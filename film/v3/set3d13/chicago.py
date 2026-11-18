@@ -53,26 +53,27 @@ LIGHTS = dict(
     MORNING=dict(_B, lamps=0.35, key=(1.75, 1.28, 0.84), key_dir=_kdaz(338, 17), sun_elev=17, sun_angle=2.2, shade=(0.105, 0.11, 0.32), shade_tint=(0.10, 0.105, 0.34), shade_mix=0.6,
                  grade_offset=(-0.004, -0.008, -0.012), lift=(0.012, 0.011, 0.026), sky='CH_MORN', sky_k=0.95, pano='CHI', pano_k=0.85, grade_saturation=1.15,
                  bounce=(1.0, 0.7, 0.45, 0.2), beams=0.05, air=('#ffe0b0', 0.36, 40.0, 480.0), wet=0.2),
-    RAIN=dict(_B, lamps=1.0, key=(0.62, 0.66, 0.82), key_dir=_kdaz(325, 52), sun_elev=52, sun_angle=9.0, shade=(0.12, 0.125, 0.335), shade_tint=(0.11, 0.115, 0.36), shade_mix=0.7,
+    RAIN=dict(_B, lamps=1.0, key=(1.7, 1.5, 1.2), key_dir=_kdaz(325, 52), sun_elev=52, sun_angle=9.0, shade=(0.105, 0.14, 0.33), shade_tint=(0.10, 0.13, 0.36), shade_mix=0.7,
               grade_offset=(-0.004, -0.006, -0.004), lift=(0.016, 0.016, 0.034), sky='CH_RAIN', sky_k=0.95, pano='CHI', pano_k=0.5, grade_saturation=1.12,
               bounce=(0.7, 0.75, 0.95, 0.10), beams=0.0, air=('#8c94b4', 0.5, 20.0, 300.0), wet=1.0),
-    CELLAR=dict(_B, key=(1.95, 1.34, 0.72), key_dir=_kdaz(300, 30), sun_elev=30, sun_angle=0.5, shade=(0.100, 0.100, 0.31), shade_tint=(0.095, 0.095, 0.335), shade_mix=0.6,
+    CELLAR=dict(_B, key=(1.95, 1.34, 0.72), key_dir=_kdaz(300, 30), sun_elev=30, sun_angle=0.5, shade=(0.100, 0.104, 0.31), shade_tint=(0.095, 0.099, 0.335), shade_mix=0.6,
                 grade_offset=(-0.006, -0.01, -0.012), lift=(0.008, 0.012, 0.028), sky='CH_DAY', sky_k=0.95, pano='CHI', pano_k=0.95, grade_saturation=1.2,
                 bounce=None, beams=0.05, air=('#d8b090', 0.12, 20.0, 160.0), lamps=1.0),
-    SUITE=dict(_B, key=(1.95, 1.42, 0.82), key_dir=_kdaz(305, 36), sun_elev=36, shade=(0.20, 0.19, 0.55), shade_tint=(0.19, 0.18, 0.55), shade_mix=0.6,
-               grade_offset=(-0.006, -0.01, -0.012), lift=(0.012, 0.01, 0.026), sky='CH_DAY', sky_k=0.95, pano='CHI', pano_k=0.95, grade_saturation=1.2,
+    SUITE=dict(_B, key=(1.95, 1.42, 0.82), key_dir=_kdaz(305, 36), sun_elev=36, shade=(0.19, 0.186, 0.48), shade_tint=(0.18, 0.176, 0.48), shade_mix=0.6,
+               grade_offset=(-0.006, -0.01, -0.012), lift=(0.012, 0.01, 0.026), sky='CH_SUITE', sky_k=0.95, pano='CHI', pano_k=0.95, grade_saturation=1.2,
                bounce=None, beams=0.03, air=('#f2c88c', 0.14, 80.0, 560.0), lamps=1.0, wet=0.3),
 )
 LOC_LIGHTS = dict(street=['DAY', 'RAIN', 'MORNING'], under=['CELLAR'], suite=['SUITE'])
 PRESETS = dict(
-    street_wide=dict(loc='street', light='DAY', cam='street_wide', state='lift0.7'),
-    hotel_front=dict(loc='street', light='DAY', cam='hotel_front', state='lift0.7'),
-    front_stair=dict(loc='street', light='DAY', cam='front_stair', state='lift1'),
-    mud_low=dict(loc='street', light='DAY', cam='mud_low', state='lift0.5'),
+    street_wide=dict(loc='street', light='DAY', cam='street_wide', state='lift0.6'),
+    street_end=dict(loc='street', light='MORNING', cam='street_end', state='lift1,fill0.15'),
+    hotel_front=dict(loc='street', light='DAY', cam='hotel_front', state='lift0.6'),
+    front_stair=dict(loc='street', light='DAY', cam='front_stair', state='lift1,mound0.5'),
+    mud_low=dict(loc='street', light='DAY', cam='mud_low', state='lift0.5,sink0.5'),
     rain_street=dict(loc='street', light='RAIN', cam='rain_street', state='lift0'),
-    crowd_street=dict(loc='street', light='DAY', cam='crowd_street', state='lift0.8'),
+    crowd_street=dict(loc='street', light='DAY', cam='crowd_street', state='lift0.1'),
     under_wide=dict(loc='under', light='CELLAR', cam='under_wide', state='lift0.2'),
-    under_rows=dict(loc='under', light='CELLAR', cam='under_rows', state='lift0.2,cut1'),
+    under_rows=dict(loc='under', light='CELLAR', cam='under_rows', state='lift0.2,cut1,count5000', dense=True),
     jack_close=dict(loc='under', light='CELLAR', cam='jack_close', state='lift0.2,jack30'),
     suite_window=dict(loc='suite', light='SUITE', cam='suite_window', state=''),
     suite_room=dict(loc='suite', light='SUITE', cam='suite_room', state=''),
@@ -81,18 +82,19 @@ PRESETS = dict(
 )
 CAMS = dict(
     street_wide=dict(loc=(-30.0, -58.0, 2.8), look_at=(-4.0, 0.0, 15.5), lens=22),
-    hotel_front=dict(loc=(-7.0, -38.0, 1.6), look_at=(0.0, 0.0, 13.0), lens=18),
-    front_stair=dict(loc=(7.0, -25.0, 3.4), look_at=(0.0, -3.0, 6.2), lens=24),
-    mud_low=dict(loc=(-14.0, -38.0, 0.9), look_at=(0.0, -12.0, 3.2), lens=20),
+    street_end=dict(loc=(14.0, -48.0, 2.0), look_at=(-4.0, 0.0, 9.0), lens=22),
+    hotel_front=dict(loc=(-4.0, -24.0, 0.5), look_at=(0.0, 0.0, 10.0), lens=17),
+    front_stair=dict(loc=(-13.0, -13.0, 2.0), look_at=(0.0, -2.0, 4.0), lens=22),
+    mud_low=dict(loc=(-4.0, -45.0, 1.0), look_at=(-19.0, -35.0, 2.4), lens=22),
     rain_street=dict(loc=(-22.0, -52.0, 3.4), look_at=(0.0, 0.0, 13.0), lens=22),
     crowd_street=dict(loc=(-6.0, -34.0, 2.6), look_at=(0.0, -8.0, 7.5), lens=24),
-    under_wide=dict(loc=(3.0, -3.0, 2.3), look_at=(8.0, 30.0, 2.3), lens=22),
-    under_rows=dict(loc=(4.0, -6.0, 17.0), look_at=(5.0, 30.0, 1.5), lens=24),
-    jack_close=dict(loc=(2.0, 5.0, 2.0), look_at=(7.0, 14.0, 2.2), lens=26),
-    suite_window=dict(loc=(-2.0, 1.6, 32.6), look_at=(2.2, -14.0, 18.5), lens=20),
+    under_wide=dict(loc=(3.0, -3.0, 1.9), look_at=(3.0, 40.0, 2.2), lens=20),
+    under_rows=dict(loc=(6.5, -12.0, 26.0), look_at=(6.5, 16.0, 0.5), lens=28),
+    jack_close=dict(loc=(11.4, 12.6, 2.0), look_at=(7.5, 14.1, 1.9), lens=30),
+    suite_window=dict(loc=(-2.0, 1.6, 32.6), look_at=(2.2, -14.0, 22.9), lens=20),
     suite_room=dict(loc=(5.2, 13.0, 32.4), look_at=(-1.0, 0.0, 31.2), lens=22),
-    tea_close=dict(loc=(3.6, 9.6, 33.7), look_at=(0.4, 4.9, 31.8), lens=30),
-    suite_two=dict(loc=(-5.0, 4.2, 32.6), look_at=(0.0, -8.0, 28.4), lens=22),
+    tea_close=dict(loc=(-0.2, 5.6, 32.9), look_at=(-3.6, 1.9, 31.8), lens=40),
+    suite_two=dict(loc=(-1.0, 5.5, 32.7), look_at=(2.5, -2.0, 30.5), lens=22),
 )
 CAM_NOTES = {}
 
@@ -212,15 +214,17 @@ def _materials(P, C, TX, tx, pre):
              win_dark_short=TX('win_dark_short'), win_lit_short=TX('win_lit_short', glow='win_lit_short', glow_k=1.0), win_dark_big=TX('win_dark_big'), win_lit_big=TX('win_lit_big', glow='win_lit_big', glow_k=1.1),
              win_base=TX('win_dark_base'), fac_a=TX('fac_a'), fac_b=TX('fac_b'), fac_c=TX('fac_c'), fac_d=TX('fac_d'), fac_e=TX('fac_e'), fac_f=TX('fac_f'),
              awn_rc=TX('awn_rc', sm=(1.2, 0.9, 0.8), smix=0.3), awn_tc=TX('awn_tc', smix=0.3), awn_oc=TX('awn_oc', smix=0.3),
-             wallpaper=TX('wallpaper'), parquet=TX('parquet', form=False), rug=TX('rug', form=False), velvet_red=TX('velvet_red', smix=0.25), velvet_teal=TX('velvet_teal', smix=0.25),
+             wallpaper=TX('wallpaper'), parquet=TX('parquet', form=False, smix=0.9), rug=TX('rug', form=False, smix=0.5), velvet_red=TX('velvet_red', smix=0.9), velvet_gold=TX('velvet_gold', smix=0.8), velvet_teal=TX('velvet_teal', smix=0.25),
              p_lake=TX('paint_lake'), p_land=TX('paint_land'), p_still=TX('paint_still'), p_portrait=TX('paint_portrait'), frame=_glossy(TX('frame_gold', sm=(2.0, 1.4, 0.6), smix=0.15), (1.0, 0.8, 0.5), 0.5, 0.25),
              iron=_glossy(C('#5a5e6c', 1.0, 1.6), (1.0, 0.85, 0.7), 0.35, 0.3), iron_d=C('#34363f', 1.0, 1.8),
              iron_k=_glossy(C('#202229', 1.0, 1.9), (1.0, 0.85, 0.7), 0.16, 0.42), iron_bar=_glossy(C('#4c505e', 1.0, 1.7), (1.0, 0.85, 0.7), 0.5, 0.25), thread=TX('thread', gain=0.55, sm=1.5),
              jack_red=_glossy(C('#c04a2c', 1.0, (1.5, 0.9, 0.8), smix=0.25), (1.0, 0.8, 0.6), 0.4, 0.3), brass=_glossy(C('#b8923e', 1.0, (2.0, 1.5, 0.6), smix=0.2), (1.0, 0.8, 0.5), 0.5, 0.22),
-             dirt=TX('mud_wet', form=False), dirt2=TX('mud', form=False, gain=1.3), stair_stone=TX('ash'), wood=C('#8a5e36'), wood_d=C('#5a3a22'), wood_l=C('#b8925e'), rope=C('#c8a868'), cream=C('#ecdcb6'), white=C('#efe8d8'),
+             dirt=TX('mud_wet', form=False), dirt2=TX('mud', form=False, gain=1.2), stair_stone=TX('ash'), wood=C('#8a5e36'), wood_d=C('#5a3a22'), wood_l=C('#b8925e'), rope=C('#c8a868'), cream=C('#ecdcb6'), white=C('#efe8d8'),
              dark=C('#2a2a32', 1.0, 1.6, form=False), red=C('#b02a22', 1.0, (1.4, 0.8, 0.7), smix=0.25), teal=C('#2f8a82', 1.0, 1.0, smix=0.3), green=C('#3e6a46'), slate=C('#59607a'), stone=C('#b0a898'),
-             canvas=C('#d8c89a'), sack=C('#c9b78c'), hay=C('#d4b45c'), door=C('#2e5a4c'), door_r=C('#7a2a24', 1.0, (1.4, 0.8, 0.7), smix=0.25), horse=C('#8a5230'), horse_d=C('#4a2c1a'), horse_g=C('#8a8680'),
+             canvas=C('#d8c89a'), sack=C('#8e7048'), hay=C('#d4b45c'), door=C('#2f7a62', 1.1), door_r=C('#b04a2c', 1.1, (1.4, 0.8, 0.7), smix=0.4), horse=C('#8a5230'), horse_d=C('#4a2c1a'), horse_g=C('#8a8680'),
              horse_w=C('#dcd2bc'), skin=C('#d8a880'), coal=C('#26262a', 1.0, 0.9),
+             plaster=C('#f2ecdc', 1.0, (0.5, 0.95, 1.0), smix=0.9),
+             china=C('#f6ecd4', 1.05, (1.5, 1.4, 1.2), smix=0.3), gold=_glossy(C('#d8a838', 1.0, (2.0, 1.6, 0.7), smix=0.1), (1.0, 0.85, 0.5), 0.9, 0.2),
              lamp_glass=mat_emit(pre + 'e_lampglass', '#ffd890', strength=3.4 * max(0.2, lk)), glass_cand=mat_emit(pre + 'e_cand', '#fff0b8', strength=6.0),
              flag_r=TX('awn_rc'), flag_b=C('#2c3f86'),
              halo=BK._mat_add(pre + 'halo', tx['pool'], (1.0, 0.6, 0.3), 0.8 if lk > 0 else 0.5), pool=MN._mat_pool(pre + 'poolmat', (1.0, 0.6, 0.28), 0.55),
@@ -233,7 +237,7 @@ def _materials(P, C, TX, tx, pre):
 def _mud_mat(pre, P, tx):
     """Street mud: painted grey-brown ochre blended to a wet dark grey-brown by height (troughs, ruts and puddle rims), a soft broad GGX sheen
     (wetter in RAIN), not polished."""
-    m = _untoon(mat_lit(pre + 'mud', image=tx['mud'], form=tuple(P['form']), shade_mix=0.35, gain=0.85)); nt = m.node_tree; N = nt.nodes.new; L = nt.links.new
+    m = _untoon(mat_lit(pre + 'mud', image=tx['mud'], form=tuple(P['form']), shade_mix=0.12, gain=0.95)); nt = m.node_tree; N = nt.nodes.new; L = nt.links.new
     tex = _tex_node(m); links0 = list(tex.outputs['Color'].links); tex.extension = 'REPEAT'
     t2 = N('ShaderNodeTexImage'); t2.image = T._img(tx['mud_wet']); t2.extension = 'REPEAT'
     geo = N('ShaderNodeTexCoord'); sp = N('ShaderNodeSeparateXYZ'); L(geo.outputs['Object'], sp.inputs[0])
@@ -260,13 +264,13 @@ def _scum_mat(pre, P, tx):
 
 def _tea_mat(pre, P):
     """Tea surface: dark amber diffuse + sharp mirror; Value 'ripple_k' (0 = perfectly flat mirror) scales a noise bump on the normal, 'ripple_p' is its phase."""
-    m = _untoon(mat_lit(pre + 'tea', '#7a3e1a', form=None, shade_mix=0.3, gain=0.75)); nt = m.node_tree
+    m = _untoon(mat_lit(pre + 'tea', '#b0611e', form=None, shade_mix=0.2, gain=1.1, shade_mul=(1.8, 1.3, 0.7))); nt = m.node_tree
     rk = D._value(nt, 'ripple_k', 0.0); rp = D._value(nt, 'ripple_p', 0.0); N = nt.nodes.new; L = nt.links.new
     tc = N('ShaderNodeTexCoord'); nz = N('ShaderNodeTexNoise'); nz.noise_dimensions = '4D'; nz.inputs['Scale'].default_value = 9.0; nz.inputs['Detail'].default_value = 1.0
     L(tc.outputs['Object'], nz.inputs['Vector']); L(rp.outputs[0], nz.inputs['W'])
     bp = N('ShaderNodeBump'); bp.inputs['Distance'].default_value = 0.02; L(rk.outputs[0], bp.inputs['Strength']); L(nz.outputs['Fac'], bp.inputs['Height'])
     def make(nt2):
-        gl = nt2.nodes.new('ShaderNodeBsdfAnisotropic'); gl.distribution = 'GGX'; gl.inputs['Roughness'].default_value = 0.0; gl.inputs['Color'].default_value = (1.0, 0.98, 0.95, 1)
+        gl = nt2.nodes.new('ShaderNodeBsdfAnisotropic'); gl.distribution = 'GGX'; gl.inputs['Roughness'].default_value = 0.0; gl.inputs['Color'].default_value = (0.55, 0.52, 0.5, 1)
         nt2.links.new(bp.outputs['Normal'], gl.inputs['Normal']); return gl.outputs['BSDF']
     MN._append_shader(m, make)
     dif = [n for n in nt.nodes if n.bl_idname == 'ShaderNodeBsdfDiffuse'][0]; L(bp.outputs['Normal'], dif.inputs['Normal'])
@@ -365,6 +369,7 @@ def _hotel(SET, M, P):
         fr.quad(mb, [(cx - 0.8, -0.27, 0.6), (cx + 0.8, -0.27, 0.6), (cx + 0.8, -0.27, 2.0), (cx - 0.8, -0.27, 2.0)], M['win_base'], [(0, 0), (1, 0), (1, 1), (0, 1)], (0, -1, 0))
         for k in range(5): rod(mb, fr.p(cx - 0.64 + k * 0.32, -0.3, 0.6), fr.p(cx - 0.64 + k * 0.32, -0.3, 2.0), 0.035, M['iron_d'], seg=4)
     fr.box(mb, (-0.35, -0.35, GF - 0.1), (W_ + 0.35, 0.85, GF + 0.18), M['ash'], 0.3)              # plinth cap
+    fr.box(mb, (-0.4, -0.4, 0.0), (W_ + 0.4, 0.85, 0.35), M['ash'], 0.3)                          # cream base course: the lower lip that reads against the air gap
     # storeys: brick wall bands with openings
     for f in range(6):
         z0, z1 = ZS[f], ZS[f + 1]; sh = STOREYS[f]; wins = []
@@ -379,14 +384,19 @@ def _hotel(SET, M, P):
             wins.append((cx, ww, zb, zt, kind, M[nm], st))
         if f == 0: wins = [(cx, w, zb, zt, k, m, s) for (cx, w, zb, zt, k, m, s) in wins]
         if f == 0:                                                              # centre bay: the doorway bay is plain brick above a portico opening
-            fr.box(mb, (3 * bw, 0, z0), (4 * bw, 0.8, z1), M['brick'], 1 / 6)
+            cx = 3.5 * bw; dh = 5.2                                                   # the grand doorway: real opening in the centre bay (door leaves, fanlight, cream surround, threshold)
+            fr.box(mb, (3 * bw, 0, z0), (cx - 1.8, 0.8, z1), M['brick'], 1 / 6); fr.box(mb, (cx + 1.8, 0, z0), (4 * bw, 0.8, z1), M['brick'], 1 / 6); fr.box(mb, (cx - 1.8, 0, z0 + dh), (cx + 1.8, 0.8, z1), M['brick'], 1 / 6)
             _openings(mb, fr, M, (0, 3 * bw), z0, z1, 0.8, [w for w in wins if w[0] < 3 * bw], M['brick'])
             _openings(mb, fr, M, (4 * bw, W_), z0, z1, 0.8, [w for w in wins if w[0] > 4 * bw], M['brick'])
-            cx = 3.5 * bw                                                         # double doors + fanlight in the centre bay
-            fr.box(mb, (cx - 1.7, -0.5, z0), (cx + 1.7, 0.9, z0 + 0.3), M['ash'], 0.3)
-            fr.box(mb, (cx - 1.5, 0.5, z0), (cx + 1.5, 0.8, z0 + 4.6), M['door'], 0.3)
-            for sgn in (-1, 1): fr.box(mb, (cx + sgn * 0.75 - 0.6, 0.3, z0 + 0.6), (cx + sgn * 0.75 + 0.6, 0.55, z0 + 3.7), M['door_r'], 0.4); sbox(mb, fr.p(cx + sgn * 0.2 - 0.07, 0.1, z0 + 2.0), fr.p(cx + sgn * 0.2 + 0.07, 0.3, z0 + 2.3), M['brass'])
-            fr.quad(mb, [(cx - 1.5, 0.45, z0 + 4.6), (cx + 1.5, 0.45, z0 + 4.6), (cx + 1.5, 0.45, z1 - 0.9), (cx - 1.5, 0.45, z1 - 0.9)], M['win_lit'], [(0, 0), (1, 0), (1, 1), (0, 1)], (0, -1, 0))
+            for sg in (-1, 1):
+                fr.box(mb, (cx + sg * 2.0 - 0.2, -0.45, z0), (cx + sg * 2.0 + 0.2, 0.8, z0 + dh + 0.5), M['ash'], 0.3)                    # pilasters
+                fr.box(mb, (min(cx, cx + sg * 1.8) - 0.0, 0.45, z0 + 0.05), (max(cx, cx + sg * 1.8), 0.75, z0 + 4.45), M['door'], 0.3)       # door leaf
+                for pz in (0.5, 2.55):
+                    fr.box(mb, (min(cx + sg * 0.25, cx + sg * 1.6), 0.3, z0 + pz), (max(cx + sg * 0.25, cx + sg * 1.6), 0.47, z0 + pz + 1.7), M['door_r'], 0.4)
+                sbox(mb, fr.p(cx + sg * 0.3 - 0.08, 0.15, z0 + 2.2), fr.p(cx + sg * 0.3 + 0.08, 0.32, z0 + 2.6), M['brass'])
+            fr.box(mb, (cx - 2.2, -0.45, z0 + dh + 0.1), (cx + 2.2, 0.8, z0 + dh + 0.6), M['ash'], 0.3)                                  # surround head
+            fr.box(mb, (cx - 2.4, -0.9, z0 - 0.02), (cx + 2.4, 0.5, z0 + 0.1), M['ash'], 0.3)                                              # cream threshold slab (proud lip)
+            fr.quad(mb, [(cx - 1.8, 0.5, z0 + 4.45), (cx + 1.8, 0.5, z0 + 4.45), (cx + 1.8, 0.5, z0 + dh), (cx - 1.8, 0.5, z0 + dh)], M['win_lit'], [(0, 0), (1, 0), (1, 1), (0, 1)], (0, -1, 0))
         else:
             _openings(mb, fr, M, (0, W_), z0, z1, 0.8, wins, M['brick'])
         fr.box(mb, (-0.1, -0.35, z1 - 0.32), (W_ + 0.1, 0.8, z1), M['ash'], 0.3)       # string course
@@ -504,8 +514,9 @@ def _jack(sm, mv, x, y, zb, S, M, crib=0, hd=0.55):
 
 def _bar_obj(SET, M, x, y, z, name, phase):
     """turning bar: an iron lever through the jack head, a separate object so set_jack_turn can rotate it about the jack axis."""
-    mb = MB(); rod(mb, (-1.45, 0, 0), (1.75, 0, 0), 0.085, M['iron_bar'], seg=5)
-    for sx in (-1.45, 1.75): rod(mb, (sx, 0, 0), (sx + (-0.12 if sx < 0 else 0.12), 0, 0), 0.13, M['iron_d'], seg=5)
+    mb = MB(); rod(mb, (-1.4, 0, 0), (1.4, 0, 0), 0.085, M['iron_bar'], seg=6)
+    for sx in (-1.4, 1.4): rod(mb, (sx, 0, 0), (sx + (-0.14 if sx < 0 else 0.14), 0, 0), 0.14, M['iron_d'], seg=6)
+    rod(mb, (0, 0, -0.05), (0, 0, 0.05), 0.2, M['iron_d'], seg=8)
     ob = _obj(mb, name, SET); ob.location = (x, y, z); ob.rotation_euler = (0, 0, phase); return ob
 
 def _jackfield(SET, M, xs, ys, name, zb, crib, S, head_base, skip=(), bars=True, hd=0.55):
@@ -559,7 +570,7 @@ def _street(SET, P, M, hotel=True, opp=False):
         gb = MB(); gb.face([Vector((HX0, 0.8, 0.02)), Vector((HX1, 0.8, 0.02)), Vector((HX1, HY1, 0.02)), Vector((HX0, HY1, 0.02))], M['dirt2'], [(0, 0), (4, 0), (4, 3), (0, 3)]); _obj(gb, 'under_floor', SET)
     _neighbours(SET, M, hotel=hotel)
     if opp: _opposite(SET, M)
-    _street_dress(SET, M, mud_z, hotel=hotel); _church(SET, M)
+    _street_dress(SET, M, mud_z, hotel=hotel); _church(SET, M); _distant_town(SET, M)
     return mud_z
 
 def _shop(mb, M, x0, x1, h, facname, y0=0.0, depth=22.0, zb=0.0, side_mat=None, cornice_mat=None):
@@ -604,7 +615,7 @@ def _barrel(mb, c, M, mat='wood', r=0.55, h=1.4):
     mb.frustum(c + Vector((0, 0, h / 2 - 0.05)), c + Vector((0, 0, h / 2 + 0.05)), r * 1.01, r * 1.01, M['iron'], seg=12, cap0=False, cap1=False)
 
 def _sack(mb, c, M, seed=1, s=1.0):
-    c = Vector(c); r = _rnd(seed); ell(mb, c + Vector((0, 0, 0.55 * s)), 0.5 * s, 0.38 * s, 0.6 * s, M['sack'], seg=8, rings=5, yaw=r.uniform(0, 3)); mb.frustum(c + Vector((0, 0, 1.05 * s)), c + Vector((0, 0, 1.25 * s)), 0.17 * s, 0.1 * s, M['sack'], seg=6)
+    c = Vector(c); r = _rnd(seed); ell(mb, c + Vector((0, 0, 0.55 * s)), 0.5 * s, 0.38 * s, 0.6 * s, M['sack'], seg=14, rings=9, yaw=r.uniform(0, 3)); mb.frustum(c + Vector((0, 0, 1.0 * s)), c + Vector((0, 0, 1.3 * s)), 0.2 * s, 0.09 * s, M['sack'], seg=8); rod(mb, c + Vector((0, 0, 1.04 * s)), c + Vector((0, 0, 1.1 * s)), 0.2 * s, M['rope'], seg=8)
 
 def _gas_lamp(mb, fl, c, M, k):
     c = Vector(c); rod(mb, c, c + Vector((0, 0, 5.2)), 0.16, M['iron_d'], seg=6, r1=0.09); mb.frustum(c, c + Vector((0, 0, 0.9)), 0.34, 0.2, M['iron_d'], seg=8)
@@ -648,7 +659,7 @@ def _horse(mb, base, yaw, M, mat='horse', seed=1):
     mb.frustum(P(0.0, 0, 3.35) - Z * 0.0, P(0.1, 0, 3.35), 0.99, 0.99, M['wood_d'], seg=12, cap0=False, cap1=False) if False else None
     for sg in (-1, 1): beam(mb, P(1.5, sg * 0.9, 3.5), P(-0.9, sg * 0.88, 3.0), 0.09, 0.05, M['wood_d'])                                   # traces
 
-def _cart(mb, wm, base, yaw, M, sink=0.6, load='barrels', horse=True, seed=3, hmat='horse'):
+def _cart(mb, wm, base, yaw, M, sink=0.6, load='barrels', horse=True, seed=3, hmat='horse', hm=None):
     b = Vector(base); ex = Vector((math.cos(yaw), math.sin(yaw), 0)); ey = Vector((-math.sin(yaw), math.cos(yaw), 0)); Z = Vector((0, 0, 1))
     P = lambda x, y, z: b + ex * x + ey * y + Z * z; zb = 2.4 - sink
     obox(mb, P(0, 0, zb), ex, ey, Z, 3.6, 1.7, 0.18, M['wood'], 0.3)
@@ -663,7 +674,7 @@ def _cart(mb, wm, base, yaw, M, sink=0.6, load='barrels', horse=True, seed=3, hm
     else:
         for (lx, ly, lz, s) in ((-2.2, -0.6, 0, 1.5), (-0.4, 0.5, 0, 1.6), (1.4, -0.5, 0, 1.4), (-1.2, 0.0, 1.5, 1.3), (0.6, -0.2, 1.6, 1.2)): obox(mb, P(lx, ly, zb + 0.18 + lz + s / 2), ex, ey, Z, s / 2, s / 2, s / 2, M['crate'], 0.3)
     for sg in (-1, 1): beam(mb, P(3.5, sg * 0.9, zb - 0.1), P(8.2, sg * 0.9, zb + 0.9), 0.16, 0.22, M['wood_d'])
-    if horse: _horse(mb, P(8.2, 0, 0.0), yaw, M, hmat, seed=seed)
+    if horse: _horse(hm if hm is not None else mb, P(8.2, 0, 0.0), yaw, M, hmat, seed=seed)
 
 def _mound(SET, M, name, cx, cy, rx, ry, h, seed, mat, mud_z):
     xs = np.linspace(cx - rx, cx + rx, 30); ys = np.linspace(cy - ry, cy + ry, 30); X, Y = np.meshgrid(xs, ys)
@@ -686,20 +697,21 @@ def _street_dress(SET, M, mud_z, hotel=True):
     mb = MB(); fl = MB(); zq = lambda x, y: float(mud_z(np.array([x]), np.array([y]))[0])
     for k, xx in enumerate((-96, -66, -40, 28, 56, 84)): _gas_lamp(mb, fl, (xx, -8.2 if xx < 0 else -7.7, 1.3 if xx < 0 else 0.5), M, k)
     for xx in (-9.0, 9.0): _gas_lamp(mb, fl, (xx + (-7.0 if xx < 0 else 7.0), -9.6, 0.0), M, 9)
-    poles = [(x, -13.0) for x in (-112, -74, -36, 2, 40, 78, 116)]
+    poles = [(x, -13.0) for x in (-112, -74, -38, 34, 72, 110)]
     for (x, y) in poles: _pole(mb, x, y, M)
     for (a, b) in zip(poles, poles[1:]):
         for dx, dz in ((-2.2, 14.1), (-0.9, 14.1), (0.9, 14.1), (2.2, 14.1), (-2.0, 12.3), (2.0, 12.3)):
             chain_rod(mb, catenary((a[0] + dx, a[1], dz), (b[0] + dx, b[1], dz), 0.9, 8), 0.05, M['iron_d'], seg=3)
     for xx in (-60, -30, 30, 60): rod(mb, (xx, -9.4, 0.0), (xx, -9.4, 2.4), 0.16, M['wood_d'], seg=5); sbox(mb, (xx - 0.7, -9.5, 2.0), (xx + 0.7, -9.3, 2.2), M['wood_d'], 0.3)
     _obj(mb, 'street_furniture', SET); _obj(fl, 'lamps_glass', SET, shadow=False)
-    cm = MB(); wm = MB()
-    _cart(cm, wm, (-24.0, -35.0, 0.0), math.radians(8), M, sink=0.6, load='barrels', seed=3)                          # the stuck cart (mud_low, street_wide)
-    _cart(cm, wm, (17.0, -26.0, 0.0), math.radians(190), M, sink=0.45, load='crates', seed=4, hmat='horse_g')
+    cm = MB(); wm = MB(); ca = MB(); wa = MB(); ha = MB()
+    _cart(ca, wa, (-24.0, -35.0, 0.0), math.radians(8), M, sink=0.6, load='barrels', seed=3, hm=ha)                    # the stuck cart: separate objects for set_wheel_sink
+    _cart(cm, wm, (31.0, -31.0, 0.0), math.radians(190), M, sink=0.45, load='crates', seed=4, hmat='horse_g')
     _cart(cm, wm, (-46.0, -42.0, 0.0), math.radians(60), M, sink=0.4, load='crates', seed=5, hmat='horse_d')
-    _obj(cm, 'carts', SET); _obj(wm, 'cart_wheels', SET); STATE['fill_objs'] += [bpy.data.objects['carts'], bpy.data.objects['cart_wheels']]
+    _obj(cm, 'carts', SET); _obj(wm, 'cart_wheels', SET); oa = _obj(ca, 'cartA_body', SET); ow = _obj(wa, 'cartA_wheels', SET); oh = _obj(ha, 'cartA_horse', SET)
+    STATE['fill_objs'] += [bpy.data.objects['carts'], bpy.data.objects['cart_wheels'], oa, ow, oh]; STATE['cartA'] = [oa, ow]
     _mound(SET, M, 'pile_a', -34.0, -17.0, 8.0, 4.4, 3.2, 4, M['clay'], mud_z); _mound(SET, M, 'pile_b', 40.0, -14.0, 7.0, 3.8, 2.6, 5, M['clay'], mud_z)
-    _mound(SET, M, 'pile_c', 12.0, -38.0, 5.0, 3.2, 1.9, 6, M['gravel'], mud_z); _mound(SET, M, 'pile_e', -8.0, -46.0, 5.0, 3.0, 2.2, 8, M['clay'], mud_z)
+    _mound(SET, M, 'pile_c', 27.0, -45.0, 5.0, 3.2, 1.9, 6, M['gravel'], mud_z); _mound(SET, M, 'pile_e', 9.0, -52.0, 5.0, 3.0, 2.2, 8, M['clay'], mud_z)
     _mound(SET, M, 'pile_d', -50.0, -22.0, 6.0, 3.4, 2.2, 7, M['clay'], mud_z)
     pm = MB()
     for k in range(5): sbox(pm, (-12.0, -15.4 + k * 0.45, 0.0), (-4.0, -15.0 + k * 0.45, 0.35), M['walk'], 0.3)
@@ -714,7 +726,7 @@ def _street_dress(SET, M, mud_z, hotel=True):
     walk((-28.0, -57.0), (-12.0, -28.0)); walk((-12.0, -22.0), (0.0, -11.0), 2.6); walk((8.0, -12.0), (8.0, -45.0), 2.4)
     _obj(pm, 'street_planks', SET); STATE['fill_objs'].append(bpy.data.objects['street_planks'])
     bm = MB()
-    for (xx, yy) in ((-33, -47.0), (-31.8, -47.6), (-26, -11.5), (-24.6, -11.0), (-25.4, -12.7), (16, -11.0), (17.4, -11.8), (-2, -44), (-0.6, -44.8), (-3.0, -48.0), (-1.8, -48.6), (48, -28), (49.4, -27.4), (-56, -30), (-57.2, -29.4), (-5.0, -20.0),
+    for (xx, yy) in ((-33, -47.0), (-31.8, -47.6), (-26, -11.5), (-24.6, -11.0), (-25.4, -12.7), (16, -11.0), (17.4, -11.8), (-2, -44), (-0.6, -44.8), (-3.0, -48.0), (-1.8, -48.6), (48, -28), (49.4, -27.4), (-56, -30), (-57.2, -29.4),
                      (-22.0, -40.0), (-20.6, -40.8), (-21.6, -41.9), (-13.0, -44.0), (-11.8, -44.5), (-30.0, -45.0), (4.0, -43.0), (5.3, -43.6), (-34.0, -29.0), (36.0, -30.0), (14.0, -18.0)):
         _barrel(bm, (xx, yy, zq(xx, yy) - 0.15), M, 'wood' if int(xx) % 2 else 'wood_l')
     for (xx, yy, s_) in ((-17.0, -45.0, 21), (6.0, -44.0, 22), (-5.0, -42.0, 12), (22.0, -11.0, 8), (-31.0, -12.0, 9), (52.0, -36.0, 10), (-40.0, -41.0, 13), (28.0, -43.0, 14)): _crate_stack(bm, (xx, yy, zq(xx, yy) - 0.1), M, s_, 5)
@@ -724,11 +736,48 @@ def _street_dress(SET, M, mud_z, hotel=True):
     for xx in (-44.0, -30.0, 28.0, 44.0):                                                                  # stakes with a rope round the fill piles
         for k in range(4): rod(bm, (xx + k * 2.2, -23.0, zq(xx + k * 2.2, -23.0) - 0.2), (xx + k * 2.2, -23.0, zq(xx + k * 2.2, -23.0) + 1.4), 0.1, M['wood_d'], seg=5)
     for k in range(5): bm_h = _rnd(k); _bale = (-16.0 + 2.2 * k, -20.5 + 0.3 * (k % 2)); sbox(bm, (_bale[0] - 0.9, _bale[1] - 0.5, zq(*_bale) - 0.1), (_bale[0] + 0.9, _bale[1] + 0.5, zq(*_bale) + 0.8), M['hay'], 0.4) if k < 3 else None
+    for (xx, yy, yw) in ((-31.0, -16.0, 0.5), (36.5, -14.0, 2.2), (-5.5, -46.0, 4.0), (-47.0, -22.0, 1.0), (0.0, -41.0, 0.3), (24.0, -41.5, 3.1)): _shovel(bm, xx, yy, zq(xx, yy), yw)
     _obj(bm, 'street_props', SET); STATE['fill_objs'].append(bpy.data.objects['street_props'])
+    _prop_jacks(SET, M, [(-8.4, -16.5), (-5.6, -12.5)])
+    mo = _mound(SET, M, 'mound_side', 11.0, -11.5, 4.5, 3.0, 3.2, 11, M['clay'], mud_z); STATE['fill_objs'].remove(mo); STATE['mound'] = mo; set_mound(0.0)
     STATE['marks'].update(
-        door=(0.0, -0.9, GF, 1), stair_top=(0.0, -3.0, GF - 0.1, 0), stair_mid=(0.0, -6.5, GF * 0.5, 0), stair_foot=(0.0, -9.6, 0.0, 0), mud_fall=(2.0, -6.4, 0.0, 0), door_b=(-3.5, -0.9, GF, 1),
+        door=(0.0, -0.9, GF, 1), stair_top=(0.0, -3.0, GF - 0.1, 0), stair_mid=(0.0, -6.5, GF * 0.5, 0), stair_foot=(0.0, -9.6, 0.0, 0), mud_fall=(0.6, -12.5, 0.0, 0), door_b=(-3.5, -0.9, GF, 1),
+        top_window=(0.0, -0.5, ZS[5] + 0.75, 1), sit_mud=(-12.5, -38.5, 0.0, 0), pay_a=(-9.5, -37.5, 0.0, 0), trench_a=(-12.0, -2.4, 0.0, 0), trench_b=(12.0, -2.4, 0.0, 0), carry_a=(-20.0, -14.0, 0.0, 0), carry_b=(-14.0, -8.5, 0.0, 0), jack_pile=(-9.0, -13.5, 0.0, 0), shovel_a=(-27.5, -16.0, 0.0, 0), shovel_b=(34.0, -13.0, 0.0, 0),
         walk_a=(-14.0, -41.0, 0.0, 0), walk_b=(-8.0, -35.0, 0.0, 0), walk_c=(8.0, -20.0, 0.0, 0), cart_a=(-21.0, -29.5, 0.0, 0), cart_b=(-27.5, -31.5, 0.0, 0), cart_c=(-14.5, -31.0, 0.0, 0),
         hf_a=(-9.0, -10.0, 0.0, 0), hf_b=(9.0, -10.0, 0.0, 0), hf_c=(-3.8, -11.5, 0.0, 0), front_a=(-9.0, -13.0, 0.0, 0), front_b=(9.0, -13.5, 0.0, 0), front_c=(-1.5, -17.0, 0.0, 0), pile_a=(-30.0, -20.5, 0.0, 0), pile_b=(5.0, -40.0, 0.0, 0), sidewalk_r=(24.0, -5.6, 0.5, 0), sidewalk_l=(-36.0, -5.6, 1.3, 0))
+
+def _shovel(mb, x, y, z, yaw):
+    M_ = STATE['M']; d = Vector((math.cos(yaw), math.sin(yaw), 0)); a = Vector((x, y, z + 0.1)); b = a + d * 0.9 + Vector((0, 0, 2.2))
+    rod(mb, a + d * 0.0, b, 0.06, M_['wood_l'], seg=5); sbox(mb, (b.x - 0.07, b.y - 0.07, b.z), (b.x + 0.07, b.y + 0.07, b.z + 0.25), M_['wood_d'], 0.3)
+    beam(mb, a - Vector((0, 0, 0.05)), a + d * 0.25 - Vector((0, 0, 0.55)), 0.35, 0.05, M_['iron'])
+
+def _prop_jacks(SET, M, spots):
+    """spare jacks standing on crib stacks in the street (foreground dressing: worm's-eye hotel_front, the carried jacks of the count shots)."""
+    sm, mv, cb = MB(), MB(), MB()
+    for k, (x, y) in enumerate(spots):
+        nl = 3 + (k % 2)
+        for li in range(nl):
+            for off in (-0.65, 0.65):
+                if li % 2 == 0: sbox(cb, (x - 1.3, y + off - 0.3, li * 0.5), (x + 1.3, y + off + 0.3, li * 0.5 + 0.5), M['timber'], 0.28)
+                else: sbox(cb, (x + off - 0.3, y - 1.3, li * 0.5), (x + off + 0.3, y + 1.3, li * 0.5 + 0.5), M['timber_w'], 0.28)
+        zt = _jack(sm, mv, x, y, nl * 0.5, 1.4, M, 0, 0.55)
+        mo = _obj(mv, 'prop_jack_head%d' % k, SET); mo.location.z = zt + 1.3; mv = MB(); STATE['prop_jack_top'] = zt
+        _bar_obj(SET, M, x, y, zt + 1.3 - 0.575, 'prop_jack_bar%d' % k, 0.4 + k)
+    _obj(sm, 'prop_jacks', SET); _obj(cb, 'prop_cribs', SET)
+
+def _distant_town(SET, M):
+    """a belt of low gabled houses and shops 140..420 D out (all round): fills the flat horizon ground with a period skyline (hazed by the mist); church excluded."""
+    r = _rnd(404); mats = [M['brick_b'], M['brick_c'], M['brick_d'], M['clap_cream'], M['clap_ochre'], M['clap_teal'], M['clap_green'], M['brick_e']]; groups = [MB() for _ in mats]; roofs = MB(); n = 0
+    while n < 420:
+        a = r.uniform(0, 2 * math.pi); d = r.uniform(140, 400); x = d * math.cos(a); y = -30 + d * math.sin(a)
+        if (x - 105) ** 2 + (y - 210) ** 2 < 900: continue
+        w, dp, h = r.uniform(6, 13), r.uniform(6, 11), r.uniform(5, 14); k = r.randrange(len(mats))
+        sbox(groups[k], (x - w / 2, y - dp / 2, -1.0), (x + w / 2, y + dp / 2, h), mats[k], 1 / 6)
+        prism_roof(roofs, x - w / 2 - 0.3, x + w / 2 + 0.3, y - dp / 2 - 0.3, y + dp / 2 + 0.3, h, r.uniform(1.5, 4.0), M['slate'])
+        if r.random() < 0.5: sbox(roofs, (x - w / 2 + 1, y, h), (x - w / 2 + 2.2, y + 1.2, h + 3.0), M['brick_d'], 1 / 6)
+        n += 1
+    for k, g in enumerate(groups): _obj(g, 'town_%d' % k, SET)
+    _obj(roofs, 'town_roofs', SET)
 
 def _church(SET, M):
     mb = MB(); x, y = 105.0, 210.0
@@ -742,7 +791,7 @@ def _church(SET, M):
 def _opposite(SET, M):
     """the row of shops across the street (y -68..-52, facing +y), seen from the suite window."""
     mb = MB()
-    spec = [(-70, -46, 24.0, 'fac_a'), (-46, -26, 20.0, 'fac_b'), (-26, -2, 28.0, 'fac_c'), (-2, 18, 22.0, 'fac_d'), (18, 44, 25.0, 'fac_e'), (44, 66, 19.0, 'fac_f'), (66, 90, 26.0, 'fac_a')]
+    spec = [(-70, -46, 17.0, 'fac_a'), (-46, -26, 14.0, 'fac_b'), (-26, -2, 21.0, 'fac_c'), (-2, 18, 15.0, 'fac_d'), (18, 44, 18.0, 'fac_e'), (44, 66, 12.5, 'fac_f'), (66, 90, 17.0, 'fac_a')]
     for (x0, x1, h, fac) in spec:
         mb.box((x0, -84.0, -1.0), (x1, -66.0, h), M['brick_b'], mats=dict(back=M[fac]), tile=(6, 6))
         sbox(mb, (x0 - 0.3, -66.3, h - 0.9), (x1 + 0.3, -64.9, h), M['cream'], 0.3); sbox(mb, (x0, -84.0, h), (x1, -65.8, h + 0.5), M['cream'], 0.3); sbox(mb, (x0 + 3.0, -80.0, h + 0.5), (x0 + 4.6, -78.4, h + 4.0), M['brick_d'], 1 / 6)
@@ -750,71 +799,99 @@ def _opposite(SET, M):
 
 # ============================================================================= cellar (crawlspace under the hotel)
 CX0, CX1, CY0, CY1 = -9.0, 19.0, -4.0, 68.0
-CZ_B = 3.5      # underside of the cross beams = top of the jack pads (at lift 0)
-UX = [-6.0 + 2.6 * k for k in range(10)]; UY = [6.0 + 2.7 * k for k in range(23)]       # jack grid: 230 jacks
+CZ_B = 2.6      # underside of the cross beams = top of the jack heads (at lift 0): a crawlspace, workers' hands reach the levers at z ~ 1.9
+UX = [-7.5 + 3.0 * k for k in range(9)]; UY = [6.0 + 2.7 * k for k in range(23)]       # jack grid: 9 columns x 23 rows = 207 jacks, aisles 3 D wide centred on UX + 1.5
 VENTS = [10.0, 20.0, 30.0, 40.0, 50.0, 60.0]
+DENSE_DX = 0.56; DENSE_COLS, DENSE_ROWS = 48, 104                                      # the dense field of up to 4992 low-poly jacks (under_rows)
 def _under(SET, P, M):
-    _sky(SET, P, M, 1100.0); _far_ground(SET, M); r = _rnd(11)
-    xs_g = np.unique(np.round(np.concatenate([np.arange(-70, -12, 4.0), np.arange(-12, 24, 0.6), np.arange(24, 71, 4.0)]), 3)); ys_g = np.unique(np.round(np.concatenate([np.arange(-30, -8, 4.0), np.arange(-8, 72, 0.6), np.arange(72, 101, 4.0)]), 3))
+    _sky(SET, P, M, 1100.0); _far_ground(SET, M); r = _rnd(11); dense = bool(PRESETS[STATE['preset']].get('dense'))
+    xs_g = np.unique(np.round(np.concatenate([np.arange(-150, -12, 6.0), np.arange(-12, 24, 0.6), np.arange(24, 151, 6.0)]), 3)); ys_g = np.unique(np.round(np.concatenate([np.arange(-100, -8, 6.0), np.arange(-8, 72, 0.6), np.arange(72, 200, 6.0)]), 3))
     X, Y = np.meshgrid(xs_g, ys_g); Z = 0.12 * np.sin(0.7 * X + 0.3 * Y) * np.cos(0.5 * Y) + 0.07 * np.sin(2.1 * X + 1.0 * Y) + 0.05 * np.sin(4.3 * X - 2.0 * Y)
-    inside = (X > CX0) & (X < CX1) & (Y > CY0 + 1) & (Y < CY1)
-    for (cx, cy, rr, h) in ((-6.0, 12.0, 1.8, 0.5), (14.0, 26.0, 2.0, 0.45), (2.0, 45.0, 2.5, 0.55), (15.5, 55.0, 1.6, 0.4)): Z = Z + h * np.exp(-((X - cx) ** 2 + (Y - cy) ** 2) / rr ** 2)    # earth lumps
-    grid_mesh('floor', xs_g, ys_g, Z, M['dirt'], uvs=(0.1, 0.1))
-    fb = MB()                                                                                       # a worn plank walkway down the middle aisle
-    for k in range(3): sbox(fb, (0.6 + k * 1.2, CY0, 0.02), (1.6 + k * 1.2, CY1 - 3, 0.1), M['plank_f'], 0.2)
-    for yy in np.arange(0.0, CY1 - 3, 4.1): sbox(fb, (0.4, yy, 0.02), (4.4, yy + 0.3, 0.18), M['timber_d'], 0.3)
+    for (cx, cy, rr, h) in ((-6.0, 12.0, 1.8, 0.5), (14.0, 26.0, 2.0, 0.45), (2.0, 45.0, 2.5, 0.55), (15.5, 55.0, 1.6, 0.4)): Z = Z + h * np.exp(-((X - cx) ** 2 + (Y - cy) ** 2) / rr ** 2)
+    out_ = ~((X > CX0 - 1) & (X < CX1 + 2) & (Y > CY0 - 1) & (Y < CY1 + 2)); Z = np.where(out_, Z * 0.6 - 0.05, Z)
+    grid_mesh('floor', xs_g, ys_g, Z, M['mud'] if False else M['dirt2'], uvs=(0.1, 0.1))
+    fb = MB()
+    if not dense:
+        for k in range(3): sbox(fb, (2.0 + k * 0.9, CY0, 0.02), (2.8 + k * 0.9, CY1 - 3, 0.1), M['plank_f'], 0.2)              # a worn plank path along the middle aisle
     _obj(fb, 'walkway', SET)
     wb = MB(); zt = CZ_B + 2.6
     sbox(wb, (CX0 - 1.0, CY0, -0.6), (CX0, CY1 + 1.0, zt), M['brick_d'], 1 / 6); sbox(wb, (CX0, CY1, -0.6), (CX1 + 1.2, CY1 + 1.0, zt), M['brick_d'], 1 / 6)
-    ys_v = [CY0] + [v for yv in VENTS for v in (yv - 0.9, yv + 0.9)] + [CY1]                              # right wall with 6 ventilation slots (z 0.9..4.0)
-    for i in range(0, len(ys_v), 2):
-        sbox(wb, (CX1, ys_v[i], -0.6), (CX1 + 1.2, ys_v[i + 1], zt), M['brick_d'], 1 / 6)
+    ys_v = [CY0] + [v for yv in VENTS for v in (yv - 0.9, yv + 0.9)] + [CY1]
+    for i in range(0, len(ys_v), 2): sbox(wb, (CX1, ys_v[i], -0.6), (CX1 + 1.2, ys_v[i + 1], zt), M['brick_d'], 1 / 6)
     for yv in VENTS: sbox(wb, (CX1, yv - 0.9, -0.6), (CX1 + 1.2, yv + 0.9, 0.7), M['brick_d'], 1 / 6); sbox(wb, (CX1, yv - 0.9, 3.0), (CX1 + 1.2, yv + 0.9, zt), M['brick_d'], 1 / 6)
-    for yy in np.arange(CY0 + 2.0, CY1, 8.0): sbox(wb, (CX0, yy, 0.0), (CX0 + 0.3, yy + 0.5, 4.8), M['timber_d'], 0.3)           # pilasters on the left wall
+    for yy in np.arange(CY0 + 2.0, CY1, 8.0): sbox(wb, (CX0, yy, 0.0), (CX0 + 0.3, yy + 0.5, 2.4), M['timber_d'], 0.3)
+    sbox(wb, (CX0 - 1.0, CY0, zt), (CX0, CY1 + 1.0, zt + 0.25), M['ash'], 0.3); sbox(wb, (CX1, CY0, zt), (CX1 + 1.2, CY1 + 1.0, zt + 0.25), M['ash'], 0.3); sbox(wb, (CX0, CY1, zt), (CX1, CY1 + 1.0, zt + 0.25), M['ash'], 0.3)
     _obj(wb, 'cellar_walls', SET)
-    pb = MB()                                                                                       # front: timber posts + cribs at the open front (y -4)
-    for xx in (CX0 + 0.5, 1.0, 6.5, 12.0, CX1 - 0.5): sbox(pb, (xx - 0.5, CY0 - 0.5, -0.1), (xx + 0.5, CY0 + 0.5, CZ_B + 0.2), M['timber_d'], 0.3)
+    pb = MB()
+    for xx in (CX0 + 0.5, 0.0, 6.3, 12.5, CX1 - 0.5): sbox(pb, (xx - 0.5, CY0 - 0.5, -0.1), (xx + 0.5, CY0 + 0.5, CZ_B + 0.2), M['timber_d'], 0.3)
     _obj(pb, 'front_posts', SET)
-    bm = MB(); kd = Vector(P['key_dir'])
-    for y in UY:
-        sbox(bm, (CX0, y - 0.5, 0.0), (CX1 + 1.0, y + 0.5, 1.2), M['timber_w'], 0.25)                      # heavy cross beams (rel z 0 = underside)
-        sbox(bm, (CX0, y - 0.58, 0.8), (CX0 + 0.8, y + 0.58, 1.4), M['iron_k'], 0.3)
-    for xj in np.arange(CX0, CX1 + 1.5, 2.0): sbox(bm, (xj - 0.28, CY0, 1.2), (xj + 0.28, CY1, 2.1), M['timber'], 0.25)
-    sbox(bm, (CX0, CY0, 2.1), (CX1 + 1.0, CY1, 2.3), M['plank_d'], 0.2)
-    bo = _obj(bm, 'floor_beams', SET); STATE['movers'].append((bo, CZ_B)); STATE['cut_objs'].append(bo)
-    so, mo, nj = _jackfield(SET, M, UX, UY, 'jf', 0.0, 1, 3.3, CZ_B, hd=1.0); STATE['njacks'] = nj
+    bm = MB(); sl = MB(); kd = Vector(P['key_dir'])
+    ys_b = [6.0 + 1.12 * k for k in range(56)] if dense else UY
+    for y in ys_b:
+        if dense: sbox(bm, (CX0, y - 0.22, 0.0), (CX1 + 1.0, y + 0.22, 0.9), M['timber_w'], 0.25)
+        else: sbox(bm, (CX0, y - 0.5, 0.0), (CX1 + 1.0, y + 0.5, 1.2), M['timber_w'], 0.25); sbox(bm, (CX0, y - 0.58, 0.8), (CX0 + 0.8, y + 0.58, 1.4), M['iron_k'], 0.3)
+    hb = 0.9 if dense else 1.2
+    for xj in np.arange(CX0, CX1 + 1.5, 2.0): sbox(sl, (xj - 0.28, CY0, hb), (xj + 0.28, CY1, hb + 0.9), M['timber'], 0.25)
+    sbox(sl, (CX0, CY0, hb + 0.9), (CX1 + 1.0, CY1, hb + 1.1), M['plank_f'], 0.2)
+    bo = _obj(bm, 'floor_beams', SET); STATE['movers'].append((bo, CZ_B)); so_ = _obj(sl, 'floor_slab', SET); STATE['movers'].append((so_, CZ_B)); STATE['cut_objs'].append(so_)
+    if dense: _dense_field(SET, M)
+    else:
+        so, mo, nj = _jackfield(SET, M, UX, UY, 'jf', 0.0, 0, 2.8, CZ_B, hd=0.8); STATE['njacks'] = nj
     pr = MB()
-    for (xx, yy) in ((-7.0, 3.0), (-7.5, 20.0), (17.0, 14.0), (16.0, 36.0), (-7.0, 52.0), (16.5, 62.0)): _crate_stack(pr, (xx, yy, 0.0), M, int(yy), 4)
-    for (xx, yy) in ((-7.0, 8.0), (15.5, 25.0), (-7.2, 33.0), (17.0, 46.0), (-7.0, 60.0)): _barrel(pr, (xx, yy, 0.0), M, 'wood')
-    for (xx, yy) in ((-7.4, 14.0), (17.5, 30.0)): rod(pr, (xx, yy, 0.0), (xx, yy, 0.8), 0.4, M['iron'], seg=8, r1=0.5)
-    for yy in (9.4, 20.2, 31.0, 42.0):                                                                 # long turning bars leaning on the beams
-        rod(pr, (3.2, yy, 0.0), (4.0, yy + 0.3, 3.3), 0.08, M['iron_bar'], seg=4)
-    for k, (xx, yy) in enumerate(((2.2, 12.0), (3.0, 22.0), (4.5, 32.0), (2.6, 42.0))): _sack(pr, (xx, yy, 0.0), M, k, 1.0)
+    for (xx, yy) in ((-7.5, 2.0), (-7.8, 21.0), (17.5, 15.0), (17.0, 38.0), (-7.5, 55.0), (17.0, 63.0)): _crate_stack(pr, (xx, yy, 0.0), M, int(yy), 3)
+    for (xx, yy) in ((-8.0, 9.0), (17.5, 27.0), (-8.0, 33.0), (17.8, 47.0), (-8.0, 61.0)): _barrel(pr, (xx, yy, 0.0), M, 'wood')
+    for k, (xx, yy) in enumerate(((-7.0, 6.0), (-6.0, 17.0), (15.0, 33.0))): _sack(pr, (xx, yy, 0.0), M, k, 1.0)
+    for yy in (14.0, 30.0): rod(pr, (13.7, yy, 0.0), (14.4, yy + 0.2, 2.5), 0.08, M['iron_bar'], seg=4)
+    for (xx, yy, yw) in ((-6.0, 4.0, 0.4), (16.0, 20.0, 2.0)): _shovel(pr, xx, yy, 0.0, yw)
     _obj(pr, 'cellar_props', SET)
-    lamps = [(1.5, 9.0, 2.6), (9.0, 17.0, 2.6), (3.0, 26.0, 2.6), (10.0, 34.0, 2.6), (2.0, 44.0, 2.6), (9.0, 54.0, 2.6), (4.0, 63.0, 2.6)]
+    lamps = [(3.0, 7.35, 1.95), (3.0, 15.45, 1.95), (3.0, 23.55, 1.95), (3.0, 34.35, 1.95), (3.0, 50.55, 1.95), (9.0, 15.45, 1.95), (13.5, 40.0, 1.95)] if not dense else [(5.0, 20.0, 2.0), (12.0, 40.0, 2.0), (0.0, 55.0, 2.0)]
     fl = MB()
     for k, (xl, yl, zl) in enumerate(lamps):
-        c = Vector((xl, yl, zl)); rod(fl, c + Vector((0, 0, 0.5)), c + Vector((0, 0, CZ_B + 0.0 - zl)), 0.03, M['iron_d'], seg=4)
+        c = Vector((xl, yl, zl)); rod(fl, c + Vector((0, 0, 0.5)), c + Vector((0, 0, 3.7 - zl)), 0.03, M['iron_d'], seg=4)
         fl.frustum(c - Vector((0, 0, 0.5)), c + Vector((0, 0, 0.5)), 0.26, 0.34, M['lamp_glass'], seg=7); fl.frustum(c + Vector((0, 0, 0.5)), c + Vector((0, 0, 0.8)), 0.38, 0.05, M['iron_d'], seg=7)
-        _halo(fl, c, 2.4, M); D._flame_light('oil_%d' % k, tuple(c), LAMP, 650 if k < 5 else 420, radius=0.15, shadow=(k % 2 == 0))
+        _halo(fl, c, 2.6, M); D._flame_light('oil_%d' % k, tuple(c), LAMP, 700 if k < 5 else 450, radius=0.15, shadow=(k % 2 == 0))
         pool = MB(); pool.face([Vector((xl - 5.5, yl - 5.5, 0.12)), Vector((xl + 5.5, yl - 5.5, 0.12)), Vector((xl + 5.5, yl + 5.5, 0.12)), Vector((xl - 5.5, yl + 5.5, 0.12))], M['pool'], [(0, 0), (1, 0), (1, 1), (0, 1)])
         _obj(pool, 'pool_%d' % k, SET, shadow=False)
     _obj(fl, 'cellar_lamps', SET, shadow=False)
-    sh = MB(); kn = kd.normalized()                                                                 # dusty shafts of light through the vents (additive cards along the key direction)
-    for yv in VENTS:
+    sh = MB(); kn = kd.normalized()
+    for yv in VENTS:                                                                                  # dusty shafts through the vents (additive cards along the key direction)
         for sg in (-1, 1):
             a = Vector((CX1, yv + sg * 0.9, 3.0)); b = Vector((CX1, yv + sg * 0.9, 0.7)); ta = a.z / max(0.05, -kn.z); tb = b.z / max(0.05, -kn.z)
             sh.face([a, b, b + kn * tb, a + kn * ta], M['shaft'], [(0, 1), (0, 0), (1, 0), (1, 1)])
+    for sg in (-1, 1):                                                                                # ... and down the middle aisle from the open front
+        for zz in (0.0, 2.4):
+            a = Vector((3.0 + sg * 1.2, CY0, 2.4)); b = Vector((3.0 + sg * 1.2, CY0, 0.2)); ta = a.z / max(0.05, -kn.z); tb = b.z / max(0.05, -kn.z)
+            sh.face([a, b, b + kn * tb, a + kn * ta], M['shaft'], [(0, 1), (0, 0), (1, 0), (1, 1)]); break
     _obj(sh, 'shafts', SET, shadow=False)
-    # stand points: aisles between the jack columns (x = column + 1.3), between beam rows
-    for k in range(4):
-        for j, yy in enumerate((9.35, 17.45, 28.25, 41.75)): STATE['marks']['aisle_%d_%d' % (k, j)] = (UX[2 * k + 1] + 1.3 if 2 * k + 1 < len(UX) else UX[-1] + 1.3, yy, 0.0, 0)
-    STATE['marks'].update(foreman=(0.0, 7.4, 0.0, 0), foreman_far=(1.0, 27.0, 0.0, 0), worker_a=(3.6, 12.0, 0.0, 0), worker_b=(9.4, 19.0, 0.0, 0), worker_c=(1.0, 24.4, 0.0, 0), worker_d=(6.2, 30.0, 0.0, 0), jack_hands=(8.6, 12.4, 0.0, 0))
+    mk = STATE['marks']
+    for k in range(8):
+        for j in range(0, 23, 2): mk['aisle_%d_%d' % (k, j)] = (UX[k] + 1.5, UY[j] - 1.35, 0.0, 0)
+    mk.update(foreman=(3.0, 36.0, 0.0, 0), foreman_far=(1.0, 27.0, 0.0, 0), pullman_walk_a=(3.0, 9.0, 0.0, 0), pullman_walk_b=(3.0, 30.0, 0.0, 0), worker_a=(2.2, 9.0, 0.0, 0), worker_b=(3.8, 13.6, 0.0, 0), worker_c=(2.3, 20.5, 0.0, 0), worker_d=(3.7, 27.6, 0.0, 0),
+              jack_target=(UX[5], UY[3], 0.0, 0))
+    mk['jack_hands'] = _jack_hands(CAMS['jack_close']['loc'], UX[5], UY[3])
+
+def _jack_hands(cam_loc, jx, jy):
+    """feet position for a cast13 worker_turn_bar_* sprite so that its drawn jack collar (hole at 1.22 D right of the feet, in the card plane facing the camera, waist height) lines
+    up with the 3D jack at (jx, jy): feet = jack - camera_right * 1.22. (z 0: the 3D lever hole is at CZ_B + lift - 0.7.)"""
+    f = Vector((jx - cam_loc[0], jy - cam_loc[1], 0)).normalized(); rt = Vector((f.y, -f.x, 0)); p = Vector((jx, jy, 0)) - rt * 1.22; return (p.x, p.y, 0.0, 0)
+
+def _dense_field(SET, M):
+    """up to 4992 low-poly dark-iron jacks (base block, shaft to z 3.55, collar) in chunks of 24 -> set_jack_count(n); fixed in z, the beams ride on them."""
+    ch = []; n = 0; k = 0
+    for row in range(DENSE_ROWS):
+        y = 5.0 + row * DENSE_DX
+        for half in range(2):
+            mb = MB()
+            for c in range(24):
+                x = -8.3 + (half * 24 + c) * DENSE_DX; sbox(mb, (x - 0.22, y - 0.22, 0.0), (x + 0.22, y + 0.22, 0.14), M['timber_d'], 0.5)
+                rod(mb, (x, y, 0.14), (x, y, 4.0), 0.1, M['iron_k'], seg=5); rod(mb, (x, y, 1.0), (x, y, 1.25), 0.17, M['iron_k'], seg=5); rod(mb, (x, y, 3.9), (x, y, 4.1), 0.2, M['brass'], seg=6)
+            ch.append(_obj(mb, 'dj_%d' % k, SET)); k += 1
+    STATE['dense_chunks'] = ch; STATE['dense_chunk'] = 24; STATE['njacks'] = len(ch) * 24; set_jack_count(5000)
 
 # ============================================================================= suite (rich guest's top-floor room, window looks down on the muddy street)
 RX0, RX1, RY1 = -11.0, 11.0, 18.0
 ZF = 30.0; RH = 6.2
-TEA = dict(x=0.6, y=5.4, top=ZF + 1.5)
+TEA = dict(x=-3.4, y=2.4, top=ZF + 1.5)
 def _cup(mb, tea_mb, cx, cy, z0, s):
     """a proper teacup on a saucer (lathe profiles, 20 segments): saucer dish, foot, bowl with an inner wall, rim, a looped handle; the tea disc is a separate flat mesh just under the rim."""
     seg = 20
@@ -827,13 +904,15 @@ def _cup(mb, tea_mb, cx, cy, z0, s):
                      Vector((cx + r1 * s * math.cos(a1), cy + r1 * s * math.sin(a1), z0 + h1 * s)), Vector((cx + r1 * s * math.cos(a0), cy + r1 * s * math.sin(a0), z0 + h1 * s))]
                 mb.face(q[::-1] if flip else q, mat, [(0, 0), (1, 0), (1, 1), (0, 1)])
     mb.pid += 1
-    lathe(prof, STATE['M']['white']); lathe([(0.62, 0.15), (0.6, 0.165), (0.5, 0.11), (0.3, 0.07), (0.0, 0.07)], STATE['M']['white'])    # saucer rim and dish
+    W_ = STATE['M']['china']; lathe(prof, W_); lathe([(0.62, 0.15), (0.6, 0.165), (0.5, 0.11), (0.3, 0.07), (0.0, 0.07)], W_)
+    lathe([(0.62, 0.15), (0.635, 0.15), (0.635, 0.17), (0.6, 0.17)], STATE['M']['gold'])    # saucer rim and dish
     cp = [(0.2, 0.07), (0.22, 0.12), (0.3, 0.26), (0.4, 0.5), (0.45, 0.62)]                                    # cup outer wall
-    lathe(cp, STATE['M']['white']); lathe([(0.45, 0.62), (0.44, 0.63), (0.39, 0.5)], STATE['M']['white']); lathe([(0.39, 0.5), (0.3, 0.26), (0.23, 0.15), (0.0, 0.13)], STATE['M']['wood_l'])     # rim + inner glaze
+    lathe(cp, W_); lathe([(0.45, 0.62), (0.44, 0.63), (0.39, 0.5)], W_); lathe([(0.39, 0.5), (0.3, 0.26), (0.23, 0.15), (0.0, 0.13)], W_)
+    lathe([(0.455, 0.6), (0.465, 0.6), (0.465, 0.64), (0.44, 0.64)], STATE['M']['gold'])     # rim + inner glaze
     for k in range(7):                                                                                       # handle: a loop of small segments on the +x side
         t0, t1 = math.pi * 0.15 + k * math.pi * 0.7 / 7, math.pi * 0.15 + (k + 1) * math.pi * 0.7 / 7
         p0 = Vector((cx + (0.45 + 0.2 * math.sin(t0)) * s, cy, z0 + (0.4 + 0.2 * math.cos(t0) * 1.0) * s)); p1 = Vector((cx + (0.45 + 0.2 * math.sin(t1)) * s, cy, z0 + (0.4 + 0.2 * math.cos(t1)) * s))
-        mb.frustum(p0, p1, 0.035 * s, 0.035 * s, STATE['M']['white'], seg=6, cap0=False, cap1=False)
+        mb.frustum(p0, p1, 0.035 * s, 0.035 * s, W_, seg=6, cap0=False, cap1=False)
     tea_mb.pid += 1; zt = z0 + 0.5 * s; R_ = 0.4 * s                                                          # flat tea surface (fan of 28 triangles)
     pts = [Vector((cx + R_ * math.cos(2 * math.pi * j / 28), cy + R_ * math.sin(2 * math.pi * j / 28), zt)) for j in range(28)]
     for j in range(28): tea_mb.face([Vector((cx, cy, zt)), pts[j], pts[(j + 1) % 28]], STATE['M']['tea'], [(0.5, 0.5), (0.5 + 0.5 * math.cos(2 * math.pi * j / 28), 0.5 + 0.5 * math.sin(2 * math.pi * j / 28)), (0.5, 0.5)])
@@ -842,8 +921,8 @@ def _suite(SET, P, M):
     mud_z = _street(SET, P, M, hotel=False, opp=True)
     mb = MB(); WX0, WX1, WZ0, WZ1 = -5.0, 5.0, ZF + 0.08, ZF + 5.6; t = 0.8; wp = M['wallpaper']
     fm = MB(); sbox(fm, (RX0, 0, ZF - 0.6), (RX1, RY1, ZF), M['parquet'], 1 / 8); _obj(fm, 'floor_room', SET)
-    rg = MB(); rg.face([Vector((-8.0, 1.0, ZF + 0.03)), Vector((6.0, 1.0, ZF + 0.03)), Vector((6.0, 11.0, ZF + 0.03)), Vector((-8.0, 11.0, ZF + 0.03))], M['rug'], [(0, 0), (1, 0), (1, 1), (0, 1)]); _obj(rg, 'rug', SET)
-    sbox(mb, (RX0 - t, -t, ZF + RH), (RX1 + t, RY1 + t, ZF + RH + 0.6), M['cream'], 0.2)                                      # ceiling slab
+    rg = MB(); rg.face([Vector((-6.5, 1.2, ZF + 0.03)), Vector((4.5, 1.2, ZF + 0.03)), Vector((4.5, 8.2, ZF + 0.03)), Vector((-6.5, 8.2, ZF + 0.03))], M['rug'], [(0, 0), (1, 0), (1, 1), (0, 1)]); _obj(rg, 'rug', SET)
+    sbox(mb, (RX0 - t, -t, ZF + RH), (RX1 + t, RY1 + t, ZF + RH + 0.6), M['plaster'], 0.2)                                      # ceiling slab
     sbox(mb, (RX0 - t, 0, ZF - 0.6), (RX0, RY1 + t, ZF + RH + 0.6), wp, 0.25); sbox(mb, (RX1, 0, ZF - 0.6), (RX1 + t, RY1 + t, ZF + RH + 0.6), wp, 0.25); sbox(mb, (RX0, RY1, ZF - 0.6), (RX1, RY1 + t, ZF + RH + 0.6), wp, 0.25)
     sbox(mb, (RX0 - t, -t, ZF - 0.6), (WX0, 0, ZF + RH + 0.6), M['brick'], 1 / 6); sbox(mb, (WX1, -t, ZF - 0.6), (RX1 + t, 0, ZF + RH + 0.6), M['brick'], 1 / 6)
     sbox(mb, (WX0, -t, ZF + RH - 0.6), (WX1, 0, ZF + RH + 0.6), M['brick'], 1 / 6); sbox(mb, (WX0, -t, WZ1), (WX1, 0, ZF + RH - 0.6), M['brick'], 1 / 6); sbox(mb, (WX0, -t, ZF - 0.6), (WX1, 0, WZ0), M['brick'], 1 / 6)
@@ -852,9 +931,6 @@ def _suite(SET, P, M):
     for xx in (WX0, WX1): sbox(mb, (xx - 0.18, -0.1, WZ0), (xx + 0.18, 0.5, WZ1), M['white'], 0.3)
     for xx in (-2.5, 0.0, 2.5): sbox(mb, (xx - 0.07, 0.1, WZ0), (xx + 0.07, 0.25, WZ1), M['white'], 0.3)
     for zz in (ZF + 4.1, WZ1 - 0.1): sbox(mb, (WX0, 0.1, zz - 0.08), (WX1, 0.25, zz + 0.08), M['white'], 0.3)
-    for k in range(int((WX1 - WX0) / 0.6) + 1):                                                                     # low see-through iron rail in the window plane (no balcony ledge: the street stays visible)
-        xx = WX0 + k * 0.6; rod(mb, (xx, -0.15, ZF + 0.05), (xx, -0.15, ZF + 1.6), 0.04, M['iron_d'], seg=4)
-    beam(mb, (WX0, -0.15, ZF + 1.6), (WX1, -0.15, ZF + 1.6), 0.1, 0.1, M['iron_d'])
     for (x0, x1, y0, y1) in ((RX0, RX0 + 0.35, 0.5, RY1), (RX1 - 0.35, RX1, 0.5, RY1)): sbox(mb, (x0, y0, ZF), (x1, y1, ZF + 2.0), M['plank_f'], 0.2); sbox(mb, (x0 - 0.1, y0, ZF + 2.0), (x1 + 0.1, y1, ZF + 2.2), M['cream'], 0.3)
     sbox(mb, (RX0, RY1 - 0.35, ZF), (RX1, RY1, ZF + 2.0), M['plank_f'], 0.2); sbox(mb, (RX0, RY1 - 0.5, ZF + 2.0), (RX1, RY1, ZF + 2.2), M['cream'], 0.3)
     sbox(mb, (RX0, 0, ZF + RH - 0.9), (RX1, 0.5, ZF + RH), M['cream'], 0.3); sbox(mb, (RX0, 0, ZF + RH - 0.6), (RX0 + 0.6, RY1, ZF + RH), M['cream'], 0.3)
@@ -862,9 +938,9 @@ def _suite(SET, P, M):
     cm = MB()
     for sg in (-1, 1):                                                                                                        # velvet drapes either side, tied back
         for k in range(5):
-            x0 = sg * (WX1 + 0.15) + sg * k * 0.38; sbox(cm, (min(x0, x0 + sg * 0.42), 0.45, ZF + 0.3 + 0.12 * (k % 2)), (max(x0, x0 + sg * 0.42), 1.0 + 0.1 * (k % 2), ZF + 5.9), M['velvet_red'], 0.4)
+            x0 = sg * (WX1 + 0.15) + sg * k * 0.38; sbox(cm, (min(x0, x0 + sg * 0.42), 0.45, ZF + 0.3 + 0.12 * (k % 2)), (max(x0, x0 + sg * 0.42), 1.0 + 0.1 * (k % 2), ZF + 5.9), M['velvet_gold'], 0.4)
         ell(cm, (sg * (WX1 + 0.5), 0.4, ZF + 2.4), 0.25, 0.3, 0.25, M['brass'], seg=6, rings=4)
-    rod(cm, (WX0 - 2.2, 0.75, ZF + 6.0), (WX1 + 2.2, 0.75, ZF + 6.0), 0.1, M['brass'], seg=6); sbox(cm, (WX0 - 1.0, 0.45, ZF + 5.7), (WX1 + 1.0, 1.2, ZF + 6.15), M['velvet_red'], 0.4)
+    rod(cm, (WX0 - 2.2, 0.75, ZF + 6.0), (WX1 + 2.2, 0.75, ZF + 6.0), 0.1, M['brass'], seg=6); sbox(cm, (WX0 - 1.0, 0.45, ZF + 5.7), (WX1 + 1.0, 1.2, ZF + 6.15), M['velvet_gold'], 0.4)
     _obj(cm, 'curtains', SET); _obj(mb, 'room', SET)
     pf = MB()
     def picture(mat, x, y, z, w, h, face):
@@ -882,19 +958,18 @@ def _suite(SET, P, M):
     picture(M['p_portrait'], 8.0, 0.5, ZF + 3.6, 1.8, 2.4, 'y+'); picture(M['p_lake'], -8.2, 0.5, ZF + 3.6, 3.0, 2.2, 'y+')
     _obj(pf, 'paintings', SET)
     fb = MB(); tmb = MB(); _furniture(fb, tmb, M); _obj(fb, 'furniture', SET); to = _obj(tmb, 'tea', SET, shadow=False); STATE['tea_obj'] = to
-    ch = MB(); fl = MB(); c = Vector((0.6, 5.6, ZF + 4.4)); rod(ch, (c.x, c.y, ZF + RH), c + Vector((0, 0, 0.3)), 0.06, M['brass'], seg=6)
+    ch = MB(); fl = MB(); c = Vector((0.4, 6.4, ZF + 4.4)); rod(ch, (c.x, c.y, ZF + RH), c + Vector((0, 0, 0.3)), 0.06, M['brass'], seg=6)
     ell(ch, c, 0.5, 0.5, 0.5, M['brass'], seg=8, rings=5); rod(ch, c + Vector((0, 0, -0.5)), c + Vector((0, 0, -1.0)), 0.04, M['brass'], seg=5); ell(ch, c + Vector((0, 0, -1.05)), 0.2, 0.2, 0.2, M['brass'], seg=6, rings=4)
     for k in range(6):
         a = 2 * math.pi * k / 6; e = c + Vector((1.5 * math.cos(a), 1.5 * math.sin(a), -0.1))
         ch.frustum(c + Vector((0, 0, -0.05)), e, 0.05, 0.05, M['brass'], seg=4); rod(ch, e, e + Vector((0, 0, 0.5)), 0.08, M['brass'], seg=6); rod(ch, e + Vector((0, 0, 0.5)), e + Vector((0, 0, 0.9)), 0.07, M['white'], seg=6)
-        fl.frustum(e + Vector((0, 0, 0.9)), e + Vector((0, 0, 1.05)), 0.07, 0.01, M['glass_cand'], seg=5); _halo(fl, e + Vector((0, 0, 1.0)), 0.5, M)
+        fl.frustum(e + Vector((0, 0, 0.9)), e + Vector((0, 0, 1.05)), 0.07, 0.01, M['glass_cand'], seg=5); _halo(fl, e + Vector((0, 0, 1.0)), 0.35, M)
         for j in range(3): rod(ch, e + Vector((0.08 * j, 0, 0.0)), e + Vector((0.08 * j, 0, -0.55 - 0.1 * j)), 0.02, M['white'], seg=3)
-    D._flame_light('chandelier', tuple(c + Vector((0, 0, 0.5))), LAMP, 700, radius=0.3, shadow=True)
+    D._flame_light('chandelier', tuple(c + Vector((0, 0, 0.5))), LAMP, 220, radius=0.3, shadow=True)
     _obj(ch, 'chandelier', SET); _obj(fl, 'candles', SET, shadow=False)
-    STATE['marks'].update(window=(0.8, 1.0, ZF, 0), window_l=(-1.8, 0.9, ZF, 0), window_r=(3.4, 1.8, ZF, 0), tea_side=(-2.6, 5.6, ZF, 0), chair_side=(3.2, 6.8, ZF, 0), room_c=(-1.0, 9.0, ZF, 0))
+    STATE['marks'].update(window=(0.8, 1.0, ZF, 0), guest_lady=(-0.8, 1.0, ZF, 0), guest_gent=(1.5, 1.0, ZF, 0), window_l=(-3.2, 1.0, ZF, 0), window_r=(3.4, 1.0, ZF, 0), tea_side=(-2.6, 5.6, ZF, 0), chair_side=(3.2, 6.8, ZF, 0), room_c=(-1.0, 9.0, ZF, 0))
     STATE['tea_xyz'] = (TEA['x'] - 0.2, TEA['y'] - 0.5, TEA['top'] + 0.03)
     # a busy street below: carts (street dress) + a crowd of workers and townsfolk standing in the mud and on the plank walks
-    crowd(46, [(-38, 38, -64, -27)], seed=21, ground=lambda x, y: float(mud_z(np.array([x]), np.array([y]))[0]), min_dist=2.2)
     cm2 = MB(); wm2 = MB(); _cart(cm2, wm2, (-8.0, -42.0, 0.0), math.radians(170), M, sink=0.5, load='crates', seed=7); _cart(cm2, wm2, (24.0, -52.0, 0.0), math.radians(10), M, sink=0.5, load='barrels', seed=8, hmat='horse_g'); _obj(cm2, 'carts2', SET); _obj(wm2, 'cart_wheels2', SET)
 
 def _furniture(mb, tmb, M):
@@ -908,16 +983,16 @@ def _furniture(mb, tmb, M):
             for sy in (-1, 1): rod(mb, P(sx * 1.25, sy * 1.2, 0.0), P(sx * 1.25, sy * 1.2, 0.6), 0.16, M['wood_d'], seg=6, r1=0.1)
         obox(mb, P(0, -1.38, 1.1), ex, ey, Z, 1.42, 0.05, 0.12, M['brass'], 0.4)
         for k in range(5): ell(mb, P(-1.0 + 0.5 * k, -1.45, 1.1), 0.08, 0.08, 0.08, M['brass'], seg=5, rings=3)       # brass studs along the seat front
-    chair(4.2, 4.2, math.radians(-150), M['velvet_red']); chair(-7.4, 6.4, math.radians(-40), M['velvet_teal'])
+    chair(4.2, 4.2, math.radians(-150), M['velvet_red']); chair(-7.4, 6.4, math.radians(-40), M['velvet_gold'])
     tx, ty = TEA['x'], TEA['y']; zt = TEA['top']
     mb.frustum((tx, ty, ZF), (tx, ty, zt - 0.1), 0.25, 0.2, M['wood_d'], seg=8); mb.frustum((tx, ty, zt - 0.1), (tx, ty, zt), 1.5, 1.5, M['wood'], seg=20)
     for k in range(3): a = k * 2 * math.pi / 3 + 0.4; mb.frustum((tx, ty, ZF + 0.15), (tx + 1.2 * math.cos(a), ty + 1.2 * math.sin(a), ZF), 0.14, 0.1, M['wood_d'], seg=5)
-    mb.frustum((tx, ty, zt), (tx, ty, zt + 0.03), 1.1, 1.1, M['white'], seg=20)
-    _cup(mb, tmb, tx - 0.2, ty - 0.5, zt + 0.03, 1.5); _cup(mb, tmb, tx + 0.7, ty + 0.35, zt + 0.03, 1.5)
-    mb.frustum((tx - 0.6, ty + 0.5, zt + 0.03), (tx - 0.6, ty + 0.5, zt + 0.7), 0.26, 0.36, M['white'], seg=12); ell(mb, (tx - 0.6, ty + 0.5, zt + 0.74), 0.3, 0.3, 0.14, M['white'], seg=10, rings=5)
-    mb.frustum((tx - 0.4, ty + 0.5, zt + 0.5), (tx, ty + 0.55, zt + 0.72), 0.05, 0.03, M['white'], seg=4)
-    mb.frustum((tx + 0.35, ty - 0.55, zt + 0.03), (tx + 0.35, ty - 0.55, zt + 0.08), 0.42, 0.42, M['brass'], seg=12)
-    for k in range(3): ell(mb, (tx + 0.25 + 0.2 * k, ty - 0.55 + 0.1 * (k % 2), zt + 0.18), 0.13, 0.13, 0.1, M['clay'], seg=6, rings=4)
+    mb.frustum((tx, ty, zt), (tx, ty, zt + 0.03), 1.1, 1.1, M['china'], seg=20)
+    _cup(mb, tmb, tx - 0.2, ty - 0.5, zt + 0.03, 1.1); _cup(mb, tmb, tx + 1.0, ty + 0.5, zt + 0.03, 1.1)
+    mb.frustum((tx - 1.0, ty + 0.55, zt + 0.03), (tx - 1.0, ty + 0.55, zt + 0.7), 0.26, 0.36, M['china'], seg=12); ell(mb, (tx - 1.0, ty + 0.55, zt + 0.74), 0.3, 0.3, 0.14, M['china'], seg=10, rings=5)
+    mb.frustum((tx - 0.8, ty + 0.55, zt + 0.5), (tx - 0.4, ty + 0.6, zt + 0.72), 0.05, 0.03, M['china'], seg=4)
+    mb.frustum((tx + 0.5, ty - 0.9, zt + 0.03), (tx + 0.5, ty - 0.9, zt + 0.08), 0.42, 0.42, M['brass'], seg=12)
+    for k in range(3): ell(mb, (tx + 0.4 + 0.2 * k, ty - 0.9 + 0.1 * (k % 2), zt + 0.18), 0.13, 0.13, 0.1, M['clay'], seg=6, rings=4)
     mb.frustum((7.5, 12.0, ZF), (7.5, 12.0, ZF + 1.6), 0.18, 0.2, M['wood_d'], seg=6); mb.frustum((7.5, 12.0, ZF + 1.6), (7.5, 12.0, ZF + 1.72), 0.8, 0.8, M['wood'], seg=12)
     ell(mb, (7.5, 12.0, ZF + 2.3), 0.35, 0.35, 0.55, M['teal'], seg=8, rings=5); mb.frustum((7.5, 12.0, ZF + 2.7), (7.5, 12.0, ZF + 3.2), 0.12, 0.2, M['teal'], seg=7)
     sbox(mb, (RX1 - 2.2, 2.0, ZF), (RX1 - 0.4, 7.5, ZF + 2.5), M['plank_f'], 0.2); sbox(mb, (RX1 - 2.35, 1.9, ZF + 2.5), (RX1 - 0.3, 7.6, ZF + 2.7), M['ash'], 0.3)
@@ -955,12 +1030,44 @@ def set_jack_turn(angle, frame=None):
                 for kp in fc.keyframe_points: kp.interpolation = 'LINEAR'
     STATE['jack_angle'] = float(angle)
 
+def _fillz(ob):
+    sink = 0.9 * STATE.get('sink', 0.0) if ob.name in ('cartA_body', 'cartA_wheels') else 0.0
+    return STATE.get('fill', 0.0) * FILL_MAX - sink
+
 def set_fill(k, frame=None):
     """Street fill level k 0..1 raises mud, puddles, scum, piles, carts, barrels, planks by k * FILL_MAX (2.5 D); buildings, stair and sidewalks stay."""
-    for ob in STATE.get('fill_objs', []):
-        ob.location.z = float(k) * FILL_MAX
-        if frame is not None: ob.keyframe_insert('location', index=2, frame=frame)
     STATE['fill'] = float(k)
+    for ob in STATE.get('fill_objs', []):
+        ob.location.z = _fillz(ob)
+        if frame is not None: ob.keyframe_insert('location', index=2, frame=frame)
+
+def set_wheel_sink(k, frame=None):
+    """The stuck cart (`cartA_body`, `cartA_wheels`, at (-24, -35)) sinks into the mud: k 0..1 -> 0..0.9 D down (the horse `cartA_horse` stays on its feet)."""
+    STATE['sink'] = float(k)
+    for ob in STATE.get('cartA', []):
+        ob.location.z = _fillz(ob)
+        if frame is not None: ob.keyframe_insert('location', index=2, frame=frame)
+
+def set_mound(k, frame=None):
+    """The side fill mound beside the stair (`mound_side` at (11, -11.5), height 3.2 D at k = 1): k 0..1 grows it (front_stair DAY: doors would sink)."""
+    mo = STATE.get('mound')
+    if mo is None: return
+    mo.scale.z = max(0.001, float(k)); mo.hide_render = float(k) <= 0.001
+    if frame is not None: mo.keyframe_insert('scale', index=2, frame=frame); mo.keyframe_insert('hide_render', frame=frame)
+    STATE['mound_k'] = float(k)
+
+def set_bars_visible(v):
+    """Show / hide the 3D jack levers (hide them when the cast13 worker_turn_bar sprites, which draw their own bar and jack collar, are used)."""
+    for (bo, bz, ph, x, y) in STATE.get('bars', []): bo.hide_render = not v
+    STATE['bars_visible'] = bool(v)
+
+def set_jack_count(n, frame=None):
+    """cellar dense field (under_rows): show the first n of up to 4992 jacks (chunks of 24, filled from the front rows); 100 / 1000 / 5000 for shot 15. Constant keys."""
+    ch = STATE.get('dense_chunks', []); k = int(math.ceil(max(0, n) / float(STATE.get('dense_chunk', 24))))
+    for i, ob in enumerate(ch):
+        ob.hide_render = i >= k; ob.hide_viewport = i >= k
+        if frame is not None: ob.keyframe_insert('hide_render', frame=frame)
+    STATE['jack_count'] = min(int(n), len(ch) * int(STATE.get('dense_chunk', 24)))
 
 def set_tea_ripple(k, frame=None):
     """Tea surface: k 0 = perfectly still flat mirror (no normal perturbation at all), 1 = visible ripples. The phase follows the frame number."""
@@ -986,6 +1093,9 @@ def apply_state(state):
     for tok in [t for t in (state or '').replace(' ', '').split(',') if t]:
         if tok.startswith('lift'): set_lift(float(tok[4:]))
         elif tok.startswith('fill'): set_fill(float(tok[4:]))
+        elif tok.startswith('mound'): set_mound(float(tok[5:]))
+        elif tok.startswith('sink'): set_wheel_sink(float(tok[4:]))
+        elif tok.startswith('count'): set_jack_count(int(float(tok[5:])))
         elif tok.startswith('jack'): set_jack_turn(float(tok[4:]))
         elif tok.startswith('tea'): set_tea_ripple(float(tok[3:]))
         elif tok.startswith('cut'): set_cutaway(float(tok[3:]) > 0)
@@ -1045,17 +1155,19 @@ def crowd(n, regions, seed=1, kinds=None, ground=0.0, min_dist=1.5, scale=(0.93,
         z = ground(x, y) if callable(ground) else float(ground); ob.location = (x, y, z); ob.visible_shadow = True; STATE['cards'].append(ob); out.append(ob)
     return out
 
-def crowd_aisles(n, seed=1, kinds=None, rows=None):
+def crowd_aisles(n, seed=1, kinds=None, rows=None, cam=None):
     """workers standing in the cellar aisles beside the jacks (one per aisle slot: x = jack column + 1.3, y = beam row - 1.35)."""
-    r = _rnd(seed); slots = [(UX[k] + 1.3, UY[j] - 1.35) for k in range(len(UX) - 1) for j in range(len(UY)) if rows is None or j in rows]; r.shuffle(slots)
+    r = _rnd(seed); slots = [(UX[k] + 1.5, UY[j] - 1.35) for k in range(len(UX) - 1) for j in range(len(UY)) if rows is None or j in rows]; r.shuffle(slots)
+    if cam is not None: slots = [p for p in slots if _visible(cam, p[0], p[1], 0.0, 3.0) and abs(p[0] - 3.0) > 0.6 and not (abs(p[0] - cam.location.x) < 0.9)]
     return crowd(n, None, seed=seed, kinds=kinds or KINDS_WORK, ground=0.0, points=slots[:n], scale=(0.95, 1.05))
 
 # ----------------------------------------------------------------------------- staging
 STAGING = dict(
     street_wide=[('rich', 'front_a'), ('worker', 'front_b'), ('foreman', 'walk_a'), ('clerk', 'sidewalk_r')],
-    hotel_front=[('rich', 'hf_c'), ('worker', 'hf_b'), ('foreman', 'hf_a')],
+    street_end=[('worker', 'trench_b'), ('foreman', 'front_b'), ('clerk', 'pile_b')],
+    hotel_front=[('rich', 'top_window'), ('worker', 'hf_c'), ('foreman', 'hf_a'), ('clerk', 'hf_b')],
     front_stair=[('rich', 'door'), ('clerk', 'stair_foot'), ('worker', 'mud_fall')],
-    mud_low=[('worker', 'cart_c'), ('foreman', 'walk_b')],
+    mud_low=[('rich', 'sit_mud'), ('foreman', 'pay_a'), ('worker', 'cart_a')],
     rain_street=[('worker', 'front_a'), ('clerk', 'sidewalk_r'), ('foreman', 'walk_a')],
     crowd_street=[('rich', 'front_c')],
     under_wide=[('worker', 'worker_a'), ('worker', 'worker_b'), ('foreman', 'foreman'), ('worker', 'worker_c'), ('worker', 'worker_d')],
@@ -1064,14 +1176,36 @@ STAGING = dict(
     suite_window=[],
     suite_room=[('rich', 'window_l')],
     tea_close=[],
-    suite_two=[('rich', 'window_l')])
+    suite_two=[('rich', 'window_r'), ('maid', 'guest_lady'), ('clerk', 'guest_gent')])
+
+def _visible(cam, x, y, z, h, chin_max=870):
+    """card at (x, y, z) of height h fully inside the frame with its chin above y chin_max (720x1280)."""
+    from bpy_extras.object_utils import world_to_camera_view
+    sc = bpy.context.scene; f = world_to_camera_view(sc, cam, Vector((x, y, z))); t = world_to_camera_view(sc, cam, Vector((x, y, z + h))); c = world_to_camera_view(sc, cam, Vector((x, y, z + h - 1.0)))
+    return f.z > 0 and 0.03 < f.x < 0.97 and 0.03 < t.x < 0.97 and t.y < 0.99 and (1 - c.y) * 1280 < chin_max and (1 - c.y) * 1280 > 40
+
+def _gnd():
+    mz = STATE['mud_z']; return lambda x, y: float(mz(np.array([x]), np.array([y]))[0])
+
+def crowd_view(n, regions, cam, seed=1, kinds=None, ground=0.0, min_dist=1.6, scale=(0.93, 1.07), h=3.0, tries=4000):
+    """crowd() restricted to points that are fully inside the camera frame with chin y < 870 (so every head is above the caption band)."""
+    r = _rnd(seed); pts = []; t = 0
+    while len(pts) < n and t < tries:
+        t += 1; (x0, x1, y0, y1) = regions[r.randrange(len(regions))]; x, y = r.uniform(x0, x1), r.uniform(y0, y1); z = ground(x, y) if callable(ground) else float(ground)
+        if all((x - a) ** 2 + (y - b) ** 2 >= min_dist ** 2 for a, b in pts) and _visible(cam, x, y, z, h): pts.append((x, y))
+    return crowd(len(pts), None, seed=seed, kinds=kinds, ground=ground, points=pts, scale=scale)
+
 PRESET_CROWD = dict(
-    crowd_street=lambda: crowd(24, [(-16, 16, -26, -14)], seed=5, ground=lambda x, y: float(STATE['mud_z'](np.array([x]), np.array([y]))[0]), min_dist=1.7) + crowd(8, [(-28, -10, -7.5, -4)], seed=8, ground=1.3, min_dist=1.7),
-    street_wide=lambda: crowd(10, [(-30, 30, -30, -14)], seed=6, ground=lambda x, y: float(STATE['mud_z'](np.array([x]), np.array([y]))[0]), min_dist=3.0),
-    rain_street=lambda: crowd(6, [(-20, 20, -30, -14)], seed=7, ground=lambda x, y: float(STATE['mud_z'](np.array([x]), np.array([y]))[0]), min_dist=4.0),
-    under_wide=lambda: crowd_aisles(16, seed=3, rows=range(0, 9)),
-    under_rows=lambda: crowd_aisles(70, seed=4),
-    jack_close=lambda: crowd_aisles(6, seed=9, rows=range(5, 9)),
+    crowd_street=lambda cam: crowd_view(26, [(-30, 30, -34, -12)], cam, seed=5, ground=_gnd(), min_dist=1.9) + crowd_view(8, [(-36, -26, -8, -4), (20, 40, -8, -4)], cam, seed=8, ground=0.9, min_dist=1.9),
+    street_wide=lambda cam: crowd_view(10, [(-34, 34, -34, -14)], cam, seed=6, ground=_gnd(), min_dist=3.0),
+    street_end=lambda cam: crowd_view(8, [(-20, 30, -34, -14)], cam, seed=12, ground=_gnd(), min_dist=3.0),
+    rain_street=lambda cam: crowd_view(8, [(-30, 30, -34, -14)], cam, seed=7, ground=_gnd(), min_dist=3.5),
+    mud_low=lambda cam: crowd_view(5, [(-20, 4, -44, -20)], cam, seed=13, ground=_gnd(), min_dist=3.0),
+    under_wide=lambda cam: crowd_aisles(14, seed=3, rows=range(0, 12), cam=cam),
+    under_rows=lambda cam: crowd_view(220, [(-8, 18.5, 4, 64)], cam, seed=4, kinds=KINDS_WORK, ground=0.0, min_dist=1.3, tries=12000),
+    jack_close=lambda cam: crowd_aisles(5, seed=9, rows=range(4, 10), cam=cam),
+    suite_window=lambda cam: crowd_view(46, [(-38, 38, -64, -22)], cam, seed=21, ground=_gnd(), min_dist=2.2),
+    suite_two=lambda cam: crowd_view(30, [(-38, 38, -64, -22)], cam, seed=22, ground=_gnd(), min_dist=2.2),
 )
 
 def stage_placeholders(A, name, cam_loc, with_crowd=True):
@@ -1080,7 +1214,8 @@ def stage_placeholders(A, name, cam_loc, with_crowd=True):
     for i, (role, mk) in enumerate(STAGING.get(name, [])):
         pos = stand(mk) if isinstance(mk, str) else tuple(mk); d = Vector(cam_loc) - Vector(pos); el = math.degrees(math.atan2(d.z - 1.5, math.hypot(d.x, d.y)))
         out.append(placeholder_actor(role, tuple(pos), face_to=cam_loc, tilt=max(0.0, el - 35) * 0.6, name='actor_%s_%d' % (role, i)))
-    if with_crowd and name in PRESET_CROWD and not STATE.get('crowd_done'): PRESET_CROWD[name](); STATE['crowd_done'] = True
+    if with_crowd and name in PRESET_CROWD and not STATE.get('crowd_done'):
+        bpy.context.view_layer.update(); PRESET_CROWD[name](bpy.context.scene.camera); STATE['crowd_done'] = True
     return out
 
 def head_pixels(name):

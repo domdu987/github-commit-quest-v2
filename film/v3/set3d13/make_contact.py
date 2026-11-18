@@ -13,6 +13,6 @@ for i, (spec, lab) in enumerate(rows_):
     im = Image.open(f).convert('RGB'); x, y = (i % C) * W, (i // C) * (H + LB)
     S.paste(im, (x, y)); d.line([(x, y + 880), (x + W, y + 880)], fill=(0, 230, 255), width=2); d.text((x + 10, y + H + 10), lab, fill=(235, 235, 235), font=F)
     m, fr = HU.shade_hue(f); fam = HU.families(f)
-    out.append('%-34s shade hue %6.1f (shaded %.2f) %s | %s' % (spec, m, fr, 'ok' if 240 <= m <= 260 else 'OUT', ' '.join('%s %.0f' % (k[:3], v) for k, v in fam.items())))
+    mg = fam['magenta']; out.append('%-36s shade hue %6.1f (shaded %.2f) %s | magenta %4.1f%% %s | %s' % (spec, m, fr, 'ok' if 240 <= m <= 260 else 'OUT', mg, 'ok' if mg <= 10 else 'OVER', ' '.join('%s %.0f' % (k[:3], v) for k, v in fam.items())))
 S.save(os.path.join(HERE, 'contact.jpg'), quality=88); S.resize((S.width // 3, S.height // 3), Image.LANCZOS).save(os.path.join(HERE, 'contact_small.jpg'), quality=88)
 open(os.path.join(HERE, 'hue_rows.txt'), 'w').write('\n'.join(out) + '\n'); print('\n'.join(out)); print(S.size, len(rows_))

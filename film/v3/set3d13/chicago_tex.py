@@ -15,7 +15,7 @@ from wall_tex import hexf, hex8, pnoise, pfbm, save              # noqa: E402
 
 TEX = os.path.join(HERE, 'tex_chicago')
 DESERT_TEX = os.path.join(PROJ, 'v3', 'set3d8', 'tex_desert')
-TEX_V = 'c13.9'
+TEX_V = 'c13.13'
 PANO_R = 420.0; PANO_Z0, PANO_Z1 = -4.0, 90.0
 SUN_DAY = (325.0, 33.0)          # sky-texture azimuth (from +x CCW) / elevation of the key sun (street: sun at +x, -y side)
 JOBS = {}
@@ -239,16 +239,16 @@ def parquet(p, out):
 def rug(p, out):
     """oriental rug 7 x 5 D, fine: red field with a lattice of small diamonds and flowers, a teal medallion, 5 border bands with a running key, fringe."""
     ppd = p['ppd']; W, H = int(p['w'] * ppd), int(p['h'] * ppd); rs = _rs(p); yy, xx = _grid(H, W, ppd); Wd, Hd = p['w'], p['h']
-    col = np.ones((H, W, 3), 'float32') * hexf('#9c2c2a'); dB = np.minimum(np.minimum(xx, Wd - xx), np.minimum(yy, Hd - yy))
+    col = np.ones((H, W, 3), 'float32') * hexf('#a8742c'); dB = np.minimum(np.minimum(xx, Wd - xx), np.minimum(yy, Hd - yy))
     u = (xx % 0.5) - 0.25; v = (yy % 0.5) - 0.25                                     # lattice of small diamonds
     dia = (np.abs(u) + np.abs(v)) < 0.17; dia2 = (np.abs(u) + np.abs(v)) < 0.09
     col = np.where(dia[..., None], hexf('#d8b86a'), col); col = np.where(dia2[..., None], hexf('#1f5a5c'), col)
     fl = (((xx + 0.25) % 0.5 - 0.25) ** 2 + ((yy + 0.25) % 0.5 - 0.25) ** 2) < 0.012; col = np.where(fl[..., None], hexf('#efe2c0'), col)
     cx, cy = Wd / 2, Hd / 2; dd = np.abs(xx - cx) / 1.7 + np.abs(yy - cy) / 1.2
-    for lim, c in ((1.0, '#1f5a5c'), (0.86, '#efe2c0'), (0.72, '#7a1e26'), (0.56, '#d8a848'), (0.4, '#1f5a5c'), (0.24, '#efe2c0'), (0.1, '#9c2c2a')): col = np.where((dd < lim)[..., None], hexf(c), col)
-    for lo, hi, c in ((0.0, 0.34, '#efe2c0'), (0.34, 0.46, '#1f5a5c'), (0.46, 0.62, '#c8a050'), (0.62, 0.72, '#7a1e26'), (0.72, 0.84, '#1f5a5c')):
+    for lim, c in ((1.0, '#1f5a5c'), (0.86, '#efe2c0'), (0.72, '#3a4a5a'), (0.56, '#d8a848'), (0.4, '#1f5a5c'), (0.24, '#efe2c0'), (0.1, '#a8742c')): col = np.where((dd < lim)[..., None], hexf(c), col)
+    for lo, hi, c in ((0.0, 0.34, '#efe2c0'), (0.34, 0.46, '#1f5a5c'), (0.46, 0.62, '#c8a050'), (0.62, 0.72, '#3a4a5a'), (0.72, 0.84, '#1f5a5c')):
         m = (dB >= lo) & (dB < hi); col = np.where(m[..., None], hexf(c), col)
-    run = (dB > 0.04) & (dB < 0.3) & ((((xx + yy) % 0.36) < 0.18)); col = np.where(run[..., None], col * 0.62 + hexf('#7a1e26') * 0.4, col)
+    run = (dB > 0.04) & (dB < 0.3) & ((((xx + yy) % 0.36) < 0.18)); col = np.where(run[..., None], col * 0.62 + hexf('#3a4a5a') * 0.4, col)
     col = col * (0.88 + 0.2 * pfbm(rs, H, W, 60, 40, 3)[..., None]) * (0.95 + 0.07 * np.sin(yy * 220)[..., None]); save(np.clip(col, 0, 1), out)
 
 def velvet(p, out):
@@ -305,6 +305,28 @@ def scum(p, out):
 def sky_plain(p, out):
     WX.sky(dict(p, mode=p['base']), out)
 
+
+def _demagenta(img, k=0.5):
+    """pull magenta / pink out of a sky: where red and blue both exceed green, lift green toward the lower of them (-> peach / pale lilac-white instead of magenta)."""
+    r, g, b = img[..., 0], img[..., 1], img[..., 2]; m = np.clip(np.minimum(r, b) - g, 0, 1)
+    img = img.copy(); img[..., 1] = np.clip(g + k * m, 0, 1); img[..., 0] = np.clip(r - 0.25 * k * m, 0, 1); return img
+
+def sky_tuned(p, out):
+    """sky_rich + (optional) demagenta, a haze tint and a neutral desaturation (MORNING: less rose; SUITE: a plain blue day sky, no golden-hour glow)."""
+    HX.sky_rich(p, out); im = np.asarray(Image.open(out).convert('RGB')).astype('float32') / 255
+    if p.get('demag'): im = _demagenta(im, p['demag'])
+    if p.get('cool'):
+        H = im.shape[0]; el = 90.0 - (np.arange(H, dtype='float32') + 0.5) / H * 105.0; w = np.clip(1 - np.abs(el - 12) / 40, 0, 1)[:, None, None] * p['cool']      # cool the golden band round the horizon
+        im = im * (1 - w) + w * (im * np.array([0.78, 0.9, 1.15], 'float32') + 0.05)
+    Image.fromarray((np.clip(im, 0, 1) * 255 + 0.5).astype('uint8'), 'RGB').save(out)
+
+def sky_rain(p, out):
+    """overcast rain sky: blue-grey gradient (no violet), soft cloud mottling, a paler band at the horizon."""
+    W = WX.SKY_W; H = int(round(W * 105 / 360)); rs = np.random.RandomState(9); el = 90.0 - (np.arange(H, dtype='float32') + 0.5) / H * 105.0
+    t = np.clip(el / 70.0, 0, 1)[:, None, None]; top = hexf('#56677f'); bot = hexf('#a9b3c0'); col = (top[None, None] * t + bot[None, None] * (1 - t)) * np.ones((1, W, 1), 'float32')
+    n = pfbm(rs, H, W, 10, 3, 5); col = col * (0.88 + 0.26 * n[..., None]); hz = np.exp(-np.clip(el, 0, 90) / 9.0)[:, None, None] * 0.35; col = col * (1 - hz) + hexf('#c4cbd2')[None, None] * hz
+    save(np.clip(col, 0, 1), out)
+
 # ----------------------------------------------------------------------------- distant skyline ring
 def pano_chi(p, out):
     """Backdrop ring: flat-toned roofs, chimneys, gables, a flat green-grey prairie, a lake strip with sails and a smoke wisp, in warm
@@ -350,7 +372,7 @@ def all_jobs():
     reg('timber', dict(size=8, ppd=36, col='#a88455', seed=14), timber); reg('timber_d', dict(size=8, ppd=36, col='#6a4c30', seed=15), timber)
     reg('timber_w', dict(size=8, ppd=36, col='#c19a62', seed=16), timber)
     for nm, c in (('clap_ochre', '#d8a548'), ('clap_teal', '#3f8a80'), ('clap_cream', '#e4d6b2'), ('clap_green', '#5e8a52')): reg(nm, dict(size=8, ppd=32, col=c, seed=hash_s(nm)), clap)
-    reg('mud', dict(size=10, ppd=36, col='#6c5d4a', seed=21, straw=200, hoof=40, dry='#8a7656'), mud)
+    reg('mud', dict(size=10, ppd=36, col='#76623f', seed=21, straw=200, hoof=40, dry='#8a7656'), mud)
     reg('mud_wet', dict(size=10, ppd=36, col='#3e362e', seed=22, straw=30, hoof=20, dry='#54483a'), mud)
     reg('clay', dict(size=8, ppd=36, col='#8e7050', seed=23), earth); reg('gravel', dict(size=8, ppd=36, col='#9a8c78', seed=24), earth)
     for st, (w, h) in (('dark', (2.2, 3.7)), ('lit', (2.2, 3.7)), ('curt', (2.2, 3.7)), ('lit2', (2.2, 3.7))):
@@ -369,14 +391,15 @@ def all_jobs():
     reg('wallpaper', dict(size=4, ppd=64, col='#5f8f7e', ink='#e6d8a8', seed=41), wallpaper)
     reg('parquet', dict(size=8, ppd=40, col='#a06a3c', seed=42), parquet)
     reg('rug', dict(w=7.0, h=5.0, ppd=96, seed=43), rug)
-    reg('velvet_red', dict(size=2, ppd=64, col='#8a2038', seed=44), velvet); reg('velvet_teal', dict(size=2, ppd=64, col='#1f6a6a', seed=45), velvet)
+    reg('velvet_red', dict(size=2, ppd=64, col='#c8501c', seed=44), velvet); reg('velvet_gold', dict(size=2, ppd=64, col='#a8782a', seed=46), velvet); reg('velvet_teal', dict(size=2, ppd=64, col='#1f6a6a', seed=45), velvet)
     for k, (w, h) in (('lake', (3.0, 2.2)), ('land', (2.2, 3.0)), ('still', (2.6, 2.0)), ('portrait', (1.8, 2.4))): reg('paint_' + k, dict(w=w, h=h, ppd=70, kind=k, seed=50), painting)
     reg('frame_gold', dict(seed=3), frame_gold)
     reg('pano_CHI', dict(ppd=10), pano_chi); reg('far_ground', dict(size=16, ppd=16, seed=61), far_ground)
     reg('thread', dict(seed=1), thread_tex); reg('scum', dict(ppd=24, seed=71), scum)
     reg('rain_near', dict(seed=54, n=170, len=(70, 150), val=(110, 200), w=(1.4, 2.4), blur=0.8), WX.rain_screen); reg('rain_far', dict(seed=56, n=1100, len=(14, 40), val=(80, 190), w=(0.8, 1.3), blur=0.3), WX.rain_screen)
-    reg('sky_CH_RAIN', dict(base='RAIN', sun=(325.0, 50.0), w=WX.SKY_W, seed=5), sky_plain)
-    reg('sky_CH_MORN', dict(base='DAWNG', sun=(335.0, 17.0), w=WX.SKY_W, seed=23, cloud=('#f8d6b4', '#ffe6a8', '#c4a8c4'), haze='#ffe0b8'), HX.sky_rich)
+    reg('sky_CH_RAIN', dict(w=WX.SKY_W, v=2), sky_rain)
+    reg('sky_CH_MORN', dict(base='DAWNG', sun=(338.0, 17.0), w=WX.SKY_W, seed=23, cloud=('#f8d8b4', '#ffe8b0', '#d8bca8'), haze='#ffe4bc', demag=0.9), sky_tuned)
+    reg('sky_CH_SUITE', dict(base='DAY', sun=(305.0, 36.0), w=WX.SKY_W, seed=21, cloud=('#f4e4d4', '#fff0d0', '#b8b4d0'), haze='#e4e8f4', cool=0.8), sky_tuned)
     reg('sky_CH_DAY', dict(base='DAY', sun=SUN_DAY, w=WX.SKY_W, seed=21, cloud=('#f0c8b8', '#ffe0a0', '#b6a2cc'), haze='#f6dcbc'), HX.sky_rich)
 
 def hash_s(s): return int(hashlib.sha1(s.encode()).hexdigest()[:6], 16)
@@ -388,7 +411,7 @@ def ensure(verbose=True):
     except ValueError: man = {}
     man0 = dict(man); out = {}
     for name, (params, fn) in JOBS.items():
-        ver = WX.TEX_V + HX.TEX_V + TEX_V if fn in (HX.sky_rich, sky_plain) else TEX_V
+        ver = WX.TEX_V + HX.TEX_V + TEX_V if fn in (HX.sky_rich, sky_plain, sky_tuned, sky_rain) else TEX_V
         h = hashlib.sha1((ver + fn.__name__ + json.dumps(params, sort_keys=True, default=str)).encode()).hexdigest(); png = os.path.join(TEX, name + '.png'); out[name] = png
         if man.get(name) != h or not os.path.exists(png):
             fn(params, png); man[name] = h

@@ -1,4 +1,0 @@
-suite_room:SUITE: wall 11.5 cpu 22.5
-suite_window:SUITE: wall 12.4 cpu 24.5
-tea_close:SUITE:tea0 wall 12.2 cpu 23.9
-suite_two:SUITE: wall 11.4 cpu 22.1

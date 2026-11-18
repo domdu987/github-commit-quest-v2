@@ -1,7 +1,0 @@
-under_wide:CELLAR:lift0.2 wall 14.6 cpu 24.5
-under_rows:CELLAR:lift0.2,cut1 wall 15.7 cpu 26.5
-suite_window:SUITE: wall 12.1 cpu 23.8
-jack_close:CELLAR:lift0.2,jack30 wall 17.5 cpu 34.2
-suite_room:SUITE: wall 10.9 cpu 21.3
-tea_close:SUITE:tea0 wall 12.2 cpu 23.4
-suite_two:SUITE: wall 10.0 cpu 20.2
