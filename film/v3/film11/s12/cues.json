@@ -1,0 +1,15 @@
+{
+ "take": "s12",
+ "fps": 30,
+ "note": "time = film seconds (g/30)",
+ "cues": [
+  {
+   "time": 24.1,
+   "duration": 1.767,
+   "frame": 723,
+   "end_frame": 776,
+   "kind": "ambience",
+   "label": "Cottage room by day: fire crackle, a small wince-groan from the boy (no speech), floorboard creak"
+  }
+ ]
+}
