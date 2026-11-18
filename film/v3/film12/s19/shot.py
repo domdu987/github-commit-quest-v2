@@ -16,7 +16,7 @@ SHOTS = {19: ('s19_wide', C.g_bound(44.66), C.g_bound(47.00) - 1),
 HANDLE = 6
 S.CAMS['s19_wide']  = dict(loc=(0.8, -4.0, 3.1), look_at=(-0.6, 18.0, 4.8), lens=22, loc_b=(-1.6, 3.6, 2.8), look_b=(-1.8, 14.0, 4.5))
 S.CAMS['s20_rev']   = dict(loc=(-3.7, 40.0, 3.2), look_at=(0.9, 4.0, 5.4), lens=22, loc_b=(-3.3, 33.0, 3.1), look_b=(0.7, 4.0, 5.4))
-S.CAMS['s21_crane'] = dict(loc=(-2.8, -6.0, 20.0), look_at=(0.3, 24.0, 2.0), lens=22, loc_b=(-1.8, 1.0, 12.5), look_b=(0.2, 22.0, 2.5))
+S.CAMS['s21_crane'] = dict(loc=(-2.8, -9.0, 20.5), look_at=(0.3, 24.0, 2.0), lens=22, loc_b=(-1.8, -4.5, 14.0), look_b=(0.2, 22.5, 2.5))
 def shot_range(sid):
     p, a, b = SHOTS[sid]; return (a - HANDLE if sid == 19 else a), (b + HANDLE if sid == 21 else b)
 
