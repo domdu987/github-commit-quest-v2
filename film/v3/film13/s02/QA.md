@@ -12,3 +12,6 @@
 
 ## Round 4 (shot 2 re-rendered g 57-107; shot 3 frames unchanged)
 - Gentleman keeps cup + saucer at the chest to the cut (tiny lift only); lady's cup stays in her hand; chandelier fragment hidden; the floating teacup at the window edge is out of frame (camera + guests shifted +0.9 D; a red armchair/curtain now shows at the left edge); rug texture downscaled to remove the scan-line shimmer; 20 samples.
+
+## Round 5
+- Lady's sip lift reduced (cup beside her body, never behind her head); checked frames g 70/84/92/100/107: cup + saucer visible in her hand on all, gentleman's cup + saucer at his chest on all. g 70-107 re-rendered, rest unchanged.

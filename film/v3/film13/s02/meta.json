@@ -96,6 +96,6 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 31.91,
- "s_per_frame_cpu_mean": 37.94
+ "s_per_frame_wall_mean": 25.8,
+ "s_per_frame_cpu_mean": 37.84
 }
