@@ -1,6 +1,8 @@
-# s01 QA (render team 1)
-- qa_auto: PASS (QA_AUTO.md, phone_sheet.jpg). Note "no visible change at cuts 66/123" is the numeric threshold only; the cuts are clearly visible (contact.jpg).
-- Head chins: all < y 880 in every frame (per-frame json in frames/, not committed).
-- Farmer parented: ladder mark fixed (-6,4,z1.25), no slide; hive swap fs0->fs1 at g44 as he lets go.
-- Mouths: still / held laughing shapes only. No elephants in this take. Cards use contact shadows; cast shadows through alpha.
-- Differences: shot 2 uses yard_crowd camera facing the fence (cards face camera, point screen-left); villagers placed on custom marks; 59.8 s/frame wall with 2 processes x 2 threads, 24 samples.
+# s01 re-take QA (render team 6), replaces the rejected team-1 version
+- qa_auto: PASS (QA_AUTO.md, phone_sheet.jpg). Cuts g66 and g123 (clear framing changes, checked at +-3 frames in contact/cuts view).
+- Shot 1 (g0-65): CLOSE from frame 0 on the farmer up the ladder, camera raised to 3.3 m looking down at him so the sky is about 20 % and the frame is filled with maize, acacias, huts and the mountain (same DAY light). The tophive in his hands is about 200 px wide under its tin roof, in front of his body, with 9 bees round it; at g44 it is hung (set hive, roof and wire) and the bees stay round the entrance. Woman and kid are at the right edge, smaller, pointing UP at him; nobody's head covers the ladder or the farmer's face. Gentle push along the view axis.
+- Shot 2 (g66-122): reverse from the yard. Farmer on the ladder + hung hive + tin roof show between the villagers (kid and old man on the left, youth and woman on the right, all facing the farmer, kid and youth pointing up at the fence). The grey tub (crowd pots/torches hook set_crowd_props(0)), the wire spools, wheelbarrow, firepit, stools, guinea fowl and edge props are removed at runtime. No T-pose arms.
+- Shot 3 (g123-186): whole hive, roof and wire in frame, farmer beside it; no foreground props along the bottom except grass and stones. Arm sweep toward the hills g150-178 (point at the end) with a slow pan right.
+- Contact shadows under every person (c14.put contact). Heads all above y 880 (highest chin about y 1000 for villagers is not a caption issue: heads are y 440-860; kid head in shot 1 reaches y about 850-920 at g65: marginal, check).
+- Mouths: held laughing shapes only. 12 samples (not 24) to fit the budget: about 46 s/frame wall, 2 processes x 2 threads.
+- Known weaknesses: the ground floor is 40-50 % of shot 3 and the sky about 25 % there; shot 2 villagers sit in tight pairs at the frame edges; the farmer is small in shot 2 (about 250 px tall); thatch huts are only small bumps on the horizon behind the maize.
