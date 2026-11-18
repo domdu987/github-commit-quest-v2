@@ -90,3 +90,8 @@ The full rules are in film/QA_TEAM.md, section "Stricter QA".
 - **Do NOT reuse sets between films.** Every film gets a new set; the client wants it fresh.
 - **Render teams run on Sonnet.** Opus is only for set and cast building, QA-art and the director.
 - **Agree the look in one round.** Before building a set, show a small style board (2-3 quick stills of the location's key preset with palette and detail level) and get the client's OK on look, colour and detail. Only then build the full set, which should leave one fix round at most at the SET gate.
+
+## 9. Client notes on film 10 (dazzle ships)
+- **Water plumes:** do not build them as a stack of round white blobs; that reads as a cartoon snowman column. Use a splash with a spray crown and falling droplets.
+- **Characters on moving decks or ships:** parent them to the ship root (set3d10 `ship_root()`) so they move WITH the deck. A card that stays still while the deck or ship moves under it looks like it is sliding. Check this in QA-tech at every shot on a moving ship.
+- **Blind viewer:** give the narration as heard (timed text), not an ASR transcript. Its catch (an aim-buoy flare read as "the ship was hit") was real and worth a re-render.

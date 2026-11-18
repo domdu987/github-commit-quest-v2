@@ -17,7 +17,7 @@ Branch: `claude/new-session-73ou27`. Only rows with status `READY` may be posted
 
 | # | Film | Title | Video | Status |
 |---|---|---|---|---|
-| 10 | ไอ้ช่างม้าลาย | (filled in when ready) | (link when ready) | WAIT |
+| 10 | ไอ้ช่างม้าลาย | ไอ้ช่างม้าลาย | film/release10/zebra_v2.mp4 | POSTED (manually by owner, 2026-11-18) — do not post |
 
 ## Captions
 (Each READY clip gets a heading here, `### <#> <Title>`, followed by the exact description text to paste.)
