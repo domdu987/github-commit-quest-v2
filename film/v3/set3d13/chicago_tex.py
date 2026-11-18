@@ -15,7 +15,7 @@ from wall_tex import hexf, hex8, pnoise, pfbm, save              # noqa: E402
 
 TEX = os.path.join(HERE, 'tex_chicago')
 DESERT_TEX = os.path.join(PROJ, 'v3', 'set3d8', 'tex_desert')
-TEX_V = 'c13.7'
+TEX_V = 'c13.8'
 PANO_R = 420.0; PANO_Z0, PANO_Z1 = -4.0, 90.0
 SUN_DAY = (325.0, 33.0)          # sky-texture azimuth (from +x CCW) / elevation of the key sun (street: sun at +x, -y side)
 JOBS = {}
@@ -237,23 +237,19 @@ def parquet(p, out):
     save(np.clip(col, 0, 1), out)
 
 def rug(p, out):
-    """oriental rug 8 x 5.5 D: red field, teal and cream medallion, border bands, fringe."""
+    """oriental rug 7 x 5 D, fine: red field with a lattice of small diamonds and flowers, a teal medallion, 5 border bands with a running key, fringe."""
     ppd = p['ppd']; W, H = int(p['w'] * ppd), int(p['h'] * ppd); rs = _rs(p); yy, xx = _grid(H, W, ppd); Wd, Hd = p['w'], p['h']
-    col = np.ones((H, W, 3), 'float32') * hexf('#a02e2c'); u = xx / Wd; v = yy / Hd
-    dB = np.minimum(np.minimum(xx, Wd - xx), np.minimum(yy, Hd - yy))
-    for lo, hi, c in ((0.0, 0.18, '#e8d8b0'), (0.18, 0.3, '#1f5a5c'), (0.3, 0.42, '#c8a050'), (0.42, 0.52, '#2a6a6c'), (0.52, 0.6, '#e8d8b0')):
-        m = (dB >= lo * 1.6) & (dB < hi * 1.6); col = np.where(m[..., None], hexf(c), col)
-    cxm, cym = 0.5 * Wd, 0.5 * Hd; dd = np.abs(xx - cxm) / 2.4 + np.abs(yy - cym) / 1.6
-    col = np.where((dd < 1.0)[..., None], hexf('#1f5a5c'), col); col = np.where((dd < 0.82)[..., None], hexf('#e8d8b0'), col); col = np.where((dd < 0.6)[..., None], hexf('#b0322e'), col)
-    col = np.where((dd < 0.3)[..., None], hexf('#d8a848'), col)
-    for k in range(7):                                                         # field dots
-        for j in range(3):
-            if k in (3,): continue
-            cxk, cyk = 0.9 + k * (Wd - 1.8) / 6, 1.6 + j * (Hd - 3.2) / 2
-            if abs(cxk - cxm) < 2.2 and abs(cyk - cym) < 1.5: continue
-            col = np.where((((xx - cxk) ** 2 + (yy - cyk) ** 2) < 0.07)[..., None], hexf('#e8c870'), col)
-    col = col * (0.88 + 0.2 * pfbm(rs, H, W, 40, 30, 3)[..., None]) * (0.96 + 0.06 * np.sin(yy * 160)[..., None])
-    save(np.clip(col, 0, 1), out)
+    col = np.ones((H, W, 3), 'float32') * hexf('#9c2c2a'); dB = np.minimum(np.minimum(xx, Wd - xx), np.minimum(yy, Hd - yy))
+    u = (xx % 0.5) - 0.25; v = (yy % 0.5) - 0.25                                     # lattice of small diamonds
+    dia = (np.abs(u) + np.abs(v)) < 0.17; dia2 = (np.abs(u) + np.abs(v)) < 0.09
+    col = np.where(dia[..., None], hexf('#d8b86a'), col); col = np.where(dia2[..., None], hexf('#1f5a5c'), col)
+    fl = (((xx + 0.25) % 0.5 - 0.25) ** 2 + ((yy + 0.25) % 0.5 - 0.25) ** 2) < 0.012; col = np.where(fl[..., None], hexf('#efe2c0'), col)
+    cx, cy = Wd / 2, Hd / 2; dd = np.abs(xx - cx) / 1.7 + np.abs(yy - cy) / 1.2
+    for lim, c in ((1.0, '#1f5a5c'), (0.86, '#efe2c0'), (0.72, '#7a1e26'), (0.56, '#d8a848'), (0.4, '#1f5a5c'), (0.24, '#efe2c0'), (0.1, '#9c2c2a')): col = np.where((dd < lim)[..., None], hexf(c), col)
+    for lo, hi, c in ((0.0, 0.34, '#efe2c0'), (0.34, 0.46, '#1f5a5c'), (0.46, 0.62, '#c8a050'), (0.62, 0.72, '#7a1e26'), (0.72, 0.84, '#1f5a5c')):
+        m = (dB >= lo) & (dB < hi); col = np.where(m[..., None], hexf(c), col)
+    run = (dB > 0.04) & (dB < 0.3) & ((((xx + yy) % 0.36) < 0.18)); col = np.where(run[..., None], col * 0.62 + hexf('#7a1e26') * 0.4, col)
+    col = col * (0.88 + 0.2 * pfbm(rs, H, W, 60, 40, 3)[..., None]) * (0.95 + 0.07 * np.sin(yy * 220)[..., None]); save(np.clip(col, 0, 1), out)
 
 def velvet(p, out):
     ppd = p['ppd']; S = int(p['size'] * ppd); rs = _rs(p); base = hexf(p['col'])
@@ -292,6 +288,22 @@ def frame_gold(p, out):
 
 def lace(p, out):
     pass
+
+
+def thread_tex(p, out):
+    """screw thread: horizontal dark grooves on mid-grey iron (v along the screw); tile 1 x 1 (u around, v repeats via uv_wrap)."""
+    S = 128; rs = _rs(p); yy = np.linspace(0, 1, S, dtype='float32')[:, None]; xx = np.linspace(0, 1, S, dtype='float32')[None, :]
+    g = np.sin((yy * 8 + xx * 0.9) * 2 * math.pi) * 0.5 + 0.5; base = hexf('#5c606c')
+    col = base[None, None] * (0.55 + 0.7 * g[..., None]) * (0.9 + 0.2 * pfbm(rs, S, S, 4, 4, 3)[..., None]); save(np.clip(col, 0, 1), out)
+
+def scum(p, out):
+    """floating scum / soft foam on puddles: alpha blotches of pale tan-grey, tileable 12 x 12 D."""
+    ppd = p['ppd']; S = int(12 * ppd); rs = _rs(p); n = pfbm(rs, S, S, 9, 9, 5); n2 = pfbm(rs, S, S, 30, 30, 3)
+    a = np.clip((n - 0.52) * 7, 0, 1) * np.clip(0.55 + n2, 0, 1) ; a = np.clip(a, 0, 0.92)
+    col = hexf('#cdbf9f')[None, None] * (0.85 + 0.25 * n2[..., None]) * np.ones((S, S, 3), 'float32'); save(np.clip(col, 0, 1), out, alpha=a)
+
+def sky_plain(p, out):
+    WX.sky(dict(p, mode=p['base']), out)
 
 # ----------------------------------------------------------------------------- distant skyline ring
 def pano_chi(p, out):
@@ -338,9 +350,9 @@ def all_jobs():
     reg('timber', dict(size=8, ppd=36, col='#a88455', seed=14), timber); reg('timber_d', dict(size=8, ppd=36, col='#6a4c30', seed=15), timber)
     reg('timber_w', dict(size=8, ppd=36, col='#c19a62', seed=16), timber)
     for nm, c in (('clap_ochre', '#d8a548'), ('clap_teal', '#3f8a80'), ('clap_cream', '#e4d6b2'), ('clap_green', '#5e8a52')): reg(nm, dict(size=8, ppd=32, col=c, seed=hash_s(nm)), clap)
-    reg('mud', dict(size=10, ppd=36, col='#6a4a30', seed=21, straw=260, hoof=40), mud)
-    reg('mud_wet', dict(size=10, ppd=36, col='#5a3e2a', seed=22, straw=40, hoof=20, dry='#6a5038'), mud)
-    reg('clay', dict(size=8, ppd=36, col='#a07040', seed=23), earth); reg('gravel', dict(size=8, ppd=36, col='#9a8c78', seed=24), earth)
+    reg('mud', dict(size=10, ppd=36, col='#6c5d4a', seed=21, straw=200, hoof=40, dry='#8a7656'), mud)
+    reg('mud_wet', dict(size=10, ppd=36, col='#3e362e', seed=22, straw=30, hoof=20, dry='#54483a'), mud)
+    reg('clay', dict(size=8, ppd=36, col='#8e7050', seed=23), earth); reg('gravel', dict(size=8, ppd=36, col='#9a8c78', seed=24), earth)
     for st, (w, h) in (('dark', (2.2, 3.7)), ('lit', (2.2, 3.7)), ('curt', (2.2, 3.7)), ('lit2', (2.2, 3.7))):
         reg('win_' + st, dict(w=w, h=h, ppd=64, state=st, seed=4), window)
     reg('win_dark_short', dict(w=2.2, h=3.0, ppd=64, state='dark', seed=6), window); reg('win_lit_short', dict(w=2.2, h=3.0, ppd=64, state='lit', seed=7), window)
@@ -356,11 +368,15 @@ def all_jobs():
     reg('awn_oc', dict(w=8, h=2, ppd=40, a='#d89a30', b='#efe2c4', sw=0.55, seed=3), awning)
     reg('wallpaper', dict(size=4, ppd=64, col='#5f8f7e', ink='#e6d8a8', seed=41), wallpaper)
     reg('parquet', dict(size=8, ppd=40, col='#a06a3c', seed=42), parquet)
-    reg('rug', dict(w=9.0, h=6.0, ppd=40, seed=43), rug)
+    reg('rug', dict(w=7.0, h=5.0, ppd=96, seed=43), rug)
     reg('velvet_red', dict(size=2, ppd=64, col='#8a2038', seed=44), velvet); reg('velvet_teal', dict(size=2, ppd=64, col='#1f6a6a', seed=45), velvet)
     for k, (w, h) in (('lake', (3.0, 2.2)), ('land', (2.2, 3.0)), ('still', (2.6, 2.0)), ('portrait', (1.8, 2.4))): reg('paint_' + k, dict(w=w, h=h, ppd=70, kind=k, seed=50), painting)
     reg('frame_gold', dict(seed=3), frame_gold)
     reg('pano_CHI', dict(ppd=10), pano_chi); reg('far_ground', dict(size=16, ppd=16, seed=61), far_ground)
+    reg('thread', dict(seed=1), thread_tex); reg('scum', dict(ppd=24, seed=71), scum)
+    reg('rain_near', dict(seed=54, n=170, len=(70, 150), val=(110, 200), w=(1.4, 2.4), blur=0.8), WX.rain_screen); reg('rain_far', dict(seed=56, n=1100, len=(14, 40), val=(80, 190), w=(0.8, 1.3), blur=0.3), WX.rain_screen)
+    reg('sky_CH_RAIN', dict(base='RAIN', sun=(325.0, 50.0), w=WX.SKY_W, seed=5), sky_plain)
+    reg('sky_CH_MORN', dict(base='DAWNG', sun=(335.0, 17.0), w=WX.SKY_W, seed=23, cloud=('#f8d6b4', '#ffe6a8', '#c4a8c4'), haze='#ffe0b8'), HX.sky_rich)
     reg('sky_CH_DAY', dict(base='DAY', sun=SUN_DAY, w=WX.SKY_W, seed=21, cloud=('#f0c8b8', '#ffe0a0', '#b6a2cc'), haze='#f6dcbc'), HX.sky_rich)
 
 def hash_s(s): return int(hashlib.sha1(s.encode()).hexdigest()[:6], 16)
@@ -372,7 +388,7 @@ def ensure(verbose=True):
     except ValueError: man = {}
     man0 = dict(man); out = {}
     for name, (params, fn) in JOBS.items():
-        ver = WX.TEX_V + HX.TEX_V + TEX_V if fn is HX.sky_rich else TEX_V
+        ver = WX.TEX_V + HX.TEX_V + TEX_V if fn in (HX.sky_rich, sky_plain) else TEX_V
         h = hashlib.sha1((ver + fn.__name__ + json.dumps(params, sort_keys=True, default=str)).encode()).hexdigest(); png = os.path.join(TEX, name + '.png'); out[name] = png
         if man.get(name) != h or not os.path.exists(png):
             fn(params, png); man[name] = h
