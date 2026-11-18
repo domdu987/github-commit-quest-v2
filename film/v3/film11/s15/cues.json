@@ -1,0 +1,10 @@
+{
+ "take": "s15",
+ "events": [
+  {
+   "frame": 922,
+   "label": "James springs out of bed, bare feet thump on the floor boards",
+   "kind": "foley"
+  }
+ ]
+}
