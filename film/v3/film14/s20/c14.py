@@ -231,3 +231,13 @@ def cut_roofs(x0, x1, y0, y1, zmin=1.9, prefix='roof'):
 
 def hide_grass_box(x0, x1, y0, y1, zmax=1.0):
     return cut_boxes([(x0, x1, y0, y1, zmax)], names=('grass', 'flowers', 'edge', 'pebbles', 'xdress'))
+
+
+def darken_mat(name, k):
+    m = F.STATE['M'][name]
+    for n in m.node_tree.nodes:
+        if n.type == 'BSDF_PRINCIPLED':
+            col = n.inputs['Base Color'].default_value; n.inputs['Base Color'].default_value = (col[0] * k, col[1] * k, col[2] * k, 1)
+            if 'Emission Strength' in n.inputs: n.inputs['Emission Strength'].default_value *= k
+        if n.type == 'EMISSION': n.inputs['Strength'].default_value *= k
+        if n.type == 'RGB': col = n.outputs[0].default_value; n.outputs[0].default_value = (col[0] * k, col[1] * k, col[2] * k, 1)
