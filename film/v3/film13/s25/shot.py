@@ -16,8 +16,8 @@ RANGE = (G0 - H, G1 + H)
 SW = [(1612, 1624), (1650, 1662)]
 H0 = float(os.environ.get("S25_H0", "0.45"))              # cellar lift state (1 D at h=1): +0.2 per swing
 LENS = float(os.environ.get("S25_LENS", "15"))
-CAM0 = eval(os.environ.get("S25_CAM0", "((5.4,67.2,3.4),(5.4,47.2,-1.5))"))
-CAM1 = eval(os.environ.get("S25_CAM1", "((5.4,66.0,3.7),(5.4,46.0,-1.5))"))
+CAM0 = eval(os.environ.get("S25_CAM0", "((5.2,62.6,3.85),(6.6,42.6,-4.0))"))
+CAM1 = eval(os.environ.get("S25_CAM1", "((5.2,61.9,3.95),(6.6,41.9,-4.0))"))
 DX = 0.56
 ZS = float(os.environ.get("S25_ZS", "1.0"))
 
@@ -42,8 +42,8 @@ def cam_of(g):
 
 def rows_pts():
     """(x, y, tag): workers standing IN the aisle (their sprite draws its own jack collar + bar), staggered left/right, shrinking into depth."""
-    ys = [63.8, 61.4, 59.0, 56.6, 54.2, 51.6, 48.6, 45.0, 40.5, 35.0]
-    return [((4.3 if k % 2 == 0 else 6.5), y, 0) for k, y in enumerate(ys)]
+    ys = [58.0, 55.9, 53.8, 51.7, 49.6, 47.3, 44.7, 41.8, 38.5, 34.5, 30.0]
+    return [((4.1 if k % 2 == 0 else 6.4), y, 0) for k, y in enumerate(ys)]
 
 def make_deck(SET, M, mat_b, mat_d):
     """beams (every 1.12) + plank deck resting on the jack caps (z 4.15); keyed up 0.2 D at each swing; no shadow (the lamps light the aisles)."""
@@ -89,7 +89,7 @@ class Take(C.Take):
     def add_lights(self):
         """warm lamps hanging under the beams (lit glass heads + point lights) so the aisles and the workers are lit (the sun does not reach the cellar floor)."""
         bpy = C.bpy; M = S.STATE["M"]; mb = S.MB()
-        for k, (x, y) in enumerate([(5.4, 56.0), (5.4, 47.0), (5.4, 38.0), (5.4, 29.0), (5.4, 20.0), (5.4, 11.0)]):
+        for k, (x, y) in enumerate([(5.4, 56.0), (5.4, 44.0), (5.4, 32.0), (11.0, 52.0), (11.0, 38.0), (-1.5, 52.0), (-1.5, 38.0), (11.0, 24.0)]):
             c = Vector((x, y, 3.5)); mb.frustum(c - Vector((0, 0, 0.35)), c + Vector((0, 0, 0.35)), 0.2, 0.26, M["lamp_glass"], seg=7)
             S.rod(mb, c + Vector((0, 0, 0.35)), Vector((x, y, 4.2)), 0.03, M["iron_d"], seg=4)
             L = bpy.data.lights.new("lamp_s25_%d" % k, "POINT"); L.energy = float(os.environ.get("S25_LE", "2800")); L.color = (1.0, 0.72, 0.4); L.shadow_soft_size = 0.4

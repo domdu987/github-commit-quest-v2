@@ -17,8 +17,8 @@ H = 6
 RANGE = (G0 - H, G1 + H)
 LIFT_H = 0.9
 LENS = float(os.environ.get("S24_LENS", "15"))
-CAM0 = eval(os.environ.get("S24_CAM0", "((0.0,-16.0,12.5),(0.0,0.0,12.5))"))
-CAM1 = eval(os.environ.get("S24_CAM1", "((0.0,-18.5,15.5),(0.0,0.0,15.5))"))
+CAM0 = eval(os.environ.get("S24_CAM0", "((0.0,-14.0,4.9),(0.0,0.0,4.9))"))
+CAM1 = eval(os.environ.get("S24_CAM1", "((0.0,-15.0,5.4),(0.0,0.0,5.4))"))
 LIFT = B.LIFT_MAX * LIFT_H
 
 def cam_of(g):
@@ -42,7 +42,7 @@ def swap_cast():
         towns_m=("town_a", P("town_stand_a"), 3.2), towns_f=("town_b", P("town_stand_b"), 3.0), towns_o=("worker13_c", P("worker_stand_c"), 3.1))
 
 # workers: (x, y, kind, scale)  inside the gap, in front of the first jack row (y 1.3), between crib piers
-WORKERS = eval(os.environ.get("S24_WORKERS", "[(-10.6,-1.2,'ws_a',0.92),(-7.6,-0.6,'wc_c',0.92),(-4.6,-1.4,'ws_b',0.92),(-1.6,-0.6,'ws_c',0.92),(1.6,-1.4,'wc_b',0.92),(4.6,-0.6,'ws_a',0.92),(7.6,-1.4,'ws_b',0.92),(10.6,-0.6,'ws_c',0.92)]"))
+WORKERS = eval(os.environ.get("S24_WORKERS", "[(-8.00,-1.2,'ws_a',0.92),(-5.70,-0.6,'wc_c',0.92),(-3.40,-1.2,'ws_b',0.92),(-1.10,-0.6,'ws_c',0.92),(1.20,-1.2,'wc_b',0.92),(3.50,-0.6,'ws_a',0.92),(5.80,-1.2,'ws_b',0.92),(8.10,-0.6,'ws_c',0.92)]"))
 
 class Take(object):
     def __init__(self, quality="preview"):
