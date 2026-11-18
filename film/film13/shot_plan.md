@@ -9,12 +9,12 @@ Set v3/set3d13/chicago.py (see API.md for presets / stand points). Cast v3/cast1
 QUOTE windows (rich's mouth moves ONLY here, +-0.15 s): Q1 21.68-28.09 ("ตึกอิฐทั้งหลัง ... โรงแรมเลย!"); Q2 41.72-43.22 ("เห็นมั้ย ไม่ขยับสักนิ้ว!").
 LOOK: wide/medium framings that show the dense set; calm always-moving camera (slow push/pan/crane, new framing every ~2-2.5 s);
 sharp, NO DOF, no text; heads above y 880; warm DAY key, blue-violet shade; comic fall without injury.
-Lift state continuity: hook shows lift rising 0.3->0.45 (flash-forward); pivot/setup h=0; boss/nickname h=0; count h=0->0.05;
+Lift state continuity: hook shows lift rising 0.55->0.65 (flash-forward); pivot/setup h=0; boss/nickname h=0; count h=0->0.05;
 false h=0.4 (but shot from INSIDE so the rich man can't tell); reveal h 0.4->0.8; aha h 0.9; ending h=1.0 (door ~2 m above old stair/mud).
 
 | # | t0-t1 (narr s) | preset / light | action |
 |---|---|---|---|
-| 1 | 0.00-2.10 | hotel_front / DAY | low angle: the whole six-storey hotel rising slowly (h 0.30->0.36), cribbing and dark jacks visible below, dust trickling; slow crane up |
+| 1 | 0.00-2.10 | hotel_front / DAY | low angle: the whole six-storey hotel rising slowly (h 0.55->0.65, worm's-eye, crib pier + jack in foreground), dust trickling; slow crane up |
 | 2 | 2.10-3.60 | suite_two / DAY | through the window the street drifts down a hair; lady and gentleman guests sip tea calmly at the window |
 | 3 | 3.60-5.30 | tea_close / DAY | teacup on saucer, tea surface mirror-still (ripple 0) while the window behind shows rooftops sliding down; slow push |
 | 4 | 5.30-7.80 | street_wide / RAIN | pivot: Chicago 1861, rain, flooded mud street, carts stuck; crane down from the spire |
