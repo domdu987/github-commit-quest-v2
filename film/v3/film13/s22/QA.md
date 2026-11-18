@@ -10,3 +10,6 @@
 - s22: bearing plank sits on the screw cap and rises with it, chalk line on the post at the start cap level, camera height locked.
 - s24: side-on lens 17 mm, lift 0.90 -> 1.0, lit cribbing stack across the base, tiny workers placed inside the gap; not verified to be >= 60 px or clearly visible at phone size.
 - s25: dense jack field (4992) from a high 36 deg view, bars in unison on the swing beats, 10 lantern posts; cellar ceiling is NOT shown (a horizon strip and ground are visible at the top).
+
+## Round 3b (director gate round 3)
+- Dark bearing plank now sits on the screw cap and rises with it (+0.2 D per swing); camera look lowered so the worker head sits at y ~ 720 (< 800). Rise vs the post mark not measured.

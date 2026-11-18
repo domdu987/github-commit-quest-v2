@@ -10,3 +10,6 @@
 - s22: bearing plank sits on the screw cap and rises with it, chalk line on the post at the start cap level, camera height locked.
 - s24: side-on lens 17 mm, lift 0.90 -> 1.0, lit cribbing stack across the base, tiny workers placed inside the gap; not verified to be >= 60 px or clearly visible at phone size.
 - s25: dense jack field (4992) from a high 36 deg view, bars in unison on the swing beats, 10 lantern posts; cellar ceiling is NOT shown (a horizon strip and ground are visible at the top).
+
+## Round 3b (director gate round 3)
+- Rebuilt as the dense 4992-jack field inside a closed hall (brick walls, plank ceiling + beam grid, no sky/horizon), camera from the right side, unison bar swings g 1612-1624 / 1650-1662 with beams stepping +0.2 D. NOT achieved: workers (one per 10 jacks, feet raised to 1.7) read only as small coloured dots on the field; a dark glossy top layer hides them; I did not reuse team 4's s15 script (only its hall idea). Needs another pass.
