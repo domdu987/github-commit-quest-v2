@@ -76,7 +76,7 @@ def f17(g, cl):
     return out
 
 # ------------------------------------------------------------------------------------------------ shot 18: the uncle with the torch (LIP-SYNC)
-CAM18 = lambda u: (mix((-3.1, -1.9, 1.35), (-2.9, -1.1, 1.4), u), mix((-2.35, 2.6, 0.6), (-2.35, 2.6, 0.65), u), 30)
+CAM18 = lambda u: (mix((-3.1, -1.9, 1.35), (-2.9, -1.1, 1.4), u), mix((-2.35, 2.6, 1.15), (-2.35, 2.6, 1.2), u), 30)
 UNCLE = (-2.4, 2.6, 0.0)
 def uncle_pose(g):
     c, p = story('uncle_shout_torch'); p['t'] = (g * 0.11) % 1.0
@@ -117,7 +117,8 @@ def trim_wire_x(x0, x1):
     if dl: bmesh.ops.delete(bm, geom=dl, context='VERTS')
     bm.to_mesh(ob.data); bm.free()
 def f19(g, cl):
-    out = {}; te = t_eff(g); F.set_wire_push(te, PS0); trim_wire_x(PX0 - 3.4, PX0 + 1.5)
+    out = {}; te = t_eff(g); F.set_wire_push(te, PS0); trim_wire_x(PX0 - 3.4, PX0 - 1.0); trim_wire_x(PX0 + 0.7, PX0 + 1.5)
+    for n in ('hive_4', 'bar_4', 'hive_3', 'bar_3'): bpy.data.objects[n].hide_render = True       # the hooks re-show them every call; none may hang in front of her chest
     bow = float(F.wire_disp(np.array([PS0]), te, PS0)[0])
     w = ease(span(g, G_PUSH0, BOW_END_G))
     c, pp = story('matriarch_push'); p = dict(pp)
@@ -138,7 +139,7 @@ def setup_shot(shot, q):
     if name not in F.CAMS or name.startswith('s1'): reg_cam(name, c, l, lens)
     if shot == 19:
         A = c14.setup(name, q, dress=False); cut_region([(13.5, 43, 1.7, 2.3, 1.2), (15.0, 19.5, 3.6, 6.4, 1.0)])
-        cut_named(['posts_', 'roof'], [(6.2, 13.5, 3.0, 12.0, -1, 9)]); hide_objs('mz', (3.5, 13.5, 5.5, 8.0)); cut_named(['props_'], [(4.2, 5.7, 1.8, 3.4, -1, 5)]); [setattr(bpy.data.objects[n], 'hide_render', True) for n in ('hive_4', 'bar_4')]; cut_named(['trees_', 'scrub_acacia'], [(2, 30, 6.0, 90, -1, 30)])
+        cut_named(['posts_', 'roof'], [(6.2, 13.5, 3.0, 12.0, -1, 9)]); hide_objs('mz', (3.5, 13.5, 5.5, 8.0)); cut_named(['props_'], [(4.2, 5.7, 1.8, 3.4, -1, 5)]); [setattr(bpy.data.objects[n], 'hide_render', True) for n in ('hive_4', 'bar_4', 'hive_3', 'bar_3')]; cut_named(['trees_', 'scrub_acacia'], [(2, 30, 6.0, 90, -1, 30)])
     else:
         A = c14.setup(name, q, dress=(shot not in (16, 17, 18)))
     F.apply_state('fs3'); F.STATE['wire_r'] = 0.03; matte_wire(); F._update_fence()
@@ -175,7 +176,10 @@ def run(mode, shot, a, b, step, outdir):
         if shot == 17: F.set_wire_push(-1.0)
         info = fn(g, cl)
         bpy.context.view_layer.update()
-        if shot == 19: F.set_bees(-1.0)
+        if shot == 19:
+            F.set_bees(-1.0)
+            for o in list(bpy.data.objects):
+                if o.name == 'bees': o.hide_render = True        # no stray sleepers floating over her chest
         w = render(os.path.join(outdir, 'g_%04d.png' % g)); rep[g] = dict(info=info, s=round(time.time() - t0, 1)); print(shot, g, 'wall %.1f s' % rep[g]['s'], json.dumps(info), flush=True)
     json.dump(rep, open(os.path.join(outdir, 'rep_%d_%d_%d.json' % (shot, a, b)), 'w'))
 
