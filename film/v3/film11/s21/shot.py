@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """shot.py -- film 11 take s21: shot 21 (41.06-43.40 s, g 1232..1301) + 6 handle frames each side (g 1226..1307).
-barn_milking / A: the reveal starts: Sarah (sarah_milk, clear smooth face) milks Blossom (cow mirrored: faces screen-left, Sarah mirrored too, planted on the cow's
+barn_milking / A: the reveal starts: Sarah (sarah_milk, clear smooth face) milks Blossom (cow faces screen-right, Sarah sits on the set stool, the cow is slid so her
 milker_feet anchor, hands on the teats, antiphase pacing), Blossom chews, flicks an ear, swishes her tail.
 Slow push-in.  Mouths: nobody speaks."""
 import math, os, sys, json
@@ -20,10 +20,11 @@ RANGE = (G0 - H, G1 - 1 + H)
 PRESET = "barn_milking"
 STORY = cast11.STORY11
 
-COW = (-4.8, 14.0, 0.0)               # Blossom's feet point; mirrored: she faces screen-left (head -x), udder at about x -4.4, flank to the camera
+STOOL = (-5.6, 12.6, 0.0)           # the set's milking stool (Sarah sits on it); the pail of the set stands at (-4.6, 13.4)
+COW = (-3.9, 14.0, 0.0)               # Blossom's feet point; mirrored: she faces screen-left (head -x), udder at about x -4.4, flank to the camera
 MAID = (-8.0, 12.4, 0.0)
-CAM0 = ((-1.0, 6.2, 1.5), (-5.0, 14.5, 0.95))
-CAM1 = ((-1.9, 8.8, 1.55), (-4.5, 14.2, 0.75))
+CAM0 = ((-1.0, 6.2, 1.5), (-4.9, 14.5, 0.95))
+CAM1 = ((-1.3, 7.4, 1.55), (-4.6, 14.2, 0.8))
 
 
 def cam_of(g):
@@ -37,12 +38,11 @@ def cow_pose(g):
     e = (g - (G0 + 22)) % 66
     if e < 6:
         ear = [1.0, 1.0, -0.3, -0.3, 0.0, 0.0][e]
-    return dict(mirror=True, chew=g / 12.0, chew_amp=1.0, tail=0.6 * math.sin(g / 9.0), ear=ear, head_down=0.1, blink=blink(g, [G0 + 15, G0 + 50]))
+    return dict(chew=g / 12.0, chew_amp=1.0, tail=0.6 * math.sin(g / 9.0), ear=ear, head_down=0.1, blink=blink(g, [G0 + 15, G0 + 50]))
 
 
 def sarah_pose(g):
     p = dict(STORY["sarah_milk"][1])
-    p["mirror"] = True
     s = math.sin(g * 0.55)
     p["arm_r"] = dict(hand=(0.54, 1.20 + 0.06 * s), bend=0.3, shape="ball")
     p["arm_l"] = dict(hand=(0.34, 1.26 - 0.06 * s), bend=0.3)
@@ -77,19 +77,24 @@ class Take(C.Take):
             f = bf(shot, g)
             loc, look = cam_of(g)
             self.key_cam(f, loc, look)
-            C.place(cow, f, COW[:2], COW[2])
         for g in gs:
             f = bf(shot, g)
             self.scene.frame_set(f)
-            cp = cow_pose(g)
-            cow.pose(f, cp, camera=self.cam, upper_k=1.0)
-            an = puppet.figure("blossom", cp, "b")["anchors"]
-            w = actors.local_to_world(cow, an["milker_feet"], f, camera=self.cam)
             cl = self.cam.matrix_world.to_translation()
-            d = Vector((cl.x - w.x, cl.y - w.y, 0.0)).normalized()
-            w2 = w + d * 1.25
-            self.milker[g] = tuple(w2)
-            C.place(sarah, f, (w2.x, w2.y), 0.0)
+            cp = cow_pose(g)
+            an = puppet.figure("blossom", cp, "b")["anchors"]
+            # Sarah sits on the set's milking stool; the cow is slid (same depth, along the view ray) so her milker_feet anchor lands on Sarah's feet
+            C.place(cow, f, COW[:2], COW[2])
+            cow.pose(f, cp, camera=self.cam, upper_k=1.0)
+            w = actors.local_to_world(cow, an["milker_feet"], f, camera=self.cam)
+            tgt = Vector(STOOL)
+            ray = (tgt - cl).normalized()
+            want = cl + ray * (w - cl).length
+            sh = want - w
+            C.place(cow, f, (COW[0] + sh.x, COW[1] + sh.y), 0.0)
+            cow.pose(f, cp, camera=self.cam, upper_k=1.0)
+            self.milker[g] = tuple(tgt)
+            C.place(sarah, f, STOOL[:2], 0.0)
             sarah.pose(f, sarah_pose(g), camera=self.cam)
         fr = [bf(shot, g) for g in gs]
         self.sprites_for([(cow, 256), (sarah, 256)], fr)

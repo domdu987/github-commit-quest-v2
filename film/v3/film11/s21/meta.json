@@ -18,11 +18,11 @@
   "type": "cut",
   "frames": 0
  },
- "size_bytes": 33764110,
- "s_per_frame_wall": 11.52,
- "s_per_frame_cpu": 22.48,
+ "size_bytes": 32720252,
+ "s_per_frame_wall": 11.29,
+ "s_per_frame_cpu": 21.61,
  "max_head_chin_y": [
-  639.5,
+  642.2,
   1226,
   "cow"
  ]

@@ -24,10 +24,10 @@ PRESET = "room_day"
 
 STORY = cast11.STORY11
 BED_TOP = 1.86
-JAMES_XY = (-4.5, 7.0)
+JAMES_XY = (-4.0, 8.2)
 JAMES_Z = BED_TOP - 0.95
-MOTHER = (-2.2, 5.4, 0.0)
-JENNER = (-1.0, 7.8, 0.0)
+MOTHER = (-1.3, 4.6, 0.0)
+JENNER = (-0.1, 8.0, 0.0)
 CAM0 = ((1.2, -1.6, 2.5), (-3.2, 6.2, 1.55))
 CAM1 = ((0.3, -0.5, 2.35), (-3.7, 6.9, 1.7))
 
