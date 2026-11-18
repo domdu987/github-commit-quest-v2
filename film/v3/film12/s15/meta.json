@@ -1,0 +1,31 @@
+{
+ "take": "s15",
+ "film": 12,
+ "shots": [
+  15,
+  16,
+  17,
+  18
+ ],
+ "first_g": 1043,
+ "n_frames": 303,
+ "g0": 1049,
+ "g1": 1339,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "cuts": [
+  1116,
+  1200,
+  1272
+ ],
+ "fps": 30,
+ "s_per_frame": 24
+}

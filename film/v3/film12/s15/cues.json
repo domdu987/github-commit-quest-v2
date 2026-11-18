@@ -1,0 +1,42 @@
+{
+ "take": "s15",
+ "fps": 30,
+ "cues": [
+  {
+   "time": 34.98,
+   "frame": 1052,
+   "label": "rain swells, thunder tail",
+   "kind": "ambience"
+  },
+  {
+   "time": 35.5,
+   "frame": 1068,
+   "label": "coins clink",
+   "kind": "prop"
+  },
+  {
+   "time": 37.2,
+   "frame": 1119,
+   "label": "thunder roll; crowd rush footsteps and shouts",
+   "kind": "sfx"
+  },
+  {
+   "time": 39.0,
+   "frame": 1173,
+   "label": "coins clink",
+   "kind": "prop"
+  },
+  {
+   "time": 40.0,
+   "frame": 1203,
+   "label": "coach rumble, wheels and hooves, doors slam",
+   "kind": "sfx"
+  },
+  {
+   "time": 43.5,
+   "frame": 1308,
+   "label": "coachman grin drops: a small deflating sting",
+   "kind": "sfx"
+  }
+ ]
+}
