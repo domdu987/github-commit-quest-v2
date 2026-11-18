@@ -26,7 +26,7 @@ def blink(g, offs, period=96):
 CAMS = {
  1: (((-8.6, 1.0, 3.3), (-6.05, 4.6, 1.75), 26), ((-8.0, 1.8, 3.3), (-5.95, 4.6, 1.8), 26)),
  2: (((-3.3, 0.9, 2.3), (-6.0, 4.4, 1.1), 21), ((-3.7, 1.3, 2.3), (-6.1, 4.4, 1.15), 21)),
- 3: (((-8.5, 1.1, 2.3), (-5.2, 4.6, 2.15), 20), ((-8.3, 1.2, 2.3), (-5.6, 4.6, 2.25), 20)),
+ 3: (((-8.5, 1.1, 2.3), (-5.3, 4.6, 2.15), 20), ((-8.3, 1.2, 2.3), (-5.4, 4.6, 2.25), 20)),
 }
 def cam_of(shot, g):
     a, b = CAMS[shot]; g0, g1 = RANGES[shot]; x = (g - g0) / float(g1 - g0)
@@ -128,12 +128,12 @@ def frame(T, shot, g):
         p['t'] = g / 30.0; p['blink'] = blink(g, 150); p['lean'] = p.get('lean', 0) + 1.2 * sway(g)
         if g >= 146:
             # real sweep toward the peak (screen-left, card mirrored): 3 keyed hand poses tweened over 16 frames, then HELD (full arm up, pointing)
-            K = [(0.45, 0.70), (0.85, 0.0), (0.95, -1.0)]; x = clamp((g - 148) / 16.0); seg = min(int(x * 2), 1); lu = ez(x * 2 - seg)
+            K = [(0.45, 0.70), (1.1, 0.10), (1.75, -0.60)]; x = clamp((g - 148) / 16.0); seg = min(int(x * 2), 1); lu = ez(x * 2 - seg)
             hx = lerp(K[seg][0], K[seg + 1][0], lu); hy = lerp(K[seg][1], K[seg + 1][1], lu)
             if g > 168: hx += 0.03 * math.sin((g - 168) * 0.5); hy += 0.03 * math.sin((g - 168) * 0.37)
             p['arm_r'] = dict(hand=(hx, hy), shape='point' if x > 0.5 else 'open', bend=-0.3, stretch=1.35, layer='front')
             p['lean'] = p.get('lean', 0) - 3.0 * ez(x); p['pitch'] = lerp(p.get('pitch', -0.2), -0.5, ez(x))
-        rep['farmer'] = T.put('farmer', 'farmer14', p, (-5.0, 3.3, 0.0), ppd=170, mirror=True, canvas=cast14.CANVAS14['farmer14'], contact=(0.55, 0.28))
+        rep['farmer'] = T.put('farmer', 'farmer14', p, (-5.35, 3.3, 0.0), ppd=170, mirror=True, canvas=cast14.CANVAS14['farmer14'], contact=(0.55, 0.28))
     F.set_crowd_props(0)
     F.set_wire_push(-1.0)
     bpy.context.view_layer.update(); F.set_bees(-1.0)
