@@ -150,7 +150,7 @@ if __name__ == '__main__':
     os.makedirs(out, exist_ok=True)
     q = 'preview' if cmd == 'stills' else 'final'
     samples = int(sys.argv[5]) if len(sys.argv) > 5 else None
-    T = C.Take(os.path.join(HERE, 'work'), PRESET[shot], LIGHT, quality=q, samples=samples)
+    T = C.Take(os.path.join(HERE, 'work', 'p%d' % os.getpid()), PRESET[shot], LIGHT, quality=q, samples=samples)
     for g in range(int(a), int(b) + 1, int(st[0]) if st else 1):
         png = os.path.join(out, 'g_%04d.png' % g)
         if cmd == 'final' and os.path.exists(png) and os.path.exists(png[:-4] + '.json'): continue
