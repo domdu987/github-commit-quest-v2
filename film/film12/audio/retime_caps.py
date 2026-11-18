@@ -30,7 +30,7 @@ for k in range(len(L)):
         times.append(max(0.0, sp[min(i, len(sp)-1)][1] - off)); pos = i + len(p)
     _, mapped, _, _ = tl.tighten(xs, SR, times, [], max_gap=0.10, keep=0.06)
     for c, m in zip(ph, mapped):
-        new = round(start[k] + m/tempo - 0.03, 2)
+        new = round(start[k] + m/tempo + 0.07, 2)  # +0.07: measured vs STT onsets (FINAL gate v2)
         out.append((c['t'], new, c['text'])); c['t'] = max(0.0, new)
 for i, c in enumerate(caps):
     if i+1 < len(caps): c['end'] = caps[i+1]['t']
