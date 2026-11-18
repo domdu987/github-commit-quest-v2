@@ -9,3 +9,8 @@ Delivered: take.mkv.part* (`cat take.mkv.part* > take.mkv`; libx264rgb crf 6, fi
 - Shot 23: stripe front is tied to the brush (set_stripes 0.38 -> 0.48; the admiral shuffles right along the stage, his last stroke lands on the front at g 1798 = the cut on "เอง"). Big navy/white paint blobs (overlay) on moustache, cap peak and cheek. Push-in ends with the head 19% of the frame width (w 139 px). Ladder kept clear of him.
 - Shot 22: camera ends close (head w ~60-70 px, heads y 800-860, chin < 880); the admiral looks up at his grey ship from g 1650-1685.
 - qa_auto PASS; its note 'cut 1710 not visible' is a luminance heuristic: the 22->23 cut (harbour wide -> hull plank) is obvious on g 1709/1710.
+
+## QA-art round 2
+- Shot 23: the zebra is drawn as runtime band geometry raycast onto the berth hull at head height (z 3.15-6.1): white/navy bands 1.2 D wide, slanted; the leading edge sits at the brush tip every frame (front_x), finished bands to his left; the last stroke at g 1798 closes the band on the cut. set_stripes still rises 0 -> 0.30 underneath (front off-screen left). Ladder is right of the brush path. Face: white blobs on moustache and cap, navy on the cheek, each with outline, gloss and a drip.
+- Shot 22: camera arrives close by g 1658 (heads 56-80 px wide), tilted down so heads stay above y 880 (painter centre <= 803); admiral's head and pupils tilt up g 1655-1690; painter has a closed calm smile.
+- qa_auto PASS.
