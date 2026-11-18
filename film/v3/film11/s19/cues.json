@@ -1,0 +1,15 @@
+{
+ "take": "s19",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film11/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 38.3,
+   "duration": 1.2,
+   "frame": 1149,
+   "end_frame": 1185,
+   "kind": "ambience",
+   "label": "village lane in the morning, hens clucking, geese, the pad of a boy running on packed dirt, villagers murmuring and gasping, a distant church bell, breeze in the thatch"
+  }
+ ]
+}
