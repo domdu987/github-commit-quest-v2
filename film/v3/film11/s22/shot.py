@@ -20,10 +20,10 @@ RANGE = (G0 - H, G1 - 1 + H)
 PRESET = "barn_milking"
 STORY = cast11.STORY11
 
-COW = (-4.8, 14.0, 0.0)               # Blossom's feet point; mirrored: she faces screen-left (head -x), udder at about x -4.4, flank to the camera
+COW = (-3.5, 14.0, 0.0)               # Blossom's feet point; mirrored: she faces screen-left (head -x), udder at about x -4.4, flank to the camera
 MAID = (-8.0, 12.4, 0.0)
-CAM0 = ((-4.4, 7.1, 1.9), (-4.9, 13.0, 1.75))
-CAM1 = ((-4.5, 8.1, 1.95), (-4.9, 13.0, 1.8))
+CAM0 = ((-3.6, 7.1, 1.9), (-3.9, 13.0, 1.75))
+CAM1 = ((-3.7, 8.1, 1.95), (-3.9, 13.0, 1.8))
 
 
 def cam_of(g):
@@ -42,6 +42,8 @@ def cow_pose(g):
 
 def sarah_pose(g):
     p = dict(STORY["sarah_show_hand_close"][1])
+    p["expr"] = "excited"
+    p["prop_r"] = dict(p["prop_r"], angle=-72)
     p["head_roll"] = 2.0 * math.sin(g * 0.09)
     p["lean"] = 1.0 * math.sin(g * 0.07)
     r = dict(p["arm_r"]); h = r["hand"]
@@ -87,7 +89,7 @@ class Take(C.Take):
             w = actors.local_to_world(cow, an["teat_l"], f, camera=self.cam)
             cl = self.cam.matrix_world.to_translation()
             d = Vector((cl.x - w.x, cl.y - w.y, 0.0)).normalized()
-            w2 = w + d * 2.3 + Vector((-0.8, 0.0, 0.0))
+            w2 = w + d * 2.3 + Vector((-0.3, 0.0, 0.0))
             self.milker[g] = tuple(w2)
             C.place(sarah, f, (w2.x, w2.y), 0.0)
             sarah.pose(f, sarah_pose(g), camera=self.cam)
