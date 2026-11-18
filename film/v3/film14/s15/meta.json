@@ -1,0 +1,41 @@
+{
+ "take": "s15",
+ "shots": [
+  15,
+  16,
+  17,
+  18,
+  19
+ ],
+ "g0": 1001,
+ "g1": 1306,
+ "first_g": 995,
+ "n_frames": 318,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "shot_starts": {
+  "15": 1001,
+  "16": 1062,
+  "17": 1127,
+  "18": 1168,
+  "19": 1226
+ },
+ "fps": 30,
+ "size": [
+  720,
+  1280
+ ],
+ "samples": 24,
+ "wire_t_at_g1307": 0.1,
+ "wire_note": "set_wire_push(t, point=24.25): t ramps 0 -> 0.10 (max bow 1.49 m at the push point) over g1246..1307 (slow lean, remapped); handle frames g1307+ continue real clock t=0.10+(g-1307)/150. Bees asleep (set_bees -1) throughout; team 4 (s20) continues from t=0.10 at g1307.",
+ "lip_sync": {
+  "shot": 18,
+  "window_g": [
+   1174,
+   1227
+  ],
+  "note": "uncle mouth = talk_mouth(g) only inside; flat before"
+ }
+}
