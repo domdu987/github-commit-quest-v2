@@ -20,17 +20,18 @@ def sub_A():
     gi, gr = 663, 654                                  # cabbage hits at 22.0 s; leaves the hand at gr (9 frames of flight)
     S.STATE['light'] = 'RAIN'; C.bpy.context.scene.frame_set(FIRST)
     c, p = C.story('coachman_b_throw_windup'); tmp = C.card('tmp', c, mouth(p, 'frown'), (-6.4, 11.0, 0.28)); p0 = C.hand_world(tmp); C.clear_cards()
+    C.bpy.context.scene.frame_set(gi); c, p = C.cyc('hanway_walk_umbrella', (gi - FIRST) / 30.0); tmp = C.card('tmp', c, p, hpos(gi), rim='#f2b25c'); pa = C.apex_world(tmp, c, p, 'umb_mid_r'); C.clear_cards()
     def build(g):
         k = g - FIRST; hp = hpos(g)
         if g < gi: c, p = C.cyc('hanway_walk_umbrella', k / 30.0)
         elif g < gi + 10: c, p = C.story('hanway_cabbage_flinch')[0], dict(C.cast12.STORY12['hanway_cabbage_flinch'][1], leaf_stick=0.0)
         else: c, p = C.cyc('hanway_walk_umbrella', k / 30.0)
-        C.card('hanway', c, p, hp, rim='#f2b25c')
+        hob = C.card('hanway', c, p, hp, rim='#f2b25c'); apex = C.apex_world(hob, c, p, 'umb_mid_r')
         if gr <= g < gi:                               # ONE cabbage: painted sprite flying from the thrower's hand to the dome
-            u = (g - gr) / float(gi - gr); q = C.parabola(p0, (hpos(gi)[0], hpos(gi)[1] - 0.1, 4.35), u, 1.6)
+            u = (g - gr) / float(gi - gr); q = C.parabola(p0, (pa[0], pa[1] - 0.1, pa[2]), u, 1.6)
             C.png_card_roll('cabbage_fly', art.cabbage(), q, 0.85, 0.85, roll=u * 9.0)
         if g >= gi:                                    # big leaf stuck on the dome, rides with Hanway
-            C.png_card_roll('leaf_dome', art.leaf(), (hp[0] + 0.05, hp[1] - 0.1, 4.2), 1.5, 1.03, roll=-0.25)
+            C.png_card_roll('leaf_dome', art.leaf(), (apex[0], apex[1] - 0.15, apex[2] + 0.08), 1.2, 0.82, roll=-0.2)
         if g < gr: c, p = C.story('coachman_b_throw_windup'); p = mouth(p, 'frown')
         elif g < 664: c, p = C.story('coachman_b_throw_release'); p = mouth(dict(p, expr='angry'), 'frown')
         else: c, p = C.story('coachman_b_nod'); p = mouth(p, 'smirk')
@@ -81,11 +82,13 @@ def sub_C():
             p['expr'] = 'shocked' if t > 0.4 else a['expr']; p['mouth'] = 'o' if t > 0.4 else a['mouth']
         elif rel < 22: c, p = b_c, dict(b)
         else: c, p = C.story('hanway_mud_deadpan'); p = dict(p, soaked=1.0, t=k * 0.04)
-        if rel >= 3: p['mud'] = min(1.0, 0.15 + 0.07 * (rel - 3)) if rel < 15 else 1.0
+        if rel >= 11: p['mud'] = min(1.0, (rel - 10) / 7.0)
         C.card('hanway', c, p, hp, rim='#f2b25c')
         if rel >= 0:
             C.png_card_flat('ripples', art.ripple_path(rel), (-1.7, 12.2, 0.0), art.RP_W)
-            if 0 < rel < 32: C.png_card('crown', art.crown_path(rel), (-1.7 - art.BASE_DX, 12.3, 0.0), art.W_U, art.H_U)
+            if 0 < rel < 28: C.png_card('crown', art.crown_path(rel), (-1.7 - art.BASE_DX, 12.3, 0.0), art.W_U, art.H_U)
+            if 2 < rel < 26: C.png_card_flat('near_ripples', art.near_path(rel), (-3.6, 6.8, 0.0), art.NR_W, z=0.05)
+            if 9 <= rel < 24: C.png_card('landing', art.landing_path(rel), (hp[0], hp[1] - 0.8, 0.0), art.LAND_W, art.LAND_W)
         return dict(h=[round(v) for v in C.head_px(hp, 3.3)[:2]], rel=rel)
     return build, range(C0, LAST + 1)
 

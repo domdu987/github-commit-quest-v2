@@ -100,3 +100,9 @@ def hand_world(ob, key='hand_r'):
 
 def parabola(p0, p1, u, arc):
     return (p0[0] + (p1[0] - p0[0]) * u, p0[1] + (p1[1] - p0[1]) * u, p0[2] + (p1[2] - p0[2]) * u + arc * 4 * u * (1 - u))
+
+def apex_world(ob, cast, pose, key='umb_top_r'):
+    """world position of a puppet anchor (e.g. the umbrella apex) on card `ob` made by cast_card (same card-plane mapping as cast_card)."""
+    import puppet
+    f = puppet.figure(cast, dict(pose), 'anch'); ax, ay = f['anchors'][key]; fx = f['anchors']['feet'][0]; fy = f['feet_y']
+    bpy.context.view_layer.update(); return tuple(ob.matrix_world @ Vector((ax - fx, 0.0, fy - ay)))

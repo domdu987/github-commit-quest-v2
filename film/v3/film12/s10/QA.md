@@ -1,3 +1,11 @@
+# s10 QA, round 3 (round 2 notes below)
+Round 3 fixes (director TAKE gate r2; only g645-713 and g786-866 re-rendered):
+- Spray falling phase: after the apex every finger breaks into 5 separate pointed streaks that fall and fade (no slabs, no rods); all spray fades smoothly to nothing by g812 (rel 27), no one-frame vanish. Rise phase keeps the passed look (heights lowered a little so the crown stays in frame).
+- Mud timing: Hanway is clean through g796; mud ramps 0 -> 1 over g796-802 as brown pointed streaks fall ONTO him from a landing sprite card in front of him (splat dots where they hit); coat, face, stockings covered (cast mud fx). The crown rises from the wheel (his right) and arcs over him.
+- Near foreground puddle: flat ripple card with 7 staggered expanding rings and tiny landing droplets g788-810 (fainter than first try).
+- Shot 10 leaf: seated on the canopy using the umbrella canopy-middle anchor (umb_mid_r) of the walking sprite, rides with Hanway; the flight now ends on the same anchor.
+- qa_auto PASS (222 frames, magenta 0.0 %); its cut flags (714, 774) are false as before.
+
 # s10 QA, round 2 (shots 10-12, RAIN), g 645-866 (651-858 + 6 lead + 8 dissolve-out handle)
 qa_auto PASS (222 frames, magenta 0.0 %, no frozen/black frames). It lists the planned cuts 714 / 774 as "no visible change": false flags (preset change; large frame differences, checked on the contact sheet).
 Fixes after the director's TAKE gate r1:
