@@ -197,6 +197,7 @@ def main():
     build_set(q)
     log = []
     for g in gs:
+        if cmd == 'final' and os.path.exists(os.path.join(out, 'g_%04d.png' % g)): continue
         t0 = time.time(); cl = frame_setup(g); heads = build_cards(g, cl)
         cam = bpy.context.scene.camera; hy = {}
         for nm, p in heads.items():
@@ -206,7 +207,7 @@ def main():
         print('g%d shot %d %.1fs heads %s' % (g, shot_of(g), time.time() - t0, hy), flush=True)
         log.append(dict(g=g, heads=hy))
         bpy.ops.outliner.orphans_purge(do_recursive=True) if False else None
-    json.dump(log, open(os.path.join(HERE, 'log_%d_%d.json' % (gs[0], gs[-1])), 'w'))
+    if log: json.dump(log, open(os.path.join(HERE, 'work_log_%d_%d.json' % (gs[0], gs[-1])), 'w'))
 
 if __name__ == '__main__':
     main()
