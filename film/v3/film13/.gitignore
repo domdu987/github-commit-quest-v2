@@ -1,0 +1,7 @@
+*/raw/
+*/frames/
+*/work/
+*/__pycache__/
+*.log
+*/dbg*
+*/probe*.py
