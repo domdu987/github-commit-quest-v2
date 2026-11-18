@@ -215,6 +215,9 @@ class Take(object):
         self.cam.data.clip_start = 0.02
         self.cam.data.clip_end = 4000
         self.no_dof()
+        for h in B.STATE.get('hooks', []):          # director note 2026-11-18: no blob-stack chimney smoke
+            if h['kind'] == 'smoke' and h['obj'] in bpy.data.objects:
+                bpy.data.objects[h['obj']].hide_render = True
         self.actors = {}
         self.anch = {}
         if verbose:
