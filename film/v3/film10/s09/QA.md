@@ -1,6 +1,7 @@
-# QA s09 (film 10, shots 9-11, g 613..793 incl. 6 in / 5 out handle frames)
-- qa_auto: PASS (QA_AUTO.md, phone_sheet.jpg). First try failed on blur for shot 11 (flat dusk wide); fixed by a closer crane framing (still harbour_wide DUSK).
-- Stripes grow on screen in every shot: shot 9 st 0.3 -> 1.0, shot 10 1.0 -> 2.0, shot 11 2.0 -> 3.0 (keyed every frame, linear). Painter on the hanging plank (shots 9-10, brush strokes), steps back proud on the quay (shot 11, small at wide).
-- Heads: painter head y 700-840 / 655-665 px (< 880). Background crew: the set's placeholder cards are hidden and replaced by cast10 sailors (idle poses); a sailor whose head would pass y 850 or sit in front of the lens is hidden per frame.
-- Nobody speaks: mouths still. No DOF, no text. Cuts at g 675 and 729 (qa_auto sees both).
-- Not checked by eye frame by frame at 6 fps: only contact.jpg / phone_sheet.jpg (every 10th / 15th frame) and stills during build. Painter is small at wide in shot 11 (acting reads by silhouette only).
+# QA s09 (film 10, shots 9-11, g 613..793 incl. 6 in / 5 out handle frames), round 2 after QA-tech FAIL
+- qa_auto: PASS (QA_AUTO.md, phone_sheet.jpg, cuts g 675 / 729 seen).
+- Fix 1, painter size: the first version stood him at z 0 under the plank (bug in my place() call: the mark's z was dropped). Now he stands ON the hanging plank at z 2.74 and the cameras are ~8 D away: he is ~1/3 of the frame height in shot 9, ~1/4 in shot 10, brush and bucket in hand, head y 529-534 (shot 9), 727-743 (shot 10), 768-776 (shot 11), all < 880.
+- Fix 2, shot 11: DUSK, camera low on the quay from the right (clear of the braziers), the painter in the lower third in front of the dazzled hull, stepping back 1.5 D toward the lens (g 729-752), step_back_proud pose with hand on hip and a smug smile, contact decal under him. Sailors within 150 px of him on screen are hidden (the old lantern sailor is gone).
+- Fix 3, shot 10: set_stripes keyed 1.10 -> 1.75 inside the shot: the staircase bands grow on the funnel and hull behind him. Shot 9 keys 0.40 -> 0.52 so the zigzag front crosses the brush tip. Differs from the plan's "up to 1" (day 1 ends with the hull partly zigzagged at the plank; the stripes still grow on screen in every shot).
+- Nobody speaks. No DOF, no text. Background crew: cast10 sailors replace the placeholder cards; a sailor with head y > 850 or in front of the lens is hidden per frame.
+- Checked by eye: contact.jpg / phone_sheet.jpg and full-res crops of the painter (g 643, g 778); not every frame at 6 fps.
