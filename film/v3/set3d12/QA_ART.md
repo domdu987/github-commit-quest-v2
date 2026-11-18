@@ -54,3 +54,58 @@ Note: API.md has no "weak points" section. The weak spots are in STYLEBOARD.md, 
 
 ## Verdict: FIX-FIRST
 The sky arcs (every low angle, including the ending), the speckled double-image water, and the cardboard mud splash are the client's named dislikes ("water smooth, not flat triangles", "pleasing, not harsh"). The reveal tile does not show the reveal. Fix 1-5, re-render 01, 05, 07, 15, 16 and 18, and run this gate again before showing the client.
+
+## Re-check r1
+
+Reviewed: the new contact.jpg (25 tiles); the full-size finals 01, 06, 09, 13, 15, 16, 22, 23 and 24; styleboard/board.jpg; and a phone strip at 360x640 of tiles 01, 13, 22 and 23 (scratchpad `phone4.png`). Code read: street.py (`_mat_pud`, `_mud_objects`, materials, COACH_SPEC) and API.md sections 9-11.
+
+### Earlier fixes
+| # | fix | status | notes |
+|---|---|---|---|
+| 1 | Sky zenith arcs, pale sky | **done** | The arcs are gone. The sky is warmer, with a peach horizon and peach cloud rims. New but minor: the cel clouds have hard dark straight "under-band" strokes, and small floating triangle shards (01 about (320,320), 15 about (190,240) and (470,170), 16 about (130,300)). |
+| 2 | Water smooth and layered, no speckle, smaller setts | **partly** | The deep cores are now flat, smooth mirrors with ripple rings (12, 13, 16, 23 read as water), and the speckle is largely gone. Open: the shore glint (`rim` 0.35*strength) now reads as a thin pale **wire or cable** running across the road (01 y 940-1050, 13, 16 y 960-1060, 23 y 1090-1200, 24). The low-camera setts are still big pillows (16 and 23 foreground). The lamp-reflection orb on the road (QA-tech #4) is still there in 01 (180,815) and 24 (560,1020). |
+| 3 | Mud splash | **not** | The fins are now lit brown with seg 10, but the new `mud_spray` sheets (12 overlapping emission tubes, 1.3 wide, opacity 0.3, colour (0.72,0.56,0.36)) stack into one opaque pale-beige cardboard slab behind Hanway. The bulbs are separate brown balls, and the droplets near his face render as grey faceted rocks (seg 6, rings 4). On the phone it reads as "beige paper plus balls", not mud. This is still the client's "flat triangles" dislike. The mud spots on Hanway's card do read well. The coach in 23 is violet-magenta (wheels and body). |
+| 4 | Reveal readability | **mostly done** | 13 now shows real cast cards shoving at coach_0's door with angry faces, the coach is lit and busy, and the coachman sits above them. It reads at phone size. It is still a single file along the coach, the lower 30 % is puddle, and the cards repeat. That is fine for the client sheet; fix it at the take gate. |
+| 5 | Ending framing and colour | **done** | 22 is the best tile. The coachman and the coral lace umbrella fill the upper-middle, the rosettes are cream, the pole is clear of his face, the hammercloth is orange-red, and the lanterns are amber. Only a small slice of horse shows at the bottom right. |
+| 6 | Empty lower third, near-road props | **partly** | 13 and 15 are better (planters and barrels on the pavement, puddles with shores). 01 (hook) and 16 still show about 40 % bare setts, and Hanway's head is about 20 px on the phone in 01. |
+| - | Cast colour notes | **done** | coach_0 is now ochre, so the olive coachman separates. Hanway's navy holds against the road. The pink umbrella is 3D only. The box cards stand on the plank with no doubled box. |
+
+### Scores (r0 -> r1)
+| criterion | r0 | r1 | why |
+|---|---|---|---|
+| Set density / ornament | 7 | 7 | Same rich terraces. The near road is still bare in 01 and 16. |
+| Lighting & colour | 5 | 7 | Warm sky, amber lanterns and a fixed hammercloth. Cloud under-strokes and shards remain, and the coach in 23 is violet. |
+| Composition / framing | 5 | 7 | 06, 09, 13 and 22 are well framed. The hook (01) is still small and high. |
+| Character acting (in set) | 7 | 7 | Real cards are now in the set, and the coachman's face reads in 09, 13 and 22. |
+| Key moments | 3 | 5 | Hook 6, reveal 6, ending 8, mud 2. |
+| Water | 3 | 6 | Smooth cores and ripples. Wire-like shore lines and the floating orb remain. |
+| Overall match to board / refs | 5 | 7 | The road's wet mirror and warm sky are now close to the board. The cel clouds are a stylistic step away from the board's soft painted clouds, but they are consistent and acceptable. |
+
+### Phone check (360x640)
+- **01 hook:** reads as a rainy street with a little umbrella man. Hanway is legible but small. The orb on the road and the pale wire curve show at this size.
+- **13 reveal:** reads. The angry crowd at the coach and the coachman's red nose are clear.
+- **22 ending:** excellent. The umbrella, the sulk and the red nose all read instantly.
+- **23 mud:** fails. Hanway with his mud spots reads, but the splash reads as a beige sheet with brown balls, and the shore wire crosses the foreground.
+
+### Verdict: FIX-FIRST (small: two items, re-render only 01, 13, 16, 23 and 24; no full gate needed, a look at those five tiles is enough)
+
+**Blocking**
+
+1. **Mud splash (tile 23, shot 12).** This is in `street.py` `_mud_objects`.
+   - The spray sheets are the beige slab. In the `PT.tube(sp, ...)` line, cut the width `1.3*(...)` to `0.5*(...)` and build a sheet only for `j % 3 == 0`.
+   - In `M['mud_spray']` (line 273), change to `_mat_streak(pre+'mudspray', (0.36, 0.25, 0.14), 1.0, 0.12)`: darker brown and much thinner.
+   - Droplets: raise to `seg=10, rings=7`, and use `M['mud']` for all of them except one in four. Skip any drop whose path passes within 0.8 of the face point `(-4.3, 11.0, 2.6)`, or clamp `vz` so the drops fall in front of the chest.
+   - Lower the fin height `Hh` by about 25 % (`3.2+0.7*...` -> `2.4+0.6*...`) so the crest breaks at chest height in front of the card instead of a wall behind it.
+   - Re-render 23 at t 0.3 and 0.45. The splash must read as glossy dark-brown fins with lighter tips, not as a sheet.
+   - At the same time, warm the coach in tile 23 (the violet body and wheels): give the coach that passes in this shot `COACH_SPEC` 'ochre' or 'oxblood' with orange-leaning wheels.
+
+2. **Shore "wire" and floating orb (tiles 01 hook, 13, 16, 23, 24).**
+   - In `_mat_pud`, in the 'shallow' rim, take `rm.inputs[1]` from `0.35*strength` to about `0.12*strength`, and soften the G-channel shore band in the mask (blur it 2-3 px in the mask texture, or multiply G by R so the line fades where the film is thin). The shore should be a faint glint, not a line.
+   - Orb: in 01 (180,815) and 24 (560,1020) a lamp glass is mirrored in a small puddle or gutter whose outline is not visible. Either set `visible_glossy = False` on the lamp-glass and lantern emission objects (keep the halo light), or drop or move the puddle decal under those pixels from the `_puddles` list for street_wide and market.
+
+**Not blocking (fix in parallel or at the take gates)**
+- Cloud under-band strokes and triangle shards (cut the dark under-band or soften it with a gradient alpha, and delete the shard faces).
+- 01 and 16 bare lower third: raise `look_at` z, or add a barrow or crates at the near kerb.
+- 13 rush: break the single file (stagger the `end` points by ±1.2 on y and add a second row), and vary the cards.
+- Big pillow setts under the low cameras.
+- Horse faceting.
