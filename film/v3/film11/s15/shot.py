@@ -62,7 +62,7 @@ def lie_overlay(f, pose, an):
 
 
 def stand_overlay(f, pose, an):
-    return C.sore_svg(an["upper_arm_l"], "blister")
+    return ""       # QA gate: the upper_arm anchors sit on the torso (sleeves are tiny), so the sore card floated; hidden while he is up and about
 
 
 def jump_state(g):

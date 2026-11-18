@@ -25,8 +25,8 @@ CUES = [{"frame": 779, "label": "candle flame flickers, fever night, soft wooden
 PRESET, LIGHT = "room_night", None
 TINT = "#f6dcc4"
 
-CAM0 = ((0.9, 1.2, 3.0), (-3.5, 8.0, 1.95))
-CAM1 = ((-1.2, 2.7, 2.75), (-3.9, 7.9, 1.95))
+CAM0 = ((0.4, 1.8, 3.75), (-4.2, 7.5, 1.55))
+CAM1 = ((-1.0, 3.0, 3.55), (-4.2, 7.6, 1.55))
 BED = (-5.2, 7.0)
 BED_Z = 1.86
 MOM = (-2.7, 8.1)
@@ -54,7 +54,7 @@ def quilt_svg():
 
 
 def james_overlay(f, pose, an):
-    return quilt_svg() + C.sore_svg(an["upper_arm_l"], "blister")
+    return quilt_svg()      # QA-art: the sore card floated beside his head -> hidden in this shot (arm under the quilt)
 
 
 def pose_james(g):
@@ -77,11 +77,33 @@ def pose_mother(g):
     return p
 
 
+def night_look():
+    """QA-art gate: make it read as night -- dim the sky dome and hills seen through the window, give the candle a stronger warm pool."""
+    import bpy
+    for mn in ("DY_sky_C_25", "DY_C_t20"):
+        m = bpy.data.materials.get(mn)
+        if m is None:
+            continue
+        for n in m.node_tree.nodes:
+            if n.bl_idname == "ShaderNodeEmission":
+                n.inputs["Strength"].default_value *= 0.3
+    for on in ("sky", "hills"):                      # the peach dusk horizon behind the window panes: hide it, the deep-blue window plates stay
+        o = bpy.data.objects.get(on)
+        if o is not None:
+            o.hide_render = True
+    li = bpy.data.objects["candle_light"].data
+    for fc in li.animation_data.drivers:
+        if fc.data_path == "energy":
+            fc.driver.expression = "340*(1.0+0.1*sin(frame*0.8)+0.06*sin(frame*2.1+1))"
+    li.shadow_soft_size = 0.2
+
+
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s13")
         self.jb = self.actors["jb"] = C.make_actor("jb", "james", os.path.join(TMP, "sprites"), canvas=cast11.CANVAS11_LIE["james"])
         self.mom = self.actors["mom"] = C.make_actor("mom", "mother", os.path.join(TMP, "sprites"))
+        night_look()
 
     def pose(self, shot, gs):
         for g in gs:
