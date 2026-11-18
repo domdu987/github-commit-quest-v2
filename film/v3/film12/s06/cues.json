@@ -1,0 +1,21 @@
+{
+ "mouth_quote_window_s": [
+  12.66,
+  19.0
+ ],
+ "lipsync": "RMS envelope of film12/audio/narration.wav per frame (+3 frame offset), flat mouth outside quote",
+ "cues": [
+  {
+   "g": 315,
+   "what": "head coachman bursts out laughing"
+  },
+  {
+   "g": 378,
+   "what": "two-shot, whip points at Hanway; 'ผู้ชายกางร่มเหรอ!'"
+  },
+  {
+   "g": 465,
+   "what": "push-in; '...ข้าจะกางร่มลูกไม้สีชมพูของเมียข้าเอง!'; other coachmen roar"
+  }
+ ]
+}

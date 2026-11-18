@@ -1,0 +1,36 @@
+{
+ "take": "s06",
+ "shots": [
+  6,
+  7,
+  8
+ ],
+ "g0": 315,
+ "g1": 571,
+ "first_g": 309,
+ "n_frames": 269,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 6
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "internal": [
+  {
+   "at": 378,
+   "type": "cut",
+   "from_shot": 6,
+   "to_shot": 7
+  },
+  {
+   "at": 465,
+   "type": "cut",
+   "from_shot": 7,
+   "to_shot": 8
+  }
+ ]
+}
