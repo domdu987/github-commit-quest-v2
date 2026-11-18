@@ -14,3 +14,8 @@ v3/film*/*/frames/
 v3/film*/*/work/
 v3/set3d*/*_work/*
 !v3/set3d*/*_work/*.py
+v3/film11/*/raw/
+v3/film11/*/frames/
+v3/film11/*/plate/
+v3/film11/*/matte/
+v3/film11/*/work/
