@@ -14,7 +14,8 @@ def gb(t): return int(round(t * 30))
 RANGE = {15: (gb(33.38), gb(35.40) - 1), 16: (gb(35.40), gb(37.56) - 1), 17: (gb(37.56), gb(38.95) - 1), 18: (gb(38.95), gb(40.85) - 1), 19: (gb(40.85), gb(43.56) - 1)}
 FIRST_G, LAST_G = RANGE[18][0] - 6, RANGE[19][1] + 6
 G_LIP = (int(round((39.03 + 0.10) * 30)), int(round((40.80 + 0.10) * 30)))     # mouth moves only inside (g 1174..1227)
-PX0 = 10.25; PS0 = 14.0 + PX0                                                   # push point (cast_test s2)
+V2 = os.environ.get('S19V') == '2'                                              # s18 v2: camera INSIDE the fence looking out at her
+PX0 = 6.0 if V2 else 10.25; PS0 = 20.0 if V2 else 14.0 + PX0                                                   # push point (cast_test s2)
 BOW_END_G = RANGE[19][1] + 1                                                    # g 1307 : wire t = T_MAX (max bow), team 4 continues in real time (1/150 per frame)
 T_MAX = 0.10
 RATE = 1.0 / (F.SEQ_T * 30)
@@ -103,7 +104,7 @@ def f18(g, cl):
     return out
 
 # ------------------------------------------------------------------------------------------------ shot 19: LOW push camera (cast_test s2)
-CAM19 = lambda u: (mix((2.6, -3.0, 1.35), (4.0, -2.8, 1.35), u), mix((PX0 - 0.5, 5.0, 2.2), (PX0 - 0.2, 5.0, 2.2), u), 34)
+CAM19 = (lambda u: (mix((6.0, 12.6, 1.55), (6.0, 11.5, 1.55), u), mix((6.0, 5.0, 2.7), (6.0, 5.0, 2.6), u), 20)) if V2 else lambda u: (mix((2.6, -3.0, 1.35), (4.0, -2.8, 1.35), u), mix((PX0 - 0.5, 5.0, 2.2), (PX0 - 0.2, 5.0, 2.2), u), 34)
 G_PUSH0 = RANGE[19][0]; T_MAX = 0.11
 def t_eff(g):
     u = span(g, G_PUSH0, BOW_END_G)
@@ -117,8 +118,10 @@ def trim_wire_x(x0, x1):
     if dl: bmesh.ops.delete(bm, geom=dl, context='VERTS')
     bm.to_mesh(ob.data); bm.free()
 def f19(g, cl):
-    out = {}; te = t_eff(g); F.set_wire_push(te, PS0); trim_wire_x(PX0 - 3.4, PX0 - 1.0); trim_wire_x(PX0 + 0.7, PX0 + 1.5)
-    for n in ('hive_4', 'bar_4', 'hive_3', 'bar_3'): bpy.data.objects[n].hide_render = True       # the hooks re-show them every call; none may hang in front of her chest
+    out = {}; te = t_eff(g); F.set_wire_push(te, PS0)
+    if not V2:
+        trim_wire_x(PX0 - 3.4, PX0 - 1.0); trim_wire_x(PX0 + 0.7, PX0 + 1.5)
+        for n in ('hive_4', 'bar_4', 'hive_3', 'bar_3'): bpy.data.objects[n].hide_render = True       # the hooks re-show them every call; none may hang in front of her chest
     bow = float(F.wire_disp(np.array([PS0]), te, PS0)[0])
     w = ease(span(g, G_PUSH0, BOW_END_G))
     c, pp = story('matriarch_push'); p = dict(pp)
@@ -126,7 +129,7 @@ def f19(g, cl):
     te0 = t_eff(g - 1); b0 = float(F.wire_disp(np.array([PS0]), te0, PS0)[0]); v = max(0.0, bow - b0) * 30.0
     st = clamp(v / (walk_step('matriarch', 1.0) * 30.0), 0.3, 1.2) if g < BOW_END_G else 0.0
     PH[0] += 1.0 / 48.0; p['gait'] = 'walk'; p['stride'] = st; p['phase'] = PH[0] % 1.0; p['t'] = 0.2 + g * 0.01; p['mirror'] = False
-    r = put('mat_%d' % g, 'matriarch', p, (0, 0, 0), cl, ppd=128, yawk=0.15, anchor_ground=('chest_push', (PX0, 5.0 + bow - 0.14)))
+    r = put('mat_%d' % g, 'matriarch', p, (0, 0, 0), cl, ppd=128, yawk=(1.0 if V2 else 0.15), anchor_ground=('chest_push', (PX0, 5.0 + bow - (0.5 if V2 else 0.14))))
     out['head'] = screen(r['world'](r['anchors']['head'])); out['chest'] = screen(r['world'](r['anchors']['chest_push'])); out['t_wire'] = round(te, 4); out['bow'] = round(bow, 3)
     return out
 PH = [0.0]
@@ -138,8 +141,12 @@ def setup_shot(shot, q):
     c, l, lens = camf(0.0)
     if name not in F.CAMS or name.startswith('s1'): reg_cam(name, c, l, lens)
     if shot == 19:
-        A = c14.setup(name, q, dress=False); cut_region([(13.5, 43, 1.7, 2.3, 1.2), (15.0, 19.5, 3.6, 6.4, 1.0)])
-        cut_named(['posts_', 'roof'], [(6.2, 13.5, 3.0, 12.0, -1, 9)]); hide_objs('mz', (3.5, 13.5, 5.5, 8.0)); cut_named(['props_'], [(4.2, 5.7, 1.8, 3.4, -1, 5)]); [setattr(bpy.data.objects[n], 'hide_render', True) for n in ('hive_4', 'bar_4', 'hive_3', 'bar_3')]; cut_named(['trees_', 'scrub_acacia'], [(2, 30, 6.0, 90, -1, 30)])
+        A = c14.setup(name, q, dress=False)
+        if V2:
+            hide_objs('mz', (0.0, 12.0, 5.5, 14.5)); cut_named(['props_'], [(4.2, 5.7, 1.8, 3.4, -1, 5)]); cut_named(['trees_', 'scrub_acacia'], [(2, 30, 6.0, 90, -1, 30)])
+        else:
+            cut_region([(13.5, 43, 1.7, 2.3, 1.2), (15.0, 19.5, 3.6, 6.4, 1.0)])
+            cut_named(['posts_', 'roof'], [(6.2, 13.5, 3.0, 12.0, -1, 9)]); hide_objs('mz', (3.5, 13.5, 5.5, 8.0)); cut_named(['props_'], [(4.2, 5.7, 1.8, 3.4, -1, 5)]); [setattr(bpy.data.objects[n], 'hide_render', True) for n in ('hive_4', 'bar_4', 'hive_3', 'bar_3')]; cut_named(['trees_', 'scrub_acacia'], [(2, 30, 6.0, 90, -1, 30)])
     else:
         A = c14.setup(name, q, dress=(shot not in (16, 17, 18)))
     F.apply_state('fs3'); F.STATE['wire_r'] = 0.03; matte_wire(); F._update_fence()
