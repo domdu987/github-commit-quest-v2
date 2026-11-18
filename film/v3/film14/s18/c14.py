@@ -134,6 +134,7 @@ def reg_cam(name, loc, look, lens, light='NIGHT', state='fs3', wire_r=0.075):
 def setup(preset, q, dress=True):
     A = F.build(preset, 'NIGHT', dress=dress); sc = bpy.context.scene; F.setup_render(sc, q); c = F.CAMS[preset]; cam = F.make_camera(c)
     sc.render.threads = int(os.environ.get('THREADS', '2'))
+    if os.environ.get('SAMPLES') and q == 'final': sc.cycles.samples = int(os.environ['SAMPLES'])
     return A
 
 def render(path):

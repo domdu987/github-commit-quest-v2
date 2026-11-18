@@ -91,7 +91,7 @@ def uncle_pose(g):
     return c, p
 def f18(g, cl):
     out = {}; c, p = uncle_pose(g)
-    r = put('unc_%d' % g, c, p, UNCLE, cl, ppd=288, yawk=1.0); out['uncle'] = dict(head=screen(r['world'](r['anchors']['head'])), mouth=p['mouth'])
+    cv = cast14.CANVAS14[c]; cv = (cv[0] * 1.25, cv[1] * 1.15, cv[2] * 1.25, cv[3]); r = put('unc_%d' % g, c, p, UNCLE, cl, ppd=288, yawk=1.0, canvas=cv); out['uncle'] = dict(head=screen(r['world'](r['anchors']['head'])), mouth=p['mouth'])
     fl = r['anchors'].get('flame_r')
     if fl: torch_light('u%d' % g, r['world'](fl) + Vector((0, -0.25, 0.1)), 150, g * 0.11)
     for tag, cast, nm, mk, ppd in (('wom', 'woman14', 'villager_woman_wave_torch', (-3.3, 3.2, 0), 192), ('old', 'oldman14', 'villager_oldman_wave_torch', (-1.25, 3.6, 0), 192)):
