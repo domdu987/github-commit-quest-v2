@@ -12,13 +12,13 @@ SHOT = 15
 G0, G1 = C.g_bound(32.50), C.g_bound(34.70) - 1          # 975..1040
 H = 6
 RANGE = (G0 - H, G1 + H)
-G_100, G_1000, G_5000 = C.g_of(32.52), C.g_of(33.10), C.g_of(33.62)      # 979, 997, 1012
-CAM0 = ((6.0, -3.0, 9.0), (6.0, 7.0, 1.2))
-CAM1 = ((6.5, -8.0, 27.5), (6.5, 27.0, 0.5))
-LENS = 24.0
+G_100, G_1000, G_5000 = 978, 996, 1011      # director: 100 at narration 32.52, 1000 at 33.10, 5000 at 33.62 (plan g = int((t + 0.10) * 30))
+CAM0 = ((6.5, -3.0, 5.0), (6.5, 30.0, 2.8))
+CAM1 = ((6.5, -3.4, 10.8), (6.5, 44.0, 0.8))
+LENS = 22.0
 
 def count_at(g):
-    return 100 if g < G_1000 else (1000 if g < G_5000 else 5000)
+    return 12 if g < G_100 else (100 if g < G_1000 else (1000 if g < G_5000 else 5000))
 def cam_of(g):
     x = (g - RANGE[0]) / float(RANGE[1] - RANGE[0]); u = 0.25 * C.ez(x) + 0.75 * x
     return [tuple(lerp(CAM0[k][i], CAM1[k][i], u) for i in range(3)) for k in (0, 1)]
@@ -26,6 +26,7 @@ def cam_of(g):
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, "under_rows", quality, lens=LENS, name="cam_s15")
+        U.dark_surround(True); U.close_hall(); self.scene.cycles.filter_width = 2.0
         self.pts = U.dense_slots(500); self.crowd = U.make_crowd(self.pts, seed=5)
         self.flip_t = [random.Random(k).randrange(14, 40) for k in range(500)]
         self.last = {}
@@ -43,7 +44,7 @@ class Take(C.Take):
                 if k * 10 + 10 > n: continue
                 p = world_to_camera_view(sc, cam, Vector((x, y, 2.2)))     # chin height ~ z 2.2
                 hid[k] = (1 - p.y) * 1280 > 862 or p.x < 0.02 or p.x > 0.98 or p.y > 1.02 or p.z <= 0
-            U.key_crowd(self.crowd, f, g, lambda k: k * 10 + 10 <= n, lambda k, g: ((g // self.flip_t[k]) + k) % 2, lambda k: hid.get(k, False))
+            U.key_crowd(self.crowd, f, g, lambda k: k * 10 + 10 <= max(n, 12 if False else 0), lambda k, g: ((g // self.flip_t[k]) + k) % 2, lambda k: hid.get(k, False))
 
     def report(self, g):
         loc, look = cam_of(g); return dict(shot=SHOT, g=g, cam=[round(c, 2) for c in loc], count=count_at(g))

@@ -10,7 +10,7 @@ def worker_roles():
     for sfx in ("a", "b", "c"):
         for ph in ("A", "B"):
             cast, pose = cast13.STORY13["worker_turn_bar_%s_%s" % (ph, sfx)]
-            name = "w%s_%s" % (ph, sfx); S.T.PH[name] = (cast, dict(pose), 3.25 if sfx != "c" else 3.1)
+            name = "w%s_%s" % (ph, sfx); pz = dict(pose); pz.update(expr="neutral", mouth="dash"); S.T.PH[name] = (cast, pz, 3.25 if sfx != "c" else 3.1)
             roles[(ph, sfx)] = name
     return roles
 
@@ -50,3 +50,13 @@ def replace_lamps(halo=False):
         c = Vector((xl, yl, zl)); S.rod(fl, c + Vector((0, 0, 0.5)), c + Vector((0, 0, 3.7 - zl)), 0.03, M['iron_d'], seg=4)
         fl.frustum(c - Vector((0, 0, 0.5)), c + Vector((0, 0, 0.5)), 0.26, 0.34, M['lamp_glass'], seg=7); fl.frustum(c + Vector((0, 0, 0.5)), c + Vector((0, 0, 0.8)), 0.38, 0.05, M['iron_d'], seg=7)
     S._obj(fl, "lamps_mine", SET, shadow=False)
+
+
+def fix_cellar():
+    """hide the pale light-shaft cards (one of them reads as a tan wedge over the aisle) and lay a raised plank slab over the central aisle so the
+    floor undulations do not poke through the planks as flat brown blobs."""
+    import bpy
+    o = bpy.data.objects.get("shafts")
+    if o is not None: o.hide_render = True
+    mb = S.MB(); S.sbox(mb, (1.9, -6.0, 0.0), (4.1, 70.0, 0.36), STATE['M']['plank_f'], 0.2)
+    S._obj(mb, "plank_aisle", STATE['SET'], shadow=False)

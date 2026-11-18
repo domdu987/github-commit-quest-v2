@@ -13,14 +13,14 @@ G0, G1 = C.g_bound(30.41), C.g_bound(32.50) - 1          # 912..974
 H = 6
 RANGE = (G0 - H, G1 + H)
 TMP = os.path.join(HERE, "work")
-CAM0 = ((-22.8, -13.8, 3.6), (-20.3, -3.6, 0.3))
-CAM1 = ((-21.6, -12.2, 3.2), (-20.0, -3.6, 0.1))
-LENS = 20.0
+CAM0 = ((-25.0, -23.0, 8.8), (-16.8, -3.0, 3.4))
+CAM1 = ((-23.8, -21.0, 7.6), (-16.2, -3.0, 3.0))
+LENS = 28.0
 V = 0.092                                              # D per frame (matches the 28-frame walk cycle: 2.6 D per cycle)
 VARS = ["a", "b", "c"]; CASTS = dict(a="worker13_a", b="worker13_b", c="worker13_c")
 # walkers: (variant, start x at g = G0, phase)
-WALK = [(VARS[i % 3], -24.0 + 2.7 * (i - 3) + 6.0 + (0.5 if i % 2 else -0.4), (0.13 * i) % 1.0) for i in range(11)]
-SPEED_JIT = [1.0, 1.03, 0.97, 1.02, 0.98, 1.0, 1.03, 0.97, 1.02, 0.98, 1.0]
+WALK = [(VARS[i % 3], -36.0 + 2.05 * i + (0.25 if i % 2 else -0.2), (0.13 * i) % 1.0) for i in range(20)]
+SPEED_JIT = [1.0, 1.03, 0.97, 1.02, 0.98] * 4
 
 def cam_of(g):
     x = (g - RANGE[0]) / float(RANGE[1] - RANGE[0]); u = 0.3 * C.ez(x) + 0.7 * x
@@ -28,14 +28,14 @@ def cam_of(g):
 
 def carry_pose(cast, g, ph0, sfx):
     base = cast13.STORY13["worker_carry_jack_" + sfx][1]
-    p = cast13.cycle(cast, g / 28.0 + ph0, "walk", base=dict(expr="determined", mouth="dash", prop_r=dict(type="iron_jack", angle=-62, scale=1.0)), arms="l")
+    p = cast13.cycle(cast, g / 28.0 + ph0, "walk", base=dict(expr="neutral", mouth="dash", prop_r=dict(type="iron_jack", angle=-62, scale=1.0)), arms="l")
     p["arm_r"] = dict(base["arm_r"]); p["blink"] = cast13.blink_at(g, 96, int(ph0 * 90))
     return p
 
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, "street_wide", quality, lens=LENS, state="lift0", name="cam_s14")
-        self.info = DR.dress()
+        self.info = DR.dress(); DR.dress_front()
         sd = os.path.join(TMP, "sprites"); self.walk = []
         for i, (sfx, x0, ph) in enumerate(WALK):
             a = self.actors["w%d" % i] = C.make_actor("w%d" % i, CASTS[sfx], sd); self.walk.append((a, sfx, x0, ph, SPEED_JIT[i]))

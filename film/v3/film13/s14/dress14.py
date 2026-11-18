@@ -4,10 +4,10 @@ import math, numpy as np, bpy, bmesh
 import c13 as C
 S = C.S; STATE = S.STATE; MB = S.MB; sbox = S.sbox
 
-XA, XB = -26.5, -14.0           # trench x (snapped to the terrain grid); west end tapers to ground
+XA, XB = -27.0, -9.0           # trench x (snapped to the terrain grid); west end tapers to ground
 Y0, Y1 = -9.0, -1.0             # rim front (45 deg bank starts), back wall
 ZF = -3.2                       # trench floor
-RAMP1 = -21.0                   # floor reaches ZF here (ramp from XA)
+RAMP1 = -21.5                   # floor reaches ZF here (ramp from XA)
 LANE_Y = -3.3
 MOUTH = (-4.7, -1.9)
 
@@ -17,7 +17,7 @@ def lane_z(x):
     if x <= XA: return zr(x, LANE_Y)
     return min(zf(x) + 0.03, zr(x, LANE_Y))
 
-def dress(spots=((-28.8, -8.0), (-26.3, -11.0))):
+def dress(spots=((-31.0, -8.5), (-28.6, -11.0))):
     SET = STATE['SET']; M = STATE['M']; terr = STATE['terrain']
     me = terr.data; bm = bmesh.new(); bm.from_mesh(me)
     xs = sorted(set(round(v.co.x, 3) for v in bm.verts)); ys = sorted(set(round(v.co.y, 3) for v in bm.verts))
@@ -55,3 +55,18 @@ def dress(spots=((-28.8, -8.0), (-26.3, -11.0))):
     S._obj(dk, 'trench_dark', SET, shadow=False)
     S._prop_jacks(SET, M, list(spots))
     return dict(xa=xa, xb=xb, mouth_x=xq)
+
+
+def dress_front():
+    """foreground dressing (fill instead of bare mud): crate stacks, barrels, a wheelbarrow, sacks, a gravel pile and a plank walk."""
+    SET = STATE['SET']; M = STATE['M']; mz = STATE['mud_z']; zq = lambda x, y: float(mz(np.array([x]), np.array([y]))[0])
+    mb = MB()
+    for k, (x, y) in enumerate(((-31.5, -19.0), (-9.0, -17.0), (-35.0, -26.0), (-8.0, -22.0), (-22.0, -15.5), (-27.5, -16.5))): S._crate_stack(mb, (x, y, zq(x, y)), M, 40 + k, 3 + k % 2)
+    for (x, y) in ((-29.0, -16.5), (-18.5, -15.0), (-15.5, -16.0), (-33.0, -22.0), (-21.0, -26.5), (-24.5, -15.2)): S._barrel(mb, (x, y, zq(x, y)), M, 'wood')
+    for k, (x, y) in enumerate(((-27.0, -18.0), (-15.5, -22.0), (-22.5, -17.2))): S._sack(mb, (x, y, zq(x, y)), M, k, 1.0)
+    S._wheelbarrow(mb, -33.0, -15.0, zq(-33.0, -15.0), 0.5, M)
+    S._obj(mb, 'front_dress', SET)
+    S._mound(SET, M, 'pile_mine', -23.0, -30.0, 5.0, 2.6, 1.8, 31, M['gravel'], STATE['mud_z'])
+    pw = MB()
+    for k in range(14): S.sbox(pw, (-40.0 + 2.9 * k, -13.4, zq(-40 + 2.9 * k, -13.4) + 0.02), (-37.3 + 2.9 * k, -11.8, zq(-40 + 2.9 * k, -13.4) + 0.16), M['walk'], 0.3)
+    S._obj(pw, 'front_planks', SET).hide_render = True

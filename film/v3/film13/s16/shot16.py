@@ -18,7 +18,7 @@ TMP = os.path.join(HERE, "work")
 CAM0 = ((3.0, -3.2, 1.15), (3.0, 40.0, 1.85))
 CAM1 = ((3.05, 0.2, 1.25), (3.0, 40.0, 1.8))
 LENS = 20.0
-PULL_Y0, PULL_Y1 = 13.6, 9.0           # pullman walks toward the camera along x = 3.0
+PULL_Y0, PULL_Y1 = 12.0, 6.4           # pullman walks toward the camera along x = 3.0
 
 def cam_of(g):
     x = (g - RANGE[0]) / float(RANGE[1] - RANGE[0]); u = 0.3 * C.ez(x) + 0.7 * x
@@ -39,7 +39,7 @@ def slots():
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, "under_wide", quality, lens=LENS, name="cam_s16")
-        S.set_bars_visible(True); U.replace_lamps()
+        S.set_bars_visible(True); U.replace_lamps(); U.fix_cellar()
         sd = os.path.join(TMP, "sprites")
         self.pts = slots(); self.crowd = U.make_crowd(self.pts, seed=16, scale=(0.78, 0.82))
         self.flip_t = [random.Random(k + 7).randrange(20, 60) for k in range(len(self.pts))]
@@ -69,7 +69,7 @@ class Take(C.Take):
             U.key_crowd(self.crowd, f, g, lambda k: True, lambda k, g: ((g // self.flip_t[k]) + k) % 2, lambda k: hid.get(k, False))
             u = (g - RANGE[0]) / float(RANGE[1] - RANGE[0])
             ph = g / 28.0
-            p = cast13.cycle("pullman", ph, "walk", base=dict(expr="determined", mouth="flat", yaw=0.25 * math.sin(g * 0.045) + 0.1, arm_r="down"), arms="l")
+            p = cast13.cycle("pullman", ph, "walk", base=dict(expr="determined", mouth="dash", yaw=0.25 * math.sin(g * 0.045) + 0.1, arm_r="down"), arms="l")
             p["arm_r"] = dict(hand=(0.95, 0.25), bend=0.3); p["blink"] = cast13.blink_at(g, 110)
             self.pull.pose(f, p, camera=self.cam)
             q = dict(cast13.STORY13["foreman_stand"][1]); q["blink"] = cast13.blink_at(g, 97); q["head_roll"] = 2 * math.sin(g * 0.07)

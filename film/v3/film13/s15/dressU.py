@@ -10,7 +10,7 @@ def worker_roles():
     for sfx in ("a", "b", "c"):
         for ph in ("A", "B"):
             cast, pose = cast13.STORY13["worker_turn_bar_%s_%s" % (ph, sfx)]
-            name = "w%s_%s" % (ph, sfx); S.T.PH[name] = (cast, dict(pose), 3.25 if sfx != "c" else 3.1)
+            name = "w%s_%s" % (ph, sfx); pz = dict(pose); pz.update(expr="neutral", mouth="dash"); S.T.PH[name] = (cast, pz, 3.25 if sfx != "c" else 3.1)
             roles[(ph, sfx)] = name
     return roles
 
@@ -50,3 +50,35 @@ def replace_lamps(halo=False):
         c = Vector((xl, yl, zl)); S.rod(fl, c + Vector((0, 0, 0.5)), c + Vector((0, 0, 3.7 - zl)), 0.03, M['iron_d'], seg=4)
         fl.frustum(c - Vector((0, 0, 0.5)), c + Vector((0, 0, 0.5)), 0.26, 0.34, M['lamp_glass'], seg=7); fl.frustum(c + Vector((0, 0, 0.5)), c + Vector((0, 0, 0.8)), 0.38, 0.05, M['iron_d'], seg=7)
     S._obj(fl, "lamps_mine", SET, shadow=False)
+
+
+def fix_cellar():
+    """hide the pale light-shaft cards (one of them reads as a tan wedge over the aisle) and lay a raised plank slab over the central aisle so the
+    floor undulations do not poke through the planks as flat brown blobs."""
+    import bpy
+    o = bpy.data.objects.get("shafts")
+    if o is not None: o.hide_render = True
+    mb = S.MB(); S.sbox(mb, (1.9, -6.0, 0.0), (4.1, 70.0, 0.36), STATE['M']['plank_f'], 0.2)
+    S._obj(mb, "plank_aisle", STATE['SET'], shadow=False)
+
+def dark_surround(hide_beams=True):
+    """under_rows: remove the bare plain (sky, far ground, backdrop, the 300 D floor) so the cut-away cellar floats in darkness with its brick walls, lamps and
+    a floor slab only inside the walls; optionally hide the beams (they hide the workers and carry a stretched wood texture)."""
+    import bpy
+    for n in ("sky", "backdrop", "far_ground", "floor"):
+        o = bpy.data.objects.get(n)
+        if o is not None: o.hide_render = True
+    if hide_beams:
+        o = bpy.data.objects.get("floor_beams")
+        if o is not None: o.hide_render = True
+    mb = S.MB(); S.sbox(mb, (S.CX0 - 1.0, S.CY0 - 1.0, -0.6), (S.CX1 + 1.2, S.CY1 + 1.0, 0.0), STATE['M']['dirt2'], 0.1)
+    S._obj(mb, "floor_mine", STATE['SET'])
+
+def close_hall(zt=12.0):
+    """camera-only enclosure: brick walls continued up to zt on four sides (front wall behind the camera) and a plank ceiling; none of it casts shadows,
+    so the cut-away lighting (sun through the open top, lamps) is unchanged."""
+    M = STATE['M']; mb = S.MB(); X0, X1, Y0, Y1 = S.CX0 - 1.0, S.CX1 + 1.2, S.CY0 - 1.0, S.CY1 + 1.0
+    S.sbox(mb, (X0, Y0, 5.2), (S.CX0, Y1, zt), M['brick_d'], 1 / 6); S.sbox(mb, (S.CX1, Y0, 5.2), (X1, Y1, zt), M['brick_d'], 1 / 6)
+    S.sbox(mb, (S.CX0, S.CY1, 5.2), (S.CX1, Y1, zt), M['brick_d'], 1 / 6); S.sbox(mb, (X0, Y0, -0.6), (X1, S.CY0 - 0.2, zt), M['brick_d'], 1 / 6)
+    S.sbox(mb, (X0, Y0, zt), (X1, Y1, zt + 0.5), M['plank_d'], 0.12)
+    o = S._obj(mb, "hall_upper", STATE['SET'], shadow=False); o.visible_shadow = False
