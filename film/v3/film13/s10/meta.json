@@ -70,6 +70,6 @@
  "threads": 2,
  "fps": 30,
  "dof": "none",
- "s_per_frame_wall_mean": 12.66,
- "s_per_frame_cpu_mean": 24.84
+ "s_per_frame_wall_mean": 13.1,
+ "s_per_frame_cpu_mean": 25.55
 }
