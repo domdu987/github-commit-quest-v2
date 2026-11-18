@@ -1,0 +1,7 @@
+{"take":"s25","film":14,"fps":30,"note":"time = film seconds (g/30); narration film14/audio/narration.wav at +0.10 s",
+"cues":[
+{"frame":1672,"end_frame":1686,"kind":"sfx","label":"alarmed elephant trumpets and bee buzz thin out; the herd stamps, ears slap"},
+{"frame":1682,"end_frame":1764,"kind":"sfx","label":"herd flees: heavy thudding footfalls on dry earth, dust spray, trumpeting fading left, a few bees buzzing off"},
+{"frame":1760,"end_frame":1768,"kind":"transition","label":"night to dawn dissolve: crickets out, first birds in"},
+{"frame":1764,"end_frame":1840,"kind":"ambience","label":"dawn over the maize field, birdsong, soft breeze, a cockerel far off; the farmer proud, calm"},
+{"frame":1840,"end_frame":1919,"kind":"sfx","label":"night, the herd in the uncle's field: munching, snapping maize stalks, soft rumbles, stalks crashing down, distant dog bark"}]}
