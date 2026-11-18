@@ -1,0 +1,21 @@
+{
+ "take": "s09",
+ "shots": [
+  9
+ ],
+ "g0": 572,
+ "g1": 650,
+ "first_g": 566,
+ "n_frames": 91,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 6
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "internal": []
+}
