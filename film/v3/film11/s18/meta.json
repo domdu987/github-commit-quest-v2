@@ -1,0 +1,29 @@
+{
+ "take": "s18",
+ "film": 11,
+ "shots": [
+  18
+ ],
+ "first_g": 1110,
+ "n_frames": 45,
+ "g0": 1116,
+ "g1": 1149,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "size_bytes": 12026578,
+ "s_per_frame_wall": 9.37,
+ "s_per_frame_cpu": 17.48,
+ "max_head_chin_y": [
+  693.6,
+  1154,
+  "mother"
+ ]
+}
