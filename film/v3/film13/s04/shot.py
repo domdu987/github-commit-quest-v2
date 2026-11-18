@@ -21,7 +21,7 @@ def shot_of(g):
 
 # ---- cameras: (loc, look, lens) start/end per shot; u = (g - a) / (b - a) over the shot's own range (handles extrapolate)
 CAMS = {4: (((-36, -62, 27), (0, -5, 28), 22), ((-30, -60, 3.6), (-6, -14, 8), 22)),
-        5: (((-6, -47, 1.5), (-20, -34, 2.7), 22), ((-12, -42.5, 1.3), (-21.5, -34.5, 2.5), 22)),
+        5: (((-8, -41, 1.7), (-16.5, -33.5, 2.9), 22), ((-11, -38.5, 1.5), (-16.8, -33.3, 2.8), 22)),
         6: (((-8, -31, 2.7), (-5.5, -16, 3.6), 22), ((-6.5, -27.5, 2.6), (-4.5, -15.5, 3.6), 22))}
 def cam_of(g):
     s = shot_of(g); a, b = SH[s]; u = (g - a) / float(b - a)
@@ -65,7 +65,7 @@ class Take(C.Take):
         self.add("t4b", "worker13_a", W("worker13_a", "worker_stand_a", (0, -11), (-12, -22), 150, 250, -1), ppd=128, shots=(4,))
         # shot 5: worker at the stuck cart, townsfolk crossing behind
         S = cast13.STORY13
-        self.add("w5", "worker13_b", self._still("worker13_b", "worker_stand_b", (-15.5, -32.5), (-22, -34), 237, 302, 5), ppd=256, plank=False, shots=(5,))
+        self.add("w5", "worker13_b", self._still("worker13_b", "worker_stand_b", (-13.8, -35.2), (-22, -34), 237, 302, 5), ppd=256, plank=False, shots=(5,))
         # shot 6: townsfolk hop along the planks, the gentleman steps off and sinks
         self.add("g6", "gentleman13", self._gent((-12.5, -22.5), (0.5, -11.2), 296, 345), ppd=224, shots=(6,))
         self.add("b6", "town_b", W("town_b", "town_stand_b", (-12, -22.5), (0.5, -11.2), 318, 372, 1), ppd=224, shots=(6,))

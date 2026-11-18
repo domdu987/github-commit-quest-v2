@@ -1,0 +1,38 @@
+{
+ "take": "s04",
+ "film": 13,
+ "shots": [
+  4,
+  5,
+  6
+ ],
+ "g0": 162,
+ "g1": 367,
+ "first_g": 156,
+ "n_frames": 217,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "light": "RAIN",
+ "preset": "street_wide (own cameras per shot)",
+ "cuts_inside": [
+  237,
+  303
+ ],
+ "dof": "none",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "threads": 2,
+ "s_per_frame_wall_mean": 16.16,
+ "s_per_frame_cpu_mean": 31.74,
+ "set": "v3/set3d13/chicago.py street (runtime: cast13 cards for crowd roles, own cameras, hooks keyed every frame)",
+ "cast": "v3/cast13",
+ "take_mkv_split": true
+}
