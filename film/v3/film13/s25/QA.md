@@ -1,0 +1,6 @@
+# QA s25 (film 13, shot 25 thousands of jacks, g 1602..1679, take g 1596..1685) - team8 redo
+- qa_auto PASS (90 frames, magenta 0 %). Hard cuts at g1602 / g1680, 6 handle frames each side.
+- Enclosed cellar, no sky: beam deck + plank underside across the top ~35 %, dense jack-shaft field (taller shafts, scale 1.9) receding to lamp-lit depth, plank floor. Camera at the back of the cellar looking toward -y (s15 looked +y), slow rise z 6.4 -> 7.1.
+- Workers: 7 large worker13_a/b/c turn-bar cards in the foreground (~70-90 px tall on the phone), plus ~60 smaller in 4 rows behind. Heads at y ~330-450 of 640 (< 880). No dark layer over them; floor/shadows below.
+- One beat: all bars flip pose A/B every 2 frames in g 1612-1624 and 1650-1662, everyone together; beam deck steps up 0.2 D across each window (0.45 -> 0.65 -> 0.85 of cellar lift, keyed per frame).
+- Deviations: the bar swing is the sprite A/B flip (+-16 deg), not a true 180 deg (the sprite draws its own bar; 3D levers hidden). Deck covers ~35 % of the frame (brief: 15-25 %). The field behind the worker rows reads as a dense pole forest rather than individually countable jacks; the dense field itself is the set's 4992 jacks, rows >= 84 hidden for the foreground clearing. Lamps are glass heads + point lights (no halo sprites).

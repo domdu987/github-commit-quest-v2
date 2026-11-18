@@ -1,0 +1,31 @@
+{
+ "take": "s25",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film13/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 53.2,
+   "duration": 3.0,
+   "frame": 1596,
+   "end_frame": 1686,
+   "kind": "ambience",
+   "label": "under the hotel: low reverberant cellar, oil lamp hiss, thousands of men"
+  },
+  {
+   "time": 53.733,
+   "duration": 0.4,
+   "frame": 1612,
+   "end_frame": 1624,
+   "kind": "foley",
+   "label": "one great metallic ratchet, all bars swinging together, timbers creak as the beams rise"
+  },
+  {
+   "time": 55.0,
+   "duration": 0.4,
+   "frame": 1650,
+   "end_frame": 1662,
+   "kind": "foley",
+   "label": "second unison ratchet, beams groan upward"
+  }
+ ]
+}

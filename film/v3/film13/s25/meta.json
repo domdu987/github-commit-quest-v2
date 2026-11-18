@@ -1,0 +1,56 @@
+{
+ "take": "s25",
+ "film": 13,
+ "shots": [
+  25
+ ],
+ "first_g": 1596,
+ "n_frames": 90,
+ "g0": 1602,
+ "g1": 1680,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "shot_ranges": {
+  "25": [
+   1602,
+   1679
+  ]
+ },
+ "events": {
+  "swing_1": [
+   1612,
+   1624
+  ],
+  "swing_2": [
+   1650,
+   1662
+  ],
+  "beams_step": [
+   1612,
+   1662
+  ]
+ },
+ "set": "v3/set3d13/chicago.py under_rows build (dense 5000-jack field, cut-away), CELLAR light; camera at the back looking down the rows toward -y; runtime deck of beams on the jacks, lamps, taller shafts; 3 rows of cast13 worker13_a/b/c turn-bar cards",
+ "light": "CELLAR",
+ "cast": "cast13 worker13_a/b/c turn_bar_A/B cards: 7 big foreground workers + ~60 behind, all flipping on one beat",
+ "dof": "none (cam.data.dof.use_dof False)",
+ "denoiser": "OpenImageDenoise (set pipeline)",
+ "narration": "film13/audio/narration.wav at +0.10 s",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 12.01,
+ "s_per_frame_cpu_mean": 23.76
+}
