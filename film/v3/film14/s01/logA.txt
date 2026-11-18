@@ -193,3 +193,21 @@
 {"shot": 2, "g": 93, "cam": [-3.49, 1.09, 2.3], "heads": {"farmer": [253, 322], "old": [518, 552], "woman": [504, 541], "youth": [498, 543], "kid": [565, 609]}, "wall": 29.7, "cpu": 97.7}
 08:43.225  render           | Saved: 'frames/g_0094.png.tmp.png'
 {"shot": 2, "g": 94, "cam": [-3.5, 1.1, 2.3], "heads": {"farmer": [252, 321], "old": [518, 552], "woman": [506, 542], "youth": [501, 546], "kid": [563, 607]}, "wall": 38.5, "cpu": 97.7}
+00:03.281  cycles           | WARNING CUEW initialization failed: Error opening the library
+01:18.664  render           | Saved: 'frames/g_0000.png.tmp.png'
+{"shot": 1, "g": 0, "cam": [-8.6, 1.0, 3.3], "heads": {"farmer": [513, 582], "woman": [544, 584], "kid": [640, 684]}, "wall": 75.2, "cpu": 107.0}
+00:03.211  cycles           | WARNING CUEW initialization failed: Error opening the library
+01:09.134  render           | Saved: 'frames/g_0000.png.tmp.png'
+{"shot": 1, "g": 0, "cam": [-8.6, 1.0, 3.3], "heads": {"farmer": [513, 582], "woman": [544, 584], "kid": [640, 684]}, "wall": 64.8, "cpu": 91.4}
+02:20.128  render           | Saved: 'frames/g_0001.png.tmp.png'
+{"shot": 1, "g": 1, "cam": [-8.59, 1.01, 3.3], "heads": {"farmer": [513, 582], "woman": [543, 583], "kid": [638, 682]}, "wall": 70.3, "cpu": 93.6}
+03:22.746  render           | Saved: 'frames/g_0002.png.tmp.png'
+{"shot": 1, "g": 2, "cam": [-8.59, 1.02, 3.3], "heads": {"farmer": [513, 582], "woman": [544, 584], "kid": [635, 680]}, "wall": 62.0, "cpu": 93.1}
+04:11.311  render           | Saved: 'frames/g_0003.png.tmp.png'
+{"shot": 1, "g": 3, "cam": [-8.58, 1.03, 3.3], "heads": {"farmer": [513, 582], "woman": [546, 585], "kid": [633, 678]}, "wall": 48.1, "cpu": 91.9}
+04:58.357  render           | Saved: 'frames/g_0004.png.tmp.png'
+{"shot": 1, "g": 4, "cam": [-8.57, 1.04, 3.3], "heads": {"farmer": [513, 582], "woman": [549, 587], "kid": [632, 678]}, "wall": 46.5, "cpu": 91.7}
+05:47.643  render           | Saved: 'frames/g_0005.png.tmp.png'
+{"shot": 1, "g": 5, "cam": [-8.57, 1.05, 3.3], "heads": {"farmer": [513, 583], "woman": [550, 589], "kid": [633, 678]}, "wall": 48.8, "cpu": 95.4}
+06:57.903  render           | Saved: 'frames/g_0006.png.tmp.png'
+{"shot": 1, "g": 6, "cam": [-8.56, 1.06, 3.3], "heads": {"farmer": [513, 583], "woman": [551, 590], "kid": [635, 680]}, "wall": 69.6, "cpu": 100.7}
