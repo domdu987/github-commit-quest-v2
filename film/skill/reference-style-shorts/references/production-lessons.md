@@ -72,3 +72,16 @@ releases on the main branch in film/release*). Never touch sessions you did not 
   - frozen/black-frame scan (qa_check.py)
   - per-sentence faster-whisper STT on the final mix vs the clean narration, all ratios >= 0.93; pass numpy audio, not a file path, because newer PyAV breaks faster_whisper's decode
   - QA-art (Opus) on a 1 fps sheet plus dense frames around the reveal and the ending
+
+## 7. Stricter QA (client asked for more thorough checking, 2026-11-18)
+The full rules are in film/QA_TEAM.md, section "Stricter QA".
+- **Every-frame scripts:** film/qa_auto.py checks frozen, black and magenta frames, pops outside cuts and blur, and builds a phone sheet.
+- **QA-tech:** runs at 6 fps plus every cut.
+- **QA-art:** reviews the key takes (hook, reveal, false payoff, ending) before conform.
+- **Final gate, four reviewers:**
+  - the scripts
+  - audio: STT, LUFS, true peak, caption sync and spelling
+  - QA-art on the full-res and phone sheets
+  - a blind Sonnet viewer who must explain the hook, mocker, mechanism and ending from the pictures alone
+- **No solo director overrides:** an override needs a second Opus reviewer who has seen the frames.
+- **Delivery report:** lists every gate's numbers and any overrides.

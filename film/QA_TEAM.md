@@ -30,7 +30,7 @@ Output: <qa_dir>/QA_ART.md.
 3. FINAL gate: QA-tech + QA-art on the conformed film's 1 fps sheet and key frames before sending to the client.
 
 ## Stricter QA (client request, 2026-11-18) — these override anything looser above
-### A. Automatic checks (scripts, every frame, no model cost) — run on every take AND on the final cut
+### A. Automatic checks — film/qa_auto.py <video> --cuts <planned cut g list> --first_g <g0> (every frame, no model cost) — run on every take AND on the final cut
 1. Every frame, not 2 fps: frozen runs >= 6 frames, black/blank/magenta frames, pops (frame-diff spike outside planned cuts),
    cut frames match the plan within +-2 frames.
 2. Sharpness: Laplacian variance per frame vs the take median; any frame < 60 % of median = suspected blur -> list it.
@@ -45,7 +45,7 @@ lip-sync only inside the quote window from captions.json (+-0.15 s).
 Key shots = hook (first 3 s), every reveal shot, the false payoff, and the ending. QA-art must PASS them before conform.
 ### D. FINAL gate — four reviewers, all must pass
 1. Script checks (A) on the full film.
-2. Audio: per-sentence STT on the final mix vs the clean narration (every sentence >= 0.93), integrated loudness -14 LUFS +-1,
+2. Audio: per-sentence STT on the final mix vs the clean narration (every sentence >= 0.93), integrated loudness -14 to -11 LUFS (approved films measure about -12; check with ffmpeg ebur128),
    true peak <= -1 dBTP, no SFX louder than the voice inside a sentence, caption on screen within +-0.15 s of its spoken phrase,
    caption text == script text (spelling).
 3. QA-art (opus) on the full-res 2 fps sheet AND the 360x640 phone sheet.
