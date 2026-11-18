@@ -175,7 +175,7 @@ def main():
         scale = float(sys.argv[4]) if len(sys.argv) > 4 else 1.0
         samples = int(sys.argv[5]) if len(sys.argv) > 5 else 12
         C.final_loop(lambda q, shot: Take(q, shot), shots, sys.argv[3], RANGES, HERE, scale=scale, samples=samples,
-                     take_key=lambda shot: LOCS[shot][0])
+                     take_key=lambda shot: LOCS[shot][1])
 
 
 if __name__ == "__main__":

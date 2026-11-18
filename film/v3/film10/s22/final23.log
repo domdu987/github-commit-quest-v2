@@ -1,0 +1,13 @@
+final: shot 23, 111 to render, 0 done
+00:00.437  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: built harbour hull_plank in 1.4 s
+00:23.700  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film10/s22/raw/s23/f_23711.png'
+shot 23 g 1710  18.7 s wall  25.3 s cpu
+00:41.728  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film10/s22/raw/s23/f_23712.png'
+shot 23 g 1711  18.1 s wall  24.8 s cpu
+00:54.524  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film10/s22/raw/s23/f_23713.png'
+shot 23 g 1712  12.8 s wall  24.4 s cpu
+01:06.664  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film10/s22/raw/s23/f_23714.png'
+shot 23 g 1713  12.1 s wall  24.5 s cpu
+01:18.782  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film10/s22/raw/s23/f_23715.png'
+shot 23 g 1714  12.1 s wall  24.5 s cpu
