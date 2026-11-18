@@ -1,0 +1,4 @@
+{"take":"s18","film":14,"shots":[18,19],"g0":1168,"g1":1306,"first_g":1162,"n_frames":151,"handle_in":6,"handle_out":6,
+ "shot_starts":{"18":1168,"19":1226},"transition_in":{"type":"cut","frames":0},"samples":12,"resolution":[720,1280],
+ "lip_sync":{"shot":18,"window_g":[1174,1227],"note":"uncle talk_mouth only inside; flat before; woman/old man neutral closed mouths"},
+ "wire_t_at_g1307":0.11,"parts":"take.mkv.part* (cat to restore take.mkv)"}
