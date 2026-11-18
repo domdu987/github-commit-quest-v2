@@ -6,3 +6,6 @@ Delivered: take.mkv.partaa/ab (`cat take.mkv.part* > take.mkv`; libx264rgb crf 6
 - Mouths: none move. Placeholder bgcards of the set are hidden.
 - Differs from plan: the painter stands on the flagship's bridge wing next to the admiral (set mark painter_bridge), not on the dazzle ship's deck (too small to read from the bridge camera).
 - Known: the wing rail crosses the painter's legs in front of him (set geometry). Quay figures are 8-22 px heads (wide, decorative).
+
+## Polish round (director QA-tech)
+- Shot 21: glossy bounces off (no mirrored ships, so no translucent blue panels on the water). Shot 20: painter's mouth held on one grin (no toggle); both figures' gaze toward the dazzle ship / sea (screen-right). Re-rendered, qa_auto PASS.

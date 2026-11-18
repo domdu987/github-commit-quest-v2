@@ -1,0 +1,22 @@
+{
+ "take": "s22",
+ "fps": 30,
+ "cues": [
+  {
+   "time": 54.233,
+   "duration": 2.767,
+   "frame": 1627,
+   "end_frame": 1710,
+   "kind": "ambience",
+   "label": "quiet dockyard, gulls; a single wry tuba note when the grey ship is seen"
+  },
+  {
+   "time": 57.0,
+   "duration": 3.5,
+   "frame": 1710,
+   "end_frame": 1815,
+   "kind": "foley",
+   "label": "scrape of a big brush on the iron hull, drips into the bucket, the plank creaks on its ropes, a sheepish cough"
+  }
+ ]
+}
