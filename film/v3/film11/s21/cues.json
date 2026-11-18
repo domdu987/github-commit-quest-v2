@@ -1,0 +1,15 @@
+{
+ "take": "s21",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film11/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 41.067,
+   "duration": 2.333,
+   "frame": 1232,
+   "end_frame": 1302,
+   "kind": "ambience",
+   "label": "barn interior, morning sun in the door, milk hissing into a wooden pail, a cow chewing and a tail swish, hens, soft straw rustle, a girl humming"
+  }
+ ]
+}
