@@ -1,6 +1,6 @@
-# QA s25 (shot 25 thousands of jacks, g 1602..1679, take 1596..1685) - team8 round 2 (director gate fixes)
+# QA s25 (shot 25 thousands of jacks, g 1602..1679, take 1596..1685) - team8 round 3
 - qa_auto PASS (90 fr, magenta 0 %). Hard cuts g1602/g1680, 6 handle frames each side.
-- Fix 1: camera now stands in an aisle cut through the dense field (verts x 3.7-7.1 removed from every chunk, ~4300 jacks remain), z 3.4 -> 3.7 just under the beam deck, looking down the aisle; rows of jacks recede on both sides to the lamp-lit end. Jack shafts lightened + lamps hung over the aisle so they read. Workers: 10 turn-bar cards standing IN the aisle (near 2-3 large, rest shrinking into depth) fill the lower frame; no sky, no empty-floor band.
-- Fix 2: bars: ONE swing per window, same frame for everyone: pose A -> B at g1618 (window 1612-1624), B -> A at g1656 (window 1650-1662); no flicker. Beam deck is HELD, then steps up 0.3 D over the last 5 frames of each window (g1619-1624, g1657-1662) - a visible step, not drift. The camera only dollies forward 1.2 D and rises 0.3 D.
-- Fix 3: teal-beanie card uses neutral expression + closed mouth in both poses (checked in full-res stills, g1596/1640).
-- Deviations: the sprite swing is the A/B card change (+-16 deg), not a 180 deg bar turn. The jack rows are lit unevenly (right wall in shadow). Nearest worker's face reaches y ~840 of 1280 at the end (chin < 880 but close). Ceiling grain is still a stretched wood texture.
+- Camera now INSIDE the field at the head of the aisle (x 5.2, y 62.6 -> 61.9, z 3.85 -> 3.95, just under the beam deck), yawed a little and tilted down ~25 deg: individual jacks (shaft, collar, cap, base) of both walls recede in perspective to the lamp-lit end, lit from the aisle lamps plus side lamps; many separate jacks read, not one row of posts.
+- Nearest (teal-beanie) worker: moved back / aside and the camera move shortened; his chin stays at y ~690-760 of 1280 through the take (< 840).
+- Held swings kept: pose A -> B at g1618, B -> A at g1656, everyone on the same frame; beam deck steps up 0.3 D over g1619-1624 and g1657-1662. Closed mouths on all cards.
+- Open points: the aisle plank floor still fills the lower ~35 % (lit, with worker shadows); ceiling is a stretched wood-grain slab with glare at the lamp end; the swing is the A/B card change (+-16 deg).
