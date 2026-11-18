@@ -4,3 +4,8 @@
 - Heads on screen y <= 660 (the 9000 values in raw/*.json are off-screen queue cards); towndoc head 83-130 px.
 - Deviation: the towndoc stands at x -3 (near the head of the queue), not at the tail (x 6.6), to be in one frame with Jenner; the camera is in the garden, not the preset's lane-side camera.
 - Re-rendered 2026-11-18 after the director note: chimney smoke hidden (hide_render in c11.py).
+
+## Gate 2 re-render (QA-art: villager c stole the shot, sleeve roll)
+- Pockmarked villager c (with e and a) now stands behind (farther than) the towndoc on the hut side, hidden by his body: the towndoc is the biggest, unblocked figure (head 107-167 px). James (blister card, by the hut stool) and Jenner (lancet up) beside the hut.
+- Sleeve roll: from g 1745 to 1775 a cream turned-back cuff (climbing from wrist to mid-forearm) and a bare skin forearm are drawn on his left arm as a sprite overlay built from the elbow_l / hand_l anchors; held to the end of the take. His right hand still tugs at it. The hat is not in his hand (no prop for it), hat_off stays.
+- 11.2 s / frame, QA_AUTO PASS. Heads on screen y <= 645.
