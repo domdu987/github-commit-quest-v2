@@ -6,10 +6,10 @@
   18,
   19
  ],
- "first_g": 1101,
+ "first_g": 1104,
  "n_frames": 202,
- "g0": 1107,
- "g1": 1297,
+ "g0": 1110,
+ "g1": 1300,
  "handle_in": 6,
  "handle_out": 5,
  "transition_in": {
@@ -22,36 +22,36 @@
  },
  "transitions": [
   {
-   "at": 1107,
+   "at": 1110,
    "type": "cut"
   },
   {
-   "at": 1170,
+   "at": 1173,
    "type": "cut",
    "note": "17 -> 18, same location"
   },
   {
-   "at": 1252,
+   "at": 1255,
    "type": "cut",
    "note": "18 -> 19"
   },
   {
-   "at": 1297,
+   "at": 1300,
    "type": "cut"
   }
  ],
  "shot_ranges": {
   "17": [
-   1107,
-   1169
+   1110,
+   1172
   ],
   "18": [
-   1170,
-   1251
+   1173,
+   1254
   ],
   "19": [
-   1252,
-   1296
+   1255,
+   1299
   ]
  },
  "set": "v3/set3d13/chicago.py suite (SUITE light; plan MORNING/DAY not available for the suite location), cameras custom (22 / 40 / 22 mm), no DOF; tea ripple 0 keyed every frame; chandelier hidden from camera only",
@@ -62,6 +62,6 @@
   1280
  ],
  "fps": 30,
- "s_per_frame_wall_mean": 7.55,
- "s_per_frame_cpu_mean": 14.85
+ "s_per_frame_wall_mean": 7.61,
+ "s_per_frame_cpu_mean": 15.01
 }
