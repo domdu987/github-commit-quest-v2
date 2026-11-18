@@ -1,0 +1,8 @@
+# QA s22 (shot 22, barn_milking / A close, g 1302..1367, take g 1296..1373) -- KEY IMAGE
+Own check at 6 fps (contact.jpg), full-size looks at g 1340 and the first / last frames (hard cuts in and out; handles are the same slow push in 3D):
+- Key image: Sarah (sarah_show_hand_close) stands left of Blossom's udder and holds the blister hand (prop scale 1.3, six pale-yellow blisters in red halos) up beside her clear, smooth, rosy face; the udder, the 3D pail and Blossom's flank fill the background; the blisters read at phone size (see phone_sheet.jpg).
+- Heads: all chins above y 880 (Sarah head 165 -> 212 px, chin about 640; max chin y 743 is Blossom's head at the left edge, g 1373); contact shadow under Sarah; she stands in front of the set's stool (her skirt covers it) and the pail, feet on the floor.
+- Blossom (mirrored): chews every frame, ear flick every 66 frames, tail swish behind Sarah; set hooks (hens, motes, lanterns) alive.
+- Slight hand sway (+-0.02 / 0.03 D) keeps the held hand alive; blinks at g 1316 / 1354.
+- Mouths: nobody speaks (smile mouth held).
+- Deviation: the hand is beside her face rather than right at the udder (the pose holds it straight up); the udder is just below and to the right of it.

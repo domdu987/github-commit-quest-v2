@@ -1,0 +1,15 @@
+{
+ "take": "s22",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film11/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 43.4,
+   "duration": 2.2,
+   "frame": 1302,
+   "end_frame": 1368,
+   "kind": "ambience",
+   "label": "barn close, a cow chewing and a soft breath, tail swish, the creak of the stool, hens far off, warm quiet pause with one low string note"
+  }
+ ]
+}
