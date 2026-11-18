@@ -1,0 +1,33 @@
+{
+ "take": "s08",
+ "film": 10,
+ "shots": [
+  8
+ ],
+ "g0": 538,
+ "g1": 619,
+ "first_g": 532,
+ "n_frames": 93,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "set": "harbour DAY (custom medium camera on the quay)",
+ "light": "DAY",
+ "cast": "sailor_a/b/c + painter10 (cast10)",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "dof": "none",
+ "cuts": [],
+ "lipsync_window_g": null,
+ "stripes": 0.6,
+ "s_per_frame_wall_mean": 12.43,
+ "s_per_frame_cpu_mean": 24.53,
+ "take_mkv_mb": 24.2
+}
