@@ -20,10 +20,10 @@ SHOT = 28
 G0, G1, H = C.g_bound(60.20), 1875, 6
 RANGES = {SHOT: (G0 - H, G1 - 1)}          # no frames beyond N: the film's last frame is g 1874 (hard cut)
 PRESET, LIGHT = "barn_wide", "A"
-BLOSSOM = Vector((-1.2, 16.4, 0.0))
+BLOSSOM = Vector((-2.8, 8.2, 0.0))
 G_WORD = C.g_of(62.20)                     # "วัว" ~ 62.3 s: she looks round around here
-CAM0 = ((2.6, 3.0, 2.2), (0.0, 16.0, 0.9))
-CAM1 = ((0.6, 9.5, 2.0), (-1.4, 16.4, 1.7))
+CAM0 = ((2.0, -1.0, 2.6), (-3.4, 12.0, 0.2))
+CAM1 = ((1.0, 0.8, 2.3), (-4.8, 9.0, 1.1))
 
 
 def cam_of(g):
