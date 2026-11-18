@@ -1,0 +1,38 @@
+{
+ "take": "s20",
+ "fps": 30,
+ "cues": [
+  {
+   "time": 47.6,
+   "duration": 3.4,
+   "frame": 1428,
+   "end_frame": 1530,
+   "kind": "ambience",
+   "label": "open sea, convoy: low swell, gulls, steady engine throb, a thin wind on the bridge wing"
+  },
+  {
+   "time": 48.0,
+   "duration": 0.4,
+   "frame": 1440,
+   "end_frame": 1452,
+   "kind": "prop",
+   "label": "binoculars lowered with a rattle of the leather strap"
+  },
+  {
+   "time": 48.333,
+   "duration": 0.267,
+   "frame": 1450,
+   "end_frame": 1458,
+   "kind": "foley",
+   "label": "stunned gasp / jaw-drop sting (no speech)"
+  },
+  {
+   "time": 51.0,
+   "duration": 3.233,
+   "frame": 1530,
+   "end_frame": 1627,
+   "kind": "ambience",
+   "label": "dockyard in daylight: gulls, distant hammering, ship sirens one after another as each ship flips to dazzle"
+  }
+ ]
+}
