@@ -24,7 +24,7 @@ def lin_ease(x, k=0.35): x = clamp(x); return k * sm(x) + (1 - k) * x          #
 def blink_at(g, period=90, off=0): return 1 if ((g + off) % period) in (0, 1) else 0
 
 _cnt = [0]
-def put(cast, pose, mark, cam_loc, ppd=128, mirror=None, yaw_off=0.0, canvas=None, contact=True, align=None, shadow_k=1.0, yaw_fixed=None):
+def put(cast, pose, mark, cam_loc, ppd=128, mirror=None, yaw_off=0.0, canvas=None, contact=True, align=None, shadow_k=1.0, yaw_fixed=None, tint=None):
     """real puppet sprite -> upright card at `mark` (feet point), facing the camera (yaw only).
     align=(anchor, world_xyz): instead move the card so that the puppet anchor lands exactly on a world point."""
     _cnt[0] += 1; tag = 'c%05d' % _cnt[0]
@@ -51,6 +51,7 @@ def put(cast, pose, mark, cam_loc, ppd=128, mirror=None, yaw_off=0.0, canvas=Non
     yaw = yaw_of(mk)
     ob = bpy.data.objects.new('actor_' + tag, me); bpy.context.scene.collection.objects.link(ob); ob.location = mk; ob.rotation_euler = (0, 0, yaw)
     ax = Vector((math.cos(yaw), math.sin(yaw), 0))
+    if tint is not None: tint_card(ob, tint)
     def w(an): a = r['anchors'][an]; return mk + ax * ((a[0] - fx) * MPD) + Vector((0, 0, (fy - a[1]) * MPD))
     if contact:
         s = dict(matriarch=1.0, elephant_b=.86, elephant_c=.93, elephant_d=.77, calf=.36).get(cast, None)
@@ -68,10 +69,10 @@ def _contact(tag, mk, yaw, L, Wd):
     img = bpy.data.images.load(p); img.alpha_mode = 'STRAIGHT'
     m = bpy.data.materials.new('cm_' + tag); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); Nn = nt.nodes.new; Lk = nt.links.new
     out = Nn('ShaderNodeOutputMaterial'); ti = Nn('ShaderNodeTexImage'); ti.image = img; ti.extension = 'CLIP'; em = Nn('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.03, 0.02, 0.07, 1); em.inputs['Strength'].default_value = 1
-    tr = Nn('ShaderNodeBsdfTransparent'); mx = Nn('ShaderNodeMixShader'); mu = Nn('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = 0.8
+    tr = Nn('ShaderNodeBsdfTransparent'); mx = Nn('ShaderNodeMixShader'); mu = Nn('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = 0.95
     Lk(ti.outputs['Alpha'], mu.inputs[0]); Lk(mu.outputs[0], mx.inputs[0]); Lk(tr.outputs[0], mx.inputs[1]); Lk(em.outputs[0], mx.inputs[2]); Lk(mx.outputs[0], out.inputs['Surface'])
     me.materials.append(m); ob = bpy.data.objects.new('actor_c_' + tag, me); bpy.context.scene.collection.objects.link(ob)
-    ob.location = (mk.x, mk.y, mk.z + 0.03); ob.rotation_euler = (0, 0, yaw); ob.visible_shadow = False
+    ob.location = (mk.x, mk.y, mk.z + 0.045); ob.rotation_euler = (0, 0, yaw); ob.visible_shadow = False
 
 def clear_cards():
     for o in list(bpy.data.objects):
@@ -134,3 +135,26 @@ def cut_region(prefix, boxes):
         if dl: bmesh.ops.delete(bm, geom=dl, context='VERTS'); bm.to_mesh(ob.data); n += len(dl)
         bm.free()
     return n
+
+# ---------------------------------------------------------------- torch glow: the cast14 torch draws a HARD translucent disc (circle opacity .18); swap it for a feathered radial gradient
+import re
+_orig_sprite_svg = sprites.sprite_svg
+_gid = [0]
+def _soft(svg_info):
+    svg, info = svg_info
+    def rep(m):
+        _gid[0] += 1; gid = 'tglow%d' % _gid[0]; col = m.group(4)
+        return ('<defs><radialGradient id="%s"><stop offset="0" stop-color="%s" stop-opacity="0.50"/><stop offset="0.35" stop-color="%s" stop-opacity="0.22"/>'
+                '<stop offset="1" stop-color="%s" stop-opacity="0"/></radialGradient></defs><circle cx="%s" cy="%s" r="%.4f" fill="url(#%s)"/>') % (gid, col, col, col, m.group(1), m.group(2), float(m.group(3)) * 0.8, gid)
+    svg = re.sub(r'<circle cx="([-\d.]+)" cy="([-\d.]+)" r="([\d.]+)" fill="(#[0-9a-fA-F]{3,8})" opacity="0.18"/>', rep, svg)
+    return svg, info
+def _sprite_svg(*a, **k): return _soft(_orig_sprite_svg(*a, **k))
+sprites.sprite_svg = _sprite_svg
+
+def tint_card(ob, rgb):
+    """multiply the card's emission colour by rgb (night dimming / cool tint)."""
+    for m in ob.data.materials:
+        nt = m.node_tree; ti = [n for n in nt.nodes if n.bl_idname == 'ShaderNodeTexImage'][0]; em = [n for n in nt.nodes if n.bl_idname == 'ShaderNodeEmission'][0]
+        mx = nt.nodes.new('ShaderNodeMix'); mx.data_type = 'RGBA'; mx.blend_type = 'MULTIPLY'; mx.inputs[0].default_value = 1.0; mx.inputs[7].default_value = (rgb[0], rgb[1], rgb[2], 1.0)
+        for l in list(em.inputs['Color'].links): nt.links.remove(l)
+        nt.links.new(ti.outputs['Color'], mx.inputs[6]); nt.links.new(mx.outputs[2], em.inputs['Color'])
