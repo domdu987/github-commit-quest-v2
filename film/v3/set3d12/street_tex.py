@@ -19,7 +19,7 @@ from wall_tex import hexf, hex8, pnoise, pfbm, save             # noqa: E402
 import harbour_tex as HX                                        # noqa: E402  (sky_rich painter)
 
 TEX = os.path.join(HERE, 'tex_street')
-TEX_V = 's12.3'
+TEX_V = 's12.8'
 JOBS = {}
 def reg(name, params, fn): JOBS[name] = (params, fn)
 
@@ -34,26 +34,37 @@ def _lerp(a, b, t): return a * (1 - t) + b * t
 
 # ----------------------------------------------------------------------------- cobbles / pavement
 def cobbles(p, out):
-    """Setts (4 x 4 units). Rounded domed stones in grey-brown, violet-grey, ochre; dark wet mortar. Also writes <out>_h.png (height, for bump)."""
-    S = 768; ppd = S / 4.0; rs = np.random.RandomState(p['seed'])
+    """Setts (4 x 4 units): individually readable rounded granite setts (0.66 x 0.44 u) laid in running bond with dark wet mortar, per-sett colour
+    (grey, violet-grey, ochre, slate) and a pale wet rim on the top-left edge. Also writes <out>_h.png (height, for the bump)."""
+    S = 1024; ppd = S / 4.0; rs = np.random.RandomState(p['seed'])
     yy, xx = np.mgrid[0:S, 0:S].astype('float32') / ppd
-    sw, sh = 0.8, 0.5
-    row = np.floor(yy / sh); off = (row % 2) * sw * 0.5 + (rs.rand(8) * 0.0)[0]
-    u = (xx + off) % sw; v = yy % sh; bx = np.floor((xx + off) / sw)
-    bid = ((row * 37 + bx * 11) % 211).astype(int); r = rs.rand(211, 4)
-    dx = np.minimum(u, sw - u) / (sw * 0.5); dy = np.minimum(v, sh - v) / (sh * 0.5)
-    edge = np.minimum(dx, dy)                                                      # 0 at the joint .. 1 at the centre
-    dome = np.clip(edge * 2.2, 0, 1) ** 0.6
-    pal = np.array([hexf('#8c8a90'), hexf('#7f7a8c'), hexf('#9a8a76'), hexf('#6c6a78'), hexf('#a08c70'), hexf('#74808c')])
+    sw, sh = 0.8, 0.5                                                              # 5 x 8 setts per tile, wraps cleanly
+    row = np.floor(yy / sh); off = (row % 2) * sw * 0.5
+    xo = xx + off; u = xo % sw; v = yy % sh; bx = np.floor(xo / sw)
+    bid = ((row * 37 + (bx % 5) * 11) % 211).astype(int); r = rs.rand(211, 5)
+    # each sett is slightly rotated / uneven: wobble the local coordinates by a per-sett random shear
+    cu = (u / sw - 0.5) * 2; cv = (v / sh - 0.5) * 2
+    shear = (r[bid, 3] - 0.5) * 0.12
+    cu2 = cu + shear * cv; cv2 = cv - shear * cu
+    pw = 0.84 + 0.1 * r[bid, 4]; ph_ = 0.8 + 0.1 * r[bid, 2]                       # sett half extents inside the cell (mortar share)
+    q = (np.abs(cu2 / pw) ** 4.0 + np.abs(cv2 / ph_) ** 4.0) ** 0.25               # superellipse: 0 centre .. 1 at the sett edge
+    inside = np.clip((1.0 - q) / 0.07, 0, 1)                                       # anti-aliased sett mask
+    dome = np.clip(1.0 - q, 0, 1) ** 0.55
+    pal = np.array([hexf('#8f8c92'), hexf('#837d92'), hexf('#a08e76'), hexf('#6f6e7e'), hexf('#a4906f'), hexf('#78828f'), hexf('#928076')])
     pick = (r[bid, 0] * len(pal)).astype(int) % len(pal)
-    base = pal[pick] * (0.78 + 0.4 * r[bid, 1:2])
-    col = base * (0.88 + 0.22 * pfbm(rs, S, S, 24, 24, 4)[..., None]) * (0.7 + 0.45 * dome[..., None])
-    top = (1.0 - (v / sh)) * (1 - 0.5 * np.abs(u / sw - 0.5))
-    col = col * (0.93 + 0.14 * top[..., None])
-    mort = hexf('#26243a')
-    col = _lerp(mort[None, None] * (0.9 + 0.3 * pnoise(rs, S, S, 40, 40)[..., None]), col, np.clip((edge - 0.045) / 0.07, 0, 1)[..., None])
+    base = pal[pick] * (0.74 + 0.5 * r[bid, 1:2])
+    mot = pfbm(rs, S, S, 24, 24, 4)[..., None]
+    col = base * (0.86 + 0.28 * mot) * (0.62 + 0.55 * dome[..., None])
+    # light from the upper left: pale wet rim on the top-left edge of each sett, dark lower-right edge
+    lx = -cu2 * 0.7 + cv2 * 0.7
+    rim = np.clip((q - 0.55) / 0.35, 0, 1) * np.clip(lx * 1.4, -1, 1)
+    col = col * (1 + 0.38 * np.clip(rim, 0, 1)[..., None]) * (1 - 0.3 * np.clip(-rim, 0, 1)[..., None])
+    # speckle (granite) kept low frequency so it does not alias
+    col = col * (0.95 + 0.1 * pnoise(rs, S, S, 128, 128)[..., None])
+    mort = hexf('#1e1c32')[None, None] * (0.8 + 0.5 * pnoise(rs, S, S, 64, 64)[..., None])
+    col = _lerp(mort, col, inside[..., None])
     save(_rgb(col), out)
-    h = np.clip(edge * 4.0, 0, 1) ** 0.7 * (0.8 + 0.2 * r[bid, 2])
+    h = np.clip(inside * (0.35 + 0.65 * dome ** 0.8), 0, 1) * (0.85 + 0.15 * r[bid, 2])
     save(np.repeat(h[..., None], 3, 2), out[:-4] + '_h.png')
 
 def pave(p, out):
@@ -79,23 +90,44 @@ def kerb(p, out):
     save(_rgb(col), out)
 
 def gutter(p, out):
-    """Running water in the gutter channel: dark blue-teal, long light streaks (u along the flow = 4 units, v across)."""
-    W, H = 512, 128; rs = np.random.RandomState(p['seed']); yy, xx = np.mgrid[0:H, 0:W].astype('float32')
-    n = pfbm(rs, H, W, 8, 2, 4); s = np.sin((xx / W * 4 * 2 * math.pi) + n * 9 + yy * 0.05)
-    base = hexf('#2c3e66')[None, None] * (0.8 + 0.5 * n[..., None])
-    hi = np.clip(s - 0.55, 0, 1) * 2.0; base = base + hexf('#9fc0e8')[None, None] * hi[..., None] * 0.55
+    """Running water in the gutter channel (u along the flow = 4 units, v across): dark blue-teal, braided long light streaks, little standing
+    waves (chevrons) and a pale foam line at both banks."""
+    W, H = 1024, 192; rs = np.random.RandomState(p['seed']); yy, xx = np.mgrid[0:H, 0:W].astype('float32')
+    n = pfbm(rs, H, W, 8, 3, 4); n2 = pfbm(rs, H, W, 16, 4, 3)
+    s = np.sin((xx / W * 4 * 2 * math.pi) * 1.0 + n * 7.0 + (yy / H) * 3.0 * (n2 - 0.5))
+    base = hexf('#243a68')[None, None] * (0.75 + 0.55 * n[..., None])
+    hi = np.clip(s - 0.62, 0, 1) * 2.4; base = base + hexf('#a8c8f0')[None, None] * hi[..., None] * 0.5
+    ch = np.abs(((xx / W * 16) % 1.0) - 0.5) * 2 + (np.abs(yy / H - 0.5)) * 1.2
+    wave = np.clip(1.0 - np.abs(ch - 0.55) / 0.05, 0, 1) * np.clip(1 - np.abs(yy / H - 0.5) * 2.2, 0, 1) * (n2 > 0.45)
+    base = base + hexf('#d8e8ff')[None, None] * wave[..., None] * 0.55
+    bank = np.clip(1 - np.minimum(yy, H - yy) / (H * 0.1), 0, 1) ** 1.5
+    base = _lerp(base, hexf('#e4ecfa')[None, None] * 0.9, (bank * (0.35 + 0.4 * n))[..., None])
     save(_rgb(base), out)
 
+def puddle_mask(p, out):
+    """Puddle decal mask (RGB, non-colour): R = body alpha (irregular blob, soft ~12 % edge), G = thin pale rim line right at the shore,
+    B = deep core alpha (smaller, softer). 512 px, the blob fills the square (radius 0.46)."""
+    S = 512; rs = np.random.RandomState(p['seed']); yy, xx = np.mgrid[0:S, 0:S].astype('float32'); xx = (xx - S / 2) / (S / 2); yy = (yy - S / 2) / (S / 2)
+    sx, sy = p.get('sx', 1.0), p.get('sy', 1.0); xx = xx / sx; yy = yy / sy
+    ang = np.arctan2(yy, xx); rr = np.sqrt(xx ** 2 + yy ** 2)
+    ph = rs.uniform(0, 6.28, 6); amp = [0.09, 0.07, 0.05, 0.035, 0.02, 0.012]
+    edge = 0.62 + sum(a * np.sin((k + 2) * ang + ph[k]) for k, a in enumerate(amp)) + (pfbm(rs, S, S, 6, 6, 3) - 0.5) * 0.16
+    d = (edge - rr)                                                               # > 0 inside
+    body = np.clip(d / 0.07, 0, 1) ** 1.2
+    rim = np.clip(1 - np.abs(d - 0.012) / 0.013, 0, 1) * 0.9 * (0.55 + 0.45 * pnoise(rs, S, S, 18, 18))
+    core = np.clip((d - 0.12) / 0.2, 0, 1)
+    save(np.stack([body, rim, core], -1), out)
+
 def ripples(p, out):
-    """Soft ripple rings: pale cool thin rings on transparent, several centres per tile, radii fading outward (4 x 4 units square)."""
+    """Soft ripple rings: pale cool thin rings (anti-aliased, softly blurred) on transparent, several centres per tile; radii fade outward."""
     S = 1024; ss = 2; Sx = S * ss; rs = np.random.RandomState(p['seed'])
     im = Image.new('RGBA', (Sx, Sx), (0, 0, 0, 0)); dr = ImageDraw.Draw(im)
     for k in range(p['n']):
-        cx, cy = rs.uniform(0.1, 0.9) * Sx, rs.uniform(0.1, 0.9) * Sx; R = rs.uniform(0.07, 0.15) * Sx; nr = rs.randint(2, 5)
+        cx, cy = rs.uniform(0.14, 0.86) * Sx, rs.uniform(0.14, 0.86) * Sx; R = rs.uniform(0.06, 0.12) * Sx; nr = rs.randint(2, 4)
         for j in range(nr):
-            rr = R * (0.35 + 0.65 * (j + 1) / nr); a = int(255 * (0.95 - 0.7 * j / nr)); w = max(2, int(Sx * 0.0035 * (1 - 0.3 * j / nr)))
+            rr = R * (0.4 + 0.6 * (j + 1) / nr); a = int(255 * (0.95 - 0.55 * j / nr)); w = max(2, int(Sx * 0.0028 * (1 - 0.3 * j / nr)))
             dr.ellipse([cx - rr, cy - rr, cx + rr, cy + rr], outline=(214, 230, 250, a), width=w)
-    im = im.resize((S, S), Image.LANCZOS); a = np.asarray(im).astype('float32') / 255
+    im = im.filter(ImageFilter.GaussianBlur(2.2)).resize((S, S), Image.LANCZOS); a = np.asarray(im).astype('float32') / 255
     save(a[..., :3], out, alpha=a[..., 3])
 
 # ----------------------------------------------------------------------------- generic tiles
@@ -257,13 +289,27 @@ def facade(p, out):
             for (b0, b1) in ((-0.55, -0.05), (0.05, 0.55)):
                 rect(dx + b0, a0, dx + b1, a1, tuple(int(c * 0.74) for c in dc)); rect(dx + b0 + 0.03, a0 + 0.03, dx + b1 - 0.03, a1 - 0.03, tuple(min(255, int(c * 1.12)) for c in dc))
         rect(dx - 0.72, 2.6, dx + 0.72, 2.66, tuple(int(c * 0.6) for c in dc))
-        # fanlight: half-disc with spokes, amber glow
-        arc_fill(dx, 4.15, 0.72, sash); arc_fill(dx, 4.15, 0.64, gl_dark)
-        arc_fill(dx, 4.15, 0.64, (255, 170, 70), gd)
-        for k in range(1, 6):
-            ang = math.pi * k / 6; ex, ez = dx + 0.66 * math.cos(ang), 4.15 + 0.66 * math.sin(ang)
-            a = _px(S, dx, 4.15); b = _px(S, ex, ez); dr.line([a, b], fill=sash, width=int(S * 0.03)); gd.line([a, b], fill=(0, 0, 0), width=int(S * 0.03))
-        rect(dx - 0.72, 4.12, dx + 0.72, 4.2, sash); rect(dx - 0.72, 4.12, dx + 0.72, 4.2, (0, 0, 0), gd)
+        ds = p.get('door_style', 'fan')
+        if ds == 'fan':
+            arc_fill(dx, 4.15, 0.72, sash); arc_fill(dx, 4.15, 0.64, gl_dark)
+            arc_fill(dx, 4.15, 0.64, (255, 170, 70), gd)
+            for k in range(1, 6):
+                ang = math.pi * k / 6; ex, ez = dx + 0.66 * math.cos(ang), 4.15 + 0.66 * math.sin(ang)
+                a = _px(S, dx, 4.15); b = _px(S, ex, ez); dr.line([a, b], fill=sash, width=int(S * 0.03)); gd.line([a, b], fill=(0, 0, 0), width=int(S * 0.03))
+        elif ds == 'transom':
+            rect(dx - 0.72, 4.15, dx + 0.72, 4.75, sash); rect(dx - 0.66, 4.2, dx + 0.66, 4.7, gl_dark); rect(dx - 0.66, 4.2, dx + 0.66, 4.7, (255, 170, 70), gd)
+            for k in range(1, 5):
+                xk = dx - 0.66 + k * 1.32 / 5; rect(xk - 0.02, 4.2, xk + 0.02, 4.7, sash); rect(xk - 0.02, 4.2, xk + 0.02, 4.7, (0, 0, 0), gd)
+            rect(dx - 0.66, 4.43, dx + 0.66, 4.47, sash); rect(dx - 0.66, 4.43, dx + 0.66, 4.47, (0, 0, 0), gd)
+        else:                                                                       # 'arch': tall arched light with a sunburst, voussoirs round it
+            arc_fill(dx, 4.0, 0.95, creamD); arc_fill(dx, 4.0, 0.8, sash); arc_fill(dx, 4.0, 0.72, gl_dark); arc_fill(dx, 4.0, 0.72, (255, 176, 76), gd)
+            for k in range(1, 9):
+                ang = math.pi * k / 9; ex, ez = dx + 0.74 * math.cos(ang), 4.0 + 0.74 * math.sin(ang)
+                a = _px(S, dx, 4.0); b = _px(S, ex, ez); dr.line([a, b], fill=sash, width=int(S * 0.022)); gd.line([a, b], fill=(0, 0, 0), width=int(S * 0.022))
+            for k in range(0, 9):
+                ang = math.pi * (k + 0.5) / 9; ex, ez = dx + 0.97 * math.cos(ang), 4.0 + 0.97 * math.sin(ang)
+                a = _px(S, dx + 0.8 * math.cos(ang), 4.0 + 0.8 * math.sin(ang)); b = _px(S, ex, ez); dr.line([a, b], fill=hex8('#b8ac90'), width=max(2, int(S * 0.012)))
+        rect(dx - 0.72, 4.0 if ds == 'arch' else 4.12, dx + 0.72, 4.08 if ds == 'arch' else 4.2, sash); rect(dx - 0.72, 4.0 if ds == 'arch' else 4.12, dx + 0.72, 4.08 if ds == 'arch' else 4.2, (0, 0, 0), gd)
         # knocker + letterbox + handle
         rect(dx - 0.2, 3.25, dx + 0.2, 3.4, hex8('#d7a843')); rect(dx + 0.38, 2.45, dx + 0.52, 2.58, hex8('#d7a843'))
         rect(dx - 0.25, 1.65, dx + 0.25, 1.75, hex8('#c89a3a'))
@@ -289,7 +335,7 @@ def _shopwin(p, out):
     """Bow-window glass seen from the street: warm lit interior (the whole image is emission), three shelves of goods, glazing bars.
     kind: boots | teapots | pretzels | greens. 5 x 3.4 units."""
     ss = 3; W, H = 640 * ss, 480 * ss; rs = np.random.RandomState(p['seed']); kind = p['kind']
-    back = {'boots': (214, 142, 74), 'teapots': (220, 170, 96), 'pretzels': (226, 156, 70), 'greens': (206, 150, 70)}[kind]
+    back = {'boots': (214, 142, 74), 'teapots': (220, 170, 96), 'pretzels': (226, 156, 70), 'greens': (206, 150, 70), 'hats': (222, 156, 96), 'jars': (214, 160, 100)}[kind]
     img = Image.new('RGB', (W, H), back); dr = ImageDraw.Draw(img)
     g = np.asarray(img).astype('float32'); yy, xx = np.mgrid[0:H, 0:W].astype('float32'); xx /= W; yy /= H
     g = g * (0.7 + 0.5 * np.exp(-(((xx - 0.5) * 1.3) ** 2 + ((yy - 0.25) * 1.4) ** 2) * 2.5))[..., None]
@@ -316,12 +362,23 @@ def _shopwin(p, out):
         x, y = cx * W, base * H; sc = s * H
         dr.ellipse([x - 0.3 * sc, y - 0.34 * sc, x + 0.3 * sc, y], fill=col)
         for k in (-0.14, 0.0, 0.14): dr.line([(x + k * sc - 0.05 * sc, y - 0.26 * sc), (x + k * sc + 0.04 * sc, y - 0.1 * sc)], fill=tuple(int(c * 0.65) for c in col), width=max(2, int(0.025 * sc)))
+    def item_hat(cx, base, s, col):
+        x, y = cx * W, base * H; sc = s * H
+        dr.polygon([(x - 0.42 * sc, y - 0.12 * sc), (x - 0.12 * sc, y - 0.46 * sc), (x + 0.14 * sc, y - 0.46 * sc), (x + 0.44 * sc, y - 0.12 * sc), (x + 0.3 * sc, y), (x - 0.3 * sc, y)], fill=col)
+        dr.line([(x - 0.42 * sc, y - 0.12 * sc), (x - 0.12 * sc, y - 0.46 * sc), (x + 0.14 * sc, y - 0.46 * sc), (x + 0.44 * sc, y - 0.12 * sc)], fill=(222, 190, 90), width=max(2, int(0.03 * sc)))
+        dr.ellipse([x - 0.04 * sc, y - 0.42 * sc, x + 0.06 * sc, y - 0.32 * sc], fill=(222, 190, 90))
+    def item_jar(cx, base, s, col):
+        x, y = cx * W, base * H; sc = s * H
+        dr.rounded_rectangle([x - 0.2 * sc, y - 0.42 * sc, x + 0.2 * sc, y], radius=int(0.08 * sc), fill=col); dr.rectangle([x - 0.09 * sc, y - 0.52 * sc, x + 0.09 * sc, y - 0.4 * sc], fill=tuple(int(c * 0.8) for c in col))
+        dr.ellipse([x - 0.12 * sc, y - 0.6 * sc, x + 0.12 * sc, y - 0.5 * sc], fill=(150, 100, 60)); dr.rectangle([x - 0.14 * sc, y - 0.3 * sc, x + 0.14 * sc, y - 0.14 * sc], fill=(240, 226, 190))
+        dr.rounded_rectangle([x - 0.15 * sc, y - 0.4 * sc, x - 0.1 * sc, y - 0.06 * sc], radius=int(0.02 * sc), fill=tuple(min(255, int(c * 1.3)) for c in col))
     def item_veg(cx, base, s, col):
         x, y = cx * W, base * H; sc = s * H
         dr.ellipse([x - 0.26 * sc, y - 0.5 * sc, x + 0.26 * sc, y], fill=col); dr.arc([x - 0.18 * sc, y - 0.42 * sc, x + 0.18 * sc, y - 0.05 * sc], 200, 340, fill=tuple(int(c * 0.6) for c in col), width=int(0.03 * sc))
     cols = {'boots': [(92, 52, 30), (46, 30, 26), (130, 80, 40), (60, 40, 50)], 'teapots': [(60, 96, 150), (230, 224, 208), (150, 56, 48), (60, 110, 90)],
-            'pretzels': [(150, 84, 36), (184, 112, 48), (120, 66, 30), (210, 150, 70)], 'greens': [(64, 130, 58), (210, 90, 36), (150, 40, 50), (222, 196, 70)]}[kind]
-    fn = dict(boots=item_boot, teapots=item_pot, pretzels=item_pretzel, greens=item_veg)[kind]
+            'pretzels': [(150, 84, 36), (184, 112, 48), (120, 66, 30), (210, 150, 70)], 'greens': [(64, 130, 58), (210, 90, 36), (150, 40, 50), (222, 196, 70)],
+            'hats': [(30, 26, 34), (60, 52, 70), (110, 36, 44), (46, 60, 96)], 'jars': [(60, 150, 120), (170, 60, 90), (70, 100, 190), (220, 170, 50)]}[kind]
+    fn = dict(boots=item_boot, teapots=item_pot, pretzels=item_pretzel, greens=item_veg, hats=item_hat, jars=item_jar)[kind]
     for k, sz in enumerate(shelf_z):
         n = 7 if k < 2 else 8; sc = (0.24, 0.24, 0.3)[k]
         for i in range(n):
@@ -358,6 +415,16 @@ def sign(p, out):
         dr.arc([cx - 0.95 * s, cy - 0.4 * s, cx - 0.35 * s, cy + 0.25 * s], 90, 270, fill=col, width=int(0.12 * s))
         dr.arc([cx - 0.36 * s, cy - 0.2 * s, cx + 0.36 * s, cy + 0.3 * s], 20, 160, fill=blue, width=int(0.045 * s))
         for k in (-0.22, 0.0, 0.22): dr.ellipse([cx + k * s - 0.04 * s, cy - 0.28 * s, cx + k * s + 0.04 * s, cy - 0.2 * s], fill=blue)
+    elif kind == 'hat':
+        col = (26, 22, 30, 255)
+        dr.polygon([(cx - 0.8 * s, cy + 0.1 * s), (cx - 0.3 * s, cy - 0.5 * s), (cx + 0.3 * s, cy - 0.5 * s), (cx + 0.8 * s, cy + 0.1 * s), (cx + 0.5 * s, cy + 0.34 * s), (cx - 0.5 * s, cy + 0.34 * s)], fill=col)
+        dr.line([(cx - 0.8 * s, cy + 0.1 * s), (cx - 0.3 * s, cy - 0.5 * s), (cx + 0.3 * s, cy - 0.5 * s), (cx + 0.8 * s, cy + 0.1 * s)], fill=gold, width=int(0.05 * s))
+        dr.ellipse([cx - 0.07 * s, cy - 0.42 * s, cx + 0.07 * s, cy - 0.28 * s], fill=gold)
+    elif kind == 'jar':
+        glass = (90, 190, 150, 255)
+        dr.polygon([(cx - 0.12 * s, cy - 0.7 * s), (cx + 0.12 * s, cy - 0.7 * s), (cx + 0.12 * s, cy - 0.45 * s), (cx + 0.46 * s, cy - 0.1 * s), (cx + 0.46 * s, cy + 0.48 * s), (cx - 0.46 * s, cy + 0.48 * s), (cx - 0.46 * s, cy - 0.1 * s), (cx - 0.12 * s, cy - 0.45 * s)], fill=glass)
+        dr.ellipse([cx - 0.16 * s, cy - 0.82 * s, cx + 0.16 * s, cy - 0.66 * s], fill=(150, 100, 60, 255)); dr.rectangle([cx - 0.3 * s, cy + 0.02 * s, cx + 0.3 * s, cy + 0.3 * s], fill=(240, 226, 190, 255))
+        dr.rounded_rectangle([cx - 0.38 * s, cy - 0.02 * s, cx - 0.3 * s, cy + 0.42 * s], radius=int(0.03 * s), fill=(190, 240, 215, 255))
     else:
         col = (164, 92, 38, 255); lo = (110, 60, 26, 255); w = int(0.15 * s)
         dr.ellipse([cx - 0.62 * s, cy - 0.48 * s, cx + 0.02 * s, cy + 0.16 * s], outline=col, width=w); dr.ellipse([cx - 0.02 * s, cy - 0.48 * s, cx + 0.62 * s, cy + 0.16 * s], outline=col, width=w)
@@ -378,8 +445,7 @@ def coach_side(p, out):
     dr.line([(0.02 * W, 0.58 * H), (0.98 * W, 0.58 * H)], fill=gold, width=int(0.006 * W)); dr.line([(0.02 * W, 0.075 * H), (0.98 * W, 0.075 * H)], fill=(160, 120, 40), width=int(0.004 * W))
     dr.rectangle([0, 0.9 * H, W, H], fill=(16, 24, 22))                                  # skirt
     wx0, wx1, wz0, wz1 = 0.14 * W, 0.86 * W, 0.12 * H, 0.46 * H                          # the glass window with a dark frame
-    dr.rounded_rectangle([wx0 - 0.02 * W, wz0 - 0.03 * H, wx1 + 0.02 * W, wz1 + 0.03 * H], radius=int(0.02 * W), fill=(16, 22, 20)); dr.rectangle([wx0, wz0, wx1, wz1], fill=(80, 44, 30))
-    gd.rectangle([wx0, wz0, wx1, wz1], fill=(255, 160, 64)); gd.rectangle([0.48 * W, wz0, 0.52 * W, wz1], fill=(0, 0, 0))
+    dr.rounded_rectangle([wx0 - 0.02 * W, wz0 - 0.03 * H, wx1 + 0.02 * W, wz1 + 0.03 * H], radius=int(0.02 * W), fill=(16, 22, 20)); dr.rectangle([wx0, wz0, wx1, wz1], fill=(26, 30, 40))
     dr.rectangle([0.48 * W, wz0, 0.52 * W, wz1], fill=(16, 22, 20))
     # crest on the lower panel: shield with chevron + three studs
     cx, cz = 0.5 * W, 0.78 * H; sw, sh = 0.07 * W, 0.15 * H
@@ -391,30 +457,81 @@ def coach_side(p, out):
     im = im.resize((480, 288), Image.LANCZOS); gl = gl.resize((480, 288), Image.LANCZOS)
     save(np.asarray(im).astype('float32') / 255, out); save(np.asarray(gl).astype('float32') / 255, out[:-4] + '_glow.png')
 
+SKY_W = 8192
+def _cloud_tile(rs, wpx, hpx, ss=2):
+    """One cartoon cumulus (flat-ish bottom, scalloped top) as three crisp masks at wpx x hpx: sil, shade (lower part), rim (upper-left band)."""
+    W, H = int(wpx * ss), int(hpx * ss); sil = Image.new('L', (W, H), 0); d = ImageDraw.Draw(sil)
+    n = rs.randint(6, 10); base = H * 0.78
+    circ = []
+    for i in range(n):
+        t = (i + rs.uniform(-0.2, 0.2)) / (n - 1); x = W * (0.12 + 0.76 * t); envh = math.sin(math.pi * (0.1 + 0.8 * t)) ** 0.8
+        r = H * rs.uniform(0.13, 0.22) * (0.5 + 0.7 * envh); y = base - r * rs.uniform(0.75, 1.0) - envh * H * rs.uniform(0.0, 0.3)
+        circ.append((x, y, r))
+    # a couple of big domes on top
+    for _ in range(2):
+        x = W * rs.uniform(0.3, 0.7); r = H * rs.uniform(0.24, 0.32); circ.append((x, base - r * 0.95 - H * 0.12, r))
+    for (x, y, r) in circ: d.ellipse([x - r, y - r, x + r, y + r], fill=255)
+    d.rounded_rectangle([W * 0.1, base - H * 0.2, W * 0.9, base], radius=int(H * 0.08), fill=255)
+    d.rectangle([0, base, W, H], fill=0)                                         # flat bottom
+    sil_a = np.asarray(sil).astype('float32') / 255
+    def shifted(dx, dy):
+        o = Image.new('L', (W, H), 0); od = ImageDraw.Draw(o)
+        for (x, y, r) in circ: od.ellipse([x - r + dx, y - r + dy, x + r + dx, y + r + dy], fill=255)
+        od.rounded_rectangle([W * 0.1 + dx, base - H * 0.2 + dy, W * 0.9 + dx, base + dy], radius=int(H * 0.08), fill=255); od.rectangle([0, base, W, H], fill=0)
+        return np.asarray(o).astype('float32') / 255
+    body = shifted(-H * 0.035, -H * 0.075) * sil_a                                 # lit upper-left volume (flat colour)
+    rim = shifted(H * 0.016, H * 0.022)
+    rim = sil_a * (1 - rim)                                                       # thin band along the top-left edges
+    ds = lambda a: np.asarray(Image.fromarray((a * 255).astype('uint8')).resize((int(wpx), int(hpx)), Image.LANCZOS)).astype('float32') / 255
+    return ds(sil_a), ds(body), ds(rim)
+
+def coach_win(p, out):
+    """Coach window glass (emission): warm amber lamp-lit interior, a dark pillar in the middle, darker toward the edges (the curtain), 2 : 1."""
+    W, H = 256, 128; yy, xx = np.mgrid[0:H, 0:W].astype('float32'); xx /= W; yy /= H
+    g = (0.55 + 0.6 * np.exp(-(((xx - 0.5) * 2.2) ** 2 + ((yy - 0.3) * 2.0) ** 2) * 1.2))[..., None] * np.array([1.0, 0.62, 0.24], 'float32')[None, None]
+    g = g * (1 - 0.6 * np.clip((0.12 - np.minimum(xx, 1 - xx)) / 0.12, 0, 1))[..., None]
+    g = g * np.where(np.abs(xx - 0.5) < 0.025, 0.05, 1.0)[..., None]
+    save(np.clip(g, 0, 1.4) / 1.4, out)
+
 def sky_rain(p, out):
-    """Rain-light sky (sky-dome UV: u = azimuth / 360 from +x CCW, v = (elevation + 15) / 105): pale violet-slate overcast in toon cloud
-    layers with hard edges, a warm peach rift along the horizon at the far end of the street (azimuth 90), a low pink glow behind."""
-    W = WX.SKY_W; H = int(round(W * 105 / 360)); rs = np.random.RandomState(p['seed'])
+    """Sky dome (UV: u = azimuth / 360 from +x CCW, v = (elevation + 15) / 105), 8192 px wide so the edges stay crisp at 720 x 1280.
+    Gradient overcast + warm rift at the far end of the street (azimuth 90) + crisp cartoon cumulus drawn as flat shapes: shade, lit body, rim.
+    p['mode'] 'rain' (pale slate-lavender day rain) | 'dusk' (deep indigo, orange horizon, peach rims)."""
+    W = SKY_W; H = int(round(W * 105 / 360)); rs = np.random.RandomState(p['seed']); dusk = p.get('mode') == 'dusk'
     el = 90.0 - (np.arange(H, dtype='float32') + 0.5) / H * 105.0; az = (np.arange(W, dtype='float32') + 0.5) / W * 360.0
     def grad(stops):
         e = np.clip(el, -15, 90); o = np.zeros((H, 3), 'float32')
         for ch in range(3): o[:, ch] = np.interp(e, [x[0] for x in stops], [hexf(x[1])[ch] for x in stops])
         return np.repeat(o[:, None, :], W, 1)
-    img = grad([(-15, '#c89888'), (0, '#f0c49c'), (7, '#e6b8a8'), (20, '#b0aecc'), (45, '#8a98bc'), (90, '#6478a4')])
+    if dusk:
+        img = grad([(-15, '#b87c78'), (0, '#f0a468'), (5, '#d890a0'), (14, '#7a78b4'), (40, '#4c58a0'), (90, '#2c3a84')]); gcol, gk = '#ffb870', 0.8
+        pal = [('#7c82c0', '#4e5a9c', '#f6b8a0'), ('#6c74b2', '#444e8c', '#f6a67c'), ('#5e66a4', '#3a4480', '#ff9a60')]
+    else:
+        img = grad([(-15, '#c89888'), (0, '#f0c49c'), (7, '#e6b8a8'), (20, '#b8bedc'), (45, '#98a8d0'), (90, '#7c8cb8')]); gcol, gk = '#ffd8a0', 0.7
+        pal = [('#c4cce8', '#8c9acc', '#fbe2cc'), ('#b6c0e0', '#7e8cc0', '#f8d6bc'), ('#a8b4d8', '#7482b6', '#f4cab0')]
     d_az = np.minimum(np.abs(az - 90.0), 360 - np.abs(az - 90.0))[None, :]
-    glow = np.exp(-((d_az / 38.0) ** 2) - ((el[:, None] - 4.0) / 16.0) ** 2); img = img + hexf('#ffd8a0')[None, None] * glow[..., None] * 0.75
-    def layer(img, cell, cover, lo, hi, body, shade, rim, seed, sq=1.0):
-        r2 = np.random.RandomState(seed); n = pfbm(r2, H, W, cell[0], cell[1], 5)
-        env = np.clip((el[:, None] - lo) / 2.5, 0, 1) * np.clip((hi - el[:, None]) / 6.0, 0, 1)
-        raw = (n - (1 - cover)) * env; m = np.clip(raw * 60, 0, 1)
-        up = np.roll(raw, int(H * 0.012), axis=0); rim_m = np.clip((raw - up) * 40, 0, 1) * m; sh = np.clip((np.roll(raw, -int(H * 0.02), axis=0) - raw) * 35, 0, 1)
-        col = hexf(body)[None, None] * (1 - sh[..., None] * 0.55) + hexf(shade)[None, None] * sh[..., None] * 0.55
-        warm = np.exp(-((d_az / 70.0) ** 2))[..., None]
-        col = col * (1 - rim_m[..., None] * 0.7) + (hexf(rim)[None, None] * (0.6 + 0.6 * warm)) * rim_m[..., None] * 0.7
-        return img * (1 - m[..., None]) + col * m[..., None]
-    img = layer(img, (7, 5), 0.62, 14, 78, '#92a0c8', '#62709c', '#f4cdb4', p['seed'] + 1)
-    img = layer(img, (9, 7), 0.58, 5, 40, '#7a88b2', '#515f8a', '#f0c0a8', p['seed'] + 2)
-    img = layer(img, (12, 9), 0.5, 1, 20, '#6a78a0', '#44527c', '#e8b098', p['seed'] + 3)
+    glow = np.exp(-((d_az / 38.0) ** 2) - ((el[:, None] - 4.0) / 16.0) ** 2); img = img + hexf(gcol)[None, None] * glow[..., None] * gk
+    ppd = W / 360.0
+    # (elevation range, count, width deg, height factor) far to near layers: small low clouds first, big high clouds last
+    layers = [((1.5, 9.0), 26, (14, 26), 0), ((9.0, 22.0), 22, (18, 34), 1), ((22.0, 46.0), 16, (26, 46), 2), ((46.0, 72.0), 8, (40, 70), 2)]
+    for (e0, e1), cnt, (w0, w1), pi_ in layers:
+        body_c, shade_c, rim_c = [hexf(c) for c in pal[pi_]]
+        for k in range(cnt):
+            e = rs.uniform(e0, e1); a = (k + rs.uniform(0.0, 1.0)) / cnt * 360.0; wd = rs.uniform(w0, w1); sc = 1.0 / max(0.45, math.cos(math.radians(min(e, 75))))
+            wpx = int(wd * ppd * sc); hpx = int(wpx * rs.uniform(0.34, 0.5))
+            if wpx < 40: continue
+            sil, bod, rim = _cloud_tile(rs, wpx, hpx)
+            cy = int((90 - e) / 105 * H) ; x0 = int(a * ppd - wpx / 2); y0 = cy - int(hpx * 0.78)
+            # warm rim stronger toward the glow at azimuth 90
+            warm = float(np.exp(-(((a - 90.0 + 180) % 360 - 180) / 90.0) ** 2))
+            tile_col = shade_c[None, None] * (1 - bod[..., None]) + body_c[None, None] * bod[..., None]
+            tile_col = tile_col * (1 - rim[..., None] * (0.55 + 0.4 * warm)) + rim_c[None, None] * rim[..., None] * (0.55 + 0.4 * warm)
+            for sx in (0, -W, W):
+                xa = x0 + sx
+                xs0, xs1 = max(0, xa), min(W, xa + wpx); ys0, ys1 = max(0, y0), min(H, y0 + hpx)
+                if xs1 <= xs0 or ys1 <= ys0: continue
+                tx0, ty0 = xs0 - xa, ys0 - y0; sl = (slice(ys0, ys1), slice(xs0, xs1)); tl = (slice(ty0, ty0 + ys1 - ys0), slice(tx0, tx0 + xs1 - xs0))
+                m = sil[tl][..., None]; img[sl] = img[sl] * (1 - m) + tile_col[tl] * m
     save(np.clip(img, 0, 1), out)
 
 def brickwall(p, out):
@@ -436,22 +553,25 @@ def all_jobs():
     JOBS.clear()
     reg('cobbles', dict(seed=21), cobbles); reg('pave', dict(seed=22), pave); reg('kerb', dict(seed=23), kerb); reg('gutter', dict(seed=24), gutter)
     reg('ripples_a', dict(seed=31, n=7), ripples); reg('ripples_b', dict(seed=32, n=5), ripples)
+    for i, (sx, sy) in enumerate(((1.0, 1.0), (1.0, 0.7), (0.75, 1.0), (1.0, 0.85))): reg('pud_' + 'abcd'[i], dict(seed=300 + i, sx=sx, sy=sy), puddle_mask)
     reg('wood', dict(seed=41, col='#8a5e3a', w=0.5), wood); reg('wood_d', dict(seed=42, col='#5e3c26', w=0.4), wood)
     reg('barrel', dict(col='#8c5c34'), barrel); reg('slate', dict(seed=51, col='#4a4e66'), slate)
     reg('awn_a', dict(n=10, a='#c8483a', b='#efe4cc'), stripes); reg('awn_b', dict(n=8, a='#2f6a52', b='#efe4cc'), stripes)
     reg('lace', dict(col='#f0a8c0'), lace)
-    specs = [('fac_a', 'red', 'ochre', 'house', 1, GREEN, 0.55, 101), ('fac_b', 'brown', 'plum', 'house', 0, OXBLOOD, 0.62, 102), ('fac_c', 'ochre', 'stock', 'house', 2, NAVY, 0.75, 103),
-             ('fac_d', 'red', 'rust', 'house', 0, GREEN, 0.6, 104), ('fac_e', 'rust', 'brown', 'house', 1, OXBLOOD, 0.68, 105), ('fac_f', 'plum', 'brown', 'house', 2, GREEN, 0.7, 106),
-             ('fac_s1', 'red', 'ochre', 'shop', 0, GREEN, 0.7, 111), ('fac_s2', 'brown', 'rust', 'shop', 1, OXBLOOD, 0.7, 112), ('fac_s3', 'ochre', 'red', 'shop', 0, NAVY, 0.72, 113),
-             ('fac_s4', 'stock', 'ochre', 'shop', 1, GREEN, 0.66, 114)]
-    fasc = dict(fac_s1='#2f5c46', fac_s2='#6e2433', fac_s3='#2b3f66', fac_s4='#7a5a2c')
-    for nm, b1, b2, g, db, dc, lit, sd in specs:
-        reg(nm, dict(brick=b1, brick2=b2, ground=g, door_bay=db, door=dc, lit=lit, seed=sd, fascia=fasc.get(nm, '#2f5c46')), facade)
-    for k, sd in (('boots', 61), ('teapots', 62), ('pretzels', 63), ('greens', 64)): reg('shopwin_' + k, dict(kind=k, seed=sd), _shopwin)
-    reg('sign_boot', dict(kind='boot', bg='#2e5a4a'), sign); reg('sign_teapot', dict(kind='teapot', bg='#7a2a34'), sign); reg('sign_pretzel', dict(kind='pretzel', bg='#2b4a7a'), sign)
+    specs = [('fac_a', 'red', 'ochre', 'house', 1, GREEN, 0.55, 101, 'fan'), ('fac_b', 'brown', 'plum', 'house', 0, OXBLOOD, 0.62, 102, 'transom'), ('fac_c', 'ochre', 'stock', 'house', 2, NAVY, 0.75, 103, 'arch'),
+             ('fac_d', 'red', 'rust', 'house', 0, GREEN, 0.6, 104, 'transom'), ('fac_e', 'rust', 'brown', 'house', 1, OXBLOOD, 0.68, 105, 'fan'), ('fac_f', 'plum', 'brown', 'house', 2, GREEN, 0.7, 106, 'arch'),
+             ('fac_g', 'stock', 'red', 'house', 1, '#8a2c2c', 0.5, 107, 'arch'), ('fac_h', 'ochre', 'rust', 'house', 0, '#2c4c5c', 0.72, 108, 'fan'), ('fac_i', 'red', 'plum', 'house', 2, '#3a3a52', 0.64, 109, 'transom'),
+             ('fac_j', 'brown', 'stock', 'house', 1, '#9a7a2c', 0.58, 110, 'fan'),
+             ('fac_s1', 'red', 'ochre', 'shop', 0, GREEN, 0.7, 111, 'fan'), ('fac_s2', 'brown', 'rust', 'shop', 1, OXBLOOD, 0.7, 112, 'fan'), ('fac_s3', 'ochre', 'red', 'shop', 0, NAVY, 0.72, 113, 'fan'),
+             ('fac_s4', 'stock', 'ochre', 'shop', 1, GREEN, 0.66, 114, 'fan'), ('fac_s5', 'plum', 'brown', 'shop', 0, '#4a2c5c', 0.7, 115, 'fan'), ('fac_s6', 'rust', 'ochre', 'shop', 1, '#2c4a6a', 0.7, 116, 'fan')]
+    fasc = dict(fac_s1='#2f5c46', fac_s2='#6e2433', fac_s3='#2b3f66', fac_s4='#7a5a2c', fac_s5='#4a2c5c', fac_s6='#2c4a6a')
+    for nm, b1, b2, g, db, dc, lit, sd, dsty in specs:
+        reg(nm, dict(brick=b1, brick2=b2, ground=g, door_bay=db, door=dc, lit=lit, seed=sd, fascia=fasc.get(nm, '#2f5c46'), door_style=dsty), facade)
+    for k, sd in (('boots', 61), ('teapots', 62), ('pretzels', 63), ('greens', 64), ('hats', 65), ('jars', 66)): reg('shopwin_' + k, dict(kind=k, seed=sd), _shopwin)
+    reg('sign_hat', dict(kind='hat', bg='#6a3a6e'), sign); reg('sign_jar', dict(kind='jar', bg='#2e4a6a'), sign); reg('sign_boot', dict(kind='boot', bg='#2e5a4a'), sign); reg('sign_teapot', dict(kind='teapot', bg='#7a2a34'), sign); reg('sign_pretzel', dict(kind='pretzel', bg='#2b4a7a'), sign)
     reg('brickwall_a', dict(seed=71, brick='red', brick2='ochre'), brickwall); reg('brickwall_b', dict(seed=72, brick='brown', brick2='rust'), brickwall); reg('halo', dict(), halo)
-    reg('coach_side', dict(v=1), coach_side)
-    reg('sky_rain', dict(seed=15), sky_rain)
+    reg('coach_side', dict(v=2), coach_side); reg('coach_win', dict(v=1), coach_win)
+    reg('sky_rain', dict(seed=15, mode='rain'), sky_rain); reg('sky_dusk', dict(seed=17, mode='dusk'), sky_rain)
 
 def ensure(verbose=True, only=None):
     os.makedirs(TEX, exist_ok=True); all_jobs()
