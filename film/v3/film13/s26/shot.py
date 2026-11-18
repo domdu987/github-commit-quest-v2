@@ -37,8 +37,8 @@ CUTS = [G[27], G[28], G[29], G[30]]
 G_WALK0, G_WALK1 = G[26] + 2, G[26] + 44             # strolls out of the door to the portico edge
 G_FALL0 = G[29] + 4                                  # launch
 G_HIT = C.g_of(63.1) - 3                             # 1893: lands in the mud (sfx splat)
-G_PURSE0 = G[30] + 36                                # purse comes up
-G_TAKE = G[30] + 68                                  # pullman takes it (1974)
+G_PURSE0 = G[30] + 8                                # purse comes up
+G_TAKE = G[30] + 52                                  # pullman takes it (1974)
 BF = lambda g: C.bf(26, g)
 
 
@@ -51,12 +51,13 @@ LAND = Vector((1.2, -11.6, 0.0))                     # where he lands (outside t
 PULL = Vector((3.0, -12.4, 0.0))
 
 CAMS = {
-    26: (((-7.0, -12.5, 5.2), (0.0, -3.6, 7.4)), ((-5.0, -10.5, 5.8), (0.0, -3.6, 7.6)), 24.0),
+    26: (((-2.2, -12.8, 5.0), (0.0, -3.2, 7.9)), ((-1.2, -10.2, 5.6), (0.0, -3.4, 7.9)), 24.0),
     27: (((-4.2, -9.5, 7.2), (0.0, -3.8, 6.2)), ((-2.6, -7.8, 7.4), (0.0, -3.8, 6.6)), 22.0),
-    28: (((12.0, -38.0, 2.0), (-2.0, -2.0, 8.0)), ((8.0, -32.0, 2.6), (-1.0, -2.5, 7.8)), 22.0),
+    28: (((-22.0, -13.5, 3.6), (0.0, -3.8, 7.6)), ((-9.2, -8.6, 4.8), (0.0, -3.9, 7.0)), 22.0),
     29: (((-4.2, -16.8, 2.6), (0.1, -6.5, 5.8)), ((-3.2, -17.2, 1.9), (1.0, -10.2, 2.6)), 22.0),
     30: (((-2.6, -18.0, 1.5), (1.6, -11.2, 2.3)), ((-1.2, -16.4, 1.7), (1.8, -11.0, 2.5)), 22.0),
 }
+LIGHT = "DAY"
 PPD = {"std": 256, "fall": 192, "sit": 256}
 
 
@@ -139,6 +140,7 @@ def land_z():
     return STATE_GROUND(LAND.x, LAND.y)
 
 
+SINK = 0.75                                           # waist deep in the mud
 STATE_GROUND = None                                   # set in Take: mud height + fill at the landing spot
 
 
@@ -148,8 +150,11 @@ def rich_sit(g):
     # the hat (still in the air at impact) comes down beside the head; stars spin
     k = ez(t / 10.0)
     hf0 = (2.7, -3.4, 38 + 420)
-    hf1 = RICH_SIT["hat_fly"]
-    p["hat_fly"] = (lerp(hf0[0], hf1[0], k), lerp(hf0[1], hf1[1], k), lerp(hf0[2] % 360, hf1[2], k))
+    hf1 = (0.0, -0.1, 0.0)
+    if t < 9:
+        p["hat_fly"] = (lerp(hf0[0], hf1[0], k), lerp(hf0[1], hf1[1], k), lerp(hf0[2] % 360, hf1[2], k))
+    else:
+        p.pop("hat_fly", None)                          # the hat is back on his head (askew, as drawn by the pose)
     p["mud"] = clamp(0.35 + t / 20.0)
     p["dizzy"] = 1.0
     p["t"] = g / 30.0
@@ -170,7 +175,7 @@ def rich_pay(g, hand_local):
     p["head_roll"] = lerp(p["head_roll"], 6.0, u)
     given = g >= G_TAKE
     if given:
-        p["arm_r"] = dict(hand=lerp_t((1.1, -0.5), (0.9, 1.3), ez((g - G_TAKE) / 10.0)), bend=0.2, stretch=1.2)
+        p["arm_r"] = dict(hand=lerp_t((1.1, -0.5), (0.9, 1.3), ez((g - G_TAKE) / 6.0)), bend=0.2, stretch=1.2)
     else:
         p["arm_r"] = dict(hand=lerp_t((0.9, 1.3), (1.15, -0.55), u), bend=lerp(0.2, -0.3, u), stretch=lerp(1.2, 1.5, u))
         if u > 0.05:
@@ -193,45 +198,84 @@ def pose_pull(g):
 
 # ----------------------------------------------------------------------------- mud splash: ballistic 3D blobs
 class Splash(object):
-    N = 40
+    """mud impact: a wet dark patch with a raised rim, a crown of cone spikes that rises and collapses (t 0..9), stretched droplets."""
+    N = 30
+    NS = 18
+
+    def _obj(self, ob, name):
+        S = B.STATE
+        ob.name = name
+        for c in list(ob.users_collection):
+            c.objects.unlink(ob)
+        S["SET"].objects.link(ob)
+        ob.visible_shadow = False
+        ob.hide_render = True
+        return ob
 
     def __init__(self, centre):
+        from mathutils import Matrix
         S = B.STATE
-        mat = S["C"]("#8c6234", 1.05, 1.0)
+        mat = S["C"]("#946336", 1.1, 1.0)
+        mat_dark = S["C"]("#34231a", 0.9, 1.0)
+        mat_rim = S["C"]("#6a4a2c", 1.0, 1.0)
         rnd = random.Random(29)
+        self.cx = centre
+        bpy.ops.mesh.primitive_circle_add(vertices=40, radius=1.0, fill_type="TRIFAN")
+        self.patch = self._obj(bpy.context.active_object, "splash_patch"); self.patch.data.materials.append(mat_dark)
+        bpy.ops.mesh.primitive_torus_add(major_radius=1.0, minor_radius=0.12, major_segments=40, minor_segments=6)
+        self.rim = self._obj(bpy.context.active_object, "splash_rim"); self.rim.data.materials.append(mat_rim)
+        self.spikes = []
+        for k in range(self.NS):
+            bpy.ops.mesh.primitive_cone_add(vertices=6, radius1=0.5, radius2=0.0, depth=1.0)
+            ob = self._obj(bpy.context.active_object, "splash_spike_%d" % k)
+            ob.data.transform(Matrix.Translation((0, 0, 0.5)))
+            ob.data.materials.append(mat)
+            self.spikes.append((ob, 2 * math.pi * k / self.NS + rnd.uniform(-0.1, 0.1), rnd.uniform(0.9, 1.6), rnd.uniform(0.9, 1.3)))
         self.obs = []
         self.vel = []
-        self.cx = centre
         for k in range(self.N):
             bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=2, radius=1.0)
-            ob = bpy.context.active_object
-            ob.name = "splash_%d" % k
-            for c in list(ob.users_collection):
-                c.objects.unlink(ob)
-            S["SET"].objects.link(ob)
+            ob = self._obj(bpy.context.active_object, "splash_%d" % k)
             ob.data.materials.append(mat)
-            ob.visible_shadow = False
-            ob.hide_render = True
             a = rnd.uniform(0, 2 * math.pi)
-            sp = rnd.uniform(0.16, 0.5) * (1.0 if k < 28 else 0.5)
-            self.vel.append((math.cos(a) * sp, math.sin(a) * sp * 0.8 - 0.05, rnd.uniform(0.28, 0.72), rnd.uniform(0.045, 0.14)))
+            sp = rnd.uniform(0.14, 0.42)
+            self.vel.append((math.cos(a) * sp, math.sin(a) * sp * 0.8, rnd.uniform(0.35, 0.8), rnd.uniform(0.04, 0.10)))
             self.obs.append(ob)
+
+    def _keys(self, ob, f, paths=("hide_render", "location", "scale", "rotation_euler")):
+        for p in paths:
+            ob.keyframe_insert(p, frame=f)
+        for fc in camrig.fcurves_of(ob):
+            for kp in fc.keyframe_points:
+                kp.interpolation = "CONSTANT"
 
     def key(self, f, g, ground):
         t = g - G_HIT
+        cx, cy = self.cx
+        on = t >= 0
+        self.patch.hide_render = self.rim.hide_render = not on
+        grow = 0.35 + 0.65 * clamp(t / 5.0)
+        self.patch.location = (cx, cy, ground + 0.05); self.patch.scale = (2.1 * grow, 1.7 * grow, 1.0)
+        self.rim.location = (cx, cy, ground + 0.10); self.rim.scale = (2.0 * grow, 1.6 * grow, 1.0)
+        self._keys(self.patch, f); self._keys(self.rim, f)
+        for ob, a, H, w in self.spikes:
+            son = 0 <= t <= 10
+            ob.hide_render = not son
+            if son:
+                h = H * math.sin(math.pi * clamp(t / 10.0)) ** 0.8
+                rr = 1.05 + 0.10 * t
+                ob.location = (cx + math.cos(a) * rr * 1.1, cy + math.sin(a) * rr * 0.9, ground + 0.05)
+                ob.rotation_euler = (0.0, math.radians(30), a)
+                ob.scale = (0.34 * w, 0.34 * w, max(0.01, h))
+            self._keys(ob, f)
         for ob, (vx, vy, vz, r) in zip(self.obs, self.vel):
-            on = 0 <= t <= 15
-            ob.hide_render = not on
-            if on:
-                ob.location = (self.cx[0] + vx * t, self.cx[1] + vy * t, ground + 0.15 + vz * t - 0.045 * t * t)
-                rr = r * (1.0 - 0.45 * t / 15.0)
-                ob.scale = (rr, rr, rr * 0.9)
-            ob.keyframe_insert("hide_render", frame=f)
-            ob.keyframe_insert("location", frame=f)
-            ob.keyframe_insert("scale", frame=f)
-            for fc in camrig.fcurves_of(ob):
-                for kp in fc.keyframe_points:
-                    kp.interpolation = "CONSTANT"
+            don = 0 <= t <= 14
+            ob.hide_render = not don
+            if don:
+                ob.location = (cx + vx * t, cy + vy * t, ground + 0.1 + vz * t - 0.05 * t * t)
+                rr = r * (1.0 - 0.4 * t / 14.0)
+                ob.scale = (rr, rr, rr * 1.5)
+            self._keys(ob, f)
 
 
 # ----------------------------------------------------------------------------- the take
@@ -260,19 +304,55 @@ def swap_cast():
     return T
 
 
+def retint_sky():
+    """the low sky band of the dome renders olive/khaki (the sky texture's warm horizon): blend the sky colour toward a pale warm blue (client QA: warm blue sky)."""
+    so = B.STATE.get("sky_obj")
+    if so is None:
+        return
+    nt = so.data.materials[0].node_tree
+    img = [n for n in nt.nodes if n.bl_idname == "ShaderNodeTexImage"][0]
+    st = nt.nodes["strength"]
+    mix = nt.nodes.new("ShaderNodeMix"); mix.data_type = "RGBA"; mix.blend_type = "MIX"
+    mix.inputs[0].default_value = SKY_MIX
+    mix.inputs[7].default_value = SKY_TINT
+    for l in list(nt.links):
+        if l.to_node == st and l.to_socket.name == "Color":
+            nt.links.remove(l)
+    nt.links.new(img.outputs["Color"], mix.inputs[6])
+    nt.links.new(mix.outputs[2], st.inputs["Color"])
+
+
+SKY_MIX = 0.72
+SKY_TINT = (0.52, 0.70, 1.0, 1.0)
+
+
+def cut_stair():
+    """the old stair stops short of the lifted portico: delete everything of it nearer the hotel than y -6.2 (top 3 flights + landing + rail),
+    leaving void between the stair top (z ~1.5) and the portico lip (z 6.25); hide the mirror puddles (smeared reflections)."""
+    import bmesh
+    st = bpy.data.objects["stair"]
+    bm = bmesh.new(); bm.from_mesh(st.data)
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.co.y > -6.2], context="VERTS")
+    bm.to_mesh(st.data); bm.free()
+    for n in ("puddles", "scum"):
+        if n in bpy.data.objects:
+            bpy.data.objects[n].hide_render = True
+
+
 class Take(object):
     def __init__(self, quality="preview"):
         global STATE_GROUND
         bpy.ops.wm.read_factory_settings(use_empty=True)
         self.scene = scene = bpy.context.scene
         swap_cast()
-        self.A = B.build("front_stair", light="MORNING", state="lift1,fill0.15")
+        self.A = B.build("front_stair", light=LIGHT, state="lift1,fill0.15")
         B.setup_render(scene, quality)
+        cut_stair()
         scene.cycles.denoising_prefilter = "FAST"
         scene.render.use_persistent_data = False
         scene.frame_start, scene.frame_end = 1, 9000
         self.cam = camrig.make_camera(scene, name="cam_s26", lens=22.0)
-        self.cam.data.clip_start, self.cam.data.clip_end = 0.02, 600
+        self.cam.data.clip_start, self.cam.data.clip_end = 0.02, 6000
         self.cam.data.dof.use_dof = False
         scene.camera = self.cam
         gz = B._gnd()
@@ -304,8 +384,8 @@ class Take(object):
             bpy.context.view_layer.update()
             gz = B._gnd()
             if shot == 28:
-                objs = (B.crowd_view(7, [(-24, 24, -23, -15)], tmp, seed=31, ground=gz, min_dist=3.2) +
-                        B.crowd_view(4, [(-22, -10, -12, -7), (10, 22, -12, -7)], tmp, seed=33, ground=gz, min_dist=3.0))
+                objs = (B.crowd_view(4, [(10, 22, -15, -9)], tmp, seed=31, ground=gz, min_dist=3.0) +
+                        B.crowd_view(3, [(-12, -8, -13, -11)], tmp, seed=33, ground=gz, min_dist=3.0))
             elif shot == 29:
                 objs = B.crowd_view(5, [(-14, -5, -14, -9), (6, 14, -14, -9)], tmp, seed=35, ground=gz, min_dist=2.6)
             else:
@@ -341,7 +421,7 @@ class Take(object):
                 on[v] = True
             else:
                 a = self.rich["sit"]
-                C_place(a, f, (LAND.x, LAND.y, land_z()), False)
+                C_place(a, f, (LAND.x, LAND.y, land_z() - SINK * ez((g - G_HIT) / 6.0)), False)
                 scene.frame_set(f)
                 a.pose(f, rich_pay(g, None) if g >= G_PURSE0 - 12 else rich_sit(g), camera=cam)
                 on["sit"] = True
@@ -355,7 +435,7 @@ class Take(object):
             f = BF(g)
             pa = self.pull
             if g >= G[30]:
-                u = ez((g - (G[30] + 4)) / 34.0)
+                u = ez((g - (G[30] + 4)) / 26.0)
                 px = lerp(PULL.x + 5.0, PULL.x, u)
                 C_place(pa, f, (px, PULL.y, land_z()), False)
                 scene.frame_set(f)
