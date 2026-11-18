@@ -1,0 +1,15 @@
+{
+ "take": "s18",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film11/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 37.2,
+   "duration": 1.1,
+   "frame": 1116,
+   "end_frame": 1149,
+   "kind": "ambience",
+   "label": "bedroom day, morning light through the window, a boy's happy laughter, the creak of the old bed, a woman's relieved breath, hearth crackle far off, sparrows outside"
+  }
+ ]
+}

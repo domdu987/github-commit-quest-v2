@@ -1,0 +1,159 @@
+final: shot 22, 78 to render, 0 done
+00:00.413  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: built barn_milking in 2.4 s
+00:18.728  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1297.png'
+shot 22 g 1296  11.7 s wall  22.8 s cpu
+00:30.305  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1298.png'
+shot 22 g 1297  11.6 s wall  22.6 s cpu
+00:41.606  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1299.png'
+shot 22 g 1298  11.3 s wall  22.1 s cpu
+00:53.119  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1300.png'
+shot 22 g 1299  11.5 s wall  22.5 s cpu
+01:04.276  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1301.png'
+shot 22 g 1300  11.2 s wall  21.7 s cpu
+01:16.115  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1302.png'
+shot 22 g 1301  11.8 s wall  23.1 s cpu
+01:27.930  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1303.png'
+shot 22 g 1302  11.8 s wall  23.0 s cpu
+01:39.499  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1304.png'
+shot 22 g 1303  11.6 s wall  22.5 s cpu
+01:51.239  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1305.png'
+shot 22 g 1304  11.7 s wall  22.8 s cpu
+02:03.268  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1306.png'
+shot 22 g 1305  12.0 s wall  23.5 s cpu
+02:14.885  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1307.png'
+shot 22 g 1306  11.6 s wall  22.5 s cpu
+02:27.079  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1308.png'
+shot 22 g 1307  12.2 s wall  23.8 s cpu
+02:38.644  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1309.png'
+shot 22 g 1308  11.5 s wall  22.3 s cpu
+02:50.609  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1310.png'
+shot 22 g 1309  12.0 s wall  23.4 s cpu
+03:02.865  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1311.png'
+shot 22 g 1310  12.3 s wall  23.9 s cpu
+03:14.320  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1312.png'
+shot 22 g 1311  11.5 s wall  22.3 s cpu
+03:25.620  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1313.png'
+shot 22 g 1312  11.3 s wall  22.0 s cpu
+03:36.948  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1314.png'
+shot 22 g 1313  11.3 s wall  22.2 s cpu
+03:48.683  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1315.png'
+shot 22 g 1314  11.7 s wall  22.7 s cpu
+04:00.535  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1316.png'
+shot 22 g 1315  11.9 s wall  23.1 s cpu
+04:12.173  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1317.png'
+shot 22 g 1316  11.6 s wall  22.7 s cpu
+04:24.289  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1318.png'
+shot 22 g 1317  12.1 s wall  23.5 s cpu
+04:41.075  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1319.png'
+shot 22 g 1318  16.8 s wall  23.2 s cpu
+04:53.097  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1320.png'
+shot 22 g 1319  12.0 s wall  22.3 s cpu
+05:05.319  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1321.png'
+shot 22 g 1320  12.2 s wall  23.8 s cpu
+05:16.973  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1322.png'
+shot 22 g 1321  11.7 s wall  22.8 s cpu
+05:28.634  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1323.png'
+shot 22 g 1322  11.6 s wall  22.7 s cpu
+05:40.286  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1324.png'
+shot 22 g 1323  11.7 s wall  22.8 s cpu
+05:51.803  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1325.png'
+shot 22 g 1324  11.5 s wall  22.5 s cpu
+06:03.841  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1326.png'
+shot 22 g 1325  12.0 s wall  23.6 s cpu
+06:15.586  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1327.png'
+shot 22 g 1326  11.7 s wall  22.9 s cpu
+06:27.499  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1328.png'
+shot 22 g 1327  11.9 s wall  23.2 s cpu
+06:39.363  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1329.png'
+shot 22 g 1328  11.9 s wall  22.9 s cpu
+06:52.202  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1330.png'
+shot 22 g 1329  12.8 s wall  24.9 s cpu
+07:03.915  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1331.png'
+shot 22 g 1330  11.7 s wall  22.8 s cpu
+07:15.372  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1332.png'
+shot 22 g 1331  11.5 s wall  22.3 s cpu
+07:27.032  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1333.png'
+shot 22 g 1332  11.7 s wall  22.8 s cpu
+07:38.404  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1334.png'
+shot 22 g 1333  11.4 s wall  22.2 s cpu
+07:50.071  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1335.png'
+shot 22 g 1334  11.7 s wall  22.8 s cpu
+08:01.796  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1336.png'
+shot 22 g 1335  11.7 s wall  22.9 s cpu
+08:13.822  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1337.png'
+shot 22 g 1336  12.0 s wall  23.4 s cpu
+08:25.894  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1338.png'
+shot 22 g 1337  12.1 s wall  23.5 s cpu
+08:37.748  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1339.png'
+shot 22 g 1338  11.9 s wall  23.1 s cpu
+08:49.970  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1340.png'
+shot 22 g 1339  12.2 s wall  23.9 s cpu
+09:02.134  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1341.png'
+shot 22 g 1340  12.2 s wall  23.6 s cpu
+09:13.934  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1342.png'
+shot 22 g 1341  11.8 s wall  23.6 s cpu
+09:25.872  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1343.png'
+shot 22 g 1342  11.9 s wall  23.6 s cpu
+09:42.271  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1344.png'
+shot 22 g 1343  16.4 s wall  23.9 s cpu
+10:02.213  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1345.png'
+shot 22 g 1344  19.9 s wall  24.5 s cpu
+10:14.370  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1346.png'
+shot 22 g 1345  12.2 s wall  23.6 s cpu
+10:26.346  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1347.png'
+shot 22 g 1346  12.0 s wall  23.2 s cpu
+10:38.251  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1348.png'
+shot 22 g 1347  11.9 s wall  23.3 s cpu
+10:50.662  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1349.png'
+shot 22 g 1348  12.4 s wall  24.1 s cpu
+11:02.341  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1350.png'
+shot 22 g 1349  11.7 s wall  22.6 s cpu
+11:15.043  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1351.png'
+shot 22 g 1350  12.7 s wall  24.8 s cpu
+11:27.754  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1352.png'
+shot 22 g 1351  12.7 s wall  24.7 s cpu
+11:39.853  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1353.png'
+shot 22 g 1352  12.1 s wall  23.6 s cpu
+11:52.185  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1354.png'
+shot 22 g 1353  12.3 s wall  24.1 s cpu
+12:04.147  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1355.png'
+shot 22 g 1354  12.0 s wall  23.4 s cpu
+12:16.104  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1356.png'
+shot 22 g 1355  12.0 s wall  23.4 s cpu
+12:27.995  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1357.png'
+shot 22 g 1356  11.9 s wall  23.2 s cpu
+12:40.128  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1358.png'
+shot 22 g 1357  12.1 s wall  23.8 s cpu
+12:52.546  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1359.png'
+shot 22 g 1358  12.4 s wall  24.3 s cpu
+13:05.039  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1360.png'
+shot 22 g 1359  12.5 s wall  24.2 s cpu
+13:16.878  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1361.png'
+shot 22 g 1360  11.8 s wall  23.0 s cpu
+13:28.812  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1362.png'
+shot 22 g 1361  11.9 s wall  23.4 s cpu
+13:39.507  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1363.png'
+shot 22 g 1362  10.7 s wall  21.1 s cpu
+13:51.584  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1364.png'
+shot 22 g 1363  12.1 s wall  23.5 s cpu
+14:03.772  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1365.png'
+shot 22 g 1364  12.2 s wall  23.9 s cpu
+14:15.227  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1366.png'
+shot 22 g 1365  11.4 s wall  22.3 s cpu
+14:27.143  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1367.png'
+shot 22 g 1366  11.9 s wall  23.1 s cpu
+14:39.035  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1368.png'
+shot 22 g 1367  11.9 s wall  23.4 s cpu
+14:50.685  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1369.png'
+shot 22 g 1368  11.6 s wall  22.7 s cpu
+15:02.551  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1370.png'
+shot 22 g 1369  11.9 s wall  23.2 s cpu
+15:14.193  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1371.png'
+shot 22 g 1370  11.6 s wall  22.9 s cpu
+15:25.615  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1372.png'
+shot 22 g 1371  11.4 s wall  22.3 s cpu
+15:37.523  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1373.png'
+shot 22 g 1372  11.9 s wall  23.2 s cpu
+15:49.098  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film11/s22/raw/s22/f_1374.png'
+shot 22 g 1373  11.6 s wall  22.5 s cpu

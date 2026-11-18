@@ -1,0 +1,29 @@
+{
+ "take": "s21",
+ "film": 11,
+ "shots": [
+  21
+ ],
+ "first_g": 1226,
+ "n_frames": 82,
+ "g0": 1232,
+ "g1": 1302,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "size_bytes": 32720252,
+ "s_per_frame_wall": 11.29,
+ "s_per_frame_cpu": 21.61,
+ "max_head_chin_y": [
+  642.2,
+  1226,
+  "cow"
+ ]
+}

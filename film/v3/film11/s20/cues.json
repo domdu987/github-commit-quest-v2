@@ -1,0 +1,15 @@
+{
+ "take": "s20",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film11/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 39.5,
+   "duration": 1.567,
+   "frame": 1185,
+   "end_frame": 1232,
+   "kind": "ambience",
+   "label": "garden in bright morning, bees in the flowerbeds, a boy's laughter and running feet, villagers gasping in disbelief, a dropped cane, hens, distant church"
+  }
+ ]
+}
