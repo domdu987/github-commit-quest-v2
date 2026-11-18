@@ -1,0 +1,29 @@
+{
+ "take": "s23",
+ "film": 11,
+ "shots": [
+  23
+ ],
+ "first_g": 1362,
+ "n_frames": 129,
+ "g0": 1368,
+ "g1": 1485,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "size_bytes": 48075513,
+ "s_per_frame_wall": 12.67,
+ "s_per_frame_cpu": 24.68,
+ "max_head_chin_y": [
+  641.5,
+  1490,
+  "sarah"
+ ]
+}
