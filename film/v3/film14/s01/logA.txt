@@ -211,3 +211,180 @@
 {"shot": 1, "g": 5, "cam": [-8.57, 1.05, 3.3], "heads": {"farmer": [513, 583], "woman": [550, 589], "kid": [633, 678]}, "wall": 48.8, "cpu": 95.4}
 06:57.903  render           | Saved: 'frames/g_0006.png.tmp.png'
 {"shot": 1, "g": 6, "cam": [-8.56, 1.06, 3.3], "heads": {"farmer": [513, 583], "woman": [551, 590], "kid": [635, 680]}, "wall": 69.6, "cpu": 100.7}
+07:53.037  render           | Saved: 'frames/g_0007.png.tmp.png'
+{"shot": 1, "g": 7, "cam": [-8.55, 1.07, 3.3], "heads": {"farmer": [513, 583], "woman": [550, 589], "kid": [637, 682]}, "wall": 54.5, "cpu": 99.3}
+08:43.526  render           | Saved: 'frames/g_0008.png.tmp.png'
+{"shot": 1, "g": 8, "cam": [-8.54, 1.08, 3.3], "heads": {"farmer": [513, 583], "woman": [547, 587], "kid": [640, 684]}, "wall": 49.7, "cpu": 98.8}
+09:32.685  render           | Saved: 'frames/g_0009.png.tmp.png'
+{"shot": 1, "g": 9, "cam": [-8.53, 1.09, 3.3], "heads": {"farmer": [513, 583], "woman": [544, 584], "kid": [641, 685]}, "wall": 48.4, "cpu": 95.7}
+10:21.451  render           | Saved: 'frames/g_0010.png.tmp.png'
+{"shot": 1, "g": 10, "cam": [-8.53, 1.1, 3.3], "heads": {"farmer": [513, 583], "woman": [542, 582], "kid": [640, 685]}, "wall": 48.0, "cpu": 95.6}
+11:10.367  render           | Saved: 'frames/g_0011.png.tmp.png'
+{"shot": 1, "g": 11, "cam": [-8.52, 1.11, 3.3], "heads": {"farmer": [513, 584], "woman": [540, 581], "kid": [638, 684]}, "wall": 48.3, "cpu": 96.1}
+11:58.562  render           | Saved: 'frames/g_0012.png.tmp.png'
+{"shot": 1, "g": 12, "cam": [-8.51, 1.12, 3.3], "heads": {"farmer": [513, 584], "woman": [541, 581], "kid": [636, 681]}, "wall": 47.7, "cpu": 94.6}
+12:44.737  render           | Saved: 'frames/g_0013.png.tmp.png'
+{"shot": 1, "g": 13, "cam": [-8.5, 1.13, 3.3], "heads": {"farmer": [513, 584], "woman": [543, 583], "kid": [633, 679]}, "wall": 45.7, "cpu": 90.9}
+13:29.661  render           | Saved: 'frames/g_0014.png.tmp.png'
+{"shot": 1, "g": 14, "cam": [-8.49, 1.15, 3.3], "heads": {"farmer": [513, 584], "woman": [545, 585], "kid": [632, 678]}, "wall": 44.3, "cpu": 88.5}
+14:15.348  render           | Saved: 'frames/g_0015.png.tmp.png'
+{"shot": 1, "g": 15, "cam": [-8.48, 1.16, 3.3], "heads": {"farmer": [513, 584], "woman": [547, 587], "kid": [632, 679]}, "wall": 45.3, "cpu": 90.0}
+15:02.074  render           | Saved: 'frames/g_0016.png.tmp.png'
+{"shot": 1, "g": 16, "cam": [-8.47, 1.17, 3.3], "heads": {"farmer": [513, 585], "woman": [548, 587], "kid": [634, 680]}, "wall": 46.1, "cpu": 91.8}
+15:46.954  render           | Saved: 'frames/g_0017.png.tmp.png'
+{"shot": 1, "g": 17, "cam": [-8.46, 1.18, 3.3], "heads": {"farmer": [513, 585], "woman": [547, 587], "kid": [637, 683]}, "wall": 44.4, "cpu": 88.5}
+16:32.997  render           | Saved: 'frames/g_0018.png.tmp.png'
+{"shot": 1, "g": 18, "cam": [-8.45, 1.2, 3.3], "heads": {"farmer": [513, 585], "woman": [544, 585], "kid": [639, 685]}, "wall": 45.5, "cpu": 90.1}
+17:19.413  render           | Saved: 'frames/g_0019.png.tmp.png'
+{"shot": 1, "g": 19, "cam": [-8.44, 1.21, 3.3], "heads": {"farmer": [513, 585], "woman": [541, 582], "kid": [641, 686]}, "wall": 45.9, "cpu": 90.5}
+18:08.015  render           | Saved: 'frames/g_0020.png.tmp.png'
+{"shot": 1, "g": 20, "cam": [-8.43, 1.22, 3.3], "heads": {"farmer": [513, 585], "woman": [538, 579], "kid": [640, 686]}, "wall": 48.0, "cpu": 95.2}
+18:55.307  render           | Saved: 'frames/g_0021.png.tmp.png'
+{"shot": 1, "g": 21, "cam": [-8.42, 1.24, 3.3], "heads": {"farmer": [513, 586], "woman": [536, 578], "kid": [639, 685]}, "wall": 46.8, "cpu": 93.2}
+19:43.255  render           | Saved: 'frames/g_0022.png.tmp.png'
+{"shot": 1, "g": 22, "cam": [-8.41, 1.25, 3.3], "heads": {"farmer": [513, 586], "woman": [537, 578], "kid": [636, 683]}, "wall": 47.5, "cpu": 95.1}
+20:31.776  render           | Saved: 'frames/g_0023.png.tmp.png'
+{"shot": 1, "g": 23, "cam": [-8.4, 1.26, 3.3], "heads": {"farmer": [512, 586], "woman": [538, 579], "kid": [633, 681]}, "wall": 47.7, "cpu": 94.5}
+21:21.564  render           | Saved: 'frames/g_0024.png.tmp.png'
+{"shot": 1, "g": 24, "cam": [-8.39, 1.28, 3.3], "heads": {"farmer": [512, 587], "woman": [541, 581], "kid": [632, 679]}, "wall": 49.2, "cpu": 96.9}
+22:09.965  render           | Saved: 'frames/g_0025.png.tmp.png'
+{"shot": 1, "g": 25, "cam": [-8.38, 1.29, 3.3], "heads": {"farmer": [512, 587], "woman": [543, 583], "kid": [632, 680]}, "wall": 47.7, "cpu": 94.9}
+22:56.276  render           | Saved: 'frames/g_0026.png.tmp.png'
+{"shot": 1, "g": 26, "cam": [-8.37, 1.31, 3.3], "heads": {"farmer": [513, 587], "woman": [544, 584], "kid": [634, 681]}, "wall": 45.9, "cpu": 95.7}
+23:43.179  render           | Saved: 'frames/g_0027.png.tmp.png'
+{"shot": 1, "g": 27, "cam": [-8.36, 1.32, 3.3], "heads": {"farmer": [513, 588], "woman": [543, 583], "kid": [636, 683]}, "wall": 46.4, "cpu": 93.4}
+24:28.399  render           | Saved: 'frames/g_0028.png.tmp.png'
+{"shot": 1, "g": 28, "cam": [-8.35, 1.34, 3.3], "heads": {"farmer": [513, 588], "woman": [540, 581], "kid": [639, 686]}, "wall": 44.8, "cpu": 89.3}
+25:15.897  render           | Saved: 'frames/g_0029.png.tmp.png'
+{"shot": 1, "g": 29, "cam": [-8.34, 1.35, 3.3], "heads": {"farmer": [513, 588], "woman": [537, 579], "kid": [641, 687]}, "wall": 46.8, "cpu": 92.9}
+26:01.992  render           | Saved: 'frames/g_0030.png.tmp.png'
+{"shot": 1, "g": 30, "cam": [-8.33, 1.36, 3.3], "heads": {"farmer": [513, 589], "woman": [534, 576], "kid": [640, 687]}, "wall": 45.7, "cpu": 92.3}
+26:51.790  render           | Saved: 'frames/g_0031.png.tmp.png'
+{"shot": 1, "g": 31, "cam": [-8.32, 1.38, 3.3], "heads": {"farmer": [513, 589], "woman": [532, 574], "kid": [639, 686]}, "wall": 49.2, "cpu": 97.6}
+27:40.605  render           | Saved: 'frames/g_0032.png.tmp.png'
+{"shot": 1, "g": 32, "cam": [-8.31, 1.39, 3.3], "heads": {"farmer": [513, 589], "woman": [532, 574], "kid": [636, 684]}, "wall": 48.3, "cpu": 96.2}
+28:29.539  render           | Saved: 'frames/g_0033.png.tmp.png'
+{"shot": 1, "g": 33, "cam": [-8.29, 1.41, 3.3], "heads": {"farmer": [513, 590], "woman": [533, 575], "kid": [633, 682]}, "wall": 48.5, "cpu": 98.8}
+29:18.450  render           | Saved: 'frames/g_0034.png.tmp.png'
+{"shot": 1, "g": 34, "cam": [-8.28, 1.42, 3.3], "heads": {"farmer": [513, 590], "woman": [535, 577], "kid": [631, 680]}, "wall": 48.4, "cpu": 95.8}
+30:06.980  render           | Saved: 'frames/g_0035.png.tmp.png'
+{"shot": 1, "g": 35, "cam": [-8.27, 1.44, 3.3], "heads": {"farmer": [513, 591], "woman": [538, 579], "kid": [631, 680]}, "wall": 48.2, "cpu": 95.7}
+30:56.096  render           | Saved: 'frames/g_0036.png.tmp.png'
+{"shot": 1, "g": 36, "cam": [-8.26, 1.45, 3.3], "heads": {"farmer": [513, 591], "woman": [539, 580], "kid": [633, 682]}, "wall": 48.5, "cpu": 97.0}
+31:44.374  render           | Saved: 'frames/g_0037.png.tmp.png'
+{"shot": 1, "g": 37, "cam": [-8.25, 1.46, 3.3], "heads": {"farmer": [513, 591], "woman": [538, 580], "kid": [636, 684]}, "wall": 47.7, "cpu": 95.3}
+32:31.831  render           | Saved: 'frames/g_0038.png.tmp.png'
+{"shot": 1, "g": 38, "cam": [-8.24, 1.48, 3.3], "heads": {"farmer": [513, 592], "woman": [536, 578], "kid": [638, 686]}, "wall": 47.0, "cpu": 93.5}
+33:19.554  render           | Saved: 'frames/g_0039.png.tmp.png'
+{"shot": 1, "g": 39, "cam": [-8.23, 1.49, 3.3], "heads": {"farmer": [513, 592], "woman": [532, 575], "kid": [640, 688]}, "wall": 47.3, "cpu": 94.4}
+34:07.545  render           | Saved: 'frames/g_0040.png.tmp.png'
+{"shot": 1, "g": 40, "cam": [-8.22, 1.51, 3.3], "heads": {"farmer": [513, 592], "woman": [529, 572], "kid": [640, 688]}, "wall": 47.5, "cpu": 95.9}
+34:58.195  render           | Saved: 'frames/g_0041.png.tmp.png'
+{"shot": 1, "g": 41, "cam": [-8.21, 1.52, 3.3], "heads": {"farmer": [513, 593], "woman": [526, 570], "kid": [639, 687]}, "wall": 50.2, "cpu": 99.6}
+35:47.325  render           | Saved: 'frames/g_0042.png.tmp.png'
+{"shot": 1, "g": 42, "cam": [-8.2, 1.54, 3.3], "heads": {"farmer": [512, 593], "woman": [526, 570], "kid": [636, 685]}, "wall": 48.5, "cpu": 96.7}
+36:37.789  render           | Saved: 'frames/g_0043.png.tmp.png'
+{"shot": 1, "g": 43, "cam": [-8.19, 1.55, 3.3], "heads": {"farmer": [512, 593], "woman": [527, 571], "kid": [633, 683]}, "wall": 50.0, "cpu": 101.6}
+37:28.683  render           | Saved: 'frames/g_0044.png.tmp.png'
+{"shot": 1, "g": 44, "cam": [-8.18, 1.56, 3.3], "heads": {"farmer": [512, 593], "woman": [530, 573], "kid": [631, 681]}, "wall": 50.2, "cpu": 99.7}
+38:19.463  render           | Saved: 'frames/g_0045.png.tmp.png'
+{"shot": 1, "g": 45, "cam": [-8.17, 1.58, 3.3], "heads": {"farmer": [512, 594], "woman": [532, 575], "kid": [630, 681]}, "wall": 50.3, "cpu": 100.0}
+39:06.362  render           | Saved: 'frames/g_0046.png.tmp.png'
+{"shot": 1, "g": 46, "cam": [-8.16, 1.59, 3.3], "heads": {"farmer": [512, 594], "woman": [533, 576], "kid": [632, 682]}, "wall": 46.3, "cpu": 95.2}
+39:53.425  render           | Saved: 'frames/g_0047.png.tmp.png'
+{"shot": 1, "g": 47, "cam": [-8.15, 1.6, 3.3], "heads": {"farmer": [512, 594], "woman": [533, 575], "kid": [635, 684]}, "wall": 46.5, "cpu": 92.7}
+40:39.395  render           | Saved: 'frames/g_0048.png.tmp.png'
+{"shot": 1, "g": 48, "cam": [-8.14, 1.62, 3.3], "heads": {"farmer": [512, 594], "woman": [531, 574], "kid": [638, 687]}, "wall": 45.5, "cpu": 90.8}
+41:25.816  render           | Saved: 'frames/g_0049.png.tmp.png'
+{"shot": 1, "g": 49, "cam": [-8.13, 1.63, 3.3], "heads": {"farmer": [512, 595], "woman": [527, 571], "kid": [640, 688]}, "wall": 46.0, "cpu": 92.6}
+42:12.357  render           | Saved: 'frames/g_0050.png.tmp.png'
+{"shot": 1, "g": 50, "cam": [-8.12, 1.64, 3.3], "heads": {"farmer": [512, 595], "woman": [524, 568], "kid": [640, 689]}, "wall": 46.2, "cpu": 91.6}
+43:01.076  render           | Saved: 'frames/g_0051.png.tmp.png'
+{"shot": 1, "g": 51, "cam": [-8.11, 1.65, 3.3], "heads": {"farmer": [512, 595], "woman": [521, 566], "kid": [639, 688]}, "wall": 48.3, "cpu": 96.1}
+43:47.743  render           | Saved: 'frames/g_0052.png.tmp.png'
+{"shot": 1, "g": 52, "cam": [-8.1, 1.67, 3.3], "heads": {"farmer": [512, 596], "woman": [520, 565], "kid": [636, 686]}, "wall": 46.2, "cpu": 92.4}
+44:34.811  render           | Saved: 'frames/g_0053.png.tmp.png'
+{"shot": 1, "g": 53, "cam": [-8.09, 1.68, 3.3], "heads": {"farmer": [512, 596], "woman": [522, 566], "kid": [633, 684]}, "wall": 46.6, "cpu": 93.4}
+45:23.397  render           | Saved: 'frames/g_0054.png.tmp.png'
+{"shot": 1, "g": 54, "cam": [-8.08, 1.69, 3.3], "heads": {"farmer": [512, 596], "woman": [524, 568], "kid": [630, 682]}, "wall": 48.1, "cpu": 95.3}
+46:10.408  render           | Saved: 'frames/g_0055.png.tmp.png'
+{"shot": 1, "g": 55, "cam": [-8.07, 1.7, 3.3], "heads": {"farmer": [512, 597], "woman": [526, 570], "kid": [630, 681]}, "wall": 46.5, "cpu": 93.0}
+46:57.612  render           | Saved: 'frames/g_0056.png.tmp.png'
+{"shot": 1, "g": 56, "cam": [-8.07, 1.71, 3.3], "heads": {"farmer": [512, 597], "woman": [528, 571], "kid": [631, 682]}, "wall": 46.8, "cpu": 94.6}
+47:46.869  render           | Saved: 'frames/g_0057.png.tmp.png'
+{"shot": 1, "g": 57, "cam": [-8.06, 1.72, 3.3], "heads": {"farmer": [512, 598], "woman": [528, 571], "kid": [634, 684]}, "wall": 48.9, "cpu": 96.9}
+48:36.773  render           | Saved: 'frames/g_0058.png.tmp.png'
+{"shot": 1, "g": 58, "cam": [-8.05, 1.73, 3.3], "heads": {"farmer": [512, 598], "woman": [526, 570], "kid": [637, 687]}, "wall": 49.4, "cpu": 98.2}
+49:22.740  render           | Saved: 'frames/g_0059.png.tmp.png'
+{"shot": 1, "g": 59, "cam": [-8.04, 1.74, 3.3], "heads": {"farmer": [512, 599], "woman": [523, 567], "kid": [639, 689]}, "wall": 45.6, "cpu": 92.5}
+50:12.887  render           | Saved: 'frames/g_0060.png.tmp.png'
+{"shot": 1, "g": 60, "cam": [-8.03, 1.75, 3.3], "heads": {"farmer": [512, 599], "woman": [519, 564], "kid": [639, 689]}, "wall": 49.5, "cpu": 98.0}
+50:59.334  render           | Saved: 'frames/g_0061.png.tmp.png'
+{"shot": 1, "g": 61, "cam": [-8.03, 1.76, 3.3], "heads": {"farmer": [513, 599], "woman": [516, 562], "kid": [638, 689]}, "wall": 46.0, "cpu": 91.8}
+51:47.671  render           | Saved: 'frames/g_0062.png.tmp.png'
+{"shot": 1, "g": 62, "cam": [-8.02, 1.77, 3.3], "heads": {"farmer": [513, 600], "woman": [515, 561], "kid": [635, 687]}, "wall": 47.9, "cpu": 97.3}
+52:38.780  render           | Saved: 'frames/g_0063.png.tmp.png'
+{"shot": 1, "g": 63, "cam": [-8.01, 1.78, 3.3], "heads": {"farmer": [513, 600], "woman": [516, 562], "kid": [632, 684]}, "wall": 50.6, "cpu": 99.5}
+53:28.981  render           | Saved: 'frames/g_0064.png.tmp.png'
+{"shot": 1, "g": 64, "cam": [-8.01, 1.79, 3.3], "heads": {"farmer": [513, 601], "woman": [519, 564], "kid": [630, 682]}, "wall": 49.7, "cpu": 98.4}
+54:16.490  render           | Saved: 'frames/g_0065.png.tmp.png'
+{"shot": 1, "g": 65, "cam": [-8.0, 1.8, 3.3], "heads": {"farmer": [513, 601], "woman": [522, 566], "kid": [629, 681]}, "wall": 47.1, "cpu": 94.9}
+00:03.121  cycles           | WARNING CUEW initialization failed: Error opening the library
+00:46.973  render           | Saved: 'frames/g_0066.png.tmp.png'
+{"shot": 2, "g": 66, "cam": [-3.3, 0.9, 2.3], "heads": {"farmer": [394, 454], "old": [518, 551], "woman": [515, 549], "youth": [509, 551], "kid": [563, 605]}, "wall": 43.4, "cpu": 85.7}
+01:29.491  render           | Saved: 'frames/g_0067.png.tmp.png'
+{"shot": 2, "g": 67, "cam": [-3.31, 0.91, 2.3], "heads": {"farmer": [394, 454], "old": [516, 550], "woman": [515, 549], "youth": [508, 550], "kid": [565, 606]}, "wall": 42.0, "cpu": 84.3}
+02:12.692  render           | Saved: 'frames/g_0068.png.tmp.png'
+{"shot": 2, "g": 68, "cam": [-3.31, 0.91, 2.3], "heads": {"farmer": [394, 454], "old": [515, 549], "woman": [514, 548], "youth": [505, 548], "kid": [567, 608]}, "wall": 42.8, "cpu": 85.1}
+02:55.670  render           | Saved: 'frames/g_0069.png.tmp.png'
+{"shot": 2, "g": 69, "cam": [-3.32, 0.92, 2.3], "heads": {"farmer": [393, 454], "old": [515, 549], "woman": [512, 547], "youth": [502, 545], "kid": [569, 610]}, "wall": 42.4, "cpu": 85.5}
+03:39.496  render           | Saved: 'frames/g_0070.png.tmp.png'
+{"shot": 2, "g": 70, "cam": [-3.32, 0.92, 2.3], "heads": {"farmer": [393, 453], "old": [517, 551], "woman": [509, 544], "youth": [499, 543], "kid": [570, 611]}, "wall": 43.4, "cpu": 85.8}
+04:22.690  render           | Saved: 'frames/g_0071.png.tmp.png'
+{"shot": 2, "g": 71, "cam": [-3.33, 0.93, 2.3], "heads": {"farmer": [393, 453], "old": [518, 552], "woman": [507, 543], "youth": [498, 542], "kid": [569, 610]}, "wall": 42.7, "cpu": 84.6}
+05:05.505  render           | Saved: 'frames/g_0072.png.tmp.png'
+{"shot": 2, "g": 72, "cam": [-3.33, 0.93, 2.3], "heads": {"farmer": [392, 453], "old": [520, 553], "woman": [507, 542], "youth": [499, 543], "kid": [567, 609]}, "wall": 42.3, "cpu": 84.1}
+05:49.103  render           | Saved: 'frames/g_0073.png.tmp.png'
+{"shot": 2, "g": 73, "cam": [-3.34, 0.94, 2.3], "heads": {"farmer": [392, 453], "old": [521, 554], "woman": [507, 543], "youth": [501, 545], "kid": [565, 607]}, "wall": 43.0, "cpu": 85.1}
+06:32.286  render           | Saved: 'frames/g_0074.png.tmp.png'
+{"shot": 2, "g": 74, "cam": [-3.35, 0.95, 2.3], "heads": {"farmer": [391, 452], "old": [520, 553], "woman": [509, 545], "youth": [505, 548], "kid": [563, 605]}, "wall": 42.7, "cpu": 85.2}
+07:14.014  render           | Saved: 'frames/g_0075.png.tmp.png'
+{"shot": 2, "g": 75, "cam": [-3.35, 0.95, 2.3], "heads": {"farmer": [391, 452], "old": [519, 552], "woman": [512, 547], "youth": [507, 550], "kid": [562, 604]}, "wall": 41.3, "cpu": 86.8}
+07:36.557  render           | Saved: 'frames/g_0076.png.tmp.png'
+{"shot": 2, "g": 76, "cam": [-3.36, 0.96, 2.3], "heads": {"farmer": [391, 452], "old": [517, 551], "woman": [513, 548], "youth": [508, 551], "kid": [563, 605]}, "wall": 22.0, "cpu": 83.8}
+07:58.917  render           | Saved: 'frames/g_0077.png.tmp.png'
+{"shot": 2, "g": 77, "cam": [-3.37, 0.97, 2.3], "heads": {"farmer": [390, 452], "old": [515, 549], "woman": [514, 549], "youth": [507, 550], "kid": [565, 607]}, "wall": 21.9, "cpu": 83.3}
+08:21.794  render           | Saved: 'frames/g_0078.png.tmp.png'
+{"shot": 2, "g": 78, "cam": [-3.37, 0.97, 2.3], "heads": {"farmer": [390, 451], "old": [514, 548], "woman": [513, 548], "youth": [504, 548], "kid": [567, 609]}, "wall": 22.4, "cpu": 85.1}
+08:44.708  render           | Saved: 'frames/g_0079.png.tmp.png'
+{"shot": 2, "g": 79, "cam": [-3.38, 0.98, 2.3], "heads": {"farmer": [389, 451], "old": [514, 549], "woman": [511, 546], "youth": [501, 545], "kid": [569, 610]}, "wall": 22.4, "cpu": 85.3}
+09:07.982  render           | Saved: 'frames/g_0080.png.tmp.png'
+{"shot": 2, "g": 80, "cam": [-3.39, 0.99, 2.3], "heads": {"farmer": [389, 451], "old": [515, 550], "woman": [508, 544], "youth": [498, 543], "kid": [570, 611]}, "wall": 22.8, "cpu": 87.0}
+09:31.280  render           | Saved: 'frames/g_0081.png.tmp.png'
+{"shot": 2, "g": 81, "cam": [-3.4, 1.0, 2.3], "heads": {"farmer": [388, 451], "old": [517, 551], "woman": [506, 542], "youth": [496, 542], "kid": [569, 611]}, "wall": 22.8, "cpu": 86.7}
+09:53.929  render           | Saved: 'frames/g_0082.png.tmp.png'
+{"shot": 2, "g": 82, "cam": [-3.4, 1.0, 2.3], "heads": {"farmer": [388, 450], "old": [518, 552], "woman": [505, 541], "youth": [497, 542], "kid": [567, 610]}, "wall": 22.2, "cpu": 84.5}
+10:17.476  render           | Saved: 'frames/g_0083.png.tmp.png'
+{"shot": 2, "g": 83, "cam": [-3.41, 1.01, 2.3], "heads": {"farmer": [388, 450], "old": [519, 553], "woman": [506, 542], "youth": [500, 544], "kid": [565, 608]}, "wall": 23.1, "cpu": 87.8}
+10:41.140  render           | Saved: 'frames/g_0084.png.tmp.png'
+{"shot": 2, "g": 84, "cam": [-3.42, 1.02, 2.3], "heads": {"farmer": [387, 450], "old": [519, 553], "woman": [508, 544], "youth": [503, 547], "kid": [563, 606]}, "wall": 23.1, "cpu": 88.0}
+11:03.308  render           | Saved: 'frames/g_0085.png.tmp.png'
+{"shot": 2, "g": 85, "cam": [-3.43, 1.03, 2.3], "heads": {"farmer": [387, 450], "old": [518, 552], "woman": [510, 546], "youth": [506, 549], "kid": [562, 605]}, "wall": 21.7, "cpu": 82.6}
+11:26.409  render           | Saved: 'frames/g_0086.png.tmp.png'
+{"shot": 2, "g": 86, "cam": [-3.43, 1.03, 2.3], "heads": {"farmer": [386, 449], "old": [516, 550], "woman": [512, 547], "youth": [507, 551], "kid": [562, 605]}, "wall": 22.7, "cpu": 86.1}
+11:49.950  render           | Saved: 'frames/g_0087.png.tmp.png'
+{"shot": 2, "g": 87, "cam": [-3.44, 1.04, 2.3], "heads": {"farmer": [386, 449], "old": [514, 548], "woman": [512, 548], "youth": [506, 550], "kid": [564, 607]}, "wall": 23.1, "cpu": 87.5}
+12:12.923  render           | Saved: 'frames/g_0088.png.tmp.png'
+{"shot": 2, "g": 88, "cam": [-3.45, 1.05, 2.3], "heads": {"farmer": [385, 449], "old": [512, 547], "woman": [512, 547], "youth": [503, 548], "kid": [567, 609]}, "wall": 22.4, "cpu": 85.5}
+12:35.404  render           | Saved: 'frames/g_0089.png.tmp.png'
+{"shot": 2, "g": 89, "cam": [-3.46, 1.06, 2.3], "heads": {"farmer": [385, 449], "old": [512, 547], "woman": [509, 545], "youth": [500, 545], "kid": [569, 611]}, "wall": 22.1, "cpu": 83.9}
+12:58.781  render           | Saved: 'frames/g_0090.png.tmp.png'
+{"shot": 2, "g": 90, "cam": [-3.47, 1.07, 2.3], "heads": {"farmer": [385, 449], "old": [513, 548], "woman": [507, 543], "youth": [497, 542], "kid": [570, 612]}, "wall": 22.9, "cpu": 86.8}
+13:22.327  render           | Saved: 'frames/g_0091.png.tmp.png'
+{"shot": 2, "g": 91, "cam": [-3.47, 1.07, 2.3], "heads": {"farmer": [384, 448], "old": [515, 550], "woman": [504, 541], "youth": [495, 541], "kid": [570, 612]}, "wall": 23.0, "cpu": 87.3}
+13:46.460  render           | Saved: 'frames/g_0092.png.tmp.png'
+{"shot": 2, "g": 92, "cam": [-3.48, 1.08, 2.3], "heads": {"farmer": [384, 448], "old": [517, 551], "woman": [503, 540], "youth": [495, 541], "kid": [568, 611]}, "wall": 23.7, "cpu": 89.8}
+14:10.569  render           | Saved: 'frames/g_0093.png.tmp.png'
+{"shot": 2, "g": 93, "cam": [-3.49, 1.09, 2.3], "heads": {"farmer": [383, 448], "old": [518, 552], "woman": [504, 541], "youth": [498, 543], "kid": [565, 609]}, "wall": 23.7, "cpu": 89.7}
+14:34.945  render           | Saved: 'frames/g_0094.png.tmp.png'
+{"shot": 2, "g": 94, "cam": [-3.5, 1.1, 2.3], "heads": {"farmer": [383, 448], "old": [518, 552], "woman": [506, 542], "youth": [501, 546], "kid": [563, 607]}, "wall": 23.7, "cpu": 90.0}

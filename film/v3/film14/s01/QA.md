@@ -1,7 +1,7 @@
-# s01 v3 QA (render team 6), answers s01v2 QA_TECH/QA_ART (director note)
-- qa_auto PASS (QA_AUTO.md, phone_sheet.jpg); 12 samples, 720x1280, ~40-46 s/frame wall, 2 procs x 2 threads. Cuts g66, g123.
-- A. ONE hive, one action: the set's own hive + hanging bar are in his hands from g0 (tin roof on the post from g0, no pop at g0/g1), carried at his hand anchor, released at g32 and tweened onto the hanger under the roof over g32-42 (small lift-over), bar un-squashes as it hooks. No swap, no teleport at g44. Bees follow the hive throughout (9 bees).
-- B. Kid moved in (head y ~735-800 of 1280, well above 840, not cut by the frame edge); woman behind him at the right.
-- C. Shot 2: camera pitched down and closer, sky about 20-25 %, farmer on the ladder about 330 px tall; villagers eyes open ("excited") looking toward him, kid+youth pointing up; stronger contact shadows (opacity .95, larger).
-- D. Shot 3: ground cut from ~45 % to ~35 % (camera pitched, sky ~25 % filled with mountain/acacias), ladder moved off the hive (LADDER_DX=2.6, ladder stands right of him), arm sweep = 3 keyed hand poses tweened over ~28 frames (g148-176): low-front -> out front -> up toward the hills, with lean back and pan right.
-- Weak: ground still ~35 % in shot 3; thatch huts only bumps on the horizon behind the maize; shot 2 villagers are small side groups.
+# s01 v4 QA (render team 6), answers s01v3_QA_RECHECK
+- qa_auto PASS (QA_AUTO.md, phone_sheet.jpg). 12 samples, ~45-60 s/frame, 2 procs x 2 threads. Per-frame L1 diff (180x320): median 2.3; cuts g65->66 (56) and g122->123 (53) on plan; g0->g1 3.1 (was 6.9-9.0); hang frames g29-40 about 5-7 (a continuous move, no single spike).
+- 1. g0 pop: cause found = both render processes wrote sprites with the same file names in a shared folder (g0 of one process picked up the other process's bigger shot-2 farmer sprite). Fixed with a per-process sprite folder; g0 re-rendered, g0=g1 pose/size.
+- 2. Hang: farmer now stands on the ladder rung (z 0.64/y 3.85, soles on the rung); same hive from g0, hands on the bar until it hooks: carry g0-30, travel onto the hanger g30-44 (14 frames), arm relaxes g46-58. Camera pitched down/left so the hung hive lands left-centre, fully in frame (x ~100-460 of 720, y <= ~830), under the roof; bar un-squashes as it hooks; bees follow.
+- 3. Shot 3: arm sweep = 3 keyed hand poses over 16 frames (g148-164) then HELD g164-186 with the full arm up toward the peak (card mirrored so the mountain is on his pointing side), camera pans toward it; ground about 25 %; contact shadow under him enlarged; ladder out of the hive's way.
+- Shot 2: villagers back to laugh-with-tears expressions (eyes squeezed, open grin); kid chin above y 830; farmer on the rung.
+- Weak: farmer's raised arm in shot 3 is more "arm up" than a long point; sky is ~35 % in shot 3 (mountain/acacias fill it); shot 2 villagers are small side groups.
