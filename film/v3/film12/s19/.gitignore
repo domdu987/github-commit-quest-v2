@@ -2,3 +2,4 @@ actors_cache/
 frames/
 draft/
 __pycache__/
+log*.txt
