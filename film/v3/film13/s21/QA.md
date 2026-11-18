@@ -4,3 +4,9 @@
 - s22: screw cap + beam + bar in one frame, fixed timber post with a cream mark at the first beam underside.
 - s23: lift 0.50->0.85 seen side-on, stair stays on the ground. s24: lift 0.85->1.0 front-low, gap under the portico.
 - Not done / weak: s25 is the sparse cellar (207 jacks), not thousands; workers are not visible inside the s24 gap; s22 worker is partly off frame before his swing. Not checked frame by frame beyond phone sheets.
+
+## Round 3 (director TAKE gate round 2)
+- s21: camera held (micro drift only), beam/jack-head step 0.20 D per swing, workers' feet on the floor, bars at hand height (do not ride the lift), cellar props hidden.
+- s22: bearing plank sits on the screw cap and rises with it, chalk line on the post at the start cap level, camera height locked.
+- s24: side-on lens 17 mm, lift 0.90 -> 1.0, lit cribbing stack across the base, tiny workers placed inside the gap; not verified to be >= 60 px or clearly visible at phone size.
+- s25: dense jack field (4992) from a high 36 deg view, bars in unison on the swing beats, 10 lantern posts; cellar ceiling is NOT shown (a horizon strip and ground are visible at the top).

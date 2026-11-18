@@ -27,7 +27,7 @@ BOUNDS = {20: (gb(43.22), gb(45.30)), 21: (gb(45.30), gb(47.10)), 22: (gb(47.10)
 G0, G1 = BOUNDS[SHOT]                      # shot frames g0 .. g1-1
 H = 6
 RANGE = (G0 - H, G1 - 1 + H)
-PRESET = {20: "under_wide", 21: "under_wide", 22: "jack_close", 23: "hotel_front", 24: "street_wide", 25: "under_wide"}[SHOT]
+PRESET = {20: "under_wide", 21: "under_wide", 22: "jack_close", 23: "hotel_front", 24: "street_wide", 25: "under_rows"}[SHOT]
 G_WHISTLE = gb(44.69)                      # 1344
 G_PUSH = G_WHISTLE + 10                    # the men start together (1354)
 LENS = {20: 24.0, 21: 20.0, 22: 28.0, 23: 22.0, 24: 17.0, 25: 18.0}[SHOT]
@@ -43,21 +43,23 @@ def prog(g, k): a, b = SW[k]; return clamp((g - a) / float(b - a))
 def swung(g): return sum(prog(g, k) for k in range(len(SW)))
 def swinging(g): return any(0 < prog(g, k) < 1 for k in range(len(SW)))
 def lift_of(g):
-    if SHOT in (21, 22, 25): return 0.40 + 0.08 * swung(g)          # beams step up with every swing (0.08 D)
+    if SHOT == 25: return 0.40
+    if SHOT in (21, 22): return 0.40 + 0.20 * swung(g)          # beams step up with every swing (0.20 D)
     if SHOT == 23: return lerp(0.50, 0.85, mix(g, G0 - H, G1 + H, 0.1))
-    return lerp(0.85, 1.0, mix(g, G0 - H, G1 + H, 0.1))
+    return lerp(0.90, 1.0, mix(g, G0 - H, G1 + H, 0.1))
 def theta_of(g):
     if SHOT == 22: return 201.0 - 180.0 * prog(g, 2)                  # away from the camera side: the worker walks round BEHIND the jack
     return 180.0 + 180.0 * swung(g)
 BAR_R = 1.25
+BAR_Z = 1.55
 def cam_of(g):
     x = mix(g, G0 - H, G1 + H)
-    if SHOT == 21: return lerp3((6.2, -3.5, 2.3), (4.0, 1.5, 2.4), x), lerp3((-1.0, 26.0, 3.0), (1.0, 28.0, 3.0), x), 22.0
+    if SHOT == 21: return lerp3((4.5, -2.5, 2.3), (4.6, -2.4, 2.3), x), lerp3((1.0, 27.0, 2.9), (1.0, 27.0, 2.9), x), 22.0
     if SHOT == 22:
-        c = lerp3((9.7, 9.7, 2.4), (9.5, 10.6, 2.5), x); return c, (7.6, 14.4, 3.0), 25.0
+        c = lerp3((9.7, 9.7, 2.5), (9.5, 10.4, 2.5), x); return c, (7.9, 14.4, 3.4), 25.0
     if SHOT == 23: return lerp3((-18.0, -8.0, 1.8), (-17.6, -8.2, 1.85), x), lerp3((-2.0, -1.0, 4.5), (-2.0, -1.0, 4.6), x), 22.0
-    if SHOT == 24: return lerp3((-3.0, -16.0, 1.0), (1.0, -16.5, 1.2), x), lerp3((0.0, 0.0, 5.0), (0.0, 0.0, 5.2), x), 17.0
-    return lerp3((15.0, -3.0, 2.9), (11.5, 0.5, 3.0), x), lerp3((-2.0, 26.0, 3.1), (-1.0, 28.0, 3.1), x), 22.0
+    if SHOT == 24: return lerp3((-24.0, -8.5, 1.8), (-23.5, -8.7, 1.85), x), lerp3((-2.0, -1.0, 2.6), (-2.0, -1.0, 2.7), x), 17.0
+    return lerp3((6.5, 2.0, 16.0), (6.5, -4.0, 22.0), x), lerp3((6.5, 24.0, 1.5), (6.5, 26.0, 1.5), x), 24.0
 
 def jack_feet(loc, jx, jy, th):
     f = Vector((jx - loc[0], jy - loc[1], 0)).normalized(); rt = Vector((f.y, -f.x, 0))
@@ -70,7 +72,7 @@ def worker_variants():
         for ab in "AB":
             name = "worker_turn_bar_%s_%s" % (ab, L); c, p = cast13.STORY13[name]; p = copy.deepcopy(p); p["jack"] = 0; p.pop("prop_r", None); p["mouth"] = "flat"
             for arm in ("arm_r", "arm_l"):
-                h = p[arm]["hand"]; p[arm]["hand"] = (h[0], h[1] - 0.6)
+                h = p[arm]["hand"]; p[arm]["hand"] = (h[0], h[1] - 0.3)
             jobs.append((c, p, PPD, cast13.CANVAS13_POSE[name])); boxes.append(cast13.CANVAS13_POSE[name])
     return C.sprite_files(jobs, SPR), boxes
 
@@ -80,7 +82,7 @@ def pose_stand(base):
 STREET = {23: [("pullman", "pullman_look_up_confident", (-1.0, -12.5), 1.0),
                ("worker13_a", "worker_stand_a", (3.5, -10.5), 1.0),
                ("foreman13", "foreman_stand", (8.0, -13.5), 1.0)],
-          24: [("worker13_a", "worker_stand_a", (-15.0, 2.5), 0.9), ("worker13_b", "worker_stand_b", (-10.0, 2.0), 0.9),
+          24: [("worker13_a", "worker_stand_a", (-15.0, 2.5), 0.9), ("worker13_b", "worker_stand_b", (-13.0, 6.0), 0.9), ("worker13_c", "worker_stand_c", (7.0, 6.5), 0.9), ("worker13_b", "worker_stand_b", (-10.0, 2.0), 0.9),
                ("worker13_c", "worker_stand_c", (-5.0, 2.5), 0.9), ("worker13_a", "worker_stand_a", (4.0, 2.0), 0.9),
                ("worker13_b", "worker_stand_b", (9.0, 2.5), 0.9), ("worker13_c", "worker_stand_c", (14.0, 2.0), 0.9),
                ("foreman13", "foreman_stand", (0.0, 3.0), 0.9)]}
@@ -94,7 +96,8 @@ class Take(C.Take):
         C.Take.__init__(self, PRESET, quality=quality, lens=LENS, name="cam_s%d" % SHOT)
         self.cards = C.Cards(self.scene)
         self.crowd = []; self.street = []
-        if SHOT in (21, 22, 25): self.setup_cellar()
+        if SHOT in (21, 22): self.setup_cellar()
+        elif SHOT == 25: self.setup_dense()
         else: self.setup_street()
         self.on_frame = self.frame_hook
 
@@ -114,13 +117,35 @@ class Take(C.Take):
                 if SHOT in (21, 25) and y < cam0[1] + 3.5: continue
                 if SHOT == 22 and not ((abs(x - 7.5) < .1 and abs(y - 14.1) < .1) or y > 16.5): continue
                 k = rnd.randrange(3)
-                it = self.cards.add("w_%d_%d" % (round(x * 10), round(y * 10)), [pngs[2 * k], pngs[2 * k + 1]], [boxes[2 * k], boxes[2 * k + 1]], (x, y), 0.0, block=D.STATE["M"]["timber_d"])
+                it = self.cards.add("w_%d_%d" % (round(x * 10), round(y * 10)), [pngs[2 * k], pngs[2 * k + 1]], [boxes[2 * k], boxes[2 * k + 1]], (x, y), 0.0, block=None)
                 self.crowd.append(dict(it=it, jx=x, jy=y))
         if SHOT == 22:                                   # a fixed timber post with a chalk mark at the beam underside of the first frame
             M = D.STATE["M"]; mb = D.MB(); px, py = 5.3, 15.4
             D.sbox(mb, (px - 0.2, py - 0.2, 0.0), (px + 0.2, py + 0.2, 7.0), M["timber_d"], 0.3)
-            D.sbox(mb, (px - 0.23, py - 0.23, 3.24), (px + 0.23, py + 0.23, 3.34), M["cream"], 0.3)
+            D.sbox(mb, (px - 0.23, py - 0.23, 3.38), (px + 0.23, py + 0.23, 3.46), M["cream"], 0.3)
             D._obj(mb, "mark_post", D.STATE["SET"])
+            pm = D.MB(); D.sbox(pm, (-1.1, -0.8, 0.0), (1.1, 0.8, 0.3), M["timber"], 0.3)       # bearing plank sitting on the screw cap
+            self.plank = D._obj(pm, "bearing_plank", D.STATE["SET"]); self.plank.location = (7.5, 14.1, 2.6 + lift_of(RANGE[0]))
+
+    def setup_dense(self):
+        S = D.STATE; M = S["M"]; SET = S["SET"]
+        self.dbars = []
+        for a in range(4):
+            mb = D.MB(); ang = math.radians(a * 45.0); dx, dy = math.cos(ang) * 0.27, math.sin(ang) * 0.27
+            for r in range(D.DENSE_ROWS):
+                y = 5.0 + r * D.DENSE_DX
+                for i in range(D.DENSE_COLS):
+                    x = -8.3 + i * D.DENSE_DX
+                    D.rod(mb, (x - dx, y - dy, 4.35), (x + dx, y + dy, 4.35), 0.075, M["iron_k"], seg=4)
+            ob = D._obj(mb, "dbar_%d" % a, SET); ob.hide_render = a != 0; ob.visible_shadow = False; self.dbars.append(ob)
+        mb = D.MB(); sites = [(-9.6, y) for y in (10.0, 22.0, 34.0, 46.0, 58.0)] + [(19.6, y) for y in (16.0, 28.0, 40.0, 52.0, 62.0)]
+        for k, (x, y) in enumerate(sites):
+            D.rod(mb, (x, y, 0.0), (x, y, 7.0), 0.07, M["iron_d"], seg=5)
+            c = D.Vector((x + (0.8 if x < 0 else -0.8), y, 6.6)); D.rod(mb, (x, y, 6.9), (c.x, c.y, 6.9), 0.05, M["iron_d"], seg=4)
+            mb.frustum(c - D.Vector((0, 0, 0.5)), c + D.Vector((0, 0, 0.5)), 0.26, 0.34, M["lamp_glass"], seg=7)
+            mb.frustum(c + D.Vector((0, 0, 0.5)), c + D.Vector((0, 0, 0.8)), 0.38, 0.05, M["iron_d"], seg=7)
+            D.D._flame_light("lan_%d" % k, tuple(c), D.LAMP, 900, radius=0.15, shadow=False)
+        D._obj(mb, "lanterns", SET, shadow=False)
 
     def setup_street(self):
         for o in objs("puddles", "scum"): o.hide_render = True
@@ -136,17 +161,28 @@ class Take(C.Take):
             loc, look, lens = cam_of(g)
             self.key_cam(f, loc, look, lens=lens)
             D.set_lift(lift_of(g), frame=f)
+            for (bo, bz, ph, x, y) in D.STATE.get("bars", []):
+                if SHOT in (21, 22): bo.location.z = BAR_Z; bo.keyframe_insert("location", index=2, frame=f)       # bars stay at hand height, the screw heads + beams rise
             if SHOT in (23, 24): D.set_jack_turn(180.0 * clamp((g - G0) / float(G1 - G0)), frame=f)
 
     def frame_hook(self, f):
         g = f - 1000 * (SHOT - 1) - 1
-        if SHOT not in (21, 22, 25): return
+        if SHOT == 25:
+            idx = 0
+            for k in (3, 4):
+                p = prog(g, k)
+                if 0 < p < 1: idx = int(p * 4) % 4 + 0
+            for a, ob in enumerate(self.dbars): ob.hide_render = a != idx
+            return
+        if SHOT not in (21, 22): return
         loc, look, lens = cam_of(g); L = lift_of(g); th = theta_of(g); sw = swinging(g)
         for (bo, bz, ph, x, y) in D.STATE["bars"]:
             bo.rotation_euler.z = math.radians(th)
+        if SHOT == 22:
+            self.plank.location.z = 2.6 + L
         for w in self.crowd:
             fx, fy = jack_feet(loc, w["jx"], w["jy"], th)
-            self.cards.move(w["it"], (fx, fy), z=L, block=True)
+            self.cards.move(w["it"], (fx, fy), z=0.0, block=False)
             self.cards.show(w["it"], 1 if sw else 0)
 
     def report(self, shot, g):
