@@ -5,9 +5,9 @@ import os, sys, json, subprocess
 import numpy as np
 from PIL import Image, ImageDraw
 HERE = os.path.dirname(os.path.abspath(__file__)); os.chdir(HERE)
-FIRST, LAST = 1672, 2104
-SHOT_OF = lambda g: 25 if g < 1764 else 26 if g < 1840 else 27 if g < 1914 else 28 if g < 1962 else 29 if g < 2032 else 30
-DISS = {1764: 8, 1914: 6}            # boundary -> dissolve length
+FIRST, LAST = 1672, 1919
+SHOT_OF = lambda g: 25 if g < 1764 else 26 if g < 1840 else 27
+DISS = {1764: 8}            # boundary -> dissolve length
 def raw(s, g): return Image.open('raw/s%d_g_%04d.png' % (s, g)).convert('RGB')
 def frame(g):
     s = SHOT_OF(g)
@@ -22,15 +22,15 @@ for g in range(FIRST, LAST + 1):
     frame(g).save('frames/g_%04d.png' % g)
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', '30', '-start_number', str(FIRST), '-i', 'frames/g_%04d.png', '-c:v', 'libx264rgb', '-crf', '6', '-preset', 'slow', 'take.mkv'], check=True)
 n = LAST - FIRST + 1
-meta = dict(take='s25', film=14, shots=[25, 26, 27, 28, 29, 30], first_g=FIRST, n_frames=n, g0=1678, g1=2104, handle_in=6, handle_out=0,
+meta = dict(take='s25', film=14, shots=[25, 26, 27], first_g=FIRST, n_frames=n, g0=1678, g1=1913, handle_in=6, handle_out=6,
             transition_in=dict(type='cut', frames=0),
             transitions=[dict(at=1678, type='cut', frames=0, note='from s24 (hard cut, handle g 1672-1677 rendered)'), dict(at=1764, type='dissolve', frames=8, note='baked in the take: shot 25 night herd -> shot 26 dawn, centred on g 1764 (g 1760-1767)'),
-                         dict(at=1840, type='cut', frames=0), dict(at=1914, type='dissolve', frames=6, note='baked in the take, g 1911-1916'), dict(at=1962, type='cut', frames=0), dict(at=2032, type='cut', frames=0)],
-            transition_out=dict(type='hard cut to black', frames=0, note='last frame g 2104 (last word ends ~69.99 s); N = 2106 so g 2105 is black in the conform; no handle after the end'),
+                         dict(at=1840, type='cut', frames=0)],
+            transition_out=dict(type='cut or dissolve (director decides; team 2 take s28 starts at 1914)', frames=0, note='handle g 1914-1919 rendered (shot 27 continues)'),
             narration='film14/audio/narration.wav at +0.10 s', size=[720, 1280], samples=24)
 json.dump(meta, open('meta.json', 'w'), indent=1)
 # contact sheet: 1 frame per 0.5 s + the cut +-1 frames, 360x640 tiles
-gs = sorted(set(list(range(FIRST, LAST + 1, 15)) + [1763, 1765, 1839, 1840, 1913, 1915, 1961, 1962, 2031, 2032, 2104]))
+gs = sorted(set(list(range(FIRST, LAST + 1, 15)) + [1763, 1765, 1839, 1840, 1913, 1919]))
 tiles = []
 for g in gs:
     im = Image.open('frames/g_%04d.png' % g).resize((180, 320)); d = ImageDraw.Draw(im); d.text((3, 3), str(g), fill=(255, 255, 0)); d.line([(0, 220), (180, 220)], fill=(0, 255, 255)); tiles.append(im)
