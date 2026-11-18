@@ -49,7 +49,7 @@ Key shots = hook (first 3 s), every reveal shot, the false payoff, and the endin
    true peak <= -1 dBTP, no SFX louder than the voice inside a sentence, caption on screen within +-0.15 s of its spoken phrase,
    caption text == script text (spelling).
 3. QA-art (opus) on the full-res 2 fps sheet AND the 360x640 phone sheet.
-4. Blind viewer (sonnet): watches only the phone sheet + the audio transcript, with no script, and must answer correctly: what is
+4. Blind viewer (sonnet): watches only the phone sheet + the narration as heard (timed sentence text; an automatic Thai transcript is too noisy and made the test fail for the wrong reason), with no beat labels or brief, and must answer correctly: what is
    strange in the hook, who mocks whom, what the mechanism is, why the ending is funny. Any wrong answer = the beat is unclear -> FIX.
 ### E. Overrides
 The director may NOT override a FAIL alone any more. An override needs a second, independent opus reviewer that sees the frames
