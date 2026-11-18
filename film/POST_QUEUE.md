@@ -11,7 +11,7 @@
    - Audience: "No, it's not made for kids".
    - Visibility: Public.
 5. After it is published, edit this file on GitHub (pencil icon) and change that row's status from `READY` to `POSTED <date>`. Commit directly to the same branch.
-6. If anything fails (upload error, captcha, file picker blocked), do NOT retry more than once. Leave the status as `READY` and stop until the next hour.
+6. If a captcha or "verify you are human" appears: STOP, do not try to solve or bypass it, and tell the owner. If another error happens (upload error, file picker blocked), do NOT retry more than once. Leave the status as `READY` and stop until the next hour.
 
 Branch: `claude/new-session-73ou27`. Only rows with status `READY` may be posted. `WAIT` means not finished yet.
 
