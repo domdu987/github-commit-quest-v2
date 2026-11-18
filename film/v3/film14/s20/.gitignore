@@ -25,3 +25,5 @@ wt2*.txt
 t2*.txt
 q.py
 work_log_*.txt
+frames_out_v2/
+frames_in/
