@@ -77,35 +77,49 @@ def mat_card(name, png, k=1.0):
     L(ti.outputs['Color'], em.inputs['Color']); L(ti.outputs['Alpha'], mx.inputs[0]); L(tr.outputs[0], mx.inputs[1]); L(em.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface'])
     m['card_em'] = em.name; MATS[name] = m; return m
 
-# ------------------------------------------------------------------ geometry builder (one object per material)
+# ------------------------------------------------------------------ geometry builder (numpy accumulation, one mesh per material or one joined multi-material mesh)
+_SPH = {}
+def _sphere(seg):
+    if seg in _SPH: return _SPH[seg]
+    u, v = seg; V = [(0, 0, 1.0)]
+    for i in range(1, v):
+        th = math.pi * i / v
+        for j in range(u): ph = 2 * math.pi * j / u; V.append((math.sin(th) * math.cos(ph), math.sin(th) * math.sin(ph), math.cos(th)))
+    V.append((0, 0, -1.0)); F = []
+    for j in range(u): F.append((0, 1 + (j + 1) % u, 1 + j))
+    for i in range(v - 2):
+        for j in range(u):
+            a = 1 + i * u + j; b = 1 + i * u + (j + 1) % u; c = 1 + (i + 1) * u + (j + 1) % u; d = 1 + (i + 1) * u + j; F.append((a, b, c, d)[::-1] if False else (a, b, c, d))
+    last = len(V) - 1; base = 1 + (v - 2) * u
+    for j in range(u): F.append((last, base + j, base + (j + 1) % u))
+    F = [tuple(reversed(f)) for f in F]; _SPH[seg] = (np.array(V), F); return _SPH[seg]
+_BOX_V = np.array([(-.5, -.5, -.5), (.5, -.5, -.5), (.5, .5, -.5), (-.5, .5, -.5), (-.5, -.5, .5), (.5, -.5, .5), (.5, .5, .5), (-.5, .5, .5)])
+_BOX_F = [(0, 3, 2, 1), (4, 5, 6, 7), (0, 1, 5, 4), (2, 3, 7, 6), (1, 2, 6, 5), (3, 0, 4, 7)]
 class MB:
-    def __init__(self, name): self.name = name; self.bm = {}; self.T = Matrix.Identity(4); self.stack = []
+    def __init__(self, name): self.name = name; self.d = {}; self.T = Matrix.Identity(4); self.stack = []
     def push(self, M): self.stack.append(self.T); self.T = self.T @ M
     def pop(self): self.T = self.stack.pop()
-    def _b(self, m):
-        if m not in self.bm: self.bm[m] = bmesh.new()
-        return self.bm[m]
-    def _smooth(self, r):
-        for v in r['verts']:
-            for f in v.link_faces: f.smooth = True
+    def _add(self, m, V, F, smooth=False):
+        V = np.asarray(V, dtype=float)
+        if V.shape[1] == 3:
+            Tm = np.array(self.T); V = V @ Tm[:3, :3].T + Tm[:3, 3]
+        e = self.d.setdefault(m, dict(V=[], F=[], S=[], n=0)); e['V'].append(V); e['F'] += [tuple(i + e['n'] for i in f) for f in F]; e['S'] += [smooth] * len(F); e['n'] += len(V)
     def box(self, m, c, s, rz=0.0, rx=0.0, ry=0.0):
-        M = self.T @ Matrix.Translation(c) @ Euler((rx, ry, rz)).to_matrix().to_4x4() @ Matrix.Diagonal((s[0], s[1], s[2], 1))
-        bmesh.ops.create_cube(self._b(m), size=1.0, matrix=M)
+        M = np.array(Matrix.Translation(c) @ Euler((rx, ry, rz)).to_matrix().to_4x4() @ Matrix.Diagonal((s[0], s[1], s[2], 1))); V = _BOX_V @ M[:3, :3].T + M[:3, 3]
+        self._add(m, V, _BOX_F)
     def ell(self, m, c, r, seg=(12, 8), rot=(0, 0, 0)):
-        M = self.T @ Matrix.Translation(c) @ Euler(rot).to_matrix().to_4x4() @ Matrix.Diagonal((r[0], r[1], r[2], 1))
-        res = bmesh.ops.create_uvsphere(self._b(m), u_segments=seg[0], v_segments=seg[1], radius=1.0, matrix=M); self._smooth(res)
+        V0, F = _sphere(tuple(seg)); M = np.array(Matrix.Translation(c) @ Euler(rot).to_matrix().to_4x4() @ Matrix.Diagonal((r[0], r[1], r[2], 1))); V = V0 @ M[:3, :3].T + M[:3, 3]
+        self._add(m, V, F, True)
     def rod(self, m, p0, p1, r0, r1=None, seg=8, caps=True, smooth=False):
         p0 = Vector(p0); p1 = Vector(p1); d = p1 - p0; ln = d.length
         if ln < 1e-6: return
-        M = self.T @ Matrix.Translation((p0 + p1) / 2) @ d.to_track_quat('Z', 'Y').to_matrix().to_4x4()
-        res = bmesh.ops.create_cone(self._b(m), cap_ends=caps, cap_tris=False, segments=seg, radius1=r0, radius2=r0 if r1 is None else r1, depth=ln, matrix=M)
-        if smooth: self._smooth(res)
-    def cone(self, m, c, r0, r1, h, seg=16):
-        self.rod(m, (c[0], c[1], c[2]), (c[0], c[1], c[2] + h), r0, r1, seg)
-    def quad(self, m, v):
-        bm = self._b(m); vs = [bm.verts.new(self.T @ Vector(p)) for p in v]
-        try: bm.faces.new(vs)
-        except ValueError: pass
+        r1 = r0 if r1 is None else r1; Rm = np.array(d.to_track_quat('Z', 'Y').to_matrix()); a = np.linspace(0, 2 * math.pi, seg, endpoint=False)
+        ring0 = np.stack([r0 * np.cos(a), r0 * np.sin(a), np.zeros(seg)], 1) @ Rm.T + np.array(p0); ring1 = np.stack([r1 * np.cos(a), r1 * np.sin(a), np.full(seg, ln)], 1) @ Rm.T + np.array(p0)
+        V = np.concatenate([ring0, ring1]); F = [(i, (i + 1) % seg, seg + (i + 1) % seg, seg + i) for i in range(seg)]
+        if caps: F += [tuple(range(seg - 1, -1, -1)), tuple(range(seg, 2 * seg))]
+        self._add(m, V, F, smooth)
+    def cone(self, m, c, r0, r1, h, seg=16): self.rod(m, (c[0], c[1], c[2]), (c[0], c[1], c[2] + h), r0, r1, seg)
+    def quad(self, m, v): self._add(m, [tuple(p) for p in v], [tuple(range(len(v)))])
     def tri(self, m, v): self.quad(m, v)
     def poly(self, m, pts, r0, r1=None, seg=6, smooth=True):
         n = len(pts) - 1
@@ -113,46 +127,36 @@ class MB:
             a = r0 + ((r1 if r1 is not None else r0) - r0) * i / max(1, n); b = r0 + ((r1 if r1 is not None else r0) - r0) * (i + 1) / max(1, n)
             self.rod(m, pts[i], pts[i + 1], a, b, seg, caps=(i == 0 or i == n - 1), smooth=smooth)
     def lathe(self, m, c, prof, seg=16, smooth=True):
-        """surface of revolution about z through c; prof = [(r, z), ...] bottom to top (a r of 0 closes the end)."""
-        bm = self._b(m); rings = []
-        for (r, z) in prof:
-            ring = [bm.verts.new(self.T @ Vector((c[0] + r * math.cos(2 * math.pi * i / seg), c[1] + r * math.sin(2 * math.pi * i / seg), c[2] + z))) for i in range(seg)]
-            rings.append(ring)
-        for a, b in zip(rings[:-1], rings[1:]):
-            for i in range(seg):
-                j = (i + 1) % seg
-                try:
-                    f = bm.faces.new([a[i], a[j], b[j], b[i]]); f.smooth = smooth
-                except ValueError: pass
+        a = np.linspace(0, 2 * math.pi, seg, endpoint=False); rings = np.concatenate([np.stack([c[0] + r * np.cos(a), c[1] + r * np.sin(a), np.full(seg, c[2] + z)], 1) for (r, z) in prof]); F = []
+        for k in range(len(prof) - 1):
+            for i in range(seg): j = (i + 1) % seg; F.append((k * seg + i, k * seg + j, (k + 1) * seg + j, (k + 1) * seg + i))
+        self._add(m, rings, F, smooth)
     def corrugated(self, m, o, dv, av, nv, length, width, rib=0.075, amp=0.018, lsteps=1):
-        """corrugated panel: origin o, direction down the ribs dv (unit), across av (unit), outward normal nv; real sine ribs."""
-        o = Vector(o); dv = Vector(dv); av = Vector(av); nv = Vector(nv); k = 4; n = max(2, int(width / rib * k)); bm = self._b(m)
-        cols = []
+        o = np.array(o, float); dv = np.array(dv, float); av = np.array(av, float); nv = np.array(nv, float); n = max(2, int(width / rib * 4)); u = np.arange(n + 1) * width / n
+        V = []; 
         for i in range(n + 1):
-            u = i * width / n; off = amp * math.sin(2 * math.pi * u / rib)
-            col = [bm.verts.new(self.T @ (o + av * u + dv * (length * j / lsteps) + nv * off)) for j in range(lsteps + 1)]; cols.append(col)
-        for a, b in zip(cols[:-1], cols[1:]):
-            for j in range(lsteps):
-                try:
-                    f = bm.faces.new([a[j], b[j], b[j + 1], a[j + 1]]); f.smooth = True
-                except ValueError: pass
+            off = amp * math.sin(2 * math.pi * u[i] / rib)
+            for j in range(lsteps + 1): V.append(o + av * u[i] + dv * (length * j / lsteps) + nv * off)
+        F = [(i * (lsteps + 1) + j, (i + 1) * (lsteps + 1) + j, (i + 1) * (lsteps + 1) + j + 1, i * (lsteps + 1) + j + 1) for i in range(n) for j in range(lsteps)]
+        self._add(m, np.array(V), F, True)
+    def _mesh(self, name, items):
+        Vs = []; F = []; S = []; MI = []; off = 0; mats = []
+        for mi, (m, e) in enumerate(items):
+            V = np.concatenate(e['V']); Vs.append(V); F += [tuple(i + off for i in f) for f in e['F']]; S += e['S']; MI += [mi] * len(e['F']); off += len(V); mats.append(m)
+        me = bpy.data.meshes.new(name); me.from_pydata(np.concatenate(Vs).tolist(), [], F); me.update()
+        me.polygons.foreach_set('use_smooth', S); me.polygons.foreach_set('material_index', MI)
+        for m in mats: me.materials.append(m)
+        return me
     def finish(self, coll=None, shadow=True, join=False):
-        objs = []
-        shadow = shadow and self.name not in ('moon', 'hills')
-        for m, bm in self.bm.items():
-            bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
-            me = bpy.data.meshes.new('%s_%s' % (self.name, m.name)); bm.to_mesh(me); bm.free()
-            ob = bpy.data.objects.new('%s_%s' % (self.name, m.name), me); ob.data.materials.append(m)
+        objs = []; shadow = shadow and self.name not in ('moon', 'hills'); items = [(m, e) for m, e in self.d.items() if e['V']]; self.d = {}
+        if not items: return []
+        groups = [items] if join else [[it] for it in items]
+        for g in groups:
+            me = self._mesh('%s_%s' % (self.name, g[0][0].name), g); ob = bpy.data.objects.new('%s_%s' % (self.name, g[0][0].name), me)
             (coll or bpy.context.scene.collection).objects.link(ob); ob.visible_shadow = shadow; objs.append(ob)
-        self.bm = {}
-        if join and len(objs) > 1: objs = [join_objs(objs)]
         return objs
 
-def join_objs(objs):
-    for o in bpy.context.selected_objects: o.select_set(False)
-    for o in objs: o.select_set(True)
-    bpy.context.view_layer.objects.active = objs[0]
-    bpy.ops.object.join(); o = objs[0]; o.select_set(False); return o
+def join_objs(objs): return objs[0]
 
 # ------------------------------------------------------------------ palette
 def palette(mode):
@@ -219,9 +223,9 @@ def palette(mode):
     d['ember'] = mat_emit('ember', '#ff7a2a', 9.0)
     d['basket'] = mat('basket', '#b88a4a', '#8a5f30', 14)
     d['char'] = mat('char', '#3a2a26', '#4a3630', 4)
-    d['flame'] = mat_emit('flame', '#ff9a30', 14.0)
-    d['flame2'] = mat_emit('flame2', '#ffd060', 22.0)
-    d['lamp'] = mat_emit('lamp', '#ffc070', 30.0 if night else 3.0)
+    d['flame'] = mat_emit('flame', '#ff8a28', 6.0)
+    d['flame2'] = mat_emit('flame2', '#ffc850', 9.0)
+    d['lamp'] = mat_emit('lamp', '#ffb860', 9.0 if night else 2.0)
     d['winlit'] = mat_emit('winlit', '#ffb860', 14.0) if mode in ('NIGHT', 'DUSK') else mat('winday', '#3a4a6e', '#52668a', 3)
     d['clay'] = mat('clay', '#b45a32', '#d08050', 5, contrast=1.2)
     d['claydark'] = mat('claydark', '#6a3a28', '#8a4c30', 5)
@@ -428,8 +432,8 @@ def bucket(mb, M, c, mt='jerry'):
 
 def sack(mb, M, c, yaw=0.0, s=1.0, full=True):
     x, y, z = _c3(c)
-    mb.ell(M['sack'], (x, y, z + 0.28 * s), (0.28 * s, 0.2 * s, 0.3 * s), (12, 8), (0, 0, yaw)); mb.ell(M['sack'], (x, y, z + 0.55 * s), (0.17 * s, 0.14 * s, 0.1 * s), (8, 6), (0, 0, yaw))
-    mb.rod(M['rope'], (x - 0.1 * s, y, z + 0.52 * s), (x + 0.1 * s, y, z + 0.52 * s), 0.02, 0.02, 4)
+    mb.lathe(M['sack'], (x, y, z), [(0.0, 0.0), (0.22 * s, 0.01 * s), (0.27 * s, 0.22 * s), (0.25 * s, 0.42 * s), (0.17 * s, 0.56 * s), (0.07 * s, 0.62 * s), (0.1 * s, 0.7 * s), (0.04 * s, 0.76 * s)], 12)
+    mb.rod(M['rope'], (x, y, z + 0.6 * s), (x, y, z + 0.64 * s), 0.1 * s, 0.1 * s, 8)
 
 def wheelbarrow(mb, M, c, yaw=0.0, mt='bike'):
     x, y, z = _c3(c)
@@ -555,7 +559,7 @@ def torch(mb, M, c, h=1.3, lit=True, s=1.0):
     x, y, z = _c3(c)
     mb.rod(M['torch'], (x, y, z), (x, y, z + h), 0.025 * s, 0.03 * s, 6); mb.ell(M['char'], (x, y, z + h + 0.03), (0.05 * s, 0.05 * s, 0.07 * s), (6, 4))
     if lit:
-        mb.cone(M['flame'], (x, y, z + h), 0.09 * s, 0.01, 0.34 * s, 8); mb.cone(M['flame2'], (x, y, z + h), 0.05 * s, 0.005, 0.2 * s, 8)
+        mb.cone(M['flame'], (x, y, z + h), 0.06 * s, 0.008, 0.26 * s, 8); mb.cone(M['flame2'], (x, y, z + h), 0.03 * s, 0.004, 0.15 * s, 8)
 
 def grass_clump(mb, M, c, rr, h=0.9, mt='grass', n=9):
     x, y, z = _c3(c)
