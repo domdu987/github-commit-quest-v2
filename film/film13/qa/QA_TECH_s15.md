@@ -1,0 +1,14 @@
+# QA_TECH s15 (film 13, TAKE gate) - FAIL
+
+Checked: qa_auto every frame (plan cuts passed), 6 fps + every cut +-3 frames, full-size key frames, join with neighbours. Scratch: /tmp/claude-0/-home-user-github-commit-quest-v2/f68faafd-58e7-5eaf-b5d5-5d4b103780c5/scratchpad/qa13/s15/ (sheet_*.jpg, full/<g>.jpg). Take files untouched.
+
+Global note G1 (all takes): delivered cuts sit at round(t*30) of the plan table, i.e. 3 frames (0.10 s) EARLIER than the plan's g = round((t+0.10)*30) (e.g. shot 3 at 108 vs 111, shot 11 at 650 vs 653, shot 17 at 1107 vs 1110, s26 cuts 1740/1772/1868/1906 vs 1743/1775/1871/1909). qa_auto reports every planned cut as 'no visible change' or as a pop 3 frames off for that reason. Fix: conform must cut at the plan g (handles cover it) or the take must be re-keyed +3 frames; in-shot cues (e.g. nickname jump g895, splash g1893) are not consistently offset either.
+
+Auto: FAIL - suspected blur on 21 frames (g 969-989, the first 21 frames; Laplacian < 60 % of median). Visual confirmation: g 969-989 are dominated by a huge stretched orange wood-grain slab plus a smooth mud foreground; the sharp content is only the jack heads and two tiny workers.
+1. g 969-989: blur flag (above). Fix: re-render with the slab replaced by real structure, or crop so detail dominates; verify Laplacian >= 60 % of median.
+2. g 975-1046 (plan under_rows / lamps / 'jacks multiply 100 -> 1000 -> 5000 in rows, camera rises to reveal'): shot is staged outdoors: a brick-edged rectangular pit in a bare brown plain, horizon with distant ships. No cellar, no beams above, no oil lamps, no hotel; reads as a parking lot of nails. Does not match shot 16 (cellar interior) that follows. Fix: render the count inside the 'under' set (beams, lamp glow) from high angle, camera rising along the rows.
+3. g 969-989: stretched, smeared orange texture covering the upper 55 % (planks scaled ~20x along one axis, visible streaking). Fix: re-UV/tile the floor-slab texture.
+4. g 1004-1046: dense jack field aliases (moire/shimmer, visible on phone sheet) and nothing moves after g 1020 (workers gone, jacks static) for 26+ frames; near-frozen composition. Fix: more samples / jack-head LOD, add worker motion or camera move.
+5. g 989-1011: count beats: 100 at plan g 978 (narr 32.5), 1000 at 996, 5000 at 1011. Jacks multiply from g ~989 (11 frames late vs 978 by plan formula; G1 would make it earlier, not later); the 100-jack stage shows ~40 visible. Fix: key the multiplication to g 978/996/1011.
+6. Workers (2 cards, g 969-989): scale equals a jack's height; they stand motionless then disappear at g 990 behind the jack wall. Heads < 880. No mouths.
+Joins: s14 (outdoor trench, 3 workers) -> s15 (pit on bare plain): continuity break; s15 -> s16: exterior pit -> dark timber cellar: no shared space.
