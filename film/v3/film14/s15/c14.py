@@ -36,13 +36,30 @@ def _contact(tag, mk, ax, yaw, L, Wd):
     for i, c in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uvl.data[i].uv = c
     img = bpy.data.images.load(p); img.alpha_mode = 'STRAIGHT'; CREATED.extend([img, me])
     m = bpy.data.materials.new('cm_' + tag); CREATED.append(m); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); Nn = nt.nodes.new; Lk = nt.links.new
-    out = Nn('ShaderNodeOutputMaterial'); ti = Nn('ShaderNodeTexImage'); ti.image = img; ti.extension = 'CLIP'; em = Nn('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.03, 0.02, 0.07, 1); em.inputs['Strength'].default_value = 1
-    tr = Nn('ShaderNodeBsdfTransparent'); mx = Nn('ShaderNodeMixShader'); mu = Nn('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = 0.8
+    out = Nn('ShaderNodeOutputMaterial'); ti = Nn('ShaderNodeTexImage'); ti.image = img; ti.extension = 'CLIP'; em = Nn('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.015, 0.01, 0.04, 1); em.inputs['Strength'].default_value = 1
+    tr = Nn('ShaderNodeBsdfTransparent'); mx = Nn('ShaderNodeMixShader'); mu = Nn('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = 1.0
     Lk(ti.outputs['Alpha'], mu.inputs[0]); Lk(mu.outputs[0], mx.inputs[0]); Lk(tr.outputs[0], mx.inputs[1]); Lk(em.outputs[0], mx.inputs[2]); Lk(mx.outputs[0], out.inputs['Surface'])
     me.materials.append(m); ob = bpy.data.objects.new('actor_c_' + tag, me); bpy.context.scene.collection.objects.link(ob)
     ob.location = (mk.x, mk.y, mk.z + 0.03); ob.rotation_euler = (0, 0, yaw); ob.visible_shadow = False
 
-CONTACT = dict(matriarch=(4.66, 1.4), elephant_b=(4.0, 1.2), elephant_c=(4.3, 1.3), elephant_d=(3.6, 1.1), calf=(1.7, 0.55), uncle14=(0.9, 0.45), woman14=(0.8, 0.4), oldman14=(0.8, 0.4), youth14=(0.8, 0.4), kid14=(0.6, 0.3))
+CONTACT = dict(matriarch=(5.2, 2.0), elephant_b=(4.5, 1.7), elephant_c=(4.8, 1.8), elephant_d=(4.0, 1.5), calf=(1.9, 0.8), uncle14=(1.1, 0.6), woman14=(1.0, 0.55), oldman14=(1.0, 0.55), youth14=(1.0, 0.55), kid14=(0.7, 0.4))
+
+ELE = ('matriarch', 'elephant_b', 'elephant_c', 'elephant_d', 'calf')
+def _grade(path, r, cast, ppd):
+    """director QA: night elephants x0.70 and tinted (0.78, 0.82, 1.0); torch glow discs of the people feathered into soft radial glows."""
+    im = np.asarray(Image.open(path).convert('RGBA'), dtype=np.float32) / 255.0; ch = False
+    if cast in ELE:
+        im[..., 0] *= 0.70 * 0.78; im[..., 1] *= 0.70 * 0.82; im[..., 2] *= 0.70; ch = True
+    fl = r['anchors'].get('flame_r')
+    if fl is not None:
+        ox, oy = r['origin_px']; fx_, fy_ = r['feet']; cx = ox + (fl[0] - fx_) * ppd; cy = oy + (fl[1] - fy_) * ppd
+        yy, xx = np.mgrid[0:im.shape[0], 0:im.shape[1]]; d = np.hypot(xx - cx, yy - cy) / (0.95 * ppd)
+        soft = (im[..., 3] < 0.62) & (d < 1.0)
+        fall = np.clip(1 - d, 0, 1) ** 2.2
+        im[..., 3] = np.where(soft, im[..., 3] * fall, im[..., 3]); ch = True
+    if ch:
+        if os.path.lexists(path): os.remove(path)
+        Image.fromarray((np.clip(im, 0, 1) * 255 + 0.5).astype(np.uint8)).save(path)
 
 def put(tag, cast, pose, mark, cam_loc, ppd=128, mirror=None, yawk=1.0, yaw_fixed=None, canvas=None, anchor_ground=None, dz=0.0):
     """real puppet sprite -> card at `mark` (feet point), turned toward the camera by yawk * (facing angle) (yawk 1 = faces the lens, <1 keeps the
@@ -55,6 +72,7 @@ def put(tag, cast, pose, mark, cam_loc, ppd=128, mirror=None, yawk=1.0, yaw_fixe
     r = sprites.render_sprites([dict(cast=cast, pose=pose, px_per_D=ppd, out=out, canvas=cv)], cache_dir=CACHE)[0]
     assert not r['clipped'], 'sprite clipped by canvas: ' + tag
     x0, y0, x1, y1 = r['canvas']; fx, fy = r['feet']
+    _grade(out, r, cast, ppd)
     X0, X1 = x0 * MPD, x1 * MPD; Z0, Z1 = -y1 * MPD, -y0 * MPD
     me = bpy.data.meshes.new(tag); me.from_pydata([(X0, 0, Z0), (X1, 0, Z0), (X1, 0, Z1), (X0, 0, Z1)], [], [(0, 1, 2, 3)]); me.update()
     uvl = me.uv_layers.new(name='UVMap')
