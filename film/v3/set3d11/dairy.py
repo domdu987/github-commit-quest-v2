@@ -51,7 +51,7 @@ ROLES = dict(jenner=3.3, boy=BOY, sarah=3.1, maid=3.1, doctor=3.4, mother=3.1, v
 PRESETS = dict(
     barn_wide=dict(loc='barn', light='A', cam='barn_wide', sun=(240, 24), look_az=100, P=dict(lift=(0.011, 0.018, 0.036))),
     barn_milking=dict(loc='barn', light='A', cam='barn_milking', sun=(200, 18), look_az=90, P=dict(shade_mix=0.82, bounce_z=0.2, lift=(0.005, 0.020, 0.036)), fills=[dict(loc=(-9.4, 14.5, 3.0), dir=(1.0, 0.1, -0.35), size=(5.0, 4.5), rgb=(1.0, 0.92, 0.50), energy=900)]),
-    barn_high=dict(loc='barn', light='C', cam='barn_high', sun=(160, 15), look_az=70, P=dict(lift=(0.004, 0.012, 0.030), bounce_z=0.3), fills=[dict(loc=(-9.4, 15.5, 3.0), dir=(1.0, -0.35, -0.3), size=(5.0, 5.0), rgb=(1.0, 0.96, 0.50), energy=1100)]),
+    barn_high=dict(loc='barn', light='C', cam='barn_high', sun=(160, 15), look_az=70, P=dict(lift=(0.004, 0.012, 0.030), bounce_z=0.3), fills=[dict(loc=(-9.4, 15.5, 3.0), dir=(1.0, -0.35, -0.3), size=(5.0, 5.0), rgb=(1.0, 0.96, 0.50), energy=1500)]),
     barn_door=dict(loc='barn', light='A', cam='barn_door', sun=(195, 18), look_az=180, P=dict(air=('#f4cf94', 0.12, 14.0, 160.0), bounce_z=0.1)),
     garden_hut=dict(loc='village', light='A', cam='garden_hut', sun=(300, 34), look_az=165, P=dict(shade_mix=0.95, shade=(0.134, 0.104, 0.36), shade_tint=(0.134, 0.102, 0.38), lift=(0.016, 0.010, 0.036))),
     lane_wide=dict(loc='village', light='A', cam='lane_wide', sun=(300, 40), look_az=182, P=dict(shade_mix=0.95, shade=(0.134, 0.104, 0.36), shade_tint=(0.130, 0.104, 0.38), lift=(0.012, 0.011, 0.036))),
@@ -366,8 +366,8 @@ def barn(SET, M, P, kd, lkey, PR):
         rr = rg.uniform(0.12, 0.28); ell(mb, (rg.uniform(-9.5, 9.5), rg.uniform(0.5, 30), rr * 0.2), (rr, rr * 0.8, rr * 0.45), M['pebble'] if i % 2 else M['pebble2'], rg.uniform(0, 6), seg=8, rings=4)
     for (x_, y_, yw, v) in ((-4.6, 8.8, 0.6, 0), (-3.6, 10.0, 2.4, 1), (0.2, 11.6, -0.8, 2), (-1.8, 12.4, 1.4, 0), (3.2, 8.4, 2.0, 1), (-6.2, 5.0, 0.2, 2), (-0.8, 4.4, 3.0, 0), (2.0, 2.6, 5.0, 1), (-2.4, 2.8, 1.0, 0), (6.0, 9.2, 4.0, 2), (-8.0, 9.8, 0.8, 1), (1.4, 10.4, 2.8, 0)):
         hen(SET, M, (x_, y_, 0), yw, v, True, rg.uniform(0, 6.28), 'hen%d' % len(STATE['hooks']), proto=P_.hen(v))
-    for (x_, y_, z_, yw, sit, k) in ((6.6, 3.2, 2.8, -2.0, True, 0), (-1.2, 7.6, 0.0, 0.7, False, 1), (-8.4, 26.5, 2.8, 0.0, True, 2), (2.8, 9.4, 0.0, 2.8, True, 0)): stamp(mb, P_.cat(sit, k), (x_, y_, z_), yw)
-    stamp(mb, P_.dog(), (-0.2, 7.2, 0.0), 2.2, 0.9)
+    for (x_, y_, z_, yw, sit, k) in ((6.6, 3.2, 2.8, -2.0, True, 0), (-1.2, 7.6, 0.0, 0.7, False, 1), (-8.4, 26.5, 2.8, 0.0, True, 2), (2.8, 9.4, 0.0, 2.8, True, 0)): (stamp(mb, P_.cat(sit, k), (x_, y_, z_), yw) if PR['cam'] != 'barn_high' else None)
+    if PR['cam'] != 'barn_high': stamp(mb, P_.dog(), (-0.2, 7.2, 0.0), 2.2, 0.9)
     c = Vector((-1.6, 9.2, 0))
     if okp(c):
         rod(mb, c, c + Vector((0, 0, 0.5)), 0.7, M['straw'], seg=10, r1=0.9)
@@ -389,11 +389,11 @@ def barn(SET, M, P, kd, lkey, PR):
         rod(mb, (x_, y_, 9.5), (x_, y_, z_), 0.022, M['iron'], seg=4); swing_lantern(SET, M, (x_, y_, z_), nm, ph, 1500, 0.09)
     FGB = dict(barn_wide=[('hen', -1.4, 6.0, 0.5, 0.9), ('basket', 2.2, 6.4, 0.3, 0.7), ('pail', -2.6, 7.2, 0, 0.5), ('hay', 2.8, 8.0, 0, 0.45), ('stool', -3.2, 8.4, 0.5, 0.6), ('milk', 1.4, 5.2, 0, 0.45), ('hen', 0.8, 9.0, 2.5, 0.9)],
                barn_milking=[('hen', -2.6, 4.8, 2.0, 0.6), ('pail', 1.8, 4.6, 0.2, 0.5), ('hay', -1.6, 5.6, 0, 0.45), ('stool', 2.6, 6.4, 0.3, 0.6), ('basket', -3.0, 3.8, 0.4, 0.7), ('hen', 3.0, 5.8, 5.0, 0.6), ('milk', 0.4, 4.2, 0.1, 0.45)],
-               barn_high=[('hay', -3.0, 9.0, 0, 0.5), ('hen', 3.0, 8.0, 1.0, 0.9)],
+               barn_high=[('hay', -3.0, 9.0, 0, 0.5), ],
                barn_door=[('hen', -1.6, 4.4, 0.3, 0.8), ('basket', 1.8, 5.0, 0.4, 0.6), ('hay', -2.8, 6.0, 0, 0.45), ('stool', 0.6, 6.6, 0.5, 0.55), ('hen', 2.8, 7.2, 4.0, 0.8), ('milk', -0.6, 3.8, 0.2, 0.4), ('hay', 1.2, 4.2, 0, 0.35)])
     fg_props(mb, hm, M, P_, SET, rg, CAMS[PR['cam']], FGB[PR['cam']])
     # ---------------- sun shafts (additive wedges along the key) + dust motes
-    ke = Vector(kdv); sf = M['shaft']; p0 = Vector((BX0, DOOR[0], 0.3)); SHAFTS = PR['cam'] != 'barn_high'; t_ = min((DOOR[2]) / -ke.z, 10.0)
+    ke = Vector(kdv); sf = M['shaft']; p0 = Vector((BX0, DOOR[0], 0.3)); SHAFTS = False                                    # no hard-edged shaft planes in any preset (motes carry the dust-in-the-sun look); t_ = min((DOOR[2]) / -ke.z, 10.0)
     def par(p, ex, ey, ez):
         p, ex, ey, ez = map(Vector, (p, ex, ey, ez))
         for a, b, o in ((ex, ey, Vector()), (ex, ey, ez), (ex, ez, Vector()), (ex, ez, ey), (ey, ez, Vector()), (ey, ez, ex)): gm.pid += 1; gm.face([p + o, p + o + a, p + o + a + b, p + o + b], sf)
