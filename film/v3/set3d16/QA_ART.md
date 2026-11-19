@@ -272,3 +272,180 @@ Secondary fixes, not blocking alone:
 - Ceilings to ≤ 20 % of the frame.
 - Studio dressing (canvases, busts, the jars FG, the wire coil + magnet, a road outside the window).
 - Fix the hue_report CHECK tiles toward shade 240-260.
+
+---
+
+# Re-check (after fix round 1, commit 1727aeb)
+
+Inputs:
+- contact.jpg. It holds **30 tiles**, not 31: make_contact.py lists 30 and telegraph_work/final has 30 PNGs. L05 bottle_macro is new.
+- Every final at 720x1280.
+- A fresh 360x640 phone sheet of all 30 tiles.
+- styleboard/board.jpg and film16/shot_plan.md.
+
+The cyan line at y≈880 on the contact sheet is the caption-band guide. It is not in the finals (checked the pixels), so it is fine.
+Placeholder actors are again judged only for size, placement and readability.
+
+## Verdict: **FIX-FIRST** (short list: 6 blocking items, mostly small)
+
+This is a real step up. The hook is now strong:
+- the green glass neck with a star glint;
+- the ladder leaning against the pole;
+- clean foreground;
+- board-style clouds;
+- the halo arc is gone.
+
+The chamber night is now warm and candle-lit. The bottle row reads to the horizon.
+
+What still fails is the **reveal chain**:
+- the pulse reads as a string of fairy lights;
+- trench_cut reads as an icicle cave over a glossy floor;
+- "the answer is glass" shows opaque green crayons in shadow.
+
+The grey lead pipe is still candy blue/white. These are set assets, so a camera move in the takes cannot fix them.
+
+## Scores (1-10), first review → re-check
+
+| Category | LINE | STUDIO | CHAMBER |
+|---|---|---|---|
+| Set density / ornament | 6 → 7 | 5 → 6 | 8 → 8 |
+| Lighting & colour | 6 → 6 | 7 → 7 | 6 → 7 |
+| Composition / framing (incl. phone) | 4 → 5 | 5 → 6 | 5 → 6 |
+| Character staging (placeholder marks) | 4 → 5 | 6 → 6 | 5 → 6 |
+| Key moment clarity & beauty | 3 → 5 | 6 → 6 | 6 → 6 |
+| Overall match to board + references | 5 → 6 | 6 → 6 | 7 → 7 |
+| **Location mean** | 4.7 → **5.7** | 5.8 → **6.2** | 6.2 → **6.7** |
+
+**Film-level set score: 6.0 / 10** (was 5.2). Inside LINE the spread is wide:
+- line_close: 8 (L01/L02 are near the board's CLOSE panel);
+- line_wide: 7;
+- trench_cut: 3;
+- line_rail: 4;
+- line_wagon: 4.
+
+## Status of the first review's fixes
+
+| First-review item | Status |
+|---|---|
+| Bottle neck 2x, green glass, glint (L01-L04) | **FIXED.** Reads on the phone (about 35 px with the star). |
+| Wire drapes over the neck | Fixed enough. The wire meets the neck top; the take's push will sell it. |
+| Ladder leaned against the pole; FG grass on line_close | **FIXED.** |
+| Sky halo arc; empty top third | **FIXED.** The gradient is smooth and the clouds read as board cumulus. A few are egg-shaped single blobs (L09, L11, L18), a minor issue. |
+| Rain in L03/L07(now L08)/L13(now L16) | **FIXED.** Full-frame streaks. They are still 100 % white and dense (L03 reads as a shower spray fanning from the top). See the non-blocking list. |
+| Pole sparks crawl down the wet pole (L03) | **FIXED.** 7 small cyan beads down the pole. Good. |
+| Pulse = a bead *on* the wire + trail; parked on the glass | **NOT FIXED.** See B1. |
+| Steam plume (single sphere) | Improved. It is now a tapering column. It is vertical, not laid back along the motion: the take can lean it. |
+| Grass saturation / density | Fixed in line_wide and line_close. **Not fixed** in L18 line_road (see the non-blocking list). |
+| Lead pipe grey | **NOT FIXED.** See B5. |
+| line_rail: pulse in frame, closer train | **NOT FIXED.** See B4. |
+| Station platform (shot 27) | Partly. A white station house sits at the rail with the train in. There is still no platform edge, lamp posts, benches or waving slots, and 50 % of the frame is empty ground. Non-blocking (shot 27 is 1.3 s). |
+| line_trench: plough + mules | Improved. 2 mules, the plough beam and the drum reel show, but the team is about 20 % of the width, behind the Cornell mark. Camera matter. |
+| trench_high: furrow at all 3 heights | Improved. 3 snap tiles exist and the team shows in all 3 (tiny in snap 3). The furrow is still mostly the blue/white pipe line, not a brown earth trench. It follows B5. |
+| trench_end: canopy, key size, rain | **FIXED** (sky shows, the key station reads at about 100 px, rain is there). The "wagon" in the label is a grey shed box. Make it a wagon tail, or change the shot 21 line. |
+| trench_cut: true soil section | **NOT FIXED.** See B2. |
+| line_road: red on red, mule, barrel | Fixed: green buggy, white house, no barrel. The mule is only a rump at the right edge, and a wall of foreground grass is back. Non-blocking (camera). |
+| line_wagon: bottles visible | Partly. A crate shows, but see B3. |
+| Studio: jars/brushes FG, oval portrait, stool, messenger separated | **FIXED** in S02/S03. |
+| Studio: dressing, road outside, coil + magnet | Partly or not fixed. S04 still shows blue hills and houses with no road. The coil, magnet and spark are under 20 px on the sill and invisible on the phone. |
+| Chamber shafts | **FIXED.** Soft beams in C01; the slab is gone in C03-C06. |
+| Congressmen in the tiers (C01) | **FIXED.** |
+| chamber_low sacks, inkwell + quill FG | Improved. The sacks have tied necks and spilled letters. Remaining problems: the quill is a 400 px beige paddle, one sack under the table reads as a boulder, and the globe is still cut at the right edge. |
+| C04 night warmth | n/a. C04 is now the mail-sack DAY tile. The NIGHT look is proven in C02/C07. |
+| Money bag | Improved. It reads as a tied cloth sack, but there are **no coins**, so it reads as "a sack" rather than "money". Non-blocking: the narration carries it. Coins are still advised. |
+| C07 night ending | Mostly fixed. Candle-warm, dark tiers, the mocker on the stool at x≈250, the tape pile round the stool: lovely. **Morse in the doorway is still not visible.** See B6. |
+
+## BLOCKING: must fix before the client sees the set (asset, light or mark changes; no camera move can fix these)
+
+**B1. Pulse look (L04, L05; shots 24, 25). REVEAL.**
+- Today set_pulse draws about 7 separate spheres, spaced 40-90 px apart at full size.
+- In L05 they are 90 px cream-white discs; on the phone they read as ping-pong balls or fairy lights on a string, not current.
+- In L04 one disc floats left of the neck, off the wire.
+- Fix:
+  - Use one hot core (cyan-white, 16-20 px at line_close and 30-40 px in the macro) with a **continuous tapered trail** along the wire curve.
+  - Build the trail from 20-30 lags at a small spacing, shrinking and fading to the wire, so it merges into one comet.
+  - Use cyan, not cream.
+  - At the L05 hero position add the cyan rim-glow inside the glass. Keep the pole wood below darker than in L01 (the "does not leak" read).
+
+**B2. trench_cut (L17; shot 16). REVEAL.**
+- The top third is good: the soil face with pebbles and the dusk sky band.
+- But the bottom 40 % is a dark **glossy reflective floor** with soft light blobs. It reads as an interior or ice, not soil.
+- The torn cloth is a row of white triangular **teeth or icicles**.
+- The sparks are cyan **rings or donuts** that read as UI bubbles.
+- On the phone, the frame reads as a shark mouth or a cave.
+- Fix:
+  - Make the lower frame damp brown soil: rough 0.8, no mirror spec, a few pebbles and roots.
+  - Make the pipe grey lead with a peeled seam.
+  - Make the cloth ragged cream strips hanging *from the seam* (irregular, not a row of equal triangles), with the copper wire clearly orange inside.
+  - Make the sparks solid small cores (no ring) leaking down into the soil, with a faint cyan light on the soil.
+
+**B3. line_wagon (L19; shot 22, "the answer is glass").**
+- The crate holds about 12 **opaque solid-green cylinders** with no glass and no glint, and the whole wagon sits in blue-violet shade.
+- It reads as crayons in a dull box. This beat has a snap push on "แก้ว" (glass), so the glass must sparkle.
+- Fix:
+  - Use the same glass material as the line_close neck, with a star glint on 3-5 necks.
+  - Put the crate in the sun with a warm rim on the wagon's top edges and wet sheen.
+  - Move it off the big spool so Morse's mark has clear after-rain sky behind his raised hand. Today the spool sits behind his head.
+
+**B4. line_rail (L09; shots 3, 25).**
+- The train is **not in the tile**: only a grey cylinder end shows at the left edge (x 0-60).
+- The pulse is a 6 px dot at the right edge.
+- The lower 45 % is flat, empty yellow ground.
+- Fix: re-shoot the tile with set_train placing the loco at about 45 % of the width, with the plume, and the pulse bead (per B1) on the near span ahead of it.
+- Also put one foreground prop at 1-2 D (crate or keg).
+- This is cheap (hooks plus one prop), but the race image must be proven before the client OK.
+
+**B5. Lead pipe material (L11-L16, L18, L17).**
+- It is still a saturated blue/white candy stripe (snaps) or pure blue (trench_end).
+- The story says grey lead, and blue must be kept for the sparks alone, or the leak reveal loses its colour logic.
+- Fix: one material, dull grey metal ≈#7a7d84, rough 0.5, with a warm highlight.
+- In the same pass, make the open furrow beside it read as **dark-brown earth**: today the trench is read only through the pipe.
+
+**B6. C07 ending: Morse at the door (shot 30).**
+- The lit doorway is in frame (good), but it is empty.
+- Morse's mark (head y 607, 31 px) sits behind the register/instrument, below the door.
+- Fix: move the mark into the doorway (head about y 480, ≥ 50 px at full size, so ≥ 25 px on the phone), half-hidden by the door leaf.
+- This is a key-shot gag; QA-art must pass it at the TAKE gate anyway.
+
+## NON-BLOCKING: render workers handle these by camera, framing or staging in their takes (set fixes welcome but not required)
+
+- **L18 line_road.**
+  - Raise the cam about 0.5 D, or start the move above the grass, so no blade crosses the buggy wheels. Today the foreground blades fill the lower 45 %.
+  - Re-aim right so the mule head and ears show.
+  - Trimming the 3-4 nearest blades in the set is a 1-line fix and is advised.
+- **Chamber ceilings (C03-C06) and studio ceilings (S01-S04).**
+  - The ceiling takes 25-35 % and is near-white overexposed in C03/C04. Tilt down 4-6°, as asked in the first review.
+  - C03/C04 also have a hot light patch on the bare floor in the lower third; frame it out or put the FG table lower.
+  - Optional set tweak: lower the ceiling emission/exposure by about 30 %.
+- **C03/C04 props.**
+  - Halve the quill: today it reads as a paddle.
+  - Keep the globe out of frame.
+  - These are small set edits; if not done, frame the quill partly out.
+- **L11 line_trench.** Push in and lower toward the team so the mules and plough fill about 50 % of the width; the mules exist now.
+- **L10 station.** Push in on the platform side; stage the waving cast across the empty foreground.
+- **L06/L07 line_wide.** The Morse mark at the ladder foot is not visible; stage him at the near pole in shot 2. Lean the steam plume back along the motion in the take.
+- **Rain (L03, L08, L16).** Streak opacity is about 100 % and the streaks are long. 30-40 % opacity is advised, so the bottle and pole stay the subject in shot 20. The pure #0000ff-blue puddles (L08, L16) would look better dark and reflective.
+- **S04 studio_window.**
+  - The coil, magnet and spark are tiny. The snap push on "พริบตา" must end close on the sill.
+  - Scale the coil and magnet 2x and the spark 2x if the set is touched anyway.
+  - The road outside is still missing; frame the window as light.
+- **C06.** Add 4-6 coins on the cloth if the set is touched; otherwise the push on the sack plus the narration carries the beat.
+- **L15 coil.** The foreground coil reads as a brown tyre or cake. Frame it partly out, or give it rope or wire texture.
+- **hue_report CHECK.** L02, L03, L09, L10, L11, L12, L14, L17 and L18 are outside 240-260; L02 is at 289.6. This is QA-tech's call; the shade tint can move with the B5 pass.
+
+## Phone (360x640) re-check
+
+| Item | First review | Now on the phone |
+|---|---|---|
+| Bottle neck (line_close) | 20 px teal cap | **reads**: about 35 px green glass + star |
+| Pulse (L04/L05) | pale discs | **fails**: a chain of beads / ping-pong balls (B1) |
+| Trench split (L17) | 50 px cluster | **fails**: reads as teeth and rings over a glossy floor (B2) |
+| Plough + mules (L11) | absent | weak: visible, about 20 % of the width |
+| Bottle crate (L19) | absent | **fails as glass**: a green block, no glint (B3) |
+| Rain (L03, L08, L16) | absent | **reads** (too strong) |
+| Key on crate (L15) | 30 px | **reads**: about 50 px |
+| Train in line_rail (L09) | small | **absent** (B4) |
+| Money bag (C06) | a pot | reads as a sack; no coins |
+| Morse at the door (C07) | absent | **absent** (B6); the doorway itself reads |
+| Register tape (C05/C07) | reads | reads, lovely in C07 |
+
+After B1-B6, re-render only these tiles: L04, L05, L09, L11-L19 and C07. If the B-items land as specified, I expect SHIP at about 7.
