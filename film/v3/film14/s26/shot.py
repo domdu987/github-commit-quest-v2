@@ -97,10 +97,11 @@ def shot27(g, rep):
     loc, look, lens = CAM27(g); cam_set(loc, look, lens)
     for cast, x0, y, face, spd in EAT:
         xx, yy, fc, ph = eat_pos(cast, g); k = g - 1840
-        tr = ('reach' if (k // 14 + len(cast)) % 2 == 0 else 'sniff')
+        tr = 'sniff'                                    # ONE trunk pose per elephant for the whole shot (no pops; a low trunk never crosses the face behind)
         base = dict(expr='curious', trunk=tr, ear_flare=0.15, head_dip=2 + 3 * math.sin(k * 0.3 + len(cast)), mouth_open=0.35 if (k // 5 + len(cast)) % 2 == 0 else 0.0, blink=cast14.blink_at(g, 96, BLINK_SEED[cast]))
         pp = cast14.cycle(cast, ph, 'walk', fc, base, speed=spd); pp['t'] = k * 0.1; pp['expr'] = 'curious'
-        r = put('s27_' + cast, cast, pp, (xx, yy, 0), loc, ppd=96, yaw_fixed=0.0, mirror=(fc < 0))
+        d_ = Vector(loc) - Vector((xx, yy, 0)); yfix = 0.4 * math.atan2(d_.x, -d_.y)            # card turned <= ~20 deg from facing the lens (left-edge elephant_b was 27-34)
+        r = put('s27_' + cast, cast, pp, (xx, yy, 0), loc, ppd=96, yaw_fixed=yfix, mirror=(fc < 0))
         rep[cast] = dict(head=screen(r['world'](r['anchors']['head'])), feet=screen(r['world'](r['anchors']['feet'])))
     F.set_uncle_field(min(1.0, max(0.0, (g - 1838) / 56.0)))      # stalks fall visibly over g 1840-1894
 
