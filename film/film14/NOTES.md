@@ -22,6 +22,7 @@
 | s04 | v2 PASS (render14/team2 @7bf169b) |
 | s28 | v4 PASS (render14/team2 @0446d16) |
 | s19 | PASS, shots 19-20 (render14/team2 @95409ce) |
+| s13 | PASS, shots 13-14 (render14/team6 @f7c31df) |
 | s15 | v3 PASS, shots 15-17 (render14/team3 @bb8a187) |
 | s01 | v5 PASS (render14/team6 @3e0e1e1) |
 | s11 | v1 FAIL -> team 7 redo |
