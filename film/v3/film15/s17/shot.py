@@ -72,11 +72,11 @@ def cam_at(n, g):
     else: lk = cam_path(a, b, g, g0, g1)
     if n == 23: lk = push_extra(lk, 9, gof(41.7) - 2, g, 10)
     if n == 18:
-        lk = push_extra(push_extra(lk, 6, 996, g, 7), 6, 1004, g, 7)
+        lk = push_extra(push_extra(lk, 9, 994, g, 7), 9, 1003, g, 7)
     if n == 19: w = 1 - ez(g, B[19], B[19] + 9); lk = (lk[0], (lk[1][0] + 5.5 * w, lk[1][1] - 2.0 * w, lk[1][2] + 0.6 * w))
     if n == 20: lk = (lk[0], (lk[1][0], lk[1][1], lk[1][2] - 1.2 * (1 - ez(g, B[20], B[20] + 15))))
     if n == 19: lk = push_extra(lk, 22, B[19] + 22, g, 9)
-    if n == 20: lk = push_extra(push_extra(lk, 14, gof(36.72) - 4, g, 8), 8, B[20] + 24, g, 8)
+    if n == 20: lk = push_extra(push_extra(lk, 19, gof(36.72) - 4, g, 7), 10, B[20] + 24, g, 7)
     if n == 24: lk = push_extra(push_extra(lk, 26, 1281, g, 7), 24, gof(43.32) - 4, g, 7)
     if n == 24:
         w = 1 - ez(g, B[24], B[24] + 6); sw = math.sin(math.pi * clamp((g - 1296) / 12.0))
