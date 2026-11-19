@@ -41,11 +41,11 @@ def cam_of(g):
     if g < G_CUT:
         u = (g - FIRST) / float(G_CUT - 1 - FIRST)
         fwd = (L22 - P22).normalized(); R = right_of(P22, L22)
-        pos = P22 + fwd * (0.8 * GAIN) * mix(u) + R * (-0.9 * GAIN) * mix(u) + Vector((0, 0, 0.05)) * mix(u)
+        pos = P22 + fwd * (0.5 * GAIN) * mix(u) + R * (-0.45 * GAIN) * mix(u) + Vector((0, 0, 0.05)) * mix(u)
         s = snap(g, 1236)
-        pos += fwd * (0.55 * GAIN) * s + R * (0.5 * GAIN) * s
-        s2 = snap(g, 1215); pos += fwd * (0.3 * GAIN) * s2 + R * (-0.45 * GAIN) * s2
-        s3 = snap(g, 1258); pos += R * (0.5 * GAIN) * s3
+        pos += fwd * (0.3 * GAIN) * s + R * (0.35 * GAIN) * s
+        s2 = snap(g, 1215); pos += fwd * (0.15 * GAIN) * s2 + R * (-0.25 * GAIN) * s2
+        s3 = snap(g, 1258); pos += R * (0.3 * GAIN) * s3
         pos += R * (SWAY * math.sin(g * 0.5)) + Vector((0, 0, SWAY * 0.7 * math.sin(g * 0.77)))
         track = Vector(group_pos(g)) + Vector((0, 0, 1.25))
         look = L22.lerp(track, 0.75 * C.smooth(u)) + R * (0.5 * GAIN) * s * 0.0
@@ -53,13 +53,13 @@ def cam_of(g):
     else:
         u = (g - G_CUT) / float(LAST - G_CUT)
         fwd = (L23 - P23).normalized(); R = right_of(P23, L23)
-        pos = P23 + fwd * (0.55 * GAIN) * mix(u) + R * (0.6 * GAIN) * mix(u)
+        pos = P23 + fwd * (0.15 * GAIN) * mix(u) + R * (0.35 * GAIN) * mix(u)
         s = snap(g, 1311)
-        pos += fwd * (0.35 * GAIN) * s + R * (-0.45 * GAIN) * s
-        s2 = snap(g, 1290); pos += fwd * (0.25 * GAIN) * s2 + R * (0.35 * GAIN) * s2
+        pos += fwd * (0.1 * GAIN) * s + R * (-0.3 * GAIN) * s
+        s2 = snap(g, 1290); pos += fwd * (0.08 * GAIN) * s2 + R * (0.3 * GAIN) * s2
         s3 = snap(g, 1331); pos += R * (-0.4 * GAIN) * s3
         pos += R * (SWAY * math.sin(g * 0.5)) + Vector((0, 0, SWAY * 0.7 * math.sin(g * 0.77)))
-        look = L23 + Vector((-0.25, 0.0, 0.1)) * s + Vector((0.2, 0, 0)) * mix(u)
+        look = L23 + Vector((0.0, 0.0, -0.3)) + Vector((-0.25, 0.0, 0.1)) * s + Vector((0.2, 0, 0)) * mix(u)
     return pos, look
 
 
