@@ -25,3 +25,4 @@
 | s11 | v1 FAIL -> team 7 redo |
 | s25 | team 5 renders died (restarted 18:45); split: team 5 = shots 25-27 (s25, g1678-1913), team 2 = shots 28-30 (new take s28, g1914-2105) |
 | s15 | team 3 renders died again (restarted 19:47); split: team 3 = shots 15-17 (s15, g1001-1167), team 6 = shots 18-19 (new take s18, g1168-1306) after s01 v3 |
+| s11 | team 7 renders died again (01:00); split: team 7 = shots 11-12 (s11, g753-869), team 6 = shots 13-14 (new take s13, g858-1006) |
