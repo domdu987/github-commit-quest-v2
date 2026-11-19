@@ -42,6 +42,8 @@ cam = bpy.context.scene.camera; cam.data.clip_start = 0.02
 if SHOT == 27:
     for ob in STATE['anim']['hero']['objs'] + [STATE['anim']['hero']['root']]: ob.hide_render = True    # the in-box card is replaced by the held one
 K.clear_keys()
+for o in bpy.data.objects:      # director fix: the additive light shafts wash over the cast cards
+    if any(m and m.name.startswith('beam_fx') for m in (getattr(o.data, 'materials', None) or [])): o.hide_render = True
 
 def make_actor(name, cast):
     a = actors.Actor(name, cast); a.build(sprites.DEFAULT_CANVAS[cast], os.path.join(TMP, "sprites"), contact=True); a.head_flip = True; return a
@@ -129,7 +131,7 @@ def pose_all(gs):
     for g in gs:
         f = bf(g); bpy.context.scene.frame_set(f)
         for a in ACTORS:
-            a.pose(f, POSE[a.name](g), camera=cam)
+            a.pose(f, cast17.silent(POSE[a.name](g)), camera=cam)
     fr = [bf(g) for g in gs]
     for a in ACTORS:
         a.anch = {}
@@ -148,7 +150,7 @@ def pose_all(gs):
             glow(bar, f, SHOT == 27 and g >= t0, 0.55 + 0.25 * math.sin((g - t0) * 0.5))
         glow(PROF, f, SHOT == 27 and 1534 <= g <= 1552, 0.35 + 0.2 * math.sin(g * 0.6))
         glow(BOT, f, SHOT == 28 and g >= 1588, 0.45 + 0.25 * math.sin(g * 0.5))
-        K.set_flicker(1.0, frame=f); K.set_dust(1.0, frame=f)
+        K.set_flicker(1.0, frame=f); K.set_dust(0.5, frame=f)
         if SHOT == 28: K.set_pendulum(frame=f); K.set_smoke(1.0, frame=f)
 
 def report(g):
