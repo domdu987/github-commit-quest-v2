@@ -1,0 +1,24 @@
+{
+ "G_FLASH": 741,
+ "coach_mouth_window": [
+  537,
+  710
+ ],
+ "jump_shot13": {
+  "takeoff": 733,
+  "apex": 741,
+  "land": 753
+ },
+ "shot16": {
+  "jump1_takeoff": 866,
+  "jump2_takeoff": 916,
+  "bar_raise": [
+   886,
+   896
+  ]
+ },
+ "dissolve": [
+  897,
+  907
+ ]
+}

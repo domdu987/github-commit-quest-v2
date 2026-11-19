@@ -1,0 +1,73 @@
+{
+ "take": "s10",
+ "film": 15,
+ "shots": [
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16
+ ],
+ "first_g": 483,
+ "n_frames": 457,
+ "g0": 489,
+ "g1": 931,
+ "handle_in": 6,
+ "handle_out": 8,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "frames": 11,
+  "note": "shot 16 -> 17 DIS; out handle g 932..939 (DAY plate)"
+ },
+ "shot_ranges": {
+  "10": [
+   489,
+   563
+  ],
+  "11": [
+   564,
+   620
+  ],
+  "12": [
+   621,
+   707
+  ],
+  "13": [
+   708,
+   761
+  ],
+  "14": [
+   762,
+   837
+  ],
+  "15": [
+   838,
+   861
+  ],
+  "16": [
+   862,
+   931
+  ]
+ },
+ "internal_dissolve": {
+  "frames": [
+   897,
+   907
+  ],
+  "note": "shot 16 season change GOLDEN -> DAY, baked into take.mkv (blend of two plates)"
+ },
+ "take_files": "take.mkv.part* (cat to rebuild)",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "s_per_frame_wall": "~11 (2 processes x 2 threads)"
+}
