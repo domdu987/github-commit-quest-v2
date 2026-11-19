@@ -112,28 +112,112 @@ def _calipers_body(k):
     return "".join(o)
 
 
+GINGER = dict(hair="#c4601f", hair_d="#8e3e12", skin="#f3d2b4", cheek="#e68a7a", stub="#5a3a2e", scarf="#b8322c", jacket="#6a4a30", glass="#5f9a84", glass_l="#cfe8dc")
+
+
+def _sp(cx, cy, s, d):
+    """path data in head units (x right, y down, origin = head centre, unit = s): letters stay, number pairs are scaled and moved."""
+    t = d.replace(",", " ").split(); out = []; nums = []; rel = False
+    for w in t:
+        if w.isalpha():
+            out.append(w); rel = w.islower()
+        else:
+            nums.append(float(w))
+            if len(nums) == 2:
+                out.append("%.4f,%.4f" % ((0 if rel else cx) + nums[0] * s, (0 if rel else cy) + nums[1] * s)); nums = []
+    return " ".join(out)
+
+
+def _dupont_front(k, cx, cy, s):
+    """Dupont bare-headed, full face, in upright card coordinates (x right, y down), centre (cx, cy), head half-width s: ginger hair, ruddy cheeks, stubble dots, ears, red neckerchief."""
+    G = GINGER; c = k.c; ink = k.ink; sw = 0.006; o = []
+    o.append('<path d="%s" fill="%s"/>' % (_sp(cx, cy, s, "M -1.5 1.7 L 1.5 1.7 L 1.25 1.05 L -1.25 1.05 Z"), c(G["jacket"])))
+    o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="%.4f" stroke-linejoin="round"/>' % (_sp(cx, cy, s, "M -0.85 0.9 L 0.85 0.9 L 0 1.75 Z"), c(G["scarf"]), ink, sw))
+    for sd in (-1, 1):
+        o.append('<ellipse cx="%.4f" cy="%.4f" rx="%.4f" ry="%.4f" fill="%s" stroke="%s" stroke-width="%.4f"/>' % (cx + sd * s, cy + 0.05 * s, 0.22 * s, 0.32 * s, c(G["skin"]), ink, sw))
+    o.append('<ellipse cx="%.4f" cy="%.4f" rx="%.4f" ry="%.4f" fill="%s" stroke="%s" stroke-width="0.007"/>' % (cx, cy, 0.88 * s, 1.08 * s, c(G["skin"]), ink))
+    for sd in (-1, 1):
+        o.append('<circle cx="%.4f" cy="%.4f" r="%.4f" fill="%s" opacity="0.8"/>' % (cx + sd * 0.5 * s, cy + 0.28 * s, 0.24 * s, c(G["cheek"])))
+    o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.007" stroke-linejoin="round"/>'
+             % (_sp(cx, cy, s, "M -0.92 -0.1 Q -1.15 -1.15 -0.1 -1.35 Q 0.6 -1.5 0.95 -0.7 Q 0.9 -0.05 0.75 -0.5 Q 0.1 -0.6 -0.45 -0.45 Q -0.7 -0.25 -0.92 -0.1 Z"), c(G["hair"]), ink))
+    o.append('<path d="%s" fill="none" stroke="%s" stroke-width="0.007" stroke-linecap="round"/>' % (_sp(cx, cy, s, "M -0.3 -1.2 q 0.2 0.25 0.1 0.4 M 0.2 -1.28 q 0.25 0.2 0.1 0.4"), c(G["hair_d"])))
+    for sd in (-1, 1):
+        o.append('<circle cx="%.4f" cy="%.4f" r="%.4f" fill="%s"/>' % (cx + sd * 0.36 * s, cy - 0.12 * s, 0.09 * s, ink))
+    o.append('<path d="%s" fill="none" stroke="%s" stroke-width="%.4f" stroke-linecap="round"/>' % (_sp(cx, cy, s, "M 0 -0.05 l -0.08 0.38 l 0.14 0.02"), ink, sw))
+    o.append('<path d="%s" fill="none" stroke="%s" stroke-width="%.4f" stroke-linecap="round"/>' % (_sp(cx, cy, s, "M -0.22 0.62 q 0.22 0.1 0.44 0"), ink, sw))
+    o.append('<g fill="%s">' % c(G["stub"]))
+    for i in range(26):
+        a = _hash(7, i); b = _hash(9, i)
+        x = (a - 0.5) * 1.5; y = 0.38 + b * 0.62
+        if (x / 0.82) ** 2 + ((y - 0.1) / 1.0) ** 2 > 1.0 or (abs(x) < 0.2 and 0.5 < y < 0.75):
+            continue
+        o.append('<circle cx="%.4f" cy="%.4f" r="%.4f"/>' % (cx + x * s, cy + y * s, 0.055 * s))
+    o.append('</g>')
+    return "".join(o)
+
+
+def _dupont_profile(k, cx, cy, s):
+    """Dupont bare-headed, a true profile facing right: ginger hair with a back tuft, one ear, nose, stubble, red neckerchief."""
+    G = GINGER; c = k.c; ink = k.ink; sw = 0.006; o = []
+    o.append('<path d="%s" fill="%s"/>' % (_sp(cx, cy, s, "M -1.5 1.7 L 1.3 1.7 L 1.05 1.05 L -1.1 1.05 Z"), c(G["jacket"])))
+    o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="%.4f" stroke-linejoin="round"/>' % (_sp(cx, cy, s, "M -0.7 0.95 L 0.6 0.95 L 0.5 1.5 L -0.7 1.5 Z"), c(G["scarf"]), ink, sw))
+    o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.007" stroke-linejoin="round"/>'
+             % (_sp(cx, cy, s, "M -0.85 -0.3 Q -0.95 -1.15 0 -1.2 Q 0.55 -1.0 0.8 -0.5 L 0.78 -0.2 L 1.12 0.12 Q 1.02 0.26 0.82 0.34 Q 0.8 0.44 0.74 0.6 Q 0.55 0.88 0.2 1.1 Q -0.35 1.0 -0.78 0.8 Z"), c(G["skin"]), ink))
+    o.append('<circle cx="%.4f" cy="%.4f" r="%.4f" fill="%s" opacity="0.8"/>' % (cx + 0.35 * s, cy + 0.3 * s, 0.22 * s, c(G["cheek"])))
+    o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.007" stroke-linejoin="round"/>'
+             % (_sp(cx, cy, s, "M -0.9 0.2 Q -1.2 -1.3 -0.1 -1.4 Q 0.7 -1.3 0.78 -0.55 Q 0.7 -0.25 0.2 -0.5 Q -0.3 -0.15 -0.3 0.2 Q -0.3 0.3 -0.6 0.1 Z"), c(G["hair"]), ink))
+    o.append('<ellipse cx="%.4f" cy="%.4f" rx="%.4f" ry="%.4f" fill="%s" stroke="%s" stroke-width="0.007"/>' % (cx - 0.12 * s, cy + 0.12 * s, 0.26 * s, 0.4 * s, c(G["skin"]), ink))
+    o.append('<path d="%s" fill="none" stroke="%s" stroke-width="0.005" stroke-linecap="round"/>' % (_sp(cx, cy, s, "M -0.1 -0.02 q 0.1 0.14 0 0.34"), ink))
+    o.append('<circle cx="%.4f" cy="%.4f" r="%.4f" fill="%s"/>' % (cx + 0.56 * s, cy - 0.1 * s, 0.09 * s, ink))
+    o.append('<path d="%s" fill="none" stroke="%s" stroke-width="%.4f" stroke-linecap="round"/>' % (_sp(cx, cy, s, "M 0.62 0.62 q 0.14 0.06 0.22 0"), ink, sw))
+    o.append('<g fill="%s">' % c(G["stub"]))
+    for i in range(16):
+        a = _hash(5, i); b = _hash(3, i)
+        x = 0.05 + a * 0.62; y = 0.35 + b * 0.55
+        if y > 0.4 + 0.5 * (1 - x) + 0.35:
+            continue
+        o.append('<circle cx="%.4f" cy="%.4f" r="%.4f"/>' % (cx + x * s, cy + y * s, 0.055 * s))
+    o.append('</g>')
+    return "".join(o)
+
+
+def _bottle_icon(k, cx, cy, h):
+    """an EMPTY glass bottle, upright, outline glass with a pale fill and a highlight; no label, no text. centre (cx, cy), height h (upright card coordinates)."""
+    G = GINGER; c = k.c; w = h * 0.30; nw = w * 0.36
+    top, bt = cy - h / 2, cy + h / 2; sh = cy - h * 0.12; r = w * 0.4
+    path = ("M%.4f,%.4f L%.4f,%.4f L%.4f,%.4f Q%.4f,%.4f %.4f,%.4f L%.4f,%.4f Q%.4f,%.4f %.4f,%.4f L%.4f,%.4f Q%.4f,%.4f %.4f,%.4f L%.4f,%.4f Q%.4f,%.4f %.4f,%.4f Z"
+            % (cx - nw, top, cx + nw, top, cx + nw, cy - h * 0.2, cx + nw, sh, cx + w, sh + h * 0.08, cx + w, bt - r, cx + w, bt, cx + w - r, bt,
+               cx - w + r, bt, cx - w, bt, cx - w, bt - r, cx - w, sh + h * 0.08, cx - nw, sh, cx - nw, cy - h * 0.2))
+    o = ['<path d="%s" fill="%s" stroke="%s" stroke-width="%.4f" stroke-linejoin="round"/>' % (path, c(G["glass_l"]), c(G["glass"]), h * 0.055)]
+    o.append('<rect x="%.4f" y="%.4f" width="%.4f" height="%.4f" rx="%.4f" fill="%s" stroke="%s" stroke-width="%.4f"/>' % (cx - nw * 1.25, cy - h / 2 - h * 0.05, nw * 2.5, h * 0.07, h * 0.02, c(G["glass"]), k.ink, h * 0.02))
+    o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="#ffffff" stroke-width="%.4f" stroke-linecap="round" opacity="0.9"/>' % (cx - w * 0.55, cy + h * 0.12, cx - w * 0.55, cy + h * 0.38, h * 0.045))
+    o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="%.4f" stroke-linecap="round" opacity="0.8"/>' % (cx - w * 0.9, cy + h * 0.46, cx + w * 0.9, cy + h * 0.46, c(G["glass"]), h * 0.03))
+    return "".join(o)
+
+
 def _card_body(k):
-    """a record card (portrait), long axis along +x: a coloured tab on the far edge, two photographs (full face, profile) with
-    head silhouettes, and a fingerprint (concentric ellipses).  No writing."""
-    x0, x1, hw = 0.02, 0.02 + CARD_LEN, CARD_W / 2
-    o = ['<path d="M%.3f,%.3f L%.3f,%.3f L%.3f,%.3f L%.3f,%.3f Z" fill="%s" stroke="%s" stroke-width="0.018" stroke-linejoin="round"/>'
-         % (x0, -hw, x1, -hw, x1, hw, x0, hw, k.c(CARD["base"]), k.ink)]
-    o.append('<path d="M%.3f,%.3f L%.3f,%.3f L%.3f,%.3f L%.3f,%.3f Z" fill="%s" stroke="%s" stroke-width="0.012"/>'
-             % (x1 - 0.07, -hw * 0.55, x1, -hw * 0.55, x1, hw * 0.10, x1 - 0.07, hw * 0.10, k.c(CARD["tab"]), k.ink))
-    # photographs on the near half (x0 .. x0 + 0.26)
-    for j, yc in enumerate((-hw * 0.50, hw * 0.50)):
-        px0, px1 = x0 + 0.045, x0 + 0.205
-        o.append('<rect x="%.3f" y="%.3f" width="%.3f" height="%.3f" rx="0.008" fill="%s" stroke="%s" stroke-width="0.010"/>'
-                 % (px0, yc - 0.062, px1 - px0, 0.124, k.c(CARD["photo"]), k.ink))
-        o.append('<circle cx="%.3f" cy="%.3f" r="0.030" fill="%s"/>' % ((px0 + px1) / 2 + 0.014, yc - 0.012 + (0.0 if j == 0 else -0.004), k.c(CARD["photo_d"])))
-        o.append('<path d="M%.3f,%.3f Q%.3f,%.3f %.3f,%.3f L%.3f,%.3f Z" fill="%s"/>' % (px0 + 0.006, yc + 0.060, (px0 + px1) / 2, yc + 0.012, px1 - 0.006, yc + 0.060, px1 - 0.006, yc + 0.062, k.c(CARD["photo_d"])))
-        if j == 1:
-            o.append('<path d="M%.3f,%.3f l0.022,0.008 l-0.004,0.016" fill="none" stroke="%s" stroke-width="0.008" stroke-linecap="round"/>' % ((px0 + px1) / 2 + 0.040, yc - 0.020, k.c(CARD["photo_d"])))
-    # fingerprint
-    fx, fy = x0 + 0.37, hw * 0.45
+    """the HERO card as a prop (portrait; raised with angle -90 it stands upright): top tab, a framed name panel with an empty bottle (no text), two portraits of
+    Dupont bare-headed (full face, true profile with an ear), a fingerprint and greeked rows.  Drawn in upright card coordinates (x right, y down) and
+    mapped onto the prop frame (up = +x, right = +y), so heads stand up when the card is raised."""
+    hw = CARD_W / 2; top, bot = -(0.02 + CARD_LEN), -0.02
+    o = ['<g transform="matrix(0 1 -1 0 0 0)">']
+    o.append('<rect x="%.3f" y="%.3f" width="%.3f" height="%.3f" fill="%s" stroke="%s" stroke-width="0.018" stroke-linejoin="round"/>' % (-hw, top, CARD_W, CARD_LEN, k.c(CARD["base"]), k.ink))
+    o.append('<rect x="%.3f" y="%.3f" width="0.075" height="0.07" fill="%s" stroke="%s" stroke-width="0.012"/>' % (hw - 0.095, top - 0.045, k.c(CARD["tab"]), k.ink))
+    o.append('<rect x="%.3f" y="%.3f" width="0.22" height="0.115" rx="0.008" fill="%s" stroke="%s" stroke-width="0.010"/>' % (-hw + 0.02, top + 0.02, k.c("#f6ecd0"), k.ink))
+    o.append(_bottle_icon(k, -hw + 0.02 + 0.11, top + 0.02 + 0.0575, 0.095))
+    o.append('<rect x="%.3f" y="%.3f" width="0.075" height="0.115" fill="none" stroke="%s" stroke-width="0.008" stroke-dasharray="0.012 0.010"/>' % (hw - 0.095 - 0.0, top + 0.02, k.c(CARD["dark"])))
+    for j, xc in enumerate((-hw * 0.5, hw * 0.5)):
+        px0, py0, pw, ph = xc - 0.077, top + 0.15, 0.154, 0.185
+        o.append('<g><rect x="%.3f" y="%.3f" width="%.3f" height="%.3f" rx="0.008" fill="%s" stroke="%s" stroke-width="0.010"/>' % (px0, py0, pw, ph, k.c("#8aa0b4"), k.ink))
+        o.append('<clipPath id="%s_pc%d"><rect x="%.3f" y="%.3f" width="%.3f" height="%.3f" rx="0.008"/></clipPath><g clip-path="url(#%s_pc%d)">' % (k.uid, j, px0, py0, pw, ph, k.uid, j))
+        o.append((_dupont_front if j == 0 else _dupont_profile)(k, xc, py0 + 0.092, 0.050))
+        o.append('</g></g>')
+    fx, fy = -hw + 0.07, bot - 0.075
     for r in (0.040, 0.030, 0.020, 0.010):
-        o.append('<ellipse cx="%.3f" cy="%.3f" rx="%.3f" ry="%.3f" fill="none" stroke="%s" stroke-width="0.007"/>' % (fx, fy, r * 0.85, r * 1.1, k.ink))
-    o.append('<path d="M%.3f,%.3f L%.3f,%.3f" stroke="%s" stroke-width="0.008" opacity="0.8"/>' % (x0 + 0.26, hw * 0.88, x0 + 0.26, -hw * 0.88, k.c(CARD["dark"])))
+        o.append('<ellipse cx="%.3f" cy="%.3f" rx="%.3f" ry="%.3f" fill="none" stroke="%s" stroke-width="0.007"/>' % (fx, fy, r * 1.1, r * 0.85, k.ink))
+    for i in range(3):
+        o.append('<path d="M%.3f,%.3f L%.3f,%.3f" stroke="%s" stroke-width="0.012" stroke-linecap="round" opacity="0.8"/>' % (-hw + 0.15, bot - 0.105 + i * 0.03, hw - 0.04 - 0.03 * (i % 2), bot - 0.105 + i * 0.03, k.c(CARD["dark"])))
+    o.append('</g>')
     return "".join(o)
 
 
@@ -659,7 +743,7 @@ NEW_CAST17 = {
         _FLAGS, build="stout", seed=88.4,
         torso_w=1.34, torso_h=1.16, profile=C2.PROFILE_ROUND, shift_pow=1.25,
         shoulder=(0.44, 0.44), arm=0.78, hip_x=0.19, leg=1.22, stance=0.07, wide=0.30, limb_w=0.070,
-        eye_y=0.000, brow="stroke", brow_th=0.080, mouth="frown", moustache=True, moustache_style="curl17", tache_scale=1.0, smirk_side=1,
+        eye_y=0.000, brow="stroke", brow_th=0.080, mouth="frown", moustache=True, moustache_style="curl17", tache_scale=1.3, smirk_side=1,
         cheeks="#ee7a66", chins=True,
         hat="newsboy", hat_style="kepi7", hat_tilt=-3.0, ear_pencil=False,
         hat_colors=dict(light="#4a62a0", base="#2c4580", dark="#16244c", shine="#8aa2d8", band="#c8402e", piping="#e2b442", visor="#16141a"),

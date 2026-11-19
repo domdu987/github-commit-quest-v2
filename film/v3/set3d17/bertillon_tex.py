@@ -146,28 +146,77 @@ def _face(d, cx, cy, r, profile, ink=(58, 40, 50), fill=(254, 247, 246), w=5):
         d.polygon([(cx + r * 0.85, cy - r * 0.1), (cx + r * 1.3, cy + r * 0.25), (cx + r * 0.9, cy + r * 0.32)], fill=fill, outline=ink)
         d.pieslice([cx - r * 1.05, cy - r * 1.15, cx + r * 0.95, cy + r * 1.1], 150, 330, fill=ink)
         d.ellipse([cx + r * 0.38, cy - r * 0.12, cx + r * 0.56, cy + r * 0.08], fill=ink); d.ellipse([cx - r * 0.35, cy - r * 0.05, cx - r * 0.05, cy + r * 0.35], outline=ink, width=w - 1)
+GINGER = dict(hair=(196, 96, 31), hair_d=(142, 62, 18), skin=(243, 210, 180), cheek=(230, 138, 122), stub=(90, 58, 46), scarf=(184, 50, 44), jacket=(106, 74, 48), glass=(95, 154, 132), glass_l=(207, 232, 220))
+def _dupont_head(profile, size=190, bg=(138, 160, 180), SS=3):
+    """Dupont bare-headed (ginger hair, ruddy cheeks, stubble dots, red neckerchief): a front view and a true profile with an ear. Drawn at SS x and reduced."""
+    G = GINGER; PL = (58, 40, 50); S = size * SS; im = Image.new('RGB', (S, S), bg); d = ImageDraw.Draw(im); cx, cy, s = S * 0.5, S * 0.44, S * 0.255; w = max(3, int(S * 0.022))
+    def P(pts): return [(cx + x * s, cy + y * s) for x, y in pts]
+    def smooth(pts, n=10):
+        out = []; m = len(pts)
+        for i in range(m):
+            p0, p1, p2, p3 = pts[(i - 1) % m], pts[i], pts[(i + 1) % m], pts[(i + 2) % m]
+            for t in np.linspace(0, 1, n, endpoint=False):
+                out.append(tuple(0.5 * ((2 * p1[k]) + (-p0[k] + p2[k]) * t + (2 * p0[k] - 5 * p1[k] + 4 * p2[k] - p3[k]) * t * t + (-p0[k] + 3 * p1[k] - 3 * p2[k] + p3[k]) * t ** 3) for k in (0, 1)))
+        return out
+    d.polygon(P([(-1.6, 1.9), (1.6, 1.9), (1.3, 1.05), (-1.3, 1.05)]), fill=G['jacket'], outline=PL)
+    if not profile:
+        d.polygon(P([(-0.9, 0.9), (0.9, 0.9), (0, 1.8)]), fill=G['scarf'], outline=PL, width=w)
+        for sd in (-1, 1): d.ellipse([cx + sd * s - 0.22 * s, cy + 0.05 * s - 0.32 * s, cx + sd * s + 0.22 * s, cy + 0.05 * s + 0.32 * s], fill=G['skin'], outline=PL, width=w)
+        d.ellipse([cx - 0.88 * s, cy - 1.08 * s, cx + 0.88 * s, cy + 1.08 * s], fill=G['skin'], outline=PL, width=w)
+        for sd in (-1, 1): d.ellipse([cx + sd * 0.5 * s - 0.24 * s, cy + 0.28 * s - 0.24 * s, cx + sd * 0.5 * s + 0.24 * s, cy + 0.28 * s + 0.24 * s], fill=G['cheek'])
+        d.polygon(smooth(P([(-0.95, -0.05), (-1.1, -0.8), (-0.6, -1.3), (0.1, -1.42), (0.8, -1.25), (1.05, -0.7), (0.95, -0.05), (0.78, -0.5), (0.1, -0.62), (-0.5, -0.45), (-0.75, -0.2)])), fill=G['hair'], outline=PL)
+        for sx in (-0.3, 0.2): d.arc([cx + sx * s - 0.15 * s, cy - 1.28 * s, cx + sx * s + 0.35 * s, cy - 0.8 * s], 280, 60, fill=G['hair_d'], width=w)
+        for sd in (-1, 1): d.ellipse([cx + sd * 0.36 * s - 0.09 * s, cy - 0.12 * s - 0.09 * s, cx + sd * 0.36 * s + 0.09 * s, cy - 0.12 * s + 0.09 * s], fill=PL)
+        d.line(P([(0, -0.05), (-0.08, 0.38), (0.06, 0.4)]), fill=PL, width=w); d.arc([cx - 0.22 * s, cy + 0.5 * s, cx + 0.22 * s, cy + 0.74 * s], 20, 160, fill=PL, width=w)
+        rg = random.Random(3)
+        for i in range(34):
+            x = rg.uniform(-0.7, 0.7); y = rg.uniform(0.4, 1.0)
+            if (x / 0.82) ** 2 + ((y - 0.1) / 1.0) ** 2 > 1.0 or (abs(x) < 0.2 and 0.5 < y < 0.75): continue
+            d.ellipse([cx + x * s - 0.06 * s, cy + y * s - 0.06 * s, cx + x * s + 0.06 * s, cy + y * s + 0.06 * s], fill=G['stub'])
+    else:
+        d.polygon(P([(-0.8, 0.95), (0.6, 0.95), (0.5, 1.6), (-0.8, 1.6)]), fill=G['scarf'], outline=PL, width=w)
+        face = [(-0.85, -0.3), (-0.8, -0.9), (0.0, -1.2), (0.55, -1.0), (0.8, -0.5), (0.78, -0.2), (1.12, 0.12), (1.02, 0.26), (0.82, 0.34), (0.78, 0.55), (0.55, 0.88), (0.2, 1.1), (-0.35, 1.0), (-0.78, 0.8)]
+        d.polygon(P(face), fill=G['skin'], outline=PL, width=w)
+        d.ellipse([cx + 0.35 * s - 0.22 * s, cy + 0.3 * s - 0.22 * s, cx + 0.35 * s + 0.22 * s, cy + 0.3 * s + 0.22 * s], fill=G['cheek'])
+        d.polygon(smooth(P([(-0.95, 0.25), (-1.15, -0.8), (-0.6, -1.3), (0.1, -1.42), (0.7, -1.3), (0.8, -0.55), (0.6, -0.3), (0.2, -0.5), (-0.3, -0.15), (-0.35, 0.25)])), fill=G['hair'], outline=PL)
+        d.ellipse([cx - 0.38 * s, cy - 0.28 * s, cx + 0.14 * s, cy + 0.52 * s], fill=G['skin'], outline=PL, width=w); d.arc([cx - 0.3 * s, cy - 0.12 * s, cx + 0.04 * s, cy + 0.36 * s], 250, 110, fill=PL, width=w)
+        d.ellipse([cx + 0.56 * s - 0.09 * s, cy - 0.1 * s - 0.09 * s, cx + 0.56 * s + 0.09 * s, cy - 0.1 * s + 0.09 * s], fill=PL); d.arc([cx + 0.55 * s, cy + 0.5 * s, cx + 0.9 * s, cy + 0.75 * s], 20, 150, fill=PL, width=w)
+        rg = random.Random(4)
+        for i in range(22):
+            x = rg.uniform(0.0, 0.7); y = rg.uniform(0.35, 0.95)
+            if y > 0.95 - 0.55 * x: continue
+            d.ellipse([cx + x * s - 0.06 * s, cy + y * s - 0.06 * s, cx + x * s + 0.06 * s, cy + y * s + 0.06 * s], fill=G['stub'])
+    return im.resize((size, size), Image.LANCZOS)
+def _bottle(d, cx, cy, h, PL=(58, 40, 50)):
+    """an empty glass bottle icon (outline glass, pale fill, a highlight; no label, no text)."""
+    G = GINGER; w = h * 0.30; nw = w * 0.36; top, bt = cy - h / 2, cy + h / 2; sh = cy - h * 0.12; lw = max(4, int(h * 0.06))
+    pts = [(cx - nw, top), (cx + nw, top), (cx + nw, sh), (cx + w, sh + h * 0.10), (cx + w, bt - 6), (cx + w - 8, bt), (cx - w + 8, bt), (cx - w, bt - 6), (cx - w, sh + h * 0.10), (cx - nw, sh)]
+    d.polygon(pts, fill=G['glass_l'], outline=G['glass']); d.line(pts + [pts[0]], fill=G['glass'], width=lw, joint='curve')
+    d.rectangle([cx - nw * 1.3, top - h * 0.06, cx + nw * 1.3, top + h * 0.03], fill=G['glass'], outline=PL, width=3)
+    d.line([(cx - w * 0.55, cy + h * 0.12), (cx - w * 0.55, cy + h * 0.38)], fill=(255, 255, 255), width=max(3, int(h * 0.05)))
 def card(name='card', kind='bertillon', seed=7, W=768, H=512):
-    """kind bertillon: two portrait frames (front + profile), a ruled grid of measurement rows with squiggle digits, an ear sketch
-    and a hand outline. NO readable text. kind notice: portrait wanted-bill with a framed face and greeked lines."""
-    p = _p(name)
+    """kind bertillon: the hero card. A framed name panel with an empty bottle icon (no text), two portraits of Dupont bare-headed (front + true profile with an ear),
+    an ear sketch, a hand outline and a ruled grid of measurement rows with squiggle digits. NO readable text. kind notice: portrait wanted-bill with a framed face and greeked lines."""
+    p = _p(name + ('_dupont' if kind == 'bertillon' else ''))
     if os.path.exists(p): return p
     rng = random.Random(seed); INK = (150, 70, 66); PL = (58, 40, 50)
     if kind == 'bertillon':
         im = Image.new('RGB', (W, H), (243, 231, 200)); d = ImageDraw.Draw(im)
-        d.rectangle([8, 8, W - 8, H - 8], outline=INK, width=7); d.rectangle([22, 22, W - 22, 66], fill=(228, 200, 168)); _squig(d, 40, 28, 400, 60, rng, 6, PL)
-        for k, (x0, prof) in enumerate(((34, False), (250, True))):
-            d.rectangle([x0, 80, x0 + 190, 290], fill=(112, 124, 160), outline=INK, width=6); _face(d, x0 + 95, 190, 58, prof)
-            d.rectangle([x0 + 40, 258, x0 + 150, 284], fill=(243, 231, 200), outline=PL, width=3)
-        d.ellipse([470, 86, 600, 216], outline=PL, width=6); d.arc([490, 106, 580, 196], 30, 300, fill=PL, width=6); d.arc([508, 126, 562, 176], 60, 280, fill=PL, width=5)   # ear sketch
-        d.polygon([(630, 220), (640, 120), (656, 120), (660, 190), (676, 100), (692, 104), (686, 200), (706, 130), (722, 136), (708, 230), (736, 190), (746, 204), (714, 270), (650, 276)], outline=PL, fill=(236, 214, 184), width=4)  # hand
-        y = 310
-        for i in range(6):
+        d.rectangle([8, 8, W - 8, H - 8], outline=INK, width=7)
+        d.rectangle([22, 22, 330, 108], fill=(246, 236, 208), outline=PL, width=6); _bottle(d, 176, 72, 70)
+        d.rectangle([346, 22, W - 22, 108], fill=(228, 200, 168)); d.rectangle([W - 120, 22, W - 22, 108], outline=INK, width=4)
+        for k, (x0, prof) in enumerate(((34, False), (240, True))):
+            d.rectangle([x0 - 4, 118, x0 + 194, 318], fill=(112, 124, 160), outline=INK, width=6); im.paste(_dupont_head(prof, 190), (x0, 124))
+        d.ellipse([470, 132, 600, 262], outline=PL, width=6); d.arc([490, 152, 580, 242], 30, 300, fill=PL, width=6); d.arc([508, 172, 562, 222], 60, 280, fill=PL, width=5)   # ear sketch
+        d.polygon([(630, 262), (640, 162), (656, 162), (660, 232), (676, 142), (692, 146), (686, 242), (706, 172), (722, 178), (708, 272), (736, 232), (746, 246), (714, 312), (650, 318)], outline=PL, fill=(236, 214, 184), width=4)  # hand
+        y = 332
+        for i in range(5):
             d.line([(24, y), (W - 24, y)], fill=INK, width=4)
-            for cx in (24, 170, 316, 462, 608, W - 24): d.line([(cx, y), (cx, y + 30)], fill=INK, width=4)
+            for cx in (24, 170, 316, 462, 608, W - 24): d.line([(cx, y), (cx, y + 32)], fill=INK, width=4)
             for cx in (36, 182, 328, 474, 620):
-                if rng.random() < 0.9: _squig(d, cx, y + 6, cx + rng.randint(50, 110), y + 26, rng, 5, PL)
-            y += 30
-        d.line([(24, y), (W - 24, y)], fill=INK, width=4); d.line([(24, 300), (W - 24, 300)], fill=INK, width=7)
+                if rng.random() < 0.9: _squig(d, cx, y + 6, cx + rng.randint(50, 110), y + 28, rng, 5, PL)
+            y += 32
+        d.line([(24, y), (W - 24, y)], fill=INK, width=4); d.line([(24, 326), (W - 24, 326)], fill=INK, width=7)
     else:
         W, H = 512, 700; im = Image.new('RGB', (W, H), (232, 214, 172)); d = ImageDraw.Draw(im)
         d.rectangle([14, 14, W - 14, H - 14], outline=(100, 60, 56), width=8); _squig(d, 50, 40, 460, 110, rng, 14, PL)

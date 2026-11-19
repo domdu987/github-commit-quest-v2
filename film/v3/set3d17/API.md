@@ -90,17 +90,17 @@ Camera, look-at, stand points and the foreground prop (1-2 units from the lens).
 
 | preset | loc / light | camera -> look | lens | foreground prop | stand points staged | what |
 |---|---|---|---|---|---|---|
-| `measure_wide` | measure / DAY_INT | (-1.9, -3.9, 1.5) -> (0.8, 2.4, 1.35) | 22 | gas standard + stool with ledgers (-2.55, -2.9) | bench1, bench2, chair, clerk, prisoner_toise | eye-level wide: bench queue left, chair + tripod centre, toise right |
+| `measure_wide` | measure / DAY_INT | (-1.9, -3.9, 1.5) -> (0.8, 2.4, 1.35) | 22 | gas standard, stool + ledgers, a small rug, crate stack, coal scuttle, stool + kepi (all y -3.5..-1.5) | bench0, queue0, chair, clerk, door_mid | eye-level wide: bench queue left, chair + tripod centre, toise right |
 | `measure_chair` | measure / DAY_INT | (2.0, 0.2, 1.5) -> (0.7, 2.4, 1.2) | 22 | the tripod camera + clerk's table corner | chair, clerk | medium on the chair, head rest and calipers table |
-| `measure_high` | measure / DAY_INT | (2.9, -3.8, 3.55) -> (-0.4, 1.9, 0.5) | 22 | gas bracket at the corner | bench0-3, queue0, chair | high angle over the room, the queue on the bench |
-| `measure_door` | measure / DAY_INT | (-1.7, 0.9, 1.5) -> (3.2, -2.4, 1.3) | 22 | ledger table corner | door_in, door_mid, queue1 | from inside toward the door: entrances |
-| `measure_low` | measure / DAY_INT | (-0.45, -0.3, 0.5) -> (0.9, 2.4, 1.5) | 22 | ledgers + crate on the floor | chair, clerk | low-angle hero of the clerk at the chair |
-| `records_aisle` | records / DAY_INT | (0.75, -3.2, 3.9) -> (-0.2, 6.5, 2.0) | 22 | gas bracket + crates | aisle0-2 | high, off-centre down the cabinet canyon |
+| `measure_high` | measure / DAY_INT | (2.9, -3.8, 3.55) -> (-0.4, 1.9, 1.1) | 22 | an UNLIT gas bracket (brass, no glow) at the corner; the second gasolier hangs 0.85 m higher (`lamps_up`) | bench0, bench2, queue0, chair, tripod | high angle over the room, the queue on the bench |
+| `measure_door` | measure / DAY_INT | (-1.7, 0.9, 1.5) -> (3.2, -2.9, 1.3) | 22 | ledger table corner | door_out, door_r, door_x | from inside toward the door: entrances |
+| `measure_low` | measure / DAY_INT | (0.3, 0.55, 0.5) -> (0.9, 2.4, 1.5) | 22 | ledgers + crate on the floor, 1-1.5 m ahead | chair, clerk | low-angle hero of the clerk at the chair |
+| `records_aisle` | records / DAY_INT | (0.75, -3.2, 3.9) -> (-0.2, 6.5, 2.0) | 22 | gas bracket + crates | aisle1, aisle2, ladder_foot, aisle_far | high, off-centre down the cabinet canyon |
 | `records_low` | records / DAY_INT | (0.1, -0.8, 0.55) -> (-0.9, 6.0, 3.2) | 22 | crate stack + stool | low_a | low angle up the cabinet wall |
-| `records_desk` | records / DAY_INT | (0.9, 0.6, 1.5) -> (-0.8, 2.6, 1.0) | 22 | a drawer pulled out (`pn`) + crate | desk_clerk, desk_stand | medium at the desk: fanned cards (`fan` 1), green lamp |
-| `records_ladder` | records / DAY_INT | (-0.2, 4.8, 1.4) -> (1.1, 7.6, 2.4) | 22 | crates + ledgers | ladder_foot, ladder_up | the rolling ladder on the right run |
-| `drawer_big` | reveal / DAY_INT | (0.6, 2.6, 2.2) -> (0.1, 0.5, 1.15) | 22 | stool + ledgers (0.65, 2.15) | clerk, inspector | the big drawer pulled out, many cards |
-| `drawer_box` | reveal / DAY_INT | (0.15, 1.4, 2.2) -> (0.0, 0.45, 1.1) | 22 | stool + ledgers | clerk | a smaller box inside the drawer (lid open), fewer cards |
+| `records_desk` | records / DAY_INT | (0.9, 0.6, 1.5) -> (-0.8, 2.6, 1.4) | 22 | a drawer pulled out (`pn`) + crate | desk_clerk, desk_stand | medium at the desk: fanned cards (`fan` 1), green lamp |
+| `records_ladder` | records / DAY_INT | (-0.2, 4.8, 1.4) -> (1.1, 7.6, 3.2) | 22 | crates + ledgers | ladder_up | the rolling ladder on the right run |
+| `drawer_big` | reveal / DAY_INT | (0.6, 2.6, 2.2) -> (0.1, 0.5, 1.15) | 22 | stool + ledgers (0.65, 2.15) | drawer_r, drawer_l | the big drawer pulled out, many cards |
+| `drawer_box` | reveal / DAY_INT | (0.09, 0.99, 1.68) -> (-0.03, 0.58, 1.2) | 22 | the drawer front | - | the light-ochre card box (lid open) lifted flush with the drawer rim on a ledger block, own warm spot `box_lamp`; sun 0.5x, window 200 W |
 | `card_hero` | reveal / DAY_INT | (0.3, 1.5, 1.75) -> (0.0, 0.7, 1.3) | 22 | stool + ledgers, the lamp table at the left | - | one Bertillon card lifted in lamplight, calipers beside |
 | `street_wide` | street / DUSK_EXT | (-1.6, -6.0, 1.9) -> (1.2, 12.0, 2.6) | 22 | street lamp + barrels (-2.9, -4.4) | street_a-c, wagon_door | wide down the street: wagon, station, lamps, puddles |
 | `street_wagon` | street / DUSK_EXT | (0.2, 2.5, 1.5) -> (3.2, 8.0, 1.6) | 22 | barrels | wagon_step, wagon_door, steps_top | medium on the wagon and the station steps |
@@ -108,13 +108,22 @@ Camera, look-at, stand points and the foreground prop (1-2 units from the lens).
 Preset start state (`state`): `drawer_big` big 1, lid 0, lift 0; `drawer_box` big 1, `box` lid 1; `card_hero` big 1, `box` lid 1, lift 1; `records_desk` fan 1. Every preset also starts the life hooks at frame 1.
 Light variants rendered on the contact sheet: `measure_wide`, `measure_chair`, `records_aisle`, `records_desk`, `card_hero` in `EVENING_INT`, and `street_wide` in `DAY_INT` (the street at day-sun, for comparison). `K.build(preset=..., light='EVENING_INT')` works for any preset.
 
+## 5b. Fix round 1 (see FIX1.md)
+
+- **Real cast on the stand points.** `K.stage_cast(A, assign)` puts the real cast17 cards (stage `Actor` cards: unlit emission sprites, billboarded, shadow proxy; sprites through Chromium) on stand points. `assign = {mark: (story_pose, opts)}`; opts: `mirror`, `seated` ('chair' | 'bench': same head size as standing, the hidden feet float so the head centre sits at the seat's head height; `seat17` is dropped because the set has its own seats), `rim` (warm rim, default on bertillon / prefect / inspector17), `H`, `dx/dy/dz`, `expr`. `K.PRESETS[p]['cast']` (= `K.CAST_ON[p]`) is what the contact sheet uses; append `ph` to the CLI (`python3 bertillon.py render <preset> <light> out.png final 64 ph`) for the placeholder discs. Cards lean toward a low or high camera (stage `tilt`): a big near head lands up to 130 px further out than its placeholder (measure_low clerk, so he has `dx -0.3`).
+- **Light hooks** (light preset or preset `over`): `sun_k` (sun scale), `frost` (skylight colour, strength), `beam_k` (shaft strength). `EVENING_INT` = sun_k 0.25, navy skylights `#2f3270`, sky `#12143a / #26295a / #3a3878`, gain 0.5, window 40 W, lamp_k 1.4 (frame mean luma about 20 % below DAY_INT).
+- **Preset keys**: `lamps_up` (measure_high), `cast`, `over`. `gas_bracket(..., lit=False)`; `card_box(..., mat, lining)`; material `box_ochre`.
+- **Tools**: `stand_report.py <preset> [light]` (screen position, OFF / LOW / BAND flags, overlaps, lamps in frame), `stand_report.hood_mask(preset)` (true tripod-hood coverage by a magenta repaint).
+- The tripod has not moved; its black cloth drape is shorter (0.72 m instead of 0.95, hem radius 0.38 instead of 0.54) so the hem stays out of the low shots.
+- Hero card art: `bertillon_tex.card` (texture `card_bertillon_dupont_v3.png`) and `cast17.card_svg` show Dupont bare-headed (ginger hair, stubble, ruddy cheeks, red neckerchief; front + true profile with an ear) and an empty glass bottle in a framed name panel, no text; `card_match.jpg` shows prop and 3D card side by side. cast17 `inspector17` moustache `tache_scale` 1.3.
+
 ## 6. Stand points (`A['marks']`, feet; z = floor level of that mark; tuple = x, y, z, facing deg, card type)
 
 | location | marks |
 |---|---|
-| measure | `chair` (0.7, 2.3, 0.5, 180, seated inspector); `clerk` (1.45, 1.95); `clerk_toise` (1.7, 3.55); `prisoner_toise` (1.7, 3.1); `bench0..3` (-2.35, y 0.15 / 0.85 / 1.55 / 2.25, facing +x); `queue0` (-1.5, -1.0); `queue1` (-0.2, -0.6); `door_in` (2.45, -2.45); `door_out` (3.0, -2.4); `door_mid` (1.3, -1.5); `table` (2.0, 0.55); `armspan` (-1.55, 3.45); `tripod` (0.2, 0.35) |
-| records | `desk_clerk` (-0.2, 3.35); `desk_stand` (0.4, 2.6); `aisle0` (0.2, 0.9); `aisle1` (-0.3, 4.6); `aisle2` (0.5, 5.4); `ladder_foot` (0.35, 7.3); `ladder_up` (1.0, 7.6, z 1.8); `aisle_far` (0.0, 9.5); `wall_look` (0.3, 3.0); `low_a` (0.45, 2.4) |
-| reveal | `clerk` (-0.95, 1.55); `inspector` (1.15, 1.35); `pair_l` (-0.2, 2.0); `pair_r` (0.9, 2.1) |
+| measure | `chair` (0.7, 2.3, 0.5, 180, seated inspector); `clerk` (1.45, 1.95); `clerk_toise` (1.7, 3.55); `prisoner_toise` (1.7, 3.1); `bench0..3` (-2.35, y 0.15 / 0.85 / 1.55 / 2.25, facing +x); `queue0` (-1.5, -1.0); `queue1` (-0.2, -0.6); `door_in` (2.45, -2.45); `door_out` (3.0, -2.4); `door_mid` (1.3, -1.5); `door_r` (-0.2, -1.6); `door_x` (-0.4, -3.3); `table` (2.0, 0.55); `armspan` (-1.55, 3.45); `tripod` (0.2, 0.35) |
+| records | `desk_clerk` (-0.9, 3.4); `desk_stand` (0.3, 3.8); `aisle0` (0.2, 0.9); `aisle1` (-0.9, 5.4); `aisle2` (0.5, 5.4); `ladder_foot` (0.35, 7.3); `ladder_up` (1.0, 7.6, z 1.8); `aisle_far` (0.0, 9.5); `wall_look` (0.3, 3.0); `low_a` (0.45, 2.4) |
+| reveal | `clerk` (-0.95, 1.55); `inspector` (1.15, 1.35); `pair_l` (-0.2, 2.0); `pair_r` (0.9, 2.1); `drawer_r` (-0.9, 0.9); `drawer_l` (0.9, 0.9) |
 | street | `wagon_door` (3.0, 6.3); `wagon_step` (2.2, 6.0); `steps_top` (5.5, 7.0, z 0.7); `steps_low` (4.9, 8.0, z 0.3); `street_a` (-1.0, 3.0); `street_b` (0.4, 4.0); `street_c` (-2.2, 5.0); `wagon_side` (1.4, 9.5) |
 
 ## 7. Hooks (every setter takes `frame=None`: set now; `frame=N`: keyframe it)
@@ -143,7 +152,8 @@ Measured (`hue.md`, `contact_work/final/*.json`): **75-133 s per frame** (street
 
 - **Colour bands are only partly met** (see the Summary at the end of `hue.md`): one tile passes every band; the others miss one or two (magenta 10-19 % in records / reveal / street, shade hue 230-238 or 255-261 instead of 240-260, p1 above 0.12 in a few). The numbers are measured on the finals, not claimed.
 - Several staged heads read against dark backdrops (records canyon, the toise corner, the wagon: ring luma 55-98).
-- `EVENING_INT` differs from `DAY_INT` only in key colour, lamp strength and the window sky (barely visible); it is a preset hook rather than a separate look yet.
+- `EVENING_INT` now reads as night. Do not stand anyone at (head off-frame or below y 880): `aisle0`, `ladder_foot` at records_ladder, `desk_*` / `wall_look` / `low_a` at records_aisle, `door_in` with `door_mid` (overlap), bench0..3 together (overlap).
+- The police wagon still has shafts and no horse (P3 not done).
 
 - Placeholder cast only; the cast cards are drawn elsewhere. The seated inspector (`chair`) uses a card height of 0.95; a real seated sprite needs its own pose.
 - Textures have no mip-mapping: the setts and plank seams stay readable up to about 12 m, beyond that they shimmer slightly in motion (kept low-contrast on purpose).

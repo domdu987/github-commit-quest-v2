@@ -54,6 +54,7 @@ def _pal():
     add('honey', '#b8782e', TX.boards('honey', (0xb8, 0x78, 0x2e), seed=16, n=3), tile=0.9, tint=True, ink=True, sm=(0.8, 1.0, 1.12))
     add('drawer', '#bc8434', TX.boards('honey', (0xbc, 0x84, 0x34), seed=16, n=3), tile=0.9, tint=True, ink=False, sm=(0.8, 1.0, 1.12))
     add('brass_nk', '#d29d38', tint=True, ink=False, mix=0.5)
+    add('box_ochre', '#e2b977', tint=True, ink=True, sm=(0.8, 1.0, 1.12))
     add('oak', '#a8703c', TX.boards('oak', (0xa8, 0x70, 0x3c), seed=17, n=2), tile=0.8, tint=True, ink=True, sm=(0.8, 1.0, 1.12))
     add('oxblood', '#7c1f2a', tint=True, ink=True, mix=0.8)
     add('navy', '#26395e', tint=True, ink=True, sm=(0.9, 0.95, 1.2))
@@ -136,7 +137,7 @@ def _lit_mat(key, s):
 def _glow_mat(key):
     """emitters: glow_gas (lamp glass), glow_frost (skylights), glow_win (lit windows), glow_green, glow_door. Strength node named 'strength'."""
     P = STATE['P']
-    spec = {'glow_gas': ('#ffc46a', 14.0 * P['glow']), 'glow_frost': ('#fff4e8', 3.0), 'glow_win': ('#ffcf86', 5.0 * P['glow']), 'glow_green': ('#8ff0a8', 3.0),
+    spec = {'glow_gas': ('#ffc46a', 14.0 * P['glow']), 'glow_frost': P.get('frost', ('#fff4e8', 3.0)), 'glow_win': ('#ffcf86', 5.0 * P['glow']), 'glow_green': ('#8ff0a8', 3.0),
             'glow_door': ('#ffd9a0', 4.0), 'glow_dust': ('#fff0c8', 5.0)}[key]
     m = bpy.data.materials.new(key); nt = _mk_tree(m); out = nt.nodes.new('ShaderNodeOutputMaterial'); e = nt.nodes.new('ShaderNodeEmission'); e.name = 'strength'
     e.inputs[0].default_value = (*hex_lin(spec[0]), 1); e.inputs[1].default_value = spec[1]; nt.links.new(e.outputs[0], out.inputs[0])
@@ -162,7 +163,7 @@ def _beam_mat():
     """light shaft: additive, camera rays only."""
     m = bpy.data.materials.new('beam_fx'); nt = _mk_tree(m); N = nt.nodes.new; L = nt.links.new
     out = N('ShaderNodeOutputMaterial'); lp = N('ShaderNodeLightPath'); e = N('ShaderNodeEmission'); tr = N('ShaderNodeBsdfTransparent'); ad = N('ShaderNodeAddShader')
-    e.inputs[0].default_value = (*hex_lin('#ffd890'), 1); e.inputs[1].default_value = 0.035; e.name = 'strength'
+    e.inputs[0].default_value = (*hex_lin('#ffd890'), 1); e.inputs[1].default_value = 0.035 * STATE['P'].get('beam_k', 1.0); e.name = 'strength'
     L(tr.outputs[0], ad.inputs[0]); L(e.outputs[0], ad.inputs[1]); mixs = N('ShaderNodeMixShader'); L(lp.outputs['Is Camera Ray'], mixs.inputs['Fac']); L(tr.outputs[0], mixs.inputs[1]); L(ad.outputs[0], mixs.inputs[2])
     L(mixs.outputs[0], out.inputs[0]); return m
 def _puddle_mat():
@@ -285,7 +286,7 @@ def new_scene(light='DAY_INT', over=None):
     sc.cycles.sample_clamp_indirect = 8.0; sc.cycles.use_adaptive_sampling = True; sc.cycles.adaptive_threshold = 0.02
     sc.render.fps = 30; return sc
 def sun(light=None, strength=None):
-    P = STATE['P']; k = np.array(P['key']); s = float(k.max()); d = bpy.data.lights.new('key', 'SUN'); d.energy = SUN_STRENGTH * s * (strength or 1.0); d.color = tuple(k / s); d.angle = math.radians(P['sun_angle'])
+    P = STATE['P']; k = np.array(P['key']); s = float(k.max()); d = bpy.data.lights.new('key', 'SUN'); d.energy = SUN_STRENGTH * s * (strength or 1.0) * P.get('sun_k', 1.0); d.color = tuple(k / s); d.angle = math.radians(P['sun_angle'])
     ob = bpy.data.objects.new('key', d); bpy.context.scene.collection.objects.link(ob); ob.rotation_euler = Vector(P['sun_dir']).normalized().to_track_quat('-Z', 'Y').to_euler(); return ob
 def point(loc, color=(1.0, 0.87, 0.62), watts=100, radius=0.08, name='lamp', flicker=True):
     P = STATE['P']; d = bpy.data.lights.new(name, 'POINT'); d.energy = watts * LAMP_W * P['lamp_k']; d.color = color; d.shadow_soft_size = radius
@@ -314,15 +315,15 @@ def sky_dome(radius=150.0):
     b = Batch(); b.sphere('sky', (0, 0, 0), radius, seg=32, rings=16); return b.finalize('sky', ink=False)
 
 # ---------------------------------------------------------------- lamps (gas: glass globe + point light, pipes)
-def gas_bracket(B, loc, rot_z=0, watts=14, arm=0.3):
+def gas_bracket(B, loc, rot_z=0, watts=14, arm=0.3, lit=True):
     """wall gas lamp: brass plate, arm, tap, shade ring, frosted globe + point light. loc = wall contact, local +x = out of the wall."""
     with B.xf(loc, (0, 0, rot_z)):
         B.box('brass', (0.03, 0, 0), (0.06, 0.12, 0.2)); B.cyl('brass', (arm / 2, 0, 0), 0.016, arm, axis='x', seg=8)
         B.cyl('brass', (arm, 0, -0.04), 0.02, 0.1, seg=8); B.cyl('brass', (arm, 0, -0.1), 0.05, 0.04, r2=0.034, seg=12)
-        B.cyl('brass', (arm, 0, -0.14), 0.05, 0.03, r2=0.075, seg=12); B.sphere('glow_gas', (arm, 0, -0.25), 0.09, scale=(1, 1, 1.2))
+        B.cyl('brass', (arm, 0, -0.14), 0.05, 0.03, r2=0.075, seg=12); B.sphere('glow_gas' if lit else 'glass', (arm, 0, -0.25), 0.09, scale=(1, 1, 1.2))
         B.cyl('brass', (arm, 0, -0.38), 0.04, 0.03, r2=0.02, seg=10)
         wp = B.wpt((arm, 0, -0.25))
-    point(wp, watts=watts, radius=0.09)
+    if lit: point(wp, watts=watts, radius=0.09)
 def gas_pipe(B, p0, p1, r=0.017):
     """iron gas pipe between two points + collars."""
     p0 = np.array(p0, float); p1 = np.array(p1, float); v = p1 - p0; L = np.linalg.norm(v)
@@ -628,12 +629,12 @@ def drawer_assembly(name, pos, rot_z, w=0.27, h=0.18, depth=0.5, travel=0.4, ope
     _cards_in_drawer(B, w - 0.02, depth, h - 0.03, cards, r, tabs=tabs, y1=cards_to)
     objs = B.finalize(name, parent=slide, ink_t=STATE['ink_t'] * 0.8)
     STATE['anim'][name] = dict(kind='drawer', root=root, slide=slide, travel=travel, objs=objs); return slide
-def card_box(name, pos, rot_z=0, w=0.3, d=0.2, h=0.17, lid=0.0, cards=9, seed=4, parent=None):
+def card_box(name, pos, rot_z=0, w=0.3, d=0.2, h=0.17, lid=0.0, cards=9, seed=4, parent=None, mat='oak', lining='dark'):
     """small wooden card box (hinged lid, brass clasp + blank label); `lid` 0..1 opens the lid (hinge at the back). animated: set_box_lid(name, o)."""
     r = random.Random(seed); root = bpy.data.objects.new(name + '_root', None); bpy.context.scene.collection.objects.link(root); root.location = pos; root.rotation_euler = (0, 0, math.radians(rot_z))
     if parent is not None: root.parent = parent
-    B = Batch(seed); B.box('oak', (0, 0, h / 2), (w, d, h)); B.box('walnut', (0, 0, h + 0.003), (w + 0.004, d + 0.004, 0.006)) if False else None
-    B.box('dark', (0, 0, h - 0.004), (w - 0.03, d - 0.03, 0.01))
+    B = Batch(seed); B.box(mat, (0, 0, h / 2), (w, d, h))
+    B.box(lining, (0, 0, h - 0.004), (w - 0.03, d - 0.03, 0.01))
     for i in range(cards):
         y = -d / 2 + 0.03 + i * (d - 0.06) / cards; B.box('cream', (0, y, h * 0.35 + h * 0.22), (w - 0.04, 0.004, h * 0.8), rot=(-6, 0, 0), tint=r.uniform(0.92, 1.05))
         if i % 3 == 0: B.box(['oxblood', 'baize', 'navy'][i // 3 % 3], (-w * 0.2 + (i // 3) * w * 0.15, y - 0.01, h * 0.35 + h * 0.62 + 0.01), (w * 0.14, 0.005, 0.022), rot=(-6, 0, 0))
@@ -641,7 +642,7 @@ def card_box(name, pos, rot_z=0, w=0.3, d=0.2, h=0.17, lid=0.0, cards=9, seed=4,
     objs = B.finalize(name, parent=root, ink_t=STATE['ink_t'] * 0.8)
     hinge = bpy.data.objects.new(name + '_hinge', None); bpy.context.scene.collection.objects.link(hinge); hinge.parent = root; hinge.location = (0, -d / 2, h)
     hinge.rotation_euler = (math.radians(-110 * lid), 0, 0)
-    L = Batch(seed); L.box('oak', (0, d / 2, 0.012), (w + 0.01, d + 0.01, 0.024)); L.box('walnut', (0, d / 2, 0.028), (w - 0.04, d - 0.04, 0.012)); L.box('brass', (0, d + 0.006, -0.012), (0.06, 0.008, 0.04))
+    L = Batch(seed); L.box(mat, (0, d / 2, 0.012), (w + 0.01, d + 0.01, 0.024)); L.box(lining, (0, d / 2, 0.028), (w - 0.04, d - 0.04, 0.012)); L.box('brass', (0, d + 0.006, -0.012), (0.06, 0.008, 0.04))
     objs += L.finalize(name + '_lid', parent=hinge, ink_t=STATE['ink_t'] * 0.8)
     STATE['anim'][name] = dict(kind='box', root=root, hinge=hinge, objs=objs); return root
 def rolling_ladder(B, base, top, width=0.46, rungs=14):
@@ -809,7 +810,7 @@ def build_measure(B):
         B.box('walnut', (c[0], c[1], c[2]), ((sz[0] + 0.08, 0.04, sz[1] + 0.08) if abs(rt) == 180 else (0.04, sz[0] + 0.08, sz[1] + 0.08)))
         STATE.setdefault('wall_cards', []).append((nm, c, sz, rt, ky))
     # gas: gasoliers + brackets + a pipe run along the ceiling and down the walls
-    gasolier(B, (-0.35, 1.0, MH - 0.05), drop=1.45, watts=260); gasolier(B, (1.0, -1.4, MH - 0.05), drop=1.45, watts=200)
+    gasolier(B, (-0.35, 1.0, MH - 0.05), drop=1.45, watts=260); gasolier(B, (1.0, -1.4, MH - 0.05), drop=(0.6 if STATE.get('lamps_up') else 1.45), watts=200)
     gas_bracket(B, (MX0 + 0.02, 3.35, 2.75), rot_z=0, watts=14); gas_bracket(B, (MX1 - 0.02, 2.3, 2.8), rot_z=180, watts=14); gas_bracket(B, (-2.6, MY1 - 0.02, 2.6), rot_z=-90, watts=14)
     gas_pipe(B, (-0.35, 1.0, MH - 0.08), (-0.35, MY1 - 0.1, MH - 0.08)); gas_pipe(B, (-0.35, MY1 - 0.1, MH - 0.08), (-2.6, MY1 - 0.1, MH - 0.08)); gas_pipe(B, (-2.6, MY1 - 0.1, MH - 0.08), (-2.6, MY1 - 0.1, 2.55))
     gas_pipe(B, (1.0, -1.4, MH - 0.08), (MX1 - 0.1, -1.4, MH - 0.08)); gas_pipe(B, (MX1 - 0.1, -1.4, MH - 0.08), (MX1 - 0.1, 2.3, MH - 0.08)); gas_pipe(B, (MX1 - 0.1, 2.3, MH - 0.08), (MX1 - 0.1, 2.3, 2.75))
@@ -831,6 +832,7 @@ def build_measure(B):
     for i, y in enumerate((0.15, 0.85, 1.55, 2.25)): M['bench%d' % i] = (-2.35, y, 0.0, 90, 'prisoner')
     M['queue0'] = (-1.5, -1.0, 0.0, 90, 'prisoner'); M['queue1'] = (-0.2, -0.6, 0.0, 120, 'prisoner')
     M['door_in'] = (2.45, -2.45, 0.0, 180, 'gendarme'); M['door_out'] = (3.0, -2.4, 0.0, 180, 'gendarme'); M['door_mid'] = (1.3, -1.5, 0.0, 200, 'prisoner')
+    M['door_x'] = (-0.4, -3.3, 0.0, 120, 'gendarme'); M['door_r'] = (-0.2, -1.6, 0.0, 120, 'prisoner')
     M['table'] = (2.0, 0.55, 0.0, 180, 'clerk'); M['armspan'] = (-1.55, 3.45, 0.0, 180, 'prisoner'); M['tripod'] = (0.2, 0.35, 0.0, 20, 'clerk')
     return A
 def camera_tripod(B, c, rot=0, h=1.45):
@@ -848,7 +850,7 @@ def camera_tripod(B, c, rot=0, h=1.45):
         for i in range(rows):
             u = i / (rows - 1)
             for j in range(cols):
-                a = math.pi * 2 * (j / (cols - 1)) - math.pi; z = h + 0.46 - 0.95 * u ** 1.3; rr = 0.2 + 0.34 * u ** 1.2 + 0.03 * math.sin(j * 2.4 + i)
+                a = math.pi * 2 * (j / (cols - 1)) - math.pi; z = h + 0.46 - 0.72 * u ** 1.3; rr = 0.18 + 0.2 * u ** 1.2 + 0.02 * math.sin(j * 2.4 + i)      # fix 1: a shorter drape, so the hem stays out of the low shots
                 V.append((-0.3 - 0.07 * u + rr * math.cos(a) * 0.35, rr * math.sin(a), z))
         for i in range(rows - 1):
             for j in range(cols - 1): F.append((i * cols + j, i * cols + j + 1, (i + 1) * cols + j + 1, (i + 1) * cols + j))
@@ -874,7 +876,7 @@ def build(location=None, preset=None, light=None, ink=True, clear=True, fg=True)
     if pr: location = location or pr['loc']; light = light or pr['light']
     light = light or 'DAY_INT'; over = dict(LOC_OVER.get((location, light), {}))
     if pr and pr.get('over'): over.update(pr['over'])
-    sc = new_scene(light, over); STATE['loc'] = location; STATE['preset'] = preset; P = STATE['P']
+    sc = new_scene(light, over); STATE['lamps_up'] = bool(pr and pr.get('lamps_up')); STATE['loc'] = location; STATE['preset'] = preset; P = STATE['P']
     if pr:
         dist = (Vector(pr['cam']) - Vector(pr['look'])).length; STATE['ink_t'] = float(np.clip(0.00384 * pr.get('sd', dist), 0.004, 0.018)) if ink else 0.0
     else: STATE['ink_t'] = 0.012 if ink else 0.0
@@ -1035,7 +1037,7 @@ def build_records(B):
                    area((-1.0, 6.0, 3.2), (1.9, 6.0, 2.4), (17.0, 1.0), STATE['P'].get('strip_w', 140), color=(1.0, 0.9, 0.62), name='strip_L', long_axis=(0, 1, 0)),
                    area((1.0, 6.0, 3.2), (-1.9, 6.0, 2.4), (17.0, 1.0), STATE['P'].get('strip_w', 140), color=(1.0, 0.9, 0.62), name='strip_R', long_axis=(0, 1, 0))]
     M = A['marks']
-    M['desk_clerk'] = (-0.2, 3.35, 0, 200, 'clerk'); M['desk_stand'] = (0.4, 2.6, 0, 160, 'inspector'); M['aisle0'] = (0.2, 0.9, 0, 180, 'clerk'); M['aisle1'] = (-0.3, 4.6, 0, 200, 'prisoner'); M['aisle2'] = (0.5, 5.4, 0, 190, 'gendarme')
+    M['desk_clerk'] = (-0.9, 3.4, 0, 200, 'clerk'); M['desk_stand'] = (0.3, 3.8, 0, 160, 'inspector'); M['aisle0'] = (0.2, 0.9, 0, 180, 'clerk'); M['aisle1'] = (-0.9, 5.4, 0, 200, 'prisoner'); M['aisle2'] = (0.5, 5.4, 0, 190, 'gendarme')
     M['ladder_foot'] = (0.35, 7.3, 0, 180, 'clerk'); M['ladder_up'] = (1.0, 7.6, 1.8, 180, 'clerk'); M['aisle_far'] = (0.0, 9.5, 0, 180, 'prefect'); M['wall_look'] = (0.3, 3.0, 0, 180, 'clerk'); M['low_a'] = (0.45, 2.4, 0, 180, 'clerk')
     return A
 BUILDERS['records'] = build_records
@@ -1059,11 +1061,12 @@ def build_reveal(B):
     drawer_assembly('big', (cx, 0.0, cz), 0, w=0.9, h=0.4, depth=0.95, travel=0.78, open_=0.0, cards=34, seed=9, cards_to=-0.52)
     # the smaller box in the big drawer + the hero card (the card is a child of the box root so it travels with the drawer)
     slide = STATE['anim']['big']['slide']
-    card_box('box', (-0.18, -0.2, -0.175), rot_z=-4, w=0.34, d=0.24, h=0.2, lid=0.0, cards=10, seed=5, parent=slide)
+    Br = Batch(2); Br.box('leather', (-0.18, -0.2, -0.175 + 0.04), (0.38, 0.28, 0.08)); Br.box('navy', (-0.17, -0.2, -0.175 + 0.075), (0.36, 0.27, 0.014)); Br.finalize('riser', parent=slide, ink_t=STATE['ink_t'] * 0.8)   # a ledger block lifts the box flush with the drawer rim
+    card_box('box', (-0.18, -0.2, -0.175 + 0.08), rot_z=-4, w=0.34, d=0.24, h=0.28, lid=0.0, cards=10, seed=5, parent=slide, mat='box_ochre', lining='walnut')
     card_box('box2', (0.1, -0.3, -0.175), rot_z=6, w=0.28, d=0.22, h=0.17, lid=0.0, cards=8, seed=6, parent=slide)
     Bc = Batch(2); sliding_calipers(Bc, (0.34, -0.14, -0.178), rot=78, length=0.42, open_=0.13); Bc.finalize('dcal', parent=slide, ink_t=STATE['ink_t'] * 0.7)
     need = STATE['cardpaths']; card_plane('hero', (0, 0, 0), (0.30, 0.20), rot=(0, 0, 0), key='card_bertillon', parent=STATE['anim']['box']['root'], ink_t=STATE['ink_t'] * 0.5)
-    STATE['anim']['hero']['root'].location = (0.0, 0.0, 0.2 * 0.5 + 0.05)         # standing in the box, top just above the rim
+    STATE['hero_z0'] = 0.28 - 0.05; STATE['anim']['hero']['root'].location = (0.0, 0.0, STATE['hero_z0'])         # standing in the box, top just above the rim
     # a lamp table with the calipers; calipers also hang on the cabinet face beside the drawer; a stool
     table(B, (-1.35, 1.3), size=(0.7, 0.5), h=0.78, rot=15, top='baize')
     with B.xf((-1.35, 1.3, 0), (0, 0, 15)):
@@ -1078,9 +1081,10 @@ def build_reveal(B):
     kepi(B, (1.45, 1.4, 0.65), rot=60)
     # lights: warm window key from the left (sun) + the lamp light on the card (spot) + strip fill
     A['lights'] = [area((-3.0, 2.0, 2.6), (0.0, 1.0, 1.2), (1.6, 1.6), STATE['P']['win_w'] * 0.5, name='win_key'),
-                   point((-1.2, 1.15, 1.45), color=(1.0, 0.8, 0.5), watts=90, radius=0.06, name='card_lamp')]
+                   point((-1.2, 1.15, 1.45), color=(1.0, 0.8, 0.5), watts=30, radius=0.06, name='card_lamp'),
+                   spot((0.2, 1.05, 1.95), (-0.03, 0.58, 1.25), watts=STATE['P'].get('box_spot', 160), angle=34, blend=0.7, color=(1.0, 0.78, 0.48), name='box_lamp', radius=0.05)]
     A['hero_ref'] = (cx, 0.0 + 0.78 - 0.2, cz - 0.07)
-    M = A['marks']; M['clerk'] = (-0.95, 1.55, 0, 160, 'clerk'); M['inspector'] = (1.15, 1.35, 0, 200, 'inspector'); M['pair_l'] = (-0.2, 2.0, 0, 180, 'clerk'); M['pair_r'] = (0.9, 2.1, 0, 180, 'prisoner')
+    M = A['marks']; M['clerk'] = (-0.95, 1.55, 0, 160, 'clerk'); M['inspector'] = (1.15, 1.35, 0, 200, 'inspector'); M['pair_l'] = (-0.2, 2.0, 0, 180, 'clerk'); M['pair_r'] = (0.9, 2.1, 0, 180, 'prisoner'); M['drawer_r'] = (-0.9, 0.9, 0, 160, 'clerk'); M['drawer_l'] = (0.9, 0.9, 0, 200, 'inspector')
     A['dust_box'] = dict(p0=np.array([-2.9, 1.8, 2.5]), d=np.array([0.8, 0.1, -0.55]), L=3.5, w=1.0)
     return A
 BUILDERS['reveal'] = build_reveal
@@ -1252,7 +1256,7 @@ def set_box_lid(name='box', open=1.0, frame=None):
     if frame is not None: _key(a['hinge'], 'rotation_euler', frame)
 def set_card_lift(t=1.0, frame=None):
     """the hero Bertillon card rises out of the box: 0 standing in the box with its top just over the rim, 1 lifted 0.3 up, tilted to the lamp."""
-    a = STATE['anim']['hero']['root']; a.location = (0.0 + 0.03 * t, 0.02 + 0.14 * t, 0.15 + 0.34 * t); a.rotation_euler = (math.radians(22 * t), 0, math.radians(-9 * t))
+    a = STATE['anim']['hero']['root']; a.location = (0.0 + 0.03 * t, 0.02 + 0.14 * t, STATE.get('hero_z0', 0.15) + 0.34 * t); a.rotation_euler = (math.radians(22 * t), 0, math.radians(-9 * t))
     if frame is not None: _key(a, 'location', frame); _key(a, 'rotation_euler', frame)
 def set_cards_fan(t=1.0, frame=None, name='fan'):
     """desk cards: 0 a squared stack, 1 fanned out like a hand (records desk)."""
@@ -1281,15 +1285,20 @@ def apply_state(A, st):
 # ================================================================ foreground props (1-2 units from the lens) and presets
 def _fgB(): return Batch(17)
 def fg_measure_wide(A):
-    B = _fgB(); gas_stand(B, (-2.55, -2.9, 0), h=1.85, watts=70); stool(B, (0.1, -2.7), h=0.55, rot=20); ledger_stack(B, (0.1, -2.7, 0.58), n=5, rot=10); B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
+    B = _fgB(); gas_stand(B, (-2.55, -2.9, 0), h=1.85, watts=70); stool(B, (0.1, -2.7), h=0.55, rot=20); ledger_stack(B, (0.1, -2.7, 0.58), n=5, rot=10)
+    B.box('runner', (-0.1, -1.55, 0.007), (0.9, 0.6, 0.014), rot=(0, 0, 14))                                  # a second small rug
+    crate(B, (1.05, -3.0, 0), size=(0.55, 0.42, 0.38), rot=-14); crate(B, (1.05, -3.0, 0.38), size=(0.46, 0.36, 0.3), rot=10); crate(B, (1.62, -3.35, 0), size=(0.42, 0.34, 0.3), rot=30)   # crate stack
+    bucket(B, (-0.85, -3.3, 0)); B.cyl('iron', (-0.85, -3.3, 0.33), 0.17, 0.06, r2=0.2, seg=12)                  # coal scuttle: bucket + flared rim
+    stool(B, (1.0, -1.75), h=0.5, rot=-25); kepi(B, (1.0, -1.75, 0.53), rot=40)                              # a stool with a kepi
+    B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
 def fg_measure_high(A):
-    B = _fgB(); gas_bracket(B, (3.18, -3.3, 3.0), rot_z=180, watts=20); B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
+    B = _fgB(); gas_bracket(B, (3.18, -3.3, 3.0), rot_z=180, watts=20, lit=False); B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
 def fg_measure_door(A):
     B = _fgB(); table(B, (-0.2, 1.2), size=(0.95, 0.55), h=0.82, rot=-20, top='baize')
     with B.xf((-0.2, 1.2, 0), (0, 0, -20)): ledger_stack(B, (-0.25, 0, 0.83), n=4, rot=10); inkpot(B, (0.2, 0.1, 0.83), rot=30); sliding_calipers(B, (0.15, -0.1, 0.83), rot=5, length=0.4, open_=0.12)
     B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
 def fg_measure_low(A):
-    B = _fgB(); ledger_stack(B, (0.25, 0.4, 0.0), n=6, rot=12); crate(B, (0.95, 0.05, 0), size=(0.45, 0.35, 0.3), rot=25); B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
+    B = _fgB(); ledger_stack(B, (-0.15, 1.65, 0.0), n=6, rot=12); crate(B, (0.95, 1.55, 0), size=(0.45, 0.35, 0.3), rot=25); B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
 def fg_records_aisle(A):
     B = _fgB(); gas_bracket(B, (-1.36, -2.3, 3.4), rot_z=0, watts=24); crate(B, (0.55, -2.0, 0), size=(0.5, 0.32, 0.24), rot=14); crate(B, (0.55, -2.0, 0.24), size=(0.46, 0.3, 0.22), rot=-6); B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
 def fg_records_low(A):
@@ -1309,31 +1318,90 @@ def fg_street_wagon(A):
     B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
 _P = lambda **k: k
 PRESETS.update({
-    'measure_wide': _P(loc='measure', light='DAY_INT', cam=(-1.9, -3.9, 1.5), look=(0.8, 2.4, 1.35), fg=fg_measure_wide, stage=['bench1', 'bench2', 'chair', 'clerk', 'prisoner_toise'], state={}, sd=5.0,
+    'measure_wide': _P(loc='measure', light='DAY_INT', cam=(-1.9, -3.9, 1.5), look=(0.8, 2.4, 1.35), fg=fg_measure_wide, stage=['bench0', 'queue0', 'chair', 'clerk', 'door_mid'], state={}, sd=5.0,
                        desc='eye level wide: bench queue left, the chair + tripod centre, toise right'),
     'measure_chair': _P(loc='measure', light='DAY_INT', cam=(2.0, 0.2, 1.5), look=(0.7, 2.4, 1.2), stage=['chair', 'clerk'], state={}, sd=3.0, desc='medium on the chair + calipers table; tripod as foreground'),
-    'measure_high': _P(loc='measure', light='DAY_INT', cam=(2.9, -3.8, 3.55), look=(-0.4, 1.9, 0.5), fg=fg_measure_high, stage=['bench0', 'bench1', 'bench2', 'bench3', 'queue0', 'chair'], state={}, sd=5.5, desc='high angle over the room (ceiling cut away), the bench queue'),
-    'measure_door': _P(loc='measure', light='DAY_INT', cam=(-1.7, 0.9, 1.5), look=(3.2, -2.4, 1.3), fg=fg_measure_door, stage=['door_in', 'door_mid', 'queue1'], state={}, sd=4.5, desc='inside toward the door: entrances'),
-    'measure_low': _P(loc='measure', light='DAY_INT', cam=(-0.45, -0.3, 0.5), look=(0.9, 2.4, 1.5), fg=fg_measure_low, stage=['chair', 'clerk'], state={}, sd=2.8, desc='low angle hero of the clerk at the chair'),
-    'records_aisle': _P(loc='records', light='DAY_INT', cam=(0.75, -3.2, 3.9), look=(-0.2, 6.5, 2.0), fg=fg_records_aisle, stage=['aisle0', 'aisle1', 'aisle2'], state={}, sd=6.0, desc='high off-centre down the aisle'),
+    'measure_high': _P(loc='measure', light='DAY_INT', cam=(2.9, -3.8, 3.55), look=(-0.4, 1.9, 1.1), lamps_up=True, fg=fg_measure_high, stage=['bench0', 'bench2', 'queue0', 'chair', 'tripod'], state={}, sd=5.5, desc='high angle over the room (ceiling cut away), the bench queue'),
+    'measure_door': _P(loc='measure', light='DAY_INT', cam=(-1.7, 0.9, 1.5), look=(3.2, -2.9, 1.3), fg=fg_measure_door, stage=['door_out', 'door_r', 'door_x'], state={}, sd=4.5, desc='inside toward the door: entrances'),
+    'measure_low': _P(loc='measure', light='DAY_INT', cam=(0.3, 0.55, 0.5), look=(0.9, 2.4, 1.5), fg=fg_measure_low, stage=['chair', 'clerk'], state={}, sd=2.8, desc='low angle hero of the clerk at the chair'),
+    'records_aisle': _P(loc='records', light='DAY_INT', cam=(0.75, -3.2, 3.9), look=(-0.2, 6.5, 2.0), fg=fg_records_aisle, stage=['aisle1', 'aisle2', 'ladder_foot', 'aisle_far'], state={}, sd=6.0, desc='high off-centre down the aisle'),
     'records_low': _P(loc='records', light='DAY_INT', cam=(0.1, -0.8, 0.55), look=(-0.9, 6.0, 3.2), fg=fg_records_low, stage=['low_a'], state={}, sd=4.0, desc='low angle up the cabinet wall'),
-    'records_desk': _P(loc='records', light='DAY_INT', cam=(0.9, 0.6, 1.5), look=(-0.8, 2.6, 1.0), fg=fg_records_desk, stage=['desk_clerk', 'desk_stand'], state={'fan': 1.0}, sd=2.8, desc='medium at the clerk desk: fanned cards, green lamp'),
-    'records_ladder': _P(loc='records', light='DAY_INT', cam=(-0.2, 4.8, 1.4), look=(1.1, 7.6, 2.4), fg=fg_records_ladder, stage=['ladder_foot', 'ladder_up'], state={}, sd=3.5, desc='the rolling ladder on the right run'),
-    'drawer_big': _P(loc='reveal', light='DAY_INT', cam=(0.6, 2.6, 2.2), look=(0.1, 0.5, 1.15), fg=fg_reveal, stage=['clerk', 'inspector'], state={'drawer': {'big': 1.0}, 'lid': {'box': 0.0, 'box2': 0.0}, 'lift': 0.0}, sd=3.0, desc='a big drawer pulled out, many cards'),
-    'drawer_box': _P(loc='reveal', light='DAY_INT', cam=(0.15, 1.4, 2.2), look=(0.0, 0.45, 1.1), fg=fg_reveal, stage=['clerk'], state={'drawer': {'big': 1.0}, 'lid': {'box': 1.0, 'box2': 0.0}, 'lift': 0.0}, sd=1.5, desc='a smaller box inside the drawer, fewer cards'),
-    'card_hero': _P(loc='reveal', light='DAY_INT', cam=(0.3, 1.5, 1.75), look=(0.0, 0.7, 1.3), fg=fg_reveal, stage=[], state={'drawer': {'big': 1.0}, 'lid': {'box': 1.0, 'box2': 0.0}, 'lift': 1.0}, sd=0.9, desc='one Bertillon card lifted in lamplight, calipers beside'),
+    'records_desk': _P(loc='records', light='DAY_INT', cam=(0.9, 0.6, 1.5), look=(-0.8, 2.6, 1.4), fg=fg_records_desk, stage=['desk_clerk', 'desk_stand'], state={'fan': 1.0}, sd=2.8, desc='medium at the clerk desk: fanned cards, green lamp'),
+    'records_ladder': _P(loc='records', light='DAY_INT', cam=(-0.2, 4.8, 1.4), look=(1.1, 7.6, 3.2), fg=fg_records_ladder, stage=['ladder_up'], state={}, sd=3.5, desc='the rolling ladder on the right run'),
+    'drawer_big': _P(loc='reveal', light='DAY_INT', cam=(0.6, 2.6, 2.2), look=(0.1, 0.5, 1.15), fg=fg_reveal, stage=['drawer_r', 'drawer_l'], state={'drawer': {'big': 1.0}, 'lid': {'box': 0.0, 'box2': 0.0}, 'lift': 0.0}, sd=3.0, desc='a big drawer pulled out, many cards'),
+    'drawer_box': _P(over=dict(sun_k=0.5, win_w=200), loc='reveal', light='DAY_INT', cam=(0.09, 0.99, 1.68), look=(-0.03, 0.58, 1.2), fg=fg_reveal, stage=[], state={'drawer': {'big': 1.0}, 'lid': {'box': 1.0, 'box2': 0.0}, 'lift': 0.0}, sd=1.0, desc='a smaller box inside the drawer, fewer cards'),
+    'card_hero': _P(over=dict(sun_k=0.55, win_w=200), loc='reveal', light='DAY_INT', cam=(0.3, 1.5, 1.75), look=(0.0, 0.7, 1.3), fg=fg_reveal, stage=[], state={'drawer': {'big': 1.0}, 'lid': {'box': 1.0, 'box2': 0.0}, 'lift': 1.0}, sd=0.9, desc='one Bertillon card lifted in lamplight, calipers beside'),
     'street_wide': _P(loc='street', light='DUSK_EXT', cam=(-1.6, -6.0, 1.9), look=(1.2, 12.0, 2.6), fg=fg_street_wide, stage=['street_a', 'street_b', 'street_c', 'wagon_door'], state={}, sd=6.0, desc='wide down the street: the wagon, the station, lamps'),
     'street_wagon': _P(loc='street', light='DUSK_EXT', cam=(0.2, 2.5, 1.5), look=(3.2, 8.0, 1.6), fg=fg_street_wagon, stage=['wagon_step', 'wagon_door', 'steps_top'], state={}, sd=4.0, desc='medium on the police wagon and the station steps'),
 })
-LIGHTS['EVENING_INT'].update(win_w=200, lamp_k=1.7)
+# the cast on the stand points of every preset that has a stage list (story pose, options); the seated poses sit on the 3D chair / bench (seat17 is dropped)
+CAST_ON = {
+    'measure_wide': {'bench0': ('prisoner_sitting_a', {'seated': 'bench'}), 'queue0': ('prisoner_standing_b', {}), 'chair': ('inspector_seated_stiff', {'seated': 'chair'}), 'clerk': ('bertillon_measuring', {}), 'door_mid': ('gendarme_standing_b', {})},
+    'measure_chair': {'chair': ('inspector_seated_stiff', {'seated': 'chair'}), 'clerk': ('bertillon_measuring', {})},
+    'measure_high': {'bench0': ('prisoner_sitting_a', {'seated': 'bench'}), 'bench2': ('prisoner_sitting_c', {'seated': 'bench'}), 'queue0': ('prisoner_standing_b', {}), 'chair': ('inspector_seated_stiff', {'seated': 'chair'}), 'tripod': ('bertillon_writing', {})},
+    'measure_door': {'door_out': ('dupont_held', {}), 'door_r': ('gendarme_escort_a', {}), 'door_x': ('gendarme_escort_b', {'mirror': True})},
+    'measure_low': {'chair': ('inspector_seated_stiff', {'seated': 'chair'}), 'clerk': ('bertillon_measuring', {'dx': -0.3})},
+    'records_aisle': {'aisle1': ('bertillon_pointing', {}), 'aisle2': ('gendarme_standing_a', {}), 'ladder_foot': ('prefect_neutral', {}), 'aisle_far': ('inspector_shouting', {})},
+    'records_desk': {'desk_clerk': ('bertillon_writing', {}), 'desk_stand': ('prefect_stern', {})},
+    'records_ladder': {'ladder_up': ('bertillon_holding_card', {})},
+    'drawer_big': {'drawer_r': ('bertillon_holding_card', {}), 'drawer_l': ('inspector_arms_crossed', {})},
+}
+for _k, _v in CAST_ON.items(): PRESETS[_k]['cast'] = _v
+LIGHTS['EVENING_INT'].update(gain=0.5, shade=(0.07, 0.075, 0.26), tint=(0.05, 0.057, 0.18), lift=(0.003, 0.007, 0.024), win_w=40, lamp_k=1.4, sun_k=0.25, beam_k=0.25, frost=('#2f3270', 1.2), sky=('#12143a', '#26295a', '#3a3878'), world=(0.16, 0.16, 0.34))
+
+# ================================================================ real cast17 cards on the stand points (stage package: Actor cards, sprites through Chromium)
+V3 = os.path.normpath(os.path.join(HERE, '..'))
+CAST_H = {'bertillon': 1.78, 'inspector17': 1.66, 'prefect': 1.74, 'dupont': 1.68, 'gendarme_a': 1.82, 'gendarme_b': 1.82, 'prisoner_a': 1.68, 'prisoner_b': 1.68, 'prisoner_c': 1.68}
+CAST_HD = {'bertillon': 3.30, 'inspector17': 3.21, 'prefect': 3.34, 'dupont': 3.06, 'gendarme_a': 3.16, 'gendarme_b': 3.32, 'prisoner_a': 3.14, 'prisoner_b': 2.99, 'prisoner_c': 2.94}   # head top to soles in head D (cast17 API.md)
+RIM_FOR = {'bertillon': '#d9a27a', 'prefect': '#d9a27a', 'inspector17': '#d9a27a'}                    # QA SET gate: a warm rim on the black coats
+HEAD_Z = {'chair': 1.22, 'bench': 1.08}          # head-centre height (m) of a seated figure: on the measuring chair (head rest 1.34) / on the bench
+def cast_heads(acts, cam=None):
+    """screen position (720x1280) of each real cast card's head centre, radius (px) and chin: through the card's true 3D place (the card leans toward a low or high camera)."""
+    import actors
+    cam = cam or bpy.context.scene.camera; bpy.context.scene.frame_set(1); out = {}
+    for mk, a in acts.items():
+        w = actors.local_to_world(a, (0.0, 0.0), 1, camera=cam); px, py, dz = project(cam, tuple(w)); w2 = actors.local_to_world(a, (0.5, 0.0), 1, camera=cam); qx, qy, _ = project(cam, tuple(w2))
+        R = math.hypot(qx - px, qy - py); out[mk] = dict(cx=px, cy=py, R=R, chin=py + R)
+    return out
+def stage_cast(A, assign, cam=None, sprite_dir=None, px_per_D=None):
+    """put the REAL cast17 cards (stage Actor cards: unlit emission sprites, billboarded to the camera, shadow proxy + contact decal) on stand points.
+    assign = {mark: (story_pose_name, opts)}; opts: mirror (bool), seated ('chair' | 'bench': scale so the hip sits on that seat height, feet on the floor), rim (colour | None),
+    H (metres, overrides the height), dx/dy/dz (metres), expr (cast17 expression name). Returns {mark: Actor}."""
+    for p in (os.path.join(V3, 'cast17'), os.path.join(V3, 'stage')):
+        if p not in sys.path: sys.path.insert(0, p)
+    import cast17, actors, sprites
+    cam = cam or bpy.context.scene.camera; sprite_dir = sprite_dir or os.path.join(HERE, 'contact_work', 'sprites'); os.makedirs(sprite_dir, exist_ok=True); out = {}; cl = cam.location
+    bpy.context.view_layer.update()
+    for mk, (story, opts) in assign.items():
+        opts = dict(opts or {}); x, y, z, fz, who = A['marks'][mk]; cast, pose = cast17.STORY17[story]; pose = dict(pose)
+        if opts.get('expr'): pose = cast17.with_expr(pose, opts['expr'])
+        seated = opts.get('seated') or ('chair' if pose.get('seat17') == 'chair' else 'bench' if pose.get('seat17') == 'bench' else None)
+        pose['seat17'] = None                                      # the set has its own chair and bench
+        if opts.get('mirror'): pose['mirror'] = True
+        rim = opts.get('rim', RIM_FOR.get(cast))
+        if rim: pose['rim'] = rim; pose['rim_opacity'] = 0.55; pose['rim_w'] = 0.02
+        a = actors.Actor('c_' + mk, cast); a.build(sprites.DEFAULT_CANVAS[cast], sprite_dir, contact=True); a.head_flip = True
+        if seated:
+            fx, fy = sprites.feet_of(cast, pose); sc = opts.get('H', CAST_H[cast]) / CAST_HD[cast]; zz = HEAD_Z[seated] - sc * fy          # same head size as standing; the (hidden) feet float so that the head centre sits at the seat's head height
+        else:
+            sc = opts.get('H', CAST_H[cast]) / CAST_HD[cast]; zz = z
+        pos = (x + opts.get('dx', 0.0), y + opts.get('dy', 0.0), zz + opts.get('dz', 0.0))
+        a.place(1, pos, scale=sc); a.pose(1, pose, camera=cam); out[mk] = a
+    for mk, a in out.items():
+        d = math.hypot(a.root.location.x - cl.x, a.root.location.y - cl.y) if a.root.location else 5.0
+        ppd = px_per_D or 256
+        a.render_sprites(ppd)
+    return out
 
 # ================================================================ command line
 def build_for_cli(preset, light=None, placeholders=True):
-    A = build(preset=preset, light=light)
-    if placeholders: stage_placeholders(A, only=PRESETS[preset].get('stage') or None) if PRESETS[preset].get('stage') else None
+    A = build(preset=preset, light=light); pr = PRESETS[preset]
+    if pr.get('cast') and CAST_MODE[0] == 'real': A['actors'] = stage_cast(A, pr['cast'])
+    elif placeholders: stage_placeholders(A, only=pr.get('stage') or None) if pr.get('stage') else None
     return A
+CAST_MODE = ['real']          # 'real' (cast17 cards) | 'ph' (placeholder discs); set by the CLI argument ph
 def cli_render(preset, light=None, out=None, mode='final', samples=None, placeholders=True):
-    """build + (placeholders) + render + grade; writes <out>.json with times, head-ring luma and chin pixels. returns (seconds, stats)."""
+    """build + (cast / placeholders) + render + grade; writes <out>.json with times, head-ring luma and chin pixels. returns (seconds, stats)."""
     t0 = time.time(); A = build_for_cli(preset, light, placeholders); tb = time.time() - t0; c0 = time.process_time()
     dt = render(out, mode, samples); ring = {}
     if placeholders and PRESETS[preset].get('stage'):
@@ -1341,13 +1409,14 @@ def cli_render(preset, light=None, out=None, mode='final', samples=None, placeho
         ring = head_ring_luma(A, out, only=PRESETS[preset]['stage'], W=Image.open(out).size[0], Hh=Image.open(out).size[1])
         sc = Image.open(out).size[0] / 720.0
         ring = {k: dict(v, chin720=v['chin'] / sc) for k, v in ring.items()}
-    info = dict(preset=preset, light=light or PRESETS[preset]['light'], build_s=round(tb, 2), render_s=round(dt, 2), mode=mode, samples=bpy.context.scene.cycles.samples, ring=ring,
+    info = dict(preset=preset, light=light or PRESETS[preset]['light'], build_s=round(tb, 2), render_s=round(dt, 2), mode=mode, samples=bpy.context.scene.cycles.samples, ring=ring, cast=('real' if (PRESETS[preset].get('cast') and CAST_MODE[0] == 'real') else 'placeholders'),
                 objects=len(bpy.data.objects), tris=int(sum(len(o.data.polygons) for o in bpy.data.objects if o.type == 'MESH')))
     json.dump(info, open(out + '.json', 'w'), default=float); return dt, info
 if __name__ == '__main__':
     a = sys.argv[1:]
     if a and a[0] == 'render':
-        preset = a[1]; light = a[2] if len(a) > 2 and a[2] != '-' else None; out = a[3]; mode = a[4] if len(a) > 4 else 'final'; samples = int(a[5]) if len(a) > 5 else None
+        preset = a[1]; light = a[2] if len(a) > 2 and a[2] != '-' else None; out = a[3]; mode = a[4] if len(a) > 4 else 'final'; samples = int(a[5]) if len(a) > 5 and a[5].isdigit() else None
+        if 'ph' in a[5:]: CAST_MODE[0] = 'ph'
         dt, info = cli_render(preset, light, out, mode, samples); print('%s %s %.1fs build %.1fs ring %s' % (preset, info['light'], dt, info['build_s'], {k: round(v['luma']) for k, v in info['ring'].items()}))
     elif a and a[0] == 'list':
         for k, v in PRESETS.items(): print('%-16s %-8s %-12s cam %s -> %s  %s' % (k, v['loc'], v['light'], v['cam'], v['look'], v.get('desc', '')))
