@@ -113,3 +113,75 @@ Re-check after the fixes:
 - Shot 29 g1600-1625 without bar overlap.
 - Shot 31 coach.
 - motion_check on s25 and s28.
+
+---
+## Re-check take 2 (render15/team5 @ 2639335, rebuilt in scratch takes/s25r2, s28r2, s29r2)
+
+| take | verdict |
+|---|---|
+| s25 (shots 25-27) | **PASS on picture.** The beats now read. Motion acceptance is still open: p90 is 8.4 against a target of 12 (see M). |
+| s28 (shot 28) | **PASS on picture.** Motion acceptance is still open: p90 is 9.5 against a target of 12 (see M). |
+| s29 (shots 29-31) | **PASS.** |
+
+I checked every 5th frame plus every cut ±3 frames, at full size and at phone size.
+- Frame counts and g ranges are unchanged.
+- Cuts land on plan: frame diffs are 38.2 at g1392, 25.5 at 1470, 42.9 at 1652 and 55.6 at 1746.
+- Dissolve handles are unchanged at 8 frames each.
+
+### Automatic checks
+| take | qa_auto | median | p90 | frozen / near-static runs (diff < 2.5, 8+ frames) |
+|---|---|---|---|---|
+| s25 | PASS | 5.2 | **8.4** | none. Take 1 had the figure frozen from g1386 to g1592. |
+| s28 | PASS | 4.9 | **9.5** | none |
+| s29 | PASS | 6.4 | 12.2 | none. The g1640-1651 lie from take 1 is gone. |
+
+**M. The p90 target (12 or more) is still missed in s25 and s28. This is not a picture fault.**
+- Both figures now move all the time, and no near-static run is left.
+- The shortfall comes from the slow, held hang between the camera moves.
+- Under WORKER15 this acceptance number sends a take back. Under QA_TEAM §E the director cannot waive it alone.
+- So the director has two options:
+  - Get an independent opus override, noted in QA_TECH.md and in the client report.
+  - Ask for one more camera move in each take: a quick eased push of 15-20 % on "ห้อยอยู่ใต้" (g1472-1484) in s25, and a whip-follow on the straddle descent (g1560-1575) in s28.
+- In my view the picture does not suffer from the slow pacing here, but this note is not an override.
+
+### Fixes 1-12
+| # | status | evidence |
+|---|---|---|
+| 1 shot 26 part by part | **done (reads)** | The body now travels and rolls across the bar instead of holding one pose. **Head:** the head drops past the bar at g1383-1392 (46.0-46.3 s with the +0.10 offset), inside ±0.3 s of 46.4. At g1395 the hips are still low on the take-off side. **Back:** at g1416-1419 the back and hips rise to the apex over the bar in the ∩ pose, with the head hanging below on the far side and the legs below on the near side. **Legs:** at g1434-1437 the thighs swing level over the bar while the shins and feet still hang below on the near side. That matches the narration's "the rest hanging below the bar". The feet go over at the flick in shot 29. |
+| 2 shot 27 not frozen | **done** | The ∩ drifts and rolls slowly, and the head and feet sway (g1470-1517). The arch is about 65-70 % of the frame width, the hips are on the bar, and the head and feet are below it against the dark stand. The key image holds. |
+| 3 bar through the chest, shot 25 | **done** | g1374-1382: the bar now stays behind his torso while he rises. |
+| 4 motion, s25 | **partly** | Median 4.2 → 5.2, p90 6.0 → 8.4. See M. |
+| 5 J-curve | not changed (minor) | He still runs mostly at the lens. |
+| 6 real straddle | **done (reads)** | He runs in, takes off at the bar (g1505-1522), rises, and is roughly horizontal at the apex (g1532-1557), about 1 D above the bar. He then rolls and drops beyond it (g1565-1592). "The whole body lifted at once, high above the bar" reads against the bar. The pose switch no longer pops. Leftovers are in notes N1 and N2. |
+| 7 motion, s28 | **partly** | Median 4.1 → 4.9, p90 6.6 → 9.5. See M. |
+| 8 raised leg cropped | **done** | The raised leg stays in frame, except at g1552-1557 where it touches the top edge for a few frames. |
+| 9 bar across Dick's face in the fall | **done** | g1603-1625: Dick now falls fully on the camera side of the bar. His head and body cover the bar and the bar never covers them, so it no longer reads as hitting the bar. |
+| 10 coach jaw-drop | **done** | coach_stands now stands on the infield edge at the right, about 17 % of frame height (head at about y 765). His mouth is closed at g1765 and open in an "O" from about g1776 to the end, on the PUSH!. It reads at phone size. Note N4. |
+| 11 shot 30 eye-line / bar framing / FG peg | **not done** | Dick still looks into the lens after he sits up. The bar end now fills the top left (g1703-1743), which shows it resting still. The FG peg is still at lower right. See N3. |
+| 12 rival2 crop / eruption | **done (enough)** | Rival2 stays in frame to g1811. There are more stand flashes and bulbs (g1753, 1778, 1798). |
+
+Other checks:
+- **Bar drawn through a body:** none on Dick in any of the three takes.
+- **Heads below y 880 (out of the caption band):** OK.
+- **Text:** none.
+- **Mouths:** only expressions. Dick's open mouth in the fall and the coach's "O" are not speech; neither is in a quote window.
+- **Continuity with s24 and s32:** unchanged and OK.
+- **Shot 30, bar:** the bar stays still.
+- **Shot 30, light:** the change from TENSE to EVE ramps over g1698-1708 (top-frame RGB goes from 171/109/119 to 183/132/148).
+
+### QA-art (phone, 360x640)
+- **s25: clarity 7/10 (was 5), beauty 7/10.** The viewer sees him go over backwards and roll across the bar: head down first, then the arched back on top, then the thighs. The rest of the body visibly hangs below the bar the whole time. The beats are subtle rather than punchy, but they follow the three spoken words.
+- **s28: clarity 7/10 (was 5), beauty 7/10.** The rival's whole body jumps up high above the bar. Next to shot 27 the contrast "his body hangs below, theirs must lift all of it" now comes across.
+- **s29: clarity 8/10 (was 6), beauty 7/10.** The flick, the clean fall in front of the untouched bar, the calm sit-up under the still bar, the podium and the gaping coach all read.
+- **Would a viewer now SEE the mechanism? Yes, mostly.** The weakest link is how subtle the head/back/legs beats are in shot 26 (note N5).
+
+### Notes (non-blocking)
+- **N1. s28, g1505-1520:** the rival takes off with the bar between his legs, one leg in front of it and one behind, so for a few frames he seems to step over it. Most of this falls inside the dissolve. If he is re-rendered, start the take-off about 0.5 D before the bar plane.
+- **N2. s28 apex:** the body is horizontal but faces the camera rather than lying belly-down toward the bar. That is acceptable for a card cast. A slight forward tilt of the head toward the bar would sell "face down".
+- **N3. Shot 30:**
+  - Dick looks into the lens; turn his eyes or head up to the bar.
+  - At g1733-1743 the two upright poles (the FG standard and the standard itself) cross Dick's face.
+  - The red/white FG peg at lower right still looks like a piece of bar on the ground.
+- **N4. Shot 31:** the coach now stands on the infield, not "in the stands". That is fine for the gag, and the jaw-drop reads.
+- **N5. Shot 26:** for a punchier part-by-part, add a small push or snap on each of the three words (g1392, 1416, 1434). That would also raise the s25 p90 (see M).
+- **N6. Shot 25:** the J-curve is still slight (fix 5).
