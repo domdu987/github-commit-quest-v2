@@ -1,0 +1,25 @@
+{
+ "take": "s21",
+ "fps": 30,
+ "note": "time = film seconds (g / 30)",
+ "cues": [
+  {
+   "time": 44.867,
+   "frame": 1346,
+   "kind": "ambience",
+   "label": "heavy rain, drops on the hat brim"
+  },
+  {
+   "time": 45.067,
+   "frame": 1352,
+   "kind": "foley",
+   "label": "key lever clack, no answer"
+  },
+  {
+   "time": 45.567,
+   "frame": 1367,
+   "kind": "foley",
+   "label": "second clack, silence"
+  }
+ ]
+}

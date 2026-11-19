@@ -1,0 +1,62 @@
+{
+ "take": "s21",
+ "film": 16,
+ "shots": [
+  21
+ ],
+ "g0": 1346,
+ "g1": 1381,
+ "first_g": 1337,
+ "n_frames": 53,
+ "shot_ranges": {
+  "21": [
+   1346,
+   1380
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "set": "v3/set3d16 LINE line_trench_end, light RAIN, set_rain 0.55 (thin), dark puddle, rain_look runtime fixes",
+ "cast": "morse16 morse_key_wait (key pressed twice by hand pin, set key), cornell_hat_over, worker16_a wait_arms",
+ "camera": "custom 22 mm CamPath push 8 %/s + slide 40 px/s on Morse, drifting through the rain (shot < 2 s: no snap)",
+ "events": {
+  "press1": [
+   1352,
+   1358
+  ],
+  "press2": [
+   1367,
+   1373
+  ]
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "RAIN",
+ "samples": 7,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 11.67,
+ "s_per_frame_cpu_mean": 22.79,
+ "framediff_in_shot": {
+  "median": 7.55,
+  "p90": 8.91
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json",
+ "head_px": [
+  129,
+  197
+ ],
+ "head_centre_y": [
+  507,
+  559
+ ],
+ "head_bottom_max_y": 652
+}
