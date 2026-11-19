@@ -1,0 +1,13 @@
+{
+ "shot": "s06",
+ "g0": 459,
+ "g1": 531,
+ "first_g": 459,
+ "n_frames": 72,
+ "handle_before": 0,
+ "handle_after": 0,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ }
+}
