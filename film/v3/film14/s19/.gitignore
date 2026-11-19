@@ -1,0 +1,9 @@
+raw/
+draft/
+draft20/
+frames/
+logs/
+work/
+__pycache__/
+sprites/
+*.log
