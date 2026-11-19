@@ -11,7 +11,7 @@ HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import c17 as C
 from c17 import K, bpy, Vector, actors, camrig, cast17, lerp, clamp, ez, blink
 TMP = os.path.join(HERE, "work")
-RANGES = {29: (1689, 1788), 30: (1789, 1873)}
+RANGES = {29: (1689, 1788), 30: (1789, 1874)}
 PRESET = {29: "records_low", 30: "records_aisle"}
 PPD = {29: 192, 30: 128}
 
