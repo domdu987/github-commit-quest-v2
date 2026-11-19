@@ -43,6 +43,10 @@ def render_tile(preset, light, quality, out_png, hue=True, hooks=None):
         except Exception as e: res['hue'] = dict(err=str(e))
     return res
 
+def finish_png_img(im, quality='final'):
+    d = ImageDraw.Draw(im); y = 880 if quality == 'final' else 440
+    d.line([(0, y), (im.width, y)], fill=(0, 255, 255), width=2 if quality == 'final' else 1)
+
 def finish_png(png, quality):
     im = Image.open(png).convert('RGB'); d = ImageDraw.Draw(im); y = 880 if quality == 'final' else 440
     d.line([(0, y), (im.width, y)], fill=(0, 255, 255), width=2 if quality == 'final' else 1); im.save(png)
@@ -57,7 +61,7 @@ def main():
     results = []
     for (p, l) in combos:
         out = os.path.join(FINAL, '%s_%s%s.png' % (p, l, '_draft' if draft else ''))
-        r = render_tile(p, l, q, out, hue); finish_png(out, q); results.append(r); print(json.dumps(r), flush=True)
+        r = render_tile(p, l, q, out, hue); (finish_png(out, q) if draft else None); results.append(r); print(json.dumps(r), flush=True)
         for pr in ('ship_',):
             pass
     jf = os.path.join(WORK, 'results%s.json' % ('_draft' if draft else ''))
@@ -100,7 +104,10 @@ def contact(allr, draft=False):
         for ci, l in enumerate(LIGHTS):
             f = os.path.join(FINAL, '%s_%s%s.png' % (p, l, '_draft' if draft else ''))
             x = pad + ci * (tw + pad); y = pad + ri * (th + lab + pad)
-            if os.path.exists(f): im.paste(Image.open(f).convert('RGB').resize((tw, th), Image.LANCZOS), (x, y))
+            if os.path.exists(f):
+                t = Image.open(f).convert('RGB')
+                if not draft: finish_png_img(t)          # cyan y-880 guide only on the contact-sheet copy
+                im.paste(t.resize((tw, th), Image.LANCZOS), (x, y))
             r = [a for a in allr if a['preset'] == p and a['light'] == l]
             d.text((x + 2, y + th + 4), '%s  %s%s' % (p, l, ('  %.0fs' % r[0]['cpu']) if r else ''), fill=(220, 220, 230))
     im.save(os.path.join(HERE, 'ship_contact%s.jpg' % ('_draft' if draft else '')), quality=90)
