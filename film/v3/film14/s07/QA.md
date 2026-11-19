@@ -10,3 +10,8 @@
 - Shot 10 (g664-764): the farmer is the target: eyes open, worried/stiff smile, holding his hive box (left). Uncle and old man on flipped cards point screen-left at him with the index finger out, held, laughing. The kid holds a spoon (stick) and bangs the pot in bursts of about 3 hits. Camera 20.5 mm, heads ~150 px, crowd y ~370-880, nobody clipped.
 - Shot 9 g650-663: the nose-tap hand now relaxes over g650-676 (cut at 663), so the hand pop at g661-662 is gone.
 - qa_auto PASS, chins < y 880 all frames. Still open (non-blocking): pinch reads as a C-shaped pincer; faint grey twigs in the foreground.
+
+## v5 (shot 10 only, g664-764)
+- Ready-made cast poses: farmer = farmer_watch_night face (wide eyes, 'o' mouth, sweat) with both hands on the hive box; uncle = uncle_point_mock mirrored, pointing screen-left at the farmer with a held laugh mouth; old man = villager_oldman_laugh (mirrored); kid = villager_kid_bang_pot with the spoon, small vertical bobs every 8 frames (3 hits per 36-frame burst).
+- Spacing: farmer, uncle, old man, kid left to right; no arm crosses another face. Camera 20 mm: heads ~135 px (slightly under 150 to keep all four unclipped). Youth skipped (no room).
+- qa_auto PASS, chins < y 880.
