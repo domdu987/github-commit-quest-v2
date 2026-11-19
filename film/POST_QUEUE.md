@@ -20,6 +20,7 @@ Branch: `claude/new-session-73ou27`. Only rows with status `READY` may be posted
 | 10 | ไอ้ช่างม้าลาย | ไอ้ช่างม้าลาย | film/release10/zebra_v2.mp4 | POSTED (manually by owner, 2026-11-18) — do not post |
 | 11 | ไอ้หมอวัว | ไอ้หมอวัว | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release11/cowdoc_v1.mp4 | POSTED (manually by owner, 2026-11-19) — do not post |
 | 13 | ไอ้แม่แรง | ไอ้แม่แรง | https://github.com/domdu987/github-commit-quest-v2/raw/film13/main/film/release13/maeraeng_v1.mp4 | WAIT (client posts himself) |
+| 16 | ไอ้บ้าลวด | ไอ้บ้าลวด | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release16/wire_v1.mp4 | WAIT (client to review; client posts himself) |
 | 17 | ไอ้ช่างวัดหู | ไอ้ช่างวัดหู | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release17/ear_v1.mp4 | WAIT (in production; client posts himself) |
 | 18 | ไอ้เสมียนวัว | ไอ้เสมียนวัว | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release18/oxclerk_v1.mp4 | WAIT (in production; client posts himself) |
 
@@ -32,3 +33,10 @@ Branch: `claude/new-session-73ou27`. Only rows with status `READY` may be posted
 แล้วใครกันแน่ที่ต้องอาย ดูให้จบ 😂
 
 #ไอ้หมอวัว #วัคซีน #เรื่องจริง #ประวัติศาสตร์ #ประวัติการแพทย์ #เรื่องเล่า #การ์ตูน #shorts
+
+### 16 ไอ้บ้าลวด
+ชายคนนี้เอาคอขวดเบียร์ไปคว่ำบนหัวเสา แล้วบอกว่าข่าวจะวิ่งเร็วกว่ารถไฟ 🍺⚡ ทั้งสภาหัวเราะ ผู้แทนคนหนึ่งลั่นวาจา "ถ้าลวดของเอ็งส่งข่าวได้จริง ข้าจะมานั่งเฝ้ามันเอง!" ทุกคนเรียกเขาว่า "ไอ้บ้าลวด"...
+
+แล้วใครกันแน่ที่ต้องมานั่งเฝ้าลวด ดูให้จบ 😂
+
+#ไอ้บ้าลวด #โทรเลข #รหัสมอร์ส #เรื่องจริง #ประวัติศาสตร์ #สิ่งประดิษฐ์ #เรื่องเล่า #การ์ตูน #shorts
