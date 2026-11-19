@@ -1,0 +1,67 @@
+heads.txt: placeholder staging of every WORKSHOP and HALL preset (H.stage_placeholders + H.head_pixels at 720x1280, y from the top).
+Rule: head centre y 450-760, chin y < 880 (caption band 880-950), head x inside the frame. Columns: role, mark (world D), head y, head width px, chin y, feet y, head x. Method: make_contact.py do_tile; ship presets are not covered here (other builder).
+
+H01_hall_wide_DAY  (hall_wide / DAY)
+   mocker    mark (-3.24, 2.50)  head y  718  head  76 px  chin  755  feet  898  head x   88   ok
+   astro     mark (-3.52, 4.07)  head y  668  head  67 px  chin  701  feet  829  head x  105   ok
+   astro     mark (-3.52, 5.92)  head y  624  head  59 px  chin  653  feet  768  head x  140   ok
+   astro     mark (3.52, 3.33)  head y  689  head  71 px  chin  724  feet  859  head x  633   ok
+   astro     mark (3.52, 5.37)  head y  636  head  61 px  chin  666  feet  784  head x  589   ok
+   astro     mark (3.15, 7.21)  head y  600  head  55 px  chin  627  feet  733  head x  539   ok
+   harrison  mark (0.65, 1.67)  head y  743  head  82 px  chin  783  feet  943  head x  420   ok
+H02_hall_wide_EVENING  (hall_wide / EVENING)
+   mocker    mark (-3.24, 2.50)  head y  718  head  76 px  chin  755  feet  898  head x   88   ok
+   astro     mark (-3.52, 4.07)  head y  668  head  67 px  chin  701  feet  829  head x  105   ok
+   astro     mark (-3.52, 5.92)  head y  624  head  59 px  chin  653  feet  768  head x  140   ok
+   astro     mark (3.52, 3.33)  head y  689  head  71 px  chin  724  feet  859  head x  633   ok
+   astro     mark (3.52, 5.37)  head y  636  head  61 px  chin  666  feet  784  head x  589   ok
+   astro     mark (3.15, 7.21)  head y  600  head  55 px  chin  627  feet  733  head x  539   ok
+   harrison  mark (0.65, 1.67)  head y  743  head  82 px  chin  783  feet  943  head x  420   ok
+H03_hall_table_DAY  (hall_table / DAY)
+   harrison  mark (0.65, 1.67)  head y  657  head 132 px  chin  722  feet 1004  head x  435   ok
+   astro     mark (-3.52, 5.92)  head y  640  head  76 px  chin  678  feet  835  head x   92   ok
+   astro     mark (3.52, 5.37)  head y  643  head  82 px  chin  683  feet  852  head x  646   ok
+   king      mark (1.76, 8.05)  head y  626  head  64 px  chin  658  feet  796  head x  474   ok
+H04_hall_table_EVENING  (hall_table / EVENING)
+   harrison  mark (0.65, 1.67)  head y  657  head 132 px  chin  722  feet 1004  head x  435   ok
+   astro     mark (-3.52, 5.92)  head y  640  head  76 px  chin  678  feet  835  head x   92   ok
+   astro     mark (3.52, 5.37)  head y  643  head  82 px  chin  683  feet  852  head x  646   ok
+   king      mark (1.76, 8.05)  head y  626  head  64 px  chin  658  feet  796  head x  474   ok
+H05_hall_low_DAY  (hall_low / DAY)
+   mocker    mark (-3.24, 3.24)  head y  613  head 136 px  chin  682  feet 1001  head x  351   ok
+H06_hall_low_EVENING  (hall_low / EVENING)
+   mocker    mark (-3.24, 3.24)  head y  613  head 136 px  chin  682  feet 1001  head x  351   ok
+H07_hall_window_DAY  (hall_window / DAY)
+   mocker    mark (-3.24, 3.24)  head y  689  head 122 px  chin  751  feet 1027  head x  174   ok
+H08_hall_window_EVENING  (hall_window / EVENING)
+   mocker    mark (-3.24, 3.24)  head y  689  head 122 px  chin  751  feet 1027  head x  174   ok
+H09_hall_door_DAY  (hall_door / DAY)
+   harrison  mark (0.00, -5.55)  head y  618  head 117 px  chin  677  feet  931  head x  392   ok
+H10_hall_door_EVENING  (hall_door / EVENING)
+   harrison  mark (0.00, -5.55)  head y  618  head 117 px  chin  677  feet  931  head x  392   ok
+W01_shop_wide_DAY  (shop_wide / DAY)
+   harrison  mark (-2.04, 2.78)  head y  560  head 112 px  chin  616  feet  855  head x  130   ok
+   william   mark (1.02, 5.09)  head y  584  head  84 px  chin  626  feet  791  head x  445   ok
+W02_shop_wide_NIGHT  (shop_wide / NIGHT)
+   harrison  mark (-2.04, 2.78)  head y  560  head 112 px  chin  616  feet  855  head x  130   ok
+   william   mark (1.02, 5.09)  head y  584  head  84 px  chin  626  feet  791  head x  445   ok
+W03_shop_bench_DAY  (shop_bench / DAY)
+   harrison  mark (3.33, 5.09)  head y  580  head 126 px  chin  643  feet  919  head x  463   ok
+W04_shop_bench_NIGHT  (shop_bench / NIGHT)
+   harrison  mark (3.33, 5.09)  head y  580  head 126 px  chin  643  feet  919  head x  463   ok
+W05_shop_clock_DAY  (shop_clock / DAY)
+   harrison  mark (3.33, 5.09)  head y  478  head 188 px  chin  570  feet  944  head x  527   ok
+W06_shop_clock_NIGHT  (shop_clock / NIGHT)
+   harrison  mark (3.33, 5.09)  head y  478  head 188 px  chin  570  feet  944  head x  527   ok
+W07_shop_door_DAY  (shop_door / DAY)
+   mocker    mark (-0.65, -3.15)  head y  565  head 200 px  chin  664  feet 1069  head x  554   ok
+   astro     mark (1.02, -2.87)  head y  556  head 245 px  chin  678  feet 1171  head x  226   ok
+W08_shop_door_NIGHT  (shop_door / NIGHT)
+   mocker    mark (-0.65, -3.15)  head y  565  head 200 px  chin  664  feet 1069  head x  554   ok
+   astro     mark (1.02, -2.87)  head y  556  head 245 px  chin  678  feet 1171  head x  226   ok
+W09_shop_bench_H2  (shop_bench / DAY)
+   harrison  mark (3.33, 5.09)  head y  580  head 126 px  chin  643  feet  919  head x  463   ok
+W10_shop_clock_H4  (shop_clock / DAY)
+   harrison  mark (3.33, 5.09)  head y  478  head 188 px  chin  570  feet  944  head x  527   ok
+
+heads outside the rule: 0

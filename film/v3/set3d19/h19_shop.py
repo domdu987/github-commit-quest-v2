@@ -74,7 +74,7 @@ def shop_mats():
     M['grey'] = mat('grey', '#9aa0b0')
     M['wick'] = mat('wick', '#2a2020')
     M['rug1'] = mat('rug1', '#7a4232', '#86503a', scale=14); M['rug2'] = mat('rug2', '#9a7c4c', '#a68858', scale=14); M['rug3'] = mat('rug3', '#4a5a38', '#566a40', scale=14); M['rug4'] = mat('rug4', '#b8a47c', '#a89468', scale=14)
-    M['rugg'] = mat('rugg', '#7c6c58', '#8a7a64', scale=14); M['rugd'] = mat('rugd', '#44382e', '#52443a', scale=14)
+    M['rugg'] = mat('rugg', '#7c6c58', '#8a7a64', scale=14); M['rugd'] = mat('rugd', '#5c4a3a', '#6a5646', scale=14)
     M['brassm'] = metal_mat('brassm', '#cb9f48', '#dcb25a', rough=0.24, spec=0.8, metallic=0.88); M['ceilp'] = mat('ceilp', '#6a5244', '#7a6050', scale=1.4, contrast=1.2)
     M['flame'] = mat_emit('flame', '#ffc860', 28.0)
     M['lampg'] = mat_emit('lampg', '#e89a48', 0.6)
@@ -453,7 +453,7 @@ def build_shop(SET, preset, light):
     PRESET_FG = SET['preset']
     if preset == 'shop_door': chest(-1.6, -0.6, 0.6, 0.4); basket(-0.15, -0.35); case(-2.05, 0.9); stump(1.45, -0.9, r=0.24, h=0.32)
     else: chest(-0.55, -0.6, 0.62, 0.2); basket(0.5, -0.85); case(-2.05, 0.9); stump(0.75, -1.5, r=0.24, h=0.32)
-    mb.box(M['honey'], (-0.2, -1.5, 0.022), (0.9, 0.12, 0.044), rz=0.5); mb.box(M['oak'], (0.25, -0.6, 0.022), (0.7, 0.1, 0.044), rz=-0.35)
+    mb.box(M['oak'], (-0.2, -1.5, 0.022), (0.9, 0.12, 0.044), rz=0.5); mb.box(M['oakd'], (0.25, -0.6, 0.022), (0.7, 0.1, 0.044), rz=-0.35)
     mb.box(M['oakd'], (-0.2, -1.5, 0.006), (0.7, 0.08, 0.012), rz=0.5); mb.box(M['oakd'], (0.25, -0.6, 0.006), (0.5, 0.07, 0.012), rz=-0.35)           # dark contact strip under each offcut: they lie on the boards
     horse(1.45, 0.0)
     # a smoothing plane + a curl of honey shavings on the sawhorse plank, 1-2 D from the lens in shop_bench (bottom-left foreground)
