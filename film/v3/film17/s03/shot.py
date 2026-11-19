@@ -59,7 +59,7 @@ def pose_for(who, base, g):
     p["t"] = g / 30.0
     p["lean"] = 1.3 * math.sin(g * 0.11 + len(who)) ; p["head_roll"] = 2.0 * math.sin(g * 0.07 + len(who) * 2)
     p["squash"] = (1.0 + 0.008 * math.sin(g * 0.2), 1.0 - 0.008 * math.sin(g * 0.2))
-    return p
+    return cast17.silent(p)
 
 def scratch_pose(base, g):
     """shot 8: the right hand scratches the head (small circles), the other hand on the desk; looks at the cards."""
@@ -70,8 +70,7 @@ def scratch_pose(base, g):
     p["arm_r"] = dict(hand=(hx, hy), bend=lerp(0.2, -1.0, u), stretch=1.05, layer="front")
     p["gaze"] = (0.3, 0.5); p["pitch"] = 0.25; p["yaw"] = 0.15
     p["expr"] = "worried"
-    p.pop("mouth", None); p["mouth"] = "flat"
-    return p
+    return cast17.silent(p)
 
 # ---------------------------------------------------------------- photo cards (drawn, no text)
 def make_photo(path, moustache):
@@ -167,6 +166,7 @@ class Take(object):
         self.spill = spill_cards(self.A)
         self.photos = desk_cards()
         self.photo_objs = [o for r in self.photos for o in [r] + list(r.children_recursive)]
+        self.beams = [o for o in bpy.data.objects if any(m and m.name.startswith('beam_fx') for m in (getattr(o.data, 'materials', None) or []))]
         K.clear_keys()
         sc = bpy.context.scene
         sc.frame_start, sc.frame_end = 1, 9000
@@ -190,7 +190,9 @@ class Take(object):
             f = bf(g); sh = shot_of(g)
             loc, look = cam_of(g)
             camrig.key_camera(f, loc, look, cam=self.cam, lens=22.0, interp="LINEAR", easing="AUTO")
-            K.set_flicker(1.0, frame=f); K.set_smoke(1.0, frame=f); K.set_dust(1.0, frame=f)
+            K.set_flicker(1.0, frame=f); K.set_smoke(1.0, frame=f); K.set_dust(0.5, frame=f)
+            for o in self.beams:
+                o.hide_render = sh == 8; o.keyframe_insert('hide_render', frame=f)
             for o in self.aisle_fg + self.spill:
                 o.hide_render = sh != 7; o.keyframe_insert("hide_render", frame=f)
             for o in self.desk_fg + self.photo_objs:
