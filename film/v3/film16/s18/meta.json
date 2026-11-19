@@ -1,0 +1,84 @@
+{
+ "take": "s18",
+ "film": 16,
+ "shots": [
+  18
+ ],
+ "g0": 1119,
+ "g1": 1226,
+ "first_g": 1110,
+ "n_frames": 125,
+ "shot_ranges": {
+  "18": [
+   1119,
+   1225
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 1226
+ },
+ "set": "v3/set3d16 LINE preset line_road, light DUSK; set_buggy keyed per frame (rolls +x 1.4 D/s, wheels turn); furrow + pipe in the foreground",
+ "cast": "mocker mocker_taunt_buggy (smug / mouth flat until g 1154, then laughing + tears, bounce +/-0.06 D at 3 Hz; LIP-SYNC talk_mouth only g 1157..1227 = 38.46-40.80 s); mule (CANVAS16_BUGGY, harness 2, walk cycle 54 f) in the shafts",
+ "camera": "custom 22 mm, low (z 1.5-1.9) from the furrow side, wide opening with the whole rig (mocker, buggy, mule), tracking the buggy; c16.CamPath push 5 %/s + slide; SNAP x2.7 with a 2.6 D pan to the mocker g 1204..1217 on 'ใต้ดินแล้ว' (head 100 -> 225 px)",
+ "events": {
+  "lipsync": [
+   1157,
+   1227
+  ],
+  "laugh_expr": 1154,
+  "snap": [
+   1204,
+   1217
+  ],
+  "word_underground": 1207
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DUSK",
+ "samples": 7,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 8.98,
+ "s_per_frame_cpu_mean": 17.34,
+ "heads": {
+  "moc": {
+   "w": [
+    84,
+    226
+   ],
+   "y": [
+    573,
+    625
+   ],
+   "bottom_max": 737
+  },
+  "mul": {
+   "w": [
+    95,
+    323
+   ],
+   "y": [
+    658,
+    893
+   ],
+   "bottom_max": 1055
+  }
+ },
+ "framediff_in_shot": {
+  "median": 6.73,
+  "p90": 14.71
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json"
+}

@@ -1,0 +1,25 @@
+{
+ "take": "s18",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 37.3,
+   "frame": 1119,
+   "kind": "ambience",
+   "label": "dusk road: mule hooves clop on the dirt, buggy wheels creak and rattle, crickets"
+  },
+  {
+   "time": 38.467,
+   "frame": 1154,
+   "kind": "accent",
+   "label": "mocker's laugh starts (voice is the narration)"
+  },
+  {
+   "time": 40.133,
+   "frame": 1204,
+   "kind": "accent",
+   "label": "snap push on 'ใต้ดินแล้ว': short whoosh"
+  }
+ ]
+}

@@ -1,0 +1,6 @@
+{"take":"s18","shots":[18],"g0":1119,"g1":1226,"handle":9,"light":"DUSK",
+ "set":"v3/set3d16 LINE preset line_road, light DUSK; set_buggy keyed per frame (rolls +x 1.4 D/s, wheels turn); furrow + pipe in the foreground",
+ "cast":"mocker mocker_taunt_buggy (smug / mouth flat until g 1154, then laughing + tears, bounce +/-0.06 D at 3 Hz; LIP-SYNC talk_mouth only g 1157..1227 = 38.46-40.80 s); mule (CANVAS16_BUGGY, harness 2, walk cycle 54 f) in the shafts",
+ "camera":"custom 22 mm, low (z 1.5-1.9) from the furrow side, wide opening with the whole rig (mocker, buggy, mule), tracking the buggy; c16.CamPath push 5 %/s + slide; SNAP x2.7 with a 2.6 D pan to the mocker g 1204..1217 on 'ใต้ดินแล้ว' (head 100 -> 225 px)",
+ "events":{"lipsync":[1157,1227],"laugh_expr":1154,"snap":[1204,1217],"word_underground":1207},
+ "cues":[[1119,"ambience","dusk road: mule hooves clop on the dirt, buggy wheels creak and rattle, crickets"],[1154,"accent","mocker's laugh starts (voice is the narration)"],[1204,"accent","snap push on 'ใต้ดินแล้ว': short whoosh"]]}
