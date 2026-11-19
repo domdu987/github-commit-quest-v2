@@ -29,8 +29,11 @@ Redone together with s01 (same camera, same marks, same bottle-hand method; s01 
 - No text, no DOF, mouths still, no magenta, hand error <= 0.1 D except the flick (intended).
 - Head touches the right frame edge for a few frames at the snap peak (g 1486-1490); the face stays in frame.
 
-## Frame-diff (in-shot g 1456..1539)
-median 6.88  p90 10.64  (target >= 4 / >= 12). Median passes; p90 is slightly under: the snap is 13 f and the scene is now busy but low-contrast. Draft (360x640) gave 6.90 / 10.16.
+## Frame-diff (in-shot g 1456..1539), v3 after the director's request
+median 7.18  p90 12.73  (target >= 4 / >= 12): MET (v2 was 6.88 / 10.64).
+- The start framing, marks and the snap on "คอขวดเบียร์" are unchanged (callback of s01). Added: one short eased TRUCK (g 1522-1536, 14 f, 0.9 D sideways, no zoom) while the wire settles on the glass; it moves the scene right, away from the glass, so his head stays clear of the bottle (the first try, in the other direction, slid his head over the glass).
+- The snap itself is x2.4 with a smaller pan (-0.55 D), so his hair no longer touches the right frame edge at the snap peak (head x <= 600 px at g 1486).
+- Head at the end 190-285 px wide, centre y 452-707, lowest head bottom 674.
 
 ## Seconds per frame
 10.77 s wall / 17.5 s CPU (720x1280, 7 spp, 2 procs x 2 threads).

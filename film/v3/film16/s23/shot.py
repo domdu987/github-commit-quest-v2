@@ -82,7 +82,7 @@ CAM_LOC0 = (2.3, -2.6, 5.3)                    # low, SW of the ladder, looking 
 CAM_LOOK0 = (7.4, -7.9, 8.8)                 # subject point: Morse's raised hand / the pole top (lower = less empty sky)
 CAM_START = 1.0                               # frame 0 starts 0.92 of the way from the look point to CAM_LOC0 (head ~92 px; the snap takes it to ~190)
 CAM = C.CamPath(Vector(CAM_LOOK0).lerp(Vector(CAM_LOC0), CAM_START), CAM_LOOK0, G0, G_LAST, push=0.06, slide_px=75.0, rise_px=0.0,
-                arc_deg_s=24.0, decay=0.25, snaps=[dict(g=SNAP, k=2.4, peak=2.0, shift=(-0.7, 0.0))])
+                arc_deg_s=24.0, decay=0.25, snaps=[dict(g=SNAP, k=2.4, peak=2.0, shift=(-0.55, 0.0)), dict(g=(1522, 1536), k=1.0, peak=1.9, shift=(-0.9, 0.0))])
 
 
 MARK_SHIFT = Vector((-0.25, -0.22, -0.6))      # Morse stands ~1 rung lower ALONG the ladder: his head clears the bottle body (QA-art: bottle merged with his head)
