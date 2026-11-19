@@ -185,3 +185,29 @@ Other checks:
 - **N4. Shot 31:** the coach now stands on the infield, not "in the stands". That is fine for the gag, and the jaw-drop reads.
 - **N5. Shot 26:** for a punchier part-by-part, add a small push or snap on each of the three words (g1392, 1416, 1434). That would also raise the s25 p90 (see M).
 - **N6. Shot 25:** the J-curve is still slight (fix 5).
+
+---
+## Re-check take 3 (render15/team5 @ 19ac75f, camera-only; takes as rebuilt in film/v3/film15/s25, s28, s29)
+
+Quick visual check at 6 fps, full size and phone size, plus the new push frames.
+
+| take | median / p90 (my run) | verdict |
+|---|---|---|
+| s25 | 6.7 / **12.0** (just at the target) | **PASS** |
+| s28 | 8.4 / 18.1 | **FAIL** (one cheap fix) |
+| s29 | 6.4 / 12.2 (picture unchanged from take 2) | **PASS** |
+
+No near-static runs in any take. The new pushes are clean eased moves with no ghosting or multi-exposure frames (s28 g1563-1569, s25 g1490-1504).
+
+- **s25:**
+  - The three shot-26 beats still read. The new snaps at g1415-1419 actually accent the "back" beat.
+  - The bar crosses no body, and heads stay above y 880.
+  - Note T1: the push at g1490-1500 brings the hanging head to the right edge, clipping hair and ear. The arch and face stay readable. In the handle (g1513) the head is cut more, but that frame sits inside the 27→28 dissolve.
+- **s28:**
+  - The apex (g1532-1557) is wide and readable.
+  - The push on "พร้อมกัน" (g1562-1592) makes the falling rival's head very large. His face skin goes below y 880 from **g1585 (y 894) to g1593 (y 1002)**, and the hair outline enters the caption band from about g1583. That is about 3 frames at full opacity plus the first half of the 28→29 dissolve, right under the caption "พร้อมกัน". This breaks the hard rule (heads above y 880).
+  - The back of his head is also cut by the right edge from g1570.
+  - **Fix 13:** end or ease out the push by about g1578, or tilt up, so the whole head stays above y 860 through g1593. Keep the right edge clear of the head. Only g1570-1593 needs a re-render, and p90 will stay well above 12.
+- **s29:** identical to take 2. Shot-30 notes N3 still apply, and they are not blocking.
+
+Earlier non-blocking notes N1-N6 are unchanged.

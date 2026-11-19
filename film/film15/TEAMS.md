@@ -21,3 +21,4 @@
 - s25/s28/s29 (reveal): FAIL r1 (mechanism not animated; frozen 6.9 s; p90 fails) -> fixes sent to team 5.
 - s10: r3 ACCEPTED (ea857cb; motion 5.5/13.2; shot 11 two-hand throat mime, shot 16 peg raise).
 - reveal take 2 (2639335): picture PASS all three; s29 ACCEPTED (6.4/12.2). s25 p90 8.4, s28 p90 9.5 < 12 -> camera-only fix requested (no override).
+- reveal take 3 (19ac75f): s25 ACCEPTED (6.7/12.2), s29 ACCEPTED (6.4/12.1); s28 FAIL (head into caption band g1583-1593 from the new push) -> r4 fix requested.
