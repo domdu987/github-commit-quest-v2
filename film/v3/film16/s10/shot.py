@@ -31,7 +31,7 @@ G_FOCUS = 672                                            # focus lines on from h
 LIGHT, PRESET = "DAY", "chamber_low"
 BEARING = -62.0                                          # deg: camera bearing rotated off the globe on the room axis
 CANVAS = (-2.875, -6.0, 2.875, 0.125)                         # wide + tall card: the focus lines reach 2.7 D from the head centre (no clipped streaks)
-FOCAL_Z = 2.5                                           # D above the floor the camera looks at (chest / chin of the mocker)
+FOCAL_Z = 2.75                                           # D above the floor the camera looks at (chest / chin of the mocker)
 
 
 def bpy_objs(*prefixes):
@@ -75,10 +75,10 @@ class Take(C.Take):
         u = Vector((u0.x * math.cos(a) - u0.y * math.sin(a), u0.x * math.sin(a) + u0.y * math.cos(a), 0.0))   # the camera's bearing from the mocker
         self.u = u
         self.mp = Vector((M.x, M.y, 0.0)) + u0 * 3.2                                      # mocker's floor point
-        loc0 = self.mp + u * 2.75 + Vector((0, 0, 1.25))
+        loc0 = self.mp + u * 1.75 + Vector((0, 0, 1.85))
         look0 = self.mp + Vector((0, 0, FOCAL_Z))
         self.cam_path = C.CamPath(loc0, look0, GS[0], G_LAST, push=0.08, slide_px=40.0, rise_px=0.0, arc_deg_s=7.0, decay=0.3,
-                                  snaps=[dict(g=G_PUNCH, k=1.8, peak=1.8, shift=(-0.15, 0.1))])
+                                  snaps=[dict(g=G_PUNCH, k=1.3, peak=1.8, shift=(-0.1, 0.0))])
         self.key_cam(bf(GS[0]), *self.cam_path.at(GS[0]))
         self.scene.frame_set(bf(GS[0]))
         self.mock = C.make_actor("mock", "mocker", os.path.join(WORK, "sprites"), canvas=CANVAS, cam=self.cam)
@@ -113,7 +113,7 @@ class Take(C.Take):
         p["mirror"] = True
         p["fx"] = ["blush"]
         if g >= G_FOCUS:
-            p["fx"] = ["blush", {"type": "focus_lines", "seed": g, "n": 34}]
+            p["fx"] = ["blush", {"type": "focus_lines", "seed": g, "n": 80}]
         p["blink"] = blink(g, [G_SWAP - 1, 612, 640, 690])
         s = math.sin(2 * math.pi * 2.0 * g / 30.0)
         p["squash"] = (1.005 + 0.012 * s, 0.995 - 0.012 * s)
