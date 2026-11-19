@@ -1,4 +1,45 @@
-{"take":"s01","film":15,"shots":[1,2,3,4],"g0":0,"g1":183,"first_g":0,"n_frames":190,"handle_in":0,"handle_out":6,
- "transition_in":{"type":"cut","frames":0},"cuts":[63,108,134],"transition_out":{"type":"cut","frames":0,"note":"shot 5 is a dissolve (11 frames) from g184: handle g184..189 rendered in 3D"},
- "location":"A GOLDEN","samples":12,"resolution":[720,1280],"fps":30,"s_per_frame_wall":7.5,"s_per_frame_cpu":14.7,
- "motion":{"median":4.5,"p90":14.4},"split":"take.mkv.part* (cat to rebuild)"}
+{
+ "take": "s01",
+ "film": 15,
+ "shots": [
+  1,
+  2,
+  3,
+  4
+ ],
+ "g0": 0,
+ "g1": 183,
+ "first_g": 0,
+ "n_frames": 190,
+ "handle_in": 0,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "cuts": [
+  63,
+  108,
+  134
+ ],
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "note": "shot 5 is a dissolve (11 frames) from g184: handle g184..189 rendered in 3D"
+ },
+ "location": "A GOLDEN",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "s_per_frame_wall": 8.7,
+ "s_per_frame_cpu": 14.7,
+ "motion": {
+  "median": 5.4,
+  "p90": 21.2
+ },
+ "split": "take.mkv.part* (cat to rebuild)",
+ "revision": "r2 (director TAKE-gate fixes 1-8)"
+}
