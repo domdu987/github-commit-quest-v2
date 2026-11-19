@@ -20,14 +20,15 @@ G_BEAT = C.g_of(35.82)                            # 1078
 
 SUBJ = Vector((119.0, -11.2, 2.55))
 OFF = Vector((-4.0, 1.2, 0.25))                   # camera 4.9 D from Morse at g0 (before the push), a little to the +y side
-CAM = C.CamPath(SUBJ + OFF * 1.0, SUBJ, GA, GZ, push=0.13, slide_px=40.0, arc_deg_s=20.0, decay=0.25,
-                snaps=[dict(g=(1085, 1098), k=1.35, peak=1.9, shift=(0.28, -0.15))])
+CAM = C.CamPath(SUBJ + OFF * 1.0, SUBJ, GA, GZ, push=0.13, slide_px=15.0, arc_deg_s=14.0, decay=0.25,
+                snaps=[dict(g=(1085, 1098), k=1.25, peak=1.9, shift=(0.2, -0.22))])
 
 MO = cast16.STORY16["morse_empty_bag"][1]
 WA = cast16.STORY16["worker_a_lean_shovel"][1]
-WB = cast16.STORY16["worker_b_lean_shovel"][1]
+WB = cast16.STORY16["worker_a_lean_shovel"][1]       # worker b uses the hands-on-the-shovel pose (his own showed crossed forearms)
 
 
+HAND0 = Vector((118.45, -12.1, 2.0))                   # the fist: chest height, right of Morse (screen-right = -y here)
 SHAKES = [(1078, 1088), (1094, 1104)]               # two shakes of the empty sack (hopeful, then slumped)
 
 
@@ -38,6 +39,10 @@ def shake_env(g):
         if a_ <= g <= b_:
             e = max(e, math.sin(math.pi * (g - a_) / float(b_ - a_)) ** 2)
     return e
+
+
+def hand_w(g):
+    return HAND0 + Vector((0.0, 0.0, shake_y(g)))
 
 
 def shake_y(g):
@@ -51,11 +56,10 @@ def shake_y(g):
 def morse_pose(g):
     p = dict(MO)
     # holds the sack by its bottom corner at chest height in front of him, mouth DOWN; looks into it
-    p["arm_r"] = dict(MO["arm_r"], hand=(0.58, 0.10 + shake_y(g)), bend=0.9)
     p.pop("prop_r", None)                                     # the sack is a 3D mesh (make_bag)
     p["expr"] = "worried" if g < 1092 else "sad"             # hopeful at the first shake, slumped at the second
-    p["pitch"] = 0.40
-    p["gaze"] = (0.30, 0.95)
+    p["pitch"] = 0.62                                         # head pitched DOWN into the sack
+    p["gaze"] = (0.85, 1.0)                                   # eyes on the sack (down and toward it), not the lens
     p["lean"] = p.get("lean", 0) + 2.0 * math.sin(g * 0.17) + 4.0 * (1.0 if g > 1100 else 0.0)
     p["head_roll"] = -4 + 2.5 * math.sin(g * 0.13 + 1)
     p["blink"] = blink(g, [1091, 1112])
@@ -96,31 +100,43 @@ def _flat_mat(name, col, emit=0.45):
 
 
 def make_bag():
-    """an EMPTY tied money sack held by its bottom corner, MOUTH DOWN (grip at the origin, hanging down: local x = screen right, z = up, -y toward the
-    camera): tan limp body with wrinkles, a dark open mouth at the bottom and the cream lining flapping out of it (a separate object: it swings).
-    Returns (body objects, lining objects)."""
+    """an EMPTY tied money sack hanging from its TWISTED, STRING-TIED neck (grip at the origin; local x = screen right, z = up, -y toward the camera):
+    the neck sits slightly BEHIND the card plane (y +0.07) so Morse's fist is drawn over it; a limp pear-shaped body; a puckered, gaping dark mouth at
+    the bottom with a small crumpled cream lining hanging from one side (a separate object: it swings).  Returns (body objects, lining objects)."""
     ink, dark = _flat_mat("bag_ink", "#2a1c16", 0.2), _flat_mat("bag_dark", "#1c1410", 0.1)
     tan, tan2, cream = _flat_mat("bag_tan", "#d9b27a", 1.0), _flat_mat("bag_tan2", "#a67a46", 0.9), _flat_mat("bag_cream", "#f4ead0", 1.1)
+    cord = _flat_mat("bag_cord", "#7a3b22", 0.5)
     mb = K.MB("s17_bag")
     mb.T = Matrix.Identity(4)
     def E(mb_, m, c, r):
         mb_.ell(m, c, r, (14, 10))
-    E(mb, ink, (0.0, 0.05, -0.30), (0.25, 0.02, 0.34))                   # outlines (behind)
-    E(mb, ink, (0.0, 0.05, -0.58), (0.35, 0.02, 0.30))
-    E(mb, ink, (0.0, 0.04, -0.84), (0.36, 0.02, 0.09))
-    E(mb, tan, (0.0, 0.0, -0.22), (0.22, 0.02, 0.26))                     # body, narrow at the fist, wide at the mouth
-    E(mb, tan, (0.0, 0.0, -0.52), (0.32, 0.02, 0.30))
-    E(mb, tan2, (0.0, -0.004, -0.74), (0.33, 0.02, 0.14))
-    for dx, dz, hh in ((-0.14, -0.40, 0.18), (0.06, -0.50, 0.2), (0.17, -0.38, 0.15), (-0.05, -0.68, 0.12)):   # wrinkles
-        E(mb, tan2, (dx, -0.016, dz), (0.011, 0.02, hh))
-    E(mb, tan2, (0.0, -0.02, -0.03), (0.11, 0.02, 0.05))                  # twisted corner in the fist
-    E(mb, dark, (0.0, -0.006, -0.84), (0.31, 0.02, 0.065))                # the open mouth
+    # twisted neck behind the fist: stacked tilted lumps + the string with two tails
+    for i, (x, z, rx, rz) in enumerate(((0.00, -0.04, 0.075, 0.08), (0.02, -0.12, 0.085, 0.07), (-0.015, -0.19, 0.07, 0.065), (0.01, -0.25, 0.09, 0.06))):
+        E(mb, ink, (x, 0.09, z), (rx + 0.018, 0.02, rz + 0.018))
+        E(mb, tan2 if i % 2 else tan, (x, 0.07, z), (rx, 0.02, rz))
+    E(mb, cord, (0.0, 0.055, -0.205), (0.115, 0.02, 0.024))                      # the string round the neck
+    E(mb, cord, (0.09, 0.05, -0.27), (0.014, 0.02, 0.075))                        # two cord tails
+    E(mb, cord, (-0.07, 0.05, -0.26), (0.012, 0.02, 0.06))
+    # limp body: narrow under the neck, widest and slack near the mouth; ink outline behind
+    E(mb, ink, (0.0, 0.05, -0.50), (0.21, 0.02, 0.30))
+    E(mb, ink, (0.0, 0.05, -0.70), (0.34, 0.02, 0.22))
+    E(mb, tan, (0.0, 0.0, -0.45), (0.17, 0.02, 0.26))
+    E(mb, tan, (0.0, 0.0, -0.64), (0.30, 0.02, 0.22))
+    E(mb, tan2, (0.0, -0.004, -0.76), (0.31, 0.02, 0.10))
+    for dx, dz, hh in ((-0.12, -0.52, 0.16), (0.05, -0.58, 0.18), (0.16, -0.50, 0.12), (-0.04, -0.72, 0.10)):   # wrinkles
+        E(mb, tan2, (dx, -0.018, dz), (0.011, 0.02, hh))
+    # gaping puckered mouth at the bottom
+    E(mb, ink, (0.0, 0.0, -0.86), (0.335, 0.02, 0.095))
+    E(mb, dark, (0.0, -0.012, -0.865), (0.285, 0.02, 0.065))
+    for k_, (x, z) in enumerate(((-0.30, -0.84), (-0.17, -0.915), (0.0, -0.935), (0.17, -0.915), (0.30, -0.84), (0.24, -0.80), (-0.24, -0.80))):   # puckered lip
+        E(mb, tan2 if k_ % 2 else tan, (x, -0.014, z), (0.07, 0.02, 0.045))
     obs = mb.finish()
     ml = K.MB("s17_lining")
     ml.T = Matrix.Identity(4)
-    E(ml, ink, (0.0, 0.045, -0.24), (0.17, 0.02, 0.30))
-    E(ml, cream, (0.0, -0.02, -0.22), (0.145, 0.02, 0.26))
-    E(ml, tan2, (0.0, -0.035, -0.22), (0.010, 0.02, 0.2))
+    for (x, z, rx, rz) in ((0.0, -0.05, 0.075, 0.07), (0.05, -0.12, 0.06, 0.06), (-0.03, -0.17, 0.05, 0.05)):   # a small crumpled flap
+        E(ml, ink, (x, 0.04, z), (rx + 0.016, 0.02, rz + 0.016))
+        E(ml, cream, (x, -0.03, z), (rx, 0.02, rz))
+    E(ml, tan2, (0.02, -0.045, -0.11), (0.009, 0.02, 0.05))
     lin = ml.finish()
     for o in obs + lin:
         o.visible_shadow = False
@@ -160,6 +176,7 @@ class Take(C.Take):
         sd = os.path.join(WORK, "sprites")
         mk = self.A["marks"]
         self.mk = mk
+        self.hand_err = {}
         self.bag, self.lining = make_bag()
         self.puffs, self.moth, self.button = make_bits()
         self.mor = self.actors["mor"] = C.make_actor("mor", "morse16", sd, cam=self.cam)
@@ -172,34 +189,31 @@ class Take(C.Take):
             f = bf(g)
             self.key_cam(f, *CAM.at(g))
             C.place(self.mor, f, (118.5, -11.3, 0.0))
-            C.place(self.wa, f, (120.6, -9.9, 0.0))
+            C.place(self.wa, f, (121.4, -9.4, 0.0))
             C.place(self.wb, f, (121.9, -13.2, 0.0))
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
-            self.mor.pose(f, morse_pose(g), camera=self.cam)
+            _, hinfo = self.mor.pose(f, morse_pose(g), hands={"r": {"hand": tuple(hand_w(g))}}, camera=self.cam)
+            self.hand_err[g] = round(max([v.get("error", 0.0) for v in hinfo.values()] or [0.0]), 3)
             self.wa.pose(f, worker_pose(WA, g, 0.0, False), camera=self.cam)
             self.wb.pose(f, worker_pose(WB, g, 2.1, True), camera=self.cam)
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
-            p = morse_pose(g)
-            k = actors.upper_stretch(self.mor, self.cam, f, p)
-            hip = C.sprites.hip_y("morse16", p)
-            lx, ly = p["arm_r"]["hand"]
-            hand = actors.local_to_world(self.mor, (lx, C.sprites.warp_y(ly, hip, k)), f, feet=C.sprites.feet_of("morse16", p), camera=self.cam)
+            hand = hand_w(g)
             cam = Vector(self.cam.location)
             d = Vector(hand) - cam
             yaw = math.atan2(d.x, -d.y) + math.pi                               # local -y toward the camera
             e = shake_env(g)
             sw = math.radians(10.0 * e * math.sin(g * 1.9) + 3.0 * math.sin(g * 0.3))
             Rz = Matrix.Rotation(yaw, 4, "Z")
-            M = Matrix.Translation(Vector(hand) + (cam - Vector(hand)).normalized() * 0.06 + Vector((0, 0, 0.1))) @ Rz @ Matrix.Rotation(sw, 4, "Y") @ Matrix.Scale(1.25, 4)
+            M = Matrix.Translation(Vector(hand) + (cam - Vector(hand)).normalized() * 0.0 + Vector((0, 0, 0.0))) @ Rz @ Matrix.Rotation(sw, 4, "Y") @ Matrix.Scale(1.25, 4)
             self._key(self.bag, f, M, True)
             flap = math.radians(18.0 * math.sin(g * 1.3) * (0.4 + e) + 8.0 * math.sin(g * 0.45))
-            ML = M @ Matrix.Translation((0.0, -0.01, -0.86)) @ Matrix.Rotation(flap, 4, "Y")
+            ML = M @ Matrix.Translation((-0.12, -0.06, -0.90)) @ Matrix.Rotation(flap, 4, "Y")
             self._key(self.lining, f, ML, True)
-            mouth = M @ Vector((0.0, -0.04, -0.9))
+            mouth = M @ Vector((0.0, -0.06, -0.92))
             # dust puffs on each shake (rise a little, spread, fade by shrinking)
             for i, pf in enumerate(self.puffs):
                 vis, loc, sc = False, mouth, 0.01
