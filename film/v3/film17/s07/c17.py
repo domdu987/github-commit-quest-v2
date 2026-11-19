@@ -63,7 +63,7 @@ class Rig:
         self.cast[key] = dict(a=a, cast=cast, pose0=pose, sc=sc, pos=(x, y, zz), mirror=mirror, rim=rim)
         return a
     def pose(self, key, g, pose, pos=None):
-        c = self.cast[key]; p = dict(pose); p["seat17"] = None
+        c = self.cast[key]; p = cast17.silent(dict(pose)); p["seat17"] = None
         if c["mirror"]: p["mirror"] = True
         if c["rim"] and c["cast"] in K.RIM_FOR: p["rim"] = K.RIM_FOR[c["cast"]]; p["rim_opacity"] = 0.55; p["rim_w"] = 0.02
         c["a"].place(g, pos or c["pos"], scale=c["sc"]); c["a"].pose(g, p, camera=self.cam)

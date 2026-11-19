@@ -26,7 +26,7 @@ CAMS = {
  16: [(844, (-0.45, -0.25, 1.50), (1.00, 2.30, 1.28)), (862, (-0.10, 0.10, 1.46), (1.10, 2.30, 1.25)), (874, (0.15, 0.50, 1.44), (1.15, 2.30, 1.24)),
       (884, (-0.05, 0.75, 1.42), (1.50, 2.30, 1.22)), (899, (0.30, 1.05, 1.40), (1.95, 2.40, 1.20))],
  17: [(900, (0.30, 0.15, 0.50), (1.00, 2.35, 1.50)), (922, (-0.15, 0.30, 0.55), (1.00, 2.35, 1.50)), (930, (-0.25, 0.35, 0.55), (1.00, 2.35, 1.50)),
-      (940, (0.95, 1.00, 0.45), (2.05, 3.10, 0.40)), (947, (1.05, 1.30, 0.45), (2.05, 3.10, 0.40))],
+      (940, (0.95, 1.00, 1.00), (2.05, 3.10, 0.20)), (947, (1.05, 1.30, 1.00), (2.05, 3.10, 0.20))],
  18: [(948, (-2.00, -1.60, 1.50), (-0.70, 2.50, 1.40)), (966, (-1.50, -1.00, 1.48), (-0.60, 2.50, 1.40)), (976, (-0.60, -1.70, 1.50), (0.40, 2.00, 1.30)),
       (984, (-0.10, -2.00, 1.50), (1.00, 1.50, 1.30)), (995, (0.20, -1.90, 1.50), (1.05, 1.40, 1.30))],
  19: [(996, (0.55, -2.20, 3.20), (-0.60, 5.00, 1.8)), (1014, (0.45, -1.30, 2.90), (-0.75, 4.80, 1.7)), (1030, (0.20, -0.30, 2.60), (-0.90, 4.30, 1.6)),
@@ -102,10 +102,9 @@ def poses(shot, T, g):
         B("gend", P("gendarme_standing_a", lean=sway(g, 1.5, .17), blink=blink(g, 40)))
 
 def hooks(shot, T, g):
-    K.set_flicker(1.0, frame=g); K.set_smoke(1.0, frame=g); K.set_dust(0.4, frame=g)
+    K.set_flicker(1.0, frame=g); K.set_smoke(1.0, frame=g); K.set_dust(0.35, frame=g)
     if shot in (16, 17, 18): K.set_pendulum(frame=g)
-    if shot == 16:
-        for o in T.hide_objs: o.hide_render = True
+    for o in T.hide_objs: o.hide_render = True
     if shot == 19:
         names = ["p0", "p1", "p2", "p3", "p4", "p5", "p6", "p7", "q0", "q1", "q2", "q3", "q5"]
         base = {"p0": .9, "p1": .5, "p2": .3, "p3": .7, "p4": .2, "p5": .6, "p6": .4, "p7": .8, "q0": .5, "q1": .8, "q2": .3, "q3": .6, "q5": .2}
@@ -116,7 +115,8 @@ def hooks(shot, T, g):
 def run(shot, gs, scale, samples, out, do_render, threads=2):
     T = C.Rig(PRESET[shot])
     import bpy
-    T.hide_objs = [bpy.data.objects[n] for n in ('measure_cloth',) if n in bpy.data.objects]
+    T.hide_objs = [o for o in bpy.data.objects if any(m and m.name.startswith('beam_fx') for m in (getattr(o.data, 'materials', None) or []))]
+    if shot in (16, 17): T.hide_objs += [bpy.data.objects['measure_cloth']]
     stage(shot, T)
     path = C.Path(CAMS[shot])
     K.clear_keys() if hasattr(K, "clear_keys") else None
