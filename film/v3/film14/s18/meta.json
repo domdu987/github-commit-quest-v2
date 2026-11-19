@@ -1,0 +1,4 @@
+{"take":"s18","film":14,"revision":"v3 (team 1): shot 18 only","shots":[18],"g0":1168,"g1":1225,"first_g":1162,"n_frames":70,"handle_in":6,"handle_out":6,
+ "transition_in":{"type":"cut","frames":0},"samples":24,"resolution":[720,1280],
+ "lip_sync":{"shot":18,"window_g":[1179,1227],"note":"uncle talk_mouth ONLY g1179-1227 (flat before/after, smug->excited eyes at g1178); woman and old man closed held mouths"},
+ "night":{"bounce_k":0.3,"lamp_k":0.3,"key_k":0.4,"exposure":-0.7,"ground_k":0.45,"torch_light_w":45,"mean_luma":"~66 (low band ~54)"}}
