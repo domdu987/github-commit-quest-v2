@@ -1,7 +1,7 @@
 # QA s10 (film 15, render team 3): shots 10-16, g 489..931 (+6 in, +8 out handle: take g 483..939, 457 frames)
 Set3d15 A GOLDEN (shot 16: GOLDEN -> DAY season dissolve g 897-907 baked in, two plates blended). Cast15 cards per frame (c15.py), 12 samples, 720x1280, ~11 s/frame wall.
 ## Numbers
-- motion_check (cuts 489,564,621,708,762,838,862,932): **median 5.5, p90 13.1** (target 4 / 12). Per shot median: 10: 2.9 | 11: 5.8 | 12: 10.9 | 13: 2.5 | 14: 5.3 | 15: 11.8 | 16: 8.4. Shots 10 and 13 are the low ones (framing limits: the sway/orbit had to stay small to keep the group / photographer in frame); no frozen runs (qa_auto PASS).
+- motion_check (cuts 489,564,621,708,762,838,862,932): **median 5.4, p90 12.1** (r2) (target 4 / 12). Per shot median: 10: 2.9 | 11: 5.8 | 12: 10.9 | 13: 2.5 | 14: 5.3 | 15: 11.8 | 16: 8.4. Shots 10 and 13 are the low ones (framing limits: the sway/orbit had to stay small to keep the group / photographer in frame); no frozen runs (qa_auto PASS).
 - qa_auto: PASS, magenta 0.0 %, phone_sheet.jpg, QA_AUTO.md.
 ## Checked
 - Heads above y 880 in every shot; the coach talks only g 537..710 (17.80-23.55 s) in shots 10-12 (talk_mouth); all other mouths static; the bar does not fall (shots 10-16 are clean flops); no letters/numbers (newspaper = grey bars + arched photo).
@@ -13,3 +13,11 @@ Set3d15 A GOLDEN (shot 16: GOLDEN -> DAY season dissolve g 897-907 baked in, two
 - Shot 16: the boy raising the peg stands at the right standard (mostly off frame); the sawdust pile of the set is large in frame.
 - Dick's flop at 13/16 is small in frame (wide shots, ~12 % of the height at the apex) because the camera has to keep photographer / bar / pit together.
 - Fixed in the take: flash_bulb's unlit bulb renders as a black ball -> hidden except on the flash frames.
+
+## r2 (director take-gate fixes)
+- Shot 11: coach neck mime (head tilted, hands at the collar) g564-596, then points at Dick (eye-line on Dick); Dick on the grass at ~20 % height, boys behind; the set's flat green ground patch is hidden in this shot.
+- Shot 14: my own newspaper card (grey bars, big photo of the arched Dick, head below a tan bar) over the cast prop, ~70 % of the frame width; reader's thumbs at its edges; the seated spectator is removed.
+- Shot 15: coach_laugh (eyes squeezed, tears, 3 Hz bounce, mouth shut).
+- Shot 16: camera head-on to the bar, boy at the left standard (in frame) slides the peg: bar 1.72 m -> 1.98 m at g 886-906 (GOLDEN), DAY plate holds 1.98 then 2.14; Dick's hip arc follows the bar height.
+- Shot 13: 22 % push-in at g 729-741 (arch at the flash is larger).
+- Per-shot median/p90: 10: 2.9/6.2 | 11: 4.8/10.8 | 12: 10.9/14.7 | 13: 3.1/13.4 | 14: 7.9/11.9 | 15: 9.0/12.2 | 16: 4.1/5.7. qa_auto PASS.

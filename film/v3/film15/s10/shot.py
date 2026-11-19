@@ -55,18 +55,19 @@ def facing_mirror(me, target):
 def mD(*p): return Vector(tuple(c * U for c in p))
 
 CARDS = {}
+PAPER = None
 def card(name):
     if name not in CARDS: CARDS[name] = Card(name)
     return CARDS[name]
 
 CAMOV = {}   # per shot: camera start (loc, look) in metres + move; overrides applied in build_scene
 CAMOV[10] = dict(a=((8.0, 0.4, 1.45), (10.4, 2.6, 1.55)), push=18, slide=90, orbit=-9)
-CAMOV[11] = dict(slide=90, push=12, orbit=7)
+CAMOV[11] = dict(slide=90, push=12, orbit=3)
 CAMOV[12] = dict(a=((8.0, 1.5, 1.55), (10.4, 2.6, 1.6)), push=14, slide=80, orbit=12, punch=(23.0, 22))
-CAMOV[13] = dict(a=((-2.3, 2.3, 1.05), (0.3, 5.5, 1.5)), push=6, slide=90, orbit=-6)
-CAMOV[14] = dict(a=((9.2, 5.3, 1.35), (12.6, 4.3, 1.1)), push=20, slide=70, orbit=-16)
+CAMOV[13] = dict(a=((-2.3, 2.3, 1.05), (0.3, 5.5, 1.5)), push=6, slide=90, orbit=-6, punch=(24.3, 22))
+CAMOV[14] = dict(a=((11.2, 4.6, 1.2), (12.6, 4.2, 1.15)), push=5, slide=30, orbit=-6)
 CAMOV[15] = dict(push=30)
-CAMOV[16] = dict(a=((-2.6, 2.6, 1.3), (-0.1, 5.4, 1.8)), push=12, slide=80, orbit=10)
+CAMOV[16] = dict(a=((-0.6, 0.6, 1.4), (-0.2, 5.3, 1.7)), push=5, slide=30, orbit=-6)
 
 # ------------------------------------------------------------------ Dick's jump (shared by shot 13 and shot 16)
 STAGES = [(-2, 'plant'), (0, 'takeoff'), (2, 'flop_rise'), (4, 'flop_head'), (6, 'flop_back'), (8, 'flop'), (12, 'flop'), (14, 'flop_flick'), (19, 'land_back'), (22, 'land_back'), (28, 'sit_up')]
@@ -126,6 +127,7 @@ def show_dick(c, g, gt, mirror, cl, h_m, ground_land):
 def stage(g, plate):
     n = shot_of(g); cl = cam_loc(); M = W['A']['marks']; sc = bpy.context.scene
     for c in CARDS.values(): c.hide()
+    if PAPER is not None: PAPER.hide()
     mir = W['mirror']
     if n == 10:
         coach = card('coach'); b0 = card('boy_a'); b1 = card('boy_b')
@@ -138,7 +140,9 @@ def stage(g, plate):
     elif n == 11:
         cc = W['c11']
         coach = card('coach'); dick = card('dick'); b0 = card('boy_a'); b1 = card('boy_b')
-        pose = talk(P('coach_neck', 'coach'), g, True); pose['bob'] = 0.02 * (1 + math.sin(g * 0.6)); pose['blink'] = cast15.blink_at(g, 96, 13)
+        u = smooth((g - 596) / 8.0); pose = blend(P('coach_neck', 'coach'), P('coach_point', 'coach'), u); pose['gaze'] = (0.7, 0.0); pose['yaw'] = 0.7
+        pose['head_roll'] = (1 - u) * (-26 + 6 * math.sin(g * 0.5)); pose['lean'] = pose.get('lean', 0) + (1 - u) * 6
+        pose = talk(pose, g, True); pose['bob'] = 0.02 * (1 + math.sin(g * 0.6)); pose['blink'] = cast15.blink_at(g, 96, 13)
         coach.show('coach', pose, cl, mark=tuple(cc['coach']), mirror=mir.get('coach', True), shadow=(1.9, .6))
         dp = alive(P('stand', 'dick'), g, 0.3, breath=0.02); dp['head_roll'] = 4 * math.sin(g * 0.13); dp['lean'] = 2 * math.sin(g * 0.09); dp['expr'] = 'worried'
         dick.show('dick', dp, cl, mark=tuple(cc['dick']), mirror=mir.get('dick', False), shadow=(1.5, .5))
@@ -161,45 +165,41 @@ def stage(g, plate):
         ph.show('photographer', pp, cl, mark=tuple(Mp), mirror=mir.get('photog', False), shadow=(1.7, .55))
         show_dick(dick, g, G_FLASH - 8, True, cl, F.bar_height_m(), M['landing'][2])
     elif n == 14:
-        rd = card('reader'); sp = card('spec'); Mr = Vector(M['reader'])
+        rd = card('reader'); Mr = Vector(M['reader'])
         pp = alive(P('sit_read', 'boy1'), g, 1.0, breath=0.0); pp['bob'] = cast15.laugh_bob(g, amp=0.025)
-        rd.show('boy1', pp, cl, anchor=('hip', tuple(Mr + Vector((0, 0, 0.55)))), shadow=None, mirror=mir.get('reader', False))
-        sq = alive(P('sit_laugh', 'crowd4'), g, 3.0, breath=0.0); sq['bob'] = cast15.laugh_bob(g + 4, amp=0.04)
-        sp.show('crowd4', sq, cl, anchor=('hip', tuple(Mr + Vector((W['spec_dx'], W['spec_dy'], 0.55)))), shadow=None, mirror=mir.get('spec', True))
+        r = rd.show('boy1', pp, cl, anchor=('hip', tuple(Mr + Vector((0, 0, 0.55)))), shadow=None, mirror=mir.get('reader', False))
+        c = r['world'](r['anchors']['paper_r']); fwd = Vector(cl) - c; fwd.z = 0; c = c + fwd.normalized() * 0.04
+        # the big newspaper (grey bars, large photo of the arched Dick) over the cast prop, hands at its edges
+        pc = PAPER; pc.show(c, r['yaw'], 2.03, 1.48)
     elif n == 15:
         coach = card('coach'); b0 = card('boy_a'); b1 = card('boy_b'); b2 = card('boy_c'); Mc = Vector(M['coach_bleacher'])
-        pose = alive(P('coach_point', 'coach'), g, 0.0, breath=0); pose['bob'] = cast15.laugh_bob(g); pose['blink'] = cast15.blink_at(g, 96, 13)
+        pose = P('coach_laugh', 'coach'); pose['mouth'] = 'smile'; pose['bob'] = cast15.laugh_bob(g)     # eyes squeezed, tears, mouth shut (quote over)
         coach.show('coach', pose, cl, mark=tuple(Mc), mirror=mir.get('coach', False), shadow=(1.9, .6))
         for cd, (key, cast, pn, sd) in ((b0, ('b0', 'boy1', 'point_laugh', 1.0)), (b1, ('b1', 'boy2', 'laugh', 2.0)), (b2, ('b2', 'boy3', 'point_laugh', 3.0))):
             pp = alive(P(pn, cast), g, sd, breath=0); pp['bob'] = cast15.laugh_bob(g + int(sd * 3))
             cd.show(cast, pp, cl, mark=tuple(W['c15'][key]), mirror=mir.get(key, False), shadow=(1.3, .4))
     elif n == 16:
-        dick = card('dick'); boy = card('boy_peg'); boy2 = card('boy_b')
-        gt1 = RANGES[16][0] + 4; gt2 = 916
-        if plate == 'GOLDEN':
-            show_dick(dick, g, gt1, True, cl, W['h'], M['landing'][2])
-        else:
-            show_dick(dick, g, gt2, True, cl, W['h'], M['landing'][2])
-        # the boy raises the peg after each flop
-        rz = W['peg_raise']
-        raising = rz[0] <= g <= rz[1]
-        pp = P('official_raise' if raising else 'cheer', 'boy3') if raising else P('stand', 'boy3')
-        pp = alive(pp, g, 5.0, breath=0.02)
+        dick = card('dick'); boy = card('boy_peg')
+        gt = GT1 if plate == 'GOLDEN' else GT2
+        show_dick(dick, g, gt, True, cl, bar_h(gt + 8, plate), M['landing'][2])
+        r0, r1 = (886, 906) if plate == 'GOLDEN' else (930, 940)       # the boy puts the bar up one notch after each flop: arms up at the peg while it rises
+        pn = 'official_raise' if r0 - 2 <= g <= r1 + 2 else 'stand'
+        pp = alive(P(pn, 'boy3'), g, 5.0, breath=0.02); pp['expr'] = 'determined' if pn == 'official_raise' else 'happy'
+        if pn == 'official_raise':                                       # reaching up to slide the peg: the hand rides up with the bar
+            pp = P('stand', 'boy3'); pp = alive(pp, g, 5.0, breath=0.02); pp['expr'] = 'determined'
+            up = smooth((g - r0) / float(r1 - r0)) if g >= r0 else 0.0
+            pp['arm_r'] = dict(hand=(0.42, -0.45 - 0.55 * up + 0.06 * math.sin(g * 0.8)), bend=-0.4, stretch=1.0, shape='ball'); pp['lean'] = 3 * up
         boy.show('boy3', pp, cl, mark=(W['peg_xy'][0], W['peg_xy'][1], 0.0), mirror=mir.get('peg', False), shadow=(1.3, .4))
-        pb = alive(P('sit_cross', 'boy2'), g, 6.0, breath=0.0) if False else alive(P('stand', 'boy2'), g, 6.0)
-        boy2.show('boy2', pb, cl, mark=W['boy2_xy'], mirror=mir.get('b2', False), shadow=(1.3, .4))
 
+GT1 = RANGES[16][0] + 4; GT2 = 916
+def bar_h(g, plate):
+    """bar height in metres: the boy raises the peg after each flop (GOLDEN 1.72 -> 1.98 at g 886-906; DAY holds 1.98, then 2.14 at g 930-939)"""
+    if g < RANGES[16][0]: return 1.72
+    if plate == 'GOLDEN': return 1.72 + 0.26 * smooth((g - 886) / 20.0)
+    return 1.98 + 0.16 * smooth((g - 930) / 9.0)
 def hook_keys(g0, g1, plate):
     """bar height, flash, spray: key on EVERY frame of the range"""
-    gt1 = RANGES[16][0] + 4; gt2 = 916
-    for g in range(g0, g1 + 1):
-        h = 1.72
-        if plate == 'GOLDEN':
-            rz = (gt1 + 20, gt1 + 30); h = 1.72 + 0.10 * smooth((g - rz[0]) / float(rz[1] - rz[0]))
-        else:
-            rz = (gt2 + 4, gt2 + 14); h = 1.82 + 0.10 * smooth((g - rz[0]) / float(rz[1] - rz[0]))
-        if 483 <= g < RANGES[16][0]: h = 1.72
-        F.set_bar_height(h, g, 'both', 'LINEAR')
+    for g in range(g0, g1 + 1): F.set_bar_height(bar_h(g, plate), g, 'both', 'LINEAR')
     W['hfn'] = None
 
 def add_sway(cam, sc, amp=0.12, rot=0.4):
@@ -276,7 +276,7 @@ def finish_setup(plate):
     # shot 11: camera-relative: coach large at the right edge (over-shoulder), Dick mid, boys behind
     at(11); cl = Vector(cam_loc()); fw = cam.matrix_world.to_quaternion() @ Vector((0, 0, -1)); fw.z = 0; fw.normalize(); rt = Vector((fw.y, -fw.x, 0))
     def rel(f, r): p = cl + fw * f * U + rt * r * U; p.z = M['dick_mark'][2]; return tuple(p)
-    W['c11'] = dict(coach=rel(2.9, 0.98), dick=rel(4.3, -0.3), b0=rel(5.6, -1.5), b1=rel(6.0, 0.9))
+    W['c11'] = dict(coach=rel(2.8, 0.78), dick=rel(6.0, -0.5), b0=rel(6.8, -1.6), b1=rel(7.2, 0.7))
     # shot 14 spectator beside the reader
     at(13); cl = Vector(cam_loc()); fw = cam.matrix_world.to_quaternion() @ Vector((0, 0, -1)); fw.z = 0; fw.normalize(); rt = Vector((fw.y, -fw.x, 0))
     p = cl + fw * 3.2 * U + rt * -1.0 * U; p.z = M['photographer'][2]; W['photog'] = p
@@ -284,13 +284,15 @@ def finish_setup(plate):
     # shot 15 boys
     W['c15'] = {k: mD(*v) for k, v in dict(b0=(9.8, 1.0, 0.0), b1=(10.7, 0.8, 0.0), b2=(10.2, 4.3, 0.0)).items()}
     for k in W['c15']: W['c15'][k].z = 0.0
-    W['peg_xy'] = (4.6, 9.0); W['boy2_xy'] = (3.2, 5.0, 0.0); W['peg_raise'] = (RANGES[16][0] + 4 + 20, RANGES[16][0] + 4 + 30)
+    W['peg_xy'] = (-3.7, 9.3); W['boy2_xy'] = (3.2, 5.0, 0.0); W['peg_raise'] = (RANGES[16][0] + 4 + 20, RANGES[16][0] + 4 + 30)
     # facing toward targets, decided at each shot's first frame
     at(11); W['mirror'].update({'coach': screen(W['c11']['dick'])[0] < screen(W['c11']['coach'])[0], 'dick': False, 'b0': False, 'b1': True})
     at(13); W['mirror']['photog'] = screen(M['takeoff'])[0] < screen(M['photographer'])[0]
     at(14); W['mirror']['reader'] = False; W['mirror']['spec'] = True
     at(15); W['mirror'].update({'coach': True, 'b0': True, 'b1': False, 'b2': True})
     at(16); W['mirror'].update({'peg': False, 'b2': False})
+    global PAPER
+    PAPER = c15.ImgCard('paper', c15.make_paper_png(os.path.join(c15.SPR, 'paper_%d.png' % os.getpid())))
     W['h'] = 1.72
     return
 
@@ -314,7 +316,8 @@ def render_frames(plate, gs, outdir, quality='final', fixed_scale=None):
         sc.frame_set(g); bpy.context.view_layer.update(); n = shot_of(g)
         for k, objs in W['fg'].items():
             for o in objs: o.hide_render = (k != n)
-        W['h'] = F.bar_height_m() if False else W['h']
+        for o in bpy.data.objects:
+            if o.name.endswith('|gp1'): o.hide_render = (n == 11)
         stage(g, plate)
         bpy.context.view_layer.update()
         wall, cpu = F.T.render(path); log.append((g, wall, cpu)); print('g %d shot %d  %.1f s wall %.1f cpu' % (g, n, wall, cpu), flush=True)
