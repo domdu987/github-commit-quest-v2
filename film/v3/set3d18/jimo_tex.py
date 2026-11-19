@@ -12,7 +12,7 @@ from PIL import Image, ImageDraw, ImageFilter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEX = os.path.join(HERE, 'tex_jimo')
-TEX_V = 'j12'
+TEX_V = 'j13'
 TS = {}                                         # name -> (w_D, h_D)
 MOON_AZ, MOON_EL = 58.0, 20.0                  # the moon in the dome (degrees)
 
@@ -46,40 +46,7 @@ def wd(d, fn, x, y, W, H, m):
             xx, yy = x + dx, y + dy
             if -m <= xx <= W + m and -m <= yy <= H + m: fn(xx, yy)
 
-# ----------------------------------------------------------------------------- rammed earth
-def rammed(path, W=8.0, H=4.0, ppd=80, seed=5):
-    w, h = int(W * ppd), int(H * ppd); rs = np.random.RandomState(seed); r = random.Random(seed)
-    n = 7; yy = np.arange(h, dtype='float32')[:, None] * np.ones((1, w), 'float32'); xx = np.ones((h, 1), 'float32') * np.arange(w, dtype='float32')[None, :]
-    wob = (vn(h, w, (h, 120), seed + 1) - 0.5) * 3.6 + (vn(h, w, (h, 40), seed + 2) - 0.5) * 1.2       # wavy layer joints (per x)
-    yw = yy + wob[0:1, :] * 1.0                                                                      # constant over y
-    layer = np.floor(yw / (h / n)).astype(int) % n; fr = (yw / (h / n)) % 1.0
-    pal = [hexf(c) for c in ('#d08440', '#bc7038', '#dc9448', '#c47a3e', '#e09c52', '#b06a36', '#d48a44')]
-    jit = rs.uniform(0.92, 1.06, n)[:, None, None] * np.ones((1, 1, 3), 'float32')
-    img = np.zeros((h, w, 3), 'float32')
-    for i in range(n): img[layer == i] = (pal[i] * jit[i])
-    img *= (0.82 + 0.34 * fr)[..., None]                                                              # darker at the bottom of every layer, pale tamped top
-    img *= (0.78 + 0.5 * fbm(h, w, 50, seed + 3, 4))[..., None]                                       # soft mottling
-    img += (fbm(h, w, 18, seed + 4, 3)[..., None] - 0.5) * 0.10
-    j = np.exp(-((fr - 0.0) / 0.035) ** 2) + np.exp(-((fr - 1.0) / 0.035) ** 2)
-    img *= (1 - 0.22 * j)[..., None]                                                                  # dark joint
-    img += (np.exp(-((fr - 0.1) / 0.05) ** 2) * 0.04)[..., None] * hexf('#fff0d0')                    # highlight lip under the joint
-    im = Image.fromarray((np.clip(img, 0, 1) * 255).astype('uint8'), 'RGB'); d = ImageDraw.Draw(im, 'RGBA')
-    for _ in range(int(W * H * 14)):                                                                  # straw / grit strokes along the layer
-        x, y = r.uniform(0, w), r.uniform(0, h); L = r.uniform(6, 20); col = r.choice(((70, 40, 22, 120), (240, 210, 150, 110), (90, 55, 30, 110)))
-        wd(d, lambda a, b: d.line([(a, b), (a + L, b + r.uniform(-1, 1))], fill=col, width=1), x, y, w, h, 24)
-    for _ in range(int(W * H * 30)):
-        x, y = r.uniform(0, w), r.uniform(0, h); rr = r.uniform(0.8, 2.2); col = r.choice(((60, 36, 20, 150), (230, 190, 130, 140), (110, 80, 50, 140)))
-        wd(d, lambda a, b: d.ellipse([a - rr, b - rr * 0.7, a + rr, b + rr * 0.7], fill=col), x, y, w, h, 6)
-    for _ in range(int(W * 5)):                                                                      # hairline cracks running down across the layers
-        x, y = r.uniform(0, w), r.uniform(0, h); pts = [(x, y)]
-        for q in range(r.randint(3, 7)): x += r.uniform(-4, 4); y += r.uniform(8, 20); pts.append((x, y))
-        wd(d, lambda a, b, pts=pts: d.line([(p[0] - pts[0][0] + a, p[1] - pts[0][1] + b) for p in pts], fill=(70, 38, 20, 150), width=1), x - sum(0 for _ in pts), y, w, h, 120) if False else d.line(pts, fill=(70, 38, 20, 140), width=1)
-    for k in range(int(W / 2.5)):                                                                    # form-board seams: short vertical steps at layer joints
-        x = (k + 0.5) * w / int(W / 2.5) + r.uniform(-8, 8)
-        for i in range(n):
-            if r.random() < 0.8: wd(d, lambda a, b: d.line([(a, b), (a + r.uniform(-1.5, 1.5), b + h / n)], fill=(60, 34, 20, 130), width=2), x, i * h / n, w, h, 6)
-    im.save(path)
-
+# ----------------------------------------------------------------------------- rammed earth (below)
 def ground(path, W=8.0, H=8.0, ppd=48, seed=9, base='#9a7248', ruts=False):
     w, h = int(W * ppd), int(H * ppd); r = random.Random(seed)
     b = hexf(base); img = np.ones((h, w, 3), 'float32') * b
@@ -192,48 +159,120 @@ def pool(path, s=256):
     y, x = np.mgrid[0:s, 0:s].astype('float32'); r = np.hypot(x - s / 2 + 0.5, y - s / 2 + 0.5) / (s / 2)
     save(np.ones((s, s, 3), 'float32'), path, np.clip(np.exp(-(r / 0.55) ** 2.4) * (1 - r ** 6), 0, 1))
 
+def rammed(path, W=8.0, H=4.0, ppd=80, seed=5):
+    """Ochre loess rammed earth: courses 0.57 D tall (jittered ochre), dark tamping joints #8e6438 0.12 D tall, wash stains, erosion runnels,
+    repaired patches, straw/grit strokes, hairline cracks, form-board seams.  Base #b8874e (H 32 S 0.58)."""
+    w, h = int(W * ppd), int(H * ppd); rs = np.random.RandomState(seed); r = random.Random(seed)
+    n = 7; yy = np.arange(h, dtype='float32')[:, None] * np.ones((1, w), 'float32')
+    wob = (vn(h, w, (h, 120), seed + 1) - 0.5) * 3.2 + (vn(h, w, (h, 40), seed + 2) - 0.5) * 1.0
+    yw = yy + wob[0:1, :]; ch = h / n
+    layer = np.floor(yw / ch).astype(int) % n; fr = (yw / ch) % 1.0
+    pal = [hexf(c) for c in ('#b8874e', '#c0904f', '#ae7e48', '#b98a52', '#c4944f', '#a97945', '#bd8c4c')]
+    img = np.zeros((h, w, 3), 'float32')
+    for i in range(n): img[layer == i] = pal[i] * rs.uniform(0.95, 1.05)
+    img *= (0.88 + 0.22 * fr)[..., None]                                                               # darker under each course, pale tamped top
+    img *= (0.80 + 0.40 * fbm(h, w, 50, seed + 3, 4))[..., None]                                       # soft mottling
+    img += (fbm(h, w, 18, seed + 4, 3)[..., None] - 0.5) * 0.08
+    jw = 0.12 * ppd / ch                                                                               # joint band 0.12 D tall (fraction of a course)
+    j = np.clip(1 - np.minimum(fr, 1 - fr) / (jw * 0.5 + 1e-6), 0, 1) ** 0.6                           # 1 at the joint centre
+    img = lerp(img, np.ones_like(img) * hexf('#8e6438') * (0.9 + 0.2 * fbm(h, w, 20, seed + 6, 2))[..., None], (j * 0.85)[..., None])
+    img += (np.exp(-((fr - 0.12) / 0.05) ** 2) * 0.05)[..., None] * hexf('#fff0c8')                    # lit lip just above the joint
+    # wash stains: tall soft vertical streaks (rain wash, salt) and big darker blotches
+    st = fbm(h, w, (h, 10), seed + 8, 3); st2 = fbm(h, w, (h // 2, 24), seed + 9, 3)
+    img *= (1 - np.clip((st - 0.55) * 2.2, 0, 1) * 0.30)[..., None]
+    img = lerp(img, img * hexf('#9a7a62') * 1.18, (np.clip((st2 - 0.60) * 3.0, 0, 1) * 0.55)[..., None])
+    img = lerp(img, img * 1.12 * hexf('#ffe2b0'), (np.clip((0.38 - st2) * 3.0, 0, 1) * 0.35)[..., None])
+    # erosion runnels: thin dark vertical lines widening downward and fading
+    im = Image.fromarray((np.clip(img, 0, 1) * 255).astype('uint8'), 'RGB'); d = ImageDraw.Draw(im, 'RGBA')
+    for _ in range(int(W * 3)):
+        x = r.uniform(0, w); y0 = r.uniform(0, h * 0.6); L = r.uniform(h * 0.15, h * 0.55); k = 14
+        for q in range(k):
+            t = q / k; xx = x + math.sin(t * 5 + x) * 2 + t * r.uniform(-2, 2) * 0.3
+            d.line([(xx, y0 + L * t), (xx + 0.5, y0 + L * (t + 1.0 / k))], fill=(80, 52, 28, int(150 * (1 - t) ** 0.7)), width=1 + int(2.2 * t))
+    for _ in range(3):                                                                                # repaired patches: slightly different earth, dark rim
+        x, y = r.uniform(30, w - 100), r.uniform(20, h - 60); pw, ph = r.uniform(40, 90), r.uniform(20, 40)
+        d.rectangle([x, y, x + pw, y + ph], fill=r.choice(((205, 160, 100, 120), (150, 110, 70, 120))), outline=(95, 62, 34, 170), width=2)
+        for k in range(5): d.line([(x + k * pw / 5, y), (x + k * pw / 5 + 2, y + ph)], fill=(95, 62, 34, 90), width=1)
+    for _ in range(int(W * H * 14)):                                                                  # straw / grit strokes
+        x, y = r.uniform(0, w), r.uniform(0, h); L = r.uniform(6, 20); col = r.choice(((100, 62, 30, 110), (230, 190, 120, 105), (120, 80, 40, 100)))
+        wd(d, lambda a, b: d.line([(a, b), (a + L, b + r.uniform(-1, 1))], fill=col, width=1), x, y, w, h, 24)
+    for _ in range(int(W * H * 30)):
+        x, y = r.uniform(0, w), r.uniform(0, h); rr = r.uniform(0.8, 2.2); col = r.choice(((90, 56, 28, 140), (225, 185, 120, 130), (130, 94, 56, 130)))
+        wd(d, lambda a, b: d.ellipse([a - rr, b - rr * 0.7, a + rr, b + rr * 0.7], fill=col), x, y, w, h, 6)
+    for _ in range(int(W * 5)):
+        x, y = r.uniform(0, w), r.uniform(0, h); pts = [(x, y)]
+        for q in range(r.randint(3, 7)): x += r.uniform(-4, 4); y += r.uniform(8, 20); pts.append((x, y))
+        d.line(pts, fill=(80, 48, 24, 150), width=1)
+    for k in range(int(W / 2.5)):
+        x = (k + 0.5) * w / int(W / 2.5) + r.uniform(-8, 8)
+        for i in range(n):
+            if r.random() < 0.8: wd(d, lambda a, b: d.line([(a, b), (a + r.uniform(-1.5, 1.5), b + h / n)], fill=(80, 52, 28, 130), width=2), x, i * h / n, w, h, 6)
+    im.save(path)
+
+def rain(path, w=256, h=512, seed=3):
+    """Dark rain streaks hanging under a parapet / eaves: alpha card, dark blue-violet, v = 0 at the top (strongest)."""
+    rs = np.random.RandomState(seed); a = np.zeros((h, w), 'float32'); yv = (np.arange(h, dtype='float32') / h)[:, None]
+    for k in range(34):
+        x = rs.randint(0, w); ww = rs.uniform(2, 9); L = rs.uniform(0.25, 1.0); s = rs.uniform(0.3, 0.9)
+        xs = np.arange(w, dtype='float32')[None, :]; col = np.exp(-((xs - x) / ww) ** 2) * np.clip(1 - yv / L, 0, 1) ** 1.4 * s
+        a = np.maximum(a, col)
+    a *= (0.6 + 0.8 * fbm(h, w, (30, 8), seed, 2)); img = np.ones((h, w, 3), 'float32') * hexf('#1c1840'); save(img, path, np.clip(a * 0.85, 0, 1))
+
+# ----------------------------------------------------------------------------- moon
 def moon(path, s=512):
     rs = np.random.RandomState(71); y, x = np.mgrid[0:s, 0:s].astype('float32'); u = (x - s / 2 + 0.5) / (s / 2); v = (y - s / 2 + 0.5) / (s / 2); r = np.hypot(u, v)
-    img = np.ones((s, s, 3), 'float32') * hexf('#fff0b8'); img = lerp(img, hexf('#ffd88a'), np.clip(r, 0, 1)[..., None] ** 2 * 0.7)
-    for k in range(9):                                                                                  # soft maria and craters
+    img = np.ones((s, s, 3), 'float32') * hexf('#f2f6ff'); img = lerp(img, hexf('#c8d8f8'), np.clip(r, 0, 1)[..., None] ** 2 * 0.6)
+    for k in range(9):
         cx, cy, rr = rs.uniform(-0.55, 0.55), rs.uniform(-0.55, 0.55), rs.uniform(0.1, 0.26)
-        if math.hypot(cx, cy) + rr < 0.95: img = lerp(img, hexf('#e8c47a'), (np.exp(-(np.hypot(u - cx, v - cy) / rr) ** 3) * 0.55)[..., None])
+        if math.hypot(cx, cy) + rr < 0.95: img = lerp(img, hexf('#aab8e0'), (np.exp(-(np.hypot(u - cx, v - cy) / rr) ** 3) * 0.5)[..., None])
     a = np.clip((1 - r) * s / 2 / 1.5, 0, 1); save(img, path, a)
 
-# ----------------------------------------------------------------------------- silk with gold five-colour dragons
+# ----------------------------------------------------------------------------- red silk with large painted five-colour dragons (the fire ox's coat)
 def silk(path, W=4.0, H=2.0, ppd=128, seed=81):
-    w, h = int(W * ppd), int(H * ppd); S = 2; im = Image.new('RGB', (w * S, h * S), (176, 22, 30)); d = ImageDraw.Draw(im, 'RGBA'); r = random.Random(seed)
-    A = np.asarray(im, 'float32') / 255; ww = (np.sin(np.arange(w * S)[None, :] * 0.9) * np.sin(np.arange(h * S)[:, None] * 0.9)) * 0.02
-    im = Image.fromarray((np.clip((A * 255 + ww[..., None] * 255), 0, 255)).astype('uint8'), 'RGB'); d = ImageDraw.Draw(im, 'RGBA')
-    gold = (246, 196, 74, 255); gold_d = (160, 100, 20, 255); five = [(36, 120, 200), (46, 168, 96), (244, 214, 70), (245, 245, 235), (30, 30, 40)]
-    bw = int(0.22 * ppd * S)                                                                             # gold border bands (top and bottom)
-    for y0 in (0, h * S - bw):
-        d.rectangle([0, y0, w * S, y0 + bw], fill=(120, 14, 24, 255))
-        for k in range(0, w * S, 14 * S): d.rectangle([k, y0 + bw * 0.3, k + 8 * S, y0 + bw * 0.7], fill=five[(k // (14 * S)) % 5] + (255,))
-        d.line([(0, y0 + (bw if y0 == 0 else 0)), (w * S, y0 + (bw if y0 == 0 else 0))], fill=gold, width=3 * S)
-    # the dragon: a thick sinuous body with scales, claws, a horned head, five-colour clouds around it
-    cy = h * S / 2; amp = 0.30 * h * S; n = 160
-    pts = [(i / n * w * S, cy + amp * math.sin(i / n * 2 * math.pi * 2.0 + 0.5) * (0.9 + 0.1 * math.sin(i * 0.3))) for i in range(n + 1)]
+    """Crimson silk #a8142a..#c42a2a; u 0..1 along the ox, v 0..1 from the spine (0) down to the hem (1). Two large readable motifs: a coiling gold
+    dragon (green-teal mane, white claws) on the flank and a medallion of clouds near the shoulder; gold lined hem with a scalloped scroll border."""
+    w, h = int(W * ppd), int(H * ppd); S = 2; r = random.Random(seed)
+    A = np.ones((h * S, w * S, 3), 'float32') * hexf('#b8182a'); yy = np.linspace(0, 1, h * S)[:, None]
+    A *= (0.94 + 0.12 * fbm(h * S, w * S, 60, seed, 3))[..., None]; A = lerp(A, A * hexf('#d83a30'), (np.sin(np.arange(w * S)[None, :] * 0.5) * 0.5 + 0.5)[..., None] * 0.05)
+    im = Image.fromarray((np.clip(A, 0, 1) * 255).astype('uint8'), 'RGB'); d = ImageDraw.Draw(im, 'RGBA')
+    gold = (224, 176, 74, 255); gold_d = (150, 96, 28, 255); teal = (62, 143, 122, 255); cream = (240, 230, 208, 255); blue = (44, 90, 160, 255)
+    W2, H2 = w * S, h * S
+    # hem: gold line + scallops
+    hy = int(H2 * 0.90)
+    d.rectangle([0, hy, W2, H2], fill=(122, 14, 30, 255)); d.line([(0, hy), (W2, hy)], fill=gold, width=4 * S)
+    sc = W2 // 26
+    for k in range(26): d.pieslice([k * sc, hy - sc // 3, (k + 1) * sc, hy + sc // 1.5], 0, 180, fill=gold if k % 2 else teal)
+    # big dragon: S-curve along the flank, thick, scaled
+    n = 200; pts = []
+    for i in range(n + 1):
+        t = i / n; x = (0.10 + 0.80 * t) * W2; y = H2 * (0.42 + 0.20 * math.sin(t * 2 * math.pi * 1.25 + 0.4) + 0.04 * math.sin(t * 17))
+        pts.append((x, y))
     for i in range(n):
-        t = i / n; th = (0.085 + 0.05 * math.sin(t * 6.28 * 2)) * h * S
-        d.line([pts[i], pts[i + 1]], fill=gold_d, width=int(th + 6 * S)); d.line([pts[i], pts[i + 1]], fill=gold, width=int(th))
-    for i in range(0, n, 4):                                                                              # scales (arcs) in the five colours
-        x, y = pts[i]; rr = 0.05 * h * S; d.arc([x - rr, y - rr, x + rr, y + rr], 200, 340, fill=five[(i // 4) % 5] + (255,), width=int(2.5 * S))
-    for i in range(6, n, 24):                                                                             # claws / spines
-        x, y = pts[i]; sgn = 1 if (i // 24) % 2 == 0 else -1
-        d.polygon([(x - 6 * S, y), (x + 6 * S, y), (x, y + sgn * 0.17 * h * S)], fill=gold, outline=gold_d)
-    hx, hy = pts[n // 5]; hr = 0.13 * h * S                                                              # head
-    d.ellipse([hx - hr, hy - hr * 0.8, hx + hr, hy + hr * 0.8], fill=gold, outline=gold_d, width=3 * S); d.ellipse([hx - hr * 0.1, hy - hr * 0.35, hx + hr * 0.25, hy - hr * 0.05], fill=(20, 20, 30, 255))
-    d.polygon([(hx - hr * 0.1, hy - hr * 0.7), (hx - hr * 0.5, hy - hr * 1.5), (hx + hr * 0.2, hy - hr * 0.8)], fill=gold_d)
-    d.polygon([(hx + hr * 0.2, hy - hr * 0.7), (hx + hr * 0.4, hy - hr * 1.5), (hx + hr * 0.7, hy - hr * 0.6)], fill=gold_d)
-    for k in range(int(W * 3)):                                                                           # five-colour scroll clouds
-        x, y = r.uniform(0, w * S), r.choice((0.22, 0.78)) * h * S + r.uniform(-0.06, 0.06) * h * S; c = five[k % 5]; rr = r.uniform(0.04, 0.07) * h * S
-        for q in range(3): d.arc([x - rr * (1 - 0.28 * q), y - rr * (1 - 0.28 * q), x + rr * (1 - 0.28 * q), y + rr * (1 - 0.28 * q)], 20 + 90 * q, 300 + 90 * q, fill=c + (255,), width=int(2.6 * S))
-        d.line([(x - rr * 1.6, y + rr), (x + rr * 1.2, y + rr)], fill=gold, width=2 * S)
+        t = i / n; th = (0.035 + 0.075 * math.sin(math.pi * min(1, t * 1.25 + 0.1)) ** 0.8 * (1 - 0.45 * t)) * H2
+        d.line([pts[i], pts[i + 1]], fill=gold_d, width=int(th + 8 * S)); d.line([pts[i], pts[i + 1]], fill=gold, width=int(th))
+    for i in range(0, n, 3):
+        x, y = pts[i]; rr = (0.035 + 0.04 * math.sin(math.pi * min(1, i / n * 1.25 + 0.1))) * H2
+        d.arc([x - rr, y - rr, x + rr, y + rr], 200, 340, fill=[teal, cream, blue][(i // 3) % 3], width=3 * S)
+    for i in range(10, n - 5, 22):                                                                   # mane / dorsal flames (teal) and claws (cream)
+        x, y = pts[i]; sg = -1 if (i // 22) % 2 == 0 else 1; ln = 0.14 * H2
+        d.polygon([(x - 8 * S, y), (x + 8 * S, y), (x + sg * 4 * S, y + sg * ln)], fill=teal if sg < 0 else cream, outline=gold_d)
+    hx, hy2 = pts[int(n * 0.12)]; hr = 0.16 * H2                                                       # head (left end), horns, whiskers, eye, jaw
+    d.ellipse([hx - hr * 1.3, hy2 - hr * 0.8, hx + hr * 0.9, hy2 + hr * 0.8], fill=gold, outline=gold_d, width=4 * S)
+    d.polygon([(hx - hr * 1.3, hy2), (hx - hr * 2.0, hy2 + hr * 0.2), (hx - hr * 1.4, hy2 + hr * 0.6)], fill=gold, outline=gold_d)
+    d.ellipse([hx - hr * 0.5, hy2 - hr * 0.45, hx - hr * 0.1, hy2 - hr * 0.1], fill=(20, 18, 30, 255)); d.ellipse([hx - hr * 0.4, hy2 - hr * 0.4, hx - hr * 0.25, hy2 - hr * 0.25], fill=cream)
+    for sg in (-1, 1): d.polygon([(hx + hr * 0.1, hy2 - hr * 0.6), (hx + hr * 0.0 + sg * hr * 0.3, hy2 - hr * 1.7), (hx + hr * 0.5, hy2 - hr * 0.7)], fill=teal, outline=gold_d)
+    for sg in (-1, 1): d.line([(hx - hr * 1.5, hy2 + sg * hr * 0.15), (hx - hr * 2.6, hy2 + sg * hr * 0.9), (hx - hr * 3.0, hy2 + sg * hr * 0.3)], fill=cream, width=3 * S)
+    # five-colour scroll clouds (spirals) filling the field, 2 sizes
+    five = [blue, teal, gold, cream, (30, 30, 44, 255)]
+    for (cx, cy, rr) in ((0.20, 0.16, 0.09), (0.50, 0.12, 0.08), (0.80, 0.16, 0.09), (0.32, 0.80, 0.09), (0.64, 0.80, 0.10), (0.90, 0.75, 0.07), (0.07, 0.75, 0.07)):
+        x, y, R = cx * W2, cy * H2, rr * H2
+        for q in range(4): d.arc([x - R * (1 - 0.24 * q), y - R * (1 - 0.24 * q), x + R * (1 - 0.24 * q), y + R * (1 - 0.24 * q)], 20 + 70 * q, 320 + 70 * q, fill=five[q % 5], width=int(3.4 * S))
+        d.line([(x - R * 1.7, y + R * 0.9), (x + R * 1.3, y + R * 0.9)], fill=gold, width=3 * S)
     im.resize((w, h), Image.LANCZOS).save(path)
 
 # ----------------------------------------------------------------------------- night sky dome
 def sky(path, W=6144, maz=58.0, mel=20.0):
+    """Bible 5.4 night: zenith #1e2e7b -> 60 % #1748ae -> horizon #204c8f, a low violet band under the horizon, cool clouds #8fa0d8, blue moon halo."""
     H = int(W * 105 / 360); rs = np.random.RandomState(7)
     el = 90.0 - (np.arange(H, dtype='float32') + 0.5) / H * 105.0; az = (np.arange(W, dtype='float32') + 0.5) / W * 360.0
     EL = el[:, None] * np.ones((1, W), 'float32'); AZ = np.ones((H, 1), 'float32') * az[None, :]
@@ -241,34 +280,31 @@ def sky(path, W=6144, maz=58.0, mel=20.0):
         e = np.clip(el, -15, 90); out = np.zeros((H, 3), 'float32')
         for c in range(3): out[:, c] = np.interp(e, [s[0] for s in stops], [hexf(s[1])[c] for s in stops])
         return np.repeat(out[:, None, :], W, 1)
-    img = grad([(-15, '#44308f'), (0, '#7456b2'), (3, '#7a5cb8'), (9, '#5a449e'), (22, '#3a2a90'), (45, '#281a78'), (90, '#1e1466')])
+    img = grad([(-15, '#3c3a94'), (-4, '#33449a'), (0, '#204c8f'), (12, '#1a4ca0'), (36, '#1748ae'), (62, '#1b3a96'), (90, '#1e2e7b')])
     def ang(a0, e0):
         da = (AZ - a0 + 180) % 360 - 180; return np.hypot(da * np.cos(np.radians(e0)), EL - e0)
     dm = ang(maz, mel)
-    img += (np.exp(-(dm / 30) ** 2) * 0.28)[..., None] * hexf('#8a78c8') + (np.exp(-(dm / 9) ** 2) * 0.35)[..., None] * hexf('#ffd890')   # moon glow on the sky
-    wa = np.exp(-(((AZ - 90 + 180) % 360 - 180) / 70) ** 2) * np.exp(-((EL - 1.5) / 5.5) ** 2)                                           # warm glow of the lit city
-    img = lerp(img, hexf('#e08a5a') * 0.85, (wa * 0.55)[..., None])
-    # thin cartoon cloud bands: stretched noise thresholded to crisp edges, lit gold/rose on the moon side, violet-blue elsewhere
+    img += (np.exp(-(dm / 26) ** 2) * 0.22)[..., None] * hexf('#3a5ac8') + (np.exp(-(dm / 8) ** 2) * 0.30)[..., None] * hexf('#8ab0ff')      # blue moon halo
+    wa = np.exp(-(((AZ - 90 + 180) % 360 - 180) / 60) ** 2) * np.exp(-((EL - 1.0) / 4.0) ** 2)                                          # faint warm city glow at the horizon
+    img = lerp(img, hexf('#c8805a') * 0.8, (wa * 0.22)[..., None])
     for k, (e0, e1, thr, seed) in enumerate(((5, 9.5, 0.50, 1), (11.5, 16, 0.54, 2), (20, 25, 0.56, 3), (30, 34, 0.60, 4), (40, 43, 0.62, 5))):
         n = fbm(H, W, (14 + 5 * k, 520), seed * 11, 3); prof = np.exp(-(((EL - (e0 + e1) / 2) / ((e1 - e0) / 2)) ** 4))
         m = np.clip((n - thr + 0.12 * (prof - 0.5)) * 18, 0, 1) * prof
-        edge = np.clip(m - np.roll(m, 3, 0), 0, 1)                                                                                         # lit lower rim
-        col = lerp(np.ones((H, W, 3), 'float32') * hexf('#5a54b4'), hexf('#f0b890'), np.clip(np.exp(-(dm / 38) ** 2) * 1.1, 0, 1)[..., None])
-        img = lerp(img, col, (m * 0.7)[..., None]); img = lerp(img, hexf('#ffe2b0'), (np.clip(edge * 2.6, 0, 1) * np.exp(-(dm / 55) ** 2))[..., None] * 0.7)
-    # stars
+        edge = np.clip(m - np.roll(m, 3, 0), 0, 1)
+        col = lerp(np.ones((H, W, 3), 'float32') * hexf('#4a62b8'), hexf('#8fa0d8'), np.clip(0.55 + np.exp(-(dm / 40) ** 2), 0, 1)[..., None])
+        img = lerp(img, col, (m * 0.62)[..., None]); img = lerp(img, hexf('#e0a880'), (np.clip(edge * 2.6, 0, 1) * wa)[..., None] * 0.5)
+        img = lerp(img, hexf('#b8c8f4'), (np.clip(edge * 2.6, 0, 1) * np.exp(-(dm / 50) ** 2))[..., None] * 0.55)
     N = 3800; ys = rs.rand(N) * H; xs = rs.rand(N) * W; bri = rs.pareto(1.6, N) * 0.22 + 0.2; st = np.zeros((H, W, 3), 'float32')
     tints = [hexf('#ffffff'), hexf('#d6e4ff'), hexf('#fff0d0'), hexf('#ffd6b8')]
     for y_, x_, b_ in zip(ys, xs, bri):
         e_ = 90 - y_ / H * 105
         if e_ < 5: continue
-        vis = min(1.0, (e_ - 5) / 14) * np.exp(-(((x_ / W * 360 - maz + 180) % 360 - 180) ** 2 + (e_ - mel) ** 2) / 900.0 * 0.0)
-        b_ = min(b_, 3.0) * vis; rad = 0.9 + 0.5 * min(b_, 2.0); t = tints[int(x_) % 4]
+        vis = min(1.0, (e_ - 5) / 14); b_ = min(b_, 3.0) * vis; rad = 0.9 + 0.5 * min(b_, 2.0); t = tints[int(x_) % 4]
         x0, x1 = int(x_ - 3 * rad) - 1, int(x_ + 3 * rad) + 2; y0, y1 = max(0, int(y_ - 3 * rad) - 1), min(H, int(y_ + 3 * rad) + 2)
         if x0 < 0 or x1 > W: continue
         gx = np.arange(x0, x1) + 0.5 - x_; gy = np.arange(y0, y1) + 0.5 - y_
         st[y0:y1, x0:x1] += (np.exp(-(gy[:, None] ** 2 + gx[None, :] ** 2) / (2 * (rad * 0.5) ** 2)) * b_)[..., None] * t
-    dim = np.clip(1 - np.exp(-(dm / 22) ** 2) * 0.95, 0, 1)[..., None]
-    img += st * dim
+    img += st * np.clip(1 - np.exp(-(dm / 22) ** 2) * 0.95, 0, 1)[..., None]
     save(np.clip(img, 0, 1), path)
 
 # ----------------------------------------------------------------------------- registry
@@ -283,7 +319,7 @@ def jobs():
     add('canvas', canvas, (4.0, 4.0)); add('canvas_red', canvas, (4.0, 4.0), seed=33, base='#a0402e', stitch='#e8c080'); add('hide', canvas, (4.0, 4.0), seed=35, base='#a07048', hide=True)
     add('planks', planks, (4.0, 4.0)); add('planks_d', planks, (4.0, 4.0), seed=43, base='#5a3a24')
     add('water', water, (16.0, 16.0)); add('streak', streak, (1.0, 8.0)); add('glow', glow, (1.0, 1.0)); add('pool', pool, (1.0, 1.0)); add('moon', moon, (1.0, 1.0))
-    add('silk', silk, (4.0, 2.0)); add('sky_WALL', sky, (360.0, 105.0), maz=58.0, mel=20.0); add('sky_CAMP', sky, (360.0, 105.0), maz=74.0, mel=19.0); add('sky_HOLES', sky, (360.0, 105.0), maz=250.0, mel=36.0)
+    add('silk', silk, (4.0, 2.0)); add('rain', rain, (2.0, 4.0)); add('sky_WALL', sky, (360.0, 105.0), maz=58.0, mel=20.0); add('sky_CAMP', sky, (360.0, 105.0), maz=74.0, mel=19.0); add('sky_HOLES', sky, (360.0, 105.0), maz=250.0, mel=36.0)
     return J
 
 def ensure(verbose=True):
