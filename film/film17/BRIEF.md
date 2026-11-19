@@ -1,0 +1,8 @@
+# Film 17: "ไอ้ช่างวัดหู" (Alphonse Bertillon's anthropometry, Paris 1882-1883)
+Branch film17/main. Set film/v3/set3d17 (NEW), cast film/v3/cast17 (NEW). Facts and sources: FACTS.md. Music text: SUNO.md.
+Same style, pipeline and client rules as films 9-16 (skill reference-style-shorts + production-lessons incl. §10 film-2 camera rhythm; QA_TEAM.md stricter QA).
+Narration audio/narration.wav (Bankky RwilAvCC3o05RLuACpAn, speed 1.15 original setting, atempo 1.134); per-sentence STT 0.987-1.000.
+Script script/script_th.txt, TTS text script/tts_bankky_orig.json, captions script/captions.json, timing audio/timing.json.
+Blind test (Sonnet): v1 7/10 (hook 6, ending 7) -> 3 rewrites (shorter pivot, list cut to หัว นิ้ว เท้า แขน หู + drawers by size, mug-shot lecture cut before the punchline) -> retest 8/10 (hook 7, mechanism 8, ending 8) -> 2 word fixes. Hook "หนีบ" removed (fal content checker flagged it).
+Locations (draft): A Paris police records office ("Préfecture" attic): towering card cabinets, gas lamps, ledgers, desks / B measuring room at the Dépôt: measuring chair with head rest, calipers, wall height scale, camera on tripod, queue of prisoners on a bench / C the card-drawer wall reveal (narrowing: big drawer -> box -> one card) / D ending: the chief inspector seated in the measuring chair, calipers on his ear, policemen laughing.
+Cast (draft): Bertillon (thin clerk, black frock coat, pince-nez, neat beard), chief inspector (stout, big moustache, kepi/uniform), prefect (top hat, sash), "Dupont/Martin" (scruffy thief, cap), 2-3 gendarmes, prisoners.
