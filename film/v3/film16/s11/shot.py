@@ -100,27 +100,40 @@ def pick_audience(cams, n, tiers=(0, 1, 2), skip=()):
     return out[::step][:n]
 
 
+MORSE_MARK = (-5.0, 8.4, 0.0)                            # beside the left end of the front table (as s08)
+MOCK_MARK = (-7.7, 8.5, 0.0)                             # the mocker stands in the aisle beside Morse (as s09/s10), laughing at him
+AISLE = [((-3.0, 11.0, 0.0), "congressman_a", "point"), ((-9.9, 11.4, 0.0), "congressman_b", "point"),
+         ((-6.4, 12.6, 0.0), "congressman_c", "point"), ((-1.2, 9.6, 0.0), "congressman_b", "laugh"), ((-11.4, 8.6, 0.0), "congressman_a", "laugh")]
+
+
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s11")
         A = self.A
         mm = Vector(MORSE_MARK)
-        self.cam_path = PathCam((Vector((3.0, 11.0, 4.0)), Vector((14.0, 23.0, 2.6))),
-                                (Vector((0.5, 11.0, 4.0)), Vector((6.5, 24.0, 2.6))),
-                                (Vector((mm.x + 1.0, mm.y - 2.6, 3.9)), Vector((mm.x - 0.15, mm.y, 3.0))), GS[0], G_LAST, SNAP)
+        self.cam_path = PathCam((Vector((-4.2, 3.4, 3.9)), Vector((-6.4, 9.6, 2.85))),
+                                (Vector((-6.9, 3.6, 3.9)), Vector((-6.2, 9.8, 2.85))),
+                                (Vector((mm.x - 0.6, mm.y - 2.9, 3.5)), Vector((mm.x, mm.y, 2.95))), GS[0], G_LAST, SNAP)
         self.key_cam(bf(GS[0]), *self.cam_path.at(GS[0]))
         self.scene.frame_set(bf(GS[0]))
         sd = os.path.join(WORK, "sprites")
         self.mor = self.add("mor", "morse16", MORSE_MARK, sd)
-        self.mock = self.add("mock", "mocker", A["marks"]["mocker_desk"], sd)
+        self.mock = self.add("mock", "mocker", MOCK_MARK, sd)
         self.aud = []
         cams = [self.cam_path.at(g) for g in (GS[0], 725, 764)]
-        pick = pick_audience(cams, 26, tiers=(0, 1, 2), skip=[A["marks"]["mocker_desk"], MORSE_MARK])
-        for i, (p, ti) in enumerate(pick):
-            a = self.add("c%d" % i, CASTS[i % 3], p, sd)
-            a.kind = "point" if i % 3 == 1 else "laugh"
+        n = 0
+        for (p, c, kind) in AISLE:
+            a = self.add("c%d" % n, c, p, sd); n += 1
+            a.kind = kind
+            a.sideflip = p[0] > MORSE_MARK[0]                 # point toward Morse
+            a.phase = (n * 0.37) % 1.0
+            self.aud.append(a)
+        pick = pick_audience(cams, 14, tiers=(0, 1), skip=[MOCK_MARK, MORSE_MARK] + [p for p, _, _ in AISLE])
+        for (p, ti) in pick:
+            a = self.add("c%d" % n, CASTS[n % 3], p, sd); n += 1
+            a.kind = "point" if n % 3 == 1 else "laugh"
             a.sideflip = p[0] > MORSE_MARK[0]
-            a.phase = (i * 0.37) % 1.0
+            a.phase = (n * 0.37) % 1.0
             self.aud.append(a)
 
     def add(self, name, cast, mark, sd):
@@ -130,7 +143,6 @@ class Take(C.Take):
         a.sideflip = False
         return a
 
-    # ---- bounce: abs(sin) at ~3 Hz (one hop per 1/3 s) + a squash that alternates with it
     @staticmethod
     def hop(g, ph, amp=0.06):
         x = 3.0 * g / 30.0 + ph
@@ -143,12 +155,12 @@ class Take(C.Take):
         p["blink"] = blink(g, [G_SWAP - 1, 705, 741])
         p["lean"] = 1.5 * math.sin(g * 0.3)
         if clutch:
-            p["fx"] = []                                          # no sweat: only the sting of being laughed at
+            p["fx"] = []
         return p
 
     def mock_pose(self, g):
         p = dict(cast16.STORY16["mocker_belly_laugh"][1])
-        p["mirror"] = False
+        p["mirror"] = False                                   # he is left of Morse: faces screen-right toward him
         p["fx"] = ["tears", "blush"]
         p["t"] = (g * 0.09) % 1.0
         dz, s = self.hop(g, 0.0)
@@ -171,7 +183,7 @@ class Take(C.Take):
             self.key_cam(f, *self.cam_path.at(g))
             C.place(self.mor, f, MORSE_MARK)
             dz, _ = self.hop(g, 0.0)
-            C.place(self.mock, f, (self.mock.mark[0], self.mock.mark[1], self.mock.mark[2] + dz))
+            C.place(self.mock, f, (MOCK_MARK[0], MOCK_MARK[1], dz))
             for a in self.aud:
                 dz, _ = self.hop(g, a.phase)
                 C.place(a, f, (a.mark[0], a.mark[1], a.mark[2] + dz))
@@ -183,7 +195,7 @@ class Take(C.Take):
             self.mock.pose(f, self.mock_pose(g), camera=self.cam)
             for a in self.aud:
                 a.pose(f, self.aud_pose(a, g), camera=self.cam)
-        jobs = [(self.mor, 448), (self.mock, 128)] + [(a, 128) for a in self.aud]
+        jobs = [(self.mor, 448), (self.mock, 384)] + [(a, 256 if a.mark[1] < 15 else 128) for a in self.aud]
         self.sprites_for(jobs, [bf(g) for g in gs])
 
     def report(self, g):

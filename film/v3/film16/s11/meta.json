@@ -28,8 +28,8 @@
   "note": "hard cut to shot 12 at g 785; handle g 785..793 in 3D"
  },
  "set": "v3/set3d16 CHAMBER (chamber_wide_high build, shafts on), DAY, custom camera: glide across the tiers then snap to Morse",
- "cast": "~26 congressmen laughing/pointing (hats bounce ~0.06 D at 3 Hz, squash), mocker belly laugh with tears + blush, Morse morse_clutch_coil -> morse_snap_up (blink swap g 768); no lip-sync",
- "camera": "custom 22 mm high angle: glide A->B across the banks (constant speed, never parked), SNAP fly-in to a close of Morse g 764..780 on 'ไอ้บ้าลวด' (g 769)",
+ "cast": "Morse (morse_clutch_coil -> morse_snap_up, blink swap g 768) with the mocker (belly laugh, tears + blush, standing in the aisle beside him) and 5 aisle congressmen (3 point at Morse, 2 laugh) + ~14 on tiers 0-1; hop 0.06 D at ~3 Hz",
+ "camera": "custom 22 mm, high-ish (3.9 D) behind the table end: slow glide, then an eased SNAP g 764..780 (peak 1.8) straight in to Morse (head 265 px) on the aisle side of the instrument; Morse stays in frame the whole way",
  "events": {
   "snap": [
    764,
@@ -51,21 +51,20 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 20.49,
- "s_per_frame_cpu_mean": 39.39,
+ "s_per_frame_wall_mean": 23.67,
+ "s_per_frame_cpu_mean": 45.55,
  "main_head_px": [
-  265,
-  292
+  154,
+  260
  ],
  "main_head_centre_y": [
-  671,
-  700
+  666,
+  681
  ],
- "head_bottom_max_y": 845,
+ "head_bottom_max_y": 797,
  "framediff_in_shot": {
-  "median": 5.52,
-  "p90": 20.82
+  "median": 5.13,
+  "p90": 13.93
  },
- "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json",
- "note_heads": "Morse close at the end of the snap (g>=776); audience heads 25-60 px (wide)"
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json"
 }
