@@ -82,6 +82,15 @@ def _contact(tag, mk, yaw, L, Wd, strength=0.8):
     Lk(ti.outputs['Alpha'], mu.inputs[0]); Lk(mu.outputs[0], mx.inputs[0]); Lk(tr.outputs[0], mx.inputs[1]); Lk(em.outputs[0], mx.inputs[2]); Lk(mx.outputs[0], out.inputs['Surface'])
     me.materials.append(m); ob = _link(bpy.data.objects.new('actor_c_' + tag, me)); ob.location = (mk.x, mk.y, mk.z + 0.08); ob.rotation_euler = (0, 0, yaw); ob.visible_shadow = False
 
+def _night_grade(png):
+    """director QA (s15 method): night elephant sprite pixels x0.52 and tint (0.78, 0.82, 1.0); written next to the cached sprite (never graded twice)"""
+    gp = png[:-4] + '_g.png'
+    if not os.path.exists(gp):
+        im = np.asarray(Image.open(png).convert('RGBA'), dtype=np.float32) / 255.0
+        im[..., 0] *= 0.52 * 0.78; im[..., 1] *= 0.52 * 0.82; im[..., 2] *= 0.52
+        Image.fromarray((np.clip(im, 0, 1) * 255 + 0.5).astype(np.uint8)).save(gp)
+    return gp
+
 _SCALE = dict(matriarch=1.0, elephant_b=.86, elephant_c=.93, elephant_d=.77, calf=.36)
 def put(tag, cast, pose, mark, cam_loc, ppd=128, mirror=False, canvas=None, shadow=True, contact=None, dz=0.0, yaw_fixed=None, anchor_ground=None, yaw_off=0.0, roll=0.0, yaw_extra=0.0, fade=1.0, shadow_k=1.0):
     """real puppet sprite -> metre card with its FEET at `mark` (x, y, z), turned to face the camera (yaw only) unless yaw_fixed.
@@ -93,9 +102,10 @@ def put(tag, cast, pose, mark, cam_loc, ppd=128, mirror=False, canvas=None, shad
     out = os.path.join(SPR, key + '.png')
     r = sprites.render_sprites([dict(cast=cast, pose=pose, px_per_D=ppd, out=out, canvas=cv)])[0]
     assert not r['clipped'], 'sprite clipped by canvas: %s %s' % (tag, r.get('bbox'))
+    if cast in _SCALE and F.STATE['light'] == 'NIGHT': out = _night_grade(out)
     x0, y0, x1, y1 = r['canvas']; fx, fy = r['feet']
     X0, X1 = x0 * MPD, x1 * MPD; Z0, Z1 = -y1 * MPD, -y0 * MPD
-    me = _card_mesh(tag, X0, Z0, X1, Z1); me.materials.append(_mat('%s_mat_%s' % (tag, key), out, tint=(0.62, 0.67, 0.86) if (cast in _SCALE and F.STATE['light'] == 'NIGHT') else None, fade=fade))
+    me = _card_mesh(tag, X0, Z0, X1, Z1); me.materials.append(_mat('%s_mat_%s' % (tag, key), out, tint=None, fade=fade))
     mk = Vector(mark) + Vector((0, 0, dz))
     def yaw_of(m):
         if yaw_fixed is not None: return yaw_fixed
@@ -110,10 +120,11 @@ def put(tag, cast, pose, mark, cam_loc, ppd=128, mirror=False, canvas=None, shad
     def w(a): return mk + ax * ((a[0] - fx) * MPD) + Vector((0, 0, (fy - a[1]) * MPD))
     if shadow:
         s = _SCALE.get(cast)
-        if s is not None: L, Wd = 6.4 * s, 2.4 * s
+        if s is not None: L, Wd = 7.4 * s, 3.4 * s
         else: L, Wd = 1.5, 0.7
         if contact is not None: L, Wd = contact
-        _contact(tag, mk, yaw - math.radians(yaw_extra), L, Wd, min(1.0, 0.85 * shadow_k) if fade > 0.5 else 0.0)
+        kd = Vector(F.STATE['P']['key_dir']); kd.z = 0; kd.normalize(); off = kd * (0.35 if s is not None else 0.1)
+        _contact(tag, Vector((mk.x + off.x, mk.y + off.y, mk.z)), yaw - math.radians(yaw_extra), L, Wd, min(1.0, 1.0 * shadow_k) if fade > 0.5 else 0.0)
     return dict(world=w, anchors=r['anchors'], res=r, mark=mk, yaw=yaw)
 
 def card(tag, png, x0, z0, x1, z1, loc, yaw=0.0, k=None, shadow=False):
