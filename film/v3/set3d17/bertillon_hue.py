@@ -18,7 +18,8 @@ def frame_stats(f):
     sel = (v > 0.10) & (v < 0.55) & (s > 0.2) & (b >= r); w = (s * v)[sel]
     shade = float('nan')
     if w.sum() > 0: a = np.radians(h[sel]); shade = math.degrees(math.atan2((np.sin(a) * w).sum(), (np.cos(a) * w).sum())) % 360
-    luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; p1 = float(np.percentile(luma, 1))
+    full = np.asarray(Image.open(f).convert('RGB'), dtype=float) / 255; fh = full.shape[0]; full = np.concatenate([full[:int(fh * 0.6875)], full[int(fh * 0.75):]])   # full resolution, caption band out
+    luma = 0.2126 * full[..., 0] + 0.7152 * full[..., 1] + 0.0722 * full[..., 2]; p1 = float(np.percentile(luma, 1))
     dim = (v > 0.12) & (v < 0.40) & (s > 0.15); n = max(dim.sum(), 1); d_blue = float(((h >= 240) & (h <= 260) & dim).sum() / n); d_warm = float(((h <= 45) & dim).sum() / n)
     vivid = float(((s > 0.6) & (h >= 200) & (h <= 245) & (v > 0.2)).mean())
     hs, sat, val, dark = H.stats([f])

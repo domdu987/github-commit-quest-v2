@@ -7,7 +7,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 HERE = os.path.dirname(os.path.abspath(__file__)); TEX = os.path.join(HERE, 'tex'); os.makedirs(TEX, exist_ok=True)
-TEX_V = 2
+TEX_V = 3
 SEAM = (0x43, 0x22, 0x19)
 def _p(name): return os.path.join(TEX, '%s_v%d.png' % (name, TEX_V))
 def _hexrgb(h): h = h.lstrip('#'); return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
@@ -108,7 +108,7 @@ def runner(name, S=512, seed=9):
     """navy runner with a red border and a gold lozenge row; u across (0..1 = full width 1.0 tile), v along."""
     p = _p(name)
     if os.path.exists(p): return p
-    navy = _hexrgb('#26395e'); red = _hexrgb('#7a2a30'); gold = _hexrgb('#c89a4a'); im = Image.new('RGB', (S, S), navy); d = ImageDraw.Draw(im)
+    navy = _hexrgb('#2f3f66'); red = _hexrgb('#7a3036'); gold = _hexrgb('#c89a4a'); im = Image.new('RGB', (S, S), navy); d = ImageDraw.Draw(im)
     d.rectangle([0, 0, 52, S], fill=red); d.rectangle([S - 53, 0, S, S], fill=red)
     d.rectangle([60, 0, 66, S], fill=gold); d.rectangle([S - 67, 0, S - 61, S], fill=gold)
     for k in range(2):                                                    # two lozenge medallions per tile
