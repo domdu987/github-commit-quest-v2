@@ -1,5 +1,5 @@
 # QA film15 s01 (shots 1-4, g0-183 + handle 184-189), KEY take
-- motion_check (cuts 63,108,134,184): see below (per shot medians 4.3 / 4.7 / 15.9 / 4.4; handle g184-189 3.1 = action settled). PASS.
+- motion_check (cuts 63,108,134,184): median 4.5, p90 14.4 (per shot medians 4.3 / 4.7 / 15.9 / 4.4; handle g184-189 3.1 = action settled). PASS.
 - qa_auto: PASS (QA_AUTO.md, phone_sheet.jpg). Heads above y 880: max head-centre y 797 (shot 4 camera tilted down after a first pass had Dick head at 1026).
 - Render: 720x1280, 12 samples, 7.5 s wall / 14.7 s CPU per frame (2 procs x 2 threads).
 - Cast cards at real scale, contact shadows, sawdust spray at landings (shot 1 boy, shot 4 Dick). No text/numbers, sawdust pit only. No mouths moving (no quote in 0-6.15 s).
