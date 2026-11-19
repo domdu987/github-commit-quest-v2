@@ -182,7 +182,7 @@ def palette(mode):
     d['bird'] = mat('bird', '#2a2428', '#3a3238', 2)
     # chamber
     d['floor'] = mat('floor', '#94592a', '#bf8040', 8, aniso=(1, 0.2, 1), contrast=1.6, rough=0.4, sheen=0.4)
-    d['carpet'] = mat('carpet', '#78301e', '#8e3c28', 10, contrast=1.2)
+    d['carpet'] = mat('carpet', '#963a22', '#b04c2c', 10, contrast=1.2)
     d['baize'] = mat('baize', '#2c8040', '#40a05a', 12)
     d['wall'] = mat('wall', '#f2e4c0', '#e4d0a0', 2.0, contrast=0.8)
     d['marble'] = mat('marble', '#f6ecd6', '#e8dcc0', 2.5, contrast=0.8)
@@ -801,16 +801,16 @@ PRESETS = {
     amb=('#4454FF', 2.2),
     hills=[(250, 8, 16, '#9a9ad2'), (310, 20, 28, '#8aa0d8'), (380, 34, 30, '#7ea4d6')], hill_k=1.0,
     cloud=('#ffeacc', '#7c84d8'), cloud_diffuse=True, cloud_z=(40, 130), ncloud=14, cloud_scale=0.5,
-    g1='#c4a244', g2='#8aa83a', g3='#b07a38', gsize=500, wagon=(1.9, 6.5), lfence=True, fgprop=(-2.0, -3.3, 0.0), loco_y=22.0, tx=-9.5,
+    g1='#c4a244', g2='#8aa83a', g3='#b07a38', gsize=500, wagon=(1.9, 6.5), lfence=True, fgprop=(-2.0, -3.3, 0.0), loco_y=27.0, tx=-7.0,
     cam=dict(loc=(-0.2, -6.0, 1.9), look=(1.6, 30.0, 2.9), lens=22), samples=96),
  'chamber': dict(
     sky=[(0.0, '#7a86d6'), (0.45, '#f4c890'), (0.5, '#fbe0aa'), (0.56, '#f4e4c4'), (0.66, '#a8c6f0'), (0.82, '#5a86e4'), (1.0, '#3a5acc')], sky_k=1.0,
-    key=(1.0, 0.85, 0.63, 9.0), key_dir=kdir(-22, 15), sun_angle=1.0, exposure=0.0, sat=1.08,
+    key=(1.0, 0.85, 0.63, 15.0), key_dir=kdir(-22, 15), sun_angle=1.0, exposure=0.0, sat=1.08,
     hills=[(250, 8, 16, '#9a9ad2'), (310, 20, 28, '#8aa0d8')], hill_k=1.0, cloud=('#fff0dc', '#a8a4dc'), cloud_z=(40, 80), ncloud=6, cloud_diffuse=True,
-    g1='#a8a050', g2='#c8a858', g3='#a08048', gsize=500, fill=(0.02, 0.21, 1.0, 17000), dbounce=1, cam=dict(loc=(0.0, -2.6, 2.6), look=(0.0, 15.0, 1.5), lens=22), samples=110),
+    g1='#a8a050', g2='#c8a858', g3='#a08048', gsize=500, fill=(0.02, 0.235, 1.0, 20000), dbounce=1, cam=dict(loc=(0.0, -2.6, 2.6), look=(0.0, 15.0, 1.5), lens=22), samples=110),
  'close': dict(
     sky=[(0.0, '#4a62c0'), (0.45, '#f0b080'), (0.5, '#f8d098'), (0.58, '#8a98d0'), (0.74, '#4a64c0'), (1.0, '#2a3fa8')], sky_k=1.0,
-    key=(1.0, 0.85, 0.63, 9.0), key_dir=kdir(-125, 24), sun_angle=0.8, exposure=0.0, sat=1.08, amb=('#6064FF', 2.2), bottle_s=2.3, pole_h=4.8, sag=0.45, wire_r=0.03, drops=0.9,
+    key=(1.0, 0.85, 0.63, 9.0), key_dir=kdir(-125, 24), sun_angle=0.8, exposure=0.0, sat=1.08, amb=('#3038FF', 2.2), bottle_s=2.3, pole_h=4.8, sag=0.45, wire_r=0.03, drops=0.9,
     hills=[(250, 8, 16, '#8a8ac8'), (310, 20, 28, '#7a96d2'), (380, 34, 30, '#7aa0d4')], hill_k=0.95,
     cloud=('#ffe2bc', '#6c78d4'), cloud_diffuse=True, cloud_z=(60, 460), ncloud=17, cloud_seed=3, cloud_scale=0.8,
     g1='#a89640', g2='#7a9a3c', g3='#9a7a44', gsize=500, grough=0.35, gspec=0.45, wagon=(-3.2, 14.0), loco_y=40.0, lfence=True, tx=-12.0,
