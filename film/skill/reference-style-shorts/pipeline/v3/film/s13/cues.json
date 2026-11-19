@@ -1,0 +1,52 @@
+{
+ "fps": 30,
+ "time_base": "film seconds (narration clock + 0.100); frame g starts at g / 30",
+ "take": "s13",
+ "events": [
+  {
+   "time": 28.03,
+   "duration": 0.2,
+   "frame": 841,
+   "end_frame": 847,
+   "kind": "whump",
+   "label": "punch-in whump (speed lines)",
+   "clock": 27.93
+  },
+  {
+   "time": 28.06,
+   "duration": 0.64,
+   "frame": 842,
+   "end_frame": 861,
+   "kind": "walla",
+   "label": "laughter tail ducking out",
+   "clock": 27.96
+  },
+  {
+   "time": 28.1,
+   "duration": 0.15,
+   "frame": 843,
+   "end_frame": 848,
+   "kind": "slap",
+   "label": "paper slap (the label hits the map)",
+   "clock": 28.0
+  },
+  {
+   "time": 28.35,
+   "duration": 0.15,
+   "frame": 850,
+   "end_frame": 855,
+   "kind": "thunk",
+   "label": "pin thunk (thumbed home)",
+   "clock": 28.25
+  },
+  {
+   "time": 28.4,
+   "duration": 0.5,
+   "frame": 852,
+   "end_frame": 867,
+   "kind": "music",
+   "label": "muted trumpet wah-wah",
+   "clock": 28.3
+  }
+ ]
+}

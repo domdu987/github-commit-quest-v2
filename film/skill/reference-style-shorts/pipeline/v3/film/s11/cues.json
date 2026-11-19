@@ -1,0 +1,106 @@
+{
+ "fps": 30,
+ "time_base": "film seconds (narration clock + 0.100); frame g starts at g / 30",
+ "take": "s11",
+ "events": [
+  {
+   "time": 23.23,
+   "duration": 3.25,
+   "frame": 697,
+   "end_frame": 794,
+   "kind": "music",
+   "label": "music: wood-block ostinato, speeding up",
+   "clock": 23.13
+  },
+  {
+   "time": 23.25,
+   "duration": 0.15,
+   "frame": 698,
+   "end_frame": 702,
+   "kind": "squeak",
+   "label": "eraser squeak 1",
+   "clock": 23.15
+  },
+  {
+   "time": 23.38,
+   "duration": 0.15,
+   "frame": 701,
+   "end_frame": 706,
+   "kind": "squeak",
+   "label": "eraser squeak 2",
+   "clock": 23.28
+  },
+  {
+   "time": 23.52,
+   "duration": 0.18,
+   "frame": 706,
+   "end_frame": 711,
+   "kind": "squeak",
+   "label": "eraser squeak 3",
+   "clock": 23.42
+  },
+  {
+   "time": 23.85,
+   "duration": 0.55,
+   "frame": 716,
+   "end_frame": 732,
+   "kind": "zip",
+   "label": "pencil zip, freehand up the red line, rising",
+   "clock": 23.75
+  },
+  {
+   "time": 24.45,
+   "duration": 0.47,
+   "frame": 734,
+   "end_frame": 748,
+   "kind": "whoosh",
+   "label": "whoosh: snap out to the low two-shot",
+   "clock": 24.35
+  },
+  {
+   "time": 24.85,
+   "duration": 0.45,
+   "frame": 746,
+   "end_frame": 759,
+   "kind": "rub",
+   "label": "four frantic rubs with a kettle whistle (steam)",
+   "clock": 24.75
+  },
+  {
+   "time": 25.35,
+   "duration": 0.27,
+   "frame": 760,
+   "end_frame": 769,
+   "kind": "zip",
+   "label": "fast zip, higher (one 8-frame swipe with the pencil stub)",
+   "clock": 25.25
+  },
+  {
+   "time": 25.43,
+   "duration": 0.47,
+   "frame": 763,
+   "end_frame": 777,
+   "kind": "whoosh",
+   "label": "whoosh: snap out and up to the high two-shot",
+   "clock": 25.33
+  },
+  {
+   "time": 25.9,
+   "duration": 0.3,
+   "frame": 777,
+   "end_frame": 786,
+   "kind": "ding",
+   "label": "ta-da ding: bold red line in its halo of smudges",
+   "clock": 25.8
+  },
+  {
+   "time": 26.0,
+   "duration": 0.5,
+   "frame": 780,
+   "end_frame": 795,
+   "kind": "pant",
+   "label": "chief panting (two pants), crumbs pattering on the ledge",
+   "clock": 25.9
+  }
+ ]
+}

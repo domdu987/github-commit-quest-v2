@@ -6,11 +6,13 @@ Tested in a cloud container with 4 CPU cores, 15 GB RAM, no GPU, outbound networ
 
 | Need | How |
 |---|---|
-| Blender | `pip install bpy` (Blender as a Python module, 5.x). Cycles renders headless on CPU. No Freestyle (a render with it aborts the process without a display), no EEVEE or Workbench without a display. |
+| Blender | `pip install bpy` (Blender as a Python module, 5.x; tested 5.3.0 on Python 3.13). Cycles renders headless on CPU. No Freestyle (a render with it aborts the process without a display), no EEVEE or Workbench without a display. |
 | SVG to PNG | Headless Chromium through Playwright. Where a browser is preinstalled do not run `playwright install`. Wait for fonts before a screenshot; embed fonts as base64 `@font-face` or use system fonts. |
 | Video and audio | ffmpeg with libass (captions), `atempo`, `alimiter`. |
 | Measuring | numpy, Pillow, OpenCV. `rapidocr-onnxruntime` reads burned-in captions offline. |
-| Fonts | npm: `@expo-google-fonts/<family>` carries full TTF files (Kanit, Prompt, Noto Sans Thai, Work Sans). |
+| Fonts | Shipped in `pipeline/fonts/`: Kanit Black and Work Sans Black for captions, and `fonts/th/Kanit_800ExtraBold.ttf` and `Kanit_900Black.ttf`, which `v3/paper/paper.py` needs (SIL Open Font License, `fonts/th/OFL-Kanit.txt`). System fonts: Loma Bold (`/usr/share/fonts/opentype/tlwg/Loma-Bold.otf`, typed Thai on paper props), DejaVu, Liberation. Other families: npm `@expo-google-fonts/<family>` carries full TTF files (Kanit, Prompt, Noto Sans Thai, Work Sans). |
+| fontTools | `pip install fonttools`: `v3/paper/paper.py` measures Thai text with it. |
+| Node module path | the rasterisers read `NODE_PATH` and default to `/opt/node22/lib/node_modules`; elsewhere `export NODE_PATH=$(npm root -g)` (`examples/setup_kit.sh` does it). |
 | Thai text tools | `pip install pythainlp` (dictionary engines work offline) for syllable counts and word boundaries. |
 
 Model hubs were blocked, so local speech recognition models could not be downloaded; speech recognition and stem separation go through fal.ai instead.
@@ -28,4 +30,4 @@ Model hubs were blocked, so local speech recognition models could not be downloa
 
 ## Render budget
 
-A final 720x1280 frame at 12 samples: about 18 CPU seconds (4.5 to 5 s on 4 threads with the machine to itself). Drafts at 360x640 and 6 samples: about 1 s. A rented GPU box that can only be driven through short remote commands is not worth it: moving the project there and thousands of frames back costs more than it saves.
+A final 720x1280 frame at 12 samples: about 18 to 23 CPU seconds (4.5 to 5 s on 4 threads with the machine to itself). Drafts at 360x640 and 6 samples: about 1 s. In production run one process with 2 threads per worker: with 3 to 5 renders at once each frame takes 25 to 45 s of wall time, and total throughput on 4 cores is about 8 to 11 frames a minute (film 1: 7.9 on average over the four hours from the first to the last final frame, 9.4 to 10.9 in the busiest hours). The 23 takes cover 1,836 film frames; with the dissolve handles 2,120 frames were rendered, so plan on 3.2 to 4.5 hours of rendering alone. A graded frame costs under 0.5 s (the whole 65 s film about 5 to 7 minutes in 3 processes). A rented GPU box that can only be driven through short remote commands is not worth it: moving the project there and thousands of frames back costs more than it saves.

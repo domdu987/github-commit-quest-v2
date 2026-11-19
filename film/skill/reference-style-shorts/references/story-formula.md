@@ -23,6 +23,37 @@ Texture to copy as well: short spoken sentences, countable concrete details, a r
 
 A new reference style needs its own list. Do not assume these twelve.
 
+## Where each element lands (timing)
+
+Sentence start times in seconds (share of the runtime in brackets). Reference: from the speech-to-text word times of the two clips (`__PROJ__/audio/refaudio/a.asr_events.json`, `b.asr_events.json`; the reference text is not quoted here); both run about 65 s. Film 1: the sentence starts of `narration_timing.json` with the `beat` of each sentence in `script_th_v2/script_th.json` (65.4 s).
+
+| Element | Reference A | Reference B | Film 1 |
+|---|---|---|---|
+| 1 hook (one sentence) | 0.1-3.4 (3.3 s) | 0.1-7.3 (7.2 s, with a quoted dare) | 0.0-4.3 (21 syllables) |
+| 2 pivot "You see" | 3.4 (5 %) | 7.3 (11 %) | 4.3 (7 %) |
+| setup / authority | 3.4-11.7 | 13.5 (21 %) | 9.0 and 13.4 |
+| 3 youngest hero and the boss's reaction | 11.7 (18 %) | | 16.8 (26 %) |
+| 4 first mocking quote | 18.2 (28 %) | | 20.3 (31 %) |
+| 5 persists | 18.2-21.7 | 17.8 (false defeat comes first) | 23.1 (35 %) |
+| rivals win / they laugh harder | 21.7-31.3 | 22.4 (34 %) | |
+| 6 nickname given | 31.3 (48 %) | 24.2 (37 %) | 26.4 (40 %) |
+| hero alone | | 29.5 (45 %) | |
+| 7 false defeat / "something weird" | 36.1-45.7 (56-70 %) | 17.8 (27 %) | 31.9 (49 %) |
+| 8 second mocking quote | 45.7 (70 %) | 40.5 (62 %) | 36.2 (55 %) |
+| 9 the turn ("Meanwhile" / "Then one night") | 46.3 (71 %) | 32.9 (51 %) | 39.6 (61 %) |
+| build to the peak | 54.4 (84 %) | 37.1 (57 %) | 44.2-54.2 (mechanism, 68-83 %) |
+| 10 disaster image | 59.4-65.0 (91 %) | 45.9 (71 %) | 54.2 (83 %) |
+| 11 mechanism reveal | inside the build (46-59) | 48.6-58.4 (75-90 %) | 44.2-54.2, before the disaster |
+| 12 last line or image | 59.4 | 58.4-64.8 | 59.6-65.4 |
+
+Rules of thumb from these numbers:
+- The hook is one sentence of 3 to 7 s; the pivot follows at once (5-11 %).
+- The first quote by about 30 %; the nickname at 37-48 %; the turn at 51-71 %; the disaster at 71-91 %.
+- After the disaster: either end within about 6 s on the disaster image (A), or reveal the mechanism and end on its last line (B, 19 s). Film 1 put the mechanism before the disaster and ended 11 s after it.
+- Nickname: the references say it 2 times (A: the name once, B: the naming and the second quote); film 1 used it 4 times (`nickname_uses`). Use it at least at the naming and in the second quote.
+- Size: reference 214 (A) and 235 (B) English words in 65 s; film 1 313 Thai syllables in 65.4 s (speed 1.2, tempo 1.19). For a 60 s Thai film plan about 290 syllables (inferred, pro rata).
+- Only the quoted lines move a mouth; no casualty figure; no moral; end on an image.
+
 ## Choosing the story
 
 Pick a true story that has an odd visible object, a doubting authority, a false defeat and a physical mechanism to reveal. Keep a fact list and a separate list of allowed dramatisations (the references dramatise freely: invented quotes, a nickname, a repeated gag). Tell the user which parts are fact and which are dramatised.

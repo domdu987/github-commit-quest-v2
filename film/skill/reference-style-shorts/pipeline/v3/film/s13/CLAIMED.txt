@@ -1,0 +1,1 @@
+This folder is owned by lane ADVANCE-X (launched 18 Nov 16:36). Any other worker whose task lists this shot: do not write, stage or render here. Return the take with complete=false and the note "owned by lane ADVANCE-X".
