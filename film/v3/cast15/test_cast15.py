@@ -117,8 +117,10 @@ def sec_poses(D=70):
         x0, y0 = cc * cw * D, r * ch * D
         o.append('<rect x="%.0f" y="%.0f" width="%.0f" height="%.0f" fill="%s"/>' % (x0, y0, cw * D, ch * D, BG if (r + cc) % 2 else BG2))
         hx, hy = x0 + cw * D * 0.5, y0 + ch * D * 0.28
-        if n.startswith(("flop", "lie", "land", "straddle", "knock")):
+        if n.startswith(("flop", "lie", "land", "straddle", "knock", "coach_clumsy")):
             hx, hy = x0 + cw * D * 0.62, y0 + ch * D * 0.45
+        elif n.startswith("sit_up") or n == "sit_thumb":
+            hx, hy = x0 + cw * D * 0.3, y0 + ch * D * 0.3
         s, f = _place(c, p, "p%d" % i, D, hx, hy)
         o.append(s)
         a = f["anchors"]
@@ -155,6 +157,29 @@ def sec_compare(D=100):
         o.append(_under(x + 1.1 * D, 8.1 * D, "%s %s" % (c, n if c != "coach" else "coach_clumsy_flop"), 12))
         x += 2.3 * D
     return _write(_svgdoc(W, H, "".join(o)), W, H, "sec_compare")
+
+
+def build_strip(D=90):
+    """flop_strip.jpg: the four flop stages side by side (dick above, rival1 below), bar line at anchors["bar"] of the apex stage."""
+    from PIL import Image
+    stages = ["flop_head", "flop_back", "flop", "flop_flick"]
+    cw, ch = 4.0, 4.2
+    W, H = int(cw * D * 4), int(ch * D * 2)
+    o = ['<rect width="%d" height="%d" fill="%s"/>' % (W, H, BG)]
+    for r, c in enumerate(("dick", "rival1")):
+        fa = P.figure(c, cast15.pose_for("flop", c), "ref")
+        for i, n in enumerate(stages):
+            x0, y0 = i * cw * D, r * ch * D
+            o.append('<rect x="%.0f" y="%.0f" width="%.0f" height="%.0f" fill="%s"/>' % (x0, y0, cw * D, ch * D, BG if (i + r) % 2 else BG2))
+            hx, hy = x0 + cw * D * 0.68, y0 + ch * D * 0.62
+            s, f = _place(c, cast15.pose_for(n, c), "s%d%d" % (r, i), D, hx, hy)
+            o.append(s)
+            by = hy + fa["anchors"]["bar"][1] * D
+            o.append('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="#e03030" stroke-width="3" opacity="0.85"/>' % (x0 + 10, by, x0 + cw * D - 10, by))
+            o.append(_under(x0 + cw * D / 2, y0 + ch * D - 8, "%d  %s (%s)" % (i + 1, n, c), 15))
+    p = _write(_svgdoc(W, H, "".join(o)), W, H, "sec_strip")
+    Image.open(p).convert("RGB").save(os.path.join(HERE, "flop_strip.jpg"), quality=90)
+    print("wrote flop_strip.jpg", (W, H))
 
 
 def sec_runs(D=80):
@@ -247,8 +272,8 @@ def sec_phone(D=34):
         p = cast15.pose_for(n, c) if n in cast15.POSE_FUNCS else dict(expr="neutral", yaw=0.3)
         if n == "stand":
             p = dict(expr="neutral", yaw=0.0)
-        lying = n.startswith(("flop", "straddle", "land", "lie", "sit_up"))
-        hx, hy = (x0 + cw * 0.55, y0 + ch * 0.42) if lying else (x0 + cw * 0.5, y0 + ch * 0.22)
+        lying = n.startswith(("flop", "straddle", "land", "lie"))
+        hx, hy = (x0 + cw * 0.66, y0 + ch * 0.52) if lying else ((x0 + cw * 0.2, y0 + ch * 0.3) if n == "sit_up" else (x0 + cw * 0.5, y0 + ch * 0.22))
         s, f = _place(c, p, "ph%d" % i, D, hx, hy)
         o.append(s)
         o.append('<text x="%.0f" y="%.0f" font-family="DejaVu Sans, sans-serif" font-size="9" fill="#222">%s</text>' % (x0 + 3, y0 + ch - 4, (c + " " + n)[:22]))
@@ -277,6 +302,7 @@ def build_sheet():
     out = os.path.join(HERE, "sheet.jpg")
     sheet.save(out, quality=88)
     print("wrote", out, sheet.size)
+    build_strip()
     ph = Image.open(sec_phone()).convert("RGB")
     ph.save(os.path.join(HERE, "sheet_phone.jpg"), quality=90)
     print("wrote sheet_phone.jpg", ph.size)

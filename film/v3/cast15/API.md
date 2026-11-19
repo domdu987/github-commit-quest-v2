@@ -63,7 +63,7 @@ New anchors on every cast15 figure: **`apex`** (the hip joint, the highest point
 
 ### Where the bar goes in the flop (card coordinates, D, head centre = origin, y down)
 
-`flop` (dick, facing right): head at (0, 0), `apex` (hips) about (-1.01, -0.91), **`bar` about (-0.98, -0.64)**, feet about (-1.7..-2.0, 0.5..0.9). So the crossbar is a horizontal line y = `anchors["bar"][1]`, 0.27 D under the apex and 0.64 D above the head centre: the **head is 0.64 D below the bar on one side and the feet 1.1..1.5 D below it on the other**. For a left-facing flop (`facing=-1`) x is negated. Anchors come back already mirrored. For other members the offset scales with torso length (read the anchor, do not hard-code). `flop_back` puts the bar at the shoulder/mid-back, `flop_head` has the bar near the neck/shoulders (the body is nearly horizontal), `flop_flick` has the hips already dropping and the legs kicked up above the bar line.
+`flop` (dick, facing right; rival1 and boy2 within 0.03): head centre at (0, 0), `apex` (hips) at **(-1.33, -1.31)**, **`bar` at (-1.30, -1.04)** (0.27 D under the apex, on the underside of the lower back), `foot_l` (-1.51, 0.09). So the crossbar is the horizontal line y = `anchors["bar"][1]`: the head centre hangs **1.04 D below the bar** on the right and the feet about 1.1 D below it on the left, an upside-down U about 1.5 D wide. For a left-facing flop (`facing=-1`) x is negated; anchors come back already mirrored. Stages (dick): `flop_head` apex (-1.61, -0.92) bar (-1.47, -0.69), feet at y 0.5 (hips still rising, legs trailing straight); `flop_back` apex (-1.45, -1.20) bar (-1.38, -0.94); `flop` apex (-1.33, -1.31) bar (-1.30, -1.04); `flop_flick` apex (-1.50, -1.14) bar (-1.41, -0.88), feet far above at y -3.0 (the legs kicked up, the body an L). Read the anchor, do not hard-code it: it scales a little with torso length.
 
 ## Pose presets (`cast15.POSE_NAMES`; `pose_for(name, cast, facing=1, **overrides)`)
 
@@ -76,13 +76,13 @@ All are authored for a figure travelling or facing screen-RIGHT (`facing=-1` tog
 | `plant` | jumpers | last stride, planted forward foot, leaning away from the bar |
 | `takeoff` | jumpers | drive leg straight, **knee lifted**, arms thrown up |
 | `flop_rise` | jumpers | leaving the ground, turning the back to the bar (lean +48, yaw -0.1) |
-| `flop_head` | jumpers | head over (lean +96): body nearly horizontal, legs trailing down |
-| `flop_back` | jumpers | back over (lean +116) |
-| `flop` | jumpers | **THE FLOP**: arched bridge, belly up, hips at the apex, head and legs hang lower, arms at the sides, face up (lean +132). `bar` anchor under the lower back |
-| `flop_flick` | jumpers | legs flick up and over (lean +108, legs pointing up and back) |
+| `flop_head` | jumpers | head and shoulders already past the bar (hanging low), hips rising, legs trailing nearly straight |
+| `flop_back` | jumpers | the arch almost complete, knees starting to bend |
+| `flop` | jumpers | **THE FLOP**: a symmetric upside-down U, belly up: torso tilted up to the hips (apex), head hung below the shoulders looking toward the feet, thighs down and out with the shins hanging (knees bent), arms down along the body. Built by `cast15._arch(...)` from `body_lean` 131 + `hdx2`/`hdy2` (torso offset from the head) + polar legs |
+| `flop_flick` | jumpers | legs kicked up and over: jack-knife into an L (legs near vertical above the hips) |
 | `land_back` | jumpers | landing on the back, legs up, startled (`sawdust` 0.5) |
 | `lie_back` | jumpers | lying flat on the back |
-| `sit_up` | jumpers | sitting up on the sawdust, sheepish (worried eyes, small smile, sweat), hand scratching his head, `sawdust=1` |
+| `sit_up` | jumpers | seated, torso upright, one leg flat out in front and the other knee up, sheepish (worried eyes, small smile, sweat), hand scratching the back of his head, `sawdust=1` |
 | `straddle_a`, `straddle_b` | jumpers | **STRADDLE roll**: body flat and horizontal, **face down**, arms hanging below, one leg swinging up over (a: leg up front, b: the other leg swinging over) |
 | `knock` | jumpers | bar knocked: tumbling flail, arms and legs wide, shocked "O" |
 | `lie_hands_face` | jumpers | lying on the mat, hands on the face, sad |
@@ -101,7 +101,7 @@ All are authored for a figure travelling or facing screen-RIGHT (`facing=-1` tog
 | `coach_jaw` | coach, coach_stands | jaw dropped (held open mouth) |
 | `coach_sigh` | coach | sigh: head down, shoulders low, hand to chin, sad |
 | (cycle) `coach_clumsy_run(phase, cast, facing)` | coach | clumsy run: heavy forward lean, flapping arms, wobbling head |
-| `coach_clumsy_flop` | coach | clumsy flop: badly arched (lean +102), limbs flailing, shocked |
+| `coach_clumsy_flop` | coach | sagging, badly arched backwards flop: low hips, head dropped, arms flailing, shocked |
 | `coach_buried` | coach | in the sawdust: `buried=1` mound, `sawdust=1`, weak thumbs-up (`thumb_r`), worried small smile |
 | `clip` | coach | holding the clipboard |
 | `photog_ready` | photographer | crouched, press camera at the eye |
@@ -114,7 +114,7 @@ Props: `clipboard` (`prop_r={"type": "clipboard", "angle": 0}`, anchor `board_r`
 
 ## Canvases (feet-relative, D)
 
-Standing and seated poses: `cast15.CANVAS15[name]` (registered into `sprites.DEFAULT_CANVAS` through `cast_ext.CANVAS`), +-2.125 wide, 0.75 D of head room over the figure (dick (-2.125, -4.5, 2.125, 0.125)). **Lying, bridge, straddle, airborne and buried poses:** use `cast15.CANVAS15_WIDE = (-4.25, -4.5, 4.25, 3.0)` and place the card by `anchors["head"]` / `["apex"]` / `["bar"]`, not by the soles (`feet_y` is just the lowest sole there). `python3 test_cast15.py canvas` runs every member x every preset x both facings x 16 run phases against the wide canvas: 0 outside.
+Standing and seated poses: `cast15.CANVAS15[name]` (registered into `sprites.DEFAULT_CANVAS` through `cast_ext.CANVAS`), +-2.125 wide, 0.75 D of head room over the figure (dick (-2.125, -4.5, 2.125, 0.125)). **Lying, bridge, straddle, airborne and buried poses:** use `cast15.CANVAS15_WIDE = (-4.25, -4.5, 4.25, 4.0)` and place the card by `anchors["head"]` / `["apex"]` / `["bar"]`, not by the soles (`feet_y` is just the lowest sole there). `python3 test_cast15.py canvas` runs every member x every preset x both facings x 16 run phases against the wide canvas: 0 outside.
 
 ## Gotchas
 
@@ -132,5 +132,5 @@ Standing and seated poses: `cast15.CANVAS15[name]` (registered into `sprites.DEF
 
 ## Files and QA
 
-- `cast15.py` is the module, `test_cast15.py` the QA, `sheet.jpg` the labelled sheet (heights front + 3/4, flop sequence above straddle with the bar line, every preset with the `bar` (red) and `apex` (green) anchors, cycles, props, six face states per member) and `sheet_phone.jpg` the phone-scale sheet (head D = 34 px).
+- `cast15.py` is the module, `test_cast15.py` the QA, `flop_strip.jpg` the four flop stages side by side (dick above, rival1 below, red line = bar anchor), `sheet.jpg` the labelled sheet (heights front + 3/4, flop sequence above straddle with the bar line, every preset with the `bar` (red) and `apex` (green) anchors, cycles, props, six face states per member) and `sheet_phone.jpg` the phone-scale sheet (head D = 34 px).
 - `python3 test_cast15.py` = sheet + canvas + robust; `sheet`, `canvas`, `robust` separately. Robust: 2376 garbage-key / determinism checks (0 failed) plus the cast10 byte-identity regression (identical).

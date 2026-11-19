@@ -22,7 +22,7 @@ _B = dict(toon=1.0, form=(0.0, -0.05, 0.22), sun_angle=0.6, exposure=0.0, lift=(
           shade_mix=0.55, crowd_k=1.0, season=0.0, floods=0.0, cx=0.0, cy=0.0)
 _SKY_EVE = [(0.0, '#2a3494'), (0.4, '#5a68c4'), (0.5, '#f2a068'), (0.53, '#e6c0a0'), (0.58, '#a4b8e4'), (0.68, '#4a62c0'), (0.82, '#2a3a9c'), (1.0, '#212a82')]
 LIGHTS = dict(
-    A_GOLDEN=dict(_B, name='A_GOLDEN', loc='A', key=(1.62, 1.16, 0.68), key_dir=kdir(-60, 24), sun_elev=24, sun_angle=0.9, shade=(0.105, 0.10, 0.31), shade_tint=(0.10, 0.095, 0.33), season=1.0,
+    A_GOLDEN=dict(_B, name='A_GOLDEN', loc='A', key=(1.62, 1.16, 0.68), key_dir=kdir(-60, 28), sun_elev=28, sun_angle=0.9, shade=(0.105, 0.10, 0.31), shade_tint=(0.10, 0.095, 0.33), season=1.0,
                   sky=[(0.0, '#7a70e0'), (0.40, '#f2b47a'), (0.5, '#f8cf96'), (0.56, '#d8d0c8'), (0.64, '#8aa0ec'), (0.8, '#5c6ee6'), (1.0, '#4a58d8')], sky_k=1.25, glow=('#ffa860', 0.35, 0.45),
                   hills=[(300, 6, 14, '#a08ac8'), (340, 20, 28, '#8f90d0')], hill_k=0.95),
     A_DAY=dict(_B, name='A_DAY', loc='A', key=(1.72, 1.56, 1.26), key_dir=kdir(-38, 44), sun_elev=44, shade=(0.115, 0.115, 0.34), shade_tint=(0.105, 0.105, 0.35), season=0.0,
@@ -356,3 +356,52 @@ def clear_keys():
     for m in bpy.data.materials:
         if m.node_tree and m.node_tree.animation_data and m.node_tree.animation_data.action: m.node_tree.animation_data.action = None
     for o in STATE.get('stand_bulbs', []): o.hide_render = True
+
+# ============================================================================= placeholder actor cards (stills and tests only)
+def _poly_round_rect(w, h, r, n=6):
+    pts = []
+    for (cx, cy, a0) in ((w / 2 - r, h - r, 0), (-w / 2 + r, h - r, 90), (-w / 2 + r, r, 180), (w / 2 - r, r, 270)):
+        for i in range(n + 1): a = math.radians(a0 + 90 * i / n); pts.append((cx + r * math.cos(a), cy + r * math.sin(a)))
+    return pts
+def _fan(pts):
+    n = len(pts); cx = sum(p[0] for p in pts) / n; cy = sum(p[1] for p in pts) / n
+    V = [(cx, cy)] + pts; Fc = [(0, 1 + i, 1 + (i + 1) % n) for i in range(n)]; return V, Fc
+
+def placeholder_actor(role, mark, face_to=None, name=None, tint=0.58):
+    """Grey rounded silhouette card at real scale (HEIGHT[role] D tall), feet at `mark` (D), turned to face `face_to`. Stills and tests only."""
+    h = HEIGHT.get(role, 2.9); name = name or 'actor_' + role
+    bw = 0.95 if role != 'dick' else 0.8
+    body = _poly_round_rect(bw, h * 0.74, bw * 0.4); hr = 0.30 if role != 'dick' else 0.27
+    hc = (0.0, h - hr); head = [(hc[0] + hr * math.cos(2 * math.pi * i / 16), hc[1] + hr * math.sin(2 * math.pi * i / 16)) for i in range(16)]
+    V3 = []; Fs = []
+    for pts, z0 in ((body, 0.0), (head, 0.0)):
+        V, Fc = _fan(pts); o = len(V3); V3 += [(x, 0.0, y + z0) for x, y in V]; Fs += [tuple(o + i for i in f) for f in Fc]
+    me = bpy.data.meshes.new(name); me.from_pydata(V3, [], Fs); me.update()
+    m = bpy.data.materials.new(name + '_m'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; Lk = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); em = N('ShaderNodeEmission'); lp = N('ShaderNodeLightPath')
+    em.inputs['Color'].default_value = (tint, tint, tint * 1.04, 1.0); Lk(lp.outputs['Is Camera Ray'], em.inputs['Strength']); Lk(em.outputs[0], out.inputs['Surface'])
+    me.materials.append(m); ob = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(ob); ob.location = mark; T.no_bounce(ob)
+    if face_to is not None:
+        d = Vector(face_to) - Vector(mark); ob.rotation_euler = (0, 0, math.atan2(d.x, -d.y))
+    return ob
+
+def stage_placeholders(n, cam_loc):
+    T._clear_actors(); out = []
+    import set15_shots as SH
+    for i, (role, p) in enumerate(SH.staging(n)): out.append(placeholder_actor(role, p, face_to=cam_loc, name='actor_%s_%d' % (role, i)))
+    return out
+
+def head_pixels(n, frame=None):
+    """[(role, chin_y_px, head_top_y_px)] at 720x1280 for the placeholders of shot n at the current frame (caption rule: heads above y 880)."""
+    from bpy_extras.object_utils import world_to_camera_view
+    import set15_shots as SH
+    sc = bpy.context.scene; cam = sc.camera; out = []
+    for role, p in SH.staging(n):
+        h = HEIGHT.get(role, 2.9); top = Vector(p) + Vector((0, 0, h)); chin = Vector(p) + Vector((0, 0, h - 0.6))
+        a = world_to_camera_view(sc, cam, top); b = world_to_camera_view(sc, cam, chin); out.append((role, round((1 - b.y) * 1280), round((1 - a.y) * 1280)))
+    return out
+
+try:
+    import set15_shots   # noqa: F401  (fills SHOTS)
+except ImportError:
+    pass

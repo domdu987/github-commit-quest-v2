@@ -732,7 +732,7 @@ def _std_canvas(h):
 
 
 CANVAS15 = {}                  # filled in register() from the measured heights
-CANVAS15_WIDE = (-4.25, -4.5, 4.25, 3.0)        # lying / bridge / straddle / sit / airborne poses (any member); place these by anchors, not by the soles
+CANVAS15_WIDE = (-4.25, -4.5, 4.25, 4.0)        # lying / bridge / straddle / sit / airborne poses (any member); place these by anchors, not by the soles
 
 
 # ============================================================================= pose keys, skin, ears, jaw, mound
@@ -1038,24 +1038,33 @@ def _p_flop_rise(c):
              leg_l=(104, 1.0, 0.3), leg_r=(62, 0.82, 1.0))
 
 
-def _p_flop_head(c):
-    return J(c, lean=96, yaw=-0.55, roll=56, expr="determined", arm_r=(100, 0.95, 0.3), arm_l=(128, 0.95, 0.3, BACK),
-             leg_l=(118, 1.0, -0.3), leg_r=(105, 1.0, -0.2))
+def _arch(c, lean, hdx, hdy, roll, ang, depth, kn=-1, spread=12, **kw):
+    """the flop family: torso tilted up to the hips (apex), head hung below the shoulders (hdx2 / hdy2 move the torso away from the
+    head), face turned toward the feet; thighs go down and out, shins hang (knees bent, kn -1 = knees toward the approach side).
+    depth = how far the feet hang below the hips (D), ang = thigh direction (90 = straight down, 180 = straight back)."""
+    L = P.CAST[c]["leg"]
+    r = min(1.05, depth / (L * max(0.2, math.sin(math.radians(ang)))))
+    p = J(c, lean=lean, yaw=-0.9, roll=roll, hdx=hdx, hdy=hdy, expr="determined", arm_r=(92, 0.95, 0.3), arm_l=(110, 0.95, 0.3, BACK),
+          leg_l=(ang, r, kn), leg_r=(ang - spread, r, kn))
+    p.update(kw)
+    return p
 
 
-def _p_flop_back(c):
-    return J(c, lean=116, yaw=-0.8, roll=72, expr="determined", arm_r=(95, 0.95, 0.3), arm_l=(120, 0.95, 0.3, BACK),
-             leg_l=(122, 1.0, -0.5), leg_r=(108, 1.0, -0.4))
+def _p_flop_head(c):      # head and shoulders already past the bar, hips rising, legs still trailing nearly straight
+    return _arch(c, 106, 0.30, 0.55, 12, 122, 1.8, -0.5, 10)
 
 
-def _p_flop(c):
-    return J(c, lean=132, yaw=-0.9, roll=86, expr="determined", arm_r=(90, 0.95, 0.3), arm_l=(112, 0.95, 0.3, BACK),
-             leg_l=(125, 0.98, -0.6), leg_r=(108, 0.98, -0.5))
+def _p_flop_back(c):      # the arch almost complete, knees starting to bend
+    return _arch(c, 122, 0.30, 0.48, 14, 110, 1.7, -0.7, 10)
 
 
-def _p_flop_flick(c):
-    return J(c, lean=108, yaw=-0.9, roll=82, expr="happy", arm_r=(92, 0.95, 0.3), arm_l=(112, 0.95, 0.3, BACK),
-             leg_l=(-128, 1.05, 0.0), leg_r=(-112, 1.05, 0.0))
+def _p_flop(c):           # THE FLOP: a symmetric upside-down U, belly up
+    return _arch(c, 131, 0.30, 0.42, 15, 100, 1.5, -1, 12)
+
+
+def _p_flop_flick(c):     # legs kicked up and over: jack-knife into an L
+    return J(c, lean=118, yaw=-0.9, roll=14, hdx=0.30, hdy=0.50, expr="happy", arm_r=(94, 0.95, 0.3), arm_l=(112, 0.95, 0.3, BACK),
+             leg_l=(-108, 1.05, 0.0), leg_r=(-92, 1.05, 0.0))
 
 
 def _p_land_back(c):
@@ -1069,8 +1078,8 @@ def _p_lie_back(c):
 
 
 def _p_sit_up(c):
-    return J(c, lean=6, yaw=0.6, roll=8, expr="worried", mouth="smile", pitch=0.3, arm_r=(-72, 1.0, -0.5, TOP), arm_l=(118, 0.8, 0.2, BACK),
-             leg_r=(6, 1.0, 0.3), leg_l=(2, 1.0, 0.3), sawdust=1.0, fx=["sweat"])
+    return J(c, lean=-4, yaw=0.55, roll=7, expr="worried", mouth="smile", pitch=0.35, arm_r=(-70, 1.0, -0.6, TOP), arm_l=(118, 0.85, 0.2, BACK),
+             leg_r=(8, 1.0, 0.3), leg_l=(-30, 0.78, -1.0), sawdust=1.0, fx=["sweat"])
 
 
 def _p_straddle_a(c):
@@ -1203,9 +1212,9 @@ def _p_coach_sigh(c):
     return J(c, lean=7, yaw=0.35, pitch=0.8, hdy=0.04, expr="sad", mouth="frown", arm_r=dict(preset="chin"), arm_l=(98, 0.75, 0.3, BACK))
 
 
-def _p_coach_clumsy_flop(c):
-    return J(c, lean=102, yaw=-0.7, roll=48, expr="shocked", mouth="o", arm_r=(-40, 1.05, -0.5), arm_l=(150, 1.05, 0.5, BACK),
-             leg_r=(-62, 1.0, 1.0), leg_l=(160, 1.0, -1.0))
+def _p_coach_clumsy_flop(c):   # a sagging, badly arched backwards flop: low hips, flailing arms, legs everywhere
+    return J(c, lean=118, yaw=-0.8, roll=30, hdx=0.30, hdy=0.30, expr="shocked", mouth="o", arm_r=(-50, 1.05, -0.5), arm_l=(-155, 1.05, 0.5, BACK),
+             leg_r=(-40, 1.0, -0.3), leg_l=(112, 0.80, -1.0))
 
 
 def _p_coach_buried(c):

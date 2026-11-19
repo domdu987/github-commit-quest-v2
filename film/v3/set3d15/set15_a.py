@@ -71,8 +71,8 @@ def build_a(P, M, dress=True):
     S.ring(mb, M['cinder'], CX, CY, 47, 47, 53, 53, 0, 180, 0.012, 1.0)
     for r in (47.0, 52.85): S.ring(mb, M['chalk'], CX, CY, r, r, r + 0.15, r + 0.15, 0, 180, 0.02, 1.0)
     for r in (49.0, 50.9): S.ring(mb, M['chalk'], CX, CY, r, r, r + 0.07, r + 0.07, 0, 180, 0.018, 1.0)
-    S.disc(mb, M['dirt'], (1.4, 1.6), 4.8, 0.008, 40, 6.6)         # worn run-up
-    S.disc(mb, M['dirt'], (6.3, -2.0), 2.4, 0.007, 24, 3.0)
+    S.disc(mb, M['dirt'], (1.4, 2.4), 3.0, 0.008, 40, 4.4)         # worn run-up
+    S.disc(mb, M['dirt'], (6.0, -2.2), 1.5, 0.007, 24, 2.2); S.disc(mb, M['dirt'], (-6.0, 1.8), 1.4, 0.007, 24, 2.4); S.disc(mb, M['dirt'], (8.2, -1.0), 1.1, 0.007, 20, 1.6)
     for (x, y, w) in [(-3.0, 9.8, 14), (-8.0, 3.0, 5), (9.0, 14.0, 9)]:   # lighter mown patches
         mb.box(M['lawn'], (x, y, 0.004), (w, w * 0.5, 0.004), rz=0.2)
     # asphalt road behind the fence with curb
@@ -164,18 +164,21 @@ def build_a(P, M, dress=True):
         PR.car60(mb, M, (x, 28.4 if yw < 1 else 31.7, 0.0), yw, col, two)
     fin(mb)
     # --- gym (brick) closer, and a long school wing; trees in front
-    mb = S.MB('gymA'); gx, gy = 18.0, 47.0
-    mb.box(M['brick'], (gx, gy, 3.8), (52, 12, 7.6)); mb.box(M['trim'], (gx, gy - 6.05, 7.7), (52.4, 0.5, 0.5)); mb.box(M['roofd'], (gx, gy, 7.95), (52.2, 12.2, 0.4))
-    mb.box(M['brick'], (gx - 32, gy - 5, 2.6), (16, 9, 5.2)); mb.box(M['roofd'], (gx - 32, gy - 5, 5.35), (16.4, 9.4, 0.3))
-    for i in range(16):
-        wx = gx - 23 + i * 3.1; mb.box(M['trim'], (wx, gy - 6.06, 4.7), (1.5, 0.12, 1.95)); mb.box(M['glass'] if i % 3 else M['glasslit'], (wx, gy - 6.12, 4.7), (1.3, 0.1, 1.75))
-        mb.box(M['trim'], (wx, gy - 6.1, 1.9), (1.5, 0.1, 1.3)) if i % 4 == 1 else None
-    for dxx in (-4, 6): mb.box(M['dark'], (gx + dxx, gy - 6.08, 1.4), (3.0, 0.12, 2.8)); mb.box(M['trim'], (gx + dxx, gy - 6.12, 2.9), (3.6, 0.2, 0.3))
-    for i in range(4): mb.box(M['glass'], (gx - 38 + i * 3.8, gy - 9.5, 2.7), (1.7, 0.1, 1.5)); mb.box(M['trim'], (gx - 38 + i * 3.8, gy - 9.47, 3.6), (2.0, 0.1, 0.2))
-    mb.box(M['brick'], (gx + 8, gy - 6.5, 9.4), (1.6, 1.6, 3.2)); mb.box(M['trim'], (gx + 8, gy - 6.5, 11.1), (2.0, 2.0, 0.3))     # chimney
+    mb = S.MB('gymA'); gx, gy = 16.0, 45.0; GH = 12.0
+    mb.box(M['brick'], (gx, gy, GH / 2), (56, 12, GH)); mb.box(M['trim'], (gx, gy - 6.05, GH + 0.1), (56.4, 0.5, 0.5)); mb.box(M['roofd'], (gx, gy, GH + 0.35), (56.2, 12.2, 0.4))
+    mb.box(M['trim'], (gx, gy - 6.06, 5.9), (56.2, 0.15, 0.3))
+    mb.box(M['brick'], (gx - 36, gy - 5, 4.2), (16, 9, 8.4)); mb.box(M['roofd'], (gx - 36, gy - 5, 8.55), (16.4, 9.4, 0.3))
+    for i in range(17):
+        wx = gx - 25 + i * 3.1
+        for zz in (3.3, 8.6):
+            mb.box(M['trim'], (wx, gy - 6.06, zz), (1.5, 0.12, 2.1)); mb.box(M['glass'] if (i + int(zz)) % 3 else M['glasslit'], (wx, gy - 6.12, zz), (1.3, 0.1, 1.9))
+    for dxx in (-4, 6): mb.box(M['dark'], (gx + dxx, gy - 6.08, 1.5), (3.0, 0.12, 3.0)); mb.box(M['trim'], (gx + dxx, gy - 6.12, 3.1), (3.6, 0.2, 0.3))
+    for i in range(4):
+        for zz in (2.8, 6.0): mb.box(M['glass'], (gx - 42 + i * 3.8, gy - 9.5, zz), (1.7, 0.1, 1.6)); mb.box(M['trim'], (gx - 42 + i * 3.8, gy - 9.47, zz + 0.95), (2.0, 0.1, 0.2))
+    mb.box(M['brick'], (gx + 10, gy - 6.5, GH + 3.0), (1.8, 1.8, 5.6)); mb.box(M['trim'], (gx + 10, gy - 6.5, GH + 5.9), (2.2, 2.2, 0.3))
     fin(mb)
     mb = S.MB('treesA')
-    for (x0, x1, y0, y1, n, hs) in [(-18, -8, 31, 42, 8, (8, 11)), (-3, 8, 40, 46, 5, (8, 11)), (-60, -20, 30, 46, 22, (8, 11)), (-60, -17, 52, 72, 26, (14, 20)), (32, 70, 28, 60, 40, (12, 20)), (-40, 70, 72, 110, 70, (12, 20))]:
+    for (x0, x1, y0, y1, n, hs) in [(-18, -8, 33, 44, 8, (9, 13)), (-3, 8, 52, 58, 6, (14, 22)), (-60, -20, 34, 50, 22, (10, 16)), (-60, -17, 56, 76, 26, (20, 32)), (28, 70, 30, 60, 40, (16, 28)), (-40, 70, 62, 110, 70, (22, 34)), (4, 28, 52, 60, 10, (18, 26))]:
         for i in range(n): S.pine(mb, M, rr.uniform(x0, x1), rr.uniform(y0, y1), rr.uniform(*hs), 400 + i + int(x0))
     for (x0, x1, y0, y1, n) in [(-20, -2, 34, 40, 8), (20, 50, 32, 38, 10), (-52, -24, 34, 46, 8), (36, 6, 36, 40, 0)]:
         for i in range(n): maple(mb, M, rr.uniform(x0, x1), rr.uniform(y0, y1), rr.uniform(8, 12), 700 + i)
