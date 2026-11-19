@@ -666,3 +666,89 @@ Re-render only:
 - L12 and L15 as the B5 proof tiles. L11, L13, L14, L16 and L18 follow by material and need no separate review.
 
 If these land as specified, I expect SHIP at about 7.
+
+---
+
+# Re-check 3 (after the Opus fix round, commit 40b3d2f)
+
+Inputs:
+- The re-rendered finals L04, L05, L09, L11-L19 at 720x1280, each viewed at full size.
+- A fresh 360x640 phone sheet of L04, L05, L09, L11-L19.
+- 2x crops of the pipe in L12 and L15, with pixel samples along the pipe's top and shade side.
+- contact.jpg and contact_small.jpg.
+
+## Verdict: **SHIP** (all 4 open blockers resolved; show the client now)
+
+| # | Blocker | Full size | Phone 360x640 | Status |
+|---|---|---|---|---|
+| B1 | Pulse (L04, L05) | one continuous cyan comet; the head sits in the neck | "a glowing pulse arriving at the glass" | **RESOLVED** |
+| B2 | trench_cut (L17) | a round grey pipe, torn mouth, copper wire, rags, cyan drips | "a broken pipe in the ground leaking" | **RESOLVED** |
+| B3 | line_wagon bottles (L19) | 8 separate bottles, necks on sky, 4 glints, Morse clear | "a crate of glass bottles beside Morse" | **RESOLVED** |
+| B5 | Lead pipe colour (L11-L16, L18) | warm or neutral grey in L12; pale grey-lavender in L15 | grey rod in a brown furrow, no longer the loudest line | **RESOLVED** (two marginal numbers, see notes) |
+
+### B1. Pulse (L04, L05): RESOLVED
+
+- The beads are gone. In both tiles the trail is one solid tapered tube that sheathes the wire, with no dark gaps.
+- The tube goes from a white star at the head to saturated cyan, then fades into the dark wire. Only the head is white.
+- The head is parked on or in the neck glass, and the soap-bubble disc beside the neck is gone.
+- In L05 the upper glass glows cyan and the lower body stays green, so the cyan wins at the neck.
+- In L04 Morse on the ladder reads right beside the lit insulator.
+- Phone view: a single cyan comet that ends in a lit bottle. It passes all three acceptance points.
+
+### B2. trench_cut (L17): RESOLVED
+
+- A grey round pipe now crosses the full frame width. Both intact ends are shaded as tubes, and the slabs are gone.
+- The split takes about 60 % of the width. Its torn edge is jagged and the lips curl back.
+- The orange copper wire and the rags read inside the mouth.
+- The lead stays grey. The only cyan in the frame is the leak.
+- The cyan drips are solid ovals, with no rings or halos.
+- The grey concrete step now reads as a pale soil stratum.
+- Notes for the takes (not blocking):
+  - The rags read off-white rather than cream (`#d9c9a4`). Warm them in a later set pass if convenient.
+  - The drips are about 2:1, not 3x streaks, and no cyan pool of light shows on the soil under the split.
+  - The view is a level elevation rather than the asked high three-quarter. The lower 40 % is empty pit floor, so the take should tilt or push in to put the split at about 45 % frame height.
+
+### B3. line_wagon (L19): RESOLVED
+
+- 8 bottles stand apart in the crate, and every shoulder and neck is above the rim.
+- At least 6 necks stand against the after-rain sky, with 4 star glints at staggered heights.
+- The fused green slab and arches are gone.
+- Morse is left of the crate, his head on clear sky, with nothing overlapping it.
+- Notes for the takes (not blocking):
+  - The glass leans blue-teal in shade. A slightly greener base would help "green glass" read.
+  - Morse is cropped at the chest by the wagon side and has no raised hand. Stage the hand in the take.
+  - The bottom 35 % is wagon underside and grass. Frame it lower or push in.
+
+### B5. Lead pipe (L11-L16, L18): RESOLVED
+
+- The candy blue and white stripe is gone in every tile. The pipe reads as a grey lead rod in a brown furrow, and the reel follows.
+- L12 measurements:
+  - shade side: S 0.10-0.17, which passes;
+  - sun top: max channel about 200 (spec ≤ 190), warm grey, hue 330-10. It reads as grey, not white.
+- L15 measurements:
+  - shade side: S 0.16-0.19, which passes;
+  - sky-lit top: about rgb(110, 107, 155), H about 240, S 0.29-0.33. That sits right on the limit, so it reads pale grey-lavender at dusk.
+- Neither number shows at phone size. If the set gets another pass, raise `lead` `emit_k` by 0.1. Otherwise the grade in the DUSK takes handles it.
+
+### Other re-rendered tiles (L09, L11, L13, L14, L16, L18): no regressions seen
+
+- L09: the race still reads. The dark oval shadow in the lower right is still there.
+- L16 and L08: the pure-blue puddle and 100 % opacity rain remain, as before.
+
+## Scores, re-check 2 → re-check 3
+
+- LINE: 6.0 → **7.1**. The reveal chain now reads: pulse at the glass, leaking pipe, glass bottles.
+- CHAMBER: unchanged at 6.9.
+- STUDIO: unchanged at 6.2.
+- **Film-level set score: 6.3 → 7.0 / 10.**
+
+## SHIP: notes the render workers handle in their takes
+
+These need camera, framing, staging or grade. None blocks the client showing.
+1. L17 trench_cut: tilt or push in so the split sits at about 45 % frame height and the empty pit floor is cut. Optional set pass: cream rags, longer drip streaks, a cyan light pool on the soil.
+2. L19 line_wagon: frame out the bottom 35 % of wagon underside and grass, and give Morse his raised hand. Optional: a greener bottle base.
+3. L15/L16 and other DUSK takes with the pipe: grade the pipe top a little warmer, or set `emit_k` +0.1 in the next set pass.
+4. L09 line_rail: frame out or move the caster of the dark oval shadow in the lower right.
+5. L16 and L08 RAIN: lower the rain opacity to about 50-60 %, and make the pure-blue puddle dark-reflective.
+6. C07 and the CHAMBER wides: tilt down to cut the blue-grey ceiling (about 25 % of the frame).
+7. Carried over from earlier re-checks: the STUDIO notes in "Per-preset fixes / STUDIO" and the NON-BLOCKING list in Re-check 1.
