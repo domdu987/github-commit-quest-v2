@@ -2,3 +2,4 @@ raw/
 draft/
 *.log
 __pycache__/
+raw_old/
