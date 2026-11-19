@@ -1,0 +1,20 @@
+SHIP final 720x1280, Cycles CPU, 12 spp + OIDN (direct light, no diffuse bounce), 2 threads. CPU s of the render call (user+sys of the process); limit 40. build = scene build seconds (once per process).
+ship_hero    NOON        render cpu  31.3 s  wall  16.9 s  build  6.7 s  OK
+ship_hero    DAY         render cpu  31.7 s  wall  17.2 s  build  6.0 s  OK
+ship_hero    STORM_DUSK  render cpu  31.2 s  wall  16.5 s  build  6.2 s  OK
+ship_aerial  NOON        render cpu  39.7 s  wall  21.2 s  build  6.3 s  OK
+ship_aerial  DAY         render cpu  37.5 s  wall  20.2 s  build  6.3 s  OK
+ship_aerial  STORM_DUSK  render cpu  40.9 s  wall  21.7 s  build  6.3 s  OVER
+ship_deck    NOON        render cpu  39.1 s  wall  20.9 s  build  6.2 s  OK
+ship_deck    DAY         render cpu  38.2 s  wall  21.1 s  build  6.4 s  OK
+ship_deck    STORM_DUSK  render cpu  39.4 s  wall  20.8 s  build  6.1 s  OK
+ship_rail    NOON        render cpu  32.0 s  wall  17.5 s  build  6.3 s  OK
+ship_rail    DAY         render cpu  32.6 s  wall  17.2 s  build  6.3 s  OK
+ship_rail    STORM_DUSK  render cpu  33.4 s  wall  17.9 s  build  8.3 s  OK
+ship_rocks   NOON        render cpu  31.3 s  wall  16.2 s  build  7.1 s  OK
+ship_rocks   DAY         render cpu  31.7 s  wall  16.4 s  build  6.8 s  OK
+ship_rocks   STORM_DUSK  render cpu  36.3 s  wall  18.8 s  build  6.6 s  OK
+ship_coast   NOON        render cpu  31.3 s  wall  16.6 s  build  3.4 s  OK
+ship_coast   DAY         render cpu  31.8 s  wall  16.9 s  build  3.8 s  OK
+ship_coast   STORM_DUSK  render cpu  32.7 s  wall  17.4 s  build  3.4 s  OK
+max cpu 40.9 s

@@ -1,0 +1,19 @@
+SHIP hue report: cast-shadow pixels from a sun-only render (method of styleboard/hue_check.py). target shade hue 225-265, magenta <= 10 %.
+ship_hero    NOON        shade hue None  median None  in-band None %  magenta 0.05 %  cast px 0.0 %  OK
+ship_hero    DAY         shade hue None  median None  in-band None %  magenta 0.09 %  cast px 0.0 %  OK
+ship_hero    STORM_DUSK  shade hue None  median None  in-band None %  magenta 0.15 %  cast px 0.0 %  OK
+ship_aerial  NOON        shade hue None  median None  in-band None %  magenta 0.03 %  cast px 0.0 %  OK
+ship_aerial  DAY         shade hue None  median None  in-band None %  magenta 0.03 %  cast px 0.0 %  OK
+ship_aerial  STORM_DUSK  shade hue None  median None  in-band None %  magenta 0.12 %  cast px 0.0 %  OK
+ship_deck    NOON        shade hue None  median None  in-band None %  magenta 4.33 %  cast px 0.0 %  OK
+ship_deck    DAY         shade hue None  median None  in-band None %  magenta 4.82 %  cast px 0.0 %  OK
+ship_deck    STORM_DUSK  shade hue None  median None  in-band None %  magenta 7.55 %  cast px 0.0 %  OK
+ship_rail    NOON        shade hue None  median None  in-band None %  magenta 5.56 %  cast px 0.0 %  OK
+ship_rail    DAY         shade hue None  median None  in-band None %  magenta 5.25 %  cast px 0.0 %  OK
+ship_rail    STORM_DUSK  shade hue None  median None  in-band None %  magenta 20.08 %  cast px 0.0 %  OUT
+ship_rocks   NOON        shade hue None  median None  in-band None %  magenta 13.94 %  cast px 0.0 %  OUT
+ship_rocks   DAY         shade hue None  median None  in-band None %  magenta 14.11 %  cast px 0.0 %  OUT
+ship_rocks   STORM_DUSK  shade hue None  median None  in-band None %  magenta 18.79 %  cast px 0.0 %  OUT
+ship_coast   NOON        shade hue None  median None  in-band None %  magenta 0.04 %  cast px 0.0 %  OK
+ship_coast   DAY         shade hue None  median None  in-band None %  magenta 0.04 %  cast px 0.0 %  OK
+ship_coast   STORM_DUSK  shade hue None  median None  in-band None %  magenta 0.43 %  cast px 0.0 %  OK

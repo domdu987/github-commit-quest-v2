@@ -15,7 +15,7 @@ WIN = (-1.55, -0.3, 0.9, 2.3)  # window x0 x1 z0 z1 (back wall)
 CAMS_M = dict(
     shop_wide=((0.05, -2.3, 1.32), (0.0, 3.4, 0.95)),
     shop_bench=((1.25, -0.6, 1.2), (1.35, 2.5, 1.2)),
-    shop_clock=((0.45, 0.6, 1.25), (1.2, 1.9, 1.1)),
+    shop_clock=((1.0, 0.3, 1.25), (1.1, 1.9, 1.02)),
     shop_door=((0.75, 0.2, 1.3), (-0.15, -2.9, 1.15)),
 )
 CAM_NOTES = dict(
@@ -485,11 +485,11 @@ def set_clock(n=1, frame=None):
     big = [x for x in ns if x != 4]; slots = {}
     if len(big) + (1 if 4 in ns else 0) == 1 and big: slots[big[0]] = (1.0, 1.88)
     elif big:
-        if 4 in ns and len(big) == 1: slots[big[0]] = (0.85, 1.88)
+        if 4 in ns and len(big) == 1: slots[big[0]] = (0.8, 1.88)
         else:
             tab = CLOCK_SLOTS[min(3, len(big))]
             for x, s in zip(big, tab): slots[x] = s
-    if 4 in ns: slots[4] = (1.25, 1.75) if not big else (1.55, 1.52)
+    if 4 in ns: slots[4] = (1.25, 1.75) if not big else (1.5, 1.58)
     for c, d in S['clocks'].items():
         on = c in ns; root = d['root']; K._show([root] + list(root.children_recursive), on, frame)
         if on:
