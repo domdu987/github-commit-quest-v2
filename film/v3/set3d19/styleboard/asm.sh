@@ -1,1 +1,1 @@
-cd "$(dirname "$0")"; cat machinery.py part_common.py part_clouds.py part_shop.py $( [ -f part_ship.py ] && echo part_ship.py ) $( [ -f part_hall.py ] && echo part_hall.py ) part_main.py > sb.py
+cd "$(dirname "$0")"; cat machinery.py part_common.py part_clouds.py part_shop.py $( [ -f part_ship.py ] && echo part_ship.py ) $( [ -f part_ship6.py ] && echo part_ship6.py ) $( [ -f part_hall.py ] && echo part_hall.py ) part_main.py > sb.py
