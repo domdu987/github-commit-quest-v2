@@ -307,20 +307,20 @@ def fg_rope(T, side="right", R=0.22):
     return objs
 
 
-def make_mod(sh_dur, push=0.0, slide=0.0, sway=0.0, sway_hz=1.7, yawwob=0.0, dz=0.0, dzt=0.0):
+def make_mod(sh_dur, push=0.0, slide=0.0, sway=0.0, sway_hz=1.7, yawwob=0.0, dz=0.0, dzt=0.0, vz=0.6):
     """camera modifier: extra push (fraction of the look distance per second), extra lateral slide (px/s of the 720 px frame at the look distance),
     handheld sway (D amplitude, lateral + vertical) and a small look-at wobble (D) -- all linear in time so no frame sits still."""
     def mod(g, t, pose):
         loc = V(pose["loc"]); look = V(pose["look_at"])
         d = look - loc; L = d.length; u = d.normalized()
         right = V((u.y, -u.x, 0.0)).normalized()
-        sec = (g - 0) / 30.0
         tt = t * sh_dur
+        sec = tt                                  # sway / wobble start at zero offset with the shot's first frame (handles run backwards)
         loc = loc + u * (push * L * tt)
-        sl = slide * (tt - 0.5 * sh_dur) / 720.0 * 2 * L * 0.45
+        sl = slide * tt / 720.0 * 2 * L * 0.45
         loc = loc + right * sl; look = look + right * sl
         import math as m
-        loc = loc + right * (sway * m.sin(2 * m.pi * sway_hz * sec)) + V((0, 0, 1)) * (0.6 * sway * m.sin(2 * m.pi * sway_hz * 1.3 * sec + 1.0))
+        loc = loc + right * (sway * m.sin(2 * m.pi * sway_hz * sec)) + V((0, 0, 1)) * (vz * sway * m.sin(2 * m.pi * sway_hz * 1.3 * sec + 1.0))
         look = look + right * (yawwob * m.sin(2 * m.pi * 1.1 * sec + 0.5)) + V((0, 0, 1)) * (0.5 * yawwob * m.sin(2 * m.pi * 0.9 * sec))
         look = look + V((0, 0, dz + dzt * t))
         pose["loc"] = tuple(loc); pose["look_at"] = tuple(look)
