@@ -44,7 +44,25 @@ You cannot listen, but you can measure:
 - Separate stems on fal.ai (`fal-ai/demucs`, model `htdemucs_ft`): drums stem silent means no beat; the remainder gives the bed level (about 20 dB under the voice), its steadiness and its spectrum.
 - Say plainly what you cannot tell (the instruments, whether the music fits the mood) and ask the user to listen.
 
+## Is the new reference the same style as the bundled spec?
+
+Re-measuring a style costs about 3.4 million tokens; building to the wrong spec costs more. Before deciding, measure the new clips with the bundled tools (about an hour, no lens team) and compare with the numbers of the first references:
+
+| Check | Tool | Same style if |
+|---|---|---|
+| Characters | look at 12 stills at full size | flat, unlit ink-and-fill figures at every size, no shading on faces or bodies |
+| Colour make-up | `pipeline/v3/tools/hue_report.py` on stills every 0.5 s | each hue share within about ±5 points of the row below (red 25-40, orange 23-38, blue 14-29, violet 1-5, magenta 5-10) |
+| Depth and camera | `pipeline/v3/shots/qa_parallax.py ref` | 10 to 45 percent of frame pairs explained by a flat 2D move (the first references: 11 and 43; a flat film reads about 90) |
+| Edit | cut and dissolve list | 16 to 22 shots per 65 s, mostly dissolves, a framing change about every 1.2 to 1.5 s |
+| Captions | OCR | one line of 1 to 3 words, centred near y 900 of 1280, hard swaps |
+| Sound | stems | voice wall to wall, a bed about 20 dB under the voice with no drums, an effect every 2 to 3 s |
+
+Four or more rows match, the characters row among them: reuse `pipeline/spec/` and re-measure only the rows that differ (one lens each). Fewer: run the full lens study. Tell the user which rows differ either way; a different palette alone is a set and light change, not a new style.
+
 ## What the first two references measured (bundled in pipeline/spec/)
+
+These are the raw measurements of the two clips (ranges over both). The acceptance bands that workers build to are in `references/look.md` and `pipeline/v3/film/CONVENTIONS.md`; they were set from these numbers after reconciliation and verification, so they differ slightly (for example red 30-41 and magenta 0-10 as a band, shade 0.15-0.31 of lit). Build to the bands; use the raw numbers when you compare a new reference.
+
 
 Characters: flat unlit ink-and-fill puppets, plum ink `#3a2832`, head outline thin on the lit side and thick away from the key light, half-lid default eyes, torso one rounded shape with a drawn costume, constant-width rubber-hose limbs, total height about 3 head diameters, hats drawn over the top of the head.
 World: real 3D (clip A) or illustrated plates with 3D inserts (clip B), one hard key light, shade at 0.11 to 0.33 of lit and blue-violet, bloom only on emitters, no grain, no vignette.

@@ -1,0 +1,31 @@
+{
+ "take": "s24",
+ "shots": [
+  24
+ ],
+ "g0": 1720,
+ "g1": 1788,
+ "handle_in": 0,
+ "handle_out": 5,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "HARD CUT, 3 frames before the word: the fog bank is a wall of water"
+ },
+ "set": "beach",
+ "light": "storm",
+ "samples": 12,
+ "frames_dir": "frames",
+ "first_rendered": 1720,
+ "last_rendered": 1792,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "transition_out": {
+  "type": "object_wipe",
+  "frames": 6,
+  "note": "the foam sheet crosses the lens (conform overlay); clean frames delivered with 5 handle frames"
+ }
+}
