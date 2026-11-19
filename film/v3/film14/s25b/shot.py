@@ -19,12 +19,13 @@ BLINK_SEED = {'matriarch': 0, 'elephant_b': 17, 'elephant_c': 33, 'elephant_d': 
 
 # ------------------------------------------------------------------------------------------------ shot 25: the herd turns and flees AWAY along the fence (NIGHT, low camera at the right end of the fence)
 # v2: the camera sits at the right end of the front fence and looks along it to the left, so the herd that runs left RECEDES in depth (scale 1.0 -> 0.4)
-CAM25 = lambda g: (lerp3((9.8, -6.8, 1.7), (9.2, -6.6, 1.7), mixu((g - 1672) / 100.0)), lerp3((-1.0, 2.6, 0.55), (-2.6, 2.8, 0.6), mixu((g - 1672) / 100.0)), 22.0)
-HERD = [  # cast, x0, y, turn-done frame (swap to the run), run speed
-    ('elephant_b', 5.9, -2.3, 1684, 1.6), ('calf', -0.9, -1.2, 1688, 1.6), ('matriarch', 2.7, 3.1, 1686, 1.6), ('elephant_c', 0.3, 0.3, 1690, 1.6), ('elephant_d', -3.2, 4.0, 1692, 1.6)]
+CAM25 = lambda g: (lerp3((6.0, 6.6, 1.45), (5.3, 6.5, 1.45), mixu((g - 1672) / 100.0)), lerp3((-6.0, -10.0, -3.4), (-10.0, -11.0, -3.3), mixu((g - 1672) / 100.0)), 22.0)
+HERD = [  # cast, x0, y0 (at the virtual start gs), gs, run speed   -- s25b v2: the herd is ALREADY turned and running at g1672 (shot 24 ends on the trumpet)
+    ('elephant_b', 4.2, 0.2, 1664, 1.6), ('calf', 0.9, 1.4, 1664, 1.6), ('matriarch', 2.4, 2.6, 1664, 1.6), ('elephant_c', -0.6, 2.2, 1664, 1.6), ('elephant_d', -2.4, 3.2, 1664, 1.6)]
+RUND = (-0.78, -0.62)   # run direction: away from the fence and the camera (into depth), drifting to the left
 PPD25 = 96
 TURN = 0            # s25b: NO cross-fade turn: the frontal card is swapped for the running side card on ONE frame, behind a dust crown
-RUNK = 2.8          # the herd runs 2.2x the original distance per cycle frame (panic gallop): it must visibly LEAVE
+RUNK = 1.7          # the herd runs 2.2x the original distance per cycle frame (panic gallop): it must visibly LEAVE
 def run_dist(cast, speed, g, gs):
     """metres run since the swap at frame gs, with a short ramp-up; and the cycle phase (no foot slip: phase advances with distance)"""
     cyc_m = cast14.cycle_distance(cast, 'run', speed) * MPD; x = 0.0; ph = 0.0
@@ -39,14 +40,14 @@ def shot25(g, rep):
     for cast, x0, y0, gs, spd in HERD:
         d = DUSTS.setdefault(cast, (C.Dust(seed=7 + len(DUSTS)), C.Dust(seed=70 + len(DUSTS))))
         cyc_m = cast14.cycle_distance(cast, 'run', spd) * MPD
-        pos = lambda k: (x0 - run_dist(cast, spd, k, gs)[0], y0 + 0.07 * run_dist(cast, spd, k, gs)[0])
+        pos = lambda k: (x0 + RUND[0] * run_dist(cast, spd, k, gs)[0], y0 + RUND[1] * run_dist(cast, spd, k, gs)[0])
         if not getattr(d[0], 'done', False):        # emit the whole history once (deterministic)
             d[0].done = True; last = -9
             for k in range(gs - 5, 1830):
                 if k == gs - 4: d[0].burst(k, x0 + 0.4, n=70, dirx=-1.0, power=1.2)        # the crown that covers the turn
-                if k in (gs + 6, gs + 14, gs + 24) and k <= gs + 24: d[0].burst(k, x0 - run_dist(cast, spd, k, gs)[0] + 0.8, n=26, dirx=-1.0, power=0.55)
+                if k in (gs + 6, gs + 14, gs + 24) and k <= gs + 24: d[0].burst(k, x0 + RUND[0] * run_dist(cast, spd, k, gs)[0] + 0.8, n=26, dirx=-1.0, power=0.55)
                 if k >= gs:
-                    xr, ph = run_dist(cast, spd, k, gs); xk = x0 - xr
+                    xr, ph = run_dist(cast, spd, k, gs); xk = x0 + RUND[0] * xr
                     if int(ph * 2) != int(run_dist(cast, spd, k - 1, gs)[1] * 2) and k - last >= 5:   # every foot strike: a crown of droplets + wisps
                         last = k; d[0].burst(k, xk + 0.8, n=70, dirx=-1.0, power=1.0)
                     d[1].trail(k, xk + 0.9, dirx=-1.0, power=1.3 * (0.5 + 0.5 * min(1, (k - gs) / 12)), n=14)
@@ -63,18 +64,20 @@ def shot25(g, rep):
             xr, ph = run_dist(cast, spd, g, gs); base = story('%s_flee' % cast)[1]
             pp = cast14.cycle(cast, ph, 'run', -1, {k: v for k, v in base.items() if k not in ('phase', 'stride', 'gait', 'mirror', 'view')}, speed=spd)
             pp['t'] = (g - gs) * 0.12; pp['dust'] = 0.5; pp['blink'] = cast14.blink_at(g, 96, BLINK_SEED[cast])
-            cur = (x0 - xr, y0 + 0.07 * xr); r = put('s25_' + cast, cast, pp, (cur[0], cur[1], 0), loc, ppd=PPD25, mirror=True)
+            cur = (x0 + RUND[0] * xr, y0 + RUND[1] * xr); r = put('s25_' + cast, cast, pp, (cur[0], cur[1], 0), loc, ppd=PPD25, mirror=True)
         rep[cast] = dict(head=screen(r['world'](r['anchors']['head'])), feet=screen(r['world'](r['anchors']['feet'])))
         # dust: cards that face the camera, centred on the elephant (card x = path x - elephant x); the crown in front of the feet, the trail behind
         yw = yaw_to(loc, (cur[0], cur[1]))
         cx, cy = cur if g >= gs else (x0, y0)
-        cx = max(cx, x0 - 6.0)
         for di, (dd, off) in enumerate(((d[0], -0.5), (d[1], 0.5))):
             p, n = dd.paint(g, cx - 7.5, cx + 7.5, 5.0, tag='%s%d' % (cast, di), light_k=1.0)
             if n and not os.environ.get('NODUST'):
                 dx, dy = math.sin(yw) * off, -math.cos(yw) * off
                 C.card('s25_dust_%s_%d' % (cast, di), p, -7.5, 0, 7.5, 5.0, (cx + dx, cy + dy, 0.0), yaw=yw, k=1.0)
-    F.set_wire_push(1.0); F.set_bees(0.82, 0.45)
+    F.set_wire_push(1.0); F.set_bees(0.82, 0.22)
+    for n in ('hive_3', 'bar_3', 'hive_4', 'bar_4', 'hive_5', 'bar_5'):          # s25b v2: the camera stands inside the fence in the gap of units 3/4: their hives are hidden (the hooks re-show them every call)
+        o = bpy.data.objects.get(n)
+        if o is not None: o.hide_render = True
 
 # ------------------------------------------------------------------------------------------------ shot 26: dawn, the farmer proud by the fence (MORNING, crane down)
 FARMER26 = (-1.7, 3.3, 0.0)
@@ -195,19 +198,28 @@ def shot30(g, rep):
 # ------------------------------------------------------------------------------------------------ setup / CLI
 def prepare(shot):
     PR = F.PRESETS; CM = F.CAMS
-    if shot == 25: CM['field_night_wide'] = dict(loc=CAM25(1700)[0], look=CAM25(1700)[1], lens=22); PR['field_night_wide'] = dict(light='NIGHT', state='fs3', staging=[]); return 'field_night_wide', 'NIGHT'
+    if shot == 25: F.STATE.get('x', None); CM['field_night_wide'] = dict(loc=CAM25(1700)[0], look=CAM25(1700)[1], lens=22); PR['field_night_wide'] = dict(light='NIGHT', state='fs3', staging=[]); return 'field_night_wide', 'NIGHT'
     if shot == 26: F.STAND['s26_farmer'] = FARMER26; CM['fence_line'] = dict(loc=(-3.4, -0.9, 1.8), look=(-1.9, 4.3, 2.25), lens=22); PR['fence_line'] = dict(light='MORNING', state='fs3', wire_r=0.07, staging=[('hero', 's26_farmer')]); return 'fence_line', 'MORNING'
     if shot == 27: CM['uncle_field_morning'] = dict(loc=CAM27(1840)[0], look=CAM27(1840)[1], lens=20); PR['uncle_field_morning'] = dict(light='NIGHT', state='fs3,uf0', staging=[]); return 'uncle_field_morning', 'NIGHT'
     if shot == 28: return 'yard_two_shot', 'MORNING'
     if shot in (29, 30): PR['uncle_hang'] = dict(light='MORNING', state='fs3,uf1,uh1', staging=[]); return 'uncle_hang', 'MORNING'
 SHOTFN = {25: shot25, 26: shot26, 27: shot27, 28: shot28, 29: shot29, 30: shot30}
 
+def matte_wire():
+    m = F.STATE['M']['wire']
+    for n in m.node_tree.nodes:
+        if n.type == 'MIX' and getattr(n, 'data_type', '') == 'RGBA': n.inputs[6].default_value = (0.50, 0.52, 0.56, 1); n.inputs[7].default_value = (0.40, 0.42, 0.47, 1)
+        if n.type == 'BSDF_PRINCIPLED':
+            n.inputs['Roughness'].default_value = 0.75
+            if 'Emission Strength' in n.inputs: n.inputs['Emission Strength'].default_value = 0.0
+            if 'Emission Color' in n.inputs: n.inputs['Emission Color'].default_value = (0, 0, 0, 1)
+
 def setup(shot, quality, samples=None, threads=2, scale=1.0):
     pr, light = prepare(shot)
     _gb = F.ImageFilter.GaussianBlur; F.ImageFilter.GaussianBlur = lambda r=2: _gb(12)      # soft path / grass edges in the ground mask (no hard-edged pale-green patch)
-    A = F.build(pr, light); sc = bpy.context.scene; F.setup_render(sc, 'final')
+    A = F.build(pr, light); F.STATE['wire_r'] = 0.03; sc = bpy.context.scene; F.setup_render(sc, 'final')
     sc.cycles.samples = samples or 24; sc.cycles.transparent_max_bounces = 40; sc.render.threads = threads; sc.render.resolution_x = int(720 * scale); sc.render.resolution_y = int(1280 * scale)
-    C.cam_make(); bpy.context.view_layer.update()
+    C.cam_make(); matte_wire(); F._update_fence(); bpy.context.view_layer.update()
     if shot == 27:                                  # radiate the destruction outward from the elephants (plants nearest the herd fall first)
         rs = np.random.RandomState(5); pts = np.array([(e[1], e[2]) for e in EAT])
         for p in F.STATE['uplants']:
@@ -217,6 +229,10 @@ def setup(shot, quality, samples=None, threads=2, scale=1.0):
             if fp['ob'].location.y < 11.0: fp['thr'] = 9.0          # no pads / mud rings in the foreground
         for cn in F.STATE['ucans']: cn['ob'].hide_render = True; cn['ob'].hide_viewport = True; cn['brk'] = False
         d0 = None
+    if shot == 25:
+        C.cut_named(['posts_', 'roof'], [(0.3, 11.6, 3.5, 6.3, -1, 9)])
+        for o in bpy.data.objects:
+            if o.name.startswith('mz') and -2.0 < o.location.x < 14.0 and 5.5 < o.location.y < 14.0: o.hide_render = True; o.hide_viewport = True
     if shot == 27: C.cut_tree33()
     if shot in (29, 30): fix_unc()
     if shot in (29, 30):                            # the set's own stool is replaced by the stool drawn by the pose (one card: the uncle never slides on it)

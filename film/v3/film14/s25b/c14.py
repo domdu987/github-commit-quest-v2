@@ -112,7 +112,7 @@ def put(tag, cast, pose, mark, cam_loc, ppd=128, mirror=False, canvas=None, shad
         for _ in range(4):
             yw = yaw_of(mk); axx = Vector((math.cos(yw), math.sin(yw), 0)); mk = Vector((gp[0], gp[1], mk.z)) - axx * ((a[0] - fx) * MPD)
     yaw = yaw_of(mk) + math.radians(yaw_extra)
-    ob = _link(bpy.data.objects.new('actor_' + tag, me)); ob.location = mk; ob.rotation_euler = (0, 0, yaw)
+    ob = _link(bpy.data.objects.new('actor_' + tag, me)); ob.location = mk; ob.rotation_euler = (0, 0, yaw); ob.visible_shadow = False
     ax = Vector((math.cos(yaw), math.sin(yaw), 0))
     def w(a): return mk + ax * ((a[0] - fx) * MPD) + Vector((0, 0, (fy - a[1]) * MPD))
     if shadow:
@@ -213,3 +213,12 @@ def cut_region(boxes, pref='props'):
 def cut_stool(): cut_region([(-23.1, -21.7, 1.8, 3.0, 0.62)])
 
 def cut_tree33(): cut_region([(-43.0, -24.0, 0.0, 13.0, 40.0)], "trees")
+
+def cut_named(prefixes, boxes):
+    """delete vertices of the meshes whose name starts with one of prefixes inside the (x0,x1,y0,y1,z0,z1) boxes (world)"""
+    for ob in list(bpy.data.objects):
+        if ob.type != 'MESH' or not ob.name.startswith(tuple(prefixes)): continue
+        bm = bmesh.new(); bm.from_mesh(ob.data); mw = ob.matrix_world
+        dl = [v for v in bm.verts if any(b[0] < (mw @ v.co).x < b[1] and b[2] < (mw @ v.co).y < b[3] and b[4] < (mw @ v.co).z < b[5] for b in boxes)]
+        if dl: bmesh.ops.delete(bm, geom=dl, context='VERTS'); bm.to_mesh(ob.data)
+        bm.free()
