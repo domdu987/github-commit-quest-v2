@@ -1,0 +1,6 @@
+frames/
+draft/
+cards/
+work/
+*.jsonl
+__pycache__/
