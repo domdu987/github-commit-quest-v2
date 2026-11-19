@@ -11,7 +11,7 @@ import math, os, sys, json
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import c16 as C                                          # noqa: E402
-from mathutils import Vector                             # noqa: E402
+from mathutils import Vector, Matrix                     # noqa: E402
 
 TG, K, LN, cast16 = C.TG, C.K, C.LN, C.cast16
 lerp, clamp, blink, u_of, bf = C.lerp, C.clamp, C.blink, C.u_of, C.bf
@@ -28,15 +28,16 @@ PRESS = (G_TRY, G_TRY + 6)
 PRESS2 = (G_SIL - 6, G_SIL - 1)
 CAM_NEAR = 0.72
 CAM_UP = 1.2
+CAM_NEAR, CAM_UP = 0.72, 1.2
 PRESET, LIGHT = "line_trench_end", "DUSK"
+DIP_K = 0.58                                            # brightness at the bottom of the dip (director: 0.55-0.6)
 
 def dip(g):
-    """brightness factor: 1 -> 0.75 -> 1 over the dip window (smooth)"""
     a, b = DIP
     if g <= a or g >= b:
         return 1.0
     u = (g - a) / float(b - a)
-    return 1.0 - 0.25 * math.sin(math.pi * u)
+    return 1.0 - (1.0 - DIP_K) * math.sin(math.pi * u)
 
 def key_press(g):
     v = 0.0
@@ -49,21 +50,47 @@ STORY = cast16.STORY16
 def story(name):
     return dict(STORY[name][1])
 
-ACTORS = dict(morse=("morse16", "morse_key_wait", "morse_key"), cornell=("cornell", "cornell_wait", "worker_key_c"),
+ACTORS = dict(morse=("morse16", "morse_key_wait", None), cornell=("cornell", "cornell_wait", "worker_key_c"),
               worker_a=("worker16_a", "worker_a_lean_shovel", "worker_key_a"), worker_b=("worker16_b", "worker_b_lean_shovel", "worker_key_b"))
 CANVAS = dict(worker_a=(-2.6875, -4.375, 2.6875, 0.375), worker_b=(-2.6875, -4.625, 2.6875, 0.1875), cornell=(-2.6875, -4.1875, 2.6875, 0.1875),
               morse=(-2.375, -4.375, 2.375, 0.1875))
+
+# ---- the set's test key (tg_line.key_station): crate frame = KEYCRATE, yaw 0.5, scale 1.6; lever pivot / rod end / knob in crate-local metres
+KC, KYAW, KSC = LN.KEYCRATE, 0.5, 1.6
+def key_pt(lx, ly, lz):
+    c, s_ = math.cos(KYAW), math.sin(KYAW)
+    return Vector(K.W((KC[0] + (c * lx - s_ * ly) * KSC, KC[1] + (s_ * lx + c * ly) * KSC, lz * KSC)))
+PIV = lambda: key_pt(0.12, -0.2, 0.70)
+ROD_END = lambda: key_pt(0.30, -0.2, 0.75)
+KNOB = lambda: key_pt(0.31, -0.2, 0.76)
+PRESS_DEG = 16.0
+LEVER_RIGHT = lambda: (Vector(ROD_END()) - Vector(PIV())).normalized()
+
+def lever_rot(g):
+    d = LEVER_RIGHT()
+    return Matrix.Rotation(math.radians(PRESS_DEG * key_press(g)), 3, Vector((0, 0, 1)).cross(d))
+
+def knob_world(g):
+    p = Vector(PIV())
+    return p + lever_rot(g) @ (Vector(KNOB()) - p)
+
+CREW = dict(cornell=lambda: (Vector(KNOB()).x + 2.4, Vector(KNOB()).y - 2.0, 0.0), worker_a=lambda: (Vector(KNOB()).x + 4.4, Vector(KNOB()).y - 1.6, 0.0),
+            worker_b=lambda: (Vector(KNOB()).x + 3.4, Vector(KNOB()).y - 2.9, 0.0))
+
+def morse_at():
+    k = Vector(KNOB())
+    return (k.x - 0.1, k.y - 1.5, 0.0)
 
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s15")
         A = self.A
-        loc0, look0 = Vector(A["cam"]["loc"]), Vector(A["cam"]["look_at"])
-        mm, mc = Vector(A["marks"]["morse_key"]), Vector(A["marks"]["worker_key_c"])
-        look0 = Vector((121.0, -8.4, 2.3))
-        loc0 = look0 + (loc0 - look0) * CAM_NEAR
-        loc0.z += CAM_UP
-        self.cp = C.CamPath(loc0, look0, GA, GB, push=0.10, slide_px=25.0, arc_deg_s=20.0, decay=0.25, snaps=[dict(g=(G_TRY - 2, G_TRY + 11), k=1.8, peak=1.7, shift=(0.5, 0.1))])
+        self.make_lever()
+        k = Vector(KNOB())
+        look0 = Vector((k.x + 0.9, k.y - 0.6, 2.6))
+        loc0 = look0 + Vector((-2.0, 6.2, 1.6))
+        self.cp = C.CamPath(loc0, look0, GA, GB, push=0.12, slide_px=45.0, arc_deg_s=-15.0, decay=0.25,
+                            snaps=[dict(g=(G_SIL - 2, G_SIL + 11), k=2.2, peak=1.8, shift=(0.6, 0.1))])
         self.key_cam(bf(GA), *self.cp.at(GA))
         self.scene.frame_set(bf(GA))
         self.base_exp = self.scene.view_settings.exposure
@@ -72,31 +99,70 @@ class Take(C.Take):
         for nm, (cast, pose, mark) in ACTORS.items():
             self.actors[nm] = self.act[nm] = C.make_actor(nm, cast, sd, canvas=CANVAS.get(nm), contact=True, cam=self.cam)
 
+    def make_lever(self):
+        """replace the set's static lever + knob with an animated copy (rod and knob pivot about the lever's hinge)"""
+        import bmesh, bpy
+        inv = K.frame_mat().inverted()
+        piv, end, knob = Vector(PIV()), Vector(ROD_END()), Vector(KNOB())
+        for name in ("work_brass", "work_dark"):
+            ob = bpy.data.objects.get(name)
+            if ob is None:
+                continue
+            bm = bmesh.new(); bm.from_mesh(ob.data); mw = ob.matrix_world
+            bad = []
+            for v in bm.verts:
+                w = mw @ v.co
+                if name == "work_brass" and (w - piv).length < 0.8 and w.z > piv.z - 0.03 and (w - Vector((piv.x, piv.y, w.z))).length > 0.0:
+                    # rod verts: close to the segment piv -> end
+                    t = max(0.0, min(1.0, (w - piv).dot(end - piv) / (end - piv).length_squared))
+                    if (w - (piv + (end - piv) * t)).length < 0.07:
+                        bad.append(v)
+                if name == "work_dark" and (w - knob).length < 0.25:
+                    bad.append(v)
+            bmesh.ops.delete(bm, geom=bad, context="VERTS"); bm.to_mesh(ob.data); bm.free()
+        M = TG.STATE["M"]
+        mb = K.MB("s15_lever")
+        mb.rod(M["brass"], tuple(inv @ piv), tuple(inv @ end), 0.019, 0.019, 8)
+        mb.ell(M["dark"], tuple(inv @ knob), (0.055, 0.055, 0.05), (10, 6))
+        self.lever = mb.finish()
+
     def pose(self, gs):
         for g in gs:
             self.key_cam(bf(g), *self.cp.at(g))
+        piv = Vector(PIV())
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
             self.scene.view_settings.exposure = self.base_exp + math.log2(dip(g))
             self.scene.view_settings.keyframe_insert("exposure", frame=f)
+            R = lever_rot(g)
+            ang = math.radians(PRESS_DEG * key_press(g))
+            ax = Vector((0, 0, 1)).cross(LEVER_RIGHT()).normalized()
+            for ob in self.lever:
+                ob.rotation_mode = "AXIS_ANGLE"
+                ob.rotation_axis_angle = (ang, ax.x, ax.y, ax.z)
+                ob.location = piv - R @ piv
+                ob.keyframe_insert("location", frame=f)
+                ob.keyframe_insert("rotation_axis_angle", frame=f)
             for nm, (cast, pose, mark) in ACTORS.items():
                 p = story(pose)
+                mk = morse_at() if nm == "morse" else CREW[nm]()
+                hands = None
                 if nm == "morse":
-                    p["key_press"] = key_press(g)
-                    if key_press(g) > 0.02:
-                        p["expr"] = "determined"
+                    kp = key_press(g)
+                    p["key_press"] = 0.0
+                    p.pop("prop_r", None)                  # the set shows the key
+                    p["expr"] = "determined" if g < 982 else "worried"
+                    p["gaze"] = (-0.5, -0.9)
+                    kw = knob_world(g)
+                    hands = {"r": {"hand": (kw.x, kw.y, kw.z + 0.12)}}
+                else:
+                    p["gaze"] = (-0.6, -0.5)
+                    p["lean"] = p.get("lean", 0.0) + 5.0 + 3.0 * math.sin(g * 0.13 + len(nm))      # lean in toward the register
                 p["lean"] = p.get("lean", 0.0) + 1.2 * math.sin(g * 0.17 + len(nm))
                 p["head_roll"] = p.get("head_roll", 0.0) + 1.5 * math.sin(g * 0.11 + 2 * len(nm))
                 p["blink"] = blink(g, [960 + 29 * (len(nm) % 4), 1000 + 3 * len(nm)])
-                p["mirror"] = MIRROR.get(nm, False)
                 p["t"] = g / 30.0
-                mk = self.A["marks"][mark]
-                hands = None
-                if nm == "morse":
-                    mk = MORSE_AT
-                    p.pop("prop_r", None)                  # the set shows the key
-                    hands = {"r": {"hand": (KEY[0], KEY[1], KEY[2] - 0.35 * key_press(g) + 0.15)}}
                 C.place(self.act[nm], f, mk)
                 _, info = self.act[nm].pose(f, p, hands=hands, camera=self.cam)
                 if hands:
@@ -107,14 +173,10 @@ class Take(C.Take):
         f = bf(g)
         self.scene.frame_set(f)
         loc, look = self.cp.at(g)
-        return dict(g=g, dip=round(dip(g), 3), press=round(key_press(g), 2), cam=[round(c, 2) for c in loc], heads=C.head_report(self, f))
+        return dict(g=g, dip=round(dip(g), 3), press=round(key_press(g), 2), herr=round(getattr(self, "herr", 0.0), 3), cam=[round(c, 2) for c in loc], heads=C.head_report(self, f))
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):
         return C.Take.render(self, [bf(g) for g in gs], out_dir, scale=scale, samples=samples, threads=threads)
-
-MIRROR = dict()
-KEY = (119.21, -8.15, 2.29)                  # the set key knob (world D), found by projecting the set's mesh vertices
-MORSE_AT = (120.1, -9.4, 0.0)
 
 if __name__ == "__main__":
     cmd = sys.argv[1]
