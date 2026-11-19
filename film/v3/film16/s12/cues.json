@@ -1,0 +1,47 @@
+{
+ "take": "s12",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 25.867,
+   "duration": 2.1,
+   "frame": 776,
+   "end_frame": 839,
+   "kind": "ambience",
+   "label": "chamber murmur, a chair creaks"
+  },
+  {
+   "time": 26.1,
+   "duration": 0.167,
+   "frame": 783,
+   "end_frame": 788,
+   "kind": "foley",
+   "label": "a heavy cloth sack whistles down"
+  },
+  {
+   "time": 26.267,
+   "duration": 0.0,
+   "frame": 788,
+   "end_frame": 788,
+   "kind": "prop",
+   "label": "THUD: the money bag lands on the table, coins chink"
+  },
+  {
+   "time": 26.367,
+   "duration": 0.233,
+   "frame": 791,
+   "end_frame": 798,
+   "kind": "prop",
+   "label": "two small bounces: soft thud, a coin rattle"
+  },
+  {
+   "time": 27.7,
+   "duration": 0.0,
+   "frame": 831,
+   "end_frame": 831,
+   "kind": "cut",
+   "label": "dissolve into shot 13: field air fades in"
+  }
+ ]
+}

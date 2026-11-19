@@ -1,0 +1,68 @@
+{
+ "take": "s12",
+ "film": 16,
+ "shots": [
+  12
+ ],
+ "g0": 785,
+ "g1": 831,
+ "first_g": 776,
+ "n_frames": 64,
+ "shot_ranges": {
+  "12": [
+   785,
+   830
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "hard cut in; 9 handle frames rendered in 3D before the first frame"
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "frames": 13,
+  "at": 831,
+  "note": "dissolve into shot 13 (line_trench) over 13-17 f centred on g 831; handle g 831..839 in 3D"
+ },
+ "set": "v3/set3d16 CHAMBER (chamber_table build, tape 0), DAY, custom eye-level camera at the right end of the front table; money bag hook keyed per frame",
+ "cast": "morse16 morse_relieved (stunned flinch on the thud), mocker_sour_arms in the background; no lip-sync",
+ "camera": "custom 22 mm eye level, push 8 %/s + slide 40 px/s + arc -6 deg/s, no snap (1.5 s shot)",
+ "events": {
+  "bag_lands": 788,
+  "bounces": [
+   791,
+   794,
+   796,
+   798
+  ]
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "samples": 6,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 15.79,
+ "s_per_frame_cpu_mean": 29.43,
+ "main_head_px": [
+  77,
+  150
+ ],
+ "main_head_centre_y": [
+  576,
+  671
+ ],
+ "head_bottom_max_y": 736,
+ "framediff_in_shot": {
+  "median": 5.48,
+  "p90": 17.75
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json"
+}
