@@ -126,6 +126,7 @@ def make_sky(path):
     import jimo_tex as X
     src = inspect.getsource(X.dusk_sky)
     src = src.replace("cx - cw / 2, ", "cx - cw * 0.40, ").replace("cx + cw / 2, ", "cx + cw * 0.40, ")
+    src = src.replace("for k in range(34):", "for k in range(0):")   # director QA-tech: the cloud sprites read as stickers -> no clouds
     src = src.replace("def dusk_sky(", "def dusk_sky_short(")
     ns = {}
     exec(src, X.__dict__, ns)
@@ -135,7 +136,7 @@ def make_sky(path):
 
 def patch_sky():
     """swap the DUSK sky texture for one whose cloud base bars are as wide as the puffs."""
-    path = os.path.join(WORK, "sky_DUSK_short.png")
+    path = os.path.join(WORK, "sky_DUSK_clear.png")
     if not os.path.exists(path):
         os.makedirs(WORK, exist_ok=True)
         make_sky(path)
@@ -340,3 +341,13 @@ def chins(T, shot):
             if c.z > 0:
                 out.append((1 - c.y) * 1280)
     return max(out) if out else 0.0
+
+
+LIP_MAP = {"flat": "dash", "talk_a": ("open", 0.55, 0.14), "talk_b": ("open", 0.62, 0.42), "talk_o": ("open", 0.36, 0.36)}
+
+
+def lip(g, active):
+    """quote lip-sync mouth for frame g: closed 'dash' outside the quote; inside, cast18.talk_mouth (a new drawing every 2 frames) mapped to openings that read under the huge moustache."""
+    if not active:
+        return "dash"
+    return LIP_MAP[cast18.talk_mouth(g, 1.0)]

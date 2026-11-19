@@ -9,15 +9,20 @@ import c18 as C                                                         # noqa: 
 
 SHOT = "s11"; G0, G1 = 853, 944; H_IN, H_OUT = 0, 8                     # dissolve 11 into s12: half + 2 = 8 handle frames
 CAMLIN = 0.5
-PARAMS = (0.08, 150, 1.3, 2.8, 2.0, 0.3, 0.0)      # c18.make_mod: push, slide px/s, sway D, Hz, wobble D, dz, dz/t
+PARAMS = (0.1, 250, 2.0, 1.0, 2.5, -0.9, 0.0)      # c18.make_mod: push, slide px/s, sway D, Hz, wobble D, dz, dz/t
 POSES = ["soldier_mock_moo_a", "soldier_laugh_point_b", "soldier_mock_moo_c", "soldier_cheer_cup_a", "soldier_mock_moo_b", "soldier_laugh_point_c"]
+MARKS = [(1.8, -80.6, 0.0), (6.4, -81.6, 0.0), (-3.2, -83.0, 0.0), (9.6, -85.5, 0.0), (3.2, -88.0, 0.0), (8.0, -90.5, 0.0)]   # two big mock-mooers in front of the fire
+BIG = 1.12                                                              # figures drawn 12 % taller (stylised) so the beat is large in frame
 STATIC_MOUTH = ("open", 0.26, 0.17)
 
 
 def patches(T):
     C.patch_sky()
     C.fg_rope(T, "right")
-    C.R2.dress(-3.0, 9.0, -82.5, -78.0, 11, 11, kinds=("hay", "basket", "pot", "rope", "silk", "stone", "hay"))
+    for fi in C.J.STATE["fires"]:
+        if fi["ob"].location.y < -60:
+            fi["E0"] *= 0.7
+            fi["k"] = fi.get("k", 1.0) * 0.85
 
 
 def camera_mod(g, t, pose):
@@ -29,7 +34,7 @@ def camera_mod(g, t, pose):
 def stage_factory(T):
     def stage(g, cam):
         marks = C.S.marks_for(SHOT)
-        sol = marks["soldier"]; gen = marks["general"][0]
+        sol = MARKS; gen = marks["general"][0]
         card = C.pcard("general_laugh", mouth=STATIC_MOUTH, lean=-8 if ((g // 5) % 2 == 0) else -3, blink=0)
         C.place(card, gen[:3], cam, C.J.HEIGHT["general"], g, "general", bounce_amp=0.06, ph=0.4, roll_deg=2.0 * C.sway(g, 0, 1.5))
         for i, m in enumerate(sol):
@@ -39,7 +44,7 @@ def stage_factory(T):
                 over["mouth"] = STATIC_MOUTH
             over["lean"] = (-5 if ((g + 3 * i) // 5) % 2 else 0)
             card = C.pcard(pose, **over)
-            C.place(card, m[:3], cam, C.J.HEIGHT["soldier"], g, "sol%d" % i, bounce_amp=0.06, ph=0.9 * i, roll_deg=2.0 * C.sway(g, i, 1.5))
+            C.place(card, m[:3], cam, C.J.HEIGHT["soldier"] * (BIG if "mock_moo" in pose else 1.0), g, "sol%d" % i, bounce_amp=0.06, ph=0.9 * i, roll_deg=2.0 * C.sway(g, i, 1.5))
     return stage
 
 

@@ -8,7 +8,7 @@ import c18 as C                                                         # noqa: 
 
 SHOT = "s09"; G0, G1 = 674, 737; H_IN, H_OUT = 0, 0
 CAMLIN = 0.5
-PARAMS = (0.12, 80, 0.7, 2.6, 0.8, -1.0, -0.6)      # extra push, slide px/s, sway D, sway Hz, look wobble D, dz, dz/t  (c18.make_mod)
+PARAMS = (0.12, 300, 0.5, 0.9, 0.8, -0.8, -0.4)      # extra push, slide px/s, sway D, sway Hz, look wobble D, dz, dz/t  (c18.make_mod)
 
 
 def patches(T):
@@ -20,7 +20,7 @@ def stage_factory(T):
         marks = C.S.marks_for(SHOT)
         gen = marks["general"][0]; sol = marks["soldier"]
         talk = C.QUOTE1[0] <= g < C.QUOTE1[1]
-        mouth = C.cast18.talk_mouth(g, 1.0) if talk else "flat"
+        mouth = C.lip(g, talk)
         card = C.pcard("general_arms_wide", mouth=mouth, blink=C.cast18.blink_at(g, 90, 11))
         C.place(card, gen[:3], cam, C.J.HEIGHT["general"], g, "general", roll_deg=1.5 * C.sway(g, 0.0, 0.8))
         poses = ["soldier_laugh_point_a", "soldier_laugh_point_b", "soldier_laugh_point_c"]

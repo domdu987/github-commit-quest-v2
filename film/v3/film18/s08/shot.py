@@ -20,7 +20,7 @@ G_LAUGH = C.g_of(21.24) - 4                                             # 636: t
 G_SOLD = (G_LAUGH + 6, G_LAUGH + 12)                                    # the soldiers catch the laugh
 LAUGH_MOUTH = ("open", 0.34, 0.22)                                      # constant (not lip-sync)
 CAMLIN = 0.5
-PARAMS = (0.0, 100, 0.12, 2.6, 3.0, -0.3, -0.3)      # extra push, slide px/s, sway D, sway Hz, look wobble D, dz, dz/t  (c18.make_mod)
+PARAMS = (0.0, 150, 0.1, 0.9, 2.5, -0.3, -0.3)      # extra push, slide px/s, sway D, sway Hz, look wobble D, dz, dz/t  (c18.make_mod)
 
 
 def patches(T):
@@ -62,7 +62,7 @@ def stage_factory(T):
         # general
         laugh = g >= G_LAUGH
         if not laugh:
-            card = C.pcard("general_stand", mouth="flat", expr="smug", blink=C.cast18.blink_at(g, 72, 10))
+            card = C.pcard("general_stand", mouth="dash", expr="smug", blink=C.cast18.blink_at(g, 72, 10))
             C.place(card, gen[:3], cam, C.J.HEIGHT["general"], g, "general", roll_deg=1.2 * C.sway(g, 0.0, 0.7))
         else:
             tog = ((g - G_LAUGH) // 5) % 2                                # belly toggles every 5 frames (3 Hz)
