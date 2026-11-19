@@ -1,0 +1,3 @@
+{"take":"s13","film":14,"shots":[13,14],"g0":864,"g1":1000,"first_g":858,"n_frames":149,"handle_in":6,"handle_out":6,
+ "shot_ranges":{"13":[864,929],"14":[930,1000]},"transition_in":{"type":"cut","frames":0},"samples":18,"resolution":[720,1280],
+ "parts":"take.mkv.part* (cat to restore take.mkv)","scripts":"team 7 s11 v2 (render14/team7 711856f), shot 13 range extended to the handle start g858"}

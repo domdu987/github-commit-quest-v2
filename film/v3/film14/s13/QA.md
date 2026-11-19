@@ -1,0 +1,5 @@
+# s13 QA (render team 6; scripts = team 7 s11 v2, shots 13-14, g858-1006)
+- qa_auto: see QA_AUTO.md / phone_sheet.jpg. 18 samples (same as team 7's s11), ~68 s/frame wall, 2 procs x 2 threads, detached resumable loop (run_s13.sh). Cut g929->930 is the only frame-diff spike (30 vs median 6.4; the median is high because of corn texture under a moving camera).
+- Shot 13 (DUSK, g858-929): farmer on his stool left of hive 1, the thin 3 cm matte grey-silver wire is fed through the eyelet rings on the hive bar (tip travel keyed g864-929), the coil on his forearm shrinks, eyes on the wire, mouth held flat all shot, stool contact shadow, camera drifts right and in every frame. Handles 858-863 extend the same shot.
+- Shot 14 (DUSK, g930-1006): medium-height dolly round the front-left corner with all 16 hives on ONE thin matte wire running through every bar (sharp_ground() removes the soft grass-patch mask: no blurry ground patch); sky about 25-30 %.
+- Not verified frame by frame at 6 fps beyond the contact sheet; known weak: the wire in shot 14 is thin (2-4 px at phone size) though continuous; ground in the lower third is plain laterite.
