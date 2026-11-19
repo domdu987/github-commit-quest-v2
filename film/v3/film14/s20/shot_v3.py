@@ -47,9 +47,58 @@ def cam_of(g):
         return loc, look, lerp(lerp(20, 24, p), 28, e)
     # shot 21: the wave front runs LEFT along the row (u3 g~1381, u2 1398, u1 1415, u0 1431); the camera sits ahead of it, 41 deg to the row, looking back at the hive being knocked -> the pendulum swing is seen side-on
     dg = g - 1368; fx = 6.0 - 0.3 * dg if dg <= 60 else -12.0 - 0.05 * (dg - 60)
-    return (fx - 4.2, 1.4, 1.3), (fx, 5.0, 2.6), 36
+    return (fx - 4.2, 1.4, 0.6), (fx, 5.0, 1.5), 50
 
-def hive_scale(cam_loc, h): return 2.0
+def hive_scale(cam_loc, h): return 1.5
+
+BANG = {3: 1388, 2: 1405, 1: 1422, 0: 1438}      # unit -> frame the swing peaks and the hive BANGS into its own post/frame (wave front u3 g1381, u2 1398, u1 1415, u0 1431)
+
+def knock_mesh(g, cam_loc):
+    """wood chips + dust specks in a spray crown at each active bang (billboard triangles, emission materials)"""
+    import random
+    verts = []; faces = []; mats = []
+    cam = Vector(cam_loc)
+    for i, gb in BANG.items():
+        a = (g - gb) / 30.0
+        if a < 0 or a > 0.75: continue
+        h = F.STATE['hive'][i]; mw = h.matrix_world; sg = 1.0 if i % 2 == 0 else -1.0
+        c0 = mw @ Vector((0.62 * sg, 0.0, -0.55))
+        rr = random.Random(i * 77 + 5)
+        fwd = (c0 - cam).normalized(); right = fwd.cross(Vector((0, 0, 1))).normalized(); up = right.cross(fwd).normalized()
+        for k in range(110):
+            kind = 0 if k < 60 else (1 if k < 106 else 2)               # chips / dust specks / wisps
+            ph = rr.uniform(0, 6.283); el = rr.uniform(0.35, 1.25); sp = rr.uniform(1.4, 3.6) * (0.7 if kind else 1.0)
+            v = Vector((math.cos(ph) * math.cos(el), math.sin(ph) * math.cos(el), math.sin(el))) * sp
+            p = c0 + v * a + Vector((0, 0, -4.5 * a * a))
+            life = 0.75 if kind < 2 else 0.6
+            sz = (0.045 if kind == 0 else 0.03 if kind == 1 else 0.07) * (1.0 - a / life) * (1.0 + 0.4 * rr.random())
+            if sz <= 0: continue
+            sp_ = rr.uniform(0, 6.283); r2 = right * math.cos(sp_) + up * math.sin(sp_); u2 = -right * math.sin(sp_) + up * math.cos(sp_)
+            b = len(verts); verts += [tuple(p + (-r2 - u2) * sz), tuple(p + (r2 - u2) * sz), tuple(p + (r2 + u2) * sz), tuple(p + (-r2 + u2) * sz)]
+            faces.append((b, b + 1, b + 2, b + 3)); mats.append(kind)
+    return verts, faces, mats
+
+_KMATS = {}
+def knock_update(g, cam_loc):
+    ob = bpy.data.objects.get('knockfx')
+    if ob is not None:
+        me = ob.data; bpy.data.objects.remove(ob); bpy.data.meshes.remove(me)
+    verts, faces, mats = knock_mesh(g, cam_loc)
+    if not faces: return 0
+    if not _KMATS:
+        for k, (col, st) in enumerate((((0.30, 0.17, 0.08, 1), 0.9), ((0.95, 0.80, 0.58, 1), 1.6), ((0.80, 0.66, 0.46, 1), 0.7))):
+            m = bpy.data.materials.new('kfx%d' % k); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); o = nt.nodes.new('ShaderNodeOutputMaterial'); e = nt.nodes.new('ShaderNodeEmission')
+            e.inputs['Color'].default_value = col; e.inputs['Strength'].default_value = st
+            if k == 2:
+                tr = nt.nodes.new('ShaderNodeBsdfTransparent'); mx = nt.nodes.new('ShaderNodeMixShader'); mx.inputs[0].default_value = 0.45
+                nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(e.outputs[0], mx.inputs[2]); nt.links.new(mx.outputs[0], o.inputs['Surface'])
+            else: nt.links.new(e.outputs[0], o.inputs['Surface'])
+            _KMATS[k] = m
+    me = bpy.data.meshes.new('knockfx'); me.from_pydata(verts, [], faces); me.update()
+    for k in range(3): me.materials.append(_KMATS[k])
+    for p, mi in zip(me.polygons, mats): p.material_index = mi
+    ob = bpy.data.objects.new('knockfx', me); bpy.context.scene.collection.objects.link(ob); ob.visible_shadow = False
+    return len(faces)
 
 class Driver:
     def __init__(self, shot, quality, threads):
@@ -84,6 +133,17 @@ class Driver:
         F.set_fence_stage(3); F.set_wire_push(t / F.SEQ_T, PS)
         if shot == 21:
             for i, h in F.STATE['hive'].items(): k = hive_scale(loc, h); h.scale = (k, k, k)
+        if shot == 21:
+            import random
+            for i, gb in BANG.items():
+                if 0 <= g - gb < 2:                                       # 2-frame jolt of the hive, its bar, the posts and roofs
+                    rr = random.Random(g * 13 + i); h = F.STATE['hive'][i]; bq = F.STATE['bar'][i]; s = 0.07 if g == gb else 0.04
+                    d = Vector((rr.uniform(-s, s), rr.uniform(-s, s), rr.uniform(-s, s) * 0.6)); h.location += d; bq.location += d
+                    for o in bpy.data.objects:
+                        if o.name.startswith(('posts_', 'roof')): o.location = d * 0.5 * (1 if o.name.startswith('posts_') else 1)
+            if not any(0 <= g - gb < 2 for gb in BANG.values()):
+                for o in bpy.data.objects:
+                    if o.name.startswith(('posts_', 'roof')): o.location = (0, 0, 0)
         bpy.context.view_layer.update()
         info = {}
         if self.mat is not None:
@@ -99,6 +159,7 @@ class Driver:
         bpy.context.view_layer.update()
         bc = bee_clock(g); F.set_bees(bc / F.SEQ_T if bc >= 0 else -1.0, burst(g), None, None)
         bpy.context.view_layer.update()
+        if shot == 21: info['fx'] = knock_update(g, loc)
         w, cpu = F.render(path); return w, cpu, info
 
 if __name__ == '__main__':
