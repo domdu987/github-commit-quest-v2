@@ -83,8 +83,8 @@ def bob(g, f=1.9, a=0.03, ph=0.0):
 
 
 CHAIR = (0.7, 2.3, 0.5)
-BERT23 = Vector((1.55, 3.0, 0.0))
-INS23 = Vector((-0.7, 2.1, 0.0))
+BERT23 = Vector((0.95, 3.3, 0.0))
+INS23 = Vector((-0.4, 2.5, 0.0))
 DUP_SEAT = Vector((0.7, 2.3, 0.0))
 
 
