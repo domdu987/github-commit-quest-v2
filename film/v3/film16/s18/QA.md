@@ -1,9 +1,9 @@
-# s18 QA (re-take 3 after QA-art round 2): film 16, shot 18, LINE line_road / DUSK
-- take.mkv g 1110..1234 (125 f; shot g 1119..1225), 720x1280, 7 spp, 2 threads, 12.0 s wall / 23.1 s cpu per frame, 40.1 MB (one file). Hard cuts.
-- Staging: camera now OUTSIDE the buggy on the field side (+y), low (z 1.8-2.5): a textured wheel + the plank-grain side panel in the foreground, the mocker seated above them (the set's red seat slab is hidden: its visibility is re-keyed every frame), and BEHIND him the road, the furrow edge, the pole fence and MORSE'S GROUP (Morse clutching his coil, workers a and b leaning on shovels; cast cards staged at the furrow, mirrored to face the buggy) on the side he points to. The buggy heads +x = screen-left (the mule is on the left, facing left, in the opening wide). He rolls gently past the group (0.45 D/s).
-- The mocker turns his head toward the group on "ใต้ดินแล้ว" (yaw 0.45 -> 0.78 over g 1201..1209). Still laughing + tears from the blink at g 1154; belly bounce, buggy / mocker / mule bob 0.05 D at 3 Hz.
-- LIP-SYNC only g 1157..1227 (38.46-40.80 s): raw/*.json "flat" <= 1156, "sync" from 1157.
-- Opening wide is short (reframes by g 1138) and centres him (head 117 px at g 1119, 164 px by g 1138, 164 px when the lips start, 280 px at the end); head centre y 516-604, bottoms <= 688.
-- Camera: wide quint reframe, lateral slide 28 px/s + arc 9 deg/s, snap x1.8 with a pan back onto his face on g 1204..1216.
-- Frame-diff in shot: median 5.45, p90 13.14 (target 4 / 12: met). qa_auto PASS.
-- Known: the field-side light is backlit, so the tree masses behind are dark; the mule is on screen only in the first ~0.6 s.
+# s18 QA (re-take 4 after TAKE gate round 4): film 16, shot 18, LINE line_road / DUSK
+- take.mkv g 1110..1234 (125 f; shot g 1119..1225), 720x1280, 7 spp, 13.1 s wall / 25.2 s cpu per frame, 41.5 MB (one file). Hard cuts.
+- (1) Group heads: the camera is tilted down (look point z 2.5) and Morse + workers a, b are staged 0.35 D up the furrow bank and further back, so all group heads sit at y 669-776 with BOTTOMS <= 825 (< 880) in every frame (worker a's bottom peaks at 825 in the last frames; the rest <= 791-818). They stay inside the frame beside him (the buggy now rolls only 0.12 D/s past them).
+- (2) A real index-finger point: his right arm is pinned to a world target at shoulder height out toward screen-right (his group), stretch 1.0, shape "point" (pointed hand at the sleeve end, white cuff). Head: yaw 0.45 -> 0.85 over g 1160..1182, well BEFORE the snap (g 1204-1216); from the blink at g 1169 his expression is "excited" with eyes OPEN and gaze (1.0, 0.55) on the group (tears kept, mouth lip-syncs).
+- (3) The snap (x1.3, g 1204..1216) pans with a +0.45 D truck toward the group, so the group + the furrow / fence stay beside him to the end.
+- (4) The buggy panel is darkened to panel-blue with plank grain (the mint tint is gone, a pale grey-teal rail remains at the lower edge in the last second); his legs are hidden: seated pose (crouch 0.75) behind the side panel, only the torso shows above it.
+- LIP-SYNC only g 1157..1227 (raw/*.json "flat" <= 1156, "sync" from 1157); belly bounce; the buggy / mocker / mule bob 0.05 D at 3 Hz.
+- Frame-diff in shot: median 5.44, p90 12.83 (target 4 / 12: met). qa_auto PASS.
+- Notes: the mocker's head centre goes to y 434-507 in the medium (slightly above the 450 floor in the first part: the lower camera pitch that lifts the group lowers his head); heads in the opening wide are 66-116 px.

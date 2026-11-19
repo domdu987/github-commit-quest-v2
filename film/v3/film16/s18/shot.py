@@ -23,20 +23,20 @@ Q0, Q1 = C.g_of(38.46), C.g_of(40.80)            # lip-sync window 1157 .. 1227
 G_LAUGH = Q0 - 3                                  # expression change on the closed frame of a blink
 G_WORD = C.g_of(40.12)                            # 1207 "ใต้ดินแล้ว"
 SNAP = (G_WORD - 3, G_WORD + 9)
-V = 0.45 / 30.0                                    # the buggy rolls gently past Morse's group (taunting over his shoulder)
+V = 0.12 / 30.0                                    # the buggy rolls gently past Morse's group (taunting over his shoulder)
 X0 = 62.0
 bx = lambda g: X0 + V * (g - GA)
 MX = lambda g: bx(g) - 0.65                       # the mocker's world x (the buggy mark)
 
 # camera on the FIELD side (+y) of the buggy looking -y: the near side panel + a wheel in the foreground, the mocker seated above them, behind
 # him the road, the furrow, the pole line and Morse's group (which he points at).  +x (the buggy's heading) is screen-LEFT, so the mule is on the left.
-SUBJ0 = Vector((X0 - 0.15 - 0.9, -2.3, 3.7))
+SUBJ0 = Vector((X0 - 0.15 - 0.9, -2.3, 2.5))
 OFF = Vector((0.3, 4.5, -1.7))
 CAM = C.CamPath(SUBJ0 + OFF, SUBJ0, GA, GZ, push=0.05, slide_px=28.0, arc_deg_s=9.0, decay=0.1,
-                snaps=[dict(g=SNAP, k=1.8, peak=1.9, shift=(-0.8, 0.0))])
+                snaps=[dict(g=SNAP, k=1.3, peak=1.9, shift=(0.45, 0.0))])
 WIDE_OFF = Vector((0.4, 6.4, -1.4))
 G_ARRIVE = 1138                                    # the (short) opening wide reframes onto the mocker well before the lips start
-GROUP = dict(morse=(59.5, -6.0), wa=(58.5, -6.8), wb=(60.6, -7.0))        # world x, y at the furrow edge, behind the buggy
+GROUP = dict(morse=(60.2, -7.4), wa=(59.4, -8.2), wb=(61.3, -8.4))        # world x, y at the furrow edge, behind the buggy
 
 
 def cam_pose(g):
@@ -45,7 +45,7 @@ def cam_pose(g):
     loc, look = loc + d, look + d
     w = 1.0 - u_of(g, GA + 4, G_ARRIVE, "quint")           # 1 = opening wide (mocker, buggy, mule), 0 = the medium
     if w > 0:
-        wl = Vector((X0 - 0.4, -2.3, 3.3)) + d
+        wl = Vector((X0 - 0.4, -2.3, 2.5)) + d
         loc, look = loc.lerp(wl + WIDE_OFF, w), look.lerp(wl, w)
     return loc, look
 
@@ -55,20 +55,34 @@ def bob(g, ph=0.0, amp=0.05):
     return amp * math.sin(2 * math.pi * 3.0 * g / 30.0 + ph)
 
 
+def hand_pt(g):
+    """world target of the pointing index finger: out to screen-right (-x) at shoulder height, toward Morse's group"""
+    return Vector((MX(g) - 1.25, -2.7, 3.15))
+
+
 def mocker_pose(g):
     p = dict(cast16.STORY16["mocker_taunt_buggy"][1])
-    if g >= Q0 - 3 and g <= Q1 + 3 and Q0 <= g <= Q1:
+    if Q0 <= g <= Q1:
         p["mouth"] = cast16.talk_mouth(g, 1.0)
     else:
         p["mouth"] = "flat"
+    turn = u_of(g, 1160, 1182)                                               # head turns toward the group well BEFORE the snap
     if g < G_LAUGH:
         p["expr"] = "smug"; p.pop("fx", None)
-    p["blink"] = blink(g, [G_LAUGH - 1, 1180, 1214])
+    elif g >= 1170:
+        p["expr"] = "excited"                                                # eyes OPEN, on the group (the laugh squint ends on the blink at 1169)
+        p["fx"] = ["tears"]
+        p["gaze"] = (1.0, 0.55)
+    p["blink"] = blink(g, [G_LAUGH - 1, 1169, 1196, 1214])
     ph = math.sin(2 * math.pi * 3.0 * g / 30.0)
     laugh = u_of(g, G_LAUGH, G_LAUGH + 6)
     p["squash"] = (1.01 + 0.035 * ph * laugh, 0.99 - 0.035 * ph * laugh)
     p["head_roll"] = p.get("head_roll", 0) + 3.0 * math.sin(g * 0.2)
-    p["yaw"] = lerp(0.45, 0.78, u_of(g, G_WORD - 6, G_WORD + 2))          # turns his head toward Morse's group on "ใต้ดินแล้ว"
+    p["yaw"] = lerp(0.45, 0.85, turn)
+    p["legs"] = dict(crouch=0.75, spread=0.05)                               # seated: knees bent, no stride
+    arm = dict(p.get("arm_r", {}))
+    arm.update(shape="point", bend=0.0, stretch=1.0)
+    p["arm_r"] = arm
     p["t"] = g / 30.0
     return p, 0.09 * ph * laugh
 
@@ -117,6 +131,11 @@ def texture_buggy():
                 mixn.inputs[1].default_value = tuple(base.default_value)
             nt.links.new(ramp.outputs[0], mixn.inputs[2])
             nt.links.new(mixn.outputs[0], base)
+            tint = nt.nodes.new("ShaderNodeMixRGB")
+            tint.blend_type, tint.inputs[0].default_value = "MULTIPLY", 1.0
+            tint.inputs[2].default_value = (0.17, 0.29, 0.42, 1.0)
+            nt.links.new(mixn.outputs[0], tint.inputs[1])
+            nt.links.new(tint.outputs[0], base)
             bump = nt.nodes.new("ShaderNodeBump")
             bump.inputs["Strength"].default_value = 0.35
             nt.links.new(nz.outputs["Fac"], bump.inputs["Height"])
@@ -137,6 +156,7 @@ class Take(C.Take):
         self.moc = self.actors["moc"] = C.make_actor("moc", "mocker", sd, canvas=cast16.CANVAS16["mocker"], cam=self.cam)
         self.mul = self.actors["mul"] = C.make_actor("mul", "mule", sd, canvas=cast16.CANVAS16_BUGGY["mule"], cam=self.cam)
         self.mk = {}
+        self.hand_err = {}
         self.grp = {}
         for nm, cast_ in (("morse", "morse16"), ("wa", cast16.key16("worker_a")), ("wb", cast16.key16("worker_b"))):
             self.grp[nm] = self.actors["g_" + nm] = C.make_actor("g_" + nm, cast_, sd, cam=self.cam)
@@ -158,11 +178,12 @@ class Take(C.Take):
             C.place(self.moc, f, (mm[0], mm[1], mm[2] + bounce + bob(g)))
             C.place(self.mul, f, (ml[0] - 2.4, ml[1], ml[2] + bob(g, 1.3, 0.04)))
             for nm, (gx, gy) in GROUP.items():
-                C.place(self.grp[nm], f, (gx, gy, 0.0))
+                C.place(self.grp[nm], f, (gx, gy, 0.35))
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
-            self.moc.pose(f, mocker_pose(g)[0], camera=self.cam)
+            _, hi = self.moc.pose(f, mocker_pose(g)[0], hands={"r": {"hand": tuple(hand_pt(g))}}, camera=self.cam)
+            self.hand_err[g] = round(max([v.get("error", 0.0) for v in hi.values()] or [0.0]), 3)
             mp = cast16.cycle("mule", g / 40.0, "walk", -1, dict(harness=2))
             self.mul.pose(f, mp, camera=self.cam)
             gp = {"morse": dict(cast16.STORY16["morse_clutch_coil"][1], mirror=True),
