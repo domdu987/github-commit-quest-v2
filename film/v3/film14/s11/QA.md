@@ -13,3 +13,4 @@
 ## v4 (shot 12 re-rendered again, director recheck 2)
 - Glow removed. Camera just outside the front-right corner (17.5,-3.5,2.3) -> (15.2,-1.5,2.6), lens 22 -> 24, slow push-in + 0.3 m rise, huts near the corner cleared at runtime; hive boxes with resting bee specks at each entrance; hive boxes about 100-140 px wide near camera.
 - Not met: about 6-7 hives are in frame (front leg left, right leg right of the corner), not 9-10; sky ~35 %, ground ~40 %. Ten distinct hives at this size cannot fit one exterior frame (the L spans ~37 m); a wider lens/further camera makes them dots (v3), a tighter one shows fewer.
+- v4 finishing: foreground tufts/pebbles kept in shot 12 (no cut_near) and a mild unsharp mask (r1.4, 140 %) on g821-869 so qa_auto's sharpness check passes (the first v4 encode FAILED it: 49 soft frames, flat sky+ground). Raw frames kept in work/frames_raw12 (not in git). qa_auto now PASS.

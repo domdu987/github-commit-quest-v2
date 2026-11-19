@@ -157,7 +157,7 @@ def build_for(shot):
             lo, lk, _ = cam_at(shot, g)
             for t in (0.0, 0.25, 0.5, 0.75): path.append((lo[0] + (lk[0] - lo[0]) * t, lo[1] + (lk[1] - lo[1]) * t))
         if shot == 12: print('huts', C.cut_region('props', [(12.6, 30, -9, 12, 5.0)]))
-        print('cut near', C.cut_near(('props', 'grass', 'flowers', 'pebbles', 'edge'), path, {11: 2.6, 12: 3.2, 13: 2.6, 14: 3.2}[shot]))
+        print('cut near', C.cut_near(('props', 'grass', 'flowers', 'pebbles', 'edge'), path, {11: 2.6, 12: 0.0, 13: 2.6, 14: 3.2}[shot]))
         if shot in (11, 13):
             print('ladder cut', C.cut_region('props', [(-8.4, -5.0, 3.0, 4.95, 2.7)]))
             stool_at(STOOL11 if shot == 11 else STOOL13)
