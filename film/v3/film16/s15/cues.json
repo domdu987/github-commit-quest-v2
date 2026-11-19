@@ -1,0 +1,28 @@
+{
+ "take": "s15",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 31.633,
+   "frame": 949,
+   "kind": "ambience",
+   "label": "dusk on the farmland: crickets, a faint breeze, waiting",
+   "peak_frame": null
+  },
+  {
+   "time": 32.5,
+   "frame": 975,
+   "kind": "prop",
+   "label": "Morse presses the test key: dry click, the register does not answer",
+   "peak_frame": 977
+  },
+  {
+   "time": 32.933,
+   "frame": 988,
+   "kind": "accent",
+   "label": "'เงียบกริบ': all sound drops out for 0.4 s with the brightness dip",
+   "peak_frame": 990
+  }
+ ]
+}

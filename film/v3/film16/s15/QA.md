@@ -1,0 +1,6 @@
+# s15 QA: film 16, shot 15 (LINE line_trench_end, DUSK) -- the silent test key
+- take.mkv: g 949..1015 (67 f; shot = g 958..1006, handles 9 each side), 720x1280, 7 spp, libx264rgb crf 6, 24 MB. Dissolve in 13 f, hard cut out (g 1007).
+- Beat: press at g 975 ("ส่งข่าว"), second press g 982-987, brightness dip x0.75 over g 986-998 on "เงียบกริบ" (g 988) via keyed exposure; Cornell / workers lean in (sway + blinks); register does nothing.
+- Camera: custom from the preset direction, pulled in, drift push 10 %/s + slide 25 px/s + arc 20 deg/s + one x1.8 snap at the press (g 973-986).
+- qa_auto PASS. Frame-diff (in-shot): median 4.84 (target 4 met), p90 5.56 (target 12 NOT met: the crate scene is dark and static, the snap pans little; further pushing lost the group).
+- Differs / known issues: (1) Morse's hand is not shown on the set's key: he stands behind the crate edge and the pinned hand falls behind the crate; the key lever itself does not animate (static set prop). (2) Heads are medium-wide (~100-150 px), Cornell and worker_a leave the frame late in the shot as the camera arcs towards Morse; Morse's face bottom reaches about y 870 (just above the caption band). (3) The press is carried only by Morse's pose + the dip.

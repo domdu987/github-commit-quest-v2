@@ -1,0 +1,64 @@
+{
+ "take": "s15",
+ "film": 16,
+ "shots": [
+  15
+ ],
+ "g0": 958,
+ "g1": 1007,
+ "first_g": 949,
+ "n_frames": 67,
+ "shot_ranges": {
+  "15": [
+   958,
+   1006
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 13
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 1007,
+  "note": "out-handle g 1007..1015 rendered in 3D"
+ },
+ "set": "v3/set3d16/telegraph.py LINE preset line_trench_end, light DUSK (the furrow end: crate with the test key + register, coil, wagon); exposure keyed per frame for the x0.75 dip",
+ "cast": "v3/cast16: morse16 (morse_key_wait, key_press animated, right hand pinned to the set's key knob at world (119.21, -8.15, 2.29)), cornell (cornell_wait), worker16_a / worker16_b (lean_shovel); breathing sway + blinks; nobody speaks",
+ "camera": "custom 22 mm from the preset's direction, pulled in to 0.72 and 1.2 D up; CamPath push 6 %/s + slide 35 px/s + arc 3 deg/s (shot < 2 s: no snap); crate + coil in the foreground",
+ "events": {
+  "press": [
+   975,
+   981
+  ],
+  "press2": [
+   982,
+   987
+  ],
+  "silence_dip": [
+   986,
+   998
+  ],
+  "word_silent": 988
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DUSK",
+ "samples": 7,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 10.88,
+ "s_per_frame_cpu_mean": 21.27,
+ "framediff_in_shot": {
+  "median": 4.84,
+  "p90": 5.56
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json"
+}

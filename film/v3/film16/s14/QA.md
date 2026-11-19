@@ -1,0 +1,6 @@
+# s14 QA: film 16, shot 14 (LINE line_trench_high, DAY -> DUSK) -- the count, three snap crane-ups
+- take.mkv: g 883..966 (84 f; shot = g 892..957, handles 9 each side), 720x1280, 7 spp, libx264rgb crf 6, 38 MB. Hard cut in (g 892), dissolve out to shot 15 (g 958+, handle g 958..966 rendered).
+- Three eased snaps (13 f, peak 1.6) at g 893-906 / 922-935 / 938-951 on the three count words: camera P0 (low) -> the set's line_trench_snap1 / 2 / 3 poses; furrow set_trench 0.20 -> 0.30 -> 0.60 -> 0.90 (the team travels with it), pipe 0.025 behind, set_light_mix DAY -> DUSK (0 / 0.10 / 0.55 / 1.0); drift push 9 %/s + slide 55 px/s + arc 8 deg/s on top, carried with the team.
+- qa_auto PASS. Frame-diff (in-shot): median 12.90, p90 20.22 (target 4 / 12). s/frame 8.75 wall, 17.0 cpu.
+- Differs from plan / notes: Morse omitted (he walked into the lens in the low start). The snap-3 crane-up passes through the tree crowns beside the field, so the three merged tree objects are hidden from g 941 (mid snap 3; a pop under the fast motion, shot 15 has trees again). Crane-up frames are wides: heads 15-60 px (wide exempt). qa_auto's blur test fired on the huge smooth tree blob in a first render; frames are sharp.
+- Mouths: nobody speaks. No DOF, no text.
