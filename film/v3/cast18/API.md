@@ -31,7 +31,7 @@ Everything in `v2/puppet/API.md` and `v3/cast*/API.md` applies unchanged (pose k
 | `woman` | slim | 2.94 (3.25) | black hair in a **bun with a bone pin and red cord**, indigo robe to the ankle, cream sash and trim |
 | `child` | child | 2.38 (2.66) | **twin tufts** tied with red cord, rust tunic, red sash |
 | `envoy` | regular | 3.00 (3.22) | plain **undyed hemp robe**, plain brown cloth cap, thin moustache, humble |
-| `qi_soldier` | slim | 3.18 | crowd figure: draw it with `qi_pose()` (tint + ink `#2a2634`): a dark silhouette, no face detail |
+| `qi_soldier` | slim | 3.18 | crowd figure: draw it with `qi_pose()` (tint + ink `#2a2634`): a dark silhouette, no face detail; **plain dark cloth cap, no red band or tuft** (`helm18=dict(kind="cloth", band=<colour>)`: `band` is a new optional key, default red) |
 
 ## New pose keys (read at draw time; `resolve_pose` / `lerp_pose` drop them: re-add them to tweened poses)
 
@@ -68,21 +68,21 @@ Standalone: `flame_svg(uid, frame, scale, lean, sparks, glow)` -> (svg, bbox): t
 
 ## The ox (`ox_figure`, not a puppet)
 
-`ox_figure(state, view, gait, phase=0, flame=-1, blades=False, reed=None, facing=1, coat=1.0, uid="ox", t=0, ink, tint)` returns `{"svg", "bbox", "anchors", "feet_y"}` in D units, hooves on y = 0, x = 0 about the middle of the body, facing +x (`facing=-1` mirrors it; anchors and bbox mirrored too). Chunky friendly cartoon ox: hump, two curved cream horns, ears, dewlap, cloven hooves, big eye, cream muzzle. Length about 3.4 D body, back 2.0 D, hump 2.6 D, horn tips about 3.2 D; with head about 4.5 D long (a puppet is 3 D tall).
+`ox_figure(state, view, gait, phase=0, flame=-1, blades=False, reed=None, facing=1, coat=1.0, uid="ox", t=0, ink, tint)` returns `{"svg", "bbox", "anchors", "feet_y"}` in D units, hooves on y = 0, x = 0 about the middle of the body, facing +x (`facing=-1` mirrors it; anchors and bbox mirrored too). Chunky friendly cartoon ox: hump, two curved cream horns (each with a short bronze dagger blade when `blades=True`), ears, dewlap, cloven hooves, big eye, cream muzzle. Length about 3.4 D body, back 2.0 D, hump 2.6 D, horn tips about 3.2 D; with head about 4.5 D long (a puppet is 3 D tall).
 
 | arg | values |
 |---|---|
-| `state` | `"plain"` brown, black patches / socks, no coat; `"dragon"` **crimson silk coat** with gold border, scalloped hem with tassels and the **gold five-colour dragon** (gold body with scales, fins in blue / green / white / black, clouds, horned head with whiskers, open mouth, pearl). `coat` 0..1 = how far it is pulled on (shifted up and back while < 1) |
-| `view` | `"side"`, `"three_quarter"` (comes toward the viewer's right: big face with two eyes, both horns and ears, front legs below the chest) |
+| `state` | `"plain"` brown, black patches / socks, no coat; `"dragon"` **crimson silk coat** with gold border, scalloped hem with tassels and a **bold, simple gold dragon** (fat S-body with a heavy ink line, four big fins in blue / green / white / blue, tail fin, one big horned head with eye and open mouth, two cream cloud scrolls; **the head sits at mid-flank, over the middle of the coat, well behind the ox's own head**, so it never reads as a second head at 40-60 px). `coat` 0..1 = how far it is pulled on (shifted up and back while < 1) |
+| `view` | `"side"`, `"three_quarter"` (side-on body, head turned to the viewer), **`"front_three_quarter"`** (new: the ox CHARGES AT THE CAMERA, a little toward screen-right: big low head with two eyes / both horns / both ears, broad chest and neck, hump behind, body running away to the left and smaller, near front legs big, far and hind legs behind; the dragon coat shows its front edge over the chest and the dragon on the visible left flank; tail with reed and flame stands up behind the back; for s21, s22, s26) |
 | `gait` | `"stand"`, `"walk"` (12-16 drawings: phase i / N), `"gallop"` (**8 drawings: phase i / 8**; body bob and pitch, tail streaming, head nodding), `"startled"` (eyes wide, legs braced, head up, tail up) |
 | `flame` | -1 off; 0 / 1 / 2 = lit flicker drawing. Lighting also ties a **reed bundle** (straw, red cords, charred end) to the tail; the flame sits on its free end, leaning backwards when galloping. `reed=True` shows the unlit bundle |
-| `blades` | short flat **bronze blades lashed to both horns** (red cord) |
+| `blades` | short flat **bronze dagger blades** (`#b08a3e`, darker edge line `#6e5224`, bright bevel) **lashed to both horns with three red cord wraps**; about 0.5 long (52 % of the old 0.95 leaf), swung 24 deg forward off the horn line so horn + blade do not read as one spike or a paintbrush |
 
-Anchors: `feet` (0, 0), `head`, `mouth`, `eye`, `back`, `hump`, `tail_tip` (the reed end = flame base), `flame_top`. `OX_CANVAS` = (-3.3125, -4.3125, 3.1875, 0.3125) covers every state (side and 3/4, gallop, lit with reed, mirrored the width is the same). For the stage an ox sprite should be rendered from `ox["svg"]` with that canvas.
+Anchors: `feet` (0, 0), `head`, `mouth`, `eye`, `back`, `hump` (front view: its own mouth / eye / hump / back anchors), `tail_tip` (the reed end = flame base), `flame_top`. `OX_CANVAS` = (-3.3125, -4.3125, 3.1875, 0.3125) covers every state (side, 3/4 and front 3/4, gallop, lit with reed; the front view's flame reaches y -4.18 at most; mirrored the width is the same). Front 3/4 gaits: `stand`, `walk` (12-16 drawings), `gallop` (8 drawings, phase i / 8: body bob, head nod, roll, legs lifting alternately), `startled` (head up, legs braced, tail and flame up); the tail angle is steeper than the side view so the flame shows above the back. For the stage an ox sprite should be rendered from `ox["svg"]` with that canvas.
 
 ## Cycles, lip-sync, blink
 
-`cast18.cycle(cast, phase, mode, facing, base, arms, speed)` (modes `walk` 28 frames, `run` 16, `sneak` 32, `march` 24), `talk_mouth`, `blink_at`: as cast6. `cast18.general_run_frame(phase, facing)` = the general's run (shocked, helmet askew, cup in hand, arm_r re-set). `cast18.qi_pose(phase, facing, speed)` = Qi soldier silhouette run with a spear (16 frames).
+`cast18.cycle(cast, phase, mode, facing, base, arms, speed)` (modes `walk` 28 frames, `run` 16, `sneak` 32, `march` 24), `talk_mouth`, `blink_at`: as cast6. `cast18.general_run_frame(phase, facing)` = the general's run (shocked, helmet askew, cup in hand, arm_r re-set; lean reduced to about 5-6 deg, was 12-15: a comic run, not a fall). `cast18.qi_pose(phase, facing, speed)` = Qi soldier silhouette run with a spear (16 frames).
 **Mouths move only on the general's two quotes**: `general_arms_wide`, `general_boast` (quote 1), `general_toast`, `general_carve` (quote 2) are tagged `lipsync` in `STORY18_META`: drive `mouth = talk_mouth(g)` there, `"flat"` outside. Everyone else keeps a held mouth (townsfolk beating pots: shout drawing).
 
 ## STORY18 (`cast18.STORY18[name] = (cast, pose)`, merged into `puppet.STORY`; notes in `STORY18_META`) - 59 poses
@@ -99,12 +99,12 @@ tiandan (-2.1875, -6.1875, 2.1875, 0.125) (torch); general (-1.875, -5.0, 1.875,
 
 ## Files and QA
 
-`cast18.py`, `test_cast18.py` (`sheet` -> `sheet.jpg`: heights front + 3/4; all poses; walk / run cycles; 15 face states per member; props; the ox in both states and views, stand / walk / startled, the 8-frame gallop side and 3/4, flame cards; `canvas`; `robust`: pose-key garbage on the members + ox garbage + `v2/test_puppet.py --quick`), `sheet.jpg` (sections in `tmp/sec_*.png`).
+`cast18.py`, `test_cast18.py` (`sheet` -> `sheet.jpg`: heights front + 3/4; all poses; walk / run cycles; 15 face states per member; props; the ox in both states and all 3 views, stand / walk / startled, the 8-frame gallop side, 3/4 and front 3/4, flame cards; `canvas`; `robust`: pose-key garbage on the members + ox garbage + `v2/test_puppet.py --quick`), `sheet.jpg` (sections in `tmp/sec_*.png`).
 
 ## Known weaknesses
 
 - The ox's body is a smooth blob in side view (a hump, but no ribs/shoulder modelling); the 3/4 body is a rounded box; gallop legs are tapered tubes with a simple two-bone bend, no overlapping hair.
-- The dragon is bold and readable at phone size but small details (scales, claws, clouds) vanish below ~100 px per D. In the side view its head sits close to the ox's own ear.
-- The qi silhouette keeps a faint dark-red brow band (tint multiplies it); lamellar patterns on the soldiers become busy at small sizes.
+- The dragon is now a bold simple motif (no scales / claws / pearl); in the front 3/4 view only its tail half is visible, the ox head covers the rest. The front view is built from the same head drawing as `three_quarter`, scaled 1.34, so the lifted gallop legs are simple tubes with little foreshortening.
+- Lamellar patterns on the soldiers become busy at small sizes.
 - `jue` reads like a small lamp at less than scale 1.4; `soldier_mock_moo` hides the helmet sides behind the arms.
 - Props held in `layer="front"` are drawn with the arm (as in cast8..10).

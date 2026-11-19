@@ -205,7 +205,9 @@ def sec_ox(D=64):
             cells2.append((st, vw, "walk", 0.25, 0, True, "%s %s walk (lit)" % (st, vw.replace("three_quarter", "3/4"))))
     cells3 = [("dragon", "side", "startled", 0.0, -1, True, "dragon side startled"), ("dragon", "three_quarter", "startled", 0.0, -1, True, "dragon 3/4 startled"),
               ("plain", "side", "startled", 0.0, -1, False, "plain side startled"), ("plain", "three_quarter", "startled", 0.0, -1, False, "plain 3/4 startled")]
-    allrows = [cells, cells2, cells3]
+    cells4 = [("plain", "front_three_quarter", "stand", 0.0, -1, False, "plain front 3/4 stand"), ("dragon", "front_three_quarter", "stand", 0.0, 0, True, "dragon front 3/4 stand (lit)"),
+              ("dragon", "front_three_quarter", "walk", 0.25, 1, True, "dragon front 3/4 walk (lit)"), ("dragon", "front_three_quarter", "startled", 0.0, 2, True, "dragon front 3/4 startled (lit)")]
+    allrows = [cells, cells2, cells3, cells4]
     W = cw * 4
     H = ch * len(allrows) + 120
     o = ['<rect width="%d" height="%d" fill="%s"/>' % (W, H, NIGHT)]
@@ -225,12 +227,12 @@ def sec_ox(D=64):
     for (st, vw) in (("plain", "side"), ("dragon", "side"), ("dragon", "three_quarter"), ("plain", "three_quarter")):
         pass
     sub = []
-    for (st, vw) in (("dragon", "side"), ("dragon", "three_quarter")):
+    for (st, vw) in (("dragon", "side"), ("dragon", "three_quarter"), ("dragon", "front_three_quarter")):
         for i in range(8):
             sub.append((st, vw, i))
     o2 = []
     sw_ = cw2 * 4
-    sh_ = ch2 * 4
+    sh_ = ch2 * 6
     body = ['<rect width="%d" height="%d" fill="%s"/>' % (sw_, sh_, NIGHT)]
     for n, (st, vw, i) in enumerate(sub):
         x0, y0 = (n % 4) * cw2, (n // 4) * ch2
@@ -358,7 +360,7 @@ def canvas_check():
                 for i in range(8):
                     f = cast18.ox_figure(st, vw, g, i / 8.0, i % 3, True)
                     assert all(map(math.isfinite, f["bbox"]))
-    print("ox: 2 states x 2 views x 4 gaits x 8 phases finite; bbox (side, lit) %r" % (cast18.ox_figure("dragon", "side", "gallop", 0.1, 1, True)["bbox"],))
+    print("ox: 2 states x 3 views x 4 gaits x 8 phases finite; bbox (side, lit) %r" % (cast18.ox_figure("dragon", "side", "gallop", 0.1, 1, True)["bbox"],))
     return bad + probs
 
 
@@ -388,7 +390,7 @@ def robust():
                     print("FAIL", name, p, repr(e))
     for i in range(200):
         try:
-            f = cast18.ox_figure(rnd.choice(garbage + ("plain", "dragon")), rnd.choice(garbage + ("side", "three_quarter")), rnd.choice(garbage + ("gallop", "walk")),
+            f = cast18.ox_figure(rnd.choice(garbage + ("plain", "dragon")), rnd.choice(garbage + ("side", "three_quarter", "front_three_quarter")), rnd.choice(garbage + ("gallop", "walk")),
                                  rnd.choice(garbage + (0.3,)), rnd.choice(garbage + (0, 1, 2)), rnd.choice(garbage), facing=rnd.choice((1, -1, "x")), coat=rnd.choice(garbage + (0.5,)))
             assert all(map(math.isfinite, f["bbox"]))
             n += 1

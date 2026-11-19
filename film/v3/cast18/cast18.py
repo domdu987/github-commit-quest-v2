@@ -218,7 +218,7 @@ def _hat_helm18(k, C, yaw):
                  % (dx - 0.36, dx - 0.30, dx - 0.12, dx + 0.34, dx + 0.28, dx + 0.12, k.c(cl["light"])))
         bd = ("M%.4f,%.4f Q%.4f,%.4f %.4f,%.4f L%.4f,%.4f Q%.4f,%.4f %.4f,%.4f Z"
               % (dx - 0.52, yb - 0.12, dx, yb - 0.08, dx + 0.52, yb - 0.12, dx + 0.51, yb + 0.03, dx, yb + 0.08, dx - 0.51, yb + 0.03))
-        o.append(_path(bd, k.c(CORD["base"]), k.ink, 0.020))
+        o.append(_path(bd, k.c(spec.get("band", CORD["base"])), k.ink, 0.020))
         kn = [(fx - 0.13, top + 0.04), (fx - 0.10, top - 0.08), (fx, top - 0.12), (fx + 0.10, top - 0.08), (fx + 0.13, top + 0.04)]
         o.append(_path(P._smooth_open(kn) + " Z", k.c(cl["base"]), k.ink, 0.020))
         o.append('<path d="M%.4f,%.4f q0.04,0.03 0.0,0.07" fill="none" stroke="%s" stroke-width="0.010" opacity="0.7"/>' % (fx - 0.01, top - 0.09, k.c(cl["light"])))
@@ -1133,7 +1133,7 @@ NEW_CAST18 = {
         torso_w=0.66, torso_h=0.98, profile=CE.PROFILE_ATHLETE, shift_pow=1.0,
         shoulder=(0.26, 0.50), arm=0.76, hip_x=0.15, leg=1.34, stance=0.06, wide=0.26, limb_w=0.062,
         eye_y=0.030, brow="stroke", brow_th=0.060, mouth="dash", moustache=False, smirk_side=-1,
-        hat="newsboy", hat_style="helm18", hat_tilt=-3.0, ear_pencil=False, helm18=dict(kind="iron", plume="tuft"),
+        hat="newsboy", hat_style="helm18", hat_tilt=-3.0, ear_pencil=False, helm18=dict(kind="cloth", band="#1e1a26"),     # dark cloth cap: no red band, no tuft
         hat_colors=dict(light="#3a3644", base="#2a2632", dark="#1a1620"),
         hair=dict(color="#1a161a", front=0.06, grow=0.20),
         costume="robe18", robe_len=0.34, robe_flare=0.08, sash_w=0.11, hem_band=False,
@@ -1269,69 +1269,54 @@ def _horn(k, base, ang, sc, far=False, blade=True, ln=1.0):
 
 
 def _blade_on_horn(k, tip, d, sc):
-    """a short flat bronze blade lashed to the horn tip, pointing on along the horn: root cord wraps, leaf blade 0.52 long."""
-    g = _lin(k, "bh%d" % int(tip[0] * 1000 % 997), BRONZE["light"], BRONZE["base"], BRONZE["dark"], 0.0, -0.1, 0.5, 0.1)
-    s = _T(tip[0], tip[1], d, sc)
-    s += '<path d="M-0.10,-0.060 L0.06,-0.085 Q0.30,-0.100 0.56,0 Q0.30,0.100 0.06,0.085 L-0.10,0.060 Z" fill="%s" stroke="%s" stroke-width="0.024" stroke-linejoin="round"/>' % (g, k.ink)
-    s += '<path d="M-0.04,0 L0.50,0" stroke="%s" stroke-width="0.014" stroke-linecap="round" opacity="0.85"/>' % k.c(BRONZE["dark"])
-    s += '<path d="M0.10,-0.062 Q0.30,-0.078 0.46,-0.030" fill="none" stroke="#ffffff" stroke-width="0.012" stroke-linecap="round" opacity="0.7"/>'
-    for x in (-0.12, -0.05, 0.02):
-        s += '<path d="M%.4f,-0.075 L%.4f,0.075" stroke="%s" stroke-width="0.034" stroke-linecap="round"/>' % (x, x + 0.03, k.ink)
-        s += '<path d="M%.4f,-0.075 L%.4f,0.075" stroke="%s" stroke-width="0.020" stroke-linecap="round"/>' % (x, x + 0.03, k.c(CORD["base"]))
+    """a short flat bronze DAGGER blade lashed to the horn tip, pointing on along the horn (fix 15: about 52 % of the old 0.95 long leaf):
+    bronze #b08a3e body with a darker edge line and a bright bevel, three red cord wraps at the root.  sc is the old scale (1.7 / 1.5)."""
+    f = sc / 1.7
+    s = _T(tip[0], tip[1], d + 24.0, f)        # swung forward off the horn line so horn + blade never read as one long spike
+    s += '<path d="M-0.06,-0.095 L0.02,-0.115 L0.26,-0.105 L0.50,0 L0.26,0.105 L0.02,0.115 L-0.06,0.095 Z" fill="%s" stroke="%s" stroke-width="0.028" stroke-linejoin="round"/>' % (k.c("#b08a3e"), k.ink)
+    s += '<path d="M0.02,-0.115 L0.26,-0.105 L0.50,0 L0.26,0.105 L0.02,0.115" fill="none" stroke="%s" stroke-width="0.030" stroke-linejoin="round" opacity="0.85"/>' % k.c("#6e5224")
+    s += '<path d="M0.02,0 L0.44,0" stroke="%s" stroke-width="0.020" stroke-linecap="round"/>' % k.c("#6e5224")
+    s += '<path d="M0.06,-0.055 L0.30,-0.050 L0.42,-0.012" fill="none" stroke="#f6dc98" stroke-width="0.016" stroke-linecap="round" opacity="0.9"/>'
+    for x in (-0.07, 0.0, 0.07):
+        s += '<path d="M%.4f,-0.105 L%.4f,0.105" stroke="%s" stroke-width="0.048" stroke-linecap="round"/>' % (x, x + 0.03, k.ink)
+        s += '<path d="M%.4f,-0.105 L%.4f,0.105" stroke="%s" stroke-width="0.030" stroke-linecap="round"/>' % (x, x + 0.03, k.c(CORD["base"]))
     s += "</g>"
     return s
 
 
 def _dragon(k, sx=1.0):
-    """the five-colour dragon painted on the silk coat (local frame of the flank: x -1.3 .. 1.0, y -2.2 .. -1.25): a fat S-curved gold body
-    with scales, fins in blue / green / white / black, two clawed legs, cloud scrolls, a horned head with whiskers, open mouth and a
-    pearl, at the front (right)."""
+    """the dragon painted on the silk coat (fix 15: bolder and simpler, the HEAD at mid-flank so it never reads as a second ox head).  Local
+    frame of the flank: x -1.4 .. 0.55, y -2.2 .. -1.25.  A fat gold S-body with a heavy ink line, four big fins (blue / green / white /
+    blue), a tail fin at the rump, one big horned head with an eye, open mouth and one whisker around x -0.1; two cream cloud scrolls."""
     o = []
-    # cloud scrolls behind (white, blue)
-    for (x, y, r, c) in ((-0.95, -1.38, 0.15, "#f4f0e6"), (-0.35, -1.30, 0.13, "#7ab4e8"), (0.30, -1.34, 0.15, "#f4f0e6"), (0.74, -1.30, 0.12, "#7ab4e8"), (-0.55, -2.12, 0.12, "#f4f0e6"), (0.10, -2.15, 0.11, "#7ab4e8")):
-        o.append('<path d="M%.4f,%.4f a%.4f,%.4f 0 1 1 %.4f,%.4f a%.4f,%.4f 0 1 1 %.4f,%.4f" fill="none" stroke="%s" stroke-width="0.040" stroke-linecap="round"/>' % (x - r, y, r, r, r * 1.2, r * 1.0, r * 0.7, r * 0.7, -r * 0.5, -r * 0.5, k.ink))
-        o.append('<path d="M%.4f,%.4f a%.4f,%.4f 0 1 1 %.4f,%.4f a%.4f,%.4f 0 1 1 %.4f,%.4f" fill="none" stroke="%s" stroke-width="0.026" stroke-linecap="round"/>' % (x - r, y, r, r, r * 1.2, r * 1.0, r * 0.7, r * 0.7, -r * 0.5, -r * 0.5, k.c(c)))
-    spine = [(-1.22, -1.55), (-1.02, -1.88), (-0.70, -2.02), (-0.40, -1.80), (-0.22, -1.50), (-0.02, -1.44), (0.20, -1.64), (0.30, -1.92)]
-    # dorsal fins in the five colours (on the upper side of the S)
-    fc = ("#2a78d8", "#2aa860", "#f4f0e6", "#1c1a20", "#2a78d8", "#2aa860")
-    for i in (1, 2, 3, 4, 5, 6):
-        a, b = spine[i], spine[i + 1] if i + 1 < len(spine) else spine[i]
-        mx_, my_ = a
-        dx, dy = (b[0] - spine[i - 1][0], b[1] - spine[i - 1][1])
+    for (x, y, r, c) in ((-0.95, -1.34, 0.15, "#f4f0e6"), (0.12, -1.33, 0.14, "#f4f0e6")):
+        o.append('<path d="M%.4f,%.4f a%.4f,%.4f 0 1 1 %.4f,%.4f a%.4f,%.4f 0 1 1 %.4f,%.4f" fill="none" stroke="%s" stroke-width="0.050" stroke-linecap="round"/>' % (x - r, y, r, r, r * 1.2, r * 1.0, r * 0.7, r * 0.7, -r * 0.5, -r * 0.5, k.ink))
+        o.append('<path d="M%.4f,%.4f a%.4f,%.4f 0 1 1 %.4f,%.4f a%.4f,%.4f 0 1 1 %.4f,%.4f" fill="none" stroke="%s" stroke-width="0.032" stroke-linecap="round"/>' % (x - r, y, r, r, r * 1.2, r * 1.0, r * 0.7, r * 0.7, -r * 0.5, -r * 0.5, k.c(c)))
+    spine = [(-1.30, -1.46), (-1.06, -1.90), (-0.72, -1.98), (-0.50, -1.64), (-0.30, -1.50), (-0.14, -1.68)]
+    fc = ("#2a78d8", "#2aa860", "#f4f0e6", "#2a78d8")
+    sm = _sample(spine, 20)
+    for j, i in enumerate((4, 8, 12, 16)):
+        a, b = sm[i], sm[i + 1]
+        dx, dy = (sm[i + 1][0] - sm[i - 1][0], sm[i + 1][1] - sm[i - 1][1])
         L = math.hypot(dx, dy) or 1.0
         nx, ny = dy / L, -dx / L
         if ny > 0:
             nx, ny = -nx, -ny
-        o.append('<path d="M%.4f,%.4f L%.4f,%.4f L%.4f,%.4f Z" fill="%s" stroke="%s" stroke-width="0.020" stroke-linejoin="round"/>' % (mx_ - dx / L * 0.08, my_ - dy / L * 0.08, mx_ + nx * 0.26 + dx / L * 0.02, my_ + ny * 0.26, mx_ + dx / L * 0.10, my_ + dy / L * 0.10, k.c(fc[i - 1]), k.ink))
-    # body: a tapering gold ribbon along the spine
-    body = _taper(_sample(spine), 0.07, 0.40)
-    g = _lin(k, "dgb", GOLD["light"], GOLD["base"], GOLD["dark"], -1.2, -2.0, 0.6, -1.4)
-    o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.030" stroke-linejoin="round"/>' % (body, g, k.ink))
-    # scales: little arcs along the body
-    for (x, y) in _sample(spine, 14)[1:-1]:
-        o.append('<path d="M%.4f,%.4f q0.04,0.05 0.08,0" fill="none" stroke="%s" stroke-width="0.014" stroke-linecap="round"/>' % (x - 0.04, y - 0.02, k.c(GOLD["deep"])))
-    # two clawed legs
-    for (x, y, d) in ((-0.55, -1.70, 1), (0.18, -1.45, 1)):
-        o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="0.080" stroke-linecap="round"/>' % (x, y, x + 0.04 * d, y + 0.26, k.ink))
-        o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="0.046" stroke-linecap="round"/>' % (x, y, x + 0.04 * d, y + 0.26, k.c(GOLD["base"])))
-        for dx in (-0.06, 0.0, 0.06):
-            o.append('<path d="M%.4f,%.4f l%.4f,0.08" stroke="%s" stroke-width="0.026" stroke-linecap="round"/>' % (x + 0.04 * d + dx * 0.3, y + 0.25, dx * 1.3, k.ink))
-            o.append('<path d="M%.4f,%.4f l%.4f,0.08" stroke="%s" stroke-width="0.012" stroke-linecap="round"/>' % (x + 0.04 * d + dx * 0.3, y + 0.25, dx * 1.3, "#f4f0e6"))
-    # tail fin
-    o.append('<path d="M-1.24,-1.55 Q-1.40,-1.46 -1.46,-1.60 Q-1.36,-1.62 -1.42,-1.74 Q-1.30,-1.70 -1.22,-1.55 Z" fill="%s" stroke="%s" stroke-width="0.020" stroke-linejoin="round"/>' % (k.c("#2aa860"), k.ink))
-    # head (at spine[-1], facing right): snout, open mouth, teeth, eye, horn, whiskers, pearl
+        o.append('<path d="M%.4f,%.4f L%.4f,%.4f L%.4f,%.4f Z" fill="%s" stroke="%s" stroke-width="0.030" stroke-linejoin="round"/>' % (a[0] - dx / L * 0.13, a[1] - dy / L * 0.13, a[0] + nx * 0.34, a[1] + ny * 0.34, a[0] + dx / L * 0.15, a[1] + dy / L * 0.15, k.c(fc[j]), k.ink))
+    o.append('<path d="M-1.28,-1.46 Q-1.46,-1.34 -1.52,-1.50 Q-1.40,-1.52 -1.46,-1.68 Q-1.30,-1.64 -1.22,-1.50 Z" fill="%s" stroke="%s" stroke-width="0.030" stroke-linejoin="round"/>' % (k.c("#2aa860"), k.ink))
+    body = _taper(sm, 0.10, 0.38)
+    g = _lin(k, "dgb", GOLD["light"], GOLD["base"], GOLD["dark"], -1.2, -2.0, 0.0, -1.4)
+    o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.044" stroke-linejoin="round"/>' % (body, g, k.ink))
+    o.append('<path d="M%s" fill="none" stroke="%s" stroke-width="0.040" stroke-linecap="round" opacity="0.7"/>' % (" L".join("%.4f,%.4f" % (x, y + 0.02) for (x, y) in sm[2:-3:2]), k.c(GOLD["dark"])))
     hx, hy = spine[-1]
-    o.append('<g transform="translate(%.4f %.4f) scale(1.6)">' % (hx - 0.12, hy + 0.04))
-    o.append('<path d="M-0.10,0.10 Q-0.14,-0.14 0.06,-0.20 Q0.26,-0.24 0.42,-0.10 Q0.50,-0.04 0.44,0.0 L0.26,0.04 Q0.40,0.10 0.38,0.16 Q0.20,0.22 0.0,0.18 Z" fill="%s" stroke="%s" stroke-width="0.026" stroke-linejoin="round"/>' % (k.c(GOLD["base"]), k.ink))
-    o.append('<path d="M0.12,0.04 L0.42,0.0 L0.38,0.14 Q0.22,0.17 0.12,0.12 Z" fill="%s" stroke="%s" stroke-width="0.012"/>' % (k.c("#7a1018"), k.ink))
-    o.append('<path d="M0.20,0.04 l0.02,0.04 l0.02,-0.04 M0.30,0.03 l0.02,0.05 l0.02,-0.05" fill="#f4f0e6" stroke="#f4f0e6" stroke-width="0.010"/>')
-    o.append('<path d="M-0.06,-0.14 Q-0.22,-0.10 -0.30,0.02 M-0.04,-0.08 Q-0.20,0.0 -0.24,0.14 M0.0,-0.02 Q-0.12,0.10 -0.14,0.22" fill="none" stroke="%s" stroke-width="0.040" stroke-linecap="round"/>' % k.c("#2a78d8"))
-    o.append('<circle cx="0.10" cy="-0.10" r="0.040" fill="#f4f0e6" stroke="%s" stroke-width="0.014"/><circle cx="0.11" cy="-0.10" r="0.020" fill="%s"/>' % (k.ink, k.ink))
-    o.append('<path d="M-0.02,-0.18 Q-0.10,-0.36 0.04,-0.46 M0.10,-0.20 Q0.06,-0.40 0.20,-0.46" fill="none" stroke="%s" stroke-width="0.050" stroke-linecap="round"/>' % k.ink)
-    o.append('<path d="M-0.02,-0.18 Q-0.10,-0.36 0.04,-0.46 M0.10,-0.20 Q0.06,-0.40 0.20,-0.46" fill="none" stroke="%s" stroke-width="0.026" stroke-linecap="round"/>' % k.c("#f4f0e6"))
-    o.append('<path d="M0.40,-0.04 Q0.60,-0.10 0.70,0.02 Q0.60,0.06 0.52,0.00 M0.38,0.16 Q0.56,0.28 0.72,0.22" fill="none" stroke="%s" stroke-width="0.030" stroke-linecap="round"/>' % k.ink)
-    o.append('<path d="M0.40,-0.04 Q0.60,-0.10 0.70,0.02 Q0.60,0.06 0.52,0.00 M0.38,0.16 Q0.56,0.28 0.72,0.22" fill="none" stroke="%s" stroke-width="0.014" stroke-linecap="round"/>' % k.c(GOLD["light"]))
-    o.append('<circle cx="0.78" cy="-0.10" r="0.075" fill="#f4f0e6" stroke="%s" stroke-width="0.020"/><path d="M0.74,-0.14 q0.04,-0.02 0.06,0.02" stroke="#7ab4e8" stroke-width="0.014" fill="none"/>' % k.ink)
+    o.append('<g transform="translate(%.4f %.4f) scale(1.32)">' % (hx - 0.10, hy + 0.02))
+    o.append('<path d="M-0.12,0.12 Q-0.16,-0.16 0.06,-0.22 Q0.28,-0.26 0.44,-0.10 Q0.52,-0.04 0.46,0.0 L0.30,0.04 Q0.42,0.10 0.40,0.17 Q0.20,0.24 0.0,0.20 Z" fill="%s" stroke="%s" stroke-width="0.036" stroke-linejoin="round"/>' % (k.c(GOLD["base"]), k.ink))
+    o.append('<path d="M0.14,0.05 L0.44,0.01 L0.40,0.15 Q0.24,0.18 0.14,0.13 Z" fill="%s" stroke="%s" stroke-width="0.014"/>' % (k.c("#7a1018"), k.ink))
+    o.append('<circle cx="0.12" cy="-0.10" r="0.060" fill="#f4f0e6" stroke="%s" stroke-width="0.020"/><circle cx="0.135" cy="-0.10" r="0.032" fill="%s"/>' % (k.ink, k.ink))
+    o.append('<path d="M-0.02,-0.20 Q-0.12,-0.40 0.06,-0.50 M0.12,-0.22 Q0.10,-0.42 0.26,-0.48" fill="none" stroke="%s" stroke-width="0.074" stroke-linecap="round"/>' % k.ink)
+    o.append('<path d="M-0.02,-0.20 Q-0.12,-0.40 0.06,-0.50 M0.12,-0.22 Q0.10,-0.42 0.26,-0.48" fill="none" stroke="%s" stroke-width="0.040" stroke-linecap="round"/>' % k.c("#f4f0e6"))
+    o.append('<path d="M-0.08,-0.04 Q-0.24,-0.04 -0.32,0.10 Q-0.22,0.20 -0.12,0.22" fill="none" stroke="%s" stroke-width="0.062" stroke-linecap="round"/>' % k.ink)
+    o.append('<path d="M-0.08,-0.04 Q-0.24,-0.04 -0.32,0.10 Q-0.22,0.20 -0.12,0.22" fill="none" stroke="%s" stroke-width="0.034" stroke-linecap="round"/>' % k.c("#2a78d8"))
     o.append('</g>')
     return "".join(o)
 
@@ -1643,15 +1628,113 @@ def _ox_34(k, state, gait, phase, flame, blades, reed, wide, coat, t):
     return "".join(o), dict(tail_tip=tail[2], head=hc, feet=feet)
 
 
+def _ox_front(k, state, gait, phase, flame, blades, reed, wide, coat, t):
+    """FRONT three-quarter: the ox comes at the camera, a little toward screen-right.  Big low head in front (two eyes, both horns, both
+    ears), a broad chest / neck, the hump behind it, the body running away to the left and getting smaller, the near front legs big, the far
+    ones and the hind legs behind them.  The silk coat (dragon) shows its front edge over the chest and the dragon on the visible left flank.
+    The tail with the reed and the flame stands up behind the back."""
+    col = OX_COL["plain"]
+    dragon = state == "dragon"
+    p = phase % 1.0
+    tw = 2 * math.pi
+    H = {"hf": (-1.20, -1.22), "hn": (-0.62, -1.18), "ff": (-0.02, -1.16), "fn": (0.84, -1.12)}
+    feet = {key: (H[key][0], 0.0) for key in H}
+    bob, tail_a, head_a, roll, reach = 0.0, 150.0, 4.0, 0.0, {}
+    hdy = 0.0
+    if gait == "gallop":
+        offs = {"hn": 0.50, "hf": 0.56, "fn": 0.0, "ff": 0.06}
+        for key, off in offs.items():
+            q = tw * (p + off)
+            front = key[0] == "f"
+            lift = (0.46 if front else 0.40) * max(0.0, math.cos(q)) ** 0.9
+            feet[key] = (H[key][0] + (0.10 if front else 0.05) * math.sin(q), -lift)
+            reach[key] = max(0.0, math.cos(q))
+        bob = -0.15 * (0.5 + 0.5 * math.cos(2 * tw * p - 0.5))
+        tail_a, head_a, roll = 120.0 + 12 * math.sin(tw * p), 6.0 + 5 * math.sin(2 * tw * p + 0.4), 2.2 * math.sin(tw * p)
+        hdy = 0.07 * math.sin(2 * tw * p + 0.4)
+    elif gait == "walk":
+        offs = {"fn": 0.0, "hf": 0.25, "ff": 0.5, "hn": 0.75}
+        for key, off in offs.items():
+            q = tw * (p + off)
+            feet[key] = (H[key][0] + 0.05 * math.sin(q), -0.24 * max(0.0, math.cos(q)))
+            reach[key] = max(0.0, math.cos(q)) * 0.5
+        bob = -0.04 * abs(math.sin(2 * tw * p))
+        tail_a, head_a, roll = 20.0 + 6 * math.sin(tw * p), 4.0 + 3 * math.sin(2 * tw * p), 1.2 * math.sin(tw * p)
+    elif gait == "startled":
+        feet = {"fn": (H["fn"][0] + 0.22, 0.0), "ff": (H["ff"][0] - 0.06, 0.0), "hn": (H["hn"][0] - 0.06, 0.0), "hf": (H["hf"][0] - 0.16, 0.0)}
+        bob, tail_a, head_a = -0.07, 128.0, -12.0
+        hdy = -0.10
+    else:
+        tail_a = 14.0 + 2 * math.sin(tw * p)
+    o = []
+    for key, sc_, far in (("hf", 0.82, True), ("hn", 0.86, False), ("ff", 0.94, True), ("fn", 1.0, False)):
+        hip = (H[key][0], H[key][1] + bob)
+        w = (0.40 * sc_, 0.29 * sc_)
+        sv, kn = _ox_leg(k, col, hip, feet[key], 0.04 if key[0] == "f" else -0.04, far=far, w=w)
+        # a hoof lifted towards the camera shows as a bigger hoof: nothing to do, the drawing already foreshortens by y
+        o.append(sv)
+    tail = _ox_tail(k, col, tail_a, reed, flame, (-1.52, -2.02 + bob), t)
+    o.append(tail[0])
+    bp = [(-1.78, -1.55), (-1.70, -2.12), (-1.15, -2.36), (-0.55, -2.58), (0.05, -2.74), (0.65, -2.62), (1.12, -2.20), (1.28, -1.55), (1.14, -1.08), (0.55, -0.92),
+          (-0.20, -0.90), (-1.10, -0.96), (-1.62, -1.10)]
+    g = _lin(k, "ofb", col["light"], col["base"], col["dark"], -1.8, -2.5, 1.2, -1.0)
+    b = ['<g transform="translate(0 %.4f) rotate(%.2f 0 -1.5)">' % (bob, roll)]
+    b.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.034" stroke-linejoin="round"/>' % (P._smooth_closed(bp), g, k.ink))
+    b.append('<path d="M-1.5,-1.04 Q-0.5,-0.82 1.0,-1.0" fill="none" stroke="%s" stroke-width="0.10" stroke-linecap="round" opacity="0.28"/>' % k.c(col["deep"]))
+    b.append('<path d="M-0.20,-2.62 Q0.10,-2.70 0.45,-2.58" fill="none" stroke="#ffffff" stroke-width="0.026" stroke-linecap="round" opacity="0.35"/>')
+    if not dragon:
+        b.append('<path d="M-1.2,-2.2 Q-0.9,-1.7 -1.35,-1.35 Q-1.65,-1.6 -1.55,-2.0 Z" fill="%s" opacity="0.30"/>' % k.c(OX_COL["patch"]))
+    else:
+        sh = 1.0 - coat
+        top = [(-1.84, -1.52), (-1.76, -2.16), (-1.15, -2.40), (-0.55, -2.62), (0.05, -2.78), (0.65, -2.66), (1.14, -2.22), (1.32, -1.56)]
+        sc2 = []
+        n = 8
+        for i2 in range(n):
+            x0 = 1.34 - 3.20 * i2 / float(n)
+            x1 = 1.34 - 3.20 * (i2 + 1) / float(n)
+            sc2.append((x0, -1.14))
+            sc2.append(((x0 + x1) / 2, -0.98))
+        sc2.append((-1.86, -1.14))
+        d = "M%s L%s Z" % (" L".join("%.4f,%.4f" % q for q in top), " L".join("%.4f,%.4f" % q for q in sc2))
+        gc = _lin(k, "ofc", SILK["light"], SILK["base"], SILK["dark"], -1.8, -2.5, 1.2, -1.0)
+        b.append('<g transform="translate(%.4f %.4f) rotate(%.2f -0.4 -1.8)">' % (-0.9 * sh, -0.55 * sh, -10 * sh))
+        b.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.034" stroke-linejoin="round"/>' % (d, gc, k.ink))
+        b.append('<path d="M%s" fill="none" stroke="%s" stroke-width="0.060" stroke-linecap="round" stroke-linejoin="round"/>' % (" L".join("%.4f,%.4f" % (x, y + 0.08) for (x, y) in top[1:-1]), k.c(GOLD["base"])))
+        b.append('<path d="M%s" fill="none" stroke="%s" stroke-width="0.050" stroke-linejoin="round"/>' % (" L".join("%.4f,%.4f" % (x, y - 0.05) for (x, y) in sc2[:-1]), k.c(GOLD["base"])))
+        for i2 in range(n):
+            xm = sc2[2 * i2 + 1][0]
+            b.append('<path d="M%.4f,-0.98 L%.4f,-0.86" stroke="%s" stroke-width="0.026" stroke-linecap="round"/>' % (xm, xm, k.ink))
+            b.append('<path d="M%.4f,-0.98 L%.4f,-0.86" stroke="%s" stroke-width="0.014" stroke-linecap="round"/>' % (xm, xm, k.c(GOLD["base"])))
+        b.append('<g transform="translate(-0.55 -0.08) scale(0.80 1.0)">%s</g>' % _dragon(k))
+        b.append('</g>')
+    b.append('</g>')
+    o.append("".join(b))
+    # the broad chest / neck seen from the front, under the head (coat colour for the dragon ox: the coat front over the shoulders)
+    hc = (0.48, -1.60 + bob + hdy)
+    neck = [(-0.55, -2.55), (0.10, -2.78), (0.75, -2.62), (1.18, -2.10), (1.16, -1.40), (0.80, -0.98), (0.20, -0.92), (-0.30, -1.10), (-0.62, -1.80)]
+    nd = _lin(k, "ofn", col["light"], col["base"], col["dark"], -0.6, -2.7, 1.1, -1.0)
+    o.append('<g transform="translate(0 %.4f)"><path d="%s" fill="%s" stroke="%s" stroke-width="0.034" stroke-linejoin="round"/>' % (bob, P._smooth_closed(neck), nd, k.ink))
+    if dragon:
+        cl = [(-0.52, -2.50), (0.10, -2.74), (0.72, -2.58), (1.12, -2.10), (1.10, -1.62), (0.70, -1.44), (0.50, -1.30), (0.20, -1.44), (-0.30, -1.50), (-0.58, -1.90)]
+        gc2 = _lin(k, "ofe", SILK["light"], SILK["base"], SILK["dark"], -0.6, -2.7, 1.1, -1.3)
+        o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.034" stroke-linejoin="round"/>' % (P._smooth_closed(cl), gc2, k.ink))
+        o.append('<path d="M-0.50,-2.42 Q0.10,-2.66 0.70,-2.50 Q1.0,-2.20 1.05,-1.80" fill="none" stroke="%s" stroke-width="0.060" stroke-linecap="round"/>' % k.c(GOLD["base"]))
+    o.append('</g>')
+    o.append(_ox_head_34(k, col, hc, head_a + roll, blades, wide, dragon, 1.34))
+    if tail[1] is not None:
+        o.append(tail[1])
+    return "".join(o), dict(tail_tip=tail[2], head=hc, feet=feet, mouth=(hc[0] + 0.05, hc[1] + 0.62), eye=(hc[0] - 0.22, hc[1] - 0.14), hump=(0.05, -2.78 + bob), back=(-0.6, -2.5 + bob))
+
+
 OX_STATES = ("plain", "dragon")
-OX_VIEWS = ("side", "three_quarter")
+OX_VIEWS = ("side", "three_quarter", "front_three_quarter")
 OX_GAITS = ("stand", "walk", "gallop", "startled")
 GALLOP_FRAMES = 8
 
 
 def ox_figure(state="plain", view="side", gait="stand", phase=0.0, flame=-1, blades=False, reed=None, facing=1, coat=1.0, uid="ox", t=0.0, ink=P.INK, tint=None):
     """the ox as a figure dict like puppet.figure(): {"svg", "bbox", "anchors", "feet_y"} in D units with the hooves on y = 0 and x = 0 at the
-    middle of the body (anchors["feet"] = (0, 0)).  state "plain" | "dragon"; view "side" | "three_quarter"; gait "stand" | "walk" | "gallop"
+    middle of the body (anchors["feet"] = (0, 0)).  state "plain" | "dragon"; view "side" | "three_quarter" | "front_three_quarter"; gait "stand" | "walk" | "gallop"
     | "startled"; phase 0..1 loops (gallop: 8 drawings = phase i / 8, walk: 12-16); flame -1 off, 0 / 1 / 2 = the lit tail flame drawing (a
     reed bundle is tied to the tail when flame >= 0 or reed=True); blades=True lashes a bronze blade to each horn; facing -1 mirrors; coat 0..1
     = how far the silk coat is pulled on (dragon only).  Anchors: head, mouth, eye, horn_tip_n / horn_tip_f (blade tips), tail_tip (flame
@@ -1664,11 +1747,11 @@ def ox_figure(state="plain", view="side", gait="stand", phase=0.0, flame=-1, bla
     k = _ctx(uid, ink, tint)
     ph = _num(phase, 0.0)
     wide = gt == "startled"
-    fn = _ox_side if vw == "side" else _ox_34
+    fn = {"side": _ox_side, "three_quarter": _ox_34, "front_three_quarter": _ox_front}[vw]
     svg, info = fn(k, st, gt, ph, fl, bool(blades), rd, wide, _f(coat, 1.0, 0.0, 1.0), _num(t, 0.0))
     fc = -1.0 if _num(facing, 1.0) < 0 else 1.0
     defs = "<defs>%s</defs>" % "".join(k.defs) if k.defs else ""
-    top = -3.05 if vw == "side" else -3.0
+    top = -3.05 if vw == "side" else (-3.3 if vw == "front_three_quarter" else -3.0)
     bb = [-2.75, top - 0.35, 3.05, 0.20]
     if rd:
         bb[0] = -3.2
@@ -1676,8 +1759,12 @@ def ox_figure(state="plain", view="side", gait="stand", phase=0.0, flame=-1, bla
     sv = defs + ('<g transform="scale(%d 1)">%s</g>' % (int(fc), svg) if fc < 0 else svg)
     box = (bb[0] * fc, bb[1], bb[2] * fc, bb[3]) if fc > 0 else (bb[2] * fc, bb[1], bb[0] * fc, bb[3])
     hd = info["head"]
+    mo = info.get("mouth", (hd[0] + 0.95, hd[1] + 0.3))
+    ey = info.get("eye", (hd[0] + 0.45, hd[1] - 0.1))
+    hu = info.get("hump", (0.62, -2.4))
+    bk = info.get("back", (0.0, -2.0))
     an = dict(feet=(0.0, 0.0), head=(hd[0] * fc, hd[1]), tail_tip=(info["tail_tip"][0] * fc, info["tail_tip"][1]),
-              back=(0.0, -2.0), hump=(0.62 * fc, -2.4), mouth=((hd[0] + 0.95) * fc, hd[1] + 0.3), eye=((hd[0] + 0.45) * fc, hd[1] - 0.1),
+              back=(bk[0] * fc, bk[1]), hump=(hu[0] * fc, hu[1]), mouth=(mo[0] * fc, mo[1]), eye=(ey[0] * fc, ey[1]),
               flame_top=(info["tail_tip"][0] * fc, info["tail_tip"][1] - 1.0))
     return dict(svg=sv, bbox=box, anchors=an, feet_y=0.0)
 
@@ -1704,6 +1791,8 @@ def general_run_frame(phase=0.0, facing=1):
     """one frame of the general's RUN (phase 0..1, 16 frames): shocked, helmet askew, the cup held up in the right hand."""
     p = cycle("general", phase, "run", facing, dict(expr="shocked", mouth=("open", 0.16, 0.18), hat_askew=24, fx=["sweat"], t=0.3, prop_r=dict(type="jue", scale=1.6)), "l")
     p["arm_r"] = dict(hand=(0.70, 0.30), bend=0.9, sharp=0.6, stretch=1.0, layer="front")
+    p["lean"] = 0.42 * p.get("lean", 0.0)        # fix 15: was 12-15 deg (read as a fall); now about 5-6 deg = a comic run
+    p["head_roll"] = 0.6 * p.get("head_roll", 0.0)
     return p
 
 

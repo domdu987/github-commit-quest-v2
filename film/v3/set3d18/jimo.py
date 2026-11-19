@@ -493,6 +493,7 @@ import jimo_in as IN                                        # noqa: E402
 import jimo_camp as CAMP                                    # noqa: E402
 import jimo_vista as VS                                     # noqa: E402
 import jimo_ox as OX                                        # noqa: E402
+import jimo_r2 as R2                                        # noqa: E402  (round 2: cards, per-shot tweaks)
 
 def build(location=None, preset=None, light=None, clear=True):
     """Build one location ('jimo_in' | 'jimo_out' | 'yan_camp' | 'vista') for a preset (a shot name 's01'..'s26', or the location name for its default wide
@@ -822,7 +823,7 @@ def render_spec(spec, quality='final', outdir=None, tag=None):
     st = state if state is not None else (S.SHOTS[name]['state'] if name in S.SHOTS else ''); apply_state(st)
     if name in S.SHOTS:
         shot_camera(name, t)
-        if os.environ.get('ACTORS', '1') == '1': placeholders(name, t)
+        if os.environ.get('ACTORS', '1') == '1': R2.placeholders(name, t)
     else: make_camera(A['cam'])
     bpy.context.view_layer.update(); flicker(1 if name not in S.SHOTS else S.SHOTS[name]['f0'] + int(t * S.SHOTS[name]['frames']))
     tag = tag or ('%s' % name + ('' if light is None else '_' + light))
