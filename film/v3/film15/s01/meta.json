@@ -38,8 +38,8 @@
  "s_per_frame_cpu": 14.7,
  "motion": {
   "median": 5.4,
-  "p90": 21.2
+  "p90": 21.4
  },
  "split": "take.mkv.part* (cat to rebuild)",
- "revision": "r2 (director TAKE-gate fixes 1-8)"
+ "revision": "r3 (smooth whip, boy offset, bar fill)"
 }
