@@ -20,7 +20,7 @@ G_LAUGH = C.g_of(21.24) - 4                                             # 636: t
 G_SOLD = (G_LAUGH + 6, G_LAUGH + 12)                                    # the soldiers catch the laugh
 LAUGH_MOUTH = ("open", 0.34, 0.22)                                      # constant (not lip-sync)
 CAMLIN = 0.5
-PARAMS = (0.2, 150, 1.0, 2.6, 1.2, -0.3, -0.3)      # extra push, slide px/s, sway D, sway Hz, look wobble D, dz, dz/t  (c18.make_mod)
+PARAMS = (0.0, 100, 0.12, 2.6, 3.0, -0.3, -0.3)      # extra push, slide px/s, sway D, sway Hz, look wobble D, dz, dz/t  (c18.make_mod)
 
 
 def patches(T):
