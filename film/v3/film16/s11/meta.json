@@ -51,20 +51,21 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 18.77,
- "s_per_frame_cpu_mean": 36.05,
+ "s_per_frame_wall_mean": 20.49,
+ "s_per_frame_cpu_mean": 39.39,
  "main_head_px": [
-  46,
-  96278
+  265,
+  292
  ],
  "main_head_centre_y": [
-  -114153,
-  48771
+  671,
+  700
  ],
- "head_bottom_max_y": 211686,
+ "head_bottom_max_y": 845,
  "framediff_in_shot": {
-  "median": 14.86,
-  "p90": 24.12
+  "median": 5.52,
+  "p90": 20.82
  },
- "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json"
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json",
+ "note_heads": "Morse close at the end of the snap (g>=776); audience heads 25-60 px (wide)"
 }

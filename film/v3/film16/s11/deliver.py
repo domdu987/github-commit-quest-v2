@@ -84,7 +84,7 @@ hd = {}
 for r in rows:
     for k, h in r["heads"].items():
         hd.setdefault(k, []).append(h)
-main = {k: v for k, v in hd.items() if k in ("mor", "mock")}
+main = {k: [h for h in v if 0 < h["x"] < 720 and 0 < h["y"] < 1280 and h["w"] < 600 and h["y"] > 300] for k, v in hd.items() if k in ("mor",)}
 allw = [h["w"] for v in main.values() for h in v]
 ally = [h["y"] for v in main.values() for h in v]
 allb = [h["bottom"] for v in hd.values() for h in v]

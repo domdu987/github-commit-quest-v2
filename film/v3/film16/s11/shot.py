@@ -106,7 +106,7 @@ class Take(C.Take):
         A = self.A
         mm = Vector(MORSE_MARK)
         self.cam_path = PathCam((Vector((3.0, 11.0, 4.0)), Vector((14.0, 23.0, 2.6))),
-                                (Vector((-3.0, 11.0, 4.0)), Vector((-14.0, 23.0, 2.6))),
+                                (Vector((0.5, 11.0, 4.0)), Vector((6.5, 24.0, 2.6))),
                                 (Vector((mm.x + 1.0, mm.y - 2.6, 3.9)), Vector((mm.x - 0.15, mm.y, 3.0))), GS[0], G_LAST, SNAP)
         self.key_cam(bf(GS[0]), *self.cam_path.at(GS[0]))
         self.scene.frame_set(bf(GS[0]))
