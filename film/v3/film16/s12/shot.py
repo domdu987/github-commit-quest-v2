@@ -101,6 +101,9 @@ class Take(C.Take):
 
     def pose(self, gs):
         import tg_chamber as CH
+        if not getattr(self, '_bag_moved', False):
+            TG.STATE['moneybag_base'] = Vector(TG.STATE['moneybag_base']) + Vector((0.55, 0.45, 0.0))   # onto the table top, off the near-left corner
+            self._bag_moved = True
         for g in gs:
             f = bf(g)
             self.key_cam(f, *CAM.at(g))

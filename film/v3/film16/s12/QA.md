@@ -4,5 +4,6 @@
 - Camera: eye level (3.5 D, ~ Morse head height), push 13 %/s + slide 40 px/s + arc 12 deg/s, plus a small vertical thud-shake after the landing (g 788..800) to land the beat. No snap (the shot is 1.5 s). Never parked.
 - Heads: Morse 123-150 px wide (plan medium 170-230), centre y 576-671, bottom <= 736; mocker 77-97 px. Band y 880 clear.
 - Frame-diff in-shot (g 786..830): median 5.48, p90 17.75. qa_auto PASS.
+- Gate note N7 applied: the bag's landing point is moved 0.55 D right and 0.45 D back, so it sits on the table top (it no longer overhangs the near-left corner); a corner of the instrument is in frame at the left. Frame-diff after the re-render: median 5.63, p90 17.44.
 - Differs from the plan: Morse is a medium-wide (~130 px) not 170-230 (the table and the instrument fill the foreground); he stands behind the right end of the table, the bag lands at its centre-right, left of him.
 - s/frame 15.8 wall / 29.4 CPU.
