@@ -175,10 +175,11 @@ def cam27(g):
     u = U01(g, 27); C = (bxm(g) - 0.2, 11.6, 2.15)
     return orbit(C, lerp(3.0, 2.4, u) - 0.75 * sm(seg(g, 1470, 1476)) + 0.35 * sm(seg(g, 1486, 1500)) - 0.5 * sm(seg(g, 1490, 1496)) + 0.5 * sm(seg(g, 1500, 1505)) - 0.5 * sm(seg(g, 1507, 1513)), lerp(22, -10, u) + 6 * math.sin(g * 0.25) + 16 * (sm(seg(g, 1470, 1476)) * 0 + sm(seg(g, 1492, 1498)) - sm(seg(g, 1502, 1508))), 2.0)
 def cam28(g):
-    u = U01(g, 28); x = rival_x(g) * DM; zc = 2.3 + 0.7 * sm(seg(g, 1516, 1530)) - 0.9 * sm(seg(g, 1558, 1574)); C = (x - 0.35 + 0.4 * sm(seg(g, 1562, 1576)), 11.6, zc)      # tilt follows him up to the apex
-    th = lerp(-24, 20, u) + 16 * (sm(seg(g, 1526, 1532)) - sm(seg(g, 1543, 1549)) + sm(seg(g, 1558, 1564)))
-    R = lerp(3.4, 3.1, u) - 0.7 * sm(seg(g, 1543, 1551)) - 0.3 * sm(seg(g, 1558, 1564)) + 0.3 * sm(seg(g, 1564, 1580))                                                      # push on the pop and on the drop, eased out so the falling head stays clear
-    return orbit(C, R, th, 2.0)
+    """same side view and size as shot 27 (R about 3 m, near frontal): the WHOLE rival visible, flat and high above the bar; truck (orbit) + tilt-follow, small snaps"""
+    u = U01(g, 28); x = rival_x(g) * DM; zc = 2.34 + 0.54 * (rival_h(g) + 0.9)
+    C = (x - 0.6, 11.6, zc)
+    th = lerp(-20, 18, u) + 12 * (sm(seg(g, 1526, 1531)) - sm(seg(g, 1543, 1548)) + sm(seg(g, 1557, 1562)))
+    return orbit(C, lerp(3.4, 3.2, u) - 0.35 * sm(seg(g, 1543, 1549)), th, lerp(2.0, 2.15, sm(seg(g, 1516, 1540))))
 def cam29(g):
     gw0, gw1 = G_FLICK1 - 2, G_FLICK1 + 8; Lx = land_hip().x * DM
     Cb = lambda gg: (bxm(gg) - 0.2, 11.6, 2.2)
