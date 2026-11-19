@@ -1,0 +1,8 @@
+# QA_TECH s15 (take g1130-1210, shot g1136-1205) - FAIL
+Checked: 6 fps frames, first/last 3, mouth crop grid f0-f76 (every 4th frame), band stats. Frame-diff in-shot (area downscale): median 6.86, p90 14.27 (bilinear 5.60 / 13.1) - passes.
+Pass items: heads fine (chin max 732), feet grounded, NIGHT, no text, no black/frozen frames, caption band mean 49-57, bright 0 %, g range 1136-1205 matches the plan, jars in the corners (small).
+1. g1136-1203 (all of f6-f73) - NO LIP-SYNC on quote 2b "พรุ่งนี้กินเนื้อวัวกัน!" (about 38.0-40.1 s): the general's face is a fixed stare, brown nose-blob plus a thin smile line; the mouth never opens or changes across the 20 sampled frames. Mandatory (mouths move only in quote 2, so s15 must move). Fix: drive the open/closed mouth cycle at about 8-10 Hz from g1136 to g1203, then close at g1204.
+2. g1136-1205 - plan beat missing: no carving mime, no lip-lick, no cup tilt; his arms hang behind the body and no hand or prop is visible. The cup from s14 (raised in his hand at g1136) has vanished: prop continuity break. Fix: put the cup back in his raised hand and tilt it, add a carve-the-air gesture and a tongue-lick frame.
+3. g1136-1205 - acting: wide-eyed blank stare with no laugh bounce, where s14 ends on a laugh; expression does not read as "tomorrow we eat beef". Fix: grin, squint, belly bounce 0.06 D at about 3 Hz between syllables.
+4. g1136-1205 - the laughing soldier at left is mostly hidden behind the general's shoulder (only half a face visible) and the pose repeats; fix: move him 1 D left so he is readable.
+5. g1136-1210 - foreground jars are dark-navy faceted polygons that look like broken geometry (bottom corners); fix: textured jars.

@@ -1,0 +1,9 @@
+# QA_TECH s20 (take g1509-1601, shot g1515-1595) - FAIL
+Checked: 6 fps frames, first/last 3, band stats. Frame-diff in-shot (area): median 7.79, p90 14.32 - passes. qa_auto soft frames g1600-1601 are in the handle after the shot (g1595) and the frames look sharp - ignore.
+Pass items: NIGHT jimo_out/field; oxen run forward (they face the lens and never turn back to the flame); at least 1 flame on screen at all times; hooves grounded; no text; no black/frozen frames; no blade contact; g range 1515-1595 matches the plan.
+1. g1524-1563 (f15-f55) - fewer than 3 visible tail flames: only 1 full flame card plus 1-2 small red tips peeking over coats (clear at g1524, g1529, g1534, g1544, g1554, g1559); 3 or more only at g1515-1519 and again from g1569. TEAMS: at least 3 visible flames, oxen yawed so the tails show. Fix: yaw oxen about 30 deg and light at least 4 tails in view throughout.
+2. g1515-1595 - tail flames are flat cards facing the lens and not attached to any tail: they hover beside or above the coats (e.g. g1599-1601 a flame at x 285 with no ox under it; g1564-1574 a flame in front of an ox face). Fix: anchor flames to the tail tip and place the tails behind the body, yawed.
+3. g1515-1595 - no "tail streaming sparks" (plan): no sparks or smoke trail from any tail. Fix: add an ember emitter per lit tail.
+4. g1519-1601 - flat ground fills the bottom 40-45 % of the frame, striped with hard dark-navy bands (look like unexplained geometry, not shadows; also hard dark bars on the ground at left at g1514). Fix: tilt up, replace with soft shadow / grass.
+5. g1569-1589 (f60-f80) - caption band mean 115-124, bright >170 share 2.8-4.8 % (orange ground glow); limit about 110 mean and no bright emitters. Fix: lower the ground flame spill.
+6. g1559-1574 - a flame card covers 25 % of the frame and an ox face (extreme close-up, edge aliased). Fix: farther lens distance.
