@@ -1,0 +1,3 @@
+sb1_line_wide        dark-third mean hue  251.2 (target 240-260)  dark px used  34.1%  share hue230-270 in dark  83.0%  magenta share  0.17% (<=10)  mean val 0.74  OK
+sb2_chamber          dark-third mean hue  242.7 (target 240-260)  dark px used  35.0%  share hue230-270 in dark  95.2%  magenta share  0.88% (<=10)  mean val 0.76  OK
+sb3_bottle_close     dark-third mean hue  247.3 (target 240-260)  dark px used  33.7%  share hue230-270 in dark  89.8%  magenta share  1.33% (<=10)  mean val 0.67  OK
