@@ -240,11 +240,12 @@ class Take(object):
             _, dp = pose_with("dupont_innocent", g, expr="worried", phase=1.0, sway=0.6)
             dp["legs"] = "stand"
             da.pose(f, dp, camera=self.cam)
+            u0 = seg(g, FIRST, 1350, lambda x: 1 - (1 - x) ** 2)       # the calipers come up from low and settle on the head, then keep working
             head_w = Vector((dpos[0], dpos[1], K.HEAD_Z["chair"] + 0.03))
             # jaw tip target: the calipers pin on the side of dupont's head (screen-left of Bertillon's hand)
             bp_cast, bp = pose_with("bertillon_measuring", g, mirror=False, sway=0.5)
             bp["prop_r"] = dict(bp["prop_r"], angle=-10 + 6 * math.sin(g * 0.3))
-            ba.pose(f, bp, hands={"r": {"tip": (head_w.x - 0.14, head_w.y - 0.05, head_w.z - 0.02), "prop": "calipers", "angle": -4}}, camera=self.cam)
+            ba.pose(f, bp, hands={"r": {"tip": (head_w.x - 0.14 - 0.45 * (1 - u0), head_w.y - 0.05, head_w.z - 0.02 - 0.40 * (1 - u0) + 0.015 * math.sin(g * 0.9)), "prop": "calipers", "angle": -4}}, camera=self.cam)
         for a, ppd in ((da, 320), (ba, 320)):
             for f, r in zip([g - FIRST + 1 for g in gs], a.render_sprites(ppd, frames=[g - FIRST + 1 for g in gs])):
                 self.anch[(a.name, f)] = r["anchors"]
