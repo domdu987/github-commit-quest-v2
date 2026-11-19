@@ -12,7 +12,7 @@ from mathutils import Vector
 PS = 20.0                           # push point arc (x 6.0 on the front row) = team 6's shot 19 v2
 PXC = 6.0
 HOLD_END = 1319                     # hold on the V until here, then the clock runs in real time
-SW_K = [1.0]; SWT = [None]
+SW_K = [1.0]; SWT = [None]; ALT = [False]
 def shot_of(g): return 20 if g < 1368 else 21
 def clock(g):
     if g < 1368: return 0.55 if g < HOLD_END else 0.55 + (g - HOLD_END) / 30.0      # wire sim seconds (t 0.11 = max bow)
@@ -20,15 +20,21 @@ def clock(g):
 def swing_clock(g):
     if g < 1368: return 0.30 if g < HOLD_END else 0.30 + (g - HOLD_END) / 30.0
     return None
-def bee_clock(g): return swing_clock(g) if g < 1368 else clock(g)
+def bee_clock(g):
+    if g < 1368: return swing_clock(g)
+    return -1.0 if g < 1438 else (2.5 / F.WAVE_C + 0.15) + (g - 1438) * 0.1
+
 def mvx(u): return 0.65 * u if u < 0 else (1 + 0.65 * (u - 1) if u > 1 else mv(u))
-def burst(g): return 0.0 if g < HOLD_END else 0.035
+def burst(g): return 0.0 if g < HOLD_END else (0.15 if g >= 1368 else 0.035)
 
 def _hive_swing(s, t, s0=None):
     s = np.asarray(s, dtype=float)
     if t is None or t < 0: return np.zeros_like(s), np.zeros_like(s)
     s0 = F.PUSH_S0 if s0 is None else s0; d = F._ring_dist(s, s0); tt = SWT[0] if SWT[0] is not None else t * F.SEQ_T; tau = tt - d / F.WAVE_C - 0.12
-    return 0.85 * SW_K[0] * F._h(tau), 0.20 * np.where(tau <= 0, 0.0, np.sin(2 * math.pi * 1.7 * tau) * np.exp(-np.maximum(tau, 0) / 1.2))
+    sg = np.ones_like(s)
+    if ALT[0]:
+        for k, ss in enumerate(s): sg[k] = (-1.0) ** min(F.UNITS, key=lambda u: abs(u['s'] - ss))['i']
+    return sg * 0.85 * SW_K[0] * F._h(tau), 0.20 * np.where(tau <= 0, 0.0, np.sin(2 * math.pi * 1.7 * tau) * np.exp(-np.maximum(tau, 0) / 1.2))
 
 def cam_of(g):
     if g < 1368:
@@ -41,16 +47,17 @@ def cam_of(g):
         return loc, look, lerp(lerp(20, 24, p), 28, e)
     # shot 21: the wave front runs LEFT along the row (u3 g~1381, u2 1398, u1 1415, u0 1431); the camera sits ahead of it, 41 deg to the row, looking back at the hive being knocked -> the pendulum swing is seen side-on
     dg = g - 1368; fx = 6.0 - 0.3 * dg if dg <= 60 else -12.0 - 0.05 * (dg - 60)
-    return (fx - 4.2, 1.6, 2.3), (fx, 5.0, 1.6), 24
+    return (fx - 4.2, 1.4, 1.3), (fx, 5.0, 2.6), 36
 
-def hive_scale(cam_loc, h): return 1.5
+def hive_scale(cam_loc, h): return 2.0
 
 class Driver:
     def __init__(self, shot, quality, threads):
         self.shot = shot
         c0, l0, ln0 = cam_of(1310 if shot == 20 else 1370)
         C.register_preset('v3s%d' % shot, c0, l0, ln0)
-        F.hive_swing = _hive_swing
+        F.hive_swing = _hive_swing; ALT[0] = (shot == 21)
+        if shot == 21: C.SLEEP_N[0] = 0
         C.build('v3s%d' % shot, quality, threads=threads, samples=int(os.environ.get('SAMPLES', 6 if quality == 'preview' else 24)), dense_bees=240)
         self.cam = C.Cam(); C.darken_mat('tinunder', 0.62); C.darken_mat('woodpale', 0.8)
         pts = [cam_of(g)[0] for g in range(1301 if shot == 20 else 1368, 1368 if shot == 20 else 1453, 6)]
@@ -64,7 +71,7 @@ class Driver:
             self.mat = C.matriarch_card(128); self.mat.grade = True
         else:
             self.mat = None
-            print('roofs removed', C.cut_roofs(-40, 40, -10, 60, zmin=-1.0)); C.hide_maize_rows(8.0); print('mountains hidden', sum(1 for o in bpy.data.objects if 'mount' in o.name.lower() and not setattr(o, 'hide_render', True)))
+            C.hide_maize_rows(8.0); print('mountains hidden', sum(1 for o in bpy.data.objects if 'mount' in o.name.lower() and not setattr(o, 'hide_render', True)))
             C.cut_boxes([(-8.0, -3.0, -1.5, 5.2, 2.8), (-15, -8, -4, 6.0, 1.5)])
             C.cut_path(pts, 2.6, names=('grass', 'flowers', 'edge', 'pebbles'), keep=None)
             C.cut_path(pts, 2.6, names=('props',), zmax=5.0, keep=lambda w: w.y > 4.0)
@@ -90,7 +97,7 @@ class Driver:
             hd = C.screen(self.mat.world('head')); tp = C.screen(self.mat.world('trunk_tip')); info = dict(head=hd, trunk=tp, chest=C.screen(self.mat.world('chest_push')))
             if hd[0] < -40 or hd[0] > 760: self.mat.hide()          # no stray trunk / ear sliding along the wire once her head has left the frame
         bpy.context.view_layer.update()
-        F.set_bees(bee_clock(g) / F.SEQ_T, burst(g), None, None)
+        bc = bee_clock(g); F.set_bees(bc / F.SEQ_T if bc >= 0 else -1.0, burst(g), None, None)
         bpy.context.view_layer.update()
         w, cpu = F.render(path); return w, cpu, info
 

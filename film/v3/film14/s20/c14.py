@@ -31,11 +31,13 @@ def register_preset(name, loc, look, lens, wire_r=0.03):
     F.CAMS[name] = dict(loc=tuple(loc), look=tuple(look), lens=lens)
     F.PRESETS[name] = dict(light='NIGHT', state='fs3', wire_r=wire_r, staging=[])
 
+SLEEP_N = [14]
 def patch_bees(near=0.10, per_m=0.010, far=0.30):
     """bigger bees so they read at phone size: patch the size clip of farm._bees_apply at runtime (the set module on disk is untouched)"""
     import inspect
     src = inspect.getsource(F._bees_apply); old = "np.clip(0.07 + 0.006 * dist, 0.07, 0.17)"
-    assert old in src; src = src.replace(old, "np.clip(%g + %g * dist, %g, %g)" % (near, per_m, near, far)); exec(src, F.__dict__)
+    assert old in src; src = src.replace(old, "np.clip(%g + %g * dist, %g, %g)" % (near, per_m, near, far))
+    assert "sleep = np.arange(n) < 14" in src; src = src.replace("sleep = np.arange(n) < 14", "sleep = np.arange(n) < %d" % SLEEP_N[0]); exec(src, F.__dict__)
 
 def build(name, quality, threads=2, samples=None, dense_bees=240):
     F.BEE_PER_HIVE = dense_bees; patch_bees()
