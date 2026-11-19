@@ -1,0 +1,6 @@
+{"take":"s17","shots":[17],"g0":1075,"g1":1119,"handle":9,"light":"DUSK",
+ "set":"v3/set3d16 LINE preset line_trench_end, light DUSK (custom camera; the key crate is left of frame, the three stand in the open beside it)",
+ "cast":"morse16 morse_empty_bag (bag shaken from g 1072), worker16_a / worker16_b lean_shovel (b mirrored), blinks, sway; no lip-sync",
+ "camera":"custom 22 mm eye-level three-shot from the -x side; c16.CamPath push 13 %/s + slide 40 px/s + arc 20 deg/s + soft snap x1.35 g 1085..1098",
+ "events":{"empty_bag_shake":[1072,1090],"word_money_gone":1078},
+ "cues":[[1075,"ambience","dusk field, crickets, a mule snorting far off; tense hush"],[1078,"prop","limp empty cloth bag shaken out: a soft cloth flap, no coins"],[1090,"foley","shovel handles creak as the workers shift weight"]]}

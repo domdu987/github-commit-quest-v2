@@ -1,0 +1,90 @@
+{
+ "take": "s17",
+ "film": 16,
+ "shots": [
+  17
+ ],
+ "g0": 1075,
+ "g1": 1119,
+ "first_g": 1066,
+ "n_frames": 62,
+ "shot_ranges": {
+  "17": [
+   1075,
+   1118
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 1119
+ },
+ "set": "v3/set3d16 LINE preset line_trench_end, light DUSK (custom camera; the key crate is left of frame, the three stand in the open beside it)",
+ "cast": "morse16 morse_empty_bag (bag shaken from g 1072), worker16_a / worker16_b lean_shovel (b mirrored), blinks, sway; no lip-sync",
+ "camera": "custom 22 mm eye-level three-shot from the -x side; c16.CamPath push 13 %/s + slide 40 px/s + arc 20 deg/s + soft snap x1.35 g 1085..1098",
+ "events": {
+  "empty_bag_shake": [
+   1072,
+   1090
+  ],
+  "word_money_gone": 1078
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DUSK",
+ "samples": 7,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 11.48,
+ "s_per_frame_cpu_mean": 22.28,
+ "heads": {
+  "mor": {
+   "w": [
+    220,
+    330
+   ],
+   "y": [
+    537,
+    607
+   ],
+   "bottom_max": 721
+  },
+  "wa": {
+   "w": [
+    145,
+    171
+   ],
+   "y": [
+    594,
+    629
+   ],
+   "bottom_max": 702
+  },
+  "wb": {
+   "w": [
+    108,
+    150
+   ],
+   "y": [
+    561,
+    595
+   ],
+   "bottom_max": 652
+  }
+ },
+ "framediff_in_shot": {
+  "median": 3.91,
+  "p90": 9.59
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json"
+}

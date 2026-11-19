@@ -1,0 +1,25 @@
+{
+ "take": "s17",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 35.833,
+   "frame": 1075,
+   "kind": "ambience",
+   "label": "dusk field, crickets, a mule snorting far off; tense hush"
+  },
+  {
+   "time": 35.933,
+   "frame": 1078,
+   "kind": "prop",
+   "label": "limp empty cloth bag shaken out: a soft cloth flap, no coins"
+  },
+  {
+   "time": 36.333,
+   "frame": 1090,
+   "kind": "foley",
+   "label": "shovel handles creak as the workers shift weight"
+  }
+ ]
+}
