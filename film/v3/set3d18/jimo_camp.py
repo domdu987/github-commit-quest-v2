@@ -40,7 +40,7 @@ def camp(J, Bk, M):
                 a, b = F.p(sgn * w / 2, yy, 0.25), F.p(sgn * (w / 2 + 2.6), yy * 1.15, 0.1)
                 J.rod(tb, a, b, 0.05, M['straw_d'], seg=3); J.rod(tb, b, b + V((0, 0, 0.5)), 0.1, M['wood_d'], seg=4)
         return F
-    for (x, y, w, l, h, yaw, hide) in ((-11.5, -90, 9, 11, 5.4, 10, False), (12.5, -89, 9, 11, 5.4, -10, True), (-13.5, -76, 12, 14, 7.0, 6, True), (14.5, -75, 12, 14, 7.0, -6, False),
+    for (x, y, w, l, h, yaw, hide) in ((-9.6, -90, 8, 10, 5.0, 10, False), (10.8, -89, 8, 10, 5.0, -10, True), (-13.5, -76, 12, 14, 7.0, 6, True), (14.5, -75, 12, 14, 7.0, -6, False),
                                        (-15.0, -58, 12, 13, 6.6, 8, False), (16.0, -57, 12, 13, 6.6, -8, True), (-30, -70, 11, 13, 6.2, 15, False), (32, -68, 11, 13, 6.2, -15, False),
                                        (-9, -49, 8, 9, 4.6, 0, True), (24, -48, 10, 12, 5.8, 3, False), (-47, -58, 10, 12, 5.8, 6, False), (48, -58, 10, 12, 5.8, -6, False), (-27, -88, 9, 11, 5.4, -14, False), (30, -87, 9, 11, 5.4, 14, False)):
         tent((x, y), yaw, w, l, h, hide=hide)
@@ -57,34 +57,42 @@ def camp(J, Bk, M):
     # ------------------------------------------------------------------ fires with seats and pots
     def fire(c, s=1.0, light=1500.0, name='f'):
         c = V((c[0], c[1], 0.0)); f = Bk('fire', shadow=False); st = Bk('firestone', hull=J.T.hull(max(10.0, dist(c)))); lg = Bk('logs', hull=J.T.hull(max(10.0, dist(c))))
-        for k in range(10):
-            a = 2 * math.pi * k / 10; J.lumpy(st, c + V((1.25 * s * math.cos(a), 1.25 * s * math.sin(a), 0.2 * s)), 0.38 * s, M['stone'] if k % 2 else M['stone_d'], 40 + k, seg=7, rings=4, rough=0.2, squash=0.7)
-        for k in range(5):
-            a = 2 * math.pi * k / 5 + 0.3; J.rod(lg, c + V((1.0 * s * math.cos(a), 1.0 * s * math.sin(a), 0.25 * s)), c + V((-0.2 * s * math.cos(a), -0.2 * s * math.sin(a), 0.75 * s)), 0.18 * s, M['wood_d'], seg=6, r1=0.14 * s)
-        rr = J._rnd(int(c.x * 3 + c.y));
-        for k in range(7):
-            a = rr.uniform(0, 6.28); dx, dy = 0.45 * s * math.cos(a), 0.45 * s * math.sin(a); hh = rr.uniform(1.6, 3.0) * s
-            f.frustum(c + V((dx, dy, 0.5 * s)), c + V((dx * 0.4 + rr.uniform(-0.2, 0.2), dy * 0.4, 0.5 * s + hh)), 0.5 * s, 0.0, M['flame'], seg=6, cap1=False)
-        for k in range(3):
-            a = rr.uniform(0, 6.28); f.frustum(c + V((0.15 * s * math.cos(a), 0.15 * s * math.sin(a), 0.5 * s)), c + V((0.05 * s, 0, 0.5 * s + rr.uniform(1.4, 2.0) * s)), 0.32 * s, 0.0, M['flame_c'], seg=6, cap1=False)
-        for k in range(14): f.sphere(c + V((rr.uniform(-1.4, 1.4) * s, rr.uniform(-1.4, 1.4) * s, rr.uniform(2.6, 5.0) * s)), 0.06 * s, M['ember'], seg=4, rings=3)   # sparks
+        for k in range(13):                                                                                     # ring of stones around a dug pit
+            a = 2 * math.pi * k / 13; J.lumpy(st, c + V((1.45 * s * math.cos(a), 1.45 * s * math.sin(a), 0.22 * s)), 0.42 * s, M['stone'] if k % 2 else M['stone_d'], 40 + k, seg=7, rings=4, rough=0.2, squash=0.7)
+        for k in range(30):                                                                                     # ash and embers inside the ring
+            a = 2 * math.pi * k / 30; rr_ = 0.5 + 0.55 * ((k * 7) % 5) / 5; J.lumpy(lg, c + V((rr_ * s * math.cos(a), rr_ * s * math.sin(a), 0.12 * s)), 0.26 * s, M['black'] if k % 3 else M['clay_d'], 300 + k, seg=5, rings=3, rough=0.2, squash=0.5)
+        for k in range(6):
+            a = 2 * math.pi * k / 6 + 0.3; J.rod(lg, c + V((1.0 * s * math.cos(a), 1.0 * s * math.sin(a), 0.3 * s)), c + V((-0.1 * s * math.cos(a), -0.1 * s * math.sin(a), 0.85 * s)), 0.17 * s, M['wood_d'], seg=6, r1=0.13 * s)
+        rr = J._rnd(int(c.x * 3 + c.y))
+        J.flame(f, c + V((0, 0, 0.55 * s)), 3.7 * s, 0.95 * s, lean=(0.25 * s, 0.1 * s), seed=int(c.x), n=4, spread=0.5)
         h = Bk('halos', shadow=False); J.halo(h, c + V((0, 0, 1.4 * s)), 4.4 * s, M['halo'])
-        pl = Bk('pools', shadow=False); R = 7.5 * s; J.flat(pl, c + V((-R, -R, 0.07)), V((2 * R, 0, 0)), V((0, 2 * R, 0)), M['pool'])
+        pl = Bk('pools', shadow=False); R = 7.5 * s; J.flat(pl, c + V((-R, -R, 0.07)), V((2 * R, 0, 0)), V((0, 2 * R, 0)), M['pool_w'])
         J.lamp(name, c + V((0, 0, 1.6 * s)), light * 0.7 * s, J.FIRE, r=0.5, shadow=False)
         for k in range(3):                                                                                      # log seats around it
             a = 2 * math.pi * k / 3 + 1.0; p = c + V((3.2 * s * math.cos(a), 3.2 * s * math.sin(a), 0.0)); J.cyl(lg, p, 0.32 * s, 0.6 * s, M['wood'], seg=8)
         return c
     # fire 1 low and near, fire 2/3 mid, fire 4 far; one with a pot on a tripod
     f1 = fire((5.5, -85.0), 0.9, 1500.0, 'fire1'); f2 = fire((-6.0, -72.0), 1.1, 1700.0, 'fire2'); f3 = fire((7.0, -68.0), 1.1, 1700.0, 'fire3'); f4 = fire((-4.0, -57.0), 1.0, 1500.0, 'fire4')
-    f0 = fire((1.4, -104.6), 0.7, 1300.0, 'fire0')
+    f0 = fire((3.0, -99.0), 0.85, 1500.0, 'fire0')
     for c in (f2, f3, f4):
         tp = Bk('props', hull=J.T.hull(30.0))
         for k in range(3):
             a = 2 * math.pi * k / 3; J.rod(tp, c + V((2.2 * math.cos(a), 2.2 * math.sin(a), 0)), c + V((0.1 * math.cos(a), 0.1 * math.sin(a), 4.0)), 0.1, M['wood_d'], seg=5)
         J.ellipsoid(tp, c + V((0, 0, 2.3)), 0.95, 0.95, 0.8, M['iron'], seg=12, rings=7); J.cyl(tp, c + V((0, 0, 3.0)), 0.85, 0.18, M['iron'], seg=12)
 
+
+    # ------------------------------------------------------------------ stand-in Yan soldiers: drinking round the near fire, a toast at the table, one asleep in the foreground shade
+    def seat_pos(c, s_, k): a = 2 * math.pi * k / 3 + 1.0; return (c.x + 3.2 * s_ * math.cos(a), c.y + 3.2 * s_ * math.sin(a), math.degrees(a) + 180)
+    for k in range(3):
+        x, y, yw = seat_pos(f0, 0.85, k); J.person(Bk, M, (x, y, 0.5), yaw=yw + (k - 1) * 12, pose='sit', s=0.95, cup=(k != 1), cd=14.0, robe=M['black'] if k != 1 else M['red_d'], seed=k)
+    for k in range(3):
+        x, y, yw = seat_pos(f1, 0.9, k); J.person(Bk, M, (x, y, 0.5), yaw=yw, pose='sit', s=0.95, cup=(k == 0), cd=30.0, robe=M['black'] if k else M['red_d'], seed=k)
+    J.person(Bk, M, (-0.8, -98.0, 0.0), yaw=-30, pose='cheer', s=1.0, cup=True, cd=14.0, robe=M['black'])
+    J.person(Bk, M, (-9.0, -97.5, 0.0), yaw=40, pose='cheer', s=1.0, cup=True, cd=14.0, robe=M['red_d'])
+    J.person(Bk, M, (-2.8, -103.6, 0.0), yaw=95, pose='sleep', s=0.8, cd=14.0, robe=M['red_d'])                 # asleep in the near shade, back to us
+    for (x, y, yw) in ((-6.5, -78.5, 20), (9.0, -80.0, 150), (-14.0, -68.0, 60)): J.person(Bk, M, (x, y, 0.0), yaw=yw, pose='spear', s=1.0, cd=40.0, robe=M['black'])
     # ------------------------------------------------------------------ the general's toast: low table with wine jars, cups, a bowl, stools (foreground left)
-    pr = Bk('props', hull=J.T.hull(11.0)); F = J.Frame((-2.6, -104.6, 0), 22)
+    pr = Bk('props', hull=J.T.hull(11.0)); F = J.Frame((-4.5, -100.5, 0), 18)
     pr.box((-2.1, -1.1, 0.0), (2.1, 1.1, 0.0), M['red']) if False else None
     J.obox(pr, F.p(0, 0, 1.15), F.X, F.Y, F.Z, 2.3, 1.25, 0.14, M['red']); J.obox(pr, F.p(0, 0, 1.0), F.X, F.Y, F.Z, 2.4, 1.35, 0.08, M['gold'])
     for sx in (-1, 1):
@@ -97,14 +105,12 @@ def camp(J, Bk, M):
         p = F.p(-1.9 + k * 0.7, -0.75 + (k % 2) * 0.1, 1.27)
         J.cyl(pr, p, 0.2, 0.34, M['bronze'], seg=8, r1=0.3); J.cyl(pr, p + V((0, 0, -0.04)), 0.1, 0.06, M['bronze'], seg=6)
     J.ellipsoid(pr, F.p(0.9, -0.3, 1.5), 0.55, 0.55, 0.36, M['bronze'], seg=12, rings=6, th=(math.pi / 2, math.pi))
-    J.lantern(Bk, M, tuple(F.p(1.0, 0.0, 2.2)), s=0.8, light=260.0, name='table_lamp', halo_r=2.2, hang=0.0)
+    J.oil_lamp(Bk, M, tuple(F.p(1.0, 0.0, 1.3)), s=0.7, light=260.0, name='table_lamp', halo_r=2.0, h=2.6)
     # large jars on the ground beside it (straw-bound necks), a barrel, a crate
     for k, (jx, jy, js) in enumerate(((-4.6, 0.8, 1.1), (-5.4, -0.6, 1.0), (-3.6, -1.0, 0.8), (4.2, 1.4, 1.0))):
         p = F.p(jx, jy, 0.0); J.ellipsoid(pr, p + V((0, 0, 0.9 * js)), 0.75 * js, 0.75 * js, 0.95 * js, M['clay'] if k % 2 else M['clay_d'], seg=12, rings=8, rough=0.05, seed=20 + k)
         J.cyl(pr, p + V((0, 0, 1.75 * js)), 0.42 * js, 0.45 * js, M['clay_d'], seg=10, r1=0.5 * js); J.cyl(pr, p + V((0, 0, 2.15 * js)), 0.55 * js, 0.2 * js, M['red'], seg=10)
         J.cyl(pr, p + V((0, 0, 1.5 * js)), 0.46 * js, 0.2 * js, M['straw'], seg=10, cap=False)
-    for k, sx in enumerate((-2.2, 3.2)):                                                                        # low round stools with red cushions
-        J.cyl(pr, F.p(sx, -2.6, 0.0), 0.5, 0.5, M['wood'], seg=10); J.cyl(pr, F.p(sx, -2.6, 0.5), 0.58, 0.1, M['red'], seg=10)
 
     # ------------------------------------------------------------------ war chariot (foreground right)
     def chariot(c, yaw, s=1.0, cd=11.0):
@@ -127,7 +133,7 @@ def camp(J, Bk, M):
         ch.frustum(F.p(-0.4 * s, 0, 5.8 * s), F.p(-0.4 * s, 0, 7.6 * s), 2.3 * s, 0.1 * s, M['canvas_red'], seg=14, cap0=False)
         ch.sphere(F.p(-0.4 * s, 0, 7.75 * s), 0.2 * s, M['gold'], seg=6, rings=4)
         for k in range(14): a = 2 * math.pi * k / 14; ch.sphere(F.p(-0.4 * s + 2.3 * s * math.cos(a), 2.3 * s * math.sin(a), 5.75 * s), 0.1 * s, M['gold'], seg=4, rings=3)
-    chariot((6.6, -103.0), 28, 0.9, 9.0); chariot((-21.5, -83), 150, 0.9, 40.0)
+    chariot((11.0, -97.0), 28, 0.9, 9.0); chariot((-21.5, -83), 150, 0.9, 40.0)
 
     # ------------------------------------------------------------------ drums, spear racks, shields, fodder, barrels, horses, pennants
     def drum(c, s=1.0, cd=40.0):
@@ -215,16 +221,15 @@ def camp(J, Bk, M):
     for (xt, s_) in ((-30.0, 1.0), (30.0, 1.0), (-52.0, 1.0), (52.0, 1.0)):
         J.torch_post(Bk, M, (xt, y0 - 1.3, 0.0), s=1.6, light=1000.0, name='pt%d' % int(xt), halo_r=3.0)
     # a few extra warm lanterns on tent poles and the pavilion
-    for (x, y, z) in ((-6.0, -79.0, 6.4), (8.0, -75.0, 6.4), (-20.0, -70.0, 6.2), (21.0, -66.0, 6.2)):
-        J.lantern(Bk, M, (x, y, z), s=1.0, light=0.0, halo_r=2.0, hang=0.8)
+    for (x, y) in ((-6.0, -79.0), (8.0, -75.0), (-18.0, -70.0), (19.0, -66.0), (-4.0, -88.0), (6.5, -90.0)): J.oil_lamp(Bk, M, (x, y, 0.0), s=0.9, light=0.0, h=3.2, halo_r=1.8)
     sc = Bk('scatter', hull=J.T.hull(10.0)); rr2 = J._rnd(77)
-    J.rod(sc, V((-3.0, -101.0, 0.12)), V((-9.0, -99.0, 0.14)), 0.07, M['wood'], seg=4); sc.frustum(V((-3.0, -101.0, 0.12)), V((-1.8, -101.4, 0.14)), 0.1, 0.0, M['steel'], seg=4)
-    J.ellipsoid(sc, V((-0.2, -102.0, 0.35)), 0.55, 0.55, 0.42, M['iron'], seg=10, rings=6, th=(math.pi / 2, math.pi)); sc.sphere(V((-0.2, -102.0, 0.78)), 0.1, M['red'], seg=5, rings=3)
+    J.rod(sc, V((-1.5, -107.5, 0.12)), V((-7.5, -106.0, 0.14)), 0.07, M['wood'], seg=4); sc.frustum(V((-1.5, -107.5, 0.12)), V((-0.3, -107.9, 0.14)), 0.1, 0.0, M['steel'], seg=4)
+    J.ellipsoid(sc, V((-4.5, -108.6, 0.35)), 0.55, 0.55, 0.42, M['iron'], seg=10, rings=6, th=(math.pi / 2, math.pi)); sc.sphere(V((-4.5, -108.6, 0.78)), 0.1, M['red'], seg=5, rings=3)
     for k in range(14): J.lumpy(sc, V((rr2.uniform(-7, 9), rr2.uniform(-108, -96), 0.1)), rr2.uniform(0.15, 0.45), M['stone_d'], 90 + k, seg=6, rings=4, rough=0.25, squash=0.6)
     for k in range(16):
         p0 = V((rr2.uniform(-8, 9), rr2.uniform(-107, -95), 0.0)); sc.frustum(p0, p0 + V((rr2.uniform(-0.6, 0.6), rr2.uniform(-0.6, 0.6), 0.06)), 0.05, 0.05, M['straw'], seg=3)
     for k in range(7):                                                                                        # firewood pile at the bottom edge
         a = rr2.uniform(-0.5, 0.5); p0 = V((2.2 + 0.5 * (k % 4), -107.4 + 0.35 * (k // 4), 0.22 + 0.4 * (k // 4)))
         J.rod(sc, p0, p0 + V((math.cos(a) * 2.2, math.sin(a) * 2.2, 0.0)), 0.22, M['wood_d'] if k % 2 else M['wood'], seg=6)
-    for k in range(7): J.cyl(sc, V((rr2.uniform(1.5, 5.5), rr2.uniform(-100.5, -97.5), 0.0)), 0.28, 0.22, M['bronze'], seg=8, r1=0.38)
+    for k in range(7): J.cyl(sc, V((rr2.uniform(-8.5, -6.0), rr2.uniform(-98.0, -96.0), 0.0)), 0.28, 0.22, M['bronze'], seg=8, r1=0.38)
     J.STATE['marks'].update(table=(-6.5, -95.0), chariot=(10.5, -95.5), fires=[tuple(f1), tuple(f2), tuple(f3), tuple(f4)])

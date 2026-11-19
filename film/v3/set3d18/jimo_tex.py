@@ -12,7 +12,7 @@ from PIL import Image, ImageDraw, ImageFilter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEX = os.path.join(HERE, 'tex_jimo')
-TEX_V = 'j13'
+TEX_V = 'j15'
 TS = {}                                         # name -> (w_D, h_D)
 MOON_AZ, MOON_EL = 58.0, 20.0                  # the moon in the dome (degrees)
 
@@ -284,6 +284,7 @@ def sky(path, W=6144, maz=58.0, mel=20.0):
     def ang(a0, e0):
         da = (AZ - a0 + 180) % 360 - 180; return np.hypot(da * np.cos(np.radians(e0)), EL - e0)
     dm = ang(maz, mel)
+    lum = (img * np.array([0.2126, 0.7152, 0.0722], 'float32')).sum(-1, keepdims=True); img = lerp(img, lum * np.array([1.0, 1.05, 1.25], 'float32'), 0.30) + np.array([0.075, 0.035, 0.0], 'float32')    # pre-compensate the grade's saturation / black point
     img += (np.exp(-(dm / 26) ** 2) * 0.22)[..., None] * hexf('#3a5ac8') + (np.exp(-(dm / 8) ** 2) * 0.30)[..., None] * hexf('#8ab0ff')      # blue moon halo
     wa = np.exp(-(((AZ - 90 + 180) % 360 - 180) / 60) ** 2) * np.exp(-((EL - 1.0) / 4.0) ** 2)                                          # faint warm city glow at the horizon
     img = lerp(img, hexf('#c8805a') * 0.8, (wa * 0.22)[..., None])
