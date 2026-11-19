@@ -238,6 +238,9 @@ def hide_grass_box(x0, x1, y0, y1, zmax=1.0):
 def darken_mat(name, k):
     m = F.STATE['M'][name]
     for n in m.node_tree.nodes:
+        for nm_ in ('Strength', 'Emission Strength'):
+            if nm_ in n.inputs and n.type != 'MIX' and not n.inputs[nm_].is_linked: n.inputs[nm_].default_value *= k
+    for n in m.node_tree.nodes:
         if n.type == 'BSDF_PRINCIPLED':
             col = n.inputs['Base Color'].default_value; n.inputs['Base Color'].default_value = (col[0] * k, col[1] * k, col[2] * k, 1)
             if 'Emission Strength' in n.inputs: n.inputs['Emission Strength'].default_value *= k

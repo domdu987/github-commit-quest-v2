@@ -45,36 +45,40 @@ def cam_of(g):
         look = (lerp(lerp(6.0, 6.5, p), loc[0] - 2.4, e), lerp(5.0, 5.2, e), lerp(lerp(2.6, 2.1, p), 1.9, e))
         if g < 1307: loc = (loc[0] + 0.02 * (1307 - g), loc[1] + 0.04 * (1307 - g), loc[2])      # handle frames drift slightly (never frozen)
         return loc, look, lerp(lerp(20, 24, p), 28, e)
-    # shot 21: the wave front runs LEFT along the row (u3 g~1381, u2 1398, u1 1415, u0 1431); the camera sits ahead of it, 41 deg to the row, looking back at the hive being knocked -> the pendulum swing is seen side-on
-    dg = g - 1368; fx = 6.0 - 0.3 * dg if dg <= 60 else -12.0 - 0.05 * (dg - 60)
-    return (fx - 4.2, 1.4, 0.6), (fx, 5.0, 1.5), 50
+    # shot 21 v6: the look point follows the hive being knocked (u3 g1388, u2 1405, u1 1422, u0 1438) so every hit lands mid-frame, camera 41 deg to the row, low, pitched up
+    kn = [(1368, 6.4), (1388, 3.5), (1405, -1.5), (1422, -6.5), (1438, -11.5), (1452, -12.6)]
+    for (g0, x0), (g1, x1) in zip(kn, kn[1:]):
+        if g <= g1:
+            u = clamp((g - g0) / float(g1 - g0)); u = u * u * (3 - 2 * u) * 0.8 + u * 0.2; fx = lerp(x0, x1, u); break
+    else: fx = kn[-1][1]
+    return (fx - 4.2, 1.4, 0.6), (fx, 5.0, 1.9), 50
 
 def hive_scale(cam_loc, h): return 1.5
 
 BANG = {3: 1388, 2: 1405, 1: 1422, 0: 1438}      # unit -> frame the swing peaks and the hive BANGS into its own post/frame (wave front u3 g1381, u2 1398, u1 1415, u0 1431)
 
 def knock_mesh(g, cam_loc):
-    """wood chips + dust specks in a spray crown at each active bang (billboard triangles, emission materials)"""
+    """spray CROWN at each bang: 12 wood chips + 14 droplets thrown in a ~110 deg upward cone (speed + gravity, thin shards stretched along their motion) + 2 thin wisps; fades over 8 frames"""
     import random
     verts = []; faces = []; mats = []
     cam = Vector(cam_loc)
     for i, gb in BANG.items():
         a = (g - gb) / 30.0
-        if a < 0 or a > 0.75: continue
+        if a < 0.03 or a > 0.27: continue
         h = F.STATE['hive'][i]; mw = h.matrix_world; sg = 1.0 if i % 2 == 0 else -1.0
-        c0 = mw @ Vector((0.62 * sg, 0.0, -0.55))
-        rr = random.Random(i * 77 + 5)
+        c0 = mw @ Vector((0.67 * sg, 0.0, -0.45))
         fwd = (c0 - cam).normalized(); right = fwd.cross(Vector((0, 0, 1))).normalized(); up = right.cross(fwd).normalized()
-        for k in range(110):
-            kind = 0 if k < 60 else (1 if k < 106 else 2)               # chips / dust specks / wisps
-            ph = rr.uniform(0, 6.283); el = rr.uniform(0.35, 1.25); sp = rr.uniform(1.4, 3.6) * (0.7 if kind else 1.0)
-            v = Vector((math.cos(ph) * math.cos(el), math.sin(ph) * math.cos(el), math.sin(el))) * sp
-            p = c0 + v * a + Vector((0, 0, -4.5 * a * a))
-            life = 0.75 if kind < 2 else 0.6
-            sz = (0.045 if kind == 0 else 0.03 if kind == 1 else 0.07) * (1.0 - a / life) * (1.0 + 0.4 * rr.random())
-            if sz <= 0: continue
-            sp_ = rr.uniform(0, 6.283); r2 = right * math.cos(sp_) + up * math.sin(sp_); u2 = -right * math.sin(sp_) + up * math.cos(sp_)
-            b = len(verts); verts += [tuple(p + (-r2 - u2) * sz), tuple(p + (r2 - u2) * sz), tuple(p + (r2 + u2) * sz), tuple(p + (-r2 + u2) * sz)]
+        rr = random.Random(i * 77 + 5); f = 1.0 - a / 0.27
+        for k in range(28):
+            kind = 0 if k < 12 else (1 if k < 26 else 2)
+            ang = math.radians(rr.uniform(-55, 55)); sp = rr.uniform(2.4, 3.6) if kind < 2 else rr.uniform(0.8, 1.4)
+            v0 = right * (math.sin(ang) * sp) + up * (math.cos(ang) * sp * (1.0 if kind < 2 else 1.3)) + fwd * rr.uniform(-0.3, 0.3)
+            vel = v0 + Vector((0, 0, -9.0 * a)); p = c0 + v0 * a + Vector((0, 0, -4.5 * a * a))
+            wx, wy = vel.dot(right), vel.dot(up); n_ = math.hypot(wx, wy) or 1.0; d = (right * wx + up * wy) / n_; pp = (-right * wy + up * wx) / n_
+            L, W = ((0.13, 0.05) if kind == 0 else (0.08, 0.05) if kind == 1 else (0.55, 0.035))
+            sz = f if kind < 2 else min(1.0, f * 1.4)
+            Lh, Wh = L * sz / 2, W * sz / 2
+            b = len(verts); verts += [tuple(p - d * Lh - pp * Wh), tuple(p + d * Lh - pp * Wh), tuple(p + d * Lh + pp * Wh), tuple(p - d * Lh + pp * Wh)]
             faces.append((b, b + 1, b + 2, b + 3)); mats.append(kind)
     return verts, faces, mats
 
@@ -86,7 +90,7 @@ def knock_update(g, cam_loc):
     verts, faces, mats = knock_mesh(g, cam_loc)
     if not faces: return 0
     if not _KMATS:
-        for k, (col, st) in enumerate((((0.30, 0.17, 0.08, 1), 0.9), ((0.95, 0.80, 0.58, 1), 1.6), ((0.80, 0.66, 0.46, 1), 0.7))):
+        for k, (col, st) in enumerate((((0.85, 0.62, 0.38, 1), 2.2), ((1.0, 0.95, 0.85, 1), 2.6), ((0.85, 0.72, 0.52, 1), 0.9))):
             m = bpy.data.materials.new('kfx%d' % k); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); o = nt.nodes.new('ShaderNodeOutputMaterial'); e = nt.nodes.new('ShaderNodeEmission')
             e.inputs['Color'].default_value = col; e.inputs['Strength'].default_value = st
             if k == 2:
@@ -108,7 +112,26 @@ class Driver:
         F.hive_swing = _hive_swing; ALT[0] = (shot == 21)
         if shot == 21: C.SLEEP_N[0] = 0
         C.build('v3s%d' % shot, quality, threads=threads, samples=int(os.environ.get('SAMPLES', 6 if quality == 'preview' else 24)), dense_bees=240)
-        self.cam = C.Cam(); C.darken_mat('tinunder', 0.62); C.darken_mat('woodpale', 0.8)
+        self.cam = C.Cam(); C.darken_mat('tinunder', 0.62 if shot == 20 else 0.40); C.darken_mat('woodpale', 0.8)
+        if shot == 21:
+            C.darken_mat('winlit', 0.3); C.darken_mat('lamp', 0.3)
+            for o in bpy.data.objects:
+                if o.name.startswith('props_winlit'): o.hide_render = True
+            print('hut lamps dimmed', C.dim_lamps((20.0, 12.0, 1.5), 16.0, 0.08))
+            nm = bpy.data.materials.new('roofunder21'); nm.use_nodes = True; pb = [n for n in nm.node_tree.nodes if n.type == 'BSDF_PRINCIPLED'][0]
+            pb.inputs['Base Color'].default_value = (0.30, 0.17, 0.10, 1); pb.inputs['Roughness'].default_value = 0.7
+            pb.inputs['Emission Color'].default_value = (0.55, 0.30, 0.14, 1); pb.inputs['Emission Strength'].default_value = 0.22
+            nt2 = bpy.data.materials.new('roofout21'); nt2.use_nodes = True; pb2 = [n for n in nt2.node_tree.nodes if n.type == 'BSDF_PRINCIPLED'][0]
+            pb2.inputs['Base Color'].default_value = (0.30, 0.31, 0.34, 1); pb2.inputs['Roughness'].default_value = 0.6; pb2.inputs['Emission Color'].default_value = (0.5, 0.35, 0.25, 1); pb2.inputs['Emission Strength'].default_value = 0.12
+            for ob in bpy.data.objects:
+                if ob.type == 'MESH' and ob.name.startswith('roof'):
+                    for sl in ob.material_slots:
+                        if sl.material is not None and sl.material.name.startswith('tinunder'): sl.material = nm
+                        elif sl.material is not None and sl.material.name.startswith('tin') and not sl.material.name.startswith('tinunder'): sl.material = nt2
+            nt = bpy.context.scene.world.node_tree
+            for n in nt.nodes:
+                if n.type == 'BACKGROUND': n.inputs['Strength'].default_value *= 0.4
+                if n.type == 'MATH' and n.operation == 'MULTIPLY' and abs(n.inputs[1].default_value - 16.0) < 1e-6: n.inputs[1].default_value = 40.0
         pts = [cam_of(g)[0] for g in range(1301 if shot == 20 else 1368, 1368 if shot == 20 else 1453, 6)]
         if shot == 20:
             print('maize hidden', C.hide_maize_rows(15.0)); C.cut_boxes([(2.5, 10.0, 5.6, 16.0, 4.5)])
@@ -128,7 +151,10 @@ class Driver:
 
     def frame(self, g, path):
         shot = self.shot
-        loc, look, lens = cam_of(g); self.cam.set(loc, look, lens); bpy.context.view_layer.update()
+        loc, look, lens = cam_of(g)
+        if shot == 21 and any(0 <= g - gb < 2 for gb in BANG.values()):         # 2-frame camera shake (about 4 px)
+            sh = 0.02 * (1 if g % 2 == 0 else -1); loc = (loc[0] + sh, loc[1], loc[2] + sh * 0.7); look = (look[0] + sh, look[1], look[2])
+        self.cam.set(loc, look, lens); bpy.context.view_layer.update()
         t = clock(g); SWT[0] = swing_clock(g)
         F.set_fence_stage(3); F.set_wire_push(t / F.SEQ_T, PS)
         if shot == 21:
@@ -137,7 +163,7 @@ class Driver:
             import random
             for i, gb in BANG.items():
                 if 0 <= g - gb < 2:                                       # 2-frame jolt of the hive, its bar, the posts and roofs
-                    rr = random.Random(g * 13 + i); h = F.STATE['hive'][i]; bq = F.STATE['bar'][i]; s = 0.07 if g == gb else 0.04
+                    rr = random.Random(g * 13 + i); h = F.STATE['hive'][i]; bq = F.STATE['bar'][i]; s = 0.065 if g == gb else 0.04
                     d = Vector((rr.uniform(-s, s), rr.uniform(-s, s), rr.uniform(-s, s) * 0.6)); h.location += d; bq.location += d
                     for o in bpy.data.objects:
                         if o.name.startswith(('posts_', 'roof')): o.location = d * 0.5 * (1 if o.name.startswith('posts_') else 1)
