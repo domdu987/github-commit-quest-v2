@@ -12,7 +12,7 @@ for p in (HERE, os.path.join(HERE, 'styleboard'), os.path.join(PROJ, 'v3', 'set3
 import tower as T                                          # noqa: E402
 import sb as S                                             # noqa: E402   (approved style board: props, MB, sky)
 
-DM = 0.6                     # metres per D
+DM = 0.54                    # metres per D (cast15: Dick 3.76 D = 2.03 m, coach 2.99 D = 1.61 m, boys 3.2 D)
 U = 1.0 / DM                 # D per metre
 STATE = T.STATE
 def hexl(h): return S.hexc(h)[:3]

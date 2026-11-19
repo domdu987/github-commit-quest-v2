@@ -65,6 +65,10 @@ def build_a(P, M, dress=True):
     rr = rnd(1963); sc = bpy.context.scene
     PR.extra_mats(M, P)
     M['leaf'] = mat('leaf', '#6aa040', '#8fba4e', 2.2, contrast=1.4, season=('#d8742a', '#eca83c'), sval=P.get('season', 0.0))
+    M['grass'] = mat('grassA', '#7f9a55', '#a0aa68', 0.5, contrast=1.1); M['lawn'] = mat('lawnA', '#73924f', '#92a95f', 0.9); M['dirt'] = mat('dirtA', '#a58562', '#bc9c78', 1.2)
+    M['cinder'] = mat('cinderA', '#8a4632', '#ab664c', 2.5, contrast=1.3); M['gp1'] = mat('gp1', '#5f8545', '#78a05a', 1.5); M['gp2'] = mat('gp2', '#a8a868', '#c0bc7c', 1.5)
+    M['sawdk'] = mat('sawdk', '#b88a42', '#c89a52', 8); M['leafo'] = mat('leafo', '#d8742a', '#e8923a', 4); M['leafy'] = mat('leafy', '#e8b83a', '#f4cc58', 4); M['leafr'] = mat('leafr', '#b8452a', '#cc5a36', 4)
+    M['leafg'] = mat('leafg', '#5f9a3a', '#7ab44a', 4); M['mark'] = mat('mark', '#f2ecd8', '#e6dec6', 3)
     L.sky_world(P); L.ridges(P)
     plane_at(M['grass'], 700, -0.02, (0, 0), 'grass')
     mb = S.MB('ground')
@@ -73,8 +77,20 @@ def build_a(P, M, dress=True):
     for r in (49.0, 50.9): S.ring(mb, M['chalk'], CX, CY, r, r, r + 0.07, r + 0.07, 0, 180, 0.018, 1.0)
     S.disc(mb, M['dirt'], (1.4, 2.4), 3.0, 0.008, 40, 4.4)         # worn run-up
     S.disc(mb, M['dirt'], (6.0, -2.2), 1.5, 0.007, 24, 2.2); S.disc(mb, M['dirt'], (-6.0, 1.8), 1.4, 0.007, 24, 2.4); S.disc(mb, M['dirt'], (8.2, -1.0), 1.1, 0.007, 20, 1.6)
-    for (x, y, w) in [(-3.0, 9.8, 14), (-8.0, 3.0, 5), (9.0, 14.0, 9)]:   # lighter mown patches
-        mb.box(M['lawn'], (x, y, 0.004), (w, w * 0.5, 0.004), rz=0.2)
+    for i in range(46):                                                       # grass patches: darker green and sun-bleached
+        x = rr.uniform(-22, 26); y = rr.uniform(-18, 14)
+        if (x * x + (y + 34) ** 2) > 46.5 ** 2: continue
+        S.disc(mb, M['gp1'] if i % 2 else M['gp2'], (x, y), rr.uniform(0.8, 2.4), 0.003 + 0.0004 * i, 14, rr.uniform(1.2, 3.6))
+    for r in (48.2, 49.6, 51.4, 52.1):
+        S.ring(mb, M['chalk'], CX, CY, r, r, r + 0.06, r + 0.06, 0, 180, 0.017, 1.0)
+    for d_ in (66, 78, 90, 102, 114):                                         # staggered start / hurdle ticks on the cinder
+        a = math.radians(d_)
+        for r in (47.5, 48.8, 50.2, 51.6): mb.box(M['mark'], (CX + (r + 0.3) * math.cos(a), CY + (r + 0.3) * math.sin(a), 0.02), (0.5, 0.06, 0.004), rz=a)
+    rp = [(6.4, -3.4), (5.6, -0.8), (4.3, 1.5), (2.9, 3.0), (1.6, 3.9)]
+    for (x0, y0), (x1, y1) in zip(rp[:-1], rp[1:]):                           # the curved run-up, chalk dashes + take-off tick
+        for t_ in (0.0, 0.5): 
+            xa = x0 + (x1 - x0) * t_; ya = y0 + (y1 - y0) * t_; mb.box(M['mark'], (xa + (x1 - x0) * 0.2, ya + (y1 - y0) * 0.2, 0.014), (math.hypot(x1 - x0, y1 - y0) * 0.38, 0.07, 0.004), rz=math.atan2(y1 - y0, x1 - x0))
+    mb.box(M['mark'], (1.15, 4.25, 0.015), (0.7, 0.07, 0.004), rz=0.6); mb.box(M['mark'], (6.4, -3.4, 0.015), (0.7, 0.07, 0.004), rz=0.3)
     # asphalt road behind the fence with curb
     for (y0, y1, mm) in [(27.0, 33.5, M['asphalt']), (26.4, 27.0, M['curb']), (33.5, 34.1, M['curb'])]: mb.box(mm, (0, (y0 + y1) / 2, 0.01), (150, y1 - y0, 0.02))
     for k in range(-14, 15): mb.box(M['cream'], (k * 5.0, 30.2, 0.022), (1.8, 0.12, 0.004))
@@ -91,6 +107,17 @@ def build_a(P, M, dress=True):
     for i in range(16):
         x = px + rr.uniform(-3.6, 3.6); y = py + rr.uniform(-3.2, 3.2)
         if abs(x - px) > 2.6 or abs(y - py) > 2.2: mb.ell(M['saw'], (x, y, 0.01), (rr.uniform(.15, .4), rr.uniform(.12, .3), 0.015), (8, 4))
+    for i in range(5):                                                         # rake marks: parallel scores across the sawdust
+        yy = py - 1.2 + i * 0.5 + 0.0; mb.box(M['sawdk'], (px + 0.4, yy, 0.468), (3.2, 0.03, 0.006), rz=0.08)
+    for i in range(14):                                                        # footprints (pairs) and a body hollow
+        fx = px + rr.uniform(-1.8, 1.8); fy = py + rr.uniform(-1.4, 1.4); a = rr.uniform(-0.5, 0.5)
+        mb.ell(M['sawdk'], (fx, fy, 0.468), (0.14, 0.07, 0.01), (8, 4), rot=(0, 0, a)); mb.ell(M['sawdk'], (fx + 0.32, fy + 0.1, 0.468), (0.14, 0.07, 0.01), (8, 4), rot=(0, 0, a))
+    mb.ell(M['sawdk'], (px - 0.3, py - 0.2, 0.455), (0.8, 0.35, 0.02), (12, 5), rot=(0, 0, 0.1))
+    nleaf = 150 if P.get('season', 0) > 0.5 else 25
+    for i in range(nleaf):
+        x = rr.uniform(-16, 22); y = rr.uniform(-8, 14); lm = [M['leafo'], M['leafy'], M['leafr']][i % 3] if nleaf > 100 else M['leafg']
+        zz = 0.46 if (abs(x) < 2.3 and abs(y - py) < 1.9) else 0.012
+        mb.box(lm, (x, y, zz), (rr.uniform(0.09, 0.16), rr.uniform(0.07, 0.11), 0.004), rz=rr.random() * 6)
     # loose sawdust pile beside the pit (ends the film): a heaped mound with a scoop, chips, a shovel
     qx, qy = -4.1, 6.9
     for (dx, dy, rx, ry, rz_, hz) in [(0, 0, 1.45, 1.1, 0.62, 0.0), (-0.45, 0.2, 0.95, 0.8, 0.62, 0.35), (0.5, -0.25, 0.85, 0.7, 0.5, 0.3), (0.0, 0.1, 0.55, 0.5, 0.45, 0.7), (0.9, 0.5, 0.5, 0.45, 0.3, 0.1)]:
@@ -186,9 +213,9 @@ def build_a(P, M, dress=True):
     for k in range(-9, 11): maple(mb, M, k * 5.3 + rr.uniform(-1, 1), 36.0 + rr.uniform(-0.6, 1.2), rr.uniform(8, 11), 900 + k) if abs(k * 5.3 - 18) > 14 or k % 2 else None
     fin(mb)
     mb = S.MB('tuftsA'); gm = mat('tuft', '#a8a040', '#c8b85a', 6, zgrad=(0, 0.4, '#6a8a30'))
-    for i in range(520):
-        x, y = rr.uniform(-16, 24), rr.uniform(-8, 22)
-        if abs(x) < 6 and -2 < y < 11: continue
+    for i in range(1500):
+        x, y = rr.uniform(-24, 30), rr.uniform(-14, 22)
+        if abs(x) < 3.2 and 1 < y < 11: continue
         if (x * x + (y + 34) ** 2) > 47 ** 2: continue
         for k in range(5):
             a = rr.random() * 6.28; Lh = rr.uniform(0.2, 0.5); d = Vector((math.cos(a), math.sin(a), 0)); sd = Vector((-d.y, d.x, 0)) * 0.012

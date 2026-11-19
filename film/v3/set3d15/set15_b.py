@@ -8,7 +8,7 @@ from set15_lib import S, mat, mat_emit, rnd, fin, adopt, root, plane_at, STATE
 import set15_props as PR
 import set15_a as LA
 
-FLOOD_W = 4.0e4
+FLOOD_W = 1.1e4
 SX, SY = 0.0, 8.0
 NROW = 28; RW = 0.9; RISE = 0.72; A0 = 64.0; B0 = 36.0
 BAR_Y_B = 11.6; PIT_B = (0.0, 15.0); FOAM_TOP = 1.0
@@ -292,7 +292,7 @@ def build_b(P, M, dress=True):
             for iz in range(4): mb.box(M['lamp'], (0.3, -3.9 + iy * 1.3, -2.1 + iz * 1.4), (0.12, 1.0, 1.0))
         mb.pop()
         if P['floods'] > 0:
-            sp = bpy.data.lights.new('flood%d' % tdeg, 'SPOT'); sp.color = (1.0, 0.9, 0.72); sp.energy = FLOOD_W * P["floods"]; sp.spot_size = math.radians(34); sp.spot_blend = 0.35; sp.use_shadow = False; sp.shadow_soft_size = 1.0
+            sp = bpy.data.lights.new('flood%d' % tdeg, 'SPOT'); sp.color = (1.0, 0.9, 0.72); sp.energy = FLOOD_W * P["floods"]; sp.spot_size = math.radians(46); sp.spot_blend = 0.8; sp.use_shadow = False; sp.shadow_soft_size = 1.0
             so = bpy.data.objects.new('flood%d' % tdeg, sp); STATE['LIGHTS'].objects.link(so); so.parent = root(); so.location = (x, y, H_ + 2.0)
             tgt = Vector((0.0 + 3 * math.cos(u), 12.0, 0.0)); so.rotation_euler = (tgt - Vector((x, y, H_ + 2.0))).to_track_quat('-Z', 'Y').to_euler(); STATE.setdefault('flood_lights', []).append(so)
     fin(mb)
