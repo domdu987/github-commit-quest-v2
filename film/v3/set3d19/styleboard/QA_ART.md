@@ -101,3 +101,29 @@ The crimson walls, gilt chandelier with candles, brass telescope, globes, Greenw
 
 ### Overall
 Workshop and hall: look agreed, so build them. Ship: one more sea-only render. The fix is the near-hull wake and the near-water colour. Nothing else on the ship changes.
+
+## Re-review (v6 ship)
+### sb2_ship (v6 hero, from the sea): APPROVED
+| density | light/colour | composition | materials | hero (sea) | match refs |
+|---|---|---|---|---|---|
+| 7 | 7 | 6 | 7 | 6 | 7 |
+
+The look is now agreed. The open sea is what the client asked for: smooth, layered swells, no edge-to-edge speckle, glitter only in one path, and no streak or motion-blur texture. The ship has a strong period silhouette: three masts, billowing seamed canvas, ratlines, pennants, ochre strakes and gun ports. The white clouds with violet undersides, the deeper sky top, the gulls and the headland finish the frame. It is sharp, with no DOF. What remains is element-level work, not look-level work.
+
+Must-fix in the full set build:
+1. **Bow wave.** It is too big and too solid: about 9-10 m tall at a 42 m hull, and it reads as an iceberg or a sculpted ribbon, which also hides the stem and figurehead. Cut its height to about a third and make it a curling white roll at the stem. Break the lit face with lacy foam, and keep the turquoise only in a thin translucent band under the lip.
+2. **Wake and foam field.** The foam right of and below the hull (y 740-800) is chunky, flat white blotches. Make it finer, lacier lines that follow the hull, with calm water between them. Make the V-wake behind the stern readable.
+3. **Near sea.** Shift the bottom 45 % toward deep teal (#0d5a6a) with a near-to-far gradient. Calm the wobbly sky-reflection squiggles. Give the empty lower half something to read: a swell crest with a thin foam line, or frame the ship lower and larger.
+4. **Headland.** It is a row of flat green triangles. Round it and add haze.
+5. **Sails** are slightly pink-white. Warm them back to #e8dcc0 on the lit side.
+6. **Character shots on deck** need closer cameras (mid shots at the rail, wheel and quarterdeck), using the v3 deck detail plus the bulwark cap-rail fix.
+7. The board caption for the ship overlaps the hall caption. Shorten it.
+
+### sb2_ship_v5_bow: open sea usable for the deck presets, with conditions
+The far and mid sea are good and can serve as the background for the deck presets: layered swells, one glitter path to the horizon, and small crisp whitecaps. Not usable:
+- The near-hull foam is a chain of white spheres with cyan rims. Replace it with the v6 bow sheet and foam bands, or keep it out of frame.
+- The white ghost blob at the lower right (about x 460-720, y 1000-1150) is an artifact. Remove it.
+- The clouds are the old faceted lilac stacks. Use the v6 metaball clouds.
+
+### Overall
+All three looks are approved: workshop, hall and ship. Build the full set with the must-fix lists above. Bow wave and wake come first on the ship.
