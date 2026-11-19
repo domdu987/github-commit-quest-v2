@@ -101,6 +101,9 @@ class Take(object):
         K.setup_render(self.sc, "final", samples)
         self.sc.cycles.denoising_prefilter = "FAST"
         self.sc.render.use_persistent_data = False
+        for o in bpy.data.objects:      # director's systemic fix: the additive light shafts wash over the cast cards
+            if any(m and m.name.startswith('beam_fx') for m in (getattr(o.data, 'materials', None) or [])):
+                o.hide_render = True
         self.fg = [o for o in bpy.data.objects if o.name.startswith("fg")]
         self.act = {}
 
@@ -175,7 +178,7 @@ class Take(object):
             camrig.key_camera(f, pos, look, cam=self.cam, lens=22.0, interp="LINEAR", easing="AUTO")
             for o in self.fg:
                 o.hide_render = g >= G_CUT; o.keyframe_insert("hide_render", frame=f)
-            K.key_life(f, f)
+            K.key_life(f, f, dust=0.5)
             P = self.poses(g)
             for k, (xy, c, p, seat, dz, vis) in P.items():
                 a = self.act[k]; self.place(k, f, xy, c, p, seat, dz); C.hide_keys(a, f, not vis)
