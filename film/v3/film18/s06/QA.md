@@ -1,8 +1,8 @@
-# QA s06 (film 18, team 1) — "สิบตัว": plain oxen led out, Tian Dan walks house to house (re-shot after QA-tech FAIL)
-Take: g 459-530 (72 frames), first_g 459, jimo_in DUSK, 720x1280, 12 samples, ~17 s/frame. transition_in: CUT. No handles (next shot is a cut).
-QA-tech fixes applied: (1) all 10 plain oxen (NO blades) in a looser double row inside the frame the whole shot, 9-10 readable at g497; (2) Tian Dan placed on the camera axis 10 D out, walking with the slide so he stays in frame through g530; (3) camera look-at lowered and eye lowered (tilt down ~7 deg), sky about 25 % instead of 40 %; (4) stronger snaps (6 in/out punch pairs, net ~0.9) + slide -30 px/s + hand-held sway 0.02 rad. Oxen walk -x only (8-drawing walk, front-3/4 cards within 15 D of the lens).
+# QA s06 (film 18, team 1) — "สิบตัว" (round-2 rework)
+Take: g 459-530 (72 frames), first_g 459, jimo_in DUSK, 720x1280, 12 samples, ~17 s/frame. transition_in: CUT.
+Round-2 changes: custom camera path (eased push + 2.2 D slide along the lane, one held +15 % punch on "สิบตัว" g 497, no pulses); 10 plain oxen (no coats, no blades) walking left in a double row, all in frame; Tian Dan leads, head turned toward the oxen/gates (yaw + gaze), kept inside the frame (60 px margin) for the whole take; townsfolk positioned at the house gates (x 58/74/86); a woman and child carrying baskets in the lower third (cast props, lit) so the bottom is no longer empty; navy dig tools/baskets hidden.
 ## Frame-diff (90x160 grey, in-shot)
-median 6.64 (>= 4 OK), p90 11.17 (target >= 12: just short), min 2.20, max 14.60.
+median 3.36 (target >= 4: NOT MET), p90 5.63 (target >= 12: NOT MET), min 1.50, max 10.34.
 ## Checks
-qa_auto PASS. Heads above y 880, no mouths, no flames, no blades, no text.
-Known: p90 11.2, short of 12 by one notch; the old man / woman in the background are mostly hidden by the herd.
+qa_auto: see QA_AUTO.md. Heads above y 880, no mouths, no flames, no blades, no text.
+Known: motion below target (no pulses used, per rule 1); the gate-side townsfolk are mostly hidden behind the oxen.
