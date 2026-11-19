@@ -1,0 +1,60 @@
+{
+ "take": "s06",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 10.167,
+   "duration": 3.5,
+   "frame": 305,
+   "end_frame": 410,
+   "kind": "ambience",
+   "label": "Morse's painting room 1825, warm window light, distant street murmur, a door creak"
+  },
+  {
+   "time": 10.467,
+   "duration": 0.667,
+   "frame": 314,
+   "end_frame": 334,
+   "kind": "foley",
+   "label": "messenger's boots, the letter held out",
+   "peak_frame": 325
+  },
+  {
+   "time": 11.133,
+   "duration": 0.067,
+   "frame": 334,
+   "end_frame": 336,
+   "kind": "prop",
+   "label": "paper takes: small letter rustle",
+   "peak_frame": 334
+  },
+  {
+   "time": 12.433,
+   "duration": 0.433,
+   "frame": 373,
+   "end_frame": 386,
+   "kind": "accent",
+   "label": "snap push on 'เมียก็ตายไป': airy whoosh",
+   "peak_frame": 378
+  },
+  {
+   "time": 12.7,
+   "duration": 0.233,
+   "frame": 381,
+   "end_frame": 388,
+   "kind": "prop",
+   "label": "PALETTE falls: wooden clatter + one bounce, paint-dab tick",
+   "peak_frame": 384
+  },
+  {
+   "time": 13.033,
+   "duration": 0.133,
+   "frame": 391,
+   "end_frame": 395,
+   "kind": "foley",
+   "label": "he sinks onto the stool: wood creak",
+   "peak_frame": 392
+  }
+ ]
+}

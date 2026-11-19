@@ -1,0 +1,74 @@
+{
+ "take": "s06",
+ "film": 16,
+ "shots": [
+  6
+ ],
+ "g0": 314,
+ "g1": 401,
+ "first_g": 305,
+ "n_frames": 105,
+ "shot_ranges": {
+  "6": [
+   314,
+   400
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "at": 314,
+  "note": "hard cut from shot 5 at g 314; handle g 305..313 continues the move"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 401,
+  "note": "hard cut to shot 7 (studio_window) at g 401; handle g 401..409 continues"
+ },
+ "set": "v3/set3d16 STUDIO preset studio_door (door 0.35 open), light DAY; camera turned to look toward -x so the wife's portrait is screen-right; runtime: own FG jars + canvases, set palette (set_palette objects) keyed to fall from his hand g 381..387 with one bounce",
+ "cast": "v3/cast16 morse16 young=1 (palette_ready -> read_letter -> palette_drop -> stool, letter swap on a blink g 333) + messenger (hand_letter -> idle, sad); mouths still",
+ "camera": "custom 22 mm, push 6 %/s + slide -12 px/s + arc -6 deg/s (c16.CamPath, decay 0.3), SNAP push x1.4 on 'เมียก็ตายไป' g 373..386 to Morse's shocked face",
+ "events": {
+  "letter_swap_blink": [
+   333,
+   335
+  ],
+  "snap": [
+   373,
+   386
+  ],
+  "word_wife_dead": 376,
+  "palette_drop": 381,
+  "palette_floor": 387,
+  "sit_swap": 391
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "samples": 6,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 11.45,
+ "s_per_frame_cpu_mean": 22.18,
+ "head_px": [
+  148,
+  219
+ ],
+ "head_centre_y": [
+  506,
+  704
+ ],
+ "head_bottom_max_y": 812,
+ "framediff_in_shot": {
+  "median": 4.87,
+  "p90": 12.58
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json"
+}
