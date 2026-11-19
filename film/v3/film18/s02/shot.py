@@ -7,7 +7,7 @@ HERD = S.herd(44, (-14, 7.8), (3, 7.8), 6.0, 11, yaw=180.0)
 def tweak(stage, A=None):
     if stage == 'pre':
         import jimo_r2 as R2
-        R2.POST.pop('s02', None)                         # the set's s02 'dress' (hay + sticks) is the pale stump: dropped
+        R2.SKIP['s02'] = [(-32.0, 8.5, 5.5), (-27.0, 8.5, 3.0)]; R2.POST.pop('s02', None)                         # the set's s02 'dress' (hay + sticks) is the pale stump: dropped
         c = S.SHOTS[SHOT]['cam']; c['look_at'] = (12.0, 10.5, 1.3); S.SHOTS[SHOT]['move'].update(slide=15, push=-0.03)
         S.SHOTS[SHOT]['move']['moves'] = [dict(t=0.2, d=1.08, dur=5), dict(t=0.4, d=0.94, dur=5), dict(t=0.6, d=1.08, dur=5), dict(t=0.8, d=0.95, dur=5)]
     else:
