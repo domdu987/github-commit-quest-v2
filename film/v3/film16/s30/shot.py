@@ -45,7 +45,9 @@ def pose_of(k, g):
         p["fx"] = [dict(type="zzz", t=(g / 40.0) % 1.0)]          # the sleep Z
     else:
         p = P("morse_peek_door")
-        p["blink"] = blink(g, [2010, 2058])
+        p["blink"] = blink(g, [2010, 2058, 2084])
+        if g >= 2085:
+            p["expr"] = "laughing"                           # grin pop on a blink
         p["head_roll"] = p.get("head_roll", 0) + 3.0 * math.sin(t * 4.0)
         p["lean"] = p.get("lean", 0) + 2.0 * math.sin(t * 3.0)
     p["mirror"] = CAST[k]["mirror"]
@@ -66,7 +68,7 @@ class Cam3(C.CamPath):
         fwd = Matrix.Rotation(ang, 3, "Z") @ fwd0
         right = Vector((fwd.y, -fwd.x, 0.0))
         uo = 0.0 if g <= SNAP[0] else min(1.0, C.camrig.ease_peak((g - SNAP[0]) / float(SNAP[1] - SNAP[0]), 1.7))
-        L = Vector(self.look0) + right * (-0.15 + 0.3 * math.sin(2 * math.pi * t / 4.1)) + Vector((0, 0, 0.35 * uo)) + right * (0.2 * uo)
+        L = Vector(self.look0) + right * (-0.15 + 0.3 * math.sin(2 * math.pi * t / 4.1)) + Vector((0, 0, 0.35 * uo)) + right * (-0.5 * uo)
         pitch = Vector((fwd.x, fwd.y, (self.look0.z - self.loc0.z) / max(1e-6, fwd0.length)))
         pitch.normalize()
         return L - pitch * dist, L
@@ -83,7 +85,7 @@ class Take(C.Take):
         look0 = Vector((mx, my, 2.45)) + Vector((-0.5, 0.85, 0.0)) * 0.9
         loc0 = look0 + d * 4.3 + Vector((0, 0, -0.05))
         CAM = Cam3(loc0, look0, G0 - H_IN, G_LAST, push=-0.07, slide_px=0.0, arc_deg_s=0.0, decay=0.2,
-                   snaps=[dict(g=(G_WORD - 2, G_WORD + 11), k=1.5, peak=1.7, shift=(0.0, 0.0)), dict(g=SNAP, k=0.68, peak=1.7, shift=(0.0, 0.0))])
+                   snaps=[dict(g=(G_WORD - 2, G_WORD + 11), k=1.5, peak=1.7, shift=(0.0, 0.0)), dict(g=SNAP, k=0.6, peak=1.7, shift=(0.0, 0.0))])
         self.night_look()
         self.key_cam(bf(GS[0]), *CAM.at(GS[0]))
         self.scene.frame_set(bf(GS[0]))
@@ -106,10 +108,10 @@ class Take(C.Take):
         for n in wm.node_tree.nodes:
             if n.type == "VALTORGB":
                 for el in n.color_ramp.elements:
-                    el.color = (el.color[0] * 0.6, el.color[1] * 0.6, el.color[2] * 0.6, el.color[3])
+                    el.color = (el.color[0] * 0.45, el.color[1] * 0.45, el.color[2] * 0.45, el.color[3])
             elif n.type == "BSDF_PRINCIPLED":
                 bc = n.inputs["Base Color"].default_value
-                n.inputs["Base Color"].default_value = (bc[0] * 0.6, bc[1] * 0.6, bc[2] * 0.6, bc[3])
+                n.inputs["Base Color"].default_value = (bc[0] * 0.45, bc[1] * 0.45, bc[2] * 0.45, bc[3])
         self.scene.view_settings.exposure -= 0.4
         M = TG.STATE["M"]
         self.build_register_corner()
@@ -204,7 +206,7 @@ class Take(C.Take):
         tl = moc + Vector((rx, ry, 0.0)) * 0.55
         for ob, e in TG.STATE["lamps"]["nightc"]:
             ob.location = Vector((tl.x, tl.y, 2.05))
-            ob.data.energy = e * 2.6
+            ob.data.energy = e * 3.6
 
     def pose(self, gs):
         for g in gs:
@@ -215,7 +217,8 @@ class Take(C.Take):
                 if k == "moc":                                    # a little toward the lens so the set's stool does not hide his legs
                     x, y = x + 0.5 * self.dir[0], y + 0.5 * self.dir[1]
                 if k == "mor":                                    # 0.9 D further into the lit opening, 15 % bigger
-                    x, y = x + 0.0, y + 0.0
+                    _o = [float(v) for v in os.environ.get('MOFF', '-0.35,0').split(',')]
+                    x, y = x + _o[0], y + _o[1]
                     C.place(a, f, (x, y, z), scale=1.15)
                 else:
                     C.place(a, f, (x, y, z))

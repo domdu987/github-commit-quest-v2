@@ -45,3 +45,11 @@ Frame-diff median 5.02 / p90 12.39; 129 frames, 8.6 s/frame; heads 82-398 px, ce
 3. **Night contrast: done.** Walls and ceiling material 40 % darker (colour ramp x 0.6), window fill and ambient kept low, windows deep blue. The candle light moves to chest height between his hand and the register (energy x 2.6 over round 2).
 4. **Morse: partly.** He stays on his mark in the doorway, drawn 15 % bigger (head 82-104 px at full size, was 71-85) and the camera look is shifted 0.15 D left so he sits further from the left frame edge. He is not moved deeper into the opening: shifting him 0.9 D put him behind the wall wing and out of sight.
 Frame-diff and heads were measured on the final frames. I did not re-scrub the whole take at 6 fps; I looked at stills (g 1990, 2030, 2060, 2095) and the contact sheet.
+
+---
+# Revision 4 (after TAKE gate round 3) -- re-rendered, take.mkv replaced (42.6 MB, one file)
+Frame-diff median 5.07 / p90 12.76; 129 frames, 8.6 s/frame; heads 78-398 px, lowest head bottom y 849. QA_AUTO PASS. Hard cut on "เอง" (g 2096) kept.
+- **Morse (blocking item): fixed.** He stands 0.35 D screen-left of his old mark (the four directions were compared on stills at g 2095; this one clears the jamb best), so his whole face shows beside the door frame: head 78-90 px at full size (g 2065-2095), doorway at x 90-180. The camera look in the snap-out moves 0.5 D left (was 0.2 right) so the doorway sits in the left third. Grin pop: a blink at g 2084, expression "laughing" from g 2085.
+- **Optional notes:** ceiling and walls a further 25 % darker (colour ramp x 0.45 of the original); the register's candle light x 1.4 brighter (total x 3.6 of the set's). The red rectangle on his vest (the mail bag of the sash costume, drawn in the sprite) is NOT removed: it belongs to cast16's costume and would need a pose key that does not exist.
+- The snap-out is now x 1.67 (k 0.6) to keep the p90 above 12 after the pan change.
+- Checked on the frames: g 2040, 2065, 2085, 2095 (contact strip); I did not re-scrub the whole take at 6 fps.
