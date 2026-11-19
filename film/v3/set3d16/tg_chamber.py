@@ -20,9 +20,9 @@ def desk_pos(ti, a):
     r = TIERS[ti]; return (C[0] + r * math.cos(a), C[1] + r * math.sin(a)), 0.38 * ti
 def seat(ti, a, d=0.95):
     (x, y), z = desk_pos(ti, a); return (x + d * math.cos(a), y + d * math.sin(a), z)
-MARKS = dict(morse_table=(-3.1, 4.7, 0.0), clerk_table=(3.1, 4.7, 0.0), mocker_table=(1.5, 5.8, 0.0), mocker_stool=(STOOL[0], STOOL[1], 0.0), mocker_desk=seat(0, MOCK_A),
+MARKS = dict(morse_table=(-1.9, 5.4, 0.0), clerk_table=(2.0, 5.4, 0.0), mocker_table=(0.35, 6.5, 0.0), mocker_stool=(STOOL[0], STOOL[1], 0.0), mocker_desk=seat(0, MOCK_A),
              cong_a=seat(1, math.radians(98)), cong_b=seat(1, math.radians(140)), cong_c=seat(2, math.radians(70)), cong_d=seat(0, math.radians(150)), cong_e=seat(0, math.radians(40)),
-             morse_door=(0.55, SCREEN_Y - 0.5, 0.0), mocker_post=seat(0, MOCK_A), table_front=(0.0, 3.0, 0.0), dais=(0.0, 10.0, 0.4))
+             morse_door=(0.05, SCREEN_Y - 0.15, 0.0), mocker_post=seat(0, MOCK_A), table_front=(0.0, 3.0, 0.0), dais=(0.0, 10.0, 0.4))
 SEAT = dict(mocker_stool=0.56)
 
 def mats():
@@ -33,6 +33,7 @@ def mats():
     M['panel'] = mat('panel', '#5e3418', '#7a4824', 7, aniso=(1, 0.3, 1), contrast=1.6, rough=0.45, sheen=0.4)
     M['moneyb'] = mat('moneyb', '#8c6a38', '#b08848', 6, contrast=1.3)
     M['coin'] = mat('coin', '#e8c04a', '#f8dc78', 4, rough=0.25, sheen=1.0)
+    M['doorlit'] = mat_emit('doorlit', '#ffc880', 2.4)
     return M
 
 def tg_arm_parts(mb, M, c, s):
@@ -103,16 +104,27 @@ def build_tape(ST, M):
     ST['tape'] = ob; ST['tape_len'] = tot
 
 def bag(mb, M, c, s=1.0):
+    """tied cloth money sack: slumped body, gathered neck with a flared ruffle, rope tie, gold coins spilled on the baize"""
     x, y, z = c
-    mb.ell(M['moneyb'], (x, y, z + 0.32 * s), (0.36 * s, 0.32 * s, 0.34 * s), (16, 10)); mb.cyl(M['moneyb'], (x, y, z + 0.66 * s), 0.12 * s, 0.14 * s, 'z', 12, True, r2=0.07 * s)
-    mb.rod(M['rope'], (x, y, z + 0.6 * s), (x, y, z + 0.64 * s), 0.14 * s, 0.14 * s, 12, caps=False); mb.ell(M['moneyb'], (x, y, z + 0.76 * s), (0.1 * s, 0.1 * s, 0.07 * s), (10, 6))
-    for k in range(4): mb.cyl(M['coin'], (x + 0.45 * s + k * 0.09 * s, y - 0.1 * s + (k % 2) * 0.12 * s, z + 0.01 + 0.004 * k), 0.05 * s, 0.012 * s, 'z', 12)
+    mb.ell(M['moneyb'], (x, y, z + 0.27 * s), (0.4 * s, 0.34 * s, 0.27 * s), (16, 10)); mb.ell(M['moneyb'], (x + 0.05 * s, y, z + 0.42 * s), (0.3 * s, 0.26 * s, 0.22 * s), (14, 8))
+    mb.cyl(M['moneyb'], (x, y, z + 0.64 * s), 0.17 * s, 0.22 * s, 'z', 12, True, r2=0.085 * s)
+    mb.rod(M['rope'], (x, y, z + 0.7 * s), (x, y, z + 0.74 * s), 0.1 * s, 0.1 * s, 12, caps=False)
+    mb.cyl(M['moneyb'], (x + 0.02 * s, y, z + 0.84 * s), 0.085 * s, 0.14 * s, 'z', 12, True, r2=0.19 * s)
+    rs = rnd(8)
+    for k in range(10):
+        a = rs.uniform(0, 6.28); rr_ = rs.uniform(0.3, 0.6) * s
+        mb.cyl(M['coin'], (x + 0.3 * s + rr_ * math.cos(a) * 0.9, y + rr_ * math.sin(a) * 0.9, z + 0.012 + 0.012 * (k % 3)), 0.055 * s, 0.014 * s, 'z', 12)
+    for k in range(3): mb.cyl(M['coin'], (x - 0.05 * s + 0.0 * k, y - 0.32 * s, z + 0.03 + 0.016 * k), 0.055 * s, 0.014 * s, 'z', 12)
 
 def sack(mb, M, c, s=1.0, yaw=0.0, tall=1.0):
+    """canvas mail sack: slumped body, cinched neck with a flared top, rope tie, red band (no text), a few letters spilled at its foot"""
     x, y, z = c
-    mb.ell(M['sack'], (x, y, z + 0.3 * s * tall), (0.34 * s, 0.26 * s, 0.32 * s * tall), (14, 9), (0, 0, yaw)); mb.cyl(M['sack'], (x, y, z + 0.62 * s * tall), 0.14 * s, 0.14 * s, 'z', 10, True, r2=0.07 * s)
-    mb.rod(M['rope'], (x, y, z + 0.58 * s * tall), (x, y, z + 0.62 * s * tall), 0.11 * s, 0.11 * s, 10, caps=False)
-    mb.ell(M['red'], (x, y - 0.255 * s, z + 0.32 * s * tall), (0.09 * s, 0.015, 0.09 * s), (10, 6), (0, 0, yaw)); mb.ell(M['sackdk'], (x + 0.18 * s, y + 0.05, z + 0.15 * s), (0.12 * s, 0.1 * s, 0.1 * s), (8, 6))
+    mb.ell(M['sack'], (x, y, z + 0.26 * s * tall), (0.36 * s, 0.28 * s, 0.26 * s * tall), (14, 9), (0, 0, yaw)); mb.ell(M['sack'], (x, y, z + 0.42 * s * tall), (0.3 * s, 0.24 * s, 0.2 * s * tall), (12, 8), (0, 0, yaw))
+    mb.ell(M['red'], (x, y - 0.27 * s, z + 0.3 * s * tall), (0.2 * s, 0.02, 0.04 * s), (10, 6), (0, 0, yaw))
+    mb.cyl(M['sack'], (x, y, z + 0.6 * s * tall), 0.15 * s, 0.2 * s, 'z', 10, True, r2=0.075 * s)
+    mb.rod(M['rope'], (x, y, z + 0.66 * s * tall), (x, y, z + 0.69 * s * tall), 0.085 * s, 0.085 * s, 10, caps=False)
+    mb.cyl(M['sack'], (x, y, z + 0.78 * s * tall), 0.075 * s, 0.14 * s, 'z', 10, True, r2=0.17 * s)
+    for k in range(3): mb.box(M['paper'], (x + 0.3 * s + 0.08 * k * s, y - 0.1 * s + 0.1 * k * s, z + 0.015 + 0.012 * k), (0.16 * s, 0.1 * s, 0.01), rz=yaw + 0.7 * k)
 
 def build_chamber(ST, P):
     sc = bpy.context.scene; M = mats(); ST['M'] = M
@@ -155,7 +167,7 @@ def build_chamber(ST, P):
         mb.box(M['screenw'], ((xa + xb) / 2, SCREEN_Y, sh / 2), (xb - xa, 0.3, sh))
         for k in range(int((xb - xa) / 1.2)):
             px_ = xa + 0.6 + k * 1.2; mb.box(M['panel'], (px_, SCREEN_Y - 0.17, 1.0), (0.9, 0.06, 1.3)); mb.box(M['panel'], (px_, SCREEN_Y - 0.17, 3.0), (0.9, 0.06, 1.6))
-    mb.box(M['screenw'], (0, SCREEN_Y, 3.7 + (sh - 3.7) / 2), (1.24, 0.3, sh - 3.7)); mb.box(M['dark'], (0, SCREEN_Y + 0.3, 1.85), (1.24, 0.2, 3.7))
+    mb.box(M['screenw'], (0, SCREEN_Y, 3.7 + (sh - 3.7) / 2), (1.24, 0.3, sh - 3.7)); mb.box(M['doorlit'], (0, SCREEN_Y + 0.3, 1.85), (1.24, 0.1, 3.7)); mb.box(M['doorlit'], (0, SCREEN_Y + 0.15, 0.02), (1.24, 0.4, 0.04))
     mb.box(M['gold'], (0, SCREEN_Y - 0.2, sh + 0.12), (sw + 0.3, 0.3, 0.24)); mb.box(M['gold'], (0, SCREEN_Y - 0.2, 3.75), (1.5, 0.22, 0.08))
     for sgn in (-1, 1): mb.box(M['gold'], (sgn * 0.66, SCREEN_Y - 0.2, 1.85), (0.1, 0.2, 3.8))
     mb.cyl(M['gold'], (0, SCREEN_Y - 0.35, sh + 0.4), 0.5, 0.12, 'y', 16); mb.ell(M['gold'], (0, SCREEN_Y - 0.4, sh + 0.8), (0.4, 0.1, 0.25), (10, 6))                                # crest
@@ -251,7 +263,7 @@ def kdir_sb(P):
 
 def lights(ST, win_x, sconces):
     sc = bpy.context.scene; L = ST['lamps']
-    for g in ('fill', 'win', 'candle', 'lamp'): L[g] = []
+    for g in ('fill', 'win', 'candle', 'lamp', 'nightc'): L[g] = []
     def area(name, loc, rot, size, col, en, grp, cam=False):
         l = bpy.data.lights.new(name, 'AREA'); l.shape = 'RECTANGLE'; l.size = size[0] * SC; l.size_y = size[1] * SC; l.color = col; l.energy = en * SC * SC
         ob = bpy.data.objects.new(name, l); ob.location = W(loc); ob.rotation_euler = rot; sc.collection.objects.link(ob); ob.visible_camera = cam; l.use_shadow = (grp != 'fill'); L[grp].append((ob, l.energy))
@@ -267,9 +279,11 @@ def lights(ST, win_x, sconces):
     point('tablecandle', (tx - 1.9, ty - 0.5, 1.9), (1.0, 0.68, 0.32), 45, 'lamp', 0.1); point('tablecandle2', (tx - 2.1, ty - 0.2, 1.5), (1.0, 0.68, 0.32), 22, 'lamp', 0.1)
     for i, (x, y, z) in enumerate(ST['desk_candles']): point('deskc%d' % i, (x, y, z + 0.08), (1.0, 0.68, 0.32), 14, 'lamp', 0.08)
     point('daisc', (0.0, 10.4, 2.0), (1.0, 0.66, 0.3), 30, 'candle', 0.1)
+    point('stoolc', (STOOL[0] + 0.45, STOOL[1] - 0.15, 1.9), (1.0, 0.62, 0.28), 70, 'nightc', 0.08); point('doorlight', (0.0, SCREEN_Y + 1.2, 2.2), (1.0, 0.7, 0.35), 60, 'candle', 0.2)
 
 def apply_state(ST, st):
     set_tape(st.get('tape', 0.0)); set_click(st.get('click', 0)); set_moneybag(st.get('moneybag', False)); set_mailsacks(st.get('mailsacks', False)); set_flames(1.0)
+    set_shafts(bool(st.get('shafts', True)) and ST['P'].get('shafts', 0.0) > 0)
 
 # ----------------------------------------------------------------------------- hooks
 def _TG():
@@ -315,6 +329,20 @@ def set_shafts(on, frame=None):
     TG = _TG(); TG._show(TG.STATE['shafts'], bool(on), frame)
 
 def fg_desk(ST, cam, look):
-    """a desk corner with inkwell + quill 1-2 D from the lens (chamber_low)"""
-    M = ST['M']; rr = rnd(3); c = Vector(cam[:2]); f = (Vector(look[:2]) - c).normalized(); p = c + f * 1.5 + Vector((f.y, -f.x)) * 0.9
-    mb = MB('fgdesk'); K.desk(mb, M, (p.x, p.y), math.atan2(f.y, f.x) + math.pi / 2 + 0.0, 0.0, rr); ST['fg'] = mb.finish()
+    """desk-corner foreground for chamber_low: green baize top with a big inkwell + quill 1-2 D from the lens"""
+    M = ST['M']; rr = rnd(3); c0 = Vector(cam[:2]); f = (Vector(look[:2]) - c0).normalized(); r = Vector((f.y, -f.x)); p = c0 + f * 1.1 - r * 0.45
+    yaw = math.atan2(f.y, f.x) - math.pi / 2
+    mb = MB('fgdesk'); mb.push(Matrix.Translation((p.x, p.y, 0.8)) @ Euler((0, 0, yaw)).to_matrix().to_4x4())
+    mb.box(M['walnut'], (0.2, 0.0, 0.0), (1.1, 0.8, 0.06)); mb.box(M['baize'], (0.2, 0.0, 0.035), (0.95, 0.66, 0.012))
+    mb.cyl(M['glassjar'], (0.0, 0.0, 0.09), 0.07, 0.12, 'z', 14, True); mb.cyl(M['ink'], (0.0, 0.0, 0.08), 0.06, 0.09, 'z', 14); mb.cyl(M['brass'], (0.0, 0.0, 0.16), 0.075, 0.025, 'z', 14)
+    mb.rod(M['paper'], (0.0, 0.0, 0.14), (0.16, 0.12, 0.62), 0.008, 0.003, 5); mb.ell(M['paper'], (0.12, 0.09, 0.5), (0.03, 0.012, 0.14), (8, 6), (0, 0.2, 0.7))
+    mb.box(M['paper'], (0.4, -0.12, 0.05), (0.3, 0.4, 0.03), rz=0.3); mb.box(M['paper'], (0.42, -0.1, 0.075), (0.28, 0.38, 0.03), rz=0.1)
+    mb.pop(); ST['fg'] = mb.finish()
+
+def congress_marks(ST, n=14):
+    """seats of congressmen across tiers 1-3 (the desks behind the front row), evenly spread"""
+    ds = [d for d in ST['desks'] if d[0] in (1, 2, 3)]; ds.sort(key=lambda d: (d[1], d[0])); out = {}
+    if not ds: return out
+    step = max(1, len(ds) // n); picks = ds[::step][:n]
+    for i, (ti, a, px, py, zt) in enumerate(picks): out['cong_%d' % (i + 1)] = (px + 0.95 * math.cos(a), py + 0.95 * math.sin(a), zt)
+    return out

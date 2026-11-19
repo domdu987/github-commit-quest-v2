@@ -87,3 +87,18 @@ def ensure():
         if not os.path.exists(P[k]): f(P[k])
     return P
 if __name__ == '__main__': print(ensure())
+
+def mule(path):
+    """simple side-view mule card (placeholder, facing right): body, long ears, harness, collar, 4 legs, tail; transparent background"""
+    W_, H_ = 700, 460; img = Image.new('RGBA', (W_, H_), (0, 0, 0, 0)); d = ImageDraw.Draw(img); bc = (122, 88, 62, 255); dk = (84, 58, 40, 255)
+    d.ellipse([120, 120, 520, 320], fill=bc); d.ellipse([150, 230, 500, 330], fill=(168, 128, 96, 255))
+    for x in (170, 220, 430, 480): d.polygon([(x, 290), (x + 36, 290), (x + 30, 440), (x + 4, 440)], fill=dk if x in (220, 480) else bc); d.rectangle([x + 2, 430, x + 32, 450], fill=(40, 30, 28, 255))
+    d.polygon([(480, 150), (600, 90), (660, 130), (680, 200), (640, 250), (560, 250), (500, 230)], fill=bc)       # neck + head
+    d.polygon([(560, 250), (640, 250), (630, 290), (570, 280)], fill=(206, 176, 146, 255))                       # muzzle
+    d.polygon([(560, 100), (590, 20), (606, 40), (596, 104)], fill=dk); d.polygon([(596, 96), (640, 28), (656, 52), (620, 110)], fill=bc)   # ears
+    d.ellipse([612, 150, 632, 170], fill=(24, 20, 20, 255))
+    d.polygon([(130, 150), (60, 220), (80, 330), (120, 230)], fill=dk)                                          # tail
+    d.arc([440, 120, 560, 300], 280, 80, fill=(150, 40, 40, 255), width=22)                                      # collar
+    d.line([(520, 200), (380, 160), (200, 190)], fill=(30, 26, 26, 255), width=8); d.line([(380, 160), (380, 300)], fill=(30, 26, 26, 255), width=8)   # harness
+    d.ellipse([368, 150, 392, 174], fill=(214, 176, 60, 255))
+    img.save(path)

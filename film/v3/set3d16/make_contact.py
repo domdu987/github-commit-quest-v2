@@ -6,45 +6,47 @@ usage:  python3 make_contact.py run [name ...]     render the missing tiles (2 w
 import os, sys, json, time, subprocess
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 FINAL = os.path.join(HERE, 'telegraph_work', 'final'); os.makedirs(FINAL, exist_ok=True)
-TILES = [   # name, preset, light, hooks (python, run after build), staging override (role, mark) or None, label
-    ('L01_line_close_AFTER_RAIN', 'line_close', 'AFTER_RAIN', '', None, 'line_close / AFTER_RAIN (ladder, drops)'),
-    ('L02_line_close_DAY', 'line_close', 'DAY', "TG.set_wet(0.0)", None, 'line_close / DAY'),
-    ('L03_line_close_RAIN', 'line_close', 'RAIN', "TG.set_rain(True); TG.set_leak('pole', 1.0)", None, 'line_close / RAIN (rain, pole sparks)'),
-    ('L04_line_close_pulse', 'line_close', 'AFTER_RAIN', "TG.set_pulse(0.0105)", None, 'line_close / AFTER_RAIN + pulse bead'),
-    ('L05_line_wide_DAY', 'line_wide', 'DAY', '', None, 'line_wide / DAY (train, poles)'),
-    ('L06_line_wide_DUSK', 'line_wide', 'DUSK', '', None, 'line_wide / DUSK'),
-    ('L07_line_wide_RAIN', 'line_wide', 'RAIN', "TG.set_poles('bare', 16); TG.set_rain(True)", None, 'line_wide / RAIN (bare poles, rain)'),
-    ('L08_line_rail_DAY', 'line_rail', 'DAY', '', None, 'line_rail / DAY (train, station)'),
-    ('L09_line_rail_pulse', 'line_rail', 'DAY', "TG.set_pulse(0.2)", None, 'line_rail / DAY + pulse'),
-    ('L10_line_trench_DAY', 'line_trench', 'DAY', '', None, 'line_trench / DAY (plough, furrow)'),
-    ('L11_line_trench_high_DUSK', 'line_trench_high', 'DUSK', "TG.set_light_mix('DAY', 'DUSK', 0.7)", None, 'line_trench_high / DAY->DUSK 0.7'),
-    ('L12_line_trench_end_DUSK', 'line_trench_end', 'DUSK', '', None, 'line_trench_end / DUSK (key, coil)'),
-    ('L13_line_trench_end_RAIN', 'line_trench_end', 'RAIN', "TG.set_rain(True)", None, 'line_trench_end / RAIN'),
-    ('L14_trench_cut_DUSK', 'trench_cut', 'DUSK', '', None, 'trench_cut / DUSK (pipe, sparks)'),
-    ('L15_line_road_DUSK', 'line_road', 'DUSK', '', None, 'line_road / DUSK (buggy)'),
-    ('L16_line_wagon_AFTER_RAIN', 'line_wagon', 'AFTER_RAIN', '', None, 'line_wagon / AFTER_RAIN (bottles)'),
-    ('S01_studio_wide_DAY', 'studio_wide', 'DAY', '', None, 'studio_wide / DAY'),
-    ('S02_studio_easel_DAY', 'studio_easel', 'DAY', '', None, 'studio_easel / DAY'),
-    ('S03_studio_door_DAY', 'studio_door', 'DAY', '', None, 'studio_door / DAY (door ajar, palette)'),
-    ('S04_studio_window_DAY', 'studio_window', 'DAY', '', None, 'studio_window / DAY'),
-    ('C01_chamber_wide_high_DAY', 'chamber_wide_high', 'DAY', '', None, 'chamber_wide_high / DAY'),
-    ('C02_chamber_wide_high_NIGHT', 'chamber_wide_high', 'NIGHT', '', [('morse', 'morse_door')], 'chamber_wide_high / NIGHT'),
-    ('C03_chamber_low_DAY', 'chamber_low', 'DAY', '', None, 'chamber_low / DAY (mail sacks)'),
-    ('C04_chamber_low_NIGHT', 'chamber_low', 'NIGHT', "CH.set_mailsacks(False)", None, 'chamber_low / NIGHT'),
-    ('C05_chamber_table_DAY', 'chamber_table', 'DAY', "CH.set_tape(0.55, 1)", None, 'chamber_table / DAY (tape, click)'),
-    ('C06_chamber_table_money', 'chamber_table', 'DAY', "CH.set_moneybag(True)", None, 'chamber_table / DAY + money bag'),
-    ('C07_chamber_table_NIGHT', 'chamber_table', 'NIGHT', "CH.set_tape(1.0, 0)", [('mocker', 'mocker_stool'), ('morse', 'morse_door')], 'chamber_table / NIGHT (candles, tape pile)'),
+TILES = [   # name, preset, light, hooks (python, run after build), staging override (role, mark) or None, label, camera name (None = preset camera / light camera)
+    ('L01_line_close_AFTER_RAIN', 'line_close', 'AFTER_RAIN', '', None, 'line_close / AFTER_RAIN (hook: bottle, ladder)', None),
+    ('L02_line_close_DAY', 'line_close', 'DAY', "TG.set_wet(0.0)", None, 'line_close / DAY', None),
+    ('L03_line_close_RAIN', 'line_close', 'RAIN', "TG.set_rain(True); TG.set_leak('pole', 1.0)", None, 'line_close / RAIN (rain, pole sparks)', None),
+    ('L04_line_close_pulse', 'line_close', 'AFTER_RAIN', "TG.set_pulse(TG.pulse_s_at_pole(1) + 0.004)", None, 'line_close / pulse crossing the glass', None),
+    ('L05_bottle_macro_pulse', 'bottle_macro', 'AFTER_RAIN', "", None, 'bottle_macro / pulse parked on the glass', None),
+    ('L06_line_wide_DAY', 'line_wide', 'DAY', '', None, 'line_wide / DAY (train, poles)', None),
+    ('L07_line_wide_DUSK', 'line_wide', 'DUSK', '', None, 'line_wide / DUSK', None),
+    ('L08_line_wide_RAIN', 'line_wide', 'RAIN', "TG.set_poles('bare', 17); TG.set_rain(True)", None, 'line_wide / RAIN (bare poles, rain)', None),
+    ('L09_line_rail_DAY', 'line_rail', 'DAY', '', None, 'line_rail / DAY (train, pulse ahead)', None),
+    ('L10_line_station_DAY', 'line_rail', 'DAY', "TG.set_train(86.0)", None, 'line_station / DAY (platform)', 'line_station'),
+    ('L11_line_trench_DAY', 'line_trench', 'DAY', '', None, 'line_trench / DAY (plough, mules, reel)', None),
+    ('L12_trench_high_snap1', 'line_trench_high', 'DAY', "TG.set_trench(0.3); TG.set_pipe(0.25)", None, 'trench_high snap 1 (k 0.3)', 'line_trench_snap1'),
+    ('L13_trench_high_snap2', 'line_trench_high', 'DAY', "TG.set_trench(0.6); TG.set_pipe(0.55); TG.set_light_mix('DAY', 'DUSK', 0.5)", None, 'trench_high snap 2 (k 0.6, mix 0.5)', 'line_trench_snap2'),
+    ('L14_trench_high_snap3', 'line_trench_high', 'DAY', "TG.set_trench(0.9); TG.set_pipe(0.85); TG.set_light_mix('DAY', 'DUSK', 1.0)", None, 'trench_high snap 3 (k 0.9, DUSK)', 'line_trench_snap3'),
+    ('L15_line_trench_end_DUSK', 'line_trench_end', 'DUSK', '', None, 'line_trench_end / DUSK (key, coil, wagon)', None),
+    ('L16_line_trench_end_RAIN', 'line_trench_end', 'RAIN', "TG.set_rain(True)", None, 'line_trench_end / RAIN', None),
+    ('L17_trench_cut_DUSK', 'trench_cut', 'DUSK', '', None, 'trench_cut / DUSK (soil face, split pipe, sparks)', None),
+    ('L18_line_road_DUSK', 'line_road', 'DUSK', '', None, 'line_road / DUSK (buggy, mule)', None),
+    ('L19_line_wagon_AFTER_RAIN', 'line_wagon', 'AFTER_RAIN', '', None, 'line_wagon / AFTER_RAIN (bottles)', None),
+    ('S01_studio_wide_DAY', 'studio_wide', 'DAY', '', None, 'studio_wide / DAY', None),
+    ('S02_studio_easel_DAY', 'studio_easel', 'DAY', '', None, 'studio_easel / DAY', None),
+    ('S03_studio_door_DAY', 'studio_door', 'DAY', '', None, 'studio_door / DAY (door ajar)', None),
+    ('S04_studio_window_DAY', 'studio_window', 'DAY', "SD.set_spark(1.0)", None, 'studio_window / DAY (coil, magnet, spark)', None),
+    ('C01_chamber_wide_high_DAY', 'chamber_wide_high', 'DAY', '', None, 'chamber_wide_high / DAY', None),
+    ('C02_chamber_wide_high_NIGHT', 'chamber_wide_high', 'NIGHT', '', None, 'chamber_wide_high / NIGHT', None),
+    ('C03_chamber_low_DAY', 'chamber_low', 'DAY', '', None, 'chamber_low / DAY (mocker desk)', None),
+    ('C04_chamber_low_sacks', 'chamber_low', 'DAY', "CH.set_mailsacks(True)", None, 'chamber_low + mail sacks hook (shot 28)', None),
+    ('C05_chamber_table_DAY', 'chamber_table', 'DAY', "CH.set_tape(0.55, 1)", None, 'chamber_table / DAY (tape, click)', None),
+    ('C06_chamber_table_money', 'chamber_table', 'DAY', "CH.set_moneybag(True)", None, 'chamber_table / DAY + money bag', None),
+    ('C07_chamber_table_NIGHT', 'chamber_table', 'NIGHT', "CH.set_tape(1.0, 0)", None, 'chamber_table / NIGHT (candles, door)', None),
 ]
 BYNAME = {t[0]: t for t in TILES}
 
 def do_tile(name):
     import bpy, telegraph as TG, tg_chamber as CH, tg_studio as SD, tg_line as LN, tg_hue
-    t = BYNAME[name]; _, preset, light, hooks, staging, label = t
+    t = BYNAME[name]; _, preset, light, hooks, staging, label, camname = t
     A = TG.build(None, preset, light=light); sc = bpy.context.scene; TG.setup_render(sc, 'final')
     exec(hooks, dict(TG=TG, CH=CH, SD=SD, LN=LN, SC=TG.SC, bpy=bpy))
-    cs = A['cams'][A['cam_name']]; TG.make_camera(cs)
+    nm = camname or A['cam_name']; cs = A['cams'][nm]; TG.make_camera(cs)
     if staging is not None: TG.STAGING['__tile'] = staging; nm = '__tile'
-    else: nm = A['cam_name']
     TG.stage_placeholders(A, nm, cs['loc']); bpy.context.view_layer.update(); hp = TG.head_pixels(nm)
     png = os.path.join(FINAL, name + '.png'); w, c = TG.render(png)
     hue = tg_hue.measure(png)

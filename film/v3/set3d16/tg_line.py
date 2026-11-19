@@ -5,20 +5,24 @@ import telegraph_kit as K
 from telegraph_kit import *
 
 TX = -7.0                                   # rail x
-POLE_H = 5.0; BS = 2.3                      # pole height (m), bottle scale
-NPOLE = 16
-POLES_Y = [4.0 + 9.0 * k for k in range(NPOLE)]
+POLE_H = 5.0; BS = 3.3                      # pole height (m), bottle scale (inverted bottle: 0.37 * BS m tall)
+BOT_TOP = 0.372                             # top of the bottle in units of BS
+POLES_Y = [-5.0] + [4.0 + 9.0 * k for k in range(16)]   # pole 0 is the hidden-behind-camera pole at y -5; the hero pole is index 1 (y 4)
+NPOLE = len(POLES_Y)
 Y0, Y1 = 2.0, 62.0                          # furrow start / end (y, m)
 PIT = (52.0, 12.0)                          # cut-away pit centre (x, y)
-PIT_HW, PIT_HL, PIT_D = 0.85, 7.0, 1.25     # pit half width, half length, depth
+PIT_HW, PIT_HL, PIT_D = 3.6, 1.3, 1.6      # pit half width (x), half depth (y), depth (z)
 LS = 1.6                                    # train scale
 LY0 = 27.0                                  # loco origin y at x-param 0
-WAGON = (xc(56) - 2.6, 56.0)                # wagon centre (x, y), long axis along y
+WAGON = (xc(70) - 2.6, 70.0)                # wagon centre (x, y), long axis along y
 KEYCRATE = (xc(Y1 + 2.5) + 2.2, Y1 + 2.5)   # test key crate on the ground at the furrow end
-PLAT = (-4.4, 34.0, 62.0)                   # station platform: x edge (towards the rail), y0, y1
+PLAT = (-9.0, 40.0, 66.0)                   # station platform on the FAR side of the rail: x edge (towards the rail), y0, y1 (extends to x - 3)
 SAG = 0.55
+def rung(u_idx, n=15):
+    a, b = LAD0; u = (u_idx + 0.5) / n; return tuple(a[i] + (b[i] - a[i]) * u for i in range(3))
 
 def px(y): return xc(y) + 3.4
+LAD0 = ((px(4.0) + 0.78, 3.0, 0.0), (px(4.0) + 0.17, 3.86, POLE_H - 0.55))      # hero ladder: foot ~1 m from the pole base, top leans on the pole side
 
 # ----------------------------------------------------------------------------- ground (with a hole for the pit)
 def ground_mat():
@@ -85,9 +89,27 @@ def pole_body(mb, M, x, y, h):
     mb.rod(M['pole'], (x, y, -0.2), (x + 0.03, y, h), 0.14, 0.085, 10, smooth=True)
     mb.cyl(M['polecut'], (x + 0.03, y, h + 0.02), 0.085, 0.04, 'z', 10)
 
-def pole_peg(mb, M, x, y, h, bs):
-    mb.rod(M['wood'], (x + 0.03, y, h), (x + 0.03, y, h + 0.14 * bs), 0.03 * bs / 2, 0.026 * bs / 2, 6)
-    bottle(mb, M, (x + 0.03, y, h + 0.01), bs)
+BPROF = [(0.036, 0.0), (0.045, 0.012), (0.047, 0.026), (0.034, 0.045), (0.031, 0.10), (0.034, 0.15), (0.048, 0.195), (0.060, 0.24), (0.064, 0.29), (0.062, 0.335), (0.048, 0.362), (0.0, 0.372)]
+def ins_bottle(mb, M, c, s):
+    """inverted green beer bottle (mouth down on the peg, shoulder widening upward, closed bottom on top), c = mouth centre"""
+    x, y, z = c; G = M['glass']
+    for (r0, z0), (r1, z1) in zip(BPROF[:-1], BPROF[1:]): mb.rod(G, (x, y, z + z0 * s), (x, y, z + z1 * s), r0 * s, r1 * s, 16, caps=False, smooth=True)
+def glint(mb, M, p, r):
+    """4-point sun sparkle: three crossed thin diamonds (reads from any side)"""
+    x, y, z = p; g = M['glintm']
+    for ax in ((1, 0, 0), (0, 1, 0), (0, 0, 1)):
+        a = Vector(ax) * r; b_ = Vector((ax[2], ax[0], ax[1])) * r * 0.08
+        mb.quad(g, [(x - a.x, y - a.y, z - a.z), (x + b_.x, y + b_.y, z + b_.z), (x + a.x, y + a.y, z + a.z), (x - b_.x, y - b_.y, z - b_.z)])
+    mb.ell(g, (x, y, z), (r * 0.2,) * 3, (8, 6))
+
+def pole_peg(mb, M, x, y, h, bs, star=False):
+    mb.rod(M['wood'], (x + 0.03, y, h), (x + 0.03, y, h + 0.22 * bs), 0.03 * bs * 0.5, 0.026 * bs * 0.5, 6)
+    ins_bottle(mb, M, (x + 0.03, y, h + 0.01), bs)
+    zr = h + 0.01 + 0.31 * bs; rr_ = 0.062 * bs + 0.03                                       # the wire is wrapped once round the glass under the closed bottom
+    for i in range(24):
+        a = i * math.pi * 2 / 24; b = (i + 1) * math.pi * 2 / 24
+        mb.rod(M['wiremat'], (x + 0.03 + rr_ * math.cos(a), y + rr_ * math.sin(a), zr + 0.03 * math.sin(2 * a)), (x + 0.03 + rr_ * math.cos(b), y + rr_ * math.sin(b), zr + 0.03 * math.sin(2 * b)), 0.03, 0.03, 5)
+    if star: glint(mb, M, (x + 0.03 - 0.06 * bs * 0.4, y - 0.064 * bs * 1.0, h + 0.01 + 0.27 * bs), 0.2)
 
 def span(a, b, sag, n=None):
     L = math.hypot(b[0] - a[0], b[1] - a[1]); n = n or max(6, int(L / 0.6))
@@ -99,10 +121,10 @@ def build_poles(ST, M):
     for i, y in enumerate(POLES_Y):
         x = px(y)
         mb = MB('pole%d' % i); pole_body(mb, M, x, y, POLE_H); body = mb.finish()
-        mb = MB('peg%d' % i); pole_peg(mb, M, x, y, POLE_H, BS); peg = mb.finish()
+        mb = MB('peg%d' % i); pole_peg(mb, M, x, y, POLE_H, BS, star=(i in (1, 2, 3))); peg = mb.finish()
         P.append(dict(body=body, peg=peg, x=x + 0.03, y=y))
-        top_b.append((x + 0.03, y, POLE_H + 0.255 * BS + 0.012)); top_n.append((x + 0.03, y, POLE_H + 0.06))
-    rb = rnd(4); birds = {(1, 0.35), (1, 0.5), (2, 0.6), (3, 0.3), (3, 0.38), (4, 0.5), (6, 0.4), (7, 0.55), (9, 0.3)}
+        top_b.append((x + 0.03, y, POLE_H + 0.01 + BOT_TOP * BS + 0.03)); top_n.append((x + 0.03, y, POLE_H + 0.06))
+    rb = rnd(4); birds = {(2, 0.35), (2, 0.5), (3, 0.6), (4, 0.3), (4, 0.38), (5, 0.5), (7, 0.4), (8, 0.55), (10, 0.3)}
     ST['wire_pts'] = {}
     for nm, tops, store in (('bottle', top_b, SB), ('bare', top_n, SN)):
         pts_all = []
@@ -127,7 +149,7 @@ def beer_bottle(mb, M, c, s=1.8, yaw=0.0):
     for (r0, z0), (r1, z1) in zip(prof[:-1], prof[1:]): mb.rod(G, (x, y, z + z0 * s), (x, y, z + z1 * s), r0 * s, r1 * s, 12, caps=False, smooth=True)
     mb.cyl(G, (x, y, z), 0.037 * s, 0.01 * s, 'z', 12); mb.cyl(M['gold'], (x, y, z + 0.298 * s), 0.014 * s, 0.006 * s, 'z', 10) if False else None
 
-def bottle_crate(mb, M, c, yaw=0.0, nb=(5, 3), s=1.8):
+def bottle_crate(mb, M, c, yaw=0.0, nb=(6, 3), s=2.4):
     x, y, z = c
     mb.push(Matrix.Translation((x, y, z)) @ Euler((0, 0, yaw)).to_matrix().to_4x4())
     w, d, h = nb[0] * 0.095 * s * 0.55 + 0.1, nb[1] * 0.095 * s * 0.55 + 0.1, 0.26 * s * 0.8
@@ -140,17 +162,18 @@ def bottle_crate(mb, M, c, yaw=0.0, nb=(5, 3), s=1.8):
             beer_bottle(mb, M, (bx, by, 0.05), s)
     mb.pop()
 
-def key_station(mb, M, c, yaw=0.0):
-    """test key + paper-tape register on a crate (sb: telegraph kit, tidy), at the furrow end"""
-    crate(mb, M, c, (1.1, 0.8, 0.6), yaw)
-    mb.push(Matrix.Translation((c[0], c[1], c[2] + 0.6)) @ Euler((0, 0, yaw)).to_matrix().to_4x4())
+def key_station(mb, M, c, yaw=0.0, sc=1.6):
+    """test key + paper-tape register on a crate (sb: telegraph kit, tidy), scaled up so it reads on a phone"""
+    mb.push(Matrix.Translation(c) @ Euler((0, 0, yaw)).to_matrix().to_4x4() @ Matrix.Diagonal((sc, sc, sc, 1)))
+    crate(mb, M, (0, 0, 0), (1.1, 0.8, 0.6), 0.0)
+    mb.push(Matrix.Translation((0, 0, 0.6)))
     mb.box(M['walnut'], (0, 0, 0.02), (1.0, 0.7, 0.04)); mb.box(M['brass'], (-0.28, 0.1, 0.07), (0.26, 0.2, 0.03))
     for sy in (-0.07, 0.07): mb.cyl(M['copper'], (-0.28, 0.1 + sy, 0.16), 0.055, 0.16, 'z', 14, True)
     mb.box(M['metal'], (-0.28, 0.1, 0.26), (0.08, 0.24, 0.02))
     mb.box(M['brass'], (0.2, -0.2, 0.06), (0.22, 0.08, 0.03)); mb.rod(M['brass'], (0.12, -0.2, 0.1), (0.3, -0.2, 0.15), 0.012, 0.012, 6); mb.ell(M['dark'], (0.31, -0.2, 0.16), (0.035, 0.035, 0.03), (10, 6))
     mb.box(M['wood'], (0.15, 0.15, 0.1), (0.34, 0.24, 0.12)); mb.cyl(M['paper'], (0.08, 0.15, 0.24), 0.09, 0.12, 'y', 18)
     mb.box(M['paper'], (0.36, 0.15, 0.17), (0.2, 0.07, 0.005), ry=-0.2)
-    mb.pop()
+    mb.pop(); mb.pop()
 
 def reel(mb, M, c, r=0.62, wide=0.7):
     """drum of lead pipe on its side (axis y): flanges + wound lead"""
@@ -173,8 +196,8 @@ def wagon2(mb, M, c, yaw=0.0):
     for sy in (-0.52, 0.52): mb.cyl(M['woodpale'], (1.2, sy, z0 - 0.1), 0.85, 0.1, 'y', 24)
     mb.cyl(M['spool'], (1.2, 0, z0 - 0.1), 0.66, 0.96, 'y', 24, True); mb.cyl(M['wood'], (1.2, 0, z0 - 0.1), 0.15, 1.3, 'y', 10)
     mb.rod(M['wiremat'], (1.2, -0.3, z0 - 0.1 + 0.66), (1.9, -0.3, 1.1), 0.02, 0.02, 4)
-    bottle_crate(mb, M, (-0.35, 0.0, 1.01), 0.0, (5, 3), 1.8)
-    key_station(mb, M, (-1.55, 0.0, 1.01), 0.0)
+    bottle_crate(mb, M, (-0.35, 0.0, 1.01), 0.0, (6, 3), 2.4)
+    key_station(mb, M, (-1.6, 0.0, 1.01), 0.0, 1.0)
     mb.pop()
 
 def plough(mb, M):
@@ -190,9 +213,9 @@ def plough(mb, M):
 
 def buggy(mb, M, wheels):
     """open 1840s buggy at the origin heading +y (parts that do not spin); wheels returned as (axle, r) for spinning objects"""
-    mb.box(M['carriage'], (0, 0, 0.78), (1.2, 2.0, 0.34))                                              # lower body
-    for sx in (-1, 1): mb.box(M['carriage'], (sx * 0.6, -0.1, 1.1), (0.06, 1.5, 0.36))               # low side panels
-    mb.box(M['carriage2'], (0, 0.95, 1.12), (1.2, 0.06, 0.55), rx=-0.25)                              # dash front
+    mb.box(M['green'], (0, 0, 0.78), (1.2, 2.0, 0.34))                                              # lower body
+    for sx in (-1, 1): mb.box(M['green'], (sx * 0.6, -0.1, 1.1), (0.06, 1.5, 0.36))               # low side panels
+    mb.box(M['black'], (0, 0.95, 1.12), (1.2, 0.06, 0.55), rx=-0.25)                              # dash front
     mb.box(M['leather'], (0, -0.35, 1.0), (1.0, 0.7, 0.14)); mb.box(M['leather'], (0, -0.72, 1.35), (1.0, 0.12, 0.6), rx=-0.15)   # seat + back
     mb.box(M['black'], (0, -0.1, 0.55), (0.08, 2.2, 0.08))
     for sy_ in (-0.7, 0.8): mb.box(M['metal'], (0, sy_, 0.55), (1.7, 0.1, 0.1))                          # axles
@@ -201,7 +224,7 @@ def buggy(mb, M, wheels):
     for sx in (-1, 1): mb.box(M['gold'], (sx * 0.64, 0.95, 1.0), (0.04, 0.04, 0.25))                     # lamp posts
     mb.box(M['woodpale'], (0.7, -0.1, 0.5), (0.2, 0.5, 0.04))                                           # step
 
-def wheel_obj(M, name, axle, r, axis_x=True, spokes=10, parent=None, wide=0.07, tyre=True, hub=0.1):
+def wheel_obj(M, name, axle, r, axis_x=True, spokes=10, parent=None, wide=0.07, tyre=True, hub=0.1, rim='red'):
     """a spinnable wheel (axis = sb x) at axle (sb metres); mesh local to the axle, object at W(axle). rotate about WORLD Y for the line."""
     mb = MB(name); mb.T = frame_mat() @ Matrix.Translation((0, 0, 0)) if False else frame_mat()
     # disc in the sb y-z plane
@@ -210,7 +233,7 @@ def wheel_obj(M, name, axle, r, axis_x=True, spokes=10, parent=None, wide=0.07, 
         a = i * math.pi * 2 / spokes; mb.rod(M['wood'], (0, 0, 0), (0, math.cos(a) * r * 0.94, math.sin(a) * r * 0.94), wide * 0.55, wide * 0.4, 5)
     for i in range(16):
         a = i * math.pi * 2 / 16; b = (i + 1) * math.pi * 2 / 16
-        mb.rod(M['red'], (0, math.cos(a) * r, math.sin(a) * r), (0, math.cos(b) * r, math.sin(b) * r), wide * 0.8, wide * 0.8, 5)
+        mb.rod(M[rim], (0, math.cos(a) * r, math.sin(a) * r), (0, math.cos(b) * r, math.sin(b) * r), wide * 0.8, wide * 0.8, 5)
         if tyre: mb.rod(M['black'], (0, math.cos(a) * (r + 0.02), math.sin(a) * (r + 0.02)), (0, math.cos(b) * (r + 0.02), math.sin(b) * (r + 0.02)), wide * 0.6, wide * 0.6, 4)
     objs = mb.finish(); o = bpy.data.objects.new(name + '_axle', None); bpy.context.scene.collection.objects.link(o); o.location = W(axle)
     for ob in objs: ob.parent = o
@@ -277,38 +300,38 @@ def build_train(ST, M):
         T['rods'].append((o, W(a).copy(), sy))
     T['drive_r'] = 0.7 * LS; T['crank'] = 0.18 * LS
     T['funnel'] = Vector(lc(2.45, 0, 4.1)); T['front0'] = W(lc(4.1, 0, 0)).x
-    for i in range(10):
+    for i in range(12):
         mb = MB('puff%d' % i); puff(mb, M, (0, 0, 0), 1.0); o = mb.finish()[0]; o.visible_shadow = False
         T['puffs'].append(o)
     T['hist'] = None
 
 # ----------------------------------------------------------------------------- station
 def station(mb, M):
-    px0, y0, y1 = PLAT; ph = 1.0
-    xm = px0 + 3.0 / 2 * 2; xw = px0 + 3.0                                           # platform back edge
-    mb.box(M['brick'], ((px0 + xw) / 2, (y0 + y1) / 2, ph / 2 - 0.05), (xw - px0, y1 - y0, ph - 0.1))
-    mb.box(M['woodpale'], ((px0 + xw) / 2, (y0 + y1) / 2, ph - 0.03), (xw - px0 + 0.1, y1 - y0 + 0.1, 0.08))
-    mb.box(M['cream'], (px0 + 0.1, (y0 + y1) / 2, ph + 0.01), (0.12, y1 - y0, 0.02))
-    # station hut (wood, red roof) on the platform, back part
-    hx, hy = xw - 1.2, y0 + 5.0
-    mb.box(M['barnred'], (hx, hy, ph + 1.3), (2.0, 5.0, 2.6)); prism_roof(mb, M['roofred'], hx - 1.0, hx + 1.0, hy - 2.5, hy + 2.5, ph + 2.6, ph + 3.5, ov=0.35, ridge='y')
-    for yy in (hy - 1.4, hy + 1.4): mb.box(M['cream'], (hx - 1.02, yy, ph + 1.5), (0.06, 0.9, 1.1)); mb.box(M['dark'], (hx - 1.05, yy, ph + 1.5), (0.04, 0.7, 0.9))
-    mb.box(M['dark'], (hx - 1.02, hy, ph + 1.1), (0.06, 0.9, 2.0))
-    mb.box(M['woodpale'], (hx - 1.0, hy + 3.3, ph + 0.35), (0.4, 1.8, 0.1)); mb.box(M['wood'], (hx - 1.0, hy + 3.3, ph + 0.7), (0.1, 1.8, 0.5))       # bench
-    for yy in (hy + 2.6, hy + 4.0): mb.box(M['wood'], (hx - 1.0, yy, ph + 0.15), (0.3, 0.08, 0.3))
-    for yy in (y0 + 1.0, y1 - 1.0):                                                                    # lamp posts
-        mb.rod(M['black'], (px0 + 0.5, yy, ph), (px0 + 0.5, yy, ph + 3.2), 0.05, 0.04, 6); mb.box(M['gold'], (px0 + 0.5, yy, ph + 3.35), (0.3, 0.3, 0.4)); mb.box(M['cream'], (px0 + 0.5, yy, ph + 3.35), (0.22, 0.22, 0.34))
-    for (yy, k) in ((y1 - 3.0, 0), (y1 - 3.8, 1)): crate(mb, M, (px0 + 1.3, yy, ph), (0.8, 0.6, 0.55 + 0.1 * k), 0.4)
-    barrel(mb, M, (px0 + 1.0, y1 - 1.8, ph))
-    for k in range(4):                                                                                  # luggage (trunks)
-        mb.box(M['leather'], (px0 + 1.0 + 0.2 * k, y0 + 2.2 + 0.0, ph + 0.15 + 0.3 * k), (0.8 - 0.1 * k, 0.5, 0.3))
+    """platform on the far side of the rail (x edge PLAT[0] toward the rail, extends 3 m away from it), blank sign board, lamp posts, bench, luggage, hut"""
+    px0, y0, y1 = PLAT; ph = 1.0; xw = px0 - 3.0
+    mb.box(M['brick'], ((px0 + xw) / 2, (y0 + y1) / 2, ph / 2 - 0.05), (px0 - xw, y1 - y0, ph - 0.1))
+    mb.box(M['woodpale'], ((px0 + xw) / 2, (y0 + y1) / 2, ph - 0.03), (px0 - xw + 0.1, y1 - y0 + 0.1, 0.08))
+    mb.box(M['cream'], (px0 - 0.1, (y0 + y1) / 2, ph + 0.01), (0.12, y1 - y0, 0.02))
+    hx, hy = xw + 1.2, y0 + 8.0
+    mb.box(M['plaster'], (hx, hy, ph + 1.3), (2.0, 6.0, 2.6)); LN_roof = prism_roof(mb, M['shingle'], hx - 1.0, hx + 1.0, hy - 3.0, hy + 3.0, ph + 2.6, ph + 3.4, ov=0.35, ridge='y')
+    for yy in (hy - 1.8, hy + 1.8): mb.box(M['cream'], (hx + 1.02, yy, ph + 1.5), (0.06, 0.9, 1.1)); mb.box(M['dark'], (hx + 1.05, yy, ph + 1.5), (0.04, 0.7, 0.9))
+    mb.box(M['dark'], (hx + 1.02, hy, ph + 1.1), (0.06, 0.9, 2.0))
+    mb.box(M['woodpale'], (px0 - 1.0, hy + 4.5 + 3.0, ph + 0.4), (0.4, 1.8, 0.1)); mb.box(M['wood'], (px0 - 1.2, hy + 7.5, ph + 0.75), (0.1, 1.8, 0.5))                       # bench
+    for yy in (hy + 6.8, hy + 8.2): mb.box(M['wood'], (px0 - 1.0, yy, ph + 0.15), (0.3, 0.08, 0.3))
+    for yy in (y0 + 1.5, y1 - 1.5):
+        mb.rod(M['black'], (px0 - 0.5, yy, ph), (px0 - 0.5, yy, ph + 3.2), 0.05, 0.04, 6); mb.box(M['gold'], (px0 - 0.5, yy, ph + 3.35), (0.3, 0.3, 0.4)); mb.box(M['cream'], (px0 - 0.5, yy, ph + 3.35), (0.22, 0.22, 0.34))
+    mb.rod(M['black'], (px0 - 0.8, y0 + 14.0, ph), (px0 - 0.8, y0 + 14.0, ph + 2.6), 0.05, 0.05, 6); mb.rod(M['black'], (px0 - 0.8, y0 + 18.0, ph), (px0 - 0.8, y0 + 18.0, ph + 2.6), 0.05, 0.05, 6)
+    mb.box(M['plaster'], (px0 - 0.8, y0 + 16.0, ph + 2.3), (0.12, 4.6, 1.0)); mb.box(M['barnred'], (px0 - 0.8, y0 + 16.0, ph + 2.3), (0.14, 4.3, 0.7))      # blank station board
+    for (yy, k) in ((y1 - 3.0, 0), (y1 - 3.8, 1)): crate(mb, M, (px0 - 1.3, yy, ph), (0.8, 0.6, 0.55 + 0.1 * k), 0.4)
+    barrel(mb, M, (px0 - 1.0, y1 - 1.8, ph))
+    for k in range(4): mb.box(M['leather'], (px0 - 1.0 - 0.2 * k, y0 + 2.2, ph + 0.15 + 0.3 * k), (0.8 - 0.1 * k, 0.5, 0.3))
 
 # ----------------------------------------------------------------------------- the whole location
 def build_line(ST, P):
-    sc = bpy.context.scene; M = palette(); ST['M'] = M
+    sc = bpy.context.scene; M = palette(); ST['M'] = M; M['glintm'] = mat_emit('glintm', '#fffbe8', 70.0)
     ground(hole=(PIT[0] - PIT_HW, PIT[1] - PIT_HL, PIT[0] + PIT_HW, PIT[1] + PIT_HL))
     ST['hill_mats'] = hills_ring(P)
-    kd = Wd(Vector((-0.4, 0.8, -0.4)).normalized()); ST['cloud_mat'] = clouds(kd, P.get('ncloud', 14), P.get('cloud_z', (40, 130)), P.get('cloud_scale', 0.5))
+    kd = Wd(Vector((-0.4, 0.8, -0.4)).normalized()); ST['cloud_mat'] = clouds(kd, 16, (80, 280), 0.7)
     # ----- road, ruts, rail
     ys = [float(i) for i in np.arange(-40, 150, 1.0)]
     mb = MB('roads')
@@ -322,22 +345,22 @@ def build_line(ST, P):
         for i in range(5): mb.ell(M['earth'], (xc(y0) + 3.4 + i * 0.4 + 0.0, y0 + i * 0.2, 0.15), (0.55, 0.45, 0.28), (8, 6)) if False else None
     mb.finish()
     # ----- trench (clipped by the TRENCH group) + pipe (PIPE group)
-    mtd = mat('trdark', '#2a1a16', '#3a2a22', 3, clip='TRENCH'); mte = mat('trearth', '#8c5233', '#b06c44', 6, contrast=1.3, wet=True, clip='TRENCH')
-    mpl = mat('leadclip', '#8c929c', '#b6bcc6', 3, rough=0.35, sheen=0.7, clip='PIPE'); mbd = mat('trwall', '#5a3a28', '#7a5036', 5, contrast=1.3, clip='TRENCH')
+    mtd = mat('trdark', '#4a2c1c', '#5e3a26', 3, clip='TRENCH'); mte = mat('trearth', '#8c5a38', '#b0744a', 6, contrast=1.3, wet=True, clip='TRENCH')
+    mpl = mat('leadclip', '#948d80', '#aaa396', 3, rough=0.5, sheen=0.05, clip='PIPE'); mbd = mat('trwall', '#6a4228', '#8a5a38', 5, contrast=1.3, clip='TRENCH')
     mb = MB('trench')
     for y0 in range(int(Y0), int(Y1) + 4, 2):
         xt = xc(y0 + 1) + 2.3
-        mb.box(mtd, (xt, y0 + 1, 0.0), (0.75, 2.0, 0.06)); mb.box(mbd, (xt - 0.36, y0 + 1, 0.1), (0.1, 2.0, 0.2)); mb.box(mbd, (xt + 0.36, y0 + 1, 0.1), (0.1, 2.0, 0.2))
-        mb.box(mte, (xt + 0.78, y0 + 1, 0.12), (0.55, 2.0, 0.24)); mb.box(mte, (xt - 0.62, y0 + 1, 0.08), (0.32, 2.0, 0.16))
+        mb.box(mtd, (xt, y0 + 1, -0.02), (1.1, 2.0, 0.08)); mb.box(mbd, (xt - 0.5, y0 + 1, 0.1), (0.14, 2.0, 0.3)); mb.box(mbd, (xt + 0.5, y0 + 1, 0.1), (0.14, 2.0, 0.3))
+        mb.box(mte, (xt + 0.98, y0 + 1, 0.15), (0.8, 2.0, 0.3)); mb.box(mte, (xt - 0.85, y0 + 1, 0.1), (0.5, 2.0, 0.2))
     mb.finish()
     mb = MB('pipe')
-    for y0 in range(int(Y0), int(Y1) + 4, 2): mb.rod(mpl, (xc(y0) + 2.3, y0 - 0.02, 0.12), (xc(y0 + 2) + 2.3, y0 + 2.02, 0.12), 0.09, 0.09, 10, smooth=True)
+    for y0 in range(int(Y0), int(Y1) + 4, 2): mb.rod(mpl, (xc(y0) + 2.3, y0 - 0.02, 0.08), (xc(y0 + 2) + 2.3, y0 + 2.02, 0.08), 0.1, 0.1, 10, smooth=True)
     mb.finish()
     ST['plough'] = None
-    mb = MB('plough'); mb.push(Matrix.Diagonal((1.35, 1.35, 1.35, 1))); plough(mb, M); mb.pop(); ob = mb.finish(); pr = bpy.data.objects.new('plough_root', None); sc.collection.objects.link(pr)
+    mb = MB('plough'); mb.push(Matrix.Diagonal((1.6, 1.6, 1.6, 1))); plough(mb, M); mb.pop(); ob = mb.finish(); pr = bpy.data.objects.new('plough_root', None); sc.collection.objects.link(pr)
     for o in ob: o.parent = pr
     ST['plough_root'] = pr
-    mb = MB('reel'); reel(mb, M, (0, 0, 0.7)); ob = mb.finish(); rr_ = bpy.data.objects.new('reel_root', None); sc.collection.objects.link(rr_)
+    mb = MB('reel'); reel(mb, M, (0, 0, 0.95), r=0.85, wide=0.9); ob = mb.finish(); rr_ = bpy.data.objects.new('reel_root', None); sc.collection.objects.link(rr_)
     for o in ob: o.parent = rr_
     mb = MB('reelcart'); mb.box(M['wood'], (0, 0, 0.12), (1.1, 1.3, 0.1)); mb.cyl(M['metal'], (0, 0, 0.3), 0.04, 1.2, 'y', 6)
     for sy in (-1, 1): mb.cyl(M['wood'], (0, sy * 0.6, 0.3), 0.3, 0.06, 'x', 14) if False else None
@@ -345,8 +368,8 @@ def build_line(ST, P):
     ST['reel_root'] = rr_
     # ----- poles / wires / ladders
     build_poles(ST, M); build_train(ST, M)
-    mb = MB('ladder0'); ladder(mb, M, (px(4.0) + 0.95, 2.9, 0.0), (px(4.0) + 0.38, 3.78, POLE_H - 0.15), 0.5, 15); ST['ladder'] = [mb.finish()]
-    mb = MB('ladder3'); ladder(mb, M, (px(31.0) + 0.9, 29.9, 0.0), (px(31.0) + 0.3, 30.8, POLE_H - 0.3), 0.5, 14); ST['ladder'].append(mb.finish())
+    mb = MB('ladder0'); ladder(mb, M, LAD0[0], LAD0[1], 0.5, 15); ST['ladder'] = [mb.finish()]
+    mb = MB('ladder3'); ladder(mb, M, (px(31.0) + 0.9, 29.9, 0.0), (px(31.0) + 0.2, 30.85, POLE_H - 0.4), 0.5, 14); ST['ladder'].append(mb.finish())
     # ----- work props along the line
     mb = MB('work')
     ladder(mb, M, (-3.0, 1.0, 0.08), (-3.2, 5.2, 0.1), 0.5, 10)
@@ -365,7 +388,8 @@ def build_line(ST, P):
     mb = MB('station'); station(mb, M); mb.finish()
     # ----- fences
     mb = MB('fences')
-    worm_fence(mb, M, [(xc(y) - 2.6, y) for y in (-20, 6, 20, 40, 62, 85, 110, 135)], seg=3.2)
+    worm_fence(mb, M, [(xc(y) - 2.6, y) for y in (46, 62, 85, 110, 135)], seg=3.2)
+    worm_fence(mb, M, [(xc(y) - 2.6, y) for y in (-60, -34, -20)], seg=3.2)
     worm_fence(mb, M, [(xc(y) + 7.5, y) for y in (-20, 6, 24, 46, 70, 100, 130)], seg=3.2)
     mb.finish()
     # ----- fields, stooks, hay
@@ -409,11 +433,11 @@ def build_line(ST, P):
                        (16, 110, 2.0), (-24, 100, 2.2), (30, 104, 2.2), (38, 6, 1.9), (26, -22, 2.0), (50, 40, 2.2), (60, 90, 2.4), (-60, 40, 2.2),
                        (-28, 120, 2.2), (20, 130, 2.3), (70, 20, 2.2), (-70, 90, 2.3), (40, -36, 2.3)]:
         oak(mb, M, (x, y, 0.0), s_, int(x * 7 + y))
-    for (yy, ss) in [(33, 1.6), (46, 1.8), (58, 1.7), (72, 1.8)]: oak(mb, M, (xc(yy) + 9.6, yy, 0.0), ss, int(yy * 3))
+    for (yy, ss) in [(33, 1.6), (46, 1.8), (95, 1.7), (110, 1.8)]: oak(mb, M, (xc(yy) + 9.6, yy, 0.0), ss, int(yy * 3))
     mb.finish()
     mb = MB('farm'); farmhouse(mb, M, (20.0, 86.0, 0.0), 0.08); barn(mb, M, (-12.0, 96.0, 0.0), -0.05); mb.finish()
     # ----- sun disc for DAY (hidden from the shade test) is not used: sky painted
-    pm = mat('puddle', '#1c2a78', None, rough=0.03, sheen=1.0); pm.node_tree.nodes['Principled BSDF'].inputs['Metallic'].default_value = 0.55
+    pm = mat('puddle', '#3a4468', None, rough=0.03, sheen=1.0); pm.node_tree.nodes['Principled BSDF'].inputs['Metallic'].default_value = 0.4
     mb = MB('puddles'); rp_ = rnd(88)
     for (x, y, rx, ry) in [(px(4.0) - 0.9, 3.4, 0.9, 0.6), (px(13.0) - 0.8, 12.4, 0.8, 0.5), (px(22.0) - 0.9, 21.6, 1.0, 0.6), (px(31.0) - 1.0, 30.4, 0.9, 0.7), (xc(8) - 0.2, 8.0, 1.4, 0.8), (xc(20) + 0.3, 20.0, 1.2, 0.7),
                            (xc(35) - 0.6, 34.0, 1.6, 0.9), (xc(47) + 0.5, 47.0, 1.4, 0.8), (xc(58) - 0.2, 59.0, 1.5, 0.8), (KEYCRATE[0] - 1.0, KEYCRATE[1] - 1.8, 1.0, 0.6), (WAGON[0] + 1.6, WAGON[1] - 1.0, 1.1, 0.7),
@@ -425,72 +449,71 @@ def build_line(ST, P):
 
 # ----------------------------------------------------------------------------- the cut-away pit (trench_cut)
 def build_pit(ST, M):
-    cx, cy = PIT; hw, hl, d = PIT_HW, PIT_HL, PIT_D
-    strata = mat('strata', '#4a2e22', '#6a4430', 4, zgrad=(-0.45, -0.1, '#c89a60'), contrast=1.4, wet=True)
-    strata2 = mat('strata2', '#c88a50', '#e0a868', 5, contrast=1.3, wet=True)
-    clay = mat('clay', '#9a8a98', '#b8a8b4', 5, contrast=1.2, wet=True)
-    gravel = mat('gravel', '#9a8f88', '#c8b8a8', 14, contrast=1.8, wet=True)
+    """cut-away section: a 7 m wide pit; its back wall (y = cy + hl, facing -y) is the cut FACE of damp brown soil strata (topsoil with roots, clay, sand, gravel and pebbles)
+    with the lead pipe lying in it along x, split open in the middle: peeled lead flaps, torn cream cloth wrapping and bright copper wire; the blue sparks leak down the face."""
+    cx, cy = PIT; hw, hl, d = PIT_HW, PIT_HL, PIT_D; fy = cy + hl; z0 = -0.72; R_ = 0.17
+    top = mat('strat_top', '#4a2c1c', '#6a4228', 5, contrast=1.5, rough=0.45, sheen=0.3, wet=True); clay = mat('strat_clay', '#a8683c', '#c8844c', 5, contrast=1.3, rough=0.5, sheen=0.25, wet=True)
+    sand = mat('strat_sand', '#c89c64', '#e0b878', 6, contrast=1.3, rough=0.55, sheen=0.2, wet=True); grav = mat('strat_grav', '#8a7664', '#b09c88', 14, contrast=1.9, rough=0.5, sheen=0.2, wet=True)
+    mud = mat('strat_mud', '#3a2418', '#52341f', 5, rough=0.35, sheen=0.4)
     mb = MB('pit')
-    # walls in 4 strata bands (z from top 0 down to -d)
-    bands = [(0.0, -0.25, strata), (-0.25, -0.55, strata2), (-0.55, -0.85, clay), (-0.85, -d, gravel)]
+    bands = [(0.0, -0.32, top), (-0.32, -0.85, clay), (-0.85, -1.25, sand), (-1.25, -d, grav)]
+    def wall(x0, x1, y_, facing, bnds=bands):
+        for (za, zb, m_) in bnds:
+            q = [(x0, y_, za), (x1, y_, za), (x1, y_, zb), (x0, y_, zb)]; mb.quad(m_, q if facing > 0 else q[::-1])
+    wall(cx - hw, cx + hw, fy, -1); wall(cx - hw, cx + hw, cy - hl, 1)
     for sg in (-1, 1):
-        x = cx + sg * hw
-        for (za, zb, m) in bands:
-            # slightly sloped walls
-            xi = x - sg * 0.12 * ((-zb) / d); xo = x - sg * 0.12 * ((-za) / d)
-            q = [(xo, cy - hl, za), (xo, cy + hl, za), (xi, cy + hl, zb), (xi, cy - hl, zb)]
-            mb.quad(m, q if sg > 0 else q[::-1])
-    for sy in (-1, 1):
-        yy = cy + sy * hl
-        for (za, zb, m) in bands:
-            q = [(cx - hw, yy, za), (cx + hw, yy, za), (cx + hw - 0.12, yy, zb), (cx - hw + 0.12, yy, zb)]
-            mb.quad(m, q if sy < 0 else q[::-1])
-    mb.quad(M['trdark'] if False else gravel, [(cx - hw + 0.12, cy - hl, -d), (cx + hw - 0.12, cy - hl, -d), (cx + hw - 0.12, cy + hl, -d), (cx - hw + 0.12, cy + hl, -d)][::-1])
-    # spoil heaps along the lip, root stubs, a plank across
+        for (za, zb, m_) in bands:
+            q = [(cx + sg * hw, cy - hl, za), (cx + sg * hw, fy, za), (cx + sg * hw, fy, zb), (cx + sg * hw, cy - hl, zb)]; mb.quad(m_, q if sg < 0 else q[::-1])
+    mb.quad(mud, [(cx - hw, cy - hl, -d), (cx + hw, cy - hl, -d), (cx + hw, fy, -d), (cx - hw, fy, -d)][::-1])
     rp = rnd(61)
+    for i in range(70):                                                                    # pebbles and roots on the face
+        mb.ell(M['dark'] if rp.random() < 0.3 else grav, (cx + rp.uniform(-hw, hw), fy - 0.03, rp.uniform(-d + 0.05, -0.05)), (rp.uniform(0.03, 0.09), 0.03, rp.uniform(0.02, 0.06)), (6, 4))
+    for i in range(14):
+        xx = cx + rp.uniform(-hw, hw); mb.rod(M['trunk'], (xx, fy - 0.02, 0.0), (xx + rp.uniform(-0.15, 0.15), fy - 0.03, -rp.uniform(0.2, 0.7)), 0.018, 0.006, 5)
     for sg in (-1, 1):
-        for i in range(10): mb.ell(M['earth'], (cx + sg * (hw + 0.35 + rp.uniform(0, 0.4)), cy - hl + i * 1.45 + rp.uniform(-0.3, 0.3), 0.1), (0.45, 0.6, 0.25), (8, 6))
-    mb.box(M['woodpale'], (cx, cy - 4.8, 0.05), (hw * 2 + 0.9, 0.3, 0.06)); mb.rod(M['wood'], (cx - hw - 0.3, cy + 5.6, 0.0), (cx - hw + 0.4, cy + 5.8, -0.05), 0.03, 0.03, 6)
+        for i in range(9): mb.ell(M['earth'], (cx + sg * (hw + 0.3 + rp.uniform(0, 0.4)), cy - hl + i * 0.3 + rp.uniform(-0.1, 0.1), 0.1), (0.4, 0.3, 0.2), (8, 6))
+    for i in range(12): mb.ell(M['earth'], (cx - hw + i * 0.62 + rp.uniform(-0.2, 0.2), cy - hl - 0.3 + rp.uniform(-0.1, 0.1), 0.1), (0.35, 0.3, 0.18), (8, 6))
+    dm = mat('damp', '#4a2e1c', '#5e3c26', 6, rough=0.3, sheen=0.5)
+    for i in range(6): mb.ell(dm, (cx + rp.uniform(-1.4, 1.4), fy - 0.045, z0 + rp.uniform(-0.55, 0.15)), (rp.uniform(0.15, 0.35), 0.012, rp.uniform(0.08, 0.16)), (10, 6))
     mb.finish()
-    # pipe on the floor, split open for 3 m in the middle; wire with torn cloth wrapping
-    mb = MB('pitpipe'); zf = -d + 0.12; w0, w1 = cy - 1.6, cy + 1.6
-    mb.rod(M['lead'], (cx, cy - hl + 0.1, zf), (cx, w0, zf), 0.1, 0.1, 12, smooth=True); mb.rod(M['lead'], (cx, w1, zf), (cx, cy + hl - 0.1, zf), 0.1, 0.1, 12, smooth=True)
-    # split section: two lead half-shell flaps curled outward + the lower half trough
-    n = 14
+    # pipe along x, embedded (axis y = fy - 0.17), split between x0..x1
+    ya = fy - R_ * 0.8; x0, x1 = cx - 1.3, cx + 1.3
+    mb = MB('pitpipe')
+    mb.rod(M['lead'], (cx - hw, ya, z0), (x0, ya, z0), R_, R_, 14, smooth=True); mb.rod(M['lead'], (x1, ya, z0), (cx + hw, ya, z0), R_, R_, 14, smooth=True)
+    n = 12
     for i in range(n):
-        ya = w0 + (w1 - w0) * i / n; yb = w0 + (w1 - w0) * (i + 1) / n
-        for k in range(6):
-            a0 = math.pi + k * math.pi / 6 * 1.0; a1 = a0 + math.pi / 6                     # lower half circle
-            mb.quad(M['lead'], [(cx + 0.1 * math.cos(a0), ya, zf + 0.1 * math.sin(a0)), (cx + 0.1 * math.cos(a0), yb, zf + 0.1 * math.sin(a0)), (cx + 0.1 * math.cos(a1), yb, zf + 0.1 * math.sin(a1)), (cx + 0.1 * math.cos(a1), ya, zf + 0.1 * math.sin(a1))])
-        for sg in (-1, 1):                                                                  # the peeled upper flaps
-            for k in range(3):
-                a0 = k * 0.35; a1 = a0 + 0.35; r_ = 0.1 + 0.02 * k
-                mb.quad(M['lead'], [(cx + sg * (0.1 + 0.07 * math.sin(a0 * 2)), ya, zf + 0.02 + 0.09 * math.cos(a0 * 1.6) * 0.5), (cx + sg * (0.1 + 0.07 * math.sin(a0 * 2)), yb, zf + 0.02 + 0.09 * math.cos(a0 * 1.6) * 0.5),
-                                     (cx + sg * (0.1 + 0.07 * math.sin(a1 * 2)), yb, zf + 0.02 + 0.09 * math.cos(a1 * 1.6) * 0.5), (cx + sg * (0.1 + 0.07 * math.sin(a1 * 2)), ya, zf + 0.02 + 0.09 * math.cos(a1 * 1.6) * 0.5)])
+        xa = x0 + (x1 - x0) * i / n; xb = x0 + (x1 - x0) * (i + 1) / n
+        for k in range(14):                                                                  # back shell: angles 55..305 (measured from the camera side -y, through +z)
+            t0 = math.radians(55 + k * (250 / 14)); t1 = math.radians(55 + (k + 1) * (250 / 14))
+            p = lambda t: (-math.sin(t) * 0 + 0, -math.cos(t), math.sin(t))
+            def pt(x_, t): return (x_, ya - R_ * math.cos(t), z0 + R_ * math.sin(t))
+            mb.quad(M['lead'], [pt(xa, t0), pt(xb, t0), pt(xb, t1), pt(xa, t1)])
+        for sgn in (1, -1):                                                                  # the peeled flaps: flat lead lips flaring out toward the camera (open mouth)
+            t_e = math.radians(55) * sgn; e0 = (ya - R_ * math.cos(t_e), z0 + R_ * math.sin(t_e)); d_ = (-0.82, 0.57 * sgn)
+            pa = [(e0[0] + d_[0] * 0.30 * u, e0[1] + d_[1] * 0.30 * u + (0.04 * u * u if sgn > 0 else -0.04 * u * u)) for u in (0.0, 0.5, 1.0)]
+            for k_ in range(2):
+                mb.quad(M['lead'], [(xa, pa[k_][0], pa[k_][1]), (xb, pa[k_][0], pa[k_][1]), (xb, pa[k_ + 1][0], pa[k_ + 1][1]), (xa, pa[k_ + 1][0], pa[k_ + 1][1])])
     mb.finish()
-    cloth = mat('cloth', '#d8c8a0', '#b8a070', 10, contrast=1.3, wet=True); tar = mat('tarcloth', '#3a2a22', '#5a4636', 10)
-    mb = MB('pitwire')
-    zw = zf + 0.04
-    mb.rod(M['wiremat'], (cx, cy - hl + 0.2, zf), (cx, w0, zw), 0.025, 0.025, 6)
-    mb.rod(M['copper'], (cx - 0.01, w0, zw), (cx + 0.01, w1, zw), 0.035, 0.035, 8)                 # bare copper in the opened section
-    mb.rod(M['wiremat'], (cx, w1, zw), (cx, cy + hl - 0.2, zf), 0.025, 0.025, 6)
-    rcl = rnd(62)
-    for i in range(10):                                                                     # cloth wrapping: spiral wraps in the intact parts + torn ragged strips hanging
-        yy = w0 - 0.15 - i * 0.16
-        mb.rod(cloth if i % 2 else tar, (cx - 0.05, yy, zw), (cx + 0.05, yy + 0.1, zw + 0.02), 0.05, 0.05, 8)
-    for i in range(10):
-        yy = w1 + 0.15 + i * 0.16
-        mb.rod(cloth if i % 2 else tar, (cx - 0.05, yy, zw), (cx + 0.05, yy + 0.1, zw + 0.02), 0.05, 0.05, 8)
-    for i in range(9):                                                                      # torn strips
-        yy = rcl.uniform(w0 - 0.4, w1 + 0.4); sg = rcl.choice((-1, 1)); ln = rcl.uniform(0.25, 0.6)
-        mb.quad(cloth, [(cx, yy, zw + 0.04), (cx, yy + 0.07, zw + 0.04), (cx + sg * ln, yy + rcl.uniform(-0.1, 0.1) + 0.12, zw - 0.0), (cx + sg * ln * 0.9, yy - 0.02, zw - 0.01)])
+    cloth = mat('cloth', '#f0e2bc', '#d8c490', 10, contrast=1.3); tar = mat('tarcloth', '#8a6a44', '#a88858', 10)
+    mb = MB('pitwire'); rcl = rnd(62); yw = ya - 0.02
+    mb.rod(M['copper'], (cx - hw, yw, z0), (cx + hw, yw, z0), 0.05, 0.05, 10, smooth=True)                         # copper wire, bright
+    for i in range(14):                                                                     # intact cloth wrapping outside the split (inside the lead on the left / right the wire shows only where torn)
+        xx = x0 - 0.1 - i * 0.12; mb.rod(cloth if i % 2 else tar, (xx, yw - 0.0, z0 - 0.06), (xx + 0.08, yw, z0 + 0.06), 0.085, 0.085, 8)
+    for i in range(14):
+        xx = x1 + 0.1 + i * 0.12; mb.rod(cloth if i % 2 else tar, (xx, yw, z0 - 0.06), (xx + 0.08, yw, z0 + 0.06), 0.085, 0.085, 8)
+    for i in range(7):                                                                      # remnants of the wrapping inside the split, ragged
+        xx = x0 + 0.25 + i * 0.33; mb.rod(cloth, (xx, yw, z0 + 0.0), (xx + 0.12, yw, z0 + 0.0), 0.09, 0.09, 8) if i % 2 == 0 else None
+    for i in range(16):                                                                     # torn strips hanging toward the camera and down
+        xx = rcl.uniform(x0 - 0.3, x1 + 0.3); ln = rcl.uniform(0.25, 0.65); sg = rcl.choice((-1, 1)) * 0.12
+        mb.quad(cloth, [(xx, yw - 0.1, z0 + 0.08), (xx + 0.2, yw - 0.1, z0 + 0.08), (xx + 0.1 + sg, yw - 0.28 - ln * 0.3, z0 + 0.08 - ln), (xx + sg * 1.4, yw - 0.26 - ln * 0.3, z0 + 0.08 - ln * 0.9)])
     mb.finish()
-    mb = MB('pitdamp'); dm = mat('damp', '#2a1c1a', '#3e2a26', 6)
-    for i in range(7): mb.ell(dm, (cx + rcl.uniform(-0.6, 0.6), cy + rcl.uniform(-1.8, 1.8), -d + 0.02), (rcl.uniform(0.2, 0.45), rcl.uniform(0.3, 0.6), 0.01), (10, 6))
-    mb.finish()
-    la = bpy.data.lights.new('pitsky', 'AREA'); la.shape = 'RECTANGLE'; la.size = 3.2 * SC; la.size_y = 9.0 * SC; la.color = (0.55, 0.52, 1.0); la.energy = 420.0 * SC * SC
-    lo = bpy.data.objects.new('pitsky', la); lo.location = W((cx, cy, 2.2)); bpy.context.scene.collection.objects.link(lo); lo.visible_camera = False
-    return dict(c=(cx, cy), hw=hw, hl=hl, d=d, zf=zf, w=(w0, w1))
+    la = bpy.data.lights.new('pitsky', 'AREA'); la.shape = 'RECTANGLE'; la.size = 7.0 * SC; la.size_y = 3.0 * SC; la.color = (0.78, 0.68, 0.95); la.energy = 300.0 * SC * SC
+    lo = bpy.data.objects.new('pitsky', la); lo.location = W((cx, cy - 0.4, 1.6)); bpy.context.scene.collection.objects.link(lo); lo.visible_camera = False; la.use_shadow = False
+    lb = bpy.data.lights.new('pitspark', 'POINT'); lb.color = (0.4, 0.62, 1.0); lb.energy = 22.0 * SC * SC; lb.shadow_soft_size = 0.12 * SC
+    ob = bpy.data.objects.new('pitspark', lb); ob.location = W((cx, fy - 0.5, z0 - 0.2)); bpy.context.scene.collection.objects.link(ob)
+    lw = bpy.data.lights.new('pitwarm', 'POINT'); lw.color = (1.0, 0.72, 0.42); lw.energy = 16.0 * SC * SC; lw.shadow_soft_size = 0.2 * SC; lw.use_shadow = False
+    ow = bpy.data.objects.new('pitwarm', lw); ow.location = W((cx, fy - 0.8, z0 + 0.35)); bpy.context.scene.collection.objects.link(ow)
+    return dict(c=(cx, cy), hw=hw, hl=hl, d=d, face_y=fy, z0=z0, w=(x0, x1))
 
 # ----------------------------------------------------------------------------- foreground dressing around a camera
 def fg_dress(ST, M, cam, look, items, seed=31, ngrass=260):
@@ -514,8 +537,17 @@ def fg_dress(ST, M, cam, look, items, seed=31, ngrass=260):
         elif kind == 'tall':
             for i in range(9):
                 q = p + f * rr.uniform(-0.3, 0.3) + r * rr.uniform(-0.35, 0.35); grass_clump(mb, M, (q.x, q.y, 0.0), rr, rr.uniform(1.0, 1.7))
+        elif kind == 'blades':
+            for (br, bf, bh) in ex[0]:
+                q = c + f * bf + r * br; grass_clump_one(mb, M, (q.x, q.y, 0.0), rr, bh)
         elif kind == 'grass':
             for i in range(ex[0] if ex else 120):
-                q = p + f * rr.uniform(-1.5, 3.5) + r * rr.uniform(-3.2, 3.2)
+                lat = rr.uniform(0.9, 3.2) * rr.choice((-1, 1)); q = p + f * rr.uniform(-1.5, 3.5) + r * lat
                 grass_clump(mb, M, (q.x, q.y, 0.0), rr, rr.uniform(0.45, 0.95)) if rr.random() < 0.6 else wheat_clump(mb, M, (q.x, q.y, 0.0), rr, rr.uniform(0.6, 1.0))
     return mb.finish()
+
+def grass_clump_one(mb, M, c, rr, h):
+    """a single tall blade (foreground accent)"""
+    x, y, z = c; a = rr.random() * 6.283; d = Vector((math.cos(a), math.sin(a), 0)); sd = Vector((-d.y, d.x, 0)) * 0.03
+    p0 = Vector((x, y, z)); p1 = p0 + d * 0.12 + Vector((0, 0, h * 0.6)); p2 = p0 + d * 0.35 + Vector((0, 0, h))
+    mb.quad(M['verge'], [p0 - sd * 1.4, p0 + sd * 1.4, p1 + sd * 0.8, p1 - sd * 0.8]); mb.tri(M['verge'], [p1 - sd * 0.8, p1 + sd * 0.8, p2])

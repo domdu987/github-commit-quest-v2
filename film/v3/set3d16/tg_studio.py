@@ -7,12 +7,12 @@ import telegraph_tex as TX
 
 WIN_X, WIN_W, WIN_Z0, WIN_Z1 = -0.8, 2.0, 0.9, 4.15
 BY = 7.0
-EASEL = (1.3, 3.7)
-TABLE = (-2.5, 3.1)
-STOOL = (-1.3, 2.4)
+EASEL = (1.0, 3.7)
+TABLE = (-1.5, 3.2)
+STOOL = (-0.9, 2.0)
 DOOR_Y = 3.1
-MARKS = dict(morse_easel=(0.25, 3.3, 0.0), morse_stool=(STOOL[0], STOOL[1], 0.0), morse_window=(-0.8, 6.1, 0.0), messenger_door=(3.2, DOOR_Y, 0.0), morse_door=(1.6, 2.6, 0.0),
-             palette_floor=(0.6, 2.7, 0.0))
+MARKS = dict(morse_easel=(-0.1, 3.1, 0.0), morse_stool=(STOOL[0], STOOL[1], 0.0), morse_window=(-0.8, 6.1, 0.0), messenger_door=(3.5, 3.7, 0.0), morse_door=(1.3, 2.0, 0.0),
+             palette_floor=(0.5, 2.5, 0.0))
 SEAT = dict(morse_stool=0.56)
 FILL_W = 5200.0
 
@@ -20,7 +20,7 @@ def mats():
     M = palette()
     M['plaster2'] = mat('plaster2', '#f4e6c4', '#e6d2a6', 2.2, contrast=0.8)
     M['wainscot'] = mat('wainscot', '#8a5a34', '#a8703e', 6, aniso=(1, 0.2, 1), contrast=1.5, rough=0.5, sheen=0.3)
-    M['floorw'] = mat('floorw', '#b07a3a', '#d6a05a', 7, aniso=(1.3, 0.12, 1), contrast=1.6, rough=0.4, sheen=0.35)
+    M['floorw'] = mat('floorw', '#b07a3a', '#c8924a', 10, contrast=1.1, rough=0.45, sheen=0.3, wave=(40, '#8e5e2c'))
     M['rug'] = mat('rug', '#8c2a2a', '#b04838', 9, contrast=1.3)
     M['rug2'] = mat('rug2', '#2c4a7a', '#4a6a9a', 9)
     M['canvas'] = mat('canvas', '#f2ead6', '#e0d4b4', 8)
@@ -29,6 +29,8 @@ def mats():
     M['brickst'] = mat('brickst', '#b25a3c', '#cf7a50', 9, aniso=(1, 1, 0.6), contrast=1.3)
     M['plasterst'] = mat('plasterst', '#e8d4a8', '#d8bc88', 3)
     M['road2'] = mat('road2', '#9a6a44', '#b88a5a', 3, contrast=1.3)
+    M['brickm'] = mat('brickm', '#b88a82', '#c8a094', 9, contrast=1.2); M['platm'] = mat('platm', '#d0bcae', '#d8c8b8', 3); M['slatem'] = mat('slatem', '#9a96ae', '#aaa6c0', 8)
+    M['brickf'] = mat('brickf', '#b0a0b8', '#bcb0c4', 9); M['platf'] = mat('platf', '#c4bcd0', '#ccc4d8', 3); M['slatef'] = mat('slatef', '#a8a6c4', '#b4b2d0', 8)
     for n, c in (('jr', '#c83a2c'), ('jb', '#2c5aa8'), ('jy', '#e8b82c'), ('jg', '#3a8a48'), ('jo', '#d8782c'), ('jw', '#f0e8d8'), ('jk', '#2a2428')):
         M[n] = mat(n, c, None, 4, rough=0.15, sheen=0.9, emit=c, emit_k=0.15)
     return M
@@ -49,42 +51,30 @@ def wall_with_window(mb, M):
     mb.rod(M['gold'], (WIN_X - 1.6, BY - 0.35, 4.3), (WIN_X + 1.6, BY - 0.35, 4.3), 0.03, 0.03, 6)
 
 def outside(ST, M):
-    """a long road + rooftops below the window (z -9 at street level) + far fields"""
+    """below the window: a long road running to the low horizon between a few rooftops, then fields; far houses fade into the haze (aerial perspective)"""
     z0 = -9.0; LN.ground(z=z0)
     mb = MB('street'); rr = rnd(41); xr = WIN_X
-    for y in np.arange(BY + 0.4, 260, 1.5): pass
-    ys = [float(i) for i in np.arange(BY + 1.0, 300, 2.0)]
-    prev = None
+    ys = [float(i) for i in np.arange(BY + 1.0, 420, 2.0)]; prev = None
     for y in ys:
-        w = 5.5
-        cur = ((xr - w / 2, y), (xr + w / 2, y))
+        w = 5.5 + 0.0 * y; cur = ((xr - w / 2, y), (xr + w / 2, y))
         if prev: mb.quad(M['road2'], [(prev[0][0], prev[0][1], z0 + 0.02), (prev[1][0], prev[1][1], z0 + 0.02), (cur[1][0], cur[1][1], z0 + 0.02), (cur[0][0], cur[0][1], z0 + 0.02)][::-1])
         prev = cur
     mb.finish()
     mb = MB('rooftops')
+    def house(xc_, y, wid, d, h, zone):
+        wallm = M[('brickst', 'brickm', 'brickf')[zone]] if rr.random() < 0.5 else M[('plasterst', 'platm', 'platf')[zone]]
+        mb.box(wallm, (xc_, y + d / 2, z0 + h / 2), (wid, d, h)); LN.prism_roof(mb, M[('slate', 'slatem', 'slatef')[zone]], xc_ - wid / 2, xc_ + wid / 2, y, y + d, z0 + h, z0 + h + rr.uniform(1.6, 3.0), ov=0.3, ridge='y' if rr.random() < 0.5 else 'x')
+        if zone == 0 and rr.random() < 0.8: mb.box(M['brick'], (xc_ + rr.uniform(-1, 1), y + d * rr.uniform(0.3, 0.7), z0 + h + 1.6), (0.7, 0.7, 2.0))
     for side in (-1, 1):
         y = BY + 2.5
-        while y < 190:
-            d = rr.uniform(6.0, 11.0); wid = rr.uniform(5.0, 9.0); h = rr.uniform(6.0, 10.5)
-            xc_ = xr + side * (3.4 + wid / 2 + rr.uniform(0, 0.4))
-            wallm = M[rr.choice(('brickst', 'plasterst', 'plasterst', 'brickst'))]
-            mb.box(wallm, (xc_, y + d / 2, z0 + h / 2), (wid, d, h))
-            roof = M[rr.choice(('slate', 'roofred', 'slate'))]
-            LN.prism_roof(mb, roof, xc_ - wid / 2, xc_ + wid / 2, y, y + d, z0 + h, z0 + h + rr.uniform(1.6, 3.0), ov=0.3, ridge='y' if rr.random() < 0.5 else 'x')
-            if rr.random() < 0.8: mb.box(M['brick'], (xc_ + rr.uniform(-1, 1), y + d * rr.uniform(0.3, 0.7), z0 + h + 1.6), (0.7, 0.7, 2.0))
-            for k in range(3):
-                for zz in (z0 + h * 0.3, z0 + h * 0.65):
-                    ww = xc_ - side * wid / 2 + 0.0
-                    mb.box(M['dark'], (xc_ - side * (wid / 2 + 0.03), y + d * (0.2 + 0.3 * k), zz), (0.06, 0.8, 1.1))
-            # second row behind
-            y += d + rr.uniform(0.0, 1.2)
-        for j in range(30):
-            y = rr.uniform(20, 280); off = rr.uniform(12, 70) * side; h = rr.uniform(5.0, 14.0); wid = rr.uniform(6, 12); d = rr.uniform(6, 14)
-            mb.box(M[rr.choice(('brickst', 'plasterst'))], (xr + off, y, z0 + h / 2), (wid, d, h))
-            LN.prism_roof(mb, M[rr.choice(('slate', 'roofred'))], xr + off - wid / 2, xr + off + wid / 2, y - d / 2, y + d / 2, z0 + h, z0 + h + 2.5, ov=0.3)
+        while y < 70:
+            d = rr.uniform(6.0, 10.0); wid = rr.uniform(5.0, 8.0); h = rr.uniform(6.0, 10.0); zone = 0 if y < 24 else 1
+            house(xr + side * (3.4 + wid / 2 + rr.uniform(0, 0.4)), y, wid, d, h, zone); y += d + rr.uniform(0.5, 2.5)
+        for j in range(8):
+            y = rr.uniform(60, 220); off = rr.uniform(22, 90) * side; house(xr + off, y, rr.uniform(6, 12), rr.uniform(6, 12), rr.uniform(5, 10), 2)
     mb.finish()
     mb = MB('trees_out'); rt = rnd(51)
-    for (x, y, s_) in [(-30, 120, 2.2), (34, 150, 2.4), (-60, 200, 2.6), (58, 230, 2.6), (0, 290, 2.8)]: LN.oak(mb, M, (x, y, z0), s_, int(x + y))
+    for (x, y, s_) in [(-30, 110, 2.2), (34, 140, 2.4), (-60, 200, 2.6), (58, 230, 2.6), (0, 300, 2.8), (-12, 90, 2.0), (16, 100, 2.0)]: LN.oak(mb, M, (x, y, z0), s_, int(x + y))
     mb.finish()
 
 def easel_set(mb, M, p):
@@ -111,7 +101,7 @@ def room(ST, M):
     dw, dh = 1.15, 2.5
     mb.box(M['plaster2'], (x1 + 0.15, (y0 + DOOR_Y - dw / 2) / 2, h / 2), (0.3, DOOR_Y - dw / 2 - y0, h)); mb.box(M['plaster2'], (x1 + 0.15, (y1 + DOOR_Y + dw / 2) / 2, h / 2), (0.3, y1 - DOOR_Y - dw / 2, h))
     mb.box(M['plaster2'], (x1 + 0.15, DOOR_Y, (dh + h) / 2), (0.3, dw, h - dh))
-    mb.box(M['dark'], (x1 + 0.4, DOOR_Y, dh / 2), (0.1, dw, dh))                                                     # dark corridor behind the door
+    mb.box(mat_emit('corr', '#ffd8a0', 1.6), (x1 + 0.4, DOOR_Y, dh / 2), (0.1, dw, dh))                                  # lit corridor behind the door
     for sy in (-1, 1): mb.box(M['cream'], (x1 - 0.06, DOOR_Y + sy * (dw / 2 + 0.05), dh / 2), (0.1, 0.12, dh + 0.1))
     mb.box(M['cream'], (x1 - 0.06, DOOR_Y, dh + 0.05), (0.1, dw + 0.3, 0.12))
     wall_with_window(mb, M)
@@ -149,6 +139,24 @@ def props(ST, M):
         a = 2 * math.pi * i / 32; b = 2 * math.pi * (i + 1) / 32; ex, ez = 0.21, 0.27
         mb.rod(M['frame'], (ox + math.cos(a) * ex, oy - 0.03, oz + math.sin(a) * ez), (ox + math.cos(b) * ex, oy - 0.03, oz + math.sin(b) * ez), 0.022, 0.022, 5)
     mb.rod(M['wood'], (ox, oy + 0.1, 0.96), (ox, oy + 0.02, oz + 0.1), 0.02, 0.02, 5)
+    # letter + wax seal on the side table, drape over a chair, a chair, a bookshelf, more frames and canvases against the back wall
+    mb.box(M['paper'], (tx - 0.35, ty - 0.2, 0.935), (0.22, 0.15, 0.008), rz=0.35); mb.ell(M['red'], (tx - 0.3, ty - 0.2, 0.945), (0.024, 0.024, 0.01), (8, 6))
+    cx_, cy_ = 2.3, 5.4; mb.box(M['leather'], (cx_, cy_, 0.5), (0.55, 0.5, 0.07)); mb.box(M['walnut'], (cx_, cy_ + 0.25, 0.9), (0.55, 0.06, 0.8)); mb.box(M['drape'], (cx_, cy_ + 0.2, 0.75), (0.6, 0.12, 0.7), rx=-0.1)
+    for dx in (-0.25, 0.25):
+        for dy in (-0.2, 0.2): mb.rod(M['walnut'], (cx_ + dx, cy_ + dy, 0.0), (cx_ + dx, cy_ + dy, 0.46), 0.03, 0.025, 5)
+    for k in range(5): mb.box(M['canvas'], (-3.3 + 0.12 * k, 6.75, 0.55 + 0.02 * k), (0.9 - 0.04 * k, 0.04, 1.1 - 0.05 * k), ry=0.0 + 0.0)
+    mb.box(M['frame'], (-3.0, 6.9, 2.7), (1.0, 0.07, 1.3)); mb.box(M['paintgrn'], (-3.0, 6.86, 2.7), (0.86, 0.04, 1.16)); mb.box(M['frame'], (2.6, 6.9, 2.9), (0.8, 0.07, 1.0)); mb.box(M['paintsky'], (2.6, 6.86, 2.9), (0.66, 0.04, 0.86))
+    mb.box(M['frame'], (1.2, 6.9, 3.4), (0.6, 0.07, 0.6)); mb.ell(M['paintdk'], (1.2, 6.86, 3.4), (0.22, 0.02, 0.26), (8, 6))
+    for k in range(4): mb.box(M['woodpale'], (3.7, 6.3, 0.35 + 0.55 * k), (0.4, 1.4, 0.05)); mb.box(M['canvas'], (3.7, 6.3, 0.5 + 0.55 * k), (0.2, 1.1, 0.25))
+    # coil + horseshoe magnet on the window sill (shot 7)
+    sx_, sy_, sz_ = WIN_X + 0.5, BY - 0.25, WIN_Z0 + 0.05
+    mb.cyl(M['copper'], (sx_, sy_, sz_ + 0.13), 0.13, 0.26, 'z', 18, True); mb.cyl(M['brass'], (sx_, sy_, sz_ + 0.27), 0.14, 0.02, 'z', 18); mb.cyl(M['brass'], (sx_, sy_, sz_ + 0.01), 0.14, 0.02, 'z', 18)
+    mx_ = WIN_X - 0.1
+    for sg in (-1, 1): mb.rod(M['red'], (mx_ + sg * 0.1, sy_, sz_ + 0.03), (mx_ + sg * 0.1, sy_, sz_ + 0.3), 0.035, 0.035, 8); mb.box(M['metal'], (mx_ + sg * 0.1, sy_, sz_ + 0.3), (0.07, 0.07, 0.03))
+    for i in range(10):
+        a0 = math.pi * i / 10; a1 = math.pi * (i + 1) / 10
+        mb.rod(M['red'], (mx_ + 0.1 * math.cos(a0 + 0.0), sy_, sz_ + 0.03 - 0.1 * math.sin(a0)), (mx_ + 0.1 * math.cos(a1), sy_, sz_ + 0.03 - 0.1 * math.sin(a1)), 0.035, 0.035, 8) if False else None
+    mb.box(M['red'], (mx_, sy_, sz_ + 0.02), (0.24, 0.07, 0.05))
     # stool
     sx_, sy_ = STOOL; mb.cyl(M['wood'], (sx_, sy_, 0.56), 0.27, 0.05, 'z', 16)
     for k in range(3):
@@ -221,7 +229,7 @@ def set_palette(on, frame=None):
 
 def apply_state(ST, st):
     import telegraph as TG
-    TG._show(ST['palette'], bool(st.get('palette', False))); set_door(st.get('door', 0.0))
+    TG._show(ST['palette'], bool(st.get('palette', False))); set_door(st.get('door', 0.0)); set_spark(st.get('spark', 0.0))
 
 def set_door(k, frame=None):
     """door slab opening 0..1 (0 closed, 1 about 95 degrees into the corridor)"""
@@ -245,3 +253,15 @@ def fg_dress(ST, M, cam, look, items, seed=5):
             mb.cyl(M['glassjar'], (x, y, 0.1), 0.08, 0.2, 'z', 10, True)
             for k in range(5): mb.rod(M['woodpale'], (x, y, 0.05), (x + rr.uniform(-0.06, 0.06), y + rr.uniform(-0.05, 0.05), 0.42), 0.01, 0.01, 5)
     return mb.finish()
+
+def set_spark(k, frame=None):
+    """tiny blue spark between the magnet and the coil on the window sill (shot 7): k 0..1 size, 0 hides it"""
+    import telegraph as TG
+    if 'spark' not in TG.STATE:
+        core = TG._emit_mat('sparkcore', '#c8e8ff', 30.0); halo = TG._glow_mat('sparkhalo', '#4a8cff', 7.0); sx_, sy_, sz_ = WIN_X + 0.2, BY - 0.25, WIN_Z0 + 0.2; objs = []
+        for m_, r in ((core, 0.025), (halo, 0.09)):
+            mb = MB('spk_win'); mb.T = Matrix.Identity(4); mb.ell(m_, (0, 0, 0), (r * SC,) * 3, (10, 6)); o = mb.finish()[0]; o.location = W((sx_, sy_ - 0.03, sz_)); o.visible_shadow = False; objs.append(o)
+        TG.STATE['spark'] = objs
+    for o in TG.STATE['spark']:
+        TG._show(o, k > 0, frame); o.scale = (max(k, 0.01),) * 3
+        if frame is not None: TG._key(o, 'scale', frame)

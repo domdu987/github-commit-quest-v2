@@ -164,21 +164,21 @@ def palette():
     d['wood'] = mat('wood', '#78461f', '#9a6230', 6, aniso=(1, 1, 0.3), contrast=1.5, wet=True)
     d['woodpale'] = mat('woodpale', '#c8883c', '#e0a856', 8, aniso=(0.4, 1, 1), contrast=1.4, wet=True)
     d['walnut'] = mat('walnut', '#6a3a1c', '#8e5430', 7, aniso=(1, 0.3, 0.3), contrast=1.6, rough=0.45, sheen=0.4)
-    d['glass'] = mat('glass', '#2a9a68', '#5fd09e', 4, rough=0.1, sheen=1.0, emit='#35b880', emit_k=0.5)
+    d['glass'] = glass_mat()
     d['glassjar'] = mat('glassjar', '#7ac4a8', '#a6e0c8', 4, rough=0.1, sheen=1.0, emit='#6ad0a8', emit_k=0.3)
     d['wiremat'] = mat('wiremat', '#2a221e', '#4a3c32', 3, rough=0.35, sheen=0.6)
     d['drop'] = mat('drop', '#e0f0ff', '#ffffff', 2, rough=0.05, sheen=1.0, emit='#d8ecff', emit_k=1.2)
     d['road'] = mat('road', '#bc7e3e', '#d49a58', 3.0, aniso=(1.2, 0.35, 1.0), contrast=1.4, wet=True)
     d['rut'] = mat('rut', '#966030', '#b27a40', 4.0, aniso=(2, 0.3, 1), wet=True)
-    d['verge'] = mat('verge', '#7fa63a', '#c4b042', 4.0, aniso=(1.4, 0.4, 1), wet=True)
+    d['verge'] = mat('verge', '#7f9a4a', '#b0a852', 4.0, aniso=(1.4, 0.4, 1), wet=True)
     d['earth'] = mat('earth', '#8c5233', '#b06c44', 6, contrast=1.3, wet=True)
     d['ballast'] = mat('ballast', '#9a8e86', '#c0aea0', 14, contrast=1.8, wet=True)
     d['sleeper'] = mat('sleeper', '#4a3426', '#6a4a34', 5, wet=True)
     d['rail'] = mat('rail', '#7a6058', '#a88c80', 3, rough=0.4, sheen=0.6)
-    d['lead'] = mat('lead', '#8c929c', '#b6bcc6', 3, rough=0.5, sheen=0.3)
+    d['lead'] = mat('lead', '#948d80', '#aaa396', 3, rough=0.5, sheen=0.05)
     d['straw'] = mat('straw', '#d6b25a', '#eccb78', 7, contrast=1.3, wet=True)
     d['strawdk'] = mat('strawdk', '#b08a3c', '#d0a850', 7, wet=True)
-    d['wheat'] = mat('wheat', '#d6a838', '#f4cc58', 6, zgrad=(0.0, 0.5, '#9a9a34'), contrast=1.4, wet=True)
+    d['wheat'] = mat('wheat', '#c8a848', '#dcc068', 6, zgrad=(0.0, 0.5, '#8a9a46'), contrast=1.4, wet=True)
     d['hay'] = mat('hay', '#c8a248', '#e8c46c', 8, aniso=(1, 1, 0.3), wet=True)
     d['leafA'] = mat('leafA', '#4f8a3a', '#8aa83e', 2.2, contrast=1.6)
     d['leafB'] = mat('leafB', '#8a9a2c', '#d0a838', 2.2, contrast=1.6)
@@ -197,8 +197,8 @@ def palette():
     d['red'] = mat('red', '#a8332a', '#c8483a', 4, rough=0.6)
     d['carriage'] = mat('carriage', '#9a3a2e', '#b94c3a', 4, aniso=(0.4, 1, 1), wet=True)
     d['carriage2'] = mat('carriage2', '#d9a642', '#ecc060', 4, aniso=(0.4, 1, 1), wet=True)
-    d['smoke'] = mat('smoke', '#f6ebe0', '#d8cce0', 2, emit='#fff0e0', emit_k=0.25)
-    d['metal'] = mat('metal', '#9aa4b0', '#c0c8d0', 3, rough=0.4, sheen=0.5)
+    d['smoke'] = smoke_mat()
+    d['metal'] = mat('metal', '#8a8c92', '#a8aab0', 3, rough=0.45, sheen=0.3)
     d['rope'] = mat('rope', '#cfae74', '#a88650', 12, wet=True)
     d['spool'] = mat('spool', '#a8602c', '#cc8040', 3, rough=0.35, sheen=0.8, wave=(90, '#5e3218'))
     d['bird'] = mat('bird', '#2a2428', '#3a3238', 2)
@@ -224,10 +224,36 @@ def palette():
     d['shaft'] = shaft_mat()
     return d
 def shaft_mat():
+    """soft sun / moon shaft: emission whose opacity fades along the shaft (object y, from the window y=BY toward the room), never a hard slab"""
     m = bpy.data.materials.new('shaft'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
     out = N('ShaderNodeOutputMaterial'); em = N('ShaderNodeEmission'); tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader')
-    em.inputs['Color'].default_value = hexc('#ffe0a0'); em.inputs['Strength'].default_value = 5.0; mx.inputs[0].default_value = 0.05
-    L(tr.outputs[0], mx.inputs[1]); L(em.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface']); MATS['shaft'] = m; return m
+    tc = N('ShaderNodeTexCoord'); sp = N('ShaderNodeSeparateXYZ'); L(tc.outputs['Object'], sp.inputs[0]); mr = N('ShaderNodeMapRange'); mr.clamp = True
+    mr.inputs['From Min'].default_value = 34.0 * SC; mr.inputs['From Max'].default_value = 12.0 * SC; mr.inputs['To Min'].default_value = 0.035; mr.inputs['To Max'].default_value = 0.0; L(sp.outputs['Y'], mr.inputs['Value'])
+    em.inputs['Color'].default_value = hexc('#ffe0a0'); em.inputs['Strength'].default_value = 5.0
+    L(mr.outputs['Result'], mx.inputs[0]); L(tr.outputs[0], mx.inputs[1]); L(em.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface']); MATS['shaft'] = m; return m
+
+def cos_facing(nt, power=2.0):
+    """|N . I| ^ power : 1 where the surface faces the camera, 0 at the silhouette (soft-edged billboards / glows)"""
+    N = nt.nodes.new; L = nt.links.new; g = N('ShaderNodeNewGeometry'); d = N('ShaderNodeVectorMath'); d.operation = 'DOT_PRODUCT'; L(g.outputs['Normal'], d.inputs[0]); L(g.outputs['Incoming'], d.inputs[1])
+    a = N('ShaderNodeMath'); a.operation = 'ABSOLUTE'; L(d.outputs['Value'], a.inputs[0]); p = N('ShaderNodeMath'); p.operation = 'POWER'; p.inputs[1].default_value = power; L(a.outputs[0], p.inputs[0]); return p.outputs[0]
+
+def glass_mat():
+    """green beer-bottle glass: translucent (alpha 0.6), glossy sharp so the sun glints, a little emission to keep the green"""
+    if 'glass' in MATS: return MATS['glass']
+    m = bpy.data.materials.new('glass'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); bs = N('ShaderNodeBsdfPrincipled')
+    bs.inputs['Base Color'].default_value = hexc('#2fa858'); bs.inputs['Roughness'].default_value = 0.04; bs.inputs['Specular IOR Level'].default_value = 1.0; bs.inputs['Alpha'].default_value = 0.62
+    bs.inputs['Emission Color'].default_value = hexc('#3fc070'); bs.inputs['Emission Strength'].default_value = 0.35
+    L(bs.outputs[0], out.inputs['Surface']); MATS['glass'] = m; return m
+
+def smoke_mat():
+    """soft steam puff: white-lavender, opacity falls off toward the silhouette, never a hard sphere edge"""
+    if 'smoke' in MATS: return MATS['smoke']
+    m = bpy.data.materials.new('smoke'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); em = N('ShaderNodeEmission'); tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader')
+    sc_ = N('ShaderNodeMath'); sc_.operation = 'MULTIPLY'; sc_.inputs[1].default_value = 0.85; L(cos_facing(nt, 0.8), sc_.inputs[0])
+    em.inputs['Color'].default_value = hexc('#f4eaf6'); em.inputs['Strength'].default_value = 1.15
+    L(sc_.outputs[0], mx.inputs[0]); L(tr.outputs[0], mx.inputs[1]); L(em.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface']); MATS['smoke'] = m; return m
 
 # ------------------------------------------------------------------ ground / sky extras
 def ribbon(mb, m, f, ys, w, z=0.02, off=0.0):
@@ -406,7 +432,7 @@ def pick(mb, M, c, yaw=0.0):
 def shovel(mb, M, c, yaw=0.0):
     x, y, z = c; dx, dy = math.cos(yaw), math.sin(yaw)
     mb.rod(M['woodpale'], (x, y, z + 0.05), (x + dx * 1.1, y + dy * 1.1, z + 0.25), 0.03, 0.025, 6)
-    mb.box(M['metal'], (x + dx * 1.25, y + dy * 1.25, z + 0.28), (0.3, 0.22, 0.03), rz=yaw)
+    mb.box(M['metal'], (x + dx * 1.25, y + dy * 1.25, z + 0.28), (0.26, 0.2, 0.025), rz=yaw); mb.box(M['metal'], (x + dx * 1.4, y + dy * 1.4, z + 0.3), (0.2, 0.14, 0.025), rz=yaw + 0.2)
 
 def loco(mb, M, c, yaw=0.0, s=1.0):
     """1840s tank loco facing +x local; track gauge along y"""

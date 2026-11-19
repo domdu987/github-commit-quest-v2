@@ -28,30 +28,30 @@ WORK = os.path.join(HERE, 'telegraph_work')
 STATE = {}
 
 # ----------------------------------------------------------------------------- lights
-SKYPOS = [0.0, 0.45, 0.5, 0.56, 0.66, 0.82, 1.0]
+SKYPOS = [0.0, 0.47, 0.53, 0.62, 0.74, 0.88, 1.0]       # smooth gradient: no hard horizon arc even when the camera pitches
 def kdir(az, el):
     a = math.radians(az); e = math.radians(el)
     return (-math.sin(a) * math.cos(e), -math.cos(a) * math.cos(e), -math.sin(e))
 
 _L = dict(sun_angle=1.0, exposure=0.0, sat=1.08, wet=0.0, cloud_k=1.0, hill_k=1.0, fill=0.0, win=0.0, candle=0.0, lamp=0.0)
 LINE_LIGHTS = dict(
-    DAY=dict(_L, key=(1.0, 0.85, 0.63, 14.0), az=150, el=24, sky_k=0.85, amb=('#4454FF', 2.2),
-             sky=['#7a86d6', '#f0bc88', '#f8d9a2', '#e8d8c0', '#9cbcec', '#4a7adc', '#2f52c4'], hills=['#9a9ad2', '#8aa0d8', '#7ea4d6'], cloud=('#ffeacc', '#7c84d8')),
+    DAY=dict(_L, key=(1.0, 0.85, 0.63, 14.0), az=150, el=24, sky_k=0.85, amb=('#4c52ff', 2.2),
+             sky=['#8a92d8', '#efc698', '#f3d3a8', '#cdc8d8', '#8db0ec', '#5a86e0', '#3a5acb'], hills=['#9a9ad2', '#8aa0d8', '#7ea4d6'], cloud=('#ffeacc', '#7c84d8')),
     DUSK=dict(_L, key=(1.0, 0.55, 0.3, 27.0), az=150, el=12, sun_angle=1.3, sky_k=0.95, amb=('#4054ff', 2.9),
-              sky=['#3a4cb8', '#ec8a44', '#f6a468', '#e8a888', '#7a90d8', '#3a56c0', '#262c98'], hills=['#7a78b8', '#6e7cc0', '#6a84c8'], cloud=('#ffc89a', '#6a72c4')),
-    RAIN=dict(_L, key=(0.8, 0.82, 1.0, 2.4), az=150, el=32, sun_angle=16.0, sky_k=0.8, amb=('#6872ff', 3.3), wet=1.0, exposure=-0.1, cloud_k=0.8,
-              sky=['#5a6cb0', '#8a9ccc', '#b0b8d4', '#b0b8d0', '#8a9ccc', '#6a80c0', '#4a62ac'], hills=['#7a82b8', '#6e7ab4', '#6a7cb4'], cloud=('#b8bad8', '#7e86c4')),
-    AFTER_RAIN=dict(_L, key=(1.0, 0.85, 0.63, 9.0), az=-125, el=24, sun_angle=0.8, sky_k=1.0, amb=('#3450ff', 2.2), wet=0.9,
-                    sky=['#4a62c0', '#f0b080', '#f8d098', '#8a98d0', '#6a80cc', '#4a64c0', '#2a3fa8'], hills=['#8a8ac8', '#7a96d2', '#7aa0d4'], cloud=('#ffe2bc', '#6c78d4')),
+              sky=['#4a52b8', '#e6905a', '#f0a876', '#b8a4c0', '#6a86d8', '#3e58c0', '#262c98'], hills=['#7a78b8', '#6e7cc0', '#6a84c8'], cloud=('#ffc89a', '#6a72c4')),
+    RAIN=dict(_L, key=(0.8, 0.82, 1.0, 2.4), az=150, el=32, sun_angle=16.0, sky_k=0.8, amb=('#5c70ff', 3.3), wet=1.0, exposure=-0.1, cloud_k=0.8,
+              sky=['#6a78b4', '#c4b4b0', '#c8c0c8', '#aab4d0', '#8a9ccc', '#6a80c0', '#4a62ac'], hills=['#7a82b8', '#6e7ab4', '#6a7cb4'], cloud=('#b8bad8', '#7e86c4')),
+    AFTER_RAIN=dict(_L, key=(1.0, 0.85, 0.63, 9.0), az=-125, el=24, sun_angle=0.8, sky_k=1.0, amb=('#3c4cff', 2.2), wet=0.9,
+                    sky=['#5a6cc4', '#f0b488', '#f4c8a0', '#b0a8d0', '#7488d0', '#4a64c4', '#2a3fa8'], hills=['#8a8ac8', '#7a96d2', '#7aa0d4'], cloud=('#ffe2bc', '#6c78d4')),
 )
 STUDIO_LIGHTS = dict(
-    DAY=dict(_L, key=(1.0, 0.82, 0.55, 16.0), az=-24, el=34, sun_angle=1.2, sky_k=1.0, amb=('#4a56ff', 2.6), fill=0.7, win=1.2, exposure=-0.1,
-             sky=['#7a86d6', '#f4c890', '#fbe0aa', '#f4e4c4', '#a8c6f0', '#5a86e4', '#3a5acc'], hills=['#9a9ad2', '#8aa0d8', '#7ea4d6'], cloud=('#fff0dc', '#a8a4dc')),
+    DAY=dict(_L, key=(1.0, 0.82, 0.55, 16.0), az=-24, el=34, sun_angle=1.2, sky_k=1.0, amb=('#4a56ff', 2.6), fill=0.55, win=1.2, exposure=-0.25,
+             sky=['#8a92d8', '#f4c890', '#f8dcb0', '#d4cce0', '#a8c6f0', '#5a86e4', '#3a5acc'], hills=['#9a9ad2', '#8aa0d8', '#7ea4d6'], cloud=('#fff0dc', '#a8a4dc')),
 )
 CHAMBER_LIGHTS = dict(
-    DAY=dict(_L, key=(1.0, 0.85, 0.63, 15.0), az=-22, el=15, sky_k=1.0, exposure=0.7, fill=1.0, win=1.9, candle=1.0, lamp=1.0, shafts=1.0, amb=('#5a60ff', 1.0),
-             sky=['#7a86d6', '#f4c890', '#fbe0aa', '#f4e4c4', '#a8c6f0', '#5a86e4', '#3a5acc'], hills=['#9a9ad2', '#8aa0d8', '#7ea4d6'], cloud=('#fff0dc', '#a8a4dc')),
-    NIGHT=dict(_L, key=(0.42, 0.5, 1.0, 1.8), az=-22, el=32, sun_angle=2.5, sky_k=0.5, exposure=-0.35, fill=0.008, win=0.25, candle=2.4, lamp=2.0, shafts=0.0, amb=('#2a2eff', 0.35), sat=1.06,
+    DAY=dict(_L, key=(1.0, 0.85, 0.63, 15.0), az=-22, el=15, sky_k=1.0, exposure=0.55, fill=1.0, win=1.9, candle=1.0, lamp=1.0, shafts=1.0, amb=('#5a60ff', 1.0),
+             sky=['#8a92d8', '#f4c890', '#f8dcb0', '#d4cce0', '#a8c6f0', '#5a86e4', '#3a5acc'], hills=['#9a9ad2', '#8aa0d8', '#7ea4d6'], cloud=('#fff0dc', '#a8a4dc')),
+    NIGHT=dict(_L, key=(0.4, 0.5, 1.0, 1.0), az=-22, el=32, sun_angle=2.5, sky_k=0.4, exposure=-0.7, fill=0.0, win=0.12, candle=2.6, lamp=2.4, nightc=1.0, shafts=0.0, amb=('#2a2eff', 0.2), sat=1.06,
                sky=['#1c2060', '#2c3478', '#3a4488', '#323c84', '#262e78', '#1a2268', '#101658'], hills=['#262c6a', '#222866', '#1e2462'], cloud=('#4a5090', '#2a3070')),
 )
 LIGHTS = dict(line=LINE_LIGHTS, studio=STUDIO_LIGHTS, chamber=CHAMBER_LIGHTS)
@@ -281,7 +281,7 @@ def make_camera(setup, name='cam', scene=None):
     cd = ob.data; cd.lens = setup.get('lens', 22); cd.sensor_width = 36; cd.sensor_fit = 'AUTO'; cd.clip_start = 0.05; cd.clip_end = 2000; cd.dof.use_dof = False
     ob.location = setup['loc']; ob.rotation_euler = (Vector(setup['look_at']) - Vector(setup['loc'])).to_track_quat('-Z', 'Y').to_euler()
     if setup.get('roll'): ob.rotation_euler.rotate_axis('Z', math.radians(setup['roll']))
-    scene.camera = ob; STATE['cam'] = ob; return ob
+    scene.camera = ob; STATE['cam'] = ob; _rain_follow(); return ob
 
 def render(path, scene=None):
     scene = scene or bpy.context.scene; scene.render.filepath = path
@@ -300,28 +300,28 @@ def _marks(loc):
         px = LN.px; wy, wx_ = LN.WAGON[1], LN.WAGON[0]; kx, ky = LN.KEYCRATE; pl = LN.PLAT
         yaw = math.pi / 2 + 0.06
         def wl(lx, ly=0.0, z=0.0): return (wx_ - ly * math.sin(yaw) + lx * math.cos(yaw), wy + lx * math.sin(yaw) + ly * math.cos(yaw) * 1.0, z)
-        m.update(morse_ladder=_pm(px(4.0) + 0.52, 3.45, 3.45), morse_ladder_foot=_pm(px(4.0) + 1.15, 2.4, 0.0), morse_wire=_pm(px(22.0) - 0.8, 18.5, 0.0),
+        rg = LN.rung(12)
+        m.update(morse_ladder=_pm(*rg), morse_ladder_foot=_pm(px(4.0) + 1.6, 2.2, 0.0), morse_wide=_pm(px(4.0) - 0.7, 0.4, 0.0), morse_wire=_pm(-3.0, 24.0, 0.0), morse_rail=_pm(-4.6, 21.0, 0.0),
                  morse_pole=_pm(px(13.0) + 1.1, 12.0, 0.0), morse_ladder3=_pm(px(31.0) + 0.5, 30.5, 3.3),
-                 morse_key=_pm(kx + 0.3, ky + 1.0, 0.0), worker_key_a=_pm(kx - 1.3, ky + 0.6, 0.0), worker_key_b=_pm(kx + 1.8, ky + 1.1, 0.0), worker_key_c=_pm(kx - 0.2, ky + 2.0, 0.0),
-                 morse_wagon_key=_pm(*wl(-1.55, 0.0, 1.0)), worker_wagon=_pm(wx_ + 1.4, wy - 2.6, 0.0), morse_bottle=_pm(wx_ + 1.5, wy - 0.4, 0.0),
-                 morse_wagon_bed=_pm(*wl(0.0, 0.0, 1.0)))
-        for i, y in enumerate((40.0, 44.0, 48.0, 52.0)): m['platform_%s' % 'abcd'[i]] = _pm(pl[0] + 1.3 + 0.3 * (i % 2), y, 1.0)
+                 morse_key=_pm(kx + 0.6, ky + 1.1, 0.0), worker_key_a=_pm(kx - 0.9, ky + 1.2, 0.0), worker_key_b=_pm(kx + 2.0, ky + 1.4, 0.0), worker_key_c=_pm(kx + 0.0, ky + 2.2, 0.0),
+                 morse_wagon_key=_pm(*wl(-1.6, 0.0, 1.0)), worker_wagon=_pm(wx_ + 1.4, wy - 2.6, 0.0), morse_wagon_bed=_pm(*wl(0.5, 0.0, 1.0)), morse_bottle=_pm(*wl(0.5, 0.0, 1.0)))
+        for i, y in enumerate((44.0, 49.0, 54.0, 59.0)): m['platform_%s' % 'abcd'[i]] = _pm(pl[0] - 1.3 - 0.4 * (i % 2), y, 1.0)
         m.update(pit_ground=_pm(LN.PIT[0], LN.PIT[1], 0.0))
         m.update(plough_marks(0.5)); m.update(buggy_marks(36.0))
     elif loc == 'studio':
         import tg_studio as SD; m.update({k: _pm(*v) for k, v in SD.MARKS.items()})
     else:
-        import tg_chamber as CH; m.update({k: _pm(*v) for k, v in CH.MARKS.items()})
+        import tg_chamber as CH; m.update({k: _pm(*v) for k, v in CH.MARKS.items()}); m.update({k: _pm(*v) for k, v in CH.congress_marks(STATE).items()})
 
 def plough_marks(k):
     """world marks that follow the plough front at furrow fraction k (0..1): mules ahead, Cornell behind the handles, workers and Morse behind"""
     y = LN.Y0 + k * (LN.Y1 - LN.Y0); xt = LN.xc(y) + 2.3
-    return dict(plough=_pm(xt, y, 0.0), mule_a=_pm(xt - 0.75, y + 4.6, 0.0), mule_b=_pm(xt + 0.55, y + 4.6, 0.0), cornell=_pm(xt - 1.1, y - 1.8, 0.0),
-                worker_a=_pm(xt + 1.4, y - 3.8, 0.0), worker_b=_pm(xt - 1.5, y - 5.2, 0.0), morse_trench=_pm(xt + 1.7, y - 6.4, 0.0))
+    return dict(plough=_pm(xt, y, 0.0), mule_a=_pm(xt - 0.95, y + 5.2, 0.0), mule_b=_pm(xt + 0.45, y + 6.6, 0.0), cornell=_pm(xt - 1.3, y - 1.6, 0.0),
+                worker_a=_pm(xt + 1.6, y - 3.2, 0.0), worker_b=_pm(xt - 1.6, y - 4.6, 0.0), morse_trench=_pm(xt + 1.9, y - 5.8, 0.0))
 
 def buggy_marks(y):
     x = LN.xc(y)
-    return dict(mocker_buggy=_pm(x + 0.0, y - 0.35, 0.95), mule_buggy=_pm(x, y + 4.0, 0.0))
+    return dict(mocker_buggy=_pm(x + 0.0, y - 0.35, 0.95), mule_buggy=_pm(x, y + 3.9, 0.0))
 
 HEIGHT = dict(morse=3.2, mocker=3.1, cornell=3.3, worker=3.1, messenger=3.0, clerk=3.0, congress=3.2)
 
@@ -347,10 +347,27 @@ def _clear_actors():
     for o in list(bpy.context.scene.objects):
         if o.name.startswith('actor_'): bpy.data.objects.remove(o, do_unlink=True)
 
+def mule_card(mark, face_to=None, name='actor_mule', size=5.6):
+    """placeholder mule (side-view card 5.6 x 3.7 D, facing +x) standing at `mark`, turned to face the camera (yaw only)"""
+    import telegraph_tex as TX
+    p = os.path.join(TX.OUT, 'mule_v1.png')
+    if not os.path.exists(p): TX.mule(p)
+    img = bpy.data.images.load(p, check_existing=True); m = bpy.data.materials.new(name + '_m'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); tx = N('ShaderNodeTexImage'); tx.image = img; em = N('ShaderNodeEmission'); tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader')
+    L(tx.outputs['Color'], em.inputs['Color']); em.inputs['Strength'].default_value = 0.9; L(tx.outputs['Alpha'], mx.inputs[0]); L(tr.outputs[0], mx.inputs[1]); L(em.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface'])
+    w, h = size, size * 460 / 700
+    me = bpy.data.meshes.new(name); me.from_pydata([(-w / 2, 0, 0), (w / 2, 0, 0), (w / 2, 0, h), (-w / 2, 0, h)], [], [(0, 1, 2, 3)]); me.update(); uv = me.uv_layers.new(name='UVMap')
+    for li, c in zip(range(4), ((0, 0), (1, 0), (1, 1), (0, 1))): uv.data[li].uv = c
+    me.materials.append(m); ob = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(ob); ob.location = tuple(mark); ob.visible_shadow = False
+    if face_to is not None:
+        d = Vector(face_to) - Vector(mark); ob.rotation_euler = (0, 0, math.atan2(d.x, -d.y))
+    return ob
+
 def stage_placeholders(A, cam_name, cam_loc):
     _clear_actors(); out = []
     for i, (role, mk) in enumerate(_staging(cam_name)):
         d = Vector(cam_loc) - Vector(mk); el = math.degrees(math.atan2(d.z - 1.5, math.hypot(d.x, d.y)))
+        if role == 'mule': out.append(mule_card(mk, cam_loc, 'actor_mule_%d' % i)); continue
         out.append(placeholder_actor(role, mk, face_to=cam_loc, tilt=max(0.0, el - 35) * 0.6, name='actor_%s_%d' % (role, i)))
     return out
 
@@ -358,114 +375,155 @@ def _staging(cam_name):
     return [(role, tuple(STATE['marks'][mk]) if isinstance(mk, str) else tuple(mk)) for role, mk in STAGING.get(cam_name, [])]
 
 def head_pixels(cam_name):
-    """[(role, mark, head_centre_y_px, head_px, chin_y_px, feet_y_px)] at 720x1280 (caption rule: chin < 880)."""
+    """[(role, mark, head_centre_y_px, head_px, chin_y_px, feet_y_px, head_x_px)] at 720x1280 (caption rule: chin < 880)."""
     from bpy_extras.object_utils import world_to_camera_view
     sc = bpy.context.scene; cam = sc.camera; out = []
     for i, (role, mk) in enumerate(_staging(cam_name)):
+        if role == 'mule': continue
         h = HEIGHT[role]; m = Vector(mk); top, hc, bot = m + Vector((0, 0, h)), m + Vector((0, 0, h - 0.5)), m + Vector((0, 0, h - 1.0))
         p, q, b = (world_to_camera_view(sc, cam, v) for v in (hc, top, bot)); f = world_to_camera_view(sc, cam, m)
-        out.append((role, tuple(round(v, 2) for v in mk), round((1 - p.y) * 1280), round(abs(q.y - b.y) * 1280), round((1 - b.y) * 1280), round((1 - f.y) * 1280)))
+        out.append((role, tuple(round(v, 2) for v in mk), round((1 - p.y) * 1280), round(abs(q.y - b.y) * 1280), round((1 - b.y) * 1280), round((1 - f.y) * 1280), round(p.x * 720)))
     return out
+
+def project(world_pt):
+    """(x_px, y_px) of a world point in the scene camera (720x1280, y from the top)"""
+    from bpy_extras.object_utils import world_to_camera_view
+    sc = bpy.context.scene; p = world_to_camera_view(sc, sc.camera, Vector(world_pt)); return round(p.x * 720), round((1 - p.y) * 1280)
 
 CAMS_M = dict(
     # LINE (sb-frame metres): (loc, look)
     line_wide=((-0.2, -6.0, 1.9), (1.6, 30.0, 2.9)),
-    line_close=((3.2, 1.2, 1.05), (4.7, 3.5, 3.3)),
-    line_rail=((8.2, 12.0, 1.8), (-7.0, 30.0, 2.7)),
-    line_trench=((0.5, 22.6, 0.95), (3.4, 29.5, 1.7)),
-    line_trench_high=((-2.0, 12.0, 4.2), (3.4, 36.0, 0.4)),
-    line_trench_end=((0.8, 60.0, 1.2), (3.6, 65.0, 1.5)),
-    trench_cut=((52.0, 5.6, -0.3), (52.0, 12.0, -1.0)),
+    line_close=((2.9, 0.7, 1.2), (4.6, 3.9, 3.7)),
+    bottle_macro=((3.5, 2.0, 4.6), (4.35, 4.0, 5.7)),
+    line_rail=((-14.5, 12.0, 1.4), (2.0, 17.0, 2.9)),
+    line_station=((3.0, 33.0, 1.6), (-10.5, 52.0, 2.4)),
+    line_trench=((-0.6, 27.2, 1.0), (3.4, 33.5, 1.6)),
+    line_trench_high=((-2.0, 16.0, 4.5), (3.6, 34.0, 0.8)),
+    line_trench_snap1=((-1.0, 8.0, 2.2), (3.3, 25.0, 1.0)),
+    line_trench_snap2=((-1.5, 22.0, 4.2), (3.3, 41.0, 0.8)),
+    line_trench_snap3=((-2.0, 34.0, 7.5), (3.3, 58.0, 0.4)),
+    line_trench_end=((0.6, 60.0, 1.8), (3.8, 65.0, 1.0)),
+    trench_cut=((52.3, 11.1, 0.1), (52.0, 13.3, -0.85)),
     line_road=((6.4, 32.6, 1.0), (1.0, 36.0, 1.8)),
-    line_wagon=((1.6, 50.5, 1.3), (-1.9, 56.0, 1.9)),
+    line_wagon=((1.8, 65.0, 2.9), (-1.9, 70.0, 1.4)),
     # STUDIO
-    studio_wide=((-3.3, -2.2, 3.9), (1.0, 4.6, 1.7)),
-    studio_easel=((-1.5, 0.3, 1.6), (1.0, 3.7, 1.8)),
-    studio_door=((-1.8, 0.4, 1.7), (3.2, 3.2, 1.9)),
-    studio_window=((-0.5, 0.6, 1.7), (-0.8, 6.9, 2.3)),
+    studio_wide=((-3.3, -2.2, 3.4), (1.0, 4.6, 1.3)),
+    studio_easel=((-0.2, -0.6, 1.55), (-0.2, 3.6, 1.45)),
+    studio_door=((-2.0, 0.3, 1.55), (3.2, 3.4, 1.6)),
+    studio_window=((-0.5, 0.8, 1.55), (-0.8, 6.9, 1.95)),
     # CHAMBER
-    chamber_wide_high=((0.0, -4.0, 9.0), (0.0, 12.0, 1.0)),
-    chamber_low=((-2.6, 7.6, 1.0), (-5.27, 12.27, 1.9)),
-    chamber_table=((0.2, -0.4, 2.0), (0.0, 4.8, 1.5)),
+    chamber_wide_high=((0.0, -5.0, 8.0), (0.0, 14.0, 0.4)),
+    chamber_low=((-3.0, 8.6, 1.05), (-5.27, 12.27, 1.05)),
+    chamber_table=((0.1, -0.3, 1.65), (0.1, 5.6, 1.4)),
+    chamber_table_night=((-0.95, -0.4, 1.45), (0.3, 13.0, 1.35)),
 )
+EXTRA_CAMS = {'line': ['line_station', 'line_trench_snap1', 'line_trench_snap2', 'line_trench_snap3'], 'studio': [], 'chamber': ['chamber_table_night']}
+LIGHT_CAM = {('chamber_table', 'NIGHT'): 'chamber_table_night'}
 CAM_NOTES = dict(
-    line_close='low angle at the pole 0 top with the ladder, bottle insulator + sloping wire, trees and stooks behind (sb3)',
+    line_close='low angle up the hero pole 1 (hook): the oversize inverted green bottle on the peg, the wire wrapped round the glass, the ladder LEANING on the pole with Morse on a rung, 3 blades in FG',
+    bottle_macro='macro on the glass neck of pole 1 (shot 24): park the pulse bead on the glass with set_pulse(TG.pulse_s_at_pole(1))',
     line_wide='sb1: dirt road with the poles marching to the horizon, wheat, fences, the train far left, farm',
-    line_rail='from beyond the poles looking across them at the track, station platform and the train',
-    line_trench='low alongside the furrow, the plough and the mule team ahead, grass + crates in FG',
-    line_trench_high='higher view down the furrow (snap crane-ups)',
-    line_trench_end='crate with the test key + register and a wire coil at the furrow end, the wagon behind',
-    trench_cut='inside the cut-away pit: the lead pipe split open, torn cloth, sparks leaking',
-    line_road='low from the pole side to the road for the buggy',
-    line_wagon='the wagon with the crate of empty green beer bottles, the spool, the key crate',
-    studio_wide='from the front-left corner, high: the tall window with the road and rooftops, the easel, canvases, busts (crane down from the window light)',
-    studio_easel='across the room at the easel with the unfinished general; paint jars in FG, the small oval portrait on the side table',
-    studio_door='toward the door on the right wall (messenger) with the stool and the easel',
-    studio_window='toward the tall window: the long road and rooftops outside; the horseshoe magnet / coil moment',
-    chamber_wide_high='high from the front: the table with the telegraph, the tiers of walnut desks, the speaker door-screen, sun shafts (DAY) or candle pools (NIGHT)',
-    chamber_low='low in front of a front-row desk (the mocker stands behind it): inkwell + quill in FG, the tiers behind',
-    chamber_table='eye level at the front table: telegraph coils, key and paper-tape register; the mocker stool and the door-screen far behind',
+    line_rail='from the far side of the track: the loco side-on in the mid-ground (wheels, rods, steam chain), the pole line + wire behind it for the pulse race',
+    line_station='from the road toward the station platform beyond the track (shot 27): train puffing in, 4 platform marks',
+    line_trench='low alongside the furrow: plough, 2 mules, Cornell + workers, the pipe unrolling from the reel',
+    line_trench_high='higher view down the furrow',
+    line_trench_snap1='snap 1 of 3 (shot 14): set_trench(0.3)', line_trench_snap2='snap 2 of 3: set_trench(0.6)', line_trench_snap3='snap 3 of 3: set_trench(0.9)',
+    line_trench_end='crate with the big test key + register and a wire coil at the furrow end, the wagon behind',
+    trench_cut='cut face of damp soil strata with the lead pipe split open: torn cloth, copper wire, blue sparks leaking down the face',
+    line_road='low from the pole side to the road: green buggy, mocker seated, mule in the shafts',
+    line_wagon='raised view onto the wagon: the crate of 18 empty green bottles, spool, key crate; Morse on the bed',
+    studio_wide='from the front-left corner: tall window with the road and fields, the easel, canvases, busts (crane down from the window light)',
+    studio_easel='easel with the unfinished general, side table with paint jars + the oval wife portrait + the letter, jars in FG',
+    studio_door='toward the door on the right wall (messenger), the stool and the easel',
+    studio_window='toward the tall window: road to the horizon; coil + magnet on the sill',
+    chamber_wide_high='high from the front: table with the telegraph, tiers of walnut desks with congressmen, the speaker door-screen, soft sun shafts (DAY) or candle pools (NIGHT)',
+    chamber_low='desk height in front of the mocker desk: inkwell + quill in FG, the mocker big behind his desk',
+    chamber_table='eye level at the front table: Morse, the mocker and the clerk behind it, telegraph coils, key and tape register',
+    chamber_table_night='NIGHT start pose (auto for chamber_table / NIGHT): mocker on his stool at the left third, tape pile, the lit door-screen far behind with Morse in the doorway',
 )
+CONG = ['cong_%d' % i for i in range(1, 15)]
 STAGING = dict(
-    line_close=[('morse', 'morse_ladder')], line_wide=[('morse', 'morse_ladder_foot')], line_rail=[('morse', 'morse_wire')],
-    line_trench=[('cornell', 'cornell'), ('worker', 'worker_a'), ('morse', 'morse_trench')],
-    line_trench_high=[('cornell', 'cornell'), ('worker', 'worker_a')],
+    line_close=[('morse', 'morse_ladder')], bottle_macro=[], line_wide=[('morse', 'morse_wide')], line_rail=[('morse', 'morse_rail')],
+    line_station=[('congress', 'platform_a'), ('worker', 'platform_b'), ('clerk', 'platform_c'), ('messenger', 'platform_d')],
+    line_trench=[('mule', 'mule_a'), ('mule', 'mule_b'), ('cornell', 'cornell'), ('worker', 'worker_a'), ('morse', 'morse_trench')],
+    line_trench_high=[('mule', 'mule_a'), ('mule', 'mule_b'), ('cornell', 'cornell'), ('worker', 'worker_a')],
+    line_trench_snap1=[('mule', 'mule_a'), ('mule', 'mule_b'), ('cornell', 'cornell')], line_trench_snap2=[('mule', 'mule_a'), ('mule', 'mule_b'), ('cornell', 'cornell')], line_trench_snap3=[('mule', 'mule_a'), ('mule', 'mule_b')],
     line_trench_end=[('morse', 'morse_key'), ('worker', 'worker_key_a'), ('worker', 'worker_key_b')],
-    trench_cut=[], line_road=[('mocker', 'mocker_buggy')], line_wagon=[('morse', 'morse_bottle')],
+    trench_cut=[], line_road=[('mocker', 'mocker_buggy'), ('mule', 'mule_buggy')], line_wagon=[('morse', 'morse_wagon_bed')],
     studio_wide=[('morse', 'morse_easel')], studio_easel=[('morse', 'morse_easel')], studio_door=[('messenger', 'messenger_door'), ('morse', 'morse_door')], studio_window=[('morse', 'morse_window')],
-    chamber_wide_high=[('morse', 'morse_table'), ('congress', 'cong_a'), ('congress', 'cong_b')], chamber_low=[('mocker', 'mocker_desk')],
+    chamber_wide_high=[('morse', 'morse_table')] + [('congress', c) for c in CONG], chamber_low=[('mocker', 'mocker_desk')],
     chamber_table=[('morse', 'morse_table'), ('mocker', 'mocker_table'), ('clerk', 'clerk_table')],
+    chamber_table_night=[('mocker', 'mocker_stool'), ('morse', 'morse_door')],
 )
+_LN = dict(poles=('bottle', 17))
 PRESETS = dict(
-    line_close=dict(loc='line', light='AFTER_RAIN', cam='line_close', state=dict(poles=('bottle', 16), trench=1.0, pipe=1.0, train=None)),
-    line_wide=dict(loc='line', light='DAY', cam='line_wide', state=dict(poles=('bottle', 16), trench=1.0, pipe=1.0, train='home')),
-    line_rail=dict(loc='line', light='DAY', cam='line_rail', state=dict(poles=('bottle', 16), trench=1.0, pipe=1.0, train=48.0)),
-    line_trench=dict(loc='line', light='DAY', cam='line_trench', state=dict(poles=('none', 0), trench=0.5, pipe=0.3, train=None)),
-    line_trench_high=dict(loc='line', light='DAY', cam='line_trench_high', state=dict(poles=('none', 0), trench=0.7, pipe=0.5, train=None)),
+    line_close=dict(loc='line', light='AFTER_RAIN', cam='line_close', state=dict(poles=('bottle', 17), trench=0.0, pipe=0.0, train=None)),
+    bottle_macro=dict(loc='line', light='AFTER_RAIN', cam='bottle_macro', state=dict(poles=('bottle', 17), trench=0.0, pipe=0.0, train=None, pulse=('pole', 1))),
+    line_wide=dict(loc='line', light='DAY', cam='line_wide', state=dict(poles=('bottle', 17), trench=0.0, pipe=0.0, train='home')),
+    line_rail=dict(loc='line', light='DAY', cam='line_rail', state=dict(poles=('bottle', 17), trench=0.0, pipe=0.0, train=31.5, pulse=('y', 9.5))),
+    line_trench=dict(loc='line', light='DAY', cam='line_trench', state=dict(poles=('none', 0), trench=0.5, pipe=0.45, train=None)),
+    line_trench_high=dict(loc='line', light='DAY', cam='line_trench_high', state=dict(poles=('none', 0), trench=0.7, pipe=0.6, train=None)),
     line_trench_end=dict(loc='line', light='DUSK', cam='line_trench_end', state=dict(poles=('none', 0), trench=1.0, pipe=1.0, train=None)),
     trench_cut=dict(loc='line', light='DUSK', cam='trench_cut', state=dict(poles=('none', 0), trench=1.0, pipe=1.0, train=None, leak=('pipe', 1.0))),
     line_road=dict(loc='line', light='DUSK', cam='line_road', state=dict(poles=('none', 0), trench=1.0, pipe=1.0, train=None, buggy=36.0 * SC)),
-    line_wagon=dict(loc='line', light='AFTER_RAIN', cam='line_wagon', state=dict(poles=('bottle', 16), trench=1.0, pipe=1.0, train=None)),
+    line_wagon=dict(loc='line', light='AFTER_RAIN', cam='line_wagon', state=dict(poles=('bottle', 17), trench=1.0, pipe=1.0, train=None)),
     studio_wide=dict(loc='studio', light='DAY', cam='studio_wide', state=dict(palette=False, door=0.0)),
     studio_easel=dict(loc='studio', light='DAY', cam='studio_easel', state=dict(palette=False, door=0.0)),
-    studio_door=dict(loc='studio', light='DAY', cam='studio_door', state=dict(palette=True, door=0.35)),
+    studio_door=dict(loc='studio', light='DAY', cam='studio_door', state=dict(palette=False, door=0.35)),
     studio_window=dict(loc='studio', light='DAY', cam='studio_window', state=dict(palette=False, door=0.0)),
     chamber_wide_high=dict(loc='chamber', light='DAY', cam='chamber_wide_high', state=dict(tape=0.0, click=0, moneybag=False, mailsacks=False)),
-    chamber_low=dict(loc='chamber', light='DAY', cam='chamber_low', state=dict(tape=0.0, click=0, moneybag=False, mailsacks=True)),
-    chamber_table=dict(loc='chamber', light='DAY', cam='chamber_table', state=dict(tape=0.45, click=0, moneybag=False, mailsacks=False)),
+    chamber_low=dict(loc='chamber', light='DAY', cam='chamber_low', state=dict(tape=0.0, click=0, moneybag=False, mailsacks=False, shafts=False)),
+    chamber_table=dict(loc='chamber', light='DAY', cam='chamber_table', state=dict(tape=0.45, click=0, moneybag=False, mailsacks=False, shafts=False)),
 )
 LOC_PRESETS = {}
-STUDIO_FG = dict(studio_wide=[('canvases', -0.6, 1.0)], studio_easel=[('jars', -0.5, 1.1), ('brushpot', 0.5, 1.4)], studio_door=[('jars', 0.7, 1.2), ('canvases', -0.9, 1.5)], studio_window=[('jars', -0.8, 1.1), ('brushpot', 0.6, 1.5)])
-FG = dict(   # foreground dressing (1-2 D from the lens): kind, metres right of the camera, metres ahead
-    line_wide=[('grass', 0, 2.4, 140), ('crate', -0.9, 1.1), ('spool', 1.0, 1.8), ('pick', 0.3, 1.5)],
-    line_close=[('grass', 0, 2.0, 70), ('tall', -0.55, 0.8), ('tall', 0.7, 1.0), ('tall', 0.05, 1.5), ('tall', -1.2, 1.7)],
-    line_rail=[('grass', 0, 2.4, 110), ('crate', 0.9, 1.2), ('coil', -0.9, 1.8)],
-    line_trench=[('grass', 0, 2.4, 100), ('crate', -0.9, 1.1), ('shovel', 0.6, 1.5), ('spool', 1.4, 2.4)],
-    line_trench_high=[('grass', 0, 3.0, 90), ('crate', -1.4, 2.4)],
-    line_trench_end=[('grass', 0, 2.2, 100), ('coil', -0.9, 1.2), ('crate', 1.0, 1.4), ('shovel', 0.1, 1.7)],
-    line_road=[('grass', 0, 2.4, 110), ('crate', -0.8, 1.2), ('barrel', 0.9, 1.7)],
-    line_wagon=[('grass', 0, 2.2, 100), ('bottles', -0.6, 1.1), ('crate', 0.9, 1.4)],
+STUDIO_FG = dict(studio_wide=[('canvases', -0.8, 1.0), ('brushpot', 0.9, 1.2)], studio_easel=[('jars', -0.55, 1.05), ('brushpot', 0.5, 1.3)], studio_door=[('jars', 0.8, 1.1), ('canvases', -0.9, 1.4)], studio_window=[('jars', -0.8, 1.1), ('brushpot', 0.7, 1.4)])
+FG = dict(   # foreground dressing (1-2 D from the lens): kind, metres right of the camera, metres ahead; kept to the sides, calm below y 880
+    line_wide=[('grass', 0, 2.4, 45), ('crate', -1.4, 1.2), ('spool', 1.7, 2.0)],
+    line_close=[('blades', 0, 0, [(-0.9, 0.8, 1.15), (0.85, 1.0, 1.35), (1.25, 0.9, 1.0)])],
+    bottle_macro=[],
+    line_rail=[('grass', 0, 3.0, 40), ('crate', -1.5, 1.6), ('coil', 1.5, 1.9)],
+    line_station=[('crate', -1.4, 1.4), ('grass', 0, 2.6, 30)],
+    line_trench=[('grass', 0, 2.4, 40), ('crate', -1.7, 1.4), ('shovel', 1.3, 1.5)],
+    line_trench_high=[('grass', 0, 3.0, 30)], line_trench_snap1=[('grass', 0, 3.0, 30)], line_trench_snap2=[], line_trench_snap3=[],
+    line_trench_end=[('coil', -1.6, 1.3), ('crate', 1.7, 1.5), ('grass', 0, 2.2, 30)],
+    line_road=[('grass', 0, 2.4, 40), ('crate', -1.6, 1.4)],
+    line_wagon=[('bottles', -1.5, 1.3), ('grass', 0, 2.0, 30)],
 )
 
 def apply_preset_state(preset):
     st = PRESETS[preset].get('state', {}); loc = PRESETS[preset]['loc']
     if loc == 'line':
-        s, n = st.get('poles', ('bottle', 16)); set_poles(s, n); set_trench(st.get('trench', 1.0)); set_pipe(st.get('pipe', 1.0)); set_ladder(True, 0); set_ladder(preset in ('line_wide', 'line_rail', 'line_close'), 3)
+        s, n = st.get('poles', ('bottle', LN.NPOLE)); set_poles(s, n); set_trench(st.get('trench', 1.0)); set_pipe(st.get('pipe', 1.0)); set_ladder(True, 0); set_ladder(preset in ('line_wide', 'line_rail', 'line_station'), 3)
         set_rain(st.get('rain', False)); set_leak('pipe', 0.0); set_leak('pole', 0.0); set_pulse(-1); set_buggy(st.get('buggy', None)); set_train(st.get('train', None))
         if st.get('leak'): set_leak(*st['leak'])
+        pu = st.get('pulse')
+        if pu:
+            if pu[0] == 'pole': set_pulse(pulse_s_at_pole(pu[1]))
+            elif pu[0] == 'y': set_pulse(pulse_s_at_y(pu[1]))
+            else: set_pulse(pu)
     elif loc == 'studio':
         import tg_studio as SD; SD.apply_state(STATE, st)
     else:
         import tg_chamber as CH; CH.apply_state(STATE, st)
 
+def pulse_s_at_pole(i):
+    """pulse parameter s that puts the bead on the glass of pole i (the closed bottom, where the wire is wrapped)"""
+    pts, cum = STATE['wire_pts']['bottle']; k = LN.POLES_Y[i]
+    j = min(range(len(pts)), key=lambda q: abs(pts[q][1] - k) + abs(pts[q][2] - (LN.POLE_H + 0.01 + LN.BOT_TOP * LN.BS + 0.03)) * 0.01)
+    return cum[j] / cum[-1]
+
+def pulse_s_at_y(y_m):
+    """pulse parameter s that puts the bead on the wire at sb-frame y (metres along the line)"""
+    pts, cum = STATE['wire_pts']['bottle']; j = min(range(len(pts)), key=lambda q: abs(pts[q][1] - y_m)); return cum[j] / cum[-1]
+
 def _cams(loc):
-    return {k: _cam(*v) for k, v in CAMS_M.items() if k in LOC_PRESETS[loc]}
+    return {k: _cam(*v) for k, v in CAMS_M.items() if k in LOC_PRESETS[loc] or k in EXTRA_CAMS.get(loc, [])}
 
 def anchors():
     P = STATE['P']; loc = STATE['loc']; PR = PRESETS[STATE['preset']]
     cams = _cams(loc)
     kd = Wd(kdir(P['az'], P['el']))
-    return dict(location=loc, preset=STATE['preset'], light=STATE['light'], cams=cams, cam=dict(cams[PR['cam']]), cam_name=PR['cam'], cam_notes={k: CAM_NOTES.get(k, '') for k in cams},
+    return dict(location=loc, preset=STATE['preset'], light=STATE['light'], cams=cams, cam=dict(cams[LIGHT_CAM.get((STATE['preset'], STATE['light']), PR['cam'])]), cam_name=LIGHT_CAM.get((STATE['preset'], STATE['light']), PR['cam']), cam_notes={k: CAM_NOTES.get(k, '') for k in cams},
                 render=dict(samples_final=FINAL_SAMPLES.get(loc), resolution=(720, 1280), threads=2, denoise='OIDN', dof=None), key_dir=tuple(round(v, 4) for v in kd),
                 sun_elevation_deg=P['el'], heights=dict(HEIGHT), marks=dict(STATE.get('marks', {})), staging={k: [(r, STATE['marks'][m] if isinstance(m, str) else m) for r, m in STAGING.get(k, [])] for k in cams},
                 floor_z=0.0, lights=[o.name for o in bpy.data.objects if o.type == 'LIGHT'])
@@ -499,7 +557,7 @@ def set_trench(k, plough=None, frame=None):
     vis = plough is not False and 0.0 < (pk if pk is not False else 0) < 1.0
     yp = LN.Y0 + float(pk if pk else 0) * (LN.Y1 - LN.Y0); pr.location = W((LN.xc(yp) + 2.3, yp, 0.0)); _show([pr] + list(pr.children), vis, frame)
     if frame is not None: _keyxf(pr, frame)
-    STATE['trench_k'] = k
+    STATE['trench_k'] = k; STATE['marks'].update(plough_marks(k))
 
 def set_pipe(k, frame=None):
     """lead pipe laid in the furrow, length k 0..1 (same y range as the furrow); the pipe reel + cart stand at its front while k < 1"""
@@ -525,7 +583,7 @@ def set_buggy(x, frame=None):
         o.rotation_euler = (0, y / r, 0)
         if frame is not None: _key(o, 'rotation_euler', frame)
     if frame is not None: _key(b['root'], 'location', frame)
-    STATE['buggy_y'] = y
+    STATE['buggy_y'] = y; STATE['marks'].update(buggy_marks(y))
 
 def _make_buggy():
     M = STATE['M']; root = bpy.data.objects.new('buggy_root', None); bpy.context.scene.collection.objects.link(root)
@@ -564,16 +622,27 @@ def set_train(x, frame=None, speed=None):
         if hist and frame is not None and frame != hist[0]: v = (hist[1] - x) / ((frame - hist[0]) / 30.0)
         elif hist: v = hist[2]
     if frame is not None: T['hist'] = (frame, x, v)
-    fun = W(T['funnel'][:]) + Vector((dx, 0, 0)); life = 3.4
+    fun = W(T['funnel'][:]) + Vector((dx, 0, 0)); life = 4.2
     for i, o in enumerate(T['puffs']):
-        a = (t * 0.55 + i / len(T['puffs'])) % 1.0
-        pos = fun + Vector((abs(v) * a * life * 0.9 + 0.5 * SC * a * life * 0.3, 0.15 * a * life * SC * 0.3, 1.2 * a * life * SC * 0.55))
-        r_m = (0.5 + 1.9 * a) * (1.0 - max(0.0, (a - 0.78) / 0.22) ** 1.5)
+        a = (t * 0.45 + i / len(T['puffs'])) % 1.0
+        pos = fun + Vector((abs(v) * a * life * 0.9 + 8.5 * SC * a, 1.2 * SC * a, 11.0 * SC * a ** 0.9))
+        r_m = (1.0 - 0.78 * a) * min(1.0, a / 0.04) * (1.0 - max(0.0, (a - 0.94) / 0.06))        # a chain of puffs that SHRINK away from the funnel
         o.location = pos; o.scale = (max(r_m, 0.002),) * 3
         if frame is not None: _key(o, 'location', frame); _key(o, 'scale', frame)
 
+def _rain_follow(frame=None):
+    """put the rain volume under the camera, turned with its heading (computed from the camera pose at `frame`; key it per frame for moving cameras)"""
+    R = STATE.get('rain'); cam = STATE.get('cam')
+    if R is None or cam is None: return
+    sc = bpy.context.scene
+    if frame is not None: sc.frame_set(int(frame))
+    bpy.context.view_layer.update(); f = cam.matrix_world.to_3x3() @ Vector((0, 0, -1)); f.z = 0
+    if f.length < 1e-4: f = cam.matrix_world.to_3x3() @ Vector((0, 1, 0)); f.z = 0
+    th = math.atan2(-f.x, f.y); root = R['root']; root.location = (cam.matrix_world.translation.x, cam.matrix_world.translation.y, 0.0); root.rotation_euler = (0, 0, th)
+    if frame is not None: _key(root, 'location', frame); _key(root, 'rotation_euler', frame)
+
 def set_rain(on=True, frame=None):
-    """rain streaks (geometry, three depth layers that follow the camera and fall every frame). on: bool or 0..1 (fraction of layers). Key per frame."""
+    """rain streaks over the whole frame (geometry, three depth layers that follow the camera and fall every frame). on: bool or 0..1 (fraction of layers). Key per frame."""
     _line_only()
     if 'rain' not in STATE and not on: return
     if 'rain' not in STATE: _make_rain()
@@ -583,24 +652,21 @@ def set_rain(on=True, frame=None):
         _setv(lay, i < n_on, frame)
         lay.location.z = -((t * v) % Lp)
         if frame is not None: _key(lay, 'location', frame)
-    if STATE.get('cam') is not None and not R.get('cons'):
-        c = R['root'].constraints.new('COPY_LOCATION'); c.target = STATE['cam']; c.use_z = False
-        c2 = R['root'].constraints.new('COPY_ROTATION'); c2.target = STATE['cam']; c2.use_x = False; c2.use_y = False; c2.euler_order = 'ZXY'; R['cons'] = True
+    _rain_follow(frame)
 
 def _make_rain():
-    sc = bpy.context.scene; root = bpy.data.objects.new('rain_root', None); sc.collection.objects.link(root); rr = rnd(77)
-    m = _emit_mat('rain', '#cfe0ff', 2.0, 0.5); layers = []
-    spec = [('near', 90, 0.8, 4.0, 1.4, 0.014, 0.55, 18.0), ('mid', 260, 3.5, 12.0, 1.1, 0.014, 0.5, 18.0), ('far', 520, 11.0, 45.0, 1.5, 0.03, 0.45, 18.0)]
-    for nm, n, d0, d1, ln, r_, spd, Lp in spec:
-        mb = MB('rain_' + nm); mb.T = Matrix.Identity(4)
+    sc = bpy.context.scene; root = bpy.data.objects.new('rain_root', None); sc.collection.objects.link(root)
+    m = _emit_mat('rain', '#dfe8ff', 1.8, 0.4); layers = []
+    spec = [('near', 150, 0.7, 3.2, 1.0, 0.012, 15.0), ('mid', 520, 3.0, 9.0, 0.8, 0.012, 15.0), ('far', 900, 8.0, 26.0, 1.0, 0.026, 15.0)]
+    for nm, n, d0, d1, ln, r_, Lp in spec:
+        mb = MB('rain_' + nm); mb.T = Matrix.Identity(4); rs = rnd(100 + len(layers))
         for rep in (0, 1):
-            rs = rnd(100 + len(layers))
             for i in range(n):
-                d = rs.uniform(d0, d1); lat = rs.uniform(-0.75, 0.75) * d; z = rs.uniform(0, Lp) + rep * Lp
-                a = (lat, d, z); b = (lat + 0.12 * ln, d, z + ln)
+                d = rs.uniform(d0, d1); lat = rs.uniform(-0.62, 0.62) * d; z = rs.uniform(-1.0, Lp) + rep * Lp
+                a = (lat, d, z); b = (lat + 0.1 * ln, d, z + ln)
                 mb.rod(m, tuple(c * SC for c in a), tuple(c * SC for c in b), r_ * SC * 0.5, r_ * SC * 0.5, 3, caps=False)
         ob = mb.finish()[0]; ob.visible_shadow = False; ob.parent = root; ob.visible_glossy = False
-        layers.append((ob, 0.30 * SC, Lp * SC))
+        layers.append((ob, 0.33 * SC, Lp * SC))
     STATE['rain'] = dict(root=root, layers=layers)
 
 def set_leak(where='pipe', intensity=1.0, frame=None):
@@ -616,28 +682,29 @@ def set_leak(where='pipe', intensity=1.0, frame=None):
         if it <= 0: _show([core, halo], False, frame); continue
         u = (t * sp['rate'] + j / len(sp['objs']) + sp['ph'][j]) % 1.0; p, s_, vis = fn(j, u, t)
         vis = vis and it > 0.01; _show([core, halo], vis, frame)
-        core.location = halo.location = p; core.scale = (s_ * (0.5 + 0.5 * it),) * 3; halo.scale = (s_ * 2.6 * (0.4 + 0.6 * it),) * 3
+        core.location = halo.location = p; core.scale = (s_ * (0.5 + 0.5 * it),) * 3; halo.scale = (s_ * 2.2 * (0.4 + 0.6 * it),) * 3
         if frame is not None: _keyxf(core, frame, True, False, True); _keyxf(halo, frame, True, False, True)
 
 def _make_sparks(where):
     M = STATE['M']; core_m = _emit_mat('sparkcore', '#c8e8ff', 30.0); halo_m = _emit_mat('sparkhalo', '#4a8cff', 6.0, 0.35); rr = rnd(55); objs = []; ph = []
-    n = 16 if where == 'pipe' else 14
+    n = 18 if where == 'pipe' else 12
     for j in range(n):
         for nm, m_ in (('c', core_m), ('h', halo_m)):
-            mb = MB('spk_%s%d%s' % (where, j, nm)); mb.T = Matrix.Identity(4); mb.ell(m_, (0, 0, 0), (0.05 * SC,) * 3, (10, 6)); o = mb.finish()[0]; o.visible_shadow = False
+            mb = MB('spk_%s%d%s' % (where, j, nm)); mb.T = Matrix.Identity(4); mb.ell(m_, (0, 0, 0), ((0.026 if where == 'pole' else 0.05) * SC,) * 3, (10, 6)); o = mb.finish()[0]; o.visible_shadow = False
             if nm == 'c': core = o
             else: halo = o
         ph.append(rr.random());
         objs.append([core, halo, None])
     if where == 'pipe':
-        pit = STATE['pit']; cx, cy = pit['c']; zf = pit['zf']; w0, w1 = pit['w']
-        def fn(j, u, t, cx=cx, zf=zf, w0=w0, w1=w1):
-            yy = w0 + (w1 - w0) * (((j * 0.37) % 1.0)); sg = -1 if j % 2 else 1
-            p = W((cx + sg * (0.05 + 0.5 * u), yy + 0.12 * math.sin(7 * u + j), zf + 0.1 + 0.26 * u - 0.7 * u * u)); return p, 0.03 * (1.0 - 0.5 * u) * SC * 0.0 + (1.0 - 0.4 * u), u < 0.82
-        rate = 0.55
+        pit = STATE['pit']; cx, cy = pit['c']; fy = pit['face_y']; z0 = pit['z0']; x0, x1 = pit['w']
+        def fn(j, u, t, cx=cx, fy=fy, z0=z0, x0=x0, x1=x1):
+            sg = -1 if j % 2 else 1; xs = x0 + 0.2 + (x1 - x0 - 0.4) * ((j * 0.37) % 1.0)
+            p = W((xs + sg * 0.5 * u * u + 0.05 * math.sin(9 * u + j), fy - 0.2 - 0.05 * u, z0 + 0.12 - 1.05 * u + 0.1 * math.sin(5 * u + j)))
+            return p, 1.0 - 0.45 * u, u < 0.93
+        rate = 0.45
     else:
         def fn(j, u, t):
-            pi = j % 2; y = LN.POLES_Y[pi]; x = LN.px(y) + 0.03; z = LN.POLE_H * (1.0 - u) ** 1.0
+            pi = 1 + j % 2; y = LN.POLES_Y[pi]; x = LN.px(y) + 0.03; z = LN.POLE_H * (1.0 - u) ** 1.0
             rad = 0.14 - (0.14 - 0.085) * z / LN.POLE_H + 0.035; a = j * 1.1 + 7.0 * u
             return W((x + rad * math.cos(a), y + rad * math.sin(a), z)), 1.0, z > 0.12
         rate = 0.3
@@ -657,17 +724,25 @@ def set_pulse(s, frame=None):
         if s < 0 or ss < 0 or ss > 1: _show([core, halo], False, frame); continue
         d = ss * tot; i = int(np.searchsorted(cum, d)); i = max(1, min(i, len(cum) - 1)); u = (d - cum[i - 1]) / max(1e-6, cum[i] - cum[i - 1])
         p = Vector(pts[i - 1]).lerp(Vector(pts[i]), u); pw = W(p); _show([core, halo], True, frame)
-        core.location = halo.location = pw; sc_ = 1.0 - 0.13 * k; core.scale = (sc_,) * 3; halo.scale = (sc_,) * 3
+        core.location = halo.location = pw; sc_ = 1.0 - 0.09 * k; core.scale = (sc_,) * 3; halo.scale = (sc_,) * 3
         if frame is not None: _keyxf(core, frame, True, False, True); _keyxf(halo, frame, True, False, True)
 
+def _glow_mat(name, hexcol, k, power=1.6):
+    """soft glow: emission whose opacity is 1 at the centre and falls to 0 at the silhouette"""
+    if name in MATS: return MATS[name]
+    m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); em = N('ShaderNodeEmission'); tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader')
+    em.inputs['Color'].default_value = hexc(hexcol); em.inputs['Strength'].default_value = k
+    L(K.cos_facing(nt, power), mx.inputs[0]); L(tr.outputs[0], mx.inputs[1]); L(em.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface']); MATS[name] = m; return m
+
 def _make_pulse():
-    core_m = _emit_mat('pulsecore', '#fff4c8', 40.0); halo_m = _emit_mat('pulsehalo', '#7ac4ff', 8.0, 0.4); L = []
-    for k in range(7):
-        r = 0.085 * (1.0 - 0.1 * k) * SC
+    core_m = _emit_mat('pulsecore', '#fff6d0', 90.0); halo_m = _glow_mat('pulsehalo', '#ffd890', 14.0); halo2_m = _glow_mat('pulsehalo2', '#78b8ff', 5.0); L = []
+    for k in range(10):
+        r = 0.032 * (1.0 - 0.07 * k) * SC
         mb = MB('pulse_c%d' % k); mb.T = Matrix.Identity(4); mb.ell(core_m, (0, 0, 0), (r,) * 3, (12, 8)); c = mb.finish()[0]
-        mb = MB('pulse_h%d' % k); mb.T = Matrix.Identity(4); mb.ell(halo_m, (0, 0, 0), (r * 3.2,) * 3, (12, 8)); h = mb.finish()[0]
-        for o in (c, h): o.visible_shadow = False
-        L.append((c, h, 0.006 * k))
+        mb = MB('pulse_h%d' % k); mb.T = Matrix.Identity(4); mb.ell(halo_m if k < 4 else halo2_m, (0, 0, 0), (r * 4.2,) * 3, (14, 10)); h = mb.finish()[0]
+        for o in (c, h): o.visible_shadow = False; o.visible_glossy = False
+        L.append((c, h, 0.0036 * k))
     STATE['pulse'] = L
 
 # ----------------------------------------------------------------------------- CLI
