@@ -1,8 +1,8 @@
 """film 17 style board: 3 stills. usage: python3 styleboard.py <1|2|3> [draft|final] [out.png]"""
 import sys, os, math, time
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
-import bertillon as K
-from bertillon import *
+import bertillon_board as K
+from bertillon_board import *
 
 def scene1():
     """measuring room at the Dépôt: eye-level wide, corner view."""
