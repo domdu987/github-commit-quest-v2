@@ -15,3 +15,8 @@
 - Ready-made cast poses: farmer = farmer_watch_night face (wide eyes, 'o' mouth, sweat) with both hands on the hive box; uncle = uncle_point_mock mirrored, pointing screen-left at the farmer with a held laugh mouth; old man = villager_oldman_laugh (mirrored); kid = villager_kid_bang_pot with the spoon, small vertical bobs every 8 frames (3 hits per 36-frame burst).
 - Spacing: farmer, uncle, old man, kid left to right; no arm crosses another face. Camera 20 mm: heads ~135 px (slightly under 150 to keep all four unclipped). Youth skipped (no room).
 - qa_auto PASS, chins < y 880.
+
+## v6 (shot 10 only, g664-764)
+- Layout left to right: farmer (hat ~40 px inside the left edge) | uncle | ~60 px gap | kid (front) | old man (behind, right). Uncle's free arm on his belly; his pointing arm (screen-left) ends in open air well short of the farmer's face, not on the hive.
+- Kid: pot14 in the left hand, spoon14 in the right, spoon bowl solved onto pot_face_l at each hit, hits every 8 frames (3 per 36-frame burst), 35 deg swing.
+- Camera 18.5 mm so all four fit without clipping: heads ~115 px (below the ~150 target). Order of old man and kid swapped (the director's alternative) because the kid in front of the old man hid him.
