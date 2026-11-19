@@ -1,0 +1,35 @@
+{
+ "take": "s14",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 29.433,
+   "frame": 883,
+   "kind": "ambience",
+   "label": "Maryland countryside, late afternoon turning to dusk: wind, crickets starting, harness creak",
+   "peak_frame": null
+  },
+  {
+   "time": 29.767,
+   "frame": 893,
+   "kind": "accent",
+   "label": "snap 1 crane-up whoosh + pipe clank on 'หนึ่งกิโล'",
+   "peak_frame": 897
+  },
+  {
+   "time": 30.733,
+   "frame": 922,
+   "kind": "accent",
+   "label": "snap 2 crane-up whoosh + pipe clank on 'ห้ากิโล'",
+   "peak_frame": 926
+  },
+  {
+   "time": 31.267,
+   "frame": 938,
+   "kind": "accent",
+   "label": "snap 3 crane-up whoosh, bigger, on 'สิบห้ากิโล'",
+   "peak_frame": 942
+  }
+ ]
+}

@@ -1,0 +1,68 @@
+{
+ "take": "s14",
+ "film": 16,
+ "shots": [
+  14
+ ],
+ "g0": 892,
+ "g1": 958,
+ "first_g": 883,
+ "n_frames": 84,
+ "shot_ranges": {
+  "14": [
+   892,
+   957
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "frames": 13,
+  "at": 958,
+  "note": "out-handle g 958..966 rendered in 3D"
+ },
+ "set": "v3/set3d16/telegraph.py LINE preset line_trench_high; per-frame hooks set_trench (0.20 -> 0.30 -> 0.60 -> 0.90 with the three snaps + team walk), set_pipe (0.025 behind), set_light_mix DAY->DUSK (0 / 0.10 / 0.55 / 1.0 after each snap)",
+ "cast": "v3/cast16: mule x2 (cycle pull, harness 1), cornell (cornell_plough + walk legs), worker16_a / worker16_b (shovel poses + walk legs); nobody speaks",
+ "camera": "custom 22 mm, P0 (snap-1 pose pulled in and lower) -> the set's line_trench_snap1 / 2 / 3 cameras, three 13 f eased snap crane-ups (peak 1.6) at g 893-906 / 922-935 / 938-951 on 'หนึ่งกิโล' / 'ห้ากิโล' / 'สิบห้ากิโล'; drift push 7 %/s + slide 30 px/s + arc 3 deg/s on top, carried along with the team",
+ "events": {
+  "snap1": [
+   893,
+   906
+  ],
+  "snap2": [
+   922,
+   935
+  ],
+  "snap3": [
+   938,
+   951
+  ],
+  "words": [
+   895,
+   924,
+   940
+  ]
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY->DUSK",
+ "samples": 7,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 8.75,
+ "s_per_frame_cpu_mean": 16.96,
+ "framediff_in_shot": {
+  "median": 12.9,
+  "p90": 20.22
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json"
+}
