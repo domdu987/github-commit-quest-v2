@@ -35,7 +35,7 @@ for f,t,db,ln in [("glass_clink",1.6,-16,0.7),("wire_twang",2.1,-20,0.8),("whoos
  ("telegraph_click",57.66,-16,0.8),("crowd_gasp",58.2,-20,1.2),("train_whistle",59.0,-22,1.2),("crowd_cheer",59.4,-22,0.8),("whoosh_fast",60.2,-28,0.6),
  ("coins_bag",61.0,-24,0.8),("whoosh_fast",63.2,-26,0.6),("crowd_gasp",65.1,-22,0.9),("telegraph_click",66.3,-22,1.5),("yawn",67.4,-20,1.6),("telegraph_click",68.8,-22,1.0)]:
     add(f+".mp3",t,db,ln)
-BEDS=[("field_day",0,5.6),("studio_tone",5.6,15.86),("chamber_tone",18.0,26.2),("field_day",27.7,31.9),("silence_wind",31.9,40.9),("rain_heavy",42.2,46.0),("field_day",46.0,56.9),("chamber_tone",56.9,58.9),("field_day",58.9,60.2),("chamber_tone",60.2,66.0),("candle_night",66.0,70.0)]
+BEDS=[("field_day",0,5.6),("studio_tone",5.6,15.86),("chamber_tone",18.0,26.2),("field_day",27.7,31.9),("silence_wind",31.9,40.9),("rain_heavy",40.6,46.4),("field_day",46.0,56.9),("chamber_tone",56.9,58.9),("field_day",58.9,60.2),("chamber_tone",60.2,66.0),("candle_night",66.0,70.0)]
 for n,a_,b_ in BEDS:
     t=a_
     while t<b_-0.5:
