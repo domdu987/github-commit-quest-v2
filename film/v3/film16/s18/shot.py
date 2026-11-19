@@ -10,6 +10,7 @@ SNAP x1.7 with a pan on "ใต้ดินแล้ว" (40.12 s -> g 1207).
 import math, os, sys, json
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import c16 as C
+import bpy
 from mathutils import Vector
 TG, cast16, actors = C.TG, C.cast16, C.actors
 bf, u_of, lerp, blink = C.bf, C.u_of, C.lerp, C.blink
@@ -21,15 +22,15 @@ GS = list(range(GA, GZ + 1))
 Q0, Q1 = C.g_of(38.46), C.g_of(40.80)            # lip-sync window 1157 .. 1227
 G_LAUGH = Q0 - 3                                  # expression change on the closed frame of a blink
 G_WORD = C.g_of(40.12)                            # 1207 "ใต้ดินแล้ว"
-SNAP = (G_WORD - 3, G_WORD + 11)
-V = 1.4 / 30.0                                    # buggy speed, D per frame
+SNAP = (G_WORD - 3, G_WORD + 9)
+V = 3.0 / 30.0                                    # buggy speed, D per frame
 X0 = 62.0
 bx = lambda g: X0 + V * (g - GA)
 
-SUBJ0 = Vector((X0 + 3.0, -2.3, 3.3))             # mocker's chest / head, road
-OFF = Vector((1.3, -8.3, -1.8))                   # camera: furrow side, low (z ~ 1.3), pitch ~ 16 deg
-CAM = C.CamPath(SUBJ0 + OFF, SUBJ0, GA, GZ, push=0.05, slide_px=-25.0, arc_deg_s=0.0, decay=0.3,
-                snaps=[dict(g=SNAP, k=2.7, peak=1.75, shift=(-2.6, 0.6))])
+SUBJ0 = Vector((X0 + 0.55, -2.3, 3.85))             # mocker's chest / head, road
+OFF = Vector((0.8, -4.4, -1.4))                   # camera: furrow side, low (z ~ 1.3), pitch ~ 16 deg
+CAM = C.CamPath(SUBJ0 + OFF, SUBJ0, GA, GZ, push=0.12, slide_px=-30.0, arc_deg_s=16.0, decay=0.15,
+                snaps=[dict(g=SNAP, k=1.85, peak=1.9, shift=(0.0, 0.1))])
 
 
 def cam_pose(g):
@@ -49,10 +50,60 @@ def mocker_pose(g):
     p["blink"] = blink(g, [G_LAUGH - 1, 1180, 1214])
     ph = math.sin(2 * math.pi * 3.0 * g / 30.0)
     laugh = u_of(g, G_LAUGH, G_LAUGH + 6)
-    p["squash"] = (1.01 + 0.02 * ph * laugh, 0.99 - 0.02 * ph * laugh)
+    p["squash"] = (1.01 + 0.035 * ph * laugh, 0.99 - 0.035 * ph * laugh)
     p["head_roll"] = p.get("head_roll", 0) + 3.0 * math.sin(g * 0.2)
     p["t"] = g / 30.0
-    return p, 0.06 * ph * laugh
+    return p, 0.09 * ph * laugh
+
+
+def texture_buggy():
+    """the set's buggy panels are flat green: add painted plank grain + weathering (wave bands + noise) to the green / wood / red materials."""
+    for o in bpy.data.objects:
+        if not o.name.startswith("buggy_") or o.type != "MESH":
+            continue
+        for sl in o.material_slots:
+            m = sl.material
+            if m is None or not m.use_nodes or m.get("s18_tex"):
+                continue
+            nt = m.node_tree
+            bsdf = next((n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"), None)
+            if bsdf is None:
+                continue
+            m["s18_tex"] = 1
+            base = bsdf.inputs["Base Color"]
+            src = base.links[0].from_socket if base.links else None
+            tc = nt.nodes.new("ShaderNodeTexCoord")
+            wv = nt.nodes.new("ShaderNodeTexWave")
+            wv.wave_type, wv.bands_direction = "BANDS", "Z"
+            wv.inputs["Scale"].default_value = 11.0
+            wv.inputs["Distortion"].default_value = 3.0
+            wv.inputs["Detail"].default_value = 3.0
+            nz = nt.nodes.new("ShaderNodeTexNoise")
+            nz.inputs["Scale"].default_value = 55.0
+            nz.inputs["Detail"].default_value = 8.0
+            mixn = nt.nodes.new("ShaderNodeMixRGB")
+            mixn.blend_type, mixn.inputs[0].default_value = "MULTIPLY", 1.0
+            ramp = nt.nodes.new("ShaderNodeValToRGB")
+            ramp.color_ramp.elements[0].color = (0.30, 0.32, 0.30, 1)
+            ramp.color_ramp.elements[1].color = (1.15, 1.15, 1.15, 1)
+            nt.links.new(tc.outputs["Object"], wv.inputs["Vector"])
+            nt.links.new(tc.outputs["Object"], nz.inputs["Vector"])
+            mf = nt.nodes.new("ShaderNodeMath")
+            mf.operation = "MULTIPLY_ADD"
+            nt.links.new(wv.outputs["Fac"], mf.inputs[0])
+            mf.inputs[1].default_value = 0.9
+            nt.links.new(nz.outputs["Fac"], mf.inputs[2])
+            nt.links.new(mf.outputs[0], ramp.inputs[0])
+            if src is not None:
+                nt.links.new(src, mixn.inputs[1])
+            else:
+                mixn.inputs[1].default_value = tuple(base.default_value)
+            nt.links.new(ramp.outputs[0], mixn.inputs[2])
+            nt.links.new(mixn.outputs[0], base)
+            bump = nt.nodes.new("ShaderNodeBump")
+            bump.inputs["Strength"].default_value = 0.35
+            nt.links.new(nz.outputs["Fac"], bump.inputs["Height"])
+            nt.links.new(bump.outputs["Normal"], bsdf.inputs["Normal"])
 
 
 class Take(C.Take):
@@ -62,6 +113,7 @@ class Take(C.Take):
         self.scene.frame_set(bf(GA))
         sd = os.path.join(WORK, "sprites")
         TG.set_buggy(bx(GA), frame=bf(GA))
+        texture_buggy()
         self.moc = self.actors["moc"] = C.make_actor("moc", "mocker", sd, canvas=cast16.CANVAS16["mocker"], cam=self.cam)
         self.mul = self.actors["mul"] = C.make_actor("mul", "mule", sd, canvas=cast16.CANVAS16_BUGGY["mule"], cam=self.cam, head_flip=False)
         self.mk = {}
@@ -80,7 +132,7 @@ class Take(C.Take):
             f = bf(g)
             self.scene.frame_set(f)
             self.moc.pose(f, mocker_pose(g)[0], camera=self.cam)
-            mp = cast16.cycle("mule", g / 54.0, "walk", 1, dict(harness=2))
+            mp = cast16.cycle("mule", g / 30.0, "walk", 1, dict(harness=2))
             self.mul.pose(f, mp, camera=self.cam)
         self.sprites_for([(self.moc, 256), (self.mul, 256)], [bf(g) for g in gs])
 
