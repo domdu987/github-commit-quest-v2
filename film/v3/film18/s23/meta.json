@@ -1,0 +1,24 @@
+{
+ "take": "s23",
+ "film": 18,
+ "shots": [
+  23
+ ],
+ "first_g": 1736,
+ "n_frames": 77,
+ "g0": 1742,
+ "g1": 1806,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 9
+ },
+ "frame_diff": {
+  "median": 5.18,
+  "p90": 12.96,
+  "min": 1.32,
+  "max": 25.26,
+  "n": 64
+ }
+}
