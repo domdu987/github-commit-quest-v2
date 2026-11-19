@@ -1,0 +1,71 @@
+{
+ "take": "s10",
+ "film": 16,
+ "shots": [
+  10
+ ],
+ "g0": 597,
+ "g1": 698,
+ "first_g": 588,
+ "n_frames": 119,
+ "shot_ranges": {
+  "10": [
+   597,
+   697
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "hard cut in; 9 handle frames rendered in 3D before the first frame"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 698,
+  "note": "hard cut to shot 11 at g 698; handle g 698..706 in 3D"
+ },
+ "set": "v3/set3d16 CHAMBER (chamber_low build, custom low camera), DAY, mocker in front of his desk; wide tall card for the focus lines",
+ "cast": "mocker: mocker_boast_finger g 588..661, blink swap g 662, mocker_boast_chest (thumping) to the end; LIP-SYNC the whole shot; blush; focus lines from g 672",
+ "camera": "custom 22 mm low angle (bearing -62 deg off the room axis), push 8 %/s + slide 40 px/s + arc 7 deg/s, ONE punch-in snap x1.8 g 672..686 peaking on 'เฝ้ามันเอง' (g 677) with focus lines",
+ "events": {
+  "punch_in": [
+   672,
+   686
+  ],
+  "focus_lines_from": 672,
+  "pose_swap_blink": [
+   661,
+   663
+  ],
+  "word_fao_man_eng": 677
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "samples": 6,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 11.09,
+ "s_per_frame_cpu_mean": 20.84,
+ "main_head_px": [
+  241,
+  460
+ ],
+ "main_head_centre_y": [
+  403,
+  520
+ ],
+ "head_bottom_max_y": 692,
+ "framediff_in_shot": {
+  "median": 4.25,
+  "p90": 13.67
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json"
+}

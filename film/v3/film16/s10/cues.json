@@ -1,0 +1,39 @@
+{
+ "take": "s10",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 19.6,
+   "duration": 3.933,
+   "frame": 588,
+   "end_frame": 706,
+   "kind": "ambience",
+   "label": "chamber murmur, the congressmen quieten to hear him"
+  },
+  {
+   "time": 22.4,
+   "duration": 0.467,
+   "frame": 672,
+   "end_frame": 686,
+   "kind": "accent",
+   "label": "punch-in whoosh + a sharp thump on 'เฝ้ามันเอง' (focus lines)"
+  },
+  {
+   "time": 22.067,
+   "duration": 0.933,
+   "frame": 662,
+   "end_frame": 690,
+   "kind": "foley",
+   "label": "his hand thumps his chest: dull cloth thumps"
+  },
+  {
+   "time": 23.267,
+   "duration": 0.0,
+   "frame": 698,
+   "end_frame": 698,
+   "kind": "cut",
+   "label": "hard cut to shot 11: the whole chamber erupts"
+  }
+ ]
+}
