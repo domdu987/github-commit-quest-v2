@@ -7,3 +7,6 @@
 | 4 | 17-24 (false payoff, KEY) | s17 (+s21) | session_017iwyCtLpqhnqeQNmRqppoK | render15/team4 |
 | 5 | 25-31 (reveal, KEY) | s25 (+s29) | session_017iwyCsrRYJQXedZdrmGi4a | render15/team5 |
 | 6 | 32-36 (ending, KEY) | s32 | session_017iwyCtVo682L7msJKbniHq | render15/team6 |
+
+## Take status
+- s01: r3 ACCEPTED (render15/team1 @ f5cefa2; TAKE gate PASS on r2, r3 = polish B/C/D; motion 5.4/21.4)
