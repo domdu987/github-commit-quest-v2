@@ -28,7 +28,7 @@ Each film now gets its own short chat.
 ## 3. Client decisions in force (2026-11-18)
 - Thai replies. Voice is Bankky (RwilAvCC3o05RLuACpAn), speed 1.15, original setting, atempo about 1.134.
 - Captions: Kanit Black 88 px, phrase captions, centred at y 900.
-- The client makes the music in Suno. Give him the Styles / Exclude styles / settings text.
+- **Music is made by us on fal.ai (client decision 2026-11-19), not by the client in Suno.** Use `elevenlabs/music/v2.5` (force_instrumental true, music_length_ms = film length + 5 s, prompt = the Suno-style text). Make 2-3 takes, have QA pick one (fits mood, no vocals, clean ending), mix at -31 dB. Do not wait for the client.
 - **New set for EVERY film. Never reuse a set.**
 - **Look approval = QA-art, not the client (client decision 2026-11-19).** Make a style board (2-3 stills), have Opus QA-art check it against the bible and client rules, fix, build the set and cast, pass the SET gate with QA-art, then render WITHOUT waiting for the client. Send the client the board and set sheet as FYI only. (Replaces the old "wait for client OK before rendering".)
 - Detail level the client asked for: rich and detailed sets. Water must be smooth and layered with foam, glitter and wakes, not big flat triangles. Use pleasing period colours, not harsh black and white. Make it dense with props and life.
