@@ -1,0 +1,42 @@
+{
+ "take": "s07",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 13.067,
+   "duration": 3.067,
+   "frame": 392,
+   "end_frame": 484,
+   "kind": "ambience",
+   "label": "Morse's painting room 1825, window light, far street murmur, a wire coil's soft rattle"
+  },
+  {
+   "time": 14.867,
+   "duration": 0.433,
+   "frame": 446,
+   "end_frame": 459,
+   "kind": "foley",
+   "label": "coil and magnet lifted: soft copper rattle",
+   "peak_frame": 452
+  },
+  {
+   "time": 15.4,
+   "duration": 0.433,
+   "frame": 462,
+   "end_frame": 475,
+   "kind": "accent",
+   "label": "snap push on 'พริบตา': whoosh",
+   "peak_frame": 466
+  },
+  {
+   "time": 15.5,
+   "duration": 0.333,
+   "frame": 465,
+   "end_frame": 475,
+   "kind": "prop",
+   "label": "BLUE SPARK at the magnet poles: bright electric crackle, short",
+   "peak_frame": 466
+  }
+ ]
+}

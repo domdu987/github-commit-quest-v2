@@ -1,0 +1,72 @@
+{
+ "take": "s07",
+ "film": 16,
+ "shots": [
+  7
+ ],
+ "g0": 401,
+ "g1": 475,
+ "first_g": 392,
+ "n_frames": 92,
+ "shot_ranges": {
+  "7": [
+   401,
+   474
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "at": 401,
+  "note": "hard cut from shot 6 at g 401; handle g 392..400 continues the move"
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "frames": 15,
+  "at": 475,
+  "note": "shot 8 (chamber_wide_high) comes in with a dissolve centred on g 475; handle g 475..483 continues the move (the snap ends by g 475)"
+ },
+ "set": "v3/set3d16 STUDIO preset studio_window, light DAY; runtime: own FG jars + canvases; the coil + magnet are cast16 card props (the set's sill coil/magnet stay on the sill behind him)",
+ "cast": "v3/cast16 morse16 young=1: young_idle -> morse_show_coil_magnet (lerped g 446..459), glint=1 (blue spark at the magnet poles) from g 465, expr excited from g 455; mouth still",
+ "camera": "custom 22 mm, pull back 8 %/s + slide -80 px/s + arc -10 deg/s (c16.CamPath, decay 0.3), SNAP push x1.6 with a 1.0 D pan on 'พริบตา' g 462..475 ending on the face + magnet spark",
+ "events": {
+  "lift_arms": [
+   446,
+   459
+  ],
+  "snap": [
+   462,
+   475
+  ],
+  "word_blink_of_an_eye": 465,
+  "spark": 465
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "samples": 6,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 10.81,
+ "s_per_frame_cpu_mean": 20.91,
+ "head_px": [
+  157,
+  269
+ ],
+ "head_centre_y": [
+  521,
+  591
+ ],
+ "head_bottom_max_y": 690,
+ "framediff_in_shot": {
+  "median": 4.95,
+  "p90": 16.49
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json"
+}
