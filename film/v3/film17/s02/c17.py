@@ -19,10 +19,10 @@ def snap(g, g0, dur):                             # 0..1 eased snap progress
     return sm((g - g0) / float(dur))
 
 class Take(object):
-    def __init__(self, preset, light=None, quality="draft"):
+    def __init__(self, preset, light=None, quality="draft", fg=True):
         bpy.ops.wm.read_factory_settings(use_empty=True)
         self.preset = preset
-        self.A = K.build(preset=preset, light=light); self.scene = bpy.context.scene
+        self.A = K.build(preset=preset, light=light, fg=fg); self.scene = bpy.context.scene
         K.clear_keys(); self.cam = camrig.make_camera(self.scene, name="cam_s02", lens=22.0)
         self.cam.data.clip_start = 0.02; self.cam.data.clip_end = 400; self.cam.data.dof.use_dof = False
         self.scene.frame_start, self.scene.frame_end = 1, 9000

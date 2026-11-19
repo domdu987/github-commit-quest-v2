@@ -6,9 +6,11 @@
 Blender frame = g.  Two locations => two processes:  python3 shot.py <street|desk> probe|draft|final  a:b[:step]  [outdir]
 """
 import os, sys, json, math
+import bpy
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import c17 as C
 from c17 import K, cast17, vlerp, mix, snap, lerp, blink
+from mathutils import Vector
 G0, G1 = 144, 336; HO = 6
 S4 = (138, 221); S5 = (222, 284); S6 = (285, 341)
 RANGES = {"street": (138, 284), "desk": (285, 341)}
@@ -24,18 +26,18 @@ def snaps(g, loc, look, ev):
     return loc, look
 def cam_s4(g):
     u = mix((g - S4[0]) / (S4[1] - S4[0]))
-    loc = vlerp((-2.4, -4.2, 2.6), (-0.3, 0.6, 1.7), u); look = vlerp((0.4, 11.0, 2.6), (2.0, 11.0, 2.3), u)
-    return snaps(g, loc, look, [(166, 12, (0.9, 1.0, -0.15), (1.5, -2.5, -0.4)), (198, 12, (-1.5, 0.6, 0.1), (-2.2, 1.0, 0.3))])
+    loc = vlerp((-2.4, -4.8, 2.6), (-0.9, -1.4, 1.8), u); look = vlerp((3.0, 10.5, 2.0), (3.8, 9.5, 1.9), u)
+    return snaps(g, loc, look, [(168, 12, (0.8, 0.9, -0.1), (0.6, -1.5, -0.2)), (198, 12, (-0.9, 0.4, 0.05), (-0.8, 0.8, 0.1))])
 def cam_s5(g):
     u = mix((g - S5[0]) / (S5[1] - S5[0]))
-    loc = vlerp((-1.8, 1.3, 1.6), (0.3, 2.6, 1.5), u); look = vlerp((2.6, 7.2, 1.5), (3.2, 6.6, 1.6), u)
-    return snaps(g, loc, look, [(238, 12, (0.9, 0.5, -0.05), (0.2, 0.0, 0.05)), (262, 12, (-0.6, 0.6, 0.0), (-0.7, -0.4, 0.0))])
+    loc = vlerp((WX - 2.4, -0.3, 1.55), (WX - 1.0, 0.5, 1.5), u); look = vlerp((WX, 5.3, 1.5), (WX, 4.6, 1.55), u)
+    return snaps(g, loc, look, [(238, 12, (0.8, 0.4, -0.05), (0.2, 0.0, 0.05)), (262, 12, (-0.5, 0.5, 0.0), (-0.5, -0.3, 0.0))])
 def cam_s6(g):
     u = mix((g - S6[0]) / (S6[1] - S6[0]))
-    loc = vlerp((-2.8, 1.6, 1.5), (-2.2, 1.1, 1.45), u); look = vlerp((1.9, -2.6, 1.3), (1.4, -3.0, 1.35), u)
-    return snaps(g, loc, look, [(298, 11, (0.35, -0.2, 0.0), (0.3, 0.1, 0.0)), (322, 11, (0.35, -0.3, 0.0), (-0.3, -0.2, 0.0))])
+    loc = vlerp((-3.0, -0.8, 1.45), (-2.0, -1.5, 1.45), u); look = vlerp((1.1, -2.4, 1.3), (1.3, -2.5, 1.3), u)
+    return snaps(g, loc, look, [(298, 11, (0.6, -0.3, 0.0), (0.3, -0.1, 0.0)), (322, 11, (-0.5, -0.4, 0.0), (-0.1, -0.2, 0.0))])
 def cam_of(g):
-    return cam_s4(g) if g <= S4[1] else cam_s5(g) if g <= S5[1] else cam_s6(g)
+    return (snaps(g, *cam_s4(g), []) if False else cam_s4(g)) if g <= S4[1] else cam_s5(g) if g <= S5[1] else cam_s6(g)
 
 # ------------------------------------------------------------ poses
 SP = cast17.STORY17
@@ -47,13 +49,52 @@ def pose_walk(cast, g, g0, facing=1):
 def pose_stand(name, g, per=89, off=0, **kw):
     p = dict(SP[name][1]); p.update(kw); p["squash"] = idle(g + off)
     p["head_roll"] = p.get("head_roll", 0) + 1.5 * math.sin(g * 0.13 + off)
-    return with_blink(cast17.silent(p), g, per, off)
+    return with_blink(p if "mouth" in kw else cast17.silent(p), g, per, off)
 
 # ------------------------------------------------------------ the take
+WY = 7.0; WX = 1.1
 class Take(C.Take):
+    def hide_puddles(self):
+        for o in bpy.data.objects:
+            if any(m and m.name.startswith("puddle") for m in getattr(o.data, "materials", []) or []): o.hide_render = True
+    def make_wagon(self):
+        K.point  # noqa
+        B = K.Batch(7); root = bpy.data.objects.new("wagon_root", None); bpy.context.scene.collection.objects.link(root); self.wroot = root
+        with B.xf((0, 0, 0)):
+            B.box('wagon', (0, 0, 1.45), (1.75, 3.5, 1.7), tint=0.95); B.box('wagon', (0, 0, 2.38), (1.85, 3.6, 0.16))
+            B.box('wagon_red', (0, 0, 2.5), (1.9, 3.65, 0.07)); B.box('wagon_red', (0, 0, 0.62), (1.82, 3.55, 0.07))
+            for sx in (-1, 1):
+                for yy in (-0.7, 0.9):
+                    B.box('dark', (sx * 0.88, yy, 1.8), (0.02, 0.6, 0.28))
+                    for k in range(4): B.cyl('iron', (sx * 0.895, yy - 0.22 + k * 0.145, 1.8), 0.012, 0.3, seg=6)
+            B.box('dark', (0, -1.77, 1.4), (1.1, 0.04, 1.45))                         # the opening behind the rear door
+            B.box('iron', (0, -2.1, 0.55), (0.9, 0.3, 0.06))                           # step
+            B.box('wagon', (0, 1.55, 2.0), (1.6, 0.9, 0.12)); B.box('leather', (0, 1.7, 2.12), (1.2, 0.4, 0.2)); B.box('wagon', (0, 1.95, 2.45), (1.5, 0.08, 0.8))
+            for sx in (-1, 1):
+                B.box('iron', (sx * 0.4, 2.7, 0.95), (0.06, 2.0, 0.06)); B.box('iron', (sx * 0.4, 3.7, 1.0), (0.1, 0.1, 0.1))
+                for (yy, rr) in ((-1.15, 0.52), (1.1, 0.62)):
+                    B.cyl('wagon_red', (sx * 0.98, yy, rr), rr, 0.1, axis='x', seg=24); B.cyl('brass', (sx * 1.04, yy, rr), 0.07, 0.08, axis='x', seg=10)
+                    for k in range(8): B.box('iron', (sx * 1.03, yy, rr), (0.04, 0.03, rr * 1.8), rot=(k * 22.5, 0, 0))
+            B.cyl('iron', (0, -1.15, 0.52), 0.045, 2.0, axis='x', seg=8); B.cyl('iron', (0, 1.1, 0.62), 0.045, 2.0, axis='x', seg=8)
+            B.cyl('brass', (-0.9, 1.9, 2.25), 0.07, 0.25, seg=8); B.sphere('glow_gas', (-0.9, 1.9, 2.45), 0.1)
+        B.finalize("wag", parent=root, ink_t=K.STATE['ink_t'])
+        hinge = bpy.data.objects.new("wagon_hinge", None); bpy.context.scene.collection.objects.link(hinge); hinge.parent = root; hinge.location = (-0.6, -1.9, 0)
+        D = K.Batch(8); D.box('wagon', (0.6, 0, 1.45), (1.2, 0.1, 1.5)); D.box('dark', (0.6, -0.06, 1.5), (0.5, 0.02, 0.6)); D.box('brass', (1.0, -0.07, 1.3), (0.06, 0.03, 0.2))
+        D.finalize("wagdoor", parent=hinge, ink_t=K.STATE['ink_t']); self.hinge = hinge
+    def make_desk(self):
+        B = K.Batch(9); K.table(B, (1.2, -2.65), size=(1.7, 0.8), h=0.85, rot=22); self.tpos = (1.2, -2.65)
+        with B.xf((1.2, -2.65, 0.85), (0, 0, 22)):
+            K.open_ledger(B, (-0.35, 0.0, 0.0), rot=10); K.inkpot(B, (0.55, 0.12, 0.0)); K.ledger_stack(B, (0.4, -0.15, 0.0), n=3, rot=8)
+        B.finalize("desk", ink_t=K.STATE['ink_t'] * 0.8)
+
     def __init__(self, loc, quality):
-        if loc == "street": C.Take.__init__(self, "street_wide", "DUSK_EXT", quality)
-        else: C.Take.__init__(self, "measure_door", "DAY_INT", quality)
+        if loc == "street":
+            K.police_wagon = lambda B, c, rot=0: None            # the set's wagon is merged into the street batch: drop it, build our own animated one
+            C.Take.__init__(self, "street_wide", "DUSK_EXT", quality)
+            self.make_wagon(); self.hide_puddles()
+        else:
+            C.Take.__init__(self, "measure_door", "DAY_INT", quality, fg=False)
+            self.make_desk()
         self.loc = loc; sd = os.path.join(HERE, "work", "sprites_" + loc)
         M = self.A["marks"]; self.M = M
         if loc == "street":
@@ -72,61 +113,71 @@ class Take(C.Take):
             else: self.stage_desk(g)
         for g in gs:
             self.scene.frame_set(g); self.stage_poses(g)
-    # ---- street staging
+    def rvec(self):
+        return self.cam.matrix_world.to_3x3() @ Vector((1, 0, 0))
     def stage_street(self, g):
-        s4 = g <= S4[1]; f = g
-        for a, nm in ((self.ga, "ga"), (self.gb, "gb"), (self.pc, "pc"), (self.gc, "gc")):
-            pass
-        if s4:                                              # shot 4: wide.  gendarme_a marches +x along street_b line, gendarme_b waits at the wagon door
-            x = -2.3 + 0.052 * (g - 138); self.place(self.ga, f, (x, 4.4, 0.0), hs("gendarme_a"))
-            wd = self.M["wagon_door"]; self.place(self.gb, f, (wd[0] - 0.5, wd[1] - 0.6, wd[2]), hs("gendarme_b"))
-            self.place(self.gc, f, (-0.6, 8.6, 0.0), hs("gendarme_a")); self.place(self.pc, f, (0.0, 30.0, -5.0), hs("prisoner_c"))
-            self.hid[g] = ("pc",)
-        else:                                               # shot 5: thief steps off the wagon, a gendarme either side
-            t = (g - S5[0]) / float(S5[1] - S5[0])
-            ws = self.M["wagon_step"]; px = ws[0] - 0.1 + 0.15 * t * 2; py = ws[1] + 0.2 - 0.9 * t
+        f = g
+        # wagon rolls in from depth, eased stop by g200
+        k = C.clamp((g - 128) / (200 - 128.0)); e = 1 - (1 - k) ** 2.2
+        wy = WY + 15.0 * (1 - e); self.wroot.location = (WX, wy, 0.012 * math.sin(g * 1.7) * (1 - e) + 0); self.wroot.keyframe_insert("location", frame=f)
+        op = C.clamp((g - 218) / 16.0); ang = -math.radians(150) * (1 - (1 - op) ** 2) if g >= 218 else 0.0
+        self.hinge.rotation_euler = (0, 0, ang); self.hinge.keyframe_insert("rotation_euler", frame=f)
+        self.hid[g] = ()
+        if g <= S4[1]:
+            x = -1.3 + 0.032 * min(g - 138, 62); self.place(self.ga, f, (x, 4.6, 0.0), hs("gendarme_a"))
+            self.place(self.gb, f, (4.9, 8.4, 0.3), hs("gendarme_b")); self.place(self.pc, f, (0, 30, -5), 1.0); self.place(self.gc, f, (0, 30, -5), 1.0)
+            self.hid[g] = ("pc", "gc")
+        else:
+            t = (g - S5[0]) / float(S5[1] - S5[0]); px = WX - 0.1 - 0.2 * t; py = WY - 2.5 - 1.0 * t
+            self.tp = (px, py)
             self.place(self.pc, f, (px, py, 0.0), hs("prisoner_c"))
-            self.place(self.ga, f, (px + 0.95, py + 0.15, 0.0), hs("gendarme_a")); self.place(self.gb, f, (px - 0.95, py + 0.1, 0.0), hs("gendarme_b"))
-            self.place(self.gc, f, (-0.6, 30.0, -5.0), hs("gendarme_a"))
-            self.hid[g] = ("gc",)
+            self.place(self.ga, f, (px + 0.72, py + 0.05, 0.0), hs("gendarme_a")); self.place(self.gb, f, (px - 0.72, py + 0.05, 0.0), hs("gendarme_b"))
+            self.place(self.gc, f, (0, 30, -5), 1.0); self.hid[g] = ("gc",)
     def stage_desk(self, g):
-        f = g; t = (g - S6[0]) / float(S6[1] - S6[0])
-        x, y, z = self.mark("door_r"); self.place(self.pc, f, (x + 0.45, y + 0.55, z), hs("prisoner_c"))
-        x, y, z = self.mark("door_r"); self.place(self.ga, f, (x - 0.15, y - 0.25, z), hs("gendarme_a"))
-        x, y, z = self.mark("door_x"); self.place(self.gb, f, (x + 0.2, y + 0.3, z), hs("gendarme_b"))
-        self.hid[g] = ("gb",)
+        f = g; tx, ty = self.tpos
+        self.place(self.pc, f, (0.9, -1.9, 0.0), hs("prisoner_c"))
+        self.place(self.ga, f, (1.5, -3.4, 0.0), hs("gendarme_a"))
+        self.place(self.gb, f, (0, 30, -5), 1.0); self.hid[g] = ("gb",)
     def stage_poses(self, g):
         cam = self.cam
         for a in self.actors.values():
             a.card.hide_render = a.name in self.hid.get(g, ())
             a.card.keyframe_insert("hide_render", frame=g)
+        CL = dict(mouth="flat")
         if self.loc == "street":
             if g <= S4[1]:
-                self.ga.pose(g, pose_walk("gendarme_a", g, 138, 1), camera=cam)
-                self.gb.pose(g, pose_stand("gendarme_standing_b", g, 91, 7, yaw=-0.3), camera=cam)
-                self.gc.pose(g, pose_stand("gendarme_standing_a", g, 101, 31, yaw=0.5), camera=cam)
-                self.pc.pose(g, pose_stand("prisoner_standing_c", g), camera=cam)
+                if g < 200: self.ga.pose(g, dict(pose_walk("gendarme_a", g, 138, 1), **CL), camera=cam)
+                else: self.ga.pose(g, pose_stand("gendarme_standing_a", g, 83, 5, yaw=0.3, **CL), camera=cam)
+                self.gb.pose(g, pose_stand("gendarme_standing_b", g, 91, 7, yaw=-0.3, **CL), camera=cam)
+                self.pc.pose(g, pose_stand("prisoner_standing_c", g, **CL), camera=cam); self.gc.pose(g, pose_stand("gendarme_standing_a", g, **CL), camera=cam)
             else:
-                tip = C.clamp((g - 250) / 8.0) * (1 - C.clamp((g - 268) / 8.0))        # tips the cap g 250-276
-                kw = dict(expr="smirk", yaw=0.15, arm_l="down")
-                kw["arm_r"] = "reach_up" if tip > 0.5 else "down"
-                self.pc.pose(g, pose_stand("prisoner_standing_c", g, 79, 3, **kw), camera=cam)
-                self.ga.pose(g, pose_stand("gendarme_escort_a", g, 97, 11, yaw=-0.2), camera=cam)
-                gb = pose_stand("gendarme_escort_b", g, 103, 17, yaw=0.2); gb["mirror"] = True; self.gb.pose(g, gb, camera=cam)
-                self.ga.card  # keep
-                self.gc.pose(g, pose_stand("gendarme_standing_a", g), camera=cam)
+                px, py = self.tp; r = self.rvec(); cl = self.cam.matrix_world.translation; fwd = Vector((0, 1, 0))
+                tw = Vector((px, py, 0.0)); toward = (cl - tw).normalized() * 0.08
+                arm_z = 1.0
+                tip = C.clamp((g - 246) / 8.0) * (1 - C.clamp((g - 270) / 8.0))
+                # thief: both upper arms held; right hand goes to the beret brim while tipping
+                kwp = dict(expr="smirk", yaw=0.0, arm_l="down", arm_r="down", mouth="smile")
+                pcp = pose_stand("prisoner_standing_c", g, 79, 3, **kwp)
+                hands = None
+                if tip > 0.5: hands = {"r": {"hand": tuple(tw + r * 0.36 + Vector((0, 0, 1.55)) + toward), "layer": "front", "bend": 0.9}}
+                _p, _i = self.pc.pose(g, pcp, hands=hands, camera=cam); self.dbg = _i
+                ga = pose_stand("gendarme_escort_a", g, 97, 11, yaw=-0.25, mouth="flat")
+                self.ga.pose(g, ga, hands={"r": {"hand": tuple(tw + r * 0.2 + Vector((0, 0, arm_z)) + toward)}}, camera=cam)
+                gb = pose_stand("gendarme_escort_b", g, 103, 17, yaw=0.25, mouth="flat")
+                self.gb.pose(g, gb, hands={"r": {"hand": tuple(tw - r * 0.2 + Vector((0, 0, arm_z)) + toward)}}, camera=cam)
+                self.gc.pose(g, pose_stand("gendarme_standing_a", g, **CL), camera=cam)
         else:
-            sh = C.clamp((g - 292) / 6.0)                                       # thief shrugs g 292..
-            self.pc.pose(g, pose_stand("prisoner_standing_c", g, 71, 5, expr="worried", arm_r="shrug", arm_l="shrug", yaw=0.1, mouth="smile"), camera=cam)
-            wave = C.clamp((g - 316) / 6.0)
-            kw = dict(expr="neutral", yaw=-0.2)
-            kw["arm_r"] = "wave" if wave > 0.4 else "shrug" if g > 298 else "behind"; kw["arm_l"] = "shrug" if wave < 0.4 and g > 298 else "behind"
+            tw = Vector((0.9, -1.9, 0.0)); r = self.rvec()
+            self.pc.pose(g, pose_stand("prisoner_standing_c", g, 71, 5, expr="worried", arm_r="shrug", arm_l="shrug", yaw=0.5, mouth="flat"), camera=cam)
+            wave = C.clamp((g - 316) / 10.0)
+            kw = dict(expr="neutral", yaw=-0.4, mouth="flat", arm_l="shrug" if g > 300 and wave < 0.3 else "behind")
+            kw["arm_r"] = "wave" if wave > 0.3 else "shrug" if g > 298 else "behind"
             self.ga.pose(g, pose_stand("gendarme_standing_a", g, 93, 13, **kw), camera=cam)
-            self.gb.pose(g, pose_stand("gendarme_standing_b", g, 107, 29, yaw=-0.3), camera=cam)
+            self.gb.pose(g, pose_stand("gendarme_standing_b", g, **CL), camera=cam)
     def ready(self, gs):
         ppd = 320 if self.loc != "street" else 256
         self.finish_sprites(list(gs), ppd)
-    def report(self, g): return dict(g=g, heads=self.heads(g), cam=[round(v, 2) for v in cam_of(g)[0]])
+    def report(self, g): return dict(dbg=str(getattr(self,'dbg',''))[:200], g=g, heads=self.heads(g), cam=[round(v, 2) for v in cam_of(g)[0]])
 
 if __name__ == "__main__":
     loc, cmd, spec = sys.argv[1], sys.argv[2], sys.argv[3]; out = sys.argv[4] if len(sys.argv) > 4 else os.path.join(HERE, "raw", loc)
