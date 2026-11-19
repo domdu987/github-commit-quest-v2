@@ -2,22 +2,27 @@ import sys, os, math
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c18 as C, jimo_shots as S
 SHOT = 's06'; G0, G1, HB, HA = 459, 531, 0, 0
-# QA-art R2 instr. 7: plain oxen, NO blades, looser double row (>= 8 readable), old man out from behind the centre ox
-HERD = S.herd(10, (63, 17.8), (84, 19.8), 5.0, 6, yaw=225.0)
+HERD = S.herd(10, (62, 18.2), (83, 20.0), 5.0, 6, yaw=200.0)
+# real eased push + a 3 D slide along the lane (follows the oxen), one held punch-in on "สิบตัว" (g 497, +15 %)
+CAM = C.cam_path(((83.0, 9.5, 2.3), (71.0, 21.0, 1.7), 22), ((78.5, 12.8, 2.2), (68.0, 22.0, 1.8), 22), punches=[(38 / 71.0, 5 / 71.0, 0.15)], slide=-2.2)
 def tweak(stage, A=None):
     if stage == 'pre':
-        S.SHOTS[SHOT]['move'].update(push=0.02, slide=-30); c = S.SHOTS[SHOT]['cam']; c['look_at'] = (c['look_at'][0], c['look_at'][1], 0.9); c['loc'] = (c['loc'][0], c['loc'][1], 2.2)
-        S.SHOTS[SHOT]['move']['moves'] = [dict(t=0.10, d=0.74, dur=4), dict(t=0.24, d=1.3, dur=5), dict(t=0.40, d=0.76, dur=4), dict(t=0.54, d=1.28, dur=5), dict(t=0.70, d=0.8, dur=4), dict(t=0.84, d=1.2, dur=5)]
+        S.SHOTS[SHOT]['fg'] = None
+    elif stage == 'post':
+        C.hide('baskets', 'digtools', 'props')
 def actors(f, cam, ctx):
     t = (f - G0) / 30.0
-    C.person_card('tiandan', 'tiandan_walk', (75.6 + 0.4 * t, 14.8 + 0.37 * t, 0), cam, 0, bob=0.05 * abs(math.sin(2 * math.pi * 2.0 * t)), roll=C.sway(f, 0, 2, 1.0), yaw_off=0)
-    for i, (x, y) in enumerate(((58, 21.0), (74, 21.0), (86, 21.0))):
-        C.person_card('townsfolk', ('woman_stand', 'old_man_stand', 'woman_stand')[i], (x - 0.8 * t, y + (0 if i != 1 else 1.0), 0), cam, i + 1, bob=C.hop(f, i, 0.03, 1.2), roll=C.sway(f, i, 2.5, 0.8))
-    C.person_card('townsfolk', 'old_man_stand', (68.0, 10.4, 0), cam, 5, bob=C.hop(f, 5, 0.03, 1.0), roll=C.sway(f, 5, 2.0, 0.7))   # out in front of the herd
+    # Tian Dan leads along the lane, head turned toward the oxen / the gates
+    C.person_card('tiandan', 'tiandan_walk', (76.5 - 1.6 * t, 14.6 + 0.5 * t, 0), cam, 0, bob=0.05 * abs(math.sin(2 * math.pi * 2.0 * t)), roll=C.sway(f, 0, 2, 1.0), mods=dict(yaw=0.45, gaze=(0.8, 0.1)))
+    # townsfolk lead the oxen out of the house gates (x 58 / 74 / 86 at y 23), ropes implied by the line of walking oxen
+    for i, (x, y, pose) in enumerate(((60.5, 21.8, 'woman_stand'), (72.0, 22.0, 'old_man_stand'), (84.5, 21.6, 'woman_stand'))):
+        C.person_card('townsfolk', pose, (x - 1.2 * t, y - 0.6 * t, 0), cam, i + 1, bob=C.hop(f, i, 0.03, 1.2), roll=C.sway(f, i, 2.5, 0.8))
+    # dark, lit foreground carriers in the lower third
+    C.person_card('townsfolk', 'woman_carry_basket', (72.0 - 0.4 * t, 14.2, 0), cam, 8, bob=0.05 * abs(math.sin(2 * math.pi * 1.6 * t)), roll=C.sway(f, 8, 2, 1.0))
+    C.person_card('child', 'child_carry_basket', (73.9 - 0.4 * t, 13.6, 0), cam, 9, bob=0.06 * abs(math.sin(2 * math.pi * 2.0 * t + 1)), roll=C.sway(f, 9, 2, 1.0))
     for i, (x, y, z, yaw, sc) in enumerate(HERD):
-        xx = x - 1.6 * t
+        xx = x - 1.8 * t
         ph = int((f * 0.30 + i * 3) % 8)
-        C.ox_card(SHOT, i, (xx, y, 0), 200, sc, cam, state='plain', view='front_three_quarter' if math.hypot(x - 84, y - 9) < 15 else 'three_quarter', gait='walk', phase=ph, blades=False,
-                  bob=0.04 * abs(math.sin(2 * math.pi * (f * 0.30 + i) / 8)))
+        C.ox_card(SHOT, i, (xx, y, 0), 200, sc, cam, state='plain', view='front_three_quarter' if math.hypot(x - 80, y - 10) < 14 else 'three_quarter', gait='walk', phase=ph, blades=False, bob=0.04 * abs(math.sin(2 * math.pi * (f * 0.30 + i) / 8)))
 if __name__ == '__main__':
-    C.run(SHOT, actors, G0, G1, HB, HA, quality=sys.argv[1] if len(sys.argv) > 1 else None, tweak=tweak, shk=0.02)
+    C.run(SHOT, actors, G0, G1, HB, HA, quality=sys.argv[1] if len(sys.argv) > 1 else None, tweak=tweak, shk=0.006, cam_fn=CAM)
