@@ -70,14 +70,29 @@ class Rig:
     def hide(self, key, g, hidden):
         for o in self.cast[key]["a"].objects():
             o.hide_render = bool(hidden); o.keyframe_insert("hide_render", frame=g)
-    def reach(self, key, g, pose, world, anchor="calipers_r", arm="r"):
+    def reach(self, key, g, pose, world, anchor="calipers_r", arm="r", pos=None):
         """pose whose prop anchor lies on the world point (as seen from the camera at frame g)."""
         c = self.cast[key]; a = c["a"]; p = dict(pose); p["seat17"] = None
         if c["mirror"]: p["mirror"] = True
-        a.place(g, c["pos"], scale=c["sc"])
+        a.place(g, pos or c["pos"], scale=c["sc"])
         feet = sprites.feet_of(c["cast"], p)
         loc = actors.world_to_local(a, self.cam, world, frame=g, feet=feet)
         return cast17.hand_for_anchor(c["cast"], p, arm, anchor, loc)
+    def hand_to(self, key, g, pose, world, arm="r", pos=None, **kw):
+        """pose with arm_<arm> hand placed (puppet-local) where the world point appears on the card."""
+        c = self.cast[key]; a = c["a"]; p = dict(pose); p["seat17"] = None
+        a.place(g, pos or c["pos"], scale=c["sc"]); feet = sprites.feet_of(c["cast"], p)
+        loc = actors.world_to_local(a, self.cam, world, frame=g, feet=feet)
+        d = dict(p["arm_" + arm]); d["hand"] = loc; d.update(kw); p["arm_" + arm] = d; return p
+    def nib_on_card(self, key, pose):
+        """writing pose with the pen nib ON the card (mirror-aware anchors)."""
+        import puppet
+        c = self.cast[key]; p = dict(pose); p["seat17"] = None
+        if c["mirror"]: p["mirror"] = True
+        an = puppet.figure(c["cast"], p, "q")["anchors"]
+        nib, card = ("nib_l", "card_r") if c["mirror"] else ("nib_r", "card_l")
+        tgt = (an[card][0], an[card][1])
+        return cast17.hand_for_anchor(c["cast"], p, "r", nib, tgt)
     def sprites(self, ppd, frames):
         for c in self.cast.values(): c["a"].render_sprites(ppd, frames=list(frames))
     def render(self, frames, out, scale, samples, threads):
