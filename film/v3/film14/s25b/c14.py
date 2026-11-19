@@ -175,7 +175,7 @@ class Dust(object):
             if p['k'] == 'd':
                 x = p['x'] + p['vx'] * age * (1 - 0.35 * u); z = 0.04 + p['vz'] * age - 0.5 * 9.0 * age * age
                 if z < 0.02: z = 0.02
-                a = int(135 * (1 - u) ** 0.9); s = p['s'] * 0.55 * (1 - 0.35 * u)
+                a = int(95 * (1 - u) ** 0.9); s = p['s'] * 0.55 * (1 - 0.35 * u)
                 vx, vz = p['vx'] * (1 - 0.35 * u), p['vz'] - 9.0 * age
                 L = min(0.16, 0.03 + 0.03 * math.hypot(vx, vz)); th = math.atan2(-vz, vx)
                 cx, cy = P(x, z); lx, ly = math.cos(th) * L * ppm * SS, math.sin(th) * L * ppm * SS; rr = s * ppm * SS
@@ -187,7 +187,7 @@ class Dust(object):
             else:
                 # wisp: a curved tapered ribbon drifting up and back, fading
                 x0 = p['x'] + p['vx'] * age * 0.9; z0 = 0.15 + p['vz'] * age * 0.7 - 0.25 * age * age; Ln = p['s'] * (0.5 + 0.9 * min(1, u * 2)); w = p['w'] * (0.5 + 0.7 * u)
-                a = int(120 * (1 - u) ** 1.1 * min(1, u * 8 + 0.35)); pts = []; N = 14
+                a = int(85 * (1 - u) ** 1.1 * min(1, u * 8 + 0.35)); pts = []; N = 14
                 dirx = 1 if p['vx'] > 0 else -1
                 for i in range(N + 1):
                     t = i / N; px = x0 - dirx * Ln * t * 0.9; pz = z0 + (0.25 + 0.5 * p['bend']) * Ln * t + 0.4 * p['bend'] * Ln * t * t

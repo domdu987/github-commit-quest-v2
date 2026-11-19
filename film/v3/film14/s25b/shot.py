@@ -22,6 +22,7 @@ BLINK_SEED = {'matriarch': 0, 'elephant_b': 17, 'elephant_c': 33, 'elephant_d': 
 CAM25 = lambda g: (lerp3((6.0, 6.6, 1.45), (5.3, 6.5, 1.45), mixu((g - 1672) / 100.0)), lerp3((-6.0, -10.0, -3.4), (-10.0, -11.0, -3.3), mixu((g - 1672) / 100.0)), 22.0)
 HERD = [  # cast, x0, y0 (at the virtual start gs), gs, run speed   -- s25b v2: the herd is ALREADY turned and running at g1672 (shot 24 ends on the trumpet)
     ('elephant_b', 4.2, 0.2, 1664, 1.6), ('calf', 0.9, 1.4, 1664, 1.6), ('matriarch', 2.4, 2.6, 1664, 1.6), ('elephant_c', -0.6, 2.2, 1664, 1.6), ('elephant_d', -2.4, 3.2, 1664, 1.6)]
+MIRROR25 = False     # v3: the cards face the direction of travel (screen-right / into depth), not left
 RUND = (-0.78, -0.62)   # run direction: away from the fence and the camera (into depth), drifting to the left
 PPD25 = 96
 TURN = 0            # s25b: NO cross-fade turn: the frontal card is swapped for the running side card on ONE frame, behind a dust crown
@@ -44,13 +45,13 @@ def shot25(g, rep):
         if not getattr(d[0], 'done', False):        # emit the whole history once (deterministic)
             d[0].done = True; last = -9
             for k in range(gs - 5, 1830):
-                if k == gs - 4: d[0].burst(k, x0 + 0.4, n=70, dirx=-1.0, power=1.2)        # the crown that covers the turn
-                if k in (gs + 6, gs + 14, gs + 24) and k <= gs + 24: d[0].burst(k, x0 + RUND[0] * run_dist(cast, spd, k, gs)[0] + 0.8, n=26, dirx=-1.0, power=0.55)
+                if k == gs - 4: d[0].burst(k, x0 + 0.4, n=70, dirx=1.0, power=1.2)        # the crown that covers the turn
+                if k in (gs + 6, gs + 14, gs + 24) and k <= gs + 24: d[0].burst(k, x0 + RUND[0] * run_dist(cast, spd, k, gs)[0] + 0.8, n=26, dirx=1.0, power=0.55)
                 if k >= gs:
                     xr, ph = run_dist(cast, spd, k, gs); xk = x0 + RUND[0] * xr
                     if int(ph * 2) != int(run_dist(cast, spd, k - 1, gs)[1] * 2) and k - last >= 5:   # every foot strike: a crown of droplets + wisps
-                        last = k; d[0].burst(k, xk + 0.8, n=70, dirx=-1.0, power=1.0)
-                    d[1].trail(k, xk + 0.9, dirx=-1.0, power=1.3 * (0.5 + 0.5 * min(1, (k - gs) / 12)), n=14)
+                        last = k; d[0].burst(k, xk + 0.8, n=70, dirx=1.0, power=1.0)
+                    d[1].trail(k, xk + 0.9, dirx=1.0, power=1.3 * (0.5 + 0.5 * min(1, (k - gs) / 12)), n=14)
         if g < gs - TURN:
             r = put('s25_' + cast, cast, story('%s_ears_flared' % cast, t=0.1 + 0.05 * (g - 1672))[1], (x0, y0, 0), loc, ppd=PPD25, canvas=cast14.CANVAS14_FRONT[cast])
             cur = (x0, y0)
@@ -64,16 +65,16 @@ def shot25(g, rep):
             xr, ph = run_dist(cast, spd, g, gs); base = story('%s_flee' % cast)[1]
             pp = cast14.cycle(cast, ph, 'run', -1, {k: v for k, v in base.items() if k not in ('phase', 'stride', 'gait', 'mirror', 'view')}, speed=spd)
             pp['t'] = (g - gs) * 0.12; pp['dust'] = 0.5; pp['blink'] = cast14.blink_at(g, 96, BLINK_SEED[cast])
-            cur = (x0 + RUND[0] * xr, y0 + RUND[1] * xr); r = put('s25_' + cast, cast, pp, (cur[0], cur[1], 0), loc, ppd=PPD25, mirror=True)
+            cur = (x0 + RUND[0] * xr, y0 + RUND[1] * xr); r = put('s25_' + cast, cast, pp, (cur[0], cur[1], 0), loc, ppd=PPD25, mirror=MIRROR25)
         rep[cast] = dict(head=screen(r['world'](r['anchors']['head'])), feet=screen(r['world'](r['anchors']['feet'])))
         # dust: cards that face the camera, centred on the elephant (card x = path x - elephant x); the crown in front of the feet, the trail behind
         yw = yaw_to(loc, (cur[0], cur[1]))
         cx, cy = cur if g >= gs else (x0, y0)
-        for di, (dd, off) in enumerate(((d[0], -0.5), (d[1], 0.5))):
-            p, n = dd.paint(g, cx - 7.5, cx + 7.5, 5.0, tag='%s%d' % (cast, di), light_k=1.0)
+        for di, (dd, off) in enumerate(((d[0], -0.7), (d[1], -0.35))):          # v3: both dust cards BEHIND their elephant (drawn through nobody: no see-through bodies)
+            p, n = dd.paint(g, cx - 14.0, cx + 14.0, 5.0, tag='%s%d' % (cast, di), light_k=1.0)
             if n and not os.environ.get('NODUST'):
                 dx, dy = math.sin(yw) * off, -math.cos(yw) * off
-                C.card('s25_dust_%s_%d' % (cast, di), p, -7.5, 0, 7.5, 5.0, (cx + dx, cy + dy, 0.0), yaw=yw, k=1.0)
+                C.card('s25_dust_%s_%d' % (cast, di), p, -14.0, 0, 14.0, 5.0, (cx + dx, cy + dy, 0.0), yaw=yw, k=1.0)
     F.set_wire_push(1.0); F.set_bees(0.82, 0.22)
     F.STATE['wire_ob'].hide_render = True; F.STATE['wire_ob'].hide_viewport = True        # the wire passes 1 m from the lens and crosses the herd's faces: hidden in this shot
     for n in ('hive_3', 'bar_3', 'hive_4', 'bar_4', 'hive_5', 'bar_5'):          # s25b v2: the camera stands inside the fence in the gap of units 3/4: their hives are hidden (the hooks re-show them every call)
