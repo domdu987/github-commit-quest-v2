@@ -177,3 +177,34 @@ def trim_wire(xmax):
     dl = [v for v in bm.verts if v.co.x > xmax]
     if dl: bmesh.ops.delete(bm, geom=dl, context='VERTS')
     bm.to_mesh(ob.data); bm.free()
+
+def cool_night():
+    """shot 17: moon-key look of shots 15/16: warm ground bounce -> cool, practical lamps / fires off"""
+    for o in bpy.data.objects:
+        if o.type != 'LIGHT': continue
+        if o.name.startswith('bounce'): o.data.color = (0.42, 0.52, 1.0); o.data.energy *= 0.55
+        elif o.name.startswith(('lamp', 'torchlight', 'tl_')): o.data.energy = 0.0
+
+def bee3d(name, c, yaw, k=1.0, M=None):
+    """a small SLEEPING 3D bee (no transparency, no cards): gold ellipsoid body, black head + two stripes, folded pale wings; length ~0.15 m * k"""
+    M = M or F.STATE['M']; objs = []
+    def part(nm, loc, sc, mat):
+        bpy.ops.mesh.primitive_uv_sphere_add(segments=14, ring_count=8, radius=1.0, location=loc); o = bpy.context.active_object; o.name = name + nm; o.scale = sc
+        o.data.materials.append(mat); o.visible_shadow = False; objs.append(o); return o
+    L = 0.075 * k; R = 0.042 * k
+    cy, sy_ = math.cos(yaw), math.sin(yaw); ax = Vector((cy, sy_, 0))
+    P = lambda a, z=0.0: Vector(c) + ax * a + Vector((0, 0, z))
+    part('_body', P(0), (L, R, R), M['beegold'])
+    part('_head', P(L * 0.95), (R * 0.9, R * 0.85, R * 0.85), M['beeblack'])
+    part('_s1', P(L * 0.15), (R * 0.28, R * 1.04, R * 1.04), M['beeblack'])
+    part('_s2', P(-L * 0.45), (R * 0.28, R * 0.98, R * 0.98), M['beeblack'])
+    for sg in (-1, 1):
+        w = part('_w%d' % sg, P(-L * 0.05, R * 0.75) + Vector((-sy_, cy, 0)) * (sg * R * 0.35), (L * 0.75, R * 0.28, R * 0.5), M['beewing'])
+    for o in objs: o.rotation_euler = (0, 0, yaw)
+    return objs
+
+def dark_roofs(col=(0.07, 0.08, 0.13)):
+    m = bpy.data.materials.new('roofdark'); m.use_nodes = True; b = m.node_tree.nodes['Principled BSDF']; b.inputs['Base Color'].default_value = (*col, 1); b.inputs['Roughness'].default_value = 0.8
+    for o in bpy.data.objects:
+        if o.name.startswith('roof') and o.type == 'MESH':
+            for i in range(len(o.material_slots)): o.material_slots[i].material = m

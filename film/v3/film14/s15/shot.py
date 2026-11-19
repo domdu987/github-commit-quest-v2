@@ -33,7 +33,7 @@ def base_of(name):
     return c, p
 
 # ------------------------------------------------------------------------------------------------ shot 15: herd to the ring (wide, camera low)
-CAM15 = lambda u: (mix((5.5, -9.8, 1.4), (2.2, -6.6, 1.4), u), mix((-1.2, 3.0, 3.9), (-1.6, 3.0, 3.8), u), 26)
+CAM15 = lambda u: (mix((5.5, -9.8, 1.4), (2.2, -6.6, 1.4), u), mix((-1.2, 3.0, 2.7), (-1.6, 3.0, 2.6), u), 26)
 HERD = [  # cast, story base, feet x at g=1001, y, stride, phase offset, ppd
     ('elephant_d', 'elephant_d_walk', 6.6, 2.8, 1.2, 0.35, 96), ('elephant_b', 'elephant_b_walk', 4.6, 1.2, 1.25, 0.60, 96),
     ('elephant_c', 'elephant_c_walk', 2.6, 2.6, 1.3, 0.10, 96), ('calf', 'calf_walk', 0.6, 0.0, 1.3, 0.85, 96), ('matriarch', 'matriarch_walk', 0.0, 1.8, 1.2, 0.0, 112)]
@@ -47,7 +47,7 @@ def f15(g, cl):
     return out
 
 # ------------------------------------------------------------------------------------------------ shot 16: matriarch arrives (fence_low_night)
-CAM16 = lambda u: (mix((1.8, -1.8, 1.3), (0.2, -2.0, 1.35), u), mix((0.2, 4.2, 2.9), (-1.4, 4.2, 2.9), u), 26)
+CAM16 = lambda u: (mix((1.8, -1.8, 1.3), (0.2, -2.0, 1.35), u), mix((0.2, 4.2, 1.9), (-1.4, 4.2, 1.9), u), 26)
 def f16(g, cl):
     out = {}; n = g - 1062
     sp = lambda k: 0.85 * (1 - ease(span(k, 1108, 1126)))
@@ -57,23 +57,21 @@ def f16(g, cl):
     b['head_dip'] = lerp(3, 6, w); b['trunk'] = b.get('trunk', 'forward') if w <= 0.5 else 'sniff'
     p = epose('matriarch', 0.1 + n / 48.0, 0.85, b, -1, stride=sp(g))
     r = put('mat_%d' % g, 'matriarch', p, (x, M16_Y, 0), cl, ppd=128, mirror=True, yawk=0.0); out['mat'] = screen(r['world'](r['anchors']['head']))
-    xc = x + 1.4 + 0.15 * math.sin(n / 30.0)                      # the calf trots behind its mother (right of her tail), nearer the lens: no trunk crosses it
+    xc = x + 0.9 + 0.15 * math.sin(n / 30.0)                      # the calf trots behind its mother (right of her tail), nearer the lens: no trunk crosses it
     cc, cb = base_of('calf_walk'); p = epose('calf', 0.4 + n / 48.0, 0.9, cb, -1, stride=0.9 * (1 - ease(span(g, 1112, 1126))))
-    r = put('calf_%d' % g, 'calf', p, (xc, 2.1, 0), cl, ppd=128, mirror=True, yawk=0.0); out['calf'] = screen(r['world'](r['anchors']['head']))
+    r = put('calf_%d' % g, 'calf', p, (xc, 2.7, 0), cl, ppd=128, mirror=True, yawk=0.0); out['calf'] = screen(r['world'](r['anchors']['head']))
     return out
 M16_X0, M16_Y = 1.0, 3.9
 
 # ------------------------------------------------------------------------------------------------ shot 17: hive_close, bees asleep
-CAM17 = lambda u: (mix((-9.3, 2.7, 1.0), (-8.3, 3.4, 1.0), u), mix((-6.9, 4.9, 1.0), (-6.85, 4.9, 1.0), u), 24)
+CAM17 = lambda u: (mix((-9.3, 2.7, 0.7), (-8.3, 3.4, 0.75), u), mix((-6.9, 4.9, 0.55), (-6.85, 4.9, 0.6), u), 24)
 REST_SPOTS = [(-0.60, -0.10, -0.66), (-0.52, -0.12, -0.70), (-0.66, -0.14, -0.58), (-0.44, -0.10, -0.68), (-0.58, -0.16, -0.76), (-0.70, -0.08, -0.70), (-0.48, -0.15, -0.60),
               (-0.62, -0.12, -0.50), (-0.40, -0.14, -0.75), (-0.72, -0.12, -0.62), (-0.55, -0.09, -0.80), (-0.36, -0.12, -0.64)]
-def f17(g, cl):
-    out = {}; h = bpy.data.objects.get('hive_1'); mw = h.matrix_world; n = g - 1127
+def make_bees17():
+    h = bpy.data.objects['hive_1']; mw = h.matrix_world
     for i, (sx, sy, sz) in enumerate(REST_SPOTS):
-        wp = mw @ Vector((sx, sy, sz)); wob = 0.004 * math.sin(n * 0.09 + i)          # a slow breathing wobble of the sleepers
-        c, p = story('bee_rest'); p = dict(p); p['size'] = 0.27; p['angle'] = (i * 37) % 50 - 25
-        r = put('bee%d_%d' % (i, g), 'bee', p, (wp.x - 0.0, wp.y - 0.06, wp.z + wob), cl, ppd=160, yaw_fixed=0.0, canvas=cast14.CANVAS14['bee'])
-    return out
+        wp = mw @ Vector((sx, sy - 0.03, sz + 0.02)); bee3d('sbee%d' % i, wp, math.radians((i * 47) % 70 - 35) + 1.57 * (i % 2), 1.0)
+def f17(g, cl): return {}
 
 # ------------------------------------------------------------------------------------------------ shot 18: the uncle with the torch (LIP-SYNC)
 CAM18 = lambda u: (mix((-3.1, -1.9, 1.35), (-2.9, -1.1, 1.4), u), mix((-2.45, 2.6, 1.55), (-2.45, 2.6, 1.6), u), 30)
@@ -139,7 +137,7 @@ def setup_shot(shot, q):
     F.set_crowd_props(0)
     if shot == 17:
         F.set_wire_push(-1.0); cut_named(['props_'], [(-13, -4.2, -3, 4.35, -1, 1.7)])
-        scale_light('bounce', 0.3); scale_light('lamp', 0.3); bpy.context.scene.view_settings.exposure = -0.7; darken_mats(['tinunder'], 0.35)
+        cool_night(); bpy.context.scene.view_settings.exposure = -0.4; dark_roofs(); make_bees17()
         for o in list(bpy.data.objects):
             if o.name == 'bees': o.hide_render = True
     return name, camf, fn
