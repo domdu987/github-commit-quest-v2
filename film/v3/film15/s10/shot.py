@@ -62,12 +62,12 @@ def card(name):
 
 CAMOV = {}   # per shot: camera start (loc, look) in metres + move; overrides applied in build_scene
 CAMOV[10] = dict(a=((8.0, 0.4, 1.45), (10.4, 2.6, 1.55)), push=18, slide=90, orbit=-9)
-CAMOV[11] = dict(slide=90, push=12, orbit=3)
-CAMOV[12] = dict(a=((8.0, 1.5, 1.55), (10.4, 2.6, 1.6)), push=14, slide=80, orbit=12, punch=(23.0, 22))
+CAMOV[11] = dict(slide=30, push=4, orbit=0, punch=(18.82, 18))
+CAMOV[12] = dict(a=((8.0, 1.5, 1.55), (10.4, 2.6, 1.6)), push=18, slide=100, orbit=14, punch=(23.0, 22))
 CAMOV[13] = dict(a=((-2.3, 2.3, 1.05), (0.3, 5.5, 1.5)), push=6, slide=90, orbit=-6, punch=(24.3, 22))
 CAMOV[14] = dict(a=((11.2, 4.6, 1.2), (12.6, 4.2, 1.15)), push=5, slide=30, orbit=-6)
-CAMOV[15] = dict(push=30)
-CAMOV[16] = dict(a=((-0.6, 0.6, 1.4), (-0.2, 5.3, 1.7)), push=5, slide=30, orbit=-6)
+CAMOV[15] = dict(push=45)
+CAMOV[16] = dict(a=((-1.5, 0.6, 1.4), (-1.1, 5.3, 1.7)), push=5, slide=30, orbit=-6, punch=(29.4, 20))
 
 # ------------------------------------------------------------------ Dick's jump (shared by shot 13 and shot 16)
 STAGES = [(-2, 'plant'), (0, 'takeoff'), (2, 'flop_rise'), (4, 'flop_head'), (6, 'flop_back'), (8, 'flop'), (12, 'flop'), (14, 'flop_flick'), (19, 'land_back'), (22, 'land_back'), (28, 'sit_up')]
@@ -140,8 +140,10 @@ def stage(g, plate):
     elif n == 11:
         cc = W['c11']
         coach = card('coach'); dick = card('dick'); b0 = card('boy_a'); b1 = card('boy_b')
-        u = smooth((g - 596) / 8.0); pose = blend(P('coach_neck', 'coach'), P('coach_point', 'coach'), u); pose['gaze'] = (0.7, 0.0); pose['yaw'] = 0.7
-        pose['head_roll'] = (1 - u) * (-26 + 6 * math.sin(g * 0.5)); pose['lean'] = pose.get('lean', 0) + (1 - u) * 6
+        neck = P('coach_neck', 'coach'); neck['arm_r'] = dict(hand=(0.14, 0.30 + 0.02 * math.sin(g * 0.9)), bend=0.9, layer='top'); neck['arm_l'] = dict(hand=(-0.14, 0.30 - 0.02 * math.sin(g * 0.9)), bend=0.9, layer='top')   # both hands clutch his own throat
+        neck['roll'] = 34 + 4 * math.sin(g * 0.5)
+        u = smooth((g - 596) / 8.0); pose = blend(neck, P('coach_point', 'coach'), u); pose['gaze'] = (0.7, 0.0); pose['yaw'] = 0.7
+        pose['head_roll'] = (1 - u) * (-34 + 5 * math.sin(g * 0.5)); pose['lean'] = pose.get('lean', 0) + (1 - u) * 8
         pose = talk(pose, g, True); pose['bob'] = 0.02 * (1 + math.sin(g * 0.6)); pose['blink'] = cast15.blink_at(g, 96, 13)
         coach.show('coach', pose, cl, mark=tuple(cc['coach']), mirror=mir.get('coach', True), shadow=(1.9, .6))
         dp = alive(P('stand', 'dick'), g, 0.3, breath=0.02); dp['head_roll'] = 4 * math.sin(g * 0.13); dp['lean'] = 2 * math.sin(g * 0.09); dp['expr'] = 'worried'
@@ -186,9 +188,9 @@ def stage(g, plate):
         pn = 'official_raise' if r0 - 2 <= g <= r1 + 2 else 'stand'
         pp = alive(P(pn, 'boy3'), g, 5.0, breath=0.02); pp['expr'] = 'determined' if pn == 'official_raise' else 'happy'
         if pn == 'official_raise':                                       # reaching up to slide the peg: the hand rides up with the bar
-            pp = P('stand', 'boy3'); pp = alive(pp, g, 5.0, breath=0.02); pp['expr'] = 'determined'
+            pp = P('stand', 'boy3'); pp = alive(pp, g, 5.0, breath=0.02); pp['expr'] = 'excited'
             up = smooth((g - r0) / float(r1 - r0)) if g >= r0 else 0.0
-            pp['arm_r'] = dict(hand=(0.42, -0.45 - 0.55 * up + 0.06 * math.sin(g * 0.8)), bend=-0.4, stretch=1.0, shape='ball'); pp['lean'] = 3 * up
+            pp['arm_r'] = dict(hand=(0.30, -0.40 - 0.95 * up + 0.07 * math.sin(g * 0.9)), bend=-0.2, stretch=1.0, shape='ball'); pp['lean'] = 4 * up; pp['arm_l'] = dict(hand=(-0.45, 0.55), bend=0.4, layer='back')
         boy.show('boy3', pp, cl, mark=(W['peg_xy'][0], W['peg_xy'][1], 0.0), mirror=mir.get('peg', False), shadow=(1.3, .4))
 
 GT1 = RANGES[16][0] + 4; GT2 = 916
@@ -276,7 +278,7 @@ def finish_setup(plate):
     # shot 11: camera-relative: coach large at the right edge (over-shoulder), Dick mid, boys behind
     at(11); cl = Vector(cam_loc()); fw = cam.matrix_world.to_quaternion() @ Vector((0, 0, -1)); fw.z = 0; fw.normalize(); rt = Vector((fw.y, -fw.x, 0))
     def rel(f, r): p = cl + fw * f * U + rt * r * U; p.z = M['dick_mark'][2]; return tuple(p)
-    W['c11'] = dict(coach=rel(2.8, 0.78), dick=rel(6.0, -0.5), b0=rel(6.8, -1.6), b1=rel(7.2, 0.7))
+    W['c11'] = dict(coach=rel(2.8, 0.22), dick=rel(6.0, -1.0), b0=rel(6.8, -1.6), b1=rel(7.2, 0.7))
     # shot 14 spectator beside the reader
     at(13); cl = Vector(cam_loc()); fw = cam.matrix_world.to_quaternion() @ Vector((0, 0, -1)); fw.z = 0; fw.normalize(); rt = Vector((fw.y, -fw.x, 0))
     p = cl + fw * 3.2 * U + rt * -1.0 * U; p.z = M['photographer'][2]; W['photog'] = p
