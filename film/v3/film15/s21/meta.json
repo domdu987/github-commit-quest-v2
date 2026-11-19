@@ -1,0 +1,55 @@
+{
+ "take": "s21",
+ "film": 15,
+ "shots": [
+  21,
+  22,
+  23
+ ],
+ "first_g": 1119,
+ "n_frames": 156,
+ "g0": 1125,
+ "g1": 1268,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "shot_ranges": {
+  "21": [
+   1125,
+   1149
+  ],
+  "22": [
+   1150,
+   1189
+  ],
+  "23": [
+   1190,
+   1268
+  ]
+ },
+ "light": "EVE",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "dof": "none",
+ "denoiser": "OpenImageDenoise",
+ "narration": "film15/audio/narration.wav at +0.10 s",
+ "set": "v3/set3d15 (B EVE)",
+ "cast": "v3/cast15 cards (c15.py)",
+ "events": {
+  "mouth_window_g": [
+   1214,
+   1270
+  ]
+ }
+}
