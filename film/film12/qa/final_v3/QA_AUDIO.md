@@ -59,3 +59,11 @@ Items 1, 2, 3, 5 pass. Item 4 fails on caption timing in sentences 2 and 7 (wors
   - Worst anchored: s4 "ปีแรกเขาโดน" +0.29, s8 "ส่วนหัวหน้า" +0.21, s7 "แฮนเวย์" -0.19, s1 "คืออย่างนี้นะ" +0.18, s3 "คนทั้งถนนเลย" +0.17. The two largest are sentence-initial phrases where whisper onset is least reliable.
   - 5/82 (6%) outside the limit, 0 beyond 0.30, 90 percent within 0.125 s: consistent with whisper word-timestamp noise (about +-0.1-0.15 s).
 - Verdict: PASS (tolerating <=6% reference-noise outliers; none anchored beyond 0.29 s). Strict zero-outlier reading would not be satisfiable with this reference. Optional: check s2 "ลั่น" and s4 "ปีแรกเขาโดน" by ear.
+
+## v4 re-check (music) - film12_v4.mp4 with Suno music bed
+- Item 1 STT mix vs clean, per sentence (raw / digit-normalised): s0 0.993/0.990, s1 1.000, s2 0.981, s3 1.000, s4 0.982/0.980, s5 0.958/0.95, s6 1.000, s7 0.995, s8 1.000. Minimum 0.958 (s5). PASS (all >= 0.93; music does not hurt intelligibility, scores are equal or better than v1).
+- Item 2: integrated -12.2 LUFS, LRA 2.7 LU, true peak -2.1 dBTP (v1 was -1.4). PASS.
+- Item 3: 555 windows of 0.4 s; mix-minus-voice gain-normalised max excess +1.74 dB, 0 windows above +3 dB. Gain-matched narration subtracted: residual (rain+SFX+music) below the voice in 555/555 windows (closest: s7 50.8 s -4.1 dB, s2 12.9 s -4.2 dB). PASS.
+  Music level (v4 minus v3 difference signal): -27.4 dBFS RMS overall; voice in the mix -12.4 dBFS RMS, so the music bed is about 14.9 dB under the voice in speech (target ~16-17 dB): about 1.5-2 dB louder than target, but inside-sentence residual is still >= 4 dB under the voice and STT is unaffected; flag as non-blocking (could lower the bed 1.5-2 dB).
+- Item 4: captions.json identical to v3 numbers (re-run: anchored median -0.022, 5/82 outside +-0.15, 0 outside +-0.30, all-86 6 outside +-0.15 / 1 outside +-0.30 = the unanchored s2 "ลั่น"). PASS (unchanged).
+- Verdict v4: PASS. Note: music sits ~15 dB under the voice, 1-2 dB hotter than the 16-17 dB target.

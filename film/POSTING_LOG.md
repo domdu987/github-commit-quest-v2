@@ -7,4 +7,4 @@
 | 8 | ไอ้บ้าน้ำแข็ง (desert ice) | posted | film/release8/ice_v1.mp4 |
 | 9 | ไอ้ช่างขนม (sticky-rice mortar) | posted (all films posted as of 2026-11-18) | film/release9/rice_v1.mp4 |
 | 10 | ไอ้ช่างม้าลาย (dazzle ships) | in production (set detail pass, waiting for client OK) | — |
-| 12 | ไอ้ร่มเดินได้ (Hanway's umbrella) | delivered to client 2026-11-18, v3 (no music yet; Suno track pending) | film/release12/film12_v3.mp4 |
+| 12 | ไอ้ร่มเดินได้ (Hanway's umbrella) | delivered to client 2026-11-19, v4 with Suno music; auto-post: WAIT (client decides) | film/release12/film12_v4.mp4 |
