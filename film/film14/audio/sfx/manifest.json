@@ -1,0 +1,242 @@
+{
+ "savanna_day": {
+  "name": "savanna_day",
+  "prompt": "African farm daytime ambience with clearly audible birdsong, weaver birds chirping, doves cooing, rustling maize leaves in the wind, no music",
+  "asked": 6.0,
+  "duration": 6.0,
+  "peak": 0.4541015625,
+  "rms_db": -30.448971374338505,
+  "onset": 2.30375,
+  "centroid_hz": 3829.2251458886035
+ },
+ "night_crickets": {
+  "name": "night_crickets",
+  "prompt": "African savanna night ambience, crickets and soft insects, very calm, no music",
+  "asked": 6.0,
+  "duration": 6.0,
+  "peak": 0.5601043701171875,
+  "rms_db": -17.78934840677138,
+  "onset": 8.333333333333333e-05,
+  "centroid_hz": 7895.144553411251
+ },
+ "village_dusk": {
+  "name": "village_dusk",
+  "prompt": "small African village at dusk, distant goats and chickens, soft murmur, calm, no music",
+  "asked": 6.0,
+  "duration": 6.0,
+  "peak": 0.2176055908203125,
+  "rms_db": -34.80440527166927,
+  "onset": 1.0629583333333332,
+  "centroid_hz": 2335.184614908214
+ },
+ "crowd_laugh": {
+  "name": "crowd_laugh",
+  "prompt": "a small group of village men women and a child laughing loudly and mocking, outdoors, no music",
+  "asked": 2.5,
+  "duration": 2.48,
+  "peak": 0.858001708984375,
+  "rms_db": -19.7896765566218,
+  "onset": 0.09829166666666667,
+  "centroid_hz": 1646.8797141495515
+ },
+ "big_laugh": {
+  "name": "big_laugh",
+  "prompt": "one older man bursting into a big hearty belly laugh, outdoors, close",
+  "asked": 2.0,
+  "duration": 2.0,
+  "peak": 0.9512786865234375,
+  "rms_db": -19.30385917656888,
+  "onset": 0.04747916666666667,
+  "centroid_hz": 1958.0932971602342
+ },
+ "pot_bang": {
+  "name": "pot_bang",
+  "prompt": "a metal cooking pot banged hard with a metal spoon, three quick clangs, outdoors",
+  "asked": 1.2,
+  "duration": 1.2,
+  "peak": 0.99554443359375,
+  "rms_db": -20.84365440431121,
+  "onset": 0.0,
+  "centroid_hz": 6393.38908718048
+ },
+ "pots_torches": {
+  "name": "pots_torches",
+  "prompt": "villagers at night banging metal pots and pans and shouting, torches crackling, outdoors chaos, no music",
+  "asked": 3.0,
+  "duration": 3.0,
+  "peak": 0.9696197509765625,
+  "rms_db": -17.757703101176933,
+  "onset": 0.18560416666666665,
+  "centroid_hz": 1559.4859490139831
+ },
+ "wood_knock": {
+  "name": "wood_knock",
+  "prompt": "one hollow wooden box knocking hard against a wooden post, single dry knock",
+  "asked": 0.5,
+  "duration": 0.48,
+  "peak": 0.2842864990234375,
+  "rms_db": -33.80464766560429,
+  "onset": 0.00022916666666666666,
+  "centroid_hz": 870.9200408706541
+ },
+ "wire_creak": {
+  "name": "wire_creak",
+  "prompt": "a long taut fence wire straining and creaking under pressure, metallic twang",
+  "asked": 1.5,
+  "duration": 1.48,
+  "peak": 0.317138671875,
+  "rms_db": -27.3066960119187,
+  "onset": 4.1666666666666665e-05,
+  "centroid_hz": 7980.394294067535
+ },
+ "elephant_step": {
+  "name": "elephant_step",
+  "prompt": "heavy elephant footsteps on dry earth, slow deep thuds, outdoors",
+  "asked": 2.5,
+  "duration": 2.48,
+  "peak": 0.9550018310546875,
+  "rms_db": -15.308770237870235,
+  "onset": 0.009208333333333334,
+  "centroid_hz": 938.6911067533922
+ },
+ "elephant_trumpet": {
+  "name": "elephant_trumpet",
+  "prompt": "a loud elephant trumpet call, alarmed, outdoors at night",
+  "asked": 2.0,
+  "duration": 2.0,
+  "peak": 0.9981231689453125,
+  "rms_db": -8.157997776836766,
+  "onset": 0.00010416666666666667,
+  "centroid_hz": 2319.003428391506
+ },
+ "herd_run": {
+  "name": "herd_run",
+  "prompt": "a herd of elephants running away on dry ground, rumbling stampede fading into the distance",
+  "asked": 3.5,
+  "duration": 3.48,
+  "peak": 0.448272705078125,
+  "rms_db": -23.33767911268884,
+  "onset": 0.490375,
+  "centroid_hz": 1920.5712619752176
+ },
+ "maize_crunch": {
+  "name": "maize_crunch",
+  "prompt": "elephants chewing and breaking dry maize stalks, crunching and snapping, close",
+  "asked": 2.5,
+  "duration": 2.48,
+  "peak": 0.9898681640625,
+  "rms_db": -33.29140879017047,
+  "onset": 0.3351458333333333,
+  "centroid_hz": 4602.947884735
+ },
+ "stalks_fall": {
+  "name": "stalks_fall",
+  "prompt": "many maize stalks snapping and falling over, crackling",
+  "asked": 2.0,
+  "duration": 2.0,
+  "peak": 1.0,
+  "rms_db": -30.481047970691538,
+  "onset": 0.174125,
+  "centroid_hz": 5725.407064145423
+ },
+ "bees_sleep": {
+  "name": "bees_sleep",
+  "prompt": "a beehive at rest, very soft low calm bee hum",
+  "asked": 2.5,
+  "duration": 2.48,
+  "peak": 0.155548095703125,
+  "rms_db": -23.818020504978836,
+  "onset": 0.0,
+  "centroid_hz": 3174.3157561660328
+ },
+ "bees_burst": {
+  "name": "bees_burst",
+  "prompt": "an angry swarm of thousands of bees bursting out of a hive, loud rising buzzing",
+  "asked": 3.0,
+  "duration": 3.0,
+  "peak": 0.857635498046875,
+  "rms_db": -16.117997556070836,
+  "onset": 0.436625,
+  "centroid_hz": 7468.635178410642
+ },
+ "bees_swarm": {
+  "name": "bees_swarm",
+  "prompt": "a dense angry bee swarm buzzing loudly around, close",
+  "asked": 3.0,
+  "duration": 3.0,
+  "peak": 0.5829315185546875,
+  "rms_db": -18.96431015978355,
+  "onset": 0.0,
+  "centroid_hz": 6637.851114802727
+ },
+ "bee_zip": {
+  "name": "bee_zip",
+  "prompt": "a single bee buzzing past quickly, short zip",
+  "asked": 0.6,
+  "duration": 0.6,
+  "peak": 0.663909912109375,
+  "rms_db": -21.90785762748817,
+  "onset": 0.09085416666666667,
+  "centroid_hz": 5260.038708755213
+ },
+ "sting_pop": {
+  "name": "sting_pop",
+  "prompt": "cartoon comedic sting accent, a quick sharp pop with a tiny ouch squeak",
+  "asked": 0.6,
+  "duration": 0.6,
+  "peak": 0.995361328125,
+  "rms_db": -14.742917531338716,
+  "onset": 0.0,
+  "centroid_hz": 2969.4833439957756
+ },
+ "nose_swell": {
+  "name": "nose_swell",
+  "prompt": "cartoon comedic inflating balloon stretch sound rising in pitch, short",
+  "asked": 1.4,
+  "duration": 1.36,
+  "peak": 0.947174072265625,
+  "rms_db": -14.277515235944202,
+  "onset": 0.07791666666666666,
+  "centroid_hz": 3065.8206110334245
+ },
+ "rooster": {
+  "name": "rooster",
+  "prompt": "a rooster crowing at dawn, outdoors farm, distant",
+  "asked": 2.0,
+  "duration": 2.0,
+  "peak": 0.8872222900390625,
+  "rms_db": -14.338351455613802,
+  "onset": 6.25e-05,
+  "centroid_hz": 2307.8118068316635
+ },
+ "whoosh": {
+  "name": "whoosh",
+  "prompt": "short soft air whoosh, quick swish, clean, no music",
+  "asked": 0.6,
+  "duration": 0.6,
+  "peak": 0.967132568359375,
+  "rms_db": -12.272352873488588,
+  "onset": 0.08497916666666666,
+  "centroid_hz": 1233.3109808645588
+ },
+ "hammer_tie": {
+  "name": "hammer_tie",
+  "prompt": "a farmer tying wire and tapping a nail into a wooden post with a small hammer, two taps",
+  "asked": 1.2,
+  "duration": 1.2,
+  "peak": 0.35968017578125,
+  "rms_db": -34.977526146720884,
+  "onset": 0.17647916666666666,
+  "centroid_hz": 5272.227310836374
+ },
+ "ding": {
+  "name": "ding",
+  "prompt": "soft bright chime accent, short",
+  "asked": 1.0,
+  "duration": 1.0,
+  "peak": 0.6608428955078125,
+  "rms_db": -22.349033350288074,
+  "onset": 2.0833333333333333e-05,
+  "centroid_hz": 4569.892843016996
+ }
+}
