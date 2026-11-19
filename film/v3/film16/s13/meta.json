@@ -1,0 +1,56 @@
+{
+ "take": "s13",
+ "film": 16,
+ "shots": [
+  13
+ ],
+ "g0": 831,
+ "g1": 892,
+ "first_g": 822,
+ "n_frames": 79,
+ "shot_ranges": {
+  "13": [
+   831,
+   891
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 15
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 892,
+  "note": "out-handle g 892..900 rendered in 3D"
+ },
+ "set": "v3/set3d16/telegraph.py LINE preset line_trench, light DAY; per-frame hooks set_trench / set_pipe (plough front 0.50 -> 0.57, pipe 0.035 behind); runtime foreground dressing (grass blades, crate, shovel) at three points of the camera path",
+ "cast": "v3/cast16: mule x2 (cycle pull, harness 1, 0.25 phase offset), cornell (cornell_plough + walk legs), worker16_a / worker16_b (shovel poses + walk legs), morse16 (walk) following; nobody speaks",
+ "camera": "custom 22 mm, 10 D off the furrow on the road side, 3.4 D up, tracking the plough; drift push 7 %/s + slide 30 px/s + arc 3 deg/s; snap x1.2 with a 13 D pan from the mules back to Cornell and the pipe on 'ตะกั่วใต้ดิน' (g 868-881, 13 f, peak 1.6)",
+ "events": {
+  "snap": [
+   868,
+   881
+  ],
+  "word_ta_kua": 870
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "samples": 7,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 10.85,
+ "s_per_frame_cpu_mean": 21.17,
+ "framediff_in_shot": {
+  "median": 7.57,
+  "p90": 27.73
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json"
+}

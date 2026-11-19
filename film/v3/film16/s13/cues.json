@@ -1,0 +1,42 @@
+{
+ "take": "s13",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 0.0,
+   "frame": 0,
+   "kind": "ambience",
+   "label": "Maryland countryside beside the railway: wind in the wheat, a distant cow, harness creak",
+   "peak_frame": null
+  },
+  {
+   "time": 27.4,
+   "frame": 822,
+   "kind": "foley",
+   "label": "mule hooves on dirt and the creak of the plough, jingling harness",
+   "peak_frame": 840
+  },
+  {
+   "time": 27.7,
+   "frame": 831,
+   "kind": "accent",
+   "label": "dissolve in: the scene settles on the working team",
+   "peak_frame": 831
+  },
+  {
+   "time": 28.933,
+   "frame": 868,
+   "kind": "accent",
+   "label": "snap pan from the mules to Cornell and the pipe: airy whoosh",
+   "peak_frame": 872
+  },
+  {
+   "time": 29.0,
+   "frame": 870,
+   "kind": "prop",
+   "label": "lead pipe unrolling into the furrow: low metallic rolling clank on 'ตะกั่ว'",
+   "peak_frame": 870
+  }
+ ]
+}
