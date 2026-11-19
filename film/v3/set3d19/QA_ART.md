@@ -52,3 +52,42 @@ ship_hero and ship_coast keep the approved look. The deck, rail and rocks preset
 
 ## Overall: FIX-FIRST
 The WORKSHOP is closest to passing. The HALL needs the carpet, the head positions, the mocker in frame and the door. The SHIP deck, rail and rocks presets are not usable. Re-render the contact sheet after these fixes, before any render team starts.
+
+## SET gate round 2
+I checked both contact sheets, the full-size W/H/S tiles, all 18 ship tiles and the reports. All heads are inside the rule. Cost is at most 38.4 CPU-s.
+
+**Shade-hue ruling: accepted as an exterior exception.** The hull shadow on the emission sea (hero, aerial and coast at NOON/DAY, 205-217) stays teal. The exception covers only the water: deck, sail, hull and sand shade must stay at 225-265, and they do (239-257).
+
+### WORKSHOP: FIX-FIRST (one item)
+| density | light/colour | composition | materials | board match |
+|---|---|---|---|---|
+| 8 | 7 | 7 | 7 | 7 |
+Round 1: 1 colour **done**. 2 NIGHT **done** (luma 50 against 93-101). 3 **half done**: the iron is warm #452e2a, but the slivers remain. 4 H4 **done** (about 220 px). 5 H3 **done**. NOTEs 6-7 **done**.
+1. **BLOCKING, black slivers (carried over again).** They show at the wall-gear overlaps (W10 x 180-240, y 230-300; W06 rings) and as cracks inside H1 (W04 x 200-260, y 570-680). Fix: offset each overlapping gear by 0.02-0.03 D along its normal so the teeth do not intersect. Give the inner and back faces the gear material. Re-render W04, W06 and W10.
+- NOTE: shop_bench DAY has a milky haze over its lower half. shop_clock DAY has hot patches under the bench (y 990-1150). H1 half-hides William in shop_wide. NIGHT has no moon patch on the floor.
+
+### HALL: PASS
+| density | light/colour | composition | materials | board match |
+|---|---|---|---|---|
+| 8 | 7 | 8 | 7 | 7 |
+Round 1 items 1-5 are **done**: carpet, heads (743 at most), mocker in frame, panelled door with a dressed corridor, gilt chair.
+- NOTE: In hall_table, Harrison (x 435) covers the King (x 474), so teams should offset a mark. The window arch is stair-stepped and its muntins are still a fan. EVENING hall_window keeps a warm sun shaft. hall_wide has medallion arcs in its bottom corners.
+
+### SHIP: FIX-FIRST
+| density | light/colour | composition | materials | board match |
+|---|---|---|---|---|
+| 7 | 6 | 7 | 6 | 7 |
+Round 1 status:
+- **Done:** 1 deck (mast, wheel, binnacle, clear deck), except the sail colour. 2 rail. 5 cost. 6 coast (beach, longboat, three people, whole ship). 7 hue (with the ruling above). Placeholders on every preset.
+- **Partly done:** 3 rocks (grade, basalt and storm deck done; the lantern is wrong). 4 hero mostly done. The aerial foam patch is gone, but the aerial glitter is not fixed.
+1. **BLOCKING, ship_rocks lantern.** It is a flat #fe8200 block about 190×420 px, cut by the top edge, with no pool. Fix: make it about 110 px wide, fully in frame at x 520-640, y 260-440, with a warm-iron frame (#3a3430), amber glass about #ffb060 and emission halved. Add a 2200 K point light that pools on the deck by the captain.
+2. **BLOCKING, sails.** The deck and rail sails measure #b0b1d9 (hue 240, lavender), but the hero's sails are cream. Fix: set the sail base to #e8dcc0 with translucency at 0.1 or less.
+3. **BLOCKING, ship_aerial glitter.** It still covers the left 40 % of the sea (x 0-300, y 280-900), glares across the caption band at y 860-900, and the square tiles remain at x 0-250, y 1000-1100. Fix: rotate the sun azimuth or raise the roughness to leave one path 15 % wide or narrower, behind the ship and above y 700. Remove the low tiles.
+- NOTE: The rocks cannon is violet #332a3e; make it iron #2a2a2c. The rocks sailor stands outboard of the bulwark, so move him inboard. The fog is a flat band. The hero bow wave is still a sled. On coast, a brown disc floats on the sea (x 490-560, y 600). Foam dots float on rail.
+- NOTE: ship_contact.py burns the cyan guide into ship_work/final/*.png. Draw it on a copy.
+
+### Other NOTEs
+API.md still documents `caption_shade`; delete it. The shot plan still names ship_wide, set_moon and DAWN; align it.
+
+### Overall: FIX-FIRST
+HALL teams may start. The WORKSHOP needs only the sliver fix, and the SHIP needs fixes 1-3.
