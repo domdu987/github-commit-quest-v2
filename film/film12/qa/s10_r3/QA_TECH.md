@@ -1,0 +1,20 @@
+# QA-tech s10 r3 RE-CHECK (shots 10-12, RAIN, g645-866) - VERDICT: FAIL (single blocking item: cabbage not seated, N2 unchanged)
+
+Checked: all 222 frames downscaled and per-frame diffed (cuts, frozen runs), montages at 360 px: g656-710 every 6th, g651-659, g712-716, g722-740 every 2nd, g786-804 every 2nd plus every frame g787-796, g804-822 every 2nd plus every frame g807-816, full-res crops of the cabbage at g668/690/710. tmp frames deleted.
+Auto: cuts real (diff g714 = 48.4, g774 = 28.0 vs median 6.2). No frozen run, no black/magenta frame, no blur, heads < y 880. Diff spikes g797-802, g807 (14-17) are splash motion, not pops.
+
+## Items
+1. Splash falling phase g800-818: FIXED. g796-802 tapered pointed teardrop streaks arcing up and over the hat; g804-808 faint translucent grey-brown streaks at the left sky; they fade steadily and are gone by about g811 (g809-810 barely visible). No flat slabs, no straight rods, no one-frame vanish (fade g806-g811). Minor: the g804-808 left-sky streaks are very pale and slightly angular shards; acceptable.
+2. Hanway mud timing/coverage: PARTLY (acceptable). Hanway is clean through g792 (g790-792 clean, shocked). Mud appears at g793, about 3 frames before the spray is visible (g794-795), and the first step g792->793 is a sudden appearance of about 15 spots (face, coat, legs) i.e. a pop-in rather than a ramp. After that it ramps: g794 more, g798-800 heavy, full by g802, and g804+ the coat, vest, legs and face are covered (clearly more of him than r2). The spray does now visibly rise in front of / over him (g796-802). Coat spots are still fat ovals/blobs.
+3. Puddle reaction g788-805: FIXED as to timing (ring starts g789-790 at the right edge, grows through g810, droplet specks g788-790). BUT the ripple rings look like THIN WHITE WIRE CIRCLES, not natural water rings: uniform 1-3 px bright white/grey outline, perfect concentric ellipses, no fill, no darker trough, no break-up, crossing the whole foreground (g796-810, up to ~600 px wide). They read as drawn vector ellipses on the puddle, and at g800-806 several overlap at ground level near his feet too. Non-blocking but this is the weakest-looking element; fix: soften and vary width/alpha with a darker inner band, break rings with rain-noise, fade the outer ones sooner, add a faint fill/refraction.
+4. Cabbage leaf seated on the canopy g663-713: OPEN (blocking, same as r2 N2). The leaf still floats above the dome: touching/just clear at g662-668, but at g690 and g710 a visible sky/background gap of roughly 10-20 px (full res) between the leaf and the canopy, and the leaf is a flat green ellipse, not rotated to the dome, sitting on top of the umbrella outline. It reads as a hovering leaf for g680-g713 (about 1 s). Gap is smaller than r2 (25-40 px), but not closed. Fix: lower the leaf centre onto the canopy surface (overlap the canopy edge by a few px) and tilt it to the dome tangent, ride with the umbrella.
+5. Regressions: none found. Cabbage release g654-g662 is one arc, no pop, no duplicate. Egg: leaves coachman_c's hand g724, arc over the umbrella g726-730, lands g732 on the dome with splat, one object at a time. Mouths closed (coachmen scowl/smirk, Hanway smirk) through g744; Hanway opens his mouth only at the shock g790+ (a gasp, no quoted line to check against; not a talking-mouth flap). Cuts g714 and g774 real, no pops, coach approach g776-790 smooth. Hanway reaction face (g808-822) is a sour closed mouth, consistent.
+
+## New failures
+None new. (Mud pop-in at g793 and wire-circle ripples are noted under 2 and 3; non-blocking.)
+
+## Non-blocking notes
+- Mud coat spots are fat ovals; smaller/irregular with drips would sell "wet".
+- coachman_c edge crop g748-760 from r2 not re-checked.
+
+## Verdict: FAIL for the take gate on item 4 alone (leaf still visibly hovering above the umbrella for ~1 s). Items 1 (FIXED), 2 (PARTLY, pop-in at g793), 3 (puddle reacts; rings look like thin wire circles), 5 (no regressions). Once the leaf is seated this take would PASS.
