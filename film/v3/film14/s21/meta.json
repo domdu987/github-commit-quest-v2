@@ -1,6 +1,7 @@
 {
  "take": "s21",
  "film": 14,
+ "version": 2,
  "shots": [
   21
  ],
@@ -20,11 +21,13 @@
  ],
  "samples": 24,
  "knocks": {
-  "u3": 1390,
-  "u2": 1410,
-  "u1": 1430
+  "unit1": [
+   1390,
+   1410,
+   1430
+  ]
  },
  "bees": "none before g1442, small puffs from g1442",
- "end_state": "g1452 = camera (-9.0,2.1,1.3) look (-6.4,4.9,1.45) 24 mm = start of team 4 shot 22; hives back to natural size from g1432-1452",
+ "end_state": "g1452 = shot 22's first frame camera (-9.0,2.1,1.3) look (-6.4,4.9,1.45) 24 mm; hives at TRUE scale 1.0",
  "narration": "film14/audio/narration.wav at +0.10 s"
 }
