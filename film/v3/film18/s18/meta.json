@@ -1,0 +1,24 @@
+{
+ "take": "s18",
+ "film": 18,
+ "shots": [
+  18
+ ],
+ "first_g": 1382,
+ "n_frames": 51,
+ "g0": 1388,
+ "g1": 1426,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "frame_diff": {
+  "median": 4.34,
+  "p90": 12.13,
+  "min": 0.23,
+  "max": 14.11,
+  "n": 38
+ }
+}

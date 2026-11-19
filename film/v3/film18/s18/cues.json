@@ -1,0 +1,4 @@
+{"take":"s18","fps":30,"note":"time = film seconds (g/30); narration film18/audio/narration.wav at +0.10 s",
+ "cues":[{"time":46.27,"frame":1388,"what":"Tian Dan raises the torch (unlit until g1413, lit from g1413)"},
+         {"time":47.13,"frame":1417,"what":"'จุดไฟ': first tail lights; ripple one ox every 2 frames, nearest first (g1417,1419,1421,1423,1425,1427)"},
+         {"time":47.56,"frame":1427,"what":"cut to s19"}]}
