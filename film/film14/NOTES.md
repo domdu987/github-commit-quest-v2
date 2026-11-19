@@ -25,6 +25,8 @@
 | s13 | PASS, shots 13-14 (render14/team6 @f7c31df) |
 | s15 | v3 PASS, shots 15-17 (render14/team3 @bb8a187) |
 | s01 | v5 PASS (render14/team6 @3e0e1e1) |
+| s26 | v2 PASS, shots 26-27 (render14/team3 @96fea63); dissolve 8 frames into shot 26 at conform |
+| s11 | v2: shot 11 PASS; shot 12 being re-done as v3 (team 7) |
 | s11 | v1 FAIL -> team 7 redo |
 | s25 | team 5 renders died (restarted 18:45); split: team 5 = shots 25-27 (s25, g1678-1913), team 2 = shots 28-30 (new take s28, g1914-2105) |
 | s15 | team 3 renders died again (restarted 19:47); split: team 3 = shots 15-17 (s15, g1001-1167), team 6 = shots 18-19 (new take s18, g1168-1306) after s01 v3 |
