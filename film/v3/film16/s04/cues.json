@@ -1,0 +1,33 @@
+{
+ "take": "s04",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 5.3,
+   "duration": 3.533,
+   "frame": 159,
+   "end_frame": 265,
+   "kind": "ambience",
+   "label": "Morse's painting room 1825, warm window light, street murmur far below, a brush scratching canvas"
+  },
+  {
+   "time": 6.767,
+   "duration": 0.433,
+   "frame": 203,
+   "end_frame": 216,
+   "kind": "accent",
+   "label": "snap push on 'เกือบสองร้อย': soft airy whoosh",
+   "peak_frame": 208
+  },
+  {
+   "time": 5.6,
+   "duration": 2.933,
+   "frame": 168,
+   "end_frame": 256,
+   "kind": "foley",
+   "label": "brush strokes on canvas, palette tapped, boards creak under his shoes",
+   "peak_frame": 190
+  }
+ ]
+}

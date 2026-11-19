@@ -1,0 +1,66 @@
+{
+ "take": "s04",
+ "film": 16,
+ "shots": [
+  4
+ ],
+ "g0": 168,
+ "g1": 256,
+ "first_g": 159,
+ "n_frames": 106,
+ "shot_ranges": {
+  "4": [
+   168,
+   255
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 15,
+  "note": "dissolve from shot 3 (studio, place change), centred on g 168; frames g 159..167 are the in-handle"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 256,
+  "note": "hard cut to shot 5 (studio_easel) at g 256; handle g 256..264 continues the move"
+ },
+ "set": "v3/set3d16 STUDIO preset studio_wide, light DAY; runtime: preset FG dressing hidden, own jars + canvases FG (tg_studio.fg_dress) 1-2 D from the lens",
+ "cast": "v3/cast16 morse16 young=1: STORY16 morse_young_paint with a painting cycle (brush hand to the canvas / palette, 34 f), blinks, breathing; mouth still; contact decal on",
+ "camera": "custom 22 mm, crane down from the window light 40 px/s + pull back 7 %/s + slide 30 px/s (c16.CamPath, decay 0.3), SNAP push x1.5 on 'เกือบสองร้อย' g 203..216",
+ "events": {
+  "snap": [
+   203,
+   216
+  ],
+  "word_almost_200": 206
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "samples": 6,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 11.9,
+ "s_per_frame_cpu_mean": 23.04,
+ "head_px": [
+  100,
+  196
+ ],
+ "head_centre_y": [
+  325,
+  574
+ ],
+ "head_bottom_max_y": 630,
+ "framediff_in_shot": {
+  "median": 5.0,
+  "p90": 14.05
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json"
+}
