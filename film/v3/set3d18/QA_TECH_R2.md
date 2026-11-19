@@ -47,3 +47,10 @@ s16 clear breach heap (weak); s19 oxen bursting from holes with dust (weak); s21
 ## Classification
 BLOCK (set must change): N1 hay card (s02 / s26), N2 s04 flag quad and flare, N3 s24 rout.
 TAKE (render team): 5 (s03 / s25 / s07 / s09 / s13 band emitters), 7, 8, 11, 13, 15 (s08), 16 (s05), 18, N4, N5, N6, N7.
+
+## Director note (gate decision, 2026-11-19)
+QA-art (Opus, independent, saw every frame) PASSED round 2 (QA_ART_SET_R2.md) and classed these three QA-tech BLOCKs as take-level.
+They are NOT waived: they are MANDATORY fixes inside the owning takes, done at runtime from shot.py, and QA-tech checks them at the TAKE gate:
+1. s04 flag quad + flare -> team owning s04: opaque Qi/Yan flag without bloom, no blown glow stalk, caption band bright share <= 1 %.
+2. s24 rout unreadable -> team owning s24: QA_ART_SET_R2 instruction 10 (soldiers >= 70 px, 3-4 flying pots/helmets, chariot, sky <= 30 %).
+3. Pale stump/hay card in s02, s26 -> hide it (QA_ART_SET_R2 instructions 5 and 11).
