@@ -29,3 +29,10 @@ v2 after the director gate (s20_QA_TECH / s20_QA_ART) and continuity notes.
 - Knock: as the wave reaches each hive it swings hard and BANGS into its own post/frame: 2-frame jolt of hive, bar, posts and roofs plus a chip/dust spray crown (wood chips, dust specks, small wisps) at g 1388 (u3), 1405 (u2), 1422 (u1), 1438 (u0).
 - Bees: none before g ~1442; small puffs at the last hives, then the shot-22 burst.
 - qa_auto: only the per-shot blur false positive. Shot 20 (v3) is unused; 22-24 unchanged.
+
+## v6 (shot 21 only, g 1368-1452)
+- Knocks: the camera look point follows the hive being knocked (u3 g1388, u2 1405, u1 1422, u0 1438) so every hit lands mid-frame with its post in frame; 2-frame jolt (~0.065 m, ~12 px) of hive, bar, posts and roofs plus a 2-frame ~4 px camera shake; spray at all four, including u2.
+- Dust: a spray crown (12 chips + 14 droplets thrown in a ~110 deg upward cone with speed and gravity, shards stretched along their motion, 2 thin wisps), fades over 8 frames; no solid backing cards.
+- Night: world sky x0.4 strength (top RGB ~94/87/164 vs shot 22 ~96/90/204), stars boosted, tin roofs and undersides darkened, hut windows hidden and hut lamps dimmed at g1368-1380.
+- Bees: none before g ~1442. qa_auto: only the per-shot blur false positive. Shot 20 (v3) unused; 22-24 unchanged.
+- Known: stars are barely visible at this camera elevation; the first frame of each spray reads as a small tight clump.
