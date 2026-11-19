@@ -28,15 +28,37 @@ WA = cast16.STORY16["worker_a_lean_shovel"][1]
 WB = cast16.STORY16["worker_b_lean_shovel"][1]
 
 
+SHAKES = [(1078, 1088), (1094, 1104)]               # two shakes of the empty sack (hopeful, then slumped)
+
+
+def shake_env(g):
+    """0..1 envelope of the shaking in progress (sin^2 bump per shake)"""
+    e = 0.0
+    for a_, b_ in SHAKES:
+        if a_ <= g <= b_:
+            e = max(e, math.sin(math.pi * (g - a_) / float(b_ - a_)) ** 2)
+    return e
+
+
+def shake_y(g):
+    """vertical hand offset (puppet-local D): quick up-down while a shake runs"""
+    for a_, b_ in SHAKES:
+        if a_ <= g <= b_:
+            return 0.16 * math.sin((g - a_) * 1.5) * math.sin(math.pi * (g - a_) / float(b_ - a_))
+    return 0.0
+
+
 def morse_pose(g):
     p = dict(MO)
-    u = u_of(g, G_BEAT - 6, G_BEAT + 6)                       # bag turned out (hand rises) then shaken
-    shake = math.sin((g - G_BEAT) * 0.9) * 0.10 * u * (1.0 - u_of(g, G_BEAT + 14, G_BEAT + 30))
-    p["arm_r"] = dict(MO["arm_r"], hand=(0.80 + 0.06 * shake * 3, 0.70 + shake))
-    p.pop("prop_r", None)                                     # the bag is a 3D mesh (BAG, below): bigger, turned inside out
-    p["lean"] = p.get("lean", 0) + 2.0 * math.sin(g * 0.17)
+    # holds the sack by its bottom corner at chest height in front of him, mouth DOWN; looks into it
+    p["arm_r"] = dict(MO["arm_r"], hand=(0.58, 0.10 + shake_y(g)), bend=0.9)
+    p.pop("prop_r", None)                                     # the sack is a 3D mesh (make_bag)
+    p["expr"] = "worried" if g < 1092 else "sad"             # hopeful at the first shake, slumped at the second
+    p["pitch"] = 0.40
+    p["gaze"] = (0.30, 0.95)
+    p["lean"] = p.get("lean", 0) + 2.0 * math.sin(g * 0.17) + 4.0 * (1.0 if g > 1100 else 0.0)
     p["head_roll"] = -4 + 2.5 * math.sin(g * 0.13 + 1)
-    p["blink"] = blink(g, [1090, 1112])
+    p["blink"] = blink(g, [1091, 1112])
     p["t"] = g / 30.0
     return p
 
@@ -46,6 +68,10 @@ def worker_pose(base, g, ph, mirror):
     p["lean"] = p.get("lean", 0) + 2.5 * math.sin(g * 0.15 + ph)
     p["head_roll"] = p.get("head_roll", 0) + 2.0 * math.sin(g * 0.11 + ph)
     p["blink"] = blink(g, [1083 + int(ph * 7), 1104 + int(ph * 5)])
+    e = shake_env(g)
+    p["lean"] = p["lean"] + 7.0 * e                           # slump onto the shovel handle on each shake
+    p["head_roll"] = p["head_roll"] + 9.0 * e
+    p["squash"] = (1.0 + 0.03 * e, 1.0 - 0.06 * e)
     p["mirror"] = mirror
     p["t"] = g / 30.0
     return p
@@ -70,31 +96,60 @@ def _flat_mat(name, col, emit=0.45):
 
 
 def make_bag():
-    """hangs from the grip at the origin (local x = screen right, z = up, -y toward the camera): tan sack body, the two cream LININGS turned out
-    like ears at the sides, a limp drooping bottom, dark outlines behind (ink)."""
-    ink, tan, tan2, cream = _flat_mat("bag_ink", "#2a1c16", 0.2), _flat_mat("bag_tan", "#d9b27a", 1.0), _flat_mat("bag_tan2", "#a67a46", 0.9), _flat_mat("bag_cream", "#f4ead0", 1.1)
+    """an EMPTY tied money sack held by its bottom corner, MOUTH DOWN (grip at the origin, hanging down: local x = screen right, z = up, -y toward the
+    camera): tan limp body with wrinkles, a dark open mouth at the bottom and the cream lining flapping out of it (a separate object: it swings).
+    Returns (body objects, lining objects)."""
+    ink, dark = _flat_mat("bag_ink", "#2a1c16", 0.2), _flat_mat("bag_dark", "#1c1410", 0.1)
+    tan, tan2, cream = _flat_mat("bag_tan", "#d9b27a", 1.0), _flat_mat("bag_tan2", "#a67a46", 0.9), _flat_mat("bag_cream", "#f4ead0", 1.1)
     mb = K.MB("s17_bag")
     mb.T = Matrix.Identity(4)
-    def E(m, c, r, rot=0.0):
-        mb.ell(m, c, r, (14, 10))
-    E(ink, (0.0, 0.05, -0.50), (0.35, 0.02, 0.50))                       # outlines (behind)
-    E(ink, (-0.36, 0.05, -0.40), (0.20, 0.02, 0.27))
-    E(ink, (0.36, 0.05, -0.40), (0.20, 0.02, 0.27))
-    E(ink, (0.0, 0.05, -0.97), (0.22, 0.02, 0.10))
-    E(tan, (0.0, 0.0, -0.50), (0.32, 0.02, 0.47))                        # body
-    E(tan2, (0.0, -0.01, -0.80), (0.24, 0.02, 0.17))                     # shaded droop
-    E(tan, (0.0, 0.0, -0.95), (0.19, 0.02, 0.08))                        # limp tip
-    E(cream, (-0.36, -0.01, -0.40), (0.17, 0.02, 0.24))                  # linings turned out
-    E(cream, (0.36, -0.01, -0.40), (0.17, 0.02, 0.24))
-    E(tan2, (-0.36, -0.02, -0.40), (0.012, 0.02, 0.19))                  # seam lines
-    E(tan2, (0.36, -0.02, -0.40), (0.012, 0.02, 0.19))
-    for dx, dz in ((-0.12, -0.45), (0.05, -0.55), (0.14, -0.4)):             # wrinkles
-        E(tan2, (dx, -0.015, dz), (0.012, 0.02, 0.16))
-    E(tan2, (0.0, -0.02, -0.06), (0.15, 0.02, 0.045))                    # tied neck
+    def E(mb_, m, c, r):
+        mb_.ell(m, c, r, (14, 10))
+    E(mb, ink, (0.0, 0.05, -0.30), (0.25, 0.02, 0.34))                   # outlines (behind)
+    E(mb, ink, (0.0, 0.05, -0.58), (0.35, 0.02, 0.30))
+    E(mb, ink, (0.0, 0.04, -0.84), (0.36, 0.02, 0.09))
+    E(mb, tan, (0.0, 0.0, -0.22), (0.22, 0.02, 0.26))                     # body, narrow at the fist, wide at the mouth
+    E(mb, tan, (0.0, 0.0, -0.52), (0.32, 0.02, 0.30))
+    E(mb, tan2, (0.0, -0.004, -0.74), (0.33, 0.02, 0.14))
+    for dx, dz, hh in ((-0.14, -0.40, 0.18), (0.06, -0.50, 0.2), (0.17, -0.38, 0.15), (-0.05, -0.68, 0.12)):   # wrinkles
+        E(mb, tan2, (dx, -0.016, dz), (0.011, 0.02, hh))
+    E(mb, tan2, (0.0, -0.02, -0.03), (0.11, 0.02, 0.05))                  # twisted corner in the fist
+    E(mb, dark, (0.0, -0.006, -0.84), (0.31, 0.02, 0.065))                # the open mouth
     obs = mb.finish()
-    for o in obs:
+    ml = K.MB("s17_lining")
+    ml.T = Matrix.Identity(4)
+    E(ml, ink, (0.0, 0.045, -0.24), (0.17, 0.02, 0.30))
+    E(ml, cream, (0.0, -0.02, -0.22), (0.145, 0.02, 0.26))
+    E(ml, tan2, (0.0, -0.035, -0.22), (0.010, 0.02, 0.2))
+    lin = ml.finish()
+    for o in obs + lin:
         o.visible_shadow = False
-    return obs
+    return obs, lin
+
+
+def make_bits():
+    """dust puff (5 soft grey-cream blobs), one moth (two wings + body) and one button: they fall out of the sack."""
+    dustm = _flat_mat("dust", "#d8c8a6", 0.9)
+    wing, body, btn = _flat_mat("moth_wing", "#9a8a72", 0.7), _flat_mat("moth_body", "#3a2c22", 0.3), _flat_mat("button", "#2c2018", 0.3)
+    puffs = []
+    for i in range(5):
+        mb = K.MB("s17_dust%d" % i)
+        mb.T = Matrix.Identity(4)
+        mb.ell(dustm, (0, 0, 0), (1.0, 0.4, 0.8), (10, 8))
+        puffs.append(mb.finish()[0])
+    mb = K.MB("s17_moth")
+    mb.T = Matrix.Identity(4)
+    mb.ell(wing, (-0.07, 0, 0.02), (0.075, 0.012, 0.05), (10, 6))
+    mb.ell(wing, (0.07, 0, 0.02), (0.075, 0.012, 0.05), (10, 6))
+    mb.ell(body, (0, 0, 0), (0.016, 0.016, 0.05), (6, 5))
+    moth = mb.finish()
+    mb = K.MB("s17_button")
+    mb.T = Matrix.Identity(4)
+    mb.ell(btn, (0, 0, 0), (0.05, 0.012, 0.05), (10, 6))
+    button = mb.finish()
+    for o in puffs + moth + button:
+        o.visible_shadow = False
+    return puffs, moth, button
 
 
 class Take(C.Take):
@@ -105,7 +160,8 @@ class Take(C.Take):
         sd = os.path.join(WORK, "sprites")
         mk = self.A["marks"]
         self.mk = mk
-        self.bag = make_bag()
+        self.bag, self.lining = make_bag()
+        self.puffs, self.moth, self.button = make_bits()
         self.mor = self.actors["mor"] = C.make_actor("mor", "morse16", sd, cam=self.cam)
         self.wa = self.actors["wa"] = C.make_actor("wa", cast16.key16("worker_a"), sd, cam=self.cam)
         self.wb = self.actors["wb"] = C.make_actor("wb", cast16.key16("worker_b"), sd, cam=self.cam)
@@ -135,15 +191,50 @@ class Take(C.Take):
             cam = Vector(self.cam.location)
             d = Vector(hand) - cam
             yaw = math.atan2(d.x, -d.y) + math.pi                               # local -y toward the camera
-            u = u_of(g, G_BEAT - 6, G_BEAT + 6)
-            sw = math.radians(28.0 * u * math.sin((g - G_BEAT) * 0.55) * (1.0 - u_of(g, G_BEAT + 16, G_BEAT + 34)) + 4.0 * math.sin(g * 0.3))
-            M = Matrix.Translation(Vector(hand) + (cam - Vector(hand)).normalized() * -0.06 + Vector((0, 0, 0.03))) @ Matrix.Rotation(yaw, 4, "Z") @ Matrix.Rotation(sw, 4, "Y") @ Matrix.Scale(1.15, 4)
-            loc, rot, sc = M.decompose()
-            for ob in self.bag:
-                ob.location, ob.rotation_euler, ob.scale = loc, rot.to_euler(), sc
-                for pth in ("location", "rotation_euler", "scale"):
-                    ob.keyframe_insert(pth, frame=f)
+            e = shake_env(g)
+            sw = math.radians(10.0 * e * math.sin(g * 1.9) + 3.0 * math.sin(g * 0.3))
+            Rz = Matrix.Rotation(yaw, 4, "Z")
+            M = Matrix.Translation(Vector(hand) + (cam - Vector(hand)).normalized() * 0.06 + Vector((0, 0, 0.1))) @ Rz @ Matrix.Rotation(sw, 4, "Y") @ Matrix.Scale(1.25, 4)
+            self._key(self.bag, f, M, True)
+            flap = math.radians(18.0 * math.sin(g * 1.3) * (0.4 + e) + 8.0 * math.sin(g * 0.45))
+            ML = M @ Matrix.Translation((0.0, -0.01, -0.86)) @ Matrix.Rotation(flap, 4, "Y")
+            self._key(self.lining, f, ML, True)
+            mouth = M @ Vector((0.0, -0.04, -0.9))
+            # dust puffs on each shake (rise a little, spread, fade by shrinking)
+            for i, pf in enumerate(self.puffs):
+                vis, loc, sc = False, mouth, 0.01
+                for a_, b_ in SHAKES:
+                    t0 = a_ + 3 + i
+                    if t0 <= g <= t0 + 10:
+                        u = (g - t0) / 10.0
+                        ang = i * 1.9 + a_
+                        loc = mouth + Vector((0.18 * u * math.cos(ang), 0.0, -0.10 - 0.25 * u * (0.6 + 0.2 * i)))
+                        sc = (0.22 + 0.30 * u) * (1.0 - 0.6 * u) * (1.0 if a_ == SHAKES[0][0] else 0.75)
+                        vis = True
+                self._key([pf], f, Matrix.Translation(loc) @ Rz @ Matrix.Scale(max(sc, 0.01), 4), vis)
+            # the moth flutters down from the first shake; the button drops on the second
+            mv, mloc, mrot = False, mouth, 0.0
+            if 1084 <= g <= 1122:
+                u = (g - 1084) / 38.0
+                mloc = mouth + Vector((0.22 * math.sin(u * 13.0) * (0.3 + u), 0.0, -0.95 * u ** 1.3))
+                mv = True
+            flapx = 0.35 + 0.65 * abs(math.sin(g * 1.1))
+            self._key(self.moth, f, Matrix.Translation(mloc) @ Rz @ Matrix.Rotation(0.25 * math.sin(g * 0.4), 4, "Y") @ Matrix.Diagonal((flapx * 2.4, 2.4, 2.4, 1.0)), mv)
+            bv, bl = False, mouth
+            if 1100 <= g <= 1116:
+                u = (g - 1100) / 16.0
+                bl = mouth + Vector((0.05 * u, 0.0, -1.5 * u * u))
+                bv = True
+            self._key(self.button, f, Matrix.Translation(bl) @ Rz @ Matrix.Rotation(g * 0.7, 4, "Y") @ Matrix.Scale(2.0, 4), bv)
         self.sprites_for([(self.mor, 256), (self.wa, 256), (self.wb, 256)], [bf(g) for g in gs])
+
+    def _key(self, obs, f, M, vis):
+        loc, rot, sc = M.decompose()
+        for ob in obs:
+            ob.location, ob.rotation_euler, ob.scale = loc, rot.to_euler(), sc
+            for pth in ("location", "rotation_euler", "scale"):
+                ob.keyframe_insert(pth, frame=f)
+        C.key_vis(obs, bool(vis), f)
 
     def report(self, g):
         f = bf(g)
