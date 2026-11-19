@@ -1,3 +1,3 @@
 sb1_line_wide      cast-shadow px   7.4% of frame | cast-shadow mean hue  241.6 (median 255.5, band 225-265) | 51.7% of shade px in 225-265 | magenta share  1.11% (<=10) | OK
-sb2_chamber        cast-shadow px  43.7% of frame | cast-shadow mean hue  240.2 (median 249.9, band 225-265) | 56.2% of shade px in 225-265 | magenta share  1.45% (<=10) | OK
+sb2_chamber        cast-shadow px  45.1% of frame | cast-shadow mean hue    9.4 (median 345.9, band 225-265) |  0.1% of shade px in 225-265 | magenta share  0.37% (<=10) | OUT
 sb3_bottle_close   cast-shadow px   2.9% of frame | cast-shadow mean hue  232.3 (median 240.0, band 225-265) | 67.6% of shade px in 225-265 | magenta share  0.76% (<=10) | OK

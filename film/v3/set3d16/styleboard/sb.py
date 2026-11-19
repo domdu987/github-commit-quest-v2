@@ -181,8 +181,8 @@ def palette(mode):
     d['spool'] = mat('spool', '#a8602c', '#cc8040', 3, rough=0.35, sheen=0.8, wave=(90, '#5e3218'))
     d['bird'] = mat('bird', '#2a2428', '#3a3238', 2)
     # chamber
-    d['floor'] = mat('floor', '#94592a', '#bf8040', 8, aniso=(1, 0.2, 1), contrast=1.6, rough=0.4, sheen=0.4)
-    d['carpet'] = mat('carpet', '#963a22', '#b04c2c', 10, contrast=1.2)
+    d['floor'] = mat('floor', '#a8702c', '#d4964a', 8, aniso=(1, 0.2, 1), contrast=1.6, rough=0.4, sheen=0.4)
+    d['carpet'] = mat('carpet', '#8c1a24', '#a82a32', 10, contrast=1.2)
     d['baize'] = mat('baize', '#2c8040', '#40a05a', 12)
     d['wall'] = mat('wall', '#f2e4c0', '#e4d0a0', 2.0, contrast=0.8)
     d['marble'] = mat('marble', '#f6ecd6', '#e8dcc0', 2.5, contrast=0.8)
@@ -192,6 +192,7 @@ def palette(mode):
     d['paper'] = mat('paper', '#f6ecd2', '#e8dcc0', 6)
     d['ink'] = mat('ink', '#1c1a22', '#2c2a34', 3, rough=0.2, sheen=0.8)
     d['flame'] = mat_emit('flame', '#ffb84a', 22.0)
+    d['carpetdk'] = mat('carpetdk', '#4a0e16', '#5a1620', 10)
     d['hat'] = mat('hat', '#26201c', '#3a302a', 3, rough=0.5, sheen=0.5)
     d['globe'] = mat('globe', '#3c74b0', '#4f9a58', 3, contrast=2.0, rough=0.4, sheen=0.5)
     d['frame'] = mat('frame', '#c8962c', '#f0c858', 5, rough=0.3, sheen=0.8)
@@ -691,8 +692,12 @@ def build_chamber(P):
     mb.box(M['wall'], (-22.5, 13, 7), (1, 44, 14)); mb.box(M['wall'], (22.5, 13, 7), (1, 44, 14)); mb.box(M['wall'], (0, -9, 7), (46, 1, 14))
     mb.box(M['wall'], (0, 13, 12.8), (46, 44, 0.6))
     for i in range(-5, 6):
-        mb.box(M['cream'], (i * 4.0, 13, 12.3), (0.6, 44, 0.4))
-    for j in range(0, 5): mb.box(M['cream'], (0, j * 9.0 - 5, 12.25), (46, 0.6, 0.5))
+        mb.box(M['wall'], (i * 4.0, 13, 12.3), (0.6, 44, 0.4)); mb.box(M['gold'], (i * 4.0 - 0.33, 13, 12.12), (0.06, 44, 0.07)); mb.box(M['gold'], (i * 4.0 + 0.33, 13, 12.12), (0.06, 44, 0.07))
+    for j in range(0, 5):
+        mb.box(M['wall'], (0, j * 9.0 - 5, 12.25), (46, 0.6, 0.5)); mb.box(M['gold'], (0, j * 9.0 - 5.33, 12.0), (46, 0.06, 0.07)); mb.box(M['gold'], (0, j * 9.0 - 4.67, 12.0), (46, 0.06, 0.07))
+    for sx in (-1.3, 1.3): mb.box(M['carpetdk'], (sx, 14, 0.04), (0.28, 40, 0.02)); mb.box(M['gold'], (sx * 0.86, 14, 0.045), (0.04, 40, 0.02))
+    for yy in np.arange(-5.0, 34.0, 1.2):
+        mb.box(M['gold'], (0, yy, 0.045), (0.5, 0.12, 0.02)); mb.box(M['carpetdk'], (0, yy + 0.6, 0.04), (0.9, 0.2, 0.02))
     win_x = [-18, -12, -6, 0, 6, 12, 18]; BY = 34.0
     window_wall(mb, M, BY, win_x)
     for sx in (-1, 1):                                          # side wall windows (dark panes) + pilasters
@@ -710,6 +715,8 @@ def build_chamber(P):
             mb.cyl(M['gold'], (c + sg * 1.85, BY - 0.9, 3.0), 0.34, 0.05, 'z', 10)
         mb.box(M['drape'], (c, BY - 0.9, 8.7), (4.0, 0.5, 0.55)); mb.cyl(M['gold'], (c, BY - 1.17, 8.4), 0.05, 4.0, 'x', 6)
         for k in range(7): mb.ell(M['drape'], (c - 1.8 + k * 0.6, BY - 1.1, 8.45), (0.35, 0.2, 0.3), (10, 6))
+    for x in (-9, 3, 9):                                          # wall sconces on the columns: bracket, cup, candle, flame
+        mb.box(M['gold'], (x, BY - 1.9, 4.2), (0.1, 0.3, 0.1)); mb.cyl(M['gold'], (x, BY - 2.1, 4.35), 0.08, 0.1, 'z', 10); mb.cyl(M['cream'], (x, BY - 2.1, 4.55), 0.03, 0.3, 'z', 8); mb.ell(M['flame'], (x, BY - 2.1, 4.8), (0.035, 0.035, 0.09), (6, 4))
     # speaker's dais + rostrum
     mb.box(M['floor'], (0, 10.5, 0.2), (7.0, 3.6, 0.4)); mb.box(M['carpet'], (0, 10.0, 0.42), (5.0, 2.4, 0.04))
     mb.box(M['walnut'], (0, 11.2, 1.0), (2.4, 0.9, 1.2)); mb.box(M['walnut'], (0, 11.2, 1.65), (2.7, 1.1, 0.1)); mb.box(M['leather'], (0, 11.0, 1.72), (2.4, 0.8, 0.04))
@@ -751,6 +758,7 @@ def build_chamber(P):
     telegraph(mb, M, (tx - 0.35, ty + 0.1, 0.96), 3.5)
     mb.box(M['paper'], (tx + 2.0, ty - 0.2, 0.99), (0.5, 0.65, 0.06), rz=0.2); mb.box(M['paper'], (tx + 1.95, ty - 0.18, 1.04), (0.46, 0.6, 0.05), rz=0.35)
     mb.cyl(M['ink'], (tx + 1.8, ty + 0.5, 0.99), 0.06, 0.1, 'z', 10); mb.cyl(M['brass'], (tx + 1.8, ty + 0.5, 1.05), 0.065, 0.02, 'z', 10); mb.rod(M['paper'], (tx + 1.8, ty + 0.5, 1.05), (tx + 1.95, ty + 0.62, 1.4), 0.008, 0.003, 4)
+    mb.cyl(M['gold'], (tx - 0.9, ty - 0.45, 1.3), 0.02, 0.6, 'z', 6); mb.cyl(M['gold'], (tx - 0.9, ty - 0.45, 1.65), 0.15, 0.12, 'z', 12, True, r2=0.08); mb.ell(M['flame'], (tx - 0.9, ty - 0.45, 1.8), (0.06, 0.06, 0.12), (8, 6))
     mb.cyl(M['gold'], (tx - 2.0, ty - 0.2, 1.05), 0.1, 0.22, 'z', 10); mb.cyl(M['cream'], (tx - 2.0, ty - 0.2, 1.25), 0.03, 0.2, 'z', 8); mb.ell(M['flame'], (tx - 2.0, ty - 0.2, 1.38), (0.025, 0.025, 0.06), (6, 4))   # candlestick
     # coiled wire entering table from the floor
     for k in range(7): mb.cyl(M['wiremat'], (tx - 1.9, ty + 0.2, 0.05 + k * 0.045), 0.3, 0.03, 'z', 16) if False else None
@@ -805,9 +813,9 @@ PRESETS = {
     cam=dict(loc=(-0.2, -6.0, 1.9), look=(1.6, 30.0, 2.9), lens=22), samples=96),
  'chamber': dict(
     sky=[(0.0, '#7a86d6'), (0.45, '#f4c890'), (0.5, '#fbe0aa'), (0.56, '#f4e4c4'), (0.66, '#a8c6f0'), (0.82, '#5a86e4'), (1.0, '#3a5acc')], sky_k=1.0,
-    key=(1.0, 0.85, 0.63, 15.0), key_dir=kdir(-22, 15), sun_angle=1.0, exposure=0.0, sat=1.08,
+    key=(1.0, 0.85, 0.63, 15.0), key_dir=kdir(-22, 15), sun_angle=1.0, exposure=0.4, sat=1.06,
     hills=[(250, 8, 16, '#9a9ad2'), (310, 20, 28, '#8aa0d8')], hill_k=1.0, cloud=('#fff0dc', '#a8a4dc'), cloud_z=(40, 80), ncloud=6, cloud_diffuse=True,
-    g1='#a8a050', g2='#c8a858', g3='#a08048', gsize=500, fill=(0.02, 0.235, 1.0, 20000), dbounce=1, cam=dict(loc=(0.0, -2.6, 2.6), look=(0.0, 15.0, 1.5), lens=22), samples=110),
+    g1='#a8a050', g2='#c8a858', g3='#a08048', gsize=500, fill=(0.81, 0.69, 0.53, 6500), winfill=(0.19, 0.24, 0.69, 2500), dbounce=3, cam=dict(loc=(0.0, -2.6, 2.6), look=(0.0, 15.0, 1.5), lens=22), samples=110),
  'close': dict(
     sky=[(0.0, '#4a62c0'), (0.45, '#f0b080'), (0.5, '#f8d098'), (0.58, '#8a98d0'), (0.74, '#4a64c0'), (1.0, '#2a3fa8')], sky_k=1.0,
     key=(1.0, 0.85, 0.63, 9.0), key_dir=kdir(-125, 24), sun_angle=0.8, exposure=0.0, sat=1.08, amb=('#3038FF', 2.2), bottle_s=2.3, pole_h=4.8, sag=0.45, wire_r=0.03, drops=0.9,
@@ -822,10 +830,18 @@ def lights(P, mode):
     d = bpy.data.lights.new('key', 'SUN'); d.color = k[:3]; d.energy = k[3]; d.angle = math.radians(P['sun_angle'])
     o = bpy.data.objects.new('key', d); sc.collection.objects.link(o); o.rotation_euler = (-kd).to_track_quat('Z', 'Y').to_euler()
     if mode == 'chamber':
-        l = bpy.data.lights.new('fill', 'AREA'); l.shape = 'RECTANGLE'; l.size = 36; l.size_y = 36; l.color = P['fill'][:3]; l.energy = P['fill'][3]
-        ob = bpy.data.objects.new('fill', l); ob.location = (0, 13, 12.2); sc.collection.objects.link(ob); ob.visible_camera = False       # points down (-Z) by default
-        l4 = bpy.data.lights.new('fillup', 'AREA'); l4.shape = 'RECTANGLE'; l4.size = 36; l4.size_y = 36; l4.color = P['fill'][:3]; l4.energy = P['fill'][3] * 0.16
-        ob4 = bpy.data.objects.new('fillup', l4); ob4.location = (0, 13, 1.2); ob4.rotation_euler = (math.pi, 0, 0); sc.collection.objects.link(ob4); ob4.visible_camera = False
+        def area(name, loc, rot, size, col, en, cam=False):
+            l = bpy.data.lights.new(name, 'AREA'); l.shape = 'RECTANGLE'; l.size = size[0]; l.size_y = size[1]; l.color = col; l.energy = en
+            ob = bpy.data.objects.new(name, l); ob.location = loc; ob.rotation_euler = rot; sc.collection.objects.link(ob); ob.visible_camera = cam; return ob
+        def point(name, loc, col, en, r=0.15):
+            l = bpy.data.lights.new(name, 'POINT'); l.color = col; l.energy = en; l.shadow_soft_size = r
+            ob = bpy.data.objects.new(name, l); ob.location = loc; sc.collection.objects.link(ob)
+        area('fill', (0, 13, 12.2), (0, 0, 0), (36, 36), P['fill'][:3], P['fill'][3])            # warm-neutral cream bounce from the ceiling
+        for k, c in enumerate([-18, -12, -6, 0, 6, 12, 18]):                                       # small blue-violet sky fill through each window plane
+            area('win%d' % k, (c, 33.3, 5.2), (-math.pi / 2, 0, 0), (2.8, 5.5), P['winfill'][:3], P['winfill'][3])
+        for (x, y) in [(-1.4, 17), (1.4, 17), (0, 18.4), (0, 15.6)]: point('flame', (x, y, 8.6), (1.0, 0.68, 0.34), 90)      # chandelier candles
+        for x in (-9, 3, 9): point('sconce', (x, 31.6, 4.6), (1.0, 0.66, 0.3), 70)                  # wall sconces
+        point('lamp', (-0.9, 3.2, 2.3), (1.0, 0.72, 0.4), 160, 0.3)                                  # warm practical lamp over the telegraph
     if mode != 'chamber' and P.get('dome'):
         dm = P['dome']; l = bpy.data.lights.new('dome', 'AREA'); l.shape = 'SQUARE'; l.size = dm[4]; l.color = dm[:3]; l.energy = dm[3]
         ob = bpy.data.objects.new('dome', l); ob.location = (0, 100, 200); sc.collection.objects.link(ob); ob.visible_camera = False
