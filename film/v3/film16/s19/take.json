@@ -1,6 +1,47 @@
-{"take":"s19","shots":[19],"g0":1226,"g1":1268,"handle_in":9,"handle_out":9,"shot_ranges":{"19":[1226,1267]},
- "transition_in":{"type":"dissolve","frames":13},"light":"DAY","cast":"morse16 morse_raise_pole, worker16_a / worker16_b raise_pole (CANVAS16_POLE); hand-held pole props until g 1259, then the set's pole 3",
- "set":"v3/set3d16 LINE line_wide, light DAY (no overcast variant used), poles bare 3 -> 4 at g 1259 (pole 3 stands, wire spans), ladder + train hidden",
- "camera":"custom 22 mm CamPath on the group: push 11 %/s + slide -45 px/s + snap x1.5 with 0.3 D pan toward Morse and the new pole g 1248..1261 on the word ลวดบนเสาไม้ (bible lists shot 19 for a snap)",
- "events":{"pole_up":1259,"snap":[1248,1261]},
- "cues":[{"f":1226,"kind":"ambience","label":"overcast warm countryside, workers grunting-free effort, creak of rope and wood"},{"f":1259,"kind":"prop","label":"the pole thuds upright into its hole, wire hums"}]}
+{
+ "take": "s19",
+ "shots": [
+  19
+ ],
+ "g0": 1226,
+ "g1": 1268,
+ "handle_in": 9,
+ "handle_out": 9,
+ "shot_ranges": {
+  "19": [
+   1226,
+   1267
+  ]
+ },
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 13
+ },
+ "light": "DAY",
+ "cast": "morse16 morse_raise_pole, worker16_a / worker16_b raise_pole (CANVAS16_POLE); both hands of each pinned to the real set pole 3 as it rises (no hand props), eyes up the pole",
+ "set": "v3/set3d16 LINE line_wide, light DAY, poles bare 0..3; pole 3 parented to a pivot at its foot and tilted 40 deg -> 0 (eased) over g 1217-1258, wire span 2 (pole 2 -> pole 3 top) switches on when it is planted (g 1258); ladder, train and furrow leftovers (trench_*/pipe_*: the clipped slabs/holes) hidden",
+ "camera": "custom 22 mm, wide: start d~9.1 D, snap x1.65 g 1243..1256 with 1.8 D pan (peak 2.0) landing as the pole is planted, slide -85 px/s, slow pull -6 %/s; pole top and the wire stay in frame, heads y 700-800",
+ "events": {
+  "pole_rising": [
+   1217,
+   1258
+  ],
+  "pole_planted_wire_on": 1258,
+  "snap": [
+   1243,
+   1256
+  ]
+ },
+ "cues": [
+  {
+   "f": 1226,
+   "kind": "ambience",
+   "label": "overcast-warm countryside, crew breathing and boots on grass, creak of the heavy pole"
+  },
+  {
+   "f": 1258,
+   "kind": "prop",
+   "label": "the pole thuds upright into its hole; the wire hums onto the bare wood"
+  }
+ ]
+}

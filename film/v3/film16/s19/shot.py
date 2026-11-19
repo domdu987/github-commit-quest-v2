@@ -15,57 +15,105 @@ WORK = os.path.join(HERE, "work")
 G0, G1 = C.g_bound(40.86), C.g_bound(42.27)       # 1226 .. 1268 (exclusive)
 H = 9
 GF, GL = G0 - H, G1 + H - 1
-G_POP = C.cap_g("ลวดบนเสาไม้") + 8                 # the pole stands: set pole 3 on, hand-held pole props off
+G_PLANT = C.cap_g("ลวดบนเสาไม้") + 9              # 1258: the pole reaches the vertical and is planted; the wire goes on the bare top
 PRESET, LIGHT = "line_wide", "DAY"
 PPD = 192
-BASE = (40.7, -8.3, 0.0)                           # foot of the pole being raised (pole 3)
+TILT0 = 40.0                                        # deg from the vertical at the first frame (leaning toward the crew, +y)
+CAM_OFF = (-6.2, 6.5, -2.0)
+POLE_I = 3
 MIRROR = {"mor": False, "wa": False, "wb": False}
+HAND_Z = {"mor": 2.7, "wa": 2.3, "wb": 2.9}         # height on the pole each person grips with the right hand (D)
+OFS = {"mor": (0.0, 0.6), "wa": (-1.0, -0.9), "wb": (1.4, 0.5)}   # (dx along the line, dy behind the pole) of each person's feet from the pole axis
+
+
+def tilt_deg(g):
+    """pole lean (deg): eased out so it settles into the hole, 0 from G_PLANT on."""
+    return TILT0 * (1.0 - C.u_of(g, GF, G_PLANT, "sine")) ** 1.0
+
+
+def pole_pt(base, g, s):
+    th = math.radians(tilt_deg(g))
+    return base + Vector((0.0, s * math.sin(th), s * math.cos(th)))
+
 
 def pose_of(key, name, g):
     p = dict(cast16.STORY16[name][1]); p["mirror"] = MIRROR[key]
-    if g >= G_POP:
-        p.pop("prop_r", None); p.pop("prop_l", None)
+    p.pop("prop_r", None); p.pop("prop_l", None)      # the real set pole is in their hands (pinned)
     p["lean"] = p.get("lean", 0) + 2.0 * math.sin(g * 0.3 + hash(key) % 5)
-    p["blink"] = blink(g, [1236 + hash(key) % 7, 1256])
+    p["blink"] = blink(g, [1236 + hash(key) % 7, 1252])
+    p["gaze"] = (0.9, -1.0)                              # eyes up the pole to its top
+    p["expr"] = "determined"
     return p
+
 
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s19")
         TG.set_ladder(False, 3); TG.set_train(None)
-        self.mk = dict(mor=(40.0, -7.2, 0.0), wa=(38.9, -9.4, 0.0), wb=(41.9, -5.5, 0.0))
+        for ob in C.bpy.data.objects:                     # furrow leftovers (trench 0): clipped slabs / dark holes in the ground
+            if ob.name.startswith(("trench_", "pipe_")):
+                ob.hide_render = True
+        TG.set_poles("bare", 4)                          # poles 0..3 and the spans between them (static); span 2 (pole 2 -> pole 3) is keyed below
+        P = TG.STATE["poles"][POLE_I]
+        self.base = Vector(K.W((P["x"], P["y"], 0.0)))
+        self.pivot = C.bpy.data.objects.new("pole3_pivot", None)
+        self.scene.collection.objects.link(self.pivot)
+        self.pivot.location = self.base
+        C.bpy.context.view_layer.update()
+        for ob in P["body"]:                             # pole 3 pivots about its foot
+            ob.parent = self.pivot
+            ob.matrix_parent_inverse = self.pivot.matrix_world.inverted()
+        self.span2 = TG.STATE["spans_bare"][2]
+        self.mk = {k: (self.base.x + OFS[k][0], self.base.y + OFS[k][1], 0.0) for k in OFS}
         d = os.path.join(WORK, "sprites")
-        self.mor = self.actors["mor"] = C.make_actor("mor", "morse16", d, canvas=cast16.CANVAS16_POLE["morse16"] if isinstance(cast16.CANVAS16_POLE, dict) else cast16.CANVAS16_POLE, cam=self.cam)
-        self.wa = self.actors["wa"] = C.make_actor("wa", "worker16_a", d, canvas=cast16.CANVAS16_POLE["worker16_a"] if isinstance(cast16.CANVAS16_POLE, dict) else cast16.CANVAS16_POLE, cam=self.cam)
-        self.wb = self.actors["wb"] = C.make_actor("wb", "worker16_b", d, canvas=cast16.CANVAS16_POLE["worker16_b"] if isinstance(cast16.CANVAS16_POLE, dict) else cast16.CANVAS16_POLE, cam=self.cam)
-        look0 = Vector((40.7, -7.2, 2.7))
-        self.cam_path = C.CamPath(look0 + Vector(CAM_OFF), look0, GF, GL, push=0.13, slide_px=-60.0, arc_deg_s=5.0, decay=0.3, snaps=[dict(g=(G_POP - 11, G_POP + 2), k=1.5, peak=1.8, shift=(0.3, 0.1))])
+        cv = cast16.CANVAS16_POLE
+        self.mor = self.actors["mor"] = C.make_actor("mor", "morse16", d, canvas=cv["morse16"], cam=self.cam, shadow="proxy")
+        self.wa = self.actors["wa"] = C.make_actor("wa", "worker16_a", d, canvas=cv["worker16_a"], cam=self.cam, shadow="proxy")
+        self.wb = self.actors["wb"] = C.make_actor("wb", "worker16_b", d, canvas=cv["worker16_b"], cam=self.cam, shadow="proxy")
+        look0 = Vector((self.base.x + 0.2, self.base.y + 1.0, 3.75))
+        self.cam_path = C.CamPath(look0 + Vector(CAM_OFF), look0, GF, GL, push=-0.06, slide_px=-85.0, arc_deg_s=0.0, decay=0.3,
+                                  snaps=[dict(g=(G_PLANT - 15, G_PLANT - 2), k=1.65, peak=2.0, shift=(1.8, 0.0))])
         self.key_cam(bf(GF), *self.cam_path.at(GF))
         self.scene.frame_set(bf(GF))
+
+    def feet_of(self, k, g):
+        """each person walks forward as the pole rises so the grip stays in reach: feet y = grip point y + offset."""
+        pt = pole_pt(self.base, g, self.s_of(k, g))
+        return (self.base.x + OFS[k][0], pt.y + OFS[k][1], 0.0)
+
+    def s_of(self, k, g):
+        th = math.radians(tilt_deg(g))
+        return min(8.6, HAND_Z[k] / max(0.2, math.cos(th)))
 
     def pose(self, gs):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *self.cam_path.at(g))
-            TG.set_poles("bare", 4 if g >= G_POP else 3, frame=f)
+            self.pivot.rotation_euler = (-math.radians(tilt_deg(g)), 0.0, 0.0)
+            self.pivot.keyframe_insert("rotation_euler", frame=f)
+            C.key_vis(self.span2, g >= G_PLANT, f)          # the wire goes on the bare top at the plant
             for k, a in (("mor", self.mor), ("wa", self.wa), ("wb", self.wb)):
-                C.place(a, f, self.mk[k])
+                C.place(a, f, self.feet_of(k, g))
+        self.herr = {}
         for g in gs:
             f = bf(g); self.scene.frame_set(f)
-            self.mor.pose(f, pose_of("mor", "morse_raise_pole", g), camera=self.cam)
-            self.wa.pose(f, pose_of("wa", "worker_a_raise_pole", g), camera=self.cam)
-            self.wb.pose(f, pose_of("wb", "worker_b_raise_pole", g), camera=self.cam)
+            for k, a, nm in (("mor", self.mor, "morse_raise_pole"), ("wa", self.wa, "worker_a_raise_pole"), ("wb", self.wb, "worker_b_raise_pole")):
+                s = self.s_of(k, g)
+                hands = {"r": {"hand": tuple(pole_pt(self.base, g, s))}, "l": {"hand": tuple(pole_pt(self.base, g, s - 0.9))}}
+                _, inf = a.pose(f, pose_of(k, nm, g), hands=hands, camera=self.cam)
+                self.herr[(k, g)] = round(max([v.get("error", 0.0) for v in inf.values()] or [0.0]), 2)
         self.sprites_for([(self.mor, PPD), (self.wa, PPD), (self.wb, PPD)], [bf(g) for g in gs])
 
     def report(self, g):
         f = bf(g); self.scene.frame_set(f)
         loc, look = self.cam_path.at(g)
-        return dict(g=g, cam=[round(c, 3) for c in loc], heads=C.head_report(self, f))
+        return dict(g=g, cam=[round(c, 3) for c in loc], heads=C.head_report(self, f), tilt=round(tilt_deg(g), 1),
+                    herr={k: self.herr.get((k, g)) for k in ("mor", "wa", "wb")},
+                    top_px=C.TG.project(tuple(self.base + Vector((0, 0, 9.25)))) if False else None)
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):
         return C.Take.render(self, [bf(g) for g in gs], out_dir, scale=scale, samples=samples, threads=threads)
 
-CAM_OFF = (-5.3, 5.8, -0.1)
 
 if __name__ == "__main__":
     cmd = sys.argv[1]

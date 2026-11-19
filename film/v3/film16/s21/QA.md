@@ -1,7 +1,11 @@
-# s21 QA: film 16, shot 21 (LINE line_trench_end, RAIN)
-- Delivered: g 1337..1389 (53 f): shot g 1346..1380, 9-f handles each side (hard cut in, dissolve into shot 22 out). 7 spp, ~11.7 s/frame wall. QA_AUTO PASS.
-- Content: Morse (morse_key_wait, right hand pinned to the set's key knob, dips 0.08 D twice on "ข่าวไปไม่ถึงไหน" = presses, nothing happens, expression worried -> sad), Cornell (cornell_hat_over) holds his hat over him, worker_a (wait_arms, red plaid) behind. Thin rain streaks + dark puddle; camera low in front of the crate, push 8 %/s + slide 40 px/s.
-- Staging differs from preset: marks moved to Morse (120.5,-6.0), Cornell (122.2,-6.4), worker (124.0,-7.8) with the camera on the field side (y -1.6) because the preset marks sit behind the furrow spoil ridge. Characters stand on the ground with contact shadows; mouths still.
-- Heads: Morse 179-200 px (y 549-559), Cornell 164-182 (y 505-518), worker 127-137; max head bottom 652 (< 880).
-- Revision after director note: added one eased snap x1.55 g 1348..1361 with a 0.5 D pan on Morse ("ข่าวไปไม่ถึงไหน" = silent key), push 8 %/s + slide 50 px/s. Morse head 179 -> 311 px, centre y 528-557, max head bottom 687; Cornell's hat stays in frame.
-- Frame-diff: median 9.22, p90 14.32 (targets 4 / 12 met). Key lever itself is hidden behind Morse/crate; the press reads by the lean and dip.
+# s21 QA: film 16, shot 21 (LINE line_trench_end, RAIN) -- revision 2 (after the TAKE gate)
+- Delivered: g 1337..1389 (53 f): shot g 1346..1380, 9-f handles each side. 7 spp, ~11.6 s/frame wall. QA_AUTO PASS.
+- Gate fixes:
+  1. Key press visible: the set's key crate is 1.8 D tall (key_station sc 1.6), the key on its far edge (knob z 2.25 D). The crew now stands BEHIND the crate, the camera on the field side 2.9-3.8 D up, so the key, the register paper and Morse's right hand (pinned to the knob, dipping 0.14 D on g 1352-1358 and 1367-1373) show above the crate edge.
+  2. Cornell stands beside Morse and holds the hat over Morse's head (hat above Morse in every frame).
+  3. Cornell and the red worker stay in frame the whole shot (worker head x 44-156 px, Cornell 232-277); camera slide reversed (-10 px/s) and look point re-centred.
+  4. Eye-lines: Morse's gaze on the key (down-right) until g 1362, then up/away; Cornell looks at Morse, the worker at the key; yaw 0.7 toward the key.
+  5. The dark foreground grass (fg_wheat, fg_verge) is hidden; the crate fills the lower third instead (it is the foreground prop).
+- Snap: x1.6 g 1348..1361 on "ข่าวไปไม่ถึงไหน" (silent key); Morse's head 145 -> 252 px (centre y 655-670), Cornell 140-238, worker 126-198; max head bottom 793 (< 880). Mouths still, no text, no DOF.
+- Frame-diff: median 7.81, p90 13.39 (targets 4 / 12).
+- Notes: the crew's feet are hidden behind the crate (it is the foreground prop; the worker's and Cornell's feet and soft shadows show beside it). The key lever itself is small; the press reads from the hand dip and the lowered paper strip.

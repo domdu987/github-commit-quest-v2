@@ -1,6 +1,55 @@
-{"take":"s21","shots":[21],"g0":1346,"g1":1381,"handle_in":9,"handle_out":9,"shot_ranges":{"21":[1346,1380]},
- "transition_in":{"type":"cut","frames":0},"light":"RAIN","cast":"morse16 morse_key_wait (key pressed twice by hand pin, set key), cornell_hat_over, worker16_a wait_arms",
- "set":"v3/set3d16 LINE line_trench_end, light RAIN, set_rain 0.55 (thin), dark puddle, rain_look runtime fixes",
- "camera":"custom 22 mm CamPath push 8 %/s + slide 50 px/s on Morse + snap x1.55 (g 1348..1361, 0.5 D pan) on the silent key",
- "events":{"press1":[1352,1358],"press2":[1367,1373],"snap":[1348,1361]},
- "cues":[{"f":1346,"kind":"ambience","label":"heavy rain, drops on the hat brim"},{"f":1352,"kind":"foley","label":"key lever clack, no answer"},{"f":1367,"kind":"foley","label":"second clack, silence"}]}
+{
+ "take": "s21",
+ "shots": [
+  21
+ ],
+ "g0": 1346,
+ "g1": 1381,
+ "handle_in": 9,
+ "handle_out": 9,
+ "shot_ranges": {
+  "21": [
+   1346,
+   1380
+  ]
+ },
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "light": "RAIN",
+ "cast": "morse16 morse_key_wait (right hand pinned to the set key knob z 2.25 D, dips 0.14 D twice = presses, nothing happens; gaze on the key, then up), cornell_hat_over (hat over Morse's head), worker16_a wait_arms",
+ "set": "v3/set3d16 LINE line_trench_end, light RAIN; crew staged BEHIND the 1.8 D key crate (camera on the field side, 3.6 m above... crate in the foreground); thin rain streaks, dark puddle; dark fg_wheat/fg_verge hidden",
+ "camera": "custom 22 mm CamPath from the field side z 3.8 -> 3.4: slide -10 px/s, snap x1.6 g 1348..1361 on the silent key; Morse, Cornell and the red worker stay in frame",
+ "events": {
+  "press1": [
+   1352,
+   1358
+  ],
+  "press2": [
+   1367,
+   1373
+  ],
+  "snap": [
+   1348,
+   1361
+  ]
+ },
+ "cues": [
+  {
+   "f": 1346,
+   "kind": "ambience",
+   "label": "heavy rain, drops on the hat brim"
+  },
+  {
+   "f": 1352,
+   "kind": "foley",
+   "label": "key lever clack, no answer"
+  },
+  {
+   "f": 1367,
+   "kind": "foley",
+   "label": "second clack, silence"
+  }
+ ]
+}
