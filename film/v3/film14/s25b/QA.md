@@ -6,3 +6,10 @@
 - 4. Dust: darker warm-grey streaks (teardrop droplets with long thin tails) and soft low-opacity wisps; no bright round balls piled at the feet; extra slow wisps at gs+6/14/24 so dust settles through the last 55 frames.
 - 5. Sky about 30 % (look target lowered).
 - Weak: the herd is on screen only for the first ~40 frames; contact ellipses near the camera in g1672-1690 are big dark blotches on the soil; the leftover dust in the last frames is faint.
+
+## v2 (director recheck: turn pop, dead air, shadows)
+- 1. Turn: dropped. The herd is already turned and running at g1672 (shot 24 ends on the trumpet): no on-screen swap, no pop (max frame diff 5.4, median 3.0).
+- 2. Dead air / direction: the camera now stands INSIDE the fence (field side, in the gap between units 3 and 4, nearest hives/posts/roofs and the maize near it hidden) looking out over the yard; the herd runs away from the fence and the camera into depth (direction (-0.78,-0.62)) and keeps receding in frame (size about 1.0 -> 0.15) through g1770; dust streaks/wisps settle behind it. The herd does not leave the frame but is tiny by the end.
+- 3. Shadows: the large loose dark blotches were the cards' own cast shadows: cards no longer cast (visible_shadow False); the contact ellipse is placed at each card's foot and moves with it (at 720 px it is mostly hidden by the foreground grass); the hard yellow patch of v1 is gone with the new camera.
+- Also: the thick set wire passed 1 m from the lens and crossed the herd's faces, so the wire is hidden in this shot; bees reduced (0.22 burst).
+- Weak: sky is about 38 % (horizon at ~38-40 % of the frame), not the 30 % asked; ground in the lower half is plain soil with footprints and grass; the herd is a tight overlapping clump of dark cards; the contact ellipses are hard to see under the grass. I could not verify luma at the final frames beyond the v1 figure (elephants 54 vs soil ~67).

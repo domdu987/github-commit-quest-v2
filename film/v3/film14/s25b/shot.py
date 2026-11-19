@@ -75,6 +75,7 @@ def shot25(g, rep):
                 dx, dy = math.sin(yw) * off, -math.cos(yw) * off
                 C.card('s25_dust_%s_%d' % (cast, di), p, -7.5, 0, 7.5, 5.0, (cx + dx, cy + dy, 0.0), yaw=yw, k=1.0)
     F.set_wire_push(1.0); F.set_bees(0.82, 0.22)
+    F.STATE['wire_ob'].hide_render = True; F.STATE['wire_ob'].hide_viewport = True        # the wire passes 1 m from the lens and crosses the herd's faces: hidden in this shot
     for n in ('hive_3', 'bar_3', 'hive_4', 'bar_4', 'hive_5', 'bar_5'):          # s25b v2: the camera stands inside the fence in the gap of units 3/4: their hives are hidden (the hooks re-show them every call)
         o = bpy.data.objects.get(n)
         if o is not None: o.hide_render = True
