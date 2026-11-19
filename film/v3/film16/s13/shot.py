@@ -40,7 +40,7 @@ class Cam(object):
     def __init__(self, loc0, look0):
         self.p0 = Vector(TG.plough_marks(k_of(GA))["plough"])
         self.path = C.CamPath(loc0, look0, GA, GB, push=0.06, slide_px=20.0, arc_deg_s=2.0, decay=0.3,
-                              snaps=[dict(g=SNAP, k=1.15, peak=1.6, shift=(11.0, 0.0))])
+                              snaps=[dict(g=SNAP, k=1.15, peak=1.6, shift=(12.5, 0.0))])
     def at(self, g):
         loc, look = self.path.at(g)
         d = Vector(TG.plough_marks(k_of(g))["plough"]) - self.p0

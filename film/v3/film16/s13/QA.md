@@ -3,3 +3,4 @@
 - Camera (re-shot after the director's TAKE gate): custom side view 12 D off the furrow, 6 D up, pitched down ~20 deg so the canopy is out of the top; starts on the mules + traces + plough (mules ~190 px tall), tracks the plough, one x1.15 snap with an 11 D pan on "ตะกั่วใต้ดิน" (g 868-881) that lands on the plough + Cornell at the handles + workers + Morse (Morse follows 6 D behind the plough mark, in frame from the snap on) + the pipe in the furrow. Foreground: sparse grass blades only (the big crates are gone).
 - Frame-diff (in-shot): median 4.65, p90 22.27. qa_auto PASS. s/frame 11.4 wall.
 - Known: the pipe is still a thin grey strip at the right of the end frames; some tree trunks / lower canopy remain at the top edge.
+- Update after the director's second note: end snap pan widened (12.5 D) so the grey pipe reads along the furrow in the middle of the end frames; frame-diff numbers above are from the earlier run (see meta.json for the current ones).

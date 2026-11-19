@@ -4,3 +4,4 @@
 - "เงียบกริบ" (g 988): brightness dip to x0.58 over g 986-998 (exposure keyed) and an eased x2.2 push-in snap (13 f, peak 1.8) that lands on Morse's worried face at the key; the final 0.7 s is a close on Morse + key + lever.
 - Camera: custom 22 mm, 6 D from the crate, push 12 %/s + slide 45 px/s + arc 15 deg/s, one snap. Frame-diff (in-shot): median 4.30, p90 13.77 (targets 4 / 12 met). qa_auto PASS. s/frame 11.2 wall.
 - Known: the eye-lines still look mostly toward the camera (cast16 gaze keys had little effect); Morse's face is large in the last frames (head ~300 px, bottom stays above y 880); no lantern was added.
+- Update: Morse now faces left toward the key (mirror, pitch 0.6, gaze 1.0/0.9), the crew's gaze is shifted toward the register (1.0/0.7); frame-diff now median 4.36 / p90 14.18.

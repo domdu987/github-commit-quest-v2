@@ -153,11 +153,11 @@ class Take(C.Take):
                     p["key_press"] = 0.0
                     p.pop("prop_r", None)                  # the set shows the key
                     p["expr"] = "determined" if g < 982 else "worried"
-                    p["gaze"] = (-0.5, -0.9)
+                    p["gaze"] = (1.0, 0.9); p["mirror"] = True; p["pitch"] = 0.6
                     kw = knob_world(g)
                     hands = {"r": {"hand": (kw.x, kw.y, kw.z + 0.12)}}
                 else:
-                    p["gaze"] = (-0.6, -0.5)
+                    p["gaze"] = (1.0, 0.7)
                     p["lean"] = p.get("lean", 0.0) + 5.0 + 3.0 * math.sin(g * 0.13 + len(nm))      # lean in toward the register
                 p["lean"] = p.get("lean", 0.0) + 1.2 * math.sin(g * 0.17 + len(nm))
                 p["head_roll"] = p.get("head_roll", 0.0) + 1.5 * math.sin(g * 0.11 + 2 * len(nm))
