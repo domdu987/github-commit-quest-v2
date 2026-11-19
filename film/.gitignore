@@ -16,3 +16,4 @@ v3/set3d*/*_work/*
 !v3/set3d*/*_work/*.py
 release13/*_frames/
 release13/*_silent.mp4
+release13/*.wav
