@@ -41,3 +41,39 @@ C5. lie_hands_face (dick_olympic): the red/white chest piece reads close to a le
 
 ## Re-check list after fixes
 Re-render contact.jpg, run set15_hue.py (all tiles shade hue 240-260, magenta <= 10 %), then QA-tech re-opens tiles 4, 5, 8, 11, 14, 15, 18-20, 22-25, 29, 30, 33, 34, 36.
+
+# Re-check (round 2) -- SET gate
+Checked at full size (720x1280 finals, cyan y 880) after the fix round; hue_rows.txt: all tiles shade hue 240-260 except shot 8 at 260.2 (note); per preset magenta 0.7-5.1 %.
+VERDICT: PASS (conditional). No remaining item needs a set rebuild; everything open is an actor mark, a small camera tweak or a prop swap for the render teams (notes below). The set may go to the render teams.
+
+## Status of the 13 blocking set issues
+1. Shot 20: PARTLY. The bar and both pegs are now in the frame (shot20), FG standard at the left edge (~8 %). But the bar runs behind the placeholder at head height (perspective), so the "bar ~0.55 D above the head" is not visible from this start; render team: put the card's head clearly below the bar line (camera 0.3 m lower or actor 0.3 m closer to the camera than the bar plane) and verify the gap on the first take frame.
+2. Shot 15: FIXED. Bleacher foot with three cards, thin wooden rail at the left (<= 15 %), red bag ~12 %.
+3. Shot 5: FIXED. High crane view: pit, bar, bleacher with a card, gym, bunting, pines in the background; no trees in the centre. (Coach's bench is small, note only.)
+4. Shot 33: FIXED. Camera raised, foam top visible with two cards on it, toned down; foam corner FG ~20 % at the bottom-left.
+5. Shot 25: FIXED. Bar at about 1/3 height, runner card at the right, floodlight pool on the tartan, sky ~30 %.
+6. Shot 24: FIXED. Only a thin standard at the right edge (~5 %), Dick centred with room to rock.
+7. Shot 11: FIXED (note). Dick large and central, bleacher and track behind; the coach shoulder is a cast piece (not built). Red bag still ~15 % at the bottom centre: render team moves it to the edge.
+8. Shot 14: PARTLY. Reader seat close, towel at the bottom; the placeholder stands where the newspaper must be and the sit_read card (paper15, 1.3 D wide) will cover ~40 % of the width: check at the first take that the bleacher behind it is calm; the pole at the centre is gone.
+9. Shot 4: FIXED. Warm sky (hue 255.2), bar against the sky, sawdust in the lower third, thin standard.
+10. Shot 22: PARTLY. No magenta cast now (hue 243.9, only just under 244), but the bottom ~28 % is a flat grey-brown apron with two lilac dashes. Note: add a few lane marks or lighten for the take; not a rebuild.
+11. Shot 19: FIXED. Rival card on the run-up, the table is only a small corner at the bottom right (no blown white card). Magenta 11.9 %: no visible cast, note.
+12. Shot 30: FIXED. Dick at 1/3 on the foam, bar peg FG at the right (~6 %), room to sit up.
+13. Shot 18: PARTLY. Both bar ends and standards are in the frame, FG standard at the left edge (~6 %); the two officials' cards sit on the extreme frame edges (slivers at x ~0 and ~720). Render team: move official_bar_l/r marks 0.6 m inward.
+
+## Cast C1-C5 (new sheet.jpg, sheet_phone.jpg, flop_strip.jpg)
+C1 FIXED. straddle_a/b: one leg kicked high, both arms down, belly down; clearly different from land_back / lie_back on sheet_phone (straddle_a, boy1 straddle_b, rival1 flop all read); flop strip shows a ∩ bridge with the bar line under the hips.
+C2 PARTLY. coach_clumsy_flop (sheet.jpg) now shows separate limbs, drooping hips and the cap flying off, readable at full size; it is not on sheet_phone.jpg, so phone-size legibility is not verified: add it to the phone sheet.
+C3 FIXED. boy1 has a navy-and-white vest (sheet_phone: dick stand vs boy1 stand).
+C4 FIXED. walk_dejected (rival1) and sit_read with paper15 (grey bars, photo of an arched jumper, no letters) exist; the official flag stays deliberately dropped.
+C5 OPEN (minor). lie_hands_face (dick_olympic) is unchanged: the red/white chest patch still looks like a letter-ish shape at sheet size. Replace with plain horizontal stripes; not blocking.
+
+## New issues / notes (non-blocking, for the render teams)
+N1. Shot 6: FG "rake" is still a white cylinder with a cat-ear notch (stump), only one card staged for the boys' line-up. Replace the prop or hide it; stage three boys.
+N2. Shot 8: bottom ~30 % is still the pit frame wall plus a plank in dark shade; sawdust mound is now in the pit (good); hue 260.2 (note).
+N3. Shots 26/27/28/29: the bar passes behind the card at chest/hip height (perspective of a far card); FG standards are now thin (~4-5 %). Place the real cards so the bar is clearly above the head (bar 2.34 m vs Dick 3.76 D = 2.03 m) and the hips cross it. Shot 28 sky is a different cloud pattern than 27 (intended EVE contrast).
+N4. Shot 23: coach card sits among block spectators; lower body hidden by the front row and bottom third is busy dark violet boxes; keep him on the aisle step and keep spectators' shoulder FG at one edge.
+N5. Shot 31: the podium cards are small (head ~16 px at 720 wide); push the camera ~30 % closer in the take.
+N6. Shot 36: the sawdust FG chips (bottom 30 %) are fine, but the pile is an unbroken smooth mound behind a dark pit wall (~15 % of the frame, mostly dark); acceptable for the buried gag, brighten the wall's shade.
+N7. Shot 17: the card at the bottom now has its head at y ~ 940, still below 880; it is a stand-in only, keep real actors above 880.
+N8. Flags: B rim flags are still national-style multi-stripe sets in a few tiles (26-29); keep the recoloured set, check no real flag is recognisable on the take frames.

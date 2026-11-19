@@ -87,3 +87,64 @@ hook's key frame. The board's sb3 has the right standard: thin, round, silver-gr
 
 After fixes 1-5, re-render the start framings of 3, 4, 17, 18, 20-22, 24, 26-33, 35, 36. Rebuild the contact sheet and the 360x640
 phone sheet, and send them back to QA-art before the client sees them.
+
+---
+
+## Re-check after round 2 (2026-11-19)
+
+Looked at: new `contact.jpg` and `contact_phone.jpg` (360x640 tiles), and the round-2 finals at full size. I looked closest at 3, 4, 11,
+21-23, 26, 27, 29, 33, 35 and 36. Also the new `cast15/flop_strip.jpg` and `sheet_phone.jpg`, and API.md "Round 2 changes".
+Actors are still standing grey cards.
+
+### Verdict: SHIP (show the client the set contact sheet and cast sheet)
+
+The round fixed the problems that would really hurt the film.
+- **Reveal:** the bar is now thick, white and red, slightly emissive, and runs across the frame against the dimmed upper stand.
+  26, 27 and 29 read at phone size.
+- **Flop pose:** a real round ∩ with clear space between the back and the bar. Head and legs hang below the bar onto the dark
+  crowd band, not onto the mat.
+- **Standards:** thin, lit silver tubes. They frame the shot instead of walling it off.
+- **Hook:** shot 4 has its bar against the sky.
+- **Ending:** the sawdust heap now sits inside the pit.
+
+What remains is polish that can be done inside the render takes. It is listed below as notes.
+
+### Scores (round 1 → round 2)
+
+| Area | R1 | R2 | Notes |
+|---|---|---|---|
+| Set density / ornament | 6 | **7** | 5 is a real high establishing crane. The school ground has tufts, chalk and leaves. 11 and 3 still show a lot of open field and sky. |
+| Lighting & colour | 7 | **8** | TENSE crowd dimmed with a pool on the bar, as the plan asks. The bar's emission reads in shade, and the DAY exposure is fixed. The EVE/TENSE track is still a vivid orange rather than brick. |
+| Composition / framing | 4 | **7** | Standards about 45 px wide at the edge. Bar and pit are in 3, 21 and 35, and the bar crosses the frame in 25-30. Leftover foreground areas: grey apron in 22, mat corner in 33. |
+| Cast design & acting poses | 8 | **9** | The flop is a clear two-segment arch with a gap above the bar. Also new: belly-down straddle, reader with an untexted newspaper, walk_dejected, navy-edged Olympic vest. All on-model. |
+| Key moments | 5 | **8** | Hook 4: thin standard, bar against the sky, sawdust at the bottom. Reveal 25-29: bar and arch read on the phone tiles. Ending 34-36: mound in the pit, with chips in the foreground. |
+| Overall match to board / client taste | 6 | **8** | Now close to the board frames: the stadium matches sb2/sb3 and the school matches sb1. Sharp, no text. |
+
+### The 8 earlier changes
+
+| # | Change | Status | Comment |
+|---|---|---|---|
+| 1 | Reframe reveal 26-29 | **DONE** | Camera below the bar and tilted up. Bar against the dimmed stand, pool light, darker textured foam top. 27 is the strongest frame. |
+| 2 | Thin and relight standards; 4 and 31 poles | **DONE** | Round silver tubes, small pegs, about 45 px at frame edges. 4's post is a thin lit diagonal. 31 has lost the purple column. |
+| 3 | Bar and pit in frame for 3, 21, 35 | **DONE** | 21 and 35 are clear. In 3 the bar is small and far back (fine for a whip pan; the takes can push toward it). |
+| 4 | Remove blank FG slabs (21, 22, 24, 33) | **PARTLY** | 21 and 24 are fixed. 22 still has a flat grey apron on the bottom ~30 %. 33 still has a mat block on the lower left ~30 %, but it is toned and textured now. Not blocking. |
+| 5 | Deeper flop arch | **DONE** | Clear ∩ on the strip for dick and rival1. Flick frame is fine. |
+| 6 | Sawdust heap in the pit (34, 36) | **DONE** | Smooth mound inside the frame with loose chips, and the boys' bench beside it. |
+| 7 | Densify A mid-ground, real crane on 5 | **PARTLY** | 5 is done. 11 (over-shoulder) and 3 still have about 40 % empty sky over open field. |
+| 8 | Tone down the EVE track | **PARTLY** | Tartan is less saturated in TENSE, but in 17-21 and 26-29 it still reads as a bright orange field rather than the board's brick red. |
+
+### Notes for the render teams (polish inside the takes, not blocking)
+
+1. **Shot 23 (coach in the stands, quote shot).** Up close the neighbouring 3D crowd figures are bare purple cubes. Put the cast
+   crowd cards (crowd1-6 sit_cheer, laugh, gape, point) on the seats next to the coach, or frame tighter so the cubes stay soft
+   background.
+2. **Shots 22 and 33.** Lift or tilt the camera during the push so the grey apron (22) and the mat corner (33) shrink to a thin bottom
+   band within the first ~0.5 s. In 22, Dick lying on the foam should be the subject, not the apron.
+3. **Shots 3 and 11.** Use the camera move to bring the pit and bar (3) and the boys and bleachers (11) up into the frame and cut
+   the empty sky. A slight tilt-down or a lower horizon is enough.
+4. **Track colour.** If a render team grades, pull the EVE/TENSE tartan about 10-15 % toward brick red, as on board sb2. Keep the
+   shade hue in the 240-260 band QA-tech measures.
+5. **Reveal takes 26-29.** Keep the flop card big. The arch should span at least half the frame width at the KEY IMAGE (27, 49.0-50.35 s).
+   Check the 360x640 tile for each of these takes before handing it to QA-art.
+6. **Cast.** boy1's new vest is navy/white, close to boy2's blue/white. In group shots (6, 15, 34) keep them apart, or give boy1 a
+   different accent stripe, so the three boys read as three people.
