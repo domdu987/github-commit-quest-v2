@@ -1,0 +1,47 @@
+{
+ "take": "s08",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 15.533,
+   "duration": 2.833,
+   "frame": 466,
+   "end_frame": 551,
+   "kind": "ambience",
+   "label": "chamber 1843: a hall of murmuring congressmen, a cough, shuffling chairs, wood creak"
+  },
+  {
+   "time": 15.833,
+   "duration": 0.467,
+   "frame": 475,
+   "end_frame": 489,
+   "kind": "accent",
+   "label": "dissolve in: the hall murmur swells in under the studio ambience"
+  },
+  {
+   "time": 16.233,
+   "duration": 0.467,
+   "frame": 487,
+   "end_frame": 501,
+   "kind": "accent",
+   "label": "snap push on 'เงินสภา': soft airy whoosh"
+  },
+  {
+   "time": 16.1,
+   "duration": 1.067,
+   "frame": 483,
+   "end_frame": 515,
+   "kind": "foley",
+   "label": "Morse's frock coat rustles as he gestures to the instrument; the register lever ticks idly"
+  },
+  {
+   "time": 18.067,
+   "duration": 0.0,
+   "frame": 542,
+   "end_frame": 542,
+   "kind": "cut",
+   "label": "hard cut to shot 9: the mocker bursts out laughing"
+  }
+ ]
+}

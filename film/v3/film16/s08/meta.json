@@ -1,0 +1,65 @@
+{
+ "take": "s08",
+ "film": 16,
+ "shots": [
+  8
+ ],
+ "g0": 475,
+ "g1": 542,
+ "first_g": 466,
+ "n_frames": 85,
+ "shot_ranges": {
+  "8": [
+   475,
+   541
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 13,
+  "note": "dissolve in from shot 7 (studio_window) over 13 f; 9 handle frames rendered in 3D before g 475"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 542,
+  "note": "hard cut to shot 9 (the mocker, low angle) at g 542; handle g 542..550 rendered in 3D"
+ },
+ "set": "v3/set3d16 CHAMBER chamber_wide_high-style custom high camera, light DAY (shafts on)",
+ "cast": "morse16 morse_present_table beside the front table; mocker idle smug at his desk (arms folded); 13 congressmen on the tiers (unimpressed / smirk / worried), cast16, no lip-sync",
+ "camera": "custom 22 mm: crane down + push 9 %/s + slide, snap x1.6 on 'เงินสภา' (g 487-501); decay 0.3 keeps it moving on both ends",
+ "events": {
+  "snap": [
+   487,
+   501
+  ]
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "samples": 6,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 18.2,
+ "s_per_frame_cpu_mean": 34.77,
+ "main_head_px": [
+  28,
+  98
+ ],
+ "main_head_centre_y": [
+  479,
+  652
+ ],
+ "head_bottom_max_y": 680,
+ "framediff_in_shot": {
+  "median": 4.53,
+  "p90": 14.78
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json"
+}
