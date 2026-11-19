@@ -1,0 +1,20 @@
+{
+ "output": "/home/user/github-commit-quest-v2/film/release15/film15_test.mp4",
+ "frames": 2095,
+ "expected_frames": 2095,
+ "duration_s": 69.83333333333333,
+ "lufs": -12.2,
+ "true_peak_dbtp": -2.4,
+ "lufs_ok": true,
+ "tp_ok": true,
+ "music_used": false,
+ "mode": "TEST (grey placeholder video)",
+ "music_WARNING": "SILENT PLACEHOLDER - music_suno.wav missing",
+ "takes": [],
+ "placeholder_ranges": [],
+ "handle_fallback_frames": 0,
+ "dissolve_blend_frames": 0,
+ "sfx_events": 68,
+ "narration_rms_db": -17.711459185489147,
+ "pass": true
+}

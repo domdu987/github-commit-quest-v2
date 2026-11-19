@@ -1,0 +1,525 @@
+{
+ "_doc": "SFX cues for film 15. 'at' is on the NARRATION clock (shot_plan.md times); conform15.py adds the +0.10 s narration offset. file relative to film15/audio/sfx/. peak_db / rms_db = target level before ducking (done in conform15.py: -6 dB short SFX, -3 dB beds and >=3 s, extra -4 dB for laugh/crowd files while narration speaks). kind 'bed' is tiled from 'at' to 'until'. 'align':'onset' makes 'at' the first transient.",
+ "cues": [
+  {
+   "file": "track_ambience.wav",
+   "kind": "bed",
+   "at": 0.0,
+   "until": 31.05,
+   "rms_db": -30,
+   "note": "1963 school-track evening bed (shots 1-16)"
+  },
+  {
+   "file": "crowd_murmur.wav",
+   "kind": "bed",
+   "at": 31.05,
+   "until": 42.3,
+   "rms_db": -30,
+   "note": "stadium bed (17-23)"
+  },
+  {
+   "file": "crowd_murmur.wav",
+   "kind": "bed",
+   "at": 42.3,
+   "until": 58.2,
+   "rms_db": -37,
+   "note": "stadium bed lowered: hush, crisis and jump (24-30)"
+  },
+  {
+   "file": "crowd_murmur.wav",
+   "kind": "bed",
+   "at": 60.15,
+   "until": 64.62,
+   "rms_db": -33,
+   "note": "stadium day bed (32-33)"
+  },
+  {
+   "file": "track_ambience.wav",
+   "kind": "bed",
+   "at": 64.62,
+   "until": 69.83,
+   "rms_db": -30,
+   "note": "back at the school track (34-36)"
+  },
+  {
+   "file": "footsteps_cinder.wav",
+   "at": 0.2,
+   "len": 1.2,
+   "peak_db": -24,
+   "note": "s1 boys wait/run-up"
+  },
+  {
+   "file": "thump_sawdust.wav",
+   "at": 1.55,
+   "len": 1.2,
+   "peak_db": -19,
+   "note": "s1 boy rolls into sawdust (straddle)",
+   "align": "onset"
+  },
+  {
+   "file": "sawdust_spray.wav",
+   "at": 1.65,
+   "len": 1.0,
+   "peak_db": -24,
+   "note": "s1 chips",
+   "align": "onset"
+  },
+  {
+   "file": "whoosh_punch.wav",
+   "at": 2.85,
+   "len": 0.5,
+   "peak_db": -24,
+   "note": "s2 PUSH! at 2.9 'khon-ni'",
+   "align": "onset"
+  },
+  {
+   "file": "whoosh_whip_a.wav",
+   "at": 3.5,
+   "len": 0.6,
+   "peak_db": -22,
+   "note": "s3 WHIP pan",
+   "align": "onset"
+  },
+  {
+   "file": "footsteps_cinder.wav",
+   "at": 3.6,
+   "len": 0.85,
+   "peak_db": -18,
+   "note": "s3 Dick runs the curve"
+  },
+  {
+   "file": "thump_sawdust.wav",
+   "at": 5.35,
+   "len": 1.2,
+   "peak_db": -15,
+   "note": "s4 flop lands on back",
+   "align": "onset"
+  },
+  {
+   "file": "sawdust_spray.wav",
+   "at": 5.4,
+   "len": 1.0,
+   "peak_db": -20,
+   "note": "s4 chips spray",
+   "align": "onset"
+  },
+  {
+   "file": "whistle_short.wav",
+   "at": 8.0,
+   "len": 0.6,
+   "peak_db": -26,
+   "note": "s5 distant coach whistle, 1963 track",
+   "align": "onset"
+  },
+  {
+   "file": "footsteps_cinder.wav",
+   "at": 8.35,
+   "len": 1.0,
+   "peak_db": -22,
+   "note": "s6 first boy runs"
+  },
+  {
+   "file": "thump_sawdust.wav",
+   "at": 9.4,
+   "len": 1.2,
+   "peak_db": -21,
+   "note": "s6 clean straddle 1",
+   "align": "onset"
+  },
+  {
+   "file": "footsteps_cinder.wav",
+   "at": 9.8,
+   "len": 1.0,
+   "peak_db": -22,
+   "note": "s6 second boy runs"
+  },
+  {
+   "file": "thump_sawdust.wav",
+   "at": 10.85,
+   "len": 1.2,
+   "peak_db": -21,
+   "note": "s6 clean straddle 2",
+   "align": "onset"
+  },
+  {
+   "file": "bar_clatter.wav",
+   "at": 12.85,
+   "len": 2.0,
+   "peak_db": -15,
+   "note": "s7 Dick knocks the bar off",
+   "align": "onset"
+  },
+  {
+   "file": "bar_rattle.wav",
+   "at": 13.9,
+   "len": 0.8,
+   "peak_db": -22,
+   "note": "s8 bar bounces to rest",
+   "align": "onset"
+  },
+  {
+   "file": "footsteps_cinder.wav",
+   "at": 14.3,
+   "len": 0.9,
+   "peak_db": -20,
+   "note": "s9 Dick runs again"
+  },
+  {
+   "file": "thump_sawdust.wav",
+   "at": 15.5,
+   "len": 1.2,
+   "peak_db": -17,
+   "note": "s9 clean flop",
+   "align": "onset"
+  },
+  {
+   "file": "coach_laugh.wav",
+   "at": 16.45,
+   "len": 2.4,
+   "peak_db": -17,
+   "note": "s10 coach belly laugh (ducked under speech)",
+   "align": "onset"
+  },
+  {
+   "file": "boys_laugh.wav",
+   "at": 19.4,
+   "len": 2.2,
+   "peak_db": -18,
+   "note": "s11 boys laugh behind the coach",
+   "align": "onset"
+  },
+  {
+   "file": "whoosh_punch.wav",
+   "at": 22.95,
+   "len": 0.5,
+   "peak_db": -24,
+   "note": "s12 PUSH! at 23.0 'du-eng'",
+   "align": "onset"
+  },
+  {
+   "file": "flash_pop.wav",
+   "at": 24.55,
+   "len": 1.2,
+   "peak_db": -16,
+   "note": "s13 flash bulb as Dick arches",
+   "align": "onset"
+  },
+  {
+   "file": "newspaper_rustle.wav",
+   "at": 25.6,
+   "len": 1.5,
+   "peak_db": -22,
+   "note": "s14 newspaper in reader's hands",
+   "align": "onset"
+  },
+  {
+   "file": "whoosh_punch.wav",
+   "at": 27.95,
+   "len": 0.5,
+   "peak_db": -24,
+   "note": "s15 snap push",
+   "align": "onset"
+  },
+  {
+   "file": "boys_laugh.wav",
+   "at": 28.05,
+   "len": 2.5,
+   "peak_db": -18,
+   "note": "s15 boys point and laugh",
+   "align": "onset"
+  },
+  {
+   "file": "coach_laugh.wav",
+   "at": 28.2,
+   "len": 2.3,
+   "peak_db": -20,
+   "note": "s15 coach laughs",
+   "align": "onset"
+  },
+  {
+   "file": "footsteps_cinder.wav",
+   "at": 29.0,
+   "len": 1.0,
+   "peak_db": -23,
+   "note": "s16 training alone"
+  },
+  {
+   "file": "thump_sawdust.wav",
+   "at": 29.9,
+   "len": 1.2,
+   "peak_db": -22,
+   "note": "s16 training flop",
+   "align": "onset"
+  },
+  {
+   "file": "flash_pop.wav",
+   "at": 31.7,
+   "len": 1.2,
+   "peak_db": -22,
+   "note": "s17 stadium flash bulbs",
+   "align": "onset"
+  },
+  {
+   "file": "flash_pop.wav",
+   "at": 32.3,
+   "len": 1.2,
+   "peak_db": -24,
+   "note": "s17 more flashes",
+   "align": "onset"
+  },
+  {
+   "file": "bar_rattle.wav",
+   "at": 33.5,
+   "len": 0.8,
+   "peak_db": -24,
+   "note": "s18 officials raise the bar",
+   "align": "onset"
+  },
+  {
+   "file": "bar_clatter.wav",
+   "at": 34.55,
+   "len": 2.0,
+   "peak_db": -17,
+   "note": "s19 rival knocks the bar",
+   "align": "onset"
+  },
+  {
+   "file": "crowd_groan.wav",
+   "at": 34.8,
+   "len": 2.0,
+   "peak_db": -22,
+   "note": "s19 crowd groans for rival"
+  },
+  {
+   "file": "bar_rattle.wav",
+   "at": 36.8,
+   "len": 0.8,
+   "peak_db": -24,
+   "note": "s20 bar above Dick's head",
+   "align": "onset"
+  },
+  {
+   "file": "whoosh_whip_b.wav",
+   "at": 37.4,
+   "len": 0.7,
+   "peak_db": -22,
+   "note": "s21 WHIP",
+   "align": "onset"
+  },
+  {
+   "file": "sneakers_rubber.wav",
+   "at": 37.5,
+   "len": 0.8,
+   "peak_db": -22,
+   "note": "s21 run-up attempt 1"
+  },
+  {
+   "file": "bar_clatter.wav",
+   "at": 38.0,
+   "len": 2.0,
+   "peak_db": -16,
+   "note": "s21 attempt 1: bar falls",
+   "align": "onset"
+  },
+  {
+   "file": "thump_foam.wav",
+   "at": 37.95,
+   "len": 1.2,
+   "peak_db": -18,
+   "note": "s21 lands on foam",
+   "align": "onset"
+  },
+  {
+   "file": "crowd_groan.wav",
+   "at": 38.1,
+   "len": 2.4,
+   "peak_db": -22,
+   "note": "s21 crowd groans"
+  },
+  {
+   "file": "sneakers_rubber.wav",
+   "at": 38.45,
+   "len": 0.8,
+   "peak_db": -22,
+   "note": "s22 attempt 2 run-up"
+  },
+  {
+   "file": "bar_clatter.wav",
+   "at": 39.2,
+   "len": 2.0,
+   "peak_db": -17,
+   "note": "s22 bar falls again",
+   "align": "onset"
+  },
+  {
+   "file": "thump_foam.wav",
+   "at": 39.1,
+   "len": 1.2,
+   "peak_db": -20,
+   "note": "s22 foam",
+   "align": "onset"
+  },
+  {
+   "file": "whoosh_punch.wav",
+   "at": 41.65,
+   "len": 0.5,
+   "peak_db": -24,
+   "note": "s23 PUSH! coach shouts",
+   "align": "onset"
+  },
+  {
+   "file": "crowd_gasp_hush.wav",
+   "at": 42.35,
+   "len": 3.5,
+   "peak_db": -24,
+   "note": "s24 stadium hushes"
+  },
+  {
+   "file": "sneakers_rubber.wav",
+   "at": 44.5,
+   "len": 1.6,
+   "peak_db": -19,
+   "note": "s25 the run, curve and plant"
+  },
+  {
+   "file": "whoosh_punch.wav",
+   "at": 49.0,
+   "len": 0.5,
+   "peak_db": -26,
+   "note": "s27 key image, hips over the bar",
+   "align": "onset"
+  },
+  {
+   "file": "whoosh_whip_b.wav",
+   "at": 52.75,
+   "len": 0.7,
+   "peak_db": -22,
+   "note": "s29 WHIP down",
+   "align": "onset"
+  },
+  {
+   "file": "thump_foam.wav",
+   "at": 54.85,
+   "len": 1.2,
+   "peak_db": -16,
+   "note": "s29 drops onto the foam",
+   "align": "onset"
+  },
+  {
+   "file": "crowd_roar.wav",
+   "at": 58.2,
+   "len": 6.0,
+   "peak_db": -14,
+   "note": "s31 stadium erupts"
+  },
+  {
+   "file": "flash_pop.wav",
+   "at": 58.5,
+   "len": 1.2,
+   "peak_db": -22,
+   "note": "s31 flash bulbs",
+   "align": "onset"
+  },
+  {
+   "file": "flash_pop.wav",
+   "at": 59.1,
+   "len": 1.2,
+   "peak_db": -22,
+   "note": "s31 flash bulbs",
+   "align": "onset"
+  },
+  {
+   "file": "flash_pop.wav",
+   "at": 59.7,
+   "len": 1.2,
+   "peak_db": -24,
+   "note": "s31 flash bulbs",
+   "align": "onset"
+  },
+  {
+   "file": "sneakers_rubber.wav",
+   "at": 60.9,
+   "len": 0.9,
+   "peak_db": -23,
+   "note": "s32 jumpers run, four years later"
+  },
+  {
+   "file": "sneakers_rubber.wav",
+   "at": 61.9,
+   "len": 0.9,
+   "peak_db": -23,
+   "note": "s32 next jumper"
+  },
+  {
+   "file": "thump_foam.wav",
+   "at": 63.2,
+   "len": 1.2,
+   "peak_db": -22,
+   "note": "s33 lands on foam",
+   "align": "onset"
+  },
+  {
+   "file": "thump_foam.wav",
+   "at": 63.9,
+   "len": 1.2,
+   "peak_db": -22,
+   "note": "s33 lands on foam",
+   "align": "onset"
+  },
+  {
+   "file": "whistle_short.wav",
+   "at": 65.3,
+   "len": 0.6,
+   "peak_db": -24,
+   "note": "s34 coach sighs, whistle",
+   "align": "onset"
+  },
+  {
+   "file": "whoosh_whip_a.wav",
+   "at": 66.2,
+   "len": 0.6,
+   "peak_db": -22,
+   "note": "s35 WHIP follow",
+   "align": "onset"
+  },
+  {
+   "file": "footsteps_cinder.wav",
+   "at": 66.4,
+   "len": 1.3,
+   "peak_db": -20,
+   "note": "s35 coach runs the curve"
+  },
+  {
+   "file": "whoosh_punch.wav",
+   "at": 68.5,
+   "len": 0.5,
+   "peak_db": -24,
+   "note": "s36 PUSH! at 68.6",
+   "align": "onset"
+  },
+  {
+   "file": "thump_sawdust.wav",
+   "at": 68.62,
+   "len": 1.2,
+   "peak_db": -12,
+   "note": "s36 TUMP: coach buried in sawdust",
+   "align": "onset"
+  },
+  {
+   "file": "sawdust_spray.wav",
+   "at": 68.65,
+   "len": 1.0,
+   "peak_db": -18,
+   "note": "s36 chips spray",
+   "align": "onset"
+  },
+  {
+   "file": "boys_laugh.wav",
+   "at": 69.1,
+   "len": 0.75,
+   "peak_db": -20,
+   "note": "s36 boys laugh, hard cut at the last word",
+   "align": "onset"
+  }
+ ]
+}
