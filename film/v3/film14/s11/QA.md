@@ -1,10 +1,6 @@
-# s11 QA (shots 11-14), redo v2 by team 7 (answers film14/qa/s11_QA_TECH.md)
-- qa_auto PASS (QA_AUTO.md, phone_sheet.jpg); 254 frames g753-1006, 24 samples, ~68 s/frame (2 procs). Handle frames 1001-1006 keep moving (qa_auto flagged a frozen run in the first encode; re-rendered).
-- Own 6 fps contact-sheet pass: heads y 450-660 of 1280 (all above 880 limit), farmer parented to stool (fixed stool, no slide), stool contact shadow added, no elephants, mouth held 'flat' in all shots, no magenta.
-- Item 1 (ground/high view): fence_ring high view removed. 12 and 14 are medium-height (3.3-5.6 m) dollies along the fence on the yard side; hive roofs 150-400 px on 720 near camera. Ground is still about 25-35 % of frame in 11-13 (not under 20 %: a camera close enough for big hives with the horizon high was not achievable), but road is sharp; one soft green grass patch still visible at lower-left in 12/14. Near-camera yard clutter removed at runtime.
-- Item 2/3 (count): 11 = ONE hive on bare posts (fs1); 12 = row of hives, fs2, no wire (about 5-7 hives visible, not all 10: the 10 do not fit at roof size); 14 = fs3 with thick glowing wire through every hive running round the front-left corner and up the left side, light beads travel along it. 12 and 14 use the same fence but different camera spots (12 front row from the left end; 14 dollies round the corner).
-- Item 4 (shot 11): camera orbits about 40 deg and pushes; hive reads as a box (top bars, trapezoid sides, end slot with bees); farmer ties it on with a 24-frame looped 3-pose arm cycle + cord to the hanging rope.
-- Item 5 (shot 13): wire tip animated from his hand THROUGH two eyelet rings on the bar, then on along the row to the next hives (tip travels ~9 m); coil prop shrinks 1.15 -> 0.55 and slack wire shortens.
-- Item 6/9: mouth held; cameras: 11 orbit+push, 12 dolly 4.7 m + 1.2 m rise, 13 slow dolly, 14 dolly 4.7 m + pan about 30 deg + rise.
-- Item 7: stool contact shadow added, sapling/kale removed (cut_near), farmer feet on stool top.
-- Known weak points: farmer eyes (puppet gaze) point toward the wire/hive but the 2D head is turned a little to the camera; wire in 14 is very thick/bright near the camera.
+# s11 QA v2 (shots 11-12, g759-863, handles 753-758 / 864-869), team 7
+- qa_auto PASS (QA_AUTO.md, phone_sheet.jpg); 117 frames g753-869, 18 samples, ~62 s/frame (2 procs).
+- Director v2 notes: farmer soles now ON the stool top (mark z 0.26, checked on a full-res crop), contact shadow under the stool; shot 12 camera stays 4.6+ m clear of every roof (dolly x -23 -> -17.5, hive height 2.0-2.1 m, lens 40) so no roof fills the frame; hive boxes visible under the roofs; blurry green ground patch removed (ground material no longer uses the grass mask), ground now sharp laterite; sky about 25-30 % in 11, ~35 % in 12.
+- Shot 11: orbit + push round the hive, hive reads as a box (top bars, slot, bees), farmer ties it on with a 3-pose 24-frame arm loop, mouth held flat.
+- Known gap: only about 7-8 hives are countable in shot 12 (not all 10) at hive height; ground still ~35 % in 12 (a sharp road, no blur).
+- Shots 13 and 14 are NOT in this take (team 6 renders them as take s13 from shot.py).
