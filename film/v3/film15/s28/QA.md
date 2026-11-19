@@ -13,7 +13,7 @@ Cost about 13.4 s wall per frame (two processes x 2 threads).
 | take | median | p90 | per shot (median / p90) |
 |---|---|---|---|
 | s25 | 6.7 | 12.0 | 25: 7.6/10.6, 26: 5.5/12.0, 27: 6.6/14.2, out handle: 7.6/12.3 |
-| s28 | 8.4 | 18.1 | 28: 10.6/18.2 |
+| s28 (r4) | 6.3 | 19.7 | 28: 7.3/20.5 |
 | s29 | 6.4 | 12.1 | 29: 6.8/20.7, 30: 6.7/10.0, 31: 3.5/13.1 (unchanged, take 2) |
 All three takes pass median >= 4 and p90 >= 12. Camera changes: shot 25 faster track (4 m in 2.1 s), quick pushes at the start, the plant and the take-off; shot 26 a 15 % eased push-in over 7 frames on each beat (g1392, g1416, g1434) plus 24-degree orbit snaps; shot 27 a snap push at g1470-1476 and two more; shot 28 a tilt that follows the rival up to the apex (g1516-1530), snaps at g1526 / g1543 / g1558 and pushes on the pop and on the drop. The tight pushes at the end of shot 27 crop the head at the right edge in the dissolve handle frames g1510-1517 only.
 ## Known points
@@ -21,3 +21,6 @@ All three takes pass median >= 4 and p90 >= 12. Camera changes: shot 25 faster t
 - Dissolve handle frames come from this take's own set-up (s25 out = shot 27 look, s28 in/out = shot 28 look, s29 in = shot 29 look, s29 out = shot 31 look).
 - Dick pose tween between presets is numeric (legs presets switch at the midpoint); the run uses run_curved (16 frames/cycle) and plant/takeoff presets, x travel 5.6 D in 35 frames.
 - Rival2 on the podium is cropped by the right edge in the last frames of shot 31 (orbit + cheer); coach in the stands is small.
+
+## s28 r4
+The push on the drop was eased out (R pull-back from g1564, tilt down, look shifted right): the falling rival's head stays at y <= 700 and x <= 465 through g1593 (no hair in the caption band, nothing cut by the right edge). Re-rendered g1556-1593 only.

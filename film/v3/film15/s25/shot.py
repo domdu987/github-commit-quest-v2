@@ -175,9 +175,9 @@ def cam27(g):
     u = U01(g, 27); C = (bxm(g) - 0.2, 11.6, 2.15)
     return orbit(C, lerp(3.0, 2.4, u) - 0.75 * sm(seg(g, 1470, 1476)) + 0.35 * sm(seg(g, 1486, 1500)) - 0.5 * sm(seg(g, 1490, 1496)) + 0.5 * sm(seg(g, 1500, 1505)) - 0.5 * sm(seg(g, 1507, 1513)), lerp(22, -10, u) + 6 * math.sin(g * 0.25) + 16 * (sm(seg(g, 1470, 1476)) * 0 + sm(seg(g, 1492, 1498)) - sm(seg(g, 1502, 1508))), 2.0)
 def cam28(g):
-    u = U01(g, 28); x = rival_x(g) * DM; zc = 2.3 + 0.7 * sm(seg(g, 1516, 1530)) - 0.7 * sm(seg(g, 1560, 1570)); C = (x - 0.35, 11.6, zc)      # tilt follows him up to the apex
+    u = U01(g, 28); x = rival_x(g) * DM; zc = 2.3 + 0.7 * sm(seg(g, 1516, 1530)) - 0.9 * sm(seg(g, 1558, 1574)); C = (x - 0.35 + 0.4 * sm(seg(g, 1562, 1576)), 11.6, zc)      # tilt follows him up to the apex
     th = lerp(-24, 20, u) + 16 * (sm(seg(g, 1526, 1532)) - sm(seg(g, 1543, 1549)) + sm(seg(g, 1558, 1564)))
-    R = lerp(3.4, 3.1, u) - 0.7 * sm(seg(g, 1543, 1551)) - 0.9 * sm(seg(g, 1558, 1566))                                                      # push on the pop and on the drop
+    R = lerp(3.4, 3.1, u) - 0.7 * sm(seg(g, 1543, 1551)) - 0.3 * sm(seg(g, 1558, 1564)) + 0.3 * sm(seg(g, 1564, 1580))                                                      # push on the pop and on the drop, eased out so the falling head stays clear
     return orbit(C, R, th, 2.0)
 def cam29(g):
     gw0, gw1 = G_FLICK1 - 2, G_FLICK1 + 8; Lx = land_hip().x * DM
