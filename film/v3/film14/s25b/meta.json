@@ -1,0 +1,3 @@
+{"take":"s25b","film":14,"shots":[25],"g0":1672,"g1":1770,"first_g":1672,"n_frames":99,"handle_in":0,"handle_out":0,
+ "transition_in":{"type":"cut","frames":0},"samples":16,"resolution":[720,1280],"parts":"take.mkv.part* (cat to restore take.mkv)",
+ "note":"shot 25 redo (third attempt): team 5 camera/set/herd, team 3 sprite grading + contact shadows; hard-swap turn behind dust; herd leaves the frame; streak dust"}
