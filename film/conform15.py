@@ -6,7 +6,7 @@ usage: python3 film/conform15.py [options] [TAKE_DIR_OR_LISTFILE ...]     (defau
   --name NAME   output basename (default film15_test)  -> film/release15/NAME.mp4 + NAME_report.json
   --n N         frame count (default 2095 = 69.83 s)
   --work DIR    scratch dir (default /tmp/conform15_work/NAME), --keep keeps it, --target LUFS (default -12)
-Takes: each contributes frames g0..g1-1, ordered by first_g, later override earlier; transition_in dissolve blends centred on g0
+Takes: each contributes frames g0..g1 (meta g1 inclusive), ordered by first_g, later override earlier; transition_in dissolve blends centred on g0
 (string transition_in is normalised to a dict); uncovered frames fall back to a handle frame, else a grey MISSING placeholder.
 SFX: film15/audio/sfx_cues.json, times on the narration clock (+0.10 s added here). Music: film15/audio/music_suno.wav else none (warning).
 """
@@ -52,7 +52,7 @@ for d in dirs:
 TK.sort(key=lambda m: m["first_g"])
 owner = {}
 for m in TK:
-    for g in range(m["g0"], min(m["g1"], N)): owner[g] = m
+    for g in range(m["g0"], min(m["g1"] + 1, N)): owner[g] = m   # meta g1 is INCLUSIVE (s01: g1 183 + 6 handle = first_g 0 + n_frames 190)
 SHOTS = [(1,0,2.1),(2,2.1,3.6),(3,3.6,4.45),(4,4.45,6.15),(5,6.15,8.2),(6,8.2,11.45),(7,11.45,13.25),(8,13.25,14.15),(9,14.15,16.3),(10,16.3,18.8),(11,18.8,20.7),(12,20.7,23.6),(13,23.6,25.4),(14,25.4,27.95),(15,27.95,28.73),(16,28.73,31.05),(17,31.05,32.5),(18,32.5,33.8),(19,33.8,35.27),(20,35.27,37.5),(21,37.5,38.35),(22,38.35,39.65),(23,39.65,42.3),(24,42.3,44.3),(25,44.3,46.4),(26,46.4,49.0),(27,49.0,50.35),(28,50.35,52.85),(29,52.85,55.08),(30,55.08,58.2),(31,58.2,60.15),(32,60.15,62.5),(33,62.5,64.62),(34,64.62,66.25),(35,66.25,68.0),(36,68.0,69.84)]
 font = ImageFont.truetype(P + "/fonts/WorkSans-Black.ttf", 44)
 def placeholder(g, path):
