@@ -449,3 +449,220 @@ The grey lead pipe is still candy blue/white. These are set assets, so a camera 
 | Register tape (C05/C07) | reads | reads, lovely in C07 |
 
 After B1-B6, re-render only these tiles: L04, L05, L09, L11-L19 and C07. If the B-items land as specified, I expect SHIP at about 7.
+
+---
+
+# Re-check 2 (after fix round 2, commit 34f0eb8)
+
+Inputs:
+- The 16 re-rendered finals: L02, L04, L05, L06, L09-L19 and C07, each at 720x1280.
+- A fresh 360x640 phone sheet of the same 16 tiles.
+- 2x crops of the L04 pulse and the L19 crate.
+- Pixel samples on the pipe in L12.
+- The fix diff: telegraph.py, tg_line.py, tg_chamber.py, telegraph_kit.py.
+
+## Verdict: **FIX-FIRST** (2 of 6 blockers resolved; the reveal chain still fails)
+
+| # | Blocker | Full size | Phone 360x640 | Status |
+|---|---|---|---|---|
+| B1 | Pulse look (L04, L05) | bead necklace | bead necklace / string of pearls | **NOT RESOLVED** |
+| B2 | trench_cut (L17) | blue slabs, paper tags, ring bubbles | "a shelf with paper tags and blue bubbles" | **NOT RESOLVED** |
+| B3 | line_wagon glass (L19) | a glowing green block in a crate | a green box | **NOT RESOLVED** |
+| B4 | line_rail race (L09) | loco, plume, pulse ahead, FG crate | reads | **RESOLVED** |
+| B5 | Lead pipe grey + brown furrow (L11-L18) | the furrow is now brown; the pipe is still blue/white candy | the blue/white stripe is the strongest line in the frame | **NOT RESOLVED** (pipe); earth part resolved |
+| B6 | C07 Morse at the door | in the lit doorway, head about 60 px | about 30 px, reads | **RESOLVED** |
+
+### B1. Pulse (L04, L05): NOT RESOLVED
+
+**(a) It still reads as a bead necklace, not one glowing pulse.**
+
+What _make_pulse does now:
+- It makes 41 separate spheres with a lag step of `0.0007` of the whole wire length.
+- On a 17-pole line that step is larger than the bead diameter, so each bead stands alone and the dark wire shows between them.
+- In L05 the trail is about 14 white discs, each 30-40 px, with a dark gap between each pair, running up the wire: pearls on a string.
+- In L04 it is a dotted white chain of about 25 dots. The head's 4.2x halo sits *past* the neck on the left span as a pale soap-bubble disc, about 45 px.
+- The core strength is 80, which clips to pure white, so nothing reads cyan except the halo.
+- In L05 there is still no cyan rim-glow inside the glass. Raising the glass emission to 0.9 makes the whole bottle glow green instead.
+
+Exact fix, in telegraph.py `_make_pulse` / `set_pulse`:
+1. Replace the beads with **one tapered emissive tube** along the wire:
+   - Each frame, sample `wire_pts` from `d_head - L` to `d_head`, with L = 1.2 m (world) and 24 samples.
+   - Sweep a tube along those samples (mb.rod per segment, `smooth=True`, `caps=False`).
+   - Taper the radius from `1.6 x wire radius` at the head to `1.05 x wire radius` at the tail. The tube must sheath the wire everywhere, so no dark wire shows through.
+   - If the team keeps beads instead, set the per-bead step to `0.3 * r_k / tot`, which takes about 120 beads, and make every bead radius at least 1.3 x the wire radius.
+2. Colour the tube, using the object-space coordinate along the segment:
+   - head: `#e8fdff`, strength 20;
+   - tail: `#3cc8ff`, strength 5;
+   - the last 30 % fades to transparent, by mixing with Transparent through a MapRange on the segment parameter.
+   - Do **not** let the trail clip to white. Only the head may be white.
+3. Head halo:
+   - Radius `2.2 x r` (now 4.2).
+   - Centre it on the wire point.
+4. In L04 and L05, park the head **inside the neck glass**: `set_pulse(s)` with `s = d_neck / tot` for the parked pole.
+5. Light inside the glass:
+   - Put `pulse_light` at the neck centre with energy 15 x SC^2, colour (0.45, 0.85, 1.0). That gives the cyan rim-glow inside the glass.
+   - For the L05 macro, put the glass emission back to 0.35 (use a separate `glass_hero` material if line_close needs 0.9).
+   - The cyan must win over the green there.
+
+Accept when, at 360x640:
+- the trail is one continuous cyan comet with no visible gaps;
+- the head sits on or in the neck;
+- no white disc floats beside the neck.
+
+### B2. trench_cut (L17): NOT RESOLVED
+
+**(b) It does not read as "a broken lead pipe in the ground leaking sparks".**
+
+What improved:
+- The lower 30 % is now matte brown soil: good.
+- The cloth strips are now irregular.
+- The copper wire inside is visible as a thin orange rod.
+
+What still fails:
+1. The camera move to z = -1.05 put the lens almost inside the pipe (pipe axis at z -0.72, R 0.17).
+   - The two peeled flaps now fill the full frame width as flat blue-grey slabs (y 450-580 and y 670-750).
+   - At this distance the pipe has no round silhouette: it reads as a shelf, a drawer or a sandwich, not a pipe.
+2. The lead is blue. The `pitsky` area light is (0.5, 0.62, 1.0) at 300 and `pitspark` is now 60, which turns #7a7d84 into a blue slab.
+3. The cloth is paper-white, and the 22 strips read as hanging paper tags.
+4. The sparks are still bullseye rings: a white dot, a cyan ring and a white rim, from the `_glow_mat` halo around the core. They read as UI bubbles.
+5. A grey gravel band (y 810-940) under the slabs reads as a concrete step.
+
+Exact fix, in tg_line.py `build_pit` and telegraph.py `CAMS_M` / `_make_sparks`:
+1. Camera:
+   - Use `trench_cut=((52.25, 10.3, -0.35), (52.0, 13.3, -0.80))`, a slightly high three-quarter view down onto the pipe.
+   - Check that the whole split, plus about 0.6 m of intact pipe on each side, is in frame.
+   - The intact pipe ends must show as **round tubes** on the left and right, and the split must take about 50-60 % of the width.
+   - The soil face must take the upper third and the pit floor the lower quarter.
+2. Peeled flaps:
+   - At most 0.22 m out from the pipe surface (today they span the whole split).
+   - Curl them: 3 quads that bend back, not one flat lip.
+   - Give the torn edge a jagged outline.
+3. Pit light colour:
+   - `pitsky` to (1.0, 0.82, 0.62), energy 150 x SC^2 (warm dusk bounce).
+   - `pitspark` to energy 25.
+   - Then the lead stays grey and the only cyan in the frame is the leak.
+4. Cloth:
+   - Material `#d9c9a4` (cream, rough 1.0, noise contrast 1.5).
+   - 8-10 strips, length 0.08-0.30.
+   - They must all hang *from the seam lips*, not from the whole pipe.
+5. Sparks:
+   - Delete the halo objects in `_make_sparks` for where == 'pipe'.
+   - Make the cores solid cyan `#8fe6ff` at strength 15, radius 0.012-0.02 m.
+   - Stretch each one 3x along its fall direction, so they read as drips or streaks.
+   - Add 2 small cyan point lights (energy 4 x SC^2) on the soil under the split, so the soil gets the cyan light.
+6. Gravel band: blend it to the brown `strat_grav` with contrast 1.2, and drop its grey.
+
+Accept when, at 360x640:
+- a grey round pipe lies across the frame;
+- a torn mouth in its middle shows orange wire and cream rags;
+- cyan sparks drip into brown soil;
+- there are no rings and no full-width slabs.
+
+### B3. line_wagon (L19): NOT RESOLVED
+
+**(c) The bottles do not read as glass bottles.**
+
+What improved:
+- The crate is now lifted into the sun.
+- The wagon has warm light.
+
+What still fails:
+- The 18 bottles overlap. With `s=2.9`, the bottle spacing is about 0.174 m and the body diameter is 0.215 m.
+- The glass (alpha 0.62, emission now 0.9) fuses them into one lit green slab: a flat glowing top above the rim, and green arches behind the slats.
+- There is not one star glint and not one separate neck.
+- Morse's head is still squeezed between the spool (left) and the crate (right). The crate top cuts across his face, and there is no raised hand and no sky behind him.
+
+Exact fix, in tg_line.py `wagon2` / `bottle_crate`, plus the camera and mark:
+1. Bottle layout:
+   - `bottle_crate(..., nb=(4, 2), s=2.9)`.
+   - Compute the crate width and depth from the spacing: `pitch = 0.074*s*1.4`, `w = nb[0]*pitch + 0.1`.
+   - The bottles then stand apart with clear gaps.
+   - Lower the crate wall height to `0.12*s`, so shoulders and necks (the top 55 % of each bottle) stand free above the rim.
+2. Crate glass:
+   - A dedicated `glass_crate` material: Principled, base `#2e8a4a`, Transmission 1.0, roughness 0.04, IOR 1.45, **emission 0**, alpha 1.0.
+   - It gets its read from refraction and specular. The line_close glass keeps its own material.
+3. Glints:
+   - `glint(mb, M, neck_top, 0.12)` on 4 of the 8 necks, staggered heights.
+   - Add a thin white rim highlight: a rod of `glintm` at strength 8 along one side of each neck.
+4. Camera:
+   - Lower the line_wagon eye to z = 1.7 and keep the target z = 2.2.
+   - That puts the necks against the after-rain sky, not against trees.
+   - Check that at least 4 necks are silhouetted on sky.
+5. Spool and mark:
+   - Move the spool to the far end of the bed, `(1.2 -> 1.9, ...)`, or drop it from this preset.
+   - Move the `morse_wagon_bed` mark 0.6 m toward camera-left of the crate, so his head and raised hand are on clear sky.
+
+Accept when, at 360x640:
+- at least 4 separate green bottle necks;
+- at least 2 star glints;
+- the necks are lit by the sun, with sky behind them;
+- Morse's head is not overlapped.
+
+### B4. line_rail (L09): RESOLVED
+
+- The loco, stack and plume are in frame at about 20-35 % of the width (asked: about 45 %, but it reads).
+- The pulse is a white head with a short tail on the near span, ahead of the train: the race reads.
+- The foreground crate is there.
+- The pulse head is about 15 px (about 8 px on the phone). It will take the B1 tube look automatically. The take's push sells the size.
+- Non-blocking: a large dark oval shadow in the lower right (x 420-720, y 1090-1280) reads as a hole. Frame it out or move its caster.
+
+### B5. Lead pipe (L11-L16, L18): NOT RESOLVED (the earth part is resolved)
+
+What is resolved:
+- The furrow now reads as dark-brown earth banks in L11-L14 and L18.
+
+What fails:
+- The pipe itself is still saturated **blue with white tops** in L11-L14 and L18, and solid blue in L15/L16.
+- The drum reel is blue too.
+- Cause: the material went to #7a7d84 as asked, but a neutral grey under the DAY/DUSK ambient (`#4256ff` x 2.2 / `#3a62ff` x 2.9) renders blue.
+- L12 samples:
+  - shade side: rgb(38, 47, 148) and (26, 33, 128);
+  - sun top: rgb(215, 201, 247), which is near white.
+
+Exact fix, in telegraph_kit.py `palette()['lead']` and tg_line.py `leadclip`:
+1. Warm-biased, darker albedo plus a small self-light that neutralises the blue fill: `mat('lead', '#6e665c', '#5e574e', 4, contrast=1.3, rough=0.55, sheen=0.25, emit='#5c5a56', emit_k=0.25)`. Use the same values for `leadclip` with `clip='PIPE'`.
+2. Acceptance by pixels on L12 and L15:
+   - pipe shade-side saturation (HSV S) ≤ 0.30;
+   - sun-side max channel ≤ 190;
+   - hue in the shade not inside 220-260 by more than S 0.3.
+   - If the shade is still blue, raise `emit_k` in steps of 0.1. Do not lift the albedo value.
+3. The reel windings use `lead`, so they follow.
+4. Keep blue for the sparks alone.
+
+### B6. C07 Morse at the door: RESOLVED
+
+- The new side doorway at SDOOR is lit and in frame.
+- Morse's mark stands in it, head about y 620 at about 60 px, so about 30 px on the phone, partly behind the jamb. It reads clearly.
+- The mocker on the stool, the money bag and the tape loops are lovely.
+- Non-blocking: the ceiling is still about 25 % of the frame and blue-grey; tilt down in the take.
+
+### Other re-rendered tiles (L02, L06, L10, L15, L16, L18): no regressions seen
+
+- L15/L16 carry the B5 blue pipe.
+- L16 rain is still at 100 % opacity, and the pure-blue puddle remains (non-blocking, as before).
+- L19 has a pure-blue puddle under the wagon: make it dark-reflective with the B3 pass.
+
+## Scores, re-check → re-check 2
+
+- LINE: 5.7 → **6.0**. Up for L09 and the brown furrow. B1, B2 and B3 hold the key-moment score at 5.
+- CHAMBER: 6.7 → **6.9**, for C07.
+- STUDIO: unchanged at 6.2.
+- **Film-level set score: 6.3 / 10.**
+
+## Why FIX-FIRST and not SHIP
+
+- B1, B2, B3 and the B5 pipe are **set assets and lights**: no camera move in a take fixes them.
+- They are the film's reveal chain:
+  - the pulse over the glass (shots 24, 25);
+  - the leaking pipe (shot 16);
+  - "the answer is glass" (shot 22).
+- Shown to the client today, the chain reads as fairy lights, a paper-tag shelf and a green box.
+- All four fixes above are small, local edits.
+
+Re-render only:
+- L04 and L05 (B1);
+- L17 (B2);
+- L19 (B3);
+- L12 and L15 as the B5 proof tiles. L11, L13, L14, L16 and L18 follow by material and need no separate review.
+
+If these land as specified, I expect SHIP at about 7.
