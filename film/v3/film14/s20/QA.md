@@ -1,3 +1,5 @@
+# QA s20 v3 (shots 20-21 re-done; 22-24 locked from v2)
+
 # QA s20 v2 (shots 20-24, THE REVEAL), g 1301-1683, 383 frames, 720x1280
 
 v2 after the director gate (s20_QA_TECH / s20_QA_ART) and continuity notes.
@@ -9,3 +11,9 @@ v2 after the director gate (s20_QA_TECH / s20_QA_ART) and continuity notes.
 - Checked every frame at 6 fps (contact.jpg, phone_sheet.jpg) and every cut +-3 (g 1368, 1453, 1503, 1599): clean hard cuts. Heads stay above y 880, no steep down-view, no text, no DOF.
 - QA_AUTO: only FAIL is "suspected blur" (118 frames, shots 20-22). Known false positive (per-shot Laplacian medians differ: bee-dense s23/24 raise the take median); frames are sharp.
 - Known quirks: in shot 20 she is cropped large at the left edge and the V is small against her grey body; bee clouds are dense/clumpy at phone size; u4 hive overlaps her chest in the first frames.
+
+## v3 (shots 20-21 only, g 1301-1452; shots 22-24 unchanged)
+- Shot 20: continues team 6's inside-fence shot 19 (push point x 6.0, max bow t 0.11 at g 1307, 3 cm matte grey wire): opens on their wide framing, eases to a low oblique close on her chest + wire, holds ~12 frames (g 1307-1319), then slides left along the bent wire past hives that start to swing (u3/u4 at g ~1320, u2 ~1334). Elephant card night-graded like s23-24; roof undersides x0.62; trees, banana leaves, mountain and u3/u4 roofs removed; her card is hidden once her head leaves frame (no floating trunk).
+- Shot 21: tracking cut-away along the row, 41 deg to it and ahead of the wave, hive swing seen side-on, ~16 frames hive to hive (u3 g ~1381, u2 ~1398, u1 ~1415, u0 ~1431), knock puff of bees at each; roofs removed, near-zero grass, orange lamp pools dimmed; hives x1.5; camera stops at the row end.
+- qa_auto: only FAIL is the per-shot blur false positive (159 frames, shots 20-21 are low-detail wide frames). Handle frames 1301-1306 drift slightly (no frozen run).
+- Known limits: the V is a faint kink in the wire (a bow toward camera cannot be drawn strongly without a high camera); sky in shot 20 is about 30-40 %; far hives in shot 21 are smaller than 120 px (only the 2 nearest are large at any time).
