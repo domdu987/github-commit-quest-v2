@@ -234,7 +234,7 @@ def build_exterior(SET, light):
 
 # ----------------------------------------------------------------------------- build
 def build_shop(SET, preset, light):
-    root = K.new_root(); M = shop_mats(); SET['M'] = M; rr = rnd(19); PL = LIGHTS[light]; SET['caption_shade'] = dict(y0=740, y1=890, a1=0.68, a2=0.8)
+    root = K.new_root(); M = shop_mats(); SET['M'] = M; rr = rnd(19); PL = LIGHTS[light]; SET['caption_shade'] = None  # director: no bottom darkening card (new effect, not approved)
     K.flat_world('#7a82ff', 0.0, env=('#ffd6a0', 0.9)); SET['samples'] = 8; SET['dbounce'] = 0
     mb = MB('shop'); fl = []
     # ---- shell

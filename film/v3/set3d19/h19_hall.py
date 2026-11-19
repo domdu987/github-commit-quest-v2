@@ -93,7 +93,7 @@ def tex_oval(name, m, c, rx, rz, y, n=40, flip=False):
     return mesh_from(name, m, vs, [(0, 1 + k, 1 + (k + 1) % n) for k in range(n)], uvs=uv)
 
 def build_hall(SET, preset, light):
-    root = K.new_root(); M = hall_mats(); SET['M'] = M; rr = rnd(31); PL = LIGHTS[light]; SET['caption_shade'] = dict(y0=770, y1=900, a1=0.5, a2=0.62)
+    root = K.new_root(); M = hall_mats(); SET['M'] = M; rr = rnd(31); PL = LIGHTS[light]; SET['caption_shade'] = None  # director: no bottom darkening card (new effect, not approved)
     K.flat_world('#7a82ff', 0.0, env=('#ffd6a0', 0.9)); SET['samples'] = 8; SET['dbounce'] = 0
     mb = MB('hall'); SET['flames'] = []; fm = M['flame']
     # ---- floor, painted carpet (greyer navy field, crimson + gold border, medallions)
