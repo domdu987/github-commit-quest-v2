@@ -12,10 +12,10 @@ def ship_mats():
     M['deck1'] = mat('deck1', '#b48a50', '#a07a40', scale=3, aniso=(0.12, 1, 1), contrast=1.4)
     M['deck2'] = mat('deck2', '#a67c44', '#bc9255', scale=3, aniso=(0.12, 1, 1), contrast=1.4)
     M['seam'] = mat('seam', '#2c1c20')
-    M['hullb'] = mat('hullb', '#221e26', '#2e2830', scale=2, aniso=(0.3, 0.3, 1))
+    M['hullb'] = mat('hullb', '#2a2622', '#36302a', scale=2, aniso=(0.3, 0.3, 1))
     M['ochre'] = mat('ochre', '#cf9230', '#bd7f26', scale=3)
     M['bulw'] = mat('bulw', '#a24c2c', '#8f3f28', scale=3, aniso=(0.2, 1, 1))
-    M['cap'] = mat('cap', '#241e22', '#322a2c', scale=3)
+    M['cap'] = mat('cap', '#2a2622', '#3a342c', scale=3)
     M['iron'] = mat('iron', '#2a2622', '#38322c', scale=6, rough=0.6)
     M['carr'] = mat('carr', '#8a3e28', '#9c4a30', scale=4, aniso=(0.2, 1, 1))
     M['oak'] = mat('oak', '#8a5a2c', '#9e6a34', scale=5, aniso=(0.15, 1, 1))
@@ -120,7 +120,9 @@ def build_ship(P):
         y = Y0
         while y < 29.5:
             yc = y + 0.35; b = hw(yc); dy = hw(yc + 0.35) - hw(yc - 0.35)
-            if b > 0.2: mb.box(M['cap'], (s * (b - 0.02), yc, DECK + 1.14), (0.3, 0.74, 0.1), rz=math.atan2(-dy * s, 0.7))
+            if b > 0.2:
+                mb.box(M['cap'], (s * (b - 0.02), yc, DECK + 1.14), (0.3, 0.74, 0.1), rz=math.atan2(-dy * s, 0.7)); mb.box(M['cap'], (s * (b + 0.1), yc, DECK + 1.2), (0.06, 0.74, 0.06), rz=math.atan2(-dy * s, 0.7))
+                mb.box(M['seam'], (s * (b - 0.02), yc + 0.36, DECK + 1.195), (0.31, 0.02, 0.012), rz=math.atan2(-dy * s, 0.7))
             y += 0.7
     # ---- cannons (black iron on red-brown carriages), muzzles through the ports
     def cannon(side, y):
@@ -168,25 +170,29 @@ def build_ship(P):
                 b = Vector((s * (hw(my + 1.5) - 0.1) * (1 - t) + (mx + s * 0.4) * t, my + 1.5 - 0.6 * t, DECK + 1.15 + (top - DECK - 1.15) * t))
                 mb.rod(M['rig'], a, b, 0.028, 0.028, 4)
     mast(8.0, 40.0, [(14.4, 14.0, 0.17), (24.6, 10.4, 0.14), (31.4, 7.2, 0.1)],
-         [(-6.5, 6.5, 8.6, 14.2, 0.7, 1.7), (-4.7, 4.7, 15.0, 24.2, 0.8, 1.4), (-3.3, 3.3, 25.0, 31.0, 0.9, 1.0)])
+         [(-6.5, 6.5, 8.6, 14.2, 0.7, 2.5), (-4.7, 4.7, 15.0, 24.2, 0.8, 2.0), (-3.3, 3.3, 25.0, 31.0, 0.9, 1.5)])
     mast(28.0, 34.0, [(13.6, 12.0, 0.15), (21.4, 9.0, 0.12), (27.0, 6.2, 0.09)],
-         [(-5.6, 5.6, 8.6, 13.4, 0.7, 1.5), (-4.1, 4.1, 14.2, 21.0, 0.8, 1.2), (-2.9, 2.9, 21.8, 26.6, 0.9, 0.9)])
+         [(-5.6, 5.6, 8.6, 13.4, 0.7, 2.2), (-4.1, 4.1, 14.2, 21.0, 0.8, 1.8), (-2.9, 2.9, 21.8, 26.6, 0.9, 1.3)])
     tube(mb, M['rig'], (0, 8.0, 40.0), (0, 28.0, 34.0), 0.05, 0.05, 4); tube(mb, M['rig'], (0, 28.0, 34.0), (0, 60.0, 14.2), 0.05, 0.05, 4); tube(mb, M['rig'], (0, 8.0, 31.0), (0, 28.0, 27.0), 0.04, 0.04, 4)
     tube(mb, M['rig'], (0.2, 7.5, 28.0), (0.2, -4.0, DECK + 1.3), 0.05, 0.05, 4)
     tube(mb, M['mast'], (0, 44.0, 9.4), (0, 62.0, 14.5), 0.2, 0.1, 10)
     sail_tri(mb, M, (0, 60.5, 13.6), (0, 51.0, 11.8), (0, 55.5, 22.0), 1.1); sail_tri(mb, M, (0, 55.0, 12.8), (0, 48.6, 11.0), (0, 50.0, 22.0), 1.0)
     mb.quad(M['red'], [(0.0, 8.0, 40.1), (0.0, 8.0, 39.3), (-0.2, 3.5, 39.2), (-0.2, 3.5, 40.0)]); mb.quad(M['red'], [(-0.2, 3.5, 40.0), (-0.2, 3.5, 39.2), (0.0, 8.0, 39.3), (0.0, 8.0, 40.1)])
     mb.finish()
-    # ---- bow wave: curling white sheets + spray at the stem, wash along the outboard hull
+    # ---- bow wave: a curling white roll pushed away from the stem with a turquoise underside, long thin rolls peeling back along the hull
     sp = MB('spray'); rr2 = rnd(8)
+    tq = mat('turq', '#2fa9a4', '#46bdb0', scale=2)
     for side in (-1, 1):
-        for k in range(26):
-            yy = STEM - 0.2 - k * 0.7; b = hw(yy) + 0.95 + 0.25 * k ** 0.5
-            hgt = max(0.12, 0.85 - 0.032 * k); sp.ell(M['spray'], (side * (b + rr2.uniform(-0.1, 0.1)), yy, 0.1 + hgt * 0.5), (0.45 + 0.012 * k, 0.55 + 0.02 * k, hgt), (10, 6))
-    for k in range(34):
-        a = rr2.uniform(0, 6.28); r_ = rr2.uniform(0, 1.8)
-        sp.ell(M['spray'], (rr2.uniform(-1.4, 1.4), STEM + 0.6 + r_ * 0.8, rr2.uniform(0.3, 1.8)), (0.11, 0.11, 0.13), (6, 4))
-    sp.ell(M['spray'], (0, STEM + 0.4, 0.5), (1.1, 1.3, 0.7), (12, 8)); sp.finish(shadow=False)
+        for k in range(22):
+            yy = STEM - 0.3 - k * 0.75; b = hw(yy) + 1.0 + 0.22 * k ** 0.6
+            hgt = max(0.18, 1.7 - 0.07 * k); yaw = -side * math.atan2(hw(yy + 0.4) - hw(yy - 0.4), 0.8) * -1.0
+            sp.ell(tq, (side * (b + 0.35 + 0.02 * k), yy, 0.15 + hgt * 0.22), (0.5 + 0.02 * k, 0.8, hgt * 0.42), (12, 6), rot=(0, 0, yaw))           # turquoise underside / face
+            sp.ell(M['spray'], (side * (b - 0.05), yy, 0.2 + hgt * 0.62), (0.42 + 0.015 * k, 0.78, hgt * 0.4), (12, 6), rot=(0, 0, yaw))                # white curling roll on top
+            if k % 2 == 0: sp.ell(M['spray'], (side * (b - 0.35), yy + 0.2, 0.25 + hgt * 0.95), (0.3, 0.5, hgt * 0.22), (10, 6), rot=(0, 0, yaw))       # the lip
+    for k in range(9):                                                                  # crescent of white across the stem
+        a = math.pi * (k / 8.0); sp.ell(M['spray'], (1.7 * math.cos(a), STEM + 0.6 + 1.2 * math.sin(a), 0.5 + 0.5 * math.sin(a)), (0.6, 0.6, 0.55 + 0.35 * math.sin(a)), (10, 6))
+    for k in range(30): sp.ell(M['spray'], (rr2.uniform(-1.6, 1.6), STEM + 0.8 + rr2.uniform(0, 2.0), rr2.uniform(0.7, 2.4)), (0.12, 0.12, 0.14), (6, 4))
+    sp.finish(shadow=False)
     # ---- far dressing
     ib = MB('isle'); n = 48; X0i = 780
     for i in range(n):
@@ -228,13 +234,18 @@ def build_sea(P):
     h *= np.clip(1 - t / 3500.0, 0, 1) ** 0.5
     # foam attribute: wash along the outboard hull, bow foam (broken up by the shader noise)
     hh_ = hw(np.clip(py, -12, STEM)); d_hull = np.abs(px) - (hh_ + 0.95); d_hull = np.where((py > -12) & (py < STEM + 1), d_hull, 9)
-    along = np.clip((py + 12.0) / 58.0, 0, 1)
-    wash = np.exp(-np.maximum(d_hull, 0) / 1.3) * (d_hull < 4.5) * (0.35 + 0.65 * along)
-    dback = np.maximum(STEM - py, 0.0); arm = np.zeros_like(px)
-    for off in (2.0, 4.4, 7.0):
-        dd = np.abs(np.abs(px) - (hh_ + 0.95 + off * (0.3 + 0.5 * np.clip(dback / 30.0, 0, 1)))); arm = np.maximum(arm, np.clip(1 - dd / (0.5 + 0.1 * off), 0, 1) * np.clip(1 - dback / (24.0 + 8 * off), 0, 1) * (py < STEM + 4))
-    bow = np.exp(-(((px - 0.0) / 3.2) ** 2 + ((py - (STEM + 2.0)) / 4.2) ** 2))
-    foam = np.nan_to_num(np.clip(np.maximum.reduce([wash * 0.75, arm * 0.55, bow * 0.9]), 0, 1))
+    dh = np.maximum(d_hull, 0.0); dback = np.maximum(STEM - py, 0.0)
+    lace = 0.5 + 0.5 * np.sin(py * 1.7 + 2.3 * np.sin(dh * 2.1 + py * 0.3))
+    inhull = (py > -12) & (py < STEM + 1.0)
+    bands = np.zeros_like(px)
+    for (off, w, amp, flen) in ((0.4, 0.9, 1.0, 80.0), (3.3, 1.0, 0.85, 60.0), (6.6, 1.15, 0.7, 44.0)):
+        wd = w * (0.65 + 0.7 * lace)
+        bnd = np.clip(1 - np.abs(dh - off - 0.3 * np.sin(py * 0.3 + off)) / wd, 0, 1)
+        bnd = bnd * bnd * (3 - 2 * bnd) * amp * np.clip(1.05 - dback / flen, 0, 1)
+        bands = np.maximum(bands, bnd)
+    bands *= inhull
+    bow = np.exp(-(((px - 0.0) / 3.2) ** 2 + ((py - (STEM + 2.0)) / 4.2) ** 2)) * 0.9
+    foam = np.nan_to_num(np.clip(np.maximum(bands * 0.95, bow), 0, 1))
     verts = np.stack([px, py, h], -1).reshape(-1, 3).astype(np.float32)
     idx = np.arange(NU * NV).reshape(NV, NU)
     a_ = idx[:-1, :-1]; b_ = idx[:-1, 1:]; c_ = idx[1:, 1:]; d_ = idx[1:, :-1]
@@ -267,14 +278,16 @@ def build_sea(P):
     wc = N('ShaderNodeMath'); wc.operation = 'MULTIPLY'; wc.use_clamp = True; L(cr.outputs['Result'], wc.inputs[0]); L(sp2.outputs['Result'], wc.inputs[1])
     col = mixc(col, hexc('#e4eeec'), wc.outputs[0])
     fa = N('ShaderNodeAttribute'); fa.attribute_type = 'GEOMETRY'; fa.attribute_name = 'foam'
-    nz2 = N('ShaderNodeTexNoise'); nz2.inputs['Scale'].default_value = 1.6; nz2.inputs['Detail'].default_value = 1.0; mp2 = N('ShaderNodeMapping'); mp2.inputs['Scale'].default_value = (1.8, 0.22, 1.0); L(tcw.outputs['Object'], mp2.inputs['Vector']); L(mp2.outputs[0], nz2.inputs['Vector'])
-    br = N('ShaderNodeMapRange'); br.inputs['From Min'].default_value = 0.35; br.inputs['From Max'].default_value = 0.7; L(nz2.outputs['Fac'], br.inputs['Value'])
+    nz2 = N('ShaderNodeTexNoise'); nz2.inputs['Scale'].default_value = 1.6; nz2.inputs['Detail'].default_value = 1.0; mp2 = N('ShaderNodeMapping'); mp2.inputs['Scale'].default_value = (2.4, 2.4, 1.0); L(tcw.outputs['Object'], mp2.inputs['Vector']); L(mp2.outputs[0], nz2.inputs['Vector'])
+    br = N('ShaderNodeMapRange'); br.inputs['From Min'].default_value = -2.0; br.inputs['From Max'].default_value = -1.0; L(nz2.outputs['Fac'], br.inputs['Value'])
     fm = N('ShaderNodeMath'); fm.operation = 'MULTIPLY'; fm.use_clamp = True; L(fa.outputs['Fac'], fm.inputs[0]); L(br.outputs['Result'], fm.inputs[1])
-    fm2 = N('ShaderNodeMath'); fm2.operation = 'MULTIPLY'; fm2.use_clamp = True; fm2.inputs[1].default_value = 1.4; L(fm.outputs[0], fm2.inputs[0])
+    fm2 = N('ShaderNodeMath'); fm2.operation = 'MULTIPLY'; fm2.use_clamp = True; fm2.inputs[1].default_value = 1.25; L(fm.outputs[0], fm2.inputs[0])
     col = mixc(col, hexc('#f0f6f2'), fm2.outputs[0])
     L(col, bs.inputs['Base Color'])
     lw = N('ShaderNodeLayerWeight'); lw.inputs['Blend'].default_value = 0.3
-    em = N('ShaderNodeMath'); em.operation = 'MULTIPLY'; em.inputs[1].default_value = P.get('fresnel_k', 0.7); L(lw.outputs['Fresnel'], em.inputs[0])
+    mrn = N('ShaderNodeMapRange'); mrn.inputs['From Min'].default_value = 20.0; mrn.inputs['From Max'].default_value = 120.0; mrn.inputs['To Min'].default_value = 0.12; mrn.inputs['To Max'].default_value = 1.0; L(cd.outputs['View Distance'], mrn.inputs['Value'])
+    fk = N('ShaderNodeMath'); fk.operation = 'MULTIPLY'; fk.inputs[1].default_value = P.get('fresnel_k', 0.7); L(mrn.outputs['Result'], fk.inputs[0])
+    em = N('ShaderNodeMath'); em.operation = 'MULTIPLY'; L(lw.outputs['Fresnel'], em.inputs[0]); L(fk.outputs[0], em.inputs[1])
     bs.inputs['Emission Color'].default_value = hexc('#9fc2d8'); L(em.outputs[0], bs.inputs['Emission Strength'])
     nzb = N('ShaderNodeTexNoise'); nzb.inputs['Scale'].default_value = 1.8; nzb.inputs['Detail'].default_value = 0.0; L(tcw.outputs['Object'], nzb.inputs['Vector'])
     bp = N('ShaderNodeBump'); bp.inputs['Strength'].default_value = 0.2; bp.inputs['Distance'].default_value = 0.2; L(nzb.outputs['Fac'], bp.inputs['Height']); L(bp.outputs['Normal'], bs.inputs['Normal'])
@@ -286,10 +299,10 @@ def build_sea(P):
     o.visible_diffuse = False; o.light_linking.receiver_collection = coll
 
 PRESETS['ship'] = dict(
-    sky=[(0.0, '#6c9ce0'), (0.46, '#a9c6e6'), (0.5, '#9dbfe6'), (0.58, '#7ea8e2'), (0.78, '#5b88d6'), (1.0, '#4a78cd')], sky_k=1.0,
+    sky=[(0.0, '#6c9ce0'), (0.46, '#a9c6e6'), (0.5, '#a4c4e6'), (0.58, '#7ea8e2'), (0.78, '#4f7ed0'), (1.0, '#3a64be')], sky_k=1.0,
     key=(1.0, 0.92, 0.78, 6.5), key_dir=kdir(140, 48), sun_angle=0.9, exposure=0.1, sat=1.08, amb=('#3050FF', 1.7), samples=80, dbounce=1, gloss=2,
     cloud=('#ffffff', '#8c9ce8'), cloud_diffuse=True, cloud_z=(70, 170), ncloud=8, cloud_seed=4, cloud_scale=0.8,
-    sea_near='#16707c', sea_far='#0a2c4c', fresnel_k=0.7,
+    sea_near='#115f6e', sea_far='#0a2c4c', fresnel_k=0.7,
     glit_az=6, glit_el=11, glit_k=30.0,
     cam=dict(loc=(4.4, -4.0, 9.2), look=(4.4 - 3.6, -4.0 + 39.8, 9.2 - 7.9), lens=22))
 
