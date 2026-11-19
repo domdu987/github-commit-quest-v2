@@ -83,7 +83,7 @@ CAM_LOC0 = (2.3, -2.6, 5.3)                    # low, SW of the ladder, looking 
 CAM_LOOK0 = (7.4, -7.9, 8.8)                 # subject point: Morse's raised hand / the pole top (lower = less empty sky)
 CAM_START = 1.0                               # frame 0 starts 0.92 of the way from the look point to CAM_LOC0 (head ~92 px; the snap takes it to ~190)
 CAM = C.CamPath(Vector(CAM_LOOK0).lerp(Vector(CAM_LOC0), CAM_START), CAM_LOOK0, G0, G_LAST, push=0.06, slide_px=60.0, rise_px=0.0,
-                arc_deg_s=18.0, decay=0.25, snaps=[dict(g=SNAP, k=2.5, peak=2.3, shift=(-0.3, 0.0)), dict(g=(1522, 1536), k=1.0, peak=1.9, shift=(-0.45, 0.55))])
+                arc_deg_s=18.0, decay=0.25, snaps=[dict(g=SNAP, k=2.5, peak=2.3, shift=(-0.3, 0.0)), dict(g=(1522, 1536), k=1.0, peak=1.9, shift=(-0.7, 0.55))])
 
 
 MARK_SHIFT = Vector((-0.25, -0.22, -0.6))      # Morse stands ~1 rung lower ALONG the ladder: his head clears the bottle body (QA-art: bottle merged with his head)
@@ -95,11 +95,11 @@ def tune_look(wet_pole):
     M = TG.STATE["M"]
     bs = [n for n in M["glass"].node_tree.nodes if n.type == "BSDF_PRINCIPLED"][0]
     bs.inputs["Alpha"].default_value = 1.0
-    bs.inputs["Transmission Weight"].default_value = 0.8
-    bs.inputs["Base Color"].default_value = (0.02, 0.30, 0.07, 1.0)
-    bs.inputs["Emission Strength"].default_value = 0.22
+    bs.inputs["Transmission Weight"].default_value = 0.35
+    bs.inputs["Base Color"].default_value = (0.03, 0.36, 0.10, 1.0)
+    bs.inputs["Emission Strength"].default_value = 0.32
     if wet_pole:
-        darken(M["pole"], (0.27, 0.25, 0.31), 0.20)
+        darken(M["pole"], (0.17, 0.15, 0.22), 0.16)
 
 
 def darken(mat, tint, rough):
@@ -202,7 +202,7 @@ def hands_of(g, coil):
         return {"r": {"hand": tuple(w1.lerp(Vector(coil), u_of(g, *G_PICK)))}}
     c = Vector(coil)
     if g < G_FLICK[1]:
-        c = c + Vector((0, 0, 0.30 * math.sin(math.pi * u_of(g, *G_FLICK))))      # a small lift of the hand, still below the chin
+        pass                                                              # hand stays at chest height (no lift: the forearm crossed his chin)
     rest = mk + Vector((-0.55, -0.5, 1.75))                           # then down to his side (away from the face and the pole)
     return {"r": {"hand": tuple(c.lerp(rest, u_of(g, G_FLICK[1], G_FLICK[1] + 8)))}}
 
@@ -241,17 +241,29 @@ def flash_scale(g):
 
 
 def build_wire(g, coil):
-    """the slack wire of frame g: two sagging half spans pole 0 -> held point -> pole 2 (sb metres -> MB -> world), the same rods,
-    radius and material as the set's spans, so at G_WIRE the swap to STATE['spans_bottle'][0..1] does not jump."""
+    """the wire of frame g.  Before the landing: two sagging half spans pole 0 -> held point -> pole 2 (as the set's spans).  From the
+    landing on (g >= G_FLICK[1]) the wire is DRAPED over the glass: two short catenaries that fall from the glass top and hang down on both
+    sides (the long set span to pole 0 passes the lens and read as a rigid rod up out of the frame)."""
     inv = K.frame_mat().inverted()
     mid = tuple(inv @ wire_point(g, coil))
     sag = wire_sag(g)
     mb = K.MB("s23_wire_%04d" % g)
     M = TG.STATE["M"]
-    for a, b in ((BOTTLE_TOP_SB(POLE - 1), mid), (mid, BOTTLE_TOP_SB(POLE + 1))):
+    if g < G_FLICK[1]:
+        pieces = ((BOTTLE_TOP_SB(POLE - 1), mid), (mid, BOTTLE_TOP_SB(POLE + 1)))
+    else:
+        t = g - G_FLICK[1]
+        drop = 1.9 * (1.0 - math.exp(-0.55 * (t + 1)))                 # world D: the ends fall and swing down over 3-4 frames
+        mw = Vector(wire_point(g, coil))
+        R = CAM.right                                                    # the loop hangs ACROSS the view (the real line runs along the sight line)
+        left = tuple(inv @ (mw - R * 1.0 + Vector((0, 0, -drop))))
+        right = tuple(inv @ (mw + R * 1.0 + Vector((0, 0, -drop))))
+        pieces = ((left, mid), (mid, right))
+        sag = 0.55
+    for a, b in pieces:
         pts = LN.span(a, b, sag, 14)
         for p, q in zip(pts[:-1], pts[1:]):
-            mb.rod(M["wiremat"], p, q, 0.03, 0.03, 5, caps=False)
+            mb.rod(M["wiremat"], p, q, 0.03 if g < G_FLICK[1] else 0.02, 0.03 if g < G_FLICK[1] else 0.02, 5, caps=False)
     return mb.finish()
 
 
@@ -268,6 +280,24 @@ class Take(C.Take):
         self.bottle = make_bottle_copy()
         self.flash = make_flash()
         self.wires = {}
+        self.drips = []
+        if LIGHT == "AFTER_RAIN":                      # AFTER_RAIN reads wet: a few drips creeping down the pole (keyed per frame)
+            import bpy
+            dm = bpy.data.materials.new("drip")
+            dm.use_nodes = True
+            b = [n for n in dm.node_tree.nodes if n.type == "BSDF_PRINCIPLED"][0]
+            b.inputs["Base Color"].default_value = (0.55, 0.65, 0.85, 1.0)
+            b.inputs["Roughness"].default_value = 0.02
+            b.inputs["Transmission Weight"].default_value = 0.6
+            for i, (z0, dxy) in enumerate(((8.0, 0.0), (6.6, 0.05), (5.4, -0.04), (7.2, -0.06), (4.4, 0.03))):
+                bpy.ops.mesh.primitive_uv_sphere_add(segments=10, ring_count=8, radius=1.0, location=(0, 0, 0))
+                d = bpy.context.object
+                d.name = "s23_drip%d" % i
+                d.scale = (0.04, 0.04, 0.11)
+                d.data.materials.append(dm)
+                d.visible_shadow = False
+                d["z0"], d["dxy"] = z0, dxy
+                self.drips.append(d)
         self.hand_err = {}
 
     def pose(self, gs):
@@ -278,9 +308,10 @@ class Take(C.Take):
             C.place(self.mor, f, Vector(mark) + MARK_SHIFT)
             capped, wired = g >= G_CAP, g >= G_WIRE
             # the set's pole-1 state switches on the beat (key EVERY frame: CONSTANT visibility keys)
-            C.key_vis([self.peg["wood"], self.peg["glass"], self.peg["glintm"]], capped, f)
-            C.key_vis(self.peg["wiremat"], wired, f)
-            C.key_vis(self.spans, wired, f)
+            C.key_vis([self.peg["wood"], self.peg["glass"]], capped, f)
+            C.key_vis(self.peg["glintm"], capped and (g < G_CAP + 10 or G_CAP + 30 <= g <= G_CAP + 34), f)      # the star flares and fades, a late twinkle (no sticker)
+            C.key_vis(self.peg["wiremat"], g >= G_FLICK[1] + 3, f)     # the wrap ring shows once the wire has landed (the wire is already draped: no pop)
+            C.key_vis(self.spans, False, f)                          # the set's long spans stay off: the draped wire is built per frame
             m, tilt = bottle_xf(g)
             for ob in self.bottle:
                 ob.location = m
@@ -288,6 +319,15 @@ class Take(C.Take):
                 ob.keyframe_insert("location", frame=f)
                 ob.keyframe_insert("rotation_euler", frame=f)
             C.key_vis(self.bottle, not capped, f)
+            top = Vector(TOP())
+            cdir = (Vector(self.cam.location) - top)
+            cdir.z = 0.0
+            cdir.normalize()
+            for d in self.drips:
+                z = d["z0"] - 0.012 * (g - G_FIRST) - 0.06 * math.sin(0.4 * (g - G_FIRST) + d["z0"])
+                r = 0.14 - 0.0058 * (z + 0.2)
+                d.location = (top.x + cdir.x * (r + 0.004) + d["dxy"], top.y + cdir.y * (r + 0.004), z)
+                d.keyframe_insert("location", frame=f)
             s = flash_scale(g)
             rot = Matrix.Rotation(math.radians(tilt), 3, "Y")
             self.flash.location = m + rot @ STAR_OFF()
@@ -301,7 +341,7 @@ class Take(C.Take):
             coil = self.coil_at(g)
             _, info = self.mor.pose(f, pose_of(g), hands=hands_of(g, coil), camera=self.cam)
             self.hand_err[g] = round(max([v.get("error", 0.0) for v in info.values()] or [0.0]), 3)
-            if g < G_WIRE:                                  # one slack-wire mesh per frame, visible on that frame only
+            if True:                                        # one wire mesh per frame, visible on that frame only
                 obs = self.wires[g] = build_wire(g, coil)
                 for ob in obs:
                     ob.hide_render = True
