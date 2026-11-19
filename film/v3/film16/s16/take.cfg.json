@@ -1,0 +1,6 @@
+{"take":"s16","shots":[16],"g0":1007,"g1":1075,"handle":9,"light":"DUSK",
+ "set":"v3/set3d16 LINE preset trench_cut, light DUSK; set_leak('pipe',1.0) keyed per frame; no actors",
+ "cast":"none (cut-away of the buggered pipe: no characters, no mouths)",
+ "camera":"custom 22 mm; c16.CamPath push 7 %/s + slide 45 px/s, decay 0.3; whip-tilt dive from 5.4 D above the pit (g 998..1014); snap x1.7 with 0.5 D pan g 1049..1064 on 'ไฟรั่วหายลงดิน'",
+ "events":{"dive":[998,1014],"snap":[1049,1064],"word_leak":1052},
+ "cues":[[1007,"ambience","dusk field, crickets; muffled underground hush inside the cut-away"],[1007,"accent","whoosh of the dive tilt into the pit"],[1020,"foley","crackling electric fizz of the leaking sparks, drips into soil (loops)"],[1052,"accent","snap push on 'ไฟรั่วหายลงดิน': short whoosh + a bright zap crackle"]]}

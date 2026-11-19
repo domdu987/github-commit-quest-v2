@@ -1,0 +1,31 @@
+{
+ "take": "s16",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 33.567,
+   "frame": 1007,
+   "kind": "ambience",
+   "label": "dusk field, crickets; muffled underground hush inside the cut-away"
+  },
+  {
+   "time": 33.567,
+   "frame": 1007,
+   "kind": "accent",
+   "label": "whoosh of the dive tilt into the pit"
+  },
+  {
+   "time": 34.0,
+   "frame": 1020,
+   "kind": "foley",
+   "label": "crackling electric fizz of the leaking sparks, drips into soil (loops)"
+  },
+  {
+   "time": 35.067,
+   "frame": 1052,
+   "kind": "accent",
+   "label": "snap push on 'ไฟรั่วหายลงดิน': short whoosh + a bright zap crackle"
+  }
+ ]
+}
