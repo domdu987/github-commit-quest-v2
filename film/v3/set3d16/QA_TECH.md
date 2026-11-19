@@ -1,0 +1,43 @@
+# QA-tech, SET gate, film 16 (set3d16)  -- VERDICT: FAIL
+Checked: contact.jpg (27 tiles), individual finals (about 20 viewed at 720x1280, rest on contact), API.md, hue_report.txt, cost_report.txt, film16/shot_plan.md.
+`python3 t_anim.py`: "ALL OK (76 checks)". It tests hook values only, not that the hooks are visible in the picture.
+Pass: no text/lettering seen anywhere (tape is dots/dashes only); no DOF blur; no magenta/black frames; cost max 27.6 CPU s (chamber_low DAY) <= 30; magenta share <= 8.7 % everywhere (<= 10); heads: chamber_wide_high Morse chin y 855 < 880 (only one near the band).
+
+## Issues (tile, what, fix)
+1. L01/L02/L03/L04 line_close: Morse hangs in front of the ladder with straight legs dangling, feet touch no rung (floating). Fix: move morse_ladder mark onto the rungs (feet on a rung, hands on rails / pole), or pose legs bent on the ladder.
+2. L10 line_trench, L11 line_trench_high: the mule team and plough are not visible (only a small blue/brown bar by Cornell; no mules, no pipe unrolling). Morse (listed in heads) not visible in L10. Plan shots 13 and 14 not met. Fix: put plough, mules and pipe-reel in frame (cams nearer / lower), show furrow length growing; check set_trench/plough_marks place the plough in the camera's view.
+3. L11: cast about 25 px high (about 1/50 of frame), furrow only as a thin blue line; shot 14 counting beat unreadable. Fix: lower the start pose or put the team in mid-ground.
+4. L14 trench_cut: broken geometry: flat yellow slab with a black underside floats across the frame at y 340-405 (ground cut-away edge) hiding the horizon; black discs/holes on the trench floor (y 600-700). Fix: close the cut slab / remove the stray plate, remove or texture the black discs (torn-cloth bits must read as cloth, not black holes). Sparks are tiny and far; bring the camera nearer to the split pipe.
+5. L16 line_wagon: the plan's "crate of empty green beer bottles on the wagon" is not readable (only two tiny cylinders on the bed); no bottle in Morse's hand; Morse stands behind grass, feet hidden, not on the wagon bed. Fix: bottle crate large and visible at the wagon edge, Morse on morse_wagon_bed with a bottle prop held up in his hand.
+6. L12/L13 line_trench_end: key/register on the crate is a 20 px blue blob, unreadable; lavender floating shovel head (x 360-420, y 900-1210) is a plain flat rectangle on a thin stick, reads as a floating sign; workers' feet hidden by grass. L13 RAIN tile shows no rain streaks at all and a saturated blue puddle (shot 21 needs rain streaks). Fix: bigger key + register on the crate, shovel head with a proper blade shape, set_rain on in the tile, desaturate puddle.
+7. L15 line_road: red buggy is the same red as the barn behind it, the buggy is indistinguishable; mocker is a 68 px head, legs end in a single thin line (seat not visible), no mule visible. Fix: change buggy colour (dark green/black), move the camera so the buggy is against sky/field, show the mule, mocker seated visibly.
+8. C03 chamber_low DAY: mocker is tiny (79 px head), mid-distance and half hidden behind a mail sack; plan shots 9/10 need a low angle ON the mocker with inkwell/quill foreground, quick push to a close-up. Lower half washed out by a hard-edged cream shaft plane; blank flat tan rectangle on the desk front (x 510-715, y 945-1170); mail sacks are on in a DAY tile (shot 28 only). Fix: add a preset (mocker_close) at mocker_desk about 6-8 D away, shafts off or soft for the low cams, sacks default off (on only for shot 28), remove the empty panel.
+9. C05/C06 chamber_table DAY: Morse (x -5.74) and the clerk (x 5.74) are outside the frame; only the mocker's head peeks behind the telegraph with body hidden. Plan shots 26 (Morse reads the tape, congressmen crowd round) and 29 (clerk slides the instrument, mocker's face) cannot be framed from this start pose. Fix: pose/FOV or marks so Morse, clerk and mocker are all in frame; congressmen to crowd round (none present in the tile).
+10. C01/C02 chamber_wide_high: tiers almost empty (one congressman at the left, none in the right bank): shot 11 "whole chamber laughs" and shot 8 "tiers of congressmen" not supported. Fix: seat at least 8-10 congressmen (hats bounce) across the tiers; cong_a..e exist but are not placed in the tile. Sun shafts are visible as flat translucent planes with hard straight edges (C01, C03, C05): fix with softer volume or fewer/rounder shafts.
+11. C07 chamber_table NIGHT (shot 30): mocker cut at the left edge (half body), Morse peeking at the door not visible (door screen is empty), tape-pile OK. Fix: shift the cam so the mocker is fully in frame, Morse head in the door-screen opening, candle in the mocker's hand.
+12. S02 studio_easel (shot 5): oval wife portrait, paint jars and palette/brush in hand not visible in this tile (portrait only in S01 far left); Morse has empty hands. Fix: put the portrait table into frame / change cam; give Morse a palette + brush prop.
+13. S03 studio_door (shot 6): the letter is not visible, messenger is half behind Morse and empty-handed, palette already on the floor (set_palette must default off before the slip). Door opening is a black-violet blob. Fix: letter prop in the messenger's hand, messenger beside Morse, door interior with light.
+14. S01 studio_wide: wood floor grain is smeared in a strong diagonal (reads as motion blur at the bottom third). Fix: re-scale the floor texture mapping / use non-anisotropic UV.
+15. Caption band y > 880 not calm in all LINE tiles with foreground grass (L05-L10, L12, L15, L16, L11): high-contrast yellow/green blades and large bright foreground props (L10 crate, L15 barrel/crate, L05 orange disc bottom right, y 1040+). Fix: darker/less saturated grass tuft density in the bottom 30 %, lower-contrast FG props, or keep FG dressing to the sides.
+16. Shade hue (target 240-260 outdoors) FAIL per hue_report: L01 201.7, L03 186.8, L04 202.0, L07 275.1, L08 217.5, L09 217.5, L10 268.4, L12 225.1, L15 235.4, L16 239.4 (borderline). Pass: L02 244.8, L05 254.3, L06 241.4, L11 242.5, L13 258.7, L14 240.4. Note L01-L04 have 0.3-1.4 % cast pixels, the measure is unreliable there; but the median hue is 195-190 (cyan, not violet). Fix: raise ambient blue-violet weight (#4454FF), AFTER_RAIN/RAIN sky and wet shading toward 245-255; re-run hue_report.
+17. L08/L09/L05 line_rail/line_wide: train sits behind the fence with wheels hidden by fence/grass and a strip of blue/white lead pipe is already laid beside the road/rail in shots 3, 25, 27 (set_pipe 0 should hide it; wire pulse L09 is a tiny bead hard to see). Fix: set_pipe(0) default in these presets; lower fence or move the track so wheels and rods are visible; larger pulse bead.
+18. Pulse (L04/L09): L04 pulse bead on pole top is large, 5 beads; L09 pulse nearly invisible at the bottle neck (shot 24/25 reveal needs a clear glow crossing the neck without leak). Fix: larger glow + bloom in L09, and a macro cam on the neck.
+
+## Plan coverage (30 shots)
+Presets present and visible: line_close, line_wide, line_rail, line_trench, line_trench_high, line_trench_end, trench_cut, line_road, line_wagon, studio x4, chamber_wide_high, chamber_low, chamber_table. Lights DAY/DUSK/RAIN/AFTER_RAIN, NIGHT, DAY->DUSK mix tile present.
+Missing / not visible in a tile:
+- Close-up of the mocker at his desk (shots 9, 10), mocker_desk low angle; chamber_low only has a tiny mocker.
+- Macro on bottle neck (shot 24 "line_close macro"): only line_close tiles, no macro start pose.
+- Mule team + plough + unrolling pipe (shots 13, 14): not visible in L10/L11.
+- Bottle crate on the wagon (shot 22) and bottle in Morse's hand: not readable.
+- Letter in messenger's hand, oval wife portrait (shots 5, 6).
+- Rain streaks in shot 21 tile (L13).
+- Clerk, Morse, congressmen crowd in chamber_table (shots 26, 29); full chamber audience (shots 8, 11).
+- Buggy with mule (shot 18): buggy unreadable, mule not visible.
+- Station platform with waving people (shot 27): line_rail tile shows no platform/people.
+- Hooks with no visible effect in any tile: set_rain in L13, set_pipe (no pipe in L10 except a thin blue strip), set_leak 'pipe' visible only as a small cluster in L14.
+## Worker blockers
+- Stand marks exist (API.md) but morse_ladder is not reachable by feet (issue 1); morse_wagon_bed, morse_trench, mocker_buggy not verified in frame (issues 2, 5, 7).
+- No hook starts/ends at an editable state for props held in hands (palette, letter, bottle, candle, key): render workers must attach them manually, no API listed.
+- Preset start poses for shots 26/29/30 do not frame the cast (issues 9, 11).
+Overrides: none.
