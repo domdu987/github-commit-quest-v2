@@ -94,7 +94,7 @@ class Driver:
         C.dress((-12.5, -5.5), (-0.6, 3.6), 60, 6, avoid)
         self.shake = [o for o in bpy.data.objects if o.name.startswith(('posts_', 'roof'))]
         self.rest = (F.STATE['hive'][1].location.copy(), F.STATE['bar'][1].location.copy())
-        U1S[0] = F.UNITS[1]['s']; self.geometry(); LIMG.update({1390: 0.30, 1410: -0.20, 1430: 0.34}); self.world_nodes()      # contact offsets calibrated on the rendered frames (hive end meets the post edge; the projection solve is kept as solve_contacts for reference)
+        U1S[0] = F.UNITS[1]['s']; self.geometry(); LIMG.update({1390: 0.30, 1410: -0.10, 1430: 0.34}); self.world_nodes()      # contact offsets calibrated on the rendered frames (hive end meets the post edge; the projection solve is kept as solve_contacts for reference)
 
     def geometry(self):
         """contact limits measured from the meshes: the hive end touches the INNER surface of its post (no overlap)"""
