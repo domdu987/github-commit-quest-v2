@@ -66,9 +66,9 @@ def build_vista(Bk, M, light):
             J.hip_roof(rf, F.p(hx, hy, hh), yaw, hw / 2 + s * 0.02, hd / 2 + s * 0.02, max(0.01, hw / 2 - hd / 2), 0.0, s * 0.05, M, lift=0.0, nx=4, ny=2, mat=M['tiles'], wadang=False)
             if hold or q < 2: J.flat(gl, F.p(hx - hw * 0.3, hy - hd / 2 - 0.05, hh * 0.25), F.X * (hw * 0.6), F.Z * (hh * 0.45), M['win'] if hold else M['win_dim'])
         if hold:
-            J.halo(hl, V((cx, cy, z0 + wh + 4)), s * 1.5, M['halo_big']); J.halo(hl, V((cx, cy, z0 + wh + 2)), s * 0.9, M['halo'])
+            J.halo(hl, V((cx, cy, z0 + wh + 4)), s * 0.75, M['halo_big']); J.halo(hl, V((cx, cy, z0 + wh + 2)), s * 0.38, M['halo'])        # round 2: small warm halo (no bloom blob)
             for sx in (-1, 1): J.live_flame(F.p(sx * s * 0.07, -s / 2 - 1.2, 0.0), s * 0.09, s * 0.035, seed=int(cx) + sx, n=2, light=0.0, name='townfire', warm=None)
-            J.flat(Bk('townpool', shadow=False), V((cx - s * 0.9, cy - s * 0.9, z0 + 0.3)), V((s * 1.8, 0, 0)), V((0, s * 1.8, 0)), M['pool_w'])
+            J.flat(Bk('townpool', shadow=False), V((cx - s * 0.9, cy - s * 0.9, z0 + 0.3)), V((s * 1.8, 0, 0)), V((0, s * 1.8, 0)), M['pool_w']) if False else None
         return z0
     for t in towns: t['z0'] = town(t)
     # Jimo: ring moat and the Yan siege camp (tents, fires, black pennants) to its south
@@ -103,12 +103,12 @@ def build_vista(Bk, M, light):
             prev = e
     # ---- pennants: black Yan pennant and the Qi one at each ordinary town (and a Qi one on the holdouts), own objects with the origin at the pole foot
     for i, t in enumerate(towns):
-        z0 = t['z0']; s = t['s']; hgt = 10.0 + s * 0.6
+        z0 = t['z0']; s = t['s']; hgt = (10.0 + s * 0.6) * 1.35
         for kind, col, trim in (('yan', M['black'], M['red']), ('qi', M['red'], M['teal'])):
             if t['hold'] and kind == 'yan': continue
             b = Bk('pen_%s_%d' % (kind, i), hull=0.0); J.banner(Bk, M, (t['x'], t['y'], z0), hgt, s * 0.5, s * 0.3, col, trim, wave=i, yaw=(i * 37) % 40 - 20, sw=True) if False else None
-            pb = b; base = V((t['x'], t['y'], z0)); J.rod(pb, base, base + V((0, 0, hgt)), 0.35, M['wood_d'], seg=5); pb.sphere(base + V((0, 0, hgt + 0.4)), 0.6, M['gold'], seg=6, rings=4)
-            fw, fh = s * 0.5, s * 0.3; top = hgt - 0.4
+            pb = b; base = V((t['x'], t['y'], z0)); J.rod(pb, base, base + V((0, 0, hgt)), 0.5, M['wood_d'], seg=5); pb.sphere(base + V((0, 0, hgt + 0.4)), 0.6, M['gold'], seg=6, rings=4)
+            fw, fh = s * 0.5 * 1.5, s * 0.3 * 1.5; top = hgt - 0.4
             for q in range(6):
                 x0_, x1_ = fw * q / 6, fw * (q + 1) / 6; sw0 = math.sin(q * 0.9 + i) * 0.25 * (q / 6) * fh; sw1 = math.sin((q + 1) * 0.9 + i) * 0.25 * ((q + 1) / 6) * fh
                 bot0 = top - fh * (1 - 0.35 * (q / 6)); bot1 = top - fh * (1 - 0.35 * ((q + 1) / 6))

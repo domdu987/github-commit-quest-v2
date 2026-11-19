@@ -43,7 +43,7 @@ WATER_Z = -2.2; MOAT = (-30.0, -9.5)
 GATE_W = 3.6; GATE_H = 9.6
 HOLE_W, HOLE_H = 3.4, 4.3                                   # a breach: wide enough for one ox card (3.2 D tall with horns)
 HOLE_X = [-41.0 + 5.5 * k for k in range(6)] + [13.5 + 5.5 * k for k in range(6)]     # 12 breaches along the wall base, x -41 .. -13.5 and 13.5 .. 41
-HEIGHT = dict(tiandan=3.0, general=3.4, soldier=3.2, townsfolk=3.0, child=2.0, envoy=3.0, ox=2.6)
+HEIGHT = dict(tiandan=3.0, general=3.4, soldier=3.2, townsfolk=3.0, child=2.0, envoy=3.0, ox=2.6, qi_soldier=3.2, party_crowd=3.2, sentry=3.2)
 LOCS = dict(jimo_in=('NIGHT', 'DUSK'), jimo_out=('NIGHT', 'DUSK', 'DAWN'), yan_camp=('NIGHT', 'DUSK'), vista=('DUSK', 'DAWN'))
 LEGACY = dict(wall='jimo_out', camp='yan_camp', holes='jimo_in')
 
@@ -238,7 +238,7 @@ def materials(P, tx, pre):
              moon_h=BK._mat_add(pre + 'a_moonh', tx['glow'], (0.35, 0.54, 0.96), 1.0), sky=D._mat_sky(pre + 'sky', P, tx['sky_' + STATE['light']], P['sky_k']),
              halo=ADD('halo', 'glow', (1.0, 0.6, 0.28), 1.0), halo_s=ADD('halo_s', 'glow', (1.0, 0.7, 0.35), 0.8), halo_big=ADD('halo_big', 'glow', (1.0, 0.55, 0.24), 0.55),
              pool=ADD('pool', 'pool', (1.0, 0.5, 0.14), 0.9), pool_w=ADD('pool_w', 'pool', (1.0, 0.5, 0.16), 0.6), streak=ADD('streak', 'streak', (1.0, 0.62, 0.3), 1.5), streak_m=ADD('streak_m', 'streak', (1.0, 0.88, 0.6), 1.5),
-             mist=BK._mat_add(pre + 'a_mist', tx['glow'], (0.5, 0.42, 0.85), 0.08))
+             mist=BK._mat_add(pre + 'a_mist', tx['glow'], (0.5, 0.42, 0.85), 0.08), dust=ADD('dust', 'glow', (0.62, 0.48, 0.38), 0.5))
     return M
 
 # ----------------------------------------------------------------------------- wall
@@ -369,7 +369,9 @@ def _sky_follow(scene, *a):
 
 def brazier(Bk, M, p, s=1.0, light=0.0, name='br', halo_r=3.2, shadow=False, tall=2.2, lean=(0.0, 0.0), flame_k=1.0, warm=(4.0, 0.9)):
     """Bronze / iron brazier on a tripod with a layered live flame; point light (1.0, 0.50, 0.18)."""
-    p = V(p); w = Bk('wood', hull=0.0); h = Bk('halos', shadow=False)
+    p = V(p)
+    if R2.skipped(p): return p + V((0, 0, (tall + 0.66) * s))
+    w = Bk('wood', hull=0.0); h = Bk('halos', shadow=False)
     for k in range(3):
         a = 2 * math.pi * k / 3 + 0.5; rod(w, p + V((0.7 * s * math.cos(a), 0.7 * s * math.sin(a), 0)), p + V((0.14 * s * math.cos(a), 0.14 * s * math.sin(a), tall * s)), 0.1 * s, M['iron'], seg=5)
     rod(w, p + V((0, 0, tall * s)), p + V((0, 0, (tall + 0.55) * s)), 0.30 * s, M['bronze'], seg=9, r1=0.62 * s)
@@ -381,7 +383,9 @@ def brazier(Bk, M, p, s=1.0, light=0.0, name='br', halo_r=3.2, shadow=False, tal
 
 def oil_lamp(Bk, M, p, s=1.0, light=0.0, name='ol', halo_r=1.6, h=3.4):
     """Bronze standing oil lamp (Warring States): three feet, a stem with discs, a shallow dish with one small flame. p = floor point."""
-    p = V(p); w = Bk('wood', hull=0.0); hl = Bk('halos', shadow=False)
+    p = V(p)
+    if R2.skipped(p): return p + V((0, 0, h * s))
+    w = Bk('wood', hull=0.0); hl = Bk('halos', shadow=False)
     for k in range(3):
         a = 2 * math.pi * k / 3; rod(w, p + V((0.5 * s * math.cos(a), 0.5 * s * math.sin(a), 0.0)), p + V((0.08 * s * math.cos(a), 0.08 * s * math.sin(a), 0.4 * s)), 0.08 * s, M['bronze'], seg=4)
     rod(w, p + V((0, 0, 0.4 * s)), p + V((0, 0, (h - 0.3) * s)), 0.09 * s, M['bronze'], seg=6)
@@ -505,7 +509,9 @@ def build(location=None, preset=None, light=None, clear=True):
     assert location in LOCS and light in LOCS[location], 'location %s has lights %s (got %s)' % (location, LOCS.get(location), light)
     scene = bpy.context.scene; P = dict(LIGHTS[light])
     if light != 'NIGHT':
-        az = SUN_AZ.get((location, light), P['sun_az']); P['sun_az'] = az
+        az = SUN_AZ.get((location, light), P['sun_az'])
+        if preset in S.SHOTS and S.SHOTS[preset].get('sun') is not None: az = S.SHOTS[preset]['sun']          # per-shot sun azimuth (round 2: sun behind or beside the camera)
+        P['sun_az'] = az
         if location == 'vista': P['sun_el'] = 15.0; P['air'] = (P['air'][0], 0.45, 120.0, 700.0)
         P['key_dir'] = _kdaz(az, P['sun_el'])
     else: P['moon_az'] = MOON_AZ_LOC[location]
@@ -555,6 +561,7 @@ def build(location=None, preset=None, light=None, clear=True):
     for f in STATE.get('post_flush', ()): f()
     _post_build(); install_handlers(); flicker(1)
     A = anchors(preset, location, light); STATE['A'] = A
+    if preset in S.SHOTS: R2.post_build(preset, location, light)
     return A
 
 def sky_dome(SET, P, M, location, light):
@@ -612,7 +619,7 @@ def _post_build():
     ob = STATE['objects']
     for i, hx in enumerate(HOLE_X):
         if 'plug%d' % i in ob: localize(ob['plug%d' % i], (hx, (yo(0) + yi(0)) / 2, 0.0))
-        for n, c in (('breach%d', (hx, yo(0), 0.0)), ('rubble%d', (hx, yo(0) - 1.0, 0.0)), ('dig%d', (hx, yi(0) + 2.0, 0.0))):
+        for n, c in (('breach%d', (hx, yo(0), 0.0)), ('rubble%d', (hx, yo(0) - 1.0, 0.0)), ('dig%d', (hx, yi(0) + 2.0, 0.0)), ('hglow%d', (hx, (yo(0) + yi(0)) / 2, 0.0))):
             if n % i in ob: localize(ob[n % i], c)
     set_holes(0.0); set_gate(0.0)
 
@@ -621,10 +628,10 @@ def set_holes(n, frame=None):
     dug-earth heap + pick + basket grow in. HOLE_X lists the 12 centres (x -41 .. -13.5, 13.5 .. 41), width HOLE_W 3.4, height HOLE_H 4.3."""
     n = max(0.0, min(12.0, float(n))); ob = STATE['objects']; STATE['states']['holes'] = n
     for i in range(12):
-        p = min(1.0, max(0.0, n - i))
+        p = min(1.0, max(0.0, n - (11 - i)))                                                                   # opening order: x 41 -> -41 (hole 11 first, then 10 ... 0; s16 slides along x 50 -> 25)
         pl = ob.get('plug%d' % i)
         if pl is not None: _vis(pl, p < 0.999, frame); _xf(pl, scl=(1.0, 1.0, max(0.03, 1.0 - p)), frame=frame)
-        for nm, th in (('breach%d', 0.15), ('rubble%d', 0.15), ('dig%d', 0.0)):
+        for nm, th in (('breach%d', 0.15), ('rubble%d', 0.15), ('dig%d', 0.0), ('hglow%d', 0.15)):
             o = ob.get(nm % i)
             if o is not None:
                 on = p > th; sc = 0.35 + 0.65 * min(1.0, max(0.0, (p - th) / (1 - th + 1e-6) if th < 1 else 1.0)); _vis(o, on, frame); _xf(o, scl=(sc, sc, sc), frame=frame)
@@ -667,7 +674,7 @@ def attach_fg(cam, setup, spec):
     """Build the shot's foreground prop 1.5-2 D in front of the lens (lower corner `side`) and parent it to the camera, so it stays 1-2 D from the lens through the move."""
     if not spec: return []
     kind, side = spec; sg = 1 if side == 'right' else -1; loc, f, r, u = _cam_frame(setup); M = STATE['M']; n0 = set(STATE['SET'].objects); Bk2 = Banks()
-    o = loc + f * 1.9 + r * (0.74 * sg) + u * (-0.40); FGK = 0.3
+    o = loc + f * 1.9 + r * (0.74 * sg) + u * (-0.40); FGK = dict(reeds=0.15, jar=0.12, lantern=0.2, torch=0.13, counter=0.22, pick_baskets=0.22).get(kind, 0.3)
     ground = V((o.x, o.y, 0.0)) if o.z > 2.4 else V((o.x, o.y, max(0.0, o.z - 2.6)))
     if kind == 'lantern': oil_lamp(Bk2, M, V((o.x, o.y, o.z - 2.4)), s=0.9, light=0.0, name='fglamp', halo_r=1.2, h=3.0)
     elif kind == 'wheel':

@@ -41,8 +41,8 @@ def wall_shell(Bk, M, loc):
     hd = T.hull(62.0 if loc != 'yan_camp' else 100.0); wl = Bk('wall', hull=hd); ops = openings(); x = X0
     for (xc, w, h) in ops:
         a, b = xc - w / 2, xc + w / 2
-        prism_g(wl, x, a, 0.0, WH, M['rammed'], M['rammed'], M['planks_d'], M['rammed_d']); prism_g(wl, a, b, h, WH, M['rammed'], M['rammed'], M['planks_d'], M['tunnel']); x = b
-    prism_g(wl, x, X1, 0.0, WH, M['rammed'], M['rammed'], M['planks_d'], M['rammed_d'])
+        prism_g(wl, x, a, 0.0, WH, M['rammed'], M['rammed'], M['planks_d'], M['tunnel']); prism_g(wl, a, b, h, WH, M['rammed'], M['rammed'], M['planks_d'], M['tunnel']); x = b
+    prism_g(wl, x, X1, 0.0, WH, M['rammed'], M['rammed'], M['planks_d'], M['tunnel'])
     STATE['holes'] = ops; STATE['warm_names'] = ['wall']
     plugs = []
     for i, hx in enumerate(HOLE_X):
@@ -79,8 +79,8 @@ def breach_decor(Bk, M, i, hx):
     rm = Bk('breach%d' % i, hull=hd); rb = Bk('rubble%d' % i, hull=hd); dg = Bk('dig%d' % i, hull=hd)
     for (yf, sg) in ((yo(h), -1), (yi(h), 1)):                                                                   # both faces
         for sx in (-1, 1):
-            for k, (dz, dx_) in enumerate(((0.0, 0.0), (-0.9, 0.5), (-1.9, 0.85))):
-                obox(rm, (hx + sx * (w / 2 - 0.2 - dx_ * 0.35), yf + sg * 0.3, h + dz - 0.1), XX, YY, ZZ, 0.5 + r.uniform(0, 0.35), 0.5, 0.42 + r.uniform(0, 0.25), M['rammed'], uvk=0.3)
+            for k, (dz, dx_) in enumerate(((0.0, 0.0), (-1.7, 0.4), (-3.3, 0.6))):                       # round 2: ragged clods along the edge (no stacked pale blocks)
+                lumpy(rm, V((hx + sx * (w / 2 + 0.15 - dx_ * 0.2), yf + sg * 0.3, h + dz - 0.1)), 0.34 + r.uniform(0, 0.2), M['rammed_d'], i * 31 + k + (0 if sg < 0 else 90) + (7 if sx > 0 else 0), seg=7, rings=4, rough=0.4, squash=0.8)
         for k in range(8):
             z = r.uniform(0.3, h + 0.5); side = r.choice((-1, 1)); x = hx + side * (w / 2 + r.uniform(-0.25, 0.25)) if z < h else hx + r.uniform(-w / 2, w / 2)
             lumpy(rm, V((x, (yo(z) if sg < 0 else yi(z)) + sg * 0.25, z)), r.uniform(0.3, 0.65), M['rammed'], i * 20 + k + (0 if sg < 0 else 400), seg=7, rings=4, rough=0.35, squash=0.8)
@@ -97,6 +97,15 @@ def breach_decor(Bk, M, i, hx):
     dg.frustum(V((bx, by, 0)), V((bx, by, 1.0)), 0.5, 0.78, M['straw_d'], seg=10); lumpy(dg, V((bx, by, 1.0)), 0.72, M['bank'], 800 + i, seg=8, rings=4, rough=0.2, squash=0.4)
     F = Frame((hx + (-1.5 if i % 2 else 1.5), yi(0) + 2.4, 0.0), r.uniform(0, 360))
     rod(dg, F.p(0, 0, 0.18), F.p(2.4, 0, 0.5), 0.1, M['wood'], seg=5); obox(dg, F.p(2.4, 0, 0.5), F.X, F.Y, F.Z, 0.08, 0.5, 0.12, M['iron'])
+    # round 2: the breach reads as a DARK opening with a warm glow from inside (the lit tails / the torches of the yard), dust puffs outside
+    gl = Bk('hglow%d' % i, shadow=False); ym = (yo(0) + yi(0)) / 2.0
+    flat(gl, V((hx - w / 2 + 0.05, ym, 0.0)), V((w - 0.1, 0, 0)), V((0, 0, h - 0.15)), M['tunnel'])
+    flat(gl, V((hx - 3.4, yo(0.0) - 4.6, 0.07)), V((6.8, 0, 0)), V((0, 4.4, 0)), M['pool_w']); flat(gl, V((hx - 3.4, yi(0.0) + 0.2, 0.07)), V((6.8, 0, 0)), V((0, 4.2, 0)), M['pool_w'])
+    for yy in (ym - 0.2, ym + 0.2):
+        flat(gl, V((hx - w * 0.5, yy, 0.0)), V((w, 0, 0)), V((0, 0, h * 0.95)), M['halo_s'])
+    for k in range(7):
+        a = r.uniform(0, math.pi); sz = r.uniform(1.4, 2.6); cx_ = hx + r.uniform(-1.8, 1.8); cy_ = yo(0.0) - r.uniform(0.8, 3.2); cz_ = r.uniform(0.2, 1.4)
+        flat(rb, V((cx_ - sz * math.cos(a) / 2, cy_ - sz * math.sin(a) / 2, cz_)), V((sz * math.cos(a), sz * math.sin(a), 0)), V((0, 0, sz * 0.8)), M['dust'])
     STATE.setdefault('breach_names', []).append(i)
 
 def gate_tunnel_extras(Bk, M, loc): pass
@@ -128,6 +137,7 @@ def wall_dress(Bk, M, loc):
     # --- torches along the wall walk: warm pools on the face (painted decal + the wall material's warm weight)
     for xt in (-72, -60, -48, -36, -26, -17, 17, 26, 36, 48, 60, 72):
         ty = (yo(WH) + 1.4) if face == 'out' else (yi(WH) - 1.4)
+        if R2.skipped((xt, ty, WH)): continue
         c = torch_post(Bk, M, (xt, ty, WH), s=1.5, light=(450.0 if abs(xt) < 50 else 300.0), name='tw%d' % xt, halo_r=3.4, warm=None)
         lamp('ww%d' % xt, (xt, fy(WH) + sg * 1.8, WH - 2.4), 260.0 if abs(xt) < 50 else 160.0, FIRE, r=1.0, shadow=False)
         STATE['warm'].append((V((xt, fy(WH - 2.2), WH - 2.2)), 3.6, 0.9))

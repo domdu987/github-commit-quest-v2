@@ -50,7 +50,7 @@ def camp(J, Bk, M, light='NIGHT'):
                 a, b = F.p(sgn * w / 2, yy, 0.25), F.p(sgn * (w / 2 + 2.6), yy * 1.15, 0.1)
                 J.rod(tb, a, b, 0.05, M['straw_d'], seg=3); J.rod(tb, b, b + V((0, 0, 0.5)), 0.1, M['wood_d'], seg=4)
         return F
-    for (x, y, w, l, h, yaw, hide) in ((-9.6, -90, 8, 10, 5.0, 10, False), (10.8, -89, 8, 10, 5.0, -10, True), (-13.5, -76, 12, 14, 7.0, 6, True), (14.5, -75, 12, 14, 7.0, -6, False),
+    for (x, y, w, l, h, yaw, hide) in ((-15.5, -92, 8, 10, 5.0, 10, False), (10.8, -89, 8, 10, 5.0, -10, True), (-13.5, -76, 12, 14, 7.0, 6, True), (14.5, -75, 12, 14, 7.0, -6, False),
                                        (-15.0, -58, 12, 13, 6.6, 8, False), (16.0, -57, 12, 13, 6.6, -8, True), (-30, -70, 11, 13, 6.2, 15, False), (32, -68, 11, 13, 6.2, -15, False),
                                        (24, -48, 10, 12, 5.8, 3, False), (-47, -58, 10, 12, 5.8, 6, False), (48, -58, 10, 12, 5.8, -6, False), (-27, -88, 9, 11, 5.4, -14, False), (30, -87, 9, 11, 5.4, 14, False)):
         tent((x, y), yaw, w, l, h, hide=hide)
@@ -91,7 +91,7 @@ def camp(J, Bk, M, light='NIGHT'):
 
 
     # ------------------------------------------------------------------ the general's toast: low table with wine jars, cups, a bowl, stools (foreground left)
-    pr = Bk('props', hull=J.T.hull(11.0)); F = J.Frame((-4.5, -100.5, 0), 18)
+    pr = Bk('props', hull=J.T.hull(11.0)); F = J.Frame((-4.5, -100.5, 0) if J.STATE.get('preset') not in ('s14', 's15') else (-22.0, -104.0, 0), 18)
     pr.box((-2.1, -1.1, 0.0), (2.1, 1.1, 0.0), M['red']) if False else None
     J.obox(pr, F.p(0, 0, 1.15), F.X, F.Y, F.Z, 2.3, 1.25, 0.14, M['red']); J.obox(pr, F.p(0, 0, 1.0), F.X, F.Y, F.Z, 2.4, 1.35, 0.08, M['gold'])
     for sx in (-1, 1):
@@ -145,7 +145,7 @@ def camp(J, Bk, M, light='NIGHT'):
             a = 2 * math.pi * k / 14; d.sphere(c + V((0.96 * s * math.cos(a), 0.96 * s * math.sin(a), 2.12 * s)), 0.07 * s, M['gold'], seg=4, rings=3)
         d.frustum(c + V((0, 0, 1.38 * s)), c + V((0, 0, 1.46 * s)), 1.27 * s, 1.27 * s, M['gold'], seg=14, cap0=False, cap1=False)
         for sx in (-1, 1): J.rod(d, c + V((sx * 0.3 * s, 0.4 * s, 2.35 * s)), c + V((sx * 0.9 * s, -0.4 * s, 2.5 * s)), 0.06 * s, M['wood'], seg=4)
-    drum((-6.5, -82.0), 1.1, 30.0); drum((8.5, -79.0), 1.0, 32.0)
+    drum((-21.0, -80.0), 1.1, 30.0); drum((16.0, -83.5), 1.0, 32.0)           # round 2: the drum pair out of the view axis of s11
     def rack(c, yaw, cd=35.0):
         F = J.Frame((c[0], c[1], 0), yaw); rk = Bk('props', hull=J.T.hull(cd))
         for sx in (-1, 1): J.obox(rk, F.p(sx * 2.4, 0, 1.9), F.X, F.Y, F.Z, 0.18, 0.18, 1.9, M['wood_d'])
@@ -196,9 +196,11 @@ def camp(J, Bk, M, light='NIGHT'):
         J.rod(hb, F.p(-1.7 * s, 0, 3.4 * s), F.p(-2.5 * s, 0, 1.4 * s), 0.18 * s, M['black'], seg=5, r1=0.06 * s)
         J.rod(hb, F.p(-1.7 * s, 0, 3.4 * s), F.p(-2.1 * s, 0.1 * s, 1.6 * s), 0.12 * s, M['black'], seg=5, r1=0.05 * s)
         J.obox(hb, F.p(0.3 * s, 0, 3.9 * s), F.X, F.Y, F.Z, 0.9 * s, 0.76 * s, 0.07 * s, M['red'])                                    # saddle cloth with gold trim
-    horse((-13.5, -69.5), 40, M['ox'], 1.0, 42.0); horse((13.5, -66.5), 150, M['straw_d'], 1.0, 45.0); horse((3.5, -51.5), 200, M['ox_d'], 0.95, 60.0)
+    horse((-13.5, -69.5), 40, M['ox'], 1.0, 42.0); horse((13.5, -66.5), 150, M['straw_d'], 1.0, 45.0)
+    if J.STATE.get('preset') not in ('s08', 's21', 's22'): horse((3.5, -51.5), 200, M['ox_d'], 0.95, 60.0)
 
     def pennant(c, h, cd=40.0, col=None):
+        if J.R2.bskipped(c): return
         J.banner(Bk, M, c, h, 4.2, 2.4, col or M['black'], M['red'], wave=c[0], yaw=(c[0] * 7) % 40 - 20, sw=True)
     for (x, y) in ((-15.5, -84), (16.5, -82), (-23, -70), (25, -68), (-8, -60), (9, -58), (-14, -50), (16, -50), (-36, -60), (38, -58), (-42, -50), (44, -48), (-50, -70), (52, -70)):
         pennant((x, y, 0.0), 13.0 + (x % 5))
@@ -220,8 +222,9 @@ def camp(J, Bk, M, light='NIGHT'):
     for (xt, s_) in ((-30.0, 1.0), (30.0, 1.0), (-52.0, 1.0), (52.0, 1.0)):
         J.torch_post(Bk, M, (xt, y0 - 1.3, 0.0), s=1.6, light=1000.0, name='pt%d' % int(xt), halo_r=3.0)
     # a few extra warm lanterns on tent poles and the pavilion
-    for (x, y) in ((-6.0, -79.0), (8.0, -75.0), (-18.0, -70.0), (19.0, -66.0), (-4.0, -88.0), (6.5, -90.0)): J.oil_lamp(Bk, M, (x, y, 0.0), s=0.9, light=0.0, h=3.2, halo_r=1.8)
+    for (x, y) in ((-6.0, -79.0), (8.0, -75.0), (-18.0, -70.0), (19.0, -66.0), (-10.5, -85.5), (9.5, -96.0)): J.oil_lamp(Bk, M, (x, y, 0.0), s=0.9, light=0.0, h=3.2, halo_r=1.8)
     sc = Bk('scatter', hull=J.T.hull(10.0)); rr2 = J._rnd(77)
+    if STATE.get('preset') in ('s09', 's10', 's14', 's15'): sc = Bk('scatter_x', hull=J.T.hull(10.0)); rr2 = J._rnd(77); sc.__dict__.setdefault('_x', 1)
     J.rod(sc, V((-1.5, -107.5, 0.12)), V((-7.5, -106.0, 0.14)), 0.07, M['wood'], seg=4); sc.frustum(V((-1.5, -107.5, 0.12)), V((-0.3, -107.9, 0.14)), 0.1, 0.0, M['steel'], seg=4)
     J.ellipsoid(sc, V((-4.5, -108.6, 0.35)), 0.55, 0.55, 0.42, M['iron'], seg=10, rings=6, th=(math.pi / 2, math.pi)); sc.sphere(V((-4.5, -108.6, 0.78)), 0.1, M['red'], seg=5, rings=3)
     for k in range(14): J.lumpy(sc, V((rr2.uniform(-7, 9), rr2.uniform(-108, -96), 0.1)), rr2.uniform(0.15, 0.45), M['stone_d'], 90 + k, seg=6, rings=4, rough=0.25, squash=0.6)
@@ -264,6 +267,8 @@ def extras(J, Bk, M, light, f0, f1, f2, f3, f4):
     STATE = J.STATE; r = J._rnd(61); X, Y, Z = (1, 0, 0), (0, 1, 0), (0, 0, 1)
     # rampart: a raised earth platform with a timber facing, a ramp at the back, a low palisade rail (the general stands at marks['rampart'])
     rp = Bk('rampart', hull=J.T.hull(40.0)); cx, cy, w, d, h = -4.0, -47.5, 20.0, 7.0, 2.6
+    NORAMP = STATE.get('preset') in ('s21', 's22')                                                              # round 2: the camera of s21 / s22 stands where the rampart is
+    if NORAMP: cy = -330.0                                                                                       # parked far away behind the hills
     J.obox(rp, (cx, cy, h / 2), X, Y, Z, w / 2, d / 2, h / 2, M['bank'], uvk=0.2); J.obox(rp, (cx, cy - d / 2 - 0.05, h / 2), X, Y, Z, w / 2 + 0.1, 0.18, h / 2 + 0.1, M['planks_d'], uvk=0.5)
     for k in range(11): J.rod(rp, V((cx - w / 2 + 0.5 + k * 1.9, cy - d / 2 - 0.2, 0)), V((cx - w / 2 + 0.5 + k * 1.9, cy - d / 2 - 0.2, h + 0.5)), 0.18, M['wood'], seg=5)
     for sx in (-1, 1): J.rod(rp, V((cx + sx * (w / 2 - 0.3), cy - d / 2, h)), V((cx + sx * (w / 2 - 0.3), cy - d / 2, h + 3.2)), 0.2, M['red'], seg=6)

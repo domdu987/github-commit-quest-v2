@@ -12,6 +12,12 @@ DEFAULT = dict(
     vista=dict(loc=(40.0, -250.0, 150.0), look_at=(0.0, 60.0, 0.0), lens=22),
 )
 SHOTS = OrderedDict()
+def CRENEL_GAPS(*xs):
+    """Centre x of the nearest crenel gap (merlons every 3.4 D from x -94, 2.0 wide) for each wanted x: cards on the wall walk stand IN a gap of the parapet."""
+    out = []
+    for x in xs:
+        k = round((x + 91.3) / 3.4); out.append(round(-91.3 + 3.4 * k, 2))
+    return out
 
 def _v(a): return tuple(float(x) for x in a)
 def _fwd(c):
@@ -24,8 +30,8 @@ def face(mark, c):
     """Yaw (deg, about z) that turns a card whose front faces -y at yaw 0 toward the camera start position."""
     dx, dy = c['loc'][0] - mark[0], c['loc'][1] - mark[1]; return round(math.degrees(math.atan2(dx, -dy)), 1)
 
-def shot(n, f0, f1, loc, light, cam, move, state='', fg=None, note='', marks=None):
-    SHOTS['s%02d' % n] = dict(n=n, f0=f0, f1=f1, frames=f1 - f0, dur=(f1 - f0) / 30.0, loc=loc, light=light, cam=cam, move=move, state=state, fg=fg, note=note, marks=marks or (lambda c: {}))
+def shot(n, f0, f1, loc, light, cam, move, state='', fg=None, note='', marks=None, sun=None):
+    SHOTS['s%02d' % n] = dict(n=n, f0=f0, f1=f1, frames=f1 - f0, dur=(f1 - f0) / 30.0, loc=loc, light=light, cam=cam, move=move, state=state, fg=fg, note=note, marks=marks or (lambda c: {}), sun=sun)
 
 def C(loc, look, lens=22): return dict(loc=_v(loc), look_at=_v(look), lens=float(lens))
 
@@ -40,85 +46,83 @@ def pts(c, items):
     return out
 
 # ============================================================== JIMO_IN
-shot(1, 0, 78, 'jimo_in', 'NIGHT', C((-14, 26, 2.5), (4, 8, 5.2), 24), dict(push=0.08, slide=40),
+shot(1, 0, 78, 'jimo_in', 'NIGHT', C((-14, 26, 2.5), (4, 8, 4.2), 24), dict(push=0.08, slide=40),
      fg=('lantern', 'right'), note='lantern-lit ox yard, eye, push 8 %/s, slide right; Tian Dan dresses an ox, a row of dressed oxen along the wall behind',
-     marks=lambda c: dict(pts(c, dict(tiandan=[(13.5, -0.5)], ox=[(13.5, 2.6), (15.5, 5.2), (18.0, 7.5), (20.5, 9.5), (23.0, 11.2), (26.0, 12.5)])), herd=herd(8, (14, 9.0), (-2, 9.0), 2.0, 3)))
+     marks=lambda c: dict(tiandan=[(-4.1, 16.8, 0.0, 0.0)], ox=[(-1.2, 15.2, 0.0, 165.0, 1.0)] + [(x, 7.4 + 0.5 * (k % 2), 0.0, 180.0, 1.0) for k, x in enumerate((-15.0, -9.5, -4.0, 1.5, 7.0, 12.5))]))
 shot(2, 78, 156, 'jimo_in', 'NIGHT', C((-28, 11.5, 1.2), (12, 10.5, 3.0), 20), dict(push=-0.07, slide=0),
      fg=('pick_baskets', 'left'), note='low 1.2 D along the ring lane, pull-out reveals dozens of dressed oxen filling the lane (herd helper)',
-     marks=lambda c: dict(pts(c, dict(tiandan=[(9.0, 0.6)], ox=[(10.5, 2.5)])), herd=herd(34, (-14, 8.6), (46, 10.2), 3.2, 5)))
-shot(5, 384, 459, 'jimo_in', 'DUSK', C((-63, 12.5, 2.4), (-77, 22.5, 4.4), 22), dict(push=0.08, slide=0),
+     marks=lambda c: dict(tiandan=[(-24.5, 10.2, 0.0, 0.0)], ox=[(-21.8, 8.4, 0.0, 180.0, 1.0)], herd=herd(34, (-21, 10.6), (30, 10.6), 6.0, 5, yaw=180.0)))
+shot(5, 384, 459, 'jimo_in', 'DUSK', C((-69.5, 18.5, 2.6), (-76.5, 22.5, 2.8), 24), dict(push=0.08, slide=0), sun=325.0,
      fg=('counter', 'right'), note='market lane, the clerk stall at (-77, 22) faces +x; Tian Dan behind the counter, townsfolk hand him a sash',
-     marks=lambda c: dict(tiandan=[(-76.2, 22.0, 0.0, 90.0)], townsfolk=[(-72.6, 20.0, 0.0, 130.0), (-71.6, 23.4, 0.0, 230.0), (-70.0, 21.6, 0.0, 200.0)], child=[(-72.0, 25.4, 0.0, 190.0)]))
-shot(6, 459, 531, 'jimo_in', 'DUSK', C((84, 9.0, 2.4), (72, 23.0, 4.0), 22), dict(push=0.0, slide=-40),
+     marks=lambda c: dict(tiandan=[(-76.0, 22.0, 0.0, 90.0)], townsfolk=[(-75.2, 20.6, 0.0, 130.0), (-75.2, 23.8, 0.0, 230.0), (-76.0, 25.6, 0.0, 200.0)], child=[(-76.8, 24.6, 0.0, 190.0)]))
+shot(6, 459, 531, 'jimo_in', 'DUSK', C((84, 9.0, 2.4), (72, 22.0, 2.6), 22), dict(push=0.0, slide=-40), sun=320.0,
      fg=None, note='eye, slides left 40 px/s along the ring lane in front of the house gates (x 58 / 74 / 89, y 23); townsfolk lead oxen out of the gates; ten oxen at "สิบตัว"',
-     marks=lambda c: dict(tiandan=[(76.0, 12.5, 0.0, 180.0)], townsfolk=[(58.0, 17.0, 0.0, 180.0), (74.0, 17.0, 0.0, 180.0), (89.0, 17.0, 0.0, 180.0), (66.0, 11.0, 0.0, 180.0)],
-                          herd=herd(10, (66, 28.5), (92, 28.5), 3.0, 6)))
-shot(7, 531, 597, 'jimo_in', 'DUSK', C((3, 46.5, 6.0), (0, 8, 1.5), 18), dict(push=-0.07, slide=0, moves=[dict(t=0.55, d=1.6, dur=7)]),
+     marks=lambda c: dict(tiandan=[(76.0, 12.5, 0.0, 180.0)], townsfolk=[(58.0, 19.5, 0.0, 180.0), (74.0, 19.5, 0.0, 180.0), (86.0, 19.5, 0.0, 180.0), (66.0, 11.0, 0.0, 180.0)],
+                          herd=herd(10, (60, 15.0), (93, 16.0), 3.0, 6, yaw=190.0)))
+shot(7, 531, 597, 'jimo_in', 'DUSK', C((0, 46, 20), (0, 14, 0), 20), dict(push=-0.05, slide=0, moves=[dict(t=0.55, d=1.6, dur=7)]), sun=80.0,
      fg=None, note='high 4-5 D from the north end of the yard, pull-out with a snap x1.6 on "พันกว่าตัว": the whole quarter packed with oxen (herd helper ~200 + silhouettes)',
-     marks=lambda c: dict(herd=herd(120, (-40, 8.5), (44, 24.0), 28.0, 7), herd_far=herd(90, (-80, 36), (88, 62), 40.0, 8)))
-shot(16, 1205, 1309, 'jimo_in', 'NIGHT', C((50, 10.5, 1.5), (22, 4.6, 3.4), 22), dict(push=0.0, slide=-40), state='h6',
-     fg=('pick_baskets', 'left'), note='low inside the wall base, slides left along the wall (x 50 -> 25): the holes open one after another (set_holes 0 -> 12); townsfolk dig',
-     marks=lambda c: dict(townsfolk=[(HOLES[i], 8.2, 0.0, 180.0) for i in (6, 7, 8, 9, 10, 11)], child=[(HOLES[7] + 2.5, 9.6, 0.0, 180.0)]))
-shot(17, 1309, 1388, 'jimo_in', 'NIGHT', C((-4, 17.5, 2.4), (-27, 5.5, 3.6), 22), dict(push=0.08, slide=0), state='h12',
+     marks=lambda c: dict(herd=herd(120, (-34, 13.5), (34, 26.0), 12.0, 7, yaw=-20.0), herd_pen=herd(40, (-15, 36.0), (15, 36.0), 8.0, 17, yaw=-60.0), herd_far=herd(60, (-34, 8.4), (34, 8.4), 3.0, 8, yaw=0.0) + herd(40, (52, 21), (94, 22), 9.0, 9, yaw=30.0)))
+shot(16, 1205, 1309, 'jimo_in', 'NIGHT', C((50, 16, 2.6), (30, 4, 2.2), 22), dict(push=0.0, slide=-40), state='h6',
+     fg=('pick_baskets', 'left'), note='low inside the wall base, slides left along the wall (x 50 -> 25): the holes open one after another (set_holes 0 -> 12, hole order from x 41 down); townsfolk dig between the holes',
+     marks=lambda c: dict(townsfolk=[(HOLES[i] + 2.75, 7.4, 0.0, 180.0) for i in (11, 10, 9, 8, 7, 6)], child=[(HOLES[8] + 2.75, 9.2, 0.0, 180.0)]))
+shot(17, 1309, 1388, 'jimo_in', 'NIGHT', C((-9, 16.5, 2.6), (-27, 5.5, 2.4), 22), dict(push=0.08, slide=0), state='h12',
      fg=('reeds', 'left'), note='eye medium, push 8 %/s; reed bundles soaked from a jar are tied to the tails; oxen lined up nose-first at the holes (marks face the wall)',
-     marks=lambda c: dict(ox=[(HOLES[i], 8.4, 0.0, 180.0) for i in (0, 1, 2, 3, 4, 5)], townsfolk=[(HOLES[i] + 1.8, 11.5, 0.0, 200.0) for i in (1, 3, 4)], tiandan=[(HOLES[2] - 2.2, 12.0, 0.0, 160.0)]))
-shot(18, 1388, 1427, 'jimo_in', 'NIGHT', C((8, 17.0, 2.4), (-14, 6.0, 4.4), 22), dict(push=0.10, slide=0, moves=[dict(t=0.5, d=0.8, dur=6)]), state='h12',
+     marks=lambda c: dict(ox=[(HOLES[i], 8.4, 0.0, -90.0, 1.0) for i in (0, 1, 2, 3, 4, 5)], townsfolk=[(HOLES[i] + 1.8, 11.5, 0.0, 200.0) for i in (1, 3, 4)], tiandan=[(HOLES[2] - 2.2, 12.0, 0.0, 160.0)]))
+shot(18, 1388, 1427, 'jimo_in', 'NIGHT', C((-1, 15.5, 2.4), (-22, 5.5, 4.0), 22), dict(push=0.10, slide=0, moves=[dict(t=0.5, d=0.8, dur=6)]), state='h12',
      fg=None, note='eye, quick push-in: Tian Dan raises a torch, tails light in a ripple (flame_card on each ox card)',
-     marks=lambda c: dict(tiandan=[(-8.5, 11.0, 0.0, 120.0)], ox=[(HOLES[i], 8.4, 0.0, 180.0) for i in (0, 1, 2, 3, 4, 5)]))
-
+     marks=lambda c: dict(tiandan=[(-6.8, 12.6, 0.0, 120.0)], ox=[(HOLES[i], 8.4, 0.0, -90.0, 1.0) for i in (0, 1, 2, 3, 4, 5)]))
 HOLES = [-41.0 + 5.5 * k for k in range(6)] + [13.5 + 5.5 * k for k in range(6)]
 
 # ============================================================== JIMO_OUT
 shot(12, 944, 1003, 'jimo_out', 'DUSK', C((-14, -42, 1.7), (2, -12, 4.6), 24), dict(push=0.0, slide=40), state='g0.15',
      fg=('wheel', 'left'), note='eye low, slides right; the gate opens a crack (set_gate 0.15); the envoy bows on the bridge; old folk and women stand on the wall walk (z 16, no soldiers)',
-     marks=lambda c: dict(envoy=[(0.0, -22.0, 0.0, 180.0)], townsfolk=[(x, 0.4, 16.0, 180.0) for x in (-14, -10, -6.5, 6.5, 10, 14)], child=[(-16.5, 0.4, 16.0, 180.0)]))
+     marks=lambda c: dict(envoy=[(0.2, -29.0, 0.0, 180.0)], townsfolk=[(x, -2.2, 16.0, 180.0) for x in CRENEL_GAPS(-14, -10, -6.5, 6.5, 10, 14)], child=[(CRENEL_GAPS(-16.5)[0], -2.2, 16.0, 180.0)]))
 shot(19, 1427, 1515, 'jimo_out', 'NIGHT', C((6, -32, 1.5), (30, -5, 3.4), 18), dict(push=0.0, slide=0, moves=[dict(t=0.9, pan=-85, dur=6)]), state='h12,g0.3',
      fg=None, note='low wide at the wall base, WHIP pan at the end to follow the herd; oxen burst out of the 12 holes (x 13.5..41 at y -5), cross the dry ditch / bridge and the field toward the camp',
-     marks=lambda c: dict(ox=[(HOLES[i], -6.6, 0.0, 0.0) for i in range(6, 12)], herd=herd(40, (27, -8), (14, -60), 22.0, 19), qi_soldier=herd(30, (27, 6), (27, -6), 30.0, 20)))
+     marks=lambda c: dict(ox=[(HOLES[i], -7.2, 0.0, -100.0, 1.0) for i in range(6, 12)], herd=herd(40, (27, -10), (34, -58), 16.0, 19, yaw=-98.0), qi_soldier=herd(30, (27, 6), (27, -6), 30.0, 20)))
 shot(20, 1515, 1596, 'jimo_out', 'NIGHT', C((22, -56, 1.7), (-2, -92, 3.0), 20), dict(push=0.07, slide=0), state='h12',
      fg=None, note='low, tracking beside the herd, push 7 %/s; the herd charges toward the Yan camp (far camp at y -150..-215); oxen never turn back',
-     marks=lambda c: dict(herd=herd(36, (8, -50), (-4, -120), 14.0, 21)))
-shot(23, 1742, 1807, 'jimo_out', 'NIGHT', C((-31, -4.5, 23.0), (-2, 0.8, 16.8), 22), dict(push=-0.07, slide=0), state='h12',
+     marks=lambda c: dict(herd=herd(36, (15, -62), (-3, -108), 14.0, 21, yaw=-108.0)))
+shot(23, 1742, 1807, 'jimo_out', 'NIGHT', C((-31, 0.6, 21.5), (-2, 0.6, 16.5), 22), dict(push=-0.07, slide=0), state='h12',
      fg=('torch', 'right'), note='high over the wall top, pull-out; fg torch; old men, women and kids beat bronze pots on the walk (walk centre y 0.4, z 16)',
-     marks=lambda c: dict(townsfolk=[(x, 0.4, 16.0, 180.0) for x in (-16, -11, -6, -1.5, 3, 7.5)], child=[(-8.5, 0.6, 16.0, 180.0), (5.2, 0.6, 16.0, 180.0)]))
-shot(26, 1958, 2112, 'jimo_out', 'DAWN', C((4, -112, 1.7), (0, -62, 5.2), 22), dict(push=-0.06, slide=0, moves=[dict(t=0.72, d=0.82, dur=10)]),
-     fg=None, note='low, long tracking pull in front of the running general (he runs -y toward home along the road), push-in at the end; dragon oxen trot after him with smoking tails',
-     marks=lambda c: dict(general=[(0.8, -72.0, 0.0, 0.0)], ox=[(-1.6, -58.0, 0.0, 0.0), (3.2, -55.0, 0.0, 0.0), (-0.6, -49.0, 0.0, 0.0)], road=[(0.0, -30.0, 0.0, 0.0), (0.0, -150.0, 0.0, 0.0)]))
-
+     marks=lambda c: dict(townsfolk=[(x, 0.4 + 1.3 * (-1) ** k, 16.0, 180.0) for k, x in enumerate((-21.5, -17, -12.5, -8, -3.5, 1))], child=[(-19.2, 0.3, 16.0, 180.0), (-10.2, 0.3, 16.0, 180.0)]))
+shot(26, 1958, 2112, 'jimo_out', 'DAWN', C((2.5, -84, 1.5), (0.5, -70, 2.6), 24), dict(push=-0.06, slide=0, moves=[dict(t=0.72, d=0.82, dur=10)]), sun=262.0,
+     fg=None, note='low, long tracking pull in front of the running general (he runs -y toward home along the road toward the camera), push-in at the end; dragon oxen trot after him with smoking tails',
+     marks=lambda c: dict(general=[(0.8, -77.0, 0.0, 0.0)], ox=[(-1.8, -71.0, 0.0, -90.0, 1.0), (3.2, -69.0, 0.0, -90.0, 1.0), (-0.6, -66.5, 0.0, -90.0, 1.0), (4.0, -63.5, 0.0, -90.0, 1.0)], road=[(0.0, -30.0, 0.0, 0.0), (0.0, -150.0, 0.0, 0.0)]))
 # ============================================================== YAN_CAMP
-shot(8, 597, 674, 'yan_camp', 'DUSK', C((3, -63, 2.4), (-4, -47.5, 5.0), 22), dict(push=0.08, slide=0),
+shot(8, 597, 674, 'yan_camp', 'DUSK', C((1.5, -59, 2.4), (-4, -47.5, 4.8), 22), dict(push=0.08, slide=0),
      fg=('spear_rack', 'left'), note='eye, push 8 %/s, the general on the rampart (marks.rampart, z 2.6) looks at Jimo, bursts out laughing; fg spear rack',
-     marks=lambda c: dict(general=[(-4.0, -47.5, 2.6, face((-4.0, -47.5), c))], soldier=[(1.5, -48.0, 2.6, face((1.5, -48.0), c)), (-9.0, -48.5, 2.6, face((-9.0, -48.5), c))]))
-shot(9, 674, 737, 'yan_camp', 'DUSK', C((2, -80, 2.4), (-3.5, -90.5, 4.6), 24), dict(push=0.09, slide=0),
-     fg=None, note='QUOTE 1a medium, push 9 %/s; the general arms wide, soldiers behind him laugh',
-     marks=lambda c: dict(general=[(-3.5, -90.5, 0.0, face((-3.5, -90.5), c))], soldier=[(-7.0, -96.0, 0.0, 30.0), (0.5, -97.0, 0.0, 10.0), (-4.0, -99.0, 0.0, 15.0)]))
-shot(10, 737, 853, 'yan_camp', 'DUSK', C((0.5, -85, 2.4), (-3.5, -90.5, 4.8), 26), dict(push=0.10, slide=-25),
-     fg=None, note='QUOTE 1b medium-close, push 10 %/s then a slight slide; thumb at his chest, chin up',
-     marks=lambda c: dict(general=[(-3.5, -90.5, 0.0, face((-3.5, -90.5), c))], soldier=[(-7.0, -96.0, 0.0, 30.0), (0.5, -97.0, 0.0, 10.0)]))
-shot(11, 853, 944, 'yan_camp', 'DUSK', C((-2, -62, 2.4), (5.5, -86, 3.8), 20), dict(push=-0.07, slide=0, moves=[dict(t=0.55, d=0.78, dur=8)]),
+     marks=lambda c: dict(general=[(-4.0, -47.5, 2.6, face((-4.0, -47.5), c))], soldier=[(3.6, -48.5, 2.6, face((3.6, -48.5), c)), (-9.0, -48.5, 2.6, face((-9.0, -48.5), c))]))
+shot(9, 674, 737, 'yan_camp', 'DUSK', C((-7, -99, 2.8), (-3.5, -90.5, 4.2), 24), dict(push=0.09, slide=0),
+     fg=None, note='QUOTE 1a medium (camera on the far side of the general, looking +y toward the camp and Jimo; the table is the fg), push 9 %/s; the general arms wide, soldiers behind him laugh',
+     marks=lambda c: dict(general=[(-3.5, -90.5, 0.0, face((-3.5, -90.5), c))], soldier=[(-8.2, -85.0, 0.0, 0.0), (0.8, -84.2, 0.0, 0.0), (-3.8, -81.5, 0.0, 0.0)]))
+shot(10, 737, 853, 'yan_camp', 'DUSK', C((-1.5, -96.5, 3.1), (-3.5, -90.5, 3.0), 26), dict(push=0.10, slide=-25),
+     fg=None, note='QUOTE 1b medium-close (reverse angle, the camp behind him), push 10 %/s then a slight slide; thumb at his chest, chin up',
+     marks=lambda c: dict(general=[(-3.5, -90.5, 0.0, face((-3.5, -90.5), c))], soldier=[(-8.0, -85.0, 0.0, 0.0), (0.8, -84.0, 0.0, 0.0)]))
+shot(11, 853, 944, 'yan_camp', 'DUSK', C((-1, -73, 2.6), (5.5, -86, 2.2), 22), dict(push=-0.07, slide=0, moves=[dict(t=0.55, d=0.78, dur=8)]), sun=100.0,
      fg=('jar', 'left'), note='wide eye, pull-out 7 %/s with a push-in on "ไอ้เสมียนวัว" (30.64 s); soldiers round the fire at (5.5, -85) mock-moo, finger horns',
-     marks=lambda c: dict(soldier=[(2.5, -81.5, 0.0, 200.0), (8.5, -82.0, 0.0, 170.0), (9.8, -86.5, 0.0, 130.0), (2.0, -87.5, 0.0, 250.0), (5.5, -89.5, 0.0, 190.0), (-1.0, -84.0, 0.0, 230.0)], general=[(-2.5, -92.0, 0.0, 200.0)]))
+     marks=lambda c: dict(soldier=[(2.5, -81.5, 0.0, 0.0), (8.5, -82.0, 0.0, 0.0), (9.8, -86.5, 0.0, 0.0), (2.0, -87.5, 0.0, 0.0), (5.5, -89.5, 0.0, 0.0), (-1.0, -84.0, 0.0, 0.0)], general=[(-2.5, -92.0, 0.0, 0.0)]))
 shot(13, 1003, 1071, 'yan_camp', 'NIGHT', C((0, -54, 12.0), (2, -86, 2.0), 20), dict(push=-0.06, slide=0), state='pt1',
      fg=None, note='wide high, pull-out 6 %/s; the camp party (set_party 1): cheering-crowd marks round the fires, cups, a sentry drops his spear and joins in',
-     marks=lambda c: dict(party_crowd=PARTY, sentry=[(-14.0, -50.5, 0.0, 180.0)]))
-shot(14, 1071, 1136, 'yan_camp', 'NIGHT', C((2, -86, 2.4), (-4.3, -96.2, 4.5), 24), dict(push=0.09, slide=0), state='pt1',
-     fg=('jar', 'right'), note='QUOTE 2a medium, push 9 %/s; the general raises his cup and laughs, bounce; fg wine jar',
-     marks=lambda c: dict(general=[(-4.3, -96.2, 0.0, face((-4.3, -96.2), c))], soldier=[(-8.0, -101.0, 0.0, 30.0), (0.5, -101.5, 0.0, 10.0)]))
-shot(15, 1136, 1205, 'yan_camp', 'NIGHT', C((-1.5, -90.5, 2.4), (-4.3, -96.2, 4.6), 26), dict(push=0.10, slide=0), state='pt1',
-     fg=None, note='QUOTE 2b medium-close, push 10 %/s; he mimes carving, licks his lips, the cup tilts',
-     marks=lambda c: dict(general=[(-4.3, -96.2, 0.0, face((-4.3, -96.2), c))], soldier=[(-8.0, -101.0, 0.0, 30.0)]))
-shot(21, 1596, 1683, 'yan_camp', 'NIGHT', C((0, -43.5, 2.2), (0, -8, 5.0), 22), dict(push=0.06, slide=0, moves=[dict(t=0.45, d=0.67, dur=6)]),
+     marks=lambda c: dict(party_crowd=PARTY, sentry=[(-14.0, -76.0, 0.0, 180.0)]))
+shot(14, 1071, 1136, 'yan_camp', 'NIGHT', C((-9, -106, 2.8), (-4.3, -96.2, 4.4), 24), dict(push=0.09, slide=0), state='pt1',
+     fg=('jar', 'right'), note='QUOTE 2a medium (reverse angle: the party fires, tents and crowd behind him), push 9 %/s; the general raises his cup and laughs, bounce; fg wine jar',
+     marks=lambda c: dict(general=[(-4.3, -96.2, 0.0, face((-4.3, -96.2), c))], soldier=[(-9.2, -90.8, 0.0, 0.0), (1.2, -90.0, 0.0, 0.0)],
+                          party_crowd=[(6.5, -85.0, 0.0, 0.0), (9.5, -80.5, 0.0, 0.0), (2.0, -78.0, 0.0, 0.0), (-3.0, -74.5, 0.0, 0.0), (-9.0, -72.0, 0.0, 0.0), (8.0, -74.0, 0.0, 0.0)]))
+shot(15, 1136, 1205, 'yan_camp', 'NIGHT', C((-1.5, -103, 3.1), (-4.3, -96.2, 3.0), 26), dict(push=0.10, slide=0), state='pt1',
+     fg=None, note='QUOTE 2b medium-close (reverse angle), push 10 %/s; he mimes carving, licks his lips, the cup tilts',
+     marks=lambda c: dict(general=[(-4.3, -96.2, 0.0, face((-4.3, -96.2), c))], soldier=[(-9.0, -91.0, 0.0, 0.0)], party_crowd=[(6.0, -86.0, 0.0, 0.0), (9.5, -81.0, 0.0, 0.0), (2.0, -79.0, 0.0, 0.0)]))
+shot(21, 1596, 1683, 'yan_camp', 'NIGHT', C((0, -58, 2.2), (0, -8, 4.0), 22), dict(push=0.03, slide=0, moves=[dict(t=0.45, d=0.67, dur=6)]),
      fg=None, note='eye from the Yan side at the palisade gap (x +-6): a wall of glowing red dragon monsters comes out of the dark field (y -38 .. -6); SNAP push x1.5; soldiers\' jaws drop, cups fall',
-     marks=lambda c: dict(soldier=[(-3.0, -47.0, 0.0, 0.0), (3.5, -49.0, 0.0, 0.0), (0.0, -52.0, 0.0, 0.0)], herd=herd(60, (0, -8), (0, -40), 24.0, 21)))
-shot(22, 1683, 1742, 'yan_camp', 'NIGHT', C((-8, -34, 2.0), (3, -14, 3.2), 26), dict(push=0.09, slide=0),
+     marks=lambda c: dict(soldier=[(-3.0, -51.5, 0.0, 0.0), (3.5, -49.5, 0.0, 0.0), (0.2, -47.0, 0.0, 0.0)], herd=herd(60, (0, -8), (0, -37), 10.0, 21, yaw=-90.0)))
+shot(22, 1683, 1742, 'yan_camp', 'NIGHT', C((-2, -52, 1.6), (0.5, -45, 2.0), 26), dict(push=0.09, slide=0),
      fg=None, note='close-medium on ONE ox in full flare (blades, silk, flame tail) with a frozen terrified soldier',
-     marks=lambda c: dict(ox=[(3.0, -22.0, 0.0, face((3.0, -22.0), c), 1.0)], soldier=[(-3.5, -28.0, 0.0, face((-3.5, -28.0), c))]))
-shot(24, 1807, 1882, 'yan_camp', 'NIGHT', C((-30, -48, 15.0), (0, -82, 2.0), 20), dict(push=0.05, slide=50), state='ro0.5',
+     marks=lambda c: dict(ox=[(0.4, -46.5, 0.0, -60.0, 1.0)], soldier=[(-1.4, -47.0, 0.0, 0.0)]))
+shot(24, 1807, 1882, 'yan_camp', 'NIGHT', C((-34, -44, 15.0), (-4, -82, 2.0), 20), dict(push=0.05, slide=50), state='ro0.5',
      fg=None, note='wide high, slide 50 px/s + push; rout (set_rout 0 -> 1): tents fold, soldiers flee, pots and helmets fly, a chariot rolls away empty; nobody hurt',
-     marks=lambda c: dict(soldier=[(x, y, 0.0, 200.0) for (x, y) in ((-10, -70), (6, -66), (-3, -84), (10, -88), (-18, -92), (14, -74), (0, -58), (-12, -60))]))
-
-PARTY = [(-6.0, -92.0, 0.0, 200.0), (-2.0, -93.0, 0.0, 210.0), (1.5, -90.0, 0.0, 190.0), (8.5, -80.0, 0.0, 180.0), (3.0, -80.0, 0.0, 190.0), (-4.0, -76.0, 0.0, 200.0), (-8.0, -70.0, 0.0, 190.0),
-         (7.0, -66.0, 0.0, 180.0), (11.0, -72.0, 0.0, 200.0), (2.0, -98.5, 0.0, 190.0), (-3.0, -104.0, 0.0, 200.0), (6.0, -91.0, 0.0, 180.0), (9.5, -88.0, 0.0, 170.0), (-10.0, -86.0, 0.0, 210.0)]
+     marks=lambda c: dict(soldier=[ahead(c, d, l) + (200.0,) for (d, l) in ((27, -9), (31, 4), (34, -5), (38, 10), (42, -12), (46, 2), (33, -14), (50, 9))]))
+PARTY = [(-6.0, -92.0, 0.0, 200.0), (-2.0, -93.0, 0.0, 210.0), (1.5, -90.0, 0.0, 190.0), (8.5, -80.0, 0.0, 180.0), (3.0, -80.0, 0.0, 190.0), (-4.0, -76.0, 0.0, 200.0), (-8.0, -77.0, 0.0, 190.0),
+         (7.0, -74.0, 0.0, 180.0), (11.0, -79.0, 0.0, 200.0), (2.0, -98.5, 0.0, 190.0), (-3.0, -104.0, 0.0, 200.0), (6.0, -91.0, 0.0, 180.0), (9.5, -88.0, 0.0, 170.0), (-10.0, -86.0, 0.0, 210.0)]
 
 # ============================================================== VISTA
 shot(3, 156, 297, 'vista', 'DUSK', C((70, -215, 105), (0, 70, -10), 20), dict(push=0.06, slide=-40), state='pn0.5',

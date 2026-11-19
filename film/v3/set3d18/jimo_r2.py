@@ -92,10 +92,15 @@ def person_card(shot, role, i, m, camloc, t):
     if SILHOUETTE.get((shot, role)): tint = (0.12, 0.12, 0.18); k = 0.9
     if role == 'qi_soldier': tint = (0.35, 0.35, 0.5)
     return put_card(meta, tuple(p), yaw, sc, name='%s%d' % (role, i), tint=tint, k=k, sw=0.9 * h / 3.0)
-SILHOUETTE = {}
+SILHOUETTE = {('s21', 'soldier'): 1, ('s22', 'soldier'): 1}
 
 # ------------------------------------------------------------------ oxen
-OXSPEC = dict(default=dict(state='dragon', view='three_quarter', gait='stand', flame=-1, theta=36))
+GAL = dict(state='dragon', view='three_quarter', gait='gallop', flame=1)
+OXSPEC = dict(default=dict(state='dragon', view='three_quarter', gait='stand', flame=-1, theta=36),
+              s02={'*': dict(gait='walk')}, s06={'*': dict(state='plain', gait='walk')},
+              s07={'*': dict(state='plain', gait='walk', theta=30, state_fn=lambda i, m: 'dragon' if (i % 3 == 0) else 'plain')},
+              s17={'*': dict(reed=True)}, s18={'*': dict(reed=True, lit_fn=lambda i, m: 1 + (i % 2) if i < 3 else -1)},
+              s19={'*': dict(GAL)}, s20={'*': dict(GAL)}, s21={'*': dict(GAL, theta=38)}, s22={'*': dict(GAL, theta=34)}, s26={'*': dict(GAL, theta=34)})
 def oxspec(shot, role):
     return dict(OXSPEC['default'], **OXSPEC.get(shot, {}).get(role, OXSPEC.get(shot, {}).get('*', {})))
 
@@ -113,23 +118,155 @@ def ox_card(shot, role, i, m, camloc, spec, travel=None):
     _, n, u, fac = best
     # quad: local +x = card right, faces -y: normal (0,-1,0) rotated by yaw -> (sin yaw, -cos yaw); want normal = n  ->  yaw = atan2(n.x, -n.y)
     yaw = math.degrees(math.atan2(n.x, -n.y))
-    ph = (i * 3 + int(abs(p.x))) % 8; fl = spec['flame']
+    ph = (i * 3 + int(abs(p.x))) % 8; fl = spec['flame']; st = spec['state_fn'](i, m) if spec.get('state_fn') else spec['state']
     if fl >= 0: fl = 1 + (i + int(abs(p.y))) % 2 if spec.get('flame_vary') else fl
     if spec.get('lit_fn') is not None: fl = spec['lit_fn'](i, m)
-    meta = CD.card('ox', state=spec['state'], view=spec['view'], gait=spec['gait'], phase=ph if spec['gait'] != 'stand' else 0, flame=fl, reed=1 if spec.get('reed') else 0)
+    meta = CD.card('ox', state=st, view=spec['view'], gait=spec['gait'], phase=ph if spec['gait'] != 'stand' else 0, flame=fl, reed=1 if spec.get('reed') else 0)
     tint = spec.get('tint'); k = spec.get('k')
-    return put_card(meta, tuple(p), yaw, sc, mirror=(fac < 0), name='ox%d' % i, tint=tint, k=k, sw=2.7 * sc)
+    ob = put_card(meta, tuple(p), yaw, sc, mirror=(fac < 0), name='ox%d' % i, tint=tint, k=k, sw=2.7 * sc)
+    if fl >= 0: LIT.append((p, u * (-fac), sc))
+    return ob
+LIT = []
+
+def lit_pools(cam, nlights=6):
+    """Warm pool decals under every lit ox + real point lights at the tails of the nearest few (the herd lights its own ground)."""
+    M = STATE['M']
+    for (p, back, sc) in LIT:
+        tail = p + back * (2.7 * sc) + V((0, 0, 2.2 * sc))
+        sm = _shadow_quad('cpool', 1.0, 1.0)
+        if not sm.materials: sm.materials.append(M['pool_w'])
+        ob = bpy.data.objects.new('ph_pool', sm); STATE['SET'].objects.link(ob); ob.location = (tail.x, tail.y, 0.06); ob.scale = (2.3 * sc, 2.3 * sc, 1.0); ob.visible_shadow = False; J.no_bounce(ob); ob['placeholder'] = 1
+    near = sorted(LIT, key=lambda a: (a[0] - cam).length)[:nlights]
+    for (p, back, sc) in near:
+        tail = p + back * (2.7 * sc) + V((0, 0, 2.2 * sc)); d = bpy.data.lights.new('ph_tail', 'POINT'); d.color = J.FIRE; d.energy = 520.0 * sc; d.shadow_soft_size = 0.5; d.use_shadow = False
+        lo = bpy.data.objects.new('ph_tail', d); STATE['LIGHTS'].objects.link(lo); lo.location = tail; lo.visible_camera = False; lo['placeholder'] = 1
 
 # ------------------------------------------------------------------ placeholders (cards at the marks)
 def clear_placeholders():
     for ob in [o for o in bpy.data.objects if o.name.startswith('ph_')]: bpy.data.objects.remove(ob, do_unlink=True)
 
 def placeholders(name, t=0.5, herd_max=400):
-    clear_placeholders(); sh = S.SHOTS[name]; marks = S.marks_for(name); pose = S.pose_at(sh, t); cam = V(pose['loc']); n = 0
+    clear_placeholders(); LIT.clear(); sh = S.SHOTS[name]; marks = S.marks_for(name); pose = S.pose_at(sh, t); cam = V(pose['loc']); n = 0
     for role, lst in marks.items():
         if isinstance(lst, str) or role == 'road': continue
         for i, m in enumerate(lst[:herd_max]):
             if role == 'ox' or role.startswith('herd'): ox_card(name, role, i, m, cam, oxspec(name, role))
             elif role in HEIGHT or role in ROLE_POSE: person_card(name, role, i, m, cam, t)
             n += 1
+    lit_pools(cam)
     return n
+
+# ------------------------------------------------------------------ build-time rules (called from jimo.brazier / oil_lamp / wall_dress)
+SKIP = {                                                           # shot -> [(x, y, r)] circles where no fire bowl / lamp is built (kept out of the lens / the diggers)
+    's16': [(44.0, 9.5, 2.0), (30.0, 9.0, 2.0), (14.0, 9.5, 2.0)],
+    's23': [(-33.0, -2.0, 9.5)],
+}
+BSKIP = {'s13': [(0.0, -54.0, 19.0), (14.0, -62.0, 30.0)], 's24': [(-20.0, -60.0, 70.0)]}          # pennant poles near the lens (cut objects at the frame edge)
+def bskipped(p):
+    return any(math.hypot(p[0] - x, p[1] - y) < r for (x, y, r) in BSKIP.get(STATE.get('preset'), ()))
+WARM_K = {'s21': 0.3, 's22': 0.3}                                  # dusk-free night: Jimo wall lamps dimmed so the herd comes out of the dark
+
+def skipped(p):
+    for (x, y, r) in SKIP.get(STATE.get('preset'), ()):
+        if math.hypot(p[0] - x, p[1] - y) < r: return True
+    return False
+
+def warmk(): return WARM_K.get(STATE.get('preset'), 1.0)
+
+# ------------------------------------------------------------------ per-shot tweaks after the build
+def post_build(preset, location, light):
+    fn = POST.get(preset)
+    if fn: fn(preset)
+    if preset in WARM_K: dim_wall_lights(WARM_K[preset])
+
+def dim_wall_lights(k, ymin=-30.0):
+    """Jimo wall / gate / bridge lamps to k: lights and flames with y > ymin (the camp stays), halo faces and pools of the wall removed."""
+    for fi in STATE.get('fires', ()):
+        ob = fi['ob']
+        if ob.location.y > ymin:
+            fi['E0'] = fi['E0'] * k; fi['k'] = fi.get('k', 1.0) * (0.55 if k < 1 else 1.0)
+    for lo in STATE['LIGHTS'].objects:
+        if lo.type == 'LIGHT' and lo.data.type == 'POINT' and lo.location.y > ymin and lo.location.y < 40: lo.data.energy *= k
+    ob = STATE['objects']
+    for nm in ('wallpools', 'tw_glow'):
+        if nm in ob: ob[nm].hide_render = True
+    h = ob.get('halos')
+    if h is not None:
+        import bmesh
+        bm = bmesh.new(); bm.from_mesh(h.data); mw = h.matrix_world
+        dl = [f for f in bm.faces if (mw @ f.calc_center_median()).y > ymin]
+        bmesh.ops.delete(bm, geom=dl, context='FACES'); bm.to_mesh(h.data); bm.free()
+
+def _rout_big(preset):
+    for it in STATE.get('rout_items', ()):
+        if it.get('ob') is not None: it['ob'].scale = (2.6, 2.6, 2.6)
+POST = {'s24': _rout_big}
+
+# ------------------------------------------------------------------ ground dressing (round 2)
+def dress(x0, x1, y0, y1, n, seed, kinds=('stone', 'hay', 'silk', 'rope', 'basket', 'pot'), z=0.0, avoid=None, k=1.0):
+    """Small props scattered over a ground rectangle so bare ground is broken up (all one bank each, cheap)."""
+    M = STATE['M']; r = random.Random(seed); Bk = J.Banks(); n0 = set(STATE['SET'].objects)
+    for k in range(n):
+        x, y = r.uniform(x0, x1), r.uniform(y0, y1)
+        if avoid and avoid(x, y): continue
+        kind = r.choice(kinds); p = V((x, y, z)); b = Bk('dr_' + kind, hull=0.0)
+        if kind == 'stone': J.lumpy(b, p + V((0, 0, 0.25)), r.uniform(0.25, 0.7), M['stone_d'] if k % 2 else M['stone'], seed * 13 + k, seg=7, rings=4, rough=0.3, squash=0.6)
+        elif kind == 'hay':
+            for q in range(3): a = r.uniform(0, 6.28); J.rod(b, p, p + V((0.5 * math.cos(a), 0.5 * math.sin(a), r.uniform(0.5, 0.9))), 0.07, M['hay'], seg=3)
+            J.lumpy(b, p + V((0, 0, 0.15)), 0.5, M['hay'], k, seg=6, rings=3, rough=0.3, squash=0.4)
+        elif kind == 'silk':
+            a = r.uniform(0, 3.14); L = r.uniform(0.9, 1.7); d = V((math.cos(a), math.sin(a), 0)); q = V((-d.y, d.x, 0))
+            b.oface([p, p + d * L, p + d * L + q * 0.6, p + q * 0.6 + d * 0.2], M['red'], [(0, 0), (1, 0), (1, 1), (0, 1)], (0, 0, 1)); b.oface([p + V((0, 0, 0.01)), p + d * 0.3 + q * 0.3 + V((0, 0, 0.01)), p + d * 0.5 + V((0, 0, 0.01))], M['gold'], [(0, 0)] * 3, (0, 0, 1))
+        elif kind == 'rope':
+            for q in range(10): a0, a1 = 2 * math.pi * q / 10, 2 * math.pi * (q + 1) / 10; J.rod(b, p + V((0.5 * math.cos(a0), 0.5 * math.sin(a0), 0.08)), p + V((0.5 * math.cos(a1), 0.5 * math.sin(a1), 0.08)), 0.09, M['straw_d'], seg=4)
+        elif kind == 'basket':
+            b.frustum(p, p + V((0, 0, 0.8)), 0.4, 0.62, M['straw_d'], seg=8)
+        elif kind == 'pot': J.ellipsoid(b, p + V((0, 0, 0.4)), 0.42, 0.42, 0.4, M['iron'], seg=8, rings=5, th=(0, math.pi))
+        elif kind == 'plume':
+            b.frustum(p + V((0, 0, 0.05)), p + V((0.4, 0.2, 0.8)), 0.3, 0.0, M['red'], seg=5); J.cyl(b, p + V((0, 0, 0.0)), 0.5, 0.3, M['iron'], seg=8, r1=0.3)
+        elif kind == 'wheel':
+            R = 1.3; a_ = r.uniform(0, 3.14); d = V((math.cos(a_), math.sin(a_), 0))
+            for q in range(14): a0, a1 = 2 * math.pi * q / 14, 2 * math.pi * (q + 1) / 14; J.rod(b, p + d * (R * math.cos(a0)) + V((0, 0, R + R * math.sin(a0))), p + d * (R * math.cos(a1)) + V((0, 0, R + R * math.sin(a1))), 0.14, M['wood_d'], seg=4)
+            for q in range(4): a0 = math.pi * q / 4; J.rod(b, p + d * (R * math.cos(a0)) + V((0, 0, R + R * math.sin(a0))), p - d * (R * math.cos(a0)) + V((0, 0, R - R * math.sin(a0))), 0.1, M['wood'], seg=4)
+    Bk.flush(STATE['SET'])
+    for ob in STATE['SET'].objects:
+        if ob not in n0: J.no_bounce(ob)
+
+def furrows(x0, x1, y0, y1, step=1.1, seed=1, along='y', mat='tunnel'):
+    """Dark furrow strips on a field (a thin quad per row): breaks the flat plane."""
+    M = STATE['M']; r = random.Random(seed); Bk = J.Banks(); b = Bk('furrows', shadow=False); n0 = set(STATE['SET'].objects)
+    x = x0
+    while x < x1:
+        w = r.uniform(0.18, 0.32); J.flat(b, V((x, y0, 0.05)), V((w, 0, 0)), V((0, y1 - y0, 0)), M[mat]); x += step * r.uniform(0.85, 1.2)
+    Bk.flush(STATE['SET'])
+    for ob in STATE['SET'].objects:
+        if ob not in n0: J.no_bounce(ob)
+
+def stake(x, y, h=3.0, light=0.0):
+    M = STATE['M']; Bk = J.Banks(); b = Bk('stk', hull=0.0); n0 = set(STATE['SET'].objects)
+    J.rod(b, V((x, y, 0)), V((x, y, h)), 0.14, M['wood_d'], seg=5); J.cyl(b, V((x, y, h)), 0.35, 0.3, M['iron'], seg=7, r1=0.45)
+    J.live_flame(V((x, y, h + 0.3)), 1.4, 0.4, seed=int(x * 7 + y), n=3, light=light, name='stk%d' % int(abs(x * 3 + y)), warm=None)
+    Bk.flush(STATE['SET'])
+    for ob in STATE['SET'].objects:
+        if ob not in n0: J.no_bounce(ob)
+
+def _s02(p): dress(-38, -14, 7.0, 13.8, 16, 2, kinds=('silk', 'rope', 'hay', 'silk'), avoid=lambda x, y: abs(y - 10.6) < 1.0 and x > -22)
+def _s19(p):
+    furrows(-5, 50, -62, -34, 1.2, 4); dress(-6, 50, -62, -34, 40, 5, kinds=('stone', 'hay', 'stone', 'basket', 'rope')); stake(8.0, -36.0); stake(36.0, -44.0)
+    if 'streaks' in STATE['objects']: STATE['objects']['streaks'].hide_render = True
+def _s20(p):
+    furrows(-25, 45, -120, -46, 1.3, 6); dress(-25, 45, -116, -48, 55, 7, kinds=('stone', 'hay', 'stone', 'basket', 'rope', 'pot')); stake(31.0, -70.0); stake(-10.0, -78.0); stake(34.0, -100.0)
+    for ob in STATE['SET'].objects:
+        if ob.name == 'streaks': ob.hide_render = True
+def _s26(p):
+    furrows(-10, 10, -100, -58, 1.0, 9, mat='bank'); dress(-9.5, 9.5, -100, -60, 22, 11, kinds=('plume', 'pot', 'hay', 'silk', 'stone', 'rope', 'wheel'), avoid=lambda x, y: abs(x) < 0.0)
+    stake(-9.0, -66.0, 3.0); stake(-9.0, -84.0, 3.0); stake(9.0, -78.0, 3.0)
+POST.update({'s02': _s02, 's19': _s19, 's20': _s20, 's26': _s26})
+
+def _hide(*names):
+    def f(p):
+        for n in names:
+            if n in STATE['objects']: STATE['objects'][n].hide_render = True
+    return f
+for _s in ('s09', 's10', 's14', 's15'): POST[_s] = _hide('scatter_x')
+POST['s08'] = _hide('cloth')
