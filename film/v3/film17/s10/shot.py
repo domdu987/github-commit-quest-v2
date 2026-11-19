@@ -151,6 +151,7 @@ def pose_with(story, g, mirror=False, expr=None, rim=True, sway=1.0, phase=0.0, 
     pose = dict(pose)
     if expr:
         pose = cast17.with_expr(pose, expr)
+    pose = cast17.silent(pose)
     pose["seat17"] = None
     if mirror:
         pose["mirror"] = True
@@ -176,6 +177,9 @@ class Take(object):
         self.cam.data.dof.use_dof = False
         sc.camera = self.cam
         sc.frame_start, sc.frame_end = 1, 9000
+        for o in bpy.data.objects:                    # director fix: the additive light shafts wash over the cards
+            if any(m and m.name.startswith('beam_fx') for m in (getattr(o.data, 'materials', None) or [])):
+                o.hide_render = True
         self.acts = {}
         self.anch = {}
         self.A_marks = self.A["marks"]
