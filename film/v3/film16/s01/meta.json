@@ -1,0 +1,100 @@
+{
+ "take": "s01",
+ "film": 16,
+ "shots": [
+  1
+ ],
+ "g0": 0,
+ "g1": 69,
+ "first_g": 0,
+ "n_frames": 75,
+ "shot_ranges": {
+  "1": [
+   0,
+   68
+  ]
+ },
+ "handle_in": 0,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "film opens on this frame (no handle before g 0)"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 69,
+  "note": "hard cut to shot 2 (line_wide whip arrival) at g 69; handle g 69..74 rendered in 3D (the push, the slide and his idle continue)"
+ },
+ "set": "v3/set3d16/telegraph.py LINE preset line_close, light DAY (wet 0); runtime: pole 1 peg/glass/glint switch on at the cap (g 47), wrap ring + wire spans 0-1 at g 65; hand-held bottle = copy of the set's bottle mesh (LN.ins_bottle, glass material) keyed per frame; per-frame slack wire meshes g 0..64; sun-star flash (LN.glint) keyed g 24..31 and 47..56",
+ "cast": "v3/cast16 morse16 (mirror: faces the pole): STORY16 morse_cap_peg (prop_r removed: the 3D bottle copy; coil on the left arm) g 0..51, morse_drape_wire g 52..74; raised hand pinned to the bottle neck / the wire; blinks g 11, 51, 65; happy from g 66; no lip-sync",
+ "camera": "custom 22 mm, low on the road side of the ladder looking up 33.4 deg; c16.CamPath drift push 10 %/s + slide 60 px/s + arc 14 deg/s, decay 0.25 (moving on frame 0 and on the last frame) + snap x2.8 with 0.8 D sideways pan g 22..35 (13 f, peak 1.6) on 'คอขวดเบียร์'",
+ "events": {
+  "snap": [
+   22,
+   35
+  ],
+  "word_bottle_neck": 24,
+  "held_glint": [
+   24,
+   31
+  ],
+  "lower": [
+   34,
+   47
+  ],
+  "cap_clink": 47,
+  "cap_glint": [
+   47,
+   56
+  ],
+  "pose_swap_blink": [
+   51,
+   53
+  ],
+  "pick_wire": [
+   52,
+   55
+  ],
+  "flick_wire": [
+   55,
+   61
+  ],
+  "settle_wire": [
+   61,
+   64
+  ],
+  "set_wire_on": 65,
+  "pleased": [
+   65,
+   67
+  ]
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "samples": 7,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 6.99,
+ "s_per_frame_cpu_mean": 13.36,
+ "head_px": [
+  93,
+  281
+ ],
+ "head_centre_y": [
+  457,
+  583
+ ],
+ "head_bottom_max_y": 639,
+ "framediff_in_shot": {
+  "median": 6.38,
+  "p90": 12.4
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json"
+}
