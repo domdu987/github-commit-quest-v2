@@ -6,7 +6,7 @@ M = S.marks_for(SHOT)
 def tweak(stage, A=None):
     if stage == 'pre':
         c = S.SHOTS[SHOT]['cam']; c.update(loc=(0.0, 46.0, 14.0), look_at=(0.0, 24.0, 0.5), lens=16.0)
-        S.SHOTS[SHOT]['move'].update(push=-0.03); S.SHOTS[SHOT]['move']['moves'] = [dict(t=0.2, d=1.1, dur=5), dict(t=0.55, d=1.3, dur=7), dict(t=0.8, d=1.06, dur=5), dict(t=0.35, d=0.93, dur=5)]
+        S.SHOTS[SHOT]['move'].update(push=-0.03); S.SHOTS[SHOT]['move']['moves'] = [dict(t=0.2, d=1.1, dur=5), dict(t=0.55, d=1.15, dur=7), dict(t=0.8, d=1.06, dur=5), dict(t=0.35, d=0.93, dur=5)]
 ALL = [(r, i, m) for r in ('herd', 'herd_pen', 'herd_far') for i, m in enumerate(M[r])]
 def actors(f, cam, ctx):
     t = (f - G0) / 30.0
