@@ -74,6 +74,8 @@ class Take(C.Take):
         ar["hand"] = (hx + 0.05 * math.sin(t * 9.0), hy + 0.10 * math.sin(t * 9.0 + 1.0))      # the tapping finger
         p["arm_r"] = ar
         p["t"] = t
+        p["gaze"] = (1.0, 0.1)                       # eyes on the train (screen right)
+        p["yaw"] = max(p.get("yaw", 0.45), 0.55)
         return p
 
     def pose(self, gs):

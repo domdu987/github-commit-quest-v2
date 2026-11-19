@@ -5,3 +5,5 @@
 - Frame-diff (90x160 grey, in-shot): median 5.39, p90 13.02 (target 4 / 12).
 - Differences from the plan: Morse "taps the wire" is a pointing/tapping gesture toward the train (the wire is 9 D up, out of reach); the train is IN FRONT of the poles' depth line from the field-side camera's point of view the poles are nearer the lens, so the train runs "behind the poles" as planned. The set's steam puffs read as a chain of white balls (set design); the smoke speed hook is set low (3.5).
 - No streak was added (no frame exceeds ~60 px/frame corner speed outside the snap).
+
+- TAKE-gate follow-up (re-render): Morse's eyes now look to screen right at the train (pose keys gaze (1.0, 0.1) + yaw 0.55), instead of at the camera. Frame-diff in-shot median 5.40, p90 13.02; QA_AUTO PASS. The wire is still not in frame (the tap is a gesture at the train).

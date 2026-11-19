@@ -30,9 +30,9 @@ WHIP_D = 11.0                                       # look point sideways offset
 MORSE_MARK = "morse_ladder_foot"
 FOOT = (4.07, -10.82, 0.0)
 
-CAM_LOOK0 = (9.0, -11.7, 2.5)                       # subject: Morse's torso beside the hero pole
-CAM_LOC0 = (-3.5, -13.0, 4.6)                        # high, behind-left on the road side (crane down from here)
-CAMP = C.CamPath(CAM_LOC0, CAM_LOOK0, GA, GB, push=0.09, slide_px=-85.0, rise_px=-85.0, arc_deg_s=7.0, decay=0.2, snaps=[])
+CAM_LOOK0 = (14.0, -8.3, 3.4)                       # subject: Morse's torso beside the hero pole
+CAM_LOC0 = (-3.2, -4.8, 2.7)                        # high, behind-left on the road side (crane down from here)
+CAMP = C.CamPath(CAM_LOC0, CAM_LOOK0, GA, GB, push=0.06, slide_px=-100.0, rise_px=-20.0, arc_deg_s=12.0, decay=0.2, snaps=[])
 
 
 class Cam(object):
@@ -62,7 +62,14 @@ class Take(C.Take):
         self.key_cam(bf(GA), *CAM.at(GA))
         self.scene.frame_set(bf(GA))
         self.mor = self.actors["mor"] = C.make_actor("mor", "morse16", os.path.join(WORK, "sprites"), contact=True, cam=self.cam)
-        self.mark = self.A["marks"][MORSE_MARK]
+        self.mark = (1.9, -6.3, 0.0)                   # on the grass beside the hero pole, nearer the lens (head ~150 px)
+        inv = K.frame_mat().inverted()                  # extra foreground (crate of bottles, spool, grass) round the START camera: fills the lower third
+        a, b = inv @ Vector(CAM_LOC0), inv @ Vector(CAM_LOOK0)
+        old = TG.STATE.get("fg")
+        for ob in (old if isinstance(old, (list, tuple)) else [old]):      # the preset's own FG belongs to the preset camera
+            if ob is not None:
+                ob.hide_render = True
+        LN.fg_dress(TG.STATE, TG.STATE["M"], (a.x, a.y), (b.x, b.y), [("bottles", -0.55, 1.2), ("crate", 0.9, 1.5), ("grass", 0, 1.6, 70)], seed=77)
 
     def pose_of(self, g):
         p = dict(cast16.STORY16["morse_proud_point"][1])
@@ -75,6 +82,8 @@ class Take(C.Take):
         ar["hand"] = (hx + 0.06 * math.sin(t * 4.0), hy - 0.10 * u_of(g, 74, 92) + 0.05 * math.sin(t * 6.3))   # the pointing hand sweeps down the line
         p["arm_r"] = ar
         p["t"] = t
+        p["gaze"] = (1.0, -0.05)                      # eyes down the pole line he points along
+        p["yaw"] = max(p.get("yaw", 0.4), 0.5)
         return p
 
     def pose(self, gs):

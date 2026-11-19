@@ -4,3 +4,9 @@
 - Heads 42-83 px (wide shot: the group is ~16 D from the camera; the snap takes them from 44 to 70-80 px), head centres y 641-720, bottoms < 880 (max 760). No mouth movement (waving grins only).
 - Frame-diff in-shot: median 7.4, p90 19.8 (target 4 / 12 met). QA_AUTO PASS.
 - NOT done: a visible smoke plume above the loco (the plume sits above the frame at this framing; the funnel appears only on the handle frames) -- the loco's smokebox, headlamp and cowcatcher are what read as 'train arriving'. The crate pile still hides legs of two people.
+
+## Re-render 2 (director: the late train must read on a phone)
+- Camera tilted up (look point z 6.4, camera z 2.9, y 1.0) so the loco's FUNNEL, smokebox front with its yellow headlamp, boiler, dome and wheels are visible entering the right third from g ~1787 (cowcatcher from ~1783) and stay to the cut; train front 128 -> 97.5 (quick ease-out). The group stays at the left with the sign and bench; the orange wall is a thin band.
+- Heads 40-83 px, head bottoms in shot max y 868 (< 880); head centres up to y 827.  Eye-lines to the train for messenger / worker / dandy.
+- Frame-diff in-shot: median 9.71, p90 18.67. QA_AUTO PASS.
+- Still not visible: the smoke PLUME (the puffs rise above the top of the frame at this tilt; tilting further would push the heads below y 880).

@@ -26,12 +26,12 @@ CAST = [("msg", "messenger_wave", (95.8, 17.8, 1.85), 0.0), ("wka", "worker_a_wa
         ("cgb", "congressman_b_wave", (99.2, 17.8, 1.85), 1.9), ("cgc", "congressman_c_wave", (100.9, 18.5, 1.85), 3.1)]
 LOOK_AT_TRAIN = {"msg", "wka", "cgc"}                 # eye-lines toward the arriving train (screen right); the congressman waves at the camera
 G_WORD = C.cap_g("ก่อนรถไฟตั้ง")                  # 1770
-CAMP = C.CamPath((95.0, 1.5, 4.0), (101.5, 19.6, 4.6), GA, GB, push=-0.12, slide_px=-25.0, rise_px=8.0, arc_deg_s=10.0, decay=0.3,
+CAMP = C.CamPath((95.0, 1.0, 2.9), (102.0, 19.6, 6.4), GA, GB, push=-0.12, slide_px=-25.0, rise_px=8.0, arc_deg_s=10.0, decay=0.3,
                  snaps=[dict(g=(G_WORD - 2, G_WORD + 12), k=1.7, peak=1.7, shift=(0.5, 0.1))])
 
 
 def train_x(g, front0):
-    return 126.0 - 26.0 * u_of(g, GA, GA + 40, kind="quad_out") - 2.0 * u_of(g, GA + 40, GB)
+    return 128.0 - 29.0 * u_of(g, GA, GA + 38, kind="quad_out") - 1.5 * u_of(g, GA + 38, GB)
 
 
 class Take(C.Take):
