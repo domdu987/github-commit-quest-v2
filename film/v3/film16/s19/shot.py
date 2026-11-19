@@ -39,7 +39,7 @@ class Take(C.Take):
         self.wa = self.actors["wa"] = C.make_actor("wa", "worker16_a", d, canvas=cast16.CANVAS16_POLE["worker16_a"] if isinstance(cast16.CANVAS16_POLE, dict) else cast16.CANVAS16_POLE, cam=self.cam)
         self.wb = self.actors["wb"] = C.make_actor("wb", "worker16_b", d, canvas=cast16.CANVAS16_POLE["worker16_b"] if isinstance(cast16.CANVAS16_POLE, dict) else cast16.CANVAS16_POLE, cam=self.cam)
         look0 = Vector((40.7, -7.2, 2.7))
-        self.cam_path = C.CamPath(look0 + Vector(CAM_OFF), look0, GF, GL, push=0.11, slide_px=-45.0, arc_deg_s=0.0, decay=0.3, snaps=[dict(g=(G_POP - 11, G_POP + 2), k=1.5, peak=1.8, shift=(0.3, 0.1))])
+        self.cam_path = C.CamPath(look0 + Vector(CAM_OFF), look0, GF, GL, push=0.13, slide_px=-60.0, arc_deg_s=5.0, decay=0.3, snaps=[dict(g=(G_POP - 11, G_POP + 2), k=1.5, peak=1.8, shift=(0.3, 0.1))])
         self.key_cam(bf(GF), *self.cam_path.at(GF))
         self.scene.frame_set(bf(GF))
 

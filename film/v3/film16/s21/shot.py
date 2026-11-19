@@ -67,7 +67,7 @@ class Take(C.Take):
         self.wa = self.actors["wa"] = C.make_actor("wa", "worker16_a", d, contact=True, cam=self.cam)
         m = Vector(self.mk["mor"])
         look0 = Vector((121.7, -6.0, 1.9))
-        self.cam_path = C.CamPath(look0 + Vector((0.0, 4.4, 0.3)), look0, GF, GL, push=0.08, slide_px=40.0, decay=0.3)
+        self.cam_path = C.CamPath(look0 + Vector((0.0, 4.4, 0.3)), look0, GF, GL, push=0.08, slide_px=50.0, decay=0.3, snaps=[dict(g=(G_WORD - 2, G_WORD + 11), k=1.55, peak=1.8, shift=(0.5, 0.1))])
         self.key_cam(bf(GF), *self.cam_path.at(GF))
         self.scene.frame_set(bf(GF))
 
