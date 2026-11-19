@@ -1,0 +1,25 @@
+{
+ "take": "s20",
+ "fps": 30,
+ "note": "time = film seconds (g / 30)",
+ "cues": [
+  {
+   "time": 42.267,
+   "frame": 1268,
+   "kind": "ambience",
+   "label": "heavy rain on grass and wet wood, low thunder rumble"
+  },
+  {
+   "time": 43.333,
+   "frame": 1300,
+   "kind": "accent",
+   "label": "soft electric fizzle as beads crawl down the wet pole"
+  },
+  {
+   "time": 43.967,
+   "frame": 1319,
+   "kind": "accent",
+   "label": "whoosh on the snap, sizzle as the sparks reach the puddle"
+  }
+ ]
+}

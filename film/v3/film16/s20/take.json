@@ -1,0 +1,6 @@
+{"take":"s20","shots":[20],"g0":1268,"g1":1346,"handle_in":9,"handle_out":9,"shot_ranges":{"20":[1268,1345]},
+ "transition_in":{"type":"cut","frames":0},"light":"RAIN","cast":null,
+ "set":"v3/set3d16 LINE line_close, light RAIN (wet 1, puddles), poles bare, set_rain 0.55 (rain streak alpha lowered to ~22 %, runtime), puddle colour darkened, ladder hidden, spark beads x2.2, set_leak pole keyed every frame",
+ "camera":"custom 22 mm: tilt down the hero pole (look point z 7.2 -> 1.3 D, eased) with push + slide, snap x1.9 on 'ไฟรั่วลงดินหมด'",
+ "events":{"snap":[1316,1331]},
+ "cues":[{"f":1268,"kind":"ambience","label":"heavy rain on grass and wet wood, low thunder rumble"},{"f":1300,"kind":"accent","label":"soft electric fizzle as beads crawl down the wet pole"},{"f":1319,"kind":"accent","label":"whoosh on the snap, sizzle as the sparks reach the puddle"}]}
