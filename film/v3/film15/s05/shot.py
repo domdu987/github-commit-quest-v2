@@ -86,7 +86,7 @@ def traj_bar_point(W, u, kind='flop'):
     z = za * (y - yb) * (y - yl) / ((yt - yb) * (yt - yl)) + zb * (y - yt) * (y - yl) / ((yb - yt) * (yb - yl)) + zc * (y - yt) * (y - yb) / ((yl - yt) * (yl - yb))
     return Vector((x, y, z))
 
-def jumper(W, tag, cast, g, gj, kind='flop', run_frames=30, knock=None, hang=14, lie_cast=None, shadow=True, start_path=2.0, wait=False, sit_for=1000):
+def jumper(W, tag, cast, g, gj, kind='flop', run_frames=30, knock=None, hang=14, lie_cast=None, shadow=True, start_path=2.0, wait=False, sit_for=1000, land_off=(0, 0, 0)):
     """one jump with take-off at frame gj. kind 'flop' | 'straddle' | 'knock'. returns the state label (for QA) or None (not on stage yet)."""
     plen = W.path_len(); t = g - gj
     # --- run
@@ -136,7 +136,7 @@ def jumper(W, tag, cast, g, gj, kind='flop', run_frames=30, knock=None, hang=14,
     # landed
     tl = ta - T_AIR
     Pl = traj_bar_point(W, 1.0, 'flop')
-    land = Vector((-0.4, 13.3, W.pit_z))
+    land = Vector((-0.4, 13.3, W.pit_z)) + Vector(land_off)
     if tl < hang:
         name = 'land_back' if (kind != 'straddle' or knock is not None) else 'straddle_b'
         pose = pose_for(name, cast); 
@@ -169,18 +169,18 @@ def stage(W, n, g):
         stand_idle(W, 'b2', 'boy2', Vector(SP5['b2']), g, 2.0, face=1, rock_=True)
         jumper(W, 'j1', 'boy1', g, 236, 'straddle', run_frames=34, start_path=0.0, hang=30)
     elif n == 6:
-        jumper(W, 'j1', 'boy1', g, 262, 'straddle', run_frames=28, hang=8, sit_for=10)
+        jumper(W, 'j1', 'boy1', g, 262, 'straddle', run_frames=28, hang=8, sit_for=10, start_path=8.0, wait=True)
         jumper(W, 'j2', 'boy2', g, 306, 'straddle', run_frames=28, hang=8, sit_for=12)
         stand_idle(W, 'dick', 'dick', M['boy_wait_b'], g, 0.0, rock_=True, face=1)
         stand_idle(W, 'b3', 'boy3', M['boy_wait_a'], g, 1.0, face=1)
     elif n == 7:
-        jumper(W, 'dick', 'dick', g, 372, 'straddle', run_frames=30, knock=5, hang=9)
+        jumper(W, 'dick', 'dick', g, 372, 'straddle', run_frames=14, knock=5, hang=9, start_path=15.8, wait=True)
         stand_idle(W, 'b3', 'boy3', M['boy_wait_a'], g, 1.0, face=1)
         stand_idle(W, 'b1', 'boy1', M['boy_wait_b'], g, 2.0, face=1)
     elif n == 8:
-        jumper(W, 'dick', 'dick', g, 372, 'straddle', run_frames=30, knock=5, hang=9)
+        jumper(W, 'dick', 'dick', g, 372, 'straddle', run_frames=14, knock=5, hang=9, start_path=15.8, wait=True)
     elif n == 9:
-        jumper(W, 'dick', 'dick', g, 452, 'flop', run_frames=20, start_path=13.5, wait=True, hang=8)
+        jumper(W, 'dick', 'dick', g, 452, 'flop', run_frames=20, start_path=13.5, wait=True, hang=8, land_off=(1.0, -2.9, 0))
         stand_idle(W, 'b3', 'boy3', M['boy_wait_a'], g, 1.0, face=1)
         stand_idle(W, 'b1', 'boy1', M['boy_wait_b'], g, 2.0, face=1)
 
@@ -210,9 +210,10 @@ def setup(n):
 def hooks(W, n, g):
     pass
 
-DRIFT = {5: (0.9, -0.9, 0.05), 6: (-1.1, 0.2, 0.05), 7: (0.9, 0.5, 0.04), 8: (-0.5, 0.25, 0.03), 9: (0.5, 0.4, 0.05)}
+DRIFT = {5: (0.9, -0.9, 0.05), 6: (-1.7, 0.2, 0.05), 7: (-0.9, 0.5, 0.04), 8: (-0.5, 0.25, 0.03), 9: (0.5, 0.4, 0.05)}
+HOLD = {9: (448, 3.0, 14)}
 LPULSE = {5: [(200, 2.5), (224, -2.5)], 7: [(350, 2.0), (386, -2.0)]}
-PULSE = {6: [(256, 2.0), (300, 2.0)], 7: [(362, 1.2), (378, 1.5)], 8: [(399, 0.6)], 9: [(452, 1.2)]}
+PULSE = {6: [(256, 2.0), (300, 2.0)], 7: [(362, 1.2), (378, 1.5)], 8: [(399, 0.6)], 9: []}
 def drift(W, n, g):
     cam = W.sc.camera; f0, f1 = SHOTS[n]; dt = (g - (f0 + f1) / 2.0) / 30.0
     sl, pu, sw = DRIFT[n]; cam.delta_location = (0, 0, 0)
@@ -223,6 +224,8 @@ def drift(W, n, g):
     d = r * (sl * dt) + fwd * (pu * dt) + r * (sw * math.sin(2 * math.pi * 0.7 * g / 30 + 1)) + up * (sw * math.sin(2 * math.pi * 1.1 * g / 30))
     for pf, amp in PULSE.get(n, []):
         u = smooth((g - pf) / 6.0) - smooth((g - pf - 10) / 24.0); d = d + fwd * (amp * u)
+    if n in HOLD:
+        hs, ha, hl = HOLD[n]; d = d + fwd * (ha * smooth((g - hs) / hl))
     for pf, amp in LPULSE.get(n, []):
         u = smooth((g - pf) / 6.0) - smooth((g - pf - 8) / 20.0); d = d + r * (amp * u)
     d = d * U
