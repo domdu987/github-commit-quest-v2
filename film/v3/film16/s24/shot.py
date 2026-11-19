@@ -24,30 +24,87 @@ G0, G1 = C.g_bound(51.32), C.g_bound(53.83)   # 1540, 1615: shot 24 = g 1540..16
 H_IN = H_OUT = 9
 G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1   # 1531, 1623
 GS = list(range(G_FIRST, G_LAST + 1))
-G_RUN = (G_FIRST - 4, 1558)
-G_PARK = 1558                                  # parked inside the neck from here on ("อยู่แต่ในลวด" 1561 .. "ไม่รั่วลงเสา" 1582)
-G_SNAP_WORD = 1582                             # "ไม่รั่วลงเสา": snap push on the glass
+G_RUN0 = G_FIRST - 4                           # the pulse is already on the wire, left of the pole, on the first frame
+G_GLASS = 1556                                 # the head reaches the glass ("ไฟเลยวิ่ง" 1543 .. "อยู่แต่ในลวด" 1561)
+G_SNAP_WORD = 1582                             # "ไม่รั่วลงเสา": snap push to the neck + the dark pole below
 SNAP = (G_SNAP_WORD - 3, G_SNAP_WORD + 10)    # 13 frames
-S_BACK = 0.05                                  # the pulse starts this far (fraction of the whole wire) before the glass
-FOLLOW_END = 1566                              # the look point has left the head and settled on the glass by here
+SPARKS = (1568, 1600)                          # weak sparks at the rim try to creep down and die (the pole stays dark)
+DS_FRAME = 0.016                               # pulse path (fraction of the whole wire) per ~16 D of line is 0.0588: 0.024 = ~6.5 D = the frame half width
+FOLLOW_END = 1566                              # the look point stops riding the head
 
-CAM0 = lambda: None                            # (placeholder: the preset camera is read from the Take)
+
+def darken(mat, tint, rough):
+    """multiply the (texture-driven) base colour of a material by `tint` and make it glossier (wet)."""
+    nt = mat.node_tree
+    bs = [n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"][0]
+    bs.inputs["Roughness"].default_value = rough
+    lk = [l for l in nt.links if l.to_socket == bs.inputs["Base Color"]]
+    mix = nt.nodes.new("ShaderNodeMix")
+    mix.data_type, mix.blend_type = "RGBA", "MULTIPLY"
+    mix.inputs[0].default_value = 1.0
+    mix.inputs[7].default_value = (tint[0], tint[1], tint[2], 1.0)
+    if lk:
+        src = lk[0].from_socket
+        nt.links.remove(lk[0])
+        nt.links.new(src, mix.inputs[6])
+    nt.links.new(mix.outputs[2], bs.inputs["Base Color"])
 
 
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, "bottle_macro", quality=quality, name="cam_s24")
-        self.s_park = TG.pulse_s_at_pole(1)
-        self.s0 = self.s_park - S_BACK
         S = TG.STATE
+        M = S["M"]
+        darken(M["pole"], (0.34, 0.31, 0.38), 0.24)                    # wet dark pole (QA-art): the contrast for "no leak"
+        bs = [n for n in M["glass"].node_tree.nodes if n.type == "BSDF_PRINCIPLED"][0]
+        bs.inputs["Alpha"].default_value = 1.0
+        bs.inputs["Transmission Weight"].default_value = 0.8
+        bs.inputs["Base Color"].default_value = (0.02, 0.30, 0.07, 1.0)
+        for ob in bpy_objects():                                       # the ladder leans on the field side: out of this camera's way
+            if ob.name.startswith("ladder"):
+                ob.hide_render = True
+        for ob in bpy_objects():                                       # the low field-side camera looks into the sun glare on the wet ground / puddles
+            if ob.name.startswith("puddles"):
+                ob.hide_render = True
+            if ob.name.startswith("ground"):
+                for ms in ob.data.materials:
+                    for n in ms.node_tree.nodes:
+                        if n.type == "BSDF_PRINCIPLED":
+                            n.inputs["Roughness"].default_value = 0.85
+                            if "Specular IOR Level" in n.inputs:
+                                n.inputs["Specular IOR Level"].default_value = 0.1
+        TG.set_wet(0.15)                                               # the sun glare on the wet ground washed out the first frames; the pole stays dark (multiplied above)
+        self.s_park = TG.pulse_s_at_pole(1)
         self.pts, self.cum = S["wire_pts"]["bottle"]
-        loc, look = Vector(self.A["cam"]["loc"]), Vector(self.A["cam"]["look_at"])
-        self.glass = self.head_world(self.s_park)                       # parked head = inside the glass
-        look = self.glass                                               # subject point = the glass (the preset looks a bit past it)
-        v = look - loc
-        loc = look - v * 1.0
-        self.cam_path = C.CamPath(Vector(look) - (look - Vector(self.A["cam"]["loc"])) * 1.0, look, G0, G_LAST, push=0.06, slide_px=115.0,
-                                  arc_deg_s=-22.0, decay=0.3, snaps=[dict(g=SNAP, k=2.0, peak=1.9, shift=(-1.3, -0.1))])
+        self.top = Vector(K.W((LN.px(LN.POLES_Y[1]) + 0.03, LN.POLES_Y[1], LN.POLE_H + 0.01)))      # pole top / glass mouth (world D)
+        self.glass = self.top + Vector((0, 0, 1.8))
+        sub = self.top + Vector((0.0, 0.0, -0.2))                      # subject: the neck and the dark pole top
+        # field-side camera (looks along +y with the line along +x: the pulse travels screen-RIGHT), low, glass in the upper third
+        loc0 = self.top + Vector((0.0, -5.0, -2.3))
+        self.cam_path = C.CamPath(loc0, sub, G0, G_LAST, push=0.09, slide_px=70.0, arc_deg_s=-15.0, decay=0.3,
+                                  snaps=[dict(g=SNAP, k=1.35, peak=1.8, shift=(0.0, 0.35))])
+        self.sparks = self.make_sparks()
+
+    def make_sparks(self):
+        import bpy
+        m = bpy.data.materials.new("spark")
+        m.use_nodes = True
+        nt = m.node_tree
+        nt.nodes.clear()
+        out, em = nt.nodes.new("ShaderNodeOutputMaterial"), nt.nodes.new("ShaderNodeEmission")
+        em.inputs["Color"].default_value = (0.35, 0.85, 1.0, 1.0)
+        em.inputs["Strength"].default_value = 30.0
+        nt.links.new(em.outputs[0], out.inputs["Surface"])
+        obs = []
+        for i, (dx, dz) in enumerate(((0.10, 0.05), (-0.14, 0.12), (0.02, 0.22))):
+            bpy.ops.mesh.primitive_uv_sphere_add(segments=8, ring_count=6, radius=0.13, location=(0, 0, 0))
+            ob = bpy.context.object
+            ob.name = "s24_spark%d" % i
+            ob.data.materials.append(m)
+            ob.visible_shadow = False
+            ob["dx"], ob["dz"] = dx, dz
+            obs.append(ob)
+        return obs
 
     def head_world(self, s):
         d0 = min(1.0, max(0.0, s)) * self.cum[-1]
@@ -56,29 +113,45 @@ class Take(C.Take):
         return TG.W(head)
 
     def s_of(self, g):
-        u = u_of(g, G_RUN[0], G_RUN[1], kind="sine")
-        return lerp(self.s0, self.s_park, u)
+        # constant speed: DS_FRAME per (G_GLASS - G_RUN0) frames; the head reaches the glass at G_GLASS and runs on along the wire
+        return self.s_park + DS_FRAME * (g - G_GLASS) / float(G_GLASS - G_RUN0) * 1.0
 
     def cam_at(self, g):
         loc, look = self.cam_path.at(g)
-        w = 1.0 - u_of(g, G_FIRST, FOLLOW_END, kind="sine")            # 1 = riding the head, 0 = settled on the glass
-        off = (self.head_world(self.s_of(g - 7)) - self.glass) * w            # lags the head by 5 frames: it runs ahead of the camera
-        return loc + off * 0.25, look + off            # mostly a PAN with the head (the sky sweeps past), a little truck
+        w = 1.0 - u_of(g, G_FIRST, FOLLOW_END, kind="sine")            # 1 = riding the head, 0 = settled on the pole
+        h = self.head_world(self.s_of(max(g, G_FIRST) - 6))             # lags the head by 6 frames: the pulse runs ahead of the camera
+        off = Vector((h.x - self.top.x, 0.0, 0.0)) * w
+        off.x = clamp(off.x, -3.2, 3.2)
+        return loc + off * 0.15, look + off
 
     def pose(self, gs):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *self.cam_at(g))
             TG.set_pulse(self.s_of(g), frame=f)
+            for i, ob in enumerate(self.sparks):
+                a, b = SPARKS
+                u = (g - a - i * 4) / float(b - a - i * 4)
+                on = 0.0 < u < 1.0
+                sc = (0.9 * (1 - u) ** 1.5) * (0.55 + 0.45 * math.sin(g * 1.9 + i * 2.1)) if on else 0.0
+                ob.location = self.top + Vector((ob["dx"] * (1 - 0.6 * u), 0.0, 0.05 + ob["dz"] * (1.0 - u)))
+                ob.scale = (max(sc, 1e-3),) * 3
+                ob.keyframe_insert("location", frame=f)
+                ob.keyframe_insert("scale", frame=f)
+                C.key_vis(ob, on and sc > 0.02, f)
 
     def report(self, g):
         f = bf(g)
         self.scene.frame_set(f)
-        return dict(g=g, s=round(self.s_of(g), 4), head_px=TG.project(tuple(self.head_world(self.s_of(g)))), glass_px=TG.project(tuple(self.glass)),
+        return dict(g=g, s=round(self.s_of(g), 4), head_px=TG.project(tuple(self.head_world(self.s_of(g)))), top_px=TG.project(tuple(self.top)),
                     cam=[round(c, 3) for c in self.cam_at(g)[0]])
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):
         return C.Take.render(self, [bf(g) for g in gs], out_dir, scale=scale, samples=samples, threads=threads)
+
+
+def bpy_objects():
+    return C.bpy.data.objects
 
 
 if __name__ == "__main__":
