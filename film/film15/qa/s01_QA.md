@@ -77,3 +77,42 @@ Checked frames at 6 fps (g0-185, every 5th) plus every cut ±3 (63, 108, 134, 18
 9. **(note, non-blocking)** The bar in shot 4 reads maroon/lavender in backlight against red/white in shots 1 and 3. That is acceptable, but a little more fill on the bar would help continuity.
 
 Re-check after the fixes: phone sheet of shots 1, 3 and 4. A blind viewer should be able to say "the others go over face-down, this one goes over on his back".
+
+---
+## Re-check r2 (render15/team1 @ c98f2d1, rebuilt in scratch takes/s01r2)
+
+**Verdict: PASS.** The hook now reads on the phone. Shot 1 shows a boy clearing the bar horizontally, face-first, and landing in the sawdust with a spray. Shot 4 shows Dick going over upside-down and arched, head hanging below the bar, then landing flat on his back in a dense spray, while the boys gape. The remaining items below are non-blocking notes.
+
+### Automatic checks
+- qa_auto: **PASS**.
+  - It flags g108-111 as soft frames (the planned whip).
+  - It reports "no visible change ±2 at g108" because the streak smears the cut frame. The cut is still on plan.
+- motion_check: median **5.4**, p90 **21.2** (target 4 / 12). **PASS**. The longest low-motion run is g64-71 (8 frames, the eased start of shot 2).
+- Heads above y 880 on every visible card. The team's `wb` boy at 1014 is off frame in shot 3 and is not visible on the phone sheet.
+
+### Fixes 1-8 from the first review
+| # | status | evidence |
+|---|---|---|
+| 1 shot 1 straddle | **done** | The jumper is centred and in frame from g0. He takes off at g20-25 and goes over the bar horizontally, head and leg leading, at g30-46, clearing the bar by about 0.3 D. His face still points at the lens, but on the phone it reads as "goes over face-first". |
+| 2 waiting boys | **done** | The boys stand on the run-up (g0-20) and leave the frame. The bar cuts no head, and the landing and spray are clear at g55-62. |
+| 3 shot 3 curve + back-turn | **partly** | The camera follows the run, Dick is about 30 % of frame height, and the plant and take-off happen at the standard (g124-133). The curve is slight, and Dick's face stays to the lens the whole time, so no back-turn is visible. See note A. |
+| 4 shot 4 path through the curly boy | **mostly** | Dick now passes in front of the boy (g162-166: his head covers about half of the boy's head for about 4 frames). It reads as depth, not as a collision. The legs flick up at g164-166 like a real flop. Back-first landing in the centre at g168-170. |
+| 5 landing / spray | **done** | Spray at g168 plus a second burst at g171, dense and high (g175-185). The lying Dick spans about 45 % of the frame width. |
+| 6 PUSH! at 2.9 s | **done** | The push runs from g88 to g101, and Dick grows about 22 %. |
+| 7 eye-lines | **done (minor)** | The boys turn toward the action. In shot 4 they still mostly face the lens while gaping, which is acceptable. |
+| 8 rocking pops | **done** | The 7-frame spikes are gone and the diffs are smooth (g64-107). |
+
+### QA-art (phone, 360x640)
+- **Clarity 7/10** (was 4), **beauty 7/10**.
+- A first-time viewer gets "the others go over the normal way, this kid goes over backwards, upside down" within the 6 s. The flop arch at g145-155 is the image that sells it.
+
+### g108-110 whip streak
+- It is not a smooth streak. It is a stepped multi-exposure of 4-5 discrete copies (trees, bleachers and Dick doubled).
+- g108 also carries a large transparent ghost of the shot-2 close-up Dick over the new framing, which looks like a short dissolve glitch.
+- At full size it is a little ugly. At phone size and 30 fps it lasts 3 frames (0.1 s) and reads as a whip blur. **Not blocking.**
+
+### Notes (non-blocking; fix if the team has a cheap re-render)
+- A. **Shot 3, g118-133:** for the plan's "turns his back to the bar", add a head or shoulder turn away from the bar on the plant (g128-133), using the side or back card if cast15 has one.
+- B. **Whip, g108-110:** raise the sub-frame count to about 12-16 so the streak blends smoothly, and drop the samples that fall before the cut so g108 has no shot-2 ghost. This is only 3 frames to re-render.
+- C. **Shot 4, g162-166:** move the curly boy about 0.5 D further left so Dick's head clears his face.
+- D. **Shot 4 bar fill (not done):** the bar reads maroon/lavender in backlight against red/white in shots 1 and 3. Add a little fill light on the bar for continuity.
