@@ -1,0 +1,6 @@
+raw/
+work/
+*.log
+d1*/
+d1_sheet.jpg
+__pycache__/
