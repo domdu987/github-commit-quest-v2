@@ -98,6 +98,8 @@ class Take(object):
         self.scene = bpy.context.scene; self.cam = self.scene.camera
         self.cam.data.dof.use_dof = False
         self.scene.frame_start, self.scene.frame_end = 1, 9000
+        for i, m in enumerate(K.STATE['life'].get('dust', [])):      # half as many motes (odd ones hidden), smaller (k 0.55)
+            if i % 2: m['ob'].hide_render = True
         self.fg = {31: [], 32: [], 33: []}
         self.make_fg()
         self.act = {}
@@ -157,7 +159,7 @@ class Take(object):
             f = F(g); loc, look = cam_of(g)
             camrig.key_camera(f, loc, look, cam=self.cam, lens=22.0, interp="LINEAR", easing="AUTO")
             self.place_all(g)
-            K.key_life(f, f, pendulum=False); K.set_pendulum(t=g / 30.0, frame=f)
+            K.key_life(f, f, dust=0.55, pendulum=False); K.set_pendulum(t=g / 30.0, frame=f)
 
     def poses(self, gs):
         ins, ber = self.act["ins"], self.act["ber"]
