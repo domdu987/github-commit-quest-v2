@@ -9,3 +9,7 @@
 - Camera: crane from the front-right outside corner (17,-3,3.2) up and out to (23,-9,4.6), lens 20 -> 17, looking along the ring's front + right legs; every one of the 10 stage-2 hives carries the same warm gold bee-cluster glow on its bee end, turned toward the lens, so about 9-10 are countable by g850 at phone size.
 - Limits: an exterior view shows the ring as an L (front + right legs), not a full arc; an interior view is a wall of maize (hives hidden), and a 4-5 m camera tilted 20-25 deg down would make the ground over 55 % of the frame, so I kept the camera nearly level. Ground ~45 % (sharp laterite).
 - qa_auto PASS on the re-encoded take (117 frames, 18 samples). Shot 11 frames unchanged (stronger stool shadow not done).
+
+## v4 (shot 12 re-rendered again, director recheck 2)
+- Glow removed. Camera just outside the front-right corner (17.5,-3.5,2.3) -> (15.2,-1.5,2.6), lens 22 -> 24, slow push-in + 0.3 m rise, huts near the corner cleared at runtime; hive boxes with resting bee specks at each entrance; hive boxes about 100-140 px wide near camera.
+- Not met: about 6-7 hives are in frame (front leg left, right leg right of the corner), not 9-10; sky ~35 %, ground ~40 %. Ten distinct hives at this size cannot fit one exterior frame (the L spans ~37 m); a wider lens/further camera makes them dots (v3), a tighter one shows fewer.
