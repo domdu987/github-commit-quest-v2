@@ -20,3 +20,9 @@
 - Layout left to right: farmer (hat ~40 px inside the left edge) | uncle | ~60 px gap | kid (front) | old man (behind, right). Uncle's free arm on his belly; his pointing arm (screen-left) ends in open air well short of the farmer's face, not on the hive.
 - Kid: pot14 in the left hand, spoon14 in the right, spoon bowl solved onto pot_face_l at each hit, hits every 8 frames (3 per 36-frame burst), 35 deg swing.
 - Camera 18.5 mm so all four fit without clipping: heads ~115 px (below the ~150 target). Order of old man and kid swapped (the director's alternative) because the kid in front of the old man hid him.
+
+## v7 (shot 10 only, g664-764)
+- Old man dropped (no room for a clean face 120 px from the kid's head between uncle and kid). Farmer | uncle | kid.
+- Uncle: pointing arm level at farmer head height, fingertip in open air about 40-50 px short of the farmer's face, not touching the hive; free arm on belly.
+- Kid: pot14 in the left hand, my own thick dark-outlined spoon (handle ~7 px, overlay) in the right; the bowl rises in open air beside his head and hits the pot face every 8 frames (3 hits per 36-frame burst), held 2 frames on each hit and at the top.
+- Camera push shortened (0.08 m) so nobody touches the right edge. qa_auto PASS, phone_sheet.jpg refreshed.

@@ -30,7 +30,7 @@ CAMS = {
  7: (((-2.3, -0.3, 1.3), (-2.15, 3.3, 1.6), 22), ((-2.2, 0.1, 1.3), (-2.1, 3.3, 1.65), 22)),
  8: (((-2.2, 0.1, 1.3), (-2.0, 3.3, 1.45), 22), ((-1.9, 1.1, 1.45), (-2.0, 3.3, 1.65), 22)),
  9: (((-1.9, 1.3, 1.5), (-1.4, 3.3, 1.75), 24), ((-1.6, 1.45, 1.5), (-1.4, 3.3, 1.8), 24)),
- 10: (((-1.95, 0.0, 1.2), (-1.95, 3.2, 1.1), 18.5), ((-1.95, 0.25, 1.2), (-1.95, 3.2, 1.15), 18.5)),
+ 10: (((-1.95, 0.0, 1.2), (-1.95, 3.2, 1.1), 18.5), ((-1.95, 0.08, 1.2), (-1.95, 3.2, 1.15), 18.5)),
 }
 def cam_of(shot, g):
     a, b = CAMS[shot]; g0, g1 = RANGES[shot]; x = (g - g0) / float(g1 - g0)
@@ -72,6 +72,15 @@ def finger_overlay(hand, tip, ext, tapping=False):
               % (k, x1 - 0.05, y1 - 0.09, x1 + 0.09, y1 - 0.09))
     return o
 
+HIT8 = [0.0, 0.0, 0.45, 1.0, 1.0, 0.8, 0.4, 0.1]
+def spoon_overlay(h, b, th):
+    """a thick dark-outlined wooden spoon from the hand h to the bowl centre b (puppet-local D; 0.058 D handle ~ 7 px on the kid)."""
+    k = '#3a2832'; ang = math.degrees(th)
+    return ('<g stroke-linecap="round"><line x1="%.3f" y1="%.3f" x2="%.3f" y2="%.3f" stroke="%s" stroke-width="0.092"/>'
+            '<line x1="%.3f" y1="%.3f" x2="%.3f" y2="%.3f" stroke="#b9854d" stroke-width="0.056"/></g>'
+            '<g transform="translate(%.3f %.3f) rotate(%.1f)"><ellipse cx="0" cy="0" rx="0.13" ry="0.085" fill="#b9854d" stroke="%s" stroke-width="0.034"/></g>'
+            % (h[0], h[1], b[0], b[1], k, h[0], h[1], b[0], b[1], b[0], b[1], ang, k))
+
 def talk(p, g):
     if TALK[0] <= g <= TALK[1]: p['mouth'] = cast14.talk_mouth(g, 1.0)
     return p
@@ -96,6 +105,7 @@ def farmer_hold(g):
     p['lean'] = 2 + 0.8 * sway(g); p['t'] = g / 30.0; p['blink'] = blink(g, 30); p['yaw'] = 0.4
     return c, p
 
+UNCLE_TIP = 1.62
 NOSE = (0.045, 0.05)          # nose tip, puppet-local D (uncle, yaw 0.2)
 def uncle_pose(shot, g):
     ov = None
@@ -150,20 +160,21 @@ def frame(T, shot, g):
         rep['farmer'] = T.put('farmer', c, p, (-3.0, 3.3, 0), ppd=ppd, canvas=cast14.CANVAS14[c])
         # UNCLE = uncle_point_mock, mirrored so he points screen-left; held laugh mouth (never talk_mouth here)
         c, p = story('uncle_point_mock'); p['t'] = g / 30.0; p['blink'] = blink(g, 12); p['expr'] = 'laughing'; p['mouth'] = 'talk_b'; p['lean'] = p.get('lean', 0) + 1.5 * math.sin(g * 0.55); p['arm_l'] = dict(hand=(-0.25, 0.8), bend=0.9)
+        p['arm_r'] = solve_tip(c, dict(p, arm_r=dict(hand=(1.2, 0.1), shape='point', bend=-0.1, stretch=1.3)), 'arm_r', (UNCLE_TIP, 0.08))
         rep['uncle'] = T.put('uncle', c, p, (-1.65, 3.1, 0), ppd=ppd, canvas=cast14.CANVAS14[c], mirror=True)
-        # OLD MAN = cackling on his stick (mirrored: faces the farmer)
-        c, p = laugh('villager_oldman_laugh', g, 3)
-        rep['old'] = T.put('old', c, p, (-0.2, 3.9, 0), ppd=ppd, canvas=cast14.CANVAS14[c], mirror=True)
-        # KID = bang_pot, spoon clearly visible, small vertical bobs every 8 frames, 3 hits per 36-frame burst
+        # KID = bang_pot: pot14 in one hand, my own thick outlined spoon (overlay) in the other; the bowl rises in open air beside his head and hits pot_face every 8 frames
         c, p = story('villager_kid_bang_pot'); p['t'] = g / 30.0; p['blink'] = blink(g, 20, 70); p['expr'] = 'laughing'; p['mouth'] = 'talk_b'
         ph = (g - 664) % 36
-        r = (0.5 - 0.5 * math.cos(2 * math.pi * (ph % 8) / 8.0)) if ph < 24 else 0.6          # 0 = bowl ON the pot face, 1 = raised (35 deg swing)
-        p['prop_l'] = dict(type='pot14', scale=1.0)
+        r = (HIT8[ph % 8] if ph < 24 else 0.7)                 # 0 = bowl on the pot face (held 2 frames), 1 = raised beside the head (held 2 frames)
+        p['prop_l'] = dict(type='pot14', scale=1.0); p.pop('prop_r', None)
         pf = puppet.figure(c, p, 'kp')['anchors']['pot_face_l']
-        p['prop_r'] = dict(type='spoon14', angle=130 + 35 * r, scale=1.0)
-        p['arm_r'] = dict(hand=(0.46, 0.3), bend=-0.5, stretch=1.1)
-        p['arm_r'] = solve_tip(c, p, 'arm_r', (pf[0] + 0.05 * r, pf[1] - 0.45 * r))
-        rep['kid'] = T.put('kid', c, p, (-0.68, 3.2, 0), ppd=ppd, canvas=cast14.CANVAS14[c], mirror=True)
+        Ls = 0.7; th0, th1 = 165.0, 235.0
+        hc = (pf[0] - Ls * math.cos(math.radians(th0)), pf[1] - Ls * math.sin(math.radians(th0))); hr = (1.05, 0.62)
+        hand = (lerp(hc[0], hr[0], r), lerp(hc[1], hr[1], r)); th = math.radians(lerp(th0, th1, r))
+        p['arm_r'] = dict(hand=hand, shape='ball', bend=-0.4, stretch=1.2)
+        bowl = (hand[0] + Ls * math.cos(th), hand[1] + Ls * math.sin(th))
+        ov = spoon_overlay(hand, bowl, th)
+        rep['kid'] = T.put('kid', c, p, (-0.72, 3.2, 0), ppd=ppd, canvas=cast14.CANVAS14[c], flip=True, overlay=ov)
     F.set_wire_push(-1.0); bpy.context.view_layer.update(); F.set_bees(-1.0)
     return rep
 
