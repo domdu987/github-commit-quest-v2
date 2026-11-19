@@ -1,0 +1,95 @@
+{
+ "take": "s01",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 0.0,
+   "duration": 2.5,
+   "frame": 0,
+   "end_frame": 75,
+   "kind": "ambience",
+   "label": "Maryland countryside, sunny day 1844: light breeze in the grass, larks, a distant cow; faint creak of the leaning ladder"
+  },
+  {
+   "time": 0.0,
+   "duration": 0.733,
+   "frame": 0,
+   "end_frame": 22,
+   "kind": "foley",
+   "label": "Morse's boots shift on the wooden rung, the coil of wire rattles softly on his arm",
+   "peak_frame": 8
+  },
+  {
+   "time": 0.733,
+   "duration": 0.433,
+   "frame": 22,
+   "end_frame": 35,
+   "kind": "accent",
+   "label": "snap push on 'คอขวดเบียร์': a short airy whoosh",
+   "peak_frame": 27
+  },
+  {
+   "time": 0.8,
+   "duration": 0.233,
+   "frame": 24,
+   "end_frame": 31,
+   "kind": "accent",
+   "label": "sun glint on the green glass: a bright tiny 'ting' sparkle",
+   "peak_frame": 25
+  },
+  {
+   "time": 1.133,
+   "duration": 0.433,
+   "frame": 34,
+   "end_frame": 47,
+   "kind": "foley",
+   "label": "the bottle comes down: soft glass-on-wood slide",
+   "peak_frame": 44
+  },
+  {
+   "time": 1.567,
+   "duration": 0.1,
+   "frame": 47,
+   "end_frame": 50,
+   "kind": "prop",
+   "label": "GLASS CLINK as the inverted bottle neck seats on the pole top (the hook's sound; clean, bright, short)",
+   "peak_frame": 47
+  },
+  {
+   "time": 1.567,
+   "duration": 0.3,
+   "frame": 47,
+   "end_frame": 56,
+   "kind": "accent",
+   "label": "star glint on the capped bottle: high glassy shimmer",
+   "peak_frame": 48
+  },
+  {
+   "time": 1.833,
+   "duration": 0.3,
+   "frame": 55,
+   "end_frame": 64,
+   "kind": "foley",
+   "label": "the copper wire is flicked up over the glass: a whippy wire swish, then a light tick as it settles on the glass",
+   "peak_frame": 63
+  },
+  {
+   "time": 2.167,
+   "duration": 0.133,
+   "frame": 65,
+   "end_frame": 69,
+   "kind": "accent",
+   "label": "Morse's small pleased 'hm' smile (no voice; a soft pizzicato pluck)",
+   "peak_frame": 66
+  },
+  {
+   "time": 2.3,
+   "duration": 0.0,
+   "frame": 69,
+   "end_frame": 69,
+   "kind": "cut",
+   "label": "hard cut to shot 2 (line_wide, whip arrival): ambience continues, same place"
+  }
+ ]
+}
