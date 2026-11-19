@@ -55,6 +55,12 @@ class Stage:
             self.cam = F.make_camera(F.cam_from(tuple(c * U for c in loc3), tuple(c * U for c in look3), lens=36.0))
             self.cam.animation_data_clear(); self.cam.data.lens = 36.0
             self.cam.location = Vector(F.cam_from(tuple(c * U for c in loc3), tuple(c * U for c in look3), lens=36.0)['loc']) if False else self.cam.location
+        if n == 4:                                           # a little fill on the bar so it reads red / white in the backlight
+            for o in [F.STATE['J']['bar']] + list(F.STATE['J']['bar'].children_recursive):
+                for m in (o.data.materials if o.type == 'MESH' else []):
+                    col = (0.80, 0.10, 0.09, 1.0) if m.name.endswith('barR') else (0.93, 0.90, 0.88, 1.0)
+                    nt = m.node_tree; nt.nodes.clear(); out = nt.nodes.new('ShaderNodeOutputMaterial'); em = nt.nodes.new('ShaderNodeEmission')
+                    em.inputs['Color'].default_value = col; em.inputs['Strength'].default_value = 0.9; nt.links.new(em.outputs[0], out.inputs['Surface'])
         sc.frame_set(int(round(g)))
         self.cl = tuple(self.cam.location)
         self.bar = Vector((0.0, F.STATE['J']['y'] * U, F.bar_height_m() * U))
@@ -208,7 +214,7 @@ def build_frame(g, quality='final'):
         lp = c0 + ax * ((land.y - 0.5 - c0.y) / ax.y)
         F.sawdust_spray(168, (lp.x, land.y - 0.5, PIT + 0.2), strength=1.9, seed=2)
         F.sawdust_spray(171, (lp.x - 0.8, land.y - 0.5, PIT + 0.2), strength=1.3, seed=5)
-        for tag, cast, dd, lt, k in (('b2', 'boy2', 8.4, -2.6, 0.2), ('b3', 'boy3', 8.4, 2.6, 1.9)):
+        for tag, cast, dd, lt, k in (('b2', 'boy2', 8.4, -2.95, 0.2), ('b3', 'boy3', 8.4, 2.6, 1.9)):
             pos = cam_rel(S, dd, lt); pos.z = 0.0
             gz = (0.8 if lt < 0 else -0.8)
             S.card(tag, cast, idle(cast, k, pose_name='gape' if g >= 152 else 'stand', gaze=(gz, 0.0) if g < 152 else (gz, 0.2)), mark=(pos.x, pos.y, 0.0), facing=S.facing(pos, (hp.x, hp.y, 0)))
@@ -240,14 +246,15 @@ if __name__ == '__main__':
             out = os.path.join(od, 'g_%04d.png' % g)
             if os.path.exists(out): continue
             t = time.time()
-            if 108 <= g <= 111:                    # real whip: 3 sub-frames averaged = 1-3 frames of streak
+            if 108 <= g <= 111:                    # real whip: 12 sub-frames averaged (g108 only forward of the cut)
                 import numpy as np
                 from PIL import Image
                 acc = None; w = c = 0
-                for dg in (-0.4, 0.0, 0.4):
+                offs = [i * 0.9 / 11.0 for i in range(12)] if g == 108 else [-0.45 + i * 0.9 / 11.0 for i in range(12)]
+                for dg in offs:
                     S = build_frame(g + dg, q); w1, c1 = F.T.render(out + '.t.png'); w += w1; c += c1
                     im = np.asarray(Image.open(out + '.t.png').convert('RGB'), np.float32); acc = im if acc is None else acc + im
-                Image.fromarray((acc / 3).round().astype(np.uint8)).save(out); os.remove(out + '.t.png')
+                Image.fromarray((acc / len(offs)).round().astype(np.uint8)).save(out); os.remove(out + '.t.png')
             else:
                 S = build_frame(g, q); w, c = F.T.render(out)
             log.write('%d %.1f %.1f %s\n' % (g, w, c, json.dumps(info(S)))); log.flush(); print(g, round(time.time() - t, 1), flush=True)
