@@ -17,13 +17,14 @@ WP = [
     (LAST,  0.80,  0.20, (-1.00, 1.80, 1.10), 0.05),
 ]
 SNAP = (688, 704)
+SNAP2 = (712, 724)
 
 
 def cam_of(g):
     for (g0, *a), (g1, *b) in zip(WP[:-1], WP[1:]):
         if g0 <= g <= g1:
             u = (g - g0) / float(g1 - g0)
-            u = ease(u) if (g0, g1) == SNAP else mix(u, 0.25)
+            u = ease(u) if (g0, g1) in (SNAP, SNAP2) else mix(u, 0.25)
             if (g0, g1) == SNAP: u = clamp(u + 0.0)
             s = lerp(a[0], b[0], u); lat = lerp(a[1], b[1], u); L = Vector([lerp(x, y, u) for x, y in zip(a[2], b[2])]); dz = lerp(a[3], b[3], u)
             d = BASE_C - BASE_L
