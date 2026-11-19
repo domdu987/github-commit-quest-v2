@@ -33,7 +33,7 @@ def cam29(g):
 def cam30(g):
     t = (g - 1789) / 84.0
     P0 = Vector((0.55, 1.4, 3.0)); L0 = Vector((-0.1, 8.0, 1.8))
-    P1 = Vector((0.75, -3.4, 4.1)); L1 = Vector((-0.2, 6.5, 2.0))
+    P1 = Vector((0.75, -1.8, 3.7)); L1 = Vector((-0.2, 6.5, 2.0))
     u = 0.3 * smooth(t) + 0.7 * t
     s = snap(g, 1822, 14)                         # mid snap: swing left and tilt
     P = P0 + (P1 - P0) * u + Vector((-0.5 * s + 0.5 * smooth((g - 1850) / 14.0), 0, 0))
@@ -117,7 +117,7 @@ class Take(object):
     def key_frames(self, gs):
         for g in gs:
             P, Lk = CAMF[self.shot](g); camrig.key_camera(g, P, Lk, cam=self.cam, interp="LINEAR", easing="AUTO")
-            K.key_life(g, g)
+            K.key_life(g, g, dust=0.45)
             for a in self.acts:
                 x, y, z, fz, who = self.A["marks"][a.mark]; sc = a.sc
                 bob = 0.0
