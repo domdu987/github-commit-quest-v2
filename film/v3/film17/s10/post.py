@@ -52,7 +52,7 @@ for g in range(S.FIRST, S.LAST + 1):
     d = (pos(hi) - pos(lo)) / max(hi - lo, 1)
     L = float(np.hypot(*d))
     tab[g] = (L, math.atan2(d[1], d[0]))
-    Lb = min(0.55 * L, 170.0) * scale
+    Lb = (min(0.3 * L, 100.0) * scale) if L >= 100 else 0.0
     src = os.path.join(raw, "g_%04d.png" % g)
     if not os.path.exists(src):
         continue

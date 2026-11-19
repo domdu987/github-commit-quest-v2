@@ -255,7 +255,7 @@ class Take(object):
         for g in gs:
             f = g - FIRST + 1
             t = drawer_t(g)
-            ba.place(f, (-0.30, 1.12 + 0.36 * t, 0.0), scale=bsc)
+            ba.place(f, (-0.30, 1.12 + 0.36 * t, 0.0) if g < 1411 else (60.0, 60.0, -60.0), scale=bsc)   # leaves during the snap peak (no floating hand in shots 25-26)
         for g in gs:
             f = g - FIRST + 1
             self.scene.frame_set(f)
