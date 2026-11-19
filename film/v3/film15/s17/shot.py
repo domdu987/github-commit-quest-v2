@@ -71,9 +71,13 @@ def cam_at(n, g):
     if n == 21: lk = cam_path(a, b, g, g0, g1, mix=0.0)             # whip: linear fast pan (blur-free: frames are crisp)
     else: lk = cam_path(a, b, g, g0, g1)
     if n == 23: lk = push_extra(lk, 26, gof(41.7) - 2, g, 10)
-    if n == 18: lk = push_extra(push_extra(lk, 14, 996, g, 8), 14, 1004, g, 8)
+    if n == 18:
+        lk = push_extra(push_extra(lk, 22, 996, g, 7), 20, 1004, g, 7); z = 1.5 * ez(g, 995, 1003) * (1 - ez(g, 1006, 1013)); lk = (lk[0], (lk[1][0], lk[1][1], lk[1][2] - z * 0.0 + 0.0))
+        lk = (lk[0], (lk[1][0] + 0.0, lk[1][1], lk[1][2] + 1.2 * ez(g, 996, 1003) - 1.2 * ez(g, 1005, 1012)))
+    if n == 19: w = 1 - ez(g, B[19], B[19] + 9); lk = (lk[0], (lk[1][0] + 5.5 * w, lk[1][1] - 2.0 * w, lk[1][2] + 0.6 * w))
+    if n == 20: lk = (lk[0], (lk[1][0], lk[1][1], lk[1][2] - 1.5 * (1 - ez(g, B[20], B[20] + 15))))
     if n == 19: lk = push_extra(lk, 22, B[19] + 22, g, 9)
-    if n == 20: lk = push_extra(push_extra(lk, 20, gof(36.72) - 4, g, 10), 10, B[20] + 18, g, 9)
+    if n == 20: lk = push_extra(push_extra(lk, 30, gof(36.72) - 4, g, 8), 12, B[20] + 24, g, 8)
     if n == 24: lk = push_extra(push_extra(lk, 18, 1281, g, 8), 16, gof(43.32) - 4, g, 8)
     return lk
 
