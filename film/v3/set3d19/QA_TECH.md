@@ -42,3 +42,37 @@ t_anim.py: ALL OK (82 checks). Hooks/presets/marks in SPEC.md all present in API
     - FAIL: hall_wide (764-926), hall_window (793).
     - UNVERIFIED: all ship presets. cost_report lists no heads for S01-S07. The deck marks (captain_wheel, william_rail, sailor_a..c, astro_deck, crew_bow) and shore marks were not projected into y 450-760. t_anim only checks that the marks exist. Fix: add placeholder staging for ship presets and print head_pixels per tile.
 17. Stale/inconsistent inputs: ship_work tiles (DAY/NOON/STORM_DUSK x6) are a different render set to h19_work S01-S07 (different times, cost numbers disagree: aerial 39.7 vs 43.4). Contact tile labels use the h19_work set. Fix: keep one set and regenerate both reports from it.
+
+## Round 2
+
+**VERDICT: FAIL (two small items: S06 orange slab, S05 band hot spot)**
+
+t_anim.py: ALL OK (82 checks). Tiles inspected at full size (W03/W05/W06/W07, H01/H05/H07/H09, S03/S05/S06/S07) plus pixel stats of y 880-950 for every tile. Caption shade card removed on purpose, not demanded.
+
+### Round-1 status
+1 Cost: FIXED. cost_report max 38.4 (W05), ship_cost max 37.7. Reports differ by up to 4 s on the same tile (different runs), both under 40. W05 margin is thin.
+2 Magenta: FIXED. Max 6.9 % (S06 STORM), all under 10 %.
+3 Hue missing: FIXED. All S and ship tiles now measured. Deck/rail/rocks sit in 225-265. Open-sea tiles referred to QA-art: ship_hero NOON 216.7, ship_hero STORM_DUSK 210.4, ship_aerial NOON 212.4, ship_aerial STORM_DUSK 213.5, ship_coast NOON/DAY 204.8/205.2 (S01, S02, S07 on the contact).
+4 H01/H02 heads: FIXED. Heads 600-743, chins at most 783. Mocker feet 898 and harrison feet 943 sit in the band (feet only, accepted).
+5 H07/H08: FIXED. Head 689, chin 751, 122 px.
+6 H03/H04 FG: FIXED. Band mean 33, no bright papers.
+7 Caption band: mostly FIXED. Interiors have band mean 23-112, clipped share 0. Remaining items below (S05, S02, S07).
+8 Floating props: FIXED. W07 plank lies on the floor and the telescope stands on its tripod legs.
+9 Geometry: FIXED. Deck rail and mast are textured, the hull is wood, the rocks are smoother, the doorway is open.
+10 Empty areas: FIXED. H09 shows a corridor and W07 a garden. S02 lower half is still plain glitter water (acceptable for an aerial).
+11 Blown-out: partly FIXED. H09, W03 and H03 are fine. S05 glitter still blown out (see N1).
+12 Blur: FIXED. W05 and H07 are crisp at full size.
+13 Text: FIXED. No readable text.
+14 Black areas: FIXED. The boat interior is now plank. NIGHT tiles are 7-11 % near-black by design, with no voids.
+15 Slivers: FIXED. Gear train is continuous on W06; no z-fight seen on S03.
+16 Ship heads: FIXED. y 590-689, chins at most 733, listed in ship_heads.txt.
+17 Stale inputs: FIXED. Contact sheets and both reports are from consistent runs.
+
+### New failures
+N1. S05_ship_rail_NOON (also ship_rail NOON/DAY): foam and glitter clip to white across x 523-719 inside the band, 7.6 % of band pixels at 240 or above (DAY 9.1 %). A glaring hot spot. Fix: lower sun glitter/foam strength, or tilt the camera so the sea sits above y 880.
+N2. S06_ship_rocks_STORM and ship_rocks NOON/DAY/STORM: a saturated flat orange and yellow slab at top right, with no shading, reads as placeholder geometry and is out of palette. Fix: give it a material (wood/canvas) or remove or dim it.
+
+### Notes, not failed
+- S07_ship_coast band mean 217 (bright sand, no heads or text in the band, 0.8 % clipped). Consider a slightly darker sand FG.
+- S02_ship_aerial band has 3.2 % clipped glitter at x 30-136. Minor.
+- W05 cost 38.4 s has little margin.
