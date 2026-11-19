@@ -1,2 +1,2 @@
 {"take":"s07","shots":[16,17,18,19],"g0":850,"g1":1045,"first_g":844,"last_g":1051,"n_frames":208,"fps":30,"resolution":"720x1280","samples":16,"cuts_g":[900,948,996],
- "transition_in":{"type":"dissolve","frames":11},"take_file":"take.mkv.part00..02 (cat take.mkv.part* > take.mkv; libx264rgb crf6)","branch":"render17/team6"}
+ "transition_in":{"type":"dissolve","frames":11},"take_file":"take.mkv.part00..02 (cat take.mkv.part* > take.mkv; libx264rgb crf6)","branch":"render17/team6","rhythm":{"median":8.46,"p90":20.56}}
