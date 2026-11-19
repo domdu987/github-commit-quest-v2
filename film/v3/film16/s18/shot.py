@@ -23,28 +23,30 @@ Q0, Q1 = C.g_of(38.46), C.g_of(40.80)            # lip-sync window 1157 .. 1227
 G_LAUGH = Q0 - 3                                  # expression change on the closed frame of a blink
 G_WORD = C.g_of(40.12)                            # 1207 "ใต้ดินแล้ว"
 SNAP = (G_WORD - 3, G_WORD + 9)
-V = 3.0 / 30.0                                    # buggy speed, D per frame
+V = 0.45 / 30.0                                    # the buggy rolls gently past Morse's group (taunting over his shoulder)
 X0 = 62.0
 bx = lambda g: X0 + V * (g - GA)
+MX = lambda g: bx(g) - 0.65                       # the mocker's world x (the buggy mark)
 
-SUBJ0 = Vector((X0 - 0.15, -2.3, 3.5))             # mocker's chest / head, road
-OFF = Vector((0.7, -3.75, -1.2))                   # camera: furrow side, low (z ~ 1.3), pitch ~ 16 deg
-CAM = C.CamPath(SUBJ0 + OFF, SUBJ0, GA, GZ, push=0.05, slide_px=50.0, arc_deg_s=12.0, decay=0.1,
-                snaps=[dict(g=SNAP, k=1.4, peak=1.9, shift=(-0.8, 0.0))])
-WIDE_OFF = Vector((1.5, -10.5, -1.6))
-G_ARRIVE = 1160                                    # the opening wide reframes onto the mocker by the time the lips start
-
+# camera on the FIELD side (+y) of the buggy looking -y: the near side panel + a wheel in the foreground, the mocker seated above them, behind
+# him the road, the furrow, the pole line and Morse's group (which he points at).  +x (the buggy's heading) is screen-LEFT, so the mule is on the left.
+SUBJ0 = Vector((X0 - 0.15 - 0.9, -2.3, 3.7))
+OFF = Vector((0.3, 4.5, -1.7))
+CAM = C.CamPath(SUBJ0 + OFF, SUBJ0, GA, GZ, push=0.05, slide_px=28.0, arc_deg_s=9.0, decay=0.1,
+                snaps=[dict(g=SNAP, k=1.8, peak=1.9, shift=(-0.8, 0.0))])
+WIDE_OFF = Vector((0.4, 6.4, -1.4))
+G_ARRIVE = 1138                                    # the (short) opening wide reframes onto the mocker well before the lips start
+GROUP = dict(morse=(59.5, -6.0), wa=(58.5, -6.8), wb=(60.6, -7.0))        # world x, y at the furrow edge, behind the buggy
 
 
 def cam_pose(g):
     loc, look = CAM.at(g)
-    d = Vector((1.0 * V * (g - GA), 0, 0))
+    d = Vector((0.55 * V * (g - GA), 0, 0))
     loc, look = loc + d, look + d
-    w = 1.0 - u_of(g, GA + 6, G_ARRIVE, "quint")           # 1 = opening wide (mocker, buggy, mule head), 0 = the medium
+    w = 1.0 - u_of(g, GA + 4, G_ARRIVE, "quint")           # 1 = opening wide (mocker, buggy, mule), 0 = the medium
     if w > 0:
-        wl = Vector((X0 + 3.9, -2.3, 3.0)) + Vector((V * (g - GA) * 1.0, 0, 0))
-        wloc = wl + WIDE_OFF
-        loc, look = loc.lerp(wloc, w), look.lerp(wl, w)
+        wl = Vector((X0 - 0.4, -2.3, 3.3)) + d
+        loc, look = loc.lerp(wl + WIDE_OFF, w), look.lerp(wl, w)
     return loc, look
 
 
@@ -66,6 +68,7 @@ def mocker_pose(g):
     laugh = u_of(g, G_LAUGH, G_LAUGH + 6)
     p["squash"] = (1.01 + 0.035 * ph * laugh, 0.99 - 0.035 * ph * laugh)
     p["head_roll"] = p.get("head_roll", 0) + 3.0 * math.sin(g * 0.2)
+    p["yaw"] = lerp(0.45, 0.78, u_of(g, G_WORD - 6, G_WORD + 2))          # turns his head toward Morse's group on "ใต้ดินแล้ว"
     p["t"] = g / 30.0
     return p, 0.09 * ph * laugh
 
@@ -128,15 +131,24 @@ class Take(C.Take):
         sd = os.path.join(WORK, "sprites")
         TG.set_buggy(bx(GA), frame=bf(GA))
         texture_buggy()
+        for o in bpy.data.objects:
+            if o.name.startswith("buggy_leather"):
+                o.hide_render = True              # the red seat slab hid the seated mocker
         self.moc = self.actors["moc"] = C.make_actor("moc", "mocker", sd, canvas=cast16.CANVAS16["mocker"], cam=self.cam)
-        self.mul = self.actors["mul"] = C.make_actor("mul", "mule", sd, canvas=cast16.CANVAS16_BUGGY["mule"], cam=self.cam, head_flip=False)
+        self.mul = self.actors["mul"] = C.make_actor("mul", "mule", sd, canvas=cast16.CANVAS16_BUGGY["mule"], cam=self.cam)
         self.mk = {}
+        self.grp = {}
+        for nm, cast_ in (("morse", "morse16"), ("wa", cast16.key16("worker_a")), ("wb", cast16.key16("worker_b"))):
+            self.grp[nm] = self.actors["g_" + nm] = C.make_actor("g_" + nm, cast_, sd, cam=self.cam)
 
     def pose(self, gs):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *cam_pose(g))
             TG.set_buggy(bx(g), frame=f)
+            for o in bpy.data.objects:
+                if o.name.startswith("buggy_leather"):
+                    C.key_vis(o, False, f)                    # the red seat slab hid the seated mocker (visibility is keyed by set_buggy: re-key it)
             rt = TG.STATE["buggy"]["root"]
             rt.location.z += bob(g)
             rt.keyframe_insert("location", frame=f)
@@ -145,13 +157,23 @@ class Take(C.Take):
             mm, ml = m["mocker_buggy"], m["mule_buggy"]
             C.place(self.moc, f, (mm[0], mm[1], mm[2] + bounce + bob(g)))
             C.place(self.mul, f, (ml[0] - 2.4, ml[1], ml[2] + bob(g, 1.3, 0.04)))
+            for nm, (gx, gy) in GROUP.items():
+                C.place(self.grp[nm], f, (gx, gy, 0.0))
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
             self.moc.pose(f, mocker_pose(g)[0], camera=self.cam)
-            mp = cast16.cycle("mule", g / 30.0, "walk", 1, dict(harness=2))
+            mp = cast16.cycle("mule", g / 40.0, "walk", -1, dict(harness=2))
             self.mul.pose(f, mp, camera=self.cam)
-        self.sprites_for([(self.moc, 256), (self.mul, 256)], [bf(g) for g in gs])
+            gp = {"morse": dict(cast16.STORY16["morse_clutch_coil"][1], mirror=True),
+                  "wa": dict(cast16.STORY16["worker_a_lean_shovel"][1], mirror=True),
+                  "wb": dict(cast16.STORY16["worker_b_lean_shovel"][1], mirror=True)}
+            for nm, pp in gp.items():
+                pp["lean"] = pp.get("lean", 0) + 2.0 * math.sin(g * 0.13 + len(nm))
+                pp["blink"] = blink(g, [1125 + 7 * len(nm), 1170 + 5 * len(nm), 1210])
+                pp["t"] = g / 30.0
+                self.grp[nm].pose(f, pp, camera=self.cam)
+        self.sprites_for([(self.moc, 256), (self.mul, 256), (self.grp['morse'], 256), (self.grp['wa'], 256), (self.grp['wb'], 256)], [bf(g) for g in gs])
 
     def report(self, g):
         f = bf(g)
