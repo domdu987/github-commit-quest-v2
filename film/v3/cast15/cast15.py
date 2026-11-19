@@ -1051,19 +1051,19 @@ def _arch(c, lean, hdx, hdy, roll, ang, depth, kn=-1, spread=12, **kw):
 
 
 def _p_flop_head(c):      # head and shoulders already past the bar, hips rising, legs still trailing nearly straight
-    return _arch(c, 106, 0.30, 0.55, 12, 122, 1.8, -0.5, 10)
+    return _arch(c, 108, 0.08, 0.14, 16, 122, 1.8, -0.5, 10)
 
 
 def _p_flop_back(c):      # the arch almost complete, knees starting to bend
-    return _arch(c, 122, 0.30, 0.48, 14, 110, 1.7, -0.7, 10)
+    return _arch(c, 123, 0.08, 0.14, 18, 110, 1.7, -0.7, 10)
 
 
 def _p_flop(c):           # THE FLOP: a symmetric upside-down U, belly up
-    return _arch(c, 131, 0.30, 0.42, 15, 100, 1.5, -1, 12)
+    return _arch(c, 133, 0.08, 0.14, 20, 100, 1.5, -1, 12)
 
 
 def _p_flop_flick(c):     # legs kicked up and over: jack-knife into an L
-    return J(c, lean=118, yaw=-0.9, roll=14, hdx=0.30, hdy=0.50, expr="happy", arm_r=(94, 0.95, 0.3), arm_l=(112, 0.95, 0.3, BACK),
+    return J(c, lean=120, yaw=-0.9, roll=16, hdx=0.08, hdy=0.14, expr="happy", arm_r=(94, 0.95, 0.3), arm_l=(112, 0.95, 0.3, BACK),
              leg_l=(-108, 1.05, 0.0), leg_r=(-92, 1.05, 0.0))
 
 
@@ -1213,7 +1213,7 @@ def _p_coach_sigh(c):
 
 
 def _p_coach_clumsy_flop(c):   # a sagging, badly arched backwards flop: low hips, flailing arms, legs everywhere
-    return J(c, lean=118, yaw=-0.8, roll=30, hdx=0.30, hdy=0.30, expr="shocked", mouth="o", arm_r=(-50, 1.05, -0.5), arm_l=(-155, 1.05, 0.5, BACK),
+    return J(c, lean=120, yaw=-0.8, roll=30, hdx=0.10, hdy=0.12, expr="shocked", mouth="o", arm_r=(-50, 1.05, -0.5), arm_l=(-155, 1.05, 0.5, BACK),
              leg_r=(-40, 1.0, -0.3), leg_l=(112, 0.80, -1.0))
 
 
