@@ -1,11 +1,31 @@
 #!/usr/bin/env python3
 """shot.py -- film 16 take s01 = shot 1, THE HOOK (g 0..68 + 6 out-handle frames g 69..74; hard cut to shot 2 at g 69), LINE line_close / DAY.
-"ชายคนนี้เอา คอขวดเบียร์ ไปคว่ำไว้บน ..." -- v2 after the QA-art / TAKE gate: Morse stands one rung lower along the ladder so his head is
-clearly BESIDE the bottle (not behind it), the glass is clear dense bottle-green (alpha 1 + transmission: no grain), the camera is higher
-(more ground and poles in the first second) and keeps the glass top and the wire in frame, the hand drops away from his face after the flick.
-s23 (callback, AFTER_RAIN) is this file with the shot 23 timing: same camera, same marks.
+"ชายคนนี้เอา คอขวดเบียร์ ไปคว่ำไว้บน ..." -- v3: same setup as s23 (the callback): head beside the bottle, free hand below the chin, wire falls onto the glass and bounces before the ring appears.
 
-    python3 shot.py probe a:b[:step] | camreport | stills a:b[:step] out [scale] [samples] | final a:b[:step] [scale] [samples]
+LINE line_close / DAY (the plan's light; the approved hook tiles L01 AFTER_RAIN / L02 DAY share the camera and set state, and
+shot 23 repeats this framing in AFTER_RAIN).  Morse stands on the leaning ladder at mark morse_ladder (rung 12) beside hero pole 1.
+    g  0..21  he holds the big inverted green bottle up over the bare pole top; camera already moving (push + slide + arc)
+    g 22..35  SNAP push x2.8 with a sideways pan on "คอขวดเบียร์" (event g 24): the held bottle flashes a sun glint (g 24..31)
+    g 34..47  he lowers the bottle mouth-down onto the pole top; g 47 CONTACT (glass clink): the set's peg + bottle switch on
+              (peg1_wood / peg1_glass / peg1_glintm visible), the hand-held copy switches off, a star glint flashes (g 47..56)
+    g 51..53  blink; the pose switches cap -> drape (morse_drape_wire, coil on the other arm)
+    g 52..64  the raised hand takes the wire at the coil on his other arm (the slack wire runs pole 0 -> coil -> pole 2 until
+              then) and flicks it up over the glass; it overshoots and settles
+    g 65      the set's wire spans 0 + 1 and the wrap ring (peg1_wiremat) switch on, the per-frame slack wire off
+    g 66..74  pleased look (behind the blink at g 65), idle sway; the camera keeps moving through the handle (cut at g 69)
+Mouths: nobody speaks (no quote): expression mouths only.  NO depth of field, NO text.
+
+The camera (c16.CamPath): low, on the road side of the ladder looking up 33 deg past the ladder rails (lower right of the frame)
+at Morse and the pole top; the trees and the wheat fill the bottom.  Drift push 10 %/s + slide 60 px/s + arc 14 deg/s round the
+subject, decaying to 75 % (still moving on the last frame: hard cut), plus the snap.  The values were tuned on drafts for the
+frame-diff target (QA.md): x1.35 / 16 f snaps and pure pushes gave median 2.3 / p90 4.3.
+
+    python3 shot.py probe a:b[:step]                       numbers only (camera, heads, hand errors), no render
+    python3 shot.py camreport                              CamPath corner speed per frame (never parked check), no bpy scene
+    python3 shot.py stills a:b[:step] <out_dir> [scale] [samples]
+    python3 shot.py final a:b[:step] [scale] [samples]     -> raw/g_%04d.png + .json (resumable; run 2 processes, e.g. 0:74:2 / 1:74:2)
+    python3 shot.py final 0:74:2 0.5 6                     DRAFT (360x640, 6 spp) -> work/draft/ (same loop)
+    python3 deliver.py                                     -> frames/, take.mkv, meta.json, cues.json, contact.jpg, framediff numbers
 """
 import math, os, sys, json
 
@@ -19,12 +39,12 @@ lerp, clamp, blink, ez, u_of, bf = C.lerp, C.clamp, C.blink, C.ez, C.u_of, C.bf
 WORK = os.path.join(HERE, "work")
 
 # ----------------------------------------------------------------------------- timing (film frames g)
-G0, G1 = C.g_bound(0.00), C.g_bound(2.31)     # 0, 69: shot 1 = g 0..68; shot 2 (hard cut) starts at 69
-H_IN, H_OUT = 0, 6                              # no handle before g 0 (the film opens here); out-handle g 69..74
+G0, G1 = C.g_bound(0.00), C.g_bound(2.31)     # 0, 69
+H_IN, H_OUT = 0, 6
 G_FIRST = G0 - H_IN
-G_LAST = G1 + H_OUT - 1                        # 74
+G_LAST = G1 + H_OUT - 1
 GS = list(range(G_FIRST, G_LAST + 1))
-G_WORD = 24                                    # caption "คอขวดเบียร์" (0.71 s)
+G_WORD = 24
 G_INV = 50
 SNAP = (G_WORD - 2, G_WORD + 11)
 G_GLINT1 = (G_WORD, G_WORD + 7)                # sun glint on the held bottle
@@ -32,10 +52,11 @@ G_LOWER = (34, 47)
 G_CAP = 47
 G_GLINT2 = (G_CAP, G_CAP + 9)
 G_SWAP = 52
-G_PICK = (52, 55)
-G_FLICK = (55, 61)
-G_SETTLE = (61, 64)
-G_WIRE = 65
+G_PICK = (53, 56)
+G_FLICK = (56, 60)
+G_SETTLE = (60, 67)
+G_WIRE = 67
+HAND_DOWN = (G_CAP + 1, G_PICK[0])                  # after the cap the free hand comes down the pole side to chest height (never across the face)
 BLINKS = [11, G_SWAP - 1, G_WIRE]              # blink(g, starts): half, closed, half
 G_HAPPY = G_SWAP                           # expression change on the closed frame of the last blink
 
@@ -60,8 +81,8 @@ CANVAS = (-2.25, -4.75, 2.25, 0.125)           # taller than CANVAS16['morse16']
 CAM_LOC0 = (2.3, -2.6, 5.3)                    # low, SW of the ladder, looking up ~38 deg (card limit: 50 deg)
 CAM_LOOK0 = (7.4, -7.9, 8.8)                 # subject point: Morse's raised hand / the pole top (lower = less empty sky)
 CAM_START = 1.0                               # frame 0 starts 0.92 of the way from the look point to CAM_LOC0 (head ~92 px; the snap takes it to ~190)
-CAM = C.CamPath(Vector(CAM_LOOK0).lerp(Vector(CAM_LOC0), CAM_START), CAM_LOOK0, G0, G_LAST, push=0.06, slide_px=75.0, rise_px=0.0,
-                arc_deg_s=24.0, decay=0.25, snaps=[dict(g=SNAP, k=2.4, peak=2.0, shift=(-0.7, 0.0))])
+CAM = C.CamPath(Vector(CAM_LOOK0).lerp(Vector(CAM_LOC0), CAM_START), CAM_LOOK0, G0, G_LAST, push=0.06, slide_px=60.0, rise_px=0.0,
+                arc_deg_s=18.0, decay=0.25, snaps=[dict(g=SNAP, k=2.5, peak=2.3, shift=(-0.3, 0.0)), dict(g=(54, 66), k=1.0, peak=1.9, shift=(-0.45, 0.55))])
 
 
 MARK_SHIFT = Vector((-0.25, -0.22, -0.6))      # Morse stands ~1 rung lower ALONG the ladder: his head clears the bottle body (QA-art: bottle merged with his head)
@@ -77,7 +98,7 @@ def tune_look(wet_pole):
     bs.inputs["Base Color"].default_value = (0.02, 0.30, 0.07, 1.0)
     bs.inputs["Emission Strength"].default_value = 0.22
     if wet_pole:
-        darken(M["pole"], (0.36, 0.33, 0.40), 0.26)
+        darken(M["pole"], (0.27, 0.25, 0.31), 0.20)
 
 
 def darken(mat, tint, rough):
@@ -110,20 +131,21 @@ def bottle_xf(g):
 
 
 def wire_point(g, coil):
-    """world point the slack wire is held at (where its two half spans meet) at frame g.  coil = world point of the coil on his
-    arm this frame (Take.coil_at): before the pick the wire runs from pole 0 to the COIL and on to pole 2 (it pays out of the coil;
-    a nail on the pole put the pole-0 half across his face in this camera), then the raised hand flicks it up over the glass."""
-    top = K.W(BOTTLE_TOP_SB(POLE))
-    if g < G_PICK[1]:
+    """world point the slack wire is held at (where its two half spans meet) at frame g.  Until G_FLICK it runs pole 0 -> coil (on his
+    arm, chest height) -> pole 2.  The flick lifts it in an arc up and over the glass; it then FALLS onto the glass and bounces twice
+    (damped) before the wrap ring appears."""
+    top = Vector(K.W(BOTTLE_TOP_SB(POLE)))
+    if g < G_FLICK[0]:
         return Vector(coil)
     if g < G_FLICK[1]:
         u = u_of(g, *G_FLICK, kind="sine")
-        over = Vector(top) + Vector((0, 0, FLICK_UP))
+        over = top + Vector((0, 0, FLICK_UP))
         mid = Vector(coil).lerp(over, u)
         mid.z += 0.35 * math.sin(math.pi * u)                           # arcs up and over, not through the glass
         return mid
-    u = u_of(g, *G_SETTLE)
-    return (Vector(top) + Vector((0, 0, FLICK_UP))).lerp(Vector(top), u)
+    t = g - G_FLICK[1]
+    h = FLICK_UP * math.exp(-0.45 * t) * abs(math.cos(0.55 * math.pi * t))
+    return top + Vector((0, 0, h))
 
 
 def wire_sag(g):
@@ -165,17 +187,23 @@ def self_mark():
 
 
 def hands_of(g, coil):
-    """pinned raised hand (arm_r of the UNMIRRORED figure): world targets."""
-    if g < G_SWAP:
+    """pinned raised hand (arm_r of the UNMIRRORED figure): world targets.  The hand never goes above his chin after the cap: it comes
+    down the pole side to W1, takes the wire at the coil (chest height) and the wire flies up by itself."""
+    mk = self_mark()
+    w1 = mk + Vector((0.60, 0.52, 2.2))
+    if g < HAND_DOWN[0]:
         m, _ = bottle_xf(min(g, G_CAP))
         return {"r": {"hand": tuple(m + Vector((0, 0, NECK)))}}         # the fist round the neck
+    neck = Vector(TOP()) + Vector((0, 0, NECK))
+    if g < G_PICK[0]:
+        return {"r": {"hand": tuple(neck.lerp(w1, u_of(g, *HAND_DOWN)))}}
     if g < G_PICK[1]:
-        a = Vector(TOP()) + Vector((0, 0, NECK))
-        return {"r": {"hand": tuple(a.lerp(Vector(coil), u_of(g, *G_PICK)))}}
-    if g < G_SETTLE[1]:
-        return {"r": {"hand": tuple(wire_point(g, coil))}}                     # follows the wire as far as the arm reaches
-    rest = Vector(self_mark()) + Vector((-0.55, -0.5, 1.75))      # hand comes down to his side (away from the face and the pole)
-    return {"r": {"hand": tuple(Vector(wire_point(g, coil)).lerp(rest, u_of(g, G_SETTLE[1], G_SETTLE[1] + 8)))}}
+        return {"r": {"hand": tuple(w1.lerp(Vector(coil), u_of(g, *G_PICK)))}}
+    c = Vector(coil)
+    if g < G_FLICK[1]:
+        c = c + Vector((0, 0, 0.30 * math.sin(math.pi * u_of(g, *G_FLICK))))      # a small lift of the hand, still below the chin
+    rest = mk + Vector((-0.55, -0.5, 1.75))                           # then down to his side (away from the face and the pole)
+    return {"r": {"hand": tuple(c.lerp(rest, u_of(g, G_FLICK[1], G_FLICK[1] + 8)))}}
 
 
 # ----------------------------------------------------------------------------- runtime set pieces

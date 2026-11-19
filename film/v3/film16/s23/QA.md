@@ -10,6 +10,13 @@ Redone together with s01 (same camera, same marks, same bottle-hand method; s01 
 - **Wet dark pole:** the pole's texture-driven base colour is multiplied by (0.36, 0.33, 0.40) and glossier (AFTER_RAIN).
 - **Expression:** determined until contact, happy from the pose swap on the closed frame of the blink (g 1499).
 
+## Round 2 (TAKE gate): what changed
+- **Free hand below the chin:** after the cap the hand comes down the pole side to chest height, takes the wire at the coil and stays at chest height; it never goes to his face or forehead (hand pins checked: error <= 0.2 D). The v2 claim "drops to his side" was wrong; this version does it.
+- **Wire falls and bounces:** the flick lifts the wire in an arc over the glass; it then falls onto the glass and bounces twice (damped) before the wrap ring appears (g 1524).
+- **Head clear of the glass to the cut (g 1526-1539):** slide / arc drift reduced, a small truck + crane-up while the wire settles keeps his head right of the glass (head-to-glass distance >= 165 px, head half-width about 130 px).
+- **Pole:** darker and glossier (multiply 0.27, 0.25, 0.31, roughness 0.20), closer to the s24 pole.
+- **Frame-diff now (in-shot):** median 6.12, p90 12.04 (target >= 4 / >= 12): MET. qa_auto PASS.
+
 ## Delivered
 - take.mkv: 103 frames, g 1446..1548 (shot g 1455..1539, 9 handle frames each side), 26.5 MB. Hard cuts in (1455) and out (1540).
 - QA_AUTO.md (PASS), phone_sheet.jpg, contact.jpg, cues.json, meta.json, framediff.json.

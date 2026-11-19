@@ -53,10 +53,11 @@ G_LOWER = (1484, 1494)
 G_CAP = 1494
 G_GLINT2 = (G_CAP, G_CAP + 9)
 G_SWAP = 1499
-G_PICK = (1505, 1509)
-G_FLICK = (1509, 1516)
-G_SETTLE = (1516, 1520)
-G_WIRE = 1521
+G_PICK = (1503, 1507)
+G_FLICK = (1507, 1513)
+G_SETTLE = (1513, 1523)
+G_WIRE = 1524
+HAND_DOWN = (G_CAP + 1, G_PICK[0])                  # after the cap the free hand comes down the pole side to chest height (never across the face)
 BLINKS = [1465, G_SWAP - 1, G_WIRE]              # blink(g, starts): half, closed, half
 G_HAPPY = G_SWAP                           # expression change on the closed frame of the last blink
 
@@ -81,8 +82,8 @@ CANVAS = (-2.25, -4.75, 2.25, 0.125)           # taller than CANVAS16['morse16']
 CAM_LOC0 = (2.3, -2.6, 5.3)                    # low, SW of the ladder, looking up ~38 deg (card limit: 50 deg)
 CAM_LOOK0 = (7.4, -7.9, 8.8)                 # subject point: Morse's raised hand / the pole top (lower = less empty sky)
 CAM_START = 1.0                               # frame 0 starts 0.92 of the way from the look point to CAM_LOC0 (head ~92 px; the snap takes it to ~190)
-CAM = C.CamPath(Vector(CAM_LOOK0).lerp(Vector(CAM_LOC0), CAM_START), CAM_LOOK0, G0, G_LAST, push=0.06, slide_px=75.0, rise_px=0.0,
-                arc_deg_s=24.0, decay=0.25, snaps=[dict(g=SNAP, k=2.4, peak=2.0, shift=(-0.55, 0.0)), dict(g=(1522, 1536), k=1.0, peak=1.9, shift=(-0.9, 0.0))])
+CAM = C.CamPath(Vector(CAM_LOOK0).lerp(Vector(CAM_LOC0), CAM_START), CAM_LOOK0, G0, G_LAST, push=0.06, slide_px=60.0, rise_px=0.0,
+                arc_deg_s=18.0, decay=0.25, snaps=[dict(g=SNAP, k=2.5, peak=2.3, shift=(-0.3, 0.0)), dict(g=(1522, 1536), k=1.0, peak=1.9, shift=(-0.45, 0.55))])
 
 
 MARK_SHIFT = Vector((-0.25, -0.22, -0.6))      # Morse stands ~1 rung lower ALONG the ladder: his head clears the bottle body (QA-art: bottle merged with his head)
@@ -98,7 +99,7 @@ def tune_look(wet_pole):
     bs.inputs["Base Color"].default_value = (0.02, 0.30, 0.07, 1.0)
     bs.inputs["Emission Strength"].default_value = 0.22
     if wet_pole:
-        darken(M["pole"], (0.36, 0.33, 0.40), 0.26)
+        darken(M["pole"], (0.27, 0.25, 0.31), 0.20)
 
 
 def darken(mat, tint, rough):
@@ -131,20 +132,21 @@ def bottle_xf(g):
 
 
 def wire_point(g, coil):
-    """world point the slack wire is held at (where its two half spans meet) at frame g.  coil = world point of the coil on his
-    arm this frame (Take.coil_at): before the pick the wire runs from pole 0 to the COIL and on to pole 2 (it pays out of the coil;
-    a nail on the pole put the pole-0 half across his face in this camera), then the raised hand flicks it up over the glass."""
-    top = K.W(BOTTLE_TOP_SB(POLE))
-    if g < G_PICK[1]:
+    """world point the slack wire is held at (where its two half spans meet) at frame g.  Until G_FLICK it runs pole 0 -> coil (on his
+    arm, chest height) -> pole 2.  The flick lifts it in an arc up and over the glass; it then FALLS onto the glass and bounces twice
+    (damped) before the wrap ring appears."""
+    top = Vector(K.W(BOTTLE_TOP_SB(POLE)))
+    if g < G_FLICK[0]:
         return Vector(coil)
     if g < G_FLICK[1]:
         u = u_of(g, *G_FLICK, kind="sine")
-        over = Vector(top) + Vector((0, 0, FLICK_UP))
+        over = top + Vector((0, 0, FLICK_UP))
         mid = Vector(coil).lerp(over, u)
         mid.z += 0.35 * math.sin(math.pi * u)                           # arcs up and over, not through the glass
         return mid
-    u = u_of(g, *G_SETTLE)
-    return (Vector(top) + Vector((0, 0, FLICK_UP))).lerp(Vector(top), u)
+    t = g - G_FLICK[1]
+    h = FLICK_UP * math.exp(-0.45 * t) * abs(math.cos(0.55 * math.pi * t))
+    return top + Vector((0, 0, h))
 
 
 def wire_sag(g):
@@ -186,17 +188,23 @@ def self_mark():
 
 
 def hands_of(g, coil):
-    """pinned raised hand (arm_r of the UNMIRRORED figure): world targets."""
-    if g < G_SWAP:
+    """pinned raised hand (arm_r of the UNMIRRORED figure): world targets.  The hand never goes above his chin after the cap: it comes
+    down the pole side to W1, takes the wire at the coil (chest height) and the wire flies up by itself."""
+    mk = self_mark()
+    w1 = mk + Vector((0.60, 0.52, 2.2))
+    if g < HAND_DOWN[0]:
         m, _ = bottle_xf(min(g, G_CAP))
         return {"r": {"hand": tuple(m + Vector((0, 0, NECK)))}}         # the fist round the neck
+    neck = Vector(TOP()) + Vector((0, 0, NECK))
+    if g < G_PICK[0]:
+        return {"r": {"hand": tuple(neck.lerp(w1, u_of(g, *HAND_DOWN)))}}
     if g < G_PICK[1]:
-        a = Vector(TOP()) + Vector((0, 0, NECK))
-        return {"r": {"hand": tuple(a.lerp(Vector(coil), u_of(g, *G_PICK)))}}
-    if g < G_SETTLE[1]:
-        return {"r": {"hand": tuple(wire_point(g, coil))}}                     # follows the wire as far as the arm reaches
-    rest = Vector(self_mark()) + Vector((-0.55, -0.5, 1.75))      # hand comes down to his side (away from the face and the pole)
-    return {"r": {"hand": tuple(Vector(wire_point(g, coil)).lerp(rest, u_of(g, G_SETTLE[1], G_SETTLE[1] + 8)))}}
+        return {"r": {"hand": tuple(w1.lerp(Vector(coil), u_of(g, *G_PICK)))}}
+    c = Vector(coil)
+    if g < G_FLICK[1]:
+        c = c + Vector((0, 0, 0.30 * math.sin(math.pi * u_of(g, *G_FLICK))))      # a small lift of the hand, still below the chin
+    rest = mk + Vector((-0.55, -0.5, 1.75))                           # then down to his side (away from the face and the pole)
+    return {"r": {"hand": tuple(c.lerp(rest, u_of(g, G_FLICK[1], G_FLICK[1] + 8)))}}
 
 
 # ----------------------------------------------------------------------------- runtime set pieces

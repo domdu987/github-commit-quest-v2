@@ -10,6 +10,13 @@ Redone together with s23 (the callback): same camera, same marks, same bottle-ha
 - **Expression:** determined while capping, happy from the pose swap on the closed blink frame (g 52).
 - **Hand:** after the flick the hand drops to his side (it crossed his face in v1).
 
+## Round 2 (TAKE gate): what changed
+- **Free hand below the chin:** after the cap the hand comes down the pole side to chest height, takes the wire at the coil and stays at chest height; it never goes to his face or forehead (hand pins checked: error <= 0.2 D). The v2 claim "drops to his side" was wrong; this version does it.
+- **Wire falls and bounces:** the flick lifts the wire in an arc over the glass; it then falls onto the glass and bounces twice (damped) before the wrap ring appears (g 67).
+- **Head clear of the glass to the cut (g 54-68):** slide / arc drift reduced, a small truck + crane-up while the wire settles keeps his head right of the glass (head-to-glass distance >= 165 px, head half-width about 130 px).
+- **Pole:** unchanged (DAY, dry); the same bottle, hand and wire staging as s23.
+- **Frame-diff now (in-shot):** median 7.67, p90 16.8 (target >= 4 / >= 12): MET. qa_auto PASS.
+
 ## Delivered
 - take.mkv: 75 frames, g 0..74 (shot g 0..68, 6-frame out-handle g 69..74, no handle before g 0), 21.0 MB. Hard cut out at g 69.
 - QA_AUTO.md, phone_sheet.jpg, contact.jpg, cues.json, meta.json, framediff.json; shot.py / deliver.py / c16.py regenerated (s23 shares the same shot.py with the shot 23 timing).
