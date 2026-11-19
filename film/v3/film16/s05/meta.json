@@ -1,0 +1,71 @@
+{
+ "take": "s05",
+ "film": 16,
+ "shots": [
+  5
+ ],
+ "g0": 256,
+ "g1": 314,
+ "first_g": 247,
+ "n_frames": 76,
+ "shot_ranges": {
+  "5": [
+   256,
+   313
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "at": 256,
+  "note": "hard cut from shot 4 at g 256; handle g 247..255 continues the move"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 314,
+  "note": "hard cut to shot 6 (studio_door) at g 314; handle g 314..322 continues the move"
+ },
+ "set": "v3/set3d16 STUDIO preset studio_easel, light DAY; runtime: preset FG hidden, own jars + brush pot FG (tg_studio.fg_dress); wife oval portrait on the side table in frame",
+ "cast": "v3/cast16 morse16 young=1: STORY16 morse_young_paint with a painting cycle (brush hand to canvas / palette, 34 f), blinks, breathing; mouth still",
+ "camera": "custom 22 mm, push 8 %/s + slide 80 px/s + arc 10 deg/s (c16.CamPath, decay 0.3); plus a short snap x1.5 with a 0.55 D pan on 'วาดรูปอยู่' g 283..296 (the shot is 1.9 s; added for the p90 frame-diff target)",
+ "events": {
+  "snap": [
+   283,
+   296
+  ],
+  "word_draw": 286,
+  "portrait_in_frame": [
+   256,
+   313
+  ]
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "samples": 6,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 11.33,
+ "s_per_frame_cpu_mean": 22.01,
+ "head_px": [
+  182,
+  312
+ ],
+ "head_centre_y": [
+  482,
+  539
+ ],
+ "head_bottom_max_y": 652,
+ "framediff_in_shot": {
+  "median": 6.55,
+  "p90": 15.71
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json"
+}

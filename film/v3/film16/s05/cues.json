@@ -1,0 +1,33 @@
+{
+ "take": "s05",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 8.233,
+   "duration": 2.533,
+   "frame": 247,
+   "end_frame": 323,
+   "kind": "ambience",
+   "label": "Morse's painting room 1825, warm window light, distant street murmur, brush scratching canvas"
+  },
+  {
+   "time": 8.533,
+   "duration": 1.933,
+   "frame": 256,
+   "end_frame": 314,
+   "kind": "foley",
+   "label": "brush strokes on canvas, palette tapped",
+   "peak_frame": 280
+  },
+  {
+   "time": 9.433,
+   "duration": 0.433,
+   "frame": 283,
+   "end_frame": 296,
+   "kind": "accent",
+   "label": "soft whoosh on the push",
+   "peak_frame": 288
+  }
+ ]
+}
