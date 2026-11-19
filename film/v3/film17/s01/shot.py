@@ -114,7 +114,7 @@ def pose_of(name, g, ear=None):
         p["squash"] = (1.0 + 0.01 * math.sin(t * 2.6 + k), 1.0 - 0.01 * math.sin(t * 2.6 + k))
     elif name == "gd":
         p.update(head_roll=1.2 * sway, blink=cast17.blink_at(g, 95, 40)); p["squash"] = (1 + 0.01 * math.sin(t * 2.2), 1 - 0.01 * math.sin(t * 2.2))
-    return p
+    return cast17.silent(p)
 
 def theta_of(yaw): return math.radians(min(abs(yaw), 1.2) * 70.0)
 
@@ -158,6 +158,8 @@ class Take(C.Take):
             if n != "gd" and n != "bert":
                 a.jobs = (lambda orig: (lambda px, frames=None, overlay=None: [dict(j, underlay=ears_svg(j["pose"])[0], overlay=ears_svg(j["pose"])[1]) for j in orig(px, frames, overlay)]))(a.jobs)
         self.ear = {}
+        for o in bpy.data.objects:                       # director's systemic fix: additive light shafts wash over the cast cards
+            if any(m and m.name.startswith("beam_fx") for m in (getattr(o.data, "materials", None) or [])): o.hide_render = True
 
     def cut_stool(self):
         """delete the room's stool + ledger pile at (-0.9, -0.6) (merged into the room meshes) so it is not a foreground block in shot 2."""
