@@ -145,6 +145,7 @@ class Card:
             x0, x1, y0, y1 = xs.min(), xs.max(), ys.min(), ys.max(); fx = np.clip((np.arange(im.shape[1]) - x0) / max(1, x1 - x0), 0, 1)[None, :]
             warm = np.clip((fx - 0.5) / 0.5, 0, 1) ** 1.3 * 0.42; rgb = rgb * (1 + warm[..., None] * np.array([0.55, 0.12, -0.35], np.float32))
             fy = np.clip(1 - (np.arange(im.shape[0]) - y0) / max(1, 0.18 * (y1 - y0)), 0, 1)[:, None] ** 2 * 0.22; rgb = rgb + fy[..., None] * np.array([0.04, 0.07, 0.14], np.float32) * (a[..., None] > 0.5)
+        a = np.clip(a * 1.8, 0, 1)                      # opaque card (ears were semi-transparent: roofs showed through)
         out = np.concatenate([np.clip(rgb, 0, 1), a[..., None]], -1); Image.fromarray((out * 255 + 0.5).astype(np.uint8)).save(o2); return o2
     @staticmethod
     def _warm_wings(path):

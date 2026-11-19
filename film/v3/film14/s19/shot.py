@@ -37,6 +37,7 @@ def hive_swing(s, t, s0=None):
     if tt < 0: return 0.55 * (bow_amp(g) / B_MAX) ** 1.5 * np.exp(-d / 14.0), 0.05 * (bow_amp(g) / B_MAX) * np.exp(-d / 14.0)
     tw = tt - np.maximum(d - 1.0, 0) / C_W - 0.05; fall = np.exp(-np.maximum(tw, 0) / 1.8)
     ang = np.where(tw <= 0, 0.34 * np.exp(-d / 14.0), 0.85 * np.exp(-d / 30.0) * np.cos(2 * math.pi * 0.95 * tw) * fall + 0.34 * np.exp(-d / 14.0) * np.exp(-np.maximum(tw, 0) / 0.5))
+    near = np.where((s > PS0 + 1.5) & (s < PS0 + 4.5), 0.15, 1.0); ang = ang * near                  # the near hive must not swing across her cheek
     return ang, 0.18 * np.exp(-d / 30.0) * np.where(tw <= 0, 0.0, np.sin(2 * math.pi * 1.7 * tw) * fall)
 
 # ----------------------------------------------------------------------------- cameras (field side: the wire is between the camera and her chest)
@@ -70,12 +71,13 @@ class Driver:
         W = F.STATE['wire']; S = W['S']; d = F._ring_dist(S, PS0); w = np.clip(1 - d / 1.5, 0, 1); w = w * w * (3 - 2 * w); W['base'][:, 2] -= DZ * w     # the span lowered to her chest
         for o in bpy.data.objects:
             if o.name == 'bees': o.hide_render = True
-        try: C.darken_mat('tinunder', 0.35)
+        try: C.darken_mat('tinunder', 0.35 * (0.6 if shot == 20 else 1.0))
         except Exception as e: print('tinunder', e)
         pts = [CAM[shot](g)[0] for g in range(G_FIRST if shot == 19 else CUT20, (1306 if shot == 19 else G_LAST) + 1, 6)]
         print('maize rows hidden', C.hide_maize_rows(float(os.environ.get('MZ', 7.5))))
         C.cut_path(pts, 1.6, keep=lambda w: w.y > 3.0 and w.y < 6.6 and w.x > -14.0 and w.x < 11.5 and False)
-        if shot == 20: print('roof cut', C.cut_roofs(7.0, 10.3, 3.0, 8.0), 'post cut', C.cut_roofs(9.2, 9.8, 3.0, 6.0, zmin=-1.0, prefix='posts_'))
+        print('roof cut (the two roofs beside her: they overlapped her ears)', C.cut_roofs(2.0, 10.3, 3.0, 8.0))
+        if shot == 20: print('post cut', C.cut_roofs(9.2, 9.8, 3.0, 6.0, zmin=-1.0, prefix='posts_'))
         self.mat = C.Card('mat', 'matriarch', cast14.CANVAS14_FRONT['matriarch'], 128, contact=(1.0 * C.MPD * 7, 0.30 * C.MPD * 7)); self.mat.grade = True; self.ph = 0.0; self.first = True
     def frame(self, g, path):
         CUR['g'] = g; loc, look, lens = CAM[self.shot](g); self.cam.set(loc, look, lens); bpy.context.view_layer.update()
