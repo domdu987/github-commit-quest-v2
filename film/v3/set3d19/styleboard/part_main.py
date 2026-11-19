@@ -8,6 +8,8 @@ def render(mode, out, samples, draft):
     sc.render.resolution_x = W // (2 if draft else 1); sc.render.resolution_y = H // (2 if draft else 1); sc.render.resolution_percentage = 100
     sc.view_settings.view_transform = 'Standard'; sc.view_settings.look = 'None'; sc.view_settings.exposure = P.get('exposure', 0.0)
     sc.render.image_settings.file_format = 'PNG'; sc.render.image_settings.color_mode = 'RGBA'
+    if os.environ.get('CROP'):      # debug: render only a fractional region x0,y0,x1,y1 (y from top)
+        x0, y0, x1, y1 = [float(v) for v in os.environ['CROP'].split(',')]; sc.render.use_border = True; sc.render.border_min_x = x0; sc.render.border_max_x = x1; sc.render.border_min_y = 1 - y1; sc.render.border_max_y = 1 - y0
     A = _rd(sc, out + '_A.png', samples, True)[..., :3]
     # shade mask for the hue check (not used for grading): sun-only render with a white override, no bounces, sky hidden; cast shadow = sun blocked
     for l in bpy.data.lights:

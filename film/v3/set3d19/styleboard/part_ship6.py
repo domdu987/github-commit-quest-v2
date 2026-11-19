@@ -48,17 +48,18 @@ def S6(): return SHIP6
 def loc2w(p):
     s = SHIP6; ph = math.radians(180.0 - s['theta']); x, y, z = p
     return Vector((s['cx'] + x * math.cos(ph) - y * math.sin(ph), s['cy'] + x * math.sin(ph) + y * math.cos(ph), z))
-SHIP6 = dict(cx=4.5, cy=67.0, theta=36.0)
+SHIP6 = dict(cx=7.5, cy=67.0, theta=33.0)
 
 def ship6_mats():
     M = ship_mats()
-    M['hull6'] = mat('hull6', '#2c2824', '#3a342d', scale=2.5, aniso=(0.25, 0.25, 4.5), contrast=1.2)
+    M['mast'] = mat('mast6', '#7a6458', '#8c7466', scale=3, aniso=(0.2, 0.2, 0.05)); M['oak'] = mat('oak6', '#7e6454', '#8e7462', scale=5, aniso=(0.15, 1, 1))
+    M['hull6'] = mat('hull6', '#28262c', '#36343a', scale=2.5, aniso=(0.25, 0.25, 4.5), contrast=1.2)
     M['ochre6'] = mat('ochre6', '#d89a34', '#c4832a', scale=3, aniso=(0.3, 0.3, 2.0))
-    M['cap6'] = mat('cap6', '#2e2824', '#403830', scale=3)
+    M['cap6'] = mat('cap6', '#2c2a30', '#3c3a42', scale=3)
     M['port6'] = mat('port6', '#241410', '#3a1c16', scale=3)
     M['deck6'] = mat('deck6', '#b48a50', '#a07a40', scale=3, aniso=(0.12, 1, 1), contrast=1.4)
-    M['canv'] = mat('canv', '#e8dcc0', '#dccfae', scale=2.2, aniso=(1.3, 1, 0.8), contrast=0.8, emit='#ffe2a0', emit_k=0.10)
-    M['canv2'] = mat('canv2', '#e2d5b4', '#d6c8a4', scale=2.2, aniso=(1.3, 1, 0.8), contrast=0.8, emit='#ffe2a0', emit_k=0.08)
+    M['canv'] = mat('canv', '#e8dcc0', '#dccfae', scale=2.2, aniso=(1.3, 1, 0.8), contrast=0.8, emit='#7f9cff', emit_k=0.05)
+    M['canv2'] = mat('canv2', '#e2d5b4', '#d6c8a4', scale=2.2, aniso=(1.3, 1, 0.8), contrast=0.8, emit='#7f9cff', emit_k=0.045)
     M['gold'] = mat('gold', '#d8a840', '#c08c30', scale=4, sheen=0.3)
     M['pen'] = mat('pen', '#c0392f', '#a8302a', scale=4)
     M['rig6'] = mat('rig6', '#2c2430', '#40343e', scale=3)
@@ -114,7 +115,7 @@ def build_hull6(M):
         y = -15.2
         while y < 16.0:
             for s in (-1, 1):
-                pquad(M['ochre6'], y - 0.58, y + 0.58, zc - 0.50, zc + 0.46, s, 0.03)
+                pquad(M['ochre6'], y - 0.52, y + 0.52, zc - 0.45, zc + 0.41, s, 0.03)
                 pquad(M['port6'], y - 0.44, y + 0.44, zc - 0.38, zc + 0.34, s, 0.06)
             y += 2.4
     mb.finish()
@@ -127,7 +128,7 @@ def sq_sail(M, name, my, zb, zt_, hw_top, hw_foot, belly, nx=22, ny=16, yoff=0.5
         by = belly * (1 - abs(u) ** 2.3) ** 0.8 * math.sin(math.pi * (0.07 + 0.86 * v)) ** 0.85 * (1 + 0.05 * math.sin(u * 8.0 + v * 3.0))
         z = zb + (zt_ - zb) * v + 0.05 * (zt_ - zb) * (1 - u * u) * (1 - v) ** 2
         return (u * hwv, my + yoff + by, z)
-    return sail_obj(M, name, PF, nx, ny, 0.04)
+    ob = sail_obj(M, name, PF, nx, ny, 0.04); ob.visible_glossy = False; return ob
 
 def spanker(M, name, my, z0, H):
     A = Vector((0, my - 0.7, z0 + 0.52 * H)); B = Vector((0, my - 8.6, z0 + 0.60 * H)); C = Vector((0, my - 11.8, z0 + 0.09 * H)); D = Vector((0, my - 0.7, z0 + 0.09 * H))
@@ -137,7 +138,7 @@ def spanker(M, name, my, z0, H):
         P = (D * (1 - u) + C * u) * (1 - v) + (A * (1 - u) + B * u) * v
         b = -1.6 * math.sin(math.pi * u) ** 0.8 * math.sin(math.pi * (0.1 + 0.8 * v))
         return (P.x + b, P.y, P.z)
-    return sail_obj(M, name, PF, nx, ny, 0.04)
+    ob = sail_obj(M, name, PF, nx, ny, 0.04); ob.visible_glossy = False; return ob
 
 def jib(M, name, T, C, Hd, bulge, n=10, m=10):
     T = Vector(T); C = Vector(C); Hd = Vector(Hd)
@@ -145,7 +146,7 @@ def jib(M, name, T, C, Hd, bulge, n=10, m=10):
         v = j / n; L = T + (Hd - T) * v; Rr = C + (Hd - C) * v; u = i / m; p = L + (Rr - L) * u
         b = -bulge * math.sin(math.pi * u) * math.sin(math.pi * min(1, 0.1 + 0.9 * v)) * (1 - 0.4 * v)
         return (p.x + b, p.y, p.z)
-    return sail_obj(M, name, PF, m, n, 0.04)
+    ob = sail_obj(M, name, PF, m, n, 0.04); ob.visible_glossy = False; return ob
 
 def rigging6(mb, M, my, z0, H, s_sides=(-1, 1), nshr=5):
     top = z0 + 0.41 * H
@@ -184,9 +185,9 @@ def build_ship6(P):
     build_hull6(M)
     # quarter gallery + stern lantern + beakhead + figurehead
     for s in (-1, 1):
-        mb.box(M['ochre6'], (s * 4.3, -16.6, 7.9), (1.4, 4.0, 3.2)); mb.box(M['hull6'], (s * 4.3, -16.6, 9.62), (1.5, 4.1, 0.2))
-        for k in range(3): mb.box(M['port6'], (s * 5.04, -18.0 + 1.4 * k, 8.0), (0.06, 0.8, 1.2))
-    mb.box(M['gold'], (0, -21.2, 10.2), (1.2, 1.2, 1.8)); mb.cyl(M['gold'], (0, -21.2, 11.3), 0.5, 0.5, seg=10)
+        mb.box(M['hull6'], (s * 4.25, -16.6, 7.7), (1.2, 3.6, 2.7)); mb.box(M['ochre6'], (s * 4.25, -16.6, 9.1), (1.3, 3.7, 0.18))
+        for k in range(3): mb.box(M['port6'], (s * 4.88, -18.0 + 1.2 * k, 7.8), (0.06, 0.7, 1.1))
+    mb.box(M['gold'], (0, -21.2, 10.0), (0.9, 0.9, 1.3)); mb.cyl(M['gold'], (0, -21.2, 10.8), 0.38, 0.4, seg=10)
     tube(mb, M['gold'], (0, YB + 2.2, 4.6), (0, YB + 4.8, 5.8), 0.36, 0.22, 8); mb.ell(M['gold'], (0, YB + 5.0, 5.9), (0.3, 0.55, 0.38), (10, 6))
     for s in (-1, 1): tube(mb, M['ochre6'], (s * 0.15, YB + 1.0, 4.9), (s * 0.5, YB + 4.8, 5.4), 0.1, 0.07, 6)
     # three masts: fore, main, mizzen
@@ -201,13 +202,13 @@ def build_ship6(P):
         for k, (fy, ff, hwt, hwf, bel) in enumerate(spec): sq_sail(M, 'ship6_sail_%s%d' % (nm, k), my, z0 + ff * H, z0 + fy * H, hwt, hwf, bel)
     spanker(M, 'ship6_spanker', -12.5, deck_z(-12.5), 29.0)
     # bowsprit, jib boom, spritsail yard, stays, jibs
-    tube(mb, M['mast'], (0, YB - 4.0, 5.2), (0, YB + 12.5, 11.6), 0.42, 0.20, 10); tube(mb, M['mast'], (0, YB + 12.0, 11.4), (0, YB + 18.5, 13.6), 0.16, 0.08, 8)
+    tube(mb, M['mast'], (0, YB - 4.0, 5.2), (0, YB + 10.5, 10.6), 0.42, 0.20, 10); tube(mb, M['mast'], (0, YB + 10.0, 10.4), (0, YB + 15.5, 12.2), 0.16, 0.08, 8)
     z0f = deck_z(11.5); z0m = deck_z(-0.5)
     fore_top = Vector((0, 11.5, z0f + 0.80 * 36.0)); fore_t2 = Vector((0, 11.5, z0f + 0.45 * 36.0)); main_top = Vector((0, -0.5, z0m + 0.80 * 40.0)); miz_top = Vector((0, -12.5, deck_z(-12.5) + 0.78 * 29.0))
-    for (a, b) in ((Vector((0, YB + 18.5, 13.6)), fore_top), (Vector((0, YB + 12.3, 11.6)), fore_t2), (fore_top, main_top), (fore_t2, Vector((0, -0.5, z0m + 0.45 * 40.0))), (main_top, miz_top), (Vector((0, -0.5, z0m + 0.45 * 40.0)), Vector((0, -12.5, deck_z(-12.5) + 0.42 * 29.0)))):
+    for (a, b) in ((Vector((0, YB + 15.5, 12.2)), fore_top), (Vector((0, YB + 10.5, 10.6)), fore_t2), (fore_top, main_top), (fore_t2, Vector((0, -0.5, z0m + 0.45 * 40.0))), (main_top, miz_top), (Vector((0, -0.5, z0m + 0.45 * 40.0)), Vector((0, -12.5, deck_z(-12.5) + 0.42 * 29.0)))):
         mb.rod(M['rig6'], a, b, 0.05, 0.05, 4)
-    jib(M, 'ship6_jib1', (0, YB + 18.0, 13.5), (0, YB + 11.0, 9.2), (0, 31.2, z0f + 0.78 * 36.0), 1.5)
-    jib(M, 'ship6_jib2', (0, YB + 11.6, 11.4), (0, YB + 4.6, 7.8), (0, 28.6, z0f + 0.52 * 36.0), 1.3)
+    jib(M, 'ship6_jib1', (0, YB + 15.0, 12.0), (0, YB + 9.5, 9.0), (0, 31.2, z0f + 0.78 * 36.0), 1.3)
+    jib(M, 'ship6_jib2', (0, YB + 10.0, 10.4), (0, YB + 4.6, 7.8), (0, 28.6, z0f + 0.52 * 36.0), 1.2)
     jib(M, 'ship6_jib3', (0, YB + 4.0, 7.4), (0, YB - 3.0, 6.9), (0, 24.0, z0f + 0.40 * 36.0), 1.0)
     # square spritsail under the bowsprit
     tube(mb, M['mast'], (-3.4, YB + 4.6, 8.0), (3.4, YB + 4.6, 8.0), 0.12, 0.08, 6)
@@ -246,25 +247,38 @@ def foam_sheet_mat(name, lacy=1.0, alpha_k=0.97):
     nz2 = N('ShaderNodeTexNoise'); nz2.inputs['Scale'].default_value = 7.0; nz2.inputs['Detail'].default_value = 3.0; L(tc.outputs['Object'], nz2.inputs['Vector'])
     # lacy outer edge: s + (noise-.5)*k - c  -> 0..1
     a1 = N('ShaderNodeMath'); a1.operation = 'SUBTRACT'; a1.inputs[1].default_value = 0.5; L(nz.outputs['Fac'], a1.inputs[0])
-    a2 = N('ShaderNodeMath'); a2.operation = 'MULTIPLY'; a2.inputs[1].default_value = 0.62 * lacy; L(a1.outputs[0], a2.inputs[0])
+    a2 = N('ShaderNodeMath'); a2.operation = 'MULTIPLY'; a2.inputs[1].default_value = 1.15 * lacy; L(a1.outputs[0], a2.inputs[0])
     a3 = N('ShaderNodeMath'); a3.operation = 'ADD'; L(sp.outputs['Fac'], a3.inputs[0]); L(a2.outputs[0], a3.inputs[1])
-    a4 = N('ShaderNodeMath'); a4.operation = 'SUBTRACT'; a4.inputs[1].default_value = 0.10; L(a3.outputs[0], a4.inputs[0])
+    a4 = N('ShaderNodeMath'); a4.operation = 'SUBTRACT'; a4.inputs[1].default_value = -0.5; L(a3.outputs[0], a4.inputs[0])
     am = N('ShaderNodeMapRange'); am.inputs['From Min'].default_value = 0.0; am.inputs['From Max'].default_value = 0.16; L(a4.outputs[0], am.inputs['Value'])
     # fine speckle holes in the thin parts
     sk = N('ShaderNodeMapRange'); sk.inputs['From Min'].default_value = 0.30; sk.inputs['From Max'].default_value = 0.46; L(nz2.outputs['Fac'], sk.inputs['Value'])
-    sk2 = N('ShaderNodeMath'); sk2.operation = 'MAXIMUM'; L(sk.outputs['Result'], sk2.inputs[0]); L(sp.outputs['Fac'], sk2.inputs[1])
+    sk2 = N('ShaderNodeMath'); sk2.operation = 'MAXIMUM'; sk2.inputs[0].default_value = 1.0; sk2.inputs[1].default_value = 1.0
     # lip end / tail fade
     le = N('ShaderNodeMath'); le.operation = 'SUBTRACT'; le.inputs[0].default_value = 1.0; L(sp.outputs['Fac'], le.inputs[1])
-    le2 = N('ShaderNodeMapRange'); le2.inputs['From Min'].default_value = 0.0; le2.inputs['From Max'].default_value = 0.05; L(le.outputs[0], le2.inputs['Value'])
+    le1 = N('ShaderNodeMath'); le1.operation = 'ADD'; L(le.outputs[0], le1.inputs[0]); L(a2.outputs[0], le1.inputs[1])
+    f1 = N('ShaderNodeMath'); f1.operation = 'SUBTRACT'; f1.inputs[1].default_value = 0.5; L(nz2.outputs['Fac'], f1.inputs[0]); f2 = N('ShaderNodeMath'); f2.operation = 'MULTIPLY'; f2.inputs[1].default_value = 0.9; L(f1.outputs[0], f2.inputs[0]); le1b = N('ShaderNodeMath'); le1b.operation = 'ADD'; L(le1.outputs[0], le1b.inputs[0]); L(f2.outputs[0], le1b.inputs[1]); le1 = le1b
+    le2 = N('ShaderNodeMapRange'); le2.inputs['From Min'].default_value = 0.0; le2.inputs['From Max'].default_value = 0.30; L(le1.outputs[0], le2.inputs['Value'])
     tf = N('ShaderNodeMapRange'); tf.inputs['From Min'].default_value = 1.0; tf.inputs['From Max'].default_value = 0.82; L(ln.outputs['Fac'], tf.inputs['Value'])
     al = N('ShaderNodeMath'); al.operation = 'MULTIPLY'; L(am.outputs['Result'], al.inputs[0]); L(le2.outputs['Result'], al.inputs[1])
     al2 = N('ShaderNodeMath'); al2.operation = 'MULTIPLY'; L(al.outputs[0], al2.inputs[0]); L(tf.outputs['Result'], al2.inputs[1])
     al3 = N('ShaderNodeMath'); al3.operation = 'MULTIPLY'; L(al2.outputs[0], al3.inputs[0]); L(sk2.outputs[0], al3.inputs[1])
-    al4 = N('ShaderNodeMath'); al4.operation = 'MULTIPLY'; al4.inputs[1].default_value = alpha_k; al4.use_clamp = True; L(al3.outputs[0], al4.inputs[0])
+    hb = N('ShaderNodeMath'); hb.operation = 'ADD'; L(hz.outputs['Fac'], hb.inputs[0]); L(a2.outputs[0], hb.inputs[1])
+    hm = N('ShaderNodeMapRange'); hm.inputs['From Min'].default_value = -0.6; hm.inputs['From Max'].default_value = -0.3; L(hb.outputs[0], hm.inputs['Value'])
+    al3b = N('ShaderNodeMath'); al3b.operation = 'MULTIPLY'; L(al3.outputs[0], al3b.inputs[0]); L(hm.outputs['Result'], al3b.inputs[1])
+    hq = N('ShaderNodeMapRange'); hq.inputs['From Min'].default_value = 0.25; hq.inputs['From Max'].default_value = 0.75; hq.inputs['To Min'].default_value = 0.62; hq.inputs['To Max'].default_value = 1.0; L(hz.outputs['Fac'], hq.inputs['Value'])
+    al3c = N('ShaderNodeMath'); al3c.operation = 'MULTIPLY'; L(al3b.outputs[0], al3c.inputs[0]); L(hq.outputs['Result'], al3c.inputs[1])
+    al4 = N('ShaderNodeMath'); al4.operation = 'MULTIPLY'; al4.inputs[1].default_value = alpha_k; al4.use_clamp = True; L(al3c.outputs[0], al4.inputs[0])
     # colour: white top, aqua toward the water; underside turquoise
-    cm = N('ShaderNodeMix'); cm.data_type = 'RGBA'; cm.inputs[6].default_value = hexc('#9fe0da'); cm.inputs[7].default_value = hexc('#fbfefc'); L(hz.outputs['Fac'], cm.inputs[0])
-    cb = N('ShaderNodeMix'); cb.data_type = 'RGBA'; cb.inputs[7].default_value = hexc('#22b5ad'); L(cm.outputs[2], cb.inputs[6]); L(geo.outputs['Backfacing'], cb.inputs[0])
-    es = N('ShaderNodeMath'); es.operation = 'MULTIPLY_ADD'; es.inputs[1].default_value = 0.55; es.inputs[2].default_value = 0.16; L(geo.outputs['Backfacing'], es.inputs[0])
+    cm = N('ShaderNodeMix'); cm.data_type = 'RGBA'; cm.inputs[6].default_value = hexc('#86c4be'); cm.inputs[7].default_value = hexc('#d6e0de'); cmr = N('ShaderNodeMapRange'); cmr.inputs['From Min'].default_value = 0.10; cmr.inputs['From Max'].default_value = 0.52; L(hz.outputs['Fac'], cmr.inputs['Value']); L(cmr.outputs['Result'], cm.inputs[0])
+    b1 = N('ShaderNodeMath'); b1.operation = 'MULTIPLY'; b1.inputs[1].default_value = 11.0; L(hz.outputs['Fac'], b1.inputs[0])
+    b2 = N('ShaderNodeMath'); b2.operation = 'MULTIPLY'; b2.inputs[1].default_value = 3.2; L(nz.outputs['Fac'], b2.inputs[0])
+    b3 = N('ShaderNodeMath'); b3.operation = 'ADD'; L(b1.outputs[0], b3.inputs[0]); L(b2.outputs[0], b3.inputs[1])
+    b4 = N('ShaderNodeMath'); b4.operation = 'SINE'; b4.inputs[1].default_value = 0.0; b3m = N('ShaderNodeMath'); b3m.operation = 'MULTIPLY'; b3m.inputs[1].default_value = 3.14159; L(b3.outputs[0], b3m.inputs[0]); L(b3m.outputs[0], b4.inputs[0])
+    b5 = N('ShaderNodeMapRange'); b5.inputs['From Min'].default_value = 0.1; b5.inputs['From Max'].default_value = 1.0; b5.inputs['To Max'].default_value = 0.7; L(b4.outputs[0], b5.inputs['Value'])
+    bt = N('ShaderNodeMix'); bt.data_type = 'RGBA'; bt.inputs[7].default_value = hexc('#8cccc6'); L(cm.outputs[2], bt.inputs[6]); L(b5.outputs['Result'], bt.inputs[0])
+    cb = N('ShaderNodeMix'); cb.data_type = 'RGBA'; cb.inputs[7].default_value = hexc('#6fd8cc'); L(bt.outputs[2], cb.inputs[6]); L(geo.outputs['Backfacing'], cb.inputs[0])
+    es = N('ShaderNodeMath'); es.operation = 'MULTIPLY_ADD'; es.inputs[1].default_value = 0.9; es.inputs[2].default_value = 0.03; L(geo.outputs['Backfacing'], es.inputs[0])
     bs.inputs['Roughness'].default_value = 0.55; bs.inputs['Specular IOR Level'].default_value = 0.2
     L(cb.outputs[2], bs.inputs['Base Color']); L(cb.outputs[2], bs.inputs['Emission Color']); L(es.outputs[0], bs.inputs['Emission Strength'])
     L(al4.outputs[0], mx.inputs[0]); L(tr.outputs[0], mx.inputs[1]); L(bs.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface']); return m
@@ -278,14 +292,14 @@ def bow_wave6(P):
     a0 = math.atan2(npt[-1, 1], npt[-1, 0]); a1 = math.atan2(nst[0, 1], nst[0, 0])
     fan = [(YB * 0 + 0.0, YB) for _ in range(14)]; fan_n = [(math.cos(a0 + (a1 - a0) * k / 13.0), math.sin(a0 + (a1 - a0) * k / 13.0)) for k in range(14)]
     Pp = np.vstack([port, np.array(fan), stb]); Nn = np.vstack([npt, np.array(fan_n), nst]); Ll = np.concatenate([lp, np.linspace(-0.2, 0.2, 14), -lp[::-1]])
-    prof = [(3.0, -0.28), (2.35, -0.05), (1.85, 0.38), (1.4, 0.95), (1.0, 1.55), (0.6, 2.0), (0.2, 2.25), (-0.2, 2.2), (-0.52, 1.92), (-0.7, 1.55), (-0.66, 1.22)]
+    prof = [(-1.0, 0.25), (-0.7, 0.8), (-0.35, 1.4), (0.05, 1.9), (0.5, 2.2), (0.95, 2.2), (1.35, 1.95), (1.62, 1.55), (1.74, 1.1), (1.8, 0.72), (1.98, 0.36), (2.4, 0.08), (2.95, -0.1)]
     nK = 26; pr = catmull(prof, nK); sp_ = np.linspace(0, 1, nK)
     verts = []; sp = []; hz = []; lp_ = []
     al = np.abs(Ll)
-    E = np.exp(-(np.maximum(al - 2.4, 0) / 6.2) ** 2) * (0.74 + 0.26 * ss(0.0, 2.4, al))
-    nzh = 1 + 0.26 * (vnoise2(Ll * 0.8 + 40, np.zeros_like(Ll) + 3.0, 5) - 0.5) * 2; nzd = 0.22 * (vnoise2(Ll * 1.3 + 90, np.zeros_like(Ll) + 8.0, 6) - 0.5) * 2
+    E = np.exp(-(np.maximum(al - 3.0, 0) / 6.4) ** 2) * (0.72 + 0.28 * ss(0.0, 2.5, al))
+    nzh = 1 + 0.24 * (vnoise2(Ll * 0.4 + 40, np.zeros_like(Ll) + 3.0, 5) - 0.5) * 2; nzd = 0.22 * (vnoise2(Ll * 1.3 + 90, np.zeros_like(Ll) + 8.0, 6) - 0.5) * 2
     for j in range(len(Pp)):
-        D = 1.15 + 0.11 * al[j] + nzd[j]; Hs = 1.18 * E[j] * nzh[j]; Wsc = 0.55 + 0.45 * E[j] + 0.25 * ss(6, 14, al[j])
+        D = 1.9 + 0.10 * al[j] + nzd[j]; Hs = 3.3 * E[j] * nzh[j]; Wsc = 0.65 + 0.35 * E[j] + 0.25 * ss(6, 14, al[j])
         for k in range(nK):
             dn, zz = pr[k]; pxl = Pp[j, 0] + Nn[j, 0] * (D + dn * Wsc); pyl = Pp[j, 1] + Nn[j, 1] * (D + dn * Wsc)
             wp = loc2w((pxl, pyl, 0)); zb = float(swell_h(wp.x, wp.y)) * 0.92
@@ -307,14 +321,14 @@ def bow_wave6(P):
     return Pp, Nn, E, Ll
 
 def spray6(P, M, Pp, Nn, E, Ll):
-    rr = random.Random(21); sp = MB('ship6_fleck'); tq = M['spray']
-    for _ in range(420):
+    rr = random.Random(21); sp = MB('ship6_fleck'); tq = mat_emit('fleck', '#f6fbf8', 1.0)
+    for _ in range(130):
         j = rr.randrange(len(Pp)); al = abs(Ll[j]); 
         if E[j] < 0.15: continue
-        D = 1.0 + 0.11 * al; r = rr.uniform(-0.6, 3.2); hgt = rr.uniform(0.0, 1.0) ** 1.6 * 3.6 * E[j] + 1.2 * E[j]
+        D = 1.0 + 0.11 * al; r = rr.uniform(0.2, 3.6); hgt = rr.uniform(0.0, 1.0) ** 1.5 * 4.4 * E[j] + 1.4 * E[j]
         px_ = Pp[j, 0] + Nn[j, 0] * (D + r); py_ = Pp[j, 1] + Nn[j, 1] * (D + r)
         wp = loc2w((px_, py_, 0)); zb = float(swell_h(wp.x, wp.y))
-        rad = rr.uniform(0.05, 0.14) * (1.0 if hgt < 2.4 else 0.75); sp.ell(tq, (px_, py_, zb + 1.2 + hgt), (rad, rad, rad * 0.9), (6, 4))
+        rad = rr.uniform(0.04, 0.11) * (1.0 if hgt < 2.4 else 0.75); sp.ell(tq, (px_, py_, zb + 1.2 + hgt), (rad, rad, rad * 0.9), (6, 4))
     sp.finish(shadow=False)
     # soft mist billboards above the crest, facing the camera
     cam = Vector(P['cam']['loc']); mm = bpy.data.materials.new('mist'); mm.use_nodes = True; nt = mm.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
@@ -358,8 +372,20 @@ def cumulus6(P, name, c, size, seed, nballs=70, squash=0.9):
     ob2.location = c; ob2.scale = (size, size, size * 0.85); ob2.visible_shadow = False
     return ob2
 
+def cloud_mat6(P):
+    m = bpy.data.materials.new('cloudG'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); em = N('ShaderNodeEmission'); gm = N('ShaderNodeNewGeometry')
+    kd = Vector(P['key_dir']).normalized(); d1 = N('ShaderNodeVectorMath'); d1.operation = 'DOT_PRODUCT'; d1.inputs[1].default_value = (-kd.x, -kd.y, -kd.z); L(gm.outputs['Normal'], d1.inputs[0])
+    sz = N('ShaderNodeSeparateXYZ'); L(gm.outputs['Normal'], sz.inputs[0])
+    a = N('ShaderNodeMath'); a.operation = 'MULTIPLY'; a.inputs[1].default_value = 0.55; L(d1.outputs['Value'], a.inputs[0])
+    b = N('ShaderNodeMath'); b.operation = 'MULTIPLY_ADD'; b.inputs[1].default_value = 0.45; L(sz.outputs['Z'], b.inputs[0]); L(a.outputs[0], b.inputs[2])
+    cr = N('ShaderNodeValToRGB'); cr.color_ramp.elements[0].position = 0.0; cr.color_ramp.elements[0].color = hexc(P['cloud'][1]); cr.color_ramp.elements[1].position = 1.0; cr.color_ramp.elements[1].color = hexc(P['cloud'][0])
+    e = cr.color_ramp.elements.new(0.42); e.color = hexc('#d4dcf8')
+    mr = N('ShaderNodeMapRange'); mr.inputs['From Min'].default_value = -0.55; mr.inputs['From Max'].default_value = 0.42; L(b.outputs[0], mr.inputs['Value']); L(mr.outputs['Result'], cr.inputs['Fac'])
+    em.inputs['Strength'].default_value = P.get('cloud_k', 1.0); L(cr.outputs[0], em.inputs['Color']); L(em.outputs[0], out.inputs['Surface']); MATS['cloudG'] = m; return m
+
 def clouds6(P):
-    cm = cloud_mat(P)
+    cm = cloud_mat6(P)
     for (nm, c, sz, sd) in P['clouds6']: cumulus6(P, nm, c, sz, sd)
 
 def gull6(mb, m, mt, c, yaw, s, flap):
@@ -374,15 +400,15 @@ def gull6(mb, m, mt, c, yaw, s, flap):
     mb.pop()
 
 def far_dressing6(P, M):
-    ib = MB('isle'); n = 56; X0i = 524.0; stp = 8.6
+    ib = MB('isle'); n = 56; X0i = 277.0; stp = 4.55
     for i in range(n):
         x0 = X0i + i * stp; x1 = x0 + stp
-        f = lambda x: 66 * max(0, math.sin(math.pi * (x - X0i) / (n * stp))) ** 0.6 * (0.8 + 0.2 * math.sin((x - X0i) / 13.0)) + 6
-        ib.quad(M['isle'] if i % 3 else M['isle2'], [(x0, 1800, 0), (x1, 1800, 0), (x1, 1800, f(x1)), (x0, 1800, f(x0))]); ib.quad(M['beach'], [(x0, 1799, -0.5), (x1, 1799, -0.5), (x1, 1799, 3.5), (x0, 1799, 3.5)])
+        f = lambda x: 36 * max(0, math.sin(math.pi * (x - X0i) / (n * stp))) ** 0.6 * (0.8 + 0.2 * math.sin((x - X0i) / 7.0)) + 3
+        ib.quad(M['isle'] if i % 6 else M['isle2'], [(x0, 950, 0), (x1, 950, 0), (x1, 950, f(x1)), (x0, 950, f(x0))]); ib.quad(M['beach'], [(x0, 949, -0.5), (x1, 949, -0.5), (x1, 949, 2.0), (x0, 949, 2.0)])
     ib.finish(shadow=False)
-    fs = MB('farsail'); x0, y0 = 205.0, 720.0
-    fs.box(M['darksail'], (x0, y0, 1.2), (14.0, 3.0, 2.4))
-    for k, (dx, hh, w) in enumerate(((-3.2, 17.0, 5.4), (2.4, 20.0, 5.8))):
+    fs = MB('farsail'); x0, y0 = 150.0, 560.0
+    fs.box(M['darksail'], (x0, y0, 0.9), (10.0, 2.2, 1.8))
+    for k, (dx, hh, w) in enumerate(((-2.4, 12.5, 4.0), (1.8, 14.5, 4.3))):
         fs.quad(M['canv'], [(x0 + dx - w / 2, y0 - 0.4, 2.8), (x0 + dx + w / 2, y0 - 0.4, 2.8), (x0 + dx + w * 0.4, y0 - 0.4, hh), (x0 + dx - w * 0.4, y0 - 0.4, hh)])
     fs.finish(shadow=False)
     gm = MB('gulls'); gm.finish()
@@ -391,6 +417,8 @@ def far_dressing6(P, M):
     gb.finish(shadow=True)
 
 def build_ship6_all(P):
+    if os.environ.get('NOSHIP'):
+        M = ship6_mats(); build_sea6(P); clouds6(P); return
     M, before = build_ship6(P)
     s = SHIP6; root = bpy.data.objects.new('shiproot', None); bpy.context.scene.collection.objects.link(root)
     root.location = (s['cx'], s['cy'], 0.0); root.rotation_euler = (0, 0, math.radians(180.0 - s['theta']))
@@ -438,10 +466,10 @@ def build_sea6(P):
     sideok = (ly > YS - 3.0) & (ly < YB + 8.0)
     n1 = 0.80 * fbm2(ly / 10.0, ax / 3.2, 4, 3) + 0.20 * vnoise2(ly * 0.9, ax * 1.1, 9)
     band = np.zeros_like(px)
-    for (off, wd, amp, sd) in ((1.9, 1.7, 1.0, 4), (6.2, 2.4, 0.9, 14), (11.0, 3.0, 0.8, 24)):
+    for (off, wd, amp, sd) in ((2.6, 1.6, 0.9, 4), (6.4, 2.4, 0.95, 14), (11.0, 3.0, 0.85, 24)):
         env = np.clip(1 - np.abs(dh - off) / wd, 0, 1); env = env * env * (3 - 2 * env)
-        n = 0.78 * fbm2(ly / 9.0 + sd, ax / 2.9, 4 + sd, 3) + 0.22 * vnoise2(ly * 1.0 + sd, ax * 1.2, 9 + sd)
-        band = np.maximum(band, patches(n, 0.58 - 0.26 * env) * env * amp)
+        n = 0.62 * fbm2(ly / 7.5 + sd, ax / 2.3, 4 + sd, 4) + 0.38 * vnoise2(ly * 1.5 + sd, ax * 2.0, 9 + sd) - 0.22 * fbm2(ly * 3.0, ax * 3.6, 30 + sd, 3)
+        band = np.maximum(band, patches(n, 0.56 - 0.26 * env, 0.075) * env * amp)
     band *= sideok * ss(YB + 4.0, YB - 8.0, ly) * np.clip(1 - dback / 9.0, 0, 1) ** 0.5 * ss(-0.6, 0.5, dh)
     # wake behind the stern: widening V (arms ~ 3:1 patches along the track) + turbulent core
     wake = np.zeros_like(px); bws = float(w_wl(0.0))
@@ -449,7 +477,7 @@ def build_sea6(P):
         xarm = bws * 0.9 + slope * dback; wd = wd0 + wd1 * dback
         env = np.clip(1 - np.abs(ax - xarm) / wd, 0, 1); env = env * env * (3 - 2 * env)
         n = 0.78 * fbm2(dback / 9.0 + sd, (ax - xarm) / 2.6, 4 + sd, 3) + 0.22 * vnoise2(dback * 0.8, ax * 1.2, 20 + sd)
-        wake = np.maximum(wake, patches(n, 0.58 - 0.25 * env) * env * amp * np.exp(-dback / 78.0))
+        wake = np.maximum(wake, patches(n - 0.10 * vnoise2(dback * 1.9, ax * 2.4, 31 + sd), 0.58 - 0.25 * env, 0.08) * env * amp * np.exp(-dback / 78.0))
     core = np.exp(-(lx / (bws * 0.95 + 0.07 * dback)) ** 2) * np.exp(-dback / 34.0)
     nc = 0.78 * fbm2(dback / 6.0 + 70, lx / 1.7, 3, 3) + 0.22 * vnoise2(dback * 1.1, lx * 1.3, 8)
     wake = np.maximum(wake, patches(nc, 0.60 - 0.22 * core) * core)
@@ -457,8 +485,9 @@ def build_sea6(P):
     # bow ring: foam where the wave sheet falls back, strongest at the stem
     ringenv = ss(0.0, 1.4, dh) * (1 - ss(3.2, 6.0, dh)) * ss(YB - 15.0, YB - 2.0, ly) * ss(YB + 7.0, YB + 1.0, ly)
     nb = 0.75 * fbm2(ly / 3.6 + 90, ax / 2.0 + 10, 7, 3) + 0.25 * vnoise2(ly * 1.5, ax * 1.5, 12)
-    bow = patches(nb, 0.50 - 0.2 * ringenv) * ringenv
-    foam = np.nan_to_num(np.clip(np.maximum(np.maximum(band, wake), bow), 0, 1))
+    bow = patches(nb, 0.56 - 0.16 * ringenv) * ringenv * 0.9
+    skirt = (1 - ss(3.2, 4.8, dh)) * ss(-0.3, 0.2, dh) * ss(YB - 15.0, YB - 3.0, ly) * ss(YB + 7.0, YB + 1.0, ly) * (0.55 + 0.45 * patches(vnoise2(ly * 0.7, ax * 0.9, 77), 0.3, 0.3))
+    foam = np.nan_to_num(np.clip(np.maximum(np.maximum(np.maximum(band, wake), bow), skirt), 0, 1))
     verts = np.stack([px, py, h], -1).reshape(-1, 3).astype(np.float32)
     idx = np.arange(NU * NV).reshape(NV, NU)
     a_ = idx[:-1, :-1]; b_ = idx[:-1, 1:]; c_ = idx[1:, 1:]; d_ = idx[1:, :-1]
@@ -485,7 +514,7 @@ def build_sea6(P):
     cd = N('ShaderNodeCameraData'); mr = N('ShaderNodeMapRange'); mr.inputs['From Min'].default_value = 22.0; mr.inputs['From Max'].default_value = 220.0; L(cd.outputs['View Distance'], mr.inputs['Value'])
     col = mixc(hexc(P['sea_near']), hexc(P['sea_far']), mr.outputs['Result'])
     gp = N('ShaderNodeNewGeometry'); spz = N('ShaderNodeSeparateXYZ'); L(gp.outputs['Position'], spz.inputs[0])
-    cr = N('ShaderNodeMapRange'); cr.inputs['From Min'].default_value = 0.55; cr.inputs['From Max'].default_value = 0.9; L(spz.outputs['Z'], cr.inputs['Value'])
+    cr = N('ShaderNodeMapRange'); cr.inputs['From Min'].default_value = P.get('wc_min', 0.55); cr.inputs['From Max'].default_value = P.get('wc_max', 0.9); L(spz.outputs['Z'], cr.inputs['Value'])
     tcw = N('ShaderNodeTexCoord'); mpw = N('ShaderNodeMapping'); mpw.inputs['Scale'].default_value = (1.1, 0.7, 1.0); L(tcw.outputs['Object'], mpw.inputs['Vector'])
     nzw = N('ShaderNodeTexNoise'); nzw.inputs['Scale'].default_value = 1.0; nzw.inputs['Detail'].default_value = 2.0; L(mpw.outputs[0], nzw.inputs['Vector'])
     sp2 = N('ShaderNodeMapRange'); sp2.inputs['From Min'].default_value = 0.52; sp2.inputs['From Max'].default_value = 0.64; L(nzw.outputs['Fac'], sp2.inputs['Value'])
@@ -508,7 +537,7 @@ def build_sea6(P):
     L(bs.outputs[0], out.inputs['Surface']); ob.data.materials.append(m)
     # glossy-only virtual sun (light-linked to the sea): the sharp glitter lobe lands under it, ahead-left of the camera
     coll = bpy.data.collections.new('seacoll'); bpy.context.scene.collection.children.link(coll); coll.objects.link(ob)
-    kd = Vector(kdir(P['glit_az'], P['glit_el'])).normalized(); d = bpy.data.lights.new('glint', 'SUN'); d.color = (1.0, 0.86, 0.62); d.energy = P.get('glit_k', 14.0); d.angle = math.radians(0.6)
+    kd = Vector(kdir(P['glit_az'], P['glit_el'])).normalized(); d = bpy.data.lights.new('glint', 'SUN'); d.color = (1.0, 0.86, 0.62); d.energy = P.get('glit_k', 14.0); d.angle = math.radians(P.get('glit_ang', 0.6))
     o = bpy.data.objects.new('glint', d); bpy.context.scene.collection.objects.link(o); o.rotation_euler = (-kd).to_track_quat('Z', 'Y').to_euler()
     o.visible_diffuse = False; o.light_linking.receiver_collection = coll
 
@@ -516,13 +545,13 @@ def build_sea6(P):
 build_ship = build_ship6_all
 PRESETS['ship'] = dict(
     sky=[(0.0, '#6c9ce0'), (0.46, '#b6cfe8'), (0.5, '#b0cbe8'), (0.56, '#8db3e6'), (0.66, '#6a98e0'), (0.78, '#4a7bd6'), (0.88, '#3a67cb'), (1.0, '#2c54b6')], sky_k=1.0,
-    key=(1.0, 0.92, 0.78, 7.2), key_dir=kdir(160, 42), sun_angle=0.9, exposure=0.1, sat=1.08, amb=('#3050FF', 1.7), samples=80, dbounce=1, gloss=2,
-    cloud=('#ffffff', '#8c9ce8'), cloud_diffuse=True,
+    key=(1.0, 0.92, 0.78, 7.2), key_dir=kdir(160, 42), sun_angle=0.9, exposure=0.1, sat=1.08, amb=('#3050FF', 2.4), samples=80, dbounce=1, gloss=2,
+    cloud=('#ffffff', '#98a8ee'), cloud_diffuse=True,
     clouds6=[('cF', (-40, 620, 330), 46, 17), ('cA', (-250, 430, 130), 36, 3), ('cB', (150, 520, 215), 44, 7), ('cC', (-330, 700, 90), 40, 5), ('cD', (380, 560, 70), 30, 11), ('cE', (20, 900, 120), 60, 13)],
     gulls=[((9.2, 30.0, 14.0), 2.2, 0.6, 0.4), ((8.2, 40.0, 28.0), 0.8, 0.55, -0.3), ((-18.5, 50.0, 39.0), 3.4, 0.6, 0.1), ((13.4, 35.0, 9.3), 1.0, 0.45, 0.6), ((11.0, 46.0, 22.0), 2.9, 0.5, 0.0)],
-    sea_near='#0a4a58', sea_far='#0a2c4c', fresnel_k=0.7,
-    glit_az=12, glit_el=9, glit_k=30.0,
-    cam=dict(loc=(0.0, 0.0, 5.0), look=(0.0, 100.0, 5.0 + 100.0 * math.tan(math.radians(3.0))), lens=22))
+    sea_near='#08444f', sea_far='#0a2c4c', fresnel_k=0.38,
+    glit_az=19, glit_el=6, glit_k=40.0, glit_ang=1.8, gloss_sky_k=0.42, wc_min=0.74, wc_max=1.05,
+    cam=dict(loc=(0.0, 0.0, 4.2), look=(0.0, 100.0, 4.2 + 100.0 * math.tan(math.radians(3.0))), lens=22))
 
 def lights_ship(P):
     sun_light(P); w = sky_world2(P)

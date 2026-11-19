@@ -77,7 +77,8 @@ def sky_world2(P):
     bg.inputs['Strength'].default_value = P['sky_k']; L(cr.outputs[0], bg.inputs['Color'])
     lp = N('ShaderNodeLightPath'); b2 = N('ShaderNodeBackground'); b2.inputs['Color'].default_value = hexc(P['amb'][0]); b2.inputs['Strength'].default_value = P['amb'][1]
     ad = N('ShaderNodeMath'); ad.operation = 'ADD'; ad.use_clamp = True; L(lp.outputs['Is Camera Ray'], ad.inputs[0]); L(lp.outputs['Is Glossy Ray'], ad.inputs[1])
-    mx = N('ShaderNodeMixShader'); L(ad.outputs[0], mx.inputs[0]); L(b2.outputs[0], mx.inputs[1]); L(bg.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface'])
+    bgG = N('ShaderNodeBackground'); bgG.inputs['Strength'].default_value = P['sky_k'] * P.get('gloss_sky_k', 1.0); L(cr.outputs[0], bgG.inputs['Color']); mxs = N('ShaderNodeMixShader'); L(lp.outputs['Is Camera Ray'], mxs.inputs[0]); L(bgG.outputs[0], mxs.inputs[1]); L(bg.outputs[0], mxs.inputs[2])
+    mx = N('ShaderNodeMixShader'); L(ad.outputs[0], mx.inputs[0]); L(b2.outputs[0], mx.inputs[1]); L(mxs.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface'])
 
 def build_ship(P):
     M = ship_mats(); mb = MB('ship'); rr = rnd(5)

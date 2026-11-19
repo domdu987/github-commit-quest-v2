@@ -1,6 +1,6 @@
 sb1_workshop   cast-shadow px  32.2% of frame | cast-shadow mean hue   17.4 (median  16.9; band 225-265) |  0.0% of shade px in 225-265 | magenta share (frame, S>0.25)  0.79% (<=10) | OUT
                families % of chroma: red 67.4 orange 23.1 yellow 0.2 green 0.0 cyan 0.0 blue 8.8 violet 0.1 magenta 0.4 | sat 0.59 val 0.67 dark(V<.25) 1.0%
-sb2_ship       cast-shadow px   4.4% of frame | cast-shadow mean hue  251.0 (median 245.6; band 225-265) | 88.7% of shade px in 225-265 | magenta share (frame, S>0.25)  0.46% (<=10) | OK
-               families % of chroma: red 1.1 orange 0.9 yellow 0.0 green 0.0 cyan 1.0 blue 96.7 violet 0.2 magenta 0.1 | sat 0.48 val 0.78 dark(V<.25) 4.9%
+sb2_ship       cast-shadow px   0.4% of frame | cast-shadow mean hue  261.9 (median 230.1; band 225-265) | 35.9% of shade px in 225-265 | magenta share (frame, S>0.25)  0.09% (<=10) | OK
+               families % of chroma: red 0.2 orange 0.7 yellow 0.0 green 0.2 cyan 0.5 blue 98.0 violet 0.3 magenta 0.1 | sat 0.56 val 0.77 dark(V<.25) 0.0%
 sb3_hall       cast-shadow px  31.1% of frame | cast-shadow mean hue  255.5 (median 232.9; band 225-265) | 69.4% of shade px in 225-265 | magenta share (frame, S>0.25)  6.47% (<=10) | OK
                families % of chroma: red 47.9 orange 7.9 yellow 0.2 green 0.5 cyan 1.6 blue 34.3 violet 0.4 magenta 7.3 | sat 0.58 val 0.52 dark(V<.25) 3.9%
