@@ -20,7 +20,7 @@ def catmull(Pc, n):
         out.append(0.5 * ((2 * p1) + (-p0 + p2) * f + (2 * p0 - 5 * p1 + 4 * p2 - p3) * f * f + (-p0 + 3 * p1 - 3 * p2 + p3) * f ** 3))
     return np.array(out)
 
-def foam_sheet_mat(name, lacy=1.0, alpha_k=0.97):
+def foam_sheet_mat(name, lacy=1.0, alpha_k=1.0):
     m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
     out = N('ShaderNodeOutputMaterial'); bs = N('ShaderNodeBsdfPrincipled'); tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader')
     geo = N('ShaderNodeNewGeometry'); sp = N('ShaderNodeAttribute'); sp.attribute_type = 'GEOMETRY'; sp.attribute_name = 'sp'
@@ -49,20 +49,35 @@ def foam_sheet_mat(name, lacy=1.0, alpha_k=0.97):
     hb = N('ShaderNodeMath'); hb.operation = 'ADD'; L(hz.outputs['Fac'], hb.inputs[0]); L(a2.outputs[0], hb.inputs[1])
     hm = N('ShaderNodeMapRange'); hm.inputs['From Min'].default_value = -0.6; hm.inputs['From Max'].default_value = -0.3; L(hb.outputs[0], hm.inputs['Value'])
     al3b = N('ShaderNodeMath'); al3b.operation = 'MULTIPLY'; L(al3.outputs[0], al3b.inputs[0]); L(hm.outputs['Result'], al3b.inputs[1])
-    hq = N('ShaderNodeMapRange'); hq.inputs['From Min'].default_value = 0.25; hq.inputs['From Max'].default_value = 0.75; hq.inputs['To Min'].default_value = 0.62; hq.inputs['To Max'].default_value = 1.0; L(hz.outputs['Fac'], hq.inputs['Value'])
-    al3c = N('ShaderNodeMath'); al3c.operation = 'MULTIPLY'; L(al3b.outputs[0], al3c.inputs[0]); L(hq.outputs['Result'], al3c.inputs[1])
+    hq = N('ShaderNodeMapRange'); hq.inputs['From Min'].default_value = 0.25; hq.inputs['From Max'].default_value = 0.75; hq.inputs['To Min'].default_value = 0.9; hq.inputs['To Max'].default_value = 1.0; L(hz.outputs['Fac'], hq.inputs['Value'])
+    def M_(op, a, b=None, c=None, clamp=False):
+        n = N('ShaderNodeMath'); n.operation = op; n.use_clamp = clamp
+        for i, v in enumerate((a, b, c)):
+            if v is None: continue
+            if hasattr(v, 'node'): L(v, n.inputs[i])
+            else: n.inputs[i].default_value = v
+        return n.outputs[0]
+    def MR(v, a, b, lo=0.0, hi=1.0):
+        n = N('ShaderNodeMapRange'); n.inputs['From Min'].default_value = a; n.inputs['From Max'].default_value = b; n.inputs['To Min'].default_value = lo; n.inputs['To Max'].default_value = hi; L(v, n.inputs['Value']); return n.outputs['Result']
+    # flow streaks (constant across-profile lines stretched along the hull) and a lace web that opens holes in the lit face
+    cvs = N('ShaderNodeCombineXYZ'); L(M_('MULTIPLY', ln.outputs['Fac'], 34.0), cvs.inputs['X']); L(M_('MULTIPLY', sp.outputs['Fac'], 20.0), cvs.inputs['Y']); L(M_('MULTIPLY', hz.outputs['Fac'], 7.0), cvs.inputs['Z'])
+    nzs = N('ShaderNodeTexNoise'); nzs.inputs['Scale'].default_value = 1.0; nzs.inputs['Detail'].default_value = 3.0; L(cvs.outputs[0], nzs.inputs['Vector'])
+    cvw = N('ShaderNodeCombineXYZ'); L(M_('MULTIPLY', ln.outputs['Fac'], 22.0), cvw.inputs['X']); L(M_('MULTIPLY', sp.outputs['Fac'], 24.0), cvw.inputs['Y']); L(M_('MULTIPLY', hz.outputs['Fac'], 6.0), cvw.inputs['Z'])
+    vow = N('ShaderNodeTexVoronoi'); vow.feature = 'DISTANCE_TO_EDGE'; vow.inputs['Scale'].default_value = 1.0; L(cvw.outputs[0], vow.inputs['Vector'])
+    web = M_('SUBTRACT', 1.0, MR(vow.outputs['Distance'], 0.03, 0.14))
+    holes = M_('MULTIPLY', M_('MAXIMUM', web, M_('MULTIPLY', MR(nzs.outputs['Fac'], 0.56, 0.7), 0.9)), MR(hz.outputs['Fac'], 0.3, 0.8), clamp=True)
+    streak = MR(nzs.outputs['Fac'], 0.36, 0.54)
+    ab = M_('MULTIPLY', al3b.outputs[0], MR(streak, 0.0, 1.0, 0.8, 1.0))
+    ab = M_('MULTIPLY', ab, M_('SUBTRACT', 1.0, M_('MULTIPLY', holes, 0.95)))
+    ab = M_('MULTIPLY', ab, 2.4, clamp=True)
+    al3c = N('ShaderNodeMath'); al3c.operation = 'MULTIPLY'; L(ab, al3c.inputs[0]); L(hq.outputs['Result'], al3c.inputs[1])
     al4 = N('ShaderNodeMath'); al4.operation = 'MULTIPLY'; al4.inputs[1].default_value = alpha_k; al4.use_clamp = True; L(al3c.outputs[0], al4.inputs[0])
-    # colour: white top, aqua toward the water; underside turquoise
-    cm = N('ShaderNodeMix'); cm.data_type = 'RGBA'; cm.inputs[6].default_value = hexc('#86c4be'); cm.inputs[7].default_value = hexc('#d6e0de'); cmr = N('ShaderNodeMapRange'); cmr.inputs['From Min'].default_value = 0.10; cmr.inputs['From Max'].default_value = 0.52; L(hz.outputs['Fac'], cmr.inputs['Value']); L(cmr.outputs['Result'], cm.inputs[0])
-    b1 = N('ShaderNodeMath'); b1.operation = 'MULTIPLY'; b1.inputs[1].default_value = 11.0; L(hz.outputs['Fac'], b1.inputs[0])
-    b2 = N('ShaderNodeMath'); b2.operation = 'MULTIPLY'; b2.inputs[1].default_value = 3.2; L(nz.outputs['Fac'], b2.inputs[0])
-    b3 = N('ShaderNodeMath'); b3.operation = 'ADD'; L(b1.outputs[0], b3.inputs[0]); L(b2.outputs[0], b3.inputs[1])
-    b4 = N('ShaderNodeMath'); b4.operation = 'SINE'; b4.inputs[1].default_value = 0.0; b3m = N('ShaderNodeMath'); b3m.operation = 'MULTIPLY'; b3m.inputs[1].default_value = 3.14159; L(b3.outputs[0], b3m.inputs[0]); L(b3m.outputs[0], b4.inputs[0])
-    b5 = N('ShaderNodeMapRange'); b5.inputs['From Min'].default_value = 0.1; b5.inputs['From Max'].default_value = 1.0; b5.inputs['To Max'].default_value = 0.7; L(b4.outputs[0], b5.inputs['Value'])
-    bt = N('ShaderNodeMix'); bt.data_type = 'RGBA'; bt.inputs[7].default_value = hexc('#8cccc6'); L(cm.outputs[2], bt.inputs[6]); L(b5.outputs['Result'], bt.inputs[0])
-    cb = N('ShaderNodeMix'); cb.data_type = 'RGBA'; cb.inputs[7].default_value = hexc('#6fd8cc'); L(bt.outputs[2], cb.inputs[6]); L(geo.outputs['Backfacing'], cb.inputs[0])
-    es = N('ShaderNodeMath'); es.operation = 'MULTIPLY_ADD'; es.inputs[1].default_value = 0.9; es.inputs[2].default_value = 0.03; L(geo.outputs['Backfacing'], es.inputs[0])
-    bs.inputs['Roughness'].default_value = 0.55; bs.inputs['Specular IOR Level'].default_value = 0.2
+    # colour: white foam, aqua only in the flow bands and the very foot; turquoise translucent underside (backfacing)
+    cm = N('ShaderNodeMix'); cm.data_type = 'RGBA'; cm.inputs[6].default_value = hexc('#86cfc8'); cm.inputs[7].default_value = hexc('#f7fbf7'); L(M_('MULTIPLY', MR(streak, 0.25, 0.7), MR(hz.outputs['Fac'], 0.05, 0.3), clamp=True), cm.inputs[0])
+    cb = N('ShaderNodeMix'); cb.data_type = 'RGBA'; cb.inputs[7].default_value = hexc('#4cc4ba'); L(cm.outputs[2], cb.inputs[6]); L(geo.outputs['Backfacing'], cb.inputs[0])
+    es = N('ShaderNodeMath'); es.operation = 'MULTIPLY_ADD'; es.inputs[1].default_value = 0.5; es.inputs[2].default_value = 0.22; L(geo.outputs['Backfacing'], es.inputs[0])
+    bs.inputs['Roughness'].default_value = 0.6; bs.inputs['Specular IOR Level'].default_value = 0.15
+    bmp = N('ShaderNodeBump'); bmp.inputs['Strength'].default_value = 0.9; bmp.inputs['Distance'].default_value = 0.35; L(nzs.outputs['Fac'], bmp.inputs['Height']); L(bmp.outputs['Normal'], bs.inputs['Normal'])
     L(cb.outputs[2], bs.inputs['Base Color']); L(cb.outputs[2], bs.inputs['Emission Color']); L(es.outputs[0], bs.inputs['Emission Strength'])
     L(al4.outputs[0], mx.inputs[0]); L(tr.outputs[0], mx.inputs[1]); L(bs.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface']); return m
 
@@ -76,8 +91,8 @@ def bow_wave6(P, parent=None):
     a0 = math.atan2(npt[-1, 1], npt[-1, 0]); a1 = math.atan2(nst[0, 1], nst[0, 0])
     fan = [(YB * 0 + 0.0, YB) for _ in range(14)]; fan_n = [(math.cos(a0 + (a1 - a0) * k / 13.0), math.sin(a0 + (a1 - a0) * k / 13.0)) for k in range(14)]
     Pp = np.vstack([port, np.array(fan), stb]); Nn = np.vstack([npt, np.array(fan_n), nst]); Ll = np.concatenate([lp, np.linspace(-0.2, 0.2, 14), -lp[::-1]])
-    prof = [(-1.0, 0.25), (-0.7, 0.8), (-0.35, 1.4), (0.05, 1.9), (0.5, 2.2), (0.95, 2.2), (1.35, 1.95), (1.62, 1.55), (1.74, 1.1), (1.8, 0.72), (1.98, 0.36), (2.4, 0.08), (2.95, -0.1)]
-    nK = 26; pr = catmull(prof, nK); sp_ = np.linspace(0, 1, nK)
+    prof = [(-1.0, 0.20), (-0.6, 0.7), (-0.2, 1.3), (0.2, 1.85), (0.6, 2.2), (1.1, 2.35), (1.7, 2.25), (2.15, 1.9), (2.4, 1.45), (2.28, 1.05), (1.95, 0.75), (1.8, 0.45), (2.2, 0.2), (2.9, 0.05), (3.6, -0.1)]
+    nK = 30; pr = catmull(prof, nK); sp_ = np.linspace(0, 1, nK)
     verts = []; sp = []; hz = []; lp_ = []
     al = np.abs(Ll)
     E = np.exp(-(np.maximum(al - 3.0, 0) / 6.4) ** 2) * (0.72 + 0.28 * ss(0.0, 2.5, al))
@@ -87,8 +102,9 @@ def bow_wave6(P, parent=None):
         for k in range(nK):
             dn, zz = pr[k]; pxl = Pp[j, 0] + Nn[j, 0] * (D + dn * Wsc); pyl = Pp[j, 1] + Nn[j, 1] * (D + dn * Wsc)
             wp = loc2w((pxl, pyl, 0)); zb = float(swell_h(wp.x, wp.y)) * 0.92
-            verts.append((pxl, pyl, zb + zz * Hs + (0.03 if E[j] < 0.05 else 0.0)))
-            sp.append(sp_[k]); hz.append(float(np.clip(zz / 2.25, 0, 1))); lp_.append(float(al[j] / 16.0))
+            lump = 0.30 * (fbm2(np.array([Ll[j] * 0.45 + 5.0]), np.array([k * 0.25 + 3.0]), 41, 3)[0] - 0.5) * 2.0 * (zz / 2.35 if zz > 0 else 0.0) * min(1.0, E[j] * 1.6)
+            verts.append((pxl, pyl, zb + zz * Hs * (1 + lump) + (0.03 if E[j] < 0.05 else 0.0)))
+            sp.append(sp_[k]); hz.append(float(np.clip(zz / 2.35, 0, 1))); lp_.append(float(al[j] / 16.0))
     faces = []; nJ = len(Pp)
     for j in range(nJ - 1):
         for k in range(nK - 1):

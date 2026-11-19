@@ -47,6 +47,7 @@ def build(preset, light=None, clear=True):
     setup_render(sc, 'final'); K.setup_grade(sc, STATE.get('sat', 1.08))
     cams = ret.get('cams') or STATE.get('cams', {}); cn = ret.get('cam_name') or STATE.get('cam_name') or preset
     cam = ret.get('cam') or cams.get(cn) or cams[preset]
+    if isinstance(cam, str): cn = cam; cam = cams[cam]
     A = dict(location=loc, preset=preset, light=STATE.get('light', lk), cams=cams, cam=dict(cam), cam_name=cn, cam_notes=STATE.get('cam_notes', {}),
              marks=ret.get('marks') or STATE.get('marks', {}), staging=ret.get('staging') or STATE.get('staging', {}), ship_root=ret.get('ship_root') or STATE.get('ship_root'),
              render=dict(samples_final=STATE.get('samples'), resolution=(720, 1280), threads=2, denoise='OIDN', dof=None), heights=dict(HEIGHT), floor_z=STATE.get('floor_z', 0.0),

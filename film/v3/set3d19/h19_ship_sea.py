@@ -94,69 +94,62 @@ def swell_group(SP, camloc):
     return ng, tv
 
 # ----------------------------------------------------------------------------- foam fields (ship frame, metres)
-def patches(n, thr, soft=0.11): return np.clip((n - thr) / soft, 0, 1)
+def pulse(d, w):
+    e = np.clip(1 - np.abs(d) / w, 0, 1); return e * e * (3 - 2 * e)
 
 def foam_fields(px, py, SP):
-    """returns dict of arrays (point attributes): foam (combined lacy patches), hump (baked small bow hump)"""
+    """smooth foam ENVELOPES (the lace is made in the shader): fenv (0..1: where lacy foam may grow), fcore (solid foam), hump (baked small bow hump), shal (shore shallows)"""
     ly = py; lx = px; ax = np.abs(lx)
     tt = np.clip((ly - YS) / (YB - YS), 0, 1); bw = w_wl(tt)
     dh = np.where(ly >= YB, np.hypot(lx, ly - YB), ax - bw)
     dback = np.maximum(YS - ly, 0.0)
-    out = {}
-    foam = np.zeros_like(px); hump = np.zeros_like(px)
+    sk = SP.get('foam_k', 1.0)
+    env = np.zeros_like(px); core = np.zeros_like(px); hump = np.zeros_like(px)
     if SP.get('ship_foam', True):
-        sk = SP.get('foam_k', 1.0)
-        hump = 0.38 * np.exp(-((np.maximum(dh, 0) - 1.6) / 2.4) ** 2) * ss(YB - 16.0, YB - 2.0, ly) * ss(YB + 5.0, YB, ly) * (dh > -1.0) * (0.0 if SP.get('anchored') else 1.0)
-        sideok = (ly > YS - 3.0) & (ly < YB + 8.0)
-        band = np.zeros_like(px)
-        # three lacy lines that follow the hull (calm water between): finer, thinner, noise-broken
-        for (off, wd, amp_, sd, thrb) in ((1.7, 0.85, 0.95, 4, 0.50), (4.6, 1.25, 0.90, 14, 0.52), (8.2, 1.7, 0.82, 24, 0.55), (12.4, 2.0, 0.6, 34, 0.58)):
-            env = np.clip(1 - np.abs(dh - off - 0.25 * np.sin(ly * 0.21 + off)) / wd, 0, 1); env = env * env * (3 - 2 * env)
-            n = 0.58 * fbm2(ly / 4.2 + sd, ax / 1.15, 4 + sd, 4) + 0.30 * vnoise2(ly * 0.8 + sd, ax * 1.4, 9 + sd) + 0.12 * fbm2(ly * 0.6, ax * 0.5, 50 + sd, 2)
-            band = np.maximum(band, patches(n, thrb - 0.20 * env, 0.06) * env * amp_)
-        band *= sideok * ss(YB + 4.0, YB - 8.0, ly) * np.clip(1 - dback / 9.0, 0, 1) ** 0.5 * ss(-0.6, 0.5, dh)
-        if SP.get('anchored'): band *= 0.0
-        wake = np.zeros_like(px); bws = float(w_wl(0.0))
-        if not SP.get('anchored'):
-            for (slope, wd0, wd1, amp_, sd) in ((0.30, 1.2, 0.14, 1.0, 40), (0.13, 1.1, 0.09, 0.85, 50), (0.52, 1.6, 0.18, 0.7, 60)):
+        anch = SP.get('anchored')
+        hump = 0.38 * np.exp(-((np.maximum(dh, 0) - 1.6) / 2.4) ** 2) * ss(YB - 16.0, YB - 2.0, ly) * ss(YB + 5.0, YB, ly) * (dh > -1.0) * (0.0 if anch else 1.0)
+        sideok = ss(YS - 3.5, YS + 1.0, ly) * ss(YB + 8.0, YB + 2.0, ly)
+        along = lambda sd: 0.50 + 0.50 * fbm2(ly / 11.0 + sd, ax / 6.0 + 0.3 * sd, 4 + sd, 3)
+        if not anch:
+            hl = np.zeros_like(px)
+            for (off, wd, amp_, sd) in ((1.5, 0.55, 1.0, 4), (4.0, 0.8, 0.95, 14), (7.2, 1.1, 0.85, 24), (11.0, 1.4, 0.7, 34), (15.5, 1.7, 0.5, 44)):
+                wob = 0.35 * np.sin(ly * 0.21 + off) + 0.5 * (fbm2(ly / 6.5 + sd, 1.0, 9 + sd, 2) - 0.5)
+                hl = np.maximum(hl, pulse(dh - off - wob, wd) * amp_ * np.clip(along(sd) * 1.35 - 0.1, 0, 1))
+            hl *= sideok * np.clip(1 - dback / 9.0, 0, 1) ** 0.5 * ss(-0.6, 0.5, dh)
+            lap = pulse(dh - 0.35, 0.55) * sideok * np.clip(along(7) * 1.4, 0, 1) * (ly > YS)
+            env = np.maximum(env, hl); core = np.maximum(core, lap * 0.8)
+            bws = float(w_wl(0.0))
+            wk = np.zeros_like(px)
+            for (slope, wd0, wd1, amp_) in ((0.30, 1.2, 0.14, 1.0), (0.13, 1.1, 0.09, 0.85), (0.52, 1.6, 0.18, 0.7)):
                 xarm = bws * 0.9 + slope * dback; wd = wd0 + wd1 * dback
-                env = np.clip(1 - np.abs(ax - xarm) / wd, 0, 1); env = env * env * (3 - 2 * env)
-                n = 0.72 * fbm2(dback / 5.5 + sd, (ax - xarm) / 1.5, 4 + sd, 4) + 0.28 * vnoise2(dback * 0.8, ax * 1.2, 20 + sd)
-                wake = np.maximum(wake, patches(n - 0.10 * vnoise2(dback * 1.9, ax * 2.4, 31 + sd), 0.54 - 0.22 * env, 0.07) * env * amp_ * np.exp(-dback / 90.0))
-            core = np.exp(-(lx / (bws * 0.95 + 0.07 * dback)) ** 2) * np.exp(-dback / 40.0)
-            nc = 0.78 * fbm2(dback / 4.0 + 70, lx / 1.3, 3, 3) + 0.22 * vnoise2(dback * 1.1, lx * 1.3, 8)
-            wake = np.maximum(wake, patches(nc, 0.60 - 0.22 * core) * core)
-            wake *= (ly < YS + 3.0) * ss(YS + 3.0, YS - 1.0, ly)
-        ringenv = ss(0.0, 1.4, dh) * (1 - ss(3.2, 6.0, dh)) * ss(YB - 15.0, YB - 2.0, ly) * ss(YB + 7.0, YB + 1.0, ly)
-        nb = 0.75 * fbm2(ly / 3.0 + 90, ax / 1.5 + 10, 7, 3) + 0.25 * vnoise2(ly * 1.5, ax * 1.5, 12)
-        bow = patches(nb, 0.56 - 0.16 * ringenv) * ringenv * 0.9
-        skirt = (1 - ss(3.2, 4.8, dh)) * ss(-0.3, 0.2, dh) * ss(YB - 15.0, YB - 3.0, ly) * ss(YB + 7.0, YB + 1.0, ly) * (0.55 + 0.45 * patches(vnoise2(ly * 0.7, ax * 0.9, 77), 0.3, 0.3))
-        if SP.get('anchored'):
-            # at anchor: a thin quiet lap line at the waterline only
-            lap = np.clip(1 - np.abs(dh - 0.5) / 0.55, 0, 1) * (ly > YS) * (ly < YB + 1.0)
-            n = 0.6 * fbm2(ly / 2.5 + 3, ax / 0.9, 11, 3) + 0.4 * vnoise2(ly * 1.2, ax * 1.8, 5)
-            band = patches(n, 0.45, 0.08) * lap * 0.85; bow = bow * 0; skirt = skirt * 0
-        foam = np.maximum(np.maximum(np.maximum(band, wake), bow), skirt) * sk
+                m_ = np.clip(0.55 + 0.9 * (fbm2(dback / 14.0 + slope * 9, ax / 9.0, 20 + int(slope * 10), 3) - 0.5) + 0.35, 0, 1)
+                wk = np.maximum(wk, pulse(ax - xarm, wd) * amp_ * m_ * np.exp(-dback / 95.0))
+            cr = np.exp(-(lx / (bws * 0.95 + 0.07 * dback)) ** 2) * np.exp(-dback / 42.0)
+            wk = np.maximum(wk, cr * 0.95)
+            wk *= (ly < YS + 3.0) * ss(YS + 3.0, YS - 1.0, ly)
+            env = np.maximum(env, wk); core = np.maximum(core, np.exp(-dback / 12.0) * np.exp(-(lx / (bws * 0.6 + 0.04 * dback)) ** 2) * (ly < YS + 1.5) * 0.7)
+            ringenv = ss(0.0, 1.4, dh) * (1 - ss(3.2, 6.0, dh)) * ss(YB - 15.0, YB - 2.0, ly) * ss(YB + 7.0, YB + 1.0, ly)
+            env = np.maximum(env, ringenv * 0.95)
+            skirt = (1 - ss(2.6, 4.2, dh)) * ss(-0.3, 0.2, dh) * ss(YB - 15.0, YB - 3.0, ly) * ss(YB + 7.0, YB + 1.0, ly)
+            core = np.maximum(core, skirt * 0.55)
+        else:
+            lap = pulse(dh - 0.5, 0.6) * (ly > YS) * (ly < YB + 1.0) * np.clip(along(3) * 1.3, 0, 1)
+            env = np.maximum(env, lap * 0.55); core = np.maximum(core, lap * 0.35)
+        env = env * sk; core = core * sk
     for (cx, cy, r, h) in SP.get('rocks', []):
         d = np.hypot(px - cx, py - cy) - r
-        env = np.clip(1 - np.abs(d - 0.4) / 2.8, 0, 1) ** 1.2
-        n = 0.62 * fbm2(px / 1.6 + cx, py / 1.2 + cy, 71, 4) + 0.38 * vnoise2(px * 0.9, py * 0.9 + 13, 72)
-        foam = np.maximum(foam, patches(n, 0.50 - 0.28 * env, 0.08) * env * 1.05)
-        foam = np.maximum(foam, np.clip(1 - np.maximum(d, 0) / 1.0, 0, 1) * (d > -0.5) * 0.9)
-    sf = SP.get('shore')
-    shal = np.zeros_like(px)
+        e = pulse(d - 1.2, 3.6) * (0.75 + 0.35 * fbm2(px / 4.0 + cx, py / 4.0, 71, 3))
+        env = np.maximum(env, np.clip(e, 0, 1) * 1.0); core = np.maximum(core, np.clip(1 - np.maximum(d, 0) / 1.4, 0, 1) * (d > -0.8) * 0.85)
+    shal = np.zeros_like(px); sf = SP.get('shore')
     if sf is not None:
-        sd = sf(px, py)                                    # signed distance to the shoreline, > 0 = water
+        sd = sf(px, py)
         shal = np.exp(-np.maximum(sd, 0) / SP.get('shal_w', 60.0))
-        surf = np.clip(1 - np.abs(sd - 2.0) / 4.0, 0, 1) * ss(-3.0, 1.0, sd)
-        n = 0.6 * fbm2(px / 3.0 + 4, py / 5.0 + 6, 91, 4) + 0.4 * vnoise2(px * 0.5, py * 0.6, 92)
-        foam = np.maximum(foam, patches(n, 0.52 - 0.2 * surf, 0.08) * surf)
+        env = np.maximum(env, pulse(sd - 2.5, 4.0) * 0.85 * ss(-3.0, 1.0, sd))
+        core = np.maximum(core, pulse(sd - 0.4, 0.9) * 0.8)
         for kk in range(3):
-            line = np.clip(1 - np.abs(sd - (9.0 + 11.0 * kk + 3.0 * np.sin(py * 0.05 + kk))) / 1.1, 0, 1) * np.exp(-kk * 0.5)
-            n = 0.6 * fbm2(px / 2.2 + 17 * kk, py / 9.0, 95 + kk, 3) + 0.4 * vnoise2(px * 0.3, py * 0.4, 96 + kk)
-            foam = np.maximum(foam, patches(n, 0.52, 0.07) * line * 0.8)
-    out['foam'] = np.nan_to_num(np.clip(foam, 0, 1)); out['hump'] = hump; out['shal'] = shal
-    return out
+            line = pulse(sd - (10.0 + 11.0 * kk + 3.0 * np.sin(py * 0.05 + kk)), 1.6) * np.exp(-kk * 0.45) * np.clip(0.4 + 1.2 * fbm2(py / 14.0 + kk * 7, 1.0, 95 + kk, 3), 0, 1)
+            env = np.maximum(env, line * 0.8)
+    return dict(fenv=np.nan_to_num(np.clip(env, 0, 1)), fcore=np.nan_to_num(np.clip(core, 0, 1)), hump=hump, shal=shal)
 
 # ----------------------------------------------------------------------------- the grid
 def fit_grid(cam_loc, cam_look, NU, NV):
@@ -189,7 +182,7 @@ def build_sea(SP, parent):
     nt_ = len(tris); me.loops.add(nt_ * 3); me.polygons.add(nt_)
     me.loops.foreach_set('vertex_index', tris.ravel().astype(np.int32)); me.polygons.foreach_set('loop_start', (np.arange(nt_) * 3).astype(np.int32)); me.polygons.foreach_set('loop_total', np.full(nt_, 3, dtype=np.int32))
     me.update(calc_edges=True); me.polygons.foreach_set('use_smooth', np.ones(nt_, dtype=bool))
-    for nm in ('foam', 'hump', 'shal'):
+    for nm in ('fenv', 'fcore', 'hump', 'shal'):
         at = me.attributes.new(nm, 'FLOAT', 'POINT'); at.data.foreach_set('value', F[nm].reshape(-1).astype(np.float32))
     ob = bpy.data.objects.new('sea', me); bpy.context.scene.collection.objects.link(ob); ob.parent = parent
     ng, tv = swell_group(SP, cam_loc)
@@ -216,53 +209,69 @@ def sea_material(SP):
         else: mx.inputs[6].default_value = a
         if hasattr(b, 'node'): L(b, mx.inputs[7])
         else: mx.inputs[7].default_value = b
-        L(fac, mx.inputs[0]); return mx.outputs[2]
-    def mrange(val, a, b, lo=0.0, hi=1.0):
+        if hasattr(fac, 'node'): L(fac, mx.inputs[0])
+        else: mx.inputs[0].default_value = fac
+        return mx.outputs[2]
+    def mrange(val, a, b, lo=0.0, hi=1.0, clamp=True):
         mr = N('ShaderNodeMapRange'); mr.inputs['From Min'].default_value = a; mr.inputs['From Max'].default_value = b; mr.inputs['To Min'].default_value = lo; mr.inputs['To Max'].default_value = hi
-        L(val, mr.inputs['Value']); return mr.outputs['Result']
-    # spec level fades in with distance (calm near reflections)
-    L(mrange(dm, 20.0, 120.0, SP.get('spec_near', 0.18), SP.get('spec_far', 0.5)), bs.inputs['Specular IOR Level'])
+        mr.clamp = clamp; L(val, mr.inputs['Value']); return mr.outputs['Result']
+    L(mrange(dm, 20.0, 120.0, SP.get('spec_near', 0.12), SP.get('spec_far', 0.5)), bs.inputs['Specular IOR Level'])
     # colour layers: deep teal near -> teal mid -> deep navy far -> haze at the horizon
     col = mixc(hexc(SP['sea_near']), hexc(SP.get('sea_mid', SP['sea_near'])), mrange(dm, 12.0, 90.0))
     col = mixc(col, hexc(SP['sea_far']), mrange(dm, 70.0, 260.0))
-    # shallow turquoise toward a shore
     shl = N('ShaderNodeAttribute'); shl.attribute_type = 'GEOMETRY'; shl.attribute_name = 'shal'
     if SP.get('shore'):
         col = mixc(col, hexc(SP.get('sea_shal', '#38b3a6')), _nm(nt, 'MULTIPLY', _nm(nt, 'POWER', shl.outputs['Fac'], 1.6, clamp=True), SP.get('shal_k', 0.9), clamp=True))
-    # whitecaps on tall crests (object-space z in metres)
     tcw = N('ShaderNodeTexCoord'); spz = N('ShaderNodeSeparateXYZ'); L(tcw.outputs['Object'], spz.inputs[0])
-    wmin, wmax = SP.get('wc_min', 0.74), SP.get('wc_max', 1.05)
-    cr = mrange(spz.outputs['Z'], wmin, wmax)
-    mpw = N('ShaderNodeMapping'); mpw.inputs['Scale'].default_value = (1.1, 0.7, 1.0); L(tcw.outputs['Object'], mpw.inputs['Vector'])
-    nzw = N('ShaderNodeTexNoise'); nzw.inputs['Scale'].default_value = 1.0; nzw.inputs['Detail'].default_value = 2.0; L(mpw.outputs[0], nzw.inputs['Vector'])
-    wc = _nm(nt, 'MULTIPLY', cr, mrange(nzw.outputs['Fac'], 0.52, 0.64), clamp=True)
-    col = mixc(col, hexc('#e4eeec'), wc)
-    # foam: baked lacy patches x drifting noise (set_sea moves it aft along the hull) x shader lace
+    # ---- foam: envelope (baked fenv + crest whitecap env) -> lace (web + noise) with the pattern drifting aft with the sea time; fcore = solid
     tv = N('ShaderNodeValue'); tv.name = 'sea_t'; tv.label = 'sea_t'; tv.outputs[0].default_value = 0.0
-    fa = N('ShaderNodeAttribute'); fa.attribute_type = 'GEOMETRY'; fa.attribute_name = 'foam'
+    fa = N('ShaderNodeAttribute'); fa.attribute_type = 'GEOMETRY'; fa.attribute_name = 'fenv'
+    fc = N('ShaderNodeAttribute'); fc.attribute_type = 'GEOMETRY'; fc.attribute_name = 'fcore'
+    wmin, wmax = SP.get('wc_min', 0.74), SP.get('wc_max', 1.05)
+    mpw = N('ShaderNodeMapping'); mpw.inputs['Scale'].default_value = (0.55, 0.40, 1.0); L(tcw.outputs['Object'], mpw.inputs['Vector'])
+    nzw = N('ShaderNodeTexNoise'); nzw.inputs['Scale'].default_value = 1.0; nzw.inputs['Detail'].default_value = 2.0; L(mpw.outputs[0], nzw.inputs['Vector'])
+    wcz = mrange(spz.outputs['Z'], wmin, wmax)
+    wcn = mrange(nzw.outputs['Fac'], 0.38, 0.66, 0.0, 1.0)
+    wc = _nm(nt, 'MULTIPLY', wcz, wcn, clamp=True)                                   # whitecap envelope (crest height x spotty noise)
+    env = _nm(nt, 'MAXIMUM', fa.outputs['Fac'], _nm(nt, 'MULTIPLY', wc, SP.get('wc_k', 0.85)))
     sx = N('ShaderNodeSeparateXYZ'); L(tcw.outputs['Object'], sx.inputs[0])
     dy = _nm(nt, 'MULTIPLY_ADD', tv.outputs[0], -SP.get('drift', 3.2), sx.outputs['Y'])
     cv = N('ShaderNodeCombineXYZ'); L(sx.outputs['X'], cv.inputs['X']); L(dy, cv.inputs['Y'])
-    nz2 = N('ShaderNodeTexNoise'); nz2.inputs['Scale'].default_value = 0.55; nz2.inputs['Detail'].default_value = 3.0; nz2.inputs['Roughness'].default_value = 0.55; L(cv.outputs[0], nz2.inputs['Vector'])
-    vo = N('ShaderNodeTexVoronoi'); vo.feature = 'DISTANCE_TO_EDGE'; vo.inputs['Scale'].default_value = SP.get('lace_scale', 2.2); L(cv.outputs[0], vo.inputs['Vector'])
-    web = _nm(nt, 'SUBTRACT', 1.0, mrange(vo.outputs['Distance'], 0.025, 0.11))                   # thin web lines
-    far_fade = mrange(dm, 90.0, 260.0, 1.0, 0.0)                                                 # lace only where the pixel can resolve it
-    lace = _nm(nt, 'MULTIPLY', web, far_fade)
-    mod = mrange(nz2.outputs['Fac'], 0.30, 0.62, 0.55, 1.15)
-    f1 = _nm(nt, 'MULTIPLY', fa.outputs['Fac'], mod)
-    f2 = _nm(nt, 'ADD', f1, _nm(nt, 'MULTIPLY', lace, _nm(nt, 'MULTIPLY', fa.outputs['Fac'], 0.35)))
-    fm = _nm(nt, 'MULTIPLY', f2, 1.3, clamp=True)
-    col = mixc(col, hexc('#f0f6f2'), fm)
-    L(col, bs.inputs['Base Color'])
-    # Fresnel sky lift, faded in with view distance (cyan only in the distance)
+    n1 = N('ShaderNodeTexNoise'); n1.inputs['Scale'].default_value = 0.8; n1.inputs['Detail'].default_value = 4.0; n1.inputs['Roughness'].default_value = 0.6; L(cv.outputs[0], n1.inputs['Vector'])
+    mp2 = N('ShaderNodeMapping'); mp2.inputs['Scale'].default_value = (4.0, 4.0, 4.0); mp2.inputs['Location'].default_value = (13.0, 7.0, 3.0); L(cv.outputs[0], mp2.inputs['Vector'])
+    n2 = N('ShaderNodeTexNoise'); n2.inputs['Scale'].default_value = 1.0; n2.inputs['Detail'].default_value = 2.0; L(mp2.outputs[0], n2.inputs['Vector'])
+    # organic lace: thin curvy contour lines of domain-warped noise (no regular cells)
+    wv = N('ShaderNodeTexNoise'); wv.inputs['Scale'].default_value = 0.9; wv.inputs['Detail'].default_value = 1.0; L(cv.outputs[0], wv.inputs['Vector'])
+    wvec = N('ShaderNodeVectorMath'); wvec.operation = 'MULTIPLY_ADD'; wvec.inputs[1].default_value = (0.9, 0.9, 0.9); wvec.inputs[2].default_value = (0.0, 0.0, 0.0); L(cv.outputs[0], wvec.inputs[2]); L(wv.outputs['Color'], wvec.inputs[0])
+    c1n = N('ShaderNodeTexNoise'); c1n.inputs['Scale'].default_value = SP.get('lace_scale', 1.5); c1n.inputs['Detail'].default_value = 2.0; c1n.inputs['Roughness'].default_value = 0.5; L(wvec.outputs[0], c1n.inputs['Vector'])
+    web = _nm(nt, 'SUBTRACT', 1.0, mrange(_nm(nt, 'ABSOLUTE', _nm(nt, 'SUBTRACT', c1n.outputs['Fac'], 0.5)), 0.012, 0.06))
+    c2n = N('ShaderNodeTexNoise'); c2n.inputs['Scale'].default_value = SP.get('lace_scale', 1.5) * 3.1; c2n.inputs['Detail'].default_value = 1.0; L(wvec.outputs[0], c2n.inputs['Vector'])
+    web2 = _nm(nt, 'SUBTRACT', 1.0, mrange(_nm(nt, 'ABSOLUTE', _nm(nt, 'SUBTRACT', c2n.outputs['Fac'], 0.5)), 0.015, 0.075))
+    wfade = mrange(dm, 70.0, 220.0, 1.0, 0.0)                                                     # lace only where a pixel can resolve it
+    webc = _nm(nt, 'MULTIPLY', _nm(nt, 'MAXIMUM', web, _nm(nt, 'MULTIPLY', web2, 0.7)), wfade)
+    pat = _nm(nt, 'ADD', _nm(nt, 'MULTIPLY', webc, 0.62), _nm(nt, 'ADD', _nm(nt, 'MULTIPLY', n1.outputs['Fac'], 0.5), _nm(nt, 'MULTIPLY', _nm(nt, 'SUBTRACT', n2.outputs['Fac'], 0.5), 0.3)))
+    thr = _nm(nt, 'MULTIPLY_ADD', env, -SP.get('lace_gain', 1.0), SP.get('lace_off', 1.0))
+    lace = mrange(_nm(nt, 'SUBTRACT', pat, thr), 0.0, 0.14)
+    lace = _nm(nt, 'MULTIPLY', lace, mrange(env, 0.04, 0.2), clamp=True)
+    fm = _nm(nt, 'MAXIMUM', lace, _nm(nt, 'MULTIPLY', fc.outputs['Fac'], mrange(n1.outputs['Fac'], 0.30, 0.55, 0.55, 1.0)), clamp=True)
+    # horizon haze (also hides the far clip of the sea)
+    hz = mrange(dm, SP.get('haze0', 380.0), SP.get('haze1', 900.0), 0.0, SP.get('haze_k', 0.85))
+    col = mixc(col, hexc(SP.get('haze', '#b0cbe8')), hz)
+    # the body colour is painted with emission (so the blue-violet ambient does not tint the water); a faint diffuse term keeps the facets lit; foam is lit white
+    blk = hexc('#000000')
+    base = mixc(mixc(col, blk, 0.80), hexc('#eef4f0'), fm)
+    L(base, bs.inputs['Base Color'])
     lw = N('ShaderNodeLayerWeight'); lw.inputs['Blend'].default_value = 0.3
     fk = _nm(nt, 'MULTIPLY', mrange(dm, 20.0, 120.0, 0.12, 1.0), SP.get('fresnel_k', 0.38))
     em = _nm(nt, 'MULTIPLY', lw.outputs['Fresnel'], fk)
-    bs.inputs['Emission Color'].default_value = hexc(SP.get('lift', '#9fc2d8')); L(em, bs.inputs['Emission Strength'])
-    # calm normals: soft broad bump only
+    ecol = mixc(col, hexc('#f4f8f2'), fm)
+    e1 = N('ShaderNodeEmission'); L(ecol, e1.inputs['Color']); e1.inputs['Strength'].default_value = SP.get('body_k', 0.85)
+    L(_nm(nt, 'MAXIMUM', _nm(nt, 'MULTIPLY', _nm(nt, 'SUBTRACT', 1.0, fm), SP.get('body_k', 0.85)), _nm(nt, 'MULTIPLY', fm, SP.get('foam_glow', 0.45))), e1.inputs['Strength'])
+    e2 = N('ShaderNodeEmission'); e2.inputs['Color'].default_value = hexc(SP.get('lift', '#9fc2d8')); L(_nm(nt, 'MULTIPLY', em, _nm(nt, 'SUBTRACT', 1.0, fm)), e2.inputs['Strength'])
+    ad1 = N('ShaderNodeAddShader'); L(bs.outputs[0], ad1.inputs[0]); L(e1.outputs[0], ad1.inputs[1])
+    ad2 = N('ShaderNodeAddShader'); L(ad1.outputs[0], ad2.inputs[0]); L(e2.outputs[0], ad2.inputs[1])
     mpb = N('ShaderNodeMapping'); mpb.inputs['Scale'].default_value = (1.0, 1.0, 1.0); L(tcw.outputs['Object'], mpb.inputs['Vector'])
     nzb = N('ShaderNodeTexNoise'); nzb.inputs['Scale'].default_value = 0.9; nzb.inputs['Detail'].default_value = 0.0; L(mpb.outputs[0], nzb.inputs['Vector'])
-    bp = N('ShaderNodeBump'); bp.inputs['Strength'].default_value = SP.get('bump', 0.10); bp.inputs['Distance'].default_value = 0.2; L(nzb.outputs['Fac'], bp.inputs['Height']); L(bp.outputs['Normal'], bs.inputs['Normal'])
-    surf = bs.outputs[0]
-    L(surf, out.inputs['Surface'])
+    bp = N('ShaderNodeBump'); bp.inputs['Strength'].default_value = SP.get('bump', 0.04); bp.inputs['Distance'].default_value = 0.2; L(nzb.outputs['Fac'], bp.inputs['Height']); L(bp.outputs['Normal'], bs.inputs['Normal'])
+    L(ad2.outputs[0], out.inputs['Surface'])
     return m, tv.outputs[0]

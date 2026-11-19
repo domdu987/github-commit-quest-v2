@@ -15,7 +15,7 @@ WIN = (-1.55, -0.3, 0.9, 2.3)  # window x0 x1 z0 z1 (back wall)
 CAMS_M = dict(
     shop_wide=((0.05, -2.3, 1.32), (0.0, 3.4, 0.95)),
     shop_bench=((1.25, -0.6, 1.2), (1.35, 2.5, 1.2)),
-    shop_clock=((0.2, 0.35, 1.25), (1.15, 1.9, 1.15)),
+    shop_clock=((0.45, 0.6, 1.25), (1.2, 1.9, 1.1)),
     shop_door=((0.75, 0.2, 1.3), (-0.15, -2.9, 1.15)),
 )
 CAM_NOTES = dict(
@@ -36,7 +36,7 @@ MARKS_M = dict(harrison_bench=(2.0, 2.75, 0.0), harrison_lathe=(-1.1, 1.5, 0.0),
 LIGHTS = dict(
     DAY=dict(key=(1.0, 0.8, 0.52, 42.0), az=-46, el=19, sun_angle=1.0, exposure=0.2, sat=1.1, fill=1.0, win=1.0, warm=0.7, candle=0.55, door=0.5,
              pane=('#a8c8f4', 1.5), hedge=('#4e7a58', 0.55), roof=('#b86a4a', 0.7), out=('#fff0d0', 0.85), outg=('#6e9a58', 0.8), moon=0.0),
-    NIGHT=dict(key=(0.4, 0.5, 1.0, 5.0), az=-30, el=34, sun_angle=2.5, exposure=0.35, sat=1.04, fill=0.22, win=2.6, warm=0.0, candle=0.75, door=0.05,
+    NIGHT=dict(key=(0.4, 0.5, 1.0, 9.0), az=-30, el=34, sun_angle=2.5, exposure=0.45, sat=1.04, fill=0.75, win=3.2, warm=0.0, candle=0.38, door=0.05,
                pane=('#3a4a9a', 0.55), hedge=('#1e2c4a', 0.25), roof=('#2a3050', 0.3), out=('#26306a', 0.5), outg=('#1a2444', 0.4), moon=1.0),
 )
 
@@ -72,8 +72,10 @@ def shop_mats():
     M['stone'] = mat('stone', '#8a7a66', '#9c8c76', scale=6)
     M['grey'] = mat('grey', '#9aa0b0')
     M['wick'] = mat('wick', '#2a2020')
+    M['rug1'] = mat('rug1', '#7a3a2a', '#8a4632', scale=14); M['rug2'] = mat('rug2', '#9a7a4a', '#a88858', scale=14); M['rug3'] = mat('rug3', '#4a5a38', '#566a40', scale=14); M['rug4'] = mat('rug4', '#c8aa78', '#b89a68', scale=14)
+    M['brassm'] = metal_mat('brassm', '#a8802c', '#c49a3c', rough=0.6, spec=0.4, metallic=0.55); M['ceilp'] = mat('ceilp', '#8a4a30', '#9c5a38', scale=1.4, contrast=1.2)
     M['flame'] = mat_emit('flame', '#ffc860', 28.0)
-    M['lampg'] = mat_emit('lampg', '#ffb860', 2.6)
+    M['lampg'] = mat_emit('lampg', '#ffb860', 1.5)
     return M
 
 def box_wall(mb, m, x0, x1, y0, y1, z0, z1): mb.box(m, ((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2), (x1 - x0, y1 - y0, z1 - z0))
@@ -118,7 +120,7 @@ def clock_h1(M, par, big=1.0, tall=0.0, gold2=False):
 
 def clock_h3(M, par):
     """H3: compact brass box with a window onto gears and two big round balance wheels (rings with spokes) on top"""
-    B, BD = M['brass'], M['brassd']; mb = MB('h3'); w, d, h = 0.5, 0.36, 0.34
+    B, BD = M['brassm'], M['brassd']; mb = MB('h3'); w, d, h = 0.5, 0.36, 0.34
     mb.box(M['honey'], (0, 0, 0.02), (w + 0.1, d + 0.1, 0.04)); mb.box(B, (0, 0, 0.04 + h / 2), (w, d, h)); mb.box(BD, (0, -d / 2 - 0.004, 0.04 + h / 2), (w - 0.1, 0.01, h - 0.1))
     for dx in (-w / 2, w / 2):
         for dy in (-d / 2, d / 2): mb.box(BD, (dx, dy, 0.04 + h / 2), (0.03, 0.03, h + 0.02))
@@ -165,7 +167,7 @@ CLOCK_SLOTS = {1: [(1.2, 1.88)], 2: [(0.9, 1.84), (1.78, 1.88)], 3: [(0.8, 1.84)
 # ----------------------------------------------------------------------------- build
 def build_shop(SET, preset, light):
     root = K.new_root(); M = shop_mats(); SET['M'] = M; rr = rnd(19); PL = LIGHTS[light]
-    K.flat_world('#7a82ff', 0.0, env=('#ffd6a0', 0.9)); SET['samples'] = 10; SET['dbounce'] = 0
+    K.flat_world('#7a82ff', 0.0, env=('#ffd6a0', 0.9)); SET['samples'] = 8; SET['dbounce'] = 0
     mb = MB('shop'); fl = []
     # ---- shell
     for i in range(23):
@@ -177,7 +179,7 @@ def build_shop(SET, preset, light):
     box_wall(mb, M['plaster'], wx0, wx1, Y1, Y1 + .32, 0, wz0); box_wall(mb, M['plaster'], wx0, wx1, Y1, Y1 + .32, wz1, ZH)
     box_wall(mb, M['plaster'], X0 - .3, X0, Y0, Y1 + .3, 0, ZH); box_wall(mb, M['plaster'], X1, X1 + .3, Y0, Y1 + .3, 0, ZH)
     box_wall(mb, M['plaster'], X0 - .3, DOORX[0], Y0 - .3, Y0, 0, ZH); box_wall(mb, M['plaster'], DOORX[1], X1 + .3, Y0 - .3, Y0, 0, ZH)
-    box_wall(mb, M['plaster'], DOORX[0], DOORX[1], Y0 - .3, Y0, 2.1, ZH); box_wall(mb, M['plaster'], X0 - .3, X1 + .3, Y0, Y1 + .3, ZH, ZH + .3)
+    box_wall(mb, M['plaster'], DOORX[0], DOORX[1], Y0 - .3, Y0, 2.1, ZH); box_wall(mb, M['ceilp'], X0 - .3, X1 + .3, Y0, Y1 + .3, ZH, ZH + .3)
     # timber frame
     for x in (-2.2, 2.2): mb.box(M['beam'], (x, Y1 - 0.06, ZH / 2), (0.2, 0.14, ZH))
     mb.box(M['beam'], (0, Y1 - 0.06, 0.12), (4.6, 0.14, 0.24)); mb.box(M['beam'], (0, Y1 - 0.06, ZH - 0.12), (4.6, 0.14, 0.24))
@@ -323,6 +325,26 @@ def build_shop(SET, preset, light):
     for z in (0.12, 0.32, 0.52): mb.cyl(M['iron'], (1.2, -2.35, z), 0.29, 0.03, seg=14)
     mb.rod(M['oak'], (0.75, -2.7, 1.5), (0.6, -2.3, 0.0), 0.014, 0.014, 5)
     for a in range(10): mb.rod(M['honey'], (0.6, -2.3, 0.2), (0.6 + 0.02 * (a - 5), -2.3 + 0.01 * a, 0.0), 0.012, 0.008, 4)    # broom
+    # ---- overhead dressing: cart-wheel candle chandelier, herb bunches, hanging tools on the beams, planks stored on the joists, coil of rope, pulley
+    wcx, wcy, wcz = 0.15, 0.7, 2.28
+    for k in range(3): mb.rod(M['iron'], (wcx + 0.35 * math.cos(k * 2.094 + 0.4), wcy + 0.35 * math.sin(k * 2.094 + 0.4), wcz + 0.05), (wcx, wcy, ZH - 0.28), 0.006, 0.006, 4)
+    mb.cyl(M['oak'], (wcx, wcy, wcz), 0.5, 0.05, seg=24); mb.cyl(M['dark'], (wcx, wcy, wcz), 0.44, 0.06, seg=24); mb.cyl(M['oak'], (wcx, wcy, wcz), 0.36, 0.07, seg=24)
+    for k in range(6): mb.box(M['oakd'], (wcx, wcy, wcz), (1.0, 0.05, 0.05), rz=k * math.pi / 6)
+    mb.cyl(M['iron'], (wcx, wcy, wcz + 0.04), 0.06, 0.08, seg=10)
+    SET['wheelcandles'] = [(wcx + 0.46 * math.cos(k * math.pi / 2 + 0.3), wcy + 0.46 * math.sin(k * math.pi / 2 + 0.3), wcz + 0.03) for k in range(4)]
+    for (px_, py_, pz_) in SET['wheelcandles']: mb.cyl(M['brass'], (px_, py_, pz_ + 0.012), 0.035, 0.02, seg=8); mb.cyl(M['cream'], (px_, py_, pz_ + 0.1), 0.02, 0.16, seg=8)
+    for k in range(7): mb.rod(M['green'] if k % 2 else M['cloth'], (-0.5 + 0.12 * k, 2.7, ZH - 0.28), (-0.5 + 0.12 * k + 0.02 * (k - 3), 2.7, 2.2 - 0.06 * (k % 3)), 0.015, 0.05, 5)
+    for k in range(5): mb.rod(M['green'], (-1.9 + 0.1 * k, -1.8, ZH - 0.28), (-1.9 + 0.1 * k, -1.8, 2.3 - 0.04 * k), 0.012, 0.04, 5)
+    for (x_, y_, ln) in [(1.9, -0.3, 0.8), (-1.7, 1.2, 0.7), (1.5, 1.5, 0.9)]:
+        mb.rod(M['iron'], (x_, y_, ZH - 0.28), (x_, y_, ZH - 0.5), 0.006, 0.006, 4); hang_saw(mb, M, (x_, y_, ZH - 0.55), ln, 0.0)
+    for k in range(5): mb.box(M['honey'] if k % 2 else M['oak'], (X1 - 0.5, -1.0 + 0.5 * k, ZH - 0.33), (0.2, 0.9, 0.04), rz=0.05 * k)
+    for k in range(4): mb.box(M['oak'], (-1.9, -1.4 + 0.55 * k, ZH - 0.33), (0.18, 0.9, 0.04))
+    for k in range(6): mb.cyl(M['cloth'], (-0.6, -1.6, ZH - 0.6 + 0.0), 0.12 - 0.012 * k, 0.03, seg=12) if False else None
+    mb.cyl(M['cloth'], (0.9, -1.6, ZH - 0.5), 0.16, 0.12, seg=14); mb.cyl(M['dark'], (0.9, -1.6, ZH - 0.5), 0.08, 0.13, seg=10); mb.rod(M['iron'], (0.9, -1.6, ZH - 0.28), (0.9, -1.6, ZH - 0.44), 0.006, 0.006, 4)
+    mb.cyl(M['iron'], (-0.6, -0.9, ZH - 0.45), 0.09, 0.04, axis='y', seg=16); mb.rod(M['iron'], (-0.6, -0.9, ZH - 0.28), (-0.6, -0.9, ZH - 0.4), 0.006, 0.006, 4)
+    # braided oval rag rug on the floor between the figures
+    for k, cc in enumerate(('rug1', 'rug2', 'dark', 'rug2', 'rug3', 'rug2', 'rug1', 'rug4')):
+        f = 1 - 0.115 * k; mb.ell(M[cc], (0.05, 0.35, 0.012 + 0.0015 * k), (0.95 * f, 0.62 * f, 0.012), (24, 6))
     # ---- floor-level dense dressing (lower third of shop_wide / bench): tool chest with open drawers, offcut basket, half-built clock case, stump + axe, plank, sawhorse
     def chest(cx_, cy_, s=0.8, yaw=0.0):
         mb.push(Matrix.Translation((cx_, cy_, 0)) @ Euler((0, 0, yaw)).to_matrix().to_4x4() @ Matrix.Diagonal((s, s, s, 1)))
@@ -387,6 +409,7 @@ def build_shop(SET, preset, light):
     flame('flame_lamp', (2.0, 2.3, BZ + 0.2), 0.02, 0.045); flame('flame_hang', (-0.1, 1.6, 2.3), 0.025, 0.05)
     flame('flame_shelf', (-1.1 + 0.6, 2.3, 2.3), 0.02, 0.045); candle_obj('stub_shelf', (-1.1 + 0.6, 2.3, 2.065), 0.14)
     candle_obj('stub_sill', (wx0 + 0.55, Y1 - 0.14, wz0 + 0.035), 0.12); flame('flame_sill', (wx0 + 0.55, Y1 - 0.14, wz0 + 0.035 + 0.12 + 0.03))
+    for i, p_ in enumerate(SET['wheelcandles']): flame('flame_wheel%d' % i, (p_[0], p_[1], p_[2] + 0.22), 0.02, 0.05)
     lanm = MB('lantern'); lanm.box(M['lampg'], (0, 0, 0), (0.13, 0.13, 0.28)); lo = lanm.finish(shadow=False)[0]; lo.location = (1.75, 0.95, 0.78); SET['flames'].append((lo, (1.75, 0.95, 0.78)))
     lan2 = MB('lantern2'); lan2.box(M['lampg'], (0, 0, 0), (0.11, 0.11, 0.24)); l2 = lan2.finish(shadow=False)[0]; l2.location = (-0.9, Y0 + 0.35, 1.95); SET['flames'].append((l2, (-0.9, Y0 + 0.35, 1.95)))
     mb2 = MB('lantern2f'); mb2.rod(M['iron'], (-0.9, Y0 + 0.35, 2.07), (-0.9, Y0 + 0.2, 2.35), 0.008, 0.008, 4); mb2.box(M['iron'], (-0.9, Y0 + 0.35, 2.09), (0.15, 0.15, 0.03)); mb2.box(M['iron'], (-0.9, Y0 + 0.35, 1.81), (0.15, 0.15, 0.03)); mb2.finish()
@@ -426,7 +449,7 @@ def build_lights(SET, light):
     A('warm', 'warmfront', (0.0, -2.6, 2.0), (math.pi / 2, 0, 0), (3.5, 2.0), (1.0, 0.7, 0.4), 50)
     A('door', 'doorlight', (-0.3, -2.7, 1.3), (-math.pi / 2, 0, 0), (0.9, 2.0), (1.0, 0.92, 0.7), 260)
     for (nm, loc, en) in [('p_bench', (0.38, 2.15, 1.25), 30), ('p_lamp', (2.0, 2.15, 1.2), 16), ('p_hang', (-0.1, 1.5, 2.3), 20), ('p_chest', (1.75, 0.7, 0.95), 18), ('p_shelf', (-0.5, 2.2, 2.35), 12),
-                          ('p_clock', (0.3, 1.3, 1.75), 30), ('p_door', (-0.9, -2.5, 1.95), 20), ('p_sill', (-0.75, 3.1, 1.25), 10)]:
+                          ('p_clock', (0.3, 1.3, 1.75), 30), ('p_wheel', (0.15, 0.7, 2.45), 40), ('p_door', (-0.9, -2.5, 1.95), 20), ('p_sill', (-0.75, 3.1, 1.25), 10)]:
         Pt('candle', nm, loc, (1.0, 0.62, 0.26), en, 0.05)
     # per-light scaling by the light preset
     S['PLK'] = PL
@@ -462,11 +485,11 @@ def set_clock(n=1, frame=None):
     big = [x for x in ns if x != 4]; slots = {}
     if len(big) + (1 if 4 in ns else 0) == 1 and big: slots[big[0]] = (1.0, 1.88)
     elif big:
-        if 4 in ns and len(big) == 1: slots[big[0]] = (0.98, 1.88)
+        if 4 in ns and len(big) == 1: slots[big[0]] = (0.85, 1.88)
         else:
             tab = CLOCK_SLOTS[min(3, len(big))]
             for x, s in zip(big, tab): slots[x] = s
-    if 4 in ns: slots[4] = (1.25, 1.78) if not big else (1.82, 1.72)
+    if 4 in ns: slots[4] = (1.25, 1.75) if not big else (1.55, 1.52)
     for c, d in S['clocks'].items():
         on = c in ns; root = d['root']; K._show([root] + list(root.children_recursive), on, frame)
         if on:
