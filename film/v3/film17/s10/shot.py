@@ -205,7 +205,7 @@ class Take(object):
                 K.set_card_lift(lift_t(g), frame=f)
                 self.lamp.data.energy = lamp_w(g) * K.LAMP_W * K.STATE["P"]["lamp_k"]
                 self.lamp.data.keyframe_insert("energy", frame=f)
-            K.set_flicker(1.0, frame=f); K.set_dust(1.0, frame=f); K.set_smoke(1.0, frame=f)
+            K.set_flicker(1.0, frame=f); K.set_dust(0.4, frame=f); K.set_smoke(1.0, frame=f)
             if self.part == "M":
                 K.set_pendulum(frame=f)
         self.stage(gs)
@@ -220,7 +220,7 @@ class Take(object):
     # ---- part M: dupont seated in the measuring chair, bertillon (mirrored) holds the calipers on his head
     def stage_M(self, gs):
         d_cast, b_cast = "dupont", "bertillon"
-        da, dpos, dsc = self.put("dup", d_cast, "chair")
+        da, dpos, dsc = self.put("dup", d_cast, "chair", dy=-0.22)
         ba, bpos, bsc = self.put("ber", b_cast, "clerk", dx=-1.0, dy=-0.15)
         # dupont: seated on the chair: head centre at HEAD_Z['chair']
         _, dpose0 = pose_with("dupont_innocent", 1)
