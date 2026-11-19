@@ -1,0 +1,66 @@
+{
+ "take": "s26",
+ "film": 16,
+ "shots": [
+  26
+ ],
+ "g0": 1707,
+ "g1": 1767,
+ "first_g": 1698,
+ "n_frames": 78,
+ "shot_ranges": {
+  "26": [
+   1707,
+   1766
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 1767
+ },
+ "events": {
+  "click1": 1733,
+  "click2": 1742,
+  "snap": [
+   1731,
+   1744
+  ],
+  "jaw_drop_swap": 1745
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "set": "v3/set3d16 CHAMBER chamber_table DAY; hooks set_tape (length grows on the clicks) / set_click / set_flames keyed per frame",
+ "cast": "v3/cast16: morse_read_tape, mocker_sour_arms -> mocker_jaw_drop (blink swap g 1745, held open mouth, sweat), congressman_a/b/c_amazed; no lip-sync",
+ "camera": "custom 22 mm from above the front table; drift push 7 %/s + slide + arc, snap x2.1 (13 f) on click 1, travel to the mocker's face",
+ "samples": 6,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 9.32,
+ "s_per_frame_cpu_mean": 18.12,
+ "head_px": [
+  66,
+  288
+ ],
+ "head_centre_y": [
+  453,
+  770
+ ],
+ "head_bottom_max_y": 914,
+ "framediff_in_shot": {
+  "median": 4.38,
+  "p90": 27.14
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json"
+}

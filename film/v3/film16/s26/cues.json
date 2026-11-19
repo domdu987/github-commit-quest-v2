@@ -1,0 +1,47 @@
+{
+ "take": "s26",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 56.6,
+   "duration": 2.6,
+   "frame": 1698,
+   "end_frame": 1776,
+   "kind": "ambience",
+   "label": "chamber hush; far murmur of congressmen, a floorboard creak"
+  },
+  {
+   "time": 57.767,
+   "duration": 0.1,
+   "frame": 1733,
+   "end_frame": 1736,
+   "kind": "prop",
+   "label": "register CLICK 'ติ๊ด' (bright brass tick) + paper tape spooling out (dry paper rattle)"
+  },
+  {
+   "time": 58.067,
+   "duration": 0.1,
+   "frame": 1742,
+   "end_frame": 1745,
+   "kind": "prop",
+   "label": "second CLICK 'ติ๊ด', tape jumps out again"
+  },
+  {
+   "time": 58.167,
+   "duration": 0.5,
+   "frame": 1745,
+   "end_frame": 1760,
+   "kind": "accent",
+   "label": "crowd gasp, then hush; the mocker's jaw-drop sting"
+  },
+  {
+   "time": 57.7,
+   "duration": 0.433,
+   "frame": 1731,
+   "end_frame": 1744,
+   "kind": "accent",
+   "label": "snap push whoosh"
+  }
+ ]
+}
