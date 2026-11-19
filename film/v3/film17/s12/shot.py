@@ -109,7 +109,7 @@ class Take(object):
                 bob = 0.03 * math.sin(f * 0.17 + c["ph"])
                 arc = 0.25 * math.sin(math.pi * u)
                 r.location = (lerp(mouth.x, tx, e), lerp(mouth.y, ty, e), lerp(mouth.z, tz, e) + arc + bob)
-                s = 1.0 * e; r.scale = (s, s, s); r.hide_render = False
+                s = 0.85 * e; r.scale = (s, s, s); r.hide_render = False
                 r.rotation_euler = (0, math.radians(c["roll"] + 20 * (1 - e)), math.radians(c["yaw"] + 180 * (1 - e) * 0 + 40 * (1 - e)))
             r.keyframe_insert("location", frame=f); r.keyframe_insert("scale", frame=f); r.keyframe_insert("rotation_euler", frame=f); r.keyframe_insert("hide_render", frame=f)
 
@@ -121,7 +121,8 @@ class Take(object):
             for a in self.acts:
                 x, y, z, fz, who = self.A["marks"][a.mark]; sc = a.sc
                 bob = 0.0
-                a.place(g, (x + a.d[0], y + a.d[1], z + a.d[2]), scale=sc)
+                dy = self.walk_dy(a, g)
+                a.place(g, (x + a.d[0], y + a.d[1] + dy, z + a.d[2] + (0.02 * abs(math.sin(g * 0.36 + hash(a.name) % 5)) if self.shot == 30 and dy > 0.02 else 0.0)), scale=sc)
             if self.shot == 30:
                 for n in self.drawers:
                     g0, d0 = self.dstart[n]; K.set_drawer(n, lerp(d0, 1.0, smooth((g - g0) / 8.0)), frame=g)
@@ -137,6 +138,14 @@ class Take(object):
         for a in self.acts:
             for g, r in zip(gs, a.render_sprites(PPD[self.shot], frames=gs)): pass
 
+    WALK = {"g1": (4.0, 1836), "p1": (4.0, 1836), "g2": (3.2, 1826), "p2": (3.2, 1826), "g3": (2.6, 1816), "p3": (2.6, 1816)}
+    def walk_dy(self, a, g):
+        if self.shot != 30 or a.name not in self.WALK: return 0.0
+        d, ge = self.WALK[a.name]; return d * (1.0 - smooth((g - 1789) / float(ge - 1789)))
+    def walk_w(self, a, g):
+        if self.shot != 30 or a.name not in self.WALK: return 0.0
+        ge = self.WALK[a.name][1]; return 1.0 if g < ge - 8 else clamp(1.0 - (g - (ge - 8)) / 8.0)
+
     def pose_for(self, a, g):
         k = hash(a.name) % 7
         if a is getattr(self, "ber", None):
@@ -145,11 +154,17 @@ class Take(object):
                 c, p = C.pose_of("bertillon_holding_card", expr="proud")
                 p.update(idle(g, k)); p["arm_r"] = dict(p["arm_r"], hand=(0.66 + 0.03 * math.sin(g * 0.2), lerp(0.42, 0.06, u) + 0.03 * math.sin(g * 0.27)))
                 p["pitch"] = -0.15 - 0.25 * u; p["blink"] = blink(g, [1706, 1750, 1781]); return c, p
-            c, p = C.pose_of("bertillon_pointing"); p.update(idle(g, k)); p["blink"] = blink(g, [1810, 1850]); return c, p
+            c, p = C.pose_of("bertillon_pointing"); p.update(idle(g, k)); p["arm_r"] = dict(p["arm_r"], hand=(1.05 + 0.04 * math.sin(g * 0.3), 0.18 - 0.12 * math.sin(g * 0.15) ** 2)); p["blink"] = blink(g, [1810, 1850]); return c, p
         if a in (getattr(self, "dfb", None), getattr(self, "dcl", None)):
             cn = a.cast; _, p = C.pose_of("dupont_innocent", cast=cn); p.update(idle(g, k)); p["blink"] = blink(g, [1700, 1742, 1775]); return cn, p
         story = {"g1": "gendarme_escort_a", "g2": "gendarme_escort_b", "g3": "gendarme_laughing_a", "p1": "prisoner_standing_a", "p2": "prisoner_standing_b", "p3": "prisoner_standing_c"}[a.name]
-        c, p = C.pose_of(story, mirror=(a.name == "g1")); p.update(idle(g, k)); p["blink"] = blink(g, [1800 + 7 * k, 1845 + 3 * k]); return c, p
+        c, p = C.pose_of(story, mirror=(a.name == "g1")); p.update(idle(g, k)); p["blink"] = blink(g, [1800 + 7 * k, 1845 + 3 * k])
+        w = self.walk_w(a, g)
+        if w > 0.02:
+            cy = cast17.cycle(c, g / 26.0 + 0.2 * k, "march", base=dict(p), arms="none"); L = dict(cy["legs"])
+            for kk in ("stride", "lift_r", "lift_l"): L[kk] = L[kk] * w
+            p["legs"] = L; p["lean"] = p.get("lean", 0.0) * (1 - w) + 1.0
+        return c, p
 
     def render(self, gs, out, mode, samples):
         return C.render_frames(self.scene, self.cam, gs, out, mode, samples)
