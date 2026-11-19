@@ -16,7 +16,7 @@ ass=["[Script Info]","ScriptType: v4.00+","PlayResX: 720","PlayResY: 1280","Wrap
 "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"]
 ts=lambda t:f"{int(t//3600)}:{int(t%3600//60):02d}:{t%60:05.2f}"
 for c in caps:
-    a=c["t"]+OFF; b=min(c["end"]+OFF,T)
+    a=c["t"]+OFF; b=min((c["end"] if c.get("end") is not None else T)+OFF,T)
     if a>=T: continue
     ass.append(f"Dialogue: 0,{ts(a)},{ts(b)},Pop,,0,0,0,,{{\\pos(360,900)}}{c['text']}")
 open(out+".ass","w").write("\n".join(ass))
