@@ -1,0 +1,24 @@
+{
+ "shot": "s22",
+ "g0": 1683,
+ "g1": 1742,
+ "first_g": 1677,
+ "n_frames": 71,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "framediff": {
+  "median": 5.84,
+  "p90": 14.39,
+  "min": 1.71,
+  "max": 20.97,
+  "n": 58,
+  "frames_lt1": 0
+ },
+ "max_chin_y": {
+  "hero": 733,
+  "soldier": 711
+ },
+ "s_per_frame": 15.6
+}
