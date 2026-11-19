@@ -6,9 +6,9 @@ The production set, grown from the style board (board/NOTES.md). Four locations,
 ## Files
 - `jimo.py`: core (presets, materials incl. the warm / cool wall material, live fires, flame cards, states, cameras, foreground props, placeholders, CLI).
 - `jimo_wall.py`: the wall (both faces, 12 breaches, gate leaves, torches, ramps...), gate hall, city roofs, moat (water + dry ditch), bridge, road, fields, far Yan camp (jimo_out).
-- `jimo_in.py` (inside Jimo), `jimo_camp.py` (yan_camp), `jimo_vista.py` (the Qi plain), `jimo_ox.py` (debug ox only), `jimo_shots.py` (shot table, motion, marks, herd), `jimo_tex.py` (painted textures, cache `tex_jimo/`, bump `TEX_V` after editing a painter), `jimo_hue.py` (hue rows), `jimo_sheet.py` (contact sheets).
-- `contact.jpg` / `contact_small.jpg`: one 720x1280 final (12 samples) per shot camera at the MIDDLE of the move (t = 0.5, the shot's mid state), with flat placeholder cards at the stand marks (`ACTORS=0` leaves them out); label under each tile, cyan line at y 880.
-- `set_work/`: `final/` (the 26 PNGs + `sNN.json` meta: head rows, wall polygons), `final_log.txt`, `hue_rows.txt`, `stills/` (drafts).
+- `jimo_in.py` (inside Jimo), `jimo_camp.py` (yan_camp), `jimo_vista.py` (the Qi plain), `jimo_ox.py` (debug ox only), `jimo_shots.py` (shot table, motion, marks, herd, per-shot `sun` azimuth), `jimo_r2.py` (round 2: real 2D cast cards at the marks, ox card yaw, contact shadows / warm pools, per-shot skips / dressing / lamp dimming), `jimo_cards.py` (cast18 figures rasterised to PNG, cache `set_work/cards/`), `jimo_tex.py` (painted textures, cache `tex_jimo/`, bump `TEX_V` after editing a painter), `jimo_hue.py` (hue rows), `jimo_sheet.py` (contact sheets).
+- `contact.jpg` / `contact_small.jpg`: one 720x1280 final (12 samples) per shot camera at the MIDDLE of the move (t = 0.5, the shot's mid state), with REAL cast18 cards at the stand marks (people poses from STORY18, the dragon / plain ox from `ox_figure`, rasterised by Playwright through `puppet._raster`; `ACTORS=0` leaves them out); label under each tile, cyan line at y 880.
+- `set_work/`: `final/` (the 26 PNGs + `sNN.json` meta: head rows, wall polygons), `final_r1/` (round 1 finals, contact, hue rows, API backup), `final_log.txt`, `hue_rows.txt`, `framediff_r2.txt`, `cards/`, `stills/` (drafts), `r2draft.py` / `r2heads.py` / `r2proj.py` / `r2measure.py` (round 2 tools).
 - Rebuild everything: `python3 jimo.py final` (26 finals, one build + one render each), then `python3 jimo.py meta`, `python3 jimo.py contact`, `python3 jimo_hue.py rows`.
 
 ## Build and CLI
@@ -43,7 +43,7 @@ Hue numbers are in `set_work/hue_rows.txt` (shade hue 240-260 rule, magenta shar
 - `J.live_flame(base, h, s, lean, seed, n, spread, light, name)` builds a mesh flame + light anywhere.
 
 ## State setters (all take `frame=None`; with a frame they KEY, constant for visibility, linear for transforms)
-- `set_holes(n)`: ragged breaches in the wall base, n = 0 .. 12 (float: 6.5 = six open, the seventh half dug). 12 centres `HOLE_X` = x -41 .. -13.5 and 13.5 .. 41 (spacing 5.5), 3.4 wide x 4.3 high, on both faces; plug sinks, rim + rubble + props grow, a heap of dug earth + pick + basket appears inside. Available in jimo_in, jimo_out (and invisible far away in yan_camp).
+- `set_holes(n)`: ragged breaches in the wall base, n = 0 .. 12 (float: 6.5 = six open, the seventh half dug); OPENING ORDER (round 2): hole 11 (x 41) first, then 10 ... 0, so s16 (camera x 50 -> 25) sees them open one after another. 12 centres `HOLE_X` = x -41 .. -13.5 and 13.5 .. 41 (spacing 5.5), 3.4 wide x 4.3 high, on both faces; plug sinks, rim + rubble + props grow, a heap of dug earth + pick + basket appears inside. Available in jimo_in, jimo_out (and invisible far away in yan_camp).
 - `set_gate(k)`: gate leaves 0 shut .. 1 open 75 deg outward (0.15 = a crack, with a warm glow behind in jimo_out).
 - `set_party(k)` (yan_camp): 16 extra cups (+ jar) pop in one by one; the crowd marks are `marks.party_crowd` of shot s13.
 - `set_rout(k)` (yan_camp): tents fold (staggered z-scale to 0.12 + tilt), 30 pots / helmets / fodder bundles / bowls fly in arcs and scatter, chariot `chariot0` rolls away and turns. Comic, nothing gory, no bodies.
@@ -67,17 +67,16 @@ Camera poses are `loc -> look_at` (D) and lens (mm). `start` is the pose at t = 
 
 ### s01  (frames 0-78, jimo_in, NIGHT)
 - lantern-lit ox yard, eye, push 8 %/s, slide right; Tian Dan dresses an ox, a row of dressed oxen along the wall behind
-- camera start (-14.0, 26.0, 2.5) -> (4.0, 8.0, 5.2) lens 24; end (-12.462, 20.05, 3.062) -> (1.794, 5.794, 5.2); move: push +0.08 /s, slide +40 px/s; fg prop: ('lantern', 'right'); state at mid: `-`
-  - tiandan (1): (-4.1, 16.81, 0) yaw -132.9
-  - ox (6): (-6.29, 14.62, 0) yaw -145.9; (-6.72, 11.36, 0) yaw -153.6; (-6.58, 7.97, 0) yaw -157.6; (-6.22, 4.79, 0) yaw -159.9; (-5.66, 1.82, 0) yaw -161; (-4.45, -1.22, 0) yaw -160.7
-  - herd (8): (0.44, 9.33, 0) yaw 184.4 s1; (2.43, 9.31, 0) yaw 183.1 s1.01; (11.61, 9.3, 0) yaw 174.2 s1.05; (9.62, 9.19, 0) yaw 185.9 s1; (6.87, 9.02, 0) yaw 181.7 s0.95; (14.21, 8.97, 0) yaw 178.4 s1.01 ...
+- camera start (-14.0, 26.0, 2.5) -> (4.0, 8.0, 4.2) lens 24; end (-12.455, 20.057, 2.854) -> (1.801, 5.801, 4.2); move: push +0.08 /s, slide +40 px/s; fg prop: ('lantern', 'right'); state at mid: `-`
+  - tiandan (1): (-4.1, 16.8, 0) yaw 0
+  - ox (7): (-1.2, 15.2, 0) yaw 165 s1; (-15, 7.4, 0) yaw 180 s1; (-9.5, 7.9, 0) yaw 180 s1; (-4, 7.4, 0) yaw 180 s1; (1.5, 7.9, 0) yaw 180 s1; (7, 7.4, 0) yaw 180 s1 ...
 
 ### s02  (frames 78-156, jimo_in, NIGHT)
 - low 1.2 D along the ring lane, pull-out reveals dozens of dressed oxen filling the lane (herd helper)
 - camera start (-28.0, 11.5, 1.2) -> (12.0, 10.5, 3.0) lens 20; end (-35.28, 11.682, 0.872) -> (12.0, 10.5, 3.0); move: push -0.07 /s, slide +0 px/s; fg prop: ('pick_baskets', 'left'); state at mid: `-`
-  - tiandan (1): (-19.02, 10.68, 0) yaw -95.2
-  - ox (1): (-17.57, 8.74, 0) yaw -104.8
-  - herd (34): (42.67, 10.36, 0) yaw 7.2 s0.99; (44.17, 10.31, 0) yaw 1.3 s0.97; (40.32, 10.29, 0) yaw -0.9 s0.99; (38.8, 10.21, 0) yaw -3.2 s0.99; (34.8, 10.19, 0) yaw -4.1 s1; (29.75, 10.11, 0) yaw -2.5 s0.94 ...
+  - tiandan (1): (-24.5, 10.2, 0) yaw 0
+  - ox (1): (-21.8, 8.4, 0) yaw 180 s1
+  - herd (34): (4.94, 12.42, 0) yaw 176.4 s1.04; (-7.78, 12.41, 0) yaw 182.3 s1.07; (-19.94, 12.4, 0) yaw 174.3 s1; (20.74, 12.39, 0) yaw 174.4 s1; (28.17, 12.35, 0) yaw 185.7 s0.99; (2.39, 12.34, 0) yaw 174.2 s1.04 ...
 
 ### s03  (frames 156-297, vista, DUSK)
 - establishing high, push 6 %/s, slide left; the black Yan pennants pop over the towns one by one (set_pennants 0 -> 1 on 7.32-9.89 s)
@@ -89,136 +88,139 @@ Camera poses are `loc -> look_at` (D) and lens (mm). `start` is the pose at t = 
 
 ### s05  (frames 384-459, jimo_in, DUSK)
 - market lane, the clerk stall at (-77, 22) faces +x; Tian Dan behind the counter, townsfolk hand him a sash
-- camera start (-63.0, 12.5, 2.4) -> (-77.0, 22.5, 4.4) lens 22; end (-65.8, 14.5, 2.8) -> (-77.0, 22.5, 4.4); move: push +0.08 /s, slide +0 px/s; fg prop: ('counter', 'right'); state at mid: `-`
-  - tiandan (1): (-76.2, 22, 0) yaw 90
-  - townsfolk (3): (-72.6, 20, 0) yaw 130; (-71.6, 23.4, 0) yaw 230; (-70, 21.6, 0) yaw 200
-  - child (1): (-72, 25.4, 0) yaw 190
+- camera start (-69.5, 18.5, 2.6) -> (-76.5, 22.5, 2.8) lens 24; end (-70.9, 19.3, 2.64) -> (-76.5, 22.5, 2.8); move: push +0.08 /s, slide +0 px/s; fg prop: ('counter', 'right'); state at mid: `-`
+  - tiandan (1): (-76, 22, 0) yaw 90
+  - townsfolk (3): (-75.2, 20.6, 0) yaw 130; (-75.2, 23.8, 0) yaw 230; (-76, 25.6, 0) yaw 200
+  - child (1): (-76.8, 24.6, 0) yaw 190
 
 ### s06  (frames 459-531, jimo_in, DUSK)
 - eye, slides left 40 px/s along the ring lane in front of the house gates (x 58 / 74 / 89, y 23); townsfolk lead oxen out of the gates; ten oxen at "สิบตัว"
-- camera start (84.0, 9.0, 2.4) -> (72.0, 23.0, 4.0) lens 22; end (82.275, 7.522, 2.4) -> (70.275, 21.522, 4.0); move: push +0 /s, slide -40 px/s; fg prop: none; state at mid: `-`
+- camera start (84.0, 9.0, 2.4) -> (72.0, 22.0, 2.6) lens 22; end (82.404, 7.527, 2.4) -> (70.404, 20.527, 2.6); move: push +0 /s, slide -40 px/s; fg prop: none; state at mid: `-`
   - tiandan (1): (76, 12.5, 0) yaw 180
-  - townsfolk (4): (58, 17, 0) yaw 180; (74, 17, 0) yaw 180; (89, 17, 0) yaw 180; (66, 11, 0) yaw 180
-  - herd (10): (91.86, 28.8, 0) yaw 4.9 s1; (66.3, 28.73, 0) yaw -0.2 s0.97; (82.92, 28.71, 0) yaw 3.7 s0.99; (71.65, 28.69, 0) yaw -2.7 s1.04; (80.75, 28.63, 0) yaw 4.1 s0.98; (68.38, 28.61, 0) yaw -0.4 s1.04 ...
+  - townsfolk (4): (58, 19.5, 0) yaw 180; (74, 19.5, 0) yaw 180; (86, 19.5, 0) yaw 180; (66, 11, 0) yaw 180
+  - herd (10): (92.81, 16.3, 0) yaw 194.9 s1; (89.91, 15.97, 0) yaw 186.4 s1.02; (81.47, 15.86, 0) yaw 193.7 s0.99; (78.72, 15.7, 0) yaw 194.1 s0.98; (85.15, 15.55, 0) yaw 191.6 s0.97; (74.27, 15.47, 0) yaw 193.7 s0.97 ...
 
 ### s07  (frames 531-597, jimo_in, DUSK)
 - high 4-5 D from the north end of the yard, pull-out with a snap x1.6 on "พันกว่าตัว": the whole quarter packed with oxen (herd helper ~200 + silhouettes)
-- camera start (3.0, 46.5, 6.0) -> (0.0, 8.0, 1.5) lens 18; end (5.539, 79.086, 9.809) -> (0.0, 8.0, 1.5); move: push -0.07 /s, slide +0 px/s, extra [{'t': 0.55, 'd': 1.6, 'dur': 7}]; fg prop: none; state at mid: `-`
-  - herd (120): (34.73, 34.61, 0) yaw 6.1 s0.98; (27.73, 33.48, 0) yaw 5.5 s0.99; (21.96, 32.82, 0) yaw 12.9 s1.02; (37.6, 32.59, 0) yaw 12.6 s1.03; (15.81, 31.34, 0) yaw 11.1 s1.06; (30.94, 31.08, 0) yaw 6.9 s1 ...
-  - herd_far (90): (93.27, 78.24, 0) yaw 10.6 s1.04; (59.76, 76.54, 0) yaw 10.6 s0.95; (68.95, 74.47, 0) yaw 5.4 s1; (81.56, 73.27, 0) yaw 7.1 s0.98; (90.04, 71.81, 0) yaw 13.5 s0.97; (31.98, 71.73, 0) yaw 5.5 s0.97 ...
+- camera start (0.0, 46.0, 20.0) -> (0.0, 14.0, 0.0) lens 20; end (0.0, 70.832, 35.52) -> (0.0, 14.0, 0.0); move: push -0.05 /s, slide +0 px/s, extra [{'t': 0.55, 'd': 1.6, 'dur': 7}]; fg prop: none; state at mid: `-`
+  - herd (120): (33.99, 30.75, 0) yaw -20 s1; (31.45, 30.39, 0) yaw -17.8 s1.03; (29.53, 29.5, 0) yaw -17.3 s1.02; (26.36, 29, 0) yaw -24.9 s0.99; (24.12, 28.72, 0) yaw -22.8 s1.06; (21.99, 28.26, 0) yaw -25.3 s0.95 ...
+  - herd_pen (40): (7.47, 38.33, 0) yaw -57 s0.96; (-8.12, 38.29, 0) yaw -65.8 s0.98; (2.93, 38.29, 0) yaw -56.3 s0.94; (-5.26, 38.2, 0) yaw -63.7 s1.01; (-6.78, 38.19, 0) yaw -55.6 s0.96; (-14.46, 38.14, 0) yaw -58.1 s0.95 ...
+  - herd_far (100): (-0.71, 8.73, 0) yaw -0.7 s0.94; (7.33, 8.73, 0) yaw 3.1 s1; (-34.11, 8.72, 0) yaw -4.5 s1.03; (14.46, 8.72, 0) yaw 3.4 s0.97; (13.2, 8.71, 0) yaw 4.2 s1; (31.86, 8.7, 0) yaw -4.9 s1.01 ...
 
 ### s08  (frames 597-674, yan_camp, DUSK)
 - eye, push 8 %/s, the general on the rampart (marks.rampart, z 2.6) looks at Jimo, bursts out laughing; fg spear rack
-- camera start (3.0, -63.0, 2.4) -> (-4.0, -47.5, 5.0) lens 22; end (1.563, -59.817, 2.934) -> (-4.0, -47.5, 5.0); move: push +0.08 /s, slide +0 px/s; fg prop: ('spear_rack', 'left'); state at mid: `-`
-  - general (1): (-4, -47.5, 2.6) yaw 24.3
-  - soldier (2): (1.5, -48, 2.6) yaw 5.7; (-9, -48.5, 2.6) yaw 39.6
+- camera start (1.5, -59.0, 2.4) -> (-4.0, -47.5, 4.8) lens 22; end (0.371, -56.639, 2.893) -> (-4.0, -47.5, 4.8); move: push +0.08 /s, slide +0 px/s; fg prop: ('spear_rack', 'left'); state at mid: `-`
+  - general (1): (-4, -47.5, 2.6) yaw 25.6
+  - soldier (2): (3.6, -48.5, 2.6) yaw -11.3; (-9, -48.5, 2.6) yaw 45
 
 ### s09  (frames 674-737, yan_camp, DUSK)
-- QUOTE 1a medium, push 9 %/s; the general arms wide, soldiers behind him laugh
-- camera start (2.0, -80.0, 2.4) -> (-3.5, -90.5, 4.6) lens 24; end (0.961, -81.984, 2.816) -> (-3.5, -90.5, 4.6); move: push +0.09 /s, slide +0 px/s; fg prop: none; state at mid: `-`
-  - general (1): (-3.5, -90.5, 0) yaw 152.4
-  - soldier (3): (-7, -96, 0) yaw 30; (0.5, -97, 0) yaw 10; (-4, -99, 0) yaw 15
+- QUOTE 1a medium (camera on the far side of the general, looking +y toward the camp and Jimo; the table is the fg), push 9 %/s; the general arms wide, soldiers behind him laugh
+- camera start (-7.0, -99.0, 2.8) -> (-3.5, -90.5, 4.2) lens 24; end (-6.338, -97.394, 3.065) -> (-3.5, -90.5, 4.2); move: push +0.09 /s, slide +0 px/s; fg prop: none; state at mid: `-`
+  - general (1): (-3.5, -90.5, 0) yaw -22.4
+  - soldier (3): (-8.2, -85, 0) yaw 0; (0.8, -84.2, 0) yaw 0; (-3.8, -81.5, 0) yaw 0
 
 ### s10  (frames 737-853, yan_camp, DUSK)
-- QUOTE 1b medium-close, push 10 %/s then a slight slide; thumb at his chest, chin up
-- camera start (0.5, -85.0, 2.4) -> (-3.5, -90.5, 4.8) lens 26; end (-0.437, -87.57, 3.328) -> (-2.89, -90.944, 4.8); move: push +0.1 /s, slide -25 px/s; fg prop: none; state at mid: `-`
-  - general (1): (-3.5, -90.5, 0) yaw 144
-  - soldier (2): (-7, -96, 0) yaw 30; (0.5, -97, 0) yaw 10
+- QUOTE 1b medium-close (reverse angle, the camp behind him), push 10 %/s then a slight slide; thumb at his chest, chin up
+- camera start (-1.5, -96.5, 3.1) -> (-3.5, -90.5, 3.0) lens 26; end (-2.901, -94.389, 3.061) -> (-4.127, -90.709, 3.0); move: push +0.1 /s, slide -25 px/s; fg prop: none; state at mid: `-`
+  - general (1): (-3.5, -90.5, 0) yaw 18.4
+  - soldier (2): (-8, -85, 0) yaw 0; (0.8, -84, 0) yaw 0
 
 ### s11  (frames 853-944, yan_camp, DUSK)
 - wide eye, pull-out 7 %/s with a push-in on "ไอ้เสมียนวัว" (30.64 s); soldiers round the fire at (5.5, -85) mock-moo, finger horns
-- camera start (-2.0, -62.0, 2.4) -> (5.5, -86.0, 3.8) lens 20; end (-1.592, -63.305, 2.476) -> (5.5, -86.0, 3.8); move: push -0.07 /s, slide +0 px/s, extra [{'t': 0.55, 'd': 0.78, 'dur': 8}]; fg prop: ('jar', 'left'); state at mid: `-`
-  - soldier (6): (2.5, -81.5, 0) yaw 200; (8.5, -82, 0) yaw 170; (9.8, -86.5, 0) yaw 130; (2, -87.5, 0) yaw 250; (5.5, -89.5, 0) yaw 190; (-1, -84, 0) yaw 230
-  - general (1): (-2.5, -92, 0) yaw 200
+- camera start (-1.0, -73.0, 2.6) -> (5.5, -86.0, 2.2) lens 22; end (-0.647, -73.707, 2.578) -> (5.5, -86.0, 2.2); move: push -0.07 /s, slide +0 px/s, extra [{'t': 0.55, 'd': 0.78, 'dur': 8}]; fg prop: ('jar', 'left'); state at mid: `-`
+  - soldier (6): (2.5, -81.5, 0) yaw 0; (8.5, -82, 0) yaw 0; (9.8, -86.5, 0) yaw 0; (2, -87.5, 0) yaw 0; (5.5, -89.5, 0) yaw 0; (-1, -84, 0) yaw 0
+  - general (1): (-2.5, -92, 0) yaw 0
 
 ### s12  (frames 944-1003, jimo_out, DUSK)
 - eye low, slides right; the gate opens a crack (set_gate 0.15); the envoy bows on the bridge; old folk and women stand on the wall walk (z 16, no soldiers)
 - camera start (-14.0, -42.0, 1.7) -> (2.0, -12.0, 4.6) lens 24; end (-11.224, -43.48, 1.7) -> (4.776, -13.48, 4.6); move: push +0 /s, slide +40 px/s; fg prop: ('wheel', 'left'); state at mid: `g0.15`
-  - envoy (1): (0, -22, 0) yaw 180
-  - townsfolk (6): (-14, 0.4, 16) yaw 180; (-10, 0.4, 16) yaw 180; (-6.5, 0.4, 16) yaw 180; (6.5, 0.4, 16) yaw 180; (10, 0.4, 16) yaw 180; (14, 0.4, 16) yaw 180
-  - child (1): (-16.5, 0.4, 16) yaw 180
+  - envoy (1): (0.2, -29, 0) yaw 180
+  - townsfolk (6): (-13.1, -2.2, 16) yaw 180; (-9.7, -2.2, 16) yaw 180; (-6.3, -2.2, 16) yaw 180; (7.3, -2.2, 16) yaw 180; (10.7, -2.2, 16) yaw 180; (14.1, -2.2, 16) yaw 180
+  - child (1): (-16.5, -2.2, 16) yaw 180
 
 ### s13  (frames 1003-1071, yan_camp, NIGHT)
 - wide high, pull-out 6 %/s; the camp party (set_party 1): cheering-crowd marks round the fires, cups, a sentry drops his spear and joins in
 - camera start (0.0, -54.0, 12.0) -> (2.0, -86.0, 2.0) lens 20; end (-0.272, -49.648, 13.36) -> (2.0, -86.0, 2.0); move: push -0.06 /s, slide +0 px/s; fg prop: none; state at mid: `pt1`
   - party_crowd (14): (-6, -92, 0) yaw 200; (-2, -93, 0) yaw 210; (1.5, -90, 0) yaw 190; (8.5, -80, 0) yaw 180; (3, -80, 0) yaw 190; (-4, -76, 0) yaw 200 ...
-  - sentry (1): (-14, -50.5, 0) yaw 180
+  - sentry (1): (-14, -76, 0) yaw 180
 
 ### s14  (frames 1071-1136, yan_camp, NIGHT)
-- QUOTE 2a medium, push 9 %/s; the general raises his cup and laughs, bounce; fg wine jar
-- camera start (2.0, -86.0, 2.4) -> (-4.3, -96.2, 4.5) lens 24; end (0.772, -87.989, 2.809) -> (-4.3, -96.2, 4.5); move: push +0.09 /s, slide +0 px/s; fg prop: ('jar', 'right'); state at mid: `pt1`
-  - general (1): (-4.3, -96.2, 0) yaw 148.3
-  - soldier (2): (-8, -101, 0) yaw 30; (0.5, -101.5, 0) yaw 10
+- QUOTE 2a medium (reverse angle: the party fires, tents and crowd behind him), push 9 %/s; the general raises his cup and laughs, bounce; fg wine jar
+- camera start (-9.0, -106.0, 2.8) -> (-4.3, -96.2, 4.4) lens 24; end (-8.084, -104.089, 3.112) -> (-4.3, -96.2, 4.4); move: push +0.09 /s, slide +0 px/s; fg prop: ('jar', 'right'); state at mid: `pt1`
+  - general (1): (-4.3, -96.2, 0) yaw -25.6
+  - soldier (2): (-9.2, -90.8, 0) yaw 0; (1.2, -90, 0) yaw 0
+  - party_crowd (6): (6.5, -85, 0) yaw 0; (9.5, -80.5, 0) yaw 0; (2, -78, 0) yaw 0; (-3, -74.5, 0) yaw 0; (-9, -72, 0) yaw 0; (8, -74, 0) yaw 0
 
 ### s15  (frames 1136-1205, yan_camp, NIGHT)
-- QUOTE 2b medium-close, push 10 %/s; he mimes carving, licks his lips, the cup tilts
-- camera start (-1.5, -90.5, 2.4) -> (-4.3, -96.2, 4.6) lens 26; end (-2.144, -91.811, 2.906) -> (-4.3, -96.2, 4.6); move: push +0.1 /s, slide +0 px/s; fg prop: none; state at mid: `pt1`
-  - general (1): (-4.3, -96.2, 0) yaw 153.8
-  - soldier (1): (-8, -101, 0) yaw 30
+- QUOTE 2b medium-close (reverse angle), push 10 %/s; he mimes carving, licks his lips, the cup tilts
+- camera start (-1.5, -103.0, 3.1) -> (-4.3, -96.2, 3.0) lens 26; end (-2.144, -101.436, 3.077) -> (-4.3, -96.2, 3.0); move: push +0.1 /s, slide +0 px/s; fg prop: none; state at mid: `pt1`
+  - general (1): (-4.3, -96.2, 0) yaw 22.4
+  - soldier (1): (-9, -91, 0) yaw 0
+  - party_crowd (3): (6, -86, 0) yaw 0; (9.5, -81, 0) yaw 0; (2, -79, 0) yaw 0
 
 ### s16  (frames 1205-1309, jimo_in, NIGHT)
-- low inside the wall base, slides left along the wall (x 50 -> 25): the holes open one after another (set_holes 0 -> 12); townsfolk dig
-- camera start (50.0, 10.5, 1.5) -> (22.0, 4.6, 3.4) lens 22; end (51.048, 5.525, 1.5) -> (23.048, -0.375, 3.4); move: push +0 /s, slide -40 px/s; fg prop: ('pick_baskets', 'left'); state at mid: `h6`
-  - townsfolk (6): (13.5, 8.2, 0) yaw 180; (19, 8.2, 0) yaw 180; (24.5, 8.2, 0) yaw 180; (30, 8.2, 0) yaw 180; (35.5, 8.2, 0) yaw 180; (41, 8.2, 0) yaw 180
-  - child (1): (21.5, 9.6, 0) yaw 180
+- low inside the wall base, slides left along the wall (x 50 -> 25): the holes open one after another (set_holes 0 -> 12, hole order from x 41 down); townsfolk dig between the holes
+- camera start (50.0, 16.0, 2.6) -> (30.0, 4.0, 2.2) lens 22; end (52.128, 12.454, 2.6) -> (32.128, 0.454, 2.2); move: push +0 /s, slide -40 px/s; fg prop: ('pick_baskets', 'left'); state at mid: `h6`
+  - townsfolk (6): (43.75, 7.4, 0) yaw 180; (38.25, 7.4, 0) yaw 180; (32.75, 7.4, 0) yaw 180; (27.25, 7.4, 0) yaw 180; (21.75, 7.4, 0) yaw 180; (16.25, 7.4, 0) yaw 180
+  - child (1): (27.25, 9.2, 0) yaw 180
 
 ### s17  (frames 1309-1388, jimo_in, NIGHT)
 - eye medium, push 8 %/s; reed bundles soaked from a jar are tied to the tails; oxen lined up nose-first at the holes (marks face the wall)
-- camera start (-4.0, 17.5, 2.4) -> (-27.0, 5.5, 3.6) lens 22; end (-8.845, 14.972, 2.653) -> (-27.0, 5.5, 3.6); move: push +0.08 /s, slide +0 px/s; fg prop: ('reeds', 'left'); state at mid: `h12`
-  - ox (6): (-41, 8.4, 0) yaw 180; (-35.5, 8.4, 0) yaw 180; (-30, 8.4, 0) yaw 180; (-24.5, 8.4, 0) yaw 180; (-19, 8.4, 0) yaw 180; (-13.5, 8.4, 0) yaw 180
+- camera start (-9.0, 16.5, 2.6) -> (-27.0, 5.5, 2.4) lens 22; end (-12.792, 14.183, 2.558) -> (-27.0, 5.5, 2.4); move: push +0.08 /s, slide +0 px/s; fg prop: ('reeds', 'left'); state at mid: `h12`
+  - ox (6): (-41, 8.4, 0) yaw -90 s1; (-35.5, 8.4, 0) yaw -90 s1; (-30, 8.4, 0) yaw -90 s1; (-24.5, 8.4, 0) yaw -90 s1; (-19, 8.4, 0) yaw -90 s1; (-13.5, 8.4, 0) yaw -90 s1
   - townsfolk (3): (-33.7, 11.5, 0) yaw 200; (-22.7, 11.5, 0) yaw 200; (-17.2, 11.5, 0) yaw 200
   - tiandan (1): (-32.2, 12, 0) yaw 160
 
 ### s18  (frames 1388-1427, jimo_in, NIGHT)
 - eye, quick push-in: Tian Dan raises a torch, tails light in a ripple (flame_card on each ox card)
-- camera start (8.0, 17.0, 2.4) -> (-14.0, 6.0, 4.4) lens 22; end (1.312, 13.656, 3.008) -> (-14.0, 6.0, 4.4); move: push +0.1 /s, slide +0 px/s, extra [{'t': 0.5, 'd': 0.8, 'dur': 6}]; fg prop: none; state at mid: `h12`
-  - tiandan (1): (-8.5, 11, 0) yaw 120
-  - ox (6): (-41, 8.4, 0) yaw 180; (-35.5, 8.4, 0) yaw 180; (-30, 8.4, 0) yaw 180; (-24.5, 8.4, 0) yaw 180; (-19, 8.4, 0) yaw 180; (-13.5, 8.4, 0) yaw 180
+- camera start (-1.0, 15.5, 2.4) -> (-22.0, 5.5, 4.0) lens 22; end (-7.384, 12.46, 2.886) -> (-22.0, 5.5, 4.0); move: push +0.1 /s, slide +0 px/s, extra [{'t': 0.5, 'd': 0.8, 'dur': 6}]; fg prop: none; state at mid: `h12`
+  - tiandan (1): (-6.8, 12.6, 0) yaw 120
+  - ox (6): (-41, 8.4, 0) yaw -90 s1; (-35.5, 8.4, 0) yaw -90 s1; (-30, 8.4, 0) yaw -90 s1; (-24.5, 8.4, 0) yaw -90 s1; (-19, 8.4, 0) yaw -90 s1; (-13.5, 8.4, 0) yaw -90 s1
 
 ### s19  (frames 1427-1515, jimo_out, NIGHT)
 - low wide at the wall base, WHIP pan at the end to follow the herd; oxen burst out of the 12 holes (x 13.5..41 at y -5), cross the dry ditch / bridge and the field toward the camp
 - camera start (6.0, -32.0, 1.5) -> (30.0, -5.0, 3.4) lens 18; end (6.0, -32.0, 1.5) -> (34.989, -53.555, 3.4); move: push +0 /s, slide +0 px/s, extra [{'t': 0.9, 'pan': -85, 'dur': 6}]; fg prop: none; state at mid: `h12,g0.3`
-  - ox (6): (13.5, -6.6, 0) yaw 0; (19, -6.6, 0) yaw 0; (24.5, -6.6, 0) yaw 0; (30, -6.6, 0) yaw 0; (35.5, -6.6, 0) yaw 0; (41, -6.6, 0) yaw 0
-  - herd (40): (24.01, -6.33, 0) yaw -106.1 s0.97; (17.89, -6.41, 0) yaw -103.8 s1; (30.03, -7.6, 0) yaw -107.6 s1.01; (20.69, -8.77, 0) yaw -106.6 s0.95; (36.67, -8.87, 0) yaw -101 s0.99; (26.59, -9.14, 0) yaw -106.3 s1.01 ...
+  - ox (6): (13.5, -7.2, 0) yaw -100 s1; (19, -7.2, 0) yaw -100 s1; (24.5, -7.2, 0) yaw -100 s1; (30, -7.2, 0) yaw -100 s1; (35.5, -7.2, 0) yaw -100 s1; (41, -7.2, 0) yaw -100 s1
+  - herd (40): (32.93, -8.4, 0) yaw -101.6 s1.01; (26.75, -9.45, 0) yaw -100.1 s0.97; (30.16, -10.33, 0) yaw -100.3 s1.01; (20.93, -11.32, 0) yaw -97.8 s1; (24.39, -11.87, 0) yaw -100.5 s0.95; (34.62, -16.46, 0) yaw -99.3 s0.95 ...
   - qi_soldier (30): (31.55, 6.88, 0) yaw -95.6 s0.94; (37.23, 6.71, 0) yaw -95.7 s1.03; (25.37, 6.61, 0) yaw -85.1 s0.98; (19.27, 5.85, 0) yaw -91.1 s1.07; (22.37, 5.33, 0) yaw -84.6 s0.99; (13.63, 5.15, 0) yaw -86.8 s1.06 ...
 
 ### s20  (frames 1515-1596, jimo_out, NIGHT)
 - low, tracking beside the herd, push 7 %/s; the herd charges toward the Yan camp (far camp at y -150..-215); oxen never turn back
 - camera start (22.0, -56.0, 1.7) -> (-2.0, -92.0, 3.0) lens 20; end (17.464, -62.804, 1.946) -> (-2.0, -92.0, 3.0); move: push +0.07 /s, slide +0 px/s; fg prop: none; state at mid: `h12`
-  - herd (36): (3.13, -48.11, 0) yaw -98.1 s1; (9.54, -50.28, 0) yaw -105.7 s0.98; (6.25, -51.06, 0) yaw -96 s1; (12.46, -53.29, 0) yaw -96.2 s0.96; (1.15, -56.99, 0) yaw -93.8 s1.03; (7.96, -58.99, 0) yaw -94.3 s0.98 ...
+  - herd (36): (10.5, -59.46, 0) yaw -106.4 s1; (13.22, -62.3, 0) yaw -104.3 s1; (16.45, -62.58, 0) yaw -114 s0.98; (7.77, -65.18, 0) yaw -102 s1.03; (18.98, -65.41, 0) yaw -104.5 s0.96; (14.13, -68.28, 0) yaw -102.6 s0.98 ...
 
 ### s21  (frames 1596-1683, yan_camp, NIGHT)
 - eye from the Yan side at the palisade gap (x +-6): a wall of glowing red dragon monsters comes out of the dark field (y -38 .. -6); SNAP push x1.5; soldiers' jaws drop, cups fall
-- camera start (0.0, -43.5, 2.2) -> (0.0, -8.0, 5.0) lens 22; end (0.0, -27.646, 3.45) -> (0.0, -8.0, 5.0); move: push +0.06 /s, slide +0 px/s, extra [{'t': 0.45, 'd': 0.67, 'dur': 6}]; fg prop: none; state at mid: `-`
-  - soldier (3): (-3, -47, 0) yaw 0; (3.5, -49, 0) yaw 0; (0, -52, 0) yaw 0
-  - herd (60): (-10.37, -7.46, 0) yaw -88.4 s1; (1.18, -7.57, 0) yaw -84 s1.03; (7.23, -8, 0) yaw -84.6 s0.98; (-4.68, -8.01, 0) yaw -96 s0.98; (10.72, -8.59, 0) yaw -94.5 s1.06; (-7.3, -8.69, 0) yaw -86.3 s1 ...
+- camera start (0.0, -58.0, 2.2) -> (0.0, -8.0, 4.0) lens 22; end (0.0, -38.585, 2.899) -> (0.0, -8.0, 4.0); move: push +0.03 /s, slide +0 px/s, extra [{'t': 0.45, 'd': 0.67, 'dur': 6}]; fg prop: none; state at mid: `-`
+  - soldier (3): (-3, -51.5, 0) yaw 0; (3.5, -49.5, 0) yaw 0; (0.2, -47, 0) yaw 0
+  - herd (60): (-3.2, -7.82, 0) yaw -88.4 s1; (3.15, -8, 0) yaw -96 s0.98; (0.2, -8.23, 0) yaw -86.3 s1; (-3.63, -9.57, 0) yaw -86.5 s0.96; (3.41, -9.73, 0) yaw -95.6 s0.98; (-0.32, -9.77, 0) yaw -84 s1.03 ...
 
 ### s22  (frames 1683-1742, yan_camp, NIGHT)
 - close-medium on ONE ox in full flare (blades, silk, flame tail) with a frozen terrified soldier
-- camera start (-8.0, -34.0, 2.0) -> (3.0, -14.0, 3.2) lens 26; end (-6.053, -30.46, 2.212) -> (3.0, -14.0, 3.2); move: push +0.09 /s, slide +0 px/s; fg prop: none; state at mid: `-`
-  - ox (1): (3, -22, 0) yaw -42.5 s1
-  - soldier (1): (-3.5, -28, 0) yaw -36.9
+- camera start (-2.0, -52.0, 1.6) -> (0.5, -45.0, 2.0) lens 26; end (-1.558, -50.761, 1.671) -> (0.5, -45.0, 2.0); move: push +0.09 /s, slide +0 px/s; fg prop: none; state at mid: `-`
+  - ox (1): (0.4, -46.5, 0) yaw -60 s1
+  - soldier (1): (-1.4, -47, 0) yaw 0
 
 ### s23  (frames 1742-1807, jimo_out, NIGHT)
 - high over the wall top, pull-out; fg torch; old men, women and kids beat bronze pots on the walk (walk centre y 0.4, z 16)
-- camera start (-31.0, -4.5, 23.0) -> (-2.0, 0.8, 16.8) lens 22; end (-35.398, -5.304, 23.94) -> (-2.0, 0.8, 16.8); move: push -0.07 /s, slide +0 px/s; fg prop: ('torch', 'right'); state at mid: `h12`
-  - townsfolk (6): (-16, 0.4, 16) yaw 180; (-11, 0.4, 16) yaw 180; (-6, 0.4, 16) yaw 180; (-1.5, 0.4, 16) yaw 180; (3, 0.4, 16) yaw 180; (7.5, 0.4, 16) yaw 180
-  - child (2): (-8.5, 0.6, 16) yaw 180; (5.2, 0.6, 16) yaw 180
+- camera start (-31.0, 0.6, 21.5) -> (-2.0, 0.6, 16.5) lens 22; end (-35.398, 0.6, 22.258) -> (-2.0, 0.6, 16.5); move: push -0.07 /s, slide +0 px/s; fg prop: ('torch', 'right'); state at mid: `h12`
+  - townsfolk (6): (-21.5, 1.7, 16) yaw 180; (-17, -0.9, 16) yaw 180; (-12.5, 1.7, 16) yaw 180; (-8, -0.9, 16) yaw 180; (-3.5, 1.7, 16) yaw 180; (1, -0.9, 16) yaw 180
+  - child (2): (-19.2, 0.3, 16) yaw 180; (-10.2, 0.3, 16) yaw 180
 
 ### s24  (frames 1807-1882, yan_camp, NIGHT)
 - wide high, slide 50 px/s + push; rout (set_rout 0 -> 1): tents fold, soldiers flee, pots and helmets fly, a chariot rolls away empty; nobody hurt
-- camera start (-30.0, -48.0, 15.0) -> (0.0, -82.0, 2.0) lens 20; end (-32.467, -57.736, 13.375) -> (-6.217, -87.486, 2.0); move: push +0.05 /s, slide +50 px/s; fg prop: none; state at mid: `ro0.5`
-  - soldier (8): (-10, -70, 0) yaw 200; (6, -66, 0) yaw 200; (-3, -84, 0) yaw 200; (10, -88, 0) yaw 200; (-18, -92, 0) yaw 200; (14, -74, 0) yaw 200 ...
+- camera start (-34.0, -44.0, 15.0) -> (-4.0, -82.0, 2.0) lens 20; end (-37.166, -54.21, 13.375) -> (-10.916, -87.46, 2.0); move: push +0.05 /s, slide +50 px/s; fg prop: none; state at mid: `ro0.5`
+  - soldier (8): (-10.21, -59.62, 0) yaw 200; (-17.93, -70.81, 0) yaw 200; (-9.01, -67.59, 0) yaw 200; (-18.3, -80.02, 0) yaw 200; (1.44, -69.53, 0) yaw 200; (-7.07, -81.34, 0) yaw 200 ...
 
 ### s25  (frames 1882-1958, vista, DAWN)
 - establishing high, push 6 %/s; the Qi banners return over the towns one by one (set_qi_return 0 -> 1), warm dawn
 - camera start (-50.0, -215.0, 105.0) -> (0.0, 80.0, -10.0) lens 20; end (-42.4, -170.16, 87.52) -> (0.0, 80.0, -10.0); move: push +0.06 /s, slide +0 px/s; fg prop: none; state at mid: `pn1,qr0.5`
 
 ### s26  (frames 1958-2112, jimo_out, DAWN)
-- low, long tracking pull in front of the running general (he runs -y toward home along the road), push-in at the end; dragon oxen trot after him with smoking tails
-- camera start (4.0, -112.0, 1.7) -> (0.0, -62.0, 5.2) lens 22; end (4.29, -115.628, 1.446) -> (0.0, -62.0, 5.2); move: push -0.06 /s, slide +0 px/s, extra [{'t': 0.72, 'd': 0.82, 'dur': 10}]; fg prop: none; state at mid: `-`
-  - general (1): (0.8, -72, 0) yaw 0
-  - ox (3): (-1.6, -58, 0) yaw 0; (3.2, -55, 0) yaw 0; (-0.6, -49, 0) yaw 0
+- low, long tracking pull in front of the running general (he runs -y toward home along the road toward the camera), push-in at the end; dragon oxen trot after him with smoking tails
+- camera start (2.5, -84.0, 1.5) -> (0.5, -70.0, 2.6) lens 24; end (2.645, -85.016, 1.42) -> (0.5, -70.0, 2.6); move: push -0.06 /s, slide +0 px/s, extra [{'t': 0.72, 'd': 0.82, 'dur': 10}]; fg prop: none; state at mid: `-`
+  - general (1): (0.8, -77, 0) yaw 0
+  - ox (4): (-1.8, -71, 0) yaw -90 s1; (3.2, -69, 0) yaw -90 s1; (-0.6, -66.5, 0) yaw -90 s1; (4, -63.5, 0) yaw -90 s1
   - road (2): (0, -30, 0) yaw 0; (0, -150, 0) yaw 0
 
 ## Measured (set_work/hue_rows.txt, one row per contact tile; set_work/final_log.txt)
@@ -233,7 +235,58 @@ Camera poses are `loc -> look_at` (D) and lens (mm). `start` is the pose at t = 
 - The sunset sky of DUSK (copied from the film-9 painter) is a smooth orange gradient with few clouds; yan_camp DUSK shots look into the sun glow (s09 / s10 / s11 are backlit).
 - jimo_out NIGHT fields (s19 / s20) read as a flat blue plane at night: low texture contrast; the far Yan camp is small silhouettes.
 - Foreground props are 30 % scale (a 3 D lantern would not fit at 1-2 D from the lens), parented to the camera; s17 reed bundles and s05 counter are chunky.
-- Placeholder cards in the contact sheet are crude flat silhouettes (head rows are right, the look is not the cast).
+- Placeholder cards in the contact sheet are the real cast18 drawings (card-yawed 30-45 deg off the camera axis), but still flat 2D cards: back views do not exist (silhouette tint is used in s21 / s22), the ox 3/4 is the cast's side-body with a turned head.
 - The wall material's `warm` weights are static (baked from the fixed lamps); the dynamic flame-card lights light the wall with the plain material (orange over blue, fine near the light, mauve at medium distance, which the hue guard pushes toward coral).
 - Camp geometry (palisade y -40, wall 40 D away) is closer than the open field of jimo_out (road to y -300, far camp at y -150..-215); the two locations do not share one world.
 - `hue_guard` is a compositor trick (hue correct on 255-350 degrees), not a material fix; the material split is the real fix for the wall.
+
+## Round 2 fixes (set builder, after the SET gate FAIL: QA_ART_SET.md 1-14 + non-blocking, QA_TECH.md 1-19)
+
+Cards: `jimo_cards.py` + `jimo_r2.py`. People = cast18 STORY18 poses, scaled so the head top meets `HEIGHT`, billboarded to the camera at t; oxen = `ox_figure(state, 'three_quarter', gait, phase, flame, blades=True)`, 8 gallop phases, flame variants 1 / 2 on lit tails, mirrored so the head points to the direction of travel, plane yawed 30-45 deg (+-6 jitter) off the camera axis (never edge-on); soft contact shadow under every card; warm pool decals under lit oxen + real tail lights on the 6 nearest. No flat placeholders remain.
+Per-shot sun azimuth (`shot(..., sun=)`), build-time skips (`jimo_r2.SKIP`, `BSKIP`) and `POST` tweaks are the mechanism for most items below.
+
+| fix | what was done | number (final, mid t unless said) |
+|---|---|---|
+| ART 1 / s02 herd | `herd(34, (-21,10.6),(30,10.6), 6)` travelling toward the camera (yaw 180), ground dressing (silk scraps, rope coils, hay) in x -38..-14 | nearest ox ~9 D from the lens at t 0.5; heads chin 632; herd reads in the lane; caption mean 119, 21.8k px V>0.7 (the pink lit lane: still brighter than the 60-110 target) |
+| ART 2 / s05 | camera (-69.5,18.5,2.6)->(-76.5,22.5,2.8) lens 24, townsfolk beside the counter; DUSK sky repainted without the sun disc (no halo ring, painter `dusk_sky`, with cartoon clouds); sun 325 deg (behind the camera); fg counter 22 % scale | Tian Dan 402 px, townsfolk 300-590 px, chin 808 / 824 / 843 |
+| ART 3 / s06 | 10 plain oxen at y 15-16 in front of the gates, townsfolk (86,19.5), camera look z 2.6, sun 320 | ox heads readable, chin max 698; caption mean 50 |
+| ART 4 / s07 | camera (0,46,20)->(0,14,0), pull -0.05 + snap x1.6; herd 170 in the yard (x -28..28) + 40 in the pens + 60 ring lane + 40 east quarter, 1/3 dragon coats, sun 80 deg (shaft gone) | 170 + 40 + 60 + 40 marks, 188 ox cards inside the frame at t 0.5 (176 at t 0, 270 at t 1; >= 150 target met); caption bright (>200) 2.4 % |
+| ART 5 / s09 s10 s14 s15 | reversed: cameras on the far side of the general looking +y (s09 (-7,-99,2.8), s10 (-1.5,-96.5,3.1)->look z 3.0, s14 (-9,-106,2.8), s15 (-1.5,-103,3.1)->look z 3.0), camp behind him, party crowd marks behind in s14 / s15, soldiers moved north; tent (-9.6,-90) and oil lamps moved >= 3 D from the general; table moved out of the s14 / s15 view; scatter pots hidden; sun behind (322 deg vs view 90) | general chin: s09 812-849, s10 728-783, s14 804-837, s15 715-738 (all < 880 at t 0 / 0.5 / 1); s10 head top 545-581 (<= 600); caption bright: s09 1.8 %, s10 0 %, s14 0 %, s15 0 % |
+| ART 6 / s11 | camera (-1,-73,2.6)->(5.5,-86,2.2) lens 22; drums moved to (-21,-80) / (16,-83.5); sun 100 deg | 7 cards visible, heads 560-654, 150-210 px tall |
+| ART 7 / s16 | camera (50,16,2.6)->(30,4,2.2); hole opening order from x 41; diggers placed between the holes; 3 braziers in the lane removed (SKIP); breaches rebuilt as dark openings (dark backing, warm glow, ground pools, ragged clods instead of the pale stacked blocks) | 7 diggers, heads 595-681; holes read dark with warm glow |
+| ART 8 / s17 | fg reeds 15 % scale (was 30 %), no fg jar; camera (-9,16.5,2.6)->(-27,5.5,2.4) so the six oxen at the holes are 2x larger | ox heads 566-839 (chin < 880 at t 1) |
+| ART 9 / s19 | breach interiors dark + warm glow + dust puffs (`hglow%d`, `dust`), tunnel side faces dark; ox cards 3/4 gallop with flame tails; moat water calmer (painter `water`), `grass` painter calm, streak decals hidden; herd re-marked (27,-10)->(34,-58), furrows + stubble + stakes | ox heads 641-672; caption bright 0 % |
+| ART 10 / s20 | herd (15,-62)->(-3,-108) so 4-5 oxen are large in frame (3-10 D); furrows, stones, hay, baskets, 3 torch stakes; warm pools under oxen | blue+violet 77.8 % (<= 85 % met), caption bright 0 % |
+| ART 11 / s21 | camera (0,-58,2.2) -> (0,-8,4.0), push 0.03 + snap x0.67; 3 soldier silhouettes at y -47..-51.5 between lens and palisade; herd 60 through the gap in 3/4 gallop cards; rampart and horse removed for s21 / s22; Jimo wall lamps x 0.3 (lights, flames, halo faces, wall pools, baked warm weights) | blue 48.8 %, lamps 0.3, herd comes out of the dark at the gap |
+| ART 12 / s22 | ox (0.4,-46.5) in the gap, soldier silhouette left (-1.4,-47.0), camera (-2,-52,1.6)->(0.5,-45,2.0) lens 26 (the rampart used to enclose this camera), no bridge rail | ox card 391 / 438 / 498 px tall = 31 / 34 / 39 % of the frame (ox body incl. horns 38-48 %), soldier 600-830 px |
+| ART 13 / s23 | camera (-31,0.6,21.5)->(-2,0.6,16.5); all fire bowls and lamps within 9.5 D of the lens skipped; fg torch 13 % scale; townsfolk marks x -21.5..1 on the walk | townsfolk visible beating pots, chin 753-793; caption bright 0 %, 62 px V>0.7 (< 2 k) |
+| ART 14 / s26 | camera (2.5,-84,1.5)->(0.5,-70,2.6) lens 24, general (0.8,-77), 4 oxen y -71..-63.5; DAWN sun 262 deg (behind the camera: warm wall, no washed sky); road dressing (ruts, plume, pots, hay, silk, wheel, 3 torch stakes) | general 351-403 px (head top 483-520, chin 696-702); wall ochre 40 % blue 11 % |
+| ART 15 | cast (done elsewhere) | - |
+| ART non-blocking | s01 oxen spread along the wall, fg lantern 20 %; s08 soldier (3.6,-48.5), pennant cloth banners hidden; s12 envoy (0.2,-29) in front of the rail, wall folk in crenel gaps; s13 pennants near the lens skipped; s18 Tian Dan (-6.8,12.6), camera (-1,15.5)->(-22,5.5); s24 flying items x2.6, pennants skipped, soldiers moved into view; vista fields = aligned grid of 4 close greens (painter `patchwork`); Jimo bloom blob removed (halo 0.75 s / 0.38 s, pool off), pennants x1.5 and higher; cartoon clouds on DUSK; wall breach rim blocks replaced | see per-shot status |
+| TECH 1 2 | s10 / s15 heads (see ART 5) | max chin 783 / 738 |
+| TECH 3 | s24 soldier marks re-placed (`ahead()` along the view) | max chin 770 / 785 / 805 |
+| TECH 4 | s01 look_at z 4.2 | max chin 759 / 792 / 849 |
+| TECH 5 caption band | s09 sky (1.8 %), s10, s14, s15, s23, s19 at 0 %; vista s03 4.2 %, s04 5.7 %, s25 1.9 % and s07 2.4 %, s13 0.4 % are NOT met | see "could not meet" |
+| TECH 6 | s23 fg torch 13 %, bowls skipped, townsfolk in view | blown pixels in the band 0 |
+| TECH 7 8 | holes dark + glow + rubble + dust (s16 s17 s18 s19); reeds smaller | - |
+| TECH 9 | s07 high camera, fence out of the foreground, cards re-yawed, herd tinted by the dusk light | 188 cards visible |
+| TECH 10 11 | s22 / s21 re-aimed (see ART 11 12) | - |
+| TECH 12 | s20 herd 3-10 D from the lens, horizon lowered by the look_at z 3.0 | - |
+| TECH 13 | s13 party_crowd cards (14), cut objects removed (pennants within 30 D of (14,-62)); `HEIGHT` now has `party_crowd`, `sentry`, `qi_soldier` so head rows test them | s13 chin 727-744 |
+| TECH 14 | s24 rout state 0.5: items x2.6, soldiers on screen, fg poles removed | - |
+| TECH 15 16 | s08 / s11 actors in frame; s26 general 351-403 px; s05 aimed at the stall | - |
+| TECH 17 | vista pennants x1.5 and raised, Jimo halo reduced | count unchanged (62 towns + 2); still low in s25 |
+| TECH 18 | warm practicals: pools under oxen, fire halos kept; s14 / s15 still 92 % / 86 % blue (night plain), table / jar lamps kept | see could-not-meet |
+| TECH 19 | scale: herd cards use scale 0.93-1.07 x 1.08 (2.6 D withers) | s19 ox vs wall rubble now 2.6 D |
+
+Measured, finals (720x1280, 12 samples, 2 threads, one render at a time): 15.8 s wall per frame on average (log `final_log.txt`). Head rows: every person head chin < 880 at t 0 / 0.5 / 1 in all shots with marks (s05 max 843, s09 849, s17 839, s01 849, s18 835). Frame diff start vs end (mean abs luma diff, 0-255; fraction of pixels > 20): `set_work/framediff_r2.txt`: min s11 7.9 / 8.6 %, s09 11.6 / 15.8 %, s14 14.3 / 25.1 %, s06 14.9 / 17.4 %, all others 16-50 mean and 21-77 %: every move is clearly visible (state held at the mid value). Caption band (y 880-950), bright (luma > 200) share: 0 on 20 shots; s03 4.16 %, s04 5.71 %, s25 1.87 %, s07 2.42 %, s09 1.76 %, s13 0.36 %. jimo_hue rows regenerated: `hue_rows.txt` (shade hue 221-261, magenta share <= 4.4 %).
+
+### Could not meet / still weak
+- Vista s03 / s04 / s25: caption band still has 2-6 % bright pixels (tent torch glints, town glow); the vista flag is still a plain quad and Ju is not visibly lit in s04; pennant count is the same 62 + 2 (bigger, not more). Towns are still salmon brick.
+- s02: caption band mean 119 (pink lit lane, 21.8 k px V > 0.7) is over the 60-110 target; s07 (2.4 %) and s09 (1.8 %): sky / lit wall glints in the band.
+- s14 / s15: 92 % / 86 % blue (night plain, moon); only the camp fires and crowd add warm. The party behind the general is small.
+- s24: rout reads (folding tents, flying pots, fleeing soldiers) but soldiers and pots are small at 25-45 D; the tent canvas is bright under the moon.
+- s12: the wall-walk folk are mostly hidden by the parapet from the low camera; the envoy is small. s05: Tian Dan is a 400 px card between the counter and the old man; the fg counter is still chunky.
+- s08: the far wall top still carries a flat red slab (gate-tower lintel colour) behind the general.
+- Ox cards: the cast has no head-on front-3/4 view yet (ART 15, cast fixer): in s21 / s22 the oxen are drawn side-body with the head turned; horn blades are the current cast (long). Re-run `jimo_cards.py` (delete `set_work/cards/*_ox.*`) when cast18 changes, then `python3 jimo.py final`.
+- Period: rammed-earth tiling, the pagoda finial of the towers and the panelled tents were not touched.

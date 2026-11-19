@@ -61,7 +61,7 @@ shot(6, 459, 531, 'jimo_in', 'DUSK', C((84, 9.0, 2.4), (72, 22.0, 2.6), 22), dic
                           herd=herd(10, (60, 15.0), (93, 16.0), 3.0, 6, yaw=190.0)))
 shot(7, 531, 597, 'jimo_in', 'DUSK', C((0, 46, 20), (0, 14, 0), 20), dict(push=-0.05, slide=0, moves=[dict(t=0.55, d=1.6, dur=7)]), sun=80.0,
      fg=None, note='high 4-5 D from the north end of the yard, pull-out with a snap x1.6 on "พันกว่าตัว": the whole quarter packed with oxen (herd helper ~200 + silhouettes)',
-     marks=lambda c: dict(herd=herd(120, (-34, 13.5), (34, 26.0), 12.0, 7, yaw=-20.0), herd_pen=herd(40, (-15, 36.0), (15, 36.0), 8.0, 17, yaw=-60.0), herd_far=herd(60, (-34, 8.4), (34, 8.4), 3.0, 8, yaw=0.0) + herd(40, (52, 21), (94, 22), 9.0, 9, yaw=30.0)))
+     marks=lambda c: dict(herd=herd(170, (-28, 13.5), (28, 26.0), 12.0, 7, yaw=-20.0), herd_pen=herd(40, (-15, 36.0), (15, 36.0), 8.0, 17, yaw=-60.0), herd_far=herd(60, (-34, 8.4), (34, 8.4), 3.0, 8, yaw=0.0) + herd(40, (52, 21), (94, 22), 9.0, 9, yaw=30.0)))
 shot(16, 1205, 1309, 'jimo_in', 'NIGHT', C((50, 16, 2.6), (30, 4, 2.2), 22), dict(push=0.0, slide=-40), state='h6',
      fg=('pick_baskets', 'left'), note='low inside the wall base, slides left along the wall (x 50 -> 25): the holes open one after another (set_holes 0 -> 12, hole order from x 41 down); townsfolk dig between the holes',
      marks=lambda c: dict(townsfolk=[(HOLES[i] + 2.75, 7.4, 0.0, 180.0) for i in (11, 10, 9, 8, 7, 6)], child=[(HOLES[8] + 2.75, 9.2, 0.0, 180.0)]))
