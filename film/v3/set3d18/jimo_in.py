@@ -132,7 +132,7 @@ def build_in(Bk, M, light):
         pen(Bk, M, x, 36.0, 20.0, 9.0, 0.0, cd=60.0)
     for i, x in enumerate((-26, 0, 26)): trough_hay(Bk, M, (x, 31.5, 0), 0, 50.0)
     hb = Bk('hay', hull=T.hull(60.0))
-    for (x, y, s_) in ((-46, 30, 1.2), (47, 31, 1.3), (-8, 44, 1.1), (8, 44, 1.2)): hb.frustum(V((x, y, 0)), V((x, y, 3.2 * s_)), 2.2 * s_, 0.3 * s_, M['hay'], seg=9); cyl(hb, V((x, y, 0.1)), 2.3 * s_, 0.6 * s_, M['straw_d'], seg=9)
+    for (x, y, s_) in ((-46, 30, 1.2), (47, 31, 1.3), (-30, 46, 1.1), (30, 46, 1.2)): hb.frustum(V((x, y, 0)), V((x, y, 3.2 * s_)), 2.2 * s_, 0.3 * s_, M['hay'], seg=9); cyl(hb, V((x, y, 0.1)), 2.3 * s_, 0.6 * s_, M['straw_d'], seg=9)
     # reed-bundle jars and bundles, water jars, sacks along the wall foot and by the holes
     for k, x in enumerate((-40, -33, -26, -19, -12, 12, 19, 26, 33, 40)): reed_jar(Bk, M, (x + 1.8, 15.5 + (k % 3) * 0.8, 0), s=1.0, cd=40.0)
     for x in (-23, 23, 0): reed_bundles(Bk, M, (x, 17.0, 0), 5, 40.0)
@@ -152,7 +152,7 @@ def build_in(Bk, M, light):
     for k in range(7):
         y = 14 + k * 8.0
         stall(Bk, M, -77, y, 90, awn[k % 6], seed=k, clerk=(k == 1), cloth=(k % 3 == 0)); stall(Bk, M, -61, y + 3, -90, awn[(k + 3) % 6], seed=40 + k, cloth=(k % 3 == 1))
-    for (x, y) in ((-69, 17), (-69, 33), (-69, 49)): brazier(Bk, M, (x, y, 0.0), s=0.9, light=700.0, name='mk%d' % int(y), halo_r=3.0, tall=2.4, warm=None)
+    for (x, y) in ((-72.5, 29), (-65.5, 45), (-72.5, 55)): brazier(Bk, M, (x, y, 0.0), s=0.9, light=700.0, name='mk%d' % int(y), halo_r=3.0, tall=2.4, warm=None)
     for k in range(5): oil_lamp(Bk, M, (-69 + (k % 2) * 3 - 1.5, 21 + k * 8, 0.0), s=0.8, light=0.0, h=3.0, halo_r=1.6)
     # ---- far town: drum tower and roofs behind, so the lanes end in lit shapes
     for (cx, cy, w, fl) in ((-69, 104, 14, 4), (34, 112, 13, 4)):

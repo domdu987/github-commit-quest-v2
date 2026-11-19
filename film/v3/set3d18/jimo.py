@@ -54,14 +54,14 @@ _B = dict(toon=1.0, key_desat=0.55, ink='#141a3e', night=True, form=(0.0, -0.05,
 def _kdaz(az, el): return W9._kdaz(az, el)
 LIGHTS = dict(
     NIGHT=dict(_B, key=(0.24, 0.42, 1.18), key_dir=G._kd((0.45, 0.89), 38), moon_az=58.0, moon_el=20.0, wall_tint=(0.07, 0.12, 0.46), wall_mix=0.92),
-    DUSK=dict(_B, night=False, key_desat=0.15, key=(1.55, 0.86, 0.46), key_dir=_kdaz(250, 9), sun_az=250.0, sun_el=9.0, sun_angle=0.9, sky='DUSK', sky_k=1.0, star_k=0.0, ink='#2a1a2e',
+    DUSK=dict(_B, night=False, key_desat=0.15, key=(1.7, 0.95, 0.5), key_dir=_kdaz(250, 9), sun_az=250.0, sun_el=9.0, sun_angle=0.9, sky='DUSK', sky_k=0.88, star_k=0.0, ink='#2a1a2e',
               shade=(0.06, 0.10, 0.27), shade_tint=(0.06, 0.115, 0.32), shade_mix=0.78, lift=(0.010, 0.008, 0.026), grade_offset=(-0.004, -0.006, -0.002), grade_saturation=1.12,
               bloom_size=0.08, air=('#f0a070', 0.30, 30.0, 300.0), lamps=0.8, wall_tint=(0.07, 0.12, 0.38), wall_mix=0.9),
-    DAWN=dict(_B, night=False, key_desat=0.15, key=(1.60, 1.00, 0.62), key_dir=_kdaz(80, 8), sun_az=80.0, sun_el=8.0, sun_angle=1.0, sky='DAWN', sky_k=1.0, star_k=0.0, ink='#2a1a2e',
+    DAWN=dict(_B, night=False, key_desat=0.15, key=(1.60, 1.00, 0.62), key_dir=_kdaz(80, 8), sun_az=80.0, sun_el=8.0, sun_angle=1.0, sky='DAWN', sky_k=0.8, star_k=0.0, ink='#2a1a2e',
               shade=(0.07, 0.12, 0.28), shade_tint=(0.07, 0.13, 0.33), shade_mix=0.78, lift=(0.010, 0.008, 0.024), grade_offset=(-0.004, -0.006, -0.010), grade_saturation=1.18,
               bloom_size=0.08, air=('#f4bca0', 0.30, 30.0, 300.0), lamps=0.6, wall_tint=(0.07, 0.12, 0.38), wall_mix=0.9),
 )
-SUN_AZ = {('jimo_in', 'DUSK'): 200.0, ('jimo_out', 'DUSK'): 255.0, ('yan_camp', 'DUSK'): 262.0, ('vista', 'DUSK'): 215.0, ('jimo_out', 'DAWN'): 75.0, ('vista', 'DAWN'): 330.0}
+SUN_AZ = {('jimo_in', 'DUSK'): 200.0, ('jimo_out', 'DUSK'): 255.0, ('yan_camp', 'DUSK'): 322.0, ('vista', 'DUSK'): 215.0, ('jimo_out', 'DAWN'): 75.0, ('vista', 'DAWN'): 330.0}
 MOON_AZ_LOC = {'jimo_in': 80.0, 'jimo_out': 58.0, 'yan_camp': 74.0, 'vista': 58.0}
 SKY_SUN = dict(NIGHT=(58.0, 20.0), DUSK=(35.0, 6.0), DAWN=(330.0, 8.0))      # sun / moon azimuth and elevation baked in the sky textures
 
@@ -337,7 +337,7 @@ def flicker(frame=None, k=1.0):
     f = bpy.context.scene.frame_current if frame is None else frame
     for fi in STATE.get('fires', ()):
         a = _fl(f, fi['seed']); ob = fi['ob']; b_ = _fl(f + 5, fi['seed'] + 1)
-        ob.scale = (0.94 + 0.10 * (a - 1) * 3 + 0.0, 0.94 + 0.10 * (b_ - 1) * 3, max(0.001, (0.92 + 0.6 * (a - 1)) * (1.0 if k > 0 else 0.001)))
+        kk = fi.get('k', 1.0); ob.scale = ((0.94 + 0.10 * (a - 1) * 3) * kk, (0.94 + 0.10 * (b_ - 1) * 3) * kk, max(0.001, (0.92 + 0.6 * (a - 1)) * (1.0 if k > 0 else 0.001)) * kk)
         ob.rotation_euler = (0.05 * (b_ - 1) * 3, 0.05 * (a - 1) * 3, 0.0)
         if fi['light'] is not None: fi['light'].data.energy = fi['E0'] * a * k
         if frame is not None:
@@ -504,7 +504,9 @@ def build(location=None, preset=None, light=None, clear=True):
     assert location in LOCS and light in LOCS[location], 'location %s has lights %s (got %s)' % (location, LOCS.get(location), light)
     scene = bpy.context.scene; P = dict(LIGHTS[light])
     if light != 'NIGHT':
-        az = SUN_AZ.get((location, light), P['sun_az']); P['sun_az'] = az; P['key_dir'] = _kdaz(az, P['sun_el'])
+        az = SUN_AZ.get((location, light), P['sun_az']); P['sun_az'] = az
+        if location == 'vista': P['sun_el'] = 15.0; P['air'] = (P['air'][0], 0.45, 120.0, 700.0)
+        P['key_dir'] = _kdaz(az, P['sun_el'])
     else: P['moon_az'] = MOON_AZ_LOC[location]
     STATE.clear(); STATE.update(P=P, preset=preset, loc=location, area=location, light=light, location=location)
     for hk in (bpy.app.handlers.render_pre, bpy.app.handlers.frame_change_pre):
@@ -651,7 +653,7 @@ def attach_fg(cam, setup, spec):
     """Build the shot's foreground prop 1.5-2 D in front of the lens (lower corner `side`) and parent it to the camera, so it stays 1-2 D from the lens through the move."""
     if not spec: return []
     kind, side = spec; sg = 1 if side == 'right' else -1; loc, f, r, u = _cam_frame(setup); M = STATE['M']; n0 = set(STATE['SET'].objects); Bk2 = Banks()
-    o = loc + f * 1.8 + r * (0.78 * sg) + u * (-0.35)
+    o = loc + f * 1.9 + r * (0.74 * sg) + u * (-0.40); FGK = 0.3
     ground = V((o.x, o.y, 0.0)) if o.z > 2.4 else V((o.x, o.y, max(0.0, o.z - 2.6)))
     if kind == 'lantern': oil_lamp(Bk2, M, V((o.x, o.y, o.z - 2.4)), s=0.9, light=0.0, name='fglamp', halo_r=1.2, h=3.0)
     elif kind == 'wheel':
@@ -684,9 +686,45 @@ def attach_fg(cam, setup, spec):
         live_flame(b0 + V((0, 0, 3.4)), 1.3, 0.38, seed=77, n=3, light=0.0, name='fgtorch', warm=None)
     Bk2.flush(STATE['SET'])
     objs = [ob for ob in STATE['SET'].objects if ob not in n0]
-    for ob in objs:
+    for ob in objs:                                                                            # scale the prop about its anchor so it takes about a fifth of the frame width
+        if ob.type == 'MESH' and tuple(ob.location) == (0.0, 0.0, 0.0) and tuple(ob.scale) == (1.0, 1.0, 1.0): ob.data.transform(Matrix.Translation(o) @ Matrix.Scale(FGK, 4) @ Matrix.Translation(-o))
+        else:
+            ob.location = o + (V(ob.location) - o) * FGK; ob.scale = tuple(x * FGK for x in ob.scale)
+            for fi in STATE['fires']:
+                if fi['ob'] is ob: fi['k'] = FGK
         no_bounce(ob); ob.parent = cam; ob.matrix_parent_inverse = cam.matrix_world.inverted()
     STATE.setdefault('fg_objs', []).extend(objs); return objs
+
+# ----------------------------------------------------------------------------- placeholder cards at the marks (stills / contact sheet only; the render teams add the real puppets)
+def placeholders(name, t=0.5, herd_max=80):
+    """Flat placeholder silhouettes at the shot's stand marks (people with their HEIGHT, ox cards 2.6 D, herd ox cards), turned to the camera at pose t. Named ph_*; remove with clear_placeholders()."""
+    clear_placeholders(); sh = S.SHOTS[name]; marks = S.marks_for(name); M = STATE['M']; pose = S.pose_at(sh, 0.0); cam = V(pose['loc']); Bk2 = Banks(); k = 0
+    cols = dict(tiandan=(M['wood_l'], M['black']), general=(M['lacq'], M['red']), soldier=(M['black'], M['red_d']), townsfolk=(M['hide'], M['black']), child=(M['jade'], M['black']), envoy=(M['cream'], M['black']), qi_soldier=(M['indigo'], M['black']), sentry=(M['black'], M['red_d']))
+    def person(m, role):
+        h = HEIGHT.get(role, 3.0); p = V(m[:3]); yaw = m[3] if len(m) > 3 else 0.0; F = Frame(p, yaw); b = Bk2('ph_%s_%d' % (role, k)); robe, cap = cols.get(role, (M['black'], M['black'])); w = 0.42 * h
+        b.face([F.p(-w, 0, 0), F.p(w, 0, 0), F.p(w * 0.7, 0, h * 0.72), F.p(-w * 0.7, 0, h * 0.72)], robe, [(0, 0)] * 4); b.face([F.p(-w, 0, 0)] [:0] or [F.p(w, 0, 0), F.p(-w, 0, 0), F.p(-w * 0.7, 0, h * 0.72), F.p(w * 0.7, 0, h * 0.72)], robe, [(0, 0)] * 4)
+        hc = F.p(0, 0, h - 0.5); n = 10
+        for i in range(n):
+            a0, a1 = 2 * math.pi * i / n, 2 * math.pi * (i + 1) / n; q = [hc, hc + F.X * (0.5 * math.cos(a0)) + F.Z * (0.5 * math.sin(a0)), hc + F.X * (0.5 * math.cos(a1)) + F.Z * (0.5 * math.sin(a1))]
+            b.face(q, M['skin'], [(0, 0)] * 3); b.face(q[::-1], M['skin'], [(0, 0)] * 3)
+        b.face([F.p(-0.5, 0, h - 0.4), F.p(0.5, 0, h - 0.4), F.p(0.4, 0, h + 0.05), F.p(-0.4, 0, h + 0.05)], cap, [(0, 0)] * 4); b.face([F.p(0.5, 0, h - 0.4), F.p(-0.5, 0, h - 0.4), F.p(-0.4, 0, h + 0.05), F.p(0.4, 0, h + 0.05)], cap, [(0, 0)] * 4)
+    def ox(m):
+        p = V(m[:3]); yaw = m[3] if len(m) > 3 else 0.0; sc = m[4] if len(m) > 4 else 1.0; F = Frame(p, yaw); b = Bk2('ph_ox_%d' % k); P = lambda x, z: F.p(x * sc, 0, z * sc)
+        polys = [([(-2.0, 1.0), (1.7, 1.0), (1.9, 2.5), (-1.9, 2.6)], M['red']), ([(-1.8, 0), (-1.3, 0), (-1.2, 1.1), (-1.8, 1.1)], M['ox_d']), ([(1.2, 0), (1.7, 0), (1.7, 1.1), (1.2, 1.1)], M['ox_d']), ([(1.7, 1.5), (2.8, 1.4), (2.9, 2.3), (1.9, 2.6)], M['ox']),
+                 ([(2.2, 2.3), (2.7, 3.2), (2.9, 3.1), (2.5, 2.2)], M['steel']), ([(-1.9, 2.3), (-2.9, 3.4), (-2.6, 3.5), (-1.7, 2.6)], M['gold'])]
+        for pts_, mat in polys:
+            q = [P(x, z) for x, z in pts_]; b.face(q, mat, [(0, 0)] * len(q)); b.face(q[::-1], mat, [(0, 0)] * len(q))
+    for role, lst in marks.items():
+        for m in lst[:herd_max if role.startswith('herd') else 12]:
+            if role == 'ox' or role.startswith('herd'): ox(m)
+            elif role in HEIGHT or role in cols: person(m, role)
+            k += 1
+    Bk2.flush(STATE['SET'])
+    for ob in STATE['SET'].objects:
+        if ob.name.startswith('ph_'): no_bounce(ob); ob['placeholder'] = 1
+
+def clear_placeholders():
+    for ob in [o for o in bpy.data.objects if o.name.startswith('ph_')]: bpy.data.objects.remove(ob, do_unlink=True)
 
 # ----------------------------------------------------------------------------- shot cameras
 def _look_rot(loc, look, prev=None):
@@ -740,6 +778,25 @@ def digest():
         if ob.type == 'LIGHT': h.update(('%.2f' % ob.data.energy).encode())
     return h.hexdigest()[:16]
 
+def wall_polys(loc):
+    """Projected cells of the visible wall face (outer for jimo_out / yan_camp, inner for jimo_in) in 720x1280 px: [[(x, y) x4]] (occlusion is NOT tested; the hue / edge numbers use it as the wall region)."""
+    from bpy_extras.object_utils import world_to_camera_view
+    sc = bpy.context.scene; cam = sc.camera; fy = yi if loc == 'jimo_in' else yo; out = []
+    for x in np.arange(-95.0, 95.0, 5.0):
+        for z in np.arange(0.5, 15.5, 2.0):
+            if any(abs(x + 2.5 - hc) < hw / 2 + 1 and z < hh + 1 for hc, hw, hh in STATE['holes'] if hh > 9): continue
+            q = [world_to_camera_view(sc, cam, V((x + dx, fy(z + dz), z + dz))) for dx, dz in ((0, 0), (5, 0), (5, 2), (0, 2))]
+            if any(p.z <= 0.1 for p in q): continue
+            P_ = [(p.x * 720, (1 - p.y) * 1280) for p in q]
+            if max(p[0] for p in P_) < 0 or min(p[0] for p in P_) > 720 or max(p[1] for p in P_) < 0 or min(p[1] for p in P_) > 1280: continue
+            out.append([(round(a, 1), round(b, 1)) for a, b in P_])
+    return out
+
+def write_meta(spec):
+    name, t, light, state = parse_spec(spec); A = build(None, name, light); sh = S.SHOTS[name]; apply_state(state if state is not None else sh['state']); shot_camera(name, t); bpy.context.view_layer.update()
+    meta = dict(shot=name, loc=sh['loc'], light=A['light'], t=t, state=sh['state'], heads=head_rows(name), wall=wall_polys(sh['loc']) if sh['loc'] != 'vista' else [])
+    json.dump(meta, open(os.path.join(WORK, 'final', name + '.json'), 'w')); print('meta', name, len(meta['wall']), 'wall cells', len(meta['heads']), 'head rows', flush=True)
+
 def parse_spec(spec):
     """'s16' | 's16@0.5' | 's16:NIGHT' | 's16@0.5:NIGHT:h6' | 'jimo_in' (location default, 'wide' camera)."""
     parts = spec.split(':'); head = parts[0]; t = 0.5
@@ -750,7 +807,9 @@ def render_spec(spec, quality='final', outdir=None, tag=None):
     name, t, light, state = parse_spec(spec); outdir = outdir or os.path.join(WORK, 'final' if quality == 'final' else 'stills'); os.makedirs(outdir, exist_ok=True)
     A = build(None if name in S.SHOTS else name, name, light); sc = bpy.context.scene; MN.setup_render(sc, quality); sc.render.threads = 2
     st = state if state is not None else (S.SHOTS[name]['state'] if name in S.SHOTS else ''); apply_state(st)
-    if name in S.SHOTS: shot_camera(name, t)
+    if name in S.SHOTS:
+        shot_camera(name, t)
+        if os.environ.get('ACTORS', '1') == '1': placeholders(name, t)
     else: make_camera(A['cam'])
     bpy.context.view_layer.update(); flicker(1 if name not in S.SHOTS else S.SHOTS[name]['f0'] + int(t * S.SHOTS[name]['frames']))
     tag = tag or ('%s' % name + ('' if light is None else '_' + light))
@@ -766,6 +825,8 @@ if __name__ == '__main__':
         for sp in specs: render_spec(sp, 'final' if cmd == 'final' else 'preview')
     elif cmd == 'digest':
         name, t, light, state = parse_spec(arg[0] if arg else 's01'); A = build(None if name in S.SHOTS else name, name, light); bpy.context.view_layer.update(); print('digest', digest())
+    elif cmd == 'meta':
+        for sp in (arg or list(S.SHOTS)): write_meta(sp)
     elif cmd == 'contact':
         import jimo_sheet; jimo_sheet.run(arg)
     else: print(__doc__)

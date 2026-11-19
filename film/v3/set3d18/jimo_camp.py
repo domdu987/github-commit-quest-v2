@@ -52,7 +52,7 @@ def camp(J, Bk, M, light='NIGHT'):
         return F
     for (x, y, w, l, h, yaw, hide) in ((-9.6, -90, 8, 10, 5.0, 10, False), (10.8, -89, 8, 10, 5.0, -10, True), (-13.5, -76, 12, 14, 7.0, 6, True), (14.5, -75, 12, 14, 7.0, -6, False),
                                        (-15.0, -58, 12, 13, 6.6, 8, False), (16.0, -57, 12, 13, 6.6, -8, True), (-30, -70, 11, 13, 6.2, 15, False), (32, -68, 11, 13, 6.2, -15, False),
-                                       (-9, -49, 8, 9, 4.6, 0, True), (24, -48, 10, 12, 5.8, 3, False), (-47, -58, 10, 12, 5.8, 6, False), (48, -58, 10, 12, 5.8, -6, False), (-27, -88, 9, 11, 5.4, -14, False), (30, -87, 9, 11, 5.4, 14, False)):
+                                       (24, -48, 10, 12, 5.8, 3, False), (-47, -58, 10, 12, 5.8, 6, False), (48, -58, 10, 12, 5.8, -6, False), (-27, -88, 9, 11, 5.4, -14, False), (30, -87, 9, 11, 5.4, 14, False)):
         tent((x, y), yaw, w, l, h, hide=hide)
     # the general's pavilion (large, red-trimmed, raised awning on two poles) at the back-left
     F = tent((-27, -47), 0, 15, 15, 8.2, hide=False)

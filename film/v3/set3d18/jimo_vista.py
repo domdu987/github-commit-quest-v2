@@ -22,6 +22,9 @@ def terrain_h(x, y):
 def build_vista(Bk, M, light):
     J.STATE['pennants'] = []; r = J._rnd(3); X, Y, Z = (1, 0, 0), (0, 1, 0), (0, 0, 1); S = J.STATE; P = S['P']
     # ---- terrain (cell 14 D), patchwork fields on two textures
+    pre = S['pre']; tx = S['tx']; FM = tuple(P['form'])
+    M = dict(M); sm = (1.5, 2.1, 1.0)
+    M['fields'] = J._untoon(J.mat_lit(pre + 'vt_fields', image=tx['fields'], gain=1.9, shade_mul=sm, form=None)); M['fields_b'] = J._untoon(J.mat_lit(pre + 'vt_fields_b', image=tx['fields_b'], gain=1.8, shade_mul=sm, form=None))
     tb = Bk('terrain'); x0, x1, y0, y1, c = -460.0, 460.0, -300.0, 520.0, 14.0
     nx, ny = int((x1 - x0) / c), int((y1 - y0) / c)
     H = {(i, j): terrain_h(x0 + i * c, y0 + j * c) for i in range(nx + 1) for j in range(ny + 1)}
@@ -37,13 +40,13 @@ def build_vista(Bk, M, light):
         if prev: wt.oface([V(prev[0]), V(prev[1]), V(b), V(a)][::-1], M['vwater'], [(prev[0][0] / 20, 0), (prev[0][0] / 20, 1), (x / 20, 1), (x / 20, 0)][::-1], (0, 0, 1))
         prev = (a, b)
     # ---- the towns: 44 ordinary + 18 far / small + Jimo + Ju; positions: jittered grid avoiding the river, the holdouts and each other
-    towns = []; occupied = [JIMO, JU]; occ_r = [60.0, 60.0]
+    towns = []; occupied = [JIMO, JU]; occ_r = [78.0, 46.0]
     def free(x, y, rr): return all(math.hypot(x - ox, y - oy) > rr + orr for (ox, oy), orr in zip(occupied, occ_r)) and abs(y - river_y(x)) > 24 + rr
     k = 0; tries = 0
-    while len(towns) < 62 and tries < 4000:
-        tries += 1; x, y = r.uniform(-340, 340), r.uniform(-120, 470); s = r.uniform(11, 17) * (0.7 + 0.6 * min(1.0, max(0.0, (y + 120) / 450.0))) * (1.0 if y < 300 else 1.25)
-        if free(x, y, s * 0.9 + 14): occupied.append((x, y)); occ_r.append(s * 0.9 + 14); towns.append(dict(x=x, y=y, s=s, hold=False))
-    towns.append(dict(x=JIMO[0], y=JIMO[1], s=34.0, hold=True, name='jimo')); towns.append(dict(x=JU[0], y=JU[1], s=24.0, hold=True, name='ju'))
+    while len(towns) < 62 and tries < 12000:
+        tries += 1; x, y = r.uniform(-200, 200), r.uniform(-90, 440); s = r.uniform(20, 26) * (1.0 + max(0.0, y + 90) / 330.0)
+        if free(x, y, s * 0.5 + 3): occupied.append((x, y)); occ_r.append(s * 0.5 + 3); towns.append(dict(x=x, y=y, s=s, hold=False))
+    towns.append(dict(x=JIMO[0], y=JIMO[1], s=56.0, hold=True, name='jimo')); towns.append(dict(x=JU[0], y=JU[1], s=40.0, hold=True, name='ju'))
     S['towns'] = towns
     bd = Bk('towns', hull=0.0); rf = Bk('townroofs', hull=0.0); gl = Bk('townglow', shadow=False); hl = Bk('halos', shadow=False)
     def town(t):
@@ -71,7 +74,7 @@ def build_vista(Bk, M, light):
     # Jimo: ring moat and the Yan siege camp (tents, fires, black pennants) to its south
     jx, jy = JIMO; z = terrain_h(jx, jy); ring = Bk('river', shadow=False)
     for k in range(48):
-        a0, a1 = 2 * math.pi * k / 48, 2 * math.pi * (k + 1) / 48; R0, R1 = 22.0, 27.0
+        a0, a1 = 2 * math.pi * k / 48, 2 * math.pi * (k + 1) / 48; R0, R1 = 38.0, 46.0
         ring.oface([V((jx + R0 * math.cos(a0), jy + R0 * math.sin(a0), z + 0.12)), V((jx + R1 * math.cos(a0), jy + R1 * math.sin(a0), z + 0.12)), V((jx + R1 * math.cos(a1), jy + R1 * math.sin(a1), z + 0.12)), V((jx + R0 * math.cos(a1), jy + R0 * math.sin(a1), z + 0.12))], M['vwater'], [(0, 0), (0, 1), (1, 1), (1, 0)], (0, 0, 1))
     tb2 = Bk('siegetents')
     for k in range(16):
@@ -100,7 +103,7 @@ def build_vista(Bk, M, light):
             prev = e
     # ---- pennants: black Yan pennant and the Qi one at each ordinary town (and a Qi one on the holdouts), own objects with the origin at the pole foot
     for i, t in enumerate(towns):
-        z0 = t['z0']; s = t['s']; hgt = 7.0 + s * 0.55
+        z0 = t['z0']; s = t['s']; hgt = 10.0 + s * 0.6
         for kind, col, trim in (('yan', M['black'], M['red']), ('qi', M['red'], M['teal'])):
             if t['hold'] and kind == 'yan': continue
             b = Bk('pen_%s_%d' % (kind, i), hull=0.0); J.banner(Bk, M, (t['x'], t['y'], z0), hgt, s * 0.5, s * 0.3, col, trim, wave=i, yaw=(i * 37) % 40 - 20, sw=True) if False else None
