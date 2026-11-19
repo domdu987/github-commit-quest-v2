@@ -30,9 +30,10 @@ G_TAKE = 1382                                  # the crate bottle leaves the cra
 G_LIFT = (1383, 1398)                          # lifted to the sun
 G_GLINT = (1396, 1410)                         # sun glint flare on the held glass
 G_GLINT2 = (1432, 1442)                        # second twinkle
-BLINKS = [1405, 1440]
+BLINKS = [1411, 1440]
+G_HAPPY = 1412                                 # eyes open and up at the bottle until here, then the happy smile (on the closed blink frame)
 
-PAN_SNAP, PAN_SLOW = 0.38, 0.28                 # D of look-point swing toward the bottle (snap), D/s afterwards
+PAN_SNAP, PAN_SLOW = 0.12, 0.10                 # D of look-point swing toward the bottle (snap), D/s afterwards
 LIGHT, PRESET = "AFTER_RAIN", "line_wagon"
 PPD = 256
 CANVAS = (-2.25, -4.75, 2.25, 0.125)
@@ -50,7 +51,7 @@ class Take(C.Take):
         self.split_crate()
         cam_loc, cam_look = Vector(self.A["cam"]["loc"]), Vector(self.A["cam"]["look_at"])
         self.subject = Vector((mk[0] - 0.4, mk[1] + 0.1, mk[2] + 2.3))
-        start = Vector(self.subject).lerp(cam_loc, 0.60) + Vector((0, 0, 0.8))
+        start = Vector(self.subject).lerp(cam_loc, 0.60) + Vector((0, 0, 2.2))
         self.cam_path = C.CamPath(start, self.subject, G0, G_LAST, push=0.08, slide_px=-80.0, rise_px=10.0, arc_deg_s=-14.0, decay=0.3,
                                   snaps=[dict(g=SNAP, k=1.9, peak=2.0, shift=(0.0, 0.3))])
         self.key_cam(bf(G_FIRST), *self.cam_path.at(G_FIRST))
@@ -139,7 +140,7 @@ class Take(C.Take):
         p = dict(cast16.STORY16["morse_bottle_sun"][1])
         p.pop("prop_r", None)
         p["glint"] = 0.0
-        p["expr"], p["mouth"] = "happy", "smile"
+        p["expr"], p["mouth"] = ("neutral", "smile") if g < G_HAPPY else ("happy", "smile")
         u = u_of(g, *G_LIFT)
         p["pitch"] = lerp(0.1, -0.5, u)
         p["lean"] = 1.5 * math.sin(g * 0.21)
