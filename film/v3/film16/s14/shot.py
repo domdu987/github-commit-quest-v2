@@ -31,7 +31,7 @@ def bpy_obj(n):
     return C.bpy.data.objects.get(n)
 
 PRESET, LIGHT = "line_trench_high", "DAY"
-KS = [0.20, 0.30, 0.60, 0.90]                           # furrow state before snap 1 / after snap 1, 2, 3
+KS = [0.27, 0.30, 0.60, 0.90]                           # furrow state before snap 1 / after snap 1, 2, 3
 MIX = [0.0, 0.10, 0.55, 1.0]                            # DAY -> DUSK after each snap
 WALK = 0.010                                            # extra furrow fraction per second the team walks between the snaps
 PIPE_LAG = 0.025
@@ -61,8 +61,8 @@ class Cam(object):
     13 f eased snap; drift on top (push, slide, arc, still moving at both ends); the camera is carried along with the team walking."""
     def __init__(self, cams):
         c1, c2, c3 = [(Vector(cams[n]["loc"]), Vector(cams[n]["look_at"])) for n in ("line_trench_snap1", "line_trench_snap2", "line_trench_snap3")]
-        l0 = c1[1] + (c1[0] - c1[1]) * 0.55
-        l0.z = max(0.9, l0.z - 1.0)
+        l0 = c1[1] + (c1[0] - c1[1]) * 1.2
+        l0.z = max(1.4, l0.z - 0.8)
         r3 = Vector(((c3[1] - c3[0]).y, -(c3[1] - c3[0]).x, 0)).normalized() * 0.0
         self.P = [(l0, c1[1] + Vector((0, 0, -0.2))), c1, c2, (c3[0] + r3, c3[1] + r3)]
         self.d0 = (self.P[0][1] - self.P[0][0]).length
@@ -104,13 +104,61 @@ class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s14")
         self.cm = Cam(self.A["cams"])
-        self.trees = [o for o in (bpy_obj(n) for n in ('trees_leafA', 'trees_leafB', 'trees_trunk')) if o is not None]
+        self.trees = self.split_near_trees()
         self.key_cam(bf(GA), *self.cm.at(GA))
         self.scene.frame_set(bf(GA))
         sd = os.path.join(WORK, "sprites")
         self.act = {}
         for nm, cast in CAST_OF.items():
             self.actors[nm] = self.act[nm] = C.make_actor(nm, cast, sd, canvas=CANVAS.get(nm), contact=True, cam=self.cam)
+
+    def split_near_trees(self, radius=11.0):
+        """the snap-3 crane-up flies through the crowns of the nearest trees (merged into trees_leafA / leafB / trunk): split the connected
+        pieces that come within `radius` D of the camera path out into their own objects; they sink into the ground during snap 3."""
+        import bmesh, bpy
+        pts = [self.cm.at(g)[0] for g in range(930, GB + 1, 4)]
+        out = []
+        for name in ("trees_leafA", "trees_leafB", "trees_trunk"):
+            ob = bpy.data.objects.get(name)
+            if ob is None:
+                continue
+            bm = bmesh.new(); bm.from_mesh(ob.data); bm.verts.ensure_lookup_table()
+            mw = ob.matrix_world
+            seen, islands = set(), []
+            for v0 in bm.verts:
+                if v0.index in seen:
+                    continue
+                st, isl = [v0], []
+                seen.add(v0.index)
+                while st:
+                    v = st.pop(); isl.append(v)
+                    for e in v.link_edges:
+                        w = e.other_vert(v)
+                        if w.index not in seen:
+                            seen.add(w.index); st.append(w)
+                islands.append(isl)
+            near = [isl for isl in islands if any((mw @ v.co - p).length < radius for v in isl[::5] for p in pts)]
+            if not near:
+                bm.free(); continue
+            near_idx = {v.index for isl in near for v in isl}
+            nob = ob.copy(); nob.data = ob.data.copy(); nob.name = name + "_near"
+            self.scene.collection.objects.link(nob)
+            nbm = bmesh.new(); nbm.from_mesh(nob.data); nbm.verts.ensure_lookup_table()
+            bmesh.ops.delete(nbm, geom=[v for v in nbm.verts if v.index not in near_idx], context="VERTS")
+            nbm.to_mesh(nob.data); nbm.free()
+            bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.index in near_idx], context="VERTS")
+            bm.to_mesh(ob.data); bm.free()
+            out.append(nob)
+        print("take: %d near tree pieces split out" % len(out), flush=True)
+        return out
+
+    def sink_trees(self, g, f):
+        """the near trees sink 16 D into the ground over g 936..946 (eased) while the camera rises through where they stood"""
+        u = u_of(g, 936, 946)
+        for ob in self.trees:
+            ob.location = (ob.location[0], ob.location[1], -16.0 * u)
+            ob.keyframe_insert("location", frame=f)
+            C.key_vis(ob, u < 0.999, f)
 
     def clear_trees(self, radius=15.0):
         """the snap-3 crane-up flies through the tree crowns beside the field: cut the tree geometry within `radius` D of the camera path
@@ -139,7 +187,7 @@ class Take(C.Take):
             f = bf(g)
             k = k_of(g)
             self.scene.frame_set(f)
-            C.key_vis(self.trees, g < G_TREES, f)
+            self.sink_trees(g, f)
             self.key_set(f, trench=(k,), pipe=(k - PIPE_LAG,), light_mix=("DAY", "DUSK", mix_of(g)))
             fc = self.facing(g)
             mk = TG.plough_marks(k)
@@ -163,7 +211,7 @@ class Take(C.Take):
         f = bf(g)
         self.scene.frame_set(f)
         loc, look = self.cm.at(g)
-        return dict(g=g, k=round(k_of(g), 4), mix=round(mix_of(g), 3), cam=[round(c, 2) for c in loc], heads=C.head_report(self, f), face=self.facing(g))
+        return dict(g=g, mind=round(min((Vector(self.A['marks'][n]) - Vector(loc)).length for n in ('cornell', 'worker_a', 'worker_b', 'mule_a', 'mule_b')) if False else min((Vector(TG.plough_marks(k_of(g))[n]) - Vector(loc)).length for n in ('cornell', 'worker_a', 'worker_b', 'mule_a', 'mule_b')), 1), k=round(k_of(g), 4), mix=round(mix_of(g), 3), cam=[round(c, 2) for c in loc], heads=C.head_report(self, f), face=self.facing(g))
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):
         return C.Take.render(self, [bf(g) for g in gs], out_dir, scale=scale, samples=samples, threads=threads)
