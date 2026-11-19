@@ -35,9 +35,9 @@ def dick_pose(g):
             break
     else: p = dict(pc(KEYS[-1][1]))
     if G_FLOP <= g < G_FLICK0:                                  # hanging in the arch: breathing between flop and flop_back
-        k = 0.16 * (0.5 + 0.5 * math.sin(2 * math.pi * g / 47.0)); p = tween(pc('flop'), pc('flop_back'), k)
+        k = 0.2 * (0.5 + 0.5 * math.sin(2 * math.pi * g / 31.0)); p = tween(tween(pc('flop'), pc('flop_back'), k), pc('flop_flick'), 0.10 * (0.5 + 0.5 * math.sin(2 * math.pi * g / 53.0 + 1.0)))
     if G_FLOP - 6 <= g < G_FLICK0 + 4: p['roll2'] = p.get('roll2', 20) + 2.0 * math.sin(g * 0.21)
-    if G_SIT1 <= g: p['gaze'] = (-0.4, -0.5); p['yaw'] = 0.2; p['pitch'] = 0.2 + 0.1 * math.sin(g * 0.13)
+    if G_SIT1 <= g: p['gaze'] = (-0.3, -1.0); p['yaw'] = 0.1; p['pitch'] = -0.6 + 0.08 * math.sin(g * 0.13)
     if G_LIE <= g < G_SIT0: p['expr'] = 'neutral'
     p.pop('sawdust', None); p.pop('fx', None)
     return p
@@ -50,16 +50,23 @@ def foam_z(): return J()['ground'] * U
 def toward(cam, p, d):
     t = Vector(cam) - p; t.z = 0; return t.normalized() * d
 
-RUN = dict(x0=-8.8, x1=-3.2, y0=20.8, y1=19.9)       # feet marks of the run (D), g = G_PLANT-35 .. G_PLANT+5
+RUN = dict(x0=-9.6, x1=-3.2, y0=18.4, y1=19.9)       # feet marks of the run (D), g = G_PLANT-35 .. G_PLANT+5
 def run_xy(g):
     u = clamp((g - (G_PLANT - 35)) / 40.0)
     return RUN['x0'] + (RUN['x1'] - RUN['x0']) * u, RUN['y0'] + (RUN['y1'] - RUN['y0']) * u * u
 
+BT = [(B26, -1.6, -0.35), (1417, -0.7, 0.0), (1435, 0.1, 0.12), (1452, 0.4, 0.0), (B28, 1.3, 0.05), (G_FLICK0, 1.6, 0.0)]
 def bar_target(g):
-    """world point of the 'bar' anchor of the flop cards (on the crossbar centre line, 0.3 D toward the camera)"""
-    b = bar_c(); x = b.x
-    x += lerp(-1.0, 0.4, sm(seg(g, G_HEAD, B27))) if g < B27 else lerp(0.4, 1.0, seg(g, B27, G_FLICK0))
-    return Vector((x, b.y, b.z + (0.05 * math.sin(g * 0.18) if g >= G_FLOP else 0.0)))
+    """world point of the 'bar' anchor: the card TRAVELS along the bar (head first, then back, then legs cross), z a little up at the thigh beat"""
+    b = bar_c(); k = BT
+    if g <= k[0][0]: x, z = k[0][1], k[0][2]
+    elif g >= k[-1][0]: x, z = k[-1][1], k[-1][2]
+    else:
+        for (g0, x0, z0), (g1, x1, z1) in zip(k, k[1:]):
+            if g0 <= g < g1: u = sm(seg(g, g0, g1)) * 0.6 + 0.4 * seg(g, g0, g1); x = lerp(x0, x1, u); z = lerp(z0, z1, u); break
+    if g >= G_FLOP: x += 0.12 * math.sin(g * 0.11); z += 0.07 * math.sin(g * 0.23)
+    return Vector((x, b.y, b.z + z))
+FRONT = Vector((0.0, -0.3, 0.0))              # the card plane stays parallel to the bar, 0.3 D in front of it (no bar through the body)
 
 def conv(r, a_from, a_to, cam, at):
     """world position of sprite anchor a_to when anchor a_from sits at world `at` (same card, yaw from the camera)"""
@@ -68,7 +75,7 @@ def conv(r, a_from, a_to, cam, at):
 
 LAND = None
 def land_hip():
-    return Vector((1.1, 24.0, foam_z() + 0.55))
+    return Vector((2.2, 24.0, foam_z() + 0.55))
 
 _ref = {}
 def ref_sprite(tag, cast, pose, ppd, canvas=None):
@@ -78,43 +85,53 @@ def ref_sprite(tag, cast, pose, ppd, canvas=None):
 def dick_spec(g, cam):
     pose = dick_pose(g); ppd = 192 if g >= G_RISE else 160
     def place(r, cam):
-        kw = dict(scale=1.0, shadow=None)
+        kw = dict(scale=1.0, shadow=None, yaw_fixed=0.0 if g >= G_TO else None)
         if g < G_TO:                                           # run / plant: feet on the tartan
             x, y = run_xy(g); kw.update(mark=(x, y, 0.0), shadow=(1.5, 0.5)); return kw
         rb = ref_sprite('to', DICK, pc('takeoff'), 192)
         xt, yt = run_xy(G_TO)
         A = conv(rb, 'feet', 'bar', cam, Vector((xt, yt, 0.0)))        # bar anchor of the take-off pose standing at the take-off mark
-        T0 = bar_target(G_HEAD); T = Vector((T0.x, T0.y, T0.z)) + toward(cam, T0, 0.3)
+        T0 = bar_target(G_HEAD); T = T0 + FRONT
         if g < G_HEAD:                                         # rise: the bar anchor flies from the take-off to the crossbar
             u = seg(g, G_TO, G_HEAD); p = Vector((lerp(A.x, T.x, sm(u)), lerp(A.y, T.y, sm(u)), lerp(A.z, T.z, 1 - (1 - u) ** 2)))
             kw.update(anchor=('bar', tuple(p))); hp = Vector((p.x, p.y, foam_z())); kw.update(shadow_at=(hp.x, hp.y, hp.z, 2.0, 0.7), shadow_a=0.35 * u)
         elif g < G_FLICK0:
-            t = bar_target(g); p = t + toward(cam, t, 0.3); kw.update(anchor=('bar', tuple(p))); hp = Vector((p.x - 0.4, p.y, foam_z())); kw.update(shadow_at=(hp.x, hp.y, hp.z, 2.6, 0.9), shadow_a=0.55)
+            t = bar_target(g); p = t + FRONT; kw.update(anchor=('bar', tuple(p))); hp = Vector((p.x - 0.4, p.y, foam_z())); kw.update(shadow_at=(hp.x, hp.y, hp.z, 2.6, 0.9), shadow_a=0.55)
         else:                                                  # flick + fall + lie + sit: placed by the hip anchor
-            t = bar_target(G_FLICK0); p0 = t + toward(cam, t, 0.3); rf = ref_sprite('flop', DICK, pc('flop'), 192)
+            t = bar_target(G_FLICK0); p0 = t + FRONT; rf = ref_sprite('flop', DICK, pc('flop'), 192)
             H0 = conv(rf, 'bar', 'hip', cam, p0); HL = land_hip()
             if g < G_FLICK1: u = seg(g, G_FLICK0, G_FLICK1); H = H0 + Vector((0.5 * sm(u), 0, 0.45 * math.sin(u * math.pi * 0.5)))
             elif g < G_LAND:
                 u = seg(g, G_FLICK1, G_LAND); Ht = H0 + Vector((0.5, 0, 0.45)); e = u * u
-                H = Vector((lerp(Ht.x, HL.x, sm(u)), lerp(Ht.y, HL.y, sm(u)), lerp(Ht.z, HL.z, e)))
+                z = lerp(Ht.z, HL.z, e); w = clamp((bar_c().z - 0.9 - z) / max(0.1, bar_c().z - 0.9 - HL.z))
+                H = Vector((lerp(Ht.x, HL.x, sm(u)), lerp(Ht.y, HL.y, sm(w)), z))
             else:
                 u = seg(g, G_LAND, G_LAND + 10); bounce = 0.18 * math.exp(-u * 4) * abs(math.sin(u * 9.0)) if g < G_LAND + 10 else 0.0
                 H = Vector((HL.x, HL.y, HL.z + bounce))
                 if g >= G_SIT0: H.z = HL.z + 0.10 * sm(seg(g, G_SIT0, G_SIT1))
-            kw.update(anchor=('hip', tuple(H))); kw.update(shadow_at=(H.x, H.y, foam_z(), 2.8, 0.9), shadow_a=0.55)
+            kw.update(anchor=('hip', tuple(H))); kw.update(shadow_at=(H.x, HL.y if g >= G_FLICK1 else H.y, foam_z(), 2.8, 0.9), shadow_a=0.55)
         return kw
     return dict(tag='dick_%04d' % g, cast=DICK, pose=pose, ppd=ppd, canvas=WIDE, place=place, name='dick')
 
+def rival_x(g): return lerp(-3.0, 2.6, clamp((g - 1500) / 94.0))
+def rival_h(g):
+    h = -1.7 + 2.4 * sm(seg(g, 1500, 1540)); h -= 2.0 * sm(seg(g, 1558, 1594)); return h      # lowest body part relative to the bar centre (D): rise, flat apex, come down
 def rival_spec(g):
-    """shot 28 contrast: straddle roll, belly down, the whole body above the bar"""
-    k = seg(g, B28 - 8, B29 + 8)
-    pose = tween(PF('straddle_a', 'rival1'), PF('straddle_b', 'rival1'), sm(seg(g, B28 + 20, B28 + 55)))
-    pose['pitch'] = 0.3 + 0.05 * math.sin(g * 0.2)
+    """shot 28: a real straddle jump, belly down and FLAT: approach, rise, roll over (apex ~0.7 D above the bar at g1540-1558), come down"""
+    st = lambda n: PF(n, 'rival1')
+    if g < 1514: pose = st('takeoff')
+    elif g < 1534: pose = tween(st('takeoff'), st('straddle_a'), sm(seg(g, 1514, 1534)))
+    elif g < 1545: pose = st('straddle_a')
+    elif g < 1557: pose = tween(st('straddle_a'), st('straddle_b'), sm(seg(g, 1545, 1557)))       # the pop: the other leg kicks up
+    elif g < 1572: pose = st('straddle_b')
+    else: pose = tween(st('straddle_b'), st('land_back'), sm(seg(g, 1572, 1592)))
+    pose = dict(pose); pose['pitch'] = 0.3 + 0.05 * math.sin(g * 0.2)
+    if 1530 <= g < 1575: pose['body_lean'] = 91; pose['roll2'] = 94      # flat, belly down
     def place(r, cam):
-        b = bar_c(); x = lerp(-0.2, 1.4, k)
-        hz = b.z + 1.6 + 0.12 * math.sin(math.pi * k) + 0.05 * math.sin(g * 0.3)
-        p = Vector((x, b.y, hz)); p += toward(cam, p, 0.3)
-        return dict(scale=1.0, shadow=None, anchor=('head', tuple(p)), shadow_at=(p.x - 0.8, p.y, foam_z(), 3.2, 1.0), shadow_a=0.4)
+        b = bar_c(); an = r['anchors']; names = [n for n in ('hand_r', 'hand_l', 'foot_r', 'foot_l', 'knee_r', 'knee_l', 'head') if n in an]
+        low = max(an[n][1] for n in names); hy = an['head'][1]
+        zl = b.z + rival_h(g); p = Vector((rival_x(g), b.y, zl + (low - hy))) + FRONT
+        return dict(scale=1.0, shadow=None, anchor=('head', tuple(p)), shadow_at=(p.x - 0.8, p.y, foam_z(), 3.2, 1.0), shadow_a=0.4, yaw_fixed=0.0)
     return dict(tag='rival_%04d' % g, cast='rival1', pose=pose, ppd=160, canvas=WIDE, place=place, name='rival')
 
 MARKS = {}
@@ -130,8 +147,11 @@ def podium_specs(g):
     out = [dict(tag='pod2_%04d' % g, cast='official1', pose=off, ppd=128, place=mk('podium_2'), name='off'),
            dict(tag='pod3_%04d' % g, cast='rival2', pose=rv, ppd=128, place=mk('podium_3'), name='riv'),
            dict(tag='pod1_%04d' % g, cast=DICK, pose=dict(pd, bob=0.04 * math.sin(g * 0.6) * cheer), ppd=160, place=mk('podium_top'), name='dick')]
-    cj = PF('coach_jaw', 'coach_stands') if 'coach_jaw' in cast15.POSE_NAMES else PF('jaw_drop', 'coach_stands')
-    out.append(dict(tag='coach_%04d' % g, cast='coach_stands', pose=cj, ppd=160, place=lambda r, cam: dict(mark=COACH_AT, scale=COACH_K, shadow=(1.5, 0.5)), name='coach'))
+    cj = dict(PF('coach_jaw', 'coach_stands') if 'coach_jaw' in cast15.POSE_NAMES else PF('jaw_drop', 'coach_stands'))
+    k = seg(g, 1774, 1782)
+    cj['mouth'] = ('open', 0.30 * k, 0.22 * k) if k > 0 else 'flat'; cj['expr'] = 'shocked' if k > 0 else 'neutral'; cj['bob'] = 0.03 * math.sin(g * 0.5) * cheer
+    cx, cy = [float(v) for v in os.environ.get('COACH', '-13.3,25.0').split(',')]; p = Vector((cx, cy, 0.0))
+    out.append(dict(tag='coach_%04d' % g, cast='coach_stands', pose=cj, ppd=160, place=lambda r, cam: dict(mark=tuple(p), scale=1.0, shadow=(1.5, 0.5)), name='coach'))
     return out
 COACH_AT = (-30.0, 108.5, 25.5); COACH_K = 3.2
 
@@ -145,11 +165,16 @@ def bxm(g): return bar_target(g).x * DM
 def U01(g, shot): g0, g1 = SHOTS[shot]; return (g - g0) / float(g1 - g0)
 def LL(a, b, u): return tuple(lerp(x, y, u) for x, y in zip(a, b))
 def cam26(g):
-    u = U01(g, 26); C = (bxm(g) - 0.2, 11.6, 2.15); return orbit(C, lerp(2.9, 2.5, u) - 0.5 * sm(seg(g, 1425, 1437)), lerp(-30, 26, u), lerp(1.95, 2.05, u))
+    u = U01(g, 26); C = (bxm(g) - 0.2, 11.6, 2.15)
+    SN = lambda a: sm(seg(g, a - 2, a + 4)); th = lerp(-24, 6, u) + 18 * (SN(1404) - SN(1416) + SN(1434) - SN(1450))
+    R = lerp(2.9, 2.6, u) - 0.3 * sm(seg(g, 1413, 1421)) + 0.2 * sm(seg(g, 1436, 1448))
+    return orbit(C, R, th, lerp(1.95, 2.05, u))
 def cam27(g):
-    u = U01(g, 27); C = (bxm(g) - 0.2, 11.6, 2.15); return orbit(C, lerp(2.6, 2.3, u) - 0.45 * sm(seg(g, 1480, 1491)), lerp(24, -8, u), 2.0)
+    u = U01(g, 27); C = (bxm(g) - 0.2, 11.6, 2.15)
+    return orbit(C, lerp(2.7, 2.4, u) - 0.55 * sm(seg(g, 1472, 1484)), lerp(22, -10, u) + 6 * math.sin(g * 0.25) + 16 * (sm(seg(g, 1470, 1476)) * 0 + sm(seg(g, 1492, 1498)) - sm(seg(g, 1502, 1508))), 2.0)
 def cam28(g):
-    u = U01(g, 28); x = lerp(-0.2, 1.4, clamp((g - (B28 - 8)) / float(B29 + 16 - B28))) * DM; C = (x - 0.45, 11.6, 2.45); return orbit(C, lerp(3.3, 3.0, u) - 0.7 * sm(seg(g, 1540, 1552)), lerp(-26, 26, u), 2.0)
+    u = U01(g, 28); x = rival_x(g) * DM; C = (x - 0.35, 11.6, 2.3)
+    return orbit(C, lerp(3.4, 3.1, u) - 0.7 * sm(seg(g, 1543, 1551)), lerp(-24, 20, u) + 16 * (sm(seg(g, 1526, 1532)) - sm(seg(g, 1543, 1549)) + sm(seg(g, 1558, 1564))), 2.0)
 def cam29(g):
     gw0, gw1 = G_FLICK1 - 2, G_FLICK1 + 8; Lx = land_hip().x * DM
     Cb = lambda gg: (bxm(gg) - 0.2, 11.6, 2.2)
@@ -160,7 +185,7 @@ def cam29(g):
 def cam30(g):
     u = U01(g, 30); C = (land_hip().x * DM + 0.3, 13.0, lerp(1.5, 1.6, u)); return orbit(C, lerp(3.5, 3.1, u) - 0.7 * sm(seg(g, G_SW - 2, G_SW + 10)), lerp(-22, 32, u), lerp(1.55, 1.6, u))
 def cam31(g):
-    u = U01(g, 31); R = lerp(4.2, 3.5, u) * (1 - 0.14 * sm(seg(g, G_CHEER - 3, G_CHEER + 9))); return orbit((-8.9, 10.0, 2.2), R, lerp(30, 8, u), 1.8)
+    u = U01(g, 31); R = lerp(4.4, 3.9, u) * (1 - 0.14 * sm(seg(g, G_CHEER - 3, G_CHEER + 9))); return orbit((-8.3, 10.0, 2.2), R, lerp(30, 14, u) + 16 * (sm(seg(g, 1760, 1766)) - sm(seg(g, G_CHEER - 2, G_CHEER + 4))), 1.8)
 CAMF = {26: cam26, 27: cam27, 28: cam28, 29: cam29, 30: cam30, 31: cam31}
 def cam25(g): u = U01(g, 25); return LL(CAMS[25]['a'][0], CAMS[25]['b'][0], u), LL(CAMS[25]['a'][1], CAMS[25]['b'][1], u)
 CAMF[25] = cam25
@@ -189,8 +214,8 @@ def setup(shot, h_in, h_out):
     F.crowd_mode('hush', frame=g0 - 20)
     if shot >= 30: F.crowd_mode('hush', frame=G_SW - 1); F.crowd_mode('normal', frame=G_SW + 12)
     if shot == 31:
-        F.crowd_mode('normal', frame=G_CHEER - 8); F.crowd_mode('cheer', frame=G_CHEER + 6); F.torch_flicker(1.4, frame=G_CHEER); F.stand_flashes(B31 - 6, BEND + 8, density=1.0)
-        for f in (B31 + 4, B31 + 15, G_CHEER + 3, G_CHEER + 12, G_CHEER + 25): F.flash_bulb(f)
+        F.crowd_mode('normal', frame=G_CHEER - 8); F.crowd_mode('cheer', frame=G_CHEER + 6); F.torch_flicker(1.4, frame=G_CHEER); F.stand_flashes(B31 - 6, BEND + 8, density=2.2)
+        for f in (B31 + 6, G_CHEER + 3, G_CHEER + 14, G_CHEER + 26): F.flash_bulb(f, energy=6e3)
     if shot >= 29: F.switch_light('EVE', G_SW, 10)
     return sc, cam
 

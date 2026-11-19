@@ -9,8 +9,8 @@ for name, t in T.items():
     seqd = os.path.join(HERE, 'work', 'seq_' + name); shutil.rmtree(seqd, ignore_errors=True); os.makedirs(seqd)
     for g in range(t['first'], t['last'] + 1):
         src = os.path.join(HERE, 'frames', 'g_%04d.png' % g)
-        if not (t['g0'] <= g <= t['g1']) and not (name == 's25' and g < t['g0']):                       # handle frames come from this take's own shot set-up
-            sh = {'s25': 27, 's28': 28, 's29': 29 if g < t['g0'] else 31}[name]; src = os.path.join(HERE, 'frames_x', str(sh), 'g_%04d.png' % g)
+        if not (t['g0'] <= g <= t['g1']) :                       # handle frames come from this take's own shot set-up
+            sh = {'s25': 25 if g < t['g0'] else 27, 's28': 28, 's29': 29 if g < t['g0'] else 31}[name]; src = os.path.join(HERE, 'frames_x', str(sh), 'g_%04d.png' % g)
         if not os.path.exists(src) and t['g0'] <= g <= t['g1']: raise SystemExit('missing ' + src)
         if not os.path.exists(src): raise SystemExit('missing ' + src)
         os.symlink(src, os.path.join(seqd, 'g_%04d.png' % g))

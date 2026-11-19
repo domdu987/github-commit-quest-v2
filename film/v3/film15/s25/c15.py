@@ -68,7 +68,7 @@ def render_batch(specs, ppd_default=128):
     for s, r in zip(specs, res): assert not r['clipped'], 'sprite clipped by canvas: ' + s['tag']
     return res
 
-def put(tag, r, cam_loc, mark=(0, 0, 0), scale=1.0, anchor=None, yaw_off=0.0, shadow=(1.4, 0.45), dz=0.0, shadow_at=None, shadow_a=0.8, tilt=0.0):
+def put(tag, r, cam_loc, mark=(0, 0, 0), scale=1.0, anchor=None, yaw_off=0.0, shadow=(1.4, 0.45), dz=0.0, shadow_at=None, shadow_a=0.8, tilt=0.0, yaw_fixed=None):
     x0, y0, x1, y1 = r['canvas']; fx, fy = r['feet']; k = scale
     X0, X1 = x0 * k, x1 * k; Z0, Z1 = -y1 * k, -y0 * k
     me = bpy.data.meshes.new(tag); me.from_pydata([(X0, 0, Z0), (X1, 0, Z0), (X1, 0, Z1), (X0, 0, Z1)], [], [(0, 1, 2, 3)]); me.update()
@@ -77,6 +77,7 @@ def put(tag, r, cam_loc, mark=(0, 0, 0), scale=1.0, anchor=None, yaw_off=0.0, sh
     me.materials.append(card_mat(tag + '_mat', r['out']))
     cam = Vector(cam_loc)
     def yaw_of(p):
+        if yaw_fixed is not None: return yaw_fixed
         d = cam - p; return math.atan2(d.x, -d.y) + math.radians(yaw_off)
     mk = Vector(mark) + Vector((0, 0, dz))
     if anchor is not None:

@@ -4,19 +4,18 @@ Takes (one script, `s25/shot.py`, `s25/c15.py`): **s25** = shots 25-27, B TENSE,
 (first_g 1578, 234 frames, dissolve in 11, out handle 8 for the dissolve into shot 32). Split from the plan's two takes into three because 27 -> 28 -> 29 are
 dissolves between TENSE and EVE (one process = one light preset). Final 720x1280, 12 samples, OIDN, no DOF, cast15 emission cards in the set3d15 scene.
 Cost about 13.4 s wall per frame (two processes x 2 threads).
-## Reveal checks
-- Flop part by part: head over g1392 (46.4 s), back g1416 (47.2), legs g1434 (47.8); arch held to g1586; flick g1586-1603, fall, lands on the foam g1626, lies, sits up g1666-1696 (shot 30).
-- Arch >= 50 % of the frame width in 26/27/29 (camera 2.0-2.6 m from the bar, orbiting the body); bar against the dark upper stand; head and legs hang below the bar; card 0.3 D in front of the bar; TENSE pool spots dimmed x0.55 so the bar is not blown out.
-- Shot 28: rival1 straddle_a -> b, belly down, whole body 1.6 D above the bar. Shot 30: bar does not move; light pops TENSE -> EVE at g1698 (56.6 s). Shot 31: podium (dick_olympic medal, official1, rival2), crowd cheer + stand flashes + flash bulbs from g1773 (59.1 s); coach_stands (jaw drop) in the stands at scale 3.2 (he is ~95 D from the camera).
-- No mouths move (no coach quote in 25-31). Heads: Dick/rival head y < 880 in every frame (lying Dick g1626-1651 head y about 620; see work logs `work/log_*.jsonl`). No text, digits or flags on cards.
+## Reveal checks (take 2, after the director review)
+- The body now TRAVELS across the bar: the card (parallel to the bar, 0.3 D in front, so the bar never crosses the body) moves along the bar with the pose tween: head and shoulders over g1392 (flop_head, hips still below the bar), back/hips at the apex g1416-1419 (flop_back -> flop), thighs up and shins hanging g1434-1437 (flop, z +0.12 D), then a slow travel with sway between flop / flop_back / flop_flick through shot 27 (g1470-1517); head-and-legs-below arch about 65-85 % of the width. Quick push-in at g1472-1484 (shot 27); camera snaps (15-20 deg in 6 frames) on every beat.
+- Shot 25: J-curve run from the left (y 18.4 -> 19.9 D), plant, take-off, back to the bar (flop_rise), card in front of the bar, no bar across the chest. Shot 28: real straddle jump: approach, rise, belly-down FLAT apex about 0.7 D above the bar at g1540-1558 (leg kick a -> b at the pop g1545-1557), then down; raised leg inside the frame. Shot 29: drop keeps the card in front of the bar plane until below it (bar not across his face). Shot 30: looks up at the bar (pitch -0.6, gaze up), light pops TENSE -> EVE at g1698; the bar does not move.
+- Shot 31: podium, medal, crowd cheer + more flashes from g1773 (59.1 s); coach_stands is now on the track right of the podium at normal size (about 15 % of the frame height, in a clear gap) with his mouth dropping open from g1774-1782 (jaw drop at about 59.2 s); he is no longer "in the stands" (the stands are 95 D away, he would be 14 px).
+- No mouths move (no coach quote in 25-31) other than the jaw drop. Heads y < 880 (see work/log_*.jsonl). No text, digits or flags on cards.
 ## Motion (python3 film15/motion_check.py take.mkv --first_g G --cuts ...)
 | take | median | p90 | per shot (median / p90) |
 |---|---|---|---|
-| s25 | 4.2 | 6.0 | 25: 5.0/6.1, 26: 3.9/5.0, 27: 4.7/7.3, out handle: 3.8/4.1 |
-| s28 | 4.1 | 6.6 | 28: 4.0/7.4 |
-| s29 | 5.3 | 12.1 | 29: 5.2/25.2, 30: 5.4/6.4, 31: 4.2/16.9 |
-Median passes in all three; **p90 >= 12 is met only by s29** (s25 6.0, s28 6.6). The hanging flop / straddle are slow by nature (the figure is held in the picture,
-the camera orbits 25-50 degrees around it with a quick 0.4 s push-in at the punch beats, FG standards ride the lens); a faster orbit or a whip in 26-28 would lift p90 if the director wants it.
+| s25 | 5.2 | 8.4 | 25: 5.5/6.4, 26: 3.6/8.9, 27: 6.6/8.8, out handle: 4.7/6.1 |
+| s28 | 4.9 | 9.5 | 28: 5.0/9.7 |
+| s29 | 6.4 | 12.1 | 29: 6.8/20.7, 30: 6.7/10.0, 31: 3.5/13.1 |
+Medians pass everywhere. p90 >= 12 holds only for s29; s25 (8.4) and s28 (9.5) are short. The figures now move all the time; the remaining gap is the slow parts between the camera snaps. More snaps would make the shots jittery; the director can decide.
 ## Known points
 - A camera sliding sideways moved almost nothing (distant stands), so 26/27/28/30/31 orbit the figure instead (first versions measured median 1.4-1.9).
 - Dissolve handle frames come from this take's own set-up (s25 out = shot 27 look, s28 in/out = shot 28 look, s29 in = shot 29 look, s29 out = shot 31 look).
