@@ -85,6 +85,23 @@ class Take(C.Take):
         self.key_cam(bf(GS[0]), *CAM.at(GS[0]))
         self.scene.frame_set(bf(GS[0]))
         self.hp = {}
+        # the register's paper drum reads as a big log in the foreground when the camera pushes in: cut it out of the table mesh (the tape still comes from the slot)
+        import bmesh
+        lo = Vector(K.W((CH.TG_C[0] - 0.4, CH.TG_C[1] - 0.2, 0.9625))); hi = Vector(K.W((CH.TG_C[0] + 1.45, CH.TG_C[1] + 0.9, 3.0)))
+        for ob in TG.STATE["table_objs"]:
+            if ob.name.endswith("brass"):                      # the brass roller beside the drum (a big gold log end to the lens)
+                a_ = Vector(K.W((CH.TG_C[0] + 0.26 * CH.TG_S - 0.12, CH.TG_C[1] + 0.1 * CH.TG_S - 0.24, CH.TG_C[2] + 0.2 * CH.TG_S - 0.16)))
+                b_ = Vector(K.W((CH.TG_C[0] + 0.26 * CH.TG_S + 0.12, CH.TG_C[1] + 0.1 * CH.TG_S + 0.24, CH.TG_C[2] + 0.2 * CH.TG_S + 0.16)))
+                lo2 = Vector((min(a_.x, b_.x), min(a_.y, b_.y), min(a_.z, b_.z))); hi2 = Vector((max(a_.x, b_.x), max(a_.y, b_.y), max(a_.z, b_.z)))
+                bm = bmesh.new(); bm.from_mesh(ob.data)
+                dead = [v for v in bm.verts if lo2.x <= v.co.x <= hi2.x and lo2.y <= v.co.y <= hi2.y and lo2.z <= v.co.z <= hi2.z]
+                bmesh.ops.delete(bm, geom=dead, context="VERTS")
+                bm.to_mesh(ob.data); bm.free()
+            if ob.name.endswith("paper"):
+                bm = bmesh.new(); bm.from_mesh(ob.data)
+                dead = [v for v in bm.verts if lo.x <= v.co.x <= hi.x and lo.y <= v.co.y <= hi.y and v.co.z > lo.z]
+                bmesh.ops.delete(bm, geom=dead, context="VERTS")
+                bm.to_mesh(ob.data); bm.free()
         for k, v in CAST.items():
             cv = cast16.CANVAS16[v["cast"]]
             self.actors[k] = C.make_actor(k, v["cast"], os.path.join(WORK, "sprites"), canvas=cv, contact=True, cam=self.cam)

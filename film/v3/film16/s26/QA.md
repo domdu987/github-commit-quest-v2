@@ -31,3 +31,9 @@ Frame-diff now median 4.27 / p90 26.37; 78 frames, 9.39 s/frame; heads 76-233 px
 - **Gate 2 (crowd): fixed.** Congressmen A, B, C are staged round the mocker (A at 2.4/12.3, B at -2.6/11.3, C at -0.5/12.8, mirrored toward the register): four faces in the opening frame, and in the closing frame the mocker, congressman A, congressman C and Morse are in shot (A and C are 170-180 px).
 - **Gate 3 (Morse's eye-line): partly.** His gaze is set toward the tape (-0.6, 0.9); the pose still grins and the sheet in his hand stays a loose paper.
 - Morse stays out of the caption band (his head bottom was 893 in the first re-render, now 796).
+
+---
+# Revision 3 (after the director's FINAL gate)
+Re-rendered, take.mkv replaced (31.5 MB). Frame-diff median 4.28 / p90 22.46; heads 76-233 px, lowest head bottom y 811. QA_AUTO PASS.
+- **Foreground spool:** the register's cream paper drum (the "log") and the big brass roller beside it are cut out of the table mesh at run time (bmesh, inside the instrument box); the tape still comes out of the slot. In the snap frames (g 1736-1750) the foreground is now the baize, the instrument's stepped base and the tape.
+- A small yellow disc remains at the far left edge at g 1740 (another part of the instrument's coil); it is out of the way.

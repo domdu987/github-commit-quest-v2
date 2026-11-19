@@ -25,3 +25,12 @@ median **6.28**, p90 **16.45** (targets >= 4 / >= 12). First tuning (slide 40, a
 Frame-diff now median 6.70 / p90 15.42; 108 frames, 8.9 s/frame; heads 159-304 px, lowest head bottom y 832 (< 880).
 - **Gate 1 (sacks): fixed.** The camera is orbited -38 deg (from +18) and pulled back (4.9 D, 1.0 D below the face): a sack stands beside him in the frame for g 1796-1870 (two at g 1800, one large at g 1830-1860), then the snap closes on his face and the key ring. The opening head is 157-165 px (medium) instead of the 190-ish before.
 - The low desk still hides his legs for part of the shot (low angle by design).
+
+---
+# Revision 3 (after the director's FINAL gate) -- re-rendered, take.mkv replaced (41.4 MB)
+Frame-diff median 6.51 / p90 13.94; 108 frames, 8.9 s/frame; heads 173-337 px, lowest head bottom y 841 (< 880). QA_AUTO PASS. Same frame range (g 1805..1894) and the 15 f dissolve-in.
+- **The set's closed burlap sacks are off** (`set_mailsacks(False)`): they hid his body and read as the money bag.
+- **Two OPEN sacks spilling blank white envelopes** (own geometry: sack, dark mouth, 15 envelopes each with a V flap drawn as two thin lines, some standing in the opening, the rest spilled over the lip) stand on the two desks beside his, in the left and right thirds of the frame, low, never across his torso. No red blob, no text.
+- **Pose:** `mocker_pm_keys` from the first frame with the right hand raised beside his head (hand (0.80, 0.10)): the key ring is held UP, the sash and the mail bag are fully visible from the first frame.
+- **Camera:** eye level (0.3 D under his face, 4.6 D away) instead of the low camera, so the desk no longer hides him: medium head 173-180 px from g 1805 to 1870 (medium by 61.5 s = g 1845 as asked), then the snap on "ไปรษณีย์ใหญ่" to a 337 px close.
+- The sack on the right drifts out of frame as the camera pushes in; at the close only the sash, keys and face remain.

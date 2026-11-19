@@ -19,14 +19,15 @@ G_LAST = GS[-1]
 G_WORD = C.cap_g("ไปรษณีย์ใหญ่")                          # snap + pose swap on 'Postmaster General'
 SNAP = (G_WORD - 6, G_WORD + 9)
 PPD = 256
-ANG = -38.0
+ANG = 0.0
 LIGHT, PRESET = "DAY", "chamber_low"
 
 def P(name):
     return dict(cast16.STORY16[name][1])
 
 def pose_of(g):
-    p = P("mocker_pm_proud" if g < G_WORD + 1 else "mocker_pm_keys")
+    p = P("mocker_pm_keys")
+    p["arm_r"] = dict(hand=(0.80, 0.10), bend=0.25, stretch=1.25)        # the key ring held UP beside his head, sash fully visible
     t = g / 30.0
     p["blink"] = blink(g, [G_WORD, 1830, 1850, 1888])
     p["lean"] = p.get("lean", 0) + 2.0 * math.sin(t * 4.2)
@@ -47,19 +48,54 @@ class Take(C.Take):
         c0 = Vector(self.A["cam"]["loc"]); l0 = Vector(self.A["cam"]["look_at"])
         d = (c0 - l0); d.z = 0; d.normalize()
         d = Matrix.Rotation(math.radians(float(os.environ.get('ANG', ANG))), 3, 'Z') @ d
-        loc0 = look0 + d * 4.9 + Vector((0, 0, -1.0))
+        loc0 = look0 + d * 4.6 + Vector((0, 0, -0.3))
         CAM = C.CamPath(loc0, look0, G0 - H, G_LAST, push=0.08, slide_px=85.0, arc_deg_s=11.0, decay=0.25,
                         snaps=[dict(g=SNAP, k=1.8, peak=1.7, shift=(-0.9, 0.2))])
+        self.build_sacks()
         self.key_cam(bf(GS[0]), *CAM.at(GS[0]))
         self.scene.frame_set(bf(GS[0]))
         self.actors["moc"] = C.make_actor("moc", "mocker", os.path.join(WORK, "sprites"), canvas=cast16.CANVAS16["mocker"], contact=True, cam=self.cam)
+    def build_sacks(self):
+        """two OPEN sacks of blank white envelopes on the two desks beside his (left and right thirds, low in frame, never across his torso);
+        the set's closed burlap sacks stay off"""
+        import random, math as _m
+        M = TG.STATE["M"]
+        D = [d for d in TG.STATE["desks"] if d[0] == 0]
+        D.sort(key=lambda d: abs(d[1] - _m.radians(136)))
+        (_, a1, x1, y1, z1), (_, a2, x2, y2, z2) = D[0], D[1]
+        p2 = Vector((x2, y2)); p1 = Vector((x1, y1))
+        spots = [(p1.x, p1.y, 0.0, 1), (p2.x + (p1.x - p2.x) * 0.26, p2.y + (p1.y - p2.y) * 0.26, 0.0, -1)]
+        rr = random.Random(5)
+        mb = K.MB("s28_sacks")
+        top = 0.85
+        for (cx, cy, _z, sgn) in spots:
+            mb.ell(M["sack"], (cx, cy, top + 0.17), (0.15, 0.14, 0.18), (14, 9))
+            mb.cyl(M["sackdk"], (cx, cy, top + 0.345), 0.14, 0.04, "z", 14)
+            mb.cyl(M["dark"], (cx, cy, top + 0.368), 0.105, 0.012, "z", 14)
+            for i in range(15):
+                ang = rr.uniform(0, 6.283)
+                if i < 6:                                     # standing up out of the opening
+                    r = rr.uniform(0.0, 0.07); z = top + 0.37 + rr.uniform(0.02, 0.10)
+                    rx, ry = rr.uniform(-0.7, 0.7), rr.uniform(-0.7, 0.7)
+                else:                                         # spilled over the lip onto the desk
+                    r = rr.uniform(0.17, 0.46); z = top + 0.012 + 0.004 * i
+                    rx, ry = rr.uniform(-0.06, 0.06), rr.uniform(-0.06, 0.06)
+                ex, ey = cx + r * _m.cos(ang), cy + r * _m.sin(ang)
+                rz = rr.uniform(0, 3.14)
+                mb.box(M["paper"], (ex, ey, z), (0.2, 0.135, 0.008), rz=rz, rx=rx, ry=ry)
+                for sgn2 in (-1, 1):                          # the V of the flap: two thin lines from the top corners to the middle
+                    lx, ly = -sgn2 * 0.06, 0.035
+                    ox = lx * _m.cos(rz) - ly * _m.sin(rz); oy = lx * _m.sin(rz) + ly * _m.cos(rz)
+                    mb.box(M["sackdk"], (ex + ox, ey + oy, z + 0.006), (0.085, 0.005, 0.004), rz=rz - sgn2 * 0.62, rx=rx, ry=ry)
+        self.sacks = mb.finish()
+
     def pose(self, gs):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *CAM.at(g))
             x, y, z = self.mark
             C.place(self.actors["moc"], f, (x, y, z + 0.04 * abs(math.sin(g * 0.2))))
-            self.key_set(f, mailsacks=(True,), flames=(1.0,))
+            self.key_set(f, mailsacks=(False,), flames=(1.0,))
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
