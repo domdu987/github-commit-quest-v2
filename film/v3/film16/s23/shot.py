@@ -58,7 +58,7 @@ G_FLICK = (1509, 1516)
 G_SETTLE = (1516, 1520)
 G_WIRE = 1521
 BLINKS = [1465, G_SWAP - 1, G_WIRE]              # blink(g, starts): half, closed, half
-G_HAPPY = G_WIRE + 1                           # expression change on the closed frame of the last blink
+G_HAPPY = G_SWAP                           # expression change on the closed frame of the last blink
 
 # ----------------------------------------------------------------------------- staging (world D; set authored in sb metres, K.W converts)
 LIGHT = "AFTER_RAIN"
@@ -71,18 +71,53 @@ PY = LN.POLES_Y[POLE]
 TOP = lambda: K.W((PX, PY, LN.POLE_H + 0.01))  # bottle mouth on the pole top (world D, z 9.27)
 BOTTLE_TOP_SB = lambda i: (LN.px(LN.POLES_Y[i]) + 0.03, LN.POLES_Y[i], LN.POLE_H + 0.01 + LN.BOT_TOP * LN.BS + 0.03)   # wire end points (= build_poles top_b)
 COIL_LOCAL = (0.42, 0.72)                      # puppet-local centre of the wire coil on his (mirrored) lower arm, both poses
-NECK = 0.50                                    # hand on the neck: D above the mouth
-LIFT = Vector((-0.28, -0.22, 0.72))           # held bottle mouth offset from TOP before lowering (toward Morse, up)
+NECK = 0.32                                    # hand on the neck: D above the mouth
+LIFT = Vector((0.14, 0.12, -0.05))           # held bottle mouth offset from TOP before lowering (toward Morse, up)
 FLICK_UP = 0.42                                # wire overshoot above the bottle top (D)
 PPD = 256                                      # sprite px per D (head ~90 px at g 0, ~280 px after the snap: 256 keeps it sharp enough)
 CANVAS = (-2.25, -4.75, 2.25, 0.125)           # taller than CANVAS16['morse16'] (top -3.875): arm up + the low-angle upper_k stretch
                                                # (~1.2 here) clipped his hair flat in the first close drafts
 
-CAM_LOC0 = (2.1, -2.9, 4.4)                    # low, SW of the ladder, looking up ~38 deg (card limit: 50 deg)
-CAM_LOOK0 = (7.15, -8.15, 9.2)                 # subject point: Morse's raised hand / the pole top (lower = less empty sky)
-CAM_START = 0.92                               # frame 0 starts 0.92 of the way from the look point to CAM_LOC0 (head ~92 px; the snap takes it to ~190)
-CAM = C.CamPath(Vector(CAM_LOOK0).lerp(Vector(CAM_LOC0), CAM_START), CAM_LOOK0, G0, G_LAST, push=0.10, slide_px=75.0, rise_px=0.0,
-                arc_deg_s=20.0, decay=0.25, snaps=[dict(g=SNAP, k=3.0, peak=2.0, shift=(-1.2, 0.15))])
+CAM_LOC0 = (2.3, -2.6, 5.3)                    # low, SW of the ladder, looking up ~38 deg (card limit: 50 deg)
+CAM_LOOK0 = (7.4, -7.9, 8.8)                 # subject point: Morse's raised hand / the pole top (lower = less empty sky)
+CAM_START = 1.0                               # frame 0 starts 0.92 of the way from the look point to CAM_LOC0 (head ~92 px; the snap takes it to ~190)
+CAM = C.CamPath(Vector(CAM_LOOK0).lerp(Vector(CAM_LOC0), CAM_START), CAM_LOOK0, G0, G_LAST, push=0.06, slide_px=75.0, rise_px=0.0,
+                arc_deg_s=24.0, decay=0.25, snaps=[dict(g=SNAP, k=2.4, peak=2.0, shift=(-0.7, 0.0))])
+
+
+MARK_SHIFT = Vector((-0.25, -0.22, -0.6))      # Morse stands ~1 rung lower ALONG the ladder: his head clears the bottle body (QA-art: bottle merged with his head)
+
+
+def tune_look(wet_pole):
+    """runtime material tuning (the set's modules are untouched): clear dense bottle-green glass (alpha 1 + transmission: no hashed-alpha grain),
+    and for AFTER_RAIN a dark wet pole (QA-art: salmon pole)."""
+    M = TG.STATE["M"]
+    bs = [n for n in M["glass"].node_tree.nodes if n.type == "BSDF_PRINCIPLED"][0]
+    bs.inputs["Alpha"].default_value = 1.0
+    bs.inputs["Transmission Weight"].default_value = 0.8
+    bs.inputs["Base Color"].default_value = (0.02, 0.30, 0.07, 1.0)
+    bs.inputs["Emission Strength"].default_value = 0.22
+    if wet_pole:
+        darken(M["pole"], (0.36, 0.33, 0.40), 0.26)
+
+
+def darken(mat, tint, rough):
+    """multiply the (texture-driven) base colour of a material by `tint` and make it glossier (wet)."""
+    nt = mat.node_tree
+    bs = [n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"][0]
+    bs.inputs["Roughness"].default_value = rough
+    lk = [l for l in nt.links if l.to_socket == bs.inputs["Base Color"]]
+    mix = nt.nodes.new("ShaderNodeMix")
+    mix.data_type, mix.blend_type = "RGBA", "MULTIPLY"
+    mix.inputs[0].default_value = 1.0
+    mix.inputs[7].default_value = (tint[0], tint[1], tint[2], 1.0)
+    if lk:
+        src = lk[0].from_socket
+        nt.links.remove(lk[0])
+        nt.links.new(src, mix.inputs[6])
+    else:
+        mix.inputs[6].default_value = tuple(bs.inputs["Base Color"].default_value)
+    nt.links.new(mix.outputs[2], bs.inputs["Base Color"])
 
 
 def bottle_xf(g):
@@ -146,6 +181,10 @@ def pose_of(g):
     return p
 
 
+def self_mark():
+    return Vector(TG.STATE['marks']['morse_ladder']) + MARK_SHIFT
+
+
 def hands_of(g, coil):
     """pinned raised hand (arm_r of the UNMIRRORED figure): world targets."""
     if g < G_SWAP:
@@ -156,7 +195,7 @@ def hands_of(g, coil):
         return {"r": {"hand": tuple(a.lerp(Vector(coil), u_of(g, *G_PICK)))}}
     if g < G_SETTLE[1]:
         return {"r": {"hand": tuple(wire_point(g, coil))}}                     # follows the wire as far as the arm reaches
-    rest = Vector(K.W(BOTTLE_TOP_SB(POLE))) + Vector((0.25, -0.35, -0.9))   # hand comes down beside the glass
+    rest = Vector(self_mark()) + Vector((-0.55, -0.5, 1.75))      # hand comes down to his side (away from the face and the pole)
     return {"r": {"hand": tuple(Vector(wire_point(g, coil)).lerp(rest, u_of(g, G_SETTLE[1], G_SETTLE[1] + 8)))}}
 
 
@@ -212,6 +251,7 @@ def build_wire(g, coil):
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s23")
+        tune_look(LIGHT == "AFTER_RAIN")
         self.key_cam(bf(G0), *CAM.at(G0))
         self.scene.frame_set(bf(G0))
         self.mor = self.actors["mor"] = C.make_actor("mor", "morse16", os.path.join(WORK, "sprites"), canvas=CANVAS, contact=False, cam=self.cam)
@@ -227,7 +267,7 @@ class Take(C.Take):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *CAM.at(g))
-            C.place(self.mor, f, mark)
+            C.place(self.mor, f, Vector(mark) + MARK_SHIFT)
             capped, wired = g >= G_CAP, g >= G_WIRE
             # the set's pole-1 state switches on the beat (key EVERY frame: CONSTANT visibility keys)
             C.key_vis([self.peg["wood"], self.peg["glass"], self.peg["glintm"]], capped, f)
