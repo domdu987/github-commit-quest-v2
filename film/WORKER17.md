@@ -17,11 +17,21 @@ PROJ = your clone's film/ folder (clone_depth 1 of branch film17/main). Push to 
 - Measure your take: in-shot frame-diff on 90x160 grey frames, median >= 4 and p90 >= 12 with `python3 PROJ/film17/rhythm.py take.mkv --first_g <first_g> --cuts <your cut g list>` (calibrated: film 2 = 5.1 / 18.7, film 10 = 2.2 / 5.6). Report both numbers in QA.md.
 - Heads: centre y 450-760, whole head above y 880.
 
-## Set
-SET_SECTION_TODO
+## Set (QA-art approved 2026-11-19)
+Approved by QA-art SET gate (client delegated approval to QA-art, 2026-11-19 — see PROJ/film17/BRIEF.md). PROJ/v3/set3d17/bertillon.py.
+READ FIRST: PROJ/v3/set3d17/API.md (sections 1-9 + 5b), QA_ART_SET.md (per-preset notes for render teams), FIX1.md (stand points with pixel numbers).
+- Units: 1 unit = 1 m; one character height D = 1.7 units (`bertillon.D`). Card heights per API.md §1; pass `scale = HEIGHT[who]/card_height_in_head_D` to `Actor.place`, or use the set's `stage_cast()` helper (API §5b).
+- Presets: measure_wide, measure_chair, measure_high, measure_door, measure_low / records_aisle, records_low, records_desk, records_ladder / drawer_big, drawer_box, card_hero / street_wide, street_wagon. Lights DAY_INT, EVENING_INT, DUSK_EXT. Each preset already has a foreground prop 1-2 units from the lens; keep it in frame while you drift.
+- Hooks (key every frame when animated): set_flicker, set_smoke, set_dust, set_pendulum, set_drawer, set_box_lid, set_card_lift, set_cards_fan, key_life, clear_keys; light keys sun_k, frost, beam_k.
+- Stand points: use ONLY the marks listed per preset in API §6 / FIX1.md. Never stage at aisle0, ladder_foot, door_in, door_mid. Real cast cards lean toward low/high cameras: check head y after placing (shift dx as needed).
+- Notes: seated poses use `seat17=None` (the set has its own 3D chair/bench); warm rim light on Bertillon/prefect/inspector over dark backdrops (records canyon, toise corner, wagon); keep the police wagon parked, seen side/rear (no horse); shot 31 ending wide: start the camera ~55 % closer to the chair than the preset (the seated inspector is only 32 px at the preset camera); card_hero has a warm bloom on the card centre: lower the card lamp so the card reads (portraits and bottle visible) — not near-white.
+- Cost ~95-150 s per 720x1280 frame at 64 samples + denoise. Draft at 360x640 first.
 
 ## Cast
-CAST_SECTION_TODO
+PROJ/v3/cast17 (`import cast17` before `sprites`). Read API.md. Members: bertillon, inspector17 (the mocker; CAST key is inspector17, poses inspector_*), prefect, dupont, gendarme_a, gendarme_b, prisoner_a/b/c (`cast17.KEY` maps short names).
+- Poses: STORY17 (bertillon neutral/measuring/writing/holding_card/pointing/triumphant/tired; inspector laughing/pointing_mock/arms_crossed/shouting/shocked/seated_stiff/red_faced (flush17); prefect neutral/finger_up_three/stern; dupont innocent/held/sweating/caught; gendarmes escort/laughing/standing; prisoners sitting/standing). Expressions via `with_expr(pose, name)`.
+- Mouths closed unless `speak(pose, frame, level)` inside the quote windows; `silent(pose)` otherwise. Props: calipers, card, pen, ledger (anchors calipers_r/l, card_r/l, nib_r/l, ledger_r/l; `hand_for_anchor()` pins caliper jaws onto an ear).
+- Tweening (`lerp_pose`) drops seat17/flush17/seat_w: re-add them after tweening. Faces with pince-nez/beard drift beyond yaw ±0.8: keep yaw within ±0.7.
 
 ## Mouths and acting
 - Mouths move ONLY on the inspector's quotes (narration time, +-0.15 s): 16.32-21.59 and 37.48-39.74. Laugh 15.46-16.32 (laugh pose + bounce, no lip-sync).
