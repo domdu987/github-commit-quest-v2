@@ -22,15 +22,16 @@ H_IN, H_OUT = 9, 9
 GA, GB = G0 - H_IN, G1 - 1 + H_OUT
 GS = list(range(GA, GB + 1))
 PRESET, LIGHT = "line_rail", "DAY"
-CAST = [("msg", "messenger_wave", (111.2, 18.2, 1.85), 0.0), ("wka", "worker_a_wave", (112.9, 18.9, 1.85), 0.7),
-        ("cgb", "congressman_b_wave", (114.6, 18.2, 1.85), 1.9), ("cgc", "congressman_c_wave", (116.3, 18.9, 1.85), 3.1)]
+CAST = [("msg", "messenger_wave", (95.8, 17.8, 1.85), 0.0), ("wka", "worker_a_wave", (97.5, 18.5, 1.85), 0.7),
+        ("cgb", "congressman_b_wave", (99.2, 17.8, 1.85), 1.9), ("cgc", "congressman_c_wave", (100.9, 18.5, 1.85), 3.1)]
+LOOK_AT_TRAIN = {"msg", "wka", "cgc"}                 # eye-lines toward the arriving train (screen right); the congressman waves at the camera
 G_WORD = C.cap_g("ก่อนรถไฟตั้ง")                  # 1770
-CAMP = C.CamPath((108.5, 11.0, 4.9), (113.8, 19.8, 3.7), GA, GB, push=-0.20, slide_px=-25.0, rise_px=8.0, arc_deg_s=12.0, decay=0.3,
-                 snaps=[dict(g=(G_WORD - 2, G_WORD + 12), k=1.6, peak=1.7, shift=(0.15, 0.1))])
+CAMP = C.CamPath((95.0, 1.5, 4.0), (101.5, 19.6, 4.6), GA, GB, push=-0.12, slide_px=-25.0, rise_px=8.0, arc_deg_s=10.0, decay=0.3,
+                 snaps=[dict(g=(G_WORD - 2, G_WORD + 12), k=1.7, peak=1.7, shift=(0.5, 0.1))])
 
 
 def train_x(g, front0):
-    return 126.0 - 14.0 * u_of(g, GA, GA + 40, kind="quad_out") - 2.0 * u_of(g, GA + 40, GB)
+    return 126.0 - 26.0 * u_of(g, GA, GA + 40, kind="quad_out") - 2.0 * u_of(g, GA + 40, GB)
 
 
 class Take(C.Take):
@@ -53,6 +54,9 @@ class Take(C.Take):
         p["lean"] = p.get("lean", 0) + 2.0 * math.sin(2 * math.pi * 1.5 * t + ph)
         p["head_roll"] = p.get("head_roll", 0) + 2.5 * math.sin(2 * math.pi * 1.5 * t + ph + 1)
         p["t"] = t
+        if nm in LOOK_AT_TRAIN:
+            p["gaze"] = (1.0, -0.15)
+            p["yaw"] = max(p.get("yaw", 0.3), 0.45)
         return p
 
     def pose(self, gs):
@@ -60,7 +64,7 @@ class Take(C.Take):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *CAMP.at(g))
-            TG.set_train(train_x(g, front0), frame=f, speed=4.0)
+            TG.set_train(train_x(g, front0), frame=f, speed=2.0)
             TG.set_pulse(-1.0, frame=f)
             bounce = 0.05
             for nm, key, mark, ph in CAST:
