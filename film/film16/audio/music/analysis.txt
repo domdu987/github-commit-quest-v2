@@ -1,0 +1,39 @@
+== A: overall RMS -15.2 dB
+  hook        0.0-  5.6s RMS  -15.7 dB  centroid   1090 Hz  env-var 29.2
+  backstory   5.6- 15.9s RMS  -15.7 dB  centroid   1081 Hz  env-var  2.8
+  mock       15.9- 26.2s RMS  -12.4 dB  centroid   1237 Hz  env-var  4.0
+  count      26.2- 31.9s RMS  -12.2 dB  centroid   1157 Hz  env-var  3.7
+  silence    31.9- 40.9s RMS  -22.8 dB  centroid   1100 Hz  env-var 16.0
+  rain       40.9- 46.0s RMS  -30.4 dB  centroid    623 Hz  env-var 13.0
+  reveal     46.0- 53.8s RMS  -29.3 dB  centroid    885 Hz  env-var  8.2
+  triumph    53.8- 60.1s RMS  -13.5 dB  centroid   1906 Hz  env-var  6.3
+  ending     60.1- 71.1s RMS  -14.1 dB  centroid   1864 Hz  env-var 16.4
+  last 0.5 s RMS -71.3 dB
+== B: overall RMS -20.7 dB
+  hook        0.0-  5.6s RMS  -25.3 dB  centroid    851 Hz  env-var 21.3
+  backstory   5.6- 15.9s RMS  -23.0 dB  centroid    761 Hz  env-var  5.3
+  mock       15.9- 26.2s RMS  -24.1 dB  centroid    787 Hz  env-var  4.1
+  count      26.2- 31.9s RMS  -23.1 dB  centroid    864 Hz  env-var  4.2
+  silence    31.9- 40.9s RMS  -26.1 dB  centroid    737 Hz  env-var 11.5
+  rain       40.9- 46.0s RMS  -63.5 dB  centroid    972 Hz  env-var  8.0
+  reveal     46.0- 53.8s RMS  -43.3 dB  centroid   1944 Hz  env-var 12.5
+  triumph    53.8- 60.1s RMS  -15.1 dB  centroid   1704 Hz  env-var  3.8
+  ending     60.1- 71.1s RMS  -16.4 dB  centroid   1773 Hz  env-var 16.1
+  last 0.5 s RMS -67.9 dB
+== C: overall RMS -14.7 dB
+  hook        0.0-  5.6s RMS  -20.2 dB  centroid   1279 Hz  env-var 25.3
+  backstory   5.6- 15.9s RMS  -14.9 dB  centroid    798 Hz  env-var  4.1
+  mock       15.9- 26.2s RMS  -14.2 dB  centroid    869 Hz  env-var  1.6
+  count      26.2- 31.9s RMS  -13.9 dB  centroid   1076 Hz  env-var  1.4
+  silence    31.9- 40.9s RMS  -14.4 dB  centroid    999 Hz  env-var  2.0
+  rain       40.9- 46.0s RMS  -33.9 dB  centroid    919 Hz  env-var  5.6
+  reveal     46.0- 53.8s RMS  -14.3 dB  centroid   1278 Hz  env-var 18.7
+  triumph    53.8- 60.1s RMS  -12.6 dB  centroid   1371 Hz  env-var  1.3
+  ending     60.1- 71.1s RMS  -13.9 dB  centroid   1537 Hz  env-var 22.0
+  last 0.5 s RMS -88.2 dB
+A upload err {"detail":"User is locked. Reason: Exhausted balance. Top up your balance at fal.ai/dashboard/billing"}
+B upload err {"detail":"User is locked. Reason: Exhausted balance. Top up your balance at fal.ai/dashboard/billing"}
+C upload err {"detail":"User is locked. Reason: Exhausted balance. Top up your balance at fal.ai/dashboard/billing"}
+mix A:  I: -12.4 LUFS  Peak: 0.5 dBFS 
+mix B:  I: -12.3 LUFS  Peak: -0.4 dBFS 
+mix C:  I: -12.4 LUFS  Peak: -0.7 dBFS 
