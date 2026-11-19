@@ -1,0 +1,19 @@
+# Blind test (film15 v2 phone sheet + narration)
+
+1. Hook strangeness (0-6 s): Everyone jumps a high-jump bar facing it, but the boy in the white/blue kit runs up, turns his back to the bar and leaps backwards over it. The pictures show the back-turn (4 s) and a backwards flip over the bar (5-6 s, bar splinters/debris). The oddity reads clearly, though at 1-3 s the shots are mostly close-ups of the boy and two bystanders, and the actual jump is small and far away at 1-2 s.
+
+2. Who mocks whom: The old coach (maroon cap and jacket, red-faced) laughs at the boy (17-23 s). Two kids laugh beside him. He says kids will copy it and break their necks, and promises: if this style wins gold, he will do the backwards jump himself.
+
+3. Mechanism: The boy goes over the bar backwards, arched like a bridge (45-47 s). Head crosses first, then back, then legs (47-50 s). The rest of the body hangs below the bar the whole time (50 s). The face-down style is shown for contrast (51-52 s, a red-shirted jumper lifting the whole body flat over the bar). So the backwards jumper lifts one part at a time and not all at once, which means the same jump power clears a higher bar and the bar is not shaken (55-58 s). The pictures show the sequence head, back, legs well. "Lift everything at once vs. not at once" is only implied by one short contrast shot, and the sheet shows no diagram or visual comparison of the body parts.
+
+4. Ending: Four years later (60-64 s) other Olympic jumpers, including some in yellow, red and green kits, all jump backwards and nobody breaks a neck. Then the coach (65-69 s) has to keep his promise. He does a backwards flip and lands with a thud into a heap of sawdust, with debris flying, while the kids grin. The joke is that the mocker has to do the very thing he mocked, and it is the only broken-neck risk in the film.
+
+5. Picture versus narration:
+- Hook (0-6 s): matches. Boy turns his back and jumps backwards. Slightly small and cut up at 1-3 s.
+- Nickname (23.8-28.8 s): mostly matches. A photographer (24-25 s) and a newspaper with a photo of the boy upside down mid-air (26-27 s) fit "newspaper photo, fish flopping". The nickname "Pla Dink" (flopping fish) itself is not shown (no headline or teasing crowd). Fish comparison is not pictured. 28-29 s shows kids laughing with the boy. Partly clear.
+- Two failed attempts (36-42 s): partly confusing. 36-37 s shows the boy next to a raised bar, and 38-39 s he lies on the mat/falls, which agrees with the first and second tries. The "30 cm above his head" is implied only by the tall bar. The coach shouting "see, flopping fish is only this good" (40-42 s) is shown as a fat man in a straw hat and tourist shirt with other spectators, not the maroon coach, so who is shouting is confusing. No obvious sign the bar falls in the second try.
+- Reveal (44-55 s): good. Silence at 43-44 s, boy standing alone, then the arch, head, then legs, body hanging below the bar, then contrast with the face-down jump at 51-52 s. It is quick but readable. Weakest part is the abstract claim "lift together vs not together" with no labels.
+- Gold medal (55-60 s): good. Boy lies on the mat (55 s), then bar is untouched (56-58 s, "not shaken") and the podium at 59-60 s with a medal around his neck. The medal moment is clear. The "bar does not shake" line is shown only as bars at the edge of frame.
+- Ending (60-69 s): clear. 61-64 s other jumpers going backwards, seated crowd members smiling. 65-69 s coach runs up, backflips and lands in sawdust. The coach is clearly the one who flips. Note the setting at 65 s returns to the original school field with the same kids.
+
+6. Scores: Story clarity from pictures 8/10. Picture support for narration 7.5/10. The hook, gold and ending are strong. The weak spots are the nickname (no pictured teasing), who shouts at 40-42 s, and the shallow explanation of why the method wins.
