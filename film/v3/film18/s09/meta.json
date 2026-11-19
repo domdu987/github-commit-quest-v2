@@ -20,6 +20,6 @@
   1280
  ],
  "samples": 12,
- "framediff_median": 0.79,
- "framediff_p90": 0.95
+ "framediff_median": 14.84,
+ "framediff_p90": 20.79
 }
