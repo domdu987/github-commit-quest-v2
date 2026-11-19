@@ -61,16 +61,16 @@ CAM = {
  18: (((-1.1, 6.6, 0.9), (-0.9, 11.6, 1.8)), ((1.0, 4.9, 1.25), (0.8, 11.6, 3.0))),
  19: (((4.6, 3.0, 1.3), (1.6, 11.4, 1.8)), ((7.6, 5.4, 1.4), (-0.2, 11.4, 1.9))),
  20: (((-3.2, 6.8, 2.15), (-2.3, 11.4, 2.05)), ((-1.1, 8.1, 2.2), (-0.9, 11.4, 2.2))),
- 21: (((2.6, 3.8, 1.5), (6.6, 9.6, 2.3)), ((1.3, 4.7, 1.6), (-0.5, 11.6, 3.0))),
- 22: (((2.6, 17.6, 2.0), (-0.4, 12.0, 2.5)), ((0.4, 15.3, 2.05), (0.5, 12.0, 2.35))),
- 23: (((-12.8, 47.4, 7.3), (-13.9, 50.4, 7.0)), ((-13.9, 48.5, 7.2), (-13.9, 50.4, 7.0))),
+ 21: (((4.2, 4.8, 1.6), (5.2, 9.2, 2.3)), ((1.7, 5.6, 1.7), (-0.2, 11.6, 2.9))),
+ 22: (((2.6, 17.6, 2.0), (-0.4, 12.0, 1.9)), ((0.4, 15.3, 2.05), (0.5, 12.0, 1.4))),
+ 23: (((-12.8, 47.4, 8.0), (-13.9, 50.4, 6.3)), ((-13.9, 48.5, 7.9), (-13.9, 50.4, 6.8))),
  24: (((-0.8, 6.2, 1.2), (5.4, 8.8, 1.9)), ((3.6, 4.2, 1.45), (6.6, 7.0, 2.0))),
 }
 def cam_at(n, g):
     a, b = CAM[n]; g0, g1 = B[n], B[n + 1]
     if n == 21: lk = cam_path(a, b, g, g0, g1, mix=0.0)             # whip: linear fast pan (blur-free: frames are crisp)
     else: lk = cam_path(a, b, g, g0, g1)
-    if n == 23: lk = push_extra(lk, 26, gof(41.7) - 2, g, 10)
+    if n == 23: lk = push_extra(lk, 9, gof(41.7) - 2, g, 10)
     if n == 18:
         lk = push_extra(push_extra(lk, 22, 996, g, 7), 20, 1004, g, 7); z = 1.5 * ez(g, 995, 1003) * (1 - ez(g, 1006, 1013)); lk = (lk[0], (lk[1][0], lk[1][1], lk[1][2] - z * 0.0 + 0.0))
         lk = (lk[0], (lk[1][0] + 0.0, lk[1][1], lk[1][2] + 1.2 * ez(g, 996, 1003) - 1.2 * ez(g, 1005, 1012)))
@@ -99,7 +99,7 @@ def seq_pose(seq, cast, r, facing, tw=2.0):
         (r0, n0), (r1, n1) = seq[i], seq[i + 1]
         if r < r1: return tween(P(n0, cast, facing), P(n1, cast, facing), clamp((r - (r1 - tw)) / tw)) if n0 != n1 else P(n0, cast, facing)
     return P(seq[-1][1], cast, facing)
-def jump_cards(tag, cast, g, gt, facing, cam_loc, miss, bar_z, bar_x=0.1, rate=1.0, path=None, run_from=-12, shadow_ground=True):
+def jump_cards(tag, cast, g, gt, facing, cam_loc, miss, bar_z, bar_x=0.1, rate=1.0, path=None, run_from=-12, shadow_ground=True, land_x=None):
     """Dick/rival run-up + flop. gt = the g of take-off. miss = how far (D) the body dips (to hit the bar).  Returns a spec list."""
     mk = MK(); path = path or mk['runup_path']; take = Vector(mk['takeoff']); r = (g - gt) * rate
     out = []
@@ -117,7 +117,7 @@ def jump_cards(tag, cast, g, gt, facing, cam_loc, miss, bar_z, bar_x=0.1, rate=1
             if r < ts[i + 1][0]: return lerp(ts[i][1], ts[i + 1][1], (r - ts[i][0]) / (ts[i + 1][0] - ts[i][0]))
         return ts[-1][1]
     yy = lin([(0, take.y), (8, BARY - 0.2), (13, BARY + 0.4), (18, 25.2), (22, 25.6)], r)
-    xx = lin([(0, take.x), (8, bar_x), (22, bar_x - facing * 0.4)], r)
+    xx = lin([(0, take.x), (8, bar_x), (22, bar_x - facing * 0.4 if land_x is None else land_x)], r)
     z = lin(zb, r)
     gz = FOAM if yy > 23.0 else 0.0
     if r >= 17: pose = tween(P('land_back', cast, facing), P('land_back', cast, facing), 1)
@@ -182,11 +182,11 @@ def specs_21(g, cam):
     return jump_cards('dick', 'dick_olympic', g, gt, -1, cam, 0.35, 4.333, bar_x=0.4)
 def specs_22(g, cam):
     gt = B[22] + 2
-    out = jump_cards('dick', 'dick_olympic', g, gt, 1, cam, 0.32, 4.333, bar_x=-0.2, path=[MK()['runup_path'][3], MK()['runup_path'][4]], run_from=-10)
+    out = jump_cards('dick', 'dick_olympic', g, gt, 1, cam, 0.32, 4.333, bar_x=0.9, land_x=1.3, path=[MK()['runup_path'][3], MK()['runup_path'][4]], run_from=-10)
     r = g - gt
     if r >= 20:
         pose = tween(P('land_back', 'dick_olympic', 1), P('lie_hands_face', 'dick_olympic', 1), clamp((r - 20) / 6.0))
-        out = [dict(tag='dick', cast='dick_olympic', pose=pose, anchor=('hip', (0.55, 25.7, FOAM + 0.5)), canvas=W_, ppd=192, shadow=None, shadow_at=(0.55, 25.7, FOAM, 3.2, 1.1), shadow_a=.5)]
+        out = [dict(tag='dick', cast='dick_olympic', pose=pose, anchor=('hip', (1.3, 23.4, FOAM + 0.5)), canvas=W_, ppd=192, shadow=None, shadow_at=(1.3, 23.4, FOAM, 3.2, 1.1), shadow_a=.5)]
     return out
 SPEC = {17: specs_17, 18: specs_18, 19: specs_19, 20: specs_20, 21: specs_21, 22: specs_22}
 
@@ -197,6 +197,7 @@ def specs_23(g, cam):
     mouth = cast15.talk_mouth(g, 1.0) if g0 <= g <= g1 else 'flat'
     sw = math.sin(g * 0.55)
     p = dict(p, mouth=mouth, body_lean=4 + 3 * sw, bob=0.0)
+    if not (g0 <= g <= g1): p['expr'] = 'smug'; p['mouth'] = 'smile'
     # he jumps up from his seat (hops) when the shout starts, then bounces on his toes with each word
     hop = 0.0
     for t0 in (gof(39.75),):
@@ -210,8 +211,8 @@ def specs_23(g, cam):
     ring = [('crowd1', 'sit_gape', -2.3, 0.9, 0.5), ('crowd2', 'sit_cheer', 2.2, 1.1, 0.6), ('crowd4', 'sit_gape', -4.4, 1.2, 0.7), ('crowd3', 'sit_laugh', 4.5, 1.4, 0.8),
             ('crowd6', 'sit_point', -1.0, 2.8, 1.5), ('crowd5', 'sit_gape', 1.2, 3.0, 1.6), ('crowd1', 'sit_laugh', 3.3, 3.6, 1.8), ('crowd4', 'sit_cheer', -3.4, 3.8, 1.9)]
     for i, (cast, pn, lat, dep, dz) in enumerate(ring):
-        pos = cm + rt * lat + d * dep; pp = P(pn, cast, 1 if i % 2 else -1); pp['bob'] = round(0.03 * math.sin(g * 0.4 + i * 1.7) / 0.01) * 0.01
-        out.append(dict(tag='cw%d' % i, cast=cast, pose=pp, mark=(pos.x, pos.y, cm.z + dz), mirror=(i % 2 == 0), shadow=(1.2, .4)))
+        pos = cm + rt * lat + d * (dep - 0.5 if dep < 2 else dep - 0.8); pp = P(pn, cast, 1 if i % 2 else -1); pp['bob'] = round(0.03 * math.sin(g * 0.4 + i * 1.7) / 0.01) * 0.01
+        out.append(dict(tag='cw%d' % i, cast=cast, pose=pp, mark=(pos.x, pos.y, cm.z + dz + 0.6), mirror=(i % 2 == 0), shadow=(1.2, .4)))
     out.append(dict(tag='coach', cast='coach_stands', pose=p, mark=tuple(cm), shadow=(1.9, .6), canvas=W_, ppd=160))
     return out
 def specs_24(g, cam):
@@ -256,7 +257,7 @@ def crowd_state(g, n, take):
     elif n == 23: a = (0.02, 0.8, 0.0) if g < gof(39.75) else (0.05, 1.8, 0.0)
     else: a = (0.006, 0.4, 0.0)
     F.crowd(*a); F.flag_wave(0.3 if n != 24 else 0.12, 0.55); F.torch_flicker(1.0 if n != 24 else 0.8)
-STAND_FLASH = dict(s17=(B[17], B[18], 0.5), s21=(B[22], B[23], 0.12))
+STAND_FLASH = dict(s17=(B[17], B[18], 0.5), s21=(B[22], B[23], 0.0))
 
 # ------------------------------------------------------------------ driver
 class Take:
