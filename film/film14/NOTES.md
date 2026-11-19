@@ -25,6 +25,7 @@
 | s13 | PASS, shots 13-14 (render14/team6 @f7c31df) |
 | s15 | v3 PASS, shots 15-17 (render14/team3 @bb8a187) |
 | s01 | v5 PASS (render14/team6 @3e0e1e1) |
+| s07 | v7 PASS (render14/team1 @a8fd6c1); MIX NOTE: put village crowd laughter under shot 10 (g664-758) so it reads as "the whole village" |
 | s26 | v2 PASS, shots 26-27 (render14/team3 @96fea63); dissolve 8 frames into shot 26 at conform |
 | s11 | v2: shot 11 PASS; shot 12 being re-done as v3 (team 7) |
 | s21 (new) | shot 21 (g1362-1458) moved from team 4 to team 3 after 6 failed rounds; built from team 4 shot 22 setup. s20 used for shot 20 and shots 22-24 |
