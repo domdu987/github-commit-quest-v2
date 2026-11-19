@@ -1,0 +1,40 @@
+{
+ "take": "s13",
+ "shots": [
+  31,
+  32,
+  33
+ ],
+ "g0": 1868,
+ "g1": 2052,
+ "first_g": 1862,
+ "n_frames": 190,
+ "handle_before": 6,
+ "handle_after": 0,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 11
+ },
+ "cuts": [
+  1947,
+  2014
+ ],
+ "end": "hard cut at g 2052",
+ "width": 720,
+ "height": 1280,
+ "fps": 30,
+ "shot_ranges": {
+  "31": [
+   1868,
+   1946
+  ],
+  "32": [
+   1947,
+   2013
+  ],
+  "33": [
+   2014,
+   2051
+  ]
+ }
+}
