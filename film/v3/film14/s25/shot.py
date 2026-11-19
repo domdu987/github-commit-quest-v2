@@ -14,7 +14,7 @@ def gb(t): return int(round(t * 30))
 def ge(t): return int(round((t + 0.10) * 30))
 B = {25: (gb(55.92), gb(58.81)), 26: (gb(58.81), gb(61.34)), 27: (gb(61.34), gb(63.79)), 28: (gb(63.79), gb(65.39)), 29: (gb(65.39), gb(67.74)), 30: (gb(67.74), 2104)}
 # frames each shot must be rendered for (take handle 6 before 1678; dissolves into 26 (8 f) and 28 (6 f) are baked in the take: both shots overlap +-4 / +-3)
-RANGES = {25: (B[25][0] - 6, B[26][0] + 3), 26: (B[26][0] - 4, B[26][1]), 27: (B[27][0], B[28][0] + 5), 28: (B[28][0] - 3, B[28][1]), 29: (B[29][0], B[29][1]), 30: (B[30][0], 2104)}
+RANGES = {25: (B[25][0] - 6, B[26][0] + 6), 26: (B[26][0] - 4, B[26][1]), 27: (B[27][0], B[28][0] + 5), 28: (B[28][0] - 3, B[28][1]), 29: (B[29][0], B[29][1]), 30: (B[30][0], 2104)}
 BLINK_SEED = {'matriarch': 0, 'elephant_b': 17, 'elephant_c': 33, 'elephant_d': 51, 'calf': 70}
 
 # ------------------------------------------------------------------------------------------------ shot 25: the herd turns and flees AWAY along the fence (NIGHT, low camera at the right end of the fence)
