@@ -4,3 +4,7 @@
 - qa_auto on the whole take reports 'suspected blur on 80 frames' (all of shot 27): false positive, the sharpness check is relative to the take median and shot 27 (dark night) sits next to the bright dawn shot. Each half passes alone (shot 26 only: PASS, shot 27 only: PASS).
 - Mouths all held/still; no lip-sync. Heads far above y 880 (farmer head y 660-740, elephant heads y 250-560).
 - Not eyeballed frame by frame at 6 fps beyond the phone sheet (every 0.5 s) and drafts.
+
+## v2 (director recheck: trunk pops)
+- Shot 27 re-rendered: one trunk pose ('sniff') per elephant for the whole shot (no 14-frame swaps), cards turned to at most ~20 deg from the lens (elephant_b at the left edge was 27-34).
+- qa_auto on the FULL take (--first_g 1758 --cuts 1840): no pops, no frozen runs, magenta 0 %; only the known false-positive 'suspected blur' on shot 27 (relative sharpness vs the bright dawn shot, confirmed by the director).

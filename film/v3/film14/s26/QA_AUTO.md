@@ -1,6 +1,8 @@
-# NOTE: full-take run flagged shot 27 as blurry (relative metric vs the bright dawn shot); shot 26 alone and shot 27 alone each PASS (see QA.md)
-# QA_AUTO PASS  (s27only.mkv, 80 frames, 30.00 fps, g 1840-1919)
+# FULL-take run (v2). Only FAIL = suspected blur on the 80 frames of shot 27: false positive (relative metric, dark night shot after bright dawn shot; confirmed by director). No pops, no frozen runs.
+# QA_AUTO FAIL  (take.mkv, 162 frames, 30.00 fps, g 1758-1919)
 
+## FAIL
+- suspected blur on 80 frames, e.g. g [1840, 1841, 1842, 1843, 1844, 1845, 1846, 1847, 1848, 1849, 1850, 1851, 1852, 1853, 1854]
 ## Notes
 - magenta share 0.0 %
 
