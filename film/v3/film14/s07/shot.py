@@ -30,7 +30,7 @@ CAMS = {
  7: (((-2.3, -0.3, 1.3), (-2.15, 3.3, 1.6), 22), ((-2.2, 0.1, 1.3), (-2.1, 3.3, 1.65), 22)),
  8: (((-2.2, 0.1, 1.3), (-2.0, 3.3, 1.45), 22), ((-1.9, 1.1, 1.45), (-2.0, 3.3, 1.65), 22)),
  9: (((-1.9, 1.3, 1.5), (-1.4, 3.3, 1.75), 24), ((-1.6, 1.45, 1.5), (-1.4, 3.3, 1.8), 24)),
- 10: (((-2.0, 0.0, 1.2), (-2.0, 3.2, 1.1), 21), ((-2.0, 0.25, 1.2), (-2.0, 3.2, 1.15), 21)),
+ 10: (((-2.1, 0.0, 1.2), (-2.1, 3.2, 1.1), 20.5), ((-2.1, 0.25, 1.2), (-2.1, 3.2, 1.15), 20.5)),
 }
 def cam_of(shot, g):
     a, b = CAMS[shot]; g0, g1 = RANGES[shot]; x = (g - g0) / float(g1 - g0)
@@ -115,7 +115,7 @@ def uncle_pose(shot, g):
         p = talk(p, g)
     elif shot == 9:
         c, p = story('uncle_arms_akimbo'); p['t'] = g / 30.0; p['blink'] = blink(g, 40)
-        up = u_of(g, 606, 626) * (1 - u_of(g, 650, 662))          # hand rises; finger reaches the nose by g630, holds to ~g645, relaxes
+        up = u_of(g, 606, 626) * (1 - u_of(g, 650, 676))          # hand rises; finger reaches the nose by g630, holds to ~g645, relaxes
         fing = u_of(g, 618, 630) * (1 - u_of(g, 647, 656))
         chest = u_of(g, 566, 600)
         p['lean'] = -5 * chest; p['pitch'] = -0.45 * chest - 0.15; p['squash'] = (1.0, 1.0 + 0.035 * chest)
@@ -144,21 +144,25 @@ def frame(T, shot, g):
         c, p, ov = uncle_pose(shot, g); rep['uncle'] = T.put('uncle', c, p, U, ppd=ppd, canvas=cast14.CANVAS14[c], overlay=ov)
     else:
         F.set_crowd_props(0)
-        # the farmer (screen-left, calm sheepish smile, faces them); the village turns to him, laughs and points
-        c, p = story('farmer_calm_smile'); p.pop('prop_r', None); p['arm_r'] = dict(hand=(0.4, 1.0), bend=0.3); p['yaw'] = 0.45; p['gaze'] = (0.9, 0.0)
-        p['t'] = g / 30.0; p['blink'] = blink(g, 30); p['lean'] = 1 + 0.8 * sway(g)
-        rep['farmer'] = T.put('farmer', c, p, (-3.0, 3.2, 0), ppd=ppd, canvas=cast14.CANVAS14[c])
-        c, p, _ = uncle_pose(10, g); p = pointy(p); p['expr'] = 'laughing'
-        rep['uncle'] = T.put('uncle', c, p, (-1.85, 3.0, 0), ppd=ppd, canvas=cast14.CANVAS14[c], mirror=True)
-        for tag, nm, mk, ph, pt in (('old', 'villager_oldman_laugh', (-2.45, 3.8, 0), 3, True),):
-            c, p = laugh(nm, g, ph)
-            if pt: p = pointy(p)
-            p['gaze'] = (0.9, 0.05); p['expr'] = 'laughing'
-            rep[tag] = T.put(tag, c, p, mk, ppd=ppd, canvas=cast14.CANVAS14[c], mirror=True)
-        c, p = story('villager_kid_bang_pot'); p['t'] = g / 30.0 * 2; p['lean'] = 2 * math.sin(g * 0.9); p['blink'] = blink(g, 20, 70); p['gaze'] = (0.9, 0.0); p['expr'] = 'laughing'
-        k = math.sin(g * 0.9); p['arm_r'] = dict(hand=(0.46, 0.2 + 0.1 * k), bend=-0.5, stretch=1.1)      # the spoon beats the pot
-        p['prop_l'] = dict(type='pot14', scale=1.0)
-        rep['kid'] = T.put('kid', c, p, (-1.0, 2.8, 0), ppd=ppd, canvas=cast14.CANVAS14[c], mirror=True)
+        # the farmer is the TARGET: eyes open, embarrassed / stiff smile, holding his hive box; the village faces him, points and laughs
+        c, p = farmer_hold(g); p['expr'] = 'worried'; p['mouth'] = 'smile'; p['yaw'] = 0.4; p['gaze'] = (0.9, 0.0); p['lean'] = 1 + 0.8 * sway(g)
+        rep['farmer'] = T.put('farmer', c, p, (-3.05, 3.3, 0), ppd=ppd, canvas=cast14.CANVAS14[c])
+        # uncle + old man: flipped cards (the pointing arm is the screen-left one), index finger out, held through the shot, laughing
+        c, p = story('uncle_point_mock'); p['t'] = g / 30.0; p['blink'] = blink(g, 12); p['expr'] = 'laughing'; p['mouth'] = 'talk_b'
+        p['arm_r'] = dict(hand=(1.08, 0.12 + 0.03 * sway(g)), shape='point', bend=-0.5, stretch=1.3); p['lean'] = p.get('lean', 0) + 2.0 * math.sin(g * 0.55); p['gaze'] = (0.9, 0.05)
+        rep['uncle'] = T.put('uncle', c, p, (-2.25, 3.2, 0), ppd=ppd, canvas=cast14.CANVAS14[c], flip=True)
+        c, p = laugh('villager_oldman_laugh', g, 3); p['expr'] = 'laughing'; p['gaze'] = (0.9, 0.05); p['yaw'] = 0.5
+        p['arm_r'] = dict(hand=(0.95 + 0.03 * sway(g), 0.1), shape='point', bend=-0.5, stretch=1.3); p['arm_l'] = dict(hand=(-0.3, 0.8), bend=0.9)
+        p.pop('prop_r', None)
+        rep['old'] = T.put('old', c, p, (-1.55, 3.7, 0), ppd=ppd, canvas=cast14.CANVAS14[c], flip=True)
+        # kid: spoon (stick) in the right hand, pot in the left; bangs in bursts of about 3 hits
+        c, p = story('villager_kid_bang_pot'); p['t'] = g / 30.0; p['blink'] = blink(g, 20, 70); p['gaze'] = (0.9, 0.0); p['expr'] = 'laughing'; p['mouth'] = 'talk_b'
+        ph = (g - 664) % 36; active = ph < 22
+        hit = (math.sin(ph * 0.62) ** 2) if active else 0.0              # about 3 beats per burst
+        p['arm_r'] = dict(hand=(0.46, 0.42 - 0.34 * hit), bend=-0.5, stretch=1.1)
+        p['prop_r'] = dict(type='spoon14', angle=205 + 40 * (1 - hit) - 20 * hit, scale=0.9); p['prop_l'] = dict(type='pot14', scale=1.0)
+        p['lean'] = 2 * hit
+        rep['kid'] = T.put('kid', c, p, (-0.95, 3.0, 0), ppd=ppd, canvas=cast14.CANVAS14[c], flip=True)
     F.set_wire_push(-1.0); bpy.context.view_layer.update(); F.set_bees(-1.0)
     return rep
 

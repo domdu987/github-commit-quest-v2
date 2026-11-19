@@ -5,3 +5,8 @@
 - Shot 7: uncle and farmer face each other; ground band trimmed (camera look raised).
 - qa_auto PASS; chins < y 880 all frames; uncle talks only g464..665.
 - Wavy dusk/day horizon band is the set sky and is only partly framed out; no yard clutter (props cleared).
+
+## v4 (shot 10 + shot 9 tail only)
+- Shot 10 (g664-764): the farmer is the target: eyes open, worried/stiff smile, holding his hive box (left). Uncle and old man on flipped cards point screen-left at him with the index finger out, held, laughing. The kid holds a spoon (stick) and bangs the pot in bursts of about 3 hits. Camera 20.5 mm, heads ~150 px, crowd y ~370-880, nobody clipped.
+- Shot 9 g650-663: the nose-tap hand now relaxes over g650-676 (cut at 663), so the hand pop at g661-662 is gone.
+- qa_auto PASS, chins < y 880 all frames. Still open (non-blocking): pinch reads as a C-shaped pincer; faint grey twigs in the foreground.
