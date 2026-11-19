@@ -16,4 +16,5 @@ F.setup_render(bpy.context.scene, 'preview'); os.makedirs(out, exist_ok=True)
 for i, (loc, look, lens) in enumerate(cams):
     C.set_cam(cam, loc, look, lens); F.set_fence_stage(stage); F.set_wire_push(-1); bpy.context.view_layer.update(); F.set_bees(-1)
     if stage == 3: S.matte_wire()
+    S.hive_cues(loc) if stage==2 else None
     print(F.render(os.path.join(out, 'p%d.png' % i)))

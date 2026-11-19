@@ -20,7 +20,7 @@ def ease(x, k=0.45): x = clamp(x); return k * sm(x) + (1 - k) * x
 # shot 11: ORBIT round the one hive, left-front -> front (hive 1 at x -6.5, y 5): the trapezoid box + end slot read in 3/4
 C11 = ((-8.5, 1.7, 1.75), (-6.9, 1.0, 1.7)); L11 = ((-6.1, 5.0, 1.65), (-6.0, 5.0, 1.65)); LENS11 = (24, 24)
 # shot 12: dolly along the front of the fence from its left end at hive height (boxes visible under the roofs); stays 5+ m clear of every roof
-C12 = ((-23.0, 1.9, 2.0), (-17.5, 2.1, 2.1)); L12 = ((-4.0, 6.5, 1.3), (-2.0, 6.6, 1.3)); LENS12 = (40, 38)
+C12 = ((17.0, -3.0, 3.2), (23.0, -9.0, 4.6)); L12 = ((5.0, 10.0, 2.0), (3.0, 12.0, 2.6)); LENS12 = (20, 17)   # v3: crane up and out so the ring's front + right legs and all 10 hive cues are in frame by ~g850
 # shot 13: close on the bar, farmer on the left of the hive, the camera drifts right and in
 C13 = ((-9.0, 1.2, 1.75), (-8.3, 1.5, 1.75)); L13 = ((-7.2, 5.0, 1.6), (-6.6, 5.0, 1.6)); LENS13 = (24, 24)
 # shot 14: dolly + pan round the front-left corner at hive height: the thin wire runs through every hive bar, round the corner and up the left side
@@ -87,6 +87,15 @@ def sharp_ground():
     for n in nt.nodes:
         if n.type == 'MIX' and n.inputs[0].links and n.inputs[0].links[0].from_node.type == 'SEPARATE_COLOR' and n.inputs[0].links[0].from_socket.name == 'Green':
             nt.links.remove(n.inputs[0].links[0]); n.inputs[0].default_value = 1.0
+def hive_cues(cam_loc, units=None, r=0.30, k=6.0):
+    """per-hive cue: a warm gold bee-cluster glow hung at the bee end of each visible hive, offset toward the lens so ten hives are countable at phone size."""
+    units = F.STAGE_UNITS[F.STATE['stage']] if units is None else units
+    for i in units:
+        u = F.UNITS[i]; c = Vector((u['pos'][0], u['pos'][1] - F.WIRE_OFF, 1.3)); t = Vector((u['t'][0], u['t'][1], 0)); n = Vector((u['n'][0], u['n'][1], 0))
+        to = (Vector(cam_loc) - c); to.z = 0; side = n if n.dot(to) > 0 else -n
+        e = c + t * (0.62 if t.dot(to) > 0 else -0.62) + side * 0.5 + Vector((0, 0, 0.05))
+        bpy.ops.mesh.primitive_uv_sphere_add(segments=12, ring_count=8, radius=r, location=e); b = bpy.context.active_object; b.name = 'actor_cue'
+        b.data.materials.append(C.G.mat_emit('cue', '#ffc247', k)); b.visible_shadow = False
 def matte_wire():
     """thin taut grey-silver, non-emissive wire (cut every link into the material's colour / emission sockets)."""
     m = F.STATE['M']['wire']; nt = m.node_tree
@@ -206,7 +215,7 @@ def frame13(st, g):
 
 def frame12(st, g):
     loc, look, lens = cam_at(12, g); C.set_cam(st['cam'], loc, look, lens)
-    F.set_fence_stage(2); F.set_wire_push(-1); bpy.context.view_layer.update(); F.set_bees(-1); hide_set_wire(True)
+    F.set_fence_stage(2); F.set_wire_push(-1); bpy.context.view_layer.update(); F.set_bees(-1); hide_set_wire(True); hive_cues(loc)
     return dict(cam=[round(v, 2) for v in loc])
 
 def frame14(st, g):
