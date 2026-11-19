@@ -24,11 +24,13 @@ GS = list(range(GA, GB + 1))
 PRESET, LIGHT = "line_rail", "DAY"
 CAST = [("msg", "messenger_wave", (111.2, 18.2, 1.85), 0.0), ("wka", "worker_a_wave", (112.9, 18.9, 1.85), 0.7),
         ("cgb", "congressman_b_wave", (114.6, 18.2, 1.85), 1.9), ("cgc", "congressman_c_wave", (116.3, 18.9, 1.85), 3.1)]
-CAMP = C.CamPath((108.5, 11.8, 5.0), (113.8, 19.8, 3.7), GA, GB, push=-0.16, slide_px=-105.0, rise_px=8.0, arc_deg_s=9.0, decay=0.3, snaps=[])
+G_WORD = C.cap_g("ก่อนรถไฟตั้ง")                  # 1770
+CAMP = C.CamPath((108.5, 11.0, 4.9), (113.8, 19.8, 3.7), GA, GB, push=-0.20, slide_px=-25.0, rise_px=8.0, arc_deg_s=12.0, decay=0.3,
+                 snaps=[dict(g=(G_WORD - 2, G_WORD + 12), k=1.6, peak=1.7, shift=(0.15, 0.1))])
 
 
 def train_x(g, front0):
-    return 125.0 - 14.0 * u_of(g, GA, GB, kind="quad_out")
+    return 126.0 - 14.0 * u_of(g, GA, GA + 40, kind="quad_out") - 2.0 * u_of(g, GA + 40, GB)
 
 
 class Take(C.Take):

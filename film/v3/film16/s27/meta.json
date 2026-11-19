@@ -34,19 +34,19 @@
   1280
  ],
  "fps": 30,
- "s_per_frame_wall_mean": 8.88,
- "s_per_frame_cpu_mean": 16.75,
+ "s_per_frame_wall_mean": 8.79,
+ "s_per_frame_cpu_mean": 17.05,
  "head_px": [
-  64,
-  113
+  69,
+  153
  ],
  "head_centre_y": [
-  570,
-  674
+  572,
+  695
  ],
- "head_bottom_max_y": 727,
+ "head_bottom_max_y": 771,
  "framediff_in_shot": {
-  "median": 3.78,
-  "p90": 4.63
+  "median": 4.61,
+  "p90": 13.83
  }
 }
