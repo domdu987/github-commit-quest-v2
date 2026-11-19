@@ -8,13 +8,13 @@ ship_aerial  STORM_DUSK  render cpu  30.4 s  wall  15.6 s  10 spp  OK
 ship_deck    NOON        render cpu  36.2 s  wall  18.5 s  11 spp  OK
 ship_deck    DAY         render cpu  36.6 s  wall  19.1 s  11 spp  OK
 ship_deck    STORM_DUSK  render cpu  36.0 s  wall  18.5 s  11 spp  OK
-ship_rail    NOON        render cpu  40.3 s  wall  20.7 s  12 spp  OVER
-ship_rail    DAY         render cpu  38.7 s  wall  19.8 s  12 spp  OK
-ship_rail    STORM_DUSK  render cpu  39.7 s  wall  20.5 s  12 spp  OK
-ship_rocks   NOON        render cpu  31.9 s  wall  16.5 s  12 spp  OK
-ship_rocks   DAY         render cpu  32.4 s  wall  16.8 s  12 spp  OK
-ship_rocks   STORM_DUSK  render cpu  34.2 s  wall  17.6 s  12 spp  OK
+ship_rail    NOON        render cpu  36.0 s  wall  19.1 s  11 spp  OK
+ship_rail    DAY         render cpu  37.7 s  wall  19.8 s  11 spp  OK
+ship_rail    STORM_DUSK  render cpu  36.5 s  wall  19.1 s  11 spp  OK
+ship_rocks   NOON        render cpu  31.5 s  wall  16.4 s  12 spp  OK
+ship_rocks   DAY         render cpu  32.0 s  wall  16.7 s  12 spp  OK
+ship_rocks   STORM_DUSK  render cpu  33.7 s  wall  17.6 s  12 spp  OK
 ship_coast   NOON        render cpu  24.6 s  wall  12.4 s  12 spp  OK
 ship_coast   DAY         render cpu  25.9 s  wall  13.4 s  12 spp  OK
 ship_coast   STORM_DUSK  render cpu  23.8 s  wall  12.0 s  12 spp  OK
-max cpu 40.3 s
+max cpu 37.7 s

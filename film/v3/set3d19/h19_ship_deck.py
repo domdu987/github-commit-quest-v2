@@ -45,7 +45,7 @@ def deck_mats():
     M['wheelw'] = mat('wheelw', '#74482a', '#8a5a34', scale=5, aniso=(0.15, 1, 1), rough=0.6, sheen=0.3); M['darkw'] = mat('darkw', '#3e2a1c', '#4c3424', scale=4)
     M['brassw'] = metal_mat('brassw', '#d2a64a', '#ecc366', rough=0.32, spec=0.7, metallic=0.55)
     if HU.THEME.get('warm'): M['caprail'] = mat('caprail_w', '#5a4632', '#6a5238', scale=3); M['carr'] = mat('carr_w', '#5a3e2c', '#6c4a34', scale=4, aniso=(0.2, 1, 1))
-    M['lampfg'] = mat_emit('lampfg', '#ff8428', 2.4)
+    M['lampfg'] = mat_emit('lampfg', '#ff8a30', 1.05)
     return M
 
 def level_of(y):

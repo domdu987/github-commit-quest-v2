@@ -8,9 +8,9 @@ ship_aerial  STORM_DUSK  no actors |
 ship_deck    NOON        head y [630, 647, 633] | captain y630 x240 chin689; william y647 x545 chin693; astro y633 x611 chin669
 ship_deck    DAY         head y [630, 647, 633] | captain y630 x240 chin689; william y647 x545 chin693; astro y633 x611 chin669
 ship_deck    STORM_DUSK  head y [630, 647, 633] | captain y630 x240 chin689; william y647 x545 chin693; astro y633 x611 chin669
-ship_rail    NOON        head y [689, 652] | william y689 x172 chin733; sailor y652 x-46 chin688
-ship_rail    DAY         head y [689, 652] | william y689 x172 chin733; sailor y652 x-46 chin688
-ship_rail    STORM_DUSK  head y [689, 652] | william y689 x172 chin733; sailor y652 x-46 chin688
+ship_rail    NOON        head y [689] | william y689 x172 chin733
+ship_rail    DAY         head y [689] | william y689 x172 chin733
+ship_rail    STORM_DUSK  head y [689] | william y689 x172 chin733
 ship_rocks   NOON        head y [632, 590] | captain y632 x161 chin679; sailor y590 x382 chin622
 ship_rocks   DAY         head y [632, 590] | captain y632 x161 chin679; sailor y590 x382 chin622
 ship_rocks   STORM_DUSK  head y [632, 590] | captain y632 x161 chin679; sailor y590 x382 chin622

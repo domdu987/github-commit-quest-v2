@@ -109,8 +109,8 @@ def ship6_mats():
     M['rig6'] = mat('rig6', '#2c2430', '#40343e', scale=3)
     if THEME.get('warm'):
         M['mast'] = mat('mast6w', '#3a2e26', '#4a3a2e', scale=3, aniso=(0.2, 0.2, 0.05)); M['oak'] = mat('oak6w', '#6a4628', '#7e5632', scale=5, aniso=(0.15, 1, 1))
-        M['canv'] = mat('canvw', '#e8dcc0', '#dccfae', scale=2.2, aniso=(1.3, 1, 0.8), contrast=0.8, emit='#f4e4c0', emit_k=0.42)
-        M['canv2'] = mat('canv2w', '#e2d6b8', '#d6c9a8', scale=2.2, aniso=(1.3, 1, 0.8), contrast=0.8, emit='#f4e4c0', emit_k=0.38)
+        M['canv'] = mat('canvw', '#e8dcc0', '#dccfae', scale=2.2, aniso=(1.3, 1, 0.8), contrast=0.8, emit='#f4e4c0', emit_k=THEME.get('sail_k', 0.42))
+        M['canv2'] = mat('canv2w', '#e2d6b8', '#d6c9a8', scale=2.2, aniso=(1.3, 1, 0.8), contrast=0.8, emit='#f4e4c0', emit_k=THEME.get('sail_k', 0.42) * 0.9)
         M['rig6'] = mat('rig6w', '#2e2620', '#40342a', scale=3); M['iron'] = mat('iron_w', '#4a4038', '#5c5248', scale=6, rough=0.6)
     M['sail'] = M['canv']; M['sail2'] = M['canv2']
     return M
