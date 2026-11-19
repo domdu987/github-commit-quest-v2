@@ -1,0 +1,24 @@
+{
+ "take": "s20",
+ "film": 18,
+ "shots": [
+  20
+ ],
+ "first_g": 1509,
+ "n_frames": 93,
+ "g0": 1515,
+ "g1": 1595,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "whip",
+  "frames": 6
+ },
+ "frame_diff": {
+  "median": 7.79,
+  "p90": 14.32,
+  "min": 3.24,
+  "max": 19.12,
+  "n": 80
+ }
+}
