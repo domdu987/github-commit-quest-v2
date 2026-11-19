@@ -73,6 +73,7 @@ def cam_at(n, g):
     if n == 23: lk = push_extra(lk, 9, gof(41.7) - 2, g, 10)
     if n == 18:
         lk = push_extra(push_extra(lk, 9, 994, g, 7), 9, 1003, g, 7)
+    if n == 18: w = 1 - ez(g, B[18], B[18] + 8); lk = (lk[0], (lk[1][0] + 4.0 * w, lk[1][1] - 1.0 * w, lk[1][2] + 0.3 * w))
     if n == 19: w = 1 - ez(g, B[19], B[19] + 9); lk = (lk[0], (lk[1][0] + 5.5 * w, lk[1][1] - 2.0 * w, lk[1][2] + 0.6 * w))
     if n == 20: lk = (lk[0], (lk[1][0], lk[1][1], lk[1][2] - 1.2 * (1 - ez(g, B[20], B[20] + 15))))
     if n == 19: lk = push_extra(lk, 22, B[19] + 22, g, 9)
