@@ -264,7 +264,7 @@ def solid_material(name, rgb, k=0.3):
     return m
 
 
-def fix_vista(T, hold_scale=0.5, tents=0.18, siege_fire=False, halo_k=0.1):
+def fix_vista(T, hold_scale=0.5, tents=0.10, siege_fire=False, halo_k=0.0):
     """opaque Qi flags without bloom, smaller holdout flags, no siege halos, dimmer sun-lit tent faces, short-bar clouds."""
     ob = STATE['objects']
     red = solid_material('t18_qi_red', (0.46, 0.06, 0.05), 0.32); teal = solid_material('t18_qi_teal', (0.08, 0.34, 0.38), 0.3)
@@ -293,9 +293,12 @@ def fix_vista(T, hold_scale=0.5, tents=0.18, siege_fire=False, halo_k=0.1):
         big = [i for i, m in enumerate(h.data.materials) if m.name.endswith('halo_big')]
         dl = [f for f in bm.faces if (mw @ f.calc_center_median()).y < -60.0 or f.material_index in big]
         bmesh.ops.delete(bm, geom=dl, context='FACES'); bm.to_mesh(h.data); bm.free()           # the big vertical halos made the blown glow stalk / bloom: gone; the small town halos stay (Ju visibly lit)
-        for m in h.data.materials:
-            for n in m.node_tree.nodes:
-                if n.bl_idname == 'ShaderNodeEmission': n.inputs['Strength'].default_value *= halo_k
+        if halo_k <= 0.0:
+            h.hide_render = True                                    # no halo at all: Jimo's pool of light is the windows + gate fires + ground pool (no blown glow)
+        else:
+            for m in h.data.materials:
+                for n in m.node_tree.nodes:
+                    if n.bl_idname == 'ShaderNodeEmission': n.inputs['Strength'].default_value *= halo_k
     for key in ('jimo', 'ju'):                                       # the two holdouts stay visibly lit: a soft warm ground pool + windows + gate fires (no bloom)
         x, y, z = STATE['marks'][key]; r_ = 34.0 if key == 'jimo' else 30.0
         sm = R2._shadow_quad('cpool', 1.0, 1.0)
@@ -374,6 +377,9 @@ def rhythm_cam(push=0.12, slide=120.0, pulses=(), width=12, amp=0.05, sway=0.0, 
                 b = math.sin(math.pi * k) ** 2
                 if axis == 'push':
                     loc = loc + u * d0 * amp * b
+                elif axis == 'pan':                           # whip-pan wiggle: pure rotation (look point swings sideways, the lens stays where it is)
+                    sgn = 1.0 if int(round(g0)) % 2 == 0 else -1.0
+                    look = look + right * d0 * amp * b * sgn
                 else:                                         # lateral punch (a sideways truck with a partial counter-pan): never drives the lens through the set
                     sgn = 1.0 if int(round(g0)) % 2 == 0 else -1.0
                     loc = loc + right * d0 * amp * b * sgn; look = look + right * d0 * amp * b * sgn * 0.45
