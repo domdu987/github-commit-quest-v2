@@ -1,0 +1,39 @@
+{
+ "take": "s29",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 62.867,
+   "duration": 3.433,
+   "frame": 1886,
+   "end_frame": 1989,
+   "kind": "ambience",
+   "label": "chamber: hush, a clock ticks"
+  },
+  {
+   "time": 64.333,
+   "duration": 0.667,
+   "frame": 1930,
+   "end_frame": 1950,
+   "kind": "prop",
+   "label": "the heavy brass-and-walnut instrument SCRAPES across the baize (wood-on-cloth slide), ends with a soft thud"
+  },
+  {
+   "time": 65.067,
+   "duration": 0.267,
+   "frame": 1952,
+   "end_frame": 1960,
+   "kind": "accent",
+   "label": "horror sting: a low string stab as the proud smile drops"
+  },
+  {
+   "time": 65.067,
+   "duration": 0.433,
+   "frame": 1952,
+   "end_frame": 1965,
+   "kind": "accent",
+   "label": "snap push whoosh"
+  }
+ ]
+}

@@ -1,0 +1,73 @@
+{
+ "take": "s29",
+ "film": 16,
+ "shots": [
+  29
+ ],
+ "g0": 1895,
+ "g1": 1980,
+ "first_g": 1886,
+ "n_frames": 103,
+ "shot_ranges": {
+  "29": [
+   1895,
+   1979
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 1980
+ },
+ "events": {
+  "instrument_slide": [
+   1930,
+   1950
+  ],
+  "blink_swap": [
+   1951,
+   1953
+  ],
+  "horror_pose": 1952,
+  "snap": [
+   1952,
+   1965
+  ],
+  "word_in_his_care": 1956
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "set": "v3/set3d16 CHAMBER chamber_table DAY; the instrument is cut out of the table meshes at runtime (bmesh, vertices above the baize inside the instrument box) and rebuilt with CH.tg_arm_parts as its own objects, location keyed per frame; the lever follows; tape hidden",
+ "cast": "v3/cast16 mocker_pm_proud -> mocker_horror (sweat, blink swap g 1952; tremble), clerk16 clerk_idle -> clerk_slide_instrument (mirrored); no lip-sync",
+ "camera": "custom 22 mm wide from the front (z 4.4, 3.2 D back), push 10 %/s + slide + arc, snap x3.2 / 14 f with a 3.4 D pan to the mocker on 'ความดูแลของเขา'",
+ "samples": 6,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 9.6,
+ "s_per_frame_cpu_mean": 18.73,
+ "head_px": [
+  66,
+  256
+ ],
+ "head_centre_y": [
+  602,
+  648
+ ],
+ "head_bottom_max_y": 762,
+ "framediff_in_shot": {
+  "median": 4.0,
+  "p90": 18.68
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json"
+}

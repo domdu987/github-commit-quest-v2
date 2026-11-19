@@ -1,0 +1,39 @@
+{
+ "take": "s28",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 59.867,
+   "duration": 3.6,
+   "frame": 1796,
+   "end_frame": 1904,
+   "kind": "ambience",
+   "label": "chamber, daytime: quiet room tone, a far door, paper rustle"
+  },
+  {
+   "time": 60.167,
+   "duration": 0.833,
+   "frame": 1805,
+   "end_frame": 1830,
+   "kind": "accent",
+   "label": "pomp: short brass fanfare sting as the postmaster poses (music-box 'ta-da')"
+  },
+  {
+   "time": 62.267,
+   "duration": 0.5,
+   "frame": 1868,
+   "end_frame": 1883,
+   "kind": "accent",
+   "label": "snap push whoosh"
+  },
+  {
+   "time": 62.5,
+   "duration": 0.5,
+   "frame": 1875,
+   "end_frame": 1890,
+   "kind": "prop",
+   "label": "iron key ring jingles as he dangles it"
+  }
+ ]
+}

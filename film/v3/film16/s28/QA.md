@@ -1,0 +1,21 @@
+# s28 QA: film 16, shot 28 (CHAMBER chamber_low, DAY)
+## Delivered
+- `take.mkv` (libx264rgb crf 6, 30 fps, 40.6 MB): first_g 1796, 108 frames (g 1796..1903). Shot 28 = g 1805..1894 (60.18-63.17 s); 9 handle frames each side in 3D. Transition in: **dissolve 15 f** from shot 27 (centred on g 1805; the 9 handle frames before it are in the take).
+- 720x1280, 6 spp, 2 threads x 2 processes: **8.52 s/frame wall, 16.59 s CPU**. QA_AUTO.md PASS.
+## Shot
+| g | beat |
+|---|---|
+| 1805-1873 | "two years later": the mocker as Postmaster, sash, mail bag on the hip, key ring on the belt, hand on hip, chest out, standing at his front-row desk; low camera (1.3 D below his face), push 8 %/s + slide 85 px/s + 11 deg/s arc round him; a mail sack in the lens at the very start (g 1796-1820) |
+| 1868-1883 | **SNAP** x1.8 / 15 f with a 0.9 D pan on "ไปรษณีย์ใหญ่" (g 1874) |
+| 1875 | pose swap on a blink to **mocker_pm_keys**: dangling the key ring (visible in the lower right) |
+| 1884-1894 | close: head 310 px, smug smile |
+## Checks
+- Mouths: nobody speaks (smile mouths only). No text, no DOF.
+- Heads: mocker 186 -> 310 px, centre y 585-615, bottom <= 749 (< 880).
+- Contact: he stands behind the front-row desk (the desk hides the legs; the grey leg seen beside the desk in g 1803-1825 is his own leg).
+## Frame-diff (90x160 grey, pairs g 1805..1894)
+median **6.28**, p90 **16.45** (targets >= 4 / >= 12). First tuning (slide 40, arc 6, snap x1.5) gave 3.35 / 11.0; the final 85 px/s + 11 deg/s + x1.8 passes.
+## Differs from the plan / notes
+- **Mail sacks:** set_mailsacks(on) is keyed on, but with the camera heading rotated 18 deg round him (to keep the oversize sacks off the lens) only the first ~1.5 s shows them; later frames show the desk, sash and keys. The plan says "sacks of letters around him": this is not fully met.
+- The desk's near edge (walnut) fills the lower third; the "foreground prop 1-2 D" is that desk and the sack, not the inkwell.
+- Camera is not exactly the preset pose: it is orbited round the mocker for the sack clearance.
