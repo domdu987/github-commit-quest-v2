@@ -1,0 +1,19 @@
+{
+ "take": "s03",
+ "fps": 30,
+ "note": "time = film seconds (g / 30)",
+ "cues": [
+  {
+   "time": 3.367,
+   "frame": 101,
+   "kind": "ambience",
+   "label": "sunny field, wind in wheat, steam train chuffing past"
+  },
+  {
+   "time": 5.333,
+   "frame": 160,
+   "kind": "accent",
+   "label": "snap push on 'รถไฟ': short whoosh + a steam whistle toot"
+  }
+ ]
+}

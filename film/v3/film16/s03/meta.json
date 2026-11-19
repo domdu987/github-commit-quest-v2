@@ -1,0 +1,52 @@
+{
+ "take": "s03",
+ "film": 16,
+ "shots": [
+  3
+ ],
+ "g0": 110,
+ "g1": 168,
+ "first_g": 101,
+ "n_frames": 76,
+ "shot_ranges": {
+  "3": [
+   110,
+   167
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "hard cut from shot 2"
+ },
+ "set": "v3/set3d16 LINE line_rail DAY; pole 3 ladder hidden, pulse hidden, train rolling -x 13 D/s (smoke speed 3.5)",
+ "camera": "custom 22 mm on the field side, looking across the pole line at the track; CamPath push 5 %/s, slide 70 px/s, arc, snap x1.7 on 'รถไฟ' (g 157..170)",
+ "cast": "morse16 morse_tap_wire_grin on the field side of pole 3, sway + tapping finger",
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "preset": "line_rail",
+ "samples": 7,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "s_per_frame_wall_mean": 10.34,
+ "s_per_frame_cpu_mean": 16.2,
+ "head_px": [
+  167,
+  319
+ ],
+ "head_centre_y": [
+  593,
+  651
+ ],
+ "head_bottom_max_y": 810,
+ "framediff_in_shot": {
+  "median": 5.39,
+  "p90": 13.02
+ }
+}
