@@ -41,3 +41,34 @@ Missing / not visible in a tile:
 - No hook starts/ends at an editable state for props held in hands (palette, letter, bottle, candle, key): render workers must attach them manually, no API listed.
 - Preset start poses for shots 26/29/30 do not frame the cast (issues 9, 11).
 Overrides: none.
+
+# Re-check (after one fix round) -- VERDICT: FAIL (1 narrow blocking item, B1; everything else is notes)
+Checked: contact.jpg (30 tiles visible, not 31: 30 PNGs in telegraph_work/final, tile numbering changed vs round 1), 16 finals viewed at 540x960 (L01 L09 L11 L12 L15 L16 L17 L18 L19 S01 S02 S03 C01 C03 C05 C07), API.md, hue_report.txt, cost_report.txt, shot_plan.
+`python3 t_anim.py`: ALL OK (83 checks). Cost max 27.2 CPU s (C01) <= 30. Magenta max 8.75 % (L15) <= 10. Max head chin y 756 (< 880). No text, no DOF blur, no black/magenta frames.
+
+## Status of the 18 earlier issues (old tile name -> new tile)
+1. FIXED (L01-L04): Morse now stands on the ladder at the pole top, feet on rungs.
+2. FIXED (L11 line_trench): plough, two mules, pipe reel and the worker/Cornell are in frame. Morse not distinguishable from Cornell (only one big figure) -> NOTE N1.
+3. PARTIAL -> NOTE N2 (L12 snap1): team now visible but the cast is about 40 px high, the furrow is a thin line; counting beat still small.
+4. FIXED (L17 trench_cut): slab/black discs gone; soil strata face with split pipe, cloth spikes and cyan sparks, camera near. Lower 40 % of the frame is an empty dark glossy floor -> NOTE N3.
+5. FIXED (L19 line_wagon): crate of green bottles readable, Morse on the wagon bed (behind the spool). Bottle in hand is a card prop (API.md "Hand props").
+6. PARTIAL: rain streaks present in L16 = FIXED; shovel-sign gone = FIXED. OPEN -> NOTE N4: key/register on the crate still small bluish blobs (L15/L16), the rain puddle is still a saturated pure blue disc (L15, L16, L19), workers' feet hidden behind the crate.
+7. FIXED (L18 line_road): buggy now green with red wheels against the field, mocker seated above it, mule visible at the right edge (cut by the frame edge, NOTE N5).
+8. PARTIAL -> NOTE N6 (C03): inkwell/quill foreground now present, flat tan panel gone, sacks only in C04, shafts soft. Mocker is still mid-distance (head about 100 px), no mocker_close preset / push-in start pose listed. Fine floor pinstripe (moire) on the lower third.
+9. FIXED (C05/C06): Morse, mocker, clerk are all in frame behind the table (heads 62-74 px). Congressmen crowd not present -> NOTE N7.
+10. FIXED (C01/C02): 14 congressmen seated in both banks; shafts now soft.
+11. FIXED (C07): mocker fully in frame at the left third, doorway lit. Morse in the door is about 31 px, unreadable -> NOTE N8.
+12. FIXED (S02): oval portrait in frame, paint jars/brushes in the foreground; palette in hand is a card prop.
+13. FIXED (S03): messenger beside Morse, door opening is a lit cream rectangle (not a black blob); palette not on the floor. Messenger half hidden behind Morse -> NOTE N9. Letter in hand is a card prop.
+14. FIXED (S01): floor grain no longer smeared.
+15. OPEN -> NOTE N10: band y > 880 is still busy in L18 (large saturated yellow blades across the bottom), L11 (crate edge y 820-990 at left), L09 (blades bottom right), L19 (hard striped shadows bottom). L15/L17 calm. Render workers must frame or crop the camera so foreground dressing stays at the sides.
+16. PARTIAL: report band is now 225-265. OK: L01 225.4, L04 225.0, L05, L06, L07, L08, L13, L15, L16, L19. Still outside: L02 289.6, L03 209.9, L09 195.1, L10 276.7, L11 47.8 (garbage: orange ground, 6.6 % cast), L12 269.5, L14 220.7, L17 270.0, L18 265.0 (borderline). L01-L04 have only 0.4-1.2 % cast pixels and medians 195/288/212, so the measure is unreliable there; pictures read blue-violet in shade. Only L09 (195, cast 2.9 %, shade visibly green-yellow) is a real miss -> B1.
+17. PARTIAL: wide tiles no longer show laid pipe; L10 line_station shows train + platform. But L09 line_rail: the train is NOT in frame (only a loco fragment at the left edge), wheels/rods not visible, wire pulse not visible -> B1.
+18. FIXED: L04 pulse trail on the wire and L05 bottle_macro with the glow parked on the glass (new tile) cover shots 24/25.
+
+## BLOCKING (fix before render)
+B1. L09 line_rail DAY: the train, its wheels/rods and the pulse bead ahead of it are not in frame (tile label claims "train, pulse ahead"); shade hue 195.1 (target 225-265). Fix: key set_train(x) so the loco is inside the start frame (or re-aim the camera), pulse at pulse_s_at_y(9.5) with a larger bead, raise ambient blue-violet; re-run hue_report. Shot 25/27 depend on it.
+
+## NOTES (render workers handle by camera / framing / cards)
+N1 L11 Morse not identifiable vs Cornell; N2 shot 14 cast tiny, use lower/nearer snap cams; N3 L17 lower half empty dark floor, frame on the pipe/sparks; N4 key/register size, puddle saturation (desaturate), feet hidden; N5 L18 reframe so the mule is not cut by the edge, grass lower; N6 chamber_low needs a mocker_close start pose (6-8 D) for shots 9/10; N7 chamber_table has no congressmen crowd for shots 26/29 (cong marks exist); N8 C07 Morse in door too small, use a framing that shows the door screen; N9 S03 messenger partly behind Morse, shift cam or mark; N10 caption-band calm in L09/L11/L18/L19; N11 hue for L02/L03/L10/L12/L14/L17 off the 240-260 target by 10-30 deg or measure-unreliable, re-check on the take frames; N12 hand props (palette, letter, bottle, candle, key) are card-only, no hook to verify attachment, TAKE gate must check.
+Overrides: none.
