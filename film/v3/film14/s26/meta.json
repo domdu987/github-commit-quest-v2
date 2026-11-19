@@ -1,0 +1,34 @@
+{
+ "take": "s26",
+ "film": 14,
+ "shots": [
+  26,
+  27
+ ],
+ "first_g": 1758,
+ "n_frames": 162,
+ "g0": 1764,
+ "g1": 1913,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 8,
+  "note": "from shot 25 (take s25, team 5) about g 1760-1767, done at conform: NOT baked; frames g1758-1763 are shot 26 handle"
+ },
+ "shot_starts": {
+  "26": 1764,
+  "27": 1840
+ },
+ "cut_inside": {
+  "at": 1840,
+  "type": "cut"
+ },
+ "size": [
+  720,
+  1280
+ ],
+ "samples": 24,
+ "narration": "film14/audio/narration.wav at +0.10 s",
+ "note": "raw shot-26 frames g1758-1839 (crane from the fence_ring height down to the proud farmer), shot-27 frames g1840-1919 (night raid, stalks fall g1840-1894)"
+}
