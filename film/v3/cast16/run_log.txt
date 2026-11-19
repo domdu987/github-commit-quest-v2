@@ -1,0 +1,30 @@
+STORY16: 70 poses render (plain + mirrored), deterministic: 0 failed
+mouth rule: lip-sync poses ['mocker_boast_chest', 'mocker_boast_finger', 'mocker_mock_point', 'mocker_taunt_buggy']; held laugh mouths ['mocker_taunt_buggy']; no other talk mouths
+STORY16_SHOTS covers shots [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 21, 22, 23, 25, 26, 27, 28, 29, 30]
+cycles (people: 10 casts x 4 modes x 3 phases x 2 facings, mule: 3 modes x 12 phases x 2 facings x 3 harness) done, 0.5 s
+identity: 324 earlier STORY poses (v2 + cast_ext + cast2..cast10) + 690 member/pose-key combinations compared with and without cast16: 0 differ (3.1 s)
+canvas: 0 outside; smallest margins (D): clerk16 0.06 (clerk_idle), congressman_a 0.07 (congressman_a_amazed), congressman_b 0.07 (run 12), congressman_c 0.08 (congressman_c_point), cornell 0.08 (cornell_plough), messenger 0.08 (messenger_hand_letter), mocker 0.08 (mocker_stool_candle), morse16 0.07 (morse_raise_pole), mule 0.04 (buggy walk 15), worker16_a 0.08 (worker_a_shovel), worker16_b 0.07 (worker_b_shovel)
+cast16 pose keys + garbage: 4400 ok, 0 failed, deterministic True, 4.3 s
+presets, expressions, props, effects                    214990 checks  ok
+numeric key sweeps (40 and 240 steps)                   345100 checks  ok
+arm targets: circles and lines through the shoulder     1910780 checks  ok
+foot targets                                            543180 checks  ok
+garbage input                                           393652 checks  ok
+random poses                                             18164 checks  ok
+determinism, ids, mirror, resolve / lerp                   280 checks  ok
+    slowest pose: 1.26 ms per call
+speed                                                        6 checks  ok
+3426152 checks, 0 failed, 303.0 s
+wrote /home/user/github-commit-quest-v2/film/v3/cast16/tmp/sec_lineup.png
+section lineup   3641 x   613
+wrote /home/user/github-commit-quest-v2/film/v3/cast16/tmp/sec_poses.png
+section poses    2061 x  3320
+wrote /home/user/github-commit-quest-v2/film/v3/cast16/tmp/sec_mule.png
+section mule     2304 x  1224
+wrote /home/user/github-commit-quest-v2/film/v3/cast16/tmp/sec_faces.png
+section faces    2302 x  1482
+wrote /home/user/github-commit-quest-v2/film/v3/cast16/tmp/sec_props.png
+section props    2261 x   578
+wrote /home/user/github-commit-quest-v2/film/v3/cast16/sheet.jpg (3641 x 7217) in 4.9 s
+TOTAL FAILED: 0
+rc=0
