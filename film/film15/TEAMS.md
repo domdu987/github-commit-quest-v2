@@ -19,3 +19,4 @@
 - s10: r2 PASS (a6c02b4; motion 5.4/12.1); r3 polish (shot 11 neck mime, shot 16 peg) requested.
 - s17: r2 PASS (968543a; motion 5.5/13.6); optional r3 polish.
 - s25/s28/s29 (reveal): FAIL r1 (mechanism not animated; frozen 6.9 s; p90 fails) -> fixes sent to team 5.
+- s10: r3 ACCEPTED (ea857cb; motion 5.5/13.2; shot 11 two-hand throat mime, shot 16 peg raise).
