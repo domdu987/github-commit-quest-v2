@@ -1,31 +1,11 @@
 #!/usr/bin/env python3
-"""shot.py -- film 16 take s01 = shot 1, THE HOOK (g 0..68 + 6 out-handle frames g 69..74; hard cut to shot 2 at g 69).
-"ชายคนนี้เอา คอขวดเบียร์ ไปคว่ำไว้บน ..." -- this man takes a beer-bottle neck and turns it upside down on the pole top.
+"""shot.py -- film 16 take s01 = shot 1, THE HOOK (g 0..68 + 6 out-handle frames g 69..74; hard cut to shot 2 at g 69), LINE line_close / DAY.
+"ชายคนนี้เอา คอขวดเบียร์ ไปคว่ำไว้บน ..." -- v2 after the QA-art / TAKE gate: Morse stands one rung lower along the ladder so his head is
+clearly BESIDE the bottle (not behind it), the glass is clear dense bottle-green (alpha 1 + transmission: no grain), the camera is higher
+(more ground and poles in the first second) and keeps the glass top and the wire in frame, the hand drops away from his face after the flick.
+s23 (callback, AFTER_RAIN) is this file with the shot 23 timing: same camera, same marks.
 
-LINE line_close / DAY (the plan's light; the approved hook tiles L01 AFTER_RAIN / L02 DAY share the camera and set state, and
-shot 23 repeats this framing in AFTER_RAIN).  Morse stands on the leaning ladder at mark morse_ladder (rung 12) beside hero pole 1.
-    g  0..21  he holds the big inverted green bottle up over the bare pole top; camera already moving (push + slide + arc)
-    g 22..35  SNAP push x2.8 with a sideways pan on "คอขวดเบียร์" (event g 24): the held bottle flashes a sun glint (g 24..31)
-    g 34..47  he lowers the bottle mouth-down onto the pole top; g 47 CONTACT (glass clink): the set's peg + bottle switch on
-              (peg1_wood / peg1_glass / peg1_glintm visible), the hand-held copy switches off, a star glint flashes (g 47..56)
-    g 51..53  blink; the pose switches cap -> drape (morse_drape_wire, coil on the other arm)
-    g 52..64  the raised hand takes the wire at the coil on his other arm (the slack wire runs pole 0 -> coil -> pole 2 until
-              then) and flicks it up over the glass; it overshoots and settles
-    g 65      the set's wire spans 0 + 1 and the wrap ring (peg1_wiremat) switch on, the per-frame slack wire off
-    g 66..74  pleased look (behind the blink at g 65), idle sway; the camera keeps moving through the handle (cut at g 69)
-Mouths: nobody speaks (no quote): expression mouths only.  NO depth of field, NO text.
-
-The camera (c16.CamPath): low, on the road side of the ladder looking up 33 deg past the ladder rails (lower right of the frame)
-at Morse and the pole top; the trees and the wheat fill the bottom.  Drift push 10 %/s + slide 60 px/s + arc 14 deg/s round the
-subject, decaying to 75 % (still moving on the last frame: hard cut), plus the snap.  The values were tuned on drafts for the
-frame-diff target (QA.md): x1.35 / 16 f snaps and pure pushes gave median 2.3 / p90 4.3.
-
-    python3 shot.py probe a:b[:step]                       numbers only (camera, heads, hand errors), no render
-    python3 shot.py camreport                              CamPath corner speed per frame (never parked check), no bpy scene
-    python3 shot.py stills a:b[:step] <out_dir> [scale] [samples]
-    python3 shot.py final a:b[:step] [scale] [samples]     -> raw/g_%04d.png + .json (resumable; run 2 processes, e.g. 0:74:2 / 1:74:2)
-    python3 shot.py final 0:74:2 0.5 6                     DRAFT (360x640, 6 spp) -> work/draft/ (same loop)
-    python3 deliver.py                                     -> frames/, take.mkv, meta.json, cues.json, contact.jpg, framediff numbers
+    python3 shot.py probe a:b[:step] | camreport | stills a:b[:step] out [scale] [samples] | final a:b[:step] [scale] [samples]
 """
 import math, os, sys, json
 
@@ -39,24 +19,25 @@ lerp, clamp, blink, ez, u_of, bf = C.lerp, C.clamp, C.blink, C.ez, C.u_of, C.bf
 WORK = os.path.join(HERE, "work")
 
 # ----------------------------------------------------------------------------- timing (film frames g)
-G0, G1 = C.g_bound(0.00), C.g_bound(2.31)     # 0, 69: shot 1 = g 0..68; shot 2 (hard cut) starts at g 69
-H_OUT = 6                                      # out-handle g 69..74 (rendered in 3D: the move and the idle continue)
+G0, G1 = C.g_bound(0.00), C.g_bound(2.31)     # 0, 69: shot 1 = g 0..68; shot 2 (hard cut) starts at 69
+H_IN, H_OUT = 0, 6                              # no handle before g 0 (the film opens here); out-handle g 69..74
+G_FIRST = G0 - H_IN
 G_LAST = G1 + H_OUT - 1                        # 74
-GS = list(range(G0, G_LAST + 1))
-G_WORD = C.cap_g("คอขวดเบียร์")                 # 24: "beer-bottle neck" -> snap + glint on the held bottle
-G_INV = C.cap_g("ไปคว่ำไว้บน")                  # 50: "turned upside down onto" -> the cap lands just before it
-SNAP = (G_WORD - 2, G_WORD + 11)               # 22..35 (13 frames, the bible minimum: fast = high p90 frame-diff)
+GS = list(range(G_FIRST, G_LAST + 1))
+G_WORD = 24                                    # caption "คอขวดเบียร์" (0.71 s)
+G_INV = 50
+SNAP = (G_WORD - 2, G_WORD + 11)
 G_GLINT1 = (G_WORD, G_WORD + 7)                # sun glint on the held bottle
-G_LOWER = (34, 47)                             # bottle lowered onto the pole top
-G_CAP = 47                                     # contact: set bottle on, copy off, clink
+G_LOWER = (34, 47)
+G_CAP = 47
 G_GLINT2 = (G_CAP, G_CAP + 9)
-G_SWAP = 52                                    # pose cap -> drape on the closed frame of the blink starting at 51
-G_PICK = (52, 55)                              # hand to the slack wire on its nail
-G_FLICK = (55, 61)                             # wire flicked up over the glass (overshoot at 61)
+G_SWAP = 52
+G_PICK = (52, 55)
+G_FLICK = (55, 61)
 G_SETTLE = (61, 64)
-G_WIRE = 65                                    # set spans + wrap ring on, per-frame slack wire off
+G_WIRE = 65
 BLINKS = [11, G_SWAP - 1, G_WIRE]              # blink(g, starts): half, closed, half
-G_HAPPY = G_WIRE + 1                           # expression change on the closed frame of the last blink
+G_HAPPY = G_SWAP                           # expression change on the closed frame of the last blink
 
 # ----------------------------------------------------------------------------- staging (world D; set authored in sb metres, K.W converts)
 LIGHT = "DAY"
@@ -69,18 +50,53 @@ PY = LN.POLES_Y[POLE]
 TOP = lambda: K.W((PX, PY, LN.POLE_H + 0.01))  # bottle mouth on the pole top (world D, z 9.27)
 BOTTLE_TOP_SB = lambda i: (LN.px(LN.POLES_Y[i]) + 0.03, LN.POLES_Y[i], LN.POLE_H + 0.01 + LN.BOT_TOP * LN.BS + 0.03)   # wire end points (= build_poles top_b)
 COIL_LOCAL = (0.42, 0.72)                      # puppet-local centre of the wire coil on his (mirrored) lower arm, both poses
-NECK = 0.50                                    # hand on the neck: D above the mouth
-LIFT = Vector((-0.28, -0.22, 0.72))           # held bottle mouth offset from TOP before lowering (toward Morse, up)
+NECK = 0.32                                    # hand on the neck: D above the mouth
+LIFT = Vector((0.14, 0.12, -0.05))           # held bottle mouth offset from TOP before lowering (toward Morse, up)
 FLICK_UP = 0.42                                # wire overshoot above the bottle top (D)
 PPD = 256                                      # sprite px per D (head ~90 px at g 0, ~280 px after the snap: 256 keeps it sharp enough)
 CANVAS = (-2.25, -4.75, 2.25, 0.125)           # taller than CANVAS16['morse16'] (top -3.875): arm up + the low-angle upper_k stretch
                                                # (~1.2 here) clipped his hair flat in the first close drafts
 
-CAM_LOC0 = (2.1, -2.9, 4.4)                    # low, SW of the ladder, looking up ~38 deg (card limit: 50 deg)
-CAM_LOOK0 = (7.15, -8.15, 9.2)                 # subject point: Morse's raised hand / the pole top (lower = less empty sky)
-CAM_START = 0.92                               # frame 0 starts 0.92 of the way from the look point to CAM_LOC0 (head ~92 px; the snap takes it to ~190)
-CAM = C.CamPath(Vector(CAM_LOOK0).lerp(Vector(CAM_LOC0), CAM_START), CAM_LOOK0, G0, G_LAST, push=0.10, slide_px=60.0, rise_px=0.0,
-                arc_deg_s=14.0, decay=0.25, snaps=[dict(g=SNAP, k=2.8, peak=1.6, shift=(-0.8, 0.15))])
+CAM_LOC0 = (2.3, -2.6, 5.3)                    # low, SW of the ladder, looking up ~38 deg (card limit: 50 deg)
+CAM_LOOK0 = (7.4, -7.9, 8.8)                 # subject point: Morse's raised hand / the pole top (lower = less empty sky)
+CAM_START = 1.0                               # frame 0 starts 0.92 of the way from the look point to CAM_LOC0 (head ~92 px; the snap takes it to ~190)
+CAM = C.CamPath(Vector(CAM_LOOK0).lerp(Vector(CAM_LOC0), CAM_START), CAM_LOOK0, G0, G_LAST, push=0.06, slide_px=75.0, rise_px=0.0,
+                arc_deg_s=24.0, decay=0.25, snaps=[dict(g=SNAP, k=2.4, peak=2.0, shift=(-0.7, 0.0))])
+
+
+MARK_SHIFT = Vector((-0.25, -0.22, -0.6))      # Morse stands ~1 rung lower ALONG the ladder: his head clears the bottle body (QA-art: bottle merged with his head)
+
+
+def tune_look(wet_pole):
+    """runtime material tuning (the set's modules are untouched): clear dense bottle-green glass (alpha 1 + transmission: no hashed-alpha grain),
+    and for AFTER_RAIN a dark wet pole (QA-art: salmon pole)."""
+    M = TG.STATE["M"]
+    bs = [n for n in M["glass"].node_tree.nodes if n.type == "BSDF_PRINCIPLED"][0]
+    bs.inputs["Alpha"].default_value = 1.0
+    bs.inputs["Transmission Weight"].default_value = 0.8
+    bs.inputs["Base Color"].default_value = (0.02, 0.30, 0.07, 1.0)
+    bs.inputs["Emission Strength"].default_value = 0.22
+    if wet_pole:
+        darken(M["pole"], (0.36, 0.33, 0.40), 0.26)
+
+
+def darken(mat, tint, rough):
+    """multiply the (texture-driven) base colour of a material by `tint` and make it glossier (wet)."""
+    nt = mat.node_tree
+    bs = [n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"][0]
+    bs.inputs["Roughness"].default_value = rough
+    lk = [l for l in nt.links if l.to_socket == bs.inputs["Base Color"]]
+    mix = nt.nodes.new("ShaderNodeMix")
+    mix.data_type, mix.blend_type = "RGBA", "MULTIPLY"
+    mix.inputs[0].default_value = 1.0
+    mix.inputs[7].default_value = (tint[0], tint[1], tint[2], 1.0)
+    if lk:
+        src = lk[0].from_socket
+        nt.links.remove(lk[0])
+        nt.links.new(src, mix.inputs[6])
+    else:
+        mix.inputs[6].default_value = tuple(bs.inputs["Base Color"].default_value)
+    nt.links.new(mix.outputs[2], bs.inputs["Base Color"])
 
 
 def bottle_xf(g):
@@ -144,6 +160,10 @@ def pose_of(g):
     return p
 
 
+def self_mark():
+    return Vector(TG.STATE['marks']['morse_ladder']) + MARK_SHIFT
+
+
 def hands_of(g, coil):
     """pinned raised hand (arm_r of the UNMIRRORED figure): world targets."""
     if g < G_SWAP:
@@ -154,7 +174,7 @@ def hands_of(g, coil):
         return {"r": {"hand": tuple(a.lerp(Vector(coil), u_of(g, *G_PICK)))}}
     if g < G_SETTLE[1]:
         return {"r": {"hand": tuple(wire_point(g, coil))}}                     # follows the wire as far as the arm reaches
-    rest = Vector(K.W(BOTTLE_TOP_SB(POLE))) + Vector((0.25, -0.35, -0.9))   # hand comes down beside the glass
+    rest = Vector(self_mark()) + Vector((-0.55, -0.5, 1.75))      # hand comes down to his side (away from the face and the pole)
     return {"r": {"hand": tuple(Vector(wire_point(g, coil)).lerp(rest, u_of(g, G_SETTLE[1], G_SETTLE[1] + 8)))}}
 
 
@@ -210,6 +230,7 @@ def build_wire(g, coil):
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s01")
+        tune_look(LIGHT == "AFTER_RAIN")
         self.key_cam(bf(G0), *CAM.at(G0))
         self.scene.frame_set(bf(G0))
         self.mor = self.actors["mor"] = C.make_actor("mor", "morse16", os.path.join(WORK, "sprites"), canvas=CANVAS, contact=False, cam=self.cam)
@@ -225,7 +246,7 @@ class Take(C.Take):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *CAM.at(g))
-            C.place(self.mor, f, mark)
+            C.place(self.mor, f, Vector(mark) + MARK_SHIFT)
             capped, wired = g >= G_CAP, g >= G_WIRE
             # the set's pole-1 state switches on the beat (key EVERY frame: CONSTANT visibility keys)
             C.key_vis([self.peg["wood"], self.peg["glass"], self.peg["glintm"]], capped, f)
@@ -292,7 +313,7 @@ if __name__ == "__main__":
             print(r)
         print("longest run under 0.25 px/frame: %d frames (bible max 6)" % worst)
         sys.exit(0)
-    gs = [g for g in C.parse(sys.argv[2]) if G0 <= g <= G_LAST]
+    gs = [g for g in C.parse(sys.argv[2]) if G_FIRST <= g <= G_LAST]
     if cmd in ("probe", "stills"):
         Tk = Take("preview")
         Tk.pose(gs)
