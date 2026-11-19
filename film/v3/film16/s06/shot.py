@@ -31,25 +31,25 @@ G_SHOCK = C.cap_g("เมียก็ตายไป")                          
 SNAP = (G_SHOCK - 3, G_SHOCK + 10)
 G_DROP = 381                                             # palette leaves the hand
 G_FALL = (381, 387)                                      # fall + bounce
-G_SIT = 391                                              # pose swap to the stool on a blink (389..391)
+G_SIT = 388                                              # stool card appears on the closed frame of the blink 387..389
 
 # ----------------------------------------------------------------------------- staging (world D); camera looks toward -x so the wife's portrait is screen-right
-M0 = Vector((-0.9, 3.5, 0.0))                            # Morse standing
-M_SIT = Vector((-1.45, 3.65, 0.0))                       # on the set's stool (STOOL (-0.9, 2.0) m = (-1.67, 3.7) D)
-N0 = Vector((-2.5, 2.9, 0.0))                          # messenger, screen-left of Morse
-CAM_LOOK0 = (-1.0, 3.7, 2.35)
-CAM_LOC0 = (3.0, 1.9, 2.9)
+M0 = Vector((0.0, 3.5, 0.0))                            # Morse standing
+M_SIT = M0                       # on the set's stool (STOOL (-0.9, 2.0) m = (-1.67, 3.7) D)
+N0 = Vector((-1.6, 2.9, 0.0))                          # messenger, screen-left of Morse
+CAM_LOOK0 = (-0.1, 3.7, 2.35)
+CAM_LOC0 = (3.9, 1.9, 2.9)
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GF, GL, push=0.08, slide_px=-95.0, rise_px=0.0, arc_deg_s=-20.0, decay=0.3,
-                snaps=[dict(g=SNAP, k=1.4, peak=1.7, shift=(-0.35, 0.0))])
+                snaps=[dict(g=SNAP, k=1.5, peak=1.7, shift=(0.45, -0.1))])
 
 P = cast16.STORY16
 Y_IDLE = P["morse_young_palette_ready"][1]
 Y_READ = P["morse_young_read_letter"][1]
 Y_DROP = P["morse_young_palette_drop"][1]
-Y_STOOL = P["morse_young_stool"][1]
+Y_STOOL = dict(P["morse_young_stool"][1], legs=dict(crouch=0.36, spread=-0.12))
 MSG_HAND = P["messenger_hand_letter"][1]
 MSG_IDLE = P["messenger_idle"][1]
-BLINKS = [322, G_SWAP_LETTER - 1, 352, 366, G_SIT - 2, 397, 405, 309]
+BLINKS = [322, G_SWAP_LETTER - 1, 352, 366, G_SIT - 1, 399, 407, 309]
 
 
 def lp(a, b, u):
@@ -70,16 +70,21 @@ def pose_mor(g):
         p = lp(Y_READ, Y_DROP, u)
         p["prop_r"] = "letter"
         p["prop_l"] = dict(type="palette16", angle=lerp(40, 75, u))
-        p["expr"] = "shocked"
-        p["fx"] = ["sweat"] if g > G_SHOCK else []
+        p["expr"], p["mouth"] = "shocked", "flat"        # wide eyes, CLOSED mouth (mouths move only in the quotes)
+        p["fx"] = []
     elif g < G_SIT:
-        p = dict(Y_DROP)
+        p = lp(Y_DROP, Y_STOOL, u_of(g, G_DROP, G_SIT))  # sinking: hands drop to the lap, knees bend, then the stool card appears on the blink
         p["prop_l"] = None
-        p["arm_l"] = dict(Y_DROP["arm_l"], hand=(-0.50, 1.18 + 0.4 * u_of(g, G_DROP, G_SIT, "sine") * 0.5))
-        p["legs"] = dict(Y_DROP["legs"]) if isinstance(Y_DROP["legs"], dict) else Y_DROP["legs"]
-        p["expr"] = "shocked" if g < G_SIT - 3 else "sad"
+        p["prop_r"] = "letter" if g < G_SIT - 3 else None
+        p["expr"], p["mouth"] = ("shocked", "flat") if g < G_SIT - 3 else ("sad", None)
+        p["stool"] = 0
+        p["fx"] = []
+        if p["mouth"] is None:
+            p.pop("mouth")
     else:
         p = dict(Y_STOOL)
+        p["fx"] = []
+        p["mirror"] = True                               # faces screen-left, toward the wife's portrait on the table
     p["young"] = 1
     p["lean"] = p.get("lean", 0) + 1.2 * math.sin(g * 0.17)
     p["head_roll"] = p.get("head_roll", 0) + 1.5 * math.sin(g * 0.13)

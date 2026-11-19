@@ -30,11 +30,12 @@ SNAP = (G_WORD - 3, G_WORD + 10)
 G_LIFT = (C.cap_g("ให้ถึงใน") - 4, G_WORD - 6)            # arms rise to show the coil and the magnet (446 .. 459)
 G_SPARK = G_WORD                                         # glint (blue spark at the poles) from here
 
-M0 = Vector((-1.48, 10.0, 0.0))                           # Morse stands in front of the window, the sill behind him
-CAM_LOOK0 = (-1.35, 10.0, 2.6)
-CAM_LOC0 = (0.5, 6.7, 3.2)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GF, GL, push=-0.08, slide_px=-85.0, rise_px=-40.0, arc_deg_s=-15.0, decay=0.3,
-                snaps=[dict(g=SNAP, k=1.6, peak=1.7, shift=(1.0, 0.25))])
+ROAD_LIFT = 12.0
+M0 = Vector((-4.6, 9.8, 0.0))                           # Morse stands in front of the window, the sill behind him
+CAM_LOOK0 = (-3.3, 9.8, 2.6)
+CAM_LOC0 = (-2.0, 6.2, 3.2)
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GF, GL, push=-0.08, slide_px=-115.0, rise_px=-40.0, arc_deg_s=-18.0, decay=0.3,
+                snaps=[dict(g=SNAP, k=1.8, peak=1.8, shift=(-0.9, 0.25))])
 
 P = cast16.STORY16
 Y_IDLE = P["morse_young_idle"][1]
@@ -53,8 +54,9 @@ def pose_mor(g):
     u = u_of(g, *G_LIFT)
     p = lp(Y_IDLE, SHOW, u)
     p["young"] = 1
-    p["yaw"] = lerp(0.15, 0.35, u)
-    p["gaze"] = (0.2, lerp(-0.7, -0.3, u))                # up at the sky / out of the window
+    p["yaw"] = lerp(0.45, 0.55, u)
+    p["gaze"] = (0.9, lerp(-0.25, -0.15, u))              # out of the window (screen-right)
+    p["arm_l"] = dict(p["arm_l"], hand=(lerp(p["arm_l"]["hand"][0], -0.86, u), lerp(p["arm_l"]["hand"][1], 0.34, u)), bend=0.3)
     if u < 0.5:
         p["prop_r"], p["prop_l"] = None, None
         p["expr"], p["mouth"] = "neutral", "flat"
@@ -62,7 +64,7 @@ def pose_mor(g):
         p["prop_r"] = dict(type="magnet", angle=-35)
         p["prop_l"] = "wire_coil"
     if g >= G_LIFT[1] - 4:
-        p["expr"] = "excited"
+        p["expr"], p["mouth"] = "excited", "smile"          # closed-mouth grin (mouths move only in the quotes)
     p["glint"] = 1.0 if g >= G_SPARK else 0.0
     p["lean"] = 1.2 * math.sin(g * 0.17)
     p["head_roll"] = -2 + 1.5 * math.sin(g * 0.13)
@@ -80,7 +82,28 @@ class Take(C.Take):
         self.mor = self.actors["mor"] = C.make_actor("mor", "morse16", os.path.join(WORK, "sprites"), contact=True, cam=self.cam)
         self.dress()
 
+    def raise_road(self):
+        """the long road to the horizon (plan): lift the street, its fields and the far houses so that the road is seen from standing
+        eye height (set ground sits 9 m below the window) and drop the near rooftops that hid it."""
+        import bpy
+        for o in bpy.data.objects:
+            n = o.name
+            if n.startswith("rooftops_") and not n.endswith("f"):
+                o.hide_render = True
+            if n.startswith(("rooftops_", "street_", "trees_out_", "ground", "field", "gnd")):
+                o.location.z += ROAD_LIFT
+        import tg_studio as SDm
+        M = TG.STATE["M"]
+        mb = K.MB("road_wide")
+        zz = -9.0 + ROAD_LIFT / K.SC + 0.05
+        x0, x1 = SDm.WIN_X - 5.0, SDm.WIN_X + 5.0
+        ys = [float(i) for i in range(int(SDm.BY + 1), 420, 4)]
+        for a, b in zip(ys[:-1], ys[1:]):
+            mb.quad(M["road2"], [(x0, a, zz), (x1, a, zz), (x1, b, zz), (x0, b, zz)][::-1])
+        mb.finish()
+
     def dress(self):
+        self.raise_road()
         S = TG.STATE
         for o in S.get("fg", []):
             o.hide_render = True
