@@ -12,7 +12,7 @@ for c in cams:
     a=np.array(c[0][:2]);b=np.array(c[1][:2])
     for t in np.linspace(0,0.7,8): path2.append(tuple(a+(b-a)*t))
 print('cut',C.cut_near(('props','grass','flowers','pebbles','edge'),path2,float(os.environ.get('CR','3.0'))))
-print('huts',C.cut_region('props',[(12.6,30,-9,12,5.0)]))
+print('yard',C.cut_region('props',[(-14,10.5,-6,3.9,2.4),(12.6,30,-9,12,5.0)]),C.cut_near(('grass','flowers','pebbles'),path2,2.2))
 F.setup_render(bpy.context.scene, 'preview'); os.makedirs(out, exist_ok=True)
 for i, (loc, look, lens) in enumerate(cams):
     C.set_cam(cam, loc, look, lens); F.set_fence_stage(stage); F.set_wire_push(-1); bpy.context.view_layer.update(); F.set_bees(-1)

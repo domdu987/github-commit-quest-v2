@@ -20,7 +20,7 @@ def ease(x, k=0.45): x = clamp(x); return k * sm(x) + (1 - k) * x
 # shot 11: ORBIT round the one hive, left-front -> front (hive 1 at x -6.5, y 5): the trapezoid box + end slot read in 3/4
 C11 = ((-8.5, 1.7, 1.75), (-6.9, 1.0, 1.7)); L11 = ((-6.1, 5.0, 1.65), (-6.0, 5.0, 1.65)); LENS11 = (24, 24)
 # shot 12: dolly along the front of the fence from its left end at hive height (boxes visible under the roofs); stays 5+ m clear of every roof
-C12 = ((17.5, -3.5, 2.3), (15.2, -1.5, 2.6)); L12 = ((7.5, 8.0, 1.85), (7.0, 8.0, 1.95)); LENS12 = (22, 24)   # v4: just outside the front-right corner, slow push-in + 0.3 m rise; front leg left, right leg right
+C12 = ((8.7, -2.5, 3.0), (8.1, -2.6, 3.1)); L12 = ((-18.61, 9.91, -1.75), (-19.16, 9.93, -1.65)); LENS12 = (36, 38)   # v5: outside the front leg, 7.5 m back, 3 m up, tilted down 9 deg, looking along the leg ~27 deg off-axis; lateral dolly 0.6 m + slight push
 # shot 13: close on the bar, farmer on the left of the hive, the camera drifts right and in
 C13 = ((-9.0, 1.2, 1.75), (-8.3, 1.5, 1.75)); L13 = ((-7.2, 5.0, 1.6), (-6.6, 5.0, 1.6)); LENS13 = (24, 24)
 # shot 14: dolly + pan round the front-left corner at hive height: the thin wire runs through every hive bar, round the corner and up the left side
@@ -156,7 +156,7 @@ def build_for(shot):
         for g in range(a, b + 1, 6):
             lo, lk, _ = cam_at(shot, g)
             for t in (0.0, 0.25, 0.5, 0.75): path.append((lo[0] + (lk[0] - lo[0]) * t, lo[1] + (lk[1] - lo[1]) * t))
-        if shot == 12: print('huts', C.cut_region('props', [(12.6, 30, -9, 12, 5.0)]))
+        if shot == 12: print('yard', C.cut_region('props', [(-14, 10.5, -6, 3.9, 2.4), (12.6, 30, -9, 12, 5.0)]), C.cut_near(('grass', 'flowers', 'pebbles'), path, 2.2))
         print('cut near', C.cut_near(('props', 'grass', 'flowers', 'pebbles', 'edge'), path, {11: 2.6, 12: 0.0, 13: 2.6, 14: 3.2}[shot]))
         if shot in (11, 13):
             print('ladder cut', C.cut_region('props', [(-8.4, -5.0, 3.0, 4.95, 2.7)]))
