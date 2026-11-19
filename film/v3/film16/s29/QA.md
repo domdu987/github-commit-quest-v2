@@ -21,3 +21,10 @@ median **4.0**, p90 **18.68** (targets >= 4 / >= 12). The median is just at the 
 - The set's instrument (3x scale, 3.5 D tall) hides anyone standing behind the table from a front camera, so the two actors stand at the table's ends beside it and the first half is a wide (heads 65-100 px, below the 110-135 wide size). The horror close-up (255 px) is reached by the snap with an explicit swing pose.
 - The instrument slides along the table (clerk to mocker) rather than toward the lens.
 - The clerk's hands are not pinned to the instrument: the pushing pose is a pose swap on the slide start.
+
+---
+# Revision 2 (after the director's TAKE gate) -- re-rendered, take.mkv (split in two parts)
+Frame-diff now median 4.15 / p90 18.89 (minimum pair 3.16: never parked); 103 frames, 9.52 s/frame; heads 82-269 px.
+- **Gate 1 (camera parked g 1966-1988): fixed.** After the snap the camera keeps pushing (16 %/s of the framing) and trucks sideways 0.55 D/s until the cut: the smallest in-shot frame-diff pair is 3.16 (it was ~0 for 23 frames).
+- **Note 2 (wide opening, slide illegible): partly.** The opening is still a wide two-shot (heads 82-95 px) because the instrument is 3 D tall; the actors now stand at the table ends, the instrument slides 1.1 D toward the mocker over g 1930-1950 (eased) and both are in frame throughout the slide. A closer opening was not possible without losing the clerk.
+- The mocker's horror close-up is 255-269 px.

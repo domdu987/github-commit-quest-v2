@@ -23,3 +23,11 @@ median **4.38**, p90 **27.14** (target >= 4 / >= 12). The p90 comes from the sna
 - The mocker's jaw drops on the second click (g 1745), not the first, so the two clicks read as build then pay-off.
 - The tape's far end (floor loops round the stool) stays out of frame.
 - No eye glint (night close only).
+
+---
+# Revision 2 (after the director's TAKE gate) -- re-rendered, take.mkv replaced
+Frame-diff now median 4.27 / p90 26.37; 78 frames, 9.39 s/frame; heads 76-233 px, lowest head bottom y 811.
+- **Gate 1 (tape does not spool): fixed.** `set_tape` length now starts at 0.04 (nothing on the table), jumps to 0.30 on click 1 (g 1733), 0.60 on click 2 (g 1742) and eases to 0.94 by g 1772. The tape visibly grows out of the register on each click.
+- **Gate 2 (crowd): fixed.** Congressmen A, B, C are staged round the mocker (A at 2.4/12.3, B at -2.6/11.3, C at -0.5/12.8, mirrored toward the register): four faces in the opening frame, and in the closing frame the mocker, congressman A, congressman C and Morse are in shot (A and C are 170-180 px).
+- **Gate 3 (Morse's eye-line): partly.** His gaze is set toward the tape (-0.6, 0.9); the pose still grins and the sheet in his hand stays a loose paper.
+- Morse stays out of the caption band (his head bottom was 893 in the first re-render, now 796).

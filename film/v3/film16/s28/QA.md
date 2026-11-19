@@ -19,3 +19,9 @@ median **6.28**, p90 **16.45** (targets >= 4 / >= 12). First tuning (slide 40, a
 - **Mail sacks:** set_mailsacks(on) is keyed on, but with the camera heading rotated 18 deg round him (to keep the oversize sacks off the lens) only the first ~1.5 s shows them; later frames show the desk, sash and keys. The plan says "sacks of letters around him": this is not fully met.
 - The desk's near edge (walnut) fills the lower third; the "foreground prop 1-2 D" is that desk and the sack, not the inkwell.
 - Camera is not exactly the preset pose: it is orbited round the mocker for the sack clearance.
+
+---
+# Revision 2 (after the director's TAKE gate) -- re-rendered, take.mkv replaced
+Frame-diff now median 6.70 / p90 15.42; 108 frames, 8.9 s/frame; heads 159-304 px, lowest head bottom y 832 (< 880).
+- **Gate 1 (sacks): fixed.** The camera is orbited -38 deg (from +18) and pulled back (4.9 D, 1.0 D below the face): a sack stands beside him in the frame for g 1796-1870 (two at g 1800, one large at g 1830-1860), then the snap closes on his face and the key ring. The opening head is 157-165 px (medium) instead of the 190-ish before.
+- The low desk still hides his legs for part of the shot (low angle by design).

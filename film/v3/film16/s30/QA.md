@@ -23,3 +23,16 @@ median **4.66**, p90 **14.04** (targets >= 4 / >= 12). The median comes from the
 - Two snaps (push and snap-out), the bible asks for one: the push alone gave p90 8-10, the snap-out is the "pull back to the wide empty chamber" of the plan, delivered as a fast reveal rather than a steady 8 %/s pull (the drift itself is 8 %/s).
 - Morse in the doorway is small (49-113 px) and partly behind the door-wing at the start; there is no eye glint.
 - The 3D register does not click visibly before the pull-back.
+
+---
+# Revision 2 (after the director's TAKE gate and QA-art) -- re-rendered, take.mkv replaced (42.3 MB, one file)
+Frame-diff now median 4.56 / p90 13.02; 129 frames, 8.5 s/frame; heads 71-398 px, centre y 635-721, lowest head bottom y 849 (< 880). QA_AUTO PASS.
+- **Gate 1 (no hat): fixed.** `hat_off` = 0: the black stovepipe is on his head for the whole take (continuity with 26-29).
+- **Gate 2 (candle): fixed.** The two translucent glow discs of cast16's candle (the un-composited sprite at his cuff) are removed at run time (`cast16._candle_body` is wrapped in shot.py, cast16 untouched): the candle is a solid brass chamberstick with its flame, visible in his hand and in the wide.
+- **Note 3 (callback axis): restored.** The camera is on the set's night axis again (register on the table to the right, lit doorway left), as the chamber_table_night preset.
+- **QA-art fixes:**
+  - End framing: the pull-back stops at a medium (mocker head 190-230 px at the end of the shot, was 80), the register and the table with the coils are in frame at his right, Morse in the doorway is 71-85 px. The two snaps are a push on "นั่งเฝ้าลวด" (x1.5) and a pull-back accent (x1.47) at g 2058-2070.
+  - Night light: the window fill is at 35 %, the world ambient at 35 %, exposure -0.4 EV, candle / lamp pools kept: the room is dark between the pools.
+  - Tape: the set's even floor loops (they read as rails) are hidden (tape clip 0.27: only the table part shows); a heap of 46 crumpled paper strips and a ribbon of paper lie round his boots, higher at the centre.
+  - Sleep Z: it floats above his head for the whole yawn (kept from the first version).
+- Still open: the heap is plain paper (no dots / dashes); the vest shows a small red rectangle (the mail bag seen from the front); Morse's grin is small.

@@ -29,11 +29,11 @@ def P(name):
     return dict(cast16.STORY16[name][1])
 
 CAST = dict(
-    mor=dict(cast="morse16", at=(3.2, 10.0), pose="morse_read_tape", mirror=True),
-    moc=dict(cast="mocker", at=(1.9, 10.9), pose="mocker_sour_arms", pose2="mocker_jaw_drop", swap=G_C2 + 3, mirror=False),
-    ca=dict(cast="congressman_a", at=(4.9, 11.2), pose="congressman_a_amazed", mirror=True),
-    cb=dict(cast="congressman_b", at=(-2.1, 10.6), pose="congressman_b_amazed", mirror=False),
-    cc=dict(cast="congressman_c", at=(6.0, 12.6), pose="congressman_c_amazed", mirror=True),
+    mor=dict(cast="morse16", at=(3.6, 10.9), pose="morse_read_tape", mirror=True),
+    moc=dict(cast="mocker", at=(1.0, 11.4), pose="mocker_sour_arms", pose2="mocker_jaw_drop", swap=G_C2 + 3, mirror=False),
+    ca=dict(cast="congressman_a", at=(2.4, 12.3), pose="congressman_a_amazed", mirror=True),
+    cb=dict(cast="congressman_b", at=(-2.6, 11.3), pose="congressman_b_amazed", mirror=False),
+    cc=dict(cast="congressman_c", at=(-0.5, 12.8), pose="congressman_c_amazed", mirror=True),
 )
 for k, v in CAST.items():
     v["seed"] = 3 + 7 * list(CAST).index(k)
@@ -49,6 +49,8 @@ def pose_of(k, g):
     p["lean"] = p.get("lean", 0) + 2.5 * math.sin(t * 5.1 + s)
     p["head_roll"] = p.get("head_roll", 0) + 2.0 * math.sin(t * 3.9 + s)
     p["squash"] = (1.0 + 0.012 * math.sin(t * 9.0 + s), 1.0 - 0.012 * math.sin(t * 9.0 + s))     # excited tremble
+    if k == "mor":
+        p["gaze"] = (-0.6, 0.9)       # eyes on the tape
     p["t"] = t
     return p
 
@@ -94,7 +96,7 @@ class Take(C.Take):
                 x, y, z = foot(k, g)
                 C.place(a, f, (x, y, z))
             u1, u2 = u_of(g, G_C1, G_C1 + 5), u_of(g, G_C2, G_C2 + 5)
-            ln = 0.30 + 0.30 * u1 + 0.30 * u2 + 0.1 * u_of(g, G_C2 + 6, G_LAST)
+            ln = 0.04 + 0.26 * u1 + 0.30 * u2 + 0.34 * u_of(g, G_C2 + 4, G_C2 + 30)
             click = 1 if (G_C1 <= g < G_C1 + 3 or G_C2 <= g < G_C2 + 3) else 0
             self.key_set(f, tape=(ln, click), flames=(1.0,))
         for g in gs:

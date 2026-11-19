@@ -19,7 +19,7 @@ G_LAST = GS[-1]
 G_WORD = C.cap_g("ไปรษณีย์ใหญ่")                          # snap + pose swap on 'Postmaster General'
 SNAP = (G_WORD - 6, G_WORD + 9)
 PPD = 256
-ANG = 18.0
+ANG = -38.0
 LIGHT, PRESET = "DAY", "chamber_low"
 
 def P(name):
@@ -47,7 +47,7 @@ class Take(C.Take):
         c0 = Vector(self.A["cam"]["loc"]); l0 = Vector(self.A["cam"]["look_at"])
         d = (c0 - l0); d.z = 0; d.normalize()
         d = Matrix.Rotation(math.radians(float(os.environ.get('ANG', ANG))), 3, 'Z') @ d
-        loc0 = look0 + d * 3.9 + Vector((0, 0, -1.3))
+        loc0 = look0 + d * 4.9 + Vector((0, 0, -1.0))
         CAM = C.CamPath(loc0, look0, G0 - H, G_LAST, push=0.08, slide_px=85.0, arc_deg_s=11.0, decay=0.25,
                         snaps=[dict(g=SNAP, k=1.8, peak=1.7, shift=(-0.9, 0.2))])
         self.key_cam(bf(GS[0]), *CAM.at(GS[0]))

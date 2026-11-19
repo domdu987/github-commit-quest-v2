@@ -23,8 +23,8 @@ G_HORROR = 1952                                           # pose swap on the clo
 SNAP = (G_WORD - 4, G_WORD + 9)
 PPD = 256
 LIGHT, PRESET = "DAY", "chamber_table"
-SLIDE_D = -1.0                                            # world D: the instrument travels left toward the mocker
-CAST = dict(moc=dict(cast="mocker", at=(-4.7, 8.7), mirror=False), clk=dict(cast="clerk16", at=(2.6, 8.7), mirror=True))
+SLIDE_D = -1.1                                            # world D: the instrument travels left toward the mocker
+CAST = dict(moc=dict(cast="mocker", at=(-4.4, 8.7), mirror=False), clk=dict(cast="clerk16", at=(2.3, 8.7), mirror=True))
 
 def P(name):
     return dict(cast16.STORY16[name][1])
@@ -59,7 +59,9 @@ class Cam2(C.CamPath):
         u = 0.0 if g <= ga else min(1.0, C.camrig.ease_peak((g - ga) / float(gb - ga), 1.7))
         t = max(0, g - gb) / 30.0
         d = self.ek - self.el
-        el = self.ek - d * (1.0 - 0.05 * t)                       # slow push after the snap
+        el = self.ek - d * (1.0 - 0.16 * t)                       # push keeps going after the snap (never parked)
+        right = Vector((d.y, -d.x, 0.0)).normalized()
+        el = el + right * (0.55 * t)
         return loc.lerp(el, u), look.lerp(self.ek, u)
 
 CAM = None
@@ -68,8 +70,8 @@ class Take(C.Take):
     def __init__(self, quality="preview"):
         global CAM
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s29")
-        look0 = Vector((-1.1, 8.7, 2.7)); loc0 = Vector((0.7, -2.6, 4.4))
-        CAM = Cam2(loc0, look0, G0 - H, G_LAST, push=0.05, slide_px=-45.0, arc_deg_s=-7.0, decay=0.25, snaps=[], end_loc=(-5.8, 5.8, 3.4), end_look=(-4.7, 8.7, 2.85))
+        look0 = Vector((-1.0, 8.7, 2.7)); loc0 = Vector((0.5, -0.3, 4.3))
+        CAM = Cam2(loc0, look0, G0 - H, G_LAST, push=0.05, slide_px=-45.0, arc_deg_s=-7.0, decay=0.25, snaps=[], end_loc=(-5.5, 5.8, 3.4), end_look=(-4.4, 8.7, 2.85))
         self.key_cam(bf(GS[0]), *CAM.at(GS[0]))
         self.scene.frame_set(bf(GS[0]))
         for k, v in CAST.items():
