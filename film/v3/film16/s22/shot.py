@@ -32,6 +32,7 @@ G_GLINT = (1396, 1410)                         # sun glint flare on the held gla
 G_GLINT2 = (1432, 1442)                        # second twinkle
 BLINKS = [1405, 1440]
 
+PAN_SNAP, PAN_SLOW = 0.38, 0.28                 # D of look-point swing toward the bottle (snap), D/s afterwards
 LIGHT, PRESET = "AFTER_RAIN", "line_wagon"
 PPD = 256
 CANVAS = (-2.25, -4.75, 2.25, 0.125)
@@ -50,8 +51,8 @@ class Take(C.Take):
         cam_loc, cam_look = Vector(self.A["cam"]["loc"]), Vector(self.A["cam"]["look_at"])
         self.subject = Vector((mk[0] - 0.4, mk[1] + 0.1, mk[2] + 2.3))
         start = Vector(self.subject).lerp(cam_loc, 0.60) + Vector((0, 0, 0.8))
-        self.cam_path = C.CamPath(start, self.subject, G0, G_LAST, push=0.08, slide_px=-50.0, rise_px=10.0, arc_deg_s=-12.0, decay=0.3,
-                                  snaps=[dict(g=SNAP, k=1.9, peak=1.9, shift=(0.15, 0.3))])
+        self.cam_path = C.CamPath(start, self.subject, G0, G_LAST, push=0.08, slide_px=-80.0, rise_px=10.0, arc_deg_s=-14.0, decay=0.3,
+                                  snaps=[dict(g=SNAP, k=1.9, peak=2.0, shift=(0.0, 0.3))])
         self.key_cam(bf(G_FIRST), *self.cam_path.at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
         self.mor = self.actors["mor"] = C.make_actor("mor", "morse16", os.path.join(WORK, "sprites"), canvas=CANVAS, contact=True, cam=self.cam)
@@ -161,10 +162,20 @@ class Take(C.Take):
                 s = max(s, 1.5 * math.sin(math.pi * min(1.0, u * 1.5)) if u < 0.66 else 1.5 * (1 - u) / 0.34 * 0.5)
         return s
 
+    def cam_at(self, g):
+        """drift + snap from CamPath, plus a PAN (the look point swings, the camera does not truck toward the crate): a fast eased swing
+        toward the raised bottle on the snap, and a slow continuing swing, so the sky and trees sweep (frame-diff) with no crate bottles in the lens."""
+        loc, look = self.cam_path.at(g)
+        right = self.cam_path.right
+        ga, gb = SNAP
+        u = C.camrig.ease_peak((g - ga) / float(gb - ga), 2.0) if g > ga else 0.0
+        pan = PAN_SNAP * u + PAN_SLOW * (g - G0) / 30.0
+        return loc, look + right * pan
+
     def pose(self, gs):
         for g in gs:
             f = bf(g)
-            self.key_cam(f, *self.cam_path.at(g))
+            self.key_cam(f, *self.cam_at(g))
             C.place(self.mor, f, self.mark)
             taken = g >= G_TAKE
             C.key_vis(self.crate_orig, not taken, f)
@@ -191,7 +202,7 @@ class Take(C.Take):
     def report(self, g):
         f = bf(g)
         self.scene.frame_set(f)
-        loc, look = self.cam_path.at(g)
+        loc, look = self.cam_at(g)
         m, _ = self.bottle_at(g)
         return dict(g=g, cam=[round(c, 3) for c in loc], heads=C.head_report(self, f), hand_err=self.hand_err.get(g),
                     bottle_px=TG.project(tuple(m)), taken=g >= G_TAKE)

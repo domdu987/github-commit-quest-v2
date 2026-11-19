@@ -20,11 +20,14 @@
 - No text, no DOF, no mouth movement (smile expression only).
 - No magenta, no retried frames. The wagon side board fills the lower left in the first frames and hides his legs (stand mark is on the bed).
 
-## Frame-diff (in-shot g 1382..1454)
-median 3.63  p90 9.61  (target >= 4 / >= 12): BELOW target. The camera cannot truck or orbit toward the crate without filling the frame with crate bottles (first versions did: median 5.8 / p90 12.3 but the last 20 frames were glass blobs and the held bottle was cropped), so the final uses a gentler drift away from the crate.
+## Frame-diff (in-shot g 1382..1454), v2 after the director's request
+median 4.12  p90 13.27  (target >= 4 / >= 12): MET (v1 was 3.63 / 9.61).
+- The camera does not truck toward the crate any more (that filled the lens with crate bottles). Instead the LOOK POINT swings: an eased pan toward the raised bottle on the snap (13 f, x1.9, peak 2.0, 0.38 D swing) plus a slow continuing pan 0.28 D/s, on top of push 8 %/s, slide -80 px/s, arc -14 deg/s. The sky, trees and farm sweep past; Morse drifts to the left third and the bottle with its glint stays upper centre.
+- Draft (360x640) gave 4.00 / 12.53; the final 4.12 / 13.27.
+- Side effect: from about g 1421 his hair touches the left frame edge (head centre x 170-235 px, 330-345 px wide); the face, bottle and glint are fully in frame. The 7 remaining crate bottles show in the lower right.
 
 ## Differs from the plan
 - Mark morse_wagon_bed moved 0.75 D toward the crate so the hand reaches the neck.
 - Expression "happy / smile" instead of the pose's "excited" (the open grin read as manic).
-- Camera is the preset's side of the wagon, raised 0.8 D (the side boards hid the crate from the preset height).
+- Camera is the preset side of the wagon, raised 0.8 D (the side boards hid the crate at the preset height); motion comes from look-point pans, not a truck toward the crate.
 - 10.85 s/frame wall, 20.9 s CPU (720x1280, 7 spp, 2 procs x 2 threads).
