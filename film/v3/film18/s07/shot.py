@@ -19,7 +19,7 @@ def actors(f, cam, ctx):
     for n, (x, y, z, yaw, sc) in enumerate(HERD):
         if f < APPEAR[n]: continue
         ph = int((f * 0.25 + n * 3) % 8)
-        C.ox_card(SHOT, n, (x - 0.6 * t, y, 0), 200, sc, cam, state='plain', view='three_quarter', gait='walk', phase=ph, blades=False, theta=26,
+        C.ox_card(SHOT, n, (x - 0.6 * t, y, 0), 200, sc, cam, state='plain', view='three_quarter', gait='walk', phase=ph, blades=False, theta=26, shadow=(n % 5 == 0),
                   bob=0.04 * abs(math.sin(2 * math.pi * (f * 0.25 + n) / 8)))
 if __name__ == '__main__':
     C.run(SHOT, actors, G0, G1, HB, HA, quality=sys.argv[1] if len(sys.argv) > 1 else None, tweak=tweak, shk=0.004, cam_fn=CAM)

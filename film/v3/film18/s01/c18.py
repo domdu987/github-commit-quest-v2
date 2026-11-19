@@ -11,7 +11,7 @@ HEIGHT = J.HEIGHT
 _SIDE = {}
 
 def ox_card(shot_key, i, pos, travel_deg, scale, camloc, state='dragon', view='three_quarter', gait='stand', phase=0, flame=-1, blades=True, theta=36,
-            bob=0.0, roll=0.0, tint=None, k=None, reed=0, coat=1.0):
+            bob=0.0, roll=0.0, tint=None, k=None, reed=0, coat=1.0, shadow=True):
     """An ox card at pos; yaw ~theta deg off the camera axis, mirrored so the head points along travel_deg. (sgn, mirror) chosen once per ox so it never pops."""
     p = V(pos); sc = scale * 1.08
     dvec = V((math.cos(math.radians(travel_deg)), math.sin(math.radians(travel_deg)), 0.0)); c = camloc - p; c.z = 0.0; c.normalize()
@@ -29,7 +29,7 @@ def ox_card(shot_key, i, pos, travel_deg, scale, camloc, state='dragon', view='t
     sgn, fac = _SIDE[key]; n, u = nu(sgn)
     yaw = math.degrees(math.atan2(n.x, -n.y))
     meta = card_ox(state, view, gait, phase, flame, blades, reed, coat)
-    ob = R2.put_card(meta, (p.x, p.y, p.z + bob), yaw, sc, mirror=(fac < 0), name='ox%d' % i, tint=tint, k=k, sw=2.7 * sc)
+    ob = R2.put_card(meta, (p.x, p.y, p.z + bob), yaw, sc, mirror=(fac < 0), name='ox%d' % i, tint=tint, k=k, sw=2.7 * sc, shadow=shadow)
     if roll: ob.rotation_euler = (0, math.radians(roll), math.radians(yaw))
     return ob
 
