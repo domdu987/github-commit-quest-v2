@@ -1,18 +1,7 @@
-shot 01 A GOLDEN wall 10.9 cpu 21.0 heads [('boy', 593, 570), ('boy', 623, 591), ('boy', 623, 591)]
-shot 03 A GOLDEN wall 8.4 cpu 16.5 heads [('dick', 592, 555), ('boy', 609, 570)]
-shot 05 A GOLDEN wall 10.7 cpu 20.8 heads [('coach', 709, 691), ('boy', 823, 779), ('boy', 829, 784)]
-shot 07 A GOLDEN wall 11.0 cpu 21.3 heads [('dick', 607, 563), ('boy', 621, 560)]
-shot 09 A GOLDEN wall 13.3 cpu 25.8 heads [('dick', 601, 560), ('boy', 680, 633)]
-shot 11 A GOLDEN wall 8.2 cpu 15.8 heads [('coach', 972, 673), ('dick', 623, 582), ('boy', 643, 603), ('boy', 646, 603)]
-shot 13 A GOLDEN wall 10.2 cpu 19.9 heads [('photographer', 579, 518), ('dick', 579, 550)]
-shot 15 A GOLDEN wall 9.9 cpu 19.5 heads [('coach', 435, -147), ('boy', 464, 24), ('boy', 909, 1357), ('dick', 665, 630)]
-shot 17 B EVE wall 9.9 cpu 19.1 heads [('dick', 1024, 981)]
-shot 19 B EVE wall 11.1 cpu 21.5 heads [('rival', 567, 540), ('official', 857, 1778)]
-shot 21 B EVE wall 11.3 cpu 21.9 heads [('dick', 580, 540)]
-shot 23 B EVE wall 10.9 cpu 21.2 heads [('coach', 629, 584)]
-shot 25 B TENSE wall 8.9 cpu 17.2 heads [('dick', 866, 799)]
-shot 27 B TENSE wall 11.5 cpu 22.4 heads [('dick', 436, 388)]
-shot 29 B TENSE wall 11.4 cpu 22.3 heads [('dick', 427, 377)]
-shot 31 B EVE wall 10.4 cpu 20.1 heads [('dick', 756, 732), ('official', 789, 765), ('rival', 793, 768)]
-shot 33 B DAY wall 10.1 cpu 19.7 heads [('rival', 535, 497), ('rival', 480, 433)]
-shot 35 A GOLDEN wall 8.7 cpu 17.0 heads [('coach', 612, 573), ('boy', 654, 706)]
+crowd figures 18500 flags 87
+00:01.911  cycles           | WARNING CUEW initialization failed: Error opening the library
+00:13.508  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d15/work/final/shot26_B_TENSE.png'
+shot 26 B TENSE wall 11.6 cpu 22.4 heads [('dick', 572, 532)]
+crowd figures 18500 flags 87
+00:26.737  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d15/work/final/shot27_B_TENSE.png'
+shot 27 B TENSE wall 11.4 cpu 22.3 heads [('dick', 562, 521)]

@@ -63,7 +63,7 @@ shot(36, 68.00, 69.84, A, 'GOLDEN', ((-3.4, 3.5, 0.5), (-4.1, 6.9, 0.95)), [('sa
 shot(17, 31.05, 32.50, B, 'EVE', ((7.0, 0.5, 3.4), (-2.0, 24.0, 9.0)), [('flagpole', 1.2, -0.5, 0.0)], [('dick', 'dick_mark')], 'grand wide push-in, rise; the packed stadium', trans='DIS', push=8, rise=0.5)
 shot(18, 32.50, 33.80, B, 'EVE', ((3.4, 8.4, 0.9), (0.0, 11.6, 1.7)), [('standard', 0.9, 0.4, 0.0)], [('official', 'official_bar_l'), ('official', 'official_bar_r')], 'tilt up following the bar', end=((3.4, 8.4, 0.9), (0.0, 11.6, 3.4)))
 shot(19, 33.80, 35.27, B, 'EVE', ((7.6, 6.2, 1.3), (0.8, 11.4, 1.5)), [('table_corner', 0.9, -0.4, 0.0)], [('rival', 'rival_land'), ('official', 'official_a')], '3/4 medium; rival knocks the bar', slide=40)
-shot(20, 35.27, 37.50, B, 'EVE', ((-3.7, 7.6, 0.5), (-2.7, 9.3, 1.85)), [('standard_peg', 0.9, 0.4, 0.0)], [('dick', 'dick_b2')], 'low tilt-up from Dick head to the bar', end=((-3.7, 7.6, 0.5), (0.0, 11.6, 3.0)))
+shot(20, 35.27, 37.50, B, 'EVE', ((-5.4, 5.6, 0.6), (-2.7, 9.3, 1.85)), [('standard_peg', 0.9, 0.4, 0.0)], [('dick', 'dick_b2')], 'low tilt-up from Dick head to the bar', end=((-5.4, 5.6, 0.6), (0.0, 11.6, 3.0)))
 shot(21, 37.50, 38.35, B, 'EVE', ((4.2, 8.0, 0.9), (6.0, 3.0, 1.0)), [('foam_edge', 1.0, -0.3, 0.0)], [('dick', 'runup_start')], 'WHIP; attempt 1, the bar falls', end=((4.2, 8.0, 0.9), (0.0, 12.0, 2.3)), whip=True)
 shot(22, 38.35, 39.65, B, 'EVE', ((0.4, 20.2, 1.5), (-0.5, 14.0, 1.1)), [('bar_on_mat', 0.9, 0.0, 0.0)], [('dick', 'rival_land')], 'reverse angle; Dick lies on the foam', push=8)
 shot(23, 39.65, 42.30, B, 'EVE', ((-6.0, 46.4, 5.3), (-8.7, 50.9, 7.3)), [('shoulder', 0.8, 0.5, 0.0)], [('coach', 'coach_stands')], 'medium in the stands; the coach jumps up and shouts', push=8, punch=(41.7, 18))

@@ -16,7 +16,7 @@ def extra_mats(M, P):
     M['car_b'] = mat('car_b', '#3a5ea8', '#5078c0', 3, contrast=0.6)
     M['car_y'] = mat('car_y', '#e8b83a', '#f4cc58', 3, contrast=0.6)
     M['tire'] = mat('tire', '#2a2430', '#3a3440', 3)
-    M['towel_w'] = mat('towel_w', '#f2ead8', '#e4dcc4', 4); M['towel_b'] = mat('towel_b', '#5a8ad0', '#6e9ee0', 4)
+    M['towel_w'] = mat('towel_w', '#dccfb2', '#cfc2a4', 4); M['towel_b'] = mat('towel_b', '#5a8ad0', '#6e9ee0', 4)
     M['paper'] = mat('paper', '#efe6cc', '#e0d4b4', 3)
     M['bikeb'] = mat('bikeb', '#2f5ea8', '#4a7cc4', 4); M['bikeg'] = mat('bikeg', '#4a8a5a', '#66a874', 4)
     M['bone'] = mat('bone', '#e8d8b8', '#d8c8a4', 4)
