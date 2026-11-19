@@ -47,7 +47,7 @@ def sm(u): return ez(u, "sine")
 def lin(u, k=0.25): return k * sm(u) + (1 - k) * clamp(u)     # mostly linear: never a dead end
 
 # ------------------------------------------------------------------ cameras
-S1 = (((1.95, 0.35, 1.42), (0.50, 2.28, 1.28)), ((1.40, 1.05, 1.38), (0.45, 2.22, 1.28)))
+S1 = (((1.70, 0.25, 1.42), (0.45, 2.22, 1.26)), ((1.15, 1.15, 1.37), (0.40, 2.17, 1.25)))
 S2 = (((-1.00, -2.40, 1.50), (-1.25, 1.9, 1.34)), ((-0.60, -3.30, 1.55), (-1.00, 1.9, 1.30)))
 S3A = (((-0.58, 1.46, 1.02), (0.58, 2.20, 1.24)), ((-0.14, 1.80, 1.06), (0.74, 2.20, 1.24)))
 S3B = (((0.26, 1.24, 1.07), (0.70, 2.20, 1.25)), ((0.52, 1.48, 1.10), (0.64, 2.20, 1.25)))
@@ -80,7 +80,7 @@ SPOT = dict(                       # name: (cast, story pose, place xy, seated)
     pa1=("prisoner_a", "prisoner_sitting_a", (-2.35, 2.55), "bench"),
     gd=("gendarme_b", "gendarme_standing_b", (-1.15, 0.95), None),
     bert=("bertillon", "bertillon_measuring", (1.45, 1.95), None))
-BERT_XY = {1: (0.42, 1.96), 2: (0.12, 2.02), 3: (0.30, 2.42)}
+BERT_XY = {1: (0.14, 1.92), 2: (0.12, 2.02), 3: (0.30, 2.42)}
 VIS = {1: ("pa", "bert"), 2: ("pa", "bert", "pb1", "pc1", "pa1", "gd"), 3: ("pa", "pcc", "bert")}
 
 def visible(name, g):
@@ -178,7 +178,7 @@ class Take(C.Take):
     def pos_of(self, name, g):
         cast, story, xy, seated = SPOT[name][:4]
         s = shot_of(g)
-        if name == "bert": xy = BERT_XY[s]
+        if name == "bert": xy = BERT_XY[s] if not (s == 3 and g >= G_SWAP) else (0.18, 2.00)
         p = base_pose(name); sc = sc_of(cast)
         if seated:
             fx, fy = C.sprites.feet_of(cast, p); z = K.HEAD_Z[seated] - sc * fy
@@ -214,7 +214,7 @@ class Take(C.Take):
             el = ear_local(an, g, sit, s)
             w = actors.local_to_world(self.acts[sit], el, f, camera=cam)
             self.ear[g] = tuple(round(v, 3) for v in w)
-            ang, psc = (-52, 1.45) if s != 3 else (-4, 1.1)
+            ang, psc = (-52, 1.45) if s == 2 else (-4, 1.15 if s == 1 else 1.1)
             p, info = self.acts["bert"].pose(f, pose_of("bert", g), hands={"r": {"tip": w, "prop": "calipers", "angle": ang, "prop_scale": psc, "stretch": 1.15}}, camera=cam)
             self.ear[(g, "err")] = round(info.get("r", {}).get("error", -1), 3)
         fr = [bf(g) for g in gs if visible("bert", g)]
