@@ -20,6 +20,8 @@ FIRST_G, G0, G_CUT, G1, H = 330, 336, 390, 445, 6
 LAST_G = G1 + H - 1                                # 450
 TMP = os.path.join(HERE, "work")
 SPR = os.path.join(TMP, "sprites")
+SN7, SN8 = 364, 418
+SNAP8 = (-0.2, 0.55, -0.05)
 def bf(g): return g - FIRST_G + 1
 def shot_of(g): return 7 if g < G_CUT else 8
 
@@ -39,6 +41,12 @@ def cam_of(g):
     sway = 0.012 * math.sin(g * 0.9)
     loc = aim(s["c0"], s["c1"], u); look = aim(s["l0"], s["l1"], u)
     loc.z += sway
+    if shot_of(g) == 7:
+        x = min(1.0, max(0.0, (g - SN7) / 12.0)); k = x * x * (3 - 2 * x)
+        loc += Vector((-1.4, 0.9, -0.5)) * k; look += Vector((2.0, 0.0, -0.1)) * k
+    else:
+        x = min(1.0, max(0.0, (g - SN8) / 13.0)); k = x * x * (3 - 2 * x)
+        loc += Vector(SNAP8) * k; look += Vector((0.32, 0.0, 0.04)) * k
     return loc, look
 
 # ---------------------------------------------------------------- the cast
