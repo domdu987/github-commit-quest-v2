@@ -1,0 +1,6 @@
+raw_*/
+old/
+work/
+__pycache__/
+*.log
+draft*.mp4
