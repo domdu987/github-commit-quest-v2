@@ -1,4 +1,4 @@
-# QA s21 v4 (film 14, shot 21, g 1362-1458, 97 frames)
+# QA s21 v5 (v4 + g1410 fix) (film 14, shot 21, g 1362-1458, 97 frames)
 - qa_auto PASS on the full take. Sky ramp unchanged: g1368 top-150-row RGB 111.6/105.2/218.2 vs team 4 g1367 110.4/103.6/216.4; g1452 116.6/109.5/222.2 vs g1453 116.5/109.0/218.0.
 ## Why v3's keys did not show (director's finding confirmed)
 The hive's pivot rides the wire's own bow (1.1 Hz ring-down; along the oblique camera that is a ~250 px pendulum), which buried my x-keys; my probe table used Blender data with a wrong hive half-length (0.725 vs the 0.66 body) and ignored parallax.
@@ -66,3 +66,8 @@ Method: 360x640 / 6-sample re-renders of each frame with (A) everything, (B) hiv
 | 1434 | 184 | 420 | 126 | 432 | 58 | 12 |
 | 1435 | 184 | 422 | 126 | 434 | 58 | 12 |
 | 1436 | 186 | 420 | 128 | 436 | 58 | 16 |
+
+## v5 (director's last blocker)
+- g1410 hit offset changed from -0.20 m to -0.10 m (the hive's left end was ~35 px behind the near post, lip/slots hidden). Run-in and rebound shape kept; because the segments before/after depend on it, frames g1398-1429 (32 frames) changed and were re-rendered and spliced into the v4 frames (splice seams g1397/1398 and g1429/1430 checked: no pop).
+- g1408-1412 checked at full size: the hive's lip (landing board) and entrance slots stay visible, the left end stops at the post's near face at g1410, nothing shows beyond the post.
+- The measured table above is the v4 one (g1390 / g1430 unchanged; the g1410 row of v4 no longer applies).
