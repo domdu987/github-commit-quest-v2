@@ -113,7 +113,7 @@ def pre_A(sc): pass
 # ------------------------------------------------------------------------------------------------ location A: coach
 COACH_RUN = [(7.963, 2.778, 0.0), (5.37, 5.556, 0.0), (2.963, 7.222, 0.0), (2.13, 7.87, 0.0)]
 T_TAKE = 2019                       # coach takeoff frame
-CDZ = -0.4
+CDZ = -0.7
 T_LAND = 2046                       # TUMP into the pile
 PILE = Vector((-2.5, 14.63, 0.815))
 BENCH = [(-9.074, 13.333), (-9.074, 14.815), (-9.074, 16.296)]
@@ -200,7 +200,7 @@ def coach_36(g, cl, M):
         up = smooth((g - 2056) / 8.0); wob = math.sin((g - 2056) * 0.55) * 14 * up
         pose['arm_r'] = dict(hand=(1.0 + 0.015 * wob, 0.42 - 2.2 * up), bend=0.0, layer='top') if up > 0 else pose['arm_r']
         pose['yaw'] = 0.15; pose['head_roll'] = -6 + sway(g, 3.0, 0.8); pose['expr'] = 'shocked'; pose['mouth'] = 'smile'
-        put('coach_%d' % g, 'coach', pose, mark=(PILE.x, PILE.y, PILE.z), cam_loc=cl, canvas=cast15.CANVAS15_WIDE, dz=CDZ, shadow=None)
+        put('coach_%d' % g, 'coach', pose, mark=(PILE.x, PILE.y, PILE.z), cam_loc=cl, canvas=cast15.CANVAS15_WIDE, dz=CDZ, shadow=None, thumb_big=(1.3 if up > 0 else 0.0))
     # boys at the pit edge laughing (bob drives the 3 Hz bounce)
     for i, (nm, pn, pos) in enumerate((('boy1', 'laugh', (-4.6, 17.0)), ('boy2', 'point_laugh', (-0.5, 17.1)), ('boy3', 'laugh', (-2.6, 17.5)))):
         pose = dict(cast15.pose_for(pn, nm), bob=cast15.laugh_bob(g + i * 3))

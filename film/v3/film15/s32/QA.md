@@ -8,3 +8,4 @@
 - Cameras of 32, 33, 34, 36 are my own (closer than the plan so the flop and the buried coach read); 35 is a per-frame camera that follows the coach (whip), no hurdle FG. Shot 33 looks from the left over the foam, not from the plan camera.
 - Shot 34 coach stands at the pit's left edge in front of the bench, not on the sawdust pile. Boys stand on the pit sand in 36.
 - Median motion in 32-34 is just above 3.5 (camera slide + breathing); whole-take median 4.4.
+- Round 3 (shot 36 only, g 2040-2101 re-rendered): coach sunk 0.3 D more (sawdust at his chin), raised thumb drawn 1.3x larger. Sneakers not added. Motion median 4.5 / p90 15.6, qa_auto PASS.

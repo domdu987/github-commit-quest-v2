@@ -43,14 +43,21 @@ def _contact(tag, c, yaw, L, Wd, alpha=0.8):
     ob.location = (c.x, c.y, c.z + 0.03); ob.rotation_euler = (0, 0, yaw); ob.visible_shadow = False
 
 def put(tag, cast, pose, mark=(0, 0, 0), cam_loc=(0, 0, 0), ppd=128, scale=1.0, mirror=False, canvas=None, shadow=(1.4, 0.45),
-        anchor=None, dz=0.0, floor=None, shadow_z=None, shadow_a=0.8, front=0.0):
+        anchor=None, dz=0.0, floor=None, shadow_z=None, shadow_a=0.8, front=0.0, thumb_big=0.0):
     """card for one cast15 pose. mark = feet point (D); anchor=(name, world) puts that sprite anchor on a world point;
     floor=z puts the LOWEST point of the drawing (bbox bottom) on that height (lying / landing poses); shadow_z = z of the contact ellipse (default floor / mark z);
     front = D the card is moved toward the camera (so a flop hides the round bar)."""
     pose = dict(pose); pose['mirror'] = bool(mirror)
     cv = canvas or cast15.CANVAS15[cast]
     out = os.path.join(SPR, tag + '.png')
-    r = sprites.render_sprites([dict(cast=cast, pose=pose, px_per_D=ppd, out=out, canvas=cv)])[0]
+    job = dict(cast=cast, pose=pose, px_per_D=ppd, out=out, canvas=cv)
+    if thumb_big:
+        r0 = sprites.render_sprites([dict(job, out=out + '.pre.png')])[0]; hx, hy = r0['anchors']['hand_r']; k_ = thumb_big
+        pose['thumb_r'] = 0; job['pose'] = pose
+        INK = sys.modules['puppet'].INK if 'puppet' in sys.modules and hasattr(sys.modules['puppet'], 'INK') else '#1a1420'
+        job['overlay'] = ('<g transform="translate(%.4f %.4f) rotate(-90) scale(%.2f)"><path d="M0.03,0 L0.17,0" stroke="%s" stroke-width="0.100" stroke-linecap="round"/>'
+                          '<path d="M0.04,0 L0.16,0" stroke="#fbeee6" stroke-width="0.040" stroke-linecap="round"/></g>' % (hx, hy, k_, INK))
+    r = sprites.render_sprites([job])[0]
     assert not r['clipped'], 'sprite clipped by canvas: ' + tag
     x0, y0, x1, y1 = r['canvas']; fx, fy = r['feet']; k = scale
     X0, X1 = x0 * k, x1 * k; Z0, Z1 = -y1 * k, -y0 * k
