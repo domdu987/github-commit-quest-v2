@@ -334,7 +334,7 @@ def build_line(ST, P):
     for y0 in range(int(Y0), int(Y1) + 4, 2): mb.rod(mpl, (xc(y0) + 2.3, y0 - 0.02, 0.12), (xc(y0 + 2) + 2.3, y0 + 2.02, 0.12), 0.09, 0.09, 10, smooth=True)
     mb.finish()
     ST['plough'] = None
-    mb = MB('plough'); plough(mb, M); ob = mb.finish(); pr = bpy.data.objects.new('plough_root', None); sc.collection.objects.link(pr)
+    mb = MB('plough'); mb.push(Matrix.Diagonal((1.35, 1.35, 1.35, 1))); plough(mb, M); mb.pop(); ob = mb.finish(); pr = bpy.data.objects.new('plough_root', None); sc.collection.objects.link(pr)
     for o in ob: o.parent = pr
     ST['plough_root'] = pr
     mb = MB('reel'); reel(mb, M, (0, 0, 0.7)); ob = mb.finish(); rr_ = bpy.data.objects.new('reel_root', None); sc.collection.objects.link(rr_)
@@ -488,6 +488,8 @@ def build_pit(ST, M):
     mb = MB('pitdamp'); dm = mat('damp', '#2a1c1a', '#3e2a26', 6)
     for i in range(7): mb.ell(dm, (cx + rcl.uniform(-0.6, 0.6), cy + rcl.uniform(-1.8, 1.8), -d + 0.02), (rcl.uniform(0.2, 0.45), rcl.uniform(0.3, 0.6), 0.01), (10, 6))
     mb.finish()
+    la = bpy.data.lights.new('pitsky', 'AREA'); la.shape = 'RECTANGLE'; la.size = 3.2 * SC; la.size_y = 9.0 * SC; la.color = (0.55, 0.52, 1.0); la.energy = 420.0 * SC * SC
+    lo = bpy.data.objects.new('pitsky', la); lo.location = W((cx, cy, 2.2)); bpy.context.scene.collection.objects.link(lo); lo.visible_camera = False
     return dict(c=(cx, cy), hw=hw, hl=hl, d=d, zf=zf, w=(w0, w1))
 
 # ----------------------------------------------------------------------------- foreground dressing around a camera
@@ -509,6 +511,9 @@ def fg_dress(ST, M, cam, look, items, seed=31, ngrass=260):
         elif kind == 'shovel': shovel(mb, M, (x, y, 0.05), rr.uniform(0, 6))
         elif kind == 'barrel': barrel(mb, M, (x, y, 0.0))
         elif kind == 'keybox': key_station(mb, M, (x, y, 0.0), rr.uniform(-0.6, 0.6))
+        elif kind == 'tall':
+            for i in range(9):
+                q = p + f * rr.uniform(-0.3, 0.3) + r * rr.uniform(-0.35, 0.35); grass_clump(mb, M, (q.x, q.y, 0.0), rr, rr.uniform(1.0, 1.7))
         elif kind == 'grass':
             for i in range(ex[0] if ex else 120):
                 q = p + f * rr.uniform(-1.5, 3.5) + r * rr.uniform(-3.2, 3.2)

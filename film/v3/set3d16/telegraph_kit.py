@@ -54,7 +54,7 @@ def mat(name, A, B=None, scale=3.0, aniso=(1, 1, 1), rough=1.0, emit=None, emit_
         mr = N('ShaderNodeMapRange'); mr.inputs['From Min'].default_value = zgrad[0] * SC; mr.inputs['From Max'].default_value = zgrad[1] * SC; L(sp.outputs['Z'], mr.inputs['Value'])
         mx3 = N('ShaderNodeMix'); mx3.data_type = 'RGBA'; mx3.inputs[6].default_value = hexc(zgrad[2]); L(col, mx3.inputs[7]); L(mr.outputs['Result'], mx3.inputs[0]); col = mx3.outputs[2]
     if wet:
-        wn = wet_out(nt); dk = N('ShaderNodeMix'); dk.data_type = 'RGBA'; dk.blend_type = 'MULTIPLY'; dk.inputs[7].default_value = (0.5, 0.36, 0.34, 1.0)
+        wn = wet_out(nt); dk = N('ShaderNodeMix'); dk.data_type = 'RGBA'; dk.blend_type = 'MULTIPLY'; dk.inputs[7].default_value = (0.5, 0.4, 0.4, 1.0)
         L(wn, dk.inputs[0]); L(col, dk.inputs[6]); col = dk.outputs[2]
         rm = N('ShaderNodeMath'); rm.operation = 'MULTIPLY_ADD'; rm.inputs[1].default_value = -0.6 * rough; rm.inputs[2].default_value = rough; L(wn, rm.inputs[0]); L(rm.outputs[0], bs.inputs['Roughness'])
         sm = N('ShaderNodeMath'); sm.operation = 'MULTIPLY_ADD'; sm.inputs[1].default_value = 0.5; sm.inputs[2].default_value = 0.0 if sheen == 0 else sheen; L(wn, sm.inputs[0]); L(sm.outputs[0], bs.inputs['Specular IOR Level'])
@@ -175,7 +175,7 @@ def palette():
     d['ballast'] = mat('ballast', '#9a8e86', '#c0aea0', 14, contrast=1.8, wet=True)
     d['sleeper'] = mat('sleeper', '#4a3426', '#6a4a34', 5, wet=True)
     d['rail'] = mat('rail', '#7a6058', '#a88c80', 3, rough=0.4, sheen=0.6)
-    d['lead'] = mat('lead', '#8c929c', '#b6bcc6', 3, rough=0.35, sheen=0.7)
+    d['lead'] = mat('lead', '#8c929c', '#b6bcc6', 3, rough=0.5, sheen=0.3)
     d['straw'] = mat('straw', '#d6b25a', '#eccb78', 7, contrast=1.3, wet=True)
     d['strawdk'] = mat('strawdk', '#b08a3c', '#d0a850', 7, wet=True)
     d['wheat'] = mat('wheat', '#d6a838', '#f4cc58', 6, zgrad=(0.0, 0.5, '#9a9a34'), contrast=1.4, wet=True)
@@ -526,3 +526,44 @@ def chandelier(mb, M, c):
             mb.rod(M['brass'], (x, y, z + 0.4), (px, py, zz - 0.03), 0.02, 0.02, 5)
             if ri == 0: mb.ell(M['glassjar'], (px, py, zz - 0.25), (0.05, 0.05, 0.12), (8, 6))
 
+
+# ------------------------------------------------------------------ image materials + UV meshes (portraits, tape)
+def img_mat(name, path, rough=0.9, emit=0.0, clip_uv=None, wet=False):
+    """Principled surface textured by an image (UV). clip_uv=group name: transparent where UV.x > the node group value (tape unspooling)."""
+    if name in MATS: return MATS[name]
+    m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); bs = N('ShaderNodeBsdfPrincipled'); bs.inputs['Roughness'].default_value = rough; bs.inputs['Specular IOR Level'].default_value = 0.1
+    tx = N('ShaderNodeTexImage'); tx.image = bpy.data.images.load(path, check_existing=True); tx.interpolation = 'Cubic'; tx.extension = 'EXTEND'
+    L(tx.outputs['Color'], bs.inputs['Base Color'])
+    if emit > 0:
+        L(tx.outputs['Color'], bs.inputs['Emission Color']); bs.inputs['Emission Strength'].default_value = emit
+    if clip_uv:
+        tc = N('ShaderNodeTexCoord'); sp = N('ShaderNodeSeparateXYZ'); L(tc.outputs['UV'], sp.inputs[0])
+        cv = clip_out(nt, clip_uv); cmp_ = N('ShaderNodeMath'); cmp_.operation = 'GREATER_THAN'; L(sp.outputs['X'], cmp_.inputs[0]); L(cv, cmp_.inputs[1])
+        tr = N('ShaderNodeBsdfTransparent'); mxs = N('ShaderNodeMixShader'); L(cmp_.outputs[0], mxs.inputs[0]); L(bs.outputs[0], mxs.inputs[1]); L(tr.outputs[0], mxs.inputs[2]); L(mxs.outputs[0], out.inputs['Surface'])
+    else: L(bs.outputs[0], out.inputs['Surface'])
+    MATS[name] = m; return m
+
+def uv_mesh(name, m, verts, faces, uvs, smooth=False, shadow=True):
+    """verts in the sb frame (metres) -> world through frame_mat(); faces = index tuples; uvs = per-vertex (u, v)."""
+    me = bpy.data.meshes.new(name); T = frame_mat()
+    me.from_pydata([tuple(T @ Vector(v)) for v in verts], [], faces); me.update()
+    uvl = me.uv_layers.new(name='UVMap')
+    for poly in me.polygons:
+        for li, vi in zip(poly.loop_indices, poly.vertices): uvl.data[li].uv = uvs[vi]
+    if smooth:
+        for p in me.polygons: p.use_smooth = True
+    ob = bpy.data.objects.new(name, me); ob.data.materials.append(m); bpy.context.scene.collection.objects.link(ob); ob.visible_shadow = shadow
+    return ob
+
+def img_quad(name, m, p0, p1, p2, p3, shadow=False):
+    """quad p0 p1 p2 p3 (counter-clockwise seen from the front) with the image mapped bottom-left p0 -> top-right p2"""
+    return uv_mesh(name, m, [p0, p1, p2, p3], [(0, 1, 2, 3)], [(0, 0), (1, 0), (1, 1), (0, 1)], shadow=shadow)
+
+def img_ellipse(name, m, c, ax, az, n=40, shadow=False):
+    """elliptical disc facing -y at c (x, y, z): half axes ax (x) and az (z), UV full image over the bounding box"""
+    cx, cy, cz = c; v = [(cx, cy, cz)]; uv = [(0.5, 0.5)]
+    for i in range(n):
+        a = 2 * math.pi * i / n; v.append((cx + ax * math.cos(a), cy, cz + az * math.sin(a))); uv.append((0.5 + 0.5 * math.cos(a), 0.5 + 0.5 * math.sin(a)))
+    faces = [(0, 1 + (i + 1) % n, 1 + i) for i in range(n)]
+    return uv_mesh(name, m, v, faces, uv, shadow=shadow)

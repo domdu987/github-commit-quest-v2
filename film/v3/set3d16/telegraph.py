@@ -37,21 +37,21 @@ _L = dict(sun_angle=1.0, exposure=0.0, sat=1.08, wet=0.0, cloud_k=1.0, hill_k=1.
 LINE_LIGHTS = dict(
     DAY=dict(_L, key=(1.0, 0.85, 0.63, 14.0), az=150, el=24, sky_k=0.85, amb=('#4454FF', 2.2),
              sky=['#7a86d6', '#f0bc88', '#f8d9a2', '#e8d8c0', '#9cbcec', '#4a7adc', '#2f52c4'], hills=['#9a9ad2', '#8aa0d8', '#7ea4d6'], cloud=('#ffeacc', '#7c84d8')),
-    DUSK=dict(_L, key=(1.0, 0.5, 0.26, 10.0), az=150, el=7, sun_angle=1.3, sky_k=0.9, amb=('#4a3cff', 1.7),
-              sky=['#3c3ca8', '#ec8a44', '#f6a468', '#d890a8', '#7c78c8', '#3a4ab8', '#262c98'], hills=['#8a6ab0', '#7a68b8', '#6a70c4'], cloud=('#ffc89a', '#6a5ab8')),
+    DUSK=dict(_L, key=(1.0, 0.55, 0.3, 27.0), az=150, el=12, sun_angle=1.3, sky_k=0.95, amb=('#4054ff', 2.9),
+              sky=['#3a4cb8', '#ec8a44', '#f6a468', '#e8a888', '#7a90d8', '#3a56c0', '#262c98'], hills=['#7a78b8', '#6e7cc0', '#6a84c8'], cloud=('#ffc89a', '#6a72c4')),
     RAIN=dict(_L, key=(0.8, 0.82, 1.0, 2.4), az=150, el=32, sun_angle=16.0, sky_k=0.8, amb=('#6872ff', 3.3), wet=1.0, exposure=-0.1, cloud_k=0.8,
-              sky=['#5a64a8', '#8c92c4', '#b0b2d2', '#b0b0cc', '#8a94c8', '#6a78b8', '#4a58a4'], hills=['#7a82b8', '#6e7ab4', '#6a7cb4'], cloud=('#b8bad8', '#7e86c4')),
-    AFTER_RAIN=dict(_L, key=(1.0, 0.85, 0.63, 9.0), az=-125, el=24, sun_angle=0.8, sky_k=1.0, amb=('#3038FF', 2.2), wet=0.9,
+              sky=['#5a6cb0', '#8a9ccc', '#b0b8d4', '#b0b8d0', '#8a9ccc', '#6a80c0', '#4a62ac'], hills=['#7a82b8', '#6e7ab4', '#6a7cb4'], cloud=('#b8bad8', '#7e86c4')),
+    AFTER_RAIN=dict(_L, key=(1.0, 0.85, 0.63, 9.0), az=-125, el=24, sun_angle=0.8, sky_k=1.0, amb=('#3450ff', 2.2), wet=0.9,
                     sky=['#4a62c0', '#f0b080', '#f8d098', '#8a98d0', '#6a80cc', '#4a64c0', '#2a3fa8'], hills=['#8a8ac8', '#7a96d2', '#7aa0d4'], cloud=('#ffe2bc', '#6c78d4')),
 )
 STUDIO_LIGHTS = dict(
-    DAY=dict(_L, key=(1.0, 0.82, 0.55, 16.0), az=-24, el=34, sun_angle=1.2, sky_k=1.0, amb=('#4a56ff', 2.6), fill=1.0, win=1.0, exposure=0.2,
+    DAY=dict(_L, key=(1.0, 0.82, 0.55, 16.0), az=-24, el=34, sun_angle=1.2, sky_k=1.0, amb=('#4a56ff', 2.6), fill=0.7, win=1.2, exposure=-0.1,
              sky=['#7a86d6', '#f4c890', '#fbe0aa', '#f4e4c4', '#a8c6f0', '#5a86e4', '#3a5acc'], hills=['#9a9ad2', '#8aa0d8', '#7ea4d6'], cloud=('#fff0dc', '#a8a4dc')),
 )
 CHAMBER_LIGHTS = dict(
-    DAY=dict(_L, key=(1.0, 0.85, 0.63, 15.0), az=-22, el=15, sky_k=1.0, exposure=0.4, fill=1.0, win=1.0, candle=1.0, lamp=1.0, amb=('#5a60ff', 1.0),
+    DAY=dict(_L, key=(1.0, 0.85, 0.63, 15.0), az=-22, el=15, sky_k=1.0, exposure=0.7, fill=1.0, win=1.9, candle=1.0, lamp=1.0, shafts=1.0, amb=('#5a60ff', 1.0),
              sky=['#7a86d6', '#f4c890', '#fbe0aa', '#f4e4c4', '#a8c6f0', '#5a86e4', '#3a5acc'], hills=['#9a9ad2', '#8aa0d8', '#7ea4d6'], cloud=('#fff0dc', '#a8a4dc')),
-    NIGHT=dict(_L, key=(0.42, 0.5, 1.0, 3.0), az=-22, el=32, sun_angle=2.5, sky_k=0.55, exposure=0.55, fill=0.045, win=0.35, candle=3.2, lamp=2.4, amb=('#2a2eff', 0.35), sat=1.06,
+    NIGHT=dict(_L, key=(0.42, 0.5, 1.0, 1.8), az=-22, el=32, sun_angle=2.5, sky_k=0.5, exposure=-0.35, fill=0.008, win=0.25, candle=2.4, lamp=2.0, shafts=0.0, amb=('#2a2eff', 0.35), sat=1.06,
                sky=['#1c2060', '#2c3478', '#3a4488', '#323c84', '#262e78', '#1a2268', '#101658'], hills=['#262c6a', '#222866', '#1e2462'], cloud=('#4a5090', '#2a3070')),
 )
 LIGHTS = dict(line=LINE_LIGHTS, studio=STUDIO_LIGHTS, chamber=CHAMBER_LIGHTS)
@@ -111,7 +111,7 @@ def _keysock(sock, value, frame, interp='LINEAR'):
                 for kp in fc.keyframe_points:
                     if abs(kp.co[0] - frame) < 1e-3: kp.interpolation = interp
 def _setv(ob, vis, frame=None):
-    ob.hide_render = not vis; ob.hide_viewport = not vis
+    ob.hide_render = not vis
     if frame is not None:
         _key(ob, 'hide_render', frame, 'CONSTANT')
 def _show(objs, vis, frame=None):
@@ -165,6 +165,7 @@ def apply_P(P, frame=None):
         cm.node_tree.nodes['cmix'].inputs[7].default_value = _col(P['cloud'][0]); cm.node_tree.nodes['cmix'].inputs[6].default_value = _col(P['cloud'][1])
         cm.node_tree.nodes['cem'].inputs['Strength'].default_value = P['cloud_k']; cm.node_tree.nodes['cdot'].inputs[1].default_value = (-kdw.x, -kdw.y, -kdw.z)
     sc.view_settings.exposure = P['exposure']
+    for o in STATE.get('shafts', []): o.hide_render = P.get('shafts', 0.0) <= 0.0
     for grp, base in STATE.get('lamps', {}).items():
         kk = P.get(grp, 0.0)
         for l, e in base: l.data.energy = e * kk
@@ -228,8 +229,11 @@ def build(location=None, preset=None, light=None, clear=True, dress=True):
             cl, lk = CAMS_M[PR['cam']]; STATE['fg'] = LN.fg_dress(STATE, STATE['M'], cl, lk, FG[preset], seed=31 + len(preset))
     elif loc == 'studio':
         import tg_studio as SD; SD.build_studio(STATE, P)
+        if dress and preset in STUDIO_FG:
+            cl, lk = CAMS_M[PR['cam']]; STATE['fg'] = SD.fg_dress(STATE, STATE['M'], cl, lk, STUDIO_FG[preset])
     else:
         import tg_chamber as CH; CH.build_chamber(STATE, P)
+        if dress and preset == 'chamber_low': CH.fg_desk(STATE, *CAMS_M['chamber_low'])
     # shared hook objects (puddles, rain, sparks, pulse) are made by the location builders / lazily
     setup_render(sc, 'final'); setup_grade(sc, P)
     apply_P(P); set_wet(P['wet'])
@@ -246,12 +250,12 @@ def setup_render(scene, quality='final'):
     c.use_denoising = True; c.denoiser = 'OPENIMAGEDENOISE'; c.denoising_input_passes = 'RGB_ALBEDO_NORMAL'; c.denoising_prefilter = 'FAST'
     c.use_adaptive_sampling = False
     ind = STATE.get('loc') != 'line'
-    c.max_bounces = 3; c.diffuse_bounces = 2 if ind else 0; c.glossy_bounces = 1; c.transmission_bounces = 0; c.transparent_max_bounces = 8
-    c.use_light_tree = True; c.filter_width = 1.2; r.threads_mode = 'FIXED'; r.threads = 2
+    c.max_bounces = 2; c.diffuse_bounces = 0; c.glossy_bounces = 1; c.transmission_bounces = 0; c.transparent_max_bounces = 8
+    c.use_light_tree = False; c.filter_width = 1.2; r.threads_mode = 'FIXED'; r.threads = 2
     scene.view_settings.view_transform = 'Standard'; scene.view_settings.look = 'None'
     r.image_settings.file_format = 'PNG'; r.image_settings.color_mode = 'RGB'; r.film_transparent = False
     c.use_fast_gi = False
-FINAL_SAMPLES = dict(line=10, studio=14, chamber=14)
+FINAL_SAMPLES = dict(line=7, studio=6, chamber=6)
 
 def setup_grade(scene, P):
     """film-wide mild saturation (the board's grade: sat 1.08), no recolour: compositor from spec/grade_compositor."""
@@ -296,7 +300,7 @@ def _marks(loc):
         px = LN.px; wy, wx_ = LN.WAGON[1], LN.WAGON[0]; kx, ky = LN.KEYCRATE; pl = LN.PLAT
         yaw = math.pi / 2 + 0.06
         def wl(lx, ly=0.0, z=0.0): return (wx_ - ly * math.sin(yaw) + lx * math.cos(yaw), wy + lx * math.sin(yaw) + ly * math.cos(yaw) * 1.0, z)
-        m.update(morse_ladder=_pm(px(4.0) + 0.52, 3.45, 3.45), morse_ladder_foot=_pm(px(4.0) + 1.15, 2.4, 0.0), morse_wire=_pm(px(22.0) + 1.3, 20.0, 0.0),
+        m.update(morse_ladder=_pm(px(4.0) + 0.52, 3.45, 3.45), morse_ladder_foot=_pm(px(4.0) + 1.15, 2.4, 0.0), morse_wire=_pm(px(22.0) - 0.8, 18.5, 0.0),
                  morse_pole=_pm(px(13.0) + 1.1, 12.0, 0.0), morse_ladder3=_pm(px(31.0) + 0.5, 30.5, 3.3),
                  morse_key=_pm(kx + 0.3, ky + 1.0, 0.0), worker_key_a=_pm(kx - 1.3, ky + 0.6, 0.0), worker_key_b=_pm(kx + 1.8, ky + 1.1, 0.0), worker_key_c=_pm(kx - 0.2, ky + 2.0, 0.0),
                  morse_wagon_key=_pm(*wl(-1.55, 0.0, 1.0)), worker_wagon=_pm(wx_ + 1.4, wy - 2.6, 0.0), morse_bottle=_pm(wx_ + 1.5, wy - 0.4, 0.0),
@@ -366,14 +370,23 @@ def head_pixels(cam_name):
 CAMS_M = dict(
     # LINE (sb-frame metres): (loc, look)
     line_wide=((-0.2, -6.0, 1.9), (1.6, 30.0, 2.9)),
-    line_close=((2.9, 0.9, 1.0), (4.6, 3.6, 3.4)),
+    line_close=((3.2, 1.2, 1.05), (4.7, 3.5, 3.3)),
     line_rail=((8.2, 12.0, 1.8), (-7.0, 30.0, 2.7)),
-    line_trench=((-0.6, 18.0, 1.0), (3.6, 31.0, 1.2)),
+    line_trench=((0.5, 22.6, 0.95), (3.4, 29.5, 1.7)),
     line_trench_high=((-2.0, 12.0, 4.2), (3.4, 36.0, 0.4)),
-    line_trench_end=((0.2, 58.0, 1.3), (3.8, 65.0, 1.3)),
+    line_trench_end=((0.8, 60.0, 1.2), (3.6, 65.0, 1.5)),
     trench_cut=((52.0, 5.6, -0.3), (52.0, 12.0, -1.0)),
-    line_road=((6.0, 28.0, 1.2), (0.8, 38.0, 1.4)),
+    line_road=((6.4, 32.6, 1.0), (1.0, 36.0, 1.8)),
     line_wagon=((1.6, 50.5, 1.3), (-1.9, 56.0, 1.9)),
+    # STUDIO
+    studio_wide=((-3.3, -2.2, 3.9), (1.0, 4.6, 1.7)),
+    studio_easel=((-1.5, 0.3, 1.6), (1.0, 3.7, 1.8)),
+    studio_door=((-1.8, 0.4, 1.7), (3.2, 3.2, 1.9)),
+    studio_window=((-0.5, 0.6, 1.7), (-0.8, 6.9, 2.3)),
+    # CHAMBER
+    chamber_wide_high=((0.0, -4.0, 9.0), (0.0, 12.0, 1.0)),
+    chamber_low=((-2.6, 7.6, 1.0), (-5.27, 12.27, 1.9)),
+    chamber_table=((0.2, -0.4, 2.0), (0.0, 4.8, 1.5)),
 )
 CAM_NOTES = dict(
     line_close='low angle at the pole 0 top with the ladder, bottle insulator + sloping wire, trees and stooks behind (sb3)',
@@ -385,6 +398,13 @@ CAM_NOTES = dict(
     trench_cut='inside the cut-away pit: the lead pipe split open, torn cloth, sparks leaking',
     line_road='low from the pole side to the road for the buggy',
     line_wagon='the wagon with the crate of empty green beer bottles, the spool, the key crate',
+    studio_wide='from the front-left corner, high: the tall window with the road and rooftops, the easel, canvases, busts (crane down from the window light)',
+    studio_easel='across the room at the easel with the unfinished general; paint jars in FG, the small oval portrait on the side table',
+    studio_door='toward the door on the right wall (messenger) with the stool and the easel',
+    studio_window='toward the tall window: the long road and rooftops outside; the horseshoe magnet / coil moment',
+    chamber_wide_high='high from the front: the table with the telegraph, the tiers of walnut desks, the speaker door-screen, sun shafts (DAY) or candle pools (NIGHT)',
+    chamber_low='low in front of a front-row desk (the mocker stands behind it): inkwell + quill in FG, the tiers behind',
+    chamber_table='eye level at the front table: telegraph coils, key and paper-tape register; the mocker stool and the door-screen far behind',
 )
 STAGING = dict(
     line_close=[('morse', 'morse_ladder')], line_wide=[('morse', 'morse_ladder_foot')], line_rail=[('morse', 'morse_wire')],
@@ -392,22 +412,33 @@ STAGING = dict(
     line_trench_high=[('cornell', 'cornell'), ('worker', 'worker_a')],
     line_trench_end=[('morse', 'morse_key'), ('worker', 'worker_key_a'), ('worker', 'worker_key_b')],
     trench_cut=[], line_road=[('mocker', 'mocker_buggy')], line_wagon=[('morse', 'morse_bottle')],
+    studio_wide=[('morse', 'morse_easel')], studio_easel=[('morse', 'morse_easel')], studio_door=[('messenger', 'messenger_door'), ('morse', 'morse_door')], studio_window=[('morse', 'morse_window')],
+    chamber_wide_high=[('morse', 'morse_table'), ('congress', 'cong_a'), ('congress', 'cong_b')], chamber_low=[('mocker', 'mocker_desk')],
+    chamber_table=[('morse', 'morse_table'), ('mocker', 'mocker_table'), ('clerk', 'clerk_table')],
 )
 PRESETS = dict(
     line_close=dict(loc='line', light='AFTER_RAIN', cam='line_close', state=dict(poles=('bottle', 16), trench=1.0, pipe=1.0, train=None)),
     line_wide=dict(loc='line', light='DAY', cam='line_wide', state=dict(poles=('bottle', 16), trench=1.0, pipe=1.0, train='home')),
-    line_rail=dict(loc='line', light='DAY', cam='line_rail', state=dict(poles=('bottle', 16), trench=1.0, pipe=1.0, train=110.0)),
+    line_rail=dict(loc='line', light='DAY', cam='line_rail', state=dict(poles=('bottle', 16), trench=1.0, pipe=1.0, train=48.0)),
     line_trench=dict(loc='line', light='DAY', cam='line_trench', state=dict(poles=('none', 0), trench=0.5, pipe=0.3, train=None)),
     line_trench_high=dict(loc='line', light='DAY', cam='line_trench_high', state=dict(poles=('none', 0), trench=0.7, pipe=0.5, train=None)),
     line_trench_end=dict(loc='line', light='DUSK', cam='line_trench_end', state=dict(poles=('none', 0), trench=1.0, pipe=1.0, train=None)),
     trench_cut=dict(loc='line', light='DUSK', cam='trench_cut', state=dict(poles=('none', 0), trench=1.0, pipe=1.0, train=None, leak=('pipe', 1.0))),
-    line_road=dict(loc='line', light='DUSK', cam='line_road', state=dict(poles=('none', 0), trench=1.0, pipe=1.0, train=None, buggy=36.0)),
+    line_road=dict(loc='line', light='DUSK', cam='line_road', state=dict(poles=('none', 0), trench=1.0, pipe=1.0, train=None, buggy=36.0 * SC)),
     line_wagon=dict(loc='line', light='AFTER_RAIN', cam='line_wagon', state=dict(poles=('bottle', 16), trench=1.0, pipe=1.0, train=None)),
+    studio_wide=dict(loc='studio', light='DAY', cam='studio_wide', state=dict(palette=False, door=0.0)),
+    studio_easel=dict(loc='studio', light='DAY', cam='studio_easel', state=dict(palette=False, door=0.0)),
+    studio_door=dict(loc='studio', light='DAY', cam='studio_door', state=dict(palette=True, door=0.35)),
+    studio_window=dict(loc='studio', light='DAY', cam='studio_window', state=dict(palette=False, door=0.0)),
+    chamber_wide_high=dict(loc='chamber', light='DAY', cam='chamber_wide_high', state=dict(tape=0.0, click=0, moneybag=False, mailsacks=False)),
+    chamber_low=dict(loc='chamber', light='DAY', cam='chamber_low', state=dict(tape=0.0, click=0, moneybag=False, mailsacks=True)),
+    chamber_table=dict(loc='chamber', light='DAY', cam='chamber_table', state=dict(tape=0.45, click=0, moneybag=False, mailsacks=False)),
 )
 LOC_PRESETS = {}
+STUDIO_FG = dict(studio_wide=[('canvases', -0.6, 1.0)], studio_easel=[('jars', -0.5, 1.1), ('brushpot', 0.5, 1.4)], studio_door=[('jars', 0.7, 1.2), ('canvases', -0.9, 1.5)], studio_window=[('jars', -0.8, 1.1), ('brushpot', 0.6, 1.5)])
 FG = dict(   # foreground dressing (1-2 D from the lens): kind, metres right of the camera, metres ahead
     line_wide=[('grass', 0, 2.4, 140), ('crate', -0.9, 1.1), ('spool', 1.0, 1.8), ('pick', 0.3, 1.5)],
-    line_close=[('grass', 0, 2.0, 110), ('coil', -0.7, 1.1), ('crate', 0.9, 1.5), ('bottles', 0.0, 1.9)],
+    line_close=[('grass', 0, 2.0, 70), ('tall', -0.55, 0.8), ('tall', 0.7, 1.0), ('tall', 0.05, 1.5), ('tall', -1.2, 1.7)],
     line_rail=[('grass', 0, 2.4, 110), ('crate', 0.9, 1.2), ('coil', -0.9, 1.8)],
     line_trench=[('grass', 0, 2.4, 100), ('crate', -0.9, 1.1), ('shovel', 0.6, 1.5), ('spool', 1.4, 2.4)],
     line_trench_high=[('grass', 0, 3.0, 90), ('crate', -1.4, 2.4)],
@@ -419,7 +450,7 @@ FG = dict(   # foreground dressing (1-2 D from the lens): kind, metres right of 
 def apply_preset_state(preset):
     st = PRESETS[preset].get('state', {}); loc = PRESETS[preset]['loc']
     if loc == 'line':
-        s, n = st.get('poles', ('bottle', 16)); set_poles(s, n); set_trench(st.get('trench', 1.0)); set_pipe(st.get('pipe', 1.0)); set_ladder(True, 0); set_ladder(True, 3)
+        s, n = st.get('poles', ('bottle', 16)); set_poles(s, n); set_trench(st.get('trench', 1.0)); set_pipe(st.get('pipe', 1.0)); set_ladder(True, 0); set_ladder(preset in ('line_wide', 'line_rail', 'line_close'), 3)
         set_rain(st.get('rain', False)); set_leak('pipe', 0.0); set_leak('pole', 0.0); set_pulse(-1); set_buggy(st.get('buggy', None)); set_train(st.get('train', None))
         if st.get('leak'): set_leak(*st['leak'])
     elif loc == 'studio':
@@ -654,7 +685,7 @@ def cli_render(specs=None, quality='final', outdir=None, actors=True):
         print('%s %s: %.1f s wall, %.1f s cpu, load %s, heads %s' % (quality, tag, w, c, _load()), flush=True)
     return res
 
-LOC_PRESETS.update(line=[k for k, v in PRESETS.items() if v['loc'] == 'line'])
+LOC_PRESETS.update({l: [k for k, v in PRESETS.items() if v['loc'] == l] for l in ('line', 'studio', 'chamber')})
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else 'help'; arg = sys.argv[2:]
     if cmd in ('final', 'stills'): cli_render(arg or None, 'final' if cmd == 'final' else 'preview')
