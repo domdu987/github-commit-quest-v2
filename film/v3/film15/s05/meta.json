@@ -1,4 +1,4 @@
-{"take": "s05", "shots": [5, 6, 7, 8, 9], "g0": 184, "g1": 488, "first_g": 176, "n_frames": 319, "fps": 30, "size": [720, 1280],
+{"take": "s05", "revision": "r2", "shots": [5, 6, 7, 8, 9], "g0": 184, "g1": 488, "first_g": 176, "n_frames": 319, "fps": 30, "size": [720, 1280],
  "transition_in": {"type": "dissolve", "frames": 11},
  "handles": {"before": 8, "after": 6},
  "cuts_g": [246, 344, 398, 424],
