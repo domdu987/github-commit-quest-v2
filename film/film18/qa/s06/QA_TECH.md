@@ -1,8 +1,15 @@
-# QA_TECH s06 (take g459-530, 72 frames) - FAIL
-Checked: 6 fps frames + first/last 3 (s06/qf/), framediff re-measured: median 5.34, p90 8.36 (min 2.31, max 10.22).
-1. whole take - camera: p90 8.36 < 12. Fix: stronger snaps / bigger slide so p90 >= 12.
-2. g459-530 - plan beat: "สิบตัว" (g ~ 17.23 s -> take frame ~ 40) should show ten oxen in the yard; at most 5-6 oxen are readable (2 big fg, 3-4 behind). Fix: widen framing or lengthen the double row so ~10 are visible at f035-f045.
-3. g497-530 (f038-f071) - Tian Dan walks out of frame to the right: clipped by the right edge from f040, absent at f070-071, so the shot ends on oxen and an old man only. Fix: retarget camera slide/his mark so he stays in frame to the end (planned: he walks house to house).
-4. g459-530 - composition: top ~40 % of frame is empty sky gradient (y 0-480), set is squeezed into the lower half. Fix: tilt camera up/down so lanes and roofs fill the frame (client wants dense set).
-5. g459-530 - eye-line: Tian Dan looks at the lens, not along the lane at the oxen/houses.
-Pass items: oxen PLAIN with NO blades (verified every sampled frame), no flames, no dragon silk (correct for s06); DUSK light consistent; heads <= y 840; caption band mean max 64, bright>200 0.14 %; no mouths moving; no text; hooves on ground (soft shadows); g range 459-530 matches plan.
+# QA_TECH s06 (take g459-530, 72 frames) - FAIL (re-check of the re-shot)
+Checked: 6 fps frames + first/last 3, framediff re-measured (71 pairs): median 6.66, p90 11.00 (min 2.08, max 14.01). Caption band y880-950 mean max 56.5, bright 0.00 %.
+## Earlier issues (previous QA_TECH s06)
+- E1 p90 < 12: NOT FIXED (11.00).
+- E2 ten oxen at "สิบตัว": FIXED (about 9-10 readable).
+- E3 Tian Dan leaves the frame: FIXED, he is in frame to g530 (one clip, see 2).
+- E4 top 40 % empty sky: partly fixed (sky ~25 % now) but the bottom is now empty, see 3.
+- E5 eye-line: NOT FIXED, see 4.
+## Issues
+1. whole shot - camera: p90 11.00 < 12. Fix: stronger snaps or a larger lateral slide so p90 >= 12.
+2. g474 (and g469-479) - framing: Tian Dan's body and hat brim are clipped by the left edge at g474 (his head touches x=0). Fix: keep his mark 60 px inside the left edge during the walk.
+3. g459-530 - composition: the bottom ~40 % of the frame (y ~800-1280) is flat, empty dark-violet ground with no props; caption band sits on it. Fix: add fg dressing (baskets, a gate post, a lantern at 1-2 D) and tilt up a little so the lane and houses fill more.
+4. g459-530 - plan beat/eye-line: the plan has townsfolk leading oxen out of gates and Tian Dan going house to house. No townsfolk or gates are visible (the old man and woman are fully hidden); the oxen are a frontal parade in one file. Tian Dan walks and smirks at the lens, never at a house or the oxen. Fix: show one or two townsfolk with ropes at the left of the lane and a gate opening; turn his face along the lane.
+## Pass items
+oxen PLAIN, NO blades, no dragon silk, no flame in every sampled frame (continuity for s06 correct); DUSK light consistent; heads < 880 (chin max ~y 800 at g469-514, passes); no mouths move; no text; hooves grounded with soft shadows; no frozen/black/magenta frames; g range 459-530 matches the plan.
