@@ -227,7 +227,7 @@ def build_sea(P):
     far = np.clip(1 - t / 3500.0, 0, 1) ** 0.5
     h *= far
     # bow wave: a raised foamy mound ahead of the stem
-    sx, sy = 0.0, STEM + 3.0
+    sx, sy = 0.0, STEM + 2.0
     h += 0.55 * np.exp(-(((px - sx) / 2.2) ** 2 + ((py - sy) / 3.2) ** 2))
     wmn = wm / max(norm_m, 1); gm = np.sqrt(wgx ** 2 + wgy ** 2) / max(norm_m, 1) + 1e-4
     # smooth contour foam streaks: constant ~2.5 px wide, broken up by long noise, fading with distance
@@ -239,10 +239,13 @@ def build_sea(P):
     dback = np.maximum(STEM - py, 0.0)
     arm = np.zeros_like(px)
     for off in (2.2, 4.8, 7.6):                    # V arms flaring back from the bow, thin broken streaks
-        dd = np.abs(np.abs(px) - (hh_ + 0.9 + off * (0.35 + 0.5 * np.clip(dback / 30.0, 0, 1)))); arm = np.maximum(arm, np.clip(1 - dd / (0.4 + 0.08 * off), 0, 1) ** 1.0 * np.clip(1 - dback / (22.0 + 8 * off), 0, 1) * (py < STEM + 4))
+        dd = np.abs(np.abs(px) - (hh_ + 0.9 + off * (0.35 + 0.5 * np.clip(dback / 30.0, 0, 1)))); arm = np.maximum(arm, np.clip(1 - dd / (0.16 + 0.03 * off), 0, 1) ** 1.0 * np.clip(1 - dback / (22.0 + 8 * off), 0, 1) * (py < STEM + 4))
     arm *= (0.6 + 0.4 * np.sin(py * 0.25 + np.abs(px) * 0.3) ** 2)
-    bow = np.exp(-(((px - sx) / 4.6) ** 2 + ((py - sy) / 6.5) ** 2)) * (0.65 + 0.35 * np.sin(px * 0.6) * np.sin(py * 0.5 + 1.0))
-    foam = np.clip(np.maximum.reduce([lines * 0.9, wash * 0.85, arm * 1.0, bow * 1.3]), 0, 1)
+    bow = np.exp(-(((px - sx) / 2.6) ** 2 + ((py - sy) / 3.6) ** 2)) * np.clip(0.2 + 0.9 * (0.5 + 0.5 * np.sin(px * 1.3 + py * 0.9) * np.sin(py * 1.1 - px * 0.7)), 0, 1) * 0.8
+    bow *= (py > STEM - 1.0) * (np.abs(px) < 9.0)
+    arm *= np.clip((t - 16.0) / 12.0, 0, 1); wash *= np.clip((t - 16.0) / 12.0, 0, 1)
+    bow = np.nan_to_num(bow); arm = np.nan_to_num(arm); wash = np.nan_to_num(wash)
+    foam = np.clip(np.maximum.reduce([lines * 0.9, wash * 0.18, arm * 0.9, bow * 1.0]), 0, 1)
     # colour distance bands
     d_mid = np.clip((t - 14.0) / 120.0, 0, 1); haze = np.clip((t - 250.0) / 2400.0, 0, 1) ** 0.8
     # glitter: one narrow path under the (virtual) sun azimuth
@@ -267,7 +270,7 @@ def build_sea(P):
         at = me.attributes.new(name, 'FLOAT', 'POINT'); at.data.foreach_set('value', arr.reshape(-1).astype(np.float32))
     ob = bpy.data.objects.new('sea', me); bpy.context.scene.collection.objects.link(ob)
     m = bpy.data.materials.new('sea'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
-    out = N('ShaderNodeOutputMaterial'); bs = N('ShaderNodeBsdfPrincipled'); bs.inputs['Roughness'].default_value = 0.6; bs.inputs['Specular IOR Level'].default_value = 0.0
+    out = N('ShaderNodeOutputMaterial'); bs = N('ShaderNodeBsdfPrincipled'); bs.inputs['Roughness'].default_value = 0.6; bs.inputs['Specular IOR Level'].default_value = 0.0; bs.inputs['IOR'].default_value = 1.0
     def attr(n):
         a = N('ShaderNodeAttribute'); a.attribute_type = 'GEOMETRY'; a.attribute_name = n; return a.outputs['Fac']
     def mix(a, b, fac):
@@ -280,7 +283,7 @@ def build_sea(P):
     col = mix(hexc(P['sea_deep']), hexc(P['sea_mid']), attr('dmid'))
     col = mix(col, hexc(P['sea_crest']), attr('crest'))
     col = mix(col, hexc(P['sea_haze']), attr('haze'))
-    col = mix(col, hexc('#f4f8f4'), attr('foam'))
+    col = mix(col, hexc('#dfeceb'), attr('foam'))
     L(col, bs.inputs['Base Color'])
     gm_ = N('ShaderNodeMath'); gm_.operation = 'MULTIPLY'; gm_.inputs[1].default_value = P.get('glit_k', 5.0); L(attr('glit'), gm_.inputs[0])
     bs.inputs['Emission Color'].default_value = hexc('#fff2cc'); L(gm_.outputs[0], bs.inputs['Emission Strength'])

@@ -1,6 +1,6 @@
-sb1_workshop   cast-shadow px  32.0% of frame | cast-shadow mean hue  282.4 (median 265.4; band 225-265) | 34.7% of shade px in 225-265 | magenta share (frame, S>0.25)  9.31% (<=10) | OUT
-               families % of chroma: red 42.1 orange 2.6 yellow 0.1 green 0.0 cyan 0.0 blue 35.6 violet 15.0 magenta 4.6 | sat 0.50 val 0.48 dark(V<.25) 11.6%
-sb2_ship       cast-shadow px  22.9% of frame | cast-shadow mean hue  257.5 (median 240.0; band 225-265) | 67.0% of shade px in 225-265 | magenta share (frame, S>0.25)  3.44% (<=10) | OK
-               families % of chroma: red 2.5 orange 24.0 yellow 0.0 green 0.0 cyan 1.1 blue 69.3 violet 1.9 magenta 1.2 | sat 0.52 val 0.68 dark(V<.25) 9.9%
-sb3_hall       cast-shadow px  33.0% of frame | cast-shadow mean hue  255.8 (median 230.1; band 225-265) | 66.5% of shade px in 225-265 | magenta share (frame, S>0.25)  6.05% (<=10) | OK
-               families % of chroma: red 47.0 orange 8.0 yellow 0.1 green 0.8 cyan 1.7 blue 32.5 violet 0.6 magenta 9.2 | sat 0.63 val 0.45 dark(V<.25) 4.5%
+sb1_workshop   cast-shadow px  28.0% of frame | cast-shadow mean hue  260.2 (median 238.6; band 225-265) | 67.5% of shade px in 225-265 | magenta share (frame, S>0.25)  9.34% (<=10) | OK
+               families % of chroma: red 46.0 orange 6.5 yellow 0.2 green 0.0 cyan 0.0 blue 39.9 violet 3.8 magenta 3.5 | sat 0.58 val 0.65 dark(V<.25) 5.7%
+sb2_ship       cast-shadow px  11.8% of frame | cast-shadow mean hue  274.0 (median 254.1; band 225-265) | 48.1% of shade px in 225-265 | magenta share (frame, S>0.25)  2.28% (<=10) | OUT
+               families % of chroma: red 3.1 orange 7.1 yellow 0.0 green 0.0 cyan 3.9 blue 82.3 violet 3.1 magenta 0.5 | sat 0.60 val 0.68 dark(V<.25) 9.3%
+sb3_hall       cast-shadow px  31.0% of frame | cast-shadow mean hue  253.8 (median 230.1; band 225-265) | 68.7% of shade px in 225-265 | magenta share (frame, S>0.25)  6.50% (<=10) | OK
+               families % of chroma: red 49.5 orange 8.2 yellow 0.2 green 0.5 cyan 1.6 blue 31.9 violet 0.5 magenta 7.6 | sat 0.65 val 0.47 dark(V<.25) 5.3%

@@ -3,7 +3,7 @@ import os
 from PIL import Image, ImageDraw, ImageFont
 HERE = os.path.dirname(os.path.abspath(__file__))
 items = [('sb1_workshop', 'WORKSHOP: Harrison, Lincolnshire, sea clock H1 on the bench'),
-         ('sb2_ship', 'SHIP: 50-gun warship, quarterdeck view over the waist'),
+         ('sb2_ship', 'SHIP: 50-gun warship, forecastle view down over the bow'),
          ('sb3_hall', 'HALL: the astronomers, telescope and globes')]
 W, H, LB, G = 720, 1280, 84, 16
 F = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 20)

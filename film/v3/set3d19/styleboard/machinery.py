@@ -95,7 +95,7 @@ class MB:
         objs = []
         shadow = shadow and self.name not in ('moon', 'hills')
         for m, bm in self.bm.items():
-            bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+            pass   # primitives come out with outward normals; recalc flips faces of intersecting solids (black gear-tooth slivers)
             me = bpy.data.meshes.new('%s_%s' % (self.name, m.name)); bm.to_mesh(me); bm.free()
             ob = bpy.data.objects.new('%s_%s' % (self.name, m.name), me); ob.data.materials.append(m)
             (coll or bpy.context.scene.collection).objects.link(ob); ob.visible_shadow = shadow; objs.append(ob)

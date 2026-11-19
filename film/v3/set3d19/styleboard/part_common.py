@@ -69,9 +69,12 @@ def sun_light(P):
     d = bpy.data.lights.new('key', 'SUN'); d.color = k[:3]; d.energy = k[3]; d.angle = math.radians(P['sun_angle'])
     o = bpy.data.objects.new('key', d); sc.collection.objects.link(o); o.rotation_euler = (-kd).to_track_quat('Z', 'Y').to_euler()
 
-def flat_world(col, k):
-    w = bpy.data.worlds.new('sky'); bpy.context.scene.world = w; w.use_nodes = True; nt = w.node_tree
-    bg = nt.nodes['Background']; bg.inputs['Color'].default_value = hexc(col); bg.inputs['Strength'].default_value = k
+def flat_world(col, k, env=('#ffd6a0', 2.2)):
+    """interior world: camera/diffuse rays see a flat colour (strength k, 0 = none); glossy rays see a warm room-like environment so brass reads as metal"""
+    w = bpy.data.worlds.new('sky'); bpy.context.scene.world = w; w.use_nodes = True; nt = w.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputWorld'); b1 = N('ShaderNodeBackground'); b1.inputs['Color'].default_value = hexc(col); b1.inputs['Strength'].default_value = k
+    b2 = N('ShaderNodeBackground'); b2.inputs['Color'].default_value = hexc(env[0]); b2.inputs['Strength'].default_value = env[1]
+    lp = N('ShaderNodeLightPath'); mx = N('ShaderNodeMixShader'); L(lp.outputs['Is Glossy Ray'], mx.inputs[0]); L(b1.outputs[0], mx.inputs[1]); L(b2.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface'])
 
 def card(mb, m, x, y, h=1.62, w=0.7, z0=0.0):
     """flat grey 2D-puppet placeholder card (3 D tall = 1.62 m)"""
