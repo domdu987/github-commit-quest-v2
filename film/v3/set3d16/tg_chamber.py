@@ -12,7 +12,8 @@ TABLE = (0.0, 4.2); TW = 4.8
 TG_S = 3.0                                   # telegraph scale on the table
 TG_C = (TABLE[0] - 0.35, TABLE[1] + 0.1, 0.96)
 TAPE_W = 0.12
-STOOL = (-1.45, 3.05)
+STOOL = (-2.3, 3.3)
+SDOOR = (-5.6, 5.6)                           # lit side doorway on a short panelled wing (closer to the table than the speaker's door-screen)
 SCREEN_Y = 13.4
 TIERS = [6.5, 9.0, 11.5, 14.0, 16.5]
 MOCK_A = math.radians(136)                    # front-row desk of the mocker
@@ -22,7 +23,7 @@ def seat(ti, a, d=0.95):
     (x, y), z = desk_pos(ti, a); return (x + d * math.cos(a), y + d * math.sin(a), z)
 MARKS = dict(morse_table=(-1.9, 5.4, 0.0), clerk_table=(2.0, 5.4, 0.0), mocker_table=(0.35, 6.5, 0.0), mocker_stool=(STOOL[0], STOOL[1], 0.0), mocker_desk=seat(0, MOCK_A),
              cong_a=seat(1, math.radians(98)), cong_b=seat(1, math.radians(140)), cong_c=seat(2, math.radians(70)), cong_d=seat(0, math.radians(150)), cong_e=seat(0, math.radians(40)),
-             morse_door=(-1.9, SCREEN_Y - 0.15, 0.0), mocker_post=seat(0, MOCK_A), table_front=(0.0, 3.0, 0.0), dais=(0.0, 10.0, 0.4))
+             morse_door=(SDOOR[0], SDOOR[1] - 0.12, 0.0), morse_door_back=(-1.9, SCREEN_Y - 0.15, 0.0), mocker_post=seat(0, MOCK_A), table_front=(0.0, 3.0, 0.0), dais=(0.0, 10.0, 0.4))
 SEAT = dict(mocker_stool=0.56)
 
 def mats():
@@ -163,6 +164,12 @@ def build_chamber(ST, P):
     mb.box(M['leather'], (0, 12.6, 0.95), (0.8, 0.7, 0.1)); mb.box(M['walnut'], (0, 13.0, 1.9), (0.8, 0.1, 2.2)); mb.box(M['leather'], (0, 12.95, 2.0), (0.6, 0.03, 1.7))
     mb.box(M['gold'], (0.8, 11.2, 1.8), (0.1, 0.1, 0.3)); mb.cyl(M['gold'], (-0.8, 11.2, 1.85), 0.1, 0.3, 'z', 10)
     sw, sh = 6.8, 4.6                                                                                          # screen: panelled wall with a doorway at x 0
+    wx0_, wx1_ = SDOOR[0] - 1.4, SDOOR[0] + 1.4; sy_w = SDOOR[1]; wh = 4.2                                           # side wing with a lit doorway
+    for (xa, xb) in ((wx0_, SDOOR[0] - 0.55), (SDOOR[0] + 0.55, wx1_)):
+        mb.box(M['screenw'], ((xa + xb) / 2, sy_w, wh / 2), (xb - xa, 0.3, wh)); mb.box(M['panel'], ((xa + xb) / 2, sy_w - 0.17, 1.2), (xb - xa - 0.2, 0.06, 1.3))
+    mb.box(M['screenw'], (SDOOR[0], sy_w, 3.4 + (wh - 3.4) / 2), (1.1, 0.3, wh - 3.4)); mb.box(M['doorlit'], (SDOOR[0], sy_w + 0.3, 1.7), (1.1, 0.1, 3.4)); mb.box(M['doorlit'], (SDOOR[0], sy_w + 0.12, 0.02), (1.1, 0.4, 0.04))
+    mb.box(M['gold'], (SDOOR[0], sy_w - 0.2, wh + 0.1), (2.9, 0.3, 0.2)); mb.box(M['gold'], (SDOOR[0], sy_w - 0.2, 3.45), (1.4, 0.22, 0.08))
+    for sgn in (-1, 1): mb.box(M['gold'], (SDOOR[0] + sgn * 0.6, sy_w - 0.2, 1.7), (0.1, 0.2, 3.4))
     DX = -1.9                                                                                                 # the doorway sits left of the speaker's chair so the chair does not hide it
     for (xa, xb) in ((-sw / 2, DX - 0.62), (DX + 0.62, sw / 2)):
         mb.box(M['screenw'], ((xa + xb) / 2, SCREEN_Y, sh / 2), (xb - xa, 0.3, sh))
@@ -280,7 +287,7 @@ def lights(ST, win_x, sconces):
     point('tablecandle', (tx - 1.9, ty - 0.5, 1.9), (1.0, 0.68, 0.32), 45, 'lamp', 0.1); point('tablecandle2', (tx - 2.1, ty - 0.2, 1.5), (1.0, 0.68, 0.32), 22, 'lamp', 0.1)
     for i, (x, y, z) in enumerate(ST['desk_candles']): point('deskc%d' % i, (x, y, z + 0.08), (1.0, 0.68, 0.32), 14, 'lamp', 0.08)
     point('daisc', (0.0, 10.4, 2.0), (1.0, 0.66, 0.3), 30, 'candle', 0.1)
-    point('stoolc', (STOOL[0] + 0.45, STOOL[1] - 0.15, 1.9), (1.0, 0.62, 0.28), 70, 'nightc', 0.08); point('doorlight', (-1.9, SCREEN_Y + 1.2, 2.2), (1.0, 0.7, 0.35), 60, 'candle', 0.2)
+    point('stoolc', (STOOL[0] + 0.45, STOOL[1] - 0.15, 1.9), (1.0, 0.62, 0.28), 70, 'nightc', 0.08); point('doorlight', (-1.9, SCREEN_Y + 1.2, 2.2), (1.0, 0.7, 0.35), 60, 'candle', 0.2); point('doorlight2', (SDOOR[0], SDOOR[1] + 1.2, 2.0), (1.0, 0.7, 0.35), 50, 'candle', 0.2)
 
 def apply_state(ST, st):
     set_tape(st.get('tape', 0.0)); set_click(st.get('click', 0)); set_moneybag(st.get('moneybag', False)); set_mailsacks(st.get('mailsacks', False)); set_flames(1.0)

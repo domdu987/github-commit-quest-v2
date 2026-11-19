@@ -196,7 +196,8 @@ def wagon2(mb, M, c, yaw=0.0):
     for sy in (-0.52, 0.52): mb.cyl(M['woodpale'], (1.2, sy, z0 - 0.1), 0.85, 0.1, 'y', 24)
     mb.cyl(M['spool'], (1.2, 0, z0 - 0.1), 0.66, 0.96, 'y', 24, True); mb.cyl(M['wood'], (1.2, 0, z0 - 0.1), 0.15, 1.3, 'y', 10)
     mb.rod(M['wiremat'], (1.2, -0.3, z0 - 0.1 + 0.66), (1.9, -0.3, 1.1), 0.02, 0.02, 4)
-    bottle_crate(mb, M, (-0.35, 0.0, 1.01), 0.0, (6, 3), 2.4)
+    mb.box(M['woodpale'], (-0.35, 0.0, 1.26), (1.0, 0.8, 0.5)); mb.box(M['wood'], (-0.35, 0.0, 1.52), (1.04, 0.84, 0.04))        # pallet box lifts the bottle crate above the side boards
+    bottle_crate(mb, M, (-0.35, 0.0, 1.54), 0.0, (6, 3), 2.9)
     key_station(mb, M, (-1.6, 0.0, 1.01), 0.0, 1.0)
     mb.pop()
 
@@ -345,8 +346,8 @@ def build_line(ST, P):
         for i in range(5): mb.ell(M['earth'], (xc(y0) + 3.4 + i * 0.4 + 0.0, y0 + i * 0.2, 0.15), (0.55, 0.45, 0.28), (8, 6)) if False else None
     mb.finish()
     # ----- trench (clipped by the TRENCH group) + pipe (PIPE group)
-    mtd = mat('trdark', '#4a2c1c', '#5e3a26', 3, clip='TRENCH'); mte = mat('trearth', '#8c5a38', '#b0744a', 6, contrast=1.3, wet=True, clip='TRENCH')
-    mpl = mat('leadclip', '#948d80', '#aaa396', 3, rough=0.5, sheen=0.05, clip='PIPE'); mbd = mat('trwall', '#6a4228', '#8a5a38', 5, contrast=1.3, clip='TRENCH')
+    mtd = mat('trdark', '#3a2216', '#4a2c1c', 3, clip='TRENCH'); mte = mat('trearth', '#5e3a24', '#7a4c30', 6, contrast=1.3, wet=True, clip='TRENCH')
+    mpl = mat('leadclip', '#7a7d84', '#7a7d84', 3, rough=1.0, sheen=0.0, clip='PIPE'); mbd = mat('trwall', '#4e301e', '#6a4228', 5, contrast=1.3, clip='TRENCH')
     mb = MB('trench')
     for y0 in range(int(Y0), int(Y1) + 4, 2):
         xt = xc(y0 + 1) + 2.3
@@ -454,7 +455,7 @@ def build_pit(ST, M):
     cx, cy = PIT; hw, hl, d = PIT_HW, PIT_HL, PIT_D; fy = cy + hl; z0 = -0.72; R_ = 0.17
     top = mat('strat_top', '#4a2c1c', '#6a4228', 5, contrast=1.5, rough=0.45, sheen=0.3, wet=True); clay = mat('strat_clay', '#a8683c', '#c8844c', 5, contrast=1.3, rough=0.5, sheen=0.25, wet=True)
     sand = mat('strat_sand', '#c89c64', '#e0b878', 6, contrast=1.3, rough=0.55, sheen=0.2, wet=True); grav = mat('strat_grav', '#8a7664', '#b09c88', 14, contrast=1.9, rough=0.5, sheen=0.2, wet=True)
-    mud = mat('strat_mud', '#3a2418', '#52341f', 5, rough=0.35, sheen=0.4)
+    mud = mat('strat_mud', '#5a3a24', '#7a5030', 5, contrast=1.5, rough=1.0, sheen=0.0)
     mb = MB('pit')
     bands = [(0.0, -0.32, top), (-0.32, -0.85, clay), (-0.85, -1.25, sand), (-1.25, -d, grav)]
     def wall(x0, x1, y_, facing, bnds=bands):
@@ -503,13 +504,19 @@ def build_pit(ST, M):
         xx = x1 + 0.1 + i * 0.12; mb.rod(cloth if i % 2 else tar, (xx, yw, z0 - 0.06), (xx + 0.08, yw, z0 + 0.06), 0.085, 0.085, 8)
     for i in range(7):                                                                      # remnants of the wrapping inside the split, ragged
         xx = x0 + 0.25 + i * 0.33; mb.rod(cloth, (xx, yw, z0 + 0.0), (xx + 0.12, yw, z0 + 0.0), 0.09, 0.09, 8) if i % 2 == 0 else None
-    for i in range(16):                                                                     # torn strips hanging toward the camera and down
-        xx = rcl.uniform(x0 - 0.3, x1 + 0.3); ln = rcl.uniform(0.25, 0.65); sg = rcl.choice((-1, 1)) * 0.12
-        mb.quad(cloth, [(xx, yw - 0.1, z0 + 0.08), (xx + 0.2, yw - 0.1, z0 + 0.08), (xx + 0.1 + sg, yw - 0.28 - ln * 0.3, z0 + 0.08 - ln), (xx + sg * 1.4, yw - 0.26 - ln * 0.3, z0 + 0.08 - ln * 0.9)])
+    for i in range(22):                                                                     # ragged torn cloth strips: jagged outline, different lengths, hanging toward the camera and down
+        xx = rcl.uniform(x0 - 0.35, x1 + 0.35); ln = rcl.uniform(0.18, 0.7); w0_ = rcl.uniform(0.05, 0.16); drift = rcl.uniform(-0.12, 0.12)
+        left = [(xx, yw - 0.1, z0 + 0.1)]; right = [(xx + w0_, yw - 0.1, z0 + 0.1)]
+        for j in range(1, 5):
+            u = j / 4.0; zz = z0 + 0.1 - ln * u; yy = yw - 0.1 - 0.18 * u
+            left.append((xx + drift * u + rcl.uniform(-0.03, 0.03), yy, zz)); right.append((xx + w0_ * (1.0 - 0.5 * u) + drift * u + rcl.uniform(-0.04, 0.04), yy - rcl.uniform(0, 0.02), zz + rcl.uniform(-0.04, 0.06)))
+        tip = (xx + w0_ * 0.4 + drift + rcl.uniform(-0.05, 0.05), yw - 0.3, z0 + 0.1 - ln - rcl.uniform(0.03, 0.12))
+        for j in range(4): mb.quad(cloth, [left[j], right[j], right[j + 1], left[j + 1]])
+        mb.tri(cloth, [left[4], right[4], tip])
     mb.finish()
     la = bpy.data.lights.new('pitsky', 'AREA'); la.shape = 'RECTANGLE'; la.size = 7.0 * SC; la.size_y = 3.0 * SC; la.color = (0.5, 0.62, 1.0); la.energy = 300.0 * SC * SC
     lo = bpy.data.objects.new('pitsky', la); lo.location = W((cx, cy - 0.4, 1.6)); bpy.context.scene.collection.objects.link(lo); lo.visible_camera = False; la.use_shadow = False
-    lb = bpy.data.lights.new('pitspark', 'POINT'); lb.color = (0.4, 0.62, 1.0); lb.energy = 22.0 * SC * SC; lb.shadow_soft_size = 0.12 * SC
+    lb = bpy.data.lights.new('pitspark', 'POINT'); lb.color = (0.4, 0.62, 1.0); lb.energy = 60.0 * SC * SC; lb.shadow_soft_size = 0.12 * SC
     ob = bpy.data.objects.new('pitspark', lb); ob.location = W((cx, fy - 0.5, z0 - 0.2)); bpy.context.scene.collection.objects.link(ob)
     lw = bpy.data.lights.new('pitwarm', 'POINT'); lw.color = (1.0, 0.72, 0.42); lw.energy = 7.0 * SC * SC; lw.shadow_soft_size = 0.2 * SC; lw.use_shadow = False
     ow = bpy.data.objects.new('pitwarm', lw); ow.location = W((cx, fy - 0.8, z0 + 0.35)); bpy.context.scene.collection.objects.link(ow)

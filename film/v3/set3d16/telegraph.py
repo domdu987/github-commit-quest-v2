@@ -35,7 +35,7 @@ def kdir(az, el):
 
 _L = dict(sun_angle=1.0, exposure=0.0, sat=1.08, wet=0.0, cloud_k=1.0, hill_k=1.0, fill=0.0, win=0.0, candle=0.0, lamp=0.0)
 LINE_LIGHTS = dict(
-    DAY=dict(_L, key=(1.0, 0.85, 0.63, 14.0), az=150, el=24, sky_k=0.85, amb=('#3e58ff', 2.2),
+    DAY=dict(_L, key=(1.0, 0.85, 0.63, 14.0), az=150, el=24, sky_k=0.85, amb=('#4256ff', 2.2),
              sky=['#8a92d8', '#efc698', '#f3d3a8', '#cdc8d8', '#8db0ec', '#5a86e0', '#3a5acb'], hills=['#9a9ad2', '#8aa0d8', '#7ea4d6'], cloud=('#ffeacc', '#7c84d8')),
     DUSK=dict(_L, key=(1.0, 0.55, 0.3, 27.0), az=150, el=12, sun_angle=1.3, sky_k=0.95, amb=('#3a62ff', 2.9),
               sky=['#4a52b8', '#e6905a', '#f0a876', '#b8a4c0', '#6a86d8', '#3e58c0', '#262c98'], hills=['#7a78b8', '#6e7cc0', '#6a84c8'], cloud=('#ffc89a', '#6a72c4')),
@@ -395,7 +395,7 @@ CAMS_M = dict(
     line_wide=((-0.2, -6.0, 1.9), (1.6, 30.0, 2.9)),
     line_close=((2.9, 0.7, 1.2), (4.6, 3.9, 3.7)),
     bottle_macro=((3.5, 2.0, 4.6), (4.35, 4.0, 5.7)),
-    line_rail=((-14.5, 12.0, 1.4), (2.0, 17.0, 2.9)),
+    line_rail=((-13.0, 12.0, 1.4), (2.0, 30.0, 2.9)),
     line_station=((3.0, 33.0, 1.6), (-10.5, 52.0, 2.4)),
     line_trench=((-0.6, 27.2, 1.0), (3.4, 33.5, 1.6)),
     line_trench_high=((-2.0, 16.0, 4.5), (3.6, 34.0, 0.8)),
@@ -403,9 +403,9 @@ CAMS_M = dict(
     line_trench_snap2=((-1.5, 22.0, 4.2), (3.3, 41.0, 0.8)),
     line_trench_snap3=((-2.0, 34.0, 7.5), (3.3, 58.0, 0.4)),
     line_trench_end=((0.6, 60.0, 1.8), (3.8, 65.0, 1.0)),
-    trench_cut=((52.3, 11.1, 0.1), (52.0, 13.3, -0.85)),
+    trench_cut=((52.2, 11.0, -1.05), (52.0, 13.3, -0.75)),
     line_road=((6.4, 32.6, 1.0), (1.0, 36.0, 1.8)),
-    line_wagon=((1.8, 65.0, 2.9), (-1.9, 70.0, 1.4)),
+    line_wagon=((-4.6, 63.8, 2.5), (-0.9, 69.5, 2.2)),
     # STUDIO
     studio_wide=((-3.3, -2.2, 3.0), (1.0, 4.6, 0.6)),
     studio_easel=((-0.2, -0.6, 1.5), (-0.2, 3.6, 0.95)),
@@ -415,7 +415,7 @@ CAMS_M = dict(
     chamber_wide_high=((0.0, -5.0, 8.0), (0.0, 14.0, -1.0)),
     chamber_low=((-3.0, 8.6, 1.05), (-5.27, 12.27, 0.55)),
     chamber_table=((0.1, -0.3, 1.5), (0.1, 5.6, 1.15)),
-    chamber_table_night=((-0.95, -0.4, 1.45), (0.3, 13.0, 0.9)),
+    chamber_table_night=((-0.5, 0.6, 1.45), (-4.5, 7.5, 1.2)),
 )
 EXTRA_CAMS = {'line': ['line_station', 'line_trench_snap1', 'line_trench_snap2', 'line_trench_snap3'], 'studio': [], 'chamber': ['chamber_table_night']}
 LIGHT_CAM = {('chamber_table', 'NIGHT'): 'chamber_table_night'}
@@ -460,7 +460,7 @@ PRESETS = dict(
     line_close=dict(loc='line', light='AFTER_RAIN', cam='line_close', state=dict(poles=('bottle', 17), trench=0.0, pipe=0.0, train=None)),
     bottle_macro=dict(loc='line', light='AFTER_RAIN', cam='bottle_macro', state=dict(poles=('bottle', 17), trench=0.0, pipe=0.0, train=None, pulse=('pole', 1))),
     line_wide=dict(loc='line', light='DAY', cam='line_wide', state=dict(poles=('bottle', 17), trench=0.0, pipe=0.0, train='home')),
-    line_rail=dict(loc='line', light='DAY', cam='line_rail', state=dict(poles=('bottle', 17), trench=0.0, pipe=0.0, train=31.5, pulse=('y', 9.5))),
+    line_rail=dict(loc='line', light='DAY', cam='line_rail', state=dict(poles=('bottle', 17), trench=0.0, pipe=0.0, train=40.7, pulse=('y', 23.5))),
     line_trench=dict(loc='line', light='DAY', cam='line_trench', state=dict(poles=('none', 0), trench=0.5, pipe=0.45, train=None)),
     line_trench_high=dict(loc='line', light='DAY', cam='line_trench_high', state=dict(poles=('none', 0), trench=0.7, pipe=0.6, train=None)),
     line_trench_end=dict(loc='line', light='DUSK', cam='line_trench_end', state=dict(poles=('none', 0), trench=1.0, pipe=1.0, train=None)),
@@ -686,7 +686,7 @@ def set_leak(where='pipe', intensity=1.0, frame=None):
         if frame is not None: _keyxf(core, frame, True, False, True); _keyxf(halo, frame, True, False, True)
 
 def _make_sparks(where):
-    M = STATE['M']; core_m = _emit_mat('sparkcore', '#c8e8ff', 30.0); halo_m = _emit_mat('sparkhalo', '#4a8cff', 6.0, 0.35); rr = rnd(55); objs = []; ph = []
+    M = STATE['M']; core_m = _emit_mat('sparkcore', '#c8e8ff', 40.0); halo_m = _glow_mat('sparkhalo', '#4a8cff', 4.0, 3.0); rr = rnd(55); objs = []; ph = []
     n = 18 if where == 'pipe' else 12
     for j in range(n):
         for nm, m_ in (('c', core_m), ('h', halo_m)):
@@ -712,20 +712,28 @@ def _make_sparks(where):
     return dict(objs=[tuple(o) for o in objs], rate=rate, ph=ph)
 
 def set_pulse(s, frame=None):
-    """glowing bead + short trail travelling along the wire: s 0..1 over the whole line (over every bottle neck in 'bottle' state); s < 0 hides it."""
+    """hot cyan-white bead + a continuous tapered trail (41 beads, tightly spaced) along the whole wire, s 0..1 (path follows the current pole state: over the glass of every bottle, or the bare wire);
+    a small cyan light travels with the head (rim glow inside the glass when it is parked on a bottle); s < 0 hides it."""
     _line_only()
     if 'pulse' not in STATE:
         if s < 0: return
         _make_pulse()
     Pz = STATE['pulse']; st = STATE.get('pole_state', ('bottle', LN.NPOLE))[0]; st = st if st in ('bottle', 'bare') else 'bottle'
-    pts, cum = STATE['wire_pts'][st]; tot = cum[-1]
+    pts, cum = STATE['wire_pts'][st]; tot = cum[-1]; lo = STATE['pulse_light']
     for k, (core, halo, lag) in enumerate(Pz):
-        ss = s - lag
-        if s < 0 or ss < 0 or ss > 1: _show([core, halo], False, frame); continue
+        ss = s - lag; objs = [core] + ([halo] if halo is not None else [])
+        if s < 0 or ss < 0 or ss > 1:
+            _show(objs, False, frame)
+            if k == 0: _setv(lo, False, frame)
+            continue
         d = ss * tot; i = int(np.searchsorted(cum, d)); i = max(1, min(i, len(cum) - 1)); u = (d - cum[i - 1]) / max(1e-6, cum[i] - cum[i - 1])
-        p = Vector(pts[i - 1]).lerp(Vector(pts[i]), u); pw = W(p); _show([core, halo], True, frame)
-        core.location = halo.location = pw; sc_ = 1.0 - 0.09 * k; core.scale = (sc_,) * 3; halo.scale = (sc_,) * 3
-        if frame is not None: _keyxf(core, frame, True, False, True); _keyxf(halo, frame, True, False, True)
+        p = Vector(pts[i - 1]).lerp(Vector(pts[i]), u); pw = W(p); _show(objs, True, frame)
+        for o in objs: o.location = pw
+        if frame is not None:
+            for o in objs: _keyxf(o, frame)
+        if k == 0:
+            lo.location = pw; _setv(lo, True, frame)
+            if frame is not None: _keyxf(lo, frame)
 
 def _glow_mat(name, hexcol, k, power=1.6):
     """soft glow: emission whose opacity is 1 at the centre and falls to 0 at the silhouette"""
@@ -736,13 +744,17 @@ def _glow_mat(name, hexcol, k, power=1.6):
     L(K.cos_facing(nt, power), mx.inputs[0]); L(tr.outputs[0], mx.inputs[1]); L(em.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface']); MATS[name] = m; return m
 
 def _make_pulse():
-    core_m = _emit_mat('pulsecore', '#fff6d0', 90.0); halo_m = _glow_mat('pulsehalo', '#ffd890', 3.2, 3.0); halo2_m = _glow_mat('pulsehalo2', '#78b8ff', 2.0, 3.0); L = []
-    for k in range(10):
-        r = 0.032 * (1.0 - 0.07 * k) * SC
-        mb = MB('pulse_c%d' % k); mb.T = Matrix.Identity(4); mb.ell(core_m, (0, 0, 0), (r,) * 3, (12, 8)); c = mb.finish()[0]
-        mb = MB('pulse_h%d' % k); mb.T = Matrix.Identity(4); mb.ell(halo_m if k < 4 else halo2_m, (0, 0, 0), (r * 5.0,) * 3, (14, 10)); h = mb.finish()[0]
-        for o in (c, h): o.visible_shadow = False; o.visible_glossy = False
-        L.append((c, h, 0.0036 * k))
+    """ONE hot cyan-white head (core + small soft glow + a small cyan light) and a continuous tapered trail of 40 tightly spaced beads along the wire"""
+    core_m = _emit_mat('pulsecore', '#e4fbff', 80.0); halo_m = _glow_mat('pulsehalo', '#8fe0ff', 5.0, 2.5); L = []
+    for k in range(41):
+        r = (0.050 * (1.0 - k / 41.0) ** 1.3 + 0.006) * SC
+        mb = MB('pulse_c%d' % k); mb.T = Matrix.Identity(4); mb.ell(core_m, (0, 0, 0), (r,) * 3, (12, 8) if k < 6 else (8, 6)); c = mb.finish()[0]; c.visible_shadow = False; c.visible_glossy = False
+        h = None
+        if k == 0:
+            mb = MB('pulse_h0'); mb.T = Matrix.Identity(4); mb.ell(halo_m, (0, 0, 0), (r * 4.2,) * 3, (14, 10)); h = mb.finish()[0]; h.visible_shadow = False; h.visible_glossy = False
+        L.append((c, h, 0.0007 * k))
+    ld = bpy.data.lights.new('pulse_light', 'POINT'); ld.color = (0.55, 0.85, 1.0); ld.energy = 5.0 * SC * SC; ld.shadow_soft_size = 0.05 * SC; ld.use_shadow = False
+    lo = bpy.data.objects.new('pulse_light', ld); bpy.context.scene.collection.objects.link(lo); STATE['pulse_light'] = lo
     STATE['pulse'] = L
 
 # ----------------------------------------------------------------------------- CLI

@@ -175,7 +175,7 @@ def palette():
     d['ballast'] = mat('ballast', '#9a8e86', '#c0aea0', 14, contrast=1.8, wet=True)
     d['sleeper'] = mat('sleeper', '#4a3426', '#6a4a34', 5, wet=True)
     d['rail'] = mat('rail', '#7a6058', '#a88c80', 3, rough=0.4, sheen=0.6)
-    d['lead'] = mat('lead', '#948d80', '#aaa396', 3, rough=0.5, sheen=0.05)
+    d['lead'] = mat('lead', '#7a7d84', '#7a7d84', 3, rough=1.0, sheen=0.0)
     d['straw'] = mat('straw', '#d6b25a', '#eccb78', 7, contrast=1.3, wet=True)
     d['strawdk'] = mat('strawdk', '#b08a3c', '#d0a850', 7, wet=True)
     d['wheat'] = mat('wheat', '#c8a848', '#dcc068', 6, zgrad=(0.0, 0.5, '#8a9a46'), contrast=1.4, wet=True)
@@ -243,7 +243,7 @@ def glass_mat():
     m = bpy.data.materials.new('glass'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
     out = N('ShaderNodeOutputMaterial'); bs = N('ShaderNodeBsdfPrincipled')
     bs.inputs['Base Color'].default_value = hexc('#2fa858'); bs.inputs['Roughness'].default_value = 0.04; bs.inputs['Specular IOR Level'].default_value = 1.0; bs.inputs['Alpha'].default_value = 0.62
-    bs.inputs['Emission Color'].default_value = hexc('#3fc070'); bs.inputs['Emission Strength'].default_value = 0.35
+    bs.inputs['Emission Color'].default_value = hexc('#3fc070'); bs.inputs['Emission Strength'].default_value = 0.9
     L(bs.outputs[0], out.inputs['Surface']); MATS['glass'] = m; return m
 
 def smoke_mat():
