@@ -30,8 +30,7 @@ Each film now gets its own short chat.
 - Captions: Kanit Black 88 px, phrase captions, centred at y 900.
 - The client makes the music in Suno. Give him the Styles / Exclude styles / settings text.
 - **New set for EVERY film. Never reuse a set.**
-- **Agree the look in ONE round.** Before building the full set, show a style board (2-3 quick stills: palette, detail level, key preset) and get an OK.
-- **Ask before rendering.** Show the set contact sheet and cast sheet, and wait for an explicit OK.
+- **Look approval = QA-art, not the client (client decision 2026-11-19).** Make a style board (2-3 stills), have Opus QA-art check it against the bible and client rules, fix, build the set and cast, pass the SET gate with QA-art, then render WITHOUT waiting for the client. Send the client the board and set sheet as FYI only. (Replaces the old "wait for client OK before rendering".)
 - Detail level the client asked for: rich and detailed sets. Water must be smooth and layered with foam, glitter and wakes, not big flat triangles. Use pleasing period colours, not harsh black and white. Make it dense with props and life.
 - Sharp picture, no DOF, wide dense lit 3D look, reveal inside the 3D world, no text signs.
 
