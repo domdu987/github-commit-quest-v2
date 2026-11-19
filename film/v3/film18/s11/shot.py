@@ -9,6 +9,7 @@ import c18 as C                                                         # noqa: 
 
 SHOT = "s11"; G0, G1 = 853, 944; H_IN, H_OUT = 0, 8                     # dissolve 11 into s12: half + 2 = 8 handle frames
 CAMLIN = 0.5
+PARAMS = (0.08, 150, 1.3, 2.8, 2.0, 0.3, 0.0)      # c18.make_mod: push, slide px/s, sway D, Hz, wobble D, dz, dz/t
 POSES = ["soldier_mock_moo_a", "soldier_laugh_point_b", "soldier_mock_moo_c", "soldier_cheer_cup_a", "soldier_mock_moo_b", "soldier_laugh_point_c"]
 STATIC_MOUTH = ("open", 0.26, 0.17)
 
@@ -55,4 +56,4 @@ if __name__ == "__main__":
         out = sys.argv[3] if len(sys.argv) > 3 else os.path.join(HERE, "work", "draft"); T = C.Take(SHOT, "preview", patches=[patches])
     else:
         out = os.path.join(HERE, "raw"); T = C.Take(SHOT, "final", patches=[patches])
-    T.render_frames(gs, out, stage_factory(T), lin=CAMLIN, mod=camera_mod)
+    T.render_frames(gs, out, stage_factory(T), lin=CAMLIN, mod=C.make_mod(T.sh["dur"], *PARAMS))

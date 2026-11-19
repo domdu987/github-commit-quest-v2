@@ -8,6 +8,7 @@ import c18 as C                                                         # noqa: 
 
 SHOT = "s10"; G0, G1 = 737, 853; H_IN, H_OUT = 0, 0
 CAMLIN = 0.5
+PARAMS = (0.12, 80, 0.7, 2.6, 0.8, -1.0, -0.6)      # extra push, slide px/s, sway D, sway Hz, look wobble D, dz, dz/t  (c18.make_mod)
 
 
 def patches(T):
@@ -43,4 +44,4 @@ if __name__ == "__main__":
         out = sys.argv[3] if len(sys.argv) > 3 else os.path.join(HERE, "work", "draft"); T = C.Take(SHOT, "preview", patches=[patches])
     else:
         out = os.path.join(HERE, "raw"); T = C.Take(SHOT, "final", patches=[patches])
-    T.render_frames(gs, out, stage_factory(T), lin=CAMLIN)
+    T.render_frames(gs, out, stage_factory(T), lin=CAMLIN, mod=C.make_mod(T.sh["dur"], *PARAMS))

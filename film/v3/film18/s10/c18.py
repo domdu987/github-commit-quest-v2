@@ -304,3 +304,39 @@ def fg_rope(T, side="right", R=0.22):
         ob.parent = cam
         ob.matrix_parent_inverse = cam.matrix_world.inverted()
     return objs
+
+
+def make_mod(sh_dur, push=0.0, slide=0.0, sway=0.0, sway_hz=1.7, yawwob=0.0, dz=0.0, dzt=0.0):
+    """camera modifier: extra push (fraction of the look distance per second), extra lateral slide (px/s of the 720 px frame at the look distance),
+    handheld sway (D amplitude, lateral + vertical) and a small look-at wobble (D) -- all linear in time so no frame sits still."""
+    def mod(g, t, pose):
+        loc = V(pose["loc"]); look = V(pose["look_at"])
+        d = look - loc; L = d.length; u = d.normalized()
+        right = V((u.y, -u.x, 0.0)).normalized()
+        sec = (g - 0) / 30.0
+        tt = t * sh_dur
+        loc = loc + u * (push * L * tt)
+        sl = slide * (tt - 0.5 * sh_dur) / 720.0 * 2 * L * 0.45
+        loc = loc + right * sl; look = look + right * sl
+        import math as m
+        loc = loc + right * (sway * m.sin(2 * m.pi * sway_hz * sec)) + V((0, 0, 1)) * (0.6 * sway * m.sin(2 * m.pi * sway_hz * 1.3 * sec + 1.0))
+        look = look + right * (yawwob * m.sin(2 * m.pi * 1.1 * sec + 0.5)) + V((0, 0, 1)) * (0.5 * yawwob * m.sin(2 * m.pi * 0.9 * sec))
+        look = look + V((0, 0, dz + dzt * t))
+        pose["loc"] = tuple(loc); pose["look_at"] = tuple(look)
+        return pose
+    return mod
+
+
+def chins(T, shot):
+    """max chin y (px of 720x1280) over the stand marks of the heads (general / soldier / ...) at the current camera."""
+    from bpy_extras.object_utils import world_to_camera_view as w2c
+    out = []
+    for role, lst in S.marks_for(shot).items():
+        if role not in J.HEIGHT:
+            continue
+        for m in lst[:12]:
+            h = J.HEIGHT[role]
+            c = w2c(T.sc, T.cam, V((m[0], m[1], m[2] + h - 1.0)))
+            if c.z > 0:
+                out.append((1 - c.y) * 1280)
+    return max(out) if out else 0.0
