@@ -57,10 +57,10 @@ def bar_h(g, hl=2.34, hr=2.34): return hl, hr
 
 # ------------------------------------------------------------------ shot cameras (metres)  (loc, look)
 CAM = {
- 17: ((( 8.2, -0.5, 3.0), (-2.5, 24.0, 6.5)), ((4.6, 4.6, 5.2), (-1.0, 24.0, 8.4))),
- 18: (((-1.1, 6.6, 0.9), (-0.9, 11.6, 1.8)), ((1.0, 4.9, 1.25), (0.8, 11.6, 3.0))),
+ 17: ((( 8.2, -0.5, 3.0), (-2.5, 24.0, 6.5)), ((4.6, 4.6, 4.6), (-1.0, 24.0, 1.5))),
+ 18: (((-0.6, 6.7, 0.95), (-0.5, 11.6, 1.8)), ((0.4, 5.2, 1.2), (0.3, 11.6, 2.3))),
  19: (((4.6, 3.0, 1.3), (1.6, 11.4, 1.8)), ((7.6, 5.4, 1.4), (-0.2, 11.4, 1.9))),
- 20: (((-3.2, 6.8, 2.15), (-2.3, 11.4, 2.05)), ((-1.1, 8.1, 2.2), (-0.9, 11.4, 2.2))),
+ 20: (((-3.4, 6.6, 2.15), (-2.4, 11.4, 2.05)), ((-1.7, 7.6, 2.2), (-1.0, 11.4, 2.2))),
  21: (((4.2, 4.8, 1.6), (5.2, 9.2, 2.3)), ((1.7, 5.6, 1.7), (-0.2, 11.6, 2.9))),
  22: (((2.6, 17.6, 2.0), (-0.4, 12.0, 1.9)), ((0.4, 15.3, 2.05), (0.5, 12.0, 1.4))),
  23: (((-12.8, 47.4, 8.0), (-13.9, 50.4, 6.3)), ((-13.9, 48.5, 7.9), (-13.9, 50.4, 6.8))),
@@ -72,12 +72,11 @@ def cam_at(n, g):
     else: lk = cam_path(a, b, g, g0, g1)
     if n == 23: lk = push_extra(lk, 9, gof(41.7) - 2, g, 10)
     if n == 18:
-        lk = push_extra(push_extra(lk, 22, 996, g, 7), 20, 1004, g, 7); z = 1.5 * ez(g, 995, 1003) * (1 - ez(g, 1006, 1013)); lk = (lk[0], (lk[1][0], lk[1][1], lk[1][2] - z * 0.0 + 0.0))
-        lk = (lk[0], (lk[1][0] + 0.0, lk[1][1], lk[1][2] + 1.2 * ez(g, 996, 1003) - 1.2 * ez(g, 1005, 1012)))
+        lk = push_extra(push_extra(lk, 6, 996, g, 7), 6, 1004, g, 7)
     if n == 19: w = 1 - ez(g, B[19], B[19] + 9); lk = (lk[0], (lk[1][0] + 5.5 * w, lk[1][1] - 2.0 * w, lk[1][2] + 0.6 * w))
     if n == 20: lk = (lk[0], (lk[1][0], lk[1][1], lk[1][2] - 1.5 * (1 - ez(g, B[20], B[20] + 15))))
     if n == 19: lk = push_extra(lk, 22, B[19] + 22, g, 9)
-    if n == 20: lk = push_extra(push_extra(lk, 30, gof(36.72) - 4, g, 8), 12, B[20] + 24, g, 8)
+    if n == 20: lk = push_extra(push_extra(lk, 14, gof(36.72) - 4, g, 8), 8, B[20] + 24, g, 8)
     if n == 24: lk = push_extra(push_extra(lk, 18, 1281, g, 8), 16, gof(43.32) - 4, g, 8)
     if n == 24:
         w = 1 - ez(g, B[24], B[24] + 6); sw = math.sin(math.pi * clamp((g - 1296) / 12.0))
@@ -129,8 +128,6 @@ def jump_cards(tag, cast, g, gt, facing, cam_loc, miss, bar_z, bar_x=0.1, rate=1
 def specs_17(g, cam):
     M = MK(); out = []
     out.append(dict(tag='dick', cast='dick_olympic', pose=idle(P('stand', 'dick_olympic', 1), g), mark=(2.2, 18.5, 0), shadow=(1.4, .45)))
-    out.append(dict(tag='o1', cast='official1', pose=idle(P('official_stand', 'official1', 1), g, ph=1), mark=M['official_a'], shadow=(1.4, .45)))
-    out.append(dict(tag='o2', cast='official2', pose=idle(P('official_stand', 'official2', -1), g, ph=2), mark=M['official_b'], mirror=True, shadow=(1.4, .45)))
     fl = [gof(t) for t in (31.4, 32.0)]
     ph = P('photog_flash' if any(0 <= g - f < 3 for f in fl) else 'photog_ready', 'photographer', 1)
     if any(0 <= g - f < 3 for f in fl): ph['flash'] = [1.0, 0.6, 0.25][[g - f for f in fl if 0 <= g - f < 3][0]]
