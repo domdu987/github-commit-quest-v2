@@ -32,10 +32,10 @@ def vis(actor, f, on):
             for kp in fc.keyframe_points: kp.interpolation = "CONSTANT"
 
 class Take(object):
-    def __init__(self, preset, quality="draft"):
+    def __init__(self, preset, quality="draft", fg=True):
         bpy.ops.wm.read_factory_settings(use_empty=True)
         self.scene = scene = bpy.context.scene
-        self.A = K.build(preset=preset); self.scene = scene = bpy.context.scene
+        self.A = K.build(preset=preset, fg=fg); self.scene = scene = bpy.context.scene
         K.setup_render(scene, "final" if quality == "final" else "draft")
         scene.cycles.denoising_prefilter = "FAST"; scene.render.use_persistent_data = False
         scene.frame_start, scene.frame_end = 1, 9000
