@@ -77,7 +77,7 @@ def cam_at(n, g):
     if n == 20: lk = (lk[0], (lk[1][0], lk[1][1], lk[1][2] - 1.5 * (1 - ez(g, B[20], B[20] + 15))))
     if n == 19: lk = push_extra(lk, 22, B[19] + 22, g, 9)
     if n == 20: lk = push_extra(push_extra(lk, 14, gof(36.72) - 4, g, 8), 8, B[20] + 24, g, 8)
-    if n == 24: lk = push_extra(push_extra(lk, 18, 1281, g, 8), 16, gof(43.32) - 4, g, 8)
+    if n == 24: lk = push_extra(push_extra(lk, 26, 1281, g, 7), 24, gof(43.32) - 4, g, 7)
     if n == 24:
         w = 1 - ez(g, B[24], B[24] + 6); sw = math.sin(math.pi * clamp((g - 1296) / 12.0))
         lk = (lk[0], (lk[1][0] - 2.2 * w - 1.1 * sw, lk[1][1] + 0.7 * w + 0.5 * sw, lk[1][2] + 0.3 * w))
