@@ -46,6 +46,7 @@ Other public functions:
 | `stage_placeholders`, `head_ring_luma`, `project(cam, p)` | placeholders and screen measurements (world to px at 720x1280). |
 | `cli_render(preset, light, out, mode, samples)` | build + placeholders + render + `<out>.json` (times, head ring luma, chin px, triangles). |
 | `drawer_assembly`, `card_box`, `cards_fan_objects`, `card_plane` | the animated assemblies (see hooks). |
+| `t_hooks.py` | hook test: keys every life hook, the reveal hooks, the fan and the drawers and checks the values move (prints `ok 15 bad []`) |
 | props (all take the `Batch` first) | `table, stool, bench, measuring_chair, toise, arm_span_scale, foot_board, sliding_calipers, spreading_calipers, camera_tripod, ledger_stack, open_ledger, inkpot, kepi, coat_rack, stove, wall_clock, pendulum_case, ledger_shelf, crate, bucket, umbrella_stand, wastebin, door, barred_window, gas_bracket, gasolier, gas_stand, gas_pipe, street_lamp, banker_lamp, cabinet_wall, rolling_ladder, police_wagon, station, shop, mansard, paris_roofs, puddles, light_shaft, room_shell, wall_box` |
 
 CLI: `python3 bertillon.py render <preset> [light|-] out.png [final|draft] [samples]`, `python3 bertillon.py list`.
@@ -136,9 +137,13 @@ Light variants rendered on the contact sheet: `measure_wide`, `measure_chair`, `
 
 ## 8. Cost (720x1280, final)
 
-See `hue.md` (per tile render seconds) and `contact_work/final/*.json` (build s, render s, triangles). Settings: Cycles CPU 4 threads, 64 samples + OIDN denoise, adaptive sampling 0.02, 0 diffuse bounces (the ambient is emission), 2 glossy bounces (puddles only), transparent bounces 16 (the ink hull), no DOF.
+Measured (`hue.md`, `contact_work/final/*.json`): **75-133 s per frame** (street 75-98, reveal 93-106, measure 100-119, records 115-148), build 0.3-1.1 s, 12-70 k triangles. Settings: Cycles CPU 4 threads, 64 samples + OIDN denoise, adaptive sampling 0.02, 0 diffuse bounces (the ambient is emission), 2 glossy bounces (puddles only), transparent bounces 16 (the ink hull), no DOF.
 
 ## 9. Known issues
+
+- **Colour bands are only partly met** (see the Summary at the end of `hue.md`): one tile passes every band; the others miss one or two (magenta 10-19 % in records / reveal / street, shade hue 230-238 or 255-261 instead of 240-260, p1 above 0.12 in a few). The numbers are measured on the finals, not claimed.
+- Several staged heads read against dark backdrops (records canyon, the toise corner, the wagon: ring luma 55-98).
+- `EVENING_INT` differs from `DAY_INT` only in key colour, lamp strength and the window sky (barely visible); it is a preset hook rather than a separate look yet.
 
 - Placeholder cast only; the cast cards are drawn elsewhere. The seated inspector (`chair`) uses a card height of 0.95; a real seated sprite needs its own pose.
 - Textures have no mip-mapping: the setts and plank seams stay readable up to about 12 m, beyond that they shimmer slightly in motion (kept low-contrast on purpose).
