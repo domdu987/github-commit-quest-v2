@@ -1,0 +1,19 @@
+{
+ "take": "s02",
+ "fps": 30,
+ "note": "time = film seconds (g / 30)",
+ "cues": [
+  {
+   "time": 0.0,
+   "frame": 0,
+   "kind": "ambience",
+   "label": "Maryland countryside, wind in the wheat, distant steam"
+  },
+  {
+   "time": 2.2,
+   "frame": 66,
+   "kind": "accent",
+   "label": "whip-pan whoosh into the wide"
+  }
+ ]
+}

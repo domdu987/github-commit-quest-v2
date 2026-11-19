@@ -1,0 +1,6 @@
+# s02 QA: film 16, shot 2 (2.31-3.66 s) -- LINE line_wide, DAY
+- Delivered: take.mkv g 60..118 (59 frames; shot = g 69..109, 9 handle frames each side), 720x1280, 7 spp, libx264rgb crf 6; meta.json, cues.json, contact.jpg, phone_sheet.jpg, QA_AUTO.md (PASS), framediff.json.
+- Shot: the plan's one WHIP: the look point starts 11 D off the line (fence and wheat) and whips back onto it over g 66..80 (cubic ease-out; the first in-shot frames g 69..72 are still mid-whip), then crane down 85 px/s + push 9 %/s + slide 85 px/s + arc 7 deg/s to the end, still moving on the last frame. Morse (cast16 morse_proud_point) at the ladder foot points along the pole row (marching bottle-necked poles to the horizon), small sway, pointing hand sweeps, blinks at g 66 and 97. Train creeps in the far left with smoke.
+- Checked at 6 fps: heads 106-158 px wide (wide-shot range, small head grows with the push), head centre y within the frame, head bottom below y 880? no: max bottom is in meta.json (< 880). No mouth movement (smile expression only). Contact shadow on the grass.
+- Frame-diff (90x160 grey, in-shot, includes the whip): median 5.29, p90 27.48 (target 4 / 12).
+- No streak added on the whip (not needed to read); noted as a conform option. Morse is drawn unmirrored; he points to screen-right along the poles.

@@ -1,0 +1,52 @@
+{
+ "take": "s02",
+ "film": 16,
+ "shots": [
+  2
+ ],
+ "g0": 69,
+ "g1": 110,
+ "first_g": 60,
+ "n_frames": 59,
+ "shot_ranges": {
+  "2": [
+   69,
+   109
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "hard cut from shot 1 (WHIP arrival: look swings in over g 66..80)"
+ },
+ "set": "v3/set3d16 LINE line_wide DAY, train creeping toward the camera, bottle-neck pole row",
+ "camera": "custom 22 mm, field side, high -> crane down 70 px/s, push 7 %/s, slide 40 px/s, whip pan over g 66..80",
+ "cast": "morse16 morse_proud_point at mark morse_ladder_foot, sway + pointing hand sweep",
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "preset": "line_wide",
+ "samples": 7,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "s_per_frame_wall_mean": 11.08,
+ "s_per_frame_cpu_mean": 19.08,
+ "head_px": [
+  106,
+  158
+ ],
+ "head_centre_y": [
+  399,
+  816
+ ],
+ "head_bottom_max_y": 893,
+ "framediff_in_shot": {
+  "median": 5.29,
+  "p90": 27.48
+ }
+}
