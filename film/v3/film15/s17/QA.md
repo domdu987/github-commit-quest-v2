@@ -1,6 +1,6 @@
 # QA s17 (film 15, shots 17-20: stadium, the bar rises, a rival fails, Dick under the bar), g 932-1124 + handles 924-931 / 1125-1130
 Set B EVE, cast15 cards (this folder: shot.py, c15.py; deliver.py/sheet.py are helpers). 12 samples, 720x1280, no DOF, one process per half-take, ~7-8 s per frame wall (2 processes x 2 threads, shown in the render logs).
-- motion_check (cuts 975,1014,1058): **median 5.3, p90 13.2** (target 4 / 12). Per shot: 17 median 7.1 / p90 13.2, 18 median 1.9 / p90 12.3 (a whip into the shot, then a slow slide; the officials stay in frame), 19 median 5.8 / p90 15.5, 20 median 4.2 / p90 12.6. The acceptance is per take; shot 18 is the quiet one between the whips.
+- motion_check (cuts 975,1014,1058): **median 5.6, p90 12.1** (target 4 / 12). Per shot: 17 median 7.1 / p90 13.2, 18 median 5.3 / p90 12.3 (a whip into the shot, then a slow slide; the officials stay in frame), 19 median 5.8 / p90 15.5, 20 median 4.0 / p90 11.0. The acceptance is per take; shot 18 is the quiet one between the whips.
 - qa_auto: PASS (no FAIL). Notes: the cuts at 975 and 1014 measure low because the neighbouring frames also move (whip into 19); soft frames g1014-1016 are the whip into shot 19 (motion streak, 3 frames).
 - Heads: every head centre y < 880 in all 207 frames (checked from the render logs); the only cards outside x 60-660 are the photographer drifting out of the frame left in shot 17, the second official sliding in at the right in g975-988 and the rival entering at the left in g1014-1015.
 - Mouths: nobody speaks in shots 17-20 (static mouths).
@@ -12,3 +12,7 @@ Set B EVE, cast15 cards (this folder: shot.py, c15.py; deliver.py/sheet.py are h
 - Shot 17: the camera ends looking lower (look z 0.9) so Dick's chin is no longer in the caption band (head y 829-865, chin < 880 in all frames).
 - Shot 18: the right official is inside the frame from g977 (a whip into the shot at g975-983; before that he is at the frame edge); both officials point at the bar as the pegs rise (left peg g984-1000, right peg g996-1012).
 - Shot 19: the camera is about 1.5 m closer (the rival is bigger), the rival jumps earlier (take-off g1026) and walks off dejected (walk_dejected, leaves the frame at the right by g1057) before the cut. The planned tilt-up in shot 18 and the hands on the pegs were not done (the pointing arm is the gesture).
+
+## Round 3 (optional polish from the director, r2 had passed)
+- Shot 20: the camera is another 0.4 m higher (z 3.7-3.8 m), so the strip above Dick's hair grows (skull-top anchor to bar underside 73 px at g1075, 88 at g1090, 115 at g1105, 140 at g1124; was 67 / 78 / 99 / 120); head y still <= 717.
+- Shot 18: a slow tilt-up (look +0.45 m over g984-1013); the officials' heads stay at y <= 828. The 'hand on each peg' was not done (the official poses cannot reach the pegs while pointing).
