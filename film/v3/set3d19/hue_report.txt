@@ -19,10 +19,10 @@ H07_hall_window_DAY        DAY        shade-hue(cast-shadow px) 264.2  median 22
 H08_hall_window_EVENING    EVENING    shade-hue(cast-shadow px) 319.9  median 227.3  in 225-265: 44.3   cast  25.7% | magenta  0.87% (<=10) | magenta OK, warm indoor shade by design
 H09_hall_door_DAY          DAY        shade-hue(cast-shadow px) 16.9   median 18.4   in 225-265: 1.7    cast  85.2% | magenta  0.76% (<=10) | magenta OK, warm indoor shade by design
 H10_hall_door_EVENING      EVENING    shade-hue(cast-shadow px) 18.9   median 21.2   in 225-265: 1.7    cast  58.5% | magenta  0.21% (<=10) | magenta OK, warm indoor shade by design
-S01_ship_hero_NOON         NOON       shade-hue(cast-shadow px) None   median None   in 225-265: None   cast   0.0% | magenta  0.05% (<=10) | OK
-S02_ship_aerial_NOON       NOON       shade-hue(cast-shadow px) None   median None   in 225-265: None   cast   0.0% | magenta  0.03% (<=10) | OK
-S03_ship_deck_NOON         NOON       shade-hue(cast-shadow px) None   median None   in 225-265: None   cast   0.0% | magenta  4.92% (<=10) | OK
-S04_ship_deck_overhead     NOON       shade-hue(cast-shadow px) None   median None   in 225-265: None   cast   0.0% | magenta  4.58% (<=10) | OK
-S05_ship_rail_NOON         NOON       shade-hue(cast-shadow px) None   median None   in 225-265: None   cast   0.0% | magenta  7.29% (<=10) | OK
-S06_ship_rocks_STORM       STORM_DUSK shade-hue(cast-shadow px) None   median None   in 225-265: None   cast   0.0% | magenta 19.94% (<=10) | CHECK
-S07_ship_coast_DAY         DAY        shade-hue(cast-shadow px) None   median None   in 225-265: None   cast   0.0% | magenta  0.04% (<=10) | OK
+S01_ship_hero_NOON         NOON       shade-hue(cast-shadow px) 216.7  median 213.2  in 225-265: 36.9   cast   0.3% | magenta  0.05% (<=10) | CHECK
+S02_ship_aerial_NOON       NOON       shade-hue(cast-shadow px) 212.4  median 201.9  in 225-265: 19.4   cast   0.1% | magenta  0.02% (<=10) | CHECK
+S03_ship_deck_NOON         NOON       shade-hue(cast-shadow px) 254.5  median 242.8  in 225-265: 73.9   cast  16.3% | magenta  2.29% (<=10) | OK
+S04_ship_deck_overhead     NOON       shade-hue(cast-shadow px) 235.8  median 230.1  in 225-265: 82.4   cast  31.3% | magenta  2.65% (<=10) | OK
+S05_ship_rail_NOON         NOON       shade-hue(cast-shadow px) 253.4  median 240.0  in 225-265: 69.7   cast  29.4% | magenta  1.68% (<=10) | OK
+S06_ship_rocks_STORM       STORM_DUSK shade-hue(cast-shadow px) 238.9  median 231.5  in 225-265: 58.9   cast  19.4% | magenta  6.91% (<=10) | OK
+S07_ship_coast_DAY         DAY        shade-hue(cast-shadow px) 205.2  median 184.9  in 225-265: 29.6   cast   1.0% | magenta  0.67% (<=10) | CHECK
