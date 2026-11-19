@@ -16,7 +16,8 @@ G0, G1, H = 1196, 1342, 6
 FIRST, LAST = G0 - H, G1 + H                          # 1190 .. 1348
 G_CUT = 1275                                          # shot 23 starts (plan 42.40 s + 0.10 s)
 WORK = os.path.join(HERE, "work")
-GAIN = float(os.environ.get("GAIN", "1.0"))
+GAIN = float(os.environ.get("GAIN", "1.6"))
+SWAY = float(os.environ.get("SWAY", "0.05"))
 
 # ---------------------------------------------------------------- camera
 P22 = Vector((-1.7, 0.9, 1.5)); L22 = Vector((3.2, -2.9, 1.3))
@@ -43,6 +44,9 @@ def cam_of(g):
         pos = P22 + fwd * (0.8 * GAIN) * mix(u) + R * (-0.9 * GAIN) * mix(u) + Vector((0, 0, 0.05)) * mix(u)
         s = snap(g, 1236)
         pos += fwd * (0.55 * GAIN) * s + R * (0.5 * GAIN) * s
+        s2 = snap(g, 1215); pos += fwd * (0.3 * GAIN) * s2 + R * (-0.45 * GAIN) * s2
+        s3 = snap(g, 1258); pos += R * (0.5 * GAIN) * s3
+        pos += R * (SWAY * math.sin(g * 0.5)) + Vector((0, 0, SWAY * 0.7 * math.sin(g * 0.77)))
         track = Vector(group_pos(g)) + Vector((0, 0, 1.25))
         look = L22.lerp(track, 0.75 * C.smooth(u)) + R * (0.5 * GAIN) * s * 0.0
         look = look + R * (0.9 * GAIN) * s
@@ -52,6 +56,9 @@ def cam_of(g):
         pos = P23 + fwd * (0.55 * GAIN) * mix(u) + R * (0.6 * GAIN) * mix(u)
         s = snap(g, 1311)
         pos += fwd * (0.35 * GAIN) * s + R * (-0.45 * GAIN) * s
+        s2 = snap(g, 1290); pos += fwd * (0.25 * GAIN) * s2 + R * (0.35 * GAIN) * s2
+        s3 = snap(g, 1331); pos += R * (-0.4 * GAIN) * s3
+        pos += R * (SWAY * math.sin(g * 0.5)) + Vector((0, 0, SWAY * 0.7 * math.sin(g * 0.77)))
         look = L23 + Vector((-0.25, 0.0, 0.1)) * s + Vector((0.2, 0, 0)) * mix(u)
     return pos, look
 
