@@ -1,0 +1,39 @@
+{
+ "take": "s24",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 51.333,
+   "duration": 2.5,
+   "frame": 1540,
+   "end_frame": 1615,
+   "kind": "ambience",
+   "label": "after-rain countryside, drips; rising electric hum under the pulse"
+  },
+  {
+   "time": 51.333,
+   "duration": 0.867,
+   "frame": 1540,
+   "end_frame": 1566,
+   "kind": "accent",
+   "label": "pulse zips along the wire: rising whistle / zap"
+  },
+  {
+   "time": 52.2,
+   "duration": 0.133,
+   "frame": 1566,
+   "end_frame": 1570,
+   "kind": "prop",
+   "label": "pulse seats in the glass: bright glassy chime, hum holds"
+  },
+  {
+   "time": 52.633,
+   "duration": 0.433,
+   "frame": 1579,
+   "end_frame": 1592,
+   "kind": "accent",
+   "label": "snap push on the glowing glass: soft whoosh"
+  }
+ ]
+}
