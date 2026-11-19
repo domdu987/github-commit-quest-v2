@@ -1,0 +1,47 @@
+{
+ "take": "s22",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 45.733,
+   "duration": 3.033,
+   "frame": 1372,
+   "end_frame": 1463,
+   "kind": "ambience",
+   "label": "wet countryside after rain, dripping, a few birds"
+  },
+  {
+   "time": 46.0,
+   "duration": 0.267,
+   "frame": 1380,
+   "end_frame": 1388,
+   "kind": "foley",
+   "label": "glass clinks as the bottle is drawn from the crate"
+  },
+  {
+   "time": 46.3,
+   "duration": 0.433,
+   "frame": 1389,
+   "end_frame": 1402,
+   "kind": "accent",
+   "label": "snap push on 'แก้ว': airy whoosh"
+  },
+  {
+   "time": 46.533,
+   "duration": 0.467,
+   "frame": 1396,
+   "end_frame": 1410,
+   "kind": "accent",
+   "label": "sun glint on the held bottle: bright 'ting'"
+  },
+  {
+   "time": 47.733,
+   "duration": 0.333,
+   "frame": 1432,
+   "end_frame": 1442,
+   "kind": "accent",
+   "label": "second glint twinkle"
+  }
+ ]
+}

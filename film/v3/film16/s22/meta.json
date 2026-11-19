@@ -1,0 +1,58 @@
+{
+ "take": "s22",
+ "film": 16,
+ "shots": [
+  22
+ ],
+ "g0": 1381,
+ "g1": 1455,
+ "first_g": 1372,
+ "n_frames": 92,
+ "shot_ranges": {
+  "22": [
+   1381,
+   1454
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 11
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "set": "set3d16 telegraph.py LINE line_wagon AFTER_RAIN; crate bottle removed from a runtime copy of the crate glass/glint meshes, held bottle = runtime copy (crate glass), sun-star flares",
+ "cast": "cast16 morse16 morse_bottle_sun (prop_r removed: 3D bottle copy), raised hand pinned to the bottle neck; mark morse_wagon_bed shifted 0.75 D toward the crate",
+ "camera": "custom 22 mm from the line_wagon preset side: drift push 8 %/s + slide 45 px/s + arc 10 deg/s + snap x1.55 with pan on 'แก้ว' (g 1389..1402, word 1392)",
+ "events": {},
+ "dof": "none",
+ "text": "none",
+ "light": "AFTER_RAIN",
+ "preset": "line_wagon",
+ "samples": 7,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 10.85,
+ "s_per_frame_cpu_mean": 20.9,
+ "framediff_in_shot": {
+  "median": 3.63,
+  "p90": 9.61
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json",
+ "head_px": [
+  177,
+  358
+ ],
+ "head_centre_y": [
+  559,
+  621
+ ],
+ "head_bottom_max_y": 800
+}
