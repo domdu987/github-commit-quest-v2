@@ -11,8 +11,8 @@ import c14 as C
 from c14 import F, put, story, lerp, clamp, sm, blink_at, cast14, Vector, bpy
 import numpy as np
 
-BOUND = {11: (759, 820), 12: (821, 869), 13: (864, 929), 14: (930, 1000)}
-GR = {11: (753, 820), 12: (821, 863), 13: (864, 929), 14: (930, 1006)}      # with handles (6 each side of the take)
+BOUND = {11: (759, 820), 12: (821, 863), 13: (864, 929), 14: (930, 1000)}
+GR = {11: (753, 820), 12: (821, 869), 13: (864, 929), 14: (930, 1006)}      # with handles (6 each side of the take)
 
 # -------------------------------------------------------------------- cameras (centre of each move is the preset camera used for the set's grass scatter)
 def L3(a, b, x): return tuple(lerp(p, q, x) for p, q in zip(a, b))
