@@ -253,7 +253,7 @@ def shafts(P, rect, zfloor=0.0, n=1):
     proj = [c + kd * ((zfloor - c.z) / kd.z) for c in corners]
     m = bpy.data.materials.new('shaft'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
     out = N('ShaderNodeOutputMaterial'); em = N('ShaderNodeEmission'); tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader')
-    em.inputs['Color'].default_value = hexc('#ffd890'); em.inputs['Strength'].default_value = P.get('shaft_k', 4.0); mx.inputs[0].default_value = P.get('shaft_a', 0.004)
+    em.inputs['Color'].default_value = hexc('#ffd890'); em.inputs['Strength'].default_value = P.get('shaft_k', 4.0); mx.inputs[0].default_value = P.get('shaft_a', 0.02)
     L(tr.outputs[0], mx.inputs[1]); L(em.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface'])
     mb = MB('shafts')
     for i in range(4):
@@ -287,8 +287,8 @@ def clouds(P):
 def shop_mats():
     M = {}
     M['plaster'] = mat('plaster', '#b4663a', '#c87a44', scale=1.6, contrast=1.2, zgrad=(0.0, 0.5, '#7c3f30'))
-    M['floor'] = mat('floor', '#6e5a44', '#847052', scale=2.2, aniso=(0.5, 0.12, 1))
-    M['floor2'] = mat('floor2', '#5a4836', '#6e5a40', scale=2.2, aniso=(0.5, 0.12, 1))
+    M['floor'] = mat('floor', '#9a7040', '#86602f', scale=2.2, aniso=(0.5, 0.12, 1))
+    M['floor2'] = mat('floor2', '#7a5530', '#8a6636', scale=2.2, aniso=(0.5, 0.12, 1))
     M['gap'] = mat('gap', '#2a1a22')
     M['beam'] = mat('beam', '#4e3420', '#684224', scale=2.0, aniso=(0.1, 1, 1))
     M['honey'] = mat('honey', '#c28b3e', '#aa7430', scale=5, aniso=(0.15, 1, 1), contrast=1.3)
@@ -454,12 +454,13 @@ def build_shop(P):
     pass
     # ---- foreground at the frame edges (dark layer): tool chest with open drawers (left), basket of offcuts (right), sawhorse + plank, stool, leaning clock-case frame
     mb.push(Matrix.Translation((1.05, 0.35, 0)))
+    mb.push(Matrix.Translation((-1.85 - 0.25, -0.85, 0)) @ Matrix.Diagonal((0.65, 0.65, 0.65, 1.0)) @ Matrix.Translation((1.85, 0.85, 0)))
     mb.box(M['oakd'], (-1.85, -0.85, 0.3), (0.9, 0.5, 0.6)); mb.box(M['oak'], (-1.85, -0.85, 0.62), (0.94, 0.54, 0.05))
     for k in range(3):
         dz = 0.14 + 0.17 * k; ext = 0.0 if k == 1 else 0.22
         mb.box(M['honey'], (-1.85, -1.12 - ext, dz), (0.78, 0.04 + 0.0, 0.13)); mb.box(M['brass'], (-1.85, -1.14 - ext, dz), (0.12, 0.02, 0.03))
         if ext: mb.box(M['dark'], (-1.85, -1.0 - ext / 2, dz - 0.02), (0.72, ext, 0.05)); mb.box(M['steel'], (-1.95, -1.0 - ext / 2, dz + 0.03), (0.3, 0.04, 0.01), rz=0.4); mb.box(M['honey'], (-1.7, -1.05 - ext / 2, dz + 0.05), (0.1, 0.1, 0.1))
-    mb.pop()
+    mb.pop(); mb.pop()
     mb.push(Matrix.Translation((-0.95, 0.45, 0)))
     mb.cyl(M['oakd'], (1.8, -0.9, 0.2), 0.3, 0.4, seg=14, r2=0.34)
     for a in range(9): mb.rod(M['honey'] if a % 2 else M['oak'], (1.8 + 0.18 * math.cos(a * 0.7), -0.9 + 0.18 * math.sin(a * 0.7), 0.35), (1.8 + 0.3 * math.cos(a * 0.7 + 0.4), -0.9 + 0.3 * math.sin(a * 0.7 + 0.4), 0.75 + 0.05 * (a % 3)), 0.03, 0.03, 6)
@@ -498,25 +499,21 @@ def build_shop(P):
 
 PRESETS = {}
 PRESETS['shop'] = dict(
-    key=(1.0, 0.8, 0.52, 15.0), key_dir=kdir(-42, 23), sun_angle=1.0, exposure=0.4, sat=1.1, samples=96, dbounce=2,
+    key=(1.0, 0.8, 0.52, 42.0), key_dir=kdir(-46, 19), sun_angle=1.0, exposure=0.2, sat=1.1, samples=96, dbounce=2,
     cam=dict(loc=(0.05, -2.3, 1.32), look=(0.0, 3.4, 0.95), lens=22), flat_amb=('#3a3cff', 0.0))
 
 def lights_shop(P):
     sun_light(P); shafts(P, (-1.55, -0.3, 0.9, 2.3, 3.38))
-    area_light('fill', (0, 0.3, 2.85), (0, 0, 0), (4.4, 5.5), (0.015, 0.07, 1.0), 700)               # blue-violet ambient from above
-    area_light('fillc', (0.0, -2.8, 1.5), (math.pi / 2, 0, 0), (4.4, 2.8), (0.08, 0.18, 1.0), 170)    # from behind the camera
+    area_light('fill', (0, 0.3, 2.85), (0, 0, 0), (4.4, 5.5), (0.12, 0.22, 1.0), 420)               # blue-violet ambient from above
+    area_light('fillc', (0.0, -2.8, 1.5), (math.pi / 2, 0, 0), (4.4, 2.8), (0.2, 0.3, 1.0), 150)    # from behind the camera
     area_light('winfill', (-0.85, 3.5, 1.6), (-math.pi / 2, 0, 0), (1.1, 1.3), (0.3, 0.42, 1.0), 140)
-    fl = bpy.data.collections.new('floorcoll'); bpy.context.scene.collection.children.link(fl)
-    for o in bpy.data.objects:
-        if o.name.startswith(('shop_floor', 'shop_gap', 'shop_floor2')): fl.objects.link(o)
-    ff = area_light('floorfill', (0, 0.5, 2.8), (0, 0, 0), (4.4, 6.0), (0.0, 0.06, 1.0), 1900); ff.light_linking.receiver_collection = fl      # extra cool fill that only lights the floor
+    area_light('roomwarm', (0.3, 1.0, 2.8), (0, 0, 0), (3.5, 4.5), (1.0, 0.7, 0.4), 170)           # warm room light (candle/lamp bounce): shade stays warm
     pts = []
     for (loc, en) in [((0.51, 2.2, 1.3), 30), ((2.05, 2.2, 1.2), 16), ((-0.1, 1.5, 2.3), 20), ((1.75, 1.2, 0.95), 18), ((-1.1 + 0.6, 2.2, 2.35), 12), ((0.3, 1.3, 1.75), 30)]:
         pts.append(point_light('flamep', loc, (1.0, 0.62, 0.26), en, 0.05))
-    for o in pts: o.light_linking.blocker_collection = fl          # warm practicals do not light the floor: floor shade stays blue-violet
 
 # ================================================================== STILL 2 (v2): Royal Navy 50-gun ship, forecastle view forward-down over the bow
-DECK = 6.0; ZF = 8.0; STEM = 46.0; YF = 27.0          # waist deck z, forecastle deck z, stem y, forecastle starts at YF
+DECK = 6.0; STEM = 46.0          # waist deck z, forecastle deck z, stem y, forecastle starts at YF
 def hw(y):
     """deck half-beam at y (m): full beam to y=20, narrowing to the stem at y=46 (floats and arrays)"""
     t = np.clip((np.asarray(y, dtype=np.float64) - 20.0) / (STEM - 20.0), 0.0, 1.0)
@@ -525,60 +522,79 @@ def hw(y):
 
 def ship_mats():
     M = {}
-    M['deck1'] = mat('deck1', '#9a7440', '#85632f', scale=3, aniso=(0.12, 1, 1), contrast=1.4)
-    M['deck2'] = mat('deck2', '#876530', '#a07a40', scale=3, aniso=(0.12, 1, 1), contrast=1.4)
+    M['deck1'] = mat('deck1', '#b48a50', '#a07a40', scale=3, aniso=(0.12, 1, 1), contrast=1.4)
+    M['deck2'] = mat('deck2', '#a67c44', '#bc9255', scale=3, aniso=(0.12, 1, 1), contrast=1.4)
     M['seam'] = mat('seam', '#2c1c20')
-    M['hullb'] = mat('hullb', '#262034', '#332c44', scale=2, aniso=(0.3, 0.3, 1))
+    M['hullb'] = mat('hullb', '#221e26', '#2e2830', scale=2, aniso=(0.3, 0.3, 1))
     M['ochre'] = mat('ochre', '#cf9230', '#bd7f26', scale=3)
     M['bulw'] = mat('bulw', '#a24c2c', '#8f3f28', scale=3, aniso=(0.2, 1, 1))
-    M['cap'] = mat('cap', '#2a2230', '#3a2e3c', scale=3)
-    M['iron'] = metal_mat('iron', '#2c2a3a', '#3e3c50', rough=0.5, spec=0.35)
-    M['carr'] = mat('carr', '#8c4a2a', '#a05a32', scale=4, aniso=(0.2, 1, 1))
+    M['cap'] = mat('cap', '#241e22', '#322a2c', scale=3)
+    M['iron'] = mat('iron', '#2a2622', '#38322c', scale=6, rough=0.6)
+    M['carr'] = mat('carr', '#8a3e28', '#9c4a30', scale=4, aniso=(0.2, 1, 1))
     M['oak'] = mat('oak', '#8a5a2c', '#9e6a34', scale=5, aniso=(0.15, 1, 1))
     M['mast'] = mat('mast', '#8a5c34', '#a2703c', scale=3, aniso=(0.2, 0.2, 0.05))
     M['rope'] = mat('rope', '#b8924c', '#9a7638', scale=6)
     M['rig'] = mat('rig', '#2a2030', '#3a2e3a', scale=3)
     M['brass'] = metal_mat('brass', '#cb9f48', '#e6bb5c', rough=0.28, spec=0.8, metallic=0.9)
-    M['sail'] = mat('sail', '#e8dcc0', '#dccfae', scale=2.2, contrast=1.1, emit='#ffe2a0', emit_k=0.3)
-    M['sail2'] = mat('sail2', '#d8c9a6', '#cdbd98', scale=2.2, contrast=1.1, emit='#ffe2a0', emit_k=0.25)
+    M['sail'] = mat('sail', '#e6d4a0', '#d8c48c', scale=2.2, contrast=1.1, emit='#ffe2a0', emit_k=0.08)
+    M['sail2'] = mat('sail2', '#dac690', '#cbb77c', scale=2.2, contrast=1.1, emit='#ffe2a0', emit_k=0.06)
     M['red'] = mat('red', '#b83a32', '#9c2e2c', scale=4)
     M['grey'] = mat('grey', '#a4a8b8')
     M['isle'] = mat_emit('isle', '#6f9a78', 0.9); M['isle2'] = mat_emit('isle2', '#4f7e68', 0.8); M['beach'] = mat_emit('beach', '#e8dcb8', 1.0)
     M['darksail'] = mat('darksail', '#2c2838')
-    M['lamp'] = mat_emit('lamp', '#ffd890', 6.0)
+    M['lamp'] = mat_emit('lamp', '#ffd890', 6.0); M['spray'] = mat('spray', '#eef4f0', '#dbe8e6', scale=2); M['lid'] = mat('lid', '#a07a48', '#8e6a3c', scale=6); M['port'] = mat('port', '#7a2c22', '#8e3828', scale=4)
     return M
 
 def tube(mb, m, p0, p1, r0, r1=None, seg=8): mb.rod(m, p0, p1, r0, r1, seg=seg, caps=True, smooth=True)
 
+def sail_obj(M, name, PF, nx, ny, thick=0.03):
+    """smooth, two-sided (solidified) sail mesh from a (i,j)->xyz function; canvas strips alternate between two materials"""
+    verts = [PF(i, j) for j in range(ny + 1) for i in range(nx + 1)]
+    faces = []; midx = []
+    for j in range(ny):
+        for i in range(nx):
+            a = j * (nx + 1) + i; faces.append((a, a + 1, a + nx + 2, a + nx + 1)); midx.append(i % 2)
+    me = bpy.data.meshes.new(name); me.from_pydata(verts, [], faces); me.update()
+    me.materials.append(M['sail']); me.materials.append(M['sail2'])
+    for p, mi in zip(me.polygons, midx): p.use_smooth = True; p.material_index = mi
+    ob = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(ob)
+    md = ob.modifiers.new('thick', 'SOLIDIFY'); md.thickness = thick; md.offset = 0.0
+    return ob
+
 def sail_tri(mb, M, T, C, Hd, bulge, n=8, m=8):
-    """billowing triangular jib: luff T->Hd, leech C->Hd, belly sideways (+x) and forward; canvas strips alternate colour"""
     T = Vector(T); C = Vector(C); Hd = Vector(Hd)
-    def P(i, j):
+    def PF(i, j):
         v = j / n; L = T + (Hd - T) * v; Rr = C + (Hd - C) * v; u = i / m
         p = L + (Rr - L) * u
         b = bulge * math.sin(math.pi * u) * math.sin(math.pi * min(1, 0.12 + 0.88 * v)) * (1 - 0.5 * v)
         return (p.x + b, p.y + b * 0.4, p.z)
-    for i in range(m):
-        for j in range(n):
-            q = [P(i, j), P(i + 1, j), P(i + 1, j + 1), P(i, j + 1)]
-            mm = M['sail'] if i % 2 else M['sail2']
-            mb.quad(mm, q); mb.quad(mm, q[::-1])
+    sail_obj(M, 'sail_jib%d' % int(T.y), PF, m, n)
 
-def sail_quad(mb, M, x0, x1, zb, zt, y, belly, ny=8, nx=10):
-    def P(i, j):
+def sail_quad(mb, M, x0, x1, zb, zt, y, belly, ny=8, nx=12):
+    def PF(i, j):
         u = i / nx; v = j / ny
         xl = x0 + (x1 - x0) * u; zz = zb + (zt - zb) * v
-        by = belly * math.sin(math.pi * u) * math.sin(math.pi * (0.15 + 0.85 * v)) ** 0.8 + 0.25 * math.sin(math.pi * u * 2.0) * 0.0
+        by = belly * math.sin(math.pi * u) * math.sin(math.pi * (0.15 + 0.85 * v)) ** 0.8
         return (xl * (1 + 0.05 * (1 - v)), y + by, zz)
-    for i in range(nx):
-        for j in range(ny):
-            q = [P(i, j), P(i + 1, j), P(i + 1, j + 1), P(i, j + 1)]
-            mm = M['sail'] if i % 2 else M['sail2']; mb.quad(mm, q); mb.quad(mm, q[::-1])
+    sail_obj(M, 'sail_%d_%d' % (int(y), int(zb)), PF, nx, ny)
+
+def sky_world2(P):
+    """exterior world: camera AND glossy rays see the painted sky gradient (so the sea mirrors a sky, not a flat colour); diffuse rays see the flat blue-violet ambient"""
+    w = bpy.data.worlds.new('sky'); bpy.context.scene.world = w; w.use_nodes = True; nt = w.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputWorld'); bg = N('ShaderNodeBackground'); tc = N('ShaderNodeTexCoord'); sp = N('ShaderNodeSeparateXYZ'); L(tc.outputs['Generated'], sp.inputs[0])
+    cr = N('ShaderNodeValToRGB'); L(sp.outputs['Z'], cr.inputs[0]); stops = P['sky']
+    cr.color_ramp.elements[0].position = stops[0][0]; cr.color_ramp.elements[0].color = hexc(stops[0][1])
+    for pos, col in stops[1:-1]:
+        e = cr.color_ramp.elements.new(pos); e.color = hexc(col)
+    cr.color_ramp.elements[-1].position = stops[-1][0]; cr.color_ramp.elements[-1].color = hexc(stops[-1][1])
+    bg.inputs['Strength'].default_value = P['sky_k']; L(cr.outputs[0], bg.inputs['Color'])
+    lp = N('ShaderNodeLightPath'); b2 = N('ShaderNodeBackground'); b2.inputs['Color'].default_value = hexc(P['amb'][0]); b2.inputs['Strength'].default_value = P['amb'][1]
+    ad = N('ShaderNodeMath'); ad.operation = 'ADD'; ad.use_clamp = True; L(lp.outputs['Is Camera Ray'], ad.inputs[0]); L(lp.outputs['Is Glossy Ray'], ad.inputs[1])
+    mx = N('ShaderNodeMixShader'); L(ad.outputs[0], mx.inputs[0]); L(b2.outputs[0], mx.inputs[1]); L(bg.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface'])
 
 def build_ship(P):
     M = ship_mats(); mb = MB('ship'); rr = rnd(5)
-    Y0 = -6.0
-    # ---- waist deck planks (clipped to the outline) + hull body strips (black, ochre wale, tumblehome flare)
+    Y0 = -12.0
     def ylim_for(ax):
         if ax >= 3.699: return 20.0
         lo, hi = 20.0, STEM
@@ -587,234 +603,211 @@ def build_ship(P):
             if hw(mid) > ax: lo = mid
             else: hi = mid
         return lo
+    # ---- deck planks, hull body (black, ochre wale, flare), gun ports on the hull side, bulwarks with ports, cap rail
     k = 0; x = -3.7 + 0.13
     while x < 3.7:
-        yl = ylim_for(abs(x)); mb.box(M['deck1'] if k % 2 else M['deck2'], (x, (Y0 + min(yl, YF + 0.2)) / 2, DECK - 0.08), (0.255, min(yl, YF + 0.2) - Y0, 0.16)); x += 0.26; k += 1
+        yl = ylim_for(abs(x)); mb.box(M['deck1'] if k % 2 else M['deck2'], (x, (Y0 + yl) / 2, DECK - 0.08), (0.255, yl - Y0, 0.16)); x += 0.26; k += 1
+    gun_y = [2.0, 6.0, 10.0, 14.0, 18.0]; gun_yp = [3.0, 7.0, 11.0, 15.0]
     y = Y0
     while y < STEM:
         yc = y + 0.5; b = hw(yc)
         if b > 0.05:
             for s in (-1, 1):
-                for (z0, z1, mm) in ((0.0, 2.7, 'hullb'), (2.7, 3.15, 'ochre'), (3.15, 5.75, 'hullb')):
-                    t = (0.55 + 0.45 * (1 - ((z0 + z1) / 2) / 5.8)) * 0.9
+                for (z0, z1, mm) in ((0.0, 2.9, 'hullb'), (2.9, 3.6, 'ochre'), (3.6, 5.75, 'hullb')):
+                    t = (0.5 + 0.5 * (1 - ((z0 + z1) / 2) / 5.8)) * 0.9
                     mb.box(M[mm], (s * (b + t / 2), yc, (z0 + z1) / 2), (t, 1.04, z1 - z0))
             mb.box(M['hullb'], (0, yc, 2.9), (2 * b, 1.04, 5.8))
         y += 1.0
-    # ---- forecastle platform (z=ZF) with planks, black/ochre sides, stair gap at the back, low balustrade
-    y = YF
-    while y < STEM - 0.5:
-        yc = y + 0.5; b = hw(yc)
-        if b > 0.2:
-            mb.box(M['hullb'], (0, yc, 7.0), (2 * b + 0.2, 1.04, 2.0)); mb.box(M['ochre'], (0, yc, 7.0), (2 * b + 0.24, 1.0, 0.3))
-        y += 1.0
-    k = 0; x = -3.7 + 0.13
-    while x < 3.7:
-        yl = ylim_for(abs(x)) if abs(x) < 3.699 else 20.0
-        if yl > YF + 0.5: mb.box(M['deck1'] if k % 2 else M['deck2'], (x, (YF + yl) / 2, ZF - 0.02), (0.255, yl - YF, 0.06))
-        x += 0.26; k += 1
-    for xx in np.arange(-3.4, 3.5, 0.45):
-        if abs(xx) < 0.75 or abs(xx) > hw(YF) - 0.2: continue
-        mb.box(M['oak'], (xx, YF + 0.1, ZF + 0.45), (0.09, 0.09, 0.9))
-    for (a, b_) in ((-3.7, -0.75), (0.75, 3.7)): mb.box(M['cap'], ((a + b_) / 2, YF + 0.1, ZF + 0.93), (b_ - a, 0.16, 0.1))
-    for st in range(3): mb.box(M['deck1'], (0, YF - 0.3 - 0.3 * st, ZF - 0.6 - 0.6 * st), (1.3, 0.5, 0.1))
-    gun_y = [40.4, 43.4]; gun_yp = [42.3]
-    for s, gy in ((1, gun_y), (-1, gun_yp)):               # low bulwark with gun ports, black + ochre band
-        y = YF
-        while y < STEM - 0.3:
+    for s, gy in ((1, gun_y), (-1, gun_yp)):
+        for g in gy:
+            b = hw(g); tt = 0.5 + 0.5 * (1 - 4.5 / 5.8)
+            mb.box(M['ochre'], (s * (b + tt + 0.04), g, 4.55), (0.06, 0.78, 0.7)); mb.box(M['port'], (s * (b + tt + 0.08), g, 4.55), (0.06, 0.62, 0.54))
+    for s, gy in ((1, gun_y), (-1, gun_yp)):
+        y = Y0
+        while y < 29.0:
             yc = y + 0.3; b = hw(yc)
-            if b > 0.15 and not any(abs(yc - g) < 0.42 for g in gy):
+            if b > 0.3 and not any(abs(yc - g) < 0.42 for g in gy):
                 dy = hw(yc + 0.3) - hw(yc - 0.3); ang = math.atan2(-dy * s, 0.6)
-                mb.box(M['hullb'], (s * (b - 0.04), yc, ZF + 0.25), (0.16, 0.66, 0.5), rz=ang); mb.box(M['ochre'], (s * (b - 0.04), yc, ZF + 0.63), (0.17, 0.66, 0.3), rz=ang); mb.box(M['hullb'], (s * (b - 0.04), yc, ZF + 0.84), (0.16, 0.66, 0.1), rz=ang)
+                mb.box(M['hullb'], (s * (b - 0.04), yc, DECK + 0.3), (0.16, 0.66, 0.6), rz=ang); mb.box(M['ochre'], (s * (b - 0.04), yc, DECK + 0.78), (0.17, 0.66, 0.36), rz=ang); mb.box(M['hullb'], (s * (b - 0.04), yc, DECK + 1.02), (0.16, 0.66, 0.12), rz=ang)
             y += 0.6
-        y = YF
-        while y < STEM - 0.3:
+        y = Y0
+        while y < 29.5:
             yc = y + 0.35; b = hw(yc); dy = hw(yc + 0.35) - hw(yc - 0.35)
-            if b > 0.15: mb.box(M['cap'], (s * (b - 0.02), yc, ZF + 0.92), (0.3, 0.74, 0.1), rz=math.atan2(-dy * s, 0.7))
+            if b > 0.2: mb.box(M['cap'], (s * (b - 0.02), yc, DECK + 1.14), (0.3, 0.74, 0.1), rz=math.atan2(-dy * s, 0.7))
             y += 0.7
-    mb.box(M['cap'], (0, STEM - 1.3, ZF + 0.92), (1.0, 0.3, 0.1))
-    # ---- cannons on carriages (forecastle)
+    # ---- cannons (black iron on red-brown carriages), muzzles through the ports
     def cannon(side, y):
-        b = hw(y); s = side; zc = ZF + 0.62
-        xo = s * (b - 0.1); xi = s * (b - 1.6)
-        tube(mb, M['iron'], (xi, y, zc), (xo + s * 0.3, y, zc), 0.23, 0.15, 12)
-        mb.ell(M['iron'], (xi - s * 0.12, y, zc), (0.17, 0.17, 0.17), (10, 8)); mb.cyl(M['iron'], (xo + s * 0.22, y, zc), 0.19, 0.08, axis='x', seg=12)
-        for yy in (-0.3, 0.3): mb.box(M['carr'], ((xi + xo) / 2 - s * 0.05, y + yy, ZF + 0.3), (1.6, 0.14, 0.5))
-        mb.box(M['carr'], (xi + s * 0.45, y, ZF + 0.45), (0.14, 0.6, 0.3)); mb.box(M['oak'], (xi - s * 0.55, y, ZF + 0.46), (0.5, 0.5, 0.06))
+        b = hw(y); s = side; zc = DECK + 0.62
+        xo = s * (b - 0.1); xi = s * (b - 2.0)
+        tube(mb, M['iron'], (xi, y, zc), (xo + s * 0.45, y, zc), 0.23, 0.15, 12)
+        mb.ell(M['iron'], (xi - s * 0.12, y, zc), (0.17, 0.17, 0.17), (10, 8)); mb.cyl(M['iron'], (xo + s * 0.42, y, zc), 0.19, 0.08, axis='x', seg=12)
+        for yy in (-0.3, 0.3): mb.box(M['carr'], ((xi + xo) / 2 - s * 0.05, y + yy, DECK + 0.3), (1.6, 0.14, 0.5))
+        mb.box(M['carr'], (xi + s * 0.45, y, DECK + 0.45), (0.14, 0.6, 0.3)); mb.box(M['oak'], (xi - s * 0.55, y, DECK + 0.46), (0.5, 0.5, 0.06))
         for dx in (-0.35, 0.5):
-            for yy in (-0.36, 0.36): mb.cyl(M['oak'], (s * (b - 0.9) + s * dx * 0.8, y + yy, ZF + 0.17), 0.17, 0.1, axis='y', seg=12)
-        for yy in (-0.7, 0.7): mb.rod(M['rope'], (xi - s * 0.1, y, zc - 0.1), (s * (b - 0.2), y + yy, ZF + 0.8), 0.03, 0.03, 5)
-        mb.rod(M['rope'], (xo, y, zc + 0.2), (s * b, y + 0.5, ZF + 0.8), 0.03, 0.03, 5)
+            for yy in (-0.36, 0.36): mb.cyl(M['carr'], (s * (b - 1.0) + s * dx, y + yy, DECK + 0.17), 0.17, 0.1, axis='y', seg=12)
+        for yy in (-0.7, 0.7): mb.rod(M['rope'], (xi - s * 0.1, y, zc - 0.1), (s * (b - 0.2), y + yy, DECK + 0.9), 0.03, 0.03, 5)
     for g in gun_y: cannon(1, g)
     for g in gun_yp: cannon(-1, g)
-    # ---- foreground deck furniture (forecastle): binnacle (wooden pedestal + brass hood), coils, bucket, lantern, barrels, capstan
-    bx, by = 0.55, 39.3
-    mb.box(M['oak'], (bx, by, ZF + 0.4), (0.55, 0.5, 0.8)); mb.box(M['cap'], (bx, by, ZF + 0.83), (0.62, 0.56, 0.06))
-    mb.cyl(M['brass'], (bx, by, ZF + 0.95), 0.26, 0.2, seg=16, smooth=True); mb.ell(M['brass'], (bx, by, ZF + 1.05), (0.26, 0.26, 0.24), (16, 10)); mb.cyl(M['brass'], (bx, by, ZF + 0.87), 0.29, 0.05, seg=16)
-    mb.ell(M['red'], (bx, by - 0.26, ZF + 0.95), (0.05, 0.02, 0.05), (6, 4))
-    for (cx, cy, r, n) in [(-0.55, 39.5, 0.3, 3), (1.05, 39.0, 0.28, 3)]:
-        for l in range(n): ring_xy(mb, M['rope'], (cx, cy, ZF + 0.06 + l * 0.1), r * (1 - 0.06 * l), 0.1, 0.1, 16)
-        mb.cyl(M['rope'], (cx, cy, ZF + 0.06 + (n - 1) * 0.05), r * 0.8, 0.1 * n, seg=16)
-    mb.cyl(M['oak'], (1.6, 39.1, ZF + 0.17), 0.17, 0.34, seg=12, r2=0.21); mb.cyl(M['iron'], (1.6, 39.1, ZF + 0.3), 0.21, 0.03, seg=12)      # bucket
-    lx, ly = -0.1, 39.0                                                                    # lantern (emitter)
-    mb.box(M['iron'], (lx, ly, ZF + 0.03), (0.22, 0.22, 0.06)); mb.box(M['iron'], (lx, ly, ZF + 0.4), (0.24, 0.24, 0.04))
-    for dx, dy in ((-0.1, -0.1), (0.1, -0.1), (-0.1, 0.1), (0.1, 0.1)): mb.box(M['iron'], (lx + dx, ly + dy, ZF + 0.21), (0.025, 0.025, 0.36))
-    lm = MB('flame'); lm.box(M['lamp'], (lx, ly, ZF + 0.2), (0.15, 0.15, 0.28)); lm.finish(shadow=False)
-    for (bx2, by2) in [(-1.35, 40.2), (-1.0, 41.1)]:
-        mb.ell(M['oak'], (bx2, by2, ZF + 0.45), (0.3, 0.3, 0.44), (14, 10))
-        for z in (0.2, 0.45, 0.7): mb.cyl(M['iron'], (bx2, by2, ZF + z), 0.27, 0.035, seg=14)
-    mb.cyl(M['cap'], (0.9, 44.6, ZF + 0.4), 0.25, 0.8, seg=10)                             # bitts
-    # ---- waist guns behind (just visible not at all) skipped. Foremast (behind the camera) with its stays and jibs ahead
-    mx, my = 0.2, 22.0
-    tube(mb, M['mast'], (mx, my, DECK), (mx, my, 26), 0.52, 0.28, 12); tube(mb, M['mast'], (mx, my, 20), (mx, my, 40), 0.3, 0.16, 10)
-    mb.box(M['mast'], (mx, my, 19.8), (3.0, 2.2, 0.22))
-    for (zy, ln, r) in [(15.0, 13.0, 0.17), (26.6, 9.4, 0.13)]: tube(mb, M['mast'], (mx - ln / 2, my, zy), (mx + ln / 2, my, zy), r, r * 0.6, 8)
-    sail_quad(mb, M, mx - 6.0, mx + 6.0, 8.8, 14.8, my + 0.6, 1.5)
-    tube(mb, M['mast'], (0, 44.0, 9.4), (0, 62.0, 14.5), 0.2, 0.1, 10)                    # bowsprit
-    mb.box(M['mast'], (0, 46.3, 9.9), (0.9, 0.5, 0.3))
-    tube(mb, M['rig'], (mx, my, 40), (0, 61.0, 14.2), 0.045, 0.045, 4)                    # fore-topmast stay
-    tube(mb, M['rig'], (mx, my, 33), (0, 56.0, 13.4), 0.045, 0.045, 4)
-    tube(mb, M['rig'], (mx, my, 27), (0, 50.0, 12.0), 0.045, 0.045, 4)
-    sail_tri(mb, M, (0, 60.5, 13.6), (0, 51.0, 11.8), (0, 55.5, 18.5), 1.1)                # outer jib
-    sail_tri(mb, M, (0, 55.0, 12.8), (0, 48.6, 11.0), (0, 51.0, 17.5), 1.0)                # fore-topmast staysail
-    sail_tri(mb, M, (0, 50.0, 11.8), (0, 46.6, 10.6), (0, 46.5, 16.5), 0.8)
-    tube(mb, M['mast'], (-1.2, 52.0, 10.2), (1.2, 52.0, 10.2), 0.07, 0.07, 6)               # spritsail yard + sail
-    sail_quad(mb, M, -1.7, 1.7, 7.0, 10.0, 52.3, 0.45, 6, 8)
-    for s in (-1, 1):                                                                      # shrouds visible on the sides far away: skipped (behind camera); extra rigging overhead
-        tube(mb, M['rig'], (s * 0.1, 62.0, 14.5), (s * 3.3, 44.0, ZF + 0.9), 0.04, 0.04, 4)   # bobstays/stay lines to the bow
-    tube(mb, M['rig'], (0, 62.0, 14.3), (0, 45.5, 7.5), 0.04, 0.04, 4)
-    mb.quad(M['red'], [(0, 61.9, 14.9), (0, 61.9, 14.3), (0, 59.0, 14.2), (0, 59.0, 14.9)])
+    # ---- deck furniture: barrels with plain lids, coils, capstan, hatch grating, bucket, binnacle at the stern
+    for (bx2, by2) in [(-2.4, 0.2), (-2.0, 1.0), (2.2, 4.5)]:
+        mb.ell(M['oak'], (bx2, by2, DECK + 0.45), (0.33, 0.33, 0.47), (14, 10)); mb.cyl(M['lid'], (bx2, by2, DECK + 0.9), 0.24, 0.03, seg=14)
+        for z in (0.2, 0.7): mb.cyl(M['iron'], (bx2, by2, DECK + z), 0.3, 0.03, seg=14)
+    for (cx, cy, r, n) in [(1.6, -0.5, 0.3, 3), (-0.4, 5.0, 0.3, 3), (1.4, 8.6, 0.28, 3)]:
+        for l in range(n): ring_xy(mb, M['rope'], (cx, cy, DECK + 0.06 + l * 0.1), r * (1 - 0.06 * l), 0.1, 0.1, 16)
+        mb.cyl(M['rope'], (cx, cy, DECK + 0.06 + (n - 1) * 0.05), r * 0.8, 0.1 * n, seg=16)
+    mb.cyl(M['oak'], (-1.2, 12.5, DECK + 0.55), 0.42, 1.1, seg=14); mb.cyl(M['cap'], (-1.2, 12.5, DECK + 1.15), 0.5, 0.1, seg=14)
+    for a in range(4): mb.rod(M['oak'], (-1.2, 12.5, DECK + 0.9), (-1.2 + 1.0 * math.cos(a * 1.571 + 0.5), 12.5 + 1.0 * math.sin(a * 1.571 + 0.5), DECK + 0.9), 0.05, 0.05, 6)
+    for i in range(5): mb.box(M['oak'], (1.0, 15.0 + 0.3 * i, DECK + 0.05), (1.5, 0.07, 0.09)); mb.box(M['oak'], (0.3 + 0.3 * i, 15.6, DECK + 0.06), (0.07, 1.4, 0.09))
+    bx, by = 0.9, -2.2
+    mb.box(M['oak'], (bx, by, DECK + 0.4), (0.55, 0.5, 0.8)); mb.box(M['cap'], (bx, by, DECK + 0.83), (0.62, 0.56, 0.06))
+    mb.cyl(M['brass'], (bx, by, DECK + 0.95), 0.26, 0.2, seg=16, smooth=True); mb.ell(M['brass'], (bx, by, DECK + 1.05), (0.26, 0.26, 0.24), (16, 10)); mb.cyl(M['brass'], (bx, by, DECK + 0.87), 0.29, 0.05, seg=16)
+    mb.cyl(M['oak'], (-0.9, 0.8, DECK + 0.17), 0.18, 0.34, seg=12, r2=0.22)
+    # ---- masts: main (y=8) and fore (y=28), with courses, topsails, topgallants, shrouds + ratlines, stays; bowsprit + jib
+    def mast(my, ht, spans, sails, pins=True):
+        mx = 0.0
+        tube(mb, M['mast'], (mx, my, DECK), (mx, my, 0.62 * ht), 0.55, 0.3, 12); tube(mb, M['mast'], (mx, my, 0.5 * ht), (mx, my, ht), 0.32, 0.14, 10)
+        top = 0.5 * ht - 0.5; mb.box(M['mast'], (mx, my, top), (3.0, 2.2, 0.22))
+        mb.cyl(M['oakd'] if 'oakd' in M else M['oak'], (mx, my, DECK + 0.5), 0.8, 0.12, seg=14)
+        for a in range(12): mb.rod(M['iron'], (mx + 0.8 * math.cos(a * .5236), my + 0.8 * math.sin(a * .5236), DECK + 0.5), (mx + 0.8 * math.cos(a * .5236), my + 0.8 * math.sin(a * .5236), DECK + 1.3), 0.035, 0.035, 5)
+        for (zy, ln, r) in spans: tube(mb, M['mast'], (mx - ln / 2, my, zy), (mx + ln / 2, my, zy), r, r * 0.6, 8)
+        for (x0, x1, zb, zt, yy, bl) in sails: sail_quad(mb, M, x0, x1, zb, zt, my + yy, bl)
+        for s in (-1, 1):                                                                # shrouds + ratlines
+            for kk in range(5):
+                yy = my - 1.5 + 0.75 * kk; bx_ = hw(yy) - 0.1
+                mb.rod(M['rig'], (mx + s * 0.4, my - 0.6 + 0.28 * kk - 0.6, top), (s * bx_, yy, DECK + 1.15), 0.045, 0.045, 4)
+            for j in range(14):
+                t = (j + 0.5) / 14
+                a = Vector((s * (hw(my - 1.5) - 0.1) * (1 - t) + (mx + s * 0.4) * t, my - 1.5 - 0.6 * t, DECK + 1.15 + (top - DECK - 1.15) * t))
+                b = Vector((s * (hw(my + 1.5) - 0.1) * (1 - t) + (mx + s * 0.4) * t, my + 1.5 - 0.6 * t, DECK + 1.15 + (top - DECK - 1.15) * t))
+                mb.rod(M['rig'], a, b, 0.028, 0.028, 4)
+    mast(8.0, 40.0, [(14.4, 14.0, 0.17), (24.6, 10.4, 0.14), (31.4, 7.2, 0.1)],
+         [(-6.5, 6.5, 8.6, 14.2, 0.7, 1.7), (-4.7, 4.7, 15.0, 24.2, 0.8, 1.4), (-3.3, 3.3, 25.0, 31.0, 0.9, 1.0)])
+    mast(28.0, 34.0, [(13.6, 12.0, 0.15), (21.4, 9.0, 0.12), (27.0, 6.2, 0.09)],
+         [(-5.6, 5.6, 8.6, 13.4, 0.7, 1.5), (-4.1, 4.1, 14.2, 21.0, 0.8, 1.2), (-2.9, 2.9, 21.8, 26.6, 0.9, 0.9)])
+    tube(mb, M['rig'], (0, 8.0, 40.0), (0, 28.0, 34.0), 0.05, 0.05, 4); tube(mb, M['rig'], (0, 28.0, 34.0), (0, 60.0, 14.2), 0.05, 0.05, 4); tube(mb, M['rig'], (0, 8.0, 31.0), (0, 28.0, 27.0), 0.04, 0.04, 4)
+    tube(mb, M['rig'], (0.2, 7.5, 28.0), (0.2, -4.0, DECK + 1.3), 0.05, 0.05, 4)
+    tube(mb, M['mast'], (0, 44.0, 9.4), (0, 62.0, 14.5), 0.2, 0.1, 10)
+    sail_tri(mb, M, (0, 60.5, 13.6), (0, 51.0, 11.8), (0, 55.5, 22.0), 1.1); sail_tri(mb, M, (0, 55.0, 12.8), (0, 48.6, 11.0), (0, 50.0, 22.0), 1.0)
+    mb.quad(M['red'], [(0.0, 8.0, 40.1), (0.0, 8.0, 39.3), (-0.2, 3.5, 39.2), (-0.2, 3.5, 40.0)]); mb.quad(M['red'], [(-0.2, 3.5, 40.0), (-0.2, 3.5, 39.2), (0.0, 8.0, 39.3), (0.0, 8.0, 40.1)])
     mb.finish()
-    # ---- far dressing: green-headed headland with a pale beach and haze, tiny dark sail
+    # ---- bow wave: curling white sheets + spray at the stem, wash along the outboard hull
+    sp = MB('spray'); rr2 = rnd(8)
+    for side in (-1, 1):
+        for k in range(26):
+            yy = STEM - 0.2 - k * 0.7; b = hw(yy) + 0.95 + 0.25 * k ** 0.5
+            hgt = max(0.12, 0.85 - 0.032 * k); sp.ell(M['spray'], (side * (b + rr2.uniform(-0.1, 0.1)), yy, 0.1 + hgt * 0.5), (0.45 + 0.012 * k, 0.55 + 0.02 * k, hgt), (10, 6))
+    for k in range(34):
+        a = rr2.uniform(0, 6.28); r_ = rr2.uniform(0, 1.8)
+        sp.ell(M['spray'], (rr2.uniform(-1.4, 1.4), STEM + 0.6 + r_ * 0.8, rr2.uniform(0.3, 1.8)), (0.11, 0.11, 0.13), (6, 4))
+    sp.ell(M['spray'], (0, STEM + 0.4, 0.5), (1.1, 1.3, 0.7), (12, 8)); sp.finish(shadow=False)
+    # ---- far dressing
     ib = MB('isle'); n = 48; X0i = 780
     for i in range(n):
         x0 = X0i + i * 7.0; x1 = x0 + 7.0
         f = lambda x: 70 * max(0, math.sin(math.pi * (x - X0i) / (n * 7.0))) ** 0.6 * (0.8 + 0.2 * math.sin((x - X0i) / 11.0)) + 6
-        ib.quad(M['isle'] if i % 3 else M['isle2'], [(x0, 1800, 0), (x1, 1800, 0), (x1, 1800, f(x1)), (x0, 1800, f(x0))])
-        ib.quad(M['beach'], [(x0, 1799, -0.5), (x1, 1799, -0.5), (x1, 1799, 3.5), (x0, 1799, 3.5)])
+        ib.quad(M['isle'] if i % 3 else M['isle2'], [(x0, 1800, 0), (x1, 1800, 0), (x1, 1800, f(x1)), (x0, 1800, f(x0))]); ib.quad(M['beach'], [(x0, 1799, -0.5), (x1, 1799, -0.5), (x1, 1799, 3.5), (x0, 1799, 3.5)])
     ib.finish(shadow=False)
-    sb_ = MB('farsail'); sb_.quad(M['darksail'], [(430, 1500, 0.5), (456, 1500, 0.5), (448, 1500, 24), (434, 1500, 28)]); sb_.quad(M['darksail'], [(425, 1500, 0.5), (455, 1500, 0.5), (455, 1500, 3), (425, 1500, 3)]); sb_.finish(shadow=False)
+    sb_ = MB('farsail'); sb_.quad(M['darksail'], [(-330, 1500, 0.5), (-304, 1500, 0.5), (-312, 1500, 24), (-326, 1500, 28)]); sb_.quad(M['darksail'], [(-335, 1500, 0.5), (-305, 1500, 0.5), (-305, 1500, 3), (-335, 1500, 3)]); sb_.finish(shadow=False)
     cm = MB('cards')
-    if not os.environ.get('NOCARDS'): card(cm, M['grey'], 0.35, 41.3, w=0.55, z0=ZF); card(cm, M['grey'], 1.05, 42.0, w=0.55, z0=ZF); cm.finish()
+    if not os.environ.get('NOCARDS'): card(cm, M['grey'], 1.2, 1.2, w=0.55, z0=DECK); card(cm, M['grey'], 2.0, 2.0, w=0.55, z0=DECK); cm.finish()
     if not os.environ.get('NOSEA'): build_sea(P)
     clouds(P)
 
-# ---------------------------------------------------------------- the sea (v2): long smooth swells built per camera pixel, layered colour, contour foam streaks, bow wave + V-wake, one narrow glitter path
+# ---------------------------------------------------------------- the sea (v3): film-10 technique. Graded smooth grid (one vertex per ~3 px), 3 long swells + short chop fading with distance,
+# whitecap flecks on crests, teal near / deep navy far (view distance), Fresnel sky lift, sharp glitter lobe from a glossy-only virtual sun, wake/bow foam as vertex attribute.
 def build_sea(P):
     c = P['cam']; loc = np.array(c['loc'], dtype=np.float64); look = np.array(c['look'], dtype=np.float64)
     f = look - loc; f /= np.linalg.norm(f); r = np.cross(f, [0, 0, 1.0]); r /= np.linalg.norm(r); u = np.cross(r, f)
-    hx, hy = 0.4602 * 1.12, 0.8182
+    hx, hy = 0.4602 * 1.15, 0.8182
     zfar = loc[2] / 7000.0
-    vmax = (-zfar - f[2]) / (u[2] * hy); vmin = -1.18
-    NU, NV = 440, 800
-    uu = np.linspace(-1.12, 1.12, NU); vv = vmin + (vmax - vmin) * np.linspace(0, 1, NV)
+    vmax = (-zfar - f[2]) / (u[2] * hy); vmin = -1.3
+    NU, NV = 420, 760
+    uu = np.linspace(-1.15, 1.15, NU); vv = vmin + (vmax - vmin) * np.linspace(0, 1, NV)
     UU, VV = np.meshgrid(uu, vv)
     ray = f[None, None, :] + r[None, None, :] * (UU * hx)[..., None] + u[None, None, :] * (VV * hy)[..., None]
     t = -loc[2] / ray[..., 2]; px = loc[0] + ray[..., 0] * t; py = loc[1] + ray[..., 1] * t
-    sdep = np.abs(ray[..., 2]) / np.linalg.norm(ray, axis=-1)
-    rng = np.random.RandomState(7)
-    th0 = math.radians(95); waves = []
-    # (wavelength, amplitude): long rolling swells; steepness 2*pi*A/L about 0.07-0.1
-    spec = [(70, 1.0), (42, .62), (26, .4), (16, .22), (10.5, .13), (6.5, .075), (4.2, .04)]
-    for (L, A) in spec:
-        a = th0 + rng.uniform(-0.55, 0.55); waves.append((L, A, a, rng.uniform(0, 6.28)))
-    rip = [(0.9, 0.012), (0.6, 0.008), (0.4, 0.006), (0.27, 0.004)]
-    rip = [(L, A, th0 + rng.uniform(-1.2, 1.2), rng.uniform(0, 6.28)) for (L, A) in rip]
+    rng = np.random.RandomState(3)
     fpx = t * (2 * hx / 720.0) * 1.1
-    h = np.zeros_like(px); gx = np.zeros_like(px); gy = np.zeros_like(px)
-    wm = np.zeros_like(px); wgx = np.zeros_like(px); wgy = np.zeros_like(px); norm_m = 0.0
-    gsx = np.zeros_like(px); gsy = np.zeros_like(px)
-    WARP = 3.2 * np.sin(0.021 * px + 1.3 * np.sin(0.03 * py)) + 2.4 * np.sin(0.027 * py + 1.1 * np.sin(0.02 * px)) + 1.6 * np.sin(0.06 * px + 0.04 * py)
-    wpx = np.maximum(fpx / np.maximum(sdep, 0.05), 0.02) * 1.6
-    brk = 0.5 + 0.5 * np.sin(px * 0.11 + 1.7 * np.sin(py * 0.06)) * np.sin(py * 0.09 + 0.9 * np.sin(px * 0.05))
-    lines = np.zeros_like(px)
-    for (L, A, a, ph) in waves:
-        k = 2 * math.pi / L; kx = k * math.cos(a); ky = k * math.sin(a)
-        fade = np.clip((L / np.maximum(fpx, 1e-6) - 5.0) / 9.0, 0, 1)
-        th = kx * px + ky * py + ph + WARP; s = np.sin(th); cs = np.cos(th)
-        if 9 <= L <= 30:
-            lines = np.maximum(lines, np.clip(1 - (1 - s) / np.maximum((k * wpx) ** 2 / 2, 1e-5), 0, 1) ** 1.2 * (0.9 if L < 20 else 0.7))
-        q = 0.5 + 0.5 * s; hh = A * (2 * q ** 1.6 - 1.0); dh = A * 2 * 1.6 * q ** 0.6 * 0.5 * cs * k
-        h += hh * fade; gx += dh * math.cos(a) * fade; gy += dh * math.sin(a) * fade
-        if 6 <= L <= 30:
-            wm += hh / A * fade; wgx += dh / A * math.cos(a) * fade; wgy += dh / A * math.sin(a) * fade; norm_m += 1
-    for (L, A, a, ph) in rip:
-        k = 2 * math.pi / L; th = k * (math.cos(a) * px + math.sin(a) * py) + ph; dh = A * k * np.cos(th)
-        gsx += dh * math.cos(a) * 1.5; gsy += dh * math.sin(a) * 1.5
-    far = np.clip(1 - t / 3500.0, 0, 1) ** 0.5
-    h *= far
-    # bow wave: a raised foamy mound ahead of the stem
-    sx, sy = 0.0, STEM + 2.0
-    h += 0.55 * np.exp(-(((px - sx) / 2.2) ** 2 + ((py - sy) / 3.2) ** 2))
-    wmn = wm / max(norm_m, 1); gm = np.sqrt(wgx ** 2 + wgy ** 2) / max(norm_m, 1) + 1e-4
-    # smooth contour foam streaks: constant ~2.5 px wide, broken up by long noise, fading with distance
-    lines *= np.clip((brk - 0.45) / 0.2, 0, 1) * np.clip(1 - t / 900, 0, 1)
-    crest = np.clip((wmn - 0.1) / 0.7, 0, 1) * 0.55
-    # hull wash, V-wake arms and bow foam
-    hh_ = hw(np.clip(py, -6, STEM)); d_hull = np.abs(px) - (hh_ + 0.9); d_hull = np.where((py > -6) & (py < STEM + 1), d_hull, 9)
-    wash = np.exp(-np.maximum(d_hull, 0) / 1.1) * (d_hull < 3) * (0.6 + 0.4 * np.sin(py * 0.22 + px * 0.3)) * 0.6
-    dback = np.maximum(STEM - py, 0.0)
-    arm = np.zeros_like(px)
-    for off in (2.2, 4.8, 7.6):                    # V arms flaring back from the bow, thin broken streaks
-        dd = np.abs(np.abs(px) - (hh_ + 0.9 + off * (0.35 + 0.5 * np.clip(dback / 30.0, 0, 1)))); arm = np.maximum(arm, np.clip(1 - dd / (0.16 + 0.03 * off), 0, 1) ** 1.0 * np.clip(1 - dback / (22.0 + 8 * off), 0, 1) * (py < STEM + 4))
-    arm *= (0.6 + 0.4 * np.sin(py * 0.25 + np.abs(px) * 0.3) ** 2)
-    bow = np.exp(-(((px - sx) / 2.6) ** 2 + ((py - sy) / 3.6) ** 2)) * np.clip(0.2 + 0.9 * (0.5 + 0.5 * np.sin(px * 1.3 + py * 0.9) * np.sin(py * 1.1 - px * 0.7)), 0, 1) * 0.8
-    bow *= (py > STEM - 1.0) * (np.abs(px) < 9.0)
-    arm *= np.clip((t - 16.0) / 12.0, 0, 1); wash *= np.clip((t - 16.0) / 12.0, 0, 1)
-    bow = np.nan_to_num(bow); arm = np.nan_to_num(arm); wash = np.nan_to_num(wash)
-    foam = np.clip(np.maximum.reduce([lines * 0.9, wash * 0.18, arm * 0.9, bow * 1.0]), 0, 1)
-    # colour distance bands
-    d_mid = np.clip((t - 14.0) / 120.0, 0, 1); haze = np.clip((t - 250.0) / 2400.0, 0, 1) ** 0.8
-    # glitter: one narrow path under the (virtual) sun azimuth
-    nx_ = -(gx + gsx); ny_ = -(gy + gsy); nz_ = np.ones_like(px); nl = np.sqrt(nx_ ** 2 + ny_ ** 2 + nz_ ** 2); nx_ /= nl; ny_ /= nl; nz_ /= nl
-    vx = px - loc[0]; vy = py - loc[1]; vz = h - loc[2]; vl = np.sqrt(vx ** 2 + vy ** 2 + vz ** 2); vx /= vl; vy /= vl; vz /= vl
-    dn = vx * nx_ + vy * ny_ + vz * nz_
-    Rx = vx - 2 * dn * nx_; Ry = vy - 2 * dn * ny_; Rz = vz - 2 * dn * nz_
-    se = math.radians(P['glit_el']); sa = math.radians(P['glit_az'])
-    S = np.array([math.sin(sa) * math.cos(se), math.cos(sa) * math.cos(se), math.sin(se)])
-    dd = Rx * S[0] + Ry * S[1] + Rz * S[2]
-    glit = np.clip((dd - P['glit_lo']) / (P['glit_hi'] - P['glit_lo']), 0, 1) ** 1.5
-    az = np.arctan2(px - loc[0], py - loc[1]); daz = az - sa
-    glit *= np.exp(-(daz / (0.045 + 0.00004 * t)) ** 2) * np.clip(1 - t / 2200, 0.2, 1) * (1 - 0.6 * foam)
+    h = np.zeros_like(px)
+    swells = [(52, 0.85, 80), (31, 0.55, 112), (19, 0.34, 70)]
+    chop = [(7.4, .10), (4.8, .06), (3.1, .04), (2.0, .026), (1.3, .016)]
+    for (L, A, deg) in swells:
+        a = math.radians(deg + rng.uniform(-8, 8)); k = 2 * math.pi / L; th = k * (math.cos(a) * px + math.sin(a) * py) + rng.uniform(0, 6.28)
+        q = 0.5 + 0.5 * np.sin(th); h += A * (2 * q ** 1.5 - 1.0)
+    for (L, A) in chop:
+        a = math.radians(80 + rng.uniform(-50, 50)); k = 2 * math.pi / L; th = k * (math.cos(a) * px + math.sin(a) * py) + rng.uniform(0, 6.28)
+        fade = np.clip((L / np.maximum(fpx, 1e-6) - 4.0) / 7.0, 0, 1) * np.clip(1 - t / 260.0, 0, 1)
+        h += A * np.sin(th) * fade
+    h *= np.clip(1 - t / 3500.0, 0, 1) ** 0.5
+    # foam attribute: wash along the outboard hull, bow foam (broken up by the shader noise)
+    hh_ = hw(np.clip(py, -12, STEM)); d_hull = np.abs(px) - (hh_ + 0.95); d_hull = np.where((py > -12) & (py < STEM + 1), d_hull, 9)
+    along = np.clip((py + 12.0) / 58.0, 0, 1)
+    wash = np.exp(-np.maximum(d_hull, 0) / 1.3) * (d_hull < 4.5) * (0.35 + 0.65 * along)
+    dback = np.maximum(STEM - py, 0.0); arm = np.zeros_like(px)
+    for off in (2.0, 4.4, 7.0):
+        dd = np.abs(np.abs(px) - (hh_ + 0.95 + off * (0.3 + 0.5 * np.clip(dback / 30.0, 0, 1)))); arm = np.maximum(arm, np.clip(1 - dd / (0.5 + 0.1 * off), 0, 1) * np.clip(1 - dback / (24.0 + 8 * off), 0, 1) * (py < STEM + 4))
+    bow = np.exp(-(((px - 0.0) / 3.2) ** 2 + ((py - (STEM + 2.0)) / 4.2) ** 2))
+    foam = np.nan_to_num(np.clip(np.maximum.reduce([wash * 0.75, arm * 0.55, bow * 0.9]), 0, 1))
     verts = np.stack([px, py, h], -1).reshape(-1, 3).astype(np.float32)
     idx = np.arange(NU * NV).reshape(NV, NU)
-    quads = np.stack([idx[:-1, :-1], idx[:-1, 1:], idx[1:, 1:], idx[1:, :-1]], -1).reshape(-1, 4)
+    a_ = idx[:-1, :-1]; b_ = idx[:-1, 1:]; c_ = idx[1:, 1:]; d_ = idx[1:, :-1]
+    alt = ((np.arange(NU - 1)[None, :] + np.arange(NV - 1)[:, None]) % 2).astype(bool)
+    t1 = np.where(alt[..., None], np.stack([a_, b_, c_], -1), np.stack([a_, b_, d_], -1)); t2 = np.where(alt[..., None], np.stack([a_, c_, d_], -1), np.stack([b_, c_, d_], -1))
+    tris = np.concatenate([t1.reshape(-1, 3), t2.reshape(-1, 3)])
     me = bpy.data.meshes.new('sea'); me.vertices.add(len(verts)); me.vertices.foreach_set('co', verts.ravel())
-    nl_ = len(quads); me.loops.add(nl_ * 4); me.polygons.add(nl_)
-    me.loops.foreach_set('vertex_index', quads.ravel().astype(np.int32)); me.polygons.foreach_set('loop_start', (np.arange(nl_) * 4).astype(np.int32)); me.polygons.foreach_set('loop_total', np.full(nl_, 4, dtype=np.int32))
-    me.update(calc_edges=True); me.polygons.foreach_set('use_smooth', np.ones(nl_, dtype=bool))
-    for name, arr in (('foam', foam), ('crest', crest), ('haze', haze), ('dmid', d_mid), ('glit', glit)):
-        at = me.attributes.new(name, 'FLOAT', 'POINT'); at.data.foreach_set('value', arr.reshape(-1).astype(np.float32))
+    nt_ = len(tris); me.loops.add(nt_ * 3); me.polygons.add(nt_)
+    me.loops.foreach_set('vertex_index', tris.ravel().astype(np.int32)); me.polygons.foreach_set('loop_start', (np.arange(nt_) * 3).astype(np.int32)); me.polygons.foreach_set('loop_total', np.full(nt_, 3, dtype=np.int32))
+    me.update(calc_edges=True); me.polygons.foreach_set('use_smooth', np.ones(nt_, dtype=bool))
+    at = me.attributes.new('foam', 'FLOAT', 'POINT'); at.data.foreach_set('value', foam.reshape(-1).astype(np.float32))
     ob = bpy.data.objects.new('sea', me); bpy.context.scene.collection.objects.link(ob)
     m = bpy.data.materials.new('sea'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
-    out = N('ShaderNodeOutputMaterial'); bs = N('ShaderNodeBsdfPrincipled'); bs.inputs['Roughness'].default_value = 0.6; bs.inputs['Specular IOR Level'].default_value = 0.0; bs.inputs['IOR'].default_value = 1.0
-    def attr(n):
-        a = N('ShaderNodeAttribute'); a.attribute_type = 'GEOMETRY'; a.attribute_name = n; return a.outputs['Fac']
-    def mix(a, b, fac):
+    out = N('ShaderNodeOutputMaterial'); bs = N('ShaderNodeBsdfPrincipled')
+    bs.inputs['Roughness'].default_value = 0.1; bs.inputs['IOR'].default_value = 1.33; bs.inputs['Specular IOR Level'].default_value = 0.5
+    def mixc(a, b, fac):
         mx = N('ShaderNodeMix'); mx.data_type = 'RGBA'
         if hasattr(a, 'node'): L(a, mx.inputs[6])
         else: mx.inputs[6].default_value = a
         if hasattr(b, 'node'): L(b, mx.inputs[7])
         else: mx.inputs[7].default_value = b
         L(fac, mx.inputs[0]); return mx.outputs[2]
-    col = mix(hexc(P['sea_deep']), hexc(P['sea_mid']), attr('dmid'))
-    col = mix(col, hexc(P['sea_crest']), attr('crest'))
-    col = mix(col, hexc(P['sea_haze']), attr('haze'))
-    col = mix(col, hexc('#dfeceb'), attr('foam'))
+    cd = N('ShaderNodeCameraData'); mr = N('ShaderNodeMapRange'); mr.inputs['From Min'].default_value = 22.0; mr.inputs['From Max'].default_value = 220.0; L(cd.outputs['View Distance'], mr.inputs['Value'])
+    col = mixc(hexc(P['sea_near']), hexc(P['sea_far']), mr.outputs['Result'])
+    gp = N('ShaderNodeNewGeometry'); spz = N('ShaderNodeSeparateXYZ'); L(gp.outputs['Position'], spz.inputs[0])
+    cr = N('ShaderNodeMapRange'); cr.inputs['From Min'].default_value = 0.62; cr.inputs['From Max'].default_value = 0.95; L(spz.outputs['Z'], cr.inputs['Value'])
+    tcw = N('ShaderNodeTexCoord'); mpw = N('ShaderNodeMapping'); mpw.inputs['Scale'].default_value = (1.1, 0.7, 1.0); L(tcw.outputs['Object'], mpw.inputs['Vector'])
+    nzw = N('ShaderNodeTexNoise'); nzw.inputs['Scale'].default_value = 1.0; nzw.inputs['Detail'].default_value = 2.0; L(mpw.outputs[0], nzw.inputs['Vector'])
+    sp2 = N('ShaderNodeMapRange'); sp2.inputs['From Min'].default_value = 0.52; sp2.inputs['From Max'].default_value = 0.64; L(nzw.outputs['Fac'], sp2.inputs['Value'])
+    wc = N('ShaderNodeMath'); wc.operation = 'MULTIPLY'; wc.use_clamp = True; L(cr.outputs['Result'], wc.inputs[0]); L(sp2.outputs['Result'], wc.inputs[1])
+    col = mixc(col, hexc('#e4eeec'), wc.outputs[0])
+    fa = N('ShaderNodeAttribute'); fa.attribute_type = 'GEOMETRY'; fa.attribute_name = 'foam'
+    nz2 = N('ShaderNodeTexNoise'); nz2.inputs['Scale'].default_value = 1.6; nz2.inputs['Detail'].default_value = 1.0; mp2 = N('ShaderNodeMapping'); mp2.inputs['Scale'].default_value = (1.8, 0.22, 1.0); L(tcw.outputs['Object'], mp2.inputs['Vector']); L(mp2.outputs[0], nz2.inputs['Vector'])
+    br = N('ShaderNodeMapRange'); br.inputs['From Min'].default_value = 0.35; br.inputs['From Max'].default_value = 0.7; L(nz2.outputs['Fac'], br.inputs['Value'])
+    fm = N('ShaderNodeMath'); fm.operation = 'MULTIPLY'; fm.use_clamp = True; L(fa.outputs['Fac'], fm.inputs[0]); L(br.outputs['Result'], fm.inputs[1])
+    fm2 = N('ShaderNodeMath'); fm2.operation = 'MULTIPLY'; fm2.use_clamp = True; fm2.inputs[1].default_value = 1.4; L(fm.outputs[0], fm2.inputs[0])
+    col = mixc(col, hexc('#f0f6f2'), fm2.outputs[0])
     L(col, bs.inputs['Base Color'])
-    gm_ = N('ShaderNodeMath'); gm_.operation = 'MULTIPLY'; gm_.inputs[1].default_value = P.get('glit_k', 5.0); L(attr('glit'), gm_.inputs[0])
-    bs.inputs['Emission Color'].default_value = hexc('#fff2cc'); L(gm_.outputs[0], bs.inputs['Emission Strength'])
+    lw = N('ShaderNodeLayerWeight'); lw.inputs['Blend'].default_value = 0.3
+    em = N('ShaderNodeMath'); em.operation = 'MULTIPLY'; em.inputs[1].default_value = P.get('fresnel_k', 0.7); L(lw.outputs['Fresnel'], em.inputs[0])
+    bs.inputs['Emission Color'].default_value = hexc('#9fc2d8'); L(em.outputs[0], bs.inputs['Emission Strength'])
+    nzb = N('ShaderNodeTexNoise'); nzb.inputs['Scale'].default_value = 1.8; nzb.inputs['Detail'].default_value = 0.0; L(tcw.outputs['Object'], nzb.inputs['Vector'])
+    bp = N('ShaderNodeBump'); bp.inputs['Strength'].default_value = 0.2; bp.inputs['Distance'].default_value = 0.2; L(nzb.outputs['Fac'], bp.inputs['Height']); L(bp.outputs['Normal'], bs.inputs['Normal'])
     L(bs.outputs[0], out.inputs['Surface']); ob.data.materials.append(m)
+    # glossy-only virtual sun (light-linked to the sea): the sharp glitter lobe lands under it, ahead-left of the camera
+    coll = bpy.data.collections.new('seacoll'); bpy.context.scene.collection.children.link(coll); coll.objects.link(ob)
+    kd = Vector(kdir(P['glit_az'], P['glit_el'])).normalized(); d = bpy.data.lights.new('glint', 'SUN'); d.color = (1.0, 0.86, 0.62); d.energy = P.get('glit_k', 14.0); d.angle = math.radians(0.6)
+    o = bpy.data.objects.new('glint', d); bpy.context.scene.collection.objects.link(o); o.rotation_euler = (-kd).to_track_quat('Z', 'Y').to_euler()
+    o.visible_diffuse = False; o.light_linking.receiver_collection = coll
 
 PRESETS['ship'] = dict(
     sky=[(0.0, '#6c9ce0'), (0.46, '#a9c6e6'), (0.5, '#9dbfe6'), (0.58, '#7ea8e2'), (0.78, '#5b88d6'), (1.0, '#4a78cd')], sky_k=1.0,
-    key=(1.0, 0.88, 0.7, 7.5), key_dir=kdir(22, 46), sun_angle=0.9, exposure=0.1, sat=1.08, amb=('#3050FF', 1.9), samples=80, dbounce=1,
-    cloud=('#fffaf0', '#8c9ce8'), cloud_diffuse=True, cloud_z=(70, 170), ncloud=8, cloud_seed=4, cloud_scale=0.8,
-    sea_deep='#0a4452', sea_mid='#2a8a8c', sea_crest='#48aaa0', sea_haze='#9cbccb',
-    glit_az=20, glit_el=18, glit_lo=0.9975, glit_hi=0.9996, glit_k=4.0,
-    cam=dict(loc=(1.2, 37.0, 12.4), look=(0.5, 61.5, -0.5), lens=22))
+    key=(1.0, 0.92, 0.78, 6.5), key_dir=kdir(140, 48), sun_angle=0.9, exposure=0.1, sat=1.08, amb=('#3050FF', 1.7), samples=80, dbounce=1, gloss=2,
+    cloud=('#ffffff', '#8c9ce8'), cloud_diffuse=True, cloud_z=(70, 170), ncloud=8, cloud_seed=4, cloud_scale=0.8,
+    sea_near='#16707c', sea_far='#0a2c4c', fresnel_k=0.7,
+    glit_az=6, glit_el=11, glit_k=30.0,
+    cam=dict(loc=(4.4, -4.0, 9.2), look=(4.4 - 3.6, -4.0 + 39.8, 9.2 - 7.9), lens=22))
 
 def lights_ship(P):
-    sun_light(P); w = sky_world(P)
+    sun_light(P); w = sky_world2(P)
 
 # ================================================================== STILL 3: the astronomers' hall (Board of Longitude)
 def hall_mats():
@@ -827,7 +820,7 @@ def hall_mats():
     M['woodd'] = mat('hwoodd', '#5a3220', '#70402a', scale=5, aniso=(0.15, 1, 1))
     M['floor1'] = mat('hfl1', '#8a5e40', '#a07048', scale=2.2, aniso=(0.5, 0.12, 1))
     M['floor2'] = mat('hfl2', '#744c34', '#8a5e40', scale=2.2, aniso=(0.5, 0.12, 1))
-    M['rug'] = mat('hrug', '#0a1432', '#101c44', scale=6, contrast=1.1)
+    M['rug'] = mat('hrug', '#4c5268', '#586078', scale=6, contrast=1.1)
     M['rugb'] = mat('hrugb', '#5a1e2a', '#6c2432', scale=6)
     M['gold'] = metal_mat('hgold', '#cb9f48', '#e6bb5c', rough=0.3, spec=0.9, metallic=0.9)
     M['brass'] = metal_mat('hbrass', '#cb9f48', '#e6bb5c', rough=0.28, spec=0.9, metallic=0.9)
@@ -933,10 +926,10 @@ def build_hall(P):
     for k in range(9): mb.ell(M['gold'], (mx + rr.uniform(-0.45, 0.45), Y1 - 0.17, mz + rr.uniform(-0.75, 0.75)), (0.015, 0.01, 0.015), (6, 4))
     for (fx, fz, fw, fh, col) in [(2.9, 3.6, 0.8, 1.0, 'navy')]:
         mb.box(M['gold'], (fx, Y1 - 0.12, fz), (fw + 0.16, 0.06, fh + 0.16)); mb.box(M[col], (fx, Y1 - 0.16, fz), (fw, 0.04, fh)); mb.ell(M['tan'], (fx, Y1 - 0.2, fz + fh * 0.15), (fw * 0.18, 0.02, fh * 0.16), (12, 8)); mb.box(M['ink'], (fx, Y1 - 0.2, fz - fh * 0.15), (fw * 0.5, 0.02, fh * 0.3))
-    mb.box(M['gold'], (2.85, Y1 - 0.12, 2.15), (0.92, 0.06, 0.72)); mb.box(M['map'], (2.85, Y1 - 0.16, 2.15), (0.8, 0.04, 0.6))                              # wall map (lines and dots only)
-    for k in range(6): mb.box(M['ink'], (2.85 + rr.uniform(-0.25, 0.25), Y1 - 0.19, 2.15 + rr.uniform(-0.2, 0.2)), (rr.uniform(0.2, 0.5), 0.01, 0.008), ry=rr.uniform(0, 3.1))
-    for k in range(14): mb.ell(M['ink'], (2.85 + rr.uniform(-0.35, 0.35), Y1 - 0.19, 2.15 + rr.uniform(-0.25, 0.25)), (0.014, 0.008, 0.014), (6, 4))
-    mb.ell(M['teal'], (2.75, Y1 - 0.185, 2.15), (0.17, 0.01, 0.12), (10, 6)); mb.ell(M['tan'], (2.98, Y1 - 0.185, 2.1), (0.12, 0.01, 0.15), (10, 6))
+    mb.box(M['gold'], (2.85, Y1 - 0.12, 2.0), (1.1, 0.06, 1.45)); mb.box(M['map'], (2.85, Y1 - 0.16, 2.0), (0.98, 0.04, 1.33))                              # wall map (lines and dots only)
+    for k in range(12): mb.box(M['ink'], (2.85 + rr.uniform(-0.3, 0.3), Y1 - 0.19, 2.0 + rr.uniform(-0.5, 0.5)), (rr.uniform(0.25, 0.6), 0.01, 0.012), ry=rr.uniform(0, 3.1))
+    for k in range(26): mb.ell(M['ink'], (2.85 + rr.uniform(-0.42, 0.42), Y1 - 0.19, 2.0 + rr.uniform(-0.58, 0.58)), (0.02, 0.008, 0.02), (6, 4))
+    mb.ell(M['teal'], (2.7, Y1 - 0.185, 2.3), (0.26, 0.01, 0.22), (10, 6)); mb.ell(M['tan'], (3.0, Y1 - 0.185, 1.7), (0.22, 0.01, 0.3), (10, 6)); mb.ell(M['tan'], (2.7, Y1 - 0.185, 1.55), (0.15, 0.01, 0.12), (10, 6))
     # ---- long table with green baize + charts (dots and lines only), brass instruments
     tx0, tx1, ty0, ty1, tz = 1.35, 2.75, -0.7, 3.7, 0.8
     mb.box(M['woodd'], ((tx0 + tx1) / 2, (ty0 + ty1) / 2, tz - 0.05), (tx1 - tx0, ty1 - ty0, 0.1)); mb.box(M['baize'], ((tx0 + tx1) / 2, (ty0 + ty1) / 2, tz + 0.006), (tx1 - tx0 - 0.14, ty1 - ty0 - 0.14, 0.014))

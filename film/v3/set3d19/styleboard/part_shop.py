@@ -3,8 +3,8 @@
 def shop_mats():
     M = {}
     M['plaster'] = mat('plaster', '#b4663a', '#c87a44', scale=1.6, contrast=1.2, zgrad=(0.0, 0.5, '#7c3f30'))
-    M['floor'] = mat('floor', '#6e5a44', '#847052', scale=2.2, aniso=(0.5, 0.12, 1))
-    M['floor2'] = mat('floor2', '#5a4836', '#6e5a40', scale=2.2, aniso=(0.5, 0.12, 1))
+    M['floor'] = mat('floor', '#9a7040', '#86602f', scale=2.2, aniso=(0.5, 0.12, 1))
+    M['floor2'] = mat('floor2', '#7a5530', '#8a6636', scale=2.2, aniso=(0.5, 0.12, 1))
     M['gap'] = mat('gap', '#2a1a22')
     M['beam'] = mat('beam', '#4e3420', '#684224', scale=2.0, aniso=(0.1, 1, 1))
     M['honey'] = mat('honey', '#c28b3e', '#aa7430', scale=5, aniso=(0.15, 1, 1), contrast=1.3)
@@ -170,12 +170,13 @@ def build_shop(P):
     pass
     # ---- foreground at the frame edges (dark layer): tool chest with open drawers (left), basket of offcuts (right), sawhorse + plank, stool, leaning clock-case frame
     mb.push(Matrix.Translation((1.05, 0.35, 0)))
+    mb.push(Matrix.Translation((-1.85 - 0.25, -0.85, 0)) @ Matrix.Diagonal((0.65, 0.65, 0.65, 1.0)) @ Matrix.Translation((1.85, 0.85, 0)))
     mb.box(M['oakd'], (-1.85, -0.85, 0.3), (0.9, 0.5, 0.6)); mb.box(M['oak'], (-1.85, -0.85, 0.62), (0.94, 0.54, 0.05))
     for k in range(3):
         dz = 0.14 + 0.17 * k; ext = 0.0 if k == 1 else 0.22
         mb.box(M['honey'], (-1.85, -1.12 - ext, dz), (0.78, 0.04 + 0.0, 0.13)); mb.box(M['brass'], (-1.85, -1.14 - ext, dz), (0.12, 0.02, 0.03))
         if ext: mb.box(M['dark'], (-1.85, -1.0 - ext / 2, dz - 0.02), (0.72, ext, 0.05)); mb.box(M['steel'], (-1.95, -1.0 - ext / 2, dz + 0.03), (0.3, 0.04, 0.01), rz=0.4); mb.box(M['honey'], (-1.7, -1.05 - ext / 2, dz + 0.05), (0.1, 0.1, 0.1))
-    mb.pop()
+    mb.pop(); mb.pop()
     mb.push(Matrix.Translation((-0.95, 0.45, 0)))
     mb.cyl(M['oakd'], (1.8, -0.9, 0.2), 0.3, 0.4, seg=14, r2=0.34)
     for a in range(9): mb.rod(M['honey'] if a % 2 else M['oak'], (1.8 + 0.18 * math.cos(a * 0.7), -0.9 + 0.18 * math.sin(a * 0.7), 0.35), (1.8 + 0.3 * math.cos(a * 0.7 + 0.4), -0.9 + 0.3 * math.sin(a * 0.7 + 0.4), 0.75 + 0.05 * (a % 3)), 0.03, 0.03, 6)
@@ -214,19 +215,15 @@ def build_shop(P):
 
 PRESETS = {}
 PRESETS['shop'] = dict(
-    key=(1.0, 0.8, 0.52, 15.0), key_dir=kdir(-42, 23), sun_angle=1.0, exposure=0.4, sat=1.1, samples=96, dbounce=2,
+    key=(1.0, 0.8, 0.52, 42.0), key_dir=kdir(-46, 19), sun_angle=1.0, exposure=0.2, sat=1.1, samples=96, dbounce=2,
     cam=dict(loc=(0.05, -2.3, 1.32), look=(0.0, 3.4, 0.95), lens=22), flat_amb=('#3a3cff', 0.0))
 
 def lights_shop(P):
     sun_light(P); shafts(P, (-1.55, -0.3, 0.9, 2.3, 3.38))
-    area_light('fill', (0, 0.3, 2.85), (0, 0, 0), (4.4, 5.5), (0.015, 0.07, 1.0), 700)               # blue-violet ambient from above
-    area_light('fillc', (0.0, -2.8, 1.5), (math.pi / 2, 0, 0), (4.4, 2.8), (0.08, 0.18, 1.0), 170)    # from behind the camera
+    area_light('fill', (0, 0.3, 2.85), (0, 0, 0), (4.4, 5.5), (0.12, 0.22, 1.0), 420)               # blue-violet ambient from above
+    area_light('fillc', (0.0, -2.8, 1.5), (math.pi / 2, 0, 0), (4.4, 2.8), (0.2, 0.3, 1.0), 150)    # from behind the camera
     area_light('winfill', (-0.85, 3.5, 1.6), (-math.pi / 2, 0, 0), (1.1, 1.3), (0.3, 0.42, 1.0), 140)
-    fl = bpy.data.collections.new('floorcoll'); bpy.context.scene.collection.children.link(fl)
-    for o in bpy.data.objects:
-        if o.name.startswith(('shop_floor', 'shop_gap', 'shop_floor2')): fl.objects.link(o)
-    ff = area_light('floorfill', (0, 0.5, 2.8), (0, 0, 0), (4.4, 6.0), (0.0, 0.06, 1.0), 1900); ff.light_linking.receiver_collection = fl      # extra cool fill that only lights the floor
+    area_light('roomwarm', (0.3, 1.0, 2.8), (0, 0, 0), (3.5, 4.5), (1.0, 0.7, 0.4), 170)           # warm room light (candle/lamp bounce): shade stays warm
     pts = []
     for (loc, en) in [((0.51, 2.2, 1.3), 30), ((2.05, 2.2, 1.2), 16), ((-0.1, 1.5, 2.3), 20), ((1.75, 1.2, 0.95), 18), ((-1.1 + 0.6, 2.2, 2.35), 12), ((0.3, 1.3, 1.75), 30)]:
         pts.append(point_light('flamep', loc, (1.0, 0.62, 0.26), en, 0.05))
-    for o in pts: o.light_linking.blocker_collection = fl          # warm practicals do not light the floor: floor shade stays blue-violet

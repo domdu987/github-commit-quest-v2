@@ -10,7 +10,7 @@ def hall_mats():
     M['woodd'] = mat('hwoodd', '#5a3220', '#70402a', scale=5, aniso=(0.15, 1, 1))
     M['floor1'] = mat('hfl1', '#8a5e40', '#a07048', scale=2.2, aniso=(0.5, 0.12, 1))
     M['floor2'] = mat('hfl2', '#744c34', '#8a5e40', scale=2.2, aniso=(0.5, 0.12, 1))
-    M['rug'] = mat('hrug', '#0a1432', '#101c44', scale=6, contrast=1.1)
+    M['rug'] = mat('hrug', '#4c5268', '#586078', scale=6, contrast=1.1)
     M['rugb'] = mat('hrugb', '#5a1e2a', '#6c2432', scale=6)
     M['gold'] = metal_mat('hgold', '#cb9f48', '#e6bb5c', rough=0.3, spec=0.9, metallic=0.9)
     M['brass'] = metal_mat('hbrass', '#cb9f48', '#e6bb5c', rough=0.28, spec=0.9, metallic=0.9)
@@ -116,10 +116,10 @@ def build_hall(P):
     for k in range(9): mb.ell(M['gold'], (mx + rr.uniform(-0.45, 0.45), Y1 - 0.17, mz + rr.uniform(-0.75, 0.75)), (0.015, 0.01, 0.015), (6, 4))
     for (fx, fz, fw, fh, col) in [(2.9, 3.6, 0.8, 1.0, 'navy')]:
         mb.box(M['gold'], (fx, Y1 - 0.12, fz), (fw + 0.16, 0.06, fh + 0.16)); mb.box(M[col], (fx, Y1 - 0.16, fz), (fw, 0.04, fh)); mb.ell(M['tan'], (fx, Y1 - 0.2, fz + fh * 0.15), (fw * 0.18, 0.02, fh * 0.16), (12, 8)); mb.box(M['ink'], (fx, Y1 - 0.2, fz - fh * 0.15), (fw * 0.5, 0.02, fh * 0.3))
-    mb.box(M['gold'], (2.85, Y1 - 0.12, 2.15), (0.92, 0.06, 0.72)); mb.box(M['map'], (2.85, Y1 - 0.16, 2.15), (0.8, 0.04, 0.6))                              # wall map (lines and dots only)
-    for k in range(6): mb.box(M['ink'], (2.85 + rr.uniform(-0.25, 0.25), Y1 - 0.19, 2.15 + rr.uniform(-0.2, 0.2)), (rr.uniform(0.2, 0.5), 0.01, 0.008), ry=rr.uniform(0, 3.1))
-    for k in range(14): mb.ell(M['ink'], (2.85 + rr.uniform(-0.35, 0.35), Y1 - 0.19, 2.15 + rr.uniform(-0.25, 0.25)), (0.014, 0.008, 0.014), (6, 4))
-    mb.ell(M['teal'], (2.75, Y1 - 0.185, 2.15), (0.17, 0.01, 0.12), (10, 6)); mb.ell(M['tan'], (2.98, Y1 - 0.185, 2.1), (0.12, 0.01, 0.15), (10, 6))
+    mb.box(M['gold'], (2.85, Y1 - 0.12, 2.0), (1.1, 0.06, 1.45)); mb.box(M['map'], (2.85, Y1 - 0.16, 2.0), (0.98, 0.04, 1.33))                              # wall map (lines and dots only)
+    for k in range(12): mb.box(M['ink'], (2.85 + rr.uniform(-0.3, 0.3), Y1 - 0.19, 2.0 + rr.uniform(-0.5, 0.5)), (rr.uniform(0.25, 0.6), 0.01, 0.012), ry=rr.uniform(0, 3.1))
+    for k in range(26): mb.ell(M['ink'], (2.85 + rr.uniform(-0.42, 0.42), Y1 - 0.19, 2.0 + rr.uniform(-0.58, 0.58)), (0.02, 0.008, 0.02), (6, 4))
+    mb.ell(M['teal'], (2.7, Y1 - 0.185, 2.3), (0.26, 0.01, 0.22), (10, 6)); mb.ell(M['tan'], (3.0, Y1 - 0.185, 1.7), (0.22, 0.01, 0.3), (10, 6)); mb.ell(M['tan'], (2.7, Y1 - 0.185, 1.55), (0.15, 0.01, 0.12), (10, 6))
     # ---- long table with green baize + charts (dots and lines only), brass instruments
     tx0, tx1, ty0, ty1, tz = 1.35, 2.75, -0.7, 3.7, 0.8
     mb.box(M['woodd'], ((tx0 + tx1) / 2, (ty0 + ty1) / 2, tz - 0.05), (tx1 - tx0, ty1 - ty0, 0.1)); mb.box(M['baize'], ((tx0 + tx1) / 2, (ty0 + ty1) / 2, tz + 0.006), (tx1 - tx0 - 0.14, ty1 - ty0 - 0.14, 0.014))
