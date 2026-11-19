@@ -1,0 +1,28 @@
+{
+ "shot": "s21",
+ "g0": 1596,
+ "g1": 1683,
+ "first_g": 1590,
+ "n_frames": 99,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "framediff": {
+  "median": 7.12,
+  "p90": 13.5,
+  "min": 2.12,
+  "max": 22.38,
+  "n": 86,
+  "frames_lt1": 0
+ },
+ "max_chin_y": {
+  "soldier_stand_a": 714,
+  "soldier_cheer_cup_b": 722,
+  "soldier_stand_c": 714,
+  "soldier_freeze_a": 757,
+  "soldier_freeze_c": 763,
+  "soldier_freeze_b": 785
+ },
+ "s_per_frame": 31.8
+}

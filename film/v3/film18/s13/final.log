@@ -1,0 +1,167 @@
+00:00.425  cycles           | WARNING CUEW initialization failed: Error opening the library
+00:18.033  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_0994.png'
+s13 g 994: 15.5 s wall 30.6 cpu heads {'general': 488, 'crowd0': 512, 'crowd1': 505, 'crowd2': 518, 'crowd3': 582, 'crowd4': 586, 'crowd5': 634, 'crowd6': 626, 'crowd7': 650, 'crowd8': 589, 'crowd9': 482, 'crowd10': 466, 'crowd11': 512, 'crowd12': 525, 'crowd13': 547}
+00:41.885  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_0995.png'
+s13 g 995: 23.8 s wall 29.4 cpu heads {'general': 487, 'crowd0': 510, 'crowd1': 504, 'crowd2': 517, 'crowd3': 580, 'crowd4': 584, 'crowd5': 633, 'crowd6': 625, 'crowd7': 648, 'crowd8': 587, 'crowd9': 481, 'crowd10': 465, 'crowd11': 510, 'crowd12': 524, 'crowd13': 546}
+01:07.030  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_0996.png'
+s13 g 996: 25.1 s wall 29.2 cpu heads {'general': 485, 'crowd0': 509, 'crowd1': 502, 'crowd2': 516, 'crowd3': 579, 'crowd4': 583, 'crowd5': 631, 'crowd6': 623, 'crowd7': 647, 'crowd8': 587, 'crowd9': 479, 'crowd10': 463, 'crowd11': 509, 'crowd12': 523, 'crowd13': 545}
+01:22.306  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_0997.png'
+s13 g 997: 15.3 s wall 29.7 cpu heads {'general': 485, 'crowd0': 508, 'crowd1': 502, 'crowd2': 515, 'crowd3': 580, 'crowd4': 583, 'crowd5': 630, 'crowd6': 621, 'crowd7': 647, 'crowd8': 587, 'crowd9': 479, 'crowd10': 463, 'crowd11': 509, 'crowd12': 523, 'crowd13': 543}
+01:37.541  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_0998.png'
+s13 g 998: 15.2 s wall 29.8 cpu heads {'general': 483, 'crowd0': 506, 'crowd1': 500, 'crowd2': 514, 'crowd3': 579, 'crowd4': 582, 'crowd5': 628, 'crowd6': 619, 'crowd7': 647, 'crowd8': 587, 'crowd9': 478, 'crowd10': 461, 'crowd11': 508, 'crowd12': 522, 'crowd13': 541}
+01:52.589  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_0999.png'
+s13 g 999: 15.0 s wall 29.5 cpu heads {'general': 480, 'crowd0': 503, 'crowd1': 497, 'crowd2': 511, 'crowd3': 577, 'crowd4': 579, 'crowd5': 625, 'crowd6': 615, 'crowd7': 644, 'crowd8': 585, 'crowd9': 475, 'crowd10': 458, 'crowd11': 505, 'crowd12': 520, 'crowd13': 537}
+02:07.539  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1000.png'
+s13 g 1000: 14.9 s wall 29.3 cpu heads {'general': 478, 'crowd0': 501, 'crowd1': 495, 'crowd2': 509, 'crowd3': 575, 'crowd4': 577, 'crowd5': 623, 'crowd6': 613, 'crowd7': 642, 'crowd8': 583, 'crowd9': 473, 'crowd10': 456, 'crowd11': 503, 'crowd12': 518, 'crowd13': 535}
+02:22.666  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1001.png'
+s13 g 1001: 15.1 s wall 29.6 cpu heads {'general': 480, 'crowd0': 503, 'crowd1': 498, 'crowd2': 512, 'crowd3': 577, 'crowd4': 580, 'crowd5': 625, 'crowd6': 615, 'crowd7': 644, 'crowd8': 585, 'crowd9': 475, 'crowd10': 458, 'crowd11': 506, 'crowd12': 521, 'crowd13': 538}
+02:38.077  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1002.png'
+s13 g 1002: 15.4 s wall 30.3 cpu heads {'general': 485, 'crowd0': 508, 'crowd1': 503, 'crowd2': 517, 'crowd3': 582, 'crowd4': 584, 'crowd5': 630, 'crowd6': 620, 'crowd7': 649, 'crowd8': 590, 'crowd9': 480, 'crowd10': 463, 'crowd11': 511, 'crowd12': 526, 'crowd13': 543}
+02:53.480  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1003.png'
+s13 g 1003: 15.4 s wall 30.4 cpu heads {'general': 488, 'crowd0': 511, 'crowd1': 506, 'crowd2': 519, 'crowd3': 584, 'crowd4': 587, 'crowd5': 633, 'crowd6': 623, 'crowd7': 651, 'crowd8': 592, 'crowd9': 483, 'crowd10': 466, 'crowd11': 513, 'crowd12': 528, 'crowd13': 546}
+03:08.606  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1004.png'
+s13 g 1004: 15.1 s wall 29.5 cpu heads {'general': 488, 'crowd0': 511, 'crowd1': 505, 'crowd2': 519, 'crowd3': 583, 'crowd4': 586, 'crowd5': 632, 'crowd6': 623, 'crowd7': 650, 'crowd8': 591, 'crowd9': 483, 'crowd10': 466, 'crowd11': 513, 'crowd12': 527, 'crowd13': 546}
+03:23.479  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1005.png'
+s13 g 1005: 14.8 s wall 29.2 cpu heads {'general': 487, 'crowd0': 510, 'crowd1': 504, 'crowd2': 518, 'crowd3': 582, 'crowd4': 585, 'crowd5': 631, 'crowd6': 622, 'crowd7': 648, 'crowd8': 589, 'crowd9': 481, 'crowd10': 465, 'crowd11': 511, 'crowd12': 525, 'crowd13': 545}
+03:38.666  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1006.png'
+s13 g 1006: 15.2 s wall 29.6 cpu heads {'general': 487, 'crowd0': 510, 'crowd1': 504, 'crowd2': 517, 'crowd3': 581, 'crowd4': 584, 'crowd5': 631, 'crowd6': 623, 'crowd7': 647, 'crowd8': 588, 'crowd9': 481, 'crowd10': 465, 'crowd11': 511, 'crowd12': 525, 'crowd13': 546}
+03:53.541  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1007.png'
+s13 g 1007: 14.9 s wall 29.3 cpu heads {'general': 486, 'crowd0': 510, 'crowd1': 504, 'crowd2': 517, 'crowd3': 580, 'crowd4': 584, 'crowd5': 631, 'crowd6': 622, 'crowd7': 646, 'crowd8': 587, 'crowd9': 481, 'crowd10': 464, 'crowd11': 510, 'crowd12': 524, 'crowd13': 545}
+04:08.422  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1008.png'
+s13 g 1008: 14.9 s wall 29.2 cpu heads {'general': 484, 'crowd0': 507, 'crowd1': 501, 'crowd2': 514, 'crowd3': 577, 'crowd4': 581, 'crowd5': 628, 'crowd6': 619, 'crowd7': 643, 'crowd8': 585, 'crowd9': 478, 'crowd10': 461, 'crowd11': 507, 'crowd12': 521, 'crowd13': 542}
+04:23.720  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1009.png'
+s13 g 1009: 15.3 s wall 29.9 cpu heads {'general': 481, 'crowd0': 504, 'crowd1': 498, 'crowd2': 511, 'crowd3': 575, 'crowd4': 578, 'crowd5': 624, 'crowd6': 615, 'crowd7': 641, 'crowd8': 583, 'crowd9': 475, 'crowd10': 458, 'crowd11': 505, 'crowd12': 519, 'crowd13': 539}
+04:38.878  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1010.png'
+s13 g 1010: 15.1 s wall 29.9 cpu heads {'general': 481, 'crowd0': 505, 'crowd1': 499, 'crowd2': 512, 'crowd3': 576, 'crowd4': 579, 'crowd5': 625, 'crowd6': 616, 'crowd7': 642, 'crowd8': 584, 'crowd9': 476, 'crowd10': 459, 'crowd11': 506, 'crowd12': 520, 'crowd13': 539}
+04:54.086  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1011.png'
+s13 g 1011: 15.2 s wall 29.9 cpu heads {'general': 486, 'crowd0': 509, 'crowd1': 503, 'crowd2': 517, 'crowd3': 580, 'crowd4': 583, 'crowd5': 629, 'crowd6': 620, 'crowd7': 646, 'crowd8': 588, 'crowd9': 480, 'crowd10': 464, 'crowd11': 510, 'crowd12': 525, 'crowd13': 544}
+05:09.111  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1012.png'
+s13 g 1012: 15.0 s wall 29.3 cpu heads {'general': 490, 'crowd0': 513, 'crowd1': 507, 'crowd2': 520, 'crowd3': 584, 'crowd4': 587, 'crowd5': 633, 'crowd6': 624, 'crowd7': 650, 'crowd8': 592, 'crowd9': 484, 'crowd10': 468, 'crowd11': 514, 'crowd12': 529, 'crowd13': 547}
+05:23.640  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1013.png'
+s13 g 1013: 14.5 s wall 28.7 cpu heads {'general': 490, 'crowd0': 513, 'crowd1': 507, 'crowd2': 521, 'crowd3': 585, 'crowd4': 588, 'crowd5': 633, 'crowd6': 624, 'crowd7': 650, 'crowd8': 593, 'crowd9': 485, 'crowd10': 468, 'crowd11': 515, 'crowd12': 529, 'crowd13': 547}
+05:38.567  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1014.png'
+s13 g 1014: 14.9 s wall 29.3 cpu heads {'general': 489, 'crowd0': 512, 'crowd1': 506, 'crowd2': 520, 'crowd3': 584, 'crowd4': 586, 'crowd5': 631, 'crowd6': 622, 'crowd7': 649, 'crowd8': 592, 'crowd9': 484, 'crowd10': 467, 'crowd11': 514, 'crowd12': 528, 'crowd13': 546}
+05:54.108  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1015.png'
+s13 g 1015: 15.5 s wall 30.4 cpu heads {'general': 488, 'crowd0': 511, 'crowd1': 506, 'crowd2': 520, 'crowd3': 584, 'crowd4': 586, 'crowd5': 631, 'crowd6': 621, 'crowd7': 649, 'crowd8': 592, 'crowd9': 484, 'crowd10': 467, 'crowd11': 514, 'crowd12': 528, 'crowd13': 545}
+06:09.291  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1016.png'
+s13 g 1016: 15.2 s wall 29.9 cpu heads {'general': 474, 'crowd0': 499, 'crowd1': 493, 'crowd2': 508, 'crowd3': 579, 'crowd4': 581, 'crowd5': 629, 'crowd6': 619, 'crowd7': 649, 'crowd8': 587, 'crowd9': 469, 'crowd10': 450, 'crowd11': 502, 'crowd12': 518, 'crowd13': 537}
+06:25.108  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1017.png'
+s13 g 1017: 15.8 s wall 31.1 cpu heads {'general': 446, 'crowd0': 475, 'crowd1': 468, 'crowd2': 485, 'crowd3': 566, 'crowd4': 569, 'crowd5': 625, 'crowd6': 614, 'crowd7': 647, 'crowd8': 575, 'crowd9': 439, 'crowd10': 418, 'crowd11': 477, 'crowd12': 495, 'crowd13': 518}
+06:41.191  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1018.png'
+s13 g 1018: 16.0 s wall 31.5 cpu heads {'general': 427, 'crowd0': 458, 'crowd1': 450, 'crowd2': 469, 'crowd3': 555, 'crowd4': 559, 'crowd5': 620, 'crowd6': 608, 'crowd7': 643, 'crowd8': 565, 'crowd9': 419, 'crowd10': 397, 'crowd11': 460, 'crowd12': 480, 'crowd13': 505}
+06:57.361  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1019.png'
+s13 g 1019: 16.1 s wall 31.9 cpu heads {'general': 428, 'crowd0': 459, 'crowd1': 451, 'crowd2': 469, 'crowd3': 554, 'crowd4': 558, 'crowd5': 619, 'crowd6': 607, 'crowd7': 641, 'crowd8': 564, 'crowd9': 420, 'crowd10': 398, 'crowd11': 460, 'crowd12': 479, 'crowd13': 506}
+07:13.058  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1020.png'
+s13 g 1020: 15.7 s wall 30.8 cpu heads {'general': 437, 'crowd0': 467, 'crowd1': 460, 'crowd2': 477, 'crowd3': 560, 'crowd4': 564, 'crowd5': 623, 'crowd6': 612, 'crowd7': 645, 'crowd8': 570, 'crowd9': 429, 'crowd10': 408, 'crowd11': 468, 'crowd12': 487, 'crowd13': 513}
+07:28.257  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1021.png'
+s13 g 1021: 15.2 s wall 29.5 cpu heads {'general': 449, 'crowd0': 479, 'crowd1': 471, 'crowd2': 488, 'crowd3': 568, 'crowd4': 572, 'crowd5': 629, 'crowd6': 619, 'crowd7': 650, 'crowd8': 577, 'crowd9': 442, 'crowd10': 421, 'crowd11': 479, 'crowd12': 497, 'crowd13': 523}
+07:43.713  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1022.png'
+s13 g 1022: 15.4 s wall 30.4 cpu heads {'general': 459, 'crowd0': 487, 'crowd1': 480, 'crowd2': 496, 'crowd3': 572, 'crowd4': 576, 'crowd5': 632, 'crowd6': 622, 'crowd7': 651, 'crowd8': 581, 'crowd9': 451, 'crowd10': 432, 'crowd11': 488, 'crowd12': 505, 'crowd13': 530}
+07:59.642  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1023.png'
+s13 g 1023: 15.9 s wall 31.3 cpu heads {'general': 466, 'crowd0': 493, 'crowd1': 486, 'crowd2': 501, 'crowd3': 574, 'crowd4': 578, 'crowd5': 632, 'crowd6': 622, 'crowd7': 649, 'crowd8': 582, 'crowd9': 459, 'crowd10': 440, 'crowd11': 493, 'crowd12': 510, 'crowd13': 534}
+08:14.869  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1024.png'
+s13 g 1024: 15.2 s wall 29.8 cpu heads {'general': 473, 'crowd0': 499, 'crowd1': 492, 'crowd2': 507, 'crowd3': 577, 'crowd4': 581, 'crowd5': 631, 'crowd6': 622, 'crowd7': 648, 'crowd8': 585, 'crowd9': 467, 'crowd10': 448, 'crowd11': 500, 'crowd12': 515, 'crowd13': 538}
+08:30.215  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1025.png'
+s13 g 1025: 15.3 s wall 30.2 cpu heads {'general': 481, 'crowd0': 505, 'crowd1': 499, 'crowd2': 513, 'crowd3': 581, 'crowd4': 584, 'crowd5': 631, 'crowd6': 622, 'crowd7': 648, 'crowd8': 588, 'crowd9': 475, 'crowd10': 457, 'crowd11': 507, 'crowd12': 522, 'crowd13': 542}
+08:45.429  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1026.png'
+s13 g 1026: 15.2 s wall 30.1 cpu heads {'general': 485, 'crowd0': 508, 'crowd1': 503, 'crowd2': 517, 'crowd3': 582, 'crowd4': 585, 'crowd5': 630, 'crowd6': 620, 'crowd7': 647, 'crowd8': 590, 'crowd9': 480, 'crowd10': 462, 'crowd11': 511, 'crowd12': 526, 'crowd13': 544}
+09:00.938  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1027.png'
+s13 g 1027: 15.5 s wall 30.2 cpu heads {'general': 485, 'crowd0': 508, 'crowd1': 503, 'crowd2': 516, 'crowd3': 581, 'crowd4': 583, 'crowd5': 626, 'crowd6': 617, 'crowd7': 644, 'crowd8': 588, 'crowd9': 480, 'crowd10': 463, 'crowd11': 511, 'crowd12': 525, 'crowd13': 542}
+09:15.857  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1028.png'
+s13 g 1028: 14.9 s wall 29.4 cpu heads {'general': 484, 'crowd0': 507, 'crowd1': 502, 'crowd2': 515, 'crowd3': 579, 'crowd4': 581, 'crowd5': 624, 'crowd6': 614, 'crowd7': 642, 'crowd8': 587, 'crowd9': 480, 'crowd10': 462, 'crowd11': 510, 'crowd12': 524, 'crowd13': 541}
+09:30.708  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1029.png'
+s13 g 1029: 14.8 s wall 29.0 cpu heads {'general': 487, 'crowd0': 509, 'crowd1': 504, 'crowd2': 518, 'crowd3': 581, 'crowd4': 583, 'crowd5': 626, 'crowd6': 616, 'crowd7': 643, 'crowd8': 589, 'crowd9': 482, 'crowd10': 465, 'crowd11': 512, 'crowd12': 526, 'crowd13': 543}
+09:46.153  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1030.png'
+s13 g 1030: 15.4 s wall 30.3 cpu heads {'general': 491, 'sentry': 644, 'crowd0': 514, 'crowd1': 509, 'crowd2': 522, 'crowd3': 585, 'crowd4': 587, 'crowd5': 630, 'crowd6': 621, 'crowd7': 647, 'crowd8': 593, 'crowd9': 486, 'crowd10': 469, 'crowd11': 516, 'crowd12': 531, 'crowd13': 548}
+10:01.650  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1031.png'
+s13 g 1031: 15.5 s wall 30.5 cpu heads {'general': 495, 'sentry': 647, 'crowd0': 517, 'crowd1': 512, 'crowd2': 525, 'crowd3': 587, 'crowd4': 590, 'crowd5': 633, 'crowd6': 624, 'crowd7': 650, 'crowd8': 595, 'crowd9': 489, 'crowd10': 473, 'crowd11': 519, 'crowd12': 533, 'crowd13': 551}
+10:16.903  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1032.png'
+s13 g 1032: 15.2 s wall 30.2 cpu heads {'general': 495, 'sentry': 648, 'crowd0': 518, 'crowd1': 512, 'crowd2': 525, 'crowd3': 587, 'crowd4': 590, 'crowd5': 633, 'crowd6': 624, 'crowd7': 649, 'crowd8': 594, 'crowd9': 489, 'crowd10': 473, 'crowd11': 519, 'crowd12': 533, 'crowd13': 551}
+10:32.216  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1033.png'
+s13 g 1033: 15.3 s wall 30.0 cpu heads {'general': 495, 'sentry': 649, 'crowd0': 518, 'crowd1': 512, 'crowd2': 525, 'crowd3': 586, 'crowd4': 589, 'crowd5': 632, 'crowd6': 625, 'crowd7': 647, 'crowd8': 592, 'crowd9': 489, 'crowd10': 473, 'crowd11': 518, 'crowd12': 532, 'crowd13': 552}
+10:46.812  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1034.png'
+s13 g 1034: 14.6 s wall 28.8 cpu heads {'general': 496, 'sentry': 651, 'crowd0': 518, 'crowd1': 512, 'crowd2': 525, 'crowd3': 585, 'crowd4': 589, 'crowd5': 633, 'crowd6': 626, 'crowd7': 647, 'crowd8': 592, 'crowd9': 489, 'crowd10': 474, 'crowd11': 518, 'crowd12': 532, 'crowd13': 553}
+11:01.423  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1035.png'
+s13 g 1035: 14.6 s wall 28.8 cpu heads {'general': 495, 'sentry': 650, 'crowd0': 518, 'crowd1': 512, 'crowd2': 525, 'crowd3': 585, 'crowd4': 588, 'crowd5': 633, 'crowd6': 626, 'crowd7': 645, 'crowd8': 591, 'crowd9': 489, 'crowd10': 473, 'crowd11': 518, 'crowd12': 531, 'crowd13': 553}
+11:17.139  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1036.png'
+s13 g 1036: 15.7 s wall 30.6 cpu heads {'general': 477, 'sentry': 647, 'crowd0': 502, 'crowd1': 496, 'crowd2': 510, 'crowd3': 576, 'crowd4': 580, 'crowd5': 628, 'crowd6': 620, 'crowd7': 643, 'crowd8': 583, 'crowd9': 471, 'crowd10': 453, 'crowd11': 502, 'crowd12': 517, 'crowd13': 540}
+11:32.855  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1037.png'
+s13 g 1037: 15.7 s wall 30.9 cpu heads {'general': 446, 'sentry': 641, 'crowd0': 475, 'crowd1': 467, 'crowd2': 484, 'crowd3': 562, 'crowd4': 566, 'crowd5': 621, 'crowd6': 611, 'crowd7': 640, 'crowd8': 571, 'crowd9': 438, 'crowd10': 417, 'crowd11': 476, 'crowd12': 494, 'crowd13': 518}
+11:48.402  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1038.png'
+s13 g 1038: 15.5 s wall 30.7 cpu heads {'general': 431, 'sentry': 639, 'crowd0': 462, 'crowd1': 454, 'crowd2': 473, 'crowd3': 558, 'crowd4': 561, 'crowd5': 619, 'crowd6': 608, 'crowd7': 642, 'crowd8': 568, 'crowd9': 423, 'crowd10': 400, 'crowd11': 464, 'crowd12': 484, 'crowd13': 508}
+12:04.636  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1039.png'
+s13 g 1039: 16.2 s wall 31.9 cpu heads {'general': 438, 'sentry': 642, 'crowd0': 468, 'crowd1': 461, 'crowd2': 479, 'crowd3': 565, 'crowd4': 568, 'crowd5': 624, 'crowd6': 612, 'crowd7': 648, 'crowd8': 575, 'crowd9': 431, 'crowd10': 408, 'crowd11': 472, 'crowd12': 491, 'crowd13': 514}
+12:19.539  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1040.png'
+s13 g 1040: 14.9 s wall 29.4 cpu heads {'general': 447, 'sentry': 646, 'crowd0': 477, 'crowd1': 470, 'crowd2': 488, 'crowd3': 572, 'crowd4': 574, 'crowd5': 629, 'crowd6': 617, 'crowd7': 653, 'crowd8': 582, 'crowd9': 440, 'crowd10': 418, 'crowd11': 481, 'crowd12': 500, 'crowd13': 521}
+12:34.403  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1041.png'
+s13 g 1041: 14.8 s wall 29.3 cpu heads {'general': 454, 'sentry': 646, 'crowd0': 483, 'crowd1': 477, 'crowd2': 494, 'crowd3': 575, 'crowd4': 577, 'crowd5': 630, 'crowd6': 618, 'crowd7': 654, 'crowd8': 585, 'crowd9': 448, 'crowd10': 426, 'crowd11': 487, 'crowd12': 506, 'crowd13': 526}
+12:49.796  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1042.png'
+s13 g 1042: 15.4 s wall 30.2 cpu heads {'general': 462, 'sentry': 646, 'crowd0': 489, 'crowd1': 483, 'crowd2': 500, 'crowd3': 577, 'crowd4': 579, 'crowd5': 630, 'crowd6': 619, 'crowd7': 652, 'crowd8': 587, 'crowd9': 455, 'crowd10': 434, 'crowd11': 493, 'crowd12': 511, 'crowd13': 530}
+13:04.874  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1043.png'
+s13 g 1043: 15.0 s wall 29.6 cpu heads {'general': 471, 'sentry': 647, 'crowd0': 497, 'crowd1': 491, 'crowd2': 507, 'crowd3': 580, 'crowd4': 582, 'crowd5': 631, 'crowd6': 621, 'crowd7': 652, 'crowd8': 589, 'crowd9': 464, 'crowd10': 444, 'crowd11': 500, 'crowd12': 517, 'crowd13': 536}
+13:20.092  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1044.png'
+s13 g 1044: 15.2 s wall 30.2 cpu heads {'general': 479, 'sentry': 648, 'crowd0': 505, 'crowd1': 498, 'crowd2': 513, 'crowd3': 582, 'crowd4': 585, 'crowd5': 632, 'crowd6': 623, 'crowd7': 650, 'crowd8': 590, 'crowd9': 473, 'crowd10': 454, 'crowd11': 506, 'crowd12': 522, 'crowd13': 542}
+13:35.264  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1045.png'
+s13 g 1045: 15.2 s wall 29.8 cpu heads {'general': 484, 'sentry': 647, 'crowd0': 509, 'crowd1': 502, 'crowd2': 516, 'crowd3': 581, 'crowd4': 584, 'crowd5': 630, 'crowd6': 622, 'crowd7': 645, 'crowd8': 588, 'crowd9': 478, 'crowd10': 460, 'crowd11': 509, 'crowd12': 524, 'crowd13': 545}
+13:49.714  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1046.png'
+s13 g 1046: 14.4 s wall 28.5 cpu heads {'general': 486, 'sentry': 644, 'crowd0': 510, 'crowd1': 504, 'crowd2': 517, 'crowd3': 578, 'crowd4': 582, 'crowd5': 627, 'crowd6': 619, 'crowd7': 639, 'crowd8': 585, 'crowd9': 480, 'crowd10': 463, 'crowd11': 510, 'crowd12': 524, 'crowd13': 546}
+14:04.996  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1047.png'
+s13 g 1047: 15.3 s wall 30.1 cpu heads {'general': 489, 'sentry': 643, 'crowd0': 512, 'crowd1': 506, 'crowd2': 519, 'crowd3': 578, 'crowd4': 582, 'crowd5': 625, 'crowd6': 618, 'crowd7': 637, 'crowd8': 584, 'crowd9': 483, 'crowd10': 467, 'crowd11': 512, 'crowd12': 525, 'crowd13': 547}
+14:19.998  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1048.png'
+s13 g 1048: 15.0 s wall 29.4 cpu heads {'general': 494, 'sentry': 644, 'crowd0': 516, 'crowd1': 510, 'crowd2': 523, 'crowd3': 582, 'crowd4': 585, 'crowd5': 628, 'crowd6': 621, 'crowd7': 641, 'crowd8': 589, 'crowd9': 488, 'crowd10': 471, 'crowd11': 516, 'crowd12': 530, 'crowd13': 550}
+14:34.726  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1049.png'
+s13 g 1049: 14.7 s wall 28.9 cpu heads {'general': 498, 'sentry': 646, 'crowd0': 520, 'crowd1': 514, 'crowd2': 527, 'crowd3': 587, 'crowd4': 590, 'crowd5': 631, 'crowd6': 624, 'crowd7': 646, 'crowd8': 594, 'crowd9': 492, 'crowd10': 476, 'crowd11': 521, 'crowd12': 535, 'crowd13': 554}
+14:49.630  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1050.png'
+s13 g 1050: 14.9 s wall 29.3 cpu heads {'general': 499, 'sentry': 647, 'crowd0': 522, 'crowd1': 516, 'crowd2': 529, 'crowd3': 590, 'crowd4': 592, 'crowd5': 633, 'crowd6': 625, 'crowd7': 648, 'crowd8': 597, 'crowd9': 494, 'crowd10': 477, 'crowd11': 523, 'crowd12': 537, 'crowd13': 555}
+15:04.295  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1051.png'
+s13 g 1051: 14.6 s wall 28.8 cpu heads {'general': 499, 'sentry': 646, 'crowd0': 521, 'crowd1': 516, 'crowd2': 529, 'crowd3': 590, 'crowd4': 592, 'crowd5': 632, 'crowd6': 624, 'crowd7': 649, 'crowd8': 597, 'crowd9': 494, 'crowd10': 477, 'crowd11': 524, 'crowd12': 538, 'crowd13': 554}
+15:18.924  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1052.png'
+s13 g 1052: 14.6 s wall 28.8 cpu heads {'general': 500, 'sentry': 645, 'crowd0': 522, 'crowd1': 517, 'crowd2': 530, 'crowd3': 591, 'crowd4': 593, 'crowd5': 633, 'crowd6': 624, 'crowd7': 650, 'crowd8': 598, 'crowd9': 495, 'crowd10': 478, 'crowd11': 524, 'crowd12': 539, 'crowd13': 554}
+15:33.520  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1053.png'
+s13 g 1053: 14.6 s wall 28.9 cpu heads {'general': 501, 'sentry': 645, 'crowd0': 523, 'crowd1': 518, 'crowd2': 531, 'crowd3': 592, 'crowd4': 594, 'crowd5': 633, 'crowd6': 625, 'crowd7': 651, 'crowd8': 600, 'crowd9': 496, 'crowd10': 479, 'crowd11': 526, 'crowd12': 540, 'crowd13': 555}
+15:48.479  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1054.png'
+s13 g 1054: 14.9 s wall 29.4 cpu heads {'general': 499, 'sentry': 644, 'crowd0': 521, 'crowd1': 516, 'crowd2': 530, 'crowd3': 591, 'crowd4': 593, 'crowd5': 632, 'crowd6': 623, 'crowd7': 649, 'crowd8': 598, 'crowd9': 495, 'crowd10': 478, 'crowd11': 524, 'crowd12': 539, 'crowd13': 554}
+16:03.425  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1055.png'
+s13 g 1055: 14.9 s wall 29.3 cpu heads {'general': 496, 'sentry': 641, 'crowd0': 518, 'crowd1': 512, 'crowd2': 526, 'crowd3': 586, 'crowd4': 588, 'crowd5': 628, 'crowd6': 620, 'crowd7': 644, 'crowd8': 593, 'crowd9': 490, 'crowd10': 473, 'crowd11': 520, 'crowd12': 534, 'crowd13': 550}
+16:18.568  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1056.png'
+s13 g 1056: 15.1 s wall 29.8 cpu heads {'general': 480, 'sentry': 639, 'crowd0': 504, 'crowd1': 498, 'crowd2': 512, 'crowd3': 577, 'crowd4': 580, 'crowd5': 624, 'crowd6': 615, 'crowd7': 640, 'crowd8': 585, 'crowd9': 474, 'crowd10': 456, 'crowd11': 506, 'crowd12': 521, 'crowd13': 540}
+16:33.928  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1057.png'
+s13 g 1057: 15.3 s wall 30.3 cpu heads {'general': 458, 'sentry': 643, 'crowd0': 486, 'crowd1': 478, 'crowd2': 494, 'crowd3': 568, 'crowd4': 572, 'crowd5': 623, 'crowd6': 614, 'crowd7': 640, 'crowd8': 576, 'crowd9': 450, 'crowd10': 430, 'crowd11': 486, 'crowd12': 503, 'crowd13': 527}
+16:49.290  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1058.png'
+s13 g 1058: 15.3 s wall 30.2 cpu heads {'general': 451, 'sentry': 649, 'crowd0': 481, 'crowd1': 473, 'crowd2': 489, 'crowd3': 567, 'crowd4': 572, 'crowd5': 627, 'crowd6': 618, 'crowd7': 644, 'crowd8': 576, 'crowd9': 442, 'crowd10': 421, 'crowd11': 481, 'crowd12': 498, 'crowd13': 525}
+17:04.457  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1059.png'
+s13 g 1059: 15.1 s wall 30.1 cpu heads {'general': 456, 'sentry': 651, 'crowd0': 485, 'crowd1': 477, 'crowd2': 494, 'crowd3': 571, 'crowd4': 576, 'crowd5': 630, 'crowd6': 621, 'crowd7': 647, 'crowd8': 579, 'crowd9': 447, 'crowd10': 426, 'crowd11': 485, 'crowd12': 503, 'crowd13': 529}
+17:19.500  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1060.png'
+s13 g 1060: 15.0 s wall 29.6 cpu heads {'general': 460, 'sentry': 650, 'crowd0': 489, 'crowd1': 481, 'crowd2': 497, 'crowd3': 573, 'crowd4': 577, 'crowd5': 631, 'crowd6': 621, 'crowd7': 648, 'crowd8': 582, 'crowd9': 451, 'crowd10': 431, 'crowd11': 489, 'crowd12': 506, 'crowd13': 532}
+17:34.820  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1061.png'
+s13 g 1061: 15.3 s wall 30.0 cpu heads {'general': 465, 'sentry': 649, 'crowd0': 493, 'crowd1': 486, 'crowd2': 502, 'crowd3': 576, 'crowd4': 580, 'crowd5': 631, 'crowd6': 622, 'crowd7': 649, 'crowd8': 585, 'crowd9': 458, 'crowd10': 437, 'crowd11': 494, 'crowd12': 511, 'crowd13': 535}
+17:50.204  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1062.png'
+s13 g 1062: 15.4 s wall 30.3 cpu heads {'general': 473, 'sentry': 650, 'crowd0': 500, 'crowd1': 493, 'crowd2': 509, 'crowd3': 581, 'crowd4': 584, 'crowd5': 633, 'crowd6': 624, 'crowd7': 651, 'crowd8': 589, 'crowd9': 466, 'crowd10': 446, 'crowd11': 501, 'crowd12': 518, 'crowd13': 540}
+18:05.726  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1063.png'
+s13 g 1063: 15.5 s wall 30.4 cpu heads {'general': 480, 'sentry': 648, 'crowd0': 505, 'crowd1': 499, 'crowd2': 514, 'crowd3': 583, 'crowd4': 586, 'crowd5': 633, 'crowd6': 624, 'crowd7': 650, 'crowd8': 592, 'crowd9': 473, 'crowd10': 454, 'crowd11': 507, 'crowd12': 523, 'crowd13': 544}
+18:20.733  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1064.png'
+s13 g 1064: 15.0 s wall 29.3 cpu heads {'general': 483, 'sentry': 643, 'crowd0': 507, 'crowd1': 501, 'crowd2': 516, 'crowd3': 583, 'crowd4': 585, 'crowd5': 629, 'crowd6': 620, 'crowd7': 647, 'crowd8': 591, 'crowd9': 477, 'crowd10': 458, 'crowd11': 509, 'crowd12': 525, 'crowd13': 543}
+18:35.677  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1065.png'
+s13 g 1065: 14.9 s wall 29.4 cpu heads {'general': 485, 'sentry': 638, 'crowd0': 508, 'crowd1': 503, 'crowd2': 517, 'crowd3': 581, 'crowd4': 583, 'crowd5': 625, 'crowd6': 616, 'crowd7': 643, 'crowd8': 589, 'crowd9': 479, 'crowd10': 461, 'crowd11': 511, 'crowd12': 526, 'crowd13': 543}
+18:50.437  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1066.png'
+s13 g 1066: 14.7 s wall 29.4 cpu heads {'general': 490, 'sentry': 638, 'crowd0': 512, 'crowd1': 507, 'crowd2': 521, 'crowd3': 583, 'crowd4': 585, 'crowd5': 625, 'crowd6': 617, 'crowd7': 642, 'crowd8': 591, 'crowd9': 485, 'crowd10': 467, 'crowd11': 515, 'crowd12': 530, 'crowd13': 546}
+19:05.625  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1067.png'
+s13 g 1067: 15.2 s wall 29.6 cpu heads {'general': 497, 'sentry': 641, 'crowd0': 519, 'crowd1': 514, 'crowd2': 527, 'crowd3': 587, 'crowd4': 589, 'crowd5': 629, 'crowd6': 621, 'crowd7': 644, 'crowd8': 594, 'crowd9': 492, 'crowd10': 475, 'crowd11': 521, 'crowd12': 536, 'crowd13': 552}
+19:20.465  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1068.png'
+s13 g 1068: 14.8 s wall 29.2 cpu heads {'general': 502, 'sentry': 645, 'crowd0': 524, 'crowd1': 518, 'crowd2': 531, 'crowd3': 590, 'crowd4': 592, 'crowd5': 632, 'crowd6': 624, 'crowd7': 646, 'crowd8': 597, 'crowd9': 496, 'crowd10': 480, 'crowd11': 525, 'crowd12': 539, 'crowd13': 556}
+19:34.907  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1069.png'
+s13 g 1069: 14.4 s wall 28.4 cpu heads {'general': 503, 'sentry': 647, 'crowd0': 525, 'crowd1': 519, 'crowd2': 532, 'crowd3': 590, 'crowd4': 593, 'crowd5': 633, 'crowd6': 625, 'crowd7': 646, 'crowd8': 597, 'crowd9': 497, 'crowd10': 481, 'crowd11': 526, 'crowd12': 539, 'crowd13': 557}
+19:49.303  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1070.png'
+s13 g 1070: 14.4 s wall 28.3 cpu heads {'general': 503, 'sentry': 647, 'crowd0': 525, 'crowd1': 520, 'crowd2': 532, 'crowd3': 590, 'crowd4': 593, 'crowd5': 633, 'crowd6': 626, 'crowd7': 646, 'crowd8': 597, 'crowd9': 497, 'crowd10': 481, 'crowd11': 526, 'crowd12': 539, 'crowd13': 558}
+20:03.581  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1071.png'
+s13 g 1071: 14.3 s wall 28.0 cpu heads {'general': 505, 'sentry': 648, 'crowd0': 527, 'crowd1': 521, 'crowd2': 534, 'crowd3': 592, 'crowd4': 594, 'crowd5': 634, 'crowd6': 627, 'crowd7': 648, 'crowd8': 598, 'crowd9': 499, 'crowd10': 483, 'crowd11': 527, 'crowd12': 541, 'crowd13': 559}
+20:18.072  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1072.png'
+s13 g 1072: 14.5 s wall 28.6 cpu heads {'general': 505, 'sentry': 649, 'crowd0': 527, 'crowd1': 522, 'crowd2': 534, 'crowd3': 592, 'crowd4': 595, 'crowd5': 635, 'crowd6': 627, 'crowd7': 649, 'crowd8': 599, 'crowd9': 499, 'crowd10': 483, 'crowd11': 528, 'crowd12': 541, 'crowd13': 560}
+20:32.330  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1073.png'
+s13 g 1073: 14.2 s wall 28.0 cpu heads {'general': 503, 'sentry': 646, 'crowd0': 525, 'crowd1': 519, 'crowd2': 532, 'crowd3': 590, 'crowd4': 593, 'crowd5': 632, 'crowd6': 625, 'crowd7': 646, 'crowd8': 596, 'crowd9': 497, 'crowd10': 481, 'crowd11': 526, 'crowd12': 539, 'crowd13': 558}
+20:46.987  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1074.png'
+s13 g 1074: 14.6 s wall 28.9 cpu heads {'general': 498, 'sentry': 642, 'crowd0': 520, 'crowd1': 515, 'crowd2': 527, 'crowd3': 585, 'crowd4': 588, 'crowd5': 628, 'crowd6': 621, 'crowd7': 641, 'crowd8': 592, 'crowd9': 492, 'crowd10': 476, 'crowd11': 521, 'crowd12': 534, 'crowd13': 553}
+21:01.911  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1075.png'
+s13 g 1075: 14.9 s wall 29.3 cpu heads {'general': 496, 'sentry': 640, 'crowd0': 518, 'crowd1': 513, 'crowd2': 525, 'crowd3': 583, 'crowd4': 586, 'crowd5': 626, 'crowd6': 618, 'crowd7': 639, 'crowd8': 590, 'crowd9': 490, 'crowd10': 474, 'crowd11': 519, 'crowd12': 533, 'crowd13': 551}
+21:16.332  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s13/frames/g_1076.png'
+s13 g 1076: 14.4 s wall 27.8 cpu heads {'general': 498, 'sentry': 641, 'crowd0': 520, 'crowd1': 515, 'crowd2': 528, 'crowd3': 586, 'crowd4': 589, 'crowd5': 628, 'crowd6': 620, 'crowd7': 642, 'crowd8': 593, 'crowd9': 493, 'crowd10': 476, 'crowd11': 522, 'crowd12': 535, 'crowd13': 553}
