@@ -27,16 +27,30 @@ V = 3.0 / 30.0                                    # buggy speed, D per frame
 X0 = 62.0
 bx = lambda g: X0 + V * (g - GA)
 
-SUBJ0 = Vector((X0 + 0.55, -2.3, 3.85))             # mocker's chest / head, road
-OFF = Vector((0.8, -4.4, -1.4))                   # camera: furrow side, low (z ~ 1.3), pitch ~ 16 deg
-CAM = C.CamPath(SUBJ0 + OFF, SUBJ0, GA, GZ, push=0.12, slide_px=-30.0, arc_deg_s=16.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.85, peak=1.9, shift=(0.0, 0.1))])
+SUBJ0 = Vector((X0 - 0.15, -2.3, 3.5))             # mocker's chest / head, road
+OFF = Vector((0.7, -3.75, -1.2))                   # camera: furrow side, low (z ~ 1.3), pitch ~ 16 deg
+CAM = C.CamPath(SUBJ0 + OFF, SUBJ0, GA, GZ, push=0.05, slide_px=50.0, arc_deg_s=12.0, decay=0.1,
+                snaps=[dict(g=SNAP, k=1.4, peak=1.9, shift=(-0.8, 0.0))])
+WIDE_OFF = Vector((1.5, -10.5, -1.6))
+G_ARRIVE = 1160                                    # the opening wide reframes onto the mocker by the time the lips start
+
 
 
 def cam_pose(g):
     loc, look = CAM.at(g)
     d = Vector((1.0 * V * (g - GA), 0, 0))
-    return loc + d, look + d
+    loc, look = loc + d, look + d
+    w = 1.0 - u_of(g, GA + 6, G_ARRIVE, "quint")           # 1 = opening wide (mocker, buggy, mule head), 0 = the medium
+    if w > 0:
+        wl = Vector((X0 + 3.9, -2.3, 3.0)) + Vector((V * (g - GA) * 1.0, 0, 0))
+        wloc = wl + WIDE_OFF
+        loc, look = loc.lerp(wloc, w), look.lerp(wl, w)
+    return loc, look
+
+
+def bob(g, ph=0.0, amp=0.05):
+    """the buggy jolting on the road: ~3 Hz"""
+    return amp * math.sin(2 * math.pi * 3.0 * g / 30.0 + ph)
 
 
 def mocker_pose(g):
@@ -123,11 +137,14 @@ class Take(C.Take):
             f = bf(g)
             self.key_cam(f, *cam_pose(g))
             TG.set_buggy(bx(g), frame=f)
+            rt = TG.STATE["buggy"]["root"]
+            rt.location.z += bob(g)
+            rt.keyframe_insert("location", frame=f)
             m = TG.STATE["marks"]
             _, bounce = mocker_pose(g)
             mm, ml = m["mocker_buggy"], m["mule_buggy"]
-            C.place(self.moc, f, (mm[0], mm[1], mm[2] + bounce))
-            C.place(self.mul, f, (ml[0] - 2.4, ml[1], ml[2]))
+            C.place(self.moc, f, (mm[0], mm[1], mm[2] + bounce + bob(g)))
+            C.place(self.mul, f, (ml[0] - 2.4, ml[1], ml[2] + bob(g, 1.3, 0.04)))
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
