@@ -14,3 +14,4 @@
 - s21: FAIL r1 (fixes sent to team 4).
 - s32: r3 ACCEPTED (shot 36 polish: chin-deep, bigger thumb).
 - s05: PASS r1 (render15/team2; motion 6.9/12.9); r2 polish requested. Dissolve into shot 5 is done at conform (handles present).
+- s21: v2 PASS (23dd8e6; motion 8.0/13.6). s24: PASS (d75a66c; 5.2/12.4). s17: FAIL r1 (shot 20 bar/head gap) -> fixes sent.
