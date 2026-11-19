@@ -1,0 +1,179 @@
+#!/usr/bin/env python3
+"""shot.py -- film 17 take s11: shots 27-28 (reveal payoff), g 1515..1694 + 6 handle frames each side (first_g 1509, last 1700).
+  id 27  g 1509..1578  reveal / card_hero room, Bertillon (foreground left) holds the Dupont card beside Dupont's face; his profile turns to the card;
+                       the five number rows glow one by one.  Drift (slide + push) with a reframe snap at g 1544.
+  id 28  g 1579..1700  measure room, two-shot: Dupont seated in the chair, Bertillon turns the card (bottle panel glows) toward him, Dupont goes wide-eyed,
+                       the inspector (arms crossed, smirk) -> jaw drops (shocked, mouth CLOSED).  Push-in, snap (18 f) to the inspector on "ขวดเปล่า" (~55.1 s).
+  python3 shot.py <27|28> stills a:b[:step] out_dir [mode draft|final] [samples]
+  python3 shot.py <27|28> final a:b[:step] [mode] [samples]
+"""
+import sys, os, json, math
+HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
+import c17 as C
+from c17 import bpy, K, cast17, actors, sprites, puppet, Vector
+SHOT = int(sys.argv[1]); CMD = sys.argv[2]
+G_FIRST, G_CUT, G_LAST = 1509, 1579, 1700
+RANGES = {27: (G_FIRST, G_CUT - 1), 28: (G_CUT, G_LAST)}
+BF0 = 1499
+def bf(g): return g - BF0
+THREADS = int(os.environ.get("THREADS", "2"))
+TMP = os.path.join(HERE, "work")
+SHAKE = float(os.environ.get('SHAKE', '0.010'))
+G_BOTTLE = C.g_of(55.10)     # 1656 "ขวดเปล่า"
+def lerp(a, b, t): return a + (b - a) * t
+def u_(g, a, b): return C.smooth((g - a) / float(b - a))
+
+# ---------------------------------------------------------------- cameras
+if SHOT == 27:
+    CAM = C.CamPath([(1509, (1.00, 3.60, 1.58), (0.15, 1.72, 1.34), 'drift'), (1528, (0.70, 3.35, 1.55), (0.05, 1.72, 1.33), 'snap'),
+                     (1542, (0.20, 3.35, 1.50), (-0.10, 1.72, 1.35), 'drift'), (1556, (0.05, 3.20, 1.50), (-0.20, 1.72, 1.35), 'snap'),
+                     (1570, (0.55, 2.90, 1.52), (0.12, 1.72, 1.34), 'drift'), (1584, (0.40, 2.75, 1.50), (0.08, 1.72, 1.34), 'drift')], shake=SHAKE)
+else:
+    CAM = C.CamPath([(1579, (2.00, 0.30, 1.50), (0.70, 2.25, 1.22), 'drift'), (1600, (1.75, 0.55, 1.50), (0.70, 2.25, 1.24), 'snap'),
+                     (1614, (1.50, 0.80, 1.48), (0.75, 2.30, 1.25), 'drift'), (1636, (1.85, 0.62, 1.50), (0.45, 2.20, 1.25), 'snap'),
+                     (1650, (1.70, 0.75, 1.50), (0.60, 2.25, 1.25), 'snap'), (1668, (1.15, 0.80, 1.46), (0.05, 2.1, 1.30), 'drift'),
+                     (1700, (0.80, 1.05, 1.45), (-0.10, 2.1, 1.32), 'drift')], shake=SHAKE)
+
+# ---------------------------------------------------------------- build
+LOC = ('reveal', 'card_hero') if SHOT == 27 else ('measure', 'measure_chair')
+A = K.build(preset=LOC[1]); STATE = K.STATE
+bpy.context.scene.render.use_persistent_data = False
+cam = bpy.context.scene.camera; cam.data.clip_start = 0.02
+if SHOT == 27:
+    for ob in STATE['anim']['hero']['objs'] + [STATE['anim']['hero']['root']]: ob.hide_render = True    # the in-box card is replaced by the held one
+K.clear_keys()
+
+def make_actor(name, cast):
+    a = actors.Actor(name, cast); a.build(sprites.DEFAULT_CANVAS[cast], os.path.join(TMP, "sprites"), contact=True); a.head_flip = True; return a
+
+def scale_of(cast): return K.CAST_H[cast] / K.CAST_HD[cast]
+
+ACT = {}
+def put(key, cast, xy, seated=None, mirror=False, pose0=None):
+    a = make_actor(key, cast); ACT[key] = a
+    sc = scale_of(cast)
+    if seated:
+        fx, fy = sprites.feet_of(cast, pose0 or {}); z = K.HEAD_Z[seated] - sc * fy
+    else: z = 0.0
+    a._place = (xy[0], xy[1], z); a._sc = sc; return a
+
+# the held card (3D, Dupont art) + glow bars
+held = K.card_plane('held', (0, 0, 0), (0.30, 0.20), key='card_bertillon', ink_t=0.0)
+def px2c(px, py, W=768, H=512): return ((px / W - 0.5) * 0.30, (0.5 - py / H) * 0.20)
+ROWS = []
+for i in range(5):
+    cx, cz = px2c(384, 348 + 32 * i); ROWS.append(C.emissive_bar('row%d' % i, held, 0.281, 0.0125, (cx, cz), strength=2.2, alpha=0.38))
+cx, cz = px2c(335, 218); PROF = C.emissive_bar('prof', held, 0.0773, 0.078, (cx, cz), color=(1.0, 0.9, 0.5), strength=2.0, alpha=0.30)
+cx, cz = px2c(176, 65); BOT = C.emissive_bar('bot', held, 0.120, 0.0336, (cx, cz), color=(0.6, 1.0, 0.85), strength=2.5, alpha=0.40)
+def glow(bar, f, on, a=None):
+    ob, mx = bar; ob.hide_render = not on; ob.keyframe_insert('hide_render', frame=f)
+    if on and a is not None:
+        mx.inputs[0].default_value = a; mx.inputs[0].keyframe_insert('default_value', frame=f)
+
+# ---------------------------------------------------------------- poses
+def idle(g, k=0.0): return dict(head_roll=1.8 * math.sin(g * 0.13 + k), lean=1.2 * math.sin(g * 0.09 + k))
+def blink(g, k): return cast17.blink_at(g + k, 83)
+
+def pose_bert(g):
+    cast, p = cast17.STORY17['bertillon_holding_card']; p = dict(p); p.pop('prop_r', None)
+    p['seat17'] = None
+    r = u_(g, G_FIRST, G_FIRST + 8) if SHOT == 27 else 1.0
+    p['arm_r'] = dict(p['arm_r'], hand=(0.66, lerp(0.30, 0.04, r)))
+    if SHOT == 28:    # turns the card toward dupont: mirrored, hand out to the screen-left
+        p['mirror'] = True; t = u_(g, 1579, 1596); p['arm_r'] = dict(p['arm_r'], hand=(lerp(0.40, 0.66, t), lerp(0.30, 0.10, t)))
+        p['yaw'] = 0.35
+    p.update(idle(g, 0.5)); p['blink'] = blink(g, 11); return p
+
+def pose_dup(g):
+    if SHOT == 27:
+        cast, p = cast17.STORY17['dupont_innocent']; p = dict(p); p['yaw'] = lerp(0.0, -0.65, u_(g, 1520, 1534))
+        p['expr'] = 'worried'; p.update(idle(g, 1.7)); p['blink'] = blink(g, 29); return p
+    base = 'dupont_sweating' if g < 1602 else 'dupont_caught'
+    cast, p = cast17.STORY17[base]; p = dict(p); p['seat17'] = None; p['yaw'] = -0.1
+    if g >= 1602: p['head_dy'] = -0.03 * u_(g, 1602, 1610)
+    p['head_roll'] = 2.0 * math.sin(g * 0.15) if g < 1602 else 1.0 * math.sin(g * 0.3)
+    p['blink'] = blink(g, 29) if g < 1600 else 0; return p
+
+def pose_ins(g):
+    if g < 1614:
+        cast, p = cast17.STORY17['inspector_arms_crossed']; p = dict(p); p['expr'] = 'smirk'
+    else:
+        cast, p = cast17.STORY17['inspector_shocked']; p = dict(p); p['mouth'] = 'flat'; p['head_dy'] = 0.05 * u_(g, 1614, 1622)
+        p['fx'] = ['sweat'] if g > 1650 else []
+    p['seat17'] = None; p['yaw'] = 0.2; p.update(idle(g, 2.9)); p['blink'] = blink(g, 3) if g < 1612 else 0; return p
+
+if SHOT == 27:
+    bert = put('bert', 'bertillon', (0.42, 1.70)); dup = put('dup', 'dupont', (-0.30, 1.75))
+    ACTORS = [bert, dup]
+else:
+    dup = put('dup', 'dupont', (0.68, 2.20), seated='chair', pose0=cast17.STORY17['dupont_sweating'][1])
+    ins = put('ins', 'inspector17', (-0.30, 2.15)); bert = put('bert', 'bertillon', (1.10, 2.75))
+    ACTORS = [dup, ins, bert]
+POSE = {'bert': pose_bert, 'dup': pose_dup, 'ins': pose_ins}
+
+def card_rz(g, hand_world):
+    d = Vector((cam.location.x - hand_world.x, cam.location.y - hand_world.y, 0)); d.normalize()
+    if SHOT == 28:
+        t = u_(g, 1579, 1596); th = math.radians(lerp(0, 38, t)); d = Vector((d.x * math.cos(th) - d.y * math.sin(th), d.x * math.sin(th) + d.y * math.cos(th), 0))
+    return math.atan2(-d.x, d.y)
+
+def key_cam_frame(g):
+    loc, look = CAM.at(g); C.key_cam(cam, bf(g), loc, look)
+
+def pose_all(gs):
+    for g in gs: key_cam_frame(g)
+    for g in gs:
+        f = bf(g); bpy.context.scene.frame_set(f)
+        for a in ACTORS:
+            x, y, z = a._place; a.place(f, (x, y, z), scale=a._sc)
+    for g in gs:
+        f = bf(g); bpy.context.scene.frame_set(f)
+        for a in ACTORS:
+            a.pose(f, POSE[a.name](g), camera=cam)
+    fr = [bf(g) for g in gs]
+    for a in ACTORS:
+        a.anch = {}
+        for f, r in zip(fr, a.render_sprites(320, frames=fr)):
+            a.anch[f] = r['anchors']
+            if r.get('clipped'): print("WARNING clipped", a.name, f, flush=True)
+    for g in gs:
+        f = bf(g); bpy.context.scene.frame_set(f)
+        hw = C.hand_world(bert, bert.anch[f], f, cam, 'hand_r')
+        rz = card_rz(g, hw); scl = 1.5 if SHOT == 27 else 1.6
+        shift = Vector((-0.14, 0, 0)) if SHOT == 27 else Vector((0, 0, 0)); held.location = hw + shift + Vector((0, 0, 0.06 * scl)); held.rotation_euler = (math.radians(3 * math.sin(g * 0.2)), 0, rz + math.radians(2.0 * math.sin(g * 0.17)))
+        held.scale = (scl,) * 3
+        held.keyframe_insert('location', frame=f); held.keyframe_insert('rotation_euler', frame=f); held.keyframe_insert('scale', frame=f)
+        for i, bar in enumerate(ROWS):
+            t0 = 1527 + 9 * i
+            glow(bar, f, SHOT == 27 and g >= t0, 0.55 + 0.25 * math.sin((g - t0) * 0.5))
+        glow(PROF, f, SHOT == 27 and 1534 <= g <= 1552, 0.35 + 0.2 * math.sin(g * 0.6))
+        glow(BOT, f, SHOT == 28 and g >= 1588, 0.45 + 0.25 * math.sin(g * 0.5))
+        K.set_flicker(1.0, frame=f); K.set_dust(1.0, frame=f)
+        if SHOT == 28: K.set_pendulum(frame=f); K.set_smoke(1.0, frame=f)
+
+def report(g):
+    f = bf(g); bpy.context.scene.frame_set(f); out = {'g': g, 'cam': [round(v, 3) for v in cam.location]}
+    for a in ACTORS:
+        hx, hy = a.anch[f]['head']; c = actors.local_to_screen(a, cam, (hx, hy), f); l = actors.local_to_screen(a, cam, (hx - 0.5, hy), f)
+        out[a.name] = dict(x=round(c[0]), y=round(c[1]), w=round(math.hypot(c[0] - l[0], c[1] - l[1])))
+    return out
+
+def render(g, path, mode, samples):
+    f = bf(g); bpy.context.scene.frame_set(f); actors.sync_all(camera=cam)
+    return C.render_frame(path, mode, samples, THREADS)
+
+if __name__ == '__main__':
+    gs = [g for g in C.parse(sys.argv[3]) if RANGES[SHOT][0] <= g <= RANGES[SHOT][1]]
+    if CMD == 'stills':
+        out = sys.argv[4]; mode = sys.argv[5] if len(sys.argv) > 5 else 'draft'; samples = int(sys.argv[6]) if len(sys.argv) > 6 else 6
+        os.makedirs(out, exist_ok=True); pose_all(gs)
+        for g in gs:
+            print(json.dumps(report(g)), flush=True); dt = render(g, os.path.join(out, 's%d_g%04d.png' % (SHOT, g)), mode, samples); print('g', g, '%.1fs' % dt, flush=True)
+    elif CMD == 'final':
+        mode = sys.argv[4] if len(sys.argv) > 4 else 'final'; samples = int(sys.argv[5]) if len(sys.argv) > 5 else 32
+        out = os.path.join(HERE, 'raw_' + mode); os.makedirs(out, exist_ok=True)
+        todo = [g for g in gs if not os.path.exists(os.path.join(out, 'g_%04d.png' % g))]
+        pose_all(gs)
+        for g in todo:
+            p = os.path.join(out, 'g_%04d.png' % g); dt = render(g, p + '.tmp.png', mode, samples); os.replace(p + '.tmp.png', p)
+            json.dump(report(g), open(p[:-4] + '.json', 'w')); print('g', g, '%.1fs' % dt, flush=True)

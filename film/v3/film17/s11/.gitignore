@@ -1,0 +1,6 @@
+raw_*/
+work/
+*.tmp.png
+draft.mkv
+log_*.txt
+__pycache__/
