@@ -48,7 +48,7 @@ def cam_of(g):
         s3 = snap(g, 1258); pos += R * (0.3 * GAIN) * s3
         pos += R * (SWAY * math.sin(g * 0.5)) + Vector((0, 0, SWAY * 0.7 * math.sin(g * 0.77)))
         track = Vector(group_pos(g)) + Vector((0, 0, 1.25))
-        look = L22.lerp(track, 0.75 * C.smooth(u)) + R * (0.5 * GAIN) * s * 0.0
+        look = L22.lerp(track, 0.5 * C.smooth(u)) + R * (0.5 * GAIN) * s * 0.0
         look = look + R * (0.9 * GAIN) * s
     else:
         u = (g - G_CUT) / float(LAST - G_CUT)
@@ -65,7 +65,7 @@ def cam_of(g):
 
 # ---------------------------------------------------------------- staging
 D_START = Vector((2.5, -2.3, 0.0)); D_END = Vector((1.1, -1.85, 0.0))
-INS_LAG = 1.2
+INS_LAG = 0.8
 
 
 def path_s(g):
@@ -85,7 +85,7 @@ def bob(g, f=1.9, a=0.03, ph=0.0):
 CHAIR = (0.7, 2.3, 0.5)
 BERT23 = Vector((0.95, 3.3, 0.0))
 INS23 = Vector((-0.4, 2.5, 0.0))
-DUP_SEAT = Vector((0.7, 2.3, 0.0))
+DUP_SEAT = Vector((0.8, 2.13, 0.0))
 
 
 class Take(object):
@@ -143,7 +143,7 @@ class Take(object):
             ip = group_pos(g, INS_LAG)
             c, p = C.story("inspector_arms_crossed", expr="smirk"); p["blink"] = C.blink(g, [1224, 1262]); p["yaw"] = 0.35
             p["squash"] = (1 + 0.015 * math.sin(g * 0.4), 1 - 0.015 * math.sin(g * 0.4))
-            out["ins"] = (ip + Rr * 0.95, c, p, None, bob(g, ph=2.4), ip.x < 3.0)
+            out["ins"] = (ip + Rr * 2.0, c, p, None, bob(g, ph=2.4), ip.x < 3.0)
             c, p = C.story("bertillon_neutral"); out["ber"] = (BERT23, c, p, None, 0.0, False)
         else:
             c, p = C.story("dupont_innocent")
