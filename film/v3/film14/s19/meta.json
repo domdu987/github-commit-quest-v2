@@ -1,4 +1,39 @@
-{"take":"s19","film":14,"shots":[19,20],"first_g":1220,"n_frames":154,"g0":1226,"g1":1367,"handle_in":6,"handle_out":6,
- "transition_in":{"type":"cut","frames":0},"transition_out":{"type":"cut","frames":0},
- "shot_ranges":{"19":[1226,1306],"20":[1307,1367]},"samples":24,"size":[720,1280],
- "take_file":"take.mkv.partaa+ab (cat to rebuild take.mkv)"}
+{
+ "take": "s19",
+ "film": 14,
+ "shots": [
+  19,
+  20
+ ],
+ "first_g": 1220,
+ "n_frames": 154,
+ "g0": 1226,
+ "g1": 1367,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "shot_ranges": {
+  "19": [
+   1226,
+   1306
+  ],
+  "20": [
+   1307,
+   1367
+  ]
+ },
+ "samples": 24,
+ "size": [
+  720,
+  1280
+ ],
+ "take_file": "take.mkv.partaa+ab (cat to rebuild take.mkv)",
+ "version": 2
+}

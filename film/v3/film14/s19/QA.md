@@ -5,3 +5,6 @@
 - Shot 20 (g1307+): different angle, low view along the wire from the right; V held 12 frames (to g1318), released at g1319 into a wave travelling left down the row past hives 3, 2, 1 (7 m/s), hives swing.
 - Grade: elephant card x0.70 tint (0.78/0.82/1.0) + cool rim / warm side; roof undersides darkened x0.35; NO bees (bees object hidden throughout); wire 3 cm matte grey-silver; contact shadow under her feet.
 - Deviations: sky ~25-30 % in shot 19 (the elephant's head is 3.3 m tall); the V is not a literal chest contact (her card stands 0.9 m behind the wire apex) because the card is flat; the near roof of hive 4 and a post are cut at runtime in shot 20; maize rows near the camera hidden.
+
+## v2 polish (director)
+- Ears opaque (card alpha x1.8 clamped), the two roofs beside her (hives 3 and 4) cut at runtime in both shots so no roof overlaps an ear; shot-20 roofs darkened x0.6 more; the near hive (unit 4) swing damped to 15 % so it does not cross her cheek at g1325-1331. Everything else identical. qa_auto PASS.
