@@ -67,13 +67,20 @@ blends = fallback = 0; missing = []
 def px(path): return np.asarray(Image.open(path).convert("RGB"), float)
 for g in ([] if a.test else range(N)):
     dst = f"{fdir}/f_{g:04d}.png"; m = owner.get(g); done = False
-    if m is not None and m["ti"]["type"] == "dissolve" and m["ti"]["frames"] > 0:
-        n = m["ti"]["frames"]; a0 = m["g0"] - n // 2
-        if a0 <= g < a0 + n:
-            prev = [p for p in TK if p is not m and p["first_g"] < m["first_g"] and g in p["have"]]
-            if prev and g in m["have"]:
-                p_ = (g - a0 + 1) / (n + 1); p_ = p_ * p_ * (3 - 2 * p_)
-                Image.fromarray(np.clip(px(prev[-1]["have"][g]) * (1 - p_) + px(m["have"][g]) * p_ + 0.5, 0, 255).astype(np.uint8)).save(dst); blends += 1; done = True
+    # dissolve window g0-n//2 .. g0+n//2 of the INCOMING take, whoever owns g (full n frames, smoothstep ramp)
+    for mi in TK:
+        n = mi["ti"]["frames"] if mi["ti"]["type"] == "dissolve" else 0
+        if n <= 0 or not (mi["g0"] - n // 2 <= g < mi["g0"] - n // 2 + n): continue
+        a0 = mi["g0"] - n // 2
+        prev = [p for p in TK if p is not mi and p["first_g"] < mi["first_g"] and p["g0"] < mi["g0"]]
+        if not prev: break
+        pv = prev[-1]
+        fo = pv["have"].get(g) or pv["have"][max(k for k in pv["have"] if k <= g) if any(k <= g for k in pv["have"]) else min(pv["have"])]
+        fi = mi["have"].get(g) or mi["have"][min(k for k in mi["have"] if k >= g) if any(k >= g for k in mi["have"]) else max(mi["have"])]
+        if g not in pv["have"] or g not in mi["have"]: print(f"WARN dissolve into {mi['name']} g{g}: handle frame missing, clamped")
+        p_ = (g - a0 + 1) / (n + 1); p_ = p_ * p_ * (3 - 2 * p_)
+        Image.fromarray(np.clip(px(fo) * (1 - p_) + px(fi) * p_ + 0.5, 0, 255).astype(np.uint8)).save(dst); blends += 1; done = True
+        break
     if done: continue
     if m is not None and g in m["have"]: os.symlink(m["have"][g], dst); continue
     cand = [p for p in TK if g in p["have"]]
