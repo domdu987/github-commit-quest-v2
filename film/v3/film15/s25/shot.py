@@ -136,35 +136,56 @@ def podium_specs(g):
 COACH_AT = (-30.0, 108.5, 25.5); COACH_K = 3.2
 
 # --------------------------------------------------------------------------------------------- cameras (metres): a/b per shot
-CAMS = {
+CAMS = {                                           # start/end cameras (metres) used only to build the FG props (and as shot 25's path)
  25: dict(a=((-4.6, 7.2, 1.2), (-3.2, 11.6, 1.55)), b=((-2.2, 8.0, 1.4), (-0.9, 11.6, 1.9))),
- 26: dict(a=((-0.85, 9.0, 1.95), (-0.85, 11.6, 2.15)), b=((-0.1, 9.2, 2.0), (-0.1, 11.6, 2.15))),
- 27: dict(a=((-0.05, 9.2, 2.0), (-0.05, 11.6, 2.15)), b=((0.15, 9.7, 2.0), (0.15, 11.6, 2.15))),
- 28: dict(a=((-0.45, 8.6, 2.1), (-0.15, 11.6, 2.55)), b=((0.25, 9.0, 2.1), (0.55, 11.6, 2.55))),
- 29: dict(a=((0.25, 9.2, 2.0), (0.25, 11.6, 2.15)), b=((0.3, 9.6, 2.0), (0.3, 11.6, 2.15))),
- 30: dict(a=((-0.9, 9.6, 1.6), (0.5, 12.8, 1.5)), b=((-0.1, 10.4, 1.6), (0.9, 12.8, 1.4))),
- 31: dict(a=((-5.9, 4.8, 1.7), (-8.9, 10.0, 2.3)), b=((-6.4, 5.4, 1.7), (-9.2, 10.0, 2.3))),
 }
-PUNCH = {31: (59.1, 20)}
+def orbit(C, R, th, z):
+    th = math.radians(th); return (C[0] + R * math.sin(th), C[1] - R * math.cos(th), z), tuple(C)
+def bxm(g): return bar_target(g).x * DM
+def U01(g, shot): g0, g1 = SHOTS[shot]; return (g - g0) / float(g1 - g0)
+def LL(a, b, u): return tuple(lerp(x, y, u) for x, y in zip(a, b))
+def cam26(g):
+    u = U01(g, 26); C = (bxm(g) - 0.2, 11.6, 2.15); return orbit(C, lerp(2.9, 2.5, u) - 0.5 * sm(seg(g, 1425, 1437)), lerp(-30, 26, u), lerp(1.95, 2.05, u))
+def cam27(g):
+    u = U01(g, 27); C = (bxm(g) - 0.2, 11.6, 2.15); return orbit(C, lerp(2.6, 2.3, u) - 0.45 * sm(seg(g, 1480, 1491)), lerp(24, -8, u), 2.0)
+def cam28(g):
+    u = U01(g, 28); x = lerp(-0.2, 1.4, clamp((g - (B28 - 8)) / float(B29 + 16 - B28))) * DM; C = (x - 0.45, 11.6, 2.45); return orbit(C, lerp(3.3, 3.0, u) - 0.7 * sm(seg(g, 1540, 1552)), lerp(-26, 26, u), 2.0)
+def cam29(g):
+    gw0, gw1 = G_FLICK1 - 2, G_FLICK1 + 8; Lx = land_hip().x * DM
+    Cb = lambda gg: (bxm(gg) - 0.2, 11.6, 2.2)
+    if g <= gw0: return orbit(Cb(g), 2.4, lerp(-12, 12, clamp((g - (B29 - 8)) / float(gw0 - B29 + 8))), 2.0)
+    p0 = orbit(Cb(gw0), 2.4, 12, 2.0); p1 = orbit((Lx, 13.0, 1.25), 3.4, -8, 2.0)
+    if g <= gw1: return LL(p0[0], p1[0], seg(g, gw0, gw1)), LL(p0[1], p1[1], seg(g, gw0, gw1))
+    return orbit((Lx, 13.0, 1.25), lerp(3.4, 3.1, seg(g, gw1, B30)), lerp(-8, 16, seg(g, gw1, B30 + 10)), lerp(2.0, 1.9, seg(g, gw1, B30)))
+def cam30(g):
+    u = U01(g, 30); C = (land_hip().x * DM + 0.3, 13.0, lerp(1.5, 1.6, u)); return orbit(C, lerp(3.5, 3.1, u) - 0.7 * sm(seg(g, G_SW - 2, G_SW + 10)), lerp(-22, 32, u), lerp(1.55, 1.6, u))
+def cam31(g):
+    u = U01(g, 31); R = lerp(4.2, 3.5, u) * (1 - 0.14 * sm(seg(g, G_CHEER - 3, G_CHEER + 9))); return orbit((-8.9, 10.0, 2.2), R, lerp(30, 8, u), 1.8)
+CAMF = {26: cam26, 27: cam27, 28: cam28, 29: cam29, 30: cam30, 31: cam31}
+def cam25(g): u = U01(g, 25); return LL(CAMS[25]['a'][0], CAMS[25]['b'][0], u), LL(CAMS[25]['a'][1], CAMS[25]['b'][1], u)
+CAMF[25] = cam25
+
+FGS = []
+def yaw_of_cam(c): return math.atan2(c[1][1] - c[0][1], c[1][0] - c[0][0])
+def set_cam(sc, cam, shot, g):
+    c = CAMF[shot](g); F.make_camera(F.cam_from(tuple(x * U for x in c[0]), tuple(x * U for x in c[1])))
+    if FGS:                                          # FG props ride the camera (rigid, 10 % slip for parallax)
+        c0, y0 = FGS[0]['c0'], FGS[0]['y0']; d = yaw_of_cam(c) - y0; cs, sn = math.cos(d), math.sin(d)
+        tx = c[0][0] - (cs * c0[0][0] - sn * c0[0][1]) - 0.10 * (c[0][0] - c0[0][0]); ty = c[0][1] - (sn * c0[0][0] + cs * c0[0][1]) - 0.10 * (c[0][1] - c0[0][1])
+        for f in FGS:
+            f['o'].rotation_euler = (0, 0, d); f['o'].location = (tx, ty, f['z0'] + c[0][2] - c0[0][2])
 
 def setup(shot, h_in, h_out):
     MARKS.update(F.build('B', LIGHT[shot])['marks']); sc = bpy.context.scene; F.setup_render(sc, 'final'); clear_cards()
-    sd = F.SHOTS[shot]; c = CAMS[shot]
-    sd['a'] = dict(loc=c['a'][0], look=c['a'][1]); sd['b'] = dict(loc=c['b'][0], look=c['b'][1]); sd['punch'] = PUNCH.get(shot); sd['whip'] = False
-    g0, g1 = SHOTS[shot]
+    sd = F.SHOTS[shot]; g0, g1 = SHOTS[shot]
+    a = CAMF[shot](g0 - h_in); b = CAMF[shot](g1 + h_out)
+    sd['a'] = dict(loc=a[0], look=a[1]); sd['b'] = dict(loc=b[0], look=b[1]); sd['punch'] = None; sd['whip'] = False
     cam = SH.setup_shot(shot, g0 - h_in, g1 + h_out)
-    if shot == 29:                                   # custom keys: hold on the arch, WHIP down to the foam with the fall
-        cam.animation_data_clear(); gw0, gw1 = G_FLICK1 - 2, G_FLICK1 + 8
-        def kc(f, loc, look, ip):
-            c = F.make_camera(F.cam_from(tuple(x * U for x in loc), tuple(x * U for x in look))); cam.location = c.location; cam.rotation_euler = c.rotation_euler
-            cam.keyframe_insert('location', frame=f); cam.keyframe_insert('rotation_euler', frame=f)
-            F.T._key(cam, 'location', f, ip); F.T._key(cam, 'rotation_euler', f, ip)
-        kc(g0 - 8, (0.25, 9.2, 2.0), (0.25, 11.6, 2.15), 'BEZIER'); kc(gw0, (0.4, 8.8, 2.0), (0.4, 11.6, 2.45), 'LINEAR')
-        kc(gw1, (0.2, 9.6, 2.0), (0.6, 13.0, 1.25), 'BEZIER'); kc(g1 + 8, (0.45, 10.0, 1.9), (0.75, 13.0, 1.25), 'BEZIER')
-        for o in bpy.data.objects:
-            if o.get('fg'): o.animation_data_clear()
+    cam.animation_data_clear(); FGS.clear()
+    for o in bpy.data.objects:
+        if o.get('fg'):
+            z0 = o.location.z; o.animation_data_clear(); FGS.append(dict(o=o, z0=z0, c0=a, y0=yaw_of_cam(a)))
     if LIGHT[shot] == 'TENSE': dim_pool(0.55)
-    # crowd: hush through the reveal, normal at the pop, cheer on the medal
     F.crowd_mode('hush', frame=g0 - 20)
     if shot >= 30: F.crowd_mode('hush', frame=G_SW - 1); F.crowd_mode('normal', frame=G_SW + 12)
     if shot == 31:
@@ -179,7 +200,7 @@ def specs_for(shot, g, cam):
     return podium_specs(g)
 
 def frame(sc, shot, g, out):
-    sc.frame_set(g); cam = cam_loc_now(); clear_cards()
+    sc.frame_set(g); set_cam(sc, sc.camera, shot, g); cam = cam_loc_now(); clear_cards()
     sp = specs_for(shot, g, cam); info = {}
     if sp:
         rs = render_batch(sp)
@@ -206,6 +227,8 @@ if __name__ == '__main__':
         sc, cam = setup(shot, 8, 8); sc.cycles.samples = 12; lg = open(os.path.join(WORK, 'log_%d_%d.jsonl' % (shot, part[0])), 'a')
         for i, g in enumerate(gs):
             if i % part[1] != part[0]: continue
-            p = os.path.join(outd, 'g_%04d.png' % g)
+            own = SHOTS[shot][0] <= g <= SHOTS[shot][1]
+            od = outd if own else os.path.join(HERE, 'frames_x', str(shot)); os.makedirs(od, exist_ok=True)
+            p = os.path.join(od, 'g_%04d.png' % g)
             if os.path.exists(p): continue
             info, wall, cpu = frame(sc, shot, g, p); lg.write(json.dumps(dict(g=g, info=info, wall=round(wall, 1), cpu=round(cpu, 1))) + '\n'); lg.flush(); print(g, '%.1fs' % wall, flush=True)

@@ -1,0 +1,13 @@
+{
+ "take": "s29",
+ "g0": 1586,
+ "g1": 1803,
+ "first_g": 1578,
+ "n_frames": 234,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 11
+ },
+ "handle_in": 8,
+ "handle_out": 8
+}

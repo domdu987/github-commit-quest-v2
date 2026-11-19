@@ -1,0 +1,13 @@
+{
+ "take": "s25",
+ "g0": 1329,
+ "g1": 1509,
+ "first_g": 1323,
+ "n_frames": 195,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "handle_in": 6,
+ "handle_out": 8
+}
