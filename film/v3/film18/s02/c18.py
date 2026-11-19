@@ -11,7 +11,7 @@ HEIGHT = J.HEIGHT
 _SIDE = {}
 
 def ox_card(shot_key, i, pos, travel_deg, scale, camloc, state='dragon', view='three_quarter', gait='stand', phase=0, flame=-1, blades=True, theta=36,
-            bob=0.0, roll=0.0, tint=None, k=None, reed=0):
+            bob=0.0, roll=0.0, tint=None, k=None, reed=0, coat=1.0):
     """An ox card at pos; yaw ~theta deg off the camera axis, mirrored so the head points along travel_deg. (sgn, mirror) chosen once per ox so it never pops."""
     p = V(pos); sc = scale * 1.08
     dvec = V((math.cos(math.radians(travel_deg)), math.sin(math.radians(travel_deg)), 0.0)); c = camloc - p; c.z = 0.0; c.normalize()
@@ -28,17 +28,18 @@ def ox_card(shot_key, i, pos, travel_deg, scale, camloc, state='dragon', view='t
         _SIDE[key] = best[1:]
     sgn, fac = _SIDE[key]; n, u = nu(sgn)
     yaw = math.degrees(math.atan2(n.x, -n.y))
-    meta = card_ox(state, view, gait, phase, flame, blades, reed)
+    meta = card_ox(state, view, gait, phase, flame, blades, reed, coat)
     ob = R2.put_card(meta, (p.x, p.y, p.z + bob), yaw, sc, mirror=(fac < 0), name='ox%d' % i, tint=tint, k=k, sw=2.7 * sc)
     if roll: ob.rotation_euler = (0, math.radians(roll), math.radians(yaw))
     return ob
 
-def card_ox(state, view, gait, phase, flame, blades, reed=0):
-    key = 'oxv_%s_%s_%s_%d_%d_%d_%d' % (state, view, gait, phase if gait != 'stand' else 0, flame, int(blades), reed); name = hashlib.md5(key.encode()).hexdigest()[:10] + '_oxv'
+def card_ox(state, view, gait, phase, flame, blades, reed=0, coat=1.0):
+    coat = round(coat * 10) / 10.0
+    key = 'oxv_%s_%s_%s_%d_%d_%d_%d_%.1f' % (state, view, gait, phase if gait != 'stand' else 0, flame, int(blades), reed, coat); name = hashlib.md5(key.encode()).hexdigest()[:10] + '_oxv'
     mp = os.path.join(CD.CARDS, name + '.json')
     if os.path.exists(mp) and os.path.exists(os.path.join(CD.CARDS, name + '.png')): return json.load(open(mp))
     cast, P = CD._cast()
-    f = cast.ox_figure(state=state, view=view, gait=gait, phase=(phase if gait != 'stand' else 0) / 8.0, flame=flame, blades=blades, reed=(True if reed else None), uid='c%s' % name[:6])
+    f = cast.ox_figure(state=state, view=view, gait=gait, phase=(phase if gait != 'stand' else 0) / 8.0, flame=flame, blades=blades, reed=(True if reed else None), coat=coat, uid='c%s' % name[:6])
     m = CD._write(f['svg'], f['bbox'], 0.0, CD.PXD_O, name); m['kind'] = 'ox'; json.dump(m, open(mp, 'w')); return m
 
 def person_card(role, pose, pos, camloc, i=0, h=None, bob=0.0, roll=0.0, sx=1.0, sz=1.0, mirror=False, tint=None, k=None, yaw_off=0.0):
@@ -67,6 +68,7 @@ def run(shot, actors_fn, g0, g1, hb=0, ha=0, quality=None, outdir=None, tweak=No
     J.apply_state(S.SHOTS[shot]['state'] if state is None else state)
     if tweak: tweak('post', A)
     cam0 = J.key_camera(shot)
+    if tweak: tweak('cam', cam0)
     if shk: shake(cam0, shk, g0, g1)
     first, last = g0 - hb, g1 - 1 + ha
     for f in range(first, last + 1): J.flicker(f)
@@ -84,3 +86,20 @@ def run(shot, actors_fn, g0, g1, hb=0, ha=0, quality=None, outdir=None, tweak=No
         bpy.context.view_layer.update()
         w, c = T.render(path); log.append(w); print('g%d %.1fs' % (f, w), flush=True)
     return log
+
+
+def warm_lantern(cam, off=(0.5, -0.40, 1.7), size=0.055, energy=180.0):
+    """A small warm paper lantern parented to the camera (1-2 D from the lens, bottom-left by default) with a warm point light that throws a pool on the near ground."""
+    import bpy as _b
+    from mathutils import Vector
+    m = T.mat_emit('c18_lantern', '#ff8a30', strength=1.3) if 'c18_lantern' not in _b.data.materials else _b.data.materials['c18_lantern']
+    kd = T.mat_emit('c18_lantern_dark', '#2a1a14', strength=0.35) if 'c18_lantern_dark' not in _b.data.materials else _b.data.materials['c18_lantern_dark']
+    parts = []
+    root = Vector((off[0], off[1], -off[2]))
+    for (name, loc, sc, mat) in (('body', 0.0, (1.0, 1.0, 1.35), m), ('cap', 1.45, (1.15, 1.15, 0.18), kd), ('base', -1.45, (1.15, 1.15, 0.18), kd), ('ring', 1.9, (0.12, 0.12, 0.35), kd)):
+        _b.ops.mesh.primitive_cylinder_add(vertices=14, radius=1.0, depth=2.0, location=(0, 0, 0)); ob = _b.context.active_object; ob.name = 'c18_lan_' + name
+        ob.scale = tuple(c * size for c in sc); ob.data.materials.append(mat); ob.visible_shadow = False
+        ob.parent = cam; ob.location = (root.x, root.y + loc * size, root.z); ob.rotation_euler = (math.pi / 2, 0, 0); parts.append(ob)
+    d = _b.data.lights.new('c18_lan_light', 'POINT'); d.color = (1.0, 0.62, 0.28); d.energy = energy; d.shadow_soft_size = 0.3; d.use_shadow = False
+    lo = _b.data.objects.new('c18_lan_light', d); _b.context.scene.collection.objects.link(lo); lo.parent = cam; lo.location = (root.x, root.y - 0.1, root.z - 0.2)
+    return parts
