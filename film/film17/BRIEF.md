@@ -7,3 +7,7 @@ Blind test (Sonnet): v1 7/10 (hook 6, ending 7) -> 3 rewrites (shorter pivot, li
 Locations (draft): A Paris police records office ("Préfecture" attic): towering card cabinets, gas lamps, ledgers, desks / B measuring room at the Dépôt: measuring chair with head rest, calipers, wall height scale, camera on tripod, queue of prisoners on a bench / C the card-drawer wall reveal (narrowing: big drawer -> box -> one card) / D ending: the chief inspector seated in the measuring chair, calipers on his ear, policemen laughing.
 Cast (draft): Bertillon (thin clerk, black frock coat, pince-nez, neat beard), chief inspector (stout, big moustache, kepi/uniform), prefect (top hat, sash), "Dupont/Martin" (scruffy thief, cap), 2-3 gendarmes, prisoners.
 Shot planning: also read the style bible on branch claude/new-session-73ou27 commit 38b5918, film/skill/reference-style-shorts/references/bible/camera.md + scene-tricks.md (framing change every 1.3-1.4 s, drift/snap numbers); client overrides in that SKILL.md section win.
+
+## Client decision 2026-11-19 (typed in this chat)
+"เรื่อง 17 ไม่ต้องรอผม OK ให้ QA-art อนุมัติแทนแล้วเรนเดอร์ได้เลย และเพลงไม่ต้องรอผม ให้ทำเองด้วย fal.ai (elevenlabs/music/v2.5 แบบ instrumental) ให้ทีมตรวจเลือก"
+-> SET gate approval = QA-art (Opus) PASS; send sheets to client as FYI only. Music: fal-ai/elevenlabs/music v2.5 instrumental, QA picks. FINAL gate + sending the finished film + WAIT queue row unchanged.
