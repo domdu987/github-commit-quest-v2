@@ -1,0 +1,27 @@
+{
+ "shot": "s15",
+ "g0": 1136,
+ "g1": 1205,
+ "first_g": 1130,
+ "n_frames": 81,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "framediff": {
+  "median": 5.72,
+  "p90": 13.25,
+  "min": 0.98,
+  "max": 18.84,
+  "n": 68,
+  "frames_lt1": 1
+ },
+ "max_chin_y": {
+  "general": 732,
+  "soldier0": 699,
+  "crowd0": 710,
+  "crowd1": 694,
+  "crowd2": 678
+ },
+ "s_per_frame": 26.6
+}

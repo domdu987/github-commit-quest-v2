@@ -1,0 +1,31 @@
+{
+ "shot": "s14",
+ "g0": 1071,
+ "g1": 1136,
+ "first_g": 1065,
+ "n_frames": 77,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "framediff": {
+  "median": 7.56,
+  "p90": 21.06,
+  "min": 1.02,
+  "max": 28.98,
+  "n": 64,
+  "frames_lt1": 0
+ },
+ "max_chin_y": {
+  "general": 832,
+  "soldier0": 839,
+  "soldier1": 817,
+  "crowd0": 804,
+  "crowd1": 798,
+  "crowd2": 799,
+  "crowd3": 798,
+  "crowd4": 799,
+  "crowd5": 794
+ },
+ "s_per_frame": 26.2
+}
