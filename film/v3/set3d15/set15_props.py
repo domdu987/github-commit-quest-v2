@@ -16,8 +16,8 @@ def extra_mats(M, P):
     M['car_b'] = mat('car_b', '#3a5ea8', '#5078c0', 3, contrast=0.6)
     M['car_y'] = mat('car_y', '#e8b83a', '#f4cc58', 3, contrast=0.6)
     M['tire'] = mat('tire', '#2a2430', '#3a3440', 3)
-    M['towel_w'] = mat('towel_w', '#dccfb2', '#cfc2a4', 4); M['towel_b'] = mat('towel_b', '#5a8ad0', '#6e9ee0', 4)
-    M['paper'] = mat('paper', '#efe6cc', '#e0d4b4', 3)
+    M['towel_w'] = mat('towel_w', '#a89870', '#9c8c64', 4); M['towel_b'] = mat('towel_b', '#5a8ad0', '#6e9ee0', 4)
+    M['paper'] = mat('paper', '#cfc4a4', '#c0b494', 3)
     M['bikeb'] = mat('bikeb', '#2f5ea8', '#4a7cc4', 4); M['bikeg'] = mat('bikeg', '#4a8a5a', '#66a874', 4)
     M['bone'] = mat('bone', '#e8d8b8', '#d8c8a4', 4)
     M['grey'] = mat('grey', '#8d8a9a', '#a09cae', 2)
@@ -94,8 +94,9 @@ def trashcan(mb, M, c):
     mb.rod(M['metal'], (x, y, z + 0.4), (x, y, z + 0.44), 0.335, 0.335, 12); mb.ell(M['paper'], (x + 0.05, y, z + 0.9), (0.16, 0.14, 0.1), (7, 5))
 
 def stopwatch(mb, M, c, s=1.0):
-    x, y, z = c; mb.rod(M['metal'], (x, y, z), (x, y + 0.02 * s, z), 0.07 * s, 0.07 * s, 12); mb.rod(M['cream'], (x, y - 0.005 * s, z), (x, y - 0.012 * s, z), 0.055 * s, 0.055 * s, 12)
-    mb.rod(M['metal'], (x, y, z + 0.07 * s), (x, y, z + 0.1 * s), 0.015 * s, 0.015 * s, 6)
+    x, y, z = c; mb.rod(M['yellow'], (x, y, z), (x, y + 0.025 * s, z), 0.07 * s, 0.07 * s, 14); mb.rod(M['cream'], (x, y - 0.005 * s, z), (x, y - 0.014 * s, z), 0.055 * s, 0.055 * s, 14)
+    mb.rod(M['dark'], (x, y - 0.012 * s, z), (x, y - 0.016 * s, z + 0.04 * s), 0.006 * s, 0.006 * s, 4)
+    mb.rod(M['yellow'], (x, y, z + 0.07 * s), (x, y, z + 0.1 * s), 0.018 * s, 0.018 * s, 6); ringp(mb, M['dark'], (x, y, z + 0.2 * s), 0.1 * s, 0.006 * s, 'y', 12)
 
 def clipboard(mb, M, c, yaw=0.0, tilt=0.0, s=1.0):
     x, y, z = c

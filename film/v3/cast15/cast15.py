@@ -51,7 +51,7 @@ _poly, _poly_d, _shade, _mix = P._poly, P._poly_d, P._shade, P._mix
 _X, _ln, _circ, _bowl = CE._X, CE._ln, CE._circ, CE._bowl
 _f = C6._f
 _O15 = {}
-_POSE15 = {"sawdust": 0.0, "medal": 0.0, "flash": 0.0, "t": 0.0, "roll": 0.0, "yaw": 0.0}
+_POSE15 = {"hat_off": 0.0, "sawdust": 0.0, "medal": 0.0, "flash": 0.0, "t": 0.0, "roll": 0.0, "yaw": 0.0, "bend": 0.0, "bend_y": 0.6}
 
 cycle, talk_mouth, blink_at, NOD = C6.cycle, C6.talk_mouth, C6.blink_at, C6.NOD
 
@@ -156,6 +156,9 @@ def _cos_vest15(k, C, m):
         o.append(_poly(k, [X(-hw * 1.2, yb - 0.09), X(hw * 1.2, yb - 0.09), X(hw * 1.2, yb), X(-hw * 1.2, yb)], k.c(col["hem"]), 0.0))
     for s in (-1, 1):     # armhole binding
         o.append(_ln([X(s * hw * 0.98, 0.40), X(s * hw * 0.86, 0.60), X(s * hw * 0.92, 0.80)], k.c(col["trim"]), 0.030))
+    if col.get("edge"):   # solid side bands: keep the white vest readable on pale ground
+        for s in (-1, 1):
+            o.append(_poly(k, [X(s * hw * 1.3, 0.30), X(s * hw * 0.80, 0.30), X(s * hw * 0.80, yb), X(s * hw * 1.3, yb)], k.c(col["edge"]), 0.0))
     o.append(_bowl(k, col["pants"], yb, yB))
     o.append(_ln([X(-hw * 1.05, yb + 0.012), X(0, yb + 0.03), X(hw * 1.05, yb + 0.012)], k.c(_shade(col["pants"], 0.78)), 0.014))
     o.append(_medal_on_chest(k, X, hw))
@@ -394,6 +397,11 @@ def _hat_cap15(k, C, yaw):
     o.append(_hat_chips(k, C, yaw, -0.70, yb))
     o.append('</g>')
     C4._ext_hat(k, C, ((dx - 0.52, yb), (dx + 0.52, yb), (dx, -0.74), (fx - pw, yb + 0.15), (fx + pw + 0.28 * yaw, yb + 0.17)))
+    ho = _POSE15["hat_off"]
+    if ho > 0.02:       # the cap flying off: lifted up and away, tumbling
+        o.insert(0, '<g transform="translate(%.3f %.3f) rotate(%.1f)">' % (-0.45 * ho, -0.95 * ho, 55.0 * ho))
+        o.append('</g>')
+        k.ext.append((-0.45 * ho, -1.6 * ho, 0.5))
     return "".join(o), (dx, -0.74)
 
 
@@ -500,8 +508,43 @@ def _ink_limb(k, S, E, H, kk, w, seed, tail=None):
 
 
 # ============================================================================= held props
-NEW_PROPS15 = ("clipboard", "presscam")
-NEW_TIP15 = {"clipboard": 0.30, "presscam": 0.30}
+NEW_PROPS15 = ("clipboard", "presscam", "paper15")
+NEW_TIP15 = {"clipboard": 0.30, "presscam": 0.30, "paper15": 0.0}
+
+
+PAPER_W, PAPER_H = 1.30, 0.95
+
+
+def _paper15_body(k):
+    """an open newspaper held wide in both hands (no letters): origin = the grip of the hand that holds the RIGHT edge, the page
+    extends toward -x (the other hand holds the left edge) and from -0.5 to +0.45 in y.  A big halftone photo of the arched
+    jumper (a grey flop silhouette over a pale pit) and grey column bars."""
+    w, h = PAPER_W, PAPER_H
+    x0, y0 = -w + 0.04, -h * 0.5
+    o = ['<rect x="%.4f" y="%.4f" width="%.4f" height="%.4f" rx="0.012" fill="%s" stroke="%s" stroke-width="0.022"/>' % (x0, y0, w, h, k.c("#efe9da"), k.ink)]
+    o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="0.010"/>' % (x0 + w / 2, y0 + 0.02, x0 + w / 2, y0 + h - 0.02, k.c("#b8b2a2")))
+    # headline bars
+    for i, (wd, th) in enumerate(((0.80, 0.045), (0.55, 0.030))):
+        o.append('<rect x="%.4f" y="%.4f" width="%.4f" height="%.4f" fill="%s"/>' % (x0 + 0.08, y0 + 0.06 + 0.07 * i, wd, th, k.c("#4a4850")))
+    # the photo
+    px, py, pw, ph = x0 + 0.08, y0 + 0.23, 0.62, 0.40
+    o.append('<rect x="%.4f" y="%.4f" width="%.4f" height="%.4f" fill="%s" stroke="%s" stroke-width="0.014"/>' % (px, py, pw, ph, k.c("#c8c6c0"), k.ink))
+    o.append('<rect x="%.4f" y="%.4f" width="%.4f" height="%.4f" fill="%s"/>' % (px + 0.01, py + ph * 0.72, pw - 0.02, ph * 0.27, k.c("#a8a69e")))
+    # bar and the flop silhouette (a round arch, head low on the right, legs hanging on the left)
+    bx0, bx1, by = px + 0.05, px + pw - 0.05, py + ph * 0.46
+    o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="0.012"/>' % (bx0, by, bx1, by, k.c("#5a585e")))
+    cx = px + pw * 0.5
+    o.append('<path d="M%.4f,%.4f Q%.4f,%.4f %.4f,%.4f Q%.4f,%.4f %.4f,%.4f" fill="none" stroke="%s" stroke-width="0.040" stroke-linecap="round" stroke-linejoin="round"/>'
+             % (cx - 0.17, py + ph * 0.80, cx - 0.20, py + ph * 0.46, cx - 0.02, py + ph * 0.40, cx + 0.10, py + ph * 0.38, cx + 0.15, py + ph * 0.62, k.c("#3c3a40")))
+    o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="0.030" stroke-linecap="round"/>' % (cx - 0.17, py + ph * 0.80, cx - 0.27, py + ph * 0.90, k.c("#3c3a40")))
+    o.append('<circle cx="%.4f" cy="%.4f" r="0.040" fill="%s"/>' % (cx + 0.17, py + ph * 0.70, k.c("#3c3a40")))
+    # column bars: under the photo on the left page, a full column of bars on the right page
+    for i in range(3):
+        o.append('<rect x="%.4f" y="%.4f" width="%.4f" height="0.022" fill="%s"/>' % (x0 + 0.08, py + ph + 0.05 + 0.055 * i, 0.62 - (0.10 if i == 2 else 0.0), k.c("#8a8890")))
+    for i in range(11):
+        wd = 0.50 if i % 5 != 4 else 0.32
+        o.append('<rect x="%.4f" y="%.4f" width="%.4f" height="0.022" fill="%s"/>' % (x0 + w / 2 + 0.08, y0 + 0.07 + 0.070 * i, wd, k.c("#8a8890")))
+    return "".join(o)
 
 
 def _clipboard_body(k):
@@ -567,6 +610,13 @@ def _prop(k, kind, H, ang, sc=1.0):
         tip = (H[0], H[1])
         an["board_" + key] = tip
         return o, tip
+    if kind == "paper15":
+        side = 1.0 if key == "r" else -1.0
+        o = '<g transform="translate(%.4f %.4f) scale(%.4f 1)"><g transform="scale(%.4f %.4f)">%s</g></g>' % (H[0], H[1], 1.0, side * sc, sc, _paper15_body(k))
+        for (x, y) in ((-PAPER_W, -PAPER_H / 2), (0.04, -PAPER_H / 2), (-PAPER_W, PAPER_H / 2), (0.04, PAPER_H / 2)):
+            k.ext.append((H[0] + side * x * sc, H[1] + y * sc, 0.03))
+        an["paper_" + key] = (H[0] - side * PAPER_W / 2 * sc, H[1])
+        return o, (H[0], H[1])
     lev = _POSE15["flash"]
     o = '<g transform="translate(%.4f %.4f) rotate(%.3f) scale(%.4f)">%s</g>' % (H[0], H[1], ang, sc, _presscam_body(k, lev))
     a = math.radians(ang)
@@ -603,7 +653,7 @@ def _hair(col, shine=None):
 
 
 SCHOOL = dict(base="#7a1f33", trim="#e2b442", s1="#e2b442", s2=None, hem="#e2b442", pants="#f4f2ee")
-OLYMP = dict(base="#f6f4ee", trim="#c8302a", s1="#c8302a", s2="#2a4a9a", hem=None, pants="#1e2a5a")
+OLYMP = dict(base="#f6f4ee", trim="#1e2a5a", s1="#c8302a", s2="#2a4a9a", hem=None, pants="#1e2a5a", edge="#1e2a5a")
 SNEAK = dict(kind="sneaker", color="#f2efe6", sole="#e6dcc6", stripe="#7a1f33", sock="#f6f4ee", sock_stripe="#7a1f33", sock_stripe2="#e2b442", sock_len=0.30, toe=0.22)
 SPIKE = dict(kind="spike", color="#f6f4ee", sole="#2a2a30", stripe="#c8302a", sock="#f6f4ee", sock_len=0.22, toe=0.20)
 
@@ -641,7 +691,7 @@ NEW_CAST15 = {
         shoe15=dict(kind="dress", color="#2a2430", sole="#16141a", sock="#e8e4dc", sock_len=0.14, toe=0.20),
         colors=dict(base="#7a1f33", dark="#5a1426", trim="#e2b442", zip="#d8d4cc", collar="#6a1a2c", pants="#3a3a44"),
     ),
-    "boy1": _vest_cast(21.7, 0.58, 0.98, 1.34, "chestnut", "crew", SCHOOL, SNEAK, mouth="grin"),
+    "boy1": _vest_cast(21.7, 0.58, 0.98, 1.34, "chestnut", "crew", dict(SCHOOL, base="#1e2f6a", trim="#f4f2ee", s1="#f4f2ee", hem="#f4f2ee", pants="#f4f2ee"), dict(SNEAK, stripe="#1e2f6a", sock_stripe="#1e2f6a", sock_stripe2="#f4f2ee"), mouth="grin"),
     "boy2": _vest_cast(33.9, 0.62, 1.00, 1.46, "black", "curly", dict(SCHOOL, base="#2a5a8a", trim="#f4f2ee", s1="#f4f2ee", hem="#f4f2ee", pants="#e8e4dc"), dict(SNEAK, stripe="#2a5a8a", sock_stripe="#2a5a8a", sock_stripe2="#f4f2ee"), skin="brown", eye_y=0.040),
     "boy3": _vest_cast(47.2, 0.56, 0.94, 1.24, "blond", "quiff", dict(SCHOOL, base="#2f7a4a", trim="#f4f2ee", s1="#f4f2ee", hem="#f4f2ee", pants="#f4f2ee"), dict(SNEAK, stripe="#2f7a4a", sock_stripe="#2f7a4a", sock_stripe2="#f4f2ee"), skin="ruddy", brow="dome", brow_th=0.040, cheeks="#f08a78"),
     # Olympic jumpers: plain kits of different colours, spikes, taller and leaner
@@ -740,6 +790,7 @@ def _norm(C, pose):
     g = pose.get if isinstance(pose, dict) else (lambda key, d=None: d)
     _POSE15["sawdust"] = _f(g("sawdust"), 0.0, 0.0, 1.0)
     _POSE15["medal"] = _f(g("medal"), 0.0, 0.0, 1.0)
+    _POSE15["hat_off"] = _f(g("hat_off"), 0.0, 0.0, 1.0)
     _POSE15["flash"] = _f(g("flash"), 0.0, 0.0, 1.0)
     t = _num(g("t"), 0.0)
     _POSE15["t"] = t if math.isfinite(t) else 0.0
@@ -753,9 +804,44 @@ def _norm(C, pose):
             Pn["head_dy"] = _f(g("hdy2"), 0.0, -4.0, 4.0)
         if g("roll2") is not None:
             Pn["head_roll"] = _f(g("roll2"), 0.0, -200.0, 200.0)
+        _POSE15["bend"] = _f(g("bend15"), 0.0, -90.0, 90.0)
+        _POSE15["bend_y"] = _f(g("bend_y"), 0.6, 0.3, 0.9)
         _POSE15["roll"] = Pn["head_roll"]
         _POSE15["yaw"] = Pn["yaw"]
     return Pn
+
+
+def _joint_y(C):
+    return TT + _POSE15["bend_y"] * C["torso_h"]
+
+
+def _rot_about(p, c, deg):
+    a = math.radians(deg)
+    ca, sa = math.cos(a), math.sin(a)
+    dx, dy = p[0] - c[0], p[1] - c[1]
+    return (c[0] + dx * ca - dy * sa, c[1] + dx * sa + dy * ca)
+
+
+def _solve(C, Pn):
+    """cast15 `bend15`: the torso is two segments; the lower one (hips) is rotated by bend15 degrees about the joint at
+    TT + bend_y * torso_h, so the legs hang from the bent hips."""
+    R = _O15["_solve"](C, Pn)
+    b = _POSE15["bend"]
+    if C is None or not C.get("_cast15") or abs(b) < 1e-6:
+        return R
+    T = R["T"]
+    yB = R["yB"]
+    m = R["m"]
+    jt = T(0.0, _joint_y(C))
+    hipx = C["hip_x"] * m.nf
+    Lg = Pn["legs"]
+    for q, sg in (("r", 1.0), ("l", -1.0)):
+        S = _rot_about(T(sg * hipx, yB - 0.04), jt, b)
+        tg = Lg["foot_" + q] if Lg["foot_" + q] is not None else R["legs"][q]["H"]
+        E, A = P._ik(S, tg, C["leg"], R["legs"][q]["knee"])
+        R["legs"][q] = dict(S=S, E=E, H=A, knee=R["legs"][q]["knee"], toe=R["legs"][q]["toe"])
+    R["feet_y"] = max(R["legs"]["l"]["H"][1], R["legs"]["r"]["H"][1]) + Pn["limb_w"] / 2 + 0.008
+    return R
 
 
 def _head_behind(k, C, yaw, roll, mir, skin):
@@ -810,6 +896,41 @@ def _mound(k, cx, ytop, ybot, w, seed, lev=1.0):
     return "".join(o)
 
 
+def _bend_torso(svg, C, Pn, yaw, k, bend, byf, hw):
+    """replace the torso group by two clipped copies: the upper segment as drawn, the lower one rotated by `bend` about the joint,
+    plus a round cap in the costume colour that fills the wedge on the outer side of the bend."""
+    start = '<g transform="translate(%.4f %.4f) rotate(%.4f)">' % (-Pn["head_dx"], -Pn["head_dy"], Pn["lean"])
+    i = svg.find(start)
+    if i < 0:
+        return svg, ""
+    depth, j = 0, i
+    while j < len(svg):
+        o, c = svg.find("<g", j), svg.find("</g>", j)
+        if c < 0:
+            return svg, ""
+        if 0 <= o < c:
+            depth += 1
+            j = o + 2
+        else:
+            depth -= 1
+            j = c + 4
+            if depth == 0:
+                break
+    inner = svg[i + len(start):j - 4]
+    ym = TT + byf * C["torso_h"]
+    uid = k.uid
+    cu, cl = uid + "_bu", uid + "_bl"
+    defs = ('<clipPath id="%s"><rect x="-3" y="-3" width="6" height="%.4f"/></clipPath>'
+            '<clipPath id="%s"><rect x="-3" y="%.4f" width="6" height="8"/></clipPath>' % (cu, ym + 0.05 + 3, cl, ym))
+    r = hw * 0.97
+    cap = ('<circle cx="0" cy="%.4f" r="%.4f" fill="%s"/><circle cx="0" cy="%.4f" r="%.4f" fill="%s"/>'
+           % (ym, r + 0.03, P.INK, ym, r, k.c(C["colors"]["base"])))
+    new = (start + cap + '<g clip-path="url(#%s)">%s</g>' % (cu, inner) +
+           '<g transform="rotate(%.3f 0 %.4f)"><g clip-path="url(#%s)">%s</g></g></g>' % (bend, ym, cl, inner))
+    return svg[:i] + new + svg[j:], defs
+
+
+
 def figure(cast_name, pose=None, uid="p"):
     C = P.CAST.get(cast_name) if isinstance(cast_name, str) else None
     if C is None or not C.get("_cast15"):
@@ -824,6 +945,14 @@ def figure(cast_name, pose=None, uid="p"):
         P.HEAD_FILL, P.HEAD_SHADE = old
     svg, bbox, an = f["svg"], list(f["bbox"]), dict(f["anchors"])
     k = P._Ctx(uid + "y", P.INK, None)
+    bend = _f(g("bend15"), 0.0, -90.0, 90.0)
+    byf = _f(g("bend_y"), 0.6, 0.3, 0.9)
+    if abs(bend) > 1e-6:
+        Pn = P._norm(C, pose or {})
+        mm = P._TorsoMap(C, Pn["yaw"])
+        svg, bdefs = _bend_torso(svg, C, Pn, Pn["yaw"], k, bend, byf, mm.hwa)
+        if bdefs:
+            svg = svg.replace("</defs>", bdefs + "</defs>", 1)
     mir = bool(g("mirror"))
     yaw = _f(g("yaw"), 0.0, -1.2, 1.2)
     roll = _f(g("roll2") if g("roll2") is not None else g("head_roll"), 0.0, -200.0, 200.0)
@@ -862,20 +991,30 @@ def figure(cast_name, pose=None, uid="p"):
     if th:
         j = svg.rfind("</g>")
         svg = svg[:j] + "".join(th) + svg[j:]
-    # the bar anchors: apex = the hip joint, bar = the underside of the lower back (where a crossbar passes under a flop)
+    # the bar anchors.  apex = the highest point of the back (the outer edge of the bend); bar = the bar position: 0.13 D below the
+    # underside of the back at the apex, so a visible gap of air stays between the back and the crossbar line.
     lean = _f(g("body_lean") if g("body_lean") is not None else g("lean"), 0.0, -200.0, 200.0)
-    Gm = _geom(C, lean, yaw, _num(g("hdx2"), _num(g("head_dx"), 0.0)), _num(g("hdy2"), _num(g("head_dy"), 0.0)))
+    hdx_, hdy_ = _num(g("hdx2"), _num(g("head_dx"), 0.0)), _num(g("hdy2"), _num(g("head_dy"), 0.0))
+    Gm = _geom(C, lean, yaw, hdx_, hdy_, bend, byf)
+    hwv = P._TorsoMap(C, yaw).hwa
     th_ = math.radians(lean)
-    ax, ay = -math.sin(th_), math.cos(th_)
-    nx, ny = -ay, ax
+    au = (-math.sin(th_), math.cos(th_))                       # head -> joint direction
+    tl = math.radians(lean + bend)
+    al = (-math.sin(tl), math.cos(tl))                         # joint -> hips direction
+    px, py = -(au[1] + al[1]), (au[0] + al[0])                # bisector of the two perpendiculars
+    nl = math.hypot(px, py) or 1.0
+    nx, ny = px / nl, py / nl
     if ny < 0:
         nx, ny = -nx, -ny
-    hwv = P._TorsoMap(C, yaw).hwa
-    hc = Gm["hc"]
-    bar = (hc[0] - ax * 0.20 + nx * (hwv * 0.55 + 0.05), hc[1] - ay * 0.20 + ny * (hwv * 0.55 + 0.05))
+    jt = Gm["jt"]
+    apex = (jt[0], jt[1] - hwv)                                 # top of the round back (the cap over the joint)
+    k_ = hwv / max(0.5, math.cos(math.radians(abs(bend)) / 2.0))   # the inner corner of the bend lies further out than hw
+    under = (jt[0] + nx * k_, jt[1] + ny * k_)
+    bar = (under[0], under[1] + 0.13)
+    hip = Gm["hc"]
     if mir:
-        hc, bar = (-hc[0], hc[1]), (-bar[0], bar[1])
-    an["apex"], an["bar"] = hc, bar
+        apex, bar, hip = (-apex[0], apex[1]), (-bar[0], bar[1]), (-hip[0], hip[1])
+    an["apex"], an["bar"], an["hip"] = apex, bar, hip
     bob = _f(g("bob"), 0.0, -0.5, 0.5)
     if abs(bob) > 1e-6:
         svg = '<g transform="translate(0 %.4f)">%s</g>' % (-bob, svg)
@@ -895,12 +1034,13 @@ def register():
         if not STORY15:
             _fill_story()
         return
-    for name in ("_prop", "_norm", "_ink_limb", "figure"):
+    for name in ("_prop", "_norm", "_ink_limb", "figure", "_solve"):
         _O15[name] = getattr(P, name)
     P._prop = _prop
     P._norm = _norm
     P._ink_limb = _ink_limb
     P.figure = figure
+    P._solve = _solve
     CE.COSTUMES.update(COSTUMES15)
     CE.HATS.update(HATS15)
     P.PROP_TYPES = tuple(P.PROP_TYPES) + tuple(t for t in NEW_PROPS15 if t not in P.PROP_TYPES)
@@ -930,7 +1070,7 @@ def _fill_story():
 # member whatever its limb length:  arm=(angle deg, reach, bend)  leg=(angle deg, reach, knee)
 #   angle: SVG angle of the limb from its root (0 = screen-right, 90 = down, -90 = up, 180 = left); reach: 0..1.15 of the limb length;
 #   bend / knee: elbow bend -1..1 / knee direction -1..1 (+1 = knee toward +x).
-def _geom(C, lean, yaw, hdx, hdy):
+def _geom(C, lean, yaw, hdx, hdy, bend=0.0, byf=0.6):
     m = P._TorsoMap(C, yaw)
     a = math.radians(lean)
     cl, sl = math.cos(a), math.sin(a)
@@ -941,7 +1081,12 @@ def _geom(C, lean, yaw, hdx, hdy):
     sx, sy = C["shoulder"]
     sxa = sx * m.nf
     hipx = C["hip_x"] * m.nf
-    return dict(S={"r": T(sxa, sy), "l": T(-sxa, sy)}, H={"r": T(hipx, yB - 0.04), "l": T(-hipx, yB - 0.04)}, hc=T(0.0, yB - 0.04), T=T, yB=yB)
+    jt = T(0.0, TT + byf * C["torso_h"])
+    if abs(bend) > 1e-9:
+        Hr, Hl, hc = (_rot_about(T(hipx, yB - 0.04), jt, bend), _rot_about(T(-hipx, yB - 0.04), jt, bend), _rot_about(T(0.0, yB - 0.04), jt, bend))
+    else:
+        Hr, Hl, hc = T(hipx, yB - 0.04), T(-hipx, yB - 0.04), T(0.0, yB - 0.04)
+    return dict(S={"r": T(sxa, sy), "l": T(-sxa, sy)}, H={"r": Hr, "l": Hl}, hc=hc, T=T, yB=yB, jt=jt)
 
 
 def _pol(root, ang, reach, length):
@@ -949,11 +1094,13 @@ def _pol(root, ang, reach, length):
     return (root[0] + math.cos(a) * reach * length, root[1] + math.sin(a) * reach * length)
 
 
-def J(cast, lean=0.0, yaw=0.0, roll=0.0, hdx=0.0, hdy=0.0, arm_r=None, arm_l=None, leg_r=None, leg_l=None, legs=None, **kw):
+def J(cast, lean=0.0, yaw=0.0, roll=0.0, hdx=0.0, hdy=0.0, arm_r=None, arm_l=None, leg_r=None, leg_l=None, legs=None, bend=0.0, bend_y=0.6, **kw):
     """build a pose dict for `cast` (see above).  arm_* / leg_* tuples are polar, a dict/str is passed through (presets etc.)."""
     C = P.CAST[cast]
-    G = _geom(C, lean, yaw, hdx, hdy)
+    G = _geom(C, lean, yaw, hdx, hdy, bend, bend_y)
     p = dict(yaw=yaw, body_lean=lean, roll2=roll, hdx2=hdx, hdy2=hdy)
+    if abs(bend) > 1e-9:
+        p["bend15"], p["bend_y"] = bend, bend_y
     for key, spec in (("r", arm_r), ("l", arm_l)):
         if spec is None:
             continue
@@ -1038,38 +1185,39 @@ def _p_flop_rise(c):
              leg_l=(104, 1.0, 0.3), leg_r=(62, 0.82, 1.0))
 
 
-def _arch(c, lean, hdx, hdy, roll, ang, depth, kn=-1, spread=12, **kw):
-    """the flop family: torso tilted up to the hips (apex), head hung below the shoulders (hdx2 / hdy2 move the torso away from the
-    head), face turned toward the feet; thighs go down and out, shins hang (knees bent, kn -1 = knees toward the approach side).
+def _arch(c, lean, hdx, hdy, roll, ang, depth, kn=-1, spread=12, bend=-48, by=0.55, **kw):
+    """the flop family: a two-segment torso (upper back / chest fixed to the head at `lean`, lower back rotated by `bend`
+    degrees about the joint), so the back is a round arch; head joined to the shoulders (hdx2 / hdy2 = small overlap), face
+    turned toward the feet; thighs go down and out, shins hang (knees bent, kn -1 = knees toward the approach side).
     depth = how far the feet hang below the hips (D), ang = thigh direction (90 = straight down, 180 = straight back)."""
     L = P.CAST[c]["leg"]
     r = min(1.05, depth / (L * max(0.2, math.sin(math.radians(ang)))))
-    p = J(c, lean=lean, yaw=-0.9, roll=roll, hdx=hdx, hdy=hdy, expr="determined", arm_r=(92, 0.95, 0.3), arm_l=(110, 0.95, 0.3, BACK),
+    p = J(c, lean=lean, yaw=-0.9, roll=roll, hdx=hdx, hdy=hdy, bend=bend, bend_y=by, expr="determined", arm_r=(92, 0.95, 0.3), arm_l=(110, 0.95, 0.3, BACK),
           leg_l=(ang, r, kn), leg_r=(ang - spread, r, kn))
     p.update(kw)
     return p
 
 
-def _p_flop_head(c):      # head and shoulders already past the bar, hips rising, legs still trailing nearly straight
-    return _arch(c, 108, 0.08, 0.14, 16, 122, 1.8, -0.5, 10)
+def _p_flop_head(c):      # head and shoulders already past the bar (hanging low), hips rising, legs trailing nearly straight
+    return _arch(c, 128, 0.05, 0.22, 16, 122, 1.8, -0.5, 10, bend=-32, by=0.5)
 
 
 def _p_flop_back(c):      # the arch almost complete, knees starting to bend
-    return _arch(c, 123, 0.08, 0.14, 18, 110, 1.7, -0.7, 10)
+    return _arch(c, 152, 0.05, 0.24, 18, 112, 1.6, -0.7, 12, bend=-55, by=0.5)
 
 
-def _p_flop(c):           # THE FLOP: a symmetric upside-down U, belly up
-    return _arch(c, 133, 0.08, 0.14, 20, 100, 1.5, -1, 12)
+def _p_flop(c):           # THE FLOP: a round upside-down U, belly up
+    return _arch(c, 165, 0.05, 0.25, 20, 128, 1.4, -1, 16, bend=-70, by=0.45)
 
 
 def _p_flop_flick(c):     # legs kicked up and over: jack-knife into an L
-    return J(c, lean=120, yaw=-0.9, roll=16, hdx=0.08, hdy=0.14, expr="happy", arm_r=(94, 0.95, 0.3), arm_l=(112, 0.95, 0.3, BACK),
-             leg_l=(-108, 1.05, 0.0), leg_r=(-92, 1.05, 0.0))
+    return J(c, lean=140, yaw=-0.9, roll=16, hdx=0.05, hdy=0.2, bend=-42, bend_y=0.5, expr="happy", arm_r=(94, 0.95, 0.3), arm_l=(112, 0.95, 0.3, BACK),
+             leg_l=(-112, 1.05, 0.0), leg_r=(-96, 1.05, 0.0))
 
 
-def _p_land_back(c):
-    return J(c, lean=92, yaw=-0.9, roll=88, expr="shocked", mouth="o", arm_r=(72, 0.95, 0.2), arm_l=(40, 0.95, 0.2, BACK),
-             leg_l=(-150, 1.0, 0.0), leg_r=(-165, 1.0, 0.0), sawdust=0.5)
+def _p_land_back(c):      # on the back, knees up, arms flung out, a little bounce (torso slightly raised)
+    return J(c, lean=84, yaw=-0.9, roll=80, expr="shocked", mouth="o", arm_r=(-75, 1.0, -0.4), arm_l=(112, 1.0, 0.4, BACK),
+             leg_l=(-38, 0.62, -1.0), leg_r=(-62, 0.66, -1.0), sawdust=0.5)
 
 
 def _p_lie_back(c):
@@ -1082,14 +1230,14 @@ def _p_sit_up(c):
              leg_r=(8, 1.0, 0.3), leg_l=(-30, 0.78, -1.0), sawdust=1.0, fx=["sweat"])
 
 
-def _p_straddle_a(c):
-    return J(c, lean=92, yaw=0.9, roll=88, expr="determined", arm_r=(96, 0.9, 0.3), arm_l=(80, 0.9, 0.3, BACK),
-             leg_r=(-150, 1.05, 0.0), leg_l=(160, 1.0, 0.2))
+def _p_straddle_a(c):     # STRADDLE: belly DOWN, face toward the ground, lead leg kicked high, arms reaching down
+    return J(c, lean=102, yaw=0.9, roll=96, pitch=0.3, hdy=0.1, expr="determined", arm_r=(94, 1.1, 0.1), arm_l=(70, 1.1, 0.1, BACK),
+             leg_r=(-100, 1.05, 0.0), leg_l=(150, 1.0, 0.2))
 
 
 def _p_straddle_b(c):
-    return J(c, lean=90, yaw=0.9, roll=88, expr="determined", arm_r=(100, 0.9, 0.3), arm_l=(84, 0.9, 0.3, BACK),
-             leg_r=(168, 1.0, 0.2), leg_l=(-128, 1.05, 0.0))
+    return J(c, lean=100, yaw=0.9, roll=94, pitch=0.3, hdy=0.1, expr="determined", arm_r=(100, 1.1, 0.1), arm_l=(76, 1.1, 0.1, BACK),
+             leg_r=(160, 1.0, 0.2), leg_l=(-118, 1.05, 0.0))
 
 
 def _p_knock(c):
@@ -1212,9 +1360,9 @@ def _p_coach_sigh(c):
     return J(c, lean=7, yaw=0.35, pitch=0.8, hdy=0.04, expr="sad", mouth="frown", arm_r=dict(preset="chin"), arm_l=(98, 0.75, 0.3, BACK))
 
 
-def _p_coach_clumsy_flop(c):   # a sagging, badly arched backwards flop: low hips, flailing arms, legs everywhere
-    return J(c, lean=120, yaw=-0.8, roll=30, hdx=0.10, hdy=0.12, expr="shocked", mouth="o", arm_r=(-50, 1.05, -0.5), arm_l=(-155, 1.05, 0.5, BACK),
-             leg_r=(-40, 1.0, -0.3), leg_l=(112, 0.80, -1.0))
+def _p_coach_clumsy_flop(c):   # a sagging, badly arched backwards flop: belly up, hips drooping, arms and legs flailing wide, the cap flying off
+    return J(c, lean=128, yaw=-0.8, roll=40, hdx=0.05, hdy=0.25, bend=-34, bend_y=0.5, expr="shocked", mouth="o", hat_off=1.0,
+             arm_r=(-25, 1.25, -0.4, TOP), arm_l=(-112, 1.25, 0.4, TOP), leg_r=(-118, 1.05, -0.3), leg_l=(96, 1.0, 0.2))
 
 
 def _p_coach_buried(c):
@@ -1271,7 +1419,31 @@ def _p_clip(c):
     return J(c, lean=0, yaw=0.4, expr="unimpressed", arm_r=dict(hand=(0.40, 0.95), bend=0.5), arm_l=dict(preset="hip"), prop_r=dict(type="clipboard", angle=0))
 
 
+def _p_sit_read(c):       # seated, holding the open newspaper wide in both hands at chest height (shot 14); the right hand holds the right edge
+    p = J(c, lean=0, yaw=0.0, pitch=0.25, expr="grinning", arm_r=dict(hand=(0.74, 0.92), bend=0.6), arm_l=dict(hand=(-0.74, 0.92), bend=0.6, layer="front"),
+          prop_r=dict(type="paper15", angle=0, scale=1.2), **_seat())
+    return p
+
+
+def _p_walk_dejected(c, phase=0.25):
+    p = cycle(c, phase, "walk", 1, base=dict(expr="sad", mouth="frown", pitch=1.0, yaw=0.6))
+    s_ = math.sin(2 * math.pi * phase)
+    p["lean"] = 12.0
+    p["head_dy"] = 0.06
+    p["head_roll"] = 8.0
+    p["arm_r"] = dict(hand=(0.45 + 0.08 * s_, 1.45), bend=0.5)
+    p["arm_l"] = dict(hand=(-0.30 - 0.08 * s_, 1.45), bend=0.5, layer="back")
+    return p
+
+
+def walk_dejected(cast, phase, facing=1):
+    """head down, shoulders slumped, arms hanging, a slow walk (cast6 'walk', 28 frames per cycle)."""
+    p = _p_walk_dejected(cast, phase)
+    return flip(p) if facing < 0 else p
+
+
 POSE_FUNCS = {
+    "sit_read": _p_sit_read, "walk_dejected": _p_walk_dejected,
     # jumper
     "rock_a": _p_rock(True), "rock_b": _p_rock(False), "plant": _p_plant, "takeoff": _p_takeoff,
     "flop_rise": _p_flop_rise, "flop_head": _p_flop_head, "flop_back": _p_flop_back, "flop": _p_flop, "flop_flick": _p_flop_flick,
@@ -1331,6 +1503,9 @@ def _STORY_DEFS():
         add("boy%d_sit_cross" % i, "boy%d" % i, "sit_cross", "sitting, arms crossed (bench)")
         add("rival%d_flop" % i, "rival%d" % i, "flop", "rival flop")
         add("rival%d_straddle" % i, "rival%d" % i, "straddle_a", "rival straddle roll: flat, face down")
+    add("boy1_reader", "boy1", "sit_read", "newspaper reader, shot 14: seated, paper held wide at chest height, flop photo on the page")
+    add("crowd1_reader", "crowd1", "sit_read", "newspaper reader (crowd member)")
+    add("rival1_dejected", "rival1", "walk_dejected", "walking off dejected (shot 19)")
     add("official1_stand", "official1", "official_stand", "hands behind the back")
     add("official1_raise", "official1", "official_raise", "raising the crossbar")
     add("official2_raise", "official2", "official_raise", "raising the crossbar")

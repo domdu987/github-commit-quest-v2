@@ -138,7 +138,7 @@ def build_crowd(P, M, rr):
 def build_flags(P, M, rr):
     """Rim flags: plain stripe cloths on poles, waving through the S15_wave geometry nodes (FLAG_CTL x = amplitude m, y = Hz)."""
     ctl = ctl_empty('FLAG_CTL', (0.32, 0.55, 0.0)); STATE['flag_ctl'] = ctl; ng = wave_group(ctl)
-    fc = [['red', 'cream', 'green'], ['blue', 'cream', 'red'], ['yellow', 'red', 'navy'], ['cream', 'blue', 'cream'], ['orange', 'cream', 'teal'], ['green', 'yellow', 'red'], ['navy', 'cream', 'orange'], ['red', 'yellow', 'green']]
+    fc = [['orange', 'teal', 'yellow', 'navy'], ['teal', 'cream', 'red', 'cream', 'blue'], ['yellow', 'navy', 'orange', 'navy'], ['cream', 'teal', 'orange', 'teal'], ['red', 'teal', 'yellow', 'teal'], ['navy', 'orange', 'cream', 'orange'], ['yellow', 'teal', 'cream', 'blue'], ['orange', 'navy', 'yellow', 'cream']]
     ao = A0 + NROW * RW; bo = B0 + NROW * RW; zt = 1.0 + NROW * RISE
     mb = S.MB('rimpoles'); cloth = {}
     def cloth_add(cmat, V, F, uu, dirv, ph):
@@ -171,8 +171,10 @@ def build_flags(P, M, rr):
 def build_b(P, M, dress=True):
     rr = rnd(1968); sc = bpy.context.scene
     PR.extra_mats(M, P)
-    M['tartan2'] = mat('tartan2', '#d0663f', '#e07a50', 1.8, contrast=0.8)
-    M['tartan3'] = mat('tartan3', '#9c3a28', '#b44a32', 1.8, contrast=0.8)
+    M['tartan'] = mat('tartanB', '#a8473a', '#bb5f48', 1.8, contrast=0.8); M['tartan2'] = mat('tartan2', '#bb5a40', '#cc6f52', 1.8, contrast=0.8); M['tartan3'] = mat('tartan3', '#a85a42', '#b86a50', 1.8, contrast=0.8)
+    M['foamtop'] = mat('foamtopB', '#6a82b0', '#7e96c4', 3.5, contrast=1.6); M['foam'] = mat('foamB', '#6c88b8', '#8098c6', 4, contrast=0.8); M['foamdk'] = mat('foamdkB', '#52689a', '#6078aa', 4)
+    M['cloth'] = mat('clothB', '#86764f', '#776745', 3)
+    M['lamp'] = mat_emit('lampB', '#fff0cc', 16.0 if P['floods'] > 0 else 1.1)
     M['podium'] = mat('podium', '#c8c0d8', '#dad2ea', 2); M['podium2'] = mat('podium2', '#8c9ccc', '#a0b0dc', 2)
     M['board'] = mat('board', '#2a2e52', '#3c4270', 2); M['boardlit'] = mat('boardlit', '#34406e', '#4a5a90', 2, emit='#7080c0', emit_k=0.15)
     M['roofm'] = mat('roofm', '#d8d0dc', '#e8e0ea', 1.4); M['pressglass'] = mat('pressglass', '#34426e', '#4a5c90', 3, emit='#ffd890', emit_k=0.35 if P['floods'] > 0 else 0.0)
@@ -295,6 +297,10 @@ def build_b(P, M, dress=True):
             sp = bpy.data.lights.new('flood%d' % tdeg, 'SPOT'); sp.color = (1.0, 0.9, 0.72); sp.energy = FLOOD_W * P["floods"]; sp.spot_size = math.radians(46); sp.spot_blend = 0.8; sp.use_shadow = False; sp.shadow_soft_size = 1.0
             so = bpy.data.objects.new('flood%d' % tdeg, sp); STATE['LIGHTS'].objects.link(so); so.parent = root(); so.location = (x, y, H_ + 2.0)
             tgt = Vector((0.0 + 3 * math.cos(u), 12.0, 0.0)); so.rotation_euler = (tgt - Vector((x, y, H_ + 2.0))).to_track_quat('-Z', 'Y').to_euler(); STATE.setdefault('flood_lights', []).append(so)
+    if P['floods'] > 1.5:
+        pl = bpy.data.lights.new('pool', 'SPOT'); pl.color = (1.0, 0.93, 0.8); pl.energy = 2.6e4; pl.spot_size = math.radians(26); pl.spot_blend = 0.15; pl.use_shadow = False
+        po = bpy.data.objects.new('pool', pl); STATE['LIGHTS'].objects.link(po); po.parent = root(); po.location = (-8.0, 2.0, 14.0)
+        po.rotation_euler = (Vector((0.0, 11.8, 1.8)) - Vector((-8.0, 2.0, 14.0))).to_track_quat('-Z', 'Y').to_euler(); STATE['pool_light'] = po
     fin(mb)
     # --- jump set: foam pit (stacked blue-grey blocks) + steel standards + striped bar; NO hurdles in the jump area
     mb = S.MB('foam'); px, py = PIT_B
@@ -308,8 +314,12 @@ def build_b(P, M, dress=True):
     for sx in (-3.15, 3.15): mb.box(M['foam'], (px + sx, py, FOAM_TOP - 0.1), (0.12, 5.4, 0.3))
     for sx in (-1.5, 0.0, 1.5): mb.box(M['foamdk'], (px + sx, py, FOAM_TOP + 0.045), (0.05, 5.3, 0.012))
     mb.box(M['foamdk'], (px, py - 1.5, FOAM_TOP + 0.045), (6.3, 0.05, 0.012)); mb.box(M['foamdk'], (px, py + 1.0, FOAM_TOP + 0.045), (6.3, 0.05, 0.012))
+    for (tx_, ty_, yw_) in [(-2.4, 12.6, 0.3), (2.3, 13.4, 3.4), (1.0, 17.2, 1.2)]: PR.towel_drape(mb, M, (tx_, ty_, FOAM_TOP + 0.0), yw_, 'towel_w' if int(tx_) % 2 else 'towel_b')
+    for (tx_, ty_, yw_) in [(-1.0, 16.2, 0.5), (-0.7, 16.4, 0.9)]: S.shoe(mb, M, (tx_, ty_, FOAM_TOP + 0.01), yw_)
+    for k_ in range(6): mb.box(M['chalk'], (-4.5 + k_ * 1.8, 20.2, 0.02), (1.0, 0.06, 0.004)); 
+    for k_ in range(6): mb.box(M['chalk'], (-4.5 + k_ * 1.8, 10.0, 0.02), (0.8, 0.05, 0.004), rz=0.1 * k_)
     fin(mb)
-    J = LA.jump_set(M, 0.0, BAR_Y_B, 2.1, 'steel', 2.95, FOAM_TOP, 'B', 2.24); STATE['J'] = J
+    J = LA.jump_set(M, 0.0, BAR_Y_B, 2.1, 'steel', 3.0, FOAM_TOP, 'B', 2.34); STATE['J'] = J
     # --- officials' table (clipboard, small flag), chairs, measuring stick, kit
     mb = S.MB('officials'); tx, ty = 9.0, 5.0
     mb.push(Matrix.Translation((tx, ty, 0)) @ Euler((0, 0, 0.5)).to_matrix().to_4x4())
@@ -359,10 +369,10 @@ def build_b(P, M, dress=True):
         o = S.MB('bulb%d' % i); o.ell(fm, (0, 0, 0), (0.17, 0.17, 0.17), (6, 4)); ob = adopt(o.finish(), cast=False)[0]; ob.location = (x, y, z); ob.hide_render = True; bulbs.append(ob)
     STATE['stand_bulbs'] = bulbs
     # --- jump-area stand points (metres)
-    cs = ell_pt(A0 + 7 * RW + 0.55 + 0.4, B0 + 7 * RW + 0.55 + 0.4, math.radians(97)); COACH_SEAT = (cs[0], cs[1], 1.0 + 7 * RISE)
+    cs = ell_pt(A0 + 7 * RW + 0.55 + 0.4, B0 + 7 * RW + 0.55 + 0.4, math.radians(101.2)); COACH_SEAT = (cs[0], cs[1], 1.0 + 7 * RISE)
     path = [(8.0, 2.0), (7.4, 5.0), (6.0, 7.6), (4.2, 9.4), (2.5, 10.3)]
-    MARKS_B.update(runup_path=[(x, y, 0.0) for x, y in path], runup_start=(8.0, 2.0, 0.0), takeoff=(1.15, 10.6, 0.0), bar_centre=(0.0, BAR_Y_B, 2.24), landing=(0.0, 14.5, FOAM_TOP), dick_mark=(5.8, 8.2, 0.0),
+    MARKS_B.update(runup_path=[(x, y, 0.0) for x, y in path], runup_start=(8.0, 2.0, 0.0), takeoff=(1.15, 10.6, 0.0), bar_centre=(0.0, BAR_Y_B, 2.34), landing=(0.0, 14.5, FOAM_TOP), dick_mark=(5.8, 8.2, 0.0),
                    coach_stands=COACH_SEAT, podium_top=(-9.0, 10.0, 0.85), podium_2=(-9.95, 10.0, 0.55), podium_3=(-8.05, 10.0, 0.35),
-                   photographer=(-12.0, 20.0, 0.2), photographer_b=(13.0, 23.0, 0.2), official_a=(8.0, 6.2, 0.0), official_b=(10.0, 6.4, 0.0), official_bar_l=(-2.9, 10.6, 0.0), official_bar_r=(2.9, 10.6, 0.0),
-                   dick_b2=(-2.7, 9.3, 0.0), rival_a=(4.9, 7.2, 0.0), rival_b=(2.2, 9.6, 0.0), rival_land=(0.5, 13.8, FOAM_TOP), table=(9.0, 5.0, 0.0), torch=STATE['torch_pos'], foam_edge=(0.0, 12.3, FOAM_TOP))
+                   photographer=(-12.0, 20.0, 0.2), photographer_b=(13.0, 23.0, 0.2), official_a=(8.0, 6.2, 0.0), official_b=(10.0, 6.4, 0.0), official_bar_l=(-2.5, 10.5, 0.0), official_bar_r=(2.5, 10.5, 0.0),
+                   dick_b2=(-1.1, 10.1, 0.0), rival_a=(4.9, 7.2, 0.0), rival_b=(2.2, 9.6, 0.0), rival_land=(0.5, 13.8, FOAM_TOP), table=(9.0, 5.0, 0.0), torch=STATE['torch_pos'], foam_edge=(0.0, 12.3, FOAM_TOP))
     STATE['marks_m'] = dict(MARKS_B)

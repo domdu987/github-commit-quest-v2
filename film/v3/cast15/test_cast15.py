@@ -89,10 +89,10 @@ def sec_heights(D=100):
 PRESET_CAST = {
     # jumper presets on dick / a boy, coach presets on the coach, crowd presets on crowd members
     "jump": ("dick", ["rock_a", "rock_b", "plant", "takeoff", "flop_rise", "flop_head", "flop_back", "flop", "flop_flick", "land_back", "lie_back",
-                      "sit_up", "straddle_a", "straddle_b", "knock", "lie_hands_face", "cheer", "podium", "thumb", "sit_thumb", "stand"]),
+                      "sit_up", "straddle_a", "straddle_b", "knock", "lie_hands_face", "cheer", "podium", "thumb", "sit_thumb", "stand", "walk_dejected"]),
     "coach": ("coach", ["coach_laugh", "coach_point", "coach_neck", "coach_wag_a", "coach_wag_b", "coach_jab", "coach_shout", "coach_jaw", "coach_sigh",
                         "coach_clumsy_flop", "coach_buried", "clip", "stand"]),
-    "boys": ("boy1", ["laugh", "point_laugh", "point", "gape", "jaw_drop", "cheer", "sit_cross", "sit_laugh", "sit_cheer", "sit_gape", "sit_point"]),
+    "boys": ("boy1", ["laugh", "point_laugh", "point", "gape", "jaw_drop", "cheer", "sit_cross", "sit_laugh", "sit_cheer", "sit_gape", "sit_point", "sit_read"]),
     "press": ("photographer", ["photog_ready", "photog_flash"]),
     "officials": ("official1", ["official_stand", "official_raise", "official_point"]),
 }
@@ -258,7 +258,7 @@ def sec_phone(D=34):
              ("official1", "official_stand"), ("official2", "official_stand"), ("photographer", "photog_ready"), ("crowd1", "sit_cheer"), ("crowd2", "sit_laugh"),
              ("crowd3", "sit_gape"), ("crowd4", "sit_point"), ("crowd5", "sit_cross"), ("crowd6", "sit_cheer"), ("coach_stands", "coach_shout"),
              ("dick", "flop"), ("dick", "straddle_a"), ("boy1", "straddle_b"), ("rival1", "flop"), ("dick", "takeoff"), ("dick", "plant"), ("dick", "land_back"),
-             ("dick", "sit_up"), ("dick_olympic", "podium"), ("coach", "coach_laugh"), ("coach", "coach_buried"), ("dick_olympic", "lie_hands_face"),
+             ("dick", "sit_up"), ("dick_olympic", "podium"), ("coach", "coach_laugh"), ("coach", "coach_buried"), ("dick_olympic", "lie_hands_face"), ("boy1", "sit_read"), ("rival1", "walk_dejected"), ("boy1", "stand"),
              ("coach", "coach_neck"), ("coach", "coach_point")]
     cols = 8
     cw, ch = 3.3 * D, 5.0 * D

@@ -26,10 +26,10 @@ The puppet torso is rigid and its keys are clamped (`lean` +-75, `head_roll` +-7
 | key | build | head top to soles | look |
 |---|---|---|---|
 | `dick` | slim, torso 0.56 x 1.04, **legs 1.86** | **3.76** (tallest; hair tufts 4.05) | lanky, long thin limbs, **big ears**, short **tousled brown hair** (spikes stick out of the head), friendly face. Costume **school**: maroon vest with gold neck binding, gold chest band and gold hem, white shorts, white socks with maroon/gold stripes, off-white canvas sneakers |
-| `dick_olympic` | same body | 3.76 | costume **olympic**: white vest with **red and blue chest stripes**, navy shorts, white socks, **spikes** (white spiked shoes). Pose key `medal=1` hangs the gold medal on a red/white/blue ribbon |
+| `dick_olympic` | same body | 3.76 | costume **olympic**: white vest with **straight red and blue chest bands** and solid **navy side bands** (readable on pale foam), navy shorts, white socks, **spikes** (white spiked shoes). Pose key `medal=1` hangs the gold medal on a red/white/blue ribbon |
 | `coach` | stout, torso 1.52 x 1.14, legs 0.98 | 2.99 (cap 3.28) | veteran: stocky **belly**, **grey crew cut** at the temples, **big square jaw**, small ears, maroon **cap** (no letters), maroon **windbreaker** (gold side stripes, zip, collar) with **lanyards: whistle and stopwatch** on the belly, grey trousers, black shoes. Prop `clipboard` |
 | `coach_stands` | same body | 2.99 (hat, pennant 3.57) | costume **stands**: loud teal tourist shirt with hibiscus blobs, cream trousers, floppy cream hat with a red band and a **red/white striped pennant** on a stick (stripes only, no flag, no letters) |
-| `boy1` | slim, legs 1.34 | 3.18 | school vest, chestnut crew cut, wide grin |
+| `boy1` | slim, legs 1.34 | 3.18 | navy-and-white vest (not Dick's maroon), chestnut crew cut, wide grin |
 | `boy2` | slim, legs 1.46 | 3.32 | blue-and-white vest, big black curls, brown skin |
 | `boy3` | slim, legs 1.24 | 3.04 | green-and-white vest, blond quiff, ruddy skin |
 | `rival1` | slim, legs 1.62 | 3.50 | plain red kit, black crew cut, tan skin, spikes |
@@ -57,13 +57,19 @@ Costumes (`CE.COSTUMES`): `vest15`, `jacket15`, `aloha15`, `blazer15`, `shirt15`
 | `flash` | 0..1 (0) | the press camera's flash: star burst at the reflector (`anchors["flash_r"/"flash_l"]`) and a white-hot bulb; animate 1 -> 0 over about 4 frames |
 | `thumb_r`, `thumb_l`, `thumb_angle` | 0/1, deg (-90) | a thumb standing up on the hand of that limb (limb r = the unflipped screen-right one; follows `mirror`) |
 | `bob` | -0.5..0.5 D (0) | lifts the whole drawing by `bob` D (feet_y is NOT changed, so the card hops when placed by feet). Use `laugh_bob(frame, fps=30, hz=3, amp=0.06)` |
+| `bend15`, `bend_y` | -90..90 deg (0), 0.3..0.9 (0.6) | splits the torso in two: the lower segment (hips, legs) rotates by `bend15` about the joint at `bend_y` of the torso length (negative = bends the way the flop arches, with the head on the right). Legs hang from the bent hips (the solver is wrapped); a round cap hides the wedge. Use `J(..., bend=, bend_y=)` so the foot targets use the bent hips |
+| `hat_off` | 0..1 (0) | cap flying off: the `cap15` hat lifted up and back and tumbling (coach_clumsy_flop) |
 | `t` | float | passed through |
 
 New anchors on every cast15 figure: **`apex`** (the hip joint, the highest point of the flop arch), **`bar`** (the underside of the lower back, where a crossbar passes under a flop; see below), plus the usual `head`, `hip`, `chest`, `hand_*`, `foot_*`, `feet`.
 
 ### Where the bar goes in the flop (card coordinates, D, head centre = origin, y down)
 
-`flop` (dick, facing right; rival1 and boy2 within 0.03): head centre at (0, 0), `apex` (hips) at **(-1.07, -1.07)**, **`bar` at (-1.05, -0.80)** (0.27 D under the apex, on the underside of the lower back), `foot_l` (-1.25, 0.34). So the crossbar is the horizontal line y = `anchors["bar"][1]`: the head centre hangs **0.80 D below the bar** on the right and the feet about 1.1 D below it on the left, an upside-down U about 1.1 D wide. The head overlaps the shoulder end of the torso (no gap): the torso is tilted to `body_lean` 133 and offset from the head by only `hdx2` 0.08 / `hdy2` 0.14. For a left-facing flop (`facing=-1`) x is negated; anchors come back already mirrored. Stages (dick): `flop_head` apex (-1.37, -0.56) bar (-1.24, -0.32), feet at y 0.9; `flop_back` apex (-1.22, -0.88) bar (-1.15, -0.62); `flop` as above; `flop_flick` apex (-1.26, -0.82) bar (-1.18, -0.56), feet far above at y -2.7 (the body an L). `coach_clumsy_flop` apex (-1.36, -0.85) bar (-1.40, -0.39). Read the anchor, do not hard-code it: it scales a little with torso length.
+`flop` (dick; rival1 / boy2 within 0.02; facing right; head centre at (0, 0), y down, D): the torso is **two segments**. The upper one (chest, shoulders) is fixed to the head (it overlaps the head, no gap, `body_lean` 165 + `hdy2` 0.25); the lower one (lower back, hips, legs) is rotated about a joint by `bend15` = -70 degrees (`bend_y` 0.45 = the joint's place along the torso), and a round cap in the costume colour fills the outside of the bend, so the back is a visible round arch.
+- `apex` = the top of the round back: **(-0.26, -1.29)** (1.29 D above the head centre)
+- **`bar` = (-0.45, -0.69)**: the horizontal line y = `anchors["bar"][1]` passes **0.13 D below the underside of the back** (the inner corner of the bend), so a gap of air shows between the back and the bar line; x is where the back is lowest-clearance. The head centre hangs 0.69 D below the bar, the feet (`foot_l` (-1.88, 0.17)) about 0.9 D below it.
+- `hip` (the hip joint after the bend) = (-0.79, -1.10); knees reach x = -1.9, so the arch is about 2 D wide head to feet (about 1.7 D head to knees).
+Other stages (dick): `flop_head` apex (-0.74, -1.00) bar (-0.84, -0.40) feet y 0.64; `flop_back` apex (-0.46, -1.26) bar (-0.62, -0.66); `flop_flick` apex (-0.62, -1.12) bar (-0.74, -0.52) feet y -2.79 (an L). `coach_clumsy_flop` apex (-0.78, -1.49). For a left-facing flop (`facing=-1`) x is negated; anchors come back already mirrored. Read the anchors, do not hard-code them (they scale a little with torso length; the bend cap radius is the torso half-width).
 
 ## Pose presets (`cast15.POSE_NAMES`; `pose_for(name, cast, facing=1, **overrides)`)
 
@@ -76,14 +82,14 @@ All are authored for a figure travelling or facing screen-RIGHT (`facing=-1` tog
 | `plant` | jumpers | last stride, planted forward foot, leaning away from the bar |
 | `takeoff` | jumpers | drive leg straight, **knee lifted**, arms thrown up |
 | `flop_rise` | jumpers | leaving the ground, turning the back to the bar (lean +48, yaw -0.1) |
-| `flop_head` | jumpers | head and shoulders already past the bar (hanging low), hips rising, legs trailing nearly straight |
-| `flop_back` | jumpers | the arch almost complete, knees starting to bend |
-| `flop` | jumpers | **THE FLOP**: a symmetric upside-down U, belly up: torso tilted up to the hips (apex), head joined to the shoulder end (overlapping, no gap) and looking toward the feet, thighs down and out with the shins hanging (knees bent), arms down along the body. Built by `cast15._arch(...)` from `body_lean` 133 + a small `hdx2`/`hdy2` overlap + polar legs |
+| `flop_head` | jumpers | head and shoulders already past the bar (hanging low), hips rising (`bend15` -32), legs trailing nearly straight |
+| `flop_back` | jumpers | the arch almost complete (`bend15` -55), knees starting to bend |
+| `flop` | jumpers | **THE FLOP**: a round upside-down U, belly up: two-segment torso (`body_lean` 165 + `bend15` -70), head overlapping the shoulder end and looking toward the feet, thighs down and out with the shins hanging (knees bent), arms down along the body. Built by `cast15._arch(...)` + polar legs |
 | `flop_flick` | jumpers | legs kicked up and over: jack-knife into an L (legs near vertical above the hips) |
-| `land_back` | jumpers | landing on the back, legs up, startled (`sawdust` 0.5) |
+| `land_back` | jumpers | on the back, **knees up**, arms flung out up and down, torso slightly raised (a small bounce), startled (`sawdust` 0.5) |
 | `lie_back` | jumpers | lying flat on the back |
 | `sit_up` | jumpers | seated, torso upright, one leg flat out in front and the other knee up, sheepish (worried eyes, small smile, sweat), hand scratching the back of his head, `sawdust=1` |
-| `straddle_a`, `straddle_b` | jumpers | **STRADDLE roll**: body flat and horizontal, **face down**, arms hanging below, one leg swinging up over (a: leg up front, b: the other leg swinging over) |
+| `straddle_a`, `straddle_b` | jumpers | **STRADDLE roll**: belly DOWN: body horizontal with the head dipped, **face toward the ground**, both arms reaching straight down, one leg kicked high up (a: right leg, b: left leg), the other trailing low |
 | `knock` | jumpers | bar knocked: tumbling flail, arms and legs wide, shocked "O" |
 | `lie_hands_face` | jumpers | lying on the mat, hands on the face, sad |
 | `cheer` | jumpers, boys | arms-up V, excited |
@@ -101,16 +107,18 @@ All are authored for a figure travelling or facing screen-RIGHT (`facing=-1` tog
 | `coach_jaw` | coach, coach_stands | jaw dropped (held open mouth) |
 | `coach_sigh` | coach | sigh: head down, shoulders low, hand to chin, sad |
 | (cycle) `coach_clumsy_run(phase, cast, facing)` | coach | clumsy run: heavy forward lean, flapping arms, wobbling head |
-| `coach_clumsy_flop` | coach | sagging, badly arched backwards flop: low hips, head dropped, arms flailing, shocked |
+| `coach_clumsy_flop` | coach | sagging backwards flop: belly up, hips drooping (`bend15` -34), head dropped, arms thrown wide over the body, one leg kicking up, the **cap flying off** (`hat_off` 1) |
 | `coach_buried` | coach | in the sawdust: `buried=1` mound, `sawdust=1`, weak thumbs-up (`thumb_r`), worried small smile |
 | `clip` | coach | holding the clipboard |
 | `photog_ready` | photographer | crouched, press camera at the eye |
 | `photog_flash` | photographer | the same with `flash=1` (burst) |
+| `walk_dejected` | all | head down, shoulders slumped, arms hanging, mid-stride (cast6 walk phase 0.25). Animated: `walk_dejected(cast, phase, facing)` (28 frames per cycle) |
+| `sit_read` | boys, crowd | **newspaper reader (shot 14)**: seated, holds the open `paper15` wide in both hands at chest height, grinning |
 | `official_stand`, `official_raise`, `official_point` | officials | hands behind the back; arms up raising the crossbar; pointing |
 
 `cast15.STORY15[name] = (cast, pose)` (also merged into `puppet.STORY`) gives 47 ready-made pairs such as `dick_flop`, `dick_straddle`, `coach_laugh`, `stands_shout`, `photographer_flash`, `boy1_laugh`, `rival2_flop`, `official1_raise`. `STORY15_META[name]["note"]`, and `["lipsync"] = True` on the two shout poses.
 
-Props: `clipboard` (`prop_r={"type": "clipboard", "angle": 0}`, anchor `board_r`), `presscam` (`{"type": "presscam", "angle": -4, "scale": 1.3}`, anchors `flash_r`, `lens_r`).
+Props: `paper15` (`prop_r={"type": "paper15", "angle": 0, "scale": 1.2}`: an open newspaper 1.3 D wide x 0.95 D, no letters: grey headline bars, a big grey halftone photo of an arched jumper over a bar, column bars; the right hand holds its right edge and the page extends to the left hand at x - 1.3 x scale; anchor `paper_r`), `clipboard` (`prop_r={"type": "clipboard", "angle": 0}`, anchor `board_r`), `presscam` (`{"type": "presscam", "angle": -4, "scale": 1.3}`, anchors `flash_r`, `lens_r`).
 
 ## Canvases (feet-relative, D)
 
@@ -133,4 +141,4 @@ Standing and seated poses: `cast15.CANVAS15[name]` (registered into `sprites.DEF
 ## Files and QA
 
 - `cast15.py` is the module, `test_cast15.py` the QA, `flop_strip.jpg` the four flop stages side by side (dick above, rival1 below, red line = bar anchor), `sheet.jpg` the labelled sheet (heights front + 3/4, flop sequence above straddle with the bar line, every preset with the `bar` (red) and `apex` (green) anchors, cycles, props, six face states per member) and `sheet_phone.jpg` the phone-scale sheet (head D = 34 px).
-- `python3 test_cast15.py` = sheet + canvas + robust; `sheet`, `canvas`, `robust` separately. Robust: 2376 garbage-key / determinism checks (0 failed) plus the cast10 byte-identity regression (identical).
+- `python3 test_cast15.py` = sheet + canvas + robust; `sheet`, `canvas`, `robust` separately. Robust: 2380 garbage-key / determinism checks (0 failed) plus the cast10 byte-identity regression (identical).

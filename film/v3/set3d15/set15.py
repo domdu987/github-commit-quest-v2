@@ -25,18 +25,18 @@ _B = dict(toon=1.0, form=(0.0, -0.05, 0.22), sun_angle=0.6, exposure=0.0, lift=(
 _SKY_EVE = [(0.0, '#2a3494'), (0.4, '#5a68c4'), (0.5, '#f2a068'), (0.53, '#e6c0a0'), (0.58, '#a4b8e4'), (0.68, '#4a62c0'), (0.82, '#2a3a9c'), (1.0, '#212a82')]
 LIGHTS = dict(
     A_GOLDEN=dict(_B, name='A_GOLDEN', loc='A', key=(1.56, 1.2, 0.8), key_dir=kdir(-60, 28), sun_elev=28, sun_angle=0.9, shade=(0.105, 0.10, 0.31), shade_tint=(0.105, 0.095, 0.33), season=1.0, grade_saturation=1.0,
-                  sky=[(0.0, '#7a70e0'), (0.40, '#f2b47a'), (0.5, '#f8cf96'), (0.56, '#d8d0c8'), (0.64, '#8aa0ec'), (0.8, '#5c6ee6'), (1.0, '#4a58d8')], sky_k=1.25, glow=('#ffa860', 0.35, 0.45),
+                  sky=[(0.0, '#7a70e0'), (0.40, '#f2b47a'), (0.5, '#f8cf96'), (0.56, '#f0c4b8'), (0.64, '#e4b4c4'), (0.8, '#c8a2d8'), (1.0, '#a890e0')], sky_k=1.25, glow=('#ffa860', 0.35, 0.45),
                   hills=[(300, 6, 14, '#a08ac8'), (340, 20, 28, '#8f90d0')], hill_k=0.95),
     A_DAY=dict(_B, name='A_DAY', loc='A', grade_saturation=1.04, key=(1.72, 1.56, 1.26), key_dir=kdir(-38, 44), sun_elev=44, shade=(0.135, 0.115, 0.34), shade_tint=(0.135, 0.11, 0.35), season=0.0,
                sky=[(0.0, '#8a90e8'), (0.4, '#bcd0f4'), (0.5, '#eaf0f8'), (0.56, '#dce8f6'), (0.64, '#86b0f0'), (0.8, '#5a8ae6'), (1.0, '#4474de')], sky_k=1.2, glow=('#fff0d0', 0.5, 0.3),
                hills=[(300, 6, 14, '#9aaedc'), (340, 20, 28, '#8aa0d8')], hill_k=0.95),
     B_EVE=dict(_B, name='B_EVE', loc='B', key=(1.42, 0.92, 0.5), key_dir=kdir(-48, 19), sun_elev=19, sun_angle=1.0, shade=(0.13, 0.10, 0.32), shade_tint=(0.13, 0.095, 0.35), cy=8.0, floods=1.0,
                sky=_SKY_EVE, sky_k=1.15, glow=('#ffb050', 0.6, 0.7), hills=[(420, 20, 30, '#6a60b8'), (480, 40, 40, '#5a58b0')], hill_k=0.9, towers=[20, 62, 118, 160], cauldron_t=104),
-    B_TENSE=dict(_B, name='B_TENSE', loc='B', key=(0.92, 0.60, 0.42), key_dir=kdir(-48, 15), sun_elev=15, sun_angle=1.0, shade=(0.095, 0.085, 0.25), shade_tint=(0.095, 0.085, 0.28), lift=(0.006, 0.006, 0.02), cy=8.0, floods=2.2, crowd_k=0.62,
+    B_TENSE=dict(_B, name='B_TENSE', loc='B', key=(0.92, 0.60, 0.42), key_dir=kdir(-48, 15), sun_elev=15, sun_angle=1.0, shade=(0.095, 0.085, 0.25), shade_tint=(0.095, 0.085, 0.28), lift=(0.006, 0.006, 0.02), cy=8.0, floods=2.2, crowd_k=0.37,
                  sky=[(0.0, '#1e1a68'), (0.4, '#2c2c80'), (0.5, '#a0685c'), (0.53, '#b08478'), (0.58, '#5c64b4'), (0.68, '#322e98'), (0.82, '#24248a'), (1.0, '#1c1a74')], sky_k=1.05, glow=('#ff9050', 0.7, 0.35),
                  hills=[(420, 20, 30, '#3c3c8c'), (480, 40, 40, '#34357e')], hill_k=0.8, towers=[20, 62, 118, 160], cauldron_t=104, grade_saturation=1.12),
-    B_DAY=dict(_B, name='B_DAY', loc='B', key=(1.66, 1.52, 1.28), key_dir=kdir(-36, 42), sun_elev=42, shade=(0.145, 0.115, 0.35), shade_tint=(0.14, 0.105, 0.37), cy=8.0, floods=0.0,
-               sky=[(0.0, '#3a50c8'), (0.4, '#6a94e8'), (0.5, '#d6e6f6'), (0.54, '#c8dcf2'), (0.6, '#8ab4f0'), (0.7, '#5584e2'), (0.84, '#3c66d6'), (1.0, '#2e52c8')], sky_k=1.15, glow=('#fff0d0', 0.5, 0.3),
+    B_DAY=dict(_B, name='B_DAY', loc='B', exposure=-0.33, key=(1.66, 1.52, 1.28), key_dir=kdir(-36, 42), sun_elev=42, shade=(0.145, 0.115, 0.35), shade_tint=(0.14, 0.105, 0.37), cy=8.0, floods=0.0,
+               sky=[(0.0, '#3a50c8'), (0.4, '#5a8ce8'), (0.5, '#b4d0f2'), (0.54, '#9cc2f0'), (0.6, '#76a6ee'), (0.7, '#4f7ee2'), (0.84, '#3a62d6'), (1.0, '#2e52c8')], sky_k=1.15, glow=('#fff0d0', 0.5, 0.3),
                hills=[(420, 20, 30, '#7e96d6'), (480, 40, 40, '#6e88cc')], hill_k=0.9, towers=[20, 62, 118, 160], cauldron_t=104),
 )
 LOC_LIGHTS = dict(A=['GOLDEN', 'DAY'], B=['EVE', 'TENSE', 'DAY'])
@@ -72,7 +72,7 @@ def build(location=None, light=None, preset=None, clear=True, dress=True, shot=N
         import set15_b as LB
         LB.build_b(P, M, dress)
     set_bar_height(STATE['J']['h0'])
-    setup_render(scene, 'final'); T.setup_grade(scene)
+    setup_render(scene, 'final'); T.setup_grade(scene); scene.view_settings.exposure = P.get('exposure', 0.0)
     A = anchors(shot); STATE['A'] = A
     return A
 

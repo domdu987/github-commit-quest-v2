@@ -8,26 +8,22 @@ from set15_lib import S, mat, mat_emit, rnd, fin, adopt, root, plane_at, STATE
 import set15_props as PR
 
 # ------------------------------------------------------------------ jump set (standards + pegs + bar as animatable objects)
-BAR_R = 0.055
+BAR_R = 0.065
 def jump_set(M, xc, y, half, kind, top, ground_z, name, bar_h):
     """Static standards, then: pegs (2 objects), bar (empty + striped meshes). Returns dict used by the hooks (metres, set-local)."""
-    mb = S.MB(name + '_std'); mt = M['wood'] if kind == 'wood' else M['steel']
+    mb = S.MB(name + '_std'); mt = M['metal']
     for sx in (-half, half):
         x = xc + sx
-        if kind == 'wood':
-            mb.box(mt, (x, y, top / 2), (0.1, 0.1, top)); mb.box(M['woodpale'], (x, y, 0.04), (0.55, 1.0, 0.08)); mb.box(M['woodpale'], (x, y - 0.1, 0.12), (0.14, 0.8, 0.1))
-            mb.box(M['yellow'], (x, y - 0.056, top - 0.15), (0.1, 0.012, 0.3))
-        else:
-            mb.rod(mt, (x, y, 0.0), (x, y, top), 0.04, 0.034, 8, smooth=True); mb.box(M['steel'], (x, y, 0.05), (0.6, 0.8, 0.1)); mb.box(M['metal'], (x, y, 0.15), (0.12, 0.12, 0.12))
-            mb.box(M['yellow'], (x, y, top + 0.02), (0.1, 0.1, 0.05))
+        mb.rod(mt, (x, y, 0.0), (x, y, top), 0.026, 0.024, 10, smooth=True); mb.box(M['steel'] if kind != 'wood' else M['woodpale'], (x, y, 0.03), (0.42, 0.62, 0.06)); mb.box(M['metal'], (x, y, 0.09), (0.07, 0.07, 0.06))
+        mb.ell(M['metal'], (x, y, top + 0.02), (0.04, 0.04, 0.04), (8, 5))
         k = 1 if sx < 0 else -1
         for i in range(15):
-            pz = 1.0 + i * 0.1; mb.box(M['metal'] if kind != 'wood' else M['rust'], (x + k * 0.058, y, pz), (0.1, 0.04, 0.03))
+            pz = 1.0 + i * 0.1; mb.box(M['steel'], (x + k * 0.03, y, pz), (0.05, 0.028, 0.016))
     fin(mb)
     J = dict(name=name, xc=xc, y=y, half=half, kind=kind, ground=ground_z, bar_len=2 * (half - 0.05), peg=[], bar=None, h0=bar_h)
     for side, sx in (('L', -half), ('R', half)):
         e = bpy.data.objects.new(name + '_peg' + side, None); STATE['SET'].objects.link(e); e.parent = root(); e.empty_display_size = 0.1
-        pm = S.MB(name + '_peg' + side); pm.box(M['yellow'], (0, 0, 0), (0.16, 0.16, 0.035)); pm.box(M['dark'], (0, 0, -0.03), (0.12, 0.05, 0.03))
+        pm = S.MB(name + '_peg' + side); pm.box(M['yellow'], (0, 0, 0), (0.1, 0.09, 0.022)); pm.box(M['dark'], (0, 0, -0.02), (0.06, 0.04, 0.02))
         for o in pm.finish():
             for c in list(o.users_collection): c.objects.unlink(o)
             STATE['SET'].objects.link(o); o.parent = e; T_nb(o)
@@ -68,6 +64,7 @@ def build_a(P, M, dress=True):
     M['grass'] = mat('grassA', '#7f9a55', '#a0aa68', 0.5, contrast=1.1); M['lawn'] = mat('lawnA', '#73924f', '#92a95f', 0.9); M['dirt'] = mat('dirtA', '#a58562', '#bc9c78', 1.2)
     M['cinder'] = mat('cinderA', '#8a4632', '#ab664c', 2.5, contrast=1.3); M['gp1'] = mat('gp1', '#5f8545', '#78a05a', 1.5); M['gp2'] = mat('gp2', '#a8a868', '#c0bc7c', 1.5)
     M['sawdk'] = mat('sawdk', '#b88a42', '#c89a52', 8); M['leafo'] = mat('leafo', '#d8742a', '#e8923a', 4); M['leafy'] = mat('leafy', '#e8b83a', '#f4cc58', 4); M['leafr'] = mat('leafr', '#b8452a', '#cc5a36', 4)
+    M['bar'] = mat('barW', '#f8f2e4', '#f8f2e4', rough=0.6); M['barr'] = mat('barR', '#d2281e', '#d2281e', rough=0.6)
     M['leafg'] = mat('leafg', '#5f9a3a', '#7ab44a', 4); M['mark'] = mat('mark', '#f2ecd8', '#e6dec6', 3)
     L.sky_world(P); L.ridges(P)
     plane_at(M['grass'], 700, -0.02, (0, 0), 'grass')
@@ -118,17 +115,20 @@ def build_a(P, M, dress=True):
         x = rr.uniform(-16, 22); y = rr.uniform(-8, 14); lm = [M['leafo'], M['leafy'], M['leafr']][i % 3] if nleaf > 100 else M['leafg']
         zz = 0.46 if (abs(x) < 2.3 and abs(y - py) < 1.9) else 0.012
         mb.box(lm, (x, y, zz), (rr.uniform(0.09, 0.16), rr.uniform(0.07, 0.11), 0.004), rz=rr.random() * 6)
-    # loose sawdust pile beside the pit (ends the film): a heaped mound with a scoop, chips, a shovel
-    qx, qy = -4.1, 6.9
-    for (dx, dy, rx, ry, rz_, hz) in [(0, 0, 1.45, 1.1, 0.62, 0.0), (-0.45, 0.2, 0.95, 0.8, 0.62, 0.35), (0.5, -0.25, 0.85, 0.7, 0.5, 0.3), (0.0, 0.1, 0.55, 0.5, 0.45, 0.7), (0.9, 0.5, 0.5, 0.45, 0.3, 0.1)]:
-        mb.ell(M['saw'], (qx + dx, qy + dy, hz * 0.55), (rx, ry, rz_), (16, 8))
-    for i in range(60):
-        a = rr.random() * 6.28; rad = rr.uniform(0.2, 1.4)
-        mb.box(M['chip'], (qx + math.cos(a) * rad * 1.1, qy + math.sin(a) * rad * 0.85, rr.uniform(0.1, 0.55) if rad < 1.0 else 0.015), (rr.uniform(0.05, 0.12), rr.uniform(0.02, 0.05), 0.012), rz=rr.random() * 6)
-    mb.rod(M['woodpale'], (qx + 1.5, qy - 0.6, 0.9), (qx + 1.0, qy - 0.2, 0.15), 0.02, 0.02, 6); mb.box(M['metal'], (qx + 0.98, qy - 0.18, 0.1), (0.3, 0.26, 0.03), rz=0.6)
+    # sawdust pile INSIDE the pit frame (left half): a smooth warm mound with chips, streaks and loose chips around it (ends the film)
+    qx, qy = -1.35, 7.9
+    for (dx, dy, rx, ry, rz_, hz, sg) in [(0, 0, 1.15, 0.95, 0.62, 0.38, (28, 16)), (-0.5, 0.15, 0.8, 0.7, 0.5, 0.36, (22, 12)), (0.5, -0.2, 0.75, 0.65, 0.42, 0.38, (22, 12))]:
+        mb.ell(M['saw'], (qx + dx, qy + dy, hz), (rx, ry, rz_), sg)
+    for i in range(260):
+        a_ = rr.random() * 6.28; rad = rr.uniform(0.0, 1.0) ** 0.7 * 1.15; xx = qx + math.cos(a_) * rad; yy = qy + math.sin(a_) * rad * 0.82
+        hh = 0.38 + 0.62 * math.sqrt(max(0.0, 1 - (rad / 1.2) ** 2)) * 0.95
+        mb.box(M['chip'] if i % 3 else M['sawdk'], (xx, yy, hh), (rr.uniform(0.06, 0.15), rr.uniform(0.02, 0.05), 0.012), rz=rr.random() * 6, rx=rr.uniform(-0.4, 0.4), ry=rr.uniform(-0.4, 0.4))
+    for i in range(50):
+        xx = px + rr.uniform(-2.2, 2.2); yy = py + rr.uniform(-1.8, 1.8); mb.box(M['chip'], (xx, yy, 0.47), (rr.uniform(0.06, 0.14), rr.uniform(0.02, 0.05), 0.012), rz=rr.random() * 6)
+    mb.rod(M['woodpale'], (qx + 1.9, qy - 0.9, 0.95), (qx + 1.4, qy - 0.5, 0.47), 0.02, 0.02, 6); mb.box(M['metal'], (qx + 1.38, qy - 0.48, 0.46), (0.3, 0.26, 0.03), rz=0.6)
     # leaning rake on the pit frame + rake lying on the sawdust
     S.rake(mb, M, (px + pw / 2 + 0.2, py + 0.9, 0.0), (px + pw / 2 - 0.1, py + 0.5, 1.0))
-    mb.rod(M['woodpale'], (px - 1.6, py + 0.2, 0.52), (px - 0.4, py - 0.7, 0.52), 0.016, 0.016, 6); mb.box(M['metal'], (px - 1.65, py + 0.23, 0.5), (0.5, 0.05, 0.03), rz=0.55)
+    mb.rod(M['woodpale'], (px + 0.8, py - 1.0, 0.5), (px + 1.9, py + 0.1, 0.5), 0.016, 0.016, 6); mb.box(M['metal'], (px + 0.75, py - 1.05, 0.48), (0.5, 0.05, 0.03), rz=0.8)
     fin(mb)
     # --- jump set: wooden standards 4 m apart, striped crossbar on pegs
     J = jump_set(M, 0.0, BAR_Y, 2.0, 'wood', 2.75, 0.44, 'A', 1.72); STATE['J'] = J
@@ -183,7 +183,7 @@ def build_a(P, M, dress=True):
     for (x, y) in [(-26.0, 22.0), (-3.0, 22.6), (22.0, 21.0)]: mb.rod(M['wood'], (x, y, 0), (x, y, 6.0), 0.1, 0.07, 7)
     S.pennant_line(mb, M, (-26.0, 22.0, 5.8), (-3.0, 22.6, 5.8), 24, ['red', 'yellow', 'blue', 'cream', 'orange', 'teal'], 1.8, 0.6)
     S.pennant_line(mb, M, (-3.0, 22.6, 5.8), (22.0, 21.0, 5.8), 26, ['yellow', 'teal', 'red', 'cream', 'blue', 'orange'], 1.8, 0.6)
-    S.flagpole(mb, M, 30.0, 17.0, 0.0, 9.0, ['red', 'cream', 'blue'], 0.2, 0.6)
+    S.flagpole(mb, M, 30.0, 17.0, 0.0, 9.0, ['yellow', 'teal', 'orange', 'cream'], 0.2, 0.6)
     fin(mb)
     # --- parked 1960s cars beyond the fence (on the road)
     mb = S.MB('carsA')
@@ -224,7 +224,7 @@ def build_a(P, M, dress=True):
     # --- marks (metres, floor z)
     path = [(6.4, -3.4), (5.6, -0.8), (4.3, 1.5), (2.9, 3.0), (1.6, 3.9)]
     MARKS_A.update(runup_path=[(x, y, 0.0) for x, y in path], runup_start=(6.4, -3.4, 0.0), takeoff=(1.15, 4.25, 0.0), bar_centre=(0.0, BAR_Y, 1.72), landing=(-0.3, 7.5, 0.44),
-                   coach_bleacher=(10.4, 2.6, 0.0), coach_end=(-4.1, 7.55, 0.0), pile=(-4.1, 6.9, 0.0),
+                   coach_bleacher=(10.4, 2.6, 0.0), coach_end=(-1.35, 8.9, 0.44), pile=(-1.35, 7.9, 0.44),
                    dick_mark=(5.6, -0.8, 0.0), boy_wait_a=(6.0, -1.7, 0.0), boy_wait_b=(7.0, -2.5, 0.0), boy_c=(5.0, 0.6, 0.0),
                    boys_bench_a=(-6.0, 2.0, 0.0), boys_bench_b=(-6.9, 2.3, 0.0), boys_bench_c=(-5.2, 1.8, 0.0),
                    photographer=(-3.6, 3.4, 0.0), reader=(12.6, 4.2, 0.9), bench_right=(7.4, -1.0, 0.0), cooler=(6.0, -2.2, 0.0),
