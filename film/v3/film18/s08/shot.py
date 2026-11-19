@@ -36,6 +36,21 @@ def patches(T):
         mk = C.cut_faces_in_rect("wood", (-40, 60, 90, 260), T.cam, mk)
     nb = C.apply_cut("wood", mk)
     print("beam faces cut:", nb)
+    # the near brazier fire4 (-4, -57) blows out the caption band when the camera sways toward it: dim it and drop its halo faces
+    for fi in C.J.STATE["fires"]:
+        if abs(fi["ob"].location.x + 4.0) < 0.1 and abs(fi["ob"].location.y + 57.0) < 0.1:
+            fi["E0"] *= 0.45
+            fi["k"] = fi.get("k", 1.0) * 0.6
+    h = ob.get("halos")
+    if h is not None:
+        import bmesh
+        from mathutils import Vector as V
+        bm = bmesh.new(); bm.from_mesh(h.data); mw = h.matrix_world
+        dl = [f for f in bm.faces if (mw @ f.calc_center_median() - V((-4.0, -57.0, 1.5))).length < 4.0]
+        for f in dl:
+            bm.faces.remove(f)
+        bm.to_mesh(h.data); bm.free(); h.data.update()
+        print("halo faces removed", len(dl))
     print("patches: red materials toned", n)
 
 
