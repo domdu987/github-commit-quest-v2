@@ -8,6 +8,7 @@ from set15_lib import S, mat, mat_emit, rnd, fin, adopt, root, plane_at, STATE
 import set15_props as PR
 import set15_a as LA
 
+FLOOD_W = 4.0e4
 SX, SY = 0.0, 8.0
 NROW = 28; RW = 0.9; RISE = 0.72; A0 = 64.0; B0 = 36.0
 BAR_Y_B = 11.6; PIT_B = (0.0, 15.0); FOAM_TOP = 1.0
@@ -291,7 +292,7 @@ def build_b(P, M, dress=True):
             for iz in range(4): mb.box(M['lamp'], (0.3, -3.9 + iy * 1.3, -2.1 + iz * 1.4), (0.12, 1.0, 1.0))
         mb.pop()
         if P['floods'] > 0:
-            sp = bpy.data.lights.new('flood%d' % tdeg, 'SPOT'); sp.color = (1.0, 0.9, 0.72); sp.energy = 3.2e6 * P['floods'] / 4.0; sp.spot_size = math.radians(34); sp.spot_blend = 0.35; sp.use_shadow = False; sp.shadow_soft_size = 1.0
+            sp = bpy.data.lights.new('flood%d' % tdeg, 'SPOT'); sp.color = (1.0, 0.9, 0.72); sp.energy = FLOOD_W * P["floods"]; sp.spot_size = math.radians(34); sp.spot_blend = 0.35; sp.use_shadow = False; sp.shadow_soft_size = 1.0
             so = bpy.data.objects.new('flood%d' % tdeg, sp); STATE['LIGHTS'].objects.link(so); so.parent = root(); so.location = (x, y, H_ + 2.0)
             tgt = Vector((0.0 + 3 * math.cos(u), 12.0, 0.0)); so.rotation_euler = (tgt - Vector((x, y, H_ + 2.0))).to_track_quat('-Z', 'Y').to_euler(); STATE.setdefault('flood_lights', []).append(so)
     fin(mb)
@@ -338,7 +339,7 @@ def build_b(P, M, dress=True):
     # --- photographers' area: low platform with tripods and cameras along the inner kerb, plus bags
     mb = S.MB('photo')
     mb.box(M['woodgrey'], (-12.0, 20.0, 0.1), (6.0, 2.2, 0.2)); mb.box(M['woodgrey'], (13.0, 23.0, 0.1), (5.0, 2.2, 0.2))
-    for (x, y) in [(-14.0, 20.0), (-12.0, 20.3), (-10.0, 19.8), (11.0, 23.0), (13.2, 23.3), (15.0, 22.8), (-22.0, 24.0), (28.0, 26.0), (6.0, 8.2)]:
+    for (x, y) in [(-14.0, 20.0), (-12.0, 20.3), (-10.0, 19.8), (11.0, 23.0), (13.2, 23.3), (15.0, 22.8), (-22.0, 24.0), (28.0, 26.0)]:
         z0 = 0.2 if abs(x) < 16 and y > 19 else 0.0
         for a in (0, 2.1, 4.2): mb.rod(M['metal'], (x, y, z0 + 1.4), (x + math.cos(a) * 0.5, y + math.sin(a) * 0.5, z0), 0.015, 0.015, 4)
         mb.box(M['dark'], (x, y, z0 + 1.5), (0.35, 0.2, 0.2)); mb.rod(M['steel'], (x + 0.2, y, z0 + 1.5), (x + 0.55, y, z0 + 1.5), 0.06, 0.08, 8)

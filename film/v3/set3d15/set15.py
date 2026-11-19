@@ -13,6 +13,8 @@ from mathutils import Vector, Matrix
 import set15_lib as L
 from set15_lib import S, U, DM, STATE, T, kdir, mat, rnd
 import set15_a as LA
+import set15_b as LB0
+LB_FLOOD = LB0.FLOOD_W
 
 HERE = L.HERE
 WORK = os.path.join(HERE, 'work')
@@ -329,7 +331,7 @@ def switch_light(to, start_frame, n_frames=12):
             for i, ((p0, c0), (p1, c1)) in enumerate(zip(P0['sky'], P1['sky'])):
                 a = L.hexl(c0); b = L.hexl(c1)
                 for c in range(3): drv(wn, 'nodes["%s"].color_ramp.elements[%d].color' % (nd.name, i), c, a[c], b[c])
-    for fl in STATE.get('flood_lights', []): drv(fl.data, 'energy', None, 3.2e6 * P0['floods'] / 4.0, 3.2e6 * P1['floods'] / 4.0)
+    for fl in STATE.get('flood_lights', []): drv(fl.data, 'energy', None, LB_FLOOD * P0["floods"], LB_FLOOD * P1["floods"])
     for m in bpy.data.materials:
         if m.name.startswith('E|hill') and m.node_tree:
             em = [x for x in m.node_tree.nodes if x.bl_idname == 'ShaderNodeEmission'][0]; li = int(m.name.split('hill')[1][0]); a = L.hexl(P0['hills'][li][3]); b = L.hexl(P1['hills'][li][3])
