@@ -1,0 +1,25 @@
+{
+ "take": "s25",
+ "fps": 30,
+ "note": "time = film seconds (g / 30)",
+ "cues": [
+  {
+   "time": 53.567,
+   "frame": 1607,
+   "kind": "accent",
+   "label": "train rushes past the lens: whoosh and rattle (object wipe)"
+  },
+  {
+   "time": 54.867,
+   "frame": 1646,
+   "kind": "accent",
+   "label": "pulse overtakes the loco: a bright electric zing"
+  },
+  {
+   "time": 53.533,
+   "frame": 1606,
+   "kind": "ambience",
+   "label": "steam train rolling along the rail, wind"
+  }
+ ]
+}

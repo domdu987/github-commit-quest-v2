@@ -1,0 +1,52 @@
+{
+ "take": "s25",
+ "film": 16,
+ "shots": [
+  25
+ ],
+ "g0": 1615,
+ "g1": 1707,
+ "first_g": 1606,
+ "n_frames": 110,
+ "shot_ranges": {
+  "25": [
+   1615,
+   1706
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 11,
+  "note": "DIS from shot 24; the object wipe (carriage panel crossing the lens, fully covering g 1609..1624) hides the join"
+ },
+ "set": "v3/set3d16 LINE line_rail DAY; trees near the camera path removed at runtime; train rolling -x 12 D/s; wire pulse 28 D/s overtaking it; carriage-side wipe panel built at runtime",
+ "camera": "custom 22 mm level on the field side, tracks left at 26.6 D/s, snap x1.4 g 1643..1656 on 'บัลติมอร์'",
+ "cast": "no characters",
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "preset": "line_rail",
+ "samples": 7,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "s_per_frame_wall_mean": 8.26,
+ "s_per_frame_cpu_mean": 15.99,
+ "head_px": [
+  0,
+  0
+ ],
+ "head_centre_y": [
+  0,
+  0
+ ],
+ "head_bottom_max_y": 0,
+ "framediff_in_shot": {
+  "median": 14.26,
+  "p90": 29.06
+ }
+}
