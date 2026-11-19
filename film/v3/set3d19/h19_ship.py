@@ -50,10 +50,10 @@ def _hero_cam():
 
 PRESETS = dict(
     ship_hero=dict(light='NOON', cam=_hero_cam(), scenery='hero', glint=dict(az=19, el=6, k=40.0, ang=1.8, v6=True), wake=True, samples=12),
-    ship_aerial=dict(light='NOON', cam=dict(loc=(-70.0, 95.0, 85.0), look=(2.0, 6.0, 14.0), lens=22), scenery='aerial', glint=dict(az=118, el=34, k=20.0, ang=0.45), sea_amp=0.55, chop=0.22, rough=0.15, wc_k=0.0, sea_nu=470, sea_nv=700, wake=True, samples=10),
+    ship_aerial=dict(light='NOON', cam=dict(loc=(-70.0, 95.0, 85.0), look=(2.0, 6.0, 14.0), lens=22), scenery='aerial', glint=dict(az=147, el=16, k=5.0, ang=0.25), sea_amp=0.55, chop=0.05, rough=0.15, wc_k=0.0, sea_nu=470, sea_nv=700, wake=True, samples=10),
     ship_deck=dict(light='NOON', amb_k=0.8, amb_col='#2c64ff', cam=dict(loc=(-0.6, -21.4, DK.ZQ + 1.5), look=(0.6, -9.0, DK.ZQ + 1.2), lens=22), scenery='deck', sun_ship=True, sun_az=-148, sun_el=60, glint=dict(az=170, el=20, k=30.0, ang=2.0), wake=True, sea_nu=360, sea_nv=520, samples=11),
-    ship_rail=dict(light='NOON', amb_k=0.8, amb_col='#2c64ff', cam=dict(loc=(3.9, 7.0, DK.ZW + 2.6), look=(8.63, 25.98, DK.ZW + 2.6 - 4.16), lens=22), scenery='rail', sun_ship=True, sun_az=-120, sun_el=76, glint=dict(az=40, el=12, k=34.0, ang=1.4), sea_nu=420, sea_nv=620, wake=True, samples=11),
-    ship_rocks=dict(light='STORM_DUSK', amb_col='#3a6cf2', amb_k=2.3, cam=dict(loc=(2.2, 14.2, DK.ZF + 2.4), look=(8.28, 42.79, DK.ZF + 2.4 - 6.75), lens=22), scenery='rocks', lantern=(0.9, 0.3, 0.4), lantern_e=60.0, no_fore_lamp=True, glint=dict(az=250, el=9, k=18.0, ang=3.0), wake=True, samples=12),
+    ship_rail=dict(light='NOON', amb_k=0.8, amb_col='#2c64ff', cam=dict(loc=(3.9, 7.0, DK.ZW + 2.6), look=(8.63, 25.98, DK.ZW + 2.6 - 4.16), lens=22), scenery='rail', sun_ship=True, sun_az=-120, sun_el=76, glint=dict(az=40, el=12, k=5.0, ang=1.4), wc_k=0.0, foam_k=0.15, no_fleck=True, sea_nu=420, sea_nv=620, wake=True, samples=11),
+    ship_rocks=dict(light='STORM_DUSK', amb_col='#3a6cf2', amb_k=2.3, cam=dict(loc=(2.2, 14.2, DK.ZF + 2.4), look=(8.28, 42.79, DK.ZF + 2.4 - 6.75), lens=22), scenery='rocks', lantern=(0.9, 0.235, 0.28), lantern_s=0.46, lantern_e=60.0, no_fore_lamp=True, glint=dict(az=250, el=9, k=18.0, ang=3.0), wake=True, samples=12),
     ship_coast=dict(light='DAY_JAMAICA', cam=dict(loc=(float(LD.shore_x(40.0)) + 9.0, 33.0, 2.0), look=(float(LD.shore_x(40.0)) + 9.0 - 60.0, 34.5, -2.2), lens=22), scenery='coast', sun_ship=True, sun_az=115, sun_el=38, glint=dict(az=-80, el=12, k=26.0, ang=2.0), sea_amp=0.45, chop=0.25, wake=False, anchored=True, samples=12),
     ship_shore=dict(light='DAY_JAMAICA', cam=dict(loc=(float(LD.shore_x(40.0)) + 10.5, 33.0, 2.5), look=(float(LD.shore_x(40.0)) - 70.0, 38.0, 4.0), lens=22), scenery='shore', sun_ship=True, sun_az=115, sun_el=38, glint=dict(az=-80, el=12, k=26.0, ang=2.0), wake=False, anchored=True, samples=12),
 )
@@ -109,7 +109,7 @@ def build_ship(SET, preset, light=None):
     LT = dict(LIGHTS[lname]); coast = LT.get('coast') or (K.STATE.get('coast') or 'jamaica')
     LTb = LIGHTS['NOON'] if lname == 'NOON' else LT
     scene = bpy.context.scene
-    HU.THEME.clear(); HU.THEME['warm'] = preset in ('ship_deck', 'ship_rail', 'ship_rocks'); HU.THEME['no_stern_lamp'] = preset == 'ship_deck'; HU.THEME['sail_k'] = 0.26 if preset == 'ship_rail' else 0.42
+    HU.THEME.clear(); HU.THEME['warm'] = preset in ('ship_deck', 'ship_rail', 'ship_rocks'); HU.THEME['no_stern_lamp'] = preset == 'ship_deck'; HU.THEME['sail_k'] = 0.95 if preset in ('ship_rail', 'ship_deck') else 0.42
     S.clear(); S.update(preset=preset, light=lname, coast=coast, P=P, LT=LT)
     K.STATE['samples'] = P.get('samples', 12); K.STATE['dbounce'] = 0
     world = K.new_root('ship_world'); S['world_root'] = world
@@ -121,7 +121,7 @@ def build_ship(SET, preset, light=None):
     M = DK.deck_mats(); S['M'] = M
     HU.build_ship6_into(M) if hasattr(HU, 'build_ship6_into') else HU.build_ship6(dict())
     dobjs, lants = DK.build_deck_all(M, skip_fore_lamp=bool(P.get('no_fore_lamp'))); S['lants'] = lants
-    if P.get('lantern'): S['fglamp'] = DK.fg_lantern(M, P['cam'], P['lantern'])
+    if P.get('lantern'): S['fglamp'] = DK.fg_lantern(M, P['cam'], P['lantern'], P.get('lantern_s', 1.0))
     _parent_new(before, body)
     # marks (empties under the ship_root, D units)
     marks = {}
@@ -131,7 +131,7 @@ def build_ship(SET, preset, light=None):
     # ---- scenery, sea
     K.ROOT = world
     sea_P = dict(cam=dict(loc=P['cam']['loc'], look=P['cam']['look']), amp=P.get('sea_amp', LT['sea_amp']), chop=P.get('chop', 0.6 if lname != 'STORM_DUSK' else 1.2), wc_k=P.get('wc_k', 0.85), rough=P.get('rough', 0.1), sea_nu=P.get('sea_nu', 560), sea_nv=P.get('sea_nv', 820), sea_near=LT['sea_near'], sea_mid=LT['sea_mid'], sea_far=LT['sea_far'],
-                 fresnel_k=0.38, foam_k=LT['foam_k'], wc_min=LT['wc'][0], wc_max=LT['wc'][1], anchored=P.get('anchored', False), ship_foam=True, lift='#9fc2d8',
+                 fresnel_k=0.38, foam_k=P.get('foam_k', LT['foam_k']), wc_min=LT['wc'][0], wc_max=LT['wc'][1], anchored=P.get('anchored', False), ship_foam=True, lift='#9fc2d8',
                  glint=dict(dir=(SE.v6_dir(kdir(P['glint']['az'], P['glint']['el'])) if P['glint'].get('v6') else kdir(P['glint']['az'], P['glint']['el'])), k=P['glint']['k'] * max(0.25, LT['key'][3] / 7.2), ang=P['glint']['ang']))
     LD.scenery(S, P, LT, sea_P, marks)
     b0 = set(bpy.data.objects)
@@ -144,10 +144,14 @@ def build_ship(SET, preset, light=None):
         Pp, Nn, E, Ll = FX.bow_wave6(dict(cam=dict(loc=P['cam']['loc'])), parent=bowfx); FX.spray6(dict(cam=dict(loc=P['cam']['loc'])), M, Pp, Nn, E, Ll)
         for o in set(bpy.data.objects) - b1:
             if o.parent is None and o.type == 'MESH': o.parent = bowfx
+            if P.get('no_fleck') and o.type == 'MESH' and 'fleck' in o.name: o.hide_render = True; o.hide_viewport = True        # no floating white foam dots
     LTw = dict(LT); LTw['amb'] = (P.get('amb_col', LT['amb'][0]), LT['amb'][1] * P.get('amb_k', 1.0))
     make_world(LTw); make_sun(LT, P)
     S['sun_energy'] = LT['key'][3]
-    if S.get('fglamp') is not None: K.point_light('lampfg', S['fglamp'], (1.0, 0.56, 0.26), P.get('lantern_e', 60.0), 0.12).parent = root
+    if S.get('fglamp') is not None:
+        K2200 = (1.0, 0.58, 0.17)                                                            # 2200 K
+        K.point_light('lampfg', S['fglamp'], K2200, P.get('lantern_e', 60.0), 0.12).parent = root
+        cb = DK.marks()['captain_bow']; K.point_light('lampfg_pool', (cb[0] + 0.5, cb[1] - 0.5, cb[2] + 1.5), K2200, P.get('pool_e', 90.0), 0.15).parent = root   # warm pool on the deck by the captain
     # ---- lights on the ship (lanterns) at dusk
     if LT.get('lamp'):
         for i, c in enumerate(lants):

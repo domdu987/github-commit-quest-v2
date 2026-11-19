@@ -11,9 +11,9 @@ ship_deck    STORM_DUSK  head y [630, 647, 633] | captain y630 x240 chin689; wil
 ship_rail    NOON        head y [689] | william y689 x172 chin733
 ship_rail    DAY         head y [689] | william y689 x172 chin733
 ship_rail    STORM_DUSK  head y [689] | william y689 x172 chin733
-ship_rocks   NOON        head y [632, 590] | captain y632 x161 chin679; sailor y590 x382 chin622
-ship_rocks   DAY         head y [632, 590] | captain y632 x161 chin679; sailor y590 x382 chin622
-ship_rocks   STORM_DUSK  head y [632, 590] | captain y632 x161 chin679; sailor y590 x382 chin622
+ship_rocks   NOON        head y [632, 566] | captain y632 x161 chin679; sailor y566 x52 chin593
+ship_rocks   DAY         head y [632, 566] | captain y632 x161 chin679; sailor y566 x52 chin593
+ship_rocks   STORM_DUSK  head y [632, 566] | captain y632 x161 chin679; sailor y566 x52 chin593
 ship_coast   NOON        head y [652, 647, 635] | william y652 x457 chin700; sailor y647 x639 chin684; astro y635 x254 chin667
 ship_coast   DAY         head y [652, 647, 635] | william y652 x457 chin700; sailor y647 x639 chin684; astro y635 x254 chin667
 ship_coast   STORM_DUSK  head y [652, 647, 635] | william y652 x457 chin700; sailor y647 x639 chin684; astro y635 x254 chin667

@@ -45,7 +45,9 @@ def deck_mats():
     M['wheelw'] = mat('wheelw', '#74482a', '#8a5a34', scale=5, aniso=(0.15, 1, 1), rough=0.6, sheen=0.3); M['darkw'] = mat('darkw', '#3e2a1c', '#4c3424', scale=4)
     M['brassw'] = metal_mat('brassw', '#d2a64a', '#ecc366', rough=0.32, spec=0.7, metallic=0.55)
     if HU.THEME.get('warm'): M['caprail'] = mat('caprail_w', '#5a4632', '#6a5238', scale=3); M['carr'] = mat('carr_w', '#5a3e2c', '#6c4a34', scale=4, aniso=(0.2, 1, 1))
-    M['lampfg'] = mat_emit('lampfg', '#ff8a30', 1.05)
+    M['lampfg'] = mat_emit('lampfg', '#ffb060', 0.525)       # amber glass, emission halved (was #ff8a30 x 1.05)
+    M['lantern_iron'] = mat('lantern_iron', '#3a3430', None, rough=0.6)          # warm iron frame
+    M['cannon_iron'] = mat('cannon_iron', '#2a2a2c', None, rough=0.55); HU._mix_self(M['cannon_iron'], '#2a2a2c', 1.0, 0.72)   # neutral iron: the storm's blue ambient must not turn it violet
     return M
 
 def level_of(y):
@@ -87,8 +89,8 @@ def liner(mb, M, side, ya, yb, zfun, n=60):
 def cannon(mb, M, side, y, z, hwid):
     s = side; zc = z + 0.60
     xo = s * (hwid - 0.20); xi = s * (hwid - 2.2)
-    tube(mb, M['iron'], (xi, y, zc), (xo + s * 0.1, y, zc), 0.23, 0.16, 12)
-    mb.ell(M['iron'], (xi - s * 0.12, y, zc), (0.17, 0.17, 0.17), (10, 8)); mb.cyl(M['iron'], (xo + s * 0.08, y, zc), 0.19, 0.08, axis='x', seg=12)
+    tube(mb, M['cannon_iron'], (xi, y, zc), (xo + s * 0.1, y, zc), 0.23, 0.16, 12)
+    mb.ell(M['cannon_iron'], (xi - s * 0.12, y, zc), (0.17, 0.17, 0.17), (10, 8)); mb.cyl(M['cannon_iron'], (xo + s * 0.08, y, zc), 0.19, 0.08, axis='x', seg=12)
     for yy in (-0.3, 0.3): mb.box(M['carr'], ((xi + xo) / 2 - s * 0.05, y + yy, z + 0.30), (1.7, 0.14, 0.5))
     mb.box(M['carr'], (xi + s * 0.45, y, z + 0.45), (0.14, 0.6, 0.3)); mb.box(M['oak'], (xi - s * 0.55, y, z + 0.46), (0.5, 0.5, 0.06))
     for dx in (-0.35, 0.5):
@@ -231,19 +233,20 @@ def marks():
     wx, wy = WHEEL
     return dict(
         captain_wheel=(wx + 1.6, wy - 0.4, ZQ), william_rail=(3.9, 11.6, ZW), sailor_a=(-2.1, -4.0, ZW), sailor_b=(-float(half_w(3.6, ZW, 0.14)) + 0.8, 3.6, ZW),
-        sailor_c=(1.9, -14.0, ZQ), astro_deck=(-2.4, -9.1, ZW), crew_bow=(3.7, 20.4, ZF),
+        sailor_c=(1.9, -14.0, ZQ), astro_deck=(-2.4, -9.1, ZW), crew_bow=(0.8, 22.5, ZF),
         sailor_rail=(2.4, 13.0, ZW), william_deck=(0.9, -17.0, ZQ), astro_quarter=(1.9, -15.6, ZQ), captain_bow=(2.0, 18.6, ZF))
 
 
-def fg_lantern(M, cam, off):
+def fg_lantern(M, cam, off, scale=1.0):
     """a big warm ship's lantern hung a metre and a half (D) in front of the camera: brass cage, glass body glowing 2200 K, cap, ring and a thin hanging line.
     cam = preset camera dict (metres); off = (forward, right, up) metres from the camera. Returns the lantern centre (metres, ship frame)."""
     c = Vector(cam['loc']); f = (Vector(cam['look']) - c).normalized(); r = f.cross(Vector((0, 0, 1))).normalized()
     p = c + f * off[0] + r * off[1] + Vector((0, 0, off[2]))
-    mb = MB('fglantern'); B = M['brassw']; s = 1.0
-    mb.cyl(B, (p.x, p.y, p.z - 0.17), 0.095, 0.05, seg=14); mb.cyl(M['lampfg'], (p.x, p.y, p.z), 0.075, 0.28, seg=12)
-    for (dx, dy) in ((-1, -1), (1, -1), (1, 1), (-1, 1)): mb.rod(B, (p.x + 0.085 * dx, p.y + 0.085 * dy, p.z - 0.16), (p.x + 0.085 * dx, p.y + 0.085 * dy, p.z + 0.15), 0.011, 0.011, 5)
-    mb.cone(B, (p.x, p.y, p.z + 0.15), 0.12, 0.025, 0.09, 12); mb.ell(B, (p.x, p.y, p.z + 0.265), (0.03, 0.03, 0.03), (8, 6))
-    mb.rod(M['rope'], (p.x, p.y, p.z + 0.27), (p.x - 0.04, p.y, p.z + 3.0), 0.009, 0.009, 4)
-    mb.finish(shadow=False)
+    mb = MB('fglantern'); B = M['lantern_iron']; s = scale
+    mb.push(Matrix.Translation((p.x, p.y, p.z)) @ Matrix.Diagonal((s, s, s, 1))); q = (0.0, 0.0, 0.0)
+    mb.cyl(B, (0, 0, -0.17), 0.095, 0.05, seg=14); mb.cyl(M['lampfg'], (0, 0, 0), 0.075, 0.28, seg=12)
+    for (dx, dy) in ((-1, -1), (1, -1), (1, 1), (-1, 1)): mb.rod(B, (0.085 * dx, 0.085 * dy, -0.16), (0.085 * dx, 0.085 * dy, 0.15), 0.011, 0.011, 5)
+    mb.cone(B, (0, 0, 0.15), 0.12, 0.025, 0.09, 12); mb.ell(B, (0, 0, 0.265), (0.03, 0.03, 0.03), (8, 6))
+    mb.rod(M['rope'], (0, 0, 0.27), (-0.04, 0, 3.0), 0.009, 0.009, 4)
+    mb.pop(); mb.finish(shadow=False)
     return (p.x, p.y, p.z)

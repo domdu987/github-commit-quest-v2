@@ -94,6 +94,20 @@ def sail_obj(M, name, PF, nx, ny, thick=0.03):
     ob = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(ob)
     md = ob.modifiers.new('thick', 'SOLIDIFY'); md.thickness = thick; md.offset = 0.0
     return ob
+def _mix_self(m, hexcol, k, fac):
+    nt = m.node_tree; bs = nt.nodes['bsdf']; out = [n for n in nt.nodes if n.type == 'OUTPUT_MATERIAL'][0]
+    em = nt.nodes.new('ShaderNodeEmission'); em.inputs['Color'].default_value = hexc(hexcol); em.inputs['Strength'].default_value = k
+    mx = nt.nodes.new('ShaderNodeMixShader'); mx.inputs[0].default_value = fac
+    nt.links.new(bs.outputs[0], mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2]); nt.links.new(mx.outputs[0], out.inputs['Surface'])
+
+def _sail_self_cream(m, k, fac=0.85):
+    """deck / rail sails: part of the shading is pure cream emission (strength k) so the blue ambient cannot turn the canvas lavender; Principled part keeps the cream base, translucency / transmission 0"""
+    nt = m.node_tree; bs = nt.nodes['bsdf']; out = [n for n in nt.nodes if n.type == 'OUTPUT_MATERIAL'][0]
+    em = nt.nodes.new('ShaderNodeEmission'); em.inputs['Color'].default_value = hexc('#e8dcc0'); em.inputs['Strength'].default_value = k
+    mx = nt.nodes.new('ShaderNodeMixShader'); mx.inputs[0].default_value = fac
+    nt.links.new(bs.outputs[0], mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2]); nt.links.new(mx.outputs[0], out.inputs['Surface'])
+    if 'Transmission Weight' in bs.inputs: bs.inputs['Transmission Weight'].default_value = 0.0
+
 def ship6_mats():
     M = ship_mats()
     M['mast'] = mat('mast6', '#7a6458', '#8c7466', scale=3, aniso=(0.2, 0.2, 0.05)); M['oak'] = mat('oak6', '#7e6454', '#8e7462', scale=5, aniso=(0.15, 1, 1))
@@ -109,9 +123,10 @@ def ship6_mats():
     M['rig6'] = mat('rig6', '#2c2430', '#40343e', scale=3)
     if THEME.get('warm'):
         M['mast'] = mat('mast6w', '#3a2e26', '#4a3a2e', scale=3, aniso=(0.2, 0.2, 0.05)); M['oak'] = mat('oak6w', '#6a4628', '#7e5632', scale=5, aniso=(0.15, 1, 1))
-        M['canv'] = mat('canvw', '#e8dcc0', '#dccfae', scale=2.2, aniso=(1.3, 1, 0.8), contrast=0.8, emit='#f4e4c0', emit_k=THEME.get('sail_k', 0.42))
-        M['canv2'] = mat('canv2w', '#e2d6b8', '#d6c9a8', scale=2.2, aniso=(1.3, 1, 0.8), contrast=0.8, emit='#f4e4c0', emit_k=THEME.get('sail_k', 0.42) * 0.9)
+        M['canv'] = mat('canvw', '#e8dcc0', '#e8dcc0', scale=2.2, aniso=(1.3, 1, 0.8), contrast=0.8, emit='#e8dcc0', emit_k=0.0)     # cream like ship_hero; no translucency (0)
+        M['canv2'] = mat('canv2w', '#e2d6b8', '#e2d6b8', scale=2.2, aniso=(1.3, 1, 0.8), contrast=0.8, emit='#e8dcc0', emit_k=0.0)
         M['rig6'] = mat('rig6w', '#2e2620', '#40342a', scale=3); M['iron'] = mat('iron_w', '#4a4038', '#5c5248', scale=6, rough=0.6)
+        for _k in ('canv', 'canv2'): _sail_self_cream(M[_k], THEME.get('sail_k', 0.5))
     M['sail'] = M['canv']; M['sail2'] = M['canv2']
     return M
 def build_hull6(M):

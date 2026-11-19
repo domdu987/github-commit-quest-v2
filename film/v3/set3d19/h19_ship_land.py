@@ -389,7 +389,9 @@ def coast(S, P, LT, sea_P, marks):
     for i in range(9):
         y = rr.uniform(20.0, 125.0); x = float(shore_x(y)) - rr.uniform(14.0, 90.0)
         if abs(x) < 26 and abs(y) < 40: continue
-        boat(mbh, M, (x, y, 0.0), rr.uniform(6.0, 11.0), rr.uniform(0, 6.28), sail=(i % 3 != 2), seed=i)
+        bl, by_ = rr.uniform(6.0, 11.0), rr.uniform(0, 6.28)
+        if S.get('preset') == 'ship_coast' and i % 3 == 2: continue            # the sail-less hulls read as brown discs floating on the sea (coast QA)
+        boat(mbh, M, (x, y, 0.0), bl, by_, sail=(i % 3 != 2), seed=i)
     mbh.finish(shadow=True)
     # ---- fort + dressing
     mbf = MB('fort')
