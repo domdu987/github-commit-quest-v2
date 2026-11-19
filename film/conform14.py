@@ -44,14 +44,14 @@ CUES = [
  ("hammer_tie", 25.7, -20, 1.2), ("whoosh", 27.36, -28, 0.5), ("ding", 27.6, -26, 0.9), ("wire_creak", 29.1, -24, 1.4), ("hammer_tie", 30.0, -22, 1.0),
  ("ding", 31.2, -26, 0.9),
  # false payoff: herd walks at night, matriarch at the fence, bees asleep, uncle shouts
- ("elephant_step", 33.5, -18, 2.4), ("elephant_step", 35.5, -17, 2.4), ("bees_sleep", 37.6, -24, 1.4),
+ ("elephant_step", 33.5, -22, 2.4), ("elephant_step", 35.5, -21, 2.4), ("bees_sleep", 37.6, -24, 1.4),
  # attack: chest on the wire
  ("elephant_step", 40.9, -18, 1.5), ("wire_creak", 41.3, -17, 1.5), ("wire_creak", 43.6, -20, 1.5),
  # reveal: hives knock (s21 contact frames g1390/1410/1430), hive jolts, bees burst, swarm on eyes and trunk
  ("wood_knock", 1390 / 30, -13, 0.45), ("wood_knock", 1410 / 30, -13, 0.45), ("wood_knock", 1430 / 30, -12, 0.45), ("bee_zip", 48.1, -22, 0.5),
  ("wood_knock", 1458 / 30, -11, 0.45), ("bees_burst", 48.7, -13, 3.0), ("bees_swarm", 50.1, -15, 3.0), ("bees_swarm", 52.0, -16, 1.4),
  # aha: bees up the trunk, trumpet (g1653), herd flees, dawn
- ("bees_swarm", 53.3, -17, 1.8), ("elephant_trumpet", 1653 / 30, -10, 1.9), ("herd_run", 55.95, -14, 3.4), ("rooster", 59.1, -20, 1.9),
+ ("bees_swarm", 53.3, -17, 1.8), ("elephant_trumpet", 1653 / 30, -10, 1.9), ("herd_run", 55.95, -16, 3.4), ("rooster", 59.1, -20, 1.9),
  # ending: uncle's field raided at night, morning ask, sting, swelling nose
  ("elephant_step", 61.4, -18, 1.2), ("maize_crunch", 61.9, -18, 1.4), ("stalks_fall", 62.6, -16, 1.9),
  ("whoosh", 63.79, -28, 0.5), ("hammer_tie", 65.6, -22, 0.8), ("bee_zip", 65.95, -18, 0.5), ("sting_pop", 66.33, -12, 0.6),
