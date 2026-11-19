@@ -36,3 +36,12 @@ Frame-diff now median 4.56 / p90 13.02; 129 frames, 8.5 s/frame; heads 71-398 px
   - Tape: the set's even floor loops (they read as rails) are hidden (tape clip 0.27: only the table part shows); a heap of 46 crumpled paper strips and a ribbon of paper lie round his boots, higher at the centre.
   - Sleep Z: it floats above his head for the whole yawn (kept from the first version).
 - Still open: the heap is plain paper (no dots / dashes); the vest shows a small red rectangle (the mail bag seen from the front); Morse's grin is small.
+
+---
+# Revision 3 (after QA-art round 2) -- re-rendered, take.mkv replaced (42.8 MB, one file)
+Frame-diff median 5.02 / p90 12.39; 129 frames, 8.6 s/frame; heads 82-398 px, centre y 597-721, lowest head bottom y 849 (< 880). QA_AUTO PASS. Hard cut on "เอง" (g 2096) kept.
+1. **Register at his elbow: done.** A small walnut table with a copy of the set's instrument (scale 1.1, built with `tg_arm_parts`) stands at his right elbow on his depth; ONE continuous paper ribbon (the set's own dot-dash tape material) runs from its slot over the table edge into a heap of 12 curled ribbons (dots and dashes visible) and 5 loose strips at his boots. The tan wooden slats are gone.
+2. **Gold sack removed: done.** It was not the money bag (hidden already): it was a brass urn of the set's room mesh (`room_brass`) standing at the stool; its vertices near the stool are cut out at run time (found by hiding objects one at a time and comparing the crop).
+3. **Night contrast: done.** Walls and ceiling material 40 % darker (colour ramp x 0.6), window fill and ambient kept low, windows deep blue. The candle light moves to chest height between his hand and the register (energy x 2.6 over round 2).
+4. **Morse: partly.** He stays on his mark in the doorway, drawn 15 % bigger (head 82-104 px at full size, was 71-85) and the camera look is shifted 0.15 D left so he sits further from the left frame edge. He is not moved deeper into the opening: shifting him 0.9 D put him behind the wall wing and out of sight.
+Frame-diff and heads were measured on the final frames. I did not re-scrub the whole take at 6 fps; I looked at stills (g 1990, 2030, 2060, 2095) and the contact sheet.

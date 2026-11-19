@@ -66,7 +66,7 @@ class Cam3(C.CamPath):
         fwd = Matrix.Rotation(ang, 3, "Z") @ fwd0
         right = Vector((fwd.y, -fwd.x, 0.0))
         uo = 0.0 if g <= SNAP[0] else min(1.0, C.camrig.ease_peak((g - SNAP[0]) / float(SNAP[1] - SNAP[0]), 1.7))
-        L = Vector(self.look0) + right * (0.3 * math.sin(2 * math.pi * t / 4.1)) + Vector((0, 0, 0.35 * uo)) + right * (0.45 * uo)
+        L = Vector(self.look0) + right * (-0.15 + 0.3 * math.sin(2 * math.pi * t / 4.1)) + Vector((0, 0, 0.35 * uo)) + right * (0.2 * uo)
         pitch = Vector((fwd.x, fwd.y, (self.look0.z - self.loc0.z) / max(1e-6, fwd0.length)))
         pitch.normalize()
         return L - pitch * dist, L
@@ -102,33 +102,109 @@ class Take(C.Take):
                 if n.type == "BACKGROUND":
                     n.inputs["Strength"].default_value *= 0.35
         P["lamp"] = P.get("lamp", 1.0) * 1.0
-        for ob, e in TG.STATE["lamps"]["nightc"]:
-            ob.data.energy = e * 2.2
+        wm = TG.STATE["M"]["wall"]                                  # ceiling + walls 40 % darker
+        for n in wm.node_tree.nodes:
+            if n.type == "VALTORGB":
+                for el in n.color_ramp.elements:
+                    el.color = (el.color[0] * 0.6, el.color[1] * 0.6, el.color[2] * 0.6, el.color[3])
+            elif n.type == "BSDF_PRINCIPLED":
+                bc = n.inputs["Base Color"].default_value
+                n.inputs["Base Color"].default_value = (bc[0] * 0.6, bc[1] * 0.6, bc[2] * 0.6, bc[3])
         self.scene.view_settings.exposure -= 0.4
         M = TG.STATE["M"]
-        rr = random.Random(11)
-        sx, sy = CH.STOOL
-        mb = K.MB("s30_pile")
-        for i in range(46):
-            a = rr.uniform(0, 6.283); r = rr.uniform(0.12, 0.62) * (1.0 - 0.0 * i)
-            z = 0.012 + 0.28 * (1.0 - r / 0.7) ** 1.5 * rr.uniform(0.3, 1.0)
-            mb.box(M["paper"], (sx + 0.27 * self.dir[0] + r * math.cos(a), sy + 0.27 * self.dir[1] + r * math.sin(a) * 0.9, z),
-                   (rr.uniform(0.30, 0.55), 0.085, 0.012), rz=rr.uniform(0, 3.14), rx=rr.uniform(-0.5, 0.5), ry=rr.uniform(-0.5, 0.5))
-        # a paper ribbon from where the set's tape reaches the floor (table front) over the carpet edge into the heap
-        p0 = Vector((-0.12, 3.14)); p1 = Vector((sx + 0.27 * self.dir[0] - 0.1, sy + 0.27 * self.dir[1] + 0.05))
-        n = 26
-        for i in range(n):
-            u0, u1 = i / float(n), (i + 1) / float(n)
+        self.build_register_corner()
+        # the set's brass urn / spittoon standing at the stool (room_brass): a gourd in the foreground that covers the paper heap -> cut it out
+        import bmesh, bpy
+        ob = bpy.data.objects.get("room_brass")
+        if ob is not None:
+            mx_, my_, _ = self.A["marks"]["mocker_stool"]
+            bm = bmesh.new(); bm.from_mesh(ob.data)
+            dead = [v for v in bm.verts if abs(v.co.x - mx_) < 2.2 and abs(v.co.y - my_) < 2.2 and v.co.z < 1.6]
+            bmesh.ops.delete(bm, geom=dead, context="VERTS")
+            bm.to_mesh(ob.data); bm.free()
+
+    def build_register_corner(self):
+        """a small table with the register at his elbow (a copy of the set's instrument, scale 1.1), one continuous paper ribbon (the set's
+        dot-dash tape material) from its slot over the table edge into a heap of curled ribbon at his boots"""
+        import bpy, random
+        M = TG.STATE["M"]
+        inv = K.frame_mat().inverted()
+        T = K.frame_mat()
+        mx, my, mz = self.A["marks"]["mocker_stool"]
+        dirx, diry = self.dir
+        rx, ry = -diry, dirx                                   # screen-right on the floor
+        moc = Vector((mx + 0.5 * dirx, my + 0.5 * diry, 0.0))
+        tab = moc + Vector((rx, ry, 0.0)) * 1.25 + Vector((dirx, diry, 0.0)) * 0.1
+        c = inv @ Vector((tab.x, tab.y, 0.0))                   # sb metres on the floor
+        top = 0.50
+        mb = K.MB("s30_regtable")
+        mb.box(M["walnut"], (c.x, c.y, top - 0.025), (1.15, 0.62, 0.05))
+        mb.box(M["baize"], (c.x, c.y, top + 0.002), (1.05, 0.52, 0.012))
+        for sx in (-0.5, 0.5):
+            for sy in (-0.24, 0.24):
+                mb.rod(M["walnut"], (c.x + sx, c.y + sy, 0.0), (c.x + sx, c.y + sy, top - 0.05), 0.035, 0.028, 8, smooth=True)
+        S = 1.1
+        CH.tg_arm_parts(mb, M, (c.x, c.y, top + 0.008), S)
+        self.regtable = mb.finish()
+        slot = Vector((c.x + S * 0.36, c.y + S * 0.10, top + 0.008 + S * 0.172))
+        tape_mat = TG.STATE["tape"].data.materials[0]
+        rsb = (inv.to_3x3() @ Vector((rx, ry, 0.0))).normalized()        # screen-right in sb
+        csb = inv @ Vector((moc.x, moc.y, 0.0))
+        def strip(name, pts, width, vertical=False):
+            """a ribbon mesh along pts (sb metres), flat (width along the floor-plane normal to the path) or as a curled band (width along z)"""
+            verts, uv1, faces, cum, tot = [], [], [], [0.0], 0.0
+            for i in range(1, len(pts)):
+                tot += (pts[i] - pts[i - 1]).length; cum.append(tot)
+            for i, p in enumerate(pts):
+                t = (pts[min(i + 1, len(pts) - 1)] - pts[max(i - 1, 0)]); t.normalize()
+                w = Vector((0, 0, 1.0)) if vertical else t.cross(Vector((0, 0, 1.0)))
+                if w.length < 0.2:
+                    w = Vector((1.0, 0, 0))
+                w = w.normalized()
+                verts += [tuple(T @ (p - w * width / 2)), tuple(T @ (p + w * width / 2))]
+                uv1 += [(cum[i] / 0.8, 0.0), (cum[i] / 0.8, 1.0)]
+            for i in range(len(pts) - 1):
+                a_ = 2 * i; faces.append((a_, a_ + 1, a_ + 3, a_ + 2))
+            me = bpy.data.meshes.new(name); me.from_pydata(verts, [], faces); me.update()
+            u1 = me.uv_layers.new(name="UVMap"); u2 = me.uv_layers.new(name="CLIP")
+            for poly in me.polygons:
+                for li, vi in zip(poly.loop_indices, poly.vertices):
+                    u1.data[li].uv = uv1[vi]; u2.data[li].uv = (0.0, 0.0)
+            me.materials.append(tape_mat)
+            ob = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(ob); ob.visible_shadow = True
+            return ob
+        def cr(pp, n=10):
+            out = []
+            for i in range(len(pp) - 1):
+                p0, p1, p2, p3 = pp[max(0, i - 1)], pp[i], pp[i + 1], pp[min(len(pp) - 1, i + 2)]
+                for k in range(n):
+                    t = k / float(n)
+                    out.append(0.5 * ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t + (-p0 + 3 * p1 - 3 * p2 + p3) * t ** 3))
+            out.append(pp[-1]); return out
+        edge = c - rsb * 0.58
+        heap = csb + rsb * 0.12
+        path = cr([slot, slot + Vector((-0.1, -0.22, -0.03)) + rsb * -0.05, Vector((c.x, c.y, top + 0.014)) - rsb * 0.3 + Vector((0.0, -0.2, 0.0)),
+                   Vector((edge.x, edge.y - 0.12, top + 0.01)), Vector((edge.x - rsb.x * 0.08, edge.y - 0.12 - rsb.y * 0.08, top - 0.12)),
+                   Vector((edge.x - rsb.x * 0.2, edge.y - rsb.y * 0.2, 0.30)), Vector((heap.x + 0.15, heap.y, 0.04)), Vector((heap.x, heap.y + 0.1, 0.03))])
+        self.ribbon = [strip("s30_ribbon", path, 0.11)]
+        rr = random.Random(21)
+        for i in range(12):                                  # curled paper heap round his boots
+            cx, cy = heap.x + rr.uniform(-0.4, 0.4), heap.y + rr.uniform(-0.28, 0.28)
+            r0, turns, h0 = rr.uniform(0.07, 0.17), rr.uniform(1.0, 2.2), rr.uniform(0.01, 0.07)
             pts = []
-            for u in (u0, u1):
-                c = p0.lerp(p1, u)
-                w = 0.28 * math.sin(u * 7.0) * (1 - u * 0.5)
-                pts.append(Vector((c.x, c.y + w)))
-            t = (pts[1] - pts[0]); t.normalize(); nrm = Vector((-t.y, t.x)) * 0.075
-            zz0 = 0.02 + 0.03 * math.sin(u0 * 11.0) + 0.14 * u0 ** 3; zz1 = 0.02 + 0.03 * math.sin(u1 * 11.0) + 0.14 * u1 ** 3
-            mb.quad(M["paper"], [(pts[0].x - nrm.x, pts[0].y - nrm.y, zz0), (pts[0].x + nrm.x, pts[0].y + nrm.y, zz0),
-                                 (pts[1].x + nrm.x, pts[1].y + nrm.y, zz1), (pts[1].x - nrm.x, pts[1].y - nrm.y, zz1)])
-        self.pile = mb.finish()
+            for k in range(26):
+                u = k / 25.0; ang = rr.uniform(0, 0) + u * turns * 6.283 + i
+                pts.append(Vector((cx + r0 * (1 - 0.3 * u) * math.cos(ang), cy + r0 * (1 - 0.3 * u) * math.sin(ang), h0 + 0.12 * u * (1 + 0.5 * math.sin(i)))))
+            self.ribbon.append(strip("s30_curl%d" % i, pts, 0.075, vertical=True))
+        for i in range(5):                                   # a few loose flat strips
+            cx, cy, ang = heap.x + rr.uniform(-0.5, 0.5), heap.y + rr.uniform(-0.35, 0.35), rr.uniform(0, 6.28)
+            pts = [Vector((cx + k * 0.06 * math.cos(ang) + 0.03 * math.sin(k), cy + k * 0.06 * math.sin(ang), 0.012 + 0.01 * k)) for k in range(9)]
+            self.ribbon.append(strip("s30_loose%d" % i, pts, 0.1))
+        # candle light at chest height between his hand and the register
+        tl = moc + Vector((rx, ry, 0.0)) * 0.55
+        for ob, e in TG.STATE["lamps"]["nightc"]:
+            ob.location = Vector((tl.x, tl.y, 2.05))
+            ob.data.energy = e * 2.6
 
     def pose(self, gs):
         for g in gs:
@@ -138,9 +214,13 @@ class Take(C.Take):
                 x, y, z = self.A["marks"][CAST[k]["mark"]]
                 if k == "moc":                                    # a little toward the lens so the set's stool does not hide his legs
                     x, y = x + 0.5 * self.dir[0], y + 0.5 * self.dir[1]
-                C.place(a, f, (x, y, z))
+                if k == "mor":                                    # 0.9 D further into the lit opening, 15 % bigger
+                    x, y = x + 0.0, y + 0.0
+                    C.place(a, f, (x, y, z), scale=1.15)
+                else:
+                    C.place(a, f, (x, y, z))
             click = 1 if (g % 9) < 3 else 0
-            self.key_set(f, tape=(0.27, click), flames=(1.0,))
+            self.key_set(f, tape=(0.0, click), flames=(1.0,), moneybag=(False,), mailsacks=(False,))
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
