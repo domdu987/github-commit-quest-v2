@@ -1,0 +1,58 @@
+{
+ "take": "s17",
+ "film": 15,
+ "shots": [
+  17,
+  18,
+  19,
+  20
+ ],
+ "first_g": 924,
+ "n_frames": 207,
+ "g0": 932,
+ "g1": 1124,
+ "handle_in": 8,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 11,
+  "note": "plan: shot 17 DIS from shot 16 (A->B); in-handle 8 frames"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "shot_ranges": {
+  "17": [
+   932,
+   974
+  ],
+  "18": [
+   975,
+   1013
+  ],
+  "19": [
+   1014,
+   1057
+  ],
+  "20": [
+   1058,
+   1124
+  ]
+ },
+ "light": "EVE",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "dof": "none",
+ "denoiser": "OpenImageDenoise",
+ "narration": "film15/audio/narration.wav at +0.10 s",
+ "set": "v3/set3d15 (B EVE)",
+ "cast": "v3/cast15 cards (c15.py)",
+ "events": {
+  "mouth_window_g": null
+ }
+}
