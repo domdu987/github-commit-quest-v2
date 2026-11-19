@@ -1,0 +1,7 @@
+# s11 QA: film 16, shot 11 (CHAMBER, DAY, the whole chamber laughs, snap to Morse)
+- Frames g 689..793 (105): shot g 698..784 (23.26-26.18 s), 9-frame handles (hard cuts both sides). 720x1280, 6 spp. take.mkv was 46 MB -> shipped as take.mkv.partaa + take.mkv.partab (`cat take.mkv.part* > take.mkv`). first_g 689.
+- Staging: ~26 congressmen across tiers 0-2 (cast16 laugh / point poses, tears; hop 0.06 D at ~3 Hz + squash alternation, phase-shifted per person), the mocker in a belly laugh with tears + blush at his desk, Morse at the front table clutching his coil (morse_clutch_coil) -> morse_snap_up on the closed frame of a blink (g 768). Nobody lip-syncs (mouths are the poses' own laughing mouths).
+- Camera: high (4 D above head height), glides from the right bank to the left bank (dwelling on the banks, quick across the empty dais; never parked), then a SNAP fly-in g 764..780 (peak 1.8) on "ไอ้บ้าลวด" (g 769) to a close of Morse (head ~270 px, centre y ~670, bottom ~800 < 880).
+- Frame-diff in-shot (g 699..784): median 14.86, p90 24.12 (targets 4 / 12). qa_auto PASS.
+- Differs from plan: the audience heads are small (25-60 px, a wide) because the chamber is big; the sweep crosses the speaker's dais (empty) for ~0.7 s; Morse is only seen at the end (snap), not in the opening wide; "fingers point at Morse" done by the point poses (a third of the crowd).
+- s/frame 18.8 wall / 36.1 CPU.

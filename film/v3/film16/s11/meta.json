@@ -1,0 +1,70 @@
+{
+ "take": "s11",
+ "film": 16,
+ "shots": [
+  11
+ ],
+ "g0": 698,
+ "g1": 785,
+ "first_g": 689,
+ "n_frames": 105,
+ "shot_ranges": {
+  "11": [
+   698,
+   784
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "hard cut in; 9 handle frames rendered in 3D before the first frame"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 785,
+  "note": "hard cut to shot 12 at g 785; handle g 785..793 in 3D"
+ },
+ "set": "v3/set3d16 CHAMBER (chamber_wide_high build, shafts on), DAY, custom camera: glide across the tiers then snap to Morse",
+ "cast": "~26 congressmen laughing/pointing (hats bounce ~0.06 D at 3 Hz, squash), mocker belly laugh with tears + blush, Morse morse_clutch_coil -> morse_snap_up (blink swap g 768); no lip-sync",
+ "camera": "custom 22 mm high angle: glide A->B across the banks (constant speed, never parked), SNAP fly-in to a close of Morse g 764..780 on 'ไอ้บ้าลวด' (g 769)",
+ "events": {
+  "snap": [
+   764,
+   780
+  ],
+  "word_nickname": 769,
+  "pose_swap_blink": [
+   767,
+   769
+  ]
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "samples": 6,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 18.77,
+ "s_per_frame_cpu_mean": 36.05,
+ "main_head_px": [
+  46,
+  96278
+ ],
+ "main_head_centre_y": [
+  -114153,
+  48771
+ ],
+ "head_bottom_max_y": 211686,
+ "framediff_in_shot": {
+  "median": 14.86,
+  "p90": 24.12
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json"
+}

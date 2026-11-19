@@ -1,0 +1,31 @@
+{
+ "take": "s11",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 22.967,
+   "duration": 3.467,
+   "frame": 689,
+   "end_frame": 793,
+   "kind": "ambience",
+   "label": "the whole chamber roaring with laughter, desks banged, a wolf-whistle"
+  },
+  {
+   "time": 25.467,
+   "duration": 0.533,
+   "frame": 764,
+   "end_frame": 780,
+   "kind": "accent",
+   "label": "snap fly-in whoosh on 'ไอ้บ้าลวด', the laughter drops to a hush under it"
+  },
+  {
+   "time": 26.167,
+   "duration": 0.0,
+   "frame": 785,
+   "end_frame": 785,
+   "kind": "cut",
+   "label": "hard cut to shot 12"
+  }
+ ]
+}
