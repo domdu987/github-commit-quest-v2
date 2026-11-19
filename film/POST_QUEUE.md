@@ -19,6 +19,7 @@ Branch: `claude/new-session-73ou27`. Only rows with status `READY` may be posted
 |---|---|---|---|---|
 | 10 | ไอ้ช่างม้าลาย | ไอ้ช่างม้าลาย | film/release10/zebra_v2.mp4 | POSTED (manually by owner, 2026-11-18) — do not post |
 | 11 | ไอ้หมอวัว | ไอ้หมอวัว | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release11/cowdoc_v1.mp4 | WAIT (client to review, then READY) |
+| 13 | ไอ้แม่แรง | ไอ้แม่แรง | https://github.com/domdu987/github-commit-quest-v2/raw/film13/main/film/release13/maeraeng_v1.mp4 | WAIT (client posts himself) |
 
 ## Captions
 (Each READY clip gets a heading here, `### <#> <Title>`, followed by the exact description text to paste.)
