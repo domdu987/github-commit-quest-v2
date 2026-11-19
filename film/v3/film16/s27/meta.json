@@ -1,0 +1,52 @@
+{
+ "take": "s27",
+ "film": 16,
+ "shots": [
+  27
+ ],
+ "g0": 1767,
+ "g1": 1805,
+ "first_g": 1758,
+ "n_frames": 56,
+ "shot_ranges": {
+  "27": [
+   1767,
+   1804
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "hard cut from shot 26"
+ },
+ "set": "v3/set3d16 LINE line_rail DAY, platform area, train arriving from the right (x 138 -> 112)",
+ "camera": "custom 22 mm on the rail looking across at the platform; CamPath pull-back 12 %/s + slide 35 px/s, still moving at the end",
+ "cast": "messenger_wave, worker_a_wave, congressman_b_wave, congressman_c_wave on the platform (own marks near the bench), hands waving 3 Hz",
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "preset": "line_rail",
+ "samples": 7,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "s_per_frame_wall_mean": 8.88,
+ "s_per_frame_cpu_mean": 16.75,
+ "head_px": [
+  64,
+  113
+ ],
+ "head_centre_y": [
+  570,
+  674
+ ],
+ "head_bottom_max_y": 727,
+ "framediff_in_shot": {
+  "median": 3.78,
+  "p90": 4.63
+ }
+}

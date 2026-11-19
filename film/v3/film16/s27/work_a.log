@@ -1,0 +1,59 @@
+final: 28 to render, 0 done
+00:19.846  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: built line line_rail DAY in 19.5 s
+00:37.958  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1759.png'
+g 1758  15.1 s wall  17.6 s cpu
+00:47.233  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1761.png'
+g 1760  9.3 s wall  17.7 s cpu
+00:56.713  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1763.png'
+g 1762  9.5 s wall  17.5 s cpu
+01:05.297  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1765.png'
+g 1764  8.6 s wall  16.5 s cpu
+01:13.536  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1767.png'
+g 1766  8.2 s wall  16.1 s cpu
+01:22.607  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1769.png'
+g 1768  9.1 s wall  17.5 s cpu
+01:31.333  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1771.png'
+g 1770  8.7 s wall  16.8 s cpu
+01:39.575  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1773.png'
+g 1772  8.2 s wall  16.0 s cpu
+01:47.956  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1775.png'
+g 1774  8.4 s wall  16.1 s cpu
+01:56.863  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1777.png'
+g 1776  8.9 s wall  17.2 s cpu
+02:04.982  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1779.png'
+g 1778  8.1 s wall  15.7 s cpu
+02:13.553  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1781.png'
+g 1780  8.6 s wall  16.6 s cpu
+02:21.484  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1783.png'
+g 1782  7.9 s wall  15.6 s cpu
+02:29.908  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1785.png'
+g 1784  8.4 s wall  16.2 s cpu
+02:38.040  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1787.png'
+g 1786  8.1 s wall  15.7 s cpu
+02:47.004  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1789.png'
+g 1788  9.0 s wall  17.2 s cpu
+02:55.834  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1791.png'
+g 1790  8.8 s wall  17.0 s cpu
+03:04.549  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1793.png'
+g 1792  8.7 s wall  16.8 s cpu
+03:13.044  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1795.png'
+g 1794  8.5 s wall  16.4 s cpu
+03:22.047  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1797.png'
+g 1796  9.0 s wall  17.3 s cpu
+03:31.028  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1799.png'
+g 1798  9.0 s wall  17.6 s cpu
+03:40.056  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1801.png'
+g 1800  9.0 s wall  17.6 s cpu
+03:48.662  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1803.png'
+g 1802  8.6 s wall  16.6 s cpu
+03:57.626  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1805.png'
+g 1804  9.0 s wall  17.5 s cpu
+04:06.419  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1807.png'
+g 1806  8.8 s wall  17.1 s cpu
+04:14.828  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1809.png'
+g 1808  8.4 s wall  16.3 s cpu
+04:23.728  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1811.png'
+g 1810  8.9 s wall  17.1 s cpu
+04:32.462  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film16/s27/raw/f_1813.png'
+g 1812  8.7 s wall  17.0 s cpu

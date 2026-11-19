@@ -1,0 +1,19 @@
+{
+ "take": "s27",
+ "fps": 30,
+ "note": "time = film seconds (g / 30)",
+ "cues": [
+  {
+   "time": 58.6,
+   "frame": 1758,
+   "kind": "ambience",
+   "label": "station platform, steam, distant cheering"
+  },
+  {
+   "time": 59.333,
+   "frame": 1780,
+   "kind": "accent",
+   "label": "train whistle, people cheering"
+  }
+ ]
+}
