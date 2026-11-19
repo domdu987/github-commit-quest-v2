@@ -94,10 +94,12 @@ try:
     import h19_ship as SHP
     A = H.build('ship_deck'); K.clear_keys(); root = A.get('ship_root')
     check('ship_root exists', root is not None)
-    for nm in ('captain_wheel', 'william_rail', 'sailor_a', 'sailor_b', 'sailor_c', 'astro_deck', 'crew_bow', 'shore_a', 'shore_b'): check('ship mark ' + nm, nm in A['marks'])
-    check('ship presets', all(p in A['cams'] for p in H.SHIP_PRESETS), sorted(A['cams']))
+    for nm in ('captain_wheel', 'william_rail', 'sailor_a', 'sailor_b', 'sailor_c', 'astro_deck', 'crew_bow'): check('ship mark ' + nm, nm in A['marks'])
+    check('ship_deck cam', A['cam_name'] == 'ship_deck' and A['cam']['lens'] == 22.0)
+    A2 = H.build('ship_coast'); check('ship_coast shore marks', 'shore_a' in A2['marks'] and 'shore_b' in A2['marks'])
+    A = H.build('ship_deck'); K.clear_keys(); root = A.get('ship_root')
     H.set_roll(0.0, frame=1); H.set_roll(2.0, frame=31); at(1); r0 = root.rotation_euler.copy(); at(31); r1 = root.rotation_euler.copy()
-    check('set_roll keyed (ship_root tilts <= 2 deg)', (r1 - r0).to_matrix().to_euler() is not None and max(abs(a) for a in (r1[0], r1[1])) <= math.radians(2.5)); K.clear_keys()
+    check('set_roll keyed (ship_root tilts <= 2 deg)', max(abs(a) for a in (r1[0], r1[1])) <= math.radians(2.5)); K.clear_keys()
     H.set_sea(0.0, frame=1); H.set_sea(3.0, frame=31); H.set_sun_overhead(0.0, frame=1); H.set_sun_overhead(1.0, frame=31); H.set_rain(True, frame=1); check('ship hooks callable', True)
 except ImportError as e:
     print('NOTE h19_ship not importable (%s): ship hooks not tested' % e)

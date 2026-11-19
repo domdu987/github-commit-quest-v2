@@ -2,13 +2,13 @@ hue per tile: cast-shadow hue (method of styleboard/hue_check.py; outdoors band 
 W01_shop_wide_DAY          DAY        shade-hue(cast-shadow px) 25.3   median 26.8   in 225-265: 0.0    cast  28.7% | magenta  0.59% (<=10) | magenta OK, warm indoor shade by design
 W02_shop_wide_NIGHT        NIGHT      shade-hue(cast-shadow px) 20.4   median 24.0   in 225-265: 0.4    cast  27.2% | magenta  1.37% (<=10) | magenta OK, warm indoor shade by design
 W03_shop_bench_DAY         DAY        shade-hue(cast-shadow px) 28.1   median 29.6   in 225-265: 0.0    cast  33.3% | magenta  0.07% (<=10) | magenta OK, warm indoor shade by design
-W04_shop_bench_NIGHT       NIGHT      shade-hue(cast-shadow px) 22.8   median 24.0   in 225-265: 0.0    cast  33.5% | magenta  0.30% (<=10) | magenta OK, warm indoor shade by design
-W05_shop_clock_DAY         DAY        shade-hue(cast-shadow px) 28.9   median 29.6   in 225-265: 0.0    cast  36.1% | magenta  0.00% (<=10) | magenta OK, warm indoor shade by design
-W06_shop_clock_NIGHT       NIGHT      shade-hue(cast-shadow px) 22.5   median 22.6   in 225-265: 0.0    cast  40.6% | magenta  0.07% (<=10) | magenta OK, warm indoor shade by design
+W04_shop_bench_NIGHT       NIGHT      shade-hue(cast-shadow px) 22.8   median 24.0   in 225-265: 0.0    cast  33.5% | magenta  0.29% (<=10) | magenta OK, warm indoor shade by design
+W05_shop_clock_DAY         DAY        shade-hue(cast-shadow px) 30.3   median 31.1   in 225-265: 0.0    cast  32.1% | magenta  0.05% (<=10) | magenta OK, warm indoor shade by design
+W06_shop_clock_NIGHT       NIGHT      shade-hue(cast-shadow px) 22.9   median 24.0   in 225-265: 0.0    cast  31.6% | magenta  0.59% (<=10) | magenta OK, warm indoor shade by design
 W07_shop_door_DAY          DAY        shade-hue(cast-shadow px) 21.1   median 25.4   in 225-265: 0.5    cast  80.1% | magenta  5.69% (<=10) | magenta OK, warm indoor shade by design
 W08_shop_door_NIGHT        NIGHT      shade-hue(cast-shadow px) 11.8   median 22.6   in 225-265: 2.7    cast  79.5% | magenta  6.09% (<=10) | magenta OK, warm indoor shade by design
 W09_shop_bench_H2          DAY        shade-hue(cast-shadow px) 28.1   median 29.6   in 225-265: 0.0    cast  33.3% | magenta  0.07% (<=10) | magenta OK, warm indoor shade by design
-W10_shop_clock_H4          DAY        shade-hue(cast-shadow px) 28.6   median 29.6   in 225-265: 0.0    cast  40.5% | magenta  0.00% (<=10) | magenta OK, warm indoor shade by design
+W10_shop_clock_H4          DAY        shade-hue(cast-shadow px) 30.4   median 31.1   in 225-265: 0.0    cast  31.3% | magenta  0.05% (<=10) | magenta OK, warm indoor shade by design
 H01_hall_wide_DAY          DAY        shade-hue(cast-shadow px) 1.5    median 131.3  in 225-265: 27.3   cast  28.3% | magenta  1.84% (<=10) | magenta OK, warm indoor shade by design
 H02_hall_wide_EVENING      EVENING    shade-hue(cast-shadow px) 359.8  median 38.1   in 225-265: 20.0   cast  26.3% | magenta  1.01% (<=10) | magenta OK, warm indoor shade by design
 H03_hall_table_DAY         DAY        shade-hue(cast-shadow px) 336.2  median 228.7  in 225-265: 39.3   cast  38.8% | magenta  1.80% (<=10) | magenta OK, warm indoor shade by design
