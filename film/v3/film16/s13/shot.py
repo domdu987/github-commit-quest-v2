@@ -29,8 +29,8 @@ PRESET, LIGHT = "line_trench", "DAY"
 K_A, K_B = 0.50, 0.57                                   # plough front (furrow fraction) at GA and GB
 def k_of(g):
     return lerp(K_A, K_B, (g - GA) / float(GB - GA))
-CAM_L = (10.0, 12.0, 3.4)
-CAM_T = (10.5, 0.0, 1.8)
+CAM_L = (9.5, 12.0, 6.0)
+CAM_T = (9.5, 0.0, 1.9)
 PIPE_LAG = 0.035                                        # the pipe is laid a little behind the plough
 
 CAM_FOCUS = lambda k: Vector(TG.plough_marks(k)["cornell"]) # tracked point: Cornell's mark
@@ -39,8 +39,8 @@ class Cam(object):
     """tracking camera: CamPath drift + snap, shifted by the team's travel (the plough mark at k_of(g))."""
     def __init__(self, loc0, look0):
         self.p0 = Vector(TG.plough_marks(k_of(GA))["plough"])
-        self.path = C.CamPath(loc0, look0, GA, GB, push=0.07, slide_px=30.0, arc_deg_s=3.0, decay=0.3,
-                              snaps=[dict(g=SNAP, k=1.2, peak=1.6, shift=(13.0, 0.0))])
+        self.path = C.CamPath(loc0, look0, GA, GB, push=0.06, slide_px=20.0, arc_deg_s=2.0, decay=0.3,
+                              snaps=[dict(g=SNAP, k=1.15, peak=1.6, shift=(11.0, 0.0))])
     def at(self, g):
         loc, look = self.path.at(g)
         d = Vector(TG.plough_marks(k_of(g))["plough"]) - self.p0
@@ -77,7 +77,7 @@ class Take(C.Take):
         for i, g in enumerate((GA + 6, GA + 40, GA + 74)):
             loc, look = self.cm.at(g)
             cs, ls = inv @ loc, inv @ look
-            items = [("blades", 0, 0, [(1.3 + 0.3 * j, 1.2 + 0.2 * j, 0.9 + 0.2 * j) for j in range(4)]), ("crate" if i != 1 else "shovel", -1.9 if i != 1 else 1.7, 2.0)]
+            items = [("blades", 0, 0, [(1.3 + 0.3 * j, 1.2 + 0.2 * j, 0.9 + 0.2 * j) for j in range(4)])]
             LN.fg_dress(TG.STATE, TG.STATE["M"], (cs.x, cs.y), (ls.x, ls.y), items, seed=70 + i)
 
     def facing(self, g):
@@ -111,7 +111,10 @@ class Take(C.Take):
                 p["t"] = g / 30.0
                 if nm not in ("mule_a", "mule_b"):
                     p["blink"] = blink(g, [17 + 23 * (hash(nm) % 3)])
-                C.place(self.act[nm], f, mk["morse_trench" if nm == "morse" else nm])
+                m_ = mk["morse_trench" if nm == "morse" else nm]
+                if nm == "morse":
+                    m_ = (m_[0] + 6.0, m_[1], m_[2])          # Morse follows close behind Cornell (in frame at the end of the snap)
+                C.place(self.act[nm], f, m_)
                 self.act[nm].pose(f, p, camera=self.cam)
         self.sprites_for([(a, 256) for a in self.act.values()], [bf(g) for g in gs])
 
