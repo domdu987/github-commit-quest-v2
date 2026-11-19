@@ -2,16 +2,14 @@
  "take": "s25",
  "film": 14,
  "shots": [
-  25,
-  26,
-  27
+  25
  ],
  "first_g": 1672,
- "n_frames": 248,
+ "n_frames": 99,
  "g0": 1678,
- "g1": 1913,
+ "g1": 1763,
  "handle_in": 6,
- "handle_out": 6,
+ "handle_out": 7,
  "transition_in": {
   "type": "cut",
   "frames": 0
@@ -22,23 +20,12 @@
    "type": "cut",
    "frames": 0,
    "note": "from s24 (hard cut, handle g 1672-1677 rendered)"
-  },
-  {
-   "at": 1764,
-   "type": "dissolve",
-   "frames": 8,
-   "note": "baked in the take: shot 25 night herd -> shot 26 dawn, centred on g 1764 (g 1760-1767)"
-  },
-  {
-   "at": 1840,
-   "type": "cut",
-   "frames": 0
   }
  ],
  "transition_out": {
-  "type": "cut or dissolve (director decides; team 2 take s28 starts at 1914)",
-  "frames": 0,
-  "note": "handle g 1914-1919 rendered (shot 27 continues)"
+  "type": "dissolve",
+  "frames": 8,
+  "note": "dissolve into shot 26 (take s26, team 3) centred on g 1764 (g 1760-1767); shot 25 is rendered to g 1770 so the conform can blend; NOT baked here"
  },
  "narration": "film14/audio/narration.wav at +0.10 s",
  "size": [

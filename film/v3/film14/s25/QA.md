@@ -1,9 +1,8 @@
-# QA s25 (film 14, shots 25-27, g 1672-1919)
-- take.mkv split in 40 MB parts (`cat take.mkv.part* > take.mkv`). 248 frames, 720x1280, 24 samples. meta.json: first_g 1672, g0 1678, g1 1913, handles 6 + 6, in-take dissolve g 1760-1767 (shot 25 -> 26, baked).
-- qa_auto: PASS (QA_AUTO.md, phone_sheet.jpg). One soft frame g 1763 = the dissolve.
-- Heads above y 880: all elephant and farmer heads at y 250-780. Elephants: camera 2.2-2.5 m, no steep down view (shot 27 at 2.4 m, shot 25 at 2.2 m).
-- Director note applied to the night shots: elephant cards tinted (0.80, 0.85, 1.0) x night card dim 0.72; larger darker contact-shadow ellipses; dust = spray crown of droplets + thin wisps (no blobs).
-- Shot 27: acacia at (-33, 6) removed at runtime (blocked the herd); stalks fall outward from the elephants as set_uncle_field ramps 0 -> 1.
-- Changes vs plan: shot 25 uses a low custom camera (not the high field_night_wide); shot 26 is a crane down from the fence_ring height to a medium of the farmer; shot 27 custom low camera. Transparent bounces raised to 40 (cards stacked otherwise rendered black).
-- Mouths: all held / still; no lip-sync in this take. Shots 28-30 are team 2's take s28.
-- Not checked by eye frame by frame at 6 fps in full (contact sheet every 0.5 s + cut +-1 only).
+# QA s25 v2 (film 14, shot 25 only, g 1672-1770, 99 frames)
+v2 fixes from the director list (shots 26-27 moved to take s26, team 3):
+- Night elephants: card x0.5 with cool tint (0.62, 0.67, 0.86) on the night card dim 0.72; larger darker contact ellipses under every foot.
+- Flee: the camera sits at the right end of the fence and looks along it, so the herd running left RECEDES (scale about 1.0 -> 0.4) and the shot ends on a nearly empty field (calf and herd as small specks at g 1770). The turn is keyed over 13 frames (frontal card swings away and fades, side card swings in), not a swap. Each stride throws a droplet crown + wisps, 2x larger than v1.
+- qa_auto PASS. Soft frames g 1678-1680 are the keyed turn cross-fade (intended). The 1678 "no change" note is expected: g 1672-1677 are handle frames of the same shot.
+- Ground mask blurred at runtime (no hard-edged pale patch); the set files are untouched in git.
+- Dissolve into shot 26 (g 1760-1767) is NOT baked: shot 25 is rendered to g 1770 for the conform to blend with take s26.
+- Not done: full 6 fps frame-by-frame review (contact sheet every 0.5 s + cut +-1 only). Dust crowns read somewhat spiky at the strongest strides.
