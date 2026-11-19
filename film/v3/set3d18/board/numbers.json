@@ -1,0 +1,74 @@
+[
+ {
+  "file": "board_1.png",
+  "hue": {
+   "red": 17.1,
+   "orange": 4.6,
+   "yellow": 1.6,
+   "green": 0.0,
+   "cyan": 0.3,
+   "blue": 56.0,
+   "violet": 15.4,
+   "magenta": 5.0
+  },
+  "sat": 0.606,
+  "val": 0.583,
+  "dark_v025": 0.0,
+  "shade_hue": 245.3,
+  "shaded_frac": 0.475,
+  "luma_mean": 80.5,
+  "luma_mid": 129.2,
+  "zone": "wall",
+  "wall_s": 7.9,
+  "cpu_s": 30.3,
+  "process_s": 9.4
+ },
+ {
+  "file": "board_2.png",
+  "hue": {
+   "red": 13.9,
+   "orange": 15.2,
+   "yellow": 2.9,
+   "green": 0.0,
+   "cyan": 0.0,
+   "blue": 49.2,
+   "violet": 12.7,
+   "magenta": 6.1
+  },
+  "sat": 0.657,
+  "val": 0.583,
+  "dark_v025": 0.0,
+  "shade_hue": 245.0,
+  "shaded_frac": 0.356,
+  "luma_mean": 79.8,
+  "luma_mid": 102.5,
+  "zone": "camp",
+  "wall_s": 8.2,
+  "cpu_s": 31.4,
+  "process_s": 10.0
+ },
+ {
+  "file": "board_3.png",
+  "hue": {
+   "red": 44.5,
+   "orange": 12.9,
+   "yellow": 9.0,
+   "green": 0.0,
+   "cyan": 0.0,
+   "blue": 11.3,
+   "violet": 8.3,
+   "magenta": 14.0
+  },
+  "sat": 0.437,
+  "val": 0.659,
+  "dark_v025": 0.0,
+  "shade_hue": 250.8,
+  "shaded_frac": 0.092,
+  "luma_mean": 117.0,
+  "luma_mid": 144.7,
+  "zone": "holes",
+  "wall_s": 9.9,
+  "cpu_s": 38.3,
+  "process_s": 11.1
+ }
+]
