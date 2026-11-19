@@ -73,7 +73,7 @@ CAM = {
     1: dict(loc=(1.2, -0.6, 2.1), look=(0.3, 5.6, 1.1), push=16, slide=-110),
     2: dict(loc=(3.4, -3.3, 0.85), look=(5.6, -0.8, 1.5), push=14, slide=90),
     3: dict(loc=(0.8, -1.6, 1.3), look=(3.4, 0.9, 1.2), end=((0.8, -1.6, 1.3), (0.5, 5.2, 1.4))),
-    4: dict(loc=(0.4, 2.7, 0.9), look=(-0.2, 5.4, 2.0), push=10),
+    4: dict(loc=(0.4, 2.7, 0.9), look=(-0.2, 5.4, 1.3), push=10),
 }
 def cam_rel(S, d, lat, z=0.0):
     """ground point d D in front of the camera (horizontal) and lat D to its right"""
