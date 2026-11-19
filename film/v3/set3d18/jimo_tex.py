@@ -12,7 +12,7 @@ from PIL import Image, ImageDraw, ImageFilter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEX = os.path.join(HERE, 'tex_jimo')
-TEX_V = 'j15'
+TEX_V = 'j16'
 TS = {}                                         # name -> (w_D, h_D)
 MOON_AZ, MOON_EL = 58.0, 20.0                  # the moon in the dome (degrees)
 
@@ -173,6 +173,14 @@ def rammed(path, W=8.0, H=4.0, ppd=80, seed=5):
     img *= (0.88 + 0.22 * fr)[..., None]                                                               # darker under each course, pale tamped top
     img *= (0.80 + 0.40 * fbm(h, w, 50, seed + 3, 4))[..., None]                                       # soft mottling
     img += (fbm(h, w, 18, seed + 4, 3)[..., None] - 0.5) * 0.08
+    seams = []                                                                                         # form-board panels: each course is cut into 2-4.5 D segments, each with its own tint and a seam between
+    for i in range(n):
+        y0, y1 = int(round(i * ch)), int(round((i + 1) * ch)); x = int(r.uniform(0, 2.0) * ppd)
+        while x < w + 4 * ppd:
+            Ls = int(r.uniform(2.0, 4.5) * ppd); tint = r.uniform(0.84, 1.12) * np.array([r.uniform(0.97, 1.03), 1.0, r.uniform(0.92, 1.06)], 'float32')
+            xa, xb = max(0, x), min(w, x + Ls)
+            if xb > xa: img[y0:y1, xa:xb] *= tint
+            seams.append((x, y0, y1)); x += Ls
     jw = 0.12 * ppd / ch                                                                               # joint band 0.12 D tall (fraction of a course)
     j = np.clip(1 - np.minimum(fr, 1 - fr) / (jw * 0.5 + 1e-6), 0, 1) ** 0.6                           # 1 at the joint centre
     img = lerp(img, np.ones_like(img) * hexf('#8e6438') * (0.9 + 0.2 * fbm(h, w, 20, seed + 6, 2))[..., None], (j * 0.85)[..., None])
@@ -184,6 +192,11 @@ def rammed(path, W=8.0, H=4.0, ppd=80, seed=5):
     img = lerp(img, img * 1.12 * hexf('#ffe2b0'), (np.clip((0.38 - st2) * 3.0, 0, 1) * 0.35)[..., None])
     # erosion runnels: thin dark vertical lines widening downward and fading
     im = Image.fromarray((np.clip(img, 0, 1) * 255).astype('uint8'), 'RGB'); d = ImageDraw.Draw(im, 'RGBA')
+    for (x, y0, y1) in seams:
+        if 0 <= x < w: d.line([(x, y0), (x + r.uniform(-1.5, 1.5), y1)], fill=(78, 50, 26, 175), width=2); d.line([(x + 2, y0), (x + 2, y1)], fill=(235, 195, 130, 60), width=1)
+    for _ in range(int(W * 2.2)):                                                                      # big weathered blotches with a hard edge (repairs, salt, soot)
+        x, y = r.uniform(0, w), r.uniform(0, h); bw, bh = r.uniform(60, 190), r.uniform(30, 90)
+        d.rounded_rectangle([x, y, x + bw, y + bh], radius=18, fill=r.choice(((150, 104, 62, 60), (214, 170, 106, 55), (110, 80, 52, 60))))
     for _ in range(int(W * 3)):
         x = r.uniform(0, w); y0 = r.uniform(0, h * 0.6); L = r.uniform(h * 0.15, h * 0.55); k = 14
         for q in range(k):
@@ -308,6 +321,49 @@ def sky(path, W=6144, maz=58.0, mel=20.0):
     img += st * np.clip(1 - np.exp(-(dm / 22) ** 2) * 0.95, 0, 1)[..., None]
     save(np.clip(img, 0, 1), path)
 
+# ----------------------------------------------------------------------------- flame card atlas (4 variants side by side; u = 0..0.25 selects one)
+def flame_atlas(path, fw=192, fh=384, seed=5):
+    S = 3; r = random.Random(seed); im = Image.new('RGBA', (4 * fw * S, fh * S), (0, 0, 0, 0)); d = ImageDraw.Draw(im, 'RGBA')
+    def tongue(x0, base_y, hgt, wid, sway, ph, col, tipcol=None, tipfrac=0.0):
+        pts_l, pts_r = [], []; n = 28
+        for k in range(n + 1):
+            t = k / n; cx = x0 + sway * (t ** 1.6) * math.sin(t * 2.4 + ph) + sway * 0.6 * t * t; wd_ = wid * (math.sin(min(1.0, t ** 0.55 * 1.0) * math.pi * 0.5) ** 1.0) * (1 - t) ** 0.8 + 0.5
+            y = base_y - hgt * t; pts_l.append((cx - wd_, y)); pts_r.append((cx + wd_, y))
+        for k in range(n):
+            t = k / n; c2 = col
+            if tipcol is not None and tipfrac > 0:
+                u = min(1.0, max(0.0, (t - (1 - tipfrac * 1.6)) / (tipfrac * 1.6))); c2 = tuple(int(col[i] + (tipcol[i] - col[i]) * u) for i in range(3)) + (255,)
+            d.polygon([pts_l[k], pts_l[k + 1], pts_r[k + 1], pts_r[k]], fill=c2)
+    for v in range(4):
+        ox = v * fw * S; cx = ox + fw * S / 2; by = fh * S * 0.97; H = fh * S * 0.90; Wd = fw * S * 0.30; lean = r.uniform(-0.12, 0.12) * fw * S
+        for (dx, hh, ww, ph) in ((-0.55, 0.62, 0.55, 1.0), (0.6, 0.55, 0.5, 2.0), (-0.2, 0.9, 0.72, 0.3), (0.25, 0.8, 0.66, 4.0)):                           # outer tongues: red body, darker tip
+            tongue(cx + dx * Wd, by, H * hh * r.uniform(0.92, 1.05), Wd * ww, lean + r.uniform(-0.1, 0.1) * fw * S, ph + v, (232, 86, 28, 255), (184, 48, 26, 255), 0.38)
+        for (dx, hh, ww, ph) in ((-0.28, 0.58, 0.42, 0.7), (0.3, 0.52, 0.4, 1.9), (0.0, 0.7, 0.5, 3.1)):                                                       # mid tongues: amber
+            tongue(cx + dx * Wd, by, H * hh * r.uniform(0.92, 1.05), Wd * ww, lean * 0.8, ph + v * 1.3, (255, 178, 56, 255), (232, 86, 28, 255), 0.3)
+        tongue(cx, by, H * 0.40, Wd * 0.34, lean * 0.3, v, (255, 254, 236, 255), (255, 178, 56, 255), 0.25)                                                       # hot core
+        for k in range(3): ex, ey = cx + r.uniform(-1.0, 1.0) * Wd * 1.1, by - H * r.uniform(0.9, 1.04); d.ellipse([ex - 3 * S, ey - 3 * S, ex + 3 * S, ey + 3 * S], fill=(255, 110, 32, 255))     # sparks
+    im.resize((4 * fw, fh), Image.LANCZOS).save(path)
+
+def copy_sky(path, src=None):
+    from PIL import Image as I
+    p = os.path.join(os.path.dirname(os.path.dirname(HERE)), 'v3', 'set3d9', 'tex_wall', src)
+    I.open(p).convert('RGB').save(path)
+
+def patchwork(path, W=64.0, H=64.0, ppd=8, seed=3, cols=None):
+    """Farm fields seen from far: irregular patches in muted greens / ochres / pale gold with furrow lines, hedge lines and path lines. Tileable."""
+    w, h = int(W * ppd), int(H * ppd); r = random.Random(seed)
+    cols = cols or ('#5a7a3a', '#6e8a3e', '#8a9a46', '#a89a4e', '#7a6a3a', '#4a6a3a', '#9a8a4a', '#b8a860')
+    im = Image.new('RGB', (w, h), tuple(int(255 * x) for x in hexf('#6a7e3e'))); d = ImageDraw.Draw(im, 'RGBA')
+    for _ in range(140):
+        x, y = r.uniform(0, w), r.uniform(0, h); pw, ph = r.uniform(30, 110), r.uniform(24, 80); c = tuple(int(255 * v) for v in hexf(r.choice(cols))); a = r.uniform(-0.3, 0.3)
+        pts = [(x + math.cos(a) * px - math.sin(a) * py, y + math.sin(a) * px + math.cos(a) * py) for (px, py) in ((0, 0), (pw, 0), (pw, ph), (0, ph))]
+        wd(d, lambda xx, yy: d.polygon([(p[0] - x + xx, p[1] - y + yy) for p in pts], fill=c + (255,)), x, y, w, h, 120)
+        fur = tuple(int(v * 0.82) for v in c)
+        for k in range(int(ph / 4)):
+            off = k * 4; wd(d, lambda xx, yy: d.line([(pts[0][0] - x + xx - math.sin(a) * off, pts[0][1] - y + yy + math.cos(a) * off), (pts[1][0] - x + xx - math.sin(a) * off, pts[1][1] - y + yy + math.cos(a) * off)], fill=fur + (120,), width=1), x, y, w, h, 120)
+    a = np.asarray(im, 'float32') / 255; a *= (0.88 + 0.24 * fbm(h, w, 60, seed + 1, 3))[..., None]
+    Image.fromarray((np.clip(a, 0, 1) * 255).astype('uint8'), 'RGB').save(path)
+
 # ----------------------------------------------------------------------------- registry
 def jobs():
     TS.clear()
@@ -320,7 +376,9 @@ def jobs():
     add('canvas', canvas, (4.0, 4.0)); add('canvas_red', canvas, (4.0, 4.0), seed=33, base='#a0402e', stitch='#e8c080'); add('hide', canvas, (4.0, 4.0), seed=35, base='#a07048', hide=True)
     add('planks', planks, (4.0, 4.0)); add('planks_d', planks, (4.0, 4.0), seed=43, base='#5a3a24')
     add('water', water, (16.0, 16.0)); add('streak', streak, (1.0, 8.0)); add('glow', glow, (1.0, 1.0)); add('pool', pool, (1.0, 1.0)); add('moon', moon, (1.0, 1.0))
-    add('silk', silk, (4.0, 2.0)); add('rain', rain, (2.0, 4.0)); add('sky_WALL', sky, (360.0, 105.0), maz=58.0, mel=20.0); add('sky_CAMP', sky, (360.0, 105.0), maz=74.0, mel=19.0); add('sky_HOLES', sky, (360.0, 105.0), maz=250.0, mel=36.0)
+    add('silk', silk, (4.0, 2.0)); add('rain', rain, (2.0, 4.0)); add('sky_NIGHT', sky, (360.0, 105.0), maz=58.0, mel=20.0)
+    add('sky_DUSK', copy_sky, (360.0, 105.0), src='sky_DUSK.png'); add('sky_DAWN', copy_sky, (360.0, 105.0), src='sky_DAWNG.png')
+    add('flame_atlas', flame_atlas, (4.0, 2.0)); add('fields', patchwork, (64.0, 64.0)); add('fields_b', patchwork, (64.0, 64.0), seed=8, cols=('#4a6a38', '#58783a', '#6a8a42', '#7a7a3e', '#8a7a46', '#3e5a34'))
     return J
 
 def ensure(verbose=True):

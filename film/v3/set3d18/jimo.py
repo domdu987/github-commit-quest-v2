@@ -1,23 +1,18 @@
 #!/usr/bin/env python3
-"""jimo.py : set of film 18 ("ไอ้เสมียนวัว", Tian Dan's fire oxen at Jimo, Qi vs Yan, 279 BC) as a real 3D Blender set (bpy 5.3, Cycles CPU).
-STYLE-BOARD stage: three zones, each built on its own (the zones share one world: 1 unit = 1 D = one head, Z up, +y = toward Jimo).
+"""jimo.py : the PRODUCTION set of film 18 ("ไอ้เสมียนวัว", Tian Dan's fire oxen at Jimo, Qi vs Yan, 279 BC): a real 3D Blender set (bpy 5.3, Cycles CPU).
+See API.md.  World: 1 unit = 1 D = one head, Z up; the Jimo wall runs along x at y = 0 (outer face y -5 at the base, inner face y +4); +y = toward / inside Jimo.
 
     import jimo as J
-    A = J.build('wall')      # jimo_wall_night : outside the wall, low wide: rammed-earth wall, gate tower, moat, bridge, road, moon
-    A = J.build('camp')      # yan_camp_night  : eye level inside the Yan camp looking at the far lit wall
-    A = J.build('holes')     # wall_holes_oxen : inside, the wall base with the holes and ONE fire ox (placeholder)
-    cam = J.make_camera(A['cam']); J.T.render(path)
+    A = J.build('jimo_in', 's01')              # location, preset (a shot name s01..s26 or a location default), light=None (NIGHT | DUSK | DAWN)
+    cam = J.make_camera(A['cam'])              # or J.set_shot_camera('s01', frame_in_shot)
+    J.set_holes(6.5, frame=1301); J.flicker(frame)
 
-World: the wall runs along x at y = 0 (outer face y -5 at the base -> -3 at the top, inner face y +4 -> +3; height 16, walk z 16); the gate in
-the middle (x +-3.5); the moat y -22..-9.5 (water z -2.2); the Yan camp lies at y -130..-35. NO depth of field, NO text anywhere.
-Built on the film-3..10 templates (imported, not copied): tower (materials, mesh builder, camera, render, grade), mine (boxes, rods,
-lumpy, fire), bakery (Frame, glow cards, lights), desert (star sky), wall (film 9: compositor air).
-CLI: python3 jimo.py board            the 3 final stills + style_board.jpg + hue numbers (board/)
-     python3 jimo.py still <wall|camp|holes> [draft]"""
-import os, sys, math, json, time, random, subprocess
+Locations: jimo_in (DUSK NIGHT), jimo_out (DUSK NIGHT DAWN), yan_camp (DUSK NIGHT), vista (DUSK DAWN).
+CLI: python3 jimo.py stills [spec ...] | final [spec ...] | digest [spec] | contact"""
+import os, sys, math, json, time, random, subprocess, shutil
 import numpy as np
 import bpy
-from mathutils import Vector
+from mathutils import Vector, Matrix
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PROJ = os.path.dirname(os.path.dirname(HERE))
@@ -35,6 +30,7 @@ from mine import obox, beam, rod, lumpy, _obj, _untoon, _glossy, vnoise   # noqa
 STATE = T.STATE
 Frame = BK.Frame
 OUT = os.path.join(HERE, 'board')
+WORK = os.path.join(HERE, 'set_work')
 def _rnd(s): return random.Random(s)
 V = Vector
 FIRE = (1.0, 0.50, 0.18); LAMP = (1.0, 0.62, 0.30)
@@ -45,23 +41,81 @@ def yo(z): return -5.0 + 2.0 * z / WH                       # outer face y at he
 def yi(z): return 4.0 - 1.0 * z / WH                        # inner face y
 WATER_Z = -2.2; MOAT = (-30.0, -9.5)
 GATE_W = 3.6; GATE_H = 9.6
+HOLE_W, HOLE_H = 3.4, 4.3                                   # a breach: wide enough for one ox card (3.2 D tall with horns)
+HOLE_X = [-41.0 + 5.5 * k for k in range(6)] + [13.5 + 5.5 * k for k in range(6)]     # 12 breaches along the wall base, x -41 .. -13.5 and 13.5 .. 41
+HEIGHT = dict(tiandan=3.0, general=3.4, soldier=3.2, townsfolk=3.0, child=2.0, envoy=3.0, ox=2.6)
+LOCS = dict(jimo_in=('NIGHT', 'DUSK'), jimo_out=('NIGHT', 'DUSK', 'DAWN'), yan_camp=('NIGHT', 'DUSK'), vista=('DUSK', 'DAWN'))
+LEGACY = dict(wall='jimo_out', camp='yan_camp', holes='jimo_in')
 
 # ----------------------------------------------------------------------------- light presets (shade hue 240-260 against warm fire / lantern light)
 _B = dict(toon=1.0, key_desat=0.55, ink='#141a3e', night=True, form=(0.0, -0.05, 0.22), bloom_size=0.12, sun_angle=0.6, sky='NIGHT', sky_k=0.88, star_k=1.0,
           shade=(0.085, 0.105, 0.34), shade_tint=(0.085, 0.115, 0.38), shade_mix=0.72, lift=(0.010, 0.012, 0.040), grade_offset=(0.002, 0.003, 0.010), grade_saturation=1.14,
-          lamps=1.0, air=('#6a5cb8', 0.30, 40.0, 420.0), beams=0.0, ground_k=1.0)
+          lamps=1.0, air=('#6a5cb8', 0.28, 40.0, 420.0), beams=0.0, ground_k=1.0)
+def _kdaz(az, el): return W9._kdaz(az, el)
 LIGHTS = dict(
-    wall=dict(_B, key=(0.24, 0.42, 1.18), key_dir=G._kd((0.45, 0.89), 38)),
-    camp=dict(_B, key=(0.24, 0.42, 1.18), key_dir=G._kd((0.30, 0.95), 42), air=('#6a5cb8', 0.26, 40.0, 420.0)),
-    holes=dict(_B, shade=(0.045, 0.07, 0.21), shade_tint=(0.045, 0.075, 0.23), key=(0.03, 0.10, 0.30), lift=(0.006, 0.008, 0.024), key_dir=G._kd((0.45, 0.89), 36), air=('#3a58b0', 0.10, 30.0, 300.0)),
+    NIGHT=dict(_B, key=(0.24, 0.42, 1.18), key_dir=G._kd((0.45, 0.89), 38), moon_az=58.0, moon_el=20.0, wall_tint=(0.07, 0.12, 0.46), wall_mix=0.92),
+    DUSK=dict(_B, night=False, key_desat=0.15, key=(1.55, 0.86, 0.46), key_dir=_kdaz(250, 9), sun_az=250.0, sun_el=9.0, sun_angle=0.9, sky='DUSK', sky_k=1.0, star_k=0.0, ink='#2a1a2e',
+              shade=(0.06, 0.10, 0.27), shade_tint=(0.06, 0.115, 0.32), shade_mix=0.78, lift=(0.010, 0.008, 0.026), grade_offset=(-0.004, -0.006, -0.002), grade_saturation=1.12,
+              bloom_size=0.08, air=('#f0a070', 0.30, 30.0, 300.0), lamps=0.8, wall_tint=(0.07, 0.12, 0.38), wall_mix=0.9),
+    DAWN=dict(_B, night=False, key_desat=0.15, key=(1.60, 1.00, 0.62), key_dir=_kdaz(80, 8), sun_az=80.0, sun_el=8.0, sun_angle=1.0, sky='DAWN', sky_k=1.0, star_k=0.0, ink='#2a1a2e',
+              shade=(0.07, 0.12, 0.28), shade_tint=(0.07, 0.13, 0.33), shade_mix=0.78, lift=(0.010, 0.008, 0.024), grade_offset=(-0.004, -0.006, -0.010), grade_saturation=1.18,
+              bloom_size=0.08, air=('#f4bca0', 0.30, 30.0, 300.0), lamps=0.6, wall_tint=(0.07, 0.12, 0.38), wall_mix=0.9),
 )
+SUN_AZ = {('jimo_in', 'DUSK'): 200.0, ('jimo_out', 'DUSK'): 255.0, ('yan_camp', 'DUSK'): 262.0, ('vista', 'DUSK'): 215.0, ('jimo_out', 'DAWN'): 75.0, ('vista', 'DAWN'): 330.0}
+MOON_AZ_LOC = {'jimo_in': 80.0, 'jimo_out': 58.0, 'yan_camp': 74.0, 'vista': 58.0}
+SKY_SUN = dict(NIGHT=(58.0, 20.0), DUSK=(35.0, 6.0), DAWN=(330.0, 8.0))      # sun / moon azimuth and elevation baked in the sky textures
 
-CAMS = dict(
-    wall=dict(loc=(-6.0, -56.0, 9.5), look_at=(3.0, 0.0, 17.6), lens=20),
-    camp=dict(loc=(0.0, -112.0, 3.3), look_at=(0.0, 0.0, 11.0), lens=16.5),
-    holes=dict(loc=(-3.6, -24.3, 1.0), look_at=(-1.0, -5.1, 5.8), lens=28),
-)
-MOON_DIR = dict(wall=(58.0, 20.0), camp=(74.0, 19.0), holes=(100.0, 34.0))
+# ----------------------------------------------------------------------------- the warm / cool split material (earth wall: OCHRE where fire-lit, blue moon-shade elsewhere)
+WARM_COL = (1.0, 0.84, 0.62)
+def mat_lit_warm(name, image, gain=1.0, shade_mul=1.0, form=None, kw=0.72):
+    """mat_lit for big earth faces with a per-vertex `warm` weight (0 = moon / sky only, 1 = fire-lit; baked from the lamp positions by bake_warm()).
+    Where warm -> 1: the blue ambient emission fades out, the key term keeps the art's full ochre (no desaturation) and a warm emission (art x fire colour) is added,
+    so fire light on the wall reads ochre #b8874e.. #c07a3c instead of rose (blue ambient + orange light = magenta). Elsewhere it is the plain blue moon-shade material."""
+    if name in bpy.data.materials: return bpy.data.materials[name]
+    P = STATE['P']; m = bpy.data.materials.new(name); nt = T._tree(m); L = nt.links.new; N = nt.nodes.new
+    out = N('ShaderNodeOutputMaterial'); dif = N('ShaderNodeBsdfDiffuse'); dif.inputs['Roughness'].default_value = 0.0
+    kd = V(P['key_dir']).normalized(); geo = N('ShaderNodeNewGeometry')
+    att = N('ShaderNodeAttribute'); att.attribute_type = 'GEOMETRY'; att.attribute_name = 'warm'
+    wk = N('ShaderNodeMath'); wk.operation = 'MULTIPLY'; wk.use_clamp = True; wk.inputs[1].default_value = 1.0; L(att.outputs['Fac'], wk.inputs[0]); warm = wk.outputs[0]
+    tex = N('ShaderNodeTexImage'); tex.image = T._img(image); art = tex.outputs['Color']
+    bw = N('ShaderNodeRGBToBW'); L(art, bw.inputs[0])
+    # key colour term: art desaturated toward its luma by key_desat, un-desaturated where warm
+    fd = N('ShaderNodeMath'); fd.operation = 'MULTIPLY_ADD'; fd.inputs[1].default_value = -0.9 * float(P.get('key_desat', 0.0)); fd.inputs[2].default_value = float(P.get('key_desat', 0.0)); L(warm, fd.inputs[0])
+    kdm = N('ShaderNodeMix'); kdm.data_type = 'RGBA'; kdm.blend_type = 'MIX'; L(fd.outputs[0], kdm.inputs[0]); L(art, kdm.inputs[6]); L(bw.outputs[0], kdm.inputs[7])
+    md = N('ShaderNodeVectorMath'); md.operation = 'SCALE'; md.inputs['Scale'].default_value = gain; L(kdm.outputs[2], md.inputs[0]); L(md.outputs['Vector'], dif.inputs['Color'])
+    # blue ambient: art x SHADE (mixed toward the luma x tint), faded where warm
+    ms = N('ShaderNodeMix'); ms.data_type = 'RGBA'; ms.blend_type = 'MULTIPLY'; ms.inputs[0].default_value = 1.0; ms.inputs[7].default_value = (*P['shade'], 1.0); L(art, ms.inputs[6])
+    mm = float(P.get('wall_mix', P.get('shade_mix', 0.0)))
+    sa = N('ShaderNodeVectorMath'); sa.operation = 'SCALE'; sa.inputs['Scale'].default_value = 1.0 - mm; L(ms.outputs[2], sa.inputs[0])
+    tb = N('ShaderNodeVectorMath'); tb.operation = 'SCALE'; tb.inputs[0].default_value = tuple(x * mm for x in P.get('wall_tint', P.get('shade_tint', (0, 0, 0)))); L(bw.outputs[0], tb.inputs['Scale'])
+    sab = N('ShaderNodeVectorMath'); sab.operation = 'ADD'; L(sa.outputs['Vector'], sab.inputs[0]); L(tb.outputs['Vector'], sab.inputs[1])
+    lf = N('ShaderNodeVectorMath'); lf.operation = 'ADD'; lf.inputs[1].default_value = tuple(P.get('lift', (0, 0, 0))); L(sab.outputs['Vector'], lf.inputs[0]); amb = lf.outputs['Vector']
+    if form and any(abs(x) > 1e-6 for x in form):
+        fdd = N('ShaderNodeVectorMath'); fdd.operation = 'DOT_PRODUCT'; fdd.inputs[1].default_value = tuple(form); L(geo.outputs['True Normal'], fdd.inputs[0])
+        fa = N('ShaderNodeMath'); fa.operation = 'ADD'; fa.inputs[1].default_value = 1.0; L(fdd.outputs['Value'], fa.inputs[0])
+        fs = N('ShaderNodeVectorMath'); fs.operation = 'SCALE'; L(amb, fs.inputs[0]); L(fa.outputs[0], fs.inputs['Scale']); amb = fs.outputs['Vector']
+    fade = N('ShaderNodeMath'); fade.operation = 'MULTIPLY_ADD'; fade.inputs[1].default_value = -0.92; fade.inputs[2].default_value = 1.0; L(warm, fade.inputs[0])
+    ab = N('ShaderNodeVectorMath'); ab.operation = 'SCALE'; L(amb, ab.inputs[0]); L(fade.outputs[0], ab.inputs['Scale'])
+    # warm emission: art x fire colour x warm
+    we = N('ShaderNodeVectorMath'); we.operation = 'MULTIPLY'; we.inputs[1].default_value = tuple(c * kw for c in WARM_COL); L(art, we.inputs[0])
+    wf = N('ShaderNodeVectorMath'); wf.operation = 'SCALE'; L(we.outputs['Vector'], wf.inputs[0]); L(warm, wf.inputs['Scale'])
+    tot = N('ShaderNodeVectorMath'); tot.operation = 'ADD'; L(ab.outputs['Vector'], tot.inputs[0]); L(wf.outputs['Vector'], tot.inputs[1])
+    emi = N('ShaderNodeEmission'); emi.inputs['Strength'].default_value = 1.0; L(tot.outputs['Vector'], emi.inputs['Color'])
+    add = N('ShaderNodeAddShader'); L(dif.outputs['BSDF'], add.inputs[0]); L(emi.outputs['Emission'], add.inputs[1]); L(add.outputs['Shader'], out.inputs['Surface'])
+    m.cycles.emission_sampling = 'NONE'
+    return m
+
+def warm_at(p):
+    """Warm (fire-lit) weight 0..1 at world point p from the registered fire sources STATE['warm'] = [(pos, radius, strength)]."""
+    w = 0.0
+    for (c, r, k) in STATE.get('warm', ()):
+        d = (p - c); d = math.sqrt(d.x * d.x + d.y * d.y + (d.z * 0.8) ** 2); w += k * math.exp(-(d / r) ** 2)
+    return min(1.0, w)
+
+def bake_warm(ob):
+    """Write the per-vertex `warm` attribute (the wall objects must be subdivided about every 2 D for a smooth pool)."""
+    me = ob.data; a = me.attributes.get('warm') or me.attributes.new('warm', 'FLOAT', 'POINT')
+    mw = ob.matrix_world; a.data.foreach_set('value', [warm_at(mw @ v.co) for v in me.vertices])
 
 # ----------------------------------------------------------------------------- mesh banks
 class Banks:
@@ -166,9 +220,10 @@ def materials(P, tx, pre):
     def TX(name, gain=1.0, sm=1.0, form=True, alpha=False, smix=None, glow=None, glow_k=0.0):
         return _untoon(mat_lit('%st_%s_%g_%s_%d_%d_%s_%g' % (pre, name, gain, _k(sm), form, alpha, smix, glow_k), image=tx[name], gain=gain, shade_mul=sm, form=FORM if form else None,
                                alpha=alpha, shade_mix=smix, glow=tx[glow] if glow else None, glow_k=glow_k))
+    def WM(name, gain=1.0): return _untoon(mat_lit_warm('%swm_%s_%g' % (pre, name, gain), image=tx[name], gain=gain, shade_mul=1.0, form=FORM))
     def E(name, hexcol='#ffffff', k=1.0, image=None, alpha=False): return mat_emit(pre + 'e_' + name, hexcol, image=tx[image] if image else None, strength=k, alpha=alpha)
     def ADD(name, image, rgb, k): return BK._mat_add(pre + 'a_' + name, tx[image], rgb, k)
-    M = dict(rammed=TX('rammed', 1.25 if STATE['area'] != 'holes' else 0.8), rammed_d=TX('rammed_d', 1.15 if STATE['area'] != 'holes' else 0.75), earth=TX('earth', 0.9, form=False), road=TX('road', 0.95, form=False), bank=TX('bank', 0.85, form=False),
+    M = dict(rammed=WM('rammed', 1.25), rammed_d=WM('rammed_d', 1.15), earth=TX('earth', 0.9, form=False), vwater=C('#4a78b0', 1.0, 1.0, form=False), win_dim=E('win_dim', '#ff9a38', 0.55), fields=TX('fields', 0.9, form=False), fields_b=TX('fields_b', 0.9, form=False), road=TX('road', 0.95, form=False), bank=TX('bank', 0.85, form=False),
              grass=TX('grass', 0.85, form=False), grass2=TX('grass2', 0.8, form=False), tiles=TX('tiles', 1.5), tiles_d=TX('tiles_d', 1.4), tiles_d_c=C('#3a4058', 1.3),
              canvas=TX('canvas', 1.35), canvas_red=TX('canvas_red', 1.0), hide=TX('hide', 1.3), planks=TX('planks', 1.1), planks_d=TX('planks_d', 1.1),
              water=TX('water', 1.0, form=False, glow='water', glow_k=0.30), silk=TX('silk', 1.6, glow='silk', glow_k=0.22),
@@ -176,83 +231,15 @@ def materials(P, tx, pre):
              iron=_glossy(C('#3a3c48', 1.2), (0.7, 0.75, 0.9), 0.4, 0.3), steel=_glossy(C('#b8c0d0', 1.5), (0.8, 0.88, 1.0), 0.55, 0.2), bronze=_glossy(C('#b8843a', 1.3), (1.0, 0.76, 0.42), 0.4, 0.3),
              stone=C('#9a98a8', 1.1), stone_d=C('#6a6878', 1.0), black=C('#201c28', 1.0), cream=C('#eadcc0', 1.15), white=C('#f0e8d8', 1.2), straw=C('#d8b860', 1.15), straw_d=C('#b08a40', 1.0),
              clay=C('#8a5a40', 1.1), clay_d=C('#5a3a2a', 1.0), jade=C('#3a8a74', 1.2), teal=C('#2a6a7a', 1.1), indigo=C('#2a3470', 1.1), ox=C('#7a5640', 1.25), ox_d=C('#3a2a22', 1.0), ox_n=C('#b89478', 1.1), hay=C('#d0b060', 1.2),
-             plaster=C('#d8c8a8', 1.1), plaster_d=C('#b0a088', 1.05), leaf=C('#4a7a4a', 1.0), hill=C('#2a2c6a', 0.9, form=False),
+             tunnel=C('#3a3046', 0.9, 0.5, form=False), plaster=C('#d8c8a8', 1.1), plaster_d=C('#b0a088', 1.05), leaf=C('#4a7a4a', 1.0), hill=C('#2a2c6a', 0.9, form=False),
              lantern=E('lantern', '#ff8a30', 4.2), lantern_g=E('lantern_g', '#ffd070', 5.5), win=E('win', '#ff9a38', 1.25), win_c=E('win_c', '#ffb860', 1.5), gate_glow=E('gate_glow', '#ff8a34', 1.3),
              flame=E('flame', '#e8561c', 1.0), flame_t=E('flame_t', '#b8301a', 0.9), flame_e=E('flame_e', '#e8561c', 0.9), flame_m=E('flame_m', '#ffb238', 0.85), flame_c=E('flame_c', '#fffeec', 1.45), ember=E('ember', '#ff6a20', 2.2),
              skin=C('#d8a47a', 1.15), lacq=C('#4a1a20', 1.0), tiles_g=C('#4a5068', 1.3), rain=mat_emit(pre + 'e_rain', image=tx['rain'], strength=1.0, alpha=True), moon=mat_emit(pre + 'e_moon', image=tx['moon'], strength=3.2, alpha=True),
-             moon_h=BK._mat_add(pre + 'a_moonh', tx['glow'], (0.35, 0.54, 0.96), 1.0), sky=D._mat_sky(pre + 'sky', P, tx['sky_' + STATE['area'].upper()], P['sky_k']),
+             moon_h=BK._mat_add(pre + 'a_moonh', tx['glow'], (0.35, 0.54, 0.96), 1.0), sky=D._mat_sky(pre + 'sky', P, tx['sky_' + STATE['light']], P['sky_k']),
              halo=ADD('halo', 'glow', (1.0, 0.6, 0.28), 1.0), halo_s=ADD('halo_s', 'glow', (1.0, 0.7, 0.35), 0.8), halo_big=ADD('halo_big', 'glow', (1.0, 0.55, 0.24), 0.55),
              pool=ADD('pool', 'pool', (1.0, 0.5, 0.14), 0.9), pool_w=ADD('pool_w', 'pool', (1.0, 0.5, 0.16), 0.6), streak=ADD('streak', 'streak', (1.0, 0.62, 0.3), 1.5), streak_m=ADD('streak_m', 'streak', (1.0, 0.88, 0.6), 1.5),
              mist=BK._mat_add(pre + 'a_mist', tx['glow'], (0.5, 0.42, 0.85), 0.08))
     return M
-
-# ----------------------------------------------------------------------------- build
-def build(zone='wall', clear=True):
-    scene = bpy.context.scene; P = dict(LIGHTS[zone]); lkey = zone
-    STATE.clear(); STATE['P'] = P; STATE['preset'] = zone; STATE['loc'] = 'jimo'; STATE['area'] = zone
-    if clear:
-        for ob in list(scene.objects): bpy.data.objects.remove(ob, do_unlink=True)
-    for ac in list(bpy.data.actions): bpy.data.actions.remove(ac)
-    for coll in (bpy.data.meshes, bpy.data.lights, bpy.data.curves, bpy.data.cameras):
-        for x in list(coll):
-            if x.users == 0: coll.remove(x)
-    SET = T._coll('SET', scene); LIG = T._coll('LIGHTS', scene); T._wipe(SET); T._wipe(LIG); STATE['SET'] = SET; STATE['LIGHTS'] = LIG
-    for m in list(bpy.data.materials):
-        if m.name.startswith(('JM_', 'ink')): bpy.data.materials.remove(m)
-    tx = JX.ensure(verbose=False); STATE['tx'] = tx
-    w = bpy.data.worlds.get('W_jimo') or bpy.data.worlds.new('W_jimo'); scene.world = w; nt = T._tree(w)
-    bg = nt.nodes.new('ShaderNodeBackground'); wo = nt.nodes.new('ShaderNodeOutputWorld'); bg.inputs['Color'].default_value = (0, 0, 0, 1); bg.inputs['Strength'].default_value = 0.0
-    nt.links.new(bg.outputs['Background'], wo.inputs['Surface'])
-    MN.setup_render(scene, 'final'); scene.render.threads = 4; scene.frame_start = 1; scene.frame_current = 1
-    pre = 'JM_%s_' % lkey; M = materials(P, tx, pre); STATE['M'] = M; STATE['pre'] = pre
-    kd = V(P['key_dir']).normalized(); k = max(P['key'])
-    d = bpy.data.lights.new('key_sun', 'SUN'); d.color = tuple(x / k for x in P['key']); d.energy = math.pi * k; d.angle = math.radians(P['sun_angle'])
-    sun = bpy.data.objects.new('key_sun', d); LIG.objects.link(sun); sun.rotation_euler = (-kd).to_track_quat('Z', 'Y').to_euler(); sun.location = (-20, -40, 40); STATE['sun'] = sun
-    STATE.update(flames=[], marks={}, torches=[])
-    Bk = Banks(); STATE['B'] = Bk; cam = CAMS[zone]; STATE['cam'] = cam
-    sky_and_ground(Bk, SET, P, M, zone)
-    wall_outer(Bk, M, zone)
-    if zone in ('wall', 'camp'): gate_tower(Bk, M, zone); city(Bk, M, zone)
-    if zone == 'wall': moat_bridge_road(Bk, M); foreground(Bk, M)
-    if zone == 'camp': camp(Bk, M)
-    if zone == 'holes': holes_inner(Bk, M)
-    Bk.flush(SET)
-    scene.cycles.use_light_tree = True
-    MN._denoise(scene); setup_grade(scene)
-    W9._air_comp(scene, P)
-    for ob in SET.objects: no_bounce(ob)
-    A = dict(cam=dict(cam), zone=zone, marks=dict(STATE['marks'])); STATE['A'] = A
-    return A
-
-def make_camera(setup, name='cam'):
-    ob = T.make_camera(setup, name); ob.data.clip_end = 600.0; ob.data.dof.use_dof = False; return ob
-
-# ----------------------------------------------------------------------------- sky, hills, ground
-def sky_and_ground(Bk, SET, P, M, zone):
-    R = 250.0; mb = MB(); seg = 72; els = [-15 + 105 * k / 14 for k in range(15)]
-    for i in range(seg):
-        for k in range(14):
-            a0, a1 = 2 * math.pi * i / seg, 2 * math.pi * (i + 1) / seg; e0, e1 = math.radians(els[k]), math.radians(els[k + 1])
-            pts = [V((R * math.cos(e) * math.cos(a), R * math.cos(e) * math.sin(a), R * math.sin(e))) for (a, e) in ((a0, e0), (a1, e0), (a1, e1), (a0, e1))]
-            mb.face(pts[::-1], M['sky'], [(i / seg, k / 14), ((i + 1) / seg, k / 14), ((i + 1) / seg, (k + 1) / 14), (i / seg, (k + 1) / 14)][::-1])
-    STATE['sky_obj'] = _obj(mb, 'sky', SET, shadow=False)
-    # the moon: a pale-gold disc + soft halo, facing the camera, placed on the dome
-    maz, mel = MOON_DIR[zone]; cam = CAMS[zone]; c0 = V(cam['loc']); d = V((math.cos(math.radians(mel)) * math.cos(math.radians(maz)), math.cos(math.radians(mel)) * math.sin(math.radians(maz)), math.sin(math.radians(mel))))
-    mc = c0 + d * 230.0; u = d.cross(V((0, 0, 1))).normalized(); v = u.cross(d).normalized(); rr = 12.5
-    mb = MB(); mb.face([mc - u * rr - v * rr, mc + u * rr - v * rr, mc + u * rr + v * rr, mc - u * rr + v * rr][::-1], M['moon'], [(0, 0), (1, 0), (1, 1), (0, 1)][::-1])
-    rh = 40.0; mb.face([mc * 0.999 - u * rh - v * rh, mc * 0.999 + u * rh - v * rh, mc * 0.999 + u * rh + v * rh, mc * 0.999 - u * rh + v * rh][::-1], M['moon_h'], [(0, 0), (1, 0), (1, 1), (0, 1)][::-1])
-    _obj(mb, 'moon', SET, shadow=False); STATE['moon_dir'] = d
-    # ground (grass) and a ring of low hills at the horizon
-    g = Bk('ground'); S = 260.0
-    if zone == 'holes': flat(g, V((-S, -S, 0)), V((2 * S, 0, 0)), V((0, 2 * S, 0)), M['earth'], (-S / 8, -S / 8, S / 8, S / 8))
-    elif True:                                                              # the moat is cut out of the ground
-        flat(g, V((-S, -S, 0)), V((2 * S, 0, 0)), V((0, S + MOAT[0], 0)), M['grass'], (-S / 8, -S / 8, S / 8, -MOAT[0] / 8 * 0 + (S + MOAT[0]) / 8 - S / 8))
-        flat(g, V((-S, MOAT[1] + 2.3, 0)), V((2 * S, 0, 0)), V((0, S - MOAT[1] - 2.3, 0)), M['earth'], (-S / 8, 0, S / 8, (S - MOAT[1]) / 8))
-    else: flat(g, V((-S, -S, 0)), V((2 * S, 0, 0)), V((0, 2 * S, 0)), M['grass'], (-S / 8, -S / 8, S / 8, S / 8))
-    hb = Bk('hills', shadow=False); r = _rnd(7)
-    for i in range(26):
-        a = 2 * math.pi * i / 26 + r.uniform(-0.1, 0.1); Rr = r.uniform(165, 195); rad = r.uniform(34, 62)
-        lumpy(hb, V((Rr * math.cos(a), Rr * math.sin(a), -rad * 0.3)), rad, M['hill'], 50 + i, seg=14, rings=6, rough=0.16, squash=0.42)
 
 # ----------------------------------------------------------------------------- wall
 # ----------------------------------------------------------------------------- real flames (layered tongues)
@@ -328,31 +315,80 @@ def person(Bk, M, pos, yaw=0.0, pose='stand', s=1.0, robe=None, cup=False, cd=40
 
 def J_rod(mb, a, b, r, mat, seg=5): rod(mb, a, b, r, mat, seg=seg)
 
-def brazier(Bk, M, p, s=1.0, light=0.0, name='br', halo_r=3.2, shadow=False, tall=2.2, lean=(0.0, 0.0)):
-    """Bronze / iron brazier on a tripod with a layered flame; point light (1.0, 0.50, 0.18)."""
-    p = V(p); w = Bk('wood', hull=0.0); f = Bk('fire', shadow=False); h = Bk('halos', shadow=False)
+# ----------------------------------------------------------------------------- live fires: every flame is its own object (scale / lean flicker per frame) with its light
+def _hash(a, b=0): return ((a * 73856093) ^ (b * 19349663) ^ 0x5bd1e995) & 0xffffff
+def _fl(frame, seed=0):
+    """Deterministic flicker 0.78 .. 1.25 from the frame number (smooth, per fire phase)."""
+    r = random.Random(_hash(int(seed), 7)); p1, p2, p3 = r.uniform(0, 6.28), r.uniform(0, 6.28), r.uniform(0, 6.28)
+    f = float(frame); return 1.0 + 0.13 * math.sin(f * 0.83 + p1) + 0.08 * math.sin(f * 1.91 + p2) + 0.07 * math.sin(f * 3.37 + p3)
+
+def live_flame(base, h, s=1.0, lean=(0.0, 0.0), seed=0, n=4, spread=0.35, light=0.0, name='fl', rgb=FIRE, lamp_r=0.3, lamp_dz=0.5, shadow=False, warm=(4.0, 0.9)):
+    """Layered flame as its own object (origin at the flame root, so scale flickers around the base) + optional point light + a warm source for the wall material."""
+    base = V(base); mb = MB(); flame(mb, base, h, s, lean=lean, seed=seed, n=n, spread=spread)
+    ob = _obj(mb, 'flame_%s_%d' % (name, len(STATE['fires'])), STATE['SET'], shadow=False); ob.data.transform(Matrix.Translation(-base)); ob.location = base; ob.visible_shadow = False
+    L_ = lamp('%s_%d' % (name, len(STATE['fires'])), base + V((0, 0, lamp_dz)), light, rgb, r=lamp_r, shadow=shadow) if light > 0 else None
+    STATE['fires'].append(dict(ob=ob, light=L_, E0=light, seed=seed + len(STATE['fires']) * 3, base=base, h=h))
+    if warm: STATE['warm'].append((base + V((0, 0, h * 0.4)), warm[0], warm[1]))
+    return ob
+
+def flicker(frame=None, k=1.0):
+    """Flicker every fire for `frame` (default: the scene frame): flame objects scale / sway, lights vary; k scales the light (0 = all out). With frame= the values are keyed
+    (LINEAR) - call it for every frame of a shot, or rely on the frame handler (installed by build) when rendering an animation."""
+    f = bpy.context.scene.frame_current if frame is None else frame
+    for fi in STATE.get('fires', ()):
+        a = _fl(f, fi['seed']); ob = fi['ob']; b_ = _fl(f + 5, fi['seed'] + 1)
+        ob.scale = (0.94 + 0.10 * (a - 1) * 3 + 0.0, 0.94 + 0.10 * (b_ - 1) * 3, max(0.001, (0.92 + 0.6 * (a - 1)) * (1.0 if k > 0 else 0.001)))
+        ob.rotation_euler = (0.05 * (b_ - 1) * 3, 0.05 * (a - 1) * 3, 0.0)
+        if fi['light'] is not None: fi['light'].data.energy = fi['E0'] * a * k
+        if frame is not None:
+            for path in ('scale', 'rotation_euler'): ob.keyframe_insert(path, frame=frame)
+            if fi['light'] is not None: T._key(fi['light'].data, 'energy', frame, 'LINEAR')
+    for fc in STATE.get('flame_cards', ()):
+        a = _fl(f, fc['seed']); root = fc['root']; on = root.get('lit', 1.0)
+        root['fu'] = float(int(((f + fc['seed']) // 2) % 4) * 0.25); root['fk'] = a * on
+        for ch in root.children:
+            if ch.type == 'LIGHT': ch.data.energy = fc['E0'] * a * on * k
+        if frame is not None:
+            for ch in root.children:
+                if ch.type == 'LIGHT': T._key(ch.data, 'energy', frame, 'LINEAR')
+            root.keyframe_insert('["fu"]', frame=frame); root.keyframe_insert('["fk"]', frame=frame)
+
+def _flicker_handler(scene, *a): flicker()
+
+def install_handlers():
+    for h in (bpy.app.handlers.frame_change_pre, bpy.app.handlers.render_pre):
+        for f in list(h):
+            if getattr(f, '__name__', '') in ('_flicker_handler', '_sky_follow'): h.remove(f)
+        h.append(_flicker_handler); h.append(_sky_follow)
+
+def _sky_follow(scene, *a):
+    cam = scene.camera; so = STATE.get('sky_obj'); mo = STATE.get('moon_objs', ())
+    if cam is None or so is None: return
+    so.location = cam.matrix_world.translation
+    for o, off in mo: o.location = cam.matrix_world.translation + off
+
+def brazier(Bk, M, p, s=1.0, light=0.0, name='br', halo_r=3.2, shadow=False, tall=2.2, lean=(0.0, 0.0), flame_k=1.0, warm=(4.0, 0.9)):
+    """Bronze / iron brazier on a tripod with a layered live flame; point light (1.0, 0.50, 0.18)."""
+    p = V(p); w = Bk('wood', hull=0.0); h = Bk('halos', shadow=False)
     for k in range(3):
         a = 2 * math.pi * k / 3 + 0.5; rod(w, p + V((0.7 * s * math.cos(a), 0.7 * s * math.sin(a), 0)), p + V((0.14 * s * math.cos(a), 0.14 * s * math.sin(a), tall * s)), 0.1 * s, M['iron'], seg=5)
     rod(w, p + V((0, 0, tall * s)), p + V((0, 0, (tall + 0.55) * s)), 0.30 * s, M['bronze'], seg=9, r1=0.62 * s)
     rod(w, p + V((0, 0, (tall + 0.5) * s)), p + V((0, 0, (tall + 0.62) * s)), 0.66 * s, M['iron'], seg=9, r1=0.66 * s)
-    for k in range(6):
-        a = 2 * math.pi * k / 6; f.sphere(p + V((0.4 * s * math.cos(a), 0.4 * s * math.sin(a), (tall + 0.66) * s)), 0.13 * s, M['ember'], seg=4, rings=3)
-    c = p + V((0, 0, (tall + 0.66) * s)); flame(f, c, 1.9 * s, 0.62 * s, lean=lean, seed=int(p.x + p.y), n=3, spread=0.3)
+    c = p + V((0, 0, (tall + 0.66) * s))
+    live_flame(c, 1.9 * s * flame_k, 0.62 * s, lean=lean, seed=int(p.x + p.y), n=3, spread=0.3, light=light, name=name, lamp_dz=0.5, shadow=shadow, warm=warm)
     halo(h, c + V((0, 0, 0.8 * s)), halo_r * s, M['halo'])
-    if light > 0: lamp(name, c + V((0, 0, 0.5)), light, FIRE, r=0.3, shadow=shadow)
     STATE['torches'].append(tuple(c)); return c
 
 def oil_lamp(Bk, M, p, s=1.0, light=0.0, name='ol', halo_r=1.6, h=3.4):
     """Bronze standing oil lamp (Warring States): three feet, a stem with discs, a shallow dish with one small flame. p = floor point."""
-    p = V(p); w = Bk('wood', hull=0.0); f = Bk('lamps', shadow=False); hl = Bk('halos', shadow=False)
+    p = V(p); w = Bk('wood', hull=0.0); hl = Bk('halos', shadow=False)
     for k in range(3):
         a = 2 * math.pi * k / 3; rod(w, p + V((0.5 * s * math.cos(a), 0.5 * s * math.sin(a), 0.0)), p + V((0.08 * s * math.cos(a), 0.08 * s * math.sin(a), 0.4 * s)), 0.08 * s, M['bronze'], seg=4)
     rod(w, p + V((0, 0, 0.4 * s)), p + V((0, 0, (h - 0.3) * s)), 0.09 * s, M['bronze'], seg=6)
     for z in (0.9, 1.9): rod(w, p + V((0, 0, z * s)), p + V((0, 0, (z + 0.1) * s)), 0.3 * s, M['bronze'], seg=8, r1=0.3 * s)
     rod(w, p + V((0, 0, (h - 0.3) * s)), p + V((0, 0, h * s)), 0.2 * s, M['bronze'], seg=8, r1=0.5 * s)
-    c = p + V((0, 0, h * s)); flame(f, c, 0.95 * s, 0.26 * s, seed=int(p.x * 3 + p.y), n=2, spread=0.1)
+    c = p + V((0, 0, h * s)); live_flame(c, 0.95 * s, 0.26 * s, seed=int(p.x * 3 + p.y), n=2, spread=0.1, light=light, name=name, lamp_dz=0.3, rgb=LAMP, warm=(3.0, 0.5))
     halo(hl, c + V((0, 0, 0.35 * s)), halo_r * s, M['halo_s'])
-    if light > 0: lamp(name, c + V((0, 0, 0.3)), light, LAMP, r=0.3)
     return c
 
 def lantern(Bk, M, p, s=1.0, light=0.0, name='ln', halo_r=1.8, hang=0.9, floor=None):
@@ -360,8 +396,8 @@ def lantern(Bk, M, p, s=1.0, light=0.0, name='ln', halo_r=1.8, hang=0.9, floor=N
     p = V(p); fl = floor if floor is not None else p.z - 3.4 * s
     return oil_lamp(Bk, M, V((p.x, p.y, fl)), s=s, light=light, name=name, halo_r=halo_r, h=(p.z - fl) / s)
 
-def torch_post(Bk, M, p, s=1.0, light=900.0, name='t', halo_r=3.2, shadow=False):
-    return brazier(Bk, M, p, s=s * 0.8, light=light, name=name, halo_r=halo_r, shadow=shadow)
+def torch_post(Bk, M, p, s=1.0, light=900.0, name='t', halo_r=3.2, shadow=False, warm=(4.0, 0.9)):
+    return brazier(Bk, M, p, s=s * 0.8, light=light, name=name, halo_r=halo_r, shadow=shadow, warm=warm)
 
 def banner(Bk, M, base, h, cloth_w, cloth_h, col, trim, wave=0.0, yaw=0.0, sw=True):
     """Pole with a hanging banner (plain shape, no text): a long swallow-tailed cloth with a trim stripe."""
@@ -379,278 +415,357 @@ def banner(Bk, M, base, h, cloth_w, cloth_h, col, trim, wave=0.0, yaw=0.0, sw=Tr
         tp = [F.p(x0, sw0, top), F.p(x1, sw1, top), F.p(x1, sw1, top - 0.45), F.p(x0, sw0, top - 0.45)]
         cl.oface(tp, trim, [(0, 0)] * 4, F.Y * -1); cl.oface(tp[::-1], trim, [(0, 0)] * 4, F.Y)
 
-def wall_outer(Bk, M, zone):
-    """The rammed-earth wall: x -90..90, with the gate passage, parapet of merlons with timber coping, torches, lanterns, banners, buttresses."""
-    wl = Bk('wall', hull=T.hull(62.0 if zone != 'camp' else 100.0)); X0, X1 = -95.0, 95.0
-    holes = []                                                                                                # (xc, w, h) openings through the whole thickness
-    if zone != 'holes': holes.append((0.0, GATE_W * 2, GATE_H))
-    if zone == 'holes': holes = [(-10.0, 5.0, 6.0), (-1.2, 5.4, 6.4), (6.8, 5.0, 6.0), (-22.0, 4.6, 5.4), (17.0, 4.6, 5.4)]
-    holes.sort()
-    x = X0
-    for (xc, wd_, hh) in holes:
-        a, b = xc - wd_ / 2, xc + wd_ / 2
-        prism(wl, x, a, 0.0, WH, M['rammed'], M['rammed_d'], M['bank']); prism(wl, a, b, hh, WH, M['rammed'], M['rammed_d'], M['bank']); x = b
-    prism(wl, x, X1, 0.0, WH, M['rammed'], M['rammed_d'], M['bank'])
-    STATE['holes'] = holes
-    # tunnel floors / ceilings + timber lintels and door frames
-    wd = Bk('wood', hull=T.hull(62.0))
-    for (xc, wd_, hh) in holes:
-        a, b = xc - wd_ / 2, xc + wd_ / 2; y0, y1 = yo(hh) - 0.1, yi(hh) + 0.1
-        obox(wd, (xc, (y0 + y1) / 2, hh + 0.35), (1, 0, 0), (0, 1, 0), (0, 0, 1), wd_ / 2 + 0.7, (y1 - y0) / 2 + 0.2, 0.42, M['wood_d'], uvk=0.5)
-        for sx in (a - 0.35, b + 0.35):
-            for ys in (yo(hh * 0.5) - 0.12, yi(hh * 0.5) + 0.12): obox(wd, (sx, ys, hh / 2), (1, 0, 0), (0, 1, 0), (0, 0, 1), 0.35, 0.35, hh / 2, M['wood_d'], uvk=0.5)
-        if hh > 8:                                                                                            # the gate: closed double doors with studs and iron straps, a glow behind the cracks
-            for sgn in (-1, 1):
-                obox(wd, (xc + sgn * wd_ / 4, yo(hh * 0.5) + 1.3, hh / 2), (1, 0, 0), (0, 1, 0), (0, 0, 1), wd_ / 4 - 0.04, 0.28, hh / 2 - 0.1, M['planks_d'], uvk=0.5)
-                for zz in (hh * 0.22, hh * 0.52, hh * 0.8): obox(wd, (xc + sgn * wd_ / 4, yo(hh * 0.5) + 1.0, zz), (1, 0, 0), (0, 1, 0), (0, 0, 1), wd_ / 4 - 0.05, 0.1, 0.16, M['iron'])
-                for ix in range(4):
-                    for iz in range(5): wd.sphere((xc + sgn * (0.4 + ix * 0.8), yo(hh * 0.5) + 0.98, 1.0 + iz * 1.6), 0.1, M['bronze'], seg=6, rings=4)
-            fl = Bk('fire', shadow=False); flat(fl, V((xc - 0.04, yo(hh * 0.5) + 1.6, 0.4)), V((0.08, 0, 0)), V((0, 0, hh - 0.8)), M['gate_glow'])    # light through the door crack
-    # parapet (outer side): merlons of rammed earth with a timber coping, a timber rail on the inner side
-    mr = Bk('merlons', hull=T.hull(62.0)); yv = yo(WH) + 0.05
-    x = X0 + 1.0
-    while x < X1 - 2:
-        if abs(x) > GATE_W + 8 or True:
-            obox(mr, (x + 1.0, yv + 0.65, WH + 1.2), (1, 0, 0), (0, 1, 0), (0, 0, 1), 1.0, 0.65, 1.2, M['rammed'], uvk=0.2)
-            obox(mr, (x + 1.0, yv + 0.65, WH + 2.5), (1, 0, 0), (0, 1, 0), (0, 0, 1), 1.18, 0.82, 0.14, M['wood_d'], uvk=0.4)
-        x += 3.4 if zone != 'camp' else 3.4
-    for sx in (-1, 1):                                                                                        # tower / end buttresses are skipped: the wall runs off-frame
-        pass
-    # vertical timber buttress posts on the outer face (every 11 D), with cross-beams: a rammed wall's lacing
-    for xb in np.arange(-88, 90, 11.0 if zone != 'holes' else 5.5):
-        if abs(xb) < 13: continue
-        for z in (3.5, 9.5): obox(wd, (xb, yo(z) - 0.05, z), (1, 0, 0), (0, 1, 0), (0, 0, 1), 0.3, 0.14, 0.2, M['wood_d'], uvk=0.5)
-    ph = Bk('putlog', shadow=False)                                                                           # putlog holes of the tamping scaffold: dark squares in rows
-    for z in (3.0, 7.0, 11.0):
-        for xp in np.arange(-93.0, 94.0, 4.0):
-            if any(abs(xp - hc) < hw_ / 2 + 1.2 and z < hh_ + 1.6 for hc, hw_, hh_ in holes): continue
-            yy = yo(z) - 0.06; flat(ph, V((xp - 0.3, yy, z - 0.3)), V((0.6, 0, 0)), V((0, 0, 0.6)), M['black'])
-    for z in (5.0, 10.0):
-        for xp in np.arange(-91.0, 92.0, 22.0):                                                               # horizontal timber lacing beams
-            obox(wd, (xp, yo(z) - 0.1, z), (1, 0, 0), (0, 1, 0), (0, 0, 1), 6.0, 0.14, 0.16, M['wood_d'], uvk=0.5)
-    # torches / lanterns along the wall walk and banners; torches stand just behind the parapet gaps and light the outer face from above
-    for xt in ((-72, -60, -48, -36, -26, -17, 17, 26, 36, 48, 60, 72) if zone != 'holes' else (-40, -22, 22, 40)):
-        c = torch_post(Bk, M, (xt, yo(WH) + 1.4, WH), s=1.5, light=(1100.0 if abs(xt) < 50 else 700.0), name='tw%d' % xt, halo_r=3.4)
-        lamp('ww%d' % xt, (xt, yo(WH) - 1.8, WH - 2.4), 1500.0 if abs(xt) < 50 else 900.0, FIRE, r=1.0, shadow=False)                       # a pool of warm light 1-1.5 D around the torch, not a wash
-        pl = Bk('wallpools', shadow=False); zc = WH - 3.2; yy = yo(zc) - 0.12                                # painted warm pool on the wall face under the torch
-        flat(pl, V((xt - 3.6, yy, zc - 3.4)), V((7.2, 0, 0)), V((0, 0, 7.0)), M['pool_w'])
-    for xl in ((-65, -54, -42, -31, 31, 42, 54, 65) if zone != 'holes' else ()):                              # bronze standing oil lamps in the parapet gaps
-        oil_lamp(Bk, M, (xl, yo(WH) + 1.3, WH), s=0.9, light=0.0, h=3.2, halo_r=1.8)
-    for i, xb in enumerate((-58, -44, -30, 30, 44, 58) if zone != 'holes' else (-36, 30)):
-        banner(Bk, M, (xb, yo(WH) + 2.0, WH), 8.5, 3.4, 5.0, M['red'] if i % 2 == 0 else M['teal'], M['gold'], wave=i, yaw=0.0)
-    wall_dress(Bk, M, zone)
-    if zone != 'holes':                                                                                       # reflections of the wall torches on the moat are added in moat_bridge_road
-        STATE['marks']['wall_torch_x'] = [-72, -60, -48, -36, -26, -17, 17, 26, 36, 48, 60, 72]
-    # ground-level wall-base details (outside): rubble, slump stains are in the texture
 
-def wall_dress(Bk, M, zone):
-    """Wall detail (QA fix 10): wooden shields on the crenels, dark rain streaks under the parapet, hanging ropes and ladders, a repair scaffold,
-    a timber ramp up the battered face, guards (stand-in figures) on the wall walk."""
-    X, Y, Z = (1, 0, 0), (0, 1, 0), (0, 0, 1); r = _rnd(41); wd = Bk('wood', hull=T.hull(62.0)); yv = yo(WH)
-    sh = Bk('shields', hull=T.hull(62.0))
-    x = -93.0 + 1.0
-    k = 0
-    while x < 93:                                                                                              # round hide shields hung on every second merlon, plain colours
-        if k % 2 == 0 and abs(x) > 14:
-            ellipsoid(sh, V((x + 1.0, yv - 0.15, WH + 1.35)), 0.95, 0.22, 0.95, M['hide'] if k % 4 else M['red_d'], seg=12, rings=6, th=(0, math.pi))
-            sh.sphere(V((x + 1.0, yv - 0.38, WH + 1.35)), 0.2, M['bronze'], seg=6, rings=4)
-        x += 3.4; k += 1
-    rn = Bk('rainstreaks', shadow=False)
-    for xr in np.arange(-90, 90, 9.0):
-        if abs(xr) < 12 and zone != 'holes': continue
-        flat(rn, V((xr, yo(WH - 7.0) - 0.1, WH - 7.4)), V((9.0, 0, 0)), V((0, 0, 7.4)), M['rain'], (0, 1, 1, 0) if (int(xr) % 2) else (1, 1, 0, 0))
-    for (xa, zb) in ((-80, 15.0), (-46.5, 12.0), (24, 14.0), (62, 15.0), (84, 13.0)):                          # hanging ropes
-        rod(wd, V((xa, yo(WH) - 0.05, WH + 0.2)), V((xa + 0.2, yo(zb) - 0.2, zb)), 0.1, M['straw_d'], seg=4)
-        for kk in range(4): wd.sphere(V((xa + 0.1, yo(zb + kk * 0.9) - 0.15, zb + kk * 0.9)), 0.15, M['straw_d'], seg=4, rings=3)
-    for xl in (-38.0, 38.0, 67.0):                                                                              # ladders leaning on the face
-        zt = 13.5
-        for sx in (-0.55, 0.55): rod(wd, V((xl + sx, yo(0) - 3.0, 0.0)), V((xl + sx, yo(zt) - 0.15, zt)), 0.13, M['wood'], seg=5)
-        for zz in np.arange(1.0, zt - 0.5, 1.1): yy = yo(0) - 3.0 + (yo(zt) - 0.15 - (yo(0) - 3.0)) * zz / zt; rod(wd, V((xl - 0.55, yy, zz)), V((xl + 0.55, yy, zz)), 0.07, M['wood_l'], seg=4)
-    xs0 = 46.0                                                                                                  # repair scaffold at the base: poles, platform, hide-bound bundle
-    for sx in (-3.0, 0.0, 3.0):
-        for yy in (yo(0) - 2.4,): rod(wd, V((xs0 + sx, yy, 0.0)), V((xs0 + sx, yy, 7.2)), 0.16, M['wood'], seg=5)
-    for zz in (3.0, 6.4):
-        obox(wd, (xs0, yo(zz) - 1.0, zz), X, Y, Z, 3.6, 1.2, 0.12, M['planks'], uvk=0.5); rod(wd, V((xs0 - 3.0, yo(0) - 2.4, zz - 0.2)), V((xs0 + 3.0, yo(0) - 2.4, zz - 0.2)), 0.12, M['wood_d'], seg=4)
-    for xr in (xs0 - 2.2, xs0 + 2.0): rod(wd, V((xr, yo(3.0) - 1.0, 3.1)), V((xr + 0.2, yo(3.0) - 0.9, 5.4)), 0.35, M['hay'], seg=6)
-    pt = Bk('patches', hull=T.hull(62.0))                                                                       # repaired patches: slightly proud blocks of fresher earth with a timber edge
-    for k in range(26 if zone == 'holes' else 16):
-        xp = r.uniform(-60, 60) if zone == 'holes' else r.choice((-1, 1)) * r.uniform(14, 85); zp = r.uniform(2.0, 12.0); pw, ph = r.uniform(1.6, 3.4), r.uniform(1.0, 2.0)
-        if zone == 'holes' and any(abs(xp - hc) < hw / 2 + 2.5 and zp < hh + 2.5 for hc, hw, hh in STATE['holes']): continue
-        if zone != 'holes' and abs(xp) < 12 and zp < 11: continue
-        obox(pt, (xp, yo(zp) - 0.06, zp), X, Y, Z, pw / 2, 0.07, ph / 2, M['rammed_d'] if k % 2 else M['bank'], uvk=0.4)
-        for (dx_, dz_, sx_, sz_) in ((0, ph / 2, pw / 2, 0.06), (0, -ph / 2, pw / 2, 0.06)): obox(pt, (xp + dx_, yo(zp + dz_) - 0.1, zp + dz_), X, Y, Z, sx_, 0.06, sz_, M['wood_d'], uvk=0.5)
-    gb = Bk('guards', hull=T.hull(80.0))
-    for xg in (-80, -66, -52, -40, -29, -21, 21, 29, 40, 52, 66, 80):                                           # guards: stand-in figures behind the crenel gaps
-        person(Bk, M, (xg + 1.0 + r.uniform(-0.3, 0.3), yv + 1.5, WH), yaw=r.uniform(-20, 20) + 90, pose='spear' if int(xg) % 3 else 'stand', s=0.78, cd=60.0, robe=M['indigo'] if int(xg) % 2 else M['red_d'])
-    for (xa, xb_) in ((-90.0, -22.0), (22.0, 90.0)):                                                            # timber walkway rail along the wall walk
-        obox(wd, ((xa + xb_) / 2, yv + 2.6, WH + 1.5), X, Y, Z, (xb_ - xa) / 2, 0.1, 0.1, M['wood_d'])
-    # timber ramp up the face at the right (far) end: sloped planks with a rail and posts
-    xr = -14.5 if zone == 'holes' else 76.0
-    if zone != 'holes':
-        for sx in (-1.6, 1.6): beam(wd, V((xr + sx, yo(0) - 7.0, 0.1)), V((xr + sx, yo(WH * 0.8) - 0.4, WH * 0.8)), 0.25, 0.3, M['wood_d'], up=(0, 1, 0))
-        for kk in range(12):
-            t = (kk + 0.5) / 12; obox(wd, (xr, yo(0) - 7.0 + (yo(WH * 0.8) - 0.4 - yo(0) + 7.0) * t, WH * 0.8 * t + 0.1), X, Y, Z, 1.8, 0.45, 0.06, M['planks'], uvk=0.5)
+# ----------------------------------------------------------------------------- flame cards for the 2D puppets (ox tails, torches in hands)
+def flame_card(parent=None, scale=1.0, loc=(0.0, 0.0, 0.0), name='flame', light=True, lit=1.0, energy=700.0):
+    """A camera-facing flame card (painted layered flame, 4 flicker variants) + a warm point light, under one Empty `root`. Parent it to an ox card / a hand:
+    root.parent = parent (pass `parent`), root.location = loc (local to the parent; the card's BOTTOM centre is the flame root). scale 1 = 2.2 D tall.
+    flicker(frame) drives the card variant / brightness and the light each frame; set_flame_card(root, lit, frame) switches it on / off (keyed).
+    Returns the root Empty."""
+    tx = STATE['tx']; M = STATE['M']
+    if 'flame_card' not in M:
+        m = bpy.data.materials.new(STATE['pre'] + 'flame_card'); nt = T._tree(m); N = nt.nodes.new; L = nt.links.new
+        out = N('ShaderNodeOutputMaterial'); em = N('ShaderNodeEmission'); tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader'); t = N('ShaderNodeTexImage'); t.image = T._img(tx['flame_atlas']); t.interpolation = 'Linear'; t.extension = 'CLIP'
+        uv = N('ShaderNodeTexCoord'); mp = N('ShaderNodeMapping'); mp.vector_type = 'POINT'
+        at = N('ShaderNodeAttribute'); at.attribute_type = 'OBJECT'; at.attribute_name = '["fu"]'; cm = N('ShaderNodeCombineXYZ'); L(at.outputs['Fac'], cm.inputs['X'])
+        ad = N('ShaderNodeVectorMath'); ad.operation = 'SCALE'; ad.inputs['Scale'].default_value = 1.0; L(cm.outputs['Vector'], ad.inputs[0])
+        L(uv.outputs['UV'], mp.inputs['Vector']); L(ad.outputs['Vector'], mp.inputs['Location']); L(mp.outputs['Vector'], t.inputs['Vector'])
+        ak = N('ShaderNodeAttribute'); ak.attribute_type = 'OBJECT'; ak.attribute_name = '["fk"]'
+        sm = N('ShaderNodeMath'); sm.operation = 'MULTIPLY'; sm.inputs[1].default_value = 1.35; L(ak.outputs['Fac'], sm.inputs[0]); L(sm.outputs[0], em.inputs['Strength'])
+        L(t.outputs['Color'], em.inputs['Color']); L(t.outputs['Alpha'], mx.inputs['Fac']); L(tr.outputs['BSDF'], mx.inputs[1]); L(em.outputs['Emission'], mx.inputs[2]); L(mx.outputs['Shader'], out.inputs['Surface'])
+        m.cycles.emission_sampling = 'NONE'; M['flame_card'] = m
+    n = len(STATE['flame_cards']); root = bpy.data.objects.new('%s_%d' % (name, n), None); STATE['SET'].objects.link(root); root.empty_display_size = 0.3
+    if parent is not None: root.parent = parent
+    root.location = loc; root.scale = (scale,) * 3; root['lit'] = float(lit); root['fu'] = 0.0; root['fk'] = 1.0
+    w, h = 1.3, 2.2; me = bpy.data.meshes.new('flame_card_mesh'); me.from_pydata([(-w / 2, 0, 0), (w / 2, 0, 0), (w / 2, h, 0), (-w / 2, h, 0)], [], [(0, 1, 2, 3)]); me.update()
+    uvl = me.uv_layers.new(name='UVMap')
+    for i, c in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uvl.data[i].uv = (c[0] * 0.25, c[1])
+    me.materials.append(M['flame_card']); card = bpy.data.objects.new('%s_card_%d' % (name, n), me); STATE['SET'].objects.link(card); card.parent = root
+    card.visible_shadow = False; no_bounce(card); tc = card.constraints.new('TRACK_TO'); tc.track_axis = 'TRACK_Z'; tc.up_axis = 'UP_Y'; tc.target = bpy.data.objects.get('cam')
+    d = bpy.data.lights.new('%s_lamp_%d' % (name, n), 'POINT'); d.color = FIRE; d.energy = energy * scale * lit; d.shadow_soft_size = 0.4; d.use_shadow = False
+    lo = bpy.data.objects.new(d.name, d); STATE['LIGHTS'].objects.link(lo); lo.parent = root; lo.location = (0, 0.6, 1.0); lo.visible_camera = False
+    if not light: lo.hide_render = True
+    STATE['flame_cards'].append(dict(root=root, card=card, seed=n * 5 + 1, E0=energy * scale))
+    return root
 
-def gate_tower(Bk, M, zone):
-    """Warring-States gate hall: a two-stage timber hall on the wall top with dark-lacquer posts, plain grey hip roofs with near-straight eaves and wadang
-    eaves tiles (no curled horns), simple block brackets, bronze standing lamps and braziers instead of paper lanterns, plain dyed banners."""
-    wd = Bk('tower', hull=T.hull(62.0 if zone != 'camp' else 100.0)); z0 = WH; cz = 0.0; yc = (yo(WH) + yi(WH)) / 2
-    X, Y, Z = (1, 0, 0), (0, 1, 0), (0, 0, 1)
-    obox(wd, (cz, yc, z0 + 0.5), X, Y, Z, 10.2, 4.2, 0.5, M['stone'], uvk=0.3)                               # plinth
-    for xp in np.linspace(-8.4, 8.4, 7):                                                                      # dark lacquer posts, front and back
-        for ys in (-3.4, 3.4): rod(wd, (xp, yc + ys, z0 + 1.0), (xp, yc + ys, z0 + 7.2), 0.40, M['lacq'], seg=10)
-    for ys in (-3.4, 3.4):
-        for xp in np.linspace(-8.4, 8.4, 6):
-            xm = xp + 1.4
-            obox(wd, (xm, yc + ys * 0.94, z0 + 4.1), X, Y, Z, 1.4, 0.16, 3.1, M['planks_d'], uvk=0.5)
-        for xm in (-4.2, 0.0, 4.2):                                                                            # three lit lattice windows only
-            fl = Bk('tw_glow', shadow=False); flat(fl, V((xm - 0.95, yc + ys * 0.99 - (0.02 if ys < 0 else -0.02), z0 + 2.4)), V((1.9, 0, 0)), V((0, 0, 2.6)), M['win'])
-            for k in range(1, 4): obox(wd, (xm - 0.95 + k * 0.475, yc + ys * 1.0 - (0.05 if ys < 0 else -0.05), z0 + 3.7), X, Y, Z, 0.05, 0.06, 1.3, M['wood_d'])
-            for zz in (2.4, 3.7, 5.0): obox(wd, (xm, yc + ys * 1.0 - (0.05 if ys < 0 else -0.05), z0 + zz), X, Y, Z, 0.95, 0.06, 0.05, M['wood_d'])
-    for ys in (-3.4, 3.4): obox(wd, (cz, yc + ys, z0 + 7.4), X, Y, Z, 9.2, 0.4, 0.4, M['lacq'])
-    for xp in np.linspace(-8.4, 8.4, 7):                                                                      # plain block bracket sets
-        for ys in (-3.7, 3.7): obox(wd, (xp, yc + ys, z0 + 7.9), X, Y, Z, 0.55, 0.5, 0.28, M['wood_l'])
-    rf = Bk('roof', hull=T.hull(62.0 if zone != 'camp' else 100.0))
-    hip_roof(rf, (cz, yc, z0 + 8.4), 0, 12.8, 6.9, 6.0, 0.0, 2.8, M, lift=0.3, mat=M['tiles'])
-    # second stage: a smaller hall
-    z1 = z0 + 11.4
-    obox(wd, (cz, yc, z1 - 0.3), X, Y, Z, 8.4, 3.9, 0.35, M['wood'], uvk=0.4)
-    for xp in np.linspace(-7.2, 7.2, 5):
-        for ys in (-3.0, 3.0): rod(wd, (xp, yc + ys, z1), (xp, yc + ys, z1 + 4.6), 0.36, M['lacq'], seg=10)
-    for ys in (-3.0, 3.0):
-        for xm in (-5.4, -1.8, 1.8, 5.4):
-            obox(wd, (xm, yc + ys * 0.95, z1 + 2.3), X, Y, Z, 1.7, 0.14, 2.2, M['planks_d'], uvk=0.5)
-        for xm in (-1.8, 1.8):
-            fl = Bk('tw_glow', shadow=False); flat(fl, V((xm - 0.9, yc + ys * 0.99 - (0.02 if ys < 0 else -0.02), z1 + 1.2)), V((1.8, 0, 0)), V((0, 0, 2.2)), M['win_c'])
-    for sx in (-1, 1): obox(wd, (sx * 7.4, yc, z1 + 2.3), X, Y, Z, 0.2, 3.0, 2.2, M['planks_d'], uvk=0.5)
-    obox(wd, (cz, yc - 3.0, z1 + 4.8), X, Y, Z, 7.6, 0.35, 0.35, M['lacq']); obox(wd, (cz, yc + 3.0, z1 + 4.8), X, Y, Z, 7.6, 0.35, 0.35, M['lacq'])
-    for xp in np.linspace(-7.2, 7.2, 5):
-        for ys in (-3.4, 3.4): obox(wd, (xp, yc + ys, z1 + 5.2), X, Y, Z, 0.6, 0.5, 0.28, M['wood_l'])
-    hip_roof(rf, (cz, yc, z1 + 5.4), 0, 10.4, 6.0, 4.4, 0.0, 3.6, M, lift=0.3, mat=M['tiles'])
-    # bronze standing lamps on the plinth between the posts, braziers flanking the hall, plain banners
-    for xl in (-9.8, -4.2, 4.2, 9.8): oil_lamp(Bk, M, (xl, yc - 3.95, z0 + 1.0), s=0.8, light=(220.0 if abs(xl) < 6 else 0.0), name='tl%d' % int(xl), halo_r=1.8, h=3.0)
-    banner(Bk, M, (-10.0, yc - 2.0, z0 + 1.0), 12.0, 4.2, 6.5, M['red_d'], M['gold'], wave=0.5)
-    banner(Bk, M, (10.0, yc - 2.0, z0 + 1.0), 12.0, 4.2, 6.5, M['teal'], M['gold'], wave=2.0, yaw=0.0)
-    for xt in (-13.5, 13.5): torch_post(Bk, M, (xt, yo(WH) + 1.6, WH), s=1.3, light=800.0, name='tt%d' % int(xt), halo_r=3.6)
+def set_flame_card(root, lit, frame=None):
+    """Switch a flame card (and its light) on (1) / off (0); keyed CONSTANT at `frame`."""
+    root['lit'] = float(lit)
+    for ch in root.children: _vis(ch, lit > 0.0, frame)
+    if frame is not None: root.keyframe_insert('["lit"]', frame=frame)
 
-def city(Bk, M, zone):
-    """Roofs of Jimo peeking above the wall: houses with tiled hip roofs and lit windows, a drum tower, a granary."""
-    r = _rnd(31); rf = Bk('cityroof', hull=T.hull(80.0)); bd = Bk('citybody', hull=T.hull(80.0)); gl = Bk('cityglow', shadow=False)
-    X, Y, Z = (1, 0, 0), (0, 1, 0), (0, 0, 1)
-    def house(cx, cy, w, d, h, rise, yaw=0.0):
-        F = Frame((cx, cy, 0), yaw)
-        obox(bd, F.p(0, 0, h / 2), F.X, F.Y, F.Z, w / 2, d / 2, h / 2, M['plaster'] if r.random() < 0.6 else M['wood_l'], uvk=0.3)
-        hip_roof(rf, (cx, cy, h), yaw, w / 2 + 1.3, d / 2 + 1.3, max(0.0, w / 2 - d / 2), 0.0, rise, M, lift=0.25, nx=14, ny=8, mat=M['tiles'], wadang=False)
-        for k in range(int(w // 3.2)):
-            xx = -w / 2 + 1.6 + k * 3.2; zz = h * 0.55
-            if r.random() < 0.8: flat(gl, F.p(xx - 0.5, -d / 2 - 0.03, zz - 0.5), F.X * 1.0, F.Z * 1.2, M['win'])
-        return F
-    spots = [(-52, 12, 14, 9, 17, 5.5), (-34, 14, 16, 10, 20, 6.0), (-19, 11, 12, 9, 16, 5.0), (19, 12, 14, 9, 18, 5.5), (34, 11, 16, 10, 16, 5.2), (52, 14, 14, 10, 21, 6.0),
-             (-70, 15, 14, 10, 18, 5.5), (68, 12, 12, 9, 15, 5.0), (-44, 30, 18, 12, 24, 6.5), (42, 32, 18, 12, 23, 6.5), (0, 40, 20, 14, 26, 7.0), (-8, 20, 12, 8, 19, 5.0), (9, 24, 14, 9, 21, 5.6),
-             (-26, 28, 12, 9, 22, 5.5), (26, 26, 12, 9, 21, 5.5)]
-    for (cx, cy, w, d, h, rise) in spots: house(cx, cy, w, d, h, rise)
-    # the drum tower: three stacked storeys with shrinking roofs; a granary with a tall roof
-    def tower(cx, cy, w, floors=3, fh=6.2):
-        z = 0.0
-        for f in range(floors):
-            ww = w * (1.0 - 0.13 * f); obox(bd, (cx, cy, z + fh / 2), X, Y, Z, ww / 2, ww / 2 * 0.8, fh / 2, M['plaster_d'] if f else M['plaster'], uvk=0.3)
-            for sx in (-1, 1):
-                for sy in (-1, 1): rod(bd, (cx + sx * ww / 2, cy + sy * ww * 0.4, z), (cx + sx * ww / 2, cy + sy * ww * 0.4, z + fh), 0.35, M['red'], seg=8)
-            flat(gl, V((cx - 1.2, cy - ww * 0.4 - 0.05, z + fh * 0.3)), V((2.4, 0, 0)), V((0, 0, fh * 0.45)), M['win_c'])
-            hip_roof(rf, (cx, cy, z + fh), 0, ww / 2 + 1.8, ww * 0.4 + 1.8, ww / 2 - ww * 0.4, 0.0, 2.2 if f < floors - 1 else 4.4, M, lift=0.3, nx=18, ny=10, mat=M['tiles'], wadang=False)
-            z += fh + 1.4
-        return z
-    tower(-22, 36, 13, 4, 6.8); tower(26, 46, 11, 4, 6.4)
-    # warm lamp-glow of the town behind the wall
-    for (gx, gy, gr) in ((-30, 20, 28), (6, 22, 24), (40, 24, 24)): halo(gl, V((gx, gy, 14)), gr, M['halo_big'])
+# ----------------------------------------------------------------------------- keyed visibility / transform helpers
+def _vis(ob, on, frame=None):
+    ob.hide_render = not on; ob.hide_viewport = not on
+    if frame is not None:
+        for p in ('hide_render', 'hide_viewport'): ob.keyframe_insert(p, frame=frame)
+        for fc in T._fcurves(ob):
+            if fc.data_path in ('hide_render', 'hide_viewport'):
+                for kp in fc.keyframe_points: kp.interpolation = 'CONSTANT'
 
-def moat_bridge_road(Bk, M):
-    wt = Bk('water', shadow=False); wz = WATER_Z; x0, x1 = -200.0, 200.0; y0, y1 = MOAT
-    flat(wt, V((x0, y0, wz)), V((x1 - x0, 0, 0)), V((0, y1 - y0, 0)), M['water'], (0, 0, (x1 - x0) / 16, (y1 - y0) / 16))
-    bk = Bk('banks')
-    # sloped banks: outer (toward the camera) y -22 -> -19.5 down to the water, inner y -9.5 -> -7.2 up to the berm
-    flat(bk, V((x0, y1 - 0.0, wz)), V((x1 - x0, 0, 0)), V((0, 2.3, 2.2)), M['bank'], (0, 0, 40, 0.6))
-    flat(bk, V((x0, y0, 0.0)), V((x1 - x0, 0, 0)), V((0, 2.5, wz)), M['bank'], (0, 0, 40, 0.6))
-    pass
-    # approach: packed-earth road from the bridge toward the camera
-    rd = Bk('road'); flat(rd, V((-5.5, y0 - 0.0, 0.03)), V((11.0, 0, 0)), V((0, -160.0, 0)), M['road'], (0, 0, 11 / 8, 20))
-    rd.face([V((-5.5, y1 + 2.3, 0.03)), V((-5.5, yo(0), 0.03)), V((5.5, yo(0), 0.03)), V((5.5, y1 + 2.3, 0.03))][::-1], M['road'], [(0, 0), (0, 1), (1, 1), (1, 0)][::-1])
-    # timber bridge: deck, beams, posts, rails, piles
-    br = Bk('bridge', hull=T.hull(60.0)); X, Y, Z = (1, 0, 0), (0, 1, 0), (0, 0, 1)
-    yb0, yb1 = y0 - 0.5, y1 + 2.3
-    obox(br, (0, (yb0 + yb1) / 2, 0.12), X, Y, Z, 4.2, (yb1 - yb0) / 2, 0.14, M['planks'], uvk=0.5)
-    for sx in (-3.8, -1.3, 1.3, 3.8): obox(br, (sx, (yb0 + yb1) / 2, -0.45), X, Y, Z, 0.28, (yb1 - yb0) / 2, 0.38, M['wood_d'], uvk=0.5)
-    for yy in np.linspace(yb0 + 1.5, yb1 - 1.5, 4):
-        for sx in (-3.8, 3.8): rod(br, (sx, yy, WATER_Z - 0.5), (sx, yy, 0.0), 0.34, M['wood_d'], seg=7)
-        obox(br, (0, yy, -0.2), X, Y, Z, 4.2, 0.22, 0.2, M['wood_d'])
-    for sx in (-4.1, 4.1):
-        for yy in np.linspace(yb0 + 0.4, yb1 - 0.4, 6):
-            rod(br, (sx, yy, 0.2), (sx, yy, 2.2), 0.2, M['red'], seg=7)
-        obox(br, (sx, (yb0 + yb1) / 2, 1.9), X, Y, Z, 0.14, (yb1 - yb0) / 2, 0.16, M['red']); obox(br, (sx, (yb0 + yb1) / 2, 1.0), X, Y, Z, 0.1, (yb1 - yb0) / 2, 0.1, M['wood'])
-    for yy in (yb1 - 0.4, yb1 - 6.0):
-        for sx in (-4.1, 4.1): oil_lamp(Bk, M, (sx, yy, 0.25), s=0.85, light=(110.0 if yy > yb1 - 1 else 0.0), name='bl%d%d' % (int(sx), int(yy)), halo_r=1.6, h=3.0)
-    # reflections: a layered streak of every wall torch / tower lantern on the water + the moon's reflection
-    st = Bk('streaks', shadow=False); wz2 = wz + 0.03
-    for xt in STATE['marks'].get('wall_torch_x', []):
-        cam = V(CAMS['wall']['loc']); xs = xt + (xt - cam.x) * (-0.18)                                           # shifts away from the camera axis a little (perspective of a vertical)
-        wd_ = 1.2; L = 19.0
-        st.face([V((xs - wd_, y1 + 0.05, wz2)), V((xs + wd_, y1 + 0.05, wz2)), V((xs + wd_, y1 - L, wz2)), V((xs - wd_, y1 - L, wz2))], M['streak'], [(0, 0), (1, 0), (1, 1), (0, 1)])
-    for xl in (-9.8, -4.2, 4.2, 9.8): st.face([V((xl - 1.0, y1 + 0.05, wz2)), V((xl + 1.0, y1 + 0.05, wz2)), V((xl + 1.0, y1 - 16, wz2)), V((xl - 1.0, y1 - 16, wz2))], M['streak'], [(0, 0), (1, 0), (1, 1), (0, 1)])
-    mx_ = CAMS['wall']['loc'][0] + math.tan(math.radians(JX.MOON_AZ - 90)) * -(0) + (-0.176) * (y1 - 6 - CAMS['wall']['loc'][1]) * 0.9
-    for k, (dx, ww, L) in enumerate(((0.0, 1.7, 12.4), (-2.0, 0.9, 9.0), (2.2, 0.8, 8.0))):
-        st.face([V((mx_ + dx - ww, y1 - 0.2, wz2 + 0.01 * k)), V((mx_ + dx + ww, y1 - 0.2, wz2 + 0.01 * k)), V((mx_ + dx + ww, y1 - L, wz2 + 0.01 * k)), V((mx_ + dx - ww, y1 - L, wz2 + 0.01 * k))], M['streak_m'], [(0, 0), (1, 0), (1, 1), (0, 1)])
-    # mist over the moat
-    for k in range(6): halo(Bk('halos', shadow=False), V((-60 + k * 24, -16, 0.5)), 16.0, M['mist'])
+def _xf(ob, loc=None, rot=None, scl=None, frame=None, interp='LINEAR'):
+    if loc is not None: ob.location = loc
+    if rot is not None: ob.rotation_euler = rot
+    if scl is not None: ob.scale = scl if hasattr(scl, '__len__') else (scl,) * 3
+    if frame is not None:
+        for p, v in (('location', loc), ('rotation_euler', rot), ('scale', scl)):
+            if v is not None: ob.keyframe_insert(p, frame=frame)
+        for fc in T._fcurves(ob):
+            if fc.data_path in ('location', 'rotation_euler', 'scale'):
+                for kp in fc.keyframe_points: kp.interpolation = interp
 
-def foreground(Bk, M):
-    """Nearest 15 % of the frame: dark grass tufts, a cart wheel leaning on its cart, rocks, a stake with a rope."""
-    r = _rnd(5); w = Bk('fgwood', hull=T.hull(14.0)); st = Bk('fgstone', hull=T.hull(14.0)); gr = Bk('tufts')
-    def wheel(c, R, yaw_deg, lean=0.0):
-        F = Frame(c, yaw_deg); n = 20
+def localize(ob, c):
+    """Move an object's origin to world point c (the mesh stays where it is)."""
+    c = V(c); ob.data.transform(Matrix.Translation(-c)); ob.location = c; return ob
+
+def animate(setter, f0, f1, v0, v1, step=1, ease='smooth', **kw):
+    """Key a state setter over frames f0..f1: setter(v, frame=f) with v eased from v0 to v1, e.g. animate(J.set_holes, 1205, 1309, 0, 12)."""
+    n = max(1, int(f1 - f0)); fs = list(range(int(f0), int(f1) + 1, step))
+    if fs[-1] != int(f1): fs.append(int(f1))
+    for f in fs:
+        t = (f - f0) / n; t = t * t * (3 - 2 * t) if ease == 'smooth' else t
+        setter(v0 + (v1 - v0) * t, frame=f, **kw)
+
+# ----------------------------------------------------------------------------- build
+import jimo_shots as S                                      # noqa: E402  (shot table, cameras, marks, herd helper)
+import jimo_wall as WL                                      # noqa: E402
+import jimo_in as IN                                        # noqa: E402
+import jimo_camp as CAMP                                    # noqa: E402
+import jimo_vista as VS                                     # noqa: E402
+import jimo_ox as OX                                        # noqa: E402
+
+def build(location=None, preset=None, light=None, clear=True):
+    """Build one location ('jimo_in' | 'jimo_out' | 'yan_camp' | 'vista') for a preset (a shot name 's01'..'s26', or the location name for its default wide
+    camera) and a light (NIGHT | DUSK | DAWN; default = the preset's). Returns the anchors dict (API.md); A['cam'] is the preset camera: J.make_camera(A['cam'])."""
+    if preset in S.SHOTS: location = location or S.SHOTS[preset]['loc']; light = light or S.SHOTS[preset]['light']
+    location = LEGACY.get(location, location) or (S.SHOTS[preset]['loc'] if preset in S.SHOTS else 'jimo_out')
+    if preset is None: preset = location
+    light = light or (S.SHOTS[preset]['light'] if preset in S.SHOTS else LOCS[location][0])
+    assert location in LOCS and light in LOCS[location], 'location %s has lights %s (got %s)' % (location, LOCS.get(location), light)
+    scene = bpy.context.scene; P = dict(LIGHTS[light])
+    if light != 'NIGHT':
+        az = SUN_AZ.get((location, light), P['sun_az']); P['sun_az'] = az; P['key_dir'] = _kdaz(az, P['sun_el'])
+    else: P['moon_az'] = MOON_AZ_LOC[location]
+    STATE.clear(); STATE.update(P=P, preset=preset, loc=location, area=location, light=light, location=location)
+    for hk in (bpy.app.handlers.render_pre, bpy.app.handlers.frame_change_pre):
+        for f in list(hk):
+            if getattr(f, '__name__', '') in ('_flicker_handler', '_sky_follow'): hk.remove(f)
+    if clear:
+        for ob in list(scene.objects): bpy.data.objects.remove(ob, do_unlink=True)
+    for ac in list(bpy.data.actions): bpy.data.actions.remove(ac)
+    for coll in (bpy.data.meshes, bpy.data.lights, bpy.data.curves, bpy.data.cameras):
+        for x in list(coll):
+            if x.users == 0: coll.remove(x)
+    SET = T._coll('SET', scene); LIG = T._coll('LIGHTS', scene); T._wipe(SET); T._wipe(LIG); STATE['SET'] = SET; STATE['LIGHTS'] = LIG
+    for m in list(bpy.data.materials):
+        if m.name.startswith(('JM_', 'ink')): bpy.data.materials.remove(m)
+    tx = JX.ensure(verbose=False); STATE['tx'] = tx
+    w = bpy.data.worlds.get('W_jimo') or bpy.data.worlds.new('W_jimo'); scene.world = w; nt = T._tree(w)
+    bg = nt.nodes.new('ShaderNodeBackground'); wo = nt.nodes.new('ShaderNodeOutputWorld'); bg.inputs['Color'].default_value = (0, 0, 0, 1); bg.inputs['Strength'].default_value = 0.0
+    nt.links.new(bg.outputs['Background'], wo.inputs['Surface'])
+    MN.setup_render(scene, 'final'); scene.render.threads = 2; scene.frame_start = 1; scene.frame_current = 1
+    pre = 'JM_%s_%s_' % (location, light); M = materials(P, tx, pre); STATE['M'] = M; STATE['pre'] = pre
+    kd = V(P['key_dir']).normalized(); k = max(P['key'])
+    d = bpy.data.lights.new('key_sun', 'SUN'); d.color = tuple(x / k for x in P['key']); d.energy = math.pi * k; d.angle = math.radians(P['sun_angle'])
+    sun = bpy.data.objects.new('key_sun', d); LIG.objects.link(sun); sun.rotation_euler = (-kd).to_track_quat('Z', 'Y').to_euler(); sun.location = (-20, -40, 40); STATE['sun'] = sun
+    STATE.update(fires=[], flame_cards=[], marks={}, torches=[], warm=[], banks_obj={}, moon_objs=[], states={})
+    cams = S.cams_for(location, light); STATE['cams'] = cams
+    cs = S.preset_cam(preset, location, light); STATE['cam'] = cs
+    Bk = Banks(); STATE['B'] = Bk
+    sky_dome(SET, P, M, location, light)
+    if location == 'jimo_out': WL.bind(sys.modules[__name__]); WL.build_out(Bk, M, light)
+    elif location == 'jimo_in': WL.bind(sys.modules[__name__]); IN.bind(sys.modules[__name__]); IN.build_in(Bk, M, light)
+    elif location == 'yan_camp': WL.bind(sys.modules[__name__]); CAMP.bind(sys.modules[__name__]); CAMP.build_camp(Bk, M, light)
+    elif location == 'vista': VS.bind(sys.modules[__name__]); VS.build_vista(Bk, M, light)
+    Bk.flush(SET)
+    nf = bpy.data.collections.get('NOFIRE') or bpy.data.collections.new('NOFIRE')
+    for ob in list(nf.objects): nf.objects.unlink(ob)
+    for n in STATE.get('warm_names', ()):
+        if n in STATE['objects']: bake_warm(STATE['objects'][n]); nf.objects.link(STATE['objects'][n])
+    for co in nf.collection_objects: co.light_linking.link_state = 'EXCLUDE'
+    for lo in LIG.objects:                                   # the static fires' light on the wall is painted (warm weights), the real lamps must not wash it pink
+        if lo.type == 'LIGHT' and lo.data.type == 'POINT': lo.light_linking.receiver_collection = nf
+    scene.cycles.use_light_tree = True
+    MN._denoise(scene); setup_grade(scene)
+    W9._air_comp(scene, P)
+    for ob in SET.objects: no_bounce(ob)
+    for f in STATE.get('post_flush', ()): f()
+    _post_build(); install_handlers(); flicker(1)
+    A = anchors(preset, location, light); STATE['A'] = A
+    return A
+
+def sky_dome(SET, P, M, location, light):
+    R = 330.0; mb = MB(); seg = 72; els = [-15 + 105 * k / 14 for k in range(15)]
+    for i in range(seg):
+        for k in range(14):
+            a0, a1 = 2 * math.pi * i / seg, 2 * math.pi * (i + 1) / seg; e0, e1 = math.radians(els[k]), math.radians(els[k + 1])
+            pts = [V((R * math.cos(e) * math.cos(a), R * math.cos(e) * math.sin(a), R * math.sin(e))) for (a, e) in ((a0, e0), (a1, e0), (a1, e1), (a0, e1))]
+            mb.face(pts[::-1], M['sky'], [(i / seg, k / 14), ((i + 1) / seg, k / 14), ((i + 1) / seg, (k + 1) / 14), (i / seg, (k + 1) / 14)][::-1])
+    so = _obj(mb, 'sky', SET, shadow=False); STATE['sky_obj'] = so
+    taz = SKY_SUN[light][0]; waz = P['moon_az'] if light == 'NIGHT' else P['sun_az']; so.rotation_euler = (0, 0, math.radians(waz - taz))
+    STATE['moon_objs'] = []
+    if light == 'NIGHT':                                         # the moon: a pale disc + soft halo on the dome (follows the camera)
+        mel = P['moon_el']; d = V((math.cos(math.radians(mel)) * math.cos(math.radians(waz)), math.cos(math.radians(mel)) * math.sin(math.radians(waz)), math.sin(math.radians(mel))))
+        u = d.cross(V((0, 0, 1))).normalized(); v = u.cross(d).normalized(); rr = 12.5 * R / 250; mc = V((0, 0, 0)) + d * (R * 0.92)
+        mb = MB(); mb.face([mc - u * rr - v * rr, mc + u * rr - v * rr, mc + u * rr + v * rr, mc - u * rr + v * rr][::-1], M['moon'], [(0, 0), (1, 0), (1, 1), (0, 1)][::-1])
+        rh = rr * 3.2; mb.face([mc * 0.999 - u * rh - v * rh, mc * 0.999 + u * rh - v * rh, mc * 0.999 + u * rh + v * rh, mc * 0.999 - u * rh + v * rh][::-1], M['moon_h'], [(0, 0), (1, 0), (1, 1), (0, 1)][::-1])
+        mo = _obj(mb, 'moon', SET, shadow=False); STATE['moon_dir'] = d; STATE['moon_objs'] = [(mo, V((0, 0, 0)))]
+
+def hills(Bk, M, centre=(0.0, 0.0), r0=165.0, r1=195.0, n=26, seed=7, rad=(34, 62), z=0.3):
+    hb = Bk('hills', shadow=False); r = _rnd(seed)
+    for i in range(n):
+        a = 2 * math.pi * i / n + r.uniform(-0.1, 0.1); Rr = r.uniform(r0, r1); rd = r.uniform(*rad)
+        lumpy(hb, V((centre[0] + Rr * math.cos(a), centre[1] + Rr * math.sin(a), -rd * z)), rd, M['hill'], 50 + i, seg=14, rings=6, rough=0.16, squash=0.42)
+
+def make_camera(setup, name='cam'):
+    ob = T.make_camera(setup, name); ob.data.clip_end = 900.0; ob.data.clip_start = 0.1; ob.data.dof.use_dof = False
+    for fc in STATE.get('flame_cards', ()):
+        for c in fc['card'].constraints:
+            if c.type == 'TRACK_TO': c.target = ob
+    _sky_follow(bpy.context.scene); return ob
+
+def anchors(preset, location, light):
+    P = STATE['P']; sh = S.SHOTS.get(preset)
+    A = dict(location=location, preset=preset, light=light, cams=S.cams_for(location, light), cam=S.preset_cam(preset, location, light), key_dir=tuple(V(P['key_dir']).normalized()),
+             render=dict(samples_final=12, resolution=(720, 1280), threads=2, denoise='OIDN', dof=None), marks=dict(STATE.get('marks', {})), heights=dict(HEIGHT),
+             lights=[o.name for o in STATE['LIGHTS'].objects], shot=dict(sh) if sh else None)
+    return A
+
+# ----------------------------------------------------------------------------- set states (every setter takes frame=None; with a frame it KEYS the values: call per frame or use animate())
+def _post_build():
+    ob = STATE['objects']
+    for i, hx in enumerate(HOLE_X):
+        if 'plug%d' % i in ob: localize(ob['plug%d' % i], (hx, (yo(0) + yi(0)) / 2, 0.0))
+        for n, c in (('breach%d', (hx, yo(0), 0.0)), ('rubble%d', (hx, yo(0) - 1.0, 0.0)), ('dig%d', (hx, yi(0) + 2.0, 0.0))):
+            if n % i in ob: localize(ob[n % i], c)
+    set_holes(0.0); set_gate(0.0)
+
+def set_holes(n, frame=None):
+    """Ragged breaches in the wall base (both faces): n = 0 .. 12 (float; 6.5 = six open and the seventh half dug). Hole i opens when n > i: its plug sinks (z scale), the rubble / rim /
+    dug-earth heap + pick + basket grow in. HOLE_X lists the 12 centres (x -41 .. -13.5, 13.5 .. 41), width HOLE_W 3.4, height HOLE_H 4.3."""
+    n = max(0.0, min(12.0, float(n))); ob = STATE['objects']; STATE['states']['holes'] = n
+    for i in range(12):
+        p = min(1.0, max(0.0, n - i))
+        pl = ob.get('plug%d' % i)
+        if pl is not None: _vis(pl, p < 0.999, frame); _xf(pl, scl=(1.0, 1.0, max(0.03, 1.0 - p)), frame=frame)
+        for nm, th in (('breach%d', 0.15), ('rubble%d', 0.15), ('dig%d', 0.0)):
+            o = ob.get(nm % i)
+            if o is not None:
+                on = p > th; sc = 0.35 + 0.65 * min(1.0, max(0.0, (p - th) / (1 - th + 1e-6) if th < 1 else 1.0)); _vis(o, on, frame); _xf(o, scl=(sc, sc, sc), frame=frame)
+
+def set_gate(k, frame=None):
+    """Gate leaves: k 0 = shut .. 1 = open 75 degrees outward; 0.15 is 'a crack' (shot 12)."""
+    STATE['states']['gate'] = k
+    for (ob, sgn, hx, yy) in STATE.get('gate_leaves', ()): _xf(ob, rot=(0.0, 0.0, sgn * math.radians(75.0 * k)), frame=frame)
+
+def set_party(k, frame=None): CAMP.set_party(k, frame)
+def set_rout(k, frame=None): CAMP.set_rout(k, frame)
+def set_pennants(k, side='yan', frame=None): VS.set_pennants(k, side, frame)
+def set_qi_return(k, frame=None): VS.set_qi_return(k, frame)
+
+def apply_state(spec, frame=None):
+    """State string (comma separated): h<n> holes, g<k> gate, pt<k> party, ro<k> rout, pn<k> pennants (yan), qr<k> qi return, fl<k> flames (0 out .. 1)."""
+    for tok in [t for t in (spec or '').split(',') if t]:
+        if tok.startswith('pt'): set_party(float(tok[2:]), frame)
+        elif tok.startswith('pn'): set_pennants(float(tok[2:]), 'yan', frame)
+        elif tok.startswith('qr'): set_qi_return(float(tok[2:]), frame)
+        elif tok.startswith('ro'): set_rout(float(tok[2:]), frame)
+        elif tok.startswith('fl'): flicker(frame, k=float(tok[2:]))
+        elif tok.startswith('h'): set_holes(float(tok[1:]), frame)
+        elif tok.startswith('g'): set_gate(float(tok[1:]), frame)
+
+def debug_ox(show=True):
+    """The 3D placeholder ox (style board). NOT used in production (the oxen are 2D puppet cards); hidden by default; show=True builds / shows it at STATE['marks']['debug_ox']."""
+    ob = STATE.get('debug_ox_objs')
+    if ob is None:
+        if not show: return
+        n0 = set(STATE['SET'].objects); Bk2 = Banks(); OX.ox(sys.modules[__name__], Bk2, STATE['M'], STATE['marks'].get('debug_ox', (0.0, 10.0)), 90.0, s=0.6, tail_lit=False, name='dbg_ox'); Bk2.flush(STATE['SET'])
+        ob = STATE['debug_ox_objs'] = [o for o in STATE['SET'].objects if o not in n0]
+    for o in ob: _vis(o, show)
+
+# ----------------------------------------------------------------------------- foreground props (1-2 D from the lens, parented to the camera)
+def _cam_frame(setup):
+    loc = V(setup['loc']); f = (V(setup['look_at']) - loc).normalized(); r = f.cross(V((0, 0, 1))).normalized(); u = r.cross(f).normalized(); return loc, f, r, u
+
+def attach_fg(cam, setup, spec):
+    """Build the shot's foreground prop 1.5-2 D in front of the lens (lower corner `side`) and parent it to the camera, so it stays 1-2 D from the lens through the move."""
+    if not spec: return []
+    kind, side = spec; sg = 1 if side == 'right' else -1; loc, f, r, u = _cam_frame(setup); M = STATE['M']; n0 = set(STATE['SET'].objects); Bk2 = Banks()
+    o = loc + f * 1.8 + r * (0.78 * sg) + u * (-0.35)
+    ground = V((o.x, o.y, 0.0)) if o.z > 2.4 else V((o.x, o.y, max(0.0, o.z - 2.6)))
+    if kind == 'lantern': oil_lamp(Bk2, M, V((o.x, o.y, o.z - 2.4)), s=0.9, light=0.0, name='fglamp', halo_r=1.2, h=3.0)
+    elif kind == 'wheel':
+        Fm = Frame((o.x, o.y, o.z - 1.9), math.degrees(math.atan2(f.y, f.x)) + 70.0); R = 1.9; w = Bk2('fgwood', hull=T.hull(3.0)); n = 20
         for i in range(n):
-            a0, a1 = 2 * math.pi * i / n, 2 * math.pi * (i + 1) / n
-            p0, p1 = F.p(R * math.cos(a0), 0, R * math.sin(a0) + R), F.p(R * math.cos(a1), 0, R * math.sin(a1) + R)
-            beam(w, p0, p1, 0.5, 0.7, M['wood_d'], up=(F.Y.x, F.Y.y, F.Y.z))
-        for i in range(5): a = math.pi * i / 5; rod(w, F.p(R * math.cos(a), 0, R * math.sin(a) + R), F.p(-R * math.cos(a), 0, -R * math.sin(a) + R), 0.2, M['wood'], seg=6)
-        rod(w, F.p(0, -0.6, R), F.p(0, 0.6, R), 0.5, M['wood_d'], seg=10); rod(w, F.p(0, -0.9, R), F.p(0, 0.9, R), 0.22, M['iron'], seg=8)
-        for i in range(n): a = 2 * math.pi * (i + 0.5) / n; w.sphere(F.p(R * 1.0 * math.cos(a), 0.0, R * 1.0 * math.sin(a) + R), 0.09, M['iron'], seg=5, rings=3)
-    wheel((-8.5, -41.5, 0.0), 1.7, 62.0); wheel((-4.0, -38.8, 0.0), 1.35, 18.0)
-    obox(w, (-6.2, -40.2, 0.5), (0.94, 0.34, 0), (-0.34, 0.94, 0), (0, 0, 1), 2.6, 0.2, 0.2, M['wood'])                      # cart shaft on the ground
-    for (x, y, s_, sd) in ((6.0, -41.5, 1.4, 3), (10.0, -43.5, 1.0, 5), (-15.5, -38.0, 1.1, 7), (12.5, -37.0, 0.7, 9), (2.5, -37.5, 0.5, 11), (-1.0, -44.0, 0.8, 13)):
-        lumpy(st, V((x, y, s_ * 0.3)), s_, M['stone'] if sd % 2 else M['stone_d'], sd, seg=9, rings=6, rough=0.28, squash=0.62)
-    for i in range(80):                                                                                        # grass tufts: crossed leaf cards (cones)
-        x, y = r.uniform(-30, 30), r.uniform(-52, -31); h_ = r.uniform(0.8, 1.8)
-        for k in range(3): a = r.uniform(0, 6.28); gr.frustum(V((x, y, 0)), V((x + 0.4 * math.cos(a), y + 0.4 * math.sin(a), h_)), 0.22, 0.0, M['leaf'] if k % 2 else M['grass2'], seg=3, cap1=False)
-    # signal fire basket stake at the roadside + a fallen spear
-    torch_post(Bk, M, (11.5, -33.0, 0.0), s=1.3, light=260.0, name='road_torch', halo_r=3.0)
-    rod(w, V((-17, -37, 0.25)), V((-9.5, -35.0, 0.45)), 0.1, M['wood'], seg=5); w.frustum(V((-9.5, -35.0, 0.45)), V((-8.4, -34.8, 0.5)), 0.2, 0.0, M['steel'], seg=4)
+            a0, a1 = 2 * math.pi * i / n, 2 * math.pi * (i + 1) / n; beam(w, Fm.p(R * math.cos(a0), 0, R * math.sin(a0) + R), Fm.p(R * math.cos(a1), 0, R * math.sin(a1) + R), 0.34, 0.46, M['wood_d'], up=(Fm.Y.x, Fm.Y.y, Fm.Y.z))
+        for i in range(6): a = math.pi * i / 6; rod(w, Fm.p(R * math.cos(a), 0, R * math.sin(a) + R), Fm.p(-R * math.cos(a), 0, -R * math.sin(a) + R), 0.14, M['wood'], seg=6)
+        rod(w, Fm.p(0, -0.5, R), Fm.p(0, 0.5, R), 0.4, M['wood_d'], seg=10)
+    elif kind == 'spear_rack':
+        Fm = Frame((o.x, o.y, o.z - 2.6), math.degrees(math.atan2(f.y, f.x)) + 90.0); rk = Bk2('fgrack', hull=T.hull(3.0))
+        for sx in (-1.2, 1.2): obox(rk, Fm.p(sx, 0, 2.0), Fm.X, Fm.Y, Fm.Z, 0.12, 0.12, 2.0, M['wood_d'])
+        for z in (1.0, 2.6): obox(rk, Fm.p(0, 0, z), Fm.X, Fm.Y, Fm.Z, 1.3, 0.1, 0.09, M['wood'])
+        for k in range(6): x = -1.0 + 0.4 * k; rod(rk, Fm.p(x, 0.3, 0.0), Fm.p(x * 0.9, 0.5, 5.2), 0.05, M['wood'], seg=4); rk.frustum(Fm.p(x * 0.9, 0.5, 5.2), Fm.p(x * 0.9, 0.5, 5.8), 0.1, 0.0, M['steel'], seg=4)
+    elif kind == 'jar':
+        Fm = V((o.x, o.y, o.z - 1.3)); jb = Bk2('fgjar', hull=T.hull(3.0)); ellipsoid(jb, Fm + V((0, 0, 0.9)), 0.8, 0.8, 0.95, M['clay'], seg=12, rings=8, rough=0.05, seed=3); cyl(jb, Fm + V((0, 0, 1.75)), 0.45, 0.4, M['clay_d'], seg=10, r1=0.55); cyl(jb, Fm + V((0, 0, 2.15)), 0.58, 0.18, M['red'], seg=10); cyl(jb, Fm + V((0, 0, 1.5)), 0.6, 0.2, M['straw'], seg=10, cap=False)
+    elif kind == 'pick_baskets':
+        Fm = Frame((o.x, o.y, o.z - 2.0), math.degrees(math.atan2(f.y, f.x)) + 30.0); pb = Bk2('fgdig', hull=T.hull(3.0))
+        rod(pb, Fm.p(0, 0, 0.0), Fm.p(-0.5, 0.2, 3.6), 0.1, M['wood'], seg=5); obox(pb, Fm.p(-0.5, 0.2, 3.6), Fm.X, Fm.Y, Fm.Z, 0.08, 0.6, 0.12, M['iron'])
+        pb.frustum(Fm.p(0.9, 0.2, 0), Fm.p(0.9, 0.2, 1.0), 0.5, 0.8, M['straw_d'], seg=10); lumpy(pb, Fm.p(0.9, 0.2, 1.0), 0.72, M['bank'], 5, seg=8, rings=4, rough=0.2, squash=0.4)
+    elif kind == 'reeds':
+        reed_ = Bk2('fgreeds', hull=T.hull(3.0)); b0 = V((o.x, o.y, o.z - 2.0))
+        for k in range(4): q = b0 + r * (0.5 * k) + f * (0.1 * (k % 2)); rod(reed_, q + V((0, 0, 0.1)), q + V((-0.25, 0.1, 3.4)), 0.38, M['hay'], seg=8); cyl(reed_, q + V((-0.07, 0.03, 1.1)), 0.4, 0.14, M['red_d'], seg=8, cap=False); cyl(reed_, q + V((-0.16, 0.06, 2.2)), 0.4, 0.14, M['red_d'], seg=8, cap=False)
+    elif kind == 'counter':
+        cb = Bk2('fgcounter', hull=T.hull(3.0)); b0 = V((o.x, o.y, o.z - 1.6)); obox(cb, tuple(b0 + V((0, 0, 0.0))), (r.x, r.y, 0), (f.x, f.y, 0), (0, 0, 1), 1.3, 0.8, 0.1, M['planks'], uvk=0.4)
+        cyl(cb, b0 + V((0, 0, 0.1)), 0.5, 0.2, M['straw_d'], seg=8, r1=0.4); ellipsoid(cb, b0 + V((0.8 * r.x, 0.8 * r.y, 0.65)), 0.42, 0.42, 0.5, M['clay'], seg=9, rings=6)
+        rod(cb, b0 + V((-0.8 * r.x, -0.8 * r.y, 0.1)), b0 + V((-0.8 * r.x, -0.8 * r.y, 2.2)), 0.05, M['wood'], seg=4); rod(cb, b0 + V((-0.8 * r.x, -0.8 * r.y, 2.2)), b0 + V((-0.1 * r.x, -0.1 * r.y, 2.2)), 0.04, M['wood'], seg=4)
+        for sgn in (-1, 1): rod(cb, b0 + V((-0.1 * r.x, -0.1 * r.y, 2.2)), b0 + V((-0.1 * r.x + sgn * 0.3 * r.x, -0.1 * r.y + sgn * 0.3 * r.y, 1.7)), 0.015, M['black'], seg=3); cyl(cb, b0 + V((-0.1 * r.x + sgn * 0.3 * r.x, -0.1 * r.y + sgn * 0.3 * r.y, 1.7)), 0.16, 0.05, M['bronze'], seg=8)
+    elif kind == 'torch':
+        b0 = V((o.x, o.y, o.z - 2.6)); tb = Bk2('fgtorch', hull=T.hull(3.0)); rod(tb, b0, b0 + V((0, 0, 3.2)), 0.1, M['wood_d'], seg=5); cyl(tb, b0 + V((0, 0, 3.0)), 0.3, 0.3, M['iron'], seg=8, r1=0.4)
+        live_flame(b0 + V((0, 0, 3.4)), 1.3, 0.38, seed=77, n=3, light=0.0, name='fgtorch', warm=None)
+    Bk2.flush(STATE['SET'])
+    objs = [ob for ob in STATE['SET'].objects if ob not in n0]
+    for ob in objs:
+        no_bounce(ob); ob.parent = cam; ob.matrix_parent_inverse = cam.matrix_world.inverted()
+    STATE.setdefault('fg_objs', []).extend(objs); return objs
 
-# --- zones camp / holes follow in jimo_camp.py / jimo_ox.py (imported at the bottom)
-def camp(Bk, M): CAMP.camp(sys.modules[__name__], Bk, M)
-def holes_inner(Bk, M): OX.holes_inner(sys.modules[__name__], Bk, M)
+# ----------------------------------------------------------------------------- shot cameras
+def _look_rot(loc, look, prev=None):
+    q = (V(look) - V(loc)).normalized().to_track_quat('-Z', 'Y'); return q.to_euler('XYZ', prev) if prev is not None else q.to_euler()
+
+def shot_camera(name, t=0.0, fg=True):
+    """Pose the scene camera for shot `name` at t = 0..1 of the move (not keyed). Builds the shot's foreground prop the first time (parented to the camera)."""
+    sh = S.SHOTS[name]; pose = S.pose_at(sh, t); first = 'cam' not in bpy.data.objects
+    cam = make_camera(S.pose_at(sh, 0.0) if first else pose)
+    if first or not STATE.get('fg_shot') == name:
+        for ob in STATE.get('fg_objs', []): bpy.data.objects.remove(ob, do_unlink=True)
+        STATE['fg_objs'] = []; cam.location = S.pose_at(sh, 0.0)['loc']; cam.rotation_euler = _look_rot(S.pose_at(sh, 0.0)['loc'], S.pose_at(sh, 0.0)['look_at']); bpy.context.view_layer.update()
+        if fg: attach_fg(cam, S.pose_at(sh, 0.0), sh['fg'])
+        STATE['fg_shot'] = name
+    cam.location = pose['loc']; cam.rotation_euler = _look_rot(pose['loc'], pose['look_at']); cam.data.lens = pose['lens']; _sky_follow(bpy.context.scene); bpy.context.view_layer.update(); return cam
+
+def key_camera(name, f0=None):
+    """Key the whole shot's camera move (one LINEAR key per frame from f0, default the shot's first frame of the film)."""
+    sh = S.SHOTS[name]; f0 = sh['f0'] if f0 is None else f0; cam = shot_camera(name, 0.0); prev = None
+    for i in range(sh['frames'] + 1):
+        pose = S.pose_at(sh, i / max(1, sh['frames'])); prev = cam.rotation_euler = _look_rot(pose['loc'], pose['look_at'], prev); cam.location = pose['loc']; cam.data.lens = pose['lens']
+        cam.keyframe_insert('location', frame=f0 + i); cam.keyframe_insert('rotation_euler', frame=f0 + i); cam.data.keyframe_insert('lens', frame=f0 + i)
+    for fc in T._fcurves(cam):
+        for kp in fc.keyframe_points: kp.interpolation = 'LINEAR'
+    return cam
+
+def head_rows(name, ts=(0.0, 0.5, 1.0)):
+    """[(role, t, mark, head_top_y, chin_y, feet_y)] in px of the 720x1280 frame for every stand mark of shot `name` (caption rule: chin (head bottom) < 880)."""
+    from bpy_extras.object_utils import world_to_camera_view
+    sh = S.SHOTS[name]; marks = S.marks_for(name); sc = bpy.context.scene; out = []
+    for t in ts:
+        cam = shot_camera(name, t, fg=False)
+        for role, lst in marks.items():
+            if role not in HEIGHT: continue
+            for m in lst[:12]:
+                h = HEIGHT[role]; p = V(m[:3]); top, chin, feet = V((p.x, p.y, p.z + h)), V((p.x, p.y, p.z + h - 1.0)), p
+                a, b, c = (world_to_camera_view(sc, cam, v) for v in (top, chin, feet))
+                if a.z <= 0: continue
+                out.append((role, t, tuple(round(x, 1) for x in m[:3]), round((1 - a.y) * 1280), round((1 - b.y) * 1280), round((1 - c.y) * 1280)))
+    return out
 
 # ----------------------------------------------------------------------------- CLI
-def render_still(zone, draft=False, out=None):
-    A = build(zone); sc = bpy.context.scene
-    if draft: MN.setup_render(sc, 'preview'); sc.cycles.samples = 6; sc.render.threads = 4
-    else: MN.setup_render(sc, 'final'); sc.cycles.samples = 12; sc.render.threads = 4
-    if os.environ.get('JIMO_CAM'): v = [float(x) for x in os.environ['JIMO_CAM'].split(',')]; A['cam'] = dict(loc=tuple(v[0:3]), look_at=tuple(v[3:6]), lens=v[6])     # debug camera
-    cam = make_camera(A['cam']); sc.camera = cam
-    os.makedirs(OUT, exist_ok=True)
-    path = out or os.environ.get('JIMO_OUT') or os.path.join(OUT, ('draft_' if draft else 'board_') + {'wall': '1', 'camp': '2', 'holes': '3'}[zone] + '.png')
-    w, c = T.render(path); print('RENDER %s %.1f wall s, %.1f cpu s -> %s' % (zone, w, c, path), flush=True)
-    return path, w, c
+def _load(): return ' '.join('%.2f' % v for v in os.getloadavg())
 
-try:
-    import jimo_camp as CAMP
-    import jimo_ox as OX
-except ImportError as e:                                    # the zones are written one after another
-    CAMP = OX = None; print('zone modules missing:', e)
+def digest():
+    import hashlib
+    h = hashlib.sha1()
+    for ob in sorted(bpy.data.objects, key=lambda o: o.name):
+        h.update(ob.name.encode()); h.update(('%.3f' * 3 % tuple(ob.matrix_world.translation)).encode())
+        if ob.type == 'MESH': h.update(str(len(ob.data.vertices)).encode()); h.update(('%.3f' % sum(v.co.x + 2 * v.co.y + 3 * v.co.z for v in ob.data.vertices)).encode())
+        if ob.type == 'LIGHT': h.update(('%.2f' % ob.data.energy).encode())
+    return h.hexdigest()[:16]
+
+def parse_spec(spec):
+    """'s16' | 's16@0.5' | 's16:NIGHT' | 's16@0.5:NIGHT:h6' | 'jimo_in' (location default, 'wide' camera)."""
+    parts = spec.split(':'); head = parts[0]; t = 0.5
+    if '@' in head: head, ts = head.split('@'); t = float(ts)
+    return head, t, (parts[1] if len(parts) > 1 and parts[1] else None), (parts[2] if len(parts) > 2 else None)
+
+def render_spec(spec, quality='final', outdir=None, tag=None):
+    name, t, light, state = parse_spec(spec); outdir = outdir or os.path.join(WORK, 'final' if quality == 'final' else 'stills'); os.makedirs(outdir, exist_ok=True)
+    A = build(None if name in S.SHOTS else name, name, light); sc = bpy.context.scene; MN.setup_render(sc, quality); sc.render.threads = 2
+    st = state if state is not None else (S.SHOTS[name]['state'] if name in S.SHOTS else ''); apply_state(st)
+    if name in S.SHOTS: shot_camera(name, t)
+    else: make_camera(A['cam'])
+    bpy.context.view_layer.update(); flicker(1 if name not in S.SHOTS else S.SHOTS[name]['f0'] + int(t * S.SHOTS[name]['frames']))
+    tag = tag or ('%s' % name + ('' if light is None else '_' + light))
+    w, c = T.render(os.path.join(outdir, tag + '.png'))
+    hr = head_rows(name, (t,)) if name in S.SHOTS else []
+    print('%s %s: %.1f s wall, %.1f s cpu, load %s, heads %s' % (quality, tag, w, c, _load(), [(r[0], r[4]) for r in hr][:6]), flush=True)
+    return dict(tag=tag, wall=round(w, 1), cpu=round(c, 1), heads=hr)
 
 if __name__ == '__main__':
-    a = sys.argv[1:]
-    if a and a[0] == 'still':
-        render_still(a[1], draft=('draft' in a[2:]))
-    elif a and a[0] == 'board':
-        import board; board.run()
+    cmd = sys.argv[1] if len(sys.argv) > 1 else 'help'; arg = sys.argv[2:]
+    if cmd in ('stills', 'final'):
+        specs = arg or list(S.SHOTS)
+        for sp in specs: render_spec(sp, 'final' if cmd == 'final' else 'preview')
+    elif cmd == 'digest':
+        name, t, light, state = parse_spec(arg[0] if arg else 's01'); A = build(None if name in S.SHOTS else name, name, light); bpy.context.view_layer.update(); print('digest', digest())
+    elif cmd == 'contact':
+        import jimo_sheet; jimo_sheet.run(arg)
     else: print(__doc__)

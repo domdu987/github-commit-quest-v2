@@ -2,20 +2,30 @@
 campfires, black-and-red pennants, spear racks, a war chariot, drums, wine jars and cups on a low table, a wooden palisade, horses, fodder.
 camp(J, Bk, M): J = the jimo module (helpers), Bk = mesh banks, M = materials."""
 import math
-from mathutils import Vector as V
+from mathutils import Vector as V, Matrix
 
+J = None
+def bind(j):
+    global J; J = j
 
-def camp(J, Bk, M):
+def build_camp(Bk, M, light):
+    import jimo_wall as WL
+    WL.bind(J); WL.build_wall(Bk, M, 'yan_camp'); WL.city(Bk, M, 'yan_camp'); WL.moat_road(Bk, M, 'yan_camp')
+    S_ = 330.0; g = Bk('ground2')
+    J.flat(g, V((-S_, J.MOAT[0] - 270, 0)), V((2 * S_, 0, 0)), V((0, 270, 0)), M['grass'], (-S_ / 8, 0, S_ / 8, 270 / 8)); J.flat(g, V((-S_, J.MOAT[1] + 2.3, 0)), V((2 * S_, 0, 0)), V((0, 400, 0)), M['earth'], (-S_ / 8, 0, S_ / 8, 400 / 8))
+    camp(J, Bk, M, light); J.hills(Bk, M, (0.0, -60.0), 230.0, 290.0, 26, 7, (40, 70))
+
+def camp(J, Bk, M, light='NIGHT'):
     r = J._rnd(18); X, Y, Z = (1, 0, 0), (0, 1, 0), (0, 0, 1)
+    STATE = J.STATE; STATE['tents'] = []; STATE['party_cups'] = []; STATE['rout_items'] = []; STATE['rout_chariots'] = []
     # trampled earth under the camp
     g = Bk('campground'); J.flat(g, V((-95, -135, 0.03)), V((190, 0, 0)), V((0, 98, 0)), M['bank'], (0, 0, 190 / 8, 98 / 8))
-    J.moat_bridge_road(Bk, M)
-    cam = V(J.CAMS['camp']['loc'])
+    cam = V(J.STATE['cam']['loc'])
     def dist(c): return math.hypot(c[0] - cam.x, c[1] - cam.y)
 
     # ------------------------------------------------------------------ tents
     def tent(c, yaw, w, l, h, trim=True, hide=False, name='tent', flaps=True):
-        F = J.Frame((c[0], c[1], 0), yaw); tb = Bk('tents', hull=J.T.hull(max(14.0, dist(c)))); mat = M['hide'] if hide else M['canvas']
+        F = J.Frame((c[0], c[1], 0), yaw); tb = Bk('tent%d' % len(STATE['tents']), hull=J.T.hull(max(14.0, dist(c)))); mat = M['hide'] if hide else M['canvas']; STATE['tents'].append(dict(name='tent%d' % len(STATE['tents']), c=(c[0], c[1], 0.0), yaw=yaw))
         sl = math.hypot(w / 2, h)
         for sgn in (-1, 1):
             tb.oface([F.p(sgn * w / 2, -l / 2, 0), F.p(sgn * w / 2, l / 2, 0), F.p(0, l / 2, h), F.p(0, -l / 2, h)], mat, [(0, 0), (l / 4, 0), (l / 4, sl / 4), (0, sl / 4)], F.X * sgn + F.Z * (w / 2 / h))
@@ -29,7 +39,7 @@ def camp(J, Bk, M):
             tb.oface([F.p(-w / 2, yy, 0), F.p(w / 2, yy, 0), F.p(0, yy, h)], mat, [(0, 0), (1, 0), (0.5, 1)], F.Y * nrm)
         d0 = -l / 2 - 0.05                                                                                      # door opening with the dark interior + red trim frame + two tied-back flaps
         tb.oface([F.p(-w * 0.2, d0, 0), F.p(w * 0.2, d0, 0), F.p(w * 0.2, d0, h * 0.5), F.p(0, d0, h * 0.78), F.p(-w * 0.2, d0, h * 0.5)], M['black'], [(0, 0)] * 5, F.Y * -1)
-        fl = Bk('campglow', shadow=False); J.flat(fl, F.p(-w * 0.12, d0 - 0.02, 0.0), F.X * (w * 0.24), F.Z * (h * 0.42), M['win'])
+        fl = tb; J.flat(fl, F.p(-w * 0.12, d0 - 0.02, 0.0), F.X * (w * 0.24), F.Z * (h * 0.42), M['win'])
         for sx in (-1, 1):
             tb.oface([F.p(sx * w * 0.2, d0 - 0.02, 0), F.p(sx * w * 0.2, d0 - 0.02, h * 0.5), F.p(sx * w * 0.2 + sx * w * 0.2, d0 - 0.02, h * 0.28), F.p(sx * w * 0.2 + sx * w * 0.2, d0 - 0.02, 0)], M['canvas_red'], [(0, 0), (0, 1), (1, 1), (1, 0)], F.Y * -1)
         rod(tb, F.p(0, -l / 2 - 1.1, h + 0.1), F.p(0, l / 2 + 1.1, h + 0.1), 0.2, M['wood_d'], seg=6) if False else J.rod(tb, F.p(0, -l / 2 - 1.1, h + 0.1), F.p(0, l / 2 + 1.1, h + 0.1), 0.2, M['wood_d'], seg=6)
@@ -46,7 +56,7 @@ def camp(J, Bk, M):
         tent((x, y), yaw, w, l, h, hide=hide)
     # the general's pavilion (large, red-trimmed, raised awning on two poles) at the back-left
     F = tent((-27, -47), 0, 15, 15, 8.2, hide=False)
-    tb = Bk('tents', hull=J.T.hull(60.0))
+    tb = Bk('tent%d' % (len(STATE['tents']) - 1), hull=J.T.hull(60.0))
     for sx in (-1, 1):
         J.rod(tb, F.p(sx * 6.5, -10.5, 0), F.p(sx * 6.5, -10.5, 6.4), 0.28, M['red'], seg=8)
         J.rod(tb, F.p(sx * 6.5, -10.5, 6.4), F.p(sx * 3.2, -7.5, 8.0), 0.18, M['wood_d'], seg=6)
@@ -55,7 +65,7 @@ def camp(J, Bk, M):
     for k in range(9): tb.sphere(F.p(-7.0 + k * 1.75, -10.6, 5.5), 0.22, M['gold'], seg=6, rings=4)
 
     # ------------------------------------------------------------------ fires with seats and pots
-    def fire(c, s=1.0, light=1500.0, name='f'):
+    def fire(c, s=1.0, light=1500.0, name='f'):    # (light = energy in W)
         c = V((c[0], c[1], 0.0)); f = Bk('fire', shadow=False); st = Bk('firestone', hull=J.T.hull(max(10.0, dist(c)))); lg = Bk('logs', hull=J.T.hull(max(10.0, dist(c))))
         for k in range(13):                                                                                     # ring of stones around a dug pit
             a = 2 * math.pi * k / 13; J.lumpy(st, c + V((1.45 * s * math.cos(a), 1.45 * s * math.sin(a), 0.22 * s)), 0.42 * s, M['stone'] if k % 2 else M['stone_d'], 40 + k, seg=7, rings=4, rough=0.2, squash=0.7)
@@ -64,10 +74,9 @@ def camp(J, Bk, M):
         for k in range(6):
             a = 2 * math.pi * k / 6 + 0.3; J.rod(lg, c + V((1.0 * s * math.cos(a), 1.0 * s * math.sin(a), 0.3 * s)), c + V((-0.1 * s * math.cos(a), -0.1 * s * math.sin(a), 0.85 * s)), 0.17 * s, M['wood_d'], seg=6, r1=0.13 * s)
         rr = J._rnd(int(c.x * 3 + c.y))
-        J.flame(f, c + V((0, 0, 0.55 * s)), 3.7 * s, 0.95 * s, lean=(0.25 * s, 0.1 * s), seed=int(c.x), n=4, spread=0.5)
+        J.live_flame(c + V((0, 0, 0.55 * s)), 3.7 * s, 0.95 * s, lean=(0.25 * s, 0.1 * s), seed=int(c.x), n=4, spread=0.5, light=light * 0.7 * s, name=name, lamp_dz=1.05 * s, lamp_r=0.5, warm=None)
         h = Bk('halos', shadow=False); J.halo(h, c + V((0, 0, 1.4 * s)), 4.4 * s, M['halo'])
         pl = Bk('pools', shadow=False); R = 7.5 * s; J.flat(pl, c + V((-R, -R, 0.07)), V((2 * R, 0, 0)), V((0, 2 * R, 0)), M['pool_w'])
-        J.lamp(name, c + V((0, 0, 1.6 * s)), light * 0.7 * s, J.FIRE, r=0.5, shadow=False)
         for k in range(3):                                                                                      # log seats around it
             a = 2 * math.pi * k / 3 + 1.0; p = c + V((3.2 * s * math.cos(a), 3.2 * s * math.sin(a), 0.0)); J.cyl(lg, p, 0.32 * s, 0.6 * s, M['wood'], seg=8)
         return c
@@ -81,16 +90,6 @@ def camp(J, Bk, M):
         J.ellipsoid(tp, c + V((0, 0, 2.3)), 0.95, 0.95, 0.8, M['iron'], seg=12, rings=7); J.cyl(tp, c + V((0, 0, 3.0)), 0.85, 0.18, M['iron'], seg=12)
 
 
-    # ------------------------------------------------------------------ stand-in Yan soldiers: drinking round the near fire, a toast at the table, one asleep in the foreground shade
-    def seat_pos(c, s_, k): a = 2 * math.pi * k / 3 + 1.0; return (c.x + 3.2 * s_ * math.cos(a), c.y + 3.2 * s_ * math.sin(a), math.degrees(a) + 180)
-    for k in range(3):
-        x, y, yw = seat_pos(f0, 0.85, k); J.person(Bk, M, (x, y, 0.5), yaw=yw + (k - 1) * 12, pose='sit', s=0.95, cup=(k != 1), cd=14.0, robe=M['black'] if k != 1 else M['red_d'], seed=k)
-    for k in range(3):
-        x, y, yw = seat_pos(f1, 0.9, k); J.person(Bk, M, (x, y, 0.5), yaw=yw, pose='sit', s=0.95, cup=(k == 0), cd=30.0, robe=M['black'] if k else M['red_d'], seed=k)
-    J.person(Bk, M, (-0.8, -98.0, 0.0), yaw=-30, pose='cheer', s=1.0, cup=True, cd=14.0, robe=M['black'])
-    J.person(Bk, M, (-9.0, -97.5, 0.0), yaw=40, pose='cheer', s=1.0, cup=True, cd=14.0, robe=M['red_d'])
-    J.person(Bk, M, (-2.8, -103.6, 0.0), yaw=95, pose='sleep', s=0.8, cd=14.0, robe=M['red_d'])                 # asleep in the near shade, back to us
-    for (x, y, yw) in ((-6.5, -78.5, 20), (9.0, -80.0, 150), (-14.0, -68.0, 60)): J.person(Bk, M, (x, y, 0.0), yaw=yw, pose='spear', s=1.0, cd=40.0, robe=M['black'])
     # ------------------------------------------------------------------ the general's toast: low table with wine jars, cups, a bowl, stools (foreground left)
     pr = Bk('props', hull=J.T.hull(11.0)); F = J.Frame((-4.5, -100.5, 0), 18)
     pr.box((-2.1, -1.1, 0.0), (2.1, 1.1, 0.0), M['red']) if False else None
@@ -114,7 +113,7 @@ def camp(J, Bk, M):
 
     # ------------------------------------------------------------------ war chariot (foreground right)
     def chariot(c, yaw, s=1.0, cd=11.0):
-        F = J.Frame((c[0], c[1], 0), yaw); ch = Bk('chariot', hull=J.T.hull(cd))
+        F = J.Frame((c[0], c[1], 0), yaw); nm_ = 'chariot%d' % len(STATE['rout_chariots']); ch = Bk(nm_, hull=J.T.hull(cd)); STATE['rout_chariots'].append(dict(name=nm_, home=(c[0], c[1], 0.0), target=(c[0] + 34.0, c[1] - 26.0, 0.0), turn=-70.0 if len(STATE['rout_chariots']) == 0 else 40.0, ob=None))
         for sy in (-1, 1):                                                                                      # two spoked wheels, R 1.6
             Rw = 1.6 * s
             for i in range(20):
@@ -232,4 +231,76 @@ def camp(J, Bk, M):
         a = rr2.uniform(-0.5, 0.5); p0 = V((2.2 + 0.5 * (k % 4), -107.4 + 0.35 * (k // 4), 0.22 + 0.4 * (k // 4)))
         J.rod(sc, p0, p0 + V((math.cos(a) * 2.2, math.sin(a) * 2.2, 0.0)), 0.22, M['wood_d'] if k % 2 else M['wood'], seg=6)
     for k in range(7): J.cyl(sc, V((rr2.uniform(-8.5, -6.0), rr2.uniform(-98.0, -96.0), 0.0)), 0.28, 0.22, M['bronze'], seg=8, r1=0.38)
+    extras(J, Bk, M, light, f0, f1, f2, f3, f4)
     J.STATE['marks'].update(table=(-6.5, -95.0), chariot=(10.5, -95.5), fires=[tuple(f1), tuple(f2), tuple(f3), tuple(f4)])
+
+def set_party(k, frame=None):
+    """Extra cups (and the cheering-crowd marks, STATE marks['party_crowd']) : k 0 .. 1; cups pop in one by one, scale-keyed."""
+    J.STATE['states']['party'] = k; cups = J.STATE.get('party_cups', [])
+    for i, o in enumerate(cups):
+        p = min(1.0, max(0.0, k * len(cups) - i)); J._vis(o, p > 0.02, frame); J._xf(o, scl=max(0.01, p), frame=frame)
+
+def _ease(t): return t * t * (3 - 2 * t)
+
+def set_rout(k, frame=None):
+    """Rout (comic, bloodless): tents fold / collapse (staggered), pots, helmets, cups and fodder fly and scatter, a chariot rolls away. k 0 .. 1."""
+    J.STATE['states']['rout'] = k; objs = J.STATE['objects']; ts = J.STATE.get('tents', [])
+    for i, t in enumerate(ts):
+        o = objs.get(t['name'])
+        if o is None: continue
+        p = _ease(min(1.0, max(0.0, k * 1.7 - 0.7 * (i % 7) / 7.0 - 0.0))); rr = J._rnd(900 + i)
+        sx = 1.0 + 0.12 * p; J._xf(o, rot=(rr.uniform(-0.18, 0.18) * p, rr.uniform(-0.12, 0.12) * p, math.radians(t['yaw']) * 0 + rr.uniform(-0.15, 0.15) * p), scl=(sx, sx, 1.0 - 0.88 * p), frame=frame)
+    for it in J.STATE.get('rout_items', []):
+        o = it['ob']; p = _ease(min(1.0, max(0.0, k * 1.5 - it['delay']))); h = V(it['home']); tg = V(it['target'])
+        pos = h + (tg - h) * p + V((0, 0, it['arc'] * math.sin(math.pi * p)))
+        J._xf(o, loc=tuple(pos), rot=(it['spin'][0] * p, it['spin'][1] * p, it['spin'][2] * p), frame=frame)
+    for ch in J.STATE.get('rout_chariots', []):
+        p = _ease(min(1.0, max(0.0, k * 1.3 - 0.15))); o = ch['ob']; h = V(ch['home']); tg = V(ch['target'])
+        J._xf(o, loc=tuple(h + (tg - h) * p), rot=(0.0, 0.0, math.radians(ch['turn']) * p), frame=frame)
+
+
+def extras(J, Bk, M, light, f0, f1, f2, f3, f4):
+    """Rampart for the general (shot 8), party cups, rout scatter (pots, helmets, fodder), post-flush origins."""
+    STATE = J.STATE; r = J._rnd(61); X, Y, Z = (1, 0, 0), (0, 1, 0), (0, 0, 1)
+    # rampart: a raised earth platform with a timber facing, a ramp at the back, a low palisade rail (the general stands at marks['rampart'])
+    rp = Bk('rampart', hull=J.T.hull(40.0)); cx, cy, w, d, h = -4.0, -47.5, 20.0, 7.0, 2.6
+    J.obox(rp, (cx, cy, h / 2), X, Y, Z, w / 2, d / 2, h / 2, M['bank'], uvk=0.2); J.obox(rp, (cx, cy - d / 2 - 0.05, h / 2), X, Y, Z, w / 2 + 0.1, 0.18, h / 2 + 0.1, M['planks_d'], uvk=0.5)
+    for k in range(11): J.rod(rp, V((cx - w / 2 + 0.5 + k * 1.9, cy - d / 2 - 0.2, 0)), V((cx - w / 2 + 0.5 + k * 1.9, cy - d / 2 - 0.2, h + 0.5)), 0.18, M['wood'], seg=5)
+    for sx in (-1, 1): J.rod(rp, V((cx + sx * (w / 2 - 0.3), cy - d / 2, h)), V((cx + sx * (w / 2 - 0.3), cy - d / 2, h + 3.2)), 0.2, M['red'], seg=6)
+    J.obox(rp, (cx, cy - d / 2, h + 1.0), X, Y, Z, w / 2 - 0.3, 0.1, 0.1, M['wood_d'])
+    for k in range(7): J.obox(rp, (cx - 5.5 + k * 1.2, cy + d / 2 + 1.5 + k * 0.0, 0.2 + k * 0.35), X, Y, Z, 0.6, 1.4, 0.2 + k * 0.0, M['planks'], uvk=0.5) if False else None
+    J.torch_post(Bk, M, (cx - w / 2 + 1.0, cy - d / 2 - 1.0, h), s=1.0, light=600.0, name='rp1', halo_r=3.0, warm=None); J.torch_post(Bk, M, (cx + w / 2 - 1.0, cy - d / 2 - 1.0, h), s=1.0, light=600.0, name='rp2', halo_r=3.0, warm=None)
+    STATE['marks']['rampart'] = (cx, cy, h)
+    # party: 16 bronze cups standing about the table, the fires and on the ground (pop in with set_party)
+    spots = [(-6.5 + 0.7 * k, -99.5 + (k % 2) * 0.6, 0.0) for k in range(6)] + [(f1.x + 2.0 * math.cos(a), f1.y + 2.0 * math.sin(a), 0.0) for a in (0.3, 1.5, 2.8, 4.1, 5.2)] + [(f2.x + 2.4, f2.y - 1.0, 0.0), (f3.x - 2.2, f3.y + 0.4, 0.0), (f0.x + 2.0, f0.y - 1.4, 0.0), (f4.x + 2.1, f4.y + 0.8, 0.0), (-9.0, -98.0, 0.0)]
+    for i, p in enumerate(spots):
+        b = Bk('pcup%d' % i, hull=J.T.hull(40.0)); J.cyl(b, V(p), 0.24, 0.42, M['bronze'], seg=8, r1=0.34); J.cyl(b, V(p) + V((0, 0, -0.03)), 0.12, 0.07, M['bronze'], seg=6)
+        if i % 3 == 0: J.ellipsoid(b, V(p) + V((0.8, 0.4, 0.5)), 0.4, 0.4, 0.5, M['clay'], seg=8, rings=6)
+        STATE['party_cups'].append(('pcup%d' % i, p))
+    # rout scatter: pots, helmets, fodder bundles, bowls: home near the fires / racks, target flung across the camp (arc, spin)
+    kinds = []
+    for i in range(30):
+        kind = ('pot', 'helmet', 'hay', 'bowl')[i % 4]; home = (r.uniform(-24, 26), r.uniform(-96, -58), 0.2)
+        if i < 8: fcen = (f0, f1, f2, f3, f4)[i % 5]; home = (fcen.x + r.uniform(-2.5, 2.5), fcen.y + r.uniform(-2.5, 2.5), 0.3)
+        b = Bk('ri%d' % i, hull=J.T.hull(40.0)); p0 = V((0, 0, 0))
+        if kind == 'pot': J.ellipsoid(b, V((0, 0, 0.45)), 0.5, 0.5, 0.5, M['iron'], seg=9, rings=6, th=(0, math.pi)); J.cyl(b, V((0, 0, 0.9)), 0.52, 0.1, M['iron'], seg=9)
+        elif kind == 'helmet': b.frustum(V((0, 0, 0)), V((0, 0, 0.55)), 0.5, 0.2, M['iron'], seg=9); b.frustum(V((0, 0, 0.55)), V((0, 0, 0.9)), 0.04, 0.1, M['red'], seg=5)
+        elif kind == 'hay': J.cyl(b, V((0, 0, 0)), 0.5, 1.6, M['hay'], seg=8); J.cyl(b, V((0, 0, 0.55)), 0.53, 0.14, M['red_d'], seg=8, cap=False)
+        else: J.ellipsoid(b, V((0, 0, 0.3)), 0.5, 0.5, 0.3, M['bronze'], seg=9, rings=5, th=(math.pi / 2, math.pi))
+        ang = r.uniform(0, 6.28); dist = r.uniform(5, 15)
+        STATE['rout_items'].append(dict(name='ri%d' % i, home=home, target=(home[0] + dist * math.cos(ang), home[1] + dist * math.sin(ang), 0.2), arc=r.uniform(3.0, 7.0), spin=(r.uniform(-6, 6), r.uniform(-6, 6), r.uniform(-6, 6)), delay=r.uniform(0.0, 0.45), ob=None, kind=kind))
+    def post():
+        objs = STATE['objects']
+        for (nm, p) in STATE['party_cups']:
+            if nm in objs: J.localize(objs[nm], p)
+        STATE['party_cups'] = [objs[nm] for (nm, p) in STATE['party_cups'] if nm in objs]
+        for t in STATE['tents']:
+            if t['name'] in objs: J.localize(objs[t['name']], t['c'])
+        for it in STATE['rout_items']:
+            o = objs.get(it['name']); it['ob'] = o
+            if o is not None: J.localize(o, it['home'])
+        for ch in STATE['rout_chariots']:
+            o = objs.get(ch['name']); ch['ob'] = o
+            if o is not None: J.localize(o, ch['home'])
+        set_party(0.0); set_rout(0.0)
+    STATE.setdefault('post_flush', []).append(post)
