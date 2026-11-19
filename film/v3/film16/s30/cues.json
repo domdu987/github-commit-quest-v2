@@ -1,0 +1,47 @@
+{
+ "take": "s30",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 65.7,
+   "duration": 4.3,
+   "frame": 1971,
+   "end_frame": 2100,
+   "kind": "ambience",
+   "label": "night: empty chamber, a faint clock, the candle flame flutters"
+  },
+  {
+   "time": 66.0,
+   "duration": 3.867,
+   "frame": 1980,
+   "end_frame": 2096,
+   "kind": "prop",
+   "label": "the register clicks 'ติ๊ด ติ๊ด' steadily (every 9 frames), paper tape hisses out"
+  },
+  {
+   "time": 66.4,
+   "duration": 0.6,
+   "frame": 1992,
+   "end_frame": 2010,
+   "kind": "foley",
+   "label": "the mocker's big yawn: a long sleepy groan"
+  },
+  {
+   "time": 67.467,
+   "duration": 0.467,
+   "frame": 2024,
+   "end_frame": 2038,
+   "kind": "accent",
+   "label": "snap push whoosh (soft)"
+  },
+  {
+   "time": 69.667,
+   "duration": 0.2,
+   "frame": 2090,
+   "end_frame": 2096,
+   "kind": "accent",
+   "label": "last click, then hard cut on 'เอง'"
+  }
+ ]
+}
