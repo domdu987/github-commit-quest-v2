@@ -157,7 +157,7 @@ COACH_AT = (-30.0, 108.5, 25.5); COACH_K = 3.2
 
 # --------------------------------------------------------------------------------------------- cameras (metres): a/b per shot
 CAMS = {                                           # start/end cameras (metres) used only to build the FG props (and as shot 25's path)
- 25: dict(a=((-4.6, 7.2, 1.2), (-3.2, 11.6, 1.55)), b=((-2.2, 8.0, 1.4), (-0.9, 11.6, 1.9))),
+ 25: dict(a=((-5.6, 7.2, 1.2), (-4.2, 11.6, 1.55)), b=((-1.6, 8.0, 1.4), (-0.3, 11.6, 1.9))),
 }
 def orbit(C, R, th, z):
     th = math.radians(th); return (C[0] + R * math.sin(th), C[1] - R * math.cos(th), z), tuple(C)
@@ -166,15 +166,19 @@ def U01(g, shot): g0, g1 = SHOTS[shot]; return (g - g0) / float(g1 - g0)
 def LL(a, b, u): return tuple(lerp(x, y, u) for x, y in zip(a, b))
 def cam26(g):
     u = U01(g, 26); C = (bxm(g) - 0.2, 11.6, 2.15)
-    SN = lambda a: sm(seg(g, a - 2, a + 4)); th = lerp(-24, 6, u) + 18 * (SN(1404) - SN(1416) + SN(1434) - SN(1450))
-    R = lerp(2.9, 2.6, u) - 0.3 * sm(seg(g, 1413, 1421)) + 0.2 * sm(seg(g, 1436, 1448))
+    SN = lambda a: sm(seg(g, a - 2, a + 3))
+    th = lerp(-26, 8, u) + 24 * (SN(1404) - SN(1416) + SN(1434) - SN(1450))
+    PU = lambda a: sm(seg(g, a - 1, a + 6)) * (1 - sm(seg(g, a + 9, a + 17)))       # quick eased push-in on each beat
+    R = lerp(3.0, 2.7, u) * (1 - 0.15 * (PU(1392) + PU(1416) + PU(1434)))
     return orbit(C, R, th, lerp(1.95, 2.05, u))
 def cam27(g):
     u = U01(g, 27); C = (bxm(g) - 0.2, 11.6, 2.15)
-    return orbit(C, lerp(2.7, 2.4, u) - 0.55 * sm(seg(g, 1472, 1484)), lerp(22, -10, u) + 6 * math.sin(g * 0.25) + 16 * (sm(seg(g, 1470, 1476)) * 0 + sm(seg(g, 1492, 1498)) - sm(seg(g, 1502, 1508))), 2.0)
+    return orbit(C, lerp(3.0, 2.4, u) - 0.75 * sm(seg(g, 1470, 1476)) + 0.35 * sm(seg(g, 1486, 1500)) - 0.5 * sm(seg(g, 1490, 1496)) + 0.5 * sm(seg(g, 1500, 1505)) - 0.5 * sm(seg(g, 1507, 1513)), lerp(22, -10, u) + 6 * math.sin(g * 0.25) + 16 * (sm(seg(g, 1470, 1476)) * 0 + sm(seg(g, 1492, 1498)) - sm(seg(g, 1502, 1508))), 2.0)
 def cam28(g):
-    u = U01(g, 28); x = rival_x(g) * DM; C = (x - 0.35, 11.6, 2.3)
-    return orbit(C, lerp(3.4, 3.1, u) - 0.7 * sm(seg(g, 1543, 1551)), lerp(-24, 20, u) + 16 * (sm(seg(g, 1526, 1532)) - sm(seg(g, 1543, 1549)) + sm(seg(g, 1558, 1564))), 2.0)
+    u = U01(g, 28); x = rival_x(g) * DM; zc = 2.3 + 0.7 * sm(seg(g, 1516, 1530)) - 0.7 * sm(seg(g, 1560, 1570)); C = (x - 0.35, 11.6, zc)      # tilt follows him up to the apex
+    th = lerp(-24, 20, u) + 16 * (sm(seg(g, 1526, 1532)) - sm(seg(g, 1543, 1549)) + sm(seg(g, 1558, 1564)))
+    R = lerp(3.4, 3.1, u) - 0.7 * sm(seg(g, 1543, 1551)) - 0.9 * sm(seg(g, 1558, 1566))                                                      # push on the pop and on the drop
+    return orbit(C, R, th, 2.0)
 def cam29(g):
     gw0, gw1 = G_FLICK1 - 2, G_FLICK1 + 8; Lx = land_hip().x * DM
     Cb = lambda gg: (bxm(gg) - 0.2, 11.6, 2.2)
@@ -187,7 +191,10 @@ def cam30(g):
 def cam31(g):
     u = U01(g, 31); R = lerp(4.4, 3.9, u) * (1 - 0.14 * sm(seg(g, G_CHEER - 3, G_CHEER + 9))); return orbit((-8.3, 10.0, 2.2), R, lerp(30, 14, u) + 16 * (sm(seg(g, 1760, 1766)) - sm(seg(g, G_CHEER - 2, G_CHEER + 4))), 1.8)
 CAMF = {26: cam26, 27: cam27, 28: cam28, 29: cam29, 30: cam30, 31: cam31}
-def cam25(g): u = U01(g, 25); return LL(CAMS[25]['a'][0], CAMS[25]['b'][0], u), LL(CAMS[25]['a'][1], CAMS[25]['b'][1], u)
+def cam25(g):
+    u = U01(g, 25); lo = Vector(LL(CAMS[25]['a'][0], CAMS[25]['b'][0], u)); lk = Vector(LL(CAMS[25]['a'][1], CAMS[25]['b'][1], u))
+    k = 1 - 0.17 * sm(seg(g, 1361, 1368)) - 0.10 * sm(seg(g, 1380, 1388)) + 0.16 * sm(seg(g, 1323, 1331)) * (1 - sm(seg(g, 1331, 1337))) - 0.14 * sm(seg(g, 1346, 1352)) + 0.14 * sm(seg(g, 1354, 1360))
+    lk = lk + Vector((0.45 * (sm(seg(g, 1343, 1350)) - sm(seg(g, 1368, 1374))), 0, 0)); return tuple(lk + (lo - lk) * k), tuple(lk)
 CAMF[25] = cam25
 
 FGS = []

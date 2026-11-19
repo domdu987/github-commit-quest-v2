@@ -9,13 +9,13 @@ Cost about 13.4 s wall per frame (two processes x 2 threads).
 - Shot 25: J-curve run from the left (y 18.4 -> 19.9 D), plant, take-off, back to the bar (flop_rise), card in front of the bar, no bar across the chest. Shot 28: real straddle jump: approach, rise, belly-down FLAT apex about 0.7 D above the bar at g1540-1558 (leg kick a -> b at the pop g1545-1557), then down; raised leg inside the frame. Shot 29: drop keeps the card in front of the bar plane until below it (bar not across his face). Shot 30: looks up at the bar (pitch -0.6, gaze up), light pops TENSE -> EVE at g1698; the bar does not move.
 - Shot 31: podium, medal, crowd cheer + more flashes from g1773 (59.1 s); coach_stands is now on the track right of the podium at normal size (about 15 % of the frame height, in a clear gap) with his mouth dropping open from g1774-1782 (jaw drop at about 59.2 s); he is no longer "in the stands" (the stands are 95 D away, he would be 14 px).
 - No mouths move (no coach quote in 25-31) other than the jaw drop. Heads y < 880 (see work/log_*.jsonl). No text, digits or flags on cards.
-## Motion (python3 film15/motion_check.py take.mkv --first_g G --cuts ...)
+## Motion (python3 film15/motion_check.py take.mkv --first_g G --cuts ...), take 3 (camera-only changes after the director's p90 note; animation unchanged)
 | take | median | p90 | per shot (median / p90) |
 |---|---|---|---|
-| s25 | 5.2 | 8.4 | 25: 5.5/6.4, 26: 3.6/8.9, 27: 6.6/8.8, out handle: 4.7/6.1 |
-| s28 | 4.9 | 9.5 | 28: 5.0/9.7 |
-| s29 | 6.4 | 12.1 | 29: 6.8/20.7, 30: 6.7/10.0, 31: 3.5/13.1 |
-Medians pass everywhere. p90 >= 12 holds only for s29; s25 (8.4) and s28 (9.5) are short. The figures now move all the time; the remaining gap is the slow parts between the camera snaps. More snaps would make the shots jittery; the director can decide.
+| s25 | 6.7 | 12.0 | 25: 7.6/10.6, 26: 5.5/12.0, 27: 6.6/14.2, out handle: 7.6/12.3 |
+| s28 | 8.4 | 18.1 | 28: 10.6/18.2 |
+| s29 | 6.4 | 12.1 | 29: 6.8/20.7, 30: 6.7/10.0, 31: 3.5/13.1 (unchanged, take 2) |
+All three takes pass median >= 4 and p90 >= 12. Camera changes: shot 25 faster track (4 m in 2.1 s), quick pushes at the start, the plant and the take-off; shot 26 a 15 % eased push-in over 7 frames on each beat (g1392, g1416, g1434) plus 24-degree orbit snaps; shot 27 a snap push at g1470-1476 and two more; shot 28 a tilt that follows the rival up to the apex (g1516-1530), snaps at g1526 / g1543 / g1558 and pushes on the pop and on the drop. The tight pushes at the end of shot 27 crop the head at the right edge in the dissolve handle frames g1510-1517 only.
 ## Known points
 - A camera sliding sideways moved almost nothing (distant stands), so 26/27/28/30/31 orbit the figure instead (first versions measured median 1.4-1.9).
 - Dissolve handle frames come from this take's own set-up (s25 out = shot 27 look, s28 in/out = shot 28 look, s29 in = shot 29 look, s29 out = shot 31 look).
