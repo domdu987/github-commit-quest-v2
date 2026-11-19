@@ -1,7 +1,7 @@
 {
  "take": "s21",
  "film": 14,
- "version": 3,
+ "version": 4,
  "shots": [
   21
  ],
@@ -28,6 +28,6 @@
   ]
  },
  "bees": "none before g1442, small puffs from g1442",
- "end_state": "g1452 = shot 22's first frame camera (-9.0,2.1,1.3) look (-6.4,4.9,1.45) 24 mm; hives at TRUE scale 1.0",
+ "end_state": "g1452 = shot 22's first frame camera (-9.0,2.1,1.3) look (-6.4,4.9,1.45) 24 mm; hives at TRUE scale",
  "narration": "film14/audio/narration.wav at +0.10 s"
 }
