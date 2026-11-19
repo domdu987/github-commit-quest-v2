@@ -24,7 +24,7 @@ def snaps(g, loc, look, ev):
     return loc, look
 def cam_s4(g):
     u = mix((g - S4[0]) / (S4[1] - S4[0]))
-    loc = vlerp((-2.8, -7.4, 3.7), (-0.4, -2.2, 1.8), u); look = vlerp((0.4, 11.0, 2.6), (2.0, 11.0, 2.3), u)
+    loc = vlerp((-2.4, -4.2, 2.6), (-0.3, 0.6, 1.7), u); look = vlerp((0.4, 11.0, 2.6), (2.0, 11.0, 2.3), u)
     return snaps(g, loc, look, [(166, 12, (0.9, 1.0, -0.15), (1.5, -2.5, -0.4)), (198, 12, (-1.5, 0.6, 0.1), (-2.2, 1.0, 0.3))])
 def cam_s5(g):
     u = mix((g - S5[0]) / (S5[1] - S5[0]))
@@ -67,7 +67,7 @@ class Take(C.Take):
         cam = self.cam
         for g in gs:
             f = g; loc, look = cam_of(g); self.key_cam(f, loc, look)
-            K.set_flicker(1.0, frame=f); K.set_smoke(1.0, frame=f); K.set_dust(1.0, frame=f); K.set_pendulum(frame=f)
+            K.set_flicker(1.0, frame=f); K.set_smoke(1.0, frame=f); K.set_dust(0.5 if self.loc == 'desk' else 1.0, frame=f); K.set_pendulum(frame=f)
             if self.loc == "street": self.stage_street(g)
             else: self.stage_desk(g)
         for g in gs:
