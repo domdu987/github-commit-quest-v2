@@ -5,3 +5,9 @@
 - Camera: custom 22 mm, 6 D from the crate, push 12 %/s + slide 45 px/s + arc 15 deg/s, one snap. Frame-diff (in-shot): median 4.30, p90 13.77 (targets 4 / 12 met). qa_auto PASS. s/frame 11.2 wall.
 - Known: the eye-lines still look mostly toward the camera (cast16 gaze keys had little effect); Morse's face is large in the last frames (head ~300 px, bottom stays above y 880); no lantern was added.
 - Update: Morse now faces left toward the key (mirror, pitch 0.6, gaze 1.0/0.9), the crew's gaze is shifted toward the register (1.0/0.7); frame-diff now median 4.36 / p90 14.18.
+
+## Round 2 (director QA-art r2) -- final state
+- Press readable: Morse now stands beside the key (crate end), faces it, and his right hand (layer front) is pinned just above the knob; the set's lever is replaced by an animated copy pressing 16 deg at g 975-981, 982-987 and again g 996-1002 inside the end close, where knob, hand and lever are all in frame. (The first press had been missing in the earlier deliveries: cap_g("ส่งข่าว") matched the hook's caption at g 422; G_TRY is now g_of(32.41) = 975.)
+- Crew: arms down, bent toward the register (lean +11, yaw 0.95, pitch 0.35, gaze toward it); no folded arms.
+- Register + lantern: brass collars on the coils, brass top on the register box and flange on the paper drum, a still white tape strip hanging over the box edge; a brass lantern with a glowing glass and a warm point light (600 W, 0.25 D) at the crate's near end gives the warm pool.
+- Frame-diff in-shot: median 4.63, p90 16.26. qa_auto PASS. s/frame 10.7 wall.

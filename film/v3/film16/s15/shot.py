@@ -21,11 +21,12 @@ G0, G1 = C.g_bound(31.93), C.g_bound(33.57)            # 958, 1007: shot = g 958
 H_IN, H_OUT = 9, 9
 GA, GB = G0 - H_IN, G1 + H_OUT - 1                      # 949 .. 1015
 GS = list(range(GA, GB + 1))
-G_TRY = C.cap_g("ส่งข่าว")                              # 975: the press
+G_TRY = C.g_of(32.41)                                   # 975: "ส่งข่าว" of the false sentence (cap_g would match the hook's first "ส่งข่าว" at g 422)
 G_SIL = C.cap_g("เงียบกริบ")                            # 988: silence, brightness dip
 DIP = (G_SIL - 2, G_SIL + 10)                           # 0.4 s
 PRESS = (G_TRY, G_TRY + 6)
 PRESS2 = (G_SIL - 6, G_SIL - 1)
+PRESS3 = (996, 1002)                                  # one more press inside the end close
 CAM_NEAR = 0.72
 CAM_UP = 1.2
 CAM_NEAR, CAM_UP = 0.72, 1.2
@@ -41,7 +42,7 @@ def dip(g):
 
 def key_press(g):
     v = 0.0
-    for a, b in (PRESS, PRESS2):
+    for a, b in (PRESS, PRESS2, PRESS3):
         if a <= g <= b:
             v = max(v, math.sin(math.pi * (g - a) / float(b - a)))
     return v
@@ -79,18 +80,19 @@ CREW = dict(cornell=lambda: (Vector(KNOB()).x + 2.4, Vector(KNOB()).y - 2.0, 0.0
 
 def morse_at():
     k = Vector(KNOB())
-    return (k.x - 0.1, k.y - 1.5, 0.0)
+    return (k.x - 0.95, k.y - 0.55, 0.0)         # beside the key (crate end), reaching left to the knob
 
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s15")
         A = self.A
         self.make_lever()
+        self.make_dressing()
         k = Vector(KNOB())
-        look0 = Vector((k.x + 0.9, k.y - 0.6, 2.6))
+        look0 = Vector((k.x - 0.2, k.y - 0.6, 2.6))
         loc0 = look0 + Vector((-2.0, 6.2, 1.6))
-        self.cp = C.CamPath(loc0, look0, GA, GB, push=0.12, slide_px=45.0, arc_deg_s=-15.0, decay=0.25,
-                            snaps=[dict(g=(G_SIL - 2, G_SIL + 11), k=2.2, peak=1.8, shift=(0.6, 0.1))])
+        self.cp = C.CamPath(loc0, look0, GA, GB, push=0.12, slide_px=20.0, arc_deg_s=-15.0, decay=0.25,
+                            snaps=[dict(g=(G_SIL - 2, G_SIL + 11), k=2.2, peak=1.8, shift=(-0.25, -0.4))])
         self.key_cam(bf(GA), *self.cp.at(GA))
         self.scene.frame_set(bf(GA))
         self.base_exp = self.scene.view_settings.exposure
@@ -126,6 +128,36 @@ class Take(C.Take):
         mb.ell(M["dark"], tuple(inv @ knob), (0.055, 0.055, 0.05), (10, 6))
         self.lever = mb.finish()
 
+    def make_dressing(self):
+        """period look for the register (brass frame + still white tape strip over the box front) and a warm lantern with a light pool on the crate"""
+        import bpy
+        from mathutils import Euler
+        M = TG.STATE["M"]
+        tape = TG._emit_mat("s15_tape", "#f4f0e2", 0.55)
+        glow = TG._emit_mat("s15_lantern_glass", "#ffb45a", 6.0)
+        mb = K.MB("s15_dress")
+        c = (KC[0], KC[1], 0.0)
+        mb.push(Matrix.Translation(c) @ Euler((0, 0, KYAW)).to_matrix().to_4x4() @ Matrix.Diagonal((KSC, KSC, KSC, 1)))
+        mb.push(Matrix.Translation((0, 0, 0.6)))
+        for sy in (-0.07, 0.07):
+            mb.cyl(M["brass"], (-0.28, 0.1 + sy, 0.10), 0.062, 0.03, "z", 14, True)   # brass collars on the coils
+        mb.box(M["brass"], (0.15, 0.15, 0.225), (0.36, 0.26, 0.015))              # brass top on the register box
+        mb.cyl(M["brass"], (0.08, 0.15, 0.24), 0.095, 0.02, "y", 18)              # brass flange on the paper drum
+        mb.box(tape, (0.37, 0.15, 0.20), (0.20, 0.07, 0.006), ry=-0.2)            # white tape strip out of the register ...
+        mb.box(tape, (0.47, 0.15, 0.13), (0.04, 0.07, 0.10))                        # ... hanging over the edge, not moving
+        mb.cyl(M["brass"], (-0.45, -0.18, 0.04), 0.07, 0.06, "z", 14, True)       # lantern: brass base, glowing glass, roof
+        mb.cyl(glow, (-0.45, -0.18, 0.13), 0.055, 0.12, "z", 14, True)
+        mb.cyl(M["brass"], (-0.45, -0.18, 0.21), 0.075, 0.025, "z", 14, True)
+        mb.ell(M["brass"], (-0.45, -0.18, 0.24), (0.03, 0.03, 0.03), (8, 6))
+        mb.pop(); mb.pop()
+        self.dress = mb.finish()
+        lp = key_pt(-0.45, -0.18, 0.73)
+        ld = bpy.data.lights.new("s15_lantern", "POINT")
+        ld.energy = 600.0; ld.color = (1.0, 0.66, 0.32); ld.shadow_soft_size = 0.25
+        lo = bpy.data.objects.new("s15_lantern", ld); lo.location = lp
+        self.scene.collection.objects.link(lo)
+        self.lantern = lo
+
     def pose(self, gs):
         for g in gs:
             self.key_cam(bf(g), *self.cp.at(g))
@@ -155,10 +187,12 @@ class Take(C.Take):
                     p["expr"] = "determined" if g < 982 else "worried"
                     p["gaze"] = (1.0, 0.9); p["mirror"] = True; p["pitch"] = 0.6
                     kw = knob_world(g)
-                    hands = {"r": {"hand": (kw.x, kw.y, kw.z + 0.12)}}
+                    hands = {"r": {"hand": (kw.x, kw.y, kw.z + 0.18), "layer": "front"}}
                 else:
+                    p["arm_r"] = "down"; p["arm_l"] = "down"          # no folded arms: they bend toward the register
+                    p["yaw"] = 0.95; p["pitch"] = 0.35
                     p["gaze"] = (1.0, 0.7)
-                    p["lean"] = p.get("lean", 0.0) + 5.0 + 3.0 * math.sin(g * 0.13 + len(nm))      # lean in toward the register
+                    p["lean"] = p.get("lean", 0.0) + 11.0 + 3.0 * math.sin(g * 0.13 + len(nm))      # lean in toward the register
                 p["lean"] = p.get("lean", 0.0) + 1.2 * math.sin(g * 0.17 + len(nm))
                 p["head_roll"] = p.get("head_roll", 0.0) + 1.5 * math.sin(g * 0.11 + 2 * len(nm))
                 p["blink"] = blink(g, [960 + 29 * (len(nm) % 4), 1000 + 3 * len(nm)])
