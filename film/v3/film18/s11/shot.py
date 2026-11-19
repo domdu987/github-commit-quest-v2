@@ -9,7 +9,7 @@ import c18 as C                                                         # noqa: 
 
 SHOT = "s11"; G0, G1 = 853, 944; H_IN, H_OUT = 0, 8                     # dissolve 11 into s12: half + 2 = 8 handle frames
 CAMLIN = 0.5
-PARAMS = (0.1, 150, 4.0, 0.8, 0.4, -0.9, 0.0, 0.15)      # c18.make_mod: push, slide px/s, sway D, Hz, wobble D, dz, dz/t
+PARAMS = (0.05, 0, 0.8, 0.9, 0.3, -1.0, 0.0, 2.4)      # c18.make_mod: push, slide px/s, sway D, Hz, wobble D, dz, dz/t
 POSES = ["soldier_mock_moo_a", "soldier_laugh_point_b", "soldier_mock_moo_c", "soldier_cheer_cup_a", "soldier_mock_moo_b", "soldier_laugh_point_c"]
 MARKS = [(1.8, -82.0, 0.0), (6.6, -82.8, 0.0), (-3.2, -83.0, 0.0), (9.6, -85.5, 0.0), (3.2, -88.0, 0.0), (8.0, -90.5, 0.0)]   # two big mock-mooers in front of the fire
 BIG = 1.12                                                              # figures drawn 12 % taller (stylised) so the beat is large in frame
