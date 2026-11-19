@@ -203,7 +203,7 @@ def palette():
     d['spool'] = mat('spool', '#a8602c', '#cc8040', 3, rough=0.35, sheen=0.8, wave=(90, '#5e3218'))
     d['bird'] = mat('bird', '#2a2428', '#3a3238', 2)
     # chamber
-    d['floor'] = mat('floor', '#a8702c', '#d4964a', 8, aniso=(1, 0.2, 1), contrast=1.6, rough=0.4, sheen=0.4)
+    d['floor'] = mat('floor', '#a8702c', '#c88a42', 9, contrast=1.1, rough=0.45, sheen=0.3, wave=(34, '#885826'))
     d['carpet'] = mat('carpet', '#8c1a24', '#a82a32', 10, contrast=1.2)
     d['baize'] = mat('baize', '#2c8040', '#40a05a', 12)
     d['wall'] = mat('wall', '#f2e4c0', '#e4d0a0', 2.0, contrast=0.8)

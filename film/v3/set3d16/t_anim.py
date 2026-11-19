@@ -19,7 +19,15 @@ S = TG.STATE
 for nm in ('morse_ladder', 'morse_ladder_foot', 'morse_key', 'morse_wagon_key', 'morse_bottle', 'platform_a', 'mule_a', 'mule_b', 'cornell', 'mocker_buggy', 'mule_buggy', 'morse_trench'):
     check('line mark ' + nm, nm in A['marks'])
 check('marks carry ground height (ladder z > 5 D, wagon bed z > 1.5 D)', A['marks']['morse_ladder'][2] > 5.0 and A['marks']['morse_wagon_key'][2] > 1.5, (A['marks']['morse_ladder'][2], A['marks']['morse_wagon_key'][2]))
-check('presets of LINE', set(A['cams']) == {'line_close', 'line_wide', 'line_rail', 'line_trench', 'line_trench_high', 'line_trench_end', 'trench_cut', 'line_road', 'line_wagon'})
+check('presets of LINE (+ bottle_macro, extra snap / station cams)', set(A['cams']) == {'line_close', 'bottle_macro', 'line_wide', 'line_rail', 'line_station', 'line_trench', 'line_trench_high', 'line_trench_snap1', 'line_trench_snap2', 'line_trench_snap3', 'line_trench_end', 'trench_cut', 'line_road', 'line_wagon'}, sorted(A['cams']))
+# new in the QA round: ladder rung mark, pulse parking, trench 0 hides the furrow, rain follows the camera, mule card
+check('morse_ladder is a rung mark (z > 5 D, ladder leans: foot within 1.5 m of the pole base)', A['marks']['morse_ladder'][2] > 5.0 and ((LN.LAD0[0][0] - LN.px(4.0)) ** 2 + (LN.LAD0[0][1] - 4.0) ** 2) ** 0.5 < 1.5)
+s_ = TG.pulse_s_at_pole(1); check('pulse_s_at_pole(1) is inside 0..1', 0.0 < s_ < 0.2, round(s_, 4))
+TG.set_trench(0.0); check('set_trench(0) puts the clip at the furrow start (nothing laid)', abs(bpy.data.node_groups['TG_CLIP_TRENCH'].nodes['clip'].outputs[0].default_value - LN.Y0 * TG.SC) < 1e-3)
+TG.set_pipe(0.0); check('set_pipe(0) nothing laid, reel hidden', abs(bpy.data.node_groups['TG_CLIP_PIPE'].nodes['clip'].outputs[0].default_value - LN.Y0 * TG.SC) < 1e-3)
+TG.set_trench(0.5); check('set_trench updates the plough marks', abs(TG.STATE['marks']['plough'][0] - TG.plough_marks(0.5)['plough'][0]) < 1e-3)
+TG.set_rain(True); R_ = S['rain']; check('rain root follows the camera heading (placed under the camera)', abs(R_['root'].location.x - TG.make_camera(A['cam']).location.x) < 1e-3); TG.set_rain(False)
+mc = TG.mule_card((10, 0, 0), face_to=(0, -20, 3)); check('mule placeholder card', mc.name.startswith('actor_mule') and len(mc.data.polygons) == 1); bpy.data.objects.remove(mc, do_unlink=True)
 # poles
 TG.set_poles('bottle', 16); n_pe = sum(vis(o) for p in S['poles'] for o in p['peg']); check('set_poles bottle 16: all pegs + bottles visible', n_pe >= 16 * 2)
 TG.set_poles('bare', 8); check('set_poles bare 8: pegs hidden, 8 bodies', sum(vis(o) for p in S['poles'] for o in p['peg']) == 0 and sum(vis(p['body'][0]) for p in S['poles']) == 8)
@@ -58,7 +66,7 @@ TG.set_rain(False); check('set_rain(False) hides it', not any(vis(l) for l, _, _
 check('rain streaks are geometry', sum(len(l.data.polygons) for l, _, _ in R['layers']) > 3000, sum(len(l.data.polygons) for l, _, _ in R['layers']))
 TG.clear_keys()
 # leaks
-TG.set_leak('pole', 1.0); sp = S['sparks']['pole']; check('set_leak pole: 14 spark beads', len(sp['objs']) == 14 and any(vis(o[0]) for o in sp['objs']))
+TG.set_leak('pole', 1.0); sp = S['sparks']['pole']; check('set_leak pole: 12 spark beads', len(sp['objs']) == 12 and any(vis(o[0]) for o in sp['objs']))
 TG.set_leak('pole', 1.0, frame=1); TG.set_leak('pole', 1.0, frame=7); at(1); a1 = pos(sp['objs'][0][0]); at(7); a2 = pos(sp['objs'][0][0])
 check('pole sparks crawl down the wood', a1.z != a2.z and (a1 - a2).length > 0.1, (round(a1.z, 2), round(a2.z, 2)))
 TG.set_leak('pole', 0.0); check('set_leak pole 0 hides them', not any(vis(o[0]) for o in sp['objs']))
@@ -100,7 +108,7 @@ TG.clear_keys()
 # ---------------------------------------------------------------- CHAMBER
 A = TG.build(None, 'chamber_table'); TG.clear_keys(); S = TG.STATE
 for nm in ('morse_table', 'mocker_desk', 'mocker_table', 'mocker_stool', 'clerk_table', 'morse_door', 'cong_a'): check('chamber mark ' + nm, nm in A['marks'])
-check('presets of CHAMBER', set(A['cams']) == {'chamber_wide_high', 'chamber_low', 'chamber_table'})
+check('presets of CHAMBER (+ the NIGHT table start pose)', set(A['cams']) == {'chamber_wide_high', 'chamber_low', 'chamber_table', 'chamber_table_night'})
 gt = bpy.data.node_groups['TG_CLIP_TAPE']; CH.set_tape(0.0, frame=1); CH.set_tape(1.0, frame=31); at(16); v = gt.nodes['clip'].outputs[0].default_value
 check('set_tape keyed (strip unspools)', abs(v - 0.5) < 0.05, round(v, 3))
 CH.set_click(0, frame=1); CH.set_click(1, frame=2); CH.set_click(0, frame=3); at(1); a0 = S['lever'].rotation_euler.y; at(2); a1 = S['lever'].rotation_euler.y; at(3); a2 = S['lever'].rotation_euler.y

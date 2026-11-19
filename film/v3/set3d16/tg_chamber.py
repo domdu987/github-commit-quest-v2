@@ -22,7 +22,7 @@ def seat(ti, a, d=0.95):
     (x, y), z = desk_pos(ti, a); return (x + d * math.cos(a), y + d * math.sin(a), z)
 MARKS = dict(morse_table=(-1.9, 5.4, 0.0), clerk_table=(2.0, 5.4, 0.0), mocker_table=(0.35, 6.5, 0.0), mocker_stool=(STOOL[0], STOOL[1], 0.0), mocker_desk=seat(0, MOCK_A),
              cong_a=seat(1, math.radians(98)), cong_b=seat(1, math.radians(140)), cong_c=seat(2, math.radians(70)), cong_d=seat(0, math.radians(150)), cong_e=seat(0, math.radians(40)),
-             morse_door=(0.05, SCREEN_Y - 0.15, 0.0), mocker_post=seat(0, MOCK_A), table_front=(0.0, 3.0, 0.0), dais=(0.0, 10.0, 0.4))
+             morse_door=(-1.9, SCREEN_Y - 0.15, 0.0), mocker_post=seat(0, MOCK_A), table_front=(0.0, 3.0, 0.0), dais=(0.0, 10.0, 0.4))
 SEAT = dict(mocker_stool=0.56)
 
 def mats():
@@ -107,9 +107,9 @@ def bag(mb, M, c, s=1.0):
     """tied cloth money sack: slumped body, gathered neck with a flared ruffle, rope tie, gold coins spilled on the baize"""
     x, y, z = c
     mb.ell(M['moneyb'], (x, y, z + 0.27 * s), (0.4 * s, 0.34 * s, 0.27 * s), (16, 10)); mb.ell(M['moneyb'], (x + 0.05 * s, y, z + 0.42 * s), (0.3 * s, 0.26 * s, 0.22 * s), (14, 8))
-    mb.cyl(M['moneyb'], (x, y, z + 0.64 * s), 0.17 * s, 0.22 * s, 'z', 12, True, r2=0.085 * s)
-    mb.rod(M['rope'], (x, y, z + 0.7 * s), (x, y, z + 0.74 * s), 0.1 * s, 0.1 * s, 12, caps=False)
-    mb.cyl(M['moneyb'], (x + 0.02 * s, y, z + 0.84 * s), 0.085 * s, 0.14 * s, 'z', 12, True, r2=0.19 * s)
+    mb.cyl(M['moneyb'], (x, y, z + 0.6 * s), 0.2 * s, 0.14 * s, 'z', 12, True, r2=0.1 * s)
+    mb.rod(M['rope'], (x, y, z + 0.66 * s), (x, y, z + 0.69 * s), 0.11 * s, 0.11 * s, 12, caps=False)
+    mb.cyl(M['moneyb'], (x + 0.02 * s, y, z + 0.76 * s), 0.1 * s, 0.14 * s, 'z', 12, True, r2=0.15 * s); mb.ell(M['moneyb'], (x + 0.05 * s, y, z + 0.82 * s), (0.15 * s, 0.1 * s, 0.05 * s), (8, 6), (0, 0, 0.6))
     rs = rnd(8)
     for k in range(10):
         a = rs.uniform(0, 6.28); rr_ = rs.uniform(0.3, 0.6) * s
@@ -121,9 +121,9 @@ def sack(mb, M, c, s=1.0, yaw=0.0, tall=1.0):
     x, y, z = c
     mb.ell(M['sack'], (x, y, z + 0.26 * s * tall), (0.36 * s, 0.28 * s, 0.26 * s * tall), (14, 9), (0, 0, yaw)); mb.ell(M['sack'], (x, y, z + 0.42 * s * tall), (0.3 * s, 0.24 * s, 0.2 * s * tall), (12, 8), (0, 0, yaw))
     mb.ell(M['red'], (x, y - 0.27 * s, z + 0.3 * s * tall), (0.2 * s, 0.02, 0.04 * s), (10, 6), (0, 0, yaw))
-    mb.cyl(M['sack'], (x, y, z + 0.6 * s * tall), 0.15 * s, 0.2 * s, 'z', 10, True, r2=0.075 * s)
-    mb.rod(M['rope'], (x, y, z + 0.66 * s * tall), (x, y, z + 0.69 * s * tall), 0.085 * s, 0.085 * s, 10, caps=False)
-    mb.cyl(M['sack'], (x, y, z + 0.78 * s * tall), 0.075 * s, 0.14 * s, 'z', 10, True, r2=0.17 * s)
+    mb.cyl(M['sack'], (x, y, z + 0.56 * s * tall), 0.2 * s, 0.1 * s, 'z', 10, True, r2=0.1 * s)
+    mb.rod(M['rope'], (x, y, z + 0.6 * s * tall), (x, y, z + 0.62 * s * tall), 0.1 * s, 0.1 * s, 10, caps=False)
+    mb.cyl(M['sack'], (x, y, z + 0.67 * s * tall), 0.09 * s, 0.1 * s, 'z', 10, True, r2=0.13 * s); mb.ell(M['sack'], (x + 0.03 * s, y, z + 0.7 * s * tall), (0.14 * s, 0.1 * s, 0.05 * s), (8, 6), (0, 0, yaw + 0.5))
     for k in range(3): mb.box(M['paper'], (x + 0.3 * s + 0.08 * k * s, y - 0.1 * s + 0.1 * k * s, z + 0.015 + 0.012 * k), (0.16 * s, 0.1 * s, 0.01), rz=yaw + 0.7 * k)
 
 def build_chamber(ST, P):
@@ -163,14 +163,15 @@ def build_chamber(ST, P):
     mb.box(M['leather'], (0, 12.6, 0.95), (0.8, 0.7, 0.1)); mb.box(M['walnut'], (0, 13.0, 1.9), (0.8, 0.1, 2.2)); mb.box(M['leather'], (0, 12.95, 2.0), (0.6, 0.03, 1.7))
     mb.box(M['gold'], (0.8, 11.2, 1.8), (0.1, 0.1, 0.3)); mb.cyl(M['gold'], (-0.8, 11.2, 1.85), 0.1, 0.3, 'z', 10)
     sw, sh = 6.8, 4.6                                                                                          # screen: panelled wall with a doorway at x 0
-    for (xa, xb) in ((-sw / 2, -0.62), (0.62, sw / 2)):
+    DX = -1.9                                                                                                 # the doorway sits left of the speaker's chair so the chair does not hide it
+    for (xa, xb) in ((-sw / 2, DX - 0.62), (DX + 0.62, sw / 2)):
         mb.box(M['screenw'], ((xa + xb) / 2, SCREEN_Y, sh / 2), (xb - xa, 0.3, sh))
         for k in range(int((xb - xa) / 1.2)):
             px_ = xa + 0.6 + k * 1.2; mb.box(M['panel'], (px_, SCREEN_Y - 0.17, 1.0), (0.9, 0.06, 1.3)); mb.box(M['panel'], (px_, SCREEN_Y - 0.17, 3.0), (0.9, 0.06, 1.6))
-    mb.box(M['screenw'], (0, SCREEN_Y, 3.7 + (sh - 3.7) / 2), (1.24, 0.3, sh - 3.7)); mb.box(M['doorlit'], (0, SCREEN_Y + 0.3, 1.85), (1.24, 0.1, 3.7)); mb.box(M['doorlit'], (0, SCREEN_Y + 0.15, 0.02), (1.24, 0.4, 0.04))
-    mb.box(M['gold'], (0, SCREEN_Y - 0.2, sh + 0.12), (sw + 0.3, 0.3, 0.24)); mb.box(M['gold'], (0, SCREEN_Y - 0.2, 3.75), (1.5, 0.22, 0.08))
-    for sgn in (-1, 1): mb.box(M['gold'], (sgn * 0.66, SCREEN_Y - 0.2, 1.85), (0.1, 0.2, 3.8))
-    mb.cyl(M['gold'], (0, SCREEN_Y - 0.35, sh + 0.4), 0.5, 0.12, 'y', 16); mb.ell(M['gold'], (0, SCREEN_Y - 0.4, sh + 0.8), (0.4, 0.1, 0.25), (10, 6))                                # crest
+    mb.box(M['screenw'], (DX, SCREEN_Y, 3.7 + (sh - 3.7) / 2), (1.24, 0.3, sh - 3.7)); mb.box(M['doorlit'], (DX, SCREEN_Y + 0.3, 1.85), (1.24, 0.1, 3.7)); mb.box(M['doorlit'], (DX, SCREEN_Y + 0.15, 0.02), (1.24, 0.4, 0.04))
+    mb.box(M['gold'], (0, SCREEN_Y - 0.2, sh + 0.12), (sw + 0.3, 0.3, 0.24)); mb.box(M['gold'], (DX, SCREEN_Y - 0.2, 3.75), (1.5, 0.22, 0.08))
+    for sgn in (-1, 1): mb.box(M['gold'], (DX + sgn * 0.66, SCREEN_Y - 0.2, 1.85), (0.1, 0.2, 3.8))
+    mb.cyl(M['gold'], (0, SCREEN_Y - 0.35, sh + 0.4), 0.5, 0.12, 'y', 16); mb.ell(M['gold'], (0, SCREEN_Y - 0.4, sh + 0.8), (0.4, 0.1, 0.25), (10, 6))
     for (sx_, sy_) in [(-1.8, 3.0), (1.9, 9.0), (-2.1, 15.0), (2.2, 19.0)]:
         mb.ell(M['brass'], (sx_, sy_, 0.16), (0.24, 0.24, 0.16), (14, 8)); mb.cyl(M['brass'], (sx_, sy_, 0.3), 0.15, 0.12, 'z', 14, True, r2=0.2)
     gx, gy = -2.8, 10.4
@@ -279,7 +280,7 @@ def lights(ST, win_x, sconces):
     point('tablecandle', (tx - 1.9, ty - 0.5, 1.9), (1.0, 0.68, 0.32), 45, 'lamp', 0.1); point('tablecandle2', (tx - 2.1, ty - 0.2, 1.5), (1.0, 0.68, 0.32), 22, 'lamp', 0.1)
     for i, (x, y, z) in enumerate(ST['desk_candles']): point('deskc%d' % i, (x, y, z + 0.08), (1.0, 0.68, 0.32), 14, 'lamp', 0.08)
     point('daisc', (0.0, 10.4, 2.0), (1.0, 0.66, 0.3), 30, 'candle', 0.1)
-    point('stoolc', (STOOL[0] + 0.45, STOOL[1] - 0.15, 1.9), (1.0, 0.62, 0.28), 70, 'nightc', 0.08); point('doorlight', (0.0, SCREEN_Y + 1.2, 2.2), (1.0, 0.7, 0.35), 60, 'candle', 0.2)
+    point('stoolc', (STOOL[0] + 0.45, STOOL[1] - 0.15, 1.9), (1.0, 0.62, 0.28), 70, 'nightc', 0.08); point('doorlight', (-1.9, SCREEN_Y + 1.2, 2.2), (1.0, 0.7, 0.35), 60, 'candle', 0.2)
 
 def apply_state(ST, st):
     set_tape(st.get('tape', 0.0)); set_click(st.get('click', 0)); set_moneybag(st.get('moneybag', False)); set_mailsacks(st.get('mailsacks', False)); set_flames(1.0)
@@ -336,7 +337,6 @@ def fg_desk(ST, cam, look):
     mb.box(M['walnut'], (0.2, 0.0, 0.0), (1.1, 0.8, 0.06)); mb.box(M['baize'], (0.2, 0.0, 0.035), (0.95, 0.66, 0.012))
     mb.cyl(M['glassjar'], (0.0, 0.0, 0.09), 0.07, 0.12, 'z', 14, True); mb.cyl(M['ink'], (0.0, 0.0, 0.08), 0.06, 0.09, 'z', 14); mb.cyl(M['brass'], (0.0, 0.0, 0.16), 0.075, 0.025, 'z', 14)
     mb.rod(M['paper'], (0.0, 0.0, 0.14), (0.16, 0.12, 0.62), 0.008, 0.003, 5); mb.ell(M['paper'], (0.12, 0.09, 0.5), (0.03, 0.012, 0.14), (8, 6), (0, 0.2, 0.7))
-    mb.box(M['paper'], (0.4, -0.12, 0.05), (0.3, 0.4, 0.03), rz=0.3); mb.box(M['paper'], (0.42, -0.1, 0.075), (0.28, 0.38, 0.03), rz=0.1)
     mb.pop(); ST['fg'] = mb.finish()
 
 def congress_marks(ST, n=14):

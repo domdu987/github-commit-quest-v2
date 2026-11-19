@@ -507,11 +507,11 @@ def build_pit(ST, M):
         xx = rcl.uniform(x0 - 0.3, x1 + 0.3); ln = rcl.uniform(0.25, 0.65); sg = rcl.choice((-1, 1)) * 0.12
         mb.quad(cloth, [(xx, yw - 0.1, z0 + 0.08), (xx + 0.2, yw - 0.1, z0 + 0.08), (xx + 0.1 + sg, yw - 0.28 - ln * 0.3, z0 + 0.08 - ln), (xx + sg * 1.4, yw - 0.26 - ln * 0.3, z0 + 0.08 - ln * 0.9)])
     mb.finish()
-    la = bpy.data.lights.new('pitsky', 'AREA'); la.shape = 'RECTANGLE'; la.size = 7.0 * SC; la.size_y = 3.0 * SC; la.color = (0.78, 0.68, 0.95); la.energy = 300.0 * SC * SC
+    la = bpy.data.lights.new('pitsky', 'AREA'); la.shape = 'RECTANGLE'; la.size = 7.0 * SC; la.size_y = 3.0 * SC; la.color = (0.5, 0.62, 1.0); la.energy = 300.0 * SC * SC
     lo = bpy.data.objects.new('pitsky', la); lo.location = W((cx, cy - 0.4, 1.6)); bpy.context.scene.collection.objects.link(lo); lo.visible_camera = False; la.use_shadow = False
     lb = bpy.data.lights.new('pitspark', 'POINT'); lb.color = (0.4, 0.62, 1.0); lb.energy = 22.0 * SC * SC; lb.shadow_soft_size = 0.12 * SC
     ob = bpy.data.objects.new('pitspark', lb); ob.location = W((cx, fy - 0.5, z0 - 0.2)); bpy.context.scene.collection.objects.link(ob)
-    lw = bpy.data.lights.new('pitwarm', 'POINT'); lw.color = (1.0, 0.72, 0.42); lw.energy = 16.0 * SC * SC; lw.shadow_soft_size = 0.2 * SC; lw.use_shadow = False
+    lw = bpy.data.lights.new('pitwarm', 'POINT'); lw.color = (1.0, 0.72, 0.42); lw.energy = 7.0 * SC * SC; lw.shadow_soft_size = 0.2 * SC; lw.use_shadow = False
     ow = bpy.data.objects.new('pitwarm', lw); ow.location = W((cx, fy - 0.8, z0 + 0.35)); bpy.context.scene.collection.objects.link(ow)
     return dict(c=(cx, cy), hw=hw, hl=hl, d=d, face_y=fy, z0=z0, w=(x0, x1))
 

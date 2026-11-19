@@ -35,13 +35,13 @@ def kdir(az, el):
 
 _L = dict(sun_angle=1.0, exposure=0.0, sat=1.08, wet=0.0, cloud_k=1.0, hill_k=1.0, fill=0.0, win=0.0, candle=0.0, lamp=0.0)
 LINE_LIGHTS = dict(
-    DAY=dict(_L, key=(1.0, 0.85, 0.63, 14.0), az=150, el=24, sky_k=0.85, amb=('#4c52ff', 2.2),
+    DAY=dict(_L, key=(1.0, 0.85, 0.63, 14.0), az=150, el=24, sky_k=0.85, amb=('#3e58ff', 2.2),
              sky=['#8a92d8', '#efc698', '#f3d3a8', '#cdc8d8', '#8db0ec', '#5a86e0', '#3a5acb'], hills=['#9a9ad2', '#8aa0d8', '#7ea4d6'], cloud=('#ffeacc', '#7c84d8')),
-    DUSK=dict(_L, key=(1.0, 0.55, 0.3, 27.0), az=150, el=12, sun_angle=1.3, sky_k=0.95, amb=('#4054ff', 2.9),
+    DUSK=dict(_L, key=(1.0, 0.55, 0.3, 27.0), az=150, el=12, sun_angle=1.3, sky_k=0.95, amb=('#3a62ff', 2.9),
               sky=['#4a52b8', '#e6905a', '#f0a876', '#b8a4c0', '#6a86d8', '#3e58c0', '#262c98'], hills=['#7a78b8', '#6e7cc0', '#6a84c8'], cloud=('#ffc89a', '#6a72c4')),
-    RAIN=dict(_L, key=(0.8, 0.82, 1.0, 2.4), az=150, el=32, sun_angle=16.0, sky_k=0.8, amb=('#5c70ff', 3.3), wet=1.0, exposure=-0.1, cloud_k=0.8,
+    RAIN=dict(_L, key=(0.8, 0.82, 1.0, 2.4), az=150, el=32, sun_angle=16.0, sky_k=0.8, amb=('#6068ff', 3.3), wet=1.0, exposure=-0.1, cloud_k=0.8,
               sky=['#6a78b4', '#c4b4b0', '#c8c0c8', '#aab4d0', '#8a9ccc', '#6a80c0', '#4a62ac'], hills=['#7a82b8', '#6e7ab4', '#6a7cb4'], cloud=('#b8bad8', '#7e86c4')),
-    AFTER_RAIN=dict(_L, key=(1.0, 0.85, 0.63, 9.0), az=-125, el=24, sun_angle=0.8, sky_k=1.0, amb=('#3c4cff', 2.2), wet=0.9,
+    AFTER_RAIN=dict(_L, key=(1.0, 0.85, 0.63, 9.0), az=-125, el=24, sun_angle=0.8, sky_k=1.0, amb=('#3a4cff', 2.2), wet=0.9,
                     sky=['#5a6cc4', '#f0b488', '#f4c8a0', '#b0a8d0', '#7488d0', '#4a64c4', '#2a3fa8'], hills=['#8a8ac8', '#7a96d2', '#7aa0d4'], cloud=('#ffe2bc', '#6c78d4')),
 )
 STUDIO_LIGHTS = dict(
@@ -407,15 +407,15 @@ CAMS_M = dict(
     line_road=((6.4, 32.6, 1.0), (1.0, 36.0, 1.8)),
     line_wagon=((1.8, 65.0, 2.9), (-1.9, 70.0, 1.4)),
     # STUDIO
-    studio_wide=((-3.3, -2.2, 3.4), (1.0, 4.6, 1.3)),
-    studio_easel=((-0.2, -0.6, 1.55), (-0.2, 3.6, 1.45)),
-    studio_door=((-2.0, 0.3, 1.55), (3.2, 3.4, 1.6)),
-    studio_window=((-0.5, 0.8, 1.55), (-0.8, 6.9, 1.95)),
+    studio_wide=((-3.3, -2.2, 3.0), (1.0, 4.6, 0.6)),
+    studio_easel=((-0.2, -0.6, 1.5), (-0.2, 3.6, 0.95)),
+    studio_door=((-2.0, 0.3, 1.5), (3.2, 3.4, 1.0)),
+    studio_window=((-0.5, 0.8, 1.5), (-0.8, 6.9, 1.5)),
     # CHAMBER
-    chamber_wide_high=((0.0, -5.0, 8.0), (0.0, 14.0, 0.4)),
-    chamber_low=((-3.0, 8.6, 1.05), (-5.27, 12.27, 1.05)),
-    chamber_table=((0.1, -0.3, 1.65), (0.1, 5.6, 1.4)),
-    chamber_table_night=((-0.95, -0.4, 1.45), (0.3, 13.0, 1.35)),
+    chamber_wide_high=((0.0, -5.0, 8.0), (0.0, 14.0, -1.0)),
+    chamber_low=((-3.0, 8.6, 1.05), (-5.27, 12.27, 0.55)),
+    chamber_table=((0.1, -0.3, 1.5), (0.1, 5.6, 1.15)),
+    chamber_table_night=((-0.95, -0.4, 1.45), (0.3, 13.0, 0.9)),
 )
 EXTRA_CAMS = {'line': ['line_station', 'line_trench_snap1', 'line_trench_snap2', 'line_trench_snap3'], 'studio': [], 'chamber': ['chamber_table_night']}
 LIGHT_CAM = {('chamber_table', 'NIGHT'): 'chamber_table_night'}
@@ -736,11 +736,11 @@ def _glow_mat(name, hexcol, k, power=1.6):
     L(K.cos_facing(nt, power), mx.inputs[0]); L(tr.outputs[0], mx.inputs[1]); L(em.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface']); MATS[name] = m; return m
 
 def _make_pulse():
-    core_m = _emit_mat('pulsecore', '#fff6d0', 90.0); halo_m = _glow_mat('pulsehalo', '#ffd890', 14.0); halo2_m = _glow_mat('pulsehalo2', '#78b8ff', 5.0); L = []
+    core_m = _emit_mat('pulsecore', '#fff6d0', 90.0); halo_m = _glow_mat('pulsehalo', '#ffd890', 3.2, 3.0); halo2_m = _glow_mat('pulsehalo2', '#78b8ff', 2.0, 3.0); L = []
     for k in range(10):
         r = 0.032 * (1.0 - 0.07 * k) * SC
         mb = MB('pulse_c%d' % k); mb.T = Matrix.Identity(4); mb.ell(core_m, (0, 0, 0), (r,) * 3, (12, 8)); c = mb.finish()[0]
-        mb = MB('pulse_h%d' % k); mb.T = Matrix.Identity(4); mb.ell(halo_m if k < 4 else halo2_m, (0, 0, 0), (r * 4.2,) * 3, (14, 10)); h = mb.finish()[0]
+        mb = MB('pulse_h%d' % k); mb.T = Matrix.Identity(4); mb.ell(halo_m if k < 4 else halo2_m, (0, 0, 0), (r * 5.0,) * 3, (14, 10)); h = mb.finish()[0]
         for o in (c, h): o.visible_shadow = False; o.visible_glossy = False
         L.append((c, h, 0.0036 * k))
     STATE['pulse'] = L
