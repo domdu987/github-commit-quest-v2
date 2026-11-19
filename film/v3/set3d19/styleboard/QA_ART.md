@@ -61,3 +61,43 @@ Fixes:
 
 ## Overall: FIX-FIRST
 The structure is sound in all three stills. The problems are the materials (brass that reads as wood, flat sails), empty lower thirds, and above all the water. The sea is exactly the noisy, over-saturated look the client has rejected before. Re-render after the fixes and resubmit the board. The ship still is the priority.
+
+## Re-review (v3)
+Compared again with film 16's board. All three stills are sharp, with no DOF and no text in the frame (the board captions sit outside the stills, as on film 16). The warm workshop shade is accepted as an indoor exception, like film 16's chamber.
+
+### sb1_workshop: APPROVED
+| density | light/colour | composition | materials | hero (H1) | match refs |
+|---|---|---|---|---|---|
+| 7 | 8 | 6 | 7 | 7 | 7 |
+
+The look is right: a honey/terracotta room, a readable window shaft, warm practicals, and H1 balls and bars that now read as polished brass. Must-fix in the full build:
+1. H1 frame and inner gears are still pale cream wood. Make them brass, like the balls.
+2. Black gear-tooth slivers remain on the upper wall gear and inside H1. Find the bad faces (duplicate or overlapping geometry) and fix them.
+3. Blue objects are still there: the blue-grey bars on the wall above H1 and the blue bracket inside H1. Make them iron-grey or brass.
+4. The bottom 35% is still bare boards with a few big pale "C" shavings. The tool chest, offcut basket and half-built clock case listed in v2 are not visible. Bring them into frame. Tint the floor shavings honey and make them smaller.
+5. The octagonal stump bottom-right is a crude low-poly block. Give it bark/grain and more sides, or replace it.
+
+### sb2_ship: FIX-FIRST (sea only)
+| density | light/colour | composition | materials | hero (sea) | match refs |
+|---|---|---|---|---|---|
+| 7 | 7 | 6 | 6 | 5 | 6 |
+
+Big progress: the deck, cannons, mast, sail shadows, white clouds with violet undersides, and the far sea (layered swells, one glitter path near the horizon) are all right. The look-level problem is the near water, the largest element on the right half. The wake along the hull is a motion-blur-like texture of vertical white streaks on saturated cyan (about RGB 90/165/215). It reads as noise and speed blur, not as smooth layered water with foam. There is no curling bow wave silhouette. This is the client's main dislike, so it needs one more ship render before the build.
+1. Near water: shift it toward deep teal (#0d5a6a to #1f7f8f) and lower the saturation. The cyan should only show in crest backlight.
+2. Wake: replace the streak texture with 2-3 smooth, coherent foam bands that follow the hull (a lacy edge, soft-edged white, broad calm water between them). Add a readable white bow-wave roll at the stem and a turquoise underside on the wave pushed away from the hull.
+3. Keep the far sea and glitter exactly as they are.
+Must-fix in the build (not blocking): the bulwark is a row of flat black boxes. Add a cap rail, plank seams and a warmer, slightly lighter black (#2a2622). Give the sails a slight billow (they are still flat planes). Add a sky gradient (deeper blue at the top, warmer near the horizon) to match film 16.
+
+### sb3_hall: APPROVED
+| density | light/colour | composition | materials | hero (telescope/globes) | match refs |
+|---|---|---|---|---|---|
+| 7 | 7 | 6 | 7 | 8 | 7 |
+
+The crimson walls, gilt chandelier with candles, brass telescope, globes, Greenwich dome view and warm sconces give the right period look. Must-fix in the full build:
+1. The carpet and chair seats are still saturated royal blue and fight the crimson. Take them to a greyer navy (about #2c3558) and give the seats crimson or green upholstery.
+2. The carpet medallion is a plain set of concentric rings that fills the bottom 30%. Add the border pattern, corner motifs and finer field ornament, and reduce the floor to about 25% of the frame.
+3. The Moon picture still reads as a blue disc with holes. Use a soft grey painted Moon on a dark ground.
+4. The left side is thin (only the telescope). Add the bookcase and quadrant from v2, which are not visible here, and more warm practicals left.
+
+### Overall
+Workshop and hall: look agreed, so build them. Ship: one more sea-only render. The fix is the near-hull wake and the near-water colour. Nothing else on the ship changes.
