@@ -1,0 +1,1 @@
+{"take":"s16","fps":30,"note":"time = film seconds (g/30)","cues":[{"time":40.15,"frame":1205,"what":"dissolve in (15 frames; handle g1195-1204 rendered)"},{"time":40.15,"frame":1207,"what":"set_holes 0 -> 12 eased over the shot, hole 11 (x 41) first; 'รูหลายสิบรู' while the holes open"},{"time":43.63,"frame":1309,"what":"cut to s17"}]}
