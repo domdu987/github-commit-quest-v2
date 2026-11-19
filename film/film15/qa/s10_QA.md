@@ -53,3 +53,37 @@ Checked at 6 fps (every 5th frame) plus every cut ±3 (489, 564, 621, 708, 762, 
 7. **qa_auto note, non-blocking.** Four planned cuts (g564, 621, 762, 838) are flagged as no-visible-change although they are real cuts. If the rerender changes these shots, re-check the cut frames.
 
 Re-check after the rerender: shots 11, 14, 15 and 16 on the phone sheet. A viewer should see (a) the coach mime a broken neck and point at Dick, (b) a newspaper with an arched jumper in the photo, (c) the bar going up between flops.
+
+---
+## Re-check r2 (render15/team3 @ a6c02b4, rebuilt in scratch takes/s10r2)
+
+**Verdict: PASS, with notes.** Shot 14 now reads clearly. Shot 11 reads as "the coach turns and points at Dick", but the neck mime is marginal. In shot 16 the season-change dissolve and the repeated flops read. The peg raise is weak but present. Nothing here clearly hurts the film.
+
+### Automatic checks
+- qa_auto: PASS. Only g621 is flagged as no visible change within ±2.
+- motion_check: median 5.4, p90 12.1 (target 4 / 12). PASS, only just on p90.
+
+### Your two questions
+- **Cuts g489 and g621.**
+  - g621: the cut is **real and clearly visible** (shot 11 is the coach pointing on a green field; shot 12 is a coach against the bleachers). The qa_auto flag is a false alarm. The cause: the coach is a large, similar-coloured card in both frames, and the smooth transition frames are close.
+  - g489: this is not a cut inside this take. The take begins at g483 with handle frames of shot 10, so there is nothing to see, and the first cut in the file is g564. This matches meta.json (cut-in at g489 is the take's boundary).
+- **Near-static runs in shots 10 and 16.** Neither is near-static on screen. The weakest 15-frame (0.5 s) windows still change a lot (shot 10 min 8.3 on a 0-255 scale, median 18; shot 16 min 21, median 25), and there are no frame-diff runs under 1.0 anywhere. Shot 10 has a visible push-in, and the coach and boys bob. Shot 16 has a long camera move plus the flops, spray and dissolve. The low per-shot medians come from the wide framing, not from stillness.
+
+### Fixes 1-6 from the first review
+| # | status | evidence |
+|---|---|---|
+| 1 shot 11 mime | **partly done, marginal** | g564-596: the coach is at the right of the frame, small and 3/4 turned, mouth an "o", hands up at his chest or collar. On a 360x640 phone it reads as "shocked", not as a clear broken-neck mime (head tilt and hand on the neck are tiny). g606-620: he turns and points with a straight arm at Dick, with an eye-line on Dick. That reads well. Dick is on the grass with the boys beside him, but small (about 10 % of the frame height, not the 15-20 % asked for). The flat green patch is gone. |
+| 2 shot 14 photo | **done** | The newspaper is about 70 % of the frame width with a large framed photo of the upside-down arched Dick (head below a tan bar) and grey bars for text. At phone size you can see "a photo of the flop". The reader's face and thumbs are at its edge. The seated spectator is removed. A little static: the push is slow, but each 15-frame window is still above 20. |
+| 3 shot 16 peg raise | **weak** | The blond boy now stands in frame at the left standard (good), and the bar visibly rises over g886-906 relative to the pole, and again on the DAY plate. But the boy never moves a hand to the peg (his eyes stay closed, and his pose is static), and the rise is about 35 px on 720, so it is easy to miss on a phone. Dick is small (about 10 % of the frame). The flops, the spray and the GOLDEN to DAY dissolve all read. |
+| 4 shot 15 coach laughs | **done** | At g838-861 the coach squeezes his eyes shut and bounces with the boys, mouth shut. The boys point and laugh. Fence at the left edge as FG. |
+| 5 shot 13 push-in | **done** | The push-in gives a larger arch at g741, with the flash at the right moment. The arch is clear over the bar. |
+| 6 shot 14 spectator | **done** | The seated spectator is gone. |
+
+### Checks that still pass
+Heads above y 880 (the lowest is Dick at the shot 16 landing, about y 860). No text anywhere. Sawdust only. The coach's mouth moves only g537-710 (it was closed in shot 10 before g537 and in shot 15). The bounce is about 3 Hz. The bar does not fall.
+
+### Leftover notes (non-blocking; fix if there is a cheap re-render)
+1. **Shot 11, g564-596:** make the neck mime bigger. Push the camera in so the coach is the left-of-centre FG card, tilt his head about 30 degrees, and put both hands on his own throat with his tongue out. Keep the point at g606.
+2. **Shot 16, g884-906:** animate the boy's hand to the peg (an arm up and a lift) and open his eyes, so the raise reads without the pole. A push-in on the bar and standard at g884-906 would also help.
+3. **Shot 11 and 16:** Dick is small in both. Push in about 20 % on his marks if time allows.
+4. **qa_auto note:** the cut detector misses g621 and can't see g489 as a cut. This is false-alarm noise, not a defect in the take.
