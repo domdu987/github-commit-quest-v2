@@ -64,7 +64,7 @@ CAM = {
  21: (((2.6, 3.8, 1.5), (6.6, 9.6, 2.3)), ((1.3, 4.7, 1.6), (-0.5, 11.6, 3.0))),
  22: (((2.6, 17.6, 2.0), (-0.4, 12.0, 2.5)), ((0.4, 15.3, 2.05), (0.5, 12.0, 2.35))),
  23: (((-12.8, 47.4, 7.3), (-13.9, 50.4, 7.0)), ((-13.9, 48.5, 7.2), (-13.9, 50.4, 7.0))),
- 24: (((0.3, 5.6, 1.2), (5.6, 8.4, 1.9)), ((2.7, 4.6, 1.35), (6.3, 7.4, 1.95))),
+ 24: (((-0.8, 6.2, 1.2), (5.4, 8.8, 1.9)), ((3.6, 4.2, 1.45), (6.6, 7.0, 2.0))),
 }
 def cam_at(n, g):
     a, b = CAM[n]; g0, g1 = B[n], B[n + 1]
@@ -74,7 +74,7 @@ def cam_at(n, g):
     if n == 18: lk = push_extra(push_extra(lk, 14, 996, g, 8), 14, 1004, g, 8)
     if n == 19: lk = push_extra(lk, 22, B[19] + 22, g, 9)
     if n == 20: lk = push_extra(push_extra(lk, 20, gof(36.72) - 4, g, 10), 10, B[20] + 18, g, 9)
-    if n == 24: lk = push_extra(lk, 16, gof(43.32) - 4, g, 12)
+    if n == 24: lk = push_extra(push_extra(lk, 18, 1281, g, 8), 16, gof(43.32) - 4, g, 8)
     return lk
 
 # ------------------------------------------------------------------ the jump (relative frame r from take-off)
@@ -208,7 +208,7 @@ def specs_23(g, cam):
     out.append(dict(tag='coach', cast='coach_stands', pose=p, mark=tuple(cm), shadow=(1.9, .6), canvas=W_, ppd=160))
     return out
 def specs_24(g, cam):
-    M = MK(); ph = 0.5 + 0.5 * math.sin(g * 0.44)
+    M = MK(); ph = 0.5 + 0.5 * math.sin(g * 0.6)
     a = P('rock_a', 'dick_olympic', -1); b = P('rock_b', 'dick_olympic', -1)
     p = tween(a, b, round(ph * 8) / 8.0)
     return [dict(tag='dick', cast='dick_olympic', pose=idle(p, g, .8), mark=M['dick_mark'], mirror=True, shadow=(1.5, .5))]
