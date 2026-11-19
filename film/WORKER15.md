@@ -34,6 +34,7 @@ Dissolves (11 frames) are where the plan says DIS: 5, 16 (+ mid-shot season DIS)
 
 ## THE worked placement code: PROJ/v3/set3d15/cast_test/cast_test.py (+ README.md, test.jpg)
 Copy its put() helper and the s10/s20/s27/s28/s36 placements into your own helper in your take folder (e.g. film/v3/film15/sNN/c15.py). Also read PROJ/v3/film8/common.py and PROJ/v3/film8/s01/shot.py for the take structure and gotchas (moves must move, key every hook every frame). No shared common.py.
+Notes from the test (set3d15/cast_test/README.md): s27 needs the camera ~2.2 m from the bar (not the plan's 4.6 m) so the arch is >= 50 % of the width, and the card sits 0.3 D toward the camera so the round bar does not cut it; dim the TENSE spot pool on the bar so the bar is not blown to white. s20: Dick 1.3 D in front of the bar plane, camera at about head/bar height (his hair tufts reach 4.05 D). s36: push the camera in so the buried coach is at least 25 % of the frame height; make the sawdust spray denser and earlier.
 
 ## CAMERA RHYTHM — the client's new hard rule (production-lessons §10, film 2 is the model)
 - Every shot has a clear move: push or pull 6-10 % of framing per second PLUS a lateral slide of about 40 px/s at 720 wide.
