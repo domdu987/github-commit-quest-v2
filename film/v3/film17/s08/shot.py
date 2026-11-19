@@ -8,6 +8,7 @@ cmds: probe | stills <out> [scale] [samples] | final [scale] [samples]
 import math, os, sys, json
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import c17 as C                                       # noqa
+import bpy
 from c17 import K, cast17, lerp, clamp, smooth, sine, g_of
 
 G_CUT = 1127                                          # shot 21 starts (narration 37.48 s + 0.10 s offset)
@@ -41,7 +42,7 @@ def drawer_open(base, i, g):
 
 def key_set(g):
     K.set_flicker(1.5 + 0.8 * sine((g - 1039) / 160.0), frame=g, seed=3)       # the candle burns low: a stronger flicker
-    K.set_dust(1.0, frame=g)
+    K.set_dust(0.5, frame=g)
     for k, a in K.STATE['anim'].items():
         if k[0] in 'pq' and k[1:].isdigit():
             K.set_drawer(k, drawer_open(BASE[k], int(k[1:]), g), frame=g)
@@ -94,12 +95,14 @@ def pose_gend(who, g, ph):
     p['lean'] = -6 + 6 * math.sin(t * 2 * math.pi * 3.0 + ph)                   # snicker bounce ~3 Hz
     p['head_roll'] = -8 + 3 * math.sin(t * 2 * math.pi * 3.0 + ph + 0.7)
     p['t'] = t
-    return p
+    return cast17.silent(p)
 
 class Take(C.Take):
     def __init__(self, shot, quality="draft"):
         C.Take.__init__(self, PRESET[shot], LIGHT, quality, sprite_dir=os.path.join(HERE, "work", "sprites_s%d" % shot))
         self.shot = shot
+        for o in bpy.data.objects:                      # director fix: shafts wash over the cast cards -> hidden
+            if any(m and m.name.startswith('beam_fx') for m in (getattr(o.data, 'materials', None) or [])): o.hide_render = True
         for k, a in K.STATE['anim'].items():
             if k[0] in 'pq' and k[1:].isdigit(): BASE[k] = a['slide'].location.y / a['travel']
         if shot == 20:
