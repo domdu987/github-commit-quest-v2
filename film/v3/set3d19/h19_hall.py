@@ -13,10 +13,10 @@ TZ = 0.8                        # table height
 TABLE = (-0.75, 0.75, 0.6, 4.2)  # x0 x1 y0 y1
 
 CAMS_M = dict(
-    hall_wide=((0.0, -3.2, 3.0), (0.0, 4.0, 2.5)),
-    hall_table=((0.1, -2.3, 1.7), (0.0, 3.3, 1.0)),
-    hall_low=((0.5, -0.4, 0.62), (-1.9, 2.3, 1.55)),
-    hall_window=((-0.1, 0.6, 1.35), (-0.9, 5.6, 2.55)),
+    hall_wide=((0.0, -3.2, 3.6), (0.0, 3.5, 1.15)),
+    hall_table=((0.1, -2.3, 1.7), (0.0, 3.3, 1.4)),
+    hall_low=((-1.9, -1.2, 0.7), (-1.7, 2.0, 1.35)),
+    hall_window=((-0.6, -1.6, 1.1), (-1.3, 5.6, 2.2)),
     hall_door=((1.5, 0.3, 1.45), (0.0, -3.4, 1.35)),
 )
 CAM_NOTES = dict(
@@ -33,13 +33,13 @@ STAGING = dict(
     hall_window=[('mocker', 'mocker_telescope')],
     hall_door=[('harrison', 'harrison_door')],
 )
-MARKS_M = dict(mocker_telescope=(-1.75, 1.75, 0.0), mocker_table=(-1.55, 0.9, 0.0), astro_a=(-1.9, 1.5, 0.0), astro_b=(-1.9, 2.7, 0.0), astro_c=(1.9, 1.4, 0.0), astro_d=(1.9, 2.6, 0.0), astro_e=(1.9, 3.7, 0.0),
-               harrison_door=(0.0, -3.0, 0.0), harrison_table=(0.45, 0.25, 0.0), king_chair=(0.0, 4.55, 0.0), king_stand=(0.95, 4.35, 0.0))
+MARKS_M = dict(mocker_telescope=(-1.75, 1.75, 0.0), mocker_table=(-1.75, 1.35, 0.0), astro_a=(-1.9, 2.2, 0.0), astro_b=(-1.9, 3.2, 0.0), astro_c=(1.9, 1.8, 0.0), astro_d=(1.9, 2.9, 0.0), astro_e=(1.7, 3.9, 0.0),
+               harrison_door=(0.0, -3.0, 0.0), harrison_table=(0.35, 0.9, 0.0), king_chair=(0.0, 4.55, 0.0), king_stand=(0.95, 4.35, 0.0))
 
 LIGHTS = dict(
     DAY=dict(key=(1.0, 0.82, 0.55, 30.0), az=-22, el=38, sun_angle=1.0, exposure=-0.15, sat=1.08, fill=1.0, win=1.0, candle=0.55, chand=0.45, warm=0.5,
              sky=('#a8c8f4', 1.5), hedge=('#4e7a58', 0.55), dome=('#e8d8b0', 0.9), domer=('#c8854a', 0.8), tree=('#4a7a48', 0.55), tree2=('#5e8c4e', 0.6), far=('#8fb4a0', 0.9)),
-    EVENING=dict(key=(0.45, 0.5, 1.0, 4.0), az=-10, el=18, sun_angle=3.0, exposure=-0.1, sat=1.06, fill=0.22, win=1.6, candle=1.2, chand=1.1, warm=0.0,
+    EVENING=dict(key=(0.45, 0.5, 1.0, 2.5), az=-10, el=18, sun_angle=3.0, exposure=-0.45, sat=1.06, fill=0.04, win=0.8, candle=1.05, chand=0.75, warm=0.0,
                  sky=('#6a74c8', 0.9), hedge=('#1e3050', 0.3), dome=('#8890b8', 0.5), domer=('#6a5a78', 0.5), tree=('#243a40', 0.35), tree2=('#2c4448', 0.35), far=('#3c4a80', 0.5)),
 )
 
@@ -58,7 +58,7 @@ def hall_mats():
     M['brassd'] = metal_mat('hbrassd', '#70501c', '#946a28', rough=0.42, spec=0.8, metallic=1.0)
     M['silver'] = metal_mat('hsilver', '#b8bcc4', '#d4d8de', rough=0.3, spec=0.8, metallic=1.0)
     M['lacq'] = mat('hlacq', '#2a1a18', '#3a2420', scale=6)
-    M['paper'] = mat('hpaper', '#e8d6a8', '#dcc592', scale=6)
+    M['paper'] = mat('hpaper', '#cdb67c', '#bea46a', scale=6)
     M['ink'] = mat('hink', '#2a1c30')
     M['cream'] = mat('hcream', '#e6cf9c', '#d8bd88', scale=5)
     M['baize'] = mat('hbaize', '#2c6a3a', '#3a7c46', scale=10)
@@ -93,7 +93,7 @@ def tex_oval(name, m, c, rx, rz, y, n=40, flip=False):
     return mesh_from(name, m, vs, [(0, 1 + k, 1 + (k + 1) % n) for k in range(n)], uvs=uv)
 
 def build_hall(SET, preset, light):
-    root = K.new_root(); M = hall_mats(); SET['M'] = M; rr = rnd(31); PL = LIGHTS[light]
+    root = K.new_root(); M = hall_mats(); SET['M'] = M; rr = rnd(31); PL = LIGHTS[light]; SET['caption_shade'] = dict(y0=770, y1=900, a1=0.5, a2=0.62)
     K.flat_world('#7a82ff', 0.0, env=('#ffd6a0', 0.9)); SET['samples'] = 8; SET['dbounce'] = 0
     mb = MB('hall'); SET['flames'] = []; fm = M['flame']
     # ---- floor, painted carpet (greyer navy field, crimson + gold border, medallions)
@@ -133,7 +133,7 @@ def build_hall(SET, preset, light):
     for k in range(1, 7): mb.box(M['woodd'], (0, yw, wz0 + k * (wz1 - wz0) / 7), (2.0, 0.05, 0.035))
     for i in range(n):
         a = math.pi * (i + 0.5) / n; sg = math.pi * rad / n * 1.1; mb.box(M['woodd'], (rad * math.cos(a), yw, wz1 + rad * math.sin(a)), (sg, 0.07, 0.08), ry=-(a + math.pi / 2))
-    for a in (math.pi * 0.25, math.pi * 0.5, math.pi * 0.75): mb.box(M['woodd'], (0, yw, wz1), (2 * rad, 0.05, 0.03), ry=-a)
+    for a in (math.radians(30), math.radians(60), math.pi / 2, math.radians(120), math.radians(150)): mb.box(M['woodd'], (0.5 * rad * math.cos(a), yw, wz1 + 0.5 * rad * math.sin(a)), (rad, 0.05, 0.03), ry=-a)       # Georgian fanlight: radial bars over the grid, no X
     for x in (-1.0, 1.0): mb.box(M['woodd'], (x, yw, (wz0 + wz1) / 2), (0.1, 0.12, wz1 - wz0))
     mb.box(M['woodd'], (0, yw - 0.1, wz0 - 0.03), (2.3, 0.4, 0.07))
     mb.box(M['gold'], (0, Y1 - 0.1, ZH - 0.12), (8, 0.3, 0.22)); mb.box(M['gold'], (X0 + 0.1, 1.0, ZH - 0.12), (0.3, 9, 0.22)); mb.box(M['gold'], (X1 - 0.1, 1.0, ZH - 0.12), (0.3, 9, 0.22)); mb.box(M['gold'], (0, Y0 + 0.1, ZH - 0.12), (8, 0.3, 0.22))
@@ -182,12 +182,13 @@ def build_hall(SET, preset, light):
     for x in (tx0 + 0.12, tx1 - 0.12):
         for y in (ty0 + 0.12, ty1 - 0.12): mb.box(M['wood'], (x, y, TZ / 2 - 0.05), (0.13, 0.13, TZ - 0.1)); mb.ell(M['wood'], (x, y, TZ * 0.45), (0.1, 0.1, 0.12), (8, 6))
     mb.box(M['woodd'], (tcx, tcy, 0.3), (0.06, ty1 - ty0 - 0.3, 0.06))
-    charts = [(-0.2, 1.7, 0.6, 0.45, 0.2), (0.25, 2.2, 0.55, 0.5, -0.15), (-0.3, 3.0, 0.55, 0.42, 0.1), (0.3, 3.6, 0.5, 0.4, -0.25)]
+    charts = [(-0.2, 1.7, 0.4, 0.3, 0.2), (0.25, 2.2, 0.36, 0.32, -0.15), (-0.3, 3.0, 0.36, 0.28, 0.1), (0.3, 3.6, 0.34, 0.27, -0.25)]
     for (cx, cy, cw, ch, rz) in charts:
-        mb.box(M['paper'], (cx, cy, TZ + 0.02), (cw, ch, 0.008), rz=rz)
-        mb.push(Matrix.Translation((cx, cy, TZ + 0.025)) @ Euler((0, 0, rz)).to_matrix().to_4x4())
-        for k in range(8): mb.ell(M['ink'], (rr.uniform(-cw / 2.4, cw / 2.4), rr.uniform(-ch / 2.4, ch / 2.4), 0), (0.01, 0.01, 0.004), (6, 4))
-        for k in range(3): mb.box(M['ink'], (rr.uniform(-cw / 4, cw / 4), rr.uniform(-ch / 4, ch / 4), 0), (cw * rr.uniform(0.3, 0.6), 0.005, 0.004), rz=rr.uniform(0, 3.14))
+        mb.box(M['paper'], (cx, cy, TZ + 0.016), (cw, ch, 0.006), rz=rz)           # yellowed, curled chart: flat sheet + a lifted curled edge
+        mb.push(Matrix.Translation((cx, cy, TZ + 0.016)) @ Euler((0, 0, rz)).to_matrix().to_4x4()); mb.box(M['paper'], (cw / 2 + 0.01, 0, 0.012), (0.05, ch, 0.005), ry=-0.5); mb.box(M['paper'], (-cw / 2 + 0.005, 0, 0.006), (0.04, ch, 0.005), ry=0.28); mb.pop()
+        mb.push(Matrix.Translation((cx, cy, TZ + 0.021)) @ Euler((0, 0, rz)).to_matrix().to_4x4())
+        for k in range(8): mb.ell(M['ink'], (rr.uniform(-cw / 2.6, cw / 2.6), rr.uniform(-ch / 2.6, ch / 2.6), 0), (0.006, 0.006, 0.003), (6, 4))
+        for k in range(5): mb.box(M['ink'], (rr.uniform(-cw / 4, cw / 4), rr.uniform(-ch / 4, ch / 4), 0), (cw * rr.uniform(0.3, 0.7), 0.0018, 0.002), rz=rr.uniform(0, 3.14))
         mb.pop()
     mb.cyl(M['paper'], (-0.5, 1.2, TZ + 0.05), 0.04, 0.5, axis='y', seg=10); mb.cyl(M['paper'], (0.55, 3.2, TZ + 0.045), 0.035, 0.45, axis='y', seg=10)
     mb.box(M['brass'], (0.5, 2.7, TZ + 0.03), (0.25, 0.25, 0.04)); ring_xy(mb, M['brass'], (0.5, 2.7, TZ + 0.07), 0.1, 0.018, 0.022, 14)
@@ -292,13 +293,37 @@ def build_hall(SET, preset, light):
     mb.box(M['wall2'], (-(3.6 + dx0 * -1) / 2 + 0.0, Y0 - 0.0, 0), (0, 0, 0)) if False else None
     mb.box(M['woodd'], (dx0 - 0.1, Y0 + 0.1, dz1 / 2), (0.2, 0.3, dz1 + 0.1)); mb.box(M['woodd'], (dx1 + 0.1, Y0 + 0.1, dz1 / 2), (0.2, 0.3, dz1 + 0.1)); mb.box(M['gold'], (0, Y0 + 0.1, dz1 + 0.12), (2.5, 0.34, 0.24))
     mb.box(M['cream'], (0, Y0 + 0.12, dz1 + 0.4), (1.9, 0.12, 0.3)); mb.finish()
-    cor = MB('corridor'); cm_ = mat_emit('hcorr', '#f0d8a0', 1.2); cor.quad(cm_, [(dx0 - 0.3, Y0 - 0.9, 0.0), (dx1 + 0.3, Y0 - 0.9, 0.0), (dx1 + 0.3, Y0 - 0.9, 3.5), (dx0 - 0.3, Y0 - 0.9, 3.5)]); cor.finish(shadow=False)
+    # corridor beyond the doors: a real passage 2.6 m wide, 2.2 m deep (far wall at 4 D), plaster walls, floor runner, two gilt sconces, a framed portrait, a console with an urn
+    cw0, cw1, cy0, cy1, cz1 = -1.3, 1.3, Y0 - 0.3, Y0 - 2.5, 3.4
+    cwall = mat('corrwall', '#a47e58', '#b48c64', scale=1.6, contrast=1.1, zgrad=(0.0, 1.2, '#6a4a3a')); cfl = mat('corrfloor', '#7a5a40', '#8a6848', scale=2.2, aniso=(0.5, 0.12, 1)); cceil = mat('corrceil', '#a07a58', '#b08a64', scale=1.2)
+    run1 = mat('corrrun', '#6a2828', '#7a3232', scale=10); run2 = mat('corrrun2', '#a8894a'); cor = MB('corridor')
+    cor.box(cfl, (0, (cy0 + cy1) / 2, -0.03), (cw1 - cw0 + 0.4, cy0 - cy1, 0.06)); cor.box(cwall, (cw0 - 0.1, (cy0 + cy1) / 2, cz1 / 2), (0.2, cy0 - cy1 + 0.2, cz1)); cor.box(cwall, (cw1 + 0.1, (cy0 + cy1) / 2, cz1 / 2), (0.2, cy0 - cy1 + 0.2, cz1))
+    cor.box(cwall, (0, cy1 - 0.1, cz1 / 2), (cw1 - cw0 + 0.4, 0.2, cz1)); cor.box(cceil, (0, (cy0 + cy1) / 2, cz1 + 0.1), (cw1 - cw0 + 0.4, cy0 - cy1 + 0.2, 0.2))
+    cor.box(M['wain'], (cw0 + 0.02, (cy0 + cy1) / 2, 0.5), (0.04, cy0 - cy1, 1.0)); cor.box(M['wain'], (cw1 - 0.02, (cy0 + cy1) / 2, 0.5), (0.04, cy0 - cy1, 1.0)); cor.box(M['wain'], (0, cy1 + 0.02, 0.5), (cw1 - cw0, 0.04, 1.0))
+    cor.box(run1, (0, (cy0 + cy1) / 2, 0.012), (1.1, cy0 - cy1, 0.02)); cor.box(run2, (-0.58, (cy0 + cy1) / 2, 0.016), (0.04, cy0 - cy1, 0.02)); cor.box(run2, (0.58, (cy0 + cy1) / 2, 0.016), (0.04, cy0 - cy1, 0.02))
+    cor.box(M['woodd'], (0, cy1 + 0.1, 0.44), (1.0, 0.3, 0.06)); cor.box(M['marble'], (0, cy1 + 0.1, 0.48), (1.0, 0.3, 0.03))
+    for dx in (-0.45, 0.45): cor.rod(M['gold'], (dx, cy1 + 0.1, 0.0), (dx, cy1 + 0.1, 0.42), 0.04, 0.025, 8)
+    cor.cyl(M['teal'], (0.2, cy1 + 0.12, 0.8), 0.12, 0.5, seg=14, r2=0.09); cor.ell(M['gold'], (-0.25, cy1 + 0.12, 0.58), (0.09, 0.09, 0.09), (10, 8))
+    cor.box(M['gold'], (0, cy1 + 0.06, 2.1), (1.12, 0.05, 1.5)); cor.box(M['woodd'], (0, cy1 + 0.05, 2.1), (1.0, 0.05, 1.38))
+    for sx in (-1, 1):
+        cor.rod(M['gold'], (sx * (cw1 - 0.02), Y0 - 0.9, 2.1), (sx * (cw1 - 0.28), Y0 - 0.9, 2.28), 0.02, 0.02, 6); cor.cyl(M['gold'], (sx * (cw1 - 0.28), Y0 - 0.9, 2.3), 0.05, 0.03, seg=8)
+        cor.rod(M['gold'], (sx * (cw1 - 0.02), Y0 - 1.7, 2.1), (sx * (cw1 - 0.28), Y0 - 1.7, 2.28), 0.02, 0.02, 6); cor.cyl(M['gold'], (sx * (cw1 - 0.28), Y0 - 1.7, 2.3), 0.05, 0.03, seg=8)
+    cor.finish()
+    tex_quad('cport', mat_image('cportrait', TX.make('seascape'), rough=0.9, emit_k=0.1), [(-0.45, cy1 + 0.09, 1.5), (0.45, cy1 + 0.09, 1.5), (0.45, cy1 + 0.09, 2.7), (-0.45, cy1 + 0.09, 2.7)])
+    cand += [(sx * (cw1 - 0.28), yy, 2.315) for sx in (-1, 1) for yy in (Y0 - 0.9, Y0 - 1.7)]
     mb = MB('hall')
-    for sx in (-1, 1):                                              # door leaves, opened a little: the carpenter in the gap
+    for sx in (-1, 1):                                              # panelled door leaves, ajar: ONE slab each (stiles, rails, 3 raised panels both faces, gilt moulding, brass knob + plate), 3.1 m, clear of the 3.2 m lintel
         pv = pivot('hdoor%d' % sx, root, (sx * (dx1 - 0.0), Y0 + 0.14, 0.0), rot=(0, 0, sx * math.radians(-62)))
-        mm = MB('hdoorleaf'); wd = (dx1 - dx0) / 2 - 0.02
-        for k in range(3): mm.box(M['wain'], (-sx * wd / 2, 0, 0.7 + 1.0 * k), (wd - 0.02, 0.07, 0.9)); mm.box(M['gold'], (-sx * wd / 2, -0.04, 0.7 + 1.0 * k), (wd - 0.22, 0.01, 0.7))
-        mm.cyl(M['gold'], (-sx * 0.1, -0.05, 1.1), 0.035, 0.03, axis='y', seg=10); mm.finish(parent=pv)
+        mm = MB('hdoorleaf'); wd = (dx1 - dx0) / 2 - 0.02; hh_ = 3.1; cx = -sx * wd / 2; woodp = M['wain']
+        mm.box(woodp, (cx, 0, hh_ / 2), (wd, 0.07, hh_))
+        for fy in (-1, 1):
+            yy = fy * 0.04
+            for (pz, ph_) in ((0.6, 0.78), (1.62, 0.78), (2.6, 0.9)):
+                mm.box(M['woodd'], (cx, yy * 0.9, pz), (wd - 0.24, 0.016, ph_)); mm.box(M['gold'], (cx, yy * 1.18, pz + ph_ / 2 + 0.005), (wd - 0.2, 0.01, 0.02)); mm.box(M['gold'], (cx, yy * 1.18, pz - ph_ / 2 - 0.005), (wd - 0.2, 0.01, 0.02))
+                for ex in (-1, 1): mm.box(M['gold'], (cx + ex * (wd - 0.2) / 2, yy * 1.18, pz), (0.02, 0.01, ph_ + 0.04))
+        mm.box(M['gold'], (cx, 0, hh_ - 0.02), (wd, 0.09, 0.04)); mm.box(M['gold'], (cx, 0, 0.03), (wd, 0.09, 0.05))
+        mm.box(M['brass'], (-sx * 0.1, -0.05, 1.25), (0.07, 0.012, 0.2)); mm.ell(M['brass'], (-sx * 0.1, -0.075, 1.2), (0.035, 0.035, 0.035), (10, 8)); mm.ell(M['brass'], (-sx * 0.1, 0.075, 1.2), (0.035, 0.035, 0.035), (10, 8))
+        mm.finish(parent=pv)
     mb.finish()
     # ---- floor-level extras: stool, urn, rolled carpet corner, foreground chair at the edge, sofa-like bench
     mb = MB('hall')
@@ -381,13 +406,21 @@ def build_hooks(SET, root, M, mb):
         for k in range(3): b.ell(M['cream'], (0.022 * math.cos(k * 2.1 + i), 0.022 * math.sin(k * 2.1 + i), 0.02 + hh * 0.6), (0.01, 0.01, hh * 0.35), (6, 4))
         b.cyl(M['wick'], (0, 0, 0.02 + hh + 0.007), 0.002, 0.014, seg=4); b.finish(parent=ph); H['stubs'].append(ph)
     # king's gilt armchair with crimson velvet at the table head
-    pv = pivot('kingchair', root, (0.0, 4.65, 0.0), rot=(0, 0, math.pi)); b = MB('kchair')
-    b.box(M['velvet'], (0, 0, 0.5), (0.62, 0.58, 0.12)); b.box(M['gold'], (0, 0, 0.4), (0.68, 0.64, 0.08))
-    for dx in (-0.28, 0.28):
-        for dy in (-0.25, 0.25): b.box(M['gold'], (dx, dy, 0.2), (0.07, 0.07, 0.4))
-    b.box(M['gold'], (0, 0.3, 1.05), (0.62, 0.07, 1.25)); b.box(M['velvet'], (0, 0.26, 1.0), (0.48, 0.05, 0.92)); b.box(M['gold'], (0, 0.3, 1.72), (0.66, 0.1, 0.1))
-    b.ell(M['gold'], (0, 0.3, 1.8), (0.12, 0.06, 0.12), (10, 8))
-    for dx in (-0.34, 0.34): b.box(M['gold'], (dx, -0.02, 0.78), (0.06, 0.5, 0.05)); b.box(M['velvet'], (dx, -0.02, 0.83), (0.07, 0.4, 0.04)); b.box(M['gold'], (dx, -0.25, 0.65), (0.06, 0.06, 0.28))
+    pv = pivot('kingchair', root, (0.0, 4.68, 0.0), rot=(0, 0, 0)); b = MB('kchair')      # seat faces -y (down the table, to the camera), back toward the window
+    G, V = M['gold'], M['velvet']
+    b.box(V, (0, -0.02, 0.5), (0.58, 0.54, 0.13)); b.box(G, (0, 0, 0.41), (0.66, 0.62, 0.07)); b.box(G, (0, -0.3, 0.41), (0.7, 0.04, 0.12)); b.ell(G, (0, -0.33, 0.41), (0.06, 0.02, 0.06), (8, 6))   # cushion, gilt seat rail + front shell
+    for dx in (-0.29, 0.29):
+        for dy, tp in ((-0.26, 0.5), (0.26, 0.85)):
+            b.rod(G, (dx, dy, 0.0), (dx, dy, 0.38), 0.022, 0.034, 10, True, True)
+            if dy < 0: b.ell(G, (dx, dy, 0.1), (0.045, 0.045, 0.05), (8, 6))
+    for dx in (-0.3, 0.3):                                             # back stiles, top rail, crest, crimson velvet panel inside a gilt moulding
+        b.rod(G, (dx, 0.28, 0.4), (dx, 0.3, 1.5), 0.03, 0.03, 10, True, True); b.ell(G, (dx, 0.3, 1.55), (0.045, 0.045, 0.06), (8, 6))
+    b.box(G, (0, 0.3, 1.46), (0.66, 0.06, 0.09)); b.ell(G, (0, 0.3, 1.58), (0.13, 0.04, 0.1), (10, 8)); b.box(G, (0, 0.3, 0.56), (0.6, 0.06, 0.06))
+    b.box(V, (0, 0.27, 1.02), (0.5, 0.05, 0.84)); b.box(G, (0, 0.285, 1.46 - 0.05), (0.54, 0.02, 0.03)); b.box(G, (0, 0.285, 0.6 + 0.04), (0.54, 0.02, 0.03))
+    for dx in (-0.255, 0.255): b.box(G, (dx, 0.285, 1.02), (0.03, 0.02, 0.86))
+    for dx in (-0.34, 0.34):                                           # arms: gilt rail, velvet pad, scrolled front support
+        b.box(G, (dx, 0.0, 0.8), (0.05, 0.56, 0.04)); b.box(V, (dx, -0.02, 0.84), (0.07, 0.4, 0.04)); b.rod(G, (dx, -0.24, 0.42), (dx, -0.24, 0.78), 0.022, 0.03, 8, True, True); b.ell(G, (dx, -0.27, 0.8), (0.04, 0.05, 0.04), (8, 6))
+        b.rod(G, (dx, 0.26, 0.45), (dx, 0.26, 0.8), 0.02, 0.02, 8)
     b.finish(parent=pv); H['kchair'] = pv
     # regulator: a tall case clock against the right wall (open dial: tick marks and hands only)
     pv = pivot('regulator', root, (X1 - 0.3, 3.9, 0.0), rot=(0, 0, math.pi / 2)); b = MB('reg')
@@ -404,7 +437,7 @@ def build_hooks(SET, root, M, mb):
     b.finish(parent=pv); H['regulator'] = pv
 
 def build_lights(SET, light, cand, chn):
-    PL = LIGHTS[light]; S = SET; S['lampgroups'] = {'candle': [], 'fill': [], 'warm': [], 'win': [], 'chand': []}; G = S['lampgroups']
+    PL = LIGHTS[light]; S = SET; S['lampgroups'] = {'candle': [], 'fill': [], 'warm': [], 'win': [], 'chand': [], 'corr': []}; G = S['lampgroups']
     d = Vector(K.kdir(PL['az'], PL['el'])); sun('key', PL['key'], PL['key'][3], d, PL['sun_angle']); S['sundir'] = d
     K.shafts(d, (-1.0, 1.0, 1.2, 3.6, Y1 - 0.02), k=4.0, a=0.004 if light == 'DAY' else 0.0015)
     def A(grp, *a, **k):
@@ -419,6 +452,7 @@ def build_lights(SET, light, cand, chn):
                                ('c_fl1', (-3.0, 4.4, 1.95), 45, 'candle'), ('c_fl2', (3.0, 2.8, 1.95), 45, 'candle'), ('c_sc1', (-2.1, 5.15, 2.45), 30, 'candle'), ('c_sc2', (2.1, 5.15, 2.45), 30, 'candle'),
                                ('c_sc3', (3.15, -1.2, 2.55), 24, 'candle'), ('c_sc4', (3.15, 1.0, 2.55), 24, 'candle'), ('c_sc5', (3.15, 3.0, 2.55), 24, 'candle'), ('c_door', (0.0, -2.4, 2.4), 60, 'candle')]:
         Pt(grp, nm, loc, (1.0, 0.66, 0.3), en, 0.05)
+    for (nm, loc, en) in [('c_cor1', (0.0, -4.0, 3.0), 55), ('c_cor2', (0.0, -5.1, 2.9), 35), ('c_corp', (0.0, -5.2, 1.6), 14)]: Pt('corr', nm, loc, (1.0, 0.72, 0.4), en, 0.08)
     apply_light(light)
 
 def apply_light(name, frame=None):

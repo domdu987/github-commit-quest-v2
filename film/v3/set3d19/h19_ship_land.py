@@ -72,6 +72,7 @@ def scenery(S, P, LT, sea_P, marks):
     for (nm, pos, size, seed) in cl: FX.cumulus6(Pc, nm, pos, size, seed)
     if kind == 'hero':
         p = SE.v6_pos
+        floating_spar(S, P, sea_P)
         gb = MB('gulls'); mw = mat('gullw', '#f6f5f0', '#e8ecee', scale=6); mt = mat('gullt', '#2e3038')
         for (c, yaw, s, fl) in [((9.2, 30.0, 14.0), 2.2, 0.6, 0.4), ((8.2, 40.0, 28.0), 0.8, 0.55, -0.3), ((-18.5, 50.0, 39.0), 3.4, 0.6, 0.1), ((13.4, 35.0, 9.3), 1.0, 0.45, 0.6), ((11.0, 46.0, 22.0), 2.9, 0.5, 0.0)]:
             FX.gull6(gb, mw, mt, p(c), yaw - SE.PH, s, fl)
@@ -96,6 +97,24 @@ def scenery(S, P, LT, sea_P, marks):
     else:
         raise NotImplementedError(kind)
 
+def floating_spar(S, P, sea_P):
+    """foreground of the hero: a floating spar (a broken yard with a rope end) and a long swell crest with a thin broken foam line, 8-14 m from the lens"""
+    c = np.array(P['cam']['loc'][:2], dtype=np.float64); lk = np.array(P['cam']['look'][:2], dtype=np.float64); f = lk - c; f /= np.linalg.norm(f); r = np.array([f[1], -f[0]])
+    A = c + f * 7.6 + r * (-3.0); B = c + f * 10.6 + r * (0.8)
+    cr0 = c + f * 13.5 + r * (-5.5); cr1 = c + f * 12.0 + r * (6.5)
+    sea_P['streaks'] = [((A[0], A[1]), (B[0], B[1]), 0.75, 0.95), ((cr0[0], cr0[1]), (cr1[0], cr1[1]), 0.5, 0.8)]
+    mb = MB('spar'); wood = mat('spar', '#5e4630', '#76583a', scale=3, aniso=(0.2, 0.2, 1.0)); rope = mat('sparrope', '#b8924c', '#9a7638', scale=6); iron = mat('sparband', '#2a2622', '#38322c', scale=6)
+    za = float(SE.swell_h(A[0], A[1])) + 0.04; zb = float(SE.swell_h(B[0], B[1])) + 0.04
+    mb.rod(wood, (A[0], A[1], za + 0.05), (B[0], B[1], zb + 0.05), 0.24, 0.19, 12, True, True)
+    d = (B - A) / np.linalg.norm(B - A)
+    for tt in (0.12, 0.5, 0.86):                                      # iron bands + a short broken stub and a rope end
+        q = A + (B - A) * tt; zq = za + (zb - za) * tt + 0.05
+        mb.rod(iron, (q[0] - d[0] * 0.05, q[1] - d[1] * 0.05, zq), (q[0] + d[0] * 0.05, q[1] + d[1] * 0.05, zq), 0.27, 0.27, 12)
+    q = A + (B - A) * 0.55; mb.rod(wood, (q[0], q[1], za + 0.1 + 0.55 * (zb - za)), (q[0] - d[1] * 0.9, q[1] + d[0] * 0.9, za + 0.2 + 0.55 * (zb - za)), 0.07, 0.06, 8)
+    q = A + (B - A) * 0.3
+    for k in range(4): mb.ell(rope, (q[0] + 0.25 * math.cos(k * 1.7), q[1] + 0.25 * math.sin(k * 1.7), za + 0.05 + 0.3 * (zb - za)), (0.16, 0.05, 0.05), (8, 5), rot=(0, 0, k * 1.7))
+    K.ROOT = S['world_root']; mb.finish(shadow=True)
+
 def kdir_(az, el):
     a = math.radians(az); e = math.radians(el)
     return (-math.sin(a) * math.cos(e), -math.cos(a) * math.cos(e), -math.sin(e))
@@ -115,6 +134,7 @@ def generic_gulls(kind):
     gb.finish(shadow=True)
 
 def clouds_for(kind):
+    if kind == 'rocks': return []
     if kind in ('aerial', 'deck', 'rail', 'rocks', 'coast', 'shore'):
         rr = random.Random({'aerial': 3, 'deck': 5, 'rail': 7, 'rocks': 9, 'coast': 11, 'shore': 12}[kind]); out = []
         for i in range(9):
@@ -126,17 +146,21 @@ def clouds_for(kind):
     return []
 
 # ----------------------------------------------------------------------------- rocks (ship_rocks): black jagged rocks near the bow + mist cards
-ROCKS = [(13.0, 54.0, 5.0, 7.5, 1), (27.0, 68.0, 4.2, 5.8, 2), (7.0, 80.0, 7.0, 10.5, 3), (-5.0, 62.0, 2.6, 3.4, 4), (21.0, 96.0, 8.0, 12.0, 5), (34.0, 52.0, 2.4, 2.8, 6)]
+ROCKS = [(13.0, 54.0, 5.0, 7.5, 1), (27.0, 68.0, 4.2, 5.8, 2), (7.0, 80.0, 7.0, 10.5, 3), (-5.0, 62.0, 2.6, 3.4, 4), (21.0, 96.0, 8.0, 12.0, 5), (34.0, 52.0, 2.4, 2.8, 6),
+         (4.0, 44.0, 2.2, 2.4, 7), (-12.0, 74.0, 3.4, 4.6, 8)]
 def rock_obj(mb, m, c, r, h, seed):
-    rr = np.random.RandomState(seed)
-    bm = bmesh.new(); bmesh.ops.create_icosphere(bm, subdivisions=2, radius=1.0)
+    """rounded black basalt boulder: smooth icosphere, low-frequency lumps, flattened shoulder, submerged base"""
+    rr = np.random.RandomState(seed); ph = rr.uniform(0, 6.28, 6)
+    bm = bmesh.new(); bmesh.ops.create_icosphere(bm, subdivisions=3, radius=1.0)
     for v in bm.verts:
-        p = v.co.copy(); n = p.normalized(); k = 1.0 + 0.32 * (rr.rand() - 0.5) + 0.22 * math.sin(3.1 * p.x + 1.7 * p.y + seed) * math.cos(2.3 * p.z)
-        top = max(0.0, p.z)
-        v.co = Vector((n.x * r * k * (1.0 - 0.35 * top), n.y * r * 0.85 * k * (1.0 - 0.35 * top), (n.z * h * k * (1.05 if n.z > 0 else 0.5)) + h * 0.22))
+        n = v.co.normalized()
+        k = 1.0 + 0.15 * math.sin(2.1 * n.x + ph[0]) * math.cos(1.7 * n.y + ph[1]) + 0.11 * math.sin(3.3 * n.z + ph[2] + 2.0 * n.x) + 0.04 * math.sin(7.0 * n.x + 5.0 * n.y + ph[3])
+        top = max(0.0, n.z); sq = 1.0 - 0.18 * top * top
+        z = n.z * h * k * (1.0 if n.z > 0 else 0.5) * (1.0 - 0.12 * max(0.0, n.z - 0.75))
+        v.co = Vector((n.x * r * k * sq, n.y * r * 0.88 * k * sq, z + h * 0.18))
     me = bpy.data.meshes.new('rock%d' % seed); bm.to_mesh(me); bm.free()
-    for p in me.polygons: p.use_smooth = False
-    me.materials.append(m); ob = bpy.data.objects.new('rock%d' % seed, me); bpy.context.scene.collection.objects.link(ob); ob.location = (c[0], c[1], -0.4); ob.rotation_euler = (0, 0, seed * 1.3); ob.parent = K.ROOT
+    for p in me.polygons: p.use_smooth = True
+    me.materials.append(m); ob = bpy.data.objects.new('rock%d' % seed, me); bpy.context.scene.collection.objects.link(ob); ob.location = (c[0], c[1], -0.5); ob.rotation_euler = (0, 0, seed * 1.3); ob.parent = K.ROOT
     return ob
 
 def mist_card(LT, loc, w, h, k, name):
@@ -153,25 +177,51 @@ def mist_card(LT, loc, w, h, k, name):
     side = Mth('SUBTRACT', 1.0, Mth('MULTIPLY', uu, uu), clamp=True)
     vv = Mth('POWER', Mth('SUBTRACT', 1.0, sp.outputs['Y'], clamp=True), 1.6)
     nz = N('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 2.5; L(tc.outputs['Generated'], nz.inputs['Vector'])
-    a = Mth('MULTIPLY', Mth('MULTIPLY', side, vv), Mth('MULTIPLY_ADD', nz.outputs['Fac'], 0.9, 0.35))
+    a = Mth('MULTIPLY', Mth('MULTIPLY', side, vv), Mth('MULTIPLY_ADD', nz.outputs['Fac'], 1.7, -0.15, clamp=True))
     L(Mth('MULTIPLY', a, k, clamp=True), mx.inputs[0]); em.inputs['Color'].default_value = hexc(LT['haze']); em.inputs['Strength'].default_value = 1.0
     L(tr.outputs[0], mx.inputs[1]); L(em.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface'])
     return m
 
+def storm_deck(LT, name='stormdeck', z=240.0, size=6000.0, dark='#4a5666', light='#98a4b4', scale=0.0035, k=1.0):
+    """a low layered storm-cloud ceiling: a huge plane seen from below, emission of stretched fbm noise (dark slate belly, lighter torn edges), faded into the haze at the horizon"""
+    m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); em = N('ShaderNodeEmission'); tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader')
+    tc = N('ShaderNodeTexCoord'); mp = N('ShaderNodeMapping'); mp.inputs['Scale'].default_value = (scale, scale * 1.9, scale); L(tc.outputs['Object'], mp.inputs['Vector'])
+    n1 = N('ShaderNodeTexNoise'); n1.inputs['Scale'].default_value = 1.0; n1.inputs['Detail'].default_value = 6.0; n1.inputs['Roughness'].default_value = 0.62; L(mp.outputs[0], n1.inputs['Vector'])
+    mp2 = N('ShaderNodeMapping'); mp2.inputs['Scale'].default_value = (4.0, 4.0, 4.0); mp2.inputs['Location'].default_value = (5.0, 3.0, 1.0); L(mp.outputs[0], mp2.inputs['Vector'])
+    n2 = N('ShaderNodeTexNoise'); n2.inputs['Scale'].default_value = 1.0; n2.inputs['Detail'].default_value = 3.0; L(mp2.outputs[0], n2.inputs['Vector'])
+    def mr(v, a, b, lo=0.0, hi=1.0):
+        n = N('ShaderNodeMapRange'); n.inputs['From Min'].default_value = a; n.inputs['From Max'].default_value = b; n.inputs['To Min'].default_value = lo; n.inputs['To Max'].default_value = hi; L(v, n.inputs['Value']); return n.outputs['Result']
+    cr = N('ShaderNodeValToRGB'); cr.color_ramp.elements[0].position = 0.0; cr.color_ramp.elements[0].color = hexc(dark); cr.color_ramp.elements[1].position = 1.0; cr.color_ramp.elements[1].color = hexc(light)
+    mid = cr.color_ramp.elements.new(0.45); mid.color = hexc('#6a7686')
+    nn = N('ShaderNodeMath'); nn.operation = 'MULTIPLY_ADD'; nn.inputs[1].default_value = 0.35; L(n2.outputs['Fac'], nn.inputs[0]); L(n1.outputs['Fac'], nn.inputs[2])
+    L(mr(nn.outputs[0], 0.35, 0.78), cr.inputs['Fac'])
+    cd = N('ShaderNodeCameraData'); hz = mr(cd.outputs['View Distance'], 700.0 * SC, 3200.0 * SC, 0.0, 0.88)
+    mxc = N('ShaderNodeMix'); mxc.data_type = 'RGBA'; L(cr.outputs[0], mxc.inputs[6]); mxc.inputs[7].default_value = hexc(LT['haze']); L(hz, mxc.inputs[0])
+    em.inputs['Strength'].default_value = k; L(mxc.outputs[2], em.inputs['Color'])
+    L(mr(n1.outputs['Fac'], 0.12, 0.34), mx.inputs[0]); L(tr.outputs[0], mx.inputs[1]); L(em.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface'])
+    # a second, higher and darker layer under the first one is not needed: the near plane is opaque where the noise is above 0.34 and torn elsewhere
+    verts = [(-size, -size, z), (size, -size, z), (size, size, z), (-size, size, z)]
+    me = bpy.data.meshes.new(name); me.from_pydata(verts, [], [(0, 1, 2, 3)]); me.update(); me.materials.append(m)
+    ob = bpy.data.objects.new('skyobj_' + name, me); bpy.context.scene.collection.objects.link(ob); ob.visible_shadow = False; ob.visible_glossy = True; ob.visible_diffuse = False; ob.parent = K.ROOT      # diffuse rays pass through to the blue world ambient (the deck keeps its blue-violet shade)
+    return ob
+
 def rocks(S, P, LT, sea_P):
-    mb = MB('rocks'); m = mat('rock', '#25222c', '#3a3644', scale=0.8, rough=0.5, sheen=0.25, contrast=1.2)
+    mb = MB('rocks'); m = mat('rock', '#18181c', '#26262c', scale=0.7, rough=0.26, sheen=0.7, contrast=1.1)
     K.ROOT = S['world_root']
     for (x, y, r, h, sd) in ROCKS: rock_obj(mb, m, (x, y), r, h, sd)
-    sea_P['rocks'] = [(x, y, r * 0.9, h) for (x, y, r, h, sd) in ROCKS]
+    sea_P['rocks'] = [(x, y, r * 1.05, h) for (x, y, r, h, sd) in ROCKS]
     cam = Vector(P['cam']['loc']); look = Vector(P['cam']['look']); d = (look - cam); d.z = 0; d.normalize(); rgt = d.cross(Vector((0, 0, 1)))
-    ang = math.atan2(d.y, d.x)
-    for i, (dist, hh, k) in enumerate(((38.0, 26.0, 0.30), (70.0, 40.0, 0.38), (120.0, 55.0, 0.42), (220.0, 80.0, 0.5), (400.0, 120.0, 0.6))):
-        c = cam + d * dist; w = dist * 1.6
+    # storm deck (low) + a torn higher deck; two fog layers: a bank on the water round the rocks and a far one that eats the horizon
+    storm_deck(LT, 'stormdeck_lo', z=180.0, dark=LT['cloud'][1], light=LT['cloud'][0], scale=0.0042, k=1.0)
+    fk = max(LT.get('fog', 0.0), 0.7)
+    for i, (dist, hh, k) in enumerate(((46.0, 15.0, 0.55), (150.0, 55.0, 0.62))):
+        c = cam + d * dist; w = dist * 1.7
         vs = [c - rgt * w - Vector((0, 0, 6)), c + rgt * w - Vector((0, 0, 6)), c + rgt * w + Vector((0, 0, hh)), c - rgt * w + Vector((0, 0, hh))]
         me = bpy.data.meshes.new('mistc%d' % i); me.from_pydata([tuple(v) for v in vs], [], [(0, 1, 2, 3)]); me.update()
         uv = me.uv_layers.new(name='UVMap')
-        me.materials.append(mist_card(LT, c, w, hh, k * LT.get('fog', 0.0), str(i)))
-        ob = bpy.data.objects.new('skyobj_fog%d' % i, me); bpy.context.scene.collection.objects.link(ob); ob.visible_shadow = False; ob.parent = K.ROOT
+        me.materials.append(mist_card(LT, c, w, hh, k * fk, str(i)))
+        ob = bpy.data.objects.new('skyobj_fog%d' % i, me); bpy.context.scene.collection.objects.link(ob); ob.visible_shadow = False; ob.visible_diffuse = False; ob.parent = K.ROOT
 
 # ----------------------------------------------------------------------------- tropical coast (shore east of the ship): terrain, palms, harbour town, fort, boats
 def shore_x(y):
@@ -219,8 +269,13 @@ def terrain_mat(LT, kind):
     col = mix(hexc(green_lo), hexc(green_hi), mr(nz.outputs['Fac'], 0.42, 0.6))
     col = mix(col, hexc('#bda648' if kind == 'barbados' else '#4c7c40'), mr(nz2.outputs['Fac'], 0.5, 0.65, 0.0, 0.5))
     col = mix(col, hexc('#2f6a4a'), mr(sp.outputs['Z'], 40.0, 130.0, 0.0, 0.55))
-    col = mix(hexc('#c89c58'), col, mr(sp.outputs['Z'], 0.9, 2.4))                    # pale sand beach
     col = mix(col, hexc('#000000'), 0.52)
+    sn1 = N('ShaderNodeTexNoise'); sn1.inputs['Scale'].default_value = 0.9; sn1.inputs['Detail'].default_value = 4.0; L(tc.outputs['Object'], sn1.inputs['Vector'])
+    sn2 = N('ShaderNodeTexNoise'); sn2.inputs['Scale'].default_value = 6.0; sn2.inputs['Detail'].default_value = 2.0; L(tc.outputs['Object'], sn2.inputs['Vector'])
+    dry = mix(hexc('#dcc088'), hexc('#c9a870'), mr(sn1.outputs['Fac'], 0.4, 0.62))                  # dry sand, two tones
+    dry = mix(dry, hexc('#b99a66'), mr(sn2.outputs['Fac'], 0.52, 0.7, 0.0, 0.5))                       # fine grain
+    sand = mix(hexc('#8c7550'), dry, mr(sp.outputs['Z'], 0.06, 0.34))                                  # wet sand darkens towards the waterline
+    col = mix(sand, col, mr(sp.outputs['Z'], 0.9, 2.4))                                                # pale sand beach
     cd = N('ShaderNodeCameraData'); dmv = mr(cd.outputs['View Distance'], 200.0 * SC, 1000.0 * SC, 0.0, 0.34)
     col = mix(col, hexc('#8fb4b8' if LT.get('fog', 0) < 0.1 else LT['haze']), dmv)
     L(col, bs.inputs['Base Color']); L(bs.outputs[0], out.inputs['Surface']); return m
@@ -296,7 +351,8 @@ def coast(S, P, LT, sea_P, marks):
              dark=mat('dkdoor', '#3a2a24'), boat=mat('boat', '#7a4a30', '#8a5a3a', scale=3), boatw=mat('boatw', '#e8dcc0', '#d8ccb0', scale=3), bsail=mat('bsail', '#e8dcc0', '#dccfae', scale=2.5, emit='#ffe2a8', emit_k=0.1),
              brick=mat('brick', '#b4623e', '#a4543a', scale=1.2), lime=mat('lime', '#e8e0cc', '#dcd4bc', scale=1.0), roofr=mat('roofr', '#b05a3a', '#9c4c32', scale=2.0), iron=mat('iron2', '#2a2622', '#38322c', scale=6),
              flag=mat_emit('flagr', '#c8403a', 0.7), wall1=mat('wall1', '#f0e2c0', '#e6d6b0', scale=1.5), wall2=mat('wall2', '#e8c88a', '#dcb878', scale=1.5), wall3=mat('wall3', '#d89a78', '#cc8c6c', scale=1.5),
-             quay=mat('quay', '#b8aa90', '#a89c84', scale=1.5), cane=mat('cane', '#a8b84a', '#92a840', scale=0.6))
+             quay=mat('quay', '#b8aa90', '#a89c84', scale=1.5), cane=mat('cane', '#a8b84a', '#92a840', scale=0.6),
+             tar=mat('tar', '#3a2a20', '#4a3626', scale=4, aniso=(1, 0.3, 0.3)), wale=mat('wale', '#b07a34', '#c28a40', scale=4), boatin=mat('boatin', '#9a7a52', '#8a6a46', scale=4, aniso=(0.3, 1, 1)), rope2=mat('rope2', '#b8924c', '#9a7638', scale=6))
     # ---- terrain
     xs = _grad_axis(100.0, 1000.0, 190.0, 330.0, 2.2, 1.09); ys = _grad_axis(-520.0, 720.0, -220.0, 340.0, 2.6, 1.09)
     X, Y = np.meshgrid(xs, ys); Z = terrain_h(X, Y, kind)
@@ -349,17 +405,60 @@ def coast(S, P, LT, sea_P, marks):
             cx = float(shore_x(40.0 * i - 120.0)) + rr.uniform(60, 190); cy = 40.0 * i - 120.0
             mbf.box(M['cane'], (cx, cy, gz(cx, cy) + 0.9), (rr.uniform(14, 24), rr.uniform(14, 24), 1.8))
     mbf.finish(shadow=True)
-    # ---- marks on the shore (metres, ship frame; z = ground)
-    ya, yb = (rr.uniform(0, 0) + 40.0), 44.0
-    S['shore_marks'] = dict(shore_a=(float(shore_x(ya)) + 4.0, ya, gz(float(shore_x(ya)) + 4.0, ya)), shore_b=(float(shore_x(yb)) + 6.0, yb + 2.0, gz(float(shore_x(yb)) + 6.0, yb + 2.0)))
+    # ---- marks on the shore (metres, ship frame; z = ground): three standing places 4-7 m in front of the camera on the dry sand
+    cam = np.array(P['cam']['loc'], dtype=np.float64); look = np.array(P['cam']['look'], dtype=np.float64)
+    f = look - cam; f[2] = 0; f /= np.linalg.norm(f); r = np.array([f[1], -f[0], 0.0])
+    def at(fw, rt):
+        p = cam[:2] + f[:2] * fw + r[:2] * rt; return (float(p[0]), float(p[1]), gz(float(p[0]), float(p[1])))
+    S['shore_marks'] = dict(shore_a=at(4.4, 0.55), shore_b=at(5.6, 2.0), shore_c=at(6.6, -0.9))
     S['extra_cams'] = {}
-    if S['preset'] == 'ship_shore':
-        mbd = MB('shoredress'); cx = float(shore_x(40.0)) + 10.5
-        for (dx, dy, hh, sd) in ((3.2, 39.0, 8.5, 91), (4.5, 27.5, 7.0, 92), (-2.5, 47.0, 7.5, 93), (14.0, 40.0, 9.0, 94)):
-            x = cx - 10.5 + dx + 10.0; y = dy; palm(mbd, M, (x, y, gz(x, y) - 0.2), hh, 0.8, sd)
-        boat(mbd, M, (cx - 9.0, 24.8, gz(cx - 9.0, 24.8) + 0.2), 4.6, 0.25, sail=False)
-        for k in range(5): mbd.box(M['trunk'], (cx - 7.8 + 0.5 * (k % 2), 42.5 + 0.7 * k, gz(cx - 7.8, 42.5) + 0.45), (0.8, 0.8, 0.8), rz=0.3 * k)
-        mbd.finish(shadow=True)
+    # ---- beach dressing near the camera: a longboat hauled up on the left, oars, driftwood, two palms leaning in on the right, wet-sand darkening is in the terrain material
+    mbd = MB('shoredress'); ang = math.atan2(f[1], f[0])
+    bp = at(7.4, -3.4); longboat(mbd, M, (bp[0], bp[1], bp[2] + 0.05), 5.6, ang + 0.42)
+    for k, (fw, rt, ln, yw) in enumerate(((3.6, -3.0, 2.6, 0.3), (8.8, 2.7, 3.4, -0.5), (3.2, 3.6, 1.8, 0.9))):                      # driftwood logs
+        p = at(fw, rt); mbd.rod(M['trunk'], (p[0] - ln / 2 * math.cos(ang + yw), p[1] - ln / 2 * math.sin(ang + yw), p[2] + 0.16), (p[0] + ln / 2 * math.cos(ang + yw), p[1] + ln / 2 * math.sin(ang + yw), p[2] + 0.2), 0.17, 0.13, 8)
+    for (fw, rt, hh, sd) in ((7.6, 3.9, 7.0, 91), (11.0, 7.6, 9.0, 92)):
+        p = at(fw, rt); palm(mbd, M, (p[0], p[1], p[2] - 0.2), hh, 0.9, sd)
+    for k in range(7):                                                                                                      # shells / stones on the sand
+        p = at(2.6 + 0.9 * (k % 4), -1.6 + 0.9 * k); mbd.ell(M['boatw'], (p[0], p[1], p[2] + 0.04), (0.1, 0.07, 0.04), (6, 4))
+    mbd.finish(shadow=True)
+    if S['preset'] == 'ship_coast':
+        headland(LT, (-430.0, 55.0), math.radians(95), 420.0, 58.0, 90.0, seed=14, name='headland_coast')
+
+def longboat(mb, M, c, l, yaw):
+    """a ship's longboat hauled up on the sand: lofted planked hull (tarred outside, light wale strip, pale inside), gunwale, thwarts, oars, a coil of rope, a boat hook"""
+    ca, sa = math.cos(yaw), math.sin(yaw)
+    def P(x, y, z): return (c[0] + x * ca - y * sa, c[1] + x * sa + y * ca, c[2] + z)
+    nt, ns = 14, 6; hl = l / 2
+    def sec(t, s):
+        u = 2 * t - 1; w = 0.95 * (1 - abs(u) ** 2.2) ** 0.7 + 0.04; zk = 0.25 + 0.1 * u * u; zg = 0.95 + 0.42 * abs(u) ** 2.4
+        return (w * s ** 0.8, u * hl, zk + (zg - zk) * s ** 1.5)
+    for t in range(nt):
+        for s in range(ns):
+            for sd in (-1, 1):
+                p = [sec(t / nt, s / ns), sec((t + 1) / nt, s / ns), sec((t + 1) / nt, (s + 1) / ns), sec(t / nt, (s + 1) / ns)]
+                q = [P(sd * a, b, z) for (a, b, z) in p]; qi = [P(sd * a * 0.94, b, z + 0.06) for (a, b, z) in p]
+                mat_ = M['wale'] if s == ns - 2 else M['tar']
+                mb.quad(mat_, q if sd > 0 else q[::-1]); mb.quad(M['boatin'], qi[::-1] if sd > 0 else qi)
+    for t in range(nt):                                                                                                       # gunwale strip
+        for sd in (-1, 1):
+            a0 = sec(t / nt, 1.0); a1 = sec((t + 1) / nt, 1.0)
+            q = [P(sd * a0[0], a0[1], a0[2] + 0.02), P(sd * a1[0], a1[1], a1[2] + 0.02), P(sd * a1[0] * 0.9, a1[1], a1[2] + 0.04), P(sd * a0[0] * 0.9, a0[1], a0[2] + 0.04)]
+            mb.quad(M['wale'], q); mb.quad(M['wale'], q[::-1])
+    for tt in (-0.55, -0.15, 0.25, 0.62):
+        w = sec(0.5 + tt / 2, 1.0)[0] * 0.9
+        mb.box(M['boatin'], P(0, tt * hl * 2 * 0.5 + 0.0, 0.72), (2 * w, 0.28, 0.06), rz=yaw)
+    for sd in (-1, 1):                                                                                                        # oars laid across the thwarts
+        for k, tt in enumerate((-0.35, 0.05)):
+            x0, y0, z0 = P(sd * 0.1, tt * l * 0.5, 0.82); x1, y1, z1 = P(sd * 2.5, tt * l * 0.5 + 0.9 * sd, 0.55)
+            mb.rod(M['trunk'], (x0, y0, z0), (x1, y1, z1), 0.04, 0.03, 6); mb.box(M['boatw'], (x1, y1, z1 - 0.01), (0.12, 0.5, 0.03), rz=yaw + 0.3)
+    mb.rod(M['trunk'], P(-0.1, hl * 0.7, 0.9), P(0.1, -hl * 0.6, 1.0), 0.03, 0.03, 6)
+    for l_ in range(3): ring_xy(mb, M['rope2'], P(0.0, -hl * 0.35, 0.52 + 0.06 * l_), 0.28 - 0.02 * l_, 0.07, 0.07, 14)
+
+def ring_xy(mb, m, c, r, w, h, n=14):
+    for i in range(n):
+        a = 2 * math.pi * (i + .5) / n; seg = 2 * math.pi * r / n * 1.2
+        mb.box(m, (c[0] + r * math.cos(a), c[1] + r * math.sin(a), c[2]), (seg, w, h), rz=a + math.pi / 2)
 
 def _rain_build(S, cam):
     rr = np.random.RandomState(7); inv = cam.matrix_world.inverted().to_3x3(); dl = (inv @ Vector((0, 0, -1))).normalized()

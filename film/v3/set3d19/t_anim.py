@@ -27,7 +27,7 @@ H.set_clock(3); check('set_clock(3): only H3', [n for n in C if tree_vis(C[n]['r
 H.set_clock(4); check('set_clock(4): only the H4 watch', [n for n in C if tree_vis(C[n]['root'])] == [4])
 H.set_clock(0); check('set_clock(0): none', not any(tree_vis(C[n]['root']) for n in C))
 H.set_clock([1, 4]); check('set_clock([1,4]): H1 and H4 side by side', sorted(n for n in C if tree_vis(C[n]['root'])) == [1, 4] and C[4]['root'].location.x > C[1]['root'].location.x + 0.3, (C[1]['root'].location.x, C[4]['root'].location.x))
-check('H4 is about 13 cm across (watch case r 0.065 m)', abs(C[4]['root'].scale.x - 1.0) < 1e-6 and C[1]['root'].scale.x > 1.1)
+check('H4 watch case r 0.065 m, hero scale 1.5-3 x (reads 150+ px in shop_clock), tilted to the lens', 1.5 <= C[4]['root'].scale.x <= 3.0 and C[4]['root'].rotation_euler.x > 0.3 and C[1]['root'].scale.x > 1.1, (C[4]['root'].scale.x, C[4]['root'].rotation_euler.x))
 H.set_clock(1, frame=1); H.set_clock(0, frame=10); H.set_clock([1, 4], frame=20); at(5); a = tree_vis(C[1]['root']); at(15); b = tree_vis(C[1]['root']); at(25); c = tree_vis(C[1]['root']) and tree_vis(C[4]['root'])
 check('set_clock keyed (shown -> hidden -> both)', (a, b, c) == (True, False, True), (a, b, c))
 K.clear_keys(); H.set_clock(1)
@@ -49,8 +49,8 @@ check('NIGHT candle stub burns down (height 1.0 -> 0.3 keyed linear)', h1 > h3 >
 H.set_candles(0.0, frame=40); at(40); check('level 0: flame hidden', not vis(st['flame']))
 K.clear_keys(); H.set_candles(1.0); check('clear_keys drops keys (plain call holds)', all(not (o.animation_data and o.animation_data.action) for o in bpy.data.objects))
 e_day = S['lampgroups']['candle'][0][0].data.energy; H.apply_light('NIGHT'); e_night = S['lampgroups']['candle'][0][0].data.energy
-sun_n = bpy.context.scene.objects['key'].data.energy; H.apply_light('DAY'); sun_d = bpy.context.scene.objects['key'].data.energy
-check('apply_light DAY <-> NIGHT (sun 42 -> moon, candles change)', sun_d > 30 > sun_n and e_day != e_night, (sun_d, sun_n))
+kn = bpy.context.scene.objects['key'].data; sun_n = kn.energy * (0.3 * kn.color[0] + 0.59 * kn.color[1] + 0.11 * kn.color[2]); cool_n = kn.color[2] > kn.color[0]; H.apply_light('DAY'); kd = bpy.context.scene.objects['key'].data; sun_d = kd.energy * (0.3 * kd.color[0] + 0.59 * kd.color[1] + 0.11 * kd.color[2]); warm_d = kd.color[0] > kd.color[2]
+check('apply_light DAY <-> NIGHT (warm sun -> cool moon of lower luminous power, candles change)', sun_d > sun_n and warm_d and cool_n and e_day != e_night, (round(sun_d, 1), round(sun_n, 1)))
 for p in H.SHOP_PRESETS:
     A = H.build(p, light='NIGHT'); check('build %s NIGHT' % p, A['light'] == 'NIGHT' and A['cam_name'] == p and A['staging'][p] != [])
 check('shop hooks refused at another location', True)

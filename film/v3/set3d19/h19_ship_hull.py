@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import h19_kit as K
 from h19_kit import mat, mat_emit, metal_mat, MB, hexc, rnd, ring_xy
 MATS = K.MATS
+THEME = {}           # per-build look switches (set by h19_ship.build_ship): warm=True -> warm-wood masts, cream canvas, wood wheel (deck / rail / rocks presets)
 BODY = [None]          # the metres body empty (set by build)
 YS, YB = -21.0, 21.0; BH = 5.6                       # stern / bow at the waterline (local y), max half beam
 def ss(a, b, x):
@@ -106,6 +107,11 @@ def ship6_mats():
     M['gold'] = mat('gold', '#d8a840', '#c08c30', scale=4, sheen=0.3)
     M['pen'] = mat('pen', '#c0392f', '#a8302a', scale=4)
     M['rig6'] = mat('rig6', '#2c2430', '#40343e', scale=3)
+    if THEME.get('warm'):
+        M['mast'] = mat('mast6w', '#3a2e26', '#4a3a2e', scale=3, aniso=(0.2, 0.2, 0.05)); M['oak'] = mat('oak6w', '#6a4628', '#7e5632', scale=5, aniso=(0.15, 1, 1))
+        M['canv'] = mat('canvw', '#e8dcc0', '#dccfae', scale=2.2, aniso=(1.3, 1, 0.8), contrast=0.8, emit='#f4e4c0', emit_k=0.42)
+        M['canv2'] = mat('canv2w', '#e2d6b8', '#d6c9a8', scale=2.2, aniso=(1.3, 1, 0.8), contrast=0.8, emit='#f4e4c0', emit_k=0.38)
+        M['rig6'] = mat('rig6w', '#2e2620', '#40342a', scale=3); M['iron'] = mat('iron_w', '#4a4038', '#5c5248', scale=6, rough=0.6)
     M['sail'] = M['canv']; M['sail2'] = M['canv2']
     return M
 def build_hull6(M):
@@ -209,8 +215,8 @@ def rigging6(mb, M, my, z0, H, s_sides=(-1, 1), nshr=5):
         mb.rod(M['rig6'], Vector((s * 0.2, my - 0.4, z0 + 0.77 * H)), Vector((s * (float(hull_x(float(hull_t(my - 7.0, 4.4)), 4.4)) + 0.4), my - 7.0, deck_z(my - 7.0) - 0.6)), 0.04, 0.035, 4)    # backstay
 
 def mast6(mb, M, my, H, yards):
-    z0 = deck_z(my)
-    tube(mb, M['mast'], (0, my, z0 - 0.5), (0, my, z0 + 0.52 * H), 0.58, 0.36, 12)
+    z0 = deck_z(my); ms = 0.62 if THEME.get('warm') else 1.0
+    tube(mb, M['mast'], (0, my, z0 - 0.5), (0, my, z0 + 0.52 * H), 0.58 * ms, 0.36 * ms, 12)
     tube(mb, M['mast'], (0, my, z0 + 0.40 * H), (0, my, z0 + 0.80 * H), 0.30, 0.19, 10)
     tube(mb, M['mast'], (0, my, z0 + 0.76 * H), (0, my, z0 + H), 0.17, 0.08, 8)
     mb.box(M['mast'], (0, my - 0.2, z0 + 0.41 * H), (3.2, 2.6, 0.22)); mb.box(M['rig6'], (0, my - 0.2, z0 + 0.41 * H - 0.13), (3.3, 2.7, 0.04))
@@ -229,7 +235,8 @@ def build_ship6(P):
     for s in (-1, 1):
         mb.box(M['hull6'], (s * 4.25, -16.6, 7.7), (1.2, 3.6, 2.7)); mb.box(M['ochre6'], (s * 4.25, -16.6, 9.1), (1.3, 3.7, 0.18))
         for k in range(3): mb.box(M['port6'], (s * 4.88, -18.0 + 1.2 * k, 7.8), (0.06, 0.7, 1.1))
-    mb.box(M['gold'], (0, -21.2, 10.0), (0.9, 0.9, 1.3)); mb.cyl(M['gold'], (0, -21.2, 10.8), 0.38, 0.4, seg=10)
+    if not THEME.get('no_stern_lamp'):
+        mb.box(M['gold'], (0, -21.2, 10.0), (0.9, 0.9, 1.3)); mb.cyl(M['gold'], (0, -21.2, 10.8), 0.38, 0.4, seg=10)
     tube(mb, M['gold'], (0, YB + 2.2, 4.6), (0, YB + 4.8, 5.8), 0.36, 0.22, 8); mb.ell(M['gold'], (0, YB + 5.0, 5.9), (0.3, 0.55, 0.38), (10, 6))
     for s in (-1, 1): tube(mb, M['ochre6'], (s * 0.15, YB + 1.0, 4.9), (s * 0.5, YB + 4.8, 5.4), 0.1, 0.07, 6)
     # three masts: fore, main, mizzen

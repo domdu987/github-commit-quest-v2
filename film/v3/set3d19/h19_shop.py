@@ -15,7 +15,7 @@ WIN = (-1.55, -0.3, 0.9, 2.3)  # window x0 x1 z0 z1 (back wall)
 CAMS_M = dict(
     shop_wide=((0.05, -2.3, 1.32), (0.0, 3.4, 0.95)),
     shop_bench=((1.25, -0.6, 1.2), (1.35, 2.5, 1.2)),
-    shop_clock=((1.0, 0.3, 1.25), (1.1, 1.9, 1.02)),
+    shop_clock=((1.15, 0.45, 1.3), (1.25, 1.9, 1.1)),
     shop_door=((0.75, 0.2, 1.3), (-0.15, -2.9, 1.15)),
 )
 CAM_NOTES = dict(
@@ -30,33 +30,34 @@ STAGING = dict(
     shop_clock=[('harrison', 'harrison_bench')],
     shop_door=[('mocker', 'visitor_a'), ('astro', 'visitor_b')],
 )
-MARKS_M = dict(harrison_bench=(2.0, 2.75, 0.0), harrison_lathe=(-1.1, 1.5, 0.0), harrison_window=(-0.9, 2.75, 0.0), door=(-0.3, -2.7, 0.0),
+MARKS_M = dict(harrison_bench=(1.8, 2.75, 0.0), harrison_lathe=(-1.1, 1.5, 0.0), harrison_window=(-0.9, 2.75, 0.0), door=(-0.3, -2.7, 0.0),
                visitor_a=(-0.35, -1.7, 0.0), visitor_b=(0.55, -1.55, 0.0), william_bench=(0.55, 2.75, 0.0))
 
 LIGHTS = dict(
-    DAY=dict(key=(1.0, 0.8, 0.52, 42.0), az=-46, el=19, sun_angle=1.0, exposure=0.2, sat=1.1, fill=1.0, win=1.0, warm=0.7, candle=0.55, door=0.5,
-             pane=('#a8c8f4', 1.5), hedge=('#4e7a58', 0.55), roof=('#b86a4a', 0.7), out=('#fff0d0', 0.85), outg=('#6e9a58', 0.8), moon=0.0),
-    NIGHT=dict(key=(0.4, 0.5, 1.0, 9.0), az=-30, el=34, sun_angle=2.5, exposure=0.45, sat=1.04, fill=0.75, win=3.2, warm=0.0, candle=0.38, door=0.05,
+    DAY=dict(key=(1.0, 0.86, 0.66, 36.0), az=-46, el=19, sun_angle=1.0, exposure=0.75, sat=1.08, fill=1.35, win=1.0, warm=0.4, candle=0.5, door=0.3,
+             pane=('#a8c8f4', 0.95), hedge=('#4e7a58', 0.45), roof=('#b86a4a', 0.55), out=('#fff0d0', 0.85), outg=('#6e9a58', 0.8), moon=0.0),
+    NIGHT=dict(key=(0.42, 0.52, 1.0, 40.0), az=-30, el=34, sun_angle=1.5, exposure=0.3, sat=1.04, fill=0.08, win=0.6, warm=0.0, candle=0.7, door=0.05,
                pane=('#3a4a9a', 0.55), hedge=('#1e2c4a', 0.25), roof=('#2a3050', 0.3), out=('#26306a', 0.5), outg=('#1a2444', 0.4), moon=1.0),
 )
 
 def shop_mats():
     M = {}
-    M['plaster'] = mat('plaster', '#b4663a', '#c87a44', scale=1.6, contrast=1.2, zgrad=(0.0, 0.5, '#7c3f30'))
-    M['floor'] = mat('floor', '#9a7040', '#86602f', scale=2.2, aniso=(0.5, 0.12, 1))
-    M['floor2'] = mat('floor2', '#7a5530', '#8a6636', scale=2.2, aniso=(0.5, 0.12, 1))
+    M['plaster'] = mat('plaster', '#9a7a66', '#aa8a72', scale=1.6, contrast=1.2, zgrad=(0.0, 0.6, '#5c4650'))        # dusty lime plaster (ochre-grey, never orange): the warm practicals make it warm, the violet fill keeps it from going monochrome
+    M['floor'] = mat('floor', '#7a5a3c', '#6a4c32', scale=2.2, aniso=(0.5, 0.12, 1))
+    M['floor2'] = mat('floor2', '#624632', '#725238', scale=2.2, aniso=(0.5, 0.12, 1))
+    M['walnut'] = mat('walnut', '#6b4a2e', '#7a5636', scale=5, aniso=(0.15, 1, 1), contrast=1.2)
     M['gap'] = mat('gap', '#2a1a22')
-    M['beam'] = mat('beam', '#4e3420', '#684224', scale=2.0, aniso=(0.1, 1, 1))
+    M['beam'] = mat('beam', '#46301f', '#5a3a26', scale=2.0, aniso=(0.1, 1, 1))
     M['honey'] = mat('honey', '#c28b3e', '#aa7430', scale=5, aniso=(0.15, 1, 1), contrast=1.3)
     M['oak'] = mat('oak', '#8a5a2c', '#9e6a34', scale=5, aniso=(0.15, 1, 1))
     M['oakd'] = mat('oakd', '#5d3a20', '#72482a', scale=5, aniso=(0.2, 1, 1))
     M['bark'] = mat('bark', '#4a3220', '#6a4a30', scale=14, aniso=(1, 1, 0.12), contrast=1.6)
     M['ring'] = mat('ring', '#c79a58', '#d8ae6c', scale=9, contrast=1.3)
     M['gearw'] = mat('gearw', '#b98240', '#a06c30', scale=8, contrast=1.3)
-    M['iron'] = metal_mat('iron', '#3c3430', '#52483e', rough=0.6, spec=0.15)       # warm iron-grey (never blue)
-    M['steel'] = mat('steel', '#7a6e62', '#8c8074', scale=8)
-    M['brass'] = metal_mat('brass', '#b08a30', '#cfaa48', rough=0.42, spec=0.6, metallic=1.0)
-    M['brassd'] = metal_mat('brassd', '#70501c', '#946a28', rough=0.42, spec=0.7, metallic=1.0)
+    M['iron'] = metal_mat('iron', '#3a3430', '#4a4038', rough=0.6, spec=0.15)       # warm iron-grey (never blue)
+    M['steel'] = mat('steel', '#3e3028', '#4c3c30', scale=8)               # warm iron (#3a3430 family): no blue-grey bars
+    M['brass'] = metal_mat('brass', '#b8923a', '#d6b050', rough=0.4, spec=0.6, metallic=0.78)
+    M['brassd'] = metal_mat('brassd', '#8a6424', '#a8802e', rough=0.45, spec=0.5, metallic=0.55)        # rims never go black: part diffuse brass
     M['silver'] = metal_mat('silver', '#b8bcc4', '#d4d8de', rough=0.26, spec=0.8, metallic=1.0)
     M['terra'] = mat('terra', '#b5532c', '#c9683a', scale=4)
     M['cloth'] = mat('cloth', '#a98354', '#bd9560', scale=7)
@@ -67,15 +68,16 @@ def shop_mats():
     M['red'] = mat('red', '#8a2630', '#a23238', scale=6)
     M['redcloth'] = mat('redcloth', '#a02a34', '#bb3a3e', scale=14, contrast=1.4)
     M['green'] = mat('green', '#5e7a3a', '#748c44', scale=6)
-    M['dark'] = mat('dark', '#2a1a14', '#3a2a1e', scale=4)
+    M['dark'] = mat('dark', '#2a1a14', '#3a2a1e', scale=4); M['coat'] = mat('coat', '#5a4a3a', '#6a5646', scale=6); M['leather'] = mat('leather', '#6a4228', '#7a5030', scale=8)
     M['shav'] = mat('shav', '#d9a85a', '#c8924a', scale=8)
-    M['stone'] = mat('stone', '#8a7a66', '#9c8c76', scale=6)
+    M['stone'] = mat('stone', '#8a6e56', '#9c8066', scale=6)
     M['grey'] = mat('grey', '#9aa0b0')
     M['wick'] = mat('wick', '#2a2020')
-    M['rug1'] = mat('rug1', '#7a3a2a', '#8a4632', scale=14); M['rug2'] = mat('rug2', '#9a7a4a', '#a88858', scale=14); M['rug3'] = mat('rug3', '#4a5a38', '#566a40', scale=14); M['rug4'] = mat('rug4', '#c8aa78', '#b89a68', scale=14)
-    M['brassm'] = metal_mat('brassm', '#a8802c', '#c49a3c', rough=0.6, spec=0.4, metallic=0.55); M['ceilp'] = mat('ceilp', '#8a4a30', '#9c5a38', scale=1.4, contrast=1.2)
+    M['rug1'] = mat('rug1', '#7a4232', '#86503a', scale=14); M['rug2'] = mat('rug2', '#9a7c4c', '#a68858', scale=14); M['rug3'] = mat('rug3', '#4a5a38', '#566a40', scale=14); M['rug4'] = mat('rug4', '#b8a47c', '#a89468', scale=14)
+    M['rugg'] = mat('rugg', '#7c6c58', '#8a7a64', scale=14); M['rugd'] = mat('rugd', '#44382e', '#52443a', scale=14)
+    M['brassm'] = metal_mat('brassm', '#cb9f48', '#dcb25a', rough=0.24, spec=0.8, metallic=0.88); M['ceilp'] = mat('ceilp', '#6a5244', '#7a6050', scale=1.4, contrast=1.2)
     M['flame'] = mat_emit('flame', '#ffc860', 28.0)
-    M['lampg'] = mat_emit('lampg', '#ffb860', 1.5)
+    M['lampg'] = mat_emit('lampg', '#e89a48', 0.6)
     return M
 
 def box_wall(mb, m, x0, x1, y0, y1, z0, z1): mb.box(m, ((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2), (x1 - x0, y1 - y0, z1 - z0))
@@ -124,26 +126,27 @@ def clock_h3(M, par):
     mb.box(M['honey'], (0, 0, 0.02), (w + 0.1, d + 0.1, 0.04)); mb.box(B, (0, 0, 0.04 + h / 2), (w, d, h)); mb.box(BD, (0, -d / 2 - 0.004, 0.04 + h / 2), (w - 0.1, 0.01, h - 0.1))
     for dx in (-w / 2, w / 2):
         for dy in (-d / 2, d / 2): mb.box(BD, (dx, dy, 0.04 + h / 2), (0.03, 0.03, h + 0.02))
-    mb.box(BD, (0, 0, 0.04 + h + 0.01), (w + 0.04, d + 0.04, 0.02)); mb.box(M['dark'], (0, -d / 2 - 0.012, 0.04 + h / 2), (w - 0.18, 0.006, h - 0.18))
+    mb.box(BD, (0, 0, 0.04 + h + 0.01), (w + 0.04, d + 0.04, 0.02)); mb.box(M['brassd'], (0, -d / 2 - 0.012, 0.04 + h / 2), (w - 0.18, 0.006, h - 0.18))
     for dx in (-w / 2 + 0.03, w / 2 - 0.03): mb.cyl(M['brassd'], (dx, -d / 2 - 0.03, 0.06), 0.03, 0.04, seg=10)
     mb.finish(parent=par); G = []
     for i, (dx, dz, r, nt, sp) in enumerate([(-0.1, 0.2, 0.07, 12, 0.9), (0.06, 0.22, 0.09, 14, -0.7), (0.16, 0.14, 0.05, 8, 1.4)]):
         G.append((gear_obj('h3gear%d' % i, par, B, (dx, -d / 2 - 0.02, dz), r, nt=nt, th=0.02, rim=0.014, tooth=0.016, hub=0.016, n=12), sp))
     bars = []
     for sgn, x in ((1, -0.13), (-1, 0.13)):
-        pv = pivot('h3bal%d' % sgn, par, (x, 0.0, 0.04 + h + 0.02 + 0.045)); mb = MB('h3b'); r = 0.115
+        mount = pivot('h3mount%d' % sgn, par, (x * 1.32, 0.0, 0.04 + h + 0.02 + 0.16), rot=(math.pi / 2, 0, 0)); pv = pivot('h3bal%d' % sgn, mount, (0, 0, 0)); mb = MB('h3b'); r = 0.155      # rings stand upright facing the camera; the balance turns in its own plane
         for k in range(20):
-            a = 2 * math.pi * (k + .5) / 20; mb.box(B, (r * math.cos(a), r * math.sin(a), 0), (2 * math.pi * r / 20 * 1.12, 0.02, 0.026), rz=a + math.pi / 2)
-        for k in range(3): mb.box(BD, (0, 0, 0), (2 * r, 0.012, 0.016), rz=math.pi * k / 3)
+            a = 2 * math.pi * (k + .5) / 20; mb.box(B, (r * math.cos(a), r * math.sin(a), 0), (2 * math.pi * r / 20 * 1.12, 0.034, 0.038), rz=a + math.pi / 2)
+        for k in range(3): mb.box(B, (0, 0, 0), (2 * r, 0.018, 0.022), rz=math.pi * k / 3)
         mb.cyl(B, (0, 0, 0), 0.02, 0.05, seg=10); mb.cyl(B, (0, 0, -0.04), 0.008, 0.08, seg=6)
         for k in range(4):
-            a = math.pi / 2 * k; sphere_brass(mb, BD, (r * math.cos(a), r * math.sin(a), 0.0), 0.022)
+            a = math.pi / 2 * k; sphere_brass(mb, B, (r * math.cos(a), r * math.sin(a), 0.0), 0.03)
         mb.finish(parent=pv); bars.append((pv, sgn))
     return dict(gears=G, bars=[b for b, _ in bars], balsgn=[s for _, s in bars])
 
 def watch_h4(M, par):
     """H4: silver watch ~13 cm across lying on a red cloth, open face with tick marks and two hands, NO numerals"""
     mb = MB('h4'); r = 0.065
+    mb.box(M['oakd'], (0, 0.05, -0.03), (0.2, 0.15, 0.05), rx=-H4_TILT)           # a closed ledger wedges the cloth up toward the lens
     mb.box(M['redcloth'], (0, 0, 0.007), (0.26, 0.21, 0.014), rz=0.12); mb.box(M['redcloth'], (-0.05, 0.02, 0.016), (0.14, 0.12, 0.012), rz=-0.5); mb.box(M['redcloth'], (0.07, -0.03, 0.017), (0.10, 0.08, 0.01), rz=0.9)
     z0 = 0.028
     mb.cyl(M['silver'], (0, 0, z0), r, 0.02, seg=40, smooth=True); mb.cyl(M['face'], (0, 0, z0 + 0.0115), r - 0.007, 0.003, seg=40)
@@ -161,12 +164,77 @@ def watch_h4(M, par):
     return dict(gears=[], bars=[])
 
 CLOCK_BUILD = {1: ('h1', lambda M, p: clock_h1(M, p)), 2: ('h2', lambda M, p: clock_h1(M, p, tall=0.13)), 3: ('h3', clock_h3), 4: ('h4', watch_h4)}
-CLOCK_SCALE = {1: 1.22, 2: 1.18, 3: 1.35, 4: 1.0}
+CLOCK_SCALE = {1: 1.22, 2: 1.18, 3: 1.35, 4: 2.3}           # H4 is a hero prop: 2.3 x (about 30 cm) so it reads at 150+ px in shop_clock; tilted toward the lens on a folded cloth
+H4_TILT = 0.75
 CLOCK_SLOTS = {1: [(1.2, 1.88)], 2: [(0.9, 1.84), (1.78, 1.88)], 3: [(0.8, 1.84), (1.3, 1.88), (1.8, 1.88)]}
+
+
+# ----------------------------------------------------------------------------- the world outside the front door: yard, path, fence, trees in depth, hills, sky (self-lit, day / night switch = apply_light)
+def ext_mat(SET, name, day, night, scale=1.0, aniso=(1, 1, 1), contrast=1.0, grad=None):
+    """self-lit two-tone noise material; day / night colour pair + strength switched by the Value node 'dn' (apply_light). grad=(z0, z1) makes it a vertical gradient (sky): A at z0 -> B at z1"""
+    m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); em = N('ShaderNodeEmission'); tc = N('ShaderNodeTexCoord'); dn = N('ShaderNodeValue'); dn.name = 'dn'; dn.outputs[0].default_value = 0.0
+    if grad:
+        sp = N('ShaderNodeSeparateXYZ'); L(tc.outputs['Object'], sp.inputs[0]); mr = N('ShaderNodeMapRange'); mr.inputs['From Min'].default_value = grad[0]; mr.inputs['From Max'].default_value = grad[1]; mr.clamp = True; L(sp.outputs['Z'], mr.inputs['Value']); fac = mr.outputs[0]
+    else:
+        mp = N('ShaderNodeMapping'); mp.inputs['Scale'].default_value = (scale * aniso[0], scale * aniso[1], scale * aniso[2]); L(tc.outputs['Object'], mp.inputs['Vector'])
+        nz = N('ShaderNodeTexNoise'); nz.inputs['Detail'].default_value = 4; nz.inputs['Roughness'].default_value = 0.6; L(mp.outputs[0], nz.inputs['Vector'])
+        cr = N('ShaderNodeValToRGB'); cr.color_ramp.elements[0].position = 0.5 - 0.2 / contrast; cr.color_ramp.elements[1].position = 0.5 + 0.2 / contrast; L(nz.outputs['Fac'], cr.inputs['Fac']); fac = cr.outputs[0]
+    cols = []
+    for (A_, B_, k_) in (day, night):
+        mx = N('ShaderNodeMix'); mx.data_type = 'RGBA'; mx.inputs[6].default_value = hexc(A_); mx.inputs[7].default_value = hexc(B_); L(fac, mx.inputs[0]); cols.append(mx.outputs[2])
+    mf = N('ShaderNodeMix'); mf.data_type = 'RGBA'; L(dn.outputs[0], mf.inputs[0]); L(cols[0], mf.inputs[6]); L(cols[1], mf.inputs[7])
+    ks = N('ShaderNodeMix'); ks.data_type = 'FLOAT'; L(dn.outputs[0], ks.inputs[0]); ks.inputs[2].default_value = day[2]; ks.inputs[3].default_value = night[2]
+    L(mf.outputs[2], em.inputs['Color']); L(ks.outputs[0], em.inputs['Strength']); L(em.outputs[0], out.inputs['Surface'])
+    SET.setdefault('ext_mats', []).append(m); return m
+
+def build_exterior(SET, light):
+    """what the door (and the front-wall window) look onto: a dirt path, a rail fence with an open gate, hedge + bushes, trees in three depth layers, a hazy far hill, a gradient sky. Self-lit (the room walls shade the real sun)."""
+    X = MB('outside'); E = lambda n, d, nn, **kw: ext_mat(SET, n, d, nn, **kw); rr = rnd(77)
+    grass = E('x_grass', ('#6e9a4c', '#84ac5a', 0.62), ('#1c2a3c', '#26364a', 0.42), scale=0.8, contrast=1.4)
+    path = E('x_path', ('#c2ab80', '#b09870', 0.7), ('#3a4258', '#48526c', 0.7), scale=3.0, contrast=1.6)
+    wood = E('x_wood', ('#86705a', '#745e48', 0.62), ('#2a3048', '#363e5a', 0.6), scale=6.0, aniso=(1, 1, 0.15))
+    bush = E('x_bush', ('#3f6e3c', '#52844a', 0.55), ('#12202e', '#1a2c3c', 0.34), scale=3.0, contrast=1.3)
+    tree1 = E('x_tree1', ('#3a6838', '#4c7c44', 0.55), ('#101e2c', '#182a3a', 0.34), scale=1.6, contrast=1.5)
+    tree2 = E('x_tree2', ('#4e7e48', '#62925a', 0.6), ('#16263a', '#1e3246', 0.36), scale=1.4, contrast=1.5)
+    tree3 = E('x_tree3', ('#7aa078', '#8cb088', 0.75), ('#20304c', '#283a58', 0.4), scale=1.0, contrast=1.3)
+    bark = E('x_bark', ('#5e4a38', '#4a382a', 0.5), ('#1c2434', '#262e42', 0.32), scale=8.0, aniso=(1, 1, 0.2))
+    hill = E('x_hill', ('#97b496', '#a8c4a4', 0.82), ('#26345a', '#303e66', 0.42), scale=0.12, contrast=1.2)
+    sky = E('x_sky', ('#dce8e6', '#74a6e0', 1.05), ('#34427a', '#121a42', 0.6), grad=(8.0, 55.0))
+    Yf = Y0 - 3.7                                                                                      # fence line, 3.7 m outside the front wall
+    X.quad(sky, [(-90, -72, -4), (90, -72, -4), (90, -72, 70), (-90, -72, 70)][::-1])
+    for (hx, hy, rx_, rz_) in [(-30, -58, 26, 7.5), (6, -61, 30, 10), (40, -57, 20, 6.5), (-62, -60, 18, 8)]: X.ell(hill, (hx, hy, -0.5), (rx_, 1.0, rz_), (24, 10))
+    X.quad(grass, [(-90, Y0 - 0.02, -0.07), (90, Y0 - 0.02, -0.07), (90, -70, -0.07), (-90, -70, -0.07)][::-1])
+    X.quad(path, [(DOORX[0] - 0.25, Y0 - 0.02, -0.055), (DOORX[1] + 0.2, Y0 - 0.02, -0.055), (DOORX[1] + 0.5, -26, -0.055), (DOORX[0] - 0.7, -26, -0.055)][::-1])
+    # hedge row + far field edge, then fence
+    X.box(bush, (0, -26, 0.9), (90, 1.6, 1.8)); X.box(tree3, (0, -34, 2.2), (90, 2.0, 4.4))
+    gate0, gate1 = DOORX[0] - 0.55, DOORX[1] + 0.35
+    xs = [x for x in [-9 + 0.85 * i for i in range(0, 18)] if not (gate0 - 0.3 < x < gate1 + 0.3)]
+    for x in xs: X.box(wood, (x, Yf, 0.58), (0.09, 0.09, 1.16))
+    for (a_, b_) in ((-9.0, gate0), (gate1, 5.5)):
+        for z in (0.38, 0.86): X.box(wood, ((a_ + b_) / 2, Yf + 0.05, z), (b_ - a_, 0.04, 0.09))
+    for x in (gate0, gate1): X.box(wood, (x, Yf, 0.7), (0.14, 0.14, 1.4))
+    gl_ = gate1 - gate0 - 0.2                                                             # the gate stands open, swung out on its hinge post
+    for z in (0.3, 0.62, 0.94): X.box(wood, (gate0 + 0.12, Yf - gl_ / 2, z), (0.05, gl_, 0.07))
+    X.box(wood, (gate0 + 0.12, Yf - gl_ / 2, 0.62), (0.05, 0.06, 0.74)); X.box(wood, (gate0 + 0.12, Yf - gl_ + 0.06, 0.62), (0.05, 0.06, 0.74))
+    for (bx_, bw_, bh_) in [(-3.4, 1.6, 0.8), (-1.9, 1.2, 0.6), (1.8, 1.7, 0.85), (3.5, 1.3, 0.7), (-6.5, 1.8, 0.9)]: X.ell(bush, (bx_, Yf - 0.6, bh_ * 0.45), (bw_, 0.7, bh_), (14, 8))
+    # trees: (x, y, trunk height, canopy radius, canopy material, trunk radius)
+    for (tx, ty, th, tr, tm, rad) in [(-3.4, -12.5, 3.2, 2.5, tree1, 0.3), (-1.3, -10.2, 2.4, 1.8, tree2, 0.22), (1.9, -13.5, 3.8, 2.8, tree1, 0.34), (-6.8, -14.0, 3.4, 2.6, tree2, 0.3), (4.8, -10.5, 2.8, 2.0, tree2, 0.26),
+                                      (-9.5, -11.0, 3.0, 2.2, tree1, 0.28), (-4.6, -19.0, 4.2, 3.2, tree3, 0.36), (0.4, -21.0, 4.6, 3.6, tree3, 0.4), (6.5, -18.5, 4.0, 3.0, tree3, 0.34), (-1.4, -9.0, 1.9, 1.3, tree1, 0.18)]:
+        X.rod(bark, (tx, ty, 0.0), (tx, ty, th), rad * 1.25, rad * 0.8, 8, True, True)
+        for k in range(5):
+            a_ = k * 1.26 + tx; X.ell(tm, (tx + 0.55 * tr * math.cos(a_) * (k > 0), ty + 0.4 * tr * math.sin(a_) * (k > 0), th + tr * (0.55 if k == 0 else 0.4 + 0.18 * (k % 2))), (tr * (0.8 if k else 1.0), tr * (0.8 if k else 1.0), tr * (0.7 if k else 0.85)), (12, 8))
+    X.finish(shadow=False)
+    moon = MB('outside_moon'); moon.ell(mat_emit('x_moon', '#e8eeff', 3.0), (-9, -70.5, 36), (3.2, 0.3, 3.2), (16, 10)); mo = moon.finish(shadow=False)[0]; SET['ext_moon'] = mo
+    # a hay cart and a milk churn by the gate: something to read in the yard
+    cm = MB('outside_props')
+    cm.box(wood, (3.2, Yf + 1.6, 0.55), (1.8, 1.0, 0.12)); cm.box(wood, (3.2, Yf + 1.1, 0.8), (1.8, 0.06, 0.5)); cm.box(wood, (3.2, Yf + 2.1, 0.8), (1.8, 0.06, 0.5)); cm.cyl(wood, (2.6, Yf + 1.6, 0.4), 0.4, 0.08, axis='y', seg=14); cm.cyl(wood, (3.8, Yf + 1.6, 0.4), 0.4, 0.08, axis='y', seg=14)
+    cm.ell(path, (3.2, Yf + 1.6, 1.0), (0.85, 0.45, 0.4), (10, 6)); cm.cyl(bush, (-1.9, Yf + 0.9, 0.3), 0.18, 0.6, seg=10)
+    cm.finish(shadow=False)
 
 # ----------------------------------------------------------------------------- build
 def build_shop(SET, preset, light):
-    root = K.new_root(); M = shop_mats(); SET['M'] = M; rr = rnd(19); PL = LIGHTS[light]
+    root = K.new_root(); M = shop_mats(); SET['M'] = M; rr = rnd(19); PL = LIGHTS[light]; SET['caption_shade'] = dict(y0=740, y1=890, a1=0.68, a2=0.8)
     K.flat_world('#7a82ff', 0.0, env=('#ffd6a0', 0.9)); SET['samples'] = 8; SET['dbounce'] = 0
     mb = MB('shop'); fl = []
     # ---- shell
@@ -178,7 +246,8 @@ def build_shop(SET, preset, light):
     box_wall(mb, M['plaster'], X0 - .2, wx0, Y1, Y1 + .32, 0, ZH); box_wall(mb, M['plaster'], wx1, X1 + .2, Y1, Y1 + .32, 0, ZH)
     box_wall(mb, M['plaster'], wx0, wx1, Y1, Y1 + .32, 0, wz0); box_wall(mb, M['plaster'], wx0, wx1, Y1, Y1 + .32, wz1, ZH)
     box_wall(mb, M['plaster'], X0 - .3, X0, Y0, Y1 + .3, 0, ZH); box_wall(mb, M['plaster'], X1, X1 + .3, Y0, Y1 + .3, 0, ZH)
-    box_wall(mb, M['plaster'], X0 - .3, DOORX[0], Y0 - .3, Y0, 0, ZH); box_wall(mb, M['plaster'], DOORX[1], X1 + .3, Y0 - .3, Y0, 0, ZH)
+    box_wall(mb, M['plaster'], X0 - .3, DOORX[0], Y0 - .3, Y0, 0, ZH); FW = (1.3, 2.1, 0.95, 1.95)                                       # small window in the front wall (x0 x1 z0 z1), looks onto the yard
+    box_wall(mb, M['plaster'], DOORX[1], FW[0], Y0 - .3, Y0, 0, ZH); box_wall(mb, M['plaster'], FW[1], X1 + .3, Y0 - .3, Y0, 0, ZH); box_wall(mb, M['plaster'], FW[0], FW[1], Y0 - .3, Y0, 0, FW[2]); box_wall(mb, M['plaster'], FW[0], FW[1], Y0 - .3, Y0, FW[3], ZH)
     box_wall(mb, M['plaster'], DOORX[0], DOORX[1], Y0 - .3, Y0, 2.1, ZH); box_wall(mb, M['ceilp'], X0 - .3, X1 + .3, Y0, Y1 + .3, ZH, ZH + .3)
     # timber frame
     for x in (-2.2, 2.2): mb.box(M['beam'], (x, Y1 - 0.06, ZH / 2), (0.2, 0.14, ZH))
@@ -220,17 +289,7 @@ def build_shop(SET, preset, light):
     for k in range(6): dl.box(M['oak'] if k % 2 else M['oakd'], (lw * (k + .5) / 6, 0, 1.04), (lw / 6 - 0.004, 0.05, 2.08))
     for z in (0.3, 1.0, 1.75): dl.box(M['iron'], (lw / 2, -0.03, z), (lw, 0.012, 0.09)); dl.cyl(M['iron'], (lw - 0.05, -0.036, z), 0.016, 0.01, axis='y', seg=8)
     dl.box(M['iron'], (lw - 0.08, -0.04, 1.0), (0.14, 0.015, 0.025)); dl.finish(shadow=True); dl.pop()
-    gld = MB('outside'); om = mat_emit('out_day', PL['out'][0], PL['out'][1]); og = mat_emit('out_grd', PL['outg'][0], PL['outg'][1]); SET['out_mats'] = (om, og)
-    day = light == 'DAY'
-    gld.quad(om, [(DOORX[0] - 1.6, Y0 - 1.4, -0.2), (DOORX[1] + 1.6, Y0 - 1.4, -0.2), (DOORX[1] + 1.6, Y0 - 1.4, 3.4), (DOORX[0] - 1.6, Y0 - 1.4, 3.4)][::-1])
-    gld.quad(og, [(DOORX[0] - 1.6, Y0 - 1.39, -0.2), (DOORX[1] + 1.6, Y0 - 1.39, -0.2), (DOORX[1] + 1.6, Y0 - 1.39, 0.5), (DOORX[0] - 1.6, Y0 - 1.39, 0.5)][::-1])
-    hm = mat_emit('out_hedge', '#4c7a46' if day else '#16242e', 0.55 if day else 0.3); hm2 = mat_emit('out_hill', '#8aa870' if day else '#24304a', 0.7 if day else 0.3); sk = mat_emit('out_sky', '#9cc4ee' if day else '#26306a', 1.1 if day else 0.4)
-    gld.quad(sk, [(DOORX[0] - 1.6, Y0 - 1.38, 1.9), (DOORX[1] + 1.6, Y0 - 1.38, 1.9), (DOORX[1] + 1.6, Y0 - 1.38, 3.4), (DOORX[0] - 1.6, Y0 - 1.38, 3.4)][::-1])
-    gld.ell(hm2, (-0.5, Y0 - 1.37, 1.35), (1.4, 0.02, 0.55), (16, 8)); gld.ell(hm2, (1.1, Y0 - 1.37, 1.25), (1.2, 0.02, 0.45), (16, 8))
-    gld.box(hm, (-0.3, Y0 - 1.3, 0.55), (3.4, 0.05, 0.7))
-    for (tx, th, tr) in [(-1.0, 1.5, 0.55), (0.9, 1.8, 0.7), (0.2, 1.2, 0.4), (-1.7, 1.2, 0.4)]: gld.ell(mat_emit('out_tree', '#5a8a50' if day else '#1c2c3a', 0.65 if day else 0.3), (tx, Y0 - 1.36, th), (tr, 0.02, tr * 1.1), (12, 8))
-    gld.box(mat_emit('out_trunk', '#6a4a30', 0.4), (0.9, Y0 - 1.36, 0.6), (0.1, 0.02, 1.0))
-    gld.finish(shadow=False)
+    build_exterior(SET, light)
     # ---- longcase clock (back-left corner), visible wooden movement
     cx, cy = -1.95, 3.0
     mb.box(M['oakd'], (cx, cy, 0.07), (0.56, 0.34, 0.14)); mb.box(M['oak'], (cx - 0.24, cy, 0.8), (0.07, 0.26, 1.5)); mb.box(M['oak'], (cx + 0.24, cy, 0.8), (0.07, 0.26, 1.5)); mb.box(M['dark'], (cx, cy + 0.1, 0.8), (0.4, 0.06, 1.5))
@@ -251,9 +310,9 @@ def build_shop(SET, preset, light):
         x = 0.6 + k * 0.2; mb.box(M['steel'], (x, Y1 - 0.13, 1.58), (0.018, 0.012, 0.16)); mb.box(M['honey'], (x, Y1 - 0.14, 1.42), (0.04, 0.045, 0.1))
     # ---- workbench (against the back wall, right)
     bx0, bx1, by0, by1 = 0.3, 2.2, 1.5, 2.3
-    mb.box(M['honey'], ((bx0 + bx1) / 2, (by0 + by1) / 2, BZ - 0.05), (bx1 - bx0, by1 - by0, 0.1)); mb.box(M['oak'], ((bx0 + bx1) / 2, by0 + 0.02, BZ - 0.17), (bx1 - bx0, 0.05, 0.14))
+    mb.box(M['walnut'], ((bx0 + bx1) / 2, (by0 + by1) / 2, BZ - 0.05), (bx1 - bx0, by1 - by0, 0.1)); mb.box(M['walnut'], ((bx0 + bx1) / 2, by0 + 0.02, BZ - 0.17), (bx1 - bx0, 0.05, 0.14))
     for x in (bx0 + 0.1, bx1 - 0.1):
-        for y in (by0 + 0.08, by1 - 0.1): mb.box(M['oak'], (x, y, BZ / 2 - 0.05), (0.12, 0.12, BZ - 0.1))
+        for y in (by0 + 0.08, by1 - 0.1): mb.box(M['walnut'], (x, y, BZ / 2 - 0.05), (0.12, 0.12, BZ - 0.1))
     mb.box(M['oakd'], ((bx0 + bx1) / 2, (by0 + by1) / 2, 0.3), (bx1 - bx0 - .1, by1 - by0 - .1, 0.05))
     mb.box(M['oak'], (bx0 + 0.15, by0 - 0.06, BZ), (0.14, 0.1, 0.1)); mb.cyl(M['iron'], (bx0 + 0.15, by0 - 0.16, BZ - 0.02), 0.025, 0.18, axis='y', seg=8)
     mb.rod(M['oakd'], (bx0 + 0.04, by0 - 0.22, BZ - 0.02), (bx0 + 0.26, by0 - 0.22, BZ - 0.02), 0.015, 0.015, 6)
@@ -283,12 +342,12 @@ def build_shop(SET, preset, light):
     curl(mb, M['shav'], (lx, ly - 0.2, 0.92), rr, 0.9)
     # ---- right wall: leaning boards, chest + lantern, barrel
     for k in range(5): mb.box(M['honey'] if k % 2 else M['oak'], (2.12 - 0.01 * k, 3.15 - 0.2 * k, 1.1), (0.05, 0.2, 2.1), ry=0.09)
-    mb.box(M['oakd'], (1.75, 0.95, 0.26), (0.7, 0.5, 0.52)); mb.box(M['oak'], (1.75, 0.95, 0.55), (0.74, 0.54, 0.08))
-    for dx in (-0.25, 0.25): mb.box(M['brassd'], (1.75 + dx, 0.95, 0.3), (0.05, 0.56, 0.54))
+    mb.box(M['oakd'], (2.0, 0.95, 0.26), (0.7, 0.5, 0.52)); mb.box(M['oak'], (2.0, 0.95, 0.55), (0.74, 0.54, 0.08))
+    for dx in (-0.25, 0.25): mb.box(M['brassd'], (2.0 + dx, 0.95, 0.3), (0.05, 0.56, 0.54))
     mb.cyl(M['oak'], (-1.85, 1.2, 0.3), 0.26, 0.6, seg=14)
     for z in (0.12, 0.3, 0.48): mb.cyl(M['iron'], (-1.85, 1.2, z), 0.275, 0.03, seg=14)
-    mb.box(M['iron'], (1.75, 0.95, 0.6), (0.2, 0.2, 0.04)); mb.box(M['iron'], (1.75, 0.95, 0.95), (0.2, 0.2, 0.04))
-    for dx, dy in ((-0.08, -0.08), (0.08, -0.08), (-0.08, 0.08), (0.08, 0.08)): mb.box(M['iron'], (1.75 + dx, 0.95 + dy, 0.78), (0.02, 0.02, 0.32))
+    mb.box(M['iron'], (2.0, 0.95, 0.6), (0.2, 0.2, 0.04)); mb.box(M['iron'], (2.0, 0.95, 0.95), (0.2, 0.2, 0.04))
+    for dx, dy in ((-0.08, -0.08), (0.08, -0.08), (-0.08, 0.08), (0.08, 0.08)): mb.box(M['iron'], (2.0 + dx, 0.95 + dy, 0.78), (0.02, 0.02, 0.32))
     # ---- ceiling: hanging oil lamp + herbs
     mb.rod(M['iron'], (-0.1, 1.6, ZH - 0.28), (-0.1, 1.6, 2.35), 0.008, 0.008, 4); mb.ell(M['brassd'], (-0.1, 1.6, 2.25), (0.09, 0.09, 0.07), (10, 8))
     for k in range(6): mb.rod(M['green'] if k % 2 else M['cloth'], (1.0 + 0.1 * k, -0.3, ZH - 0.28), (1.0 + 0.1 * k + 0.02 * (k - 2), -0.3, 2.25), 0.02, 0.05, 5)
@@ -307,11 +366,21 @@ def build_shop(SET, preset, light):
     mb.cyl(M['brass'], (X0 + 0.2, 0.55, 2.3), 0.07, 0.1, seg=14, r2=0.03)
     # ---- front wall dressing (visible from shop_door): pegs with tools, shelf of jars, ladder, boards, sacks, barrel
     yw = Y0 + 0.12
-    mb.box(M['oakd'], (1.35, yw, 1.55), (1.9, 0.05, 0.1))
-    for k in range(7): mb.box(M['iron'], (0.55 + 0.27 * k, yw, 1.6), (0.03, 0.05, 0.03))
-    hang_saw(mb, M, (0.95, yw, 1.1), 0.75, 0.0); hang_saw(mb, M, (1.9, yw, 1.2), 0.6, 0.0)
-    for k in range(3): mb.box(M['iron'], (1.35 + 0.09 * k, yw, 1.4), (0.03, 0.02, 0.3)); mb.box(M['oak'], (1.35 + 0.09 * k, yw, 1.18), (0.045, 0.03, 0.14))
-    mb.cyl(M['iron'], (0.7, yw, 1.35), 0.12, 0.03, axis='y', seg=18); mb.cyl(M['iron'], (0.7, yw, 1.35), 0.14, 0.015, axis='y', seg=18)
+    # right of the door: a coat-peg rail with a coat, a leather apron and a hat; the small window onto the yard; a shelf of jars above
+    mb.box(M['oakd'], (0.78, yw, 1.66), (0.95, 0.05, 0.1))
+    for k in range(4): mb.box(M['iron'], (0.45 + 0.22 * k, yw - 0.03, 1.66), (0.03, 0.08, 0.03))
+    mb.box(M['coat'], (0.45, yw - 0.06, 1.2), (0.34, 0.07, 0.8)); mb.box(M['coat'], (0.45, yw - 0.1, 1.5), (0.38, 0.06, 0.3)); mb.box(M['coat'], (0.27, yw - 0.08, 1.15), (0.1, 0.07, 0.62), rz=0.0); mb.box(M['coat'], (0.63, yw - 0.08, 1.15), (0.1, 0.07, 0.62))
+    mb.box(M['leather'], (0.67, yw - 0.06, 1.28), (0.24, 0.05, 0.62)); mb.box(M['leather'], (0.67, yw - 0.08, 1.52), (0.06, 0.04, 0.2)); mb.cyl(M['dark'], (0.89, yw - 0.1, 1.74), 0.13, 0.02, axis='y', seg=14); mb.cyl(M['dark'], (0.89, yw - 0.12, 1.76), 0.07, 0.1, axis='y', seg=12)
+    wx0_, wx1_, wz0_, wz1_ = FW; ym_ = Y0 - 0.02
+    for k in range(4): mb.box(M['oakd'], (wx0_ + k * (wx1_ - wx0_) / 3, ym_, (wz0_ + wz1_) / 2), (0.035, 0.05, wz1_ - wz0_))
+    for k in range(4): mb.box(M['oakd'], ((wx0_ + wx1_) / 2, ym_, wz0_ + k * (wz1_ - wz0_) / 3), (wx1_ - wx0_, 0.05, 0.035))
+    for x in (wx0_, wx1_): mb.box(M['oakd'], (x, Y0 - 0.1, (wz0_ + wz1_) / 2), (0.1, 0.28, wz1_ - wz0_ + 0.1))
+    for z in (wz0_, wz1_): mb.box(M['oakd'], ((wx0_ + wx1_) / 2, Y0 - 0.1, z), (wx1_ - wx0_ + 0.1, 0.28, 0.1))
+    mb.box(M['oak'], ((wx0_ + wx1_) / 2, Y0 + 0.08, wz0_ - 0.04), (wx1_ - wx0_ + 0.3, 0.3, 0.06))
+    mb.cyl(M['terra'], (1.55, Y0 + 0.12, wz0_ + 0.06), 0.06, 0.1, seg=10, r2=0.075); mb.cyl(M['cream'], (1.9, Y0 + 0.12, wz0_ + 0.05), 0.04, 0.07, seg=10)
+    # left of the door: two saws hung upright and a spoke-shave rack
+    hang_saw(mb, M, (-1.42, yw, 1.35), 0.8, math.pi / 2); hang_saw(mb, M, (-1.2, yw, 1.3), 0.65, math.pi / 2 + 0.03)
+    for k in range(4): mb.box(M['iron'], (-1.45 + 0.12 * k, yw - 0.03, 1.95), (0.02, 0.05, 0.02)); mb.box(M['oak'], (-1.45 + 0.12 * k, yw - 0.05, 1.82), (0.04, 0.03, 0.2))
     mb.box(M['oak'], (1.55, yw - 0.1, 2.05), (1.5, 0.28, 0.05))
     for k, (cm, r, h) in enumerate([('terra', 0.07, 0.22), ('cream', 0.05, 0.16), ('terra', 0.06, 0.26), ('green', 0.05, 0.12), ('cloth', 0.06, 0.18), ('terra', 0.05, 0.14)]): mb.cyl(M[cm], (0.95 + 0.2 * k, yw - 0.1, 2.075 + h / 2), r, h, seg=10)
     mb.box(M['oak'], (-1.55, yw - 0.1, 1.9), (1.1, 0.28, 0.05))
@@ -340,11 +409,14 @@ def build_shop(SET, preset, light):
     for k in range(5): mb.box(M['honey'] if k % 2 else M['oak'], (X1 - 0.5, -1.0 + 0.5 * k, ZH - 0.33), (0.2, 0.9, 0.04), rz=0.05 * k)
     for k in range(4): mb.box(M['oak'], (-1.9, -1.4 + 0.55 * k, ZH - 0.33), (0.18, 0.9, 0.04))
     for k in range(6): mb.cyl(M['cloth'], (-0.6, -1.6, ZH - 0.6 + 0.0), 0.12 - 0.012 * k, 0.03, seg=12) if False else None
-    mb.cyl(M['cloth'], (0.9, -1.6, ZH - 0.5), 0.16, 0.12, seg=14); mb.cyl(M['dark'], (0.9, -1.6, ZH - 0.5), 0.08, 0.13, seg=10); mb.rod(M['iron'], (0.9, -1.6, ZH - 0.28), (0.9, -1.6, ZH - 0.44), 0.006, 0.006, 4)
     mb.cyl(M['iron'], (-0.6, -0.9, ZH - 0.45), 0.09, 0.04, axis='y', seg=16); mb.rod(M['iron'], (-0.6, -0.9, ZH - 0.28), (-0.6, -0.9, ZH - 0.4), 0.006, 0.006, 4)
-    # braided oval rag rug on the floor between the figures
-    for k, cc in enumerate(('rug1', 'rug2', 'dark', 'rug2', 'rug3', 'rug2', 'rug1', 'rug4')):
-        f = 1 - 0.115 * k; mb.ell(M[cc], (0.05, 0.35, 0.012 + 0.0015 * k), (0.95 * f, 0.62 * f, 0.012), (24, 6))
+    # woven rag rug (muted ochre / rust / grey stripes, fringed ends) on the floor between the figures: no bullseye
+    cols = ('rug2', 'rug1', 'rugg', 'rug2', 'rugd', 'rug1', 'rugg', 'rug2', 'rug1'); n_ = len(cols); rw = 0.2; rl = 1.25
+    mb.push(Matrix.Translation((0.05, 0.35, 0)) @ Euler((0, 0, 0.12)).to_matrix().to_4x4())
+    for k, cc in enumerate(cols): mb.box(M[cc], (-(n_ - 1) * rw / 2 + k * rw, 0, 0.007), (rw - 0.004, rl, 0.014))
+    for e in (-1, 1):
+        for k in range(18): mb.box(M['rug4'], (-n_ * rw / 2 + 0.05 + k * (n_ * rw - 0.1) / 17, e * (rl / 2 + 0.04), 0.004), (0.012, 0.09, 0.006), rz=0.08 * ((k % 3) - 1))
+    mb.pop()
     # ---- floor-level dense dressing (lower third of shop_wide / bench): tool chest with open drawers, offcut basket, half-built clock case, stump + axe, plank, sawhorse
     def chest(cx_, cy_, s=0.8, yaw=0.0):
         mb.push(Matrix.Translation((cx_, cy_, 0)) @ Euler((0, 0, yaw)).to_matrix().to_4x4() @ Matrix.Diagonal((s, s, s, 1)))
@@ -381,13 +453,17 @@ def build_shop(SET, preset, light):
     PRESET_FG = SET['preset']
     if preset == 'shop_door': chest(-1.6, -0.6, 0.6, 0.4); basket(-0.15, -0.35); case(-2.05, 0.9); stump(1.45, -0.9, r=0.24, h=0.32)
     else: chest(-0.55, -0.6, 0.62, 0.2); basket(0.5, -0.85); case(-2.05, 0.9); stump(0.75, -1.5, r=0.24, h=0.32)
-    mb.box(M['honey'], (-0.2, -1.5, 0.03), (0.9, 0.12, 0.05), rz=0.5); mb.box(M['oak'], (0.25, -0.6, 0.03), (0.7, 0.1, 0.05), rz=-0.35)
+    mb.box(M['honey'], (-0.2, -1.5, 0.022), (0.9, 0.12, 0.044), rz=0.5); mb.box(M['oak'], (0.25, -0.6, 0.022), (0.7, 0.1, 0.044), rz=-0.35)
+    mb.box(M['oakd'], (-0.2, -1.5, 0.006), (0.7, 0.08, 0.012), rz=0.5); mb.box(M['oakd'], (0.25, -0.6, 0.006), (0.5, 0.07, 0.012), rz=-0.35)           # dark contact strip under each offcut: they lie on the boards
     horse(1.45, 0.0)
+    # a smoothing plane + a curl of honey shavings on the sawhorse plank, 1-2 D from the lens in shop_bench (bottom-left foreground)
+    mb.box(M['honey'], (1.16, 0.0, 0.745), (0.3, 0.075, 0.04)); mb.box(M['steel'], (1.16, 0.0, 0.768), (0.17, 0.05, 0.008)); mb.box(M['oakd'], (1.1, 0.0, 0.79), (0.045, 0.045, 0.06)); mb.box(M['oakd'], (1.27, 0.0, 0.775), (0.05, 0.03, 0.035))
+    for k in range(5): curl(mb, M['shav'], (0.97 + 0.045 * k, 0.07 - 0.03 * (k % 2), 0.72), rr, 0.7)
     # a second case + half a gear in progress on the floor near the bench, bucket of water, stool
     mb.cyl(M['oakd'], (1.15, 0.45, 0.4), 0.2, 0.06, seg=14)
     for a in (0.3, 2.4, 4.5): mb.rod(M['oak'], (1.15 + 0.16 * math.cos(a), 0.45 + 0.16 * math.sin(a), 0.38), (1.15 + 0.24 * math.cos(a), 0.45 + 0.24 * math.sin(a), 0.0), 0.025, 0.02, 6)
     mb.cyl(M['cloth'], (-1.65, 0.9, 0.13), 0.14, 0.26, seg=12, r2=0.17)
-    gear(mb, M['honey'], (0.2, 0.9, 0.04), 0.22, nt=14, th=0.04, rim=0.04, tooth=0.04, hub=0.04, n=16, rot=(math.pi / 2, 0, 0))
+    gear(mb, M['honey'], (0.56, 2.08, BZ + 0.025), 0.12, nt=12, th=0.03, rim=0.025, tooth=0.025, hub=0.025, n=14, rot=(math.pi / 2, 0, 0.5))       # half-made gear lies on the bench, not on the rug
     # shavings: ~240 thin honey ribbons clustered round the bench, lathe, chest and stump
     for k in range(240):
         c = rr.random()
@@ -410,7 +486,7 @@ def build_shop(SET, preset, light):
     flame('flame_shelf', (-1.1 + 0.6, 2.3, 2.3), 0.02, 0.045); candle_obj('stub_shelf', (-1.1 + 0.6, 2.3, 2.065), 0.14)
     candle_obj('stub_sill', (wx0 + 0.55, Y1 - 0.14, wz0 + 0.035), 0.12); flame('flame_sill', (wx0 + 0.55, Y1 - 0.14, wz0 + 0.035 + 0.12 + 0.03))
     for i, p_ in enumerate(SET['wheelcandles']): flame('flame_wheel%d' % i, (p_[0], p_[1], p_[2] + 0.22), 0.02, 0.05)
-    lanm = MB('lantern'); lanm.box(M['lampg'], (0, 0, 0), (0.13, 0.13, 0.28)); lo = lanm.finish(shadow=False)[0]; lo.location = (1.75, 0.95, 0.78); SET['flames'].append((lo, (1.75, 0.95, 0.78)))
+    lanm = MB('lantern'); lanm.box(M['lampg'], (0, 0, 0), (0.13, 0.13, 0.28)); lo = lanm.finish(shadow=False)[0]; lo.location = (2.0, 0.95, 0.78); SET['flames'].append((lo, (2.0, 0.95, 0.78)))
     lan2 = MB('lantern2'); lan2.box(M['lampg'], (0, 0, 0), (0.11, 0.11, 0.24)); l2 = lan2.finish(shadow=False)[0]; l2.location = (-0.9, Y0 + 0.35, 1.95); SET['flames'].append((l2, (-0.9, Y0 + 0.35, 1.95)))
     mb2 = MB('lantern2f'); mb2.rod(M['iron'], (-0.9, Y0 + 0.35, 2.07), (-0.9, Y0 + 0.2, 2.35), 0.008, 0.008, 4); mb2.box(M['iron'], (-0.9, Y0 + 0.35, 2.09), (0.15, 0.15, 0.03)); mb2.box(M['iron'], (-0.9, Y0 + 0.35, 1.81), (0.15, 0.15, 0.03)); mb2.finish()
     for dx, dy in ((-0.06, -0.06), (0.06, -0.06), (-0.06, 0.06), (0.06, 0.06)):
@@ -441,14 +517,14 @@ def build_lights(SET, light):
         o = area_light(*a, **k); G[grp].append((o, K.STATE['lights'][a[0]][1])); return o
     def Pt(grp, *a, **k):
         o = point_light(*a, **k); G[grp].append((o, K.STATE['lights'][a[0]][1])); return o
-    K.shafts(d, (WIN[0], WIN[1], WIN[2], WIN[3], Y1 - 0.02), k=4.0, a=0.004 if light == 'DAY' else 0.0015)
+    K.shafts(d, (WIN[0], WIN[1], WIN[2], WIN[3], Y1 - 0.02), k=4.0, a=0.004 if light == 'DAY' else 0.0004, col='#ffd890' if light == 'DAY' else '#8fa4ff')
     A('fill', 'fill', (0, 0.3, 2.85), (0, 0, 0), (4.4, 5.5), (0.34, 0.4, 1.0), 220)
     A('fill', 'fillc', (0.0, -2.8, 1.5), (math.pi / 2, 0, 0), (4.4, 2.8), (0.4, 0.45, 1.0), 60)
     A('win', 'winfill', (-0.85, 3.3, 1.6), (-math.pi / 2, 0, 0), (1.1, 1.3), (0.3, 0.42, 1.0), 220)
     A('warm', 'roomwarm', (0.3, 1.0, 2.8), (0, 0, 0), (3.5, 4.5), (1.0, 0.72, 0.42), 110)
     A('warm', 'warmfront', (0.0, -2.6, 2.0), (math.pi / 2, 0, 0), (3.5, 2.0), (1.0, 0.7, 0.4), 50)
-    A('door', 'doorlight', (-0.3, -2.7, 1.3), (-math.pi / 2, 0, 0), (0.9, 2.0), (1.0, 0.92, 0.7), 260)
-    for (nm, loc, en) in [('p_bench', (0.38, 2.15, 1.25), 30), ('p_lamp', (2.0, 2.15, 1.2), 16), ('p_hang', (-0.1, 1.5, 2.3), 20), ('p_chest', (1.75, 0.7, 0.95), 18), ('p_shelf', (-0.5, 2.2, 2.35), 12),
+    A('door', 'doorlight', (-0.3, -2.55, 1.0), (-math.pi / 2, 0, 0), (0.9, 1.5), (1.0, 0.92, 0.7), 260)
+    for (nm, loc, en) in [('p_bench', (0.38, 2.15, 1.25), 30), ('p_lamp', (2.0, 2.15, 1.2), 16), ('p_hang', (-0.1, 1.5, 2.3), 20), ('p_chest', (2.0, 0.72, 0.95), 18), ('p_shelf', (-0.5, 2.2, 2.35), 12),
                           ('p_clock', (0.3, 1.3, 1.75), 30), ('p_wheel', (0.15, 0.7, 2.45), 40), ('p_door', (-0.9, -2.5, 1.95), 20), ('p_sill', (-0.75, 3.1, 1.25), 10)]:
         Pt('candle', nm, loc, (1.0, 0.62, 0.26), en, 0.05)
     # per-light scaling by the light preset
@@ -461,8 +537,8 @@ def apply_light(name, frame=None):
     for grp, lst in S['lampgroups'].items():
         for o, base in lst: o.data.energy = base * PL.get(grp, 1.0) * K.E2
     sc.view_settings.exposure = PL['exposure']; S['sat'] = PL['sat']
-    om, og = S['out_mats']; om.node_tree.nodes['Emission'].inputs['Color'].default_value = hexc(PL['out'][0]); om.node_tree.nodes['Emission'].inputs['Strength'].default_value = PL['out'][1]
-    og.node_tree.nodes['Emission'].inputs['Color'].default_value = hexc(PL['outg'][0]); og.node_tree.nodes['Emission'].inputs['Strength'].default_value = PL['outg'][1]
+    for m_ in S.get('ext_mats', []): m_.node_tree.nodes['dn'].outputs[0].default_value = 1.0 if name == 'NIGHT' else 0.0
+    if S.get('ext_moon') is not None: S['ext_moon'].hide_render = name != 'NIGHT'
     S['candle_k'] = PL['candle']
     return PL
 
@@ -485,15 +561,16 @@ def set_clock(n=1, frame=None):
     big = [x for x in ns if x != 4]; slots = {}
     if len(big) + (1 if 4 in ns else 0) == 1 and big: slots[big[0]] = (1.0, 1.88)
     elif big:
-        if 4 in ns and len(big) == 1: slots[big[0]] = (0.8, 1.88)
+        if 4 in ns and len(big) == 1: slots[big[0]] = (0.5, 1.92)
         else:
             tab = CLOCK_SLOTS[min(3, len(big))]
             for x, s in zip(big, tab): slots[x] = s
-    if 4 in ns: slots[4] = (1.25, 1.75) if not big else (1.5, 1.58)
+    if 4 in ns: slots[4] = (1.15, 1.62) if not big else (1.12, 1.62)
     for c, d in S['clocks'].items():
         on = c in ns; root = d['root']; K._show([root] + list(root.children_recursive), on, frame)
         if on:
-            root.location = (slots[c][0], slots[c][1], BZ + (0.0 if c != 4 else 0.0)); K._keyxf(root, frame)
+            root.location = (slots[c][0], slots[c][1], BZ + (0.0 if c != 4 else 0.105 * math.sin(H4_TILT) * CLOCK_SCALE[4] + 0.02)); K._keyxf(root, frame)
+            if c == 4: root.rotation_euler = (H4_TILT, 0, 0); K._keyxf(root, frame, loc=False, rot=True)
 
 def set_balance(t=0.0, frame=None):
     """balance and gears at time t (seconds): the crossed bars of H1 / H2 rock +-24 deg (H3: the two round balances counter-rotate +-70 deg), every gear turns at its own rate"""

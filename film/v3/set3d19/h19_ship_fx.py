@@ -68,20 +68,20 @@ def foam_sheet_mat(name, lacy=1.0, alpha_k=1.0):
     holes = M_('MULTIPLY', M_('MAXIMUM', web, M_('MULTIPLY', MR(nzs.outputs['Fac'], 0.56, 0.7), 0.9)), MR(hz.outputs['Fac'], 0.3, 0.8), clamp=True)
     streak = MR(nzs.outputs['Fac'], 0.36, 0.54)
     ab = M_('MULTIPLY', al3b.outputs[0], MR(streak, 0.0, 1.0, 0.8, 1.0))
-    ab = M_('MULTIPLY', ab, M_('SUBTRACT', 1.0, M_('MULTIPLY', holes, 0.95)))
+    ab = M_('MULTIPLY', ab, M_('SUBTRACT', 1.0, M_('MULTIPLY', holes, 0.55)))
     ab = M_('MULTIPLY', ab, 2.4, clamp=True)
     al3c = N('ShaderNodeMath'); al3c.operation = 'MULTIPLY'; L(ab, al3c.inputs[0]); L(hq.outputs['Result'], al3c.inputs[1])
     al4 = N('ShaderNodeMath'); al4.operation = 'MULTIPLY'; al4.inputs[1].default_value = alpha_k; al4.use_clamp = True; L(al3c.outputs[0], al4.inputs[0])
     # colour: white foam, aqua only in the flow bands and the very foot; turquoise translucent underside (backfacing)
     cm = N('ShaderNodeMix'); cm.data_type = 'RGBA'; cm.inputs[6].default_value = hexc('#86cfc8'); cm.inputs[7].default_value = hexc('#f7fbf7'); L(M_('MULTIPLY', MR(streak, 0.25, 0.7), MR(hz.outputs['Fac'], 0.05, 0.3), clamp=True), cm.inputs[0])
     cb = N('ShaderNodeMix'); cb.data_type = 'RGBA'; cb.inputs[7].default_value = hexc('#4cc4ba'); L(cm.outputs[2], cb.inputs[6]); L(geo.outputs['Backfacing'], cb.inputs[0])
-    es = N('ShaderNodeMath'); es.operation = 'MULTIPLY_ADD'; es.inputs[1].default_value = 0.5; es.inputs[2].default_value = 0.22; L(geo.outputs['Backfacing'], es.inputs[0])
+    es = N('ShaderNodeMath'); es.operation = 'MULTIPLY_ADD'; es.inputs[1].default_value = 0.25; es.inputs[2].default_value = 0.62; L(geo.outputs['Backfacing'], es.inputs[0])
     bs.inputs['Roughness'].default_value = 0.6; bs.inputs['Specular IOR Level'].default_value = 0.15
     bmp = N('ShaderNodeBump'); bmp.inputs['Strength'].default_value = 0.9; bmp.inputs['Distance'].default_value = 0.35; L(nzs.outputs['Fac'], bmp.inputs['Height']); L(bmp.outputs['Normal'], bs.inputs['Normal'])
     L(cb.outputs[2], bs.inputs['Base Color']); L(cb.outputs[2], bs.inputs['Emission Color']); L(es.outputs[0], bs.inputs['Emission Strength'])
     L(al4.outputs[0], mx.inputs[0]); L(tr.outputs[0], mx.inputs[1]); L(bs.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface']); return m
 
-SHEET_H = 1.2
+SHEET_H = 1.55
 def bow_wave6(P, parent=None):
     rr = np.random.RandomState(11)
     ts = np.linspace(0.58, 1.0, 100); xs = w_wl(ts); ys = YS + ts * (YB - YS)

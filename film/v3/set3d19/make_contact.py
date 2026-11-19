@@ -45,6 +45,11 @@ def ship_ok():
 def do_tile(name):
     import bpy, h19 as H
     t = BYNAME[name]; _, preset, light, hooks, label = t
+    if preset.startswith('ship'):                                  # single source: the ship tiles come from ship_contact.render_tile (same pipeline, same hooks, same cost)
+        import ship_contact as SCN
+        png = os.path.join(FINAL, name + '.png'); r = SCN.render_tile(preset, light, 'final', png, True, hooks=hooks)
+        json.dump(dict(name=name, label=label, preset=preset, light=light, wall=r['wall'], cpu=r['cpu'], samples=r['samples'], heads=r['heads'], hue=r['hue'], load=os.getloadavg()[0]), open(os.path.join(FINAL, name + '.json'), 'w'))
+        print('%s: %.1f s wall, %.1f s cpu, heads %s, hue %s' % (name, r['wall'], r['cpu'], r['heads'], r['hue']), flush=True); return
     A = H.build(preset, light=light); sc = bpy.context.scene; H.setup_render(sc, 'final')
     cs = A['cam']; cam = H.make_camera(cs)
     exec(hooks, dict(H=H, bpy=bpy))

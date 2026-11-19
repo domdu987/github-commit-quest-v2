@@ -15,6 +15,7 @@ ZW = 5.25; ZQ = 7.75; ZF = 6.45
 YQ = -12.6          # quarterdeck break (front face)
 YFC = 13.6          # forecastle break (rear face)
 INS = 0.14          # inboard liner offset
+WHEEL = (-2.4, -17.4)   # wheel centre (x, y) on the quarterdeck, metres: at the port side of the frame for the ship_deck camera
 
 def deck_mat(name, c1, c2, mortar, bw=2.2, rh=0.24, msize=0.012):
     """planks running along y: brick texture in object xy turned 90 degrees (butt joints staggered)"""
@@ -34,13 +35,17 @@ def deck_mats():
     M = HU.ship6_mats()
     M['d_waist'] = deck_mat('d_waist', '#b48a50', '#a27c46', '#33241e')
     M['d_quart'] = deck_mat('d_quart', '#b88e54', '#a67e48', '#33241e')
-    M['liner'] = deck_mat('liner', '#8e4630', '#7c3c2a', '#3a2018', bw=2.6, rh=0.30, msize=0.014)
+    M['liner'] = deck_mat('liner', '#7c4a34', '#6c4030', '#2e1c14', bw=2.6, rh=0.30, msize=0.014) if HU.THEME.get('warm') else deck_mat('liner', '#8e4630', '#7c3c2a', '#3a2018', bw=2.6, rh=0.30, msize=0.014)
     M['caprail'] = mat('caprail', '#2e2a28', '#3e3834', scale=3)
     M['pinrail'] = mat('pinrail', '#7a5230', '#8c6238', scale=5, aniso=(0.2, 1, 1))
     M['hatchw'] = mat('hatchw', '#6e4a2c', '#82583a', scale=6, aniso=(0.15, 1, 1))
     M['barrel'] = mat('barrel', '#94683a', '#a8784a', scale=5, aniso=(0.2, 0.2, 1))
     M['lampg'] = mat_emit('lampg', '#ffd890', 7.0)
     M['stairs'] = mat('stairs', '#9a7040', '#86602f', scale=4, aniso=(1, 0.2, 1))
+    M['wheelw'] = mat('wheelw', '#74482a', '#8a5a34', scale=5, aniso=(0.15, 1, 1), rough=0.6, sheen=0.3); M['darkw'] = mat('darkw', '#3e2a1c', '#4c3424', scale=4)
+    M['brassw'] = metal_mat('brassw', '#d2a64a', '#ecc366', rough=0.32, spec=0.7, metallic=0.55)
+    if HU.THEME.get('warm'): M['caprail'] = mat('caprail_w', '#5a4632', '#6a5238', scale=3); M['carr'] = mat('carr_w', '#5a3e2c', '#6c4a34', scale=4, aniso=(0.2, 1, 1))
+    M['lampfg'] = mat_emit('lampfg', '#ff8428', 2.4)
     return M
 
 def level_of(y):
@@ -117,25 +122,32 @@ def mast_base(mb, M, my, z0):
     for a in range(10):
         ang = a * 2 * math.pi / 10 + 0.3; mb.rod(M['rope'], (1.05 * math.cos(ang), my + 1.05 * math.sin(ang), z0 + 0.75), (1.08 * math.cos(ang), my + 1.08 * math.sin(ang), z0 + 0.15), 0.03, 0.03, 5)
 
-def wheel_and_binnacle(mb, M, yw, z):
-    # pedestal + drum + double rim wheel with 8 spokes and handles
-    zc = z + 1.28
-    mb.box(M['oak'], (0, yw, z + 0.55), (0.9, 0.5, 1.1)); mb.cyl(M['oak'], (0, yw, zc), 0.2, 0.55, axis='y', seg=14)
-    for (dy, rr, th) in ((-0.17, 0.80, 0.07), (0.17, 0.80, 0.07)):
-        HU_ring_xz(mb, M['oak'], (0, yw + dy, zc), rr, th, 0.07, 18)
+def wheel_and_binnacle(mb, M, yw, z, xw=0.0):
+    """ship's wheel (walnut rim + 8 turned spokes, brass hub / rim band / handle caps) on a wooden drum-and-pedestal at (xw, yw) facing +-y, and a binnacle (wooden pedestal
+    with raised panels, cornice, brass hood, dome, ring and a glowing lamp window aft) a little forward of it.  Returns the binnacle foot."""
+    W = M['wheelw']; B = M['brassw']; zc = z + 1.34
+    mb.box(W, (xw, yw, z + 0.55), (0.95, 0.55, 1.1)); mb.box(M['caprail'], (xw, yw, z + 1.12), (1.05, 0.62, 0.07))            # pedestal + cap
+    mb.box(M['darkw'], (xw, yw - 0.28, z + 0.55), (0.62, 0.03, 0.72))                                                           # raised panel aft
+    mb.cyl(W, (xw, yw, zc), 0.22, 0.56, axis='y', seg=16, smooth=True)                                                          # drum
+    for (dy, rr, th) in ((-0.17, 0.80, 0.085), (0.17, 0.80, 0.085)):
+        HU_ring_xz(mb, W, (xw, yw + dy, zc), rr, th, 0.085, 22)
+    for dy in (-0.17, 0.17): HU_ring_xz(mb, B, (xw, yw + dy * 1.02, zc), 0.80, 0.02, 0.095, 22)                                  # brass band round the rim
     for k in range(8):
-        a = k * math.pi / 4
-        mb.rod(M['oak'], (0.15 * math.cos(a), yw, zc + 0.15 * math.sin(a)), (0.80 * math.cos(a), yw, zc + 0.80 * math.sin(a)), 0.035, 0.028, 6)
-        mb.rod(M['brass'], (0.78 * math.cos(a), yw - 0.28, zc + 0.78 * math.sin(a)), (0.99 * math.cos(a), yw - 0.28, zc + 0.99 * math.sin(a)), 0.03, 0.045, 6)
-        mb.rod(M['brass'], (0.78 * math.cos(a), yw + 0.28, zc + 0.78 * math.sin(a)), (0.99 * math.cos(a), yw + 0.28, zc + 0.99 * math.sin(a)), 0.03, 0.045, 6)
-        mb.rod(M['oak'], (0.80 * math.cos(a), yw - 0.28, zc + 0.80 * math.sin(a)), (0.80 * math.cos(a), yw + 0.28, zc + 0.80 * math.sin(a)), 0.03, 0.03, 6)
-    mb.cyl(M['brass'], (0, yw, zc), 0.12, 0.62, axis='y', seg=14)
-    # binnacle: wooden pedestal + brass hood and a lamp
-    bx, by = 0.0, yw + 1.9
-    mb.box(M['oak'], (bx, by, z + 0.42), (0.62, 0.55, 0.84)); mb.box(M['caprail'], (bx, by, z + 0.86), (0.7, 0.62, 0.07))
-    mb.cyl(M['brass'], (bx, by, z + 1.0), 0.27, 0.22, seg=18, smooth=True); mb.ell(M['brass'], (bx, by, z + 1.12), (0.27, 0.27, 0.22), (18, 10)); mb.cyl(M['brass'], (bx, by, z + 0.89), 0.3, 0.05, seg=18)
-    mb.box(M['lampg'], (bx, by - 0.28, z + 0.96), (0.14, 0.04, 0.11))
-    return (0.0, by, z)
+        a = k * math.pi / 4; ca, sa = math.cos(a), math.sin(a)
+        mb.rod(W, (xw + 0.15 * ca, yw, zc + 0.15 * sa), (xw + 0.80 * ca, yw, zc + 0.80 * sa), 0.04, 0.032, 6)
+        mb.rod(W, (xw + 0.80 * ca, yw - 0.32, zc + 0.80 * sa), (xw + 1.02 * ca, yw - 0.32, zc + 1.02 * sa), 0.036, 0.05, 6)      # handles
+        mb.rod(W, (xw + 0.80 * ca, yw + 0.32, zc + 0.80 * sa), (xw + 1.02 * ca, yw + 0.32, zc + 1.02 * sa), 0.036, 0.05, 6)
+        mb.rod(W, (xw + 0.80 * ca, yw - 0.32, zc + 0.80 * sa), (xw + 0.80 * ca, yw + 0.32, zc + 0.80 * sa), 0.034, 0.034, 6)
+        mb.ell(B, (xw + 1.04 * ca, yw - 0.32, zc + 1.04 * sa), (0.065, 0.065, 0.065), (8, 6)); mb.ell(B, (xw + 1.04 * ca, yw + 0.32, zc + 1.04 * sa), (0.065, 0.065, 0.065), (8, 6))   # brass caps
+    mb.cyl(B, (xw, yw, zc), 0.14, 0.66, axis='y', seg=16, smooth=True); mb.ell(B, (xw, yw - 0.36, zc), (0.12, 0.05, 0.12), (10, 6))
+    # binnacle: wooden pedestal (two stages) + brass hood + lamp
+    bx, by = xw + 0.0, yw + 1.8
+    mb.box(W, (bx, by, z + 0.5), (0.72, 0.62, 1.0)); mb.box(M['darkw'], (bx, by - 0.32, z + 0.5), (0.5, 0.03, 0.66)); mb.box(M['darkw'], (bx, by + 0.32, z + 0.5), (0.5, 0.03, 0.66))
+    mb.box(M['caprail'], (bx, by, z + 1.04), (0.84, 0.74, 0.07)); mb.box(W, (bx, by, z + 1.12), (0.66, 0.58, 0.1))
+    mb.cyl(B, (bx, by, z + 1.34), 0.30, 0.34, seg=20, smooth=True); mb.cyl(B, (bx, by, z + 1.17), 0.34, 0.05, seg=20, smooth=True)
+    mb.ell(B, (bx, by, z + 1.5), (0.30, 0.30, 0.22), (20, 10)); mb.cyl(B, (bx, by, z + 1.7), 0.06, 0.1, seg=10); mb.ell(B, (bx, by, z + 1.77), (0.07, 0.07, 0.07), (8, 6))
+    mb.box(M['lampg'], (bx, by - 0.28, z + 1.34), (0.2, 0.05, 0.16)); mb.box(M['lampg'], (bx + 0.29, by, z + 1.34), (0.05, 0.2, 0.16))
+    return (bx, by, z)
 
 def HU_ring_xz(mb, m, c, r, w, h, n=14):
     for i in range(n):
@@ -184,7 +196,7 @@ def build_deck(M):
     for side in (-1, 1):
         for y in (-7.4, -4.1, -0.5 - 3.0 * 0 + 3.4, 6.8, 9.9):
             cannon(mb, M, side, y, ZW, half_w(y, ZW + 0.6, INS))
-        for y in (-16.8, -14.2):
+        for y in ((-14.2,) if not HU.THEME.get('warm') else ()):
             cannon(mb, M, side, y, ZQ, half_w(y, ZQ + 0.6, INS))
         cannon(mb, M, side, 16.0, ZF, half_w(16.0, ZF + 0.6, INS))
     # ---- hatches, capstan, mast bases, barrels, coils, buckets
@@ -201,13 +213,14 @@ def build_deck(M):
         bucket(mb, M, (bx2, by2, bz))
     return mb
 
-def build_deck_all(M, with_lights=False):
+def build_deck_all(M, with_lights=False, skip_fore_lamp=False):
     mb = build_deck(M)
     # wheel + binnacle, lantern post
-    wp = wheel_and_binnacle(mb, M, -16.0, ZQ)
+    wp = wheel_and_binnacle(mb, M, WHEEL[1], ZQ, WHEEL[0])
     # lanterns: one hung on a post by the binnacle, one at the break, one at the forecastle rail
     lants = []
     for (c, post) in (((2.5, -13.9, ZQ), True), ((-3.4, YQ + 0.5, ZW), True), ((1.9, 16.6, ZF), True)):
+        if skip_fore_lamp and c[1] > 10: continue
         if post: mb.rod(M['pinrail'], (c[0], c[1], c[2]), (c[0], c[1], c[2] + 1.55), 0.05, 0.05, 6); mb.rod(M['iron'], (c[0], c[1], c[2] + 1.55), (c[0] - 0.18, c[1], c[2] + 1.55), 0.025, 0.025, 4)
         lantern(mb, M, (c[0] - 0.18, c[1], c[2] + 1.05), 1.4); lants.append((c[0] - 0.18, c[1], c[2] + 1.25))
     objs = mb.finish()
@@ -215,6 +228,22 @@ def build_deck_all(M, with_lights=False):
 
 def marks():
     """deck marks in ship metres: (x, y, z_ground)  (ground z = the deck level the character stands on)"""
+    wx, wy = WHEEL
     return dict(
-        captain_wheel=(0.0, -17.1, ZQ), william_rail=(float(half_w(5.2, ZW, 0.14)) - 0.75, 5.2, ZW), sailor_a=(-2.1, -4.0, ZW), sailor_b=(-float(half_w(3.6, ZW, 0.14)) + 0.8, 3.6, ZW),
-        sailor_c=(1.9, -14.0, ZQ), astro_deck=(-2.4, -9.1, ZW), crew_bow=(1.2, 17.6, ZF))
+        captain_wheel=(wx + 1.6, wy - 0.4, ZQ), william_rail=(3.9, 11.6, ZW), sailor_a=(-2.1, -4.0, ZW), sailor_b=(-float(half_w(3.6, ZW, 0.14)) + 0.8, 3.6, ZW),
+        sailor_c=(1.9, -14.0, ZQ), astro_deck=(-2.4, -9.1, ZW), crew_bow=(3.7, 20.4, ZF),
+        sailor_rail=(2.4, 13.0, ZW), william_deck=(0.9, -17.0, ZQ), astro_quarter=(1.9, -15.6, ZQ), captain_bow=(2.0, 18.6, ZF))
+
+
+def fg_lantern(M, cam, off):
+    """a big warm ship's lantern hung a metre and a half (D) in front of the camera: brass cage, glass body glowing 2200 K, cap, ring and a thin hanging line.
+    cam = preset camera dict (metres); off = (forward, right, up) metres from the camera. Returns the lantern centre (metres, ship frame)."""
+    c = Vector(cam['loc']); f = (Vector(cam['look']) - c).normalized(); r = f.cross(Vector((0, 0, 1))).normalized()
+    p = c + f * off[0] + r * off[1] + Vector((0, 0, off[2]))
+    mb = MB('fglantern'); B = M['brassw']; s = 1.0
+    mb.cyl(B, (p.x, p.y, p.z - 0.17), 0.095, 0.05, seg=14); mb.cyl(M['lampfg'], (p.x, p.y, p.z), 0.075, 0.28, seg=12)
+    for (dx, dy) in ((-1, -1), (1, -1), (1, 1), (-1, 1)): mb.rod(B, (p.x + 0.085 * dx, p.y + 0.085 * dy, p.z - 0.16), (p.x + 0.085 * dx, p.y + 0.085 * dy, p.z + 0.15), 0.011, 0.011, 5)
+    mb.cone(B, (p.x, p.y, p.z + 0.15), 0.12, 0.025, 0.09, 12); mb.ell(B, (p.x, p.y, p.z + 0.265), (0.03, 0.03, 0.03), (8, 6))
+    mb.rod(M['rope'], (p.x, p.y, p.z + 0.27), (p.x - 0.04, p.y, p.z + 3.0), 0.009, 0.009, 4)
+    mb.finish(shadow=False)
+    return (p.x, p.y, p.z)

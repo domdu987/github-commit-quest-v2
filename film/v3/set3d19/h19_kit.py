@@ -331,7 +331,32 @@ def make_camera(setup, name='cam', scene=None):
     cd = ob.data; cd.lens = setup.get('lens', 22); cd.sensor_width = 36; cd.sensor_fit = 'AUTO'; cd.clip_start = 0.05; cd.clip_end = 2000; cd.dof.use_dof = False
     ob.location = setup['loc']; ob.rotation_euler = (Vector(setup['look_at']) - Vector(setup['loc'])).to_track_quat('-Z', 'Y').to_euler()
     if setup.get('roll'): ob.rotation_euler.rotate_axis('Z', math.radians(setup['roll']))
-    scene.camera = ob; STATE['cam'] = ob; return ob
+    scene.camera = ob; STATE['cam'] = ob
+    if STATE.get('caption_shade'): caption_shade(ob, **STATE['caption_shade'])
+    return ob
+
+def caption_shade(cam, y0=770, y1=900, a1=0.50, a2=0.62, col='#120c0c', name='caption_shade'):
+    """foreground shadow for the caption band: a camera-attached card (camera rays only: no light / shadow / glossy effect) that blends the frame toward a dark warm brown from pixel row y0 (0 %)
+    through y1 (a1) to the bottom edge (a2). It reads as a soft foreground shadow / vignette, keeps y 880-950 calm and dim. Opt-in per location: STATE['caption_shade'] = dict(...) before make_camera."""
+    old = bpy.data.objects.get(name)
+    if old is not None: bpy.data.objects.remove(old, do_unlink=True)
+    d = 0.4; H_ = 2 * d * 18.0 / cam.data.lens; W_ = H_ * 720 / 1280.0
+    me = bpy.data.meshes.new(name); me.from_pydata([(-W_ / 2 * 1.02, -H_ / 2 * 1.02, 0), (W_ / 2 * 1.02, -H_ / 2 * 1.02, 0), (W_ / 2 * 1.02, H_ / 2 * 1.02, 0), (-W_ / 2 * 1.02, H_ / 2 * 1.02, 0)], [], [(0, 1, 2, 3)]); me.update()
+    ob = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(ob); ob.parent = cam; ob.location = (0, 0, -d)
+    for a in ('visible_diffuse', 'visible_glossy', 'visible_transmission', 'visible_volume_scatter', 'visible_shadow'): setattr(ob, a, False)
+    m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); em = N('ShaderNodeEmission'); tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader'); tc = N('ShaderNodeTexCoord'); sp = N('ShaderNodeSeparateXYZ'); cr = N('ShaderNodeMapRange')
+    em.inputs['Color'].default_value = hexc(col); em.inputs['Strength'].default_value = 1.0
+    # object-space y of the card: -H/2 (bottom row 1280) .. +H/2 (top row 0); row = (0.5 - y / H) * 1280
+    L(tc.outputs['Object'], sp.inputs[0]); rowm = N('ShaderNodeMath'); rowm.operation = 'MULTIPLY_ADD'; rowm.inputs[1].default_value = -1280.0 / (H_ * 1.0); rowm.inputs[2].default_value = 640.0; L(sp.outputs['Y'], rowm.inputs[0])
+    cr.data_type = 'FLOAT'; cr.interpolation_type = 'SMOOTHERSTEP'; cr.inputs['From Min'].default_value = y0; cr.inputs['From Max'].default_value = y1; cr.inputs['To Min'].default_value = 0.0; cr.inputs['To Max'].default_value = a1; cr.clamp = True
+    L(rowm.outputs[0], cr.inputs['Value'])
+    cr2 = N('ShaderNodeMapRange'); cr2.interpolation_type = 'LINEAR'; cr2.inputs['From Min'].default_value = y1; cr2.inputs['From Max'].default_value = 1280; cr2.inputs['To Min'].default_value = a1; cr2.inputs['To Max'].default_value = a2; cr2.clamp = True; L(rowm.outputs[0], cr2.inputs['Value'])
+    add = N('ShaderNodeMath'); add.operation = 'MAXIMUM'; L(cr.outputs[0], add.inputs[0]); L(cr2.outputs[0], add.inputs[1])
+    gate = N('ShaderNodeMath'); gate.operation = 'GREATER_THAN'; gate.inputs[1].default_value = y1; L(rowm.outputs[0], gate.inputs[0])
+    sel = N('ShaderNodeMix'); sel.data_type = 'FLOAT'; L(gate.outputs[0], sel.inputs[0]); L(cr.outputs[0], sel.inputs[2]); L(cr2.outputs[0], sel.inputs[3])
+    L(sel.outputs[0], mx.inputs[0]); L(tr.outputs[0], mx.inputs[1]); L(em.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface'])
+    ob.data.materials.append(m); return ob
 
 def render(path, scene=None):
     scene = scene or bpy.context.scene; scene.render.filepath = path
@@ -392,7 +417,7 @@ def _rd(sc, path, samples, transp):
     cy = sc.cycles; cy.samples = samples; cy.use_denoising = False; sc.render.film_transparent = transp; sc.render.filepath = path
     bpy.ops.render.render(write_still=True); a = np.asarray(Image.open(path).convert('RGBA'), dtype=np.float32) / 255.0; os.remove(path); return a
 
-def measure_hue(png, tmp=None, hide_prefix=('clouds', 'shafts', 'rain', 'actor_', 'sun_', 'foam', 'spray', 'glass')):
+def measure_hue(png, tmp=None, hide_prefix=('clouds', 'shafts', 'rain', 'actor_', 'sun_', 'foam', 'spray', 'glass', 'caption_shade')):
     sc = bpy.context.scene; cy = sc.cycles; tmp = tmp or png[:-4]
     saved = dict(samples=cy.samples, den=cy.use_denoising, mb=cy.max_bounces, db=cy.diffuse_bounces, gb=cy.glossy_bounces, comp=sc.render.use_compositing, tr=sc.render.film_transparent,
                  cm=sc.render.image_settings.color_mode, exp=sc.view_settings.exposure)
@@ -428,14 +453,14 @@ def measure_hue(png, tmp=None, hide_prefix=('clouds', 'shafts', 'rain', 'actor_'
     inb = float(((h >= 225) & (h <= 265))[sel].mean() * 100)
     return dict(shade_hue=round(mh, 1), median=round(float(np.median(h[sel])), 1), cast_pct=round(float(m.mean() * 100), 1), in_band=round(inb, 1), magenta=round(mag, 2), ok=(225 <= mh <= 265) and mag <= 10)
 
-def shafts(kd, rect, zfloor=0.0, k=4.0, a=0.02, name='shafts'):
+def shafts(kd, rect, zfloor=0.0, k=4.0, a=0.02, name='shafts', col='#ffd890'):
     """faint light-shaft volume: the window rectangle (x0, x1, z0, z1, y; metres) projected along the sun direction kd to the floor (emission / transparent mix, no shadows)"""
     kd = Vector(kd).normalized(); (x0, x1, z0, z1, y) = rect
     corners = [Vector((x0, y, z0)), Vector((x1, y, z0)), Vector((x1, y, z1)), Vector((x0, y, z1))]
     proj = [c + kd * ((zfloor - c.z) / kd.z) for c in corners]
     m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
     out = N('ShaderNodeOutputMaterial'); em = N('ShaderNodeEmission'); tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader')
-    em.inputs['Color'].default_value = hexc('#ffd890'); em.inputs['Strength'].default_value = k; mx.inputs[0].default_value = a
+    em.inputs['Color'].default_value = hexc(col); em.inputs['Strength'].default_value = k; mx.inputs[0].default_value = a
     L(tr.outputs[0], mx.inputs[1]); L(em.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface'])
     mb = MB(name)
     for i in range(4):

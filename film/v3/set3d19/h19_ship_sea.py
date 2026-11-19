@@ -120,10 +120,10 @@ def foam_fields(px, py, SP):
             env = np.maximum(env, hl); core = np.maximum(core, lap * 0.8)
             bws = float(w_wl(0.0))
             wk = np.zeros_like(px)
-            for (slope, wd0, wd1, amp_) in ((0.30, 1.2, 0.14, 1.0), (0.13, 1.1, 0.09, 0.85), (0.52, 1.6, 0.18, 0.7)):
+            for (slope, wd0, wd1, amp_) in ((0.30, 1.7, 0.2, 1.0), (0.13, 1.5, 0.12, 0.9), (0.52, 2.0, 0.24, 0.85)):
                 xarm = bws * 0.9 + slope * dback; wd = wd0 + wd1 * dback
-                m_ = np.clip(0.55 + 0.9 * (fbm2(dback / 14.0 + slope * 9, ax / 9.0, 20 + int(slope * 10), 3) - 0.5) + 0.35, 0, 1)
-                wk = np.maximum(wk, pulse(ax - xarm, wd) * amp_ * m_ * np.exp(-dback / 95.0))
+                m_ = np.clip(0.8 + 0.7 * (fbm2(dback / 14.0 + slope * 9, ax / 9.0, 20 + int(slope * 10), 3) - 0.5) + 0.3, 0, 1)
+                wk = np.maximum(wk, pulse(ax - xarm, wd) * amp_ * m_ * np.exp(-dback / 150.0))
             cr = np.exp(-(lx / (bws * 0.95 + 0.07 * dback)) ** 2) * np.exp(-dback / 42.0)
             wk = np.maximum(wk, cr * 0.95)
             wk *= (ly < YS + 3.0) * ss(YS + 3.0, YS - 1.0, ly)
@@ -140,6 +140,12 @@ def foam_fields(px, py, SP):
         d = np.hypot(px - cx, py - cy) - r
         e = pulse(d - 1.2, 3.6) * (0.75 + 0.35 * fbm2(px / 4.0 + cx, py / 4.0, 71, 3))
         env = np.maximum(env, np.clip(e, 0, 1) * 1.0); core = np.maximum(core, np.clip(1 - np.maximum(d, 0) / 1.4, 0, 1) * (d > -0.8) * 0.85)
+    for (a, b, wd, amp_) in SP.get('streaks', []):                       # broken foam lines (a swell crest's foam, the water round a floating spar): segment a-b (ship frame, m)
+        dx, dy = b[0] - a[0], b[1] - a[1]; L2 = dx * dx + dy * dy; ln = math.sqrt(L2)
+        t = np.clip(((px - a[0]) * dx + (py - a[1]) * dy) / L2, 0, 1); d = np.hypot(px - (a[0] + t * dx), py - (a[1] + t * dy))
+        brk = np.clip(0.35 + 1.5 * (fbm2(t * ln / 4.5 + a[0] * 0.1, 3.0 + a[1] * 0.1, 61, 3) - 0.4), 0, 1)
+        e = pulse(d, wd) * amp_ * brk * ss(0.0, 0.08, t) * ss(1.0, 0.92, t)
+        env = np.maximum(env, e); core = np.maximum(core, np.clip(e - 0.25, 0, 1) * 0.6)
     shal = np.zeros_like(px); sf = SP.get('shore')
     if sf is not None:
         sd = sf(px, py)

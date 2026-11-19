@@ -18,7 +18,7 @@ def carpet(path, w=640, h=1000):
     p = path
     if os.path.exists(p): return p
     S = 2; W_, H_ = w * S, h * S; im = Image.new('RGB', (W_, H_), _h('#2c3558')); d = ImageDraw.Draw(im)
-    navy, navy2, crim, crim2, gold, cream = _h('#2c3558'), _h('#38446e'), _h('#7a2a34'), _h('#923640'), _h('#c9a24a'), _h('#d8c89c')
+    navy, navy2, crim, crim2, gold, cream = _h('#2c3558'), _h('#343f66'), _h('#7a2a2a'), _h('#6a2c30'), _h('#a8894a'), _h('#a89a78')   # muted period carpet
     def rect(i0, col):                            # inset rectangle band
         d.rectangle([i0 * S, i0 * S, W_ - 1 - i0 * S, H_ - 1 - i0 * S], fill=col)
     rect(0, gold); rect(5, crim); rect(11, cream); rect(14, crim2); rect(58, cream); rect(61, gold); rect(65, navy)
@@ -58,15 +58,15 @@ def carpet(path, w=640, h=1000):
             if (ix + iy) % 3 == 0: d.ellipse([cx - 2.5 * S, yy - 2.5 * S, cx + 2.5 * S, yy + 2.5 * S], fill=crim2)
     # central medallion + two end medallions + spandrels
     def medallion(cx, cy, rx, ry):
-        for k, col in enumerate((gold, crim, cream, navy, crim2, gold, navy)):
-            f = 1 - k * 0.13; d.ellipse([cx - rx * f, cy - ry * f, cx + rx * f, cy + ry * f], fill=col)
-        for a in range(16):
-            ang = a * math.pi / 8; px, py = cx + rx * 0.5 * math.cos(ang), cy + ry * 0.5 * math.sin(ang)
-            d.ellipse([px - 6 * S, py - 9 * S, px + 6 * S, py + 9 * S], fill=gold if a % 2 else cream)
-        d.ellipse([cx - rx * 0.2, cy - ry * 0.2, cx + rx * 0.2, cy + ry * 0.2], fill=crim)
-    medallion(W_ / 2, H_ / 2, 190 * S, 250 * S); medallion(W_ / 2, 230 * S, 90 * S, 90 * S); medallion(W_ / 2, H_ - 230 * S, 90 * S, 90 * S)
+        """one soft oval medallion, no concentric target rings: a dull crimson oval with a thin gold edge and a small ochre lozenge lattice"""
+        d.ellipse([cx - rx, cy - ry, cx + rx, cy + ry], fill=gold); d.ellipse([cx - rx + 4 * S, cy - ry + 4 * S, cx + rx - 4 * S, cy + ry - 4 * S], fill=crim2)
+        for a in range(10):
+            ang = a * math.pi / 5; px, py = cx + rx * 0.55 * math.cos(ang), cy + ry * 0.55 * math.sin(ang)
+            d.polygon([(px, py - 8 * S), (px + 5 * S, py), (px, py + 8 * S), (px - 5 * S, py)], fill=cream if a % 2 else gold)
+        d.ellipse([cx - rx * 0.28, cy - ry * 0.28, cx + rx * 0.28, cy + ry * 0.28], fill=navy2, outline=gold, width=2 * S)
+    medallion(W_ / 2, H_ / 2, 95 * S, 125 * S)
     for (cx, cy, a0) in ((70 * S, 70 * S, 0), (W_ - 70 * S, 70 * S, 90), (W_ - 70 * S, H_ - 70 * S, 180), (70 * S, H_ - 70 * S, 270)):
-        d.pieslice([cx - 150 * S, cy - 150 * S, cx + 150 * S, cy + 150 * S], a0, a0 + 90, fill=crim2, outline=gold, width=3 * S)
+        d.pieslice([cx - 150 * S, cy - 150 * S, cx + 150 * S, cy + 150 * S], a0, a0 + 90, fill=crim2, outline=gold, width=2 * S)
         d.pieslice([cx - 105 * S, cy - 105 * S, cx + 105 * S, cy + 105 * S], a0, a0 + 90, fill=navy, outline=cream, width=2 * S)
     im = im.resize((w, h), Image.LANCZOS); im = _paint(im, 9, 3, 5); im.save(p, optimize=True); return p
 

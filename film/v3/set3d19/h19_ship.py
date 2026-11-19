@@ -31,14 +31,14 @@ def kdir(az, el):
 # ----------------------------------------------------------------------------- lights
 SKY_NOON = [(0.0, '#6c9ce0'), (0.46, '#b6cfe8'), (0.5, '#b0cbe8'), (0.56, '#8db3e6'), (0.66, '#6a98e0'), (0.78, '#4a7bd6'), (0.88, '#3a67cb'), (1.0, '#2c54b6')]
 SKY_DAY = [(0.0, '#7ab0ea'), (0.46, '#c2dbee'), (0.5, '#bcd8ee'), (0.56, '#98c0ee'), (0.66, '#74a6e8'), (0.78, '#5288dc'), (0.88, '#3f72d2'), (1.0, '#315cbc')]
-SKY_STORM = [(0.0, '#4a4a70'), (0.46, '#8c88a4'), (0.5, '#8a86a2'), (0.56, '#6e6c96'), (0.66, '#58587e'), (0.78, '#464670'), (0.88, '#383862'), (1.0, '#2a2a52')]
+SKY_STORM = [(0.0, '#4a5a74'), (0.46, '#8e9aae'), (0.5, '#8c98ac'), (0.56, '#6e7c96'), (0.66, '#5a6a86'), (0.78, '#485874'), (0.88, '#3a4a68'), (1.0, '#2c3c5a')]
 LIGHTS = dict(
     NOON=dict(key=(1.0, 0.92, 0.78, 7.2), az=160, el=46, sun_angle=0.9, sky=SKY_NOON, sky_k=1.0, amb=('#3050FF', 2.4), gloss_sky_k=0.42, exposure=0.1, sat=1.08,
               cloud=('#ffffff', '#98a8ee'), haze='#b0cbe8', sea_amp=1.0, sea_near='#07505e', sea_mid='#157f8e', sea_far='#0b3a5c', foam_k=1.0, wc=(0.74, 1.05), lamp=0.0, rain_ok=False, fog=0.0),
     DAY=dict(key=(1.0, 0.94, 0.80, 7.6), az=200, el=40, sun_angle=0.9, sky=SKY_DAY, sky_k=1.0, amb=('#3a58FF', 2.3), gloss_sky_k=0.5, exposure=0.12, sat=1.1,
              cloud=('#ffffff', '#a0b0f0'), haze='#bcd8ee', sea_amp=0.55, sea_near='#0f6a78', sea_mid='#16808a', sea_far='#10405c', foam_k=0.9, wc=(0.8, 1.1), lamp=0.0, rain_ok=False, fog=0.0),
-    STORM_DUSK=dict(key=(1.0, 0.62, 0.45, 2.2), az=250, el=7, sun_angle=2.5, sky=SKY_STORM, sky_k=0.85, amb=('#5a62FF', 1.55), gloss_sky_k=0.55, exposure=-0.1, sat=1.04,
-                    cloud=('#9a98c0', '#50508c'), haze='#7c7aa0', sea_amp=1.7, sea_near='#16384a', sea_mid='#1a4052', sea_far='#1c2a48', foam_k=1.5, wc=(0.5, 0.9), lamp=1.0, rain_ok=True, fog=1.0),
+    STORM_DUSK=dict(key=(1.0, 0.62, 0.45, 2.2), az=250, el=7, sun_angle=2.5, sky=SKY_STORM, sky_k=0.85, amb=('#6c80d8', 1.75), gloss_sky_k=0.55, exposure=-0.1, sat=1.04,
+                    cloud=('#98a4b6', '#4c586a'), haze='#7c8898', sea_amp=1.7, sea_near='#16384a', sea_mid='#1a4052', sea_far='#1c2a48', foam_k=1.5, wc=(0.5, 0.9), lamp=1.0, rain_ok=True, fog=1.0),
 )
 LIGHTS['DAY_JAMAICA'] = dict(LIGHTS['DAY'], coast='jamaica'); LIGHTS['DAY_BARBADOS'] = dict(LIGHTS['DAY'], coast='barbados')
 LIGHT_NAMES = ['NOON', 'DAY', 'STORM_DUSK']
@@ -50,12 +50,18 @@ def _hero_cam():
 
 PRESETS = dict(
     ship_hero=dict(light='NOON', cam=_hero_cam(), scenery='hero', glint=dict(az=19, el=6, k=40.0, ang=1.8, v6=True), wake=True, samples=12),
-    ship_aerial=dict(light='NOON', cam=dict(loc=(-70.0, 95.0, 85.0), look=(2.0, 6.0, 14.0), lens=22), scenery='aerial', glint=dict(az=118, el=34, k=22.0, ang=1.2), wake=True, samples=12),
-    ship_deck=dict(light='NOON', amb_k=0.45, cam=dict(loc=(3.0, -10.4, DK.ZQ + 1.5), look=(-0.6, -17.6, DK.ZQ + 1.9), lens=22), scenery='deck', glint=dict(az=170, el=20, k=30.0, ang=2.0), wake=True, samples=12),
-    ship_rail=dict(light='NOON', amb_k=0.45, cam=dict(loc=(4.1, 3.0, DK.ZW + 1.75), look=(9.5, 14.0, DK.ZW - 0.6), lens=22), scenery='rail', glint=dict(az=40, el=12, k=34.0, ang=2.0), wake=True, samples=12),
-    ship_rocks=dict(light='STORM_DUSK', cam=dict(loc=(2.6, 13.4, DK.ZF + 2.3), look=(16.0, 60.0, DK.ZF + 0.6), lens=22), scenery='rocks', glint=dict(az=250, el=9, k=18.0, ang=3.0), wake=True, samples=12),
-    ship_coast=dict(light='DAY_JAMAICA', cam=dict(loc=(-95.0, -60.0, 5.5), look=(215.0, 40.0, 17.0), lens=22), scenery='coast', sun_ship=True, sun_az=-130, sun_el=42, glint=dict(az=-50, el=14, k=26.0, ang=2.0), wake=False, anchored=True, samples=12),
+    ship_aerial=dict(light='NOON', cam=dict(loc=(-70.0, 95.0, 85.0), look=(2.0, 6.0, 14.0), lens=22), scenery='aerial', glint=dict(az=118, el=34, k=20.0, ang=0.45), sea_amp=0.55, chop=0.22, rough=0.15, wc_k=0.0, sea_nu=470, sea_nv=700, wake=True, samples=10),
+    ship_deck=dict(light='NOON', amb_k=0.8, amb_col='#2c64ff', cam=dict(loc=(-0.6, -21.4, DK.ZQ + 1.5), look=(0.6, -9.0, DK.ZQ + 1.2), lens=22), scenery='deck', sun_ship=True, sun_az=-148, sun_el=60, glint=dict(az=170, el=20, k=30.0, ang=2.0), wake=True, sea_nu=360, sea_nv=520, samples=11),
+    ship_rail=dict(light='NOON', amb_k=0.8, amb_col='#2c64ff', cam=dict(loc=(3.9, 7.0, DK.ZW + 2.6), look=(8.63, 25.98, DK.ZW + 2.6 - 4.16), lens=22), scenery='rail', sun_ship=True, sun_az=-120, sun_el=76, glint=dict(az=40, el=12, k=34.0, ang=1.4), wake=True, samples=12),
+    ship_rocks=dict(light='STORM_DUSK', amb_col='#3a6cf2', amb_k=2.3, cam=dict(loc=(2.2, 14.2, DK.ZF + 2.4), look=(8.28, 42.79, DK.ZF + 2.4 - 6.75), lens=22), scenery='rocks', lantern=(0.9, 0.3, 0.4), lantern_e=60.0, no_fore_lamp=True, glint=dict(az=250, el=9, k=18.0, ang=3.0), wake=True, samples=12),
+    ship_coast=dict(light='DAY_JAMAICA', cam=dict(loc=(float(LD.shore_x(40.0)) + 9.0, 33.0, 2.0), look=(float(LD.shore_x(40.0)) + 9.0 - 60.0, 34.5, -2.2), lens=22), scenery='coast', sun_ship=True, sun_az=115, sun_el=38, glint=dict(az=-80, el=12, k=26.0, ang=2.0), sea_amp=0.45, chop=0.25, wake=False, anchored=True, samples=12),
     ship_shore=dict(light='DAY_JAMAICA', cam=dict(loc=(float(LD.shore_x(40.0)) + 10.5, 33.0, 2.5), look=(float(LD.shore_x(40.0)) - 70.0, 38.0, 4.0), lens=22), scenery='shore', sun_ship=True, sun_az=115, sun_el=38, glint=dict(az=-80, el=12, k=26.0, ang=2.0), wake=False, anchored=True, samples=12),
+)
+STAGING = dict(      # (role, mark) pairs the placeholder actors stand on, per preset camera
+    ship_deck=[('captain', 'captain_wheel'), ('william', 'william_deck'), ('astro', 'astro_quarter')],
+    ship_rail=[('william', 'william_rail'), ('sailor', 'sailor_rail')],
+    ship_rocks=[('captain', 'captain_bow'), ('sailor', 'crew_bow')],
+    ship_coast=[('william', 'shore_a'), ('sailor', 'shore_b'), ('astro', 'shore_c')],
 )
 PRESET_NAMES = ['ship_hero', 'ship_aerial', 'ship_deck', 'ship_rail', 'ship_rocks', 'ship_coast']
 
@@ -81,9 +87,9 @@ def sun_dir_local(LT, el=None, az=None):
     return SE.v6_dir(kdir(a, e))
 
 def make_sun(LT, P):
-    az = P.get('sun_az', LT['az']); el = LT['el']
+    az = P.get('sun_az', LT['az']); el = P['sun_el'] if (P.get('sun_el') and LT['el'] > 20) else LT['el']
     d = kdir(az, el) if P.get('sun_ship') else SE.v6_dir(kdir(az, el)); S['sun_az'] = az; S['sun_el0'] = el; S['sun_ship'] = bool(P.get('sun_ship'))
-    o = K.sun('sun_key', LT['key'], LT['key'][3], d, LT['sun_angle']); S['sun'] = o; S['key_dir'] = d
+    o = K.sun('ssun_key', LT['key'], LT['key'][3], d, LT['sun_angle']); S['sun'] = o; S['key_dir'] = d
     return o
 
 def _parent_new(before, parent, skip=('ship_root', 'ship_body', 'ship_world')):
@@ -103,6 +109,7 @@ def build_ship(SET, preset, light=None):
     LT = dict(LIGHTS[lname]); coast = LT.get('coast') or (K.STATE.get('coast') or 'jamaica')
     LTb = LIGHTS['NOON'] if lname == 'NOON' else LT
     scene = bpy.context.scene
+    HU.THEME.clear(); HU.THEME['warm'] = preset in ('ship_deck', 'ship_rail', 'ship_rocks'); HU.THEME['no_stern_lamp'] = preset == 'ship_deck'
     S.clear(); S.update(preset=preset, light=lname, coast=coast, P=P, LT=LT)
     K.STATE['samples'] = P.get('samples', 12); K.STATE['dbounce'] = 0
     world = K.new_root('ship_world'); S['world_root'] = world
@@ -113,7 +120,8 @@ def build_ship(SET, preset, light=None):
     K.ROOT = body; HU.BODY[0] = body
     M = DK.deck_mats(); S['M'] = M
     HU.build_ship6_into(M) if hasattr(HU, 'build_ship6_into') else HU.build_ship6(dict())
-    dobjs, lants = DK.build_deck_all(M); S['lants'] = lants
+    dobjs, lants = DK.build_deck_all(M, skip_fore_lamp=bool(P.get('no_fore_lamp'))); S['lants'] = lants
+    if P.get('lantern'): S['fglamp'] = DK.fg_lantern(M, P['cam'], P['lantern'])
     _parent_new(before, body)
     # marks (empties under the ship_root, D units)
     marks = {}
@@ -122,7 +130,7 @@ def build_ship(SET, preset, light=None):
         e = _empty('mark_' + nm, root, loc=tuple(v * SC for v in p)); marks[nm] = tuple(round(v * SC, 3) for v in p)
     # ---- scenery, sea
     K.ROOT = world
-    sea_P = dict(cam=dict(loc=P['cam']['loc'], look=P['cam']['look']), amp=LT['sea_amp'], chop=0.6 if lname != 'STORM_DUSK' else 1.2, sea_near=LT['sea_near'], sea_mid=LT['sea_mid'], sea_far=LT['sea_far'],
+    sea_P = dict(cam=dict(loc=P['cam']['loc'], look=P['cam']['look']), amp=P.get('sea_amp', LT['sea_amp']), chop=P.get('chop', 0.6 if lname != 'STORM_DUSK' else 1.2), wc_k=P.get('wc_k', 0.85), rough=P.get('rough', 0.1), sea_nu=P.get('sea_nu', 560), sea_nv=P.get('sea_nv', 820), sea_near=LT['sea_near'], sea_mid=LT['sea_mid'], sea_far=LT['sea_far'],
                  fresnel_k=0.38, foam_k=LT['foam_k'], wc_min=LT['wc'][0], wc_max=LT['wc'][1], anchored=P.get('anchored', False), ship_foam=True, lift='#9fc2d8',
                  glint=dict(dir=(SE.v6_dir(kdir(P['glint']['az'], P['glint']['el'])) if P['glint'].get('v6') else kdir(P['glint']['az'], P['glint']['el'])), k=P['glint']['k'] * max(0.25, LT['key'][3] / 7.2), ang=P['glint']['ang']))
     LD.scenery(S, P, LT, sea_P, marks)
@@ -136,15 +144,16 @@ def build_ship(SET, preset, light=None):
         Pp, Nn, E, Ll = FX.bow_wave6(dict(cam=dict(loc=P['cam']['loc'])), parent=bowfx); FX.spray6(dict(cam=dict(loc=P['cam']['loc'])), M, Pp, Nn, E, Ll)
         for o in set(bpy.data.objects) - b1:
             if o.parent is None and o.type == 'MESH': o.parent = bowfx
-    LTw = dict(LT); LTw['amb'] = (LT['amb'][0], LT['amb'][1] * P.get('amb_k', 1.0))
+    LTw = dict(LT); LTw['amb'] = (P.get('amb_col', LT['amb'][0]), LT['amb'][1] * P.get('amb_k', 1.0))
     make_world(LTw); make_sun(LT, P)
     S['sun_energy'] = LT['key'][3]
+    if S.get('fglamp') is not None: K.point_light('lampfg', S['fglamp'], (1.0, 0.56, 0.26), P.get('lantern_e', 60.0), 0.12).parent = root
     # ---- lights on the ship (lanterns) at dusk
     if LT.get('lamp'):
         for i, c in enumerate(lants):
             K.point_light('lamp%d' % i, c, (1.0, 0.72, 0.4), 90.0 * LT['lamp'], 0.12).parent = root
     scene.view_settings.exposure = LT['exposure']
-    K.STATE['grade_sat'] = LT['sat']
+    K.STATE['grade_sat'] = LT['sat']; K.STATE['sat'] = LT['sat']
     # ---- cameras (D)
     cams = {}
     def cam_D(c): return dict(loc=tuple(round(v * SC, 4) for v in c['loc']), look_at=tuple(round(v * SC, 4) for v in c['look']), lens=c.get('lens', 22))
@@ -152,7 +161,8 @@ def build_ship(SET, preset, light=None):
     cams.update({k: cam_D(v) for k, v in S.get('extra_cams', {}).items()})
     for k, v in S.get('shore_marks', {}).items(): marks[k] = tuple(round(c * SC, 3) for c in v)
     set_roll(0.0)
-    A = dict(cams=cams, cam=preset, marks=marks, ship_root=root, location='ship')
+    stg = {preset: [(r, marks[m]) for (r, m) in STAGING.get(preset, []) if m in marks]}
+    A = dict(cams=cams, cam=preset, marks=marks, ship_root=root, location='ship', staging=stg)
     S['A'] = A
     return A
 
@@ -164,9 +174,14 @@ def _roll_values(t):
     lim = math.radians(1.9)
     return float(np.clip(pitch, -lim, lim)), float(np.clip(roll, -lim, lim)), 0.8 * h * 0.35 + 0.05 * math.sin(1.7 * t)
 
+def _roll_rel(t):
+    """roll values relative to t=0 (the ship is exactly level at t=0, so the marks / cameras of the API are exact there)"""
+    if 'roll0' not in S: S['roll0'] = _roll_values(0.0)
+    a = _roll_values(t); b = S['roll0']; return a[0] - b[0], a[1] - b[1], a[2] - b[2]
+
 def set_roll(t, frame=None):
     """gentle roll / pitch (<= 2 deg) and bob of the whole ship (ship_root, so every deck mark / card parented to it moves with the deck); t in seconds"""
-    root = S['root']; pitch, roll, bob = _roll_values(t)
+    root = S['root']; pitch, roll, bob = _roll_rel(t)
     root.rotation_euler = (pitch, roll, 0.0); root.location = (0.0, 0.0, bob * SC)
     K._keyxf(root, frame, loc=True, rot=True)
     bf = S.get('bowfx')
