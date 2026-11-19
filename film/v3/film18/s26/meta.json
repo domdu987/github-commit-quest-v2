@@ -1,0 +1,10 @@
+{
+ "g0": 1958,
+ "g1": 2112,
+ "first_g": 1950,
+ "n_frames": 162,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 11
+ }
+}
