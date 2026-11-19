@@ -27,7 +27,7 @@ LIGHTS = dict(
     A_GOLDEN=dict(_B, name='A_GOLDEN', loc='A', key=(1.62, 1.16, 0.68), key_dir=kdir(-60, 28), sun_elev=28, sun_angle=0.9, shade=(0.105, 0.10, 0.31), shade_tint=(0.10, 0.095, 0.33), season=1.0,
                   sky=[(0.0, '#7a70e0'), (0.40, '#f2b47a'), (0.5, '#f8cf96'), (0.56, '#d8d0c8'), (0.64, '#8aa0ec'), (0.8, '#5c6ee6'), (1.0, '#4a58d8')], sky_k=1.25, glow=('#ffa860', 0.35, 0.45),
                   hills=[(300, 6, 14, '#a08ac8'), (340, 20, 28, '#8f90d0')], hill_k=0.95),
-    A_DAY=dict(_B, name='A_DAY', loc='A', key=(1.72, 1.56, 1.26), key_dir=kdir(-38, 44), sun_elev=44, shade=(0.115, 0.115, 0.34), shade_tint=(0.105, 0.105, 0.35), season=0.0,
+    A_DAY=dict(_B, name='A_DAY', loc='A', key=(1.72, 1.56, 1.26), key_dir=kdir(-38, 44), sun_elev=44, shade=(0.135, 0.115, 0.34), shade_tint=(0.135, 0.11, 0.35), season=0.0,
                sky=[(0.0, '#8a90e8'), (0.4, '#bcd0f4'), (0.5, '#eaf0f8'), (0.56, '#dce8f6'), (0.64, '#86b0f0'), (0.8, '#5a8ae6'), (1.0, '#4474de')], sky_k=1.2, glow=('#fff0d0', 0.5, 0.3),
                hills=[(300, 6, 14, '#9aaedc'), (340, 20, 28, '#8aa0d8')], hill_k=0.95),
     B_EVE=dict(_B, name='B_EVE', loc='B', key=(1.42, 0.92, 0.5), key_dir=kdir(-48, 19), sun_elev=19, sun_angle=1.0, shade=(0.10, 0.10, 0.32), shade_tint=(0.095, 0.095, 0.34), cy=8.0, floods=1.0,
