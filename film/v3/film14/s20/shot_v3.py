@@ -22,10 +22,10 @@ def swing_clock(g):
     return None
 def bee_clock(g):
     if g < 1368: return swing_clock(g)
-    return -1.0 if g < 1438 else (2.5 / F.WAVE_C + 0.15) + (g - 1438) * 0.1
+    return -1.0 if g < 1438 else (12.5 / F.WAVE_C + 0.15) + (g - 1438) * 0.1
 
 def mvx(u): return 0.65 * u if u < 0 else (1 + 0.65 * (u - 1) if u > 1 else mv(u))
-def burst(g): return 0.0 if g < HOLD_END else (0.15 if g >= 1368 else 0.035)
+def burst(g): return 0.0 if g < HOLD_END else (0.2 if g >= 1368 else 0.035)
 
 def _hive_swing(s, t, s0=None):
     s = np.asarray(s, dtype=float)

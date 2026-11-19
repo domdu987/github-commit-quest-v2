@@ -17,3 +17,9 @@ v2 after the director gate (s20_QA_TECH / s20_QA_ART) and continuity notes.
 - Shot 21: tracking cut-away along the row, 41 deg to it and ahead of the wave, hive swing seen side-on, ~16 frames hive to hive (u3 g ~1381, u2 ~1398, u1 ~1415, u0 ~1431), knock puff of bees at each; roofs removed, near-zero grass, orange lamp pools dimmed; hives x1.5; camera stops at the row end.
 - qa_auto: only FAIL is the per-shot blur false positive (159 frames, shots 20-21 are low-detail wide frames). Handle frames 1301-1306 drift slightly (no frozen run).
 - Known limits: the V is a faint kink in the wire (a bow toward camera cannot be drawn strongly without a high camera); sky in shot 20 is about 30-40 %; far hives in shot 21 are smaller than 120 px (only the 2 nearest are large at any time).
+
+## v4 (shot 21 only, g 1368-1452; per the push re-check)
+- No bees before g ~1442 (dormant entrance bees removed); small bee puffs from g ~1442 on at u1 then u0, leading into the shot-22 burst.
+- Neighbouring hives swing out of step (alternating direction, hives x2.0) so they overlap/knock around g 1405-1445.
+- Camera lower and pitched up: ground about 20 %; roofs and posts kept (undersides darkened), orange lamp pools dimmed.
+- qa_auto: only the per-shot blur false positive remains. Shot 20 (g 1301-1367) is the v3 version and will not be used (reassigned to team 2); shots 22-24 unchanged.
