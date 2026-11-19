@@ -426,12 +426,28 @@ class Take(object):
             f = BF(g)
             loc, look, lens = cam_of(g)
             camrig.key_camera(f, loc, look, cam=cam, lens=lens, interp="LINEAR", easing="AUTO")
+        # crowd cards whose chin would drop below y 850 anywhere in their shot are dropped for the whole shot (caption band y 880)
+        low = set()
+        for s_ in (28, 29, 30):
+            if not any(RANGES[s_][0] <= g <= RANGES[s_][1] for g in ext):
+                continue
+            from bpy_extras.object_utils import world_to_camera_view
+            for g in range(RANGES[s_][0], RANGES[s_][1] + 1, 3):
+                loc, look, lens = cam_of(g)
+                camrig.key_camera(BF(g), loc, look, cam=cam, lens=lens, interp="LINEAR", easing="AUTO")
+                scene.frame_set(BF(g))
+                bpy.context.view_layer.update()
+                for ob in self.crowds[s_]:
+                    p = ob.location
+                    c = world_to_camera_view(scene, cam, Vector((p.x, p.y, p.z + 2.0 * ob.scale.z)))
+                    if (1 - c.y) * 1280 > 850 and c.z > 0 and -0.1 < c.x < 1.1:
+                        low.add(ob.name)
         for g in ext:
             f = BF(g)
             shot = SHOT_OF(g)
             for s_, objs in self.crowds.items():
                 for ob in objs:
-                    key_hidden(ob, f, s_ != shot)
+                    key_hidden(ob, f, s_ != shot or ob.name in low)
             r = pose_rich(g) if g < G_HIT else None
             on = {"std": False, "fall": False, "sit": False}
             if r is not None:

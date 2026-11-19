@@ -4,3 +4,5 @@ Round 3 fixes: cane (drawn in the left hand, planted, gold knob) in shots 26-28;
 (from g 1749: head down, eyes down, 'worried' lids); shot 30: purse in HIS raised hand first (g 1917-1968), pullman reaches (g ~1953), takes it at g 1969 and holds it up, the rich man lowers the arm and sulks.
 Kept from round 2: stair cut short with void + cribbing, side-on wide with crane-in, waist-deep mud pit + spray crown splash, blue sky (far-clip bug fixed), puddles hidden, DAY light.
 Open (non-blocking): mud-pit rim reads a bit like a manhole; rich head 45-65 px in shot 28; hat is the cast pose's askew-on-head.
+
+FINAL-gate fix: shot 28 (g 1775-1870) re-rendered with the near-camera red-vest townsman removed (crowd cards whose chin would pass y 850 are dropped for the shot). Other shots unchanged; qa_auto PASS.
