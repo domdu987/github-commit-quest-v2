@@ -49,7 +49,7 @@ def sprayfx(g, cam_loc, focal):
         h = F.STATE['hive'][i]; mw = h.matrix_world
         c0 = mw @ Vector((-0.70, 0.0, -0.42))                       # the contact point: hive end against its post
         d = (c0 - cam).length; fwd = (c0 - cam).normalized(); right = fwd.cross(Vector((0, 0, 1))).normalized(); up = right.cross(fwd).normalized()
-        k = (87.0 / focal * d) / 0.8                                # half-width 87 px -> 175 px crown at full res
+        k = (150.0 / focal * d) / 0.8                                # half-width 87 px -> 175 px crown at full res
         rr = random.Random(i * 91 + 3); f = 1.0 - a / 0.27
         for n in range(15):
             kind = 0 if n < 8 else (1 if n < 13 else 2)             # 8 chips, 5 droplets, 2 wisps
