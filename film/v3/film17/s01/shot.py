@@ -35,6 +35,9 @@ def _svg(cast, pose, *a, **kw):
 C.sprites.sprite_svg = _svg
 
 def slide_of(g):
+    if shot_of(g) == 3:                                   # close on each ear: ear A g96-108, ear B g128-138
+        if g < G_SWAP: return lerp(0.30, 0.50, ez((g - 96) / 12.0))
+        return lerp(0.28, 0.50, ez((g - 128) / 10.0))
     if shot_of(g) != 1: return 0.50
     return lerp(0.24, 0.50, ez((g - 14) / 26.0))          # jaws wide at g14, closing to g40 (gap 0.64 -> 0.38 prop units)
 G_CUT2, G_CUT3, G_SNAP0, G_SNAP1, G_SWAP, G_END, H_OUT = 48, 93, 118, 136, 127, 144, 6
@@ -144,6 +147,20 @@ def ears_svg(pose):
     wrap = lambda g: '<g transform="rotate(%.2f %.3f %.3f) translate(%.3f %.3f)">%s</g>' % (r, dx, dy, dx, dy, g) if g else ""
     return wrap(under), wrap(over)
 
+def hand_svg(an):
+    """a visible forearm (lighter sleeve), white cuff and skin hand gripping the beam (puppet-local D, from the sprite's own anchors)."""
+    ex, ey = an["elbow_r"]; hx, hy = an["hand_r"]
+    dx, dy = hx - ex, hy - ey; L = math.hypot(dx, dy) or 1.0; ux, uy = dx / L, dy / L
+    cx, cy = hx - ux * 0.13, hy - uy * 0.13
+    return ('<g><path d="M%.3f,%.3f L%.3f,%.3f" stroke="#3a2832" stroke-width="0.17" stroke-linecap="round" fill="none"/>'
+            '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="#46598f" stroke-width="0.125" stroke-linecap="round" fill="none"/>'
+            '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="#3a2832" stroke-width="0.155" stroke-linecap="butt" fill="none"/>'
+            '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="#fbf3ee" stroke-width="0.115" stroke-linecap="butt" fill="none"/>'
+            '<circle cx="%.3f" cy="%.3f" r="0.105" fill="#f4d4cb" stroke="#3a2832" stroke-width="0.03"/>'
+            '<path d="M%.3f,%.3f q0.05,-0.02 0.09,0.03" stroke="#3a2832" stroke-width="0.02" fill="none"/></g>'
+            % (ex, ey, hx, hy, ex, ey, hx, hy, cx - ux * 0.045, cy - uy * 0.045, cx + ux * 0.045, cy + uy * 0.045,
+               cx - ux * 0.045, cy - uy * 0.045, cx + ux * 0.045, cy + uy * 0.045, hx, hy, hx - 0.04, hy - 0.01))
+
 class Take(C.Take):
     def __init__(self, quality="draft", ppd=None):
         C.Take.__init__(self, "measure_wide", quality, fg=False)
@@ -178,7 +195,7 @@ class Take(C.Take):
     def pos_of(self, name, g):
         cast, story, xy, seated = SPOT[name][:4]
         s = shot_of(g)
-        if name == "bert": xy = BERT_XY[s] if not (s == 3 and g >= G_SWAP) else (0.18, 2.00)
+        if name == "bert": xy = BERT_XY[s] if not (s == 3 and g >= G_SWAP) else (0.22, 2.02)
         p = base_pose(name); sc = sc_of(cast)
         if seated:
             fx, fy = C.sprites.feet_of(cast, p); z = K.HEAD_Z[seated] - sc * fy
@@ -214,7 +231,7 @@ class Take(C.Take):
             el = ear_local(an, g, sit, s)
             w = actors.local_to_world(self.acts[sit], el, f, camera=cam)
             self.ear[g] = tuple(round(v, 3) for v in w)
-            ang, psc = (-52, 1.45) if s == 2 else (-4, 1.15 if s == 1 else 1.1)
+            ang, psc = (-52, 1.45) if s == 2 else (-4, 1.15 if s == 1 else (0.8 if g < G_SWAP else 0.5))
             p, info = self.acts["bert"].pose(f, pose_of("bert", g), hands={"r": {"tip": w, "prop": "calipers", "angle": ang, "prop_scale": psc, "stretch": 1.15}}, camera=cam)
             self.ear[(g, "err")] = round(info.get("r", {}).get("error", -1), 3)
         fr = [bf(g) for g in gs if visible("bert", g)]
@@ -231,6 +248,10 @@ class Take(C.Take):
         base = 128 if self.q == "draft" else 256
         if lo: self.sprites_for(a, base, lo)
         if hi: self.sprites_for(a, base * 2, hi)
+        if n == "bert":                                   # second pass: draw the visible hand + forearm from the anchors of the first
+            ov = lambda f, pose: hand_svg(self.anch[("bert", f)])
+            if lo: a.render_sprites(base, frames=lo, overlay=ov)
+            if hi: a.render_sprites(base * 2, frames=hi, overlay=ov)
 
     def report(self, g):
         f = bf(g); self.scene.frame_set(f); loc, look = cam_of(g); out = dict(g=g, shot=shot_of(g), cam=[round(c, 3) for c in loc], ear=self.ear.get(g), err=self.ear.get((g, "err")))
