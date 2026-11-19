@@ -1270,13 +1270,13 @@ def _horn(k, base, ang, sc, far=False, blade=True, ln=1.0):
 
 def _blade_on_horn(k, tip, d, sc):
     """a short flat bronze DAGGER blade lashed to the horn tip, pointing on along the horn (fix 15: about 52 % of the old 0.95 long leaf):
-    bronze #b08a3e body with a darker edge line and a bright bevel, three red cord wraps at the root.  sc is the old scale (1.7 / 1.5)."""
+    bronze #8a6a3a body, a darker #5a4424 edge and a thin highlight, three red cord wraps at the root.  sc is the old scale (1.7 / 1.5)."""
     f = sc / 1.7
     s = _T(tip[0], tip[1], d + 24.0, f)        # swung forward off the horn line so horn + blade never read as one long spike
-    s += '<path d="M-0.06,-0.095 L0.02,-0.115 L0.26,-0.105 L0.50,0 L0.26,0.105 L0.02,0.115 L-0.06,0.095 Z" fill="%s" stroke="%s" stroke-width="0.028" stroke-linejoin="round"/>' % (k.c("#b08a3e"), k.ink)
-    s += '<path d="M0.02,-0.115 L0.26,-0.105 L0.50,0 L0.26,0.105 L0.02,0.115" fill="none" stroke="%s" stroke-width="0.030" stroke-linejoin="round" opacity="0.85"/>' % k.c("#6e5224")
-    s += '<path d="M0.02,0 L0.44,0" stroke="%s" stroke-width="0.020" stroke-linecap="round"/>' % k.c("#6e5224")
-    s += '<path d="M0.06,-0.055 L0.30,-0.050 L0.42,-0.012" fill="none" stroke="#f6dc98" stroke-width="0.016" stroke-linecap="round" opacity="0.9"/>'
+    s += '<path d="M-0.06,-0.095 L0.02,-0.115 L0.26,-0.105 L0.50,0 L0.26,0.105 L0.02,0.115 L-0.06,0.095 Z" fill="%s" stroke="%s" stroke-width="0.028" stroke-linejoin="round"/>' % (k.c("#8a6a3a"), k.ink)
+    s += '<path d="M0.02,-0.115 L0.26,-0.105 L0.50,0 L0.26,0.105 L0.02,0.115" fill="none" stroke="%s" stroke-width="0.030" stroke-linejoin="round" opacity="0.85"/>' % k.c("#5a4424")
+    s += '<path d="M0.02,0 L0.44,0" stroke="%s" stroke-width="0.020" stroke-linecap="round"/>' % k.c("#5a4424")
+    s += '<path d="M0.06,-0.055 L0.30,-0.050 L0.42,-0.012" fill="none" stroke="#d8c088" stroke-width="0.016" stroke-linecap="round" opacity="0.9"/>'
     for x in (-0.07, 0.0, 0.07):
         s += '<path d="M%.4f,-0.105 L%.4f,0.105" stroke="%s" stroke-width="0.048" stroke-linecap="round"/>' % (x, x + 0.03, k.ink)
         s += '<path d="M%.4f,-0.105 L%.4f,0.105" stroke="%s" stroke-width="0.030" stroke-linecap="round"/>' % (x, x + 0.03, k.c(CORD["base"]))
@@ -1285,38 +1285,59 @@ def _blade_on_horn(k, tip, d, sc):
 
 
 def _dragon(k, sx=1.0):
-    """the dragon painted on the silk coat (fix 15: bolder and simpler, the HEAD at mid-flank so it never reads as a second ox head).  Local
-    frame of the flank: x -1.4 .. 0.55, y -2.2 .. -1.25.  A fat gold S-body with a heavy ink line, four big fins (blue / green / white /
-    blue), a tail fin at the rump, one big horned head with an eye, open mouth and one whisker around x -0.1; two cream cloud scrolls."""
+    """the dragon painted on the silk coat (round 3: a SERPENTINE body, not a face).  Local frame of the flank: x -1.4 .. 0.55, y -2.2 .. -1.25.
+    A long gold S-curve body (thick in the middle, thin at the tail and at the neck) with a dark-gold belly line and scale ticks, a fin crest
+    of small triangles along the back, a flame tail tuft, and a SMALL profile head (a long snout, two swept-back horns, a dot eye, no open mouth,
+    about 15 % of the coat height) at mid-flank, x about -0.15; three cream cloud swirls around it."""
     o = []
-    for (x, y, r, c) in ((-0.95, -1.34, 0.15, "#f4f0e6"), (0.12, -1.33, 0.14, "#f4f0e6")):
-        o.append('<path d="M%.4f,%.4f a%.4f,%.4f 0 1 1 %.4f,%.4f a%.4f,%.4f 0 1 1 %.4f,%.4f" fill="none" stroke="%s" stroke-width="0.050" stroke-linecap="round"/>' % (x - r, y, r, r, r * 1.2, r * 1.0, r * 0.7, r * 0.7, -r * 0.5, -r * 0.5, k.ink))
-        o.append('<path d="M%.4f,%.4f a%.4f,%.4f 0 1 1 %.4f,%.4f a%.4f,%.4f 0 1 1 %.4f,%.4f" fill="none" stroke="%s" stroke-width="0.032" stroke-linecap="round"/>' % (x - r, y, r, r, r * 1.2, r * 1.0, r * 0.7, r * 0.7, -r * 0.5, -r * 0.5, k.c(c)))
-    spine = [(-1.30, -1.46), (-1.06, -1.90), (-0.72, -1.98), (-0.50, -1.64), (-0.30, -1.50), (-0.14, -1.68)]
-    fc = ("#2a78d8", "#2aa860", "#f4f0e6", "#2a78d8")
-    sm = _sample(spine, 20)
-    for j, i in enumerate((4, 8, 12, 16)):
-        a, b = sm[i], sm[i + 1]
-        dx, dy = (sm[i + 1][0] - sm[i - 1][0], sm[i + 1][1] - sm[i - 1][1])
-        L = math.hypot(dx, dy) or 1.0
-        nx, ny = dy / L, -dx / L
+    for (x, y, r, c) in ((-0.98, -1.33, 0.13, "#f4f0e6"), (0.18, -1.32, 0.12, "#f4f0e6"), (-0.50, -2.13, 0.10, "#f4f0e6")):
+        d = 'M%.4f,%.4f a%.4f,%.4f 0 1 1 %.4f,%.4f a%.4f,%.4f 0 1 1 %.4f,%.4f' % (x - r, y, r, r, r * 1.2, r * 1.0, r * 0.7, r * 0.7, -r * 0.5, -r * 0.5)
+        o.append('<path d="%s" fill="none" stroke="%s" stroke-width="0.046" stroke-linecap="round"/>' % (d, k.ink))
+        o.append('<path d="%s" fill="none" stroke="%s" stroke-width="0.028" stroke-linecap="round"/>' % (d, k.c(c)))
+    spine = [(-1.34, -1.44), (-1.10, -1.84), (-0.80, -1.88), (-0.58, -1.56), (-0.36, -1.44), (-0.22, -1.66)]
+    sm = _sample(spine, 24)
+    n = len(sm)
+    wp = [0.020 + 0.085 * math.sin(math.pi * min(1.0, i / (n - 1.0) * 1.08)) ** 0.8 for i in range(n)]
+    L_, R_ = [], []
+    nrm = []
+    for i in range(n):
+        a, b = sm[max(i - 1, 0)], sm[min(i + 1, n - 1)]
+        dx, dy = b[0] - a[0], b[1] - a[1]
+        Ln = math.hypot(dx, dy) or 1.0
+        nrm.append((dy / Ln, -dx / Ln, dx / Ln, dy / Ln))
+    # fin crest on the outer (upper) side
+    for i in range(3, n - 3, 2):
+        nx, ny, tx, ty = nrm[i]
         if ny > 0:
             nx, ny = -nx, -ny
-        o.append('<path d="M%.4f,%.4f L%.4f,%.4f L%.4f,%.4f Z" fill="%s" stroke="%s" stroke-width="0.030" stroke-linejoin="round"/>' % (a[0] - dx / L * 0.13, a[1] - dy / L * 0.13, a[0] + nx * 0.34, a[1] + ny * 0.34, a[0] + dx / L * 0.15, a[1] + dy / L * 0.15, k.c(fc[j]), k.ink))
-    o.append('<path d="M-1.28,-1.46 Q-1.46,-1.34 -1.52,-1.50 Q-1.40,-1.52 -1.46,-1.68 Q-1.30,-1.64 -1.22,-1.50 Z" fill="%s" stroke="%s" stroke-width="0.030" stroke-linejoin="round"/>' % (k.c("#2aa860"), k.ink))
-    body = _taper(sm, 0.10, 0.38)
+        w = wp[i]
+        px, py = sm[i]
+        o.append('<path d="M%.4f,%.4f L%.4f,%.4f L%.4f,%.4f Z" fill="%s" stroke="%s" stroke-width="0.022" stroke-linejoin="round"/>' % (
+            px - tx * 0.07 + nx * w * 0.6, py - ty * 0.07 + ny * w * 0.6, px + nx * (w + 0.13) + tx * 0.04, py + ny * (w + 0.13) + ty * 0.04,
+            px + tx * 0.07 + nx * w * 0.6, py + ty * 0.07 + ny * w * 0.6, k.c(GOLD["dark"]), k.ink))
+    for i in range(n):
+        nx, ny, tx, ty = nrm[i]
+        L_.append((sm[i][0] + nx * wp[i], sm[i][1] + ny * wp[i]))
+        R_.append((sm[i][0] - nx * wp[i], sm[i][1] - ny * wp[i]))
+    pts = L_ + R_[::-1]
+    body = "M" + " L".join("%.4f,%.4f" % p for p in pts) + " Z"
+    # tail tuft
+    o.append('<path d="M-1.33,-1.45 Q-1.50,-1.36 -1.56,-1.50 Q-1.44,-1.50 -1.50,-1.64 Q-1.32,-1.60 -1.26,-1.48 Z" fill="%s" stroke="%s" stroke-width="0.026" stroke-linejoin="round"/>' % (k.c(GOLD["dark"]), k.ink))
     g = _lin(k, "dgb", GOLD["light"], GOLD["base"], GOLD["dark"], -1.2, -2.0, 0.0, -1.4)
-    o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.044" stroke-linejoin="round"/>' % (body, g, k.ink))
-    o.append('<path d="M%s" fill="none" stroke="%s" stroke-width="0.040" stroke-linecap="round" opacity="0.7"/>' % (" L".join("%.4f,%.4f" % (x, y + 0.02) for (x, y) in sm[2:-3:2]), k.c(GOLD["dark"])))
-    hx, hy = spine[-1]
-    o.append('<g transform="translate(%.4f %.4f) scale(1.32)">' % (hx - 0.10, hy + 0.02))
-    o.append('<path d="M-0.12,0.12 Q-0.16,-0.16 0.06,-0.22 Q0.28,-0.26 0.44,-0.10 Q0.52,-0.04 0.46,0.0 L0.30,0.04 Q0.42,0.10 0.40,0.17 Q0.20,0.24 0.0,0.20 Z" fill="%s" stroke="%s" stroke-width="0.036" stroke-linejoin="round"/>' % (k.c(GOLD["base"]), k.ink))
-    o.append('<path d="M0.14,0.05 L0.44,0.01 L0.40,0.15 Q0.24,0.18 0.14,0.13 Z" fill="%s" stroke="%s" stroke-width="0.014"/>' % (k.c("#7a1018"), k.ink))
-    o.append('<circle cx="0.12" cy="-0.10" r="0.060" fill="#f4f0e6" stroke="%s" stroke-width="0.020"/><circle cx="0.135" cy="-0.10" r="0.032" fill="%s"/>' % (k.ink, k.ink))
-    o.append('<path d="M-0.02,-0.20 Q-0.12,-0.40 0.06,-0.50 M0.12,-0.22 Q0.10,-0.42 0.26,-0.48" fill="none" stroke="%s" stroke-width="0.074" stroke-linecap="round"/>' % k.ink)
-    o.append('<path d="M-0.02,-0.20 Q-0.12,-0.40 0.06,-0.50 M0.12,-0.22 Q0.10,-0.42 0.26,-0.48" fill="none" stroke="%s" stroke-width="0.040" stroke-linecap="round"/>' % k.c("#f4f0e6"))
-    o.append('<path d="M-0.08,-0.04 Q-0.24,-0.04 -0.32,0.10 Q-0.22,0.20 -0.12,0.22" fill="none" stroke="%s" stroke-width="0.062" stroke-linecap="round"/>' % k.ink)
-    o.append('<path d="M-0.08,-0.04 Q-0.24,-0.04 -0.32,0.10 Q-0.22,0.20 -0.12,0.22" fill="none" stroke="%s" stroke-width="0.034" stroke-linecap="round"/>' % k.c("#2a78d8"))
+    o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.036" stroke-linejoin="round"/>' % (body, g, k.ink))
+    o.append('<path d="M%s" fill="none" stroke="%s" stroke-width="0.020" stroke-linecap="round" opacity="0.8"/>' % (" L".join("%.4f,%.4f" % (x, y) for (x, y) in R_[3:-3:1]), k.c(GOLD["dark"])))
+    for i in range(4, n - 4, 3):
+        nx, ny, tx, ty = nrm[i]
+        o.append('<path d="M%.4f,%.4f q%.4f,%.4f %.4f,%.4f" fill="none" stroke="%s" stroke-width="0.012" opacity="0.7"/>' % (
+            sm[i][0] - nx * 0.04, sm[i][1] - ny * 0.04, tx * 0.03, ty * 0.03, -nx * 0.08 * 0, 0.0, k.c(GOLD["deep"])))
+    # small profile head at the neck end, facing +x: about 0.20 tall, 0.40 long with the snout
+    hx, hy = sm[-1]
+    o.append('<g transform="translate(%.4f %.4f) rotate(-14)">' % (hx, hy))
+    o.append('<path d="M0.0,-0.07 L0.10,-0.10 Q0.30,-0.10 0.46,-0.05 Q0.50,-0.02 0.46,0.01 L0.12,0.07 Q0.02,0.08 -0.04,0.05 Z" fill="%s" stroke="%s" stroke-width="0.026" stroke-linejoin="round"/>' % (k.c(GOLD["base"]), k.ink))
+    o.append('<path d="M0.10,-0.10 Q0.20,-0.22 0.04,-0.30 M0.02,-0.08 Q0.06,-0.26 -0.12,-0.30" fill="none" stroke="%s" stroke-width="0.056" stroke-linecap="round"/>' % k.ink)
+    o.append('<path d="M0.10,-0.10 Q0.20,-0.22 0.04,-0.30 M0.02,-0.08 Q0.06,-0.26 -0.12,-0.30" fill="none" stroke="%s" stroke-width="0.028" stroke-linecap="round"/>' % k.c("#f4f0e6"))
+    o.append('<path d="M0.44,0.0 Q0.58,0.08 0.52,0.18 M0.40,0.03 Q0.50,0.14 0.40,0.22" fill="none" stroke="%s" stroke-width="0.018" stroke-linecap="round"/>' % k.ink)
+    o.append('<circle cx="0.16" cy="-0.03" r="0.020" fill="%s"/>' % k.ink)
     o.append('</g>')
     return "".join(o)
 
