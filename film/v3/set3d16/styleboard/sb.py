@@ -136,19 +136,19 @@ def prism_roof(mb, m, x0, x1, y0, y1, z0, zr, ov=0.0, ridge='x'):
 def palette(mode):
     d = {}
     wet = mode == 'close'
-    d['pole'] = mat('pole', '#d9a966', '#efca8a', 7, aniso=(1, 1, 0.12), contrast=1.2) if not wet else \
-        mat('pole_wet', '#a06a3a', '#c48a50', 7, aniso=(1, 1, 0.12), contrast=1.4, rough=0.3, sheen=0.5, zgrad=(3.2, 6.2, '#5a3a22'))
+    d['pole'] = mat('pole', '#c98a46', '#e8ac66', 7, aniso=(1, 1, 0.12), contrast=1.3) if not wet else \
+        mat('pole_wet', '#b07440', '#d09050', 7, aniso=(1, 1, 0.12), contrast=1.4, rough=0.45, sheen=0.35, zgrad=(0.5, 3.4, '#7a4a28'))
     d['polecut'] = mat('polecut', '#efd49a', '#e0b878', 3)
-    d['wood'] = mat('wood', '#7a4a28', '#9a6535', 6, aniso=(1, 1, 0.3), contrast=1.4)
-    d['woodpale'] = mat('woodpale', '#c48a50', '#dba868', 8, aniso=(0.4, 1, 1))
-    d['walnut'] = mat('walnut', '#5a3320', '#7c4a2c', 7, aniso=(1, 0.3, 0.3), contrast=1.6, rough=0.5, sheen=0.3)
+    d['wood'] = mat('wood', '#78461f', '#9a6230', 6, aniso=(1, 1, 0.3), contrast=1.5)
+    d['woodpale'] = mat('woodpale', '#c8883c', '#e0a856', 8, aniso=(0.4, 1, 1), contrast=1.4)
+    d['walnut'] = mat('walnut', '#6a3a1c', '#8e5430', 7, aniso=(1, 0.3, 0.3), contrast=1.6, rough=0.45, sheen=0.4)
     d['glass'] = mat('glass', '#2a9a68', '#5fd09e', 4, rough=0.1, sheen=1.0, emit='#35b880', emit_k=0.5)
     d['glassjar'] = mat('glassjar', '#7ac4a8', '#a6e0c8', 4, rough=0.1, sheen=1.0, emit='#6ad0a8', emit_k=0.3)
     d['wiremat'] = mat('wiremat', '#2a221e', '#4a3c32', 3, rough=0.35, sheen=0.6)
     d['drop'] = mat('drop', '#e0f0ff', '#ffffff', 2, rough=0.05, sheen=1.0, emit='#d8ecff', emit_k=1.2)
-    d['road'] = mat('road', '#c48c58', '#d6a16a', 3.0, aniso=(1.2, 0.35, 1.0), contrast=1.2) if not wet else mat('road_w', '#8a5a3a', '#a8714a', 3.0, aniso=(1.2, 0.35, 1.0), rough=0.25, sheen=0.7)
-    d['rut'] = mat('rut', '#9e6a42', '#b57c4e', 4.0, aniso=(2, 0.3, 1))
-    d['verge'] = mat('verge', '#9aa040', '#c8b052', 4.0, aniso=(1.4, 0.4, 1))
+    d['road'] = mat('road', '#bc7e3e', '#d49a58', 3.0, aniso=(1.2, 0.35, 1.0), contrast=1.4) if not wet else mat('road_w', '#7e4a2c', '#9c6038', 3.0, aniso=(1.2, 0.35, 1.0), rough=0.25, sheen=0.7)
+    d['rut'] = mat('rut', '#966030', '#b27a40', 4.0, aniso=(2, 0.3, 1))
+    d['verge'] = mat('verge', '#7fa63a', '#c4b042', 4.0, aniso=(1.4, 0.4, 1))
     d['earth'] = mat('earth', '#8c5233', '#b06c44', 6, contrast=1.3)
     d['ballast'] = mat('ballast', '#9a8e86', '#c0aea0', 14, contrast=1.8)
     d['sleeper'] = mat('sleeper', '#4a3426', '#6a4a34', 5)
@@ -156,7 +156,7 @@ def palette(mode):
     d['lead'] = mat('lead', '#8c929c', '#b6bcc6', 3, rough=0.35, sheen=0.7)
     d['straw'] = mat('straw', '#d6b25a', '#eccb78', 7, contrast=1.3)
     d['strawdk'] = mat('strawdk', '#b08a3c', '#d0a850', 7)
-    d['wheat'] = mat('wheat', '#c9a540', '#ecca6c', 6, zgrad=(0.0, 0.5, '#8a8a38'), contrast=1.4)
+    d['wheat'] = mat('wheat', '#d6a838', '#f4cc58', 6, zgrad=(0.0, 0.5, '#9a9a34'), contrast=1.4)
     d['hay'] = mat('hay', '#c8a248', '#e8c46c', 8, aniso=(1, 1, 0.3))
     d['leafA'] = mat('leafA', '#4f8a3a', '#8aa83e', 2.2, contrast=1.6)
     d['leafB'] = mat('leafB', '#8a9a2c', '#d0a838', 2.2, contrast=1.6)
@@ -178,12 +178,12 @@ def palette(mode):
     d['smoke'] = mat('smoke', '#f6ebe0', '#d8cce0', 2, emit='#fff0e0', emit_k=0.25)
     d['metal'] = mat('metal', '#9aa4b0', '#c0c8d0', 3, rough=0.4, sheen=0.5)
     d['rope'] = mat('rope', '#cfae74', '#a88650', 12)
-    d['spool'] = mat('spool', '#3a3028', '#5a4a3c', 2, rough=0.4, sheen=0.5, wave=(70, '#8a7a68'))
+    d['spool'] = mat('spool', '#a8602c', '#cc8040', 3, rough=0.35, sheen=0.8, wave=(90, '#5e3218'))
     d['bird'] = mat('bird', '#2a2428', '#3a3238', 2)
     # chamber
-    d['floor'] = mat('floor', '#8a5630', '#b07840', 8, aniso=(1, 0.2, 1), contrast=1.6, rough=0.45, sheen=0.3)
-    d['carpet'] = mat('carpet', '#6c2326', '#85302e', 10, contrast=1.2)
-    d['baize'] = mat('baize', '#2f7a4a', '#459a60', 12)
+    d['floor'] = mat('floor', '#94592a', '#bf8040', 8, aniso=(1, 0.2, 1), contrast=1.6, rough=0.4, sheen=0.4)
+    d['carpet'] = mat('carpet', '#78301e', '#8e3c28', 10, contrast=1.2)
+    d['baize'] = mat('baize', '#2c8040', '#40a05a', 12)
     d['wall'] = mat('wall', '#f2e4c0', '#e4d0a0', 2.0, contrast=0.8)
     d['marble'] = mat('marble', '#f6ecd6', '#e8dcc0', 2.5, contrast=0.8)
     d['drape'] = mat('drape', '#a02a2a', '#c64440', 3, aniso=(0.4, 0.4, 3.0), contrast=1.5)
@@ -192,6 +192,12 @@ def palette(mode):
     d['paper'] = mat('paper', '#f6ecd2', '#e8dcc0', 6)
     d['ink'] = mat('ink', '#1c1a22', '#2c2a34', 3, rough=0.2, sheen=0.8)
     d['flame'] = mat_emit('flame', '#ffb84a', 22.0)
+    d['hat'] = mat('hat', '#26201c', '#3a302a', 3, rough=0.5, sheen=0.5)
+    d['globe'] = mat('globe', '#3c74b0', '#4f9a58', 3, contrast=2.0, rough=0.4, sheen=0.5)
+    d['frame'] = mat('frame', '#c8962c', '#f0c858', 5, rough=0.3, sheen=0.8)
+    d['paintsky'] = mat('paintsky', '#7aa8dc', '#e6b890', 1.2)
+    d['paintgrn'] = mat('paintgrn', '#4a7a34', '#8a8a38', 2.0, contrast=1.6)
+    d['paintdk'] = mat('paintdk', '#3a3a28', '#5a4a30', 2.0)
     d['shaft'] = shaft_mat()
     return d
 
@@ -228,13 +234,24 @@ def hills(P):
         for i in range(n - 1): mb.quad(m, [(xs[i], yy, -5), (xs[i + 1], yy, -5), (xs[i + 1], yy, hs[i + 1]), (xs[i], yy, hs[i])])
     mb.finish()
 
+def cloud_mat(P):
+    """emission-only painted cloud: normal facing the sun -> cream/peach, facing away / down -> blue-violet (gradient across every puff)"""
+    m = bpy.data.materials.new('cloudG'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); em = N('ShaderNodeEmission'); gm = N('ShaderNodeNewGeometry'); vm = N('ShaderNodeVectorMath'); vm.operation = 'DOT_PRODUCT'
+    kd = Vector(P['key_dir']).normalized(); vm.inputs[1].default_value = (-kd.x, -kd.y, -kd.z); L(gm.outputs['Normal'], vm.inputs[0])
+    mr = N('ShaderNodeMapRange'); mr.inputs['From Min'].default_value = -0.35; mr.inputs['From Max'].default_value = 0.45; L(vm.outputs['Value'], mr.inputs['Value'])
+    mx = N('ShaderNodeMix'); mx.data_type = 'RGBA'; mx.inputs[6].default_value = hexc(P['cloud'][1]); mx.inputs[7].default_value = hexc(P['cloud'][0]); L(mr.outputs['Result'], mx.inputs[0])
+    em.inputs['Strength'].default_value = P.get('cloud_k', 1.0); L(mx.outputs[2], em.inputs['Color']); L(em.outputs[0], out.inputs['Surface']); MATS['cloudG'] = m; return m
+
 def clouds(P):
     mb = MB('clouds'); rr = rnd(P.get('cloud_seed', 9)); a = mat_emit('cloudA', P['cloud'][0], P.get('cloud_k', 1.0)); b = mat_emit('cloudB', P['cloud'][1], P.get('cloud_k', 1.0))
+    if P.get('cloud_diffuse'):      # sun-lit clouds: warm cream tops, blue-violet undersides from the sky ambient + a faint violet self term
+        a = cloud_mat(P); b = a
     for i in range(P.get('ncloud', 10)):
         cx = rr.uniform(-260, 260); cy = rr.uniform(300, 420); cz = rr.uniform(P.get('cloud_z', (60, 140))[0], P.get('cloud_z', (60, 140))[1]); sz = rr.uniform(25, 55) * (1.0 + cz / 160.0) * P.get('cloud_scale', 1.0)
         for j in range(rr.randint(4, 7)):
             ox = rr.uniform(-1.4, 1.4) * sz; oz = rr.uniform(0, 0.35) * sz
-            mb.ell(b, (cx + ox, cy, cz + oz - 0.25 * sz), (sz * rr.uniform(0.6, 1.0), sz * 0.5, sz * 0.28), (14, 8))
+            mb.ell(b, (cx + ox, cy, cz + oz - 0.25 * sz), (sz * rr.uniform(0.6, 1.0), sz * 0.5, sz * 0.32), (18, 10))
             mb.ell(a, (cx + ox, cy - 6, cz + oz), (sz * rr.uniform(0.5, 0.9), sz * 0.45, sz * 0.27), (14, 8))
     mb.finish()
 
@@ -448,8 +465,8 @@ def loco(mb, M, c, yaw=0.0, s=1.0):
     mb.rod(M['black'], (4.1, -0.9, 0.2), (4.1, 0.9, 0.2), 0.05, 0.05, 5)
     mb.pop()
 
-def carriage(mb, M, c, yaw=0.0, body='carriage', L=5.4):
-    mb.push(Matrix.Translation(c) @ Euler((0, 0, yaw)).to_matrix().to_4x4())
+def carriage(mb, M, c, yaw=0.0, body='carriage', L=5.4, s=1.0):
+    mb.push(Matrix.Translation(c) @ Euler((0, 0, yaw)).to_matrix().to_4x4() @ Matrix.Diagonal((s, s, s, 1)))
     mb.box(M['black'], (0, 0, 0.8), (L, 1.7, 0.25)); mb.box(M[body], (0, 0, 1.95), (L, 2.2, 2.0)); mb.box(M['cream'], (0, 0, 1.2), (L + 0.04, 2.24, 0.12)); mb.box(M['cream'], (0, 0, 2.95), (L + 0.04, 2.24, 0.1))
     prism_roof(mb, M['dark'], -L / 2, L / 2, -1.1, 1.1, 3.0, 3.5, ov=0.15)
     for i in range(5):
@@ -469,7 +486,7 @@ def build_line(mode, P):
     mb = MB('roads')
     ribbon(mb, M['verge'], xc, ys, 6.5, 0.01); ribbon(mb, M['road'], xc, ys, 3.0, 0.03)
     ribbon(mb, M['rut'], xc, ys, 0.3, 0.04, -0.6); ribbon(mb, M['rut'], xc, ys, 0.3, 0.04, 0.6); ribbon(mb, M['verge'], xc, ys, 0.35, 0.045, 0.0)
-    tx = -10.2                                              # railway x
+    tx = P['tx']                                              # railway x
     ribbon(mb, M['ballast'], lambda y: tx, ys, 3.4, 0.04)
     for y in np.arange(-14, 130, 0.85): mb.box(M['sleeper'], (tx, y, 0.12), (2.2, 0.26, 0.14))
     for sx in (-0.72, 0.72):
@@ -487,7 +504,7 @@ def build_line(mode, P):
     # --- telegraph poles
     mb = MB('poles'); tops = []; pyy = [4.0 + 9.0 * k for k in range(9)]; bs = P['bottle_s']
     for y in pyy:
-        x = xc(y) + 3.4; h = 6.5
+        x = xc(y) + 3.4; h = P.get('pole_h', 6.5)
         pole(mb, M, x, y, h, bs); tops.append((x + 0.03, y, h + 0.255 * bs + 0.012))
     wires(mb, M, tops, sag=P.get('sag', 0.5), r=P.get('wire_r', 0.024))
     # birds on wire
@@ -510,7 +527,7 @@ def build_line(mode, P):
     # --- wagon + props
     mb = MB('work')
     P_ = P.get('wagon', (-2.6, 9.5)); wagon(mb, M, (P_[0], P_[1], 0.0), 1.45)
-    ladder(mb, M, (xc(8) + 4.3, 6.3, 0.0), (xc(8) + 3.6, 6.1, 6.2), 0.5, 14)                           # ladder leaning on pole 1
+    ladder(mb, M, (xc(8) + 4.3, 6.3, 0.0), (xc(8) + 3.6, 6.1, P.get('pole_h', 6.5) - 0.3), 0.5, 14)                           # ladder leaning on pole 1
     ladder(mb, M, (-3.0, 1.0, 0.08), (-3.2, 5.2, 0.1), 0.5, 10)                                          # ladder on the ground
     for (x, y, yw) in [(xc(3) + 3.0, 1.0, 0.2), (xc(3) + 3.8, 3.0, 0.9), (xc(7) + 4.0, 8.0, -0.4)]: pick(mb, M, (x, y, 0.15), yw)
     for (x, y, yw) in [(xc(5) + 4.4, 5.0, 1.3), (xc(12) + 3.6, 12.0, 0.3)]: shovel(mb, M, (x, y, 0.05), yw)
@@ -560,22 +577,38 @@ def build_line(mode, P):
     mb.finish()
     # --- trees + farm
     mb = MB('trees'); rt = rnd(24)
-    for (x, y, s_) in [(-22, 40, 1.4), (-30, 52, 1.7), (-17, 68, 1.5), (22, 40, 1.5), (30, 28, 1.3), (36, 60, 1.8), (-34, 30, 1.6), (4, 92, 1.8), (-8, 100, 1.9), (46, 76, 2.0), (-44, 70, 2.1), (16, 110, 2.0), (-24, 100, 2.2), (30, 104, 2.2)]:
+    for (x, y, s_) in [(-30, 44, 1.6), (-34, 58, 1.8), (-24, 76, 1.6), (22, 40, 1.5), (30, 28, 1.3), (36, 60, 1.8), (-34, 30, 1.6), (4, 92, 1.8), (-8, 100, 1.9), (46, 76, 2.0), (-44, 70, 2.1), (16, 110, 2.0), (-24, 100, 2.2), (30, 104, 2.2)]:
         oak(mb, M, (x, y, 0.0), s_, int(x * 7 + y)); 
-    oak(mb, M, (xc(16) + 12.0, 16, 0.0), 1.2, 8)
+    for (yy, ss) in [(13, 1.5), (23, 1.7), (33, 1.6), (46, 1.8)]: oak(mb, M, (xc(yy) + 9.6, yy, 0.0), ss, int(yy * 3))
     mb.finish()
     mb = MB('farm'); farmhouse(mb, M, (20.0, 86.0, 0.0), 0.08); barn(mb, M, (-12.0, 96.0, 0.0), -0.05)
     mb.rod(M['trunk'], (4.0, 92, 0), (4.0, 92, 0.1), 0.01, 0.01, 4)
     mb.finish()
     # --- railway scene: loco + 2 carriages (loco facing -y toward camera side)
     mb = MB('train')
-    ly = P.get('loco_y', 30.0); yaw = -math.pi / 2          # local +x -> world -y
-    loco(mb, M, (tx, ly, 0.2), yaw, 1.0)
-    carriage(mb, M, (tx, ly + 7.2, 0.2), yaw, 'carriage'); carriage(mb, M, (tx, ly + 13.4, 0.2), yaw, 'carriage2')
-    mb.rod(M['black'], (tx, ly + 3.6, 0.95), (tx, ly + 4.6, 0.95), 0.05, 0.05, 5); mb.rod(M['black'], (tx, ly + 9.9, 0.95), (tx, ly + 10.7, 0.95), 0.05, 0.05, 5)
-    sx_ = tx; sy_ = ly - 2.45                              # stack x position in world: local x 2.45 -> world y = ly - 2.45
-    for i, (dx, dy, dz, r) in enumerate([(0.0, 0.0, 4.4, 0.55), (0.5, 0.5, 5.3, 0.8), (1.4, 1.4, 6.5, 1.05), (2.6, 2.6, 7.6, 1.3), (4.2, 4.0, 8.6, 1.5)]):
-        puff(mb, M, (sx_ + 0.5 + dx * 1.1, sy_ + dy * 1.0, dz), r)
+    ly = P.get('loco_y', 30.0); yaw = -math.pi / 2; LS = 1.6          # local +x -> world -y
+    loco(mb, M, (tx, ly, 0.2), yaw, LS)
+    carriage(mb, M, (tx, ly + 7.2 * LS, 0.2), yaw, 'carriage', 5.4, LS); carriage(mb, M, (tx, ly + 13.4 * LS, 0.2), yaw, 'carriage2', 5.4, LS)
+    mb.rod(M['black'], (tx, ly + 3.6 * LS, 0.95), (tx, ly + 4.6 * LS, 0.95), 0.06, 0.06, 5); mb.rod(M['black'], (tx, ly + 9.9 * LS, 0.95), (tx, ly + 10.7 * LS, 0.95), 0.06, 0.06, 5)
+    sy_ = ly - 2.45 * LS                                              # funnel position
+    for i, (dx, dy, dz, r) in enumerate([(0.0, 0.0, 5.3, 0.6), (0.6, 0.6, 6.4, 0.9), (1.6, 1.6, 7.8, 1.2), (3.0, 3.0, 9.3, 1.55), (4.8, 4.6, 10.9, 1.9), (7.0, 6.4, 12.6, 2.3), (9.6, 8.2, 14.4, 2.6)]):
+        puff(mb, M, (tx + 0.4 + dx * 1.3, sy_ + dy * 1.4, dz), r)
+    mb.finish()
+    # --- dense foreground near the lens: tall grass tufts, spool, wire coil, tools
+    mb = MB('fg'); rf = rnd(31)
+    for i in range(420 if mode == 'line' else 0):
+        x = rf.choice((-1, 1)) * rf.uniform(1.6, 5.5) + xc(0); y = rf.uniform(-5.2, 4.5)
+        if abs(x - xc(y)) < 1.6: continue
+        grass_clump(mb, M, (x, y, 0.0), rf, rf.uniform(0.9, 1.7)) if rf.random() < 0.6 else wheat_clump(mb, M, (x, y, 0.0), rf, rf.uniform(0.9, 1.4))
+    for i in range(70 if mode == 'line' else 0):
+        x = rf.uniform(0.2, 2.2) + (rf.random() < 0.5) * 0; y = rf.uniform(-5.0, -1.0)
+        if rf.random() < 0.5: grass_clump(mb, M, (x + 2.0 * (rf.random() < 0.5), y, 0.0), rf, rf.uniform(0.5, 0.9))
+    sp = P.get('fgspool', (-2.3, -4.0))
+    mb.cyl(M['woodpale'], (sp[0], sp[1], 0.05), 0.62, 0.1, 'z', 22); mb.cyl(M['woodpale'], (sp[0], sp[1], 0.7), 0.62, 0.1, 'z', 22); mb.cyl(M['spool'], (sp[0], sp[1], 0.38), 0.46, 0.6, 'z', 22, True)
+    mb.rod(M['wiremat'], (sp[0] + 0.45, sp[1], 0.5), (sp[0] + 1.3, sp[1] + 0.3, 0.02), 0.02, 0.02, 5)
+    cp = P.get('fgcoil', (1.8, -3.6))
+    for k in range(3): mb.cyl(M['wiremat'], (cp[0], cp[1], 0.08 + k * 0.12), 0.6, 0.1, 'z', 22, True); mb.cyl(M['dark'], (cp[0], cp[1], 0.08 + k * 0.12), 0.26, 0.12, 'z', 14)
+    pick(mb, M, (0.5, -3.9, 0.15), 0.5); shovel(mb, M, (1.0, -4.8, 0.05), 2.4); pick(mb, M, (-1.0, -2.5, 0.15), -0.4)
     mb.finish()
 
 # ------------------------------------------------------------------ chamber
@@ -627,6 +660,9 @@ def desk(mb, M, c, rz, zt, rr, ink=True):
     for k in range(rr.randint(1, 3)):
         mb.box(M['paper'], (rr.uniform(-0.55, 0.55) if k else -xi * 0.6 - 0.25, rr.uniform(-0.1, 0.1), 0.86 + k * 0.025), (0.3, 0.4, 0.04 + 0.03 * k), rz=rr.uniform(-0.3, 0.3))
     if rr.random() < 0.5: mb.box(M['leather'], (0.45, -0.1, 0.87), (0.25, 0.18, 0.05), rz=0.3)
+    if rr.random() < 0.3:                                   # top hat on the desk (or on the chair back)
+        hx = rr.uniform(-0.5, 0.5); mb.cyl(M['hat'], (hx, 0.1, 0.99), 0.1, 0.22, 'z', 14, True, r2=0.095); mb.cyl(M['hat'], (hx, 0.1, 0.88), 0.18, 0.02, 'z', 14); mb.cyl(M['red'], (hx, 0.1, 0.92), 0.102, 0.03, 'z', 14)
+    elif rr.random() < 0.12: mb.cyl(M['hat'], (0.0, 1.2, 1.2), 0.1, 0.2, 'z', 14); mb.cyl(M['hat'], (0.0, 1.2, 1.1), 0.17, 0.02, 'z', 14)
     # chair behind
     mb.box(M['leather'], (0, 0.95, 0.5), (0.55, 0.5, 0.07)); mb.box(M['walnut'], (0, 1.2, 0.85), (0.55, 0.06, 0.6))
     for dx in (-0.25, 0.25):
@@ -679,6 +715,18 @@ def build_chamber(P):
     mb.box(M['walnut'], (0, 11.2, 1.0), (2.4, 0.9, 1.2)); mb.box(M['walnut'], (0, 11.2, 1.65), (2.7, 1.1, 0.1)); mb.box(M['leather'], (0, 11.0, 1.72), (2.4, 0.8, 0.04))
     mb.box(M['leather'], (0, 12.6, 0.95), (0.8, 0.7, 0.1)); mb.box(M['walnut'], (0, 13.0, 1.9), (0.8, 0.1, 2.2)); mb.box(M['leather'], (0, 12.95, 2.0), (0.6, 0.03, 1.7))
     mb.box(M['gold'], (0.8, 11.2, 1.8), (0.1, 0.1, 0.3)); mb.cyl(M['gold'], (-0.8, 11.2, 1.85), 0.1, 0.3, 'z', 10)
+    # life: brass spittoons beside the aisle, a floor globe on the dais, framed paintings over the windows
+    for (sx_, sy_) in [(-1.8, 3.0), (1.9, 9.0), (-2.1, 15.0), (2.2, 19.0)]:
+        mb.ell(M['brass'], (sx_, sy_, 0.16), (0.24, 0.24, 0.16), (14, 8)); mb.cyl(M['brass'], (sx_, sy_, 0.3), 0.15, 0.12, 'z', 14, True, r2=0.2)
+    gx, gy = -2.8, 10.4
+    mb.cyl(M['walnut'], (gx, gy, 0.55), 0.22, 0.03, 'z', 12); mb.rod(M['walnut'], (gx, gy, 0.42), (gx, gy, 1.05), 0.04, 0.03, 8)
+    for k in (-1, 1): mb.rod(M['walnut'], (gx, gy, 0.42), (gx + k * 0.4, gy, 0.42), 0.03, 0.03, 6); mb.rod(M['walnut'], (gx, gy, 0.42), (gx, gy + k * 0.4, 0.42), 0.03, 0.03, 6)
+    mb.ell(M['globe'], (gx, gy, 1.5), (0.5, 0.5, 0.5), (24, 16)); mb.cyl(M['brass'], (gx, gy, 1.5), 0.53, 0.03, 'x', 24); mb.cyl(M['brass'], (gx, gy, 1.5), 0.53, 0.03, 'y', 24)
+    rp = rnd(77)
+    for k, c in enumerate(win_x):
+        mb.box(M['frame'], (c, BY - 0.62, 10.4), (3.1, 0.14, 2.1)); mb.box(M['paintsky'], (c, BY - 0.72, 10.65), (2.8, 0.06, 1.3)); mb.box(M['paintgrn'], (c, BY - 0.72, 9.75), (2.8, 0.06, 0.6))
+        for j in range(3): mb.ell(M['paintdk'], (c - 0.9 + j * 0.9 + rp.uniform(-0.2, 0.2), BY - 0.76, 10.0), (0.22, 0.03, 0.34 + 0.1 * j), (8, 6))
+        mb.ell(M['paintgrn'], (c + rp.uniform(-0.6, 0.6), BY - 0.76, 9.8), (0.9, 0.03, 0.3), (10, 6))
     # tiers of desks (semicircle around C, opening toward camera)
     C = (0.0, 7.0)
     for ti, r in enumerate([6.5, 9.0, 11.5, 14.0, 16.5]):
@@ -694,20 +742,21 @@ def build_chamber(P):
     mb.finish()
     # --- front table with telegraph
     mb = MB('table')
-    tx, ty = 0.0, 5.6
-    mb.box(M['walnut'], (tx, ty, 0.9), (3.0, 1.3, 0.1)); mb.box(M['baize'], (tx, ty, 0.955), (2.8, 1.1, 0.012)); mb.box(M['gold'], (tx, ty - 0.66, 0.9), (3.0, 0.03, 0.07))
-    for sx in (-1.35, 1.35):
-        for sy in (-0.55, 0.55): mb.rod(M['walnut'], (tx + sx, ty + sy, 0.0), (tx + sx, ty + sy, 0.86), 0.09, 0.06, 8, smooth=True)
-    mb.box(M['walnut'], (tx, ty, 0.35), (2.7, 0.08, 0.1))
-    telegraph(mb, M, (tx - 0.3, ty + 0.05, 0.96), 2.5)
-    mb.box(M['paper'], (tx + 1.15, ty - 0.2, 0.99), (0.4, 0.55, 0.06), rz=0.2); mb.box(M['paper'], (tx + 1.1, ty - 0.18, 1.04), (0.38, 0.5, 0.05), rz=0.35)
-    mb.cyl(M['ink'], (tx + 1.0, ty + 0.3, 0.99), 0.05, 0.08, 'z', 10); mb.cyl(M['brass'], (tx + 1.0, ty + 0.3, 1.04), 0.055, 0.015, 'z', 10); mb.rod(M['paper'], (tx + 1.0, ty + 0.3, 1.04), (tx + 1.1, ty + 0.38, 1.28), 0.007, 0.003, 4)
-    mb.cyl(M['gold'], (tx - 1.1, ty - 0.2, 1.05), 0.1, 0.22, 'z', 10); mb.cyl(M['cream'], (tx - 1.1, ty - 0.2, 1.25), 0.03, 0.2, 'z', 8); mb.ell(M['flame'], (tx - 1.1, ty - 0.2, 1.38), (0.025, 0.025, 0.06), (6, 4))   # candlestick
+    tx, ty = 0.0, 4.2
+    TW = 4.8
+    mb.box(M['walnut'], (tx, ty, 0.9), (TW, 1.7, 0.1)); mb.box(M['baize'], (tx, ty, 0.955), (TW - 0.2, 1.5, 0.012)); mb.box(M['gold'], (tx, ty - 0.86, 0.9), (TW, 0.03, 0.07))
+    for sx in (-TW / 2 + 0.2, TW / 2 - 0.2):
+        for sy in (-0.7, 0.7): mb.rod(M['walnut'], (tx + sx, ty + sy, 0.0), (tx + sx, ty + sy, 0.86), 0.09, 0.06, 8, smooth=True)
+    mb.box(M['walnut'], (tx, ty, 0.35), (TW - 0.4, 0.08, 0.1))
+    telegraph(mb, M, (tx - 0.35, ty + 0.1, 0.96), 3.5)
+    mb.box(M['paper'], (tx + 2.0, ty - 0.2, 0.99), (0.5, 0.65, 0.06), rz=0.2); mb.box(M['paper'], (tx + 1.95, ty - 0.18, 1.04), (0.46, 0.6, 0.05), rz=0.35)
+    mb.cyl(M['ink'], (tx + 1.8, ty + 0.5, 0.99), 0.06, 0.1, 'z', 10); mb.cyl(M['brass'], (tx + 1.8, ty + 0.5, 1.05), 0.065, 0.02, 'z', 10); mb.rod(M['paper'], (tx + 1.8, ty + 0.5, 1.05), (tx + 1.95, ty + 0.62, 1.4), 0.008, 0.003, 4)
+    mb.cyl(M['gold'], (tx - 2.0, ty - 0.2, 1.05), 0.1, 0.22, 'z', 10); mb.cyl(M['cream'], (tx - 2.0, ty - 0.2, 1.25), 0.03, 0.2, 'z', 8); mb.ell(M['flame'], (tx - 2.0, ty - 0.2, 1.38), (0.025, 0.025, 0.06), (6, 4))   # candlestick
     # coiled wire entering table from the floor
     for k in range(7): mb.cyl(M['wiremat'], (tx - 1.9, ty + 0.2, 0.05 + k * 0.045), 0.3, 0.03, 'z', 16) if False else None
     mb.rod(M['wiremat'], (tx - 0.7, ty + 0.5, 0.97), (tx - 1.4, ty + 0.8, 0.5), 0.015, 0.015, 5); mb.rod(M['wiremat'], (tx - 1.4, ty + 0.8, 0.5), (tx - 2.2, ty + 1.3, 0.02), 0.015, 0.015, 5)
     # two lone chairs flanking the table
-    for sx in (-2.2, 2.2):
+    for sx in (-3.4, 3.4):
         mb.box(M['leather'], (tx + sx, ty - 0.2, 0.5), (0.55, 0.5, 0.07)); mb.box(M['walnut'], (tx + sx, ty + 0.05, 0.9), (0.55, 0.06, 0.8))
         for dx in (-0.25, 0.25):
             for dy in (-0.4, 0.0): mb.rod(M['walnut'], (tx + sx + dx, ty + dy, 0.0), (tx + sx + dx, ty + dy, 0.46), 0.03, 0.025, 5)
@@ -734,7 +783,11 @@ def sky_world(P):
     for pos, col in stops[1:-1]:
         e = cr.color_ramp.elements.new(pos); e.color = hexc(col)
     cr.color_ramp.elements[-1].position = stops[-1][0]; cr.color_ramp.elements[-1].color = hexc(stops[-1][1])
-    bg.inputs['Strength'].default_value = P['sky_k']; L(cr.outputs[0], bg.inputs['Color']); L(bg.outputs[0], out.inputs['Surface'])
+    bg.inputs['Strength'].default_value = P['sky_k']; L(cr.outputs[0], bg.inputs['Color'])
+    if P.get('amb'):     # non-camera rays (lighting) see a flat blue-violet sky ambient; camera rays see the painted sky gradient
+        lp = N('ShaderNodeLightPath'); b2 = N('ShaderNodeBackground'); b2.inputs['Color'].default_value = hexc(P['amb'][0]); b2.inputs['Strength'].default_value = P['amb'][1]
+        mx = N('ShaderNodeMixShader'); L(lp.outputs['Is Camera Ray'], mx.inputs[0]); L(b2.outputs[0], mx.inputs[1]); L(bg.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface'])
+    else: L(bg.outputs[0], out.inputs['Surface'])
 
 # ------------------------------------------------------------------ presets
 def kdir(az, el):
@@ -743,47 +796,36 @@ def kdir(az, el):
 
 PRESETS = {
  'line': dict(
-    sky=[(0.0, '#7a86d6'), (0.45, '#f0bc88'), (0.5, '#f8d9a2'), (0.56, '#e8d8c0'), (0.66, '#9cbcec'), (0.82, '#4a7adc'), (1.0, '#2f52c4')], sky_k=1.0,
-    key=(1.0, 0.78, 0.52, 6.8), key_dir=kdir(-105, 20), cshadow=[(-5, -1, 10, 10), (-13, 18, 8, 12), (16, 22, 9, 15), (26, 52, 16, 12), (-18, 58, 12, 12)], sun_angle=1.0, exposure=0.05, dome=(0.40, 0.46, 1.0, 300000, 500), shade_mode='sun', shade=(0.52, 0.50, 1.0, 40, 0.14, 0.95), bottle_s=2.4, sag=0.55, wire_r=0.03,
-    hills=[(250, 8, 16, '#9090cc'), (310, 20, 28, '#8498d4'), (380, 34, 30, '#7e9ed2')], hill_k=1.0,
-    cloud=('#fff0dc', '#a8a4dc'), cloud_k=1.0, cloud_z=(40, 130), ncloud=14, cloud_scale=0.5,
-    g1='#c8a850', g2='#9aa046', g3='#b88a48', gsize=500, wagon=(-0.9, 3.6), lfence=True, fgprop=(-1.7, -2.6, 0.0), loco_y=26.0,
-    cam=dict(loc=(-0.2, -6.0, 1.9), look=(2.0, 30.0, 2.9), lens=22), samples=96),
+    sky=[(0.0, '#7a86d6'), (0.45, '#f0bc88'), (0.5, '#f8d9a2'), (0.56, '#e8d8c0'), (0.66, '#9cbcec'), (0.82, '#4a7adc'), (1.0, '#2f52c4')], sky_k=0.85,
+    key=(1.0, 0.85, 0.63, 14.0), key_dir=kdir(150, 24), sun_angle=1.0, exposure=0.0, sat=1.08, bottle_s=2.2, sag=0.55, wire_r=0.03,
+    amb=('#4454FF', 2.2),
+    hills=[(250, 8, 16, '#9a9ad2'), (310, 20, 28, '#8aa0d8'), (380, 34, 30, '#7ea4d6')], hill_k=1.0,
+    cloud=('#ffeacc', '#7c84d8'), cloud_diffuse=True, cloud_z=(40, 130), ncloud=14, cloud_scale=0.5,
+    g1='#c4a244', g2='#8aa83a', g3='#b07a38', gsize=500, wagon=(1.9, 6.5), lfence=True, fgprop=(-2.0, -3.3, 0.0), loco_y=22.0, tx=-9.5,
+    cam=dict(loc=(-0.2, -6.0, 1.9), look=(1.6, 30.0, 2.9), lens=22), samples=96),
  'chamber': dict(
     sky=[(0.0, '#7a86d6'), (0.45, '#f4c890'), (0.5, '#fbe0aa'), (0.56, '#f4e4c4'), (0.66, '#a8c6f0'), (0.82, '#5a86e4'), (1.0, '#3a5acc')], sky_k=1.0,
-    key=(1.0, 0.8, 0.52, 5.0), key_dir=kdir(24, 36), sun_angle=1.0, exposure=0.0, sat=1.1, shade_mode='lum', shade=(0.46, 0.44, 1.0, 44, 0.05, 0.93),
-    hills=[(250, 8, 16, '#9090cc'), (310, 20, 28, '#8498d4')], hill_k=1.0, cloud=('#fff0dc', '#a8a4dc'), cloud_z=(40, 80), ncloud=6,
-    g1='#a8a050', g2='#c8a858', g3='#a08048', gsize=500, fill=(0.55, 0.58, 1.0, 22000), cam=dict(loc=(0.0, -0.5, 2.6), look=(0.0, 15.0, 0.9), lens=22), samples=110),
+    key=(1.0, 0.85, 0.63, 9.0), key_dir=kdir(-22, 15), sun_angle=1.0, exposure=0.0, sat=1.08,
+    hills=[(250, 8, 16, '#9a9ad2'), (310, 20, 28, '#8aa0d8')], hill_k=1.0, cloud=('#fff0dc', '#a8a4dc'), cloud_z=(40, 80), ncloud=6, cloud_diffuse=True,
+    g1='#a8a050', g2='#c8a858', g3='#a08048', gsize=500, fill=(0.02, 0.21, 1.0, 17000), dbounce=1, cam=dict(loc=(0.0, -2.6, 2.6), look=(0.0, 15.0, 1.5), lens=22), samples=110),
  'close': dict(
-    sky=[(0.0, '#4a56b4'), (0.45, '#e8a67c'), (0.5, '#f6c88c'), (0.58, '#7a86c8'), (0.74, '#3a4a9e'), (1.0, '#222f80')], sky_k=1.35,
-    key=(1.0, 0.72, 0.44, 5.0), key_dir=kdir(2, 30), cshadow=[(2, 0, 10, 14), (14, 14, 10, 16), (-12, 12, 8, 12)], sun_angle=0.8, exposure=-0.05, dome=(0.40, 0.46, 1.0, 300000, 500), shade_mode='sun', shade=(0.52, 0.50, 1.0, 40, 0.14, 0.95), bottle_s=3.4, sag=0.5, wire_r=0.035, drops=0.8, sunDisc=8,
-    hills=[(250, 8, 16, '#6a6aa8'), (310, 20, 28, '#5e72b4'), (380, 34, 30, '#5a80bc')], hill_k=0.9,
-    cloud=('#ffe2bc', '#8a8ed0'), cloud_k=1.0, cloud_z=(60, 460), ncloud=17, cloud_seed=3, cloud_scale=0.8,
-    g1='#a89640', g2='#7a8a3c', g3='#9a7a44', gsize=500, grough=0.35, gspec=0.45, wagon=(-3.2, 14.0), loco_y=40.0, lfence=True,
-    cam=dict(loc=(2.3, 0.8, 1.0), look=(4.0, 4.4, 3.6), lens=22), samples=120),
+    sky=[(0.0, '#4a62c0'), (0.45, '#f0b080'), (0.5, '#f8d098'), (0.58, '#8a98d0'), (0.74, '#4a64c0'), (1.0, '#2a3fa8')], sky_k=1.0,
+    key=(1.0, 0.85, 0.63, 9.0), key_dir=kdir(-125, 24), sun_angle=0.8, exposure=0.0, sat=1.08, amb=('#6064FF', 2.2), bottle_s=2.3, pole_h=4.8, sag=0.45, wire_r=0.03, drops=0.9,
+    hills=[(250, 8, 16, '#8a8ac8'), (310, 20, 28, '#7a96d2'), (380, 34, 30, '#7aa0d4')], hill_k=0.95,
+    cloud=('#ffe2bc', '#6c78d4'), cloud_diffuse=True, cloud_z=(60, 460), ncloud=17, cloud_seed=3, cloud_scale=0.8,
+    g1='#a89640', g2='#7a9a3c', g3='#9a7a44', gsize=500, grough=0.35, gspec=0.45, wagon=(-3.2, 14.0), loco_y=40.0, lfence=True, tx=-12.0,
+    cam=dict(loc=(2.9, 1.9, 1.0), look=(4.1, 4.0, 2.7), lens=22), samples=120),
 }
 
-def cloud_shadows(P):
-    """invisible-to-camera flat blobs high above that only cast shadows (cloud shadows on the land)"""
-    kd = Vector(P['key_dir']).normalized(); sd = -kd; z = 40.0
-    for i, (tx, ty, rx, ry) in enumerate(P.get('cshadow', [])):
-        c = Vector((tx, ty, 0.0)) + sd * (z / sd.z)
-        me = bpy.data.meshes.new('cs%d' % i); bm = bmesh.new(); bmesh.ops.create_uvsphere(bm, u_segments=20, v_segments=10, radius=1.0); bm.to_mesh(me); bm.free()
-        ob = bpy.data.objects.new('cs%d' % i, me); ob.location = c; ob.scale = (rx, ry * 1.0, 3.0); ob.rotation_euler = (0, 0, math.radians(-14))
-        bpy.context.scene.collection.objects.link(ob); ob.visible_camera = False
-
 def lights(P, mode):
-    cloud_shadows(P)
     sc = bpy.context.scene; k = P['key']; kd = Vector(P['key_dir']).normalized()
     d = bpy.data.lights.new('key', 'SUN'); d.color = k[:3]; d.energy = k[3]; d.angle = math.radians(P['sun_angle'])
     o = bpy.data.objects.new('key', d); sc.collection.objects.link(o); o.rotation_euler = (-kd).to_track_quat('Z', 'Y').to_euler()
     if mode == 'chamber':
         l = bpy.data.lights.new('fill', 'AREA'); l.shape = 'RECTANGLE'; l.size = 36; l.size_y = 36; l.color = P['fill'][:3]; l.energy = P['fill'][3]
         ob = bpy.data.objects.new('fill', l); ob.location = (0, 13, 12.2); sc.collection.objects.link(ob); ob.visible_camera = False       # points down (-Z) by default
-        l2 = bpy.data.lights.new('warm', 'POINT'); l2.color = (1.0, 0.7, 0.4); l2.energy = 900; l2.shadow_soft_size = 0.5
-        ob2 = bpy.data.objects.new('warm', l2); ob2.location = (0, 17, 8.0); sc.collection.objects.link(ob2)
-        l3 = bpy.data.lights.new('bounce', 'AREA'); l3.shape = 'RECTANGLE'; l3.size = 30; l3.size_y = 10; l3.color = (1.0, 0.72, 0.45); l3.energy = 1800
-        ob3 = bpy.data.objects.new('bounce', l3); ob3.location = (0, 26, 6); ob3.rotation_euler = (math.radians(-110), 0, 0) if False else (math.radians(70), 0, 0); sc.collection.objects.link(ob3); ob3.visible_camera = False
+        l4 = bpy.data.lights.new('fillup', 'AREA'); l4.shape = 'RECTANGLE'; l4.size = 36; l4.size_y = 36; l4.color = P['fill'][:3]; l4.energy = P['fill'][3] * 0.16
+        ob4 = bpy.data.objects.new('fillup', l4); ob4.location = (0, 13, 1.2); ob4.rotation_euler = (math.pi, 0, 0); sc.collection.objects.link(ob4); ob4.visible_camera = False
     if mode != 'chamber' and P.get('dome'):
         dm = P['dome']; l = bpy.data.lights.new('dome', 'AREA'); l.shape = 'SQUARE'; l.size = dm[4]; l.color = dm[:3]; l.energy = dm[3]
         ob = bpy.data.objects.new('dome', l); ob.location = (0, 100, 200); sc.collection.objects.link(ob); ob.visible_camera = False
@@ -796,25 +838,8 @@ def setup_camera(P):
     ob = bpy.data.objects.new('cam', cd); sc.collection.objects.link(ob); ob.location = c['loc']
     ob.rotation_euler = (Vector(c['look']) - Vector(c['loc'])).to_track_quat('-Z', 'Y').to_euler(); sc.camera = ob
 
-def grade(a, P, mask=None):
-    """saturation, then violet-blue shade tint (luminance preserved) where shade. mask from a sun-off render ('sun' mode) or a luminance percentile ('lum' mode)."""
-    g = a.mean(-1, keepdims=True); a = np.clip(g + (a - g) * P.get('sat', 1.12), 0, 1)
-    sh = P.get('shade')
-    if sh:       # sh = (r, g, b, percentile of luminance (lum mode), soft edge, strength)
-        t = np.array(sh[:3], dtype=np.float32); t = t / (0.3 * t[0] + 0.59 * t[1] + 0.11 * t[2])
-        lum = (0.3 * a[..., 0] + 0.59 * a[..., 1] + 0.11 * a[..., 2])[..., None]
-        if mask is None:
-            p = float(np.percentile(lum, sh[3])); e = sh[4]; u = np.clip((p + e - lum) / (2 * e), 0, 1); w = u * u * (3 - 2 * u)
-        else: w = mask
-        w = w * sh[5]
-        # shade colour: hue pulled to ~248 but keeping a third of the original hue spread, original sat softened; luminance preserved
-        hsv = np.asarray(Image.fromarray((a * 255 + 0.5).astype(np.uint8)).convert('HSV'), dtype=np.float32) / 255.0
-        h0 = hsv[..., 0] * 360.0; hn = (248.0 + (((h0 - 40.0) + 180.0) % 360.0 - 180.0) * 0.28) % 360.0
-        sn = np.clip(0.22 + 0.45 * hsv[..., 1], 0, 0.75); hs = np.stack([hn / 360.0, sn, hsv[..., 2]], -1)
-        sh_img = np.asarray(Image.fromarray((hs * 255 + 0.5).astype(np.uint8), 'HSV').convert('RGB'), dtype=np.float32) / 255.0
-        ls = (0.3 * sh_img[..., 0] + 0.59 * sh_img[..., 1] + 0.11 * sh_img[..., 2])[..., None]; sh_img = np.clip(sh_img * (lum / np.maximum(ls, 1e-3)), 0, 1)
-        a = np.clip(a * (1 - w) + sh_img * w, 0, 1)
-    return a
+def grade(a, P):
+    g = a.mean(-1, keepdims=True); return np.clip(g + (a - g) * P.get('sat', 1.08), 0, 1)
 
 def _rd(sc, path, samples, denoise, transp=False):
     cy = sc.cycles; cy.samples = samples; cy.use_denoising = denoise; sc.render.film_transparent = transp
@@ -824,35 +849,35 @@ def _rd(sc, path, samples, denoise, transp=False):
 def render(mode, out, samples, draft):
     sc = bpy.context.scene; P = PRESETS[mode]
     sc.render.engine = 'CYCLES'; cy = sc.cycles; cy.device = 'CPU'; cy.use_denoising = True; cy.denoiser = 'OPENIMAGEDENOISE'
-    cy.denoising_input_passes = 'RGB_ALBEDO_NORMAL'; cy.max_bounces = 4; cy.diffuse_bounces = 3; cy.glossy_bounces = 2; cy.transmission_bounces = 0; cy.transparent_max_bounces = 6
+    cy.denoising_input_passes = 'RGB_ALBEDO_NORMAL'; cy.max_bounces = 3; cy.diffuse_bounces = P.get('dbounce', 0); cy.glossy_bounces = 1; cy.transmission_bounces = 0; cy.transparent_max_bounces = 6
     cy.use_light_tree = True; cy.filter_width = 1.2; sc.render.threads = 4
     sc.render.resolution_x = W // (2 if draft else 1); sc.render.resolution_y = H // (2 if draft else 1); sc.render.resolution_percentage = 100
     sc.view_settings.view_transform = 'Standard'; sc.view_settings.look = 'None'; sc.view_settings.exposure = P.get('exposure', 0.0)
     sc.render.image_settings.file_format = 'PNG'; sc.render.image_settings.color_mode = 'RGBA'
     A = _rd(sc, out + '_A.png', samples, True)[..., :3]
-    mask = None
-    if P.get('shade_mode') == 'sun':
-        # D: direct-sun-only mask (white override material, no bounces, no world/fill) -> lit by sun vs shade; C: emission-only + alpha (excludes sky, clouds, hills, glass glow)
-        others = [(l, l.energy) for l in bpy.data.lights if l.name != 'key']
-        for l, e in others: l.energy = 0.0
-        wbg = bpy.data.worlds['sky'].node_tree.nodes['Background'].inputs['Strength']; wv = wbg.default_value; wbg.default_value = 0.0
-        wm = bpy.data.materials.new('ovr'); wm.use_nodes = True; bs = wm.node_tree.nodes['Principled BSDF']; bs.inputs['Base Color'].default_value = (1, 1, 1, 1); bs.inputs['Roughness'].default_value = 1.0
-        bs.inputs['Specular IOR Level'].default_value = 0.0
-        cy.use_denoising = False; mb0 = cy.max_bounces; cy.max_bounces = 0; cy.diffuse_bounces = 0; cy.glossy_bounces = 0
-        bpy.context.view_layer.material_override = wm
-        D = _rd(sc, out + "_D.png", 24, False)[..., :3]
-        bpy.context.view_layer.material_override = None
-        ks = bpy.data.lights['key'].energy; bpy.data.lights['key'].energy = 0.0
-        C = _rd(sc, out + '_C.png', 4, False, True)
-        bpy.data.lights['key'].energy = ks; wbg.default_value = wv
-        for l, e in others: l.energy = e
-        lD = 0.3 * D[..., 0] + 0.59 * D[..., 1] + 0.11 * D[..., 2]
-        di = Image.fromarray((np.clip(lD * 2.0, 0, 1) * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(1.0)); lD = np.asarray(di, dtype=np.float32) / 255.0
-        lC = 0.3 * C[..., 0] + 0.59 * C[..., 1] + 0.11 * C[..., 2]; excl = ((lC > 0.1) | (C[..., 3] < 0.5)).astype(np.float32)
-        ei = Image.fromarray((excl * 255).astype(np.uint8)).filter(ImageFilter.MedianFilter(5)).filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.GaussianBlur(0.7)); excl = np.asarray(ei, dtype=np.float32) / 255.0
-        u = np.clip((0.22 - lD) / 0.16, 0, 1); mask = (u * u * (3 - 2 * u) * (1 - excl))[..., None]
-        if os.environ.get('SB_DEBUG'): Image.fromarray((np.clip(C[..., :3], 0, 1) * 255).astype(np.uint8)).save(out + '_C.png'); Image.fromarray((mask[..., 0] * 255).astype(np.uint8)).save(out + '_mask.png')
-    a = grade(A, P, mask)
+    # shade mask (for the hue check only, NOT used for grading): direct-sun-only render with a white override material, no bounces,
+    # sky / clouds / hills / sun disc / shafts hidden (alpha 0). Shade = not sky and sun contribution ~ 0.
+    others = [(l, l.energy) for l in bpy.data.lights if l.name != 'key']
+    for l, e in others: l.energy = 0.0
+    wbgs = [n for n in bpy.data.worlds['sky'].node_tree.nodes if n.bl_idname == 'ShaderNodeBackground']; wvs = [n.inputs['Strength'].default_value for n in wbgs]
+    for n in wbgs: n.inputs['Strength'].default_value = 0.0
+    hid = [o for o in bpy.data.objects if o.name.startswith(('hills', 'clouds', 'sun_', 'shafts'))]
+    for o in hid: o.hide_render = True
+    wm = bpy.data.materials.new('ovr'); wm.use_nodes = True; bs = wm.node_tree.nodes['Principled BSDF']; bs.inputs['Base Color'].default_value = (1, 1, 1, 1)
+    bs.inputs['Roughness'].default_value = 1.0; bs.inputs['Specular IOR Level'].default_value = 0.0
+    cy.max_bounces = 0; cy.diffuse_bounces = 0; cy.glossy_bounces = 0; bpy.context.view_layer.material_override = wm
+    D = _rd(sc, out + '_D.png', 24, False, True)
+    bpy.context.view_layer.material_override = None
+    lD = 0.3 * D[..., 0] + 0.59 * D[..., 1] + 0.11 * D[..., 2]
+    # D2: same but nothing casts shadows -> where D2 is lit but D is dark, the sun is truly blocked (a real cast shadow, not just a surface turned away)
+    vs = [(o, o.visible_shadow) for o in bpy.data.objects if o.type == 'MESH']
+    for o, _ in vs: o.visible_shadow = False
+    D2 = _rd(sc, out + '_D2.png', 8, False, True)
+    for o, v in vs: o.visible_shadow = v
+    lD2 = 0.3 * D2[..., 0] + 0.59 * D2[..., 1] + 0.11 * D2[..., 2]
+    cast = (D[..., 3] > 0.99) & (lD < 0.02) & (lD2 > 0.08)
+    Image.fromarray((cast * 255).astype(np.uint8)).filter(ImageFilter.MinFilter(3)).save(out + '_shade.png')
+    a = grade(A, P)
     Image.fromarray((a * 255 + 0.5).astype(np.uint8)).save(out + '.jpg', quality=93)
 
 NAMES = {'line': 'sb1_line_wide', 'chamber': 'sb2_chamber', 'close': 'sb3_bottle_close'}
