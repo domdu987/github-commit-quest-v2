@@ -13,3 +13,9 @@
 - 3. Shadows: the large loose dark blotches were the cards' own cast shadows: cards no longer cast (visible_shadow False); the contact ellipse is placed at each card's foot and moves with it (at 720 px it is mostly hidden by the foreground grass); the hard yellow patch of v1 is gone with the new camera.
 - Also: the thick set wire passed 1 m from the lens and crossed the herd's faces, so the wire is hidden in this shot; bees reduced (0.22 burst).
 - Weak: sky is about 38 % (horizon at ~38-40 % of the frame), not the 30 % asked; ground in the lower half is plain soil with footprints and grass; the herd is a tight overlapping clump of dark cards; the contact ellipses are hard to see under the grass. I could not verify luma at the final frames beyond the v1 figure (elephants 54 vs soil ~67).
+
+## v3 (director recheck: moonwalk, patches)
+- Moonwalk: the running cards are no longer mirrored (MIRROR25 = False), so the elephants face the direction the clump travels on screen (right and into depth), matching shot 24's right-facing matriarch; tails/rumps lead on the left. Max frame diff 4.3, median 2.9.
+- Patches: the hard-edged flat rectangles were the edges of the dust strip cards (paint window clipped at +-7.5 m round the lead elephant, with the spray thrown AHEAD of the herd). Strips are now +-14 m wide, the spray drifts BEHIND the runners (dirx +1), both dust cards sit behind their elephant, and streak/wisp alpha is lower (95/85): no card edge in the picture and the rear elephants are no longer drawn through. A few faint streaks still cross the rear elephants' bodies (they read as dust, not as see-through).
+- Drafts of g1690, 1720, 1750 checked before the final render (by me, at 540x370 crops).
+- Everything else as v2 (herd already running at g1672, runs into depth, thick wire hidden, card shadows off).

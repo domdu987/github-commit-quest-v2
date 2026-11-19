@@ -21,5 +21,5 @@
  ],
  "parts": "take.mkv.part* (cat to restore take.mkv)",
  "note": "shot 25 redo (third attempt): team 5 camera/set/herd, team 3 sprite grading + contact shadows; hard-swap turn behind dust; herd leaves the frame; streak dust",
- "revision": "v2: herd already running at g1672 (no on-screen turn), runs into depth away from fence+camera, card shadows off, wire hidden"
+ "revision": "v3: cards face the direction of travel, dust behind/softer with wide cards (no card edges)"
 }
