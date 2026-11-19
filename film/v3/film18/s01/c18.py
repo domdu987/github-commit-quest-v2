@@ -42,8 +42,16 @@ def card_ox(state, view, gait, phase, flame, blades, reed=0, coat=1.0):
     f = cast.ox_figure(state=state, view=view, gait=gait, phase=(phase if gait != 'stand' else 0) / 8.0, flame=flame, blades=blades, reed=(True if reed else None), coat=coat, uid='c%s' % name[:6])
     m = CD._write(f['svg'], f['bbox'], 0.0, CD.PXD_O, name); m['kind'] = 'ox'; json.dump(m, open(mp, 'w')); return m
 
-def person_card(role, pose, pos, camloc, i=0, h=None, bob=0.0, roll=0.0, sx=1.0, sz=1.0, mirror=False, tint=None, k=None, yaw_off=0.0):
-    p = V(pos); meta = CD.card('person', pose=pose); h = h or HEIGHT.get(role, 3.0); sc = h / meta['height']
+def card_person_mod(pose, **mods):
+    key = 'pmod_%s_%s' % (pose, sorted(mods.items())); name = hashlib.md5(key.encode()).hexdigest()[:10] + '_pmod'
+    mp = os.path.join(CD.CARDS, name + '.json')
+    if os.path.exists(mp) and os.path.exists(os.path.join(CD.CARDS, name + '.png')): return json.load(open(mp))
+    cast, P = CD._cast(); c, ps = cast.STORY18[pose]; ps = dict(ps); ps.update(mods); f = P.figure(c, ps, 'p%s' % name[:6]); a = f['anchors']
+    m = CD._write(f['svg'], f['bbox'], f['feet_y'], CD.PXD_P, name); m['kind'] = 'person'; m['height'] = f['feet_y'] - a['head_top'][1]; m['x0'] = f['bbox'][0] - 4.0 / CD.PXD_P
+    json.dump(m, open(mp, 'w')); return m
+
+def person_card(role, pose, pos, camloc, i=0, h=None, bob=0.0, roll=0.0, sx=1.0, sz=1.0, mirror=False, tint=None, k=None, yaw_off=0.0, mods=None):
+    p = V(pos); meta = card_person_mod(pose, **mods) if mods else CD.card('person', pose=pose); h = h or HEIGHT.get(role, 3.0); sc = h / meta['height']
     d = camloc - p; yaw = math.degrees(math.atan2(d.x, -d.y)) + yaw_off
     ob = R2.put_card(meta, (p.x, p.y, p.z + bob), yaw, sc, mirror=mirror, name='%s%d' % (role, i), tint=tint, k=k, sw=0.9 * h / 3.0)
     ob.rotation_euler = (0, math.radians(roll), math.radians(yaw)); ob.scale = ((-1.0 if mirror else 1.0) * sx, 1.0, sz)
