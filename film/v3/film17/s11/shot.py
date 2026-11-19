@@ -88,19 +88,19 @@ def pose_dup(g):
     if SHOT == 27:
         cast, p = cast17.STORY17['dupont_innocent']; p = dict(p); p['yaw'] = lerp(0.0, -0.65, u_(g, 1520, 1534))
         p['expr'] = 'worried'; p.update(idle(g, 1.7)); p['blink'] = blink(g, 29); return p
-    base = 'dupont_sweating' if g < 1602 else 'dupont_caught'
+    base = 'dupont_sweating' if g < 1607 else 'dupont_caught'
     cast, p = cast17.STORY17[base]; p = dict(p); p['seat17'] = None; p['yaw'] = -0.1
-    if g >= 1602: p['head_dy'] = -0.03 * u_(g, 1602, 1610)
-    p['head_roll'] = 2.0 * math.sin(g * 0.15) if g < 1602 else 1.0 * math.sin(g * 0.3)
-    p['blink'] = blink(g, 29) if g < 1600 else 0; return p
+    if g >= 1607: p['head_dy'] = -0.03 * u_(g, 1607, 1615)
+    p['head_roll'] = 2.0 * math.sin(g * 0.15) if g < 1607 else 1.0 * math.sin(g * 0.3)
+    p['blink'] = blink(g, 29) if g < 1604 else 0; return p
 
 def pose_ins(g):
-    if g < 1614:
+    if g < 1607:
         cast, p = cast17.STORY17['inspector_arms_crossed']; p = dict(p); p['expr'] = 'smirk'
     else:
         cast, p = cast17.STORY17['inspector_shocked']; p = dict(p); p['mouth'] = 'flat'; p['head_dy'] = 0.05 * u_(g, 1614, 1622)
         p['fx'] = ['sweat'] if g > 1650 else []
-    p['seat17'] = None; p['yaw'] = 0.2; p.update(idle(g, 2.9)); p['blink'] = blink(g, 3) if g < 1612 else 0; return p
+    p['seat17'] = None; p['yaw'] = 0.2; p.update(idle(g, 2.9)); p['blink'] = blink(g, 3) if g < 1604 else 0; return p
 
 if SHOT == 27:
     bert = put('bert', 'bertillon', (0.42, 1.70)); dup = put('dup', 'dupont', (-0.30, 1.75))
