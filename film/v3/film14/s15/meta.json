@@ -3,14 +3,12 @@
  "shots": [
   15,
   16,
-  17,
-  18,
-  19
+  17
  ],
  "g0": 1001,
- "g1": 1306,
+ "g1": 1166,
  "first_g": 995,
- "n_frames": 318,
+ "n_frames": 179,
  "transition_in": {
   "type": "cut",
   "frames": 0
@@ -18,9 +16,7 @@
  "shot_starts": {
   "15": 1001,
   "16": 1062,
-  "17": 1127,
-  "18": 1168,
-  "19": 1226
+  "17": 1127
  },
  "fps": 30,
  "size": [
@@ -28,14 +24,5 @@
   1280
  ],
  "samples": 24,
- "wire_t_at_g1307": 0.1,
- "wire_note": "set_wire_push(t, point=24.25): t ramps 0 -> 0.10 (max bow 1.49 m at the push point) over g1246..1307 (slow lean, remapped); handle frames g1307+ continue real clock t=0.10+(g-1307)/150. Bees asleep (set_bees -1) throughout; team 4 (s20) continues from t=0.10 at g1307.",
- "lip_sync": {
-  "shot": 18,
-  "window_g": [
-   1174,
-   1227
-  ],
-  "note": "uncle mouth = talk_mouth(g) only inside; flat before"
- }
+ "note": "v2. Shots 18-19 are NOT in this take (rendered by team 6 as take s18 from these scripts: shot.py final 18 1168:1225 / final 19 1226:1312). Handle frames g995-1000 (before) and g1167-1173 (after, shot 17 continues; 1167 is the last in-shot frame)."
 }

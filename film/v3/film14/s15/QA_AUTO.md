@@ -1,6 +1,7 @@
-# QA_AUTO PASS  (take.mkv, 318 frames, 30.00 fps, g 995-1312)
+# QA_AUTO PASS  (take.mkv, 179 frames, 30.00 fps, g 995-1173)
 
 ## Notes
+- planned cuts with no visible change within +-2 frames: g [1062]
 - magenta share 0.0 %
 
 Phone sheet: phone_sheet.jpg (cyan line = caption band y 880). Judge legibility on it.
