@@ -24,79 +24,99 @@ def with_arm(p, key, **kw):
 # ------------------------------------------------------------------ camera paths (world m)
 CAMS = {
  16: [(844, (-0.45, -0.25, 1.50), (1.00, 2.30, 1.28)), (862, (-0.10, 0.10, 1.46), (1.10, 2.30, 1.25)), (874, (0.15, 0.50, 1.44), (1.15, 2.30, 1.24)),
-      (882, (-0.35, 0.65, 1.42), (1.40, 2.20, 1.22)), (899, (0.30, 1.05, 1.40), (1.20, 2.25, 1.20))],
+      (884, (-0.05, 0.75, 1.42), (1.50, 2.30, 1.22)), (899, (0.30, 1.05, 1.40), (1.95, 2.40, 1.20))],
  17: [(900, (0.30, 0.15, 0.50), (1.00, 2.35, 1.50)), (922, (-0.15, 0.30, 0.55), (1.00, 2.35, 1.50)), (930, (-0.25, 0.35, 0.55), (1.00, 2.35, 1.50)),
-      (940, (0.40, 1.30, 0.65), (2.15, 3.30, 0.50)), (947, (0.70, 1.55, 0.65), (2.15, 3.30, 0.50))],
- 18: [(948, (-2.90, -3.90, 1.50), (0.10, 2.40, 1.35)), (966, (-1.60, -3.95, 1.50), (0.50, 2.40, 1.35)), (981, (-0.20, -3.90, 1.45), (0.90, 2.40, 1.35)),
-      (995, (0.60, -3.80, 1.45), (1.00, 2.40, 1.32))],
- 19: [(996, (0.95, -3.40, 3.95), (-0.10, 6.40, 2.0)), (1014, (0.80, -2.30, 3.60), (-0.35, 6.30, 1.95)), (1030, (0.30, -0.90, 3.30), (-0.60, 5.90, 1.9)),
-      (1051, (0.10, 0.60, 3.00), (-0.75, 5.60, 1.85))],
+      (940, (0.95, 1.00, 0.45), (2.05, 3.10, 0.40)), (947, (1.05, 1.30, 0.45), (2.05, 3.10, 0.40))],
+ 18: [(948, (-2.00, -1.60, 1.50), (-0.70, 2.50, 1.40)), (966, (-1.50, -1.00, 1.48), (-0.60, 2.50, 1.40)), (976, (-0.60, -1.70, 1.50), (0.40, 2.00, 1.30)),
+      (984, (-0.10, -2.00, 1.50), (1.00, 1.50, 1.30)), (995, (0.20, -1.90, 1.50), (1.05, 1.40, 1.30))],
+ 19: [(996, (0.55, -2.20, 3.20), (-0.60, 5.00, 1.8)), (1014, (0.45, -1.30, 2.90), (-0.75, 4.80, 1.7)), (1030, (0.20, -0.30, 2.60), (-0.90, 4.30, 1.6)),
+      (1051, (0.10, 0.60, 2.40), (-1.00, 4.00, 1.55))],
 }
+CAM0 = {s: CAMS[s][0][1] for s in CAMS}
+SWAP18 = 976          # sprite swap (measuring -> writing Bertillon) at the peak of the g968-984 snap
+Q_FRONT = (-1.00, 2.55, 1.35)   # drawer q4 front when pulled out
 
 def stage(shot, T):
-    A = T.A; M = A["marks"]
+    A = T.A; M = A["marks"]; c0 = CAM0[shot]
     if shot == 16:
-        T.add("pris", "prisoner_sitting_a", M["chair"][:3], seated="chair")
+        T.add("pris", "prisoner_sitting_a", M["chair"][:3], seated="chair", toward=0.35, cam0=c0)
         T.add("bert", "bertillon_measuring", M["clerk"][:3], mirror=True)
-        T.add("gend", "gendarme_standing_a", (2.55, 3.05, 0.0))
+        T.add("gend", "gendarme_standing_a", (2.70, 2.10, 0.0), mirror=True)
     elif shot == 17:
-        T.add("pris", "prisoner_sitting_a", M["chair"][:3], seated="chair")
+        T.add("pris", "prisoner_sitting_a", M["chair"][:3], seated="chair", toward=0.35, cam0=c0)
         T.add("bert", "bertillon_measuring", (M["clerk"][0], M["clerk"][1], 0.0), mirror=True)
         T.add("foot", "prisoner_standing_c", (2.15, 3.10, 0.0))
-        T.add("bert2", "bertillon_measuring", (1.45, 3.05, 0.0))
+        T.add("bert2", "bertillon_measuring", (1.60, 2.95, 0.0))
     elif shot == 18:
-        T.add("arm", "prisoner_standing_b", M["armspan"][:3])
-        T.add("bert", "bertillon_writing", (1.05, 1.25, 0.0))
-        T.add("pris", "prisoner_sitting_a", M["chair"][:3], seated="chair")
-        T.add("gend", "gendarme_standing_b", M["queue0"][:3])
+        T.add("arm", "prisoner_standing_b", (-1.15, 2.55, 0.0))
+        T.add("bertA", "bertillon_measuring", (-0.35, 2.35, 0.0), mirror=True)
+        T.add("bertB", "bertillon_writing", (1.05, 1.25, 0.0))
+        T.add("pris", "prisoner_sitting_a", M["chair"][:3], seated="chair", toward=0.3, cam0=(0.0, -3.0))
+        T.add("gend", "gendarme_standing_b", (2.3, -0.6, 0.0))
     elif shot == 19:
-        T.add("bert", "bertillon_holding_card", M["desk_clerk"][:3])
-        T.add("gend", "gendarme_standing_a", M["desk_stand"][:3])
+        T.add("bert", "bertillon_holding_card", (-0.30, 2.30, 0.0), mirror=True)
+        T.add("gend", "gendarme_standing_a", (0.55, 3.2, 0.0))
 
 def poses(shot, T, g):
-    B = lambda k, p, **kw: T.pose(k, g, p)
+    B = lambda k, p: T.pose(k, g, p)
     if shot == 16:
-        u = (g - 844) / 55.0
-        bp = P("bertillon_measuring", lean=4 + sway(g, 1.2, .21), pitch=0.12 + 0.1 * sstep((g - 876) / 8.0), blink=blink(g, 10))
-        # calipers: open around the head (g 844..872), then lowered and read (g 872..), nodding
-        bp = with_arm(bp, "arm_r", hand=(0.88 + 0.05 * math.sin(g * .5), 0.34 - 0.06 * math.sin(g * .5)))
-        B("bert", bp)
+        bp = P("bertillon_measuring", lean=4 + sway(g, 1.2, .21), blink=blink(g, 10), pitch=0.12 + 0.1 * sstep((g - 876) / 8.0))
+        tgt = (0.62 + 0.03 * math.sin(g * .4), 2.02, 1.34 + 0.02 * math.sin(g * .5))        # calipers on the prisoner's head
+        B("bert", T.reach("bert", g, bp, tgt, "calipers_l"))
         B("pris", P("prisoner_sitting_a", head_roll=sway(g, 2.5, .13), blink=blink(g, 40), lean=sway(g, 1.0, .2)))
-        B("gend", P("gendarme_standing_a", lean=sway(g, 1.5, .17), head_roll=sway(g, 3, .11), blink=blink(g, 55)))
+        w = S["bertillon_writing"][1]
+        gp = P("gendarme_standing_a", pitch=0.45, gaze=(0.3, 0.9), lean=3 + sway(g, 1.2, .2), blink=blink(g, 55), arm_r=dict(w["arm_r"]), prop_r=dict(w["prop_r"]),
+               arm_l=dict(w["arm_l"]), prop_l=dict(w["prop_l"]))
+        gp["arm_r"]["hand"] = (w["arm_r"]["hand"][0] + 0.04 * math.sin(g * .7), w["arm_r"]["hand"][1] + 0.03 * math.cos(g * .9))   # the pen scribbles
+        B("gend", gp)
     elif shot == 17:
-        bp = P("bertillon_measuring", lean=4 + sway(g, 1.4, .23), blink=blink(g, 20)); bp = with_arm(bp, "arm_r", hand=(0.88, 0.34 + 0.07 * math.sin(g * .55)))
-        B("bert", bp)
+        bp = P("bertillon_measuring", lean=4 + sway(g, 1.4, .23), blink=blink(g, 20))
+        tgt = (0.98, 2.22 + 0.02 * math.sin(g * .5), 0.86 + 0.03 * math.sin(g * .6))       # the caliper jaws close on the prisoner's hand: the finger gauge
+        B("bert", T.reach("bert", g, bp, tgt, "calipers_l"))
         B("pris", P("prisoner_sitting_a", head_roll=sway(g, 2.5, .13), blink=blink(g, 33)))
         B("foot", P("prisoner_standing_c", lean=sway(g, 1.5, .2), head_roll=sway(g, 3, .12), blink=blink(g, 47)))
-        bp2 = P("bertillon_measuring", lean=6 + sway(g, 1.4, .25), pitch=0.6, blink=blink(g, 60)); bp2 = with_arm(bp2, "arm_r", hand=(0.95, 2.7 + 0.07 * math.sin(g * .6)))
-        B("bert2", bp2)
+        bp2 = P("bertillon_measuring", lean=10 + sway(g, 1.4, .25), pitch=0.7, blink=blink(g, 60), legs=dict(preset="step", stride=0.3, crouch=0.35))
+        tf = (2.12 + 0.02 * math.sin(g * .6), 3.05, 0.02)                                    # jaws on the foot, at the foot board
+        B("bert2", T.reach("bert2", g, bp2, tf, "calipers_r"))
+        for k in ("bert", "pris"): T.hide(k, g, g >= 935)            # sprite swap at the peak of the g930-940 snap
+        for k in ("bert2", "foot"): T.hide(k, g, g < 935)
     elif shot == 18:
-        # the prisoner holds both arms out for the arm-span, Bertillon writes
         ap = P("prisoner_standing_b", lean=sway(g, 1.2, .19), head_roll=sway(g, 3, .13), blink=blink(g, 25),
                arm_r=dict(hand=(1.55, 0.55 + 0.03 * math.sin(g * .4)), bend=-0.1, stretch=1.1), arm_l=dict(hand=(-1.55, 0.55 - 0.03 * math.sin(g * .4)), bend=-0.1, stretch=1.1))
         B("arm", ap)
-        B("bert", P("bertillon_writing", lean=5 + sway(g, 1.2, .22), pitch=0.55 + 0.05 * math.sin(g * .3), blink=blink(g, 50)))
+        bp = P("bertillon_measuring", lean=4 + sway(g, 1.3, .23), blink=blink(g, 20))
+        ear = (-1.15 + 0.17 + 0.015 * math.sin(g * .5), 2.5, 1.45 + 0.02 * math.sin(g * .45))   # jaws on the arm-span man's ear
+        B("bertA", T.reach("bertA", g, bp, ear, "calipers_l"))
+        B("bertB", P("bertillon_writing", lean=5 + sway(g, 1.2, .22), pitch=0.55 + 0.05 * math.sin(g * .3), blink=blink(g, 50)))
+        T.hide("bertA", g, g >= SWAP18); T.hide("bertB", g, g < SWAP18)
         B("pris", P("prisoner_sitting_a", head_roll=sway(g, 2.5, .13), blink=blink(g, 33)))
         B("gend", P("gendarme_standing_b", lean=sway(g, 1.5, .17), blink=blink(g, 66)))
     elif shot == 19:
-        # card raised, then slid into the drawer (hand moves to the cabinet wall), drawer closes
-        u = clamp((g - 1008) / 22.0)
+        u = sstep((g - 1008) / 20.0)                         # raise the card to the drawer front
+        v = sstep((g - 1032) / 10.0)                         # slid in: the card is gone
         bp = P("bertillon_holding_card", blink=blink(g, 18), lean=sway(g, 1.4, .2))
+        tgt = (lerp(-0.62, Q_FRONT[0] + 0.02, u), lerp(2.30, Q_FRONT[1], u), lerp(1.62, Q_FRONT[2], u))
+        bp = T.reach("bert", g, bp, tgt, "card_l", arm="r")
+        if v >= 0.99: bp = dict(bp); bp.pop("prop_r", None)
         B("bert", bp)
         B("gend", P("gendarme_standing_a", lean=sway(g, 1.5, .17), blink=blink(g, 40)))
 
 def hooks(shot, T, g):
-    K.set_flicker(1.0, frame=g); K.set_smoke(1.0, frame=g); K.set_dust(1.0, frame=g)
+    K.set_flicker(1.0, frame=g); K.set_smoke(1.0, frame=g); K.set_dust(0.4, frame=g)
     if shot in (16, 17, 18): K.set_pendulum(frame=g)
+    if shot == 16:
+        for o in T.hide_objs: o.hide_render = True
     if shot == 19:
-        # drawers: p-series open one after another, the card drawer slides shut (size drawers fill up)
-        for i, nm in enumerate(["p0", "p1", "p2", "p3", "p4", "p5", "p6", "p7", "q0", "q1", "q2", "q3", "q4", "q5"]):
-            base = {"p0": .9, "p1": .5, "p2": .3, "p3": .7, "p4": .2, "p5": .6, "p6": .4, "p7": .8, "q0": .5, "q1": .8, "q2": .3, "q3": .6, "q4": .9, "q5": .2}[nm]
-            wob = base * (0.55 + 0.45 * sstep((g - 996) / 20.0 - i * 0.06)) if i % 2 else base
-            K.set_drawer(nm, clamp(wob + 0.04 * math.sin(g * .2 + i)), frame=g)
+        names = ["p0", "p1", "p2", "p3", "p4", "p5", "p6", "p7", "q0", "q1", "q2", "q3", "q5"]
+        base = {"p0": .9, "p1": .5, "p2": .3, "p3": .7, "p4": .2, "p5": .6, "p6": .4, "p7": .8, "q0": .5, "q1": .8, "q2": .3, "q3": .6, "q5": .2}
+        for i, nm in enumerate(names):
+            K.set_drawer(nm, clamp(base[nm] * (0.6 + 0.4 * sstep((g - 996) / 30.0 - i * 0.05)) + 0.03 * math.sin(g * .2 + i)), frame=g)
+        K.set_drawer("q4", 0.8 * sstep((g - 1000) / 14.0) * (1 - sstep((g - 1034) / 14.0)) + 0.0, frame=g)   # the size drawer opens, takes the card, shuts
 
 def run(shot, gs, scale, samples, out, do_render, threads=2):
     T = C.Rig(PRESET[shot])
+    import bpy
+    T.hide_objs = [bpy.data.objects[n] for n in ('measure_cloth',) if n in bpy.data.objects]
     stage(shot, T)
     path = C.Path(CAMS[shot])
     K.clear_keys() if hasattr(K, "clear_keys") else None

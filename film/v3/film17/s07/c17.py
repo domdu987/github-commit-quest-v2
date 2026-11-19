@@ -50,7 +50,7 @@ class Rig:
         self.sdir = os.path.join(HERE, "work", "sprites"); os.makedirs(self.sdir, exist_ok=True)
         self.frames = []
     def key_cam(self, g, loc, look): camrig.key_camera(g, Vector(loc), Vector(look), cam=self.cam, lens=22.0, interp="LINEAR", easing="AUTO")
-    def add(self, key, story, xyz, face=None, seated=None, H=None, rim=True, mirror=False, expr=None):
+    def add(self, key, story, xyz, face=None, seated=None, H=None, rim=True, mirror=False, expr=None, toward=0.0, cam0=None):
         cast, pose = cast17.STORY17[story]; pose = dict(pose)
         sc = (H or K.CAST_H[cast]) / K.CAST_HD[cast]
         a = actors.Actor("c_" + key, cast); a.build(sprites.DEFAULT_CANVAS[cast], self.sdir, contact=True); a.head_flip = True
@@ -58,6 +58,8 @@ class Rig:
         if seated:
             fx, fy = sprites.feet_of(cast, dict(pose, seat17=None)); zz = K.HEAD_Z[seated] - sc * fy
         else: zz = z
+        if toward and cam0:
+            dx, dy = cam0[0] - x, cam0[1] - y; n = math.hypot(dx, dy) or 1.0; x, y = x + dx / n * toward, y + dy / n * toward
         self.cast[key] = dict(a=a, cast=cast, pose0=pose, sc=sc, pos=(x, y, zz), mirror=mirror, rim=rim)
         return a
     def pose(self, key, g, pose, pos=None):
@@ -65,6 +67,17 @@ class Rig:
         if c["mirror"]: p["mirror"] = True
         if c["rim"] and c["cast"] in K.RIM_FOR: p["rim"] = K.RIM_FOR[c["cast"]]; p["rim_opacity"] = 0.55; p["rim_w"] = 0.02
         c["a"].place(g, pos or c["pos"], scale=c["sc"]); c["a"].pose(g, p, camera=self.cam)
+    def hide(self, key, g, hidden):
+        for o in self.cast[key]["a"].objects():
+            o.hide_render = bool(hidden); o.keyframe_insert("hide_render", frame=g)
+    def reach(self, key, g, pose, world, anchor="calipers_r", arm="r"):
+        """pose whose prop anchor lies on the world point (as seen from the camera at frame g)."""
+        c = self.cast[key]; a = c["a"]; p = dict(pose); p["seat17"] = None
+        if c["mirror"]: p["mirror"] = True
+        a.place(g, c["pos"], scale=c["sc"])
+        feet = sprites.feet_of(c["cast"], p)
+        loc = actors.world_to_local(a, self.cam, world, frame=g, feet=feet)
+        return cast17.hand_for_anchor(c["cast"], p, arm, anchor, loc)
     def sprites(self, ppd, frames):
         for c in self.cast.values(): c["a"].render_sprites(ppd, frames=list(frames))
     def render(self, frames, out, scale, samples, threads):
