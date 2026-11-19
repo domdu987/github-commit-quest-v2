@@ -1,0 +1,300 @@
+{
+ "duration": 66.5,
+ "out_wav": "release13/raeng.wav",
+ "video_in": "release13/raeng_silent.mp4",
+ "video_out": "release13/raeng.mp4",
+ "voice": {
+  "file": "/home/user/github-commit-quest-v2/film/film13/audio/narration.wav",
+  "at": 0.1,
+  "gain": 1.3803842646028848
+ },
+ "music": {
+  "file": "/home/user/github-commit-quest-v2/film/film13/audio/music_suno.wav",
+  "at": 0,
+  "rms_db": -31.0,
+  "fade_in": 0.3,
+  "fade_out": 0.6
+ },
+ "sfx": [
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/clink.mp3",
+   "at": 3.9,
+   "peak_db": -30,
+   "len": 0.8,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/drag.mp3",
+   "at": 8.0,
+   "peak_db": -30,
+   "len": 2,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/splat.mp3",
+   "at": 11.0,
+   "peak_db": -28,
+   "len": 1,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/pick.mp3",
+   "at": 12.6,
+   "peak_db": -28,
+   "len": 1.5,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/pick.mp3",
+   "at": 14.0,
+   "peak_db": -28,
+   "len": 1.5,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/laugh.mp3",
+   "at": 20.3,
+   "peak_db": -28,
+   "len": 2.5,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/crowd_laugh.mp3",
+   "at": 28.3,
+   "peak_db": -29,
+   "len": 2.5,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/rattle.mp3",
+   "at": 30.7,
+   "peak_db": -28,
+   "len": 2,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/thud.mp3",
+   "at": 32.6,
+   "peak_db": -26,
+   "len": 0.6,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/thud.mp3",
+   "at": 33.2,
+   "peak_db": -25,
+   "len": 0.6,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/thud.mp3",
+   "at": 33.7,
+   "peak_db": -24,
+   "len": 0.8,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/clink.mp3",
+   "at": 40.2,
+   "peak_db": -28,
+   "len": 0.8,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/whistle.mp3",
+   "at": 44.75,
+   "peak_db": -20,
+   "len": 1.0,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/rattle.mp3",
+   "at": 45.4,
+   "peak_db": -24,
+   "len": 1.5,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/groan.mp3",
+   "at": 46.6,
+   "peak_db": -26,
+   "len": 2,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/creak.mp3",
+   "at": 48.9,
+   "peak_db": -25,
+   "len": 2.5,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/ding.mp3",
+   "at": 52.9,
+   "peak_db": -28,
+   "len": 1,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/door.mp3",
+   "at": 56.0,
+   "peak_db": -26,
+   "len": 1.2,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/whoosh.mp3",
+   "at": 62.3,
+   "peak_db": -24,
+   "len": 0.6,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/splat.mp3",
+   "at": 62.9,
+   "peak_db": -18,
+   "len": 1.2,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/chirp.mp3",
+   "at": 63.4,
+   "peak_db": -32,
+   "len": 1.2,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/coins.mp3",
+   "at": 64.5,
+   "peak_db": -23,
+   "len": 1,
+   "align": "onset",
+   "fade_out": 0.08
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/street.mp3",
+   "at": 0,
+   "peak_db": -38,
+   "len": 2.2,
+   "align": "onset",
+   "fade_out": 0.4
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/rain.mp3",
+   "at": 5.4,
+   "peak_db": -35,
+   "len": 5.5,
+   "align": "onset",
+   "fade_out": 0.4
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/rain.mp3",
+   "at": 10.8,
+   "peak_db": -38,
+   "len": 1.3999999999999986,
+   "align": "onset",
+   "fade_out": 0.4
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/street.mp3",
+   "at": 12.2,
+   "peak_db": -35,
+   "len": 5.5,
+   "align": "onset",
+   "fade_out": 0.4
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/street.mp3",
+   "at": 17.6,
+   "peak_db": -38,
+   "len": 2.1999999999999993,
+   "align": "onset",
+   "fade_out": 0.4
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/street.mp3",
+   "at": 28.2,
+   "peak_db": -38,
+   "len": 2.1999999999999993,
+   "align": "onset",
+   "fade_out": 0.4
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/murmur.mp3",
+   "at": 30.4,
+   "peak_db": -39,
+   "len": 5.5,
+   "align": "onset",
+   "fade_out": 0.4
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/murmur.mp3",
+   "at": 35.8,
+   "peak_db": -42,
+   "len": 1.2000000000000028,
+   "align": "onset",
+   "fade_out": 0.4
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/murmur.mp3",
+   "at": 43.3,
+   "peak_db": -39,
+   "len": 5.5,
+   "align": "onset",
+   "fade_out": 0.4
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/murmur.mp3",
+   "at": 48.699999999999996,
+   "peak_db": -42,
+   "len": 2.500000000000007,
+   "align": "onset",
+   "fade_out": 0.4
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/street.mp3",
+   "at": 51.2,
+   "peak_db": -38,
+   "len": 2.1999999999999957,
+   "align": "onset",
+   "fade_out": 0.4
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/street.mp3",
+   "at": 55.9,
+   "peak_db": -35,
+   "len": 5.5,
+   "align": "onset",
+   "fade_out": 0.4
+  },
+  {
+   "file": "/home/user/github-commit-quest-v2/film/film13/audio/sfx/street.mp3",
+   "at": 61.3,
+   "peak_db": -35,
+   "len": 5.180000000000007,
+   "align": "onset",
+   "fade_out": 0.4
+  }
+ ]
+}

@@ -1,0 +1,12 @@
+cast13 pose keys + garbage: 3600 ok, 0 failed, deterministic True, 5.4 s
+cast10 STORY10 svg hash without / with cast13: d1a0c43aa466 / d1a0c43aa466  -> identical
+presets, expressions, props, effects                    249552 checks  ok
+numeric key sweeps (40 and 240 steps)                   414120 checks  ok
+arm targets: circles and lines through the shoulder     2292936 checks  ok
+foot targets                                            651816 checks  ok
+garbage input                                           472382 checks  ok
+random poses                                             18148 checks  ok
+determinism, ids, mirror, resolve / lerp                   336 checks  ok
+    slowest pose: 1.49 ms per call
+speed                                                        6 checks  ok
+4099296 checks, 0 failed, 483.5 s

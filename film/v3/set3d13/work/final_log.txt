@@ -1,0 +1,17 @@
+crowd_street:DAY:lift0.1 wall 14.7 cpu 28.9
+front_stair:DAY:lift1,mound0.5 wall 15.7 cpu 31.1
+front_stair:MORNING:lift1,fill0.15 wall 16.2 cpu 31.9
+hotel_front:DAY:lift0.6 wall 15.0 cpu 29.9
+jack_close:CELLAR:lift0.2,jack30 wall 20.9 cpu 40.8
+mud_low:DAY:lift0.5,sink0.5 wall 14.9 cpu 29.5
+mud_low:RAIN:lift0.5,sink0.8 wall 16.7 cpu 32.9
+rain_street:RAIN:lift0 wall 13.6 cpu 26.9
+street_end:MORNING:lift1,fill0.15 wall 15.1 cpu 29.9
+street_wide:DAY:lift0.6 wall 15.0 cpu 29.7
+street_wide:RAIN:lift0 wall 14.7 cpu 28.7
+suite_room:SUITE: wall 11.0 cpu 21.9
+suite_two:SUITE: wall 10.6 cpu 21.6
+suite_window:SUITE: wall 13.3 cpu 26.2
+tea_close:SUITE:tea0 wall 12.1 cpu 23.9
+under_rows:CELLAR:lift0.2,cut1,count5000 wall 15.5 cpu 30.5
+under_wide:CELLAR:lift0.2 wall 14.4 cpu 28.0

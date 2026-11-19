@@ -1,0 +1,17 @@
+street_wide:DAY:lift0.6|street_wide DAY lift 0.6
+street_wide:RAIN:lift0|street_wide RAIN (pivot)
+street_end:MORNING:lift1,fill0.15|street_end MORNING (day 5) lift 1
+hotel_front:DAY:lift0.6|hotel_front DAY lift 0.6 (hook)
+front_stair:DAY:lift1,mound0.5|front_stair DAY lift 1 side mound
+front_stair:MORNING:lift1,fill0.15|front_stair MORNING lift 1 fill 0.15
+mud_low:DAY:lift0.5,sink0.5|mud_low DAY stuck cart
+mud_low:RAIN:lift0.5,sink0.8|mud_low RAIN
+rain_street:RAIN:lift0|rain_street RAIN
+crowd_street:DAY:lift0.1|crowd_street DAY
+under_wide:CELLAR:lift0.2|under_wide CELLAR aisle
+under_rows:CELLAR:lift0.2,cut1,count5000|under_rows CELLAR count 5000
+jack_close:CELLAR:lift0.2,jack30|jack_close CELLAR jack turn 30
+suite_window:SUITE:|suite_window SUITE (street below)
+suite_room:SUITE:|suite_room SUITE (armchair)
+tea_close:SUITE:tea0|tea_close SUITE tea ripple 0
+suite_two:SUITE:|suite_two SUITE (rich + guests)
