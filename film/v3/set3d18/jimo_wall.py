@@ -116,15 +116,15 @@ def wall_dress(Bk, M, loc):
     nrm_out = 'out' == face
     # --- putlog holes + lacing beams + buttress posts
     ph = Bk('putlog', shadow=False)
-    for z in (3.0, 7.0, 11.0, 14.0):
-        for xp in np.arange(-93.0, 94.0, 4.0):
+    for z in (2.2, 4.8, 7.4, 10.0, 12.6, 14.6):
+        for xp in np.arange(-93.0, 94.0, 3.0):
             if not clear(xp, z): continue
-            yy = fy(z) + sg * 0.06; flat(ph, V((xp - 0.3, yy, z - 0.3)), V((0.6, 0, 0)), V((0, 0, 0.6)), M['black'])
-    for z in (5.0, 10.0):
-        for xp in np.arange(-91.0, 92.0, 22.0): obox(wd, (xp, fy(z) + sg * 0.1, z), XX, YY, ZZ, 6.0, 0.14, 0.16, M['wood_d'], uvk=0.5)
-    for xb in np.arange(-88, 90, 11.0):
-        if abs(xb) < 13 or not clear(xb, 4): continue
-        for z in (3.5, 9.5): obox(wd, (xb, fy(z) + sg * 0.05, z), XX, YY, ZZ, 0.3, 0.14, 0.2, M['wood_d'], uvk=0.5)
+            yy = fy(z) + sg * 0.06; flat(ph, V((xp - 0.28 + 0.4 * ((int(z * 3) % 3) - 1), yy, z - 0.28)), V((0.56, 0, 0)), V((0, 0, 0.56)), M['black'])
+    for z in (4.0, 7.0, 10.0, 13.0):
+        for xp in np.arange(-91.0, 92.0, 11.0): obox(wd, (xp, fy(z) + sg * 0.1, z), XX, YY, ZZ, 5.0, 0.16, 0.2, M['wood_d'], uvk=0.5)
+    for xb in np.arange(-88, 90, 5.5):
+        if abs(xb) < 13 or not clear(xb, 4, 1.5): continue
+        obox(wd, (xb, fy(7.5) + sg * 0.14, 7.5), XX, YY, ZZ, 0.26, 0.16, 7.2, M['wood_d'], uvk=0.5)
     # --- torches along the wall walk: warm pools on the face (painted decal + the wall material's warm weight)
     for xt in (-72, -60, -48, -36, -26, -17, 17, 26, 36, 48, 60, 72):
         ty = (yo(WH) + 1.4) if face == 'out' else (yi(WH) - 1.4)

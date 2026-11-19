@@ -549,7 +549,7 @@ def build(location=None, preset=None, light=None, clear=True):
         if lo.type == 'LIGHT' and lo.data.type == 'POINT': lo.light_linking.receiver_collection = nf
     scene.cycles.use_light_tree = True
     MN._denoise(scene); setup_grade(scene)
-    W9._air_comp(scene, P)
+    W9._air_comp(scene, P); hue_guard(scene)
     for ob in SET.objects: no_bounce(ob)
     for f in STATE.get('post_flush', ()): f()
     _post_build(); install_handlers(); flicker(1)
@@ -572,6 +572,19 @@ def sky_dome(SET, P, M, location, light):
         mb = MB(); mb.face([mc - u * rr - v * rr, mc + u * rr - v * rr, mc + u * rr + v * rr, mc - u * rr + v * rr][::-1], M['moon'], [(0, 0), (1, 0), (1, 1), (0, 1)][::-1])
         rh = rr * 3.2; mb.face([mc * 0.999 - u * rh - v * rh, mc * 0.999 + u * rh - v * rh, mc * 0.999 + u * rh + v * rh, mc * 0.999 - u * rh + v * rh][::-1], M['moon_h'], [(0, 0), (1, 0), (1, 1), (0, 1)][::-1])
         mo = _obj(mb, 'moon', SET, shadow=False); STATE['moon_dir'] = d; STATE['moon_objs'] = [(mo, V((0, 0, 0)))]
+
+def hue_guard(scene, shift=0.07):
+    """Compositor 'rose / lavender guard' just before the output: hues 295-350 deg (blue ambient + orange fire light = magenta rose) are pushed toward warm red-orange, 255-295 (lavender)
+    toward blue. The fire-lit earth and the dusk ground stay warm, the night shade stays blue; no pixel is left magenta."""
+    ng = scene.compositing_node_group; go = [n for n in ng.nodes if n.bl_idname == 'NodeGroupOutput'][0]
+    lk = go.inputs[0].links[0]; src = lk.from_socket; ng.links.remove(lk)
+    hc = ng.nodes.new('CompositorNodeHueCorrect'); hc.name = 'hue_guard'; cv = hc.mapping.curves[0]
+    pts = [(0.0, 0.5), (0.05, 0.5), (0.62, 0.5), (0.70, 0.5), (0.74, 0.44), (0.80, 0.42), (0.815, 0.43), (0.822, 0.57), (0.86, 0.62), (0.93, 0.62), (0.98, 0.56), (1.0, 0.5)]
+    while len(cv.points) > 2: cv.points.remove(cv.points[1])
+    cv.points[0].location = pts[0]; cv.points[-1].location = pts[-1]
+    for (x, y) in pts[1:-1]: cv.points.new(x, y)
+    for p in cv.points: p.handle_type = 'VECTOR'
+    hc.mapping.update(); ng.links.new(src, hc.inputs['Image']); ng.links.new(hc.outputs['Image'], go.inputs[0])
 
 def hills(Bk, M, centre=(0.0, 0.0), r0=165.0, r1=195.0, n=26, seed=7, rad=(34, 62), z=0.3):
     hb = Bk('hills', shadow=False); r = _rnd(seed)

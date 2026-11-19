@@ -12,7 +12,7 @@ from PIL import Image, ImageDraw, ImageFilter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEX = os.path.join(HERE, 'tex_jimo')
-TEX_V = 'j16'
+TEX_V = 'j17'
 TS = {}                                         # name -> (w_D, h_D)
 MOON_AZ, MOON_EL = 58.0, 20.0                  # the moon in the dome (degrees)
 
@@ -177,13 +177,13 @@ def rammed(path, W=8.0, H=4.0, ppd=80, seed=5):
     for i in range(n):
         y0, y1 = int(round(i * ch)), int(round((i + 1) * ch)); x = int(r.uniform(0, 2.0) * ppd)
         while x < w + 4 * ppd:
-            Ls = int(r.uniform(2.0, 4.5) * ppd); tint = r.uniform(0.84, 1.12) * np.array([r.uniform(0.97, 1.03), 1.0, r.uniform(0.92, 1.06)], 'float32')
+            Ls = int(r.uniform(2.0, 4.5) * ppd); tint = r.uniform(0.78, 1.16) * np.array([r.uniform(0.97, 1.03), 1.0, r.uniform(0.90, 1.08)], 'float32')
             xa, xb = max(0, x), min(w, x + Ls)
             if xb > xa: img[y0:y1, xa:xb] *= tint
             seams.append((x, y0, y1)); x += Ls
     jw = 0.12 * ppd / ch                                                                               # joint band 0.12 D tall (fraction of a course)
     j = np.clip(1 - np.minimum(fr, 1 - fr) / (jw * 0.5 + 1e-6), 0, 1) ** 0.6                           # 1 at the joint centre
-    img = lerp(img, np.ones_like(img) * hexf('#8e6438') * (0.9 + 0.2 * fbm(h, w, 20, seed + 6, 2))[..., None], (j * 0.85)[..., None])
+    img = lerp(img, np.ones_like(img) * hexf('#6e4826') * (0.9 + 0.2 * fbm(h, w, 20, seed + 6, 2))[..., None], (j * 0.97)[..., None])
     img += (np.exp(-((fr - 0.12) / 0.05) ** 2) * 0.05)[..., None] * hexf('#fff0c8')                    # lit lip just above the joint
     # wash stains: tall soft vertical streaks (rain wash, salt) and big darker blotches
     st = fbm(h, w, (h, 10), seed + 8, 3); st2 = fbm(h, w, (h // 2, 24), seed + 9, 3)
@@ -193,7 +193,7 @@ def rammed(path, W=8.0, H=4.0, ppd=80, seed=5):
     # erosion runnels: thin dark vertical lines widening downward and fading
     im = Image.fromarray((np.clip(img, 0, 1) * 255).astype('uint8'), 'RGB'); d = ImageDraw.Draw(im, 'RGBA')
     for (x, y0, y1) in seams:
-        if 0 <= x < w: d.line([(x, y0), (x + r.uniform(-1.5, 1.5), y1)], fill=(78, 50, 26, 175), width=2); d.line([(x + 2, y0), (x + 2, y1)], fill=(235, 195, 130, 60), width=1)
+        if 0 <= x < w: d.line([(x, y0), (x + r.uniform(-1.5, 1.5), y1)], fill=(60, 38, 18, 215), width=3); d.line([(x + 3, y0), (x + 3, y1)], fill=(240, 205, 140, 90), width=2)
     for _ in range(int(W * 2.2)):                                                                      # big weathered blotches with a hard edge (repairs, salt, soot)
         x, y = r.uniform(0, w), r.uniform(0, h); bw, bh = r.uniform(60, 190), r.uniform(30, 90)
         d.rounded_rectangle([x, y, x + bw, y + bh], radius=18, fill=r.choice(((150, 104, 62, 60), (214, 170, 106, 55), (110, 80, 52, 60))))
