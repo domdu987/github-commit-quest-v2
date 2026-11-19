@@ -37,7 +37,7 @@ Frame = BK.Frame
 OUT = os.path.join(HERE, 'board')
 def _rnd(s): return random.Random(s)
 V = Vector
-FIRE = (1.0, 0.58, 0.26); LAMP = (1.0, 0.66, 0.36)
+FIRE = (1.0, 0.50, 0.18); LAMP = (1.0, 0.62, 0.30)
 
 # ----------------------------------------------------------------------------- dimensions (D)
 WH = 16.0                                                   # wall height (walk level)
@@ -116,7 +116,7 @@ def prism(mb, x0, x1, z0, z1, mo, mi, mt, mb_=None, ends=True, uvk=1.0 / 8):
             mb.oface([V((xe, yo(z0), z0)), V((xe, yi(z0), z0)), V((xe, yi(z1), z1)), V((xe, yo(z1), z1))], mi, [(0, z0 / 4.0), (0.9, z0 / 4.0), (0.9, z1 / 4.0), (0, z1 / 4.0)], (nx, 0, 0))
 
 # ----------------------------------------------------------------------------- hip roof with upturned eaves
-def hip_roof(mb, o, yaw, A, Bh, r, z0, rise, M, lift=1.1, nx=28, ny=18, thick=0.4, tile=4.0, mat=None, under=None, edge=None):
+def hip_roof(mb, o, yaw, A, Bh, r, z0, rise, M, lift=1.1, nx=28, ny=18, thick=0.4, tile=4.0, mat=None, under=None, edge=None, horns=False, wadang=True):
     """Chinese hip roof: plan half sizes A x Bh around o (yaw deg), ridge half length r along local x, eave level z0, ridge z0 + rise,
     concave slopes and corners curled up by `lift`. Tile surface, underside board and a fascia edge."""
     F = Frame(o, yaw); mat = mat or M['tiles']; under = under or M['wood_d']; edge = edge or M['red']
@@ -137,12 +137,16 @@ def hip_roof(mb, o, yaw, A, Bh, r, z0, rise, M, lift=1.1, nx=28, ny=18, thick=0.
     for (a, b), (a2, b2) in [(((i, 0), (i + 1, 0))) for i in range(nx)] + [(((i, ny), (i + 1, ny))) for i in range(nx)] + [(((0, j), (0, j + 1))) for j in range(ny)] + [(((nx, j), (nx, j + 1))) for j in range(ny)]:
         p0, p1 = Pt[a][b], Pt[a2][b2]; n = (p0 + p1) / 2 - F.p(0, 0, p0.z)
         mb.oface([p0, p1, p1 - V((0, 0, thick * 0.9)), p0 - V((0, 0, thick * 0.9))], edge, [(0, 0), (1, 0), (1, 1), (0, 1)], (n.x, n.y, 0))
-    if r > 0.3:                                                                                           # ridge + end horns
+    if r > 0.3:                                                                                           # plain ridge (no curled horns: Warring States)
         rz = z0 + rise
-        rod(mb, F.p(-r, 0, rz + 0.1), F.p(r, 0, rz + 0.1), 0.42, M['tiles_d_c'], seg=8)
-        for sx in (-1, 1):
-            rod(mb, F.p(sx * r, 0, rz + 0.1), F.p(sx * (r + 0.55), 0, rz + 1.2), 0.30, M['tiles_d_c'], seg=6, r1=0.1)
-            rod(mb, F.p(sx * (r + 0.55), 0, rz + 1.2), F.p(sx * (r + 0.1), 0, rz + 1.95), 0.12, M['gold'], seg=5, r1=0.02)
+        rod(mb, F.p(-r, 0, rz + 0.1), F.p(r, 0, rz + 0.1), 0.38, M['tiles_d_c'], seg=8)
+        if horns:
+            for sx in (-1, 1): rod(mb, F.p(sx * r, 0, rz + 0.1), F.p(sx * (r + 0.4), 0, rz + 0.8), 0.28, M['tiles_d_c'], seg=6, r1=0.12)
+    if wadang:                                                                                            # half-round eaves tiles (wadang) along the long eaves
+        for jj in (0, ny):
+            for ii in range(1, nx, 2):
+                p0 = Pt[ii][jj]; out = F.Y * (-1 if jj == 0 else 1)
+                mb.frustum(p0 - V((0, 0, 0.1)) + out * 0.02, p0 - V((0, 0, 0.1)) + out * 0.16, 0.26, 0.26, M['stone'], seg=7)
     for sx in (-1, 1): hz_ = 0                                                                            # (corner finials)
     return F
 
@@ -174,8 +178,9 @@ def materials(P, tx, pre):
              clay=C('#8a5a40', 1.1), clay_d=C('#5a3a2a', 1.0), jade=C('#3a8a74', 1.2), teal=C('#2a6a7a', 1.1), indigo=C('#2a3470', 1.1), ox=C('#6a4a38', 1.15), ox_d=C('#3a2a22', 1.0), hay=C('#d0b060', 1.2),
              plaster=C('#d8c8a8', 1.1), plaster_d=C('#b0a088', 1.05), leaf=C('#4a7a4a', 1.0), hill=C('#2a2c6a', 0.9, form=False),
              lantern=E('lantern', '#ff8a30', 4.2), lantern_g=E('lantern_g', '#ffd070', 5.5), win=E('win', '#ffb040', 2.6), win_c=E('win_c', '#ffd890', 3.4), gate_glow=E('gate_glow', '#ff9a40', 2.6),
-             flame=E('flame', '#ffa040', 6.5), flame_c=E('flame_c', '#fff0c0', 11.0), ember=E('ember', '#ff6a20', 3.4), moon=mat_emit(pre + 'e_moon', image=tx['moon'], strength=3.2, alpha=True),
-             moon_h=BK._mat_add(pre + 'a_moonh', tx['glow'], (1.0, 0.86, 0.55), 0.9), sky=D._mat_sky(pre + 'sky', P, tx['sky_' + STATE['area'].upper()], P['sky_k']),
+             flame=E('flame', '#e8561c', 1.0), flame_t=E('flame_t', '#b8301a', 1.0), flame_e=E('flame_e', '#e8561c', 1.0), flame_m=E('flame_m', '#ffb238', 1.0), flame_c=E('flame_c', '#fffeec', 1.6), ember=E('ember', '#ff6a20', 2.2),
+             skin=C('#d8a47a', 1.15), lacq=C('#4a1a20', 1.0), tiles_g=C('#4a5068', 1.3), rain=mat_emit(pre + 'e_rain', image=tx['rain'], strength=1.0, alpha=True), moon=mat_emit(pre + 'e_moon', image=tx['moon'], strength=3.2, alpha=True),
+             moon_h=BK._mat_add(pre + 'a_moonh', tx['glow'], (0.35, 0.54, 0.96), 1.0), sky=D._mat_sky(pre + 'sky', P, tx['sky_' + STATE['area'].upper()], P['sky_k']),
              halo=ADD('halo', 'glow', (1.0, 0.6, 0.28), 1.0), halo_s=ADD('halo_s', 'glow', (1.0, 0.7, 0.35), 0.8), halo_big=ADD('halo_big', 'glow', (1.0, 0.55, 0.24), 0.55),
              pool=ADD('pool', 'pool', (1.0, 0.5, 0.14), 0.9), pool_w=ADD('pool_w', 'pool', (1.0, 0.5, 0.16), 0.55), streak=ADD('streak', 'streak', (1.0, 0.62, 0.3), 1.5), streak_m=ADD('streak_m', 'streak', (1.0, 0.88, 0.6), 1.5),
              mist=BK._mat_add(pre + 'a_mist', tx['glow'], (0.5, 0.42, 0.85), 0.08))
@@ -249,30 +254,112 @@ def sky_and_ground(Bk, SET, P, M, zone):
         lumpy(hb, V((Rr * math.cos(a), Rr * math.sin(a), -rad * 0.3)), rad, M['hill'], 50 + i, seg=14, rings=6, rough=0.16, squash=0.42)
 
 # ----------------------------------------------------------------------------- wall
-def torch_post(Bk, M, p, s=1.0, light=900.0, name='t', halo_r=3.2, shadow=False):
-    """Iron torch / brazier on a post: pole, bowl, crisp flame tongues, glow card, point light. Returns the flame centre."""
+# ----------------------------------------------------------------------------- real flames (layered tongues)
+def flame(fb, base, h, s=1.0, lean=(0.0, 0.0), seed=0, n=4, spread=0.35, mats=None):
+    """Layered flame: n outer tongues graded tip #b8301a -> edge #e8561c, mid tongues #ffb238, a small core #fffeec (the only part that clips).
+    Each tongue is a bent chain of tapering cone segments leaning with `lean` (xy offset at the tip, in D) with a little S wobble. `fb` is a mesh bank
+    without shadows. base = V (root centre), h = full height."""
+    M = STATE['M']; base = V(base); rr = _rnd(int(abs(base.x * 13 + base.y * 7 + base.z * 3) * 10 + seed) & 0xffff)
+    lx, ly = lean; seg = 5
+    def tongue(c0, ht, rad, mats_by_t, wob, lx_, ly_, a0):
+        pts = []
+        for k in range(seg + 1):
+            t = k / seg; sw = math.sin(t * 3.1 + a0) * wob * t
+            pts.append(c0 + V((lx_ * t ** 1.5 + sw * math.cos(a0), ly_ * t ** 1.5 + sw * math.sin(a0), ht * t)))
+        for k in range(seg):
+            t0, t1 = k / seg, (k + 1) / seg
+            r0 = rad * (1 - t0) ** 0.72 * min(1.0, 0.55 + t0 * 3.0) if t0 > 0 else rad * 0.55; r1 = rad * (1 - t1) ** 0.72 if t1 < 1 else 0.0
+            fb.frustum(pts[k], pts[k + 1], r0, r1, mats_by_t(t0), seg=5, cap0=(k == 0), cap1=False)
+    ot = lambda t: M['flame_t'] if t > 0.6 else (M['flame_e'] if t > 0.22 else M['flame_m'])
+    mt = lambda t: M['flame_c'] if t < 0.01 else (M['flame_m'] if t < 0.6 else M['flame_e'])
+    for k in range(n):                                                                       # outer tongues: tall, red-orange, tipped dark red
+        a = 2 * math.pi * k / n + rr.uniform(0, 1); d = spread * s * 0.8
+        c0 = base + V((d * math.cos(a), d * math.sin(a), 0)); ht = h * rr.uniform(0.72, 1.0)
+        tongue(c0, ht, 0.46 * s * (h / (2.2 * s)) ** 0.25, ot, 0.18 * s, lx * ht / h + rr.uniform(-0.15, 0.15) * s, ly * ht / h + rr.uniform(-0.15, 0.15) * s, a)
+    for k in range(max(2, n - 1)):                                                           # mid tongues: amber, inside
+        a = 2 * math.pi * k / max(2, n - 1) + rr.uniform(0, 1); d = spread * s * 0.35; c0 = base + V((d * math.cos(a), d * math.sin(a), 0.03 * s)); ht = h * rr.uniform(0.55, 0.78)
+        tongue(c0, ht, 0.36 * s, lambda t: M['flame_m'] if t < 0.55 else M['flame_e'], 0.12 * s, lx * ht / h * 0.9, ly * ht / h * 0.9, a)
+    tongue(base + V((0, 0, 0.04 * s)), h * 0.40, 0.24 * s, lambda t: M['flame_c'] if t < 0.7 else M['flame_m'], 0.05 * s, lx * 0.3, ly * 0.3, 0.0)      # hot core
+    for k in range(int(3 + 2 * s)):                                                          # embers
+        fb.sphere(base + V((rr.uniform(-0.8, 0.8) * s + lx * 0.7, rr.uniform(-0.8, 0.8) * s + ly * 0.7, rr.uniform(0.9, 1.9) * h)), 0.05 * s, M['ember'], seg=4, rings=3)
+
+def px(p, cam=None):
+    """World point -> (x, y) pixel on the 720x1280 frame of the current camera (None if behind)."""
+    from bpy_extras.object_utils import world_to_camera_view
+    sc = bpy.context.scene; cam = cam or sc.camera; v = world_to_camera_view(sc, cam, Vector(p))
+    return (round(v.x * 720), round((1 - v.y) * 1280), round(v.z, 1))
+
+def person(Bk, M, pos, yaw=0.0, pose='stand', s=1.0, robe=None, cup=False, cd=40.0, helmet=True, seed=1):
+    """Stand-in soldier / guard (low-poly, 4.6 D tall when standing): robe cone, belt, head with cap or helmet, arms, optional spear / cup.
+    poses: stand, spear, cheer (cup raised), sit (on the ground / a log, cup to the mouth), sleep (lying on the side, back to camera)."""
+    F = Frame((pos[0], pos[1], pos[2] if len(pos) > 2 else 0.0), yaw); b = Bk('people', hull=T.hull(cd)); robe = robe or M['black']; sk = M['skin']
+    P = lambda x, y, z: F.p(x * s, y * s, z * s)
+    if pose == 'sleep':
+        b.frustum(P(-1.4, 0, 0.55), P(1.5, 0, 0.6), 0.55 * s, 0.5 * s, robe, seg=8)
+        b.sphere(P(1.95, 0, 0.62), 0.42 * s, sk, seg=8, rings=5); b.frustum(P(1.95, 0, 0.8), P(2.1, 0, 0.86), 0.46 * s, 0.4 * s, M['black'], seg=8)
+        b.frustum(P(-1.4, -0.1, 0.5), P(-2.6, -0.3, 0.35), 0.28 * s, 0.22 * s, M['red_d'], seg=6)
+        b.frustum(P(0.6, 0.5, 0.45), P(1.4, 0.55, 0.9), 0.14 * s, 0.12 * s, robe, seg=5)
+        return
+    zs = 0.0
+    if pose == 'sit':
+        zs = -1.2
+        b.frustum(P(-0.3, 0, 0.2), P(0.9, 0, 0.5), 0.4 * s, 0.34 * s, robe, seg=7); b.frustum(P(0.9, -0.28, 0.45), P(1.5, -0.4, 0.2), 0.2 * s, 0.17 * s, M['red_d'], seg=6)
+        b.frustum(P(0.9, 0.28, 0.45), P(1.5, 0.4, 0.2), 0.2 * s, 0.17 * s, M['red_d'], seg=6)
+    else:
+        b.frustum(P(0, -0.22, 0.05), P(0, -0.22, 1.9), 0.26 * s, 0.2 * s, M['black'], seg=6); b.frustum(P(0, 0.22, 0.05), P(0, 0.22, 1.9), 0.26 * s, 0.2 * s, M['black'], seg=6)
+    b.frustum(P(0, 0, 1.6 + zs), P(0, 0, 3.4 + zs), 0.78 * s, 0.5 * s, robe, seg=9)
+    b.frustum(P(0, 0, 2.3 + zs), P(0, 0, 2.5 + zs), 0.8 * s, 0.8 * s, M['red'], seg=9, cap0=False, cap1=False)
+    b.frustum(P(0, 0, 3.4 + zs), P(0, 0, 3.7 + zs), 0.2 * s, 0.2 * s, sk, seg=6)
+    hz = 4.1 + zs; b.sphere(P(0, 0, hz), 0.46 * s, sk, seg=9, rings=6); b.sphere(P(0.2, -0.05, hz + 0.04), 0.1 * s, M['black'], seg=4, rings=3)
+    if helmet:
+        b.frustum(P(0, 0, hz + 0.16), P(0, 0, hz + 0.62), 0.5 * s, 0.22 * s, M['iron'], seg=9); b.frustum(P(0, 0, hz + 0.62), P(0, 0, hz + 1.0), 0.04 * s, 0.1 * s, M['red'], seg=5)
+    else: b.frustum(P(0, 0, hz + 0.2), P(0, 0, hz + 0.55), 0.46 * s, 0.4 * s, M['black'], seg=9)
+    if pose in ('cheer', 'sit') and cup:
+        sh = P(0.0, -0.75, 3.1 + zs); hand = P(0.35, -1.0, 4.45 + zs) if pose == 'cheer' else P(0.5, -0.3, hz - 0.35)
+        J_rod(b, sh, hand, 0.14 * s, robe); b.frustum(hand, hand + V((0, 0, 0.32 * s)), 0.13 * s, 0.22 * s, M['bronze'], seg=6)
+        sh2 = P(0.0, 0.75, 3.1 + zs); J_rod(b, sh2, P(0.4, 0.45, 2.0 + zs), 0.14 * s, robe)
+    elif pose == 'spear':
+        J_rod(b, P(0, -0.75, 3.1), P(0.3, -0.85, 2.3), 0.14 * s, robe); J_rod(b, P(0, 0.75, 3.1), P(0.3, 0.85, 2.3), 0.14 * s, robe)
+        J_rod(b, P(0.4, -0.9, 0.0), P(0.4, -0.9, 7.0), 0.07 * s, M['wood']); b.frustum(P(0.4, -0.9, 7.0), P(0.4, -0.9, 7.9), 0.12 * s, 0.0, M['steel'], seg=4)
+    else:
+        for sy in (-1, 1): J_rod(b, P(0, sy * 0.75, 3.1 + zs), P(0.3, sy * 0.85, 2.0 + zs), 0.14 * s, robe)
+
+def J_rod(mb, a, b, r, mat, seg=5): rod(mb, a, b, r, mat, seg=seg)
+
+def brazier(Bk, M, p, s=1.0, light=0.0, name='br', halo_r=3.2, shadow=False, tall=2.2, lean=(0.0, 0.0)):
+    """Bronze / iron brazier on a tripod with a layered flame; point light (1.0, 0.50, 0.18)."""
     p = V(p); w = Bk('wood', hull=0.0); f = Bk('fire', shadow=False); h = Bk('halos', shadow=False)
-    rod(w, p, p + V((0, 0, 2.4 * s)), 0.14 * s, M['wood_d'], seg=6)
-    rod(w, p + V((0, 0, 2.3 * s)), p + V((0, 0, 2.9 * s)), 0.36 * s, M['iron'], seg=8, r1=0.5 * s)
-    c = p + V((0, 0, 3.0 * s)); rr = _rnd(int(p.x * 7 + p.y * 3) & 255)
-    for k in range(5):
-        a = rr.uniform(0, 6.28); dx, dy = 0.14 * s * math.cos(a), 0.14 * s * math.sin(a); hh = rr.uniform(1.0, 1.9) * s
-        f.frustum(c + V((dx, dy, 0)), c + V((dx * 1.8 + rr.uniform(-0.1, 0.1), dy * 1.8, hh)), 0.30 * s, 0.0, M['flame'], seg=6, cap1=False)
-    f.frustum(c, c + V((0.03, 0, 1.2 * s)), 0.2 * s, 0.0, M['flame_c'], seg=6, cap1=False)
-    halo(h, c + V((0, 0, 0.7 * s)), halo_r * s, M['halo'])
+    for k in range(3):
+        a = 2 * math.pi * k / 3 + 0.5; rod(w, p + V((0.7 * s * math.cos(a), 0.7 * s * math.sin(a), 0)), p + V((0.14 * s * math.cos(a), 0.14 * s * math.sin(a), tall * s)), 0.1 * s, M['iron'], seg=5)
+    rod(w, p + V((0, 0, tall * s)), p + V((0, 0, (tall + 0.55) * s)), 0.30 * s, M['bronze'], seg=9, r1=0.62 * s)
+    rod(w, p + V((0, 0, (tall + 0.5) * s)), p + V((0, 0, (tall + 0.62) * s)), 0.66 * s, M['iron'], seg=9, r1=0.66 * s)
+    for k in range(6):
+        a = 2 * math.pi * k / 6; f.sphere(p + V((0.4 * s * math.cos(a), 0.4 * s * math.sin(a), (tall + 0.66) * s)), 0.13 * s, M['ember'], seg=4, rings=3)
+    c = p + V((0, 0, (tall + 0.66) * s)); flame(f, c, 1.9 * s, 0.62 * s, lean=lean, seed=int(p.x + p.y), n=3, spread=0.3)
+    halo(h, c + V((0, 0, 0.8 * s)), halo_r * s, M['halo'])
     if light > 0: lamp(name, c + V((0, 0, 0.5)), light, FIRE, r=0.3, shadow=shadow)
     STATE['torches'].append(tuple(c)); return c
 
-def lantern(Bk, M, p, s=1.0, light=0.0, name='ln', halo_r=1.8, hang=0.9):
-    p = V(p); w = Bk('wood'); f = Bk('lamps', shadow=False); h = Bk('halos', shadow=False)
-    ellipsoid(f, p, 0.62 * s, 0.62 * s, 0.76 * s, M['lantern'], seg=12, rings=8)                         # round paper lantern, hot orange glow
-    ellipsoid(f, p, 0.3 * s, 0.3 * s, 0.4 * s, M['lantern_g'], seg=8, rings=5)
-    for dz in (-0.64, 0.64): cyl(w, p + V((0, 0, dz * s - 0.07 * s)), 0.3 * s, 0.14 * s, M['gold'], seg=10)
-    for dz in (-0.34, 0.0, 0.34): cyl(w, p + V((0, 0, dz * s - 0.03 * s)), 0.64 * s, 0.06 * s, M['red_d'], seg=12, r1=0.64 * s, cap=False)
-    rod(w, p + V((0, 0, 0.7 * s)), p + V((0, 0, (0.7 + hang) * s)), 0.04 * s, M['red_d'], seg=4)
-    rod(w, p - V((0, 0, 0.7 * s)), p - V((0, 0, (1.2) * s)), 0.05 * s, M['red'], seg=4, r1=0.1 * s)      # tassel
-    halo(h, p, halo_r * s, M['halo_s'])
-    if light > 0: lamp(name, p, light, LAMP, r=0.4)
+def oil_lamp(Bk, M, p, s=1.0, light=0.0, name='ol', halo_r=1.6, h=3.4):
+    """Bronze standing oil lamp (Warring States): three feet, a stem with discs, a shallow dish with one small flame. p = floor point."""
+    p = V(p); w = Bk('wood', hull=0.0); f = Bk('lamps', shadow=False); hl = Bk('halos', shadow=False)
+    for k in range(3):
+        a = 2 * math.pi * k / 3; rod(w, p + V((0.5 * s * math.cos(a), 0.5 * s * math.sin(a), 0.0)), p + V((0.08 * s * math.cos(a), 0.08 * s * math.sin(a), 0.4 * s)), 0.08 * s, M['bronze'], seg=4)
+    rod(w, p + V((0, 0, 0.4 * s)), p + V((0, 0, (h - 0.3) * s)), 0.09 * s, M['bronze'], seg=6)
+    for z in (0.9, 1.9): rod(w, p + V((0, 0, z * s)), p + V((0, 0, (z + 0.1) * s)), 0.3 * s, M['bronze'], seg=8, r1=0.3 * s)
+    rod(w, p + V((0, 0, (h - 0.3) * s)), p + V((0, 0, h * s)), 0.2 * s, M['bronze'], seg=8, r1=0.5 * s)
+    c = p + V((0, 0, h * s)); flame(f, c, 0.95 * s, 0.26 * s, seed=int(p.x * 3 + p.y), n=2, spread=0.1)
+    halo(hl, c + V((0, 0, 0.35 * s)), halo_r * s, M['halo_s'])
+    if light > 0: lamp(name, c + V((0, 0, 0.3)), light, LAMP, r=0.3)
+    return c
+
+def lantern(Bk, M, p, s=1.0, light=0.0, name='ln', halo_r=1.8, hang=0.9, floor=None):
+    """Kept for the call sites: now a bronze standing oil lamp whose FLAME is at p (stem down to `floor`, else 3 D)."""
+    p = V(p); fl = floor if floor is not None else p.z - 3.4 * s
+    return oil_lamp(Bk, M, V((p.x, p.y, fl)), s=s, light=light, name=name, halo_r=halo_r, h=(p.z - fl) / s)
+
+def torch_post(Bk, M, p, s=1.0, light=900.0, name='t', halo_r=3.2, shadow=False):
+    return brazier(Bk, M, p, s=s * 0.8, light=light, name=name, halo_r=halo_r, shadow=shadow)
 
 def banner(Bk, M, base, h, cloth_w, cloth_h, col, trim, wave=0.0, yaw=0.0, sw=True):
     """Pole with a hanging banner (plain shape, no text): a long swallow-tailed cloth with a trim stripe."""
