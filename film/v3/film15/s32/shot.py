@@ -113,6 +113,7 @@ def pre_A(sc): pass
 # ------------------------------------------------------------------------------------------------ location A: coach
 COACH_RUN = [(7.963, 2.778, 0.0), (5.37, 5.556, 0.0), (2.963, 7.222, 0.0), (2.13, 7.87, 0.0)]
 T_TAKE = 2019                       # coach takeoff frame
+CDZ = -0.4
 T_LAND = 2046                       # TUMP into the pile
 PILE = Vector((-2.5, 14.63, 0.815))
 BENCH = [(-9.074, 13.333), (-9.074, 14.815), (-9.074, 16.296)]
@@ -130,6 +131,8 @@ def cards_A(g, cam, n):
             put('b%d_%d' % (i, g), names[i], pose, mark=(bx, by, 0.0), cam_loc=cl, anchor=('hip', (bx, by, 0.95)), shadow=(1.2, 0.5), shadow_z=0.0, canvas=cast15.CANVAS15_WIDE)
     if n == 34:
         pose = cast15.pose_for('coach_sigh', 'coach'); pose['head_roll'] = pose.get('head_roll', 0) + sway(g, 2.0, 0.4); pose['lean'] = pose.get('lean', 0) + sway(g, 1.0, 0.3, 1.0)
+        sg = (g - 1939) % 36; env = math.sin(math.pi * min(1.0, sg / 20.0)) if sg < 20 else 0.0
+        pose['lean'] += 7.0 * env; pose['yaw'] = pose.get('yaw', 0) + 0.35 * math.sin(g * 0.5) * (1 if (g - 1939) % 72 >= 36 else 0.4); pose['head_roll'] += 6 * env
         put('coach_%d' % g, 'coach', pose, mark=(-5.8, 14.9, 0.0), cam_loc=cl, shadow=(1.9, 0.6))
     if n == 35:
         coach_run(g, cl)
@@ -155,7 +158,7 @@ def key_cam35(cam):
     for g in range(f0, f1 + 1):
         pts = [coach_pos(max(CUTS[35], g - 3 + k)) for k in (-3, -2, -1, 0, 1, 2, 3)]
         tgt = sum(pts, Vector()) / len(pts)
-        loc = Vector((-2.0 + 0.9 * (g - CUTS[35]) / 52.0, 0.7 - 0.3 * (g - CUTS[35]) / 52.0, 1.45)) * U
+        loc = Vector((-0.4 + 0.6 * (g - CUTS[35]) / 52.0, 0.3 - 1.4 * (g - CUTS[35]) / 52.0, 1.4)) * U
         look = tgt
         d = look - loc; q = d.to_track_quat('-Z', 'Y'); 
         cam.location = loc; cam.rotation_euler = q.to_euler(); cam.keyframe_insert('location', frame=g); cam.keyframe_insert('rotation_euler', frame=g)
@@ -171,7 +174,8 @@ def coach_run(g, cl):
         pose = cast15.coach_clumsy_run((g % 14) / 14.0, 'coach', 1)
         put('coach_%d' % g, 'coach', pose, tuple(p), cl, shadow=(1.9, 0.6)); return
     if tau < 0:
-        put('coach_%d' % g, 'coach', cast15.pose_for('plant', 'coach'), COACH_RUN[-1], cl, shadow=(1.9, 0.6)); return
+        pp = cast15.pose_for('plant', 'coach'); pp['yaw'] = -0.9; pp['lean'] = -20
+        put('coach_%d' % g, 'coach', pp, COACH_RUN[-1], cl, shadow=(1.9, 0.6)); return
     if tau < 2:
         put('coach_%d' % g, 'coach', cast15.pose_for('takeoff', 'coach'), COACH_RUN[-1], cl, dz=0.4 * tau, shadow=(1.9, 0.6)); return
     coach_air(g, cl)
@@ -193,19 +197,21 @@ def coach_36(g, cl, M):
         coach_air(g, cl)
     else:
         pose = cast15.pose_for('coach_buried', 'coach'); k = g - T_LAND
-        pose['head_roll'] = pose.get('head_roll', 0) + sway(g, 2.5, 0.8)
-        put('coach_%d' % g, 'coach', pose, mark=tuple(M['coach_end']), cam_loc=cl, canvas=cast15.CANVAS15_WIDE, dz=-0.15, shadow=None)
+        up = smooth((g - 2056) / 8.0); wob = math.sin((g - 2056) * 0.55) * 14 * up
+        pose['arm_r'] = dict(hand=(1.0 + 0.015 * wob, 0.42 - 2.2 * up), bend=0.0, layer='top') if up > 0 else pose['arm_r']
+        pose['yaw'] = 0.15; pose['head_roll'] = -6 + sway(g, 3.0, 0.8); pose['expr'] = 'shocked'; pose['mouth'] = 'smile'
+        put('coach_%d' % g, 'coach', pose, mark=(PILE.x, PILE.y, PILE.z), cam_loc=cl, canvas=cast15.CANVAS15_WIDE, dz=CDZ, shadow=None)
     # boys at the pit edge laughing (bob drives the 3 Hz bounce)
-    for i, (nm, pn, pos) in enumerate((('boy1', 'laugh', (-4.9, 16.9)), ('boy2', 'point_laugh', (-0.2, 17.0)), ('boy3', 'laugh', (-3.6, 18.4)))):
+    for i, (nm, pn, pos) in enumerate((('boy1', 'laugh', (-4.6, 17.0)), ('boy2', 'point_laugh', (-0.5, 17.1)), ('boy3', 'laugh', (-2.6, 17.5)))):
         pose = dict(cast15.pose_for(pn, nm), bob=cast15.laugh_bob(g + i * 3))
         put('bl%d_%d' % (i, g), nm, pose, mark=(pos[0], pos[1], 0.815), cam_loc=cl, shadow=(1.3, 0.45))
 
 def CAMDEF(loc):
     SH_ = c15.F.SHOTS
     if loc == 'A':
-        SH_[34]['a'] = dict(loc=(-0.6, 2.4, 1.3), look=(-3.5, 8.0, 1.2)); SH_[34]['b'] = dict(loc=(-1.5, 3.9, 1.3), look=(-3.6, 8.0, 1.2))
+        SH_[34]['a'] = dict(loc=(-0.6, 2.4, 1.3), look=(-3.5, 8.0, 1.2)); SH_[34]['b'] = dict(loc=(-0.1, 3.9, 1.3), look=(-3.9, 8.0, 1.2))
         SH_[35]['fg'] = []
-        SH_[36]['a'] = dict(loc=(-1.0, 5.0, 0.55), look=(-1.45, 8.0, 1.05)); SH_[36]['b'] = dict(loc=(-1.25, 5.9, 0.6), look=(-1.45, 8.0, 1.05))
+        SH_[36]['a'] = dict(loc=(-0.9, 5.4, 0.55), look=(-1.4, 7.9, 1.5)); SH_[36]['b'] = dict(loc=(-1.1, 6.0, 0.55), look=(-1.4, 7.9, 1.5))
     if loc == 'B':
         SH_[32]['a'] = dict(loc=(-3.4, 8.2, 1.45), look=(0.3, 11.6, 2.0)); SH_[32]['b'] = dict(loc=(-1.9, 8.9, 1.5), look=(0.8, 11.6, 2.0))
         SH_[33]['a'] = dict(loc=(-1.7, 9.2, 1.55), look=(-0.3, 14.7, 0.9)); SH_[33]['b'] = dict(loc=(-0.3, 10.7, 1.5), look=(0.1, 14.7, 0.9)); SH_[33]['fg'] = [('foam_edge', 1.0, 0.3, 0.0)]
