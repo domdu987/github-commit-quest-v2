@@ -100,3 +100,42 @@ Frames checked:
 - **Continuity cut 20 -> 21:** check Dick's kit and the bar against the s17 take's last frame when it is delivered.
 
 Re-check after the fixes: phone sheet of g1165-1190 (head above the band, face in frame) and g1190-1268 (no boxed faces). Shot 21 should be checked again if fix 3 is done.
+
+---
+## Re-check v2 (render15/team4 @ 23dd8e6, rebuilt in scratch takes/s21r2)
+
+**Verdict: PASS.** Both blocking fixes are done.
+- Attempt 2 now ends on a clean, captions-safe image: Dick flat on the foam, hands on his face, the bar across him.
+- The coach shouts from a lively, laughing crowd, and every face is visible.
+- The remaining items are non-blocking.
+
+### Automatic checks
+- qa_auto (`--first_g 1119 --cuts 1125,1150,1190,1269`): FAIL on "suspected blur" g1119-1149 only.
+  - I checked these frames at full size. Shot 21 is sharp: the test is relative, and the low-texture track and sky under dark stands trip it. False positive.
+  - Cuts g1150 (diff 57) and g1190 (diff 59) are on plan. Magenta 0 %. No black or frozen frames.
+- motion_check: median **8.0**, p90 **13.6** (target 4 / 12). **PASS.**
+
+### Fixes 1-4 from the first review
+| # | status | evidence |
+|---|---|---|
+| 1 shot 22 head in the band / face cut | **done** | g1169-1189: Dick lies across the middle of the frame. His head is at y ~680-720 and x ~330-480, and his whole face is in frame. Both hands are on his face from about g1180. The bar lies across the mat behind him. |
+| 2 shot 23 boxed faces | **done (one small leftover)** | The back-row cards were lifted, so all five faces read: the bandana guy laughing with tears, the redhead, the blue-cap man, the brown-haired woman. Leftover: a seat-back block still covers the brown-haired woman's mouth and chin (g1212-1272) and the blue-cap man's mouth (g1240-1272). Their eyes show, so it reads as people behind a seat. See note A. |
+| 3 shot 21 Dick too small | **partly** | The run-up is now big and close (g1119-1130, Dick about 30 % of frame height), so we see who is jumping. At the bar (g1137-1149) he is still small (head ~75 px, about 6 % of the height). bar_fall starts at contact (g1141), and the bar is clearly tilted by g1145. On the phone the first fail now reads as "he jumps, the bar comes down". |
+| 4 coach gloats | **done** | Smug closed-mouth smile g1190-1212 and from g1271. Angry shout inside the window. |
+
+### Still OK
+- **Mouths:** the coach talks g1213-1270 only.
+- **Back-row expressions:** they are static drawings (laughing, gaping), with no lip movement.
+- **Heads:** all above y 880. The lowest is Dick lying at about y 720.
+- **Continuity:** kit and bar match across shots 21 and 22.
+- **Attempts:** both attempts show a backwards flop and a falling bar.
+
+### Notes (non-blocking)
+- A. **Shot 23, g1212-1272: leftover seat-back blocks over the lower faces of two back-row cards.** Lift these two cards by about 0.15 D more, or hide those two blocks.
+- B. **Shot 23, g1196-1272: the coach's hat pennant has lost its pole.** It now sits among the back-row cards and looks like a party horn at the redhead's mouth (g1200-1212). Put the pennant back on the coach's hat and in front of the crowd layer.
+- C. **Shot 21 at the bar (g1137-1149):** a further 30-50 % push-in at the bar would make the first fail as strong as the second.
+- D. **Unchanged set items:** the bottom ~40 % of shot 23 is empty stand steps, the shot 22 sky has a V seam, and the stands have a dark smudge.
+
+### Joins
+- **20 -> 21** (s17 g1124 -> s21 g1125): same kit, same red/white bar, both EVE. A cut from Dick standing at the standard to his run-up reads fine.
+- **23 -> 24** (s21 g1268 -> s24 g1269): a cut from the coach close-up to Dick wide at his mark under the TENSE light. Kit matches, and the light change is planned. OK.
