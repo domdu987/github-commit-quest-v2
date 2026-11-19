@@ -1,0 +1,17 @@
+# FINAL gate, audio (film 14 cut1, music not yet added)   VERDICT: PASS
+- Per-sentence STT on the final mix (fal ElevenLabs STT, sentence cut from the mix ±0.05 s), threshold 0.93:
+  - s0: 1.0
+  - s1: 0.996
+  - s2: 1.0
+  - s3: 1.0
+  - s4: 1.0
+  - s5: 0.951
+  - s6: 1.0
+  - s7: 1.0
+  - s8: 1.0
+  - s9: 1.0
+  - s5 0.951: ASR heard "จากฝูง"/"พึ่ง" for "จ่าฝูง"/"ผึ้ง" under the elephant footsteps; still above the gate.
+- Loudness: integrated -13.2 LUFS (target -14 to -11), true peak -1.4 dBTP (limit -1).
+- SFX vs voice: SFX+beds stem vs voice stem in 300 ms windows while the voice is active (1399 windows): never louder; worst -3.0 dB at 56.2 s (herd run under "ทั้งฝูงหันหลังวิ่งหนี").
+- Captions: text equals the script for all 10 sentences; timing is built from the same narration timing (+0.10 s offset as the voice), so sync is by construction.
+- Re-run this gate after the client's Suno music is added (music at about -31 dB RMS under the voice).
