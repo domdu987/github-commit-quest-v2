@@ -23,3 +23,9 @@ v2 after the director gate (s20_QA_TECH / s20_QA_ART) and continuity notes.
 - Neighbouring hives swing out of step (alternating direction, hives x2.0) so they overlap/knock around g 1405-1445.
 - Camera lower and pitched up: ground about 20 %; roofs and posts kept (undersides darkened), orange lamp pools dimmed.
 - qa_auto: only the per-shot blur false positive remains. Shot 20 (g 1301-1367) is the v3 version and will not be used (reassigned to team 2); shots 22-24 unchanged.
+
+## v5 (shot 21 only, g 1368-1452)
+- Reframed: camera low (z 0.6), 50 mm, pitched up so the swinging hives sit in the middle band (y ~350-850); sky ~25-30 %, ground ~15 %.
+- Knock: as the wave reaches each hive it swings hard and BANGS into its own post/frame: 2-frame jolt of hive, bar, posts and roofs plus a chip/dust spray crown (wood chips, dust specks, small wisps) at g 1388 (u3), 1405 (u2), 1422 (u1), 1438 (u0).
+- Bees: none before g ~1442; small puffs at the last hives, then the shot-22 burst.
+- qa_auto: only the per-shot blur false positive. Shot 20 (v3) is unused; 22-24 unchanged.
