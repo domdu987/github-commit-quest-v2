@@ -81,3 +81,37 @@ Checked at 6 fps (every 5th g, 1796-2101) plus every cut ±3 (1804, 1875, 1939, 
 - E. **Per-shot motion in 32-34 is median 3.5-3.9.** The take passes overall. If 34 is re-rendered for fix 2, add a little more push or slide there.
 
 Re-check after the fixes: phone sheet of g1940-2095. A blind viewer should say "the coach who mocked the backward jump tried it himself and ended up stuck in the sawdust, giving a weak thumbs-up while the boys laugh".
+
+---
+## Re-check r2 (render15/team6 @ e69eca0, rebuilt in scratch takes/s32r2)
+
+**Verdict: PASS.** The gag now lands on the phone. After the TUMP and the spray (g2046-2070), the last 1.5 s (g2050-2095) hold a big, centred coach stuck in the sawdust heap: wide dazed eyes, a sheepish little smile, chips on his cap, and a raised thumb, while the boys laugh with tears on both sides. Together with shots 34-35 it pays off "ข้าจะหงายหลังให้ดูเอง".
+
+### Automatic checks
+- qa_auto (`--first_g 1796 --cuts 1875,1939,1988,2040`): **PASS**.
+  - The only soft frames are g1935-1941, the baked 33→34 dissolve. The shot-35 whip is no longer flagged.
+  - "No visible change at 1939" is still expected (baked dissolve; conform must not add a second one).
+- motion_check: median **4.5**, p90 **15.7** (target 4 / 12). **PASS**. (Team per-shot: 34 5.0/7.5, 35 14.4/20.6, 36 6.8/23.1.)
+- Heads above y 880. The lowest is the coach's chin at about y 680 in shot 36. No text. The 1963 pit has sawdust only. The take ends at g2095 with a 6-frame same-shot handle.
+
+### Fixes 1-3 from the first review
+| # | status | evidence |
+|---|---|---|
+| 1 shot 36 buried coach | **done (mostly)** | The coach is about 25-29 % of frame height (cap top about y 475, sawdust line about y 770-850) and centred in front of the boys. The face is dazed and sheepish. The thumb is up and wobbles from g2056 and reads on the phone. The boys bounce and laugh. The sawdust line is at mid-chest, not the chin: his shoulders and the windbreaker show above the heap. On the phone it still reads "stuck in the sawdust". See note A. |
+| 2 shot 34 pole / sigh | **done** | The pole now stands about 1.5 heads left of the coach for the whole shot (g1945-1987) and never crosses him. The boys still sit on the bench with arms crossed. |
+| 3 shot 35 size / back turn | **done (partly)** | The coach is about 25-30 % of frame height through the run (g1991-2016). At about g2010-2014 he turns side-on and looks over his shoulder. Then he faces front with his arms up (g2017-2019) and tumbles head-down over the bar (g2021-2039). It reads as a clumsy imitation, but not as a clear back-to-bar turn. See note B. |
+
+### QA-art (phone, 360x640), shots 34-36
+- **Clarity 7/10** (was 5).
+- **Funny 7/10** (was 4).
+- **Beauty 7/10** (was 6).
+- The end image is now a readable button: the big dazed face, the sawdust on the cap, the thumb and the laughing boys.
+
+### Leftover notes (non-blocking)
+- A. **Shot 36:** sink the coach about 0.3 D more (or pile sawdust higher on him) so the line reaches his chin and the shoulders disappear. That would match the plan's "buried to the chin" and make the gag funnier.
+  - The thumb only reaches head height. Raising the arm higher, or a bigger thumb, would help a little.
+  - No sneakers stick out of the pile (optional gag).
+- B. **Shot 35, g2015-2019:** a true back-to-bar pose on the plant would sharpen "he copies Dick's backward jump".
+- C. **Shot 36, g2075-2095:** the bottom 35-40 % of the frame is still shaded sawdust with plank-sized chips (below the caption band, so it is acceptable).
+- D. **Shot 33:** the jumpers and their thumbs-ups are still small (unchanged, non-blocking).
+- E. **Handle g1796-1803:** the white prop at the bottom edge is unchanged and almost invisible in the dissolve.

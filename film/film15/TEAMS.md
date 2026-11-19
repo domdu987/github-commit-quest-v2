@@ -10,3 +10,5 @@
 
 ## Take status
 - s01: r3 ACCEPTED (render15/team1 @ f5cefa2; TAKE gate PASS on r2, r3 = polish B/C/D; motion 5.4/21.4)
+- s32: r2 PASS (render15/team6 @ e69eca0; motion 4.5/15.7); r3 polish (shot 36 only) requested. Conform: dissolve 33->34 is BAKED in the take (no second dissolve at g1939).
+- s21: FAIL r1 (fixes sent to team 4).
