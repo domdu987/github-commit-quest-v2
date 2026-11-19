@@ -1,0 +1,15 @@
+{
+ "take": "s23",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film16/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 0.0,
+   "duration": 0.0,
+   "frame": 0,
+   "end_frame": 0,
+   "kind": "ambience",
+   "label": "Maryland countryside after rain: dripping, a few birds, light breeze; ladder creak"
+  }
+ ]
+}

@@ -1,0 +1,58 @@
+{
+ "take": "s23",
+ "film": 16,
+ "shots": [
+  23
+ ],
+ "g0": 1455,
+ "g1": 1540,
+ "first_g": 1446,
+ "n_frames": 103,
+ "shot_ranges": {
+  "23": [
+   1455,
+   1539
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "set": "set3d16 telegraph.py LINE line_close AFTER_RAIN (callback of shot 1: same camera path and marks as s01)",
+ "cast": "cast16 morse16 (mirror) morse_cap_peg / morse_drape_wire, hand-held bottle = copy of the set's glass mesh, as s01",
+ "camera": "custom 22 mm, s01's low camera + drift push 8 %/s + slide + arc + snap x2.8 (13 f) on 'คอขวดเบียร์'",
+ "events": {},
+ "dof": "none",
+ "text": "none",
+ "light": "AFTER_RAIN",
+ "preset": "line_close",
+ "samples": 7,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 7.53,
+ "s_per_frame_cpu_mean": 14.42,
+ "framediff_in_shot": {
+  "median": 7.14,
+  "p90": 11.39
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json",
+ "head_px": [
+  90,
+  304
+ ],
+ "head_centre_y": [
+  396,
+  588
+ ],
+ "head_bottom_max_y": 713
+}
