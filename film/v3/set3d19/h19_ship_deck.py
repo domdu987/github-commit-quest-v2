@@ -161,13 +161,9 @@ def build_deck(M):
         for k in range(14):
             xx = -hw1 + (2 * hw1) * (k + 0.5) / 14
             if abs(xx) > 2.0: mb.rod(M['pinrail'], (xx, y, z1), (xx, y, z1 + 0.88), 0.045, 0.04, 5)
-            mb.rod(M['pinrail'], (xx, y, z1), (xx, y, z1 + 0.88), 0.04, 0.04, 5) if abs(xx) > 2.0 else None
         mb.box(M['caprail'], (0, y, z1 + 0.9), (2 * hw1, 0.12, 0.09))
         mb.box(M['port'], (0, y - 0.03 * ds, z0 + 1.0), (1.1, 0.04, 1.8))                          # doorway
     # stairs up to the quarterdeck and the forecastle (both sides)
-    for sdx in (-1, 1):
-        for k in range(7):
-            mb.box(M['stairs'], (sdx * 3.0, YQ + 0.9 + 0.6 * (6 - k) * 0 + 0.0 + (-0.0), ZW + (ZQ - ZW) * (k + 0.5) / 7 / 1.0), (1.0, 0.45, (ZQ - ZW) * (k + 1) / 7)) if False else None
     for sdx in (-1, 1):
         for k in range(7):
             h = (ZQ - ZW) * (k + 1) / 7

@@ -51,8 +51,8 @@ def _hero_cam():
 PRESETS = dict(
     ship_hero=dict(light='NOON', cam=_hero_cam(), scenery='hero', glint=dict(az=19, el=6, k=40.0, ang=1.8, v6=True), wake=True, samples=12),
     ship_aerial=dict(light='NOON', cam=dict(loc=(-70.0, 95.0, 85.0), look=(2.0, 6.0, 14.0), lens=22), scenery='aerial', glint=dict(az=118, el=34, k=22.0, ang=1.2), wake=True, samples=12),
-    ship_deck=dict(light='NOON', amb_k=0.62, cam=dict(loc=(3.0, -10.4, DK.ZQ + 1.5), look=(-0.6, -17.6, DK.ZQ + 1.9), lens=22), scenery='deck', glint=dict(az=170, el=20, k=30.0, ang=2.0), wake=True, samples=12),
-    ship_rail=dict(light='NOON', amb_k=0.62, cam=dict(loc=(4.1, 3.0, DK.ZW + 1.75), look=(9.5, 14.0, DK.ZW - 0.6), lens=22), scenery='rail', glint=dict(az=40, el=12, k=34.0, ang=2.0), wake=True, samples=12),
+    ship_deck=dict(light='NOON', amb_k=0.45, cam=dict(loc=(3.0, -10.4, DK.ZQ + 1.5), look=(-0.6, -17.6, DK.ZQ + 1.9), lens=22), scenery='deck', glint=dict(az=170, el=20, k=30.0, ang=2.0), wake=True, samples=12),
+    ship_rail=dict(light='NOON', amb_k=0.45, cam=dict(loc=(4.1, 3.0, DK.ZW + 1.75), look=(9.5, 14.0, DK.ZW - 0.6), lens=22), scenery='rail', glint=dict(az=40, el=12, k=34.0, ang=2.0), wake=True, samples=12),
     ship_rocks=dict(light='STORM_DUSK', cam=dict(loc=(2.6, 13.4, DK.ZF + 2.3), look=(16.0, 60.0, DK.ZF + 0.6), lens=22), scenery='rocks', glint=dict(az=250, el=9, k=18.0, ang=3.0), wake=True, samples=12),
     ship_coast=dict(light='DAY_JAMAICA', cam=dict(loc=(-95.0, -60.0, 5.5), look=(215.0, 40.0, 17.0), lens=22), scenery='coast', sun_ship=True, sun_az=-130, sun_el=42, glint=dict(az=-50, el=14, k=26.0, ang=2.0), wake=False, anchored=True, samples=12),
     ship_shore=dict(light='DAY_JAMAICA', cam=dict(loc=(float(LD.shore_x(40.0)) + 10.5, 33.0, 2.5), look=(float(LD.shore_x(40.0)) - 70.0, 38.0, 4.0), lens=22), scenery='shore', sun_ship=True, sun_az=115, sun_el=38, glint=dict(az=-80, el=12, k=26.0, ang=2.0), wake=False, anchored=True, samples=12),
