@@ -21,7 +21,7 @@ LAST_G = G1 + H - 1                                # 450
 TMP = os.path.join(HERE, "work")
 SPR = os.path.join(TMP, "sprites")
 SN7, SN8 = 364, 418
-SNAP8 = (-0.2, 0.55, -0.05)
+SNAP8 = (-0.30, -0.30, -0.02)
 def bf(g): return g - FIRST_G + 1
 def shot_of(g): return 7 if g < G_CUT else 8
 
@@ -29,9 +29,9 @@ def shot_of(g): return 7 if g < G_CUT else 8
 def aim(a, b, u):
     return Vector([lerp(a[i], b[i], u) for i in range(3)])
 # shot 7: preset records_aisle camera (0.75,-3.2,3.9)->(-0.2,6.5,2.0); pull back along the aisle + rise + slide to the left
-S7 = dict(c0=(1.10, -2.55, 3.65), c1=(0.15, -4.35, 4.05), l0=(-0.35, 6.5, 2.05), l1=(-0.45, 6.3, 1.95))
+S7 = dict(c0=(0.95, -1.7, 3.5), c1=(0.30, -3.2, 3.85), l0=(-0.35, 6.5, 2.05), l1=(-0.45, 6.3, 1.95))
 # shot 8: records_desk insert, drifting right-to-left across the cards with a push
-S8 = dict(c0=(1.10, 1.25, 1.55), c1=(0.45, 1.50, 1.42), l0=(-0.45, 2.75, 1.32), l1=(-0.60, 2.75, 1.30))
+S8 = dict(c0=(0.50, 1.10, 1.55), c1=(0.38, 0.98, 1.50), l0=(-0.74, 2.33, 1.42), l1=(-0.76, 2.35, 1.40))
 
 def cam_of(g):
     if shot_of(g) == 7:
@@ -43,15 +43,15 @@ def cam_of(g):
     loc.z += sway
     if shot_of(g) == 7:
         x = min(1.0, max(0.0, (g - SN7) / 12.0)); k = x * x * (3 - 2 * x)
-        loc += Vector((-1.4, 0.9, -0.5)) * k; look += Vector((2.0, 0.0, -0.1)) * k
+        loc += Vector((0.45, 0.9, -0.5)) * k; look += Vector((1.5, 0.0, -0.1)) * k
     else:
         x = min(1.0, max(0.0, (g - SN8) / 13.0)); k = x * x * (3 - 2 * x)
-        loc += Vector(SNAP8) * k; look += Vector((0.32, 0.0, 0.04)) * k
+        loc += Vector(SNAP8) * k; look += Vector((0.0, 0.0, -0.02)) * k
     return loc, look
 
 # ---------------------------------------------------------------- the cast
 A7 = {"aisle1": ("bertillon_holding_card", {}), "aisle_far": ("prisoner_standing_a", {"expr": "worried"})}
-A8 = {"desk_clerk": ("bertillon_neutral", {"expr": "worried", "dx": 0.5, "dy": 0.1})}
+A8 = {"desk_clerk": ("bertillon_neutral", {"expr": "worried", "dx": 0.05, "dy": 0.3, "dz": 0.28})}
 
 def pose_for(who, base, g):
     p = dict(base)
@@ -65,9 +65,9 @@ def scratch_pose(base, g):
     """shot 8: the right hand scratches the head (small circles), the other hand on the desk; looks at the cards."""
     p = pose_for("clerk8", base, g)
     u = min(1.0, max(0.0, (g - G_CUT) / 8.0))
-    sx, sy = 0.52 + 0.07 * math.sin(g * 0.9), -0.12 + 0.06 * math.cos(g * 0.9)
-    hx, hy = lerp(0.30, sx, u), lerp(1.0, sy, u)
-    p["arm_r"] = dict(hand=(hx, hy), bend=lerp(0.2, -1.0, u), stretch=1.05, layer="front")
+    sx, sy = -0.55 + 0.05 * math.sin(g * 0.9), -0.20 + 0.06 * math.cos(g * 0.9)
+    hx, hy = lerp(-0.30, sx, u), lerp(1.0, sy, u)
+    p["arm_l"] = dict(hand=(hx, hy), bend=lerp(0.2, -1.0, u), stretch=1.0, layer="front")
     p["gaze"] = (0.3, 0.5); p["pitch"] = 0.25; p["yaw"] = 0.15
     p["expr"] = "worried"
     return cast17.silent(p)
@@ -98,9 +98,9 @@ def make_photo(path, moustache):
             pts = [(cx, cy + 30)]
             for k in range(1, 15):
                 t = k / 14.0
-                pts.append((cx + sgn * (t * 92), cy + 30 + 8 * math.sin(t * 3.0) - 28 * (t ** 2.2) * (1 if t > 0.75 else 0.2)))
-            d.line(pts, fill="#2a1a14", width=17, joint="curve")
-            d.ellipse([pts[-1][0] - 11, pts[-1][1] - 14, pts[-1][0] + 11, pts[-1][1] + 8], fill="#2a1a14")
+                pts.append((cx + sgn * (t * 118), cy + 30 + 8 * math.sin(t * 3.0) - 28 * (t ** 2.2) * (1 if t > 0.75 else 0.2)))
+            d.line(pts, fill="#2a1a14", width=26, joint="curve")
+            d.ellipse([pts[-1][0] - 16, pts[-1][1] - 20, pts[-1][0] + 16, pts[-1][1] + 10], fill="#2a1a14")
     # right side: ruled greeked rows (no letters) + a fingerprint
     for k in range(6):
         d.rectangle([450, 100 + k * 46, 450 + 140 - 20 * (k % 3), 108 + k * 46], fill="#a99869")
@@ -131,24 +131,28 @@ def spill_cards(A):
             B.box("cream", (x, y, z), (0.27, 0.19, 0.004), rot=(rnd.uniform(-5, 5), rnd.uniform(-5, 5), rnd.uniform(0, 360)), tint=rnd.uniform(0.86, 1.04))
             if i % 5 == 0:
                 B.box(["oxblood", "baize", "navy"][i // 5 % 3], (x + 0.07, y + 0.05, z + 0.003), (0.07, 0.025, 0.003), rot=(0, 0, 0))
-    for (sx, sy, n, rt) in ((-0.15, -1.35, 34, 8), (0.9, -1.0, 24, -14)):         # foreground card stacks (aisle fg)
+    for (sx, sy, n, rt) in ((-0.15, -0.3, 34, 8), (0.9, 0.0, 24, -14)):         # foreground card stacks (aisle fg)
         for i in range(n):
             B.box("cream", (sx + rnd.uniform(-0.012, 0.012), sy + rnd.uniform(-0.012, 0.012), 0.0035 + 0.0075 * i), (0.27, 0.19, 0.007), rot=(0, 0, rt + rnd.uniform(-3, 3)), tint=rnd.uniform(0.88, 1.03))
             if i % 6 == 0:
                 B.box("oxblood", (sx + 0.1, sy + 0.03, 0.0075 * i + 0.008), (0.06, 0.02, 0.003), rot=(0, 0, rt))
     B.finalize("spill", ink_t=K.STATE["ink_t"] * 0.5)
+    n = 0
+    for (px, py) in piles + [(-0.15, -0.3), (0.9, 0.0)]:
+        for j in range(2):
+            n += 1; a = rnd.uniform(0, 360)
+            K.card_plane("pf%d" % n, (px + rnd.uniform(-0.12, 0.12), py + rnd.uniform(-0.1, 0.1), (0.26 if px == -0.15 else 0.185 if px == 0.9 else 0.055) + 0.002 * j), (0.27, 0.2), rot=(90, 0, a), key="card_photo_%s" % "ab"[(n // 2) % 2], ink_t=0.0, thick=0.004)
     return [o for o in bpy.data.objects if o.name not in before]
 
 def desk_cards():
-    """two big photo cards on the clerk's desk, leaning back against a ledger, facing the shot-8 camera; returns the root empties"""
+    """two big photo cards on the clerk's desk, each on a small block, leaning back, facing the shot-8 camera; returns the root empties"""
     roots = []
-    tgt = Vector((0.35, 1.5, 1.2))
+    cen = Vector((-0.74, 2.33)); perp = Vector((0.52, 0.85)); w, h = 0.60, 0.45
     for k, key in enumerate(("card_photo_a", "card_photo_b")):
-        c = Vector((-0.74 + 0.0, 2.20 + 0.30 * (0.5 - k) * 2.0 * 0.5 + (0.0 if k == 0 else 0.0), 0.0))
-        c = Vector((-0.80, 2.12 + 0.50 * k, 0.0))
-        w, h = 0.46, 0.345
-        root = K.card_plane("photo%d" % k, (c.x, c.y, 0.915 + h / 2 * 0.80 + 0.01), (w, h), rot=(0, 0, 0), key=key, ink_t=0.0, thick=0.006)
-        d = Vector((0.6, 1.4, 0.0)) - Vector((c.x, c.y, 0.0)); root.rotation_euler = (math.radians(42), 0, math.atan2(-d.x, d.y))
+        c = cen + perp * (0.35 * (k - 0.5) * 2.0)
+        B = K.Batch(60 + k); B.box("walnut", (c.x, c.y, 0.915 + 0.13), (0.5, 0.12, 0.26), rot=(0, 0, math.degrees(math.atan2(-perp.x, perp.y)) * 0 + 58)); B.finalize("blk%d" % k, ink_t=0.004)
+        root = K.card_plane("photo%d" % k, (c.x, c.y, 0.915 + 0.26 + h / 2 * 0.80), (w, h), rot=(0, 0, 0), key=key, ink_t=0.0, thick=0.006)
+        d = Vector((0.7, 0.9, 0.0)) - Vector((c.x, c.y, 0.0)); root.rotation_euler = (math.radians(34), 0, math.atan2(-d.x, d.y))
         roots.append(root)
     return roots
 
@@ -226,7 +230,13 @@ class Take(object):
             w = actors.local_to_world(a, (0.0, 0.0), f, camera=self.cam); px, py, dz = K.project(self.cam, tuple(w))
             w2 = actors.local_to_world(a, (0.5, 0.0), f, camera=self.cam); qx, qy, _ = K.project(self.cam, tuple(w2))
             R = math.hypot(qx - px, qy - py); heads[mk] = dict(x=round(px), y=round(py), R=round(R), chin=round(py + R))
-        return dict(g=g, shot=sh, cam=[round(v, 3) for v in loc], heads=heads)
+        cards = {}
+        if sh == 8:
+            bpy.context.view_layer.update()
+            for i, r in enumerate(self.photos):
+                pts = [K.project(self.cam, tuple(r.matrix_world @ Vector(p))) for p in ((-0.3, 0, -0.225), (0.3, 0, -0.225), (-0.3, 0, 0.225), (0.3, 0, 0.225))]
+                cards["card%d" % i] = [round(min(p[0] for p in pts)), round(max(p[0] for p in pts)), round(min(p[1] for p in pts)), round(max(p[1] for p in pts))]
+        return dict(g=g, shot=sh, cards=cards, cam=[round(v, 3) for v in loc], heads=heads)
 
     def render(self, g, path, scale, samples, threads=2):
         f = bf(g); bpy.context.scene.frame_set(f); bpy.context.scene.camera = self.cam
