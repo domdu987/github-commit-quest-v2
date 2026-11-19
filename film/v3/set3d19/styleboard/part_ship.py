@@ -94,7 +94,7 @@ def build_ship(P):
     k = 0; x = -3.7 + 0.13
     while x < 3.7:
         yl = ylim_for(abs(x)); mb.box(M['deck1'] if k % 2 else M['deck2'], (x, (Y0 + yl) / 2, DECK - 0.08), (0.255, yl - Y0, 0.16)); x += 0.26; k += 1
-    gun_y = [2.0, 6.0, 10.0, 14.0, 18.0]; gun_yp = [3.0, 7.0, 11.0, 15.0]
+    gun_y = [2.0, 6.0, 10.0, 14.0, 18.0, 31.0, 34.5, 38.0]; gun_yp = [3.0, 7.0, 11.0, 15.0, 32.5, 36.0]
     y = Y0
     while y < STEM:
         yc = y + 0.5; b = hw(yc)
@@ -111,14 +111,14 @@ def build_ship(P):
             mb.box(M['ochre'], (s * (b + tt + 0.04), g, 4.55), (0.06, 0.78, 0.7)); mb.box(M['port'], (s * (b + tt + 0.08), g, 4.55), (0.06, 0.62, 0.54))
     for s, gy in ((1, gun_y), (-1, gun_yp)):
         y = Y0
-        while y < 29.0:
+        while y < 43.0:
             yc = y + 0.3; b = hw(yc)
             if b > 0.3 and not any(abs(yc - g) < 0.42 for g in gy):
                 dy = hw(yc + 0.3) - hw(yc - 0.3); ang = math.atan2(-dy * s, 0.6)
                 mb.box(M['hullb'], (s * (b - 0.04), yc, DECK + 0.3), (0.16, 0.66, 0.6), rz=ang); mb.box(M['ochre'], (s * (b - 0.04), yc, DECK + 0.78), (0.17, 0.66, 0.36), rz=ang); mb.box(M['hullb'], (s * (b - 0.04), yc, DECK + 1.02), (0.16, 0.66, 0.12), rz=ang)
             y += 0.6
         y = Y0
-        while y < 29.5:
+        while y < 43.5:
             yc = y + 0.35; b = hw(yc); dy = hw(yc + 0.35) - hw(yc - 0.35)
             if b > 0.2:
                 mb.box(M['cap'], (s * (b - 0.02), yc, DECK + 1.14), (0.3, 0.74, 0.1), rz=math.atan2(-dy * s, 0.7)); mb.box(M['cap'], (s * (b + 0.1), yc, DECK + 1.2), (0.06, 0.74, 0.06), rz=math.atan2(-dy * s, 0.7))
@@ -184,8 +184,8 @@ def build_ship(P):
     tq = mat('turq', '#2fa9a4', '#46bdb0', scale=2)
     for side in (-1, 1):
         for k in range(22):
-            yy = STEM - 0.3 - k * 0.75; b = hw(yy) + 1.0 + 0.22 * k ** 0.6
-            hgt = max(0.18, 1.7 - 0.07 * k); yaw = -side * math.atan2(hw(yy + 0.4) - hw(yy - 0.4), 0.8) * -1.0
+            yy = STEM - 0.3 - k * 0.75; b = hw(yy) + 2.6 + 0.25 * k ** 0.6
+            hgt = max(0.22, 2.1 - 0.08 * k); yaw = -side * math.atan2(hw(yy + 0.4) - hw(yy - 0.4), 0.8) * -1.0
             sp.ell(tq, (side * (b + 0.35 + 0.02 * k), yy, 0.15 + hgt * 0.22), (0.5 + 0.02 * k, 0.8, hgt * 0.42), (12, 6), rot=(0, 0, yaw))           # turquoise underside / face
             sp.ell(M['spray'], (side * (b - 0.05), yy, 0.2 + hgt * 0.62), (0.42 + 0.015 * k, 0.78, hgt * 0.4), (12, 6), rot=(0, 0, yaw))                # white curling roll on top
             if k % 2 == 0: sp.ell(M['spray'], (side * (b - 0.35), yy + 0.2, 0.25 + hgt * 0.95), (0.3, 0.5, hgt * 0.22), (10, 6), rot=(0, 0, yaw))       # the lip
@@ -202,7 +202,7 @@ def build_ship(P):
     ib.finish(shadow=False)
     sb_ = MB('farsail'); sb_.quad(M['darksail'], [(-330, 1500, 0.5), (-304, 1500, 0.5), (-312, 1500, 24), (-326, 1500, 28)]); sb_.quad(M['darksail'], [(-335, 1500, 0.5), (-305, 1500, 0.5), (-305, 1500, 3), (-335, 1500, 3)]); sb_.finish(shadow=False)
     cm = MB('cards')
-    if not os.environ.get('NOCARDS'): card(cm, M['grey'], 1.2, 1.2, w=0.55, z0=DECK); card(cm, M['grey'], 2.0, 2.0, w=0.55, z0=DECK); cm.finish()
+    if not os.environ.get('NOCARDS'): card(cm, M['grey'], 1.0, 34.0, w=0.55, z0=DECK); card(cm, M['grey'], 1.8, 35.4, w=0.55, z0=DECK); cm.finish()
     if not os.environ.get('NOSEA'): build_sea(P)
     clouds(P)
 
@@ -235,15 +235,16 @@ def build_sea(P):
     # foam attribute: wash along the outboard hull, bow foam (broken up by the shader noise)
     hh_ = hw(np.clip(py, -12, STEM)); d_hull = np.abs(px) - (hh_ + 0.95); d_hull = np.where((py > -12) & (py < STEM + 1), d_hull, 9)
     dh = np.maximum(d_hull, 0.0); dback = np.maximum(STEM - py, 0.0)
-    lace = 0.5 + 0.5 * np.sin(py * 1.7 + 2.3 * np.sin(dh * 2.1 + py * 0.3))
     inhull = (py > -12) & (py < STEM + 1.0)
+    uu_ = py / 2.4; vv_ = dh / 0.8                                   # patch coordinates: 3 m along the hull per 1 m across -> ~3:1 patches
+    nzp = 0.5 + 0.22 * np.sin(1.7 * uu_ + 0.9 * np.sin(1.3 * vv_ + 0.4 * uu_)) + 0.2 * np.sin(2.3 * vv_ + 1.2 * np.sin(0.8 * uu_ + 1.7)) + 0.12 * np.sin(3.1 * uu_ - 2.2 * vv_ + 0.7)
     bands = np.zeros_like(px)
-    for (off, w, amp, flen) in ((0.4, 0.9, 1.0, 80.0), (3.3, 1.0, 0.85, 60.0), (6.6, 1.15, 0.7, 44.0)):
-        wd = w * (0.65 + 0.7 * lace)
-        bnd = np.clip(1 - np.abs(dh - off - 0.3 * np.sin(py * 0.3 + off)) / wd, 0, 1)
-        bnd = bnd * bnd * (3 - 2 * bnd) * amp * np.clip(1.05 - dback / flen, 0, 1)
-        bands = np.maximum(bands, bnd)
-    bands *= inhull
+    for (off, w, amp, flen) in ((3.2, 1.6, 1.0, 90.0), (7.6, 2.2, 0.9, 90.0), (12.6, 2.8, 0.8, 90.0)):
+        env = np.clip(1 - np.abs(dh - off - 0.3 * dback * (0.4 + off / 12.0) - 0.5 * np.sin(py * 0.17 + off)) / w, 0, 1); env = env * env * (3 - 2 * env)
+        thr = 0.5 - 0.3 * env                                            # centre of the band is the most foamy
+        patch = np.clip((nzp - thr) / 0.12, 0, 1)
+        bands = np.maximum(bands, patch * env * amp * np.clip(1.05 - dback / flen, 0, 1))
+    bands *= inhull * np.clip((STEM + 1.0 - py) / 7.0, 0, 1)
     bow = np.exp(-(((px - 0.0) / 3.2) ** 2 + ((py - (STEM + 2.0)) / 4.2) ** 2)) * 0.9
     foam = np.nan_to_num(np.clip(np.maximum(bands * 0.95, bow), 0, 1))
     verts = np.stack([px, py, h], -1).reshape(-1, 3).astype(np.float32)
@@ -261,6 +262,7 @@ def build_sea(P):
     m = bpy.data.materials.new('sea'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
     out = N('ShaderNodeOutputMaterial'); bs = N('ShaderNodeBsdfPrincipled')
     bs.inputs['Roughness'].default_value = 0.1; bs.inputs['IOR'].default_value = 1.33; bs.inputs['Specular IOR Level'].default_value = 0.5
+    cdv = N('ShaderNodeCameraData'); msp = N('ShaderNodeMapRange'); msp.inputs['From Min'].default_value = 20.0; msp.inputs['From Max'].default_value = 120.0; msp.inputs['To Min'].default_value = 0.22; msp.inputs['To Max'].default_value = 0.5; L(cdv.outputs['View Distance'], msp.inputs['Value']); L(msp.outputs['Result'], bs.inputs['Specular IOR Level'])
     def mixc(a, b, fac):
         mx = N('ShaderNodeMix'); mx.data_type = 'RGBA'
         if hasattr(a, 'node'): L(a, mx.inputs[6])
@@ -271,7 +273,7 @@ def build_sea(P):
     cd = N('ShaderNodeCameraData'); mr = N('ShaderNodeMapRange'); mr.inputs['From Min'].default_value = 22.0; mr.inputs['From Max'].default_value = 220.0; L(cd.outputs['View Distance'], mr.inputs['Value'])
     col = mixc(hexc(P['sea_near']), hexc(P['sea_far']), mr.outputs['Result'])
     gp = N('ShaderNodeNewGeometry'); spz = N('ShaderNodeSeparateXYZ'); L(gp.outputs['Position'], spz.inputs[0])
-    cr = N('ShaderNodeMapRange'); cr.inputs['From Min'].default_value = 0.62; cr.inputs['From Max'].default_value = 0.95; L(spz.outputs['Z'], cr.inputs['Value'])
+    cr = N('ShaderNodeMapRange'); cr.inputs['From Min'].default_value = 0.55; cr.inputs['From Max'].default_value = 0.9; L(spz.outputs['Z'], cr.inputs['Value'])
     tcw = N('ShaderNodeTexCoord'); mpw = N('ShaderNodeMapping'); mpw.inputs['Scale'].default_value = (1.1, 0.7, 1.0); L(tcw.outputs['Object'], mpw.inputs['Vector'])
     nzw = N('ShaderNodeTexNoise'); nzw.inputs['Scale'].default_value = 1.0; nzw.inputs['Detail'].default_value = 2.0; L(mpw.outputs[0], nzw.inputs['Vector'])
     sp2 = N('ShaderNodeMapRange'); sp2.inputs['From Min'].default_value = 0.52; sp2.inputs['From Max'].default_value = 0.64; L(nzw.outputs['Fac'], sp2.inputs['Value'])
@@ -302,9 +304,9 @@ PRESETS['ship'] = dict(
     sky=[(0.0, '#6c9ce0'), (0.46, '#a9c6e6'), (0.5, '#a4c4e6'), (0.58, '#7ea8e2'), (0.78, '#4f7ed0'), (1.0, '#3a64be')], sky_k=1.0,
     key=(1.0, 0.92, 0.78, 6.5), key_dir=kdir(140, 48), sun_angle=0.9, exposure=0.1, sat=1.08, amb=('#3050FF', 1.7), samples=80, dbounce=1, gloss=2,
     cloud=('#ffffff', '#8c9ce8'), cloud_diffuse=True, cloud_z=(70, 170), ncloud=8, cloud_seed=4, cloud_scale=0.8,
-    sea_near='#115f6e', sea_far='#0a2c4c', fresnel_k=0.7,
+    sea_near='#0a4a58', sea_far='#0a2c4c', fresnel_k=0.7,
     glit_az=6, glit_el=11, glit_k=30.0,
-    cam=dict(loc=(4.4, -4.0, 9.2), look=(4.4 - 3.6, -4.0 + 39.8, 9.2 - 7.9), lens=22))
+    cam=dict(loc=(2.4, 33.5, 8.9), look=(2.4 + 9.7, 33.5 + 38.8, 8.9 - 6.3), lens=22))
 
 def lights_ship(P):
     sun_light(P); w = sky_world2(P)
