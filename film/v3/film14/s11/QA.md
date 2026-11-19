@@ -19,3 +19,8 @@
 - Camera outside the front leg: (8.7,-2.5,3.0) -> (8.1,-2.6,3.1), 7.5 m back, tilted down 9 deg, lens 36 -> 38, looking along the front leg about 27 deg off-axis, lateral dolly 0.6 m + slight push. Yard clutter, lamp and huts cleared; foreground tufts kept (no unsharp mask this time). No glow, no people. DAY light as shot 11.
 - qa_auto PASS (117 frames, 18 samples).
 - Not met: about 6 hives distinct in my drafts (3 large + 3 small), not 7-8; sky ~30 %, ground ~50 % at 9 deg tilt (more tilt = more ground, longer yaw loses the fence).
+
+## v6 (shot 12 re-rendered, director recheck 3)
+- Camera moved back and to the right of the ring: (20,-6,3.3) -> (19.4,-6.1,3.4), lens 26 -> 27, tilt down 6.5 deg, lateral dolly 0.6 m + push. Draft counts (360x640 + 540x960 stills): g821 = 6-7 roof+box pairs (5 front-leg hives + corner hive of the right leg), g863 = 7. Yellow flower stalks / grass near the hive row removed; no glow, no farmer.
+- Not tilted down more (the director's 2-3 deg): that raises the ground share; ground is still ~50 %, sky ~35-40 %.
+- qa_auto PASS (117 frames, 18 samples).
