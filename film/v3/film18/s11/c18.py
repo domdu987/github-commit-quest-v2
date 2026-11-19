@@ -351,3 +351,11 @@ def lip(g, active):
     if not active:
         return "dash"
     return LIP_MAP[cast18.talk_mouth(g, 1.0)]
+
+
+def subject_x(T, shot, role="general"):
+    """screen x (px of 720) of the role's first stand mark (head height) at the current camera."""
+    from bpy_extras.object_utils import world_to_camera_view as w2c
+    m = S.marks_for(shot)[role][0]
+    c = w2c(T.sc, T.cam, V((m[0], m[1], m[2] + J.HEIGHT[role] - 0.5)))
+    return c.x * 720 if c.z > 0 else -9999

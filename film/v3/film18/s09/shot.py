@@ -8,7 +8,7 @@ import c18 as C                                                         # noqa: 
 
 SHOT = "s09"; G0, G1 = 674, 737; H_IN, H_OUT = 0, 0
 CAMLIN = 0.5
-PARAMS = (0.12, 120, 0.5, 0.9, 1.0, -0.8, -0.4)      # extra push, slide px/s, sway D, sway Hz, look wobble D, dz, dz/t  (c18.make_mod)
+PARAMS = (0.15, 0, 1.8, 0.7, 0.15, -0.8, -0.4, 0.3)      # extra push, slide px/s, sway D, sway Hz, look wobble D, dz, dz/t  (c18.make_mod)
 
 
 def patches(T):
