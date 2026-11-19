@@ -67,25 +67,28 @@ class Take:
             if i.users == 0 and i.name.startswith(('f14', 'contact_')): bpy.data.images.remove(i)
         for k in [k for k in G.MATS if k.startswith('f14_')]: G.MATS.pop(k)
 
-    def put(self, tag, cast, pose, mark, ppd=128, mirror=False, canvas=None, shadow=True, yaw_off=0.0, yaw_fixed=None, contact=(0.30, 0.16)):
+    def put(self, tag, cast, pose, mark, ppd=128, mirror=False, canvas=None, shadow=True, yaw_off=0.0, yaw_fixed=None, contact=(0.30, 0.16), overlay=None, flip=False):
         """real puppet sprite -> card standing at `mark` (feet), turned to the camera (yaw only). Returns anchors in world + screen."""
         pose = dict(pose); pose['mirror'] = bool(mirror)
         cv = canvas or cast14.CANVAS14[cast]
         self.n += 1; ntag = 'f14_%s_%d' % (tag, self.n)
         out = os.path.join(self.spr, ntag + '.png')
-        r = sprites.render_sprites([dict(cast=cast, pose=pose, px_per_D=ppd, out=out, canvas=cv)])[0]
+        job = dict(cast=cast, pose=pose, px_per_D=ppd, out=out, canvas=cv)
+        if overlay: job['overlay'] = overlay
+        r = sprites.render_sprites([job])[0]
         assert not r['clipped'], 'sprite clipped by canvas: %s %s' % (tag, cast)
         x0, y0, x1, y1 = r['canvas']; fx, fy = r['feet']
         X0, X1 = x0 * MPD, x1 * MPD; Z0, Z1 = -y1 * MPD, -y0 * MPD
         me = bpy.data.meshes.new(ntag); me.from_pydata([(X0, 0, Z0), (X1, 0, Z0), (X1, 0, Z1), (X0, 0, Z1)], [], [(0, 1, 2, 3)]); me.update()
         uvl = me.uv_layers.new(name='UVMap')
-        for i, c in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uvl.data[i].uv = c
+        for i, c in enumerate(((1, 0), (0, 0), (0, 1), (1, 1)) if flip else ((0, 0), (1, 0), (1, 1), (0, 1))): uvl.data[i].uv = c
         P = F.STATE['P']; m = G.mat_card(ntag + '_mat', out, P.get('card_k', 1.0)); me.materials.append(m)
         mk = Vector(mark); cl = self.cam.location
         d = cl - mk; yaw = (math.atan2(d.x, -d.y) + math.radians(yaw_off)) if yaw_fixed is None else yaw_fixed
         ob = bpy.data.objects.new('actor_' + ntag, me); bpy.context.scene.collection.objects.link(ob); ob.location = mk; ob.rotation_euler = (0, 0, yaw)
         ax = Vector((math.cos(yaw), math.sin(yaw), 0))
-        def w(a): return mk + ax * ((a[0] - fx) * MPD) + Vector((0, 0, (fy - a[1]) * MPD))
+        sgn = -1.0 if flip else 1.0
+        def w(a): return mk + ax * (sgn * (a[0] - fx) * MPD) + Vector((0, 0, (fy - a[1]) * MPD))
         if shadow and contact:
             self._contact(ntag, mk, yaw, contact[0] * 8 * MPD, contact[1] * 8 * MPD, cast)
         return dict(world=w, anchors=r['anchors'], res=r)
