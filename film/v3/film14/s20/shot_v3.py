@@ -37,9 +37,10 @@ def cam_of(g):
         x0 = lerp(6.0, 3.0, p); y0 = lerp(11.5, 9.3, p); z0 = lerp(1.55, 1.1, p)
         loc = (lerp(x0, -6.0, e), lerp(y0, 7.6, e), lerp(z0, 1.5, e))
         look = (lerp(lerp(6.0, 6.5, p), loc[0] - 2.4, e), lerp(5.0, 5.2, e), lerp(lerp(2.6, 2.1, p), 1.9, e))
+        if g < 1307: loc = (loc[0] + 0.02 * (1307 - g), loc[1] + 0.04 * (1307 - g), loc[2])      # handle frames drift slightly (never frozen)
         return loc, look, lerp(lerp(20, 24, p), 28, e)
     # shot 21: the wave front runs LEFT along the row (u3 g~1381, u2 1398, u1 1415, u0 1431); the camera sits ahead of it, 41 deg to the row, looking back at the hive being knocked -> the pendulum swing is seen side-on
-    fx = 6.0 - 0.3 * (g - 1368)
+    dg = g - 1368; fx = 6.0 - 0.3 * dg if dg <= 60 else -12.0 - 0.05 * (dg - 60)
     return (fx - 4.2, 1.6, 2.3), (fx, 5.0, 1.6), 24
 
 def hive_scale(cam_loc, h): return 1.5
