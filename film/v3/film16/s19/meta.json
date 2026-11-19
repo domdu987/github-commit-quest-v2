@@ -1,0 +1,59 @@
+{
+ "take": "s19",
+ "film": 16,
+ "shots": [
+  19
+ ],
+ "g0": 1226,
+ "g1": 1268,
+ "first_g": 1217,
+ "n_frames": 60,
+ "shot_ranges": {
+  "19": [
+   1226,
+   1267
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 13
+ },
+ "set": "v3/set3d16 LINE line_wide, light DAY (no overcast variant used), poles bare 3 -> 4 at g 1259 (pole 3 stands, wire spans), ladder + train hidden",
+ "cast": "morse16 morse_raise_pole, worker16_a / worker16_b raise_pole (CANVAS16_POLE); hand-held pole props until g 1259, then the set's pole 3",
+ "camera": "custom 22 mm CamPath on the group: push 11 %/s + slide -45 px/s + snap x1.5 with 0.3 D pan toward Morse and the new pole g 1248..1261 on the word ลวดบนเสาไม้ (bible lists shot 19 for a snap)",
+ "events": {
+  "pole_up": 1259,
+  "snap": [
+   1248,
+   1261
+  ]
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "samples": 7,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 12.55,
+ "s_per_frame_cpu_mean": 24.54,
+ "framediff_in_shot": {
+  "median": 3.63,
+  "p90": 12.88
+ },
+ "narration": "film16/audio/narration.wav at +0.10 s; captions film16/script/captions.json",
+ "head_px": [
+  98,
+  193
+ ],
+ "head_centre_y": [
+  634,
+  692
+ ],
+ "head_bottom_max_y": 772
+}

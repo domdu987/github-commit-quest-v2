@@ -1,0 +1,6 @@
+{"take":"s19","shots":[19],"g0":1226,"g1":1268,"handle_in":9,"handle_out":9,"shot_ranges":{"19":[1226,1267]},
+ "transition_in":{"type":"dissolve","frames":13},"light":"DAY","cast":"morse16 morse_raise_pole, worker16_a / worker16_b raise_pole (CANVAS16_POLE); hand-held pole props until g 1259, then the set's pole 3",
+ "set":"v3/set3d16 LINE line_wide, light DAY (no overcast variant used), poles bare 3 -> 4 at g 1259 (pole 3 stands, wire spans), ladder + train hidden",
+ "camera":"custom 22 mm CamPath on the group: push 11 %/s + slide -45 px/s + snap x1.5 with 0.3 D pan toward Morse and the new pole g 1248..1261 on the word ลวดบนเสาไม้ (bible lists shot 19 for a snap)",
+ "events":{"pole_up":1259,"snap":[1248,1261]},
+ "cues":[{"f":1226,"kind":"ambience","label":"overcast warm countryside, workers grunting-free effort, creak of rope and wood"},{"f":1259,"kind":"prop","label":"the pole thuds upright into its hole, wire hums"}]}
