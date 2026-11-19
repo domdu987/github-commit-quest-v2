@@ -250,7 +250,7 @@ def setup_render(scene, quality='final'):
     c.use_denoising = True; c.denoiser = 'OPENIMAGEDENOISE'; c.denoising_input_passes = 'RGB_ALBEDO_NORMAL'; c.denoising_prefilter = 'FAST'
     c.use_adaptive_sampling = False
     ind = STATE.get('loc') != 'line'
-    c.max_bounces = 2; c.diffuse_bounces = 0; c.glossy_bounces = 1; c.transmission_bounces = 0; c.transparent_max_bounces = 8
+    c.max_bounces = 2; c.diffuse_bounces = 0; c.glossy_bounces = 1; c.transmission_bounces = 2 if STATE.get('loc') == 'line' else 0; c.transparent_max_bounces = 8   # line: the wagon crate's transmissive bottles
     c.use_light_tree = False; c.filter_width = 1.2; r.threads_mode = 'FIXED'; r.threads = 2
     scene.view_settings.view_transform = 'Standard'; scene.view_settings.look = 'None'
     r.image_settings.file_format = 'PNG'; r.image_settings.color_mode = 'RGB'; r.film_transparent = False
@@ -304,7 +304,7 @@ def _marks(loc):
         m.update(morse_ladder=_pm(*rg), morse_ladder_foot=_pm(px(4.0) + 1.6, 2.2, 0.0), morse_wide=_pm(px(4.0) - 0.7, 0.4, 0.0), morse_wire=_pm(-3.0, 24.0, 0.0), morse_rail=_pm(-4.6, 21.0, 0.0),
                  morse_pole=_pm(px(13.0) + 1.1, 12.0, 0.0), morse_ladder3=_pm(px(31.0) + 0.5, 30.5, 3.3),
                  morse_key=_pm(kx + 0.6, ky + 1.1, 0.0), worker_key_a=_pm(kx - 0.9, ky + 1.2, 0.0), worker_key_b=_pm(kx + 2.0, ky + 1.4, 0.0), worker_key_c=_pm(kx + 0.0, ky + 2.2, 0.0),
-                 morse_wagon_key=_pm(*wl(-1.6, 0.0, 1.0)), worker_wagon=_pm(wx_ + 1.4, wy - 2.6, 0.0), morse_wagon_bed=_pm(*wl(0.5, 0.0, 1.0)), morse_bottle=_pm(*wl(0.5, 0.0, 1.0)))
+                 morse_wagon_key=_pm(*wl(-1.6, 0.0, 1.0)), worker_wagon=_pm(wx_ + 1.4, wy - 2.6, 0.0), morse_wagon_bed=_pm(*wl(1.1, 0.0, 1.0)), morse_bottle=_pm(*wl(1.1, 0.0, 1.0)))
         for i, y in enumerate((44.0, 49.0, 54.0, 59.0)): m['platform_%s' % 'abcd'[i]] = _pm(pl[0] - 1.3 - 0.4 * (i % 2), y, 1.0)
         m.update(pit_ground=_pm(LN.PIT[0], LN.PIT[1], 0.0))
         m.update(plough_marks(0.5)); m.update(buggy_marks(36.0))
@@ -403,9 +403,9 @@ CAMS_M = dict(
     line_trench_snap2=((-1.5, 22.0, 4.2), (3.3, 41.0, 0.8)),
     line_trench_snap3=((-2.0, 34.0, 7.5), (3.3, 58.0, 0.4)),
     line_trench_end=((0.6, 60.0, 1.8), (3.8, 65.0, 1.0)),
-    trench_cut=((52.2, 11.0, -1.05), (52.0, 13.3, -0.75)),
+    trench_cut=((51.7, 11.3, 0.15), (52.05, 13.2, -1.0)),
     line_road=((6.4, 32.6, 1.0), (1.0, 36.0, 1.8)),
-    line_wagon=((-4.6, 63.8, 2.5), (-0.9, 69.5, 2.2)),
+    line_wagon=((-3.8, 68.3, 0.95), (-0.95, 70.25, 2.15)),
     # STUDIO
     studio_wide=((-3.3, -2.2, 3.0), (1.0, 4.6, 0.6)),
     studio_easel=((-0.2, -0.6, 1.5), (-0.2, 3.6, 0.95)),
@@ -421,7 +421,7 @@ EXTRA_CAMS = {'line': ['line_station', 'line_trench_snap1', 'line_trench_snap2',
 LIGHT_CAM = {('chamber_table', 'NIGHT'): 'chamber_table_night'}
 CAM_NOTES = dict(
     line_close='low angle up the hero pole 1 (hook): the oversize inverted green bottle on the peg, the wire wrapped round the glass, the ladder LEANING on the pole with Morse on a rung, 3 blades in FG',
-    bottle_macro='macro on the glass neck of pole 1 (shot 24): park the pulse bead on the glass with set_pulse(TG.pulse_s_at_pole(1))',
+    bottle_macro='macro on the glass of pole 1 (shot 24): set_pulse(TG.pulse_s_at_pole(1)) parks the pulse head inside the glass (cyan glow in the glass, pole below dark)',
     line_wide='sb1: dirt road with the poles marching to the horizon, wheat, fences, the train far left, farm',
     line_rail='from the far side of the track: the loco side-on in the mid-ground (wheels, rods, steam chain), the pole line + wire behind it for the pulse race',
     line_station='from the road toward the station platform beyond the track (shot 27): train puffing in, 4 platform marks',
@@ -429,9 +429,9 @@ CAM_NOTES = dict(
     line_trench_high='higher view down the furrow',
     line_trench_snap1='snap 1 of 3 (shot 14): set_trench(0.3)', line_trench_snap2='snap 2 of 3: set_trench(0.6)', line_trench_snap3='snap 3 of 3: set_trench(0.9)',
     line_trench_end='crate with the big test key + register and a wire coil at the furrow end, the wagon behind',
-    trench_cut='cut face of damp soil strata with the lead pipe split open: torn cloth, copper wire, blue sparks leaking down the face',
+    trench_cut='slightly high three-quarter view at the cut face of damp soil strata: the round grey lead pipe across the frame, torn open in the middle (curled lips, copper wire, cream rags), cyan drips falling into the soil',
     line_road='low from the pole side to the road: green buggy, mocker seated, mule in the shafts',
-    line_wagon='raised view onto the wagon: the crate of 18 empty green bottles, spool, key crate; Morse on the bed',
+    line_wagon='low view up at the wagon bed: the crate of 8 empty green bottles (4 x 2, necks free above a low rim, on the after-rain sky, 4 sun glints), key crate; Morse on the bed left of the crate with clear sky round his head',
     studio_wide='from the front-left corner: tall window with the road and fields, the easel, canvases, busts (crane down from the window light)',
     studio_easel='easel with the unfinished general, side table with paint jars + the oval wife portrait + the letter, jars in FG',
     studio_door='toward the door on the right wall (messenger), the stool and the easel',
@@ -458,7 +458,7 @@ STAGING = dict(
 _LN = dict(poles=('bottle', 17))
 PRESETS = dict(
     line_close=dict(loc='line', light='AFTER_RAIN', cam='line_close', state=dict(poles=('bottle', 17), trench=0.0, pipe=0.0, train=None)),
-    bottle_macro=dict(loc='line', light='AFTER_RAIN', cam='bottle_macro', state=dict(poles=('bottle', 17), trench=0.0, pipe=0.0, train=None, pulse=('pole', 1))),
+    bottle_macro=dict(loc='line', light='AFTER_RAIN', cam='bottle_macro', state=dict(poles=('bottle', 17), trench=0.0, pipe=0.0, train=None, pulse=('pole', 1), glass_emit=0.35)),
     line_wide=dict(loc='line', light='DAY', cam='line_wide', state=dict(poles=('bottle', 17), trench=0.0, pipe=0.0, train='home')),
     line_rail=dict(loc='line', light='DAY', cam='line_rail', state=dict(poles=('bottle', 17), trench=0.0, pipe=0.0, train=40.7, pulse=('y', 23.5))),
     line_trench=dict(loc='line', light='DAY', cam='line_trench', state=dict(poles=('none', 0), trench=0.5, pipe=0.45, train=None)),
@@ -496,6 +496,7 @@ def apply_preset_state(preset):
         s, n = st.get('poles', ('bottle', LN.NPOLE)); set_poles(s, n); set_trench(st.get('trench', 1.0)); set_pipe(st.get('pipe', 1.0)); set_ladder(True, 0); set_ladder(preset in ('line_wide', 'line_rail', 'line_station'), 3)
         set_rain(st.get('rain', False)); set_leak('pipe', 0.0); set_leak('pole', 0.0); set_pulse(-1); set_buggy(st.get('buggy', None)); set_train(st.get('train', None))
         if st.get('leak'): set_leak(*st['leak'])
+        if 'glass_emit' in st: MATS['glass'].node_tree.nodes['Principled BSDF'].inputs['Emission Strength'].default_value = st['glass_emit']   # macro: less green self-glow, the pulse cyan wins
         pu = st.get('pulse')
         if pu:
             if pu[0] == 'pole': set_pulse(pulse_s_at_pole(pu[1]))
@@ -678,29 +679,42 @@ def set_leak(where='pipe', intensity=1.0, frame=None):
         S[where] = _make_sparks(where)
     sp = S[where]; t = (frame if frame is not None else bpy.context.scene.frame_current) / 30.0; it = float(intensity)
     for j, o in enumerate(sp['objs']):
-        core, halo, fn = o
-        if it <= 0: _show([core, halo], False, frame); continue
+        core, halo, fn = o; both = [core] + ([halo] if halo is not None else [])
+        if it <= 0: _show(both, False, frame); continue
         u = (t * sp['rate'] + j / len(sp['objs']) + sp['ph'][j]) % 1.0; p, s_, vis = fn(j, u, t)
-        vis = vis and it > 0.01; _show([core, halo], vis, frame)
-        core.location = halo.location = p; core.scale = (s_ * (0.5 + 0.5 * it),) * 3; halo.scale = (s_ * 2.2 * (0.4 + 0.6 * it),) * 3
-        if frame is not None: _keyxf(core, frame, True, False, True); _keyxf(halo, frame, True, False, True)
+        vis = vis and it > 0.01; _show(both, vis, frame)
+        core.location = p; core.scale = (s_ * (0.5 + 0.5 * it),) * 3
+        if halo is not None: halo.location = p; halo.scale = (s_ * 2.2 * (0.4 + 0.6 * it),) * 3
+        for o_ in both:
+            if frame is not None: _keyxf(o_, frame, True, False, True)
 
 def _make_sparks(where):
-    M = STATE['M']; core_m = _emit_mat('sparkcore', '#c8e8ff', 40.0); halo_m = _glow_mat('sparkhalo', '#4a8cff', 4.0, 3.0); rr = rnd(55); objs = []; ph = []
-    n = 18 if where == 'pipe' else 12
-    for j in range(n):
-        for nm, m_ in (('c', core_m), ('h', halo_m)):
-            mb = MB('spk_%s%d%s' % (where, j, nm)); mb.T = Matrix.Identity(4); mb.ell(m_, (0, 0, 0), ((0.026 if where == 'pole' else 0.05) * SC,) * 3, (10, 6)); o = mb.finish()[0]; o.visible_shadow = False
-            if nm == 'c': core = o
-            else: halo = o
-        ph.append(rr.random());
-        objs.append([core, halo, None])
+    """where 'pipe': 18 solid cyan drips (no glow ring), each stretched 3x along its fall, from the lower lip of the torn pipe down into the soil;
+    'pole': 12 small beads with a soft glow crawling down the wet wood"""
+    M = STATE['M']; rr = rnd(55); objs = []; ph = []
     if where == 'pipe':
-        pit = STATE['pit']; cx, cy = pit['c']; fy = pit['face_y']; z0 = pit['z0']; x0, x1 = pit['w']
-        def fn(j, u, t, cx=cx, fy=fy, z0=z0, x0=x0, x1=x1):
-            sg = -1 if j % 2 else 1; xs = x0 + 0.2 + (x1 - x0 - 0.4) * ((j * 0.37) % 1.0)
-            p = W((xs + sg * 0.5 * u * u + 0.05 * math.sin(9 * u + j), fy - 0.2 - 0.05 * u, z0 + 0.12 - 1.05 * u + 0.1 * math.sin(5 * u + j)))
-            return p, 1.0 - 0.45 * u, u < 0.93
+        drip_m = _emit_mat('sparkdrip', SPARK_DRIP[0], SPARK_DRIP[1])
+        for j in range(18):
+            r = rr.uniform(0.014, 0.022) * SC
+            mb = MB('spk_pipe%dc' % j); mb.T = Matrix.Identity(4); mb.ell(drip_m, (0, 0, -r), (r, r, 3.0 * r), (10, 8)); core = mb.finish()[0]
+            core.visible_shadow = False; core.visible_glossy = False; core.visible_diffuse = False
+            ph.append(rr.random()); objs.append([core, None, None])
+    else:
+        core_m = _emit_mat('sparkcore', '#c8e8ff', 40.0); halo_m = _glow_mat('sparkhalo', '#4a8cff', 4.0, 3.0)
+        for j in range(12):
+            for nm, m_ in (('c', core_m), ('h', halo_m)):
+                mb = MB('spk_%s%d%s' % (where, j, nm)); mb.T = Matrix.Identity(4); mb.ell(m_, (0, 0, 0), (0.026 * SC,) * 3, (10, 6)); o = mb.finish()[0]; o.visible_shadow = False
+                if nm == 'c': core = o
+                else: halo = o
+            ph.append(rr.random()); objs.append([core, halo, None])
+    if where == 'pipe':
+        pit = STATE['pit']; x0, x1 = pit['w']; ya, R_, z0, TC = pit['ya'], pit['R'], pit['z0'], pit['tc']; zf = -pit['d'] + 0.03
+        def fn(j, u, t, x0=x0, x1=x1, ya=ya, R_=R_, z0=z0, TC=TC, zf=zf):
+            v = 0.1 + 0.8 * ((j * 0.37) % 1.0); xs = x0 + (x1 - x0) * v; env = math.sin(math.pi * v) ** 0.75
+            e_ = TC - math.radians(4.0 + 58.0 * env); ys = ya - R_ * math.cos(e_) - 0.02; zs = z0 + R_ * math.sin(e_) - 0.03
+            zz = zs - (zs - zf + 0.1) * u ** 1.7
+            p = W((xs + 0.04 * math.sin(3 * u + j), ys - 0.04 * u, zz))
+            return p, 1.0 - 0.3 * u, zz > zf
         rate = 0.45
     else:
         def fn(j, u, t):
@@ -711,29 +725,61 @@ def _make_sparks(where):
     for j, o in enumerate(objs): o[2] = fn
     return dict(objs=[tuple(o) for o in objs], rate=rate, ph=ph)
 
+SPARK_DRIP = ('#5cd8ff', 1.6)   # pipe leak drips: solid cyan emission (colour, strength)
+PULSE_L = 1.0          # comet length (sb metres along the wire) = 1.85 D
+PULSE_N = 24           # tube segments (24 samples + the head)
+WIRE_R = 0.03          # wire radius (sb metres), tg_line.build_poles
+PULSE_HEAD_R = 0.05    # hot head (sb metres); its glow is 2.2 x this
+PULSE_GLASS_K = 4.0    # cyan glow strength inside the glass round the head (telegraph_kit.pulse_glow)
+PULSE_PARK_Z = 0.30    # parked head height inside the inverted bottle, in units of LN.BS above the mouth (the wire wrap ring is at 0.31)
+
+def _pulse_head_target(p):
+    """if the wire point p (sb frame) is over a bottle top, pull the head down INSIDE the glass (centre of the wire wrap ring); smooth blend 0..1 within 0.45 m"""
+    if STATE.get('pole_state', ('bottle', LN.NPOLE))[0] != 'bottle': return p, 0.0
+    i = min(range(LN.NPOLE), key=lambda q: abs(LN.POLES_Y[q] - p[1])); y = LN.POLES_Y[i]
+    n = STATE.get('pole_state', ('bottle', LN.NPOLE))[1]
+    if n is not None and i >= n: return p, 0.0
+    c = Vector((LN.px(y) + 0.03, y, LN.POLE_H + 0.01 + PULSE_PARK_Z * LN.BS)); d = math.hypot(p[0] - c.x, p[1] - c.y)
+    w = max(0.0, min(1.0, 1.0 - (d - 0.08) / 0.37)); w = w * w * (3 - 2 * w)
+    return Vector(p).lerp(c, w), w
+
+def _wire_at(pts, cum, d):
+    d = max(0.0, min(cum[-1], d)); i = int(np.searchsorted(cum, d)); i = max(1, min(i, len(cum) - 1)); u = (d - cum[i - 1]) / max(1e-9, cum[i] - cum[i - 1])
+    return Vector(pts[i - 1]).lerp(Vector(pts[i]), u)
+
 def set_pulse(s, frame=None):
-    """hot cyan-white bead + a continuous tapered trail (41 beads, tightly spaced) along the whole wire, s 0..1 (path follows the current pole state: over the glass of every bottle, or the bare wire);
-    a small cyan light travels with the head (rim glow inside the glass when it is parked on a bottle); s < 0 hides it."""
+    """ONE glowing pulse along the whole wire, s 0..1 (path follows the current pole state: over the glass of every bottle, or the bare wire):
+    a continuous tapered emissive tube sheathing the wire (PULSE_L = 1 m = 1.85 D behind the head; white-hot only at the head, cyan along the trail, fading out over its last 30 %),
+    a hot head with a soft cyan glow (2.2 x the head) and a small cyan light linked to the bottle glass only (the glass glows, the pole below stays dark).
+    At a pole the head slides off the wire INTO the glass (centre of the wire wrap): pulse_s_at_pole(i) parks it there. s < 0 hides it. Keyed per frame with frame=n."""
     _line_only()
     if 'pulse' not in STATE:
         if s < 0: return
         _make_pulse()
-    Pz = STATE['pulse']; st = STATE.get('pole_state', ('bottle', LN.NPOLE))[0]; st = st if st in ('bottle', 'bare') else 'bottle'
-    pts, cum = STATE['wire_pts'][st]; tot = cum[-1]; lo = STATE['pulse_light']
-    for k, (core, halo, lag) in enumerate(Pz):
-        ss = s - lag; objs = [core] + ([halo] if halo is not None else [])
-        if s < 0 or ss < 0 or ss > 1:
-            _show(objs, False, frame)
-            if k == 0: _setv(lo, False, frame)
-            continue
-        d = ss * tot; i = int(np.searchsorted(cum, d)); i = max(1, min(i, len(cum) - 1)); u = (d - cum[i - 1]) / max(1e-6, cum[i] - cum[i - 1])
-        p = Vector(pts[i - 1]).lerp(Vector(pts[i]), u); pw = W(p); _show(objs, True, frame)
-        for o in objs: o.location = pw
+    core, halo, _ = STATE['pulse'][0]; tube = STATE['pulse_tube']; lo = STATE['pulse_light']
+    st = STATE.get('pole_state', ('bottle', LN.NPOLE))[0]; st = st if st in ('bottle', 'bare') else 'bottle'
+    pts, cum = STATE['wire_pts'][st]; tot = cum[-1]
+    gP = K.pulse_group().nodes['P']; gK = K.pulse_group().nodes['K'].outputs[0]
+    if s < 0 or s > 1:
+        _show([core, halo, lo] + tube, False, frame); _keysock(gK, 0.0, frame); return
+    d0 = s * tot; ph = _wire_at(pts, cum, d0); head, w = _pulse_head_target(ph)
+    hw = W(head); _show([core, halo, lo], True, frame)
+    for i_ in range(3): _keysock(gP.inputs[i_], float(hw[i_]), frame)
+    _keysock(gK, PULSE_GLASS_K, frame)
+    for o in (core, halo, lo):
+        o.location = hw
+        if frame is not None: _keyxf(o, frame)
+    samp = [W(_wire_at(pts, cum, d0 - PULSE_L * k / PULSE_N)) for k in range(PULSE_N + 1)]
+    for k, o in enumerate(tube):
+        a, b = samp[k], samp[k + 1]; dv = b - a; ln = dv.length
+        vis = ln > 1e-4
+        _show(o, vis, frame)
+        if not vis: continue
+        q = dv.to_track_quat('Z', 'Y'); pq = o.rotation_quaternion
+        if q.dot(pq) < 0: q.negate()
+        o.location = a; o.rotation_quaternion = q; o.scale = (1.0, 1.0, ln)
         if frame is not None:
-            for o in objs: _keyxf(o, frame)
-        if k == 0:
-            lo.location = pw; _setv(lo, True, frame)
-            if frame is not None: _keyxf(lo, frame)
+            _key(o, 'location', frame); _key(o, 'rotation_quaternion', frame); _key(o, 'scale', frame)
 
 def _glow_mat(name, hexcol, k, power=1.6):
     """soft glow: emission whose opacity is 1 at the centre and falls to 0 at the silhouette"""
@@ -743,19 +789,58 @@ def _glow_mat(name, hexcol, k, power=1.6):
     em.inputs['Color'].default_value = hexc(hexcol); em.inputs['Strength'].default_value = k
     L(K.cos_facing(nt, power), mx.inputs[0]); L(tr.outputs[0], mx.inputs[1]); L(em.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface']); MATS[name] = m; return m
 
+PULSE_COL = dict(head=('#e8fdff', 20.0), mid=('#3cc8ff', 2.2), tail=('#3cc8ff', 1.3))
+def _pulse_tube_mat():
+    """emission along the tube parameter t (mesh attribute 'pt': 0 at the head, 1 at the tail): white-hot head -> cyan within the first 15 %, then cyan; the last 30 % fades to transparent"""
+    if 'pulsetube' in MATS: return MATS['pulsetube']
+    m = bpy.data.materials.new('pulsetube'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); at = N('ShaderNodeAttribute'); at.attribute_name = 'pt'
+    cr = N('ShaderNodeValToRGB'); cr.color_ramp.elements[0].position = 0.0; cr.color_ramp.elements[0].color = hexc(PULSE_COL['head'][0])
+    cr.color_ramp.elements[1].position = 0.15; cr.color_ramp.elements[1].color = hexc(PULSE_COL['mid'][0]); L(at.outputs['Fac'], cr.inputs['Fac'])
+    fc = N('ShaderNodeFloatCurve'); cv = fc.mapping.curves[0]; cv.points[0].location = (0.0, 1.0); cv.points[1].location = (1.0, 0.0); cv.points.new(0.15, PULSE_COL['mid'][1] / PULSE_COL['head'][1])
+    fc.mapping.clip_max_y = 1.0; fc.mapping.use_clip = True; cv.points.new(0.7, PULSE_COL['tail'][1] / PULSE_COL['head'][1])
+    for p in cv.points: p.handle_type = 'VECTOR'
+    fc.mapping.update(); L(at.outputs['Fac'], fc.inputs['Value'])
+    sm = N('ShaderNodeMath'); sm.operation = 'MULTIPLY'; sm.inputs[1].default_value = PULSE_COL['head'][1]; L(fc.outputs[0], sm.inputs[0])
+    em = N('ShaderNodeEmission'); L(cr.outputs['Color'], em.inputs['Color']); L(sm.outputs[0], em.inputs['Strength'])
+    mr = N('ShaderNodeMapRange'); mr.clamp = True; mr.inputs['From Min'].default_value = 0.7; mr.inputs['From Max'].default_value = 1.0; mr.inputs['To Min'].default_value = 1.0; mr.inputs['To Max'].default_value = 0.0
+    L(at.outputs['Fac'], mr.inputs['Value'])
+    tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader'); L(mr.outputs['Result'], mx.inputs[0]); L(tr.outputs[0], mx.inputs[1]); L(em.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface'])
+    MATS['pulsetube'] = m; return m
+
+def _tube_seg(name, m, r0, r1, t0, t1, seg=10):
+    """unit frustum along local +z (z 0 -> 1), radius r0 -> r1 (world D), attribute 'pt' t0 -> t1; scaled in z to the segment length per frame"""
+    import bmesh
+    bm = bmesh.new(); bmesh.ops.create_cone(bm, cap_ends=False, cap_tris=False, segments=seg, radius1=r0, radius2=r1, depth=1.0, matrix=Matrix.Translation((0, 0, 0.5)))
+    for f in bm.faces: f.smooth = True
+    me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free()
+    zs = [v.co.z for v in me.vertices]
+    if abs(me.vertices[0].co.z) < 0.5 and False: pass
+    lo_r = [v for v in me.vertices if v.co.z < 0.5]
+    if lo_r and abs(lo_r[0].co.xy.length - r0) > abs(lo_r[0].co.xy.length - r1) and abs(r0 - r1) > 1e-9:     # create_cone put radius1 on the other end: mirror
+        for v in me.vertices: v.co.z = 1.0 - v.co.z
+        me.flip_normals()
+    a = me.attributes.new('pt', 'FLOAT', 'POINT')
+    for v in me.vertices: a.data[v.index].value = t0 + (t1 - t0) * v.co.z
+    ob = bpy.data.objects.new(name, me); ob.data.materials.append(m); bpy.context.scene.collection.objects.link(ob)
+    ob.rotation_mode = 'QUATERNION'; ob.visible_shadow = False; ob.visible_glossy = False; ob.visible_diffuse = False; return ob
+
 def _make_pulse():
-    """ONE hot cyan-white head (core + small soft glow + a small cyan light) and a continuous tapered trail of 40 tightly spaced beads along the wire"""
-    core_m = _emit_mat('pulsecore', '#e4fbff', 80.0); halo_m = _glow_mat('pulsehalo', '#8fe0ff', 5.0, 2.5); L = []
-    for k in range(41):
-        r = (0.050 * (1.0 - k / 41.0) ** 1.3 + 0.006) * SC
-        mb = MB('pulse_c%d' % k); mb.T = Matrix.Identity(4); mb.ell(core_m, (0, 0, 0), (r,) * 3, (12, 8) if k < 6 else (8, 6)); c = mb.finish()[0]; c.visible_shadow = False; c.visible_glossy = False
-        h = None
-        if k == 0:
-            mb = MB('pulse_h0'); mb.T = Matrix.Identity(4); mb.ell(halo_m, (0, 0, 0), (r * 4.2,) * 3, (14, 10)); h = mb.finish()[0]; h.visible_shadow = False; h.visible_glossy = False
-        L.append((c, h, 0.0007 * k))
-    ld = bpy.data.lights.new('pulse_light', 'POINT'); ld.color = (0.55, 0.85, 1.0); ld.energy = 5.0 * SC * SC; ld.shadow_soft_size = 0.05 * SC; ld.use_shadow = False
+    """the hot head (core + 2.2x soft cyan glow), PULSE_N tube segments behind it and the small cyan light (light-linked to the bottle glass only)"""
+    core_m = _emit_mat('pulsecore', PULSE_COL['head'][0], PULSE_COL['head'][1]); halo_m = _glow_mat('pulsehalo', '#7ad8ff', 3.0, 1.8); tm = _pulse_tube_mat()
+    r = PULSE_HEAD_R * SC
+    mb = MB('pulse_c0'); mb.T = Matrix.Identity(4); mb.ell(core_m, (0, 0, 0), (r,) * 3, (14, 10)); c = mb.finish()[0]; c.visible_shadow = False; c.visible_glossy = False; c.visible_diffuse = False
+    mb = MB('pulse_h0'); mb.T = Matrix.Identity(4); mb.ell(halo_m, (0, 0, 0), (r * 2.2,) * 3, (16, 12)); h = mb.finish()[0]; h.visible_shadow = False; h.visible_glossy = False; h.visible_diffuse = False
+    rad = lambda t: WIRE_R * SC * (1.6 - 0.55 * t)                      # 1.6 x wire radius at the head -> 1.05 x at the tail (always sheathes the wire)
+    tube = [_tube_seg('pulse_t%02d' % k, tm, rad(k / PULSE_N), rad((k + 1) / PULSE_N), k / PULSE_N, (k + 1) / PULSE_N) for k in range(PULSE_N)]
+    ld = bpy.data.lights.new('pulse_light', 'POINT'); ld.color = (0.45, 0.85, 1.0); ld.energy = 15.0 * SC * SC; ld.shadow_soft_size = 0.05 * SC; ld.use_shadow = False
     lo = bpy.data.objects.new('pulse_light', ld); bpy.context.scene.collection.objects.link(lo); STATE['pulse_light'] = lo
-    STATE['pulse'] = L
+    glass = [o for p in STATE.get('poles', []) for o in p['peg'] if o.data.materials and o.data.materials[0].name.startswith('glass')]
+    if glass:                                                           # light linking: the pulse light lights the bottle glass only
+        col = bpy.data.collections.new('pulse_glass_rx')
+        for o in glass: col.objects.link(o)
+        lo.light_linking.receiver_collection = col
+    STATE['pulse'] = [(c, h, 0.0)]; STATE['pulse_tube'] = tube
 
 # ----------------------------------------------------------------------------- CLI
 def _load(): return ' '.join('%.2f' % v for v in os.getloadavg())

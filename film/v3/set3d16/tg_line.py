@@ -142,24 +142,40 @@ def build_poles(ST, M):
         ST['wire_pts'][nm] = (pts, cum)
 
 # ----------------------------------------------------------------------------- props
-def beer_bottle(mb, M, c, s=1.8, yaw=0.0):
-    """upright green beer bottle (body + shoulder + neck + lip), s scales the real 0.3 m bottle (film bottles are oversize)"""
-    x, y, z = c; G = M['glass']
+def beer_bottle(mb, M, c, s=1.8, yaw=0.0, G=None):
+    """upright green beer bottle (body + shoulder + neck + lip), s scales the real 0.3 m bottle (film bottles are oversize); G = glass material (default M['glass'])"""
+    x, y, z = c; G = G or M['glass']
     prof = [(0.037, 0.0), (0.037, 0.12), (0.034, 0.15), (0.02, 0.19), (0.0155, 0.22), (0.0155, 0.27), (0.019, 0.275), (0.019, 0.29), (0.0155, 0.295)]
-    for (r0, z0), (r1, z1) in zip(prof[:-1], prof[1:]): mb.rod(G, (x, y, z + z0 * s), (x, y, z + z1 * s), r0 * s, r1 * s, 12, caps=False, smooth=True)
-    mb.cyl(G, (x, y, z), 0.037 * s, 0.01 * s, 'z', 12); mb.cyl(M['gold'], (x, y, z + 0.298 * s), 0.014 * s, 0.006 * s, 'z', 10) if False else None
+    for (r0, z0), (r1, z1) in zip(prof[:-1], prof[1:]): mb.rod(G, (x, y, z + z0 * s), (x, y, z + z1 * s), r0 * s, r1 * s, 16, caps=False, smooth=True)
+    mb.cyl(G, (x, y, z), 0.037 * s, 0.01 * s, 'z', 16)
 
-def bottle_crate(mb, M, c, yaw=0.0, nb=(6, 3), s=2.4):
+def crate_glass():
+    """the wagon crate's bottle glass: clear green transmissive glass with no self-glow (reads by refraction and specular), separate from the pole glass"""
+    if 'glass_crate' in MATS: return MATS['glass_crate']
+    m = bpy.data.materials.new('glass_crate'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); out = nt.nodes.new('ShaderNodeOutputMaterial'); bs = nt.nodes.new('ShaderNodeBsdfPrincipled')
+    bs.inputs['Base Color'].default_value = hexc('#48b03a'); bs.inputs['Roughness'].default_value = 0.04; bs.inputs['IOR'].default_value = 1.45; bs.inputs['Transmission Weight'].default_value = 1.0
+    bs.inputs['Specular IOR Level'].default_value = 1.0; bs.inputs['Emission Strength'].default_value = 0.0; bs.inputs['Alpha'].default_value = 1.0
+    nt.links.new(bs.outputs[0], out.inputs['Surface']); MATS['glass_crate'] = m; return m
+
+def bottle_crate(mb, M, c, yaw=0.0, nb=(4, 2), s=2.9, G=None, wall=None, glints=None):
+    """crate of nb[0] x nb[1] upright bottles standing apart (pitch 1.4 x the body diameter); wall = side height (default 0.12 s: shoulders and necks stand free above the rim);
+    glints: {(i, j): neck height in units of s} -> a sun star + a thin white rim highlight on those necks"""
     x, y, z = c
     mb.push(Matrix.Translation((x, y, z)) @ Euler((0, 0, yaw)).to_matrix().to_4x4())
-    w, d, h = nb[0] * 0.095 * s * 0.55 + 0.1, nb[1] * 0.095 * s * 0.55 + 0.1, 0.26 * s * 0.8
+    pitch = 0.074 * s * 1.4; w, d = nb[0] * pitch + 0.1, nb[1] * pitch + 0.1; h = wall if wall is not None else 0.12 * s
     for sx in (-1, 1): mb.box(M['woodpale'], (sx * w / 2, 0, h / 2), (0.04, d, h))
     for sy in (-1, 1): mb.box(M['woodpale'], (0, sy * d / 2, h / 2), (w, 0.04, h))
     mb.box(M['wood'], (0, 0, 0.03), (w, d, 0.04))
+    for i in range(nb[0] - 1): mb.box(M['woodpale'], (-w / 2 + 0.05 + pitch * (i + 1), 0, h * 0.4), (0.02, d, h * 0.8))     # low dividers between the bottles
+    G = G or M['glass']; rim = M.get('glintrim')
     for i in range(nb[0]):
         for j in range(nb[1]):
-            bx = -w / 2 + 0.07 + i * (w - 0.14) / max(1, nb[0] - 1); by = -d / 2 + 0.07 + j * (d - 0.14) / max(1, nb[1] - 1)
-            beer_bottle(mb, M, (bx, by, 0.05), s)
+            bx = -w / 2 + 0.05 + pitch * (i + 0.5); by = -d / 2 + 0.05 + pitch * (j + 0.5)
+            beer_bottle(mb, M, (bx, by, 0.05), s, G=G)
+            if glints and (i, j) in glints:
+                zf = glints[(i, j)]; r_ = 0.0155 * s * 1.02
+                glint(mb, M, (bx - 0.35 * r_, by + 0.94 * r_, 0.05 + zf * s), 0.12)
+                if rim is not None: mb.rod(rim, (bx - 0.5 * r_, by + 0.87 * r_, 0.05 + 0.205 * s), (bx - 0.5 * r_, by + 0.87 * r_, 0.05 + 0.285 * s), 0.0045, 0.0045, 5)
     mb.pop()
 
 def key_station(mb, M, c, yaw=0.0, sc=1.6):
@@ -192,12 +208,10 @@ def wagon2(mb, M, c, yaw=0.0):
         mb.box(M['wood'], (sx, 0, 0.8), (0.12, 1.9, 0.12))
         for sy in (-1, 1): wheel(mb, M, (sx, sy * 0.95, 0.62 if sx < 0 else 0.5), 0.62 if sx < 0 else 0.5)
     mb.rod(M['wood'], (2.2, 0, 0.85), (5.0, 0, 0.45), 0.06, 0.05, 6)
-    z0 = 1.95
-    for sy in (-0.52, 0.52): mb.cyl(M['woodpale'], (1.2, sy, z0 - 0.1), 0.85, 0.1, 'y', 24)
-    mb.cyl(M['spool'], (1.2, 0, z0 - 0.1), 0.66, 0.96, 'y', 24, True); mb.cyl(M['wood'], (1.2, 0, z0 - 0.1), 0.15, 1.3, 'y', 10)
-    mb.rod(M['wiremat'], (1.2, -0.3, z0 - 0.1 + 0.66), (1.9, -0.3, 1.1), 0.02, 0.02, 4)
-    mb.box(M['woodpale'], (-0.35, 0.0, 1.26), (1.0, 0.8, 0.5)); mb.box(M['wood'], (-0.35, 0.0, 1.52), (1.04, 0.84, 0.04))        # pallet box lifts the bottle crate above the side boards
-    bottle_crate(mb, M, (-0.35, 0.0, 1.54), 0.0, (6, 3), 2.9)
+    for k in range(3): mb.cyl(M['wiremat'], (1.75, 0.25, 1.06 + k * 0.07), 0.32, 0.06, 'z', 20, True)                 # a low wire coil at the front end (the tall spool is gone: Morse's head is on clear sky)
+    mb.cyl(M['dark'], (1.75, 0.25, 1.13), 0.14, 0.22, 'z', 12)
+    mb.box(M['woodpale'], (-0.35, 0.0, 1.26), (1.3, 0.8, 0.5)); mb.box(M['wood'], (-0.35, 0.0, 1.52), (1.34, 0.84, 0.04))        # pallet box lifts the bottle crate above the side boards
+    bottle_crate(mb, M, (-0.35, 0.0, 1.54), 0.0, (4, 2), 2.9, G=crate_glass(), glints={(0, 1): 0.27, (2, 1): 0.235, (1, 0): 0.28, (3, 0): 0.25})
     key_station(mb, M, (-1.6, 0.0, 1.01), 0.0, 1.0)
     mb.pop()
 
@@ -329,7 +343,7 @@ def station(mb, M):
 
 # ----------------------------------------------------------------------------- the whole location
 def build_line(ST, P):
-    sc = bpy.context.scene; M = palette(); ST['M'] = M; M['glintm'] = mat_emit('glintm', '#fffbe8', 70.0)
+    sc = bpy.context.scene; M = palette(); ST['M'] = M; M['glintm'] = mat_emit('glintm', '#fffbe8', 70.0); M['glintrim'] = mat_emit('glintrim', '#ffffff', 8.0)
     ground(hole=(PIT[0] - PIT_HW, PIT[1] - PIT_HL, PIT[0] + PIT_HW, PIT[1] + PIT_HL))
     ST['hill_mats'] = hills_ring(P)
     kd = Wd(Vector((-0.4, 0.8, -0.4)).normalized()); ST['cloud_mat'] = clouds(kd, 16, (80, 280), 0.7)
@@ -347,7 +361,7 @@ def build_line(ST, P):
     mb.finish()
     # ----- trench (clipped by the TRENCH group) + pipe (PIPE group)
     mtd = mat('trdark', '#3a2216', '#4a2c1c', 3, clip='TRENCH'); mte = mat('trearth', '#5e3a24', '#7a4c30', 6, contrast=1.3, wet=True, clip='TRENCH')
-    mpl = mat('leadclip', '#7a7d84', '#7a7d84', 3, rough=1.0, sheen=0.0, clip='PIPE'); mbd = mat('trwall', '#4e301e', '#6a4228', 5, contrast=1.3, clip='TRENCH')
+    mpl = mat('leadclip', '#5e5a50', '#504c44', 4, contrast=1.3, rough=0.55, sheen=0.25, emit='#665e50', emit_k=1.0, clip='PIPE'); mbd = mat('trwall', '#4e301e', '#6a4228', 5, contrast=1.3, clip='TRENCH')
     mb = MB('trench')
     for y0 in range(int(Y0), int(Y1) + 4, 2):
         xt = xc(y0 + 1) + 2.3
@@ -441,7 +455,7 @@ def build_line(ST, P):
     pm = mat('puddle', '#3a4468', None, rough=0.03, sheen=1.0); pm.node_tree.nodes['Principled BSDF'].inputs['Metallic'].default_value = 0.4
     mb = MB('puddles'); rp_ = rnd(88)
     for (x, y, rx, ry) in [(px(4.0) - 0.9, 3.4, 0.9, 0.6), (px(13.0) - 0.8, 12.4, 0.8, 0.5), (px(22.0) - 0.9, 21.6, 1.0, 0.6), (px(31.0) - 1.0, 30.4, 0.9, 0.7), (xc(8) - 0.2, 8.0, 1.4, 0.8), (xc(20) + 0.3, 20.0, 1.2, 0.7),
-                           (xc(35) - 0.6, 34.0, 1.6, 0.9), (xc(47) + 0.5, 47.0, 1.4, 0.8), (xc(58) - 0.2, 59.0, 1.5, 0.8), (KEYCRATE[0] - 1.0, KEYCRATE[1] - 1.8, 1.0, 0.6), (WAGON[0] + 1.6, WAGON[1] - 1.0, 1.1, 0.7),
+                           (xc(35) - 0.6, 34.0, 1.6, 0.9), (xc(47) + 0.5, 47.0, 1.4, 0.8), (xc(58) - 0.2, 59.0, 1.5, 0.8), (KEYCRATE[0] - 1.0, KEYCRATE[1] - 1.8, 1.0, 0.6),
                            (xc(2) + 0.2, 1.2, 1.3, 0.7), (xc(14) + 0.9, 15.0, 1.0, 0.6), (3.0, -2.2, 1.2, 0.6), (xc(26) + 4.0, 26.0, 0.9, 0.5)]:
         mb.ell(pm, (x, y, 0.035), (rx, ry, 0.012), (16, 6), (0, 0, rp_.uniform(0, 3)))
     ST['puddles'] = mb.finish()
@@ -451,76 +465,102 @@ def build_line(ST, P):
 # ----------------------------------------------------------------------------- the cut-away pit (trench_cut)
 def build_pit(ST, M):
     """cut-away section: a 7 m wide pit; its back wall (y = cy + hl, facing -y) is the cut FACE of damp brown soil strata (topsoil with roots, clay, sand, gravel and pebbles)
-    with the lead pipe lying in it along x, split open in the middle: peeled lead flaps, torn cream cloth wrapping and bright copper wire; the blue sparks leak down the face."""
+    with the lead pipe lying in it along x, torn open in the middle: a lens-shaped mouth with short curled lead lips, the copper wire inside with ragged bands of its cream cloth wrapping,
+    9 cream rags hanging from the lower lip; cyan spark drips fall from the tear into the soil. The near wall is hidden from the camera (cut-away)."""
     cx, cy = PIT; hw, hl, d = PIT_HW, PIT_HL, PIT_D; fy = cy + hl; z0 = -0.72; R_ = 0.17
     top = mat('strat_top', '#4a2c1c', '#6a4228', 5, contrast=1.5, rough=0.45, sheen=0.3, wet=True); clay = mat('strat_clay', '#a8683c', '#c8844c', 5, contrast=1.3, rough=0.5, sheen=0.25, wet=True)
-    sand = mat('strat_sand', '#c89c64', '#e0b878', 6, contrast=1.3, rough=0.55, sheen=0.2, wet=True); grav = mat('strat_grav', '#8a7664', '#b09c88', 14, contrast=1.9, rough=0.5, sheen=0.2, wet=True)
-    mud = mat('strat_mud', '#5a3a24', '#7a5030', 5, contrast=1.5, rough=1.0, sheen=0.0)
+    sand = mat('strat_sand', '#c89c64', '#e0b878', 6, contrast=1.3, rough=0.55, sheen=0.2, wet=True); grav = mat('strat_grav', '#7a5232', '#946644', 14, contrast=1.2, rough=0.5, sheen=0.2, wet=True)
+    mud = mat('strat_mud', '#4e3220', '#604028', 3, contrast=0.8, rough=1.0, sheen=0.0)
     mb = MB('pit')
     bands = [(0.0, -0.32, top), (-0.32, -0.85, clay), (-0.85, -1.25, sand), (-1.25, -d, grav)]
     def wall(x0, x1, y_, facing, bnds=bands):
         for (za, zb, m_) in bnds:
             q = [(x0, y_, za), (x1, y_, za), (x1, y_, zb), (x0, y_, zb)]; mb.quad(m_, q if facing > 0 else q[::-1])
-    wall(cx - hw, cx + hw, fy, -1); wall(cx - hw, cx + hw, cy - hl, 1)
+    wall(cx - hw, cx + hw, fy, -1)
     for sg in (-1, 1):
         for (za, zb, m_) in bands:
             q = [(cx + sg * hw, cy - hl, za), (cx + sg * hw, fy, za), (cx + sg * hw, fy, zb), (cx + sg * hw, cy - hl, zb)]; mb.quad(m_, q if sg < 0 else q[::-1])
     mb.quad(mud, [(cx - hw, cy - hl, -d), (cx + hw, cy - hl, -d), (cx + hw, fy, -d), (cx - hw, fy, -d)][::-1])
     rp = rnd(61)
     for i in range(70):                                                                    # pebbles and roots on the face
-        mb.ell(M['dark'] if rp.random() < 0.3 else grav, (cx + rp.uniform(-hw, hw), fy - 0.03, rp.uniform(-d + 0.05, -0.05)), (rp.uniform(0.03, 0.09), 0.03, rp.uniform(0.02, 0.06)), (6, 4))
+        mb.ell(M['dark'] if rp.random() < 0.08 else grav, (cx + rp.uniform(-hw, hw), fy - 0.03, rp.uniform(-d + 0.05, -0.05)), (rp.uniform(0.03, 0.09), 0.03, rp.uniform(0.02, 0.06)), (6, 4))
     for i in range(14):
         xx = cx + rp.uniform(-hw, hw); mb.rod(M['trunk'], (xx, fy - 0.02, 0.0), (xx + rp.uniform(-0.15, 0.15), fy - 0.03, -rp.uniform(0.2, 0.7)), 0.018, 0.006, 5)
     for sg in (-1, 1):
         for i in range(9): mb.ell(M['earth'], (cx + sg * (hw + 0.3 + rp.uniform(0, 0.4)), cy - hl + i * 0.3 + rp.uniform(-0.1, 0.1), 0.1), (0.4, 0.3, 0.2), (8, 6))
     for i in range(12): mb.ell(M['earth'], (cx - hw + i * 0.62 + rp.uniform(-0.2, 0.2), cy - hl - 0.3 + rp.uniform(-0.1, 0.1), 0.1), (0.35, 0.3, 0.18), (8, 6))
     dm = mat('damp', '#4a2e1c', '#5e3c26', 6, rough=0.3, sheen=0.5)
-    for i in range(6): mb.ell(dm, (cx + rp.uniform(-1.4, 1.4), fy - 0.045, z0 + rp.uniform(-0.55, 0.15)), (rp.uniform(0.15, 0.35), 0.012, rp.uniform(0.08, 0.16)), (10, 6))
     mb.finish()
-    # pipe along x, embedded (axis y = fy - 0.17), split between x0..x1
-    ya = fy - R_ * 0.8; x0, x1 = cx - 1.3, cx + 1.3
-    mb = MB('pitpipe')
-    mb.rod(M['lead'], (cx - hw, ya, z0), (x0, ya, z0), R_, R_, 14, smooth=True); mb.rod(M['lead'], (x1, ya, z0), (cx + hw, ya, z0), R_, R_, 14, smooth=True)
-    n = 12
+    mb = MB('pitfront'); wall(cx - hw, cx + hw, cy - hl, 1)                               # the near wall: cut away for the camera (still blocks the low sun)
+    for o in mb.finish(): o.visible_camera = False; o.visible_glossy = False
+    # pipe along x, embedded in the face (axis y = ya), torn open in the middle (x0..x1): a lens-shaped torn mouth facing the camera and up,
+    # curled short lead lips with a jagged edge, the copper wire inside with ragged bands of its cream cloth wrapping, rags hanging from the lower lip
+    ya = fy - R_ * 0.8; x0, x1 = cx - 0.56, cx + 0.56; TC = math.radians(28.0)                     # TC: the mouth faces the camera, tilted 28 deg up
+    def pt(x_, t, r=R_): return (x_, ya - r * math.cos(t), z0 + r * math.sin(t))                     # t from the camera side (-y) through +z
+    mb = MB('pitpipe'); rj = rnd(63); M = dict(M); M['lead'] = mat('leadpit', '#625c52', '#544e46', 4, contrast=1.3, rough=0.32, sheen=0.55, emit='#665e50', emit_k=0.25)   # the pit pipe: same lead, less self-light (the pit is shaded from the blue sky)
+    mb.rod(M['lead'], (cx - hw, ya, z0), (x0 + 0.002, ya, z0), R_, R_, 24, smooth=True); mb.rod(M['lead'], (x1 - 0.002, ya, z0), (cx + hw, ya, z0), R_, R_, 24, smooth=True)
+    lin_ = mat('leadin', '#3a352e', '#2e2a25', 6, contrast=1.3, rough=0.7)
+    n, m_ = 28, 20; th = 0.022
+    half = []; lipL = []
+    for i in range(n + 1):
+        u = i / n; env = math.sin(math.pi * u) ** 0.75
+        half.append(math.radians(4.0 + 58.0 * env + (rj.uniform(-7, 7) if 0 < i < n else 0.0)))
+        lipL.append([0.0 if i in (0, n) else (0.06 + 0.15 * env) * rj.uniform(0.45, 1.0) for _s in (0, 1)])
     for i in range(n):
-        xa = x0 + (x1 - x0) * i / n; xb = x0 + (x1 - x0) * (i + 1) / n
-        for k in range(14):                                                                  # back shell: angles 55..305 (measured from the camera side -y, through +z)
-            t0 = math.radians(55 + k * (250 / 14)); t1 = math.radians(55 + (k + 1) * (250 / 14))
-            p = lambda t: (-math.sin(t) * 0 + 0, -math.cos(t), math.sin(t))
-            def pt(x_, t): return (x_, ya - R_ * math.cos(t), z0 + R_ * math.sin(t))
-            mb.quad(M['lead'], [pt(xa, t0), pt(xb, t0), pt(xb, t1), pt(xa, t1)])
-        for sgn in (1, -1):                                                                  # the peeled flaps: flat lead lips flaring out toward the camera (open mouth)
-            t_e = math.radians(55) * sgn; e0 = (ya - R_ * math.cos(t_e), z0 + R_ * math.sin(t_e)); d_ = (-0.82, 0.57 * sgn)
-            pa = [(e0[0] + d_[0] * 0.30 * u, e0[1] + d_[1] * 0.30 * u + (0.04 * u * u if sgn > 0 else -0.04 * u * u)) for u in (0.0, 0.5, 1.0)]
-            for k_ in range(2):
-                mb.quad(M['lead'], [(xa, pa[k_][0], pa[k_][1]), (xb, pa[k_][0], pa[k_][1]), (xb, pa[k_ + 1][0], pa[k_ + 1][1]), (xa, pa[k_ + 1][0], pa[k_ + 1][1])])
+        xa = x0 + (x1 - x0) * i / n; xb = x0 + (x1 - x0) * (i + 1) / n; ha, hb = half[i], half[i + 1]
+        for k in range(m_):                                                                    # outer shell + inner (dark) shell of the remaining pipe wall
+            ta0 = TC + ha + (2 * math.pi - 2 * ha) * k / m_; ta1 = TC + ha + (2 * math.pi - 2 * ha) * (k + 1) / m_
+            tb0 = TC + hb + (2 * math.pi - 2 * hb) * k / m_; tb1 = TC + hb + (2 * math.pi - 2 * hb) * (k + 1) / m_
+            mb.quad(M['lead'], [pt(xa, ta0), pt(xb, tb0), pt(xb, tb1), pt(xa, ta1)])
+            mb.quad(lin_, [pt(xa, ta0, R_ - th), pt(xa, ta1, R_ - th), pt(xb, tb1, R_ - th), pt(xb, tb0, R_ - th)])
+        for sgn, si in ((1, 0), (-1, 1)):                                                       # the torn edge: wall thickness + a short lip curling back over the pipe
+            ea, eb = TC + sgn * ha, TC + sgn * hb
+            mb.quad(M['lead'], [pt(xa, ea), pt(xa, ea, R_ - th), pt(xb, eb, R_ - th), pt(xb, eb)])
+            rows = []
+            for (x_, e_, L_) in ((xa, ea, lipL[i][si]), (xb, eb, lipL[i + 1][si])):
+                p = Vector(pt(x_, e_)); nrm = Vector((0.0, -math.cos(e_), math.sin(e_))); tg = Vector((0.0, math.sin(e_), math.cos(e_))) * (-sgn)   # tg: away from the mouth
+                d_ = nrm * 0.75 + tg * 0.25; d_.normalize(); row = [p.copy()]
+                for q in range(3):                                                             # 3 segments bending back (curl ~55 deg per segment)
+                    p = p + d_ * (L_ / 3.0); row.append(p.copy()); ang = math.radians(55.0)
+                    d_ = (d_ * math.cos(ang) + tg * math.sin(ang)); d_.normalize()
+                rows.append(row)
+            for q in range(3): mb.quad(M['lead'], [tuple(rows[0][q]), tuple(rows[1][q]), tuple(rows[1][q + 1]), tuple(rows[0][q + 1])])
     mb.finish()
-    cloth = mat('cloth', '#f0e2bc', '#d8c490', 10, contrast=1.3); tar = mat('tarcloth', '#8a6a44', '#a88858', 10)
-    mb = MB('pitwire'); rcl = rnd(62); yw = ya - 0.02
-    mb.rod(M['copper'], (cx - hw, yw, z0), (cx + hw, yw, z0), 0.05, 0.05, 10, smooth=True)                         # copper wire, bright
-    for i in range(14):                                                                     # intact cloth wrapping outside the split (inside the lead on the left / right the wire shows only where torn)
-        xx = x0 - 0.1 - i * 0.12; mb.rod(cloth if i % 2 else tar, (xx, yw - 0.0, z0 - 0.06), (xx + 0.08, yw, z0 + 0.06), 0.085, 0.085, 8)
-    for i in range(14):
-        xx = x1 + 0.1 + i * 0.12; mb.rod(cloth if i % 2 else tar, (xx, yw, z0 - 0.06), (xx + 0.08, yw, z0 + 0.06), 0.085, 0.085, 8)
-    for i in range(7):                                                                      # remnants of the wrapping inside the split, ragged
-        xx = x0 + 0.25 + i * 0.33; mb.rod(cloth, (xx, yw, z0 + 0.0), (xx + 0.12, yw, z0 + 0.0), 0.09, 0.09, 8) if i % 2 == 0 else None
-    for i in range(22):                                                                     # ragged torn cloth strips: jagged outline, different lengths, hanging toward the camera and down
-        xx = rcl.uniform(x0 - 0.35, x1 + 0.35); ln = rcl.uniform(0.18, 0.7); w0_ = rcl.uniform(0.05, 0.16); drift = rcl.uniform(-0.12, 0.12)
-        left = [(xx, yw - 0.1, z0 + 0.1)]; right = [(xx + w0_, yw - 0.1, z0 + 0.1)]
-        for j in range(1, 5):
-            u = j / 4.0; zz = z0 + 0.1 - ln * u; yy = yw - 0.1 - 0.18 * u
-            left.append((xx + drift * u + rcl.uniform(-0.03, 0.03), yy, zz)); right.append((xx + w0_ * (1.0 - 0.5 * u) + drift * u + rcl.uniform(-0.04, 0.04), yy - rcl.uniform(0, 0.02), zz + rcl.uniform(-0.04, 0.06)))
-        tip = (xx + w0_ * 0.4 + drift + rcl.uniform(-0.05, 0.05), yw - 0.3, z0 + 0.1 - ln - rcl.uniform(0.03, 0.12))
-        for j in range(4): mb.quad(cloth, [left[j], right[j], right[j + 1], left[j + 1]])
-        mb.tri(cloth, [left[4], right[4], tip])
+    cloth = mat('cloth', '#d9c9a4', '#c4b088', 10, contrast=1.5, rough=1.0, emit='#d9c4a0', emit_k=0.18); tar = mat('tarcloth', '#8a6a44', '#a88858', 10)
+    mb = MB('pitwire'); rcl = rnd(62); yw = ya
+    mb.rod(M['copper'], (cx - hw, yw, z0), (cx + hw, yw, z0), 0.055, 0.055, 12, smooth=True)                       # copper wire, bright
+    for (ua, ub) in ((-0.2, 0.16), (0.3, 0.41), (0.58, 0.66), (0.84, 1.2)):                         # ragged bands of the cloth wrapping round the wire inside the mouth
+        xa_, xb_ = x0 + (x1 - x0) * ua, x0 + (x1 - x0) * ub; mb.rod(cloth, (xa_, yw, z0), (xb_, yw, z0), 0.095, 0.095, 12, smooth=True)
+        for xe in (xa_, xb_):                                                                   # frayed ends
+            for f in range(5):
+                a = f * 1.3 + rcl.uniform(0, 0.5); mb.rod(cloth, (xe, yw - 0.09 * math.cos(a), z0 + 0.09 * math.sin(a)), (xe + rcl.uniform(-0.06, 0.06), yw - 0.11 * math.cos(a), z0 + 0.11 * math.sin(a) - 0.03), 0.012, 0.004, 4)
+    lip_lo = TC - 0.0
+    for i in range(9):                                                                          # 9 rags hanging from the lower lip of the tear: soft twisted ribbons, blunt frayed ends
+        u = 0.12 + 0.76 * (i + rcl.uniform(-0.3, 0.3)) / 8.0; xx = x0 + (x1 - x0) * u; env = math.sin(math.pi * u) ** 0.75
+        e_ = TC - math.radians(4.0 + 58.0 * env); top = Vector(pt(xx, e_)) + Vector((0, -0.015, 0.01))
+        ln = rcl.uniform(0.08, 0.30); w0_ = rcl.uniform(0.05, 0.095); tw = rcl.uniform(-0.9, 0.9); drift = rcl.uniform(-0.05, 0.05)
+        rows = []
+        for j in range(6):
+            v = j / 5.0; a = tw * v; c = Vector((xx + drift * v * v, top.y - 0.06 * math.sin(v * 2.2), top.z - ln * v))
+            hw_ = w0_ * (1.0 - 0.25 * v) / 2; dx = Vector((math.cos(a) * hw_, math.sin(a) * hw_, 0.0))
+            jl = rcl.uniform(-0.012, 0.012) if j == 5 else 0.0; jr = rcl.uniform(-0.03, 0.01) if j == 5 else 0.0
+            rows.append((c - dx + Vector((0, 0, jl)), c + dx + Vector((0, 0, jr))))
+        for j in range(5): mb.quad(cloth, [tuple(rows[j][0]), tuple(rows[j][1]), tuple(rows[j + 1][1]), tuple(rows[j + 1][0])])
+        for f in range(3):                                                                      # a few loose threads at the frayed end
+            q = rows[5][0].lerp(rows[5][1], 0.2 + 0.3 * f); mb.rod(cloth, tuple(q), tuple(q + Vector((rcl.uniform(-0.01, 0.01), 0, -rcl.uniform(0.02, 0.05)))), 0.004, 0.002, 3)
     mb.finish()
-    la = bpy.data.lights.new('pitsky', 'AREA'); la.shape = 'RECTANGLE'; la.size = 7.0 * SC; la.size_y = 3.0 * SC; la.color = (0.5, 0.62, 1.0); la.energy = 300.0 * SC * SC
-    lo = bpy.data.objects.new('pitsky', la); lo.location = W((cx, cy - 0.4, 1.6)); bpy.context.scene.collection.objects.link(lo); lo.visible_camera = False; la.use_shadow = False
-    lb = bpy.data.lights.new('pitspark', 'POINT'); lb.color = (0.4, 0.62, 1.0); lb.energy = 60.0 * SC * SC; lb.shadow_soft_size = 0.12 * SC
-    ob = bpy.data.objects.new('pitspark', lb); ob.location = W((cx, fy - 0.5, z0 - 0.2)); bpy.context.scene.collection.objects.link(ob)
-    lw = bpy.data.lights.new('pitwarm', 'POINT'); lw.color = (1.0, 0.72, 0.42); lw.energy = 7.0 * SC * SC; lw.shadow_soft_size = 0.2 * SC; lw.use_shadow = False
-    ow = bpy.data.objects.new('pitwarm', lw); ow.location = W((cx, fy - 0.8, z0 + 0.35)); bpy.context.scene.collection.objects.link(ow)
-    return dict(c=(cx, cy), hw=hw, hl=hl, d=d, face_y=fy, z0=z0, w=(x0, x1))
+    la = bpy.data.lights.new('pitsky', 'AREA'); la.shape = 'RECTANGLE'; la.size = 7.0 * SC; la.size_y = 3.0 * SC; la.color = (1.0, 0.82, 0.62); la.energy = 150.0 * SC * SC
+    lo = bpy.data.objects.new('pitsky', la); lo.location = W((cx, cy - 0.4, 1.6)); bpy.context.scene.collection.objects.link(lo); lo.visible_camera = False; la.use_shadow = True   # shadowed: the pipe underside and its shadow on the face stay dark (round read)
+    lb = bpy.data.lights.new('pitspark', 'POINT'); lb.color = (0.45, 0.85, 1.0); lb.energy = 25.0 * SC * SC; lb.shadow_soft_size = 0.12 * SC
+    ob = bpy.data.objects.new('pitspark', lb); ob.location = W((cx + 0.2, fy - 0.95, z0 - 0.6)); bpy.context.scene.collection.objects.link(ob)
+    lw = bpy.data.lights.new('pitwarm', 'SPOT'); lw.color = (1.0, 0.74, 0.46); lw.energy = 55.0 * SC * SC; lw.shadow_soft_size = 0.3 * SC; lw.use_shadow = False   # warm fill on the pipe + rags only
+    lw.spot_size = math.radians(34.0); lw.spot_blend = 0.8
+    ow = bpy.data.objects.new('pitwarm', lw); ow.location = W((cx - 0.5, fy - 1.7, z0 + 1.0)); bpy.context.scene.collection.objects.link(ow)
+    ow.rotation_euler = (Vector(W((cx, ya, z0 - 0.1))) - ow.location).to_track_quat('-Z', 'Y').to_euler()
+    for k_, (sx, sz) in enumerate(((-0.3, z0 - 0.45), (0.3, -d + 0.12))):                          # 2 small cyan lights on the soil under the split (face, floor): the leak lights the soil
+        lc_ = bpy.data.lights.new('pitcyan%d' % k_, 'POINT'); lc_.color = (0.45, 0.88, 1.0); lc_.energy = 4.0 * SC * SC; lc_.shadow_soft_size = 0.05 * SC; lc_.use_shadow = False
+        oc = bpy.data.objects.new('pitcyan%d' % k_, lc_); oc.location = W((cx + sx, fy - 0.25, sz)); bpy.context.scene.collection.objects.link(oc)
+    return dict(c=(cx, cy), hw=hw, hl=hl, d=d, face_y=fy, z0=z0, w=(x0, x1), ya=ya, R=R_, tc=TC)
 
 # ----------------------------------------------------------------------------- foreground dressing around a camera
 def fg_dress(ST, M, cam, look, items, seed=31, ngrass=260):

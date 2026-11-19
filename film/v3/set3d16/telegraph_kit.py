@@ -175,7 +175,7 @@ def palette():
     d['ballast'] = mat('ballast', '#9a8e86', '#c0aea0', 14, contrast=1.8, wet=True)
     d['sleeper'] = mat('sleeper', '#4a3426', '#6a4a34', 5, wet=True)
     d['rail'] = mat('rail', '#7a6058', '#a88c80', 3, rough=0.4, sheen=0.6)
-    d['lead'] = mat('lead', '#7a7d84', '#7a7d84', 3, rough=1.0, sheen=0.0)
+    d['lead'] = mat('lead', '#5e5a50', '#504c44', 4, contrast=1.3, rough=0.55, sheen=0.25, emit='#665e50', emit_k=1.0)   # warm-biased dark grey + a little self-light: stays grey under the blue ambient
     d['straw'] = mat('straw', '#d6b25a', '#eccb78', 7, contrast=1.3, wet=True)
     d['strawdk'] = mat('strawdk', '#b08a3c', '#d0a850', 7, wet=True)
     d['wheat'] = mat('wheat', '#c8a848', '#dcc068', 6, zgrad=(0.0, 0.5, '#8a9a46'), contrast=1.4, wet=True)
@@ -244,7 +244,25 @@ def glass_mat():
     out = N('ShaderNodeOutputMaterial'); bs = N('ShaderNodeBsdfPrincipled')
     bs.inputs['Base Color'].default_value = hexc('#2fa858'); bs.inputs['Roughness'].default_value = 0.04; bs.inputs['Specular IOR Level'].default_value = 1.0; bs.inputs['Alpha'].default_value = 0.62
     bs.inputs['Emission Color'].default_value = hexc('#3fc070'); bs.inputs['Emission Strength'].default_value = 0.9
-    L(bs.outputs[0], out.inputs['Surface']); MATS['glass'] = m; return m
+    L(pulse_glow(nt, bs.outputs[0]), out.inputs['Surface']); MATS['glass'] = m; return m
+
+PULSE_GLOW_R = 0.42      # metres: the glass glows cyan within this distance of the pulse head (falls off smoothly; the lower bottle and the pole stay dark)
+def pulse_group():
+    """node group TG_PULSE: P = world position of the pulse head (CombineXYZ 'P', keyed by telegraph.set_pulse), K = cyan glow strength (Value 'K')"""
+    g = bpy.data.node_groups.get('TG_PULSE')
+    if g is None:
+        g = bpy.data.node_groups.new('TG_PULSE', 'ShaderNodeTree'); g.interface.new_socket('P', in_out='OUTPUT', socket_type='NodeSocketVector'); g.interface.new_socket('K', in_out='OUTPUT', socket_type='NodeSocketFloat')
+        cx = g.nodes.new('ShaderNodeCombineXYZ'); cx.name = 'P'; cx.inputs[2].default_value = -1e4; v = g.nodes.new('ShaderNodeValue'); v.name = 'K'; v.outputs[0].default_value = 0.0
+        go = g.nodes.new('NodeGroupOutput'); g.links.new(cx.outputs[0], go.inputs[0]); g.links.new(v.outputs[0], go.inputs[1])
+    return g
+def pulse_glow(nt, shader):
+    """adds the pulse's cyan inner glow to a glass shader: cyan emission K * smooth falloff of the distance to the pulse head"""
+    N = nt.nodes.new; L = nt.links.new; gp = N('ShaderNodeGroup'); gp.node_tree = pulse_group(); geo = N('ShaderNodeNewGeometry')
+    dv = N('ShaderNodeVectorMath'); dv.operation = 'DISTANCE'; L(geo.outputs['Position'], dv.inputs[0]); L(gp.outputs['P'], dv.inputs[1])
+    mr = N('ShaderNodeMapRange'); mr.interpolation_type = 'SMOOTHSTEP'; mr.clamp = True; mr.inputs['From Min'].default_value = PULSE_GLOW_R * SC; mr.inputs['From Max'].default_value = 0.0
+    L(dv.outputs['Value'], mr.inputs['Value']); ml = N('ShaderNodeMath'); ml.operation = 'MULTIPLY'; L(mr.outputs['Result'], ml.inputs[0]); L(gp.outputs['K'], ml.inputs[1])
+    em = N('ShaderNodeEmission'); em.inputs['Color'].default_value = hexc('#4ad4ff'); L(ml.outputs[0], em.inputs['Strength'])
+    ad = N('ShaderNodeAddShader'); L(shader, ad.inputs[0]); L(em.outputs[0], ad.inputs[1]); return ad.outputs[0]
 
 def smoke_mat():
     """soft steam puff: white-lavender, opacity falls off toward the silhouette, never a hard sphere edge"""

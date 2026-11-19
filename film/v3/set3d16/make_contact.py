@@ -10,7 +10,7 @@ TILES = [   # name, preset, light, hooks (python, run after build), staging over
     ('L01_line_close_AFTER_RAIN', 'line_close', 'AFTER_RAIN', '', None, 'line_close / AFTER_RAIN (hook: bottle, ladder)', None),
     ('L02_line_close_DAY', 'line_close', 'DAY', "TG.set_wet(0.0)", None, 'line_close / DAY', None),
     ('L03_line_close_RAIN', 'line_close', 'RAIN', "TG.set_rain(True); TG.set_leak('pole', 1.0)", None, 'line_close / RAIN (rain, pole sparks)', None),
-    ('L04_line_close_pulse', 'line_close', 'AFTER_RAIN', "TG.set_pulse(TG.pulse_s_at_pole(1) + 0.004)", None, 'line_close / pulse crossing the glass', None),
+    ('L04_line_close_pulse', 'line_close', 'AFTER_RAIN', "TG.set_pulse(TG.pulse_s_at_pole(1))", None, 'line_close / pulse parked in the glass', None),
     ('L05_bottle_macro_pulse', 'bottle_macro', 'AFTER_RAIN', "", None, 'bottle_macro / pulse parked on the glass', None),
     ('L06_line_wide_DAY', 'line_wide', 'DAY', '', None, 'line_wide / DAY (train, poles)', None),
     ('L07_line_wide_DUSK', 'line_wide', 'DUSK', '', None, 'line_wide / DUSK', None),
