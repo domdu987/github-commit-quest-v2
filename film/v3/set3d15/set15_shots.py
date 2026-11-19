@@ -42,7 +42,7 @@ A, B = 'A', 'B'
 # ------------------------------------------------------------------ Location A (GOLDEN unless noted)
 shot(1, 0.00, 2.10, A, 'GOLDEN', ((-5.6, -4.4, 1.45), (1.2, 5.2, 1.1)), [('hurdle', 1.0, -0.35, 0.5)], [('boy', (0.2, 6.6, 0.44)), ('boy', 'boy_wait_a'), ('boy', 'boy_wait_b')], 'wide 3/4 on the pit; boy straddle-rolls over the bar; two boys wait', push=8, slide=40)
 shot(2, 2.10, 3.60, A, 'GOLDEN', ((3.4, -3.3, 0.85), (5.6, -0.8, 1.5)), [('cone', 1.0, 0.4, 0.0)], [('dick', 'dick_mark'), ('boy', (7.3, 0.6, 0.0)), ('boy', (6.5, 1.6, 0.0))], 'low medium on Dick at his mark', push=8, slide=20, punch=(2.9, 18))
-shot(3, 3.60, 4.45, A, 'GOLDEN', ((10.5, -5.5, 1.5), (3.4, -1.75, 1.2)), [('bench_end', 1.0, 0.45, 0.4)], [('dick', 'runup_start'), ('boy', 'boy_wait_a')], 'WHIP follow pan along the curved run; pit + bar in the left of frame', end=((10.5, -5.5, 1.5), (-1.0, 6.0, 1.2)), whip=True, minp=0)
+shot(3, 3.60, 4.45, A, 'GOLDEN', ((10.5, -5.5, 1.5), (3.8, -1.0, 1.2)), [('bench_end', 1.0, 0.45, 0.4)], [('dick', 'runup_start'), ('boy', 'boy_wait_a')], 'WHIP follow pan along the curved run; pit + bar in the left of frame', end=((10.5, -5.5, 1.5), (-1.0, 6.0, 1.2)), whip=True, minp=0)
 shot(4, 4.45, 6.15, A, 'GOLDEN', ((-0.3, 3.6, 0.9), (0.0, 5.3, 1.75)), [('standard_base', 0.9, -0.5, 0.0)], [('dick', 'landing'), ('boy', 'boy_wait_a'), ('boy', 'boy_wait_b')], 'low at the bar, looking up; bar against the sky, sawdust at the bottom', minp=0, push=10)
 shot(5, 6.15, 8.20, A, 'GOLDEN', ((-9.0, -7.0, 4.2), (4.0, 6.0, 0.8)), [('pine_branch', 0.9, -0.5, 0.35)], [('coach', 'coach_bleacher'), ('boy', 'boys_bench_a'), ('boy', 'boys_bench_b')], 'high wide pull-back crane: bleachers, bench, pit, gym, pines', trans='DIS', push=-8, rise=0.35, minp=0)
 shot(6, 8.20, 11.45, A, 'GOLDEN', ((5.6, 1.0, 1.15), (-0.2, 5.6, 1.2)), [('rake', 0.9, 0.35, 0.4)], [('boy', 'runup_start'), ('boy', 'boy_wait_b'), ('boy', 'takeoff')], 'side medium, slide left; straddle rolls', push=6, slide=-40)
@@ -56,18 +56,18 @@ shot(13, 23.60, 25.40, A, 'GOLDEN', ((-7.6, 1.2, 0.6), (-0.3, 6.4, 1.2)), [('cam
 shot(14, 25.40, 27.95, A, 'GOLDEN', ((10.6, 4.9, 1.3), (12.6, 4.2, 1.0)), [('thumb', 0.7, 0.3, -0.2)], [('reader', 'reader')], 'newspaper insert: the reader seat, centre kept clear', push=10, slide=30, minp=0)
 shot(15, 27.95, 28.73, A, 'GOLDEN', ((7.0, -0.2, 1.35), (10.6, 3.0, 1.3)), [('rail', 0.9, -0.1, 0.0)], [('coach', 'coach_bleacher'), ('boy', (9.8, 1.0, 0.0)), ('boy', (10.7, 0.8, 0.0)), ('boy', (10.2, 4.3, 0.0))], 'PUSH! snap; coach and boys at the bleacher foot point and laugh', push=25, minp=5)
 shot(16, 28.73, 31.05, A, 'GOLDEN', ((-4.6, 2.2, 1.5), (0.4, 5.4, 1.5)), [('hurdle_stack', 1.0, -0.4, 0.4)], [('dick', 'takeoff'), ('boy', 'boy_c')], 'orbit + push; training; GOLDEN -> DAY (render both lights)', trans='DIS', orbit=10, push=6)
-shot(34, 64.62, 66.25, A, 'GOLDEN', ((1.0, 1.0, 1.4), (-5.0, 4.5, 1.2)), [('bench_end', 0.9, -0.4, 0.4)], [('coach', 'coach_end'), ('boy', 'boys_bench_a'), ('boy', 'boys_bench_b'), ('boy', 'boys_bench_c')], 'back at the school track; coach at the sawdust pit, boys on the bench', trans='DIS', push=8, minp=0)
+shot(34, 64.62, 66.25, A, 'GOLDEN', ((1.5, 1.5, 1.4), (-3.0, 7.5, 1.2)), [('bench_end', 0.9, -0.4, 0.4)], [('coach', 'coach_end'), ('boy', 'boys_bench_a'), ('boy', 'boys_bench_b'), ('boy', 'boys_bench_c')], 'back at the school track; coach at the sawdust pit, boys on the bench', trans='DIS', push=8, minp=0)
 shot(35, 66.25, 68.00, A, 'GOLDEN', ((-3.0, -3.0, 3.0), (1.6, 2.0, 1.0)), [('hurdle', 0.9, 0.4, 0.8)], [('coach', (4.3, 1.5, 0.0)), ('boy', 'boys_bench_a')], 'WHIP follow from high left; the coach runs the curve to the bar', end=((-3.0, -3.0, 3.0), (0.4, 5.2, 1.2)), whip=True, minp=0)
-shot(36, 68.00, 69.84, A, 'GOLDEN', ((-1.8, 4.0, 0.55), (-1.35, 8.0, 1.0)), [('sawdust_chips', 0.8, 0.0, 0.0)], [('coach', 'coach_end'), ('boy', 'boys_bench_a'), ('boy', 'boys_bench_b')], 'low at the pit; TUMP in the pile inside the pit frame', push=8, punch=(68.6, 18), minp=0)
+shot(36, 68.00, 69.84, A, 'GOLDEN', ((-0.8, 3.4, 0.6), (-1.35, 8.0, 1.0)), [('sawdust_chips', 0.8, 0.0, 0.0)], [('coach', 'coach_end'), ('boy', 'boys_bench_a'), ('boy', 'boys_bench_b')], 'low at the pit; TUMP in the pile inside the pit frame', push=8, punch=(68.6, 18), minp=0)
 # ------------------------------------------------------------------ Location B
 shot(17, 31.05, 32.50, B, 'EVE', ((7.0, 0.5, 3.4), (-2.0, 24.0, 9.0)), [('flagpole', 1.2, -0.5, 0.0)], [('dick', (1.2, 10.0, 0.0))], 'grand wide push-in, rise; the packed stadium', trans='DIS', push=8, rise=0.5)
 shot(18, 32.50, 33.80, B, 'EVE', ((0.0, 5.4, 1.0), (0.0, 11.6, 1.7)), [('standard', 0.9, -0.5, 0.0)], [('official', 'official_bar_l'), ('official', 'official_bar_r')], 'tilt up following the bar; both officials by the standards', end=((0.0, 5.4, 1.0), (0.0, 11.6, 3.3)))
-shot(19, 33.80, 35.27, B, 'EVE', ((7.6, 6.2, 1.3), (0.8, 11.4, 1.5)), [('table_corner', 0.9, -0.4, 0.0)], [('rival', 'rival_a'), ('official', 'official_a')], '3/4 medium; the rival on the run-up knocks the bar', slide=40)
+shot(19, 33.80, 35.27, B, 'EVE', ((7.6, 6.2, 1.3), (0.8, 11.4, 1.5)), [('cone', 1.0, -0.4, 0.0)], [('rival', 'rival_a'), ('official', 'official_a')], '3/4 medium; the rival on the run-up knocks the bar', slide=40)
 shot(20, 35.27, 37.50, B, 'EVE', ((-4.5, 7.0, 1.0), (-1.3, 10.5, 2.0)), [('standard_peg', 0.9, -0.5, 0.0)], [('dick', 'dick_b2')], 'low tilt-up from Dick head to the bar (bar 0.55 D above the head, pegs visible)', end=((-4.5, 7.0, 1.0), (0.0, 11.6, 3.2)))
 shot(21, 37.50, 38.35, B, 'EVE', ((6.5, 2.5, 1.3), (2.0, 10.0, 1.5)), [('foam_edge', 0.9, -0.4, 0.0)], [('dick', (4.2, 9.4, 0.0))], 'WHIP; attempt 1, the bar falls (bar + foam in the start frame)', end=((6.5, 2.5, 1.3), (-2.0, 12.5, 1.8)), whip=True)
-shot(22, 38.35, 39.65, B, 'EVE', ((0.0, 19.0, 1.9), (0.0, 13.6, 1.4)), [('bar_on_mat', 0.9, 0.0, 0.0)], [('dick', 'rival_land')], 'reverse angle; Dick lies on the foam', push=8)
-shot(23, 39.65, 42.30, B, 'EVE', ((-12.9, 45.8, 7.25), (-13.9, 50.4, 7.5)), [('shoulder', 0.8, 0.5, 0.0)], [('coach', 'coach_stands')], 'medium in the stands; the coach on an aisle step jumps up and shouts', push=8, punch=(41.7, 18))
-shot(24, 42.30, 44.30, B, 'TENSE', ((1.0, 5.4, 1.2), (5.8, 8.2, 1.9)), [('bar_end', 0.9, 0.5, 0.0)], [('dick', 'dick_mark')], 'slow push; the stadium hushed', push=6, slide=40)
+shot(22, 38.35, 39.65, B, 'EVE', ((0.0, 23.6, 1.5), (0.0, 14.0, 1.7)), [('bar_on_mat', 0.9, 0.0, 0.0)], [('dick', 'rival_land')], 'reverse angle; Dick lies on the foam', push=8)
+shot(23, 39.65, 42.30, B, 'EVE', ((-13.3, 47.7, 7.3), (-13.9, 50.4, 7.0)), [('shoulder', 0.8, 0.5, 0.0)], [('coach', 'coach_stands')], 'medium in the stands; the coach on an aisle step jumps up and shouts', push=8, punch=(41.7, 18))
+shot(24, 42.30, 44.30, B, 'TENSE', ((1.0, 5.4, 1.2), (5.8, 8.2, 1.9)), [('standard_peg', 0.9, 0.5, 0.0)], [('dick', 'dick_mark')], 'slow push; the stadium hushed', push=6, slide=40)
 shot(25, 44.30, 46.40, B, 'TENSE', ((-4.5, 5.5, 0.9), (0.0, 11.6, 1.0)), [('foam_edge', 1.0, 0.3, 0.0)], [('dick', 'takeoff')], 'low at the bar; bar at 1/3 height, the runner visible', push=8)
 shot(26, 46.40, 49.00, B, 'TENSE', ((-2.4, 7.4, 1.6), (0.0, 11.6, 2.4)), [('standard', 0.9, -0.33, 0.0)], [('dick', (0.0, 11.6, 1.15))], 'lateral track along the bar (camera below the bar, tilted up); part by part', slide=40, push=6)
 shot(27, 49.00, 50.35, B, 'TENSE', ((-1.0, 7.1, 1.6), (0.0, 11.6, 2.4)), [('crossbar_end', 0.9, 0.33, 0.0)], [('dick', (0.0, 11.6, 1.15))], 'KEY IMAGE: tight side view, bar against the dark stand', push=8)
@@ -92,7 +92,7 @@ def fg_build(kind, p, yaw, M, cam_h):
         mb.box(M['woodpale'], (x, y, 0.12), (1.0, 0.1, 0.24)); mb.box(M['woodpale'], (x, y, 0.25), (1.1, 0.16, 0.03)); mb.ell(M['saw'], (x, y + 0.45, 0.18), (0.7, 0.4, 0.07), (12, 6))
     elif kind == 'bar_end':
         mb.rod(M['metal'], (x, y, 0), (x, y, 2.8), 0.026, 0.024, 10, smooth=True); mb.box(M['yellow'], (x - 0.08, y, 1.4), (0.14, 0.09, 0.022))
-        for i in range(4): mb.rod(M['bar'] if i % 2 == 0 else M['barr'], (x - 0.1 - i * 0.2, y, 1.46), (x - 0.3 - i * 0.2, y, 1.46), LA_BAR, LA_BAR, 8)
+        for i in range(2): mb.rod(M['bar'] if i % 2 == 0 else M['barr'], (x - 0.1 - i * 0.12, y, 1.46), (x - 0.22 - i * 0.12, y, 1.46), LA_BAR, LA_BAR, 8)
     elif kind == 'clipboard': import set15_props as PR; PR.clipboard(mb, M, (x, y, z + 1.0), yaw, -1.2, 1.3)
     elif kind == 'stopwatch':
         import set15_props as PR; PR.stopwatch(mb, M, (x, y, z + 1.0), 1.6)
@@ -125,7 +125,7 @@ def fg_build(kind, p, yaw, M, cam_h):
     elif kind in ('shoulder', 'thumb'): return []      # cast pieces (the coach's / spectator's shoulder, the reader's thumb): the stage only keeps the lens clear
     return L.fin(mb)
 
-LA_BAR = 0.055
+LA_BAR = 0.07
 FG_H = dict(shoulder=0.5, thumb=0.2, hurdle=0.9, cone=0.4, bench_end=0.9, standard_base=2.0, rake=1.1, cooler=0.55, sawdust_edge=0.45, bar_end=2.8, camera_bag=0.35, hurdle_stack=0.7, rail=1.2, sawdust_chips=0.1, flagpole=4.0, standard=3.2, standard_peg=3.2, crossbar_end=3.2, bar_peg=3.2, table_corner=0.8, foam_edge=0.55, bar_on_mat=0.1)
 
 def cam_dicts(n, which='a'):

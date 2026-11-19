@@ -54,7 +54,7 @@ def _lit_tail(nt, art, gain=1.0, shade_mul=1.0, shade_mix=None, form=True, add_e
     L(md.outputs['Vector'], dif.inputs['Color']); L(dif.outputs['BSDF'], add.inputs[0]); L(emi.outputs['Emission'], add.inputs[1]); L(add.outputs['Shader'], out.inputs['Surface'])
     return out
 
-def mat(name, A, B=None, scale=3.0, aniso=(1, 1, 1), rough=1.0, emit=None, emit_k=0.0, zgrad=None, wave=None, sheen=0.0, contrast=1.0, gain=1.0, shade_mul=1.0, season=None, sval=0.0, crowd=False):
+def mat(name, A, B=None, scale=3.0, aniso=(1, 1, 1), rough=1.0, emit=None, emit_k=0.0, zgrad=None, wave=None, sheen=0.0, contrast=1.0, gain=1.0, shade_mul=1.0, season=None, sval=0.0, crowd=False, smix=None):
     """Board-style two-tone object-space noise (colour from the hex pair) shaded in the house look (key + painted blue-violet shade)."""
     key = '%s|%s' % (STATE['P']['name'], name)
     if key in S.MATS: return S.MATS[key]
@@ -82,8 +82,8 @@ def mat(name, A, B=None, scale=3.0, aniso=(1, 1, 1), rough=1.0, emit=None, emit_
         mx3 = N('ShaderNodeMix'); mx3.data_type = 'RGBA'; mx3.inputs[6].default_value = S.hexc(zgrad[2]); L(col, mx3.inputs[7]); L(mr.outputs['Result'], mx3.inputs[0]); col = mx3.outputs[2]
     ae = None
     if emit and emit_k > 0: e = hexl(emit); ae = (e[0] * emit_k, e[1] * emit_k, e[2] * emit_k)
-    _lit_tail(nt, col, gain, shade_mul, None, True, ae); m.cycles.emission_sampling = 'NONE'
-    m['lit'] = 1; m['gain'] = float(gain); m['sm'] = float(shade_mul if not isinstance(shade_mul, (tuple, list)) else shade_mul[0]); m['crowd'] = int(bool(crowd))
+    _lit_tail(nt, col, gain, shade_mul, smix, True, ae); m.cycles.emission_sampling = 'NONE'
+    m['lit'] = 1; m['gain'] = float(gain); m['sm'] = float(shade_mul if not isinstance(shade_mul, (tuple, list)) else shade_mul[0]); m['crowd'] = int(bool(crowd)); m['mix'] = float(STATE['P']['shade_mix'] if smix is None else smix)
     S.MATS[key] = m; return m
 
 def mat_emit(name, hexcol, k):

@@ -8,9 +8,10 @@ from set15_lib import S, mat, mat_emit, rnd, fin, adopt, root, plane_at, STATE
 import set15_props as PR
 
 # ------------------------------------------------------------------ jump set (standards + pegs + bar as animatable objects)
-BAR_R = 0.065
+BAR_R = 0.07
 def jump_set(M, xc, y, half, kind, top, ground_z, name, bar_h):
     """Static standards, then: pegs (2 objects), bar (empty + striped meshes). Returns dict used by the hooks (metres, set-local)."""
+    M['bar'] = mat('barW', '#f8f2e4', '#f8f2e4', rough=0.6, emit='#fff4dc', emit_k=0.55); M['barr'] = mat('barR', '#d2281e', '#d2281e', rough=0.6, emit='#ff4a30', emit_k=0.3)
     mb = S.MB(name + '_std'); mt = M['metal']
     for sx in (-half, half):
         x = xc + sx
@@ -138,6 +139,7 @@ def build_a(P, M, dress=True):
     benches = [(7.4, -1.0, 3.0), (-6.2, 2.4, 3.0), (9.0, -4.0, 2.4), (-8.4, -2.0, 2.4), (-4.0, -6.0, 2.4)]
     for (bx, by, ln) in benches:
         bench(mb, M, (bx, by, 0.0), face((bx, by), (0.5, 4.5)), ln)
+    bench(mb, M, (-4.9, 8.2, 0.0), -1.5708, 3.0); S.jacket(mb, M, (-4.9, 7.6, 0.48), 0.4, 'teal')
     S.cooler(mb, M, (6.0, -2.2, 0.0)); S.cooler(mb, M, (-7.2, 0.6, 0.0)); S.cooler(mb, M, (4.6, 1.8, 0.0))
     for (x, y, yw, mt) in [(8.0, -1.9, 0.5, 'jr'), (6.6, -0.2, 1.4, 'jn'), (-5.4, 3.5, 0.3, 'jy'), (-6.6, 1.0, 2.0, 'jo'), (9.4, -3.4, 1.0, 'jt'), (-8.6, -1.2, 0.7, 'jr')]:
         S.jacket(mb, M, (x, y, 0.48), yw, {'jr': 'red', 'jn': 'navy', 'jy': 'yellow', 'jo': 'orange', 'jt': 'teal'}[mt])
@@ -226,7 +228,7 @@ def build_a(P, M, dress=True):
     MARKS_A.update(runup_path=[(x, y, 0.0) for x, y in path], runup_start=(6.4, -3.4, 0.0), takeoff=(1.15, 4.25, 0.0), bar_centre=(0.0, BAR_Y, 1.72), landing=(-0.3, 7.5, 0.44),
                    coach_bleacher=(10.4, 2.6, 0.0), coach_end=(-1.35, 8.9, 0.44), pile=(-1.35, 7.9, 0.44),
                    dick_mark=(5.6, -0.8, 0.0), boy_wait_a=(6.0, -1.7, 0.0), boy_wait_b=(7.0, -2.5, 0.0), boy_c=(5.0, 0.6, 0.0),
-                   boys_bench_a=(-6.0, 2.0, 0.0), boys_bench_b=(-6.9, 2.3, 0.0), boys_bench_c=(-5.2, 1.8, 0.0),
+                   boys_bench_a=(-4.9, 7.2, 0.0), boys_bench_b=(-4.9, 8.0, 0.0), boys_bench_c=(-4.9, 8.8, 0.0),
                    photographer=(-3.6, 3.4, 0.0), reader=(12.6, 4.2, 0.9), bench_right=(7.4, -1.0, 0.0), cooler=(6.0, -2.2, 0.0),
                    scorer=(-9.9, 7.4, 0.0), rake=(2.5, 8.3, 0.44))
     STATE['marks_m'] = dict(MARKS_A)

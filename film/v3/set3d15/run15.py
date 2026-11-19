@@ -52,5 +52,10 @@ if __name__ == '__main__':
         for i, (n, pth) in enumerate(items):
             im = Image.open(pth).convert('RGB'); x, y = (i % C) * W, (i // C) * (H + LB); Sh.paste(im, (x, y)); d.line([(x, y + 880), (x + W, y + 880)], fill=(0, 230, 255), width=2)
             sd = F.SHOTS[n]; lt = os.path.basename(pth).split('_')[2][:-4]; d.text((x + 12, y + H + 11), 'shot %d  %s %s' % (n, sd['loc'], lt), fill=(235, 235, 235), font=fnt)
+        PW, PH, PL = 360, 640, 30; fp = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 18); Ph = Image.new('RGB', (PW * C, (PH + PL) * rows), (16, 16, 20)); dp = ImageDraw.Draw(Ph)
+        for i, (n, pth) in enumerate(items):
+            im = Image.open(pth).convert('RGB').resize((PW, PH), Image.LANCZOS); x, y = (i % C) * PW, (i // C) * (PH + PL); Ph.paste(im, (x, y)); dp.line([(x, y + 440), (x + PW, y + 440)], fill=(0, 230, 255), width=1)
+            sd = F.SHOTS[n]; lt = os.path.basename(pth).split('_')[2][:-4]; dp.text((x + 8, y + PH + 5), 'shot %d  %s %s' % (n, sd['loc'], lt), fill=(235, 235, 235), font=fp)
+        Ph.save(os.path.join(HERE, 'contact_phone.jpg'), quality=88)
         Sh.save(os.path.join(HERE, 'contact.jpg'), quality=88); Sh.resize((Sh.width // 3, Sh.height // 3), Image.LANCZOS).save(os.path.join(HERE, 'contact_small.jpg'), quality=88); print(Sh.size, len(items))
     else: print(__doc__)

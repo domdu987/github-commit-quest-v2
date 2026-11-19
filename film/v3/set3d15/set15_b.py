@@ -103,8 +103,8 @@ SKINS = ['#d9a070', '#c8895a', '#8a5a3a', '#f0c8a0', '#6a4430', '#e8b488']
 def build_crowd(P, M, rr):
     ctl = ctl_empty('CROWD_CTL', (0.012, 0.45, 0.0)); STATE['crowd_ctl'] = ctl
     ng = crowd_group(ctl); k = P.get('crowd_k', 1.0)
-    cm = [mat('cw%d' % i, h, h, 1.0, rough=1.0, crowd=True) for i, h in enumerate(S.CROWD_HEX)]
-    sk = [mat('sk%d' % i, h, h, 1.0, crowd=True) for i, h in enumerate(SKINS)]
+    cm = [mat('cw%d' % i, h, h, 1.0, rough=1.0, crowd=True, smix=0.85) for i, h in enumerate(S.CROWD_HEX)]
+    sk = [mat('sk%d' % i, h, h, 1.0, crowd=True, smix=0.85) for i, h in enumerate(SKINS)]
     groups = {}                                            # material -> lists
     def add(mi, c, sz, yaw, ph, wt, aw):
         g = groups.setdefault(mi, dict(c=[], s=[], y=[], ph=[], wt=[], aw=[])); g['c'].append(c); g['s'].append(sz); g['y'].append(yaw); g['ph'].append(ph); g['wt'].append(wt); g['aw'].append(aw)
@@ -171,7 +171,7 @@ def build_flags(P, M, rr):
 def build_b(P, M, dress=True):
     rr = rnd(1968); sc = bpy.context.scene
     PR.extra_mats(M, P)
-    M['tartan'] = mat('tartanB', '#a8473a', '#bb5f48', 1.8, contrast=0.8); M['tartan2'] = mat('tartan2', '#bb5a40', '#cc6f52', 1.8, contrast=0.8); M['tartan3'] = mat('tartan3', '#a85a42', '#b86a50', 1.8, contrast=0.8)
+    M['tartan'] = mat('tartanB', '#a8473a', '#bb5f48', 1.8, contrast=0.8, smix=0.25); M['tartan2'] = mat('tartan2', '#bb5a40', '#cc6f52', 1.8, contrast=0.8, smix=0.25); M['tartan3'] = mat('tartan3', '#a85a42', '#b86a50', 1.8, contrast=0.8, smix=0.25)
     M['foamtop'] = mat('foamtopB', '#6a82b0', '#7e96c4', 3.5, contrast=1.6); M['foam'] = mat('foamB', '#6c88b8', '#8098c6', 4, contrast=0.8); M['foamdk'] = mat('foamdkB', '#52689a', '#6078aa', 4)
     M['cloth'] = mat('clothB', '#86764f', '#776745', 3)
     M['lamp'] = mat_emit('lampB', '#fff0cc', 16.0 if P['floods'] > 0 else 1.1)

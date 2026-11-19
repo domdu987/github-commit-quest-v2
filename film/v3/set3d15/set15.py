@@ -25,7 +25,7 @@ _B = dict(toon=1.0, form=(0.0, -0.05, 0.22), sun_angle=0.6, exposure=0.0, lift=(
 _SKY_EVE = [(0.0, '#2a3494'), (0.4, '#5a68c4'), (0.5, '#f2a068'), (0.53, '#e6c0a0'), (0.58, '#a4b8e4'), (0.68, '#4a62c0'), (0.82, '#2a3a9c'), (1.0, '#212a82')]
 LIGHTS = dict(
     A_GOLDEN=dict(_B, name='A_GOLDEN', loc='A', key=(1.56, 1.2, 0.8), key_dir=kdir(-60, 28), sun_elev=28, sun_angle=0.9, shade=(0.105, 0.10, 0.31), shade_tint=(0.105, 0.095, 0.33), season=1.0, grade_saturation=1.0,
-                  sky=[(0.0, '#7a70e0'), (0.40, '#f2b47a'), (0.5, '#f8cf96'), (0.56, '#f0c4b8'), (0.64, '#e4b4c4'), (0.8, '#c8a2d8'), (1.0, '#a890e0')], sky_k=1.25, glow=('#ffa860', 0.35, 0.45),
+                  sky=[(0.0, '#7a70e0'), (0.40, '#f2b47a'), (0.5, '#f8cf96'), (0.56, '#f4c8a8'), (0.64, '#f2bca0'), (0.8, '#e8b0a0'), (1.0, '#d8a498')], sky_k=1.25, glow=('#ffa860', 0.35, 0.45),
                   hills=[(300, 6, 14, '#a08ac8'), (340, 20, 28, '#8f90d0')], hill_k=0.95),
     A_DAY=dict(_B, name='A_DAY', loc='A', grade_saturation=1.04, key=(1.72, 1.56, 1.26), key_dir=kdir(-38, 44), sun_elev=44, shade=(0.135, 0.115, 0.34), shade_tint=(0.135, 0.11, 0.35), season=0.0,
                sky=[(0.0, '#8a90e8'), (0.4, '#bcd0f4'), (0.5, '#eaf0f8'), (0.56, '#dce8f6'), (0.64, '#86b0f0'), (0.8, '#5a8ae6'), (1.0, '#4474de')], sky_k=1.2, glow=('#fff0d0', 0.5, 0.3),
@@ -67,6 +67,7 @@ def build(location=None, light=None, preset=None, clear=True, dress=True, shot=N
     scene.frame_start = 1; scene.frame_current = 1; scene.render.fps = 30
     L.add_sun(P)
     M = S.pal(); STATE['M'] = M
+    M['concrete2'] = mat('concrete2b', '#9a9cb0', '#aeb0c2', 0.8); M['roofd'] = mat('roofdb', '#585a6c', '#6a6c7e', 2); M['concrete'] = mat('concreteb', '#c4b4ac', '#d8c8c0', 0.8, contrast=0.9)
     if location == 'A': LA.build_a(P, M, dress)
     else:
         import set15_b as LB
@@ -317,7 +318,7 @@ def switch_light(to, start_frame, n_frames=12):
         if not (n1 and n2 and n3 and n4): continue
         for c in range(3):
             drv(nt, 'nodes["sh_mul"].inputs[7].default_value', c, P0['shade'][c] * sm0 * k0, P1['shade'][c] * sm0 * k1)
-            drv(nt, 'nodes["sh_tint"].inputs[0].default_value', c, P0['shade_tint'][c] * P0['shade_mix'], P1['shade_tint'][c] * P1['shade_mix'])
+            drv(nt, 'nodes["sh_tint"].inputs[0].default_value', c, P0['shade_tint'][c] * m['mix'], P1['shade_tint'][c] * m['mix'])
             drv(nt, 'nodes["sh_lift"].inputs[1].default_value', c, P0['lift'][c], P1['lift'][c])
         drv(nt, 'nodes["gain_num"].inputs[2].default_value', None, g0 * k0, g0 * k1)
     sun = STATE['sun']; k0m = max(P0['key']); k1m = max(P1['key']); sd = sun.data
