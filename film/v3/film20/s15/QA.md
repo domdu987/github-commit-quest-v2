@@ -17,3 +17,16 @@ After TAKE_ART (F1-F3), TAKE_B and QA_TEAM §G. Checked at 6 fps contact + phone
 - `qa_stats2.py take.mkv` (the pushed file): **sat 0.587, vivid 47.2->48.6 %, luma 84.3 (0.7 under the 85 floor), warm 25.9 % / cool 39.7 %, motion med 7.88 p90 11.72, still 0 %**. In-shot g 997..1092: median 6.49, p90 10.62.
 - The director's earlier read (sat 0.442 / vivid 37 % / p90 8.3) did not match the pushed file at that commit (md5 2c507741...: sat 0.561 / vivid 47.2 %); re-pull before measuring.
 - take.mkv 29.4 MB.
+
+## v6 (TAKE2_ART s15 fixes F1-F3)
+- F1 document: the permit is now always in a visible hand on a visible arm. The official holds it on a stretched arm (hand (-0.62..-1.1, 0.7), stretch 1.1-1.3, the cast `official_doc` values) while handing it over, Eiffel takes it with his right arm (hand (0.62, 0.72), stretch 1.1 = the cast `official_doc` hold) and holds it at his chest through the payoff frame; the dark ball at the document edge is his fist.
+- F2 official: he stays inside the frame (head x 408-646, widest 262 px, right edge < 720 in-shot) and steps back along the depth only.
+- F3 tower: the camera is wider (5.4 D, was 4.3) and the orbit is only 8 deg/s (was 24), so the tower legs, the first platform and the EXPOSITION banner stay behind Eiffel through the snap (g 1064-1080).
+- Head width 145-370 px (centre y 545-635, chin <= 764): Eiffel never exceeds 29 % of the frame height.
+- `qa_stats2.py take.mkv`: sat 0.585, vivid 49.1 %, luma 86.7, warm 42.8 % / cool 25.7 %, motion med 5.72 **p90 12.06**, still 0 %. In-shot g 997..1092: median 4.95, p90 10.87. take.mkv 38.1 MB.
+
+## v7 (TAKE2_A adds)
+- Banner raised (z 11.2) so the official's hat no longer hides it: "EXPOSITION UNIVERSELLE 1889" reads on every frame through g ~1075 (then the snap carries it out).
+- Acting g 1020-1060: stronger idle sway (lean 5, head-roll 4, breathing), the official gestures with his free arm (small wave toward the tower g 1032-1066), Eiffel bows over the permit to read it (head pitch to 0.22 g 1030-1065), crowd and pennants moving.
+- Last push eased (snap x1.5, peak 1.7, 20 frames g 1064-1083) against the soft-frame note; luma 86.9 (>= 85).
+- `qa_stats2.py take.mkv`: sat 0.585, vivid 49.4 %, luma 86.9, warm 43.2 % / cool 25.7 %, motion med 7.10 **p90 11.40** (the eased snap costs ~0.7 p90), still 0 %. In-shot g 997..1092: median 6.08, p90 10.34. Head width 145-348 px (chin <= 769). take.mkv 39.2 MB.

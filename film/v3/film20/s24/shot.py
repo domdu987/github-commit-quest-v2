@@ -33,9 +33,9 @@ CANVAS = cast20.CANVAS20["maupassant"]
 
 # ---- camera in metres, tower-local (x right, y toward Paris/camera side = -y, z up); window table at (0, -35.8, 58.65), glass y = -36.8
 TGT = Vector((0.0, -35.4, 59.2))                 # aim point: his head height
-START_OFF = Vector((float(os.environ.get("X0", "-30")), -205.0, float(os.environ.get("Z0", "95"))))     # camera start relative to TGT (m): far, high, left
-END_OFF = Vector((float(os.environ.get("X1", "0.0")), -float(os.environ.get("D1", "2.2")), 0.25))       # camera landing relative to TGT (m)
-AIM0 = Vector((0.0, -30.0, float(os.environ.get("AIMZ", "135"))))                                        # initial aim point: mid-tower (whole tower in frame)
+START_OFF = Vector((float(os.environ.get("X0", "-60")), -float(os.environ.get("Y0", "360")), float(os.environ.get("Z0", "130"))))     # camera start relative to TGT (m): far, high, left
+END_OFF = Vector((float(os.environ.get("X1", "0.0")), -float(os.environ.get("D1", "1.8")), 0.25))       # camera landing relative to TGT (m)
+AIM0 = Vector((0.0, -30.0, float(os.environ.get("AIMZ", "150"))))                                        # initial aim point: mid-tower (whole tower in frame)
 
 
 AIM_DROP = float(os.environ.get('AIM_DROP', '0.1'))      # m: the landing aim sits below his head (less bare floor, head up in the frame)
@@ -78,6 +78,17 @@ def cam_at(g):
     return Vector(CO.W(tuple(loc))), Vector(CO.W(tuple(aim)))
 
 
+EXPO_FAR, EXPO_NEAR = float(os.environ.get("EXPO_FAR", "-1.3")), float(os.environ.get("EXPO_NEAR", "-0.05"))
+
+
+def expo_at(g):
+    """grade exposure follows the distance: the sunlit exterior is bright (-1.3 EV), the lamp-lit room darker (-0.05 EV): keeps luma ~95 through the whole zoom."""
+    d = (cam_at(g)[0] - Vector(CO.W(tuple(TGT)))).length / CO.SC
+    k = clamp(math.log(150.0 / max(d, 1.0)) / math.log(150.0 / 6.0))
+    bump = 0.5 * math.exp(-((math.log(max(d, 0.5)) - math.log(3.8)) / 0.45) ** 2)       # the dark ceiling / beams while the camera crosses the gallery
+    return EXPO_FAR + (EXPO_NEAR - EXPO_FAR) * k + bump
+
+
 TOAST = None
 EAT = cast20.STORY20["maupassant_seated_eat"][1]
 CHEW = cast20.STORY20["maupassant_seated_eat_chew"][1]
@@ -91,7 +102,7 @@ def pose_of(g):
     p["seated"], p["seat_h"], p["napkin"], p["mouth"] = 1, SEAT_H, 1, "smile"
     ae, ac = EAT["arm_r"]["hand"], CHEW["arm_r"]["hand"]
     p["arm_r"] = dict(EAT["arm_r"], hand=(lerp(ac[0], ae[0], s), lerp(ac[1], ae[1], s)), bend=lerp(CHEW["arm_r"]["bend"], EAT["arm_r"]["bend"], s))
-    pr = dict(EAT["prop_r"]); pr["angle"] = lerp(CHEW["prop_r"]["angle"], EAT["prop_r"]["angle"], s)
+    pr = dict(EAT["prop_r"]); pr["scale"] = 1.45; pr["angle"] = lerp(CHEW["prop_r"]["angle"], EAT["prop_r"]["angle"], s)
     p["prop_r"] = pr
     p["bite"] = 1.0 if s > 0.5 else 0.0
     p["yaw"] = 0.30 + 0.07 * math.sin(g * 0.11)
@@ -107,7 +118,7 @@ def pose_of(g):
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s%02d" % SHOT)
-        C.grade(self.scene, float(os.environ.get("EXPO", "-1.0")), float(os.environ.get("SAT", "1.2")))
+        C.grade(self.scene, float(os.environ.get("EXPO", "-1.3")), float(os.environ.get("SAT", "1.2")))
         self.cam.data.shift_x = self.cam.data.shift_y = 0.0
         self.cam.data.clip_start, self.cam.data.clip_end = 0.05, 2000.0
         for ob in [o for o in C.bpy.data.objects if o.name.startswith(("fg_", "shade_casters"))]:      # preset FG iron post (anchored to the preset camera): a black bar through the table
@@ -126,6 +137,8 @@ class Take(C.Take):
             f = bf(g)
             self.key_cam(f, *cam_at(g))
             self.key_set(f, set_year=1889, set_crowd=2)
+            self.scene.view_settings.exposure = expo_at(g)
+            self.scene.view_settings.keyframe_insert("exposure", frame=f)
             C.place(self.mau, f, mark)
         for g in gs:
             f = bf(g)

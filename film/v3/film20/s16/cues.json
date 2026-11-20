@@ -1,0 +1,59 @@
+{
+ "take": "s16",
+ "fps": 30,
+ "note": "t = film seconds (g / 30)",
+ "cues": [
+  {
+   "kind": "ambience",
+   "t": 36.3,
+   "dur": 4.767,
+   "frame": 1089,
+   "end_frame": 1232,
+   "note": "Paris café: low murmur of the artists, cutlery and cups, a gas lamp hiss, far street noise through the window"
+  },
+  {
+   "kind": "accent",
+   "t": 36.433,
+   "dur": 0.567,
+   "frame": 1093,
+   "end_frame": 1110,
+   "note": "crash pull-out: fast whoosh falling",
+   "peak_frame": 1100
+  },
+  {
+   "kind": "voice_fx",
+   "t": 36.433,
+   "dur": 1.633,
+   "frame": 1093,
+   "end_frame": 1142,
+   "note": "belly laugh bounce (a light 'ha ha' under the narration)",
+   "peak_frame": 1110
+  },
+  {
+   "kind": "accent",
+   "t": 37.233,
+   "dur": 0.433,
+   "frame": 1117,
+   "end_frame": 1130,
+   "note": "tower reveal in the window: a tiny sting",
+   "peak_frame": 1117
+  },
+  {
+   "kind": "accent",
+   "t": 39.667,
+   "dur": 0.667,
+   "frame": 1190,
+   "end_frame": 1210,
+   "note": "push-in on 'เป็นเศษเหล็ก': whoosh + crumpling paper / scrap-metal clang on the mime",
+   "peak_frame": 1198
+  },
+  {
+   "kind": "dissolve",
+   "t": 40.7,
+   "dur": 0.567,
+   "frame": 1221,
+   "end_frame": 1238,
+   "note": "DIS 17 into T18 (dusk 1909): café murmur fades under a low evening wind"
+  }
+ ]
+}

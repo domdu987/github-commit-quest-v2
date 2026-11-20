@@ -22,13 +22,13 @@ G_PULL = (G0 + G_HOLD, 2033)                     # crash pull 1976..2033; 2034..
 G_WORD = C.cap_g("สักครั้ง")                     # 2020: last word
 PRESET = "tower_window_pull"
 PPD = 256
-CLOSE = float(os.environ.get("CLOSE", "9.5"))
-LOOK_DROP = float(os.environ.get("LDROP", "3.3"))
+CLOSE = 0.0
+LOOK_DROP = 0.0
 CANVAS = cast20.CANVAS20["maupassant"]
 
 
 def cam_dicts(A):
-    return A["cams"][PRESET], A["cams"]["tower_window_end"]
+    return A["cams"]["tower_window_in"], A["cams"]["tower_window_end"]      # start = the set builder's tower_window_in (55 mm medium)
 
 
 def cam_at(A, g):
@@ -36,7 +36,7 @@ def cam_at(A, g):
     along log-distance (geometric), the aim sweeps from the window to the tower's mid height, the lens shift blends 0 -> end shift."""
     a, b = cam_dicts(A)
     u = min(1.0, (g - G_PULL[0]) / float(G_PULL[1] - G_PULL[0]))
-    hold = 0.02 * (min(g, G_PULL[0]) - G0) / float(G_HOLD)                        # gentle drift while he is read (also backwards in the handle)
+    hold = 0.006 * (min(g, G_PULL[0]) - G0) / float(G_HOLD)                        # gentle drift while he is read (also backwards in the handle)
     if u <= 0:
         e = hold
     else:
@@ -57,7 +57,8 @@ def cam_at(A, g):
     # after the pull: a gentle residual drift (never parked), 0.15 %/s ...
     t_after = max(0.0, (g - G_PULL[1]) / 30.0)
     loc = loc + Vector((0.0, -1.0, 0.0)) * (1.2 * t_after)
-    return loc, look, sh
+    lens = lerp(a.get("lens", 22.0), b.get("lens", 22.0), min(1.0, max(0.0, f) / 0.35) if f > 0 else 0.0)   # 55 mm medium -> 22 mm wide inside the first third of the pull
+    return loc, look, sh, lens
 
 
 class Take(C.Take):
@@ -65,10 +66,12 @@ class Take(C.Take):
         C.Take.__init__(self, PRESET, light="DAY", quality=quality, name="cam_s27")
         for ob in C.bpy.data.objects:                      # the preset FG (iron post, 1 m ahead of the PRESET camera) rides with our closer start
             if ob.name.startswith(("fg_", "shade_casters")):
-                ob.location = ob.location + Vector((0.0, CLOSE / CO.SC, 0.0))
-                print("moved FG", ob.name, flush=True)
+                if ob.name.startswith("fg_"):
+                    ob.hide_render = True                  # director F1: the iron post slashing the opening is hidden
+                    print("hid FG", ob.name, flush=True)
         self.scene.frame_set(bf(G_FIRST))
         self.key_cam(bf(G_FIRST), *cam_at(self.A, G_FIRST)[:2])
+        self.cam.data.lens = cam_at(self.A, G_FIRST)[3]
         self.mau = self.actors["mau"] = C.make_actor("mau", "maupassant", os.path.join(WORK, "sprites"), canvas=CANVAS,
                                                      contact=dict(width=1.0, depth=0.4, opacity=0.5), cam=self.cam)
 
@@ -76,10 +79,12 @@ class Take(C.Take):
         mark = self.A["marks"]["maupassant_window"]
         for g in gs:
             f = bf(g)
-            loc, look, sh = cam_at(self.A, g)
+            loc, look, sh, lens = cam_at(self.A, g)
             self.key_cam(f, loc, look)
             self.cam.data.shift_y = sh
             self.cam.data.keyframe_insert("shift_y", frame=f)
+            self.cam.data.lens = lens
+            self.cam.data.keyframe_insert("lens", frame=f)
             C.place(self.mau, f, mark)
         for g in gs:
             f = bf(g)
@@ -90,8 +95,8 @@ class Take(C.Take):
     def report(self, g):
         f = bf(g)
         self.scene.frame_set(f)
-        loc, look, sh = cam_at(self.A, g)
-        return dict(g=g, cam=[round(c, 2) for c in loc], shift=round(sh, 3), heads=C.head_report(self, f))
+        loc, look, sh, lens = cam_at(self.A, g)
+        return dict(g=g, cam=[round(c, 2) for c in loc], shift=round(sh, 3), lens=round(lens, 1), heads=C.head_report(self, f))
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):
         return C.Take.render(self, [bf(g) for g in gs], out_dir, scale=scale, samples=samples, threads=threads)
