@@ -67,7 +67,6 @@ class Take(object):
             K.horse(B, (x, yy, K.DECK_Z), 90.0, coat=['horse', 'horse_dk', 'horse'][rs.randint(0, 3)], trap=m[0], trim=m[1], tint=0.85 + 0.3 * rs.rand(), rider=(m[0],))
         self.col = B.finalize('troops_bridge')
         self.cam = bpy.context.scene.camera; self.cam.data.dof.use_dof = False
-        C.hide_prefix(['smoke_col'])                          # the grey blades on the horizon are the camp smoke columns (set banner bug): hidden until the set fix
         self.actors = {"near": C.make_actor("ka", "knight_a_mtd", os.path.join(TMP, "sprites")), "far": C.make_actor("kb", "knight_b_mtd", os.path.join(TMP, "sprites"))}
 
     def key(self, gs):
