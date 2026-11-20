@@ -359,14 +359,15 @@ def _tau_of(g):
 
 
 _AD = {}
-G_A0, G_A1 = 108, 160
+G_A0, G_A1 = 90, 160
 
 
 def _aim_design(g, loc, look):
-    """round 15 (QA: the aim tilts down to -59 deg at g 126 and back up, the turn-around squeezed into 2 frames, then the turning speed drops and climbs again = a second move):
-    for g 108-160 the PITCH of the view direction follows a designed schedule (rate crosses zero over >= 8 frames: -0.5 deg/frame at g 112 -> 0 at g 124 -> ~1.0 at g 134 -> ~1.3
-    at g 148 -> the raw rate at g 160), the YAW is the Gaussian-smoothed raw yaw; the distance to the aim point and the position are the path's.  Both are blended to the raw path
-    at g 108 and g 160 (values and rates match there), so g >= 160 is EXACTLY unchanged."""
+    """round 17 (QA: a dead hold at g 131-139 then the tilt-up as a SECOND move): the tilt-up must already be running early, while the falling translation still hides it, so the
+    pitch RATE (deg / frame) follows the director's schedule for g 108-160: -0.87 (g 109), -0.3 (111), 0 (114), +0.3 (117), +0.6 (120), +0.8 (124), +1.0 (130), +1.1 (136),
+    +1.2 (142), +1.25 (150), +1.31 (160, the round-14 value).  The pitch VALUE must still equal the old one at g 160, so the schedule is integrated from g 160 BACKWARD to fix the value
+    at g 108, and the (additional) tilt-down that this implies is blended in smoothly over g 90-108 (smoothstep: no rate change at either end).  Yaw = the Gaussian-smoothed raw yaw.
+    g >= 160 is EXACTLY unchanged."""
     if g < G_A0 or g > G_A1:
         return loc, look
     if not _AD:
@@ -374,42 +375,31 @@ def _aim_design(g, loc, look):
             l, k = _land(_tau_of(gi)); d = k - l
             return math.degrees(math.atan2(d.z, math.hypot(d.x, d.y))), math.degrees(math.atan2(d.x, d.y)), d.length
         R = {gi: raw(gi) for gi in range(G_A0 - 20, G_A1 + 21)}
-        p0, p1 = R[G_A0][0], R[G_A1][0]
-        s0 = R[G_A0 + 1][0] - R[G_A0 - 1][0]; s0 *= 0.5                         # raw pitch rate at the start (deg / frame)
-        s1 = (R[G_A1 + 1][0] - R[G_A1 - 1][0]) * 0.5
         sm = lambda t: t * t * (3 - 2 * t)
-        # rate schedule: start rate s0 -> 0 at g 124 (smoothly) -> up to 1.0 at g 134 -> 1.3 at g 148 -> s1 at g 160, amplitude of the rising part solved so p(160) = p1
-        def rate(gi, k):
-            if gi <= 124:
-                return s0 * (1 - sm(clamp((gi - G_A0) / 16.0)))
-            if gi <= 134:
-                return k * 1.0 * sm((gi - 124) / 10.0)
-            if gi <= 148:
-                return k * (1.0 + 0.3 * sm((gi - 134) / 14.0))
-            return k * 1.3 + (s1 - k * 1.3) * sm((gi - 148) / 12.0)
-        def total(k):
-            return p0 + sum(rate(gi + 0.5, k) for gi in range(G_A0, G_A1))
-        lo, hi = 0.2, 3.0
-        for _ in range(50):
-            mid = 0.5 * (lo + hi)
-            if total(mid) < p1:
-                lo = mid
-            else:
-                hi = mid
-        k = 0.5 * (lo + hi)
-        _AD["k"] = k
-        p = p0
-        for gi in range(G_A0, G_A1 + 1):
-            _AD[gi] = p
-            p += rate(gi + 0.5, k)
-        # yaw: Gaussian smoothing (sigma 4) of the raw yaw, blended in over 108-120 and out over 148-160
+        KN = [(108, -0.87), (111, -0.3), (114, 0.0), (117, 0.3), (120, 0.6), (124, 0.8), (130, 1.0), (136, 1.1), (142, 1.2), (150, 1.25), (160, 1.31)]
+        def rate0(gi):
+            for i in range(len(KN) - 1):
+                if KN[i][0] <= gi <= KN[i + 1][0]:
+                    t = (gi - KN[i][0]) / float(KN[i + 1][0] - KN[i][0])
+                    return KN[i][1] + (KN[i + 1][1] - KN[i][1]) * t
+            return KN[-1][1]
+        rs = {gi: rate0(gi) for gi in range(100, 175)}
+        rate = {gi: (rs[gi - 1] + 2 * rs[gi] + rs[gi + 1]) / 4.0 for gi in range(108, 161)}            # light smoothing of the knot corners
+        p1 = R[G_A1][0]
+        P = {G_A1: p1}
+        for gi in range(G_A1 - 1, 107, -1):
+            P[gi] = P[gi + 1] - rate[gi]                                         # integrate backward: P(g+1) = P(g) + rate(g)
+        d108 = P[108] - R[108][0]
+        for gi in range(G_A0, 108):
+            P[gi] = R[gi][0] + d108 * sm(clamp((gi - G_A0) / float(108 - G_A0)))
         for gi in range(G_A0, G_A1 + 1):
             ks = [math.exp(-0.5 * (j / 4.0) ** 2) for j in range(-12, 13)]
             tot = sum(ks); y = sum(R[min(max(gi + j, G_A0 - 20), G_A1 + 20)][1] * w for j, w in zip(range(-12, 13), ks)) / tot
             w_in = sm(clamp((gi - G_A0) / 12.0)); w_out = sm(clamp((G_A1 - gi) / 12.0)); w = min(w_in, w_out)
             _AD[("y", gi)] = R[gi][1] * (1 - w) + y * w
             _AD[("d", gi)] = R[gi][2]
-    pw = 1.0                                                                   # pitch blends only through its own boundary conditions (value + rate match)
+            _AD[gi] = P[gi]
+        _AD["d108"] = d108
     p = _AD[int(g)] * (1 - (g - int(g))) + _AD[min(int(g) + 1, G_A1)] * (g - int(g))
     yv = _AD[("y", int(g))] * (1 - (g - int(g))) + _AD[("y", min(int(g) + 1, G_A1))] * (g - int(g))
     dist = _AD[("d", int(g))]
