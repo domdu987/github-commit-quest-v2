@@ -36,7 +36,8 @@ def one(g, path):
 if sys.argv[1] == 'still': one(int(sys.argv[2]), sys.argv[3])
 else:
     os.makedirs(OUT, exist_ok=True)
-    for g in range(1211, 1384):
+    G0, G1 = (int(sys.argv[2]), int(sys.argv[3])) if len(sys.argv) > 3 else (1211, 1383)   # usage: full [g0 g1]
+    for g in range(G0, G1 + 1):
         p = '%s/g_%04d.png' % (OUT, g)
         if os.path.exists(p) and os.path.getsize(p) > 50000: continue
         one(g, p)
