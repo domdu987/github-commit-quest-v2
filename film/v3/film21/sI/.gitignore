@@ -1,0 +1,5 @@
+work/
+raw/
+draft/
+*.tmp.png
+__pycache__/
