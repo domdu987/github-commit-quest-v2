@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c18 as C
 from c18 import J, S, R2, V, bpy
 SHOT = 's19'; G0, G1 = 1427, 1514; H_IN, H_OUT = 6, 6        # cut in, whip out
-c = S.SHOTS[SHOT]['cam']; c['loc'] = (8.0, -17.0, 1.1); c['look_at'] = (32.0, -6.0, 10.6); c['lens'] = 18.0
+c = S.SHOTS[SHOT]['cam']; c['loc'] = (15.0, -15.5, 1.1); c['look_at'] = (32.0, -6.0, 7.0); c['lens'] = 18.0
 C.motion(SHOT, push=0.0, slide=-30, moves=[dict(t=0.2, d=0.9, dur=8), dict(t=0.35, d=0.9, dur=8), dict(t=0.84, pan=-85, dur=7)])
 _p0 = S.pose_at
 def _tilt(sh, t):                                            # the whip lands on the herd: tilt down from the sky onto the field while the pan runs
@@ -31,16 +31,27 @@ def setup(ctx):
     for ob in [o for o in bpy.data.objects if o.type == 'MESH' and (o.name == 'halos' or o.name.startswith('breach'))]:
         bm = bmesh.new(); bm.from_mesh(ob.data); mi = [i for i, m in enumerate(ob.data.materials) if m is not None and ('mist' in m.name or 'dust' in m.name)]
         bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.material_index in mi], context='FACES'); bm.to_mesh(ob.data); bm.free()
+    Mt = J.STATE['M']; tun = Mt.get('tunnel'); bank = Mt.get('bank')
+    if tun is not None and bank is not None:
+        for ob in bpy.data.objects:
+            if ob.type == 'MESH':
+                for i_, m_ in enumerate(ob.data.materials):
+                    if m_ is tun and ob.name == 'furrows': ob.data.materials[i_] = bank
     gd = bpy.data.objects['ground'].data; gm = gd.materials[-1]
-    me = bpy.data.meshes.new('gapfill'); me.from_pydata([(-30, -60, -0.3), (90, -60, -0.3), (90, -7, -0.3), (-30, -7, -0.3)], [], [(0, 1, 2, 3)]); me.update()
+    me = bpy.data.meshes.new('gapfill'); me.from_pydata([(-30, -60, 0.18), (90, -60, 0.18), (90, -7, 0.18), (-30, -7, 0.18)], [], [(0, 1, 2, 3)]); me.update()
     uv = me.uv_layers.new(name='UVMap')
     for i_, c_ in enumerate(((0, 0), (6, 0), (6, 3), (0, 3))): uv.data[i_].uv = c_
-    me.materials.append(gm); go = bpy.data.objects.new('gapfill', me); J.STATE['SET'].objects.link(go); J.no_bounce(go)
+    me.materials.append(Mt.get('bank') or gm); go = bpy.data.objects.new('gapfill', me); J.STATE['SET'].objects.link(go); J.no_bounce(go)
 
+FGP = []
 def frame(g, t, camloc, ctx):
     J.set_holes(12)
+    if not FGP:                                   # warm foreground props (pots, a helmet) low in frame, parented to nothing: placed in the world near the camera path
+        for i, (dx, dy, kind) in enumerate(((3.4, -2.2, 'pot'), (5.6, -4.5, 'jar'), (2.6, -6.5, 'bowl'), (6.8, -1.0, 'pot'))):
+            FGP.append(J.prop_pot((camloc.x + dx, camloc.y + dy, 0.0), 0.5 * i, kind=kind, scale=0.9, cd=8))
+        FGP.append(J.prop_helmet((camloc.x + 4.4, camloc.y - 8.0, 0.0), 2.4, scale=1.0, cd=8))
     for ob in bpy.data.objects:
-        if ob.name in HIDE or ob.name.startswith('rubble'): ob.hide_render = True
+        if ob.name in HIDE or ob.name.startswith(('rubble', 'hglow')): ob.hide_render = True
     for ob in bpy.data.objects:
         if ob.name.startswith('hglow'): ob.hide_render = True
     for j, (gs, hx, jit, sc) in enumerate(OX):
@@ -49,7 +60,7 @@ def frame(g, t, camloc, ctx):
         if y < -150: continue
         pos = (hx + jit, y, 0.0); near = (V(pos) - camloc).length < 16
         ph = int((g - gs) * 12 / 30.0 + j) % 8
-        C.put_ox(j, pos, -100, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='front_three_quarter' if (near and j % 3 == 0) else 'three_quarter', gait='gallop', theta=14 if (near and j % 3 == 0) else 30, reed=True, tfx=0.8, lean=84.0, face='rage')
+        C.put_ox(j, pos, -100, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='front_three_quarter' if (near and j % 3 == 0) else 'three_quarter', gait='gallop', theta=14 if (near and j % 3 == 0) else 30, reed=True, tfx=(1.3 if (V(pos) - camloc).length < 20 else 0.8), lean=84.0, face='rage')
     for j, (gs, x) in enumerate(QI):
         if g < gs: continue
         y = -7.0 - V_QI * (g - gs) / 30.0

@@ -131,6 +131,7 @@ def run(shot, g0, g1, frame_cb, setup_cb=None, argv=None, lights=6, keep=None):
         kc = None
         if keep is not None:
             import jimo_dress; kc = list(jimo_dress.default_keep_clear()) + list(keep)
+        if hasattr(J, 'gapfill') and os.environ.get('GAP', '1') == '1': J.gapfill(frames=fs)
         info = J.dress_ground(frames=fs, seed=int(shot[1:]), keep_clear=kc, density=float(os.environ.get('DENS', '0.45')))
         camo.animation_data_clear(); camo.data.animation_data_clear(); print('dress_ground', {k: info.get(k) for k in ('n', 'kinds')})
     tt = []
@@ -244,3 +245,18 @@ def lit_tails(cam, nlights=5):
     for (t, sc) in sorted(TAILS, key=lambda a: (a[0] - cam).length)[:nlights]:
         d = bpy.data.lights.new('ph_tail', 'POINT'); d.color = J.FIRE; d.energy = 420.0 * sc; d.shadow_soft_size = 0.5; d.use_shadow = False
         lo = bpy.data.objects.new('ph_tail', d); STATE['LIGHTS'].objects.link(lo); lo.location = t; lo.visible_camera = False; lo['placeholder'] = 1
+
+# ================================================================== round 8: tie reeds exactly at an ox tail tip
+def person_anchors(pose, over=None):
+    cast, P = CD._cast(); c, ps = cast.STORY18[pose]; ps = dict(ps); ps.update(over or {})
+    f = P.figure(c, ps, 'pa'); return f['anchors'], f['feet_y']
+
+def tie_reeds(ox_obj, state, view, gait, phase, ox_scale, camloc, height=3.4, name='tie', pose='townsperson_tie_reeds', over=None, lift=0.0):
+    """place the old man (STORY18 townsperson_tie_reeds) so his anchor reed_tail_l sits on the tail tip of the given ox card object."""
+    ax, ay = tail_anchor(state, view, gait, phase); sc_o = ox_scale * 1.08
+    oyaw = ox_obj.rotation_euler.z; mir = ox_obj.scale.x < 0; right_o = V((math.cos(oyaw), math.sin(oyaw), 0))
+    tail = V(ox_obj.location) + right_o * ((-1.0 if mir else 1.0) * ax * sc_o) + V((0, 0, -ay * sc_o))
+    meta = person(pose, over); anc, feet_y = person_anchors(pose, over); rx, ry = anc['reed_tail_l']
+    sc_p = height / meta['height']; d = V(camloc) - tail; pyaw = math.degrees(math.atan2(d.x, -d.y)); right_p = V((math.cos(math.radians(pyaw)), math.sin(math.radians(pyaw)), 0))
+    feet = tail - right_p * (rx * sc_p) - V((0, 0, (feet_y - ry) * sc_p))
+    return put_person(meta, (feet.x, feet.y, max(0.0, feet.z)), camloc, height, name, yaw=pyaw, lift=lift)

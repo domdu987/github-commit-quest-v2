@@ -1,6 +1,6 @@
-# QA s20 (render team 5, film 18) round 7 - frames g1515-1595 (+6 handles: take.mkv g1509-1601, 93 frames), jimo_out NIGHT
-Frame-diff in-shot (n=80): median **4.03**, p90 **6.70**. qa_auto PASS.
-- Lead ox in pure profile at about 40 % of frame height, running screen-left, `face='rage'` (all charging oxen use it); head at x 0.25-0.35, its flame trailing at x 0.8-0.95 (still near the right edge on some frames).
-- Tripod brazier on the ox's back: raycast at g1589 hit `halos`, `wood`, `posts` (road tripods at x 9.5). Their flames, halo quads and mesh faces in the field are removed at runtime.
-- Camera pitched down (look z 0.1), eased push, no wobble; sky about 30 %.
-- NOT fixed: bare ground still about 45 % of the frame: the lane next to the low camera. The set's v2 dressing and `R2.dress` put (almost) nothing there and my own soft dark bush sprites did not render; no Qi silhouettes were added in the lower third.
+# QA s20 (render team 5, film 18) round 8 - frames g1515-1595 (+6 handles: take.mkv g1509-1601, 93 frames), jimo_out NIGHT
+Frame-diff in-shot (n=80): median **5.70**, p90 **6.94** (target median >= 5 met; p90 >= 9 NOT met). qa_auto PASS.
+- Camera: eased dolly-in (lateral distance 6.6 -> 5.2 D) plus a sideways truck (1.0 D drift + a slow 1.1 D sway) and a lateral sway; no pulses.
+- `J.gapfill(frames=...)` runs for every take: the striped floor is now dark earth with warm light pools under the tail flames.
+- Lead ox in pure profile with `face='rage'`, y about 0.38-0.62, about 40 % of frame height, head x 0.2-0.3; its flame trails off the tail tip. The lattice spacing of the other oxen is now 12 D so no flame meets a snout.
+- Not done: the 2-3 oxen / Qi cropped by the bottom edge (the Qi cards I added did not render; no ox cards were mirrored). Bottom third is plain warm earth.

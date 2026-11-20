@@ -10,7 +10,7 @@ SHOT = 's20'; G0, G1 = 1515, 1595; H_IN, H_OUT = 6, 6
 V_OX = 11.0; XC = 20.0; Y0 = -46.0; DUR = 81 / 30.0
 def pose(sh, t):
     """camera rides with the herd: y = Y0 - V*t*DUR; lateral distance 10.5 -> 9.2 (slow push), whip-in during the first 7 frames."""
-    y = Y0 - V_OX * t * DUR; lat = 6.4 - 0.5 * min(1.0, max(0.0, t)) + 0.5 * math.sin(t * 25.0); w = max(0.0, 1.0 - (t * 81) / 7.0) ** 2
+    y = Y0 - V_OX * t * DUR + 1.0 * t + 1.1 * math.sin(t * 12.0); lat = 6.6 - 1.4 * min(1.0, max(0.0, t)) + 0.9 * math.sin(t * 17.0); w = max(0.0, 1.0 - (t * 81) / 7.0) ** 2
     return dict(loc=(XC, y, 1.6), look_at=(XC - lat, y + 0.2 + 30.0 * w, 0.1 + 0.1 * t), lens=19.0)
 S.pose_at = pose
 rnd = random.Random(20)
@@ -19,7 +19,7 @@ REL = [(-7.0, 1.0, 1.0, 0.0)]                                   # lead ox in pur
 for row, dx in enumerate((-7.0, -11.8, -16.6)):
     for n in range(-2, 3):
         if row == 0 and n == 0: continue
-        REL.append((dx + rnd.uniform(-0.3, 0.3), 1.0 + 9.6 * n + rnd.uniform(-0.4, 0.4), rnd.uniform(0.97, 1.03), 0.0))
+        REL.append((dx + rnd.uniform(-0.3, 0.3), 1.0 + 12.0 * n + rnd.uniform(-0.4, 0.4), rnd.uniform(0.97, 1.03), 0.0))
 
 def setup(ctx):
     J.set_holes(12)
@@ -53,6 +53,9 @@ def frame(g, t, camloc, ctx):
         if abs(by - camloc.y) < 16: C.put_puff((bx, by, bs * 0.38), bs * 1.5, camloc, alpha=0.95, name='bush%d' % n_, tone=(78, 58, 44))
     for ob in bpy.data.objects:
         if ob.name in ('tufts', 'furrows', 'posts', 'road') or ob.name.startswith(('stk', 'flame_stk', 'flame_road', 'flame_rd', 'flame_far', 'farglow', 'fgstone', 'fgwood')): ob.hide_render = True
+    for q, (qdy, qph) in enumerate(((-7.5, 0.0), (4.5, 0.5))):          # Qi runners in the near lane, cropped by the bottom edge
+        yq = Y0 - V_OX * (g - G0) / 30.0 + qdy + 2.0 * k
+        C.put_person(C.qi(k * 1.5 + qph, 1), (XC - 3.4, yq, 0), camloc, 3.1, 'qin%d' % q, mirror=True, tint=(0.4, 0.4, 0.62), k=0.8)
     for j, (dx, dy, sc, dv) in enumerate(REL):
         ycam = Y0 - V_OX * (g - G0) / 30.0
         pos = (XC + dx, ycam + dy + dv * k, 0.0)

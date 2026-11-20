@@ -131,6 +131,7 @@ def run(shot, g0, g1, frame_cb, setup_cb=None, argv=None, lights=6, keep=None):
         kc = None
         if keep is not None:
             import jimo_dress; kc = list(jimo_dress.default_keep_clear()) + list(keep)
+        if hasattr(J, 'gapfill') and os.environ.get('GAP', '1') == '1': J.gapfill(frames=fs)
         info = J.dress_ground(frames=fs, seed=int(shot[1:]), keep_clear=kc, density=float(os.environ.get('DENS', '0.45')))
         camo.animation_data_clear(); camo.data.animation_data_clear(); print('dress_ground', {k: info.get(k) for k in ('n', 'kinds')})
     tt = []
