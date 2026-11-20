@@ -43,10 +43,10 @@ H_OUT = 9                                      # out-handle g 57..65 (WORKER19: 
 G_LAST = G1 + H_OUT - 1                        # 65
 GS = list(range(G0, G_LAST + 1))
 G_CLOCK = C.cap_g("บอกว่านาฬิกา")               # 37: "says that a clock" -> the snap
-SNAP = (G_CLOCK - 1, G_CLOCK + 12)             # 36..49 (13 frames, the bible minimum: lands as the word นาฬิกา is spoken, ~g 44)
+SNAP = (G_CLOCK - 2, G_CLOCK + 16)             # 36..49 (13 frames, the bible minimum: lands as the word นาฬิกา is spoken, ~g 44)
 G_RISE = (0, 11)                               # arms swing up into the presentation
 G_TADA = (G_CLOCK, G_CLOCK + 7)                # second, bigger presentation on the snap
-BLINKS = [20, 55]
+BLINKS = [20, 50]
 
 # ----------------------------------------------------------------------------- staging
 LIGHT = "DAY"
@@ -58,18 +58,20 @@ HIDE_SHAFTS = True                             # the faint window-shaft volume r
                                                # QA_ART round-2 NOTE (shop_bench DAY); hidden here, the sun patches stay
 CANVAS = None                                  # cast19.CANVAS19['harrison19'] is enough here (no clipping warnings)
 
-CAM_LOC0 = (2.10, -1.25, 2.25)                 # near the preset start (2.31, -1.11, 2.22); lower = the sawhorse plank fills the frame
-CAM_LOOK0 = (2.85, 5.0, 2.50)                  # subject point at HARRISON's depth, between him and the H1: the arc keeps him put
+CAM_LOC0 = (1.70, -1.95, 2.25)                 # near the preset start (2.31, -1.11, 2.22); lower = the sawhorse plank fills the frame
+CAM_LOOK0 = (2.70, 3.2, 2.05)                  # subject point at HARRISON's depth, between him and the H1: the arc keeps him put
                                                # while the nearer H1 swings across (parallax); the push keeps both in frame
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G0, G_LAST, push=0.08, slide_px=-45.0, rise_px=35.0, arc_deg_s=15.0, decay=0.1,
-                snaps=[dict(g=SNAP, k=1.35, peak=1.9, shift=(0.30, -0.30))])
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G0, G_LAST, push=0.04, slide_px=-25.0, rise_px=60.0, arc_deg_s=16.5, decay=0.1,
+                snaps=[dict(g=SNAP, k=1.18, peak=3.2, shift=(0.20, -0.75))])
 
+
+MARK_OFF = Vector((0.12, -2.9, 0.0))             # QA_ART fix: beside the H1 on the camera side (was 1.6 D behind it)
 
 # ----------------------------------------------------------------------------- pose (cast19 harrison19 default; mirrored: faces the H1 at screen-left)
 BASE = cast19.STORY19["harrison_idle"][1]
-DOWN_R, DOWN_L = (0.30, 1.17), (-0.30, 1.17)          # arms down (puppet-local, unmirrored)
-PRES_R, PRES_L = (0.86, 0.52), (0.55, 0.72)           # presenting: both open palms out toward screen-right (screen-left mirrored)
-TADA_R, TADA_L = (1.00, 0.30), (0.70, 0.50)           # the ta-da on the snap: higher and further out
+DOWN_R, DOWN_L = (0.70, 0.85), (-0.50, 0.75)          # arms down (puppet-local, unmirrored)
+PRES_R, PRES_L = (0.92, 0.42), (-0.40, 0.10)           # presenting: both open palms out toward screen-right (screen-left mirrored)
+TADA_R, TADA_L = (1.0, 0.22), (-0.30, -0.05)           # the ta-da on the snap: higher and further out
 
 
 def _mix(a, b, u):
@@ -112,25 +114,122 @@ class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s01")
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
+        self.drop_top_right_plank()
+        self.lantern = [o for o in C.bpy.data.objects if o.name.startswith(("lantern_", "lanternf_"))]
+        self.ring_flames = [o for o in C.bpy.data.objects if o.name.startswith("flame_wheel")]
+        print("stool lantern objects hidden:", [o.name for o in self.lantern], flush=True)
         self.key_cam(bf(G0), *CAM.at(G0))
         self.scene.frame_set(bf(G0))
         self.har = self.actors["har"] = C.make_actor("har", "harrison19", os.path.join(WORK, "sprites"), canvas=CANVAS, contact=True,
                                                      cam=self.cam)
 
+    def drop_top_right_plank(self):
+        """QA_ART fix: the bright diagonal oak plank hanging near the ceiling at the top right (shop_oak island holding the face
+        hit by a ray at x 3.2, y 2.1, z 4.7) pulled the eye: its connected island is deleted from the (scene-local) mesh."""
+        import bmesh
+        ob = C.bpy.data.objects["shop_oak"]
+        bm = bmesh.new()
+        bm.from_mesh(ob.data)
+        bm.faces.ensure_lookup_table()
+        seed = [bm.faces[814]]
+        island, stack = set(), list(seed)
+        while stack:
+            f = stack.pop()
+            if f in island:
+                continue
+            island.add(f)
+            for e in f.edges:
+                stack.extend(o for o in e.link_faces if o not in island)
+        print("plank island faces:", len(island), flush=True)
+        bmesh.ops.delete(bm, geom=list(island), context="FACES")
+        bm.to_mesh(ob.data)
+        bm.free()
+        # round 3: a second lit plank (shop_honey face 576, z 4.72) shows at the top right with the new framing
+        ob = C.bpy.data.objects["shop_honey"]
+        bm = bmesh.new()
+        bm.from_mesh(ob.data)
+        bm.faces.ensure_lookup_table()
+        island, stack = set(), [bm.faces[576]]
+        while stack:
+            f = stack.pop()
+            if f in island:
+                continue
+            island.add(f)
+            for e in f.edges:
+                stack.extend(o for o in e.link_faces if o not in island)
+        print("plank 2 island faces:", len(island), flush=True)
+        bmesh.ops.delete(bm, geom=list(island), context="FACES")
+        bm.to_mesh(ob.data)
+        bm.free()
+        # round 4: the hanging candle ring (wheel chandelier: hoop + chains + candles merged into shop_brass / cream / dark / iron /
+        # oak / oakd at z 4.1-4.95 around (0.28, 1.29)); its four flames are hidden with key_vis in pose()
+        C.bpy.context.view_layer.update()
+        for nm in ("shop_brass", "shop_cream", "shop_dark", "shop_iron", "shop_oak", "shop_oakd"):
+            ob = C.bpy.data.objects[nm]
+            bm = bmesh.new()
+            bm.from_mesh(ob.data)
+            mw = ob.matrix_world.copy()
+            ring = [f for f in bm.faces if (lambda c: math.hypot(c.x - 0.28, c.y - 1.29) < 1.15 and 4.1 < c.z < 4.95)(mw @ f.calc_center_median())]
+            print("candle ring faces deleted from", nm, len(ring), flush=True)
+            bmesh.ops.delete(bm, geom=ring, context="FACES")
+            bm.to_mesh(ob.data)
+            bm.free()
+        # round 3: the stool lantern's iron cage is merged into shop_iron (key_vis of lanternf_iron / lantern_lampg leaves it):
+        # delete its faces (x 3.45-3.95, y 1.5-2.0, z 1.10-1.9) from the scene mesh
+        ob = C.bpy.data.objects["shop_iron"]
+        bm = bmesh.new()
+        bm.from_mesh(ob.data)
+        C.bpy.context.view_layer.update()
+        mw = ob.matrix_world.copy()
+        cage = [f for f in bm.faces if (lambda c: 3.45 < c.x < 3.95 and 1.5 < c.y < 2.0 and 1.10 < c.z < 1.9)(mw @ f.calc_center_median())]
+        print("lantern cage faces deleted:", len(cage), flush=True)
+        bmesh.ops.delete(bm, geom=cage, context="FACES")
+        bm.to_mesh(ob.data)
+        bm.free()
+
     def pose(self, gs):
-        mark = Vector(self.A["marks"]["harrison_bench"])
+        mark = Vector(self.A["marks"]["harrison_bench"]) + MARK_OFF
         for g in gs:
             f = bf(g)
             self.key_cam(f, *CAM.at(g))
             C.place(self.har, f, mark + Vector((0, 0, bounce_z(g))))
             # the set state, keyed on EVERY frame: H1 alone, bars rocking (t = film seconds), candle flicker
             self.key_set(f, clock=CLOCK, balance=g / 30.0, candles=1.0)
-            C.key_vis(H.STATE.get("shafts", []), not HIDE_SHAFTS, f)   # QA_ART NOTE: shop_bench DAY milky haze = the window-shaft volume
+            C.key_vis(H.STATE.get("shafts", []), not HIDE_SHAFTS, f)
+            C.key_vis(self.ring_flames, False, f)                       # round 4: candle ring flames hidden (and its mesh deleted)
+            C.key_vis(self.lantern, False, f)                           # round 3: nothing in front of him below y 880   # QA_ART NOTE: shop_bench DAY milky haze = the window-shaft volume
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
             self.har.pose(f, pose_of(g), camera=self.cam)
         self.sprites_for([(self.har, PPD)], [bf(g) for g in gs])
+
+    def sprite_extent(self, g, thr=128):
+        """pixel check: screen extent (x0, x1, y0, y1; 720x1280) of the OPAQUE pixels of his sprite on frame g: every row's left- and
+        right-most alpha > 16 pixel of har_%04d.png is mapped onto the axis-aligned card plane and projected with the camera."""
+        import numpy as np
+        from PIL import Image
+        f = bf(g)
+        self.scene.frame_set(f)
+        C.bpy.context.view_layer.update()
+        card = self.har.card
+        vs = [card.matrix_world @ v.co for v in card.data.vertices]
+        x0, x1 = min(v.x for v in vs), max(v.x for v in vs)
+        z0, z1 = min(v.z for v in vs), max(v.z for v in vs)
+        y = vs[0].y
+        a = np.asarray(Image.open(os.path.join(WORK, "sprites", "har_%04d.png" % f)).convert("RGBA"))[..., 3]
+        hgt, wid = a.shape
+        xs, ys = [], []
+        for r in range(0, hgt, 2):
+            cols = np.nonzero(a[r] > thr)[0]
+            if len(cols) == 0:
+                continue
+            z = z1 - (r + 0.5) / hgt * (z1 - z0)
+            for c in (cols[0], cols[-1]):
+                px = H.project((x0 + (c + 0.5) / wid * (x1 - x0), y, z))
+                xs.append(px[0])
+                ys.append(px[1])
+        return [round(min(xs), 1), round(max(xs), 1), round(min(ys), 1), round(max(ys), 1)]
 
     def report(self, g):
         f = bf(g)
@@ -138,7 +237,9 @@ class Take(C.Take):
         loc, look = CAM.at(g)
         v = look - loc
         bars = C.clock_world(CLOCK, (0.0, 0.0, 0.64))
-        return dict(g=g, cam=[round(c, 3) for c in loc], pitch=round(math.degrees(math.atan2(v.z, math.hypot(v.x, v.y))), 1),
+        pts = [H.project((x, y, z)) for x in (0.74, 3.3) for y in (2.67, 4.3) for z in (1.66, 3.71)]
+        h1box = [round(min(p[0] for p in pts)), round(min(p[1] for p in pts)), round(max(p[0] for p in pts)), round(max(p[1] for p in pts))]
+        return dict(g=g, sprite_px=self.sprite_extent(g), h1_bbox_px=h1box, cam=[round(c, 3) for c in loc], pitch=round(math.degrees(math.atan2(v.z, math.hypot(v.x, v.y))), 1),
                     heads=C.head_report(self, f), h1_bars_px=H.project(tuple(bars)), dof=self.cam.data.dof.use_dof,
                     caption_shade=bool(C.bpy.data.objects.get("caption_shade")))
 
@@ -167,6 +268,42 @@ if __name__ == "__main__":
                 st = Tk.render([g], out, scale=scale, samples=samples)[0]
                 os.replace(st["path"], os.path.join(out, "g_%04d.png" % g))
                 print("g %d  %.1f s wall %.1f cpu" % (g, st["wall"], st["cpu"]), flush=True)
+    elif cmd == "edgecheck":
+        # PIXEL CHECK (round 4): render each frame again at 0.5 scale / 6 spp with his sprite card hidden, diff against the draft
+        # work/draft/g_%04d.png (same settings: identical elsewhere) -> the columns his sprite covers.  Writes work/edge_%d.json.
+        import numpy as np
+        from PIL import Image
+        Tk = Take("preview")
+        Tk.pose(gs)
+        Tk.har.card.hide_render = True
+        res = {}
+        for g in gs:
+            st = Tk.render([g], os.path.join(WORK, "edge"), scale=0.5, samples=6)[0]
+            a = np.asarray(Image.open(os.path.join(WORK, "draft", "g_%04d.png" % g)).convert("L"), dtype=float)
+            b = np.asarray(Image.open(st["path"]).convert("L"), dtype=float)
+            d = np.abs(a - b) > 60
+            cnt = d.sum(0)
+            cols = np.nonzero(cnt >= 3)[0]
+            res[g] = [int(cols[0]) * 2, int(cols[-1]) * 2 + 1] if len(cols) else None
+            print(g, res[g], flush=True)
+        json.dump(res, open(os.path.join(WORK, "edge_%d.json" % gs[0]), "w"))
+    elif cmd == "edgefinal":
+        # the same pixel check on the FINAL frames: full scale, final spp, card hidden, diff against raw/g_%04d.png
+        import numpy as np
+        from PIL import Image
+        Tk = Take("final")
+        Tk.pose(gs)
+        Tk.har.card.hide_render = True
+        res = {}
+        for g in gs:
+            st = Tk.render([g], os.path.join(WORK, "edgef"), scale=1.0, samples=FINAL_SPP)[0]
+            a = np.asarray(Image.open(os.path.join(HERE, "raw", "g_%04d.png" % g)).convert("L"), dtype=float)
+            b = np.asarray(Image.open(st["path"]).convert("L"), dtype=float)
+            d = np.abs(a - b) > 60
+            cols = np.nonzero(d.sum(0) >= 6)[0]
+            res[g] = [int(cols[0]), int(cols[-1])] if len(cols) else None
+            print(g, res[g], flush=True)
+        json.dump(res, open(os.path.join(WORK, "edgef_%d.json" % gs[0]), "w"))
     elif cmd == "final":
         scale = float(sys.argv[3]) if len(sys.argv) > 3 else 1.0
         samples = int(sys.argv[4]) if len(sys.argv) > 4 else None

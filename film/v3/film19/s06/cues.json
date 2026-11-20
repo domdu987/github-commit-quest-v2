@@ -1,0 +1,39 @@
+{
+ "take": "s06",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film19/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 11.867,
+   "duration": 3.667,
+   "frame": 356,
+   "end_frame": 466,
+   "kind": "ambience",
+   "label": "hall, afternoon: quiet room tone, distant clock tick"
+  },
+  {
+   "time": 12.6,
+   "duration": 0.467,
+   "frame": 378,
+   "end_frame": 392,
+   "kind": "accent",
+   "label": "money bag drops onto the baize: heavy thud, coin jingle, a small bounce"
+  },
+  {
+   "time": 14.633,
+   "duration": 0.5,
+   "frame": 439,
+   "end_frame": 454,
+   "kind": "accent",
+   "label": "snap push-in on 'สองหมื่นปอนด์': short airy whoosh with a coin glint"
+  },
+  {
+   "time": 15.533,
+   "duration": 0.0,
+   "frame": 466,
+   "end_frame": 466,
+   "kind": "cut",
+   "label": "hard cut to shot 7 (hall window, the telescope)"
+  }
+ ]
+}

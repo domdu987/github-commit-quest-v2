@@ -1,0 +1,81 @@
+{
+ "take": "s24",
+ "film": 19,
+ "shots": [
+  24
+ ],
+ "g0": 1933,
+ "g1": 2028,
+ "first_g": 1924,
+ "n_frames": 113,
+ "shot_ranges": {
+  "24": [
+   1933,
+   2027
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "at": 1933,
+  "note": "hard cut from shot 23; 9 f in-handle g 1924..1932 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 2028,
+  "note": "hard cut to shot 25; out-handle g 2028..2036 rendered in 3D (stubs 9-10, snap)"
+ },
+ "set": "v3/set3d19/h19.py HALL preset hall_table, light EVENING; set_candles flicker, set_regulator(True), set_kings_chair(True), set_stubs(0 -> 10 over the shot, +1 about every 0.3 s) keyed on EVERY frame; no caption_shade; no DOF",
+ "cast": "v3/cast19 king19 (king_watch_squint base): the King stands at the head of the table holding the gold pocket watch (right) beside the silver H4 (left); the two hands rise and fall out of phase (0.9 s), eyes go from one watch to the other, head roll and lean, blink; expression 'unimpressed' (squint), mouth flat; no lip-sync",
+ "camera": "custom 22 mm, low and wide over the table near-edge row of candle stubs, dolly toward the King: c19.CamPath push 10 %/s + slide -95 px/s + arc 11 deg/s + snap x1.3 with a pan (shift 2.0 D, peak 2.1, 16 f) on 'สิบสัปดาห์' (66.77 s -> g 2006)",
+ "events": {
+  "stubs_0_to_10": [
+   1933,
+   2027
+  ],
+  "comparison_period_s": 0.9,
+  "snap": [
+   2003,
+   2019
+  ],
+  "word_sip_sapda_caption": 2006
+ },
+ "dof": "none",
+ "text": "none",
+ "caption_shade": "none",
+ "light": "EVENING",
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 18.07,
+ "s_per_frame_cpu_mean": 35.46,
+ "heads_in_shot_px": {
+  "king": {
+   "w": [
+    137,
+    222
+   ],
+   "y": [
+    546,
+    621
+   ],
+   "x": [
+    154,
+    566
+   ],
+   "bottom_max": 695
+  }
+ },
+ "framediff_in_shot": {
+  "median": 4.06,
+  "p90": 13.94
+ },
+ "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
+}
