@@ -32,3 +32,17 @@ Full list of 38 offenders: scratchpad conf/f2/sync.json (start, text, stt_time, 
 
 ## Check 5 - caption text vs script
 Caption ASS == captions.json == caption_split.txt (96 phrases, identical). Versus script_th.txt the only differences are the intended digit forms (ปี 1887, 300 เมตร, 18,000 ชิ้น, 20 ปี, 70 ปี); one script phrase ยี่สิบปี appears as 'ยี่สิบปีผ่านไป' in the crisis sentence (spelled out, matches script) while 'ได้แค่ 20 ปี' is digits as intended. No spelling differences. PASS.
+
+## Re-check rc3 (film20_rc3.mp4 / film20_rc3.ass, captions re-timed to spoken phrase)
+
+**Check 4 - caption sync: PASS (with one caveat).**
+- Fresh STT pass (fal elevenlabs speech-to-text, tha) on the rc3 final-mix audio, cut into 3 new chunks (0-23, 22-45, 44-68 s; different boundaries from the earlier per-sentence cuts), char timestamps, each of the 96 caption phrases aligned to the STT text and its first-character time compared with the ASS start: 96/96 matched, **0 phrases > +-0.15 s** (also 0 > 0.25 s). Offset range -0.05..-0.03 s (median -0.03; caption slightly early = the intended 0.03 s lead + rounding). Worst: 'ได้จริง' 66.41 vs 66.46, 'ครบแล้วต้องรื้อ' 35.69 vs 35.74 (-0.05). Before: 38/96 off, range -0.63..+0.42.
+- Independence caveat: same STT engine as the one the fix was derived from, so a systematic STT bias would not show here. Independent energy check on clean narration.wav (+0.10 s offset, 10 ms RMS, -35 dB from peak): 6 phrases start right after a >=80 ms pause so the voiced onset is unambiguous; 5 are within 0.15 s (two checked by hand are 0.04-0.07 s early, i.e. at the pause end). The 6th, 'อีก 70 ปี' (56.91 film), is ambiguous in the envelope: the nearest onsets are 0.17 s before (56.64 narr) and 0.23 s after (57.04) the caption, and the STT time falls between them inside a voiced stretch (soft glottal onset), so it cannot be called off. The other ~90 phrases start inside continuous speech, where energy gives no onset, so STT is the only measure there.
+
+**Check 2 - loudness: PASS.** rc3.mp4 ebur128: integrated -12.6 LUFS (-14..-11), true peak -1.2 dBTP (<= -1), LRA 1.7 LU. Duration 68.2 s.
+
+**Check 5 - caption text: PASS.** ASS text == captions.json == captions_v1_proportional.json (text unchanged by the re-time) == caption_split.txt (96 phrases, identical order).
+
+**Overlap / flicker: PASS (minor note).** Min on-screen 0.26 s (>= 0.2). No real overlaps, 3 gaps > 0.05 s; two adjacent pairs overlap by 0.01-0.02 s (ASS centisecond rounding at 26.87/27.47-27.49 'ไอ้ช่างหมุด'->'แต่เขาก็' and 33.27-33.28 'จนถึงยอด'->next), same position, at most one frame of double render, not visible flicker.
+
+**Verdict rc3 audio + captions: PASS.**
