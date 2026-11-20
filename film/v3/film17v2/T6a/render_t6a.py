@@ -5,6 +5,8 @@ OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'frames')
 def assign_for(g):
     a = {'bertillon': ('bertillon_holding_card', {}), 'dupont': ('dupont_sweating', {}),
          'inspector': ('inspector_arms_crossed', {}), 'gend_a': ('gendarme_standing_a', {}), 'gend_b': ('gendarme_standing_b', {})}
+    if g <= 1545: a['inspector'] = ('inspector_arms_crossed', {'dx': -0.4, 'dy': 3.0})   # director: keep his body out of Bertillon's face (T6a only)
+    if g <= 1545: a['bertillon'] = ('bertillon_holding_card', {'dx': 0.45 * min(1.0, max(0.0, (1536 - g) / 14.0))})   # drawer front passes through his face otherwise
     return a
 def run(frames, out_dir, samples=16):
     os.makedirs(out_dir, exist_ok=True)
@@ -16,5 +18,5 @@ def run(frames, out_dir, samples=16):
         bpy.context.scene.render.filepath = fp; bpy.ops.render.render(write_still=True); P.grade2(fp); print('done', g, flush=True)
 if __name__ == '__main__':
     a = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else sys.argv[1:]
-    if a[0] == 'key': run([1515], a[1])
+    if a[0] == 'key': run([1515, 1540], a[1])
     else: run(range(1371, 1536), OUT)
