@@ -14,3 +14,10 @@ Earlier issues: R1-1 captain clipped at left edge: FIXED (inside, hat brim x>=60
 1. g182-261 (R1-2, planned beat "peers into fog over a blank chart"): he still faces the lens with a grumpy stare, body square to camera; eyes never go to the chart or fog; the chart now shows coast lines and a red compass rose, not blank. Fix: turn the body 3/4 to the rail, head up into the fog on "กลางทะเล", chart blank (ticks only) held at chest height.
 2. g182-261 (R1-3): chart is held at arm's length, arm straight, horizontal at hip/chest side; attach reads weak. Fix: bend the elbow, fingers on the card edge, chart in front of the body.
 3. g205-217 (R1-4): FG lantern swings to the right frame edge and is ~70 % cut at g205-210 and still clipped at g215-217 (and g261-270 at the edge). Fix: shorten the swing / move its mark 0.3 D toward centre so it stays fully inside.
+
+## Round 4: FAIL
+Checked 6 fps + cut g262 (take g182-270), qa_auto PASS, frame-diff g192-261 median 6.33 / p90 11.84 OK. No text, black/magenta, frozen, blur; mouth fixed; heads in band. Take unchanged in substance since round 3.
+Earlier issues: R3-1 NOT FIXED, R3-2 NOT FIXED, R3-3 NOT FIXED.
+1. g182-261 (R3-1, planned beat "peers into fog over a blank chart"): he still faces the lens, grumpy stare, body square to camera; eyes never go to the chart or fog; the chart shows coast lines and a red compass rose (not blank). Fix: turn body 3/4 to the rail, head up into the fog on "กลางทะเล", chart blank (ticks only).
+2. g182-261 (R3-2): chart still held out sideways at arm's length, straight arm. Fix: bend the elbow, chart at chest height in front of the body, fingers on its edge.
+3. g200-217 and g257-270 (R3-3): FG lantern still swings to the right frame edge and is cut ~half at g200-212 and at the end. Fix: shorten the swing / mark 0.3 D toward centre.

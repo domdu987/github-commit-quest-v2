@@ -15,3 +15,7 @@ Issues:
 2. g2009-2034 (plan coverage): the near-edge stub row leaves the frame; only ~5-6 stubs are visible at g2004-2014 and none from g2019, so the pile never reads as 10 at the end. Fix: keep the stub row in frame to the cut (lower camera or shorter push) or time the growth to finish before the camera leaves it.
 3. g1924-1974 (scale): King head 80-100 px, the two watches are specks; the comparison does not read until g1984. Fix: start closer (the mid-shot size of g1994) and keep it.
 Notes: an orrery sits in front of the King and covers his lower body; the King reads seated; flames are blown white.
+
+## Round 4: PASS
+Checked 6 fps + cut +-3 (take g1924-2036). qa_auto PASS. No text, black/magenta, frozen, blur. King's mouth is closed throughout (only expression changes). Frame-diff g1934-2027 median 4.05 / p90 13.91: R2-1 FIXED. R2-2 FIXED: the stub row stays in frame and grows from 0 to ~10 by g2006-2014. R2-3 FIXED: King head 135-220 px from the start, the two watches read; the candelabra no longer covers him.
+Notes: King's wig touches the left edge at g2009-2027 (face intact); a candle edge shows at the left of the last frames; the King reads seated behind a lectern; flames blown white.

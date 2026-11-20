@@ -11,3 +11,7 @@ Verification of round 1: 1 shuffle-in FIXED (Harrison now travels from the reces
 Issues:
 1. p90 11.34 < 12 (hard limit). Fix: stronger slide/arc in g1870-1895 where pairs sit at 3.5-4.5, or a second small snap.
 Notes: (a) g1847-1858 Harrison half hidden behind the open door leaf (reads as a peek, ok). (b) the hall is very dark g1907-1937, low phone legibility; old Harrison, spectacles, H4 in right hand, evening light and fixed smile all OK; head centre y 450-600, none near 880.
+
+## Round 4: PASS
+Checked 6 fps + cut g1933 +-3 (take g1847-1941). qa_auto FAIL on blur g1847-1851 only: handle frames with Harrison behind the door leaf, sharp by eye (false positive, as in round 2). No text, black/magenta, frozen; mouth fixed smile. Frame-diff g1857-1932 median 4.53 / p90 12.95: R2-1 FIXED (>= 4 / >= 10). Entrance through the door, H4 in the right hand, evening light, head centre y 450-650, none near 880.
+Notes: g1907-1937 the hall is very dark and Harrison small (~100 px): low phone legibility; contact shadow faint.

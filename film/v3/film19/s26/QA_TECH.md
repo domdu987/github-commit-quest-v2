@@ -18,3 +18,12 @@ Issues:
 4. g2112-2157 (acting): Harrison grin is a faint smile, arms down; no joyful rise or 2 bounces; King nods are small (head moves a few px). Fix: arms up, 2 bounces ~0.06 D, firmer nods.
 5. g2077-2159 (feet): Harrison torso is behind the table while his legs show below the table at a lower, disconnected position, with no contact shadow on the dark carpet = floating legs. Fix: hide the legs under the table or ground them with a shadow.
 6. Plan row says 69.55-71.90 (g1 2156); take runs to g2159 per the director rule; update the plan row.
+
+## Round 4: FAIL
+Checked 6 fps and g2140/g2150/g2159 at full size (take g2077-2159, last frame g2159 present, hard cut, out-handle 0). qa_auto PASS. No text, black/magenta, frozen, blur; mouths closed. Frame-diff g2087-2159 median 4.25 / p90 11.31: R2-1 FIXED. End frame contains the bag, Harrison and the King.
+Earlier issues: R2-1 FIXED; R2-2 bag NOT FIXED; R2-3 King clipped FIXED (King inside, ~100 px) but see 1; R2-4 acting NOT FIXED; R2-5 floating legs NOT FIXED.
+1. g2148-2159 (clipping, new at the end frame): Harrison's head is cut by the LEFT frame edge (about 10-20 % of the face, wig and ponytail off at g2154-2159). QA.md admits "head near the left edge". Fix: end the move with Harrison's head inside x 20-700 (reduce the pan/arc or move him 0.3 D right).
+2. g2104-2159 (R2-2, prop): the "money bag" still reads as a clay jar / vase: no tied neck or cloth fold, brown-gold rigid body with a cork-like top; a coin spill exists but the money beat is weak. Fix: soft cloth sack with a tie and a sag, golden sheen, coins pouring from the neck.
+3. g2112-2159 (R2-4, acting): Harrison's grin is a small smile; one arm is stretched out rigidly sideways across the table, no joyful rise and no 2 bounces; King nods are barely visible. Fix: both arms up with the H4, 2 bounces ~0.06 D, firmer nods.
+4. g2077-2159 (R2-5, feet): Harrison's legs hang below the table in mid-air, disconnected from his torso, with no contact shadow on the dark carpet. Fix: hide the legs under the table (lower the camera cut-off) or ground them with a blob shadow.
+5. g2086-2150 (composition): the lower third is dark empty floor. Note only.

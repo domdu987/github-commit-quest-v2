@@ -15,3 +15,7 @@ Checked: qa_auto PASS, meta g0 938/g1 985 OK, handles OK, framediff median 4.42 
 Checked 6 fps (take g929-994), qa_auto PASS (no planned cuts: dissolve in). No text, no black/magenta, no frozen, no blur. Mouth fixed. Head centre y ~ 460-580, nothing at 880. Frame-diff (take.mkv, g939-985): median 4.36, p90 10.59: OK. Snap g952-972 visible, tapping continues to the end, eye-line to lens at the end.
 Earlier issues: R2-1 candle burn-down: FIXED (candle stays in frame on the chest; tall slim candle at g938 -> short stub at g985; flame smaller; frame mean luma falls 64 -> 56). R2-2 tapping: OK. R2-3 shadows: still faint, NOTE.
 Notes: p90 10.59 is just above the limit; legs end in thin stubs (rig limit); the film-level 12 is for FINAL.
+
+## Round 4: PASS
+Checked 6 fps (take g929-994), qa_auto PASS. No text, black/magenta, frozen, blur; mouth fixed (frown). Frame-diff g939-985 median 4.22 / p90 10.62 (>= 4 / >= 10) OK. Round 3 PASS stands: candle burn-down reads, tapping continues, eye-line to lens. New: nothing blocking.
+Notes: Harrison's ponytail/hair touches the right edge in the last frames (face intact); legs end in thin stubs; shadow under shoes faint.

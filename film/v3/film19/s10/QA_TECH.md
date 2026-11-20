@@ -25,3 +25,9 @@ Earlier issues: R2-1 NOT FIXED, R2-2 NOT FIXED, R2-3 NOT FIXED.
 2. g764-809 (R2-2): astro_b and astro_c (right) still overlap into one clump of two wigs, one face partly hidden. Fix: separate marks by >= 0.8 D.
 3. g792-846 (R2-3): Board members are cut by BOTH frame edges: the left astronomer's wig/face is ~half off the left edge from g~800 (160-290 rows cut at x=0, g798-846) and the right-hand pair is ~50 % off the right edge (g786-839). Fix: pull the slide end and the marks inboard so every face stays inside x 20-700 until the snap.
 Notes: contact shadows under Harrison faint; meta g1=862 exclusive.
+
+## Round 4: FAIL
+NOTE on files: take.mkv (09:17) is STALE; the current render is take.mkv.partaa+partab (09:57, matches meta/framediff/QA.md). Checked the concatenated parts (g764-871). qa_auto PASS (soft g850-854 = planned snap). 6 fps + cuts g773/g862 checked. No text, no black/magenta, no frozen. Frame-diff g774-861 median 6.92 / p90 17.82 OK. Wide exempt from head band; Harrison head centre y ~ 560.
+Earlier issues: R3-1 tricorne NOT FIXED; R3-2 astro_b/c clump FIXED (smaller green-coat astronomer now sits clear of the right-hand one, faces readable); R3-3 edge clipping PARTLY (left astronomer's wig is cut by the left edge g764-846 and his face touches/loses ~20 % at the edge g836-846 during the whip; right one's wig cut at the right edge, face intact: NOTE).
+1. g854-871 (R3-1, plan "Harrison with his tricorne"): still no tricorne; arms folded low, hands empty. Fix: tricorne in the raised hand (fingers over the brim) or the director amends the plan row in writing.
+Notes: the take.mkv/parts duplication should be cleaned (deliver one file); contact shadows faint.

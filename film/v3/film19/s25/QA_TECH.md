@@ -12,3 +12,7 @@ Snap push-in on "เป๊ะ" (spoken g2081) g2069-2082 visible. Head centre y 
 Issues:
 1. g2019-2074 (feet): Astro stands on the dark red carpet runner with no contact shadow; the legs are thin white stubs that float. Fix: blob shadow under both shoes (it is a wide shot for 2 s, readable).
 Notes: the first frames g2019-2024 mouth smaller than the held shape (handle only).
+
+## Round 4: PASS
+Checked 6 fps + cut +-3 (take g2019-2094). qa_auto PASS. No text, black/magenta, frozen, blur. Held jaw-drop OK (blink frames g2050, g2074 show a changed mouth: NOTE). Frame-diff g2029-2085 median 5.01 / p90 12.68 OK. Head centre y 573-655, wig inside the frame, snap push-in on "เป๊ะ" g2069-2082 visible.
+Earlier issue R2-1 (no shadow under the feet): now a dark contact blob is present under both shoes on the runner at g2019-2060: FIXED (NOTE: legs still thin white stubs, rig limit).
