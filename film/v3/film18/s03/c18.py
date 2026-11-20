@@ -281,7 +281,7 @@ def hold_apply(T):
     """after set_pennants / set_qi_return (which reset the holdout flag scale): scale the two holdout flags about their pole feet."""
     for p in STATE['pennants']:
         if p.get('hold') and p.get('ob') is not None:
-            s = STATE.get('hold_scale', 1.0) if p['x'] > 0 else 1.0; p['ob'].scale = (s, s, s)
+            pass
 
 
 def tilt_cam(dz_look, dz_loc=0.0):
@@ -412,3 +412,11 @@ def vista_quiet(T, ju_y=100.0):
         bm = bmesh.new(); bm.from_mesh(h.data); mw = h.matrix_world
         dl = [f for f in bm.faces if (mw @ f.calc_center_median()).y < ju_y]
         bmesh.ops.delete(bm, geom=dl, context='FACES'); bm.to_mesh(h.data); bm.free()
+
+
+def jimo_flag(k=0.45):
+    """Vista round 4: the near Qi flag of Jimo (a holdout) at scale k (cloth grows from the pole top)."""
+    import jimo_vista as VS_
+    for i, t in enumerate(STATE['towns']):
+        if t.get('name') == 'jimo':
+            VS_.set_pennant_scale(i, k, kind='qi')

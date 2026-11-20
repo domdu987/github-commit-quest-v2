@@ -27,10 +27,20 @@ c18.fix_vista(T); c18.vista_quiet(T)
 c18.fix_sky_clean(T, 'sky_DUSK')
 
 
+import jimo_vista as VS
+ORDER = None
+
+
 def frame(T, g):
-    k = c18.ramp(g, G_PEN0, G_PEN1)
-    J.set_pennants(k, 'yan'); J.set_qi_return(0.0)
-    c18.hold_apply(T)
+    global ORDER
+    if ORDER is None:
+        T.set_camera(FIRST); ORDER = J.vista_pennant_order(T.cam)
+    n = len(ORDER); step = (G_PEN1 - G_PEN0 - 10) / float(n)
+    for r, idx in enumerate(ORDER):
+        cap = 0.4 if r < 20 else 0.55
+        VS.set_pennant_scale(idx, cap * c18.ramp(g, G_PEN0 + r * step, G_PEN0 + r * step + 10), kind='yan')
+    J.set_qi_return(0.0) if False else None
+    c18.jimo_flag(0.45)
 
 
 T.run(frame, gs=rng, force=(mode == 'draft'))

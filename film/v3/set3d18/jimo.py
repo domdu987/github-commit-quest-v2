@@ -645,6 +645,8 @@ def set_party(k, frame=None): CAMP.set_party(k, frame)
 def set_rout(k, frame=None): CAMP.set_rout(k, frame)
 def set_pennants(k, side='yan', frame=None): VS.set_pennants(k, side, frame)
 def set_qi_return(k, frame=None): VS.set_qi_return(k, frame)
+def vista_pennant_order(cam=None, kind='yan'): return VS.vista_pennant_order(cam, kind)
+def set_pennant_scale(idx, k, kind='yan', frame=None): VS.set_pennant_scale(idx, k, kind, frame)
 
 def apply_state(spec, frame=None):
     """State string (comma separated): h<n> holes, g<k> gate, pt<k> party, ro<k> rout, pn<k> pennants (yan), qr<k> qi return, fl<k> flames (0 out .. 1)."""
