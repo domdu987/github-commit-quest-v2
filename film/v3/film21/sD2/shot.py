@@ -154,7 +154,7 @@ def camera_at(g, M):
         fwd = herm(g, G_CU, G_OUT, 2.50, 0.0, -0.02, -PULL)
         up = herm(g, G_CU, G_OUT, -0.2, 0.0, 0.0, 0.0)
         rt = 0.0
-    xd = pw(g, [(642, 330), (700, 240), (725, 190), (748, 200), (G_PUSH + 9, 330), (G_OUT, 330)])        # head x: the bridge enters on the right by g ~725
+    xd = pw(g, [(642, 330), (700, 240), (725, 190), (748, 200), (G_PUSH + 9, 385), (G_OUT, 385)])        # head x: the bridge enters on the right by g ~725
     yd = pw(g, [(642, 665), (700, 665), (748, 650), (G_PUSH + 9, 395), (G_CU, 395), (G_OUT, 585)])      # tilt up 4-6 deg: sand < 30 %; CU: head centre y 452 so the belt + purse stay in shot
     loc = Vector((loc0.x + (cx.x - M[0]), loc0.y + (cx.y - M[1]), loc0.z)) + f * fwd + R * rt + Vector((0, 0, up))
     hd = Vector((cx.x, cx.y, gz + 1.55))
@@ -200,9 +200,9 @@ def near_props(A, M, R, f, loc0):
     B = K.Batch(91)
     K.sacks(B, at(0.10, 1.6, -1.5), 5, rs); K.sacks(B, at(0.62, 2.2, -1.2), 4, rs)
     bx, by, bz = at(0.30, 2.0, -0.4)                              # a stacked bundle of spears (the weapon rack's shield discs read as black rings)
-    for i in range(6): K.spear(B, (bx + 0.12 * (i % 3), by + 0.1 * (i // 3), bz), tilt=(0.10 * (i - 2.5) / 2.5, 0.05 * (i % 2)), h=2.7)
+    for i in range(6): K.spear(B, (bx + 0.12 * (i % 3), by + 0.1 * (i // 3), bz), tilt=(0.10 * (i - 2.5) / 2.5, 0.05 * (i % 2)), h=1.2)
     B.rod('wood', (bx - 0.2, by, bz + 0.9), (bx + 0.4, by + 0.05, bz + 0.9), 0.04, seg=5)
-    K.spear(B, at(0.82, 1.9, -1.3), tilt=(0.06, -0.1), h=3.0); K.spear(B, at(0.84, 2.2, -1.1), tilt=(-0.05, -0.12), h=3.0)
+    K.spear(B, at(0.82, 1.9, -1.3), tilt=(0.06, -0.1), h=1.1); K.spear(B, at(0.84, 2.2, -1.1), tilt=(-0.05, -0.12), h=1.0)
     for k in range(7):                                            # tent pegs and rope stubs in the sand
         x, y, z = at(0.05 + 0.13 * k, rs.uniform(-1.8, 2.8), rs.uniform(-1.8, -0.4))
         B.rod("wood", (x, y, z), (x + 0.05, y, z + 0.28), 0.03, seg=5)
@@ -238,7 +238,7 @@ def stage(T, gs):
     sf = K.mark_px(P_LOC, P_LOOK, P_LENS, 5.8, 570, "surrey")            # Surrey at cx ~570 at P_BANK (QA: the banner pole is at x >= 640)
     jobs = [(cre, cress_pose), (sur, surrey_pose)]
     ext = []
-    for k, (key, cast, story) in enumerate((("e1", "footman_b", "footman_b_stand"),)):
+    for k, (key, cast, story) in enumerate(()):          # the background soldier e1 stacked his head on the hat (QA): removed
         a = T.add("x" + key, cast); jobs.append((a, extra_pose(story, 1.3 * k))); ext.append((a, marks[key], cast))
     loc_of = lambda gg: camera_at(gg, M)[0]
     for g in gs:
