@@ -6,3 +6,10 @@
 - Beats: jumpers T0 60.45 / 61.60 / 62.75 s (green / gold / red kits), dissolve 64.6-65.5, run 66.3-67.42, flop 67.5-68.0, TUMP g2040 (68.0) with flecks, buried thumbs-up, push-in to end.
 - Differences from the plan: boys sit on the right bench (bench_right) so they stay in frame; no back-view coach card, so "turns his back" is a plant pose into the flop; the bar is hidden once the coach has crossed it.
 - Files: take.mkv.partaa.. (cat to rebuild), contact.jpg, QA_AUTO.md, phone_sheet.jpg, shot.py, compose.py.
+
+## Round 2 (director TAKE gate FIX)
+- MEXICO 68 rim/outer/podium banners and the 2.24 m board hidden in the 1972 stadium (g1796-1965).
+- Camera holds low and close with a zoom (lens 26-36) on the first landing: jumper 1 sits with the thumbs-up pumping from g~1862 (smile readable by g1870-1900).
+- Coach: mound raised to the chin, sawdust on cap, thumbs pumping at 3 Hz, push-in to head ~17 % of frame height (camera 2 m away) before the hard cut; run camera re-centred (coach no longer clipped at g2024).
+- Bar is kept and falls backwards into the sawdust from g2033; landing spray is four bursts (3.2/2.6/2.2/1.6 strength) from g2039.
+- Final numbers: see QA_AUTO.md; frames re-rendered: B all, A g1989-2100.
