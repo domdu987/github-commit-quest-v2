@@ -13,13 +13,13 @@ NAME = 's22'
 G0, G1 = 1683, 1742
 H_IN, H_OUT = 6, 6
 G_GLINT = C.g_of(57.64)                                           # 1732
-MOVE = dict(push=0.09, slide=14)
-CAMO = dict(loc=(-1.6, -52.6, 2.0), look_at=(0.3, -46.0, 2.4), lens=22.0)
+MOVE = dict(push=0.09, slide=8)
+CAMO = dict(loc=(-1.4, -51.5, 1.9), look_at=(0.6, -46.0, 2.5), lens=27.0)
 SHAKE = (0.8, 0.6, 0.4, 2.6)
 SNAPS = [(G_GLINT - 1, 1.15, 4, 9999)]                            # ONE held +15 % punch-in on the word
-OX = V((1.0, -46.0, 0.0))
-SCALE_OX = 0.88
-SOL_D, SOL_LAT = 5.6, -2.0
+OX = V((-0.1, -46.0, 0.0))
+SCALE_OX = 0.8
+SOL_D, SOL_LAT = 5.4, -2.3
 
 
 def make_driver(quality):
@@ -37,13 +37,23 @@ def make_driver(quality):
         import bmesh
         bm = bmesh.new(); bm.from_mesh(pl.data); mw = pl.matrix_world
         bmesh.ops.delete(bm, geom=[f for f in bm.faces if (mw @ f.calc_center_median()).z > 6.9], context='FACES'); bm.to_mesh(pl.data); bm.free()
+    # remove the grey watch post at the right (palisade-bank faces that project into its screen area during the shot)
+    from bpy_extras.object_utils import world_to_camera_view as w2c
+    if pl is not None:
+        sc_ = C.bpy.context.scene; cam0 = ob['cam']; kill = set(); mw = pl.matrix_world
+        for gg in (G0, (G0 + G1) // 2, G1):
+            C.set_camera(NAME, gg, move=MOVE, cam=CAMO); C.bpy.context.view_layer.update()
+            for f in pl.data.polygons:
+                v = w2c(sc_, cam0, mw @ f.center)
+                if v.z > 0 and v.x > 0.62 and 0.12 < 1 - v.y < 0.75: kill.add(f.index)
+        bm = bmesh.new(); bm.from_mesh(pl.data); bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.index in kill], context='FACES'); bm.to_mesh(pl.data); bm.free()
     # hero ox: charging gallop front-3/4 with the charging face; unlit reed + OWN flame card
-    hv = {ph: C.angry_ox(C.ox_variant('dragon', 'front_three_quarter', 'gallop', ph, -1, reed=True, uid='h'), True) for ph in range(8)}
-    at_h = C.Atlas('s22_hero2', hv, ppd=200)
+    hv = {ph: C.ox_variant('dragon', 'front_three_quarter', 'gallop', ph, -1, reed=True, uid='h', face='rage') for ph in range(8)}
+    at_h = C.Atlas('s22_hero3', hv, ppd=200)
     hero = C.Actor(at_h, 'hero', scale=SCALE_OX, tint=(1.0, 0.86, 0.74), k=0.95, sw=2.7 * SCALE_OX, ref=0)
-    fl = C.J.flame_card(parent=None, scale=1.0, name='herofl', light=True, lit=1.0, energy=1100.0)
-    gv = {ph: C.angry_ox(C.ox_variant('dragon', 'front_three_quarter', 'gallop', ph, -1, reed=True, uid='b')) for ph in range(8)}
-    at_b = C.Atlas('s22_bg2', gv, ppd=70); rnd = random.Random(22); bg = []
+    fl = C.J.flame_card(parent=None, scale=1.0, name='herofl', light=True, lit=1.0, energy=1100.0); C.lean_flame(fl, 40.0)
+    gv = {ph: C.ox_variant('dragon', 'front_three_quarter', 'gallop', ph, -1, reed=True, uid='b', face='rage') for ph in range(8)}
+    at_b = C.Atlas('s22_bg3', gv, ppd=70); rnd = random.Random(22); bg = []
     for i in range(10):
         sc = rnd.uniform(0.95, 1.1) * 1.15
         bg.append((C.Actor(at_b, 'bg%d' % i, scale=sc, tint=(1.0, 0.8, 0.65), k=0.75, sw=2.7 * sc, ref=0), V((rnd.uniform(-7, 8), rnd.uniform(-38.0, -29.0), 0.0)), rnd.random(),
@@ -64,10 +74,10 @@ def make_driver(quality):
         pose = C.set_camera(NAME, g, move=MOVE, cam=CAMO, shake=SHAKE, snaps=SNAPS); cam = V(pose['loc'])
         t = (g - G0) / 30.0; ph = int(g / 2.5) % 8
         bob = 0.05 * abs(math.sin(2 * math.pi * 2.5 * t))
-        hero.show(ph, OX, cam, mirror=False, lift=bob, roll=2.0 * math.sin(2 * math.pi * 1.7 * t))
+        hero.show(ph, OX, cam, mirror=True, lift=bob, roll=2.0 * math.sin(2 * math.pi * 1.7 * t))
         d = cam - OX; yaw = math.atan2(d.x, -d.y); ur = V((math.cos(yaw), math.sin(yaw), 0))
-        ax, ay = at_h.anchors[ph].get('tail_tip', (-1.2, -2.0)); tail = OX + ur * (ax * SCALE_OX) + V((0, 0, -ay * SCALE_OX + bob))
-        fl.location = tail; fl.scale = (1.25, 1.25, 1.25)
+        ax, ay = at_h.anchors[ph].get('tail_tip', (-1.2, -2.0)); tail = OX + ur * (-ax * SCALE_OX) + V((0, 0, -ay * SCALE_OX + bob))
+        fl.location = tail; fl.scale = (1.1, 1.1, 1.1)
         lights[0].location = tail + V((0.2, 0.6, 0.3)); lights[0].data.energy = 900.0 * (0.9 + 0.2 * math.sin(g * 1.7))
         lights[1].location = (OX.x + 0.5, OX.y - 2.0, 1.8); lights[1].data.energy = 260.0
         fwd = (V(pose['look_at']) - V(pose['loc'])); fwd.z = 0; fwd.normalize(); rt = V((fwd.y, -fwd.x, 0))
@@ -84,7 +94,7 @@ def make_driver(quality):
         for si, st in enumerate(stars):
             tp = TIP[si] if TIP[si] else None
             if tp is not None and 0 <= k < 14:
-                sgn = 1.0; wx = OX + ur * (tp[0] * SCALE_OX * sgn) + V((0, 0, -tp[1] * SCALE_OX + bob)); st.location = wx
+                sgn = 1.0; wx = OX + ur * (-tp[0] * SCALE_OX * sgn) + V((0, 0, -tp[1] * SCALE_OX + bob)); st.location = wx
                 sz = 1.6 * math.sin(math.pi * k / 14.0) + 0.1; st.scale = (sz, sz, sz); st.rotation_euler = (0, 0, 0); st.hide_render = False
             else: st.hide_render = True
     return drive, actors
