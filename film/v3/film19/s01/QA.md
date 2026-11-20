@@ -97,3 +97,27 @@ How the camera got there (draft numbers):
 - **Top-right plank:** the lit diagonal oak plank is deleted from the scene mesh at build time (drop_top_right_plank in shot.py).
 - **Numbers (final 720x1280):** head width 214 px at g 0 (to 411 at g 56); head centre y 427-561 (all heads below top, bottom max y 687, above 880); frame-diff median 4.43, p90 13.81 (min 3.54, max 20.49); camreport: never parked (0 frames under 0.25 px/frame); 12.4 s/frame wall; qa_auto PASS; no DOF, no text, no caption_shade; H1 bars rock every frame.
 - meta.json camera string corrected.
+
+
+## Round 3 (QA-art round 2: 7/10 FIX-FIRST)
+- **Head capped:** snap x1.18 (was 1.35), drift push 4 %/s (was 8). Head width per 10 g (px, head centre y):
+
+| g | head w | head y |
+|---|---|---|
+| 0 | 182 | 538 |
+| 10 | 189 | 560 |
+| 20 | 196 | 581 |
+| 30 | 204 | 607 |
+| 40 | 217 | 615 |
+| 50 | 281 | 461 |
+| 60 | 296 | 486 |
+
+  Head 182 px at g 0, 290 px at g 56 (cap 300-320); head centre y 461-607 in shot (min 461 at g 50), bottoms max y 730 (all above 880).
+- **Whole H1 in frame (checked on the rendered frames g 0, 30, 50, 56, not only projected):** snap shift x -0.05 (about 0); camera starts at x 1.90 looking at x 2.45. Projected H1 bounding box including both balls (x0, y0, x1, y1 in 720x1280): g 0 [25, 346, 472, 715]; g 30 [48, 414, 481, 784]; g 56 [38, 228, 576, 734]; min x over all 66 frames 25, max x 598. Both hands and the ponytail are inside the frame on every frame: the arm V was narrowed (screen-right hand raised beside his head, hand targets in shot.py) because with the clock-side arm reaching the H1 and a wide second arm, the whole H1 plus both hands cannot fit at a 300 px head.
+- **Lantern:** hidden for the whole take: key_vis of lantern_lampg and lanternf_iron every frame, plus its iron cage (35 faces merged into shop_iron) deleted from the scene mesh; only the stool/crate is left, nothing in front of him at y 880 or below except the crate top.
+- **Top-right plank:** a second lit plank (shop_honey island, 6 faces) appeared with the new framing and is deleted too.
+- **Blink** moved from g 55 to g 50: eyes open at the lens on g 53-56.
+- **Frame-diff** (final): median 5.60, p90 13.53 (min 4.4, max 16.7); the snap now runs g 35..52 (18 f, peak 3.2, shift y -0.75) with arc 18 deg/s and crane 60 px/s to hold p90 at the smaller zoom. Never parked (camreport).
+- The camera stays inside the room (x 4.24 at g 65; the wall is at 4.25; an arc of 20 put it outside and rendered a black void).
+- Head size / H1-visible trade-off: whole-H1 + both hands + a head over 300 px cannot share one frame, so the head ends at 290 px.
+- qa_auto PASS; no DOF, no text, no caption_shade; H1 bars rock on every frame.

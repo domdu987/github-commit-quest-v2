@@ -27,9 +27,9 @@
   "at": 57,
   "note": "hard cut to shot 2 (SHIP ship_aerial NOON) at g 57; handle g 57..65 rendered in 3D (the push, the arc, the rocking bars and his idle continue)"
  },
- "set": "v3/set3d19/h19.py WORKSHOP preset shop_bench, light DAY; set_clock(1) (H1 alone), set_balance(g/30) and set_candles(1.0) keyed on every frame; no runtime set changes; no caption_shade; runtime set change: the lit top-right oak plank (shop_oak island, 6 faces) deleted from the scene mesh; window-shaft volume hidden",
- "cast": "v3/cast19 harrison19 default (greying hair, apron + shavings), mirrored (faces the H1 at screen-left): harrison_idle base, open-V two-arm presentation (clock-side arm out toward the H1, other arm up and outward, palms up, no arm across the chest) rising g 0..11, a second bigger ta-da on the snap g 37..44, proud bob; expr grinning (fixed mouth); blinks g 20, 55; no lip-sync",
- "camera": "custom 22 mm, start (2.00,-1.30,2.25) looking at (2.70,3.20,2.05) (about -2.5 deg, level-down: ceiling < 30 % of frame); c19.CamPath drift push 8 %/s + slide +30 px/s + crane 35 px/s + arc 9 deg/s about Harrison's depth, decay 0.1 (moving on frame 0 and the last frame) + snap x1.35, 13 f, peak 1.9, shift (0.12,-0.30) g 36..49 on 'บอกว่านาฬิกา'",
+ "set": "v3/set3d19/h19.py WORKSHOP preset shop_bench, light DAY; set_clock(1) (H1 alone), set_balance(g/30) and set_candles(1.0) keyed on every frame; no runtime set changes; no caption_shade",
+ "cast": "v3/cast19 harrison19 default (greying hair, apron + shavings), mirrored (faces the H1 at screen-left): harrison_idle base, both arms rise into an open-palm presentation g 0..11, a second bigger ta-da on the snap g 37..44, proud bob; expr grinning (fixed mouth); blinks g 20, 55; no lip-sync",
+ "camera": "custom 22 mm, start (1.90,-1.95,2.25) looking at (2.45,3.20,2.05); c19.CamPath drift push 4 %/s + slide -25 px/s + crane 60 px/s + arc 18 deg/s about Harrison's depth, decay 0.1 + snap x1.18, 18 f (g 35..52), peak 3.2, shift (-0.05,-0.75) on 'บอกว่านาฬิกา'",
  "events": {
   "arms_rise": [
    0,
@@ -37,7 +37,7 @@
   ],
   "blink": [
    20,
-   55
+   50
   ],
   "snap": [
    36,
@@ -66,21 +66,20 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 12.36,
- "s_per_frame_cpu_mean": 24.27,
+ "s_per_frame_wall_mean": 12.57,
+ "s_per_frame_cpu_mean": 24.61,
  "head_px": [
-  214,
-  411
+  182,
+  290
  ],
  "head_centre_y": [
-  427,
-  561
+  461,
+  624
  ],
- "head_bottom_max_y": 687,
+ "head_bottom_max_y": 730,
  "framediff_in_shot": {
-  "median": 4.43,
-  "p90": 13.81
+  "median": 5.6,
+  "p90": 13.53
  },
- "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json",
- "staging": "mark harrison_bench + (0.12,-2.9,0) = (3.45,2.19): beside the H1 on the camera side, apron visible from g 0"
+ "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
 }
