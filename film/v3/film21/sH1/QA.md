@@ -1,13 +1,8 @@
-# H1 THE CHARGE v2 (g 1239-1345 + handles 1346-1348), team 9 (fix pass after the TAKE gate)
-World `build_world(['hill_over','bridge_end_north'])`, 32 samples, 720x1280, new cast colours (Scots blue, English crimson). CUT in, no internal cut.
-- Ride g1239-1275 (kept): camera behind 5 running Scots, gorse whipping past, 5 Hz shake decaying. Overtake + swoop kept; the path now looks at the neck from g1297 (fix 5: no shelf slab filling the frame).
-- Fix 1: the swoop ends LOW and CLOSE past the bridge mouth: camera (9, 40, 3.2) at g1316 with a lens zoom 22 -> 32 (wall figures about 12-15 % of the frame), then eases back (zoom-out, pull away) and lands EXACTLY on P_NECK (-2.0, 50.0, 4.6) -> (0.0, 22.0, 1.8), 22 mm at g1345. g1346-1348 begin the crane up.
-- Fix 2: the slam is an event: the flank Scots (pre-placed by the banner sites) are still running at g1310 (accelerating, wall NOT formed), close across the deck mouth on g1316 with a 0.45 m overshoot, spears drop level together (spear prop x1.45 thicker), squash, tan dust puffs g1316-1327.
-- Fix 3: three tall blue saltire banners (6-7.4 m) rise out of the ground g1312-1320 in the wall.
-- Fix 4: the English first turn their heads back toward the wall (g_hit-10..), then jump back toward the lens in 8 frames from g1313-1321 (hop 0.9 D + 0.6 m back), five helmets pop off (own painted kettle-hat cards fly up and land crooked on the ground).
-- Fix 6: nearest English now at y <= 39.2 (head bottoms at the end stay above y 880, heads around y 600-700).
-## Numbers
-qa_auto PASS (blur FAIL of v1 gone), saturation 0.496, motion median 11.4 / p90 18.2 (rhythm.py 13.6 / 20.9), no stills. Luma 131 (colour normalized at the conform per director policy).
-## Known limits
-- The English keep their own painted helmet on the head when the card helmet pops (no hatless sprite exists): reads as a pop at phone size, double hat when paused.
-- The wall is 2 ranks of cards; the world's 3D wall is hidden. The deck/wall continuity with H2a is the director's call.
+# H1 THE CHARGE v3 (g 1239-1345 + handles 1346-1348), team 9
+Rebuilt on the H2a staging (render21/team3 sH2a shot.py, same calls): `K.BRIDGE_Y1 = WALL_Y - 0.4` (deck ends at the wall, WALL_Y 31.5), world presets with `foam_k 1.25`, crimson English mass in the loop and on the south bank, 5-rank blue wall (front 2 ranks = blue cast cards that slam, back 3 ranks = blue 3D bodies that rise g1314-1320), 4 big saltire banners (rise g1312-1321), the same 12 crimson causeway English (place_troops causeway seed 3, same recolour), same fg props. At g1345 the frame matches H2a's first frame (checked by eye against the sH2a contact sheet).
+- Ride g1239-1275 and the overtake kept. Swoop ends low and close past the mouth at g1316 (camera (9,47,3.3), lens zoom 34; front rank 12-18 % of frame), then eases back and lands EXACTLY on P_NECK at g1345; g1346-1348 start the crane up.
+- Slam g1316: flank Scots (blue) still running at g1310, close with a 0.45 m overshoot, spears (thicker) drop level together, dust, banners and back ranks rise.
+- English (12): turn heads back to the wall (from g_hit-10), jump back toward the lens in 8 frames (g1313-1321), five helmets pop off (painted hat cards), then shuffle back to their home marks by g1340 with small hops and wobbles (they keep acting to g1348), same pose function as H2a from g1335.
+- qa_auto PASS (one soft frame g1310 = fast motion in the swoop), motion median 13.3 / p90 25.0, no stills. Colour left to the conform.
+## Limits
+English keep their own painted helmet when the card helmet pops (no hatless sprite). Banner blue is the set's t_saltire (no lighter blue available in this staging).
