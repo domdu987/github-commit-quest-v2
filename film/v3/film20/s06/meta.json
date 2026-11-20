@@ -10,7 +10,35 @@
  "g1": 604,
  "first_g": 396,
  "n_frames": 212,
- "status": "rendering",
+ "shot_ranges": {
+  "6": [
+   404,
+   465
+  ],
+  "7": [
+   466,
+   512
+  ],
+  "8": [
+   513,
+   603
+  ]
+ },
+ "handle_in": 8,
+ "handle_out": 4,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 13
+ },
+ "transition_out": {
+  "type": "match",
+  "frames": 0,
+  "at": 604,
+  "note": "match cut into T09 (team7) at g 604; out-handle g 604..607 continues the move"
+ },
+ "set": "v3/set3d20 CAFE cafe_wide DAY, window view stub, smoke ramp keyed per frame, add_signature keyed per frame; saturation grade 1.45",
+ "cast": "v3/cast20 painter20 / composer20 / poet20 / architect20 (outraged: wave greeked newspapers g 396-500, then jab pointing fingers at the window g 500-603, 3 Hz bounce) + waiter (idle sway, off to the right) + Maupassant SEATED on the banquette mark the whole take (maupassant_seated_toast_smug, mouth held 'smile', sips, idle breathing only after g 585); runtime meshes: quill + two sleeved hands (A cream / B plum) hand the quill over the sheet g 452-520, FONT heading 'PROTESTATION' on the sheet; signatures 14 -> 15 (g 471) -> 16 (g 496); forge smoke ramps 0 -> 1 over g 513-572",
+ "camera": "ONE continuous travel take (WORKER20 §8): waypoint camera (Catmull-Rom on loc + look, no stop): slide past the waving artists g 396-440, push-in snap g 430-446 on 'สี่สิบกว่าคน' (444), descend and push DOWN onto the protest sheet g 446-490 (the cafe_table_insert pose at g 490), over the sheet g 490-512, rise + swing to the window g 512-572 (smoke 1.0 at 572), sweep down-right to the banquette g 572-603; last frame g603 = (3.533, 6.506, 0.983) D looking at (1.692, 13.16, 2.944) D = team7's T09 start pose, handle g604 (3.505, 6.531, 0.994), arriving with ~0.03 D/frame velocity; 22 mm, no shift, no DOF",
  "end_cam": {
   "g": 603,
   "loc_D": [
@@ -39,7 +67,113 @@
     13.16,
     2.942
    ]
+  }
+ },
+ "events": {
+  "snap": [
+   430,
+   446
+  ],
+  "word_count": 444,
+  "word_sign": 469,
+  "land_1": 471,
+  "handover": [
+   483,
+   494
+  ],
+  "word_paper": 491,
+  "land_2": 496,
+  "smoke_ramp": [
+   513,
+   572
+  ],
+  "word_chimney": 572,
+  "end_pose_g603": true
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "year": 1887,
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 22.5,
+ "s_per_frame_cpu_mean": 43.74,
+ "heads_px_in_shot": {
+  "art1": {
+   "w": [
+    118,
+    664
+   ],
+   "y": [
+    -266,
+    707
+   ],
+   "bottom_max": 894
   },
-  "note": "team7's exact T09 start numbers (director correction): T06's last frame g603 and handle g604; the camera arrives with velocity ~(-0.028,+0.025,+0.011) D/frame (push + crane), not a stop; handle g605-607 keeps drifting; Maupassant sits at the banquette seat mark all take, idle breathing only after g585"
- }
+  "art2": {
+   "w": [
+    95,
+    303
+   ],
+   "y": [
+    -25,
+    721
+   ],
+   "bottom_max": 820
+  },
+  "art3": {
+   "w": [
+    109,
+    590
+   ],
+   "y": [
+    -287,
+    711
+   ],
+   "bottom_max": 826
+  },
+  "art4": {
+   "w": [
+    150,
+    93654
+   ],
+   "y": [
+    -28151,
+    33682
+   ],
+   "bottom_max": 78284
+  },
+  "mau": {
+   "w": [
+    61,
+    138
+   ],
+   "y": [
+    128,
+    721
+   ],
+   "bottom_max": 764
+  },
+  "wtr": {
+   "w": [
+    117,
+    12984
+   ],
+   "y": [
+    -10704,
+    695
+   ],
+   "bottom_max": 788
+  }
+ },
+ "framediff_in_shot": {
+  "median": 13.02,
+  "p90": 22.95
+ },
+ "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
 }
