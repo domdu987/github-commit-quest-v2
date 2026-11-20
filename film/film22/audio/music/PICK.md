@@ -26,3 +26,4 @@ No take has harsh highs (centroid under 2 kHz everywhere, under 0.2% energy abov
 - Calm 0-40 s needs no duck: m2 sits around -20 to -25 dB raw. Mocking-quote beats (19.3-27.4 s and 36.2-39.9 s) are fine; optionally -1.5 dB on 26-28 s where a brighter phrase (centroid 1500 Hz) appears.
 - Lift after 40 s is real (+3 dB, brighter). Let it push, but if the reveal and aha lines (43.4-58.4 s) feel masked, duck -1.5 to -2 dB over 43-58 s with 0.5 s ramps. Do not duck at the turn at 39.96 s; let the music open up there.
 - Open item: vocals check on m2 and m3 was not completed (fal returned "Exhausted balance"). m2's prompt asked for no vocals and its spectrum shows no sibilance bursts, but re-run STT on m2.json audio url after a top-up before locking.
+- Vocals check (local faster-whisper small, VAD): m2 and m3 no speech segments -> PASS (fal STT locked).
