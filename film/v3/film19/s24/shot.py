@@ -47,8 +47,14 @@ W2 = (2086, 2093)                                        # whip 2: telescope -> 
 WHIP_SHUTTER = 0.9
 PRESET, LIGHT, FINAL_SPP, PPD = "hall_table", "EVENING", 8, 256
 G_SNAP = A.G_SNAP                                        # 2006 (stubs reach 10 here)
-ASTRO_ON = (W1[0] - 3, W2[1] + 3)                        # astro19's card renders only around his part of the take
 HAR_ON = (W2[0] - 3, G_LAST)
+
+
+_c = Cm.CAM
+CAM_C = C.CamPath(_c.loc0, _c.look0 + Vector((0.0, 0.0, -0.08)), _c.g0, _c.g1, push=_c.push, slide_px=_c.slide_px, rise_px=_c.rise_px,
+                  arc_deg_s=_c.arc, decay=_c.decay, snaps=[dict(x) for x in _c.snaps])      # round 8: tilted down 0.08 D (tabletop fills the lower third)
+KING_C = (Cm.KING_M[0], 4.90, 0.0)                       # round 8: 0.3 D closer to the camera
+ASTRO_ON = (W1[0] - 3, W2[0] + 2)                        # round 8 (minimum fix): his card is hidden from g 2089, inside the heaviest blur
 
 
 def _blend(a, b, u):
@@ -64,8 +70,8 @@ def cam_at(g):
     if g < W2[0]:
         return B.CAM.at(g)
     if g <= W2[1]:
-        return _blend(B.CAM.at(W2[0]), Cm.CAM.at(W2[1]), (g - W2[0]) / float(W2[1] - W2[0]))
-    return Cm.CAM.at(g)
+        return _blend(B.CAM.at(W2[0]), CAM_C.at(W2[1]), (g - W2[0]) / float(W2[1] - W2[0]))
+    return CAM_C.at(g)
 
 
 def whip(g):
@@ -89,7 +95,27 @@ def stubs_at(g):
 
 
 def pose_king(g):
-    return A.pose_of(g) if g < W2[0] else Cm.pose_king(g)
+    if g < W2[0]:
+        return A.pose_of(g)
+    p = Cm.pose_king(g)
+    p["pitch"] = 0.05 + (p["pitch"] - 0.05) * 1.5                      # round 8: bigger nods
+    return p
+
+
+def pose_har(g):
+    p = Cm.pose_har(g)
+    if g >= Cm.G_BAG + 2:                                              # round 8: a big open grin
+        p["expr"] = "laughing"
+        p.pop("mouth", None)
+    u = u_of(g, Cm.G_BAG + 14, Cm.G_BAG + 24, kind="sine")
+    p["arm_l"] = dict(hand=(lerp(-0.45, -0.58, u), 0.50), bend=0.2, shape="open", layer="front")      # the raised watch stays inside the frame
+    p["prop_l"] = dict(type="h4_watch", scale=1.25)
+    return p
+
+
+def hop(g):
+    d = g - Cm.G_BAG
+    return 0.16 * math.sin(math.pi * d / 10.0) if 0 <= d <= 10 else 0.0
 
 
 class Take(C.Take):
@@ -114,7 +140,7 @@ class Take(C.Take):
 
     def pose(self, gs):
         kA = Vector(K.W(A.KING_M))
-        kC = Vector(Cm.KING_M)
+        kC = Vector(KING_C)
         hm = Vector((Cm.HAR_M[0], Cm.HAR_M[1], 0.0))
         am = Vector(self.A["marks"][B.MARK])
         for g in gs:
@@ -123,7 +149,7 @@ class Take(C.Take):
             u = u_of(g, W2[0], W2[1], kind="sine")             # the King moves from his table spot to his ending spot during whip 2 (off screen)
             kp = kA.lerp(kC, u)
             C.place(self.king, f, kp + Vector((0, 0, 0.012 * math.sin(2 * math.pi * g / 20.0))))
-            C.place(self.har, f, hm + Vector((0, 0, 0.07 * abs(math.sin(2 * math.pi * g / 16.0)) * u_of(g, Cm.G_BAG + 14, Cm.G_BAG + 20))))
+            C.place(self.har, f, hm + Vector((0, 0, hop(g) + 0.07 * abs(math.sin(2 * math.pi * g / 16.0)) * u_of(g, Cm.G_BAG + 14, Cm.G_BAG + 20))))
             C.place(self.astro, f, am + Vector((0, 0, 0.012 * math.sin(2 * math.pi * g / 20.0))))
             C.key_vis(self.har.objects(), HAR_ON[0] <= g <= HAR_ON[1], f)
             C.key_vis(self.astro.objects(), ASTRO_ON[0] <= g <= ASTRO_ON[1], f)
@@ -153,7 +179,7 @@ class Take(C.Take):
             f = bf(g)
             self.scene.frame_set(f)
             self.king.pose(f, pose_king(g), camera=self.cam)
-            self.har.pose(f, Cm.pose_har(g), camera=self.cam)
+            self.har.pose(f, pose_har(g), camera=self.cam)
             self.astro.pose(f, B.pose_of(g), camera=self.cam)
         self.sprites_for([(self.king, PPD), (self.har, PPD), (self.astro, PPD)], [bf(g) for g in gs])
 
