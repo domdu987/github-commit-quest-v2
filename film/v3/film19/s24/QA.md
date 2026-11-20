@@ -7,4 +7,8 @@
 - heads in shot (px): {"king": {"w": [99, 220], "y": [447, 621], "x": [155, 607], "bottom_max": 695}, "astro": {"w": [137, 218], "y": [488, 651], "x": [-4, 548], "bottom_max": 759}, "har": {"w": [185, 241], "y": [497, 721], "x": [197, 364], "bottom_max": 841}} (astro x min -4 and king x 607 occur on whip frames / the ending; caption band y 880 respected)
 - Known: sack has no tie facing the camera; candle edge in the last frames; p90 of the deliver frame-diff is inflated by the whips.
 - s/frame wall 17.75 (2 procs x 2 threads), cpu 34.86.
-- Frame-diff in shot (90x160 grey): median 4.48, p90 19.09 (rule: median >= 4, p90 >= 10).
+- Round 8 (g 2086-2159 re-rendered): (1) the mocker's card is hidden from g 2089 (minimum fix, inside the heaviest whip-2 blur); he is not kept in frame for the ending and has no second shock beat; (2) Harrison: big open laughing grin after the bag lands (g 2109+), hop 0.16 D at the landing, raised watch moved in (scale 1.25) and inside the frame to g 2159; (3) the King 0.7 D closer (head 108-141 px), nods 1.5x; (4) camera tilted down 0.08 D (not 0.10-0.15: more pushes the heads above y 450), the lower frame still shows some table front; (5) NOT done: the telescope lift (part of the merged set mesh); (6) camera moving on the last frame, bag lands g 2107, both men in frame.
+- King head centre dips to y 434 (under 450) around g 2146.
+- Delivered as .part files only (take.mkv removed): `cat take.mkv.parta* > take.mkv`.
+- s/frame wall 17.8, cpu 34.95; heads (px): {"king": {"w": [108, 220], "y": [434, 621], "x": [155, 598], "bottom_max": 695}, "astro": {"w": [160, 218], "y": [574, 651], "x": [336, 548], "bottom_max": 759}, "har": {"w": [185, 242], "y": [480, 702], "x": [195, 364], "bottom_max": 823}}
+- Frame-diff in shot (90x160 grey): median 4.52, p90 18.98 (p90 inflated by the whips); qa_stats.py in-shot motion 5.15 / 12.93, saturation 0.660, brightness 64.5.

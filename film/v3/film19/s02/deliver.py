@@ -11,21 +11,23 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 PROJ = os.path.normpath(os.path.join(HERE, "..", "..", ".."))
 # ---- take config -----------------------------------------------------------------------------------------------------------
 TAKE, SHOT = "s02", 2
-T0, T1 = 1.91, 3.65
+SHOTS = [2, 3]                                            # s02 absorbs the old shot 3 (s03 is dropped)
+T0, T1 = 1.91, 6.37
 H_IN, H_OUT = 9, 9
-G0, G1 = int(round(T0 * 30)), int(round(T1 * 30))        # shot = g G0..G1-1
+G0, G1 = int(round(T0 * 30)), int(round(T1 * 30))        # shot = g G0..G1-1 (57..190, 134 frames)
 FIRST = G0 - H_IN
 N = (G1 + H_OUT) - FIRST
-TR_IN = dict(type="cut", frames=0, note="hard cut in from shot 1 (WORKSHOP shop_bench) at g %d; %d handle frames before it rendered in 3D" % (G0, H_IN))
-TR_OUT = dict(type="cut", frames=0, at=G1, note="hard cut to shot 3 (HALL hall_window) at g %d; %d handle frames after it rendered in 3D" % (G1, H_OUT))
-CUTS = [G0, G1]                                           # planned cuts for qa_auto
-SET = "v3/set3d19/h19.py SHIP preset ship_aerial, light NOON; set_sea(g/30) + set_roll(g/30) keyed on every frame; sea grid re-fitted at runtime to a 11x wider (same azimuth as the camera, 1300x1800 vertices) virtual camera footprint (no set module edited) so the pull-back never shows the grid edge; no actors; no caption_shade"
-CAMERA = "custom 22 mm from the ship_aerial start pose; c19.CamPath pull 9 %/s + orbit -18 deg/s + slide 150 px/s + crane 110 px/s from 0.5x the aerial distance at azimuth -30 deg, plus a small snap pull-back x0.8 (14 f, g 79..93), decay 0.1 (moving on frame 0 and on the last frame); no snap (shot < 2 s)"
-EV = dict()
+TR_IN = dict(type="cut", frames=0, note="hard cut in from s01 (WORKSHOP shop_bench) at g %d; %d handle frames before it rendered in 3D" % (G0, H_IN))
+TR_OUT = dict(type="dissolve", frames=13, at=G1, note="dissolve 13 f into s04 (SHIP ship_rocks STORM_DUSK) centred on g %d; handle g %d..%d rendered in 3D" % (G1, G1, G1 + H_OUT - 1))
+CUTS = [G0]                                               # planned cuts for qa_auto
+SET = "v3/set3d19/h19.py SHIP preset ship_aerial, light NOON (colour-fixed set, merge of film19/main ff204d3); set_sea(g/30) + set_roll(g/30) keyed on every frame; sea grid re-fitted at runtime to a 3x farther / higher virtual camera (1500x2000 vertices; no set module edited); gulls hidden; captain19 and astro19_c ride ship_root (c19.ride_ship) on the quarterdeck, camera rides the deck (c19.on_ship); no caption_shade"
+CAMERA = "BIGZOOM, one continuous camera move in the ship rest frame (Catmull-Rom spline through 4 key poses, smootherstep ease in / out + 22 % linear so it never parks), g 57..177: from extreme wide high above and behind the ship (ship small, characters ~6 px) descending and pushing in, passing the spanker sail at ~2 D (parallax), to a MEDIUM on the quarterdeck by 5.9 s (g 177); then a slow push to the end of the handle"
+EV = dict(bigzoom=[G0, G1 - 1], arrive_medium=177, astro_scratch=[146, 166], blinks_captain=[70, 128, 171], blinks_astro=[92, 150, 188])
 CUES = [
-    (0, N, "ambience", "open sea far from land: steady wind over water, a long soft swell, distant gulls", {}),
-    (G0 - FIRST, G0 - FIRST + 20, "foley", "bow wave hiss and rigging creak from far above, fading in", {}),
-    (G0 - FIRST + 10, G1 - FIRST, "accent", "a lone distant ship bell, thin and small (the loneliness of the sea)", {}),
+    (0, N, "ambience", "open sea far from land: steady wind over water, a long swell, rigging creak that grows as the camera drops to the deck", {}),
+    (G0 - FIRST, 177 - FIRST, "accent", "descending whoosh: the long eased zoom from the sky down to the deck (wind rising, canvas flutter as it passes the sail)", {}),
+    (146 - FIRST, 166 - FIRST, "foley", "astro19_c's head-scratch: wig rustle (no voice)", {}),
+    (G1 - FIRST, N, "cut", "dissolve into the storm: deck creak, wind darkens", {}),
 ]
 # --------------------------------------------------------------------------------------------------------------------------------
 
@@ -82,9 +84,9 @@ pngs = [os.path.join(OUT, "g_%04d.png" % (FIRST + i)) for i in range(N)]
 walls, cpus = [r["wall"] for r in rows], [r["cpu"] for r in rows]
 nb = numbers(framediff(pngs))
 json.dump(nb, open(os.path.join(HERE, "framediff.json"), "w"), indent=1)
-meta = {"take": TAKE, "film": 19, "shots": [SHOT], "g0": G0, "g1": G1, "first_g": FIRST, "n_frames": N,
-        "shot_ranges": {str(SHOT): [G0, G1 - 1]}, "handle_in": H_IN, "handle_out": H_OUT, "transition_in": TR_IN, "transition_out": TR_OUT,
-        "set": SET, "cast": "none (no characters in this shot)", "camera": CAMERA, "events": EV, "dof": "none", "text": "none",
+meta = {"take": TAKE, "film": 19, "shots": SHOTS, "g0": G0, "g1": G1, "first_g": FIRST, "n_frames": N,
+        "shot_ranges": {"2": [G0, G1 - 1], "3": "absorbed (merged into this take)"}, "bigzoom": [G0, G1 - 1], "handle_in": H_IN, "handle_out": H_OUT, "transition_in": TR_IN, "transition_out": TR_OUT,
+        "set": SET, "cast": "captain19 (captain_peer_chart: holds a blank sea chart) and astro19_c (squints through the quadrant at the sky, scratches his head g 146-166), no mouth movement", "camera": CAMERA, "events": EV, "dof": "none", "text": "none",
         "caption_shade": "none", "light": "NOON", "samples": rows[0].get("samples"), "resolution": [720, 1280], "threads": 2, "fps": 30,
         "s_per_frame_wall_mean": round(float(np.mean(walls)), 2), "s_per_frame_cpu_mean": round(float(np.mean(cpus)), 2),
         "framediff_in_shot": {"median": nb["median"], "p90": nb["p90"]},

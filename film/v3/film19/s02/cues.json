@@ -5,27 +5,35 @@
  "cues": [
   {
    "time": 1.6,
-   "duration": 2.367,
+   "duration": 5.067,
    "frame": 48,
-   "end_frame": 119,
+   "end_frame": 200,
    "kind": "ambience",
-   "label": "open sea far from land: steady wind over water, a long soft swell, distant gulls"
+   "label": "open sea far from land: steady wind over water, a long swell, rigging creak that grows as the camera drops to the deck"
   },
   {
    "time": 1.9,
-   "duration": 0.667,
+   "duration": 4.0,
    "frame": 57,
-   "end_frame": 77,
-   "kind": "foley",
-   "label": "bow wave hiss and rigging creak from far above, fading in"
+   "end_frame": 177,
+   "kind": "accent",
+   "label": "descending whoosh: the long eased zoom from the sky down to the deck (wind rising, canvas flutter as it passes the sail)"
   },
   {
-   "time": 2.233,
-   "duration": 1.433,
-   "frame": 67,
-   "end_frame": 110,
-   "kind": "accent",
-   "label": "a lone distant ship bell, thin and small (the loneliness of the sea)"
+   "time": 4.867,
+   "duration": 0.667,
+   "frame": 146,
+   "end_frame": 166,
+   "kind": "foley",
+   "label": "astro19_c's head-scratch: wig rustle (no voice)"
+  },
+  {
+   "time": 6.367,
+   "duration": 0.3,
+   "frame": 191,
+   "end_frame": 200,
+   "kind": "cut",
+   "label": "dissolve into the storm: deck creak, wind darkens"
   }
  ]
 }
