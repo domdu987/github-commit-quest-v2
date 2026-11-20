@@ -7,7 +7,7 @@ from c21 import *
 from shot26 import parse
 G0, G1 = 1578, 1640
 G_SNAP = 1609                      # "เหมือนกัน" 53.5 s
-P0 = np.array([-3.0, -50.0, 15.0]); L0 = np.array([0.0, 8.0, 1.5])
+P0 = np.array([-3.5, -48.0, 12.0]); L0 = np.array([0.0, 16.0, 3.0])
 SLOTS = [(sx, -30.0 + 3.4 * i) for i in range(20) for sx in (-0.62, 0.62)]
 
 def cam_at(g):
