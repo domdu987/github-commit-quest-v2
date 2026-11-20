@@ -3,55 +3,70 @@
   "type": "cut",
   "frames": 0,
   "at": 1933,
-  "note": "hard cut from shot 23; 9 f in-handle g 1924..1932 rendered in 3D"
+  "note": "hard cut from s23; 9 f in-handle g 1924..1932 rendered in 3D"
  },
  "transition_out": {
-  "type": "cut",
+  "type": "end",
   "frames": 0,
-  "at": 2028,
-  "note": "hard cut to shot 25; out-handle g 2028..2036 rendered in 3D (stubs 9-10, snap)"
+  "at": 2160,
+  "note": "the film ends on a hard cut on the last word: the take runs to g 2159 (N = 2160 film frames), camera still moving; no out-handle"
  },
- "set": "v3/set3d19/h19.py HALL preset hall_table, light EVENING; set_candles flicker, set_regulator(True), set_kings_chair(True), set_stubs(0 -> 10 over the shot, +1 about every 0.3 s) keyed on EVERY frame; no caption_shade; no DOF",
- "cast": "v3/cast19 king19 (king_watch_squint base): the King stands at the head of the table holding the gold pocket watch (right) beside the silver H4 (left); the two hands rise and fall out of phase (0.9 s), eyes go from one watch to the other, head roll and lean, blink; expression 'unimpressed' (squint), mouth flat; no lip-sync",
- "camera": "custom 22 mm, low and wide over the table near-edge row of candle stubs, dolly toward the King: c19.CamPath push 10 %/s + slide -95 px/s + arc 11 deg/s + snap x1.3 with a pan (shift 2.0 D, peak 2.1, 16 f) on 'สิบสัปดาห์' (66.77 s -> g 2006)",
+ "set": "v3/set3d19/h19.py HALL preset hall_table, light EVENING; set_candles flicker, set_regulator(True), set_kings_chair(True), set_stubs (0 -> 10 by g 2006, then 10), set_moneybag('full') from g 2099 keyed on EVERY frame; runtime dressing: stub row moved in front of the King, gold coins + warm bag light, dark-wood table panel (hides Harrison's legs); no caption_shade; no DOF",
+ "cast": "v3/cast19: king19 (table, compares gold pocket watch with the H4, squint; later nods), astro19 (telescope mark, held jaw drop, wig askew, tremble; NO talking), harrison19 old=1 (behind the table edge, looks at the bag then grins, arms rise, H4 in hand); cards are visible only where they are on screen",
+ "camera": "MERGED continuous take (client rule §I: no cuts inside g 1933-2159): approved s24 path (slide+push, snap on 'สิบสัปดาห์' g 2006) -> WHIP-PAN 1 g 2022-2029 (7 f, eased lerp of loc/look, Cycles motion blur shutter 0.9) -> hall_low angle on astro19 with the fast push-in on 'เป๊ะ' (g 2069-2082, face capped ~33 %) -> WHIP-PAN 2 g 2086-2093 -> table, push/orbit ending centred on Harrison + bag, both men in frame, moving on the last frame",
  "events": {
   "stubs_0_to_10": [
    1933,
-   2027
+   2006
   ],
-  "comparison_period_s": 0.9,
-  "snap": [
+  "snap_sip_sapda": [
    2003,
    2019
   ],
-  "word_sip_sapda_caption": 2006
+  "whip1": [
+   2022,
+   2029
+  ],
+  "jaw_drop_held_from": 2028,
+  "snap_pe": [
+   2069,
+   2082
+  ],
+  "whip2": [
+   2086,
+   2093
+  ],
+  "bag_falls": [
+   2099,
+   2107
+  ],
+  "bag_lands_caption": 2107,
+  "king_nods": [
+   2113,
+   2157
+  ],
+  "snap_chang_mai": [
+   2142,
+   2159
+  ]
  },
  "cues": [
   {
    "time": 64.133,
-   "duration": 3.733,
+   "duration": 7.833,
    "frame": 1924,
-   "end_frame": 2036,
+   "end_frame": 2159,
    "kind": "ambience",
    "label": "the hall by candlelight: low room tone, the regulator tick-tock, candle hiss"
   },
   {
    "time": 64.433,
-   "duration": 3.133,
+   "duration": 2.433,
    "frame": 1933,
-   "end_frame": 2027,
+   "end_frame": 2006,
    "kind": "foley",
-   "label": "a soft stack 'tock' each time a new burnt stub appears on the table edge (ten of them, about every 0.3 s)",
+   "label": "a soft 'tock' as each of the ten burnt stubs appears (about every 0.3 s); two watch ticks, gold fast and silver slower",
    "peak_frame": 1950
-  },
-  {
-   "time": 64.433,
-   "duration": 3.133,
-   "frame": 1933,
-   "end_frame": 2027,
-   "kind": "foley",
-   "label": "two watch ticks, a fast gold tick and a slower silver tick, side by side as the King compares them",
-   "peak_frame": 1960
   },
   {
    "time": 66.767,
@@ -63,12 +78,66 @@
    "peak_frame": 2010
   },
   {
-   "time": 67.6,
+   "time": 67.4,
+   "duration": 0.233,
+   "frame": 2022,
+   "end_frame": 2029,
+   "kind": "accent",
+   "label": "whip-pan whoosh to the astronomer, a comic 'gulp' as his jaw drops",
+   "peak_frame": 2026
+  },
+  {
+   "time": 68.967,
+   "duration": 0.433,
+   "frame": 2069,
+   "end_frame": 2082,
+   "kind": "accent",
+   "label": "fast push-in swish with a sting on 'เป๊ะ'",
+   "peak_frame": 2076
+  },
+  {
+   "time": 69.533,
+   "duration": 0.233,
+   "frame": 2086,
+   "end_frame": 2093,
+   "kind": "accent",
+   "label": "whip-pan whoosh back to the table",
+   "peak_frame": 2089
+  },
+  {
+   "time": 69.967,
+   "duration": 0.267,
+   "frame": 2099,
+   "end_frame": 2107,
+   "kind": "accent",
+   "label": "the fat money bag whistles down",
+   "peak_frame": 2103
+  },
+  {
+   "time": 70.233,
+   "duration": 0.367,
+   "frame": 2107,
+   "end_frame": 2118,
+   "kind": "foley",
+   "label": "THUD of the heavy bag of coins on the baize, then two jingling bounces and spilling coins",
+   "peak_frame": 2107
+  },
+  {
+   "time": 70.433,
+   "duration": 1.233,
+   "frame": 2113,
+   "end_frame": 2150,
+   "kind": "accent",
+   "label": "the King's approving nods: soft cloth rustle; a content 'hm'",
+   "peak_frame": 2120
+  },
+  {
+   "time": 72.0,
    "duration": 0.0,
-   "frame": 2028,
-   "end_frame": 2028,
+   "frame": 2160,
+   "end_frame": 2160,
    "kind": "cut",
-   "label": "hard cut to shot 25 (the astronomer's jaw drops)"
+   "label": "end of film: hard cut on the last word"
   }
  ]
 }
