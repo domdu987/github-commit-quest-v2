@@ -5,7 +5,7 @@ Luma (RGB mean of 90x160 bilinear): part mean 99.5, min 90.8, max 110.1; target 
 Render: 16 samples + OIDN, 720x1280, no motion blur, no haze, no saturation boost.
 Shimmer: I did not measure it numerically (the camera moves, so a frame difference on a wall mixes in motion). I only looked at the frames below and did not notice shimmer on the walls.
 
-Frames viewed at full size, then at 360x640 phone size (frames below at full size only; the phone-size copies were made by resize and not judged separately beyond legibility of the main subject):
+Frames viewed at full size, and the same six at 360x640 on one phone sheet. At phone size the red inspector, the white glove and the calipers stay readable in g2000 and g2030; in g1862 and g1958 the calipers are too small to read, and at g2052 the glove and calipers are a small shape at the left edge.
 
 - g1862: bird's-eye of the room. Red-faced inspector in the chair at the centre, Bertillon beside it on the rug, the crowd around, gasolier pole at left. A flat navy band fills the top fifth of the frame (set cutaway above the room). It reads as a dark header, not as a prop.
 - g1910: crane-down. Bertillon's face with glasses and goatee at the left-centre holds the calipers in a white glove hand, the inspector with clenched teeth and a sweat drop behind him. A gasolier arm and lamp pass in the foreground left, bright but they do not cover a face.
