@@ -26,3 +26,27 @@ Frames: /tmp/claude-0/-home-user-github-commit-quest-v2/a108c86f-deb9-528c-85fa-
 2. Camera height: CAM_LOC0 z from 2.5 to about 2.9 and CAM_LOOK0 z from 2.2 to about 1.9, so the camera looks slightly down onto the bench top. The bench top and the cloth then fill y 750-1000 instead of the apron. Add RISE=10 so the camera keeps climbing over the bench during the push.
 3. Keep PUSH 0.15, SLIDE -30, ARC 10. The frame-diff loss from the smaller snap can be made up with arc 14.
 4. Harrison: make the palm bigger in the wide. Push the palm hand out to x 0.95 with stretch 1.25 for g 1039-1070, so his hand points at the H4 across the cloth.
+
+## Round 3 (re-render 09:17): PASS, 7.4
+
+Frames checked (take index / g): 12/1019, 40/1047, 62/1069, 72/1079, 80/1087, 90/1097 at full size and 360x640, plus contact.jpg and phone_sheet.jpg.
+Frames: /tmp/claude-0/-home-user-github-commit-quest-v2/a108c86f-deb9-528c-85fa-39b541349af8/scratchpad/artkey3/s14_*.png
+
+| Earlier fix | Status |
+|---|---|
+| 1. Smaller snap that keeps the H1 beside the H4 | FIXED (mostly). Snap x1.65, shift (0.65, -0.35). At g 1085-1097 the H1 frame, wheel and both balls fill the left ~35 %, the H4 on its cloth sits left of centre, Harrison and his palm are in frame. It is a two-object image now. The H4 is still drawn about as big as the visible part of the H1, so the "tiny" reading relies on the wide before it. That works in the cut. |
+| 2. Camera higher, lower frame not a dead apron blur | PARTLY FIXED. The wide (g 1016-1078) is good: bench top, cloth, floor, shavings. In the snap, y 780-1280 is still bench front, under-bench glow and floor. It is no longer a washed haze: it has wood grain, warm light patches and shavings. That band is the caption zone, so it is acceptable. Not a blocker. |
+| 3. Keep push / slide / arc | FIXED (push 0.20, slide -10, rise 25, arc 8). |
+| 4. Bigger palm toward the H4 | FIXED. From g 1047 the arm reaches across to the H4 and reads at 360x640. It reads clearly after the snap. |
+
+| Criterion | Score |
+|---|---|
+| Set density / ornament | 9 |
+| Lighting & colour | 7.5 |
+| Composition / phone legibility | 7 |
+| Acting (proud palm) | 7 |
+| Key moment | 7 |
+| Match to refs / client taste | 7.5 |
+| **Overall** | **7.4** |
+
+Notes (not blockers): the H1 frame upright ends exactly on the H4's crown at g 1087-1097, a tangent. Nudging SNAPSX by about +0.05 would separate them. Frame-diff median 3.43 is a TECH matter.
