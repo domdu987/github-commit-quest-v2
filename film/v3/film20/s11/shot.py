@@ -30,8 +30,8 @@ PPD = 256
 
 # ---- staging (metres, site20 marks); cards at ground z 0
 M_ = CO.W
-LADY, GENT, CHILD = (16.4, -101.1), (15.0, -101.3), (13.8, -101.2)      # outside the fence, y -103
-EIF = (8.4, -98.9)                                                      # inside, 7 m behind them
+LADY, GENT, CHILD = (-14.4, -101.1), (-12.6, -101.3), (-11.1, -101.2)      # outside the fence, y -103
+EIF = (-7.0, -98.7)                                                      # inside, 7 m behind them
 
 
 def mk(xy, A):
@@ -39,20 +39,20 @@ def mk(xy, A):
 
 
 # camera A: eye level, outside the fence at the left, pulling back; B: tight on Eiffel
-CAM_A0 = (19.6, -105.4, 1.0)          # metres, start
-SUBJ_A = (12.0, -100.2, 1.45)           # between the group and Eiffel
-CAM_B0 = (10.6, -101.2, 0.95)
-SUBJ_B = (8.4, -98.9, 1.6)
+CAM_A0 = (-18.0, -105.0, 1.0)          # metres, start
+SUBJ_A = (-11.1, -100.2, 1.45)           # between the group and Eiffel
+CAM_B0 = (-6.0, -101.5, 0.95)
+SUBJ_B = (-7.0, -98.7, 1.6)
 
 
 def cam_a():
-    return C.CamPath(CO.W(CAM_A0), CO.W(SUBJ_A), G_FIRST, G_PUNCH - 1, push=-0.10, slide_px=-90.0, rise_px=40.0, arc_deg_s=2.0,
+    return C.CamPath(CO.W(CAM_A0), CO.W(SUBJ_A), G_FIRST, G_PUNCH - 1, push=-0.10, slide_px=90.0, rise_px=40.0, arc_deg_s=-2.0,
                      tilt0=0.0, tilt_deg_s=0.0, decay=0.25,
-                     snaps=[dict(g=(G_CALL - 2, G_CALL + 14), k=1.4, peak=1.7, shift=(-0.9, 0.0), tilt=1.5)])
+                     snaps=[dict(g=(G_CALL - 2, G_CALL + 14), k=1.4, peak=1.7, shift=(0.9, 0.0), tilt=1.5)])
 
 
 def cam_b():
-    return C.CamPath(CO.W(CAM_B0), CO.W(SUBJ_B), G_PUNCH, G_LAST, push=0.12, slide_px=-110.0, rise_px=-30.0, arc_deg_s=-6.0, tilt0=0.0,
+    return C.CamPath(CO.W(CAM_B0), CO.W(SUBJ_B), G_PUNCH, G_LAST, push=0.12, slide_px=110.0, rise_px=-30.0, arc_deg_s=6.0, tilt0=0.0,
                      tilt_deg_s=0.0, decay=0.3)
 
 
@@ -81,7 +81,7 @@ def pose_of(who, g):
         up = 0.5 + 0.5 * math.sin(t * 3.0)
         p["arm_r"] = dict(hand=(0.9, -0.15 + 0.12 * up), bend=-0.3, stretch=1.3)       # the rivet bobs up and down in his fist
         p["prop_r"] = dict(p["prop_r"]); p["prop_r"]["angle"] = -5 + 9 * math.sin(t * 3.0)
-        p["yaw"] = 0.45 + 0.04 * math.sin(t * 1.7)                                         # faces screen-left, to the Parisians
+        p["yaw"] = -0.45 + 0.04 * math.sin(t * 1.7)                                         # faces screen-left, to the Parisians
         p["lean"] = 1.5 * math.sin(t * 2.2)
         p["blink"] = blink(g, [757, 790, 812])
     else:
@@ -90,7 +90,7 @@ def pose_of(who, g):
         ph = {"lady": 0.0, "gent": 1.3, "child": 2.4}[who]
         s = math.sin(2 * math.pi * 3.0 * t + ph)
         p["squash"] = (1.0 + 0.02 * s, 1.0 - 0.02 * s)
-        p["yaw"] = -0.5 + 0.05 * math.sin(t * 2.0 + ph)
+        p["yaw"] = 0.5 + 0.05 * math.sin(t * 2.0 + ph)
         p["head_roll"] = 4.0 * math.sin(2 * math.pi * 1.5 * t + ph)
         p["lean"] = 2.0 * math.sin(2 * math.pi * 3.0 * t + ph)
         if who == "gent":
