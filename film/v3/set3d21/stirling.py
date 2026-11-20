@@ -64,6 +64,7 @@ def _pal():
     add('t_red', '#c8383a', tint=True, ink=True, sm=(0.95, 0.9, 1.18), mix=0.8)
     add('t_cream', '#efe2bb', tint=True, ink=True, sm=(0.85, 0.95, 1.18), mix=0.8)
     add('t_blue', '#2f58ad', tint=True, ink=True, sm=(0.85, 0.95, 1.2), mix=0.8)
+    add('t_saltire', '#153d9c', tint=True, ink=True, sm=(0.85, 0.95, 1.2), mix=0.8)
     add('t_gold', '#dcae3a', tint=True, ink=True, sm=(0.9, 0.95, 1.2), mix=0.8)
     add('t_green', '#3f7d4c', tint=True, ink=True, mix=0.8)
     add('t_brown', '#7a5a3a', tint=True, ink=True)
@@ -926,6 +927,8 @@ def banner(B, base, h, yaw, field, charge, shape, rs, size=(1.9, 1.3), wave=0.12
         over(charge, [[(0.0, 0.40), (0.88, 0.40), (0.88, 0.60), (0.0, 0.60)], [(0.30, 0.0), (0.46, 0.0), (0.46, 1.0), (0.30, 1.0)]])
     elif shape == 'bend':
         over(charge, [[(0.0, 0.0), (0.3, 0.0), (0.9, 0.8), (0.9, 1.0), (0.6, 1.0), (0.0, 0.2)][:4] and [(0.0, 0.05), (0.28, 0.0), (0.88, 0.92), (0.6, 0.98)]])
+    elif shape == 'saltire':                  # the Scots' blue banner: a white diagonal cross
+        over(charge, [[(0.0, 0.0), (0.14, 0.0), (0.88, 1.0), (0.74, 1.0)], [(0.74, 0.0), (0.88, 0.0), (0.14, 1.0), (0.0, 1.0)]])
     elif shape == 'lion':                      # a rampant-lion stand-in: a gold block body, head and three small legs, no detail
         over(charge, [[(0.18, 0.25), (0.55, 0.25), (0.55, 0.75), (0.18, 0.75)], [(0.55, 0.2), (0.75, 0.2), (0.75, 0.42), (0.55, 0.42)], [(0.3, 0.75), (0.4, 0.75), (0.4, 0.95), (0.3, 0.95)], [(0.5, 0.75), (0.6, 0.75), (0.6, 0.95), (0.5, 0.95)]])
 def barrel(B, c, r=0.34, h=0.85, rs=None):
@@ -1290,7 +1293,15 @@ def scots_slope_line(n, ranks, scale, rs, spear_h=3.4, a0=188.0, a1=258.0, hh0=9
             B.box(m, (x, y, z + 0.8 * scale), (0.75 * scale, 0.55 * scale, 1.5 * scale), tint=0.95 + 0.3 * rs.rand()); B.sphere('iron', (x, y, z + 1.68 * scale), 0.2 * scale, seg=6, rings=4)
             tl = (rs.uniform(-0.25, 0.25), rs.uniform(-0.25, 0.25)); spear(B, (x + 0.38 * scale, y, z), tilt=tl, h=spear_h * scale); cnt += 1
             if scale > 1.2: B.sphere('gold', (x + 0.38 * scale + tl[0], y + tl[1], z + spear_h * scale + 0.1), 0.32 * scale, seg=5, rings=3)
-    B.finalize('scots_line', ink=False); return cnt
+    B.finalize('scots_line', ink=False)
+    Bp = Batch(86)
+    for k in range(2, n, max(n // 4, 1)):                                                         # blue saltire banners on poles along the line
+        a = math.radians(a0 + (a1 - a0) * k / max(n - 1, 1))
+        for r_ in np.arange(30, 110, 1.0):
+            x = HILL_C[0] + r_ * math.cos(a) * 1.05; y = HILL_C[1] + r_ * 0.9 * math.sin(a)
+            if float(hill_h(np.array([x]), np.array([y]))[0][0]) < hh0 - 1.0: break
+        banner(Bp, (x, y, float(ground(x, y))), 5.5 * scale, rs.uniform(150, 200), 't_saltire', 't_white', 'saltire', rs, size=(2.2 * scale, 1.5 * scale))
+    Bp.finalize('scots_banners'); return cnt
 def spear_wall(n, ranks, rs, y0=27.0, half=9.0):
     """the cork: a wall of Scots across the north end of the bridge (the neck), spears level."""
     B = Batch(83); cnt = 0
@@ -1298,7 +1309,10 @@ def spear_wall(n, ranks, rs, y0=27.0, half=9.0):
         for k in range(n):
             x = -half + 2 * half * k / max(n - 1, 1); y = y0 + 1.1 * rank; z = float(ground(x, y)); B.box('thatch' if k % 2 else 't_brown', (x, y, z + 0.85), (0.8, 0.6, 1.6)); B.sphere('iron', (x, y, z + 1.78), 0.21, seg=6, rings=4)
             spear(B, (x, y - 0.4, z), tilt=(0.0, -0.9), h=2.4); cnt += 1
-    B.finalize('spear_wall', ink=False); return cnt
+    B.finalize('spear_wall', ink=False)
+    Bp = Batch(87)
+    for sx in (-half - 1.0, half + 1.0): banner(Bp, (sx, y0 - 0.5, float(ground(sx, y0))), 5.0, 190, 't_saltire', 't_white', 'saltire', rs, size=(2.2, 1.5))
+    Bp.finalize('wall_banners'); return cnt
 def crowd_loop(A, pr):
     """~120 tiny placeholder troops for valley_loop: English inside the loop meadow and the neck, a two-by-two column of mounted knights on the bridge, a queue and
     groups on the south bank; Scots along the hill's lower slope."""
@@ -1654,7 +1668,18 @@ def preset_extras(A, pr):
 
 # ================================================================ CONNECTED WORLD + CAMERA PATH (client rule 2026-11-20: the camera travels instead of cutting)
 WORLD_OVR = dict(glit_stretch=1.0, glit_s=0.6, glit_t=0.11, foam_k=2.5, wake_k=3.0, sun_k=1.8, reed_k=0.6, haze_max=0.2)
+POSES = {'P_A': ((290.0, 205.0, 170.0), (120.0, 110.0, 10.0), 22.0), 'P_NECK': ((-2.0, 50.0, 4.6), (0.0, 22.0, 1.8), 22.0), 'P_TOP': ((-10.0, -40.0, 120.0), (0.0, 80.0, 0.0), 22.0),
+         'P_CAMP': 'camp_wide', 'P_BANK': 'camp_bank'}          # named join poses (loc, look, lens) for cam_path keys; P_CAMP / P_BANK are the camp_wide / camp_bank presets
+RIM_GOLD = '#ffc766'
+def with_rim(pose, color=RIM_GOLD):
+    """default warm-gold rim for a cast card: returns a copy of the pose dict with the puppet `rim` key set (v2/puppet/API.md: a light halo behind arms, hands, legs and feet where they
+    leave the body silhouette). The scene cannot light an emission card, so every cast pose a render team builds should go through this (or set rim='#ffc766' itself)."""
+    d = dict(pose); d.setdefault('rim', color); return d
 def preset_pose(name):
+    if name in POSES:
+        v = POSES[name]
+        if isinstance(v, str): return preset_pose(v)
+        return v
     """(loc, look, lens) of a preset with the camera height resolved on the terrain (cam_dz)."""
     pr = PRESETS[name]
     if pr.get('cam_dz') is not None: ref = pr.get('cam_ref', pr['cam'][:2]); pr['cam'] = (pr['cam'][0], pr['cam'][1], float(ground(ref[0], ref[1])) + pr['cam_dz'])
@@ -1717,7 +1742,7 @@ def cam_path(cam, keys, g):
     returns dict(loc, look, lens, vivid)."""
     ks = []
     for k in keys:
-        if isinstance(k[1], str): loc, look, lens = (STATE.get('cams') or {}).get(k[1]) or preset_pose(k[1]); viv = VIVID.get(k[1], (1.4, 1.3))
+        if isinstance(k[1], str): loc, look, lens = (STATE.get('cams') or {}).get(k[1]) or preset_pose(k[1]); nm_ = POSES[k[1]] if isinstance(POSES.get(k[1]), str) else k[1]; viv = VIVID.get(nm_) or _nearest_vivid(loc)[0]
         else: loc, look, lens = k[1], k[2], k[3]; viv = _nearest_vivid(loc)[0]
         ks.append((float(k[0]), np.array(loc, float), np.array(look, float), float(lens), viv))
     ks.sort(key=lambda a: a[0]); n = len(ks); g = float(np.clip(g, ks[0][0], ks[-1][0])); i = 0
