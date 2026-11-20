@@ -1,7 +1,7 @@
 # T8 QA (g1862-2052, 191 frames)
 
 Checks: `check_take('T8')` hits [], `check_face('T8')` ok. `qa_auto.py --cuts 1868 --first_g 1862`: PASS (notes: no visible change at g1868 because the cut comes from T7 into this shot; magenta share 0.0 %). `rhythm.py`: 191 frames, in-shot median motion 10.44, p90 20.84.
-Luma (RGB mean of 90x160 bilinear): part mean 99.5, min 90.8, max 110.1; target 95-110. g1862-1870 sit at about 91-92, the g2036-2050 end about 96. Lights were not changed.
+Luma (RGB mean of 90x160 bilinear): part mean 100.0, min 90.8, max 110.1; target 95-110. g1862-1870 sit at about 91-92, the g2036-2050 end about 96. Lights were not changed.
 Render: 16 samples + OIDN, 720x1280, no motion blur, no haze, no saturation boost.
 Shimmer: I did not measure it numerically (the camera moves, so a frame difference on a wall mixes in motion). I only looked at the frames below and did not notice shimmer on the walls.
 
@@ -19,3 +19,10 @@ Known weaknesses (what I could not fix inside the rules):
 - At g2052 Bertillon's head is out of the frame; the glove and calipers are in frame.
 - The bird's-eye start has the empty navy band at the top.
 - At g1958 the camera tripod hides part of one crowd face on the left.
+
+## Fix pass (director fix list, frames g1862-1892 and g2009-2052 re-rendered)
+- Opening: camera shift_y -0.14 eased to 0 over g1868-1892. The navy band above the room is gone at g1862 and g1868; a dark wall and door strip shows at the bottom edge instead.
+- Punchline: Bertillon is full height again and stands slightly closer to the chair; g2052 (viewed at full size) shows the white glove at the left edge with the open calipers around the camera-side ear, tips at ear height. The calipers do not cross a face. The ear stays visible between the tips.
+- Top-hat prefect walks off to screen-left over g2010-2030 (not seen on screen in the frames I viewed there).
+- Bertillon's face leaves through the left edge between about g2036 and g2041 (6 frames, face partly cut on the edge during that time); from g2042 only the glove and calipers remain in frame.
+- Luma after the fix: mean 100.0, min 90.8, max 110.1. qa_auto PASS, rhythm in-shot median 10.84.
