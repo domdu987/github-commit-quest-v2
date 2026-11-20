@@ -1,7 +1,7 @@
 # s15 QA (merged shots 15 + 16): film 19, SHIP ship_deck NOON, ONE continuous take (QA_TEAM §I: no cut inside)
 
 ## Delivered
-- `take.mkv` (libx264rgb crf 6, 73.6 MB, split in `take.mkv.partaa/ab`; `cat take.mkv.part* > take.mkv`): g 1086..1288 = 203 frames, first_g 1086. Shot range g 1096..1279 (36.52-42.65 s, 184 f); handle in g 1086..1095 (10 f, DIS 15 in from s14), out g 1280..1288 (9 f; hard CUT to s17 at g 1280). 720x1280, 11 spp, 2 threads. `qa_auto` PASS. meta.json (shots [15, 16]), cues.json, contact.jpg, phone_sheet.jpg, framediff.json. **The s16 folder is dropped** (this take replaces it).
+- `take.mkv` (libx264rgb crf 6, 64.1 MB, split in `take.mkv.partaa/ab`; `cat take.mkv.part* > take.mkv`): g 1086..1288 = 203 frames, first_g 1086. Shot range g 1096..1279 (36.52-42.65 s, 184 f); handle in g 1086..1095 (10 f, DIS 15 in from s14), out g 1280..1288 (9 f; hard CUT to s17 at g 1280). 720x1280, 11 spp, 2 threads. `qa_auto` PASS. meta.json (shots [15, 16]), cues.json, contact.jpg, phone_sheet.jpg, framediff.json. **The s16 folder is dropped** (this take replaces it).
 - Built on the colour-fixed set (film19/main ff204d3 merged).
 
 ## Shot (no cut)
@@ -26,3 +26,16 @@
 - The captain's mark moves 0.6 D (feet glide, legs stand) while the camera pulls away (g 1188-1214) so he is beside William for the watch.
 - The hauling sailors' rope end floats in the air (cast pose rope19); they are small and in the background.
 - After the pull-back the heads sit at y ~600 (above the 880 band, within the 450-760 range).
+## Round 8 (director review: the MECHANISM must read on a phone) - whole take re-rendered, g 1086..1288
+1. **Sun overhead reads at the snap (g 1172):** the sun is a bright disc (+halo) now parented 2.5 D from the lens (it used to sit behind the main sail), top-CENTRE (360,125), fading in on the snap; the camera tilts up so William's quadrant points straight up under it and the deck falls to the bottom ~25 % (heads y ~745). From g 1171 the sails stop casting the big diagonal shadow (visible_shadow keyed off during the snap, the pop hidden in the whip): a pool under the feet remains; `set_sun_overhead` is 1 by g 1176.
+2. **Home time contrast:** the H4's hands now show 8:00 (cast19 `_h4_body` patched at runtime in shot.py: hour hand at 8, minute at 12); on "บอกเวลาที่" (g 1218) the camera pushes in x1.75 and the watch pops to scale 3.0 for ~1 s: dial ~170-190 px at 720x1280 (faces 270 px = 37 % at the peak only), then it eases back to a medium shot (faces ~215 px, 30 %). No lid engraving.
+3. **Sun and watch in ONE frame (g 1229-1288):** the sun fades back in at the top (g 1226-1250) while a slow crane-up / arc keeps the watch at the bottom of the pair; the pair is centred.
+4. **Nobody still > 1.5 s:** William sights and adjusts the quadrant (hand, angle +-6 deg, glint, lean, head roll every 0.5-1 s), the captain shifts weight, moves his shading hand and turns his head; from g 1236 the captain leans 0.2 D toward the watch and looks surprised (expr `shocked`), William glances up at the sun and back to the watch (g 1238-1262). The two sailors haul in a 1.2 s loop and stay inside the frame (marks moved in: (3.1, -25.0) and (-2.7, -24.6)); the captain stands beside William for the whole take (mark offset 1.6 / 1.15 D: no glide).
+5. **Deck foreground:** two rope coils, two buckets and a grating on the quarterdeck planks in front of the lens (parented to ship_root); the deck is under ~25 % of the frame from the snap on, ~40 % in the first second (the coil / bucket pieces fill its corners).
+6. **Colour:** exposure -0.62 EV (-0.3 more), grade saturation 1.32, deeper blue sky ramp, sails darkened ~18 %, all set from shot.py (the set is unchanged): **`film/qa_stats.py`: saturation 0.509, brightness 108.4.**
+
+## Numbers (final)
+- Frame-diff (in-shot pairs g 1097..1279, 90x160 grey): **median 4.49, p90 9.94** (the whole file incl. handles: 5.09 / 10.81). The p90 is 0.06 under the 10 target: the last 2 s (the pair filling the frame, flat sails) sit at ~2.3-2.5; a re-render would be needed to lift it.
+- Heads in shot: centre y 431-773, width 54 (far sailor) - 270 px, lowest head bottom 863 (the peak of the first tilt-up); nobody cut by the frame: captain left edge >= 15 px, William right edge <= ~665 px; no heads in the caption band.
+- s/frame 25.5 wall / 49.7 cpu (4 actors + 3 sailors' sprites). `qa_auto` PASS.
+- One format delivered: `take.mkv.partaa/partab` only (`cat take.mkv.part* > take.mkv`).
