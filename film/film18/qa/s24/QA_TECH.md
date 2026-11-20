@@ -1,18 +1,16 @@
-# QA-tech round 14 s24: FAIL
-Checked: all 87 frames; 6 fps phone sheet; action band (y 430-886) every 3rd frame g1801-1887; chariot 1:1 crops g1871/1881/1887; soldier chins on frames; ground sand mask; frame-diff 90x160 (director 12.14 / 17.31).
+# QA-tech round 18 s24: PASS
+Checked: all 87 frames (6 fps), action-band crops every 3rd frame g1822-1867, 1:1 crops of the sitting soldier g1828-1856 with y860/880 lines, bottom crops g1862-1887 for the chariot. Director numbers accepted (ground 0.123, frame-diff 11.85/17.07).
 
-## Blockers
-1. Only ONE visible fall in open ground (need >= 2). The moustached soldier at the left sits with legs splayed about g1861-1881 (x 0.05-0.30, chin ~y 800): clear. A second soldier on the ground: none. In every sampled frame g1801-1887 all other soldiers stand, run or crouch upright; none sits, falls or lies. (g1861 the left soldier is crouching into the sit; the helmet/pot props land on the ground but no second soldier.) Fix: make a second soldier at x 0.55-0.90 do a visible pratfall/sit-down held >= 12 frames in the open between g1825-1870, body >= 120 px tall, not behind the fire pit, chariot or tents.
-2. Chariot pole too long: wheel+box about 120 px = 17 % of the frame width (limit 18 %: OK), but with its pole the chariot spans x ~160-392 at g1881 = 232 px = 32 % of the width (g1887 31 %), limit 25 %. Fix: shorten the pole to <= 60 % of its current length (<= 180 px total).
+## Asked checks
+- SECOND visible fall: PASS (marginal). A soldier at x ~0.30-0.45 sits on the ground with legs splayed and a shocked face, held g1828-1848 (about 20 frames), about 125-130 px tall, in front of the crowd. Fall 1 (the moustached soldier at the left) sits g1855-1881. Weak point: the small chariot box sits at the sitter's lap g1836-1848 and the crowd behind overlaps his shoulders, so he is "in the open" but not isolated.
+- Chariot wheels plus box <= 18 %: PASS (about 80-130 px = 11-18 % wide). The pole is NOT hidden: it is a thin stick, total span with pole about 170 px = 24 % at g1882-1887 (previous limit 25 %). Note only.
+- Chins <= 860: PASS. Sitter chin ~830-840, runners 700-846, none higher than 860 (checked crops with the lines).
+- Props warm and moving: PASS. Terracotta pots, golden helmets and bundles fly in arcs g1822-1882 (positions change each frame), the chariot rolls and tips; nothing hangs still.
+- Rout reads comic and bloodless.
 
-## Asked checks (pass)
-- Ground: plain sand 3.6-8 % (sand mask g1807 / g1831 / g1851 / g1871); floor fully dressed. OK (<= 30 %).
-- Chins <= 860: standing runners 700-840, the sitting soldier ~800-850; none over 860 in g1807-1882.
-- Props warm and moving: pots and helmets in golden/terracotta yellow, flying in arcs (positions change each frame g1813-1887); chariot warm wood, rolling/tipping across g1840-1887. None hangs still.
-- Rim: cool blue rim on every runner; fire pit key in the centre; warm + cool in frame.
-- Frame-diff fine, no pulsing, mouths held, no text, no placeholders, subject in frame.
+## Hard checks
+- No face in y 880-950 (max chin ~846). No pole or prop through a face (the chariot pole crosses the sitter's lap only). No half-cut character. No ghosts. No pulsing. Mouths held.
 
 ## Notes
-- The scene is very wide: soldiers are only 130-190 px tall, so a fall must be big enough (>= 120 px) to read.
-- Helmets/pots are flat glowing yellow (note, slightly translucent); the fire-pit flames are 3 stiff red wedges at frame centre all shot, they hide a lot of the action.
-- Dense ground clutter (pots, stones, bundles) is busy but grounded.
+- Gold helmets are flat glowing yellow and slightly translucent at g1862-1876 (largest ~120 px); lit, accepted.
+- The fire pit is three stiff red wedges at the centre all take and hides some floor action.

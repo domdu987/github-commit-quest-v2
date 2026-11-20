@@ -1,43 +1,31 @@
-# QA-art round 14 s22: FIX-FIRST
-Shot: REVEAL close-medium, "หางลุกเป็นไฟ เขาติดมีดวาววับ" (g 1683-1742). I extracted all 71 frames (g = 1677 + n).
-- I judged them on a 180x320 phone sheet every 5th frame (about 6 fps) and at full size at g 1690 and g 1737.
-- I checked the mouth on crops every 4th frame with guides at y 820/860.
-- I measured the flame-to-soldier gap on every 2nd frame:
-  - **Flame:** the largest blob with R > 220, B < 90 and R-B > 150 in x ≥380.
-  - **Soldier's left edge:** the first column in x ≥480 with ≥15 pale-blue rim pixels in y 300-760.
+# QA-art round 18 s22: FIX-FIRST
+Shot: REVEAL close-medium, "หางลุกเป็นไฟ เขาติดมีดวาววับ" (g 1683-1742). Per the round-14 director decision, this is a pure ox hero shot with no soldier. I extracted all 71 frames (g = 1677 + n). I judged:
+- a 180x320 phone sheet every 5th frame
+- full size at g 1683/1706-1708/1735/1741
+- mouth crops with guides at y 840/860/880
+- a per-frame strip of the bottom-left props (g 1677-1747)
 
-## Asked fixes
-1. **Mouth ≤860 on every frame: DONE.**
-   - The hero (the front ox, scaled 0.45) has its mouth outline at about 805-815 at g 1683-1731 and about 838 at the worst, g 1735-1739.
-   - The back oxen's mouths sit at about 560-620.
-2. **Soldier at x 0.80-0.92: DONE.** His rim edge is at x 559-609 (0.78-0.85), and his body runs to about 0.92 for the whole take, head to feet in frame.
-3. **Soldier turned toward the ox: NOT DONE.** He is still square to the lens with his pupils centred on camera (team admits). He is the soldier who must react, so the eye-line exception applies to him.
-4. **Tail, bundle and flame between the ox and the soldier, at least 60 px clear: NOT DONE.**
-   - The flame column (x about 430-596, y about 250-640) rises from the tail tip, which is good, and it no longer crosses his chest.
-   - But the gap to his left edge is 0-34 px on every measured frame: 26 (g 1683), 2 (g 1693-1695), 1 (g 1699), 0 (g 1715), 2 (g 1735) and 5 (g 1737). The median is about 12 px.
-   - At face height (y 340-470) the flame touches the side of his helmet and face.
-   - On the phone it still reads as "a soldier standing beside his own torch or bonfire", not as "the ox's tail on fire".
-5. **Flame in frame: DONE.** Its right edge is ≤ x 600 on every frame.
-6. **"Tail ablaze, blades glinting": HALF.**
-   - **Blades glinting: reads.** The gold horn blades and the star glint at g 1733-1739 read.
-   - **Tail ablaze: does not read.** The flame stands upright about 300 px tall and reads as a separate fire column. The hero's reed bundle below it (x 460-550, y 595-650) looks unlit on the phone.
-7. **Ground, by eye:** about 30 %, dressed with a pot and a reed bundle at the bottom. Note only.
+Working files: /tmp/claude-0/-home-user-github-commit-quest-v2/64d228e2-e8b3-5935-8909-70298ec15c3e/scratchpad/qa18r/ (s22_phone.jpg, s22_bot.jpg, s22_pop.png, s22_full.png, s22_mouth.png).
+
+## Director's decision
+- **No soldier: DONE.** It is a pure close-medium of the hero ox. The dragon silk (red coat, gold dragon), rage face, gold horn blades and blue moon rim all read.
+- **"Tail ablaze": reads.** The flame grows from the lit reed bundle on the tail tip, behind and to the right of the rump. It stays in frame, close to the right edge at the end.
+- **"Blades glinting": reads.** A clean 4-point star sits on the blade at g 1732-1739.
+- **Mouth:** the chin outline is ≤ about 855 on every checked frame (worst g 1737). No face is in the caption band.
+- **Poles, fire on heads, half-cut:** none. The herd behind the hero is cut only at the frame edges, and none of those oxen is the main character.
+
+## Blocker: single-frame prop pops (glitch)
+The foreground jar and reed bundle (bottom-left) jump to a different, smaller and higher position for ONE frame at **g 1694, g 1707 and g 1719** (and at g 1677, which is in the handle). The ox and the set are unchanged on those frames, so only the dressing props pop. At 30 fps this is a visible flicker of the biggest object in the lower frame, three times in two seconds. The likely cause is stale prop transforms at render-chunk boundaries.
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 6 | 8 | 6 | 5 | 7 |
+| 8 | 8 | 7 | 7 | 7 |
 
-## Verdict: FIX-FIRST (1 blocker, measurable)
-1. **Make the flame the tail's, clear of the soldier, and turn him:**
-   - Lean the hero's tail flame back and away from the soldier, about 35-45° toward the upper LEFT or straight back over the rump. Also cut its height to about 180-220 px, so that it grows visibly out of the lit bundle tip.
-   - Or move the hero and its tail about 60 px left.
-   - Yaw the soldier 30-40° toward the ox, with his pupils on the ox (to the left). His body can stay at x 0.80-0.92.
-   - Pass checks, with the method above, on every frame g 1683-1742:
-     - soldier left edge minus flame right edge ≥60 px;
-     - no flame pixel at the soldier's face height within 60 px of his face;
-     - the flame base touches the hero's bundle tip.
-     - On the phone sheet his eyes point at the ox.
+## Verdict: FIX-FIRST (1 narrow blocker, 3 frames)
+1. Re-render g 1694, 1707 and 1719 with the props at their neighbour positions, and also g 1677 if the handle may be used.
+   - **Pass check:** on a per-frame strip of the bottom-left (x 0-720, y 840-1280) for g 1683-1742, the jar and bundle move smoothly with the camera, with no one-frame jump.
+   - Nothing else needs to change. With this fixed, the take is a PASS with no further art review.
+   - **Stopgap at conform:** replace each bad frame with a 50/50 blend of its neighbours. A plain duplicate also works but adds a stutter.
 
 ## Notes (not blocking)
-- The rage face, horn blades, glint, blue moon sky and warm/cool rim are good. Keep them.
-- The front hero is small (scale 0.45). The plan says close-medium. If the flame fix allows, scale it to 0.55-0.6, keeping the mouth ≤860.
+- The hero is about 30 % of the frame height, which reads as medium more than close-medium. The lower 40 % is warm dirt with a jar and a bundle. Accepted.

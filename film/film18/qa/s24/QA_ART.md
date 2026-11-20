@@ -1,40 +1,34 @@
-# QA-art round 14 s24: FIX-FIRST
-Shot: comic rout in the Yan camp (g 1807-1882). I extracted all 87 frames (g = 1801 + n).
-- I judged them on a 180x320 phone sheet every 5th frame (about 6 fps), on action-band crops (y 600-1040) every 4th frame, and at full size at g 1820/1835/1846/1850/1858/1866/1876.
-- I measured the chariot on bottom crops at g 1870/1876/1882 with a 72 px ruler.
+# QA-art round 18 s24: PASS
+Shot: comic rout in the Yan camp (g 1807-1882). I extracted all 87 frames (g = 1801 + n). I judged:
+- a 180x320 phone sheet every 5th frame
+- full-size action-band crops (y 500-1100) at g 1810/1818/1824/1830/1840/1848/1858/1866/1878
+- a 4-frame-step crop of the fire pit and the moustached soldier, g 1820-1880
+- a per-region single-frame pop check
 
-## Asked fixes
-1. **Chariot ≤18 % wide (≤25 % with the pole): NOT DONE at the end.**
-   - At g 1835-1850 the whole chariot is 115-130 px (16-18 %). Good.
-   - **g 1870:** 165 px (23 %) in total.
-   - **g 1876:** about 200 px (28 %) in total.
-   - **g 1882:** pole tip to box 148-375 = 227 px (32 %), with the wheels and box alone at about 180 px (25 %).
-   - It is now a dim, low-contrast prop that no longer dominates the frame, so this is a small overrun. But the numbers fail.
-2. **At least 2 visible falls in open ground: NOT DONE (third round).**
-   - **Fall 1: reads.** The moustached soldier at the left sits on the ground with his legs splayed (g 1855-1879, x 0.12-0.32).
-   - **Fall 2: not found.** I find no second soldier on the ground on any tile or crop. The g 1850 figure at x 0.15-0.30 crouches mid-run and gets up. The x 0.42 sit-down the team moved (v 0.58) is hidden by the clutter and the crowd (team admits).
-3. **The rout reads as comic: YES.** Shocked "O" faces, flying gold helmets and pots (largest about 120 px, 17 %), the soldiers' scramble, the folding tent and the fire pit all read as comic and bloodless.
+Working files: /tmp/claude-0/-home-user-github-commit-quest-v2/64d228e2-e8b3-5935-8909-70298ec15c3e/scratchpad/qa18r/ (s24_phone.jpg, s24_a/b/c.png, s24_fall.jpg, s24_fire.jpg).
 
-## §G and §I checks
-- Nothing hangs still in mid-air.
-- No face is crossed by a prop for longer than a frame.
-- Chins are ≤846.
-- **Rim:** a cool blue rim on every runner, against the warm fire and lanterns. Warm and cool are in the same frame.
-- **Ground:** dressed. The floor is busy with pots, sacks and bundles, but it is grounded.
+## Director's decision
+1. **New soldier falls in clear ground: DONE.**
+   - A soldier at about x 0.35-0.45 sits down hard, legs splayed, beside a tipped jar on open floor (clear at full size at g 1830).
+   - The moustached soldier's fall at the left reads at g 1855-1879.
+   - The two falls are not on the same tile and the figures are small (about 150 px), so on the phone each fall reads as a beat inside the scramble rather than a featured gag. That is acceptable for a wide rout.
+2. **Chariot pole hidden: OK.** The chariot is now a small wood prop in the middle ground. It no longer dominates the frame.
+
+## Beat on the phone: "comic rout: soldiers scatter and fall, pots and helmets fly"
+**YES.** It shows shocked "O" faces, a dozen runners with a cool blue rim against the warm fire pit and lanterns, and gold helmets and jars arcing through the frame up to the end. The tents fold and the floor is dressed. It is comic and bloodless.
+
+## Hard rules
+- **Caption band:** no face in the band. The chins are ≤846 (team), and I saw no face below about y 860 on the crops.
+- **Poles through faces:** none.
+- **Fire on heads:** none. The fire-pit flame cards stay below the nearest heads.
+- **Half-cut main character:** none. The runners at the edges are crowd extras.
+- **Ghosts and glitches:** none found.
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 6 | 8 | 6 | 6 | 7 |
-
-## Verdict: FIX-FIRST (1 blocker, plus a quick scale fix in the same pass)
-1. **Second fall:**
-   - Clear a patch of floor of the dropped props and sacks: x 0.55-0.80, y 0.66-0.76 (the open area right of the fire pit, below the barrels), at least 160 px wide.
-   - Stage a soldier there who falls on his bottom at g about 1845 and sits for at least 15 frames, legs up, at least 120 px tall, with nothing in front of him.
-   - Pass check: one phone tile in g 1855-1870 shows both the moustached soldier and this one on the ground.
-2. **Chariot:**
-   - Scale it to 0.25, or stop its roll so it stays where it is at g 1850.
-   - Pass check: ≤130 px (18 %) for the wheels and box and ≤180 px (25 %) with the pole, on g 1870, 1876 and 1882.
+| 7 | 8 | 6 | 7 | 7 |
 
 ## Notes (not blocking)
-- The soldiers still mill in the centre band. Two runners exiting toward the side edges would make it read as a scatter. I accepted this in round 12 and do not re-raise it.
-- The fire-pit flame cards are flat red wedges at frame centre. They read, but they are a little blocky.
+- At g 1864-1872 a flying helmet passes over the moustached soldier's face for about 8 frames. It reads as a comic "helmet in the face" hit, not a pole through a face. Fine, but do not extend it.
+- The crowd mills in the centre band, and runners exiting the sides would sell "scatter" better (an old note).
+- The fire-pit flames are flat red wedges (an old note).
