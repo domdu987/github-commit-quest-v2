@@ -76,7 +76,7 @@ def ears_svg(pose, fill="#f4d4cb"):
     wrap = lambda g: '<g transform="rotate(%.2f %.3f %.3f) translate(%.3f %.3f)">%s</g>' % (r, dx, dy, dx, dy, g) if g else ""
     return wrap(under), wrap(over)
 
-def hand_svg(an, side="r"):
+def hand_svg(an, side="r", big=1.0):
     """a visible forearm (lighter sleeve), white cuff and skin hand gripping the beam (puppet-local D, from the sprite's own anchors)."""
     ex, ey = an["elbow_" + side]; hx, hy = an["hand_" + side]
     dx, dy = hx - ex, hy - ey; L = math.hypot(dx, dy) or 1.0; ux, uy = dx / L, dy / L
@@ -85,10 +85,10 @@ def hand_svg(an, side="r"):
             '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="#46598f" stroke-width="0.125" stroke-linecap="round" fill="none"/>'
             '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="#3a2832" stroke-width="0.155" stroke-linecap="butt" fill="none"/>'
             '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="#fbf3ee" stroke-width="0.115" stroke-linecap="butt" fill="none"/>'
-            '<circle cx="%.3f" cy="%.3f" r="0.105" fill="#f4d4cb" stroke="#3a2832" stroke-width="0.03"/>'
+            '<circle cx="%.3f" cy="%.3f" r="%.3f" fill="#f4d4cb" stroke="#3a2832" stroke-width="0.03"/>'
             '<path d="M%.3f,%.3f q0.05,-0.02 0.09,0.03" stroke="#3a2832" stroke-width="0.02" fill="none"/></g>'
             % (ex, ey, hx, hy, ex, ey, hx, hy, cx - ux * 0.045, cy - uy * 0.045, cx + ux * 0.045, cy + uy * 0.045,
-               cx - ux * 0.045, cy - uy * 0.045, cx + ux * 0.045, cy + uy * 0.045, hx, hy, hx - 0.04, hy - 0.01))
+               cx - ux * 0.045, cy - uy * 0.045, cx + ux * 0.045, cy + uy * 0.045, hx, hy, 0.105 * big, hx - 0.04, hy - 0.01))
 
 
 def slide_of(g):
@@ -110,8 +110,8 @@ CAMS = {
     9: [(439, (2.05, 0.10, 1.42), (0.75, 2.2, 1.28), "d"), (466, (1.90, 0.28, 1.42), (0.75, 2.2, 1.28), "s"), (474, (1.62, 0.50, 1.40), (0.66, 2.2, 1.30), "d"), (482, (1.60, 0.52, 1.40), (0.66, 2.2, 1.30), "s"), (489, (1.44, 0.68, 1.38), (0.60, 2.2, 1.30), "d"), (492, (1.43, 0.69, 1.38), (0.60, 2.2, 1.30), "d")],
     10: [(493, (1.62, 0.44, 1.02), (0.68, 2.1, 1.35), "d"), (512, (1.66, 0.40, 1.02), (0.68, 2.1, 1.35), "s"), (519, (2.02, 0.10, 0.95), (0.72, 2.1, 1.35), "d"), (528, (2.05, 0.08, 0.95), (0.72, 2.1, 1.35), "s"), (535, (1.78, 0.30, 1.0), (0.64, 2.1, 1.35), "d"), (539, (1.76, 0.32, 1.0), (0.64, 2.1, 1.35), "d")],
     11: [(540, (1.62, 0.72, 1.40), (0.68, 2.0, 1.30), "d"), (566, (1.66, 0.68, 1.40), (0.68, 2.0, 1.30), "s"), (574, (2.15, 0.15, 1.42), (0.55, 2.0, 1.30), "d"), (591, (2.25, 0.08, 1.42), (0.55, 2.0, 1.30), "d")],
-    12: [(592, (1.95, 0.30, 1.48), (0.80, 1.60, 1.38), "d"), (604, (1.92, 0.34, 1.48), (0.80, 1.60, 1.38), "s"), (611, (1.50, 0.62, 1.46), (0.90, 1.55, 1.38), "d"), (632, (1.45, 0.65, 1.46), (0.92, 1.55, 1.38), "s"),
-         (639, (1.72, 0.74, 1.46), (1.00, 1.55, 1.38), "d"), (656, (1.76, 0.76, 1.46), (1.02, 1.55, 1.38), "d")],
+    12: [(592, (1.95, 0.30, 1.48), (0.80, 1.60, 1.38), "d"), (604, (1.92, 0.34, 1.48), (0.80, 1.60, 1.38), "s"), (611, (1.42, 0.52, 1.46), (0.90, 1.55, 1.38), "d"), (632, (1.38, 0.55, 1.46), (0.92, 1.55, 1.38), "s"),
+         (639, (1.62, 0.64, 1.46), (1.00, 1.55, 1.38), "d"), (656, (1.66, 0.66, 1.46), (1.02, 1.55, 1.38), "d")],
 }
 def cam_of(g):
     wps = CAMS[shot_of(g)]; i = 0
@@ -181,7 +181,7 @@ def pose_ins(g):
     p = story("inspector_pointing_mock", expr="smug"); p["yaw"] = -0.4
     if s == 10:
         p["head_roll"] = 6 + 3 * math.sin(g * 0.23); p["lean"] = -3 + 2 * math.sin(g * 0.31); p["mirror"] = True; p["yaw"] = 0.4
-        p["arm_r"] = dict(p["arm_r"], hand=(1.25 + 0.05 * math.sin(g * 0.3), 0.05), stretch=1.3)
+        p["arm_r"] = dict(p["arm_r"], hand=(1.30 + 0.05 * math.sin(g * 0.3), 0.30), stretch=1.3)
     if s == 11: p["head_roll"] = -4 + 3 * math.sin(g * 0.2); p["lean"] = 3 + 2 * math.sin(g * 0.33); p["yaw"] = 0.4; p["mirror"] = True
     if s == 12:
         k = clamp((g - B12) / 14.0)
@@ -191,7 +191,7 @@ def pose_ins(g):
 
 def ins_ear_local(an, g):
     hx, hy = an["head"]; c = math.cos(theta_of(0.88))
-    tap = 0.075 * max(0.0, math.sin((g - B12) * 0.75)) if g >= B12 + 12 else 0.0     # two taps in the second half
+    tap = 0.05 * abs(math.sin((g - 604) * math.pi / 9.0)) if g >= 604 else 0.0     # taps from g604 on (period 9 f)
     return (hx - 0.52 * c + 0.05 - tap * 0.0, hy + 0.02 - tap)
 
 class Take(C.Take):
@@ -202,10 +202,48 @@ class Take(C.Take):
         self.acts = {n: self.make_actor(n, v[0], sd) for n, v in SPOT.items()}
         for n, fill in (("pris", "#f4d4cb"), ("ins", "#e9857a")):
             a = self.acts[n]
-            a.jobs = (lambda orig, fl: (lambda px, frames=None, overlay=None: [dict(j, underlay=ears_svg(j["pose"], fl)[0], overlay=(j.get("overlay") or "") + ears_svg(j["pose"], fl)[1]) for j in orig(px, frames, overlay)]))(a.jobs, fill)
+            a.jobs = (lambda orig, fl: (lambda px, frames=None, overlay=None: [dict(j, underlay=ears_svg(j["pose"], fl)[0], overlay=ears_svg(j["pose"], fl)[1] + (j.get("overlay") or "")) for j in orig(px, frames, overlay)]))(a.jobs, fill)
         for o in bpy.data.objects:
             if any(m and m.name.startswith("beam_fx") for m in (getattr(o.data, "materials", None) or [])): o.hide_render = True
         self.ear = {}; self.info = {}
+        self.cut_table_calipers()
+
+    def cut_table_calipers(self):
+        """delete the steel calipers (and their ink hull) lying on the small table at ~(1.9, 1.55): loose crossed rods that read as stray props."""
+        import bmesh
+        box = lambda c: 1.5 < c.x < 2.4 and 1.3 < c.y < 1.85 and 0.8 < c.z < 1.12
+        n = 0; lo = Vector((9, 9, 9)); hi = Vector((-9, -9, -9)); steel = []
+        for ob in bpy.data.objects:
+            if ob.type != "MESH" or not ob.data.materials: continue
+            mw = ob.matrix_world
+            for p in ob.data.polygons:
+                m = ob.data.materials[p.material_index]
+                if m and m.name == "steel" and box(mw @ p.center):
+                    steel.append((ob, p.index))
+                    for vi in p.vertices:
+                        v = mw @ ob.data.vertices[vi].co
+                        lo = Vector((min(lo.x, v.x), min(lo.y, v.y), min(lo.z, v.z))); hi = Vector((max(hi.x, v.x), max(hi.y, v.y), max(hi.z, v.z)))
+        for ob in bpy.data.objects:
+            if ob.type != "MESH" or not ob.data.materials: continue
+            mw = ob.matrix_world; bm = bmesh.new(); bm.from_mesh(ob.data); dead = []
+            for f in bm.faces:
+                m = ob.data.materials[f.material_index]
+                if not m or m.name not in ("steel", "ink"): continue
+                c = mw @ f.calc_center_median()
+                if all(lo[i] - 0.03 < c[i] < hi[i] + 0.03 for i in range(3)) and (m.name == "steel" or True):
+                    if m.name == "steel" and not box(c): continue
+                    dead.append(f)
+            if dead:
+                bmesh.ops.delete(bm, geom=dead, context="FACES"); n += len(dead); bm.to_mesh(ob.data)
+            bm.free()
+        for ob in bpy.data.objects:                              # the floating crossed rods are thin cream faces hovering at z ~1.02 above the table
+            if ob.type != "MESH" or not ob.data.materials: continue
+            mw = ob.matrix_world; bm = bmesh.new(); bm.from_mesh(ob.data)
+            dead = [f for f in bm.faces if ob.data.materials[f.material_index] and ob.data.materials[f.material_index].name == "cream"
+                    and 1.4 < (mw @ f.calc_center_median()).x < 2.0 and 1.5 < (mw @ f.calc_center_median()).y < 1.95 and 0.9 < (mw @ f.calc_center_median()).z < 1.2]
+            if dead: bmesh.ops.delete(bm, geom=dead, context="FACES"); n += len(dead); bm.to_mesh(ob.data)
+            bm.free()
+        print("cut_table_calipers: removed", n, "faces", tuple(round(v, 2) for v in lo), tuple(round(v, 2) for v in hi), flush=True)
 
     def ppd(self, s): return {9: 256, 10: 384, 11: 384, 12: 512}[s] * (1 if self.q == "final" else 0.5)
 
@@ -272,18 +310,21 @@ class Take(C.Take):
             if shot_of(g) == 12:
                 f = bf(g); self.scene.frame_set(f); p, xy, lift = pose_ins(g); p = rim(dict(p), "inspector17")
                 el = ins_ear_local(self.anch[("ins", f)], g)
-                self.acts["ins"].pose(f, dict(p, arm_r="akimbo", arm_l=dict(hand=(-0.5, 0.0), bend=0.3)), hands={"l": {"hand": el, "stretch": 1.2, "shape": "point"}}, camera=cam)
+                side = os.environ.get("EARARM", "l"); other = "r" if side == "l" else "l"
+                pp = dict(p); pp["arm_" + other] = "akimbo"; pp["arm_" + side] = dict(hand=(-0.5, 0.0), bend=0.3)
+                _, ii = self.acts["ins"].pose(f, pp, hands={side: {"hand": el, "stretch": 1.4, "shape": "point"}}, camera=cam)
+                self.info[(g, "ear")] = (side, round(ii.get(side, {}).get("error", -1), 3), tuple(round(v, 2) for v in el))
         fr12 = [bf(g) for g in gs if shot_of(g) in (11, 12)]
         if fr12:
             self.sprites("ins", self.acts["ins"], fr12)
-            self.sprites("ins", self.acts["ins"], fr12, overlay=lambda f, pose: hand_svg(self.anch[("ins", f)], "l" if shot_of(f - 1) == 12 else "r"))
+            self.sprites("ins", self.acts["ins"], fr12, overlay=lambda f, pose: hand_svg(self.anch[("ins", f)], "l" if shot_of(f - 1) == 12 else "r", 1.5 if shot_of(f - 1) == 12 else 1.0))
 
     def wobble(self, g):
         if 558 <= g <= 567: return 9.0 * math.sin((g - 558) * 1.7) * (1 - (g - 558) / 10.0)
         return 0.0
 
     def report(self, g):
-        f = bf(g); self.scene.frame_set(f); out = dict(g=g, shot=shot_of(g), err=self.info.get((g, "bert")), ins_err=self.info.get((g, "ins")))
+        f = bf(g); self.scene.frame_set(f); out = dict(g=g, shot=shot_of(g), err=self.info.get((g, "bert")), ins_err=self.info.get((g, "ins")), ear=self.info.get((g, "ear")))
         heads = {}
         for n, a in self.acts.items():
             if a.card.hide_render or (a.name, f) not in self.anch: continue

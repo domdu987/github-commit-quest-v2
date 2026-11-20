@@ -2,7 +2,7 @@
 720x1280, 12 samples + OIDN. Built on team 1's s01 machinery (pinned calipers, ears_svg, hand_svg).
 
 ## Numbers
-- rhythm.py (cuts 445,493,540,592,651): **in-shot median 5.69, p90 13.18** (>= 4 / >= 12).
+- rhythm.py (cuts 445,493,540,592,651): **in-shot median 5.59, p90 12.61** (>= 4 / >= 12).
 - qa_auto.py: PASS (QA_AUTO.md, phone_sheet.jpg), magenta 0.0 %, no blur flag.
 
 ## QA_TECH round-1 fixes
@@ -19,3 +19,10 @@
 - g560: inspector's blue forearm reaches the caliper bar at the ear (touch frame ~558); camera has just started the snap.
 - g620: inspector close-up, red ear + hand at the ear, mouth open (speech), kepi top at y ~ 70.
 - Known: the tapping hand is a small blue cuff blob at the ear (reads at phone size, finger detail lost); the ears are large cartoon ears (team-1 style); shot 11 end frames (g585-591) the inspector sits near the right edge (face fully visible).
+
+## Round 3 (QA_TECH_R2 blockers) -- full-res self-check, sheet selfcheck_R3.jpg (g445, 468, 520, 505, 560, 564, 615, 630)
+- B1 stray rods: they were thin cream faces of a set prop hovering at z~1.02 above the small table (plus the table's steel calipers). Both deleted at runtime (cut_table_calipers). g445, g468, g520: no floating rods; the only calipers are the pair in Bertillon's hand.
+- B2 ear tap: pin converged (err 0.0 all frames); the earlier failure was the hand drawn UNDER the red ear and the akimbo fist at the belt mistaken for the tapping glove. Now the glove (skin circle, 1.5x) is drawn in front of the ear (g615, g630: hand ON the ear, mouth open and clear), taps every 9 frames from g604 (+-0.05 D), chest puff x1.05, camera 0.1 m wider at the end of the push (chin well above y 850).
+- Shot 10 g505: the pointing forearm now ends at ear height on the calipers (not the hat).
+- Shot 11 g560/g564: arm on the bar; bar wobble g558-567 (+-9 deg decaying) is small but visible in the sprite.
+- Shot 9: surprised stop-and-look g460-466, laugh from g467.
