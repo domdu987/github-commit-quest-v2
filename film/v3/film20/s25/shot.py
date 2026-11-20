@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""shot.py -- film 20 take s25 = shot 25 (g 1814..1911) + handles: 4 in (cut) g 1810..1813, 4 out (cut to shot 26) g 1912..1915.
+"""shot.py -- film 20 take s25 = shot 25 (g 1853..1911) + handles: 4 in (cut) g 1849..1852, 4 out (cut to shot 26) g 1912..1915.
 "กินข้าวบนหอ แทบทุกวัน": RESTO resto_table / DAY 1889, callback of shot 2.  Maupassant eats blissfully (napkin tucked): fork bite, chew,
-a sip of wine, chew ...; eye level, wine glass + bread FG from the set; push 8 %/s + slide 40 px/s; SNAP push x1.4 on "แทบทุกวัน"
-(event g 1838).  Mouths never move (no quote): fork / glass cycle + a chew bob carry the eating.
+a sip of wine, chew ...; eye level, wine glass + bread FG from the set; push 8 %/s + slide 40 px/s; SNAP push x1.4 on "ที่เดียว"
+(event g 1879).  Mouths never move (no quote): fork / glass cycle + a chew bob carry the eating.
 
     python3 shot.py probe a:b[:step] | camreport | stills a:b[:step] <out_dir> [scale] [samples] | final a:b[:step] [scale] [samples]
     python3 deliver.py
@@ -19,11 +19,11 @@ lerp, clamp, blink, ez, u_of, bf = C.lerp, C.clamp, C.blink, C.ez, C.u_of, C.bf
 WORK = os.path.join(HERE, "work")
 
 SHOT = 25
-G0, G1 = C.g_bound(60.48), C.g_bound(63.72)    # 1814, 1912: shot = g 1814..1911
+G0, G1 = C.g_bound(61.77), C.g_bound(63.72)    # 1853, 1912 (plan 61.77-63.72 s): shot = g 1853..1911
 H_IN, H_OUT = 4, 4                              # cut in, cut out
 G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1     # 76..185
 GS = list(range(G_FIRST, G_LAST + 1))
-G_EVERY = C.g_of(61.15)                          # snap push event
+G_EVERY = C.g_of(62.52)                          # snap push event: "ที่เดียว" (62.52 s)
 SNAP = (G_EVERY - 2, G_EVERY + 13)
 
 PRESET, LIGHT = "resto_table", "DAY"
@@ -63,7 +63,7 @@ def cam_path_static():
 
 
 TOAST = cast20.STORY20["maupassant_seated_toast"][1]
-T_A, T_B, T_C = 0, 44, 84                       # relative frames: fork cycle | wine sip | fork again
+T_A, T_B, T_C = 0, 38, 78                       # relative frames: fork cycle | wine sip | fork again
 
 
 def pose_of(g):
