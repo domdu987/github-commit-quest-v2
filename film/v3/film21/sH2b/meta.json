@@ -20,11 +20,11 @@
    0
   ],
   "lens": 22.0,
-  "note": "K.POSES['P_TOP'] new pose; first 30 frames drift slightly (hold ~1 s), descent starts g1422"
+  "note": "K.POSES['P_TOP']; ~1 s near-hold, descent from g1422"
  },
  "cam_out": {
   "loc": "near Cressingham, 2.05-2.3 m, lens 26",
   "note": "ends with a CUT at g1519; frames 1520-1522 continue the push"
  },
- "note": "raw set grade, no post exposure; luma/sat normalised at conform per director policy"
+ "note": "QA-art gate fixes applied; raw set grade, no post pass; set e07ceb1"
 }
