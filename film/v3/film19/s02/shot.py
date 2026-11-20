@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
-"""shot.py -- film 19 take s02 = shot 2: "เรือนเดียว ... เรืออยู่ตรงไหนกลางทะเล" -- the lone ship on the endless glittering sea.
-SHIP ship_aerial / NOON, no actors.  g 57..109 (1.91-3.65 s) + 9 handle frames each side (hard cuts in and out): g 48..118.
-The ship sits at the origin (it 'sails' by the sea moving: set_sea(g/30) and set_roll(g/30) keyed on EVERY frame; the wake is part of the set).
-Camera (c19.CamPath): high drift PULL 7 %/s + slow orbit about the ship + lateral slide; moving on the first frame, decay 0.1 (still moving on
-the last).  No snap (shot < 2 s).  NO depth of field, NO text, NO caption_shade.
+"""shot.py -- film 19 take s02 = the BIGZOOM (shots 2 + 3 merged, QA_TEAM section H).  g 57..190 (1.91-6.37 s, 134 frames) + 9 handle frames each side
+(hard cut in from s01 at g 57; DISSOLVE 13 f out into s04 at g 191): g 48..199.
+
+ONE continuous eased camera move, no cut.  SHIP ship_aerial / NOON (set_sea + set_roll keyed on every frame):
+  START  extreme wide from high above and behind: the lone warship on the endless glittering sea, small in the frame; captain19 and astro19_c on the
+         quarterdeck are ~6 px tall (under 5 % of the frame), findable
+  MIDDLE the camera descends and pushes in toward the stern, passing the spanker sail (a fore-and-aft sail, 1.8 D from the lens) as a parallax foreground
+  END    (by ~5.9 s, g 177) a MEDIUM shot on the quarterdeck: captain19 holds a blank sea chart, astro19_c squints through a quadrant at the sky and
+         scratches his head (g ~150-165); 35-60 % of the frame height; the camera rides the deck (C.on_ship)
+No mouth movement.  NO depth of field, NO text, NO caption_shade.
 
     python3 shot.py camreport | probe a:b[:step] | stills a:b[:step] out [scale] [spp] | final a:b[:step] [scale] [spp]
     python3 deliver.py [draft]
@@ -13,87 +18,173 @@ import math, os, sys, json
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import c19 as C                                          # noqa: E402
-from mathutils import Vector, Matrix                             # noqa: E402
+from mathutils import Vector, Matrix                     # noqa: E402
 
-H, K = C.H, C.K
+H, K, cast19 = C.H, C.K, C.cast19
+lerp, clamp, blink, u_of, bf = C.lerp, C.clamp, C.blink, C.u_of, C.bf
 WORK = os.path.join(HERE, "work")
 TAKE = "s02"
 PRESET, LIGHT = "ship_aerial", "NOON"
-SHOT_T0, SHOT_T1 = 1.91, 3.65
+G0, G1 = 57, 191                                         # shot = g 57..190
 H_IN, H_OUT = 9, 9
-G0, G1 = C.g_bound(SHOT_T0), C.g_bound(SHOT_T1)          # shot = g G0..G1-1
-FIRST_G, G_LAST = G0 - H_IN, G1 + H_OUT - 1
+FIRST_G, G_LAST = G0 - H_IN, G1 + H_OUT - 1              # 48..199
 GS = list(range(FIRST_G, G_LAST + 1))
-FINAL_SPP = 10                                           # H.STATE['samples'] of ship_aerial (cost_report): Take() checks it
+FINAL_SPP = 10
+S = 1.85
+PPD = 224                                                # sprite px per D (head ~110 px at the end; the start is downsampled)
+G_ARRIVE = 177                                           # the medium shot is reached (5.9 s)
+G_SCRATCH = (146, 166)                                   # astro19_c scratches his head (comic), 4.9-5.5 s
+BLINKS_C, BLINKS_A = [70, 128, 171], [92, 150, 188]
 
-SEAK = float(os.environ.get("SEAK", "2"))                    # sea clock rate (1 = real time)
-S = 1.85                                                 # metres -> world D
-AZ = float(os.environ.get("AZ", "183.29"))               # camera azimuth about the ship vs the aerial preset: ~180 = from BEHIND the ship (it sails away, the wake trails to us)
-DIST0 = float(os.environ.get("DIST0", "0.86"))           # start distance as a fraction of the preset aerial distance
-_loc, _look = Vector((-70.0, 95.0, 85.0)) * S, Vector((2.0, 6.0, 14.0)) * S
-_d = Matrix.Rotation(math.radians(AZ), 3, "Z") @ ((_loc - _look) * DIST0)
-CAM_LOOK0, CAM_LOC0 = _look, _look + _d
-_f = (CAM_LOOK0 - CAM_LOC0).normalized(); _u = Vector((_f.y, -_f.x, 0.0)).normalized().cross(_f).normalized()
-_o = _u * (float(os.environ.get("OFF", "-44.21")) * (CAM_LOOK0 - CAM_LOC0).length / C.F_PX)       # start framing offset (px)
-CAM_LOOK0, CAM_LOC0 = CAM_LOOK0 + _o, CAM_LOC0 + _o
-G_WORD = C.cap_g("เรืออยู่")                              # g 98: "เรืออยู่ตรงไหน" -> the snap
-SNAP = (92, 108)                                         # 16 f, x1/0.59 = 1.7 pull-back with a pan (shift), peak 2.0
-# values from a random search (scratchpad plan17.py): the whole ship inside the frame (30 px margin) on EVERY frame, the ship travels across the frame
-_P = [float(v) for v in os.environ.get("CAMP", "-0.03,140,119,-30").split(",")]      # push (pull), slide px/s, rise px/s, arc deg/s
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, FIRST_G, G_LAST, push=_P[0], slide_px=_P[1], rise_px=_P[2], arc_deg_s=_P[3], decay=0.1,
-                snaps=[dict(g=SNAP, k=0.59, peak=2.0, shift=(-251.88, -177.73))])
+# ----------------------------------------------------------------------------- staging (ship rest frame = world D at t = 0; z of the quarterdeck 14.34)
+Z_QD = 14.34 + 0.22                                        # the deck plus the shoe sole (the card base sat 0.2 D low)
+CAP_XY = (-0.75, -31.3)                                  # captain19, beside the wheel, camera-left
+AST_XY = (1.7, -30.6)                                   # astro19_c, camera-right (short: 2.8 D)
+
+# ----------------------------------------------------------------------------- camera: a spline through key poses in the SHIP's rest frame (D), eased in and out
+KEYS = [  # (u, loc, look)
+    (0.00, (14.0, -330.0, 255.0), (0.0, -14.0, 14.0)),            # extreme wide from high above and behind
+    (0.50, (10.0, -98.0, 74.0), (1.0, -30.0, 15.0)),              # descending
+    (0.76, (5.5, -47.0, 27.5), (0.8, -30.5, 15.6)),               # above the stern, off the starboard quarter
+    (0.91, (2.4, -41.0, 21.0), (0.6, -30.3, 15.8)),               # passes the spanker's starboard face and descends
+    (1.00, (0.45, -36.3, 16.5), (0.5, -30.0, 15.9)),           # medium on the quarterdeck
+]
 
 
-def widen_sea(preset, k, nu, nv):
-    """the sea is ONE grid fitted to the preset camera's footprint; a pull-back would show its edge.  Runtime patch (set modules stay
-    untouched): fit the grid to a virtual camera k times farther from the look point on the same axis (a k times wider footprint)."""
+def _cr(p0, p1, p2, p3, t):
+    """Catmull-Rom, uniform"""
+    return 0.5 * ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t + (-p0 + 3 * p1 - 3 * p2 + p3) * t * t * t)
+
+
+def _spline(g, which):
+    """position on the key spline at the eased parameter u(g) (which 1 = loc, 2 = look)"""
+    t = clamp((g - G0 + 4) / float(G_ARRIVE - (G0 - 4)))                 # 0 slightly before the cut-in, 1 when the medium shot is reached
+    u = 0.78 * (t * t * t * (t * (6 * t - 15) + 10)) + 0.22 * t           # eased in / out (smootherstep) with a little linear so it never parks
+    P = [Vector(k[which]) for k in KEYS]
+    us = [k[0] for k in KEYS]
+    j = max(i for i in range(len(us) - 1) if us[i] <= u) if u < 1.0 else len(us) - 2
+    tt = (u - us[j]) / (us[j + 1] - us[j])
+    p0 = P[j - 1] if j > 0 else P[j] * 2 - P[j + 1]
+    p3 = P[j + 2] if j + 2 < len(P) else P[j + 1] * 2 - P[j]
+    return Vector([_cr(p0[i], P[j][i], P[j + 1][i], p3[i], tt) for i in range(3)])
+
+
+def cam_rest(g):
+    """(loc, look) in the ship's rest frame at film frame g.  After arrival: a slow push so the shot never parks."""
+    loc, look = _spline(min(g, G_ARRIVE), 1), _spline(min(g, G_ARRIVE), 2)
+    if g > G_ARRIVE:
+        k = 0.014 * (g - G_ARRIVE) / 30.0 * 4.0                         # ~5.6 %/s drift toward the pair
+        loc = loc + (look - loc) * k * 2.0
+        look = look + Vector((0.05, 0.0, 0.0)) * (g - G_ARRIVE) / 30.0
+    return loc, look
+
+
+# ----------------------------------------------------------------------------- the sea (ONE camera-fitted grid): fit it to a virtual camera far above and behind
+def widen_sea(preset, nu, nv):
     import h19_ship as SH
     P = SH.PRESETS[preset]
-    loc, look = Vector(P["cam"]["loc"]), Vector(P["cam"]["look"])
-    P["cam"] = dict(P["cam"], loc=tuple(look + Matrix.Rotation(math.radians(AZ), 3, "Z") @ ((loc - look) * k)))
+    look = Vector(P["cam"]["look"])
+    P["cam"] = dict(P["cam"], loc=tuple(Vector((14.0, -330.0, 255.0)) * 3.0 / S))   # metres: a virtual camera 3x as far / high as the start pose
     P["sea_nu"], P["sea_nv"] = nu, nv
-    # a LONG white V wake trailing far behind the ship (the set's wake fades by ~150 m): the set's own 'streaks' hook (broken foam lines,
-    # ship frame, metres): two Kelvin arms (half-angle ~19 deg) + the turbulent centre line, each 300 m long
-    L = 300.0
-    P["streaks"] = list(P.get("streaks", [])) \
-        + [((sx * 3.5, -21.0), (sx * (3.5 + sl * L), -21.0 - L), wd, am) for sx in (-1, 1)
-           for (sl, wd, am) in ((0.34, 4.0, 1.0), (0.27, 3.4, 1.0), (0.21, 3.0, 1.0), (0.15, 2.6, 1.0), (0.09, 2.2, 1.0))] \
-        + [((0.0, -21.0), (0.0, -21.0 - L), 3.0, 0.7)]
+
+
+# ----------------------------------------------------------------------------- poses
+def pose_captain(g):
+    p = dict(cast19.STORY19["captain_peer_chart"][1])
+    p["lean"] = 8 + 1.5 * math.sin(g * 0.11)
+    p["head_roll"] = 3.0 * math.sin(g * 0.07)
+    p["blink"] = blink(g, BLINKS_C)
+    p["t"] = g / 30.0
+    return p
+
+
+def pose_astro(g):
+    """astro19_c: squints through the quadrant at the sky, then scratches his head, shrugs, and goes back to the quadrant"""
+    p = dict(cast19.STORY19["william_quadrant_sun"][1])                    # arms / prop of the quadrant pose (william19's pose key set)
+    p["expr"] = "squint"
+    p["blink"] = blink(g, BLINKS_A)
+    p["lean"] = -3
+    a, b = G_SCRATCH
+    u = u_of(g, a, a + 6) * (1.0 - u_of(g, b - 6, b))                      # 0 -> 1 -> 0 over the scratch window
+    if u > 0.0:
+        # the quadrant hand lowers, the other hand goes to the head, a small shrug
+        p["arm_r"] = dict(hand=(lerp(0.46, 0.55, u), lerp(0.1, 0.55, u)), bend=lerp(-0.7, 0.5, u), stretch=1.1, layer="top")
+        p["prop_r"] = dict(type="quadrant19", angle=lerp(-62, -10, u), scale=0.95)
+        p["arm_l"] = dict(hand=(lerp(-0.46, -0.12, u), lerp(0.96, 2.25, u)), bend=lerp(0.5, 0.9, u), shape="open")
+        p["pitch"] = lerp(-0.75, 0.2, u)
+        p["expr"] = "unimpressed" if u > 0.4 else "squint"
+        p["head_roll"] = 8.0 * u * math.sin(g * 0.9)                       # the scratching wobble
+        p["gaze"] = (0.2, 0.2)
+        p["glint"] = 0.0
+    else:
+        p["glint"] = 0.5 + 0.5 * math.sin(g * 0.2)
+    p["t"] = g / 30.0
+    return p
 
 
 class Take(C.Take):
     def __init__(self, quality="preview"):
-        widen_sea(PRESET, float(os.environ.get('WIDEN', '11')), int(os.environ.get('NU', '1300')), int(os.environ.get('NV', '1800')))
+        widen_sea(PRESET, int(os.environ.get("NU", "1500")), int(os.environ.get("NV", "2000")))
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_" + TAKE)
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
-        self.key_cam(C.bf(FIRST_G), *CAM.at(FIRST_G))
-        g_ = C.bpy.data.objects.get('glint')                      # tone down the glare patch at the left edge (sun glint)
-        if g_ is not None:
-            g_.data.energy *= float(os.environ.get('GLINT', '0.45'))
+        root = self.A["ship_root"]
+        self.cap = self.actors["cap"] = C.make_actor("cap", "captain19", os.path.join(WORK, "sprites"), contact=True, cam=self.cam)
+        self.ast = self.actors["ast"] = C.make_actor("ast", "astro19_c", os.path.join(WORK, "sprites"), contact=True, cam=self.cam)
+        for a in (self.cap, self.ast):
+            C.ride_ship(a, root)                                           # BEFORE place() and BEFORE any set_roll key: the inverse is taken at rest
+        self.cam_pose(FIRST_G, root)
+
+    def cam_pose(self, g, root):
+        f = bf(g)
+        self.key_set(f, sea=g / 30.0, roll=g / 30.0)                       # same t on every frame
+        loc, look = cam_rest(g)
+        self.key_cam(f, *C.on_ship(root, f, loc, look))                    # the camera rides the deck (rest-frame pose -> world)
 
     def pose(self, gs):
+        root = self.A["ship_root"]
         for g in gs:
-            f = C.bf(g)
-            self.key_set(f, sea=g / 30.0 * SEAK, roll=g / 30.0 * SEAK)           # same t, every frame
-            self.key_cam(f, *CAM.at(g))
-            C.key_vis([o for o in (C.bpy.data.objects.get('gulls_gullt'), C.bpy.data.objects.get('gulls_gullw')) if o], False, f)   # no gulls (one was clipped by the edge)
+            f = bf(g)
+            self.cam_pose(g, root)
+            C.key_vis([o for o in (C.bpy.data.objects.get("gulls_gullt"), C.bpy.data.objects.get("gulls_gullw")) if o], False, f)
+            C.place(self.cap, f, (CAP_XY[0], CAP_XY[1], Z_QD))
+            C.place(self.ast, f, (AST_XY[0], AST_XY[1], Z_QD))
+        for g in gs:
+            f = bf(g)
+            self.scene.frame_set(f)
+            self.cap.pose(f, pose_captain(g), camera=self.cam)
+            pa = pose_astro(g)
+            pa["mirror"] = True
+            self.ast.pose(f, pa, camera=self.cam)
+        self.sprites_for([(self.cap, PPD), (self.ast, PPD)], [bf(g) for g in gs])
 
     def report(self, g):
-        loc, look = CAM.at(g)
-        return dict(g=g, cam=[round(c, 2) for c in loc], heads={}, dof=self.cam.data.dof.use_dof,
+        f = bf(g)
+        self.scene.frame_set(f)
+        loc, look = cam_rest(g)
+        return dict(g=g, cam=[round(c, 2) for c in loc], heads=C.head_report(self, f), dof=self.cam.data.dof.use_dof,
                     caption_shade=bool(C.bpy.data.objects.get("caption_shade")))
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):
-        return C.Take.render(self, [C.bf(g) for g in gs], out_dir, scale=scale, samples=samples, threads=threads)
+        return C.Take.render(self, [bf(g) for g in gs], out_dir, scale=scale, samples=samples, threads=threads)
+
+
+def camreport():
+    prev = None
+    mx = 0
+    for g in GS:
+        loc, look = cam_rest(g)
+        if prev is not None:
+            d = (loc - prev).length
+            mx = max(mx, d)
+        if g % 12 == 0:
+            print(g, [round(c, 1) for c in loc], [round(c, 1) for c in look])
+        prev = loc
 
 
 if __name__ == "__main__":
     cmd = sys.argv[1]
     if cmd == "camreport":
-        rows, worst = CAM.report(GS[:-1])
-        for r in rows[::6]:
-            print(r)
-        print("longest run under 0.25 px/frame: %d frames (bible max 6)" % worst)
+        camreport()
         sys.exit(0)
     gs = [g for g in C.parse(sys.argv[2]) if FIRST_G <= g <= G_LAST]
     if cmd in ("probe", "stills"):
