@@ -84,7 +84,7 @@ def cam_rest(g):
         c = Vector((0.5, -30.5, loc.z))
         loc = c + Matrix.Rotation(ang, 3, "Z") @ (loc - c)
         loc = loc + (look - loc) * (0.0030 * (g - G_ARRIVE))
-    look = look + Vector((0.0, 0.0, 0.34 * clamp((g - 112) / 30.0)))      # aim a little higher so the heads sit at y 450-760 (the camera still rides the deck)
+    look = look + Vector((0.0, 0.0, 0.34 * clamp((g - 124) / 26.0)))      # aim a little higher so the heads sit at y 450-760 (the camera still rides the deck)
     return loc, look
 
 
