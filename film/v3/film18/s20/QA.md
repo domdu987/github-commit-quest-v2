@@ -1,7 +1,5 @@
-# QA s20 (render team 5, film 18) round 3 - frames g1515-1595 (+6 handles: take.mkv g1509-1601, 93 frames), jimo_out NIGHT
-See meta.json for the frame-diff (median >= 4, p90 below 12; gate allows it); qa_auto PASS.
-QA-art round-3 notes:
-1. No flame on a head: 3 rows of oxen share one 9.6 D lattice along the run, so the tail flame (about 1.7 D streaming back, rotated level, facing the camera) of every ox lands in the gap between oxen; the 9.6 D spacing is more than 2 body lengths. Checked at 6 fps: no flame card on a face, no edge-on spikes (the card is a camera-facing sprite).
-2. Lead ox in pure side profile (cast side view, theta 0) at the left-centre running screen-left with a level tail and flame; about 35 % of frame height; all other oxen are side-view too, same direction, none face-on to the lens at any frame.
-3. Camera rides alongside the herd at herd speed with a slow push (lateral 8.8 -> 7.2 D), a small sway and the whip-in; pitch up so the herd fills the middle of the frame. Sky is about 30 %, plain ground about 35 % (not yet at the 25 % target).
-Tail flames: 2-5 visible in every frame, each with sparks and a warm point light on the nearest five.
+# QA s20 (render team 5, film 18) round 5 - frames g1515-1595 (+6 handles: take.mkv g1509-1601, 93 frames), jimo_out NIGHT
+Frame-diff in-shot (n=80): median **4.89**, p90 **6.58**. qa_auto PASS.
+- Came in about 25 % (lateral 8.8 -> 6.7 D, slow push 0.9 D): the lead ox is about 40 % of frame height, nose in frame, flame trailing level behind with sparks; flames still attached, none on a head.
+- Navy spikes (`tufts`), furrows, the white rock and foreground stones/props hidden; the road posts and the far-camp fires hidden.
+- Not fixed: a tripod torch stand still shows behind the lead ox around g1522-1540 and g1569-1590 (it is a set brazier I could not identify among the set's objects, so it is not hidden); sky is about 30 % and plain ground about 35 % (the set's `dress_ground` is not yet available).
