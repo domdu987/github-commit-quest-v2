@@ -38,11 +38,11 @@ def cam_track(T, g, t):
     dy = SPEED * (g - G0) / 30.0
     sw = 1.2 * math.sin(2 * math.pi * 0.4 * (g - G0) / 30.0)   # smooth lateral weave of the tracking camera (the subject stays framed)
     gen_y = -50.0 - dy
-    return dict(loc=(2.0 + sw, gen_y - rel(g), 0.95), look_at=(0.8 + 0.4 * sw, gen_y + 4.0, 3.0), lens=24)
+    return dict(loc=(2.0 + sw, gen_y - rel(g), 0.95), look_at=(0.8 + 0.4 * sw, gen_y + 4.0, 2.5), lens=24)
 
 
 T = c18.Take('s26', FIRST, LAST, draft=(mode == 'draft'), cam_fn=cam_track)
-c18.fix_sky_clean(T, 'sky_DAWN', flat_above=0.5)
+c18.fix_sky_clean(T, 'sky_DAWN', flat_above=0.6)
 import bpy
 for ob in bpy.data.objects:                       # no grey rocks / wheels / ring props / hay anywhere (TAKE gate rule 2)
     if ob.name.startswith(('fgwood', 'fgstone', 'dr_hay', 'dr_plume', 'dr_pot', 'dr_rope', 'dr_stone', 'dr_wheel', 'dr_basket')) or ob.name == 'hay':
@@ -53,11 +53,12 @@ OX_START = [9.0, 11.5, 14.0, 16.5]; OX_END = [2.6, 4.3, 6.0, 7.8]       # distan
 
 def frame(T, g):
     cam = V(T.cur['loc']); dy = SPEED * (g - G0) / 30.0
-    gen = V((0.8 + 0.5 * math.sin(g * 0.11), -50.0 - dy, 0.0))
+    gen = V((1.35 + 0.3 * math.sin(g * 0.11), -50.0 - dy, 0.0))
     heads = []
     ph = (g * 0.0625) % 1.0; i16 = int(ph * 16)
     lb = 2070 <= g <= 2080                                                            # head turned back over the shoulder g 2070-2080
     pose = dict(cast18.general_run_scream_frame(ph, facing=-1, lookback=lb)); pose['t'] = g / 30.0
+    pose['prop_r'] = dict(pose['prop_r'], scale=pose['prop_r'].get('scale', 1.0) * 0.62)    # the cup was head-sized: 62 %
     m = c18.pcard('general', pose, 'gs%02d_%d' % (i16, int(lb)))
     c18.put(m, tuple(gen), cam, height=3.4, name='general', sw=1.0)
     heads.append(T.head_row(tuple(gen), 3.4, 'general'))

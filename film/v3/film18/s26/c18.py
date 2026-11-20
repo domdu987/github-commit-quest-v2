@@ -374,10 +374,17 @@ def fix_sky_clean(T, tex_name='sky_DAWN', flat_above=None):
         a = np.asarray(I.open(os.path.join(SETD, 'tex_jimo', tex_name + '.png')).convert('RGB'), dtype='float32')
         med = np.median(a, axis=1); k = np.ones(41, dtype='float32') / 41.0; pad = np.pad(med, ((20, 20), (0, 0)), mode='edge')
         ref = np.stack([np.convolve(pad[:, c], k, mode='valid') for c in range(3)], axis=1)[:, None, :]
-        if flat_above is not None:                                   # a smooth gradient: everything above v = flat_above eases into one colour (no curved band)
-            h = ref.shape[0]; r0 = int(h * (1 - flat_above)); top = ref[r0].copy()
-            for r in range(r0):
-                w = (r0 - r) / float(r0); w = min(1.0, w * 1.6); ref[r] = ref[r0] * (1 - w) + top * w
+        if flat_above is not None:                                   # a smooth warm dawn gradient above the horizon glow: pink -> peach -> pale gold, no arc, no cloud band
+            h = ref.shape[0]; v0 = 0.10; v1 = flat_above
+            pink = ref[int(h * (1 - v0))].copy(); peach = np.array([[246.0, 186.0, 150.0]]); gold = np.array([[252.0, 230.0, 168.0]])
+            for r in range(h):
+                v = 1.0 - r / float(h)
+                if v <= v0:
+                    continue
+                if v < 0.5 * (v0 + v1):
+                    w = (v - v0) / (0.5 * (v0 + v1) - v0); ref[r] = pink * (1 - w) + peach * w
+                else:
+                    w = min(1.0, (v - 0.5 * (v0 + v1)) / (v1 - 0.5 * (v0 + v1))); ref[r] = peach * (1 - w) + gold * w
         I.fromarray(np.clip(np.repeat(ref, a.shape[1], axis=1), 0, 255).astype('uint8'), 'RGB').save(out)
     for im in bpy.data.images:
         if tex_name in os.path.basename(im.filepath):
