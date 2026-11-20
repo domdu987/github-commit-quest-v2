@@ -11,10 +11,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 PROJ = os.path.normpath(os.path.join(HERE, "..", "..", ".."))
 # ---- per-take configuration (keep in step with shot.py) -------------------------------------------------------------------------
 CFG = dict(
-    take="s25", shot=25, g0=1853, g1=1912, h_in=4, h_out=4,
-    tin=dict(type="cut", frames=0), tout=dict(type="cut", frames=0, at=1912, to_shot=26),
-    cuts=[1853, 1912],                          # hard cut in (from shot 24) and out (to shot 26)
-    events=dict(word_that_one_place=1879, snap_push=[1877, 1892], fork_bite_rel=[19], wine_sip_rel=[38, 78]),
+    take="s25", shot=25, g0=1853, g1=1912, h_in=6, h_out=4,
+    tin=dict(type="match-dissolve", frames=9, from_shot=24, note="starts on the framing matching the end of s24 (head x~330 y~680, 165 px, same fork-cycle phase)"), tout=dict(type="cut", frames=0, at=1912, to_shot=26),
+    cuts=[1912],                          # hard cut in (from shot 24) and out (to shot 26)
+    events=dict(word_that_one_place=1879, snap_push=[1877, 1892], fork_bite_rel=[19], wine_sip=[1873, 1913]),
     set="v3/set3d20 RESTO preset resto_table, light DAY, year 1889 (wine glass + bread basket FG from the set)",
     cast="v3/cast20 maupassant seated (maupassant_seated_eat / _eat_chew / _toast arms blended: fork bite, chew, sip of wine, fork bite; napkin; seat_h 0.865 D; mouth a still smile); stand-in card hidden",
     camera="custom 22 mm, resto_table pose 0.6 D closer, 0.55 D to the side; c20.CamPath push 8 %/s + slide -40 px/s + arc -2.5 deg/s + tilt 4 deg, decay 0.3 + SNAP PUSH x1.6 g 1877..1892 on 'ที่เดียว' (event 1879)",

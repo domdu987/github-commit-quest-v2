@@ -20,7 +20,7 @@ WORK = os.path.join(HERE, "work")
 
 SHOT = 25
 G0, G1 = C.g_bound(61.77), C.g_bound(63.72)    # 1853, 1912 (plan 61.77-63.72 s): shot = g 1853..1911
-H_IN, H_OUT = 4, 4                              # cut in, cut out
+H_IN, H_OUT = 6, 4                              # 9-frame MATCH-DISSOLVE in from s24 (6 handle frames), cut out
 G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1     # 76..185
 GS = list(range(G_FIRST, G_LAST + 1))
 G_EVERY = C.g_of(62.52)                          # snap push event: "ที่เดียว" (62.52 s)
@@ -32,12 +32,12 @@ SEAT_H = 0.865                                  # chair seat 0.46 m in D
 HEAD_Z = float(os.environ.get("HEAD_Z", "2.35"))  # head centre above the feet mark (probe-tuned)
 PPD = 256
 CANVAS = cast20.CANVAS20["maupassant"]
-CAM_CLOSER = float(os.environ.get("CAM_CLOSER", "0.6"))   # D closer than the preset along the view
+CAM_CLOSER = float(os.environ.get("CAM_CLOSER", "1.45"))   # D closer than the preset along the view
 TILT0 = float(os.environ.get("TILT0", "4.0"))
 
 EAT = cast20.STORY20["maupassant_seated_eat"][1]
 CHEW = cast20.STORY20["maupassant_seated_eat_chew"][1]
-LAT = float(os.environ.get("LAT", "1.05"))
+LAT = float(os.environ.get("LAT", "0.25"))
 PERIOD = 40.0                                   # frames per fork cycle
 BLINKS = [1842, 1880]
 
@@ -50,7 +50,7 @@ def cam_path(A):
     fw = (subj - c).normalized()
     lat = Vector((fw.y, -fw.x, 0.0)).normalized() * LAT        # parallel shift: the head starts left of centre and the slide carries it right
     c, subj = c + lat, subj + lat
-    return C.CamPath(c, subj, G_FIRST, G_LAST, push=0.15, slide_px=-70.0, rise_px=0.0, arc_deg_s=-3.0, tilt0=TILT0, tilt_deg_s=0.0,
+    return C.CamPath(c, subj, G_FIRST, G_LAST, push=0.15, slide_px=-55.0, rise_px=0.0, arc_deg_s=-3.0, tilt0=TILT0, tilt_deg_s=0.0,
                      decay=0.3, snaps=[dict(g=SNAP, k=1.6, peak=1.7, shift=(-0.1, 0.0), tilt=-1.0)])
 
 
@@ -63,37 +63,39 @@ def cam_path_static():
 
 
 TOAST = cast20.STORY20["maupassant_seated_toast"][1]
-T_A, T_B, T_C = 0, 38, 78                       # relative frames: fork cycle | wine sip | fork again
+G_BITE = 1817                                   # s24's first bite: the fork cycle is the SAME function of g in s24 and here (match-dissolve)
+G_SIP0, G_SIP1 = 1873, 1913                     # wine sip (glass raised ~1893, lowered at the end of the shot)
 
 
 def pose_of(g):
-    """fork bite (rel 0..44) -> wine sip (44..84) -> fork bite again; arm hands are blended, the prop swaps at the lowest point
-    (hand down by the plate); mouth stays a still smile."""
-    r = g - G0
+    """continues s24's fork cycle (bite at 1817, 1857, ...) so the match-dissolve is seamless, then a sip of wine g 1873..1913."""
     p = dict(EAT)
     p["seated"], p["seat_h"], p["napkin"], p["mouth"] = 1, SEAT_H, 1, "smile"
     ae, ac, at_ = EAT["arm_r"], CHEW["arm_r"], TOAST["arm_r"]
-    if T_A <= r < T_B or r >= T_C:
-        per = (r - (T_C if r >= T_C else T_A)) / 40.0
-        s = 0.5 - 0.5 * math.cos(2 * math.pi * per)
+    sip = G_SIP0 <= g < G_SIP1
+    if not sip:
+        s = 0.5 - 0.5 * math.cos(2 * math.pi * ((g - G_BITE) / PERIOD) + math.pi)
         hand = (lerp(ac["hand"][0], ae["hand"][0], s), lerp(ac["hand"][1], ae["hand"][1], s))
         p["arm_r"] = dict(ae, hand=hand, bend=lerp(ac["bend"], ae["bend"], s))
         p["prop_r"] = dict(EAT["prop_r"], angle=lerp(CHEW["prop_r"]["angle"], EAT["prop_r"]["angle"], s))
-        p["bite"] = 1.0 if s > 0.45 else 0.0
+        p["bite"] = 1.0 if s > 0.5 else 0.0
+        p["pitch"] = 0.02 + 0.06 * (1 - s)
+        p["head_roll"] = 2.5 * math.sin(2 * math.pi * (g - G_BITE) / PERIOD + 1.0)
+        p["lean"] = 2.0 * s + 0.8 * math.sin(g * 0.17)
     else:
-        u = (r - T_B) / float(T_C - T_B)
-        s = math.sin(math.pi * u) ** 1.2                    # 0 -> 1 (glass raised) -> 0
+        u = (g - G_SIP0) / float(G_SIP1 - G_SIP0)
+        s = math.sin(math.pi * u) ** 1.2
         hand = (lerp(ac["hand"][0], at_["hand"][0], s), lerp(ac["hand"][1], at_["hand"][1], s))
         p["arm_r"] = dict(at_, hand=hand, bend=lerp(ac["bend"], at_["bend"], s))
         p["prop_r"] = dict(TOAST["prop_r"])
         p["bite"] = 0.0
-    p["yaw"] = 0.32 + 0.07 * math.sin(g * 0.11)
-    p["pitch"] = 0.02 + (-0.15 * s if T_B <= r < T_C else 0.06 * (1 - s))
-    p["head_roll"] = 2.5 * math.sin(g * 0.157 + 1.0) - (3.0 * s if T_B <= r < T_C else 0)
-    p["lean"] = 1.5 * s + 0.8 * math.sin(g * 0.17)
+        p["pitch"] = 0.02 - 0.15 * s
+        p["head_roll"] = 2.5 * math.sin(g * 0.157 + 1.0) - 3.0 * s
+        p["lean"] = 1.5 * s + 0.8 * math.sin(g * 0.17)
+    p["yaw"] = 0.30 + 0.07 * math.sin(g * 0.11)                 # same as s24
     ch = 0.5 + 0.5 * math.sin(g * 0.52)
-    p["squash"] = (1.0 + 0.012 * ch, 1.0 - 0.012 * ch)
-    p["blink"] = blink(g, BLINKS)
+    p["squash"] = (1.0 + 0.012 * (1 - s) if not sip else 1.0, 1.0 - 0.012 * (1 - s) if not sip else 1.0)
+    p["blink"] = blink(g, [1838, 1880])
     p["t"] = g / 30.0
     return p
 

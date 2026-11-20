@@ -11,14 +11,14 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 PROJ = os.path.normpath(os.path.join(HERE, "..", "..", ".."))
 # ---- per-take configuration (keep in step with shot.py) -------------------------------------------------------------------------
 CFG = dict(
-    take="s24", shot=24, g0=1732, g1=1852, h_in=8, h_out=4,
-    tin=dict(type="dissolve", frames=13, from_shot=23), tout=dict(type="cut", frames=0, at=1852, to_shot=25),
-    cuts=[1852],                                # planned cut g's for qa_auto (hard cut out to shot 25; the dissolve in is not a cut)
+    take="s24", shot=24, g0=1732, g1=1853, h_in=8, h_out=6,
+    tin=dict(type="dissolve", frames=13, from_shot=23), tout=dict(type="match-dissolve", frames=9, at=1853, to_shot=25, note="ends on the medium of Maupassant in the window; s25 starts inside on the matching framing (same pose cycle)"),
+    cuts=[],                                # planned cut g's for qa_auto (hard cut out to shot 25; the dissolve in is not a cut)
     events=dict(bigzoom="BIGZOOM 2: g 1724..1817 (extreme wide on Paris + whole tower -> medium of Maupassant at his window table)", first_bite=1817, land=1819),
     set="v3/set3d20 TOWER preset tower_window_pull (lit first-floor restaurant window, whole tower + Paris + fair crowd 2), DAY 1889; preset FG iron post hidden at runtime",
     cast="v3/cast20 maupassant seated (maupassant_seated_eat / _eat_chew arms blended, napkin, seat_h 0.865 D, mouth a still smile) at mark maupassant_window; first bite (fork at the mouth) at g 1817 on 'กินข้าวบนหอ'; stand-in card hidden",
-    camera="ONE continuous move (no cut), custom 22 mm: start 213 m from the window, 95 m above it, 30 m left (the whole tower + Paris, he is a 5 px speck in the window); smootherstep ease-in/out of log-distance (205 m -> 2.2 m) with the direction blended, aim from mid-tower to his head; passes the lattice girders of the first platform; lands g 1819 on a medium (head 155 px); then a slow push + slide until the cut at g 1852",
-    cue_note_cut_out="hard cut to shot 25 (RESTO resto_table, eating from inside): the outdoor wind drops to the room tone",
+    camera="ONE continuous move (no cut), custom 22 mm: start 213 m from the window, 95 m above it, 30 m left (the whole tower + Paris, he is a 5 px speck in the window); smootherstep ease-in/out of log-distance (205 m -> 2.2 m) with the direction blended, aim from mid-tower to his head; passes the lattice girders of the first platform; lands g 1819 on a medium (head 155 px); then a slow push + slide until the match-dissolve into s25 at g 1853",
+    cue_note_cut_out="9-frame match-dissolve into shot 25 (inside, same table, same bite cycle): the outdoor wind fades to the room tone",
 )
 MB_LIMIT = 45e6
 G0, G1, H_IN, H_OUT = CFG["g0"], CFG["g1"], CFG["h_in"], CFG["h_out"]

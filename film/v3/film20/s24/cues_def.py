@@ -5,4 +5,4 @@ def CUES(add, CFG, G0, G1, H_IN, H_OUT):
     add(1810, 1822, "accent", "landing on Maupassant: soft glass-and-room 'pop' as the window room tone arrives", peak_frame=1815)
     add(1815, 1819, "foley", "first happy bite on 'กินข้าวบนหอ': fork clinks on the plate, a blissful nasal hum without words (mouth stays still)", peak_frame=1817)
     add(1834, 1840, "foley", "second bite, napkin rustle and a glass tinkle", peak_frame=1837)
-    add(G1, G1, "cut", CFG["cue_note_cut_out"])
+    add(G1 - 4, G1 + 5, "dissolve", CFG["cue_note_cut_out"])

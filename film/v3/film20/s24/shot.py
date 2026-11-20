@@ -22,7 +22,7 @@ WORK = os.path.join(HERE, "work")
 
 SHOT = 24
 G0, G1 = C.g_bound(57.75), 1852                 # 1732, 1852 (exclusive): shot = g 1732..1851 (plan: 57.75-61.77 s)
-H_IN, H_OUT = 8, 4
+H_IN, H_OUT = 8, 6                              # dissolve 13 in (13/2 + 2); 9-frame MATCH-DISSOLVE out into s25 (6 handle frames)
 G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1     # 1724..1855
 GS = list(range(G_FIRST, G_LAST + 1))
 G_BITE = C.g_of(60.48 - 0.10)                   # 1817: "กินข้าวบนหอ" starts at 60.48 narration s -> first bite lands here
