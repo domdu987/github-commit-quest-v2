@@ -1,0 +1,17 @@
+s03 start sat 0.780 luma 65.3 vivid 86.5 shade_hue 248.3
+s03 mid sat 0.913 luma 38.6 vivid 95.0 shade_hue 242.7
+s03 end sat 0.510 luma 110.4 vivid 60.1 shade_hue 253.9
+s09 start sat 0.690 luma 91.7 vivid 70.6 shade_hue 267.0
+s09 mid sat 0.681 luma 86.2 vivid 79.1 shade_hue 260.9
+s09 end sat 0.662 luma 89.3 vivid 73.9 shade_hue 258.1
+s10 start sat 0.721 luma 84.0 vivid 79.8 shade_hue 243.4
+s10 end sat 0.670 luma 99.0 vivid 73.9 shade_hue 251.9
+s11 start sat 0.691 luma 104.1 vivid 75.1 shade_hue 259.3
+s11 mid sat 0.524 luma 131.0 vivid 50.6 shade_hue 257.8
+s11 end sat 0.292 luma 164.5 vivid 9.3 shade_hue 229.6
+s12 start sat 0.566 luma 100.7 vivid 53.2 shade_hue 242.5
+s12 end sat 0.542 luma 107.8 vivid 50.5 shade_hue 243.0
+s13 start sat 0.703 luma 84.5 vivid 78.0 shade_hue 257.1
+s13 end sat 0.656 luma 97.9 vivid 72.7 shade_hue 264.7
+s14 start sat 0.752 luma 76.2 vivid 74.1 shade_hue 241.8
+s14 end sat 0.370 luma 111.2 vivid 40.5 shade_hue 235.6

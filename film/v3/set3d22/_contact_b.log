@@ -1,0 +1,35 @@
+00:00.342  cycles           | WARNING CUEW initialization failed: Error opening the library
+contact/B_s03_start.png frame 192 8.6s wall 33.3s cpu
+00:00.403  cycles           | WARNING CUEW initialization failed: Error opening the library
+contact/B_s03_mid.png frame 258 4.3s wall 16.5s cpu
+00:00.319  cycles           | WARNING CUEW initialization failed: Error opening the library
+contact/B_s03_end.png frame 323 8.6s wall 32.8s cpu
+00:00.328  cycles           | WARNING CUEW initialization failed: Error opening the library
+contact/B_s09_start.png frame 1005 7.9s wall 30.5s cpu
+00:00.414  cycles           | WARNING CUEW initialization failed: Error opening the library
+contact/B_s09_mid.png frame 1101 7.4s wall 28.4s cpu
+00:00.310  cycles           | WARNING CUEW initialization failed: Error opening the library
+contact/B_s09_end.png frame 1196 7.5s wall 29.0s cpu
+00:00.330  cycles           | WARNING CUEW initialization failed: Error opening the library
+contact/B_s10_start.png frame 1197 7.5s wall 29.0s cpu
+00:00.337  cycles           | WARNING CUEW initialization failed: Error opening the library
+contact/B_s10_end.png frame 1300 7.1s wall 27.5s cpu
+00:00.299  cycles           | WARNING CUEW initialization failed: Error opening the library
+contact/B_s11_start.png frame 1301 7.3s wall 28.4s cpu
+00:00.389  cycles           | WARNING CUEW initialization failed: Error opening the library
+contact/B_s11_mid.png frame 1393 7.0s wall 27.1s cpu
+00:00.387  cycles           | WARNING CUEW initialization failed: Error opening the library
+contact/B_s11_end.png frame 1484 3.5s wall 13.4s cpu
+00:00.372  cycles           | WARNING CUEW initialization failed: Error opening the library
+contact/B_s12_start.png frame 1485 5.0s wall 18.6s cpu
+00:00.378  cycles           | WARNING CUEW initialization failed: Error opening the library
+contact/B_s12_end.png frame 1558 6.0s wall 22.3s cpu
+00:00.322  cycles           | WARNING CUEW initialization failed: Error opening the library
+contact/B_s13_start.png frame 1559 7.2s wall 28.0s cpu
+00:00.356  cycles           | WARNING CUEW initialization failed: Error opening the library
+contact/B_s13_end.png frame 1661 7.8s wall 30.0s cpu
+00:00.557  cycles           | WARNING CUEW initialization failed: Error opening the library
+contact/B_s14_start.png frame 1662 5.0s wall 18.4s cpu
+00:00.362  cycles           | WARNING CUEW initialization failed: Error opening the library
+contact/B_s14_end.png frame 1751 6.2s wall 22.8s cpu
+DONE

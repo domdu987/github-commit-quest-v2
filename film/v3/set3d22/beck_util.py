@@ -12,7 +12,7 @@ from beck import V, T, STATE, BX
 import bpy
 
 HERE = B.HERE
-UTEX_V = 6
+UTEX_V = 7
 ORG = V((0.0, 0.0, 0.0))
 
 def set_org(x, y, z):
@@ -21,10 +21,16 @@ def set_org(x, y, z):
 
 # ----------------------------------------------------------------------------- Part / lights with the origin
 class Pt(B.Part):
-    """B.Part + ORG: geometry is built in local coordinates; the object is moved by ORG when finished."""
+    """B.Part + ORG: geometry is built in local coordinates; the object is moved by ORG when finished.
+    hd = ink distance: the hull is sized as if the camera were hd D from the part (shots whose camera range spans 4 .. 400 D set it by hand)."""
+    def __init__(s, name, at=None, ink=True, shadow=True, camera_only=False, hd=None):
+        B.Part.__init__(s, name, at, ink, shadow, camera_only); s.hd = hd
     def done(s, at=None, px=3.0):
         at = V(at or s.at or (0, 0, 0)) + ORG
-        ob = B.Part.done(s, at, px)
+        if s.hd:
+            keep = STATE['cam']; STATE['cam'] = at + V((0, 0, s.hd))
+            ob = B.Part.done(s, at, px); STATE['cam'] = keep
+        else: ob = B.Part.done(s, at, px)
         ob.location = ob.location + ORG
         return ob
 
@@ -107,7 +113,7 @@ def tex_hall_floor(W=512, H=512):
     img = Image.new('RGB', (W, H), '#c9b890'); d = ImageDraw.Draw(img); s = W // 4
     for i in range(4):
         for j in range(4):
-            if (i + j) % 2: d.rectangle((i * s, j * s, (i + 1) * s, (j + 1) * s), fill='#7a2a3a')
+            if (i + j) % 2: d.rectangle((i * s, j * s, (i + 1) * s, (j + 1) * s), fill='#3a3a8a')
             d.polygon([(i * s + s // 2, j * s + 6), (i * s + s - 6, j * s + s // 2), (i * s + s // 2, j * s + s - 6), (i * s + 6, j * s + s // 2)], outline='#e8dcb8', width=3)
     a = np.asarray(img, 'float32') / 255 * (0.9 + BX.noise(np.random.RandomState(8), H, W, 5, 0.18))[..., None]
     return Image.fromarray((np.clip(a, 0, 1) * 255).astype('uint8'))
@@ -182,7 +188,7 @@ def move_actor(name, mark):
 
 def face_cards(cam_loc=None):
     """Re-face every camera-facing card to the camera (yaw only, plus the lean-back tilt)."""
-    cam = bpy.context.scene.camera; c = V(cam_loc) if cam_loc is not None else cam.matrix_world.translation
+    cam = bpy.context.scene.camera; c = V(cam_loc) if cam_loc is not None else V(cam.location)
     for ob, tilt in BILL:
         d = c - ob.location; yaw = math.atan2(d.x, -d.y); ob.rotation_euler = (math.radians(-tilt), 0, yaw)
 

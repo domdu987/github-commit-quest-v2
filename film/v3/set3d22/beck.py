@@ -35,6 +35,8 @@ _B = dict(toon=1.0, key_desat=0.0, ink='#1a1450', form=(0.0, -0.05, 0.22), bloom
 LIGHTS = dict(
     DUSK_CITY=dict(_B, key=(1.9, 1.0, 0.42), key_dir=kdir(60, 11), shade=(0.10, 0.10, 0.40), shade_tint=(0.085, 0.095, 0.44), shade_mix=0.8,
                    grade_offset=(-0.004, -0.006, 0.0), lift=(0.040, 0.036, 0.086), grade_saturation=1.18),
+    NIGHT_CITY=dict(_B, key=(0.34, 0.46, 0.95), key_dir=kdir(235, 38), shade=(0.07, 0.09, 0.40), shade_tint=(0.06, 0.08, 0.44), shade_mix=0.9,
+                    grade_offset=(-0.004, -0.006, 0.002), lift=(0.030, 0.030, 0.080), grade_saturation=1.22, night=True),
     LODGINGS=dict(_B, key=(0.0, 0.0, 0.0), key_dir=kdir(0, 60), shade=(0.09, 0.15, 0.46), shade_tint=(0.06, 0.14, 0.56), shade_mix=0.92,
                   grade_offset=(0.0, -0.006, 0.004), lift=(0.006, 0.014, 0.054), grade_saturation=1.32, toon=0.8),
     PLATFORM=dict(_B, key=(0.0, 0.0, 0.0), key_dir=kdir(0, 60), shade=(0.09, 0.14, 0.46), shade_tint=(0.06, 0.12, 0.55), shade_mix=0.8,
@@ -56,7 +58,7 @@ def setup(lkey, cam_setup, quality='final', sky=False):
     w = bpy.data.worlds.get('W_beck') or bpy.data.worlds.new('W_beck'); scene.world = w; nt = T._tree(w)
     bg = nt.nodes.new('ShaderNodeBackground'); wo = nt.nodes.new('ShaderNodeOutputWorld'); bg.inputs['Color'].default_value = (0.02, 0.03, 0.12, 1); bg.inputs['Strength'].default_value = 1.0
     if sky:
-        env = nt.nodes.new('ShaderNodeTexEnvironment'); env.image = T._img(tx['sky']); lp = nt.nodes.new('ShaderNodeLightPath')
+        env = nt.nodes.new('ShaderNodeTexEnvironment'); env.image = T._img(tx['sky_night'] if lkey == 'NIGHT_CITY' else tx['sky']); lp = nt.nodes.new('ShaderNodeLightPath')
         nt.links.new(env.outputs['Color'], bg.inputs['Color']); nt.links.new(lp.outputs['Is Camera Ray'], bg.inputs['Strength'])
     else:
         lp = nt.nodes.new('ShaderNodeLightPath'); nt.links.new(lp.outputs['Is Camera Ray'], bg.inputs['Strength'])
@@ -793,7 +795,7 @@ def set_frame_cam(shot, g, scene=None):
 
 # ----------------------------------------------------------------------------- cast22 cards (the real cast, painted by the puppet pipeline, as camera-facing cards)
 _CAST_CARDS = {}
-def cast_card(story, mark, face_to=None, yaw_deg=None, tilt=0.0, mirror=False, pose=None, rim='#9fb8ff', rim_w=0.022, name=None, ppd=230, scale=1.0, cast=None, shadow=True):
+def cast_card(story, mark, face_to=None, yaw_deg=None, tilt=None, roll=0.0, mirror=False, pose=None, rim='#9fb8ff', rim_w=0.022, name=None, ppd=230, scale=1.0, cast=None, shadow=True):
     """One cast22 pose (`story` = a cast22.STORY22 key, or a (cast, pose_dict) pair) as a card standing at `mark` (x, y, z), figure units are D so
     world scale is exact (beck about 3.1 D). The card turns to face `face_to` (yaw only), or has the explicit yaw_deg (0 = faces -y), leaning back `tilt` deg.
     pose = dict of pose-key overrides (e.g. board=0, mouth=...). rim = painted rim light colour (cool indoors, warm '#ffb070' outdoors). Returns the object."""
@@ -823,11 +825,15 @@ def cast_card(story, mark, face_to=None, yaw_deg=None, tilt=0.0, mirror=False, p
     for i, c in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uvl.data[i].uv = c
     me.materials.append(mat_card(name + '_mat', pp))
     ob = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(ob); ob.location = tuple(mark[:3]); no_bounce(ob)
+    if tilt is None:                                                    # lean back toward a high camera (half-way, so the figure stays upright-looking)
+        tilt = 0.0
+        if face_to is not None:
+            d_ = V(face_to) - V((mark[0], mark[1], mark[2] + 1.5)); hz = math.hypot(d_.x, d_.y); tilt = max(0.0, min(62.0, 0.8 * math.degrees(math.atan2(d_.z, max(hz, 1e-3)))))
     yaw = 0.0
     if yaw_deg is not None: yaw = math.radians(yaw_deg)
     elif face_to is not None:
         d = V(face_to) - V(mark[:3]); yaw = math.atan2(d.x, -d.y)
-    ob.rotation_euler = (math.radians(-tilt), 0, yaw)
+    ob.rotation_mode = 'YXZ'; ob.rotation_euler = (math.radians(-tilt), math.radians(roll), yaw); ob['roll'] = roll
     ob['feet_w'] = (bx1 - bx0) * 0.45 * k; ob['anc'] = {kk: ((vv[0] - fx) * k, (fy - vv[1]) * k) for kk, vv in f['anchors'].items() if isinstance(vv, (tuple, list)) and len(vv) == 2}
     if shadow: card_shadow(ob)
     return ob
@@ -838,19 +844,28 @@ def card_shadow(ob):
     sh = Part('shadow_' + ob.name, ink=False, shadow=False)
     plane(sh.mb, (mark[0] - fw * 0.8, mark[1] - fw * 0.5, mark[2] + 0.03), (fw * 1.6, 0, 0), (0, fw * 1.0, 0), STATE['E']('blob', 'blob', alpha=True), (0, 0, 1, 1)); sh.done()
 
+def _anc_off(ob, name):
+    ax, az = ob['anc'][name]; yaw = ob.rotation_euler[2]; t = -ob.rotation_euler[0]; r = math.radians(ob.get('roll', 0.0))
+    ax, az = ax * math.cos(r) + az * math.sin(r), -ax * math.sin(r) + az * math.cos(r)
+    lx, ly, lz = ax, az * math.sin(t), az * math.cos(t)
+    return V((lx * math.cos(yaw) - ly * math.sin(yaw), lx * math.sin(yaw) + ly * math.cos(yaw), lz))
+
 def card_anchor(ob, name):
-    """World position of a puppet anchor ('pen_r', 'hand_r', 'head', ...) of a cast card."""
-    ax, az = ob['anc'][name]; yaw = ob.rotation_euler[2]
-    return V(ob.location) + V((math.cos(yaw), math.sin(yaw), 0)) * ax + V((0, 0, 1)) * az
+    """World position of a puppet anchor ('pen_r', 'hand_r', 'head', ...) of a cast card (yaw and lean-back tilt included)."""
+    return V(ob.location) + _anc_off(ob, name)
 
 def place_tip(story, anchor, tip, face_to, ground_z=0.0, toward_cam=0.0, **kw):
-    """Cast card whose `anchor` (e.g. 'pen_r' = pen nib) sits exactly on the world point `tip`, standing on z = ground_z, facing face_to
-    (the position is solved in the card plane: x along the card, z up; depth follows from the tip). Returns the object."""
-    if toward_cam: tip = V(face_to) + (V(tip) - V(face_to)) * (1.0 - toward_cam)          # slide along the view ray: same screen point, card in front of the board
+    """Cast card whose `anchor` (e.g. 'pen_r' = pen nib) sits exactly on the world point `tip`, standing on z = ground_z (None = not clamped, for
+    tilted cards), facing face_to (yaw only; slide `toward_cam` of the way along the view ray to keep the card in front of a board).
+    The position is solved in the card plane; depth follows from the tip. Returns the object."""
+    if toward_cam: tip = V(face_to) + (V(tip) - V(face_to)) * (1.0 - toward_cam)
     d = V(face_to) - V(tip); kw.setdefault('yaw_deg', math.degrees(math.atan2(d.x, -d.y)))
-    ob = cast_card(story, (0, 0, ground_z), shadow=False, **kw)
-    yaw = ob.rotation_euler[2]; ax, az = ob['anc'][anchor]; r = V((math.cos(yaw), math.sin(yaw), 0))
-    ob.location = V(tip) - r * ax - V((0, 0, az)); ob.location.z = ground_z
+    ob = cast_card(story, (0, 0, ground_z or 0.0), shadow=False, **kw)
+    if ground_z is not None and not kw.get('tilt'):                     # scale the card a little so the feet are on the floor AND the tip on the point
+        az = ob['anc'][anchor][1]; k = max(0.9, min(1.15, (V(tip).z - ground_z) / az)) if az > 0.2 else 1.0
+        if abs(k - 1.0) > 0.01: bpy.data.objects.remove(ob, do_unlink=True); kw['scale'] = k; ob = cast_card(story, (0, 0, ground_z), shadow=False, **kw)
+    ob.location = V(tip) - _anc_off(ob, anchor)
+    if ground_z is not None and not kw.get('tilt'): ob.location.z = ground_z
     return ob
 
 LIGHT_ALIAS = {'DUSK': 'DUSK_CITY', 'NIGHT': 'NIGHT_CITY'}
@@ -864,9 +879,13 @@ def build(location, light=None, shot=None, quality='final', frame=None):
     cam0 = dict(loc['cam']) if 'cam' in loc else dict(loc=(0, -10, 5), look_at=(0, 10, 3), lens=30)
     if sh: l_, k_, ln_, _ = cam_eval(sh['cam'], (sh['f0'] if frame is None else frame) - sh['f0']); cam0 = dict(loc=tuple(l_), look_at=tuple(k_), lens=ln_, shift_y=sh.get('shift_y', 0.0))
     scene, P = setup(light, cam0, quality, sky=loc.get('sky', False))
+    if sh:
+        for k, v in sh.get('pre', {}).items(): SETTERS[k](v)
     loc['build'](scene, P)
     if sh:
         for k, v in sh.get('state', {}).items(): SETTERS[k](v)
+        gg = sh['f0'] if frame is None else frame
+        for k, fn in sh.get('animate', {}).items(): fn(gg - sh['f0'], sh['f1'] - sh['f0'])
         if 'actors' in sh: sh['actors'](sh['f0'] if frame is None else frame)
         set_frame_cam(shot, sh['f0'] if frame is None else frame)
     setup_grade(scene)

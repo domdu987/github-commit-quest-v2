@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, 'tex_beck')
-TEX_V = 15
+TEX_V = 18
 FB = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 FN = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
 FS = '/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf'
@@ -220,6 +220,17 @@ def dusk_sky(W=2048, H=1024):
         b = rs.uniform(.6, 1.0); img[sy:sy + 2, sx:sx + 2] = np.array((1, 0.95, 0.8), "float32") * b
     return Image.fromarray((np.clip(img, 0, 1) * 255).astype('uint8'))
 
+def night_sky(W=2048, H=1024):
+    y = np.linspace(0, 1, H)[:, None]; t = np.clip((0.5 - y) / 0.5, 0, 1); c = np.zeros((H, 1, 3), 'float32')
+    stops = [(0.0, (0.46, 0.26, 0.40)), (0.025, (0.30, 0.18, 0.46)), (0.07, (0.07, 0.10, 0.46)), (0.4, (0.035, 0.06, 0.34)), (1.0, (0.02, 0.04, 0.26))]
+    for i in range(H):
+        tt = t[i, 0]
+        if y[i, 0] > 0.5: c[i, 0] = np.array(stops[0][1]) * 0.5
+        else:
+            for (t0, c0), (t1, c1) in zip(stops, stops[1:]):
+                if t0 <= tt <= t1: k = (tt - t0) / (t1 - t0); c[i, 0] = np.array(c0) * (1 - k) + np.array(c1) * k; break
+    return Image.fromarray((np.clip(np.repeat(c, W, 1), 0, 1) * 255).astype('uint8'))
+
 def skyline(W=2048, H=512, seed=2):
     """1930s London far skyline cutout (RGBA): low near-black blue roofs, chimneys, 2 spires, the dome, Big Ben, a gasholder, smoke plumes."""
     rs = random.Random(seed); img = Image.new('RGBA', (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(img); base = H; sil = (20, 24, 56, 255)
@@ -241,10 +252,6 @@ def skyline(W=2048, H=512, seed=2):
     def spire(cx, h, w=14):
         d.polygon([(cx - w / 2, base - 60), (cx, base - 60 - h), (cx + w / 2, base - 60)], fill=sil); d.rectangle((cx - w / 2, base - 100, cx + w / 2, base), fill=sil)
     spire(420, 100); spire(1500, 90)
-    # dome with lantern (St Paul's): drum + dome + lantern + ball
-    dx = 1000; d.rectangle((dx - 70, base - 110, dx + 70, base), fill=sil); d.pieslice((dx - 60, base - 215, dx + 60, base - 95), 180, 360, fill=sil); d.rectangle((dx - 8, base - 250, dx + 8, base - 205), fill=sil); d.ellipse((dx - 6, base - 262, dx + 6, base - 250), fill=sil)
-    # Big Ben: tall thin tower, lit clock face
-    bx = 1750; d.rectangle((bx - 16, base - 230, bx + 16, base), fill=sil); d.polygon([(bx - 18, base - 230), (bx, base - 290), (bx + 18, base - 230)], fill=sil); d.ellipse((bx - 11, base - 214, bx + 11, base - 192), fill=(255, 230, 150, 255))
     # gasholder ring
     gx = 700; d.rectangle((gx - 60, base - 70, gx + 60, base), fill=sil); d.arc((gx - 60, base - 100, gx + 60, base - 40), 180, 360, fill=sil, width=6)
     return img
@@ -260,6 +267,9 @@ def river(W=1024, H=1024):
         for yy in range(0, H, 22):
             if nr.rand() < .75: l = nr.randint(18, 60); x0 = xx + nr.randint(-14, 14); d.rectangle((x0, yy, x0 + l * .5, yy + 7), fill=(255, 200 + nr.randint(0, 50), 110))
     return img
+
+def farground_dark(W=8, H=512):
+    a = np.zeros((H, W, 3), 'float32'); a[:] = (0.06, 0.07, 0.22); return Image.fromarray((a * 255).astype('uint8'))
 
 def farground(W=8, H=512):
     y = np.linspace(0, 1, H)[:, None, None]; c0 = np.array([0.30, 0.16, 0.50]); c1 = np.array([1.0, 0.55, 0.2])
@@ -315,7 +325,7 @@ def pavement(W=512, H=512, base=(0.55, 0.52, 0.66)):
 def grate(W=512):
     img = Image.new('RGB', (W, W), '#150f1a'); d = ImageDraw.Draw(img); g = Image.new('RGB', (W, W), (0, 0, 0)); gd = ImageDraw.Draw(g)
     for i in range(10):
-        x = 30 + i * 46; d.rectangle((x, 24, x + 26, W - 24), fill=(255, 170, 70)); gd.rectangle((x, 24, x + 26, W - 24), fill=(255, 190, 90))
+        x = 30 + i * 46; d.rectangle((x, 24, x + 26, W - 24), fill=(150, 70, 30)); gd.rectangle((x, 24, x + 26, W - 24), fill=(255, 150, 55))
     d.rectangle((0, 0, W - 1, W - 1), outline='#3a3050', width=22)
     return img, g
 
@@ -515,13 +525,12 @@ def paper_grid(W=1024, H=740):
     return img
 
 def rag_rug(W=512, H=512):
-    img = Image.new('RGB', (W, H), '#7a2a3a'); d = ImageDraw.Draw(img); rr = random.Random(3)
-    cols = ['#c4272f', '#1f49c8', '#e8b43a', '#12a15a', '#f0e4c8', '#7a3a8a']
+    img = Image.new('RGB', (W, H), '#4a1a2a'); d = ImageDraw.Draw(img); rr = random.Random(3)
+    cols = ['#8a2a3a', '#1f3f86', '#c8982e', '#2a6a4e', '#d8c8a0', '#6a2a7a']
     for i in range(9, 0, -1):
-        r = i * 27; d.ellipse((W / 2 - r * 1.0, H / 2 - r * 1.0, W / 2 + r * 1.0, H / 2 + r * 1.0), fill=cols[i % len(cols)], outline='#2a1430', width=4)
-    for _ in range(900):
-        x, y = rr.uniform(0, W), rr.uniform(0, H); d.line((x, y, x + rr.uniform(-8, 8), y + rr.uniform(-8, 8)), fill=rr.choice(cols), width=2)
-    return img
+        r = i * 27; d.ellipse((W / 2 - r, H / 2 - r, W / 2 + r, H / 2 + r), fill=cols[i % len(cols)], outline='#2a1430', width=3)
+    a = np.asarray(img, 'float32') / 255; nr = np.random.RandomState(4); a = a * (0.82 + noise(nr, H, W, 4, 0.3))[..., None]
+    return Image.fromarray((np.clip(a, 0, 1) * 255).astype('uint8'))
 
 def circuit_sheet(W=640, H=460, seed=1):
     img = Image.new('RGB', (W, H), '#1a3a90'); d = ImageDraw.Draw(img); rr = random.Random(seed)
@@ -541,6 +550,18 @@ def circuit_sheet(W=640, H=460, seed=1):
 
 def cork_wall(W=1024, H=700):
     return cork_board(W, H)
+
+
+def pocket_map(W=512, H=512):
+    """Folded pocket map cover: cream card, red-blue roundel, UNDERGROUND, a mini diagram (stack sides / towers / crates)."""
+    img = Image.new('RGB', (W, H), '#f4ead0'); d = ImageDraw.Draw(img)
+    d.rectangle((0, 0, W - 1, H - 1), outline='#1a1840', width=8)
+    d.rectangle((0, 0, W, 90), fill='#12307a'); d.text((W / 2, 46), 'POCKET MAP', font=font(52, FB), fill='#ffffff', anchor='mm')
+    cx, cy, R = W / 2, 250, 120
+    d.ellipse((cx - R, cy - R, cx + R, cy + R), outline='#e3262b', width=34); d.rectangle((cx - R - 40, cy - 28, cx + R + 40, cy + 28), fill='#1f49c8'); d.text((cx, cy), 'UNDERGROUND', font=font(34, FB), fill='white', anchor='mm')
+    for (x0, y0, x1, y1, col) in ((40, 420, 470, 420, RED), (110, 380, 110, 490, BLUE), (200, 490, 330, 380, GREEN), (400, 380, 400, 490, YELLOW)):
+        d.line((x0, y0, x1, y1), fill=col, width=14)
+    return img
 
 # ----------------------------------------------------------------------------- build all
 def ensure(verbose=False):
@@ -564,7 +585,7 @@ def ensure(verbose=False):
     add('diagram', diagram); add('old_map', old_map); add('old_map_small', lambda: old_map(700, 520))
     pair('hq', hq_facade); pair('lodging', lodging_facade)
     pair('fac_a', lambda: facade('a', 896, 760, 7, 5, '#cbbd9a', 0.34, 21, trim='#e8dcb8', door=False)); pair('fac_b', lambda: facade('b', 896, 760, 7, 5, '#8a3a2a', 0.34, 33, trim='#d8c8a0', door=False)); pair('fac_c', lambda: facade('c', 896, 760, 7, 5, '#6a2c28', 0.34, 44, trim='#cbbd9a'))
-    add('sky', dusk_sky); add('skyline', skyline); add('skyline2', lambda: skyline(2048, 512, 9)); add('river', river)
+    add('sky', dusk_sky); add('sky_night', night_sky); add('farground_dark', farground_dark); add('skyline', skyline); add('skyline2', lambda: skyline(2048, 512, 9)); add('river', river)
     add('farground', farground); add('halo_warm', lambda: halo((1.0, 0.62, 0.22))); add('halo_cool', lambda: halo((0.3, 0.5, 1.0))); add('halo_white', lambda: halo((1.0, 0.9, 0.7))); add('halo_green', lambda: halo((0.35, 1.0, 0.5)))
     add('beam_warm', lambda: beam_glow((1.0, 0.8, 0.45)))
     pair('bus', bus_side); pair('cab', cab_side); pair('grate', grate); add('road', road); add('pave', pavement); add('slate', slate); add('slate2', lambda: slate(base='#4a3a7a'))
@@ -578,7 +599,8 @@ def ensure(verbose=False):
     add('note', lambda: paper_note('')); add('night_city', night_city)
     for i in range(6): add('poster%d' % i, lambda i=i: poster(i))
     add('tiles', station_wall('t')); add('tiles_plain', lambda: station_wall('tp', band=None)); add('tiles_cool', lambda: station_wall('tc', base='#9aa6dc')); add('tiles_cool_plain', lambda: station_wall('tcp', base='#6a78c0', band=None)); add('blob', blob); add('quilt', quilt); pair('train_side', train_side); add('tiles_green', lambda: station_wall('tg', band='#14733f'))
-    add('paper_grid', paper_grid); add('rag_rug', rag_rug)
+    add('crate_maps', lambda: sign('MAPS', '#8a4a22', '#ffe0a0', border='#ffe0a0', w=600, h=360, radius=0.04, sub='REPRINT')); add('sign_dept_door', lambda: sign('PUBLICITY', '#12307a', '#fff1c0', border='#ffc81e', w=700, h=200)); add('sign_signals', lambda: sign('SIGNALS', '#12724a', '#fff1c0', border='#fff1c0', w=700, h=200)); add('sign_drawing', lambda: sign('DRAWING OFFICE', '#7a1a22', '#fff1c0', border='#fff1c0', w=900, h=200)); add('sign_notices', lambda: sign('NOTICES', '#1a1840', '#ffd88a', border='#ffd88a', w=640, h=200)); add('sign_stairs', lambda: sign('STAIRS', '#3a2a6a', '#fff1c0', border='#fff1c0', w=520, h=180))
+    add('pocket_map', pocket_map); add('paper_grid', paper_grid); add('rag_rug', rag_rug)
     for i in range(3): add('circuit%d' % i, lambda i=i: circuit_sheet(seed=i + 1))
     add('clock', clock_face); pair('train_front', train_front); add('floor_pf', floor_platform); add('ballast', ballast)
     return tx
