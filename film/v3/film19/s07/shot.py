@@ -25,14 +25,26 @@ LIGHT, PRESET = "DAY", "hall_window"
 FINAL_SPP = 8
 CONTACT = dict(width=1.6, depth=0.75, color="#1a1626", opacity=0.9)
 
-CAM_LOC0 = (-1.2, -3.8, 2.5)
+CAM_LOC0 = (-2.4, -3.6, 2.5)
 CAM_LOOK0 = (-2.9, 2.6, 2.55)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.08, slide_px=-50.0, rise_px=0.0, arc_deg_s=17.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.9, peak=1.3, shift=(0.1, -0.30))])
+class SwayCam(C.CamPath):
+    """CamPath + a slow lateral sway of the camera body (loc only): parallax of the dense hall that keeps all three astronomers framed."""
+    SWAY_D, SWAY_T = 2.2, 2.4
 
-MARK_A = (-2.9, 2.6, 0.0)                      # astro19 lecturing (faces screen-left, points at the Moon)
-MARK_B = (-1.2, 2.9, 0.0)                      # astro19_b nodding (faces screen-left)
-MARK_C = (-4.7, 2.9, 0.0)                      # astro19_c nodding (faces screen-right)
+    def at(self, g):
+        loc, look = C.CamPath.at(self, g)
+        f = (look - loc).normalized()
+        r = Vector((f.y, -f.x, 0.0)).normalized()
+        ph = 2.0 * math.pi * (g - G_FIRST) / (30.0 * self.SWAY_T)
+        return loc + r * (self.SWAY_D * math.sin(ph)), look
+
+
+CAM = SwayCam(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.03, slide_px=0.0, rise_px=0.0, arc_deg_s=0.0, decay=0.15,
+              snaps=[dict(g=SNAP, k=1.3, peak=2.0, shift=(0.0, -0.10))])
+
+MARK_A = (-2.9, 2.2, 0.0)                      # astro19 lecturing (faces screen-left, points at the Moon)
+MARK_B = (-1.45, 3.2, 0.0)                      # astro19_b nodding (faces screen-left)
+MARK_C = (-4.3, 2.9, 0.0)                      # astro19_c nodding (faces screen-right)
 
 
 def nod(g, ph, amp=0.25, hz=1.8):
@@ -51,7 +63,9 @@ def pose_a(g):
     p["arm_r"] = dict(hand=(1.05, -0.25 + 0.06 * math.sin(g * 0.45)), shape="point", bend=-0.4, stretch=1.3)   # jabs up at the Moon
     p["arm_l"] = "akimbo"
     p["blink"] = blink(g, [480, 521])
-    p["gaze"] = (0.9, -0.8)
+    u_look = 1.0 - u_of(g, SNAP[0] - 2, SNAP[0] + 6, "sine")                 # eyes follow the point up-left at the Moon, back to the lens on the snap
+    p["gaze"] = (1.0 * u_look, -1.0 * u_look)
+    p["yaw"] = 0.3 + 0.35 * u_look
     return p
 
 
