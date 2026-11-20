@@ -22,7 +22,7 @@ s09 render17/team8  084ef5b
 s10 render17/team9  669e44b  # PASS R5
 s11 render17/team10 55446ee  # PASS R3
 s12 render17/team11 3c91397
-s13 render17/team12 ba82a63  # not ca5cc1a (unreviewed variant)
+s13 render17/team12 2345bc4  # shot 33 redo after FINAL QA-art (shots 31-32 = ba82a63 renders)
 '
 WANT=" $* "
 cd "$REPO"; mkdir -p "$OUT"; fetched=(); skipped=()
