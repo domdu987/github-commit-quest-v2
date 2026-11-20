@@ -56,8 +56,8 @@ def attempt_spec(g, S, hit):
     if k < FLOP_OFF: return ('air', 'flop_back', (0.25 - 0.08 * (k - 21),))
     if k < FLOP_OFF + 3: return ('air', 'flop', (0.02 - 0.12 * (k - FLOP_OFF),))
     if k < FLOP_OFF + 5: return ('air', 'flop_flick', (-0.30 - 0.08 * (k - FLOP_OFF - 3),))
-    if k < FLOP_OFF + 11: return ('mat', 'land_back', (-0.7, 14.0 + 0.3 * min(1, (k - FLOP_OFF - 5) / 3.0)))
-    return ('mat', 'lie_hands_face', (-0.7, 14.3))
+    if k < FLOP_OFF + 11: return ('mat', 'land_back', (0.9, 14.0 + 0.3 * min(1, (k - FLOP_OFF - 5) / 3.0)))
+    return ('mat', 'lie_hands_face', (0.9, 14.3))
 
 class Dyn:
     n = 0
@@ -97,13 +97,14 @@ def place_dick(g, cam, cast='dick_olympic'):
     elif kind == 'air':
         place_air(tag, cast, a, cam, b[0], bar_h=BAR_JUMP)
     elif kind == 'mat':
-        SHB.card(tag, cast, cast15.pose_for(a, cast), (b[0], b[1]), cam, z=B2.FOAM_SURF, ppd=192, scale=1.5, tilt_deg=-22, mirror=True, shadow=(3.2, 1.2), canvas=cast15.CANVAS15_WIDE, kind='seat')
+        SHB.card(tag, cast, cast15.pose_for(a, cast), (b[0], b[1]), cam, z=B2.FOAM_SURF, ppd=192, scale=1.5, tilt_deg=float(os.environ.get('TILT', '25')), mirror=True, shadow=(3.2, 1.2), canvas=cast15.CANVAS15_WIDE, kind='seat')
     SHB.rim(False)
 
 # ------------------------------------------------------------------ pit camera (metres): (g, loc, look, lens)
 PIT_KEYS = [
-    (1052, (-2.4, 7.5, 0.40), (3.0, 11.6, 2.05), 22.0),
-    (1096, (-1.8, 7.9, 0.50), (3.0, 11.6, 2.05), 22.0),         # low hero beside the standard: bar ~30 cm above his head, 2.24 m board right
+    (1052, (1.4, 7.2, 0.42), (0.9, 11.6, 1.90), 17.0),
+    (1074, (1.65, 7.25, 0.46), (1.0, 11.6, 1.92), 17.0),
+    (1096, (1.9, 7.3, 0.50), (1.1, 11.6, 1.95), 17.0),         # low hero beside the standard: bar ~30 cm above his head, 2.24 m board right
     (1100, (3.0, 5.4, 0.90), (5.6, 8.1, 1.5), 22.0),
     (1105, (7.2, 3.9, 1.00), (5.6, 8.1, 1.5), 22.0),          # side tracking begins: Dick at his mark
     (1117, (6.2, 4.6, 1.05), (4.6, 8.6, 1.5), 22.0),
@@ -147,7 +148,7 @@ def cam_for_pit(g):
 def bg_actors(cam, g, hush=False):
     J = STATE['J']; tag = lambda s: 'dyn_%s_%d' % (s, g)
     SHB.rim(True, side='right', color=(255, 240, 215), width=0.05, k=0.7, tint=(0.9, 0.93, 1.0), cool=0.4)
-    for i, (cast, x, mir) in enumerate((('official1', -2.75, False), ('official2', 2.75, True))):
+    for i, (cast, x, mir) in enumerate((('official1', -2.75, False), ('official2', 4.3 if g < 1100 else 2.75, True))):
         SHB.card(tag('off%d' % i), cast, cast15.pose_for('official_stand', cast), (x, J['y'] - 0.9), cam, ppd=112, mirror=mir, shadow=(1.4, 0.5))
         ob = bpy.data.objects['actor_' + tag('off%d' % i)]; ob.location.z += 0.012 * math.sin(g * 0.45 + i * 2.0) * U
     for i, (x, y) in enumerate(((-4.6, 9.2), (4.4, 14.4), (-5.6, 14.0))):
@@ -184,7 +185,7 @@ def setup_pit(q):
         if o.name.startswith('officials_B_'):
             me = o.data; co = np.empty(len(me.vertices) * 3, dtype=np.float32); me.vertices.foreach_get('co', co); co = co.reshape(-1, 3)
             mw = np.array(o.matrix_world); w = co @ mw[:3, :3].T + mw[:3, 3]
-            m = ((np.hypot(w[:, 0] / U - 4.9, w[:, 1] / U - 2.7) < 1.1) | (np.hypot(w[:, 0] / U - 6.6, w[:, 1] / U - 8.0) < 1.3) | (np.hypot(w[:, 0] / U - 3.65, w[:, 1] / U - 4.1) < 1.0)) & (w[:, 2] / U < 0.7)
+            m = ((np.hypot(w[:, 0] / U - 4.9, w[:, 1] / U - 2.7) < 1.1) | (np.hypot(w[:, 0] / U - 6.6, w[:, 1] / U - 8.0) < 1.3) | (np.hypot(w[:, 0] / U - 3.65, w[:, 1] / U - 4.1) < 1.0) | (np.hypot(w[:, 0] / U + 1.9, w[:, 1] / U - 9.1) < 0.8)) & (w[:, 2] / U < 0.7)
             if m.any(): co[m, 2] -= 400.0; me.vertices.foreach_set('co', co.reshape(-1)); me.update()
     F.clear_keys()
     F.set_bar_height(BAR_LOW, frame=1, interp='CONSTANT')
@@ -207,7 +208,7 @@ def draw_pit_frame(g, sc, cam_ob):
     bg_actors(cm, g)
     SHB.rim(True, side='right', color=(255, 240, 215), width=0.05, k=0.8, tint=(0.95, 0.97, 1.0), cool=0.35)
     if g < G_PASS1[0]:
-        SHB.card('dyn_dick_%d' % g, 'dick_olympic', cast15.pose_for('rock_a' if (g // 7) % 2 == 0 else 'rock_b', 'dick_olympic'), (1.9, 11.15), cm, ppd=192, shadow=(1.6, 0.55))
+        SHB.card('dyn_dick_%d' % g, 'dick_olympic', cast15.pose_for('rock_a' if (g // 7) % 2 == 0 else 'rock_b', 'dick_olympic'), (-0.5, 11.15), cm, ppd=192, shadow=(1.6, 0.55))
     elif g < S1:
         if g >= G_PASS1[1]:
             SHB.card('dyn_dick_%d' % g, 'dick_olympic', cast15.pose_for('rock_a' if (g // 5) % 2 == 0 else 'rock_b', 'dick_olympic'), MARK, cm, ppd=160, mirror=True, shadow=(1.5, 0.5))
