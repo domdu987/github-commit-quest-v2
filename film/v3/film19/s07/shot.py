@@ -20,18 +20,18 @@ H_IN, H_OUT = 9, 9
 G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1
 GS = list(range(G_FIRST, G_LAST + 1))
 G_SNAP_WORD = C.g_of(16.58)                    # "คณะกรรมการ" -> g 500
-SNAP = (G_SNAP_WORD - 8, G_SNAP_WORD + 7)
+SNAP = (G_SNAP_WORD - 8, G_SNAP_WORD + 8)
 LIGHT, PRESET = "DAY", "hall_window"
 FINAL_SPP = 8
 
-CAM_LOC0 = (1.4, -3.6, 2.4)
-CAM_LOOK0 = (-3.0, 3.0, 2.9)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.09, slide_px=-25.0, rise_px=0.0, arc_deg_s=16.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.8, peak=1.5, shift=(-0.25, 0.05))])
+CAM_LOC0 = (-1.2, -3.8, 2.5)
+CAM_LOOK0 = (-2.9, 2.6, 3.0)
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.08, slide_px=-50.0, rise_px=0.0, arc_deg_s=17.0, decay=0.15,
+                snaps=[dict(g=SNAP, k=1.9, peak=1.3, shift=(0.1, -0.05))])
 
-MARK_A = (-3.2, 3.2, 0.0)                      # astro19 lecturing (faces screen-left, points at the Moon)
-MARK_B = (-1.7, 2.4, 0.0)                      # astro19_b nodding (faces screen-left)
-MARK_C = (-4.9, 2.3, 0.0)                      # astro19_c nodding (faces screen-right)
+MARK_A = (-2.9, 2.6, 0.0)                      # astro19 lecturing (faces screen-left, points at the Moon)
+MARK_B = (-1.2, 2.9, 0.0)                      # astro19_b nodding (faces screen-left)
+MARK_C = (-4.7, 2.9, 0.0)                      # astro19_c nodding (faces screen-right)
 
 
 def nod(g, ph, amp=0.25, hz=1.8):
