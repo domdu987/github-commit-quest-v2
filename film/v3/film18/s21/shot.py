@@ -16,7 +16,7 @@ H_IN, H_OUT = 6, 6
 G_WORD = C.g_of(54.76)                                            # 1646
 G_FLARE = 1624                                                    # flames start to flare
 MOVE = dict(push=0.09, slide=6, moves=[])
-CAMO = dict(look_at=(0.0, -8.0, 7.2))                             # tilted up a little: ground <= 25 %
+CAMO = dict(look_at=(0.0, -8.0, 3.2))                             # tilted up a little: ground <= 25 %
 SHAKE = (0.9, 0.65, 0.4, 2.6)
 SNAPS = [(G_WORD - 2, 1.5, 4, 9999)]                              # ONE x1.5 snap on the word, held to the end
 SPEED = 3.8
@@ -72,8 +72,14 @@ def make_driver(quality):
     for nm_ in ('wood', 'palisade'):
         o_ = C.STATE['objects'].get(nm_)
         if o_ is None: continue
-        bm_ = bmesh.new(); bm_.from_mesh(o_.data); mw_ = o_.matrix_world
-        bmesh.ops.delete(bm_, geom=[f for f in bm_.faces if 4.8 < abs((mw_ @ f.calc_center_median()).x) < 11.0 and -43.5 < (mw_ @ f.calc_center_median()).y < -37.0], context='FACES'); bm_.to_mesh(o_.data); bm_.free()
+        import time as _t; t0_ = _t.time(); mw_ = o_.matrix_world; kill_ = set()
+        for f in o_.data.polygons:
+            c_ = mw_ @ f.center
+            if 4.8 < abs(c_.x) < 11.0 and -43.5 < c_.y < -37.0: kill_.add(f.index)
+        print('s21 posts', nm_, len(kill_), len(o_.data.polygons), round(_t.time() - t0_, 1), flush=True)
+        vs_ = set(v for i in kill_ for v in o_.data.polygons[i].vertices)
+        for v in vs_: o_.data.vertices[v].co.z -= 60.0                       # sink the faces' vertices under the ground (bmesh.delete hangs on this mesh)
+        o_.data.update()
     for o_ in ob:
         if o_.name.startswith('flame_pg'): o_.hide_render = True
     # deep night sky; the gate lintel (faces of the palisade bank above z 6.8 around the gap) is removed
