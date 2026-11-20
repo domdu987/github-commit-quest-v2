@@ -15,3 +15,10 @@ Delivered: `take.mkv` (parts `take.mkv.partaa/ab`, 62 MB total: `cat take.mkv.pa
 - `qa_stats2.py`: sat 0.585, vivid 61.4 %, luma 102.1 (colour is normalised at the conform).
 - `rhythm.py`: in-shot median 13.17, p90 30.36. `qa_auto.py`: PASS, magenta 0 %.
 - Lip-sync only g 642-791. Whip in g 642-647. No text in this segment.
+
+## Fix pass 2 (QA-tech FAIL / QA-art FIX-FIRST on v2), same render
+- The background soldier e1 (his head stacked on the hat, g 660-755) is removed.
+- The foreground spears are cut to waist height (1.0-1.2 m): they cross the body, not the face or Surrey's face (g 685-712).
+- CU framing shifted right (head x about 330) so the hat and the pointing arm stay off the left edge at g 764-776.
+- Frames g 793-796 still end at P_BANK (g793 exactly) and continue the pull-out (frame diff about 17 per frame, not frozen).
+- Numbers: sat 0.583, vivid 60.7 %, luma 104.7; rhythm median 11.09 / p90 30.67; qa_auto PASS.
