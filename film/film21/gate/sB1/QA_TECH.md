@@ -20,3 +20,6 @@ PASS. No blocking defect. Notes below should go to QA-art / the director.
 3. g235-301: the grey crescent "smoke" billboards look like flat grey slabs (hard-edged curved blades), especially g215-230. Fix: soften or tint them as smoke, or swap for particles.
 4. g298: the parade is tiny, riders about 20 px high, so "knights on caparisoned horses" reads weakly on a phone. Fix if cheap: end slightly lower or closer.
 5. The cast cards read as flat 2D against a boxy 3D set (known set limitation, rim light as well).
+
+## Director note (2026-11-20 18:30): PASS REVOKED for palette continuity
+B1 was rendered on the OLD valley palette (red/lime neon fields, murky mid-dive). After the set palette fix (08c9d4b) it would visibly clash with its neighbours. It is being re-rendered by team 7 on the new palette, with the same path and the same end at P_CAMP.

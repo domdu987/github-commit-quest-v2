@@ -11,6 +11,8 @@ import c21 as C
 import numpy as np, bpy
 import stirling as K
 
+SCOTS_TOWARD = tuple(float(v) for v in os.environ.get("TOWARD", "120,-300").split(","))
+SCOTS_SCALE = float(os.environ.get("SSCALE", "2.2"))
 G0, G1, G_JOIN = 0, 83, 80
 PRE = -40                                   # a key before the film start: the ease-in happens before g0, so the film opens already moving
 VW = K.preset_pose("P_HOOK")
@@ -49,7 +51,7 @@ def main():
     samples = int(sys.argv[4]) if len(sys.argv) > 4 else 32
     os.makedirs(out, exist_ok=True)
     A = K.build_world(["valley_wide"], fg=False, scots_wide=False)
-    K.scots_wide_line(n=26, banners=3, scale=1.7, toward=(-60.0, -260.0))        # the visible Scots line, facing the south camera
+    K.scots_wide_line(n=26, banners=5, scale=SCOTS_SCALE, toward=SCOTS_TOWARD)        # the visible Scots line, facing the south camera
     sc = bpy.context.scene; ks = keys(A)
     for o in [o for o in bpy.data.objects if o.name.startswith("troops_bridge")]: bpy.data.objects.remove(o, do_unlink=True)
     knights = build_column()

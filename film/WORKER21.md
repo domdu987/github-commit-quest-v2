@@ -87,3 +87,10 @@ PROJ/v3/cast21 (`import cast21` BEFORE `sprites`/`stage.sprites`). Read API.md.
 - Commit and push the take to your outcome branch as soon as it is final. Also push work in progress every ~30 min (the container can restart; `git add` your sNN folder, not frames). Do not open pull requests.
 - Work autonomously. Do not ask for confirmation: the set has passed QA-art (the client delegated approval to QA-art) and rendering is approved.
 - If a fix request arrives from the director, fix that take, re-run QA and push again.
+
+## Colour policy (director, 2026-11-20 19:00), replaces the per-take luma and saturation targets
+Overall brightness, saturation and any yellow cast are normalized ONCE for the whole film at the conform, with a fixed correction per segment eased across D6 joins. The target is about luma 100, sat about 0.55, with yellows pulled back.
+- Do NOT re-render, and do not add post-gamma passes, only to hit colour numbers.
+- Use the set's default VIVID grade, consistent within your segment.
+- TAKE gates judge CONTENT only.
+- The set palette itself (field and crag colours) is content: segments rendered before 08c9d4b that show the far valley are re-rendered.

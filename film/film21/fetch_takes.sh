@@ -10,19 +10,23 @@ REPO=${REPO:-$(cd "$(dirname "$0")/../.." && pwd)}
 
 # take  branch  commit    (source: gate/STATUS.md "USE THIS" + RENDER_TEAMS.md)
 TABLE='
-s01 render21/team1  d6ecda5
-s02 render21/team2  c2c810e
-s03 render21/team3  3fcb09e
-s04 render21/team4  68d44d5  # PASS R4
-s05 render21/team2  e553276  # moved from team5 to team2
-s06 render21/team5  6fe61b4
-s07 render21/team1  f528820  # PASS R5 (team1 rework; shot 16 from team6)
-s08 render21/team7  5866892
-s09 render21/team8  084ef5b
-s10 render21/team9  669e44b  # PASS R5
-s11 render21/team10 55446ee  # PASS R3
-s12 render21/team11 3c91397
-s13 render21/team12 2345bc4  # shot 33 redo after FINAL QA-art (shots 31-32 = ba82a63 renders)
+sA1  render21/team1   TODO
+sA2  render21/team5   TODO
+sB1  render21/team7   TODO
+sB2  render21/team5   TODO
+sC   render21/team3   9756c30  # PASS TAKE gate v2 (QA-tech)
+sD1  render21/team2   TODO
+sD2  render21/team4   TODO
+sE1  render21/team7   TODO
+sE2  render21/team6   TODO
+sF   render21/team1   TODO
+sG   render21/team8   TODO
+sH1  render21/team9   TODO
+sH2a render21/team3   TODO
+sH2b render21/team10  TODO
+sI   render21/team12  bc7db28  # PASS TAKE gate v2 (QA-tech)
+sJ1  render21/team8   TODO
+sJ2  render21/team11  TODO
 '
 WANT=" $* "
 cd "$REPO"; mkdir -p "$OUT"; fetched=(); skipped=()
