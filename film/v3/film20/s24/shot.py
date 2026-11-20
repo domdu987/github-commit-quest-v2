@@ -56,11 +56,21 @@ def ease(g):
     return 0.7 * u + 0.3 * smooth(u)
 
 
+M_END = float(os.environ.get("M_END", "1.24"))                           # r9: the landing is ~1.2x closer (independent hair-to-tabletop measure was 6-7 points lower than the sprite estimate)
+DRIFT = float(os.environ.get("DRIFT", "0.06"))                          # slow push after the landing, 6 %/s
+G_M0, G_M1 = 1804, 1822                                                 # g <= 1804 is identical to the r7 render (the move stays continuous)
+
+
+def closer(g):
+    """1.0 up to g 1804, then eases to M_END by g 1830 and keeps the zoom going (no stop): the end pose is closer, the early move is untouched."""
+    return 1.0 + (M_END - 1.0) * smooth((g - G_M0) / float(G_M1 - G_M0))
+
+
 def width_at(g):
     """apparent head width px: exponential in e(g) (constant zoom rate), + a slow 12 %/s drift push after the landing."""
     e = ease(g)
-    w = W0 * (W1 / W0) ** e if e <= 1.0 else W1 * (1.0 + 0.12 * (g - G_LAND) / 30.0)
-    return w
+    w = W0 * (W1 / W0) ** e if e <= 1.0 else W1 * (1.0 + DRIFT * (g - G_LAND) / 30.0)
+    return w * closer(g)
 
 
 def lens_at(g):
@@ -268,6 +278,8 @@ class Take(C.Take):
             top = h["y"] - 0.62 * h["w"]
             out["fig_pct"] = round(100.0 * (tb[1] - top) / 1280.0, 1)          # visible figure: hair to tabletop
             out["table_y"] = round(float(tb[1]), 1)
+            tbb = CO.project(CO.W((0.0, -35.8 + 0.70, 58.65)))                    # the far (back) edge of the cloth top: the edge a viewer reads as "the table"
+            out["fig_pct_back"] = round(100.0 * (tbb[1] - top) / 1280.0, 1)
         return out
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):
