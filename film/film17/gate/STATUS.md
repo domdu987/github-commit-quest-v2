@@ -2,7 +2,7 @@
 | take | team | status | approved commit | notes |
 |---|---|---|---|---|
 | s01 | 1 | **PASS** (QA-art R3 SHIP; QA-tech R2 blockers hand + post-whip caliper verified fixed) | render17/team1 d6ecda5 | rhythm 8.96/17.84; minor: brow bar g70-90, coat hem, beard seam |
-| s02 | 2 | FAIL r1 -> re-render | | |
+| s02 | 2 | PASS R3 (QA-tech; 3 should-fix accepted: no hand sprite on blue cuff, edge object, tight push) | c2c810e (USE THIS) | gate/s02/QA_TECH_R3.md |
 | s03 | 3 | FAIL r1 -> re-render | | |
 | s04 | 4 | FAIL r1 -> re-render | | |
 | s05 | 5 | first pass | | |
