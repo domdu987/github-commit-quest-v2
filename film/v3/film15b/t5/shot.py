@@ -27,7 +27,7 @@ def install_private_cache(tagname):
 
 FPS = 30; BAR_Y = B2.BAR_Y; BAR_H = 2.24; PX, PY = B2.PIT; FS = B2.FOAM_SURF
 G0, G1 = 1331, 1804; HAND = 6
-POD = (-9.0, 10.0); LAND_Y = 13.6
+POD = (-9.0, 10.0); LAND_Y = 13.6; TL = 53.85
 
 # ------------------------------------------------------------------ camera (metres)
 CAM_KEYS = [   # (t, loc, look)
@@ -42,7 +42,7 @@ CAM_KEYS = [   # (t, loc, look)
     (50.3, (-1.2, 9.6, 2.0), (0.0, BAR_Y, 2.3)),
     (52.9, (-0.7, 9.55, 2.0), (0.0, BAR_Y, 2.4)),
     (53.5, (-1.0, 8.7, 2.8), (0.0, 12.4, 2.2)),
-    (54.3, (-0.5, 10.4, 3.5), (-0.6, 13.7, 0.7)),
+    (54.3, (-0.35, 10.4, 3.5), (-0.4, 13.7, 0.7)),
     (55.08, (-0.4, 10.4, 3.9), (0.0, 13.6, 0.9)),
     (56.2, (-0.3, 10.8, 4.4), (0.0, 13.4, 0.9)),
     (57.4, (-0.2, 10.2, 6.0), (0.0, 13.3, 0.9)),                 # top-down-ish crane over the bar, mat below
@@ -63,7 +63,7 @@ def cam_at(t):
     a, b = Vector(CAM_KEYS[-1][1]), Vector(cl); la, lb = Vector(CAM_KEYS[-1][2]), Vector(ck)
     mid = (a + b) / 2 + Vector((0, 0, 14.0)) * math.sin(math.pi * u)           # arc up so it never ploughs through the stand
     p = a * (1 - u) + b * u + Vector((0, 0, 14.0 * math.sin(math.pi * u)))
-    return tuple(p), tuple(la * (1 - u) + lb * u), 22.0 + 80.0 * u * u + 12.0 * smooth((t - 59.85) / 0.5)
+    return tuple(p), tuple(la * (1 - u) + lb * u), 22.0 + 44.0 * u * u + 12.0 * smooth((t - 59.85) / 0.5)
 
 # ------------------------------------------------------------------ actors
 def bar_pt(x, z=None, y=BAR_Y): return (x, y, BAR_H if z is None else z)
@@ -114,21 +114,27 @@ def dick_cards(t, cam, pitch_tilt):
     else:
         tf = t - 52.85
         if tf < 0.55: nm = 'flop_flick'; an = 'bar'; pt = (-0.4 + 0.3 * tf / 0.55, BAR_Y, BAR_H - 0.15); FR = 0.3
-        elif t < 53.75:
-            u = ((t - 52.85) - 0.55) / (53.75 - 53.40); nm = 'flop_flick'; an = 'bar'; uy = smooth(max(0.0, (u - 0.45) / 0.55)); pt = (-0.1 - 0.4 * u, BAR_Y - 0.15 + (LAND_Y - BAR_Y + 0.15) * uy, BAR_H - 0.15 + (FS + 0.9 - BAR_H + 0.15) * smooth(u)); FR = 0.25 if u < 0.5 else 0.2
+        elif t < TL:
+            u = ((t - 52.85) - 0.55) / (TL - 53.40); nm = 'flop_flick'; an = 'bar'; uy = smooth(min(1.0, max(0.0, (u - 0.1) / 0.45))); pt = (-0.1 - 0.4 * u, BAR_Y - 0.15 + (LAND_Y - BAR_Y + 0.15) * uy, BAR_H - 0.15 + (FS + 0.55 - BAR_H + 0.15) * smooth(max(0.0, (u - 0.45) / 0.55)) + 0.35 * math.sin(math.pi * min(1.0, u / 0.55))); FR = 0.25 if u < 0.5 else 0.2
         else: nm = None
     if nm:
         SHB.rim(True, side='left', k=1.0, up=0.5, color=(255, 248, 235), width=0.07, tint=(1.0, 1.0, 1.05), cool=0.3)
-        return put_anchor('dick', c, P(nm, c), cam, an, pt, front=FR)
+        r = put_anchor('dick', c, P(nm, c), cam, an, pt, front=FR)
+        if t >= 53.5 and nm == 'flop_flick':                      # legs swing down, back flattens: roll the card about the anchor
+            roll = math.radians(ROLL_SIGN * 82 * smooth((t - 53.5) / (TL - 53.5)))
+            ob = bpy.data.objects['actor_dick']; aw = r['world'](r['anchors'][an]); v = aw - ob.location
+            ob.rotation_euler = (0, roll, r['yaw']); from mathutils import Euler; R = Euler((0, roll, r['yaw']), 'XYZ').to_matrix(); R0 = Euler((0, 0, r['yaw']), 'XYZ').to_matrix()
+            ob.location = aw - R @ (R0.inverted() @ v)
+        return r
     return None
 
-MIR = dict(run=False)
+MIR = dict(run=False); ROLL_SIGN = 1
 
 def dick_ground(t, cam, tilt):
     c = 'dick_olympic'; P = cast15.pose_for; SHB.rim(True, side='right', color=(255, 240, 210), width=0.045, k=0.7, tint=(0.97, 0.98, 1.0), cool=0.25)
     base = (PX - 0.9 if t < 55.35 else PX + 0.5, LAND_Y)
-    if t < 53.75: return None
-    if t < 54.55: nm = 'lie_back'; dz = 0.06 * max(0, math.sin((t - 53.75) * 9)) * math.exp(-(t - 53.75) * 3)
+    if t < TL: return None
+    if t < 54.55: nm = 'lie_back'; dz = 0.06 * max(0, math.sin((t - TL) * 9)) * math.exp(-(t - TL) * 3)
     elif t < 55.35: nm = 'lie_back'; dz = 0
     else: nm = 'sit_up'; dz = 0
     pose = dict(P(nm, c), bob=(bobq(t, 1.5, 0.03) if nm == 'sit_up' else 0.0))
@@ -183,6 +189,12 @@ def build_coach_cluster(cam_loc):
             if row == 9 and abs(u - CU) < 0.5: continue
             if rr.random() < 0.05: continue
             SHB.seat_card('cr%d' % k, rr.choice(crowd), rr.choice(poses), row, u, cam_loc, ppd=96, mirror=rr.random() < 0.5, back=0.5 + rr.uniform(-0.1, 0.1)); k += 1
+    # hero crowd tight around the coach for close-up 3: behind his shoulders, beside him, and low in front-left
+    HERO = [(8, -1.0, 'crowd1', 'sit_cheer'), (8, 1.0, 'crowd2', 'sit_laugh'), (9, -0.6, 'crowd3', 'sit_cheer'), (9, 0.6, 'crowd4', 'sit_gape'), (9, -1.3, 'crowd5', 'sit_cheer'), (9, 1.3, 'crowd6', 'sit_point'),
+            (8, -1.7, 'crowd4', 'sit_laugh'), (8, 1.7, 'crowd1', 'sit_cheer'), (6, -0.95, 'crowd2', 'sit_cheer'), (5, -0.5, 'crowd6', 'sit_laugh'), (6, 2.1, 'crowd3', 'sit_cheer'),
+            (10, -0.3, 'crowd2', 'sit_cheer'), (10, 0.35, 'crowd5', 'sit_laugh'), (10, -0.95, 'crowd1', 'sit_cheer'), (10, 0.95, 'crowd6', 'sit_cheer'), (11, 0.0, 'crowd4', 'sit_cheer'), (11, -0.6, 'crowd3', 'sit_gape'), (11, 0.6, 'crowd1', 'sit_laugh'), (11, -1.2, 'crowd6', 'sit_cheer'), (11, 1.2, 'crowd2', 'sit_cheer'), (12, -0.3, 'crowd5', 'sit_cheer'), (12, 0.3, 'crowd3', 'sit_laugh'), (12, -0.9, 'crowd4', 'sit_cheer'), (12, 0.9, 'crowd1', 'sit_point')]
+    for i, (row, du, cst, pz) in enumerate(HERO):
+        SHB.seat_card('hero%d' % i, cst, pz, row, CU + du, cam_loc, ppd=128, mirror=(i % 2 == 0), back=0.5); k += 1
     SHB.rim(True, side='left', color=(255, 236, 200), width=0.06, k=0.95, tint=(1.0, 1.0, 1.04), bright=1.1, cool=0.2)
     return k
 
@@ -203,12 +215,12 @@ def build_plate(t, cam, kind):
     clear_actors(); SHB.GROUND_LOG.clear()
     pitch = math.degrees(math.atan2(cam[2] - 1.0, 8.0)); top = 0.0
     tilt = 0.0
-    if t >= 53.7:
+    if t >= TL - 0.05:
         # lean lying/sitting cards back toward high cameras
         lc, lk, _ = cam_at(t); hd = math.hypot(lk[0] - lc[0], lk[1] - lc[1]); p = math.degrees(math.atan2(lc[2] - lk[2], max(hd, 0.1))); tilt = -(90 - p) * 0.85 if p > 25 else 0.0
     if kind == 'rival': rival_card(t, cam)
-    elif t < 53.75 or t >= 52.85 and t < 53.75: dick_cards(t, cam, 0)
-    if kind == 'main' and t >= 53.75 or kind == 'mat': dick_ground(t, cam, tilt)
+    elif t < TL: dick_cards(t, cam, 0)
+    if kind == 'main' and t >= TL or kind == 'mat': dick_ground(t, cam, tilt)
     if kind == 'pod': podium_cards(t, cam)
     common_cards(t, cam, tilt * 0.6 if t >= 55 else 0.0)
     if t >= 56.0: podium_rivals = None
@@ -250,7 +262,7 @@ def render_frame(g, out, q):
     for kind, w in plates:
         if w <= 0.001: continue
         k2 = kind
-        if kind == 'main' and t >= 53.75: k2 = 'mat'
+        if kind == 'main' and t >= TL: k2 = 'mat'
         p = out + ('.%s.png' % kind)
         for attempt in range(4):
             build_plate(t, loc, k2 if k2 != 'main' else 'main'); F.T.render(p); im = np.asarray(Image.open(p).convert('RGB'), np.float32)
