@@ -146,6 +146,14 @@ def make_glow_and_fill(A):
     fill.data.color = (1.0, 0.78, 0.55)
     fill.data.energy = 4000.0
     fill.data.shadow_soft_size = 3.0
+    fb = bpy.data.materials.get("flag_b")                                      # the flag's blue renders pure black in shade: lift it to a real blue
+    if fb is not None and fb.use_nodes:
+        for n in fb.node_tree.nodes:
+            if n.type == "BSDF_PRINCIPLED":
+                n.inputs["Base Color"].default_value = (0.10, 0.22, 0.70, 1)
+            for i in n.inputs:
+                if i.type == "RGBA" and n.type in ("MIX", "VALTORGB") and hasattr(i, "default_value"):
+                    i.default_value = (0.10, 0.24, 0.72, 1)
     A["bz_glow"], A["bz_fill"] = gl, fill
 
 
@@ -303,7 +311,7 @@ class Take(C.Take):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s03")
         self.A["marks"][MARK] = C.on_ground(self.A["marks"][MARK])
         for ob in C.bpy.data.objects:                               # the preset's near-black FG slabs (anchored to the preset camera): camera-invisible
-            if ob.name in ("fg_redlead_sh", "fg_dark_sh", "fg_metal_sh", "fg_timber_sh") or ob.name.startswith(("derricks_", "swinggirder")) or ob.name in HIDE_SCATTER:
+            if ob.name in ("fg_redlead_sh", "fg_dark_sh", "fg_metal_sh", "fg_timber_sh") or ob.name.startswith(("derricks_", "swinggirder")) or ob.name in HIDE_SCATTER or ob.name.startswith("pnoink_flag"):
                 ob.visible_camera = False
         self.cam.data.clip_end = 6000.0
         make_glow_and_fill(self.A)
@@ -336,7 +344,7 @@ class Take(C.Take):
                 C.place(a, f, mk, scale=sc)
             d_m = self.path.state(g)[0] / CO.SC                                  # camera distance in metres
             p = self.path.prog(g)[0]
-            gk = clamp(d_m / 60.0, 0.0, 6.0) * (1.0 - smoother((p - 0.60) / 0.25))   # glow radius ~ 10 px while far, gone for the landing
+            gk = clamp(self.path.state(g)[0] * 7.0 / 782.0, 0.0, 40.0) * (1.0 - smoother((p - 0.40) / 0.25))   # glow radius ~ 7 px on screen while far, gone well before the landing
             self.A["bz_glow"].scale = (max(gk, 1e-3),) * 3
             self.A["bz_glow"].keyframe_insert("scale", frame=f)
             self.cam.data.lens = self.path.lens(p)
@@ -346,7 +354,7 @@ class Take(C.Take):
             fe = smoother((p - 0.7) / 0.3)
             self.A["bz_fill"].data.energy = 4000.0 * fe
             self.A["bz_fill"].data.keyframe_insert("energy", frame=f)
-            self.key_set(f, set_beacon=bool(p < 0.7))
+            self.key_set(f, set_beacon=bool(p < 0.22))
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
