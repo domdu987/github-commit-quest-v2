@@ -1,4 +1,4 @@
-# QA sJ2 v2 (director gate fixes), g 1709-1848, 140 frames, 720x1280, 32 samples + OIDN
+# QA sJ2 v3 (director gate fixes: B1 lit wall, B2 soft smoke from set e07ceb1), g 1709-1848, 140 frames, 720x1280, 32 samples + OIDN
 One travelling camera (`K.cam_path`), no cut inside, hard cut on g1848, no handles. Cast = new default crimson English.
 - Whip-in: 4 frames, lands on the group by g1713 (no empty-ground frame); the first frame already shows the group edge and the water.
 - g1713-1772: camera looks toward the bridge neck (the Scots spear wall + saltire banners at the far left, small and backlit) with the group right of centre; three head turns: bridge g1713-1730, water g1731-1746, each other g1747+ (sweat drops); nose pinch from g1756.
@@ -11,3 +11,8 @@ qa_stats2: sat 0.549, vivid 56.0 %, luma 98.3; motion med 7.7, p90 21.8. rhythm:
 - A crown very close to the lens at about g1800 covers the left quarter for a few frames.
 - The bare bank is about 35-40 % of the frame in the last 45 frames. Faces are large (about 20-25 % of frame height).
 - Colour levels are left to the conform (director policy).
+
+## v3 changes (gate B1/B2 + notes)
+- B1: the Scots wall's saltire banners are lit by a local warm point light and doubled in size (4.2 x 2.9 m on 9 m poles); the dark trees near the wall (meadow_trees, farms_leaf/bark) are hidden; the camera yaws 27 deg toward the bridge neck. The big saltire flag and the lit wall read at the left of g1713-1745; later the move follows the group so the wall leaves the frame.
+- B2: set3d21 / cast21 re-pulled from film21/main (soft smoke puffs); the grey crescent slabs are gone.
+- Near-lens crown shards are culled (no crown within 3.0 m / 2.2 m of the camera); the left swimmer is re-centred (offsets computed along the end-camera axis).

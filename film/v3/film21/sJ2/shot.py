@@ -204,15 +204,21 @@ def build_state(T, gs):
     pr = K.PRESETS['riverbank']
     for p_ in ('riverbank', 'river_low'):
         for i in range(3): K.splash(0, 0, -1, name='%s%d' % (p_, i))
-    c21.hide_prefix('fg_generic_g'); c21.hide_prefix('veg_reed')
-    K.spear_wall(14, 2, np.random.RandomState(4))                   # the blue Scots spear wall + saltire banners at the bridge neck
+    c21.hide_prefix('fg_generic_g'); c21.hide_prefix('veg_reed'); c21.hide_prefix('smoke_col_far')
+    K.spear_wall(14, 2, np.random.RandomState(4))
+    c21.hide_prefix('meadow_trees'); c21.hide_prefix('farms_leaf'); c21.hide_prefix('farms_bark')                                  # the dark tree that stood in front of the wall
+    rs_ = np.random.RandomState(5); Bq = K.Batch(88)
+    for sx in (-11.0, 11.0): K.banner(Bq, (sx, 26.8, float(K.ground(sx, 26.8))), 9.0, 190, 't_saltire', 't_white', 'saltire', rs_, size=(4.2, 2.9))
+    Bq.finalize('wall_banners_big')
+    ld = bpy.data.lights.new('wall_fill', 'POINT'); ld.energy = 30000.0; ld.shadow_soft_size = 3.0; ld.color = (1.0, 0.9, 0.7)
+    lo = bpy.data.objects.new('wall_fill', ld); bpy.context.scene.collection.objects.link(lo); lo.location = (-8.0, 40.0, 9.0)   # lights the wall's north face                   # the blue Scots spear wall + saltire banners at the bridge neck
     C0 = Vector((-27.0, 54.0, float(K.ground(-27.0, 54.0)) + 1.8)); L0 = aim_pitch(C0, Vector(pr['look']), -4.5)
     base = L0 - C0
     def yawed(d, deg, up=0.0):
         c, s = math.cos(math.radians(deg)), math.sin(math.radians(deg))
         return Vector((d.x * c + d.y * s, -d.x * s + d.y * c, d.z + up * d.length))
     Fv, Rv = fwd_vec(C0, L0), right_vec(C0, L0)
-    dirA = yawed(base, -20.0)                       # looks toward the bridge neck: wall + saltires at the left, group right of centre
+    dirA = yawed(base, -27.0)                       # looks toward the bridge neck: wall + saltires at the left, group right of centre
     dirB = yawed(base, 0.0)
     # stand points relative to camera direction A
     lookA = C0 + dirA
@@ -229,11 +235,11 @@ def build_state(T, gs):
         rigs[c['n']] = Rig(T, c['n'], c['cast'], tl); rigs[c['n']].ent = ent
     # swimmers cluster centre (for the end framing)
     cen = sum((ents[w] for w in ("B", "D", "E")), Vector((0, 0, 0))) / 3.0
-    Lat = Rv
-    for w_, o_ in (("B", -1.15), ("D", 0.0), ("E", 1.15)):
-        CL[w_] = cen + Lat * o_ + Fv * (0.25 * (1 if w_ == "D" else 0)); CL[w_].z = 0.0
-    loc1 = C0 + Rv * 0.5 + Fv * 0.5
     uu = Vector((C0.x - cen.x, C0.y - cen.y, 0)).normalized()
+    Lat = Vector((-uu.y, uu.x, 0)); Fw = -uu                         # camera-right / camera-forward at the end framing
+    for w_, o_ in (("B", -0.95), ("D", 0.1), ("E", 1.2)):
+        CL[w_] = cen + Lat * o_ + Fw * (0.3 if w_ == "D" else 0.0); CL[w_].z = 0.0
+    loc1 = C0 + Rv * 0.5 + Fv * 0.5
     loc3 = Vector((cen.x + uu.x * 2.9, cen.y + uu.y * 2.9, 0.95))
     loc2 = C0.lerp(loc3, 0.55) + Vector((0, 0, -0.3))
     def aimc(loc, dz=0.0):
@@ -256,15 +262,15 @@ def build_state(T, gs):
         def tlh(g, j=j, off=off):
             if g < 1805 + 4 * j: return dict(hide=True)
             u = g - (1805 + 4 * j)
-            q = cen + Lat * off + Fv * (0.5 + 0.3 * j)
+            q = cen + Lat * off + Fw * (0.5 + 0.3 * j)
             return dict(pos=(q.x + 0.1 * math.sin(u * 0.13), q.y + 0.1 * math.cos(u * 0.1), 0.0),
                         pose=dict(helm21=("kettle", "great")[j], t=(g / 40.0 + 0.3 * j) % 1.0, tilt=12 * math.sin(u * 0.2 + j)), contact=False, scale=wscale("footman_a") * 0.5)
         rigs["H%d" % j] = Rig(T, "H%d" % j, "helmet_float", tlh)
     for r in rigs.values(): r.pose_frames(gs)
     T.sprites_for(128 if T.quality == 'draft' else 256); T.rigs = rigs
     IMP = (1813, 1822, 1831)
-    lat = Rv; fw = Fv
-    CP = [cen + lat * 2.0 + fw * 1.1, cen - lat * 2.1 + fw * 0.9, cen + lat * 0.2 + fw * 2.6]
+    lat = Lat; fw = Fw
+    CP = [cen + lat * 2.3 + fw * 1.3, cen - lat * 2.4 + fw * 1.1, cen + lat * 0.3 + fw * 2.8]
     for p in CP: p.z = 0.0
 
     def on_g(g):
@@ -280,10 +286,11 @@ def build_state(T, gs):
                     for ob in (r.a.card, r.a.proxy): ob.hide_render = True
         for who, (t0, kind, h, sz) in JUMPS.items():
             age = (g - (t0 + T_AIR)) / 30.0 + 0.02
-            e = ents[who]; splash2(e.x, e.y, age if age > 0 else -1, size=sz, name=who, seed=ord(who))
+            e = ents[who]; near = math.hypot(e.x - cl.x, e.y - cl.y) < 3.0
+            splash2(e.x, e.y, age if (age > 0 and not near) else -1, size=sz, name=who, seed=ord(who))
         for j in range(3):
             a_ = (g - IMP[j]) / 30.0
-            splash2(CP[j].x, CP[j].y, a_ if a_ >= 0 else -1, size=0.85, name='L%d' % j, seed=j + 3)
+            splash2(CP[j].x, CP[j].y, a_ if (a_ >= 0 and math.hypot(CP[j].x - cl.x, CP[j].y - cl.y) > 2.2) else -1, size=0.85, name='L%d' % j, seed=j + 3)
     return on_g
 
 
