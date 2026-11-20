@@ -182,3 +182,5 @@ motion.
 - Fix 2 (T4 camera through an official, g1098-1102 and g1146-1150): sent to team 4.
 - Fix 3 (T7 bar across the 1972 jumper's eyes and floating head, g1845-1860): sent to team 6.
 - g833-841 soft run: QA-art says acceptable (sharpness down only 7-9 %).
+
+- Fix 2 verified by director (21:40 UTC): T4 swaps at g1100 and g1148 are now 6-frame directional whip blurs with no person in frame (checked g1096-1110 and g1144-1152).
