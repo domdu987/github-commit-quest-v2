@@ -56,14 +56,17 @@ def ease(g):
     return 0.7 * u + 0.3 * smooth(u)
 
 
-M_END = float(os.environ.get("M_END", "1.24"))                           # r9: the landing is ~1.2x closer (independent hair-to-tabletop measure was 6-7 points lower than the sprite estimate)
-DRIFT = float(os.environ.get("DRIFT", "0.06"))                          # slow push after the landing, 6 %/s
-G_M0, G_M1 = 1804, 1822                                                 # g <= 1804 is identical to the r7 render (the move stays continuous)
+M_END = float(os.environ.get("M_END", "1.14"))                           # r9: the landing is ~1.2x closer (independent hair-to-tabletop measure was 6-7 points lower than the sprite estimate)
+DRIFT = float(os.environ.get("DRIFT", "0.12"))                          # slow push after the landing, 6 %/s
+G_M0, G_M1 = 1810, 1858                                                 # g <= 1804 is identical to the r7 render (the move stays continuous)
 
 
 def closer(g):
     """1.0 up to g 1804, then eases to M_END by g 1830 and keeps the zoom going (no stop): the end pose is closer, the early move is untouched."""
-    return 1.0 + (M_END - 1.0) * smooth((g - G_M0) / float(G_M1 - G_M0))
+    if g <= G_M0:
+        return 1.0
+    t = g - G_M0                                    # r10: r8 camera + a magnification that never stops: 1.00 at g 1810 -> 1.06 at 1830, 1.09 at 1840, 1.14 at 1858
+    return 1.0 + 0.0029 * t * smooth(t / 8.0) + 0.0029 * t * (1.0 - smooth(t / 8.0)) * 0.0
 
 
 def width_at(g):
@@ -167,6 +170,7 @@ class Take(C.Take):
             ob.hide_render = True
             ob.hide_viewport = True
         self.clear_room_wedges()
+        self.close_right_wall()
         if GLOW > 0:
             self.make_glow()
         self.key_cam(bf(G_FIRST), *cam_at(G_FIRST))
@@ -219,6 +223,22 @@ class Take(C.Take):
         n += self.clear_box(((2.5, -38.9, 62.9), (3.7, -37.7, 64.1)), ("gallery_iron",))
         n += self.clear_box(((5.0, -34.0, 57.0), (40.0, -4.0, 64.0)), ("tower_ironlt_t",))        # black unlit tower members seen through the window to the right (g 1756-1784)
         print("clear_room_wedges: %d faces deleted" % n, flush=True)
+
+    def close_right_wall(self):
+        """the room copy has no right-hand side wall: through the window at an angle (g 1756-1784) you looked through the open side onto the BACK faces of the tower
+        facade (pure black, 1.5 % of the frame).  A plane with the room's own wall material closes it (x = +4.4 m, behind the glass, y -36.5..-17, z 57.9..64)."""
+        bpy = C.bpy
+        src = bpy.data.objects.get("room_wallres")
+        mat = src.data.materials[0] if src is not None and src.data.materials else None
+        x, y0, y1, z0, z1 = 4.4, -36.5, -17.0, 57.9, 64.0
+        P = [Vector(CO.W(p)) for p in ((x, y0, z0), (x, y1, z0), (x, y1, z1), (x, y0, z1))]
+        me = bpy.data.meshes.new("room_rwall")
+        me.from_pydata([tuple(p) for p in P], [], [(0, 1, 2, 3)])
+        ob = bpy.data.objects.new("room_rwall", me)
+        bpy.context.scene.collection.objects.link(ob)
+        if mat is not None:
+            me.materials.append(mat)
+        me.polygons[0].use_smooth = False
 
     def make_glow(self):
         """a warm emissive plane just outside the glass of Maupassant's window: in the extreme wide the window + red awning must be the brightest WARM spot
