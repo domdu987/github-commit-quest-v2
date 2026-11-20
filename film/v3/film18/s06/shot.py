@@ -4,7 +4,7 @@ import c18 as C, jimo_shots as S
 SHOT = 's06'; G0, G1, HB, HA = 459, 531, 0, 0
 HERD = S.herd(10, (62, 18.2), (83, 20.0), 5.0, 6, yaw=200.0)
 # real eased push + a 3 D slide along the lane (follows the oxen), one held punch-in on "สิบตัว" (g 497, +15 %)
-CAM = C.cam_path(((83.0, 9.5, 2.3), (71.0, 21.0, 1.7), 22), ((78.5, 12.8, 2.2), (68.0, 22.0, 1.8), 22), punches=[(38 / 71.0, 5 / 71.0, 0.15)], slide=-2.2)
+CAM = C.cam_path(((83.0, 9.5, 2.5), (71.0, 21.0, 0.9), 22), ((78.0, 13.2, 2.3), (67.5, 22.0, 0.9), 22), punches=[(38 / 71.0, 5 / 71.0, 0.15)], slide=-2.4)
 def tweak(stage, A=None):
     if stage == 'pre':
         S.SHOTS[SHOT]['fg'] = None
@@ -25,4 +25,4 @@ def actors(f, cam, ctx):
         ph = int((f * 0.30 + i * 3) % 8)
         C.ox_card(SHOT, i, (xx, y, 0), 200, sc, cam, state='plain', view='front_three_quarter' if math.hypot(x - 80, y - 10) < 14 else 'three_quarter', gait='walk', phase=ph, blades=False, bob=0.04 * abs(math.sin(2 * math.pi * (f * 0.30 + i) / 8)))
 if __name__ == '__main__':
-    C.run(SHOT, actors, G0, G1, HB, HA, quality=sys.argv[1] if len(sys.argv) > 1 else None, tweak=tweak, shk=0.006, cam_fn=CAM)
+    C.run(SHOT, actors, G0, G1, HB, HA, quality=sys.argv[1] if len(sys.argv) > 1 else None, tweak=tweak, shk=0.016, cam_fn=CAM)
