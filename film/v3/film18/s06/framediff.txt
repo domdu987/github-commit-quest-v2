@@ -1,1 +1,1 @@
-in-shot frame-diff (90x160 grey, mean abs x255/255 units as 0-255 levels): frames 72, median 3.36, p90 5.63, min 1.50, max 10.34; whole take incl. handles: median 3.36 p90 5.63
+in-shot frame-diff (90x160 grey, mean abs x255/255 units as 0-255 levels): frames 72, median 5.81, p90 9.79, min 2.05, max 13.14; whole take incl. handles: median 5.81 p90 9.79
