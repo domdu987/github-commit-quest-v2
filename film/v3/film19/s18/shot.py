@@ -93,7 +93,7 @@ def whitecaps_in_front(n=int(os.environ.get("WC", "28")), seed=int(os.environ.ge
 
 
 ISLAND_AT = (float(os.environ.get("ISX", "250")), float(os.environ.get("ISY", "699")), 1452)   # screen px (x, y) of the island base at g 1452
-ISLAND_W = float(os.environ.get("ISW", "44"))                                                   # metres (~10 % of the frame width at ~330 m)
+ISLAND_W = float(os.environ.get("ISW", "54"))                                                   # metres (~10 % of the frame width at ~330 m)
 
 
 def build_island():
@@ -114,7 +114,7 @@ def build_island():
                                                   hmax=kw.get("hmax", 60.0), dist=(700.0, 4000.0), kmax=0.22)
     yaw = math.atan2(r.y, r.x)
     c = (P.x, P.y)
-    H_ = 0.55 * ISLAND_W / 4.0                                                  # dome height ~ 4.7 m
+    H_ = 0.9 * ISLAND_W / 4.0                                                  # dome height ~ 4.7 m
     LD.headland(LT, c, yaw, ISLAND_W * 1.35, 1.0, ISLAND_W * 0.62, seed=21, nx=60, ny=14, name="jamaica_sand")        # the sand shelf / rim
     dome = LD.headland(LT, (c[0] + f.x * 1.5, c[1] + f.y * 1.5), yaw, ISLAND_W, H_, ISLAND_W * 0.42, seed=22, nx=60, ny=14, name="jamaica")
     for o in (bpy.data.objects.get("jamaica"), bpy.data.objects.get("jamaica_sand")):
