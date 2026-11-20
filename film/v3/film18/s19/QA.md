@@ -1,9 +1,8 @@
-# QA s19 (render team 5, film 18) round 5 - frames g1427-1514 (+6 handles: take.mkv g1421-1520, 100 frames), jimo_out NIGHT
-Frame-diff in-shot (n=87): median **8.37**, p90 **11.47**. qa_auto: "blur" g1505-1520 = the whip and its landing on sky/sand (ruled a whip, not blur, by QA-tech).
-- Oxen leave the holes in 6 waves 15 frames (7.5 D at 15 D/s) apart, so the spacing along the run is more than 1.5 body lengths; the flame of one ox no longer lands on the next one's head or neck at the frames named (g1446, 1481, 1491 re-checked at 6 fps).
-- 6 Qi silhouettes behind the oxen (first g1417, then every 5 frames).
-- The purple ditch strip is NOT fixed: I tried hiding/re-texturing `banks`, `bridge`, `road`, `water`, `fields` and the ground material; none of them changed it, so it is some other set element. Left for `dress_ground`.
-- Bare ground about 30-35 % (see above).
-
-## Round 6: ground dressing
-Re-rendered with `J.dress_ground` (density 0.45, keep-clear along the herd lanes): `J.ground_share` 0.09 / 0.07 / 0.07 / 0.06 at g1435 / 1460 / 1485 / 1505 (target <= 0.25). Frame-diff median 8.92, p90 11.73. qa_auto blur flag = whip landing (as before). The purple ditch strip is still visible (set element not identified).
+# QA s19 (render team 5, film 18) round 7 - frames g1427-1514 (+6 handles: take.mkv g1421-1520, 100 frames), jimo_out NIGHT
+Frame-diff in-shot (n=87): median **7.91**, p90 **11.24**. qa_auto: "blur" g1505-1520 = the whip and its landing on sky/sand (ruled a whip by QA-tech).
+- Purple ditch strip FIXED: it was a hole in the set's ground (nothing hit there, the world colour showed through; hiding or re-texturing any object changed nothing). A dark earth plane `gapfill` (z -0.3, x -30..90, y -60..-7) now covers it.
+- `face='rage'` on every charging ox (3/4 and front-3/4 cards).
+- Camera lowered to z 1.1 with the look-at raised (look z 10.6); oxen 15-22 % of frame height; plain ground about 30 %.
+- 6 Qi silhouettes behind the oxen (g1417 + every 5 frames; visible g1436-1500).
+- Removed the breach `mist` / `dust` halo quads, which showed as translucent light panels across the frame with the new set; hole glow cards are gone as a result.
+- Not met: bare ground about 30 % (v2 dressing is sparse and my own dress fills did not render); one dark foreground prop not added.

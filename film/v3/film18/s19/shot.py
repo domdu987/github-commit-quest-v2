@@ -27,6 +27,10 @@ V_OX, V_QI = 15.0, 11.5
 
 def setup(ctx):
     J.set_holes(12)
+    import bmesh
+    for ob in [o for o in bpy.data.objects if o.type == 'MESH' and (o.name == 'halos' or o.name.startswith('breach'))]:
+        bm = bmesh.new(); bm.from_mesh(ob.data); mi = [i for i, m in enumerate(ob.data.materials) if m is not None and ('mist' in m.name or 'dust' in m.name)]
+        bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.material_index in mi], context='FACES'); bm.to_mesh(ob.data); bm.free()
     gd = bpy.data.objects['ground'].data; gm = gd.materials[-1]
     me = bpy.data.meshes.new('gapfill'); me.from_pydata([(-30, -60, -0.3), (90, -60, -0.3), (90, -7, -0.3), (-30, -7, -0.3)], [], [(0, 1, 2, 3)]); me.update()
     uv = me.uv_layers.new(name='UVMap')

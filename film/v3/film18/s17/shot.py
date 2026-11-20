@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c18 as C
 from c18 import J, S, R2, V, bpy
 SHOT = 's17'; G0, G1 = 1309, 1387; H_IN, H_OUT = 6, 6
-c = S.SHOTS[SHOT]['cam']; c['loc'] = (-19.0, 19.5, 1.9); c['look_at'] = (-26.5, 8.5, 4.3); c['lens'] = 19.0
+c = S.SHOTS[SHOT]['cam']; c['loc'] = (-19.0, 19.5, 1.9); c['look_at'] = (-26.5, 8.5, 2.2); c['lens'] = 19.0
 C.motion(SHOT, push=0.05, slide=-60, moves=[dict(t=0.55, d=0.93, dur=7)])
 _p0 = S.pose_at
 def _sway(sh, t):
@@ -31,7 +31,7 @@ def frame(g, t, camloc, ctx):
         C.put_ox(i, (x, 8.4 + (0.8 if i % 2 else 0.0), bob), -90, 1.0, camloc, phase=0, flame=-1, state='dragon', view='three_quarter', gait='stand', theta=40, reed=True)
     # LARGE: an old man bends at the tail of ox 3 (x -22.2) and ties a reed bundle to it; a woman brings reeds
     ph = (g // 3) % 4
-    C.put_person(C.person('old_man_dig', {'prop_r': None, 'lean': (18, 30, 40, 30)[ph]}), (XS[3] + 2.4, 11.3, 0), camloc, 3.0, 'tie')
+    C.put_person(C.person('old_man_dig', {'prop_r': None, 'lean': (18, 30, 40, 30)[ph]}), (XS[3] + 2.4, 11.8, 0), camloc, 3.0, 'tie')
     C.put_person(C.person('woman_carry_basket', {'lean': 4 + 4 * ((g // 4) % 2)}), (XS[3] + 6.4, 11.8, 0), camloc, 3.0, 'wm', lift=0.04 * abs(math.sin(g * 0.6)))
     C.put_person(C.person('tiandan_point', {'lean': (g // 6) % 2 * 3}), (XS[1] - 1.2, 11.6, 0), camloc, 3.0, 'td')
 
