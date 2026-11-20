@@ -170,3 +170,46 @@ paint it out. The QA_AUTO blur flag is a content flag (flat interior against the
 - **Re-submit:**
   - s03, s18 and s21 can pass on a phone sheet plus contact sheet check once the fixes are visible.
   - s09 passes once s06's tail is re-rendered and a cross-join strip (s06 g 595-603 + s09 g 604-612) shows no jump.
+
+## s16: Maupassant laughs and jeers in the café, with the finished tower in the window (g 1093-1220): FIX
+
+Frames: 2 fps from g 1093 (f00 = g 1093, f01 = 1108 ... f08 = 1213, f09 = 1228 handle), in
+.../scratchpad/takeart3/s16/{full,ph}/, with s16_phone.jpg, pair1.png (g 1138 / 1183), pair2.png (g 1198 / 1213) and
+thumb.jpg (g 1136-1146, every 2nd frame).
+
+| set | light | comp | act | key | cam | chan | verdict |
+|---|---|---|---|---|---|---|---|
+| 6 | 7 | 6 | 6 | 5 | 7 | 7 | **FIX** (3 changes) |
+
+**What works:**
+- The crash pull-out from the grin to the medium-wide is a strong, on-channel move. It goes in one continuous camera with no cut.
+- The red banquette, gold studs, chandelier, sconce and blue-white tiles against a clear blue sky give the room a strong colour. The
+  red-and-blue contrast matches the refs.
+- The full tower with its lit rings reads in the window at phone size from g 1108 to 1198.
+- The laugh reads clearly: squeezed eyes, tears and the bounce.
+- He has contact shadows and his feet are on the tiles. No §G slicing is visible.
+- The lip-sync mouth opens on the quote (g 1183-1213) and is closed in the grin before it.
+- The close-up head is about 30-34 % of the frame height, which is under the 35 % limit.
+
+**Problems:**
+1. **He points the wrong way (g 1136-1213).** The "thumb at the tower" arm points to SCREEN-LEFT, at the empty curtain and wall,
+   while the tower is behind his screen-RIGHT shoulder. He keeps the same arm pointing left through the jeer. On a phone it reads
+   as him pointing at something off-screen, so the mockery loses its target. This is the key acting beat of the shot.
+2. **The tower is hidden on the punchline (g 1205-1220).** The push-in for "เป็นเศษเหล็ก!" ends with his head covering the tower.
+   Only the spire tip shows above his hair at g 1213. In the medium-wide (g 1123-1168), the right curtain also clips the tower's right
+   leg. The false payoff needs the man and the tower side by side at the moment he calls it scrap.
+3. **The floor is bare and blown out (g 1115-1170).** The bottom 30-35 % of the frame is empty tiles with a blown-white,
+   amoeba-shaped sun patch that reads as a white hole on the phone sheet. The "café" has no table, glass or patron in frame (the
+   ambience promises artists), so the set is thinner than s09's. There is also a small stray green stick poking in at the right edge
+   of the window (g 1108-1183).
+
+**Fixes:**
+1. **Make the gesture point at the tower.** Mirror the pointing arm so the thumb jabs back over his screen-right shoulder toward the
+   tower, without him looking. Keep it from g 1136 through the jeer. If mirroring the cut-out is hard, slide the tower in the window
+   view to screen-left of him instead.
+2. **Frame the punchline (g 1195-1220).** End the push about 0.3 D to the left, or truck it left, so his head sits in the left
+   half and the whole tower, rings included, stands clear beside his head in the right third. In the medium-wide, centre the window
+   view about 1 m further left so the curtain does not clip the tower's leg.
+3. **Dress and expose the floor.** Bring the sun patch down to a warm cream (no clipped white). Add a café table in the near FG with
+   a cloth, a glass and a chair, plus one or two seated patrons on the banquette (or dim figures at the frame edge) to fill the bottom
+   30 %. Remove the green stick at the window edge.
