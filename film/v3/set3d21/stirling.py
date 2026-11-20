@@ -1617,7 +1617,7 @@ def signs_build(A, pr):
     """pr['signs'] = subset of ('stirling', 'treasury', 'english'). The only text in the set."""
     sg = pr.get('signs') or []
     if 'stirling' in sg:        # a gantry over the south end of the bridge, facing the camp
-        sx_, sy_ = -2.9, -27.5; make_sign('stirling', (sx_, sy_, float(ground(sx_, sy_)) + 3.6), face_yaw((sx_, sy_), (-3.0, -45.0)), 3.2, 0.9, ['STIRLING BRIDGE'], posts=1.0)
+        sx_, sy_ = -2.15, -27.5; make_sign('stirling2', (sx_, sy_, float(ground(sx_, sy_)) + 3.4), face_yaw((sx_, sy_), (-2.5, -45.0)), 1.9, 1.15, ['STIRLING', 'BRIDGE'], posts=1.0)
     if 'treasury' in sg and A.get('camp', {}).get('table'):      # painted on the front of Cressingham's coin chest
         tx, ty, tz = A['camp']['table']; make_sign('treasury', (tx - 0.92, ty - 0.05 - 0.322, tz + 1.2), 0.0, 0.8, 0.34, ["KING'S", 'TREASURY'], slab=False)
     if 'english' in sg:         # the camp entrance board by the road
