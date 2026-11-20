@@ -29,8 +29,8 @@ PRESET, LIGHT, MARK = "site_table", "DAY", "eiffel_table"
 HEAD_Z = 2.6
 PPD = 256
 CAMERA_DROP = 0.75                             # D (0.4 m lower)
-CAM_FWD = 10.0                                 # D toward him
-TILT0 = 7.0                                    # deg above the camera -> head line; + drift tilt
+CAM_FWD = 7.0                                  # D toward him
+TILT0 = 6.0                                    # deg above the camera -> head line; + drift tilt
 TILT_RATE = 1.5
 
 
@@ -39,7 +39,7 @@ def cam_path(A):
     subj = m + Vector((0.0, 0.0, HEAD_Z))
     c = Vector(A["cams"][PRESET]["loc"]) - Vector((0.0, 0.0, CAMERA_DROP))
     c = c + (subj - c).normalized() * CAM_FWD                           # closer: his head ~110 px instead of 56
-    return C.CamPath(c, subj, GF, G_LAST, push=0.08, slide_px=40.0, rise_px=0.0, arc_deg_s=2.0, tilt0=TILT0, tilt_deg_s=TILT_RATE,
+    return C.CamPath(c, subj, GF, G_LAST, push=0.10, slide_px=60.0, rise_px=0.0, arc_deg_s=-24.0, tilt0=TILT0, tilt_deg_s=TILT_RATE,
                      decay=0.2, snaps=[])
 
 
