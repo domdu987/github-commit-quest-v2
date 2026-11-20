@@ -40,3 +40,15 @@ NOTES (non-blocking):
 2. g1444-1467: a foreground foresail panel covers William's shin/feet region, so deck contact is only partly visible (the legs end on the deck line behind the panel). Not floating, but crop at g1450+ shows no contact shadow.
 3. g1384-1410: a small log floats in the sea at lower left, reads as a prop and is fine.
 4. William's pose change in g1384-1416 is subtle at phone size (head about 26-40 px); the clear action is g1436+.
+
+## Round 13 (director QA-tech) - FAIL (marginal: ffmpeg-gray p90 9.97 vs 10)
+Take v2 g1375-1476 (102 f, 720x1280, 30 fps). Frames: /tmp/qa19_r13/s18/ (f6_*.jpg 6 fps, full_000..101.png every frame, index = g-1375; sheet.jpg, wil.jpg crops). Script /tmp/qa19_r13/m.py.
+Numbers (in-shot g1384-1467, 84 frames / 83 consecutive pairs, 90x160 bilinear):
+- luma 98.44 (85-110) PASS; per-frame 89.5-106.3. saturation 0.654 (>= 0.47) PASS.
+- frame-diff mean-RGB grey: median 5.33, p90 10.20 PASS. ffmpeg gray: median 5.24 PASS, **p90 9.97 FAIL (< 10, by 0.03)**. Min 1.75, max 16.6 (snap peak g1431-1435). With g1384-1468 (84 pairs): RGB 5.24 / 10.19, gray 5.16 / 9.97, still fail. meta.json 5.33 / 10.21 agrees with the RGB method only.
+- Cause: g1384-1404 is flat 1.8-1.9 (21 pairs, a quarter of the shot, the new +0.1 EV lift didn't add motion) and g1440-1467 settles at 2.7-6. Fix: more motion in the first 0.7 s (start the slide/push or the orbit ramp about 10 f earlier, or a gentle ease-in rather than a dead start), or a slightly stronger snap decay. Even +0.1 of p90 gives margin; aim for 10.3+ on gray.
+Checks:
+- William: g1384-1409 looks down at the H4 (eyes closed), g1410-1426 head turn / glance up, g1434+ H4 raised overhead on the screen-left (island) side with open-mouth excited face held to the end, warm sparkle on the watch about g1436-1454, hop g1436-1456. Change about every 1 s; longest near-static stretch about 1.1 s. PASS. Open mouth is a held expression, not talking. PASS. Watch now clearly readable.
+- Island: clear green dome with palms at the left horizon; width about 32 % at g1440 and 36 % at g1467 (mask measure; the request was 20-25 %, so it is larger, fine), also about 27 % from g1425. Clearly in frame on the word. PASS. Note: the ship still sails toward the camera while the island sits at left horizon level with / behind the hull, so "ahead of the ship" is only partly met (it reads as beside the ship). QA-art to judge; not a tech item.
+- Bow wave: smaller, matte white spray with wake rings. No cut by frame edge (ship whole). Face about 3 % of frame height. Head y about 590-700 (< 880). William on the forecastle deck, a sail panel hides his shins from g1445 (contact not fully visible, not floating). No prop through a face. No pops (only the planned snap g1431-1437), no black frames, no frozen runs (min diff 1.75). Pure-white (>=250) fraction <= 0.02 %, no blown-out holes, no bare planes.
+VERDICT: FAIL on the single number (gray p90 9.97). Everything else passes; re-measure after adding early motion.
