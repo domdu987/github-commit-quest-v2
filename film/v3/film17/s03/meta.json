@@ -1,6 +1,43 @@
-{"take":"s03","film":17,"shots":[7,8],"first_g":330,"n_frames":121,"g0":336,"g1":445,"handle_in":6,"handle_out":6,
- "transition_in":{"type":"dissolve","frames":11},
- "transitions":[{"at":390,"type":"cut"}],
- "render":{"size":"720x1280","samples":12,"denoise":"OIDN","s_per_frame":75},
- "rhythm":{"median":5.50,"p90":12.93},
- "cast":{"7":["bertillon_holding_card@aisle1","prisoner_standing_a@aisle_far"],"8":["bertillon_neutral+scratch@desk_clerk(dx .5)"]}}
+{
+ "take": "s03",
+ "film": 17,
+ "shots": [
+  7,
+  8
+ ],
+ "first_g": 330,
+ "n_frames": 121,
+ "g0": 336,
+ "g1": 445,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 11
+ },
+ "transitions": [
+  {
+   "at": 390,
+   "type": "cut"
+  }
+ ],
+ "render": {
+  "size": "720x1280",
+  "samples": 12,
+  "denoise": "OIDN",
+  "s_per_frame": 75
+ },
+ "rhythm": {
+  "median": 4.51,
+  "p90": 13.28
+ },
+ "cast": {
+  "7": [
+   "bertillon_holding_card@aisle1",
+   "prisoner_standing_a@aisle_far"
+  ],
+  "8": [
+   "bertillon_neutral+scratch@desk_clerk(dx .5)"
+  ]
+ }
+}

@@ -22,7 +22,7 @@ TMP = os.path.join(HERE, "work")
 SPR = os.path.join(TMP, "sprites")
 SN7, SN8 = 364, 418
 SNAP8 = (-0.30, -0.30, -0.02)
-ORB8 = (-30.0, -22.0)
+ORB8 = (-20.0, -14.0)
 def bf(g): return g - FIRST_G + 1
 def shot_of(g): return 7 if g < G_CUT else 8
 
@@ -43,8 +43,9 @@ def cam_of(g):
     loc = aim(s["c0"], s["c1"], u); look = aim(s["l0"], s["l1"], u)
     loc.z += sway
     if shot_of(g) == 7:
+        x = min(1.0, max(0.0, (g - 344) / 12.0)); k1 = x * x * (3 - 2 * x)
         x = min(1.0, max(0.0, (g - SN7) / 12.0)); k = x * x * (3 - 2 * x)
-        loc += Vector((0.45, 0.9, -0.5)) * k; look += Vector((1.5, 0.0, -0.1)) * k
+        loc += Vector((0.2, 0.4, -0.2)) * k1 + Vector((0.25, 0.5, -0.3)) * k; look += Vector((1.4, 0.0, -0.05)) * k1 + Vector((0.6, 0.0, -0.05)) * k
     else:
         piv = Vector((-0.74, 2.33, 0.0)); rel = Vector(S8["c0"]) - piv
         x = min(1.0, max(0.0, (g - SN8) / 13.0)); k = x * x * (3 - 2 * x)
@@ -200,6 +201,10 @@ class Take(object):
             loc, look = cam_of(g)
             camrig.key_camera(f, loc, look, cam=self.cam, lens=22.0, interp="LINEAR", easing="AUTO")
             K.set_flicker(1.0, frame=f); K.set_smoke(1.0, frame=f); K.set_dust(0.5, frame=f)
+            if sh == 8:
+                for r in self.photos:
+                    d = loc - Vector((r.location.x, r.location.y, 0.0)); d.z = 0
+                    r.rotation_euler = (math.radians(34), 0, math.atan2(-d.x, d.y)); r.keyframe_insert("rotation_euler", frame=f)
             for o in self.beams:
                 o.hide_render = sh == 8; o.keyframe_insert('hide_render', frame=f)
             for o in self.aisle_fg + self.spill:
