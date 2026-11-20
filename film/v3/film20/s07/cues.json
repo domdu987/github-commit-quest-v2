@@ -1,0 +1,68 @@
+{
+ "take": "s07",
+ "fps": 30,
+ "note": "t = film seconds (g / 30); narration PROJ/film20/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "kind": "ambience",
+   "t": 15.4,
+   "dur": 1.8,
+   "frame": 462,
+   "end_frame": 516,
+   "note": "Café 1887: crowd hubbub quiet and distant, close pen scratching, gas-lamp hiss"
+  },
+  {
+   "kind": "foley",
+   "t": 15.533,
+   "dur": 0.5,
+   "frame": 466,
+   "end_frame": 481,
+   "note": "quill scratching on paper as the first signature is written; hand-sleeve cloth rustle",
+   "peak_frame": 474
+  },
+  {
+   "kind": "accent",
+   "t": 15.7,
+   "dur": 0.067,
+   "frame": 471,
+   "end_frame": 473,
+   "note": "signature lands: a short pen 'tick' + a snappy ink stamp thud (comic punctuation)",
+   "peak_frame": 471
+  },
+  {
+   "kind": "accent",
+   "t": 15.6,
+   "dur": 0.4,
+   "frame": 468,
+   "end_frame": 480,
+   "note": "small snap push on the landing: quick rising whoosh",
+   "peak_frame": 473
+  },
+  {
+   "kind": "foley",
+   "t": 16.1,
+   "dur": 0.367,
+   "frame": 483,
+   "end_frame": 494,
+   "note": "quill handed over: soft cloth swish, fingers brushing the shaft, paper creak",
+   "peak_frame": 488
+  },
+  {
+   "kind": "accent",
+   "t": 16.533,
+   "dur": 0.067,
+   "frame": 496,
+   "end_frame": 498,
+   "note": "second signature lands: pen 'tick' + ink thud",
+   "peak_frame": 496
+  },
+  {
+   "kind": "cut",
+   "t": 17.1,
+   "dur": 0.0,
+   "frame": 513,
+   "end_frame": 513,
+   "note": "hard cut to shot 8 (artists at the window)"
+  }
+ ]
+}
