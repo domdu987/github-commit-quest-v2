@@ -62,7 +62,11 @@ for g in range(S.FIRST, S.LAST + 1):
         im = cv2.filter2D(im, -1, kernel(Lb, 0.0 if g <= S.G_M_END else math.pi), borderType=cv2.BORDER_REPLICATE)
     if g >= 1476:                                   # card shot: exposure -15..-18 % (director round 1)
         k = 1.0 - 0.17 * min(1.0, (g - 1476) / 14.0)
-        im = np.clip(im.astype(np.float32) * k, 0, 255).astype(np.uint8)
+        im = im.astype(np.float32) * k
+        hsv = cv2.cvtColor(np.clip(im, 0, 255).astype(np.uint8), cv2.COLOR_BGR2HSV).astype(np.float32)
+        mask = ((hsv[..., 2] > 140) & (hsv[..., 1] < 80)).astype(np.float32)          # the card paper: +10 % (director round 1)
+        mask = cv2.GaussianBlur(mask, (0, 0), 3 * scale)[..., None] * min(1.0, (g - 1476) / 14.0)
+        im = np.clip(im * (1.0 + 0.10 * mask), 0, 255).astype(np.uint8)
     cv2.imwrite(os.path.join(out, "g_%04d.png" % g), im)
 big = [(g, round(v[0])) for g, v in tab.items() if v[0] > 40]
 print("blurred frames (g, px/frame):", big)
