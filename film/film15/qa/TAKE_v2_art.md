@@ -312,3 +312,6 @@ Round-2 items:
 
 ### Round 4 verdict
 T4 **FIX**: only the pole behind Dick, g1280-1337 (x about 375-395). After that fix, T4 passes. Minor and not blocking: the bar end touches Dick's chin at g1180.
+
+## Round 4b (director check, 19:10 UTC) - T2
+T2 round-3 fix verified on frames g848-868: hands are skin-coloured and hidden from g852, the page through the seam has no hands, the headline and photo framing are unchanged. T2 PASS.
