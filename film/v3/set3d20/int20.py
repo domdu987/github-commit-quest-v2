@@ -43,7 +43,7 @@ def mat_checker(name, A, B, pitch, rough=0.35, sheen=0.25, vary=0.12):
     mx = N('ShaderNodeMix'); mx.data_type = 'RGBA'; mx.blend_type = 'MULTIPLY'; mx.inputs[0].default_value = 1.0; L(ck.outputs['Color'], mx.inputs[6]); L(cr.outputs[0], mx.inputs[7])
     L(mx.outputs[2], bs.inputs['Base Color']); L(bs.outputs[0], out.inputs['Surface']); C.MATS[name] = m; return m
 
-def mat_greek(name, paper='#f2ead2', ink='#4a4250', ink2='#6a6070', rowh=0.011, wordw=0.034, mortar=0.28):
+def mat_greek(name, paper='#f2ead2', ink='#4a4250', ink2='#6a6070', rowh=0.0125, wordw=0.045, mortar=0.0045):
     """GREEKED text: rows of word-like ink blocks on paper (Brick texture in object metres). No readable text anywhere."""
     if name in C.MATS: return C.MATS[name]
     m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
@@ -65,11 +65,11 @@ def pal():
     M['i_zincbar'] = mat('i_zincbar', '#a4aec2', '#cdd4e2', 3, rough=0.35, sheen=0.5)
     M['i_wall'] = mat('i_wall', '#d49c88', '#e6b8a2', 2.2, contrast=0.8)
     M['i_wallhi'] = mat('i_wallhi', '#e2c898', '#f0dcb0', 2.0, contrast=0.8)
-    M['i_ceil'] = mat('i_ceil', '#a8806a', '#bc9478', 2.0, contrast=0.7)
+    M['i_ceil'] = mat('i_ceil', '#98705c', '#ac846c', 2.0, contrast=0.7)
     M['i_wood'] = mat('i_wood', '#5a2e18', '#7a4626', 5, aniso=(1, 1, 0.3), contrast=1.4, rough=0.45, sheen=0.3)
     M['i_woodlt'] = mat('i_woodlt', '#8a5a30', '#b07a44', 5, aniso=(1, 1, 0.3), contrast=1.4, rough=0.45, sheen=0.3)
     M['i_paint'] = mat('i_paint', '#f2e8d0', '#e2d6bc', 3, contrast=0.6)                      # cream painted window frames / pilasters
-    M['i_tile'] = mat_checker('i_tile', '#cdb48c', '#566a98', 0.32, vary=0.1)                           # café floor: cream / slate-blue tiles
+    M['i_tile'] = mat_checker('i_tile', '#b09a74', '#445688', 0.32, vary=0.1)                           # café floor: cream / slate-blue tiles
     M['i_tilebrd'] = mat('i_tilebrd', '#a4562c', '#c46a3a', 6, contrast=1.2)
     M['i_mirror'] = mat('i_mirror', '#b4c6e0', '#dce8f6', 0.6, zgrad=(1.5, 3.7, '#6f88b6'), sheen=0.0, contrast=0.5)   # diffuse pale blue: NO readable reflections
     M['i_glint'] = mat_emit('i_glint', '#e8f2ff', 0.7)
@@ -99,7 +99,7 @@ def pal():
     M['i_sky'] = mat('i_sky', '#5a78c8', '#7e9ad8', 2, contrast=0.8)
     M['p_sky'] = mat('p_sky', '#7a9ae6', '#a8c0f4', 2); M['p_grn'] = mat('p_grn', '#4a7a4a', '#7a9a50', 3); M['p_ocr'] = mat('p_ocr', '#d4a040', '#e8c060', 3); M['p_red'] = mat('p_red', '#c0402a', '#d86038', 3); M['p_blu'] = mat('p_blu', '#2a46a8', '#3a5cc8', 3)
     M['i_lamp'] = mat_emit('i_lamp', '#ffb050', 6.5)
-    M['i_ceilres'] = mat('i_ceilres', '#a87c58', '#bc9068', 3, contrast=0.8)
+    M['i_ceilres'] = mat('i_ceilres', '#98704c', '#ac8460', 3, contrast=0.8)
     M['i_coffer'] = mat('i_coffer', '#b88a74', '#caa086', 3); M['i_cofferr'] = mat('i_cofferr', '#a8784c', '#bc8c5c', 3)
     return M
 
@@ -227,7 +227,7 @@ def curtain(mb, M, x, y, w, h, zb=0.05, n=7, mm='i_crim', md='i_crimdk', sgn=1):
         xx = x - w / 2 + (i + 0.5) * w / n; off = 0.05 * (1 if i % 2 else -1) * sgn
         mb.box(M[mm if i % 2 else md], (xx, y + off, zb + h / 2), (w / n * 1.05, 0.07, h))
 
-def chandelier(mb, M, x, y, z, lights, arms=6, r=0.55):
+def chandelier(mb, M, x, y, z, lights, arms=6, r=0.55, en=18):
     mb.rod(M['gold'], (x, y, z + 0.1), (x, y, z + 0.9), 0.012, 0.012, 5); mb.cyl(M['gold'], (x, y, z), 0.12, 0.16, 'z', 12, r2=0.05, smooth=True)
     mb.cyl(M['gold'], (x, y, z - 0.08), r * 0.95, 0.03, 'z', 24)
     for k in range(arms):
@@ -237,7 +237,7 @@ def chandelier(mb, M, x, y, z, lights, arms=6, r=0.55):
         mb.cyl(M['gold'], (px, py, z + 0.04), 0.03, 0.06, 'z', 8)
         mb.ell(M['i_lamp'], (px, py, z + 0.16), (0.075, 0.075, 0.11), (10, 8))
     mb.ell(M['i_lamp'], (x, y, z - 0.18), (0.09, 0.09, 0.13), (10, 8))
-    lights.append(((x, y, z - 0.1), (1.0, 0.70, 0.36), 26))
+    lights.append(((x, y, z - 0.1), (1.0, 0.70, 0.36), en))
 
 def sconce(mb, M, x, y, z, nrm, lights, en=16):
     """wall gas bracket; nrm = unit (nx, ny) pointing into the room"""
@@ -328,8 +328,8 @@ CAFE_CAMS_M = dict(
     cafe_wide_end=((-1.3, -1.4, 1.1), (0.2, 5.8, 1.25), 0.0),
     cafe_table_insert=((T1[0] + 0.2, T1[1] - 0.5, 1.05), (T1[0] + 0.0, T1[1] + 0.06, 0.765)),
     cafe_window=((-0.15, -0.9, 1.5), (0.9, 8.0, 2.0)),
-    cafe_low=((0.9, 4.6, 0.5), (0.9, 7.0, 1.95)),
-    cafe_low_close=((0.95, 5.3, 0.85), (0.9, 7.0, 1.85)),
+    cafe_low=((0.9, 4.6, 0.5), (0.9, 7.0, 1.45)),
+    cafe_low_close=((0.95, 5.3, 0.85), (0.9, 7.0, 1.35)),
 )
 CAFE_STAGING = dict(
     cafe_wide=[('painter20', 'artist_1'), ('composer20', 'artist_2'), ('poet20', 'artist_3'), ('architect20', 'artist_4'), ('maupassant', 'maupassant'), ('waiter', 'waiter')],
@@ -405,7 +405,7 @@ def build_cafe(P, preset, view):
     sconce(mb, M, -1.2, Y1 - 0.05, 2.9, (0, -1), lights); sconce(mb, M, 3.1, Y1 - 0.05, 2.9, (0, -1), lights)
     # near (camera-side) wall: a mirror + a clock-less panel, so a wide reversed shot has something
     mirror_frame(mb, M, 'y', Y0, 0.0, 2.2, 1.8, 1.6, 'i_mirror2')
-    chandelier(mb, M, T1[0], T1[1], ZH - 0.8, lights); chandelier(mb, M, 0.9, 6.3, ZH - 0.75, lights, 6, 0.42)
+    chandelier(mb, M, T1[0], T1[1], ZH - 0.8, lights); chandelier(mb, M, 0.9, 6.3, ZH - 0.75, lights, 6, 0.42, 6)
     # painted ceiling bays: coffer panels with a sky medallion and gilt ring
     for yy in (-2.0, 1.0, 4.0, 6.9):
         for xx in (-3.0, 0.0, 3.0):
@@ -538,13 +538,13 @@ RX0, RX1, RY0, RY1, RZH = -4.8, 4.8, -9.0, 17.0, 4.5
 RBIGWIN = (-2.6, 2.6, 0.0, 3.9)                    # the big window on the far wall (the window table is in front of it)
 HERO = (0.0, 15.7)                                 # window table centre (room metres)
 RESTO_MARKS_M = dict(
-    maupassant=(HERO[0], HERO[1] + 0.95, 0.0), maupassant_seat=(HERO[0], HERO[1] + 0.95, 0.46), maupassant_seated_card=(HERO[0], HERO[1] + 0.98, -0.22), waiter=(HERO[0] + 1.3, HERO[1] - 0.8, 0.0), waiter_start=(0.35, 6.2, 0.0),
-    maupassant_start=(-0.4, 6.9, 0.0), hero_table=(HERO[0], HERO[1], 0.76), window=(HERO[0], RY1 - 0.05, 2.0))
+    maupassant=(HERO[0], HERO[1] + 0.95, 0.0), maupassant_seat=(HERO[0], HERO[1] + 0.95, 0.46), maupassant_seated_card=(HERO[0], HERO[1] + 0.98, -0.22), waiter=(HERO[0] + 1.3, HERO[1] - 0.8, 0.0), waiter_start=(0.35, 3.1, 0.0),
+    maupassant_start=(-0.45, 3.7, 0.0), hero_table=(HERO[0], HERO[1], 0.76), window=(HERO[0], RY1 - 0.05, 2.0))
 RESTO_CAMS_M = dict(
-    resto_wide=((0.0, -3.0, 0.7), (0.0, 12.0, 3.0), 0.0),
-    resto_wide_end=((0.1, 1.6, 0.95), (0.0, 13.0, 2.3), 0.0),
+    resto_wide=((0.0, -2.4, 0.75), (0.0, 12.0, 3.4), 0.0),
+    resto_wide_end=((0.0, 0.8, 0.8), (0.0, 13.0, 2.3), 0.0),
     resto_table=((0.15, 13.4, 1.12), (0.0, 16.4, 1.5), 0.0),
-    resto_view=((0.6, 14.9, 1.5), (-0.3, 60.0, 0.4), 0.0),
+    resto_view=((0.6, 14.7, 1.4), (-0.3, 60.0, -0.9), 0.0),
 )
 RESTO_STAGING = dict(
     resto_wide=[('maupassant', 'maupassant_start'), ('waiter', 'waiter_start')],
@@ -613,7 +613,7 @@ def build_resto(P, preset):
     mb = MB('floor', parent=C.root())
     ymid = (Y0 + Y1) / 2; ln = Y1 - Y0
     mb.box(M['i_parq'], (0, ymid, -0.05), (X1 - X0, ln, 0.1))
-    for (w, m_) in ((1.5, 'gold'), (1.36, 'i_crim'), (1.02, 'i_navycp')):                 # runner: gilt edge, crimson border, navy field
+    for (w, m_) in ((1.7, 'gold'), (1.56, 'i_crim'), (1.28, 'i_navycp')):                 # runner: gilt edge, crimson border, navy field
         mb.box(M[m_], (0.0, ymid, 0.006 + (0.002 if m_ != 'gold' else 0.0) + (0.004 if m_ == 'i_navycp' else 0.0)), (w, ln - 0.5, 0.012))
     for yy in np.arange(Y0 + 1.0, Y1 - 0.4, 0.6):                                          # carpet pattern: gilt lozenges
         mb.ell(M['gold'], (0, yy, 0.016), (0.1, 0.16, 0.004), (10, 6))
@@ -679,6 +679,13 @@ def build_resto(P, preset):
     for sx in (-1, 1):
         xo = sx * (b + 0.1)
         mb.rod(I, (xo - 0.5, yo, 0.0), (xo + 0.5, yo, zb_ + 0.3), 0.11, 0.11, 4); mb.rod(I, (xo + 0.5, yo, 0.0), (xo - 0.5, yo, zb_ + 0.3), 0.11, 0.11, 4)
+    yo2 = Y1 + 0.55
+    for sx in (-1, 1):                                                              # X-braced lattice panels of the tower's leg crossing the glass at both sides (centre stays open for Paris)
+        xin = sx * 1.45; xout = sx * (b + 0.05)
+        for (za_, zb2_) in ((0.0, 1.95), (1.95, 3.9)):
+            mb.rod(I, (xin, yo2, za_), (xout, yo2, zb2_), 0.055, 0.055, 4); mb.rod(I, (xout, yo2, za_), (xin, yo2, zb2_), 0.055, 0.055, 4)
+        for zz in (0.0, 1.95, 3.9): mb.rod(IL, (xin, yo2, zz), (xout, yo2, zz), 0.05, 0.05, 4)
+        mb.rod(I, (xin, yo2, 0.0), (xin, yo2, 3.9), 0.06, 0.06, 4)
     for t in (a, b): mb.box(I, (t, Y1 - 0.1, 2.0), (0.09, 0.06, 3.9))
     mb.box(I, (0, Y1 - 0.1, 3.4), (b - a, 0.06, 0.07))
     for i in range(14):
@@ -692,8 +699,8 @@ def build_resto(P, preset):
             mb.rod(IL, p0 + Vector((-w0, 0, 0)), p1 + Vector((w0, 0, 0)), 0.07, 0.07, 4); mb.rod(IL, p0 + Vector((w0, 0, 0)), p1 + Vector((-w0, 0, 0)), 0.07, 0.07, 4)
     fin(mb)
     # ---- furniture, diners, dressing
-    mb = MB('furn', parent=C.root())
-    tabs = [(-2.9, 1.0), (2.4, 0.2), (-2.9, 4.6), (2.3, 4.0), (-2.9, 8.2), (2.2, 8.2), (-2.9, 12.0), (2.5, 12.2), (-2.0, 14.9), (2.4, 15.3)]
+    mb = MB('furn', parent=C.root()); _crim = M['crimson']; M['crimson'] = M['i_navycp']
+    tabs = [(-2.1, 1.2), (2.1, 0.9), (-2.1, 4.6), (2.1, 4.2), (-2.1, 8.2), (2.1, 8.4), (-2.1, 11.9), (2.1, 12.2), (-2.9, 14.6), (2.9, 15.2)]
     dd = [('d_blue', 'bonnet'), ('d_navy', 'top'), ('d_cream', 'bonnet'), ('d_slate', 'top'), ('d_crim', 'bonnet'), ('d_teal', 'top'), ('d_plum', 'bonnet'), ('d_ochre', 'top')]
     for i, (x, y) in enumerate(tabs):
         a1 = dd[i % 8]; a2 = dd[(i + 3) % 8]
@@ -705,6 +712,7 @@ def build_resto(P, preset):
     lights.append(((hx, hy - 0.2, 2.2), (1.0, 0.72, 0.4), 10))
     SB.chair(mb, M, (hx - 0.95, hy + 0.1, 0), math.pi / 2 - 0.2); SB.chair(mb, M, (hx + 0.95, hy + 0.1, 0), -math.pi / 2 + 0.2); SB.chair(mb, M, (hx, hy - 0.95, 0), math.pi)
     SB.chair(mb, M, (hx, hy + 0.95, 0), 0.0)
+    M['crimson'] = _crim
     # buffet / sideboard with a gilt mirror screen on the right wall: silver domes, bottles, fruit
     bx, by = 4.0, 9.8
     mb.box(M['wallpan'], (bx - 0.1, by, 0.55), (0.7, 3.0, 1.1)); mb.box(M['i_cloth'], (bx - 0.1, by, 1.12), (0.8, 3.1, 0.05)); mb.box(M['gold'], (bx + 0.45, by, 2.5), (0.1, 2.4, 2.7)); mb.box(M['i_mirror2'], (bx + 0.4, by, 2.5), (0.05, 2.1, 2.4))
@@ -713,8 +721,8 @@ def build_resto(P, preset):
     for i in range(3): bottle(mb, M, bx - 0.12, by - 0.9 + i * 0.9 + 0.3, 1.14, ['wineg', 'i_botr', 'wineamb'][i], 0.34, 0.045)
     for j in range(7): mb.ell(M['d_crim'] if j % 2 else M['d_ochre'], (bx - 0.05 + (j % 3) * 0.1, by + 1.2 + (j // 3) * 0.1, 1.17 + 0.03 * (j % 2)), (0.06, 0.06, 0.06), (8, 6))
     # gilt side mirror stands + palms in pots + coat stand
-    SB.palm(mb, M, (-4.2, 15.9, 0.0), 1.5, 2); SB.palm(mb, M, (4.1, 15.5, 0.0), 1.4, 3); SB.palm(mb, M, (-4.2, 6.4, 0.0), 1.3, 5); SB.palm(mb, M, (4.1, 2.2, 0.0), 1.4, 7)
-    coat_stand(mb, M, 4.0, -0.9); coat_stand(mb, M, -4.1, -6.0)
+    SB.palm(mb, M, (-4.2, 15.9, 0.0), 1.5, 2); SB.palm(mb, M, (4.1, 15.5, 0.0), 1.4, 3); SB.palm(mb, M, (-4.2, 6.4, 0.0), 1.3, 5); SB.palm(mb, M, (4.1, 2.2, 0.0), 1.4, 7); SB.palm(mb, M, (-3.9, 1.8, 0.0), 1.5, 8); SB.palm(mb, M, (3.7, 8.6, 0.0), 1.3, 9)
+    coat_stand(mb, M, 3.75, 5.9); coat_stand(mb, M, -4.1, 11.0)
     # FG chair backs and a service table with a wine glass + bread (for the low wide camera)
     SB.chair(mb, M, (-2.55, -4.0, 0), 0.4); SB.chair(mb, M, (3.0, -4.6, 0), math.pi - 0.3)
     fin(mb)
@@ -727,11 +735,10 @@ def build_resto(P, preset):
     fin(mb)
     mb = MB('fg', parent=C.root())
     if preset == 'resto_wide':                      # FG: a chair back (lower left) and a small table with wine glass + bread (lower right), both in shade, 1-2 D from the lens
-        SB.chair(mb, M, (-0.52, -0.9, 0), math.pi)
-        table_set(mb, M, 0.78, -0.62, rr, 2, None, r=0.5, bread=True)
-        glass(mb, M, 0.62, -1.14, 0.76, 'wineg', 0.14); glass(mb, M, 0.92, -1.12, 0.76, 'glasswine', 0.13)
-        for k in range(3): mb.ell(M['d_ochre'], (0.74 + k * 0.1, -1.08, 0.82), (0.08, 0.03, 0.035), (8, 6), (0, 0, 0.4 * k))
-        SB.chair(mb, M, (0.78, 0.4, 0), 0.0)
+        SB.chair(mb, M, (-0.66, -0.85, 0), math.pi)
+        table_set(mb, M, 0.78, -0.7, rr, 2, None, r=0.45, bread=True, lamp=False)
+        glass(mb, M, 0.63, -1.12, 0.76, 'wineg', 0.14); glass(mb, M, 0.92, -1.1, 0.76, 'glasswine', 0.13)
+        for k in range(3): mb.ell(M['d_ochre'], (0.56 + k * 0.1, -1.08, 0.82), (0.07, 0.03, 0.03), (8, 6), (0, 0, 0.4 * k))
     if preset == 'resto_table':
         glass(mb, M, HERO[0] + 0.26, HERO[1] - 0.5, 0.76, 'wineg', 0.15); glass(mb, M, HERO[0] - 0.12, HERO[1] - 0.52, 0.76, 'glasswine', 0.14)
         mb.cyl(M['i_woodlt'], (HERO[0] - 0.34, HERO[1] - 0.38, 0.8), 0.13, 0.07, 'z', 14, r2=0.16)
@@ -747,6 +754,9 @@ LIGHTS = dict(
     cafe=dict(DAY=dict(key=(1.0, 0.84, 0.6, 16.0), key_dir=(0.30, -0.78, -0.55), sun_angle=1.0, sky=SKY_DAY, sky_k=0.8, amb=('#5a6cff', 2.6), exposure=0.35, sat=1.08, winfill=((0.14, 0.30, 0.78), 480.0), fill=((0.95, 0.86, 0.74), 18.0), lamp=1.0)),
     resto=dict(DAY=dict(key=(1.0, 0.84, 0.6, 18.0), key_dir=(0.34, -0.78, -0.40), sun_angle=1.0, sky=SKY_DAY, sky_k=0.7, amb=('#4a64ff', 3.4), exposure=1.0, sat=1.06, winfill=((0.14, 0.30, 0.78), 600.0), fill=((0.92, 0.84, 0.74), 24.0), lamp=1.0)))
 DEFAULT_LIGHT = dict(cafe='DAY', resto='DAY')
+# per-preset exposure / sky tweaks (the interiors are lit for the wide; the shots that look mostly outside or at a bright sheet are pulled down so V > 0.95 stays small)
+PRESET_P = dict(cafe_low=dict(exposure=0.0), cafe_low_close=dict(exposure=-0.05), cafe_table_insert=dict(exposure=-0.45), resto_wide=dict(exposure=1.35),
+                resto_table=dict(exposure=0.3, sky_k=0.5), resto_view=dict(exposure=-0.15, sky_k=0.5))
 
 def _place_lights(loc, P, lights):
     for i, (p, colour, en) in enumerate(lights):
@@ -783,7 +793,7 @@ def build(preset, light=None, view=None, spp=None):
     loc = 'cafe' if preset.startswith('cafe_') else 'resto'
     light = light or DEFAULT_LIGHT[loc]
     C.reset(loc, preset, light, spp=spp, dbounce=1)
-    P = dict(LIGHTS[loc][light]); P['zbase'] = -55.0
+    P = dict(LIGHTS[loc][light]); P.update(PRESET_P.get(preset, {})); P['zbase'] = -55.0
     if loc == 'cafe':
         lights = build_cafe(P, preset, view or 'stub'); build_cafe_outside(P, STATE['M']); set_window_view(view or 'stub'); add_signature(24 if preset != 'cafe_table_insert' else 24)
     else:
@@ -792,9 +802,28 @@ def build(preset, light=None, view=None, spp=None):
     C.apply_P(P)
     cams, marks = _cams_marks(loc)
     STATE['marks'].update(marks); STATE['cams'] = cams; STATE['staging'] = {k: v for k, v in (CAFE_STAGING if loc == 'cafe' else RESTO_STAGING).items()}
-    A = dict(loc=loc, preset=preset, light=light, cams=cams, marks=marks, cam=cams[preset], P=P, state=STATE)
+    A = dict(loc=loc, preset=preset, light=light, cam_name=preset, cams=cams, marks=marks, cam=cams[preset], P=P, state=STATE,
+             marks_m={k: tuple(v) for k, v in (CAFE_MARKS_M if loc == 'cafe' else RESTO_MARKS_M).items()}, staging=STATE['staging'],
+             hooks=dict(set_window_view=set_window_view, smoke=smoke, add_signature=add_signature) if loc == 'cafe' else {})
     if loc == 'resto': A['window_world'] = RESTO_WINDOW_WORLD
     return A
+
+PRESETS = ['cafe_wide', 'cafe_table_insert', 'cafe_window', 'cafe_low', 'cafe_low_close', 'resto_wide', 'resto_table', 'resto_view']
+H_ = "A['hooks']"
+TILES = [   # (tile_name, preset, light, hooks_code, label, camera_name_or_None[, extras_code])
+    ('I01_cafe_wide', 'cafe_wide', 'DAY', H_ + "['smoke'](0.0)", 'cafe_wide / DAY 1887 (stub view, no smoke)', None),
+    ('I02_cafe_wide_end', 'cafe_wide', 'DAY', H_ + "['smoke'](0.0)", 'cafe_wide_end / DAY 1887 (end of the slide)', 'cafe_wide_end'),
+    ('I03_cafe_table_insert', 'cafe_table_insert', 'DAY', H_ + "['add_signature'](24)", 'cafe_table_insert / DAY (24 signatures)', None),
+    ('I04_cafe_table_insert_5', 'cafe_table_insert', 'DAY', H_ + "['add_signature'](5)", 'cafe_table_insert / DAY (add_signature 5)', None),
+    ('I05_cafe_window_smoke', 'cafe_window', 'DAY', H_ + "['smoke'](0.9)", 'cafe_window / DAY 1887 (forge smoke 0.9, shot 8)', None),
+    ('I06_cafe_low_stub', 'cafe_low', 'DAY', H_ + "['smoke'](0.0)", 'cafe_low / DAY 1887 (stub, shot 9)', None),
+    ('I07_cafe_low_full', 'cafe_low', 'DAY', H_ + "['set_window_view']('full')", 'cafe_low / DAY 1889 (finished tower, shot 16)', None),
+    ('I08_cafe_low_close_stub', 'cafe_low_close', 'DAY', H_ + "['smoke'](0.0)", 'cafe_low_close / DAY 1887 (stub, shot 10)', None),
+    ('I09_cafe_low_close_full', 'cafe_low_close', 'DAY', H_ + "['set_window_view']('full')", 'cafe_low_close / DAY 1889 (finished tower, shot 17)', None),
+    ('I10_resto_wide', 'resto_wide', 'DAY', '', 'resto_wide / DAY 1889 (shot 24)', None),
+    ('I11_resto_table', 'resto_table', 'DAY', '', 'resto_table / DAY (shots 2, 25)', None),
+    ('I12_resto_view', 'resto_view', 'DAY', '', 'resto_view / DAY (shot 26, Paris, no tower)', None),
+]
 
 # =============================================================================================== CLI / test renders
 def render_one(A, out, quality='final', actors=True):

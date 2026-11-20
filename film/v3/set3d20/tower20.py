@@ -24,7 +24,7 @@ CAMS_M = dict(
     tower_fair=dict(loc=(-6.0, -150.0, 1.55), look=(0.0, 0.0, 17.0), lens=22, shift=0.06),
     tower_dusk=dict(loc=(-8.0, -232.0, 4.5), look=(0.0, 0.0, 4.5), lens=22, shift=0.345),
     tower_dusk_summit=dict(loc=(-8.0, -232.0, 4.5), look=(0.0, 0.0, 285.0), lens=22),
-    tower_dusk_summit_end=dict(loc=(-8.0, -232.0, 4.5), look=(-3.0, -205.0, 4.5), lens=22),
+    tower_dusk_summit_end=dict(loc=(-8.0, -232.0, 4.5), look=(-3.0, -205.0, 4.5), lens=22, shift=0.22),
     tower_hut=dict(loc=(HUT[0] + 0.5, HUT[1] - 1.5, 1.45), look=(HUT[0] - 0.2, HUT[1] + 1.4, 1.25), lens=22),
     tower_night_wide=dict(loc=(-8.0, -236.0, 5.0), look=(0.0, 0.0, 5.0), lens=22, shift=0.345),
     tower_night_summit=dict(loc=(-6.0, -80.0, 250.0), look=(0.0, 0.0, 290.0), lens=22),
@@ -144,7 +144,7 @@ def _window_gallery(M, A):
     mb.box(M['iron'], (0, 0, zt + 0.3), (2 * ag + 1.6, 2 * ag + 1.6, 0.7))
     # interior glimpse: floor, ceiling, back partition, side walls (warm), table + cloth + chairs, glasses, gas lamps
     yb = yg + 4.2
-    mb.box(M['floor'], (WIN_X, (yg + yb) / 2, zf + 0.04), (14.0, yb - yg, 0.08)); mb.box(M['wallpan'], (WIN_X, yb, (zf + zt) / 2), (14.0, 0.2, zt - zf))
+    mb.box(M['floor'], (WIN_X, (yg + yb) / 2, zf + 0.04), (14.0, yb - yg, 0.08)); mb.box(M['wallres'], (WIN_X, yb, (zf + zt) / 2), (14.0, 0.2, zt - zf))
     mb.box(M['crimdk'], (WIN_X, (yg + yb) / 2, zt - 0.2), (14.0, yb - yg, 0.3))
     for sx in (-1, 1): mb.box(M['wallres'], (WIN_X + sx * 7.0, (yg + yb) / 2, (zf + zt) / 2), (0.2, yb - yg, zt - zf))
     tx, ty = WIN_X, -35.8
@@ -162,7 +162,7 @@ def _window_gallery(M, A):
     for sx in (-WIN_W / 2, 0.0, WIN_W / 2): mb.box(M['ironlt'], (WIN_X + sx, yo - 0.2, zf + 0.35 + WIN_H / 2), (0.1, 0.1, WIN_H))
     mb.box(M['ironlt'], (WIN_X, yo - 0.2, zf + 0.35 + WIN_H * 0.62), (WIN_W, 0.08, 0.08))
     STATE['window_room'] = mb.finish()
-    STATE['pt_lights'] = STATE.get('pt_lights', []) + [(Vector((WIN_X + dx, yg + 1.6, zt - 1.0)), (1.0, 0.7, 0.36), 90) for dx in (-4.0, 0.0, 4.0)]
+    STATE['pt_lights'] = STATE.get('pt_lights', []) + [(Vector((WIN_X + dx, yg + 1.6, zt - 1.0)), (1.0, 0.7, 0.36), 700) for dx in (-4.0, 0.0, 4.0)]
     STATE['win_floor'] = zf; STATE['win_ag'] = 36.8
 
 # ------------------------------------------------------------------ avenue, trees, lamps
@@ -210,6 +210,7 @@ def _crowd(M, rr):
         for i in range(n):
             while True:
                 x = r2.uniform(-12.5, 12.5); y = r2.uniform(-150, -78) if r2.random() < 0.8 else r2.uniform(-210, -150)
+                if any(math.hypot(x - cx, y - cy) < 9.0 for cx, cy in ((-7.0, -120.0), (-6.0, -150.0))): continue   # nothing within 9 m of the start cameras
                 if abs(x) < 3.0 and -158 < y < -138: continue          # keep the hero marks clear
                 if abs(x) < 3.5 and -128 < y < -110: continue
                 break
@@ -278,7 +279,7 @@ def _hut(M, night):
     mb.box(M['timber'], (hx + 1.0, hy + d / 2 - 0.45, 1.6), (1.6, 0.25, 0.05))
     for i in range(5): mb.cyl(M['glasswine'] if i % 2 else M['wineg'], (hx + 0.4 + i * 0.28, hy + d / 2 - 0.45, 1.75), 0.08, 0.25, 'z', 8)
     mb.cyl(M['soot'], (hx - 2.2, hy + 0.9, 0.5), 0.3, 1.0, 'z', 10); mb.cyl(M['soot'], (hx - 2.2, hy + 0.9, 2.2), 0.08, 2.2, 'z', 8)
-    STATE['pt_lights'] = STATE.get('pt_lights', []) + [(Vector((dx + 0.65, dy + 0.1, 1.15)), (1.0, 0.62, 0.28), 160), (Vector((hx - 0.2, hy - 1.2, 2.6)), (1.0, 0.7, 0.4), 90), (Vector((hx + 1.4, hy - d / 2 - 0.9, 1.6)), (1.0, 0.62, 0.26), 140)]
+    STATE['pt_lights'] = STATE.get('pt_lights', []) + [(Vector((dx + 0.65, dy + 0.1, 1.15)), (1.0, 0.62, 0.28), 70), (Vector((hx - 0.2, hy - 1.2, 2.6)), (1.0, 0.7, 0.4), 30), (Vector((hx + 1.4, hy - d / 2 - 0.9, 1.6)), (1.0, 0.62, 0.26), 140)]
     return mb.finish()
 
 # ------------------------------------------------------------------ demolition wagon + scrap cart
@@ -349,22 +350,23 @@ def _rings(M):
         m = bpy.data.materials.new('ringm%d' % i); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); out = nt.nodes.new('ShaderNodeOutputMaterial'); em = nt.nodes.new('ShaderNodeEmission'); em.name = 'em'
         em.inputs['Color'].default_value = C.hexc('#bfe2ff'); em.inputs['Strength'].default_value = 0.0; nt.links.new(em.outputs[0], out.inputs['Surface'])
         ob = bpy.data.objects.new('ring_%d' % i, me); ob.data.materials.append(m) if i == 0 else None
-        if i > 0: ob.data = me.copy(); ob.data.materials.append(m)
+        if i > 0:
+            ob.data = me.copy(); ob.data.materials.clear(); ob.data.materials.append(m)
         bpy.context.scene.collection.objects.link(ob); ob.parent = R; ob.visible_shadow = False; ob.visible_diffuse = False; ob.visible_glossy = False; ob.hide_render = True; ob.location = (0, 0, 300.0); rings.append(ob)
     STATE['rings'] = rings
 def signal_rings(t, frame=None):
     """glowing blue-white rings expanding from the summit (billboard circles facing the camera along y): t 0..1 phase of the burst (6 rings, staggered 0.1); t < 0 hides them. Key every frame."""
     for i, ob in enumerate(STATE['rings']):
         age = (t - i * 0.1) / 0.7 if t >= 0 else -1.0; on = 0.0 < age < 1.0
-        rad = 12.0 + (age if on else 0.0) * 650.0; k = 90.0 * (1.0 - (age if on else 0.0)) ** 1.5 if on else 0.0
+        rad = 12.0 + (age if on else 0.0) * 650.0; k = 28.0 * (1.0 - (age if on else 0.0)) ** 1.5 if on else 0.0
         ob.scale = (rad, rad, rad); C.setv(ob, on, frame); C.keysock(ob.active_material.node_tree.nodes['em'].inputs['Strength'], k, frame)
         if frame is not None: C.key(ob, 'scale', frame)
 
 def _wire_glow_setup(M): pass
 def wire_glow(v, frame=None):
     """the lattice glows blue-white along the wire: v 0..1 (emission of the tower iron + the wires). Key every frame."""
-    for m in STATE['glow_mats']: C.keysock(m.node_tree.nodes['Principled BSDF'].inputs['Emission Strength'], 3.0 * v, frame)
-    wm = STATE['M']['wirep']; C.keysock(wm.node_tree.nodes['Principled BSDF'].inputs['Emission Strength'], 0.5 + 6.0 * v, frame)
+    for m in STATE['glow_mats']: C.keysock(m.node_tree.nodes['Principled BSDF'].inputs['Emission Strength'], 0.9 * v, frame)
+    wm = STATE['M']['wirep']; C.keysock(wm.node_tree.nodes['Principled BSDF'].inputs['Emission Strength'], 0.2 + 3.0 * v, frame)
 
 # ------------------------------------------------------------------ state hooks
 def set_year(y, frame=None):

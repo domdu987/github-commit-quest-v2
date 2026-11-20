@@ -244,7 +244,7 @@ def palette_ext(d):
     d['brassb'] = mat('brassb', '#cba048', '#e8c068', 2, rough=0.25, sheen=0.9)
     d['vase'] = mat('vase', '#5a6a8a', '#7a8aaa', 3, rough=0.4, sheen=0.4)
     d['rubber'] = mat('rubber', '#2e3038', '#42444e', 3)
-    d['wirep'] = mat('wirep', '#cfc4b8', '#c4b8ac', 3, emit='#d8ccc0', emit_k=0.35)         # antenna wire, pale line (QA TOWER fix 1)
+    d['wirep'] = mat('wirep', '#b4a99e', '#a89d92', 3, emit='#d8ccc0', emit_k=0.2)         # antenna wire, pale line (QA TOWER fix 1)
     return d
 
 def mat_ink_flat(name, hexcol):

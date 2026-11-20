@@ -23,7 +23,7 @@ CAMS_M = dict(
     site_table=dict(loc=(-38.0, -60.0, 1.5), look=(-47.0, -49.0, 2.4), lens=22),
     site_leg_low=dict(loc=(-36.0, -64.0, 1.3), look=(-44.0, -52.0, 10.0), lens=22),
     site_fence=dict(loc=(-20.0, -109.5, 1.5), look=(-2.0, -98.0, 2.5), lens=22),
-    site_girders=dict(loc=(-42.0, -32.0, 1.7), look=(-62.0, -19.0, 3.0), lens=22),
+    site_girders=dict(loc=(-64.0, -42.0, 1.5), look=(-66.0, -20.0, 1.7), lens=22),
     site_rivet=dict(loc=(-39.0, -73.0, 17.7), look=(-47.0, -63.0, 17.6), lens=22),
     site_rise=dict(loc=(-30.0, -170.0, 30.0), look=(0.0, 0.0, 55.0), lens=22),
     site_rise_snap1=dict(loc=(-30.0, -170.0, 30.0), look=(0.0, 0.0, 55.0), lens=22),
@@ -127,12 +127,12 @@ def build(preset, light=None):
     # ---- derricks + work gantry (the camera platform) + hanging girders
     mb = MB('derricks', R)
     tips = []
-    tips.append(derrick2(mb, M, (-62.0, -88.0, 0.0), 42.0, 24.0, 0.45)); tips.append(derrick2(mb, M, (62.0, -92.0, 0.0), 38.0, 22.0, math.pi - 0.5))
+    tips.append(derrick2(mb, M, (-84.0, -14.0, 0.0), 42.0, 24.0, 0.0)); tips.append(derrick2(mb, M, (62.0, -92.0, 0.0), 38.0, 22.0, math.pi - 0.5))
     tips.append(derrick2(mb, M, (-82.0, 30.0, 0.0), 44.0, 22.0, -0.2)); tips.append(derrick2(mb, M, (84.0, 26.0, 0.0), 40.0, 22.0, 3.3))
     gantry(mb, M, (70.0, -150.0, 0.0), 12.0, 9.0, 16.0)
     STATE['derricks'] = mb.finish()
     # swinging girder (hook hook): a girder hanging from the left derrick tip on a pivot empty at the mast head
-    piv = bpy.data.objects.new('swing', None); bpy.context.scene.collection.objects.link(piv); piv.parent = R; piv.location = (-62.0, -88.0, 42.0 * 0.8 + 4.0); STATE['swing'] = piv
+    piv = bpy.data.objects.new('swing', None); bpy.context.scene.collection.objects.link(piv); piv.parent = R; piv.location = (-84.0, -14.0, 42.0 * 0.8 + 4.0); STATE['swing'] = piv
     mb = MB('swinggirder', piv)
     mb.rod(M['dark'], (24.0 * 0.8, 0, 0), (24.0 * 0.8, 0, -9.0), 0.12, 0.12, 4); mb.box(M['dark'], (24.0 * 0.8, 0, -9.3), (1.4, 1.4, 0.8))
     mb.rod(M['rope'], (24.0 * 0.8, 0, -9.0), (24.0 * 0.8 - 2.6, 0, -10.8), 0.1, 0.1, 4); mb.rod(M['rope'], (24.0 * 0.8, 0, -9.0), (24.0 * 0.8 + 2.6, 0, -10.8), 0.1, 0.1, 4)
@@ -274,7 +274,7 @@ def set_stage(s, frame=None):
 
 def crane_swing(k, frame=None):
     """the derrick (left, mast (-62,-88)) swings its hanging red-lead girder: k 0..1 -> yaw from the front-left to over the yard (rotation of the pivot at the mast head)"""
-    p = STATE['swing']; p.rotation_euler = (0, 0, 0.45 + (k - 0.5) * 1.3)
+    p = STATE['swing']; p.rotation_euler = (0, 0, (k - 0.5) * 1.3)
     if frame is not None: C.key(p, 'rotation_euler', frame)
 
 def _spark_objs():
@@ -319,7 +319,7 @@ def _marks(A):
              worker_a=_m(-44.5, -159.9), worker_b=_m(-40.0, -159.3), worker_c=_m(-35.7, -161.8), worker_d=_m(-31.3, -160.0), worker_e=_m(-42.4, -155.4),
              worker_f=_m(-71.0, -33.0), worker_g=_m(-37.0, -159.2), worker_h=_m(-40.0, -150.0),
              scaff_a=_m(-40.0, -57.0, 18.0), scaff_b=_m(-36.0, -60.0, 26.0), scaff_c=_m(-42.5, -54.0, 34.0), scaff_d=_m(-33.0, -52.0, 36.0),
-             girder_carry_a=_m(-55.5, -25.0), girder_carry_b=_m(-52.8, -23.4), forge_a=_m(-20, -64), forge_b=_m(24, -62))
+             girder_carry_a=_m(-64.5, -34.0), girder_carry_b=_m(-61.0, -33.0), forge_a=_m(-20, -64), forge_b=_m(24, -62))
     A['marks_m'] = {k: tuple(v / SC for v in vv) for k, vv in m.items()}
 def _staging(A):
     S = A['staging']
