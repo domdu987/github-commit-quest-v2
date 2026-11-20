@@ -486,7 +486,7 @@
    "at": 60.933,
    "len": 1.2,
    "peak_db": -22,
-   "note": "T7 g1831: jumper 1 lands on the foam (head/back hit g1828-1833, legs fall to g1845)",
+   "note": "T7 g1831: jumper 1 lands on the foam (head/back hit g1828-1833, legs fall to g1845) (T7 re-render)",
    "align": "onset"
   },
   {
@@ -499,18 +499,18 @@
   },
   {
    "file": "thump_foam.wav",
-   "at": 61.833,
+   "at": 62.067,
    "len": 1.2,
    "peak_db": -22,
-   "note": "T7 g1858: jumper 2 lands on the foam (head enters g1853, body on the mat g1857-1860)",
+   "note": "T7 g1865: jumper 2 lands on the foam (head enters g1853, body on the mat g1857-1860) (T7 re-render)",
    "align": "onset"
   },
   {
    "file": "thump_foam.wav",
-   "at": 62.967,
+   "at": 63.233,
    "len": 1.2,
    "peak_db": -22,
-   "note": "T7 g1892: jumper 3 lands on the foam (over g1888-1891, body g1892-1895)",
+   "note": "T7 g1900: jumper 3 lands on the foam (over g1888-1891, body g1900-1895) (T7 re-render)",
    "align": "onset"
   },
   {
