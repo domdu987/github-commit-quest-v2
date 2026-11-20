@@ -47,8 +47,8 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 13.48,
- "s_per_frame_cpu_mean": 25.24,
+ "s_per_frame_wall_mean": 22.02,
+ "s_per_frame_cpu_mean": 25.57,
  "heads": {
   "mau": {
    "head_px": [
@@ -63,8 +63,8 @@
   }
  },
  "framediff_in_shot": {
-  "median": 3.86,
-  "p90": 11.92
+  "median": 3.73,
+  "p90": 9.62
  },
  "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
 }

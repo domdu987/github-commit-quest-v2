@@ -5,56 +5,47 @@
  "cues": [
   {
    "kind": "ambience",
-   "t": 60.333,
-   "dur": 3.533,
-   "frame": 1810,
+   "t": 61.633,
+   "dur": 2.233,
+   "frame": 1849,
    "end_frame": 1916,
    "note": "first-floor restaurant of the finished tower, day 1889: room murmur, cutlery and plates, a faint string trio, wind through the open lattice"
   },
   {
    "kind": "foley",
-   "t": 61.067,
-   "dur": 0.167,
-   "frame": 1832,
-   "end_frame": 1837,
-   "note": "fork lifted to his mouth: small cutlery clink on the plate, blissful nasal hum without words (mouth stays still)",
-   "peak_frame": 1834
-  },
-  {
-   "kind": "foley",
-   "t": 63.6,
-   "dur": 0.167,
-   "frame": 1908,
-   "end_frame": 1913,
-   "note": "fork lifted to his mouth: small cutlery clink on the plate, blissful nasal hum without words (mouth stays still)",
-   "peak_frame": 1910
-  },
-  {
-   "kind": "foley",
    "t": 62.333,
-   "dur": 0.533,
+   "dur": 0.167,
    "frame": 1870,
-   "end_frame": 1886,
-   "note": "wine glass raised and set down: a light crystal 'tink' and a soft swallow",
-   "peak_frame": 1876
+   "end_frame": 1875,
+   "note": "fork lifted to his mouth: small cutlery clink on the plate, blissful nasal hum without words (mouth stays still)",
+   "peak_frame": 1872
   },
   {
    "kind": "foley",
-   "t": 61.2,
-   "dur": 0.733,
-   "frame": 1836,
-   "end_frame": 1858,
+   "t": 63.433,
+   "dur": 0.6,
+   "frame": 1903,
+   "end_frame": 1921,
+   "note": "wine glass raised and set down: a light crystal 'tink' and a soft swallow",
+   "peak_frame": 1911
+  },
+  {
+   "kind": "foley",
+   "t": 62.5,
+   "dur": 0.467,
+   "frame": 1875,
+   "end_frame": 1889,
    "note": "napkin rustle, chair creak as he sways happily",
-   "peak_frame": 1844
+   "peak_frame": 1883
   },
   {
    "kind": "accent",
-   "t": 61.2,
+   "t": 62.567,
    "dur": 0.5,
-   "frame": 1836,
-   "end_frame": 1851,
-   "note": "snap push on 'แทบทุกวัน': short airy whoosh rising with a pleased 'tada' on the lyrical word",
-   "peak_frame": 1842
+   "frame": 1877,
+   "end_frame": 1892,
+   "note": "snap push on 'ที่เดียว': short airy whoosh rising with a pleased 'tada' on the lyrical word",
+   "peak_frame": 1883
   },
   {
    "kind": "cut",

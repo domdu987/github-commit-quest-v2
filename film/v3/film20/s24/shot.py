@@ -9,6 +9,7 @@ Mouths never move (no quote).
     python3 shot.py probe a:b[:step] | stills a:b[:step] <out_dir> [scale] [samples] | final a:b[:step] [scale] [samples]
 """
 import math, os, sys, json
+import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -37,21 +38,40 @@ END_OFF = Vector((float(os.environ.get("X1", "0.0")), -float(os.environ.get("D1"
 AIM0 = Vector((0.0, -30.0, float(os.environ.get("AIMZ", "135"))))                                        # initial aim point: mid-tower (whole tower in frame)
 
 
+AIM_DROP = float(os.environ.get('AIM_DROP', '0.1'))      # m: the landing aim sits below his head (less bare floor, head up in the frame)
+DIP = float(os.environ.get('DIP', '0.0'))
+LOOK_UP = float(os.environ.get('LOOK_UP', '2.5'))
+GAMMA = float(os.environ.get('GAMMA', '1.0'))
+
+
 def smooth(u):
     u = clamp(u)
     return u * u * u * (u * (6 * u - 15) + 10)    # smootherstep: ease in and out, zero velocity ends
 
 
+_GG = np.arange(G_FIRST, G_LAST + 1)
+_V = 1.0 * np.exp(-0.5 * ((_GG - 1755) / 20.0) ** 2) + 20.0 * np.exp(-0.5 * ((_GG - 1781) / 2.0) ** 2) + 1.0 * np.exp(-0.5 * ((_GG - 1802) / 9.0) ** 2)
+_V[_GG > 1822] = 0.0
+_C = np.cumsum(_V); _C = _C - _C[0]; _C = np.minimum(_C / _C[np.where(_GG <= 1822)[0][-1]], 1.0)
+
+
+def prog(g):
+    """camera progress 0..1: eased-in approach across the city and up the lattice (g 1724-1777), a fast eased whip into the window gallery
+    (g 1778-1784, the flat gallery facade is on screen for only ~5 frames), then a long ease-out settle onto the medium (-> g 1822)."""
+    return float(_C[int(clamp(g, G_FIRST, G_LAST)) - G_FIRST])
+
+
 def cam_at(g):
     """(loc, look) in world D at film frame g."""
-    s = smooth((g - G_FIRST) / float(G_LAND - G_FIRST))
+    s = prog(g)
     d0, d1 = START_OFF.length, END_OFF.length
     dist = d0 * (d1 / d0) ** s
     dir0, dir1 = START_OFF.normalized(), END_OFF.normalized()
     dr = (dir0 * (1 - s) + dir1 * s).normalized()
     drift = (g - G_LAND) / 30.0 if g > G_LAND else 0.0                   # after landing: slow push + slide, never parked
-    loc = TGT + dr * dist
-    aim = TGT + (AIM0 - TGT) * (1 - s) ** 3.0
+    bump = math.exp(-(((s - 0.80) / 0.13) ** 2))
+    loc = TGT + dr * dist + Vector((0.0, 0.0, -DIP * bump))     # swoops below the window, looking up through the first-platform lattice (texture), then rises to his eye level
+    aim = TGT + (AIM0 - TGT) * (1 - s) ** 3.0 + Vector((0.0, 0.0, -AIM_DROP * s + LOOK_UP * bump))
     if drift > 0:
         loc = loc + Vector((0.10 * drift, 0.22 * drift, 0.0)) * (1.0 - 0.3 * drift / 1.2)
         aim = aim + Vector((0.10 * drift, 0.0, 0.0))
@@ -98,7 +118,7 @@ class Take(C.Take):
         self.key_cam(bf(G_FIRST), *cam_at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
         self.mau = self.actors["mau"] = C.make_actor("mau", "maupassant", os.path.join(WORK, "sprites"), canvas=CANVAS,
-                                                     contact=dict(width=1.1, depth=0.5, opacity=0.5), cam=self.cam)
+                                                     contact=dict(width=1.1, depth=0.5, opacity=0.5), shadow=None, cam=self.cam)
 
     def pose(self, gs):
         mark = self.A["marks"]["maupassant_window"]

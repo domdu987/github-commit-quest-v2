@@ -4,13 +4,13 @@
  "shots": [
   25
  ],
- "g0": 1814,
+ "g0": 1853,
  "g1": 1912,
- "first_g": 1810,
- "n_frames": 106,
+ "first_g": 1849,
+ "n_frames": 67,
  "shot_ranges": {
   "25": [
-   1814,
+   1853,
    1911
   ]
  },
@@ -28,20 +28,19 @@
  },
  "set": "v3/set3d20 RESTO preset resto_table, light DAY, year 1889 (wine glass + bread basket FG from the set)",
  "cast": "v3/cast20 maupassant seated (maupassant_seated_eat / _eat_chew / _toast arms blended: fork bite, chew, sip of wine, fork bite; napkin; seat_h 0.865 D; mouth a still smile); stand-in card hidden",
- "camera": "custom 22 mm, resto_table pose 0.6 D closer, 0.55 D to the side; c20.CamPath push 8 %/s + slide -40 px/s + arc -2.5 deg/s + tilt 4 deg, decay 0.3 + SNAP PUSH x1.4 g 1836..1851 on 'แทบทุกวัน' (event 1838)",
+ "camera": "custom 22 mm, resto_table pose 0.6 D closer, 0.55 D to the side; c20.CamPath push 8 %/s + slide -40 px/s + arc -2.5 deg/s + tilt 4 deg, decay 0.3 + SNAP PUSH x1.6 g 1877..1892 on 'ที่เดียว' (event 1879)",
  "events": {
-  "word_every_day": 1838,
+  "word_that_one_place": 1879,
   "snap_push": [
-   1836,
-   1851
+   1877,
+   1892
   ],
   "fork_bite_rel": [
-   20,
-   100
+   19
   ],
   "wine_sip_rel": [
-   44,
-   84
+   38,
+   78
   ]
  },
  "dof": "none",
@@ -55,24 +54,24 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 11.51,
- "s_per_frame_cpu_mean": 21.27,
+ "s_per_frame_wall_mean": 18.01,
+ "s_per_frame_cpu_mean": 23.07,
  "heads": {
   "mau": {
    "head_px": [
     143,
-    312
+    285
    ],
    "head_centre_y": [
-    658,
+    659,
     686
    ],
-   "head_bottom_max_y": 819
+   "head_bottom_max_y": 806
   }
  },
  "framediff_in_shot": {
-  "median": 4.19,
-  "p90": 9.43
+  "median": 4.42,
+  "p90": 11.45
  },
  "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
 }
