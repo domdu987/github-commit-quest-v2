@@ -54,11 +54,12 @@ def cam_path(A):
     m = Vector(A["marks"]["telegraphist"])
     subj = m + Vector((AIM_DX * CO.SC, 0.35 * CO.SC, HEAD_Z - 0.55))   # aim between the soldier (left) and the spark gap (right)
     c = Vector(A["cams"][PRESET]["loc"])
-    return C.CamPath(c, subj, G0, G_LAST, push=0.09, slide_px=30.0, rise_px=0.0, arc_deg_s=3.0, tilt0=TILT0, tilt_deg_s=0.0,
+    return C.CamPath(c, subj, G0, G_LAST, push=0.09, slide_px=-40.0, rise_px=0.0, arc_deg_s=ARC, tilt0=TILT0, tilt_deg_s=0.0,
                      decay=0.3, snaps=[])
 
 
 TILT0 = 0.0
+ARC = 12.0
 
 
 def pose_tel(g):
@@ -107,7 +108,7 @@ class Take(C.Take):
         loc, look = self.path.at(g)
         v = look - loc
         return dict(g=g, cam=[round(c, 3) for c in loc], pitch=round(math.degrees(math.atan2(v.z, math.hypot(v.x, v.y))), 1),
-                    heads=C.head_report(self, f), spark=bool(g in SPARK_FRAMES))
+                    heads=C.head_report(self, f), spark=bool(g in SPARK_FRAMES), sg_px=CO.project(CO.W((0.5, -202.55, 1.1))))
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):
         return C.Take.render(self, [bf(g) for g in gs], out_dir, scale=scale, samples=samples, threads=threads)

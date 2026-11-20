@@ -29,11 +29,12 @@ G_WIRE = C.cap_g("จากยอดหอ")                                 # 1
 WHIP = (G_WIRE, G_WIRE + 9)
 
 PRESET, LIGHT = "tower_dusk_summit", None
-CAM_M = (-4.4, -218.0, 0.5)                    # camera (m)
-PITCH_A0, PITCH_A1 = 16.0, 18.5                # aim pitch above the horizon before the whip (deg), tilts up slowly
+CAM_M = (-2.2, -215.4, 0.4)                    # camera (m)
+PITCH_A0, PITCH_A1 = 28.0, 30.0
+SHIFT_A, SHIFT_B = 0.0, 0.15                                  # lens shift: the picture moves up, so a high pitch still keeps Eiffel's head above y 880                # aim pitch above the horizon before the whip (deg), tilts up slowly
 SUMMIT = (0.0, 0.0, 300.0)
 POST_AIM = (4.0, -201.4, 5.5)                  # end of the whip: the wire's foot (anchor post top) - slightly under, hut below
-PITCH_B0 = 12.0                                 # aim pitch at the end of the whip
+PITCH_B0 = 0.0                                 # aim pitch at the end of the whip
 EIF_HEAD_Z = 2.7
 WIRE_GLOW = 0.7
 
@@ -56,14 +57,14 @@ def cam_at(g):
     toward = (eif - base).normalized() * (1 - u) + (hut - base).normalized() * u
     toward.z = 0.0
     toward.normalize()
-    dist = 0.8 * t * (1.0 - 0.1 * t)                     # m travelled
+    dist = 0.2 * t if g < WHIP[0] else 0.2 * (WHIP[0] - G0) / 30.0 + 1.6 * (g - WHIP[0]) / 30.0                     # m travelled
     right = Vector((toward.y, -toward.x, 0.0))
-    loc_m = base + toward * dist * 1.0 + right * (0.6 * t)
+    loc_m = base + toward * dist * 1.0 + right * (-0.65 * t if g < WHIP[0] else -0.65 * (WHIP[0] - G0) / 30.0)
     # aim
     ya = bearing(loc_m, SUMMIT) + 2.0            # a little left of the summit so the wires cross the frame
     pa = PITCH_A0 + (PITCH_A1 - PITCH_A0) * min(1.0, t / 1.5)
     yb = bearing(loc_m, POST_AIM)
-    pb = PITCH_B0 - 1.0 * max(0.0, (g - WHIP[1]) / 30.0)
+    pb = PITCH_B0
     w = C.snap_u(g, WHIP[0], WHIP[1], 1.9)                 # eased whip, peak speed 1.9 x mean
     yaw = lerp(ya, yb, w)
     pitch = lerp(pa, pb, w)
@@ -105,7 +106,9 @@ class Take(C.Take):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *cam_at(g))
-            C.place(self.actors["eif"], f, self.mark)
+            self.cam.data.shift_y = lerp(SHIFT_A, SHIFT_B, C.snap_u(g, WHIP[0], WHIP[1], 1.9))
+            self.cam.data.keyframe_insert('shift_y', frame=f)
+            C.place(self.actors["eif"], f, self.mark if g < WHIP[0] + 6 else (self.mark[0], self.mark[1], self.mark[2] - 200.0))   # fully out of frame by g 1349: parked below the ground
             loc, _ = cam_at(g)
             d = (Vector(CO.W(CAM_M)) - self.board) + 0.75 * (loc - Vector(CO.W(CAM_M)))   # FG: start offset, then 75 % of the camera's travel
             d.z = 0.0

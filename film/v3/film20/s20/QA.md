@@ -8,3 +8,7 @@ Shot 20 (g 1382-1430, cut in/out; handles g 1378-1381 and 1431-1434). 57 frames.
 - Set bug worked around at runtime (c20.fix_antenna_wires): tower20._antenna zips 40 points with linspace(...)[1:] (39 pairs), so the last segment of each wire to the anchor post was never built (wires ended in mid-air). s18/s19 add it. Also wire_glow 0.7 in s19 so wires read against the dusk sky.
 - Staging deviations: s18 cast marks moved 2-5 m toward the wagon so five heads fit one frame; s19 camera on the avenue at (-4.4,-218,0.5) m (not the board camera) so Eiffel is in frame; s20 soldier seated on the chair (seat_h 0.5) with the aim between him and the spark gap.
 - Known weak: bottom third is empty ground (caption zone); s20 plank grooves faintly stripe on floor/ceiling (no visible shimmer at phone size); hands/key of the soldier mostly hidden behind desk and headphones.
+
+## Take-gate revision
+Orbit 12 deg/s + slide -40 px/s; ARC chosen so the spark gap stays in the right third for all six taps (x <= 670 at g 1428). A stronger orbit hit median 4.2 but lost the spark from frame.
+- Final numbers: s/frame 11.19 wall, frame-diff median 3.03 p90 17.97.

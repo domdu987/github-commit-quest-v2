@@ -47,13 +47,13 @@ def cam_path(A):
     m = Vector(A["marks"]["eiffel_old"])
     subj = m + Vector((AIM_DX * CO.SC, 0.0, HEAD_Z))
     c = CO.W(CAM_M)
-    return C.CamPath(c, subj, G0, G_LAST, push=0.20, slide_px=-60.0, rise_px=0.0, arc_deg_s=-8.0, tilt0=TILT0, tilt_deg_s=-4.5,
-                     decay=0.95, snaps=[dict(g=SNAP, k=1.3, peak=1.7, shift=(0.0, 0.0), tilt=0.0)])
+    return C.CamPath(c, subj, G0, G_LAST, push=0.20, slide_px=-60.0, rise_px=0.0, arc_deg_s=-12.0, tilt0=TILT0, tilt_deg_s=-4.5,
+                     decay=0.95, snaps=[dict(g=SNAP, k=1.6, peak=1.7, shift=(0.0, 0.0), tilt=-3.0)])
 
 
 CAM_M = (-7.6, -220.6, 1.4)                     # start camera (m): T14 lens + shift, moved so all five stand in frame
 TILT0 = -3.0
-AIM_DX = -0.45                                  # aim point 2.2 m left of old Eiffel (between him and the wagon)
+AIM_DX = -0.3                                  # aim point 2.2 m left of old Eiffel (between him and the wagon)
 
 
 def cam_path_static():
