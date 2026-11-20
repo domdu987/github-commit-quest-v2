@@ -19,3 +19,8 @@
 - Legs: Harrison's mark is 0.2 D right of the old spot so the foreground chest (with the candle and the lantern) hides his lower legs: no white stubs float in front of the chest any more.
 - Face height / frame: head width max 229.5 px, head x 199-697 (nobody cut by an edge), always above y 880. Candle burn-down and the falling lights are unchanged.
 - Frame-diff in-shot: median 5.31, p90 12.24. QA_AUTO PASS. qa_stats: saturation 0.72, brightness 59.9 (night). s/frame 18.0 wall / 35.3 CPU.
+
+## Round 9 (QA-art round 8: head ran off the right edge at g 997-1012) - g 990-1024 re-rendered
+- From g 990 the look point turns a further 0.45 D toward him (ramp g 990-998), so the whole figure (hair, bow, ponytail, both steam puffs) sits well inside the frame. Checked BY EYE on a crop of x 600-720 of every frame g 990-1024 (work/rightedge.png): only plain wall is in that strip, except a hairline sliver at x ~600 in g 1015-1017, so the figure's right edge never passes x ~602 (the detector's head-x range in the earlier round, 199-697, was wrong: it misses the outline and the puffs).
+- Polish: the steam puff is held g 995-1008 and pumps (t animated); the slump now tilts back (pitch -0.30, head roll 2 deg) rather than sideways. The puff size is the puppet's own (not scalable without editing the cast), so it is not 1.5x bigger.
+- Frame-diff in-shot: median 5.45, p90 12.49. QA_AUTO PASS. Frames g 929-989 are unchanged from round 8.

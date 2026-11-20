@@ -42,7 +42,7 @@ LIGHTS = dict(
 )
 SKY_JAM = [(0.0, '#6aa6ea'), (0.46, '#9ccaf0'), (0.5, '#94c4f0'), (0.56, '#6aa4ec'), (0.66, '#4482e0'), (0.78, '#2c64d2'), (0.88, '#2050c4'), (1.0, '#1a40b0')]   # cobalt toward the top (QA-art r7)
 LIGHTS['DAY_JAMAICA'] = dict(LIGHTS['DAY'], coast='jamaica', sky=SKY_JAM, haze='#9ccaf0', exposure=-0.68, cloud=('#ffffff', '#8ca0f0'), coast_sun_az=158, glint_k=0.4)   # coast_sun_az: key from the front-left of the beach camera, palm shadows fall screen-right (off the cast)
-LIGHTS['DAY_BARBADOS'] = dict(LIGHTS['DAY'], coast='barbados')
+LIGHTS['DAY_BARBADOS'] = dict(LIGHTS['DAY'], coast='barbados', sky=SKY_JAM, haze='#9ccaf0', exposure=-0.68, cloud=('#ffffff', '#8ca0f0'), coast_sun_az=158, glint_k=0.4)   # same vivid grade as Jamaica (QA-art r9: s21 was pale, sat 0.48 / luma 130)
 LIGHT_NAMES = ['NOON', 'DAY', 'STORM_DUSK']
 
 # ----------------------------------------------------------------------------- presets (metres, ship frame; cam loc / look in metres; converted to D when returned)

@@ -17,3 +17,10 @@ Checked 6 fps + cuts g57/g110 +-3 (take g48-118), qa_auto PASS, no text/black/ma
 Earlier: R2-1 (diff) NOT FIXED on the median (p90 now OK); ship fully in frame throughout.
 1. g57-109 (frame-diff): median 3.81 < 4. Fix: raise the mid-shot drift/orbit by about 10 % (or lift the pull speed) so the median clears 4 with margin; keep the late accent, re-measure.
 NOTES: g48-75 blown-out white glitter patches at the left edge; gull clipped by the left edge g88-118 (not a key prop).
+
+## Round 9 (director QA-tech): FAIL
+Checked 6 fps + every frame g105-120 (frames in /tmp/qa19_r9/s02/, take g48-199 read as g57-190 in shot). Frame-diff (90x160 grey bilinear, g58-190): median 5.15 / p90 11.01 (>= 4 / >= 10) OK. No black/magenta/blank, no frozen run (min diff 1.8), no text, no mouth movement, no prop through a face, nothing floating, no edge-of-world or bare plane at the start (horizon + sky strip, sea with wake and glitter).
+Numbers: start g57 ship ~35 % of frame height, crew on deck <1 % (findable only as specks on the quarterdeck); end g177-190 captain 44 % / astro ~40 % of frame height, head centres y ~ 490-560 (inside 450-760), both fully in frame, both puzzled (chart, quadrant), astro scratches head. Face < 35 %.
+Issue (blocking, smoothness of the move):
+1. g109-119: the move is not an eased single move. Frame-diff goes 9 -> 21 -> 27 -> 34 -> 41 (g112) -> 13 -> 12 -> 18 -> 31 -> 33 (g118), then drops to 1.8 at g119 (camera stops dead in ONE frame), and stays near-still g119-124 (diff 1.8-3.4) before it creeps up again. The ~10-frame whoosh through the stern ends with a hard stop = visible jolt, not an ease-out. Also g109 jumps from the slow g57-108 drift (diff ~10) to a sprint. Fix: re-time the g->u map so the descent decelerates over >= 8 frames (diff falling 30 -> 10 -> 5 by g126) and ramps in over >= 6 frames from g102; keep the settle g119+ at diff >= 4.
+Notes (not blocking): g102-107 blown-out white glitter at the lower-left corner; the dark mast-shadow/sail plane fills g110-116 (read as fast whoosh, acceptable once eased); crew at the start are barely visible (>5 % rule satisfied).

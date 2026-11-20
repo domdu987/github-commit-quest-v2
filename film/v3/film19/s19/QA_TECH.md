@@ -28,3 +28,20 @@ Issues / notes:
 2. g1468-1495: the two big brown flat-shaded polygon hills framing the cove (left y 270-450 and right y 220-330 at g1468) and the salmon face of the red rock read as bare untextured planes. Not an edge of the world, but thin on "rich set" (QA-art call).
 3. g1540-1580: left sailor's raised hand sits within ~6-30 px of the left edge (touches at g1578-1580). Minor, was noted in round 2.
 4. Start height is only ~2.3 %, tiny: findable only because of the boat and arms. Acceptable under the brief (< 5 %).
+
+## Round 9 (director QA-tech) - FAIL
+Checked: take.mkv 131 frames 720x1280 30 fps, meta g0 1468 / g1 1581 (shot g1468-1580), first_g 1459; 6 fps frames in /tmp/qa19_r9b/s19/f6/, every frame in /tmp/qa19_r9b/s19/all/ (frame index = g - 1459 + 1 in file names), rebuilt coast set.
+Numbers (measured by QA-tech):
+- Start character height (g1468): trio about 22-25 px of 1280 = ~1.9 % (< 5 %). Findable only on zoom: three figures with arms up at the PORT ROYAL sign behind the palms, right of the beached boat (x ~ 505-535, y ~ 775-800). At phone size they are barely readable.
+- End character height: g1552 William (H4 + hat to feet) ~ 45 %; g1580 ~ 50-55 %. Inside 35-60 %. Faces ~11-14 % (< 35 %). Heads y centre well above 880.
+- Frame-diff (90x160 grey, bilinear, 111 consecutive in-shot pairs g1468-1579): median 8.07 (>= 4 OK), p90 14.30 (>= 10 OK), min 0.32, max 17.85 (g~1504). Opening hold g1468-1481 (0.3-0.4, about 0.45 s, the "brief hold"), then smooth ease-in 0.6 -> 8 over g1482-1525, snap peak 15-17.8 at g1497-1507, dip to 8.1 at g1512, second hump 16.5 at g1561-1568, ease-out to 5.7 at g1578. One continuous move, no cut, no pop, no neighbour jump above ~1.15x, no dead stop after the hold. No black frames (min frame mean > 20), no frozen run (only the opening hold).
+- Set: ship, island, boats, red-roof town, fort block and palms in the first frames; descent passes down over the roofs, between palms, past the cannon and barrels. No edge of the world, no bare plane and no mesh seam seen in any frame (the sand/sea edge at g1528-1536 right side reads as a beach bluff). Fixes from round 7 are in: palm fronds are green and lit (g1504 fronds clearly green, dark-pixel share of the frame 0.4 %).
+- Crate: rests on the sand with a contact shadow from g1546 to g1580, William stands on it, no float. Hats: thrown tricorne/sailor hats cross the sky g1554-1580 on a slow rising-then-falling drift (positions change every frame, not static). They render as flat grey saucers, odd next to the black tricorne, but they are not frozen.
+- Mouths fixed grins (no lip-sync). Sailors bounce constantly (no still run > 1.5 s). No prop through a face (H4 and hats clear of faces).
+Issues:
+1. FAIL: sailor b (right, striped shirt, blue cap) is cut by the right frame edge g1552-1562: face and torso about 30-50 % off-frame at g1556-1560 (about 0.4 s), back inside by g1564. Brief and section G.3 forbid a character cut by a frame edge. Fix: shift the framing/path left by ~60-80 px at g1550-1565 or move sailor b toward William.
+2. g1566-1580: the throw is not legible. Sailor a does not visibly jump (feet stay on the sand, he only grows with the push) and sailor b does not hug before throwing; hats appear from off the top and drift without leaving a hand. Fix: add a jump arc for sailor a at g1558-1570 and a visible hug/throw for sailor b, or at least launch the hats from the raised hands.
+3. g1566-1580: the thrown hats are grey saucers, flat and edge-on, not the black tricorne; consider matching the hat model.
+4. Note: left sailor's raised hand sits ~10-30 px from the left edge at g1570-1580.
+5. Note: palm crown top right at g1570-1580 is very dark green (mean RGB ~ 7,19,3 in the core, 2.7 % of the top band under 28) but not pure black.
+6. Note: start height ~1.9 % is tiny; findable only by zooming into the sign/boat area.

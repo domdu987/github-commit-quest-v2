@@ -2,35 +2,61 @@
  "take": "s02",
  "film": 19,
  "shots": [
-  2
+  2,
+  3
  ],
  "g0": 57,
- "g1": 110,
+ "g1": 191,
  "first_g": 48,
- "n_frames": 71,
+ "n_frames": 152,
  "shot_ranges": {
   "2": [
    57,
-   109
-  ]
+   190
+  ],
+  "3": "absorbed (merged into this take)"
  },
+ "bigzoom": [
+  57,
+  190
+ ],
  "handle_in": 9,
  "handle_out": 9,
  "transition_in": {
   "type": "cut",
   "frames": 0,
-  "note": "hard cut in from shot 1 (WORKSHOP shop_bench) at g 57; 9 handle frames before it rendered in 3D"
+  "note": "hard cut in from s01 (WORKSHOP shop_bench) at g 57; 9 handle frames before it rendered in 3D"
  },
  "transition_out": {
-  "type": "cut",
-  "frames": 0,
-  "at": 110,
-  "note": "hard cut to shot 3 (HALL hall_window) at g 110; 9 handle frames after it rendered in 3D"
+  "type": "dissolve",
+  "frames": 13,
+  "at": 191,
+  "note": "dissolve 13 f into s04 (SHIP ship_rocks STORM_DUSK) centred on g 191; handle g 191..199 rendered in 3D"
  },
- "set": "v3/set3d19/h19.py SHIP preset ship_aerial, light NOON; set_sea / set_roll keyed on every frame (t = 2 g/30); sea grid re-fitted at runtime to an 11x farther virtual camera at the camera's azimuth (1300x1800 vertices; no set module edited); gulls hidden, glint light x0.45, long V wake added through the set's own streaks hook; no actors; no caption_shade",
- "cast": "none (no characters in this shot)",
- "camera": "custom 22 mm; c19.CamPath from BEHIND the ship (azimuth 183 deg off the preset, 0.86x its distance, start offset -44 px): pull 3 %/s + crane 119 px/s + orbit -30 deg/s + slide 140 px/s, decay 0.1 (moving on frame 0 and the last), plus a SNAP BACK x0.59 with a pan and a rise (16 f, g 92..108) on 'เรืออยู่' (caption g 98); sea clock x2; no gulls; sun glint x0.45; long V wake via the set's streaks hook",
- "events": {},
+ "set": "v3/set3d19/h19.py SHIP preset ship_aerial, light NOON (colour-fixed set, merge of film19/main ff204d3); set_sea(g/30) + set_roll(g/30) keyed on every frame; sea grid re-fitted at runtime to a 3x farther / higher virtual camera (1500x2000 vertices; no set module edited); gulls hidden; captain19 and astro19_c ride ship_root (c19.ride_ship) on the quarterdeck, camera rides the deck (c19.on_ship); no caption_shade",
+ "cast": "captain19 (captain_peer_chart: holds a blank sea chart) and astro19_c (squints through the quadrant at the sky, scratches his head g 146-166), no mouth movement",
+ "camera": "BIGZOOM, ONE continuous camera move in the ship's rest frame (Catmull-Rom spline through 4 key poses; g->u map: slow-ish wide start, a fast descent through the stern g 108-118, then it settles): g 57-60 extreme wide from high above and behind (ship ~27 % of the frame height, the two on deck ~10 px), descends and pushes in over the long wake, passes the spanker sail / mizzen mast and the stern at ~3 D (parallax) to a MEDIUM on the quarterdeck by g 150 (5.0 s); then a 17 deg eased orbit about the pair + a gentle push to the end of the handle (never parked); the camera rides the deck (c19.on_ship); look aimed 0.34 D higher from g 124-150 so the heads sit at y 464-564",
+ "events": {
+  "bigzoom": [
+   57,
+   190
+  ],
+  "arrive_medium": 177,
+  "astro_scratch": [
+   146,
+   166
+  ],
+  "blinks_captain": [
+   70,
+   128,
+   171
+  ],
+  "blinks_astro": [
+   92,
+   150,
+   188
+  ]
+ },
  "dof": "none",
  "text": "none",
  "caption_shade": "none",
@@ -42,11 +68,38 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 21.27,
- "s_per_frame_cpu_mean": 41.16,
+ "s_per_frame_wall_mean": 25.43,
+ "s_per_frame_cpu_mean": 49.1,
  "framediff_in_shot": {
-  "median": 3.6,
-  "p90": 17.57
+  "median": 4.96,
+  "p90": 10.96
  },
- "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
+ "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json",
+ "heads": {
+  "captain19": {
+   "head_centre_y": [
+    464,
+    481
+   ],
+   "head_w_px": [
+    163,
+    181
+   ]
+  },
+  "astro19_c": {
+   "head_centre_y": [
+    541,
+    564
+   ],
+   "head_w_px": [
+    141,
+    179
+   ]
+  },
+  "note": "g 150-199"
+ },
+ "qa_stats": {
+  "saturation": 0.597,
+  "luma": 100.6
+ }
 }

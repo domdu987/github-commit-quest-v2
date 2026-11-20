@@ -282,13 +282,13 @@ def terrain_mat(LT, kind):
     col = mix(col, hexc('#000000'), 0.30 if jam else 0.52)
     sn1 = N('ShaderNodeTexNoise'); sn1.inputs['Scale'].default_value = 0.9; sn1.inputs['Detail'].default_value = 4.0; L(tc.outputs['Object'], sn1.inputs['Vector'])
     sn2 = N('ShaderNodeTexNoise'); sn2.inputs['Scale'].default_value = 6.0; sn2.inputs['Detail'].default_value = 2.0; L(tc.outputs['Object'], sn2.inputs['Vector'])
-    sand_c = ('#d6a040', '#c28c36', '#b07c32', '#946630') if jam else ('#d2a45a', '#bf8f4a', '#b58a50', '#7a5e38')       # Jamaica: deep gold sand
+    sand_c = ('#d6a040', '#c28c36', '#b07c32', '#946630') if jam else ('#d8a848', '#c69238', '#b4823a', '#946630')       # deep gold sand (Barbados a touch paler, 2026-11-20 §G)
     dry = mix(hexc(sand_c[0]), hexc(sand_c[1]), mr(sn1.outputs['Fac'], 0.4, 0.62))                  # dry sand, two tones
     dry = mix(dry, hexc(sand_c[2]), mr(sn2.outputs['Fac'], 0.52, 0.7, 0.0, 0.5))                       # fine grain
-    if jam:                                                                                            # wind ripples
+    if True:                                                                                           # wind ripples (both coasts)
         rw = N('ShaderNodeTexWave'); rw.wave_type = 'BANDS'; rw.bands_direction = 'X'; rw.inputs['Scale'].default_value = 2 * math.pi / (20.0 * 0.22); rw.inputs['Distortion'].default_value = 3.0; rw.inputs['Detail'].default_value = 2.0; L(tc.outputs['Object'], rw.inputs['Vector'])
         dry = mix(dry, hexc('#a87430'), mr(rw.outputs['Fac'], 0.75, 1.0, 0.0, 0.3))
-    sand = mix(hexc(sand_c[3]), dry, mr(sp.outputs['Z'], 0.02, 0.14) if jam else mr(sp.outputs['Z'], 0.06, 0.34))                                  # wet sand darkens towards the waterline
+    sand = mix(hexc(sand_c[3]), dry, mr(sp.outputs['Z'], 0.02, 0.14))                                  # wet sand darkens towards the waterline
     col = mix(sand, col, mr(sp.outputs['Z'], 0.9, 2.4))                                                # pale sand beach
     cd = N('ShaderNodeCameraData'); dmv = mr(cd.outputs['View Distance'], 200.0 * SC, 1000.0 * SC, 0.0, 0.34)
     col = mix(col, hexc('#8fb4b8' if LT.get('fog', 0) < 0.1 else LT['haze']), dmv)
@@ -673,6 +673,7 @@ def coast(S, P, LT, sea_P, marks):
     if not jam:
         for k in range(7):                                                                                                      # shells / stones on the sand
             p = at(2.6 + 0.9 * (k % 4), -1.6 + 0.9 * k); mbd.ell(M['boatw'], (p[0], p[1], p[2] + 0.04), (0.1, 0.07, 0.04), (6, 4))
+        barbados_life(M, mbd, at, gz)
     else:
         beach_life(S, P, M, mbd, at, gz, ang); beach_mid(M, mbd, gz)
     mbd.finish(shadow=True)
@@ -766,6 +767,21 @@ def port_royal(S, P, LT, M, gz, lane):
     jb.finish(shadow=True); rk.finish(shadow=True)
     for nm, (x, y, h, sd) in (P.get('zoom_palms') or {}).items():                                # the palms the BIGZOOM passes (1-2 D from the lens)
         zp = MBF('zoompalm_' + nm); palm(zp, M, (x, y, gz(x, y) - 0.2), h, 0.5, sd, nf=11); zp.finish(shadow=True)
+
+def barbados_life(M, mb, at, gz):
+    """Barbados landing (2026-11-20, QA-art r9: the lower frame was bare sand): footprints to the crew, a crate stack and barrels at the
+    frame sides in the near foreground, a rope coil; no sign (the PORT ROYAL sign is Jamaica only)"""
+    rr = random.Random(53)
+    def xy(fw, rt): p = at(fw, rt); return (p[0], p[1])
+    footprints(mb, M['print'], [xy(8.4, -2.4), xy(6.8, -1.4), xy(5.4, -0.4), xy(4.6, 0.4)], rr, gz=gz)
+    footprints(mb, M['print'], [xy(3.0, 2.4), xy(4.2, 1.6), xy(5.4, 1.9)], rr, gz=gz)
+    for (fw, rt, s_, rz) in ((4.6, -2.0, 0.75, 0.3), (5.0, -2.6, 0.6, 1.1), (4.8, 2.3, 0.7, -0.4)):
+        p = at(fw, rt); crate(mb, M, (p[0], p[1], p[2] - 0.03), s_, rz)
+    p = at(4.75, -2.25); crate(mb, M, (p[0], p[1], p[2] + 0.72), 0.55, 0.7)
+    p = at(4.2, 1.85); barrel(mb, M, (p[0], p[1], p[2] - 0.03), 0.3, 0.85)
+    p = at(5.6, 3.0); barrel(mb, M, (p[0], p[1], p[2] - 0.02), 0.28, 0.6, lying=True, rz=0.9)
+    p = at(3.9, -1.1)
+    for l_ in range(4): ring_xy(mb, M['rope2'], (p[0], p[1], p[2] + 0.03 + 0.05 * l_), 0.24 - 0.03 * l_, 0.06, 0.06, 16)
 
 def beach_life(S, P, M, mb, at, gz, ang):
     """Jamaica landing: footprints from the longboat to the crew and up the beach, the longboat's drag track down to the water, crates,
