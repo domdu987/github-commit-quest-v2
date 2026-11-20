@@ -1,16 +1,24 @@
-# QA s21 (shot 21, g1431..1559, handles 1427-1430 / 1560-1563) -- take-gate fix round 1
-- qa_auto: no FAIL. Notes: soft frames g1427-1430 are the out-of-shot handle (3 on screen max), 'cuts with no visible change' = handles are 3-D continuations.
-- qa_stats: `take.mkv: 4.6s ... saturation 0.748, brightness 69.9, in-shot motion median 7.18 p90 11.70`
-- s/frame 7.52 wall / 14.32 cpu (2 procs x 2 threads, 720x1280, 8 spp). Frame-diff (90x160 grey, in shot): median 6.27 PASS, p90 9.16 (target 12: MISS; the previous version had 12.3 but with the camera sliding past the wire anchor, which sent the wire across the sky).
-## Take-gate fixes (QA-art F1-F4, QA-tech 1-5, QA-stats)
-- F1 rings: own thick glowing tori (shot.build_fx), a ring born every 18 f at the summit lamp (r 6 m, bright flash sphere), growing to 500 m (age^0.7) while fading, 3 alive, so they visibly EXPAND over Paris; the set's thin rings are hidden every frame.
-- F2 glow g1530+: iron stays red-orange; the glow is an ADDED blue-white emission (0.03) on the lattice + the single wire ramps 2 -> 7 + ring flash. No tint toward pale pink.
-- F3/QA-tech 4 wire: set's 4 fat wires hidden; ONE thin pale wire (r 0.22 m) from the summit to the post (same tower20.wire_path) for the whole shot; the slide is -14 px/s so the wire never swings over to the left.
-- F4/QA-tech 5 trees: wide camera raised 5 -> 30 m, aim 4 deg down: lit roofs of Paris under the rings, trees small, tower base visible.
-- QA-tech 1: start framing 40 m from the summit lamp with a warm summit point light and exposure +0.95 (scene view_settings): lit summit with lamp dots; 9-frame whip (g1427-1436) already running at the cut; soft frames only in the handle.
-- QA-stats: exposure +0.95 lifted brightness 54 -> 69.9 (night floor 70), saturation 0.75.
-## Rules
-Heads: none (no cast). Tower reads as the Eiffel Tower on every frame. No DOF, no text, nothing floating. Ground (avenue lawn) <= 25 % at the wide.
-## Deviations
-- Wire is a runtime single wire (set object antenna_wirep hidden), the set module untouched. The wire exits the frame at the right edge during the snap-in (it runs on to the post).
-- Pull 6 %/s along the ground + snap push x1.28 on the word (plan: drift 6 %).
+# QA T21 = s21 (shots 21+22 as ONE camera-travel take): g1431..1655, handles g1427-1430 (hard cut in) and g1656-1663 (8 f, dissolve 13 out into T23)
+Per QA_TEAM s I / WORKER20 s8. s22 folder deleted (merged here).
+- qa_auto PASS (QA_AUTO.md; the note 'cut with no visible change at 1431' = the cut is against shot 20, handle frames are 3-D).
+- qa_stats : `take.mkv: 7.9s, shots=1 ... saturation 0.535, brightness 88.2, in-shot motion median 15.93 p90 31.27`
+- qa_stats2: `sat 0.535 vivid% 47.9 luma 88.2 contrast 39.2 detail 12.08 warm 21.9% cool 64.0% | motion med 15.93 p90 31.27 still% 0.0` (targets sat >= 0.50, vivid >= 45, luma >= 70: PASS)
+- frame-diff (90x160 grey, in shot): median 14.01, p90 28.65 (>= 4 / 12 PASS). 237 frames, 11.48 s/frame wall, 22.08 cpu (2 procs x 2 threads, 720x1280, 8 spp). take.mkv 132 MB: delivered as take.mkv.part* (40 MB parts), take.mkv gitignored.
+## The travel (one continuous camera, Hermite spline then c20.CamPath, no cut inside)
+| g | what |
+|---|---|
+| 1427-1469 | RISE from beside the hut roof / post along the antenna wire up the tower to the summit lamp ("หอยิ่งสูง สัญญาณยิ่งไปไกล" 1434-1467); the lit lattice and lamp necklaces fill the frame, city below |
+| 1468-1532 | at the summit the camera hovers 30-80 m above the ring plane looking down over lit Paris; the first ring is BORN at the lamp (flash) at g1468 and spreads over the city, a ring every 18 f (3 alive); the rings are not visible before the camera arrives |
+| 1530 | "เสาอากาศยักษ์": blue-white glow along the wire + lattice edges (iron stays red), ring flash |
+| 1532-1576 | SWOOP down the tower face and back along the avenue to the foot (lens shift 0 -> -0.03), landing on the group |
+| 1576-1655 | old Eiffel, officer and three demolition men: bars on shoulders; 1586 'ไร้ประโยชน์' they stop; 1607-1619 they DROP the bars (3-D bars tumble); 1625-1630 officer salutes old Eiffel; Eiffel worried -> proud on a blink; men cheer (bounce); wagon + scrap cart roll away; 1642 snap push on 'ขาดไม่ได้' |
+## Rule checks (WORKER20 s6-s8)
+- Tower in frame and reads as the Eiffel Tower on every frame (rise: lattice fills the frame; wide: full tower); motivated lights: lamp necklaces + hut window + summit flash + wire glow, warm vs deep blue in every frame.
+- Everyone acts in the group phase (sway, bars, drop, salute, cheer bounce); nobody floats (contact decals + proxy shadows, ground ray-cast); heads 45-84 px in the wide of five, centre y 560-720 (lowest bottom < 880); no face > 35 % of frame height.
+- Mouths: none animated (held expression mouths only). No DOF, no text (in-world signs optional: none added).
+- Wire: one thin pale wire for the whole take, own object (set's 4 fat wires hidden); rings: own thick tori (set's thin rings hidden); exposure +0.95; foreground kegs/crates at the sides of the group phase (kit20).
+## Known misses / deviations
+- Ground under the group still reads as a large dark slab below y ~880 in the last 3 s (under the captions); only side props fill it.
+- 'Crowbar' = cast5 pickaxe prop; fallen bars are plain cylinders. Marks bunched at runtime so five fit at 15 D.
+- The wire crosses the sky as a bright diagonal in the group phase (it runs summit -> post); it carries the glow.
+- Hue not measured; the whole take is night (exception in the hue band).
