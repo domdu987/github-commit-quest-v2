@@ -97,7 +97,7 @@ _MATS = {}
 def get_mat(key):
     if key in _MATS: return _MATS[key]
     if key.startswith('glow'): m = _glow_mat(key)
-    elif key == 'smoke': m = _glow_mat('glow_smoke')
+    elif key == 'smoke': m = _smoke_mat()
     elif key == 'ink_hull': m = _ink_mat()
     elif key == 'sky': m = _sky_mat()
     elif key == 'water': m = _water_mat()
@@ -177,6 +177,35 @@ def _lit_mat(key, s):
     sh = _lit_core(nt, art, s, geo)
     if s['haze']: sh = _haze_out(nt, sh)
     L(sh, out.inputs['Surface']); return m
+def _smoke_mat():
+    """soft smoke: warm-grey emission, transparent at the silhouette (facing falloff) and fading toward the top of each plume, so a plume near the lens is a soft haze-free puff, not a flat grey blade."""
+    m = bpy.data.materials.new('smoke'); nt = _mk_tree(m); N = nt.nodes.new; L = nt.links.new; out = N('ShaderNodeOutputMaterial'); lw = N('ShaderNodeLayerWeight'); lw.inputs['Blend'].default_value = 0.5
+    tc = N('ShaderNodeTexCoord'); sp = N('ShaderNodeSeparateXYZ'); L(tc.outputs['Generated'], sp.inputs[0]); fz = N('ShaderNodeMath'); fz.operation = 'SUBTRACT'; fz.inputs[0].default_value = 1.0; L(sp.outputs['Z'], fz.inputs[1])
+    a1 = N('ShaderNodeMath'); a1.operation = 'MULTIPLY'; L(lw.outputs['Facing'], a1.inputs[0]); L(fz.outputs[0], a1.inputs[1]); a2 = N('ShaderNodeMath'); a2.operation = 'MULTIPLY'; a2.inputs[1].default_value = 0.85; L(a1.outputs[0], a2.inputs[0])
+    em = N('ShaderNodeEmission'); em.inputs['Color'].default_value = (*hex_lin('#e4d6cc'), 1); em.inputs['Strength'].default_value = 0.9; tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader'); L(a2.outputs[0], mx.inputs['Fac']); L(tr.outputs[0], mx.inputs[1]); L(em.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface']); return m
+def hide_near_banners(points, radius=15.0, smoke=True, banners=True):
+    """hide (hide_render) every live banner (and, with smoke=True, every smoke plume) within `radius` m of any point of a camera path (list of (x, y, z) or (x, y); 3D distance when z is
+    given). Call again with other points to update; `K.show_all_banners()` undoes it. Returns (banners hidden, plumes hidden)."""
+    P = [np.array(p, float) for p in points]; nb = ns = 0
+    def near(loc):
+        for p in P:
+            q = np.array(loc, float)
+            if len(p) == 2: q = q[:2]
+            if np.linalg.norm(q - p) < radius: return True
+        return False
+    for (obn, mdn, ph, h0) in STATE['anim'].get('flags', []):
+        ob = bpy.data.objects.get(obn)
+        if ob is not None: hide = banners and near(ob.location); ob.hide_render = bool(hide); nb += int(hide)
+    for c in STATE['anim'].get('smoke', []):
+        ob = bpy.data.objects.get(c['ob'])
+        if ob is not None: hide = smoke and near(c['base']); ob.hide_render = bool(hide); ns += int(hide)
+    # the pole + cloth of one banner are separate objects at one origin: hide the siblings too
+    for ob in bpy.data.objects:
+        if ob.name.startswith('flag_') and not any(ob.name == f[0] for f in STATE['anim'].get('flags', [])): ob.hide_render = bool(banners and near(ob.location))
+    return nb, ns
+def show_all_banners():
+    for ob in bpy.data.objects:
+        if ob.name.startswith('flag_') or ob.name.startswith('smoke_col'): ob.hide_render = False
 def _glow_mat(key):
     spec = {'glow_flame': ('#ffb040', 6.0), 'glow_ember': ('#ff8a30', 4.0), 'glow_sun': ('#fff2cc', 6.0), 'glow_smoke': ('#cdbfc0', 0.85), 'glow_spray': ('#f6f8fb', 1.0), 'glow_spray2': ('#f2f6fa', 1.0)}[key]
     m = bpy.data.materials.new(key); nt = _mk_tree(m); out = nt.nodes.new('ShaderNodeOutputMaterial'); e = nt.nodes.new('ShaderNodeEmission'); e.name = 'strength'
@@ -201,7 +230,7 @@ def _sky_mat():
     cb = N('ShaderNodeCombineXYZ'); L(uw.outputs[0], cb.inputs['X']); L(v.outputs[0], cb.inputs['Y'])
     it = N('ShaderNodeTexImage'); it.image = bpy.data.images.load(path, check_existing=True); it.interpolation = 'Linear'; it.extension = 'EXTEND'; L(cb.outputs[0], it.inputs[0])
     e = N('ShaderNodeEmission'); L(it.outputs['Color'], e.inputs[0]); e.inputs[1].default_value = 1.0; L(e.outputs[0], out.inputs[0]); return m
-PH_COL = {'scot': '#6e5a3c', 'wallace': '#5a4a34', 'moray': '#3f6a4a', 'cressingham': '#b03a38', 'surrey': '#34548e', 'knight': '#b8323a', 'knight_b': '#2f56a8', 'knight_g': '#d9a93a',
+PH_COL = {'scot': '#6e5a3c', 'wallace': '#5a4a34', 'moray': '#3f6a4a', 'cressingham': '#b03a38', 'surrey': '#34548e', 'knight': '#b8323a', 'knight_b': '#c8962e', 'knight_g': '#d9a93a',
           'foot': '#9a8c70', 'foot_r': '#a84a40', 'archer': '#3f6a4a', 'squire': '#6a5a7a', 'scot_b': '#8c4a30', 'scot_o': '#b08a3c', 'scot_m': '#5a6a3a'}
 def _ph_mat(key):
     hexc = '#fef7f6' if key == 'ph_head' else '#4a2a4a' if key == 'ph_ring' else PH_COL[key[3:]]
@@ -860,7 +889,7 @@ def knight_pair_column(B, y_list, x, rs, mats):
     for i, yy in enumerate(y_list):
         for sx in (-0.62, 0.62):
             m = mats[(i + (0 if sx < 0 else 1)) % len(mats)]; horse(B, (x + sx, yy, DECK_Z), 90.0, coat=['horse', 'horse_dk', 'horse'][rs.randint(0, 3)], trap=m[0], trim=m[1], tint=0.85 + 0.3 * rs.rand(), rider=(m[0],))
-KNIGHT_MATS = [('t_red', 't_gold'), ('t_blue', 't_gold'), ('t_cream', 't_red'), ('t_red', 't_white'), ('t_blue', 't_white')]
+KNIGHT_MATS = [('t_red', 't_gold'), ('t_gold', 't_red'), ('t_cream', 't_red'), ('t_red', 't_white'), ('t_gold', 't_cream')]
 
 # ---------------------------------------------------------------- camp props
 def ropes(B, c, r, hroof, hwall, n, rs, peg_r=1.9):
@@ -954,7 +983,7 @@ def weapon_rack(B, c, yaw, rs, n=7):
         for sx in (-1.0, 1.0): B.rod('wood', (sx, -0.3, 0), (sx, 0, 1.55), 0.05, seg=5); B.rod('wood', (sx, 0.3, 0), (sx, 0, 1.55), 0.05, seg=5)
         B.rod('wood', (-1.0, 0, 1.5), (1.0, 0, 1.5), 0.045, seg=5); B.rod('wood', (-1.0, 0, 0.6), (1.0, 0, 0.6), 0.04, seg=5)
         for i in range(n): xx = -0.85 + i * 1.7 / (n - 1); spear(B, (xx, rs.uniform(-0.05, 0.05), 0.02), tilt=(rs.uniform(-0.2, 0.2), rs.uniform(-0.1, 0.1)), h=2.5)
-        for i in range(2): B.cyl('t_red' if i == 0 else 't_blue', (-0.4 + i * 0.8, -0.22, 0.45), 0.34, 0.06, axis='y', seg=12, smooth=False)
+        for i in range(2): B.cyl('t_red' if i == 0 else 't_gold', (-0.4 + i * 0.8, -0.22, 0.45), 0.34, 0.06, axis='y', seg=12, smooth=False)
 def campfire(B, Bs, c, rs, puffs=True):
     x, y, z = c
     for i in range(9): a = i * 2 * math.pi / 9; boulder(B, x + 0.62 * math.cos(a), y + 0.62 * math.sin(a), z, 0.26, rs, 'rock')
@@ -994,7 +1023,7 @@ def table_set(A, B, c, yaw, rs):
             for sy in (-1.2, 1.2): B.rod('wood', (sx, sy, -0.1), (sx, sy, 3.5), 0.055, seg=6)
         seg = 8; r = 2.5; hz = 3.5
         for i in range(seg):
-            a0 = 2 * math.pi * i / seg + math.pi / 4; a1 = 2 * math.pi * (i + 1) / seg + math.pi / 4; m = ('t_blue', 't_gold')[i % 2]
+            a0 = 2 * math.pi * i / seg + math.pi / 4; a1 = 2 * math.pi * (i + 1) / seg + math.pi / 4; m = ('t_red', 't_gold')[i % 2]
             Bc.mesh(m, [(r * 1.0 * math.cos(a0) * 1.0, r * 0.82 * math.sin(a0), hz), (r * math.cos(a1), r * 0.82 * math.sin(a1), hz), (0, 0, hz + 0.9)], [(0, 1, 2)], False)
             Bc.mesh(m, [(r * math.cos(a0), r * 0.82 * math.sin(a0), hz), (r * math.cos(a1), r * 0.82 * math.sin(a1), hz), (r * math.cos(a1), r * 0.82 * math.sin(a1), hz - 0.5), (r * math.cos(a0), r * 0.82 * math.sin(a0), hz - 0.5)], [(0, 1, 2, 3)], False)
         Bc.sphere('gold', (0, 0, hz + 1.0), 0.14, seg=8, rings=5)
@@ -1076,16 +1105,16 @@ def build_camp(A, pr):
     free = lambda x, y, r=0.0: all(math.hypot(x - cx, y - cy) > cr + r for cx, cy, cr in clear)
     PAV = [(-96, 8, 3.6), (-72, 10, 4.0), (-48, 8, 3.8), (-26, 22, 4.4), (24, 9, 4.0), (48, 12, 3.8), (74, 8, 4.2), (98, 11, 3.6), (-60, 30, 3.6), (-12, 36, 5.0), (30, 34, 4.4), (66, 36, 3.8), (-86, 34, 3.6), (92, 36, 3.6)]
     for i, (x, off, r) in enumerate(PAV):
-        by = float(bank_y(x)); y = by - off - r; z = float(ground(x, y)); mats = (('t_red', 't_cream'), ('t_blue', 't_gold'))[i % 2]
+        by = float(bank_y(x)); y = by - off - r; z = float(ground(x, y)); mats = (('t_red', 't_cream'), ('t_gold', 't_cream'))[i % 2]
         if not free(x, y, r + 2): continue
         pavilion(B, (x, y, z), r, mats, yaw=rs.uniform(0, 30), rs=rs, hw=1.8 + 0.2 * rs.rand(), hr=3.2 + 0.7 * rs.rand())
-        if i % 2 == 0 or r > 4.3: bn(Bh, (x + r * 0.6, y + r * 0.2, z), 6.5 + rs.rand() * 1.5, rs.uniform(-20, 60), *[('t_red', 't_gold', 'chevron'), ('t_blue', 't_gold', 'bars'), ('t_cream', 't_red', 'cross'), ('t_gold', 't_red', 'lion'), ('t_green', 't_cream', 'bend')][i % 5], rs)
+        if i % 2 == 0 or r > 4.3: bn(Bh, (x + r * 0.6, y + r * 0.2, z), 6.5 + rs.rand() * 1.5, rs.uniform(-20, 60), *[('t_red', 't_gold', 'chevron'), ('t_red', 't_gold', 'bars'), ('t_cream', 't_red', 'cross'), ('t_gold', 't_red', 'lion'), ('t_green', 't_cream', 'bend')][i % 5], rs)
         sacks(B, (x + r + 1.0, y - 1.5, z), 3, rs); barrel(B, (x - r - 0.8, y - 2.0, z), rs=rs)
     camp['pav'] = PAV
     for i, (x, y, r) in enumerate([(-24.0, -38.0, 3.6), (-14.0, -44.0, 3.9), (-38.0, -58.0, 4.2), (-6.0, -62.0, 4.6), (-6.0, -35.5, 4.2)]):          # the plaza pavilions
         if not free(x, y, r + 2): continue
-        z = float(ground(x, y)); pavilion(B, (x, y, z), r, (('t_blue', 't_gold'), ('t_red', 't_cream'))[i % 2], yaw=rs.uniform(0, 30), rs=rs, hw=1.9, hr=3.4)
-        bn(Bh, (x + r * 0.7, y - r * 0.3, z), 7.0, rs.uniform(10, 70), *[('t_gold', 't_red', 'lion'), ('t_blue', 't_gold', 'bars'), ('t_red', 't_gold', 'chevron'), ('t_cream', 't_red', 'cross')][i % 4], rs)
+        z = float(ground(x, y)); pavilion(B, (x, y, z), r, (('t_gold', 't_cream'), ('t_red', 't_cream'))[i % 2], yaw=rs.uniform(0, 30), rs=rs, hw=1.9, hr=3.4)
+        bn(Bh, (x + r * 0.7, y - r * 0.3, z), 7.0, rs.uniform(10, 70), *[('t_gold', 't_red', 'lion'), ('t_red', 't_gold', 'bars'), ('t_red', 't_gold', 'chevron'), ('t_cream', 't_red', 'cross')][i % 4], rs)
         sacks(B, (x + r + 1.0, y - 1.0, z), 3, rs); barrel(B, (x - r - 0.9, y - 1.5, z), rs=rs)
     for (x, y, yaw) in [(-31.0, -42.0, 20), (-19.0, -50.0, 80), (-45.0, -46.0, 10)]:
         if free(x, y, 4): cart(B, (x, y, float(ground(x, y))), yaw, rs, cover=rs.rand() < 0.5)
@@ -1103,7 +1132,7 @@ def build_camp(A, pr):
             if rs.rand() < 0.35: bell_tent(B, (x, y, z), 1.8 * sz, 2.8 * sz, m, rs)
             else: ridge_tent(B, (x, y, z), 3.6 * sz, 2.9 * sz, 2.0 * sz, m, yaw=rs.choice([0, 90, 20, -25, 70]) + rs.uniform(-8, 8))
     for i, (x, off) in enumerate([(-130, 24), (-110, 6), (116, 12), (130, 34), (-60, 52), (50, 58), (4, 62), (-34, 60)]):          # more banners on the skirts
-        y = float(bank_y(x)) - off; bn(Bh, (x, y, float(ground(x, y))), 7.0, rs.uniform(-20, 60), *[('t_red', 't_gold', 'chevron'), ('t_blue', 't_gold', 'bars'), ('t_cream', 't_red', 'cross'), ('t_gold', 't_red', 'lion')][i % 4], rs)
+        y = float(bank_y(x)) - off; bn(Bh, (x, y, float(ground(x, y))), 7.0, rs.uniform(-20, 60), *[('t_red', 't_gold', 'chevron'), ('t_red', 't_gold', 'bars'), ('t_cream', 't_red', 'cross'), ('t_gold', 't_red', 'lion')][i % 4], rs)
     for (x, off, yaw) in [(-34, 26, 20), (44, 24, -10), (84, 28, 80), (-76, 28, 5), (10, 40, 30)]:
         y = float(bank_y(x)) - off
         if free(x, y, 4): cart(B, (x, y, float(ground(x, y))), yaw, rs, cover=rs.rand() < 0.6)
@@ -1119,7 +1148,7 @@ def build_camp(A, pr):
         zl = [float(ground(x_, y)) for x_ in xs]
         for i, x_ in enumerate(xs):
             B.rod('wood', (x_ - 2.6, y + 0.2, zl[i]), (x_ - 2.6, y + 0.2, zl[i] + 1.6), 0.06, seg=5)
-            horse(B, (x_, y + (1.2 if i % 2 else -0.2), zl[i]), rs.uniform(70, 110) if i % 2 == 0 else rs.uniform(250, 290), coat=['horse', 'horse_dk', 'horse', 'horse'][rs.randint(0, 4)], trap=(None, 't_red', None, 't_blue', 't_cream', None, 't_red')[i], trim='t_gold', tint=0.8 + 0.4 * rs.rand(), bob=rs.uniform(0, 0.25))
+            horse(B, (x_, y + (1.2 if i % 2 else -0.2), zl[i]), rs.uniform(70, 110) if i % 2 == 0 else rs.uniform(250, 290), coat=['horse', 'horse_dk', 'horse', 'horse'][rs.randint(0, 4)], trap=(None, 't_red', None, 't_gold', 't_cream', None, 't_red')[i], trim='t_gold', tint=0.8 + 0.4 * rs.rand(), bob=rs.uniform(0, 0.25))
         B.rod('rope', (xs[0] - 2.6, y + 0.2, zl[0] + 1.5), (xs[-1] - 2.6, y + 0.2, zl[-1] + 1.5), 0.02, seg=3)
     # Cressingham's money table by the road, west side, facing the river
     tx, toff = -13.0, 8.5; ty = float(bank_y(tx)) - toff; tz = float(ground(tx, ty)); table_set(A, B, (tx, ty, tz), 0.0, rs); camp['table'] = (tx, ty, tz)
@@ -1359,10 +1388,10 @@ def crowd_loop(A, pr):
         items.append((x, y, float(ground(x, y)), ['scot', 'scot_b', 'scot_o', 'scot_m'][i % 4], 1.0))
     A['scots_line'] = scots_slope_line(30, 3, 1.0, rs, spear_h=4.0) + spear_wall(14, 2, rs)
     Bb = Batch(80)
-    for i, (x, y, f, c, sh) in enumerate([(-30, 66, 't_red', 't_gold', 'chevron'), (22, 72, 't_blue', 't_gold', 'bars'), (-8, 96, 't_cream', 't_red', 'cross'), (34, 104, 't_gold', 't_red', 'lion'), (-34, 112, 't_blue', 't_white', 'chevron'),
-                                           (4, 126, 't_red', 't_cream', 'bars'), (-60, -52, 't_red', 't_gold', 'chevron'), (52, -48, 't_blue', 't_gold', 'bars'), (8, -80, 't_gold', 't_red', 'lion')]):
+    for i, (x, y, f, c, sh) in enumerate([(-30, 66, 't_red', 't_gold', 'chevron'), (22, 72, 't_red', 't_gold', 'bars'), (-8, 96, 't_cream', 't_red', 'cross'), (34, 104, 't_gold', 't_red', 'lion'), (-34, 112, 't_red', 't_gold', 'chevron'),
+                                           (4, 126, 't_red', 't_cream', 'bars'), (-60, -52, 't_red', 't_gold', 'chevron'), (52, -48, 't_red', 't_gold', 'bars'), (8, -80, 't_gold', 't_red', 'lion')]):
         banner(Bb, (x, y, float(ground(x, y))), 11.0, 20 + 25 * i % 70, f, c, sh, rs, size=(4.4, 3.0))
-    for i, (a, f, c, sh) in enumerate([(220, 't_blue', 't_white', 'cross'), (242, 't_red', 't_gold', 'lion')]):
+    for i, (a, f, c, sh) in enumerate([(220, 't_gold', 't_red', 'cross'), (242, 't_red', 't_gold', 'lion')]):
         x = HILL_C[0] + 66 * math.cos(math.radians(a)) * 1.05; y = HILL_C[1] + 66 * 0.9 * math.sin(math.radians(a)); banner(Bb, (x, y, float(ground(x, y))), 11.0, 30, f, c, sh, rs, size=(4.4, 3.0))
     Bb.finalize('crowd_banners', shadow=False); B.finalize('crowd_horses'); stage_crowd(items)
 def px_lat(lens, d, x_px): return (x_px - 360.0) / (1280.0 * lens / 36.0) * d
@@ -1381,12 +1410,12 @@ def camp_fg(A, pr):
     cam = np.array(pr['cam']); look = np.array(pr['look']); B = Batch(65); Bs = Batch(66); rs = np.random.RandomState(23); lens = pr['lens']
     def at(d, xp): return rel_xy(cam, look, d, px_lat(lens, d, xp))
     dry = lambda x, y, m=3.5: float(sd_at(x, y)) > m
-    mats = (('t_red', 't_cream'), ('t_blue', 't_gold'), ('t_red', 't_cream'), ('t_blue', 't_gold'), ('t_red', 't_cream'), ('t_blue', 't_gold'))
+    mats = (('t_red', 't_cream'), ('t_gold', 't_cream'), ('t_red', 't_cream'), ('t_gold', 't_cream'), ('t_red', 't_cream'), ('t_gold', 't_cream'))
     for i, (d, xp, r) in enumerate([(26.0, 770, 4.0), (40.0, 700, 3.6), (32.0, 715, 4.4), (46.0, 700, 4.0), (60.0, 705, 4.6), (78.0, 690, 4.2)]):
         x, y = at(d, xp)
         if not dry(x, y, 6): continue
         z0 = float(ground(x, y)); pavilion(B, (x, y, z0), r, mats[i], yaw=rs.uniform(0, 30), rs=rs, hw=1.9, hr=3.4)
-        bx, by = x + r * 0.7, y + r * 0.3; banner(B, (bx, by, float(ground(bx, by))), 7.5, rs.uniform(-30, 40), *[('t_red', 't_gold', 'chevron'), ('t_blue', 't_gold', 'bars'), ('t_gold', 't_red', 'lion')][i % 3], rs)
+        bx, by = x + r * 0.7, y + r * 0.3; banner(B, (bx, by, float(ground(bx, by))), 7.5, rs.uniform(-30, 40), *[('t_red', 't_gold', 'chevron'), ('t_red', 't_gold', 'bars'), ('t_gold', 't_red', 'lion')][i % 3], rs)
         sacks(B, (x - r - 1.0, y - 1.5, z0), 3, rs); barrel(B, (x + r + 0.9, y - 2.0, z0), rs=rs)
     for i, (d, xp) in enumerate([(12, 760), (17, 40), (19, 20), (24, 700), (26, 60), (33, 120), (38, 540), (46, 90), (52, 735), (58, 20), (64, 640), (70, 520), (80, 430)]):
         x, y = at(d, xp)
@@ -1402,7 +1431,7 @@ def camp_fg(A, pr):
     for i in range(6):                                          # horse line
         x, y = at(19 + 2.0 * i, 720 + 6 * i)
         if not dry(x, y, 5): continue
-        horse(B, (x, y, float(ground(x, y))), 95 + rs.uniform(-15, 15), coat=['horse', 'horse_dk', 'horse'][i % 3], trap=(None, 't_red', None, 't_blue', 't_cream', None)[i], trim='t_gold', tint=0.8 + 0.4 * rs.rand(), bob=rs.uniform(0, 0.25))
+        horse(B, (x, y, float(ground(x, y))), 95 + rs.uniform(-15, 15), coat=['horse', 'horse_dk', 'horse'][i % 3], trap=(None, 't_red', None, 't_gold', 't_cream', None)[i], trim='t_gold', tint=0.8 + 0.4 * rs.rand(), bob=rs.uniform(0, 0.25))
     B.finalize('camp_fg', shadow=False); Bs.finalize('camp_fg_smoke', ink=False)
 def crowd_hill(A, pr):
     """hill_over: tiny English column on the bridge (knights two by two + a few foot), foot soldiers at the camp, the Scots line below the lens with spears."""
