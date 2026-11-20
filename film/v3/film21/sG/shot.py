@@ -40,11 +40,11 @@ def cam_for(g):
         snap = C.sm(clamp((g - G_HORN) / 14.0))
         push = 1.0 + 0.0
         # drift: slow push + lateral slide, plus the snap x1.5
-        zoom = lerp(1.0, 1.5, snap) * (1.0 + 0.012 * k)
+        zoom = lerp(1.0, 1.5, snap) * (1.0 + 0.0035 * k)
         fwd = (tgt - loc).normalized(); right = Vector((fwd.y, -fwd.x, 0)).normalized()
         d = (tgt - loc).length
-        loc = loc + fwd * (d * (1 - 1 / zoom)) + right * (0.045 * k)
-        look = look + right * (0.045 * k)
+        loc = loc + fwd * (d * (1 - 1 / zoom)) + right * (0.006 * k)
+        look = look + (tgt - look) * (0.85 * snap) + right * (0.006 * k)
     sh = 0.0
     if g in (G_HORN, G_HORN + 1):                       # 2-frame shake on the blast
         sh = 0.24 * (1 if g == G_HORN else -0.8)
@@ -69,7 +69,7 @@ def setup(T):
     for i, (nm, cst, pn) in enumerate(g2):
         x, y, z = M2[nm][:3]; T.actor("l_" + nm, cst); out.append(("l_" + nm, cst, pn, (x, y, z), 2, 10 + i))
     mh, mw = M2["horn"], M2["w"]
-    TGT[0] = Vector(((mh[0] + mw[0]) / 2, (mh[1] + mw[1]) / 2, (mh[2] + mw[2]) / 2 + 1.6))
+    TGT[0] = Vector(((mh[0] + mw[0]) / 2, (mh[1] + mw[1]) / 2, (mh[2] + mw[2]) / 2 + 1.1))
     # the yawning knight on the causeway (true height, scaled x2.2 so it reads from 230 m)
     cx, cy = 1.4, 41.0
     T.actor("knight", "knight_a_open", scale=2.2 * C.TRUE_H["knight_a_open"] / C.CAST_H["knight_a_open"])
@@ -113,7 +113,7 @@ def build(mode, samples, cast=True):
     K.place_troops(T.A, "bridge", 12); K.place_troops(T.A, "causeway", 14, seed=2); K.place_troops(T.A, "meadow", 18, seed=3)
     items = setup(T) if cast else []
     M2 = T.A["marks"]["hill_low"]; mh, mw = M2["horn"], M2["w"]
-    TGT[0] = Vector(((mh[0] + mw[0]) / 2, (mh[1] + mw[1]) / 2, (mh[2] + mw[2]) / 2 + 1.6))
+    TGT[0] = Vector(((mh[0] + mw[0]) / 2, (mh[1] + mw[1]) / 2, (mh[2] + mw[2]) / 2 + 1.1))
     return T, items
 
 if __name__ == "__main__":

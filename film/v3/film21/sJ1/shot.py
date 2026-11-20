@@ -14,24 +14,19 @@ WHIP0 = G1 - 6                                       # 1703
 def u_lin(g, a, b): return (g - a) / float(b - a)
 
 def cam_for(g, A):
-    pr = K.PRESETS["camp_table"]; c0 = Vector(K.preset_pose("camp_table")[0]); l0 = Vector(K.preset_pose("camp_table")[1])
-    tx, ty, tz = A["camp"]["table"]
-    t = (g - G0) / 30.0; x = u_lin(g, G0, G1)
-    # start a little off to the right and higher, push in 8 %/s with a lateral slide (arc) toward the chest
-    fwd = (l0 - c0); fwd.z = 0; fwd.normalize(); right = Vector((fwd.y, -fwd.x, 0))
-    u = 0.3 * sm(x) + 0.7 * x
-    c = c0 + Vector((0, 0, 0.35 * (1 - u))) - fwd * 0.55 + fwd * (1.0 * u * 1.0) + right * (0.55 - 1.1 * u)
-    l = l0 + Vector((0, 0, -0.15 * u)) + right * (0.2 - 0.5 * u)
-    d = l - c; yaw = 0.0
+    mid = Vector((-12.8, -26.85, 0.0)); x = u_lin(g, G0, G1); u = 0.3 * sm(x) + 0.7 * x
+    ang = math.radians(-7.0 + 14.0 * u)                    # slow arc: starts left of the axis, swings right
+    d = 4.5 - 0.9 * u                               # push in about 8 %/s
+    c = Vector((mid.x + d * math.sin(ang), mid.y - d * math.cos(ang), 1.5 - 0.05 * u))
+    l = Vector((mid.x + 0.12 * math.sin(g * 0.2), mid.y, 1.55 + 0.0 * u))
+    dd = l - c
     if g >= WHIP0:
-        k = (g - WHIP0 + 1) / 6.0
-        yaw = 95.0 * k ** 2.2                          # accelerating pan to the left
-    a = math.radians(yaw)
-    d = Vector((d.x * math.cos(a) - d.y * math.sin(a), d.x * math.sin(a) + d.y * math.cos(a), d.z))
+        k = (g - WHIP0 + 1) / 6.0; a = math.radians(95.0 * k ** 2.2)
+        dd = Vector((dd.x * math.cos(a) - dd.y * math.sin(a), dd.x * math.sin(a) + dd.y * math.cos(a), dd.z))
     cam = bpy.context.scene.camera; cam.location = c
-    cam.rotation_euler = d.to_track_quat('-Z', 'Y').to_euler(); cam.data.lens = 22.0
+    cam.rotation_euler = dd.to_track_quat('-Z', 'Y').to_euler(); cam.data.lens = 22.0
     K.STATE["vivid"] = K.VIVID.get("camp_table", (1.05, 1.1))
-    return dict(loc=tuple(c), look=tuple(c + d))
+    return dict(loc=tuple(c), look=tuple(c + dd))
 
 def scale_deg(g):
     if g < G_TIP: return 0.0 + 0.6 * math.sin(g * 0.3)            # idle quiver
@@ -67,7 +62,7 @@ if __name__ == "__main__":
     samples = 6 if cmd == "path_draft" else (int(sys.argv[5]) if len(sys.argv) > 5 else None)
     T = C.Take("camp_table", mode, samples, world=["camp_table"])
     for o in bpy.data.objects:
-        if o.name.startswith("table_extras_t_cream"): o.hide_render = True              # rug stripes
+        if o.name.startswith(("table_extras_t_cream", "table_extras_t_gold")): o.hide_render = True              # rug stripes
     A = T.A
     if cmd == "path_draft":
         out = os.path.join(HERE, "work", "path"); os.makedirs(out, exist_ok=True)
