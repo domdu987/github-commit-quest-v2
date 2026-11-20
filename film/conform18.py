@@ -37,6 +37,26 @@ def frames():
     os.makedirs(os.path.dirname(OUTF), exist_ok=True)
     sh(sys.executable, P + "/conform_full.py", TAKES, OUTF, env=dict(os.environ, N=str(N)))
 
+def grade_filter():
+    """QA_TEAM §G colour: per-shot eq grade so every shot reaches saturation >= 0.48 and luma 87-108 (film 2: 0.49 / 94).
+    Measured on the conformed frames per shot range; returns an ffmpeg filter chain with timeline enable."""
+    import numpy as np
+    sp = json.load(open(F18 + "/qa/shot_ranges.json"))  # [[shot, g0, g1], ...]
+    chain = []
+    for shot, a, b in sp:
+        fr = [f"{OUTF}_frames/f_{i:04d}.png" for i in range(a, b, 6)]
+        from PIL import Image
+        x = np.stack([np.asarray(Image.open(f).convert("RGB").resize((90, 160), Image.BOX), np.float32) for f in fr])
+        mx = x.max(-1); mn = x.min(-1); sat = ((mx - mn) / (mx + 1e-3)).mean(); L = x.mean()
+        k = min(1.45, max(1.0, 0.50 / max(sat, 1e-3)))
+        T = 90.0 if L < 87 else (105.0 if L > 108 else L)
+        gm = float(np.log(L / 255) / np.log(T / 255)) if T != L else 1.0
+        gm = 1 / gm  # ffmpeg eq gamma > 1 brightens
+        if k > 1.0 or abs(gm - 1) > 0.01:
+            chain.append(f"eq=saturation={k:.3f}:gamma={gm:.3f}:enable='between(n,{a},{b-1})'")
+        print(f"grade {shot}: sat {sat:.3f} luma {L:.1f} -> k {k:.2f} gamma {gm:.3f}")
+    return ",".join(chain)
+
 def music_bed(out):
     """music m1 with the audio-QA automation: -3.5 dB 40.0-43.6 s (0.5 s ramps), +1.5 dB 43.6-60, fade out to 70.4."""
     src = F18 + "/audio/music_pick.mp3"
@@ -55,7 +75,7 @@ def final(out):
         a = max(0, c["t"] + OFF); b = min(c["end"] + OFF, T)
         if a < T: ass.append(f"Dialogue: 0,{ts(a)},{ts(b)},Pop,,0,0,0,,{{\\pos(360,900)}}{c['text']}")
     os.makedirs(os.path.dirname(out), exist_ok=True); open(out + ".ass", "w").write("\n".join(ass))
-    sh("ffmpeg", "-y", "-v", "error", "-framerate", "30", "-i", OUTF + "_frames/f_%04d.png", "-vf", f"ass={out}.ass:fontsdir={P}/fonts",
+    sh("ffmpeg", "-y", "-v", "error", "-framerate", "30", "-i", OUTF + "_frames/f_%04d.png", "-vf", ",".join(filter(None, [grade_filter() if os.environ.get("GRADE", "1") == "1" else "", f"ass={out}.ass:fontsdir={P}/fonts"])),
        "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "17", "-movflags", "+faststart", out + "_silent.mp4")
     mb = SCR + "/conf18/music_bed.wav"; music_bed(mb)
     B = F18 + "/audio/sfx/"; sfx = []

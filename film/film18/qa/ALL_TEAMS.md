@@ -31,3 +31,9 @@ High-motion shots (s10, s14, s15, s19, s21, s24, the charge) carry the film's p9
 - s20: lead ox 25-30 % of frame height (not 35-40 %), side view, whole head in frame, flame ends <= x 700 and >= 120 px (the cast ox is ~1.45x longer than tall, so the old framing could not fit).
 - s21: dark unlit ground before the snap up to 35 % is a NOTE (deep-night opening); blur on the dark opening frames accepted as design; glints optional.
 - s22: glints optional.
+
+## QA_TEAM §G (producer, client complaint on films 15/17; 2026-11-20 11:40 UTC) — applies to every remaining take and the FINAL gate
+- Colour: saturation >= 0.47 and luma 85-110 (film 2: 0.49 / 94). Director measured the staged takes: film mean 0.481 / 93.3 (passes), but s05 s06 s08 s09 s10 s11 s12 s13 s17 s23 are 0.37-0.44 and the night shots s16 s17 s18 s20 s21 s23 are luma 70-82. The director applies a per-shot eq grade at conform (conform18.py grade_filter) so every shot reaches sat >= 0.48 and luma 87-108; QA-art judges the graded film side by side with film 2 at FINAL. Remaining takes: keep saturated reds/blues, no haze; do not crush the night darker than the passed s14/s15.
+- Nothing floats: feet/bodies on a surface with contact shadow, no poles/props through faces, no debris hanging still in mid-air. QA-art checks every 0.5 s phone tile.
+- Camera distance: no face taller than 35 % of frame height, no character cut in half by an edge, >= half the shots wide/medium-wide.
+- FINAL: side-by-side sheet with film 2; "as vivid, wide and grounded as film 2?" — a "no" blocks release.
