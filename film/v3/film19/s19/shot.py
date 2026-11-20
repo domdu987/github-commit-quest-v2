@@ -38,11 +38,32 @@ CAM_LOOK0 = (446.0, 61.789, 2.6)                # subject point (found with a pr
 CAM_LOC0 = tuple(Vector(CAM_LOOK0) + (Vector((452.0, 61.2, 3.55)) - Vector((446.0, 62.6, 2.6))) * 1.1)
 SNAP = (G_WORD - 2, G_WORD + 12)
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GF, GL, push=0.0335, slide_px=12.6, rise_px=9.4, arc_deg_s=-5.0, decay=0.1,
-                snaps=[dict(g=SNAP, k=1.108, peak=1.6, shift=(0.37, -0.10)),
-                       dict(g=(1526, 1533), k=1.0, peak=1.3, shift=(0.0, 0.68)),        # second beat: two quick camera bumps (tilt down and back)
-                       dict(g=(1533, 1542), k=1.0, peak=1.3, shift=(0.0, -0.68)),
-                       dict(g=(1556, 1563), k=1.0, peak=1.3, shift=(0.0, 0.68)),
-                       dict(g=(1563, 1572), k=1.0, peak=1.3, shift=(0.0, -0.68))])
+                snaps=[dict(g=SNAP, k=1.108, peak=1.6, shift=(0.37, -0.10))])
+
+
+# ----------------------------------------------------------------------------- BIGZOOM (QA_TEAM section H): one continuous descent
+GZ = 1552                                       # 51.7 s: the medium shot is reached (William 35-60 % of frame height); BIGZOOM g 1468..1552
+Z_L0 = Vector(json.loads(os.environ.get('ZL0', '[525.0, 66.0, 36.0]')))              # start: extreme wide from high above the bay (the characters ~3 % of the frame height)
+Z_K0 = Vector(json.loads(os.environ.get('ZK0', '[420.0, 62.0, -8.0]')))
+Z_LM = Vector((490.0, 66.0, 14.0))              # passes through the palm-frond layer (z 16-24, x 470-515): fronds at 1-2 D = foreground parallax
+Z_L1, Z_K1 = CAM.at(GZ)
+
+
+def zoom_ease(u):
+    u = clamp(u)
+    return u * u * u * (u * (6.0 * u - 15.0) + 10.0)          # smootherstep: ease-in and ease-out
+
+
+def cam_at(g):
+    """the take's camera: the BIGZOOM descent g GF..GZ (eased), then the drift CamPath."""
+    if g >= GZ:
+        return CAM.at(g)
+    e = zoom_ease((g - GF) / float(GZ - GF))
+    a, b = 1.0 - e, e
+    loc = (Z_L0 * (a * a) + Z_LM * (2.0 * a * b) + Z_L1 * (b * b))      # quadratic Bezier through the fronds
+    ek = zoom_ease(clamp((g - GF) / float(GZ - GF)) ** 0.8)
+    look = Z_K0 * (1.0 - ek) + Z_K1 * ek
+    return loc, look
 
 
 def _mix(a, b, u):
@@ -89,7 +110,7 @@ class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s19")
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
-        self.key_cam(bf(GF), *CAM.at(GF))
+        self.key_cam(bf(GF), *cam_at(GF))
         self.scene.frame_set(bf(GF))
         sd = os.path.join(WORK, "sprites")
         self.wil = self.actors["wil"] = C.make_actor("wil", "william19", sd, contact=True, cam=self.cam)
@@ -103,7 +124,7 @@ class Take(C.Take):
     def pose(self, gs):
         for g in gs:
             f = bf(g)
-            self.key_cam(f, *CAM.at(g))
+            self.key_cam(f, *cam_at(g))
             C.place(self.wil, f, self.mw + Vector((0, 0, bounce_z(g, 0.0, 0.14))))
             C.place(self.sa, f, self.ma + Vector((0, 0, bounce_z(g, 1.3))))
             C.place(self.sb, f, self.mb + Vector((0, 0, bounce_z(g, 2.6))))
@@ -120,7 +141,7 @@ class Take(C.Take):
     def report(self, g):
         f = bf(g)
         self.scene.frame_set(f)
-        loc, look = CAM.at(g)
+        loc, look = cam_at(g)
         return dict(g=g, cam=[round(c, 3) for c in loc], heads=C.head_report(self, f), dof=self.cam.data.dof.use_dof,
                     caption_shade=bool(C.bpy.data.objects.get("caption_shade")))
 

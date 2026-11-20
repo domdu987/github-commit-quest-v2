@@ -83,7 +83,7 @@ meta = {"take": TAKE, "film": 19, "shots": [CFG["shot"]], "g0": G0, "g1": G1, "f
         "transition_in": {"type": CFG["tin"][0], "frames": CFG["tin"][1]},
         "transition_out": {"type": CFG["tout"][0], "frames": CFG["tout"][1], "at": G1},
         "set": CFG["set"] + "; no runtime set changes; no caption_shade",
-        "events": EV, "dof": "none", "text": "none", "caption_shade": "none", "samples": rows[0].get("samples"),
+        "bigzoom": ([1468, 1552] if TAKE == "s19" else None), "events": EV, "dof": "none", "text": "none", "caption_shade": "none", "samples": rows[0].get("samples"),
         "resolution": [720, 1280], "threads": 2, "fps": 30,
         "s_per_frame_wall_mean": round(float(np.mean(walls)), 2), "s_per_frame_cpu_mean": round(float(np.mean(cpus)), 2),
         "head_px": [round(min(h["w"] for h in heads)), round(max(h["w"] for h in heads))],
