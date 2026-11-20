@@ -10,3 +10,4 @@ saturation 0.508, vivid 54 %, luma 130 (over the 85-110 band: bright sunny exter
 - Wall at P_NECK is small (22 m, ~60 px figures) and rank 2 is partly hidden behind rank 1; the 4-5-rank wall of API §13 was not available in the set code, so H2a should compare against my 2-rank card wall or the director may tint the world wall.
 - The Scots wall tint is a light blue multiply on the cards; the saltire banners are the world's.
 - Placeholder crowd cards (meadow) are not re-faced per frame; they are tiny in this segment.
+- qa_auto: one FAIL, 'suspected blur' on 6 frames (g1280, 1281, 1299, 1300, 1302, 1307): the sharp-frame check trips on the fast terrain/water sweep of the swoop (no blur or DOF is rendered; it is low-texture water and sky at speed). Left as is; director to judge.
