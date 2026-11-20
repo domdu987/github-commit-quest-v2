@@ -41,3 +41,12 @@ A shot's g0 = round(t0*30), g1 = round(t1*30)-1. In-shot events at narration tim
 - Before delivering: `python3 PROJ/qa_auto.py take.mkv --first_g <first_g> --cuts <your planned cut g's>`, fix every FAIL, add QA_AUTO.md + phone_sheet.jpg; then check yourself at 6 fps plus every cut ±3 frames (heads, contact shadows, props held, eye-lines, mouths only in quote windows, continuity with neighbouring shots) and write QA.md.
 - Push each take as soon as it is final: `git add -A film/v3/film20/sNN; git commit; git push -u origin <your branch>` (retry with backoff). Do not open pull requests.
 - Final message: takes delivered, frame ranges, s/frame, frame-diff numbers, anything that differs from the plan.
+
+## 6. Self-check before delivering (added after TAKE gate round 1: 18 of 19 checks failed on these)
+- **Ground / ceiling / floor <= 25 % of the frame** at every 6-fps sample. No flat bare slab in the bottom third: tilt up, lower the camera, or dress it (crowd cards, props in light).
+- **Principals readable on a phone**: the main character's head >= 60 px (wides >= 40 px), never cut by the frame edge mid-shot, never hidden behind foreground props. Foreground props sit at the SIDES, never over faces.
+- **The planned beat must happen on screen**: walks actually travel, hands touch what they use (Morse key), points point at the thing, the reveal reveals (start where the thing is NOT yet visible).
+- **The Eiffel Tower (or its legs/scaffolds) is in frame on every SITE/TOWER shot** and reads as the tower; compare with the approved set tiles in v3/set3d20/contact.jpg.
+- **No broken geometry, black slabs, unlit low-poly voids, blown streaks, duplicate props, moire.** Hide or move what you cannot fix.
+- **Frame-diff measured on the final frames** (90x160 grey, in-shot): median >= 4 AND p90 >= 12, from real camera motion (push/slide/orbit + one snap), not from flashes or jitter alone.
+- Look at your own phone_sheet.jpg (360x640) and ask: would the client understand this beat in 1 second? If not, fix it before pushing.
