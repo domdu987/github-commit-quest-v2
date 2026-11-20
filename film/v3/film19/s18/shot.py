@@ -50,7 +50,7 @@ _P = [float(v) for v in os.environ.get("CAMP", "-0.01,35,12.26,-8").split(",")] 
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, FIRST_G, G_LAST, push=_P[0], slide_px=_P[1], rise_px=_P[2], arc_deg_s=_P[3], decay=0.1,
                 snaps=[dict(g=SNAP, k=_S[2], peak=2.0, shift=(_S[3], _S[4])),
                        dict(g=(1446, 1476), k=1.05, peak=1.0, shift=(0.8, 0.0)),
-                       dict(g=(1375, 1412), k=1.0, peak=1.0, shift=(3.5, 0.0))])      # an eased early pan (g 1375-1412: the quiet start moves; QA-tech round 13)      # a gentle second move so the camera never parks after the snap (g 1444-1467)
+                       dict(g=(1375, 1412), k=1.0, peak=1.0, shift=(9.0, 0.0))])      # an eased early pan (g 1375-1412: the quiet start moves; QA-tech round 13)      # a gentle second move so the camera never parks after the snap (g 1444-1467)
 
 
 def widen_sea(preset, k, nu, nv):
@@ -67,7 +67,7 @@ def widen_sea(preset, k, nu, nv):
     P["sea_nu"], P["sea_nv"] = nu, nv
 
 
-def whitecaps_in_front(n=int(os.environ.get("WC", "14")), seed=int(os.environ.get("WCSEED", "3"))):
+def whitecaps_in_front(n=int(os.environ.get("WC", "20")), seed=int(os.environ.get("WCSEED", "3"))):
     """foreground swell crests: the hero preset's floating_spar() also places the preset's two foam streaks relative to P['cam'] (our widen_sea patched it): wrap it,
     keep the spar where the preset puts it (original camera) and add broken foam lines (the set's 'streaks' hook) between our camera and the ship, so crests
     sweep across the frame as the camera slides (frame-diff)."""
@@ -278,7 +278,7 @@ class Take(C.Take):
     def pose(self, gs):
         for g in gs:
             f = C.bf(g)
-            self.key_set(f, sea=g / 30.0 * SEAK, roll=g / 30.0 * SEAK)           # same t, every frame
+            self.key_set(f, sea=g / 30.0 * SEAK, roll=g / 30.0 * float(os.environ.get('ROLLK', '3.5')))           # same t, every frame
             self.key_cam(f, *CAM.at(g))
             C.key_vis([o for o in (C.bpy.data.objects.get('gulls_gullt'), C.bpy.data.objects.get('gulls_gullw'), C.bpy.data.objects.get('headland')) if o], False, f)   # no gulls; the pale old headland is hidden (JAMAICA is the island)
             C.place(self.will, f, (WILL_XYZ[0], WILL_XYZ[1], WILL_XYZ[2] + hop_z(g)), scale=WS)
