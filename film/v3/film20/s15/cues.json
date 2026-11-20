@@ -1,0 +1,59 @@
+{
+ "take": "s15",
+ "fps": 30,
+ "note": "t = film seconds (g / 30); narration film20/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "kind": "ambience",
+   "t": 33.2,
+   "dur": 3.233,
+   "frame": 996,
+   "end_frame": 1093,
+   "note": "Champ de Mars, sunny day 1889: fair crowd murmur, distant brass band, flags snapping in the breeze"
+  },
+  {
+   "kind": "foley",
+   "t": 33.6,
+   "dur": 0.467,
+   "frame": 1008,
+   "end_frame": 1022,
+   "note": "the official's arm stretches out with the sealed document; paper rustle, a ceremonial 'ta-da' flourish",
+   "peak_frame": 1014
+  },
+  {
+   "kind": "foley",
+   "t": 34.0,
+   "dur": 0.133,
+   "frame": 1020,
+   "end_frame": 1024,
+   "note": "Eiffel takes the document: crisp paper grab + tiny pleased 'hm' (non-verbal)",
+   "peak_frame": 1021
+  },
+  {
+   "kind": "accent",
+   "t": 35.467,
+   "dur": 0.5,
+   "frame": 1064,
+   "end_frame": 1079,
+   "note": "snap push on 'ครบแล้วต้องรื้อ': short airy whoosh rising",
+   "peak_frame": 1070
+  },
+  {
+   "kind": "accent",
+   "t": 35.533,
+   "dur": 0.133,
+   "frame": 1066,
+   "end_frame": 1070,
+   "note": "Eiffel's smile drops: comic descending slide-whistle 'womp' + a sweat-drop 'plip'",
+   "peak_frame": 1067
+  },
+  {
+   "kind": "cut",
+   "t": 36.433,
+   "dur": 0.0,
+   "frame": 1093,
+   "end_frame": 1093,
+   "note": "hard cut to shot 16 (CAFE): ambience changes to the cafe room tone"
+  }
+ ]
+}
