@@ -12,4 +12,4 @@
 | s10 | 9 | FAIL r1 -> re-render | | |
 | s11 | 10 | FAIL r1 -> re-render | | |
 | s12 | 11 | FAIL r1 -> re-render | | |
-| s13 | 12 | **PASS** (QA-art R3 SHIP; QA-tech R2 blocker = hand on bar, verified fixed in R3) | render17/team12 ba82a63 | rhythm 4.55/13.68; nit: tripod hood g1947-1965 |
+| s13 | 12 | **PASS** (QA-art R3 SHIP; QA-tech R2 blocker = hand on bar, verified fixed in R3) | render17/team12 ba82a63 (USE THIS; later ca5cc1a = unreviewed head-mask variant, ignore) | rhythm 4.55/13.68; nit: tripod hood g1947-1965 |
