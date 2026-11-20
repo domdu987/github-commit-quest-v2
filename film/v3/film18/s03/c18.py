@@ -366,14 +366,25 @@ def compose(f1, f2):
     return fn
 
 
-def fix_sky_clean(T, tex_name='sky_DAWN'):
+def fix_sky_clean(T, tex_name='sky_DAWN', flat_above=None):
     """cloud stickers out (TAKE gate): the sky texture is replaced by its row-median gradient (every cloud / sun disc column averaged away)."""
     from PIL import Image as I
-    out = os.path.join(HERE, 'sky_clean.png')
+    out = os.path.join(HERE, 'sky_clean%s.png' % ('' if flat_above is None else '_f'))
     if not os.path.exists(out):
         a = np.asarray(I.open(os.path.join(SETD, 'tex_jimo', tex_name + '.png')).convert('RGB'), dtype='float32')
         med = np.median(a, axis=1); k = np.ones(41, dtype='float32') / 41.0; pad = np.pad(med, ((20, 20), (0, 0)), mode='edge')
         ref = np.stack([np.convolve(pad[:, c], k, mode='valid') for c in range(3)], axis=1)[:, None, :]
+        if flat_above is not None:                                   # a smooth warm dawn gradient above the horizon glow: pink -> peach -> pale gold, no arc, no cloud band
+            h = ref.shape[0]; v0 = 0.10; v1 = flat_above
+            pink = ref[int(h * (1 - v0))].copy(); peach = np.array([[246.0, 186.0, 150.0]]); gold = np.array([[252.0, 230.0, 168.0]])
+            for r in range(h):
+                v = 1.0 - r / float(h)
+                if v <= v0:
+                    continue
+                if v < 0.5 * (v0 + v1):
+                    w = (v - v0) / (0.5 * (v0 + v1) - v0); ref[r] = pink * (1 - w) + peach * w
+                else:
+                    w = min(1.0, (v - 0.5 * (v0 + v1)) / (v1 - 0.5 * (v0 + v1))); ref[r] = peach * (1 - w) + gold * w
         I.fromarray(np.clip(np.repeat(ref, a.shape[1], axis=1), 0, 255).astype('uint8'), 'RGB').save(out)
     for im in bpy.data.images:
         if tex_name in os.path.basename(im.filepath):
@@ -420,3 +431,15 @@ def jimo_flag(k=0.45):
     for i, t in enumerate(STATE['towns']):
         if t.get('name') == 'jimo':
             VS_.set_pennant_scale(i, k, kind='qi')
+
+
+def vista_yard_fix(r=33.0):
+    """Jimo's yard shows a navy diagonal beam: the town road ribbon (vroad) that starts at Jimo's centre. Faces of vroad inside Jimo's walls are removed (the road continues outside)."""
+    import bmesh
+    h = STATE['objects'].get('vroad')
+    if h is None:
+        return
+    jx, jy = STATE['marks']['jimo'][:2]
+    bm = bmesh.new(); bm.from_mesh(h.data); mw = h.matrix_world
+    dl = [f for f in bm.faces if math.hypot((mw @ f.calc_center_median()).x - jx, (mw @ f.calc_center_median()).y - jy) < r]
+    bmesh.ops.delete(bm, geom=dl, context='FACES'); bm.to_mesh(h.data); bm.free()
