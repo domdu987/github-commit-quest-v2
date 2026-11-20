@@ -1,10 +1,12 @@
 import sys, os, math
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c18 as C, jimo_shots as S
+from mathutils import Vector as V
 SHOT = 's06'; G0, G1, HB, HA = 459, 531, 0, 0
 HERD = S.herd(10, (62, 15.4), (82, 17.2), 4.5, 6, yaw=200.0)
 # real eased push + a 3 D slide along the lane (follows the oxen), one held punch-in on "สิบตัว" (g 497, +15 %)
 CAM = C.cam_path(((83.0, 9.5, 2.5), (71.0, 21.0, 1.6), 22), ((78.0, 13.2, 2.3), (67.5, 22.0, 1.4), 22), punches=[(38 / 71.0, 5 / 71.0, 0.15)], slide=-2.4)
+LAT = 0.9
 def tweak(stage, A=None):
     if stage == 'pre':
         S.SHOTS[SHOT]['fg'] = None
@@ -13,7 +15,10 @@ def tweak(stage, A=None):
 def actors(f, cam, ctx):
     t = (f - G0) / 30.0
     # Tian Dan leads along the lane, head turned toward the oxen / the gates
-    C.person_card('tiandan', 'tiandan_walk', (76.5 - 1.6 * t, 12.4 + 0.5 * t, 0), cam, 0, bob=0.05 * abs(math.sin(2 * math.pi * 2.0 * t)), roll=C.sway(f, 0, 2, 1.0), mods=dict(yaw=0.45, gaze=(0.8, 0.1)))
+    # keep Tian Dan locked in the camera frame (cap and body fully inside the left edge): fixed distance / lateral offset from the keyed camera, plus his walk bounce
+    loc_, look_, _ = CAM((f - G0) / float(G1 - 1 - G0)); fw_ = look_ - loc_; fw_.z = 0; fw_.normalize(); rt_ = V((fw_.y, -fw_.x, 0.0))
+    ptd = loc_ + fw_ * 7.6 - rt_ * LAT
+    C.person_card('tiandan', 'tiandan_walk', (ptd.x, ptd.y, 0), cam, 0, bob=0.05 * abs(math.sin(2 * math.pi * 2.0 * t)), roll=C.sway(f, 0, 2, 1.0), mods=dict(yaw=0.45, gaze=(0.8, 0.1)))
     # townsfolk lead the oxen out of the house gates (x 58 / 74 / 86 at y 23), ropes implied by the line of walking oxen
     for i, (x, y, pose) in enumerate(((60.5, 21.8, 'woman_stand'), (72.0, 22.0, 'old_man_stand'), (84.5, 21.6, 'woman_stand'))):
         C.person_card('townsfolk', pose, (x - 1.2 * t, y - 0.6 * t, 0), cam, i + 1, bob=C.hop(f, i, 0.03, 1.2), roll=C.sway(f, i, 2.5, 0.8))

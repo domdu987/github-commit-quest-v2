@@ -77,6 +77,7 @@ def run(shot, actors_fn, g0, g1, hb=0, ha=0, quality=None, outdir=None, tweak=No
     if tweak: tweak('pre')
     A = J.build(None, shot); sc = bpy.context.scene; MN.setup_render(sc, 'preview' if quality == 'fast' else quality); sc.render.threads = 2
     if quality == 'fast': sc.render.resolution_percentage = 50; sc.cycles.samples = 3
+    sc.cycles.transparent_max_bounces = 64
     J.apply_state(S.SHOTS[shot]['state'] if state is None else state)
     if tweak: tweak('post', A)
     cam0 = key_cam(shot, cam_fn, g0, g1 - 1) if cam_fn else J.key_camera(shot)
