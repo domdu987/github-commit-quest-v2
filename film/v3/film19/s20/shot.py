@@ -35,7 +35,7 @@ LIGHT, PRESET, FINAL_SPP, PPD = "DAY", "hall_low", 8, 400
 SUBJ = Vector((-3.24, 3.24, 2.60))
 CAM_LOC0 = (-4.9, -1.30, 1.25)
 CAM = C.CamPath(CAM_LOC0, tuple(SUBJ), G_FIRST, G_LAST, push=0.12, slide_px=30.0, rise_px=0.0, arc_deg_s=14.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.4, peak=2.6, shift=(-0.60, -0.30))])
+                snaps=[dict(g=SNAP, k=1.25, peak=3.0, shift=(-0.50, -0.25))])
 
 ST = cast19.STORY19
 IDLE, SHRUG = ST["astro_idle"][1], ST["astro_shrug_fluke"][1]
@@ -52,7 +52,7 @@ def pose_of(g):
     for q, sgn in (("arm_r", 1), ("arm_l", -1)):
         d = dict(p[q])
         # QA-art: palms up and OUT at about (+-1.30, 0.95), layered in front of the wig / gown so they read
-        hx = 1.15 - 0.43 * u_of(g, G_QUOTE - 5, G_QUOTE + 8, "sine")       # hands come in to +-0.72 during the snap (no sideways pump): both palms inside x 40-680
+        hx = 1.02 - 0.30 * u_of(g, G_QUOTE - 5, G_QUOTE + 8, "sine")       # hands come in to +-0.72 during the snap (no sideways pump): both palms inside x 40-680
         d["hand"] = (lerp(d["hand"][0], sgn * hx, u) + 0.0 * pump, lerp(d["hand"][1], 0.95, u) + 0.12 * pump)
         d["layer"] = "front"
         d["shape"] = "open"
@@ -72,6 +72,15 @@ def pose_of(g):
     return p
 
 
+def lens_scale(g):
+    """FOV punches (client gate: no face above ~35 % of the frame, so the end push is trimmed): x1.08 punch with the snap on
+    "ฟลุ๊ค!" (g 1633) that eases back, x1.05 on the two shoulder pumps."""
+    z = 1.0 + 0.12 * math.sin(math.pi * u_of(g, G_QUOTE - 5, G_QUOTE + 10)) ** 2
+    z *= 1.0 + 0.06 * math.sin(math.pi * u_of(g, G_SHRUG - 2, G_SHRUG + 8)) ** 2
+    z *= 1.0 + 0.05 * math.sin(math.pi * u_of(g, G_QUOTE + 18, G_QUOTE + 30)) ** 2
+    return z
+
+
 def hop_z(g):
     return 0.03 * math.sin(math.pi * u_of(g, G_QUOTE - 3, G_QUOTE + 6)) ** 2 + 0.012 * math.sin(2 * math.pi * g / 20.0) ** 2      # a hop of smugness on "ฟลุ๊ค"
 
@@ -89,6 +98,7 @@ class Take(C.Take):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *CAM.at(g))
+            C.camrig.key(self.cam.data, "lens", f, 22.0 * lens_scale(g), "LINEAR", "AUTO")
             C.place(self.ast, f, mark + Vector((0, 0, hop_z(g))))
             self.key_set(f, candles=1.0)
         for g in gs:

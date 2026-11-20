@@ -103,7 +103,7 @@ s01 is the director's worked example. All other teams run on Sonnet.
 ## QA §I restructure (director, 2026-11-20 12:50 UTC): camera travel instead of hard cuts
 Client decision (QA_TEAM §I, film/ref_shorts): at most 12 hard cuts, target 4-10. Same-location neighbours become one continuous camera-travel take; the later folders are dropped from the conform.
 - **s02** absorbs s03 (BIGZOOM, opening)
-- **s08** absorbs s09: 18.17-25.78, a continuous orbit from the laugh into the mock bow; both lip-sync windows
+- ~~s08 absorbs s09~~ cancelled (director 13:00): s09 re-rendered with the §G face cap and kept as its own take; planned hard cuts = 9, inside the 4-10 target
 - **s12** absorbs s13: 31.26-33.86, a slide along the bench from the H3 to white-haired Harrison (foreground wipe for the ageing)
 - **s15** absorbs s16: 36.52-42.65, crane up to the sun, then back down to the H4 on William's palm
 - **s24** absorbs s25 and s26: 64.44-71.90, the King's table, then a whip-pan to the jaw-dropped mocker (the single ~1 s punctuation close-up), then a whip back to the bag landing in front of Harrison; the film ends moving

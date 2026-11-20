@@ -27,15 +27,15 @@ G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1              # 652 .. 781
 GS = list(range(G_FIRST, G_LAST + 1))
 G_QUOTE = C.cap_g("จับเวลาเอง")                           # 748
 G_KING = C.cap_g("ให้พระราชามา")                          # 722: the deepest bow
-SNAP = (G_QUOTE - 5, G_QUOTE + 14)
+SNAP = (G_QUOTE - 4, G_QUOTE + 10)
 BLINKS = [690, 735, 770]
 
 LIGHT, PRESET, FINAL_SPP, PPD = "DAY", "hall_low", 8, 400
 
-SUBJ = Vector((-3.24, 3.24, 2.55))
-CAM_LOC0 = (-4.9, 0.55, 1.25)
-CAM = C.CamPath(CAM_LOC0, tuple(SUBJ), G_FIRST, G_LAST, push=0.07, slide_px=25.0, rise_px=0.0, arc_deg_s=5.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.5, peak=1.9, shift=(-0.2, 0.0))])
+SUBJ = Vector((-3.24, 3.24, 2.22))
+CAM_LOC0 = (-5.28, 0.22, 1.15)
+CAM = C.CamPath(CAM_LOC0, tuple(SUBJ), G_FIRST, G_LAST, push=0.04, slide_px=25.0, rise_px=0.0, arc_deg_s=7.0, decay=0.15,
+                snaps=[dict(g=SNAP, k=1.12, peak=2.6, shift=(-0.2, -0.05))])
 
 ST = cast19.STORY19
 POINT, BOW = ST["astro_mock_point"][1], ST["astro_mock_bow"][1]
@@ -62,6 +62,15 @@ def pose_of(g):
     return p
 
 
+def lens_scale(g):
+    """FOV punches instead of a long push (client gate: no face taller than ~30 % of the frame): x1.10 punch with the deep bow
+    (g 722), x1.06 micro-punches on the bow beats (1.5 Hz), a x1.10 punch with the snap on "จับเวลาเอง" (g 748) that eases back."""
+    z = 1.0 + 0.10 * math.sin(math.pi * u_of(g, G_KING - 4, G_KING + 10)) ** 2
+    z *= 1.0 + 0.06 * max(0.0, math.sin(2 * math.pi * 1.5 * (g - G0) / 30.0)) ** 2
+    z *= 1.0 + 0.06 * math.sin(math.pi * u_of(g, G_QUOTE - 5, G_QUOTE + 12)) ** 2
+    return z
+
+
 def hop_z(g):
     return 0.015 * math.sin(2 * math.pi * g / 24.0) ** 2        # small proud rise on the toes
 
@@ -79,6 +88,7 @@ class Take(C.Take):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *CAM.at(g))
+            C.camrig.key(self.cam.data, "lens", f, 22.0 * lens_scale(g), "LINEAR", "AUTO")
             C.place(self.ast, f, mark + Vector((0, 0, hop_z(g))))
             self.key_set(f, candles=1.0)
         for g in gs:
@@ -94,7 +104,7 @@ class Take(C.Take):
         v = look - loc
         p = pose_of(g)
         return dict(g=g, cam=[round(c, 3) for c in loc], pitch=round(math.degrees(math.atan2(v.z, math.hypot(v.x, v.y))), 1),
-                    heads=C.head_report(self, f), mouth=str(p.get("mouth")), in_window=C.mouth_open_at(g), dof=self.cam.data.dof.use_dof,
+                    heads=C.head_report(self, f), wig_bottom=[round(h["y"] + 1.17 * h["w"]) for h in C.head_report(self, f).values()], mouth=str(p.get("mouth")), in_window=C.mouth_open_at(g), dof=self.cam.data.dof.use_dof,
                     caption_shade=bool(C.bpy.data.objects.get("caption_shade")))
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):

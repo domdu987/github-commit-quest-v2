@@ -9,13 +9,13 @@
 astro19 stands smug at mark mocker_telescope (arched window, telescope tube behind him), still smirk. On "คนเดิมยักไหล่" (g 1615) he lifts both palms up into the shrug (astro_shrug_fluke, hands pumped out and up), head tilting. The lip-sync window opens at g 1626 (54.25 s -0.15): "ฟลุ๊ค!" from g 1633 with a hop and a shoulder pump, then "ต้องลองใหม่!" with a second smaller pump (g 1651-1663), mouth driven with talk_mouth until the window closes (g 1672); a still smirk before and a still smile after. Camera: hard cut in already moving, from the telescope side (x -4.9) with push 10 %/s + slide 45 px/s + slow orbit 13 deg/s (the Board's chair backs sweep in the foreground); one SNAP x1.4 (g 1628-1646, peak 2.6) with a pan on "ฟลุ๊ค!" (g 1633).
 
 ## Checked
-- Heads: width 154-289 px, centre y 467-612, chin at most y 704; wig lappets end above y 880 on every frame.
+- Heads: width 154-264 px, centre y 510-612, chin at most y 711; wig lappets end above y 880 on every frame (max 862 by estimate). Face about 28 % of the frame height at its biggest (was ~36 %).
 - Mouth: moves only for g 1626..1672 (mouth_open_at); `meta.json mouth_moving_outside_window_frames = []`.
 - Palms-up shrug readable at g 1625-1665 (hands out at both sides, framed); feet on the floor with contact decal in the wide first half; no DOF, no text, no caption_shade.
 - qa_auto PASS; the "no visible change at g 1581, 1665" note is the handle.
 
 ## Frame-diff (90x160 grey, in-shot pairs g 1582..1664)
-median **4.22**, p90 **10.68**: meets the per-take rule (median >= 4, p90 >= 10; the film-wide p90 target of 12 is the director's).
+median **4.30**, p90 **11.06** (10 in-shot pairs >= 10): meets the per-take rule (median >= 4, p90 >= 10).
 
 ## Revision (director's QA-art / TAKE gate round 2)
 - Shrug: both hands now go to about (+-1.30, 0.95), palms open, layered in FRONT of the wig and gown, so the palms-up pose reads from g 1615 and stays in frame through the snap (the hand tips touch the frame edges in the tightest frames g 1639-1666). Snap k 1.6 -> 1.4 with the pan keeping him centred (head x 345-377).
@@ -23,3 +23,11 @@ median **4.22**, p90 **10.68**: meets the per-take rule (median >= 4, p90 >= 10;
 - Smug rocking on the heels before the shrug lifts the median to 4.16.
 - Round 4: during the snap the hand targets come in from +-1.30 to +-1.00 (g 1628-1641) so both palms stay inside the frame on every frame (g 1640 to the end checked on the contact sheet); squash 0.04 and head_roll -10 on the shrug. Snap k stays 1.4 (peak 2.6).
 - Round 5: hand targets come in from +-1.15 to +-0.72 over the snap (g 1628-1641), no sideways pump; checked on every frame g 1609-1673 from the raw head positions (hand centre = head x +- hx*width, fingertips +0.3 D): both hands stay inside x 40-680 (0 frames outside; the projection matched the mitt positions seen on the contact sheet to within ~5 px).
+
+## Revision (client gate)
+- End push trimmed: snap k 1.4 -> 1.25 (peak 3.0), plus lens punches instead of travel (x1.12 with the snap on 'ฟลุ๊ค!' g 1633, x1.06 on the shrug g 1613-1623, x1.05 on the second pump). Head width now at most 264 px (was 289). Hand targets +-1.02 -> +-0.72 over the snap: every frame g 1609-1673 has both hands inside x 40-680 (0 outside, projection from the raw head positions).
+- qa_stats (take.mkv, handles included):
+```
+take.mkv: 3.4s, shots=1, mean shot 3.40s, median 3.40s, shortest 3.40s, shots<1.5s: 0
+   saturation 0.692, brightness 70.4, in-shot motion median 5.07 p90 11.23
+```
