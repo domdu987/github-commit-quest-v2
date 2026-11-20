@@ -107,3 +107,39 @@ Fixes, in priority order:
 2. **William's gesture.** At g 1430-1440, raise the H4 above head height on the island side (screen-left arm). Swap the face to open-mouth excitement and hold for 0.5 s or more. Add one warm sparkle on the watch at g ~1438 so it reads as more than 6 px on a phone.
 3. **Bow wave.** Replace the solid tube mesh with broken toon spray: 3-6 separate white chunks or a particle spray with an alpha edge. Do not just re-shade it. Alternatively, cap its size at about 15 % of the frame width.
 4. (Polish) Lift the first 17 frames by about +0.1 EV (luma 84 → 87). Thin the lower-third foam mass at g 1415-1432 by about 30 %.
+
+## Round 13 (director QA-art): PASS, 7.3 (v2 is better than round 12's 6.9)
+
+Take: take.mkv v2 (first_g 1375, 102 frames, frame index = g - 1375). Frames: /tmp/qa19_r13art/s18/gNNNN.png (every frame, named by g). Sheets: /tmp/qa19_r13art/s18_sheet3fps.jpg (every 10 f), s18_snapA.jpg / s18_snapB.jpg (every frame g 1425-1476), s18_phone.jpg (360x640: g 1385, 1400, 1415, 1430, 1438, 1445, 1455, 1467), s18_william.jpg (son crops), s18_watch_1440_1455.jpg (every frame), s18_g1445_island_bow.png, s18_g1445_phone.png.
+
+Stats (Rec.601 luma, (max-min)/max saturation, in-shot g 1384-1467):
+- Mean luma **92.2** (min 83.4 around g 1399, max 100.1). Passes G.1.
+- The opening frames are 85.7 falling to 83.4 over g 1384-1400. The +0.1 EV did not get them to 87, but this is not blocking.
+- Saturation **0.668**. Passes G.1 and I.3.
+
+| Check | Status |
+|---|---|
+| Island / "Jamaica" | **Fixed in size.** A green twin-hump island with a sand rim and 5 palms is on screen-left from g ~1400 to the dissolve. At g 1440-1467 it is about 30-36 % of the frame width (260 px at 720). On the phone it is about 100 px wide, and the palms read as palms. It is the clear second subject and the obvious destination, and it hands off well to the s19 beach. **Remaining weakness:** it still sits on the horizon line beside or behind the ship. The ship comes toward the camera rather than turning toward it, so the "heading TO" reading comes mainly from William's gesture, not the ship's course. There is no JAMAICA sign (I.4, optional). |
+| Son / watch | **Lands.** From g 1427 the arm goes straight up on the island side (screen-left). The H4 is held above his hat from g ~1436 to the end. A 4-point white sparkle shows at g 1436-1450, and after that the clock face is legible at full size (about 20 px). His face changes to open-mouth excitement with round eyes and a red mouth, and he hops. Hand and watch stay attached on every frame, and the watch stays on the same side, with no jump. On the phone his arm reads as raised with a bright point at its tip, and the read is "showing something, excited". The pose is a stiff single-card arm, but it reads. |
+| Bow wave | **Mostly fixed.** It is smaller and no longer a dominant pillow. It is now a thin white skirt plus crest rings. A **lavender/purple underglow** remains at the stem waterline (g 1430-1467), visible on the phone as a violet smudge left of the bow. This is polish only. |
+| Lower-third foam | This was not thinned. At g 1415-1432 a large noisy white foam mass fills the bottom third and briefly competes with the ship on the phone. It clears by g 1438, so the key word is clean. |
+| Colour / light | Vivid deep-blue sky and teal sea, warm sails, green island: on-brand and the same as round 12. NOON key with a warm/cool split. |
+| Composition / camera | There is now a 3/4 front-right angle with a push, orbit and snap. The snap on "จาไมกา" lands at g 1438-1446 with the island and William both in frame. The ship is still roughly centred. Nothing is cut by a frame edge. **Nothing floats on any 0.5 s tile**: the son stands on the deck, and the spar from g 1385-1405 rides on the water. |
+
+| Criterion | Score |
+|---|---|
+| Set | 7.5 (big island adds a destination; bow underglow and foam mass remain) |
+| Light & colour | 7.5 |
+| Composition / phone | 7 |
+| Acting | 7.5 (raise, excited face, hop and sparkle all read on the phone) |
+| Key moment ("across the sea to Jamaica") | 7 (island big on the word and the son presents the watch to it; the ship's course still does not point at it) |
+| Match to refs (R5) | 7 |
+| **Overall** | **7.3 - PASS** |
+
+**Verdict vs round 12: v2 is clearly better (7.3 vs 6.9).** All three blocking notes from round 12 are addressed: island size, William's raise and reaction, and bow-wave size. On a phone, the shot now tells "his son carried it across the sea to Jamaica".
+
+Optional polish (not blocking):
+1. Kill the violet emission or underglow at the bow stem.
+2. Thin the lower-third foam at g 1415-1432 by about 30 %.
+3. Yaw the ship about 10-15 deg toward the island, or add a small "JAMAICA" flag or banner on the beach, so the ship's course also points at the destination.
+4. Lift g 1384-1400 by another +0.1 EV.
