@@ -22,6 +22,7 @@ TMP = os.path.join(HERE, "work")
 SPR = os.path.join(TMP, "sprites")
 SN7, SN8 = 364, 418
 SNAP8 = (-0.30, -0.30, -0.02)
+ORB8 = (-30.0, -22.0)
 def bf(g): return g - FIRST_G + 1
 def shot_of(g): return 7 if g < G_CUT else 8
 
@@ -45,8 +46,12 @@ def cam_of(g):
         x = min(1.0, max(0.0, (g - SN7) / 12.0)); k = x * x * (3 - 2 * x)
         loc += Vector((0.45, 0.9, -0.5)) * k; look += Vector((1.5, 0.0, -0.1)) * k
     else:
+        piv = Vector((-0.74, 2.33, 0.0)); rel = Vector(S8["c0"]) - piv
         x = min(1.0, max(0.0, (g - SN8) / 13.0)); k = x * x * (3 - 2 * x)
-        loc += Vector(SNAP8) * k; look += Vector((0.0, 0.0, -0.02)) * k
+        ang = math.radians(ORB8[0] * (g - G_CUT) / float(G1 - G_CUT) + ORB8[1] * k)
+        c, sn = math.cos(ang), math.sin(ang)
+        loc = Vector((piv.x + c * rel.x - sn * rel.y, piv.y + sn * rel.x + c * rel.y, S8["c0"][2] - 0.06 * (g - G_CUT) / 55.0 + 0.012 * math.sin(g * 0.9)))
+        look = Vector((-0.74, 2.33, 1.42))
     return loc, look
 
 # ---------------------------------------------------------------- the cast
