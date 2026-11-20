@@ -5,3 +5,4 @@ work/
 *.pyc
 __pycache__/
 frames/
+log_*.txt
