@@ -133,6 +133,8 @@ def _lit_mat(key, s):
     fs = N('ShaderNodeVectorMath'); fs.operation = 'SCALE'; L(amb, fs.inputs[0]); L(fa.outputs[0], fs.inputs['Scale']); amb = fs.outputs['Vector']
     em = N('ShaderNodeEmission'); L(amb, em.inputs['Color']); em.inputs['Strength'].default_value = 1.0
     ad = N('ShaderNodeAddShader'); L(dif.outputs['BSDF'], ad.inputs[0]); L(em.outputs['Emission'], ad.inputs[1]); L(ad.outputs['Shader'], out.inputs['Surface'])
+    gk.name = 'amb_gain'; ms.name = 'amb_shade'; tb.name = 'amb_tint'; lf.name = 'amb_lift'; fd.name = 'amb_form'          # named for prefecture17.set_light_mix (no effect on the render)
+    m['pal'] = dict(sm=list(sm), mix=float(mix), afl=float(s['afl']))
     return m
 def _glow_mat(key):
     """emitters: glow_gas (lamp glass), glow_frost (skylights), glow_win (lit windows), glow_green, glow_door. Strength node named 'strength'."""

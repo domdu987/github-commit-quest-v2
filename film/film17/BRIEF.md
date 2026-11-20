@@ -11,3 +11,7 @@ Shot planning: also read the style bible on branch claude/new-session-73ou27 com
 ## Client decision 2026-11-19 (typed in this chat)
 "เรื่อง 17 ไม่ต้องรอผม OK ให้ QA-art อนุมัติแทนแล้วเรนเดอร์ได้เลย และเพลงไม่ต้องรอผม ให้ทำเองด้วย fal.ai (elevenlabs/music/v2.5 แบบ instrumental) ให้ทีมตรวจเลือก"
 -> SET gate approval = QA-art (Opus) PASS; send sheets to client as FYI only. Music: fal-ai/elevenlabs/music v2.5 instrumental, QA picks. FINAL gate + sending the finished film + WAIT queue row unchanged.
+
+## v2 remake decision (client, in this chat, 2026-11-20)
+"ทำเรื่อง 17 ใหม่" and "ทำใหม่ ตามกฎ G H I ทั้งหมด ใช้ป้ายตัวหนังสือได้ ไม่ต้องรอผม OK ฉาก ให้ QA-art อนุมัติแล้วเรนเดอร์เลย"
+-> remake to QA_TEAM §G/§H/§I, text signs allowed, QA-art approves the v2 set on the client's behalf, render without waiting. Plan: film/film17/v2/PLAN_V2.md.
