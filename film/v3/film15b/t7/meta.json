@@ -1,0 +1,4 @@
+{"take":"t7","g0":1804,"g1":2095,"first_g":1796,"n_frames":305,
+ "transition_in":{"type":"dissolve","frames":11},
+ "internal":[{"at":1938,"type":"dissolve","frames":27,"note":"sky-to-sky B(1972 stadium) -> A(Medford), g1938..1965, smoothstep, baked"}],
+ "handles":"8 frames at start (1796-1803), 6 at end (2095-2100)","hard_cut":"on the last word at g2094"}
