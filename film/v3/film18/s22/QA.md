@@ -1,9 +1,9 @@
 # QA s22 (film 18, render team 4)
 Range g 1683-1741, take.mkv frames 1677..1747 (71 frames), transition in: cut.
-Render: 720x1280, 12 samples, OIDN, 2 threads, 21.7 s/frame wall (two renders at once).
+Render: 720x1280, 12 samples, OIDN, 2 threads, 21.5 s/frame wall (two renders at once).
 
 ## Frame diff (90x160 grey, in-shot frames only)
-median 10.3, p90 13.8, min 4.92, max 16.33, frames < 1: 0 (rule: median >= 4, p90 >= 12)
+median 9.97, p90 13.36, min 4.92, max 16.33, frames < 1: 0 (rule: median >= 4, p90 >= 12)
 
 ## Max chin y per head (rule < 880)
 {"hero": 530}
@@ -22,5 +22,6 @@ median 10.3, p90 13.8, min 4.92, max 16.33, frames < 1: 0 (rule: median >= 4, p9
 - Gate 12 (rendered check, g 1738): punch removed (steady push only); ox mouth about y 800 on the RENDERED frame, muzzle inside the frame; the ox's own tail flame is in frame (right edge ~x 0.97); soldier fully inside the frame at x ~0.7-0.85; glazed pot and reed bundle in the bottom corners, ground_share 0.03-0.05 (g 1683 / 1710 / 1742). NOT fixed: the ox's reed bundle still crosses the soldier's chest and can read as a broom; I did not measure every frame.
 - Gate 13 + rule I: ox shrunk to 0.45, soldier at x ~0.88 fully in frame, cool moon-blue rim on soldier and hero. Rendered g 1713/1725/1737 (checked by eye): hero jaw about y 800-830 (projected anchor max 797). NOT fixed: the tail flame still stands right beside the soldier's head (well under the 60 px the director asked for), the soldier still faces the lens, and the flame stays in frame but touches the right edge region.
 - Gate 14: the Yan soldier is REMOVED; pure ox close-medium (hero + blue rim), own tail flame in frame, blue sky, star glints g 1732-1739, glazed pot + reed bundle bottom corners. Ground share (film18 ground_share.py) max 0.018 / median 0.015. Rendered frames g 1690/1725/1738 checked by eye: mouth y ~800-830, flame at the right edge but in frame. Projected mouth anchor max 772.
+- Gate 18: the fg pot / reed bundle flickered at g 1694, 1707, 1719 (and handle 1677): the script read a stale camera matrix when placing them. Fixed (props placed explicitly from the previous frame's pose); those 4 frames re-rendered and the take re-encoded. Prop centroid now moves smoothly at g 1693-1695, 1706-1708, 1718-1720.
 
 See QA_AUTO.md and phone_sheet.jpg.

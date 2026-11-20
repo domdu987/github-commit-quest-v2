@@ -106,11 +106,13 @@ def make_driver(quality):
             pp = p + V((0, -2.5 * t, 0)); pph = (int(g / 2.5 + phs * 8)) % 8; mir = (i % 2 == 0); a.show(pph, pp, cam, mirror=mir, lift=0.04 * math.sin(g * 0.8 + i))
             dd = cam - pp; yw = math.atan2(dd.x, -dd.y); u2 = V((math.cos(yw), math.sin(yw), 0)); bx, by = at_b.anchors[pph].get('tail_tip', (-1.2, -2.0))
             f2.location = pp + u2 * ((-1.0 if mir else 1.0) * bx * a.sc) + V((0, 0, -by * a.sc)); f2.scale = (a.sc * 0.9,) * 3
-        c_pt = C.ground_at(cam_obj, 0.88, 0.97)
         barrel.hide_render = True
+        # fg props: placed with the PREVIOUS frame's camera pose on every frame (explicitly, so a re-render of a single frame matches its neighbours; the old code read a stale camera matrix)
+        pose_now = pose; C.set_camera(NAME, g - 1, move=MOVE, cam=CAMO, shake=SHAKE, snaps=SNAPS, focus=OX + V((1.6, 0, 1.6))); C.bpy.context.view_layer.update()
         for o_, (u_, v_) in ((pot, (0.06, 0.93)), (reed, (0.55, 0.97))):
             q_ = C.ground_at(cam_obj, u_, v_)
             if q_ is not None: o_.location = (q_.x, q_.y, 0.0)
+        C.set_camera(NAME, g, move=MOVE, cam=CAMO, shake=SHAKE, snaps=SNAPS, focus=OX + V((1.6, 0, 1.6))); C.bpy.context.view_layer.update()
         # star glints on both blade tips on "วาววับ"
         k = g - G_GLINT
         for si, st in enumerate(stars):
