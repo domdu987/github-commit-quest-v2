@@ -9,7 +9,7 @@ import c18 as C                                                         # noqa: 
 
 SHOT = "s11"; G0, G1 = 853, 944; H_IN, H_OUT = 0, 8                     # dissolve 11 into s12: half + 2 = 8 handle frames
 CAMLIN = 0.5
-PARAMS = (0.03, 0, 0.0, 0.8, 0.0, 0.0, 0.0, 0.6, 3.4)      # c18.make_mod: push, slide px/s, sway D, Hz, wobble D, dz, dz/t
+PARAMS = (0.03, 0, 0.0, 0.8, 0.0, 0.0, 0.0, 0.6, 3.4, 0.4)      # c18.make_mod: push, slide px/s, sway D, Hz, wobble D, dz, dz/t
 POSES = ["soldier_mock_moo_a", "soldier_laugh_point_b", "soldier_mock_moo_c", "soldier_cheer_cup_a", "soldier_mock_moo_b", "soldier_laugh_point_c"]
 MARKS = [(3.2, -84.0, 0.0), (7.6, -83.4, 0.0), (2.4, -87.6, 0.0), (8.8, -87.4, 0.0), (5.4, -88.6, 0.0), (5.2, -91.0, 0.0)]   # two big mock-mooers in front of the fire
 BIG = 1.0                                                              # figures drawn 12 % taller (stylised) so the beat is large in frame
@@ -27,9 +27,12 @@ C.S.SHOTS[SHOT]["move"] = dict(push=0.04, slide=0, moves=[dict(t=0.55, d=0.88, d
 def patches(T):
     C.patch_sky()
     C.fg_rope(T, "right")
+    for nm in ("pools", "wallpools"):
+        if nm in C.J.STATE["objects"]:
+            C.J.STATE["objects"][nm].hide_render = True
     for fi in C.J.STATE["fires"]:
         if fi["ob"].location.y < -60:
-            fi["E0"] *= 0.7
+            fi["E0"] *= 0.5
             fi["k"] = fi.get("k", 1.0) * 0.85
 
 
@@ -50,9 +53,9 @@ def stage_factory(T):
             over = {}
             if "cheer_cup" in pose or "mock_moo" in pose:
                 over["mouth"] = STATIC_MOUTH
-            over["lean"] = (-5 if ((g + 3 * i) // 5) % 2 else 0)
+            over["lean"] = (-10 if ((g + 3 * i) // 4) % 2 else 2)
             card = C.pcard(pose, **over)
-            C.place(card, m[:3], cam, C.J.HEIGHT["soldier"] * (BIG if "mock_moo" in pose else 1.0), g, "sol%d" % i, bounce_amp=0.06, ph=0.9 * i, roll_deg=2.0 * C.sway(g, i, 1.5))
+            C.place(card, m[:3], cam, C.J.HEIGHT["soldier"] * (BIG if "mock_moo" in pose else 1.0), g, "sol%d" % i, bounce_amp=0.06, ph=0.9 * i, roll_deg=3.5 * C.sway(g, i, 1.5))
     return stage
 
 
