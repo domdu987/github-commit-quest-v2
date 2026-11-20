@@ -32,6 +32,7 @@ G_LIFT = (GF, GF + 20)
 LIGHT, PRESET = "DAY_JAMAICA", "ship_coast"
 FINAL_SPP = 12
 PPD = 192
+CRATE_H = 0.40                                  # William stands on a wooden crate (set apart from the sailors)
 
 CAM_LOOK0 = (446.0, 61.789, 2.6)                # subject point (found with a projection search so that all three heads, hats and raised
                                                 # hands stay inside the frame on every frame)
@@ -75,7 +76,7 @@ def william_pose(g):
     u = u_of(g, *G_LIFT, kind="sine")
     hi = _mix((0.5, 0.68), (0.80, -0.72), u)
     p["arm_r"] = dict(hand=(hi[0], hi[1] + 0.20 * math.sin(2 * math.pi * g / 10.0)), bend=-0.4, stretch=1.3, shape="open", layer="top")
-    p["prop_r"] = "h4_watch"
+    p["prop_r"] = dict(type="h4_watch", scale=1.8)
     p["arm_l"] = dict(hand=(-0.70, -0.62 + 0.20 * math.sin(2 * math.pi * g / 10.0 + 2.5)), bend=-0.5, stretch=1.3, shape="open", layer="top")
     p["prop_l"] = "tricorn_held"
     p["mirror"] = True
@@ -91,11 +92,35 @@ def william_pose(g):
     return p
 
 
+# sailors: sa JUMPS and throws his tricorne (g 1538..1574), sb throws his tricorne (g 1516..1552) and then HUGS himself for joy.
+HAT_FLIGHTS = {"sa": (1538, 1574, 1.3), "sb": (1516, 1552, 1.5)}        # (release g, catch g, arc height D)
+
+
+def hat_in_hand(name, g):
+    r0, r1, _h = HAT_FLIGHTS[name]
+    return not (r0 <= g < r1)
+
+
 def sailor_pose(name, g, ph):
+    key = "sa" if name == "sailor_a" else "sb"
     p = dict(cast19.STORY19[name + "_cheer"][1])
     s = math.sin(2 * math.pi * g / 10.0 + ph)                     # ~3 Hz cheer
     p["arm_r"] = dict(p["arm_r"], hand=(0.74, -0.74 + 0.30 * s))
     p["arm_l"] = dict(p["arm_l"], hand=(-0.74, -0.7 - 0.30 * s))
+    if hat_in_hand(key, g):
+        p["prop_r"] = "tricorn_held"
+    r0, r1, _h = HAT_FLIGHTS[key]
+    if key == "sb" and g >= r1 + 6:                                # the self-hug: both arms across the chest, swaying
+        k = u_of(g, r1 + 6, r1 + 14)
+        p["arm_r"] = dict(hand=(lerp(0.74, -0.30, k), lerp(-0.74 + 0.30 * s, 0.55, k)), bend=0.8, shape="open", layer="top")
+        p["arm_l"] = dict(hand=(lerp(-0.74, 0.30, k), lerp(-0.7 - 0.30 * s, 0.60, k)), bend=0.8, shape="open", layer="front")
+        p["prop_r"] = None
+        p["lean"] = 8 * math.sin(g * 0.3)
+        p["head_roll"] = -8 + 6 * math.sin(g * 0.3)
+        p["expr"] = "happy"
+        p["mouth"] = "grin"
+    if p.get("prop_r") is None:
+        p.pop("prop_r", None)
     p["blink"] = blink(g, [1478 + int(ph * 5), 1540])
     p["t"] = g / 30.0
     return p
@@ -120,13 +145,76 @@ class Take(C.Take):
         self.mw = Vector(M["shore_a"])
         self.ma = self.mw + Vector((-0.2, 1.35, -0.10))
         self.mb = self.mw + Vector((-0.2, -1.35, -0.17))
+        self.dress()
+
+    # ------------------------------------------------------------------------- runtime dressing: crate, glint star, flying hats
+    def _mat(self, name, rgb, emit=0.0):
+        m = C.bpy.data.materials.new(name)
+        m.use_nodes = True
+        bs = m.node_tree.nodes["Principled BSDF"]
+        bs.inputs["Base Color"].default_value = (rgb[0], rgb[1], rgb[2], 1.0)
+        bs.inputs["Roughness"].default_value = 0.7
+        if emit:
+            bs.inputs["Emission Color"].default_value = (rgb[0], rgb[1], rgb[2], 1.0)
+            bs.inputs["Emission Strength"].default_value = emit
+        return m
+
+    def dress(self):
+        bpy = C.bpy
+        for ob in list(bpy.data.objects):                      # the stray lavender / blue shell blob between the feet (QA_TECH): the set's 'boatw' dressing
+            if ob.name.startswith("shoredress_boatw"):
+                self.hide_obs = getattr(self, "hide_obs", []) + [ob]
+        # the crate William stands on (0.9 x 0.9 D x CRATE_H, plank-brown, a darker lid edge)
+        bpy.ops.mesh.primitive_cube_add(size=1.0, location=(self.mw.x, self.mw.y, self.mw.z + CRATE_H / 2.0 - 0.02))
+        cr = bpy.context.active_object
+        cr.name = "crate_w"
+        cr.scale = (1.0, 1.0, CRATE_H + 0.04)
+        cr.data.materials.append(self._mat("crate_wood", (0.20, 0.085, 0.02)))
+        self.crate = cr
+        # the glint: a four-point white star facing the camera, emissive
+        import bmesh
+        me = bpy.data.meshes.new("glint_star")
+        bm = bmesh.new()
+        pts = []
+        for i in range(8):
+            r = 1.0 if i % 2 == 0 else 0.22
+            a = math.pi / 2 + i * math.pi / 4
+            pts.append(bm.verts.new((r * math.cos(a), 0.0, r * math.sin(a))))
+        bm.faces.new(pts)
+        bm.to_mesh(me)
+        bm.free()
+        st = bpy.data.objects.new("glint_star", me)
+        bpy.context.scene.collection.objects.link(st)
+        st.data.materials.append(self._mat("glint_white", (1.0, 1.0, 1.0), emit=40.0))
+        st.visible_shadow = False
+        self.star = st
+        tc = st.constraints.new('TRACK_TO')
+        tc.target = self.cam
+        tc.track_axis = 'TRACK_Y'
+        tc.up_axis = 'UP_Z'
+        # two flying tricornes (flattened black dome + gold rim)
+        self.hats = {}
+        for key in HAT_FLIGHTS:
+            bpy.ops.mesh.primitive_cylinder_add(vertices=3, radius=0.48, depth=0.06, location=(0, 0, -50))      # the three-cornered brim
+            h = bpy.context.active_object
+            h.name = "hat_%s" % key
+            h.rotation_euler = (0, 0, math.pi / 6)
+            h.data.materials.append(self._mat("hat_black", (0.05, 0.05, 0.06)))
+            bpy.ops.mesh.primitive_uv_sphere_add(radius=0.22, segments=14, ring_count=7, location=(0, 0, -50))  # the crown
+            rim = bpy.context.active_object
+            rim.name = "hatcrown_%s" % key
+            rim.scale = (1.0, 1.0, 0.8)
+            rim.data.materials.append(self._mat("hat_black2", (0.05, 0.05, 0.06)))
+            rim.parent = h
+            rim.location = (0, 0, 0.08)
+            self.hats[key] = h
 
     def pose(self, gs):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *cam_at(g))
-            C.place(self.wil, f, self.mw + Vector((0, 0, bounce_z(g, 0.0, 0.14))))
-            C.place(self.sa, f, self.ma + Vector((0, 0, bounce_z(g, 1.3))))
+            C.place(self.wil, f, self.mw + Vector((0, 0, CRATE_H + bounce_z(g, 0.0, 0.10))))
+            C.place(self.sa, f, self.ma + Vector((0, 0, bounce_z(g, 1.3, 0.26))))
             C.place(self.sb, f, self.mb + Vector((0, 0, bounce_z(g, 2.6))))
             self.key_set(f, sea=(g - GF) / 30.0, roll=(g - GF) / 30.0)
         for g in gs:
@@ -137,6 +225,51 @@ class Take(C.Take):
             self.sb.pose(f, sailor_pose("sailor_b", g, 2.6), camera=self.cam)
         fr = [bf(g) for g in gs]
         self.sprites_for([(self.wil, PPD), (self.sa, PPD), (self.sb, PPD)], fr)
+        self.key_dressing(gs)
+
+    def _hand_world(self, actor, g, anchor):
+        f = bf(g)
+        self.scene.frame_set(f)
+        loc = self.anch[(actor.name, f)][anchor]
+        return C.actors.local_to_world(actor, loc, frame=f)
+
+    def _hand_est(self, key, g):
+        """world point of a sailor's raised right hand (cheer arm): feet + 0.74 D to the camera's right + 3.55 D up."""
+        m = self.ma if key == "sa" else self.mb
+        loc, look = cam_at(g)
+        _f, r, _u = C._cam_basis(loc, look)
+        up = bounce_z(g, 1.3, 0.26) if key == "sa" else bounce_z(g, 2.6)
+        return m + r * 0.74 + Vector((0, 0, 3.55 + up))
+
+    def key_dressing(self, gs):
+        C.key_vis(getattr(self, "hide_obs", []), False, 0 + 1)
+        for g in gs:
+            f = bf(g)
+            C.key_vis(getattr(self, "hide_obs", []), False, f)
+            # glint on the watch at the word "ห้าวินาที": a star that blooms and fades over 14 frames
+            on = G_WORD <= g <= G_WORD + 13
+            C.key_vis(self.star, on, f)
+            if on:
+                u = (g - G_WORD) / 13.0
+                p = self._hand_world(self.wil, g, "prop_tip_r")
+                self.star.location = p + Vector((0, 0, 0.0))
+                self.star.scale = (0.9 * math.sin(math.pi * u) ** 0.7 + 0.05,) * 3
+                self.star.keyframe_insert("location", frame=f)
+                self.star.keyframe_insert("scale", frame=f)
+            # flying hats
+            for key, (r0, r1, hgt) in HAT_FLIGHTS.items():
+                actor = self.sa if key == "sa" else self.sb
+                fly = r0 <= g < r1
+                C.key_vis(self.hats[key], fly, f)
+                if fly:
+                    u = (g - r0) / float(r1 - r0)
+                    p0 = self._hand_est(key, r0 - 1)
+                    p1 = self._hand_est(key, r1)
+                    pos = p0 * (1 - u) + p1 * u + Vector((0, 0, 4.0 * hgt * u * (1 - u)))
+                    self.hats[key].location = pos
+                    self.hats[key].rotation_euler = (0.35 * math.sin(6 * math.pi * u), 0.0, math.pi / 6 + 4 * math.pi * u)
+                    self.hats[key].keyframe_insert("location", frame=f)
+                    self.hats[key].keyframe_insert("rotation_euler", frame=f)
 
     def report(self, g):
         f = bf(g)

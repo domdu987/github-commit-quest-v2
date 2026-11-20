@@ -44,19 +44,28 @@ def _mix(a, b, u):
 
 
 def william_pose(g):
-    """William keeps acting (client rule: nobody still > 1.5 s): the watch is lifted and flicked every ~0.9 s, he nods, sways with
-    amusement at the astronomer's fumble, and his gaze alternates between the lens, the watch and the astronomer."""
+    """William stays calm but alive (client rule: nobody still > 1.5 s): a small proud nod at ~56.0 s, a slow glance at the fumbling
+    astronomer from 56.5 s (g 1698) that he holds for ~1.3 s, a thumb wiping the watch face from g 1722, then back to the lens with
+    a second nod; between these the watch rises and falls gently, he sways and tilts his head."""
     p = dict(cast19.STORY19["william_show_h4"][1])
-    flick = math.sin(2 * math.pi * g / 27.0)                         # 1.1 Hz watch lift
-    p["arm_r"] = dict(p["arm_r"], hand=(0.62 + 0.05 * math.sin(2 * math.pi * g / 27.0 + 1.0), 0.60 - 0.16 * max(0.0, flick) + 0.04 * math.sin(g * 0.4)))
+    t = g
+    lift = 0.10 * math.sin(2 * math.pi * t / 40.0)                        # the watch rises and falls
+    wipe = 0.0
+    if 1722 <= g <= 1746:                                                  # thumb wipes the watch face: small quick circles of the hand
+        wipe = 1.0
+    hx = 0.62 + 0.03 * math.sin(2 * math.pi * t / 40.0 + 1.0) + wipe * 0.05 * math.cos(g * 0.9)
+    hy = 0.60 - 0.08 * max(0.0, math.sin(2 * math.pi * t / 40.0)) + wipe * 0.05 * math.sin(g * 0.9)
+    p["arm_r"] = dict(p["arm_r"], hand=(hx, hy + 0.01 * lift))
     p["expr"] = "happy"
     p["mouth"] = "smile"
-    p["yaw"] = 0.15 + 0.12 * math.sin(g * 0.09)
-    p["head_roll"] = -3 + 5 * math.sin(2 * math.pi * g / 36.0)       # nods and tilts
-    p["pitch"] = 0.12 * math.sin(2 * math.pi * g / 27.0 + 0.5)
-    p["lean"] = 4.0 * math.sin(2 * math.pi * g / 45.0)               # sways towards / away from the astronomer
-    ph = (g // 24) % 3
-    p["gaze"] = [(0.0, 0.0), (-0.7, 0.1), (0.5, -0.3)][ph]            # lens, astronomer (screen-left), watch
+    nod1 = 0.22 * math.sin(math.pi * clamp((g - 1676) / 12.0))             # small proud nod (pitch down and up)
+    nod2 = 0.22 * math.sin(math.pi * clamp((g - 1752) / 12.0))
+    p["pitch"] = nod1 + nod2 + 0.05 * math.sin(2 * math.pi * t / 36.0)
+    glance = u_of(g, 1698, 1708) - u_of(g, 1740, 1752)                      # 0 -> 1 (look left at the astronomer) -> 0
+    p["gaze"] = (-0.8 * glance + 0.15 * (1 - glance), 0.1 * glance)
+    p["yaw"] = 0.15 - 0.25 * glance + 0.05 * math.sin(g * 0.09)             # the head turns with the glance
+    p["head_roll"] = -3 + 4 * math.sin(2 * math.pi * t / 44.0) - 3 * glance
+    p["lean"] = 3.0 * math.sin(2 * math.pi * t / 52.0)
     p["blink"] = blink(g, [1672, 1700, 1718, 1750])
     p["t"] = g / 30.0
     return p
@@ -69,7 +78,7 @@ def astro_pose(g):
         p.pop(k, None)
     w1 = math.sin(g * 0.55)
     w2 = math.sin(g * 0.35 + 1.0)
-    p["arm_r"] = dict(hand=(0.34 + 0.05 * w2, 0.0 + 0.06 * w1), bend=-0.7, stretch=1.1, layer="top")
+    p["arm_r"] = dict(hand=(0.34 + 0.05 * w2, -0.30 + 0.05 * w1), bend=-0.7, stretch=1.1, layer="top")
     p["arm_l"] = dict(hand=(-0.5 + 0.2 * w1, 0.80 + 0.25 * w2), bend=0.6, shape="open", layer="top")
     p["prop_r"] = dict(type="quadrant19", angle=-100 + 20 * w1 + 8 * w2, scale=1.5)
     p["yaw"] = 0.35
@@ -98,7 +107,7 @@ class Take(C.Take):
         self.wil = self.actors["wil"] = C.make_actor("wil", "william19", sd, contact=True, cam=self.cam)
         self.ast = self.actors["ast"] = C.make_actor("ast", "astro19_c", sd, contact=True, cam=self.cam)
         M = self.A["marks"]
-        self.mw = Vector(M["shore_a"]) + Vector((0.0, 0.5, 0.0))
+        self.mw = Vector(M["shore_a"]) + Vector((0.0, 0.3, 0.0))      # a little left: the palm trunk is no longer a tangent behind his head
         self.ma = self.mw + Vector((0.0, -1.7, 0.0))
 
     def pose(self, gs):
@@ -107,6 +116,9 @@ class Take(C.Take):
             self.key_cam(f, *CAM.at(g))
             C.place(self.wil, f, self.mw + Vector((0, 0, 0.05 * abs(math.sin(math.pi * g / 9.0)))))
             C.place(self.ast, f, self.ma + Vector((0, 0, hop_z(g))))
+            for ob in C.bpy.data.objects:
+                if ob.name.startswith('shoredress_boatw'):
+                    C.key_vis(ob, False, f)                  # the stray lavender / blue shell blob (QA_TECH)
             self.key_set(f, sea=(g - GF) / 30.0, roll=(g - GF) / 30.0)
         for g in gs:
             f = bf(g)
