@@ -1,8 +1,10 @@
 # QA s21 (shot 21, SHIP ship_coast DAY_BARBADOS, g 1665..1755 + 9 handle frames each side, take g 1656..1764) -- re-render after the TAKE gate (QA_TECH FAIL)
-- Frame-diff in-shot (90x160 grey): median 6.59, p90 12.86 (target 4 / 12): met.
+- Frame-diff in-shot (90x160 grey): median 5.72, p90 10.24 (rule: median >= 4, p90 >= 10): met.
 - Gate fixes: no close-up any more -- a two-shot all the way (head w 133-200 px). Camera found by a projection search (both heads, the quadrant and William's H4 hand inside x 8..712, y >= 8): William's hand edge <= x 705, astro's left edge >= x 23, astro head centre y 546-734 and chin <= ~816 (<880), William head centre y >= 452 (all on the final raw/*.json); William's H4 hand, watch and shoes stay in frame the whole shot.
 - Camera: world-fixed on the sand, drift push 5 %/s + slide 45 px/s + arc -4.6 deg/s, snap x1.12 with a pan on "นาฬิกาแม่น" (event g 1699, g 1697..1712), plus a second beat of quick camera bumps (g 1672-1688, 1722-1738, 1744-1760) and a stronger quadrant fumble (faster wobble / sway / hops).
 - Eye-line: astro's gaze goes up toward the quadrant (gaze (0.9, -1.0)); his expression is "worried" for the whole take (no mouth change: the zig-zag swap g 1686-1691 is gone).
 - Set: set_sea / set_roll keyed every frame with t = (g - first_g)/30 (t = g/30 floods the beach). No text, no DOF, no caption_shade; nobody speaks.
 - Joins: dissolve in 13 f from shot 20, dissolve out 11 f to shot 22 (9 handle frames each side).
 - Minor: astro's feet shadow is the cast19 contact decal (faint on the pale sand).
+- COLOUR gate (QA_TEAM section G), re-render on the merged set (ff204d3): film/qa_stats.py take.mkv -> saturation 0.465, brightness 133.7 (target sat >= 0.40, luma 70-135). Sand is about 45 % of the frame: heads must stay at y 452-735 and a tilt/zoom-out that cuts the sand pushed luma over 135 and lost the frame-diff, so the framing is unchanged.
+- QA-art item (no prop through a face): the quadrant now rides above astro19_c's head (hand (0.34, 0), angle -100 +- 20, smaller swing, scale 1.5) and never reaches William; it overlaps astro's own wig only, eyes and mouth stay clear. Heads still y 452-735, nothing cropped.
