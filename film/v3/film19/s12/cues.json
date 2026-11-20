@@ -5,25 +5,25 @@
  "cues": [
   {
    "time": 30.967,
-   "duration": 2.2,
+   "duration": 3.2,
    "frame": 929,
-   "end_frame": 995,
+   "end_frame": 1025,
    "kind": "ambience",
    "label": "workshop at night: near silence, a distant owl, the soft hiss of the candle"
   },
   {
    "time": 30.967,
-   "duration": 2.2,
+   "duration": 3.2,
    "frame": 929,
-   "end_frame": 995,
+   "end_frame": 1025,
    "kind": "prop",
-   "label": "the H3 ticking: a quicker, lighter brass tick than the H1, two balances"
+   "label": "the H3 ticking: a quick light brass tick, two balances"
   },
   {
    "time": 31.267,
-   "duration": 0.733,
+   "duration": 0.933,
    "frame": 938,
-   "end_frame": 960,
+   "end_frame": 966,
    "kind": "foley",
    "label": "small chisel taps on brass, about two a second"
   },
@@ -33,7 +33,23 @@
    "frame": 952,
    "end_frame": 972,
    "kind": "accent",
-   "label": "soft push whoosh on 'สิบ'"
+   "label": "whip-pan whoosh along the bench on 'สิบ'; a quick cloth/shimmer swish at g 966 as the years pass"
+  },
+  {
+   "time": 33.1,
+   "duration": 0.333,
+   "frame": 993,
+   "end_frame": 1003,
+   "kind": "foley",
+   "label": "stool creak as he leans back, a long tired sigh (no words)"
+  },
+  {
+   "time": 33.433,
+   "duration": 0.433,
+   "frame": 1003,
+   "end_frame": 1016,
+   "kind": "foley",
+   "label": "knuckles rub closed eyes: soft cloth-on-skin rustle"
   },
   {
    "time": 31.267,

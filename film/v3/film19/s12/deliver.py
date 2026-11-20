@@ -9,20 +9,22 @@ from PIL import Image, ImageDraw
 HERE = os.path.dirname(os.path.abspath(__file__))
 PROJ = os.path.normpath(os.path.join(HERE, "..", "..", ".."))
 TAKE, SHOT = "s12", 12
-G0, G1, H_IN, H_OUT = 938, 986, 9, 9                 # shot 12 = g 938..985; in-handle g 929..937; out-handle g 986..994
+G0, G1, H_IN, H_OUT = 938, 1016, 9, 9                # MERGED shots 12+13 = g 938..1015 (31.26-33.86 s); in-handle g 929..937; out-handle g 1016..1024
 FIRST, LAST = G0 - H_IN, G1 + H_OUT - 1
 N = LAST - FIRST + 1
 TIN = dict(type="dissolve", frames=11)
 CUTS_OUT = []
-EV = dict(tapping="chisel taps ~2 Hz", candle="set_candles(level 1.0 -> 0.35, lights dimmed to 30 %) every frame", snap=[952, 972], word_caption=960, look_up=[964, 974],
-          h3_balance="set_balance(g/30) every frame (H3 balances counter-rotate)")
-SET = "v3/set3d19 WORKSHOP preset shop_clock, light NIGHT; set_clock(3) (H3), set_balance(g/30) + set_candles(level) keyed on every frame; no runtime set changes; no caption_shade"
-CAST = "v3/cast19 harrison19 default (greying hair, apron), harrison_chisel base mirrored (H3 at screen-left), chisel taps, straightens and looks tired at the lens after the snap; fixed expression mouth; no lip-sync"
-CAM = "custom 22 mm from (2.2,-1.6,2.4) toward Harrison/H3; CamPath push 3 %/s + slide -125 px/s + arc 12 deg/s + a lateral whip pan on the snap (k 1.05, shift 1.4 D, peak 3.0): head width stays <= 230 px (client gate G: no face over ~35 % of the frame) on สิบ (g 952..972)"
+EV = dict(tapping="chisel taps ~2 Hz g 938..965", whip_pan=[952, 972], age_swap=966, word_caption_1=960, word_caption_2=989, word_spoken_2=996,
+          lean_back=[993, 1003], rub=[1003, 1024], candle="set_candles(1.0 -> 0.25) + lights down, every frame", h3_balance="set_balance(g/30) every frame")
+SET = "v3/set3d19 WORKSHOP preset shop_clock, light NIGHT; set_clock(3) (H3), set_balance(g/30) + set_candles(level) keyed every frame; runtime: the bench candle stub + its point light moved onto the foreground chest; the lights are keyed down over the take; no caption_shade"
+CAST = "v3/cast19 harrison19: default (greying, apron, harrison_chisel taps) until g 965, then old=1 (white hair, spectacles, brown coat, harrison_tired_rub) from g 966 - the swap happens at the fastest frames of the whip pan; leans back and rubs his eyes g 993-1003; fixed expression mouth; no lip-sync"
+CAM = "ONE continuous custom 22 mm camera, no cut: from (2.2,-1.6,2.4) at the shop_clock spot, push 6 %/s + slide -60 px/s, a lateral whip pan along the bench (g 952..972, k 1.05, shift 1.4 D, peak 3.0) toward the shop_bench side, then the camera turns (look point +1.0 D over g 985..1024) to keep him framed, handheld sway 0.09 D at 1.5 Hz; the camera never passes x 3.3 (shop wall at 4.25); head width <= ~250 px"
 CUES = [(FIRST, LAST + 1, "ambience", "workshop at night: near silence, a distant owl, the soft hiss of the candle"),
-        (FIRST, LAST + 1, "prop", "the H3 ticking: a quicker, lighter brass tick than the H1, two balances"),
-        (G0, 960, "foley", "small chisel taps on brass, about two a second"),
-        (952, 972, "accent", "soft push whoosh on 'สิบ'"),
+        (FIRST, LAST + 1, "prop", "the H3 ticking: a quick light brass tick, two balances"),
+        (G0, 966, "foley", "small chisel taps on brass, about two a second"),
+        (952, 972, "accent", "whip-pan whoosh along the bench on 'สิบ'; a quick cloth/shimmer swish at g 966 as the years pass"),
+        (993, 1003, "foley", "stool creak as he leans back, a long tired sigh (no words)"),
+        (1003, 1016, "foley", "knuckles rub closed eyes: soft cloth-on-skin rustle"),
         (G0, G0, "transition", "dissolve in from the daylight workshop (shot 11) to night: birdsong fades, candle hiss rises")]
 
 
@@ -78,8 +80,8 @@ heads = [r["heads"]["har"] for r in rows if "har" in r["heads"]]
 nb = numbers(framediff(pngs))
 json.dump(nb, open(os.path.join(HERE, "framediff.json"), "w"), indent=1)
 
-meta = {"take": TAKE, "film": 19, "shots": [SHOT], "g0": G0, "g1": G1, "first_g": FIRST, "n_frames": N,
-        "shot_ranges": {str(SHOT): [G0, G1 - 1]}, "handle_in": H_IN, "handle_out": H_OUT,
+meta = {"take": TAKE, "film": 19, "shots": [12, 13], "g0": G0, "g1": G1, "first_g": FIRST, "n_frames": N,
+        "shot_ranges": {"12": [938, 985], "13": [986, 1015]}, "handle_in": H_IN, "handle_out": H_OUT,
         "transition_in": TIN, "set": SET, "cast": CAST, "camera": CAM, "events": EV, "dof": "none", "text": "none", "caption_shade": "none",
         "light": "NIGHT", "samples": rows[0].get("samples"), "resolution": [720, 1280], "threads": 2, "fps": 30,
         "s_per_frame_wall_mean": round(float(np.mean(walls)), 2), "s_per_frame_cpu_mean": round(float(np.mean(cpus)), 2),
