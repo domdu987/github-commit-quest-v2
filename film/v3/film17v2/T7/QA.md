@@ -1,8 +1,8 @@
 # T7 QA self-check, fix round 2 (g1689-1874, 186 frames, 720x1280, 16 samples + OIDN)
 
 Checks: check_take('T7') no hits, check_face('T7') PASS. Motion blur 0.5 on g1800-1867 only. clear_cast() before every stage_cast2. beam_fx off for the whole take.
-Fix round 2: lights ramp to 0.72 over g1804-1845; the Dupont stool was removed (not moved or seated); banners within 2.4 m of the camera are hidden; the MOYEN banner is hidden from g1823 to the end of the take; Bertillon has a card bob and head roll.
-Luma (RGB mean at 90x160): take mean 96.8 (min 73.0, max 119.9). 7a g1689-1791: 96.7 (94.1-98.3). Crane g1792-1874: 96.9. g1809-1839: 104.1 (101.3-113.5, within the 115 limit). Over 105 only at g1800-1812 (up to 119.9, the ramp has not caught up yet). Under 88 at g1852-1874 (73-87), the top-down end of the crane, where the lights stay at 0.72. g1868-1874 are handle frames with the original lighting and the stool kept. Shimmer was not re-measured; none seen in the frames viewed.
+Fix round 2 (round 3 timing): lights ramp 1.0 to 0.72 over g1796-1806, hold to g1838, back to 1.0 by g1850; the Dupont stool was removed (not moved or seated); banners within 2.4 m of the camera are hidden; the MOYEN banner is hidden from g1823 to the end of the take; Bertillon has a card bob and head roll.
+Luma (RGB mean at 90x160): take mean 95.8 (min 73.0, max 104.4). 7a g1689-1791: 96.7 (94.1-98.3). g1800-1812: 101.8-104.4. g1809-1839: 102.6 (101.1-104.4). Under 88 only at g1852-1867 (73-87): the top-down end is dark with the lights at 1.0, because the ramp already reached 1.0 by g1845 in the previous render and those frames did not change. g1868-1874 are handle frames (81-80) with the original lighting and the stool kept. Shimmer was not re-measured.
 qa_auto still FAILs on blur (57 frames) and pops (g1797-1806, 1828, 1829, 1833): the planned motion blur and the fast crane. rhythm.py reports 0 cuts detected.
 Known caveats: the thieves and escort are tiny (1-3 %H) in top-down frames; the moustache reads mostly as part of the beard.
 
