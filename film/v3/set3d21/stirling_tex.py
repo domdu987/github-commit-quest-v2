@@ -5,7 +5,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
 HERE = os.path.dirname(os.path.abspath(__file__)); TEX = os.path.join(HERE, 'tex'); os.makedirs(TEX, exist_ok=True)
-TEX_V = 6
+TEX_V = 8
 def _p(name): return os.path.join(TEX, '%s_v%d.png' % (name, TEX_V))
 def _rgb(h): h = h.lstrip('#'); return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
 def _lerp(a, b, t): return tuple(a[i] + (b[i] - a[i]) * t for i in range(3))
@@ -15,7 +15,7 @@ def sky(name='sky', W=2048, H=1024, sun_az=-45.0):
     azimuth (south-east = -45 deg), flat drawn cumulus (cream-peach tops, blue-violet undersides), a pale haze band at the horizon."""
     p = _p(name)
     if os.path.exists(p): return p
-    top, mid, hor, below = _rgb('#5a8fdc'), _rgb('#98bfec'), _rgb('#ece0de'), _rgb('#dcd2d2')
+    top, mid, hor, below = _rgb('#6f9fdc'), _rgb('#a9cbec'), _rgb('#efe2de'), _rgb('#dcd2d2')
     y = np.arange(H)[:, None] * np.ones((1, W)); v = 1 - y / (H - 1); el = v * 105 - 15
     a = np.zeros((H, W, 3))
     for c in range(3):
@@ -42,7 +42,7 @@ def sky(name='sky', W=2048, H=1024, sun_az=-45.0):
         for px, py, rad in items:
             d.ellipse([px - rad * 0.55 - rad * 0.12, py - rad * 0.7 - rad * 0.1, px + rad * 0.55 - rad * 0.12, py + rad * 0.1], fill=_rgb('#fff4e6'))
     for k, (az0, e0, w, h) in enumerate([(-100, 16, 40, 8), (-40, 32, 46, 9), (20, 22, 52, 10), (80, 40, 40, 8), (140, 20, 50, 9), (200, 34, 44, 8), (250, 14, 46, 8), (-150, 44, 36, 7),
-                                           (330, 52, 40, 7), (110, 58, 34, 6), (10, 60, 30, 6), (205, 26, 38, 7), (232, 18, 30, 6), (176, 30, 34, 6), (222, 42, 28, 5), (-30, 20, 30, 6), (60, 28, 34, 6)]):
+                                           (330, 52, 40, 7), (110, 58, 34, 6), (10, 60, 30, 6), (205, 26, 38, 7), (232, 18, 30, 6), (176, 30, 34, 6), (222, 42, 28, 5), (-30, 20, 30, 6), (60, 28, 34, 6), (35, 33, 40, 8), (47, 19, 36, 7), (24, 41, 30, 6), (56, 45, 28, 5), (39, 54, 28, 5), (14, 30, 30, 6)]):
         blob(az0 % 360, e0, w, h, 100 + k)
         if az0 % 360 > 300 or az0 % 360 < 60: blob((az0 % 360) + 360, e0, w, h, 100 + k)
     big = big.resize((W, H), Image.LANCZOS); big.save(p); return p

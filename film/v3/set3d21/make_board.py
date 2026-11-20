@@ -4,7 +4,7 @@
 import os, shutil
 from PIL import Image, ImageDraw, ImageFont
 HERE = os.path.dirname(os.path.abspath(__file__)); D = os.path.join(HERE, 'styleboard')
-ST = [('hill_over', 'still1.png', '1  hill_over  (hook: over the Scots down to the bridge)'), ('camp_bank', 'still2.png', '2  camp_bank  (Cressingham across the river)'), ('valley_loop', 'still3.png', '3  valley_loop  (the loop is the bottle, the bridge its neck)')]
+ST = [('hill_over', 'still1.png', '1 hill_over (the hook)'), ('camp_bank', 'still2.png', '2 camp_bank (across the river)'), ('valley_loop', 'still3.png', '3 valley_loop (the bottle)')]
 for p, out, _ in ST: shutil.copyfile(os.path.join(D, p + '.png'), os.path.join(D, out))
 W, H, LB, G = 720, 1280, 64, 14
 F = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 24)

@@ -18,7 +18,7 @@ D = 1.7
 HEIGHT = {'scot': 1.70, 'wallace': 1.92, 'moray': 1.80, 'cressingham': 1.78, 'surrey': 1.66, 'knight': 1.78, 'foot': 1.68, 'archer': 1.66, 'squire': 1.55}
 STATE = {'P': None, 'ink_t': 0.012, 'anim': {}, 'loc': None, 'preset': None, 'cam': (0, 0, 0)}
 CACHE = os.path.join(HERE, 'cache'); os.makedirs(CACHE, exist_ok=True)
-TERRAIN_V = 12
+TERRAIN_V = 13
 
 def hex_lin(h):
     h = h.lstrip('#'); c = [int(h[i:i + 2], 16) / 255.0 for i in (0, 2, 4)]
@@ -28,8 +28,8 @@ def lin_arr(c): c = np.asarray(c, float); return np.where(c <= 0.04045, c / 12.9
 
 # ---------------------------------------------------------------- light preset (the series model, exterior morning)
 LIGHTS = {
-    'MORNING': dict(key=(2.35, 1.82, 0.98), sun_dir=(-0.58, 0.58, -0.58), sun_angle=0.9, shade=(0.165, 0.15, 0.40), tint=(0.125, 0.11, 0.28), mix=0.85,
-                    lift=(0.006, 0.010, 0.030), form=(0.0, -0.05, 0.28), gain=1.0, ink='#2e1a26', haze='#d6d8ea', haze_d=(180.0, 2600.0), haze_max=0.68, sun_k=1.0),
+    'MORNING': dict(key=(2.35, 1.82, 0.98), sun_dir=(-0.58, 0.58, -0.58), sun_angle=0.9, shade=(0.17, 0.14, 0.40), tint=(0.135, 0.105, 0.29), mix=0.85,
+                    lift=(0.010, 0.009, 0.032), form=(0.0, -0.05, 0.28), gain=1.0, ink='#2e1a26', haze='#d6d8ea', haze_d=(180.0, 2600.0), haze_max=0.68, sun_k=1.0),
 }
 SUN_STRENGTH = 3.94
 
@@ -411,7 +411,7 @@ def terrain_colour(X, Y, z, sd, hh, cm):
     mud = smooth(2.2, 0.2, sd) * (0.6 + 0.4 * m2); col = col + (hex_rgb('#7a6850') - col) * mud[..., None]
     bed = smooth(-1.0, -2.6, sd); col = col + (hex_rgb('#3a5a60') - col) * bed[..., None]
     # patchwork fields on the plains (period farmland): rotated cells of green, gold, pale green and plough, hedgerow lines between
-    ca, sa_ = math.cos(math.radians(14)), math.sin(math.radians(14)); fu = (X * ca + Y * sa_) / 64.0; fv = (-X * sa_ + Y * ca) / 46.0 if False else (-X * sa_ + Y * ca) / 46.0
+    ca, sa_ = 1.0, 0.0; fu = (X * ca + Y * sa_) / 64.0; fv = (-X * sa_ + Y * ca) / 46.0 if False else (-X * sa_ + Y * ca) / 46.0
     ci = np.floor(fu); cj = np.floor(fv); hsh = np.sin(ci * 12.9898 + cj * 78.233) * 43758.5453; hsh = hsh - np.floor(hsh)
     pal = np.array([hex_rgb('#7cae3c'), hex_rgb('#c8b44e'), hex_rgb('#9ec444'), hex_rgb('#8a7a4e'), hex_rgb('#5f9a3c'), hex_rgb('#d2bd5a')]); fc = pal[np.minimum((hsh * 6).astype(int), 5)]
     fc = fc * (0.94 + 0.12 * m3[..., None]); fx_ = np.abs(fu - ci - 0.5) * 2; fy_ = np.abs(fv - cj - 0.5) * 2; hedge = smooth(0.965, 0.985, np.maximum(fx_, fy_) * (1 - 0.0))
@@ -507,7 +507,7 @@ def _water_mat():
     wa = N('ShaderNodeAttribute'); wa.attribute_name = 'wattr'; wa.attribute_type = 'GEOMETRY'; fa = N('ShaderNodeAttribute'); fa.attribute_name = 'fuv'; fa.attribute_type = 'GEOMETRY'
     sp = N('ShaderNodeSeparateXYZ'); L(wa.outputs['Vector'], sp.inputs[0])
     ramp = N('ShaderNodeValToRGB'); L(sp.outputs['X'], ramp.inputs[0]); cr = ramp.color_ramp; cr.elements[0].position = 0.0; cr.elements[0].color = (*hex_lin('#4fb4a6'), 1)
-    cr.elements[1].position = 1.0; cr.elements[1].color = (*hex_lin('#0f3358'), 1); e = cr.elements.new(0.3); e.color = (*hex_lin('#2a8fa0'), 1); e = cr.elements.new(0.6); e.color = (*hex_lin('#1d6585'), 1)
+    cr.elements[1].position = 1.0; cr.elements[1].color = (*hex_lin('#0a2a4c'), 1); e = cr.elements.new(0.3); e.color = (*hex_lin('#2a8fa0'), 1); e = cr.elements.new(0.6); e.color = (*hex_lin('#1d6585'), 1)
     off = N('ShaderNodeMapping'); L(fa.outputs['Vector'], off.inputs[0]); off.name = 'flow_off'; off.inputs['Scale'].default_value = (0.045, 0.30, 1.0)
     nz = N('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 1.0; nz.inputs['Detail'].default_value = 2.0; nz.inputs['Roughness'].default_value = 0.5; L(off.outputs[0], nz.inputs['Vector'])
     bands = N('ShaderNodeValToRGB'); bands.color_ramp.interpolation = 'CONSTANT'; be = bands.color_ramp.elements; be[0].color = (0.78, 0.82, 0.86, 1); be[1].position = 0.42; be[1].color = (1, 1, 1, 1)
@@ -585,7 +585,7 @@ def _gblur(a, rad):
         for i, w in enumerate(g): out += w * np.take(p, np.arange(i, i + arr.shape[axis]), axis=axis)
         return out
     return conv(conv(a.astype(np.float32), 0), 1)
-def grade(path, sat=1.07, bloom=0.5, scale=None, gamma=1.16):
+def grade(path, sat=1.07, bloom=0.5, scale=None, gamma=1.28):
     """final grade: bloom halo around real emitters only (min channel >= 252), then a saturation boost. Nothing else."""
     scale = scale or STATE.get('scale', 1.0)
     im = np.asarray(Image.open(path).convert('RGB'), dtype=np.float32) / 255
@@ -671,14 +671,14 @@ def veg_near(A, pr):
         ok = (sd > 0.6) & (rs.rand(n) > dw * 1.1) & ((hh < 4.0 + 8 * rs.rand(n)) | (rs.rand(n) < cfg.get('hill_grass', 0.0)))
         x, y, z = x[ok], y[ok], z[ok]; n2 = len(x); rad = rs.uniform(hlo, hhi, n2); gc = ground_col(x, y) * (0.8 + 0.45 * rs.rand(n2))[:, None]
         gold = rs.rand(n2) < 0.25; gc = np.where(gold[:, None], np.array(hex_lin('#c9b04e')) * (0.8 + 0.4 * rs.rand(n2))[:, None], gc)
-        V, F, T_ = tuft_arrays(rs, np.stack([x, y, z], 1), rad * cfg.get('tuft_k', 2.4), gc * 1.35, blades=9, wid=0.02); B.bulk('sprig', V, F, False, T_)
+        V, F, T_ = tuft_arrays(rs, np.stack([x, y, z], 1), rad * cfg.get('tuft_k', 2.4), gc * cfg.get('tuft_gain', 1.35), blades=9, wid=0.02); B.bulk('sprig', V, F, False, T_)
     x, y = sample_wedge(rs, cfg.get('flowers', 1800), cam, look, 2, 38, half); z = ground(x, y); sd = sd_at(x, y); hh, _ = hill_h(x, y); ok = (sd > 1.5) & (hh < 3) & (dirt_w(x, y) < 0.3)
     x, y, z = x[ok], y[ok], z[ok]; n = len(x); cols = [hex_lin(h) for h in ('#ffe05a', '#fffaf0', '#ffe05a', '#ffb347', '#f4d0b8')]
     for i in range(n): Bg.blob('gorse_fl', (x[i], y[i], z[i] + 0.12 + 0.08 * rs.rand()), 0.035 + 0.03 * rs.rand(), tint=tuple(np.array(cols[rs.randint(0, 5)]) / np.array(hex_lin('#f3c61f'))))
     # heather clumps / bracken / gorse on the hill
     hz_ = cfg.get('heather'); Bp = Batch(15)
     if hz_:
-        PAL = [hex_lin(h) for h in ('#7a4a52', '#80523f', '#6a4c4a', '#8a5a56', '#654a70', '#5e4048', '#74564a')]; BR = [hex_lin(h) for h in ('#b0782f', '#9a6a2c', '#c08a3c')]; v0, f0 = _ico()
+        PAL = [hex_lin(h) for h in ('#7a4a52', '#80523f', '#6a4c4a', '#7e5048', '#6c4a50', '#5e4048', '#74564a')]; BR = [hex_lin(h) for h in ('#b0782f', '#9a6a2c', '#c08a3c')]; v0, f0 = _ico()
         for (r0, r1, n, slo, shi) in hz_:
             x, y = sample_wedge(rs, n, cam, look, r0, r1, half); z = ground(x, y); hh, cm = hill_h(x, y); sd = sd_at(x, y); e = 0.8
             slope = np.hypot((hill_h(x + e, y)[0] - hill_h(x - e, y)[0]) / (2 * e), (hill_h(x, y + e)[0] - hill_h(x, y - e)[0]) / (2 * e)); ok = (hh > 3) & (slope < 1.0) & (sd > 2)
@@ -1125,12 +1125,15 @@ def crowd_loop(A, pr):
     kinds = ['foot', 'foot_r', 'foot', 'knight_b', 'foot_r']
     # bridge column of horses
     knight_pair_column(B, bridge_pairs(-30, 33, 6.5), BRIDGE_X, rs, KNIGHT_MATS)
-    # meadow: ranks in the south half of the bulb, spreading out, a few mounted
+    # meadow: the army jammed in ranks at the neck (south half of the bulb), the rest thinner behind
+    for r in range(8):
+        for c in range(12):
+            x = -18 + c * 3.3 + rs.uniform(-0.5, 0.5) + (1.6 if r % 2 else 0); y = 44 + r * 4.6 + rs.uniform(-0.5, 0.5)
+            if math.hypot(x - LOOP_C[0], y - LOOP_C[1]) < LOOP_R - 20 and float(sd_at(x, y)) > 3: items.append((x, y, float(ground(x, y)), kinds[(r + c) % 5] if (r + c) % 7 else 'knight', 1.0))
     n = 0
-    while n < 96:
-        x = rs.uniform(-62, 62); y = rs.uniform(36, 150)
-        if math.hypot(x - LOOP_C[0], y - LOOP_C[1]) > LOOP_R - 22 or (y < 80 and abs(x) > 17) or float(sd_at(x, y)) < 3: continue
-        if rs.rand() < 0.5 and y > 100: continue
+    while n < 34:
+        x = rs.uniform(-60, 60); y = rs.uniform(92, 160)
+        if math.hypot(x - LOOP_C[0], y - LOOP_C[1]) > LOOP_R - 22 or float(sd_at(x, y)) < 3: continue
         items.append((x, y, float(ground(x, y)), kinds[rs.randint(0, 5)], 1.0)); n += 1
     for i in range(5):
         x = rs.uniform(-30, 30); y = rs.uniform(95, 140); horse(B, (x, y, float(ground(x, y))), rs.uniform(0, 360), coat='horse', trap=KNIGHT_MATS[i % 5][0], trim=KNIGHT_MATS[i % 5][1], rider=(KNIGHT_MATS[i % 5][0],), tint=0.9)
@@ -1169,11 +1172,11 @@ def mk_camp_bank(A):
     return m
 PRESETS['hill_over'] = dict(loc='hill', cam=(137.0, 137.0, 0.0), cam_dz=2.15, cam_ref=(131.0, 131.0), look=(-4.0, 22.0, -9.0), sd=8.0, lens=22.0, marks=mk_hill_over,
     veg=dict(seed=5, half=34, hill_grass=0.4, grass=[(2, 14, 2500, 0.1, 0.17), (14, 40, 2500, 0.2, 0.34)], flowers=500, heather=[(1.5, 8, 1600, 0.09, 0.16), (8, 17, 2600, 0.12, 0.22), (17, 40, 3600, 0.2, 0.34), (40, 100, 3000, 0.45, 0.8)], gorse=[(3, 14, 8), (14, 40, 26)], reeds=None),
-    fg_spears=[(1.7, -1.9, (0.1, 0.35)), (1.5, 2.1, (-0.2, 0.25))], fg_gorse=[(2.3, -1.6, 0.55), (2.1, 1.4, 0.5)], fg_rocks=[(1.9, 0.2, 0.7)],
+    fg_spears=[(1.8, -0.66, (0.08, 0.1)), (1.6, 0.66, (-0.1, 0.1))], fg_gorse=[(2.3, -1.6, 0.55), (2.1, 1.4, 0.5)], fg_rocks=[(1.9, 0.2, 0.7)],
     dress_pines=[(13, -5.2, 10.0), (17, -7.4, 9.0), (24, -9.5, 12.0), (14, 5.8, 11.0), (21, 9.0, 10.5), (30, 13.0, 12.0)], dress_crags=[(9, -6, 6, 2.5, 1.5), (12, 5.5, 5, 2.5, 1.7), (22, -3, 9, 5, 2.2), (28, 5, 7, 4, 2.4), (8, 3.5, 3, 1.5, 0.9)],
     dress_gorse=[(7, -3.5, 0.7), (6, 3, 0.6), (10, 2, 0.8), (11, -4.5, 0.9), (12, 5.5, 0.9), (13, -2, 0.7), (18, 0, 1.0), (9, 4.8, 0.7), (15, -5, 1.0), (14, 3, 0.8), (20, 6, 1.1)], clear_hill=(137.0, 137.0, 14.0))
 PRESETS['camp_bank'] = dict(loc='camp', cam=(-30.0, -47.0, 0.0), cam_dz=1.55, look=(48.8, 14.6, 6.0), sd=6.0, lens=22.0, marks=mk_camp_bank,
-    veg=dict(seed=6, half=34, tuft_k=1.9, grass=[(1.5, 9, 2200, 0.08, 0.14), (9, 40, 3600, 0.12, 0.2)], flowers=900, reeds=[(10, 45, 200)]),
+    veg=dict(seed=6, half=34, tuft_k=1.3, tuft_gain=1.8, grass=[(1.5, 9, 1500, 0.08, 0.13), (9, 40, 3000, 0.12, 0.2)], flowers=900, reeds=[(10, 45, 200)]),
     fg_banner=(7.0, 2.6), clear=[(-30.0, -47.0, 7.0)], fg_banner_yaw=30, fg_spears=[(1.7, -1.35), (2.0, 1.05)], fg_barrels=[(3.2, 2.6)], fg_rope=True)
 PRESETS['valley_loop'] = dict(loc='valley', cam=(-6.0, -165.0, 150.0), look=(14.0, 105.0, 0.0), sd=300.0, lens=22.0, marks=lambda A: {}, veg=None)
 for _n, _fn in (('hill_over', fg_hill), ('camp_bank', fg_bank)): PRESETS[_n]['fg'] = _fn
