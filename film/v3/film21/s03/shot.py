@@ -38,12 +38,12 @@ def cam8(g):
     u = 0.12 * ease(t / 3.0) + 0.88 * t / 3.0
     c0, l0 = Vector(CAM8), Vector(LOOK8)
     d = (l0 - c0); dist = d.length
-    push = 0.08 * 3.0 * u                                    # 8 %/s for 3 s -> 24 % closer
+    sn = clamp((g - 466) / 14.0); push = 0.10 * 3.0 * u + 0.12 * (1.0 - (1.0 - sn) ** 3)   # + snap push x1.3 (14 f) at g466
     c = c0 + d * push
-    c.z -= 0.0
+    c.z -= 2.5 * u
     right = _unit(d.cross(Vector((0, 0, 1))))
-    slide = 25.0 / 782.0 * dist * 3.0 * u                    # 25 px/s at the target distance, as a truck (position AND target move)
-    return c + right * slide, l0 + right * slide
+    slide = 36.0 / 782.0 * dist * 3.0 * u                    # 25 px/s at the target distance, as a truck (position AND target move)
+    return c + right * slide, l0 + right * (slide * 0.45)
 
 KNIGHT_X = 0.62
 def build8():
