@@ -1,0 +1,51 @@
+{
+ "output": "/home/user/github-commit-quest-v2/film/release15/fosbury_v2.mp4",
+ "frames": 2095,
+ "expected_frames": 2095,
+ "duration_s": 69.83333333333333,
+ "lufs": -12.2,
+ "true_peak_dbtp": -2.4,
+ "lufs_ok": true,
+ "tp_ok": true,
+ "music_used": true,
+ "mode": "release",
+ "music_WARNING": null,
+ "takes": [
+  [
+   "T1",
+   0,
+   489
+  ],
+  [
+   "t2",
+   489,
+   862
+  ],
+  [
+   "T3",
+   862,
+   1058
+  ],
+  [
+   "T4",
+   1058,
+   1331
+  ],
+  [
+   "t5",
+   1331,
+   1804
+  ],
+  [
+   "t7",
+   1804,
+   2095
+  ]
+ ],
+ "placeholder_ranges": [],
+ "handle_fallback_frames": 0,
+ "dissolve_blend_frames": 18,
+ "sfx_events": 73,
+ "narration_rms_db": -17.711459185489147,
+ "pass": true
+}
