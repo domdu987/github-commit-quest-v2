@@ -1125,7 +1125,7 @@ TAKE_LIGHT = {'T1': {'ext': 'BLUE_HOUR_EXT', 'measure': 'SUNSET_INT'}, 'T2': {'e
               'T3': {'measure': 'SUNSET_INT'}, 'T4': {'measure': 'SUNSET_INT', 'archive': 'ARCHIVE_DAY'}, 'T5': {'archive': 'ARCHIVE_NIGHT'},
               'T6': {'archive': 'ARCHIVE_DAY'}, 'T7': {'archive': 'ARCHIVE_DAY'}, 'T8': {'measure': 'SUNSET_INT'}}
 TAKE_OVER = {   # per take, per location overrides of the light preset (SET gate v2b): T1 window brightest pool; T6 -12 % / T7 +5 % luma
-    'T3': {'measure': dict(beam_k=0.0, shade_mul=1.5, fill_w=360, win_w=420, win_lamp=200, lamp_k=1.5, gain=1.12)},   # render17v2/T3: shaft hidden (none on cast cards), luma to 95-110 by lights only
+    'T3': {'measure': dict(beam_k=0.0, shade_mul=1.5, fill_w=360, win_w=420, win_lamp=200, lamp_k=1.5, gain=1.05)},   # render17v2/T3: shaft hidden (none on cast cards), luma to 95-110 by lights only
     'T1': {'measure': dict(win_w=300, win_lamp=170, shade_mul=0.88)}, 'T6': {'archive': dict(shade_mul=0.8, fill_w=220, vault_w=100, gain=0.65, beam_k=0.5, frost=('#7f9ef0', 1.1))}, 'T7': {'archive': dict(shade_mul=1.16, fill_w=400)}}
 TAKE_CUTAWAY = {'T3': ('measure',), 'T7': ('archive',), 'T8': ('measure',)}
 def ML(x, y, z=0.0): return (x + MO[0], y + MO[1], z + MO[2])
