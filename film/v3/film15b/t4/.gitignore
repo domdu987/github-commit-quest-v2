@@ -1,0 +1,5 @@
+draft/
+frames/
+raw/
+__pycache__/
+*.png
