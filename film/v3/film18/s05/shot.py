@@ -5,12 +5,15 @@ from mathutils import Vector as V
 SHOT = 's05'; G0, G1, HB, HA = 384, 459, 8, 0
 HAND_G = 414                                   # the sash changes hands
 # real eased push (about 8 %/s) + a 1.3 D slide + ONE held punch-in (+15 %) on the hand-over
-CAM = C.cam_path(((-69.0, 17.7, 2.6), (-75.3, 21.8, -0.5), 24), ((-70.1, 18.5, 2.4), (-75.7, 22.4, 0.5), 24), punches=[(0.45, 0.06, 0.14)], slide=-0.5)
+CAM = C.cam_path(((-68.6, 17.3, 2.6), (-75.0, 21.4, 0.4), 24), ((-69.5, 18.0, 2.5), (-74.7, 21.4, 0.6), 24), punches=[(0.45, 0.06, 0.10)], slide=-0.2)
 def tweak(stage, A=None):
     if stage == 'pre':
         S.SHOTS[SHOT]['fg'] = None
     elif stage == 'post':
-        C.hide('baskets', 'digtools', 'props')
+        C.hide('baskets', 'digtools', 'props'); print('sky', C.clear_sky())
+        import jimo_r2 as R2
+        R2.dress(-73.0, -66.0, 15.6, 19.4, 9, 5, kinds=('basket', 'pot', 'rope', 'hay', 'basket'))
+        R2.dress(-76.0, -72.0, 17.0, 19.0, 4, 6, kinds=('basket', 'pot'))
 def actors(f, cam, ctx):
     t = (f - G0) / 30.0; give = f < HAND_G
     sash = dict(arm_r={'hand': (0.62, 0.52), 'bend': 0.2, 'stretch': 1.1, 'layer': 'front'}, prop_r={'type': 'sash', 'scale': 1.0})
@@ -22,6 +25,9 @@ def actors(f, cam, ctx):
     C.person_card('child', 'child_stand', (-72.1, 24.5, 0), cam, 4, bob=C.hop(f, 4, 0.08, 2.4), roll=C.sway(f, 4, 3.0, 1.1))
     loc, look, _ = CAM((f - G0) / float(G1 - 1 - G0)); fw = look - loc; fw.z = 0; fw.normalize(); rt = V((fw.y, -fw.x, 0.0))
     p1 = loc + fw * 3.1 - rt * 1.0; p2 = loc + fw * 3.4 + rt * 1.75
+    p3 = loc + fw * 2.5 + rt * 0.35; p4 = loc + fw * 4.2 + rt * 0.9
+    C.person_card('townsfolk', 'old_man_carry_basket', (p3.x, p3.y, 0), cam, 7, h=1.35, bob=0.04 * abs(math.sin(2 * math.pi * 1.4 * t + 2)), roll=C.sway(f, 7, 2, 0.8))
+    C.person_card('child', 'child_carry_basket', (p4.x, p4.y, 0), cam, 8, h=1.5, bob=0.05 * abs(math.sin(2 * math.pi * 2.0 * t)), roll=C.sway(f, 8, 2, 1.0), mirror=True)
     C.person_card('child', 'child_carry_basket', (p1.x, p1.y, 0), cam, 5, h=1.5, bob=0.05 * abs(math.sin(2 * math.pi * 1.8 * t)), roll=C.sway(f, 5, 2, 0.9))
     C.person_card('townsfolk', 'woman_carry_basket', (p2.x, p2.y, 0), cam, 6, h=1.6, bob=0.05 * abs(math.sin(2 * math.pi * 1.5 * t + 1)), roll=C.sway(f, 6, 2, 0.9), mirror=True)
 if __name__ == '__main__':

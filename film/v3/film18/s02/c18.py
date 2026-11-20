@@ -83,7 +83,12 @@ def run(shot, actors_fn, g0, g1, hb=0, ha=0, quality=None, outdir=None, tweak=No
     if tweak: tweak('cam', cam0)
     if shk: shake(cam0, shk, g0, g1)
     if dress is not None:
-        info = J.dress_ground(frames=range(g0, g1), seed=dress); print('dress_ground', info.get('n'), flush=True)
+        cam_ = sc.camera; R2.LIT.clear(); R2.clear_placeholders()
+        for f_ in range(g0, g1, 15):
+            sc.frame_set(f_); bpy.context.view_layer.update(); actors_fn(f_, cam_.matrix_world.translation.copy(), ctx)
+        cards = [o for o in bpy.data.objects if o.name.startswith('ph_') and not o.name.startswith('ph_sh_')]
+        info = J.dress_ground(frames=range(g0, g1), seed=dress, actors=cards, keep_clear=[], density=2.2); print('dress_ground', info.get('n'), info.get('stat'), flush=True)
+        R2.clear_placeholders(); R2.LIT.clear()
     first, last = g0 - hb, g1 - 1 + ha
     for f in range(first, last + 1): J.flicker(f)
     frames = list(range(first, last + 1))
@@ -144,6 +149,20 @@ def key_cam(shot, fn, f0, f1):
     for fc in T._fcurves(cam):
         for kp in fc.keyframe_points: kp.interpolation = 'LINEAR'
     return cam
+
+def clear_sky():
+    """Cloudless sky: the sky dome texture replaced by its per-row median (a smooth gradient), so no cloud / sun sticker shows."""
+    import bpy as _b, numpy as _np
+    from PIL import Image as _I
+    m = STATE['M']['sky']
+    for n in m.node_tree.nodes:
+        if n.type == 'TEX_IMAGE' and n.image is not None:
+            src = _b.path.abspath(n.image.filepath); a = _np.asarray(_I.open(src).convert('RGB'), 'float32')
+            med = _np.median(a, axis=1)[:, None, :]; out = _np.repeat(med, a.shape[1], axis=1)
+            p = os.path.join(HERE, 'sky_clear.png'); _I.fromarray(out.astype('uint8'), 'RGB').save(p)
+            n.image = _b.data.images.load(p)
+            return True
+    return False
 
 def hide(*names):
     for n in names:

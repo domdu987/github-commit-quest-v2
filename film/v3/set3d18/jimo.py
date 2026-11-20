@@ -841,9 +841,9 @@ def render_spec(spec, quality='final', outdir=None, tag=None):
 
 
 # ----------------------------------------------------------------------------- ground dressing (jimo_dress.py, API.md "Ground dressing")
-def dress_ground(cam=None, density=1.0, seed=0, keep_clear=None, frames=None):
+def dress_ground(cam=None, density=1.0, seed=0, keep_clear=None, frames=None, actors=None):
     """Scatter lit, inked, instanced ground dressing where the camera sees the ground (see jimo_dress.dress_ground / API.md)."""
-    import jimo_dress; return jimo_dress.dress_ground(cam=cam, density=density, seed=seed, keep_clear=keep_clear, frames=frames)
+    import jimo_dress; return jimo_dress.dress_ground(cam=cam, density=density, seed=seed, keep_clear=keep_clear, frames=frames, actors=actors)
 
 def clear_dressing():
     import jimo_dress; return jimo_dress.clear_dressing()
