@@ -16,7 +16,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 P = os.path.dirname(os.path.abspath(__file__)); F15 = P + "/film15"; FPS = 30; OFF = 0.10; SR = 48000
 ap = argparse.ArgumentParser(); ap.add_argument("takes", nargs="*"); ap.add_argument("--test", action="store_true"); ap.add_argument("--name", default="film15_test")
-ap.add_argument("--n", type=int, default=2095); ap.add_argument("--work"); ap.add_argument("--keep", action="store_true"); ap.add_argument("--target", type=float, default=-12.0)
+ap.add_argument("--n", type=int, default=2095); ap.add_argument("--work"); ap.add_argument("--keep", action="store_true"); ap.add_argument("--target", type=float, default=-12.0); ap.add_argument("--sfx", default="sfx_cues.json", help="cue list in film15/audio/ (v2: sfx_cues_v2.json)")
 a = ap.parse_args(); N = a.n; T = N / FPS; name = a.name
 work = a.work or f"/tmp/conform15_work/{name}"; os.makedirs(work, exist_ok=True)
 rel = P + "/release15"; os.makedirs(rel, exist_ok=True)
@@ -121,7 +121,7 @@ v = nx.mean(1)[::6]; env = np.sqrt(np.convolve(v ** 2, np.ones(480) / 480, "same
 def talk(at, ln):
     i0, i1 = int((at - OFF) * 100), int((at - OFF + ln) * 100); seg = env[max(0, i0):max(0, i1)]
     return seg.size > 0 and (seg > 0.02).mean() > 0.3
-cues = json.load(open(F15 + "/audio/sfx_cues.json"))["cues"]; sfx = []
+cues = json.load(open(F15 + "/audio/" + a.sfx))["cues"]; sfx = []
 for c in cues:
     c = dict(c, at=c["at"] + OFF)   # narration clock -> film clock
     if c["at"] >= T: continue
