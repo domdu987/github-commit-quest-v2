@@ -1,13 +1,12 @@
-# QA_TECH s19 (take g1421-1520, shot g1427-1514) - FAIL (round 7)
-Checked: 6 fps + first/last 3 (25 frames) + full-size crop g1511. Director 7.92 / 11.24 (my re-measure 7.87 / 11.24): OK, no pulsing. Whip: the blur flag g1505-1519 is ALLOWED. At full size the sky, stars, herd and torch are crisp; Laplacian ratio 0.5-0.57 is the flat sky/ground content, not smear. Flames sit on tail tips and trail backward (behind the oxen); none on a head. NIGHT, no text, soft dust (no dark-square puffs), heads fine.
+# QA_TECH s19 (take g1421-1520, shot g1427-1514) - FAIL (take gate)
+Checked: 6 fps (25 frames incl. first/last 3), phone sheets, full-size crop with y 860 line. Director 12.66 / 16.22: OK, no pulsing. Whip blur flag g1505-1519: ALLOWED, the frames are sharp (sky, stars, herd, pots crisp). NIGHT, no text, no dark-square puffs (soft dust). Flames: red teardrops on the tail tips trailing backward (behind the oxen); none on a head. Qi silhouettes: 1-2 visible early (note).
 ## Earlier blockers
-- Flat saturated purple strip: FIXED (gone).
-- Qi silhouettes 4-6: NOT FIXED (see 1).
+- Oxen faces in the caption band: NOT FIXED (see 1).
 - Bare ground > 30 %: NOT FIXED (see 2).
-- Navy spiky plants: gone; only a few small navy boulder lumps on the horizon after the whip (note).
+- Purple strip, navy lumps: gone.
 ## Issues
-1. g1427-1514 - Qi silhouettes: only 1-2 black figures, visible g1426-1456 and a lone one at g1511; the plan and TEAMS ask for 4-6.
-2. g1506-1520 - bare ground: after the whip about 40-45 % of the frame is plain lavender ground (0.3 s inside the shot plus the handle). Also about 30 % at g1427-1446. Fix: end the whip with the horizon higher / dark fg prop, or tilt up.
+1. g1434-1500 - ox faces below y 860: the lead oxen run along y 880-1050 with the open mouth / chin at about y 900-1040 (checked at full size, g~1490: mouth y 900-1040). The captions will sit on the faces. Rule: no ox face below y 860. Fix: pitch the camera down / raise the oxen so every chin is at y <= 860, or pull the herd back.
+2. g1427-1446 and g1434-1470 - bare ground: the bottom 45-50 % of the frame is plain lavender gravel and a flat purple wedge with only a bread-roll prop (visually ~45 %, over 30 %). Fix: dark fg props low in frame, horizon lower / tilt up so legs and dust fill the bottom.
 ## Notes
-- Oxen faces are neutral, not rage; after the whip the herd is small and distant (about 8 % of frame height).
-- Warm dust and ground glow under the herd read well. Navy boulder lumps (outlined) on the horizon g1506-1520.
+- After the whip (g1500+) the framing is better: sky 40 %, pots fg, herd at the horizon (faces small and above 860), ground ~35 % with pots; acceptable.
+- Rage faces read; the flame cards are 40-80 px, readable on a phone.

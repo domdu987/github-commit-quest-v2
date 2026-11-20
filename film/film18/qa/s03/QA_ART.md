@@ -1,19 +1,22 @@
-# QA-art s03 (vista: Yan pennants rise over the plain, 5.20-9.89 s), TAKE gate, vista round 3 — FIX-FIRST
-Reviewed take.mkv at 6 fps (art10/f, g 147-292) at full size and on art10/psheet_0-2.jpg (360x640, cyan = y 880). First QA-art review of this take.
+# QA-art s03 (vista: Yan pennants rise over the plain, 5.20-9.89 s), TAKE gate, Vista round 4 — FIX-FIRST
+I reviewed take.mkv at 6 fps (art11/f/NNN.png, g = 147 + 5*(NNN-1)) at full size and on art11/psheet_1-4.jpg (360x640, cyan line = y 880).
 
-What works: the warm orange dusk sky, the lit 3D farmland and walled towns, the red Qi flag on the near town at the start, and Ju's glow on the horizon. There are no cloud stickers, the image is sharp, and the camera move is calm and steady.
-
-What breaks the beat: the line is "Yan took 70+ towns". The pennants that pop at g 237-292 are only about 7, and they are huge (the nearest is 45 % of frame width at g 282, art10/f/027.png). They sit near the lens, not over the towns. Their cloth is a flat navy slab with a noisy orange-speckle top band. While they rise, some lie flat or diagonally across the bottom of frame (g 282-292, bottom-left; a pole crosses the bottom-right). On the phone it reads as a few dark boards falling into shot, not a plain filling with enemy flags. s04 then opens on about 35 small flags, so the count also jumps at the cut.
+## Earlier changes
+1. Pennant count, scale and placement: PARTLY done. The flags now grow from the pole top and are capped in size, which is good. But the camera drifts right and down over the near town blocks, so at the end (g 292, art11/f/030.png) only about 7 flags are in frame, not the 30 or more I asked for. The "51 up by g 296" are mostly outside the frame. s04 then opens on about 35 flags.
+2. Pop animation: Mostly done. No flag lies flat any more. But the nearest pole at the bottom right (g 272-282, f/026-028) leans about 30° across the lower third, and its cloth is cut by the right edge. On the phone it still reads as a falling pole.
+3. Material: The pennants are DONE (dark silk, red border, lit by the dusk; they read as cloth). The moat is now a textured, glinting gravel or mud ring, which is acceptable. The navy slabs are NOT done. The flat navy ramp/plank is still inside the first town (g 147-200), and flat navy L-shaped strips lie at the pole bases of the later towns. At g 277 (f/027.png, bottom right) a navy slab carries a lump of yellow cubes, which reads as a placeholder prop (rule 2).
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 5 | 7 | 4 | n/a (no cast; pennant action 4) | 6 |
+| 5 | 7 | 5 | n/a (no cast) | 6 |
+
+On the phone you see a warm dusk plain with lit towns, and a handful of black flags appear near the lens over the last second. The line is "Yan took 70+ towns". The image says "a few towns" instead.
 
 ## Verdict: FIX-FIRST
-1. **Pennant count, scale and placement (g 222-296):** Pop one pennant over the centre of each town, spreading from near to far and left to right. Have 30 or more by g 296, matching the field s04 opens on. Cap each flag at about 8 % of frame width at the near towns and smaller beyond. Keep every pole at least about 3 D from the lens, so no flag crosses the frame edge or the bottom third.
-2. **Pop animation:** Scale each flag up from its pole top over 4-6 frames, with the pole already standing. Do not swing it up from the ground. No flag may lie flat or diagonally at any point (g 282-292 bottom).
-3. **Pennant and moat material (set-level, shared with s04 and s25):** Give the black pennants lit black silk with a matte red border. Remove the orange stipple band and let the cloth catch the dusk rim light, so they stop reading as navy slabs (rule 2). Give the grey moat ring around each town a water material that reflects the orange sky (or dark earth). Give the navy plank or ramp inside the towns an earth or timber texture.
+1. **End framing shows the whole plain (g 255-296):** Stop the drift down into the near blocks. From about g 240, ease the camera up and back (or pull its look-at toward the horizon) so the last frame looks over the plain with 25 or more black flags visible, matching s04's opening field. Keep the eased move; no pulse.
+2. **Nearest pole (g 262-292):** Keep every pole out of the bottom third and at least 40 px inside the frame edges. Either skip the nearest town's pennant in this shot or pop it before it reaches the lower-right corner.
+3. **Navy slabs (set-level, also affects s04 and s25):** Give the navy ramp/plank and the L-shaped pole-base strips an earth or timber texture (or hide them), and remove the yellow-cube lump at the pole base. Check the last 10 frames for zero flat navy areas.
 
 ## Notes
-- From g 207 to g 222 the near town's corner tower and wall slide huge across the right half. This is fine as parallax, but at the rebuild a slightly higher camera would avoid the close brick wall.
-- In-shot frame-diff p90 is 6.5. That is under the 9 guide, but the move is visible, so I accept it for a vista.
+- The bright Jimo "sun flare" on the horizon is pretty, but it is stronger than any town light. Less bloom would read more like a town.
+- Frame-diff median 5.8 / p90 6.5, below the 9 guide. The move is visible, so this is fine for a vista.

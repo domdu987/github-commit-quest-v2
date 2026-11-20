@@ -1,18 +1,23 @@
-# QA-art s20 (reveal A: "ไฟอยู่ข้างหลัง วัวเลยวิ่งไปข้างหน้าอย่างเดียว", 50.51-53.20 s), TAKE gate round 8 — FIX-FIRST (reveal, strict)
-Reviewed take.mkv at 6 fps (art10/f, g 1509-1599) at full size and on art10/psheet_0-1.jpg (360x640, cyan = y 880).
+# QA-art s20 (reveal A: "ไฟอยู่ข้างหลัง วัวเลยวิ่งไปข้างหน้าอย่างเดียว", 50.51-53.20 s), TAKE gate round 9 — FIX-FIRST (reveal, strict)
+I reviewed take.mkv at 6 fps (art11/f/NNN.png, g = 1509 + 5*(NNN-1); f/001-002 are handles from the s19 whip) at full size (art11/h.png, g 1549 and 1574 with a y 880 line) and on art11/psheet_1-3.jpg (360x640).
 
 ## Earlier changes
-1. Frame + ground: NOT DONE. The take notes say the lead ox is at y 0.38-0.62 and 40 % of height, but the frames show it at y 0.22-0.48 and about 26 % of height (g 1559, art10/f/010.png). From y 0.50 to the bottom (about 50 % of frame, every shot frame) there is only plain cold lavender-slate gravel, not the dark-earth gapfill. The warm pools under the flames are only a few small patches behind the ox. No second rank was added: the notes confirm the Qi cards did not render.
-2. Flames trail back: Partly DONE. The lead ox's own flame now roots at the bundle tip and streams back to screen-right, which is good. But the left neighbour's flame still ends at the lead ox's snout, next to the steam puffs, about 30 px away (g 1534-1559 and g 1579, x 0-40, y 420-440). On the phone it still looks like breathing fire.
-3. Camera: Partly DONE. There is a visible dolly and sway (median 5.7, p90 6.9). The ox now drifts across the frame. It is still under the 9 guide.
+1. Re-aim the camera: DONE for the lead ox. It sits at y 0.38-0.67, is about 30 % of the frame height, and its chin is around y 730, well above the caption band. NOT done for the lower band. Below the ox's feet, about 33 % of the frame (y 0.67-1.0) is plain cold violet gravel. No cropped oxen or dust fill it. Only a dark Qi silhouette at the left edge shows, from g 1584.
+2. Ground colour: NOT done. The ground is still lavender-violet. The warm pools are faint patches behind the ox.
+3. Nose flame: NOT done. At g 1574 (f/014.png) the neighbour's flame tip is about 20 px from the lead ox's open mouth, next to the steam puffs. At g 1549 it is about 100 px away.
+
+## Beat problem
+The lead ox's own fire is the point of the shot, but its tail and flame are at the right edge and often cut off. At g 1549 the flame is out of frame. At g 1574 it is about 80 px long at full size, 40 px on the phone. The phone viewer sees an angry ox running left, with fire at its snout and none clearly behind it. "Fire behind, so they only run forward" does not read.
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 4 | 4 | 3 | 6 | 5 |
-
-On the phone you see one angry, roaring dragon-ox high in the frame over a huge empty violet floor, with one flame behind it and another at its nose. "Fire behind, so they only run forward" and "the herd charges" do not read.
+| 4 | 5 | 4 | 7 | 5 |
 
 ## Verdict: FIX-FIRST
-1. **Re-aim the camera (verify on a still before rendering):** Tilt down or lower the camera so the lead ox's feet sit at y 0.66-0.70 and its back at y 0.36-0.40, about 35 % of height, with its chin above y 860. Measure this on a rendered frame; do not rely on the rig values. Fill the lower band with 2-3 more running oxen (or Qi silhouettes) cropped by the bottom edge, plus dust puffs. Plain ground must be 30 % or less.
-2. **Ground colour:** Apply the s19 dark-earth gapfill material to this ground (it is still the cold lavender gravel). Put a warm orange pool under every lit tail, so the bottom half carries firelight.
-3. **Nose flame:** Move the left neighbour ox back by at least half a body length, or drop it. No flame may come within 60 px of any ox face in any frame, especially g 1534-1559 and g 1579.
+1. **Show the fire behind the lead ox, whole shot:** Truck or pan so the ox's head is at x 0.12-0.25 and its tail bundle and flame are fully in frame at x 0.75-0.92. Scale the lead flame card to at least 150 px long at full size, and add a strong warm rim light from it on the ox's rump and the ground. This is the shot's reveal; the flame must be the second-brightest thing after the face.
+2. **Fill the lower band and warm the ground:** Bring 2-3 more charging oxen (or Qi silhouettes plus dust) through the lower third, cropped by the bottom edge. Use the dark-earth gapfill material and warm pools under every lit tail, so plain ground is 25 % or less (it is now about 33 %).
+3. **Nose flame:** Push the left neighbour back another body length, or hide its flame while it is level with the lead head. No flame may come within 60 px of any face at g 1559-1590.
+
+## Notes
+- Frame-diff median 4.65 / p90 5.75. The truck is visible, but more oxen crossing the lower band would raise p90 naturally.
+- The angry face and gallop cycle are good.

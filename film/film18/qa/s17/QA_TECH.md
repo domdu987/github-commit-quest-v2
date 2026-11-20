@@ -1,19 +1,16 @@
-# QA_TECH s17 (take g1303-1393, shot g1309-1387) - FAIL (round 6)
-Checked: 6 fps + first/last 3 (23 frames). Re-measured 6.82 / 9.37 (director 6.72 / 9.20): median OK, p90 at the guide, eased push + slide on the elder; no pulsing. NIGHT, no lit tail before "จุดไฟ", no text, no mouths, heads < 880, band mean max 76.
-## New assets
-- townsperson_tie_reeds pose: the elder is now bent over beside an ox with a yellow bundle at its tail, so the pose looks used. At phone size it reads as an elder carrying a yellow board, not as tying.
-- J.prop_reed_bundle: the hand-held bundle is a chunky yellow block with a faint ridge and the foreground one is a flat yellow fan with a navy outline, fixed at the bottom-left of the screen (no parallax, no shadow). It reads as a sticker pinned to the lens.
+# QA_TECH s17 (take g1303-1393, shot g1309-1387) - FAIL (take gate)
+Checked: 6 fps (23 frames incl. first/last 3), phone-size sheets. Director 8.77 / 15.00: median and p90 OK; no pulsing (elder slides in, push eased). NIGHT, no text, no mouths, heads < 880. No lit tail before "จุดไฟ" (only warm ground glow/brazier behind the oxen). Oxen are dragon-dressed with plain tails.
 ## Earlier blockers
-- Fg reed bundle flat plank: PARTLY. Now strands are drawn, but it is still a flat outlined card and does not move with the camera.
-- Tying visible: NOT FIXED in practice (see 1).
-- Oxen nose-first at the holes: NOT FIXED. The oxen stand side-on in a row along the wall base; no wall hole is visible anywhere in the shot.
-- Bare ground: NOT FIXED (see 2).
-- Navy rubble stacks along the wall base: NOT FIXED (see 3).
+- Holes in the wall: MET. Rubble-ringed holes are visible along the wall base.
+- Oxen nose-first: PARTLY. The oxen are front-3/4 and look at the lens, not at the holes; acceptable as a note.
+- Real 3D reed bundle foreground prop: NOT MET (see 1).
+- Tying visible: NOT MET (see 2).
+- Bare ground: NOT FIXED (see 3).
+- Navy rubble lumps along the wall base: gone (holes now textured grey-lilac); OK.
 ## Issues
-1. g1303-1393 - plan beat missed: no hole in the wall, oxen side-on not nose-first, the tail tie is not clearly seen (elder looks at the lens, the bundle sits beside the ox's tail tassel).
-2. g1303-1345 and g1350-1393 - bare ground: the bottom 35-40 % is plain dark-purple pebbled road with only the pinned reed card and, until g1340, two small baskets. Mask 27-31 % of the frame in the lower half only; visual about 35 %. Over 30 % blocks. Fix: a dark fg prop low (basket, sack, real 3D reed bundle sliding across) and tilt up.
-3. g1303-1393 - dark navy / grey low-poly rubble lumps behind the oxen along the wall base (rule 2, repeated for the third round).
+1. g1303-1393 - fg reed bundle is a flat, outlined yellow card pinned to the bottom-left of the screen in every frame (same position, no parallax, no shadow). It is not a 3D reed bundle and reads as a sticker on the lens. Fix: a real lit, textured 3D bundle placed in the world 1-2 D from the lens that slides across with the truck.
+2. g1345-1393 - the elder carries a yellow plank-like bundle beside an ox, looking at the lens; the tie to the tail is not seen (bundle sits next to the tail tassel). Plan beat "reeds tied to the tails" does not read on a phone.
+3. g1303-1345 - bare ground: the bottom 35-40 % of the frame is plain dark-purple pebbled road with only the pinned card and one stone (about 35 % visually, over 30 %). Fix: tilt up / push in, or add dark lit fg props (baskets, sacks, a 3D reed bundle) in the bottom corners.
 ## Notes
-- g1303-1340 - cast small (the herd 60-150 px); the elder grows to about 35 % of the frame height from g1350.
-- Oxen are dragon-dressed, plain tails, no flame (consistent).
-- Min frame-diff 0.99 at g1317 and g1383 (single pairs; no frozen run).
+- g1303-1340 cast is small (herd 60-150 px) with the elder out of frame; he enters about g1340.
+- A stray ox head peeks at the left edge at g1318 and g1348 (clipped, inside a hole); minor.

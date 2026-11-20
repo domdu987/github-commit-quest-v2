@@ -1,13 +1,13 @@
-# QA_TECH s03 (take g147-298, in-shot g156-297) - FAIL (round 5)
-Checked: 6 fps (35 frames) + first/last 3 + full-size g197 / g225. Re-measured 6.66 / 7.44: median OK, p90 below the 9 guide, orbit + push visible, no pulsing. No text, characters or blur. Caption band bright share max 0.59 %, band mean max 96.8: clear.
+# QA_TECH s03 (take g147-298, in-shot g156-297) - FAIL (take gate, vista round 4)
+Checked: 6 fps (35 frames incl. first/last 3), phone-size sheets. Director 6.70 / 7.45: median OK, p90 under the 9 guide but eased orbit + push visible, no pulsing. No text, characters, blur. Caption band: bright share max 0.18 %, band mean max 95: clear.
 ## Earlier blockers
-- Navy shadow slabs and the huge navy arc ring: MOSTLY FIXED. Field is now textured plaid farmland and small towns, no tent shards. A flat grey arc ring and one navy diagonal ribbon / navy gate boxes inside the walls remain (small).
-- Bare ground (g197-237): NOT FIXED, improved. See 1.
-- Clouds fixed; pennant pop-up g237-298: met.
+- Bare ground: RESOLVED. Lit plaid farmland with hedges, huts, haystacks and walls fills the lower third (not bare per the vista rule).
+- Pennant pop-up near to far, 30+ small: NOT MET (see 1).
+- Navy slabs / pennants as flat navy boards: PARTLY. Pennants are now dark silk with a red border (better), but flat grey arc ring and navy ribbon/gate boxes inside the towns remain (note).
 ## Issues
-1. g190-245 - bare ground: the bottom 35-40 % of the frame is plain plaid farmland (viewed at full size g197 and g225: open field below the walled town, only a haystack or two). My mask reads 29-31 % (g217-247), visual 35-40 %. Over 30 % blocks. Fix: pitch down / push so towns fill the lower third, or scatter dressing (haystacks, tents, carts) over the open field.
+1. g237-298 - pennant count and scale: only about 8-10 pennants exist at the last frame (3 small at the horizon, 1 far, 4-5 large in the mid/near field). Requirement is 30+ small pennants popping near to far. The near ones are huge (one is about 40 % of frame width at g285-298), one pole lies diagonally across the bottom-right and a flag cut by the left edge at g270-298. On a phone it is a few big dark boards, not a plain filling with Yan flags. s04 then opens on ~35 small flags, so the count jumps at the cut. Fix: spawn 30+ pennants, one per town/hut cluster, scale <= 8 % frame width near, keep poles >= 3 D from the lens, no pole or flag crossing a frame edge.
 ## Notes
-- g147-190 - the lower half has sparse tents / sacks, about 25-28 % open field, acceptable.
-- g257-298 - the black pennants are large flat dark slabs near the lens; plan-mandated, heavy.
-- Flat grey arc ring around the near town reads as an untextured band (rule 2, mild).
-- Ju: the far glow with a tower is visible at the horizon from g147 (small). First/last 3 frames clean.
+- g147-190 - lower half is lit sparse tents and cloth; fine.
+- Flat grey arc ring around the near town reads as an untextured band (rule 2, mild); navy ribbon / gate boxes inside the walls small.
+- Ju glow with tower visible at the horizon from the first frame.
+- First/last 3 frames clean.
