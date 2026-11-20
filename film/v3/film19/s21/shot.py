@@ -44,28 +44,29 @@ def _mix(a, b, u):
 
 
 def william_pose(g):
-    """William stays calm but alive (client rule: nobody still > 1.5 s): a small proud nod at ~56.0 s, a slow glance at the fumbling
-    astronomer from 56.5 s (g 1698) that he holds for ~1.3 s, a thumb wiping the watch face from g 1722, then back to the lens with
-    a second nod; between these the watch rises and falls gently, he sways and tilts his head."""
+    """William stays calm but alive (client rule: nobody still > 1.5 s): a small proud nod at ~56.0 s, a slow, READABLE glance at the
+    fumbling astronomer from 56.5 s (g 1698): head turned towards him with OPEN eyes looking at him, held ~1.3 s; then a bigger
+    thumb-wipe of the watch face (g 1720-1748: the hand brings the watch in and rubs it in wide circles, head tilted down at it with
+    open eyes); then back to the lens with a second nod.  Between these the watch rises and falls, he sways and tilts his head."""
     p = dict(cast19.STORY19["william_show_h4"][1])
     t = g
-    lift = 0.10 * math.sin(2 * math.pi * t / 40.0)                        # the watch rises and falls
-    wipe = 0.0
-    if 1722 <= g <= 1746:                                                  # thumb wipes the watch face: small quick circles of the hand
-        wipe = 1.0
-    hx = 0.62 + 0.03 * math.sin(2 * math.pi * t / 40.0 + 1.0) + wipe * 0.05 * math.cos(g * 0.9)
-    hy = 0.60 - 0.08 * max(0.0, math.sin(2 * math.pi * t / 40.0)) + wipe * 0.05 * math.sin(g * 0.9)
-    p["arm_r"] = dict(p["arm_r"], hand=(hx, hy + 0.01 * lift))
-    p["expr"] = "happy"
+    glance = u_of(g, 1696, 1706) - u_of(g, 1738, 1748)                      # 0 -> 1 (look at the astronomer, screen-left) -> 0
+    wipe = u_of(g, 1718, 1724) * (1.0 - u_of(g, 1744, 1750))                # 0 -> 1 -> 0
+    hx = 0.62 + 0.03 * math.sin(2 * math.pi * t / 40.0 + 1.0)
+    hy = 0.60 - 0.08 * max(0.0, math.sin(2 * math.pi * t / 40.0))
+    hx = lerp(hx, 0.34 + 0.15 * math.cos(g * 0.8), wipe)                    # the watch is brought in towards the chest and rubbed in circles
+    hy = lerp(hy, 0.42 + 0.13 * math.sin(g * 0.8), wipe)
+    p["arm_r"] = dict(p["arm_r"], hand=(hx, hy))
+    open_eyes = max(glance, wipe)
+    p["expr"] = "neutral" if open_eyes > 0.3 else "happy"                   # the 'happy' eyes are closed arcs: open eyes while he looks
     p["mouth"] = "smile"
     nod1 = 0.22 * math.sin(math.pi * clamp((g - 1676) / 12.0))             # small proud nod (pitch down and up)
-    nod2 = 0.22 * math.sin(math.pi * clamp((g - 1752) / 12.0))
-    p["pitch"] = nod1 + nod2 + 0.05 * math.sin(2 * math.pi * t / 36.0)
-    glance = u_of(g, 1698, 1708) - u_of(g, 1740, 1752)                      # 0 -> 1 (look left at the astronomer) -> 0
-    p["gaze"] = (-0.8 * glance + 0.15 * (1 - glance), 0.1 * glance)
-    p["yaw"] = 0.15 - 0.25 * glance + 0.05 * math.sin(g * 0.09)             # the head turns with the glance
-    p["head_roll"] = -3 + 4 * math.sin(2 * math.pi * t / 44.0) - 3 * glance
-    p["lean"] = 3.0 * math.sin(2 * math.pi * t / 52.0)
+    nod2 = 0.22 * math.sin(math.pi * clamp((g - 1754) / 12.0))
+    p["pitch"] = nod1 + nod2 + 0.05 * math.sin(2 * math.pi * t / 36.0) + 0.35 * wipe
+    p["gaze"] = (-1.0 * glance + 0.15 * (1 - glance - wipe), 0.1 * glance + 0.9 * wipe)
+    p["yaw"] = 0.15 - 0.55 * glance + 0.05 * math.sin(g * 0.09)            # a clear head turn towards the astronomer
+    p["head_roll"] = -3 + 4 * math.sin(2 * math.pi * t / 44.0) - 5 * glance
+    p["lean"] = 3.0 * math.sin(2 * math.pi * t / 52.0) - 4 * glance
     p["blink"] = blink(g, [1672, 1700, 1718, 1750])
     p["t"] = g / 30.0
     return p
@@ -84,7 +85,7 @@ def astro_pose(g):
     p["yaw"] = 0.35
     p["pitch"] = -0.6
     p["expr"] = "worried"
-    p["gaze"] = (0.9, -1.0)
+    p["gaze"] = (0.1, -1.0)                      # eye-line: squinting UP at the sun / the sky above the quadrant, not at the lens
     p["lean"] = -4 + 22 * w2
     p["head_roll"] = 9 * w1
     p["legs"] = "wide"
@@ -95,6 +96,9 @@ def astro_pose(g):
 
 def hop_z(g):
     return 0.2 * max(0.0, math.sin(g * 0.55 + 1.5)) ** 2
+
+
+RIM_COL, RIM_K, RIM_OFF = '#ffb24a', 1.5, (0.0045, 0.0035)    # set3d19 H.card_rim: warm rim on the upper-right edges (same as s19)
 
 
 class Take(C.Take):
@@ -127,6 +131,10 @@ class Take(C.Take):
             self.ast.pose(f, astro_pose(g), camera=self.cam)
         fr = [bf(g) for g in gs]
         self.sprites_for([(self.wil, PPD), (self.ast, PPD)], fr)
+        if not getattr(self, "_rim", False):                # warm rim light on the cards (director, QA-art r7): the same grade as s19
+            for a in (self.wil, self.ast):
+                H.card_rim(a, color=RIM_COL, k=RIM_K, offset=RIM_OFF)
+            self._rim = True
 
     def report(self, g):
         f = bf(g)
