@@ -1,7 +1,10 @@
-# s09 QA: film 20, shot 9 (CAFE cafe_low, DAY, view stub): Maupassant rises
-Delivered: take.mkv g 600..679 (80 frames; shot g 604..675, 4-frame handles each side, cut in / cut out), 720x1280, 8 spp, 22.58 s/frame wall (43.88 cpu).
-Beat: seated-crouch -> rises (legs crouch 0.6 -> 0, step forward, lean) g 612-640, two cravat tugs g 640-658, chin up smug g 654-668; snap push+orbit on "ก็ประกาศลั่น" g 657-670; crane up + orbit all shot. Mouth held flat the whole shot (quote starts g 682).
-Numbers: head 152-230 px wide, centre y 658-740, lowest head bottom y 855 (< 880); no head > 35 % of frame height.
-qa_stats: saturation 0.556, luma 96.5, in-shot motion median 5.04 / p90 10.02. Own frame-diff (deliver.py): median 4.41 / p90 10.36 (target 4 / 12: p90 slightly under; the snap is limited by the head band).
-qa_auto: PASS (see QA_AUTO.md). Checked contact sheet / phone sheet at 6 fps.
-Deviations: there is no seated Maupassant puppet on a banquette: he starts in a crouch with the banquette behind him (reads as perched on its edge, feet on the tiles with a contact decal) and straightens. Floor share ~20-25 % in the first 20 frames. p90 10.0 < 12.
+# s09 QA: film 20, T09 = shots 9+10 (CAFE cafe_low, DAY 1887, window view STUB): he rises, then the vow
+Delivered: take.mkv g 600..760 (161 frames) as take.mkv.partaa/ab (50.5 MB > 45: `cat take.mkv.part* > take.mkv`). In-take g 604..752 (20.15-25.09 s); 4 handle frames before (MATCH join to T06's end), 8 after (DIS 11 into T11). 720x1280, 8 spp, 19.42 s/frame wall (38.02 cpu), 2 threads, two processes.
+Match: g604 camera (3.505, 6.531, 0.994) D looking at (1.692, 13.16, 2.942) D, 22 mm, no shift (agreed with the director; team6 ends T06 on it); he is a seated-crouch, idle breathing only until g 610.
+ONE continuous camera (Catmull-Rom keys in shot.py `KEYS`, no cuts): wide with the sunlit tiles and chandelier, crane up as he rises (g 612-640), cravat tugs (640-658), chin up, a +-20 deg orbit swing (g 640-705) while he folds his arms and turns his back on the window, push in for the vow, then a quick ~1 s push-in to the close-up on "สักครั้ง" (g 727-752, head ~380 px = ~30 % of frame height).
+LIP-SYNC: g 682..755 only (22.62-25.11 s +0.10; the last 3 frames fall in the handle), narration RMS loudness -> cast20 MOUTH_SET (`python3 shot.py mouth`). Mouth flat for the whole rise (g 600-681).
+Numbers: head 104-384 px wide, centre y 626-713, lowest head bottom y 832 (< 880 in-take); in the handle the head grows to ~400 px (inside the DIS).
+Window: stub tower (four legs + first-platform girders) visible through the window in the wide frames; smoke hook keyed 0.
+qa_stats: saturation 0.539, luma 100.8. qa_stats2: sat 0.539, vivid 51.8 %, luma 100.8, warm 50.5 % / cool 28.7 %, motion median 8.29 / p90 12.49, still 0 %. Own frame-diff: median 7.6 / p90 11.79. qa_auto: PASS (QA_AUTO.md).
+Light: set key (sun patch on the tiles), cool window fill, warm gas lamps / chandelier in frame.
+Deviations: at g 604-640 he is a crouch standing in front of the banquette (no seated puppet on that banquette), feet on the tiles with a contact decal; floor ~30 % of the frame in the first wide frames (rule 25 %); no light-shaft geometry; "artists nod" not shown (artists are not in this view).
