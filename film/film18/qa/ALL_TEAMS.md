@@ -58,3 +58,6 @@ High-motion shots (s10, s14, s15, s19, s21, s24, the charge) carry the film's p9
 
 ## Ground metric is now ONE shared script (director, 2026-11-20 14:40 UTC)
 `python3 film/film18/qa/ground_share.py take.mkv <first_g> <g0> <g1> [step]` — plain = low-saturation, mid-value, UNTEXTURED (9x9 std < 6) pixels below y 0.40, as a share of the whole frame. Gate: max <= 0.30 (every 10th frame). Teams and QA both use this number; dressed/textured ground (stones, straw, props, ruts) does not count as plain. Visual "does it look empty?" stays a QA-art note, not a ground-% blocker.
+
+## Director decision, round 16 (2026-11-20 15:20 UTC) — list in the client report
+- BIGZOOM transit: herd-extra ox muzzles may cross the caption band during the crane move (s01 g40-66); human faces and the hero never do, and the band is clear at the end of the zoom.
