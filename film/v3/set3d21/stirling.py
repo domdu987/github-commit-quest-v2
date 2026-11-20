@@ -47,7 +47,7 @@ def _pal():
     add('deck', '#8c6c48', tex=wood, tile=1.5, tint=True, ink=False, sm=(0.8, 1.0, 1.12), rot=90.0)
     add('rock', '#77737f', tint=True, ink=False, sm=(0.85, 0.98, 1.1), afl=0.15)
     add('rock_warm', '#85766d', tint=True, ink=False, sm=(0.85, 0.98, 1.1))
-    add('heather', '#7a4f72', tint=True, sm=(0.85, 0.95, 1.2), afl=0.18)
+    add('heather', '#7a4f72', tint=True, sm=(0.6, 1.05, 1.0), afl=0.18)
     add('bracken', '#b0742f', tint=True, sm=(0.85, 1.0, 1.15))
     add('grass', '#6c9a3a', tint=True, sm=(0.75, 1.0, 1.15), afl=0.2)
     add('sprig', '#ffffff', tint=True, sm=(0.75, 1.0, 1.2), afl=0.22)
@@ -678,7 +678,7 @@ def veg_near(A, pr):
     # heather clumps / bracken / gorse on the hill
     hz_ = cfg.get('heather'); Bp = Batch(15)
     if hz_:
-        PAL = [hex_lin(h) for h in ('#7a4a52', '#80523f', '#6a4c4a', '#7e5048', '#6c4a50', '#5e4048', '#74564a')]; BR = [hex_lin(h) for h in ('#b0782f', '#9a6a2c', '#c08a3c')]; v0, f0 = _ico()
+        PAL = [hex_lin(h) for h in ('#7a5048', '#80563f', '#6e5242', '#7a5446', '#704c46', '#66463e', '#78604c', '#7a4a4c')]; BR = [hex_lin(h) for h in ('#b0782f', '#9a6a2c', '#c08a3c')]; v0, f0 = _ico()
         for (r0, r1, n, slo, shi) in hz_:
             x, y = sample_wedge(rs, n, cam, look, r0, r1, half); z = ground(x, y); hh, cm = hill_h(x, y); sd = sd_at(x, y); e = 0.8
             slope = np.hypot((hill_h(x + e, y)[0] - hill_h(x - e, y)[0]) / (2 * e), (hill_h(x, y + e)[0] - hill_h(x, y - e)[0]) / (2 * e)); ok = (hh > 3) & (slope < 1.0) & (sd > 2)
