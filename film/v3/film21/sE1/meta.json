@@ -1,0 +1,5 @@
+{"segment": "E1", "g0": 793, "g1": 885, "first_g": 790, "n_frames": 96,
+ "transition_in": {"type": "dissolve", "frames": 6, "note": "D6 at P_BANK; 3 handle frames g790-792 continue team 4's pull-out into P_BANK"}, "transition_out": "cut at g885",
+ "world": ["camp_bank", "hill_eye"], "samples": 32,
+ "cam_in": {"loc": "camp_bank preset camera (P_BANK) exactly at g793", "lens": 26},
+ "cam_out": {"loc": "hill_eye preset camera + (0.35,-0.35,-0.05) m slide", "lens": 22}}
