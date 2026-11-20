@@ -16,7 +16,7 @@ H_IN, H_OUT = 6, 6
 G_WORD = C.g_of(54.76)                                            # 1646
 G_FLARE = 1624                                                    # flames start to flare
 MOVE = dict(push=0.09, slide=6, moves=[])
-CAMO = dict(look_at=(0.0, -8.0, 5.5))                             # tilted up a little: ground <= 25 %
+CAMO = dict(look_at=(0.0, -8.0, 6.0))                             # tilted up a little: ground <= 25 %
 SHAKE = (0.9, 0.65, 0.4, 2.6)
 SNAPS = [(G_WORD - 2, 1.5, 4, 9999)]                              # ONE x1.5 snap on the word, held to the end
 SPEED = 3.8
@@ -32,26 +32,32 @@ def make_driver(quality):
     for o in list(ob):
         if o.type == 'LIGHT' and o.data.type == 'SUN': o.data.energy *= 0.3                      # deep night
     C.R2.dim_wall_lights(0.25)
+    FIRES = [(fi, fi['E0']) for fi in C.STATE.get('fires', ()) if fi['ob'].location.y > -30.0]
     for nm, rgb in (('water', (0.006, 0.008, 0.02)), ('banks', (0.015, 0.015, 0.03)), ('palisade', (0.03, 0.022, 0.02))):     # palisade bank also carries the salmon gate beam
         w = C.STATE['objects'].get(nm)
         if w is not None: w.data.materials.clear(); w.data.materials.append(C.flat_mat(rgb, nm + '_dark'))
     # ---- oxen: unlit reed tail (flame cards carry the fire), charging face overlay, 8 gallop phases
-    ov = {ph: C.angry_ox(C.ox_variant('dragon', 'front_three_quarter', 'gallop', ph, -1, reed=True, uid='o')) for ph in range(8)}
-    at_ox = C.Atlas('s21_ox2', ov, ppd=105)
+    ov = {ph: C.ox_variant('dragon', 'front_three_quarter', 'gallop', ph, -1, reed=True, uid='o', face='rage') for ph in range(8)}
+    at_ox = C.Atlas('s21_ox3', ov, ppd=105)
     oxen, flames = [], []
     for i, m in enumerate(herd):
         sc = m[4] * 1.6
         oxen.append(C.Actor(at_ox, 'ox%d' % i, scale=sc, tint=(1.0, 0.74, 0.58), k=0.9, sw=2.7 * sc, ref=0))
-        flames.append(C.J.flame_card(parent=None, scale=1.0, name='tailfl%d' % i, light=True, lit=1.0, energy=450.0))
+        fc_ = C.J.flame_card(parent=None, scale=1.0, name='tailfl%d' % i, light=True, lit=1.0, energy=450.0); C.lean_flame(fc_, -40.0 if i % 2 == 0 else 40.0)
+        flames.append(fc_)
     # ---- two black silhouettes in 3/4 profile
     def sol(base, cast):
         p = dict(cast18.STORY18[base][1]); p.pop('mouth', None); return C.person_variant(cast, p, 's')
     BLK = dict(tint=(0.0, 0.0, 0.0), k=1.0)
-    cfg = [dict(st='soldier_stand_a', fr='soldier_freeze_a', base='yan_soldier_a', d=6.8, lat=-2.5, cup=False, yaw=-58),
-           dict(st='soldier_cheer_cup_b', fr='soldier_freeze_b', base='yan_soldier_b', d=7.6, lat=2.5, cup=True, yaw=58)]
+    def shock(base):
+        p = dict(cast18.STORY18[base][1]); p.pop('mouth', None); p.update(lean=-14, pitch=-0.25, arm_r=dict(hand=(0.7, -0.35), bend=0.3, stretch=1.1, layer='front'), arm_l=dict(hand=(-0.7, -0.35), bend=0.3, stretch=1.1, layer='back'), legs='wide'); p.pop('prop_r', None); p.pop('prop_l', None)
+        return p
+    cfg = [dict(st='soldier_stand_a', fr='soldier_freeze_a', base='yan_soldier_a', d=9.0, lat=-3.4, cup=False, yaw=-58),
+           dict(st='soldier_cheer_cup_b', fr='soldier_freeze_b', base='yan_soldier_b', d=9.8, lat=3.4, cup=True, yaw=58),
+           dict(st='soldier_stand_c', fr='soldier_freeze_c', base='yan_soldier_c', d=13.0, lat=-1.2, cup=False, yaw=-40)]
     sold = []
     for c in cfg:
-        a1 = C.Atlas('s21b_' + c['st'], {0: sol(c['st'], c['base'])}, ppd=130); a2 = C.Atlas('s21b_' + c['fr'], {0: sol(c['fr'], c['base'])}, ppd=130)
+        a1 = C.Atlas('s21b_' + c['st'], {0: sol(c['st'], c['base'])}, ppd=130); a2 = C.Atlas('s21c_' + c['fr'], {0: C.person_variant(c['base'], shock(c['fr'].replace('freeze', 'freeze')) if False else dict(shock(c['fr'])), 's')}, ppd=130)
         sold.append((c, C.Actor(a1, 's_' + c['st'], height=3.2, shadow=False, **BLK), C.Actor(a2, 's_' + c['fr'], height=3.2, shadow=False, **BLK)))
     _v = sol('soldier_cheer_cup_b', 'yan_soldier_b'); CUPA = _v.anchors['cup_r']; FEET = _v.feet_y
     actors = {}
@@ -80,6 +86,7 @@ def make_driver(quality):
         t = (g - G0) / 30.0
         fwd = (V(pose['look_at']) - V(pose['loc'])); fwd.z = 0; fwd.normalize(); rt = V((fwd.y, -fwd.x, 0))
         ramp = C.smooth((g - G_FLARE) / 22.0)
+        for fi, e0 in FIRES: fi['E0'] = e0 * (0.35 + 0.65 * C.smooth((g - 1626) / 20.0))             # gate and wall lamps come up only after the flare
         rows = []
         for i, m in enumerate(herd):
             y0 = FRONT_Y + (m[1] - ymin) * 0.55

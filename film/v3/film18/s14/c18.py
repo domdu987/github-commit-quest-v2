@@ -67,8 +67,8 @@ def person_variant(cast, pose, uid='p'):
     return Var(f['svg'], f['bbox'], f['feet_y'], height=f['feet_y'] - a['head_top'][1], anchors=a)
 
 
-def ox_variant(state='dragon', view='front_three_quarter', gait='gallop', phase=0, flame=-1, reed=None, uid='o'):
-    f = cast18.ox_figure(state=state, view=view, gait=gait, phase=phase / 8.0 if gait == 'gallop' else phase, flame=flame, blades=True, reed=(True if reed else None), uid=uid)
+def ox_variant(state='dragon', view='front_three_quarter', gait='gallop', phase=0, flame=-1, reed=None, uid='o', face=None):
+    f = cast18.ox_figure(state=state, view=view, gait=gait, phase=phase / 8.0 if gait == 'gallop' else phase, flame=flame, blades=True, reed=(True if reed else None), uid=uid, **({'face': face} if face else {}))
     return Var(f['svg'], (cast18.OX_CANVAS[0] - 1.4, cast18.OX_CANVAS[1] - 1.4, cast18.OX_CANVAS[2] + 1.0, cast18.OX_CANVAS[3]), 0.0, height=2.6, anchors=f['anchors'])           # the full ox canvas: the flame glow must not be clipped by a tight bbox
 
 
