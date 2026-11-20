@@ -1,0 +1,67 @@
+{
+ "take": "s03",
+ "film": 19,
+ "shots": [
+  3
+ ],
+ "g0": 110,
+ "g1": 191,
+ "first_g": 101,
+ "n_frames": 99,
+ "shot_ranges": {
+  "3": [
+   110,
+   190
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "CUT from shot 2 (SHIP ship_aerial); 9 handle frames g 101..109 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "frames": 13,
+  "at": 191,
+  "note": "DIS 13 into shot 4 (SHIP ship_rocks STORM_DUSK); 9 handle frames g 191..199 rendered in 3D (half dissolve 6.5 + 2)"
+ },
+ "set": "v3/set3d19/h19.py HALL preset hall_window, light DAY; set_candles(1.0) keyed on every frame; no runtime set changes; no caption_shade",
+ "cast": "v3/cast19 astro19_b (mirrored, peers through the telescope eyepiece, straightens with a frown at the snap), astro19 (mirrored, scratches under his wig, puzzled); expression mouths only (no quote in this shot)",
+ "camera": "custom 22 mm, c19.CamPath: push 6 %/s + slide + arc about the telescope pair, chair in the foreground, SNAP x1.3 (15 f) on 'ทำไม่ได้' (g 177)",
+ "events": {
+  "snap": [
+   169,
+   184
+  ],
+  "word_thamaidai_g": 177
+ },
+ "dof": "none",
+ "text": "none",
+ "caption_shade": "none",
+ "light": "DAY",
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 15.35,
+ "s_per_frame_cpu_mean": 30.11,
+ "head_px": [
+  100,
+  212
+ ],
+ "head_centre_y": [
+  598,
+  692
+ ],
+ "head_bottom_max_y": 758,
+ "framediff_in_shot": {
+  "median": 4.8,
+  "p90": 13.96
+ },
+ "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
+}

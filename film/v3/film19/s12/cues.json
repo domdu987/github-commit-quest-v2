@@ -1,0 +1,47 @@
+{
+ "take": "s12",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film19/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 30.967,
+   "duration": 2.2,
+   "frame": 929,
+   "end_frame": 995,
+   "kind": "ambience",
+   "label": "workshop at night: near silence, a distant owl, the soft hiss of the candle"
+  },
+  {
+   "time": 30.967,
+   "duration": 2.2,
+   "frame": 929,
+   "end_frame": 995,
+   "kind": "prop",
+   "label": "the H3 ticking: a quicker, lighter brass tick than the H1, two balances"
+  },
+  {
+   "time": 31.267,
+   "duration": 0.733,
+   "frame": 938,
+   "end_frame": 960,
+   "kind": "foley",
+   "label": "small chisel taps on brass, about two a second"
+  },
+  {
+   "time": 31.733,
+   "duration": 0.667,
+   "frame": 952,
+   "end_frame": 972,
+   "kind": "accent",
+   "label": "soft push whoosh on 'สิบ'"
+  },
+  {
+   "time": 31.267,
+   "duration": 0.0,
+   "frame": 938,
+   "end_frame": 938,
+   "kind": "transition",
+   "label": "dissolve in from the daylight workshop (shot 11) to night: birdsong fades, candle hiss rises"
+  }
+ ]
+}
