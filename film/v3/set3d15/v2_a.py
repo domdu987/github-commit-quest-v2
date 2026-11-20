@@ -31,7 +31,7 @@ FONTS = dict(black=os.path.join(FONT_DIR, 'Kanit_900Black.ttf'), work=os.path.jo
 MAROON = '#a01830'; GOLD = '#ffc928'
 PALETTE = {   # name -> (A, B) hex pair of the board two-tone noise (or a single colour); applied by recolor() on every material called A_<LIGHT>|name
     'grassA': ('#2f9d16', '#58bb24'), 'lawnA': ('#2a9414', '#4cb61e'), 'gp1': ('#1f8a12', '#3ca81c'), 'gp2': ('#8ec81c', '#aedc30'), 'grass': ('#2f9d16', '#58bb24'),
-    'cinderA': ('#c3301a', '#e4501e'), 'dirtA': ('#b87424', '#d89030'), 'cinder': ('#c3301a', '#e4501e'),
+    'cinderA': ('#c3301a', '#e4501e'), 'dirtA': ('#9c7a4c', '#b8925a'), 'cinder': ('#c3301a', '#e4501e'),
     'saw': ('#f0aa24', '#ffc844'), 'chip': ('#c47a22', '#e29a36'), 'sawdk': ('#d08c1e', '#e8a42c'),
     'brick': ('#a0182e', '#c42a3a'), 'trim': ('#ffd23c', '#ffc020'), 'roofd': ('#5c1030', '#7a1a40'), 'roofdb': ('#5c1030', '#7a1a40'),
     'glass': ('#1c3ca0', '#3a62d0'), 'glasslit': ('#ffb020', '#ffd048'),
@@ -70,12 +70,11 @@ def recolor(light_name=None):
     return n
 
 # ============================================================================= light preset  A_HERO
-_SKY_HERO = [(0.0, '#1230c8'), (0.38, '#1f58e6'), (0.50, '#ff9a30'), (0.54, '#ffb44a'), (0.60, '#4a96ff'), (0.72, '#1f62ee'), (0.86, '#1442d4'), (1.0, '#0f2cb8')]
-F.LIGHTS['A_HERO'] = dict(F._B, name='A_HERO', loc='A', key=(1.8, 1.30, 0.80), key_dir=kdir(-58, 30), sun_elev=30, sun_angle=0.8, shade=(0.22, 0.17, 0.52), shade_tint=(0.22, 0.17, 0.58),
-                          lift=(0.012, 0.018, 0.07), season=1.0, grade_saturation=1.28, grade_offset=(-0.008, -0.012, -0.012), exposure=-0.05, shade_mix=0.6,
-                          sky=_SKY_HERO, sky_k=1.0, glow=('#ff9a28', 0.55, 0.6), hills=[(560, 40, 70, '#4838b8'), (640, 70, 90, '#6a4ad0')], hill_k=1.0)
-F.LIGHTS['A_HERODAY'] = dict(F.LIGHTS['A_HERO'], name='A_HERODAY', key=(2.0, 1.8, 1.4), key_dir=kdir(-38, 44), sun_elev=44, season=0.0, sky=[(0.0, '#1a40d8'), (0.4, '#3a82f4'), (0.5, '#b8dcff'), (0.56, '#8cc4ff'), (0.64, '#3a84f6'),
-                             (0.8, '#1c5ae8'), (1.0, '#1244d0')], glow=('#fff0c0', 0.5, 0.3), hills=[(560, 40, 70, '#4a6ad8'), (640, 70, 90, '#6a8aee')])
+_SKY_HERO = [(0.0, '#ff9c34'), (0.035, '#ffc062'), (0.10, '#64aaff'), (0.28, '#3480f4'), (0.6, '#1f5ce4'), (1.0, '#1840cc')]
+F.LIGHTS['A_HERO'] = dict(F._B, name='A_HERO', loc='A', key=(1.8, 1.30, 0.80), key_dir=kdir(-105, 28), sun_elev=28, sun_angle=0.8, shade=(0.22, 0.17, 0.52), shade_tint=(0.22, 0.17, 0.58),
+                          lift=(0.012, 0.018, 0.07), season=1.0, grade_saturation=1.32, grade_offset=(-0.008, -0.012, -0.012), exposure=-0.85, shade_mix=0.6,
+                          sky=_SKY_HERO, sky_k=1.0, glow=('#ffb040', 0.90, 0.9), hills=[(560, 40, 70, '#4838b8'), (640, 70, 90, '#6a4ad0')], hill_k=1.0)
+F.LIGHTS['A_HERODAY'] = dict(F.LIGHTS['A_HERO'], name='A_HERODAY', key=(2.0, 1.8, 1.4), key_dir=kdir(-38, 44), sun_elev=44, season=0.0, sky=[(0.0, '#d8ecff'), (0.05, '#8cc4ff'), (0.2, '#3a84f6'), (0.5, '#1c5ae8'), (1.0, '#1244d0')], glow=('#fff0c0', 0.5, 0.3), hills=[(560, 40, 70, '#4a6ad8'), (640, 70, 90, '#6a8aee')])
 for _k in ('HERO', 'HERODAY'):
     if _k not in F.LOC_LIGHTS['A']: F.LOC_LIGHTS['A'].append(_k)
 
@@ -88,25 +87,25 @@ def sky_clouds(P, cloud_cover=0.55, seed=3):
     for pos, col in st[1:-1]: cr.color_ramp.elements.new(pos).color = S.hexc(col)
     cr.color_ramp.elements[-1].position = st[-1][0]; cr.color_ramp.elements[-1].color = S.hexc(st[-1][1])
     kd = Vector(P['key_dir']).normalized(); sd = -kd
-    ma = N('ShaderNodeVectorMath'); ma.operation = 'MULTIPLY_ADD'; Lk(tc.outputs['Generated'], ma.inputs[0]); ma.inputs[1].default_value = (2, 2, 2); ma.inputs[2].default_value = (-1, -1, -1)
-    dt = N('ShaderNodeVectorMath'); dt.operation = 'DOT_PRODUCT'; Lk(ma.outputs[0], dt.inputs[0]); dt.inputs[1].default_value = tuple(sd)
+    dt = N('ShaderNodeVectorMath'); dt.operation = 'DOT_PRODUCT'; Lk(tc.outputs['Generated'], dt.inputs[0]); dt.inputs[1].default_value = tuple(sd)
+    ma = tc
     mr = N('ShaderNodeMapRange'); Lk(dt.outputs['Value'], mr.inputs['Value']); mr.inputs['From Min'].default_value = P['glow'][1]; mr.inputs['From Max'].default_value = 1.0; mr.interpolation_type = 'SMOOTHSTEP'
-    zf = N('ShaderNodeMapRange'); Lk(sp.outputs['Z'], zf.inputs['Value']); zf.inputs['From Min'].default_value = 0.8; zf.inputs['From Max'].default_value = 0.5
+    zf = N('ShaderNodeMapRange'); Lk(sp.outputs['Z'], zf.inputs['Value']); zf.inputs['From Min'].default_value = 0.6; zf.inputs['From Max'].default_value = 0.0
     mu = N('ShaderNodeMath'); mu.operation = 'MULTIPLY'; Lk(mr.outputs['Result'], mu.inputs[0]); Lk(zf.outputs['Result'], mu.inputs[1])
     mu2 = N('ShaderNodeMath'); mu2.operation = 'MULTIPLY'; mu2.inputs[1].default_value = P['glow'][2]; Lk(mu.outputs[0], mu2.inputs[0])
     ad = N('ShaderNodeMix'); ad.data_type = 'RGBA'; Lk(cr.outputs[0], ad.inputs[6]); ad.inputs[7].default_value = S.hexc(P['glow'][0]); Lk(mu2.outputs[0], ad.inputs[0])
     col = ad.outputs[2]
     if cloud_cover > 0:
         # clouds: stretched noise on the dome direction (flattened in z so they form bands), band-limited to a belt above the horizon, lit warm on the sun side
-        d3 = N('ShaderNodeVectorMath'); d3.operation = 'MULTIPLY'; Lk(ma.outputs[0], d3.inputs[0]); d3.inputs[1].default_value = (5.0, 5.0, 11.0)
+        d3 = N('ShaderNodeVectorMath'); d3.operation = 'MULTIPLY'; Lk(tc.outputs['Generated'], d3.inputs[0]); d3.inputs[1].default_value = (3.2, 3.2, 8.0)
         nz = N('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 1.0; nz.inputs['Detail'].default_value = 5; nz.inputs['Roughness'].default_value = 0.55; Lk(d3.outputs[0], nz.inputs['Vector'])
-        cc = N('ShaderNodeMapRange'); Lk(nz.outputs['Fac'], cc.inputs['Value']); cc.inputs['From Min'].default_value = 1.0 - 0.34 * cloud_cover - 0.2; cc.inputs['From Max'].default_value = 1.0 - 0.34 * cloud_cover - 0.02
+        cc = N('ShaderNodeMapRange'); Lk(nz.outputs['Fac'], cc.inputs['Value']); cc.inputs['From Min'].default_value = 0.62 - 0.2 * cloud_cover; cc.inputs['From Max'].default_value = 0.70 - 0.2 * cloud_cover
         cc.interpolation_type = 'SMOOTHSTEP'
-        belt = N('ShaderNodeMapRange'); Lk(sp.outputs['Z'], belt.inputs['Value']); belt.inputs['From Min'].default_value = 0.505; belt.inputs['From Max'].default_value = 0.62
+        belt = N('ShaderNodeMapRange'); Lk(sp.outputs['Z'], belt.inputs['Value']); belt.inputs['From Min'].default_value = 0.04; belt.inputs['From Max'].default_value = 0.16
         bm_ = N('ShaderNodeMath'); bm_.operation = 'MULTIPLY'; Lk(cc.outputs['Result'], bm_.inputs[0]); Lk(belt.outputs['Result'], bm_.inputs[1])
         # cloud colour: shaded side lilac-blue, sun side hot gold-pink
         sun_k = N('ShaderNodeMapRange'); Lk(dt.outputs['Value'], sun_k.inputs['Value']); sun_k.inputs['From Min'].default_value = -0.3; sun_k.inputs['From Max'].default_value = 0.9
-        cm = N('ShaderNodeMix'); cm.data_type = 'RGBA'; cm.inputs[6].default_value = S.hexc('#8a6ae8'); cm.inputs[7].default_value = S.hexc('#ffb060'); Lk(sun_k.outputs['Result'], cm.inputs[0])
+        cm = N('ShaderNodeMix'); cm.data_type = 'RGBA'; cm.inputs[6].default_value = S.hexc('#b49cf4'); cm.inputs[7].default_value = S.hexc('#ffd694'); Lk(sun_k.outputs['Result'], cm.inputs[0])
         cmix = N('ShaderNodeMix'); cmix.data_type = 'RGBA'; Lk(col, cmix.inputs[6]); Lk(cm.outputs[2], cmix.inputs[7]); Lk(bm_.outputs[0], cmix.inputs[0]); col = cmix.outputs[2]
     Lk(col, bg.inputs['Color']); Lk(bg.outputs[0], out.inputs['Surface'])
     lp = N('ShaderNodeLightPath'); m3 = N('ShaderNodeMath'); m3.operation = 'MULTIPLY'; m3.inputs[1].default_value = P['sky_k']; Lk(lp.outputs['Is Camera Ray'], m3.inputs[0]); Lk(m3.outputs[0], bg.inputs['Strength'])
@@ -636,7 +635,7 @@ def god_rays(P, n=16, seed=5, strength=0.9, width=(3.0, 7.0), length=(38.0, 55.0
     pts = where or [(rr.uniform(-60, 40), rr.uniform(20, 70)) for _ in range(n)]
     objs = []
     for i, (x, y) in enumerate(pts):
-        ln = rr.uniform(*length); wd = rr.uniform(*width); top = Vector((x, y, rr.uniform(14, 24))); end = top + kd * ln
+        ln = rr.uniform(*length); wd = rr.uniform(*width); top = Vector((x, y, rr.uniform(11, 17))); end = top + kd * ln
         if end.z < 0: ln = top.z / -kd.z; end = top + kd * ln
         ax = (end - top).normalized(); up = Vector((0, 0, 1)); side = ax.cross(up).normalized(); nrm = side.cross(ax).normalized()
         for q in range(2 if cross else 1):
@@ -783,7 +782,7 @@ def _kill(prefixes):
 
 def build_a2(light='HERO', town_on=True, people=True, rays=True, clouds=0.55, seed=1963, hills=True):
     """Build location A v2. light: 'HERO' (golden hour, deep blue sky) or 'HERODAY' (day, for T3's season shift). Returns the anchors dict (marks in D) + extra marks: poster, gym_sign, gate_sign, scoreboard."""
-    t0 = time.time(); rr = rnd(seed)
+    t0 = time.time(); rr = rnd(seed); _SHAFT_MAT.clear()
     A = F.build('A', light); P = STATE['P']; M = STATE['M']; sc = bpy.context.scene
     recolor()
     _kill(KILL_PREFIX)
@@ -804,3 +803,130 @@ def build_a2(light='HERO', town_on=True, people=True, rays=True, clouds=0.55, se
     A['marks'].update({k: F.D3(v) for k, v in STATE['marks_m'].items() if k in ('poster', 'gym_sign', 'gate_sign', 'scoreboard', 'water_tower')})
     STATE['A'] = A; STATE['v2_build_s'] = time.time() - t0
     return A
+
+# ============================================================================= grounding: surface probe, cards that touch the ground, cast shadows
+import importlib
+_CT = None
+def CT():
+    """cast_test (put() helper) with its sprite cache redirected to work_v2_a/sprites."""
+    global _CT
+    if _CT is None:
+        d = os.path.join(HERE, 'cast_test')
+        if d not in sys.path: sys.path.insert(0, d)
+        import cast15, sprites                     # cast15 BEFORE sprites
+        _CT = importlib.import_module('cast_test'); _CT.SPR = os.path.join(WORK, 'sprites'); os.makedirs(_CT.SPR, exist_ok=True)
+    return _CT
+
+_IGN = ('actor_', 'shaft_', 'sign_', 'poster', 'scoreboard', 'newspaper', 'mcar', 'rimglow')
+def surface_z(x, y, z_top=80.0):
+    """z (D) of the first set surface below (x, y, z_top) in D (cards, signs, shafts and shadow quads are skipped). Ground = terrain; seats, pit sawdust, benches are found too."""
+    bpy.context.view_layer.update(); dg = bpy.context.evaluated_depsgraph_get(); o = Vector((x, y, z_top)); d = Vector((0, 0, -1))
+    for _ in range(12):
+        hit, loc, nrm, idx, ob, mw = bpy.context.scene.ray_cast(dg, o, d)
+        if not hit: return 0.0
+        if ob.name.startswith(_IGN) or abs(nrm.z) < 0.5: o = loc + d * 0.002; continue
+        return float(loc.z)
+    return 0.0
+
+def _shadow_mat(png, alpha):
+    m = bpy.data.materials.new('castshadow'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; Lk = nt.links.new
+    img = bpy.data.images.load(png); img.alpha_mode = 'STRAIGHT'; ti = N('ShaderNodeTexImage'); ti.image = img; ti.extension = 'CLIP'
+    mu = N('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = alpha; Lk(ti.outputs['Alpha'], mu.inputs[0])
+    em = N('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.012, 0.01, 0.06, 1.0); tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader')
+    Lk(mu.outputs[0], mx.inputs[0]); Lk(tr.outputs[0], mx.inputs[1]); Lk(em.outputs[0], mx.inputs[2]); out = N('ShaderNodeOutputMaterial'); Lk(mx.outputs[0], out.inputs['Surface']); return m
+
+def cast_shadow(tag, r, png, zg, alpha=0.62, kd=None):
+    """the sprite's own silhouette projected onto the ground along the sun direction (a true long golden-hour shadow, dark violet). r = dict returned by put(); zg = surface z (D)."""
+    kd = Vector(kd if kd is not None else STATE['P']['key_dir']).normalized(); hxy = Vector((kd.x, kd.y)); ln = hxy.length
+    if ln < 1e-4 or kd.z > -0.05: return None
+    sx, sy = hxy.x / (-kd.z), hxy.y / (-kd.z)                    # ground displacement per unit of height
+    x0, y0, x1, y1 = r['res']['canvas']; k = r['scale']; X0, X1 = x0 * k, x1 * k; Z0, Z1 = -y1 * k, -y0 * k
+    mk = r['mk']; yaw = r['yaw']; ax = Vector((math.cos(yaw), math.sin(yaw), 0)); cs = []
+    for (X, Z) in ((X0, Z0), (X1, Z0), (X1, Z1), (X0, Z1)):
+        w = mk + ax * X + Vector((0, 0, Z)); h = max(w.z - zg, 0.0); cs.append((w.x + sx * h, w.y + sy * h, zg + 0.025))
+    me = bpy.data.meshes.new('actor_s_' + tag); me.from_pydata(cs, [], [(0, 1, 2, 3)]); me.update(); uvl = me.uv_layers.new(name='UVMap')
+    for i, c in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uvl.data[i].uv = c
+    me.materials.append(_shadow_mat(png, alpha)); ob = bpy.data.objects.new('actor_s_' + tag, me); bpy.context.scene.collection.objects.link(ob); ob.visible_shadow = False; L.T.no_bounce(ob)
+    return ob
+
+def ground_card(tag, cast, pose, xy, cam_loc, z=None, scale=1.0, shadow='cast', shadow_a=0.62, contact=(1.2, 0.45), **kw):
+    """Place a cast15 card so its feet TOUCH the surface: z = surface_z under xy (D) unless given (e.g. seat plank). Adds a soft contact ellipse + the long cast shadow.
+    xy = (x, y) in D; cam_loc = camera position (D, the card yaws to face it). kw -> cast_test.put (ppd, mirror, yaw_off, canvas, anchor, ...). Returns put()'s dict plus ['z']."""
+    ct = CT(); zz = surface_z(xy[0], xy[1]) if z is None else z
+    r = ct.put(tag, cast, pose, mark=(xy[0], xy[1], zz), cam_loc=cam_loc, scale=scale, shadow=contact, **kw)
+    if shadow == 'cast': cast_shadow(tag, r, os.path.join(ct.SPR, tag + '.png'), zz, shadow_a)
+    r['z'] = zz; return r
+
+def ground_card_anchor(tag, cast, pose, anchor, cam_loc, zg, scale=1.0, shadow_a=0.55, **kw):
+    """Airborne / lying cards (flop, straddle, buried): placed by sprite anchor (`('bar', world_xyz)`); the cast shadow lands on the surface zg (sawdust top, D) under the body."""
+    ct = CT(); r = ct.put(tag, cast, pose, cam_loc=cam_loc, scale=scale, anchor=anchor, shadow=None, **kw)
+    cast_shadow(tag, r, os.path.join(ct.SPR, tag + '.png'), zg, shadow_a); r['z'] = zg; return r
+
+# ============================================================================= rim / back light for cards (document: API_v2_a.md)
+RIM = dict(on=False, to_light=(-0.7, -0.7), color=(1.0, 0.74, 0.30), width=5, strength=1.0, glow=0.5)
+def rim_on(to_light=(-0.7, -0.7), color='#ffb040', width=5, strength=1.0, glow=0.5):
+    """Turn the rim light on for every card put() AFTER this call. to_light = direction ON THE SCREEN from the figure towards the light (x right, y down: (-0.7, -0.7) = light up-left behind),
+    color = hot gold, width in sprite pixels (ppd 128), glow = outer halo opacity. rim_off() restores plain cards."""
+    c = hexl(color); RIM.update(on=True, to_light=tuple(to_light), color=tuple(min(1.0, v ** (1 / 2.2) * 1.25) for v in c), width=int(width), strength=float(strength), glow=float(glow))
+    ct = CT()
+    if not hasattr(ct, '_card_mat_orig'): ct._card_mat_orig = ct.card_mat
+    ct.card_mat = _rim_card_mat
+def rim_off():
+    RIM['on'] = False; ct = CT()
+    if hasattr(ct, '_card_mat_orig'): ct.card_mat = ct._card_mat_orig
+
+def rim_png(png, to_light, color, width, strength, glow, out):
+    from PIL import Image, ImageFilter
+    im = Image.open(png).convert('RGBA'); a = np.asarray(im).astype(np.float32) / 255; al = a[..., 3]; H, W = al.shape
+    lx, ly = to_light; n = math.hypot(lx, ly) or 1.0; lx, ly = lx / n, ly / n
+    def shift(arr, dx, dy):
+        out_ = np.zeros_like(arr); sx, sy = int(round(dx)), int(round(dy))
+        ys0, ys1 = max(0, -sy), min(H, H - sy); xs0, xs1 = max(0, -sx), min(W, W - sx)
+        out_[ys0:ys1, xs0:xs1] = arr[ys0 + sy:ys1 + sy, xs0 + sx:xs1 + sx]; return out_
+    inside = np.ones_like(al)
+    for s_ in range(1, width + 1): inside = np.minimum(inside, shift(al, lx * s_, ly * s_))       # pixels whose neighbours toward the light are all inside
+    edge = np.clip(al * (1 - inside), 0, 1); edge = np.asarray(Image.fromarray((edge * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(1.0))).astype(np.float32) / 255 * (al > 0.2)
+    rimc = np.array(color, np.float32)[None, None]; rgb = a[..., :3] * (1 - np.clip(edge * 0.95 * strength, 0, 1)[..., None]) + rimc * np.clip(edge * 0.95 * strength, 0, 1)[..., None]
+    # outer halo on the light side
+    gl = shift(al, lx * width * 0.7, ly * width * 0.7); gl = np.asarray(Image.fromarray((gl * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(width * 1.3))).astype(np.float32) / 255 * (1 - al) * glow * strength
+    A2 = np.maximum(al, np.clip(gl, 0, 1)); RGB = np.where(al[..., None] > 0.5, rgb, np.broadcast_to(rimc, rgb.shape))
+    o = np.concatenate([RGB, A2[..., None]], -1); Image.fromarray((np.clip(o, 0, 1) * 255).astype(np.uint8), 'RGBA').save(out); return out
+
+def _rim_card_mat(name, png, k=1.0):
+    ct = CT(); d = os.path.join(ct.SPR, 'rim'); os.makedirs(d, exist_ok=True); out = os.path.join(d, os.path.basename(png))
+    rim_png(png, RIM['to_light'], RIM['color'], RIM['width'], RIM['strength'], RIM['glow'], out)
+    return ct._card_mat_orig(name, out, k)
+
+# ============================================================================= newspaper prop (front page, readable, fills the frame)
+def newspaper(cam_loc, look, dist=0.85, fill=1.16, roll_deg=2.0, bend=0.05, name='newspaper', hands=True):
+    """The front page of the MEDFORD MAIL TRIBUNE (masthead, headline FOSBURY FLOPS OVER BAR, halftone photo of the arched jumper) as a bent paper mesh facing the camera.
+    cam_loc, look in D (as F.cam_from); dist = metres in front of the lens; fill = page WIDTH relative to the frame width at that distance (1.16 = page a bit wider than the frame, headline stays inside).
+    Returns the object. For a push-through animate `dist` (or the camera) over the frames."""
+    png = tex_newspaper(); m = mat_tex('newspaper', png, k=0.92, tint=(1.0, 0.95, 0.84))
+    cam = Vector(cam_loc) * DM; fwd = (Vector(look) * DM - cam).normalized(); right = fwd.cross(Vector((0, 0, 1))).normalized(); up = right.cross(fwd).normalized()
+    wfr = 2 * dist * math.tan(math.atan(18.0 / 22.0 * 720 / 1280)); w = wfr * fill; h = w * 3200 / 2400
+    cr, sr = math.cos(math.radians(roll_deg)), math.sin(math.radians(roll_deg)); rt = right * cr + up * sr; upv = up * cr - right * sr
+    nu, nv = 14, 18; V = []; Fc = []; UV = []
+    for j in range(nv + 1):
+        for i in range(nu + 1):
+            u = i / nu; v = j / nv; xx = (u - 0.5) * w; yy = (v - 0.5) * h - h * 0.12
+            z = bend * w * (1 - (2 * u - 1) ** 2) * 0.5 + 0.02 * h * math.sin(v * 3.1)         # page bows toward the camera
+            V.append(cam + fwd * (dist - z) + rt * xx + upv * yy); UV.append((u, v))
+    for j in range(nv):
+        for i in range(nu): a = j * (nu + 1) + i; Fc.append((a, a + 1, a + nu + 2, a + nu + 1))
+    me = bpy.data.meshes.new(name); me.from_pydata([tuple(p) for p in V], [], Fc); me.update(); uvl = me.uv_layers.new(name='UVMap')
+    for pi, poly in enumerate(me.polygons):
+        for li, vi in zip(poly.loop_indices, poly.vertices): uvl.data[li].uv = UV[vi]
+    me.materials.append(m); ob = bpy.data.objects.new(name, me); STATE['SET'].objects.link(ob); ob.parent = root(); L.T.no_bounce(ob); ob.visible_shadow = False
+    if hands:        # a reader's hands gripping the lower corners
+        mb = S.MB('hands'); M = STATE['M']; mk_people_mats(M)
+        for sg in (-1, 1):
+            base = cam + fwd * (dist - bend * w * 0.1 - 0.012) + rt * (sg * w * 0.43) + upv * (-h * 0.44 - h * 0.12 * 0 + 0.0)
+            # relative to the camera frame (mb works in set-local metres; build with a transform)
+            Mx = Matrix(((rt.x, upv.x, fwd.x, base.x), (rt.y, upv.y, fwd.y, base.y), (rt.z, upv.z, fwd.z, base.z), (0, 0, 0, 1)))
+            mb.push(Mx)
+            mb.ell(M['skin1'], (0, 0, 0), (0.07, 0.04, 0.09), (8, 6)); mb.ell(M['skin1'], (-sg * 0.05, 0.0, 0.07), (0.035, 0.03, 0.06), (6, 4))
+            for fi in range(4): mb.ell(M['skin1'], (-sg * (0.03 + fi * 0.028), -0.02, 0.03 + fi * 0.004), (0.022, 0.02, 0.07), (6, 4))
+            mb.pop()
+        L.fin(mb, cast=False)
+    return ob
