@@ -5,22 +5,36 @@
  "cues": [
   {
    "kind": "ambience",
-   "t": 0.0,
-   "frame": 0,
-   "note": "building site 1887: hammering on iron, forge bellows, distant carts, wind"
+   "t": 5.933,
+   "frame": 178,
+   "note": "building site 1887 from high above: wind, distant hammering, carts"
   },
   {
    "kind": "accent",
-   "t": 7.1,
-   "frame": 213,
-   "note": "snap push on 'ปี 1887': airy whoosh",
-   "peak_frame": 219
+   "t": 6.333,
+   "frame": 190,
+   "note": "long airy descending whoosh as the camera swoops in (g 178-268)",
+   "peak_frame": 225
   },
   {
    "kind": "foley",
-   "t": 0.0,
-   "frame": 0,
-   "note": "anvil / rivet hammer clinks, a few, irregular"
+   "t": 8.333,
+   "frame": 250,
+   "note": "rooftops/scaffold close pass: timber creak, rope hum"
+  },
+  {
+   "kind": "accent",
+   "t": 8.933,
+   "frame": 268,
+   "note": "small bright sting on 'วิศวกรไอเฟล' as he points",
+   "peak_frame": 270
+  },
+  {
+   "kind": "foley",
+   "t": 8.867,
+   "frame": 266,
+   "note": "cloth rustle as his arm goes up",
+   "peak_frame": 270
   }
  ]
 }
