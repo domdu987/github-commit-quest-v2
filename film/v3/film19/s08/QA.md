@@ -15,10 +15,13 @@
 Camera: low, moving on frame 0; drift push 8 %/s with a slide and a 10 deg/s orbit (parallax of the bookcases, chair-back FG), one SNAP x1.3 (g 632-651, peak 2.2) with a pan on "นาฬิกาเนี่ยนะ" (g 637).
 
 ## Checked
-- Heads: width 146-314 px, centre y 570-655, lowest head bottom y 807 (caption band y 880 stays clear of heads). Face never covered by a foreground prop (an earlier orbit swung the camera behind the quadrant stand at g 607-634; rejected).
+- Heads: width 146-265 px, centre y 512-612, chin at most y 699; the wig lappets (centre + 1.17 x width) end above y 880 on every frame (contact sheet).
 - Mouth: moves only for g 622..669 (inside mouth_open_at); outside: fixed expression (smug flat, laughing). `meta.json mouth_moving_outside_window_frames = []`.
 - Contact: feet on the floor with the decal and shadow; true cast19 scale; no DOF, no text, no caption_shade (all keyed false in raw/g_*.json).
 - qa_auto: PASS (no black / blank / magenta / frozen frames). The "no visible change at g 545, 661" note is the handle: the real cuts happen in the conform.
 
 ## Frame-diff (90x160 grey, in-shot pairs g 546..660)
-median **3.39**, p90 **5.93** (target >= 4 / >= 12): BELOW TARGET. Reason: this hall is dark red with low contrast, and every wider orbit that raised the numbers (median 5.4, p90 10) swung the camera behind the quadrant stand, the Board table or a chair back and hid the laughing face, so the clean, face-first camera was kept. Reported as a deviation.
+median **3.54**, p90 **6.22** (target >= 4 / >= 12): BELOW TARGET. Reason: this hall is dark red with low contrast, and every wider orbit that raised the numbers (median 5.4, p90 10) swung the camera behind the quadrant stand, the Board table or a chair back and hid the laughing face, so the clean, face-first camera was kept. Reported as a deviation.
+
+## Revision
+Re-rendered after the director's TAKE gate (QA_TECH.md): the laugh mouth now starts at g 623 (mouth flat and eyes open before; the bounce and shoulder shake start earlier), the turn starts side-on with the gaze at the Board and settles on the lens by about g 598, the snap is framed up and left so the wig lappets end above y 880 and the raised pointing arm shows at g 640-660. Frame-diff stays below target because every camera that moves more either hides the face behind the quadrant stand, the Board table or chair backs, or pushes the wig below y 880; reported as a deviation.
