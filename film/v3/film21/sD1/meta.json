@@ -1,0 +1,5 @@
+{"segment": "D1", "g0": 542, "g1": 642, "first_g": 542, "n_frames": 101,
+ "transition_in": {"type": "cut", "frames": 0}, "transition_out": "whip right (last 6 frames, g 636-642), joins by cut to team 4's whip-in",
+ "world": ["camp_table"], "samples": 32,
+ "cam_in": {"loc": "arc start az -112 deg, r 2.6 m round the table (-13,-26.6), z 1.85", "lens": 22},
+ "cam_out": "whip: view yaws right about 95 deg over g 636-642"}
