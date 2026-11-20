@@ -1,0 +1,22 @@
+{
+ "segment": "sB2",
+ "g0": 298,
+ "g1": 418,
+ "first_g": 295,
+ "n_frames": 124,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 6
+ },
+ "handle_frames_before": 3,
+ "cam_in": "P_CAMP",
+ "cam_out": "P_HILL (hill_low raised 0.8 m)",
+ "samples": 32,
+ "fps": 30,
+ "size": [
+  720,
+  1280
+ ],
+ "take_mkv_bytes": 64867168,
+ "split": true
+}
