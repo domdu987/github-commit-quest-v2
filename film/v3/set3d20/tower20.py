@@ -168,8 +168,10 @@ def _window_gallery(M, A):
             a_, b_ = Vector((xa, yl, zs_[i])), Vector((xb, yl, zs_[i + 1])); c_, d_ = Vector((xb, yl, zs_[i])), Vector((xa, yl, zs_[i + 1]))
             mb.rod(IL, a_, b_, 0.14, 0.14, 4); mb.rod(IL, c_, d_, 0.14, 0.14, 4)
         for z in zs_: mb.rod(I, Vector((xa, yl, z)), Vector((xb, yl, z)), 0.16, 0.16, 4)
-    for sgn in (-1, 1): mb.rod(I, Vector((WIN_X - sgn * (WIN_W / 2), yg - 0.55, z0w)), Vector((WIN_X + sgn * (WIN_W / 2), yg - 0.55, z1w)), 0.12, 0.12, 4)
-    for sx in (-WIN_W / 2, 0.0, WIN_W / 2): mb.box(IL, (WIN_X + sx, wy - 0.25, (z0w + z1w) / 2), (0.1, 0.1, WIN_H))
+    for side in (-1, 1):                                    # X braces only in the two outer bays: the centre pane (2.6 m wide) stays clear for the diner
+        xo, xi = WIN_X + side * WIN_W / 2, WIN_X + side * 1.3
+        mb.rod(I, Vector((xo, yg - 0.55, z0w)), Vector((xi, yg - 0.55, z1w)), 0.1, 0.1, 4); mb.rod(I, Vector((xi, yg - 0.55, z0w)), Vector((xo, yg - 0.55, z1w)), 0.1, 0.1, 4)
+    for sx in (-WIN_W / 2, -1.3, 1.3, WIN_W / 2): mb.box(IL, (WIN_X + sx, wy - 0.25, (z0w + z1w) / 2), (0.1, 0.1, WIN_H))
     # interior glimpse
     yb = yg + 4.2; carpet = M['navy']
     mb.box(carpet, (WIN_X, (yg + yb) / 2, zf + 0.06), (14.0, yb - yg, 0.12)); mb.box(M['cream'], (WIN_X, yb, (zf + zt) / 2), (14.0, 0.2, zt - zf))
@@ -188,7 +190,7 @@ def _window_gallery(M, A):
     for dx in (-4.4, 0.0, 4.4):
         mb.rod(M['gold'], (WIN_X + dx, yg + 1.8, zt - 0.4), (WIN_X + dx, yg + 1.8, zt - 1.0), 0.04, 0.04, 5); mb.ell(M['lamp'], (WIN_X + dx, yg + 1.8, zt - 1.25), (0.3, 0.3, 0.38), (10, 8))
     STATE['window_room'] = mb.finish()
-    STATE['pt_lights'] = STATE.get('pt_lights', []) + [(Vector((WIN_X + dx, yg + 1.8, zt - 1.4)), (1.0, 0.72, 0.4), 420) for dx in (-4.4, 0.0, 4.4)] + [(Vector((WIN_X, yg + 2.6, zf + 1.6)), (1.0, 0.8, 0.55), 160)]
+    STATE['pt_lights'] = STATE.get('pt_lights', []) + [(Vector((WIN_X + dx, yg + 1.8, zt - 1.4)), (1.0, 0.72, 0.4), 800) for dx in (-4.4, 0.0, 4.4)] + [(Vector((WIN_X, yg + 2.2, zf + 1.7)), (1.0, 0.82, 0.58), 700), (Vector((WIN_X, yg + 1.0, zf + 1.5)), (1.0, 0.85, 0.65), 400)]
     STATE['win_floor'] = zf; STATE['win_ag'] = 36.8
 
 # ------------------------------------------------------------------ avenue, trees, lamps
