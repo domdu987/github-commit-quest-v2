@@ -118,8 +118,10 @@ def ramp(g, a, b, c, d, lo):      # 1 -> lo over a..b, hold to c, back to 1 by d
 LIGHT_RAMP = (1796, 1806, 1838, 1850, float(os.environ.get('T7_RAMP', 0.72)))
 def key_light_ramp():
     a, b, c, d, lo = LIGHT_RAMP; sc = bpy.context.scene
-    for g in range(a, d + 1):
+    GAIN = float(os.environ.get('T7_GAIN', 1.3))       # director: x1.3 over g1846-1852, held to g1867
+    for g in range(a, 1868):
         sc.frame_set(g + 1); r = ramp(g, a, b, c, d, lo)
+        if g > 1846: r *= 1.0 + (GAIN - 1.0) * min(1.0, (g - 1846) / 6.0)
         for L in bpy.data.lights:
             base = L.energy; L.energy = base * r; L.keyframe_insert('energy', frame=g + 1)
 def cull_banners(cam, g=0):
