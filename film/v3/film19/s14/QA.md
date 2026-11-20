@@ -20,3 +20,18 @@
 ## Round 4 (director round-3: median 3.43-3.73 under 4; keep Harrison's hair off the right edge g1088-1095)
 - Snap framing unchanged (x1.65, shift (0.7, -0.35), peak 2.5). More drift in the wide before the snap: push 24 %/s (was 20), slide -35 px/s (was -10), arc 14 deg/s (was 8); Harrison's mark moved 1.1 D left so the extra drift does not carry him out of frame. His head right edge is x 673 at g1088 and 707 at g1095 (< 720), hair clear of the edge; H1 stays in frame (bars x ~116 at g1095).
 - Frame-diff in-shot: median 4.43, p90 12.84. QA_AUTO PASS. s/frame 22.5 wall / 44.2 CPU.
+
+## Round 5 (director QA-art round 4: 6.6 regression after the 1.1 D mark move)
+- Harrison's mark back near the approved spot (0.3 D left, the director's maximum), approved drift restored (push 22 %/s, slide -10, rise 25, arc 8), snap framing x1.65 with SNAPSX 0.6 (shift (0.6, -0.35)) instead of moving him. The wide gets its extra frame-diff from a small handheld sway (0.07 D, 1.5 Hz, +0.035 D vertical, no net drift) instead of more slide/arc, so the camera does not travel right and the H4 does not slide over the H1 upright.
+- Checked on the final frames: his head's right edge is at most x 690 over g 1084-1095 (30 px inside 720, whole face and hair in frame); the palm reaches across toward the H4; the cloth is clear of his chin; the H4 dial sits right of the H1 post (the post only grazes the dial's top-left edge at g 1088).
+- Frame-diff in-shot: median 4.79, p90 11.44. QA_AUTO PASS. s/frame 21.6 wall / 42.3 CPU.
+
+## Gate G check (face size / edges)
+- Max head width 237 px or less over the shot (about 20 % of the frame height); g 1083-1095 head right edge <= x 690: whole face in frame. qa_stats: saturation 0.56, brightness 95.8.
+
+## Round 8 (QA-art round 7, 6.8 FIX) - re-render
+- Palm: it is now above the red cloth: the arm sweeps out at shoulder height over g 1039-1050 (arm drawn in front, hand y 0.95 -> 0.30), toward the H4, and is visible in the wide (g 1040-1078); small "ta-da" bounce on "เท่าจานรอง" (g 1079-1087: lean back, squash 1.035/0.965, hop 0.05 D). The cloth itself still stands up (set geometry); the arm is simply drawn above it.
+- Never still: eyes on the H4 first (g 1016-1055), then a proud look at the lens (g 1056-1068); expression smile -> happy -> grinning; chest-puff breathing (squash 1.2 %, 1.25 Hz) and a 1.25 Hz lift; blinks at g 1028, 1048, 1066, 1090. No one-expression hold over 1.5 s.
+- H1 moved 0.14 D left (root.x keyed every frame): the corner post no longer lands on the H4's crown at g 1063-1095; clear gap between the clocks.
+- Snap tilted up 0.13 D (shift (0.7, -0.22)); snap framing otherwise as accepted. Mark, drift and sway unchanged.
+- Frame-diff in-shot: median 4.73, p90 10.91. QA_AUTO PASS.

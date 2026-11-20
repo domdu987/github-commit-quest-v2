@@ -5,9 +5,9 @@
  "cues": [
   {
    "time": 36.533,
-   "duration": 3.133,
+   "duration": 6.133,
    "frame": 1096,
-   "end_frame": 1190,
+   "end_frame": 1280,
    "kind": "ambience",
    "label": "open sea from the quarterdeck: wind in the sails, rigging creak, hull and swell, a far gull"
   },
@@ -21,21 +21,47 @@
    "peak_frame": 1108
   },
   {
-   "time": 38.933,
+   "time": 38.867,
    "duration": 0.533,
-   "frame": 1168,
-   "end_frame": 1184,
+   "frame": 1166,
+   "end_frame": 1182,
    "kind": "accent",
-   "label": "snap push on 'อยู่ตรงหัว': airy whoosh and a bright glint chime on the quadrant",
+   "label": "snap tilt up on 'อยู่ตรงหัว': airy whoosh and a bright glint chime as the sun glare blooms",
    "peak_frame": 1172
   },
   {
    "time": 39.667,
-   "duration": 0.0,
+   "duration": 1.067,
    "frame": 1190,
-   "end_frame": 1190,
+   "end_frame": 1222,
+   "kind": "foley",
+   "label": "the quadrant is lowered, the H4 comes out: cloth and a small tick",
+   "peak_frame": 1204
+  },
+  {
+   "time": 40.267,
+   "duration": 0.667,
+   "frame": 1208,
+   "end_frame": 1228,
+   "kind": "accent",
+   "label": "crane down and push to the watch on 'บอกเวลา': whoosh, a bright H4 tick",
+   "peak_frame": 1218
+  },
+  {
+   "time": 36.533,
+   "duration": 6.133,
+   "frame": 1096,
+   "end_frame": 1280,
+   "kind": "foley",
+   "label": "two sailors haul a rope in the background: a rhythmic heave-ho every 1.2 s, rope creak"
+  },
+  {
+   "time": 42.667,
+   "duration": 0.0,
+   "frame": 1280,
+   "end_frame": 1280,
    "kind": "cut",
-   "label": "cut out to shot 16 (same deck, the H4 held out)"
+   "label": "cut out to shot 17 (ship_aerial, the ship sails on)"
   }
  ]
 }

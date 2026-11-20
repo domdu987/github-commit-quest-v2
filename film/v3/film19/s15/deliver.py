@@ -12,14 +12,14 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 PROJ = os.path.normpath(os.path.join(HERE, "..", "..", ".."))
 SHOT = int(os.path.basename(HERE)[1:])                      # take folder s15 / s16
-_c = {15: dict(t0=36.52, t1=39.67, h_in=10, h_out=9, tin=("dissolve", 15), snap=(1168, 1184), word="อยู่ตรงหัว", g_word=1172),
-      16: dict(t0=39.67, t1=42.65, h_in=9, h_out=9, tin=("cut", 0), snap=(1214, 1230), word="บอกเวลาที่", g_word=1218)}[SHOT]
+_c = dict(t0=36.52, t1=42.65, h_in=10, h_out=9, tin=("dissolve", 15), snap=(1166, 1182), word="อยู่ตรงหัว", g_word=1172,
+          snap2=(1208, 1228), word2="บอกเวลาที่", g_word2=1218)
 G0, G1 = int(round(_c["t0"] * 30)), int(round(_c["t1"] * 30))     # shot = g G0 .. G1-1
 H_IN, H_OUT = _c["h_in"], _c["h_out"]
 FIRST = G0 - H_IN
 N = G1 + H_OUT - FIRST
-CUTS_OUT = [G1] if SHOT == 15 else [G0, G1]    # planned hard cuts (g) for qa_auto; 15 comes in on a dissolve
-EV = dict(snap=list(_c["snap"]), snap_word=_c["word"], snap_word_g=_c["g_word"], sun_overhead="set_sun_overhead keyed every frame" + (" 0 -> 1 (g %d..%d)" % (G0 - 10, _c["g_word"] + 4) if SHOT == 15 else " = 1.0"),
+CUTS_OUT = [G1]    # planned hard cuts (g) for qa_auto; 15 comes in on a dissolve
+EV = dict(snap=list(_c["snap"]), snap_word=_c["word"], snap_word_g=_c["g_word"], snap2=list(_c["snap2"]), snap2_word=_c["word2"], snap2_word_g=_c["g_word2"], sun_overhead="set_sun_overhead keyed every frame" + (" 0 -> 1 (g %d..%d), then 1" % (G0 - 10, _c["g_word"] + 4)),
           deck="set_sea(t), set_roll(t) every frame; cards parented to ship_root; camera rides the deck (c19.on_ship)")
 
 
@@ -81,8 +81,8 @@ allh = [v for l in hd.values() for v in l]
 ins_rows = [r for r in rows if G0 <= r["g"] < G1]
 ins_h = [v for r in ins_rows for v in r["heads"].values()]
 tin = {"type": _c["tin"][0], "frames": _c["tin"][1]}
-meta = {"take": "s%02d" % SHOT, "film": 19, "shots": [SHOT], "g0": G0, "g1": G1, "first_g": FIRST, "n_frames": N,
-        "shot_ranges": {str(SHOT): [G0, G1 - 1]}, "handle_in": H_IN, "handle_out": H_OUT,
+meta = {"take": "s15", "film": 19, "shots": [15, 16], "g0": G0, "g1": G1, "first_g": FIRST, "n_frames": N,
+        "shot_ranges": {"15": [G0, 1189], "16": [1190, G1 - 1]}, "handle_in": H_IN, "handle_out": H_OUT,
         "transition_in": tin, "transition_out": {"type": "cut", "frames": 0, "at": G1},
         "set": "v3/set3d19/h19.py SHIP preset ship_deck, light NOON; set_sea(t), set_roll(t), set_sun_overhead(k) keyed on every frame (same t); no runtime set changes; no caption_shade",
         "cast": "v3/cast19 william19 (quadrant / H4 pose) + captain19 (idle) at the deck marks william_deck / captain_wheel (+offset), cards parented to ship_root (c19.ride_ship)",
@@ -107,15 +107,13 @@ def add(g0, g1, kind, label, **kw):
 
 
 add(G0, G1, "ambience", "open sea from the quarterdeck: wind in the sails, rigging creak, hull and swell, a far gull")
-if SHOT == 15:
-    add(G0, G0 + 40, "foley", "William raises the brass quadrant to the sun: wood and brass creak, a soft ratchet", peak_frame=G0 + 12)
-    add(_c["snap"][0], _c["snap"][1], "accent", "snap push on 'อยู่ตรงหัว': airy whoosh and a bright glint chime on the quadrant", peak_frame=_c["g_word"])
-else:
-    add(G0, G0 + 30, "prop", "the H4's quick fine tick, close and bright (a watch is held out)", peak_frame=G0 + 12)
-    add(_c["snap"][0], _c["snap"][1], "accent", "snap push to the watch on 'บอกเวลา': whoosh, a small tick accent", peak_frame=_c["g_word"])
-    add(G0, G0, "cut", "hard cut in from shot 15 (same deck, the quadrant): the H4 held out close")
-add(G1, G1, "cut", "cut out to " + ("shot 16 (same deck, the H4 held out)" if SHOT == 15 else "shot 17 (ship_aerial, the ship sails on)"))
-json.dump(dict(take="s%02d" % SHOT, fps=30, note="time = film seconds (g / 30); narration PROJ/film19/audio/narration.wav at +0.10 s", cues=ev),
+add(G0, G0 + 40, "foley", "William raises the brass quadrant to the sun: wood and brass creak, a soft ratchet", peak_frame=G0 + 12)
+add(_c["snap"][0], _c["snap"][1], "accent", "snap tilt up on 'อยู่ตรงหัว': airy whoosh and a bright glint chime as the sun glare blooms", peak_frame=_c["g_word"])
+add(1190, 1222, "foley", "the quadrant is lowered, the H4 comes out: cloth and a small tick", peak_frame=1204)
+add(_c["snap2"][0], _c["snap2"][1], "accent", "crane down and push to the watch on 'บอกเวลา': whoosh, a bright H4 tick", peak_frame=_c["g_word2"])
+add(G0, G1, "foley", "two sailors haul a rope in the background: a rhythmic heave-ho every 1.2 s, rope creak")
+add(G1, G1, "cut", "cut out to shot 17 (ship_aerial, the ship sails on)")
+json.dump(dict(take="s15", fps=30, note="time = film seconds (g / 30); narration PROJ/film19/audio/narration.wav at +0.10 s", cues=ev),
           open(os.path.join(HERE, "cues.json"), "w"), indent=1, ensure_ascii=False)
 
 contact(pngs, os.path.join(HERE, "contact.jpg"))

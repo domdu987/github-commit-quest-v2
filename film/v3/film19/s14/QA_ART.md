@@ -72,3 +72,35 @@ Fixes (shot.py):
 2. The palm must again be visible in the wide (g 1039-1070), reaching left over the cloth toward the H4 (hand x 0.95, stretch 1.25, layer front if needed), and must still read after the snap.
 3. Check that at g 1085-1095 the H1 upright clears the H4 dial (a gap of >= 15 px), and that the cloth corner is below his chin.
 Keep the frame-diff gain (median 4.43). It must not drop below 4 after these changes.
+
+## Round 8 (director QA-art): PASS, 7.2
+
+Take: take.mkv 14:26 (first_g 1007, g 1007-1104, frame index = g - 1007). I viewed it at 3 fps and every frame from g 1068 to 1099 (the snap and the word), at full size and at 360x640.
+Frames: /tmp/qa19_r8art/s14/all_NNN.png. Sheets: /tmp/qa19_r8art/s14_3fps.jpg, s14_snap.jpg, s14_phone.jpg.
+
+| Round 7 issue | Status |
+|---|---|
+| Palm hidden by the upright cloth | FIXED. The arm sweeps out over the top of the cloth from g ~1040, and at the snap (g 1085-1095) the extended arm and open hand sit at the cloth's top-right corner, pointing at the H4. It reads as "ta-da" at 360x640. The hand is drawn dark, so it reads as a silhouette rather than a palm, which is acceptable. |
+| Frozen smile 2.1 s | FIXED. He watches the H4, closes his eyes in a proud smile (g 1068-1075), then looks at the lens grinning, with blinks, breathing and a small bounce on "เท่าจานรอง". Nothing holds over 1.5 s. |
+| H1 post merging with the H4 | FIXED. There is a clear gap between the H1 post and the H4 dial from g 1063 to 1095. |
+
+**Does the shrink reveal land instantly on a phone?** Mostly. The H4 lands instantly: a crisp white dial on a saturated red cloth, centred, is the brightest and cleanest shape in the frame on the word. The "it got SMALL" half lands less well, for two reasons:
+- The giant H1 is a gold frame with balls in front of a gold gear rack on the back wall. At phone size the two merge into one brass jumble, so the H1 does not read as one huge object.
+- In the snap only its two balls and a corner remain, and the H4 dial is drawn as big as Harrison's (cartoon) head.
+
+A viewer gets "look at this neat watch" in under 1 s, and "it is tiny compared with the old one" mostly from the narration. This is not blocking, because the wide (g 1016-1070) does show the big brass machine next to the small dial.
+
+| Criterion | Score |
+|---|---|
+| Set | 8.5 |
+| Light & colour (DAY, warm brass, red cloth pop; brightness 95.8, sat 0.56) | 7.5 |
+| Composition / phone | 7 |
+| Acting | 7.5 |
+| Key moment (size reveal) | 6.5 |
+| Match to refs | 7.5 |
+| **Overall** | **7.2 - PASS** |
+
+Polish (only if the take is re-rendered for another reason):
+1. Separate the H1 from the back-wall gear rack: darken or hide the rack behind the H1 (or push it 0.5 D back and out of the key light), or add a cool rim on the H1 frame, so the H1 reads as ONE big machine.
+2. At the snap, keep more of the H1's height in frame (snap x1.65 to about x1.5, or a 0.1 D tilt up), so the big-versus-tiny comparison is in the same frame on the word.
+3. Lighten Harrison's open hand (skin tone, not dark), so it reads as a palm.

@@ -93,5 +93,41 @@ def set_rain(on=True, frame=None): _loc('ship'); import h19_ship as S; return S.
 def apply_light(name, frame=None):
     loc = STATE['loc']; return _mod(loc).apply_light(name, frame)
 
+# ----------------------------------------------------------------------------- card rim light (any location)
+_RIMS = []
+def _rim_sync(*_a):
+    for tex, rims in list(_RIMS):
+        try:
+            for r in rims:
+                if r.image is not tex.image: r.image = tex.image
+        except ReferenceError: pass
+
+def card_rim(actor, color='#ffb050', k=1.6, offset=(0.006, 0.004), width=2):
+    """A warm RIM / back light on a cast card (cards are emission-only, so a lamp cannot light them): the sprite is sampled again
+    shifted by `offset` (UV units, sign = the side the light comes from: +x screen right, +y up); the silhouette edge on that side
+    (inside the figure, where the shifted alpha falls off) is lifted toward `color` by up to k (screen-blend).  `width` samples
+    (offset, 2 x offset ...) soften it.  Call after the actor's first sprites exist (Take.sprites_for); the rim samplers follow the
+    card's image sequence on every frame (frame_change_pre + render_pre handlers).  Does not move, re-pose or re-shape the card."""
+    m = actor.material; nt = m.node_tree; N = nt.nodes.new; L = nt.links.new; tex = actor.tex
+    emi = [n for n in nt.nodes if n.type == 'EMISSION'][0]
+    uv = N('ShaderNodeTexCoord'); rims = []; fall = None
+    for i in range(1, width + 1):
+        mp = N('ShaderNodeMapping'); mp.inputs['Location'].default_value = (offset[0] * i, offset[1] * i, 0.0); L(uv.outputs['UV'], mp.inputs['Vector'])
+        t2 = N('ShaderNodeTexImage'); t2.image = tex.image; t2.interpolation = 'Linear'; t2.extension = 'CLIP'
+        for a in ('frame_start', 'frame_offset', 'frame_duration', 'use_auto_refresh', 'use_cyclic'): setattr(t2.image_user, a, getattr(tex.image_user, a))
+        L(mp.outputs[0], t2.inputs['Vector']); rims.append(t2)
+        e = N('ShaderNodeMath'); e.operation = 'SUBTRACT'; e.inputs[0].default_value = 1.0; L(t2.outputs['Alpha'], e.inputs[1])
+        if fall is None: fall = e.outputs[0]
+        else:
+            ad = N('ShaderNodeMath'); ad.operation = 'MULTIPLY_ADD'; ad.inputs[1].default_value = 0.5; L(e.outputs[0], ad.inputs[0]); L(fall, ad.inputs[2]); fall = ad.outputs[0]
+    amt = N('ShaderNodeMath'); amt.operation = 'MULTIPLY'; amt.use_clamp = True; L(fall, amt.inputs[0]); amt.inputs[1].default_value = k / 1.5
+    src = emi.inputs['Color'].links[0].from_socket
+    mx = N('ShaderNodeMix'); mx.data_type = 'RGBA'; mx.blend_type = 'SCREEN'; L(amt.outputs[0], mx.inputs[0]); L(src, mx.inputs[6]); mx.inputs[7].default_value = K.hexc(color)
+    L(mx.outputs[2], emi.inputs['Color'])
+    _RIMS.append((tex, rims))
+    for hl in (bpy.app.handlers.frame_change_pre, bpy.app.handlers.render_pre):
+        if _rim_sync not in hl: hl.append(_rim_sync)
+    return rims
+
 if __name__ == '__main__':
     pass

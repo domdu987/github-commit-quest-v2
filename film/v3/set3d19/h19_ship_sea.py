@@ -173,10 +173,20 @@ def fit_grid(cam_loc, cam_look, NU, NV):
     px = loc[0] + ray[..., 0] * t; py = loc[1] + ray[..., 1] * t
     return px, py, t
 
+def polar_grid(c, a0, a1, r0, r1, NU, NV):
+    """a fan of rays from the point c (ship frame, m): angles a0..a1 (rad), radii r0..r1 spaced geometrically.  Used where the
+    camera travels far (the coast BIGZOOM from high above the bay down to the beach): a camera-fitted grid only covers one view."""
+    aa = np.linspace(a0, a1, NU); rr = r0 * (r1 / r0) ** np.linspace(0.0, 1.0, NV)
+    A_, R_ = np.meshgrid(aa, rr)
+    return c[0] + R_ * np.cos(A_), c[1] + R_ * np.sin(A_), R_
+
 def build_sea(SP, parent):
     c = SP['cam']; cam_loc = np.array(c['loc'], dtype=np.float64)
     NU, NV = SP.get('sea_nu', 560), SP.get('sea_nv', 820)
-    px, py, t = fit_grid(c['loc'], c['look'], NU, NV)
+    if SP.get('polar'):
+        pg = SP['polar']; px, py, t = polar_grid(pg['c'], pg['a0'], pg['a1'], pg['r0'], pg['r1'], NU, NV)
+    else:
+        px, py, t = fit_grid(c['loc'], c['look'], NU, NV)
     F = foam_fields(px, py, SP)
     verts = np.stack([px, py, np.zeros_like(px)], -1).reshape(-1, 3).astype(np.float32)
     idx = np.arange(NU * NV).reshape(NV, NU)

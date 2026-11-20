@@ -11,3 +11,13 @@
 - Tricorne already dropped (hands clasped). Frame-diff median 6.93 / p90 17.82 (a small handheld sway was added; target 4 / 10). qa_auto: soft-frame note g 850-854 = the snap (motion streak, 5 frames), no FAIL. take.mkv is 45.5 MB: delivered as take.mkv.part* (split -b 40M; `cat take.mkv.part* > take.mkv`).
 
 - Round 3b: astro19_c moved to (0.8, -0.3) so the astro19_b / astro19_c head discs are >= 1 D apart on screen (probe g 764-845: bb x 68-190, cc x 241-329 at the start, never touching; cc stays clear of Harrison at x 330-385). Board heads inside 0..720 until g 843 (astro19_b leaves at the left edge as the snap starts, g 843-846).
+
+## Round 4 (client gate QA_TEAM section G: no character cut in half by a frame edge)
+- Board re-staged once more: astro19 (-2.1, 1.0) right, astro19_b (2.2, 1.5) left, astro19_c (0.8, 0.5) centre-left; chosen by a projection search so that every head + wig stays inside the frame from g 764 to 843 (probe: all head discs inside x 66..657) and bb / cc are >= 1.1 D apart on screen.
+- At the snap the camera flies through the Board line to Harrison, so the Board has to leave the frame: it leaves in the whip g 845-849 (3-4 frames at peak speed, a wig sliver at the right edge on g 846-848, astro19_c at the lower left on g 848); from g 850 Harrison alone in the doorway (head centre y ~640, nothing else in frame), the end hold g 852-871 has no Board member at all. Harrison is the only focus at the end.
+- take.mkv: delivered as take.mkv.partaa + partab only (the stale 09:17 take.mkv that the film19/main merge brought back is deleted). qa_stats.py on the joined parts: saturation 0.637, brightness 90.0, in-shot motion median 7.74 / p90 15.46 (qa_stats' own measure). Frame-diff (deliver.py, g 774-861): median 6.84 / p90 18.71.
+
+## Round 5 (director round 7: the snap must read as a whip-pan)
+- Snap moved earlier and made steeper: g 836-850 (14 f), ease peak 3.0 (peak speed 3x the mean), whip peak about g 843, the word "ไอ้ช่างไม้" at g 846. The end framing is also re-centred (shift x 0.0): Harrison is now centred in the doorway (head x about 330-380) instead of left of the door leaf.
+- Cycles camera motion blur on the whip frames only (g 835-852, shutter 0.9, position CENTER); every other frame has no blur. The Board is whole (head + wig) until g 838, a motion smear at the frame edges on g 840-843, and gone from g 844; nobody is a readable half-person.
+- qa_auto: FAIL "suspected blur on 15 frames g 838-852" is the INTENDED whip-pan blur (Laplacian variance of the smeared frames), not a focus problem. Frame-diff median 6.68 / p90 12.04 (deliver.py); qa_stats.py: saturation 0.646, brightness 89.7, in-shot motion median 7.56 / p90 10.46. take.mkv 43.7 MB (< 45 MB, single file, no parts).

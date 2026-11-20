@@ -24,7 +24,8 @@ H_IN, H_OUT = 9, 10                              # CUT in (9), DIS 15 out -> 10 
 G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1      # 764..871
 GS = list(range(G_FIRST, G_LAST + 1))
 G_WORD = C.cap_g("ไอ้ช่างไม้")                   # 846: caption start of the nickname
-SNAP = (G_WORD - 3, G_WORD + 11)                 # 843..857 (14 frames)
+SNAP = (G_WORD - 10, G_WORD + 4)                 # 836..850 (14 frames): the whip peaks about g 843, the word is at g 846
+WHIP = (SNAP[0] - 1, SNAP[1] + 2)                # frames rendered with Cycles motion blur (shutter 0.9): the Board leaves as a smear
 LIGHT, PRESET, FINAL_SPP = "DAY", "hall_wide", 8
 
 HAR_XY = (0.0, -5.0)                             # AT the door (harrison_door is (0, -5.55)); the open leaves frame him                             # Harrison just inside the doors, left of the aisle (screen-right of centre)
@@ -47,11 +48,11 @@ class _Sway(object):
 
 
 _CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.03, slide_px=0.0, rise_px=0.0, arc_deg_s=0.0, decay=0.05,
-                snaps=[dict(g=SNAP, k=3.0, peak=1.6, shift=(1.1, 0.7))])
+                snaps=[dict(g=SNAP, k=3.0, peak=3.0, shift=(0.0, 0.7))])
 CAM = _Sway(_CAM)
 
 # ---------------------------------------------------------------------------- cast
-STAND = dict(mock=(-2.3, 1.0, 0.0), bb=(2.1, 2.6, 0.0), cc=(0.8, -0.3, 0.0))
+STAND = dict(mock=(-2.1, 1.0, 0.0), bb=(2.2, 1.5, 0.0), cc=(0.8, 0.5, 0.0))
 # name, cast, mark, base STORY19 pose, mirror (faces screen-left), phase offset (frames)
 BOARD = [
     ("mock", "astro19", "mocker_table", "astro_belly_laugh", True, 0),
@@ -132,7 +133,17 @@ class Take(C.Take):
                     caption_shade=bool(C.bpy.data.objects.get("caption_shade")))
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):
-        return C.Take.render(self, [bf(g) for g in gs], out_dir, scale=scale, samples=samples, threads=threads)
+        out = []
+        for g in gs:                                   # whip frames get Cycles camera motion blur, all others none
+            blur = WHIP[0] <= g <= WHIP[1]
+            self.scene.render.use_motion_blur = blur
+            self.scene.render.motion_blur_shutter = 0.9
+            try:
+                self.scene.cycles.motion_blur_position = "CENTER"
+            except Exception:
+                pass
+            out += C.Take.render(self, [bf(g)], out_dir, scale=scale, samples=samples, threads=threads)
+        return out
 
 
 if __name__ == "__main__":

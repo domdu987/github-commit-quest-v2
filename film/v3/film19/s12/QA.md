@@ -1,21 +1,21 @@
-# s12 QA: film 19, shot 12 (WORKSHOP shop_clock NIGHT, set_clock(3))
-- Take g 929..994 (66 frames, 720x1280, 8 spp). Shot = g 938..985 (31.26-32.85 s); in-handle g 929..937 (dissolve 11 f in), out-handle g 986..994 (next shot is a cut). take.mkv crf 6, first_g 929. QA_AUTO PASS.
-- Action: greying Harrison (default variant, apron) taps a chisel at the H3 (two round balances counter-rotate, set_balance every frame) by candlelight; the bench candle stub burns down (set_candles level 1.0 -> 0.3, keyed every frame, flame flicker). Snap g 952..972 (x1.4, peak 2.8, pan) on "สิบ" (caption g 960); he straightens and looks tired at the lens.
-- Staging: he stands in front of the bench (offset from harrison_bench so the H3 does not hide him), contact shadow, feet on floor. Candle stub visible right.
-- Heads 207-401 px wide (close at the end), centre y ~464-576, bottom < 681 (caption band clear). No text, no DOF, no caption_shade; mouth fixed.
-- Frame-diff in-shot: median 4.42, p90 13.37 (re-render after the director's QA-tech FAIL). Night is dim, so this needed a strong drift (push 15 %/s) and a long snap.
-- s/frame 15.8 wall / 31.1 CPU.
-- Deviations: custom camera (preset cam hid him behind the H3; an early version drove into the right wall); shot is 1.6 s with a snap anyway (frame-diff).
+# s12 QA (MERGED shots 12 + 13): film 19, WORKSHOP shop_clock NIGHT, set_clock(3) - one continuous take, no cut (QA_TEAM §I)
+- Take g 929..1024 (96 frames, 720x1280, 8 spp). Shots: 12 = g 938..985 (31.26-32.85 s), 13 = g 986..1015 (32.85-33.86 s) with NO cut between them. In-handle g 929..937 (dissolve 11 f in from shot 11), out-handle g 1016..1024 (dissolve 11 f out into shot 14). take.mkv crf 6, first_g 929. QA_AUTO PASS. meta.json shots [12, 13], shot_ranges {12: [938, 985], 13: [986, 1015]}. The s13 folder is superseded by this take.
+- Story: greying Harrison (default) taps a chisel at the H3 by candlelight (g 938-965). The camera makes a lateral whip pan along the bench (snap g 952..972 on "สิบ", caption g 960). At the PEAK of the whip (camera speed peaks at g 961-962, 30 px/frame) the SAME Harrison swaps to the old=1 look (white hair, spectacles, brown coat) at g 961, under a foreground wipe: a dark wood beam (a 0.42 D slab parented to the camera, 0.6 D from the lens) sweeps across g 957-965 and covers the centre of the frame at g 961, so the grey -> white change is never seen (g 960 grey, g 961 beam, g 962 white). Round-7 fix: the swap used to be at g 966 after the pan had settled, a visible pop. White-haired Harrison bends tired over the H3 (g 973-992), then on "จนผมหงอกทั้งหัว" (caption g 989, หงอก ~g 996) leans back and rubs his eyes with a sweat drop (g 993-1015+). He is always doing something (tapping, fidgeting, rubbing).
+- Candle / light: the bench candle stub and its light sit on the foreground chest (always in frame), set_candles 1.0 -> 0.25 keyed every frame, flame emission and all lights keyed down over the whole take (luma falls). set_balance(g/30) every frame (H3 balances).
+- Camera: ONE custom 22 mm path: start (2.2,-1.6,2.4), push 6 %/s, slide -60 px/s, the whip pan (k 1.05, shift 1.4 D), then the look point turns +1.0 D over g 985..1024 (camera turns, does not move), handheld sway 0.09 D at 1.5 Hz. The camera never passes x ~3.3 (the shop wall is at 4.25; an earlier version with arc / travel went through the wall and rendered black).
+- Gate G: head width max 248 px (about 19-24 % of the frame height; well under 30 %), head centre y 548-592, head left edge >= 121, right edge <= 637: nobody cut by an edge, heads above y 880. No text, no DOF, no caption_shade, fixed mouth.
+- Frame-diff in-shot (g 939..1015): median 5.60, p90 14.47 (per-take rule median >= 4, p90 >= 10 met). qa_stats (whole file incl. handles): saturation 0.70, brightness 66.8 (night; the conform grade lifts it).
+- s/frame 17.2 wall / 33.8 CPU (two processes).
+- Known: contact decal is on, but the legs still end in thin white stubs (cast rig limit). The right half of the frame after g 967 is the plain shop wall (the camera looks along the bench).
 
-## Re-render (after QA_TECH FAIL + the lantern set fix)
-- Re-rendered with the new iron-cage lantern (h19_shop.py from film19/main).
-- Candle burn-down now reads: at runtime the bench stub and its point light are moved onto the foreground chest (it stayed in frame only at the far left before), set_candles level 1.0 -> 0.12 keyed every frame (stub 17 cm -> 2 cm, flame follows), in frame for the whole shot.
-- Tapping continues through the end of the shot (bigger stroke, the straighten/look-up moved out of the shot); snap x1.45 g 952..972.
-- Head 198-420 px wide, centre y 463-580. Contact shadow: cast19 contact decal is on; the legs still end in thin stubs (rig limit).
+## Round 7 note
+- Motion blur on the whip frames was tried (shutter 0.5-0.9) and dropped: qa_auto then lists the blurred frames under FAIL. The foreground beam alone hides the swap. QA_AUTO PASS; its only note is soft frames g 960-961 (the beam). Frame-diff in-shot median 5.60, p90 13.68. Only g 955-968 were re-rendered; everything else is unchanged.
 
-## Round 2 re-render (QA_TECH round-2 FAIL)
-- Candle: stub + flame + point light on the foreground chest (in frame all shot); set_candles level 1.0 -> 0.35 (stub 17 cm -> 6 cm), flame emission x0.5, candle lights x0.3, all other lamps / fills / moon key keyed down to 30 % across the shot. Frame mean luma now FALLS: 68.9 (g938) -> 59.4 (g985) (was 62.9 -> 88). The end close-up is smaller (head 295 px max, snap x1.2) because the big white face was what raised the luma.
-- Frame-diff in-shot: median 4.02 (meets), **p90 9.84 (under 12)**: the smaller snap costs p90. Tapping continues to the end.
-
-## Round 3 (director's relaxed per-take rule: median >= 4, p90 >= 10)
-- Snap x1.3 instead of x1.2 (everything else as round 2): frame-diff in-shot median 4.23, p90 10.62. Meets the per-take rule. Candle / luma behaviour as in round 2 (luma falls).
+## Round 8 (QA-art round 7: age gag as the joke, real whip, slump, leg stubs) - supersedes the age-swap notes above
+- Hair stays GREY through the whip pan and until the word: at g 996 ("หงอก", caption g 989 + the word ~g 996) it pops WHITE (+ spectacles, brown coat: harrison19 old=1) with a puff (the puppet's `steam` fx over g 995-1002) and a squash (1.07/0.93) plus a small hop (0.06 D). The beam wipe / motion blur of round 7 are removed (no swap under the whip any more).
+- The chisel stays in his hand the whole take: he taps it until g 992, slumps, and it hangs low in his right hand (angle -> pointing down) while the LEFT hand rubs his eyes. It never vanishes.
+- Tired beat: real slump g 993-1000 (lean 8 -> -15 deg back, pitch back, head roll 8, squash 1.03/0.97), then the eye-rub (blink 2) with the sweat drop.
+- Camera: the whip pan (g 952-972, shift 1.4 D) overshoots and then SETTLES BACK left (second move g 970-996, -0.9 D) with the look point turning +0.9 D: Harrison sits at the right of centre and the H3 (gold wheels) is in frame at his left while he rubs his eyes; the blank right-hand wall of round 7 is gone (it is a narrow strip). The whip peak is ~45 px per frame (a 120-180 px whip would take the 22 mm camera through the shop wall; I chose the swing-back option).
+- Legs: Harrison's mark is 0.2 D right of the old spot so the foreground chest (with the candle and the lantern) hides his lower legs: no white stubs float in front of the chest any more.
+- Face height / frame: head width max 229.5 px, head x 199-697 (nobody cut by an edge), always above y 880. Candle burn-down and the falling lights are unchanged.
+- Frame-diff in-shot: median 5.31, p90 12.24. QA_AUTO PASS. qa_stats: saturation 0.72, brightness 59.9 (night). s/frame 18.0 wall / 35.3 CPU.

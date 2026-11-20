@@ -1,7 +1,9 @@
-# QA_AUTO PASS  (take.mkv, 113 frames, 30.00 fps, g 1924-2036)
+# QA_AUTO FAIL  (take.mkv, 236 frames, 30.00 fps, g 1924-2159)
 
+## FAIL
+- suspected blur on 14 frames, e.g. g [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2087, 2088, 2089, 2090, 2091, 2092, 2093]
 ## Notes
-- planned cuts with no visible change within +-2 frames: g [1933, 2028]
+- planned cuts with no visible change within +-2 frames: g [1933]
 - magenta share 0.0 %
 
 Phone sheet: phone_sheet.jpg (cyan line = caption band y 880). Judge legibility on it.

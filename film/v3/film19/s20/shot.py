@@ -19,6 +19,39 @@ from mathutils import Vector                             # noqa: E402
 H, K, actors, cast19 = C.H, C.K, C.actors, C.cast19
 lerp, clamp, blink, ez, u_of, bf = C.lerp, C.clamp, C.blink, C.ez, C.u_of, C.bf
 WORK = os.path.join(HERE, "work")
+import puppet                                            # noqa: E402  (already imported below; the patch needs it now)
+
+# QA-art: the palms-up hands read as dark mitts at phone size.  Runtime patch (this process only; the puppet module is not edited):
+# an open hand is drawn bigger with a LIGHT skin fill (ink outline kept), a light palm and four light fingers facing the lens.
+_HAND_ORIG = puppet._hand
+HAND_SCALE, SKIN, SKIN_SHADE = 1.35, "#f4d6b8", "#d9a98a"
+
+
+def _hand_light(k, H, dirv, shape, hr=puppet.HAND_R, fold=1.0):
+    if shape != "open":
+        return _HAND_ORIG(k, H, dirv, shape, hr, fold)
+    ux, uy = dirv
+    g = HAND_SCALE * hr / puppet.HAND_R
+    fl = 0.098 * g * fold
+    ink = ""
+    lite = ""
+    for a in (-48.0, -17.0, 14.0, 45.0):
+        vx, vy = puppet._rot(ux, uy, a)
+        seg = "M%.4f,%.4f L%.4f,%.4f" % (H[0], H[1], H[0] + vx * fl, H[1] + vy * fl)
+        ink += seg
+        lite += seg
+    o = [puppet._stroke(k, ink, 0.046 * g),
+         '<path d="%s" fill="none" stroke="%s" stroke-width="%.4f" stroke-linecap="round"/>' % (lite, SKIN, 0.026 * g)]
+    r = hr * HAND_SCALE
+    o.append('<circle cx="%.4f" cy="%.4f" r="%.4f" fill="%s"/>' % (H[0], H[1], r, k.ink))
+    o.append('<circle cx="%.4f" cy="%.4f" r="%.4f" fill="%s"/>' % (H[0], H[1], r * 0.76, SKIN))
+    o.append('<ellipse cx="%.4f" cy="%.4f" rx="%.4f" ry="%.4f" fill="%s" opacity="0.7"/>' % (H[0] + 0.12 * r, H[1] + 0.22 * r, 0.42 * r, 0.30 * r, SKIN_SHADE))
+    k.ext.append((H[0], H[1], 0.115 * g))
+    k.ext.append((H[0], H[1], r + 0.01))
+    return "".join(o)
+
+
+puppet._hand = _hand_light
 import puppet                                            # noqa: E402
 
 G0, G1 = C.g_bound(52.71), C.g_bound(55.49)              # 1581, 1665: shot 20 = g 1581..1664
@@ -35,7 +68,7 @@ LIGHT, PRESET, FINAL_SPP, PPD = "DAY", "hall_low", 8, 400
 SUBJ = Vector((-3.24, 3.24, 2.60))
 CAM_LOC0 = (-4.9, -1.30, 1.25)
 CAM = C.CamPath(CAM_LOC0, tuple(SUBJ), G_FIRST, G_LAST, push=0.12, slide_px=30.0, rise_px=0.0, arc_deg_s=14.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.4, peak=2.6, shift=(-0.60, -0.30))])
+                snaps=[dict(g=SNAP, k=1.25, peak=3.0, shift=(-0.50, -0.25))])
 
 ST = cast19.STORY19
 IDLE, SHRUG = ST["astro_idle"][1], ST["astro_shrug_fluke"][1]
@@ -52,8 +85,8 @@ def pose_of(g):
     for q, sgn in (("arm_r", 1), ("arm_l", -1)):
         d = dict(p[q])
         # QA-art: palms up and OUT at about (+-1.30, 0.95), layered in front of the wig / gown so they read
-        hx = 1.15 - 0.43 * u_of(g, G_QUOTE - 5, G_QUOTE + 8, "sine")       # hands come in to +-0.72 during the snap (no sideways pump): both palms inside x 40-680
-        d["hand"] = (lerp(d["hand"][0], sgn * hx, u) + 0.0 * pump, lerp(d["hand"][1], 0.95, u) + 0.12 * pump)
+        hx = 1.02 - 0.22 * u_of(g, G_QUOTE - 5, G_QUOTE + 8, "sine")       # hands come in to +-0.72 during the snap (no sideways pump): both palms inside x 40-680
+        d["hand"] = (lerp(d["hand"][0], sgn * hx, u) + 0.0 * pump, lerp(d["hand"][1], 0.95 + 0.15 * u_of(g, G_QUOTE - 5, G_QUOTE + 8, "sine"), u) + 0.12 * pump)
         d["layer"] = "front"
         d["shape"] = "open"
         p[q] = d
@@ -70,6 +103,15 @@ def pose_of(g):
     p["blink"] = blink(g, BLINKS)
     p["t"] = g / 30.0
     return p
+
+
+def lens_scale(g):
+    """FOV punches (client gate: no face above ~35 % of the frame, so the end push is trimmed): x1.08 punch with the snap on
+    "ฟลุ๊ค!" (g 1633) that eases back, x1.05 on the two shoulder pumps."""
+    z = 1.0 + 0.12 * min(1.0, 1.5 * math.sin(math.pi * u_of(g, G_QUOTE - 5, G_QUOTE + 12)) ** 2)      # plateau: the punch holds ~3 frames longer around g 1635-1637
+    z *= 1.0 + 0.06 * math.sin(math.pi * u_of(g, G_SHRUG - 2, G_SHRUG + 8)) ** 2
+    z *= 1.0 + 0.05 * math.sin(math.pi * u_of(g, G_QUOTE + 18, G_QUOTE + 30)) ** 2
+    return z
 
 
 def hop_z(g):
@@ -89,6 +131,7 @@ class Take(C.Take):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *CAM.at(g))
+            C.camrig.key(self.cam.data, "lens", f, 22.0 * lens_scale(g), "LINEAR", "AUTO")
             C.place(self.ast, f, mark + Vector((0, 0, hop_z(g))))
             self.key_set(f, candles=1.0)
         for g in gs:

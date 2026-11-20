@@ -1,7 +1,10 @@
-# s24 QA: film 19, shot 24 (HALL EVENING), round-2 fixes
-- take.mkv: g 1924..2036 (113 frames), shot g 1933..2027; transition in: cut.
-- King19 beside the table head (clear of the orrery) compares the pocket watch with the H4 (both 1.5x at face height); the ten candle stubs (moved in front of the King) grow 0->10 by the snap word 'สิบสัปดาห์' (g 2006) and stay in frame; closer start (King head 135-220 px), stronger drift, snap shift 2.4 D. Known: a candle edge shows at the left of the last frames.
-- Rules: no DOF, no text, no caption_shade; set hooks keyed every frame; samples 8; heads in shot (px): {"king": {"w": [137, 222], "y": [546, 621], "x": [154, 566], "bottom_max": 695}}
-- qa_auto: see QA_AUTO.md + phone_sheet.jpg. Contact sheet checked at full size.
-- s/frame wall 18.07 (2 procs x 2 threads), cpu 35.46.
-- Frame-diff in shot (90x160 grey): median 4.06, p90 13.94 (per-take rule: median >= 4, p90 >= 10).
+# s24 QA (MERGED shots 24+25+26): film 19, HALL EVENING, one continuous take (client rule §I)
+- take.mkv (split in 40 MB parts: take.mkv.partaa..): g 1924..2159 (236 frames), shot g 1933..2159; hard cut in from s23 at g 1933 (9 f in-handle); the film ends at g 2159 (N = 2160), moving, no out-handle. The director's 2157 is the narration end; the take runs to the film end like s26 did.
+- Action: g 1933-2021 the approved s24 (King compares watches, stubs 0->10 by 'สิบสัปดาห์' g 2006, snap); whip-pan 1 g 2022-2029 (7 f, motion blur) to astro19 at the telescope; jaw drop held, wig askew, tremble, fast push-in on 'เป๊ะ' (g 2069-2082, head width <= 218 px, face about 30 %); whip-pan 2 g 2086-2093 back to the table; bag falls and lands in front of Harrison at g 2107 (gold coins, squash), the King nods, Harrison looks at the bag then grins, arms rise; ends centred on Harrison + bag with both men in frame, moving.
+- Joins: 3 camera paths (the approved ones) are lerped over the whips (smoothstep on loc and look); the King's card slides from his s24 spot to his s26 spot during whip 2 (off screen); cards are shown only where on screen.
+- qa_auto: FAIL 'suspected blur' on g 2023-2029 and 2087-2093 = the 14 whip frames, motion blur by design (client request). Everything else passes (no black / blank / magenta / frozen). qa_stats.py counts 4 'shots' because it reads each whip as a cut (shots<1.5 s: 1, the astronomer, 0.47 s of steady frames between the whips).
+- qa_stats: saturation 0.662, brightness 64.6, in-shot motion median 5.14 p90 12.94
+- heads in shot (px): {"king": {"w": [99, 220], "y": [447, 621], "x": [155, 607], "bottom_max": 695}, "astro": {"w": [137, 218], "y": [488, 651], "x": [-4, 548], "bottom_max": 759}, "har": {"w": [185, 241], "y": [497, 721], "x": [197, 364], "bottom_max": 841}} (astro x min -4 and king x 607 occur on whip frames / the ending; caption band y 880 respected)
+- Known: sack has no tie facing the camera; candle edge in the last frames; p90 of the deliver frame-diff is inflated by the whips.
+- s/frame wall 17.75 (2 procs x 2 threads), cpu 34.86.
+- Frame-diff in shot (90x160 grey): median 4.48, p90 19.09 (rule: median >= 4, p90 >= 10).
