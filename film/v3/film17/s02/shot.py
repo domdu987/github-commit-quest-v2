@@ -84,7 +84,7 @@ class Take(C.Take):
     def make_desk(self):
         B = K.Batch(9); K.table(B, (1.2, -2.65), size=(1.7, 0.8), h=0.85, rot=22); self.tpos = (1.2, -2.65)
         with B.xf((1.2, -2.65, 0.85), (0, 0, 22)):
-            K.open_ledger(B, (-0.35, 0.0, 0.0), rot=10); K.inkpot(B, (0.55, 0.12, 0.0)); K.ledger_stack(B, (0.4, -0.15, 0.0), n=3, rot=8)
+            K.open_ledger(B, (-0.35, 0.0, 0.0), rot=10); K.inkpot(B, (0.55, 0.12, 0.0), quill=False); K.ledger_stack(B, (0.4, -0.15, 0.0), n=3, rot=8)
         B.finalize("desk", ink_t=K.STATE['ink_t'] * 0.8)
 
     def __init__(self, loc, quality):
@@ -131,7 +131,7 @@ class Take(C.Take):
             t = (g - S5[0]) / float(S5[1] - S5[0]); px = WX - 0.1 - 0.2 * t; py = WY - 2.5 - 1.0 * t
             self.tp = (px, py)
             self.place(self.pc, f, (px, py, 0.0), hs("prisoner_c"))
-            self.place(self.ga, f, (px + 0.72, py + 0.05, 0.0), hs("gendarme_a")); self.place(self.gb, f, (px - 0.72, py + 0.05, 0.0), hs("gendarme_b"))
+            self.ga.place(f, (px + 0.72, py + 0.05, 0.0), scale=hs("gendarme_a"), flip=True); self.place(self.gb, f, (px - 0.72, py + 0.05, 0.0), hs("gendarme_b"))
             self.place(self.gc, f, (0, 30, -5), 1.0); self.hid[g] = ("gc",)
     def stage_desk(self, g):
         f = g; tx, ty = self.tpos
@@ -159,7 +159,7 @@ class Take(C.Take):
                 kwp = dict(expr="smirk", yaw=0.0, arm_l="down", arm_r="down", mouth="smile")
                 pcp = pose_stand("prisoner_standing_c", g, 79, 3, **kwp)
                 hands = None
-                if tip > 0.5: hands = {"r": {"hand": tuple(tw + r * 0.36 + Vector((0, 0, 1.55)) + toward), "layer": "front", "bend": 0.9}}
+                if tip > 0.5: hands = {"r": {"hand": tuple(tw + r * 0.06 + Vector((0, 0, 1.56)) + toward * 3), "layer": "top", "bend": 0.9}}
                 _p, _i = self.pc.pose(g, pcp, hands=hands, camera=cam); self.dbg = _i
                 ga = pose_stand("gendarme_escort_a", g, 97, 11, yaw=-0.25, mouth="flat")
                 self.ga.pose(g, ga, hands={"r": {"hand": tuple(tw + r * 0.2 + Vector((0, 0, arm_z)) + toward)}}, camera=cam)
