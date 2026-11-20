@@ -41,13 +41,15 @@ G_ARR = 1576                                      # the swoop has landed on the 
 PRESET = "tower_night_wide"
 PPD = 256
 EXPO = 0.95
-RING_T0, RING_P, N_RINGS = 1468, 54.0, 3          # first ring born at the lamp at g1468, a ring every 18 f, life 54 f
+RING_T0, RING_P, N_RINGS = 1468, 54.0, 3
+RING_STOP = 1521                                  # no ring is born after g1521 (the camera crosses the ring plane near g1529; the rings die out by ~1573)
+FX_OFF = 1566                                     # wire + glow halo + aura leave the frame (group framing must stay clean)          # first ring born at the lamp at g1468, a ring every 18 f, life 54 f
 WIRE_R = 0.22
 SHIFT = -0.03
-CAM_BACK = 2.5
-TILT0 = 3.0
+CAM_BACK = -5.0
+TILT0 = 9.0
 HEAD_Z = 2.5
-M = dict(eiffel_old=(-4.0, -217.6), officer=(-2.2, -217.4), demo_a=(-5.5, -216.6), demo_b=(-6.4, -215.6), demo_c=(-7.3, -216.8))
+M = dict(eiffel_old=(-3.8, -217.6), officer=(-2.7, -217.5), demo_a=(-5.0, -217.2), demo_b=(-5.9, -216.4), demo_c=(-4.6, -215.6))
 CAST = dict(eiffel_old="eiffel_old", officer="officer", demo_a="riveter_hammer", demo_b="riveter_tongs", demo_c="riveter_forge")
 
 def A_(*a, **k):
@@ -115,10 +117,10 @@ def group_path(A):
     import tower20
     cm = tower20.CAMS_M["tower_dusk_chars"]
     c = Vector(CO.W(cm["loc"]))
-    cen = Vector(CO.W((-4.7, -217.0, 0.0))) + Vector((0, 0, HEAD_Z))
+    cen = Vector(CO.W((-3.9, -217.0, 0.0))) + Vector((0, 0, HEAD_Z))
     c = c + (c - cen).normalized() * CAM_BACK
-    return C.CamPath(c, cen, G_ARR, G_LAST, push=0.07, slide_px=0.0, rise_px=0.0, arc_deg_s=10.0, tilt0=TILT0, tilt_deg_s=1.8,
-                     decay=0.25, snaps=[dict(g=SNAP, k=1.1, peak=1.7, shift=(0.0, 0.0))])
+    return C.CamPath(c, cen, G_ARR, G_LAST, push=0.04, slide_px=0.0, rise_px=0.0, arc_deg_s=7.0, tilt0=TILT0, tilt_deg_s=0.4,
+                     decay=0.25, snaps=[dict(g=SNAP, k=1.08, peak=1.7, shift=(0.0, 0.0))])
 
 
 def hermite(knots, g):
@@ -216,6 +218,7 @@ class Take(C.Take):
         self.wagon = list(CO.STATE.get("wagon", []))
         self.wagon0 = [Vector(o.location) for o in self.wagon]
         self.dress_fg()
+        self.cobbles()
         self.build_fx()
         self.key_cam(bf(G_FIRST), *cam_at(A, G_FIRST, self.path)[:2])
         self.scene.frame_set(bf(G_FIRST))
@@ -226,21 +229,48 @@ class Take(C.Take):
         import kit20 as K
         M_ = CO.STATE["M"]
         loc = self.path.loc0 / CO.SC                      # metres
-        cen = Vector(CO.W((-4.7, -217.0, 0.0))) / CO.SC
+        cen = Vector(CO.W((-3.9, -217.0, 0.0))) / CO.SC
         f = Vector((cen.x - loc.x, cen.y - loc.y, 0.0)).normalized()
         r = Vector((f.y, -f.x, 0.0))
         mb = CO.MB("s22fg", parent=CO.root())
         def at(fw, ri):
             p = Vector((loc.x, loc.y, 0.0)) + f * fw + r * ri
             return (p.x, p.y, 0.0)
-        K.keg(mb, M_, at(5.0, -2.5), 0.9, 0.36)
-        K.keg(mb, M_, at(5.9, -3.0), 0.9, 0.36, "timberdk")
-        K.keg(mb, M_, at(7.5, -1.9), 0.9, 0.36, "timberdk")
-        K.crate(mb, M_, at(7.4, 3.0), (0.9, 0.7, 0.6), 0.5)
-        K.crate(mb, M_, at(7.45, 3.05), (0.7, 0.6, 0.5), 0.2)
-        K.keg(mb, M_, at(7.0, 3.1), 0.9, 0.36)
+        K.keg(mb, M_, at(3.3, -2.4), 0.9, 0.36)
+        K.keg(mb, M_, at(3.9, -3.0), 0.9, 0.36, "timberdk")
+        K.keg(mb, M_, at(3.6, 2.9), 0.9, 0.36)
+        K.crate(mb, M_, at(4.6, 3.6), (0.9, 0.7, 0.6), 0.5)
         mb.finish(hull=0.00384 * 22.0)
 
+
+    def cobbles(self):
+        """a cobbled forecourt under the group (brick texture, blue-grey): detail + scale on the bare ground slab, a place for the bars to land."""
+        SC = CO.SC
+        zg = self.A["marks"]["eiffel_old"][2] + 0.012
+        bpy.ops.mesh.primitive_plane_add(size=1.0, location=(-4.5 * SC, -216.0 * SC, zg))
+        ob = bpy.context.object
+        ob.name = "cobbles"
+        ob.scale = (16.0 * SC, 14.0 * SC, 1.0)
+        m = bpy.data.materials.new("cobblemat")
+        m.use_nodes = True
+        nt = m.node_tree
+        bs = nt.nodes["Principled BSDF"]
+        bs.inputs["Roughness"].default_value = 0.95
+        if "Specular IOR Level" in bs.inputs:
+            bs.inputs["Specular IOR Level"].default_value = 0.0
+        tc = nt.nodes.new("ShaderNodeTexCoord")
+        br = nt.nodes.new("ShaderNodeTexBrick")
+        br.inputs["Color1"].default_value = (0.17, 0.19, 0.27, 1)
+        br.inputs["Color2"].default_value = (0.12, 0.13, 0.21, 1)
+        br.inputs["Mortar"].default_value = (0.06, 0.065, 0.11, 1)
+        br.inputs["Scale"].default_value = 16.0
+        br.inputs["Mortar Size"].default_value = 0.03
+        br.inputs["Brick Width"].default_value = 0.5
+        br.inputs["Row Height"].default_value = 0.25
+        nt.links.new(tc.outputs["UV"], br.inputs["Vector"])
+        nt.links.new(br.outputs["Color"], bs.inputs["Base Color"])
+        ob.data.materials.append(m)
+        ob.visible_shadow = False
 
     def bar_pos(self, i, g):
         """(location, euler, visible) of bar i: appears in the hand at DROP[0], falls and tumbles to the ground at DROP[1]."""
@@ -305,6 +335,41 @@ class Take(C.Take):
         self.scene.collection.objects.link(self.wire)
         self.wire.data.materials.append(emat("sigwire", (0.80, 0.88, 1.0, 1.0), 2.0))
         self.wire.visible_shadow = self.wire.visible_diffuse = self.wire.visible_glossy = False
+        def gmat(name, col, k, fac):
+            m = bpy.data.materials.new(name)
+            m.use_nodes = True
+            nt = m.node_tree
+            nt.nodes.clear()
+            out = nt.nodes.new("ShaderNodeOutputMaterial")
+            tr = nt.nodes.new("ShaderNodeBsdfTransparent")
+            em = nt.nodes.new("ShaderNodeEmission")
+            em.inputs["Color"].default_value = col
+            em.inputs["Strength"].default_value = k
+            mx = nt.nodes.new("ShaderNodeMixShader")
+            mx.name = "mix"
+            mx.inputs[0].default_value = fac
+            nt.links.new(tr.outputs[0], mx.inputs[1])
+            nt.links.new(em.outputs[0], mx.inputs[2])
+            nt.links.new(mx.outputs[0], out.inputs["Surface"])
+            return m
+        cu2 = bpy.data.curves.new("sig_halo", "CURVE")
+        cu2.dimensions = "3D"
+        cu2.bevel_depth = 0.7 * SC
+        cu2.bevel_resolution = 3
+        sp2 = cu2.splines.new("POLY")
+        sp2.points.add(len(pts) - 1)
+        for p, q in zip(sp2.points, pts):
+            p.co = (q.x * SC, q.y * SC, q.z * SC, 1.0)
+        self.halo = bpy.data.objects.new("sig_halo", cu2)
+        self.scene.collection.objects.link(self.halo)
+        self.halo.data.materials.append(gmat("sighalo", (0.35, 0.6, 1.0, 1.0), 8.0, 0.0))
+        self.halo.visible_shadow = self.halo.visible_diffuse = self.halo.visible_glossy = False
+        bpy.ops.mesh.primitive_cone_add(vertices=48, radius1=30.0 * SC, radius2=1.5 * SC, depth=244.0 * SC)
+        self.aura = bpy.context.object
+        self.aura.name = "sig_aura"
+        self.aura.location = (0.0, 0.0, 179.0 * SC)
+        self.aura.data.materials.append(gmat("sigaura", (0.45, 0.7, 1.0, 1.0), 5.0, 0.0))
+        self.aura.visible_shadow = self.aura.visible_diffuse = self.aura.visible_glossy = False
         ld = bpy.data.lights.new("sig_summit_light", "POINT")
         ld.energy, ld.color, ld.shadow_soft_size = 4000.0 * SC * SC, (1.0, 0.75, 0.5), 1.0
         self.slight = bpy.data.objects.new("sig_summit_light", ld)
@@ -323,13 +388,16 @@ class Take(C.Take):
         for i, ob in enumerate(self.rings_ob):
             t = g - RING_T0 - i * RING_P / N_RINGS
             age = (t % RING_P) / RING_P if t >= 0 else 0.0
-            on = t >= 0 and age < 0.92
+            kmax = int((RING_STOP - RING_T0 - i * RING_P / N_RINGS) // RING_P)
+            on = t >= 0 and age < 0.92 and int(t // RING_P) <= kmax
             r = 6.0 + 500.0 * age ** 0.7
             ob.scale = (r * CO.SC,) * 3
             CO.key(ob, "scale", f, "LINEAR")
             CO.keysock(ob.active_material.node_tree.nodes["em"].inputs["Strength"], 9.0 * (1.0 - age) ** 1.4, f)
             CO.setv(ob, on, f)
         t = g - RING_T0
+        if g > RING_STOP:
+            t = -1
         ph = ((t % (RING_P / N_RINGS)) / (RING_P / N_RINGS)) if t >= 0 else 1.0
         fl = 4.0 * max(0.0, 1.0 - ph / 0.35) ** 2 if t >= 0 else 0.0
         self.flash.scale = (CO.SC * (1.2 + 2.0 * ph),) * 3
@@ -338,7 +406,12 @@ class Take(C.Take):
         CO.setv(self.flash, fl > 0.05, f)
         gl = u_of(g, *GLOW)
         CO.keysock(self.wire.active_material.node_tree.nodes["em"].inputs["Strength"], 2.0 + 5.0 * gl, f)
-        CO.setv(self.wire, True, f)
+        vis = g < FX_OFF
+        CO.setv(self.wire, vis, f)
+        CO.keysock(self.halo.active_material.node_tree.nodes["mix"].inputs[0], 0.35 * gl, f)
+        CO.setv(self.halo, vis and gl > 0.0, f)
+        CO.keysock(self.aura.active_material.node_tree.nodes["mix"].inputs[0], 0.03 * gl, f)
+        CO.setv(self.aura, vis and gl > 0.0, f)
 
     def pose(self, gs):
         for g in gs:
