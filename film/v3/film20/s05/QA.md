@@ -1,7 +1,7 @@
-# QA s05 (shot 5, SITE site_leg_low, g 318..403; first_g 314, 94 frames, cut in/out, 4+4 handles)
-- take.mkv 39.7 MB (not split), 720x1280, 8 spp, 16.30 s/frame wall. qa_auto PASS (g 404 note expected).
-- Camera: preset moved 12 m toward the leg foot, aim pitch 19 -> 27 deg by drift, +11 deg SNAP up on "สูงที่สุดในโลก" (g 344-359, ends pitch ~38 deg, sky well above 35 %), aim pans 24 deg to the right over the shot, push 8 %/s, slide 60 px/s.
-- Cast: Eiffel at eiffel_leg (C.on_ground, decal) raises his arm at g 319-327 on "สูง 300 เมตร"; three riveters on the platforms leg_a..c (hammer / tongs / forge cycles). No mouth animation.
-- DEVIATIONS: (1) Eiffel is only in frame about g 314-345: the tilt-up and pan push him out of the bottom-left, so his head crosses the caption band (y 880) and leaves frame in the second half (head bottom max y 1070) -> breaks "heads above 880" for part of the shot. (2) The pier's pale stone wall fills the middle of the frame (it is the leg's masonry foundation); riveter heads are tiny (14-30 px) and sit high. (3) Preset near-black FG slabs hidden (visible_camera=False). 
-- Frame-diff in shot: median 4.89, p90 10.84 (p90 below the 12 target).
-- Not done: hue measurement; frame-by-frame review at the cuts.
+# QA s05 (shot 5, SITE site_leg_low, g 318..403; first_g 314, 94 frames, cut in/out, 4+4 handles) -- re-render after TAKE gate A
+- take.mkv 39.1 MB (not split), 720x1280, 8 spp, 15.65 s/frame wall. qa_auto PASS (g 404 "no visible change" note expected: the handle continues the move).
+- `qa_stats.py take.mkv`: saturation 0.508, brightness 97.2 (post grade x0.97 sat, x0.92 luma, in deliver.py), in-shot motion median 3.65 p90 11.85. (own measure, 90x160 grey, pairs inside the shot: median 3.14 / p90 11.26)  -> median and p90 STILL BELOW the 4 / 12 target.
+- Fixed from the gate: riveters (hammer / tongs / forge, scaled x2.4, heads 35-55 px) are now visible on the three leg platforms; tilt ends at pitch ~38 deg with the leg tapering into a deep-blue sky; the aim pans right and the preset camera moved 7 m back from the foot, so the huge sacks are smaller and sit at the edges; bright saturated grade.
+- Still NOT fixed: (1) the pale masonry foundation of the leg (the wall) still fills ~25 % of the middle of the frame; (2) Eiffel is small (head 34-79 px) and, as the camera tilts up, he drops through the caption band (head centre up to y 1054, bottom 1093) and is out of frame at the bottom left for the second half: he cannot stay in a frame that ends at 35 % sky with a 1.4 m lens; (3) foreground sacks / bucket still sit in the bottom 20 % at the start; (4) motion numbers above.
+- Snap up on "สูงที่สุดในโลก" at g 344-359 (+14 deg tilt) is present.
+- Not done: shadow-hue measurement; frame-by-frame cut review.

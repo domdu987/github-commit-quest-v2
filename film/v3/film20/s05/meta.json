@@ -27,6 +27,11 @@
   "note": "next shot is a hard cut; 4 handle frames rendered in 3D"
  },
  "note": "SITE site_leg_low DAY stage 0: tilt up the scaffolded leg to the sky, riveters on the platforms, Eiffel small at the foot arm raised; snap up on 'สูงที่สุดในโลก' (g 344-359)",
+ "grade": {
+  "saturation_x": 0.971,
+  "brightness_x": 0.923,
+  "note": "post grade for QA_TEAM section G"
+ },
  "dof": "none",
  "text": "none",
  "light": "DAY",
@@ -37,20 +42,20 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 16.3,
- "s_per_frame_cpu_mean": 31.64,
+ "s_per_frame_wall_mean": 15.65,
+ "s_per_frame_cpu_mean": 30.14,
  "head_px": [
-  16,
-  167
+  34,
+  79
  ],
  "head_centre_y": [
-  210,
-  987
+  176,
+  1054
  ],
- "head_bottom_max_y": 1070,
+ "head_bottom_max_y": 1093,
  "framediff_in_shot": {
-  "median": 4.89,
-  "p90": 10.84
+  "median": 3.14,
+  "p90": 11.26
  },
  "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
 }
