@@ -15,8 +15,8 @@ FIRST, LAST = G0 - H_IN, G1 - 1 + H_OUT
 G_JIMO = c18.g_of(11.91)            # 360
 
 mode, rng = c18.parse_args(FIRST, LAST)
-T = c18.Take('s04', FIRST, LAST, draft=(mode == 'draft'), cam_fn=c18.compose(lambda T, g, t: T.base_pose(t), c18.rhythm_cam(push=0.14, slide=0.0, orbit=-12.0, pulses=())))
-c18.fix_vista(T); c18.vista_quiet(T)
+T = c18.Take('s04', FIRST, LAST, draft=(mode == 'draft'), cam_fn=c18.compose(lambda T, g, t: T.base_pose(t), c18.rhythm_cam(push=0.06, slide=0.0, orbit=-24.0, pulses=())))
+c18.fix_vista(T); c18.vista_quiet(T); c18.vista_yard_fix()
 c18.fix_sky_clean(T, 'sky_DUSK')
 
 
@@ -28,7 +28,7 @@ def frame(T, g):
     order = J.vista_pennant_order(T.cam)
     for r, idx in enumerate(order):
         VS.set_pennant_scale(idx, 0.4 if r < 20 else 0.55, kind='yan')
-    c18.jimo_flag(0.45)
+    c18.jimo_flag(0.4)
 
 
 T.run(frame, gs=rng, force=(mode == 'draft'))

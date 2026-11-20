@@ -420,3 +420,15 @@ def jimo_flag(k=0.45):
     for i, t in enumerate(STATE['towns']):
         if t.get('name') == 'jimo':
             VS_.set_pennant_scale(i, k, kind='qi')
+
+
+def vista_yard_fix(r=33.0):
+    """Jimo's yard shows a navy diagonal beam: the town road ribbon (vroad) that starts at Jimo's centre. Faces of vroad inside Jimo's walls are removed (the road continues outside)."""
+    import bmesh
+    h = STATE['objects'].get('vroad')
+    if h is None:
+        return
+    jx, jy = STATE['marks']['jimo'][:2]
+    bm = bmesh.new(); bm.from_mesh(h.data); mw = h.matrix_world
+    dl = [f for f in bm.faces if math.hypot((mw @ f.calc_center_median()).x - jx, (mw @ f.calc_center_median()).y - jy) < r]
+    bmesh.ops.delete(bm, geom=dl, context='FACES'); bm.to_mesh(h.data); bm.free()

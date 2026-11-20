@@ -48,7 +48,7 @@ for ob in bpy.data.objects:                       # no grey rocks / wheels / rin
     if ob.name.startswith(('fgwood', 'fgstone', 'dr_hay', 'dr_plume', 'dr_pot', 'dr_rope', 'dr_stone', 'dr_wheel', 'dr_basket')) or ob.name == 'hay':
         ob.hide_render = True
 OX_LAT = [-1.5, 1.7, -3.0, 3.1]
-OX_START = [9.0, 11.5, 14.0, 16.5]; OX_END = [2.6, 4.3, 6.0, 7.8]       # distance behind the general: gaining on him
+OX_START = [9.0, 11.5, 14.0, 16.5]; OX_END = [5.0, 4.3, 6.0, 7.8]       # distance behind the general: gaining on him
 
 
 def frame(T, g):
@@ -67,13 +67,31 @@ def frame(T, g):
         back = OX_START[i] + (OX_END[i] - OX_START[i]) * u
         lat = OX_LAT[i] * (1.0 - 0.35 * u)
         if i == 0:
-            lat = c18.lerp(-1.5, 1.9, c18.ramp(g, 2040, 2100))       # the nearest ox ends at screen-right of him: its face shows at his shoulder at the cut
+            lat = c18.lerp(-1.5, 2.0, c18.ramp(g, 2040, 2100))       # the nearest ox ends at screen-right of him: its face shows at his shoulder at the cut
         pos = gen + V((lat, back, 0.0))
         phase = (int(g / 2.5) + i * 3) % 8
         mo = c18.oxcard('dragon', 'front_three_quarter', 'gallop', phase, -1, smoke=(g // 2 + i) % 4, face='rage')
         c18.put(mo, tuple(pos), cam, scale=1.08, mirror=bool(i % 2), name='ox%d' % i, sw=2.7, yaw_off=(10 if i % 2 else -10))
         heads.append(T.head_row(tuple(pos), 2.6, 'ox'))
+        if i == 0:
+            heads.append(dict(role='oxmouth', chin=round(T.project((pos.x, pos.y, 0.80))[1])))
     return dict(heads=heads)
+
+
+# one dark, lit foreground prop low in the bottom-left corner: a dropped bronze helmet (J.prop_helmet), parented to nothing, keyed per frame in frame()
+HELM = J.prop_helmet((0.0, 0.0, 0.0), rot=0.0, scale=0.5)
+
+
+def corner_helmet(g):
+    dy = SPEED * (g - G0) / 30.0
+    cam = T.cur['loc']
+    J._xf(HELM, loc=(cam[0] - 1.5, cam[1] + 2.6, 0.0), rot=(0.0, 0.0, 0.7))
+
+
+_f0 = frame
+def frame(T, g):
+    corner_helmet(g)
+    return _f0(T, g)
 
 
 T.run(frame, gs=rng, force=(mode == 'draft'))
