@@ -13,9 +13,9 @@ G0, G1 = 1656, 1732                 # shot = g G0..G1-1
 H_IN, H_OUT = 8, 8
 TR_IN = dict(type="dissolve", frames=13, note="DIS 13 into shot 23 from shot 22 (handle 8 frames g 1648..1655 rendered in 3D)")
 TR_OUT = dict(type="dissolve", frames=13, at=G1, note="shot 24 dissolves in over this shot's tail: handle 8 frames g 1732..1739 rendered in 3D (the move continues)")
-SET = "v3/set3d20 TOWER preset tower_fair, light DAY, year 1910 (set_year(1910) keyed every frame), set_crowd(3); keyed crowd bob; preset lamp-post/bench moved out of frame; FG = gent20 back card 3 D ahead of the lens, bottom-left, camera-relative"
+SET = "v3/set3d20 TOWER preset tower_fair, light DAY (runtime grade: sat 1.22, exposure -0.42), year 1910 (set_year(1910) keyed every frame), set_crowd(3); 24 preset + 16 extra crowd cards with keyed bob; preset lamp-post/bench out of frame; FG = gent20 back card 3 D ahead of the lens, bottom-left"
 CAST = "v3/cast20 eiffel_old (white beard, stoop lean 4; worried -> proud swapped on the closed frame of a blink at g 1706; takes the document with the right hand g 1676..1688, moves it to the left hand behind a blink at g 1696, doffs the bowler (hat_off, bowler_held in the right hand held out at chest height) on 'อีก 70 ปี') + official (tricolour sash, doc_seal held out toward Eiffel g 1664..1676, then hand to hip, happy); no lip-sync"
-CAMERA = "custom 22 mm, shift 0.06 kept, cam z 1.6 D, 3.5 D from Eiffel, matches s15 v2 staging (official 0.7 D nearer, 1.55 D right, FG gent back card bottom-left); CamPath PULL 10 %/s + slide -40 px/s + arc 8 deg/s + tilt drift -2 deg/s from -3 deg, decay 0.3, snap x1.9 g 1703..1717 (peak 1.9, tilt -2 deg) on 'อีก 70 ปี'"
+CAMERA = "custom 22 mm, shift 0.06 kept, cam z 1.6 D, 3.5 D from Eiffel, same staging as s15 v3 (official 0.5 D nearer, 1.25 D right, steps back g 1684..1702; FG gent back card bottom-left); CamPath PULL 10 %/s + slide -45 px/s + arc 17 deg/s + tilt drift -2 deg/s from -3 deg, decay 0.3, snap x1.6 g 1703..1717 (peak 2.0, tilt -3 deg) on 'อีก 70 ปี'"
 EV = dict(doc_reach=[1664, 1684], doc_in_eiffel_hand=1676, doc_to_left_hand=1696, hat_word=1706, face_swap_blink=[1705, 1707], snap=[1703, 1717])
 YEAR, LIGHT = 1910, "DAY"
 CUTS = []

@@ -16,6 +16,9 @@ import c20 as C                                          # noqa: E402
 from mathutils import Vector                             # noqa: E402
 
 S, CO, actors, cast20 = C.S, C.CO, C.actors, C.cast20
+import tower20                                           # noqa: E402  (runtime grade bump, qa_stats wants saturation >= 0.47)
+tower20.LIGHTS['DAY']['sat'] = 1.22
+tower20.LIGHTS['DAY']['exposure'] = -0.42
 lerp, clamp, blink, ez, u_of, bf = C.lerp, C.clamp, C.blink, C.ez, C.u_of, C.bf
 WORK = os.path.join(HERE, "work")
 
@@ -47,16 +50,16 @@ EIF_Z = 2.55                                    # head centre above the feet
 
 def marks(A):
     e = Vector(A["marks"]["eiffel_fair"])
-    return dict(eiffel=e, official=e + Vector((1.55, -0.7, 0.0)))
+    return dict(eiffel=e, official=e + Vector((1.25, -0.5, 0.0)))
 
 
 def cam_path(A):
     m = marks(A)
     subj = m["eiffel"] + Vector((0.8, 0.0, EIF_Z))
     c = Vector((subj.x - 0.3, subj.y - CAM_BACK, CAM_Z))
-    return C.CamPath(c, subj, GF, G_LAST, push=0.06, slide_px=-45.0, rise_px=0.0, arc_deg_s=11.0, tilt0=TILT0, tilt_deg_s=1.5,
-                     decay=0.25, snaps=[dict(g=PUSH1, k=1.2, peak=1.8, shift=(0.0, 0.0), tilt=0.0),
-                           dict(g=SNAP, k=1.85, peak=2.0, shift=(0.0, 0.0), tilt=-3.0)])
+    return C.CamPath(c, subj, GF, G_LAST, push=0.06, slide_px=-45.0, rise_px=0.0, arc_deg_s=17.0, tilt0=TILT0, tilt_deg_s=1.5,
+                     decay=0.25, snaps=[dict(g=PUSH1, k=1.35, peak=1.8, shift=(0.0, 0.0), tilt=0.0),
+                           dict(g=SNAP, k=1.6, peak=2.0, shift=(0.0, 0.0), tilt=-3.0)])
 
 
 def move_fg(A, cam_loc):
@@ -132,6 +135,7 @@ class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s15")
         self.path = cam_path(self.A)
+        self.extra = self.add_crowd()
         move_fg(self.A, self.path.loc0)
         self.key_cam(bf(GF), *self.path.at(GF))
         self.scene.frame_set(bf(GF))
@@ -141,6 +145,39 @@ class Take(C.Take):
         self.fgh = C.make_actor("fgh", "gent20", os.path.join(WORK, "sprites"), contact=False, shadow=None, cam=self.cam)
         self.off = self.actors["off"] = C.make_actor("off", "official", os.path.join(WORK, "sprites"),
                                                      contact=dict(width=1.3, depth=0.55, opacity=0.8), cam=self.cam)
+
+    def add_crowd(self):
+        """16 extra cast20 crowd cards (lady / gent / child / artists) in the midground behind and beside the pair (QA: thin crowd)"""
+        import random
+        rr = random.Random(7)
+        roles = ["lady20", "gent20", "child20", "painter20", "gent20", "lady20", "composer20", "architect20", "poet20", "lady20"]
+        m = marks(self.A)
+        e = m["eiffel"]
+        cam = self.path.loc0
+        out = []
+        for i in range(16):
+            for _ in range(60):
+                x = e.x + rr.uniform(-6.5, 8.0)
+                y = e.y + rr.uniform(2.2, 13.0)
+                if abs(x - (e.x + 0.7)) < 2.2 and y < e.y + 6.5:
+                    continue                                          # keep the area right behind the pair readable
+                if any(math.hypot(x - o[0], y - o[1]) < 1.5 for o in out):
+                    continue
+                break
+            out.append((x, y))
+        cards = []
+        for i, (x, y) in enumerate(out):
+            z = C.ground_z(x, y)
+            ob = CO.placeholder_actor(roles[i % len(roles)], (x, y, z), face_to=(cam[0] + rr.uniform(-3, 3), cam[1], 1.6), name="xcrowd_%d" % i,
+                                      pose=dict(yaw=rr.choice([-0.6, -0.3, 0.3, 0.6]), expr=rr.choice(["neutral", "smile"])))
+            cards.append(ob)
+        return cards
+
+    def off_pos(self, g):
+        """the official steps back and aside after the handover (g 1030..1062), so the snap lands on Eiffel with him small behind-right"""
+        u = u_of(g, 1030, 1062)
+        p = Vector(self.M["official"])
+        return (p.x - 0.1 * u, p.y + 4.6 * u, p.z)
 
     def fg_pos(self, g):
         """foreground crowd head (back of a gent in a top hat): 2.5 D ahead of the lens, bottom-left corner, feet underground"""
@@ -156,7 +193,7 @@ class Take(C.Take):
             self.key_cam(f, *self.path.at(g))
             C.place(self.fgh, f, self.fg_pos(g))
             C.place(self.eif, f, self.M["eiffel"])
-            C.place(self.off, f, self.M["official"])
+            C.place(self.off, f, self.off_pos(g))
             self.key_set(f, set_year=YEAR, set_crowd=3)
         self.bob_crowd(gs)
         for g in gs:
@@ -169,7 +206,7 @@ class Take(C.Take):
 
     def bob_crowd(self, gs):
         """the fair crowd cards are static placeholders: give each a small idle bob + sway (nobody frozen), keyed every frame."""
-        cards = [ob for grp in CO.STATE.get("cards", []) for ob in grp]
+        cards = [ob for grp in CO.STATE.get("cards", []) for ob in grp] + list(getattr(self, "extra", []))
         if not hasattr(self, "_card0"):
             self._card0 = [(ob, ob.location.copy(), ob.rotation_euler.copy()) for ob in cards]
         for g in gs:
