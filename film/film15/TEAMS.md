@@ -24,3 +24,6 @@
 - reveal take 3 (19ac75f): s25 ACCEPTED (6.7/12.2), s29 ACCEPTED (6.4/12.1); s28 FAIL (head into caption band g1583-1593 from the new push) -> r4 fix requested.
 - s28 r4 ACCEPTED (05639a7; 9.9/13.8; side view, head mid-frame). Conform film15_v3: 55 blends, 0 fallbacks, motion 6.3/13.6, -12.2 LUFS, -2.4 dBTP, no music yet.
 - FINAL: approved by client 2026-11-20 with music C; release on claude/new-session-73ou27 film/release15/fosbury_v1.mp4; queue WAIT (client posts).
+
+## Remake v2 (client 2026-11-20)
+- Client: rules G/H/I all, text signs allowed, NO client OK needed on the set: QA-art (Opus) approves the SET gate, then render immediately.
