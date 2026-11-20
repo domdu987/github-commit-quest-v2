@@ -45,11 +45,12 @@ WP = [
     (488, (-0.56, 5.45, 1.97), (-0.92, 6.5, 1.44)),   # the raking insert pose of cafe_table_insert
     (512, (-0.4, 5.5, 2.0), (-0.7, 6.5, 1.5)),        # still over the sheet, starts to rise
     (556, (0.0, 5.3, 2.3), (0.5, 8.2, 2.1)),          # calm rise, the aim swings up toward the window
-    (580, (1.0, 4.8, 2.6), (1.55, 12.8, 3.2)),        # stub + black smoke
-    (594, (2.3, 5.6, 1.9), (1.7, 13.1, 3.0)),         # sweep down + right toward the banquette
-    (603, (3.533, 6.506, 0.983), (1.692, 13.16, 2.944)),   # LAST frame of T06 = team7's exact T09 pose (director correction)
-    (604, (3.505, 6.531, 0.994), (1.692, 13.16, 2.942)),   # first out-handle frame (T09 g604)
-    (607, (3.421, 6.606, 1.027), (1.692, 13.16, 2.936)),   # out-handle: keeps drifting ~0.03 D/frame toward -x/+y/+z (push + crane)
+    (572, (0.9, 4.7, 2.6), (1.55, 12.8, 3.2)),        # stub + black smoke
+    (582, (1.3, 5.9, 2.25), (1.7, 13.0, 2.95)),         # sweep down toward the banquette
+    (593, (2.0, 7.7, 1.7), (1.7, 13.2, 2.4)),         # slowing
+    (603, (2.6, 9.6, 1.35), (1.69, 13.16, 2.0)),      # LAST frame of T06 = the agreed T09 start pose (director/team7)
+    (604, (2.63, 9.65, 1.345), (1.69, 13.16, 1.995)), # first out-handle frame, still gently moving
+    (607, (2.7, 9.8, 1.33), (1.69, 13.16, 1.98)),     # out-handle
 ]
 END_CAM = dict(g=603, loc=WP[-3][1], look=WP[-3][2], lens=22.0, shift=(0.0, 0.0), note="turned toward the banquette (Maupassant mark (1.69, 13.16), seat (1.69, 14.0)); camera moving +y ~0.07 D/frame; D units")
 
@@ -97,7 +98,7 @@ def corner_speed(g):
 
 # ----------------------------------------------------------------------------- cast
 ART = [("art1", "painter20"), ("art2", "composer20"), ("art3", "poet20"), ("art4", "architect20")]
-SPOT = {"art1": (-3.0, 6.9), "art2": (-1.1, 8.9), "art3": (1.5, 7.3), "art4": (-2.1, 5.2), "wtr": (4.8, 8.5)}
+SPOT = {"art1": (-3.0, 6.9), "art2": (-2.0, 8.9), "art3": (-0.8, 7.9), "art4": (-2.1, 5.2), "wtr": (4.8, 8.5)}
 YAW = {"art1": 0.35, "art2": 0.1, "art3": -0.35, "art4": 0.3}
 PROP = {"art1": dict(type="news20", angle=-25, scale=0.6), "art2": None, "art3": dict(type="news20", angle=20, scale=0.6), "art4": dict(type="news20", angle=-35, scale=0.6)}
 PHASE = {"art1": 0.0, "art2": 1.7, "art3": 3.1, "art4": 4.4}
