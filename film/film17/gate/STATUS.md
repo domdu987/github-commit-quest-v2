@@ -13,4 +13,13 @@
 | s10 | 9 | **PASS** R5 (QA-tech R4 PASS + QA-art R5 PASS; R5 changed only g1406-19 and card post) | 669e44b (USE THIS) | gate/s10/QA_TECH_R4.md, QA_ART_R5.md |
 | s11 | 10 | **PASS** R3 (QA-art R2 PASS + QA-tech R3 PASS; should-fix accepted: eye pop g1607 reads as a 'caught' take, chair post, weak fist) | 55446ee (USE THIS) | gate/s11/QA_TECH_R3.md, QA_ART_R2.md |
 | s12 | 11 | **PASS** R3 (QA-tech; chins measured all frames, cards 55-72 px) | 3c91397 (USE THIS) | gate/s12/QA_TECH_R3.md |
-| s13 | 12 | REOPENED at FINAL (QA-art): shot 33 g2014-2051 hand = black bars, calipers not on ear; re-render shot 33 | ba82a63 (shots 31-32 OK) | FINAL_QA_ART.md, FINAL_director_end.png |
+| s13 | 12 | **PASS** (shot 33 redo after FINAL QA-art; FINAL QA-art R2 SHIP) | 2345bc4 (USE THIS) | FINAL_QA_ART_R2.md |
+
+## FINAL gate (2026-11-20)
+| reviewer | result | file |
+|---|---|---|
+| script checks (qa_auto full cut) | PASS (0 black/frozen/magenta; flagged pops = planned inner cuts) | FINAL_QA_AUTO.md |
+| audio | R1 FAIL (caption sync 34/102) -> captions retimed from STT -> R2 PASS: STT 0.995-1.000, -12.2 LUFS, TP -1.5 dBTP, captions 0/102 off (max 0.05 s), SFX >=16 dB under voice | FINAL_AUDIO.md, FINAL_AUDIO_R2.md |
+| QA-art | R1 FIX-FIRST (shot 33 hand) -> s13 2345bc4 -> R2 SHIP, overall 8 | FINAL_QA_ART.md, FINAL_QA_ART_R2.md |
+| blind viewer | PASS (hook, mocker, mechanism, ending all correct) | FINAL_BLIND.md |
+Rhythm full film: in-shot median 6.22 / p90 14.35 (film 2: 5.11 / 18.65; floor 4 / 12). No director overrides.
