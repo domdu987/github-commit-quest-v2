@@ -30,7 +30,7 @@ G0, G1 = C.g_bound(CFG["t0"]), C.g_bound(CFG["t1"])      # shot = g G0 .. G1-1
 G_FIRST, G_LAST = G0 - CFG["h_in"], G1 + CFG["h_out"] - 1
 GS = list(range(G_FIRST, G_LAST + 1))
 G_SNAP = C.cap_g(CFG["snap_word"])
-SNAP = (G_SNAP - 8, G_SNAP + 12)                          # 14 frames, the strongest word lands inside
+SNAP = (G_SNAP - 6, G_SNAP + 10)                          # 16 frames
 LIGHT, PRESET = "NOON", "ship_deck"
 FINAL_SPP = 11
 PPD = 256 if SHOT == 15 else 384
@@ -49,9 +49,9 @@ def sun_k(g):
 # ---- camera (rest frame of the deck: world D at t = 0) ------------------------------------------------------------
 CAM_LOC0 = (-1.11, -39.59, 17.1125)                       # preset start
 if SHOT == 15:
-    CAM_LOOK0 = (0.55, -31.4, 16.6)
-    CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.10, slide_px=40.0, rise_px=15.0, arc_deg_s=-7.0, decay=0.2,
-                    snaps=[dict(g=SNAP, k=1.9, peak=1.5, shift=(0.8, 0.0))])
+    CAM_LOOK0 = (0.55, -31.4, 15.2)
+    CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.10, slide_px=-30.0, rise_px=0.0, arc_deg_s=5.0, decay=0.2,
+                    snaps=[dict(g=SNAP, k=1.5, peak=1.8, shift=(0.85, 2.0))])
 else:
     CAM_LOC0 = (-2.1, -38.6, 15.9)
     CAM_LOOK0 = (1.3, -31.3, 16.3)
@@ -72,11 +72,12 @@ def william_pose(g):
         p = dict(W_Q)
         u = u_of(g, G_SNAP - 4, G_SNAP + 8)                       # the quadrant thrusts up on "อยู่ตรงหัว"
         sway = math.sin(2 * math.pi * g / 40.0)
-        p["arm_r"] = dict(hand=(0.46 + 0.02 * sway, 0.10 - 0.10 * u), bend=-0.7, stretch=1.1, layer="top")
-        p["prop_r"] = dict(type="quadrant19", angle=-62 + 3.0 * sway - 6.0 * u, scale=0.95)
+        p["arm_r"] = dict(hand=(0.40 + 0.02 * sway, 0.05 - 0.12 * u), bend=-0.7, stretch=1.1, layer="top")
+        p["prop_r"] = dict(type="quadrant19", angle=-85 + 2.0 * sway - 3.0 * u, scale=0.95)
+        p["pitch"] = -0.45
         p["glint"] = 0.5 + 0.5 * math.sin(2 * math.pi * g / 12.0) if g >= G_SNAP - 6 else 0.4
         p["lean"] = -3 - 1.5 * u + 0.8 * math.sin(g * 0.2)
-        p["gaze"] = (0.5, -0.9)
+        p["gaze"] = (0.2, -1.0)
     else:
         p = dict(W_H4)
         u = u_of(g, G_SNAP - 4, G_SNAP + 12)
@@ -96,9 +97,10 @@ def captain_pose(g):
     p["lean"] = 1.0 * math.sin(g * 0.09)
     p["head_roll"] = 1.5 * math.sin(g * 0.07 + 1.0)
     if SHOT == 15:
-        p["pitch"] = -0.35                                          # looks up at the sun (squint)
-        p["gaze"] = (0.5, -0.8)
+        p["pitch"] = -0.40                                          # looks up at the sun, shading his eyes with a hand
+        p["gaze"] = (0.2, -1.0)
         p["expr"] = "determined"
+        p["arm_r"] = dict(hand=(0.34, -0.02), bend=-0.9, shape="open", stretch=1.0, layer="top")
     else:
         p["pitch"] = 0.05
         p["gaze"] = (0.9, 0.2)                                      # at William's watch
@@ -126,6 +128,72 @@ class Take(C.Take):
         self.scene.frame_set(1)
         for a in (self.wil, self.cap):
             C.ride_ship(a, self.root)
+        if SHOT == 15:
+            self.build_sun_disc()
+
+    def build_sun_disc(self):
+        """a visible sun: a bright disc + soft halo parented to the camera (top right of frame), camera rays only (it lights nothing);
+        fade keyed by frame."""
+        bpy = C.bpy
+        d = 12.0                                              # D from the lens
+        self.sun_fade = []
+        for name, px, py, rpx, soft in (("sun_halo", 580.0, 150.0, 230.0, 1), ("sun_disc", 580.0, 150.0, 52.0, 0)):
+            me = bpy.data.meshes.new(name)
+            r = rpx / 782.2 * d
+            me.from_pydata([(-r, -r, 0), (r, -r, 0), (r, r, 0), (-r, r, 0)], [], [(0, 1, 2, 3)])
+            uv = me.uv_layers.new(name="uv")
+            for i, (u, v) in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))):
+                uv.data[i].uv = (u, v)
+            ob = bpy.data.objects.new(name, me)
+            self.scene.collection.objects.link(ob)
+            ob.parent = self.cam
+            ob.location = ((px - 360.0) / 782.2 * d, (640.0 - py) / 782.2 * d, -d)
+            for a in ("visible_diffuse", "visible_glossy", "visible_transmission", "visible_volume_scatter", "visible_shadow"):
+                setattr(ob, a, False)
+            mat = bpy.data.materials.new(name)
+            mat.use_nodes = True
+            nt = mat.node_tree
+            for n in list(nt.nodes):
+                nt.nodes.remove(n)
+            out = nt.nodes.new("ShaderNodeOutputMaterial")
+            mix = nt.nodes.new("ShaderNodeMixShader")
+            tr = nt.nodes.new("ShaderNodeBsdfTransparent")
+            em = nt.nodes.new("ShaderNodeEmission")
+            em.inputs["Color"].default_value = (1.0, 0.93, 0.72, 1.0) if soft else (1.0, 0.98, 0.90, 1.0)
+            em.inputs["Strength"].default_value = 3.0 if soft else 30.0
+            tc = nt.nodes.new("ShaderNodeTexCoord")
+            sub = nt.nodes.new("ShaderNodeVectorMath"); sub.operation = "SUBTRACT"
+            sub.inputs[1].default_value = (0.5, 0.5, 0.0)
+            ln = nt.nodes.new("ShaderNodeVectorMath"); ln.operation = "LENGTH"
+            mr = nt.nodes.new("ShaderNodeMapRange")
+            mr.inputs["From Min"].default_value = 0.0 if soft else 0.46
+            mr.inputs["From Max"].default_value = 0.5 if soft else 0.5
+            mr.inputs["To Min"].default_value = 1.0
+            mr.inputs["To Max"].default_value = 0.0
+            if soft:
+                mr.interpolation_type = "SMOOTHSTEP"
+            fade = nt.nodes.new("ShaderNodeValue"); fade.name = "fade"; fade.outputs[0].default_value = 0.0
+            mul = nt.nodes.new("ShaderNodeMath"); mul.operation = "MULTIPLY"
+            if soft:
+                mul2 = nt.nodes.new("ShaderNodeMath"); mul2.operation = "MULTIPLY"; mul2.inputs[1].default_value = 0.55
+            nt.links.new(tc.outputs["UV"], sub.inputs[0]); nt.links.new(sub.outputs[0], ln.inputs[0])
+            nt.links.new(ln.outputs["Value"], mr.inputs["Value"])
+            nt.links.new(mr.outputs["Result"], mul.inputs[0]); nt.links.new(fade.outputs[0], mul.inputs[1])
+            last = mul.outputs[0]
+            if soft:
+                nt.links.new(last, mul2.inputs[0]); last = mul2.outputs[0]
+            nt.links.new(last, mix.inputs["Fac"])
+            nt.links.new(tr.outputs[0], mix.inputs[1]); nt.links.new(em.outputs[0], mix.inputs[2])
+            nt.links.new(mix.outputs[0], out.inputs["Surface"])
+            ob.data.materials.append(mat)
+            ob.visible_camera = True
+            self.sun_fade.append((mat, fade))
+
+    def key_sun_disc(self, f, g):
+        v = u_of(g, G_SNAP - 8, G_SNAP + 4, kind="sine")
+        for mat, fade in self.sun_fade:
+            fade.outputs[0].default_value = v
+            fade.outputs[0].keyframe_insert("default_value", frame=f)
 
     def pose(self, gs):
         M = self.A["marks"]
@@ -136,6 +204,8 @@ class Take(C.Take):
             H.set_roll(t, frame=f)
             H.set_sun_overhead(sun_k(g), frame=f)
             self.key_cam(f, *C.on_ship(self.root, f, *CAM.at(g)))
+            if SHOT == 15:
+                self.key_sun_disc(f, g)
             C.place(self.wil, f, Vector(M["william_deck"]))
             C.place(self.cap, f, Vector(M["captain_wheel"]) + CAP_OFF)
         for g in gs:
