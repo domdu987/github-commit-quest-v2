@@ -28,7 +28,7 @@ GS = list(range(G_FIRST, G_LAST + 1))
 G_QUOTE = C.cap_g("นาฬิกาเนี่ยนะ")                        # 637
 G_MOUTH0 = 623                                           # the grin / open mouth starts no earlier than g 619 (window 20.80 s = g 622 +-4)
 G_LAUGH0 = C.cap_g("หัวเราะลั่น") - 9                      # laugh starts building before the caption
-SNAP = (G_QUOTE - 5, G_QUOTE + 17)
+SNAP = (G_QUOTE - 4, G_QUOTE + 14)
 BLINKS = [560, 584]
 
 YAW0 = float(os.environ.get("YAW0", "1.35"))
@@ -36,8 +36,8 @@ LIGHT, PRESET, FINAL_SPP, PPD = "DAY", "hall_low", 8, 320
 
 SUBJ = Vector((-3.24, 3.24, 2.62))                        # chest/neck of the mocker at his mark
 CAM_LOC0 = (-3.30, -1.85, 1.15)
-CAM = C.CamPath(CAM_LOC0, tuple(SUBJ), G_FIRST, G_LAST, push=0.08, slide_px=-45.0, rise_px=0.0, arc_deg_s=10.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.3, peak=2.2, shift=(0.95, -0.20))])
+CAM = C.CamPath(CAM_LOC0, tuple(SUBJ), G_FIRST, G_LAST, push=0.07, slide_px=-45.0, rise_px=0.0, arc_deg_s=11.5, decay=0.15,
+                snaps=[dict(g=SNAP, k=1.3, peak=2.5, shift=(0.80, -0.25))])
 
 ST = cast19.STORY19
 IDLE, LAUGH, POINT = ST["astro_idle"][1], ST["astro_belly_laugh"][1], ST["astro_mock_point"][1]
@@ -57,6 +57,8 @@ def pose_of(g):
         base = LR(smug, LAUGH, u) if u < 1 else dict(LAUGH)
         base["yaw"] = lerp(smug["yaw"], 0.12, u)
         p = cast19.laugh_cycle(((g - G_LAUGH0) % 30) / 30.0, base)
+        sq = p["squash"]
+        p["squash"] = (1.0 + 2.0 * (sq[0] - 1.0), 1.0 + 2.0 * (sq[1] - 1.0))     # stronger belly bounce
         p["expr"] = "laughing" if (u >= 0.5 and g >= G_MOUTH0) else "smug"
         if g < G_MOUTH0:
             p["mouth"] = "flat"
@@ -85,13 +87,38 @@ def hop_z(g):
     if g < G_LAUGH0 + 6 or g > G_QUOTE + 3:
         return 0.0
     ph = (g - G_LAUGH0) / 30.0 * 3.0
-    return 0.045 * (1.0 + math.sin(2 * math.pi * ph - math.pi / 2))      # 0..0.06 D at 3 Hz
+    return 0.08 * (1.0 + math.sin(2 * math.pi * ph - math.pi / 2))      # 0..0.06 D at 3 Hz
+
+
+# director option (3): the chair(s) of the Board table's left row stand between the orbiting camera and the mocker during the snap.
+# They are merged into per-material meshes, so delete the FACES whose centre lies in this box (set dressing from the shot, never the set module).
+CHAIR_BOX = ((-2.95, -1.35), (0.7, 3.8), (0.04, 2.45))          # x, y, z in world D
+
+
+def hide_chairs(box=CHAIR_BOX):
+    import bmesh
+    n = 0
+    for ob in list(C.bpy.data.objects):
+        if ob.type != "MESH" or not ob.name.startswith("hall_"):
+            continue
+        bm = bmesh.new()
+        bm.from_mesh(ob.data)
+        M = ob.matrix_world
+        dead = [f for f in bm.faces if all(lo <= c <= hi for c, (lo, hi) in zip(M @ f.calc_center_median(), box))]
+        if dead:
+            bmesh.ops.delete(bm, geom=dead, context="FACES")
+            bm.to_mesh(ob.data)
+            n += len(dead)
+        bm.free()
+    return n
 
 
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s08")
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
+        C.bpy.context.view_layer.update()
+        print("take: hid %d chair faces" % hide_chairs(), flush=True)
         self.key_cam(bf(G_FIRST), *CAM.at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
         self.ast = self.actors["ast"] = C.make_actor("ast", "astro19", os.path.join(WORK, "sprites"), contact=True, cam=self.cam)
