@@ -1,21 +1,19 @@
 #!/usr/bin/env python3
-"""shot.py -- film 20 CAFE Maupassant takes (team7): s09 / s10 / s16 / s17.  ONE file, identical in the four take folders; the shot
-is chosen by the folder name (sNN).  CAFE cafe_low / cafe_low_close, DAY; view 'stub' (1887, shots 9-10) or 'full' (1889, shots 16-17).
+"""shot.py -- film 20 CAFE Maupassant CAMERA-TRAVEL takes (team7, QA_TEAM §I re-plan): s09 = T09 (shots 9+10) and s16 = T16 (shots 16+17).
+ONE file, identical in both take folders; the take is chosen by the folder name.  CAFE cafe_low, DAY; window view 'stub' (T09, 1887)
+or 'full' (T16, 1889).  No cuts inside a take: the camera TRAVELS (crane / push / orbit, Catmull-Rom keys, never parked).
 
-  s09 (g 604..675)  cafe_low: he rises from the banquette (crouch 0.6 -> 0 on the legs, lean forward then upright), tugs his cravat
-                    twice, chin up; crane up + push + slide; snap on 'ประกาศลั่น' (g 659).  NO mouth movement (quote starts g 682).
-  s10 (g 676..752)  cafe_low_close: QUOTE 1 22.62-25.11 s, lip-sync from the narration loudness (cast20 MOUTH_SET); he turns his back
-                    to the window (yaw +0.3 -> -0.6), eyes shut, arms crossed; snap push on 'มันสักครั้ง!' (g 732).
-  s16 (g 1093..1142) cafe_low, view FULL: belly laugh (3 Hz bounce), crash pull-out from the grin to the gloat framing; he starts
-                    lip-sync on the laugh at 37.12 s (g 1117).
-  s17 (g 1143..1220) cafe_low_close, FULL: QUOTE 2 lip-sync (loudness), laughing, thumb jerked over the shoulder at the tower, mimes
-                    crumpling on 'เป็นเศษเหล็ก!' (g 1195); snap push there.
+  s09 = T09  g 604..752 (20.15-25.09 s), out handle 8 (DIS 11 into T11), 4 frames in (match join to T06): wide on the banquette,
+             crane up as he rises (g 612-640), cravat tugs, push in for the vow (lip-sync 22.62-25.11 s, g 682..755), orbit while he
+             turns his back on the window, then a quick ~1 s push-in to the close-up on "สักครั้ง" (g 728-750).
+  s16 = T16  g 1093..1220 (36.44-40.70 s), 4 frames in (hard cut onto the grin), out handle 11 (DIS 17 into T18): close on the grin,
+             crash pull-out (g 1093-1110) to a medium-wide with the full tower in the window, laugh bounce, lip-sync from 37.12 s
+             (g 1117), slow push-in for the jeer, thumb over the shoulder, crumple mime + ~1 s push-in on "เป็นเศษเหล็ก!" (g 1195).
 
     python3 shot.py probe a:b[:step]          camera / head numbers, no render
-    python3 shot.py camreport                 never-parked check
     python3 shot.py stills a:b[:step] out [scale] [samples]
-    python3 shot.py final a:b[:step] [scale] [samples]   -> raw/ (resumable; run 2 processes) ; scale<1 -> work/draft
-    python3 shot.py mouth                     print the lip-sync table (no bpy work)
+    python3 shot.py final a:b[:step] [scale] [samples]   -> raw/ (resumable); scale<1 -> work/draft
+    python3 shot.py mouth                     lip-sync table
 """
 import math, os, sys, json, wave
 
@@ -27,24 +25,19 @@ from mathutils import Vector                             # noqa: E402
 S, CO, actors, cast20 = C.S, C.CO, C.actors, C.cast20
 lerp, clamp, blink, ez, u_of, bf = C.lerp, C.clamp, C.blink, C.ez, C.u_of, C.bf
 WORK = os.path.join(HERE, "work")
-SHOT = int(os.path.basename(HERE)[1:])
-H = 4                                                    # handle frames on each cut side
+SHOT = int(os.path.basename(HERE)[1:])                   # 9 = T09, 16 = T16
 
-CFG = {
-    9:  dict(g=(604, 675), preset="cafe_low", view="stub"),
-    10: dict(g=(676, 752), preset="cafe_low_close", view="stub"),
-    16: dict(g=(1093, 1142), preset="cafe_low", view="full"),
-    17: dict(g=(1143, 1220), preset="cafe_low_close", view="full"),
-}[SHOT]
-G0, G1 = CFG["g"]                                        # in-shot frames G0..G1 inclusive
-GA, GZ = G0 - H, G1 + H                                  # rendered range
-PRESET, VIEW = CFG["preset"], CFG["view"]
+CFG = {9:  dict(g=(604, 752), h_in=4, h_out=8, view="stub"),
+       16: dict(g=(1093, 1220), h_in=4, h_out=11, view="full")}[SHOT]
+G0, G1 = CFG["g"]                                        # in-take frames G0..G1 inclusive
+GA, GZ = G0 - CFG["h_in"], G1 + CFG["h_out"]
+PRESET, VIEW = "cafe_low", CFG["view"]
 GS = list(range(GA, GZ + 1))
 
 # ----------------------------------------------------------------------------- lip-sync from the narration loudness
 QUOTE1 = (C.g_of(22.62), C.g_of(25.11) - 1)              # 682..755
 QUOTE2 = (C.g_of(37.12), C.g_of(40.67))                  # 1117..1223
-WIN = QUOTE1 if SHOT in (9, 10) else QUOTE2
+WIN = QUOTE1 if SHOT == 9 else QUOTE2
 _ENV = None
 
 
@@ -90,49 +83,68 @@ def mouth_of(g):
 
 
 # ----------------------------------------------------------------------------- staging
-HEAD_Z = 2.6
 PPD = 256
 CANVAS = (-1.75, -4.0, 1.75, 0.25)
 FOLD_R, FOLD_L = dict(hand=(-0.40, 0.92), bend=0.9, layer="top"), dict(hand=(0.40, 0.96), bend=0.9, layer="top")
+C.add_expression("grin20", eyes="happy", tilt=0.0, brows=("both", 0.105, -10.0, 0.050, 0.18, 0.012), mouth="smile")
 
 
 def arm(x, y, **kw):
     return dict(hand=(x, y), **kw)
 
 
-C.add_expression("grin20", eyes="happy", tilt=0.0, brows=("both", 0.105, -10.0, 0.050, 0.18, 0.012), mouth="smile")
-
-# per-shot camera ---------------------------------------------------------------------------------
-CAMP = {
-    9:  dict(push=0.07, slide_px=25.0, rise_px=38.0, arc_deg_s=22.0, arc0=-26.0, tilt0=0.0, tilt_deg_s=-1.0, decay=0.25,
-             snaps=[dict(g=(657, 670), k=1.30, peak=2.0, shift=(0.0, 0.0), tilt=0.0, arc=22.0)]),
-    10: dict(push=0.05, slide_px=10.0, rise_px=0.0, arc_deg_s=26.0, arc0=-30.0, tilt0=0.0, tilt_deg_s=0.0, decay=0.25,
-             snaps=[dict(g=(729, 742), k=1.25, peak=2.2, shift=(0.0, 0.0), tilt=-3.0, arc=48.0)]),
-    16: dict(push=-0.16, slide_px=10.0, rise_px=0.0, arc_deg_s=-14.0, arc0=6.0, tilt0=5.5, tilt_deg_s=0.0, decay=0.3,
-             snaps=[dict(g=(1090, 1108), k=0.65, peak=2.0, shift=(0.0, 0.0), tilt=0.0, arc=-6.0)]),
-    17: dict(push=0.05, slide_px=10.0, rise_px=0.0, arc_deg_s=26.0, arc0=-30.0, tilt0=0.0, tilt_deg_s=0.0, decay=0.25,
-             snaps=[dict(g=(1192, 1205), k=1.25, peak=2.2, shift=(0.0, 0.0), tilt=-3.0, arc=48.0)]),
+# ----------------------------------------------------------------------------- the travelling camera (Catmull-Rom through keys)
+# key = (g, dist D from the look point, azimuth deg round him (0 = the preset's side, + = toward screen-right of the window),
+#        camera height z D, look-at height z D, look-at truck x D).  Head width px ~ 782 / dist.
+KEYS = {
+    9: [(600, 7.0, 16, 0.95, 2.95, 0.0), (622, 6.3, 12, 1.2, 2.9, 0.0), (645, 5.6, 6, 1.6, 2.75, 0.0),
+        (682, 4.6, 8, 2.2, 2.6, 0.0), (712, 4.0, 14, 2.20, 2.55, 0.0), (728, 3.6, 18, 2.15, 2.55, 0.0),
+        (740, 2.6, 24, 2.15, 2.60, 0.0), (752, 2.05, 28, 2.15, 2.62, 0.0), (762, 1.85, 30, 2.15, 2.62, 0.0)],
+    16: [(1089, 2.1, -4, 2.20, 2.65, 0.0), (1096, 2.5, -2, 2.10, 2.60, 0.0), (1110, 5.4, 6, 1.0, 2.6, 0.0),
+         (1135, 5.8, 10, 1.05, 2.7, 0.0), (1165, 5.0, 4, 1.3, 2.65, 0.0), (1185, 4.0, 0, 1.85, 2.55, 0.0),
+         (1195, 3.3, -3, 2.15, 2.60, 0.0), (1210, 2.1, -6, 2.20, 2.65, 0.0), (1222, 1.9, -7, 2.20, 2.65, 0.0),
+         (1232, 1.8, -8, 2.20, 2.65, 0.0)],
 }[SHOT]
-if os.environ.get('CAMP'):
-    CAMP.update(json.loads(os.environ['CAMP']))          # tuning only
-CAM_SHIFT = {9: (0.0, 0.0), 10: (0.0, 0.0), 16: (0.0, 0.0), 17: (0.0, 0.0)}[SHOT]
-START_CLOSE = {16: 1.5}.get(SHOT, 1.0)                   # s16 starts this much closer than the preset (the grin), then pulls out
+if os.environ.get("KEYS"):
+    KEYS = [tuple(k) for k in json.loads(os.environ["KEYS"])]       # tuning only
 
 
-def cam_path(A):
-    m = Vector(A["marks"]["maupassant"])
-    subj = m + Vector((0.0, 0.0, HEAD_Z))
-    c = Vector(A["cams"][PRESET]["loc"])
-    if START_CLOSE != 1.0:
-        c = subj + (c - subj) / START_CLOSE
-    return C.CamPath(c, subj, GA, GZ, **CAMP)
+def _cr(p0, p1, p2, p3, t0, t1, t2, t3, t):
+    """non-uniform Catmull-Rom (tangents by finite differences) between p1 and p2."""
+    m1 = (p2 - p0) / (t2 - t0) if t2 != t0 else 0.0
+    m2 = (p3 - p1) / (t3 - t1) if t3 != t1 else 0.0
+    h = t2 - t1
+    u = (t - t1) / h
+    return ((2 * u ** 3 - 3 * u ** 2 + 1) * p1 + (u ** 3 - 2 * u ** 2 + u) * h * m1 + (-2 * u ** 3 + 3 * u ** 2) * p2 + (u ** 3 - u ** 2) * h * m2)
+
+
+def cam_vals(g):
+    K = KEYS
+    g = clamp(g, K[0][0], K[-1][0])
+    i = 0
+    while i < len(K) - 2 and g > K[i + 1][0]:
+        i += 1
+    a, b = K[i], K[i + 1]
+    p0 = K[i - 1] if i > 0 else (2 * a[0] - b[0],) + tuple(2 * a[j] - b[j] for j in range(1, 6))
+    p3 = K[i + 2] if i + 2 < len(K) else (2 * b[0] - a[0],) + tuple(2 * b[j] - a[j] for j in range(1, 6))
+    return [_cr(p0[j], a[j], b[j], p3[j], p0[0], a[0], b[0], p3[0], g) for j in range(1, 6)]
+
+
+def cam_at(g, mark):
+    d, az, zc, zl, tx = cam_vals(g)
+    r = math.radians(az)
+    look = Vector((mark[0] + tx, mark[1], zl))
+    loc = Vector((mark[0] + tx + d * math.sin(r), mark[1] - d * math.cos(r), zc))
+    return loc, look
 
 
 # ----------------------------------------------------------------------------- poses
 def rise_crouch():
-    """leg crouch that puts the seat top on the banquette (0.865 D)."""
     p = cast20._seated("maupassant", dict(cast20.STORY20["maupassant_idle"][1], seated=1, seat_h=0.80))
     return p["legs"]["crouch"]
+
+
+_CROUCH = None
 
 
 def bounce(g, hz=3.0, a=0.03):
@@ -140,77 +152,65 @@ def bounce(g, hz=3.0, a=0.03):
     return (1.0 + a * s, 1.0 - a * s)
 
 
-def pose_s09(g):
-    c0 = _CROUCH
-    r0, r1 = 612, 634                                    # the rise
-    ur = u_of(g, r0, r1)
-    p = dict(yaw=lerp(0.45, 0.25, ur), expr="sneer", legs=dict(crouch=lerp(c0, 0.0, ur), spread=0.05), t=g / 30.0)
-    # arms: hands on the table edge while seated -> push off -> cravat tug
-    p["arm_l"] = arm(lerp(-0.40, -0.55, ur), lerp(1.04, 0.95, ur), bend=0.6)
+def pose_t09(g):
+    """g 604..752 (+ handles): rise, cravat, chin up (to 668), fold arms + turn his back on the window (676-712), chin jerk on 'สักครั้ง'."""
+    ur = u_of(g, 612, 634)
+    uf = u_of(g, 664, 680)                               # arms: cravat hand -> folded
+    p = dict(legs=dict(crouch=lerp(_CROUCH, 0.0, ur), spread=0.05), t=g / 30.0)
+    p["yaw"] = lerp(lerp(0.45, 0.25, ur), lerp(0.30, -0.60, u_of(g, 676, 712)), uf)
     tug = max(0.0, math.sin(math.pi * clamp((g - 640) / 8.0))) + max(0.0, math.sin(math.pi * clamp((g - 650) / 8.0)))
     if g < 636:
-        p["arm_r"] = arm(lerp(0.40, 0.55, ur), lerp(1.04, 0.95, ur), bend=0.6)
+        a_r = arm(lerp(0.40, 0.55, ur), lerp(1.04, 0.95, ur), bend=0.6)
+        a_l = arm(lerp(-0.40, -0.55, ur), lerp(1.04, 0.95, ur), bend=0.6)
     else:
-        p["arm_r"] = arm(0.22 + 0.04 * tug, 0.78 - 0.05 * tug, bend=0.8, shape="open", layer="top")
-    p["lean"] = lerp(0.0, 0.0, ur) + 7.0 * math.sin(math.pi * clamp((g - 608) / 30.0)) * (1 if g < 640 else 0)
+        a_r = arm(0.22 + 0.04 * tug, 0.78 - 0.05 * tug, bend=0.8, shape="open", layer="top")
+        a_l = arm(-0.55, 0.95, bend=0.6)
+    if g >= 664:                                          # fold the arms
+        a_r = dict(hand=(lerp(a_r["hand"][0], FOLD_R["hand"][0], uf), lerp(a_r["hand"][1], FOLD_R["hand"][1], uf)), bend=lerp(0.8, 0.9, uf), layer="top")
+        a_l = dict(hand=(lerp(a_l["hand"][0], FOLD_L["hand"][0], uf), lerp(a_l["hand"][1], FOLD_L["hand"][1], uf)), bend=lerp(0.6, 0.9, uf), layer="top")
+    p["arm_r"], p["arm_l"] = a_r, a_l
+    hm = math.sin(math.pi * clamp((g - 729) / 9.0))       # chin jerk on 'สักครั้ง' (g 732)
     up = u_of(g, 654, 668)
-    p["pitch"] = lerp(0.05, -0.45, up) - 0.1 * math.sin(math.pi * ur)
-    p["head_roll"] = lerp(4.0, -4.0, up) + 1.5 * math.sin(g * 0.15)
-    p["expr"] = "sneer" if g < 654 else "smug"
+    p["pitch"] = lerp(lerp(0.05, -0.45, up) - 0.1 * math.sin(math.pi * ur), lerp(-0.30, -0.50, u_of(g, 676, 712)) - 0.15 * hm, uf)
+    p["head_roll"] = lerp(lerp(4.0, -4.0, up), lerp(5.0, -5.0, u_of(g, 676, 712)) + 3 * hm, uf) + 1.8 * math.sin(g * 0.17)
+    p["lean"] = (7.0 * math.sin(math.pi * clamp((g - 608) / 30.0)) if g < 640 else 0.0) + lerp(0.0, -4.0, u_of(g, 676, 712)) + 1.2 * math.sin(g * 0.19)
     p["gaze"] = (0.5, 0.0)
     p["squash"] = (1.0, 1.0 + 0.008 * math.sin(g * 0.27))
-    p["blink"] = blink(g, [616, 649])
-    p["mouth"] = "flat"
-    return p
-
-
-def pose_s10(g):
-    u = u_of(g, 676, 712)                                # turns his back on the window (face yaw +0.3 -> -0.6)
-    p = dict(yaw=lerp(0.30, -0.60, u), expr="smug_shut", arm_r=FOLD_R, arm_l=FOLD_L, legs="wide", t=g / 30.0)
-    hm = math.sin(math.pi * clamp((g - 729) / 8.0))      # chin jerk on the last words
-    p["pitch"] = lerp(-0.30, -0.50, u) - 0.15 * hm
-    p["head_roll"] = lerp(5.0, -5.0, u) + 2.0 * math.sin(g * 0.2) + 3 * hm
-    p["lean"] = lerp(0.0, -4.0, u) + 1.2 * math.sin(g * 0.19)
-    p["squash"] = (1.0, 1.0 + 0.008 * math.sin(g * 0.26))
-    # eyes: open sneer for the first beat, then shut behind a blink at g 686
-    p["expr"] = "sneer" if g < 686 else "smug_shut"
-    p["blink"] = blink(g, [685])
+    if g < 654:
+        p["expr"] = "sneer"
+    elif g < 686:
+        p["expr"] = "smug"
+    else:
+        p["expr"] = "smug_shut"                           # eyes shut behind the blink at 685
+    p["blink"] = blink(g, [616, 649, 685])
     m = mouth_of(g)
     p["mouth"] = m if m is not None else "flat"
     return p
 
 
-def pose_s16(g):
-    p = dict(yaw=0.30, pitch=-0.55, expr="laughing20", fx=["tears"], head_roll=-9 + 2.0 * math.sin(g * 0.3), lean=-8, t=g / 30.0,
-             arm_r=arm(0.50, 1.0, bend=0.9, shape="open"), arm_l=arm(-0.56, 0.98, bend=0.9, shape="open"), legs="wide")
-    p["squash"] = bounce(g)
-    m = mouth_of(g)
-    if m is not None:
-        p["mouth"] = m
-    return p
-
-
-def pose_s17(g):
-    p = dict(yaw=0.30, pitch=-0.5, expr="laughing20", fx=["tears"], head_roll=-8 + 2.0 * math.sin(g * 0.3), lean=-6, t=g / 30.0, legs="wide")
-    p["squash"] = bounce(g, a=0.025)
-    cr = u_of(g, 1190, 1196) - u_of(g, 1202, 1210)       # crumple mime on 'เป็นเศษเหล็ก!' 1195
-    p["arm_l"] = arm(-0.85, 0.30, shape="point", bend=0.6, stretch=1.2)     # thumb over the shoulder at the tower
+def pose_t16(g):
+    """g 1089..1231: belly laugh (3 Hz bounce); from 1143 the thumb over the shoulder at the tower, crumple mime on 1195."""
+    p = dict(yaw=0.30, pitch=-0.55, expr="laughing20", fx=["tears"], head_roll=-9 + 2.5 * math.sin(g * 0.3), lean=-8, t=g / 30.0, legs="wide")
+    p["squash"] = bounce(g, a=0.03)
+    ut = u_of(g, 1136, 1146)                              # belly-hold arms -> thumb over the shoulder
+    p["arm_l"] = dict(hand=(lerp(-0.56, -0.85, ut), lerp(0.98, 0.30, ut)), bend=lerp(0.9, 0.6, ut), shape="open" if ut < 0.5 else "point",
+                      stretch=lerp(1.0, 1.2, ut))
+    cr = u_of(g, 1190, 1196) - u_of(g, 1202, 1210)        # crumple mime on 'เป็นเศษเหล็ก!' 1195
     wob = 0.04 * math.sin(g * 0.9) if cr > 0.05 else 0.0
-    p["arm_r"] = arm(lerp(0.52, 0.36, cr) + wob, lerp(1.0, 0.70, cr), bend=0.9, shape="open" if cr < 0.5 else "ball")
+    p["arm_r"] = arm(lerp(0.50, 0.36, cr) + wob, lerp(1.0, 0.70, cr), bend=0.9, shape="open" if cr < 0.5 else "ball")
+    p["pitch"] = -0.55 - 0.1 * ut
     m = mouth_of(g)
     if m is not None:
         p["mouth"] = m
     return p
 
 
-POSE = {9: pose_s09, 10: pose_s10, 16: pose_s16, 17: pose_s17}[SHOT]
-_CROUCH = None
+POSE = {9: pose_t09, 16: pose_t16}[SHOT]
 
 
-def stand_mark(A, g):
-    """feet position: s09 steps from the banquette to the standing mark while rising."""
+def feet_at(A, g):
     m = Vector(A["marks"]["maupassant"])
-    if SHOT == 9:
+    if SHOT == 9:                                         # steps forward off the banquette edge while rising
         s = Vector(A["marks"]["maupassant_seat"])
         u = u_of(g, 612, 640)
         return (lerp(s.x, m.x, u), lerp(s.y - 0.30, m.y, u))
@@ -222,23 +222,23 @@ class Take(C.Take):
         global _CROUCH
         C.Take.__init__(self, PRESET, light="DAY", quality=quality, name="cam_s%02d" % SHOT)
         mk = self.A["marks"]["maupassant"]
-        self.A["marks"]["maupassant"] = (mk[0], mk[1], C.ground_z(mk[0], mk[1], top=0.6))   # the CAFE ceiling is below top=40: ray from 0.6 D
+        self.A["marks"]["maupassant"] = (mk[0], mk[1], C.ground_z(mk[0], mk[1], top=0.6))   # ray from 0.6 D: the CAFE ceiling is below 40
         _CROUCH = rise_crouch()
-        self.path = cam_path(self.A)
-        self.key_cam(bf(GA), *self.path.at(GA))
+        self.mark = self.A["marks"]["maupassant"]
+        self.key_cam(bf(GA), *cam_at(GA, self.mark))
         self.scene.frame_set(bf(GA))
         self.mau = self.actors["mau"] = C.make_actor("mau", "maupassant", os.path.join(WORK, "sprites"), canvas=CANVAS,
                                                      contact=dict(width=1.3, depth=0.55, opacity=0.7), cam=self.cam)
 
     def pose(self, gs):
-        z = self.A["marks"]["maupassant"][2]
+        z = self.mark[2]
         for g in gs:
             f = bf(g)
-            self.key_cam(f, *self.path.at(g))
-            x, y = stand_mark(self.A, g)
-            bob = 0.06 * abs(math.sin(2 * math.pi * 1.5 * g / 30.0)) if SHOT in (16, 17) else 0.0     # laugh bounce ~0.06 D at 3 Hz
+            self.key_cam(f, *cam_at(g, self.mark))
+            x, y = feet_at(self.A, g)
+            bob = 0.06 * abs(math.sin(2 * math.pi * 1.5 * g / 30.0)) if SHOT == 16 and g < 1230 else 0.0     # laugh bounce 0.06 D at 3 Hz
             C.place(self.mau, f, (x, y, z + bob))
-            self.key_set(f, set_window_view=(VIEW,), smoke=(0.0,)) if False else self.key_set(f, set_window_view=VIEW)
+            self.key_set(f, set_window_view=VIEW)
             if SHOT == 9:
                 self.A["hooks"]["smoke"](0.0, frame=f)
         for g in gs:
@@ -250,19 +250,11 @@ class Take(C.Take):
     def report(self, g):
         f = bf(g)
         self.scene.frame_set(f)
-        loc, look = self.path.at(g)
-        v = look - loc
-        return dict(g=g, cam=[round(c, 3) for c in loc], pitch=round(math.degrees(math.atan2(v.z, math.hypot(v.x, v.y))), 1),
-                    heads=C.head_report(self, f), mouth=str(mouth_of(g)))
+        loc, look = cam_at(g, self.mark)
+        return dict(g=g, cam=[round(c, 3) for c in loc], dist=round(cam_vals(g)[0], 2), heads=C.head_report(self, f), mouth=str(mouth_of(g)))
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):
         return C.Take.render(self, [bf(g) for g in gs], out_dir, scale=scale, samples=samples, threads=threads)
-
-
-def cam_path_static():
-    """CamPath without building the set: numbers from the probe of cafe_low / cafe_low_close (world D)."""
-    loc = {"cafe_low": (1.692, 8.648, 0.94), "cafe_low_close": (1.786, 9.964, 1.598)}[PRESET]
-    return cam_path(dict(marks={"maupassant": (1.692, 13.16, 0.0)}, cams={PRESET: dict(loc=loc)}))
 
 
 if __name__ == "__main__":
@@ -270,13 +262,6 @@ if __name__ == "__main__":
     if cmd == "mouth":
         for g in GS:
             print(g, round(envelope()[g], 2), mouth_of(g))
-        sys.exit(0)
-    if cmd == "camreport":
-        P = cam_path_static()
-        rows, worst = P.report(GS[:-1])
-        for r in rows[::4]:
-            print(r)
-        print("longest run under 0.25 px/frame: %d frames (max 6)" % worst)
         sys.exit(0)
     gs = [g for g in C.parse(sys.argv[2]) if GA <= g <= GZ]
     if cmd in ("probe", "stills"):
