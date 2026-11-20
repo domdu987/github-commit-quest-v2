@@ -55,8 +55,8 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 12.22,
- "s_per_frame_cpu_mean": 23.86,
+ "s_per_frame_wall_mean": 12.52,
+ "s_per_frame_cpu_mean": 24.5,
  "heads_in_shot_px": {
   "astro": {
    "w": [

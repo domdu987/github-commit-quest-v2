@@ -30,17 +30,33 @@ LIGHT, PRESET, FINAL_SPP = "DAY", "hall_wide", 8
 HAR_XY = (0.0, -5.0)                             # AT the door (harrison_door is (0, -5.55)); the open leaves frame him                             # Harrison just inside the doors, left of the aisle (screen-right of centre)
 CAM_LOC0 = (0.0, 9.4, 3.6)
 CAM_LOOK0 = (0.0, -5.0, 2.0)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.10, slide_px=-20.0, rise_px=0.0, arc_deg_s=0.0, decay=0.05,
+class _Sway(object):
+    """CamPath plus a small handheld sway (translation only, level horizon): 0.065 D at 2.6 Hz lateral, 0.05 D at 3.4 Hz vertical"""
+    def __init__(self, cp):
+        self.cp = cp
+
+    def at(self, g):
+        loc, look = self.cp.at(g)
+        f = (look - loc).normalized()
+        r = Vector((f.y, -f.x, 0.0)).normalized()
+        off = r * (0.065 * math.sin(2 * math.pi * g * 2.6 / 30.0 + 0.7)) + Vector((0, 0, 0.05 * math.sin(2 * math.pi * g * 3.4 / 30.0)))
+        return loc + off, look + off
+
+    def report(self, gs, depth=None):
+        return self.cp.report(gs, depth)
+
+
+_CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.03, slide_px=0.0, rise_px=0.0, arc_deg_s=0.0, decay=0.05,
                 snaps=[dict(g=SNAP, k=3.0, peak=1.6, shift=(1.1, 0.7))])
+CAM = _Sway(_CAM)
 
 # ---------------------------------------------------------------------------- cast
-STAND = dict(mock=(-2.1, 0.2, 0.0), bb=(-2.1, 1.9, 0.0), cc=(2.1, 0.9, 0.0), bd=(2.1, 2.6, 0.0))   # behind the chairs; the narrow 22 mm lens needs them inboard of the marks
+STAND = dict(mock=(-2.3, 1.0, 0.0), bb=(2.1, 2.6, 0.0), cc=(1.3, 0.0, 0.0))
 # name, cast, mark, base STORY19 pose, mirror (faces screen-left), phase offset (frames)
 BOARD = [
     ("mock", "astro19", "mocker_table", "astro_belly_laugh", True, 0),
     ("bb", "astro19_b", "astro_a", "astro_b_laugh", True, 7),
     ("cc", "astro19_c", "astro_c", "astro_c_laugh", False, 3),
-    ("bd", "astro19_b", "astro_d", "astro_b_laugh", False, 13),
 ]
 
 

@@ -1,7 +1,7 @@
-# s23 QA: film 19, shot 23 (HALL EVENING), after the QA-art / QA-tech fix round
+# s23 QA: film 19, shot 23 (HALL EVENING), round-2 fixes
 - take.mkv: g 1847..1941 (95 frames), shot g 1856..1932; transition in: dissolve.
-- Old Harrison (old=1) starts in the corridor beyond the door, shuffles THROUGH the doorway toward the camera (about 3.5 D of travel, 34-frame stride cycle, wider contact shadow) holding the H4 on his palm; crane-down + arc camera, whip-pan snap on 'พระราชา' (g 1898). qa_auto reports FAIL 'suspected blur' on the 7 in-handle frames g 1847-1853: false positive, the frames are sharp (full size checked); he is half hidden behind the door leaf there (dark, low-detail). Not screen time (the dissolve in uses the handle). The door leaf covers him briefly after the snap.
-- Rules: no DOF, no text, no caption_shade; set hooks keyed every frame; samples 8; heads in shot (px): {"har": {"w": [96, 162], "y": [534, 643], "x": [207, 620], "bottom_max": 691}}
+- Old Harrison (old=1) starts in the corridor, shuffles THROUGH the doorway toward the camera (about 3.5 D, 34-frame stride cycle), H4 on his palm; stronger contact shadow (opacity 1.0, 1.5 D wide); crane-down + arc camera, faster whip-pan snap (shift 7.3 D) on 'พระราชา' (g 1898). qa_auto 'suspected blur' on the first 5 in-handle frames (g 1847-1851) is a false positive: sharp frames, Harrison half behind the door leaf, handle only. Known: the hall is dark late in the shot.
+- Rules: no DOF, no text, no caption_shade; set hooks keyed every frame; samples 8; heads in shot (px): {"har": {"w": [96, 166], "y": [553, 643], "x": [176, 646], "bottom_max": 691}}
 - qa_auto: see QA_AUTO.md + phone_sheet.jpg. Contact sheet checked at full size.
-- s/frame wall 27.14 (2 procs x 2 threads, some frames rendered while a second job ran), cpu 31.21.
-- Frame-diff in shot (90x160 grey): median 4.42, p90 11.34 (target 4 / 12).
+- s/frame wall 16.95 (2 procs x 2 threads), cpu 33.18.
+- Frame-diff in shot (90x160 grey): median 4.54, p90 12.94 (per-take rule: median >= 4, p90 >= 10).

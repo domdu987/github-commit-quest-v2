@@ -30,7 +30,7 @@ G0, G1 = C.g_bound(CFG["t0"]), C.g_bound(CFG["t1"])      # shot = g G0 .. G1-1
 G_FIRST, G_LAST = G0 - CFG["h_in"], G1 + CFG["h_out"] - 1
 GS = list(range(G_FIRST, G_LAST + 1))
 G_SNAP = C.cap_g(CFG["snap_word"])
-SNAP = (G_SNAP - 6, G_SNAP + 10)                          # 16 frames
+SNAP = (G_SNAP - 8, G_SNAP + 12)                          # 20 frames
 LIGHT, PRESET = "NOON", "ship_deck"
 FINAL_SPP = 11
 PPD = 384
@@ -53,12 +53,16 @@ if SHOT == 15:
     CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.07, slide_px=-12.0, rise_px=30.0, arc_deg_s=0.0, decay=0.2,
                     snaps=[dict(g=SNAP, k=1.2, peak=1.8, shift=(0.0, 0.10))])
 else:
-    CAM_LOC0 = (-1.6, -38.6, 17.1)
-    CAM_LOOK0 = (0.6, -31.3, 16.7)
-    CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.10, slide_px=45.0, rise_px=0.0, arc_deg_s=-9.0, decay=0.15,
-                    snaps=[dict(g=SNAP, k=2.3, peak=1.4, shift=(0.4, 0.1))])
+    # continuity with s15: the cut lands on the framing s15 ends on (same rest-frame pose at g 1190), then a push to the watch
+    _c15 = C.CamPath((-1.11, -39.59, 17.1125), (0.55, -31.4, 15.2), 1086, 1198, push=0.10, slide_px=-30.0, rise_px=0.0, arc_deg_s=5.0,
+                     decay=0.2, snaps=[dict(g=(1166, 1182), k=1.5, peak=1.8, shift=(0.85, 2.0))])
+    CAM_LOC0, CAM_LOOK0 = _c15.at(1190)
+    CAM_LOC0 = CAM_LOOK0 + (CAM_LOC0 - CAM_LOOK0) * 1.8          # a little wider than s15's last frame, so both stay in frame through the push
+    CAM_LOOK0 = CAM_LOOK0 + Vector((0.0, 0.0, 1.0))
+    CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, 1190, G_LAST, push=0.10, slide_px=20.0, rise_px=-15.0, arc_deg_s=-6.0, decay=0.15,
+                    snaps=[dict(g=SNAP, k=1.6, peak=1.4, shift=(0.0, -1.5))])
 
-CAP_OFF = Vector((0.8, 1.7, 0.0))                       # captain a little further from the lens (head size / snap framing)
+CAP_OFF = Vector((0.8, 1.7, 0.0)) if SHOT == 15 else Vector((1.5, 1.1, 0.0))   # s16: the captain stands close beside William so both fit at the push
 
 # ---- poses ---------------------------------------------------------------------------------------------------------
 W_Q = cast19.STORY19["william_quadrant_sun"][1]
@@ -80,8 +84,9 @@ def william_pose(g):
     else:
         p = dict(W_H4)
         u = u_of(g, G_SNAP - 4, G_SNAP + 12)
-        p["arm_r"] = dict(hand=(0.64 + 0.10 * u, 0.62 - 0.05 * u), bend=-0.2, shape="open", stretch=1.15 + 0.10 * u, layer="top")
-        p["yaw"] = 0.30 - 0.15 * u                                # turns toward the lens as he holds the watch out
+        p["arm_r"] = dict(hand=(0.30 - 0.06 * u, 0.86), bend=-0.2, shape="open", stretch=1.15, layer="top")
+        p["prop_r"] = dict(type="h4_watch", scale=2.0)            # the H4 at 2x so it reads on a phone, held in front of the chest
+        p["yaw"] = 0.10
         p["gaze"] = (0.0, 0.2)
         p["lean"] = 2.0 * math.sin(g * 0.13)
         p["head_roll"] = -3.0 + 1.5 * math.sin(g * 0.11)

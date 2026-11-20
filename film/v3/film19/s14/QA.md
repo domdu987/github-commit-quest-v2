@@ -13,3 +13,6 @@
 ## Round 2 re-render (QA_ART 6.5 / QA_TECH FAIL)
 - Camera from (0.9,-2.4,2.9) looking down (look z 1.9), push 20 %/s, slide -10, rise 25, arc 8; snap x1.65 (director asked 1.45) with shift (0.65, -0.35), peak 2.5, so the H1 stays the left ~40 % of the frame beside the H4 on its cloth, and Harrison and his palm stay in frame (head x 469-623). The lower frame is floor / bench top, not the washed apron blur. His palm now points at the H4 (hand x 0.95, stretch 1.25 from g 1039).
 - Frame-diff in-shot: **median 3.43 (under 4)**, p90 11.18 (under 12). Drafts read 4.30 / 10.58; the final comes out lower again. I could not raise it without cropping the H1 or Harrison out at the snap.
+
+## Round 3 (director's relaxed per-take rule: median >= 4, p90 >= 10)
+- Push 30 %/s, rise 40 px/s, arc 12 deg/s, snap shift (0.7, -0.35): frame-diff in-shot median 4.16, p90 11.30. Meets the per-take rule. Framing as in round 2 (H1 left, H4 centre, Harrison and his palm right); in the out-handle after g 1095 Harrison drifts to the right edge (handle only).

@@ -22,7 +22,7 @@
  },
  "set": "v3/set3d19 WORKSHOP preset shop_clock, light NIGHT; set_clock(3) (H3), set_balance(g/30) + set_candles(level) keyed on every frame; no runtime set changes; no caption_shade",
  "cast": "v3/cast19 harrison19 default (greying hair, apron), harrison_chisel base mirrored (H3 at screen-left), chisel taps, straightens and looks tired at the lens after the snap; fixed expression mouth; no lip-sync",
- "camera": "custom 22 mm from (2.2,-1.6,2.4) toward Harrison/H3; CamPath push 7 %/s + slide -70 px/s + arc 8 deg/s + snap x1.2 (peak 3.0) on สิบ (g 952..972)",
+ "camera": "custom 22 mm from (2.2,-1.6,2.4) toward Harrison/H3; CamPath push 7 %/s + slide -70 px/s + arc 8 deg/s + snap x1.3 (peak 3.0) on สิบ (g 952..972)",
  "events": {
   "tapping": "chisel taps ~2 Hz",
   "candle": "set_candles(level 1.0 -> 0.35, lights dimmed to 30 %) every frame",
@@ -48,20 +48,20 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 17.33,
- "s_per_frame_cpu_mean": 34.03,
+ "s_per_frame_wall_mean": 17.15,
+ "s_per_frame_cpu_mean": 33.7,
  "head_px": [
   198,
-  306
+  339
  ],
  "head_centre_y": [
-  512,
+  498,
   580
  ],
  "head_bottom_max_y": 684,
  "framediff_in_shot": {
-  "median": 4.02,
-  "p90": 9.84
+  "median": 4.23,
+  "p90": 10.62
  },
  "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
 }

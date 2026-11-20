@@ -57,7 +57,7 @@ class Take(C.Take):
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
         self.key_cam(bf(G_FIRST), *CAM.at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
-        self.astro = self.actors["astro"] = C.make_actor("astro", "astro19", os.path.join(WORK, "sprites"), contact=dict(width=1.3, depth=0.55, opacity=0.8), cam=self.cam)
+        self.astro = self.actors["astro"] = C.make_actor("astro", "astro19", os.path.join(WORK, "sprites"), contact=dict(width=1.9, depth=0.8, opacity=1.0), cam=self.cam)
 
     def pose(self, gs):
         mark = Vector(self.A["marks"][MARK])

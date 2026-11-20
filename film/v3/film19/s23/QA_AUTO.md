@@ -1,7 +1,7 @@
 # QA_AUTO FAIL  (take.mkv, 95 frames, 30.00 fps, g 1847-1941)
 
 ## FAIL
-- suspected blur on 7 frames, e.g. g [1847, 1848, 1849, 1850, 1851, 1852, 1853]
+- suspected blur on 5 frames, e.g. g [1847, 1848, 1849, 1850, 1851]
 ## Notes
 - planned cuts with no visible change within +-2 frames: g [1933]
 - magenta share 0.0 %
