@@ -139,6 +139,10 @@ def camera_at(g, M):
 # ------------------------------------------------------------------ staging
 def stage(T, gs):
     A = T.A
+    import bpy
+    for o in bpy.data.objects:                                   # the fg banner pole at (-87.6, -14.5) crosses Cressingham's head while we track: hide it (QA: no pole through a face)
+        if o.name in ("flag_gold.021", "flag_wood.021", "flag_t_gold.014", "flag_t_red.015"):
+            o.hide_render = True
     marks = A["marks"]["camp_bank"]
     M = marks["cress"]
     loc0, look0, f, R = axes()
@@ -194,6 +198,7 @@ if __name__ == "__main__":
         gs = list(range(G0, GH + 1, int(sys.argv[2]) if len(sys.argv) > 2 else 2)); q = "final"; out = None
     else:
         gs = C.parse(sys.argv[2]); out = os.path.join(HERE, "raw"); q = "final"
+    if os.environ.get("DRAFT"): q = "draft"; out = os.path.join(HERE, "raw_t")
     samples = int(os.environ.get("SAMPLES", "6" if q == "draft" else "32"))
     T = C.Take21("camp_bank", os.path.join(HERE, "work"), quality=q, samples=samples, world=["camp_bank"])
     if mode == "final":
