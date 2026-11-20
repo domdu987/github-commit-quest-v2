@@ -24,6 +24,7 @@ Branch: `claude/new-session-73ou27`. Only rows with status `READY` may be posted
 | 17 | ไอ้ช่างวัดหู | ไอ้ช่างวัดหู | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release17/ear_v1.mp4 | WAIT (in production; client posts himself) |
 | 18 | ไอ้เสมียนวัว | ไอ้เสมียนวัว | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release18/oxclerk_v1.mp4 | WAIT (in production; client posts himself) |
 | 15 | ไอ้ปลาดิ้น | ไอ้ปลาดิ้น | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release15/fosbury_v1.mp4 | WAIT (client posts himself; music C approved 2026-11-20) |
+| 20 | ไอ้ช่างหมุด | ไอ้ช่างหมุด | https://github.com/domdu987/github-commit-quest-v2/raw/film20/main/film/release20/rivet_v1.mp4 | WAIT (client posts himself) |
 
 ## Captions
 (Each READY clip gets a heading here, `### <#> <Title>`, followed by the exact description text to paste.)
@@ -48,3 +49,12 @@ Branch: `claude/new-session-73ou27`. Only rows with status `READY` may be posted
 แล้วโค้ชต้องทำตามที่พูดไว้ไหม ดูให้จบ 😂
 
 #ไอ้ปลาดิ้น #กระโดดสูง #FosburyFlop #โอลิมปิก #เรื่องจริง #กีฬา #เรื่องเล่า #การ์ตูน #shorts
+
+### 20 ไอ้ช่างหมุด
+ปารีส ปี 1887 วิศวกรคนหนึ่งจะสร้างหอเหล็กสูง 300 เมตร 🗼 ศิลปินและนักเขียนดังสี่สิบกว่าคนลงชื่อประท้วงในหนังสือพิมพ์ ว่าหอนี้ไร้ประโยชน์ น่าเกลียดเหมือนปล่องโรงงาน นักเขียนคนหนึ่งลั่นวาจา "ถ้าหอนี้ตั้งขึ้นมา ข้าจะไม่มองมันสักครั้ง!" ทั้งปารีสเลยเรียกวิศวกรคนนั้นว่า "ไอ้ช่างหมุด"...
+
+แล้วนักเขียนคนนั้นรักษาสัญญาได้ไหม ดูให้จบ 😂
+
+*การประท้วงปี 1887, ใบอนุญาต 20 ปี และสายอากาศวิทยุบนยอดหอเป็นเรื่องจริง ส่วนเรื่องโมปัสซังต์ขึ้นไปกินข้าวบนหอเป็นเรื่องเล่าขาน ("เล่ากันว่า") คำพูดในคลิปและฉายา "ไอ้ช่างหมุด" แต่งขึ้นเพื่อการเล่าเรื่อง
+
+#ไอ้ช่างหมุด #หอไอเฟล #ปารีส #เรื่องจริง #ประวัติศาสตร์ #สิ่งก่อสร้าง #เรื่องเล่า #การ์ตูน #shorts

@@ -9,3 +9,4 @@
 | 10 | ไอ้ช่างม้าลาย (dazzle ships) | posted by owner 2026-11-18 | film/release10/zebra_v2.mp4 |
 | 11 | ไอ้หมอวัว (smallpox vaccine) | posted by owner 2026-11-19 | film11/main film/release11/cowdoc_v1.mp4 |
 | 15 | ไอ้ปลาดิ้น (Fosbury Flop) | approved 2026-11-20 (music C); client posts himself | film/release15/fosbury_v1.mp4 |
+| 20 | ไอ้ช่างหมุด (Eiffel Tower protest) | finished 2026-11-20, queue row WAIT; client posts himself | film20/main film/release20/rivet_v1.mp4 |
