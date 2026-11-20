@@ -29,13 +29,13 @@ PRESET, LIGHT, FINAL_SPP, PPD = "hall_table", "EVENING", 8, 256
 BLINKS_H, BLINKS_K = [2095, 2125, 2150], [2100, 2130]
 
 HAR_M = (-0.90, 1.70, 0.0)                               # D: BEHIND the table edge (near edge y 1.1 D); the bag lands in front of him
-KING_M = (1.20, 5.60, 0.0)                               # D: beside the table head, clear of Harrison
+KING_M = (0.45, 5.60, 0.0)                               # D: beside the table head, clear of Harrison
 BAG_XY_M = (0.15, 0.80)                                  # metres on the tabletop: right of Harrison, near edge (lower third of the frame)
 BAG_SCALE = 1.35
-CAM_LOC0 = (-0.80, -3.90, 3.20)
-CAM_LOOK0 = (0.20, 3.00, 1.90)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.07, slide_px=-8.0, rise_px=5.0, arc_deg_s=-2.0, decay=0.10,
-                snaps=[dict(g=SNAP, k=1.10, peak=2.3, shift=(-0.10, 0.20))])
+CAM_LOC0 = (-1.00, -2.70, 3.00)
+CAM_LOOK0 = (-0.50, 1.80, 2.00)
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.11, slide_px=0.0, rise_px=8.0, arc_deg_s=15.0, decay=0.10,
+                snaps=[dict(g=SNAP, k=1.25, peak=2.6, shift=(0.80, 0.10))])
 
 HB = dict(cast19.STORY19["harrison_old_idle"][1])
 KB = dict(cast19.STORY19["king_idle"][1])
@@ -102,7 +102,7 @@ class Take(C.Take):
         self.key_cam(bf(G_FIRST), *CAM.at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
         sd = os.path.join(WORK, "sprites")
-        self.har = self.actors["har"] = C.make_actor("har", "harrison19", sd, contact=True, cam=self.cam)
+        self.har = self.actors["har"] = C.make_actor("har", "harrison19", sd, contact=dict(width=1.1, depth=0.5, opacity=0.8), cam=self.cam)
         self.king = self.actors["king"] = C.make_actor("king", "king19", sd, contact=True, cam=self.cam)
         self.bag = K.STATE["hooks"]["bag_full"]
         self.bag0 = Vector((BAG_XY_M[0], BAG_XY_M[1], self.bag.location.z))   # on the tabletop in front of Harrison
