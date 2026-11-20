@@ -213,3 +213,33 @@ thumb.jpg (g 1136-1146, every 2nd frame).
 3. **Dress and expose the floor.** Bring the sun patch down to a warm cream (no clipped white). Add a café table in the near FG with
    a cloth, a glass and a chair, plus one or two seated patrons on the banquette (or dim figures at the frame edge) to fill the bottom
    30 %. Remove the green stick at the window edge.
+
+## s16 rev2 (commit fa9f44b): PASS
+
+Frames: 2 fps from g 1093, at full size and 360x640, in .../scratchpad/takeart3/s16r2/{full,ph}/, with s16r2_phone.jpg and pair.png
+(g 1138 / 1198).
+
+| set | light | comp | act | key | cam | chan | verdict |
+|---|---|---|---|---|---|---|---|
+| 7 | 8 | 7 | 8 | 8 | 7 | 8 | **PASS** |
+
+**My three fixes:**
+- **F1 gesture: FIXED.** From about g 1153 through the jeer, his arm jabs back over his screen-right shoulder at the tower, and he
+  does not look at it. The mockery has its target on the phone sheet.
+- **F2 punchline: FIXED.** At g 1198-1213 his head is in the left half, and the whole tower with its lit rings stands clear in the
+  right third. On the phone this is the false-payoff image: man versus tower, side by side.
+- **F3 floor and set: FIXED (accepted with a deviation).**
+  - The floor is about 18 % of the frame.
+  - The painter (red beret) and the composer laugh behind him, which fills the room and doubles the mockery.
+  - The window junk is gone.
+  - The grade now has a rich red, blue and gold palette.
+  - I accept the director's reason for having no patrons at the FG table.
+
+**Non-blocking notes (conform or the next pass, if time allows):**
+- The banquette seat edge, a red bar, crosses both artists' coats at the waist with their legs dangling in front of the seat face
+  (g 1108-1183). They read as standing behind the seat rather than sitting on it. It is minor because they are background players,
+  but it is the same seat-slice as in s09.
+- The FG marble table at the left edge is a bare grey disc. A glass catching the light would sell it more.
+- A small blown-white floor glint remains at the bottom-left at g 1123-1153. The right curtain still clips the tower's leg in the
+  mid-orbit, which is fine because the tower is clear on the punchline.
+- In the close-up the composer is half off the right edge (g 1198-1220). This is accepted as part of the punch-in.

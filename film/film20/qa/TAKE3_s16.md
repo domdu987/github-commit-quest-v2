@@ -14,3 +14,15 @@ Frames: /tmp/claude-0/-home-user-github-commit-quest-v2/ef039ac4-2646-5d6b-b692-
 4. Window geometry: g1089-1099 and g1175-1195 the window frame/glass shows mis-registered panes (an offset blue rectangle over the lit frame, a dark-green slab across the lower window at g1175-1200, a white sliver at the left edge g1190). Reads as broken geometry. Fix: enlarge the glass quad / view-plane behind the window so its edges stay outside the frame, remove or move the green slab.
 5. Tower at the end: g1210-1220 the tower is reduced to its top over the head, and almost hidden at g1220, while he thumbs at it. Fix: offset the push so the tower stays beside his head.
 6. Thumb gesture: the thumb/arm points out to the LEFT of frame (g1140-1220) while the tower is on the RIGHT; the "over the shoulder at the tower" reads wrong. Fix: mirror the arm (right arm to frame right) or put the tower on the side he points to.
+
+## Revision 2 (take.mkv re-extracted, 143 frames, first_g 1089; 6 fps + cut +-3; frames in .../scratchpad/takeqa3/s16r2/)
+Verdict: PASS (3 non-blocking notes). qa_auto PASS (same expected cut note). qa_stats2: sat 0.555, vivid 49.7 %, luma 97.5, warm 42.2 / cool 33.5, motion med 8.32 / p90 17.63, still 0 %. meta head bottom max y 848 (< 880).
+Round-3 items:
+1. Artists: FIXED. Painter (red beret) and composer (white hair) laugh on the banquette behind him g1099-1230 with laugh mouths; marble table with glasses at the left edge g1105-1185.
+2. Floor/glare: FIXED. Floor about 18 %, white patch reduced to a few small glints (g1105-1160), no blown slab.
+3. Close-up: FIXED. Face about 30-33 % of frame height at g1205-1220, chin above y 880; the push (g1185-1220) is about 1.1 s.
+4. Window geometry: mostly fixed (lawn slab/stick gone); the glass edge still shows a faint offset pane at g1089-1099 and g1190 (left edge). Non-blocking.
+5. Tower at the punchline: FIXED. The whole tower with rings stands clear in the right third g1190-1230.
+6. Thumb: FIXED. The mirrored arm jabs over his right shoulder toward the tower (g1136-1220); QA-art items 1-3 match.
+Lip-sync still only g1117-1223 (grin/laugh mouths before; artists' mouths are laugh shapes only).
+Notes (non-blocking): (a) g1105-1170 the tower's right leg is slightly clipped by the right curtain; (b) the green-suited composer shows a red banquette/table bar crossing his torso g1130-1170; (c) the artists' legs look thin and rubbery.

@@ -202,7 +202,7 @@ def bridge(mb, M, zb, x, y0, y1, w=22.0):
     for i in range(n):
         yy = y0 - 6 + (y1 - y0 + 12) * (i + 0.5) / n; mb.box(M['stone'], (x, yy, zb + 0.55), (w - 1.0, (y1 - y0 + 12) / n - 5.0, 0.7))
 
-def ground_plane(zb, cols, size=2400, rough=1.0, ctr=(0, 300), apron=None):
+def ground_plane(zb, cols, size=2400, rough=1.0, ctr=(0, 300), apron=None, outer=None):
     """apron = (x, y, R, k, (r, g, b)): darker trampled earth (multiply colour, strength k at the centre, smooth fall-off to R metres) around a world point"""
     me = bpy.data.meshes.new('ground'); bm = bmesh.new(); bmesh.ops.create_grid(bm, x_segments=2, y_segments=2, size=size); bm.to_mesh(me)
     ob = bpy.data.objects.new('ground', me); ob.location = (ctr[0], ctr[1], zb); bpy.context.scene.collection.objects.link(ob); ob.parent = C.root()
@@ -223,6 +223,11 @@ def ground_plane(zb, cols, size=2400, rough=1.0, ctr=(0, 300), apron=None):
         vd = N('ShaderNodeVectorMath'); vd.operation = 'DISTANCE'; L(tc.outputs['Object'], vd.inputs[0]); vd.inputs[1].default_value = (ax - ctr[0], ay - ctr[1], 0.0)
         mr = N('ShaderNodeMapRange'); mr.interpolation_type = 'SMOOTHSTEP'; mr.inputs['From Min'].default_value = 0.4 * ar; mr.inputs['From Max'].default_value = ar; mr.inputs['To Min'].default_value = ak; mr.inputs['To Max'].default_value = 0.0; L(vd.outputs['Value'], mr.inputs['Value'])
         c4 = N('ShaderNodeMix'); c4.data_type = 'RGBA'; c4.blend_type = 'MULTIPLY'; L(mr.outputs['Result'], c4.inputs[0]); L(last, c4.inputs[6]); c4.inputs[7].default_value = (atint[0], atint[1], atint[2], 1.0); last = c4.outputs[2]
+    if outer:                                   # beyond R0..R1 metres from the tower axis the ground turns into Paris street paving / lawn colour
+        ox, oy, r0, r1, hx_ = outer
+        vd2 = N('ShaderNodeVectorMath'); vd2.operation = 'DISTANCE'; L(tc.outputs['Object'], vd2.inputs[0]); vd2.inputs[1].default_value = (ox - ctr[0], oy - ctr[1], 0.0)
+        mr2 = N('ShaderNodeMapRange'); mr2.interpolation_type = 'SMOOTHSTEP'; mr2.inputs['From Min'].default_value = r0; mr2.inputs['From Max'].default_value = r1; mr2.inputs['To Min'].default_value = 0.0; mr2.inputs['To Max'].default_value = 1.0; L(vd2.outputs['Value'], mr2.inputs['Value'])
+        c5 = N('ShaderNodeMix'); c5.data_type = 'RGBA'; L(mr2.outputs['Result'], c5.inputs[0]); L(last, c5.inputs[6]); c5.inputs[7].default_value = hexc(hx_); last = c5.outputs[2]
     L(last, bs.inputs['Base Color']); L(bs.outputs[0], out.inputs['Surface']); ob.data.materials.append(m)
 
 def clouds(P):
@@ -281,7 +286,7 @@ def tower_slice(mb, M, a, b, thick=1.0, piers=True, interleg=True, top_plate=Fal
             for z0, z1 in zip(zs[:-1], zs[1:]): mb.rod(I, f(z0), f(z1), 0.52 * k * (1.15 - z0 / 600.0), 0.5 * k * (1.15 - z1 / 600.0), 4)
         for p_, q_ in (((-1, -1), (1, -1)), ((1, -1), (1, 1)), ((1, 1), (-1, 1)), ((-1, 1), (-1, -1))): lattice_face(mb, IL, P[p_], P[q_], zs, 0.22 * k, 0.26 * k)
         if piers and a == 0:
-            mb.box(M['stonedk'], (sx * tw(0), sy * tw(0), 1.4), (2 * th(0) + 5.0, 2 * th(0) + 5.0, 5.2)); mb.box(M['stone'], (sx * tw(0), sy * tw(0), 4.2), (2 * th(0) + 3.2, 2 * th(0) + 3.2, 0.7))
+            mb.box(M['stonedk'], (sx * tw(0), sy * tw(0), 0.9), (2 * th(0) + 5.0, 2 * th(0) + 5.0, 3.0)); mb.box(M['stone'], (sx * tw(0), sy * tw(0), 2.6), (2 * th(0) + 3.2, 2 * th(0) + 3.2, 0.6))
         if top_plate:
             z = b; mb.box(I, (sx * tw(z), sy * tw(z), z + 0.4), (2 * th(z) + 0.8, 2 * th(z) + 0.8, 0.8))
     if interleg and b > Z1 + 2:

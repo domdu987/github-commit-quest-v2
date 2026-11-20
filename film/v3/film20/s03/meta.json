@@ -35,8 +35,8 @@
  },
  "note": "T03: ONE continuous take = shots 3+4+5. BIGZOOM 1 from an extreme wide high over Paris 1887 down to a medium of Eiffel at the plan table (lands g 268, he points up), then the camera travels through the yard and CRANES up the scaffolded front-left leg past working riveters to the sky; snap tilt on 'สูงที่สุดในโลก' (g 344-359)",
  "grade": {
-  "saturation_x": 0.914,
-  "brightness_x": 0.899,
+  "saturation_x": 1.186,
+  "brightness_x": 0.916,
   "note": "post grade for QA_TEAM section G"
  },
  "dof": "none",
@@ -49,20 +49,20 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 14.48,
- "s_per_frame_cpu_mean": 27.95,
+ "s_per_frame_wall_mean": 12.86,
+ "s_per_frame_cpu_mean": 24.83,
  "head_px": [
-  2,
-  8845
+  3,
+  10274
  ],
  "head_centre_y": [
-  -20867,
-  58034
+  -93206,
+  19120
  ],
- "head_bottom_max_y": 62327,
+ "head_bottom_max_y": 24257,
  "framediff_in_shot": {
-  "median": 7.66,
-  "p90": 13.49
+  "median": 4.18,
+  "p90": 12.07
  },
  "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
 }

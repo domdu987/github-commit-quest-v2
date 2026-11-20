@@ -60,7 +60,7 @@ Shots inside one take are NOT cut: the camera travels from beat to beat (follow,
 | T21 = s21 | 21+22 | 47.71-55.21 | 1431-1656 | team9 | night: from the hut roof RISE to the summit, rings spread over Paris, lattice glows on "เสาอากาศยักษ์", then SWOOP down to the foot: crowbars drop, officer salutes | CUT |
 | T23 = s23 | 23 | 55.21-57.75 | 1656-1732 | team1 | 1910 fair callback | DIS 13 |
 | T24 = s24 | 24 | 57.75-61.77 | 1732-1853 | team2 | BIGZOOM 2 Paris -> restaurant window | DIS 13 |
-| T25 = s25 | 25 | 61.77-63.72 | 1853-1911 | team2 | inside, eating (match the window framing) | MATCH-DISSOLVE 9 |
+| T25 = s25 | 25 | 61.77-63.72 | 1853-1911 | team2 | inside, eating (same table seen from inside) | DISSOLVE 9 (outside->inside; no frame match needed) |
 | T26 = s26 | 26 | 63.72-65.60 | 1911-1968 | team3 | over-the-shoulder out of the window | CUT |
 | T27 = s27 | 27 | 65.60-68.20 | 1968-2046 | team3 | crash pull-out | CUT |
 Hard cuts: 1|2, 15|16, 18|21, 25|26, 26|27 = 5 (plus 1 match). Lighting: motivated sources in every take (sun shafts through the café / restaurant windows, forges, gas lamps, the spark gap, lamp dots at night), warm + cool in the same frame. Signature colours: Eiffel red-orange iron against deep Paris blue. Short in-world signs now ALLOWED (sharp, readable on a phone, Latin letters only to avoid Thai tofu), e.g. "LE TEMPS" masthead on the newspaper, "PROTESTATION" on the sheet, "EXPOSITION UNIVERSELLE 1889" banner at the fair, "T.S.F." on the radio hut, "RESTAURANT" on the first-floor pavilion.

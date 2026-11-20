@@ -21,6 +21,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import c20 as C                                          # noqa: E402
 from mathutils import Vector                             # noqa: E402
+import int20 as I                                        # noqa: E402  (set3d20 interior builders: marble_table, cup, glass)
+import sb as SB                                          # noqa: E402  (styleboard: bentwood chair)
 
 S, CO, actors, cast20 = C.S, C.CO, C.actors, C.cast20
 lerp, clamp, blink, ez, u_of, bf = C.lerp, C.clamp, C.blink, C.ez, C.u_of, C.bf
@@ -100,10 +102,10 @@ KEYS = {
     9: [(600, 7.0, 16, 0.95, 2.95, 0.0), (622, 6.3, 12, 1.2, 2.9, 0.0), (645, 5.6, 6, 1.6, 2.75, 0.0),
         (682, 4.6, 8, 2.2, 2.6, 0.0), (712, 4.0, 14, 2.20, 2.55, 0.0), (728, 3.6, 18, 2.15, 2.55, 0.0),
         (740, 2.6, 24, 2.15, 2.60, 0.0), (752, 2.05, 28, 2.15, 2.62, 0.0), (762, 1.85, 30, 2.15, 2.62, 0.0)],
-    16: [(1089, 2.1, -4, 2.20, 2.65, 0.0), (1096, 2.5, -2, 2.10, 2.60, 0.0), (1110, 5.4, 6, 1.0, 2.6, 0.0),
-         (1135, 5.8, 10, 1.05, 2.7, 0.0), (1165, 5.0, 4, 1.3, 2.65, 0.0), (1185, 4.0, 0, 1.85, 2.55, 0.0),
-         (1195, 3.3, -3, 2.15, 2.60, 0.0), (1210, 2.1, -6, 2.20, 2.65, 0.0), (1222, 1.9, -7, 2.20, 2.65, 0.0),
-         (1232, 1.8, -8, 2.20, 2.65, 0.0)],
+    16: [(1089, 2.1, -4, 2.20, 2.65, 0.0), (1096, 2.5, -2, 2.10, 2.60, 0.0), (1110, 5.4, 6, 1.0, 2.85, 0.0),
+         (1135, 5.8, 10, 1.05, 2.95, 0.0), (1165, 5.0, 4, 1.3, 2.9, 0.05), (1185, 4.0, 2, 1.85, 2.7, 0.1),
+         (1195, 3.3, 5, 2.15, 2.65, 0.15), (1210, 2.5, 8, 2.2, 2.65, 0.2), (1222, 2.3, 9, 2.2, 2.65, 0.2),
+         (1232, 2.2, 9, 2.2, 2.65, 0.2)],
 }[SHOT]
 if os.environ.get("KEYS"):
     KEYS = [tuple(k) for k in json.loads(os.environ["KEYS"])]       # tuning only
@@ -192,12 +194,12 @@ def pose_t16(g):
     """g 1089..1231: belly laugh (3 Hz bounce); from 1143 the thumb over the shoulder at the tower, crumple mime on 1195."""
     p = dict(yaw=0.30, pitch=-0.55, expr="laughing20", fx=["tears"], head_roll=-9 + 2.5 * math.sin(g * 0.3), lean=-8, t=g / 30.0, legs="wide")
     p["squash"] = bounce(g, a=0.03)
-    ut = u_of(g, 1136, 1146)                              # belly-hold arms -> thumb over the shoulder
-    p["arm_l"] = dict(hand=(lerp(-0.56, -0.85, ut), lerp(0.98, 0.30, ut)), bend=lerp(0.9, 0.6, ut), shape="open" if ut < 0.5 else "point",
-                      stretch=lerp(1.0, 1.2, ut))
-    cr = u_of(g, 1190, 1196) - u_of(g, 1202, 1210)        # crumple mime on 'เป็นเศษเหล็ก!' 1195
+    ut = u_of(g, 1136, 1146)                              # belly-hold arm -> thumb jabbed back over his RIGHT (screen-right) shoulder at the tower
+    p["arm_r"] = dict(hand=(lerp(0.50, 0.85, ut), lerp(1.0, 0.30, ut)), bend=lerp(0.9, 0.6, ut), shape="open" if ut < 0.5 else "point",
+                      stretch=lerp(1.0, 1.2, ut), layer="top")
+    cr = u_of(g, 1190, 1196) - u_of(g, 1202, 1210)        # crumple mime (left hand) on 'เป็นเศษเหล็ก!' 1195
     wob = 0.04 * math.sin(g * 0.9) if cr > 0.05 else 0.0
-    p["arm_r"] = arm(lerp(0.50, 0.36, cr) + wob, lerp(1.0, 0.70, cr), bend=0.9, shape="open" if cr < 0.5 else "ball")
+    p["arm_l"] = arm(lerp(-0.56, -0.36, cr) + wob, lerp(0.98, 0.70, cr), bend=0.9, shape="open" if cr < 0.5 else "ball")
     p["pitch"] = -0.55 - 0.1 * ut
     m = mouth_of(g)
     if m is not None:
@@ -217,6 +219,56 @@ def feet_at(A, g):
     return (m.x, m.y)
 
 
+# ----------------------------------------------------------------------------- T16 extras (TAKE3 fixes): artists laughing + near-FG table with patrons
+HIDE_NAMES = ("furn_leafA", "city_leafA", "city_leafB", "city_trunk")   # palms (stray green stick) and street-tree leaves (dark-green slab in the window)
+# (cast, STORY20 pose, feet (x, y) D, yaw, mirror, laugh phase)
+ARTISTS = [("painter20", "painter20_laughing", (0.30, 13.80), 0.30, False, 0.0), ("composer20", "composer20_laughing", (3.50, 13.80), -0.30, True, 1.7)]
+PATRONS = ARTISTS                                        # both sit on the banquette behind him (seated=1, seat 0.865 D) and laugh
+FG_TABLE_D = (0.55, 10.0)                                 # near-foreground marble table (D); chairs + patrons around it
+
+
+def build_extras(take):
+    """hide the stray set objects, add the FG table + chairs (set3d20 builders, metres under the scaled root), make the extra actors."""
+    for o in C.bpy.data.objects:
+        if o.name in HIDE_NAMES:
+            o.hide_render = True
+            o.hide_viewport = True
+    wo = CO.STATE.get("win_objs", {}).get("full")
+    if wo is not None:                                    # the dark-green lawn slab under the tower (tower_full_i_lawn2): out of the window view
+        keep = [o for o in wo if o.name != "tower_full_i_lawn2"]
+        for o in wo:
+            if o.name == "tower_full_i_lawn2":
+                o.hide_render = True
+        CO.STATE["win_objs"]["full"] = keep
+    M = CO.STATE["M"]
+    mb = CO.MB("t16_fg", parent=CO.root())
+    tx, ty = FG_TABLE_D[0] / CO.SC, FG_TABLE_D[1] / CO.SC
+    I.marble_table(mb, M, tx, ty, 0.42)
+    I.cup(mb, M, tx + 0.1, ty + 0.08, 0.77); I.glass(mb, M, tx - 0.16, ty + 0.12, 0.77, "wineg", 0.11); I.glass(mb, M, tx + 0.2, ty - 0.1, 0.77, "wineamb", 0.11)
+    I.bottle(mb, M, tx - 0.02, ty - 0.14, 0.77, "i_botb", 0.28, 0.035)
+    mb.finish()
+    take.extra = []
+    for cast, pose, (x, y), yaw, mirror, ph in ARTISTS + PATRONS:
+        a = C.make_actor("x_" + cast, cast, os.path.join(WORK, "sprites"), canvas=cast20.CANVAS20[cast], contact=dict(width=1.1, depth=0.5, opacity=0.7), cam=take.cam)
+        take.extra.append((a, cast, pose, (x, y), yaw, mirror, ph, (cast, pose, (x, y), yaw, mirror, ph) in PATRONS))
+
+
+def extra_pose(spec, g):
+    a, cast, pose, (x, y), yaw, mirror, ph, seated = spec
+    p = dict(cast20.STORY20[pose][1])
+    p["yaw"] = yaw
+    p["t"] = g / 30.0 + ph
+    s = math.sin(2 * math.pi * 3.0 * g / 30.0 + ph)
+    p["squash"] = (1.0 + 0.025 * s, 1.0 - 0.025 * s)
+    p["head_roll"] = p.get("head_roll", 0) + 5.0 * math.sin(g * 0.31 + ph)
+    if seated:
+        p["seated"] = 1
+        p["seat_h"] = 0.865
+    if mirror:
+        p["mirror"] = True
+    return p
+
+
 class Take(C.Take):
     def __init__(self, quality="preview"):
         global _CROUCH
@@ -229,6 +281,17 @@ class Take(C.Take):
         self.scene.frame_set(bf(GA))
         self.mau = self.actors["mau"] = C.make_actor("mau", "maupassant", os.path.join(WORK, "sprites"), canvas=CANVAS,
                                                      contact=dict(width=1.3, depth=0.55, opacity=0.7), cam=self.cam)
+        if SHOT == 16:                                       # TAKE3 colour: tilted-up frames lost saturation / gained luma -> exposure down, grade sat up
+            ge, gs = [float(v) for v in os.environ.get("GRADE", "-0.25,1.22").split(",")]
+            P = CO.STATE.get("P", {})
+            P["sat"] = gs
+            CO.setup_grade(self.scene, P)
+            self.scene.view_settings.exposure = float(P.get("exposure", 0.0)) + ge
+        self.extra = []
+        if SHOT == 16:
+            build_extras(self)
+            for spec in self.extra:
+                self.actors[spec[0].name] = spec[0]
 
     def pose(self, gs):
         z = self.mark[2]
@@ -239,13 +302,19 @@ class Take(C.Take):
             bob = 0.06 * abs(math.sin(2 * math.pi * 1.5 * g / 30.0)) if SHOT == 16 and g < 1230 else 0.0     # laugh bounce 0.06 D at 3 Hz
             C.place(self.mau, f, (x, y, z + bob))
             self.key_set(f, set_window_view=VIEW)
+            for spec in self.extra:
+                (xx, yy), seated = spec[3], spec[7]
+                bob2 = 0.0 if seated else 0.05 * abs(math.sin(2 * math.pi * 1.5 * g / 30.0 + spec[6]))
+                C.place(spec[0], f, (xx, yy, z + bob2))
             if SHOT == 9:
                 self.A["hooks"]["smoke"](0.0, frame=f)
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
             self.mau.pose(f, POSE(g), camera=self.cam)
-        self.sprites_for([(self.mau, PPD)], [bf(g) for g in gs])
+            for spec in self.extra:
+                spec[0].pose(f, extra_pose(spec, g), camera=self.cam)
+        self.sprites_for([(self.mau, PPD)] + [(spec[0], PPD) for spec in self.extra], [bf(g) for g in gs])
 
     def report(self, g):
         f = bf(g)
