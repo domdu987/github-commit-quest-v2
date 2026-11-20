@@ -24,7 +24,7 @@ G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1
 GS = list(range(G_FIRST, G_LAST + 1))
 G_BAG = C.g_of(12.50)                          # "รางวัล" -> bag drops
 G_SNAP_WORD = C.g_of(14.81)                    # "สองหมื่นปอนด์" -> push-in snap
-SNAP = (G_SNAP_WORD - 8, G_SNAP_WORD + 9)
+SNAP = (G_SNAP_WORD - 6, G_SNAP_WORD + 7)
 LIGHT, PRESET = "DAY", "hall_table"
 FINAL_SPP = 8
 CONTACT = dict(width=1.6, depth=0.75, color="#1a1626", opacity=0.9)
@@ -34,7 +34,7 @@ CAM_LOOK0 = (0.0, 3.0, 2.4)
 class SwayCam(C.CamPath):
     """CamPath + a slow lateral sway of the camera body (loc only, the look point stays): parallax of the dense hall that keeps both
     astronomers framed (a plain arc swings the camera past one of them)."""
-    SWAY_D, SWAY_T = 1.4, 3.0
+    SWAY_D, SWAY_T = 1.8, 2.6
 
     def at(self, g):
         loc, look = C.CamPath.at(self, g)
@@ -44,8 +44,8 @@ class SwayCam(C.CamPath):
         return loc + r * (self.SWAY_D * math.sin(ph)), look
 
 
-CAM = SwayCam(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.06, slide_px=0.0, rise_px=0.0, arc_deg_s=0.0, decay=0.15,
-              snaps=[dict(g=SNAP, k=1.7, peak=1.4, shift=(0.22, -0.12))])
+CAM = SwayCam(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.02, slide_px=0.0, rise_px=0.0, arc_deg_s=0.0, decay=0.15,
+              snaps=[dict(g=SNAP, k=1.4, peak=2.0, shift=(0.0, -0.10))])
 
 MARK_A = (-1.55, 3.40, 0.0)                    # astro19, left of the table, faces screen-right
 MARK_B = (1.55, 3.60, 0.0)                     # astro19_b, right of the table, faces screen-left (mirror)
