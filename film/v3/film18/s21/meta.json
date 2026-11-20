@@ -9,10 +9,10 @@
   "frames": 0
  },
  "framediff": {
-  "median": 5.57,
-  "p90": 13.29,
-  "min": 1.31,
-  "max": 17.61,
+  "median": 6.04,
+  "p90": 13.64,
+  "min": 1.57,
+  "max": 17.87,
   "n": 86,
   "frames_lt1": 0
  },
@@ -24,5 +24,5 @@
   "soldier_freeze_b": 609,
   "soldier_freeze_c": 611
  },
- "s_per_frame": 24.1
+ "s_per_frame": 24.3
 }
