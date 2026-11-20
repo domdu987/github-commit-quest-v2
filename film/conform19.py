@@ -18,8 +18,9 @@ T = N / FPS
 VOICE_DB = float(os.environ.get("VOICE_DB", "-14.4")); MUSIC_DB = float(os.environ.get("MUSIC_DB", "-31"))
 SR = 48000
 REL = P + "/release19"; os.makedirs(REL, exist_ok=True); os.makedirs(WORK, exist_ok=True)
-OUT = REL + ("/harrison_preview.mp4" if PREV else "/harrison_v1.mp4")
-TAG = "preview" if PREV else "v1"
+VER = os.environ.get("VER", "v1")
+OUT = REL + ("/harrison_preview.mp4" if PREV else f"/harrison_{VER}.mp4")
+TAG = "preview" if PREV else VER
 FA = P + "/film19/audio"
 log = lambda *a: print(*a, flush=True)
 
