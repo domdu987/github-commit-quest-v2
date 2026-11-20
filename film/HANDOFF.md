@@ -80,6 +80,9 @@ Read film/QA_TEAM.md §G (vivid colour, nothing floats, not too close) and §H (
 ## 7c. Client decision 2026-11-20: the TARGET is the reference Shorts in film/ref_shorts/
 Read film/QA_TEAM.md §I. In short: the camera travels through connected sets instead of cutting (≤12 cuts), lighting is motivated (light shafts, lamps, neon, rim light), each film has a bold signature colour, text signs are now ALLOWED, characters always act, and close-ups are used only as short punctuation.
 
+## 7d. Client decision 2026-11-20: no idle chats
+As soon as a render team's takes are ACCEPTED, archive that team's session with archive_session (allowed in .claude/settings.json). After the release is sent to the client, the producer archives the director session. Archived chats stay readable, and every file is on GitHub.
+
 ## 8. From film 15: film-2 camera rhythm (client decision 2026-11-18)
 Read skill production-lessons §10 before planning shots, and use film/plan/shot_plan.md (film 2) as the camera-grammar example.
 The voice stays Bankky at the original setting.
