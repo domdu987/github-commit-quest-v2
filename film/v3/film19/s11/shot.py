@@ -56,7 +56,7 @@ def pose_of(g):
     lk = u_of(g, *G_LOOKUP, kind="sine")
     ph = 2 * math.pi * g / 12.0                           # 2.5 Hz filing stroke
     stroke = (1.0 - lk) * 0.11 * math.sin(ph)
-    hr = (0.82 + stroke, 1.06 + 0.02 * math.sin(ph + 1.0) + lk * 0.1)
+    hr = (1.0 + stroke, 1.45 + 0.02 * math.sin(ph + 1.0) + lk * 0.05)
     p["arm_r"] = dict(hand=hr, bend=0.2, layer="front", stretch=1.2)
     p["prop_r"] = dict(type="file19", angle=12 + 6 * math.sin(ph) * (1 - lk))
     p["lean"] = lerp(10 + 1.5 * math.sin(ph), 2.0, lk)
