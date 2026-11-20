@@ -118,3 +118,31 @@ Recommended (non-blocking polish, in priority order):
 3. Make the shared look read: turn the heads ~15-20 deg toward each other (or slide the pupils sideways) on g 173-179, and keep the captain's brows raised (not half-lidded) through the shrug.
 4. Break up the flat sail on the left at g 118-150 with seams, reef points or a stripe, or warm or whiten all the sails (R5 style).
 5. Sharpen the foreground deck texture, or lower the empty-deck share.
+
+## Round 12 (director QA-art): PASS, 7.4 (must-fix closed; no regressions)
+
+Take: take.mkv.partaa + partab joined to /tmp/s02a12.mkv (first_g 48, 152 frames, 720x1280, 30 fps). All 152 frames extracted to /tmp/qa19_r12art/s02/gNNN.png (named by g, so this covers 3 fps and every frame g 150-199). Sheets: sheet_3fps.jpg (every 10th frame), beat.jpg (every 2nd frame g 150-198), beat_phone.jpg (360x640 tiles g 166-198), crop_beat.jpg (full-res g 172-199), faces.jpg (full-res heads g 168-196), hands.jpg (every frame g 178-191). I recomputed the frame-diff myself (90x160 grey); it matches framediff.json.
+
+| Check | Status |
+|---|---|
+| **Props stay in hand (round-11 must-fix)** | **Fixed.** I checked every frame from g 178 to g 199. The quadrant stays in the astronomer's hand: it is raised for the head-scratch until about g 181, then lowered over g 182-187 to hip height, where it sits under the chart. The chart stays at the captain's hand, low and dark band down, through g 199. Nothing vanishes or jumps in one frame. At g 185 the quadrant is briefly hidden behind the chart; this is plain occlusion, with no pop. Minor: from g 186 the chart, the quadrant and both outstretched hands meet in the gap between the characters, so that area reads a little cluttered and the chart looks almost shared. This is acceptable. |
+| Landing soft? | **Yes, softer than in round 11.** The frame-diff falls monotonically: 10.4 (g 158), 8.7 (g 167-170), 7.8 (g 171), 6.4 (g 173), 5.5 (g 174), 3.7 (g 175), then a floor of 2.3 at g 176. That is an ease-out over about 8 frames, where round 11 had a 4-frame touchdown, and there is no second surge in camera speed. The rise to about 6 from g 182 to g 187 comes from the shrug action, not the camera. The slow orbit then holds steady at about 4.4 and never parks. On a phone the crane settles onto the quarterdeck instead of thudding. The 8-10 plateau over g 139-169 is the acting plus parallax, as the team says; it looks fine. |
+| Puzzled beat: funnier? | **Slightly.** It is still carried by the captain's round-eyed, open-mouthed shock (g 158-170), which reads at phone size. (a) **Shared look, g 173-180:** the captain's pupils and head slide toward the astronomer, and the astronomer, after a squeezed-eye scratch at g 176, glances back left. You can now see it at full size, but at 360x640 it is subtle, a sideways glance rather than a beat. (b) **Brows:** the captain has brow lines, but his eyelids stay half-lidded and his mouth is wavy, so the face reads "unimpressed / queasy" more than "brows-up puzzled". This is better than round 11, but not a clear "?!" face. (c) **Shrug, g 184-199:** the astronomer is a clean, symmetric arms-out shrug. The captain now has both arms off his body, but his chart arm sits horizontal toward the astronomer while the other arm is low, so it still reads partly as offering or pointing. I cannot make out palms on either character at phone size, because the hands are small dark gloves. There is no shoulder-up squash. **Net: the beat reads clearly as "neither of us knows", gently funny rather than a big laugh.** |
+| Regressions | **None found.** Compared with round 11: the opening is the same (lone ship at about 10 %, no slab), the wake, the stern pass, colour and grounding are unchanged, contact shadows are present on every tile, nobody is cut, faces are about 13-15 % of the frame height, and nothing passes through a face (G2/G3 OK). qa_stats: saturation 0.635, luma 93.8 (G1 OK). |
+| Still open (polish, unchanged) | The plain grey-lilac sail face on the left, g 118-150, has no seams (the team says this was not done). The soft, smeared plank texture covers the bottom ~30 % of the frame on the landing. |
+
+| Criterion | Score |
+|---|---|
+| Set | 8 |
+| Light & colour | 8 |
+| Composition / phone | 7 |
+| Acting | 7 |
+| Key moment (BIGZOOM + "where are we?" beat) | 7.5 |
+| Match to refs (R5 crane over the ship onto the deck) | 7.5 |
+| **Overall** | **7.4 - PASS** |
+
+Non-blocking polish if time allows (none is needed for FINAL):
+1. Captain's face from g 172: open his eyes fully under raised brows (the round shock eyes with a closed, flat mouth). This is the cheapest way to sell "puzzled".
+2. Captain's shrug: drop the chart arm to match the other one (both forearms up and out at the same angle) and add a 3-4 frame shoulder lift.
+3. Shared look: increase the head yaw to about 20 deg on g 174-180 so it reads at 360x640.
+4. Seams or a stripe on the left sail (g 118-150), and a sharper plank texture in the foreground.
