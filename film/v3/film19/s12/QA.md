@@ -19,3 +19,7 @@
 
 ## Round 3 (director's relaxed per-take rule: median >= 4, p90 >= 10)
 - Snap x1.3 instead of x1.2 (everything else as round 2): frame-diff in-shot median 4.23, p90 10.62. Meets the per-take rule. Candle / luma behaviour as in round 2 (luma falls).
+
+## Round 6 (client gate QA_TEAM §G: no face over ~35 % of the frame, nobody cut by an edge)
+- The end push is gone: push 3 %/s, snap k 1.05 as a lateral whip pan (shift 1.4 D, peak 3.0), slide -125 px/s, arc 12 deg/s. Head width 202 px at g938, 222 px at g974, **max 237 px** (g992, handle) - about 19 % of the frame height, vs 327 px before. Harrison is in frame for the whole shot (head x range 215-665 of 720), full torso and stool-side visible; the candle on the chest stays in frame and burns down, the lights keep falling (luma falls).
+- Frame-diff in-shot: median 4.65, p90 15.17. qa_stats: saturation 0.72, brightness 57.0 (night; the conform grade lifts it).

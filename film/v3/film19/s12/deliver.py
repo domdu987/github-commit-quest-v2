@@ -18,7 +18,7 @@ EV = dict(tapping="chisel taps ~2 Hz", candle="set_candles(level 1.0 -> 0.35, li
           h3_balance="set_balance(g/30) every frame (H3 balances counter-rotate)")
 SET = "v3/set3d19 WORKSHOP preset shop_clock, light NIGHT; set_clock(3) (H3), set_balance(g/30) + set_candles(level) keyed on every frame; no runtime set changes; no caption_shade"
 CAST = "v3/cast19 harrison19 default (greying hair, apron), harrison_chisel base mirrored (H3 at screen-left), chisel taps, straightens and looks tired at the lens after the snap; fixed expression mouth; no lip-sync"
-CAM = "custom 22 mm from (2.2,-1.6,2.4) toward Harrison/H3; CamPath push 7 %/s + slide -70 px/s + arc 8 deg/s + snap x1.3 (peak 3.0) on สิบ (g 952..972)"
+CAM = "custom 22 mm from (2.2,-1.6,2.4) toward Harrison/H3; CamPath push 3 %/s + slide -125 px/s + arc 12 deg/s + a lateral whip pan on the snap (k 1.05, shift 1.4 D, peak 3.0): head width stays <= 230 px (client gate G: no face over ~35 % of the frame) on สิบ (g 952..972)"
 CUES = [(FIRST, LAST + 1, "ambience", "workshop at night: near silence, a distant owl, the soft hiss of the candle"),
         (FIRST, LAST + 1, "prop", "the H3 ticking: a quicker, lighter brass tick than the H1, two balances"),
         (G0, 960, "foley", "small chisel taps on brass, about two a second"),
