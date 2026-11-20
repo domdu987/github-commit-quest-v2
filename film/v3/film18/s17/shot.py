@@ -17,12 +17,15 @@ R2.SKIP['s17'] = [(-22.0, 21.0, 3.0), (-14.0, 9.5, 2.5), (-30.0, 9.0, 2.5), (-44
 
 def setup(ctx):
     J.set_holes(12)
+    me = bpy.data.meshes.new('mygap'); me.from_pydata([(-70, 4.5, 0.06), (30, 4.5, 0.06), (30, 40, 0.06), (-70, 40, 0.06)], [], [(0, 1, 2, 3), (3, 2, 1, 0)]); me.update()
+    uv = me.uv_layers.new(name='UVMap')
+    for i_, c_ in enumerate(((0, 0), (12, 0), (12, 8), (0, 8), (0, 8), (12, 8), (12, 0), (0, 0))): uv.data[i_].uv = c_
+    me.materials.append(J.STATE['M']['bank']); J.STATE['SET'].objects.link(bpy.data.objects.new('mygap', me))
     for ob in bpy.data.objects:
         if ob.name in ('jars', 'reeds'): ob.hide_render = True; ob.location.z = -200; ob.hide_viewport = True
     for ob_ in J.STATE.get('fg_objs', []): ob_.hide_render = True; ob_.scale = (0.0, 0.0, 0.0)
     cam = bpy.data.objects['cam']; bpy.context.view_layer.update()
-    rb = J.prop_reed_bundle((0, 0, 0), None, scale=0.5, n=60, cd=3.0); mw = cam.matrix_world
-    rb.parent = cam; rb.location = (-0.42, -0.78, -1.5); rb.rotation_euler = (1.4, 0.2, 0.3)
+    rb = J.prop_reed_bundle((-25.2, 14.2, 0.25), (0.0, 0.0, 2.6), scale=1.0, n=60, cd=3.0)
     emm = bpy.data.materials.new('reedglow'); emm.use_nodes = True; nt = emm.node_tree; nt.nodes.clear(); em = nt.nodes.new('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.8, 0.58, 0.2, 1); em.inputs['Strength'].default_value = 0.5
     o2 = nt.nodes.new('ShaderNodeOutputMaterial'); nt.links.new(em.outputs[0], o2.inputs[0])
     for i_ in range(len(rb.data.materials)):

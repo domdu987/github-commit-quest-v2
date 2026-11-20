@@ -10,8 +10,8 @@ SHOT = 's20'; G0, G1 = 1515, 1595; H_IN, H_OUT = 6, 6
 V_OX = 11.0; XC = 20.0; Y0 = -46.0; DUR = 81 / 30.0
 def pose(sh, t):
     """camera rides with the herd: y = Y0 - V*t*DUR; lateral distance 10.5 -> 9.2 (slow push), whip-in during the first 7 frames."""
-    y = Y0 - V_OX * t * DUR + 1.0 * t + 1.1 * math.sin(t * 12.0); lat = 5.7 - 0.9 * min(1.0, max(0.0, t)) + 0.9 * math.sin(t * 17.0); w = max(0.0, 1.0 - (t * 81) / 7.0) ** 2
-    return dict(loc=(XC, y, 1.25), look_at=(XC - lat, y - 0.5 + 30.0 * w, 1.7 + 0.1 * t), lens=19.0)
+    y = Y0 - V_OX * t * DUR + 1.0 * t + 1.1 * math.sin(t * 12.0); lat = 6.6 - 0.9 * min(1.0, max(0.0, t)) + 0.9 * math.sin(t * 17.0); w = max(0.0, 1.0 - (t * 81) / 7.0) ** 2
+    return dict(loc=(XC, y, 1.25), look_at=(XC - lat, y - 0.2 + 30.0 * w, 1.7 + 0.1 * t), lens=19.0)
 S.pose_at = pose
 rnd = random.Random(20)
 R2.POST['s20'] = lambda p: None
@@ -19,10 +19,15 @@ REL = [(-6.0, 1.0, 1.0, 0.0)]                                   # lead ox in pur
 for row, dx in enumerate((-7.0, -11.8, -16.6)):
     for n in range(-2, 3):
         if row == 0 and n == 0: continue
-        REL.append((dx + rnd.uniform(-0.3, 0.3), 1.0 + 12.0 * n + (2.4 if (row == 0 and n == 1) else 0.0) + rnd.uniform(-0.4, 0.4), rnd.uniform(0.97, 1.03), 0.0))
+        REL.append((dx + rnd.uniform(-0.3, 0.3), 1.0 + 12.0 * n + (4.2 if (row == 0 and n == 1) else 0.0) + rnd.uniform(-0.4, 0.4), rnd.uniform(0.97, 1.03), 0.0))
 
 def setup(ctx):
     J.set_holes(12)
+    Mt = J.STATE['M']
+    me = bpy.data.meshes.new('mygap'); me.from_pydata([(0, -160, 0.06), (45, -160, 0.06), (45, -25, 0.06), (0, -25, 0.06)], [], [(0, 1, 2, 3), (3, 2, 1, 0)]); me.update()
+    uv = me.uv_layers.new(name='UVMap')
+    for i_, c_ in enumerate(((0, 0), (12, 0), (12, 8), (0, 8), (0, 8), (12, 8), (12, 0), (0, 0))): uv.data[i_].uv = c_
+    me.materials.append(Mt['bank']); J.STATE['SET'].objects.link(bpy.data.objects.new('mygap', me))
     import bmesh
     ho = bpy.data.objects.get('halos')
     import numpy as np
@@ -60,7 +65,7 @@ def frame(g, t, camloc, ctx):
         ycam = Y0 - V_OX * (g - G0) / 30.0
         pos = (XC + dx, ycam + dy + dv * k, 0.0)
         ph = int(k * 12 + j * 3) % 8
-        C.put_ox(j, pos, -90, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='side', gait='gallop', theta=0, reed=True, face='rage', tfx=(0.85 if j == 0 else 0.7), lean=86.0)
+        C.put_ox(j, pos, -90, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='side', gait='gallop', theta=0, reed=True, face='rage', tfx=(1.9 if j == 0 else 0.8), lean=86.0)
 
 if __name__ == '__main__':
     KEEP = [(x, y, 3.2) for x in (13.0, 8.2, 3.4) for y in range(-40, -150, -6)]
