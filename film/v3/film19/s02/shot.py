@@ -59,7 +59,7 @@ def _cr(p0, p1, p2, p3, t):
 def _spline(g, which):
     """position on the key spline at the eased parameter u(g) (which 1 = loc, 2 = look)"""
     # g -> u: a slow-ish wide start, a fast descent through the stern (the smooth planks / sail frames the blur check punishes), then it SETTLES on the medium
-    TM = [(48, 0.0), (80, 0.17), (109, 0.54), (117, 0.84), (123, 0.97), (G_ARRIVE, 1.0)]
+    TM = [(48, 0.0), (80, 0.26), (109, 0.58), (117, 0.84), (123, 0.97), (G_ARRIVE, 1.0)]
     j = max(i for i in range(len(TM) - 1) if TM[i][0] <= g) if g < TM[-1][0] else len(TM) - 2
     (g0_, u0_), (g1_, u1_) = TM[j], TM[j + 1]
     x = clamp((g - g0_) / float(g1_ - g0_))
@@ -79,11 +79,11 @@ def cam_rest(g):
     loc, look = _spline(min(g, G_ARRIVE), 1), _spline(min(g, G_ARRIVE), 2)
     if g > G_ARRIVE:
         # settle on the medium: a slow orbit about the pair (parallax against the rigging) plus a gentle push, so the long hold keeps moving
-        d = clamp((g - G_ARRIVE) / 60.0)
-        ang = math.radians(11.0) * d * d * (3 - 2 * d)
+        d = clamp((g - G_ARRIVE) / 50.0)
+        ang = math.radians(17.0) * d * d * (3 - 2 * d)
         c = Vector((0.5, -30.5, loc.z))
         loc = c + Matrix.Rotation(ang, 3, "Z") @ (loc - c)
-        loc = loc + (look - loc) * (0.0012 * (g - G_ARRIVE))
+        loc = loc + (look - loc) * (0.0030 * (g - G_ARRIVE))
     return loc, look
 
 
