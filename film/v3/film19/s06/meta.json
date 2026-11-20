@@ -1,0 +1,68 @@
+{
+ "take": "s06",
+ "film": 19,
+ "shots": [
+  6
+ ],
+ "g0": 356,
+ "g1": 466,
+ "first_g": 347,
+ "n_frames": 128,
+ "shot_ranges": {
+  "6": [
+   356,
+   465
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 13,
+  "note": "DIS 13 from shot 5 (SHIP ship_rocks); 9 handle frames g 347..355 rendered in 3D (half dissolve 6.5 + 2)"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 466,
+  "note": "CUT to shot 7; 9 handle frames g 466..474 rendered in 3D"
+ },
+ "set": "v3/set3d19/h19.py HALL preset hall_table, light DAY; set_moneybag none -> full keyed at g 378 (bag pivot keyed to fall, bounce, squash and settle), set_candles(1.0) on every frame; no caption_shade",
+ "cast": "v3/cast19 astro19 (left, faces right) and astro19_b (right, mirrored): lean in toward the bag, excited, eyes on it; expression mouths only",
+ "camera": "custom 22 mm, c19.CamPath: push 6 %/s + arc, SNAP x1.7 (15 f) pushing in on the bag at 'สองหมื่นปอนด์' (g 447)",
+ "events": {
+  "bag_drop": 378,
+  "snap": [
+   439,
+   454
+  ],
+  "word_20000_g": 447
+ },
+ "dof": "none",
+ "text": "none",
+ "caption_shade": "none",
+ "light": "DAY",
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 10.19,
+ "s_per_frame_cpu_mean": 19.77,
+ "head_px": [
+  141,
+  987
+ ],
+ "head_centre_y": [
+  44,
+  531
+ ],
+ "head_bottom_max_y": 607,
+ "framediff_in_shot": {
+  "median": 4.55,
+  "p90": 6.71
+ },
+ "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
+}

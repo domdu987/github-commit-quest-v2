@@ -1,0 +1,41 @@
+{
+ "take": "s25",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film19/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 67.3,
+   "duration": 2.5,
+   "frame": 2019,
+   "end_frame": 2094,
+   "kind": "ambience",
+   "label": "hall by candlelight, low room tone; the regulator tick goes silent for a beat on the jaw drop"
+  },
+  {
+   "time": 67.6,
+   "duration": 0.4,
+   "frame": 2028,
+   "end_frame": 2040,
+   "kind": "accent",
+   "label": "a comic 'gulp' / deflating squeak as his jaw drops open",
+   "peak_frame": 2033
+  },
+  {
+   "time": 68.967,
+   "duration": 0.433,
+   "frame": 2069,
+   "end_frame": 2082,
+   "kind": "accent",
+   "label": "snap whoosh with a tiny sting on 'เป๊ะ'",
+   "peak_frame": 2076
+  },
+  {
+   "time": 69.533,
+   "duration": 0.0,
+   "frame": 2086,
+   "end_frame": 2086,
+   "kind": "cut",
+   "label": "hard cut to shot 26 (the money bag lands)"
+  }
+ ]
+}

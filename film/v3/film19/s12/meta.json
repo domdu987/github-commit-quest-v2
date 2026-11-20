@@ -1,0 +1,67 @@
+{
+ "take": "s12",
+ "film": 19,
+ "shots": [
+  12
+ ],
+ "g0": 938,
+ "g1": 986,
+ "first_g": 929,
+ "n_frames": 66,
+ "shot_ranges": {
+  "12": [
+   938,
+   985
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 11
+ },
+ "set": "v3/set3d19 WORKSHOP preset shop_clock, light NIGHT; set_clock(3) (H3), set_balance(g/30) + set_candles(level) keyed on every frame; no runtime set changes; no caption_shade",
+ "cast": "v3/cast19 harrison19 default (greying hair, apron), harrison_chisel base mirrored (H3 at screen-left), chisel taps, straightens and looks tired at the lens after the snap; fixed expression mouth; no lip-sync",
+ "camera": "custom 22 mm from (2.2,-1.6,2.4) toward Harrison/H3; CamPath push 15 %/s + slide -45 px/s + snap x1.4 (20 f, peak 2.8, pan) on สิบ (g 952..972)",
+ "events": {
+  "tapping": "chisel taps ~2 Hz",
+  "candle": "set_candles(level 1.0 -> 0.3 over the shot) every frame",
+  "snap": [
+   952,
+   972
+  ],
+  "word_caption": 960,
+  "look_up": [
+   964,
+   974
+  ],
+  "h3_balance": "set_balance(g/30) every frame (H3 balances counter-rotate)"
+ },
+ "dof": "none",
+ "text": "none",
+ "caption_shade": "none",
+ "light": "NIGHT",
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 15.83,
+ "s_per_frame_cpu_mean": 31.06,
+ "head_px": [
+  198,
+  401
+ ],
+ "head_centre_y": [
+  464,
+  580
+ ],
+ "head_bottom_max_y": 685,
+ "framediff_in_shot": {
+  "median": 4.19,
+  "p90": 16.41
+ },
+ "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
+}

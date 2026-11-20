@@ -1,0 +1,52 @@
+{
+ "take": "s02",
+ "film": 19,
+ "shots": [
+  2
+ ],
+ "g0": 57,
+ "g1": 110,
+ "first_g": 48,
+ "n_frames": 71,
+ "shot_ranges": {
+  "2": [
+   57,
+   109
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "hard cut in from shot 1 (WORKSHOP shop_bench) at g 57; 9 handle frames before it rendered in 3D"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 110,
+  "note": "hard cut to shot 3 (HALL hall_window) at g 110; 9 handle frames after it rendered in 3D"
+ },
+ "set": "v3/set3d19/h19.py SHIP preset ship_aerial, light NOON; set_sea(g/30) + set_roll(g/30) keyed on every frame; sea grid re-fitted at runtime to a 4.5x wider virtual camera footprint (no set module edited) so the pull-back never shows the grid edge; no actors; no caption_shade",
+ "cast": "none (no characters in this shot)",
+ "camera": "custom 22 mm from the ship_aerial start pose; c19.CamPath pull 10 %/s + orbit -8 deg/s + slide 60 px/s + crane 140 px/s (ship starts 180 px higher), decay 0.1 (moving on frame 0 and on the last frame); no snap (shot < 2 s)",
+ "events": {},
+ "dof": "none",
+ "text": "none",
+ "caption_shade": "none",
+ "light": "NOON",
+ "samples": 10,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 16.43,
+ "s_per_frame_cpu_mean": 32.06,
+ "framediff_in_shot": {
+  "median": 2.04,
+  "p90": 2.33
+ },
+ "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
+}

@@ -1,0 +1,83 @@
+{
+ "take": "s08",
+ "film": 19,
+ "shots": [
+  8
+ ],
+ "g0": 545,
+ "g1": 661,
+ "first_g": 536,
+ "n_frames": 134,
+ "shot_ranges": {
+  "8": [
+   545,
+   660
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "hard cut from shot 7 (hall_window); 9 handle frames rendered g 536..544"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 661,
+  "note": "hard cut to shot 9 (hall_low, closer); handle g 661..669"
+ },
+ "set": "v3/set3d19/h19.py HALL preset hall_low, light DAY; set_candles(1.0) keyed every frame; no runtime set changes; no caption_shade",
+ "cast": "v3/cast19 astro19 (the mocker) alone at mark mocker_telescope; mouth driven only inside the quote window (c19.mouth_open_at), still expression mouth elsewhere",
+ "events": {
+  "turn": [
+   536,
+   600
+  ],
+  "belly_laugh": [
+   598,
+   640
+  ],
+  "mouth_window": [
+   622,
+   669
+  ],
+  "quote_word": 637,
+  "snap": [
+   632,
+   651
+  ],
+  "point": [
+   640,
+   661
+  ]
+ },
+ "dof": "none",
+ "text": "none",
+ "caption_shade": "none",
+ "light": "DAY",
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "mouth_moving_outside_window_frames": [],
+ "s_per_frame_wall_mean": 13.55,
+ "s_per_frame_cpu_mean": 26.59,
+ "head_px": [
+  146,
+  314
+ ],
+ "head_centre_y": [
+  570,
+  655
+ ],
+ "head_bottom_max_y": 807,
+ "framediff_in_shot": {
+  "median": 3.39,
+  "p90": 5.93
+ },
+ "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
+}
