@@ -38,7 +38,7 @@ CRANE = (G_POINT, G_WIRE - 1)                               # 1304..1342
 WHIP = (G_WIRE, G_GROUND - 3)                               # 1343..1360
 DIVE = (WHIP[1] + 1, 1394)                                  # 1361..1394
 INSIDE = (1394, 1410)                                       # through the window, settle
-G_GLASS = 1387                                              # the window glass panel is hidden from here
+G_GLASS = 1384                                              # the window glass panel is hidden from here
 
 PRESET, CAM = "tower_dusk", "tower_dusk_chars"
 CAST = [("eif", "eiffel_old", "eiffel_old"), ("off", "officer", "officer"), ("da", "riveter_hammer", "demo_a"),
@@ -57,7 +57,7 @@ for a, b in SPARK_TAPS:
     SPARK_FRAMES.update(range(a, b + 1))
 POST_AIM = (4.0, -201.4, 5.0)
 SUMMIT_AIM = (14.0, 0.0, 140.0)
-WINDOW = (0.8, -205.0, 1.3)                    # crossing point: clear of the wall battens (x 0.5, 1.1) and the muntin cross (0.9, z 1.6)
+WINDOW = (1.1, -205.0, 1.3)                    # crossing point: clear of the wall battens (x 0.5, 1.1) and the muntin cross (0.9, z 1.6)
 
 
 # ----------------------------------------------------------------------------- camera
@@ -115,7 +115,7 @@ def cam_at(g, path1):
         yb, pb = yp(loc, CO.W(POST_AIM))
         return loc, look_from(loc, lerp(ys2, yb, w), lerp(ps2, pb, w))
     Wp = Vector(CO.W((WINDOW[0], WINDOW[1] - 0.6, WINDOW[2])))          # dive toward the window, through it, settle inside
-    Cc = Vector(CO.W((0.8, -212.0, 2.2)))
+    Cc = Vector(CO.W((1.1, -212.0, 2.2)))
     Ii = Vector(CO.W(I_M))
     Wc = Vector(CO.W((WINDOW[0], -203.0, WINDOW[2])))
     if g <= DIVE[1]:
