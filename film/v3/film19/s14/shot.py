@@ -40,12 +40,12 @@ PPD = 256
 CANVAS = None
 
 MARK = "harrison_bench"
-MARK_DX = float(os.environ.get("MARK_DX", 0.0))
+MARK_DX = float(os.environ.get("MARK_DX", -1.1))
 MARK_DY = float(os.environ.get("MARK_DY", 0.0))
 CAM_LOC0 = tuple(float(v) for v in os.environ.get("CAM_LOC0", "0.9,-2.4,2.9").split(","))
 CAM_LOOK0 = tuple(float(v) for v in os.environ.get("CAM_LOOK0", "2.0,3.2,1.9").split(","))
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get("PUSH", 0.3)), slide_px=float(os.environ.get("SLIDE", -10)),
-                rise_px=float(os.environ.get("RISE", 40)), arc_deg_s=float(os.environ.get("ARC", 12)), decay=0.25,
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get("PUSH", 0.24)), slide_px=float(os.environ.get("SLIDE", -35)),
+                rise_px=float(os.environ.get("RISE", 25)), arc_deg_s=float(os.environ.get("ARC", 14)), decay=0.25,
                 snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 1.65)), peak=float(os.environ.get("SNAPPEAK", 2.5)), shift=(float(os.environ.get("SNAPSX", 0.7)), float(os.environ.get("SNAPSY", -0.35))))])
 
 BASE = dict(cast19.STORY19["harrison_show_h4"][1])

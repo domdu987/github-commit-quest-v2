@@ -16,3 +16,7 @@
 
 ## Round 3 (director's relaxed per-take rule: median >= 4, p90 >= 10)
 - Push 30 %/s, rise 40 px/s, arc 12 deg/s, snap shift (0.7, -0.35): frame-diff in-shot median 4.16, p90 11.30. Meets the per-take rule. Framing as in round 2 (H1 left, H4 centre, Harrison and his palm right); in the out-handle after g 1095 Harrison drifts to the right edge (handle only).
+
+## Round 4 (director round-3: median 3.43-3.73 under 4; keep Harrison's hair off the right edge g1088-1095)
+- Snap framing unchanged (x1.65, shift (0.7, -0.35), peak 2.5). More drift in the wide before the snap: push 24 %/s (was 20), slide -35 px/s (was -10), arc 14 deg/s (was 8); Harrison's mark moved 1.1 D left so the extra drift does not carry him out of frame. His head right edge is x 673 at g1088 and 707 at g1095 (< 720), hair clear of the edge; H1 stays in frame (bars x ~116 at g1095).
+- Frame-diff in-shot: median 4.43, p90 12.84. QA_AUTO PASS. s/frame 22.5 wall / 44.2 CPU.
