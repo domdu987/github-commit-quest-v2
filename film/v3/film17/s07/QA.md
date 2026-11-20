@@ -1,18 +1,21 @@
-# film17 s07 (shots 16-19) RESHOOT, g 844..1051 (g0 850, g1 1045, 6 handles each side)
-720x1280, 16 samples + OIDN. Shots: 16 measure_chair g844-899, 17 measure_low -> foot board g900-947, 18 measure_wide g948-995, 19 records_aisle g996-1051. Cuts g 900/948/996. Sprite swaps (bert/pris <-> bert2/foot in 17 at g935, bertA <-> bertB in 18 at g976) sit at the peak of the 10-14 frame snaps.
+# film17 s07 (shots 16-19) R2 reshoot, g 844..1051 (g0 850, g1 1045, 6 handles each side)
+720x1280, 16 samples + OIDN. 16 measure_chair g844-899 (kept, gendarme moved into frame writing with the nib on the card); 17 insert g900-947; 18 insert g948-995; 19 medium-close at the cabinet g996-1051. Cuts g 900/948/996.
 
 ## Numbers
-- qa_auto: PASS (QA_AUTO.md), magenta 0.0 %.
-- rhythm.py --cuts 900,948,996: in-shot median **8.46**, p90 **20.56** (target >= 4 / >= 12).
+- qa_auto: PASS (QA_AUTO.md; soft frames g996,997,999,1001,1027 only; one planned pop at g928 = the swap at the peak of the 17 snap). magenta 0.0 %.
+- rhythm.py --cuts 900,948,996: in-shot median **5.24**, p90 **14.85** (target >= 4 / >= 12).
+- Mouths: cast17.silent() on every pose. beam_fx shafts hidden, dust k 0.35, tripod cloth hidden.
 
-## Fixes vs the first delivery
-- Tripod cloth hidden (16, 17); sprite of the seated prisoner nudged toward the camera so the headrest bar is behind the head.
-- Calipers set with cast17.hand_for_anchor on a world target: jaws on the head (16), on the hand at the chair arm (17 first half), at the foot on the foot board with a crouching Bertillon (17 second half), on the arm-span man's ear (18 first half), then Bertillon writes (18 second half).
-- 16: the gendarme writes (pen + card) at the right of frame at the end of the shot. 19: Bertillon raises the card to the pulled-out size drawer q4, the card goes in (prop removed), the drawer shuts.
-- 18/19: cameras closer; the standing figures are 350 px tall in 18, about 220-300 px in 19 (checked on the contact).
-- beam_fx light shafts hidden in every shot (no translucent wedge), cast17.silent() on every pose, dust k 0.35.
-
-## Self-check (what I looked at)
-- contact.jpg every 4 frames (52 frames) + stills at 850, 866, 890, 899, 904, 920, 936, 942, 947, 950, 966, 980, 994, 996, 1012, 1026, 1040, 1050 on drafts of the same script; phone_sheet.jpg; cuts 900/948/996 are camera cuts inside one staging, not sprite pops.
-- Heads above y 880 in the close shots; no mouth moves (no quote window in this take).
-- NOT done: a literal frame-by-frame viewing of all 208 frames at 6 fps (only the contact every 4 f). Weak spots to watch: 17 foot insert has the jaws near shin/foot level, 19 card is small in the wide; 16 the gendarme only enters at the end of the shot; the three drawer sizes are not distinct.
+## What I opened at full size and what is really in it (g925, 940, 970, 990, 1020, 1045 + 848/865/899, 904, 950, 966, 976 on stills of the same script)
+- 848-899 (16): thief seated left, fully in frame; Bertillon calipers jaws on the thief's head (hand_for_anchor, err 0); gendarme at the right edge in frame from g844 with pen nib ON the card (nib anchor on the card anchor); the thief is cropped only slightly at the left at g899.
+- 925 (17 finger): table close-up. Bertillon's steel calipers lie across the gauge table with the jaws beside the thief's hand; the thief's hand (point shape) is on the table top. The jaws are NEXT TO, not clearly around, the middle finger (small ball hand at this size).
+- 940 (17 foot): thief stands on the foot board (wide frame so the planks and board read). The calipers bar runs behind his shins at ankle height; Bertillon is partly hidden behind the thief and his hand is not visible. NOT the plan's "jaws at heel/toe with the hand visible": the puppet arm cannot reach the floor. A pop at g928 (the table pair swaps to the foot pair at the snap peak).
+- 970 (18 ear): jaws of the calipers sit on the thief's screen-left ear, Bertillon's hand holds the beam, both in frame.
+- 990 (18 writing): Bertillon holds a card in his left hand, pen nib on the card (anchor solved); quill and card visible.
+- 1020 (19): three drawers of different sizes (small, medium, large fronts, new runtime drawers on a wainscot panel) at the right; Bertillon holds the card up beside the medium drawer.
+- 1045 (19): the card has gone into the medium drawer (prop removed at g1026), hand open, drawers closing/sliding; the large drawer slides out at the end (second pass without a second card).
+- Wide heights: 18 about 330 px figures, 19 about 300 px.
+## Known weak spots
+- 17 foot: calipers at ankle height, hand hidden; 17 finger: jaws beside the finger.
+- 19 sizes are different but modest (0.20/0.34/0.50 m fronts); the card slides in over about 10 frames with the small hand ball.
+- I did not view every one of the 208 frames at 6 fps; I looked at the frames listed above plus contact.jpg (every 4th) and the qa_auto sheet.
