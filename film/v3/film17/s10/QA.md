@@ -3,7 +3,7 @@
 take.mkv: g 1336..1520 (185 frames, 720x1280, 12 samples + OIDN, libx264rgb crf 6; stored as take.mkv.partaa/ab: `cat take.mkv.part* > take.mkv`). Cut-in at g1342, out at g1515, 6 handle frames each side.
 
 ## Numbers
-- rhythm.py (--cuts 1374,1375): in-shot median 4.86, p90 14.14 (targets >= 4 / >= 12) PASS.
+- rhythm.py (--cuts 1374,1375): in-shot median 4.74, p90 13.13 (targets >= 4 / >= 12) PASS. (round 2)
 - qa_auto (--cuts 1374,1375,1406,1461): black/blank/magenta/frozen: none (magenta 0.0 %). One FAIL: "suspected blur on 39 frames" (Laplacian < 0.6 x median). Honest breakdown: 9 frames are the intended whip streak (g1370-1378, M->R whip, 13-frame 1367-1383), ~6 are the snap g1411-1415 / 1467-1470, and the rest (g1470-1490) are the card_hero wall/dark wood: raw un-blurred frames measure 0.5-0.65 of the median because the median is carried by the texture-rich measuring-room frames. No blur is applied outside the whips (kernel only where the camera moves >= 100 px/frame). The pop flagged at g1370 is the whip. See QA_AUTO.md.
 
 ## What happens (all animated)
@@ -22,3 +22,12 @@ beam_fx shafts hidden; dust 0.4; every pose wrapped in cast17.silent (no quote i
 - Heads: Dupont/Bertillon centre y 515-700 in the M part; Bertillon chin < 880 in the drawer shot (large head near the camera at g1400-1410, chin ~800). No cast in shots 25-26.
 - Faces: Dupont 'worried' smile, Bertillon 'determined' then 'proud'; mouths closed.
 - Dupont is placed 0.22 m in front of the chair so the headrest bar does not cross his cap.
+
+## Round 1 director fixes (QA-tech FAIL / QA-art FIX-FIRST)
+1. Whip: blur table in post.py, 3 smeared frames (g1373-1375, 40-44 px) with eased ramps g1370-72 / g1376-78 (kernel about 1/3 of before). qa_auto still counts g1371-1377 as soft: the raw whip frames are low-texture wall/wainscot passing at speed (unblurred).
+2. Shot 24 re-rendered: calipers pinned at skull height across Dupont's head (hand follows, grip on the bar), rising into place g1336-1350, small working jitter; Bertillon looks along the beam (gaze + pitch). Not done: tightening 2-3 frames on "ระดับนี้".
+3. Drawer beat: Bertillon moved 0.5 D screen-right with the camera, leaning back as the drawer is pulled (g1376-1410), head no longer covers the drawer (full-res g1400 checked); snap at g1406 unchanged.
+4. NOT DONE: six lit boxes going dark one by one / hand lifting the box (needs runtime set dressing + a hand contact pass); box beat still shows the single box, lid opening g1410-1434.
+5. NOT DONE: measuring inserts (finger ~g1406, ear ~g1459): not rendered (a second measuring-room pass + team 1's S3A ear framing); the boxes-going-dark fallback of item 4 is also not done.
+6. Card g1476-1520: exposure -17 % ramp in post (g1476-1490); no card/rim boost (not done).
+Self-check (full res): g1350 calipers on the skull, both heads in frame, chins < 880; g1374 whip frame (streak, no cast); g1400 Bertillon in frame, drawer open at left, chin < 880; g1440 box with open lid, no stray hand; g1470 snap to card_hero, card below the rim; g1510 card with portraits + hand + bottle readable, not blown.
