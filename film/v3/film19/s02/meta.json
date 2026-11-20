@@ -35,19 +35,19 @@
  },
  "set": "v3/set3d19/h19.py SHIP preset ship_aerial, light NOON (colour-fixed set, merge of film19/main ff204d3); set_sea(g/30) + set_roll(g/30) keyed on every frame; sea grid re-fitted at runtime to a 3x farther / higher virtual camera (1500x2000 vertices; no set module edited); gulls hidden; captain19 and astro19_c ride ship_root (c19.ride_ship) on the quarterdeck, camera rides the deck (c19.on_ship); no caption_shade",
  "cast": "captain19 (captain_peer_chart: holds a blank sea chart) and astro19_c (squints through the quadrant at the sky, scratches his head g 146-166), no mouth movement",
- "camera": "BIGZOOM round 9: ONE continuous camera move in the ship's rest frame, a Catmull-Rom spline through 5 key poses with the retimed table g->u [(48,0),(66,.10),(90,.35),(115,.70),(135,.92),(152,1)]: g 57 truly extreme wide (camera ~640 D away: ship ~10 % of the frame height, the two on deck ~4 px), a smooth swoop down over the long wake, high over the stern through the mizzen sails / rigging (spanker sail at ~1.9 D), down to a MEDIUM on the quarterdeck by g ~152; then a 17 deg eased orbit + gentle push to g 199 (never parked); the camera rides the deck (c19.on_ship)",
+ "camera": "BIGZOOM round 10: ONE continuous camera move in the ship's rest frame: a Catmull-Rom spline through 5 key poses (extreme wide ~640 D out -> over the stern at the mizzen yards -> past the spanker (3.1 D) and the rigging -> a MEDIUM on the quarterdeck), reparametrised by LOG DISTANCE to the pair (equal steps = equal zoom rate) and eased with the table [(48,0),(66,.08),(90,.30),(115,.60),(140,.86),(160,.97),(170,1)]: one speed hump (peak frame-diff ~16 at g 109) and an ease-out over g 138-170, landing at g 170; then a 17 deg orbit + gentle push (never parked); the camera rides the deck",
  "events": {
   "bigzoom": [
    57,
    190
   ],
-  "arrive_medium": 152,
+  "arrive_medium": 170,
   "beat": [
-   148,
-   186
+   157,
+   190
   ],
-  "captain": "g148-166 lifts / turns the blank chart, brows up; g164-170 looks at astro19_c; g172-186 shrugs",
-  "astro": "g146-166 obvious head-scratch (wobble); g164-170 looks at the captain; g172-186 shrugs palms up"
+  "captain": "g157-167 lifts the chart, brows up (shocked, g158-172), TURNS it 180 deg (g160-170, a dark header band flips from top to bottom); g173-179 looks at astro19_c; g181-189 palms-up shrug",
+  "astro": "g155-175 obvious head-scratch; g173-179 looks at the captain; g181-189 palms-up shrug"
  },
  "dof": "none",
  "text": "none",
@@ -60,38 +60,30 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 25.02,
- "s_per_frame_cpu_mean": 48.35,
+ "s_per_frame_wall_mean": 23.79,
+ "s_per_frame_cpu_mean": 45.99,
  "framediff_in_shot": {
-  "median": 5.46,
-  "p90": 18.35
+  "median": 8.45,
+  "p90": 14.01
  },
  "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json",
  "qa_stats": {
-  "saturation": 0.641,
-  "luma": 93.6
+  "saturation": 0.634,
+  "luma": 93.2
  },
  "heads": {
   "captain19": {
    "head_centre_y": [
-    454,
-    521
-   ],
-   "head_w_px": [
-    155,
-    180
+    462,
+    479
    ]
   },
   "astro19_c": {
    "head_centre_y": [
-    541,
-    578
-   ],
-   "head_w_px": [
-    134,
-    177
+    546,
+    553
    ]
   },
-  "note": "g 150-199"
+  "note": "g 170-199"
  }
 }
