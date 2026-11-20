@@ -12,13 +12,20 @@ P.TAKE_OVER['T2'] = OVER
 RES = tuple(int(x) for x in os.environ.get('T2_RES', '720,1280').split(','))
 
 sys.path.insert(0, HERE); import t2a_back   # thief back view g330-386: hair, flat cap, patched jacket (from T6b's approved code); patches P._back_cover
+# director TAKE-gate fix: clerk head cut by the top edge g386-410 / face by the left edge g414-456 -> stand him on a lower rung (rung 1: y 6.699, z 1.734+0.017)
+CLERK = json.loads(os.environ.get('T2_CLERK', 'null')) or {'dx': 0.0, 'dy': -0.21, 'dz': -0.90}
+OLD = {'dx': 0.0, 'dy': -0.05, 'dz': -0.03}      # the staging of g330-385 / g467-493 as rendered (rung 4)
+def clerk_opts(g, r0=380, r1=386, r2=456, r3=466):
+    """constant lower-rung staging g386-456; a short climb (ramp) back to the old rung over g380-386 and g456-466 so there is no pop at the edges of the re-render"""
+    t = 0.0 if g <= r0 else 1.0 if r1 <= g <= r2 else 0.0 if g >= r3 else (g - r0) / (r1 - r0) if g < r1 else (r3 - g) / (r3 - r2)
+    t = t * t * (3 - 2 * t); return {k: OLD[k] + (CLERK[k] - OLD[k]) * t for k in OLD}
 LAUGH = (467, 493)
 def assign_for(g):
     """story poses of 2a-2c. Mouths closed (cast17 story poses) except the held laugh g467-493 (no lip-sync, no talk)."""
     laugh = LAUGH[0] <= g <= LAUGH[1]
     a = {'thief': ('dupont_innocent', {}),
          'gend_corr': ('gendarme_standing_a', {}),
-         'clerk_ladder': ('prisoner_standing_b', {'dy': -0.05, 'dz': -0.03}),   # feet on rung 4 (y 6.858, z 2.598..2.615), rung under / in front of the shoes
+         'clerk_ladder': ('prisoner_standing_b', clerk_opts(g)),   # feet on a ladder rung (rung k: y 6.6+0.0536k.., z 1.446+0.288k); see CLERK
          'gend_ledger': ('gendarme_standing_b', {}),
          'pris_c0': ('prisoner_sitting_a', {'seated': 'bench'}), 'pris_c1': ('prisoner_sitting_b', {'seated': 'bench'}), 'pris_c2': ('prisoner_sitting_c', {'seated': 'bench'}),
          'bertillon': ('bertillon_measuring', {'mirror': True}),
