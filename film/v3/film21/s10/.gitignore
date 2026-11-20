@@ -1,0 +1,4 @@
+raw/
+sprites_*/
+log*.txt
+__pycache__/
