@@ -1,9 +1,10 @@
 raw/
+old_raw/
+all/
 work/
 __pycache__/
 t6/
 t6.mkv
 d.mkv
 log_*.txt
-take.mkv.part*
 take.mkv
