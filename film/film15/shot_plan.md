@@ -1,66 +1,40 @@
-# Shot plan, film 15 (ไอ้ปลาดิ้น)
-Narration film/film15/audio/narration.wav (69.84 s), placed at +0.10 s. g = round(t*30). Times below are narration clock.
-Captions film15/script/captions.json. Facts and picture limits: FACTS.md (1963 = SAWDUST pit, no foam; no text, no "world record").
+# Shot plan v2, film 15 (ไอ้ปลาดิ้น) — REMAKE to QA_TEAM §G/§H/§I (client: "ทำใหม่", 2026-11-20)
+Narration, captions, script and music C are UNCHANGED (audio/narration.wav 69.84 s at +0.10 s; g = round(t*30); N = 2095).
+Sentence starts: hook 0 | pivot 6.18 | boss 16.30 | nickname 23.66 | count 28.73 | false 35.27 | crisis 42.38 | reveal 44.35 | aha 55.08 | ending 60.15.
+Quote windows (mouth moves only here): coach 17.80-23.55 and 40.38-42.25.
+v1 is kept in shot_plan_v1.md for reference.
 
-Sentence starts: hook 0 | pivot 6.18 | boss 16.30 | nickname 23.66 | count 28.73 | false 35.27 | crisis 42.38 | reveal 44.35 | aha 55.08 | ending 60.15 | end 69.84.
-Quote windows (mouth moves ONLY here): coach 17.80-23.55 and 40.38-42.25.
+## Hard rules for v2 (from QA_TEAM §G, §H, §I)
+- CAMERA TRAVELS, it does not cut: 7 long takes (T1-T7), 6 joins, of which at most 4 hard cuts; the rest are push-THROUGH or dissolve transitions. A take is ONE continuous camera path, even when a team renders it in parts.
+- 2 BIGZOOMs (marked): extreme wide from high and far (character < 5 % of frame height) to a medium of the character (35-60 %), 3-6 s, ease in/out, through set detail.
+- Angle types used: bird's-eye/high crane, low hero, over-the-shoulder, through a foreground frame (crowd, fence, newspaper), side tracking, top-down, crane up. Never 3 shots in a row at the same height/angle.
+- Colour: signature colours = 1963 GOLDEN-HOUR AMBER + school MAROON vs. deep SKY BLUE; 1968 = HOT TARTAN RED + NIGHT BLUE with white floodlight shafts. Film mean saturation >= 0.50, vivid % >= 45, luma 85-110 (film/qa_stats2.py). No peach haze.
+- Light: motivated key in every shot (low sun with long shadows and god rays through pines; stadium floodlights with visible beams); rim light on characters; warm + cool in the same frame.
+- Grounding: every character touches a surface with a contact shadow; nothing floats; no bar or pole through a face; no grey slabs slicing characters; airborne jumpers only over the bar/pit with a shadow on the mat/sawdust.
+- Distance: >= half the screen time wide or medium-wide; at most 3 punch close-ups (~1 s each); no face taller than 35 % of the frame otherwise.
+- Characters always act (rocking, stretching, chalking hands, cheering, laughing with bounce); nobody still > 1.5 s.
+- Text signs ALLOWED and wanted (sharp, English, readable on a phone): MEDFORD HIGH (gym wall), TRACK & FIELD, scoreboard "HIGH JUMP", newspaper headline "FOSBURY FLOPS OVER BAR" (the real 1964 headline), stadium banners "MEXICO 68", bar-height board "2.24 m", "1972" banner in T7.
+- Camera-motion targets stay: median >= 4, p90 >= 12 (film/film15/motion_check.py).
 
-## Camera grammar (film-2 rhythm, production-lessons §10 — hard rules)
-- Every shot has a clear move: push or pull 6-10 % of framing per second plus a lateral slide of about 40 px/s at 720 wide.
-- Quick push-ins (15-25 % in 0.3-0.5 s, eased) on punch lines: marked **PUSH!**. Whip/snap moves on reveals: marked **WHIP**.
-- No near-static hold longer than 1 s. Median in-shot frame-diff >= 4 and p90 >= 12 (90x160 grey) across the film.
-- Dissolves of 11 frames at location/time changes (marked DIS); hard cuts elsewhere.
-- Foreground prop 1-2 D from the lens in most shots (FG column).
-- Laughing characters bounce ~0.06 D at ~3 Hz; nobody stands frozen (breathing, weight shifts, crowd bob).
-- Wide and medium framings that show the dense set; sharp, no DOF; heads above y 880.
+## Takes
+| take | t0-t1 (s) | in | camera path (continuous) | action / beats |
+|---|---|---|---|---|
+| T1 | 0.00-16.30 | – | **BIGZOOM 1** 0.0-4.4: bird's-eye 120 m above the small town of Medford at golden hour (houses, streets, cars, the school, the track); descend and push through the pines and over the bleachers (MEDFORD HIGH sign) down to the high-jump pit, ending medium on Dick at his mark at 4.4. Then low hero angle as he runs the J-curve and flops over the bar (4.45-6.1). 6.2: crane UP and slide sideways along the run-up (side tracking) past the line of boys; 11.5-13.3 low angle on Dick trying the straddle, the bar falls (bar bounces in sawdust); 13.3-16.3 orbit as he turns his back and flops cleanly. | 0-2.1 a boy straddle-rolls face-down (seen small inside the BIGZOOM, then larger as we arrive); 4.45 Dick flops; 8-11 two boys straddle; 13.3 bar falls; 15 clean flop. |
+| T2 | 16.30-28.73 | cut | Over-the-shoulder from behind Dick toward the bleachers, push in on the coach (laughing, belly bounce 3 Hz) 16.3-18.8; side tracking along the bleacher front as he mimes the broken neck and points (18.8-20.7); **punch CLOSE-UP 1** on "ดูเอง" (22.9-23.6, ~0.8 s); pull back to wide, a photographer's FLASH (24.6) as Dick arches over the bar; **push THROUGH the flash into the newspaper page** (25.0-26.0): a reader holds the paper, headline FOSBURY FLOPS OVER BAR with the photo of the arched Dick; camera pulls back from the paper to reveal the boys and the coach laughing and pointing (27.9-28.7). | Coach quote 17.80-23.55 (mouth only here). |
+| T3 | 28.73-35.27 | push-through | **Push INTO the newspaper photo** (28.7-29.3): the photo comes alive as training; side tracking along the pit as Dick flops again and again while the peg rises; season shift via a 11-frame dissolve (leaves fall, GOLDEN to bright DAY) at ~30.3; at 31.0 the camera rises past a "MEXICO 68" poster on the gym wall and **match-dissolves into BIGZOOM 2** (31.0-35.3): bird's-eye 150 m above the floodlit Estadio at dusk (city lights, mountains, packed stands, MEXICO 68 banners, light beams), dive down through the crowd and floodlight beams to the high-jump fan, ending medium on Dick at the runway as officials raise the bar (2.24 m board) and a rival knocks it and walks off. | 32.5 bar rises; 33.8 rival fails. |
+| T4 | 35.27-44.38 | cut | Low angle beside the standard looking up: Dick with the bar ~30 cm above his head (visible gap, bar-height board 2.24 m in frame) 35.3-37.5; side tracking along the bar for attempt 1 (bar falls 38.0) and attempt 2 (bar falls 39.2), Dick lands flat on the mat, hands on face; **whip pan** up into the stands to the coach (SAME maroon cap and windbreaker as 1963, among dense crowd cards) shouting 40.38-42.25 with **punch CLOSE-UP 2** on "แค่นี้แหละ" (~41.7, 0.8 s); whip back down; 42.4-44.4 the stadium hushes: floodlight beams, dimmer crowd, slow push on Dick rocking at his mark (through a foreground frame of crowd heads). | |
+| T5 | 44.38-55.08 | cut | THE REVEAL, one continuous move: low side angle, the camera **rides alongside Dick** as he runs the curve and rises (44.4-46.3), slows to a near-hover and tracks laterally with him across the bar: head over 46.4, back 47.2, legs 47.8; holds a slow orbit on the arch (head and legs hanging below the bar, hard floodlight rim on his body) 47.8-50.3; 50.35 **match-dissolve** to the same framing with a rival doing the face-down straddle, his whole body lifted flat high above the bar (50.4-52.8); 52.85 dissolve back to Dick's legs flicking over, drop onto the mat (52.9-55.1). | Every body part crosses on the spoken beat. |
+| T6 | 55.08-60.15 | – (continuous from T5) | Top-down crane over the mat: Dick sits up and looks at the bar, which does NOT tremble (55.1-57.4); crane UP and out as the stadium erupts (flash bulbs, cheering crowd bob) to the podium, Dick with the gold medal (58.5-59.6); **punch CLOSE-UP 3** on the coach in the stands jaw-dropping (59.6-60.1). | |
+| T7 | 60.15-69.84 | dissolve (time) | Crane over a DAY stadium with a "1972" banner: three jumpers in different kits flop one after another, land smiling with thumbs up (60.2-64.6); the camera rises into the sky and **dissolves down** (sky to sky) into the Medford school track at golden hour (64.6-65.5); the coach, sighing, at the sawdust pit (boys watching from the bench); low side tracking as he runs, turns his back and flops clumsily (66.3-68.0); TUMP into the sawdust pile with a big spray (68.0), push in to medium as he sits buried to the chin with a weak thumbs-up; hard cut on the last word. | |
 
-## Locations / presets (set3d15)
-- A = Medford-style high-school track 1963 (approved board sb1): GOLDEN (late afternoon). Sawdust pit in a wooden frame, wooden/metal standards, thin crossbar, cinder track, bleachers, gym, pines, bunting.
-- B = Olympic stadium 1968 (board sb2/sb3): EVE (sunset + floodlights), TENSE (darker sky, floodlight pools, crowd dimmed) for the crisis, DAY (bright afternoon, used for "four years later").
+Joins: T1→T2 cut, T2→T3 push-through, T3→T4 cut, T4→T5 cut, T5→T6 continuous, T6→T7 dissolve. Hard cuts total: 3 (plus 2 whip pans inside T4 and the 11-frame dissolves inside T3/T5).
+BIGZOOMs: 0.0-4.4 s (Medford) and 31.0-35.3 s (Mexico City stadium). Close-ups: 23.0, 41.7, 59.8.
+Angle types: bird's-eye (T1, T3), low hero (T1, T4), over-the-shoulder (T2), through a foreground frame (T2 newspaper, T4 crowd heads), side tracking (T1, T3, T4, T5), top-down (T6), crane up (T6, T7).
 
-| # | t0-t1 | in | preset | camera | action | FG |
-|---|---|---|---|---|---|---|
-| 1 | 0.00-2.10 | – | A GOLDEN | wide 3/4, push 8 %/s + slide right | a boy straddle-rolls FACE-DOWN over the bar into the sawdust; two boys wait at the run-up | hurdle edge |
-| 2 | 2.10-3.60 | cut | A GOLDEN | low medium on Dick at his mark, push; **PUSH!** at 2.9 ("คนนี้") | Dick, lanky teen, bounces on his toes, the other boys glance | cone |
-| 3 | 3.60-4.45 | cut | A GOLDEN | **WHIP** follow pan | Dick runs a CURVED approach and turns his back to the bar at take-off | bench end |
-| 4 | 4.45-6.15 | cut | A GOLDEN | low at the bar looking up, push 10 %/s | Dick flops BACKWARDS over the bar, arched, lands on his back in the sawdust, chips spray; the boys gape | standard base |
-| 5 | 6.15-8.20 | DIS | A GOLDEN | high wide pull-back crane | 1963 school track establishing: bleachers with a few spectators, gym, pines, bunting, coach's bench | pine branch |
-| 6 | 8.20-11.45 | cut | A GOLDEN | side medium, slide left 40 px/s + push | boys line up and straddle-roll face-down over the bar one after another (2 clean jumps) | rake on pit |
-| 7 | 11.45-13.25 | cut | A GOLDEN | 3/4 medium, push; **PUSH!** at 13.3 | Dick tries the straddle and knocks the bar off (bar_fall) | water cooler |
-| 8 | 13.25-14.15 | cut | A GOLDEN | close-medium, slide | the bar bounces in the sawdust; Dick sits up, sheepish, chips in his hair | sawdust edge |
-| 9 | 14.15-16.30 | cut | A GOLDEN | high angle orbit 15°/s | Dick turns his back and tries the backward jump again: clean flop | bar end |
-| 10 | 16.30-18.80 | cut | A GOLDEN | medium on the coach, push 8 %/s | the veteran coach on the bleacher front laughs, belly bounce 3 Hz; mouth from 17.80 | clipboard on rail |
-| 11 | 18.80-20.70 | cut | A GOLDEN | over-shoulder of coach onto Dick, slide | coach grabs his own neck (broken-neck mime), points at Dick; boys laugh behind | coach shoulder |
-| 12 | 20.70-23.60 | cut | A GOLDEN | medium-close, push; **PUSH!** at 23.0 ("ดูเอง!") | coach wags a finger, jabs his chest: "I'll jump backwards myself!" | stopwatch on lanyard |
-| 13 | 23.60-25.40 | cut | A GOLDEN | low wide by the pit, slide | a press photographer crouches; FLASH at 24.6 as Dick arches mid-air over the bar | camera bag |
-| 14 | 25.40-27.95 | cut | A GOLDEN | insert, push 10 %/s + slide | a newspaper (NO letters: grey column bars) in a reader's hands on the bleacher; its big photo shows the arched Dick like a fish | reader's thumb |
-| 15 | 27.95-28.73 | cut | A GOLDEN | **PUSH!** snap | boys and the coach point and laugh at Dick ("ไอ้ปลาดิ้น"), bounce | bleacher rail |
-| 16 | 28.73-31.05 | DIS | A GOLDEN→DAY | orbit + push | Dick trains alone: flop after flop, a boy raises the peg each time; season change (leaves) via a mid-shot DIS | hurdle stack |
-| 17 | 31.05-32.50 | DIS | B EVE | grand wide push-in 8 %/s, rise | Olympic stadium: packed stands bobbing, torch burning, flags waving, flash bulbs | flag pole |
-| 18 | 32.50-33.80 | cut | B EVE | tilt up following the bar | two officials raise the crossbar on the standards ("สูงขึ้น สูงขึ้น") | standard |
-| 19 | 33.80-35.27 | cut | B EVE | 3/4 medium, slide | a rival straddle-rolls and knocks the bar; he walks off dejected | officials' table |
-| 20 | 35.27-37.50 | cut | B EVE | low tilt-up from Dick's head to the bar | Dick (USA-style kit, no letters) stands by the standard: the bar ~30 cm above his head | standard peg |
-| 21 | 37.50-38.35 | cut | B EVE | **WHIP** | attempt 1: flop, the bar falls; crowd groans | foam pit edge |
-| 22 | 38.35-39.65 | cut | B EVE | reverse angle, push | attempt 2: the bar falls again; Dick lies on the foam, hands on face | bar on mat |
-| 23 | 39.65-42.30 | cut | B EVE | medium in the stands, push; **PUSH!** at 41.7 | the coach (in the crowd, US pennant hat) jumps up, points, shouts; mouth 40.38-42.25 | spectator's shoulder |
-| 24 | 42.30-44.30 | cut | B TENSE | slow push 6 %/s + slide | Dick at his mark, rocking; the stadium hushed, crowd still but breathing | bar end |
-| 25 | 44.30-46.40 | cut | B TENSE | low at the bar (sb3), push | Dick runs the curve, plants and rises; his body arches like a bridge over the bar | foam pit edge |
-| 26 | 46.40-49.00 | cut | B TENSE | lateral track along the bar with the body | PART BY PART: head over (46.4), back over (47.2), legs over (47.8) | standard |
-| 27 | 49.00-50.35 | cut | B TENSE | side view at bar height, push | KEY IMAGE: hips over the bar, head and legs hang BELOW the bar on both sides | crossbar end |
-| 28 | 50.35-52.85 | DIS | B EVE | same side view, slide | contrast: a straddle rival lies flat, his WHOLE body lifted high above the bar | standard |
-| 29 | 52.85-55.08 | DIS | B TENSE | back to the side view, **WHIP** down | Dick's legs flick over, he drops onto the foam | foam edge |
-| 30 | 55.08-58.20 | cut | B TENSE→EVE | close of the bar, push; light pops back to EVE at 56.6 | the bar does not tremble; Dick sits up, looks at the bar | bar peg |
-| 31 | 58.20-60.15 | cut | B EVE | wide, **PUSH!** at 59.1 | stadium erupts; Dick on the podium with the gold medal, flash bulbs; coach in the stands jaw drops | flag |
-| 32 | 60.15-62.50 | DIS | B DAY | side medium, slide 40 px/s | four years later: jumper after jumper flops backwards over the bar (3 different kits) | standard |
-| 33 | 62.50-64.62 | cut | B DAY | low wide, push | jumpers land on the foam, sit up smiling, thumbs up — no one hurt | foam edge |
-| 34 | 64.62-66.25 | DIS | A GOLDEN | medium, push | back at the school track: the coach, sighing, at the sawdust pit; boys sit on the bench, arms crossed | bench end |
-| 35 | 66.25-68.00 | cut | A GOLDEN | **WHIP** follow | the coach runs the curve, turns his back and flops clumsily | hurdle |
-| 36 | 68.00-69.84 | cut | A GOLDEN | low at the pit, **PUSH!** at 68.6 | TUMP: he lands in the sawdust pile, chips spray, buried to the chin, weak thumbs up; boys laugh. Hard cut on the last word | sawdust chips |
-
-## Cast (cast15)
-- `dick`: tall lanky teen/young man, long limbs, short tousled brown hair, big ears. Costume A: maroon-and-gold school vest (no letters), white shorts, white socks, canvas sneakers. Costume B: white vest with red and blue chest stripes (no letters), navy shorts, spikes; gold medal prop.
-- `coach`: veteran, stocky, grey crew cut, big jaw, whistle and stopwatch on lanyards, cap, maroon windbreaker, clipboard. Costume B: tourist shirt + pennant hat in the stands. Ending: sawdust on him.
-- `boy1..3`: high-school jumpers (varied hair, skin and vest colours).
-- `rival1, rival2, rival3`: Olympic jumpers in plain national-style kits (no letters, no real flags on them).
-- `official1, official2`: 1968 officials (blazers, ties, one with a flag); `photographer` (1960s press camera with flash bulb); `reader` (hands with newspaper insert).
-- Jump poses (all from the side and 3/4): curved run, plant, take-off; FLOP arched over the bar (bridge), legs flick; land on back; STRADDLE roll face-down (flat over the bar); bar-knock; sit-up sheepish; laugh bounce; point; neck-grab mime; finger wag; cheer; podium wave; coach clumsy flop + buried in sawdust.
+## Render split (6 teams, as before)
+- Team 1: T1 (0-16.30, 489 frames).
+- Team 2: T2 (16.30-28.73, 373 frames).
+- Team 3: T3 (28.73-35.27, 196 frames; contains BIGZOOM 2 — big set view).
+- Team 4: T4 (35.27-44.38, 273 frames).
+- Team 5: T5 + T6 (44.38-60.15, 473 frames; the reveal).
+- Team 6: T7 (60.15-69.84, 291 frames).
