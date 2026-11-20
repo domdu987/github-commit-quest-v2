@@ -13,3 +13,6 @@ After TAKE_ART (F1-F3 callback), TAKE_B and QA_TEAM §G. Checked at 6 fps contac
 - `qa_stats2.py take.mkv`: sat 0.568, vivid 50.1 % (>= 45), luma 93.4, warm 39.9 % / cool 31.5 %, motion median 6.92 p90 10.74, still 0 %. In-shot g 1657..1731: median 5.89, p90 9.51 (p90 short of 12).
 - Bowler is still the flat dish (arm rig limit, see above).
 - take.mkv 31.2 MB.
+
+## v5
+- Re-rendered with more orbit (24 deg/s) and slide (-75 px/s). `qa_stats2.py take.mkv`: **sat 0.564, vivid 50.0 %, luma 94.4, warm 35.3 % / cool 35.8 %, motion med 7.30 p90 11.45, still 0 %**. In-shot g 1657..1731: median 6.44, p90 10.30. Head width 175-275 px, centre y 519-639, chin <= 743. take.mkv 29.0 MB.

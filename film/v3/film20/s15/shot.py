@@ -17,8 +17,8 @@ from mathutils import Vector                             # noqa: E402
 
 S, CO, actors, cast20 = C.S, C.CO, C.actors, C.cast20
 import tower20                                           # noqa: E402  (runtime grade bump, qa_stats wants saturation >= 0.47)
-tower20.LIGHTS['DAY']['sat'] = 1.22
-tower20.LIGHTS['DAY']['exposure'] = -0.42
+tower20.LIGHTS['DAY']['sat'] = 1.28
+tower20.LIGHTS['DAY']['exposure'] = -0.36
 tower20.LIGHTS['DAY']['key_dir'] = (0.36, 0.62, -0.34)   # lower, raking sun (motivated key, long shadows)
 lerp, clamp, blink, ez, u_of, bf = C.lerp, C.clamp, C.blink, C.ez, C.u_of, C.bf
 WORK = os.path.join(HERE, "work")
@@ -59,9 +59,9 @@ def cam_path(A):
     m = marks(A)
     subj = m["eiffel"] + Vector((0.8, 0.0, EIF_Z))
     c = Vector((subj.x - 0.3, subj.y - CAM_BACK, CAM_Z))
-    return C.CamPath(c, subj, GF, G_LAST, push=0.06, slide_px=-45.0, rise_px=0.0, arc_deg_s=17.0, tilt0=TILT0, tilt_deg_s=1.5,
-                     decay=0.25, snaps=[dict(g=PUSH1, k=1.35, peak=1.8, shift=(0.0, 0.0), tilt=0.0),
-                           dict(g=SNAP, k=1.6, peak=2.0, shift=(0.0, 0.0), tilt=-3.0)])
+    return C.CamPath(c, subj, GF, G_LAST, push=0.06, slide_px=-75.0, rise_px=0.0, arc_deg_s=24.0, tilt0=TILT0, tilt_deg_s=1.5,
+                     decay=0.25, snaps=[dict(g=PUSH1, k=1.28, peak=1.9, shift=(0.0, 0.0), tilt=0.0),
+                           dict(g=SNAP, k=1.35, peak=2.3, shift=(0.0, 0.0), tilt=-3.5)])
 
 
 def move_fg(A, cam_loc):

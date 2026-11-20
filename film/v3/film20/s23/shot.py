@@ -56,7 +56,7 @@ def cam_path(A):
     m = marks(A)
     subj = m["eiffel"] + Vector((0.8, 0.0, EIF_Z))
     c = Vector((subj.x - 0.3, subj.y - CAM_BACK, CAM_Z))
-    return C.CamPath(c, subj, GF, G_LAST, push=-0.10, slide_px=-45.0, rise_px=0.0, arc_deg_s=17.0, tilt0=TILT0, tilt_deg_s=-2.0,
+    return C.CamPath(c, subj, GF, G_LAST, push=-0.10, slide_px=-75.0, rise_px=0.0, arc_deg_s=24.0, tilt0=TILT0, tilt_deg_s=-2.0,
                      decay=0.3, snaps=[dict(g=SNAP, k=1.6, peak=2.0, shift=(0.0, 0.0), tilt=-3.0)])
 
 
