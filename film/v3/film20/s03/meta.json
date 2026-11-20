@@ -30,8 +30,8 @@
  },
  "note": "BIGZOOM 1 (shots 3+4 merged): one continuous crane-down + push from an extreme wide high over Paris 1887 to a medium of Eiffel at the plan table, landing on 'วิศวกรไอเฟล' (g 268), then slow drift",
  "grade": {
-  "saturation_x": 1.357,
-  "brightness_x": 0.895,
+  "saturation_x": 1.366,
+  "brightness_x": 0.896,
   "note": "post grade for QA_TEAM section G"
  },
  "dof": "none",
@@ -44,20 +44,20 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 15.28,
- "s_per_frame_cpu_mean": 29.6,
+ "s_per_frame_wall_mean": 14.51,
+ "s_per_frame_cpu_mean": 28.12,
  "head_px": [
   5,
-  186
+  204
  ],
  "head_centre_y": [
-  -1409,
+  -3910,
   743
  ],
  "head_bottom_max_y": 747,
  "framediff_in_shot": {
-  "median": 3.54,
-  "p90": 8.84
+  "median": 3.55,
+  "p90": 8.86
  },
  "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
 }
