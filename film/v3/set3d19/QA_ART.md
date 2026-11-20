@@ -91,3 +91,40 @@ API.md still documents `caption_shade`; delete it. The shot plan still names shi
 
 ### Overall: FIX-FIRST
 HALL teams may start. The WORKSHOP needs only the sliver fix, and the SHIP needs fixes 1-3.
+
+## SET gate round 3
+I judged W04/W06/W10, S02-S07 and all 18 ship tiles at full size, with crops, plus both contact sheets and all reports. Heads are inside the rule and cost is at most 35.4 CPU-s.
+
+| # | Item | Status |
+|---|---|---|
+| 1 | Gear slivers | **W04 FIXED** (H1 shows a clean dark cavity with no cracks). **W06 and W10 OPEN**: black V-wedges at every rim joint and tooth root. On W06 they line both front wheels (x 0-500, y 150-430); on W10 they sit at x 60-330, y 180-330. |
+| 2 | Rocks lantern | **OPEN (half)**. The size (115 px, x 524-639), framing and shape are fixed. Still wrong: the bars render amber (#b77e3f) instead of iron, the glass is matte orange (#b97b36) with no glow, and the deck shows no warm pool in any light. It does not read as lit. |
+| 3 | Deck/rail sails cream | **FIXED** at NOON/DAY (#e7d9c2, hue 36-38). |
+| 4 | ship_aerial | **FIXED**. One path about 100-110 px wide (14-15 %), behind the ship and above y 500. No tiles and no hot pixels below y 820, in all three lights. |
+| 5 | N1 rail band glare | **FIXED**. NOON 0 % clipped, DAY 1.7 % (x 662-719), STORM 0.2 %. |
+| 6 | N2 lantern slab | **FIXED** as geometry (cage, cap, base). See item 2 for the art misses. |
+
+**Shade-hue ruling: accepted.** Cream sail shade (hue about 36) is an exception, like the sea. By eye, the deck shadows are blue-violet: S03 #4f4852 and S04 #434251 (hue 245). The rail cast shadows on deck are cool grey. QA-tech should mask the sail material out of the hue measurement instead of reading the mixed mean.
+
+**Sail shading.** At NOON/DAY the sails are slightly flat but readable, with rigging shadows and a soft gradient. **New blocker:** `_sail_self_cream` mixes 85 % emission at a constant level, so in STORM_DUSK the sails stay at luma 190-214 while the deck drops to 63. They glow in the storm.
+
+### WORKSHOP: FIX-FIRST
+1. **BLOCKING, slivers on W06 and W10.** The cause is in `h19_kit.gear()`: the rim chord is sized at the centre radius r, so the outer corners open on thick rims. Fix: `seg = 2*(r+rim/2)*tan(pi/n)*1.05`, or use n ≥ 24 on the wall gears. Re-render W06 and W10.
+
+### HALL: PASS (unchanged)
+
+### SHIP: FIX-FIRST
+1. **BLOCKING, storm sails.** Scale the sail emission per light (STORM_DUSK k ≤ 0.15) or drop the mix factor to 0.4 or less. Re-render deck, rail and hero at STORM_DUSK.
+2. **BLOCKING, rocks lantern lit.** Set the bars to unlit #3a3430, give the glass a visible emission toward #ffb060, and raise `pool_e` until a warm pool reads at the captain's feet. Re-render ship_rocks ×3 and S06.
+
+### NOTEs render teams must respect
+- The rail inner bulwark shade is warm brown-black (#3b2723). Accept it as local colour, but keep characters off it.
+- A bright yellow gunport slot sits at S05 x 395-440, y 920-1090.
+- The aerial STORM wake fans read as light rays. A gull sits on the bowsprit (x 220-270, y 730-790).
+- The coast ship's square sails render grey.
+- The ship_rocks sail reads lavender (#908fa5).
+- The ship_hero tiles (not re-rendered) still carry the burned cyan guide.
+- The round-2 NOTEs stand: cannon colour, outboard sailor, flat fog, sled bow wave, H1 hiding William, Harrison covering the King, and the window muntins.
+
+### Overall: FIX-FIRST
+HALL proceeds. Render teams may also start on ship_aerial and ship_coast, and on ship_deck and ship_rail at NOON/DAY.
