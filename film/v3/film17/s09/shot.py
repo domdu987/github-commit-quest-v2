@@ -50,7 +50,7 @@ def cam_of(g):
         pos += R * (SWAY * math.sin(g * 0.5)) + Vector((0, 0, SWAY * 0.7 * math.sin(g * 0.77)))
         track = Vector(group_pos(g)) + Vector((0, 0, 1.25))
         look = L22.lerp(track, 0.92 * C.smooth(u)) + R * (0.5 * GAIN) * s * 0.0
-        look = look + R * (0.9 * GAIN) * s - R * (0.5 * C.smooth(u))
+        look = look + R * (0.9 * GAIN) * s - R * (0.6 * C.smooth(u))
     else:
         u = (g - G_CUT) / float(LAST - G_CUT)
         fwd = (L23 - P23).normalized(); R = right_of(P23, L23)
@@ -96,8 +96,10 @@ def bob(g, f=1.9, a=0.03, ph=0.0):
 
 CHAIR = (0.7, 2.3, 0.5)
 BERT23 = Vector((0.7, 3.3, 0.0))
-INS23 = Vector((0.1, 2.0, 0.0))
-INS_YAW = float(os.environ.get('INS_YAW', '0.7'))
+INS23 = Vector((0.05, 1.9, 0.0))
+INS_YAW = float(os.environ.get('INS_YAW', '0.5'))
+LEGS = {'narrow': dict(preset='narrow', crouch=0.45, knee_r=0.0, knee_l=0.0), 'wide': dict(preset='wide', crouch=0.35, knee_r=0.0, knee_l=0.0), 'stand': 'stand', 'mid': dict(preset='narrow', crouch=0.3, knee_r=0.25, knee_l=-0.25)}[os.environ.get('LEGS', 'narrow')]
+DUP_DZ = float(os.environ.get("DUP_DZ", "-0.3"))
 DUP_SEAT = Vector((0.8, 2.13, 0.0))
 
 
@@ -174,21 +176,21 @@ class Take(object):
             ip = group_pos(g, 0.25 + 0.65 * C.smooth((g - FIRST) / 60.0))
             c, p = C.story("inspector_arms_crossed", expr="proud"); p["blink"] = C.blink(g, [1224, 1262]); p["yaw"] = 0.5
             p["head_roll"] = -6 + 2 * math.sin(g * 0.15); p = cast17.silent(p)
-            out["ins"] = (ip + Rr * 1.9, c, walk(c, p, g, 0.75), None, bob(g, f=2.0, ph=0.6), True)
+            out["ins"] = (ip + Rr * (1.4 + 0.5 * C.smooth((g - FIRST) / 40.0)), c, walk(c, p, g, 0.75), None, bob(g, f=2.0, ph=0.6), True)
             c, p = C.story("bertillon_neutral"); out["ber"] = (BERT23, c, p, None, 0.0, False)
         else:
             c, p = C.story("dupont_innocent")
             p = cast17.silent(p); p["mouth"] = "flat"; p["expr"] = "worried"; p.pop("gaze", None)
             t = (g - 1290) / 30.0
             burst = 1.0 if (1290 <= g < 1311 or 1318 <= g < 1339) else 0.0
-            sh = math.sin(2 * math.pi * 2.5 * (g - (1290 if g < 1315 else 1318)) / 30.0) * burst
-            p["yaw"] = 0.1 + 0.42 * sh; p["head_roll"] = -2 + 8 * sh
-            p["lean"] = 2; p["blink"] = C.blink(g, [1288, 1330])
-            p["legs"] = dict(preset="narrow", crouch=0.45, knee_r=0.0, knee_l=0.0)
-            out["dup"] = (DUP_SEAT, c, p, "chair", 0.0, True)
-            c, p = C.story("inspector_arms_crossed", expr="happy")
+            sh = max(-1.0, min(1.0, 1.7 * math.sin(2 * math.pi * 2.5 * (g - (1290 if g < 1315 else 1318)) / 30.0))) * burst
+            p["yaw"] = 0.1 + 0.5 * sh; p["head_roll"] = -2 + 12 * sh
+            p["lean"] = 2 + 5 * sh; p["blink"] = C.blink(g, [1288, 1330])
+            p["legs"] = LEGS
+            out["dup"] = (DUP_SEAT, c, p, "chair", DUP_DZ, True)
+            c, p = C.story("inspector_arms_crossed"); p["expr"] = "happy"; p["mouth"] = "smile"
             ch = math.sin(2 * math.pi * 3.0 * g / 30.0)
-            p["squash"] = (1 + 0.02 * ch, 1 - 0.02 * ch); p["head_roll"] = -10 + 2 * ch; p["yaw"] = INS_YAW; p["pitch"] = -0.25; p["gaze"] = (0.9, 0.0); p["mouth"] = "smile"
+            p["squash"] = (1 + 0.02 * ch, 1 - 0.02 * ch); p["head_roll"] = -10 + 2 * ch; p["yaw"] = INS_YAW; p["pitch"] = -0.25; p["gaze"] = (0.9, 0.0)
             p["blink"] = C.blink(g, [1292, 1334]); out["ins"] = (INS23, c, p, None, 0.03 * abs(ch), True)
             c, p = C.story("bertillon_neutral"); p["yaw"] = -0.3; p["head_roll"] = 2 * math.sin(g * 0.11); p["blink"] = C.blink(g, [1300])
             out["ber"] = (BERT23, c, cast17.silent(p), None, 0.0, True)
