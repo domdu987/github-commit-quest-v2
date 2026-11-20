@@ -19,6 +19,7 @@ S, CO, actors, cast20 = C.S, C.CO, C.actors, C.cast20
 import tower20                                           # noqa: E402  (runtime grade bump, qa_stats wants saturation >= 0.47)
 tower20.LIGHTS['DAY']['sat'] = 1.22
 tower20.LIGHTS['DAY']['exposure'] = -0.42
+tower20.LIGHTS['DAY']['key_dir'] = (0.36, 0.62, -0.34)   # lower, raking sun (motivated key, long shadows)
 lerp, clamp, blink, ez, u_of, bf = C.lerp, C.clamp, C.blink, C.ez, C.u_of, C.bf
 WORK = os.path.join(HERE, "work")
 
@@ -44,6 +45,7 @@ CAM_BACK = 4.3                                  # D from the camera to Eiffel at
 CAM_Z = 1.6
 TILT0 = -6.0
 FG_SHIFT = (40.0, 0.0, 0.0)
+BANNER_DEPTH, BANNER_Z, BANNER_W = 9.0, 10.2, 9.6   # banner: D behind Eiffel, centre height, width
 FG_AHEAD, FG_SIDE, FG_Z = 3.0, -1.2, -1.6        # foreground head: ahead, left, feet z (underground: only head + hat show)
 EIF_Z = 2.55                                    # head centre above the feet
 
@@ -136,6 +138,7 @@ class Take(C.Take):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s15")
         self.path = cam_path(self.A)
         self.extra = self.add_crowd()
+        self.add_dressing()
         move_fg(self.A, self.path.loc0)
         self.key_cam(bf(GF), *self.path.at(GF))
         self.scene.frame_set(bf(GF))
@@ -145,6 +148,71 @@ class Take(C.Take):
         self.fgh = C.make_actor("fgh", "gent20", os.path.join(WORK, "sprites"), contact=False, shadow=None, cam=self.cam)
         self.off = self.actors["off"] = C.make_actor("off", "official", os.path.join(WORK, "sprites"),
                                                      contact=dict(width=1.3, depth=0.55, opacity=0.8), cam=self.cam)
+
+    def add_dressing(self):
+        """EXPOSITION UNIVERSELLE 1889 banner (Latin letters, sharp) on two poles behind the pair + 6 small fluttering pennant poles
+        (the preset flags are merged static meshes; these are keyed every frame)."""
+        import bpy
+        e = marks(self.A)["eiffel"]
+        cx, cy = e.x + 0.9, e.y + BANNER_DEPTH
+        def mat(name, col, rough=0.8):
+            m = bpy.data.materials.new(name)
+            m.use_nodes = True
+            b = m.node_tree.nodes["Principled BSDF"]
+            b.inputs["Base Color"].default_value = col
+            b.inputs["Roughness"].default_value = rough
+            return m
+        red, gold, wood, white, blue = (mat("bn_red", (0.55, 0.04, 0.05, 1)), mat("bn_gold", (1.0, 0.72, 0.16, 1), 0.4), mat("bn_wood", (0.22, 0.12, 0.06, 1)),
+                                        mat("bn_white", (0.92, 0.92, 0.9, 1)), mat("bn_blue", (0.05, 0.12, 0.55, 1)))
+        def box(name, loc, sc, m):
+            bpy.ops.mesh.primitive_cube_add(size=1, location=loc)
+            o = bpy.context.object
+            o.name = name
+            o.scale = sc
+            o.data.materials.append(m)
+            return o
+        W_, H_ = BANNER_W, 2.0
+        box("bn_board", (cx, cy, BANNER_Z), (W_, 0.14, H_), red)
+        box("bn_trim_t", (cx, cy - 0.09, BANNER_Z + H_ / 2 - 0.06), (W_, 0.06, 0.12), gold)
+        box("bn_trim_b", (cx, cy - 0.09, BANNER_Z - H_ / 2 + 0.06), (W_, 0.06, 0.12), gold)
+        for sx in (-1, 1):
+            box("bn_pole%d" % sx, (cx + sx * (W_ / 2 + 0.1), cy, BANNER_Z / 2 - 0.5), (0.14, 0.14, BANNER_Z + 1.4), wood)
+        for txt, z, size in (("EXPOSITION UNIVERSELLE", BANNER_Z + 0.34, 0.50), ("1889", BANNER_Z - 0.50, 0.62)):
+            cu = bpy.data.curves.new("bn_txt", "FONT")
+            cu.body = txt
+            cu.size = size
+            cu.align_x = "CENTER"
+            cu.align_y = "CENTER"
+            cu.extrude = 0.03
+            ob = bpy.data.objects.new("bn_txt_" + txt[:4], cu)
+            bpy.context.scene.collection.objects.link(ob)
+            ob.location = (cx, cy - 0.15, z)
+            ob.rotation_euler = (math.pi / 2, 0.0, 0.0)               # faces -y (toward the camera)
+            ob.data.materials.append(gold)
+        # fluttering pennant poles
+        self.flags = []
+        for i, (dx, dy) in enumerate([(-5.2, 2.5), (-3.0, 5.5), (5.5, 3.0), (3.8, 6.5), (-7.5, 7.5), (7.8, 8.5)]):
+            px, py = cx + dx, cy + dy
+            pole = box("fl_pole%d" % i, (px, py, 2.6), (0.07, 0.07, 5.2), wood)
+            pivot = bpy.data.objects.new("fl_piv%d" % i, None)
+            bpy.context.scene.collection.objects.link(pivot)
+            pivot.location = (px, py, 4.9)
+            for k, m in enumerate((blue, white, red)):
+                bpy.ops.mesh.primitive_plane_add(size=1, location=(0.35 + 0.0, 0, 0))
+                p = bpy.context.object
+                p.scale = (0.35, 1, 0.5)
+                p.rotation_euler = (math.pi / 2, 0, 0)
+                p.location = (0.18 + 0.36 * k, 0.0, 0.0)
+                p.data.materials.append(m)
+                p.parent = pivot
+            self.flags.append((pivot, i))
+
+    def flutter(self, gs):
+        for g in gs:
+            f = bf(g)
+            for pivot, i in getattr(self, "flags", []):
+                pivot.rotation_euler = (0.06 * math.sin(g * 0.45 + i), 0.0, 0.35 * math.sin(g * 0.31 + i * 1.7) + 0.2)
+                pivot.keyframe_insert("rotation_euler", frame=f)
 
     def add_crowd(self):
         """16 extra cast20 crowd cards (lady / gent / child / artists) in the midground behind and beside the pair (QA: thin crowd)"""
@@ -196,6 +264,7 @@ class Take(C.Take):
             C.place(self.off, f, self.off_pos(g))
             self.key_set(f, set_year=YEAR, set_crowd=3)
         self.bob_crowd(gs)
+        self.flutter(gs)
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)

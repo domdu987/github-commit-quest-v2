@@ -7,3 +7,9 @@ After TAKE_ART (F1-F3 callback), TAKE_B and QA_TEAM §G. Checked at 6 fps contac
 - NOT FIXED: the bowler still reads as a dark dish held at chest height. The cast20 arm rig clamps the hand near chest height (hand y > ~1.0 has no effect), so it cannot be raised to the head; the prop is the cast20 `bowler_held` as the director asked. The dark ball on the document is the left fist holding it.
 - 1910 vs 1889: carried by Old Eiffel (white beard) and the new document; set_year(1910) differs little in this framing.
 - take.mkv 31.4 MB (single file).
+
+## v4 (QA_TEAM §I client decision)
+- Same banner "EXPOSITION UNIVERSELLE 1889", fluttering pennants and low raking sun as s15 v4 (callback), crowd + flags move.
+- `qa_stats2.py take.mkv`: sat 0.568, vivid 50.1 % (>= 45), luma 93.4, warm 39.9 % / cool 31.5 %, motion median 6.92 p90 10.74, still 0 %. In-shot g 1657..1731: median 5.89, p90 9.51 (p90 short of 12).
+- Bowler is still the flat dish (arm rig limit, see above).
+- take.mkv 31.2 MB.

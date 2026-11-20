@@ -27,7 +27,7 @@
   "at": 1093,
   "note": "hard cut to shot 16 (CAFE cafe_low) at g 1093; handle g 1093..1096 rendered in 3D"
  },
- "set": "v3/set3d20 TOWER preset tower_fair, light DAY (runtime grade: sat 1.22, exposure -0.42 for qa_stats), year 1889, set_crowd(3) keyed every frame; 24 preset crowd cards + 16 extra cast20 crowd cards (xcrowd_*) in the midground, all with a keyed idle bob + sway; preset lamp-post/bench moved out of frame; FG = a gent20 BACK card 3 D ahead of the lens, bottom-left, camera-relative",
+ "set": "EXPOSITION UNIVERSELLE 1889 banner (Latin text objects on a red board + two poles, behind the pair) + 6 keyed fluttering pennant poles; low raking sun (key_dir elevation ~27 deg); v3/set3d20 TOWER preset tower_fair, light DAY (runtime grade: sat 1.22, exposure -0.42 for qa_stats), year 1889, set_crowd(3) keyed every frame; 24 preset crowd cards + 16 extra cast20 crowd cards (xcrowd_*) in the midground, all with a keyed idle bob + sway; preset lamp-post/bench moved out of frame; FG = a gent20 BACK card 3 D ahead of the lens, bottom-left, camera-relative",
  "cast": "v3/cast20 eiffel (proud -> worried + sweat swapped on the closed frame of a blink at g 1067, arm reaches, takes the document) + official (tricolour sash, doc_seal in the left hand held out toward Eiffel g 1008..1020, then hand to hip, happy; he steps back/aside g 1030..1062 so the snap lands on Eiffel); contact decals + proxy shadows; no lip-sync",
  "camera": "custom 22 mm, shift 0.06 kept, cam z 1.6 D, 4.3 D from Eiffel; CamPath push 6 %/s + slide -45 px/s + arc 17 deg/s + tilt drift 1.5 deg/s, decay 0.25, push-in x1.35 g 1003..1011 on 'ใบอนุญาต', snap x1.6 g 1064..1080 (peak 2.0, tilt -3 deg) on 'ครบแล้วต้องรื้อ'",
  "events": {
@@ -63,8 +63,8 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 6.89,
- "s_per_frame_cpu_mean": 13.22,
+ "s_per_frame_wall_mean": 7.67,
+ "s_per_frame_cpu_mean": 14.55,
  "head_px_main": [
   179,
   448
@@ -75,8 +75,8 @@
  ],
  "head_bottom_max_y": 768,
  "framediff_in_shot": {
-  "median": 6.45,
-  "p90": 10.68
+  "median": 6.46,
+  "p90": 11.02
  },
  "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
 }
