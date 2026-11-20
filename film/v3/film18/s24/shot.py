@@ -42,7 +42,7 @@ def make_driver(quality):
         atl[k] = C.Atlas('s24_' + k, v, ppd=110)
     run = []
     C.set_camera(NAME, G0 + 24, move=MOVE, cam=CAMO); C.bpy.context.view_layer.update()
-    for (uu, vv, st_, ff_, k_) in ((0.72, 0.66, 14, 20, 'b'), (0.6, 0.72, 30, 36, 'c')):          # two clear falls in open ground at x 0.6-0.75 (director gate 12)
+    for (uu, vv, st_, ff_, k_) in ((0.72, 0.66, 14, 20, 'b'), (0.42, 0.58, 30, 36, 'c')):          # two clear falls in open ground at x 0.6-0.75 (director gate 12)
         pt_ = C.ground_at(cam_obj, uu, vv)
         if pt_ is not None: RUNNERS.append((pt_.x, pt_.y, 20.0, 1.2, st_, ff_, 100.0, k_))
     for i, (x, y, ang, sp, st, ff, ang2, k) in enumerate(RUNNERS):
@@ -66,7 +66,7 @@ def make_driver(quality):
         if abs(t_['c'][0] - 11) < 2 and abs(t_['c'][1] + 89) < 2 and C.STATE['objects'].get(t_['name']) is not None: C.STATE['objects'][t_['name']].hide_render = True
     for ch_ in C.STATE['rout_chariots']:
         if ch_.get('ob') is not None: ch_['ob'].hide_render = True
-    chariot_root = C.J.prop_chariot((-4.0, -80.0, 0.0), rot=math.radians(200.0), tumble=0.0, scale=0.6)
+    chariot_root = C.J.prop_chariot((-4.0, -80.0, 0.0), rot=math.radians(200.0), tumble=0.0, scale=0.33)
     chariot = None
     for k_ in range(2):
         sp_ = C.J.prop_reed_bundle((0, 0, 0.1), scale=2.2); sp_.rotation_euler = (0, 0, math.radians(20 + 70 * k_))

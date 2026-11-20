@@ -15,12 +15,12 @@ G0, G1 = 1683, 1742
 H_IN, H_OUT = 6, 6
 G_GLINT = C.g_of(57.64)                                           # 1732
 MOVE = dict(push=0.09, slide=8)
-CAMO = dict(loc=(-1.4, -51.5, 1.9), look_at=(0.55, -46.0, 1.45), lens=27.0)
+CAMO = dict(loc=(-1.4, -51.5, 1.9), look_at=(0.6, -46.0, 1.3), lens=27.0)
 SHAKE = (0.8, 0.6, 0.4, 2.6)
 SNAPS = []                                                         # punch removed (director gate 12): steady push only
 OX = V((0.1, -46.0, 0.0))
-SCALE_OX = 0.72
-SOL_D, SOL_LAT = 6.4, 1.3
+SCALE_OX = 0.55
+SOL_D, SOL_LAT = 8.0, 2.0
 
 
 def make_driver(quality):
