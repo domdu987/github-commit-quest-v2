@@ -3,4 +3,4 @@
  "transitions":[{"at":1579,"type":"cut","note":"shot 27 (reveal room, card_hero) -> shot 28 (measure room, two-shot) at 52.62 s"}],
  "render":{"res":"720x1280","samples":20,"denoise":"OIDN","fps":30},
  "rhythm":{"median":5.84,"p90":13.43},
- "files":"take.mkv is split in take.mkv.part00..part03 (cat take.mkv.part* > take.mkv)"}
+ "files":"take.mkv is split in take.mkv.part00..part01 (cat take.mkv.part* > take.mkv)"}
