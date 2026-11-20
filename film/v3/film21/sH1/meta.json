@@ -1,0 +1,32 @@
+{
+ "segment": "H1",
+ "g0": 1239,
+ "g1": 1345,
+ "first_g": 1239,
+ "n_frames": 110,
+ "handles_after": 3,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "cam_out": {
+  "loc": [
+   -2.0,
+   50.0,
+   4.6
+  ],
+  "look": [
+   0.0,
+   22.0,
+   1.8
+  ],
+  "lens": 22.0,
+  "note": "ends exactly at P_NECK at g1345; g1346-1348 start the crane up"
+ },
+ "cam_in": "ride behind runners at hill_over shelf, see h1.py",
+ "world": [
+  "hill_over",
+  "bridge_end_north"
+ ],
+ "samples": 32
+}

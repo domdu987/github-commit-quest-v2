@@ -1,0 +1,24 @@
+{
+ "cues": [
+  {
+   "g": 1239,
+   "cue": "charge: running feet, spear shafts, gorse whips (5 Hz shake)"
+  },
+  {
+   "g": 1278,
+   "cue": "whoosh: the overtake and swoop to the bridge"
+  },
+  {
+   "g": 1316,
+   "cue": "spear-wall clack on the slam (narration 43.78)"
+  },
+  {
+   "g": 1316,
+   "cue": "English hop back, helmet rattle"
+  },
+  {
+   "g": 1332,
+   "cue": "sting settles (44.42 ~ g1348)"
+  }
+ ]
+}
