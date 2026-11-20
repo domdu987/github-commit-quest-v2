@@ -195,7 +195,7 @@ def _fw(g):
 
 def _path_flow(tau):
     """background flow (px/frame at 360 wide) of the landing path (spline + aim) at path time tau"""
-    a, b = _land(tau), _land(tau + 0.25)
+    a, b = _land_raw(tau), _land_raw(tau + 0.25)
     tot = 0.0
     for P in _FPTS:
         pts = []
@@ -207,7 +207,7 @@ def _path_flow(tau):
     return tot / len(_FPTS) / 0.25
 
 
-def _land(tau):
+def _land_raw(tau):
     """the landing path BEFORE the time warp: the spline + the look-up aim, at path time tau"""
     loc, look = _spline(min(tau, G_ARRIVE), 1), _spline(min(tau, G_ARRIVE), 2)
     uu = _umap(min(tau, G_ARRIVE))
@@ -254,18 +254,52 @@ _DPTS = [Vector(p) for p in ((0.5, -33.5, 14.3), (-1.5, -31.8, 14.3), (2.5, -31.
 _TAU2 = {}
 
 
+_SMP = {}
+G_S0 = 108.0                                   # the smoothing blends in from path time 108 and out at the round-13 g160 path time (so g >= 160 is EXACTLY unchanged)
+
+
+def _land(tau):
+    """round 15: the landing path with a Gaussian (sigma 5 frames of path time) smoothing of BOTH loc and look over tau 108..tau160: the aim's pitch / yaw turn-around (it
+    tilts down to -59 deg at g 126 and back up) is spread over >= 8 frames instead of 2; weight 0 at tau >= tau160 and below 108 (exact there)"""
+    t160 = _tau_of_old(G_NEW1)
+    if tau <= G_S0 or tau >= t160:
+        return _land_raw(tau)
+    q = tau * 4.0; i0 = int(math.floor(q)); fr = q - i0                       # cache on a 0.25-frame grid and interpolate linearly (no quantisation noise)
+    a_, b_ = _land_grid(i0, t160), _land_grid(i0 + 1, t160)
+    return (a_[0] * (1 - fr) + b_[0] * fr, a_[1] * (1 - fr) + b_[1] * fr)
+
+
+def _land_grid(key, t160):
+    tau = key / 4.0
+    if tau <= G_S0 or tau >= t160:
+        return _land_raw(tau)
+    if key in _SMP:
+        return _SMP[key]
+    w_in = clamp((tau - G_S0) / 16.0); w_in = w_in * w_in * (3 - 2 * w_in)
+    w_out = clamp((t160 - tau) / 12.0); w_out = w_out * w_out * (3 - 2 * w_out)
+    w = min(w_in, w_out)
+    raw = _land_raw(tau)
+    ks = [math.exp(-0.5 * (k / 5.0) ** 2) for k in range(-15, 16)]
+    tot = sum(ks)
+    loc = Vector((0.0, 0.0, 0.0)); look = Vector((0.0, 0.0, 0.0))
+    for k, wk in zip(range(-15, 16), ks):
+        l, lk = _land_raw(min(max(tau + k, 96.0), t160 + 30.0))
+        loc += l * (wk / tot); look += lk * (wk / tot)
+    out = (raw[0] * (1 - w) + loc * w, raw[1] * (1 - w) + look * w)
+    _SMP[key] = out
+    return out
+
+
+_SPTS = [Vector(p) for p in ((0.5, -27.0, 14.3), (-3.0, -26.0, 14.3), (4.0, -25.0, 14.3), (0.5, -22.0, 14.5), (8.5, -22.0, 14.5), (-8.5, -22.0, 14.5), (8.0, -14.0, 12.5),
+                              (-8.0, -14.0, 12.5), (0.0, -10.0, 10.0), (0.0, 40.0, 14.0), (0.0, -25.0, 60.0), (0.0, 5.0, 70.0))]     # forward deck, hull sides, bow, mast tops: rigid ship features (always >= 5 D ahead)
+_TAU2 = {}
+
+
 def _path_flow2(tau):
+    """camera POSITION speed (D per frame of path time) of the smoothed landing path: with the pitch now designed separately (_aim_design) the position speed is what the warp
+    shapes (a rise to one peak, then a monotone fall that meets round 13's speed at g 160)"""
     a, b = _land(tau), _land(tau + 0.25)
-    tot = 0.0
-    pts_all = _FPTS + _DPTS
-    for P in pts_all:
-        pts = []
-        for (loc, look) in (a, b):
-            f = (look - loc).normalized(); r = Vector((f.y, -f.x, 0.0)).normalized(); up = r.cross(f)
-            d = P - loc; z = d.dot(f)
-            pts.append((360 + 782.2 * d.dot(r) / z, 640 - 782.2 * d.dot(up) / z))
-        tot += math.hypot(pts[0][0] - pts[1][0], pts[0][1] - pts[1][1]) / 2.0
-    return tot / len(pts_all) / 0.25
+    return (b[0] - a[0]).length / 0.25
 
 
 def _tau_of(g):
@@ -280,27 +314,26 @@ def _tau_of(g):
         for i in range(n):
             A.append(A[-1] + _path_flow2(G_W0 + i * 0.25) * 0.25)
         v0 = _path_flow2(G_W0)
-        v1 = _path_flow2(tau160) * (_tau_of_old(G_NEW1 + 1) - _tau_of_old(G_NEW1))
-        gp = 131.0
-        def prof(g_, vp):
-            sm = lambda t: t * t * (3 - 2 * t)
-            if g_ <= gp:
-                return v0 + (vp - v0) * sm(clamp((g_ - G_W0) / (gp - G_W0)))
-            return vp + (v1 - vp) * sm(clamp((g_ - gp) / (G_NEW1 - gp)))
-        def total(vp):
-            return sum(prof(G_W0 + i + 0.5, vp) for i in range(G_NEW1 - G_W0))
-        lo, hi = max(v0, v1), 80.0
+        v1 = _path_flow2(tau160 - 0.25) * (_tau_of_old(G_NEW1 + 1) - _tau_of_old(G_NEW1))
+        lv0, lv1 = math.log(max(v0, 1e-4)), math.log(max(v1, 1e-4))
+        def prof(g_, al):
+            t = clamp((g_ - G_W0) / float(G_NEW1 - G_W0))
+            return math.exp(lv0 + (lv1 - lv0) * (t ** al))                       # monotone fall of the camera speed from round 13's value at g 96 to its value at g 160
+        def total(al):
+            return sum(prof(G_W0 + i + 0.5, al) for i in range(G_NEW1 - G_W0))
+        lo, hi = 0.05, 12.0
         for _ in range(60):
             mid = 0.5 * (lo + hi)
-            if total(mid) < A[-1]:
+            if total(mid) < A[-1]:                                               # larger alpha = slower fall = more length
                 lo = mid
             else:
                 hi = mid
         vp = 0.5 * (lo + hi)
-        _TAU2["vp"] = vp
+        _TAU2["vp"] = vp; _TAU2["v0"] = v0; _TAU2["v1"] = v1
         G = [0.0]
         for g_ in range(G_W0, G_NEW1):
             G.append(G[-1] + prof(g_ + 0.5, vp))
+        raw_tau = []
         for gi in range(G_W0, G_NEW1 + 1):
             tgt = G[gi - G_W0]
             lo_, hi_ = 0, n
@@ -311,9 +344,78 @@ def _tau_of(g):
                 else:
                     hi_ = m_
             f = (tgt - A[lo_]) / max(1e-9, A[hi_] - A[lo_])
-            _TAU2[gi] = G_W0 + (lo_ + f) * 0.25
+            raw_tau.append(G_W0 + (lo_ + f) * 0.25)
+        # smooth the per-frame warp steps over g 120-134 (QA: a 1.65-frame step at g 127 between 1.28 and 1.09), keeping both ends exact
+        for it in range(0):                                                       # (the exact warp is already smooth; the extra filter created a dip at g 136)
+            sm = list(raw_tau)
+            for gi in range(120, 135):
+                i = gi - G_W0
+                sm[i] = 0.25 * raw_tau[i - 1] + 0.5 * raw_tau[i] + 0.25 * raw_tau[i + 1]
+            raw_tau = sm
+        for gi, t_ in zip(range(G_W0, G_NEW1 + 1), raw_tau):
+            _TAU2[gi] = t_
     i = int(g); fr = g - i
     return _TAU2[i] * (1 - fr) + _TAU2[min(i + 1, G_NEW1)] * fr
+
+
+_AD = {}
+G_A0, G_A1 = 108, 160
+
+
+def _aim_design(g, loc, look):
+    """round 15 (QA: the aim tilts down to -59 deg at g 126 and back up, the turn-around squeezed into 2 frames, then the turning speed drops and climbs again = a second move):
+    for g 108-160 the PITCH of the view direction follows a designed schedule (rate crosses zero over >= 8 frames: -0.5 deg/frame at g 112 -> 0 at g 124 -> ~1.0 at g 134 -> ~1.3
+    at g 148 -> the raw rate at g 160), the YAW is the Gaussian-smoothed raw yaw; the distance to the aim point and the position are the path's.  Both are blended to the raw path
+    at g 108 and g 160 (values and rates match there), so g >= 160 is EXACTLY unchanged."""
+    if g < G_A0 or g > G_A1:
+        return loc, look
+    if not _AD:
+        def raw(gi):
+            l, k = _land(_tau_of(gi)); d = k - l
+            return math.degrees(math.atan2(d.z, math.hypot(d.x, d.y))), math.degrees(math.atan2(d.x, d.y)), d.length
+        R = {gi: raw(gi) for gi in range(G_A0 - 20, G_A1 + 21)}
+        p0, p1 = R[G_A0][0], R[G_A1][0]
+        s0 = R[G_A0 + 1][0] - R[G_A0 - 1][0]; s0 *= 0.5                         # raw pitch rate at the start (deg / frame)
+        s1 = (R[G_A1 + 1][0] - R[G_A1 - 1][0]) * 0.5
+        sm = lambda t: t * t * (3 - 2 * t)
+        # rate schedule: start rate s0 -> 0 at g 124 (smoothly) -> up to 1.0 at g 134 -> 1.3 at g 148 -> s1 at g 160, amplitude of the rising part solved so p(160) = p1
+        def rate(gi, k):
+            if gi <= 124:
+                return s0 * (1 - sm(clamp((gi - G_A0) / 16.0)))
+            if gi <= 134:
+                return k * 1.0 * sm((gi - 124) / 10.0)
+            if gi <= 148:
+                return k * (1.0 + 0.3 * sm((gi - 134) / 14.0))
+            return k * 1.3 + (s1 - k * 1.3) * sm((gi - 148) / 12.0)
+        def total(k):
+            return p0 + sum(rate(gi + 0.5, k) for gi in range(G_A0, G_A1))
+        lo, hi = 0.2, 3.0
+        for _ in range(50):
+            mid = 0.5 * (lo + hi)
+            if total(mid) < p1:
+                lo = mid
+            else:
+                hi = mid
+        k = 0.5 * (lo + hi)
+        _AD["k"] = k
+        p = p0
+        for gi in range(G_A0, G_A1 + 1):
+            _AD[gi] = p
+            p += rate(gi + 0.5, k)
+        # yaw: Gaussian smoothing (sigma 4) of the raw yaw, blended in over 108-120 and out over 148-160
+        for gi in range(G_A0, G_A1 + 1):
+            ks = [math.exp(-0.5 * (j / 4.0) ** 2) for j in range(-12, 13)]
+            tot = sum(ks); y = sum(R[min(max(gi + j, G_A0 - 20), G_A1 + 20)][1] * w for j, w in zip(range(-12, 13), ks)) / tot
+            w_in = sm(clamp((gi - G_A0) / 12.0)); w_out = sm(clamp((G_A1 - gi) / 12.0)); w = min(w_in, w_out)
+            _AD[("y", gi)] = R[gi][1] * (1 - w) + y * w
+            _AD[("d", gi)] = R[gi][2]
+    pw = 1.0                                                                   # pitch blends only through its own boundary conditions (value + rate match)
+    p = _AD[int(g)] * (1 - (g - int(g))) + _AD[min(int(g) + 1, G_A1)] * (g - int(g))
+    yv = _AD[("y", int(g))] * (1 - (g - int(g))) + _AD[("y", min(int(g) + 1, G_A1))] * (g - int(g))
+    dist = _AD[("d", int(g))]
+    pr, yr = math.radians(p), math.radians(yv)
+    d = Vector((math.cos(pr) * math.sin(yr), math.cos(pr) * math.cos(yr), math.sin(pr))) * dist
+    return loc, loc + d
 
 
 _DR = {}
@@ -336,6 +438,7 @@ def _drift(g):
 def cam_rest_raw(g):
     """(loc, look) in the ship's rest frame at film frame g: the time-warped landing path + the drift"""
     loc, look = _land(_tau_of(g))
+    loc, look = _aim_design(g, loc, look)
     ang, push = _drift(g)
     c = Vector((0.5, -30.5, loc.z))
     loc = c + Matrix.Rotation(-ang, 3, "Z") @ (loc - c)                      # the drift continues the landing's travel direction (-x), eased in from zero
