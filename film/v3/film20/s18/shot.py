@@ -38,39 +38,40 @@ CRANE = (G_POINT, G_WIRE - 1)                               # 1304..1342
 WHIP = (G_WIRE, G_GROUND - 3)                               # 1343..1360
 DIVE = (WHIP[1] + 1, 1394)                                  # 1361..1394
 INSIDE = (1394, 1410)                                       # through the window, settle
-G_GLASS = 1390                                              # the window glass panel is hidden from here
+G_GLASS = 1387                                              # the window glass panel is hidden from here
 
 PRESET, CAM = "tower_dusk", "tower_dusk_chars"
 CAST = [("eif", "eiffel_old", "eiffel_old"), ("off", "officer", "officer"), ("da", "riveter_hammer", "demo_a"),
         ("db", "riveter_tongs", "demo_b"), ("dc", "riveter_forge", "demo_c"), ("tel", "telegraphist", "telegraphist")]
-DEMO_XY = dict(eiffel_old=(-5.6, -219.0), officer=(-6.7, -216.6), demo_a=(-8.4, -215.2), demo_b=(-7.2, -213.6), demo_c=(-9.6, -214.0))
+DEMO_XY = dict(eiffel_old=(-3.9, -217.4), officer=(-5.2, -216.4), demo_a=(-6.7, -215.0), demo_b=(-5.8, -213.8), demo_c=(-7.2, -214.0))
+WAGON_SHIFT = (4.0, -3.5, 0.0)                  # the set's wagon + crowbars + horse moved ~5 m toward the group so it reads behind them
 HEAD_Z = 2.75
 PPD = dict(eif=160, off=160, da=160, db=160, dc=160, tel=224)
 HUT = (-0.5, -203.0)
 FLOOR_Z = (0.23 + 0.15) * 1.88                 # hut floor plank top + a hidden box under the soldier (hands clear the desk)
 SEAT_H = 0.5
-TEL_XY = (-0.85, -202.1)                       # soldier mark pulled 0.4 m toward the desk
+TEL_XY = (-0.85, -202.5)                       # soldier mark pulled 0.4 m toward the desk
 SPARK_TAPS = [(1396, 1398), (1402, 1404), (1409, 1414), (1419, 1421), (1425, 1429)]
 SPARK_FRAMES = set()
 for a, b in SPARK_TAPS:
     SPARK_FRAMES.update(range(a, b + 1))
 POST_AIM = (4.0, -201.4, 5.0)
 SUMMIT_AIM = (14.0, 0.0, 140.0)
-WINDOW = (0.7, -205.0, 1.3)                    # crossing point: clear of the wall battens (x 0.5, 1.1) and the muntin cross (0.9, z 1.6)
+WINDOW = (0.8, -205.0, 1.3)                    # crossing point: clear of the wall battens (x 0.5, 1.1) and the muntin cross (0.9, z 1.6)
 
 
 # ----------------------------------------------------------------------------- camera
-CAM_M = (-5.4, -227.0, 0.7)
-TILT0, AIM_DX, AIM_DY = -3.0, -0.9, 0.0
+CAM_M = (-4.6, -223.2, 0.3)
+TILT0, AIM_DX, AIM_DY = 0.0, -0.8, 0.0
 
 
 def cam_path1(A):
     m = Vector(A["marks"]["eiffel_old"])
     subj = m + Vector((AIM_DX * CO.SC, AIM_DY * CO.SC, HEAD_Z))
-    return C.CamPath(CO.W(CAM_M), subj, G0, G_END1, push=0.20, slide_px=-30.0, rise_px=0.0, arc_deg_s=-4.0, tilt0=TILT0,
+    return C.CamPath(CO.W(CAM_M), subj, G0, G_END1, push=0.16, slide_px=-30.0, rise_px=0.0, arc_deg_s=-4.0, tilt0=TILT0,
                      tilt_deg_s=-4.5, decay=0.95,
-                     snaps=[dict(g=SNAP, k=1.55, peak=1.9, shift=(0.75, 0.0), tilt=-3.0),
-                            dict(g=(1280, 1296), k=1.15, peak=1.7, shift=(0.0, 0.0), tilt=-2.0)])
+                     snaps=[dict(g=SNAP, k=1.3, peak=1.9, shift=(0.3, 0.0), tilt=-3.0),
+                            dict(g=(1280, 1296), k=1.08, peak=1.7, shift=(0.0, 0.0), tilt=-2.0)])
 
 
 def yp(loc, look):
@@ -103,7 +104,8 @@ def cam_at(g, path1):
     L2, L3 = Vector(CO.W(L2_M)), Vector(CO.W(L3_M))
     ys2, ps2 = yp(L2, CO.W(SUMMIT_AIM))
     if g <= CRANE[1]:                                                   # crane + tilt up to the summit
-        u = ez((g - CRANE[0] + 1) / float(CRANE[1] - CRANE[0] + 1), "sine")
+        x = (g - CRANE[0] + 1) / float(CRANE[1] - CRANE[0] + 1)
+        u = 1.0 - (1.0 - x) ** 2                                       # fast start: Eiffel leaves the frame in a few frames, not half-cut for long
         loc = loc1.lerp(L2, u)
         return loc, look_from(loc, lerp(y1, ys2, u), lerp(p1, ps2, u))
     L3a = L2.lerp(L3, 0.15)
@@ -113,7 +115,7 @@ def cam_at(g, path1):
         yb, pb = yp(loc, CO.W(POST_AIM))
         return loc, look_from(loc, lerp(ys2, yb, w), lerp(ps2, pb, w))
     Wp = Vector(CO.W((WINDOW[0], WINDOW[1] - 0.6, WINDOW[2])))          # dive toward the window, through it, settle inside
-    Cc = Vector(CO.W((0.7, -212.0, 2.2)))
+    Cc = Vector(CO.W((0.8, -212.0, 2.2)))
     Ii = Vector(CO.W(I_M))
     Wc = Vector(CO.W((WINDOW[0], -203.0, WINDOW[2])))
     if g <= DIVE[1]:
@@ -195,6 +197,7 @@ def tap_amount(g):
 def pose_tel(g):
     p = dict(cast20.STORY20["telegraphist_key"][1])
     p.pop("stool", None)
+    p.pop("prop_r", None)                                        # our own 3D key under the hand (no duplicate card prop)
     p["seated"], p["seat_h"] = 1, SEAT_H
     p["yaw"] = 0.25 + 0.05 * math.sin(g * 0.11)
     p["lean"] = 6.0 + 1.5 * math.sin(g * 0.17)
@@ -220,14 +223,17 @@ class Take(C.Take):
                 o.hide_render = True
         C.warm_ground_sun(strength=2.2, color=(1.0, 0.56, 0.30))
         self.dress_ground()
-        self.glass = [o for o in C.bpy.data.objects if o.name == "hut_lampsm"]
+        for o in C.bpy.data.objects:
+            if o.name.startswith("wagon_"):
+                o.location = o.location + Vector(WAGON_SHIFT)
+        self.glass = [o for o in C.bpy.data.objects if o.name in ("hut_lampsm", "hut_dark")]   # lit panes + muntin cross / black junction
         print("hut objects:", [o.name for o in C.bpy.data.objects if o.name.startswith("hut")], flush=True)
         for o in list(CO.STATE["sg_dyn"]):                        # our own arc between the brass balls (the set's arc reads as a scribble)
             o.hide_render = True
         CO.STATE["sg_dyn"] = []
         rr = random.Random(20)
         sgp = Vector((HUT[0] + 1.0, HUT[1] + 0.45, 1.1))
-        amat = CO.mat_emit("team8_arc", "#dff2ff", 14.0)
+        amat = CO.mat_emit("team8_arc", "#3f9bff", 9.0)
         self.arcs = []
         for k in range(3):
             mb = CO.MB("team8_arc%d" % k, CO.root())
@@ -238,6 +244,26 @@ class Take(C.Take):
         for o in self.arcs:
             o.hide_render = True
         self.exp0 = self.scene.view_settings.exposure
+        import bpy
+        # the wires' foot: from the anchor post top (4.2, -201.4, 6.2) a stout stay wire runs down to a ground stake (wire reaches the GROUND)
+        mbw = CO.MB("team8_stay", CO.root())
+        top, stake = Vector((4.2, -201.4, 6.2)), Vector((7.2, -197.6, 0.1))
+        mbw.rod(CO.STATE["M"]["wirep"], top, stake, 0.12, 0.12, 5)
+        mbw.cyl(CO.STATE["M"]["timber"], stake + Vector((0, 0, 0.2)), 0.12, 0.6, "z", 6)
+        mbw.finish(shadow=False)
+        # cool rim / flash light on the soldier + the wall (spark), keyed with the taps
+        self.flash = bpy.data.lights.new("team8_flash", "POINT")
+        self.flash.color, self.flash.shadow_soft_size = (0.45, 0.68, 1.0), 0.15 * CO.SC
+        fo = bpy.data.objects.new("team8_flash", self.flash)
+        self.scene.collection.objects.link(fo)
+        fo.location = CO.W((-0.1, -203.3, 1.7))
+        fo.visible_camera = False
+        self.rim = bpy.data.lights.new("team8_rim", "POINT")
+        self.rim.color, self.rim.shadow_soft_size = (0.5, 0.72, 1.0), 0.3 * CO.SC
+        ro = bpy.data.objects.new("team8_rim", self.rim)
+        self.scene.collection.objects.link(ro)
+        ro.location = CO.W((-1.9, -200.6, 2.0))
+        ro.visible_camera = False
         for m, xy in DEMO_XY.items():
             self.A["marks"][m] = CO.W((xy[0], xy[1], 0.0))
         self.path1 = cam_path1(self.A)
@@ -258,17 +284,18 @@ class Take(C.Take):
     def dress_ground(self):
         M = CO.STATE["M"]
         mb = CO.MB("team8_fg", CO.root())
-        for (x, y) in ((-8.6, -223.6), (-9.2, -221.4), (-3.0, -222.6)):
+        for (x, y) in ((-9.4, -222.6), (-10.2, -220.4), (0.6, -221.4)):
             mb.cyl(M["timber"], (x, y, 0.45), 0.34, 0.9, "z", 14)
             mb.cyl(M["metal"], (x, y, 0.2), 0.355, 0.05, "z", 14)
             mb.cyl(M["metal"], (x, y, 0.7), 0.355, 0.05, "z", 14)
-        for (x, y, r) in ((-2.4, -220.2, 0.3), (-8.0, -219.8, -0.4)):
+        for (x, y, r) in ((1.4, -219.0, 0.3), (-9.0, -219.0, -0.4)):
             mb.box(M["timberdk"], (x, y, 0.3), (0.8, 0.6, 0.6), rz=r)
             mb.box(M["plank"], (x, y, 0.62), (0.84, 0.64, 0.05), rz=r)
-        mb.cyl(M["rope"], (-7.4, -222.2, 0.08), 0.35, 0.16, "z", 12)
+        mb.cyl(M["rope"], (-1.9, -219.8, 0.08), 0.35, 0.16, "z", 12)
         mb.finish()
 
     def pose(self, gs):
+        self.key_gs = gs
         for g in gs:
             f = bf(g)
             self.key_cam(f, *cam_at(g, self.path1))
@@ -279,6 +306,10 @@ class Take(C.Take):
                 CO.setv(o, (g in SPARK_FRAMES) and (g % 3 == k), f)
             for o in self.glass:
                 CO.setv(o, g < G_GLASS, f)
+            self.flash.energy = (55.0 if g in SPARK_FRAMES else 0.0) * CO.SC * CO.SC
+            self.flash.keyframe_insert("energy", frame=f)
+            self.rim.energy = (5.0 if g >= 1376 else 0.0) * CO.SC * CO.SC
+            self.rim.keyframe_insert("energy", frame=f)
             self.scene.view_settings.exposure = self.exp0 + 0.35 * ez((g - 1380) / 30.0)
             self.scene.keyframe_insert(data_path="view_settings.exposure", frame=f)
         for g in gs:
@@ -287,6 +318,37 @@ class Take(C.Take):
             for k, cast, mark in CAST:
                 self.actors[k].pose(f, POSES[k](g), camera=self.cam)
         self.sprites_for([(a, PPD[k]) for k, a in self.actors.items()], [bf(g) for g in gs])
+        self.build_key(bf(1412 if 1412 in gs else gs[len(gs) // 2]))
+
+    def build_key(self, f):
+        """a brass Morse key + oil-lamp-warm bakelite base on the desk under the soldier's right hand (hand_r anchor of the card at frame f);
+        the lever + knob dip on the taps (3 variants: up / half / down, switched per frame)."""
+        if getattr(self, "key_objs", None):
+            return
+        a = self.actors["tel"]
+        hl = self.anch[("tel", f)]["hand_r"]
+        self.scene.frame_set(f)
+        hw = Vector(C.actors.local_to_world(a, hl, f))                    # world D
+        hx, hy = hw.x / CO.SC, hw.y / CO.SC                                  # metres
+        M = CO.STATE["M"]
+        top = 0.87
+        self.key_objs = []
+        mb = CO.MB("team8_keybase", CO.root())
+        mb.box(M["timberdk"], (hx, hy - 0.02, top + 0.015), (0.24, 0.12, 0.03))
+        mb.cyl(M["brass"], (hx - 0.07, hy - 0.02, top + 0.05), 0.02, 0.05, "z", 8)
+        mb.finish()
+        for k, lift in enumerate((0.075, 0.055, 0.035)):                   # lever up / half / down
+            mb = CO.MB("team8_keyl%d" % k, CO.root())
+            mb.rod(M["brass"], (hx - 0.07, hy - 0.02, top + 0.07), (hx + 0.09, hy - 0.02, top + 0.03 + lift * 0.5), 0.011, 0.011, 6)
+            mb.ell(M["brass"], (hx + 0.09, hy - 0.02, top + 0.035 + lift * 0.5), (0.03, 0.03, 0.03), (8, 6))
+            self.key_objs += mb.finish(shadow=False)
+        for o in self.key_objs:
+            o.hide_render = True
+        for g in self.key_gs:
+            ff = bf(g)
+            amt = tap_amount(g)
+            for k, o in enumerate(self.key_objs):
+                CO.setv(o, k == (0 if amt == 0 else (1 if amt < 1 else 2)), ff)
 
     def report(self, g):
         f = bf(g)
