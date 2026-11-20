@@ -1,0 +1,63 @@
+{
+ "take": "s18",
+ "fps": 30,
+ "note": "t = film seconds (g / 30); narration film20/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "kind": "ambience",
+   "t": 40.333,
+   "dur": 3.2,
+   "frame": 1210,
+   "end_frame": 1306,
+   "note": "Champ de Mars at dusk 1909: empty, a little wind, distant city murmur, a lone horse shifting by the wagon, iron creak from the tower"
+  },
+  {
+   "kind": "accent",
+   "t": 40.5,
+   "dur": 0.467,
+   "frame": 1215,
+   "end_frame": 1229,
+   "note": "dissolve in from the 1889 cafe laugh: the laugh tails off, a low cold string note enters (twenty years later)"
+  },
+  {
+   "kind": "foley",
+   "t": 41.1,
+   "dur": 0.233,
+   "frame": 1233,
+   "end_frame": 1240,
+   "note": "sledge-hammer rests on the shoulder: cloth + metal tick; a crowbar scrapes the cobbles"
+  },
+  {
+   "kind": "accent",
+   "t": 41.733,
+   "dur": 0.5,
+   "frame": 1252,
+   "end_frame": 1267,
+   "note": "snap push on 'ใกล้วันรื้อ' (about to be torn down): short airy whoosh + a low drum hit at the end"
+  },
+  {
+   "kind": "foley",
+   "t": 41.8,
+   "dur": 0.067,
+   "frame": 1254,
+   "end_frame": 1256,
+   "note": "Eiffel's face drops to worry: tiny rising worried 'wobble' sting (no voice)"
+  },
+  {
+   "kind": "foley",
+   "t": 42.4,
+   "dur": 0.6,
+   "frame": 1272,
+   "end_frame": 1290,
+   "note": "wind through the lattice, the antenna wire hums faintly high above"
+  },
+  {
+   "kind": "cut",
+   "t": 43.4,
+   "dur": 0.0,
+   "frame": 1302,
+   "end_frame": 1302,
+   "note": "hard cut to shot 19 (summit): the hum swells"
+  }
+ ]
+}

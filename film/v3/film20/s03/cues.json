@@ -1,0 +1,26 @@
+{
+ "take": "s03",
+ "fps": 30,
+ "note": "t = film seconds (g / 30)",
+ "cues": [
+  {
+   "kind": "ambience",
+   "t": 0.0,
+   "frame": 0,
+   "note": "building site 1887: hammering on iron, forge bellows, distant carts, wind"
+  },
+  {
+   "kind": "accent",
+   "t": 7.1,
+   "frame": 213,
+   "note": "snap push on 'ปี 1887': airy whoosh",
+   "peak_frame": 219
+  },
+  {
+   "kind": "foley",
+   "t": 0.0,
+   "frame": 0,
+   "note": "anvil / rivet hammer clinks, a few, irregular"
+  }
+ ]
+}
