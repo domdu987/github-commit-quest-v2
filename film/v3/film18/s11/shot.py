@@ -9,11 +9,19 @@ import c18 as C                                                         # noqa: 
 
 SHOT = "s11"; G0, G1 = 853, 944; H_IN, H_OUT = 0, 8                     # dissolve 11 into s12: half + 2 = 8 handle frames
 CAMLIN = 0.5
-PARAMS = (0.05, 0, 0.8, 0.9, 0.3, -1.0, 0.0, 2.4)      # c18.make_mod: push, slide px/s, sway D, Hz, wobble D, dz, dz/t
+PARAMS = (0.03, 0, 0.0, 0.8, 0.0, 0.0, 0.0, 0.6, 3.4)      # c18.make_mod: push, slide px/s, sway D, Hz, wobble D, dz, dz/t
 POSES = ["soldier_mock_moo_a", "soldier_laugh_point_b", "soldier_mock_moo_c", "soldier_cheer_cup_a", "soldier_mock_moo_b", "soldier_laugh_point_c"]
-MARKS = [(1.8, -82.0, 0.0), (6.6, -82.8, 0.0), (-3.2, -83.0, 0.0), (9.6, -85.5, 0.0), (3.2, -88.0, 0.0), (8.0, -90.5, 0.0)]   # two big mock-mooers in front of the fire
-BIG = 1.12                                                              # figures drawn 12 % taller (stylised) so the beat is large in frame
+MARKS = [(3.2, -84.0, 0.0), (7.6, -83.4, 0.0), (2.4, -87.6, 0.0), (8.8, -87.4, 0.0), (5.4, -88.6, 0.0), (5.2, -91.0, 0.0)]   # two big mock-mooers in front of the fire
+BIG = 1.0                                                              # figures drawn 12 % taller (stylised) so the beat is large in frame
 STATIC_MOUTH = ("open", 0.26, 0.17)
+
+
+CAM = ((0.0, -77.6, 1.8), (5.5, -85.5, 2.9), 22.0)
+if os.environ.get("CAM11"):
+    a, b, c = os.environ["CAM11"].split(":")
+    CAM = (tuple(float(x) for x in a.split(",")), tuple(float(x) for x in b.split(",")), float(c))
+C.S.SHOTS[SHOT]["cam"] = dict(loc=CAM[0], look_at=CAM[1], lens=CAM[2])
+C.S.SHOTS[SHOT]["move"] = dict(push=0.04, slide=0, moves=[dict(t=0.55, d=0.88, dur=8)])      # eased pull-out + the planned held push-in (+20 %) on "ไอ้เสมียนวัว"
 
 
 def patches(T):

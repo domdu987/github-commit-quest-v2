@@ -307,7 +307,7 @@ def fg_rope(T, side="right", R=0.22):
     return objs
 
 
-def make_mod(sh_dur, push=0.0, slide=0.0, sway=0.0, sway_hz=1.7, yawwob=0.0, dz=0.0, dzt=0.0, vz=0.6):
+def make_mod(sh_dur, push=0.0, slide=0.0, sway=0.0, sway_hz=1.7, yawwob=0.0, dz=0.0, dzt=0.0, vz=0.6, drift=0.0, vdrift=0.0):
     """camera modifier: extra push (fraction of the look distance per second), extra lateral slide (px/s of the 720 px frame at the look distance),
     handheld sway (D amplitude, lateral + vertical) and a small look-at wobble (D) -- all linear in time so no frame sits still."""
     def mod(g, t, pose):
@@ -322,6 +322,7 @@ def make_mod(sh_dur, push=0.0, slide=0.0, sway=0.0, sway_hz=1.7, yawwob=0.0, dz=
         import math as m
         loc = loc + right * (sway * m.sin(2 * m.pi * sway_hz * sec)) + V((0, 0, 1)) * (vz * sway * m.sin(2 * m.pi * sway_hz * 1.3 * sec + 1.0))
         look = look + right * (yawwob * m.sin(2 * m.pi * 1.1 * sec + 0.5)) + V((0, 0, 1)) * (0.5 * yawwob * m.sin(2 * m.pi * 0.9 * sec))
+        loc = loc + right * (drift * (tt - 0.5 * sh_dur)) + V((0, 0, 1)) * (vdrift * (tt - 0.5 * sh_dur))   # one-way orbit-like drift, look-at stays on the subject
         look = look + V((0, 0, dz + dzt * t))
         pose["loc"] = tuple(loc); pose["look_at"] = tuple(look)
         return pose
@@ -343,7 +344,7 @@ def chins(T, shot):
     return max(out) if out else 0.0
 
 
-LIP_MAP = {"flat": "dash", "talk_a": ("open", 0.55, 0.14), "talk_b": ("open", 0.62, 0.42), "talk_o": ("open", 0.36, 0.36)}
+LIP_MAP = {"flat": "dash", "talk_a": ("open", 0.5, 0.16), "talk_b": ("open", 0.9, 0.60), "talk_o": ("open", 0.5, 0.5)}
 
 
 def lip(g, active):

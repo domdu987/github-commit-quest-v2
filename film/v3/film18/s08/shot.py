@@ -20,22 +20,38 @@ G_LAUGH = C.g_of(21.24) - 4                                             # 636: t
 G_SOLD = (G_LAUGH + 6, G_LAUGH + 12)                                    # the soldiers catch the laugh
 LAUGH_MOUTH = ("open", 0.34, 0.22)                                      # constant (not lip-sync)
 CAMLIN = 0.5
-PARAMS = (0.03, 0, 2.2, 0.8, 0.15, -0.3, -0.3, 0.3)      # extra push, slide px/s, sway D, sway Hz, look wobble D, dz, dz/t  (c18.make_mod)
+PARAMS = (0.0, 0, 0.0, 0.8, 0.0, 0.0, 0.0, 0.6, 2.2)      # extra push, slide px/s, sway D, sway Hz, look wobble D, dz, dz/t  (c18.make_mod)
+
+
+CAM = ((1.8, -53.2, 4.7), (-4.0, -47.5, 4.5), 24.0)   # reframed (director round 4): general ~30 % of the frame height, above the rail; env CAM8 overrides.  Format of the env: (loc, look_at, lens) override of the set camera, e.g. "2.5,-54.5,4.4:-4,-47.5,4.4:24" in env CAM8
+if os.environ.get("CAM8"):
+    a, b, c = os.environ["CAM8"].split(":")
+    CAM = (tuple(float(x) for x in a.split(",")), tuple(float(x) for x in b.split(",")), float(c))
+if CAM:
+    C.S.SHOTS[SHOT]["cam"] = dict(loc=CAM[0], look_at=CAM[1], lens=CAM[2])
+    C.S.SHOTS[SHOT]["move"] = dict(push=float(os.environ.get("PUSH8", "0.08")), slide=float(os.environ.get("SLIDE8", "0")))
 
 
 def patches(T):
-    n = C.tone_red()
+    n = C.tone_red(gain=0.35)
+    # director round 4: the red gate lintel (palisade b82c20 faces at z >= 7.9) is the bright slab with the cut end -> remove it; hide the stump (logs) and the fire-ring stones lump
+    pal = C.J.STATE["objects"]["palisade"]
+    import bmesh
+    bm = bmesh.new(); bm.from_mesh(pal.data); mw = pal.matrix_world
+    red = [i for i, m in enumerate(pal.data.materials) if m and "b82c20" in m.name]
+    dl = [f for f in bm.faces if f.material_index in red and (mw @ f.calc_center_median()).z >= 7.9]
+    for f in dl:
+        bm.faces.remove(f)
+    bm.to_mesh(pal.data); bm.free(); pal.data.update()
+    print("lintel faces removed", len(dl))
+    for nm in ("logs", "firestone"):
+        if nm in C.J.STATE["objects"]:
+            C.J.STATE["objects"][nm].hide_render = True
     C.patch_sky()
     ob = C.J.STATE["objects"]
     for nm in ("cloth",):
         if nm in ob:
             ob[nm].hide_render = True
-    mk = None
-    for gg in (G0 - H_IN, G0 + 38, G1):
-        T.camera(gg, CAMLIN)
-        mk = C.cut_faces_in_rect("wood", (-40, 60, 90, 260), T.cam, mk)
-    nb = C.apply_cut("wood", mk)
-    print("beam faces cut:", nb)
     # the near brazier fire4 (-4, -57) blows out the caption band when the camera sways toward it: dim it and drop its halo faces
     for fi in C.J.STATE["fires"]:
         if abs(fi["ob"].location.x + 4.0) < 0.1 and abs(fi["ob"].location.y + 57.0) < 0.1:
