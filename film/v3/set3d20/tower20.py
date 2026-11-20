@@ -11,8 +11,8 @@ from kit20 import tw, th, Z1, Z2, Z3
 
 # ------------------------------------------------------------------ lights
 LIGHTS = dict(
-    DAY=dict(sky=['#f2c89a', '#eec4a4', '#cfc0cc', '#94aee8', '#6a8cdc', '#4c74d2', '#3a62c8'], sky_k=0.85, amb=('#7088FF', 2.5), key=(1.0, 0.84, 0.62, 8.5), key_dir=(0.30, 0.62, -0.46), sun_angle=1.0, exposure=-0.55, sat=1.08, lamp=0.12),
-    DUSK=dict(sky=['#f6a878', '#f0a07e', '#c890b4', '#8a78cc', '#5a52b8', '#3a3ca8', '#262c98'], sky_k=1.0, amb=('#2a3cFF', 0.95), key=(1.0, 0.66, 0.4, 3.6), key_dir=(0.6, 0.55, -0.1), sun_angle=1.5, exposure=0.25, sat=1.1, lamp=1.0),
+    DAY=dict(sky=['#f2c89a', '#eec4a4', '#cfc0cc', '#94aee8', '#6a8cdc', '#4c74d2', '#3a62c8'], sky_k=0.85, amb=('#6a8AFF', 2.5), key=(1.0, 0.84, 0.62, 8.5), key_dir=(0.30, 0.62, -0.46), sun_angle=1.0, exposure=-0.55, sat=1.08, lamp=0.12),
+    DUSK=dict(sky=['#f6a878', '#f0a07e', '#c890b4', '#8a78cc', '#5a52b8', '#3a3ca8', '#262c98'], sky_k=1.0, amb=('#2a38FF', 0.95), key=(1.0, 0.66, 0.4, 3.6), key_dir=(0.6, 0.55, -0.1), sun_angle=1.5, exposure=0.25, sat=1.1, lamp=1.0),
     NIGHT=dict(sky=['#4a3a78', '#3a3470', '#2a2c68', '#1e2260', '#161a54', '#10144a', '#0a0e3c'], sky_k=1.0, amb=('#3a44F8', 0.55), key=(0.55, 0.66, 1.0, 0.9), key_dir=(0.35, 0.55, -0.55), sun_angle=2.5, exposure=0.35, sat=1.1, lamp=1.35),
 )
 HUT = (-0.5, -203.0)               # hut centre (m)
@@ -342,7 +342,7 @@ def _spark_gap(M):
     mb.rod(bb, sg + Vector((-0.55, 0, -0.02)), sg + Vector((-0.2, 0, 0)), 0.022, 0.02, 8); mb.rod(bb, sg + Vector((0.55, 0, -0.02)), sg + Vector((0.2, 0, 0)), 0.022, 0.02, 8)
     mb.box(M['dark'], sg + Vector((0, 0.05, -0.2)), (1.3, 0.4, 0.06)); mb.cyl(M['glasswine'], sg + Vector((-0.45, 0.1, -0.1)), 0.05, 0.16, 'z', 8); mb.cyl(M['glasswine'], sg + Vector((0.45, 0.1, -0.1)), 0.05, 0.16, 'z', 8)
     mb.finish()
-    mb = MB('sg_dyn', R); mat_e = mat_emit('sparkc_h', '#e6f2ff', 35.0)
+    mb = MB('sg_dyn', R); mat_e = mat_emit('sparkc_h', '#e6f2ff', 25.0)
     p = sg + Vector((-0.07, 0, 0))
     for k in range(7):                                                  # jagged arc between the balls (thin, blue-white)
         q = Vector((sg.x - 0.07 + 0.14 * (k + 1) / 7.0, sg.y, sg.z + rr.uniform(-0.035, 0.035))); mb.rod(mat_e, p, q, 0.011, 0.01, 4); p = q
@@ -355,7 +355,7 @@ def _spark_gap(M):
     l = bpy.data.lights.new('sg_light', 'POINT'); l.color = (0.55, 0.72, 1.0); l.energy = 0.0; l.shadow_soft_size = 0.1 * SC
     ob = bpy.data.objects.new('sg_light', l); bpy.context.scene.collection.objects.link(ob); ob.location = W(sg + Vector((0, -0.3, 0.1))); ob.visible_camera = False; STATE['sg_light'] = ob
     for o in dyn: o.hide_render = True
-SG_ENERGY = 110.0
+SG_ENERGY = 60.0
 def spark_gap(on, frame=None):
     """spark gap on the hut bench: two brass balls + a thin jagged blue-white arc + a small halo (12-24 px at tower_hut) and a blue point light, only while on. Key it on every frame of the Morse taps."""
     for o in STATE['sg_dyn']: C.setv(o, bool(on), frame)
