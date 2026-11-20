@@ -45,13 +45,13 @@ K.LIGHTS.update({
     # archive hall, day: 5 pale blue-white skylight shafts with dust, amber banker lamps, cobalt vault and gallery iron
     'ARCHIVE_DAY': dict(_base, key=(1.95, 2.0, 2.25), sun_dir=(0.22, 0.30, -0.93), sun_angle=0.9, sun=True, sun_k=0.62, lamp_k=1.3,
                         shade=(0.13, 0.185, 0.74), tint=(0.085, 0.13, 0.49), mix=0.5, lift=(0.004, 0.012, 0.05), form=(0.0, -0.05, 0.25),
-                        ink='#141a48', world=(0.06, 0.1, 0.42), gain=0.74, glow=1.3, win_w=0, frost=('#9fbcff', 1.5), beam_k=3.2,
+                        ink='#141a48', world=(0.06, 0.1, 0.42), gain=0.74, glow=1.3, win_w=0, frost=('#9fbcff', 1.5), beam_k=2.4,
                         rim='#ffb85a', fill_w=300, fill_col=(1.0, 0.72, 0.4), vault_w=140, beam_col='#e4edff'),
     # archive hall, night (false payoff): ONE banker lamp + candle, gasoliers at 40 %, moonlight-blue shafts; cobalt walls lifted (luma >= 85)
     'ARCHIVE_NIGHT': dict(_base, key=(0.55, 0.8, 1.9), sun_dir=(0.22, 0.30, -0.93), sun_angle=0.9, sun=True, sun_k=0.55, lamp_k=0.75,
                           shade=(0.13, 0.20, 0.92), tint=(0.08, 0.14, 0.62), mix=0.45, lift=(0.004, 0.014, 0.07), form=(0.0, -0.05, 0.25),
                           ink='#10133c', world=(0.04, 0.06, 0.3), gain=0.75, glow=1.1, win_w=0, frost=('#4a72f0', 2.6), beam_k=2.6,
-                          rim='#9cc2ff', fill_w=110, fill_col=(1.0, 0.68, 0.36), gasolier_k=0.4, vault_w=420, beam_col='#7f9eff'),
+                          rim='#9cc2ff', fill_w=110, fill_col=(1.0, 0.68, 0.36), gasolier_k=0.4, vault_w=1100, beam_col='#7f9eff'),
 })
 PRESETS_V2 = ('BLUE_HOUR_EXT', 'GASLIGHT_INT', 'SUNSET_INT', 'ARCHIVE_DAY', 'ARCHIVE_NIGHT')
 AMB_K = 0.78                      # SET-gate calibration: the painted ambient (shade, tint) of the v2 presets, x0.78 -> mean luma in the 85-110 band
@@ -502,7 +502,7 @@ def build_street2(B, A):
     lamps = []
     for yy in (-10.0, -2.0, 6.0, 14.0, 22.0, 30.0, 38.0, 46.0, 54.0):
         K.street_lamp(B, (-4.3, yy, 0.0), h=4.2, rot=0); lamps.append((-4.3, yy))
-        if not (3.0 < yy + 3.0 < 9.0): K.street_lamp(B, (4.3, yy + 3.0, 0.0), h=4.2, rot=0); lamps.append((4.3, yy + 3.0))
+        if not (3.0 < yy + 3.0 < 9.0): K.street_lamp(B, (4.3, yy + 3.0, 0.0), h=4.2, rot=0, watts=420); lamps.append((4.3, yy + 3.0))     # dimmer: they stand 1 m from the ochre façade
     A['lamps'] = lamps
     cafe_terrace(B, -6.0, 17.0, 25.0); morris_column(B, (-4.75, 9.5)); kiosk(B, (-4.9, 31.0))
     A['fiacre_nose'] = fiacre(B, (-1.7, 27.0), rot=180)
@@ -576,7 +576,7 @@ def build_facade(B, A):
     sign(B, 'PRÉFECTURE DE POLICE', 11.2, 1.15, (fx - 0.12, 5.7, 6.15), n=(-1, 0), fg=GOLD, bg=COBALT, emit=0.55, depth=0.14)
     for yy in (3.5, 7.9):
         B.cyl('iron', (fx - 0.3, yy, 3.7), 0.03, 0.6, axis='x', seg=6); B.cyl('iron', (fx - 0.6, yy, 3.95), 0.14, 0.12, r2=0.04, seg=8); B.cyl('glow_lantern', (fx - 0.6, yy, 3.68), 0.12, 0.42, r2=0.15, seg=8, smooth=False)
-        B.cyl('iron', (fx - 0.6, yy, 3.42), 0.15, 0.05, seg=8); A['lights'].append(K.point((fx - 0.6, yy, 3.68), watts=90, radius=0.12, name='door_lantern'))
+        B.cyl('iron', (fx - 0.6, yy, 3.42), 0.15, 0.05, seg=8); A['lights'].append(K.point((fx - 0.6, yy, 3.68), watts=45, radius=0.12, name='door_lantern'))
     # flags (tricolour, waving), sentry box, the measuring-room French window outside: shutters open, flower box, pigeons
     for yy, dy in ((3.6, -0.5), (7.8, 0.5)): flag('flag_%d' % int(yy), (fx - 0.1, yy, 7.2), (-0.8, dy, 0.55), B=B)
     with B.xf((fx - 0.75, 2.4, 0.14)):
@@ -658,7 +658,7 @@ def build_corridor(B, A, with_end_wall=True):
                 B.box(r.choice(['cream', 'amber_paint', 'cardedge']), (x, yy + s * 0.03, z), (0.09, 0.012, 0.13), rot=(0, r.uniform(-12, 12), 0), tint=t)
         B.box('frieze', ((CX0 + CX1) / 2, yy, zt - 0.35), (CX1 - CX0, 0.04, 0.3)); B.box('gold', ((CX0 + CX1) / 2, yy, zt - 0.18), (CX1 - CX0, 0.07, 0.05))
     sign(B, 'PHOTOGRAPHIES — SÛRETÉ', 3.6, 0.36, (8.3, CY0 + 0.06, zt - 0.62), n=(0, 1), fg=GOLD, bg=KEPI, emit=0.4)
-    sign(B, "SERVICE D'IDENTIFICATION", 4.6, 0.58, (10.3, CY1 - 0.06, z0 + 3.3), n=(0, -1), fg=GOLD, bg=COBALT, emit=0.45, maxh=0.66)
+    sign(B, 'IDENTIFICATION', 2.9, 0.6, (10.3, CY1 - 0.06, z0 + 3.1), n=(0, -1), fg=GOLD, bg=COBALT, emit=0.45, maxh=0.66)     # corridor side: short form (cap 0.37 m)
     sign(B, 'CABINET DU PRÉFET', 2.0, 0.32, (10.0, CY0 + 0.06, z0 + 2.8), n=(0, 1), fg=GOLD, bg=KEPI, emit=0.4)
     sign(B, 'ARCHIVES', 1.9, 0.46, (CX1 - 0.06, 5.7, z0 + 3.05), n=(-1, 0), fg=GOLD, bg=COBALT, emit=0.45)
     for (x, s) in ((9.25, 1), (10.75, 1)): B.box('walnut', (x, CY0 + 0.08, z0 + 1.25), (0.14, 0.16, 2.5))
@@ -999,7 +999,7 @@ def build_archive(B, A):
     with B.xf((14.75, hy - 1.25, z0), (0, 0, 15)): K.sliding_calipers(B, (-0.05, 0.0, 0.788), rot=-12, length=0.5, open_=0.17); K.inkpot(B, (-0.25, 0.14, 0.788), rot=10)
     K.banker_lamp(B, (14.95, hy - 1.4, z0 + 0.788), rot=200, watts=60); K.stool(B, (14.45, hy + 0.55, 0), h=0.62) if False else None
     with lift(B): K.stool(B, (14.5, hy + 0.65), h=0.62, rot=-10)
-    A['lights'].append(K.spot((15.25, hy + 0.4, hz + 1.5), (hx + 0.55, hy + 0.15, hz), watts=170, angle=36, blend=0.7, color=(1.0, 0.76, 0.42), name='box_lamp', radius=0.05))
+    A['lights'].append(K.spot((15.25, hy + 0.4, hz + 1.5), (hx + 0.55, hy + 0.15, hz), watts=P().get('box_w', 120), angle=36, blend=0.7, color=(1.0, 0.76, 0.42), name='box_lamp', radius=0.05))
     # lights: the archive sun through the skylights, skylight fill areas, warm strip fills along both galleries
     for (a, b) in SKY: A['lights'].append(K.area((17.0, (a + b) / 2, VCZ + VR - 0.3), (17.0, (a + b) / 2, z0), (2.4, b - a), 260 * (0.6 if night else 1.0), color=(0.75, 0.85, 1.0), name='sky_area'))
     for x, tx in ((AX0 + 1.6, AX1), (AX1 - 1.6, AX0)):
@@ -1125,7 +1125,7 @@ TAKE_LIGHT = {'T1': {'ext': 'BLUE_HOUR_EXT', 'measure': 'SUNSET_INT'}, 'T2': {'e
               'T3': {'measure': 'SUNSET_INT'}, 'T4': {'measure': 'SUNSET_INT', 'archive': 'ARCHIVE_DAY'}, 'T5': {'archive': 'ARCHIVE_NIGHT'},
               'T6': {'archive': 'ARCHIVE_DAY'}, 'T7': {'archive': 'ARCHIVE_DAY'}, 'T8': {'measure': 'SUNSET_INT'}}
 TAKE_OVER = {   # per take, per location overrides of the light preset (SET gate v2b): T1 window brightest pool; T6 -12 % / T7 +5 % luma
-    'T1': {'measure': dict(win_w=360, win_lamp=260)}, 'T6': {'archive': dict(shade_mul=0.86, fill_w=250, vault_w=120)}, 'T7': {'archive': dict(shade_mul=1.06, fill_w=330)}}
+    'T1': {'measure': dict(win_w=300, win_lamp=170, shade_mul=0.88)}, 'T6': {'archive': dict(shade_mul=0.8, fill_w=220, vault_w=100, gain=0.65, beam_k=0.5, frost=('#7f9ef0', 1.1))}, 'T7': {'archive': dict(shade_mul=1.16, fill_w=400)}}
 TAKE_CUTAWAY = {'T3': ('measure',), 'T7': ('archive',), 'T8': ('measure',)}
 def ML(x, y, z=0.0): return (x + MO[0], y + MO[1], z + MO[2])
 def world_build(take='ALL', light=None, parts=None, cutaway=None):
@@ -1188,8 +1188,7 @@ def world_build(take='ALL', light=None, parts=None, cutaway=None):
             for i, db in enumerate(A['dust_boxes']): _dust_box(db, seed=20 + i)
             bm = K._MATS.get('beam_fx')
             if bm: bm.node_tree.nodes['strength'].inputs[0].default_value = (*hex_lin(P().get('beam_col', '#e4edff')), 1)
-    for nm in cut:
-        for o in W.get('ceil_' + nm, []): o.visible_camera = False
+    W['cut'] = tuple(cut)
     W['marks'] = A['marks']; A['build_s'] = time.time() - t0
     cam = K.camera((0, -10, 2), (0, 0, 2), 22.0); cam.data.clip_end = 900; cam.data.clip_start = 0.05; cam.rotation_mode = 'QUATERNION'; A['cam'] = cam
     return A
@@ -1275,7 +1274,7 @@ def _takes():
         keys=[_k(0, (-34.0, -6.0, 34.0), (5.7, 13.3, 10.5), hold=True), _k(46, (-14.0, 6.0, 17.0), ML(-2.2, 1.3, 1.6)), _k(78, (2.6, 12.9, 4.6), ML(0.2, 0.6, 0.6)),
               _k(92, (6.0, 12.75, 3.1), ML(1.2, 0.5, 0.2)), _k(105, ML(0.15, -0.55, 1.6), ML(-2.1, 1.35, 1.0), hold=True),
               _k(148, ML(0.0, 1.3, 1.55), ML(-2.2, 2.0, 1.0), hold=True),
-              _k(158, ML(-0.7, 0.45, 2.9), ML(-2.0, 1.6, 1.1)), _k(168, (4.6, 12.5, 3.8), ML(-1.8, 1.4, 1.0)), _k(194, (0.5, 5.5, 10.5), (5.0, 12.5, 4.5)), _k(218, (-3.5, 1.0, 16.0), (5.0, 15.0, 3.5), hold=True),
+              _k(158, ML(-0.7, 0.45, 2.9), ML(-2.0, 1.6, 1.1)), _k(168, (4.6, 12.5, 3.8), ML(-1.8, 1.4, 1.0)), _k(198, (0.0, 3.0, 12.5), (5.0, 6.5, 5.0)), _k(218, (-2.5, -3.0, 15.0), (5.0, 3.5, 6.0), hold=True),
               _k(255, (-3.0, -1.0, 7.0), (3.0, 8.0, 1.2)), _k(287, (-0.2, 2.6, 1.75), (2.8, 6.4, 1.15), hold=True),
               _k(336, (2.0, 2.4, 1.6), (4.9, 6.2, 1.3), hold=True)])
     # ---- T2 corridor + mockery (g 336-651)
@@ -1286,16 +1285,16 @@ def _takes():
         _C('bertillon', 'bertillon', (330, ML(1.45, 1.95))), _C('prisoner_chair', 'seated', (330, ML(0.7, 2.3, 0.0))), _C('inspector', 'inspector', (330, ML(-0.6, 0.2)), (493, ML(-0.6, 0.2)), (560, ML(0.15, 0.2)), (651, ML(0.15, 0.2))),
         _C('gend_room', 'gendarme', (330, ML(-1.4, -0.4))), _C('gend_room2', 'gendarme', (330, ML(2.6, -1.7))), _C('prisoner_b', 'seated', (330, ML(-2.45, 1.55)))],
         keys=[_k(330, (2.0, 5.2, 1.85), (8.0, 5.9, 1.9), hold=True), _k(360, (3.9, 5.5, 1.95), (9.0, 6.0, 2.0)), _k(386, (6.6, 5.2, 2.75), (10.0, 6.4, 1.7)),
-              _k(445, (8.2, 4.45, 2.7), (10.5, 6.6, 2.6)), _k(470, (9.9, 5.6, 2.55), (10.3, 9.0, 2.3)), _k(493, (10.25, 8.5, 1.55), ML(-0.6, 1.6, 1.75)),
+              _k(445, (7.9, 4.4, 2.6), (9.9, 7.2, 3.1)), _k(470, (9.9, 5.6, 2.55), (10.3, 9.0, 2.3)), _k(493, (10.25, 8.5, 1.55), ML(-0.6, 1.6, 1.75)),
               _k(560, (11.9, 14.0, 2.45), ML(-0.3, 0.6, 1.45)), _k(593, ML(2.25, 2.9, 1.65), ML(-0.1, 0.3, 1.25), hold=True),
               _k(657, ML(2.0, -0.95, 0.55), ML(0.05, 0.3, 1.3), hold=True)])
     # ---- T3 nickname + prefect (g 651-850): bird's-eye from the gasolier (ceiling cut away), crane to eye height, low under the table, into the clock
     T['T3'] = dict(g=(651, 850), render=(645, 856), cast=[
         _C('bertillon', 'bertillon', (645, ML(1.45, 1.95)), (780, ML(1.45, 1.95)), (802, ML(1.0, 1.3))), _C('prisoner_chair', 'seated', (645, ML(0.7, 2.3))), _C('inspector', 'inspector', (645, ML(-0.4, 0.3))),
-        _C('gend_a', 'gendarme', (645, ML(-1.2, -0.3))), _C('gend_b', 'gendarme', (645, ML(2.2, -0.9))), _C('prankster', 'gendarme', (645, ML(2.0, 2.9)), (725, ML(1.9, 2.5)), (760, ML(1.6, 0.6)), (800, ML(-1.6, 1.2))),
+        _C('gend_a', 'gendarme', (645, ML(-1.2, -0.3))), _C('gend_b', 'gendarme', (645, ML(1.3, -1.5))), _C('prankster', 'gendarme', (645, ML(2.0, 2.9)), (725, ML(1.9, 2.5)), (760, ML(1.6, 0.6)), (800, ML(-1.6, 1.2))),
         _C('prisoner_b', 'seated', (645, ML(-2.45, 1.55))), _C('prisoner_q', 'seated', (645, ML(-2.45, 0.85))),
         _C('prefect', 'prefect', (725, ML(1.1, -4.6)), (760, ML(1.0, -2.2)), (800, ML(0.8, -2.0)), (840, ML(1.1, -3.8)))],
-        keys=[_k(645, ML(0.6, 1.3, 7.6), ML(0.75, 1.6, 0.0), hold=True), _k(700, ML(0.2, 0.6, 6.0), ML(0.7, 1.6, 0.4)), _k(745, ML(-2.0, 3.0, 3.6), ML(1.0, -1.0, 1.0)),
+        keys=[_k(645, ML(0.6, 1.3, 7.6), ML(0.75, 1.6, 0.0), hold=True), _k(700, ML(0.2, 0.6, 6.0), ML(0.7, 1.6, 0.4)), _k(745, ML(-2.0, 3.0, 3.6), ML(1.0, -2.6, 2.0)),
               _k(792, ML(0.6, 3.75, 1.8), ML(1.2, -3.0, 1.4)), _k(812, ML(2.85, 2.75, 0.5), ML(1.45, 1.95, 1.55), hold=True), _k(834, ML(2.4, 2.6, 2.1), ML(0.2, 4.2, 3.05)),
               _k(856, ML(0.05, 3.05, 2.95), ML(0.2, 4.2, 3.05), lens=22.0, hold=True)])
     # ---- T4 montage + drawers (g 850-1045): out of the clock, track the stations, low at the desk, through ARCHIVES -> into the hall
@@ -1320,7 +1319,7 @@ def _takes():
         _C('gend_a', 'gendarme', (1371, GA6)), _C('gend_b', 'gendarme', (1371, GB6)), _C('clerk_gal', 'clerk', (1371, (19.85, 21.0, FZ + 4.2))), _C('clerk_t', 'clerk', (1371, (17.9, 11.6, FZ)))],
         keys=[_k(1371, (17.0, 2.9, 9.55), (15.1, 24.0, 0.4), hold=True), _k(1395, (16.95, 4.6, 9.2), (15.0, 24.5, 0.8)), _k(1440, (15.7, 9.5, 7.6), (14.9, 26.0, 1.8)), _k(1478, (15.6, 17.5, 5.4), (14.8, 26.1, 1.8)),
               _k(1515, (16.35, 24.55, 2.35), (14.55, 26.05, 1.85), hold=True), _k(1535, P1CAM, P1CARD, hold=True), _k(1545, P1CAM2, P1CARD, hold=True),
-              _k(1560, (15.65, 26.75, 3.0), (14.35, 25.7, 2.0)), _k(1580, (15.6, 28.2, 2.35), (14.35, 25.7, 2.0), hold=True), _k(1640, (17.9, 27.6, 2.3), (14.9, 26.0, 1.8), hold=True), _k(1671, (17.9, 27.5, 2.3), (14.9, 26.0, 1.8), hold=True),
+              _k(1560, (15.8, 26.85, 3.05), (14.35, 25.7, 2.0)), _k(1580, (15.6, 28.2, 2.35), (14.35, 25.7, 2.0), hold=True), _k(1640, (17.9, 27.6, 2.3), (14.9, 26.0, 1.8), hold=True), _k(1671, (17.9, 27.5, 2.3), (14.9, 26.0, 1.8), hold=True),
               _k(1695, (15.95, 25.1, 2.72), (15.2, 24.35, FZ + 1.5), hold=True), _k(1701, (15.92, 25.07, 2.72), (15.2, 24.35, FZ + 1.5), hold=True)])
     # ---- T7 aha + 200 (g 1695-1868): low hero under the GRAND drawer, crane up and out to top-down (vault cut away)
     T['T7'] = dict(g=(1695, 1868), render=(1689, 1874), cast=[
@@ -1445,10 +1444,18 @@ def render_frame(path, res=(360, 640), samples=16, threads=2, do_grade=True):
     setup_render2(res, samples, threads); sc = bpy.context.scene; sc.render.filepath = path; t = time.time(); bpy.ops.render.render(write_still=True); dt = time.time() - t
     if do_grade: grade2(path)
     return dt
+CEIL_Z = {'measure': FZ + K.MH - 0.15, 'archive': VCZ + VR - 0.2}
+def cutaway_at(fr, frame=None):
+    """hide the cut-away ceilings of the take (TAKE_CUTAWAY) only while the camera is above them (bird's-eye / top-down frames); keyed with frame."""
+    for nm in W.get('cut', ()):
+        hide = fr['loc'][2] > CEIL_Z[nm]
+        for o in W.get('ceil_' + nm, []):
+            o.visible_camera = not hide
+            if frame is not None: o.keyframe_insert('visible_camera', frame=frame)
 def shot(take, g, A=None, cards=True):
     """put the world in its state for frame g of a take: camera on the path, hooks, life, cast cards."""
     t = TAKES[take]; frames = dict((f['g'], f) for f in path_take(take)); g = max(t['render'][0], min(t['render'][1], g)); cam = bpy.context.scene.camera
-    bpy.context.scene.frame_set(g + 1); set_cam(cam, frames[g]); take_state(take, g); life_at(g); bpy.context.view_layer.update()
+    bpy.context.scene.frame_set(g + 1); set_cam(cam, frames[g]); take_state(take, g); cutaway_at(frames[g]); life_at(g); bpy.context.view_layer.update()
     if cards: cast_cards(take, g, cam)
     return frames[g]
 def gate_stills(take, out_dir, res=(360, 640), samples=16, which=None):
@@ -1461,16 +1468,6 @@ def gate_stills(take, out_dir, res=(360, 640), samples=16, which=None):
         info = dict(take=take, g=g, build_s=round(A['build_s'], 1), render_s=round(dt, 1), res=res, samples=samples, tris=int(sum(len(o.data.polygons) for o in bpy.data.objects if o.type == 'MESH')), size_pct=sizes)
         json.dump(info, open(p[:-4] + '.json', 'w')); res_.append(info); print('%s g%d %.1fs (build %.1fs) %s' % (take, g, dt, A['build_s'], info['tris']), flush=True)
     return res_
-
-if __name__ == '__main__':
-    a = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else sys.argv[1:]
-    if a and a[0] == 'stills': gate_stills(a[1], a[2], res=(int(a[3]), int(a[4])) if len(a) > 4 else (360, 640), samples=int(a[5]) if len(a) > 5 else 16, which=[int(x) for x in a[6].split(',')] if len(a) > 6 else None)
-    elif a and a[0] == 'report':
-        for tk in (a[1:] or list(TAKES)): print('== ' + tk); cam_report(tk, step=int(os.environ.get('STEP', 12)))
-    elif a and a[0] == 'frame':      # frame <take> <g> <out.png> [W H samples threads]
-        A = world_build(a[1]); shot(a[1], int(a[2]), A); W_, H_ = (int(a[4]), int(a[5])) if len(a) > 5 else (720, 1280)
-        dt = render_frame(a[3], (W_, H_), int(a[6]) if len(a) > 6 else 32, int(a[7]) if len(a) > 7 else 2); print('frame %s g%s %.1fs build %.1fs tris %d' % (a[1], a[2], dt, A['build_s'], sum(len(o.data.polygons) for o in bpy.data.objects if o.type == 'MESH')))
-    else: print('usage: python3 prefecture17.py stills <T1..T8> <out_dir> [W H samples g,g,g] | report [T..] | frame <take> <g> <out.png> [W H samples threads]')
 
 # ================================================================ QA: per-frame anchor + speed check (SET gate v2b)
 PLANNED_CLOSE = {   # (take, anchor) -> [(g0, g1)] where > 75 %H is planned: OTS shoulders (back-view cards) and the punctuation pushes P1-P3
@@ -1575,3 +1572,13 @@ def _back_cover(a, c, cam):
     H = HCAST[c['who']]; hd = 0.3 * H / 1.78 * 0.55; p = Vector(a.root.location); to = (Vector(cam.location) - p); to.z = 0; to.normalize()
     for nm, (w, h, z, col) in (('hair', (hd * 2.1, hd * 2.2, H - hd * 1.1, '#1c1424')), ('coat', (0.5, H * 0.62, H * 0.36, '#15122a'))):
         ob = plane('back_%s_%s' % (nm, c['name']), tuple(p + to * 0.05 + Vector((0, 0, z))), (w, h), rotz=face_rot((to.x, to.y)), mat=_flat('cc_back_' + nm, col)); ob.visible_shadow = False
+
+if __name__ == '__main__':
+    a = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else sys.argv[1:]
+    if a and a[0] == 'stills': gate_stills(a[1], a[2], res=(int(a[3]), int(a[4])) if len(a) > 4 else (360, 640), samples=int(a[5]) if len(a) > 5 else 16, which=[int(x) for x in a[6].split(',')] if len(a) > 6 else None)
+    elif a and a[0] == 'report':
+        for tk in (a[1:] or list(TAKES)): print('== ' + tk); cam_report(tk, step=int(os.environ.get('STEP', 12)))
+    elif a and a[0] == 'frame':      # frame <take> <g> <out.png> [W H samples threads]
+        A = world_build(a[1]); shot(a[1], int(a[2]), A); W_, H_ = (int(a[4]), int(a[5])) if len(a) > 5 else (720, 1280)
+        dt = render_frame(a[3], (W_, H_), int(a[6]) if len(a) > 6 else 32, int(a[7]) if len(a) > 7 else 2); print('frame %s g%s %.1fs build %.1fs tris %d' % (a[1], a[2], dt, A['build_s'], sum(len(o.data.polygons) for o in bpy.data.objects if o.type == 'MESH')))
+    else: print('usage: python3 prefecture17.py stills <T1..T8> <out_dir> [W H samples g,g,g] | report [T..] | frame <take> <g> <out.png> [W H samples threads]')

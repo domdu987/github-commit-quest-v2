@@ -8,14 +8,18 @@ A = P.world_build('T3')                       # only the locations take T3 can s
 frames = P.path_T3()                          # per-frame camera (g, loc, look, rot quaternion, lens) for the take's render range incl. handles
 P.key_cam(A['cam'], frames)                   # Blender frame = g + 1
 g0, g1 = P.TAKES['T3']['render']
-for g in range(g0, g1 + 1): P.take_state('T3', g, frame=g + 1)      # doors / window / calendar / drawer / tally / light mix, keyed
+for g in range(g0, g1 + 1):
+    P.take_state('T3', g, frame=g + 1)                                # doors / window / calendar / drawer / tally / light mix, keyed
+    P.cutaway_at(frames[g - g0], frame=g + 1)                         # ceilings hide only while the camera is above them (T3, T7, T8)
 P.key_life2(g0 + 1, g1 + 1)                   # flicker, smoke, dust, pendulum, banners (flags wave by themselves)
-# ... stage the real cast cards on the anchors in P.TAKES['T3']['cast'] (P.cast_cards(...) = placeholders) ...
-P.setup_render2((720, 1280), samples=32, threads=2)   # recommended: 32 samples + OIDN, adaptive 0.03, 2 threads
+# per frame, before rendering: acts = P.stage_cast2('T3', g, {anchor: (story_pose, opts)})   # real cast17 cards: floor_z feet, yaw clamp, back views
+P.setup_render2((720, 1280), samples=16, threads=2)   # recommended (v2b A/B): 16 samples + OIDN, adaptive 0.03, 2 threads
 bpy.context.scene.frame_set(g + 1); bpy.ops.render.render(write_still=True); P.grade2(path)   # v2 grade: sat 1.20 + vibrance band
 ```
 CLI: `python3 prefecture17.py frame T6 1515 out.png 720 1280 32 2` | `stills T1 <dir> 360 640 16` | `report T1 T6` (per-frame %H + BIGZOOM verdict).
-Measured cost: **56-135 s per 720x1280 frame** at 32 samples / 2 threads (mean ~98 s; table in §v2.8) -> ~58 CPU-hours for 2144 frames.
+Measured cost: **56-145 s per 720x1280 frame** at 32 samples / 2 threads (mean ~98 s; §v2.8); **16 samples halves it** (36-73 s, mean ~50 s ->
+~30 CPU-hours for 2144 frames) with no visible difference (v2_gate/AB_archive_night_16_vs_32.jpg, §v2.10). Motion blur (shutter 0.5) on the planned
+crane / swoop ranges: T1 g152-278, T7 g1800-1867. Check every take with `check_take(take)` before rendering (§v2.10).
 
 Four locations, 14 camera presets, 3 light presets, life hooks, stand points for 1-4 cast cards. Built from code only (numpy + PIL textures, batched
 meshes). **No depth of field anywhere. No readable text anywhere** (notices, ledgers, the Bertillon card and the sign board are greeked or blank).
@@ -297,3 +301,72 @@ the flat-shaded look; check the night archive for noise first). Build per take <
 - 11 MESURES chart is 1.2 x 1.5 m (fits under the frieze).
 - `stage_cast` v2 (yaw clamp, walk_path, contact decals) is not in this build: cast anchors + placeholder cards + `RIM` colours only.
 - Bundled serif font (film/fonts has only Kanit Black and Work Sans Black).
+
+### v2.10 SET gate fixes B1-B6 and re-gate (v2b, answers `v2_gate/QA_ART_SET_V2.md`)
+
+**Anchors and paths (B1, B2).** `check_take(take, limit=0.75, vmax=6.0)` runs every frame: anchors in frame above 75 %H outside
+`PLANNED_CLOSE` (OTS shoulders, P1-P3), anchors within 1.0 m of the lens, camera speed above 6 m/s. Result in `v2_gate/anchors_v2b.md`:
+**0 unplanned hits above 75 %H in all 8 takes** (largest 73 %), no lens pass-throughs (one gendarme at 0.98 m from the T2 corridor track, a
+wall-side figure), and the only frames above 6 m/s are the planned cranes (T1 1c/1d g152-278 at <= 14.8 m/s, T7 7b g1800-1867 at 15.5 m/s)
+plus two 6.1 m/s moments (T4 g1035-1038, T5 g1141-1150). Changes:
+- T6: inspector at (15.2, 24.35) (T5 ends there too; T7 puts him at (15.5, 27.4), behind Dupont); gendarmes at (13.95, 28.2) and (16.9, 29.6);
+  P1 aims at the lifted card's measured centre (14.29, 26.14, 2.88) from 0.44 m along its normal: the card is ~74 % of the frame width; P2 on the
+  inspector's new head.
+- T3: no hold at g792; the low key is at g812 (20 frames, <= 5.7 m/s); the prankster walks off the rise; Bertillon steps to ML(1.0, 1.3) for 3c.
+- T1: the crane-out clears the seated heads (key at z FZ + 2.9), crane end at (-2.5, -3, 15) above the carriageway (was inside a block);
+  BIGZOOM 1 start (-34, -6, 34) aimed with the horizon in the top fifth.
+- T5: the night crane starts on the NW gallery rail (14.75, 32.3, 7.0) and lands behind Bertillon's desk, so the OTS push down the aisle turns
+  only 20 deg (no whip); the push ends on the east side (19.2, 16.8); the escort lanes are x 15.9 / 16.6 / 17.3, at least 1.9 m from the track.
+- T7: the end is a high bird's-eye from the south (17, 5, 23) -> (17, 21, 1.2), so every banner reads upright (a straight top-down shows the
+  south banner upside down whatever its orientation).
+
+**T1 hook frame (B3).** Ground plane of setts under the whole plate (no void), lamp dots at every block corner, `tex_zinc2` seamed zinc on all
+roofs, dormers on all four slopes of the blocks within 90 m and on the back slopes of the street rows (`roof_back`), the sky dome with its thin
+amber horizon and Notre-Dame (moved to (120, 135)) in frame, all v1 window glows amber (`glow_win` 1.7, never white), a red/amber awning over
+the French window and a warm lamp inside it (`win_glow`; T1 window key 300 W), so the French window is the brightest pool. `report T1 T6`:
+BIGZOOM 1 1.6 -> 36.4 %H PASS, BIGZOOM 2 4.4 -> 48.0 %H PASS.
+
+**Foreground (B4).** Measuring room: ledgers, kepi on the floor, spittoon, open calipers case, dropped cards, a rug and a crate by the doors.
+Corridor: runner and photo-box piles. Archive entry: a card trolley and an overflow pile. Street: a refuge island with a lamp post (the 1d
+foreground), smaller puddles, more crowd anchors.
+
+**Light (B5).** Archive shafts visible: `beam_k` 2.4 (day) / 2.6 (night) with pale-blue / moon-blue beam colour, 34 larger motes per shaft,
+the shafts land at x 17.9-20.3 (east of every cast anchor). Night vault: two cool `vault_fill` areas (1100 W at night) light the vault and ribs.
+Fanlight `glow_fan` 1.4 (no white transom), right-side street lamps 420 W, door lanterns 45 W. Per-take overrides `TAKE_OVER`: T1 measure
+(window), T6 archive (shade x0.8, fills 220 W, beams 0.5: on the hall axis the five additive shafts stack into haze), T7 archive (shade x1.16).
+`Loc` accepts `shade_mul`. Ceilings in `TAKE_CUTAWAY` hide only while the camera is above them (`cutaway_at(frame)`).
+
+**Signs.** Corridor side: `IDENTIFICATION` (2.9 x 0.6 m, cap 0.37 m), whole in frame T2 g445-458 (it then leaves through the top as the camera
+pushes under it into the door). Room side: `SERVICE D'IDENTIFICATION` 3.9 x 0.5 m (cap 0.31 m), whole in T3 g736-760.
+
+**stage_cast v2 (B6).**
+- `floor_z(x, y)`: walkable height (street 0, pavement 0.14, the 3 façade steps, the 0.6 sill, the 5 corridor steps, interiors 1.2). Feet and
+  contact shadows of the placeholder cards and of `stage_cast2` stand on it.
+- `yaw_clamp(face_deg, pos, cam_loc, max_dev=35)`: the card turns toward the camera by at most 35 deg from the story facing; the rest of the turn
+  goes into the puppet `yaw` key (`pose_yaw`, +-0.6); `back` = camera more than 110 deg off the facing; `yaw_fixed` is the value for
+  `stage.actors.Actor.yaw_fixed` (card yaw 0 = facing -y).
+- `walk_path(keys, stride=0.72)`: per frame pos on `floor_z`, heading, speed, gait `phase` from the distance walked (feed `cast17.cycle(cast,
+  phase, 'walk')`: the planted foot does not skate), `planted` foot, `idle`.
+- `BACK_VIEW` (OTS shoulders: T2 Bertillon g555-625, T5 Bertillon g1100-1150, T6 Dupont g1546-1616, T8 gendarme g1958-2052) and
+  `is_back(take, anchor, g)`. cast17 has no back art (cast17/API.md), so `stage_cast2` mirrors the pose and puts a dark back-of-head disc and coat
+  silhouette in front of the card (`_back_cover`); the placeholder cards show a dark head.
+- `stage_cast2(take, g, assign)`: bertillon.stage_cast + all of the above for frame g (call it on every frame of a frame-by-frame render).
+  `cast_face(take, anchor, g)`: explicit `face`, else the walking direction, else toward the take's first camera.
+
+**Re-gate material (`v2_gate/`):** `contact_v2b.jpg` (18 stills: the 14 requested + T1 g0218, T2 g0450, T3 g0750), `*b.jpg`, `stats_v2b.md`,
+`anchors_v2b.md` (frame-size table, sign check, BIGZOOM verdicts), `full720_roofs_bigzoom_v2b.jpg`, `full720_archive_night_v2b.jpg`,
+`AB_archive_night_16_vs_32.jpg`. qa_stats2 on the re-gate stills: **sat 0.629, vivid 75.7 %, luma 109.1** (saturation not pushed: 0.64 -> 0.63).
+Per take on these frames: T1 120 (interiors through the bright window), T6 121 (the P1 frame is the near-white MARTIN card filling the frame; the
+BIGZOOM start fell from 137 to 121), T7 88, the others 103-108.
+
+| full frame 720x1280, 2 threads | 32 samples | 16 samples |
+|---|---|---|
+| rooftop plate, BIGZOOM 1 start (T1 g0) | 67 s | 36 s |
+| archive night (T5 g1060) | 145 s | 73 s |
+16 vs 32 samples on the night archive: identical numbers (sat 0.606 / 0.608, luma 97.3 / 97.4) and no visible noise difference at 1:1 (OIDN
+holds the flat-shaded look). **Recommendation: 16 samples + OIDN** for all takes.
+
+Known after v2b: T1 g218 (crane top) still does not show the whole PRÉFECTURE DE POLICE band (QA non-blocking note); at T3 g796 a gasolier
+crosses the room-side sign for a few frames; placeholder cards seen at the clamp limit read thin (expected: the real puppets carry the rest of the
+turn in `pose_yaw`).
+
