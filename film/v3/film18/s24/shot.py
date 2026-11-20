@@ -68,6 +68,10 @@ def make_driver(quality):
         if ch_.get('ob') is not None: ch_['ob'].hide_render = True
     chariot_root = C.J.prop_chariot((-4.0, -80.0, 0.0), rot=math.radians(200.0), tumble=0.0, scale=0.6)
     chariot = None
+    for k_ in range(2):
+        sp_ = C.J.prop_reed_bundle((0, 0, 0.1), scale=2.2); sp_.rotation_euler = (0, 0, math.radians(20 + 70 * k_))
+        q_ = C.ground_at(cam_obj, 0.3 + 0.4 * k_, 0.9 - 0.05 * k_)
+        if q_ is not None: sp_.location = (q_.x, q_.y, 0.1)
     C.set_camera(NAME, G0, move=MOVE, cam=CAMO); C.bpy.context.view_layer.update()
     for n_, (uu, vv) in enumerate(((0.16, 0.86), (0.48, 0.94), (0.82, 0.88), (0.32, 0.78), (0.66, 0.8))):       # dropped camp props from the first frame (ground <= 30 %)
         pt_ = C.ground_at(cam_obj, uu, vv)
@@ -79,6 +83,7 @@ def make_driver(quality):
         if ch_.type == 'MESH':
             ch_.data.materials.clear(); ch_.data.materials.append(C.glaze_mat(((0.06, 0.03, 0.02), (0.35, 0.12, 0.06), (0.62, 0.22, 0.1), (0.95, 0.5, 0.25)), 'chariot_warm'))
     C.set_camera(NAME, (G0 + G1) // 2, move=MOVE, cam=CAMO); C.bpy.context.view_layer.update(); C.J.gapfill(cam_obj)        # no bare ground
+    C.J.dress_ground(cam_obj, density=1.0, seed=24)          # sparse lit textured clutter (director)
     actors = {}
     for i, a in enumerate(run): actors['run%d' % i] = a
 
