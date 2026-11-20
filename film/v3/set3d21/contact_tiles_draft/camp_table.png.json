@@ -1,1 +1,1 @@
-{"preset": "camp_table", "light": "MORNING", "build_s": 2.93, "render_s": 16.5, "mode": "draft", "samples": 20, "heads": {"cress": {"cx": 360, "cy": 506, "chin": 559, "dist": 3.9}}, "objects": 177, "tris": 560750}
+{"preset": "camp_table", "light": "MORNING", "build_s": 2.89, "render_s": 17.36, "mode": "draft", "samples": 20, "heads": {"cress": {"cx": 365, "cy": 540, "chin": 593, "dist": 4.0}}, "objects": 197, "tris": 560887}

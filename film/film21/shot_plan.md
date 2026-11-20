@@ -1,90 +1,90 @@
-# Shot plan, film 21 (ไอ้ชาวนาบนเนิน — Battle of Stirling Bridge, 11 Sept 1297)
-Narration film/film21/audio/narration.wav (61.25 s), placed at +0.10 s. g = round(t_film*30), t_film = t_narr + 0.10.
-**N = 1848** (61.60 s, hard cut on the last "ตูม").
-Captions film/film21/script/captions.json (narration time). Timing film/film21/audio/timing.json. Facts FACTS.md.
-Set film/v3/set3d21 (stirling.py + API.md; use the closest preset in API.md if a name differs). Cast film/v3/cast21.
+# Shot plan v3, film 21 (ไอ้ชาวนาบนเนิน, Battle of Stirling Bridge, 11 Sept 1297): CAMERA TRAVEL (QA_TEAM.md §I)
+Replaces the cut-based plan v2 (kept as shot_plan_v2_cuts.md) after the client's decision of 2026-11-20 to match his reference Shorts:
+"ได้ทุก ทำอะไรก็ได้ที่ออกมาเหมือนคลิปที่ผมส่งให้". Study film/ref_shorts/ first, especially R5_sheet.jpg (storm oil), R3_transition_detail.jpg
+(the camera follows a character through the set) and R7 (ride-along).
 
-## Sentence starts (narration time)
-| line | start | end |
+Narration film/film21/audio/narration.wav (61.25 s), placed at +0.10 s. g = round((t_narr + 0.10) * 30). **N = 1848**: the film ends on a hard cut on the last "ตูม".
+Captions film/film21/script/captions.json (narration time). Set film/v3/set3d21 (API.md, including the new `build_world` and `cam_path` for travel). Cast film/v3/cast21.
+
+## The idea in one line
+One connected Forth valley. The camera FLIES: it swoops from the sky to the Scots on Abbey Craig, crosses the river to the English camp, rides the narrow bridge,
+follows Cressingham to the bank, cranes over the river to the hill, rides down with the charge, rises to show the trap, swoops back to the shocked treasurer,
+and ends in the river splash.
+- Hard cuts: 8, the target of §I being 4-10. Most other joins are continuous travel: the segments meet at the same camera pose and are joined with a 6-frame dissolve (D6).
+- Two joins are whip pans (W): D1->D2 and J1->J2.
+- BIGZOOMs (§H): segment A and segment H2b.
+
+## Signature colour (§I 3)
+English CRIMSON and GOLD (surcoats, pavilions, banners, the treasury) against Scots SALTIRE BLUE (blue banners with a white saltire on the hill and at the spear wall), on the teal river. Keep both in most frames.
+
+## Render budget (QA-art)
+Travel frames render at 32 samples (+ OIDN); close-ups and held frames at 64. Before finals, each team renders a 10 fps draft of its whole camera path (360x640) and pushes it as path_draft.mp4.
+
+## Rules for every segment (§G, §H, §I, camera rhythm)
+- **One continuous, eased camera move** with no internal cut, unless the table says so. Never parked: the camera always travels (push, crane, track, ride along). Pass THROUGH set detail (pine branches, banner cloth, tent ropes, reeds) for parallax.
+- **Lighting (§I 2):**
+  - A motivated key: the low morning sun, light shafts through the pines and through campfire smoke, and a lantern under the money canopy.
+  - Warm sun and cool shade in the same frame.
+  - A **rim light on every character card**: puppet `rim` (cast API; warm-gold rim on the sun side).
+- **Colour (§G/§I):** frame saturation >= 0.50 and vivid % >= 45, luma 85-110. The VIVID grade does it (API §9). On travel, `cam_path` eases the VIVID entry between presets.
+- **Text signs (§I 4)**, built into the set: "STIRLING BRIDGE" (bridge, south end), "KING'S TREASURY" (the coin chest), "ENGLISH CAMP" (camp entrance). Let the camera pass them where the table says.
+- **Characters always act (§I 5):**
+  - Nobody stands still for more than 1.5 s. Use walk cycles, the horses' walk, laughing bounce (0.06 D at 3 Hz), spear shifts, scratching, chewing, counting coins, and the horn.
+  - Riders stay on their horses. Feet stay on the ground with contact shadows (§G). Nobody is cut in half by the frame edge.
+- **Close-ups (§I 6):** at most 3 fast pushes into a face, about 1 s each. These are marked CU1-CU3. Everything else is wide or medium inside the rich set; no face is over 35 % of the frame height except at CU1-CU3.
+- **Content:** comic and BLOODLESS.
+  - Spears block and point; nobody is struck, lies still or dies.
+  - Cressingham appears ONLY on the south bank.
+  - At the ending, only his EMPTY money table is shown.
+- **Mouths:**
+  - Cressingham's mouth moves ONLY at narration 21.29-26.26 and 36.32-37.89 (±0.15 s).
+  - He laughs (laugh drawing and bounce, no lip-sync) at 20.29-21.29.
+  - The camp laughs at 34.71-36.32.
+  - Nobody else talks. The horn blower's cheeks puff at 39.7-41.1.
+- **Handles:**
+  - Every segment renders 3 extra frames past each end that joins by D6. These must be the continuation of the same move, so the dissolve blends the same camera path.
+  - Segments joined by a cut or a whip need no handles.
+
+## Join poses (shared camera poses where two segments meet; segment ends and starts EXACTLY here)
+| pose | camera loc -> look, lens | used at |
 |---|---|---|
-| hook | 0.00 | 5.14 |
-| pivot | 5.19 | 13.77 |
-| bridge | 13.82 | 17.97 |
-| mocker | 18.02 | 26.26 |
-| nickname | 26.32 | 29.34 |
-| count | 29.39 | 34.65 |
-| false | 34.71 | 37.89 |
-| crisis | 37.94 | 41.14 |
-| reveal | 41.19 | 50.47 |
-| aha | 50.53 | 54.50 |
-| ending | 54.55 | 61.25 |
+| P_CAMP | the `camp_wide` preset camera | B1 end / B2 start (g 298) |
+| P_HILL | the `hill_low` preset camera, raised 0.8 m | B2 end (g 418, then cut) |
+| P_BANK | the `camp_bank` preset camera | D2 end (CU1 pushes out of it) / E1 start |
+| P_NECK | the QA-art bridge_end_north camera (-2.0, 50.0, 4.6) -> (0.0, 22.0, 1.8), 22 mm | H1 end / H2a start (g 1345) |
+| P_TOP | (-10, -40, 120) -> (0, 80, 0), 22 mm (frames the loop, the bridge mouth and the south bank; a man is about 10 px) | H2a end / H2b start (g 1392) |
+| P_A | (290, 205, 170) -> (120, 110, 10), 22 mm (mid-swoop of BIGZOOM 1, NE of Abbey Craig, looking SW-down at the hill and the bridge) | A1 end / A2 start (g 80) |
+If a team cannot hit a pose exactly, it writes its actual first or last camera into meta.json (`cam_in` / `cam_out`) and the director re-checks the join.
 
-## Quote windows (mouths move ONLY here, +-0.15 s)
-- cressingham: 21.29-26.26 ("ชาวนาบนเนินไม่กี่คน! อ้อมไปเปลืองเงินหลวง ข้ามสะพานนี่แหละ เร็วดี ประหยัดดี!"). Laugh (no lip-sync, laughing pose + bounce) 20.29-21.29.
-- cressingham: 36.32-37.89 ("เห็นไหม กลัวจนขยับไม่ได้!"). Camp laughs 34.71-36.32 (laughing poses, bounce, mouths in a fixed laugh drawing, no lip-sync).
-- Nobody else speaks. The Scots never open their mouths (except the horn blower's cheeks puffing on the horn at 39.7-41.1).
+## Segments (t = NARRATION time)
+| seg | t0-t1 | g0-g1 | join in | world (build_world presets) | what happens (camera + action) |
+|---|---|---|---|---|---|
+| A | 0.00-5.19 | 0-159 | - (film start) | valley_wide, hill_over | **BIGZOOM 1, the hook.** See the detail under the table. |
+| (A split) | | g80 | D6 at P_A | | A1 = g0-80 (team 1), A2 = g80-159 (team 5); they join by D6 at P_A (table below). |
+| B1 | 5.19-9.82 | 159-298 | CUT 1 | valley_wide, camp_wide | "คืออย่างนี้นะ สกอตแลนด์ เจ็ดร้อยกว่าปีก่อน": high over the valley, the camera glides south over the river and swoops DOWN into the English camp. It flies past the "ENGLISH CAMP" sign, banners fluttering and fire smoke with light shafts, and lands at P_CAMP as knights on caparisoned horses parade ("อัศวินม้าเกราะเต็มทุ่ง", 7.74). |
+| B2 | 9.82-13.82 | 298-418 | D6 at P_CAMP | camp_wide, hill_low | "ส่วนฝั่งสกอต...": from the parade the camera CRANES UP over the pavilions, flies north across the river (glitter, the bridge at the left), and climbs Abbey Craig. It lands LOW looking up at the Scots spearmen on foot against the sky (low hero angle, light shafts through the pines). They shift their spears; one leans on his. |
+| C | 13.82-17.97 | 418-542 | CUT 2 | bridge_high, bridge_end_south | "ระหว่างกลาง มีสะพานไม้แคบ ๆ อยู่สะพานเดียว": high above the bridge, the camera flies along it (the only crossing), then DESCENDS to the south end past the "STIRLING BRIDGE" sign. It rides behind two knights whose horses fill the deck side by side; their knees brush the rails and one knight sucks his belly in on "ม้าสองตัวก็เต็มแล้ว" (16.52-17.97). |
+| D1 | 17.97-21.29 | 542-642 | CUT 3 | camp_table | Under the money canopy (warm lantern, "KING'S TREASURY" chest), Cressingham counts coins into the chest (coin clink). The camera arcs around the table. He looks up across the river and bursts out LAUGHING at "หัวเราะลั่นว่า" (20.29): bounce, belly shakes. At the end the camera whips right (W, 6 frames). |
+| D2 | 21.29-26.32 | 642-793 | W | camp_bank | Whip in (6 frames), then the camera FOLLOWS Cressingham (side tracking) as he waddles to the bank, pointing across the river at the tiny Scots on the hill. Lip-sync: "ชาวนาบนเนินไม่กี่คน! อ้อมไปเปลืองเงินหลวง ข้ามสะพานนี่แหละ...". Surrey follows behind, tired. **CU1**: on "เร็วดี ประหยัดดี!" (25.11-26.26) a fast push into Cressingham's face as he slaps his purse, then the camera eases back out to P_BANK by g 793. |
+| E1 | 26.32-29.39 | 793-885 | D6 at P_BANK | camp_bank, hill_eye | "ทั้งค่ายเลยเรียก...": from the bank, laughing soldiers point across, and one mimes hoeing (bounce). The camera RISES and flies across the river and up the hill. On "พวกไอ้ชาวนาบนเนิน" (27.80) it lands with a SNAP punch-in (6 frames of speed lines, 2-frame shake) on the Scots line: unbothered, Wallace raises an eyebrow. |
+| E2 | 29.39-34.71 | 885-1044 | CUT 4 | bridge_end_north, valley_loop | The count, as RIDE-ALONG plus crane: at the north end of the bridge the camera rides just behind the first English footmen stepping off ("ข้ามมาสิบคน", 29.39). They glance up at the hill nervously ("บนเนินเงียบ"). The camera rises as more pour over ("ร้อยคน", 31.17; still silent) and on "เป็นพัน" (32.75) CRANES UP to only 35-45 m, angled back toward the hill (NOT straight up over the loop: that image belongs to the reveal): the meadow fills with hundreds of troops (place_troops meadow), and the Scots on the hill have not moved. |
+| F | 34.71-37.94 | 1044-1141 | CUT 5 | camp_bank | FALSE PAYOFF. On the south bank the waiting English laugh and point across, bouncing out of phase; the camera tracks along them. **CU2**: Cressingham, thumbs in his belt, "เห็นไหม กลัวจนขยับไม่ได้!" (36.32-37.89, lip-sync), a fast push into his smug face. |
+| G | 37.94-41.19 | 1141-1239 | CUT 6 | hill_over, hill_low | Calm before, then the horn (merged G1+G2: cause before effect). We open BEHIND the Scots on the hill (the hill_over pose, their backs and spear tips in the foreground) looking down at the calm column still crossing the bridge two by two, about half the army over. A knight on the causeway yawns, tiny but readable. The camera ARCS down and around to the LOW hero angle (hill_low) against the sky and pine light shafts. On "เสียงแตร" (39.69) a Scot raises a long cow horn and BLOWS (cheeks puff); Wallace lifts his sword arm. Snap push (14 frames, x1.5) with a 2-frame shake. |
+| H1 | 41.19-44.73 | 1239-1345 | CUT 7 | hill_over, bridge_end_north | The CHARGE as a ride-along. The camera rides behind 4-5 running Scots (spears forward, gorse whipping past in the foreground, 5 Hz shake decaying) for about 1.2 s, then OVERTAKES them and swoops down to the bridge mouth (about 195 m: no runner can keep up). There a second, pre-placed group of Scots (blue saltire banner) SLAMS the spear wall across the north end on "ปิดหัวสะพาน" (43.78). The English jump back and their helmets wobble. It ends at P_NECK. |
+| H2a | 44.73-46.30 | 1345-1392 | D6 at P_NECK | bridge_end_north, valley_loop | From P_NECK the camera CRANES straight UP fast (about 1 s) to P_TOP and holds-drifts: the bottle-and-cork image (the English boxed inside the loop in crimson, the Scots spear wall plugging the bridge mouth with BLUE saltire banners, the other half on the south bank), "ครึ่งทัพที่ข้ามมาแล้ว ถอยไม่ได้ ติดอยู่ริมน้ำ". Ends at P_TOP (+3 handle frames continuing the drift). |
+| H2b | 46.30-50.53 | 1392-1519 | D6 at P_TOP | valley_loop, camp_bank | **BIGZOOM 2 (wide to medium in about 3.3 s):** from P_TOP the camera SWOOPS across the river, past banners and tents, down to a MEDIUM shot of Cressingham and Surrey on the bank watching helplessly. Their jaws drop (shocked swap behind a blink, sweat drop) and soldiers stand on tiptoe ("อีกครึ่ง ข้ามมาช่วยไม่ได้ ได้แต่ยืนดู"). **CU3**: a 1 s push into Cressingham's shocked face on "อยู่อีกฝั่ง" (49.73). |
+| I | 50.53-54.55 | 1519-1640 | CUT 8 | bridge_deck, bridge_high | AHA, as a ride-along on the jammed bridge: the column tries to turn back, two horses wedged nose to tail, and a knight's helmet pops off. The camera rides the deck, then CRANES UP to look straight down the bridge: two-by-two all along, nobody moving. Snap pull-out on "เหมือนกัน" (53.5). |
+| J1 | 54.55-56.88 | 1640-1709 | CUT 9 | camp_table | ENDING: Cressingham's EMPTY money table (stool with his cloak, the "KING'S TREASURY" chest, the lantern). The camera pushes in. The coin scale TIPS on "เร็วดี" (55.80) and the chest lid SLAMS on "ประหยัดดี" (56.22). Then a whip left (W). |
+| J2 | 56.88-61.50 | 1709-1848 | W | riverbank, river_low | Whip in to the north bank inside the loop. The English look at the blocked bridge, then the water, then each other; one pinches his nose ("ขากลับไม่ต้องใช้สะพานสักนิด"). They JUMP (59.0-59.8): cards lifted 0.5-0.8 D, `splash()` crowns, swim cards bob up spluttering, helmets float. The camera DROPS to water level (river_low) and pushes in: "ตูม ตูม ตูม" with 3 big crowns at 60.6, 60.9 and 61.2. HARD CUT on the last one (g 1848). |
 
-## Hard content rules
-- Comic and BLOODLESS: no wounds, no weapons striking a body, no one lying still, no one shown dying. Spears point and block; English soldiers back off, bump, wobble, fall into water and come up splashing (heads, helmets floating, spluttering).
-- Cressingham's fate is NEVER shown or hinted. He appears only on the SOUTH bank (camp, money table, river bank). In the ending only his empty money table and tipping coin scale appear.
-- No kilts, no blue face paint (anachronistic). Scots: knee-length tunics (brown, ochre, moss, faded red), simple iron caps or bare heads, long spears, a few round shields; Wallace tall in a mail shirt with a long sword on his back; Moray in mail and a green surcoat.
-- English: knights in mail with red/blue/gold surcoats (no readable heraldry text), great helms or open bascinets, on caparisoned horses; foot soldiers in padded gambesons and kettle hats with spears; Welsh archers optional in the camp.
-- No readable text anywhere (banners carry simple shapes: lions, chevrons, stripes).
+**Segment A, BIGZOOM 1 (the hook).** The film opens already moving, EXTREME WIDE and high over the Forth valley.
+- In shot: the river loop, the narrow bridge with English knights crossing two by two (place_troops bridge), the camp and Abbey Craig. The Scots are tiny (under 5 % of the frame height) on the slope.
+- One eased swoop down: past pine branches and through a light shaft on the crag, to a MEDIUM shot of the Scots line on the shelf. Wallace is in the centre with arms folded on his spear, and the bridge is still visible far below behind them (at g 125).
+- Then a quick push (15 frames, x1.4) onto the Scot chewing a grass stalk, on "อะไรเลยสักอย่าง".
+- The others shift their weight but nobody moves forward.
 
-## Camera rules (production-lessons §10 + bible camera.md), MANDATORY in every shot
-- 22 mm, roll 0. Every shot has a clear eased move: drift push or pull 6-10 %/s with a 20-60 px/s lateral slide, or a snap (13-25 frames, x1.3-x3). Never more than 6 frames under 0.25 px/frame. No near-static hold over 1 s.
-- Framing changes every 1.3-1.4 s on average (cuts + dissolves + snaps). Quick push-in on punch lines; one whip (s21); snaps on the reveal steps.
-- Foreground prop 1-2 D from the lens in most shots: spear shafts, heather and gorse, rocks, tent ropes and poles, the coin chest, bridge rail posts, reeds on the bank, a banner pole.
-- Transitions: 11-frame dissolve between locations or time jumps (D11); hard cut elsewhere (C).
-- Heads: centre y 450-760, all heads above y 880. Laughing characters bounce about 0.06 D at about 3 Hz. Nobody is frozen: idle sway and blinks. Horses: idle head bob and tail swish, walk cycle on the bridge.
-- Characters on a moving thing stay parented to it (riders to their horse).
-- Acceptance: median in-shot frame-diff >= 4, p90 >= 12 (90x160 grey), shown next to film 2 at the FINAL gate.
+Hard cuts: 8 (G1+G2 merged) plus 2 whips (D1->D2, J1->J2). The E1 punch-in and CU pushes are camera moves, not cuts. BIGZOOMs: A (g 0-125) and H2b (g 1392-1519, wide to medium 3.3 s).
+Angle types: bird's-eye/high (A, B1, C, E2, H2, I), low hero (B2, G), over-the-shoulder/ride-along (C, E2, H1, I), through a foreground frame (B1 banners, D2 tent ropes, H1 gorse), side tracking (D2, F), crane up/down (B2, E1, E2, H2, I).
 
-## Locations (one coherent valley; time: morning, low warm sun from the south-east, light haze in the distance)
-- `hill`: Abbey Craig: a craggy wooded hill north of the river (rocks, heather, gorse, Scots pines). The Scots stand along its lower slope and look down at the bridge.
-- `bridge`: the narrow wooden trestle bridge over the Forth: plank deck, rails, timber piers in the water, two horses fill its width. North end: a short causeway into flat meadow inside the river loop. South end: the English camp.
-- `valley`: the whole Forth valley seen high: a big meandering loop of the river north of the bridge (the trap), the bridge, the hill, the camp, and Stirling's castle rock in the far south-west with a small period castle. Hills and haze beyond.
-- `camp`: the English camp on the south bank: pavilion tents (striped red/cream, blue/gold), banners on poles, horse lines, carts, campfire smoke, a cooking pot, weapon racks, and Cressingham's money table (coin chest, scales, stacks of coins, a ledger with no text). From the bank you look across the river to the bridge and the hill.
-- `riverbank`: the north-bank meadow at the water's edge inside the loop (reeds, mud, shallow water, the bridge in the background), for the ending splash. The water is smooth and layered with foam lines, glitter and wakes; splashes are spray crowns with falling droplets (not stacks of round blobs).
-
-## Shots (t = NARRATION time; film time = t + 0.10)
-| # | t0-t1 | in | preset | action + camera move |
-|---|---|---|---|---|
-| 1 | 0.00-1.36 | — | hill_over | HOOK image: over the shoulders of 4-5 Scots spearmen (backs not shown full: three-quarter from behind-side, spear shafts in the fg) looking down to the far narrow bridge where tiny knights cross two by two. Already moving: push-in 9 %/s + slide left 35 px/s. |
-| 2 | 1.36-2.85 | C | bridge_deck | two English knights on horses side by side fill the bridge deck, rails brushing their knees; hooves clop. Low from beside the rail, push 8 %/s, rail post fg. |
-| 3 | 2.85-5.19 | C | hill_eye | the Scots line stands still, arms folded on spear shafts; Wallace in the centre calm; one Scot chews a grass stalk. Slide 40 px/s; quick push-in (snap 15 f, x1.4) on the grass-chewer on "ไม่ทำอะไรเลยสักอย่าง" (4.08). |
-| 4 | 5.19-7.74 | D11 | valley_wide | establishing: the Forth valley in morning light: river loop, bridge, hill, camp, castle rock. High, crane-down + push 6 %/s. |
-| 5 | 7.74-9.82 | C | camp_wide | English knights on caparisoned horses parade past tents and banners; lots of life (flags flutter, smoke). Slide 50 px/s + push; tent rope fg. |
-| 6 | 9.82-11.89 | D11 | hill_low | Scots spearmen on foot among rocks and gorse, long spears up against the sky. Low 1.2 D, +14 deg, pull-out 7 %/s. |
-| 7 | 11.89-13.82 | C | valley_river | eye level just above the water from the south bank: the river between the camp side and the hill side, the hill with Scots on the far side. Push 7 %/s + slide; reeds fg. |
-| 8 | 13.82-16.52 | D11 | bridge_high | the long narrow wooden bridge from high above one bank: the only crossing. Push in along the bridge 8 %/s. |
-| 9 | 16.52-17.97 | C | bridge_end_south | two horses side by side wedged on the deck, a knight sucks his belly in; snap push (16 f, x1.4) on "เต็มแล้ว" (17.37). |
-| 10 | 17.97-21.29 | D11 | camp_table | Cressingham at his money table counting coins into the chest (coins clink); he looks up across the river and bursts out laughing at "หัวเราะลั่นว่า" (20.29, laugh + bounce). Push 8 %/s, coin chest fg. |
-| 11 | 21.29-23.47 | C | camp_bank | low two-shot on the south bank: Cressingham near, points across the river at the tiny Scots on the hill, lip-sync "ชาวนาบนเนินไม่กี่คน! อ้อมไปเปลืองเงินหลวง"; old Earl Surrey behind, listening. Low 1.2 D, slow push + slide. |
-| 12 | 23.47-26.32 | C | camp_bank | QUICK PUSH-IN (snap 20 f, x1.5) as Cressingham slaps the coin purse and flings an arm at the bridge: "ข้ามสะพานนี่แหละ เร็วดี ประหยัดดี!" (lip-sync), chin up. |
-| 13 | 26.32-27.80 | C | camp_wide | the camp laughs: soldiers point across at the hill, one mimes a farmer hoeing with his spear (bounce 3 Hz). High-ish, pull-out 7 %/s + slide. |
-| 14 | 27.80-29.39 | C | hill_eye | the nickname lands: punch-in cut on the Scots line (speed lines 6 f, 2-frame shake), Scots unbothered; Wallace raises one eyebrow. Drift push 5 %/s. |
-| 15 | 29.39-31.17 | D11 | bridge_end_north | count 1 ("สิบคน"): the first ten English footmen step off the bridge onto the north causeway and glance up at the hill nervously. Push 8 %/s, rail post fg. |
-| 16 | 31.17-32.75 | C | hill_eye | "ยังเงียบ": the Scots still silent; one scratches his nose. Snap pull-out (15 f, x0.7). |
-| 17 | 32.75-34.71 | C | valley_loop | count 3 ("เป็นพัน"): high over the loop: the meadow inside the loop fills with English troops and knights, more still coming over the bridge; the Scots on the hill unmoved. Stepped pull-out (one 14 f step on "เป็นพัน", 32.75). |
-| 18 | 34.71-36.32 | D11 | camp_bank | FALSE PAYOFF: on the south bank the waiting English laugh and point across (laughing poses, bounce out of phase). Pull-out 8 %/s + slide; banner pole fg. |
-| 19 | 36.32-37.94 | C | camp_bank | quick push-in on Cressingham, lip-sync "เห็นไหม กลัวจนขยับไม่ได้!", smug, thumbs in his belt. Push 10 %/s. |
-| 20 | 37.94-39.69 | C | bridge_end_north | calm before: the bridge with the column still crossing two by two, about half the army over; a knight on the causeway yawns. Longest gentle push 7 %/s, slight sway. |
-| 21 | 39.69-41.19 | C | hill_low | the horn: a Scot raises a long cow-horn and blows (cheeks puff, no lip-sync); Wallace lifts his sword arm. Low angle, sky behind; snap push (14 f, x1.5) on "เสียงแตร" (39.69), 2-frame shake. |
-| 22 | 41.19-43.07 | C | hill_over | WHIP (4 off, 7 on) from the horn down the slope: the Scots run down the hill with spears forward, gorse flicking past in the fg. Lens rides down the slope behind them, 5 Hz shake decaying. |
-| 23 | 43.07-44.73 | C | bridge_end_north | the Scots' spear wall slams across the north end of the bridge ("ปิดหัวสะพาน", 43.78): spears level, a solid row; the English on the causeway jump back, helmets wobble. Snap push (16 f, x1.5). |
-| 24 | 44.73-47.50 | C | valley_loop | THE ONE-IMAGE REVEAL: high over the loop: the English on the north bank are boxed inside the river loop (water on three sides), the bridge mouth blocked by the Scots like a cork in a bottle, the other half of the army stuck on the south bank. Crash pull-out (17 f, x0.4) then hold-drift 5 %/s. |
-| 25 | 47.50-50.53 | C | camp_bank | the other half on the south bank can only watch: Cressingham's and Surrey's jaws drop (shocked swap behind a blink, sweat drop), soldiers on tiptoe. Slide 45 px/s + push 6 %/s. |
-| 26 | 50.53-52.50 | D11 | bridge_deck | AHA: the column tries to turn back on the bridge: two horses wedged nose to tail, everyone squeezes two at a time, a knight's helmet pops off. Push 8 %/s. |
-| 27 | 52.50-54.55 | C | bridge_high | the jam from above: two-by-two stack all along the narrow deck, nobody moves. Snap pull-out (15 f, x0.7) on "เหมือนกัน" (53.5). |
-| 28 | 54.55-56.88 | D11 | camp_table | ENDING: Cressingham's EMPTY money table on the south bank (nobody at it), the coin scale tips on "เร็วดี" (55.80) and the coin chest lid slams on "ประหยัดดี" (56.22). Push 9 %/s. |
-| 29 | 56.88-58.86 | C | riverbank | the English on the north bank look at the blocked bridge, then at the water, then at each other; one pinches his nose. Slide 40 px/s + push. |
-| 30 | 58.86-60.60 | C | riverbank | they jump into the Forth: a row of comic jumps, arms up, spray crowns; heads and helmets bob up, spluttering, and swim for the far bank. Pull-out 8 %/s. |
-| 31 | 60.60-61.50 | C | river_low | "ตูม ตูม ตูม": water level, three big spray crowns in a row on each "ตูม" (60.6, 60.9, 61.2), quick push. HARD CUT on the last splash (g 1848). |
-
-Shot count 31 in 61.6 s (mean 1.99 s; with snaps about one framing change per 1.35 s).
-Angle mix (approximate): establishing/vista (4, 8, 17, 24, 27) about 20 %; eye (2, 3, 7, 14, 15, 16, 20, 23, 26, 29, 30) about 38 %; low (6, 11, 12, 21) about 12 %; high camp (13) and inserts (10, 28, 31) about 15 %.
-Key takes for QA-art at the TAKE gate: s01 (hook), s23-s24 (reveal), s18-s19 (false payoff), s28-s31 (ending).
-
-## Sound cues (conform; levels per captions-sound.md, music m1 at -31 dB under the voice)
-hooves on planks (2, 9, 20, 26), coin clink (10, 28), crowd laugh (13, 18), horn blast (21), running feet and shouts with no words (22), spear-wall clack (23), whoosh (22, 24), wood creak (26, 27), coin scale tip and chest slam (28), splashes (30, 31, one per "ตูม").
+## Sound cues (conform; levels per captions-sound.md, music m1 at -31 dB)
+See conform21.py: hooves on planks (A, C, G, I), coin clink (D1), crowd laughs (E1, F), river bed (E2, J2), horn (G), charge (H1), spear wall (H1 43.78), sting (44.42), whooshes on the whips and swoops, wood creak (I), chest slam (J1), splashes (J2).

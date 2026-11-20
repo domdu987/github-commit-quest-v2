@@ -49,10 +49,24 @@ PROJ/v3/cast21 (`import cast21` BEFORE `sprites`/`stage.sprites`). Read API.md.
 - Make your OWN helper module inside your take folder (for example PROJ/v3/film21/sNN/c21.py) by copying film8/common.py and switching it to cast21 and set3d21/stirling.py.
 - Do not create a shared film/v3/film21/common.py.
 
+## QA_TEAM.md §I (client decision 2026-11-20, matching his reference Shorts): BLOCKING, and it CHANGED THE PLAN
+- READ FIRST: PROJ/film21/shot_plan.md (v3, travel segments), PROJ/film21/RENDER_TEAMS.md (your segment), PROJ/ref_shorts/README.md and the R*_sheet.jpg / R*_transition_detail.jpg (look at R5, R3 and R7 at least).
+- Each segment is ONE continuous travelling camera move (no internal cut unless the plan says so). Build the travel world with `K.build_world(presets=[...])` and fly it with `K.cam_path(...)` (set3d21/API.md). Segments that join by D6 start or end EXACTLY at the shared pose (P_CAMP, P_BANK, P_NECK) and render 3 handle frames that continue the move. A whip (W) is rendered inside your segment: 6 frames of fast pan out at the end, or in at the start.
+- Lighting: a motivated key light (sun, light shafts, lantern), warm against cool, and a RIM LIGHT on every character card (puppet `rim`, warm gold on the sun side).
+- Colour: saturation >= 0.50 and vivid % >= 45 (`python3 PROJ/qa_stats2.py take.mkv`), luma 85-110.
+- Text signs are allowed and built into the set ("STIRLING BRIDGE", "KING'S TREASURY", "ENGLISH CAMP"). Do not add other text.
+- Characters always act; nobody is still for more than 1.5 s. Close-ups only at CU1-CU3 as marked, about 1 s each.
+- The old take numbers s01-s11 and the old shot numbers are REPLACED by segments A-J2. Reuse your harness and helper code; deliver to PROJ/v3/film21/s<SEG>.
+
 ## QA_TEAM.md §G (client complaint 2026-11-20): BLOCKING at the TAKE gate
 - Colour: `python3 PROJ/qa_stats.py take.mkv` must show saturation >= 0.47 and brightness 85-110. The set's grade has a per-preset VIVID stage that gets you there (API.md §9); keep `K.STATE['preset']` set and never skip the grade.
 - Nothing floats: every character's feet on the ground with a contact shadow (`contact=True` on the Actor), riders on their horses, nothing hanging in the sky, no pole or prop passing through a face.
 - Camera distance: at least half your shots wide or medium-wide (they show the place). No face taller than 35 % of the frame height. Nobody cut in half by a frame edge.
+
+## QA_TEAM.md §H (client decision 2026-11-20): BLOCKING
+- BIGZOOM: shot_plan.md shots 1 (take s01) and 24 (take s09) are ONE continuous eased camera move from EXTREME WIDE (character < 5 % of frame height, the whole valley from high) to a MEDIUM shot of the character (35-60 % of frame height), passing through set detail (pines, gorse, tents, banners) on the way. No cut inside. Build the whole valley in one scene (start from the valley preset) and stage the cast at the end location's marks.
+- Interesting angles: no more than 2 shots in a row at the same height and angle; avoid flat straight-on eye level as a default.
+- Rich detailed set in every frame: dense props and life, foreground/mid/far layers, no empty ground planes.
 
 ## QA (stricter, film/QA_TEAM.md "Stricter QA")
 - Before delivering, run `python3 PROJ/qa_auto.py take.mkv --first_g <first_g> --cuts <your planned cut g's>` and fix every FAIL. Add QA_AUTO.md and phone_sheet.jpg to the take folder.
