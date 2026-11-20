@@ -85,6 +85,8 @@ class Seg(object):
             x, y = K.at_px(pr2, d, xp); self.marks[mk] = (x, y, float(K.ground(x, y)))
         for nm, cast, pname, mk, ph in STAND:
             self.acts[nm] = C.make_actor(nm, cast, os.path.join(TMP, "sprites"))
+        pts = [K.cam_path(None, keys(), g)["loc"] for g in range(G0, 419, 3)]
+        print("hidden banners/plumes near the path:", K.hide_near_banners(pts, 15), flush=True)
         self.stage_parade()
         print("B2: built world in %.1f s" % (time.time() - t0), flush=True)
 
@@ -92,11 +94,11 @@ class Seg(object):
         """B1's parade (team 2 message): at g 298 the cast stands exactly where B1 left it; the knights keep walking toward the bridge at 1.35 m/s, the marchers at 1.5 m/s."""
         pr = K.PRESETS["camp_wide"]; left = (-0.439, 0.898); SC = 1.7 / 3.18
         self.SC = SC; self.par = []
-        riders = [("r1", "knight_a_mtd", "knight_a_mounted", 31.0, 420, "red"), ("r2", "knight_b_mtd", "knight_b_mounted", 35.0, 340, "blue"),
+        riders = [("r1", "knight_a_mtd", "knight_a_mounted", 31.0, 420, "red"), ("r2", "knight_b_mtd", "knight_b_mounted", 35.0, 340, "red"),
                   ("r3", "knight_a_open_mtd", "knight_a_mounted", 39.0, 270, "gold"), ("r4", "knight_b_great_mtd", "knight_b_mounted", 43.0, 200, "red"),
-                  ("r5", "knight_a_mtd", "knight_a_mounted", 47.0, 130, "blue"), ("r6", "knight_b_mtd", "knight_b_mounted", 34.0, 470, "gold"),
-                  ("r7", "knight_a_open_mtd", "knight_a_mounted", 37.0, 560, "blue"), ("r8", "knight_b_great_mtd", "knight_b_mounted", 41.0, 600, "red"),
-                  ("r9", "knight_a_mtd", "knight_a_mounted", 45.0, 520, "gold"), ("r10", "knight_b_mtd", "knight_b_mounted", 50.0, 450, "blue")]
+                  ("r5", "knight_a_mtd", "knight_a_mounted", 47.0, 130, "red"), ("r6", "knight_b_mtd", "knight_b_mounted", 34.0, 470, "gold"),
+                  ("r7", "knight_a_open_mtd", "knight_a_mounted", 37.0, 560, "red"), ("r8", "knight_b_great_mtd", "knight_b_mounted", 41.0, 600, "red"),
+                  ("r9", "knight_a_mtd", "knight_a_mounted", 45.0, 520, "gold"), ("r10", "knight_b_mtd", "knight_b_mounted", 50.0, 450, "red")]
         def mk(name, cast):
             a = actors.Actor(name, cast); a.build(C.sprites.DEFAULT_CANVAS[cast], os.path.join(TMP, "sprites_par"), contact=True, shadow="proxy"); a.head_flip = False
             return a
@@ -118,11 +120,11 @@ class Seg(object):
     def par_pose(self, m, g):
         S21 = cast21.STORY21; k = m["k"]
         if m["kind"] == "walk":
-            p = dict(cast21.walk_spear(m["cast"], ((g + 7 * k) / 28.0) % 1.0, -1, "march")); p["variant21"] = m["var"]
+            p = dict(cast21.walk_spear(m["cast"], ((g + 7 * k) / 28.0) % 1.0, -1, "march")); pass
         elif m["kind"] == "ride":
             p = dict(S21[m["base"]][1]); p.update(gait=((g + 9 * k) / 40.0) % 1.0, t=((g + 13 * k) / 70.0) % 1.0, blink=cast21.blink_at(g, 90 + 5 * k, 13 * k), lean=0.8 * math.sin(g * 0.09 + k), mode21="walk", horse21=m["cap"], mirror=True)
         else:
-            p = dict(S21[m["base"]][1]); p.update(lean=1.2 * math.sin(g * 0.071 + k * 1.7), head_roll=1.5 * math.sin(g * 0.053 + k * 2.3), blink=cast21.blink_at(g, 84 + 7 * (k % 9), 11 * k), variant21=m["var"], mirror=m["mir"])
+            p = dict(S21[m["base"]][1]); p.update(lean=1.2 * math.sin(g * 0.071 + k * 1.7), head_roll=1.5 * math.sin(g * 0.053 + k * 2.3), blink=cast21.blink_at(g, 84 + 7 * (k % 9), 11 * k), mirror=m["mir"])
         for kk in ("prop_r", "prop_l"):
             if isinstance(p.get(kk), dict) and p[kk].get("type") == "spear21": p[kk] = dict(p[kk], scale=1.1)
         return K.with_rim(p)
