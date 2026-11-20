@@ -8,6 +8,7 @@ from c18 import J, S, R2, V, bpy
 SHOT = 's16'; G0, G1 = 1205, 1308; H_IN, H_OUT = 10, 6
 HOLE_LIGHTS = []
 def pose(sh, t):
+    t = max(0.0, t)
     e = t * t * (3 - 2 * t) * 0.35 + t * 0.65; d = 1.0 - (0.12 * min(1.0, max(0.0, (t - 0.55) / 0.06)))      # slide along the wall (x 52 -> 27), one held punch-in 12 % at t 0.55
     lx = 43.5 - 31.0 * t; return dict(loc=(lx + 17.0, 5.0 + 12.5 * d, 2.5), look_at=(lx, 5.0, 4.4), lens=22.0)
 S.pose_at = pose
