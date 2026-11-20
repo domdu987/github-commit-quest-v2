@@ -42,7 +42,9 @@ if __name__ == '__main__':
     assert P.check_take(take)['hits'] == [] and P.check_face(take)['ok']
     A = P.world_build(take); P.key_take(take); P.setup_render2(RES, samples=int(a[3]) if len(a) > 3 and a[0] == 'range' else 16, threads=2)
     bpy.context.scene.render.use_motion_blur = False   # T2: no motion blur anywhere
-    if a[0] == 'still': print('still g%s %.1fs' % (a[1], frame(int(a[1]), a[2])), flush=True)
+    if a[0] == 'multi':   # multi g,g,g out_prefix: several stills in one process (light tests)
+        for g in a[1].split(','): print('multi g%s %.1fs' % (g, frame(int(g), '%s_g%s.png' % (a[2], g))), flush=True)
+    elif a[0] == 'still': print('still g%s %.1fs' % (a[1], frame(int(a[1]), a[2])), flush=True)
     else:
         os.makedirs(os.path.join(HERE, 'frames'), exist_ok=True)
         for g in range(int(a[1]), int(a[2]) + 1):
