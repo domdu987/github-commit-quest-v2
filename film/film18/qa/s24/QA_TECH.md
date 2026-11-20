@@ -1,18 +1,18 @@
-# QA-tech round 12 s24: FAIL
-
-Checked: all 87 frames extracted; g1807-1882 at 5-frame steps with the y 860 line; band crops (y 560-960) every 4 frames; full-size looks at g1812, g1817, g1857, g1875; chin crops g1860/1867/1875. Pixel measures on the rendered frames.
+# QA-tech round 13 s24: FAIL
+Checked: all 87 frames at 6 fps; soldier band y620-920 with y860 line every 6 frames; full 1:1 g1821/1846/1876; frame-diff re-measured 90x160 (median 11.75, p90 17.20).
 
 ## Blockers
-1. g1837-1882 - prop scale. The tipped chariot (J.prop_chariot) spans x ~40-500 at g1857-1875 (about 60 % of the frame width including the pole; the box alone ~28 %) and sits in the lower third over the fire pit. The flying pots/helmets are far above 20 %: g1857 a pot x 495-690 (27 %), g1871-1875 pots/helmets ~30 % of the width (x ~450-600 and a second at x 560-720). Fix: prop_pot and prop_helmet scale to <= 0.5 of the present size (each <= 20 % of the frame, ~140 px), the chariot at <= 0.4 and the pole shortened or hidden, keep them out of the lower third.
-2. g1830-1882 - the rout does not read. About 5-6 soldiers (150 px tall) stay in the centre-left cluster x 0.05-0.65, y 0.45-0.70; nobody crosses the frame and the right half is empty of soldiers. Only ONE soldier visibly falls/sits (g1851-1879, x 0.10-0.25, y ~0.62-0.68); I find no second fall. Fix: at least 4 soldiers running in different directions (left, right, toward and away from the lens, x travel >= 150 px over 20 frames) and at least 2 visibly falling (tumble/sprawl, not just sitting) in g1830-1880; fill the empty right side.
+1. Prop wider than 20 % of the frame: the tipped chariot with its pole. Measured on 1:1 frames: g1849 about 36 % of the width (x 150-410), g1876 about 61 % (x 0-440 box+pole), g1881-1886 about 75 % (x 0-540). The box alone is about 17-28 %; the long pole makes it a bar across the lower third. Fix: shorten or hide the pole (<= 0.3 of its present length) and keep the whole chariot <= 140 px wide in g1843-1886.
+2. Only ONE visible fall. The moustached soldier sits with legs splayed g1850-1875 at x 0.10-0.27 (chin about y 850). I find no second soldier on the ground in any frame: soldiers at g1807-1849 stand or step in place with "O" mouths, the other soldiers in g1855-1885 stand upright. QA.md says six fall; they are not visible. Fix: make a second soldier at x 0.55-0.85 do a pratfall/sit-down held >= 12 frames in the open between g1825-1870, >= 120 px tall, not behind tents, fire pit or the chariot.
+(The rout reads weakly overall: most soldiers stay within 150 px of where they started; at least 2 more should visibly run across the frame.)
 
-## Previous blockers
-- Terracotta and bronze: PARTLY. The chariot is now warm timber (OK) and the pots are warm, but pots and helmets are a flat lemon-yellow glowing fill with a soft translucent look, no texture, no clay red/brown (g1863-1875). Reads as gold/bronze-ish, not grey/navy, so not a placeholder blocker; it is a note (darken to a bronze/terracotta hue and add a texture/outline). Size is blocker 1.
-- Plain ground at g1807-1827: dark violet plain ground measured 24-25 % (g1807 24.8 %, g1812 24.2 %, g1817 24.7 %, g1822 24.3 %, g1827 21 %); including the warm lit pool round the fire pit the ground is ~30-32 % (the whole y > 0.68 band is ground except the pit and two stumps). Within the gate as measured, borderline; a note. A dark fg prop low-left (a dropped shield, sacks) would clear it.
-- Chins: all faces <= ~y 860. Sitting soldier chin ~855 at g1860, ~852 at g1867, ~858 at g1875 (crops with the y 860 line); standing soldiers' chins y 700-840. Borderline at the sitting soldier; a note: lift him 10-15 px.
+## Checked and passed
+- Ground: now heavily dressed (pots, stones, bundles, helmets, fire pit); no bare ground, about 0-5 % plain. Dense clutter: note.
+- Props warm, not grey: pots terracotta-yellow, helmets gold, chariot warm wood. Flying pots/helmets about 90-130 px (13-18 %): OK. They move every frame (positions change per frame across g1813-1886), none hangs still.
+- Chins: sitting soldier chin about 850 (g1855-1873), standing ones 700-840, none over 860.
+- Frame-diff 11.75 / 17.20; no pulsing; mouths held; no text; subject in frame. Flame only the camp fire (set prop).
 
-## Hard checks
-- Placeholders: none grey/navy (pots, helmets, chariot warm). Left white tent slab at g1827-1882 (x 0-250, y 700-900) and right white/grey cloth slab (x 580-720, y 820-1000) are flat pale planes; add cloth texture (note).
-- Flames: only the fire pit's flame (a set prop, no tails in this shot); never near a face. OK.
-- Subject in frame: soldiers stay in frame. No zoom pulsing (continuous push). Mouths held. No text.
-- Frame diff (my re-measure, 90x160): median 9.99, p90 15.00. OK.
+## Notes
+- Helmets and pots are flat yellow, slightly glowing/translucent, no texture (note).
+- Pale flat white cloth slabs at left (g1849-1861) and lower right (g1879+) are untextured planes (note).
+- Fire pit flames are 3 stiff tall red cards (note).

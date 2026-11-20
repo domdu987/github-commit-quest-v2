@@ -1,23 +1,18 @@
-# QA-tech round 12 s19: FAIL
-Checked: 6 fps g1427-1514 (contact sheet), every frame g1450-1490 (crops x220-720, y640-940), 2x zooms of g1456/1458/1460/1462, full-size g1458/1470/1484 with y 860/880 lines. Method: eyeballed on rendered pixels; no automatic face/flame segmentation available (no scipy/cv2), so gap numbers are zoom estimates (+-5 px).
+# QA-tech round 13 s19: FAIL
+Checked: all frames g1427-1514 at 6 fps; every 2nd frame g1427-1499 (band y650-850, 1:1); mouth crops g1477-1488 at 2x with y860/880 lines; frame-diff re-measured 90x160 (median 10.97, p90 13.72, OK, no pulsing); ground colour-mask estimate on 10 frames.
 
-## Blocking
-1. Flame-to-horn/face rule (>= 15 px gap, no overlap) is violated. The small "tail flame" of the OX BEHIND sits on the horn/head of the ox in front, because the herd is dense and flames are at head height:
-   - g1456, g1458: flame overlaps the front ox's right horn tip (gap 0, overlap ~10-15 px; horn tip runs into the flame's tail-torch).
-   - g1460: gap ~5 px to the horn tip. g1462-1463: flame again overlaps the horn tip (0 px).
-   - g1454-1455, g1464-1465: flame within ~5-10 px of horn / on the second ox's head.
-   - g1479: flame sits on the lead ox's horn tip (0 px). g1480-1482: flame overlaps the horn/head of the second ox (0 px; ~35 px blob on the head at g1482). g1490: flame within ~10 px of the rear ox's horn.
-   - Clear (>= 15 px): g1450-1453, g1466-1478, g1483-1489 (big flames well behind and above).
-   The team did not run a pixel test and checked only g1436/1458/1484 -- g1458 and 1484 region is exactly where it fails. Their own measure.txt reports "flame<60 frames 68".
-   Fix: for the rear ox's flame, offset the tail-flame card back along the tail by ~40-60 px in screen space (longer tail/torch) or lower the flame scale to 0.6 in g1454-1465 and g1479-1482, or shift that ox laterally/deeper by ~0.5 D so its tail tip clears the front ox's horn by >= 15 px. Then measure on rendered pixels (flame bright-orange mask vs horn/head mask) every frame g1450-1490.
+## Blockers
+1. Ox mouth below y 860 (hard check; QA.md claims worst 857). Measured on 2x crops of the lowest edge of the mouth/tongue: g1479 ~856, g1480 ~868, g1481 ~877, g1482 ~882, g1483 ~878, g1484 ~880 (g1485 head leaves frame bottom/cut by pot). So g1480-1484 are 8-22 px over the limit, touching the caption line y880. Fix: tilt the camera up ~30 px or lift the lead ox / move its lane 0.3 D deeper in g1478-1485 so the mouth stays <= 850; re-measure the mouth, not the head box.
+2. Prop through a face: at g1483-1485 the terracotta pot at lower right sits in front of the lead ox's mouth/chin (the pot rim covers the lower jaw, g1484 the tongue is cut by the rim). Fix: move that pot 80-100 px right or lower it out of the ox's face band (y < 880) in g1480-1486.
 
-## Passed hard checks
-- Mouths/faces: lowest mouth chin ~855-858 (g1458, g1484 crops against the y 860 line); none seen below 860 in the dense run. Accepted (very tight, 2-5 px margin).
-- Placeholders: no grey/navy untextured props; wall stones are textured, pots terracotta, fg helmet textured.
-- Subject in frame: yes. Night, no text. Mouths: held roars, no lip-sync. No pulsing seen (eased dolly/truck); director 11.55 / 14.39 accepted.
-- Blur g1505+: accepted (whip landing).
+## Checked and passed
+- Flame vs face/horn/blade, g1427-1499 (every 2nd frame, plus 1:1 crops): no overlap. Nearest approaches I can see: g1451 flame to left ox horn about 80 px, g1455 about 130, g1469 about 110, g1481 about 90. I could not find anything below the claimed 38 px; the team's 38 px figure is plausible and the 15 px gap holds. Each flame sits on its own ox's tail torch (a stick with a ~25-30 px flame at the end, trailing behind). g1500-1514 whip frames: flames far from faces.
+- Placeholders: none (wall stones textured, pots terracotta/striped, helmet fan warm). Pots read lavender at g1427-1447 (note).
+- Subject in frame: yes. No zoom pulsing (eased dolly/truck). Mouths held. No text. Blur g1505+ accepted as whip.
+- Frame-diff: 10.97 / 13.72.
 
 ## Notes
-- Plain ground: team claims 16-23 %. My estimate (area y>870 is ~32 % of frame, minus helmet and pots) is ~27-30 % at g1450-1490 (g1458/1484: ~29-30 %, lower third almost all bare gravel). Within the 25-30 % note band but not 16-23 %; adding a pot or two in the lower corners at g1475-1495 would fix it.
-- g1484-1490: a pot at lower right clips an ox's chin/legs (team already notes it).
-- g1450-1452: black Qi silhouette is large (covers ~1/4 of width) but acceptable.
+- Ground (colour-mask estimate, props included in the mask): 0.35 g1430, 0.37 g1441, 0.36 g1451, 0.34 g1461, 0.28 g1469, 0.26 g1476, 0.35 g1483, 0.35 g1491. Team figure 0.15-0.28 does not reproduce; with pots subtracted I read about 0.28-0.33, i.e. on the 30 % edge. Add one low dark prop at lower left in g1427-1465 and g1483-1500 to be safe. Not blocking alone.
+- Herd read: 1-2 oxen are visible at a time (one big, one small behind) plus black Qi silhouettes. It reads as a few oxen trotting out, not a herd pouring out. The only herd read is the g1507-1514 landing (6-7 small oxen in a row at the horizon). Accepted under round 12 decisions, but weak.
+- Oxen are small (head about 100 px), flames about 25-30 px: the film's key idea (fire behind the oxen) reads only on the pole, not as a big flame.
+- Black Qi silhouette at g1427-1449 overlaps the lead ox's tail torch slightly (silhouette only).

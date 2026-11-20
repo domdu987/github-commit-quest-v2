@@ -1,35 +1,49 @@
-# QA-art round 12 s19: FIX-FIRST
-s19: burning oxen burst out of the wall holes at night (g 1427-1514). I extracted all 100 frames (g = 1421 + n), and judged every 5th frame (about 6 fps) plus every frame from g 1450 to g 1490. I viewed them at full size with a line at y 860, at 4x zoom for the flame-to-head contacts and the mouths, and on a 180x320 phone sheet. All the numbers below are measured on pixels.
+# QA-art round 13 s19: FIX-FIRST
+s19: burning oxen burst out of the wall holes at night (g 1427-1514). I extracted all 100 frames (g = 1421 + n). I judged every 5th frame (about 6 fps) on a 180x320 phone sheet, every 2nd frame on full-size action-band crops (y 680-920), and the mouth and plume contacts at 2x and 4x zoom with lines at y 850/860/870/880. All numbers below are measured on the rendered pixels.
 
-## Round-12 asks
-1. **Flame: no overlap with a face, horn or blade, and at least a 15 px gap: NOT done.** The team did not run a pixel test (QA.md says so), and its own `measure.txt` still reports "flame<60 on 68 frames, worst -73". On the rendered frames, a tail flame in the middle lane keeps landing on the horns or head of the ox next to it, with a gap of 0 px:
-   - g 1440: a flame at x 430-450, y about 735 sits against the second ox's horn and the edge of its face.
-   - g 1443: a flame at x 490-515, y 745-760 sits on the centre ox's right horn.
-   - g 1454-1461: a flame at x 368-470, y 750-795 is crossed by the near lead's right horn. The lead's horn passes over the flame card at g 1456 and g 1459 (4x zoom).
-   - g 1463-1465: a flame at x 560-640, y 755-780 sits on the horns of the ox behind.
-   - g 1470 and g 1474-1475: a flame at x 497-530, y 756-783 is overlapped by the near ox's right horn.
-   - g 1477-1481: a flame at x 585-628, y 755-783 is overlapped by the lead's left horn, and its white tip touches the forehead and ear of the third ox (x 620-630, y 780).
-   - g 1493: a flame at x 500-545, y 765-790 sits on the next ox's horn.
+## Round-13 asks
+1. **Flames clear every face, horn and blade by at least 15 px: DONE.** On every 2nd frame from g 1427 to 1513, each flame trails off its own reed bundle behind its own ox. No flame card touches another ox's head, horn or blade. The closest case is g 1503, where the flame at x about 690, y 740 is about 90 px from the next horn tip. The team's matte number (worst 38 px) is plausible. I could not reproduce it exactly, because a colour mask picks up the flame cores and the wall lamps.
+2. **Ox mouths at y ≤860: NOT DONE. The team's 857 at g 1484 does not reproduce.** At 4x zoom, the lowest point of the lead's open-mouth outline is:
+   - about 876 at g 1481
+   - about 887 at g 1482
+   - at least 880 at g 1483-1484, where the pot rim hides the lower edge
 
-   On the phone this reads as fire on the oxen's heads, not trailing behind them. It breaks rule 3, which is the film's key idea.
-2. **Mouths at y 860 or above: almost done. The team says 858, but that is the round-11 number.** The lowest edge of the open mouth measures: g 1479 at about 853, g 1481 at about 864, g 1483-1484 at about 873-875, and g 1485 at about 878, where the pot cuts it off. g 1486-1491 are all above 840. So the worst is about 878 over 5 frames. That is a big gain on round 11 (950-985), and nothing reaches the caption band at y 880, but the ask was 860.
-3. **Plain ground 30 % or less: NOT verified. The team's 16-23 % does not reproduce.** I measured smooth, outline-free 20 px blocks below y 840 every 3rd frame. Most frames come out at 25-29 %, but g 1442 is 31.5 %, g 1445 is 32.6 %, g 1448 is 31.0 % and g 1457 is 31.5 %. At g 1442-1448 the band from y 900 to 1280 is bare earth across the whole width, apart from three small pots. Under the director's rule, anything over 30 % blocks.
-4. **Pots read warm terracotta: half done.** The middle-ground pots are good: median hue 11-22 deg (g 1437 centre pot (137,93,69); g 1485 lit pot (124,86,64)). The largest pots, which are the near foreground pots at g 1430-1447 and g 1497-1512, still come out violet: hue 252-269 deg (g 1437 (64,55,99), g 1507 (69,55,94)). On the phone sheet those are the pots you notice, and they read as lavender.
+   g 1479-1480 and g 1486 onward are above 860. This is no better than round 12 (about 878), and g 1482 enters the caption band.
+3. **Ground ≤30 %: DONE (note band).** I measured smooth, outline-free 20 px blocks below y 700 every 3rd frame. Raw values are 23-31 %, median 27 %. The block mask also catches pot interiors and the dark hole openings (about 2-4 % of the frame), so the true plain ground in-shot is about 24-28 %. The whip-landing frames g 1505-1514 read 30-32 % raw, which is design (whip).
+4. **Qi silhouettes behind the oxen: DONE.** At g 1429-1449 they run behind the ox row, and the ox heads overlap them, not the other way round.
+5. **Pots warm: NOTE (as agreed).** The mid-ground pots are terracotta. The large near pots at g 1427-1449 are still lavender-violet.
+6. **Does "oxen burst out of the holes" read as a herd? NO.** On the phone sheet, every tile from g 1427 to g 1502 shows 1 or 2 oxen, occasionally 3, each about 110 px tall (8 % of the frame height), in a thin band under a wall that fills 60 % of the frame. It reads as "an ox trots out of a hole, then another", not as a burst. The herd only appears in the far row after the whip (g 1507+, 6-8 small oxen). The director relaxed the flame rule to 15 px precisely to keep a dense herd. Trading the herd away for the flame rule does not meet that intent.
+
+## New §G finding
+- **A prop crosses a face.** The plumed helmet on the ground at frame centre (x about 330-460) sits in the lead lane, and its striped plume lies across the oxen's mouths:
+  - g 1453-1456: the plume is over the left ox's muzzle and mouth (x 335-375, y 790-830).
+  - g 1475-1480: the plume is over the lead ox's chin and mouth (x 430-470, y 830-860).
+
+  On the phone it reads as an ox chewing a fan. Elsewhere the bell-shaped helmet with its fan plume reads as a bell or a broom, not a helmet.
 
 ## Phone read
-The beat reads: red-coated, angry oxen pour out of the breaches along a lit wall at night, and the flames are warm against the blue. But the herd sits in a thin band (y 700-860, about 12 % of the frame height) under a wall that fills 60 % of the frame. At g 1427-1453 the large black Qi silhouettes run in FRONT of the lead ox and cover the reveal. The shot plan puts them behind the oxen. The flames are small, and because they sit on the heads, the reading is "oxen with torches on their heads" rather than "fire behind them".
+Warm fire against blue moon-shade is good, the angry faces read, and the flames now clearly trail behind. But the burst is a trickle, and the herd beat is carried only by the last 8 frames after the whip.
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 6 | 7 | 6 | 7 | 7 |
+| 5 | 7 | 5 | 7 | 7 |
 
-## Verdict: FIX-FIRST (2 blockers, 1 small fix)
-1. **Flames clear of heads (blocker):** In the middle lanes, swing each tail down so the flame trails at or below the ox's back line rather than up at head height. Or offset the following ox 0.6 D sideways, or delay it 4-6 frames. As a last resort, scale a flame card to 0.6 while it is near a head. Check it with an ID or matte pass (flame cards against ox head, horn and blade) and a distance transform on every frame from g 1427 to g 1514. Pass when the minimum distance is at least 15 px. Re-check the frames listed in ask 1 by eye.
-2. **Ground at or below 30 % on every frame (blocker):** Add a dark rubble clod or a lit fg prop low in the lower left for g 1439-1460 (wall debris fits this), or slide a near fg pot through it. Measure g 1442, 1445, 1448 and 1457 with the same block method and get them to 28 % or less. Do not tilt down.
-3. **Lead mouth (small):** Over g 1479-1486, raise the near lead ox's path about 20 px in frame, or keep it 0.1-0.15 D farther from the camera, until the lowest mouth outline is at y 860 or above. Measure g 1481, 1483, 1484 and 1485.
+## Verdict: FIX-FIRST (3 blockers, each measurable)
+1. **Herd density:**
+   - Have at least 5 oxen visible in every 0.5 s phone tile from g 1435 to 1500, and at least 3 of them in a single tile emerging from different holes within the same 10 frames.
+   - Keep the 15 px flame rule. Ways to do both:
+     - Add a second lane of oxen running at the lens in front-3/4 or head-on (out of holes nearer the camera). Their own flames are then hidden behind their bodies, so the flame-to-face rule holds trivially.
+     - Or add a farther lane at 0.5-0.6 scale, timed so that its heads are never in the same screen row as a near-lane flame.
+     - Or start the far row seen at g 1507 earlier and visibly (g 1460+, along the field beyond the wall end).
+   - Re-run the matte check over g 1427-1514.
+2. **Prop off the faces (§G):**
+   - Move the plumed helmet out of the ox lane (x < 250 or x > 560), or lay it on its side so the plume is under y 900.
+   - Pass check: no prop pixels over any ox head on g 1450-1460 and g 1472-1484.
+3. **Lead mouth:**
+   - Over g 1479-1486, raise the lead's path about 30 px in frame, or keep it 0.15 D farther from the lens.
+   - Measure the lowest mouth outline on the RENDERED g 1481, 1482, 1483 and 1484. All must be ≤860.
 
 ## Notes (not blockers)
-- The near fg pots should come out warm: lift the albedo toward terracotta, or add a warm rim from the fire on the side toward it, so the moon side stays around hue 0-40 deg rather than 260.
-- Move the Qi silhouettes behind the lead ox or to the frame edges at g 1427-1453, so the burst is not covered.
-- The automated blur at g 1505+ is the whip. Accepted by the director.
-- Frame-diff median 11.49 / p90 14.38. Good.
+- Near fg pots: still lavender at g 1427-1449. Warm their albedo or add a fire rim.
+- The automated blur at g 1505+ is the whip. Accepted.
+- The team's frame-diff (median 11.11 / p90 13.74) is good.
