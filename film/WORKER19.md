@@ -35,7 +35,7 @@ The plan's anchor times are CAPTION-PHRASE starts; a word in the middle of a phr
 - Key EVERY set hook on EVERY rendered frame (set_balance(g/30) rocks the H1/H2/H3 bars; set_candles(level) flickers; set_sea/set_roll animate the sea and ship).
 - Final samples: the set's own (H.STATE['samples'] after build: WORKSHOP / HALL 8, SHIP 10-12 by preset; set3d19/cost_report.txt). Do not raise them. Drafts 360x640, 6 spp.
 - Comic falls only, no injury (shot 5's bailing sailors).
-- Target in-shot frame-diff (90x160 grey): median >= 4, p90 >= 12. Measure it as s01/deliver.py does (`python3 deliver.py draft` on a draft) and report it. Tune on drafts: the final comes within ~0.5.
+- Target in-shot frame-diff (90x160 grey): PER TAKE median >= 4 and p90 >= 10 (director decision 2026-11-20 after TAKE gate round 2; the production-lessons §10 target median >= 4 / p90 >= 12 is measured on the WHOLE FILM at the FINAL gate, so aim higher where you can). Measure it as s01/deliver.py does (`python3 deliver.py draft` on a draft) and report it. Tune on drafts: the final comes within ~0.5.
 
 ## 5. Mouths (lip-sync windows)
 Only astro19 (the mocker) moves his mouth, and only inside his quotes (±0.15 s; c19.mouth_open_at(g)):
