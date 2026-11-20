@@ -1,19 +1,17 @@
-# T1a QA self-check (g0-171). Result: FAIL, awaiting a fix list from the director
-Render: 720x1280, 16 samples + OIDN, 2 threads; motion blur 0.5 on g152-171 only. Real cast via stage_cast2 with the g105 key-still assignment on every frame. Viewed: contact.jpg (every 8th frame) plus g0, 29, 60, 76, 86, 95, 105, 120, 155 at full size and at 360x640. Nothing else was viewed frame by frame.
+# T1a QA self-check (g0-171), after the stage_cast2 leak fix
+Render: 720x1280, 16 samples + OIDN, 2 threads; motion blur 0.5 on g152-171 only. Real cast via stage_cast2 (g105 key-still assignment) on every frame. g0-59 are from the first run (roofs, no leak seen); g60-171 were re-rendered with the leak fix (clear c2_/back_hair_/back_coat_ + actors.clear_registry() before each call).
+Viewed: contact.jpg (every 8th frame, phone-size tiles) and at full size g0, 29, 102, 105 (key), 120 earlier; g60, 76, 155 only as tiles/small crops.
 
 | g | what I see |
 |---|---|
-| 0, 29 | Rooftop BIGZOOM start: cobalt zinc roofs, red chimneys with smoke, lit windows, orange horizon, Notre-Dame tower top-left. Reads well. The French window is NOT yet the brightest spot. |
-| 60-61 | Camera against a lit window: a flat yellow/white block fills the frame (luma 181-216, qa_auto "blank"). Defect. |
-| 76 | Close on the French window with the red/white awning. A large black polygon fills the window opening. Defect. |
-| 86-93 | Nearly or fully black frames (luma 0-14). The window opening is a black slab. qa_auto black-frame FAIL. Defect. |
-| 95 | Camera is inside the room, pointing across it. Clean: clock, calendar MARS 1882, tripod, rug, props. No cast in frame. |
-| 105 | Key still, OK'd by the director: Bertillon front-on, prisoners front-facing, feet on the floor. |
-| 100-150 | A large flat dark-brown/black rectangle stands behind the bench prisoners. Likely the mirrored back-of-head/coat cover (`_back_cover`) for the back view. It reads as a black slab, which the brief says to report. A prisoner and Bertillon are half hidden by it. Defect. |
-| 120 | Same slab covers about 40 % of the frame. Defect. |
-| 155-156 | Overexposed yellow-white glow fills the frame (luma 169-202), motion blur on. Defect. |
+| 0, 29 | Rooftop BIGZOOM start: cobalt zinc roofs, red chimneys with smoke, lit windows, orange horizon, Notre-Dame tower. Reads well. The French window is not yet visible as the brightest spot. |
+| 60-61 | Camera against a lit window: a flat yellow block fills the frame (RGB-mean 157-180; qa_auto 'blank' g61). Not a leak: it comes from the planned camera path. Defect, not fixed. |
+| 72-80 | Facade with PRÉFEC sign, window with red/white awning, figures visible inside. Clean, no black polygon any more. |
+| 86-96 | Through the French window into the room: clock, MARS 1882, tripod, rug, ARCHIVES door. Silhouettes of seated figures in the window foreground. Black frames gone. |
+| 102, 105 | Bertillon front-on, calipers at the prisoner's ear, prisoners front-facing, feet on the floor, props in the foreground. No black slab. |
+| 112-136 | Same group from the side track: Bertillon, a moustached prisoner, a hat prisoner, all readable; bench and window behind. |
+| 152-160 | Motion blur on. g155-156 a yellow-white glow fills the frame (RGB-mean 188-203), then a fast swing. Defect, not fixed. |
 
-Luma (my own Rec.601 mean, qa_stats2.py is not in the repo): g0-95 72.4, g96-171 85.5, whole part 78.2. Target 95-112: BELOW.
-Shimmer: not checked as a clip. Flat roofs in stills look clean.
-qa_auto: FAIL. black frames 87-93, blank 61/88/91, "suspected blur" on 50 frames (g36-50 and later; motion blur is only on in g152-171, so this is probably the camera speed on the roof pass), pops at g94, 131, 155-157.
-Not claimed: façade-sign rule (g200-300 belongs to T1b), BIGZOOM report (not re-run).
+Luma, binding metric (RGB mean at 90x160): part 112.9 (min 64.7, max 203.1); g0-95 102.3; g96-171 126.2. g96-171 is above 112 and is trimmed at conform per the director.
+qa_auto: FAIL on 'blank' g61 and 'suspected blur' on 48 frames from g26 (motion blur is off there: the camera swoops over the roofs); pop at g156.
+Shimmer: not checked as a clip. Not checked: BIGZOOM report, façade-sign rule (T1b).
