@@ -3,3 +3,4 @@ draft/
 *.log
 __pycache__/
 raw_old/
+raw_old*/
