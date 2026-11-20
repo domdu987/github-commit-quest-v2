@@ -49,6 +49,16 @@ PROJ/v3/cast21 (`import cast21` BEFORE `sprites`/`stage.sprites`). Read API.md.
 - Make your OWN helper module inside your take folder (for example PROJ/v3/film21/sNN/c21.py) by copying film8/common.py and switching it to cast21 and set3d21/stirling.py.
 - Do not create a shared film/v3/film21/common.py.
 
+## QA_TEAM.md §G (client complaint 2026-11-20): BLOCKING at the TAKE gate
+- Colour: `python3 PROJ/qa_stats.py take.mkv` must show saturation >= 0.47 and brightness 85-110. The set's grade has a per-preset VIVID stage that gets you there (API.md §9); keep `K.STATE['preset']` set and never skip the grade.
+- Nothing floats: every character's feet on the ground with a contact shadow (`contact=True` on the Actor), riders on their horses, nothing hanging in the sky, no pole or prop passing through a face.
+- Camera distance: at least half your shots wide or medium-wide (they show the place). No face taller than 35 % of the frame height. Nobody cut in half by a frame edge.
+
+## QA_TEAM.md §H (client decision 2026-11-20): BLOCKING
+- BIGZOOM: shot_plan.md shots 1 (take s01) and 24 (take s09) are ONE continuous eased camera move from EXTREME WIDE (character < 5 % of frame height, the whole valley from high) to a MEDIUM shot of the character (35-60 % of frame height), passing through set detail (pines, gorse, tents, banners) on the way. No cut inside. Build the whole valley in one scene (start from the valley preset) and stage the cast at the end location's marks.
+- Interesting angles: no more than 2 shots in a row at the same height and angle; avoid flat straight-on eye level as a default.
+- Rich detailed set in every frame: dense props and life, foreground/mid/far layers, no empty ground planes.
+
 ## QA (stricter, film/QA_TEAM.md "Stricter QA")
 - Before delivering, run `python3 PROJ/qa_auto.py take.mkv --first_g <first_g> --cuts <your planned cut g's>` and fix every FAIL. Add QA_AUTO.md and phone_sheet.jpg to the take folder.
 - Then check your frames yourself at 6 fps, plus every cut ±3 frames:
