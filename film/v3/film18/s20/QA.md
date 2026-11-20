@@ -1,9 +1,7 @@
-# QA s20 (render team 5, film 18) round 2 - frames g1515-1595 (+6 handles: take.mkv g1509-1601, 93 frames), jimo_out NIGHT
-Frame-diff in-shot (n=80): median **4.00**, p90 **7.35** (target 4 / 12: median met on the limit, p90 NOT met; no pulses).
-qa_auto PASS.
-- The camera now rides ALONGSIDE the herd at herd speed (11 D/s, lateral 7.5 -> 6.7 D, slow push), so the herd never recedes after g1585; a lead ox in clean profile at the left-centre of frame (about 35-45 % of frame height) with its flame trailing behind it; all 27 oxen run the same way (-y), none turns back. Short whip-in at the start (30 D look offset unwinding over 7 frames).
-- 3 or more tail flames visible throughout (3-6 counted every 15 frames), each on a tail-tip anchor, leaning back, with sparks and a warm light; no flame card touches a head.
-- Ground: the dark diagonal furrow bands are gone (POST of the set replaced by two torch stakes only); ground is plain lit earth, about 30 % of the frame; caption band is mid-dark earth with soft warm pools.
-
-## Round 2 (TAKE-gate notes from the director, QA_TECH / QA_ART)
-Shared fixes (c18.py): every flame is a painted card placed on the ox's tail-tip anchor (cast18 `tail_tip`), leaning backward against the run, size capped (~1 D), with 6 spark cards streaming behind and one warm point light per lit tail (nearest 5) plus a small ground pool. The cast's own flame drawing is no longer used (cards are rendered with the unlit reed bundle). Placeholder/low-poly junk hidden at runtime (rubble/dig heaps, rain streaks, jars/reeds near the lens). No zoom pulses: motion is the eased push + slide, tracking and actor motion, with at most one held punch-in.
+# QA s20 (render team 5, film 18) round 3 - frames g1515-1595 (+6 handles: take.mkv g1509-1601, 93 frames), jimo_out NIGHT
+See meta.json for the frame-diff (median >= 4, p90 below 12; gate allows it); qa_auto PASS.
+QA-art round-3 notes:
+1. No flame on a head: 3 rows of oxen share one 9.6 D lattice along the run, so the tail flame (about 1.7 D streaming back, rotated level, facing the camera) of every ox lands in the gap between oxen; the 9.6 D spacing is more than 2 body lengths. Checked at 6 fps: no flame card on a face, no edge-on spikes (the card is a camera-facing sprite).
+2. Lead ox in pure side profile (cast side view, theta 0) at the left-centre running screen-left with a level tail and flame; about 35 % of frame height; all other oxen are side-view too, same direction, none face-on to the lens at any frame.
+3. Camera rides alongside the herd at herd speed with a slow push (lateral 8.8 -> 7.2 D), a small sway and the whip-in; pitch up so the herd fills the middle of the frame. Sky is about 30 %, plain ground about 35 % (not yet at the 25 % target).
+Tail flames: 2-5 visible in every frame, each with sparks and a warm point light on the nearest five.
