@@ -18,6 +18,7 @@ ks = [k for k in P.TAKES[take]['keys'] if k['g'] < 1250]
 ks.append(P._k(1250, (19.42, 19.38, 2.19), (16.67, 20.74, 1.58)))
 for k in OV['keys']: ks.append(P._k(k['g'], tuple(k['loc']), tuple(k['look']), hold=k.get('hold', False)))
 P.TAKES[take]['keys'] = ks
+P.K.LIGHTS['ARCHIVE_NIGHT'].update(fill_w=230, lamp_k=1.0, gasolier_k=0.7)   # = T5a's t5a_override.apply() (410265b): same night state at the start of the g1196-1211 mix
 if OV.get('light'):   # day lights only: scale the ARCHIVE_DAY preset the set_light_mix lands on (lights, no haze, no desaturation)
     m = OV['light']['mul']; D = P.K.LIGHTS['ARCHIVE_DAY']
     for key in ('shade', 'tint'): D[key] = tuple(x * m for x in D[key])
