@@ -178,7 +178,7 @@ def mk_actor(name, cast, extra_scale=1.0):
     a.build(sprites.DEFAULT_CANVAS[cast], os.path.join(TMP, "sprites"), contact=True)
     a.head_flip = True
     if cast == "dupont":
-        a.jobs = (lambda orig: (lambda px, frames=None, overlay=None: [dict(j, underlay=ears_svg(j["pose"])[0], overlay=ears_svg(j["pose"])[1]) for j in orig(px, frames, overlay)]))(a.jobs)
+        a.jobs = (lambda orig: (lambda px, frames=None, overlay=None: [dict(j, underlay=ears_svg(j["pose"])[0], overlay=(j.get("overlay") or "") + ears_svg(j["pose"])[1]) for j in orig(px, frames, overlay)]))(a.jobs)
     return a
 
 
@@ -261,6 +261,25 @@ def ears_svg(pose):
     over = ear(-0.52 * c, 1, True) if prof else ""
     wrap = lambda gg: '<g transform="rotate(%.2f %.3f %.3f) translate(%.3f %.3f)">%s</g>' % (r, dx, dy, dx, dy, gg) if gg else ""
     return wrap(under), wrap(over)
+
+
+def finger_dir(an):
+    ex, ey = an["elbow_l"]; hx, hy = an["hand_l"]
+    dx, dy = hx - ex, hy - ey; L = math.hypot(dx, dy) or 1.0
+    return dx / L, dy / L
+
+
+def finger_tip(an, ln=0.28):
+    ux, uy = finger_dir(an)
+    return an["hand_l"][0] + ux * ln, an["hand_l"][1] + uy * ln
+
+
+def finger_svg(an):
+    """one distinct extended index finger (skin, inked) continuing the forearm direction past the hand."""
+    hx, hy = an["hand_l"]; tx, ty = finger_tip(an)
+    return ('<g><path d="M%.3f,%.3f L%.3f,%.3f" stroke="#3a2832" stroke-width="0.135" stroke-linecap="round" fill="none"/>'
+            '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="#f4d4cb" stroke-width="0.095" stroke-linecap="round" fill="none"/>'
+            '<circle cx="%.3f" cy="%.3f" r="0.075" fill="#f4d4cb" stroke="#3a2832" stroke-width="0.03"/></g>' % (hx, hy, tx, ty, hx, hy, tx, ty, hx, hy))
 
 
 def hand_svg(an):
@@ -372,14 +391,17 @@ class Take(object):
                 dp["ears17"] = True
             da.pose(f, dp, camera=self.cam)
         self.sprites_group(da, gs, 320, 512)
+        ff = [g - FIRST + 1 for g in gs if mode_of(g) == "finger"]
+        if ff:
+            da.render_sprites(512, frames=ff, overlay=lambda f, pose: finger_svg(self.anch[(da.name, f)]))
         for g in gs:
             if mode_of(g) != "finger":
                 continue
             f = g - FIRST + 1
             self.scene.frame_set(f)
-            hw = actors.local_to_world(da, self.anch[(da.name, f)]["hand_l"], f, camera=self.cam)
+            hw = actors.local_to_world(da, finger_tip(self.anch[(da.name, f)], 0.20), f, camera=self.cam)
             u = seg(g, G_FING[0], G_FING[1] + 1, lambda x: 0.3 * sine(x) + 0.7 * x)
-            off = Vector((lerp(0.46, 0.34, u), lerp(-0.46, -0.38, u), lerp(0.14, 0.08, u)))
+            off = Vector((lerp(0.58, 0.46, u), lerp(-0.80, -0.68, u), lerp(0.20, 0.12, u)))
             camrig.key_camera(f, hw + off, hw + Vector((-0.02, 0.0, 0.0)), cam=self.cam, lens=LENS, interp="LINEAR", easing="AUTO")
         for g in gs:                                              # bertillon: jaws pinned
             f = g - FIRST + 1
@@ -400,9 +422,9 @@ class Take(object):
             else:
                 an = self.anch[(da.name, f)]
                 if m == "finger":
-                    hx, hy = an["hand_l"]
+                    hx, hy = finger_tip(an, 0.20)
                     k = 1.0 - seg(g, G_FING[0], G_FING[0] + 7)
-                    loc_t = (hx - 0.02 - 0.5 * k, hy - 0.10 + 0.9 * k + 0.012 * math.sin(g * 0.9))
+                    loc_t = (hx - 0.5 * k, hy + 0.9 * k + 0.012 * math.sin(g * 0.9))
                     ang, psc = -4, 0.9
                 else:
                     hx, hy = an["head"]
