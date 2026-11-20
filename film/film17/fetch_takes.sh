@@ -19,8 +19,8 @@ s06 render17/team5  6fe61b4
 s07 render17/team1  TODO     # reassigned to team1, fill when approved (last 34bb2c8 = FAIL R3)
 s08 render17/team7  5866892
 s09 render17/team8  084ef5b
-s10 render17/team9  TODO     # FAIL R3 (last e6fe1c2)
-s11 render17/team10 TODO     # FAIL R2 (last 95c6e9b)
+s10 render17/team9  669e44b  # PASS R5
+s11 render17/team10 55446ee  # PASS R3
 s12 render17/team11 3c91397
 s13 render17/team12 ba82a63  # not ca5cc1a (unreviewed variant)
 '
