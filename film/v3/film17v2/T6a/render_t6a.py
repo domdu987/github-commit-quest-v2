@@ -19,4 +19,5 @@ def run(frames, out_dir, samples=16):
 if __name__ == '__main__':
     a = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else sys.argv[1:]
     if a[0] == 'key': run([1515, 1540], a[1])
+    elif a[0] == 'range': run(range(int(a[1]), int(a[2]) + 1), a[3] if len(a) > 3 else OUT)   # range g0 g1 [out_dir]
     else: run(range(1371, 1536), OUT)
