@@ -1,7 +1,8 @@
-# QA_TECH s16 (take g1195-1314, shot g1205-1308) - FAIL (round 3)
-Own frame-diff: median 8.01, p90 9.51 (steady dolly/truck, no pulsing, no spikes in-shot except the opening pop). Band mean 47-108, bright <= 0.7 %.
-Earlier issues: #1 breach glow - improved (warm glow at the holes, orange ember at g1215-1225); #2 holes open one after another - FIXED (g1215, 1225, 1245, 1255, 1265 ...); #3 diggers - picks held up with small motion, still weak (note); #4 dark squares - putlog holes of the set, accepted (note); #5 fg junk - the navy post is gone but a new slab appears (see 1) and ground still too large (see 2).
-Pass: NIGHT jimo_in, no oxen and no lit tail, heads far above 880, mouths still, no text, g range OK.
-1. g1195-1209 (take frames 0-14; g1205-1209 are in-shot) - big dark-navy faceted slab geometry fills the left half and the lower third (unlit placeholder, rule 2); the first 10 frames are a frozen copy of g1205 (diff 0), then the framing pops at g1206-1208 (diff 11/16/16) when the slab disappears. A viewer sees the slab and the jump during the dissolve. Fix: start the render from the post-pop camera (hide the slab), no frozen handle.
-2. g1210-1314 - bare ground about 33-35 % of the frame (limit 25 %, director admits 35 %); plus pale thin "needle" streaks on the ground (g1245-1314) that read as stray geometry. Fix: tilt up / lower the horizon and add dark fg props (baskets, earth heaps) low in frame; delete the needles.
-Notes: flat glowing white-yellow quad on the ground at g1295-1314 (breach glow card laid flat) reads as a placeholder; old man clipped at the left edge only in the handle g1312-1314 (outside the shot); caption band 108 at the end, at the limit.
+# QA_TECH s16 (take g1195-1314, shot g1205-1308) - PASS (round 4)
+Checked: 6 fps + first/last 3 (29 frames), pop strip g1195/1204-1213, 3 full-size frames. Frame-diff director 8.50/9.53 (own: steady dolly, no pulsing; handle g1195-1204 moves at diff 1.5, not frozen; one lighting step at g1211 inside the 15-frame dissolve). median OK, p90 9.5 at the guide, visible eased dolly + truck.
+Earlier blockers: #1 glow - orange glow on the holes and floor visible; #2 holes in sequence - FIXED (first hole about g1230, then one after another to about 5-6 breaches, townsfolk with picks); #3 navy slab - GONE from the shot (only a tiny sliver at the left edge in handle frame g1195); frozen start - FIXED.
+Pass: NIGHT jimo_in, no oxen, heads far above 880, no text, no blur, mouths still.
+Notes:
+- Bare ground about 31-33 % in g1205-1235, about 25-28 % afterwards (dark road wedge at bottom right counted): borderline, in the 25-30 note band for most of the shot.
+- Pale thin needle streaks on the ground (g1245-1314) read as stray geometry; a flat white-yellow glow quad lies on the ground at g1295-1314.
+- Caption band at the limit at the end (about 108).

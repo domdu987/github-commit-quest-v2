@@ -1,7 +1,5 @@
-# QA_TECH s18 (take g1382-1432, shot g1388-1426) - FAIL (round 3)
-Own frame-diff: median 4.25 (box) / 3.60 (bilinear), p90 7.13 (director 4.42/7.29): median passes only with area downscale, p90 below 9 and the first in-shot frames g1388-1394 are near static (diff 0-2); the push is barely visible. No pulsing.
-Earlier issues: #1 ripple - NOT FIXED. #2 Tian Dan clipped - FIXED (fully in frame, centred). #3 pink V decals / navy polygons - partly: pink V gone, but white needle/spike slivers remain on the ground (g1382-1432). #4 caption band - FIXED (mean 57-80). #5 torch before cue - FIXED. #6 broom tail - improved (flame card now sits at the tail tip).
-Pass: no lit tail before g1417 (flames first appear g1417-1418), torch in hand and lit at g1417, heads fine, oxen dragon-dressed, NIGHT, mouths still, no text, g range OK.
-1. g1417-1432 - ripple of 5-6 tails is missing: only 2 clearly attached tail flames (nearest ox at x about 390 and one beside Tian Dan at x about 590 at g1432) plus a sliver at the right edge; the rest of the 6 oxen show no flame. It reads as two flames, not a ripple. Fix: yaw the oxen so every tail shows, ignite one every 2-3 frames from g1417, 5-6 flame cards on tail tips.
-2. g1382-1432 - bare ground about 40 % of the frame (about 55 % at g1382-1407): empty dark ground with white sliver decals, oxen and Tian Dan small in the upper half (limit 25 %). Fix: tilt up / push in, put a dark fg prop low.
-Notes: 6 oxen in a flat row, low drama; white spike slivers on the ground (g1382-1432) look like stray geometry.
+# QA_TECH s18 (take g1382-1432, shot g1388-1426) - PASS (round 4)
+Checked: 6 fps + first/last 3 (15 frames) + every-frame strip g1411-1426. Frame-diff director 5.38/9.23 (meta 5.29/9.21): median OK, p90 at the guide, visible eased push + tilt-up. No pulsing.
+Earlier blockers: #1 ripple - FIXED: tail flames light one after another from g1417 (1 at g1417, 2 at g1419, 3-4 by g1422, 4-5 by g1426, 6 in the out-handle), each flame card sits at a tail tip with warm ground light; Tian Dan in frame with a lit torch; #2 bare ground - improved (ground shrinks as the camera tilts up); #3 white slivers still there (note).
+Pass: NIGHT, no flame before the cue (torch itself lights at about g1413, 4 frames early: note), no text, no blur, mouths still, heads fine, oxen dragon-dressed.
+Notes: bare ground about 30 % in g1388-1410 (before the tilt), about 17 % at the ripple; flame cards are flat orange triangles; 6 oxen in a flat row; white spike slivers on the ground.

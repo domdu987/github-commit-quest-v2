@@ -1,7 +1,4 @@
-# QA_TECH s15 (take g1130-1210, shot g1136-1205) - FAIL (round 3)
-Own frame-diff: median 9.27, p90 13.65. No pulsing (one held punch-in, steady push). Band mean 57-65, bright <= 0.4 %.
-Earlier issues: #1 lip-sync - FIXED (mouth shapes change over g1136-1203). #2 cup - FIXED (cup kept, tilts over the shot). #2 carving mime - NOT FIXED. #3 acting - partly (bounce present, grin at g1180). #4 soldier - FIXED (visible at the fire, right). #5 jars - NOT FIXED.
-Pass: heads (chin max about 780), NIGHT, no text, no flames, mouths only within quote 2, g range OK.
-1. g1136-1205 - carving mime not visible: the left (viewer's left) arm stays a dark pauldron at the side with only a few px of shift; no hand or saw-the-air gesture reads at g1155-1175. Plan requires the mime. Fix: bring a hand into frame, chest height, with a clear sawing stroke on "พรุ่งนี้กิน" (g1155).
-2. g1130-1210 - the two foreground jars (left pair overlapping, one right) are flat uniform brown silhouettes with no texture or lighting: unlit placeholder props (rule 2). Fix: textured lit jars or hide them.
-Notes: lip-lick is a wide grin with a flat brown mouth at g1180 (reads as a different mouth, no tongue); the cup tilts but no wine spill; general fills most of the frame at the end, face fully in frame.
+# QA_TECH s15 (take g1130-1210, shot g1136-1205) - PASS (round 4)
+Checked: 6 fps + first/last 3 (21 frames) + 3 full-size mime frames (g1165, 1172, 1180). Frame-diff director 9.94/15.24: OK. No pulsing (one held push). Heads < 880, NIGHT, no text, no flames, mouth shapes change only within quote 2.
+Earlier blockers: #1 jars flat - FIXED (faceted shaded jars, corners, about 70 %); #2 carving mime - FIXED: from about g1165 a red sleeve with a tan hand sweeps back and forth across the belly (visible sawing stroke, three distinct positions); cup tilts overhead.
+Notes: the hand is a flat tan bar (reads as a stick, not a hand); the lip-lick is a wide open red mouth (no tongue); the general fills the frame at the end, face fully in frame.

@@ -1,6 +1,5 @@
-# QA_TECH s14 (take g1065-1141, shot g1071-1136) - FAIL (round 3)
-Checked: 6 fps + first/last 3, mouth crop strip every 3 frames, band stats. Own frame-diff (in-shot, 90x160 area): median 8.75, p90 13.08 (director 8.79/13.08). Median OK, p90 OK. No pulsing: two held punch-ins (about g1093, g1112), no release.
-Earlier issues: #1 jars - NOT FIXED (see 1). #2 moon blown disc - only scaled down, still a pure-white disc (note).
-Pass: heads (chin max about 700, well above 880), cup raised and held in hand, general stays in frame, NIGHT camp warm/rim lit, no text, no blood, no flames, band mean 69-79 and bright 0 %, g range matches plan; lip-sync: held open laugh before g1113, mouth shapes change from g1113 (quote 2 start) - OK.
-1. g1065-1141 (all frames) - lower-right foreground "jar" is a flat uniform brown (#a8703a) silhouette with no texture, shading, highlight or light: an unlit placeholder prop (rule 2). Fix: textured, lit glazed jar mesh or hide it.
-Notes (non-blocking): bare ground about 30 % at g1065-1090 (legs and jar inside it), falls to about 20 % later; moon is still a blown white disc; pre-1113 laugh mouth shows slight shape changes (acceptable as laugh).
+# QA_TECH s14 (take g1065-1141, shot g1071-1136) - PASS (round 4)
+Checked: 6 fps + first/last 3 (20 frames). Frame-diff director 8.90/13.21 (meta 7.7/12.0): OK. No pulsing (held punch-ins only). Heads < 880, general in frame all shot, cup held in hand, NIGHT warm rim light, no text, no flames.
+Earlier blocker #1 (flat uniform jar) - FIXED: the jar is now a faceted, shaded, highlighted mesh, no longer a flat cut-out. #2 moon: still a blown white disc (note).
+Lip-sync: laughing open mouth until about g1113 then the mouth shape changes with the quote (g1113+): OK.
+Notes: bare ground about 30 % in g1065-1090 (legs and jar inside it), falls to about 20 %; moon pure white disc; background soldier has a blue-grey face (reads odd, minor).

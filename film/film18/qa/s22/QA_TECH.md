@@ -1,7 +1,8 @@
-# QA_TECH s22 (take g1677-1747, shot g1683-1742) - FAIL (round 3)
-Own frame-diff: median 7.90, p90 11.37 (director 7.92/11.40) - OK. Pulsing: no in-out release, but 3 held punch-ins (g1696-1699 diff 19/21/15, about g1718, g1738-1742): rule allows 1-2 (note). Band mean 100-105, bright 0 %. Heads: chin max 721. No mouths moving; no blades touching anyone.
-Earlier issues: #1 pulsing - no release now (3 holds, note). #2 hero's flame tail - NOT FIXED. #3 close-medium - NOT FIXED. #4 bare ground - NOT FIXED. QA-art: glint on "วาววับ" - NOT FIXED. Flame on soldier head - NOT FIXED.
-1. g1683-1742 - the hero ox has no flame: its two horns end in gold/red blade tips and no tail is visible or lit; the only flames belong to oxen behind and sit directly on the frozen soldier's helmet/face (g1677-1700 beside the head, g1745-1747 on top of the helmet). Rule 3 breach (flame covering a face, hero tail flame missing). Fix: lit tail on the hero ox in frame, move the background flames away from the soldier.
-2. g1732 (and g1730-1736) - no glint on "วาววับ": the blade tips are small matt gold, no sparkle or highlight in frames g1725-1740. Fix: star glint on each blade at g1731-1734.
-3. g1683-1742 - not a close-medium: ox about 35-40 % of frame width, feet and flat pink dirt fill the lower 35-40 % (limit 25 %), sky upper 30 %. Fix: camera at ox-head height, head and blades 60 % of width, dark fg prop bottom-left.
-Notes: soldier is clipped by the left edge from g1707 on (body partly out, head in); lintel beam is a flat orange-tan bar (textured enough to read as timber, borderline); 3 punch-ins exceed the 1-2 allowed; ox expression is a gentle smile, not startled/flaring.
+# QA_TECH s22 (take g1677-1747, shot g1683-1742) - FAIL (round 4)
+Checked: 6 fps + first/last 3 (19 frames). Frame-diff director 6.71/9.79: OK. No pulsing release (held pushes, 3 of them: note). Heads < 880. NIGHT, no text, no mouths, no blades touching anyone.
+Earlier: glint on "วาววับ" - FIXED: star glints on the blade tips at about g1727-1737 (g1732 included); close-medium - improved (ox about 40-45 % of width, still not tight); hero tail flame - NOT FIXED; flame on the soldier's head - NOT FIXED.
+## Issues
+1. g1683-1747 - the hero ox has no tail flame: its tail rises with a gold arrow tip and no fire; the only flames belong to the oxen behind. Rule 3 / the shot check "its own tail flame" fails. Fix: a lit tail with flame card and light on the hero ox, visible in frame.
+2. g1720-1747 - a large flame from the background oxen rises directly behind and on top of the frozen soldier's helmet (growing to cover his head at g1735-1747); the flame reads as burning on his head (rule 3: never on a head). Fix: move the soldier or the background flame away from his head.
+3. g1683-1742 - bare ground about 30-35 % (pink dirt with a stump in the lower third), the soldier is clipped by the left edge. Fix: camera lower/closer to the ox head, dark fg props.
+Notes: the glints are small white crosses but visible; the ox expression is a gentle frown, not startled; the stump fg prop is lit and textured (fine).

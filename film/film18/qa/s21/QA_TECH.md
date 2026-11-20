@@ -1,10 +1,8 @@
-# QA_TECH s21 (take g1590-1688, shot g1596-1683) - FAIL (round 3)
-Own frame-diff: median 8.24, p90 14.28. Pulsing: FIXED (one snap at g1645-1648, diff 22, held; smaller held punch at g1610-1614; no in-out release). Heads: chin max 825 (<880). Band 54-108, bright 0.1 %. Soldiers 3-6 D in front, in frame all shot.
-Earlier issues: #1 pulsing - FIXED. #2 purple band / lintel beam - NOT FIXED. #3 flames - NOT FIXED. #4 falling cup - NOT FIXED. QA-art: not "out of the dark" - NOT FIXED. Soldiers face the herd - NOT FIXED.
-1. g1615-1650 - a flat untextured salmon/purple lintel beam crosses the upper third (rule 2, mandatory "purple band darkened"). Fix: texture and darken, or crop out.
-2. g1645-1660 - the falling cup is a flat yellow trapezoid card hovering about 200 px above the soldier's hand (g1645) and then a yellow semicircle at the right edge; the bronze cup in the hand at g1640 vanishes. It does not read as a cup falling (placeholder look). Fix: the 3D bronze cup leaves the hand at g1646 and drops to the ground.
-3. g1596-1683 - does not come out of the dark: moonlit blue sky and fully lit gate, and the red dragon herd is already visible behind the soldiers at g1590-1620. Plan: out of the dark, held snap reveals the wall. Fix: darken sky/gate, hide the herd until about g1630.
-4. g1590-1683 - the three soldiers face the lens with their backs to the herd, laughing until g1640 and freezing with O-mouths toward the camera; they never look at the herd (rule 7, checklist "soldiers face the herd"). Fix: 3/4 or profile cards toward the oxen.
-5. g1660-1683 - fewer than 3 tail flames: only 1-2 small flames visible (g1665, 1670, 1675, 1680); 3 or more only g1620-1655. Mandatory TEAMS item. Fix: more flame cards on visible tails or pull back.
-6. g1596-1620 - bare ground about 30-35 % (limit 25 %).
-Notes: snap lands on the word at g1646 (correct); the push after the snap keeps growing so the hero ox face fills about 45 % of the frame at g1680-1683 and reads as a friendly cow, not a monster; tails look like gold arrow tips; mouths of soldiers are expression cards, no lip-sync.
+# QA_TECH s21 (take g1590-1688, shot g1596-1683) - FAIL (round 4)
+Checked: 6 fps + first/last 3 (25 frames) + cup strip. Frame-diff director 6.57/14.70: OK (g1596-1635 only 2-6, then 11-20). One snap at about g1645-1648, held; no pulsing. Blur flag g1590-1625: ALLOWED, the frames are dark but sharp. Heads fine (soldiers are silhouettes). 3+ big tail flames from about g1630 to the end. NIGHT, no text.
+Earlier: #3 not out of the dark - FIXED (dark navy sky, herd dim until about g1630, then flames); #4 cup - the cup now leaves the raised hand and lands on the ground (small, g1640-1655); #5 flames - FIXED; #2 beam - changed to pillars (see 1); soldiers face the herd - they stand with their backs to the lens, facing the herd: OK.
+## Issues
+1. g1590-1640 - flat untextured tan cylinders stand at the left and right of the frame (rule 2, placeholder). Fix: textured lit timber posts or hide them.
+2. g1596-1640 - bare ground about 40 % of the frame (lavender-pink floor, no fg props) for the first 1.5 s (limit 30 %). Fix: tilt up / dark fg prop, with the herd pushed lower.
+3. g1590-1683 - only 2 soldiers (the plan and TEAMS need 3) and both are solid black featureless silhouettes: the jaws dropping and the cup falling cannot be read as a reaction on the phone sheet. Fix: lit costumed soldier cards (3) 3-6 D in front, O-mouths toward the herd.
+Notes: the hero ox face fills about 45 % of the frame at g1670-1683 and its face is a sad frown, so it reads as a sad cow, not a monster (note, repeated); tails are gold arrow tips; the cup is tiny.
