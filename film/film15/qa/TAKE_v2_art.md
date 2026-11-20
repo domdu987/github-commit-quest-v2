@@ -315,3 +315,6 @@ T4 **FIX**: only the pole behind Dick, g1280-1337 (x about 375-395). After that 
 
 ## Round 4b (director check, 19:10 UTC) - T2
 T2 round-3 fix verified on frames g848-868: hands are skin-coloured and hidden from g852, the page through the seam has no hands, the headline and photo framing are unchanged. T2 PASS.
+
+## Round 4c (director check, 20:00 UTC) - T4
+The dark "pole" in the hush (g1280-1337) was Dick's far leg in the rock pose, drawn as a thin navy stroke. Team 4 replaced it with a 'stand' weight-shift pose (lean + bob, both legs with sneakers). Verified at g1280, g1310 and g1334: no stake, two clear legs, crowd-head frame kept. All other round-2 items were verified in Round 4. T4 PASS.
