@@ -1,3 +1,5 @@
 frames/
 __pycache__/
 render.log
+frames_join/
+join.log
