@@ -20,3 +20,8 @@
 ## Round 4 (director round-3: median 3.43-3.73 under 4; keep Harrison's hair off the right edge g1088-1095)
 - Snap framing unchanged (x1.65, shift (0.7, -0.35), peak 2.5). More drift in the wide before the snap: push 24 %/s (was 20), slide -35 px/s (was -10), arc 14 deg/s (was 8); Harrison's mark moved 1.1 D left so the extra drift does not carry him out of frame. His head right edge is x 673 at g1088 and 707 at g1095 (< 720), hair clear of the edge; H1 stays in frame (bars x ~116 at g1095).
 - Frame-diff in-shot: median 4.43, p90 12.84. QA_AUTO PASS. s/frame 22.5 wall / 44.2 CPU.
+
+## Round 5 (director QA-art round 4: 6.6 regression after the 1.1 D mark move)
+- Harrison's mark back near the approved spot (0.3 D left, the director's maximum), approved drift restored (push 22 %/s, slide -10, rise 25, arc 8), snap framing x1.65 with SNAPSX 0.6 (shift (0.6, -0.35)) instead of moving him. The wide gets its extra frame-diff from a small handheld sway (0.07 D, 1.5 Hz, +0.035 D vertical, no net drift) instead of more slide/arc, so the camera does not travel right and the H4 does not slide over the H1 upright.
+- Checked on the final frames: his head's right edge is at most x 690 over g 1084-1095 (30 px inside 720, whole face and hair in frame); the palm reaches across toward the H4; the cloth is clear of his chin; the H4 dial sits right of the H1 post (the post only grazes the dial's top-left edge at g 1088).
+- Frame-diff in-shot: median 4.79, p90 11.44. QA_AUTO PASS. s/frame 21.6 wall / 42.3 CPU.

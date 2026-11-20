@@ -17,7 +17,7 @@ CUTS_OUT = []
 EV = dict(palm_out=[1039, 1055], snap=[1071, 1091], word_caption=1079, word_spoken=1085, h4_hold=[1089, 1104], h1_balance="set_balance(g/30) every frame")
 SET = "v3/set3d19 WORKSHOP preset shop_clock, light DAY; set_clock([1, 4]) (H1 + H4 on its red cloth), set_balance(g/30) + set_candles(1.0) keyed on every frame; no runtime set changes; no caption_shade"
 CAST = "v3/cast19 harrison19 default, harrison_show_h4 base without prop (open palm toward the H4), mirrored; proud smile; eyes to the H4 then the lens; no lip-sync"
-CAM = "custom 22 mm from (0.9,-2.4,2.9) looking down (look z 1.9) wide on H1 + H4 + Harrison (H1 big, H4 tiny on its cloth); CamPath push 24 %/s + slide -35 px/s + rise 25 px/s + arc 14 deg/s; Harrison mark 1.1 D left of harrison_bench, then snap x1.65 (20 f, peak 2.5, shift 0.7 right / 0.35 down; H1 stays in frame) onto the H4 g 1071..1091 on เท่าจานรอง"
+CAM = "custom 22 mm from (0.9,-2.4,2.9) looking down (look z 1.9) wide on H1 + H4 + Harrison (H1 big, H4 tiny on its cloth); CamPath push 22 %/s + slide -10 px/s + rise 25 px/s + arc 8 deg/s + handheld sway 0.07 D at 1.5 Hz; Harrison mark 0.3 D left of harrison_bench, then snap x1.65 (20 f, peak 2.5, shift 0.6 right / 0.35 down; H1 stays in frame) onto the H4 g 1071..1091 on เท่าจานรอง"
 CUES = [(FIRST, LAST + 1, "ambience", "workshop afternoon, 1700s: room tone, a far rooster"),
         (FIRST, LAST + 1, "prop", "H1 slow heavy tick-tock under, and a tiny bright quick tick of the H4 that rises as the camera nears it"),
         (1039, 1055, "foley", "sleeve rustle as the palm goes out"),

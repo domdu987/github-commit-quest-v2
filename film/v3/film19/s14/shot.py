@@ -40,13 +40,26 @@ PPD = 256
 CANVAS = None
 
 MARK = "harrison_bench"
-MARK_DX = float(os.environ.get("MARK_DX", -1.1))
+MARK_DX = float(os.environ.get("MARK_DX", -0.3))
 MARK_DY = float(os.environ.get("MARK_DY", 0.0))
 CAM_LOC0 = tuple(float(v) for v in os.environ.get("CAM_LOC0", "0.9,-2.4,2.9").split(","))
 CAM_LOOK0 = tuple(float(v) for v in os.environ.get("CAM_LOOK0", "2.0,3.2,1.9").split(","))
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get("PUSH", 0.24)), slide_px=float(os.environ.get("SLIDE", -35)),
-                rise_px=float(os.environ.get("RISE", 25)), arc_deg_s=float(os.environ.get("ARC", 14)), decay=0.25,
-                snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 1.65)), peak=float(os.environ.get("SNAPPEAK", 2.5)), shift=(float(os.environ.get("SNAPSX", 0.7)), float(os.environ.get("SNAPSY", -0.35))))])
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get("PUSH", 0.22)), slide_px=float(os.environ.get("SLIDE", -10)),
+                rise_px=float(os.environ.get("RISE", 25)), arc_deg_s=float(os.environ.get("ARC", 8)), decay=0.25,
+                snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 1.65)), peak=float(os.environ.get("SNAPPEAK", 2.5)), shift=(float(os.environ.get("SNAPSX", 0.6)), float(os.environ.get("SNAPSY", -0.35))))])
+
+SWAY = float(os.environ.get("SWAY", 0.07))            # handheld sway (D) along the view's right axis, 1.5 Hz + a little vertical: more life in the wide, no net drift
+
+
+def cam_at(g):
+    loc, look = CAM.at(g)
+    fwd = (look - loc).normalized()
+    right = Vector((fwd.y, -fwd.x, 0.0)).normalized()
+    up = right.cross(fwd).normalized()
+    ph = 2 * math.pi * g / 20.0
+    off = right * (SWAY * math.sin(ph)) + up * (0.5 * SWAY * math.sin(ph * 0.7 + 1.0))
+    return loc + off, look + off
+
 
 BASE = dict(cast19.STORY19["harrison_show_h4"][1])
 
@@ -84,7 +97,7 @@ class Take(C.Take):
         mark = Vector(self.A["marks"][MARK]) + Vector((MARK_DX, MARK_DY, 0))
         for g in gs:
             f = bf(g)
-            self.key_cam(f, *CAM.at(g))
+            self.key_cam(f, *cam_at(g))
             C.place(self.har, f, mark)
             self.key_set(f, clock=(CLOCK,), balance=g / 30.0, candles=1.0)
         for g in gs:
@@ -96,7 +109,7 @@ class Take(C.Take):
     def report(self, g):
         f = bf(g)
         self.scene.frame_set(f)
-        loc, look = CAM.at(g)
+        loc, look = cam_at(g)
         bars = C.clock_world(1, (0.0, 0.0, 0.64))
         return dict(g=g, cam=[round(c, 3) for c in loc], heads=C.head_report(self, f), h1_bars_px=H.project(tuple(bars)),
                     dof=self.cam.data.dof.use_dof, caption_shade=bool(C.bpy.data.objects.get("caption_shade")))
