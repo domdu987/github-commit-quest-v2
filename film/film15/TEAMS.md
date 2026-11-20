@@ -33,3 +33,8 @@
 |---|---|---|---|
 | 1 | T1 | session_017iwyCuaxS1onESpuXGmuuL | render15b/team1 |
 | 2 | T2 | session_017iwyCtBR4FcEjnZD87a3PU | render15b/team2 |
+| 3 | T3 | session_017iwyCvr8WtJyTc4XVajo6P | render15b/team3 |
+| 4 | T4 | session_017iwyCwsuCzLjGEaiBsEgZx | render15b/team4 |
+| 5 | T5+T6 | session_017iwyCsh7wzcZ2b11gWkQUs | render15b/team5 |
+| 6 | T7 | session_017iwyCwwfBJHXAGDxAB6iUE | render15b/team6 |
+Teams 3-6 launched 14:17 UTC after location B round 3 (87ececb: render 128 -> 25 s/frame).
