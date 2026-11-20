@@ -32,7 +32,7 @@ def cam_path(A):
     c0 = Vector(A["cams"][PRESET]["loc"])
     v = (c0 - subj)
     v.z = 0.0
-    c = subj + v.normalized() * CAMDIST + Vector((0.0, 0.0, -1.0))
+    c = subj + v.normalized() * CAMDIST + Vector((0.0, 0.0, 1.3))
     return C.CamPath(c, subj, G_FIRST, G_LAST, push=0.07, slide_px=55.0, rise_px=15.0, arc_deg_s=3.0, tilt0=0.0, decay=0.2,
                      snaps=[dict(g=(G_CATCH - 1, G_CATCH + 12), k=1.5, peak=1.7, shift=(0.0, -0.3), tilt=0.0)])
 
@@ -70,6 +70,8 @@ class Take(C.Take):
             S.set_stage(1, frame=f)
             S.spark(frame=f, t0=G_HITS[0], period=9, strength=1.5)
             S.rivet_toss(k if G_TOSS[0] <= g <= G_TOSS[1] else None, frame=f)
+            if CO.STATE.get('rivet') is not None:
+                CO.STATE['rivet'].scale = (3.2, 3.2, 3.2)       # the toss rivet must read at phone size (>= 10 px)
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)

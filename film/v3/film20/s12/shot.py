@@ -22,16 +22,16 @@ G_STEEL = C.cap_g("เหล็ก 18,000")                   # the strongest wo
 LIGHT, PRESET = "DAY", "site_girders"
 PPD = 256
 
-CAM0 = (-76.0, -36.6, 1.0)                         # metres: south of the stack (stack face y ~ -31.8), 1 m high
-SUBJ = (-66.5, -31.5, 1.7)                         # a point on the pile face the camera pushes toward
-WALK_Y = -33.6                                     # the carriers walk along the stack, 2 m from the pile face, 3 m from the lens
-CARRY_X0, CARRY_X1 = -73.0, -57.0                  # metres, walking +x (screen-right) ... over the whole range
+CAM0 = (-71.6, -39.6, 1.0)                         # metres: south of the stack (stack face y ~ -31.8), 1 m high
+SUBJ = (-72.0, -31.8, 1.45)                         # a point on the pile face the camera pushes toward
+WALK_Y = -34.2                                     # the carriers walk along the stack, 2 m from the pile face, 3 m from the lens
+CARRY_X0, CARRY_X1 = -70.0, -67.9                  # metres, walking +x (screen-right) ... over the whole range
 
 
 def cam_path():
-    return C.CamPath(CO.W(CAM0), CO.W(SUBJ), G_FIRST, G_LAST, push=0.06, slide_px=60.0, rise_px=20.0, arc_deg_s=1.5,
-                     tilt0=3.0, tilt_deg_s=0.0, decay=0.2,
-                     snaps=[dict(g=(G_STEEL - 2, G_STEEL + 14), k=1.35, peak=1.7, shift=(0.0, 0.0), tilt=1.5)])
+    return C.CamPath(CO.W(CAM0), CO.W(SUBJ), G_FIRST, G_LAST, push=0.03, slide_px=100.0, rise_px=-12.0, arc_deg_s=0.0,
+                     tilt0=-3.0, tilt_deg_s=0.0, decay=0.2,
+                     snaps=[dict(g=(G_STEEL - 2, G_STEEL + 14), k=1.18, peak=1.7, shift=(0.0, 0.0), tilt=1.5)])
 
 
 def walk_x(g):
@@ -62,7 +62,7 @@ class Take(C.Take):
             C.bpy.ops.mesh.primitive_cube_add(size=1.0)
             ob = C.bpy.context.active_object
             ob.scale = (sz[0] * CO.SC, sz[1] * CO.SC, sz[2] * CO.SC)
-            ob.data.materials.append(M["redlead"])
+            ob.data.materials.append(M.get("ironlt") or M["redlead"])
             parts.append((ob, dz))
         self.girder = parts
 
@@ -71,12 +71,12 @@ class Take(C.Take):
             f = bf(g)
             self.key_cam(f, *self.path.at(g))
             xa = walk_x(g)
-            for who, dx in (("a", 0.0), ("b", -2.5)):
+            for who, dx in (("a", 0.0), ("b", -2.6)):
                 m = CO.W((xa + dx, WALK_Y, 0.0))
                 z = C.ground_z(m[0], m[1]) if False else 0.0
                 C.place(self.actors[who], f, (m[0], m[1], z))
             # carried girder: ride on the shoulders (z ~ 1.45 m), centred between the two men, long axis +x
-            cx = CO.W((xa - 1.25, WALK_Y + 0.02, 1.52))
+            cx = CO.W((xa - 1.3, WALK_Y + 0.12, 1.42))
             for ob, dz in self.girder:
                 ob.location = (cx[0], cx[1], cx[2] + dz * CO.SC * 0 + (dz - 0.14) * CO.SC)
                 ob.keyframe_insert("location", frame=f)

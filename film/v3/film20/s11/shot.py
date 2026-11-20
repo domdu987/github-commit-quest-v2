@@ -30,8 +30,8 @@ PPD = 256
 
 # ---- staging (metres, site20 marks); cards at ground z 0
 M_ = CO.W
-LADY, GENT, CHILD = (-14.4, -101.1), (-12.6, -101.3), (-11.1, -101.2)      # outside the fence, y -103
-EIF = (-4.6, -98.7)                                                      # inside, 7 m behind them
+LADY, GENT, CHILD = (-12.4, -101.1), (-11.0, -101.3), (-9.8, -101.2)      # outside the fence, y -103
+EIF = (-7.4, -100.4)                                                      # inside, 7 m behind them
 
 
 def mk(xy, A):
@@ -39,16 +39,16 @@ def mk(xy, A):
 
 
 # camera A: eye level, outside the fence at the left, pulling back; B: tight on Eiffel
-CAM_A0 = (-18.0, -105.0, 1.0)          # metres, start
-SUBJ_A = (-9.6, -100.2, 1.45)           # between the group and Eiffel
-CAM_B0 = (-6.9, -101.6, 0.95)
-SUBJ_B = (-4.6, -98.7, 1.6)
+CAM_A0 = (-16.2, -106.0, 1.0)          # metres, start
+SUBJ_A = (-9.8, -100.4, 1.45)           # between the group and Eiffel
+CAM_B0 = (-8.6, -103.6, 0.95)
+SUBJ_B = (-7.4, -100.4, 1.6)
 
 
 def cam_a():
-    return C.CamPath(CO.W(CAM_A0), CO.W(SUBJ_A), G_FIRST, G_PUNCH - 1, push=-0.10, slide_px=140.0, rise_px=45.0, arc_deg_s=-2.0,
+    return C.CamPath(CO.W(CAM_A0), CO.W(SUBJ_A), G_FIRST, G_PUNCH - 1, push=-0.10, slide_px=100.0, rise_px=45.0, arc_deg_s=-2.0,
                      tilt0=0.0, tilt_deg_s=0.0, decay=0.25,
-                     snaps=[dict(g=(G_CALL - 2, G_CALL + 14), k=1.4, peak=1.7, shift=(0.9, 0.0), tilt=1.5)])
+                     snaps=[dict(g=(G_CALL - 2, G_CALL + 14), k=1.4, peak=1.7, shift=(0.0, 0.0), tilt=1.5)])
 
 
 def cam_b():
@@ -62,7 +62,7 @@ def cam_at(g, pa, pb):
         k = 1 if g == G_SHAKE[0] else -1
         d = Vector((0.0, 0.0, 0.05 * k))
         loc, look = loc + d, look + d * 0.3
-    j = Vector((0.05 * math.sin(g * 1.9), 0.05 * math.cos(g * 1.3), 0.035 * math.sin(g * 2.3 + 1.0)))   # hand-held energy
+    j = Vector((0.09 * math.sin(g * 1.9), 0.09 * math.cos(g * 1.3), 0.06 * math.sin(g * 2.3 + 1.0)))   # hand-held energy
     return loc + j, look + j * 0.4
 
 

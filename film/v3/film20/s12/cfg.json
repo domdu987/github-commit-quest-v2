@@ -1,0 +1,72 @@
+{
+ "take": "s12",
+ "shots": [
+  12
+ ],
+ "g0": 822,
+ "g1": 907,
+ "h_in": 4,
+ "h_out": 4,
+ "shot_ranges": {
+  "12": [
+   822,
+   906
+  ]
+ },
+ "speed_g0": null,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 907
+ },
+ "cuts": [
+  822,
+  907
+ ],
+ "set": "v3/set3d20 SITE preset site_girders, light DAY, stage 1 (set_stage keyed every frame), crane_swing(k) keyed 0->1 over the take (derrick girder swings up). Runtime: preset FG mesh hidden; a camera-parented-free scene otherwise untouched.",
+ "cast": "cast20 riveter_tongs + riveter_hammer carrying a girder (runtime 3-box I-girder, ironlt) on their shoulders along the stack (cast20.cycle walk, arms raised to the shoulder); walk 0.65 m/s.",
+ "camera": "custom 22 mm at 1.0 m, 5 m south of the 3 m high red-lead stack (walkers 4.4 m from the lens): slide 100 px/s + push 3 %/s + small snap x1.18 on 'เหล็ก 18,000' (g854..870).",
+ "events": {
+  "word_steel": 856,
+  "snap": [
+   854,
+   870
+  ]
+ },
+ "cues": [
+  [
+   818,
+   910,
+   "ambience",
+   "Iron yard: clanging girders, chains and a derrick winch, distant hammering"
+  ],
+  [
+   822,
+   907,
+   "foley",
+   "two men walking in step with a girder on their shoulders: boots on gravel, iron creak"
+  ],
+  [
+   854,
+   870,
+   "accent",
+   "snap push on 'เหล็ก 18,000': iron clang + whoosh"
+  ],
+  [
+   822,
+   907,
+   "foley",
+   "derrick winch with a hanging girder swinging up (chain rattle)"
+  ],
+  [
+   907,
+   907,
+   "cut",
+   "hard cut to shot 13 (rivet deck)"
+  ]
+ ]
+}

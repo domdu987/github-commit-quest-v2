@@ -1,0 +1,102 @@
+{
+ "take": "s13",
+ "shots": [
+  13
+ ],
+ "g0": 907,
+ "g1": 945,
+ "h_in": 4,
+ "h_out": 4,
+ "shot_ranges": {
+  "13": [
+   907,
+   944
+  ]
+ },
+ "speed_g0": null,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 945
+ },
+ "cuts": [
+  907,
+  945
+ ],
+ "set": "v3/set3d20 SITE preset site_rivet, light DAY, stage 1; hooks keyed every frame: spark(t0=913, period 9, strength 1.5), rivet_toss(k) g911..921 (runtime scale x3.2 so it reads), set_stage(1). Camera lifted 1.3 D over the deck rail.",
+ "cast": "cast20 riveter_tongs (riveter_tongs_work -> _throw, glow flicker, empty tongs after the toss), riveter_hammer at the catch mark (arms low; cheer after the catch), riveter_forge hammering (rivet_hammer swings every 9 frames). Deviation: the bucket is the set's bucket beside the thrower; the catcher does not hold it.",
+ "camera": "custom 22 mm close-medium (5.8 m), push 7 %/s + slide 55 px/s + rise, snap x1.5 on the catch (g920..933).",
+ "events": {
+  "toss": [
+   911,
+   921
+  ],
+  "catch": 921,
+  "hammer_hits": [
+   913,
+   922,
+   931,
+   940
+  ]
+ },
+ "cues": [
+  [
+   903,
+   948,
+   "ambience",
+   "Rivet deck: forge roar, hammering, wind at height"
+  ],
+  [
+   911,
+   921,
+   "foley",
+   "tongs release: the glowing rivet flies with a hissing whistle"
+  ],
+  [
+   921,
+   923,
+   "accent",
+   "rivet lands in the bucket: sizzle + metallic clank"
+  ],
+  [
+   913,
+   913,
+   "foley",
+   "hammer blow + sparks"
+  ],
+  [
+   922,
+   922,
+   "foley",
+   "hammer blow + sparks"
+  ],
+  [
+   931,
+   931,
+   "foley",
+   "hammer blow + sparks"
+  ],
+  [
+   940,
+   940,
+   "foley",
+   "hammer blow + sparks"
+  ],
+  [
+   920,
+   933,
+   "accent",
+   "snap push on the catch: whoosh"
+  ],
+  [
+   945,
+   945,
+   "cut",
+   "hard cut to shot 14 (tower rise)"
+  ]
+ ]
+}
