@@ -1,0 +1,16 @@
+# QA-tech s12 (shots 29-30, g1689-1874) — FAIL
+Checked at 6 fps + every frame g1786-1792. Auto: median 4.42 / p90 13.89, qa_auto PASS. Cut is really at g1789 (frame diff 39 between 1788 and 1789; qa_auto's "no change at 1789" note is a false alarm). No frozen/black/magenta frames, no blur, all heads y < 880.
+
+Team claims verified: shot 29 beard dissolve — TRUE (grey goatee g1689-1729, fading g1734-1744, clean by g1749; same card in Bertillon's raised hand throughout; unchanged). Shot 30 "gendarmes bring thieves, cards found one after another, drawers open, cards pop up" — only partly true (see 3-6).
+
+1. g1689-1724 (shot 29): large dark slab/box fills the bottom-right foreground (~15 % of frame, slides out by ~g1744). Reads as an unexplained occluder, not set dressing. Fix: remove/move the box or lower the camera path so nothing crosses the lower third.
+2. g1689-1784: the beat's key prop is small. Card is ~40 px wide, tilted, at the edge of Bertillon's raised hand, on the far side of his head; at phone size the "same card" read is weak. Dupont is tiny behind a desk, cut off at the waist, left of Bertillon (plan: "behind him"). Fix: push in on Bertillon+Dupont or enlarge card and keep Dupont's face unoccluded for the dissolve.
+3. g1789-1809 (shot 30 open): no visible gendarme-brings-thief action. Group of ~7 stands as one clump at the far end of the aisle, tiny, barely walking; reads static. Fix: stagger entries, show gendarmes physically leading thieves in from the foreground and a clear hand-off.
+4. g1794-1874: "cards found one after another" is not what is shown. Giant cream cards (blue square, no mugshot/photo) appear from nowhere in the camera foreground, grow into a dense wall, then cover the whole lower half and carpet by g1859-1874. They are far larger than the characters (scale wrong), float/tumble in the air, and do not come out of drawers. Only 2-3 static drawers stick out of the cabinets; no drawer opens during the shot. Fix: spawn cards at drawer mouths along the aisle walls at true size, popping out in sequence far-to-near; cap the pile so the aisle stays visible.
+5. g1829-1874: cards bury the gendarmes/thieves (the story subject) and the set; final frames are a card pile with faces peeking out. Fix: limit coverage to ~30 % and keep characters unobstructed.
+6. Card continuity: shot 29 card is a portrait/mugshot card (photos + yellow strip); shot 30 cards are plain cream with a blue square. Fix: reuse the same card texture.
+7. g1789-1814 (note, not blocking alone): thieves/gendarmes have open-mouth shouting faces while the narration is a statement (no quote). Static expression, not lip movement, but unmotivated; switch to neutral/sheepish expressions. Dupont's face in shot 29 stays closed-mouth: OK.
+8. g1789 cut: instant hard cut from records_low to the aisle at much wider scale; works as a planned cut, but ensure the narration "ปีต่อมา" lands at 59.62 (g1789 = 59.62+0.1 would be g1792; cut is ~3 frames early, within tolerance but note).
+9. g1789-1792: per-frame diff 7.8-8.2 after the cut vs. ~2.5 in shot 29: camera starts fast (crane at much more than 8 %/s?) then settles; check for an ease-in/jerk at the shot head.
+
+Fix list priority: 4, 5, 3 (shot 30 re-render), then 1, 2, 6.
