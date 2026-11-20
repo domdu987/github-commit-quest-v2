@@ -52,3 +52,42 @@ Frames: /tmp/claude-0/-home-user-github-commit-quest-v2/a108c86f-deb9-528c-85fa-
 ## Polish notes (not blocking)
 - At f 76-84 (just before the snap) the disc fades in as a hard, flat white circle with almost no halo, and because it is 12 D from the lens it sits IN FRONT of the yard and shrouds. For those few frames it looks like a paper moon stuck on the rigging. Fade the halo in first (halo fade leads the disc by about 6 f), or hold the disc at 0 until the snap peak, so the sun first appears already blooming.
 - A long diagonal sail shadow remains on the lower-left deck at the end. It matches the opening of s16, so continuity holds, but a shorter shadow would support "overhead" a little better.
+
+---
+## Round 10 (director QA-art): PASS, 7.3
+
+Take: take.mkv.partaa+partab -> /tmp/s15a10.mkv (203 f, first_g 1086). Frames at 3 fps plus key beats (idx 73-83 bloom, 86, 96, 104, 122-140 sun/mast, 146-182 glance, 190, 202), full size and 360x640.
+Frames and sheets: /tmp/qa19_r10art/s15/ (sheet.jpg, bloom.jpg, sunmast.jpg, glance.jpg).
+Measured on the extracted frames: sat 0.516, mean luma 121 (team figure 113.6).
+
+| Criterion | R2 | R10 |
+|---|---|---|
+| Set density / ornament | 8 | 8 |
+| Lighting & colour | 8 | 7 |
+| Composition / phone legibility | 7 | 8 |
+| Acting | 6 | 6 |
+| Key moment (sun overhead + watch on home time) | 7 | 8 |
+| Match to refs / client taste | 7 | 7 |
+| **Overall** | **7.0** | **7.3** |
+
+## Does the mechanism read? Yes, better than any earlier round.
+- idx 86-104: the noon sun sits at x~560, right above the quadrant William aims, and the sail shadow has left the deck. Reading "sun overhead, they measure it" is immediate at phone size.
+- idx 132-202: the sun is at top centre and the big white pocket watch is in the lower half of the same frame. f190 shows sun and watch in one picture, which is the whole mechanism (noon here, but the watch says 8 o'clock home time). The captain's "O" mouth against William's smug smile sells the reveal.
+
+## Sun: is it a sun or a sticker? It reads as a sun.
+- The halo blooms first (idx 75-79) with a soft radial falloff and no square edge or hard rim. The disc then firms up inside the glow. The R2 note about a paper moon is fixed.
+- It is steady from the bloom to the last frame, with no blink (the R9 tech failure at g1207-1229 is not visible: idx 121-143 are continuous).
+- Because it is image-space, the disc washes over the mast and topmast stays (sunmast.jpg, idx 122-140), and the spars show faintly through it. This reads as lens glare and not as a sticker, because the glow also lifts the sail and the mast edge around it. NOTE only.
+
+## Glance: does not read (NOTE, not blocking)
+- The eyes are open through idx 146-182, which fixes the R9 problem. The glance up and back at g1238-1262 is only a few-pixel pupil shift under the same half-lidded lids. At 360x640 I cannot see it at all, so William reads as smugly holding the watch to camera. The beat still works, because the sun and the watch share the frame and the viewer's eye makes the connection.
+- To land it: tilt the head (pitch about -0.3, roll 8) for 6-8 frames as he glances, raise his brows, and put the pupils at the very top of the eye whites. Do not rely on the gaze value alone.
+
+## Anything worse than R9? No.
+- The sail shadows clear by idx ~88, before the snap ends at idx 96. The captain's hat has about 45 px of air from the left edge at idx 96-110, and nobody is cut by a frame edge.
+- Grounding: contact shadows under every pair of feet on all tiles. Nothing floats.
+- Colour: sat passes §G (>= 0.47) and §I (>= 0.50) narrowly. Mean luma 113-121 is above the §G band of 85-110, because the sail and the glare are large and bright. QA-tech/auto own that number. If it gates, pull the sail exposure down by about 0.2 EV after the snap. Do not darken the sun.
+
+## Polish (not blocking)
+1. The glance described above.
+2. William and the captain still face the lens squinting during the measurement (idx 86-110). That is acceptable at this size.
