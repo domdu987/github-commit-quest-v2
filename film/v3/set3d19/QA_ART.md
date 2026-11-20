@@ -109,7 +109,7 @@ I judged W04/W06/W10, S02-S07 and all 18 ship tiles at full size, with crops, pl
 **Sail shading.** At NOON/DAY the sails are slightly flat but readable, with rigging shadows and a soft gradient. **New blocker:** `_sail_self_cream` mixes 85 % emission at a constant level, so in STORM_DUSK the sails stay at luma 190-214 while the deck drops to 63. They glow in the storm.
 
 ### WORKSHOP: FIX-FIRST
-1. **BLOCKING, slivers on W06 and W10.** The cause is in `h19_kit.gear()`: the rim chord is sized at the centre radius r, so the outer corners open on thick rims. Fix: `seg = 2*(r+rim/2)*tan(pi/n)*1.05`, or use n ≥ 24 on the wall gears. Re-render W06 and W10.
+1. **BLOCKING, slivers on W06 and W10.** The cause is in `h19_kit.gear()`: the rim chord is sized at the centre radius r, so the outer corners open on thick rims. Fix: `seg = 2*(r+rim/2)*tan(pi/n)*1.05`, or use n ≥ 24 on the wall gears.
 
 ### HALL: PASS (unchanged)
 
@@ -128,3 +128,45 @@ I judged W04/W06/W10, S02-S07 and all 18 ship tiles at full size, with crops, pl
 
 ### Overall: FIX-FIRST
 HALL proceeds. Render teams may also start on ship_aerial and ship_coast, and on ship_deck and ship_rail at NOON/DAY.
+
+## SET gate round 4
+I judged every re-rendered tile at full size, with crops of the gears.
+
+| # | Blocker | Status |
+|---|---|---|
+| 1 | Gear slivers W06/W10 | **OPEN.** The new chord (h19_kit.py:166) is in the render, but nothing changed. Black wedges sit at every tooth root. W10 has 1576 px under luma 25, and W06 has 8387 px on both front wheels. W04 is clean. |
+| 2 | Storm sails glow | **FIXED.** Deck/rail sails are luma 107-110 against a deck at 42 and show rigging shadows. Hero sails are 144 against a sky at 99 and read tan. |
+| 3 | Rocks lantern | **FIXED.** The glass glows (luma 199), and a warm pool lands at the captain's feet. |
+| r3 | Hero cyan guide | **FIXED.** No cyan in the hero tiles or S01/S06. |
+| r3 | Rocks sail | **NOTE.** It is periwinkle #6576c7 in STORM (x 0-95). |
+
+### WORKSHOP: FIX-FIRST
+1. **BLOCKING, W06/W10 wedges.** Check those meshes for flipped normals or interior faces. Failing that, put a solid ring of the gear material behind each rim (r-rim/2 to r+rim/2+0.5·tooth, offset +0.3·th) so any gap shows wood.
+
+### HALL: PASS (unchanged)
+
+### SHIP: PASS
+- Use ship_rocks only at STORM_DUSK. The 450 W pool turns the NOON/DAY deck and bulwark orange (#d05908).
+- The lantern bars render brass (#805e40), not iron. The glass is lemon (hue 50), and the hanging line glows.
+
+### NOTEs for render teams (rounds 2-4)
+- Ship:
+  - Keep characters off the rail bulwark (#3b2723).
+  - S05 has a yellow gunport slot at x 395-440, y 920-1090.
+  - The aerial STORM wake reads as rays, and a gull sits on the bowsprit.
+  - The coast sails are grey, and a brown disc floats on the coast sea.
+  - The rocks fog is a flat band, and the hero bow wave is a sled.
+  - Foam dots float on rail.
+- Hall:
+  - Offset Harrison from the King.
+  - The window muntins fan.
+  - EVENING hall_window has a warm shaft.
+  - hall_wide has corner medallion arcs.
+- Shop:
+  - H1 half-hides William in shop_wide.
+  - shop_bench DAY is hazy.
+  - shop_clock DAY has hot patches at y 990-1150.
+  - NIGHT has no moon patch.
+
+### Overall: FIX-FIRST (WORKSHOP only)
+HALL and SHIP teams may start. The WORKSHOP needs only the W06/W10 wedge fix.

@@ -159,12 +159,24 @@ def mesh_from(name, mat_, verts, faces, parent=None, shadow=True, smooth=False, 
     return ob
 
 # ------------------------------------------------------------------ props shared by all locations
+def ring(mb, m, ri, ro, th, seg=48):
+    """closed annulus in the XZ plane (axis y), thickness th: front/back faces, outer and inner walls, outward normals"""
+    bm = mb._b(m); T = mb.T; V = []
+    for i in range(seg):
+        a = 2 * math.pi * i / seg; c_, s_ = math.cos(a), math.sin(a)
+        V.append([bm.verts.new(T @ Vector((rr * c_, yy, rr * s_))) for rr, yy in ((ro, -th / 2), (ri, -th / 2), (ri, th / 2), (ro, th / 2))])
+    for i in range(seg):
+        A, B = V[i], V[(i + 1) % seg]
+        for k in range(4):
+            k2 = (k + 1) % 4
+            try: bm.faces.new((A[k], B[k], B[k2], A[k2]))
+            except ValueError: pass
+    bmesh.ops.recalc_face_normals(bm, faces=[f for f in bm.faces if all(v in sum(V, []) for v in f.verts)])
+
 def gear(mb, m, c, r, nt=12, th=0.04, rim=0.03, spokes=4, tooth=0.035, rot=(0, 0, 0), hub=0.05, n=16, hubm=None):
     """gear wheel from boxes: rim ring, teeth, spokes, hub. Built in the XZ plane (axis y); rot orients it. Teeth sit just OUTSIDE the rim (no coplanar faces)"""
     mb.push(Matrix.Translation(c) @ Euler(rot).to_matrix().to_4x4())
-    for i in range(n):
-        a = 2 * math.pi * (i + .5) / n; seg = 2 * (r + rim / 2) * math.tan(math.pi / n) * 1.08   # director r3: size at the OUTER radius so thick rims close
-        mb.box(m, (r * math.cos(a), 0, r * math.sin(a)), (seg, th, rim), ry=-(a + math.pi / 2))
+    ring(mb, m, r - rim / 2, r + rim / 2, th, max(32, 3 * n))   # director r4: one closed annulus instead of box segments (box joints showed black wedges)
     for i in range(nt):
         a = 2 * math.pi * i / nt; rr_ = r + tooth * .45 + rim / 2
         mb.box(m, (rr_ * math.cos(a), 0, rr_ * math.sin(a)), (tooth, th * 0.96, tooth * 1.1), ry=-a)
