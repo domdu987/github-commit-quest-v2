@@ -1,0 +1,68 @@
+{
+ "take": "s25",
+ "fps": 30,
+ "note": "t = film seconds (g / 30); narration film20/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "kind": "ambience",
+   "t": 60.333,
+   "dur": 3.533,
+   "frame": 1810,
+   "end_frame": 1916,
+   "note": "first-floor restaurant of the finished tower, day 1889: room murmur, cutlery and plates, a faint string trio, wind through the open lattice"
+  },
+  {
+   "kind": "foley",
+   "t": 61.067,
+   "dur": 0.167,
+   "frame": 1832,
+   "end_frame": 1837,
+   "note": "fork lifted to his mouth: small cutlery clink on the plate, blissful nasal hum without words (mouth stays still)",
+   "peak_frame": 1834
+  },
+  {
+   "kind": "foley",
+   "t": 63.6,
+   "dur": 0.167,
+   "frame": 1908,
+   "end_frame": 1913,
+   "note": "fork lifted to his mouth: small cutlery clink on the plate, blissful nasal hum without words (mouth stays still)",
+   "peak_frame": 1910
+  },
+  {
+   "kind": "foley",
+   "t": 62.333,
+   "dur": 0.533,
+   "frame": 1870,
+   "end_frame": 1886,
+   "note": "wine glass raised and set down: a light crystal 'tink' and a soft swallow",
+   "peak_frame": 1876
+  },
+  {
+   "kind": "foley",
+   "t": 61.2,
+   "dur": 0.733,
+   "frame": 1836,
+   "end_frame": 1858,
+   "note": "napkin rustle, chair creak as he sways happily",
+   "peak_frame": 1844
+  },
+  {
+   "kind": "accent",
+   "t": 61.2,
+   "dur": 0.5,
+   "frame": 1836,
+   "end_frame": 1851,
+   "note": "snap push on 'แทบทุกวัน': short airy whoosh rising with a pleased 'tada' on the lyrical word",
+   "peak_frame": 1842
+  },
+  {
+   "kind": "cut",
+   "t": 63.733,
+   "dur": 0.0,
+   "frame": 1912,
+   "end_frame": 1912,
+   "note": "hard cut to shot 26 (RESTO resto_view, over his shoulder out of the window): same room tone"
+  }
+ ]
+}
