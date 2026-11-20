@@ -6,9 +6,9 @@
   {
    "kind": "ambience",
    "t": 57.467,
-   "dur": 4.4,
+   "dur": 4.5,
    "frame": 1724,
-   "end_frame": 1856,
+   "end_frame": 1859,
    "note": "high above Paris, day 1889: wind, a far fairground band and crowd murmur that thins out as the camera climbs, then the warm restaurant murmur, cutlery and a faint string trio when it lands at the window"
   },
   {
@@ -57,12 +57,12 @@
    "peak_frame": 1837
   },
   {
-   "kind": "cut",
-   "t": 61.733,
-   "dur": 0.0,
-   "frame": 1852,
-   "end_frame": 1852,
-   "note": "hard cut to shot 25 (RESTO resto_table, eating from inside): the outdoor wind drops to the room tone"
+   "kind": "dissolve",
+   "t": 61.633,
+   "dur": 0.3,
+   "frame": 1849,
+   "end_frame": 1858,
+   "note": "9-frame match-dissolve into shot 25 (inside, same table, same bite cycle): the outdoor wind fades to the room tone"
   }
  ]
 }
