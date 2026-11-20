@@ -37,7 +37,7 @@ CAM_KEYS = [   # (t, loc, look)
 CU = 103.2
 def _coach_cam():
     cs = B2.stand_pos(7, CU, 0.5); c0 = B2.stand_pos(3, CU + 1.2, 0.0)
-    return (c0[0], c0[1], c0[2] + 1.9), (cs[0], cs[1], cs[2] + 0.95)
+    return (c0[0], c0[1], c0[2] + 1.4), (cs[0], cs[1], cs[2] + 0.55)
 def cam_at(t):
     ks = [(a, b) for a, b, c in CAM_KEYS]; kl = [(a, c) for a, b, c in CAM_KEYS]
     if t <= 59.4: return tuple(spline(ks, t)), tuple(spline(kl, t)), 22.0
@@ -151,8 +151,8 @@ def build_coach_cluster(cam_loc):
     B2.hide_3d_crowd((cs[0], cs[1], cs[2]), 22.0, (-7.0, 9.5)); B2.hide_rails((cs[0], cs[1], cs[2]), 26.0)
     SHB.rim(True, side='left', color=(255, 226, 180), width=0.045, k=0.6, tint=(0.9, 0.92, 1.0), cool=0.4)
     crowd = ['crowd1', 'crowd2', 'crowd3', 'crowd4', 'crowd5', 'crowd6']; poses = ['sit_cheer', 'sit_laugh', 'sit_cheer', 'sit_point', 'sit_gape', 'sit_cheer']; k = 0
-    for row in range(20, 2, -1):
-        for du in range(-11, 12):
+    for row in range(25, 2, -1):
+        for du in range(-14, 15):
             u = CU + du * 0.62 + (0.31 if row % 2 else 0.0) + rr.uniform(-0.12, 0.12)
             if 3 <= row <= 6 and abs(u - (CU + 0.75)) < 0.8: continue
             if row in (7, 8) and abs(u - CU) < 0.9: continue
