@@ -43,10 +43,10 @@ H_OUT = 9                                      # out-handle g 57..65 (WORKER19: 
 G_LAST = G1 + H_OUT - 1                        # 65
 GS = list(range(G0, G_LAST + 1))
 G_CLOCK = C.cap_g("บอกว่านาฬิกา")               # 37: "says that a clock" -> the snap
-SNAP = (G_CLOCK - 1, G_CLOCK + 12)             # 36..49 (13 frames, the bible minimum: lands as the word นาฬิกา is spoken, ~g 44)
+SNAP = (G_CLOCK - 2, G_CLOCK + 16)             # 36..49 (13 frames, the bible minimum: lands as the word นาฬิกา is spoken, ~g 44)
 G_RISE = (0, 11)                               # arms swing up into the presentation
 G_TADA = (G_CLOCK, G_CLOCK + 7)                # second, bigger presentation on the snap
-BLINKS = [20, 55]
+BLINKS = [20, 50]
 
 # ----------------------------------------------------------------------------- staging
 LIGHT = "DAY"
@@ -58,20 +58,20 @@ HIDE_SHAFTS = True                             # the faint window-shaft volume r
                                                # QA_ART round-2 NOTE (shop_bench DAY); hidden here, the sun patches stay
 CANVAS = None                                  # cast19.CANVAS19['harrison19'] is enough here (no clipping warnings)
 
-CAM_LOC0 = (2.00, -1.30, 2.25)                 # near the preset start (2.31, -1.11, 2.22); lower = the sawhorse plank fills the frame
+CAM_LOC0 = (1.90, -1.95, 2.25)                 # near the preset start (2.31, -1.11, 2.22); lower = the sawhorse plank fills the frame
 CAM_LOOK0 = (2.70, 3.2, 2.05)                  # subject point at HARRISON's depth, between him and the H1: the arc keeps him put
                                                # while the nearer H1 swings across (parallax); the push keeps both in frame
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G0, G_LAST, push=0.08, slide_px=30.0, rise_px=35.0, arc_deg_s=9.0, decay=0.1,
-                snaps=[dict(g=SNAP, k=1.35, peak=1.9, shift=(0.12, -0.30))])
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G0, G_LAST, push=0.04, slide_px=-25.0, rise_px=60.0, arc_deg_s=18.0, decay=0.1,
+                snaps=[dict(g=SNAP, k=1.18, peak=3.2, shift=(-0.05, -0.75))])
 
 
 MARK_OFF = Vector((0.12, -2.9, 0.0))             # QA_ART fix: beside the H1 on the camera side (was 1.6 D behind it)
 
 # ----------------------------------------------------------------------------- pose (cast19 harrison19 default; mirrored: faces the H1 at screen-left)
 BASE = cast19.STORY19["harrison_idle"][1]
-DOWN_R, DOWN_L = (0.70, 0.85), (-0.70, 0.85)          # arms down (puppet-local, unmirrored)
-PRES_R, PRES_L = (0.92, 0.42), (-0.82, 0.30)           # presenting: both open palms out toward screen-right (screen-left mirrored)
-TADA_R, TADA_L = (1.0, 0.22), (-0.9, 0.12)           # the ta-da on the snap: higher and further out
+DOWN_R, DOWN_L = (0.70, 0.85), (-0.50, 0.75)          # arms down (puppet-local, unmirrored)
+PRES_R, PRES_L = (0.92, 0.42), (-0.55, 0.12)           # presenting: both open palms out toward screen-right (screen-left mirrored)
+TADA_R, TADA_L = (1.0, 0.22), (-0.62, -0.02)           # the ta-da on the snap: higher and further out
 
 
 def _mix(a, b, u):
@@ -115,6 +115,8 @@ class Take(C.Take):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s01")
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
         self.drop_top_right_plank()
+        self.lantern = [o for o in C.bpy.data.objects if o.name.startswith(("lantern_", "lanternf_"))]
+        print("stool lantern objects hidden:", [o.name for o in self.lantern], flush=True)
         self.key_cam(bf(G0), *CAM.at(G0))
         self.scene.frame_set(bf(G0))
         self.har = self.actors["har"] = C.make_actor("har", "harrison19", os.path.join(WORK, "sprites"), canvas=CANVAS, contact=True,
@@ -141,6 +143,35 @@ class Take(C.Take):
         bmesh.ops.delete(bm, geom=list(island), context="FACES")
         bm.to_mesh(ob.data)
         bm.free()
+        # round 3: a second lit plank (shop_honey face 576, z 4.72) shows at the top right with the new framing
+        ob = C.bpy.data.objects["shop_honey"]
+        bm = bmesh.new()
+        bm.from_mesh(ob.data)
+        bm.faces.ensure_lookup_table()
+        island, stack = set(), [bm.faces[576]]
+        while stack:
+            f = stack.pop()
+            if f in island:
+                continue
+            island.add(f)
+            for e in f.edges:
+                stack.extend(o for o in e.link_faces if o not in island)
+        print("plank 2 island faces:", len(island), flush=True)
+        bmesh.ops.delete(bm, geom=list(island), context="FACES")
+        bm.to_mesh(ob.data)
+        bm.free()
+        # round 3: the stool lantern's iron cage is merged into shop_iron (key_vis of lanternf_iron / lantern_lampg leaves it):
+        # delete its faces (x 3.45-3.95, y 1.5-2.0, z 1.10-1.9) from the scene mesh
+        ob = C.bpy.data.objects["shop_iron"]
+        bm = bmesh.new()
+        bm.from_mesh(ob.data)
+        C.bpy.context.view_layer.update()
+        mw = ob.matrix_world.copy()
+        cage = [f for f in bm.faces if (lambda c: 3.45 < c.x < 3.95 and 1.5 < c.y < 2.0 and 1.10 < c.z < 1.9)(mw @ f.calc_center_median())]
+        print("lantern cage faces deleted:", len(cage), flush=True)
+        bmesh.ops.delete(bm, geom=cage, context="FACES")
+        bm.to_mesh(ob.data)
+        bm.free()
 
     def pose(self, gs):
         mark = Vector(self.A["marks"]["harrison_bench"]) + MARK_OFF
@@ -150,7 +181,8 @@ class Take(C.Take):
             C.place(self.har, f, mark + Vector((0, 0, bounce_z(g))))
             # the set state, keyed on EVERY frame: H1 alone, bars rocking (t = film seconds), candle flicker
             self.key_set(f, clock=CLOCK, balance=g / 30.0, candles=1.0)
-            C.key_vis(H.STATE.get("shafts", []), not HIDE_SHAFTS, f)   # QA_ART NOTE: shop_bench DAY milky haze = the window-shaft volume
+            C.key_vis(H.STATE.get("shafts", []), not HIDE_SHAFTS, f)
+            C.key_vis(self.lantern, False, f)                           # round 3: nothing in front of him below y 880   # QA_ART NOTE: shop_bench DAY milky haze = the window-shaft volume
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
@@ -163,7 +195,9 @@ class Take(C.Take):
         loc, look = CAM.at(g)
         v = look - loc
         bars = C.clock_world(CLOCK, (0.0, 0.0, 0.64))
-        return dict(g=g, cam=[round(c, 3) for c in loc], pitch=round(math.degrees(math.atan2(v.z, math.hypot(v.x, v.y))), 1),
+        pts = [H.project((x, y, z)) for x in (0.74, 3.3) for y in (2.67, 4.3) for z in (1.66, 3.71)]
+        h1box = [round(min(p[0] for p in pts)), round(min(p[1] for p in pts)), round(max(p[0] for p in pts)), round(max(p[1] for p in pts))]
+        return dict(g=g, h1_bbox_px=h1box, cam=[round(c, 3) for c in loc], pitch=round(math.degrees(math.atan2(v.z, math.hypot(v.x, v.y))), 1),
                     heads=C.head_report(self, f), h1_bars_px=H.project(tuple(bars)), dof=self.cam.data.dof.use_dof,
                     caption_shade=bool(C.bpy.data.objects.get("caption_shade")))
 
