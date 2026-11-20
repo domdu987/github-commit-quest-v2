@@ -93,7 +93,10 @@ def stage_factory(T):
             if i == 1: m = SOL2                                                   # FINAL-gate B2: moved right of the general, clear of the fg spear shafts
             pose = ["soldier_laugh_point_a", "soldier_laugh_point_b"][i % 2]
             if g < G_SOLD[i % 2]:
-                card = C.pcard(pose.replace("laugh_point", "stand"), blink=C.cast18.blink_at(g, 80, 7 * i))
+                if i == 1:      # director: this soldier is empty-handed for the whole take (no spear popping out at the pose switch): standing pose without the spear prop
+                    card = C.pcard("soldier_stand_b", prop_r=None, prop_l=None, blink=C.cast18.blink_at(g, 80, 7 * i))
+                else:
+                    card = C.pcard(pose.replace("laugh_point", "stand"), blink=C.cast18.blink_at(g, 80, 7 * i))
                 C.place(card, m[:3], cam, C.J.HEIGHT["soldier"], g, "sol%d" % i, roll_deg=0.8 * C.sway(g, i, 0.6))
             else:
                 tog = ((g - G_SOLD[i % 2]) // 5 + i) % 2

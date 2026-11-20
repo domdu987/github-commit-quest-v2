@@ -23,3 +23,7 @@ Camera = the set's planned move (jimo_shots.pose_at) plus c18.make_mod: extra pu
 - scene.cycles.transparent_max_bounces = 64 (patches()).
 - Re-rendered all 86 frames (13 s/frame), re-encoded take.mkv, qa_auto PASS.
 - Frame diff in-shot g 597..673: median 4.47 / p90 4.84 with area downscale (the director's method), 3.97 / 4.23 with bilinear 90x160: borderline on the bilinear measure.
+
+## FINAL-gate fix B2b (team 4): spear popping
+- The moved soldier's standing pose carried a full-height spear that vanished at the laugh switch (g 648). He now uses soldier_stand_b with prop_r / prop_l removed for g < 648 (the laugh pose has none), so he is empty-handed for the whole take. Re-rendered g 588-647 (the only frames that change), re-encoded take.mkv (86 frames), qa_auto PASS.
+- Checked by eye on g 640, 644, 647, 648, 650, 655 (no prop appears or disappears at the switch); I did not view each of g 640-655 individually. Frame diff in-shot: median 4.44 / p90 4.84 area downscale, 3.95 / 4.23 bilinear.
