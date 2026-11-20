@@ -130,3 +130,44 @@ Other checks:
 - Shared look PASS (modest): heads angle toward each other g173-179; captain's eyes open and brows raised from g172 (visible at phone size). Held "O" g158-171 allowed.
 - Usual checks PASS: nobody cut, faces ~20 % of frame height, heads at y ~490-530 of 1280, contact shadows, nothing floating, no props through faces, no black or frozen frames, nobody still > 1.5 s.
 Verdict: FAIL on the camera only (g176 jerk + g142-156 re-rise). All other round 12 items are fixed.
+
+## Round 14 (director QA-tech): FAIL (landing g158-182 is now clean; the camera still re-accelerates g140-152 and has surges at g115 and g129-130)
+Take re-joined -> /tmp/s02q14.mkv (152 frames); frames in /tmp/qa19_r14/f/. Same measures as rounds 12-13 (px/frame at 360 wide; bgdiff / flow / LK all OUTSIDE the character band x 12-96 %, y 22-72 %; deck = bottom strip; "char band diff" = frame-diff inside that band).
+| g | whole | bgdiff | char band diff | flow | deck | LK |
+| 112 | 15.1 | 25.3 | 18.9 | 12.6 | - | 8.7 |
+| 114 | 16.4 | 25.3 | 20.5 | 14.5 | - | 10.2 |
+| 115 | 18.4 | 25.4 | 23.7 | 20.4 | - | 14.1 |
+| 116 | 15.9 | 22.9 | 21.2 | 12.6 | - | 9.5 |
+| 123 | 12.1 | 20.1 | 13.5 | 5.4 | - | 5.2 |
+| 128 | 10.6 | 16.4 | 10.7 | 8.7 | - | 8.9 |
+| 130 | 11.7 | 17.2 | 10.1 | 12.2 | 16.3 | 14.4 |
+| 134 | 8.9 | 11.4 | 10.6 | 6.3 | 7.3 | 6.0 |
+| 140 | 7.5 | 8.9 | 10.5 | 3.5 | 10.9 | 2.9 |
+| 144 | 8.5 | 9.3 | 12.4 | 5.9 | 8.8 | 5.4 |
+| 148 | 11.0 | 9.6 | 18.8 | 9.8 | 11.1 | 10.1 |
+| 151 | 15.1 | 13.1 | 24.3 | 11.0 | 12.3 | 13.9 |
+| 152 | 15.9 | 14.2 | 24.9 | 10.4 | 12.6 | 14.5 |
+| 156 | 12.1 | 11.9 | 19.7 | 7.0 | 7.3 | 6.4 |
+| 160 | 10.2 | 11.2 | 16.5 | 5.4 | 5.2 | 6.8 |
+| 164 | 8.4 | 10.2 | 13.0 | 4.4 | 3.1 | 5.9 |
+| 168 | 7.7 | 9.8 | 12.1 | 4.0 | 2.1 | 5.3 |
+| 172 | 6.7 | 8.8 | 10.6 | 3.2 | 1.3 | 4.1 |
+| 174 | 5.7 | 7.3 | 9.7 | 2.5 | 0.9 | 3.2 |
+| 176 | 5.5 | 6.4 | 10.6 | 2.5 | 1.0 | 2.7 |
+| 178 | 4.1 | 5.1 | 7.9 | 1.8 | 0.9 | 1.9 |
+| 180 | 3.3 | 4.2 | 6.0 | 1.2 | 0.5 | 1.3 |
+| 181 | 2.6 | 3.3 | 4.6 | 0.8 | 0.5 | 0.8 |
+| 182-199 | 1.7-5.1 | 2.5-3.8 | 2.9-11.2 | 0.5-0.6 | 0.9-2.1 | 0.5-0.6 |
+Findings:
+1. GOOD, landing: from g156 the background decays monotonically 7.0 -> 5.4 (g160) -> 4.4 (g164) -> 3.2 (g172) -> 2.5 -> 2.5 -> 2.1 -> 1.8 -> 1.2 -> 0.8 -> 0.6 (g182), no step above 33 % per frame (largest 1.2 -> 0.8); no zero-then-nonzero, no overshoot (the g176 jerk of round 13 is gone). After g182 the drift is steady 0.5-0.6 (flow and LK agree), continuous and in the same direction. This part PASSES.
+2. BLOCKER, the g140-153 hump is CAMERA, not acting. The team's rigging/sail points miss it. Tracked features OUTSIDE the character box move coherently: median vector (dx, dy) = (-2.1, 3.2) at g142, (-3.6, 7.8) at g147, (-5.0, 11.4) at g150, (-5.6, 11.8) at g152, then (-2.9, 4.8) at g156; top-of-frame features (rigging, sky: 4.2 -> 16.1 px/frame over g142-152) and floor features (8.8 -> 14.8) both ramp up together. Visually (sheet g144-159) the camera tilts up/pushes while the characters grow and the horizon and sails slide in: a real second move. Flow goes 3.5 (g140) -> 11.0 (g151) -> 5.4 (g160): a 3x re-acceleration over 11 frames. The character-band diff rises in step (10.5 -> 24.9) because the characters sit in the moving frame, which is why it looks like acting; it is not the cause. The head-scratch/chart-turn contribute some of the whole-frame hump but the background numbers rise by themselves.
+3. BLOCKER, earlier surges (not monotone): one-frame spike at g115 (flow 14.5 -> 20.4 -> 12.6, LK 10.2 -> 14.1 -> 9.5, whole 18.4, the max of the take) and a second surge at g129-130 (flow 5.3 at g123-125 -> 12.2 at g130 -> 6.3 at g134, LK 5.2 -> 14.4 -> 6.0). The rise at g130 is the same size as the earlier peak, so "rise to 6.2 at g131-133 then monotone fall" does not describe the picture.
+Fix: the camera path/zoom keys in g112-153 still contain the cusp at g115, a bump at g130 and the tilt-up at g143-153; build the move as one monotone ease (e.g. 12 at g112 falling to 4.5 by g156) and re-measure with background points that include the near deck and the top frame, not only far rigging.
+Other checks (all PASS):
+- Whole-frame frame-diff (pairs g58-190): median 8.47, p90 14.22, max 18.4 (g115), min 1.8.
+- Luma 89.65 (per frame 66.5-110.0).
+- Props: quadrant and chart in hand in every sampled frame g172-199 (every 2-3), no pop.
+- Shrug: two-armed, symmetric, shoulders lifted g183-189; astronomer arms out both sides.
+- Shared look: heads angle toward each other g173-179; captain's eyes open, brows raised from g172. Held "O" g158-171 allowed.
+- Usual: nobody cut, faces ~20 % of frame height, heads y ~490-530 of 1280, contact shadows, nothing floating, no props through faces, no black or frozen frames, nobody still > 1.5 s.
+Verdict: FAIL on camera monotonicity only (g115 spike, g129-130 surge, g142-153 re-acceleration). Landing and everything else PASS.
