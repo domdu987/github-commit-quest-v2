@@ -46,10 +46,14 @@ GOTCHAS (found on film-20 s01; read before building a shot -- QA.md has the long
     between the frame top (summit) and the head row.  Keep the pitch to the card itself < 40 deg (the head line, not the aim).
   * The FG items of a preset (tower_low: lamp-post 1.2 m ahead-left, bench 2 m ahead-right; objects fg_* + the invisible
     'shade_casters') are built relative to the PRESET start camera (tower20.FG_ITEMS / _fg), MERGED into one mesh per
-    material.  If your camera starts elsewhere, move them at runtime -- and with an orbit / push, check the lens never enters
-    them: s01 first anchored them to the g-0 lens and the push + arc drove the lens THROUGH the bench at g 53-64 (a 50-level
-    frame-diff pop, frames full of dark timber).  s01 now splits the vertices by distance to the lamp spot and places each
-    prop relative to the LAST frame's lens (shot.move_set_dressing), checked with a lens-clearance + screen-x solve.
+    material, in SHADE materials (ShadeMats: blue-multiplied) under shade casters.  From a moving low camera they read as
+    black slabs / a black 'glitch bar' (QA-art take gate).  s01 (shot.move_set_dressing / build_lamp):
+      - splits the fg_* vertices by distance to the preset lamp spot; sinks the preset lamp-post; builds its own lamp-post
+        (green iron + lit lantern) whose pole lies in the plane of camera + image column, so it stands UPRIGHT in frame
+        (a true vertical at the frame edge leans ~12 deg at pitch 32), and hides it (key_vis) once it has left frame;
+      - moves the bench relative to the LAST frame's lens (anchored at g 0 the push + orbit drove the lens THROUGH it: a
+        50-level frame-diff pop) and gives it lit timber; it still sits under the shade casters, so only its end is kept in frame.
+    Always check lens clearance and screen x of every FG item over the whole path, and keep FG off faces and the tower.
   * Moving the camera ALONG the camera -> subject line (closer / farther) does not change how high the subject sits for a given
     tilt; only the camera height or a horizontal move does.
   * A PUSH must go toward the SUBJECT, not toward the preset look_at: tower_low looks at the tower axis 225 D away, so
@@ -58,8 +62,11 @@ GOTCHAS (found on film-20 s01; read before building a shot -- QA.md has the long
   * TILT vs. CAPTION BAND: every degree of tilt-up moves a near subject down ~14 px; a push toward a head ABOVE the lens raises
     the head line, which buys back tilt.  s01: head centre 585 -> 718 (g 0 -> 79) for pitch 32 -> 39.
   * FRAME-DIFF with a fixed subject: a smooth sky dominates a low-angle frame and the head band limits tilt.  Tilt + push alone
-    gave median 3.2 / p90 6.3.  ORBIT (arc) round the subject makes the far tower slide behind him: drift arc 8 deg/s + snap
-    arc 18 deg -> median 4.8 / p90 12.7 (draft).  Start the arc negative (arc0) so the tower sweeps across, not out of frame.
+    gave median 3.2 / p90 6.3.  ORBIT (arc) round the subject makes the far tower slide behind him.  A ONE-WAY sweep big
+    enough for the numbers pushed half the tower out of frame (QA-art); s01 uses a COUNTER-orbit: drift arc -9.5 deg/s, snap
+    arc +36 deg (the snap whips across, the drift brings it back): tower centred all shot, draft median 5.05 / p90 12.9.
+    A counter-orbit cancels part of the snap's speed: it needs a bigger snap arc than a one-way sweep.
+    Shortening the snap 15 -> 13 frames LOWERED p90 (fewer high pairs; p90 is roughly the 8th-highest pair of 79).
   * CARD LIMITS: keep the camera pitch to the card under ~40 deg (stage max_slant 50).  A low camera close to an actor gives
     upper_k ~1.1-1.2 (the upper body is drawn taller to keep the head round): pass a TALLER canvas than CANVAS20 when the
     camera is low and close, and watch the 'sprite clipped' warnings in the logs (Take.sprites_for prints them).

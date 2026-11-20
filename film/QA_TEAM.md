@@ -77,3 +77,47 @@ Producer review vs film 2 (sky_poker_v3) found:
    - No character cut in half by a frame edge.
    - Do not repeat one room angle more than 3 times in a row.
 4. FINAL gate: add a side-by-side contact sheet with film 2. One reviewer must answer "is it as vivid, wide and grounded as film 2?" A "no" blocks release.
+
+## H. Client decision 2026-11-20: big zoom, interesting angles, rich 3D (EVERY film, blocking)
+The client's words: "ทุกเรื่องเลยนะคือมันต้องมีฉากซูมไกลมาก เข้ามาหาตัวละครด้วย มุมกล้องให้น่าสนใจ ฉาก3d สวยละเอียด"
+
+1. **Big zoom (at least 2 per film):**
+   - One continuous camera move (not a cut) that starts EXTREME WIDE and ends on the character.
+   - The start shows the whole town, valley, stadium or city from high and far, with the character tiny (under 5 % of frame height) but findable.
+   - The end is a medium shot of the character (35-60 % of frame height).
+   - It lasts 3-6 s with ease-in/out and passes through set detail (roofs, trees, crowds, foreground props) on the way in.
+   - Use one at the opening (hook) and one at the reveal or ending. Mark them in shot_plan.md as BIGZOOM.
+2. **Interesting angles:**
+   - Each film uses at least 4 different angle types from: high/bird's-eye, low hero angle, over-the-shoulder, through a foreground frame (window, doorway, crowd, bars), top-down, side tracking, crane up/down.
+   - No more than 2 shots in a row at the same height and angle.
+   - Avoid flat, eye-level, straight-on framing as the default.
+3. **Beautiful, detailed 3D set:**
+   - Dense props and life: people, animals, smoke, flags, lights.
+   - Layered depth (foreground / mid / far), textured surfaces and warm/cool lighting contrast.
+   - No empty flat ground planes or bare backdrops.
+   - QA-art scores the set "rich and detailed?". A "no" blocks the SET gate.
+4. At the FINAL gate, list the BIGZOOM timecodes and the angle types used. A film missing them is blocked.
+
+## I. Client decision 2026-11-20: match the reference Shorts in film/ref_shorts/ (EVERY film, blocking)
+The client: "ได้ทุก ทำอะไรก็ได้ที่ออกมาเหมือนคลิปที่ผมส่งให้". Study film/ref_shorts/ (videos, sheets and README) before planning.
+
+1. **CAMERA TRAVELS INSTEAD OF CUTTING.** At most 12 hard cuts per film; the target is 4-10. Move between places and beats with continuous camera travel:
+   - follow a walking character through the set (R3 office)
+   - crane up and out from a character to reveal the whole ship or town, then swoop on (R5)
+   - push THROUGH an object (door, window, clock, porthole) into the next scene (R3, R5)
+   - ride along with a vehicle or object (R7 coaster, R1 car interior)
+   - whip-pan or match-dissolve only where travel is impossible
+
+   Build connected sets so the camera can travel between locations. Render long takes of 5-15 s.
+2. **LIGHTING TELLS THE STORY.** Every scene has a visible motivated key light:
+   - light shafts or god rays through windows (R6, R3)
+   - lamps or candles in dark rooms (R4)
+   - neon reflected on wet ground (R2)
+   - floodlights or headlights at night (R1, R7)
+
+   Also required: a rim light on characters so they pop off the background, and warm and cool in the same frame. No flat even light.
+3. **SIGNATURE COLOUR.** Each film picks 1-2 bold dominant colours, for example R6 hot pink, R5 deep storm blue, R2 neon purple/pink. Film saturation ≥ 0.50 and vivid % ≥ 45 (qa_stats2.py). No haze.
+4. **TEXT SIGNS ARE NOW ALLOWED.** This lifts the old no-text-signs rule. Use short in-world English or Thai signs and labels that tell the viewer where we are or what a thing is, like PRIZE COUNTER, STORM OIL, CAREER DEVELOPMENT ROOM. Keep them sharp and readable on a phone.
+5. **CHARACTERS ALWAYS ACT.** In every shot someone is doing something: walking, pouring, carrying, sitting cross-legged, knitting. Give them props in hand, expression changes (smile, shock, red angry face) and secondary motion. Nobody stands still for more than 1.5 s.
+6. **CLOSE-UPS AS PUNCTUATION ONLY.** A fast push into a face on a punchline is fine: about 1 s, at most 3 per film. Everything else is wide or medium inside a rich set (see §G and §H).
+7. **FINAL GATE.** Put the film's contact sheet next to two reference sheets. One reviewer answers: "Would a viewer believe this is from the same channel?" A "no" blocks release.
