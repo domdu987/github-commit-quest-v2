@@ -15,11 +15,11 @@ G0, G1 = 1683, 1742
 H_IN, H_OUT = 6, 6
 G_GLINT = C.g_of(57.64)                                           # 1732
 MOVE = dict(push=0.09, slide=8)
-CAMO = dict(loc=(-1.4, -51.5, 1.9), look_at=(0.5, -46.0, 1.2), lens=27.0)
+CAMO = dict(loc=(-1.4, -51.5, 1.9), look_at=(0.75, -46.0, 1.3), lens=27.0)
 SHAKE = (0.8, 0.6, 0.4, 2.6)
 SNAPS = []                                                         # punch removed (director gate 12): steady push only
 OX = V((0.1, -46.0, 0.0))
-SCALE_OX = 0.45
+SCALE_OX = 0.7
 SOL_D, SOL_LAT = 8.0, 2.0
 
 
@@ -101,7 +101,7 @@ def make_driver(quality):
         lights[1].location = (OX.x + 0.5, OX.y - 2.0, 1.8); lights[1].data.energy = 260.0
         fwd = (V(pose['look_at']) - V(pose['loc'])); fwd.z = 0; fwd.normalize(); rt = V((fwd.y, -fwd.x, 0))
         zf = pose['lens'] / CAMO['lens']; sp = cam + fwd * SOL_D + rt * (SOL_LAT / zf); sp.z = 0.0
-        sol.show(0, sp + rt * (0.04 * math.sin(g * 2.1)), cam, mirror=True, yaw_add=-35, squash=(1.0, 1.0 + 0.012 * math.sin(g * 1.3)))
+        sol.hide()                                              # round 14: the Yan soldier is removed entirely
         for i, (a, p, phs, f2) in enumerate(bg):
             pp = p + V((0, -2.5 * t, 0)); pph = (int(g / 2.5 + phs * 8)) % 8; mir = (i % 2 == 0); a.show(pph, pp, cam, mirror=mir, lift=0.04 * math.sin(g * 0.8 + i))
             dd = cam - pp; yw = math.atan2(dd.x, -dd.y); u2 = V((math.cos(yw), math.sin(yw), 0)); bx, by = at_b.anchors[pph].get('tail_tip', (-1.2, -2.0))

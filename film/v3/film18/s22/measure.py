@@ -16,6 +16,4 @@ for g in range(SH.G0, SH.G1):
         w=p+ur*(sg*an[0]*sc_)+V((0,0,-an[1]*sc_)); v=w2c(sc,cam,w); return v.x*720,(1-v.y)*1280
     mx,my=px(a['mouth']); hx,hy=px(a['head'])
     worst['mouth_y']=max(worst['mouth_y'],my); worst['head_x0']=min(worst['head_x0'],hx/720-0.0); worst['head_x1']=max(worst['head_x1'],hx/720)
-    sp,_,_=sol.last; cs=[w2c(sc,cam,sp+V((dx,0,dz))) for dx in (-1,1) for dz in (0,3.2)]
-    xs=[c.x for c in cs]; worst['sol_x0']=min(worst['sol_x0'],min(xs)); worst['sol_x1']=max(worst['sol_x1'],max(xs))
 print('WORST', {k:round(v,2) for k,v in worst.items()})

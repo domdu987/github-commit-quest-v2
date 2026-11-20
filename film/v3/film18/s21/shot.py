@@ -16,7 +16,7 @@ H_IN, H_OUT = 6, 6
 G_WORD = C.g_of(54.76)                                            # 1646
 G_FLARE = 1624                                                    # flames start to flare
 MOVE = dict(push=0.09, slide=6, moves=[])
-CAMO = dict(look_at=(0.0, -8.0, 1.7))                             # tilted up a little: ground <= 25 %
+CAMO = dict(look_at=(0.0, -8.0, 2.4))                             # tilted up a little: ground <= 25 %
 SHAKE = (0.9, 0.65, 0.4, 2.6)
 SNAPS = [(G_WORD - 2, 1.5, 4, 9999)]                              # ONE x1.5 snap on the word, held to the end
 SPEED = 3.8
@@ -33,6 +33,9 @@ def make_driver(quality):
         if o.type == 'LIGHT' and o.data.type == 'SUN': o.data.energy *= 0.3                      # deep night
     C.R2.dim_wall_lights(0.25)
     FIRES = [(fi, fi['E0']) for fi in C.STATE.get('fires', ()) if fi['ob'].location.y > -30.0]
+    for nm_g in ('ground2', 'campground', 'road'):
+        o_g = C.STATE['objects'].get(nm_g)
+        if o_g is not None: o_g.data.materials.clear(); o_g.data.materials.append(C.flat_mat((0.045, 0.035, 0.05), nm_g + '_dark'))
     for nm, rgb in (('water', (0.006, 0.008, 0.02)), ('banks', (0.015, 0.015, 0.03)), ('palisade', (0.03, 0.022, 0.02))):     # palisade bank also carries the salmon gate beam
         w = C.STATE['objects'].get(nm)
         if w is not None: w.data.materials.clear(); w.data.materials.append(C.flat_mat(rgb, nm + '_dark'))
@@ -97,11 +100,21 @@ def make_driver(quality):
     global OXLIST, ATOX
     OXLIST = oxen; ATOX = at_ox
     cam_obj = ob['cam']
+    fgp = []
+    for n_, kind in enumerate(('pot', 'helmet', 'pot')):
+        o_ = C.J.prop_pot((0, 0, 0), kind='jar', scale=0.4) if kind == 'pot' else C.J.prop_helmet((0, 0, 0), scale=0.45)
+        for c2 in [o_] + list(o_.children):
+            if c2.type == 'MESH': c2.data.materials.clear(); c2.data.materials.append(C.glaze_mat(((0.02, 0.01, 0.01), (0.1, 0.05, 0.03), (0.22, 0.1, 0.05), (0.5, 0.25, 0.1)), 'fg21_%d' % n_))
+        fgp.append(o_)
     stars = [C.star_obj('g21_%d' % k) for k in range(3)]
 
     def drive(g):
         pose = C.set_camera(NAME, g, move=MOVE, cam=CAMO, shake=SHAKE, snaps=SNAPS); cam = V(pose['loc'])
         t = (g - G0) / 30.0
+        C.bpy.context.view_layer.update()
+        for o_, (u_, v_) in zip(fgp, ((0.1, 0.95), (0.5, 0.97), (0.9, 0.94))):
+            q_ = C.ground_at(cam_obj, u_, v_)
+            if q_ is not None: o_.location = (q_.x, q_.y, 0.0)
         fwd = (V(pose['look_at']) - V(pose['loc'])); fwd.z = 0; fwd.normalize(); rt = V((fwd.y, -fwd.x, 0))
         ramp = C.smooth((g - G_FLARE) / 22.0)
         for fi, e0 in FIRES: fi['E0'] = e0 * (0.35 + 0.65 * C.smooth((g - 1626) / 20.0))             # gate and wall lamps come up only after the flare
