@@ -2,6 +2,8 @@
 import sys, os
 sys.path.insert(0, '/home/user/github-commit-quest-v2/film/v3/set3d17')
 import prefecture17 as P, bpy
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import t5a_override; t5a_override.apply()
 take = 'T5'
 HERE = os.path.dirname(os.path.abspath(__file__))
 def assign_for(g):
@@ -13,7 +15,7 @@ def assign_for(g):
     if g >= 1196:
         a['dupont'] = ('dupont_held', {}); a['gend_a'] = ('gendarme_escort_a', {}); a['gend_b'] = ('gendarme_escort_b', {})
     else:
-        a['gend_a'] = ('gendarme_standing_a', {}); a['gend_b'] = ('gendarme_standing_b', {})
+        a['gend_a'] = ('gendarme_standing_a', {'expr': 'smug'}); a['gend_b'] = ('gendarme_standing_b', {'expr': 'smug'})
     return a
 def setup():
     assert P.check_take(take)['hits'] == [] and P.check_face(take)['ok']
