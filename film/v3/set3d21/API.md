@@ -58,7 +58,7 @@ Other public functions: `new_scene(light, over)`, `Batch` (`box, cyl, sphere, ro
 | `K.set_flutter(t, amp=1.0)` | every banner flutters (Wave modifier phase keyed by `t` seconds; amp scales the ripple) | live banners = `K.STATE['anim']['flags']`; poles bob a few cm; 3-4 objects per banner |
 | `K.set_smoke(t, speed=0.12)` | every smoke column (camp fires, farms): puffs rise, grow and fade out in a loop (cycle = 1/speed s) | columns in `K.STATE['anim']['smoke']`; flat grey emission, no shadow |
 | `K.set_flow(t, speed=1.0)` | the water: current streaks, foam streaks and the sun glitter twinkle | the glitter uses a 4D voronoi; one call per frame |
-| `K.splash(x, y, age, size=1.0, z=0.0, name='a', seed=0)` | a spray crown on the water `age` s after the impact: scalloped crown sheet that rises and opens, central column, expanding foam ring, 40 ballistic droplets. `age < 0` or `> 1.6` removes it | calling again with the same `name` replaces it (never stacks); use one name per jumper; size 1 = a man jumping |
+| `K.splash(x, y, age, size=1.0, z=0.0, name='a', seed=0)` | a spray crown on the water `age` s after the impact: white emission-lit foam (never shaded), 15 separate tapered spikes flaring out 30-45 deg and ending in beads, 8 inner spikes, a thick central column with a bead cap, mist discs, an expanding foam ring and 80 ballistic droplets (r 0.06-0.14 m). `age < 0` or `> 1.6` removes it. Size 1 = a man jumping (crown 1.5 m at age 0.3); river_low uses size 1.8 at ages 0.15/0.3/0.45; `splash_strip.py` renders ages 0.1/0.25/0.4/0.6/0.9 | calling again with the same `name` replaces it (never stacks); use one name per jumper; size 1 = a man jumping |
 | `K.set_scale_tip(A, deg)` | Cressingham's coin scale: tips the balance beam (deg, + = right pan down) | the beam is its own object with its pivot |
 | `K.set_chest_lid(A, deg_open)` | the coin chest lid: 72 = open, 0 = slammed shut | hinge object |
 | `K.place_troops(A, where, n, kind=None, seed=0, cb=None, horses=True)` | English troops by COUNT: `'bridge'` (n mounted knights two by two on the deck, 3D riders), `'causeway'` (n foot soldiers, 3 abreast north of the bridge), `'meadow'` (n foot soldiers in ranks in the loop meadow), `'south'` (n queued on the south road) | returns `[(x, y, z, kind, scale)]`. With `cb=f` the list goes to `f(items)` so a team can place its real cast sprites at those points; without `cb` the default placeholder cards are staged (bridge: the 3D riders; `horses=False` hides them). Re-calling the same `where` replaces the set |
@@ -86,10 +86,10 @@ Camera, look-at, foreground prop, stand points with their head centre in screen 
 | `valley_loop` | valley | (-72.0, -133.0, z 229.0) -> (12.0, 36.0, 0.0) | 21 | - | - |  | 108 s render, 33 s build |
 | `valley_river` | valley | (38.0, -24.0, z = ground + 2.10) -> (105.0, 28.0, 4.0) | 22 | reeds 2.2 m, reeds 2.0 m, rock 2.4 m | `e1` (130, 762), `e2` (601, 783) | push 7 %/s + slide | 91 s render, 35 s build |
 | `camp_wide` | camp | (-78.0, -96.0, z 13.0) -> (12.0, -52.0, 2.0) | 22 | rope 1.8 m, pole 2.2 m | `k1` (203, 733), `k2` (518, 709) | slide 50 px/s + push | 82 s render, 3 s build |
-| `camp_table` | camp | (-12.0, -32.6, z = ground + 1.50) -> (-13.2, -25.0, 1.3) | 22 | barrel 1.6 m, rope 1.7 m | `cress` (360, 552) | push 8 %/s, coin chest in the middle ground | 139 s render, 3 s build |
-| `camp_bank` | camp | (-140.0, -17.3, z = ground + 2.00) -> (-43.0, 6.9, -16.6) | 30 | banner pole with its banner at the right edge, a barrel, reeds and tent pegs | `cress` (177, 589), `surrey` (640, 546), `e0` (37, 568), `e1` (110, 529), `e2` (214, 487), `e3` (601, 505), `e4` (667, 494), `e5` (709, 479) |  | 87 s render, 4 s build |
-| `riverbank` | riverbank | (-17.0, 60.0, z = ground + 1.80) -> (0.0, 30.0, 1.6) | 22 | reeds 1.6 m, reeds 2.0 m, gorse 2.4 m | `e1` (91, 679), `e2` (250, 669), `e3` (400, 661), `e4` (175, 642) | slide 40 px/s + push; water on the right for the jumps (splash()) | 73 s render, 3 s build |
-| `river_low` | riverbank | (-26.0, 46.0, z = ground + 0.55) -> (-44.0, 44.0, 0.9) | 22 | reeds 1.4 m, reeds 1.6 m, rock 1.8 m | - | quick push; splash() crowns at pr["splashes"] | 78 s render, 2 s build |
+| `camp_table` | camp | (-13.0, -30.0, z = ground + 1.30) -> (-13.0, -26.5, 1.6) | 22 | barrel 2.4 m | `cress` (360, 506) | push 8 %/s; hooks: set_scale_tip(A, deg), set_chest_lid(A, deg) | 174 s render, 3 s build |
+| `camp_bank` | camp | (-95.0, -15.0, z = ground + 2.00) -> (-2.3, 22.5, -16.5) | 26 | banner pole with its banner at the right edge, a barrel, reeds and tent pegs | `cress` (191, 585), `surrey` (640, 556), `e0` (56, 572), `e1` (335, 522), `e2` (441, 502), `e3` (541, 516), `e4` (612, 503) |  | 87 s render, 3 s build |
+| `riverbank` | riverbank | (-27.0, 54.0, z = ground + 1.80) -> (-28.0, 22.0, -3.5) | 22 | reeds 1.7 m, gorse 2.2 m | `e1` (81, 574), `e2` (215, 559), `e3` (129, 540), `e4` (42, 520) | slide 40 px/s + push; the channel is on the right: splash() points in PRESETS["riverbank"]["splashes"] | 78 s render, 3 s build |
+| `river_low` | riverbank | (-26.0, 46.0, z = ground + 0.90) -> (-44.0, 44.0, 0.9) | 22 | reeds 1.4 m, reeds 1.6 m, rock 1.8 m | - | quick push; splash() crowns at pr["splashes"] | 72 s render, 3 s build |
 
 Notes per preset:
 - `hill_over`: the Scots stand on `PAD` (a levelled ledge 44 m up) with their backs to us; the far bridge (x 235-510, y 520-570, about 280 px, knights two by two) is the hook; castle rock upper left; run path coloured on the slope for shot 22 (the lens rides down it).
@@ -115,11 +115,3 @@ Terrain tables load in 0.2 s (first run builds them in about 15 s); scene build 
 - Placeholder heads are flat cards turned to the camera at render start; if the camera moves a lot during a drift, call `stage_placeholders(A)` again or use your cast sprites (billboards).
 - No glossy anywhere; the water glitter is emission only. Do not add a world volume or fog: QA-art rejects haze.
 - 4 cores: use `threads_mode FIXED, threads 4` (the render function does).
-
-## 9. VIVID grade (QA_TEAM.md §G, client complaint 2026-11-20) — applied automatically by `K.render()`
-`grade()` ends with a fixed per-preset VIVID stage (`K.VIVID[preset] = (gamma, sat)`), fitted so the frame saturation is >= 0.47 (as `film/qa_stats.py`
-measures it) and the mean luma is about 85-110, like film 2 (0.49 / 94). It keys on `K.STATE['preset']`, which `build(preset=...)` sets.
-If you build a scene without a preset name, or blend two presets, set `K.STATE['vivid'] = (gamma, sat)` yourself (use the preset you are closest to).
-Never call `render(..., do_grade=False)` for final frames. Check your take with `python3 film/qa_stats.py take.mkv`: saturation >= 0.47, brightness 85-110.
-The bright sand presets (bridge_end_south, bridge_high, valley_river, river_low) still measure 120-150 luma on the static tile: keep the sky and the sunlit sand
-smaller in frame there (frame lower, more water and characters), or lower `STATE['vivid']` gamma toward 2.1 if a shot stays over 115.

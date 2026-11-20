@@ -634,8 +634,8 @@ def grade(path, sat=1.07, bloom=0.5, scale=None, gamma=1.28):
     im = np.clip(im, 0, 1) ** vg; mx = im.max(-1, keepdims=True); im = np.clip(mx - (mx - im) * vs, 0, 1)
     Image.fromarray((im * 255 + 0.5).astype(np.uint8)).save(path)
 VIVID = {'bridge_deck': (1.78, 1.15), 'bridge_end_north': (1.38, 1.23), 'bridge_end_south': (1.9, 1.15), 'bridge_high': (1.9, 1.15),
-         'camp_bank': (1.47, 1.27), 'camp_table': (1.35, 1.15), 'camp_wide': (1.9, 1.15), 'hill_eye': (0.8, 1.31), 'hill_low': (1.38, 1.15),
-         'hill_over': (1.48, 1.15), 'river_low': (1.9, 1.15), 'riverbank': (1.55, 1.38), 'valley_loop': (1.07, 1.53), 'valley_river': (1.9, 1.18),
+         'camp_bank': (1.52, 1.3), 'camp_table': (0.9, 1.45), 'camp_wide': (1.9, 1.15), 'hill_eye': (0.8, 1.31), 'hill_low': (1.38, 1.15),
+         'hill_over': (1.48, 1.15), 'river_low': (6.0, 1.04), 'riverbank': (1.63, 1.59), 'valley_loop': (1.07, 1.53), 'valley_river': (1.9, 1.18),
          'valley_wide': (1.11, 1.63)}
 def render(path, mode='final', samples=None, do_grade=True):
     sc = bpy.context.scene; setup_render(sc, mode, samples); sc.render.filepath = path; t = time.time(); bpy.ops.render.render(write_still=True); dt = time.time() - t
@@ -1567,7 +1567,7 @@ _mk('riverbank', loc='riverbank', cam=(-27.0, 54.0, 0.0), cam_dz=1.8, look=(-28.
     veg=dict(_VEG, half=30, reeds=[(2, 40, 90)]), drift='slide 40 px/s + push; the channel is on the right: splash() points in PRESETS["riverbank"]["splashes"]')
 PRESETS['riverbank']['splashes'] = [at_px(PRESETS['riverbank'], d, xp) + (0.0,) for d, xp in ((9.0, 520), (11.0, 640), (13.0, 380))]
 PRESETS['riverbank']['splash_size'] = 1.5; PRESETS['riverbank']['splash_ages'] = [0.2, 0.35, 0.5]
-_mk('river_low', loc='riverbank', cam=(-26.0, 46.0, 0.0), cam_dz=0.9, look=(-44.0, 44.0, 0.9), lens=22.0, sd=10.0, over=dict(_OVR, reed_k=0.4, foam_k=0.15),
+_mk('river_low', loc='riverbank', cam=(-26.0, 46.0, 0.0), cam_dz=0.9, look=(-44.0, 44.0, 0.9), lens=22.0, sd=10.0, over=dict(_OVR, reed_k=0.4, foam_k=0.15, sun_k=1.0),
     marks_spec=[], fg_list=[('reeds', 1.4, 60), ('reeds', 1.6, 670), ('rock', 1.8, 380, 0.3)], veg=dict(_VEG, half=34, reeds=[(2, 40, 160)]), splash_size=1.8, splash_ages=[0.15, 0.3, 0.45], drift='quick push; splash() crowns at pr["splashes"]')
 PRESETS['river_low']['splashes'] = [at_px(PRESETS['river_low'], d, xp) + (0.0,) for d, xp in ((9.0, 150), (10.5, 380), (9.5, 610))]
 
