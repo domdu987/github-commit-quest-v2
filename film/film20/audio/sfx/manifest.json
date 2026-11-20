@@ -1,0 +1,274 @@
+{
+ "paris_day": {
+  "name": "paris_day",
+  "prompt": "1889 Paris street ambience outdoors, distant horse carriages and hooves on cobbles, gentle crowd murmur far away, pigeons, light breeze, no clear speech, no speech, no music",
+  "asked": 20.0,
+  "duration": 20.0,
+  "peak": 0.086,
+  "onset": 0.28
+ },
+ "site_bed": {
+  "name": "site_bed",
+  "prompt": "a busy 1880s iron construction site ambience, distant hammering of rivets, metal clanks, steam winch puffing, workers far away, no clear speech, no speech, no music",
+  "asked": 20.0,
+  "duration": 20.0,
+  "peak": 0.65,
+  "onset": 0.65
+ },
+ "rivet_hammer": {
+  "name": "rivet_hammer",
+  "prompt": "three quick loud blows of a hammer on a hot iron rivet, metallic clangs, no speech, no music",
+  "asked": 1.2,
+  "duration": 1.2,
+  "peak": 1.0,
+  "onset": 0.0
+ },
+ "rivet_catch": {
+  "name": "rivet_catch",
+  "prompt": "a hot iron rivet tossed and caught with a clink in a metal bucket, no speech, no music",
+  "asked": 0.8,
+  "duration": 0.8,
+  "peak": 0.397,
+  "onset": 0.0
+ },
+ "forge_whoosh": {
+  "name": "forge_whoosh",
+  "prompt": "a blacksmith bellows pumping a coal forge, whooshing air and crackling coals, no speech, no music",
+  "asked": 2.0,
+  "duration": 2.0,
+  "peak": 0.787,
+  "onset": 0.0
+ },
+ "crane_creak": {
+  "name": "crane_creak",
+  "prompt": "an old wooden and iron crane winch creaking and ratcheting while lifting a heavy girder, chains rattling, no speech, no music",
+  "asked": 2.5,
+  "duration": 2.48,
+  "peak": 0.709,
+  "onset": 0.09
+ },
+ "girder_clank": {
+  "name": "girder_clank",
+  "prompt": "a heavy iron girder set down onto a stack with a deep metallic clank, no speech, no music",
+  "asked": 1.0,
+  "duration": 1.0,
+  "peak": 1.0,
+  "onset": 0.22
+ },
+ "cafe_bed": {
+  "name": "cafe_bed",
+  "prompt": "a cosy 1880s Paris cafe interior ambience, cups and saucers clinking, quiet murmur of patrons, no clear speech, no speech, no music",
+  "asked": 20.0,
+  "duration": 20.0,
+  "peak": 0.728,
+  "onset": 2.14
+ },
+ "newspaper_rustle": {
+  "name": "newspaper_rustle",
+  "prompt": "a newspaper being shaken and rustled angrily in hands, paper crinkle, close, no speech, no music",
+  "asked": 1.5,
+  "duration": 1.48,
+  "peak": 0.26,
+  "onset": 0.12
+ },
+ "quill_scratch": {
+  "name": "quill_scratch",
+  "prompt": "a quill pen scratching a quick signature on paper, close, no speech, no music",
+  "asked": 1.2,
+  "duration": 1.2,
+  "peak": 0.411,
+  "onset": 0.12
+ },
+ "artists_outrage": {
+  "name": "artists_outrage",
+  "prompt": "a small group of outraged gentlemen huffing and muttering indignantly, harrumphs, no clear words",
+  "asked": 2.5,
+  "duration": 2.48,
+  "peak": 0.806,
+  "onset": 0.06
+ },
+ "artists_laugh": {
+  "name": "artists_laugh",
+  "prompt": "a small group of gentlemen laughing heartily together, mocking, no words",
+  "asked": 2.5,
+  "duration": 2.48,
+  "peak": 0.988,
+  "onset": 0.0
+ },
+ "chair_scrape": {
+  "name": "chair_scrape",
+  "prompt": "a wooden bentwood chair scraping back on a tiled floor as a man stands up, no speech, no music",
+  "asked": 0.8,
+  "duration": 0.8,
+  "peak": 0.255,
+  "onset": 0.12
+ },
+ "crowd_laugh_street": {
+  "name": "crowd_laugh_street",
+  "prompt": "a few Parisian passers-by laughing and pointing outdoors, a lady giggling, no clear words",
+  "asked": 2.5,
+  "duration": 2.48,
+  "peak": 0.766,
+  "onset": 0.44
+ },
+ "whoosh_punch": {
+  "name": "whoosh_punch",
+  "prompt": "a short punchy punch-in whoosh with a tiny low thud at the end, no speech, no music",
+  "asked": 0.5,
+  "duration": 0.48,
+  "peak": 0.96,
+  "onset": 0.07
+ },
+ "whoosh_whip": {
+  "name": "whoosh_whip",
+  "prompt": "a very quick sharp camera whip-pan whoosh, air swish, no speech, no music",
+  "asked": 0.6,
+  "duration": 0.6,
+  "peak": 0.868,
+  "onset": 0.12
+ },
+ "whoosh_soft": {
+  "name": "whoosh_soft",
+  "prompt": "a soft gentle swoosh of a camera move, no speech, no music",
+  "asked": 0.8,
+  "duration": 0.8,
+  "peak": 0.448,
+  "onset": 0.4
+ },
+ "fair_crowd": {
+  "name": "fair_crowd",
+  "prompt": "a big festive world fair crowd outdoors, cheerful murmur, distant brass band hint, children, no clear speech",
+  "asked": 20.0,
+  "duration": 20.0,
+  "peak": 0.626,
+  "onset": 0.67
+ },
+ "seal_stamp": {
+  "name": "seal_stamp",
+  "prompt": "a heavy wax seal stamp pressed down onto paper with a thud, no speech, no music",
+  "asked": 0.6,
+  "duration": 0.6,
+  "peak": 0.57,
+  "onset": 0.01
+ },
+ "gulp": {
+  "name": "gulp",
+  "prompt": "a nervous comedic gulp, no speech, no music",
+  "asked": 0.6,
+  "duration": 0.6,
+  "peak": 0.979,
+  "onset": 0.0
+ },
+ "dusk_wind": {
+  "name": "dusk_wind",
+  "prompt": "evening wind blowing gently around a tall iron tower at dusk, faint creaks, very calm, distant city, no speech, no music",
+  "asked": 20.0,
+  "duration": 20.0,
+  "peak": 0.066,
+  "onset": 1.03
+ },
+ "crowbar_clank": {
+  "name": "crowbar_clank",
+  "prompt": "iron crowbars and tools clanking in a wooden wagon, no speech, no music",
+  "asked": 1.2,
+  "duration": 1.2,
+  "peak": 1.0,
+  "onset": 0.0
+ },
+ "wire_twang": {
+  "name": "wire_twang",
+  "prompt": "a long thin metal wire pulled taut with a twangy vibrating ring, no speech, no music",
+  "asked": 1.2,
+  "duration": 1.2,
+  "peak": 0.33,
+  "onset": 0.06
+ },
+ "spark_gap": {
+  "name": "spark_gap",
+  "prompt": "an early radio spark gap transmitter firing, loud sharp electric crackling zaps in a rhythm, no speech, no music",
+  "asked": 2.0,
+  "duration": 2.0,
+  "peak": 0.926,
+  "onset": 0.24
+ },
+ "morse_key": {
+  "name": "morse_key",
+  "prompt": "a telegraph morse key tapping quick dots and dashes, mechanical clicks, no speech, no music",
+  "asked": 2.0,
+  "duration": 2.0,
+  "peak": 0.238,
+  "onset": 0.07
+ },
+ "radio_hum": {
+  "name": "radio_hum",
+  "prompt": "a low electrical hum with a rising shimmering radio wave sweep, magical but subtle, no speech, no music",
+  "asked": 4.0,
+  "duration": 4.0,
+  "peak": 0.501,
+  "onset": 0.37
+ },
+ "tools_drop": {
+  "name": "tools_drop",
+  "prompt": "several iron crowbars dropped onto cobblestones, clattering, no speech, no music",
+  "asked": 1.2,
+  "duration": 1.2,
+  "peak": 0.968,
+  "onset": 0.0
+ },
+ "salute_stomp": {
+  "name": "salute_stomp",
+  "prompt": "a soldier's boot heel click and stomp to attention, no speech, no music",
+  "asked": 0.5,
+  "duration": 0.48,
+  "peak": 0.915,
+  "onset": 0.02
+ },
+ "wagon_roll": {
+  "name": "wagon_roll",
+  "prompt": "a horse-drawn wooden wagon rolling away on cobblestones, hooves and creaky wheels fading, no speech, no music",
+  "asked": 3.0,
+  "duration": 3.0,
+  "peak": 0.459,
+  "onset": 0.13
+ },
+ "resto_bed": {
+  "name": "resto_bed",
+  "prompt": "an elegant 1889 restaurant dining room ambience, silverware on porcelain, glasses, soft murmur of diners, no clear speech, no speech, no music",
+  "asked": 20.0,
+  "duration": 20.0,
+  "peak": 0.555,
+  "onset": 3.07
+ },
+ "cutlery_clink": {
+  "name": "cutlery_clink",
+  "prompt": "a fork and knife clinking on a porcelain plate, close, no speech, no music",
+  "asked": 0.8,
+  "duration": 0.8,
+  "peak": 0.802,
+  "onset": 0.25
+ },
+ "glass_toast": {
+  "name": "glass_toast",
+  "prompt": "a crystal wine glass raised with a light clink, no speech, no music",
+  "asked": 0.6,
+  "duration": 0.6,
+  "peak": 0.054,
+  "onset": 0.0
+ },
+ "happy_hum": {
+  "name": "happy_hum",
+  "prompt": "a plump man humming a contented 'mmm' of delicious food, no words",
+  "asked": 1.2,
+  "duration": 1.2,
+  "peak": 0.476,
+  "onset": 0.0
+ },
+ "hmph": {
+  "name": "hmph",
+  "prompt": "a man's short haughty 'hmph' snort, no words",
+  "asked": 0.6,
+  "duration": 0.6,
+  "peak": 0.979,
+  "onset": 0.01
+ }
+}
