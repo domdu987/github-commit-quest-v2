@@ -86,6 +86,7 @@ def widen_sea(preset, nu, nv):
     look = Vector(P["cam"]["look"])
     P["cam"] = dict(P["cam"], loc=tuple(Vector((14.0, -330.0, 255.0)) * 3.0 / S))   # metres: a virtual camera 3x as far / high as the start pose
     P["sea_nu"], P["sea_nv"] = nu, nv
+    P["foam_k"] = float(os.environ.get("FOAMK", "0.55"))                # a calmer wake: less white lace (it dominated the frame statistics)
 
 
 # ----------------------------------------------------------------------------- poses
