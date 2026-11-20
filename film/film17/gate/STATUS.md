@@ -7,7 +7,7 @@
 | s04 | 4 | **PASS** R4 (QA-tech + director look; ear tap reads; should-fix accepted: glove edge clip from g624, gentle taps) | 68d44d5 (USE THIS) | gate/s04/QA_TECH_R4.md |
 | s05 | 2 (from 5) | **PASS** R2 (QA-tech + director look; should-fix accepted: edge crop, blown chandelier g685-715, hood cloth) | e553276 (USE THIS) | gate/s05/QA_TECH_R2.md |
 | s06 | 5 | **PASS** R2 (QA-tech; should-fix accepted: glove size, weak exit, double-hand g760/772) | 6fe61b4 (USE THIS) | gate/s06/QA_TECH_R2.md |
-| s07 | 1 (from 6) | FAIL R4 (structure OK; B1 floating sleeve g1024-1046, B2 finger/boot unreadable at phone size g900-947; director confirmed) | f745e43 | gate/s07/QA_TECH_R4.md, director_check_R4.png |
+| s07 | 1 (from 6) | **PASS** R5 (QA-tech + director look; should-fix accepted: faint wall moire, empty table, slab at lower right g1034-51) | f528820 (USE THIS) | gate/s07/QA_TECH_R5.md |
 | s08 | 7 | **PASS** R3 (QA-art R2 PASS + QA-tech R3 PASS + director look) | 5866892 (USE THIS) | gate/s08/QA_TECH_R3.md, QA_ART_R2.md |
 | s09 | 8 | **PASS** R4 (QA-tech; 3 cosmetic should-fix accepted: edge touches, coat notch) | 084ef5b (USE THIS) | gate/s09/QA_TECH_R4.md |
 | s10 | 9 | **PASS** R5 (QA-tech R4 PASS + QA-art R5 PASS; R5 changed only g1406-19 and card post) | 669e44b (USE THIS) | gate/s10/QA_TECH_R4.md, QA_ART_R5.md |

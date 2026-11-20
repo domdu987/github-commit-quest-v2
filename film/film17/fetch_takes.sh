@@ -16,7 +16,7 @@ s03 render17/team3  3fcb09e
 s04 render17/team4  68d44d5  # PASS R4
 s05 render17/team2  e553276  # moved from team5 to team2
 s06 render17/team5  6fe61b4
-s07 render17/team1  TODO     # reassigned to team1, fill when approved (last 34bb2c8 = FAIL R3)
+s07 render17/team1  f528820  # PASS R5 (team1 rework; shot 16 from team6)
 s08 render17/team7  5866892
 s09 render17/team8  084ef5b
 s10 render17/team9  669e44b  # PASS R5
