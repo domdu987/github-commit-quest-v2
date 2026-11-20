@@ -121,3 +121,12 @@ How the camera got there (draft numbers):
 - The camera stays inside the room (x 4.24 at g 65; the wall is at 4.25; an arc of 20 put it outside and rendered a black void).
 - Head size / H1-visible trade-off: whole-H1 + both hands + a head over 300 px cannot share one frame, so the head ends at 290 px.
 - qa_auto PASS; no DOF, no text, no caption_shade; H1 bars rock on every frame.
+
+
+## Round 4 (QA-art round 3: 8/10 FIX-FIRST)
+1. **Hand, ponytail and head inside the frame on every frame g 0-65 (pixel-checked).** The screen-right raised hand now sits beside his cheek (arm_l targets PRES (-0.40, 0.10), TADA (-0.30, -0.05); was -0.55 / -0.62), and the framing moved screen-left (snap shift x 0.20, was -0.05; camera start x 1.70, arc 16.5 deg/s so the camera stays inside the room: max x 4.16, wall 4.25).
+   - **Pixel check** (`shot.py edgefinal`, on the FINAL frames): each frame is re-rendered at full size and final spp with his sprite card hidden and differenced against raw/g_%04d.png; the columns that differ are exactly his sprite (hand, head, ponytail, apron). **Right-most column of his sprite: 694 px at most over g 0-56 (g 44-56: 679-694; hand about x 630), 709 over the handle g 57-65.** All 66 frames are at least 10 px inside x 719 (`work/edgef_*.json`).
+   - The H1 stays whole: the left ball is fully inside (about x 40 at g 50-56, checked on the frames), the H1's left edge is at about x 28; projected bbox x0 is -14 at g 50 only because the bbox takes the bench-level corner.
+2. **Candle ring hidden for the whole take:** the wheel chandelier's four flames are hidden with key_vis every frame and its hoop / chain / candle faces (224 faces merged into shop_brass, cream, dark, iron, oak, oakd inside r 1.15 of (0.28, 1.29), z 4.1-4.95) are deleted at build. Nothing orange or black remains top-left on any frame.
+- **Numbers (final):** head 179 px at g 0 (the 180 px start slipped by 1 px with the new camera start) rising to 271 px at g 56; head y 472-616 in shot; head bottoms max y 728; frame-diff median 5.32, p90 12.79 (min 3.87, max 16.44); never parked; qa_auto PASS; no DOF, no text, no caption_shade; blink at g 20 and g 50.
+- Old frame folders (raw_r2, frames_r2, raw_r3, frames_r3, all draft_old*, st*, edge*) deleted; work/ keeps sprites, the current draft and the edge json.
