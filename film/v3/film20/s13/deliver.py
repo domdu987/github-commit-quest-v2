@@ -42,6 +42,8 @@ def post(g, png):
     img = Image.open(png).convert("RGB")
     if CFG.get("speed_g0") is not None:
         img = speed_lines(img, g, CFG["speed_g0"])
+    if CFG.get("gain"):                                   # global exposure trim (QA_TEAM §G luma band 85-110), RGB multiply
+        img = Image.fromarray(np.clip(np.asarray(img, dtype=np.float32) * CFG["gain"], 0, 255).astype(np.uint8))
     return img
 
 

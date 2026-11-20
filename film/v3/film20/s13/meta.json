@@ -63,8 +63,8 @@
  ],
  "head_bottom_max_y": 688,
  "framediff_in_shot": {
-  "median": 6.82,
-  "p90": 10.34
+  "median": 6.25,
+  "p90": 9.46
  },
  "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
 }
