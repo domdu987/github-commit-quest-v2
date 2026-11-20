@@ -20,3 +20,9 @@
 - team6 / shot 8 cafe_window: move the artist card ~0.5 D so it does not cover the window; smoke 1.0 on "ปล่องโรงงานสีดำ".
 - team9 / shot 21: hold the summit start <= 4 frames before the whip pull-out.
 - all CAFE shots: keep the checker floor <= 25 % of the frame. Hut (shot 20): check a 360x640 draft strip for plank shimmer while moving.
+
+## Sessions (launched 2026-11-20 09:58 UTC, claude-sonnet-5-5, source film20/main, outcome render20/teamK)
+team1 session_017iwyCtBTXZTXrX2LuZMoVQ | team2 session_017iwyCwXPB9F594dd5BvZBL | team3 session_017iwyCwUvMJVnTUwHpGzRwf
+team4 session_017iwyCts7F4GoxGxK4cYZT3 | team5 session_017iwyCsuowzvp1zKchKgP4a | team6 session_017iwyCwmYUF3MQX3kqxy9YG
+team7 session_017iwyCuDik3vbdfHWshYiW4 | team8 session_017iwyCwBY532MzoskoffqzP | team9 session_017iwyCsmmkdTRxH31aAqzUF
+s01 worked example: director's local Opus agent (film/v3/film20/s01).
