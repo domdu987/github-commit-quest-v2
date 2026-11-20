@@ -565,7 +565,7 @@ def build_facade(B, A):
     for yy in (5.0, 11.0, 17.0, 23.0, 29.0): B.box('glow_frost' if False else 'glow_blue', (17.0, yy, Hc + 2.45), (2.2, 2.8, 0.05))
     # the main door: rusticated arch, voussoirs, fanlight glow, double doors on hinges (set_door('main'))
     for k in range(9):
-        a = math.radians(180 - k * 22.5); B.box('stone', (fx - 0.12, 5.7 + 1.35 * math.cos(a), 4.4 + 1.35 * math.sin(a)), (0.24, 0.42, 0.55), rot=(math.degrees(a) - 90, 0, 0))
+        a = math.radians(180 - k * 22.5); B.box('stone', (fx - 0.12, 5.7 + 1.25 * math.cos(a), 4.4 + 1.25 * math.sin(a)), (0.24, 0.42, 0.42), rot=(math.degrees(a) - 90, 0, 0))   # T1b: radius 1.35 -> 1.25, height 0.55 -> 0.42 so the arch (top z 5.86) no longer clips the letters of the sign band above it
     hv = 14; a = np.linspace(0, math.pi, hv + 1); v = [(0, 0, 0)] + [(0, 1.1 * math.cos(t_), 1.1 * math.sin(t_)) for t_ in a]
     with B.xf((fx - 0.02, 5.7, 4.4)): B.mesh('glow_fan', v, [(0, i + 1, i + 2) for i in range(hv)], smooth=False)
     for s in (-1, 1): B.box('stone', (fx - 0.14, 5.7 + s * 1.3, 2.2), (0.28, 0.4, 4.4))
@@ -1275,7 +1275,7 @@ def _takes():
               _k(92, (6.0, 12.75, 3.1), ML(1.2, 0.5, 0.2)), _k(105, ML(0.15, -0.55, 1.6), ML(-2.1, 1.35, 1.0), hold=True),
               _k(148, ML(0.0, 1.3, 1.55), ML(-2.2, 2.0, 1.0), hold=True),
               _k(158, ML(-0.7, 0.45, 2.9), ML(-2.0, 1.6, 1.1)), _k(168, (4.6, 12.5, 3.8), ML(-1.8, 1.4, 1.0)), _k(198, (0.0, 3.0, 12.5), (5.0, 6.5, 5.0)), _k(218, (-2.5, -3.0, 15.0), (5.0, 3.5, 6.0), hold=True),
-              _k(255, (-3.0, -1.0, 7.0), (3.0, 8.0, 1.2)), _k(287, (-0.2, 2.6, 1.75), (2.8, 6.4, 1.15), hold=True),
+              _k(269, (-0.34, -3.51, 2.70), (5.76, 2.71, 2.46), hold=True), _k(287, (-0.2, 2.6, 1.75), (2.8, 6.4, 1.15), hold=True),
               _k(336, (2.0, 2.4, 1.6), (4.9, 6.2, 1.3), hold=True)])
     # ---- T2 corridor + mockery (g 336-651)
     T['T2'] = dict(g=(336, 651), render=(330, 657), cast=[
