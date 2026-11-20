@@ -85,11 +85,11 @@ class World(object):
     def stage(self):
         pr = self.pr
         left = (-0.439, 0.898)                           # screen-left at P_CAMP = toward the bridge
-        riders = [("r1", "knight_a_mtd", "knight_a_mounted", 31.0, 420, "red"), ("r2", "knight_b_mtd", "knight_b_mounted", 35.0, 340, "blue"),
+        riders = [("r1", "knight_a_mtd", "knight_a_mounted", 31.0, 420, "red"), ("r2", "knight_b_mtd", "knight_b_mounted", 35.0, 340, "red"),
                   ("r3", "knight_a_open_mtd", "knight_a_mounted", 39.0, 270, "gold"), ("r4", "knight_b_great_mtd", "knight_b_mounted", 43.0, 200, "red"),
-                  ("r5", "knight_a_mtd", "knight_a_mounted", 47.0, 130, "blue"), ("r6", "knight_b_mtd", "knight_b_mounted", 34.0, 470, "gold"),
-                  ("r7", "knight_a_open_mtd", "knight_a_mounted", 37.0, 560, "blue"), ("r8", "knight_b_great_mtd", "knight_b_mounted", 41.0, 600, "red"),
-                  ("r9", "knight_a_mtd", "knight_a_mounted", 45.0, 520, "gold"), ("r10", "knight_b_mtd", "knight_b_mounted", 50.0, 450, "blue")]
+                  ("r5", "knight_a_mtd", "knight_a_mounted", 47.0, 130, "red"), ("r6", "knight_b_mtd", "knight_b_mounted", 34.0, 470, "gold"),
+                  ("r7", "knight_a_open_mtd", "knight_a_mounted", 37.0, 560, "red"), ("r8", "knight_b_great_mtd", "knight_b_mounted", 41.0, 600, "red"),
+                  ("r9", "knight_a_mtd", "knight_a_mounted", 45.0, 520, "gold"), ("r10", "knight_b_mtd", "knight_b_mounted", 50.0, 450, "red")]
         for i, (nm, cast_, base, d, xp, cap) in enumerate(riders):
             x0, y0 = K.at_px(pr, d, xp)
             def xyz(g, x0=x0, y0=y0):
@@ -103,7 +103,7 @@ class World(object):
         for i, (nm, cast_, d, xp, v) in enumerate(foot):
             x, y = K.at_px(pr, d, xp); z = self.ground(x, y)
             self.cast.append(Member(self.add_actor(nm, cast_), (lambda g, p=(x, y, z): p), cast_ + "_stand", 10 + i,
-                                    fn=(lambda p, v=v, i=i: dict(p, variant21=v + 1, mirror=bool(i % 2)))))
+                                    fn=(lambda p, v=v, i=i: dict(p, mirror=bool(i % 2)))))
         # walkers: a file of footmen marching along the camp lane toward the bridge (spears up), walk cycle
         for i in range(6):
             cast_ = ("footman_a", "footman_b")[i % 2]
@@ -113,7 +113,7 @@ class World(object):
                 t = (g - G1) / 30.0
                 x, y = x0 + left[0] * 1.5 * t, y0 + left[1] * 1.5 * t
                 return (x, y, self.ground(x, y))
-            self.cast.append(Member(self.add_actor("w%d" % (i + 1), cast_), xyz, None, 30 + i, fn=(lambda p, i=i: dict(p, variant21=(i % 3) + 1)), walk=cast_))
+            self.cast.append(Member(self.add_actor("w%d" % (i + 1), cast_), xyz, None, 30 + i, fn=None, walk=cast_))
 
     def key_cam(self, f, loc, look, lens):
         camrig.key_camera(f, Vector(loc), Vector(look), cam=self.cam, lens=lens, interp='LINEAR', easing='AUTO')
@@ -155,7 +155,10 @@ class World(object):
         f = C.bf(g); sc = self.scene
         sc.frame_set(f)
         hooks(g)
-        cam_at(g)                                  # sets STATE['vivid'] (and the K camera); the render camera is the stage camera
+        r_ = cam_at(g)                             # sets STATE['vivid'] (and the K camera); the render camera is the stage camera
+        v_ = list(r_['vivid']) + [1.0] * (3 - len(r_['vivid']))
+        w_ = max(0.0, min(1.0, min((g - 192) / 22.0, (272 - g) / 27.0)))      # the steep mid-dive (g ~205-250) looks into the shade: lift it so it is not murky
+        K.STATE['vivid'] = (v_[0] + (1.5 - v_[0]) * w_, v_[1], v_[2] + (1.32 - v_[2]) * w_)
         actors.sync_all(sc, self.cam); sc.camera = self.cam
         sc.render.filepath = out_png; sc.render.resolution_percentage = pct
         t0 = time.time(); bpy.ops.render.render(write_still=True); dt = time.time() - t0
