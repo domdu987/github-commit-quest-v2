@@ -83,8 +83,9 @@ def pose_inspector(g):
     p["rim"] = K.RIM_FOR["inspector17"]; p["rim_opacity"] = 0.55; p["rim_w"] = 0.02
     gx = -0.9 * ez((g - 1950) / 22.0)                         # eyes slide sideways toward the calipers (screen-left)
     p["gaze"] = (gx, 0.12 * ez((g - 1950) / 22.0))
-    tw = 1.6 * math.sin((g - 2028) * 1.3) if 2027 <= g <= 2034 else 0.0     # the moustache twitch ~g2030 (a quick head-roll pulse)
+    tw = 1.8 * math.sin((g - 2028) * 1.3) if 2028 <= g <= 2035 else 0.0     # the moustache twitch ~g2030 (a quick head-roll pulse)
     p["head_roll"] = 0.6 * math.sin(g * 0.21) + tw
+    if g >= 2014: p["arm_l"] = dict(p["arm_l"], hand=(-0.42, 1.12))        # shot 33: his near fist tucked in, off the caliper bar
     p["mouth"] = "flat"                                       # never changes (no "t" key: no idle mouth)
     p["blink"] = blink(g, [1880, 1925, 1975, 2005])
     return cast17.silent(p)
@@ -143,7 +144,8 @@ class Take(object):
         ins = self.act["ins"]; pi = pose_inspector(g); fx, fy = sprites.feet_of("inspector17", pi)
         sc = K.CAST_H["inspector17"] / K.CAST_HD["inspector17"]
         self.put(ins, f, Vector((HEAD.x, HEAD.y, K.HEAD_Z["chair"] - sc * fy)), sc, cl)
-        E = ear_of(v); bp = E - rt_of(v) * (0.62 if sh == 33 else 0.60)
+        E = ear_of(v); sep = 0.60
+        bp = E - rt_of(v) * sep
         scb = K.CAST_H["bertillon"] / K.CAST_HD["bertillon"]
         self.put(self.act["ber"], f, Vector((bp.x, bp.y, 0.0)), scb, cl)
         for k, (st, cast, mir) in CAST_STAND.items():
@@ -176,7 +178,7 @@ class Take(object):
             self.ear_w = ear_w
             pb = dict(cast17.STORY17["bertillon_measuring"][1]); pb["seat17"] = None
             pb["mirror"] = False; pb["yaw"] = 0.45
-            pb["prop_r"] = dict(type="calipers", scale=1.0, angle=-90)           # bar vertical, jaws pointing at the ear: one tip above, one below
+            pb["prop_r"] = dict(type="calipers", scale=(1.0 if sh != 33 else 1.0 - 0.45 * ez((g - 2018) / 10.0)), angle=-90)           # bar vertical, jaws pointing at the ear: one tip above, one below
             pb["rim"] = K.RIM_FOR["bertillon"]; pb["rim_opacity"] = 0.55; pb["rim_w"] = 0.02
             pb["gaze"] = (0.9, 0.45); pb["blink"] = blink(g, [1885, 1950, 2010]); pb["mouth"] = "flat"
             if sh == 31: c = 0.15 + 0.35 * ez(clamp((g - 1862) / 84.0))
@@ -202,13 +204,25 @@ class Take(object):
                 '<path d="M%.4f,%.4f q0.05,0.02 0.02,0.10 M%.4f,%.4f q0.03,-0.04 0.0,-0.09" stroke="#9c2a22" stroke-width="0.016" fill="none" stroke-linecap="round"/></g>'
                 % (cx, cy, cx - 0.01, cy - 0.07, cx - 0.01, cy + 0.06))
 
+    def ber_overlay(self, f, pose):
+        if f - 1 < 2014: return ""
+        ber = self.act["ber"]; an = sprites.puppet.figure("bertillon", pose, "q")["anchors"]; hx, hy = an["hand_r"]
+        hip = sprites.hip_y("bertillon", pose); k = ber.upper_k.get(f, 1.0); hy = hip + (hy - hip) * k
+        sc = pose["prop_r"]["scale"]; w = 0.075 * sc
+        out = ""
+        for i in range(3):                                       # three fingers wrapped round the vertical bar, over the hand ball
+            y = hy - 0.075 + i * 0.062
+            out += '<rect x="%.4f" y="%.4f" width="%.4f" height="0.052" rx="0.026" fill="#2b2225" stroke="#120d0f" stroke-width="0.012"/>' % (hx - 0.115, y, 0.22 + w)
+        out += '<path d="M%.4f,%.4f h0.16" stroke="#6b5a58" stroke-width="0.008" stroke-linecap="round" opacity="0.7"/>' % (hx - 0.08, hy - 0.06)
+        return out
+
     def sprites(self, gs):
         by = {}
         for g in gs: by.setdefault(shot_of(g), []).append(F(g))
         for sh, fr in by.items():
             for k, a in self.act.items():
                 ppd = PPD[sh] if k in ("ins", "ber") else (PPD[sh] if sh != 33 else (192 if not QUICK else 64))
-                a.render_sprites(ppd, frames=fr, overlay=self.ear_overlay if k == 'ins' else None)
+                a.render_sprites(ppd, frames=fr, overlay=self.ear_overlay if k == 'ins' else (self.ber_overlay if k == 'ber' else None))
 
     def prepare(self, gs):
         self.key_all(gs); self.poses(gs); self.sprites(gs)

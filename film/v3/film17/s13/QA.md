@@ -1,6 +1,6 @@
 # QA s13 (film 17 ending, shots 31-33), re-render round 2, g 1862-2051 (g0 1868, g1 2052, 6 handle frames before, none after: hard cut at 2052)
 take.mkv is split (`cat take.mkv.part* > take.mkv`), 190 frames 720x1280. transition_in dissolve 11. Cuts inside: 1947, 2014.
-- qa_auto PASS (magenta 0.0 %). rhythm.py (cuts 1947,2014): in-shot median 4.56, p90 13.69.
+- qa_auto PASS (magenta 0.0 %). rhythm.py (cuts 1947,2014): in-shot median 4.55, p90 13.68.
 - Full-res frames for review: full/g1917 g1987 g2007 g2030 g2050.jpg.
 
 ## Changes vs round 1 (gate: QA-tech FAIL / QA-art FIX-FIRST)
@@ -17,3 +17,9 @@ take.mkv is split (`cat take.mkv.part* > take.mkv`), 190 frames 720x1280. transi
 - Shot 32 start (g1947-1965): the dark camera-tripod hood still shows at the top-left edge (about 20 % of the width), sliding out by about g1970. I did not re-render a third time for it.
 - Shot 31 gendarme and prisoner are small in the early wide frames but taller than 180 px (card heights 1.7-1.8 m at ~2.9 m).
 - I only looked at every 5th frame, not every frame, and not at full res outside the five listed frames.
+
+## Round 4 (shot 33 only, g2010-2051 re-rendered)
+- Three drawn fingers wrap the caliper bar over Bertillon's hand ball (sleeve+cuff attached); the inspector's near fist is tucked in so it no longer sits on the bar end.
+- Jaws clamp the ear: they close over g2018-2028 (prop scale 1.0 -> 0.55), upper jaw on the top of the ear, lower jaw at its bottom; moustache twitch starts g2028 (contact).
+- Bertillon's head is fully in frame g2014-2024 and leaves by the push; a sliver of his face stays at the left edge about g2030-2040 (camera move, reach limit). Hood in shot 32 g1947-1965 not touched (optional item skipped).
+- Full res: full/g2022, g2030, g2050.
