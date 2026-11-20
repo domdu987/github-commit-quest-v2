@@ -36,8 +36,8 @@ SNAP = (G_SOON - 2, G_SOON + 13)
 G_END1 = G_POINT - 1                                        # 1303: end of the dusk move
 CRANE = (G_POINT, G_WIRE - 1)                               # 1304..1342
 WHIP = (G_WIRE, G_GROUND - 3)                               # 1343..1360
-DIVE = (WHIP[1] + 1, 1394)                                  # 1361..1394
-INSIDE = (1394, 1410)                                       # through the window, settle
+DIVE = (WHIP[1] + 1, 1390)                                  # 1361..1394
+INSIDE = (1390, 1399)                                       # through the window, settle
 G_GLASS = 1384                                              # the window glass panel is hidden from here
 
 PRESET, CAM = "tower_dusk", "tower_dusk_chars"
