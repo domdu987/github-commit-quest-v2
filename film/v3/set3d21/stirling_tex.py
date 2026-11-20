@@ -5,7 +5,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
 HERE = os.path.dirname(os.path.abspath(__file__)); TEX = os.path.join(HERE, 'tex'); os.makedirs(TEX, exist_ok=True)
-TEX_V = 8
+TEX_V = 9
 def _p(name): return os.path.join(TEX, '%s_v%d.png' % (name, TEX_V))
 def _rgb(h): h = h.lstrip('#'); return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
 def _lerp(a, b, t): return tuple(a[i] + (b[i] - a[i]) * t for i in range(3))
@@ -36,7 +36,7 @@ def sky(name='sky', W=2048, H=1024, sun_az=-45.0):
             t = (i + 0.5) / n; px = cx + (t - 0.5) * ww; ph = hh * (0.55 + 0.45 * math.sin(math.pi * t)) * rr.uniform(0.7, 1.0)
             items.append((px, cy - ph * 0.25, ph * 0.62))
         for px, py, rad in items:                    # shadow side first (blue-violet), then the sunlit cream tops offset up-left
-            d.ellipse([px - rad, py - rad * 0.8 + rad * 0.14, px + rad, py + rad * 0.8 + rad * 0.14], fill=_rgb('#aab4de'))
+            d.ellipse([px - rad, py - rad * 0.8 + rad * 0.05, px + rad, py + rad * 0.8 + rad * 0.05], fill=_rgb('#c4c0e2'))
         for px, py, rad in items:
             d.ellipse([px - rad * 0.96, py - rad * 0.8 - rad * 0.06, px + rad * 0.96, py + rad * 0.74], fill=_rgb('#f6efec'))
         for px, py, rad in items:

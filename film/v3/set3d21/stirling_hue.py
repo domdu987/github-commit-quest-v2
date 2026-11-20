@@ -39,3 +39,8 @@ def files_of(arg):
 if __name__ == '__main__':
     for a in sys.argv[1:]:
         for f in files_of(a): row(os.path.basename(f)[:-4], frame_stats(f))
+
+def sharp_bands(path, bands=((0, 320), (320, 640), (640, 880), (950, 1280))):
+    """Laplacian variance of the luma per band (y ranges of the 1280 frame): the top / middle ratio must be >= 0.4 on valley_loop (no haze, no blur)."""
+    im = np.asarray(Image.open(path).convert('L'), dtype=float); lap = 4 * im[1:-1, 1:-1] - im[:-2, 1:-1] - im[2:, 1:-1] - im[1:-1, :-2] - im[1:-1, 2:]
+    return [float(lap[max(a - 1, 0):b - 1].var()) for a, b in bands]
