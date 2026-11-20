@@ -134,3 +134,44 @@ Note: the round-11 pull had dropped the R9/R10 QA-art section from this file. Th
 
 ## Polish (not blocking)
 - Make the glance bigger: add a brow lift if the rig has one, or about 15 deg of head roll for the 8 held frames.
+
+---
+## Round 12 (director QA-art): PASS, 7.5
+
+Take: take.mkv.partaa+partab -> /tmp/s15a12.mkv (203 f, 720x1280, 30 fps, first_g 1086, idx = g - 1086). I extracted every frame, then reviewed frames at 3 fps (21), every second frame from g1170 to g1200, and a captain crop strip from g1242 to g1288. Each was viewed at full size and at phone size (180x320 / 360x640).
+Frames and sheets are in /tmp/qa19_r12art/s15/ (sheet3fps.jpg, dark_sheet.jpg, phone_sheet.jpg, cap_sheet.jpg, fr/).
+Measured per-frame mean luma (PIL L, full frame): before the snap 108 -> 92. Snap peak 137 at g1172-1176. It ramps down to 118 by g1192 and holds at 114-119 to the end.
+Note: my measure gives about 117 after the snap, not 105. That is probably a different metric or window. QA-tech owns the gate number. On my frames the shot is visibly darker than R11 (125-134 -> 114-119).
+
+| Criterion | R11 | R12 |
+|---|---|---|
+| Set density / ornament | 8 | 8 |
+| Lighting & colour | 7 | 7 |
+| Composition / phone legibility | 8 | 8 |
+| Acting | 7 | 7 |
+| Key moment (sun overhead + watch on home time) | 8 | 8 |
+| Match to refs / client taste | 7 | 7 |
+| **Overall** | **7.5** | **7.5** |
+
+## Darker deck: still reads as bright noon.
+- The deck is still saturated amber-orange, and the plank grain is lit. Hard, short contact shadows sit under every pair of feet, so the sun still reads as overhead. The sails are warm off-white, not grey. The sun disc and halo are undimmed, and the glare still lifts the sail and the mast around it (g1186 full-size, g1260 full-size).
+- The image is a little less "blown", which helps the watch dial and the faces stand out. It does not look dull or overcast at either size.
+
+## Darkening transition g1176-1196: no pop.
+- Luma falls by about 1-1.5 per frame from 136 to 118 over about 20 frames, a smooth ramp. There is no step in the per-frame series.
+- It happens during the pull-back, while the eye is tracking the move, and it reads as the exposure settling after the sun bloom. I cannot see it as an event at 30 fps or on the phone sheet.
+
+## Faster dial push: acceptable as punctuation.
+- The pull-back runs g1196-1206 (whole quarterdeck, foreground rope coil and buckets kept). The push lands at about g1222 and holds, then eases out to the two-shot by about g1246.
+- At the peak, the faces and the 8:00 dial are big and readable, and both hat brims are inside the frame. The faster move reads punchier, not jerky. framediff stays under 11 through the push.
+
+## Frozen captain "O": fine.
+- From g1246 to g1288 (about 1.4 s), the O pose is held while camera drift and the slow scale change keep the frame alive (cap_sheet.jpg). At this length it reads as a stunned, frozen gape, which suits the gag. It does not read as a dead rig.
+- NOTE: a 1-2 px head bob or one eye-ring pulse around g1265 would make it read as alive rather than held, if a later round is touching the shot anyway.
+
+## Mechanism: still reads.
+- g1172-1186: noon sun overhead and both men sighting up with the quadrant, with the sail shadow gone.
+- g1216-1288: the sun is at the top of the frame and the watch shows 8 o'clock in the lower half of the same frame. William smiles and the captain gapes. The cause and the effect read clearly at 360x640.
+
+## Regressions vs R11? None.
+- The extra drift keeps everyone inside the frame, with no new edge cuts. Grounding is intact. The R11 notes about the glance size and the captain's half-lid blink are unchanged.
