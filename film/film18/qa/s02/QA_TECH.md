@@ -1,17 +1,8 @@
-# QA_TECH s02 (g78-155 + 10 handle to g165) - PASS
-Checked: 6 fps frames + first/last 3. Frame-diff re-measured: median 8.28, p90 11.09 (min 3.9, max 17.5), eased crane/pull-out clearly visible, no pulsing.
+# QA_TECH s02 (g78-165) - FAIL (round 3)
+Checked: 6 fps + first/last 3 sheet. Director frame-diff 10.48 / 14.09: OK, no pulsing, eased pull-out visible.
 ## Earlier blockers
-- Bare ground bottom 45-50 %: FIXED (plain ground about 20-25 % at g128-165, about 28 % at g103-125 with the woman and Tian Dan in it).
-- Herd 10 D wide / dozens of oxen: FIXED, ranks of dressed oxen fill the lane g118-165.
-- Tie-the-blade beat: readable g78-100 (blade at the horn); Tian Dan then shrinks to ~65 px at the left but stays inside the frame and identifiable.
-- Eye-line: still at the lens, now a note. Navy slab / stump: absent.
+- Herd/ground/blade beat: still fine. No stump.
 ## Issues
-None blocking.
+1. g78-165 - ground-dressing helper (rule 2 / junk): the lower 35-45 % is covered with navy untextured low-poly rocks, navy spiky star-shapes and dark flat shadow stripes. They read as placeholder junk at phone size; at g138-165 rocks cover the woman's lower body and basket (bottom-left) and Tian Dan's feet. Fix: remove the rocks/spikes or replace with lit textured props (jars, baskets, straw) kept out of the actors.
 ## Notes
-1. g108-150 a flat dark purple band (untextured shadow quad) lies along the back of the herd; reads as shadow at phone size but it is the nearest thing to a navy slab (rule 2). Fix: texture or drop the quad.
-2. g78-93 he frowns at the lens, not at the horn.
-3. g148-165 a grey-green figure is clipped by the right edge (minor).
-4. sky about 30-35 % until g103.
-5. g128-165 Tian Dan is small and half-hidden by the woman and ox head; keep a gap.
-## Pass items
-Dressed oxen with blades (correct); NIGHT; no stump; heads < 880; no mouths; no text; no frozen/black frames; band dark; frames g78-155 plus 10 handle OK.
+- g108-165 flat purple band behind the herd (shadow quad). Tian Dan small/half hidden by woman g128-165. Eye-line at lens (note). Sky ~30 % to g103.
