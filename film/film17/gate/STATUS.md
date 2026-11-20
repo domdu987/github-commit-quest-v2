@@ -10,7 +10,7 @@
 | s07 | 6 | FAIL r2 -> inserts restage | | |
 | s08 | 7 | R2: QA-art PASS, QA-tech FAIL (B1: right card floats without a hand + ring loop under it, verified by director at g1144/1169/1194) -> small fix R3 | 4ce80d3 | gate/s08/QA_TECH_R2.md, QA_ART_R2.md |
 | s09 | 8 | FAIL R3 (B1 inspector grin not visible + beret overlap; B2 head shake too slow) | 9ddf81d | gate/s09/QA_TECH_R3.md |
-| s10 | 9 | FAIL r1 -> re-render | | |
+| s10 | 9 | FAIL R2 (QA-tech FAIL + QA-art FIX-FIRST: calipers not on skull, 6-box countdown not visible, finger insert weak, whip smear 5-9 f) | acdfec4 | gate/s10/QA_TECH_R2.md, QA_ART_R2.md |
 | s11 | 10 | FAIL r1 -> re-render | | |
 | s12 | 11 | FAIL r1 -> re-render | | |
 | s13 | 12 | **PASS** (QA-art R3 SHIP; QA-tech R2 blocker = hand on bar, verified fixed in R3) | render17/team12 ba82a63 (USE THIS; later ca5cc1a = unreviewed head-mask variant, ignore) | rhythm 4.55/13.68; nit: tripod hood g1947-1965 |
