@@ -52,8 +52,9 @@ Travel frames render at 32 samples (+ OIDN); close-ups and held frames at 64. Be
 | P_HILL | the `hill_low` preset camera, raised 0.8 m | B2 end (g 418, then cut) |
 | P_BANK | the `camp_bank` preset camera | D2 end (CU1 pushes out of it) / E1 start |
 | P_NECK | the QA-art bridge_end_north camera (-2.0, 50.0, 4.6) -> (0.0, 22.0, 1.8), 22 mm | H1 end / H2a start (g 1345) |
-| P_TOP | (-10, -40, 120) -> (0, 80, 0), 22 mm (frames the loop, the bridge mouth and the south bank; a man is about 10 px) | H2a end / H2b start (g 1392) |
-| P_A | (290, 205, 170) -> (120, 110, 10), 22 mm (mid-swoop of BIGZOOM 1, NE of Abbey Craig, looking SW-down at the hill and the bridge) | A1 end / A2 start (g 80) |
+| P_TOP | (-10, -115, 115) -> (0, 70, 0), 22 mm (v2 after the H2a gate: from the south looking north; loop, bridge mouth AND the south-bank camp in frame; VIVID['P_TOP'] = (1.4, 1.1, 0.75)) | H2a end / H2b start (g 1392) |
+| P_HOOK | (-60, -260, 230) -> (60, 60, 0), 22 mm (front-lit extreme wide from the south; A1 START, g 0) | A1 start |
+| P_A | (40, 10, 95) -> (150, 140, 20), 22 mm (v2: low over the river SW of the crag, looking NE at it) | A1 end / A2 start (g 80) |
 If a team cannot hit a pose exactly, it writes its actual first or last camera into meta.json (`cam_in` / `cam_out`) and the director re-checks the join.
 
 ## Segments (t = NARRATION time)

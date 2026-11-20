@@ -131,7 +131,7 @@ def run(quality, gs, samples, out):
     def hook(g):
         K.cam_path(None, KEYS, g)                            # re-sets the camera
         v0, v1 = (GAMMA0, K.VIVID['bridge_end_north'][1]), K.VIVID['valley_loop']; u = ez((g - 940) / 80.0)
-        K.STATE['vivid'] = (math.exp(lerp(math.log(v0[0]), math.log(v1[0]), u)), lerp(v0[1], v1[1], u))
+        K.STATE['vivid'] = (math.exp(lerp(math.log(v0[0]), math.log(v1[0]), u)), lerp(v0[1], v1[1], u), lerp(1.0, 0.8, ez((g - 985) / 59.0)))   # exposure down at the crane top (luma < 110)
         K.set_flow(g / 30.0); K.set_flutter(g / 30.0); K.set_smoke(g / 30.0)
         for m, (a, cast) in enumerate(mact):
             hid = g < mead_arrive(m)
@@ -143,7 +143,7 @@ def run(quality, gs, samples, out):
                 its = []
                 for (x, y, z, k, s) in items:
                     xx, yy = x * 1.7, 90.0 + (y - 46.0) * 0.9
-                    its.append((xx, yy, float(K.ground(xx, yy)), k, 2.2))
+                    its.append((xx, yy, float(K.ground(xx, yy)), "knight", 2.08))   # crimson only
                 for o in K.stage_crowd(its, cam=T.cam): o.name = "troops_meadow_" + o.name
             K.place_troops(A, "meadow", n, seed=3, cb=cb)
     for g in gs:
