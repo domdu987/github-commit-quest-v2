@@ -1,0 +1,32 @@
+{
+ "take": "s21",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film19/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 55.5,
+   "duration": 3.033,
+   "frame": 1665,
+   "end_frame": 1756,
+   "kind": "ambience",
+   "label": "Barbados beach: surf, wind in the palms, gulls"
+  },
+  {
+   "time": 56.633,
+   "duration": 0.4,
+   "frame": 1699,
+   "end_frame": 1711,
+   "kind": "accent",
+   "label": "snap push on 'นาฬิกาแม่น': whoosh",
+   "peak_frame": 1705
+  },
+  {
+   "time": 55.5,
+   "duration": 3.0,
+   "frame": 1665,
+   "end_frame": 1755,
+   "kind": "foley",
+   "label": "brass quadrant clanks and wobbles in astro19_c's hands; a stumble on the sand"
+  }
+ ]
+}
