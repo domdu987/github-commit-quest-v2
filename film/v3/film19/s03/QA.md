@@ -1,14 +1,15 @@
-# s03 QA: film 19, shot 3 (HALL hall_window, DAY)
+# s03 QA: film 19, shot 3 (HALL hall_window, DAY) -- revision 2 (after QA_TECH FAIL)
 ## Delivered
-- take.mkv (libx264rgb crf 6, 30 fps), first_g 101, 99 frames: g 101-109 in-handle (CUT from shot 2), g 110-190 = shot 3 (3.65-6.37 s), g 191-199 out-handle (DIS 13 into shot 4). 720x1280, 8 spp (set's own), 2 threads.
-- meta.json, cues.json, contact.jpg, QA_AUTO.md (PASS), phone_sheet.jpg, framediff.json. Its only note, 'cut g 110 has no visible change', is expected (the handle continues in 3D).
-## Shot
-astro19_b (mirrored) bends to the brass telescope eyepiece, squinting; astro19 beside him scratches under his wig (3 Hz scrub), puzzled. Chair and tripod leg pass through the foreground. SNAP x2.0 (15 f, g 169-184) with a pan on "ทำไม่ได้" (g 177): astro_b straightens from the eyepiece with a frown. Candles keyed every frame; no DOF, no text, no caption_shade (dof false / caption_shade false in every raw json).
+- take.mkv (99 frames, first_g 101): g 101-109 in-handle (CUT), g 110-190 = shot 3, g 191-199 out-handle (DIS 13). 720x1280, 8 spp. qa_auto PASS.
+## Fixes for QA_TECH s03
+1. Black tripod wedge g190-199: the camera no longer swings across the left foreground (arc -13 deg/s, slide -40 px/s; the earlier -21 deg/s arc is gone). Only a thin dark tripod leg remains at the far left edge.
+2. astro_b clipped: both astronomers are fully inside the frame to g 199 (snap x1.9 with shift +0.3).
+3. Peering: astro_b's mark is at the eyepiece depth (mark -3.80, 3.45); he bends (lean 23, crouch 0.30) so his face is at the eyepiece (eyepiece px 246,666 vs head 248,680 at g 110), then straightens with a frown on the snap.
+4. Contact shadows: decal widened and darkened for both (1.6 x 0.75 D, #1a1626, opacity 0.9).
+5. astro19 moved off the chair (mark -2.10, 4.00).
 ## Numbers
-- Head width 112-345 px, head centre y 553-656, lowest head bottom y 766 (< 880).
-- Frame-diff in-shot (90x160 grey): median 4.75, p90 15.64 (draft 4.75 / 15.5). Camera never parked (camreport: 0 frames under 0.25 px).
-- 14.92 s/frame wall, 28.74 s CPU (two processes).
-## Notes / deviations
-- Mouths: flat for both (no quote in this shot). Characters stand on the floor with contact decals.
-- The camera arc (-21 deg/s) is strong to reach the frame-diff target; at g 185-199 a dark tripod leg crosses the left foreground and astro_b's head is large (x 15-60 px at the end of the handle, inside the frame during the shot).
-- The tripod leg renders very dark (set material); it reads as a foreground occluder.
+- Frame-diff in-shot: median 2.98, p90 10.99. **Both are below the first delivery (4.75 / 15.6): median < 4 and p90 < 12 now.** Cause: the strong left arc that made the median is what swung the camera across the tripod / black quadrant arc; stronger slide or arc brought the black arc back into frame (checked at slide -55/-65). Kept the clean framing.
+- Head width 100-228 px, head centre y 598-695, lowest head bottom 764 (< 880).
+- 9.87 s/frame wall, 19.45 s CPU.
+## Known
+- The sprite crouch makes astro_b's legs look bent as he leans; it reads as bending to the eyepiece at phone size.
