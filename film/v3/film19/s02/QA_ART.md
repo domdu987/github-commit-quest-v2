@@ -85,3 +85,36 @@ Fixes (shot.py), in priority order:
 4. Give the big sail that passes on the left at g 125-146 some detail (seams, reef points, a pennant), or route about 1 D further right so that rigging and deck life fill more of the frame than flat canvas.
 5. (Polish) Sharpen the foreground deck texture: use a higher-resolution plank texture, or anisotropic or closest filtering. Optionally drop the camera 0.3 D so that the empty deck takes about 20 % of the frame instead of 30 %. Keep room for the caption band at y 880.
 6. (Polish, carried from round 9) Warm or whiten the sails; R5's ships use bold orange or striped sails.
+
+## Round 11 (director QA-art): PASS, 7.3 (with one cheap must-fix: the prop pops at g 182 and g 186)
+
+Take: take.mkv.partaa + partab joined to /tmp/s02a11.mkv (first_g 48, 152 frames, 720x1280, frame index = g - 48). All 152 frames extracted to /tmp/qa19_r11art/s02/f_NNN.png (NNN = g - 47). Sheets: sheet_3fps.jpg (every 10th frame), descent.jpg (every 4th frame g 90-166), beat.jpg (every 2nd frame g 140-190), beat_phone.jpg (360x640 tiles g 160-190), crop_beat.jpg (full-res g 154/158/186), open.jpg (g 57/80), chartgone.jpg (every frame g 180-187). I recomputed the frame-diff myself (90x160 grey) and it matches the team's numbers: median 8.45, p90 14.01, max 15.5.
+
+| Check | Status |
+|---|---|
+| Move shape | **Fixed: one swoop.** The frame-diff rises smoothly from 1.3 (g 49) to a single peak of 15.5 (g 110), with no dips at the old knots. The three surges are gone and **there is no dead stop at g 152.** There is a second, gentle swell from 7.5 at g 134 to 11.2 at g 165 (the drop from top-down to eye level, g 142-166), then a decel from 10.4 to 3.7 over g 167-171. That is a 4-frame touchdown, a little brisk but not a slam, and part of that diff is the chart flip. Then the orbit holds a steady ~4.3 (never parked). On a phone it reads as one continuous, impressive crane down: lone ship, wake, over the stern, past the sails and shrouds, down onto the quarterdeck. It lands acceptably soft. |
+| Start | Good. The ship is ~10 % of the frame height and alone, the horizon is crisp and the clouds are clean. **The pale slab is gone** (checked g 48-90). |
+| Detail on the way in | Wake, stern, yards, shrouds, deck props, lanterns and wheel shadow all pass by. **Still open:** for g 118-150 the left 30-40 % of the frame is one plain grey-lilac sail face. The ~1.2 D route shift did not visibly reduce it. |
+| Puzzled beat (phone) | **Much better.** g 158-170: the captain's round-eyed, open-mouthed "shocked" face reads instantly at 360x640; this is the laugh. The chart tilts and turns over g 162-170, and the motion reads, although the 180-degree flip itself (the dark band moving) is hard to parse; it reads as "fumbling the chart", which is fine. The astronomer's head-scratch with the quadrant (g 155-181) is clear. **Weak points:** (a) the "shared look" g 173-179 does not read, because both faces stay front-on with half-lidded eyes and no head turn; (b) after g 172 the captain's face goes back to the half-lidded wavy-mouth "worried" face, which is close to the old "bored" look; (c) the shrug g 184-190: the astronomer's arms go out both sides (it reads as a shrug), but the captain only swings one arm toward the astronomer, so it reads half as pointing; no palms are visible on either. |
+| **Regression: prop pops** | **The astronomer's quadrant vanishes between g 181 and g 182, and the captain's chart vanishes between g 185 and g 186**: there one frame, gone the next, with no drop or tuck. At g 183-185 the chart also slides away from the captain's hand. The quadrant pop is at full opacity, just before the s04 dissolve (g 185-197), and is visible on a phone. |
+| Colour / light | Unchanged and good (sat 0.634, luma 93.2: G1 OK). Warm orange deck against blue sea, sky and masts; hard sun shadows. The sails are still dull grey-lilac (polish). |
+| Grounding / framing (G2/G3) | Contact shadows on every tile, nobody cut, faces ~13-15 % of the frame height, nothing through faces. The foreground deck (bottom ~30 %, g 160-199) is still a soft, smeared plank texture over a large empty plane (polish, carried). |
+
+| Criterion | Score |
+|---|---|
+| Set | 8 |
+| Light & colour | 8 |
+| Composition / phone | 7 |
+| Acting | 7 |
+| Key moment (BIGZOOM + "where are we?" beat) | 7.5 |
+| Match to refs (R5 crane over the ship onto the deck) | 7.5 |
+| **Overall** | **7.3 - PASS** |
+
+Must-fix before FINAL (cheap, no re-review needed beyond a frame check of g 178-191):
+1. **Kill the prop pops.** Keep the quadrant in the astronomer's hand through g 199 (or let it drop or tuck over 4+ frames). Likewise the chart: keep it pinned to the captain's hand, or let him toss it over his shoulder in a visible arc. Nothing may disappear in one frame.
+
+Recommended (non-blocking polish, in priority order):
+2. Make the shrug palms-up with both arms and shoulders up, symmetrical for the captain (no single arm toward the astronomer), with a 3-4 frame squash.
+3. Make the shared look read: turn the heads ~15-20 deg toward each other (or slide the pupils sideways) on g 173-179, and keep the captain's brows raised (not half-lidded) through the shrug.
+4. Break up the flat sail on the left at g 118-150 with seams, reef points or a stripe, or warm or whiten all the sails (R5 style).
+5. Sharpen the foreground deck texture, or lower the empty-deck share.
