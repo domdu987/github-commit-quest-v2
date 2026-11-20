@@ -215,6 +215,9 @@ class Take(C.Take):
                 bm.to_mesh(o.data); o.data.update()
             bm.free()
         n += self.clear_box(((-1.9, -42.0, 57.0), (1.9, -36.2, 58.6)), ("gallery_ironlt",))      # the flat gallery slab outside the sill (an orange strip with a black seam) in the landing view
+        n += self.clear_box(((-3.7, -38.9, 62.9), (-2.5, -37.7, 64.1)), ("gallery_iron",))      # black unlit post caps beside the RESTAURANT sign (g 1724-1757)
+        n += self.clear_box(((2.5, -38.9, 62.9), (3.7, -37.7, 64.1)), ("gallery_iron",))
+        n += self.clear_box(((5.0, -34.0, 57.0), (40.0, -4.0, 64.0)), ("tower_ironlt_t",))        # black unlit tower members seen through the window to the right (g 1756-1784)
         print("clear_room_wedges: %d faces deleted" % n, flush=True)
 
     def make_glow(self):
