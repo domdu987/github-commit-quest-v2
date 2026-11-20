@@ -27,3 +27,9 @@
 
 ## Remake v2 (client 2026-11-20)
 - Client: rules G/H/I all, text signs allowed, NO client OK needed on the set: QA-art (Opus) approves the SET gate, then render immediately.
+
+## v2 remake render teams (2026-11-20, brief film/WORKER15b.md, set gate QA-art PASS-WITH-NOTES)
+| team | take | session | branch |
+|---|---|---|---|
+| 1 | T1 | session_017iwyCuaxS1onESpuXGmuuL | render15b/team1 |
+| 2 | T2 | session_017iwyCtBR4FcEjnZD87a3PU | render15b/team2 |
