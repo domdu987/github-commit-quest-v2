@@ -54,3 +54,30 @@ Same measure as before (visible figure, hair top to far edge of the tabletop, re
 
 ## Round 9 verdict: FAIL
 Landing size is fixed (35 % reached at g1825, 43 % at the end, holds), join/smoothness fine, post caps gone. Blockers: (a) under-5 % -> >=35 % takes ~2.7 s (<3 s): either start the zoom a bit later/slower (e.g. hold <5 % to g1750 and keep the end) or accept 35 % at ~g1833 by relaxing the ramp; (b) the black block right of the window at g1756-1784 is still there. Not committed.
+
+---
+# Round 10 (r8 camera + never-stopping extra magnification from g1810, room closed) -- QA-tech: FAIL (one speed step left at g1834/1835; duration only ~3.1 s, at the limit)
+
+Same measure (hair top to the visible tabletop edge, full 720x1280 frames, 1 % grid, +-1.5 %). g1724-1755 untouched, so g1736-1750 = round 9 values.
+
+| g | fig % H | | g | fig % H |
+|---|---|---|---|---|
+| 1736 | 4.5 | | 1836 | ~35 |
+| 1743 | ~5.0 | | 1840 | ~36 |
+| 1750 | 5.5 | | 1845 | ~37.5 |
+| 1775 | ~9.5 | | 1850 | ~38.5 |
+| 1805 | ~20 | | 1858 | ~40 |
+| 1815 | ~24.5 | | | |
+| 1826 | ~30 | | | |
+| 1830 | ~32 | | | |
+
+- Last frame <5 %: ~g1743. First frame >=35 %: ~g1836 (error band g1833-1839). Duration ~93 frames = **3.1 s** (band 3.0-3.3): inside 3.0-6.0 s but with no margin. Monotonic: yes, no decrease. >=35 % held to g1852: yes (36 -> 38.5 %, 40 % at g1858).
+- Smoothness (90x160 grey frame diff): 15.6 (g1750) -> 19.9 (1755) -> 22.0 (1756): NO jump at the re-render start (22.0 -> 23.0 peak at g1759, the lattice/sign crossing). 9.8-11.3 (g1795-1804), 8.8-9.9 (1810-1822), 8.5 (1825), 7.3 (1828), 6.8 (1834), then **3.2 at g1835** and 3.3-4.5 after. **The step is still there: the diff halves in one frame (6.8 -> 3.2) at g1834/1835**, exactly where the old step was; the extra magnification does not mask it (the apparent speed drops ~50 %). Reads as a soft settle, but "no plateau/step" is not met.
+- Pure-black share (max channel <10): g1772 0.000 %, g1784 0.000 %, g1796 0.002 % (g1736-1750 0.15-0.39 %, set bits, was the same). Black block FIXED.
+- New right wall: the cream wall with the room's pillars/trusses reads as the dining room's side wall (same material, perspective consistent with the carpet and tables, g1760-1796); no odd plane, no seam.
+- Take checks (t.mkv rebuilt from the 135 frames): qa_auto PASS (magenta 0 %); qa_stats sat 0.720 (>=0.50), luma 86.6 (85-110, near the floor), motion median 10.6 p90 20.6; qa_stats2 vivid 72.4 % (>=45).
+- Heads at landing (g1826-1858): x ~0.44-0.47 W, hair-to-chin centre y ~0.45-0.50 H. OK.
+- s24 -> s25 (g1847-1858): s24 end = interior, head ~(0.45 W, 0.45 H), ~20 % H; s25 = blue sky behind him, head ~(0.45 W, 0.5 H), ~0.7x size. Plain 9-frame dissolve, x matches, small y/scale step, no black frame. Acceptable.
+
+## Round 10 verdict: FAIL (narrow)
+Fixed: black block, no jump at g1755/1756, growth monotonic and held, size ok. Remaining: (1) the zoom-speed step at g1834 -> 1835 (diff 6.8 -> 3.2) is unchanged; the extra magnification should start earlier/stronger so the total rate stays flat across g1830-1840 (and that would also pull the 35 % crossing earlier); (2) duration is 3.1 s with no margin (a slightly later 5 % or earlier 35 % is needed to clear it safely). Not committed.
