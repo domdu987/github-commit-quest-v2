@@ -15,17 +15,34 @@ def _cast():
         _C['cast'] = cast18; _C['P'] = P
     return _C['cast'], _C['P']
 
+def _rim(path):
+    # client rule I: cool moon-blue rim on the upper / right silhouette edge (light from behind), against the warm fire key
+    import numpy as np
+    from PIL import Image
+    im = np.asarray(Image.open(path).convert('RGBA')).astype(np.float32); a = im[..., 3] / 255.0
+    emp = np.zeros_like(a)
+    for s in (2, 4, 6):
+        for dx, dy in ((s, -s), (s, 0), (0, -s)):
+            sh = np.ones_like(a); H, W = a.shape
+            ys0, ys1 = max(0, -dy), H - max(0, dy); xs0, xs1 = max(0, -dx), W - max(0, dx)
+            sh[ys0:ys1, xs0:xs1] = a[ys0 + dy:ys1 + dy, xs0 + dx:xs1 + dx]
+            emp = np.maximum(emp, (1.0 - sh) * (1.0 - 0.15 * (s // 2 - 1)))
+    r = np.clip(emp, 0, 1) * (a > 0.5) * 0.8
+    col = np.array([120.0, 175.0, 255.0])
+    for c in range(3): im[..., c] = im[..., c] * (1 - r) + col[c] * r
+    Image.fromarray(im.astype(np.uint8), 'RGBA').save(path)
+
 def _write(svg_body, bb, feet_y, D, name):
     cast, P = _cast(); x0, y0, x1, y1 = bb; W = int((x1 - x0) * D) + 8; H = int((y1 - y0) * D) + 8
     svg = '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d"><g transform="translate(%.2f %.2f) scale(%d)">%s</g></svg>' % (W, H, 4 - x0 * D, 4 - y0 * D, D, svg_body)
     os.makedirs(CARDS, exist_ok=True); sp = os.path.join(CARDS, name + '.svg'); out = os.path.join(CARDS, name + '.png')
-    open(sp, 'w').write(svg); P._raster(sp, out, W, H, 1)
+    open(sp, 'w').write(svg); P._raster(sp, out, W, H, 1); _rim(out)
     try: os.remove(sp)
     except OSError: pass
     return dict(path=out, w=W / D, h=H / D, x0=x0 - 4.0 / D, feet=(feet_y - y0) + 4.0 / D, top=-(y0 - 4.0 / D), D=D)
 
 def card(kind, **k):
-    key = kind + '_' + '_'.join('%s%s' % (a, k[a]) for a in sorted(k)); name = hashlib.md5(key.encode()).hexdigest()[:10] + '_' + kind
+    key = kind + '_' + '_'.join('%s%s' % (a, k[a]) for a in sorted(k)); name = hashlib.md5((key + '|rim1').encode()).hexdigest()[:10] + '_' + kind
     mp = os.path.join(CARDS, name + '.json')
     if os.path.exists(mp) and os.path.exists(os.path.join(CARDS, name + '.png')): return json.load(open(mp))
     cast, P = _cast()

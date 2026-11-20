@@ -6,3 +6,7 @@ Redesign per director round 13/14: side-view gallop, lead ox ~17 % frame height,
 - Contact shadows present under oxen; Qi not in shot. Comic, bloodless.
 - Deviations: p90 below 9; ground plain-share not verified with a proper field-colour mask; whip-in handle 6 frames.
 - qa_auto PASS (QA_AUTO.md).
+
+## Section I rim light (final render)
+- Frame-diff in-shot (n=80): median **4.73**, p90 **6.56** (p90 < 9 not reached). qa_auto PASS.
+- Moon-blue rim (120,175,255) painted into every character/ox card on the upper/right silhouette edge (cards are unlit emission, so scene lights cannot rim them); plus two blue point lights per frame behind the nearest oxen for the ground. Warm fire key and saturated reds unchanged, no haze added. Layout unchanged; the other s19 caveats above still apply.

@@ -7,3 +7,7 @@
 - Props: pots with warm point lights; helmet moved to (16.2,-9,0); props may still graze the lead ox jaw at isolated frames, not re-verified frame by frame.
 - Ground: purple strip covered by `mygap` plane; rendered-PNG colour mask not done (rough low-chroma lower-third proxy 0.86 is dominated by the road/field palette and is not a valid plain-field metric). Honest deviation.
 - Qi silhouettes behind oxen at x 44+. Comic, bloodless.
+
+## Section I rim light (final render)
+- Frame-diff in-shot (n=87): median **11.21**, p90 **14.19**. qa_auto blur flag only on the whip-out (g1504-1518).
+- Moon-blue rim (120,175,255) painted into every character/ox card on the upper/right silhouette edge (cards are unlit emission, so scene lights cannot rim them); plus two blue point lights per frame behind the nearest oxen for the ground. Warm fire key and saturated reds unchanged, no haze added. Layout unchanged; the other s19 caveats above still apply.

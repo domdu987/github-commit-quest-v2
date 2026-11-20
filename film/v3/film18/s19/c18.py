@@ -263,6 +263,11 @@ def lit_tails(cam, nlights=5):
     for (t, sc) in sorted(TAILS, key=lambda a: (a[0] - cam).length)[:nlights]:
         d = bpy.data.lights.new('ph_tail', 'POINT'); d.color = J.FIRE; d.energy = 420.0 * sc; d.shadow_soft_size = 0.5; d.use_shadow = False
         lo = bpy.data.objects.new('ph_tail', d); STATE['LIGHTS'].objects.link(lo); lo.location = t; lo.visible_camera = False; lo['placeholder'] = 1
+    # section I rim: cool moon-blue back lights behind the nearest oxen (against the warm fire key)
+    for (t, sc) in sorted(TAILS, key=lambda a: (a[0] - cam).length)[:2]:
+        d = bpy.data.lights.new('ph_rim', 'POINT'); d.color = (0.45, 0.62, 1.0); d.energy = 1500.0 * sc; d.shadow_soft_size = 0.8; d.use_shadow = False
+        dirv = (t - cam); dirv.z = 0; dirv.normalize()
+        lo = bpy.data.objects.new('ph_rim', d); STATE['LIGHTS'].objects.link(lo); lo.location = t + dirv * (3.0 * sc) + V((0, 0, 2.2 * sc)); lo.visible_camera = False; lo['placeholder'] = 1
 
 
 # ================================================================== round 11: per-frame measurement (mouth y, flame-to-face distance)
