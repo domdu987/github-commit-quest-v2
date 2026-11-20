@@ -4,3 +4,6 @@ Frame-diff in-shot (n=87): median **8.37**, p90 **11.47**. qa_auto: "blur" g1505
 - 6 Qi silhouettes behind the oxen (first g1417, then every 5 frames).
 - The purple ditch strip is NOT fixed: I tried hiding/re-texturing `banks`, `bridge`, `road`, `water`, `fields` and the ground material; none of them changed it, so it is some other set element. Left for `dress_ground`.
 - Bare ground about 30-35 % (see above).
+
+## Round 6: ground dressing
+Re-rendered with `J.dress_ground` (density 0.45, keep-clear along the herd lanes): `J.ground_share` 0.09 / 0.07 / 0.07 / 0.06 at g1435 / 1460 / 1485 / 1505 (target <= 0.25). Frame-diff median 8.92, p90 11.73. qa_auto blur flag = whip landing (as before). The purple ditch strip is still visible (set element not identified).
