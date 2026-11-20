@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
-"""shot.py -- film 19 take s12 = shot 12 (WORKSHOP shop_clock NIGHT, set_clock(3)): "เครื่องที่สาม สิบกว่าปี".
-Harrison (harrison19 default: greying hair, apron) works on the H3 (compact brass box, two round balances) by candlelight, the bench candle
-stub burning down (set_candles(level 1 -> 0.3) keyed on every frame).  Take = g 929..994: 9-frame dissolve in-handle g 929..937, shot g 938..985
-(31.26-32.85 s), 9-frame out-handle g 986..994 (the next shot 13 is a CUT).
-    g 938..   he taps with the chisel at the H3, head bent (a small nod each stroke); the H3 balances counter-rotate; flame flickers
-    SNAP push on "สิบ" of "สิบกว่าปี" (caption 31.91 = g 960): he straightens, looks at the lens, tired
-Camera: shop_clock start pose region, push + slide + arc; snap with a pan.  NO DOF, NO text, NO caption_shade.
-Mouths: nobody speaks: fixed expression mouth.
+"""shot.py -- film 19 take s12 = MERGED shots 12 + 13 (WORKSHOP NIGHT, set_clock(3)), ONE continuous camera, no cut (client rule QA_TEAM §I):
+"เครื่องที่สาม สิบกว่าปี จนผมหงอกทั้งหัว" (31.26-33.86 s, g 938..1015).  Take = g 929..1024: 9-frame dissolve in-handle g 929..937, shot g 938..1015,
+9-frame out-handle g 1016..1024 (dissolve 11 f into shot 14).
+    g 938..965   greying Harrison (default) taps a chisel at the H3 by candlelight (shop_clock spot), the camera slides along the bench
+    g 955..972   the lateral WHIP PAN (SNAP, on "สิบ" of "สิบกว่าปี", caption 31.91 = g 960) travels along the bench to the shop_bench spot;
+                 at the fastest frames (g 966) the SAME Harrison's look swaps default -> old=1 (white hair, spectacles, brown coat): the whip
+                 hides the pop
+    g 973..992   white-haired Harrison bends over the H3, tired
+    g 993..1003  "จนผมหงอกทั้งหัว" (caption 32.85 = g 989; หงอก spoken ~g 996): he leans back and rubs his eyes (sweat drop), g 1003.. keeps rubbing
+The bench candle stub (moved onto the foreground chest) burns down 1.0 -> 0.3 and the room lights fall over the whole take.
+NO DOF, NO text, NO caption_shade.   Mouths: nobody speaks: fixed expression mouth.
 
     python3 shot.py probe a:b[:step]       numbers only        python3 shot.py camreport
     python3 shot.py stills a:b[:step] <out_dir> [scale] [samples]
@@ -23,14 +26,16 @@ H, K, actors, cast19 = C.H, C.K, C.actors, C.cast19
 lerp, clamp, blink, ez, u_of, bf = C.lerp, C.clamp, C.blink, C.ez, C.u_of, C.bf
 WORK = os.path.join(HERE, "work")
 
-G0, G1 = C.g_bound(31.26), C.g_bound(32.85)            # 938, 986: shot 12 = g 938..985
+G0, G1 = C.g_bound(31.26), C.g_bound(33.86)            # 938, 1016: merged shots 12+13 = g 938..1015
 H_IN, H_OUT = 9, 9
-G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1            # 929 .. 994
+G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1            # 929 .. 1024
 GS = list(range(G_FIRST, G_LAST + 1))
 G_WORD = C.cap_g("สิบกว่าปี")                          # 960: caption start; "สิบ" spoken right at it
 SNAP = (G_WORD - 8, G_WORD + 12)                       # 955..969 (14 f)
-G_LOOKUP = (G_WORD + 30, G_WORD + 40)                   # he straightens and looks at the lens
-BLINKS = [950, 975, 990]
+G_AGE = 966                                            # the look swap, at the fastest frames of the whip pan
+G_W2 = C.cap_g("จนผมหงอกทั้งหัว")                      # 989
+G_LEAN = (G_W2 + 4, G_W2 + 14)                         # 993..1003: leans back, hand to the eyes
+BLINKS = [950, 980]
 
 LIGHT, PRESET, CLOCK = "NIGHT", "shop_clock", 3
 FINAL_SPP = 8
@@ -42,39 +47,75 @@ MARK_DX = float(os.environ.get("MARK_DX", -0.1))
 MARK_DY = float(os.environ.get("MARK_DY", -2.8))
 CAM_LOC0 = tuple(float(v) for v in os.environ.get("CAM_LOC0", "2.2,-1.6,2.4").split(","))
 CAM_LOOK0 = tuple(float(v) for v in os.environ.get("CAM_LOOK0", "2.6,2.9,2.3").split(","))
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get("PUSH", 0.07)), slide_px=float(os.environ.get("SLIDE", -70)),
-                rise_px=float(os.environ.get("RISE", 0)), arc_deg_s=float(os.environ.get("ARC", 8)), decay=0.25,
-                snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 1.3)), peak=float(os.environ.get("SNAPPEAK", 3.0)), shift=(float(os.environ.get("SNAPSX", 0.6)), -0.1))])
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get("PUSH", 0.06)), slide_px=float(os.environ.get("SLIDE", -60)),
+                rise_px=float(os.environ.get("RISE", 0)), arc_deg_s=float(os.environ.get("ARC", 0)), decay=0.25,
+                snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 1.05)), peak=float(os.environ.get("SNAPPEAK", 3.0)), shift=(float(os.environ.get("SNAPSX", 1.4)), -0.1))])
+
+SWAY = float(os.environ.get("SWAY", 0.09))
+TRAVEL = float(os.environ.get("TRAVEL", 1.0))              # D: look point moves right (camera turns, does not move) after the pan lands
+
+
+def cam_at(g):
+    loc, look = CAM.at(g)
+    fwd = (look - loc).normalized()
+    right = Vector((fwd.y, -fwd.x, 0.0)).normalized()
+    u = u_of(g, 985, G_LAST, kind="sine")
+    look = look + right * (TRAVEL * u)
+    up = right.cross(fwd).normalized()
+    ph = 2 * math.pi * g / 20.0                           # handheld sway (D): 1.5 Hz lateral + a little vertical, no net drift
+    off = right * (SWAY * math.sin(ph)) + up * (0.5 * SWAY * math.sin(ph * 0.7 + 1.0))
+    return loc + off, look + off
+
 
 BASE = dict(cast19.STORY19["harrison_chisel"][1])
 
 
+BASE_OLD = dict(cast19.STORY19["harrison_tired_rub"][1])
+
+
 def pose_of(g):
-    p = dict(BASE)
+    p = dict(BASE) if g < G_AGE else dict(BASE_OLD)
     p["mirror"] = True                                    # the H3 is at screen-left of him
-    lk = u_of(g, *G_LOOKUP, kind="sine")
     ph = 2 * math.pi * g / 14.0                           # ~2 Hz tapping
-    tap = (1.0 - lk) * 0.16 * max(0.0, math.sin(ph))
-    p["arm_r"] = dict(hand=(0.78 + 0.5 * tap, 1.0 - tap), bend=0.2, layer="front", stretch=1.2)
-    p["prop_r"] = dict(type="chisel19", angle=40 - 25 * tap * 6 * (1 - lk))
-    p["lean"] = lerp(8 + 1.5 * math.sin(ph), 1.0, lk)
-    p["pitch"] = lerp(0.30 + 0.05 * math.sin(ph), -0.05, lk)
-    p["yaw"] = lerp(0.5, 0.2, lk)
-    p["gaze"] = (lerp(0.7, 0.1, lk), lerp(0.9, 0.0, lk))
-    p["expr"] = "determined" if lk < 0.5 else "worried"
+    if g < G_AGE:                                         # greying Harrison taps the chisel
+        tap = 0.16 * max(0.0, math.sin(ph))
+        p["arm_r"] = dict(hand=(0.78 + 0.5 * tap, 1.0 - tap), bend=0.2, layer="front", stretch=1.2)
+        p["prop_r"] = dict(type="chisel19", angle=40 - 25 * tap * 6)
+        p["lean"] = 8 + 1.5 * math.sin(ph)
+        p["pitch"] = 0.30 + 0.05 * math.sin(ph)
+        p["yaw"] = 0.5
+        p["gaze"] = (0.7, 0.9)
+        p["expr"] = "determined"
+    else:                                                 # the same man, white-haired and tired
+        p["old"] = 1
+        lk = u_of(g, *G_LEAN, kind="sine")                # 0 bent over the work -> 1 leaning back, rubbing
+        rub = math.sin(2 * math.pi * g / 9.0)
+        # bent over he still works: the free hand fidgets on the H3 until he gives up and rubs his eyes
+        p["arm_r"] = dict(hand=(0.16 + 0.05 * rub * lk, 0.30 - 0.26 * lk + 0.04 * math.sin(2 * math.pi * g / 9.0 + 1.2) * lk), bend=-0.5,
+                          layer="top", shape="open")
+        p["arm_l"] = dict(hand=(-0.4 + 0.10 * math.sin(ph) * (1 - lk), 0.96), bend=0.5)
+        p["lean"] = lerp(8.0 + 1.5 * math.sin(ph), -17.0, lk)
+        p["pitch"] = lerp(0.30, -0.15, lk)
+        p["head_roll"] = lerp(0.0, 7.0, lk) + 1.5 * math.sin(g * 0.3) * lk
+        p["yaw"] = 0.2
+        p["expr"] = "worried"
+        p["blink"] = 2 if lk > 0.5 else blink(g, BLINKS)
+        p["fx"] = ["sweat"] if lk > 0.7 else []
+        p["t"] = g / 30.0
+        return p
     p["blink"] = blink(g, BLINKS)
     p["t"] = g / 30.0
     return p
 
 
 def candle_level(g):
-    """the bench candle stub burns down over the shot (1.0 -> 0.3)"""
-    return lerp(1.0, 0.35, clamp((g - G0) / float(G1 - G0)))
+    """the bench candle stub burns down over the whole take (1.0 -> 0.25)"""
+    return lerp(1.0, 0.25, clamp((g - G0) / float(G1 - G0)))
 
 
 class Take(C.Take):
     def __init__(self, quality="preview"):
-        C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s12")
+        C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s12m")
         self._base = {}
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
         # the bench candle stub moves from the far left of the bench to the bench top at his right shoulder, so it stays in frame while it burns down
@@ -84,7 +125,7 @@ class Take(C.Take):
         for o, _b in H.STATE["lampgroups"]["candle"]:
             if o.name == "p_bench":
                 o.location = (1.7 * 1.85, 0.8 * 1.85, 1.6)
-        self.key_cam(bf(G_FIRST), *CAM.at(G_FIRST))
+        self.key_cam(bf(G_FIRST), *cam_at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
         self.har = self.actors["har"] = C.make_actor("har", "harrison19", os.path.join(WORK, "sprites"), canvas=CANVAS, contact=True, cam=self.cam)
 
@@ -92,7 +133,7 @@ class Take(C.Take):
         mark = Vector(self.A["marks"][MARK]) + Vector((MARK_DX, MARK_DY, 0))
         for g in gs:
             f = bf(g)
-            self.key_cam(f, *CAM.at(g))
+            self.key_cam(f, *cam_at(g))
             C.place(self.har, f, mark)
             self.key_set(f, clock=CLOCK, balance=g / 30.0, candles=candle_level(g))
             self.dim(f, g)
@@ -110,10 +151,10 @@ class Take(C.Take):
         for grp, items in H.STATE["lampgroups"].items():
             for o, _b in items:
                 if grp == "candle":
-                    o.data.energy = o.data.energy * lerp(1.0, 0.3, u)
+                    o.data.energy = o.data.energy * lerp(1.0, 0.45, u)
                 else:
                     self._base.setdefault(o.name, o.data.energy)
-                    o.data.energy = self._base[o.name] * lerp(1.0, 0.3, u)
+                    o.data.energy = self._base[o.name] * lerp(1.0, 0.45, u)
                 o.data.keyframe_insert("energy", frame=f)
         em = H.STATE["M"]["flame"].node_tree.nodes["Emission"].inputs["Strength"]
         em.default_value = em.default_value * lerp(1.0, 0.5, u)
@@ -121,13 +162,13 @@ class Take(C.Take):
         sun = H.STATE.get("sun")
         if sun is not None:
             self._base.setdefault("sun", sun.data.energy)
-            sun.data.energy = self._base["sun"] * lerp(1.0, 0.3, u)
+            sun.data.energy = self._base["sun"] * lerp(1.0, 0.45, u)
             sun.data.keyframe_insert("energy", frame=f)
 
     def report(self, g):
         f = bf(g)
         self.scene.frame_set(f)
-        loc, look = CAM.at(g)
+        loc, look = cam_at(g)
         bars = C.clock_world(CLOCK, (0.0, 0.0, 0.64))
         return dict(g=g, cam=[round(c, 3) for c in loc], heads=C.head_report(self, f), h1_bars_px=H.project(tuple(bars)),
                     dof=self.cam.data.dof.use_dof, caption_shade=bool(C.bpy.data.objects.get("caption_shade")))

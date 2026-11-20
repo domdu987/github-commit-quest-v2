@@ -51,7 +51,7 @@ _CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.03, slide_px=0.0, 
 CAM = _Sway(_CAM)
 
 # ---------------------------------------------------------------------------- cast
-STAND = dict(mock=(-2.3, 1.0, 0.0), bb=(2.1, 2.6, 0.0), cc=(0.8, -0.3, 0.0))
+STAND = dict(mock=(-2.1, 1.0, 0.0), bb=(2.2, 1.5, 0.0), cc=(0.8, 0.5, 0.0))
 # name, cast, mark, base STORY19 pose, mirror (faces screen-left), phase offset (frames)
 BOARD = [
     ("mock", "astro19", "mocker_table", "astro_belly_laugh", True, 0),

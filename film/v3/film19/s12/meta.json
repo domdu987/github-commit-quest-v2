@@ -2,16 +2,21 @@
  "take": "s12",
  "film": 19,
  "shots": [
-  12
+  12,
+  13
  ],
  "g0": 938,
- "g1": 986,
+ "g1": 1016,
  "first_g": 929,
- "n_frames": 66,
+ "n_frames": 96,
  "shot_ranges": {
   "12": [
    938,
    985
+  ],
+  "13": [
+   986,
+   1015
   ]
  },
  "handle_in": 9,
@@ -20,22 +25,29 @@
   "type": "dissolve",
   "frames": 11
  },
- "set": "v3/set3d19 WORKSHOP preset shop_clock, light NIGHT; set_clock(3) (H3), set_balance(g/30) + set_candles(level) keyed on every frame; no runtime set changes; no caption_shade",
- "cast": "v3/cast19 harrison19 default (greying hair, apron), harrison_chisel base mirrored (H3 at screen-left), chisel taps, straightens and looks tired at the lens after the snap; fixed expression mouth; no lip-sync",
- "camera": "custom 22 mm from (2.2,-1.6,2.4) toward Harrison/H3; CamPath push 7 %/s + slide -70 px/s + arc 8 deg/s + snap x1.3 (peak 3.0) on สิบ (g 952..972)",
+ "set": "v3/set3d19 WORKSHOP preset shop_clock, light NIGHT; set_clock(3) (H3), set_balance(g/30) + set_candles(level) keyed every frame; runtime: the bench candle stub + its point light moved onto the foreground chest; the lights are keyed down over the take; no caption_shade",
+ "cast": "v3/cast19 harrison19: default (greying, apron, harrison_chisel taps) until g 965, then old=1 (white hair, spectacles, brown coat, harrison_tired_rub) from g 966 - the swap happens at the fastest frames of the whip pan; leans back and rubs his eyes g 993-1003; fixed expression mouth; no lip-sync",
+ "camera": "ONE continuous custom 22 mm camera, no cut: from (2.2,-1.6,2.4) at the shop_clock spot, push 6 %/s + slide -60 px/s, a lateral whip pan along the bench (g 952..972, k 1.05, shift 1.4 D, peak 3.0) toward the shop_bench side, then the camera turns (look point +1.0 D over g 985..1024) to keep him framed, handheld sway 0.09 D at 1.5 Hz; the camera never passes x 3.3 (shop wall at 4.25); head width <= ~250 px",
  "events": {
-  "tapping": "chisel taps ~2 Hz",
-  "candle": "set_candles(level 1.0 -> 0.35, lights dimmed to 30 %) every frame",
-  "snap": [
+  "tapping": "chisel taps ~2 Hz g 938..965",
+  "whip_pan": [
    952,
    972
   ],
-  "word_caption": 960,
-  "look_up": [
-   964,
-   974
+  "age_swap": 966,
+  "word_caption_1": 960,
+  "word_caption_2": 989,
+  "word_spoken_2": 996,
+  "lean_back": [
+   993,
+   1003
   ],
-  "h3_balance": "set_balance(g/30) every frame (H3 balances counter-rotate)"
+  "rub": [
+   1003,
+   1024
+  ],
+  "candle": "set_candles(1.0 -> 0.25) + lights down, every frame",
+  "h3_balance": "set_balance(g/30) every frame"
  },
  "dof": "none",
  "text": "none",
@@ -48,20 +60,20 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 17.15,
- "s_per_frame_cpu_mean": 33.7,
+ "s_per_frame_wall_mean": 17.24,
+ "s_per_frame_cpu_mean": 33.77,
  "head_px": [
   198,
-  339
+  255
  ],
  "head_centre_y": [
-  498,
-  580
+  548,
+  592
  ],
- "head_bottom_max_y": 684,
+ "head_bottom_max_y": 714,
  "framediff_in_shot": {
-  "median": 4.23,
-  "p90": 10.62
+  "median": 5.6,
+  "p90": 14.47
  },
  "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
 }

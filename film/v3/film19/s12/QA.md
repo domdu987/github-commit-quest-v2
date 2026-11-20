@@ -1,21 +1,9 @@
-# s12 QA: film 19, shot 12 (WORKSHOP shop_clock NIGHT, set_clock(3))
-- Take g 929..994 (66 frames, 720x1280, 8 spp). Shot = g 938..985 (31.26-32.85 s); in-handle g 929..937 (dissolve 11 f in), out-handle g 986..994 (next shot is a cut). take.mkv crf 6, first_g 929. QA_AUTO PASS.
-- Action: greying Harrison (default variant, apron) taps a chisel at the H3 (two round balances counter-rotate, set_balance every frame) by candlelight; the bench candle stub burns down (set_candles level 1.0 -> 0.3, keyed every frame, flame flicker). Snap g 952..972 (x1.4, peak 2.8, pan) on "สิบ" (caption g 960); he straightens and looks tired at the lens.
-- Staging: he stands in front of the bench (offset from harrison_bench so the H3 does not hide him), contact shadow, feet on floor. Candle stub visible right.
-- Heads 207-401 px wide (close at the end), centre y ~464-576, bottom < 681 (caption band clear). No text, no DOF, no caption_shade; mouth fixed.
-- Frame-diff in-shot: median 4.42, p90 13.37 (re-render after the director's QA-tech FAIL). Night is dim, so this needed a strong drift (push 15 %/s) and a long snap.
-- s/frame 15.8 wall / 31.1 CPU.
-- Deviations: custom camera (preset cam hid him behind the H3; an early version drove into the right wall); shot is 1.6 s with a snap anyway (frame-diff).
-
-## Re-render (after QA_TECH FAIL + the lantern set fix)
-- Re-rendered with the new iron-cage lantern (h19_shop.py from film19/main).
-- Candle burn-down now reads: at runtime the bench stub and its point light are moved onto the foreground chest (it stayed in frame only at the far left before), set_candles level 1.0 -> 0.12 keyed every frame (stub 17 cm -> 2 cm, flame follows), in frame for the whole shot.
-- Tapping continues through the end of the shot (bigger stroke, the straighten/look-up moved out of the shot); snap x1.45 g 952..972.
-- Head 198-420 px wide, centre y 463-580. Contact shadow: cast19 contact decal is on; the legs still end in thin stubs (rig limit).
-
-## Round 2 re-render (QA_TECH round-2 FAIL)
-- Candle: stub + flame + point light on the foreground chest (in frame all shot); set_candles level 1.0 -> 0.35 (stub 17 cm -> 6 cm), flame emission x0.5, candle lights x0.3, all other lamps / fills / moon key keyed down to 30 % across the shot. Frame mean luma now FALLS: 68.9 (g938) -> 59.4 (g985) (was 62.9 -> 88). The end close-up is smaller (head 295 px max, snap x1.2) because the big white face was what raised the luma.
-- Frame-diff in-shot: median 4.02 (meets), **p90 9.84 (under 12)**: the smaller snap costs p90. Tapping continues to the end.
-
-## Round 3 (director's relaxed per-take rule: median >= 4, p90 >= 10)
-- Snap x1.3 instead of x1.2 (everything else as round 2): frame-diff in-shot median 4.23, p90 10.62. Meets the per-take rule. Candle / luma behaviour as in round 2 (luma falls).
+# s12 QA (MERGED shots 12 + 13): film 19, WORKSHOP shop_clock NIGHT, set_clock(3) - one continuous take, no cut (QA_TEAM §I)
+- Take g 929..1024 (96 frames, 720x1280, 8 spp). Shots: 12 = g 938..985 (31.26-32.85 s), 13 = g 986..1015 (32.85-33.86 s) with NO cut between them. In-handle g 929..937 (dissolve 11 f in from shot 11), out-handle g 1016..1024 (dissolve 11 f out into shot 14). take.mkv crf 6, first_g 929. QA_AUTO PASS. meta.json shots [12, 13], shot_ranges {12: [938, 985], 13: [986, 1015]}. The s13 folder is superseded by this take.
+- Story: greying Harrison (default) taps a chisel at the H3 by candlelight (g 938-965). The camera makes a lateral whip pan along the bench (snap g 952..972 on "สิบ", caption g 960). At the fastest frames (g 966) the SAME Harrison swaps to the old=1 look (white hair, spectacles, brown coat): the whip hides the pop. White-haired Harrison bends tired over the H3 (g 973-992), then on "จนผมหงอกทั้งหัว" (caption g 989, หงอก ~g 996) leans back and rubs his eyes with a sweat drop (g 993-1015+). He is always doing something (tapping, fidgeting, rubbing).
+- Candle / light: the bench candle stub and its light sit on the foreground chest (always in frame), set_candles 1.0 -> 0.25 keyed every frame, flame emission and all lights keyed down over the whole take (luma falls). set_balance(g/30) every frame (H3 balances).
+- Camera: ONE custom 22 mm path: start (2.2,-1.6,2.4), push 6 %/s, slide -60 px/s, the whip pan (k 1.05, shift 1.4 D), then the look point turns +1.0 D over g 985..1024 (camera turns, does not move), handheld sway 0.09 D at 1.5 Hz. The camera never passes x ~3.3 (the shop wall is at 4.25; an earlier version with arc / travel went through the wall and rendered black).
+- Gate G: head width max 248 px (about 19-24 % of the frame height; well under 30 %), head centre y 548-592, head left edge >= 121, right edge <= 637: nobody cut by an edge, heads above y 880. No text, no DOF, no caption_shade, fixed mouth.
+- Frame-diff in-shot (g 939..1015): median 5.60, p90 14.47 (per-take rule median >= 4, p90 >= 10 met). qa_stats (whole file incl. handles): saturation 0.70, brightness 66.8 (night; the conform grade lifts it).
+- s/frame 17.2 wall / 33.8 CPU (two processes).
+- Known: contact decal is on, but the legs still end in thin white stubs (cast rig limit). The right half of the frame after g 967 is the plain shop wall (the camera looks along the bench).
