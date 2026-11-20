@@ -1,17 +1,17 @@
 # QA s22 (film 18, render team 4)
 Range g 1683-1741, take.mkv frames 1677..1747 (71 frames), transition in: cut.
-Render: 720x1280, 12 samples, OIDN, 2 threads, 15.1 s/frame wall (two renders at once).
+Render: 720x1280, 12 samples, OIDN, 2 threads, 15.6 s/frame wall (two renders at once).
 
 ## Frame diff (90x160 grey, in-shot frames only)
-median 6.85, p90 10.34, min 2.05, max 20.39, frames < 1: 0 (rule: median >= 4, p90 >= 12)
+median 5.89, p90 8.86, min 2.55, max 11.1, frames < 1: 0 (rule: median >= 4, p90 >= 12)
 
 ## Max chin y per head (rule < 880)
-{"hero": 721, "soldier": 694}
+{"hero": 711, "soldier": 681}
 
 ## Notes
-- Hero ox: front-3/4 startled dragon card, flame drawings flicker every 2 frames, whole head + both blades inside the frame (right blade margin > 100 px), tail flame visible; 10 background gallop oxen.
-- Frozen soldier (coloured card, sweat + O mouth) kept apart on the left, carried with the camera (position scaled with the snap zoom) so he never leaves the frame.
-- Camera: push 9 %/s, slide 22 px/s, sway, 3 punch-ins homing on the ox (last on "วาววับ", 57.64 s). Mouths do not move.
-- Re-render after TAKE gate rules: zoom pulses removed, only held punch-ins (s21: +12 % then the x1.4 held snap on the word; s22: two held +12 %). Frame-diff from push, slide, sway and herd motion.
+- Round 4 rework: deep night (moon, cityglow and gate lintel removed, sky black); charging ox face overlay (frown + angry brows) on the front-3/4 gallop card; the hero's OWN tail flame is a flame card on the tail tip with a warm point light (found and fixed: the set's flame-card material read its flicker props from the wrong object, so flames rendered black; the card now gets fu/fk each frame).
+- Frozen soldier at the left edge (kept in frame, scaled with the snap) in front-3/4; dark glazed barrel bottom-right; ground about 25 %.
+- ONE held +15 % punch-in at g 1731 ("วาววับ" 57.64 s) with a star glint sprite on each blade tip g 1732-1745 (tip positions estimated from the head anchor: the front view has no tip anchors).
+- Deviation: p90 frame diff 8.9 (target 12): no pulses, so motion comes from push 9 %/s, slide 14 px/s and sway only. The soldier's helmet still overlaps the edge of the hero flame at the start.
 
 See QA_AUTO.md and phone_sheet.jpg.
