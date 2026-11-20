@@ -1,0 +1,74 @@
+{
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 15,
+  "note": "DIS 15 from shot 22 (HALL hall_table DAY): 9 f in-handle g 1847..1855 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 1933,
+  "note": "hard cut to shot 24; out-handle g 1933..1941 rendered in 3D (walk and camera continue)"
+ },
+ "set": "v3/set3d19/h19.py HALL preset hall_door, light EVENING; set_candles flicker + set_regulator(True) keyed on EVERY frame; no caption_shade; no DOF",
+ "cast": "v3/cast19 harrison19 old=1 (white hair, spectacles, brown coat, stoop): cast19.cycle walk, speed 0.55, 46-frame cycle (slow shuffle), right hand holds the H4 watch (prop h4_watch) on the open palm, left arm swings; happy smile fixed mouth; blinks; no lip-sync",
+ "camera": "custom 22 mm from near the hall_door start pose raised 0.75 m: c19.CamPath crane DOWN (rise -35 px/s) + push 6 %/s + slide -135 px/s + arc 30 deg/s about the doorway, decay 0.12 (moving on the last frame); snap x1.75 + pan (shift 4.6 D, peak 2.3, 21 f) on 'พระราชา' (caption 63.18 s -> g 1898)",
+ "events": {
+  "enters_door": [
+   1847,
+   1880
+  ],
+  "walk_cycle_frames": 46,
+  "snap": [
+   1896,
+   1915
+  ],
+  "word_phra_racha_caption": 1898,
+  "word_heard_yin_rueang_nii": 1910
+ },
+ "cues": [
+  {
+   "time": 61.567,
+   "duration": 2.867,
+   "frame": 1847,
+   "end_frame": 1933,
+   "kind": "ambience",
+   "label": "grand hall, evening: soft room tone, distant clock tick from the regulator, candle hiss"
+  },
+  {
+   "time": 61.867,
+   "duration": 2.567,
+   "frame": 1856,
+   "end_frame": 1933,
+   "kind": "foley",
+   "label": "slow old-man shuffle on polished boards (soft shoe taps with a tiny cane-less drag), every ~0.8 s",
+   "peak_frame": 1870
+  },
+  {
+   "time": 62.8,
+   "duration": 0.0,
+   "frame": 1884,
+   "end_frame": 1884,
+   "kind": "accent",
+   "label": "the double door creaks wider as he comes in",
+   "peak_frame": 1870
+  },
+  {
+   "time": 63.2,
+   "duration": 0.633,
+   "frame": 1896,
+   "end_frame": 1915,
+   "kind": "accent",
+   "label": "camera snap whoosh as the camera whips across the hall on 'พระราชา'",
+   "peak_frame": 1904
+  },
+  {
+   "time": 64.433,
+   "duration": 0.0,
+   "frame": 1933,
+   "end_frame": 1933,
+   "kind": "cut",
+   "label": "hard cut to shot 24 (the King's table): footsteps cut, clock ticks continue"
+  }
+ ]
+}

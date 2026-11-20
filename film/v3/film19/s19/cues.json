@@ -1,0 +1,32 @@
+{
+ "take": "s19",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film19/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 48.933,
+   "duration": 3.767,
+   "frame": 1468,
+   "end_frame": 1581,
+   "kind": "ambience",
+   "label": "tropical beach: surf, palm fronds rustling, gulls, a far ship's bell"
+  },
+  {
+   "time": 49.9,
+   "duration": 0.4,
+   "frame": 1497,
+   "end_frame": 1509,
+   "kind": "accent",
+   "label": "snap push on 'แค่ห้าวินาที': airy whoosh + cheer swell",
+   "peak_frame": 1503
+  },
+  {
+   "time": 48.933,
+   "duration": 1.0,
+   "frame": 1468,
+   "end_frame": 1498,
+   "kind": "foley",
+   "label": "sailors' cheers and a tricorne thrown up (no words)"
+  }
+ ]
+}
