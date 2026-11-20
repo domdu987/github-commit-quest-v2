@@ -32,7 +32,7 @@ GS = list(range(FIRST_G, G_LAST + 1))
 FINAL_SPP = 10
 S = 1.85
 PPD = 224                                                # sprite px per D (head ~110 px at the end; the start is downsampled)
-G_ARRIVE = 176                                           # the medium shot is reached (5.9 s)
+G_ARRIVE = 182                                           # the medium shot is reached (5.9 s)
 G_SCRATCH = (155, 175)       # head scratch; 157-190 the whole puzzled beat                                   # astro19_c scratches his head (comic), 4.9-5.5 s
 BLINKS_C, BLINKS_A = [70, 128, 171], [92, 150, 188]
 
@@ -56,7 +56,7 @@ def _cr(p0, p1, p2, p3, t):
     return 0.5 * ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t + (-p0 + 3 * p1 - 3 * p2 + p3) * t * t * t)
 
 
-TM = [(48, 0.0), (66, 0.07), (90, 0.27), (112, 0.52), (125, 0.66), (140, 0.80), (176, 1.0)]    # g -> FRACTION OF THE PATH LENGTH (ease in, one speed hump, ease OUT over g 138-170)
+TM = [(48, 0.0), (66, 0.07), (90, 0.27), (112, 0.52), (125, 0.66), (140, 0.80), (182, 1.0)]    # g -> FRACTION OF THE PATH LENGTH (ease in, one speed hump, ease OUT over g 138-170)
 
 
 def _slopes():
@@ -73,7 +73,7 @@ _M = _slopes()
 
 
 G_FLOW0 = 140
-FLOW_T = [(140, 5.0), (150, 5.6), (158, 5.8), (164, 5.4), (168, 3.5), (171, 2.0), (174, 0.8), (176, 0.3), (178, 0.3)]     # px/frame of the rigging / sail background at 360 wide
+FLOW_T = [(140, 5.4), (146, 5.0), (156, 4.5), (164, 4.0), (170, 2.9), (174, 1.9), (178, 1.0), (182, 0.0)]     # px/frame of the rigging / sail background at 360 wide
 _FPTS = [Vector(p) for p in ((0.5, -26, 24), (2.5, -22, 20), (-2.5, -24, 22), (4, -27, 18), (1.0, -18, 16.5), (-3, -28, 17))]
 _FU = {}
 
@@ -125,10 +125,6 @@ def _flow_table():
 
 
 def _umap(g):
-    if g >= G_FLOW0:
-        if g >= G_ARRIVE:
-            return 1.0
-        return _flow_table()[int(g)] * (1 - (g - int(g))) + _flow_table()[int(g) + 1] * (g - int(g))
     return _umap_tm(g)
 
 
@@ -184,18 +180,96 @@ def _spline_u(u, which):
     return Vector([_cr(p0[i], P[j][i], P[j + 1][i], p3[i], tt) for i in range(3)])
 
 
-def cam_rest(g):
-    """(loc, look) in the ship's rest frame at film frame g.  After arrival: a slow push so the shot never parks."""
-    loc, look = _spline(min(g, G_ARRIVE), 1), _spline(min(g, G_ARRIVE), 2)
-    # AFTER the landing (g 176) a very slow orbit + push keep the frame alive (a linear part so the speed never reaches zero, a smoothstep part for the ease);
-    # everything before g 176 is the spline alone, so the background flow decays with the zoom (QA-tech round 12: no 6-7 px/frame orbit until g 170)
-    d = clamp((g - 176) / 70.0)
-    ang = math.radians(17.0) * (0.15 * d + 0.85 * d * d * (3 - 2 * d))
+G_W0 = 96
+FLOW_W = [(96, 1.5), (104, 2.4), (112, 3.2), (120, 4.4), (125, 5.4), (131, 6.2), (136, 6.0), (146, 5.0), (156, 4.5), (164, 4.0), (170, 2.9), (174, 1.9), (178, 1.1), (182, 0.0)]   # target background flow (px/frame at 360 wide)
+_TAU = {}
+
+
+def _fw(g):
+    for i in range(len(FLOW_W) - 1):
+        if FLOW_W[i][0] <= g <= FLOW_W[i + 1][0]:
+            t = (g - FLOW_W[i][0]) / float(FLOW_W[i + 1][0] - FLOW_W[i][0]); t = t * t * (3 - 2 * t)
+            return FLOW_W[i][1] + (FLOW_W[i + 1][1] - FLOW_W[i][1]) * t
+    return 0.0
+
+
+def _path_flow(tau):
+    """background flow (px/frame at 360 wide) of the landing path (spline + aim) at path time tau"""
+    a, b = _land(tau), _land(tau + 0.25)
+    tot = 0.0
+    for P in _FPTS:
+        pts = []
+        for (loc, look) in (a, b):
+            f = (look - loc).normalized(); r = Vector((f.y, -f.x, 0.0)).normalized(); up = r.cross(f)
+            d = P - loc; z = d.dot(f)
+            pts.append((360 + 782.2 * d.dot(r) / z, 640 - 782.2 * d.dot(up) / z))
+        tot += math.hypot(pts[0][0] - pts[1][0], pts[0][1] - pts[1][1]) / 2.0
+    return tot / len(_FPTS) / 0.25
+
+
+def _land(tau):
+    """the landing path BEFORE the time warp: the spline + the look-up aim, at path time tau"""
+    loc, look = _spline(min(tau, G_ARRIVE), 1), _spline(min(tau, G_ARRIVE), 2)
+    uu = _umap(min(tau, G_ARRIVE))
+    look = look + Vector((0.0, 0.0, 0.30 * (lambda t: t * t * (3 - 2 * t))(clamp((uu - 0.05) / 0.95))))
+    return loc, look
+
+
+def _tau_of(g):
+    """time warp g -> path time tau for g in [G_W0, G_ARRIVE]: the path is re-timed so the measured background flow equals FLOW_W exactly (monotone from the g 131 peak)"""
+    if not _TAU:
+        n = int((G_ARRIVE - G_W0) / 0.25)
+        A = [0.0]
+        for i in range(n):
+            A.append(A[-1] + _path_flow(G_W0 + i * 0.25) * 0.25)
+        G = [0.0]
+        for g_ in range(G_W0, G_ARRIVE):
+            G.append(G[-1] + _fw(g_ + 0.5))
+        k = A[-1] / G[-1]
+        _TAU["k"] = k
+        for gi in range(G_W0, G_ARRIVE + 1):
+            tgt = G[gi - G_W0] * k
+            lo, hi = 0, n
+            while hi - lo > 1:
+                mid = (lo + hi) // 2
+                if A[mid] <= tgt:
+                    lo = mid
+                else:
+                    hi = mid
+            f = (tgt - A[lo]) / max(1e-9, A[hi] - A[lo])
+            _TAU[gi] = G_W0 + (lo + f) * 0.25
+    if g <= G_W0:
+        return float(g)
+    if g >= G_ARRIVE:
+        return float(G_ARRIVE)
+    i = int(g); fr = g - i
+    return _TAU[i] * (1 - fr) + _TAU[min(i + 1, G_ARRIVE)] * fr
+
+
+_DR = {}
+
+
+def _drift(g):
+    """(orbit angle rad, push fraction) accumulated from per-frame speeds: v(k) = ramp(k) * (small + a bump over the hold)"""
+    if not _DR:
+        ang = push = 0.0
+        for k in range(170, 260):
+            r = clamp((k - 170) / 12.0); r = r * r * (3 - 2 * r)
+            d = clamp((k - 170) / 70.0)
+            _DR[k] = (ang, push)
+            ang += math.radians(0.075 + 0.06 * 4 * d * (1 - d)) * r
+            push += (0.0005 + 0.0003 * d) * r
+        _DR[260] = (ang, push)
+    return _DR.get(int(g), (0.0, 0.0) if g < 170 else _DR[259])
+
+
+def cam_rest_raw(g):
+    """(loc, look) in the ship's rest frame at film frame g: the time-warped landing path + the drift"""
+    loc, look = _land(_tau_of(g))
+    ang, push = _drift(g)
     c = Vector((0.5, -30.5, loc.z))
-    loc = c + Matrix.Rotation(ang, 3, "Z") @ (loc - c)
-    loc = loc + (look - loc) * (0.0030 * max(0.0, g - 176) * (0.3 + 0.7 * d))
-    uu = _umap(min(g, G_ARRIVE))
-    look = look + Vector((0.0, 0.0, 0.30 * clamp((uu - 0.6) / 0.4)))      # aim a little higher so the heads sit at y 450-760: tied to the spline progress, so it decays with it
+    loc = c + Matrix.Rotation(-ang, 3, "Z") @ (loc - c)                      # the drift continues the landing's travel direction (-x), eased in from zero
+    loc = loc + (look - loc) * push
     return loc, look
 
 
@@ -404,6 +478,30 @@ def camreport():
         prev = loc
 
 
+_SM = {}
+
+
+def cam_rest(g):
+    """cam_rest_raw smoothed in time (Gaussian, sigma 3 frames) from g ~112: kills the one-frame ticks at the table hand-offs (QA-tech round 13: flow must fall monotonically
+    from g 131 with no up-tick at g 176); blended in with a smoothstep over g 112-128 so the opening is untouched."""
+    g = int(g)
+    if g not in _SM:
+        w = 0.0
+        raw = cam_rest_raw(g)
+        if w <= 0.0:
+            _SM[g] = raw
+        else:
+            ks = [math.exp(-0.5 * (k / 3.0) ** 2) for k in range(-9, 10)]
+            tot = sum(ks)
+            loc = Vector((0.0, 0.0, 0.0)); look = Vector((0.0, 0.0, 0.0))
+            for k, wk in zip(range(-9, 10), ks):
+                l, lk = cam_rest_raw(min(max(g + k, 48), 260))
+                loc += l * (wk / tot); look += lk * (wk / tot)
+            _SM[g] = (raw[0] * (1 - w) + loc * w, raw[1] * (1 - w) + look * w)
+    return _SM[g]
+
+
+
 if __name__ == "__main__":
     cmd = sys.argv[1]
     if cmd == "camreport":
@@ -428,3 +526,4 @@ if __name__ == "__main__":
         quality = "final" if scale >= 1.0 else "preview"
         out = os.path.join(HERE, "raw") if scale >= 1.0 else os.path.join(WORK, "draft")
         C.final_loop(lambda: Take(quality), gs, out, scale=scale, samples=samples)
+
