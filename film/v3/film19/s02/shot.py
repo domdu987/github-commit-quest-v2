@@ -59,7 +59,7 @@ def _cr(p0, p1, p2, p3, t):
 def _spline(g, which):
     """position on the key spline at the eased parameter u(g) (which 1 = loc, 2 = look)"""
     # g -> u: a slow-ish wide start, a fast descent through the stern (the smooth planks / sail frames the blur check punishes), then it SETTLES on the medium
-    TM = [(48, 0.0), (80, 0.26), (109, 0.58), (117, 0.84), (123, 0.97), (G_ARRIVE, 1.0)]
+    TM = [(48, 0.0), (80, 0.26), (108, 0.57), (116, 0.86), (121, 0.97), (G_ARRIVE, 1.0)]
     j = max(i for i in range(len(TM) - 1) if TM[i][0] <= g) if g < TM[-1][0] else len(TM) - 2
     (g0_, u0_), (g1_, u1_) = TM[j], TM[j + 1]
     x = clamp((g - g0_) / float(g1_ - g0_))
