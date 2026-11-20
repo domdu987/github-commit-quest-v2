@@ -1653,6 +1653,9 @@ def stage_cast2(take, g, assign, cam=None, sprite_dir=None, px_per_D=256):
     for pth in (os.path.join(K.V3, 'cast17'), os.path.join(K.V3, 'stage')):
         if pth not in sys.path: sys.path.insert(0, pth)
     import cast17, actors, sprites
+    # leak fix (found by render team T3): drop the previous frame's cast actors before building new ones
+    for o in [o for o in bpy.data.objects if o.name.startswith(('c2_', 'back_hair_', 'back_coat_'))]: bpy.data.objects.remove(o, do_unlink=True)
+    actors.clear_registry()
     sc = bpy.context.scene; cam = cam or sc.camera; cl = cam.location; fnum = sc.frame_current; t = TAKES[take]; out = {}
     sprite_dir = sprite_dir or os.path.join(HERE, 'contact_work', 'sprites_v2'); os.makedirs(sprite_dir, exist_ok=True); bpy.context.view_layer.update()
     for c in t['cast']:
