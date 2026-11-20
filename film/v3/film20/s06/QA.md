@@ -1,13 +1,14 @@
-# s06 (T06) QA, round 2: film 20, shots 6+7+8 as ONE camera-travel take -- CAFE cafe_wide scene, DAY, 1887 (stub view)
-Delivered: take.mkv.partaa/ab/ac (83 MB split 40M; `cat take.mkv.part* > take.mkv`), first_g 396, 212 frames. Shot g 404..603 (13.47-20.15 s); in-handle 8 (g 396..403, DIS 13), out-handle 4 (g 604..607). 23.4 s/frame wall, 45.8 s cpu, 8 spp.
-**Checks:** qa_auto PASS. `qa_stats.py`/`qa_stats2.py`: sat 0.563, vivid% 48.8, luma 100.6 (was 110.4: exposure -0.3), contrast 58.6, warm 63.3 % cool 18.1 %, motion med 15.91 p90 24.28, still% 0.0 (gates: sat >= 0.50, vivid >= 45 %, luma 85-110, motion >= 4 / 12: met). My own diff: 14.75 / 22.10.
-**end_cam (meta.json) = team7's exact T09 start (their s09/meta.json start_cam):** g603 camera (2.618, 9.596, 1.334) D looking at (1.692, 13.160, 1.999) D; handle g604 (2.599, 9.600, 1.350) looking at (1.692, 13.160, 2.000); 22 mm, no shift; drift (-0.019, +0.004, +0.016) D/frame, g605-607 keep it. Maupassant sits on the banquette the whole take, idle + sips (arm sip fades out by g 597), head ~150-180 px at the end.
-## Round-2 fixes (TAKE2_A)
-- Half-cut artists g437-480: artists spread wider (radius ~2 D from the table), start aim shifted left; the camera dives onto the sheet by g 466 so the group leaves frame cleanly (the edge crops are single-digit frames during the descent).
-- Papers: news20 scaled 0.6 and the hands lowered, no paper over a face in the wave beat.
-- Rise g 512-580 stretched (was 512-572): corner speed 20-35 px/frame instead of 45-65; the purple artist moved back (face <= ~25 %).
-- Ending: new landing pose (2.6, 9.6, 1.35 -> exact team7 values): ceiling gone, floor ~30 %, Maupassant ~150 px, window with stub + black smoke behind him; glare patch gone with exposure -0.3.
-- Artists' mouths closed (runtime expression `outraged_c`, frown mouth): only Maupassant's mouth is drawn at all and it is held 'smile'.
+# s06 (T06) QA, round 3: film 20, shots 6+7+8 as ONE camera-travel take -- CAFE cafe_wide scene, DAY, 1887 (stub view)
+Delivered: take.mkv.partaa/ab (83 MB split 40M; `cat take.mkv.part* > take.mkv`), first_g 396, 212 frames. Shot g 404..603; in-handle 8 (g 396..403, DIS 13), out-handle 4 (g 604..607). 20.7 s/frame wall, 40.5 s cpu, 8 spp.
+**Checks:** qa_auto PASS. `qa_stats2.py`: sat 0.539, vivid% 45.6, luma 103.4, contrast 57.2, warm 65.4 % cool 16.5 %, motion med 16.74 p90 24.13, still% 0.0 (gates: sat >= 0.50, vivid >= 45 %, luma <= 110, motion >= 4 / 12: met; vivid is only just over).
+## The join T06 g603 -> T09 g604 (proof: `join_strip.jpg`, top row T06 g595-603, bottom row T09 g604-612 from render20/team7 s09)
+- Camera: g603 = (2.618, 9.596, 1.334) D looking at (1.692, 13.160, 1.999) D, g604 = (2.599, 9.600, 1.350) -> (1.692, 13.160, 2.000), 22 mm, no shift, drift (-0.019, +0.004, +0.016) D/frame; = team7's start_cam.
+- Maupassant is team7's own pose at g604 (their pose_t09 with ur = uf = 0: crouched on the banquette edge at (seat.x, seat.y - 0.30), hands at the sides, `sneer`, mouth flat, same idle terms), same canvas / PPD: NO wine glass. The banquette bar in front of his coat is T09's own geometry, present in both.
+- Colour: my film-wide grade (sat 1.45, exposure -0.3) ramps to T09's own look (sat 1.08, exposure -0.37 relative to cafe_wide's, measured against their frames) over g 560-603; smoke thins from g 586 to none at g 603 like T09 (no smoke).
+- Measured mean abs grey diff (90x160): T06 602->603 5.64, **T06 603 -> T09 604: 4.75**, T09 604->605 4.41, i.e. normal motion, not a cut (the old take had 82).
+## Round-3 fixes
+- Artists now stand on the north side of the table (the dive passes under them): the top-hat artist is whole g 396-448 and leaves through the top, not the side; papers are lowered / removed (arms down, leaning in) from g 452, so no paper covers a face g 456-480; waiter dropped cleanly (never in frame); artists' mouths closed (`outraged_c`).
+- Glare patch gone with the T09 exposure ramp; floor in the end pose is T09's own (~30 %).
 ## The travel (waypoint camera, continuous velocity, no stop; min corner speed 3.6 px/frame)
 | g | beat |
 |---|---|
