@@ -2,117 +2,33 @@
  "take": "s06",
  "film": 20,
  "shots": [
-  6
+  6,
+  7,
+  8
  ],
  "g0": 404,
- "g1": 466,
- "first_g": 395,
- "n_frames": 75,
- "shot_ranges": {
-  "6": [
-   404,
-   465
-  ]
- },
- "handle_in": 9,
- "handle_out": 4,
- "transition_in": {
-  "type": "dissolve",
-  "frames": 13
- },
- "transition_out": {
-  "type": "cut",
-  "frames": 0,
-  "at": 466,
-  "note": "hard cut at g 466; out-handle g 466..469 rendered in 3D (the move continues)"
- },
- "set": "v3/set3d20 CAFE cafe_wide DAY, window view stub, smoke 0 (keyed every frame)",
- "cast": "v3/cast20 painter20 / composer20 / poet20 / architect20 (outraged poses, news20 / paintbrush+palette props waving at ~1.7 Hz, arm + head sway, 3 Hz breathing bounce; poet + architect flipped to face the table) + waiter_idle; mouths held (outraged = held open, never animated); contact decal + proxy shadow",
- "camera": "custom 22 mm cafe_wide start moved to (-5.0, -2.2, 1.2) D (preset (-4.89, -2.63, 2.07)), aim tilted +4 deg above the camera->table line (pitch ~11.5); c20.CamPath push 8 %/s toward the artists' table + truck-left slide 40 px/s + snap x1.3 (+0.1 D pan) g 442..457 on 'สี่สิบกว่าคน'; decay 0.25 (still moving on the last frame)",
- "events": {
-  "snap": [
-   442,
-   457
+ "g1": 604,
+ "first_g": 396,
+ "n_frames": 212,
+ "status": "END CAM ONLY (take in progress)",
+ "end_cam": {
+  "g": 603,
+  "loc_D": [
+   1.7,
+   6.1,
+   2.35
   ],
-  "word_count": 444,
-  "art_arms_up": [
-   442,
-   457
-  ]
- },
- "dof": "none",
- "text": "none",
- "light": "DAY",
- "year": 1887,
- "samples": 8,
- "resolution": [
-  720,
-  1280
- ],
- "threads": 2,
- "fps": 30,
- "s_per_frame_wall_mean": 22.25,
- "s_per_frame_cpu_mean": 42.77,
- "heads_px_in_shot": {
-  "art1": {
-   "w": [
-    120,
-    160
-   ],
-   "y": [
-    634,
-    653
-   ],
-   "bottom_max": 724
-  },
-  "art2": {
-   "w": [
-    102,
-    130
-   ],
-   "y": [
-    656,
-    667
-   ],
-   "bottom_max": 728
-  },
-  "art3": {
-   "w": [
-    131,
-    180
-   ],
-   "y": [
-    630,
-    652
-   ],
-   "bottom_max": 730
-  },
-  "art4": {
-   "w": [
-    145,
-    207
-   ],
-   "y": [
-    612,
-    642
-   ],
-   "bottom_max": 727
-  },
-  "wtr": {
-   "w": [
-    117,
-    155
-   ],
-   "y": [
-    637,
-    647
-   ],
-   "bottom_max": 714
-  }
- },
- "framediff_in_shot": {
-  "median": 3.68,
-  "p90": 8.76
- },
- "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
+  "look_at_D": [
+   1.7,
+   14.0,
+   2.15
+  ],
+  "lens_mm": 22.0,
+  "shift": [
+   0.0,
+   0.0
+  ],
+  "set": "CAFE cafe_wide scene, DAY, window view stub, smoke 1.0",
+  "note": "end of T06: camera turned toward the banquette where Maupassant sits (marks maupassant (1.692,13.16,0), maupassant_seat (1.692,14.006,0.865)); world D (1 D = 0.532 m); camera still moving ~+0.07 D/frame in +y (4 out-handle frames g 604..607 continue to loc (1.72,6.4,2.33)); T09 starts at g 604 on this framing"
+ }
 }
