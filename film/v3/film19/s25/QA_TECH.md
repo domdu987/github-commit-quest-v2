@@ -1,0 +1,6 @@
+# QA_TECH s25 - FAIL
+Checked: qa_auto PASS (cuts g2028 / g2086 not visible, expected), 6 fps + cut +-3 sheet g2019-2094, meta g0 2028 / g1 2085 (plan 67.61-69.55 -> 2028/2085 OK; 2086 = 69.55*30 rounds to 2086), cuts with 9 f handles OK, framediff median 5.01 / p90 12.69 OK. Astro19 wig askew, ring eyes, sweat drop, blinks (g2074 seen), push-in snap g2069-2082 on "เป๊ะ" visible. No text, no blur, head centre y 573-655, bottom <= 810, no clipping until the deliberate push-in.
+Issues:
+1. g2024-2094 (mouth moving outside a quote window): this shot is at 67.61-69.55 s, outside both quote windows (20.80-25.75, 54.25-55.45), yet the mouth goes from closed (g2019-2024) to wide-open (jaw drop g2025-2034) and then changes shape: small round (g2044-2064), larger oval (g2079-2089). Rule: every mouth stays still. Fix: render one constant mouth shape for the whole shot (open from frame 0 or closed); no jaw-drop animation; hold the shape through the push.
+2. g2019-2074: no contact shadow under astro's shoes; the legs end in thin stubs floating above the carpet. Fix: add a blob shadow / lower the card to the floor.
+3. g2079-2094: legs/feet leave the frame with the push; fine for the snap, but the wig and head fill 80 % of the width (head ~ 315 px); make sure the wig tips are not clipped at the left (g2088 tip touches x = 0).

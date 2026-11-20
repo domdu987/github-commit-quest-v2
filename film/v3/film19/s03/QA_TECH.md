@@ -1,0 +1,9 @@
+# s03 QA_TECH: FAIL
+Shot 3, HALL hall_window DAY, take g101-199 (handles 9+9, out side is DIS 13), 6 fps + cuts g110/g191 +-3 checked. qa_auto PASS. No text, no black/magenta frames, no frozen run, no pop outside the planned snap, no blur. Frame-diff re-measured median 4.73, p90 15.60: OK. Mouths: all flat, none moving: OK. Heads in y 450-760 band for g110-176; wig lappet bottom <= ~870 at g186 (inside 880).
+## Issues
+1. g190-199 (g190, g191-196 in the dissolve handle visible from g190 in shot): the dark tripod leg renders as a solid black wedge covering ~25-33 % of frame width at the left (g193: x 0-230 of 720). Reads as a black bar / missing render. Fix: give the tripod the wood material (it renders black), or move the camera so it does not cross, or hide it from g186.
+2. g186-196: astro_b (left, grey wig) is clipped by the left frame edge (wig and hand cut at x=0). Fix: end the snap framing with astro_b fully inside the frame (shift the camera right ~60 px) or reduce snap scale x2.0 -> x1.6.
+3. g110-176: plan says astro_b "peers through the brass telescope". He stands left of the tube with a hand/glove over his eyes (squint); the eyepiece is ~150 px away behind him, no eye-line to the lens, hand not on the telescope. Fix: place astro_b's mark at the eyepiece and have his head at the eyepiece end of the tube (or tilt the tube to him) so the facepalm reads as peering.
+4. g131, g146, g161 (whole wide section): no visible contact shadow under either astronomer's shoes (white legs on the floor/rug), they read as floating. Fix: contact decals darker/larger (multiply 0.5+) on both the wood floor and the navy rug.
+5. g131-166: astro (white wig) is half-hidden behind the chair back, legs cut by the chair; plan wants him "beside" the telescope scratching. Fix: offset his mark 0.4 D away from the chair.
+6. meta.json g1 = 191 is exclusive (plan g1 = 190; shot_ranges 110-190 correct). Note only.
