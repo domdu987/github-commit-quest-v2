@@ -9,22 +9,22 @@
   "frames": 0
  },
  "framediff": {
-  "median": 8.61,
-  "p90": 12.09,
-  "min": 2.2,
-  "max": 14.56,
+  "median": 8.66,
+  "p90": 12.19,
+  "min": 2.77,
+  "max": 14.49,
   "n": 74,
   "frames_lt1": 0
  },
  "max_chin_y": {
-  "run0": 684,
-  "run1": 700,
-  "run2": 896,
-  "run3": 800,
-  "run4": 798,
-  "run5": 693,
-  "run6": 737,
+  "run0": 682,
+  "run1": 689,
+  "run2": 818,
+  "run3": 803,
+  "run4": 814,
+  "run5": 695,
+  "run6": 748,
   "run7": 761
  },
- "s_per_frame": 16.5
+ "s_per_frame": 15.8
 }

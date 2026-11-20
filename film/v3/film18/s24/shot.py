@@ -19,8 +19,8 @@ SNAPS = [(G0 + 14, 1.14, 4, 9999), (G0 + 46, 1.12, 4, 9999)]      # HELD punch-i
 
 
 # ---- the rout cast: (start x, y), run direction (deg, world), speed D/s, fall frame (None = keeps running), cast
-RUNNERS = [(-8.0, -78.0, 190.0, 3.4, None, 'a'), (6.0, -76.0, 345.0, 3.4, 30, 'b'), (-3.0, -82.0, 235.0, 3.0, None, 'c'), (9.0, -84.0, 20.0, 3.0, 8, 'a'),
-           (-11.0, -88.0, 170.0, 3.4, 40, 'b'), (1.0, -80.0, 100.0, 2.6, None, 'c'), (-5.0, -84.0, 170.0, 3.2, None, 'a'), (4.0, -82.0, 10.0, 3.4, 48, 'c')]
+RUNNERS = [(-8.0, -78.0, 190.0, 1.9, None, 'a'), (6.0, -76.0, 345.0, 1.9, 30, 'b'), (-3.0, -82.0, 235.0, 1.7, None, 'c'), (9.0, -84.0, 20.0, 1.7, 8, 'a'),
+           (-11.0, -88.0, 170.0, 1.9, 40, 'b'), (1.0, -80.0, 100.0, 1.4, None, 'c'), (-5.0, -84.0, 170.0, 1.8, None, 'a'), (4.0, -82.0, 10.0, 1.9, 48, 'c')]
 CASTS = dict(a='yan_soldier_a', b='yan_soldier_b', c='yan_soldier_c')
 
 
@@ -41,18 +41,20 @@ def make_driver(quality):
         run.append(C.Actor(atl[k], 'run%d' % i, height=3.2 if k != 'c' else 3.0, sw=1.0, ref=('fall', 0)))
     # ---- hero flying items (pot / helmet / hay), big, near the lens (3D)
     Bk = C.J.Banks(); M = C.STATE['M']; items = []
-    for n_, kind in enumerate(('pot', 'helmet', 'pot', 'helmet')):
+    for n_, kind in enumerate(('pot', 'helmet', 'pot', 'helmet', 'pot', 'helmet')):
         b = Bk('fly%d' % n_, hull=0.0)
         if kind == 'pot': C.J.ellipsoid(b, V((0, 0, 0.45)), 0.5, 0.5, 0.5, M['iron'], seg=10, rings=6, th=(0, math.pi)); C.J.cyl(b, V((0, 0, 0.9)), 0.52, 0.1, M['iron'], seg=10)
         else: b.frustum(V((0, 0, 0)), V((0, 0, 0.55)), 0.5, 0.2, M['iron'], seg=10); b.frustum(V((0, 0, 0.55)), V((0, 0, 0.9)), 0.04, 0.1, M['red'], seg=5)
     Bk.flush(C.STATE['SET'])
-    for n_ in range(4):
+    for n_ in range(6):
         o = [o for o in C.STATE['SET'].objects if o.name.startswith('fly%d' % n_)][0]; C.J.no_bounce(o); items.append(o)
-        o.data.materials.clear(); o.data.materials.append(C.flat_mat((0.28, 0.17, 0.05) if n_ % 2 == 0 else (0.16, 0.16, 0.22), 'flyitem%d' % n_))
-    FLY = [(-2.0, -80.0, 0.0, -9.0, -86.0, 6.0, 0.08), (5.0, -82.0, 0.0, 10.0, -90.0, 6.5, 0.20), (-9.0, -84.0, 0.0, -15.0, -92.0, 7.0, 0.32), (1.0, -78.0, 0.0, 4.0, -86.0, 5.5, 0.14)]
+        o.data.materials.clear(); o.data.materials.append(C.glaze_mat(((0.03, 0.015, 0.01), (0.2, 0.1, 0.03), (0.4, 0.22, 0.08), (0.6, 0.36, 0.14)) if n_ % 2 == 0 else ((0.02, 0.02, 0.03), (0.15, 0.16, 0.22), (0.25, 0.26, 0.36), (0.45, 0.46, 0.6)), 'flyitem%d' % n_))
+    FLY = [(-6.0, -78.0, 0.0, -11.0, -88.0, 6.0, 0.45), (3.0, -84.0, 0.0, 9.0, -94.0, 6.5, 0.38), (-2.0, -80.0, 0.0, -9.0, -86.0, 6.0, 0.08), (5.0, -82.0, 0.0, 10.0, -90.0, 6.5, 0.20), (-9.0, -84.0, 0.0, -15.0, -92.0, 7.0, 0.32), (1.0, -78.0, 0.0, 4.0, -86.0, 5.5, 0.14)]
     cols = dict(pot=(0.30, 0.19, 0.07), helmet=(0.30, 0.30, 0.40), hay=(0.42, 0.30, 0.10), bowl=(0.34, 0.2, 0.08))
     for it in C.STATE['rout_items']:                      # no grey untextured lumps (ALL_TEAMS rule 2): warm flat-glazed pots / bowls / hay
-        if it.get('ob') is not None: it['ob'].data.materials.clear(); it['ob'].data.materials.append(C.flat_mat(cols[it['kind']], 'ri_' + it['kind']))
+        if it.get('ob') is not None: it['ob'].data.materials.clear(); it['ob'].data.materials.append(C.glaze_mat(((0.02, 0.01, 0.01), tuple(c * 0.6 for c in cols[it['kind']]), tuple(c * 1.6 for c in cols[it['kind']]), tuple(min(1.0, c * 2.6) for c in cols[it['kind']])), 'ri_' + it['kind']))
+    for t_ in C.STATE['tents']:                          # the near right tent reads as a ghost panel when it folds: hide it
+        if abs(t_['c'][0] - 11) < 2 and abs(t_['c'][1] + 89) < 2 and C.STATE['objects'].get(t_['name']) is not None: C.STATE['objects'][t_['name']].hide_render = True
     chariot = C.STATE['rout_chariots'][1]['ob']
     actors = {}
     for i, a in enumerate(run): actors['run%d' % i] = a
@@ -60,7 +62,7 @@ def make_driver(quality):
     def drive(g):
         pose = C.set_camera(NAME, g, move=MOVE, cam=CAMO, shake=SHAKE, snaps=SNAPS)
         cam = V(pose['loc']); u = (g - G0) / float(G1 - G0)
-        C.J.set_rout(C.smooth((g - G0 + 8) / float(G1 - G0 + 12)))
+        C.J.set_rout(0.06 + 0.8 * C.clamp((g - G0 + 6) / float(G1 - G0 + 6)))
         fwd = (V(pose['look_at']) - V(pose['loc'])); fwd.z = 0; fwd.normalize(); rt = V((fwd.y, -fwd.x, 0))
         for i, (x, y, ang, sp, ff, k) in enumerate(RUNNERS):
             a = run[i]; t = (g - G0 + 6) / 30.0
@@ -78,7 +80,7 @@ def make_driver(quality):
             p = C.clamp((u - dl) / 0.6); e = p
             o.location = (x0 + (x1 - x0) * e, y0 + (y1 - y0) * e, z0 + 0.4 + ap * math.sin(math.pi * e) * 1.0); o.rotation_euler = (g * 0.25 + n_, g * 0.17, g * 0.11); o.scale = (1.7, 1.7, 1.7)
             o.hide_render = not (0.0 < p < 1.0)
-        pp = C.smooth(C.clamp((g - G0 + 6) / 60.0)); chariot.location = (6.0 - 30.0 * pp, -78.0 - 2.0 * pp, 0.0); chariot.rotation_euler = (0, 0, math.radians(-12.0 * pp))
+        pp = C.smooth(C.clamp((g - G0 + 6) / 100.0)); chariot.location = (6.0 - 30.0 * pp, -78.0 - 2.0 * pp, 0.0); chariot.rotation_euler = (0, 0, math.radians(-12.0 * pp))
     return drive, actors
 
 
