@@ -16,10 +16,10 @@ G_GLINT = C.g_of(57.64)                                           # 1732
 MOVE = dict(push=0.09, slide=8)
 CAMO = dict(loc=(-1.4, -51.5, 1.9), look_at=(0.6, -46.0, 2.5), lens=27.0)
 SHAKE = (0.8, 0.6, 0.4, 2.6)
-SNAPS = [(G_GLINT - 1, 1.15, 4, 9999)]                            # ONE held +15 % punch-in on the word
-OX = V((-0.1, -46.0, 0.0))
+SNAPS = [(G_GLINT - 1, 1.08, 4, 9999)]                            # ONE held +15 % punch-in on the word
+OX = V((0.1, -46.0, 0.0))
 SCALE_OX = 0.8
-SOL_D, SOL_LAT = 5.4, -2.3
+SOL_D, SOL_LAT = 4.7, 0.7
 
 
 def make_driver(quality):
@@ -71,7 +71,7 @@ def make_driver(quality):
     _h = hv[0].anchors['head']; TIP = [(_h[0] - 0.2, _h[1] - 1.05), (_h[0] + 0.95, _h[1] - 0.8)]       # blade tips (front view has no tip anchors): offsets from the head anchor
 
     def drive(g):
-        pose = C.set_camera(NAME, g, move=MOVE, cam=CAMO, shake=SHAKE, snaps=SNAPS); cam = V(pose['loc'])
+        pose = C.set_camera(NAME, g, move=MOVE, cam=CAMO, shake=SHAKE, snaps=SNAPS, focus=OX + V((1.6, 0, 1.6))); cam = V(pose['loc'])
         t = (g - G0) / 30.0; ph = int(g / 2.5) % 8
         bob = 0.05 * abs(math.sin(2 * math.pi * 2.5 * t))
         hero.show(ph, OX, cam, mirror=True, lift=bob, roll=2.0 * math.sin(2 * math.pi * 1.7 * t))
@@ -82,20 +82,20 @@ def make_driver(quality):
         lights[1].location = (OX.x + 0.5, OX.y - 2.0, 1.8); lights[1].data.energy = 260.0
         fwd = (V(pose['look_at']) - V(pose['loc'])); fwd.z = 0; fwd.normalize(); rt = V((fwd.y, -fwd.x, 0))
         zf = pose['lens'] / CAMO['lens']; sp = cam + fwd * SOL_D + rt * (SOL_LAT / zf); sp.z = 0.0
-        sol.show(0, sp + rt * (0.04 * math.sin(g * 2.1)), cam, mirror=False, squash=(1.0, 1.0 + 0.012 * math.sin(g * 1.3)))
+        sol.show(0, sp + rt * (0.04 * math.sin(g * 2.1)), cam, mirror=True, squash=(1.0, 1.0 + 0.012 * math.sin(g * 1.3)))
         for i, (a, p, phs, f2) in enumerate(bg):
             pp = p + V((0, -2.5 * t, 0)); pph = (int(g / 2.5 + phs * 8)) % 8; mir = (i % 2 == 0); a.show(pph, pp, cam, mirror=mir, lift=0.04 * math.sin(g * 0.8 + i))
             dd = cam - pp; yw = math.atan2(dd.x, -dd.y); u2 = V((math.cos(yw), math.sin(yw), 0)); bx, by = at_b.anchors[pph].get('tail_tip', (-1.2, -2.0))
             f2.location = pp + u2 * ((-1.0 if mir else 1.0) * bx * a.sc) + V((0, 0, -by * a.sc)); f2.scale = (a.sc * 0.9,) * 3
         c_pt = C.ground_at(cam_obj, 0.88, 0.97)
-        if c_pt is not None: barrel.location = (c_pt.x, c_pt.y, 0.0); barrel.scale = (0.5, 0.5, 0.5)
+        barrel.hide_render = True
         # star glints on both blade tips on "วาววับ"
         k = g - G_GLINT
         for si, st in enumerate(stars):
             tp = TIP[si] if TIP[si] else None
-            if tp is not None and 0 <= k < 14:
+            if tp is not None and 0 <= k < 8:
                 sgn = 1.0; wx = OX + ur * (-tp[0] * SCALE_OX * sgn) + V((0, 0, -tp[1] * SCALE_OX + bob)); st.location = wx
-                sz = 1.6 * math.sin(math.pi * k / 14.0) + 0.1; st.scale = (sz, sz, sz); st.rotation_euler = (0, 0, 0); st.hide_render = False
+                sz = 3.6 * math.sin(math.pi * (k + 0.5) / 8.0) + 0.2; st.scale = (sz, sz, sz); st.rotation_euler = (0, 0, 0); st.hide_render = False
             else: st.hide_render = True
     return drive, actors
 
