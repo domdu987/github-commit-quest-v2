@@ -28,3 +28,29 @@ Independent measurement from the frames (hair top to tabletop, full 720x1280, +-
 
 ## Verdict: PASS with notes
 Fixed vs the old take: smooth steady zoom, no whoosh, he is findable from frame 1, 3.5-4 s long, dining room behind him, no seam. Notes for the gate: (1) final figure is ~35 % (not 42 %): meets the floor only at the cut/last frame; to be safe a ~5-10 % tighter end pose (or letting the zoom run to g1852 instead of stopping at g1833) would give 38-40 %; (2) start is a facade close-up, not a whole-tower extreme wide; (3) the bite happens from g1750 on. Not committed.
+
+---
+# Round 9 (re-render: ending ~1.24x closer from g1805, post caps + black tower members removed) -- QA-tech: FAIL (duration 2.7 s < 3 s; black block remains)
+
+Same measure as before (visible figure, hair top to far edge of the tabletop, read on the full 720x1280 frames against a 1 % grid, +-1.5 %). g1724-1804 use the identical camera, so the lower half of the old table still holds.
+
+| g | fig % H | | g | fig % H |
+|---|---|---|---|---|
+| 1736 | 4.5 | | 1825 | ~35.5 |
+| 1750 | 5.5 | | 1828 | ~36 |
+| 1775 | ~9.5 | | 1830 | ~37 |
+| 1790 | ~13.5 | | 1840 | ~39.5 |
+| 1805 | ~19 | | 1850 | ~41 |
+| 1815 | ~28.5 | | 1858 | ~43 |
+(g1820 32.6, g1823 34.2, g1826 35.8, g1829 37.2 on the fine grid)
+
+- Last frame <5 %: ~g1743 (4.5 % at g1736, 5.5 % at g1750). First frame >=35 %: ~g1825 (34.2 at 1823, 35.8 at 1826). Duration ~g1743 -> ~g1825 = 82 frames = **2.7 s: OUTSIDE 3-6 s** (error band about 2.4-3.1 s; team2's 3.1 s uses its own sprite-based 5.0 % at g1735, which reads ~0.7 point under my measure at the start and ~2 points under at the end). Not a pass by the same measure as last round.
+- Holds >=35 % to the end: YES, grows 36 -> 43 % (g1828 -> g1858), no drop; the landing now clears the floor by 1-8 points (was borderline).
+- Smoothness: per-frame grey diff (90x160) is continuous through g1795-1834: 10.8 (1795) -> 11.2 (1804) -> 10.9 (1805) -> hump 17.1 (g1814-1815, the old ramp 1804-1822 now a gentle bump) -> 8.3 (1822) -> 6.6 (1830). No step at the old ramp and no jump at g1804/1805 (11.2 -> 10.9). Max adjacent change 29 at g1764 is the lattice/sign crossing (unchanged, was 22 before; no spike in the new part). ONE mild step remains: diff 6.6 -> 1.9 between g1834 and g1835 (zoom rate falls in one frame, then a slow 2-3 drift); reads as a soft settle, but "the zoom continues without a speed step" is not literally true.
+- Take checks (t.mkv rebuilt from the 135 frames): qa_auto PASS (magenta 0 %, no black/frozen frames); qa_stats sat 0.716 (ok), luma 87.3 (85-110, near the floor, ok), motion median 11.0 p90 20.6; qa_stats2 vivid 71.3 % (ok), warm 81.5 / cool 5.5.
+- Defects: (1) black squares on the post tops beside the RESTAURANT sign g1724-1757: REMOVED (pure-black share 0.1-0.2 % at g1724-1740, posts clean). (2) black unlit tower members right of the window g1756-1784: NOT removed. A solid pure-black block (luma<14) still fills the right side of the window behind the lattice: 6.3k px at g1757, 8.6k g1765, 13.4k g1775, 13.8k g1784 (1.5 % of frame, x 420-719, y 370-775 at g1784); it drops to 0.12 % at g1800. It reads as a black void with lamps in front of it (possibly the dark room back wall/unlit gap rather than members, but it is the same visible defect). New artifacts: none (no seam, no floating, ground ok; landing frames clean).
+- Heads at landing: x ~0.44-0.46 W, hair-to-chin centre y ~0.45-0.50 H, head ~19-21 % H (g1830-1858). OK.
+- s24 -> s25 (g1847-1858 into s25 g1847+): s24 end = interior, head centre ~(0.45 W, 0.43 H); s25 = blue sky behind him, head centre ~(0.45 W, 0.54 H), head ~0.7x the size. Plain dissolve, x matches, y offset ~0.1 H and a scale step; no black frame, reads as a match-dissolve with a small drop. Acceptable.
+
+## Round 9 verdict: FAIL
+Landing size is fixed (35 % reached at g1825, 43 % at the end, holds), join/smoothness fine, post caps gone. Blockers: (a) under-5 % -> >=35 % takes ~2.7 s (<3 s): either start the zoom a bit later/slower (e.g. hold <5 % to g1750 and keep the end) or accept 35 % at ~g1833 by relaxing the ramp; (b) the black block right of the window at g1756-1784 is still there. Not committed.
