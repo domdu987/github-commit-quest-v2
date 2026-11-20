@@ -31,7 +31,7 @@ def base_path(g):
             (1154, tuple(c0 + fwd * 2.5 + Vector((0, 0, 0.3))), (0.0, 14.0, 2.0), 64.0),
             (1162, (159.0, 149.0, 53.0), (60.0, 60.0, 10.0), 40.0),
             (1171, (150.0, 137.0, 47.0), (134.0, 127.0, 23.0), 30.0),
-            (1178, (138.0, 120.0, 29.0), (139.0, 129.0, 21.5), 25.0),
+            (1178, (131.0, 115.0, 24.0), (140.0, 132.0, 21.0), 25.0),
             (G_ARRIVE, end_loc, end_look, 22.0)]
     return K.cam_path(None, keys, min(g, G_ARRIVE))
 
@@ -144,7 +144,7 @@ def column(T):
     return Bk.finalize('s08_column')
 
 def build(mode, samples, cast=True):
-    T = C.Take(None, mode, samples, world=PRESETS, fg=["hill_low"], over=dict(shaft_k=1.4))
+    T = C.Take(None, mode, samples, world=PRESETS, fg=["hill_low"], over=dict(shaft_k=0.9))
     for o in bpy.data.objects:
         if o.name.startswith(("fg_generic_steel", "fg_generic_wood")): o.hide_render = True        # the spear that crossed the hero faces
     T.col = column(T)
