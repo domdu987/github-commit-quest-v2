@@ -91,6 +91,40 @@ def hand_svg(an, side="r", big=1.0):
                cx - ux * 0.045, cy - uy * 0.045, cx + ux * 0.045, cy + uy * 0.045, hx, hy, 0.105 * big, hx - 0.04, hy - 0.01))
 
 
+def glove_svg(an, side="l"):
+    """shot 12: sleeve from the elbow, big white glove (r 0.19 D) and an extended index finger whose tip lands on the ear (puppet-local D)."""
+    ex, ey = an["elbow_" + side]; hx, hy = an["hand_" + side]
+    dx, dy = hx - ex, hy - ey; L = math.hypot(dx, dy) or 1.0; ux, uy = dx / L, dy / L
+    fx, fy = hx + ux * 0.40, hy + uy * 0.40                         # fingertip
+    ex, ey = hx - ux * 0.85, hy - uy * 0.85                          # long sleeve rising from the chest to the hand
+    ink, glove, sleeve = "#3a2832", "#fbf3ee", "#46598f"
+    return ('<g><path d="M%.3f,%.3f L%.3f,%.3f" stroke="%s" stroke-width="0.19" stroke-linecap="round" fill="none"/>'
+            '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="%s" stroke-width="0.145" stroke-linecap="round" fill="none"/>'
+            '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="%s" stroke-width="0.125" stroke-linecap="round" fill="none"/>'
+            '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="%s" stroke-width="0.085" stroke-linecap="round" fill="none"/>'
+            '<circle cx="%.3f" cy="%.3f" r="0.17" fill="%s" stroke="%s" stroke-width="0.035"/>'
+            '<path d="M%.3f,%.3f q0.07,-0.03 0.12,0.04" stroke="%s" stroke-width="0.025" fill="none"/></g>'
+            % (ex, ey, hx - ux * 0.1, hy - uy * 0.1, ink, ex, ey, hx - ux * 0.1, hy - uy * 0.1, sleeve,
+               hx, hy, fx, fy, ink, hx, hy, fx, fy, glove, hx, hy, glove, ink, hx - 0.07 - uy * 0.0, hy - 0.04, ink))
+
+def glove_ear_svg(an, g):
+    """shot 12: forearm + big white glove below his own (screen-left) ear with the index finger tip ON the ear rim, tapping 3x g606-640.  Drawn from the head anchor."""
+    hx, hy = an["head"]; c = math.cos(theta_of(0.88))
+    ex, ey = hx - 0.52 * c, hy + 0.02                                 # ear centre
+    tap = 0.05 * abs(math.sin((g - 606) * math.pi / 11.0)) if 606 <= g <= 640 else 0.0
+    gx, gy = ex - 0.02, ey + 0.52 - tap                                # glove centre (below the ear, clear of the mouth)
+    tx, ty = ex - 0.02, ey + 0.17                                      # fingertip on the lower rim of the ear
+    bx, by = gx + 0.25, gy + 1.10                                      # sleeve root (chest)
+    ink, glove, sleeve = "#3a2832", "#fbf3ee", "#46598f"
+    return ('<g><path d="M%.3f,%.3f L%.3f,%.3f" stroke="%s" stroke-width="0.30" stroke-linecap="round" fill="none"/>'
+            '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="%s" stroke-width="0.24" stroke-linecap="round" fill="none"/>'
+            '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="%s" stroke-width="0.14" stroke-linecap="round" fill="none"/>'
+            '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="%s" stroke-width="0.09" stroke-linecap="round" fill="none"/>'
+            '<circle cx="%.3f" cy="%.3f" r="0.17" fill="%s" stroke="%s" stroke-width="0.035"/>'
+            '<path d="M%.3f,%.3f q0.07,-0.03 0.12,0.04" stroke="%s" stroke-width="0.025" fill="none"/></g>'
+            % (bx, by, gx, gy + 0.12, ink, bx, by, gx, gy + 0.12, sleeve, gx, gy, tx, ty, ink, gx, gy, tx, ty, glove,
+               gx, gy, glove, ink, gx - 0.07, gy - 0.04, ink))
+
 def slide_of(g):
     return lerp(0.24, 0.50, ez((g - 440) / 30.0))          # jaws close during shot 9, then stay on the ear
 
@@ -185,14 +219,14 @@ def pose_ins(g):
     if s == 11: p["head_roll"] = -4 + 3 * math.sin(g * 0.2); p["lean"] = 3 + 2 * math.sin(g * 0.33); p["yaw"] = 0.4; p["mirror"] = True
     if s == 12:
         k = clamp((g - B12) / 14.0)
-        p.update(yaw=0.88, expr="smug", pitch=-0.35, head_roll=-3 + 2 * math.sin(g * 0.25), lean=-6 - 3 * sm(k) + 1.2 * math.sin(g * 0.3), arm_r="akimbo")
-        sq = 1.0 + 0.05 * sm(k); p["squash"] = (sq, 1.0 - 0.01 * sm(k))
+        p.update(yaw=0.88, expr="smug", pitch=-0.35, head_roll=-3 + 2 * math.sin(g * 0.25), lean=-6 - 3 * sm(k) + 1.2 * math.sin(g * 0.3), arm_r="behind")
+        sq = 1.0 + 0.09 * sm(k); p["squash"] = (sq, 1.0 - 0.01 * sm(k))
     return speak(p, g), xy, 0.0
 
 def ins_ear_local(an, g):
     hx, hy = an["head"]; c = math.cos(theta_of(0.88))
-    tap = 0.05 * abs(math.sin((g - 604) * math.pi / 9.0)) if g >= 604 else 0.0     # taps from g604 on (period 9 f)
-    return (hx - 0.52 * c + 0.05 - tap * 0.0, hy + 0.02 - tap)
+    tap = 0.045 * abs(math.sin((g - 606) * math.pi / 11.0)) if 606 <= g <= 640 else 0.0     # 3 taps g606-640 (period 11 f), then hold
+    return (hx - 0.52 * c + 0.0, hy + 0.62 - tap)
 
 class Take(C.Take):
     def __init__(self, quality="draft"):
@@ -311,13 +345,12 @@ class Take(C.Take):
                 f = bf(g); self.scene.frame_set(f); p, xy, lift = pose_ins(g); p = rim(dict(p), "inspector17")
                 el = ins_ear_local(self.anch[("ins", f)], g)
                 side = os.environ.get("EARARM", "l"); other = "r" if side == "l" else "l"
-                pp = dict(p); pp["arm_" + other] = "akimbo"; pp["arm_" + side] = dict(hand=(-0.5, 0.0), bend=0.3)
-                _, ii = self.acts["ins"].pose(f, pp, hands={side: {"hand": el, "stretch": 1.4, "shape": "point"}}, camera=cam)
-                self.info[(g, "ear")] = (side, round(ii.get(side, {}).get("error", -1), 3), tuple(round(v, 2) for v in el))
+                pp = dict(p); pp["arm_" + other] = "behind"; pp["arm_" + side] = "behind"
+                self.acts["ins"].pose(f, pp, camera=cam)
         fr12 = [bf(g) for g in gs if shot_of(g) in (11, 12)]
         if fr12:
             self.sprites("ins", self.acts["ins"], fr12)
-            self.sprites("ins", self.acts["ins"], fr12, overlay=lambda f, pose: hand_svg(self.anch[("ins", f)], "l" if shot_of(f - 1) == 12 else "r", 1.5 if shot_of(f - 1) == 12 else 1.0))
+            self.sprites("ins", self.acts["ins"], fr12, overlay=lambda f, pose: (glove_ear_svg(self.anch[("ins", f)], f - 1) if shot_of(f - 1) == 12 else hand_svg(self.anch[("ins", f)], "r")))
 
     def wobble(self, g):
         if 558 <= g <= 567: return 9.0 * math.sin((g - 558) * 1.7) * (1 - (g - 558) / 10.0)

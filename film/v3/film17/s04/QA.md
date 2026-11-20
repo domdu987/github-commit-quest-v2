@@ -2,7 +2,7 @@
 720x1280, 12 samples + OIDN. Built on team 1's s01 machinery (pinned calipers, ears_svg, hand_svg).
 
 ## Numbers
-- rhythm.py (cuts 445,493,540,592,651): **in-shot median 5.59, p90 12.61** (>= 4 / >= 12).
+- rhythm.py (cuts 445,493,540,592,651): **in-shot median 5.70, p90 13.33** (>= 4 / >= 12).
 - qa_auto.py: PASS (QA_AUTO.md, phone_sheet.jpg), magenta 0.0 %, no blur flag.
 
 ## QA_TECH round-1 fixes
@@ -26,3 +26,9 @@
 - Shot 10 g505: the pointing forearm now ends at ear height on the calipers (not the hat).
 - Shot 11 g560/g564: arm on the bar; bar wobble g558-567 (+-9 deg decaying) is small but visible in the sprite.
 - Shot 9: surprised stop-and-look g460-466, laugh from g467.
+
+## Round 4 (QA_TECH_R3: ear tap) -- shot 12 re-rendered (g592-656), phone-size check selfcheck_R4.jpg (g610, 620, 630, 645)
+- The tapping arm is now a big visible blue sleeve rising from the chest, a white glove (>= 55 px) and an extended index finger whose tip is ON the lower rim of the red ear, drawn in front of it; taps 3x (+-0.05 D, ~15 px, period 11 f) g606-640, then holds to the end. The glove sits below the ear, mouth clear.
+- The fist at the belt is gone (both puppet arms are 'behind' during the tap; only the drawn arm is visible). Chest puff: torso squash x1.09 eased from g592 (visible as a wider torso vs g592).
+- Camera/chin unchanged from R3 (chin well above y 850).
+- Shots 9-11 unchanged from R3 (optional point/wobble tweaks not made).
