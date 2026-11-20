@@ -1,1 +1,143 @@
 00:00.424  cycles           | WARNING CUEW initialization failed: Error opening the library
+00:29.258  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1677.png'
+s22 g 1677: 26.8 s wall 26.5 cpu heads {'hero': 721, 'soldier': 674}
+00:56.184  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1678.png'
+s22 g 1678: 26.9 s wall 27.5 cpu heads {'hero': 715, 'soldier': 669}
+01:23.392  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1679.png'
+s22 g 1679: 27.2 s wall 27.3 cpu heads {'hero': 711, 'soldier': 665}
+01:49.386  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1680.png'
+s22 g 1680: 26.0 s wall 26.7 cpu heads {'hero': 714, 'soldier': 669}
+02:17.323  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1681.png'
+s22 g 1681: 27.9 s wall 27.6 cpu heads {'hero': 721, 'soldier': 677}
+02:44.042  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1682.png'
+s22 g 1682: 26.7 s wall 26.9 cpu heads {'hero': 726, 'soldier': 683}
+03:10.320  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1683.png'
+s22 g 1683: 26.3 s wall 26.7 cpu heads {'hero': 727, 'soldier': 684}
+03:29.852  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1684.png'
+s22 g 1684: 19.5 s wall 27.1 cpu heads {'hero': 725, 'soldier': 682}
+03:43.798  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1685.png'
+s22 g 1685: 13.9 s wall 27.2 cpu heads {'hero': 725, 'soldier': 682}
+03:57.987  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1686.png'
+s22 g 1686: 14.2 s wall 27.6 cpu heads {'hero': 726, 'soldier': 682}
+04:12.190  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1687.png'
+s22 g 1687: 14.2 s wall 27.7 cpu heads {'hero': 723, 'soldier': 679}
+04:26.142  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1688.png'
+s22 g 1688: 13.9 s wall 27.3 cpu heads {'hero': 717, 'soldier': 672}
+04:40.218  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1689.png'
+s22 g 1689: 14.1 s wall 27.5 cpu heads {'hero': 713, 'soldier': 668}
+04:54.851  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1690.png'
+s22 g 1690: 14.6 s wall 28.4 cpu heads {'hero': 716, 'soldier': 670}
+05:08.517  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1691.png'
+s22 g 1691: 13.6 s wall 26.7 cpu heads {'hero': 723, 'soldier': 677}
+05:22.275  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1692.png'
+s22 g 1692: 13.7 s wall 26.9 cpu heads {'hero': 728, 'soldier': 683}
+05:36.587  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1693.png'
+s22 g 1693: 14.3 s wall 27.9 cpu heads {'hero': 729, 'soldier': 685}
+05:49.937  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1694.png'
+s22 g 1694: 13.3 s wall 26.0 cpu heads {'hero': 728, 'soldier': 684}
+06:04.332  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1695.png'
+s22 g 1695: 14.4 s wall 27.9 cpu heads {'hero': 728, 'soldier': 685}
+06:19.014  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1696.png'
+s22 g 1696: 14.7 s wall 28.5 cpu heads {'hero': 729, 'soldier': 687}
+06:32.804  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1697.png'
+s22 g 1697: 13.8 s wall 26.8 cpu heads {'hero': 726, 'soldier': 684}
+06:47.120  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1698.png'
+s22 g 1698: 14.3 s wall 27.8 cpu heads {'hero': 719, 'soldier': 678}
+07:01.490  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1699.png'
+s22 g 1699: 14.3 s wall 28.2 cpu heads {'hero': 715, 'soldier': 673}
+07:15.716  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1700.png'
+s22 g 1700: 14.2 s wall 27.6 cpu heads {'hero': 717, 'soldier': 675}
+07:29.870  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1701.png'
+s22 g 1701: 14.1 s wall 27.5 cpu heads {'hero': 724, 'soldier': 681}
+07:44.415  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1702.png'
+s22 g 1702: 14.5 s wall 28.4 cpu heads {'hero': 730, 'soldier': 686}
+07:59.103  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1703.png'
+s22 g 1703: 14.7 s wall 28.7 cpu heads {'hero': 732, 'soldier': 687}
+08:13.506  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1704.png'
+s22 g 1704: 14.4 s wall 28.1 cpu heads {'hero': 731, 'soldier': 687}
+08:27.697  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1705.png'
+s22 g 1705: 14.2 s wall 27.7 cpu heads {'hero': 732, 'soldier': 688}
+08:42.518  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1706.png'
+s22 g 1706: 14.8 s wall 28.9 cpu heads {'hero': 733, 'soldier': 690}
+08:57.213  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1707.png'
+s22 g 1707: 14.6 s wall 28.5 cpu heads {'hero': 731, 'soldier': 688}
+09:12.268  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1708.png'
+s22 g 1708: 15.0 s wall 29.5 cpu heads {'hero': 724, 'soldier': 682}
+09:26.610  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1709.png'
+s22 g 1709: 14.3 s wall 28.0 cpu heads {'hero': 718, 'soldier': 677}
+09:41.255  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1710.png'
+s22 g 1710: 14.6 s wall 28.5 cpu heads {'hero': 720, 'soldier': 679}
+09:55.663  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1711.png'
+s22 g 1711: 14.4 s wall 28.1 cpu heads {'hero': 726, 'soldier': 685}
+10:10.187  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1712.png'
+s22 g 1712: 14.5 s wall 28.4 cpu heads {'hero': 732, 'soldier': 691}
+10:24.735  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1713.png'
+s22 g 1713: 14.5 s wall 28.4 cpu heads {'hero': 733, 'soldier': 693}
+10:39.149  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1714.png'
+s22 g 1714: 14.4 s wall 28.3 cpu heads {'hero': 734, 'soldier': 693}
+10:53.423  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1715.png'
+s22 g 1715: 14.3 s wall 27.8 cpu heads {'hero': 735, 'soldier': 694}
+11:08.322  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1716.png'
+s22 g 1716: 14.9 s wall 29.0 cpu heads {'hero': 737, 'soldier': 695}
+11:23.284  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1717.png'
+s22 g 1717: 14.9 s wall 29.1 cpu heads {'hero': 735, 'soldier': 692}
+11:38.024  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1718.png'
+s22 g 1718: 14.7 s wall 28.8 cpu heads {'hero': 729, 'soldier': 686}
+11:52.674  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1719.png'
+s22 g 1719: 14.6 s wall 28.7 cpu heads {'hero': 723, 'soldier': 680}
+12:07.519  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1720.png'
+s22 g 1720: 14.8 s wall 29.1 cpu heads {'hero': 724, 'soldier': 681}
+12:22.596  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1721.png'
+s22 g 1721: 15.1 s wall 29.5 cpu heads {'hero': 730, 'soldier': 688}
+12:37.463  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1722.png'
+s22 g 1722: 14.8 s wall 29.0 cpu heads {'hero': 735, 'soldier': 694}
+12:52.032  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1723.png'
+s22 g 1723: 14.5 s wall 28.5 cpu heads {'hero': 737, 'soldier': 696}
+13:06.746  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1724.png'
+s22 g 1724: 14.7 s wall 28.6 cpu heads {'hero': 737, 'soldier': 697}
+13:21.389  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1725.png'
+s22 g 1725: 14.6 s wall 28.5 cpu heads {'hero': 739, 'soldier': 699}
+13:35.912  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1726.png'
+s22 g 1726: 14.5 s wall 28.3 cpu heads {'hero': 741, 'soldier': 701}
+13:50.497  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1727.png'
+s22 g 1727: 14.6 s wall 28.5 cpu heads {'hero': 739, 'soldier': 699}
+14:05.371  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1728.png'
+s22 g 1728: 14.9 s wall 29.1 cpu heads {'hero': 733, 'soldier': 692}
+14:20.227  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1729.png'
+s22 g 1729: 14.8 s wall 28.8 cpu heads {'hero': 727, 'soldier': 686}
+14:34.479  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1730.png'
+s22 g 1730: 14.2 s wall 27.9 cpu heads {'hero': 727, 'soldier': 685}
+14:49.447  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1731.png'
+s22 g 1731: 14.9 s wall 29.0 cpu heads {'hero': 733, 'soldier': 690}
+15:04.770  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1732.png'
+s22 g 1732: 15.3 s wall 30.0 cpu heads {'hero': 727, 'soldier': 684}
+15:19.583  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1733.png'
+s22 g 1733: 14.8 s wall 29.0 cpu heads {'hero': 703, 'soldier': 659}
+15:35.262  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1734.png'
+s22 g 1734: 15.7 s wall 30.6 cpu heads {'hero': 676, 'soldier': 631}
+15:51.075  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1735.png'
+s22 g 1735: 15.8 s wall 30.9 cpu heads {'hero': 665, 'soldier': 621}
+16:06.461  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1736.png'
+s22 g 1736: 15.4 s wall 30.0 cpu heads {'hero': 667, 'soldier': 623}
+16:21.877  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1737.png'
+s22 g 1737: 15.4 s wall 30.1 cpu heads {'hero': 664, 'soldier': 622}
+16:38.319  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1738.png'
+s22 g 1738: 16.4 s wall 32.1 cpu heads {'hero': 657, 'soldier': 615}
+16:53.937  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1739.png'
+s22 g 1739: 15.6 s wall 30.4 cpu heads {'hero': 649, 'soldier': 608}
+17:09.988  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1740.png'
+s22 g 1740: 16.0 s wall 31.2 cpu heads {'hero': 648, 'soldier': 606}
+17:26.085  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1741.png'
+s22 g 1741: 16.1 s wall 31.4 cpu heads {'hero': 654, 'soldier': 611}
+17:42.027  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1742.png'
+s22 g 1742: 15.9 s wall 31.1 cpu heads {'hero': 660, 'soldier': 616}
+17:57.622  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1743.png'
+s22 g 1743: 15.6 s wall 30.5 cpu heads {'hero': 662, 'soldier': 618}
+18:13.285  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1744.png'
+s22 g 1744: 15.6 s wall 30.6 cpu heads {'hero': 664, 'soldier': 619}
+18:29.124  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1745.png'
+s22 g 1745: 15.8 s wall 30.9 cpu heads {'hero': 667, 'soldier': 621}
+18:45.004  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1746.png'
+s22 g 1746: 15.9 s wall 30.9 cpu heads {'hero': 670, 'soldier': 624}
+19:00.650  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1747.png'
+s22 g 1747: 15.6 s wall 30.6 cpu heads {'hero': 668, 'soldier': 623}
