@@ -29,12 +29,13 @@ CAM = {
  21: [(1127, (0.45, -0.90, 2.25), (-0.15, 5.2, 1.35), 'drift'),
       (1141, (0.15, 1.60, 2.10), (-0.20, 5.2, 1.30), 'snap'),
       (1168, (0.05, 2.00, 2.05), (-0.25, 5.2, 1.30), 'drift'),
-      (1181, (0.55, 1.30, 2.00), (-0.05, 5.2, 1.30), 'snap'),
-      (1201, (0.45, 1.75, 1.95), (-0.05, 5.2, 1.30), 'drift')],
+      (1181, (0.55, 1.30, 2.00), (-0.05, 5.2, 1.05), 'snap'),
+      (1201, (0.45, 1.75, 1.95), (-0.05, 5.2, 1.00), 'drift')],
 }
 POS21 = dict(bert=(-0.85, 3.9, 0.0), ins=(0.40, 4.3, 0.0), ga=(1.00, 5.5, 0.0), gb=(-0.15, 6.2, 0.0))
 
-def drawer_open(base, i, g):
+def drawer_open(base, i, g, name=None):
+    if name == 'p5': return 0.0
     """overflowing: every pulled drawer creeps further out, a little jitter; continuous over both shots."""
     u = clamp((g - 1039) / 160.0)
     return clamp(base + (1.0 - base) * 0.55 * smooth(u) + 0.015 * math.sin(g * 0.21 + i * 1.7))
@@ -44,7 +45,7 @@ def key_set(g):
     K.set_dust(0.5, frame=g)
     for k, a in K.STATE['anim'].items():
         if k[0] in 'pqx' and k[1:].isdigit():
-            K.set_drawer(k, drawer_open(BASE[k], int(k[1:]), g), frame=g)
+            K.set_drawer(k, drawer_open(BASE[k], int(k[1:]), g, k), frame=g)
     if 'fan' in K.STATE['anim']: K.set_cards_fan(0.85 + 0.15 * math.sin(g * 0.13), frame=g)
 
 BASE = {}
@@ -85,8 +86,8 @@ def pose_bert21(g):
     p['pitch'] = 0.9 + 0.45 * fl
     p['head_dy'] = 0.12 + 0.1 * fl
     p['expr'] = 'sad'
-    p['arm_r'] = dict(hand=(0.55, 1.15), bend=0.4, layer='front'); p['prop_r'] = dict(type='card', scale=1.0, angle=-70)
-    p['arm_l'] = dict(hand=(-0.18, 1.1), bend=0.5, layer='front'); p['prop_l'] = dict(type='card', scale=1.0, angle=-30)
+    p['arm_r'] = dict(hand=(0.40, 1.34), bend=0.4, layer='front'); p['prop_r'] = dict(type='card', scale=0.9, angle=-35)
+    p['arm_l'] = dict(hand=(-0.26, 1.30), bend=0.4, layer='front'); p['prop_l'] = dict(type='card', scale=0.9, angle=-145)
     p['blink'] = blink(g, 66, 9)
     return cast17.silent(p)
 
@@ -95,9 +96,9 @@ def pose_ins(g):
     t = (g - G_CUT) / 30.0
     p = cast17.with_expr(p, 'angry') if False else p
     p['mirror'] = True                                                # faces camera-left, toward Bertillon
-    p['yaw'] = 0.55
+    p['yaw'] = 0.80 if g >= 1150 else 0.55
     p = cast17.with_expr(p, 'surprised')                              # wide open eyes, brows up (no laugh tears)
-    p['gaze'] = (-0.9, 0.1)
+    p['gaze'] = (-1.0, 0.1)
     stress = max(0.0, math.sin(t * 2 * math.pi * 2.6)) ** 0.7        # lean forward on each stressed syllable
     p['lean'] = 4 + 14 * stress
     p['pitch'] = -0.1 + 0.25 * stress
@@ -133,11 +134,12 @@ def dress(shot):
         B.box('cream', (r.uniform(-1.05, -0.45), r.uniform(1.95, 2.55), 0.916), (0.15, 0.10, 0.0035), rot=(0, 0, r.uniform(0, 180)))
     for i in range(22):                                              # spilled on the floor around the stool
         B.box('cream', (r.uniform(-0.65, 0.55), r.uniform(1.9, 3.4), 0.003 + 0.003 * (i % 3)), (0.15, 0.10, 0.003), rot=(0, 0, r.uniform(0, 180)))
-    B.cyl('brass', (-1.05, 2.12, 0.917), 0.055, 0.012, seg=16)       # stub candle on a saucer
-    B.cyl('cream', (-1.05, 2.12, 0.955), 0.02, 0.065, seg=12)
-    B.sphere('glow_gas', (-1.05, 2.12, 1.0), 0.013, scale=(1, 1, 1.5))
+    B.cyl('brass', (-0.78, 1.97, 0.917), 0.06, 0.012, seg=16)        # stub candle on a saucer, front edge of the desk
+    B.cyl('cream', (-0.78, 1.97, 0.985), 0.024, 0.13, seg=12)
+    B.cyl('cream', (-0.757, 1.97, 0.93), 0.012, 0.04, seg=8)         # wax drip
+    B.sphere('glow_gas', (-0.78, 1.97, 1.07), 0.022, scale=(1, 1, 1.7))
     B.finalize('s08_dress', ink_t=K.STATE['ink_t'] * 0.7)
-    K.point((-1.05, 2.12, 1.02), watts=6, radius=0.02, name='candle')
+    K.point((-0.78, 1.97, 1.08), watts=8, radius=0.02, name='candle')
     x1 = 1.9; CYb = 13.5                                             # more drawers hanging out of the left run beside the desk
     for i, (yw, row) in enumerate([(1.4, 5), (1.95, 12), (3.0, 8), (3.3, 15), (4.45, 6), (4.9, 11), (5.75, 9), (3.9, 13)]):
         xl = (CYb - yw)
