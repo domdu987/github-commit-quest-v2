@@ -1,32 +1,34 @@
 #!/usr/bin/env python3
-"""s20 (frames 1515-1595): reveal A. Low tracking beside the herd, the oxen run forward only (-y) toward the Yan camp, tails streaming flame.  jimo_out NIGHT.  Whip in.
+"""s20 (frames 1515-1595): reveal A. The camera tracks ALONGSIDE the herd at herd speed: a lead ox in clean profile (35-50 % of frame height) with its flame trailing behind;
+every ox runs the same way (-y toward the Yan camp), flames on the tail tips, sparks, tail lights.  jimo_out NIGHT.  Short whip-in.
 python3 shot.py draft|final [first_g last_g] [out]"""
 import os, sys, math, random
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c18 as C
 from c18 import J, S, R2, V, bpy
 SHOT = 's20'; G0, G1 = 1515, 1595; H_IN, H_OUT = 6, 6
-C.motion(SHOT, push=0.07, slide=0, moves=[dict(t=-1.0, pan=-55, dur=1), dict(t=0.0, pan=55, dur=7), dict(t=0.30, pan=6, dur=4), dict(t=0.46, pan=-6, dur=4), dict(t=0.60, d=0.92, dur=4), dict(t=0.78, pan=6, dur=4), dict(t=0.90, pan=-6, dur=4)])
-V_OX = 11.0
-c = S.SHOTS[SHOT]['cam']; c['loc'] = (25.0, -47.0, 1.6); c['look_at'] = (5.0, -63.0, 3.0)
+V_OX = 11.0; XC = 20.0; Y0 = -46.0; DUR = 81 / 30.0
+def pose(sh, t):
+    """camera rides with the herd: y = Y0 - V*t*DUR; lateral distance 10.5 -> 9.2 (slow push), whip-in during the first 7 frames."""
+    y = Y0 - V_OX * t * DUR; lat = 7.5 - 0.8 * min(1.0, max(0.0, t)); w = max(0.0, 1.0 - (t * 81) / 7.0) ** 2
+    return dict(loc=(XC, y, 1.7), look_at=(XC - lat, y + 1.2 + 30.0 * w, 2.6 + 0.2 * t), lens=20.0)
+S.pose_at = pose
+rnd = random.Random(20)
+R2.POST['s20'] = lambda p: (R2.stake(31.0, -70.0), R2.stake(34.0, -100.0))
+REL = [(-6.6, -0.8, 1.0, 0.0)]                                  # hero: lateral from the camera, y rel, scale, speed diff
+for k in range(26):
+    row = k % 3; REL.append((-6.6 - 3.4 * (row + (0.6 if k % 2 else 0.0)) - rnd.uniform(-0.4, 0.4), -14 + 1.1 * k + rnd.uniform(-1.0, 1.0), rnd.uniform(0.95, 1.05), rnd.uniform(-0.8, 0.8)))
 
 def setup(ctx):
     J.set_holes(12)
 
 def frame(g, t, camloc, ctx):
-    J.set_holes(12)
-    marks = S.marks_for(SHOT)['herd']
-    k = (g - G0) / 30.0
-    cands = []
-    for j, m in enumerate(marks):
-        yaw = m[3]; dy = V_OX * k
-        pos = V((m[0] + 0.12 * (yaw + 100) * 0 + 6.0 * 0, m[1] + 30.0 - dy, 0.0)); cands.append((j, pos, m))
-    near = sorted(cands, key=lambda a: (a[1] - camloc).length)[:2]; nearj = {a[0] for a in near}
-    for j, pos, m in cands:
-        d = (pos - camloc).length
-        if d > 130 or d < 2.0: continue
+    J.set_holes(12); k = (g - G0) / 30.0
+    for j, (dx, dy, sc, dv) in enumerate(REL):
+        ycam = Y0 - V_OX * (g - G0) / 30.0
+        pos = (XC + dx, ycam + dy + dv * k, 0.0)
         ph = int(k * 12 + j * 3) % 8
-        C.put_ox(j, (pos.x, pos.y, 0.0), -100, m[4] if len(m) > 4 else 1.0, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='three_quarter', gait='gallop', theta=(50 if j in nearj else 34), reed=True, fcard=0.9)
+        C.put_ox(j, pos, -90, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='three_quarter', gait='gallop', theta=(6 if j == 0 else 24), reed=True, tfx=(0.62 if j == 0 else 0.5), lean=34.0)
 
 if __name__ == '__main__':
     C.run(SHOT, G0 - H_IN, G1 + H_OUT, frame, setup, sys.argv[1:])

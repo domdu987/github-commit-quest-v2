@@ -45,7 +45,30 @@ def put_person(meta, pos, camloc, height, name, yaw=None, mirror=False, tint=Non
     sc = height / meta['height']
     return R2.put_card(meta, (p.x, p.y, p.z + lift), y, sc, mirror=mirror, name=name, tint=tint, k=k, sw=0.9 * height / 3.0)
 
-def put_ox(i, pos, travel, scale, camloc, phase=0, flame=-1, state='dragon', view='three_quarter', gait='gallop', theta=36.0, reed=False, tint=None, k=None, lit_light=True):
+def flame_meta(var=0):
+    from PIL import Image, ImageDraw, ImageFilter
+    p = os.path.join(CD.CARDS, 'tailflame_%d.png' % var); os.makedirs(CD.CARDS, exist_ok=True)
+    if not os.path.exists(p):
+        W, H = 160, 256; im = Image.new('RGBA', (W, H), (0, 0, 0, 0)); rr = random.Random(var)
+        for (col, sc, dy) in (((184, 48, 26, 255), 1.0, 0), ((232, 86, 28, 255), 0.78, 14), ((255, 178, 56, 255), 0.56, 28), ((255, 254, 236, 255), 0.32, 44)):
+            d = ImageDraw.Draw(im); tip = 8 + dy * 0.5 + rr.uniform(-6, 6); sway = rr.uniform(-18, 18)
+            pts = []
+            for i in range(0, 41):
+                u = i / 40.0; y = H - 6 - u * (H - 20) * sc; w = 62 * sc * math.sin(math.pi * min(1, u * 1.0) ** 0.8) * (1 - u) ** 0.35; x = W / 2 + sway * u * u
+                pts.append((x - w, y))
+            for i in range(40, -1, -1):
+                u = i / 40.0; y = H - 6 - u * (H - 20) * sc; w = 62 * sc * math.sin(math.pi * min(1, u * 1.0) ** 0.8) * (1 - u) ** 0.35; x = W / 2 + sway * u * u
+                pts.append((x + w, y))
+            d.polygon(pts, fill=col)
+        im.save(p)
+    return dict(path=p, w=1.3, h=2.0, x0=-0.65, feet=2.0, kind='flame')
+
+def clear_flames(): pass
+def place_flame(loc, sc, camloc, var=0):
+    m = flame_meta(var % 3); p = V(loc); d = V(camloc) - p; yaw = math.degrees(math.atan2(d.x, -d.y)); v = d.copy(); v.z = 0; v.normalize(); p = p + v * 0.6
+    R2.put_card(m, (p.x, p.y, p.z), yaw, sc, name='tfl', tint=(1, 1, 1), k=1.6, shadow=False)
+
+def put_ox(i, pos, travel, scale, camloc, phase=0, flame=-1, state='dragon', view='three_quarter', gait='gallop', theta=36.0, reed=False, tint=None, k=None, lit_light=True, fcard=0.0):
     """ox card at pos, travelling toward yaw `travel` (deg from +x); card plane yawed `theta` off the camera axis (3/4 view), head toward the direction of travel.
     view 'front_three_quarter': the card faces the viewer (nose coming toward the lens)."""
     p = V(pos); sc = scale * 1.08
@@ -61,7 +84,12 @@ def put_ox(i, pos, travel, scale, camloc, phase=0, flame=-1, state='dragon', vie
     meta = CD.card('ox', state=state, view=view, gait=gait, phase=(phase % 8) if gait != 'stand' else 0, flame=flame, reed=1 if (reed or flame >= 0) else 0)
     mir = (fac < 0) if view != 'front_three_quarter' else False
     ob = R2.put_card(meta, tuple(p), yaw, sc, mirror=mir, name='ox%d' % i, tint=tint, k=k, sw=2.7 * sc)
-    if flame >= 0: R2.LIT.append((p, u * (-fac), sc))
+    if flame >= 0:
+        R2.LIT.append((p, u * (-fac), sc))
+        if fcard > 0:
+            tail = p + u * (-fac) * (2.7 * sc) + V((0, 0, 1.55 * sc))
+            if view == 'front_three_quarter': tail = p - dvec * (1.0 * sc) + V((0, 0, 2.7 * sc))
+            place_flame(tail, fcard * sc, camloc, flame)
     return ob
 
 def flame_for(g, i=0):
@@ -101,9 +129,9 @@ def run(shot, g0, g1, frame_cb, setup_cb=None, argv=None, lights=6):
         if os.path.exists(path) and os.environ.get('SKIP', '1') == '1': continue
         t0 = time.time(); t = (g - f0) / float(nfr)
         cam = J.shot_camera(shot, t); camloc = V(S.pose_at(sh, t)['loc'])
-        R2.clear_placeholders(); R2.LIT.clear()
+        R2.clear_placeholders(); R2.LIT.clear(); TAILS.clear(); clear_flames()
         frame_cb(g, t, camloc, ctx)
-        R2.lit_pools(camloc, lights)
+        lit_tails(camloc, lights)
         bpy.context.view_layer.update(); J.flicker(g)
         w, c = T.render(path); tt.append(time.time() - t0)
         print('%s g%d  %.1f s (wall %.1f cpu %.1f)' % (shot, g, tt[-1], w, c), flush=True)
@@ -131,3 +159,74 @@ def fg_bundle(shot, side='left', n=9, length=0.55, rad=0.045, drop=0.42, ahead=1
     objs = [ob for ob in STATE['SET'].objects if ob not in n0]
     for ob in objs: T.no_bounce(ob); ob.parent = cam; ob.matrix_parent_inverse = cam.matrix_world.inverted()
     STATE.setdefault('fg_objs', []).extend(objs)
+
+# ------------------------------------------------------------------ soft dust / smoke puffs (light-brown, replaces the set's dark dust squares)
+def puff_meta(alpha=0.5, tone=(226, 196, 160)):
+    from PIL import Image
+    name = 'puff_%d_%d_%d_%d' % ((alpha * 100,) + tone); p = os.path.join(CD.CARDS, name + '.png'); os.makedirs(CD.CARDS, exist_ok=True)
+    if not os.path.exists(p):
+        n = 128; yy, xx = np.mgrid[0:n, 0:n]; rr = np.random.RandomState(3); a = np.zeros((n, n))
+        for (cx, cy, rad) in [(64, 70, 40), (42, 78, 26), (88, 76, 28), (62, 46, 28), (80, 52, 22), (46, 56, 22)]:
+            a = np.maximum(a, np.clip(1.0 - np.hypot(xx - cx, yy - cy) / rad, 0, 1) ** 0.7)
+        im = np.zeros((n, n, 4), np.uint8); im[..., 0], im[..., 1], im[..., 2] = tone; im[..., 3] = (np.clip(a, 0, 1) * alpha * 255).astype(np.uint8)
+        Image.fromarray(im, 'RGBA').save(p)
+    return dict(path=p, w=1.0, h=1.0, x0=-0.5, feet=0.0, kind='puff')
+
+def put_puff(pos, size, camloc, alpha=0.5, name='puff', tone=(226, 196, 160)):
+    m = puff_meta(alpha, tone); p = V(pos); d = V(camloc) - p; yaw = math.degrees(math.atan2(d.x, -d.y))
+    return R2.put_card(m, (p.x, p.y, p.z), yaw, size, name=name, tint=(1, 1, 1), k=1.0, shadow=False)
+
+# ================================================================== round 2 (TAKE gate): flames parented to the tail tip, trailing backward, sparks, one warm light per lit tail
+def spark_meta():
+    from PIL import Image
+    p = os.path.join(CD.CARDS, 'spark.png'); os.makedirs(CD.CARDS, exist_ok=True)
+    if not os.path.exists(p):
+        n = 32; yy, xx = np.mgrid[0:n, 0:n]; r = np.hypot(xx - n / 2 + .5, yy - n / 2 + .5) / (n / 2); a = np.clip(1 - r, 0, 1) ** 1.5
+        im = np.zeros((n, n, 4), np.uint8); im[..., 0] = 255; im[..., 1] = (200 - 60 * r * 1).clip(0, 255); im[..., 2] = 90; im[..., 3] = (a * 255).astype(np.uint8); Image.fromarray(im, 'RGBA').save(p)
+    return dict(path=p, w=1.0, h=1.0, x0=-0.5, feet=0.5, kind='spark')
+
+_ANC = {}
+def tail_anchor(state, view, gait, phase):
+    k = (state, view, gait, phase % 8)
+    if k not in _ANC:
+        cast, P = CD._cast(); f = cast.ox_figure(state, view, gait, phase=(phase % 8) / 8.0 if gait != 'stand' else 0.0, flame=-1, blades=True, reed=True, uid='an'); _ANC[k] = f['anchors']['tail_tip']
+    return _ANC[k]
+
+TAILS = []                       # (world tail tip, scale) of the lit tails of this frame, for the lights
+def put_ox(i, pos, travel, scale, camloc, phase=0, flame=-1, state='dragon', view='three_quarter', gait='gallop', theta=36.0, reed=False, tint=None, k=None, lit_light=True, fcard=0.0, tfx=0.55, lean=48.0, sparks=True):
+    """ox card (unlit reed bundle) + a flame card PARENTED to the tail-tip anchor, leaning backward against the run, sparks streaming behind, size ~ tfx*sc D*2 (capped ~1.1 D)."""
+    p = V(pos); sc = scale * 1.08
+    dvec = V((math.cos(math.radians(travel)), math.sin(math.radians(travel)), 0.0)); c = V(camloc) - p; c.z = 0.0; c.normalize(); best = None
+    for sgn in (1, -1):
+        a = math.radians(sgn * theta); n = V((c.x * math.cos(a) - c.y * math.sin(a), c.x * math.sin(a) + c.y * math.cos(a), 0.0)); u = V((-n.y, n.x, 0.0))
+        for fac in (1, -1):
+            sco = (u * fac).dot(dvec)
+            if best is None or sco > best[0] + 1e-4: best = (sco, n, u, fac)
+    _, n, u, fac = best; yaw = math.degrees(math.atan2(n.x, -n.y)); mir = (fac < 0) if view != 'front_three_quarter' else False
+    ph = int(phase) % 8
+    meta = CD.card('ox', state=state, view=view, gait=gait, phase=ph if gait != 'stand' else 0, flame=-1, reed=1 if (reed or flame >= 0) else 0)
+    ob = R2.put_card(meta, tuple(p), yaw, sc, mirror=mir, name='ox%d' % i, tint=tint, k=k, sw=2.7 * sc)
+    if flame >= 0:
+        ax, ay = tail_anchor(state, view, gait, ph); ly = math.radians(yaw)
+        lx = (-1.0 if mir else 1.0) * ax * sc; lz = -ay * sc
+        right = V((math.cos(ly), math.sin(ly), 0.0)); tail = p + right * lx + V((0, 0, lz)); TAILS.append((tail, sc))
+        back = 1.0 if lx > 0 else -1.0
+        fm = flame_meta(flame % 3); fs = tfx * sc; bob = 1.0 + 0.1 * math.sin(i + flame)
+        fo = R2.put_card(fm, (tail.x, tail.y, tail.z), yaw, fs * bob, name='tfl%d' % i, tint=(1, 1, 1), k=1.6, shadow=False)
+        fo.rotation_euler = (0, math.radians(back * lean + 6 * math.sin(phase * 1.7 + i)), math.radians(yaw)); fo.location = (tail.x + 0.0, tail.y + 0.0, tail.z)
+        if sparks:
+            sm = spark_meta(); rr = random.Random(i * 131 + int(phase * 7))
+            for s in range(6):
+                d = 0.5 + 0.38 * s + rr.uniform(0, 0.2); h = 0.55 * fs + 0.12 * d + rr.uniform(-0.15, 0.2) * sc
+                q = tail + right * (back * d * sc) + V((0, 0, h * 1.0)); z = R2.put_card(sm, (q.x, q.y, q.z), yaw, 0.16 * sc * (1.0 - 0.1 * s), name='spk', tint=(1, 1, 1), k=2.2, shadow=False)
+    return ob
+
+def lit_tails(cam, nlights=5):
+    M = STATE['M']
+    for (t, sc) in TAILS:
+        sm = R2._shadow_quad('cpool', 1.0, 1.0)
+        if not sm.materials: sm.materials.append(M['pool_w'])
+        ob = bpy.data.objects.new('ph_pool', sm); STATE['SET'].objects.link(ob); ob.location = (t.x, t.y, 0.06); ob.scale = (1.1 * sc, 1.1 * sc, 1.0); ob.visible_shadow = False; J.no_bounce(ob); ob['placeholder'] = 1
+    for (t, sc) in sorted(TAILS, key=lambda a: (a[0] - cam).length)[:nlights]:
+        d = bpy.data.lights.new('ph_tail', 'POINT'); d.color = J.FIRE; d.energy = 420.0 * sc; d.shadow_soft_size = 0.5; d.use_shadow = False
+        lo = bpy.data.objects.new('ph_tail', d); STATE['LIGHTS'].objects.link(lo); lo.location = t; lo.visible_camera = False; lo['placeholder'] = 1

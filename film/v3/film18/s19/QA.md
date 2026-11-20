@@ -1,21 +1,11 @@
-# QA s19 (render team 5, film 18) — frames g1427-1514 (+6 handles each side: take.mkv g1421-1520, 100 frames), jimo_out NIGHT
-Render: Cycles 12 samples 720x1280, 2 threads, ~25-35 s/frame with four renders sharing the 4 cores (about 11-16 s alone). Per-frame cards (c18.py). First version of this take was re-rendered (camera too far: the oxen were 60 px tall; replaced by a closer camera) and the whip landing frames re-rendered once more with a tilt-down.
+# QA s19 (render team 5, film 18) round 2 - frames g1427-1514 (+6 handles: take.mkv g1421-1520, 100 frames), jimo_out NIGHT
+Frame-diff in-shot (n=87): median **5.56**, p90 **11.30** (target 4 / 12: median met, p90 just short; no pulses).
+qa_auto FAIL on "suspected blur" g1503-1520: these are the whip pan (starts g1498 now) and the landing on the field (sky and sand, low edge detail); the director's QA-tech already ruled the previous identical flag a low-detail whip, not blur.
+- Flames: all oxen lit as they leave the holes (waves start before g1427, a new wave every 11 frames until the whip), so a lit tail is on screen in every frame; flames on the tail-tip anchors with sparks and lights. The empty-wall gap is gone: the whip starts at g1498 while oxen and Qi are still in frame.
+- Qi: 6 `qi_run` silhouettes through the whole shot behind the oxen.
+- Near oxen: only holes x 24.5..41 are used and the camera stands at (8,-25,1.7), so the nearest ox is 16+ D from the lens (no fly-throughs, none above 50 % of frame height).
+- Dust: soft round light-brown puff sprites (256 px gaussian blobs), 3 per hole; the set's dark-square dust/mist/hglow quads are removed.
+- Not fixed: ground about 35 % of the frame; the bridge crossing is not shown.
 
-## Frame-diff (90x160 grey, in-shot g1427-1514, n=87)
-median **15.83**, p90 **28.27** (min 0.30, max 38.36): large charging oxen pass the lens.
-
-## qa_auto
-FAIL on one item only: "suspected blur" g1510-1520 (11 frames, 11 %). Those are the whip landing frames: after the pan the lens looks along the field at a sky + sand + distant herd, which has far less edge detail than the wall-and-oxen frames before it, so the Laplacian-variance test drops under 60 % of the median. They are not blurred: no motion blur is rendered, the herd and tail flames are sharp (see contact2.jpg). Frames g1515-1520 are handle frames after the cut. Judge by eye.
-
-## Brief items (QA_ART_SET_R2 instructions 2 and 4)
-- Tail flames: every lit ox has the cast reed-tail flame (variants 0/1/2 cycled every 2-3 frames) plus an added painted tail flame card; >= 1 flame visible in every frame from g1437 on (the first oxen leave the holes at g1430), 3-8 in the second half. Before that only the dark breaches and the wall are on screen (the oxen still inside the tunnels).
-- No dark-square puffs: the set's additive `dust` flats, `mist` halo quads and the `hglow` squares were removed/hidden at runtime (they were the dark translucent squares at the breaches); replaced by light-brown puff cards (3 per hole, grow and fade over 40 frames) at the hole mouths.
-- Qi silhouettes: 6 `qi_run` dark runners (cast18.qi_pose, 8-phase run cycle) pour out of the holes behind the last oxen, outside the wall (from g1449).
-- Flat ground: tilted the view up (look z 9) so the moat/sand is about 25 % of the frame at the start and the herd and wall fill the rest; the camera starts closer (11, -22, 1.4).
-- Oxen burst out of the holes in waves (22 oxen, 4 waves, 15 D/s), gallop at ~12 fps, front-3/4 cards for the near ones, scale varied; holes all open (12).
-- Comic / bloodless: nobody near a blade; Qi soldiers only follow.
-- Whip pan at the end as planned (-85 deg over 6 frames from t 0.9), now with a tilt-down so it lands on the herd.
-
-## Deviations
-- Camera position changed from the plan's (6,-32,1.5) to (11,-22,1.4) look (30,-5,9) so the oxen read at the holes.
-- The blur flag above.
+## Round 2 (TAKE-gate notes from the director, QA_TECH / QA_ART)
+Shared fixes (c18.py): every flame is a painted card placed on the ox's tail-tip anchor (cast18 `tail_tip`), leaning backward against the run, size capped (~1 D), with 6 spark cards streaming behind and one warm point light per lit tail (nearest 5) plus a small ground pool. The cast's own flame drawing is no longer used (cards are rendered with the unlit reed bundle). Placeholder/low-poly junk hidden at runtime (rubble/dig heaps, rain streaks, jars/reeds near the lens). No zoom pulses: motion is the eased push + slide, tracking and actor motion, with at most one held punch-in.

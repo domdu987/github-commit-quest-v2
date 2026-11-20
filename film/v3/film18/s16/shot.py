@@ -7,10 +7,12 @@ import c18 as C
 from c18 import J, S, R2, V, bpy
 SHOT = 's16'; G0, G1 = 1205, 1308; H_IN, H_OUT = 10, 6
 HOLE_LIGHTS = []
-C.motion(SHOT, push=0.0, slide=-55, moves=[dict(t=0.20, pan=-6, dur=4), dict(t=0.34, pan=6, dur=4), dict(t=0.48, d=0.95, dur=4), dict(t=0.62, pan=-6, dur=4), dict(t=0.76, pan=6, dur=4), dict(t=0.88, d=1.05, dur=4)])
+def pose(sh, t):
+    e = t * t * (3 - 2 * t) * 0.35 + t * 0.65; d = 1.0 - (0.12 * min(1.0, max(0.0, (t - 0.55) / 0.06)))      # slide along the wall (x 52 -> 27), one held punch-in 12 % at t 0.55
+    lx = 43.5 - 31.0 * t; return dict(loc=(lx + 17.0, 5.0 + 12.5 * d, 2.5), look_at=(lx, 5.0, 4.4), lens=22.0)
+S.pose_at = pose
 
 def setup(ctx):
-    R2.dress(14, 52, 9.0, 20.0, 18, 16, kinds=('basket', 'hay', 'rope', 'stone', 'pot'), avoid=lambda x, y: False)      # bottom of frame: dark props
     M = J.STATE['M']
     for i, hx in enumerate(J.HOLE_X):                                       # doubled warm glow inside each breach: one real warm light per hole
         d = bpy.data.lights.new('hl%d' % i, 'POINT'); d.color = J.FIRE; d.energy = 0.0; d.shadow_soft_size = 1.2; d.use_shadow = False
@@ -20,9 +22,14 @@ def ease(x): x = min(1, max(0, x)); return x * x * (3 - 2 * x)
 
 def frame(g, t, camloc, ctx):
     k = (g - G0) / float(G1 - G0)
-    n = 12.0 * ease((k - 0.02) / 0.95); J.set_holes(n)
+    TJ = [1210 + 20 * j for j in range(5)] + [1296 + 3 * (j - 5) for j in range(5, 12)]
+    n = sum(min(1.0, max(0.0, (g - tj) / 8.0)) for tj in TJ); J.set_holes(n)
+    for ob in bpy.data.objects:
+        if ob.name in ('jars', 'reeds'): ob.hide_render = True; ob.location.z = -200
+        if ob.name in ('fgdig', 'rainstreaks', 'streaks', 'streak'): ob.hide_render = True; ob.scale = (0.0, 0.0, 0.0)
     for i, o in enumerate(HOLE_LIGHTS):
-        p = min(1.0, max(0.0, n - (11 - i))); o.data.energy = 2600.0 * min(1.0, p / 0.3) if p > 0.15 else 0.0
+        p = min(1.0, max(0.0, n - (11 - i))); o.data.energy = 4200.0 * min(1.0, p / 0.3) if p > 0.15 else 0.0
+        if p > 0.3: C.put_puff((J.HOLE_X[i], 5.0, 2.0), 4.0, camloc, alpha=1.0, name='glow%d' % i, tone=(255, 160, 60))
     marks = S.marks_for(SHOT)
     for i, m in enumerate(marks['townsfolk']):
         base = 'old_man' if i % 2 == 0 else 'woman'
@@ -30,7 +37,7 @@ def frame(g, t, camloc, ctx):
         over = {'lean': lean, 'prop_r': {'type': 'pick', 'angle': ang, 'scale': 1.0}}
         meta = C.person('%s_dig' % base, over)
         bob = 0.07 * abs(math.sin((g + i * 3) * math.pi / 5.0))
-        C.put_person(meta, m[:3], camloc, 3.0, 'dig%d' % i, lift=bob)
+        C.put_person(meta, m[:3], camloc, 3.0, 'dig%d' % i, lift=bob, yaw=C.math.degrees(C.math.atan2((camloc.x - m[0]), -(camloc.y - m[1]))) + 38.0, mirror=True)
     for i, m in enumerate(marks.get('child', [])):
         ph = (g // 4) % 2
         meta = C.person('child_carry_basket', {'lean': 4 + 6 * ph})

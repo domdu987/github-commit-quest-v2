@@ -1,21 +1,9 @@
-# QA s18 (render team 5, film 18) — frames g1388-1426 (+6 handle each side: take.mkv g1382-1432, 51 frames), jimo_in NIGHT
-Render: Cycles 12 samples, 720x1280, 2 threads, ~20 s/frame under load (15.9 s/frame alone), per-frame card re-placement (c18.py).
+# QA s18 (render team 5, film 18) round 2 - frames g1388-1426 (+6 handles: take.mkv g1382-1432, 51 frames), jimo_in NIGHT
+Frame-diff in-shot (90x160 grey, area downscale, n=38): median **4.33**, p90 **7.22** (target 4 / 12: median met, p90 NOT met; no pulses were used, and the wide static framing carries little motion). qa_auto PASS.
+- Ripple: 6 oxen, one tail lit every 3 frames from g1417 (nearest to the camera first), all six in frame in a lateral row (x -37..-14 spaced 4.6 D) so no tail is hidden; no tail lit before g1417 (checked every frame).
+- Tian Dan stays in frame (placed at (-21.5, 13.2), torch unlit until g1413 then lit), push 0.17/s + slide, one held 10 % punch on "จุดไฟ".
+- Pink V decals and navy lumps: rain streaks, rubble and dig heaps hidden; foreground dressing removed. Ground bottom is dark with the warm pools only under the lit tails; flame lights limited (420 W x scale).
+- Not fixed: ground is still about 40 % of the frame (a lower camera was needed to keep six tails in view); the old navy-outlined basket at the left edge in the first frames.
 
-## Frame-diff (90x160 grey, mean abs diff x255, in-shot frames g1388-1426, n=38)
-median **4.34**, p90 **12.13** (min 0.23, max 14.11). Target >= 4 / >= 12: met.
-Camera: push 0.07/s + slide, four quick swings (pan +-6 deg, snap 0.94 on "จุดไฟ" g1417), fg none.
-
-## qa_auto
-PASS (QA_AUTO.md, phone_sheet.jpg).
-
-## Brief items (TEAMS.md / QA_ART_SET_R2)
-- NO lit tail before "จุดไฟ" 47.13 s (g1417): checked g1388-1416 every frame, tails carry unlit reed bundles, flame=-1. Torch in Tian Dan's hand is unlit until g1413, then lit (it is a torch, not a tail).
-- Tails light in a ripple after "จุดไฟ": nearest ox at g1417, one more every 2 frames (6 oxen); tail flame variants 0/1/2 cycle every 2-3 frames, real warm light at the tails of the lit oxen (lit_pools). Flames visible on screen from g1417 to the end of the take.
-- Ox cards re-baked from the current cast18 (set_work/cards deleted before the first render; short bronze blades, front/3-4 view).
-- Tian Dan moved to (-13, 12) so the push does not run through him (set mark was behind the lens at the end of the push). Eye-line to the torch; head top above y 880 (head y approx 330-400 of 640 tile = 660-800 px).
-- Set fixes: braziers near the lens skipped, reed jars hidden (they stood next to the lens), a little ground dressing in the foreground.
-- Comic / bloodless: nobody touched by blades; oxen hop (0.06 D) when their tail lights.
-
-## Checks (6 fps look + cut +-3 frames)
-heads above y 880: yes. Hooves on the ground with contact shadow: yes. Props held (torch): yes. Mouths: still (no lip-sync here). Continuity: same wall holes (set_holes 12) and dress state as s17 / s19.
-Deviation: the planned fixed marks for Tian Dan were replaced; camera moves are stronger than the plan's for the frame-diff rule.
+## Round 2 (TAKE-gate notes from the director, QA_TECH / QA_ART)
+Shared fixes (c18.py): every flame is a painted card placed on the ox's tail-tip anchor (cast18 `tail_tip`), leaning backward against the run, size capped (~1 D), with 6 spark cards streaming behind and one warm point light per lit tail (nearest 5) plus a small ground pool. The cast's own flame drawing is no longer used (cards are rendered with the unlit reed bundle). Placeholder/low-poly junk hidden at runtime (rubble/dig heaps, rain streaks, jars/reeds near the lens). No zoom pulses: motion is the eased push + slide, tracking and actor motion, with at most one held punch-in.
