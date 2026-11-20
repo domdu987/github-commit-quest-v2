@@ -7,3 +7,9 @@ Issues:
 4. g1569-1589: flat lavender patch in the sky at top right (clipped cloud/sky card). Fix: remove or re-place the sky card.
 5. g1574-1589: a sailor's head sits directly under/behind the H4 and William's raised hand (tangent, watch overlaps sailor cap). Minor; re-space the sailor.
 6. g1459-1504: wide-shot head y OK; g1509+ head centre y ~ 538-611 OK.
+
+## Round 2 - PASS
+Checked: qa_auto PASS (cut g1581 is the handle boundary, not visible, expected); 6 fps + cut sheet g1459-1589; meta g0 1468 / g1 1580, DIS 13 in, cut out, 9 f handles OK; frame-diff median 6.63 / p90 13.50 (measured).
+Verification of round 1: 1 p90 FIXED (13.50). 2 clipping FIXED (heads, hats, H4 inside the frame to the end; head centre y 472-739, all heads above 880). 3 sea edge FIXED (no hard diagonal edge). 4 lavender sky patch FIXED (reads as a cloud). 5 sailor/H4 tangent FIXED (H4 clear of the sailor caps).
+Snap on "ห้าวินาที" g1496-1509 (word g1497) visible. Mouths are fixed grins. Ship at left in the first frames, sails far right later; sea moves. Contact shadows present.
+Notes: (a) g1578-1589 the left sailor raised hand touches the left frame edge. (b) left sailor feet shadow is faint at g1534/1564.

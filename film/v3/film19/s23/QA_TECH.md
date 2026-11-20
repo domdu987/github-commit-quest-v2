@@ -4,3 +4,10 @@ Issues (non-blocking):
 1. g1847-1902 (plan coverage): "shuffles in at the door" does not read. Harrison stays at the same place inside the recess behind the open leaf (walk-in-place); he never crosses the door line, only the camera moves. Fix: translate him from the recess to the front of the door over g1847-1880 (move the actor, not only the cycle).
 2. g1847-1937: shoes have no readable contact shadow on the dark floor; slight float on the lifted-foot frames (g1862, g1892). Fix: add a blob shadow.
 3. g1907-1937: he is small (head ~ 120 px) after the arc; the "king hears about it" beat has low phone legibility. Note only.
+
+## Round 2 - FAIL (marginal)
+Checked: qa_auto FAIL on blur g1847-1853 only (these are the 9 in-handle frames where Harrison is behind the door leaf; not in-shot, NOTE); 6 fps + cut +-3 sheet g1847-1937; meta g0 1856 / g1 1932 OK, DIS 15 in, cut out, 9 f handles OK; frame-diff median 4.41 / p90 11.34 (measured; meta says 11.34, round 1 had 12.31).
+Verification of round 1: 1 shuffle-in FIXED (Harrison now travels from the recess past the leaf and out to the room front; reads as entering). 2 contact shadow PARTLY (a faint blob exists on the lit boards, none readable on dark boards; NOTE). 3 small head: head 100-125 px g1907-1937, NOTE.
+Issues:
+1. p90 11.34 < 12 (hard limit). Fix: stronger slide/arc in g1870-1895 where pairs sit at 3.5-4.5, or a second small snap.
+Notes: (a) g1847-1858 Harrison half hidden behind the open door leaf (reads as a peek, ok). (b) the hall is very dark g1907-1937, low phone legibility; old Harrison, spectacles, H4 in right hand, evening light and fixed smile all OK; head centre y 450-600, none near 880.

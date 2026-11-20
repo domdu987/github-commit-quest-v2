@@ -7,3 +7,8 @@ Issues:
 4. g1696-1761: astro looks into the lens, not at the sky he is "fumbling at" (eye-line). Fix: eyes up-left toward the quadrant.
 5. g1686-1691: astro mouth changes from flat frown to wavy zig-zag. Expression swap, not lip-sync, but it is a mouth shape change outside quote windows; hold one mouth shape.
 6. g1656-1706: astro feet have only a faint shadow; William's feet OK. Minor.
+
+## Round 2 - PASS (notes)
+Checked: qa_auto PASS (cut g1756 = handle boundary); 6 fps + cut sheet g1656-1761; meta g0 1665 / g1 1755, DIS 13 in / DIS 11 out, 9 f handles OK; frame-diff median 6.59 / p90 12.85 (measured).
+Verification of round 1: 1 head limit FIXED (chin <= ~700, centre <= 735). 2 clipping FIXED (both heads inside x 20-700 through g1755). 3 H4 in hand FIXED (William holds the H4 to the end, shoes in frame). 4 eye-line NOT fixed (astro eyes still squint forward/down toward the lens while the quadrant points at the sky) - NOTE only, the wince reads as squinting at the sun. 5 mouth FIXED (one wavy mouth throughout). 6 shadows FIXED.
+Notes: (a) g1736-1745 and g1761 the quadrant fan covers half of William face/hat (g1761 is in the dissolve handle). (b) astro eye-line as above.
