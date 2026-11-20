@@ -58,39 +58,96 @@ MARK = "maupassant_low"
 HEAD_Z = 2.6                                   # head centre above the feet (3.1 D figure, head 1 D)
 PPD = 256                                      # sprite px per D (head 120 -> ~210 px on screen)
 CANVAS = (-1.75, -4.25, 1.75, 0.1875)          # taller than CANVAS20['maupassant'] (top -3.5625): low-angle upper_k stretch
-CAM_DROP = 1.22                                # lower the preset camera by 1.22 D (1.0 m -> 0.35 m above the ground)
-CAM_BACK = -1.6                                # D further back along the view: -1.6 = 1.6 D CLOSER (5.0 D from his head instead of
-                                               # the preset 6.6 D: he fills the lower frame, so the aim can pitch up into the tower)
-TILT0 = -19.0                                  # aim pitched 19 deg BELOW the lens -> head line (pitch ~ +2 deg on frame 0: head y ~475)
+STAGE_DY_M = -50.0                             # the whole staging (his mark, the camera, the preset FG and crowd cards) moves 50 m
+                                               # back down the avenue (y -116.5 -> -166.5 m): from 120 m the summit sits 68 deg up
+                                               # and cannot share a 22 mm frame with his head in the 450-760 band; from 170 m it is
+                                               # 60.5 deg up and the WHOLE tower fits above him from frame 0 (director note)
+STAGE_DX_M = 2.0                               # and 2 m toward the avenue centre (x -6.8 -> -4.8 m): the shaded kiosk awnings on the
+                                               # left (x -11.6 m) otherwise fill the left edge as a black slab
+CAM_H = 0.30                                   # lens height above the path, D (0.16 m): low angle
+CAM_DIST = 5.2                                 # horizontal distance lens -> his feet at g 0, D
+CAM_X = -0.38                                  # lens x offset from his mark, D (the preset camera is 0.2 m left of the mark)
+SHIFT = -0.12                                  # lens shift_y (preset +0.08): negative = optical centre ABOVE the frame centre, so
+                                               # the summit and his head (40 deg apart) both fit; verticals stay as the pitch sets them
+TILT0 = 8.0                                    # aim pitched 8 deg ABOVE the lens -> head line on frame 0 (pitch ~32 deg)
+TILT_RATE = 2.0                                # deg/s drift tilt-up (the push raises the head line, so his head stays in band)
+SNAP_TILT = 2.0                                # extra tilt in the snap
+ARC0, ARC_RATE, SNAP_ARC = -11.0, 8.0, 18.0    # orbit round his head (deg, deg/s, deg in the snap): the far tower slides behind
+                                               # him; it carries the frame-diff (tilt alone gave median 3.2 / p90 6.3 on the draft)
+SLIDE = 45.0                                   # px/s lateral slide
+SNAP_K = 1.4                                   # snap framing factor
+FG_ANCHOR = G_LAST                             # the preset FG is placed relative to the lens at THIS frame.  Anchored at g 0 the
+                                               # push + arc drove the lens THROUGH the bench at g 53-64 (frame-diff pop 50.9);
+                                               # anchored at the end (+ LAMP_AT / BENCH_AT) both stay clear of the lens and of him
+
+
+def delta():
+    """the staging offset in world D (STAGE_DY_M metres along y)."""
+    return Vector(CO.W((STAGE_DX_M, STAGE_DY_M, 0.0)))
 
 
 def cam_path(A):
-    """the CamPath from the preset camera: same x/y, lowered; subject = his head centre.  A function: A only exists after build."""
+    """the CamPath: lens CAM_DIST D in front of his (moved, ground-snapped) mark, CAM_H D above the path; subject = his head
+    centre.  A function: A only exists after build (or comes from cam_path_static)."""
     m = Vector(A["marks"][MARK])
     subj = m + Vector((0.0, 0.0, HEAD_Z))
-    c = Vector(A["cams"][PRESET]["loc"]) - Vector((0.0, 0.0, CAM_DROP))
-    c = c + (c - subj).normalized() * CAM_BACK
-    return C.CamPath(c, subj, G0, G_LAST, push=0.08, slide_px=30.0, rise_px=0.0, arc_deg_s=3.0, tilt0=TILT0, tilt_deg_s=4.5,
-                     decay=0.2, snaps=[dict(g=SNAP, k=1.35, peak=1.7, shift=(-0.25, 0.0), tilt=6.0)])
+    c = Vector((m.x + CAM_X, m.y - CAM_DIST, m.z + CAM_H))
+    return C.CamPath(c, subj, G0, G_LAST, push=0.08, slide_px=SLIDE, rise_px=0.0, arc_deg_s=ARC_RATE, arc0=ARC0, tilt0=TILT0,
+                     tilt_deg_s=TILT_RATE, decay=0.1,
+                     snaps=[dict(g=SNAP, k=SNAP_K, peak=1.7, shift=(-0.25, 0.0), tilt=SNAP_TILT, arc=SNAP_ARC)])
 
 
-def move_fg(A, cam_loc):
-    """the preset FG (lamp-post + bench: objects fg_*, and the invisible shade casters over the near ground) is built relative to
-    the PRESET camera (tower20._fg / _shade).  Our camera starts elsewhere, so move them by the same ground offset: the lamp-post
-    stays 1.2 m (2.3 D) ahead-left of the lens and the bench 2 m ahead-right.  Objects are children of the scaled root (metres)."""
-    d = Vector(cam_loc) - Vector(A["cams"][PRESET]["loc"])
-    d.z = 0.0
+LAMP_AT = (1.2, -1.3)                           # lamp-post (m ahead, m right) of the lens at FG_ANCHOR: screen x <= 143 all shot,
+                                               # 3.1 D (1.6 m) from the lens at its closest -- nearer, it crosses his face
+BENCH_AT = (2.0, 1.1)                           # bench (m ahead, m right): lower right, x >= 608, >= 4.3 D from the lens
+
+
+def _ground_basis(loc, look):
+    f, r, _u = C._cam_basis(loc, look)
+    return Vector((f.x, f.y, 0.0)).normalized(), Vector((r.x, r.y, 0.0)).normalized()
+
+
+def move_set_dressing(A, cam):
+    """the preset FG is built relative to the PRESET camera (tower20._fg): lamp-post 1.2 m ahead / 0.46 m left, bench 2 m ahead /
+    1.1 m right, merged into one mesh per material (fg_dark_sh, fg_timber_sh, fg_lamp: children of the scaled root, metres).
+    We split the vertices by distance to the preset lamp spot and move the lamp-post to LAMP_AT and the bench to BENCH_AT of
+    our lens at FG_ANCHOR (cam = (loc, look) of that frame).  The invisible near-ground shade casters move with the lens.
+    The 8 crowd cards (crowd_*, world D) move with the staging (delta())."""
+    import tower20
+    pc = tower20.CAMS_M[PRESET]
+    pl = Vector(pc["loc"]); pl.z = 0.0
+    f0, r0 = _ground_basis(Vector(pc["loc"]), Vector(pc["look"]))
+    old_lamp, old_bench = pl + f0 * 1.2 + r0 * -0.46, pl + f0 * 2.0 + r0 * 1.1          # metres (tower20.FG_ITEMS)
+    cl = Vector(cam[0]) / CO.SC
+    cl.z = 0.0
+    f1, r1 = _ground_basis(*cam)
+    d_lamp = cl + f1 * LAMP_AT[0] + r1 * LAMP_AT[1] - old_lamp
+    d_bench = cl + f1 * BENCH_AT[0] + r1 * BENCH_AT[1] - old_bench
     for ob in C.bpy.data.objects:
-        if ob.name.startswith(("fg_", "shade_casters")):
-            ob.location = ob.location + d / CO.SC
+        if ob.name.startswith("fg_"):
+            for v in ob.data.vertices:
+                q = Vector((v.co.x, v.co.y, 0.0))
+                v.co = v.co + (d_lamp if (q - old_lamp).length < 0.8 else d_bench)
+            ob.data.update()
+        elif ob.name.startswith("shade_casters"):
+            ob.location = ob.location + (cl - pl)
+        elif ob.name.startswith("crowd_") and ob.parent is None:
+            ob.location = ob.location + delta()
 
 
 def cam_path_static():
-    """CamPath without building the set (camreport): the preset numbers from tower20 in metres -> D."""
-    import tower20
-    cam = tower20.CAMS_M[PRESET]
-    A = dict(marks={MARK: CO.W((-6.8, -116.5, 0.0))}, cams={PRESET: dict(loc=CO.W(cam["loc"]))})   # tower20._marks, metres -> D
+    """CamPath without building the set (camreport / solve): mark in metres -> D, moved, on the gravel path (z 0.113 D)."""
+    A = dict(marks={MARK: tuple(Vector(CO.W((-6.8, -116.5, 0.0))) + delta() + Vector((0, 0, 0.113)))})
     return cam_path(A)
+
+
+def project(loc, look, p):
+    """pure-math projection (x, y px at 720x1280) of world point p for a camera (loc, look) with lens shift SHIFT: the same
+    as Blender's for sensor fit AUTO on a portrait frame (shift is in units of the larger dimension, 1280)."""
+    f, r, u = C._cam_basis(loc, look)
+    d = Vector(p) - Vector(loc)
+    z = d.dot(f)
+    return (360.0 + C.F_PX * d.dot(r) / z, 640.0 + SHIFT * 1280.0 - C.F_PX * d.dot(u) / z)
 
 
 # ----------------------------------------------------------------------------- poses (cast20 STORY20: arms folded as in maupassant_turn_away)
@@ -126,9 +183,10 @@ def pose_of(g):
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s01")
-        self.A["marks"][MARK] = C.on_ground(self.A["marks"][MARK])      # the gravel path is 0.113 D above the mark's z 0
+        self.A["marks"][MARK] = C.on_ground(Vector(self.A["marks"][MARK]) + delta())   # moved; the gravel path is 0.113 D up
+        self.cam.data.shift_y = SHIFT
         self.path = cam_path(self.A)
-        move_fg(self.A, self.path.loc0)
+        move_set_dressing(self.A, self.path.at(FG_ANCHOR))
         self.key_cam(bf(G0), *self.path.at(G0))
         self.scene.frame_set(bf(G0))
         self.mau = self.actors["mau"] = C.make_actor("mau", "maupassant", os.path.join(WORK, "sprites"), canvas=CANVAS,

@@ -170,21 +170,24 @@ class CamPath(object):
     slide_px     lateral slide of the subject on screen, px/s at 720 wide (+ = camera trucks right, the world slides left)
     rise_px      vertical crane, px/s (+ = camera rises)
     arc_deg_s    orbit about the vertical through the subject, deg/s (+ = counter-clockwise seen from above): background parallax
+    arc0         start orbit, deg (the path starts arc0 round the subject from loc0, so a long arc can sweep through loc0)
     tilt0        start tilt, deg: the aim pitches UP by this much about the lens relative to the camera -> subject line
                  (tower_low: the subject is ~level with the lens but the shot looks up the tower)
     tilt_deg_s   drift tilt rate, deg/s (+ = tilts up: the subject sinks on screen ~14 px per degree, the tower climbs)
     decay        0..1: the drift speed falls linearly from v0 at g0 to v0 * (1 - decay) at g1.  < 1 = still moving on the last
                  frame (a shot that ends on a hard cut); 0 = constant speed (avoid: the bible wants eased moves)
-    snaps        [dict(g=(ga, gb), k=1.4, peak=1.7, shift=(right_D, up_D), tilt=deg)]: framing x k over ga..gb (geometric in
-                 distance), eased with camrig.ease_peak; shift trucks camera + subject (D); tilt adds pitch, same ease.
+    snaps        [dict(g=(ga, gb), k=1.4, peak=1.7, shift=(right_D, up_D), tilt=deg, arc=deg)]: framing x k over ga..gb
+                 (geometric in distance), eased with camrig.ease_peak; shift trucks camera + subject (D); tilt adds pitch; arc
+                 orbits round the subject (a far background -- the tower -- whips sideways behind a steady subject: the
+                 cheapest frame-diff p90 when the subject must stay in a screen band).
     lens stays 22 mm (set rule: move the camera, never zoom)."""
 
     def __init__(self, loc0, subj0, g0, g1, push=0.08, slide_px=40.0, rise_px=0.0, arc_deg_s=0.0, tilt0=0.0, tilt_deg_s=0.0,
-                 decay=0.4, snaps=()):
+                 decay=0.4, snaps=(), arc0=0.0):
         self.loc0, self.subj0 = Vector(loc0), Vector(subj0)
         self.g0, self.g1 = int(g0), int(g1)
         self.push, self.slide_px, self.rise_px, self.decay = float(push), float(slide_px), float(rise_px), float(decay)
-        self.arc, self.tilt0, self.tilt_rate = float(arc_deg_s), float(tilt0), float(tilt_deg_s)
+        self.arc, self.tilt0, self.tilt_rate, self.arc0 = float(arc_deg_s), float(tilt0), float(tilt_deg_s), float(arc0)
         self.snaps = [dict(s) for s in snaps]
         v = self.subj0 - self.loc0
         self.d0 = v.length
@@ -211,14 +214,16 @@ class CamPath(object):
         zoom = max(0.2, 1.0 + self.push * p)                               # framing scale of the drift
         right = self.slide_px * self.d0 / F_PX * p                         # px/s at the subject depth -> D
         up = self.rise_px * self.d0 / F_PX * p
+        arc = self.arc0 + self.arc * p
         for s in self.snaps:
             u = snap_u(g, s["g"][0], s["g"][1], s.get("peak", 1.7))
             zoom *= s.get("k", 1.0) ** u
             sh = s.get("shift", (0.0, 0.0))
             right += sh[0] * u
             up += sh[1] * u
+            arc += s.get("arc", 0.0) * u
         subj = self.subj0 + self.right * right + self.up * up
-        fwd = Matrix.Rotation(math.radians(self.arc * p), 3, "Z") @ self.fwd
+        fwd = Matrix.Rotation(math.radians(arc), 3, "Z") @ self.fwd
         d = self.d0 / zoom
         loc = subj - fwd * d
         r = Vector((fwd.y, -fwd.x, 0.0)).normalized()
