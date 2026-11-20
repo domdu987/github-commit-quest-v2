@@ -10,6 +10,21 @@ import bpy
 from mathutils import Vector
 from set15_lib import U, STATE
 smoother, smooth, spline = SHB.smoother, SHB.smooth, SHB.spline
+import hashlib, shutil, sprites as _sp
+def install_private_cache(tagname):
+    """per-process sprite dir + a sprite cache that copies from its own immutable hashed files (two processes / re-used tags must never share a PNG)"""
+    d = os.path.join(SHB.SPR, tagname); os.makedirs(d, exist_ok=True); CT.SPR = d; orig = SHB._orig_render; mem = {}
+    def render(specs):
+        out = []
+        for sp in specs:
+            key = hashlib.md5(json.dumps([sp['cast'], sp['pose'], sp['px_per_D'], sp.get('canvas')], sort_keys=True, default=str).encode()).hexdigest()
+            if key in mem and os.path.exists(mem[key][0]):
+                src, r = mem[key]; shutil.copyfile(src, sp['out']); out.append(r)
+            else:
+                tmp = os.path.join(d, 'cache_%s.png' % key); sp2 = dict(sp, out=tmp); r = orig([sp2])[0]; r = dict(r); mem[key] = (tmp, r); shutil.copyfile(tmp, sp['out']); out.append(r)
+        return out
+    _sp.render_sprites = render
+
 FPS = 30; BAR_Y = B2.BAR_Y; BAR_H = 2.24; PX, PY = B2.PIT; FS = B2.FOAM_SURF
 G0, G1 = 1331, 1804; HAND = 6
 POD = (-9.0, 10.0); LAND_Y = 13.6
@@ -236,6 +251,7 @@ if __name__ == '__main__':
     ap.add_argument('--stride', type=int, default=1); ap.add_argument('--offset', type=int, default=0); ap.add_argument('--frames', default=''); ap.add_argument('--threads', type=int, default=2)
     a = ap.parse_args(); os.makedirs(a.out, exist_ok=True)
     qq = 'preview' if a.q == 'draft' else 'final'
+    install_private_cache('p%d_%d' % (a.offset, os.getpid()))
     A = B2.build('TENSE', fast=True); sc = bpy.context.scene; F.setup_render(sc, qq); CT.hide_placeholders(); SHB.GROUND_LOG.clear()
     for o in bpy.data.objects:
         if o.name.startswith(('officials_', 'kit_')): o.hide_render = True; o.hide_viewport = True
