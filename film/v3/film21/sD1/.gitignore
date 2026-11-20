@@ -1,0 +1,6 @@
+work/
+raw/
+frames/
+*.log
+__pycache__/
+*.tmp.png
