@@ -27,15 +27,15 @@ BX, DZ = K.BRIDGE_X, K.DECK_Z
 LANE_W, LANE_E = BX - 0.62, BX + 0.62
 
 # ------------------------------------------------------------------ camera
-KEYS = [(-10, (-3.1, -7.2, 3.5), (0.3, -1.2, 3.3), 22.0),
-        (0, (-3.6, -4.7, 3.5), (0.2, 0.0, 3.3), 22.0),          # starts 2.4 m from the set's foreground post (-2.4, -1.25) and slides away from the rail
-        (16, (-5.8, -3.0, 3.6), (0.0, 1.6, 3.4), 22.0),
-        (36, (-7.4, -1.8, 3.9), (0.0, 2.4, 3.4), 22.0),
-        (66, (-6.8, 1.4, 4.6), (0.0, 3.0, 3.1), 22.0),
-        (78, (-3.4, -14.0, 11.5), (0.0, 3.0, 2.2), 22.0),       # CRANE UP and back, fast
-        (88, (-1.2, -40.0, 19.0), (0.0, 12.0, 1.8), 22.0),      # straight down the bridge
-        (112, (-5.0, -66.0, 29.0), (0.0, 8.0, 1.5), 17.0),
-        (121, (-6.5, -76.0, 33.0), (0.0, 8.0, 1.5), 16.0)]
+KEYS = [(-10, (-3.1, -7.2, 4.6), (0.3, -1.2, 3.0), 22.0),
+        (0, (-3.6, -4.7, 4.6), (0.2, 0.0, 3.0), 22.0),          # starts 2.4 m from the set's foreground post (-2.4, -1.25) and slides away from the rail
+        (16, (-5.8, -3.0, 4.7), (0.0, 1.6, 3.0), 22.0),
+        (36, (-7.4, -1.8, 5.0), (0.0, 2.4, 3.0), 22.0),
+        (66, (-6.8, 1.4, 5.6), (0.0, 3.0, 2.8), 22.0),
+        (78, (-4.4, -6.0, 9.5), (0.0, 3.0, 2.2), 22.0),         # CRANE UP and back, fast
+        (88, (0.0, -10.0, 14.0), (0.0, 6.0, 1.8), 22.0),       # high behind the column, looking down its length
+        (113, (0.0, -6.0, 20.0), (0.0, 8.0, 0.0), 30.0),       # snap pull-out ends DIRECTLY over the bridge, looking down its length
+        (118, (0.0, -3.0, 23.0), (0.0, 10.0, 0.0), 30.0)]
 
 
 def path_frame(f):
@@ -47,8 +47,16 @@ def path_frame(f):
     return G_SNAP + 24.0 + (f - G_SNAP - 18) * 0.28
 
 
+VIV_TOP = (1.4, 1.1, 0.9)                                          # API sec.13: calm ochre meadow, luma <= 105 over the bridge
+
+
 def cam_at(f):
-    return K.cam_path(None, KEYS, path_frame(f))
+    r = K.cam_path(None, KEYS, path_frame(f))
+    v0 = K.VIVID['bridge_deck']; v0 = (v0[0], v0[1], v0[2] if len(v0) > 2 else 1.0)
+    u = u_of(path_frame(f), 66.0, 100.0)
+    K.STATE['vivid'] = (math.exp((1 - u) * math.log(v0[0]) + u * math.log(VIV_TOP[0])), lerp(v0[1], VIV_TOP[1], u), lerp(v0[2], VIV_TOP[2], u))
+    r['vivid'] = K.STATE['vivid']
+    return r
 
 
 # ------------------------------------------------------------------ world and the 3D column
@@ -59,7 +67,7 @@ def build():
     return A
 
 
-MATS = K.KNIGHT_MATS
+MATS = [('t_red', 't_gold'), ('t_gold', 't_red'), ('t_red', 't_gold'), ('t_red', 't_cream')]      # ALL English crimson and gold (blue = Scots only)
 ANIM = []                                                          # [(empty, base_yaw_deg, amp, t0, phase, wob)]
 
 
@@ -74,7 +82,7 @@ def build_column():
             slot = (i, sx)
             if slot in hero_slots:
                 continue
-            m = MATS[(i * 2 + (0 if sx < 0 else 1)) % len(MATS)]
+            m = MATS[(i * 2 + (0 if sx < 0 else 1)) % 3]
             coat = ['horse', 'horse_dk', 'horse'][rs.randint(0, 3)]
             tint = 0.85 + 0.3 * rs.rand()
             x = BX + 0.62 * sx
@@ -89,6 +97,14 @@ def build_column():
                                  ph=rs.uniform(0, 6.28), toward=(1 if sx < 0 else -1) * rs.choice([-1, 1])))
             else:
                 K.horse(Bs, (x, y, DZ), 90.0, coat=coat, trap=m[0], trim=m[1], tint=tint, rider=(m[0],))
+    for k in range(1, 11):                                         # the rest of the column north of the camera (static, nobody moves)
+        for sx in (-1, 1):
+            m = MATS[(k * 2 + (0 if sx < 0 else 1)) % 3]
+            K.horse(Bs, (BX + 0.62 * sx, 7.2 + 3.0 * k, DZ), 90.0, coat=['horse', 'horse_dk', 'horse'][rs.randint(0, 3)], trap=m[0], trim=m[1], tint=0.85 + 0.3 * rs.rand(), rider=(m[0],))
+    for i in range(14, 22):                                        # and the tail to the south end
+        for sx in (-1, 1):
+            m = MATS[(i * 2 + (0 if sx < 0 else 1)) % 3]
+            K.horse(Bs, (BX + 0.62 * sx, 7.2 - 3.0 * i, DZ), 90.0, coat=['horse', 'horse_dk', 'horse'][rs.randint(0, 3)], trap=m[0], trim=m[1], tint=0.85 + 0.3 * rs.rand(), rider=(m[0],))
     Bs.finalize('column')
 
 
@@ -177,8 +193,8 @@ class Cast(object):
     def __init__(self):
         sc = bpy.context.scene
         self.a = C.actors.Actor('hA', 'knight_a_mtd'); self.a.build(C.sprites.DEFAULT_CANVAS['knight_a_mtd'], SPR, contact=True)
-        self.b = C.actors.Actor('hB', 'knight_b_great_mtd'); self.b.build(C.sprites.DEFAULT_CANVAS['knight_b_great_mtd'], SPR, contact=True)
-        self.c = C.actors.Actor('hC', 'knight_b_great_bare_mtd'); self.c.build(C.sprites.DEFAULT_CANVAS['knight_b_great_bare_mtd'], SPR, contact=True)
+        self.b = C.actors.Actor('hB', 'knight_b_crim_mtd'); self.b.build(C.sprites.DEFAULT_CANVAS['knight_b_crim_mtd'], SPR, contact=True)
+        self.c = C.actors.Actor('hC', 'knight_b_crim_bare_mtd'); self.c.build(C.sprites.DEFAULT_CANVAS['knight_b_crim_bare_mtd'], SPR, contact=True)
         self.h = C.actors.Actor('hH', 'helmet_air'); self.h.build(C.sprites.DEFAULT_CANVAS['helmet_air'], SPR, contact=False, shadow='card')
         for x in (self.a, self.b, self.c, self.h):
             x.head_flip = False
@@ -194,7 +210,7 @@ class Cast(object):
                 xyz, _, _ = hero_xyz(who, f)
                 act.place(bf, xyz, scale=S_CARD)
                 act.pose(bf, hero_base(who, f), camera=cam)
-            self.h.place(bf, self.helm_xyz(f), scale=S_CARD * 1.15)
+            self.h.place(bf, self.helm_xyz(f), scale=S_CARD * 1.5)
             self.h.pose(bf, dict(tilt=self.helm_tilt(f)), camera=cam)
 
     def helm_xyz(self, f):
@@ -215,7 +231,7 @@ class Cast(object):
         return (x, y, z)
 
     def helm_tilt(self, f):
-        return 30.0 + 640.0 * max(0.0, (f - G_POP) / 30.0) * (1.0 - 0.6 * u_of(f, G_POP + 10, G_POP + 22))
+        return -25.0 + 330.0 * max(0.0, (f - G_POP) / 30.0) * (1.0 - 0.85 * u_of(f, G_POP + 10, G_POP + 24))
 
     def sprites(self, frames):
         jobs = []
@@ -288,6 +304,10 @@ if __name__ == '__main__':
         outdir = os.path.join(HERE, 'draft' if cmd == 'draft' else 'raw')
         smp = int(sys.argv[3]) if len(sys.argv) > 3 else (None if cmd == 'draft' else 32)
         render_frames(frames, cmd, outdir, smp)
+    if cmd == 'camdraft':                                          # camdraft f1,f2,..  quick column+camera drafts (no cast) -> work/camdraft/
+        A = build(); build_column(); d = os.path.join(HERE, 'work', 'camdraft'); os.makedirs(d, exist_ok=True)
+        for f in parse(sys.argv[2]):
+            hooks(f); key_column(f); cam_at(f); K.render(os.path.join(d, 'c_%04d.png' % f), 'draft'); print('cam', f, flush=True)
     if cmd == 'path_draft':
         step = int(sys.argv[2]) if len(sys.argv) > 2 else 3
         # path_frame(f) with f = local index; draft samples every `step` frames

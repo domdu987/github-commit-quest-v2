@@ -39,29 +39,31 @@ def u_of(g, a, b):
 
 # ------------------------------------------------------------------ segment-local cast extras
 def register_extras():
-    """knight_b_great_bare_mtd: the blue knight with NO helmet (bare head, brown hair), for after the pop; helmet_air: a lone great helm (no foam ring)."""
+    """film-21 colour rule: ALL English are crimson and gold (blue = Scots).  knight_b_crim_mtd: the second rider in a crimson surcoat / red great helm on a GOLD caparison;
+    knight_b_crim_bare_mtd: the same with NO helmet (bare head) for after the pop; helmet_air: a lone bascinet with a crimson plume."""
     base = P.CAST["knight_b_great"]
-    bare = dict(base)
-    bare.update(hat_style="bare7", hat_colors={"light": "#8a6038", "base": "#6a4a2a", "dark": "#4a3220"},
-                hair=dict(color="#6a4a2a", front=0.08, grow=0.2))
-    P.CAST["knight_b_great_bare"] = bare
-    cast21.MOUNTED["knight_b_great_bare_mtd"] = "knight_b_great_bare"
-    cast21.DEFAULT_CAP["knight_b_great_bare"] = "blue"
-    P.CAST["knight_b_great_bare_mtd"] = dict(P.CAST["knight_a_mtd"])
+    crim = dict(base)
+    crim.update(hat_colors=dict(cast21.GREAT_RED), colors=dict(base["colors"], base=cast21.ENGLISH_RED, alt="#e8b52e", trim="#e8b52e"))
+    bare = dict(crim)
+    bare.update(hat_style="bare7", hat_colors={"light": "#8a6038", "base": "#6a4a2a", "dark": "#4a3220"}, hair=dict(color="#6a4a2a", front=0.08, grow=0.2))
+    P.CAST["knight_b_crim"] = crim; P.CAST["knight_b_crim_bare"] = bare
     cv = cast21.CANVAS_SPECIAL21["knight_b_great_mtd"] if "knight_b_great_mtd" in cast21.CANVAS_SPECIAL21 else MTD_CANVAS
-    cast21.CANVAS_SPECIAL21["knight_b_great_bare_mtd"] = cv
-    sprites.DEFAULT_CANVAS["knight_b_great_bare_mtd"] = cv
-    # lone helmet (great helm, blue plume), tilted, no water
+    for nm in ("knight_b_crim", "knight_b_crim_bare"):
+        cast21.MOUNTED[nm + "_mtd"] = nm
+        cast21.DEFAULT_CAP[nm] = "gold"
+        P.CAST[nm + "_mtd"] = dict(P.CAST["knight_a_mtd"])
+        cast21.CANVAS_SPECIAL21[nm + "_mtd"] = cv
+        sprites.DEFAULT_CANVAS[nm + "_mtd"] = cv
     prev = P.figure
 
     def figure2(name, pose=None, uid="p"):
         if name == "helmet_air":
             pd = pose if isinstance(pose, dict) else {}
-            ink = P.INK
-            k = cast21._ctx(uid, ink, None)
-            C = dict(hat_colors=cast21.GREAT_BLUE if hasattr(cast21, "GREAT_BLUE") else cast21.GREAT, hat_tilt=float(pd.get("tilt", 0.0)))
-            hat, top = cast21._hat_greathelm21(k, C, 0.0)
-            svg = "<defs>%s</defs><g transform=\"translate(0 0.55)\">%s</g>" % ("".join(k.defs), hat)
+            k = cast21._ctx(uid, P.INK, None)
+            steel = dict(light="#f4f6fa", base="#b4bcc8", dark="#6a7482", shine="#ffffff", plume="#c8282c")
+            C = dict(hat_colors=steel, hat_tilt=0.0)
+            hat, top = cast21._hat_bascinet21(k, C, 0.0)
+            svg = "<defs>%s</defs><g transform=\"rotate(%.2f 0 -0.59)\"><g transform=\"translate(0 -0.05)\">%s</g></g>" % ("".join(k.defs), float(pd.get("tilt", 0.0)), hat)
             an = dict(feet=(0.0, 0.0), hip=(0.0, -0.2), head=(0.0, -0.4), head_top=(0.0, -0.8), hat_top=(0.0, -0.8), mouth=(0.0, -0.3))
             return dict(svg=svg, feet_y=0.0, bbox=(-1.2, -1.4, 1.2, 0.4), anchors=an)
         return prev(name, pose, uid)
