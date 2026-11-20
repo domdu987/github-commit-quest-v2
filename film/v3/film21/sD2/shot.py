@@ -199,7 +199,9 @@ def near_props(A, M, R, f, loc0):
         return (p.x, p.y, float(K.ground(p.x, p.y)))
     B = K.Batch(91)
     K.sacks(B, at(0.10, 1.6, -1.5), 5, rs); K.sacks(B, at(0.62, 2.2, -1.2), 4, rs)
-    K.weapon_rack(B, at(0.30, 2.0, -0.4), 20.0, rs, n=6)
+    bx, by, bz = at(0.30, 2.0, -0.4)                              # a stacked bundle of spears (the weapon rack's shield discs read as black rings)
+    for i in range(6): K.spear(B, (bx + 0.12 * (i % 3), by + 0.1 * (i // 3), bz), tilt=(0.10 * (i - 2.5) / 2.5, 0.05 * (i % 2)), h=2.7)
+    B.rod('wood', (bx - 0.2, by, bz + 0.9), (bx + 0.4, by + 0.05, bz + 0.9), 0.04, seg=5)
     K.spear(B, at(0.82, 1.9, -1.3), tilt=(0.06, -0.1), h=3.0); K.spear(B, at(0.84, 2.2, -1.1), tilt=(-0.05, -0.12), h=3.0)
     for k in range(7):                                            # tent pegs and rope stubs in the sand
         x, y, z = at(0.05 + 0.13 * k, rs.uniform(-1.8, 2.8), rs.uniform(-1.8, -0.4))
@@ -217,7 +219,7 @@ def stage(T, gs):
     import bpy
     A = T.A
     for o in bpy.data.objects:
-        if o.name in ("flag_gold.021", "flag_wood.021", "flag_t_gold.014", "flag_t_red.015", "fg_bank_barrel"):
+        if o.name in ("flag_gold.021", "flag_wood.021", "flag_t_gold.014", "flag_t_red.015", "fg_bank_barrel", "fg_bank_iron"):
             o.hide_render = True                                 # fg banner pole (crossed his head) and the red barrel (covered him)
     marks = A["marks"]["camp_bank"]
     M = marks["cress"]
