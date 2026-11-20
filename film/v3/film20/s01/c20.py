@@ -38,35 +38,45 @@ GOTCHAS (found on film-20 s01; read before building a shot -- QA.md has the long
   * SAMPLES: final = CO.STATE['spp'] (8, the approved set number; TOWER / SITE build with spp=8), draft = 4 at 360x640.
     Take.render() passes them explicitly.  Do not raise them (cost).  Threads = 2 per process, 2 processes max.
   * NO DOF anywhere: CO.make_camera sets dof off; Take.no_dof() repeats it before every render.  NO TEXT anywhere.
+  * WHOLE TOWER + HEAD BAND: from tower_low's spot (120 m from the base) the summit is 68 deg up; with a head centre in 450-760
+    the 22 mm frame cannot hold both unless the lens is ~4 D from the head.  s01 moves the WHOLE staging 50 m back down the
+    avenue (summit 60.5 deg) and solves the camera (height, distance, tilt, lens shift) with a pure-math projection
+    (shot.project) before any render.  Moving a staging = mark + camera + FG + crowd cards by one offset (shot.delta).
+  * LENS SHIFT is a free framing tool: shift_y < 0 puts the optical centre above the frame centre; that maximises the angle
+    between the frame top (summit) and the head row.  Keep the pitch to the card itself < 40 deg (the head line, not the aim).
   * The FG items of a preset (tower_low: lamp-post 1.2 m ahead-left, bench 2 m ahead-right; objects fg_* + the invisible
-    'shade_casters' that shade the near ground) are built relative to the PRESET start camera (tower20.FG_ITEMS / _fg).  If
-    your camera starts elsewhere they are no longer 1-2 D from YOUR lens: move them by the same ground offset at runtime
-    (s01 shot.move_fg: they are children of the scaled root, so offset / CO.SC), or the lamp-post ends up behind the lens.
+    'shade_casters') are built relative to the PRESET start camera (tower20.FG_ITEMS / _fg), MERGED into one mesh per
+    material.  If your camera starts elsewhere, move them at runtime -- and with an orbit / push, check the lens never enters
+    them: s01 first anchored them to the g-0 lens and the push + arc drove the lens THROUGH the bench at g 53-64 (a 50-level
+    frame-diff pop, frames full of dark timber).  s01 now splits the vertices by distance to the lamp spot and places each
+    prop relative to the LAST frame's lens (shot.move_set_dressing), checked with a lens-clearance + screen-x solve.
   * Moving the camera ALONG the camera -> subject line (closer / farther) does not change how high the subject sits for a given
-    tilt; only the camera height or a horizontal move does.  s01 lowered tower_low from 1.0 m to 0.35 m AND came 1.6 D closer
-    (5.0 D from his head): he fills the lower frame instead of 40 % empty grey ground.
+    tilt; only the camera height or a horizontal move does.
   * A PUSH must go toward the SUBJECT, not toward the preset look_at: tower_low looks at the tower axis 225 D away, so
     "8 %/s of that distance" would fly the camera 18 D/s through Maupassant.  CamPath pushes along camera -> subject and
     adds TILT separately (tilt_deg / tilt_deg_s: the aim pitches up about the lens, the subject sinks on screen).
-  * TILT vs. CAPTION BAND: every degree of tilt-up moves a near subject down ~14 px.  Budget it: s01 starts his head centre
-    at y 479 (pitch -2.6) and ends at y 700-717 (pitch 13.7-14.6) after 17 deg of tilt (drift 11 + snap 6).  Check with probe.
+  * TILT vs. CAPTION BAND: every degree of tilt-up moves a near subject down ~14 px; a push toward a head ABOVE the lens raises
+    the head line, which buys back tilt.  s01: head centre 585 -> 718 (g 0 -> 79) for pitch 32 -> 39.
+  * FRAME-DIFF with a fixed subject: a smooth sky dominates a low-angle frame and the head band limits tilt.  Tilt + push alone
+    gave median 3.2 / p90 6.3.  ORBIT (arc) round the subject makes the far tower slide behind him: drift arc 8 deg/s + snap
+    arc 18 deg -> median 4.8 / p90 12.7 (draft).  Start the arc negative (arc0) so the tower sweeps across, not out of frame.
   * CARD LIMITS: keep the camera pitch to the card under ~40 deg (stage max_slant 50).  A low camera close to an actor gives
     upper_k ~1.1-1.2 (the upper body is drawn taller to keep the head round): pass a TALLER canvas than CANVAS20 when the
     camera is low and close, and watch the 'sprite clipped' warnings in the logs (Take.sprites_for prints them).
   * HEAD_FLIP: the puppet head crescent sits lower-right (key from screen-left).  make_actor() sets head_flip from the sun as
-    seen from the camera (tower_low DAY: sun from screen-left, behind the camera -> False).
+    seen from the camera of the first frame (tower_low DAY -> False); re-check if your camera turns more than ~60 deg.
   * MARK HEIGHT: marks carry ground z 0 but the surface can be higher (tower_low: gravel avenue at z 0.113 D = 6 cm under
     maupassant_low).  From a low lens the shoes AND the contact decal disappear into the path (s01's first final had no shoes).
     Always place actors at C.on_ground(mark) (ray cast) and check the soles at full size in the first draft.
   * CONTACT: cast20 cards have no feet shadow of their own.  make_actor(contact=True) adds the soft contact decal (a multiply
     ellipse 0.004 D over the ground) + shadow='proxy' (a hidden shadow card turned toward the sun).  QA-tech N1 on tower_low
     found 'thin stick legs, no contact shadow' on the stand-in.  At tower_low he stands inside the preset's near-ground SHADE
-    zone, so his proxy shadow does not show and the default decal (opacity 0.5) is almost invisible: s01 uses
+    zone, so his proxy shadow does not show and the default decal (opacity 0.5) is faint: s01 uses
     contact=dict(width=1.3, depth=0.55, opacity=0.8).
   * EXPRESSIONS that cast20 does not have (s01 needs "disgust") are registered at runtime with add_expression() -- never edit
     cast20.py / puppet.py.  Expression changes and pose swaps go on the closed frame of a 3-frame blink (blink_swap).
-  * CROWD: tower_low builds 8 crowd cards (set_crowd(1)) 14-34 m behind him; they are static placeholder cards (no motion):
-    keep them small / behind him or set_crowd(0) for a shot where they would read as frozen people.
+  * CROWD: tower_low builds 8 crowd cards (set_crowd(1), objects crowd_*, world D) 14-34 m ahead of the preset camera; they
+    are static placeholder cards (no motion): keep them small / far or set_crowd(0) where they would read as frozen people.
   * Runtime set dressing is allowed (add / hide / move objects from your shot.py); never edit the set modules.
     Useful: CO.STATE['M'] (materials), CO.MB(name[, parent=CO.root()]) mesh builder (.finish() -> objects), CO.project(world_pt)
     -> pixel in the scene camera, CO.STATE['tower_objs'] / ['crowd'] / ['cards'] / ['fair'] / ['flags'].

@@ -2,20 +2,22 @@
 """shot.py -- film 20 take s01 = shot 1, THE HOOK (g 0..79 + 4 out-handle frames g 80..83; hard cut to shot 2 at g 80).
 "นักเขียนคนนี้ เกลียดหอคอย ต้นหนึ่ง ที่สุดในโลก" -- this writer hated one tower more than anything in the world.
 
-TOWER tower_low / DAY 1889.  Maupassant stands in the foreground on the Champ de Mars (mark maupassant_low), arms crossed; the
-FINISHED tower fills the sky behind him; lamp-post (left) + bench (right) foreground from the preset.
-    g  0..25  he sneers up at the tower (expr sneer, gaze up-right, chin up); the camera is already moving: push + slide + tilt up
-    g 25..40  SNAP push x1.45 + extra tilt-up on "เกลียดหอคอย" (event g 27); the face swaps sneer -> disgust on the CLOSED frame of a
-              3-frame blink (g 26 half, g 27 closed = swap, g 28 half)
+TOWER tower_low / DAY 1889, staged 50 m further down the avenue than the preset (see STAGE_DY_M).  Maupassant stands in the
+foreground on the Champ de Mars, arms crossed; the WHOLE finished tower (spire in frame from g 0) fills the sky behind him;
+lamp-post (left edge) + bench (lower right) foreground, kiosks / flags / crowd cards in the lower third.
+    g  0..25  he sneers up at the tower (expr sneer, gaze up-right, chin up); the camera is already moving: push + slide + arc + tilt
+    g 25..40  SNAP push x1.4 + orbit 18 deg + tilt 2 deg on "เกลียดหอคอย" (event g 27): the tower whips sideways behind him; the face
+              swaps sneer -> disgust on the CLOSED frame of a 3-frame blink (g 26 half, g 27 closed = swap, g 28 half)
     g 45..53  "ต้นหนึ่ง" (event g 47): he turns his nose away -- yaw +0.30 -> -0.85 (faces screen-left), chin up, eyes squeezed
               shut (expr avoid; the swap rides on the head turn at g 48)
     g 61..66  "ที่สุดในโลก" (event g 61): a small "hmph" chin jerk (pitch bump), still turned away
-    g 66..83  he holds the snub with an idle sway; the camera keeps tilting up to the second platform and the spire (cut at g 80)
+    g 66..83  he holds the snub with an idle sway; the camera keeps pushing, orbiting and tilting (cut at g 80)
 Mouths: no quote in this shot -> expression mouths only (smirk / frown), never animated.  NO depth of field, NO text.
 
-The camera (c20.CamPath): the preset pose lowered from 1.0 m to 0.35 m (his head rides higher in frame, so there is room to tilt
-up the tower and still keep his head centre in 450-760); push 8 %/s toward his head + slide 30 px/s + arc + tilt up 4.5 deg/s,
-decay 0.3 (moving on frame 0 and on the last frame), plus the snap.
+The camera (c20.CamPath): 0.16 m above the gravel path, 5.2 D in front of him, lens shift -0.12 (preset +0.08), pitch 32 -> 39
+deg; push 8 %/s toward his head + slide 45 px/s + orbit 8 deg/s + tilt 2 deg/s, decay 0.1 (moving on frame 0 and the last
+frame), plus the snap.  The numbers were solved for: summit y >= 30 from g 0, head centre 585-720, horizon ~y 970 (ground
+<= 25 %), then tuned on drafts for the frame-diff target (QA.md).
 
     python3 shot.py probe a:b[:step]                       numbers only (camera, heads), no render
     python3 shot.py camreport                              CamPath corner speed per frame (never parked check), no scene build
