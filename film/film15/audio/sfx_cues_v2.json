@@ -1,0 +1,581 @@
+{
+ "_doc": "SFX cues for film 15 v2 (remake). 'at' is on the NARRATION clock like sfx_cues.json: conform15.py adds OFF=0.10 s, and picture frame g shows at film time g/30, so at = g/30 - 0.10 (the g of each cue is in its note, as the frame number in the final conform; take frame index = g - first_g). 'align':'onset' makes 'at' the first transient (contact / whip peak). Levels, ducking and bed tiling as in v1. 1963 Medford = sawdust/cinder sounds, 1968/1972 stadium = foam/rubber/crowd; beds follow the location changes.",
+ "cues": [
+  {
+   "file": "track_ambience.wav",
+   "kind": "bed",
+   "at": 0.0,
+   "until": 31.0,
+   "rms_db": -30,
+   "note": "Medford 1963 bed: T1, T2, T3 up to the poster->BIGZOOM2 match dissolve (g927-933 = narr 30.8-31.0)"
+  },
+  {
+   "file": "crowd_murmur.wav",
+   "kind": "bed",
+   "at": 30.8,
+   "until": 32.9,
+   "rms_db": -34,
+   "note": "Stadium bed, quiet while the bird's-eye BIGZOOM 2 dives (T3 g927-990)"
+  },
+  {
+   "file": "crowd_murmur.wav",
+   "kind": "bed",
+   "at": 32.9,
+   "until": 42.3,
+   "rms_db": -30,
+   "note": "Stadium bed at the runway: bar rise, rival, Dick attempts (T3 g990 - T4 g1272)"
+  },
+  {
+   "file": "crowd_murmur.wav",
+   "kind": "bed",
+   "at": 42.3,
+   "until": 59.9,
+   "rms_db": -37,
+   "note": "Stadium bed lowered: hush at T4 g1273, the reveal (T5) and the aha (T6) until the 1972 bed"
+  },
+  {
+   "file": "crowd_murmur.wav",
+   "kind": "bed",
+   "at": 59.7,
+   "until": 65.15,
+   "rms_db": -33,
+   "note": "1972 day-stadium bed (T7 g1796-1951), crossfades into Medford at the sky dissolve centre g1951"
+  },
+  {
+   "file": "track_ambience.wav",
+   "kind": "bed",
+   "at": 64.75,
+   "until": 69.83,
+   "rms_db": -30,
+   "note": "Back at Medford: T7 sky dissolve g1938-1965 (centre g1951) to the hard cut g2094"
+  },
+  {
+   "file": "thump_sawdust.wav",
+   "at": 1.433,
+   "len": 1.2,
+   "peak_db": -26,
+   "note": "T1 g46: tiny boy's straddle roll lands in the pit inside the BIGZOOM (QA beat 0.75-1.55 s; figure is only a few pixels, timed from QA)",
+   "align": "onset"
+  },
+  {
+   "file": "whoosh_whip_a.wav",
+   "at": 1.767,
+   "len": 0.6,
+   "peak_db": -26,
+   "note": "T1 g56: BIGZOOM 1 fast dive through the pines toward the school (frames 48-72 change fastest)",
+   "align": "onset"
+  },
+  {
+   "file": "footsteps_cinder.wav",
+   "at": 4.767,
+   "len": 0.7,
+   "peak_db": -24,
+   "note": "T1 g146: Dick starts the J-curve run-up at the left of the pit (low hero push, g133-160)",
+   "align": "onset"
+  },
+  {
+   "file": "thump_sawdust.wav",
+   "at": 6.2,
+   "len": 1.2,
+   "peak_db": -15,
+   "note": "T1 g189: Dick lands in the sawdust after the flop (over the bar g168-182, in the pit g189-192)",
+   "align": "onset"
+  },
+  {
+   "file": "sawdust_spray.wav",
+   "at": 6.233,
+   "len": 1.0,
+   "peak_db": -20,
+   "note": "T1 g190: chips fly off the pit as Dick lands",
+   "align": "onset"
+  },
+  {
+   "file": "footsteps_cinder.wav",
+   "at": 7.833,
+   "len": 0.6,
+   "peak_db": -24,
+   "note": "T1 g238: first boy runs in (g240-246 visible)",
+   "align": "onset"
+  },
+  {
+   "file": "thump_sawdust.wav",
+   "at": 8.567,
+   "len": 1.2,
+   "peak_db": -19,
+   "note": "T1 g260: boy 1 straddle lands face-down in the sawdust (over bar g254-258, on the pit g259-261)",
+   "align": "onset"
+  },
+  {
+   "file": "footsteps_cinder.wav",
+   "at": 9.1,
+   "len": 0.6,
+   "peak_db": -24,
+   "note": "T1 g276: second boy runs in (g279-292)",
+   "align": "onset"
+  },
+  {
+   "file": "thump_sawdust.wav",
+   "at": 10.033,
+   "len": 1.2,
+   "peak_db": -19,
+   "note": "T1 g304: boy 2 straddle lands (over bar g298-301, in the pit g303-306)",
+   "align": "onset"
+  },
+  {
+   "file": "footsteps_cinder.wav",
+   "at": 11.833,
+   "len": 0.8,
+   "peak_db": -22,
+   "note": "T1 g358: Dick runs in for the straddle try (g366-376 close, over bar ~g386)",
+   "align": "onset"
+  },
+  {
+   "file": "bar_clatter.wav",
+   "at": 13.233,
+   "len": 2.0,
+   "peak_db": -15,
+   "note": "T1 g400: Dick knocks the bar off, it leaves the standards (QA g399; bar tilting g402-412)",
+   "align": "onset"
+  },
+  {
+   "file": "thump_sawdust.wav",
+   "at": 13.333,
+   "len": 1.2,
+   "peak_db": -17,
+   "note": "T1 g403: Dick drops into the sawdust under the falling bar",
+   "align": "onset"
+  },
+  {
+   "file": "bar_rattle.wav",
+   "at": 13.767,
+   "len": 0.8,
+   "peak_db": -22,
+   "note": "T1 g416: bar bounces and settles on the pit edge (g414-418)",
+   "align": "onset"
+  },
+  {
+   "file": "footsteps_cinder.wav",
+   "at": 15.1,
+   "len": 0.8,
+   "peak_db": -23,
+   "note": "T1 g456: Dick jogs in for the clean flop (enters g460-472)",
+   "align": "onset"
+  },
+  {
+   "file": "thump_sawdust.wav",
+   "at": 16.167,
+   "len": 1.2,
+   "peak_db": -16,
+   "note": "T1 g488: clean flop lands in the sawdust (last frames g486-489 before the T2 cut at g489)",
+   "align": "onset"
+  },
+  {
+   "file": "coach_laugh.wav",
+   "at": 16.267,
+   "len": 2.4,
+   "peak_db": -17,
+   "note": "T2 g491: coach belly laugh starts with the take (QA laugh g489-564)",
+   "align": "onset"
+  },
+  {
+   "file": "boys_laugh.wav",
+   "at": 17.267,
+   "len": 2.2,
+   "peak_db": -18,
+   "note": "T2 g521: boys laugh in the far background (visible g519-555)",
+   "align": "onset"
+  },
+  {
+   "file": "whoosh_punch.wav",
+   "at": 22.767,
+   "len": 0.5,
+   "peak_db": -24,
+   "note": "T2 g686: punch close-up 1 creeps in on the coach (CU g687-708, 'du-eng')",
+   "align": "onset"
+  },
+  {
+   "file": "whoosh_whip_a.wav",
+   "at": 23.6,
+   "len": 0.6,
+   "peak_db": -22,
+   "note": "T2 g711: whip back to the pit (blur g709-716, lands on the wide g716)",
+   "align": "onset"
+  },
+  {
+   "file": "footsteps_cinder.wav",
+   "at": 23.833,
+   "len": 0.7,
+   "peak_db": -22,
+   "note": "T2 g718: Dick runs the J-curve toward the photographer (g718-730)",
+   "align": "onset"
+  },
+  {
+   "file": "flash_pop.wav",
+   "at": 24.5,
+   "len": 1.2,
+   "peak_db": -14,
+   "note": "T2 g738: photographer's flash white-out as Dick arches",
+   "align": "onset"
+  },
+  {
+   "file": "whoosh_punch.wav",
+   "at": 24.633,
+   "len": 0.5,
+   "peak_db": -26,
+   "note": "T2 g742: push THROUGH the flash into the newspaper page (white-out g738-744)",
+   "align": "onset"
+  },
+  {
+   "file": "newspaper_rustle.wav",
+   "at": 24.9,
+   "len": 1.5,
+   "peak_db": -22,
+   "note": "T2 g750: newspaper page arrives, reader's hands grip it (g744-760)",
+   "align": "onset"
+  },
+  {
+   "file": "boys_laugh.wav",
+   "at": 26.967,
+   "len": 2.5,
+   "peak_db": -18,
+   "note": "T2 g812: boys point and laugh behind the paper (visible g810-846)",
+   "align": "onset"
+  },
+  {
+   "file": "coach_laugh.wav",
+   "at": 27.167,
+   "len": 2.3,
+   "peak_db": -20,
+   "note": "T2 g818: coach laughs too (visible g810-846)",
+   "align": "onset"
+  },
+  {
+   "file": "whoosh_punch.wav",
+   "at": 28.233,
+   "len": 0.5,
+   "peak_db": -24,
+   "note": "T2 g850: snap push into the newspaper photo (g846-868, hands to T3)",
+   "align": "onset"
+  },
+  {
+   "file": "footsteps_cinder.wav",
+   "at": 29.167,
+   "len": 0.7,
+   "peak_db": -26,
+   "note": "T3 g878: Dick's run-in for the training flop (off screen right, he flies in g888)",
+   "align": "onset"
+  },
+  {
+   "file": "thump_sawdust.wav",
+   "at": 30.0,
+   "len": 1.2,
+   "peak_db": -21,
+   "note": "T3 g903: training flop lands (over bar g890-898, in the pit g902-906; only one flop is visible in this take)",
+   "align": "onset"
+  },
+  {
+   "file": "whoosh_whip_b.wav",
+   "at": 31.167,
+   "len": 0.7,
+   "peak_db": -26,
+   "note": "T3 g938: BIGZOOM 2 dive through the floodlight beams (g930-975)",
+   "align": "onset"
+  },
+  {
+   "file": "bar_rattle.wav",
+   "at": 32.433,
+   "len": 0.8,
+   "peak_db": -24,
+   "note": "T3 g976: officials raise the bar (QA g972-992, 2.04 -> 2.24 m)",
+   "align": "onset"
+  },
+  {
+   "file": "sneakers_rubber.wav",
+   "at": 33.3,
+   "len": 0.7,
+   "peak_db": -26,
+   "note": "T3 g1002: rival runs in from the right (g1006-1009)",
+   "align": "onset"
+  },
+  {
+   "file": "thump_foam.wav",
+   "at": 33.833,
+   "len": 1.2,
+   "peak_db": -21,
+   "note": "T3 g1018: rival drops onto the foam (over the bar g1010-1017)",
+   "align": "onset"
+  },
+  {
+   "file": "crowd_groan.wav",
+   "at": 33.967,
+   "len": 2.0,
+   "peak_db": -22,
+   "note": "T3 g1022: crowd groans for the rival's failure",
+   "align": "onset"
+  },
+  {
+   "file": "bar_clatter.wav",
+   "at": 34.167,
+   "len": 2.0,
+   "peak_db": -17,
+   "note": "T3 g1028: the bar falls and hits the mat/stands (knocked g1018, tilting g1020-1027, flat g1030)",
+   "align": "onset"
+  },
+  {
+   "file": "sneakers_rubber.wav",
+   "at": 36.967,
+   "len": 0.9,
+   "peak_db": -22,
+   "note": "T4 g1112: attempt 1 run-up (g1106-1133)",
+   "align": "onset"
+  },
+  {
+   "file": "thump_foam.wav",
+   "at": 38.0,
+   "len": 1.2,
+   "peak_db": -18,
+   "note": "T4 g1143: attempt 1 lands on the foam (over bar g1134-1142, below the frame edge g1144)",
+   "align": "onset"
+  },
+  {
+   "file": "bar_clatter.wav",
+   "at": 38.067,
+   "len": 2.0,
+   "peak_db": -16,
+   "note": "T4 g1145: attempt 1 bar falls (QA g1140 = 38.0 s; tilting g1142-1145 then the official covers the lens, contact hidden)",
+   "align": "onset"
+  },
+  {
+   "file": "crowd_groan.wav",
+   "at": 38.1,
+   "len": 2.4,
+   "peak_db": -22,
+   "note": "T4 g1146: crowd groans, attempt 1",
+   "align": "onset"
+  },
+  {
+   "file": "sneakers_rubber.wav",
+   "at": 38.367,
+   "len": 0.8,
+   "peak_db": -22,
+   "note": "T4 g1154: attempt 2 run-up (g1153-1172)",
+   "align": "onset"
+  },
+  {
+   "file": "thump_foam.wav",
+   "at": 39.267,
+   "len": 1.2,
+   "peak_db": -19,
+   "note": "T4 g1181: attempt 2 lands on the foam (over bar g1174-1180)",
+   "align": "onset"
+  },
+  {
+   "file": "crowd_groan.wav",
+   "at": 39.367,
+   "len": 2.4,
+   "peak_db": -22,
+   "note": "T4 g1184: crowd groans, attempt 2",
+   "align": "onset"
+  },
+  {
+   "file": "bar_clatter.wav",
+   "at": 39.6,
+   "len": 2.0,
+   "peak_db": -17,
+   "note": "T4 g1191: attempt 2 bar hits the mat (knocked g1176, tilting g1180-1189, flat g1192; QA 39.2 s = g1176)",
+   "align": "onset"
+  },
+  {
+   "file": "whoosh_whip_a.wav",
+   "at": 40.033,
+   "len": 0.6,
+   "peak_db": -22,
+   "note": "T4 g1204: WHIP pan up to the coach (blur g1203-1208, stands from g1205)",
+   "align": "onset"
+  },
+  {
+   "file": "whoosh_punch.wav",
+   "at": 41.1,
+   "len": 0.5,
+   "peak_db": -24,
+   "note": "T4 g1236: punch close-up 2 on the coach 'แค่นี้แหละ' (CU g1238-1262)",
+   "align": "onset"
+  },
+  {
+   "file": "whoosh_whip_b.wav",
+   "at": 42.233,
+   "len": 0.7,
+   "peak_db": -22,
+   "note": "T4 g1270: WHIP back down to the pit (blur g1268-1277)",
+   "align": "onset"
+  },
+  {
+   "file": "crowd_gasp_hush.wav",
+   "at": 42.367,
+   "len": 3.5,
+   "peak_db": -24,
+   "note": "T4 g1274: stadium hushes, Dick rocking at his mark (hush g1273-1337)",
+   "align": "onset"
+  },
+  {
+   "file": "sneakers_rubber.wav",
+   "at": 44.967,
+   "len": 1.6,
+   "peak_db": -19,
+   "note": "T5 g1352: the run, curve and plant (run g1331-1394, take-off ~g1394-1397)",
+   "align": "onset"
+  },
+  {
+   "file": "whoosh_whip_b.wav",
+   "at": 50.267,
+   "len": 0.7,
+   "peak_db": -30,
+   "note": "T5 g1511: match dissolve into the rival plate (g1511-1518), soft swell",
+   "align": "onset"
+  },
+  {
+   "file": "thump_foam.wav",
+   "at": 53.567,
+   "len": 1.2,
+   "peak_db": -16,
+   "note": "T5 g1610: Dick drops onto the foam (legs flick g1596-1608, head/back on the mat g1610-1612)",
+   "align": "onset"
+  },
+  {
+   "file": "crowd_roar.wav",
+   "at": 57.567,
+   "len": 6.0,
+   "peak_db": -14,
+   "note": "T6 g1730: stadium erupts as the crane goes up and out (QA cheer ramp from g1719)",
+   "align": "onset"
+  },
+  {
+   "file": "flash_pop.wav",
+   "at": 58.433,
+   "len": 1.2,
+   "peak_db": -22,
+   "note": "T6 g1756: flash bulb in the stands (sparkle visible g1755-1757)",
+   "align": "onset"
+  },
+  {
+   "file": "flash_pop.wav",
+   "at": 58.667,
+   "len": 1.2,
+   "peak_db": -22,
+   "note": "T6 g1763: flash bulbs (g1763-1765)",
+   "align": "onset"
+  },
+  {
+   "file": "flash_pop.wav",
+   "at": 58.867,
+   "len": 1.2,
+   "peak_db": -24,
+   "note": "T6 g1769: flash bulb at the podium (g1768-1770)",
+   "align": "onset"
+  },
+  {
+   "file": "whoosh_whip_a.wav",
+   "at": 59.4,
+   "len": 0.6,
+   "peak_db": -22,
+   "note": "T6 g1785: whip fly from the podium to the coach (streak g1784-1790)",
+   "align": "onset"
+  },
+  {
+   "file": "thump_foam.wav",
+   "at": 60.933,
+   "len": 1.2,
+   "peak_db": -22,
+   "note": "T7 g1831: jumper 1 lands on the foam (head/back hit g1828-1833, legs fall to g1845)",
+   "align": "onset"
+  },
+  {
+   "file": "sneakers_rubber.wav",
+   "at": 61.5,
+   "len": 0.7,
+   "peak_db": -26,
+   "note": "T7 g1848: jumper 2 (gold kit) runs in at the left (g1852-1855)",
+   "align": "onset"
+  },
+  {
+   "file": "thump_foam.wav",
+   "at": 61.833,
+   "len": 1.2,
+   "peak_db": -22,
+   "note": "T7 g1858: jumper 2 lands on the foam (head enters g1853, body on the mat g1857-1860)",
+   "align": "onset"
+  },
+  {
+   "file": "thump_foam.wav",
+   "at": 62.967,
+   "len": 1.2,
+   "peak_db": -22,
+   "note": "T7 g1892: jumper 3 lands on the foam (over g1888-1891, body g1892-1895)",
+   "align": "onset"
+  },
+  {
+   "file": "whistle_short.wav",
+   "at": 65.433,
+   "len": 0.6,
+   "peak_db": -26,
+   "note": "T7 g1966: distant coach whistle as the Medford track fades in (dissolve g1938-1965)",
+   "align": "onset"
+  },
+  {
+   "file": "footsteps_cinder.wav",
+   "at": 66.2,
+   "len": 1.3,
+   "peak_db": -20,
+   "note": "T7 g1989: coach runs the curve on cinder (run g1987-2023)",
+   "align": "onset"
+  },
+  {
+   "file": "bar_clatter.wav",
+   "at": 67.733,
+   "len": 2.0,
+   "peak_db": -17,
+   "note": "T7 g2035: bar knocked off by the coach (QA g2033; bar crossing the pit g2034-2040, flat on the sand g2053)",
+   "align": "onset"
+  },
+  {
+   "file": "thump_sawdust.wav",
+   "at": 67.9,
+   "len": 1.2,
+   "peak_db": -12,
+   "note": "T7 g2040: TUMP, coach buried in the sawdust (QA g2040; mound first visible g2040)",
+   "align": "onset"
+  },
+  {
+   "file": "sawdust_spray.wav",
+   "at": 67.933,
+   "len": 1.0,
+   "peak_db": -18,
+   "note": "T7 g2041: spray burst 1 (bursts g2039-2050)",
+   "align": "onset"
+  },
+  {
+   "file": "sawdust_spray.wav",
+   "at": 68.1,
+   "len": 1.0,
+   "peak_db": -22,
+   "note": "T7 g2046: spray burst 2",
+   "align": "onset"
+  },
+  {
+   "file": "bar_rattle.wav",
+   "at": 68.233,
+   "len": 0.8,
+   "peak_db": -24,
+   "note": "T7 g2050: bar rolls to rest in the sawdust (g2048-2053)",
+   "align": "onset"
+  },
+  {
+   "file": "boys_laugh.wav",
+   "at": 68.633,
+   "len": 1.1,
+   "peak_db": -20,
+   "note": "T7 g2062: boys laugh off screen, runs to the end; film ends at the hard cut g2094/2095",
+   "align": "onset"
+  }
+ ]
+}

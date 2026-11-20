@@ -1,0 +1,106 @@
+{
+ "bz_start": {
+  "sat": 0.5435280203819275,
+  "vivid": 53.479166666666664,
+  "luma": 99.40177917480469,
+  "magenta": 0.40972222222222227,
+  "shade_hue": 244.39050062376376,
+  "time": [
+   12.7,
+   25.5
+  ],
+  "label": "BIGZOOM 2 start 31.0 s: bird eye over the city, Dick at the runway (about 4 px)",
+  "ground_issues": []
+ },
+ "bz_mid": {
+  "sat": 0.4992111623287201,
+  "vivid": 50.93055555555556,
+  "luma": 113.03092193603516,
+  "magenta": 1.2916666666666667,
+  "shade_hue": 247.12495253495854,
+  "time": [
+   14.2,
+   28.4
+  ],
+  "label": "BIGZOOM 2 mid 33.2 s: through the beams over the crowd",
+  "ground_issues": []
+ },
+ "bz_end": {
+  "sat": 0.6711701154708862,
+  "vivid": 75.41666666666667,
+  "luma": 97.1959457397461,
+  "magenta": 1.6875,
+  "shade_hue": 285.72427278597684,
+  "time": [
+   25.5,
+   50.6
+  ],
+  "label": "BIGZOOM 2 end 35.3 s: medium on Dick at the runway, officials raise the bar, 2.24 m board",
+  "ground_issues": []
+ },
+ "t4_low": {
+  "sat": 0.8316217064857483,
+  "vivid": 84.97222222222223,
+  "luma": 91.2459487915039,
+  "magenta": 0.42361111111111116,
+  "shade_hue": 241.1503463526803,
+  "time": [
+   29.5,
+   58.7
+  ],
+  "label": "T4 low angle beside the standard: bar ~30 cm above Dick, 2.24 m board right",
+  "ground_issues": []
+ },
+ "t4_coach": {
+  "sat": 0.6257076859474182,
+  "vivid": 76.02083333333334,
+  "luma": 73.19904327392578,
+  "magenta": 0.3194444444444445,
+  "shade_hue": 239.41789532355745,
+  "time": [
+   37.1,
+   73.9
+  ],
+  "label": "T4 coach in the stands (row 7), varied dense crowd cards (hid 5692 3D figures)",
+  "ground_issues": []
+ },
+ "t5_arch": {
+  "sat": 0.7297780513763428,
+  "vivid": 75.40277777777777,
+  "luma": 106.91312408447266,
+  "magenta": 0.5347222222222222,
+  "shade_hue": 241.58493462913466,
+  "time": [
+   25.1,
+   49.6
+  ],
+  "label": "T5 key: the arch over the bar, hard rim light, dark crowd",
+  "ground_issues": []
+ },
+ "t6_top": {
+  "sat": 0.7848362326622009,
+  "vivid": 93.24305555555556,
+  "luma": 89.78133392333984,
+  "magenta": 2.701388888888889,
+  "shade_hue": 242.8371017344481,
+  "time": [
+   28.9,
+   57.5
+  ],
+  "label": "T6 top-down crane over the mat (pitch 52 deg): Dick sits up; podium at the left, photographers flash",
+  "ground_issues": []
+ },
+ "t7_day": {
+  "sat": 0.7807794809341431,
+  "vivid": 84.38194444444444,
+  "luma": 103.82678985595703,
+  "magenta": 4.798611111111111,
+  "shade_hue": 262.9556579589844,
+  "time": [
+   12.7,
+   25.1
+  ],
+  "label": "T7 1972 day: jumper flops, 1972 banner",
+  "ground_issues": []
+ }
+}

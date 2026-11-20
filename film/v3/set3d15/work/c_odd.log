@@ -1,0 +1,28 @@
+crowd figures 18500 flags 87
+00:02.025  cycles           | WARNING CUEW initialization failed: Error opening the library
+00:11.957  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d15/work/final/shot17_B_EVE.png'
+shot 17 B EVE wall 9.9 cpu 19.3 heads [('dick', 946, 920)]
+crowd figures 18500 flags 87
+00:24.489  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d15/work/final/shot19_B_EVE.png'
+shot 19 B EVE wall 10.6 cpu 20.7 heads [('rival', 583, 491), ('official', 916, 1746)]
+crowd figures 18500 flags 87
+00:37.573  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d15/work/final/shot21_B_EVE.png'
+shot 21 B EVE wall 11.0 cpu 21.6 heads [('dick', 613, 578)]
+crowd figures 18500 flags 87
+00:51.759  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d15/work/final/shot23_B_EVE.png'
+shot 23 B EVE wall 12.2 cpu 23.7 heads [('coach', 546, 453)]
+crowd figures 18500 flags 87
+01:04.902  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d15/work/final/shot25_B_TENSE.png'
+shot 25 B TENSE wall 11.1 cpu 21.8 heads [('dick', 566, 532)]
+crowd figures 18500 flags 87
+01:17.185  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d15/work/final/shot27_B_TENSE.png'
+shot 27 B TENSE wall 10.3 cpu 20.0 heads [('dick', 566, 515)]
+crowd figures 18500 flags 87
+01:29.816  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d15/work/final/shot29_B_TENSE.png'
+shot 29 B TENSE wall 10.6 cpu 20.9 heads [('dick', 547, 502)]
+crowd figures 18500 flags 87
+01:42.646  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d15/work/final/shot31_B_EVE.png'
+shot 31 B EVE wall 10.8 cpu 21.1 heads [('dick', 576, 549), ('official', 629, 603), ('rival', 629, 600)]
+crowd figures 18500 flags 87
+01:55.024  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d15/work/final/shot33_B_DAY.png'
+shot 33 B DAY wall 10.3 cpu 20.7 heads [('rival', 462, 424), ('rival', 430, 382)]

@@ -1,0 +1,25 @@
+crowd figures 18500 flags 87
+00:02.071  cycles           | WARNING CUEW initialization failed: Error opening the library
+00:13.193  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d15/work/final/shot18_B_EVE.png'
+shot 18 B EVE wall 11.1 cpu 21.6 heads [('official', 666, 617), ('official', 666, 617)]
+crowd figures 18500 flags 87
+00:25.656  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d15/work/final/shot20_B_EVE.png'
+shot 20 B EVE wall 10.5 cpu 20.5 heads [('dick', 683, 630)]
+crowd figures 18500 flags 87
+00:38.003  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d15/work/final/shot22_B_EVE.png'
+shot 22 B EVE wall 10.3 cpu 20.1 heads [('dick', 560, 534)]
+crowd figures 18500 flags 87
+00:50.716  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d15/work/final/shot24_B_TENSE.png'
+shot 24 B TENSE wall 10.8 cpu 21.0 heads [('dick', 667, 622)]
+crowd figures 18500 flags 87
+01:03.085  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d15/work/final/shot26_B_TENSE.png'
+shot 26 B TENSE wall 10.4 cpu 20.3 heads [('dick', 569, 520)]
+crowd figures 18500 flags 87
+01:15.391  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d15/work/final/shot28_B_EVE.png'
+shot 28 B EVE wall 10.2 cpu 20.1 heads [('rival', 532, 482)]
+crowd figures 18500 flags 87
+01:29.135  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d15/work/final/shot30_B_TENSE.png'
+shot 30 B TENSE wall 11.6 cpu 22.8 heads [('dick', 455, 405)]
+crowd figures 18500 flags 87
+01:41.821  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d15/work/final/shot32_B_DAY.png'
+shot 32 B DAY wall 10.7 cpu 21.0 heads [('rival', 688, 653), ('rival', 689, 660)]

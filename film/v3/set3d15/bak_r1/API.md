@@ -1,0 +1,61 @@
+# v3/set3d15/set15.py : film 15 set ("ไอ้ปลาดิ้น", the Fosbury Flop). bpy 5.x, Cycles CPU. Same shape as set3d10/API.md.
+
+Files
+- `set15.py`: build, presets, hooks, placeholders, anchors. `set15_lib.py` (house-look materials, root, sky, sun), `set15_a.py` (location A, jump set), `set15_b.py` (location B, crowd, flags, flame), `set15_props.py`, `set15_shots.py` (36-shot table, camera moves, FG props, staging).
+- `run15.py`: CLI. `python3 run15.py stills|final [shots]`, `contact [shots] tag`, `sheet` (builds contact.jpg + contact_small.jpg from work/final), `day16`.
+- `set15_hue.py` (hue rows + shade hue, as harbour_hue.py), `t_anim.py` (ALL OK, 67 checks), `contact.jpg` / `contact_small.jpg` (37 tiles: every shot's START framing, 720x1280, 12 spl, grey placeholder cards, label under each tile, cyan line y 880), `work/final/` (the 37 PNG), `work/hue_rows.txt`, `work/final_log_*.txt`, `bak_r0/` (first working build). `styleboard/` is the approved board.
+- Built on `set3d2/tower.py` (setup_render, setup_grade, make_camera, _key) and the board's `sb.py` (props, MB, sky). The materials keep the board's noise tones but use the house shading (one hard key + painted blue-violet shade, no bounce).
+
+World: 1 unit = 1 D = **0.6 m** (adult 3.0 D, Dick 3.2 D), Z up. Inside the builders metres; everything hangs under `SETROOT` (scale 1/0.6). Hooks that name metres say so; positions, cameras and marks are D. No DOF, no text, no digits anywhere. 1963 = SAWDUST pit, never foam.
+- **A** high-school track 1963: pit (0, 7.6) m in a wooden frame, flat sawdust + loose sawdust pile (-4.1, 6.9) m beside it, wooden standards (4 m apart, y 5.3), striped bar on pegs (r 5.5 cm), run-up, cinder track + oval, bleacher (x 11.6.., faces the pit) with coats and bags, benches, coolers, bags, towels, stacked hurdles, cones, tape reels, wheelbarrow, rake, scorer's table, trash cans, bicycle racks with 5+4 bikes, chain-link fence, pennants, road with 7 parked 1960s cars, 2-storey brick gym, maples (green or autumn), tall pines.
+- **B** Olympic stadium 1968: bowl centre (0, 8) m, 28 tiers with aisle stairs and rails, press box + roof section (far side), blank scoreboard, 18.5k crowd figures (body + head + arms), 87 flags, cauldron with animated flame, 4 floodlight towers, officials' table (clipboard, small flag), 3-step podium at (-9, 10) m (no numbers), photographers' platforms, foam pit (3 layers of blue-grey blocks, centre (0,15) m, top 1.0 m), tartan fan + apron around the jump, steel standards at y 11.6 (NO hurdles in the jump area), 60 hidden stand flash bulbs.
+
+## Build and render
+```python
+import sys; sys.path.insert(0, '.../v3/set3d15'); import set15 as F, set15_shots as SH
+A = F.build('A', 'GOLDEN')            # build(location=None, light=None, clear=True, dress=True, shot=None) -> anchors
+A = F.build(shot=24)                  # location + light of a plan shot
+cam = SH.setup_shot(24)               # camera keys (start f0 .. end f1, eased) + FG props; frames default to round(t*30)
+F.make_camera(F.cam_from(loc_D, look_D, lens=22))   # your own camera (use F.make_camera: far clip, DOF off)
+F.setup_render(scene, 'final' | 'preview'); F.T.render(path)
+F.stage_placeholders(24, tuple(cam.location))        # grey cards at the plan's stand points (stills only)
+```
+Lights: A `GOLDEN | DAY`, B `EVE | TENSE | DAY` (`F.LIGHTS['A_GOLDEN']`...). One sun per preset (A GOLDEN az -60 el 28; B EVE az -48 el 19; TENSE el 15 dim; DAYs el 42-44), crisp shadows. TENSE: darker sky, 4 floodlight pool spots (no shadows) and crowd dimmed to 62 %. DAY A has fresh green leaves, GOLDEN autumn leaves.
+
+## Hooks (frame = scene frame at 30 fps; frame=None sets the value now, frame=N keys it)
+| hook | what |
+|---|---|
+| `set_bar_height(h_m, frame=None, peg='both'\|'L'\|'R', interp='LINEAR')` | top of the bar in METRES (A default 1.72, B 2.24); one peg only tilts the bar (shot 18: L then R). |
+| `bar_fall(start_frame, side='back'\|'front'\|'left'\|'right', bounce=True, seed=0) -> rest_frame` | knock-off: gravity, 3 damped bounces, roll, settles on the sawdust (0.44 m) / foam (1.0 m). |
+| `bar_reset(frame)` | bar back on the pegs (hard cut). |
+| `flash_bulb(frame, where=None, energy=2e4)` | camera flash pulse at the photographer (default mark; where = D xyz): point light + glowing bulb, 3 frames. |
+| `stand_flashes(f0, f1, density=0.35)` | bulbs popping in the stands (B). |
+| `sawdust_spray(frame, position_D, strength=1, seed=0, floor=None)` | chips/splinters (thin boxes, no blobs): a ring-shaped crown, a faster centre plume, fine specks, tumbling, falling back and landing. One object per burst (geometry nodes keyed on the frame). strength 0.5 = bar bounce, 1 = body. |
+| `crowd(amp_m, hz, cheer, frame)` / `crowd_mode('hush'\|'tense'\|'normal'\|'groan'\|'cheer', frame)` | bob amplitude/frequency, cheer = stand up + arms up. Plan: hush 24-30, cheer at 31 (key hush at 28-29, cheer at 59.1 s -> frame 1773). |
+| `torch_flicker(level, frame)` | cauldron flame size (it flickers by itself via drivers) + warm light. |
+| `flag_wave(amp_m, hz, frame)` | rim flags (geometry-node wave, always running). |
+| `switch_light(to, start_frame, n_frames=12)` | smooth blend of the built preset to another of the same location (sun colour/energy/direction, shade of every material, crowd dimming, sky ramp, hills, floods) via drivers. Shot 30: build B TENSE, `switch_light('EVE', round(56.6*30), 10)`. |
+| `set_season(k, frame)` | A leaves 0 green .. 1 autumn. For shot 16 render GOLDEN and `build('A','DAY')` plates and dissolve. |
+| `clear_keys()` | drops hook keys, keeps drivers / waves. Bar and ctl keys win over un-keyed calls: key every state or clear first. |
+
+## Stand points (`A['marks']`, D, feet; z = floor)
+A: `runup_path` (list of 5 points, the curve), `runup_start`, `takeoff`, `bar_centre`, `landing`, `coach_bleacher` (bleacher front), `coach_end` / `pile` (sawdust pile, shot 36), `dick_mark`, `boy_wait_a/b/c`, `boys_bench_a/b/c`, `photographer`, `reader` (bleacher seat), `bench_right`, `cooler`, `scorer`, `rake`.
+B: `runup_path`, `runup_start`, `takeoff`, `bar_centre`, `landing`, `dick_mark`, `dick_b2` (by the standard), `coach_stands` (row 8, aisle side), `podium_top`, `podium_2`, `podium_3`, `photographer`, `photographer_b`, `official_a/b`, `official_bar_l/r`, `rival_a/b`, `rival_land`, `table`, `torch`, `foam_edge`.
+Heights `F.HEIGHT` (D): dick 3.2, coach 2.85, boy 2.9, rival 3.1, official 2.9, photographer 2.7.
+
+## Cameras and shots
+`F.SHOTS[n]` (n = 1..36): t0, t1, loc, light, `a` (start) and `b` (end) camera in METRES (`SH.cam_dicts(n,'a'|'b')` gives D), fg list, actors, note, `punch`, `whip`. Moves follow the plan (push 6-10 %/s + lateral slide 40 px/s, orbit 15 deg/s shot 9, rise in 5/17, WHIP pans in 3/21/29/35, punch pushes 15-25 % in 0.4 s keyed with Bezier). `SH.setup_shot(n)` makes the camera and builds the FG props (hurdle, cone, bench end, standard base/peg, pine branch, rake, cooler, sawdust edge, bar end, clipboard, stopwatch, camera bag, hurdle stack, rail, sawdust chips, flag pole, table corner, foam edge, bar on mat, crossbar end); they sit 0.8-1.2 m (1.3-2 D) from the lens and follow the camera 90 %. 'shoulder' / 'thumb' FG are cast pieces (nothing built).
+
+## Placeholders
+`F.placeholder_actor(role, mark_D, face_to)`: grey rounded card at real scale. `F.head_pixels(n)` gives chin/top y px (caption rule y < 880).
+
+## Measured
+- Final 720x1280, 12 samples, OIDN, 2 threads (two processes in parallel): **10.4 s wall / 20.3 s CPU per frame** average (max 25.8 CPU). Build 0.5 s (A), 1.6 s (B).
+- Shade hue (chroma-weighted mean of shaded pixels, `set15_hue.py`): A GOLDEN 250.8, A DAY 247.2, B EVE 241.4, B TENSE 240.7, B DAY 241.3 (all 240-260). Magenta: 1.3 / 0.5 / 4.2 / 6.8 / 3.8 %. A few single B tiles read 234-239 (frames with little shade).
+
+## Gotchas / known gaps
+- Cards are not part of the set; the placeholders are grey. Lens 22 mm portrait is 49 x 78.6 deg: FG props must sit within about 0.4 m of the lens axis sideways.
+- Several A tiles still show plenty of sky (horizon near mid-frame); tall pines/gym fill the lower third of it. Pitch the camera down in post-brief tuning if wanted. A few B tiles (20, 21, 25) are dominated by their FG prop at the start frame.
+- Shot 14 (newspaper) and 11/23 (shoulder / spectator) rely on cast FG pieces. Foam-pit dent is not built. Flash bulb pop is a point light under the house shading (flat, no shadows).
+- `switch_light` keeps the start preset's sun direction in the toon term (a few degrees). The tartan and foam in B can burn orange/white near the flood pools in EVE.
+- Light-blend and hooks use drivers/geometry nodes: render in Blender (not an exporter).

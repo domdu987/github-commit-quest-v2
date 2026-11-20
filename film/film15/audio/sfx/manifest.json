@@ -1,0 +1,162 @@
+{
+ "footsteps_cinder": {
+  "name": "footsteps_cinder",
+  "prompt": "a young athlete running fast on a cinder running track, quick crunchy footsteps, six to eight steps, no speech, no music",
+  "asked": 2.0,
+  "duration": 2.0,
+  "peak": 0.957,
+  "onset": 0.32
+ },
+ "sneakers_rubber": {
+  "name": "sneakers_rubber",
+  "prompt": "sneakers running on a rubber tartan athletics track, quick squeaky slaps, six steps, no speech, no music",
+  "asked": 1.6,
+  "duration": 1.6,
+  "peak": 0.281,
+  "onset": 0.06
+ },
+ "thump_sawdust": {
+  "name": "thump_sawdust",
+  "prompt": "a soft body thump landing into a deep pile of sawdust, dull soft fall with a little shuffle, no speech, no music",
+  "asked": 1.2,
+  "duration": 1.2,
+  "peak": 0.745,
+  "onset": 0.03
+ },
+ "thump_foam": {
+  "name": "thump_foam",
+  "prompt": "a body landing on a thick foam crash mat, soft bouncy whump and a small squeak, no speech, no music",
+  "asked": 1.2,
+  "duration": 1.2,
+  "peak": 0.332,
+  "onset": 0.0
+ },
+ "bar_clatter": {
+  "name": "bar_clatter",
+  "prompt": "a thin aluminium high-jump crossbar falling off its supports, clattering and bouncing on the ground several times, no speech, no music",
+  "asked": 2.0,
+  "duration": 2.0,
+  "peak": 0.377,
+  "onset": 0.19
+ },
+ "bar_rattle": {
+  "name": "bar_rattle",
+  "prompt": "a tiny quick rattle of a thin metal bar shaking on its pegs, very short and faint, no speech, no music",
+  "asked": 0.8,
+  "duration": 0.8,
+  "peak": 0.279,
+  "onset": 0.04
+ },
+ "sawdust_spray": {
+  "name": "sawdust_spray",
+  "prompt": "a puff of sawdust spraying up and pattering down, soft dry hiss, no speech, no music",
+  "asked": 1.2,
+  "duration": 1.2,
+  "peak": 0.256,
+  "onset": 0.0
+ },
+ "boys_laugh": {
+  "name": "boys_laugh",
+  "prompt": "a group of three teenage boys laughing and sniggering together, mocking and friendly, outdoors, no words",
+  "asked": 2.5,
+  "duration": 2.48,
+  "peak": 1.0,
+  "onset": 0.09
+ },
+ "coach_laugh": {
+  "name": "coach_laugh",
+  "prompt": "an old man's deep belly laugh, hearty and wheezing, with no words",
+  "asked": 2.5,
+  "duration": 2.48,
+  "peak": 0.81,
+  "onset": 0.06
+ },
+ "crowd_murmur": {
+  "name": "crowd_murmur",
+  "prompt": "large olympic stadium crowd murmuring steadily in the distance, ambient bed, no cheering, no speech words",
+  "asked": 20.0,
+  "duration": 20.0,
+  "peak": 0.664,
+  "onset": 0.99
+ },
+ "crowd_groan": {
+  "name": "crowd_groan",
+  "prompt": "a big stadium crowd groaning together in disappointment, a long collective 'ohhh', no words",
+  "asked": 2.5,
+  "duration": 2.48,
+  "peak": 0.889,
+  "onset": 0.01
+ },
+ "crowd_gasp_hush": {
+  "name": "crowd_gasp_hush",
+  "prompt": "a big stadium crowd gasping in surprise then falling into a tense hush with faint breathing",
+  "asked": 3.5,
+  "duration": 3.48,
+  "peak": 0.953,
+  "onset": 0.0
+ },
+ "crowd_roar": {
+  "name": "crowd_roar",
+  "prompt": "a huge stadium crowd erupting into a roaring cheer and applause, building, euphoric",
+  "asked": 5.0,
+  "duration": 5.0,
+  "peak": 0.955,
+  "onset": 0.01
+ },
+ "flash_pop": {
+  "name": "flash_pop",
+  "prompt": "an old press camera flash bulb popping with a quick bright pop and a short electronic whine fading",
+  "asked": 1.2,
+  "duration": 1.2,
+  "peak": 0.071,
+  "onset": 0.0
+ },
+ "newspaper_rustle": {
+  "name": "newspaper_rustle",
+  "prompt": "a newspaper being unfolded and rustled in hands, paper crinkle, close, no speech, no music",
+  "asked": 1.5,
+  "duration": 1.48,
+  "peak": 0.19,
+  "onset": 0.1
+ },
+ "whoosh_whip_a": {
+  "name": "whoosh_whip_a",
+  "prompt": "a very quick sharp camera whip-pan whoosh, air swish, no speech, no music",
+  "asked": 0.6,
+  "duration": 0.6,
+  "peak": 0.844,
+  "onset": 0.17
+ },
+ "whoosh_whip_b": {
+  "name": "whoosh_whip_b",
+  "prompt": "a fast low swooshing whoosh sweeping left to right, no speech, no music",
+  "asked": 0.7,
+  "duration": 0.68,
+  "peak": 0.88,
+  "onset": 0.06
+ },
+ "whoosh_punch": {
+  "name": "whoosh_punch",
+  "prompt": "a short punchy punch-in whoosh with a tiny low thud at the end, no speech, no music",
+  "asked": 0.5,
+  "duration": 0.48,
+  "peak": 0.982,
+  "onset": 0.03
+ },
+ "whistle_short": {
+  "name": "whistle_short",
+  "prompt": "a coach blowing one short sharp metal whistle blast, outdoors, no speech, no music",
+  "asked": 0.8,
+  "duration": 0.8,
+  "peak": 1.0,
+  "onset": 0.0
+ },
+ "track_ambience": {
+  "name": "track_ambience",
+  "prompt": "calm school track and field ambience on an evening, birds chirping and distant children playing, light breeze, no clear speech",
+  "asked": 20.0,
+  "duration": 20.0,
+  "peak": 0.024,
+  "onset": 0.1
+ }
+}
