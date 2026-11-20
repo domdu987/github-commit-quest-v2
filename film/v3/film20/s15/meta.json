@@ -1,0 +1,78 @@
+{
+ "take": "s15",
+ "film": 20,
+ "shots": [
+  15
+ ],
+ "g0": 996,
+ "g1": 1093,
+ "first_g": 988,
+ "n_frames": 109,
+ "shot_ranges": {
+  "15": [
+   996,
+   1092
+  ]
+ },
+ "handle_in": 8,
+ "handle_out": 4,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 13,
+  "note": "DIS 13 into shot 15 from shot 14 (handle 8 frames g 988..995 rendered in 3D)"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 1093,
+  "note": "hard cut to shot 16 (CAFE cafe_low) at g 1093; handle g 1093..1096 rendered in 3D"
+ },
+ "set": "v3/set3d20 TOWER preset tower_fair, light DAY, year 1889, set_crowd(3) keyed every frame; the 24 crowd cards get a small keyed idle bob + sway; lamp-post/bench FG moved by the camera offset + FG_SHIFT",
+ "cast": "v3/cast20 eiffel (proud -> worried + sweat swapped on the closed frame of a blink at g 1067, arm reaches, takes the document) + official (tricolour sash, doc_seal in the left hand held out toward Eiffel g 1008..1020, then hand to hip, happy); contact decals + proxy shadows; no lip-sync",
+ "camera": "custom 22 mm, shift 0.06 kept, cam z 1.7 D, 6.6 D from Eiffel; CamPath push 10 %/s + slide -40 px/s + arc 8 deg/s + tilt drift 2.5 deg/s from -8.5 deg under his head line, decay 0.25, snap x2.3 (g 1064..1080, peak 1.9, tilt -4 deg) on 'ครบแล้วต้องรื้อ'",
+ "events": {
+  "permit_word": 1000,
+  "doc_reach": [
+   1008,
+   1030
+  ],
+  "doc_in_eiffel_hand": 1020,
+  "twenty_years": 1041,
+  "drop_word": 1067,
+  "face_swap_blink": [
+   1066,
+   1068
+  ],
+  "snap": [
+   1064,
+   1079
+  ]
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "year": 1889,
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 8.72,
+ "s_per_frame_cpu_mean": 16.93,
+ "head_px_main": [
+  122,
+  384
+ ],
+ "head_centre_y_main": [
+  528,
+  647
+ ],
+ "head_bottom_max_y": 749,
+ "framediff_in_shot": {
+  "median": 5.32,
+  "p90": 7.34
+ },
+ "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
+}

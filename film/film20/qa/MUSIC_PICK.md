@@ -45,3 +45,6 @@
 4. Speech-band relief for the ending: apply a broad `equalizer=f=2500:t=o:w=2:g=-3` to the music bus (or only 52-68 s), which lifts the 1-4 kHz ratio in S9-S10 from 10 dB to about 13 dB at the as-is narration level (above 16 dB at -14.4 dB narration).
 5. Optional local duck: none required. If S9 (52.1-57.8 s, ratio 11.7 dB as-is) still masks, duck music a further -2 dB over 52.0-57.8 s with 150 ms ramps.
 6. If the final narration is NOT re-levelled to -14.4 dB (stays at -17.3 dB active), duck music -3 dB over 52-68 s so all sentences keep >= 14 dB.
+
+## Director: conform bed (applied)
+`ffmpeg -i music_C.mp3 -t 68.2 -af "equalizer=f=2500:t=o:w=2:g=-3,afade=t=out:st=67.2:d=1.0" -ar 48000 -ac 2 music_C_mix.wav` (regenerable, not committed); conform20.py mixes it at MUSIC_DB -31 with the narration lifted from -17.3 to -14.4 (VOICE_DB/NARR_DB).
