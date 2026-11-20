@@ -7,7 +7,40 @@ take = 'T3'
 CHAIR_D = (-0.4, 0.0); PRIS_D = (-0.15, 0.0)
 _kc = P.K.measuring_chair
 P.K.measuring_chair = lambda B, c, **kw: _kc(B, (c[0] + CHAIR_D[0], c[1] + CHAIR_D[1]), **kw) if abs(c[0] - 0.7) < 1e-6 and abs(c[1] - 2.4) < 1e-6 else _kc(B, c, **kw)
-OUT = ROOT + '/film/v3/film17v2/T3/frames'
+# ---- director TAKE-gate fix list (items 1, 2, 3) ----
+# item 3: the gasolier at room-local (-0.35, 1.0) (world 8.85, 13.0; lamps at z 3.9) hangs in front of the green gendarme `gend_b` (10.5, 10.5) from the g741-761 cameras.
+# ONE constant, shared with T3b: raise that gasolier by GAS_DZ (its pendant drop 1.45 -> 1.45-GAS_DZ). The other gasolier (1.0, -1.4) is untouched.
+GAS_DZ = 0.6
+_kg = P.K.gasolier
+P.K.gasolier = lambda B, c, **kw: _kg(B, c, **dict(kw, drop=kw.get('drop', 1.45) - GAS_DZ)) if abs(c[0] + 0.35) < 1e-6 and abs(c[1] - 1.0) < 1e-6 else _kg(B, c, **kw)
+import math
+from mathutils import Vector, Matrix
+def _lookrot_smooth(loc, look, up_hint=(0, 1, 0)):
+    # item 1: the stock _lookrot switches the camera up vector from +y to world-Z when |f.z| crosses 0.995 (g664): the roll jumps ~9 deg in one frame.
+    # Blend the two perpendicular up directions smoothly over |f.z| 0.9990 (g645, same as before) -> 0.9866 (g675, pure world-Z up). Below 0.9866 identical to stock.
+    f = (Vector(look) - Vector(loc)).normalized(); d = abs(f.z)
+    def perp(a): a = Vector(a); a = a - f * a.dot(f); return a.normalized()
+    t = max(0.0, min(1.0, (d - 0.9866) / (0.9990 - 0.9866))); w = t * t * (3 - 2 * t)
+    if d > 0.9999: u = perp(up_hint)
+    else: u = (perp(up_hint) * w + perp((0, 0, 1)) * (1 - w)).normalized()
+    rgt = f.cross(u).normalized(); u = rgt.cross(f); return Matrix((rgt, u, -f)).transposed().to_quaternion()
+P._lookrot = _lookrot_smooth
+Z_DIP_A, Z_DIP_G0, Z_DIP_G1 = 0.85, 700, 745   # item 2: camera z lowered by A*sin^2(pi*(g-700)/45) (zero value and slope at both ends): it passes below the ceiling slab (z 5.25) at ~g722 instead of g736
+_pt = P.path_take
+def _path_take(take):
+    fr = _pt(take)
+    if take != 'T3': return fr
+    for f in fr:
+        if Z_DIP_G0 < f['g'] < Z_DIP_G1:
+            l = list(f['loc']); l[2] -= Z_DIP_A * math.sin(math.pi * (f['g'] - Z_DIP_G0) / (Z_DIP_G1 - Z_DIP_G0)) ** 2; f['loc'] = tuple(l)
+    prev = None
+    for f in fr:
+        q = P._lookrot(f['loc'], f['look'])
+        if prev is not None and q.dot(prev) < 0: q.negate()
+        prev = q; f['rot'] = tuple(q)
+    return fr
+P.path_take = _path_take
+OUT = os.environ.get('OUT', ROOT + '/film/v3/film17v2/T3/frames')
 def assign_for(g):
     a = {'bertillon': ('bertillon_measuring', {'mirror': True}),
          'prisoner_chair': ('prisoner_sitting_b', {'seated': 'chair'}),
