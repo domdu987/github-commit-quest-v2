@@ -11,9 +11,3 @@ Checked 6 fps + cut g1384/g1468 +-3 (take g1375-1476), qa_auto PASS. No actors, 
 Earlier: R2-1 NOT FIXED; R2-2 ship clipping FIXED (whole ship stays in frame, no gull clipping); R2-3 sun glint still a blown-out white blob (NOTE).
 1. g1385-1467 (frame-diff): median 2.75 < 4 (and p90 9.23 < 10). Fix: stronger slide/push (>= 10 %/s), bigger snap on จาไมกา (g1430-1446, x1.4+), foreground swell/spray motion; re-measure.
 NOTES: g1384-1445 white sun glint on the water reads as a hole; small ship far lower half teal.
-
-## Round 10 (director QA-tech): FAIL
-Take g1375-1476 (/tmp/s18q.mkv, 102 frames). Frames /tmp/qa19_r10c/s18/. 6 fps sheet plus the snap g1428-1446 checked. Frame-diff (90x160 grey bilinear, pairs g1385..g1467): median 4.41, p90 10.97 (limits 4 / 10: OK), max 21.6 at g1435; snap g1431-1441 eases in and out. Whole ship stays in frame, bow wave and foreground whitecap crests are present, floating spar sits on the water, no actors, no text, no black/magenta/frozen frames (min diff 2.47), no edge of the world.
-Issue:
-1. Whole take: mean luma 122.7 (6 fps samples; meta says 128.6) vs QA_TEAM section G1 limit 85-110. Saturation 0.535 is fine. The sky and sea are too bright (washed-out); fix by another -0.5 to -0.8 EV or a deeper sky and sea, then re-measure luma <= 110.
-Notes (not blocking): g1384-1445 blown-out white sun glint bottom right (g1395-1415 largest) reads as a hole; g1444-1467 the camera is nearly parked (diff 2-3, ~0.8 s) before the dissolve.

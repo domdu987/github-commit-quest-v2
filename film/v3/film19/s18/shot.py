@@ -15,7 +15,8 @@ sys.path.insert(0, HERE)
 import c19 as C                                          # noqa: E402
 from mathutils import Vector                             # noqa: E402
 
-H, K = C.H, C.K
+H, K, cast19 = C.H, C.K, C.cast19
+blink = C.blink
 WORK = os.path.join(HERE, "work")
 TAKE = "s18"
 PRESET, LIGHT = "ship_hero", "NOON"
@@ -45,7 +46,8 @@ _S = [float(v) for v in os.environ.get("SNP", "1428,17,1.22,-2.86,-0.9").split("
 SNAP = (int(_S[0]), int(_S[0] + _S[1]))                                     # 17 f, x1.33 with a pan, landing on the word
 _P = [float(v) for v in os.environ.get("CAMP", "-0.01,12.25,12.26,-5.59").split(",")]      # push, slide px/s, rise px/s, arc deg/s
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, FIRST_G, G_LAST, push=_P[0], slide_px=_P[1], rise_px=_P[2], arc_deg_s=_P[3], decay=0.1,
-                snaps=[dict(g=SNAP, k=_S[2], peak=2.0, shift=(_S[3], _S[4]))])
+                snaps=[dict(g=SNAP, k=_S[2], peak=2.0, shift=(_S[3], _S[4])),
+                       dict(g=(1446, 1476), k=1.05, peak=1.0, shift=(0.8, 0.0))])      # a gentle second move so the camera never parks after the snap (g 1444-1467)
 
 
 def widen_sea(preset, k, nu, nv):
@@ -62,7 +64,7 @@ def widen_sea(preset, k, nu, nv):
     P["sea_nu"], P["sea_nv"] = nu, nv
 
 
-def whitecaps_in_front(n=int(os.environ.get("WC", "40")), seed=int(os.environ.get("WCSEED", "3"))):
+def whitecaps_in_front(n=int(os.environ.get("WC", "28")), seed=int(os.environ.get("WCSEED", "3"))):
     """foreground swell crests: the hero preset's floating_spar() also places the preset's two foam streaks relative to P['cam'] (our widen_sea patched it): wrap it,
     keep the spar where the preset puts it (original camera) and add broken foam lines (the set's 'streaks' hook) between our camera and the ship, so crests
     sweep across the frame as the camera slides (frame-diff)."""
@@ -88,18 +90,45 @@ def whitecaps_in_front(n=int(os.environ.get("WC", "40")), seed=int(os.environ.ge
     LD.floating_spar = fs
 
 
+def deepen_sky():
+    """deepen the pale horizon band of the NOON sky (QA-art round 10): runtime edit of the light table, no set file touched"""
+    import h19_ship as SH
+    sky = [(0.0, '#5f92dc'), (0.46, '#82aee2'), (0.5, '#7ca8e0'), (0.56, '#6f9fe0'), (0.66, '#5c8ede'), (0.78, '#4a7bd6'), (0.88, '#3a67cb'), (1.0, '#2c54b6')]
+    SH.LIGHTS['NOON'] = dict(SH.LIGHTS['NOON'], sky=sky, haze='#86aede')
+
+
+# ----------------------------------------------------------------------------- william19 small at the bow holding the watch (QA-art: "his son carried it")
+WILL_XYZ = tuple(float(v) for v in os.environ.get("WXYZ", "-6.5,36.0,12.0").split(","))   # forecastle, port side, in front of the foremast (visible between the jibs and the foresail)
+WS = float(os.environ.get("WSCALE", "4.0"))              # readability scale (a 3.3 D man is ~15 px tall from here)
+PPD = 224
+
+
+def pose_william(g):
+    p = dict(cast19.STORY19["william_show_h4"][1])
+    p["expr"] = "happy"
+    p["blink"] = blink(g, [1390, 1432, 1470])
+    p["lean"] = p.get("lean", 0) + 2.0 * math.sin(g * 0.2)
+    p["head_roll"] = 3.0 * math.sin(g * 0.13)
+    p["t"] = g / 30.0
+    return p
+
+
 class Take(C.Take):
     def __init__(self, quality="preview"):
         PRESET_CAM0 = None
         widen_sea(PRESET, float(os.environ.get('WIDEN', '1.8')), int(os.environ.get('NU', '900')), int(os.environ.get('NV', '1300')))
         whitecaps_in_front()
+        deepen_sky()
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_" + TAKE)
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
+        root = self.A["ship_root"]
+        self.will = self.actors["will"] = C.make_actor("will", "william19", os.path.join(WORK, "sprites"), contact=True, cam=self.cam)
+        C.ride_ship(self.will, root)                                      # before place() and before any set_roll key
         self.key_cam(C.bf(FIRST_G), *CAM.at(FIRST_G))
-        self.scene.view_settings.exposure -= float(os.environ.get("EXPO", "0.3"))           # QA_TEAM section G: luma 70-135 (the foam crests brighten the frame)
+        self.scene.view_settings.exposure -= float(os.environ.get("EXPO", "0.8"))           # QA_TEAM section G: luma 70-135 (the foam crests brighten the frame)
         g_ = C.bpy.data.objects.get("glint")                    # tone the blown sun glint down (QA-tech): 40 -> GLINT x the set's energy
         if g_ is not None:
-            g_.data.energy *= float(os.environ.get("GLINT", "0.3"))
+            g_.data.energy *= float(os.environ.get("GLINT", "0.03"))
 
     def pose(self, gs):
         for g in gs:
@@ -107,10 +136,16 @@ class Take(C.Take):
             self.key_set(f, sea=g / 30.0 * SEAK, roll=g / 30.0 * SEAK)           # same t, every frame
             self.key_cam(f, *CAM.at(g))
             C.key_vis([o for o in (C.bpy.data.objects.get('gulls_gullt'), C.bpy.data.objects.get('gulls_gullw')) if o], False, f)   # no gulls (one was clipped by the edge)
+            C.place(self.will, f, WILL_XYZ, scale=WS)
+        for g in gs:
+            f = C.bf(g)
+            self.scene.frame_set(f)
+            self.will.pose(f, pose_william(g), camera=self.cam)
+        self.sprites_for([(self.will, PPD)], [C.bf(g) for g in gs])
 
     def report(self, g):
         loc, look = CAM.at(g)
-        return dict(g=g, cam=[round(c, 2) for c in loc], heads={}, dof=self.cam.data.dof.use_dof,
+        return dict(g=g, cam=[round(c, 2) for c in loc], heads=C.head_report(self, C.bf(g)), dof=self.cam.data.dof.use_dof,
                     caption_shade=bool(C.bpy.data.objects.get("caption_shade")))
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):
