@@ -5,7 +5,7 @@ import prefecture17 as P, bpy
 take = 'T3'
 # gate fix v1 (director fix list items 1-3): constant offset of the measuring chair + its sitter, so the 2 m rear post leaves Bertillon's head line
 # (g790-795) and the head-rest pad no longer crosses the sitter's face from the east camera (g811-826). Applies over the whole part.
-CHAIR_D = (-0.4, 0.0); PRIS_D = (-0.10, 0.0)   # chair geometry dx,dy; sitter card dx,dy (card = chair offset +0.30 m: pad stays behind the card plane, sitter stays on the seat edge, face off the post line at g793)
+CHAIR_D = (-0.4, 0.0); PRIS_D = (-0.15, 0.0)   # chair geometry dx,dy; sitter card dx,dy (card = chair offset +0.25 m: armrest rail stays in front of the card at g816, pad behind it, face >=70 % visible off the post at g793)
 _kc = P.K.measuring_chair
 P.K.measuring_chair = lambda B, c, **kw: _kc(B, (c[0] + CHAIR_D[0], c[1] + CHAIR_D[1]), **kw) if abs(c[0] - 0.7) < 1e-6 and abs(c[1] - 2.4) < 1e-6 else _kc(B, c, **kw)
 OUT = os.environ.get('OUT', ROOT + '/film/v3/film17v2/T3b/frames')
