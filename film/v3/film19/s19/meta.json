@@ -1,0 +1,66 @@
+{
+ "take": "s19",
+ "film": 19,
+ "shots": [
+  19
+ ],
+ "g0": 1468,
+ "g1": 1581,
+ "first_g": 1459,
+ "n_frames": 131,
+ "shot_ranges": {
+  "19": [
+   1468,
+   1580
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 13
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 1581
+ },
+ "set": "v3/set3d19/h19.py SHIP preset ship_coast, light DAY_JAMAICA; set_sea / set_roll keyed every frame with t = (g - first_g)/30; no runtime set changes; no caption_shade",
+ "events": {
+  "lift": [
+   1459,
+   1479
+  ],
+  "snap": [
+   1496,
+   1509
+  ],
+  "word_caption": 1497,
+  "cheer": "g 1510..1589 hats and watch up, sailors bounce ~3 Hz"
+ },
+ "dof": "none",
+ "text": "none",
+ "caption_shade": "none",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 14.13,
+ "s_per_frame_cpu_mean": 26.62,
+ "head_px": [
+  92,
+  397
+ ],
+ "head_centre_y": [
+  538,
+  611
+ ],
+ "framediff_in_shot": {
+  "median": 7.12,
+  "p90": 9.77
+ },
+ "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
+}
