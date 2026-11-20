@@ -10,7 +10,9 @@ Fallback check: send_later 60 min, always re-armed.
 - [x] Style board r1 (v3/set3d22/board) -> QA-art FIX-FIRST (board/QA_ART.md: period skyline, sky magenta, tunnel not dark blue, still 2 framing)
 - [x] Board r2 -> QA-art SHIP (board/QA_ART.md Round 2; 8 carry-forward look rules)
 - [x] cast22 built (10 members + 16 crowd, 51 poses, test ALL OK)
-- [ ] Full set: builder A (london + hq), builder B (under + mapworld) per film22/FULL_SET_BRIEF.md -> SET gate
+- [x] Full set: builder A (london + hq, 2 revisions), builder B (under + mapworld, 1 revision) -> contact_sheet.jpg / contact_sheet_B.jpg
+- [ ] SET gate running (QA-art Opus -> SET_GATE.md, QA-tech Sonnet -> QA_TECH.md) 2026-11-20 23:40 UTC
+- [x] WORKER22.md drafted (5 teams)
 - [ ] Set + cast -> SET gate (QA-art + QA-tech)
 - [ ] shot_plan.md (≤12 hard cuts, 2 BIGZOOM), WORKER22.md, render teams (Sonnet, render22/teamK)
 - [ ] TAKE gates, conform22, FINAL gate (4 reviewers + film 2 side-by-side + ref sheets), release22, queue WAIT
