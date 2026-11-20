@@ -46,7 +46,7 @@ CAM_LOC0, CAM_LOOK0 = _loc + _o, _look + _o
 G_WORD = C.cap_g("ไปจาไมกา") + 5                         # ~1438: the word จาไมกา (the caption phrase starts at ไป, 1433)
 _S = [float(v) for v in os.environ.get("SNP", "1428,17,1.22,-2.86,-0.9").split(",")]   # snap: start g, frames, k, shift right/up (D)
 SNAP = (int(_S[0]), int(_S[0] + _S[1]))                                     # 17 f, x1.33 with a pan, landing on the word
-_P = [float(v) for v in os.environ.get("CAMP", "-0.01,12.25,12.26,-5.59").split(",")]      # push, slide px/s, rise px/s, arc deg/s
+_P = [float(v) for v in os.environ.get("CAMP", "-0.01,35,12.26,-8").split(",")]      # push, slide px/s, rise px/s, arc deg/s
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, FIRST_G, G_LAST, push=_P[0], slide_px=_P[1], rise_px=_P[2], arc_deg_s=_P[3], decay=0.1,
                 snaps=[dict(g=SNAP, k=_S[2], peak=2.0, shift=(_S[3], _S[4])),
                        dict(g=(1446, 1476), k=1.05, peak=1.0, shift=(0.8, 0.0))])      # a gentle second move so the camera never parks after the snap (g 1444-1467)
@@ -93,7 +93,7 @@ def whitecaps_in_front(n=int(os.environ.get("WC", "28")), seed=int(os.environ.ge
 
 
 ISLAND_AT = (float(os.environ.get("ISX", "250")), float(os.environ.get("ISY", "699")), 1452)   # screen px (x, y) of the island base at g 1452
-ISLAND_W = float(os.environ.get("ISW", "34"))                                                   # metres (~10 % of the frame width at ~330 m)
+ISLAND_W = float(os.environ.get("ISW", "44"))                                                   # metres (~10 % of the frame width at ~330 m)
 
 
 def build_island():
@@ -145,6 +145,20 @@ def tame_bow_wave():
                 m = sl.material
                 if m is None or not m.use_nodes:
                     continue
+                n33 = m.node_tree.nodes.get("Math.033")                      # the backface glow (Backfacing -> Math.033 -> Emission Strength): the blue 'plastic' tube
+                if n33 is not None and n33.type == "MATH":
+                    n33.inputs[1].default_value *= 0.25
+                nt_ = m.node_tree
+                for n in nt_.nodes:
+                    if n.type == "BSDF_PRINCIPLED":
+                        for l in list(nt_.links):                                    # matte white foam: drop the blue mix from the base / emission colour
+                            if l.to_node == n and l.to_socket.name in ("Base Color", "Emission Color"):
+                                nt_.links.remove(l)
+                        n.inputs["Base Color"].default_value = (0.94, 0.97, 0.98, 1.0)
+                        n.inputs["Emission Color"].default_value = (0.9, 0.96, 1.0, 1.0)
+                        if "Specular IOR Level" in n.inputs:
+                            n.inputs["Specular IOR Level"].default_value = 0.0
+                        n.inputs["Roughness"].default_value = 0.95
                 for n in m.node_tree.nodes:
                     if n.type == "BSDF_PRINCIPLED":
                         for k_, fct in (("Emission Strength", 0.3), ("Specular IOR Level", 0.3), ("Coat Weight", 0.3)):
@@ -228,7 +242,7 @@ class Take(C.Take):
             f = C.bf(g)
             self.key_set(f, sea=g / 30.0 * SEAK, roll=g / 30.0 * SEAK)           # same t, every frame
             self.key_cam(f, *CAM.at(g))
-            C.key_vis([o for o in (C.bpy.data.objects.get('gulls_gullt'), C.bpy.data.objects.get('gulls_gullw')) if o], False, f)   # no gulls (one was clipped by the edge)
+            C.key_vis([o for o in (C.bpy.data.objects.get('gulls_gullt'), C.bpy.data.objects.get('gulls_gullw'), C.bpy.data.objects.get('headland')) if o], False, f)   # no gulls; the pale old headland is hidden (JAMAICA is the island)
             C.place(self.will, f, (WILL_XYZ[0], WILL_XYZ[1], WILL_XYZ[2] + hop_z(g)), scale=WS)
         for g in gs:
             f = C.bf(g)
