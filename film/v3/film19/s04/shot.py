@@ -39,9 +39,9 @@ PPD = 256
 T_OFFSET = 0.0                                    # sea / roll time = g / 30 + T_OFFSET (shot 5 continues the same clock)
 
 CAM_LOC0 = (3.60, 27.10, 16.30)                   # near the preset start (4.07, 26.27, 16.37), a touch left / back
-CAM_LOOK0 = (3.95, 34.55, 14.65)                  # subject point: the captain's head / chart
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GA, GZ, push=0.085, slide_px=0.0, rise_px=-12.0, arc_deg_s=6.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.9, peak=2.3, shift=(-0.12, -0.15))])
+CAM_LOOK0 = (3.0, 34.55, 14.65)                  # subject point: the captain's head / chart
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GA, GZ, push=0.085, slide_px=35.0, rise_px=-12.0, arc_deg_s=0.0, decay=0.15,
+                snaps=[dict(g=SNAP, k=1.85, peak=2.4, shift=(0.50, -0.12)), dict(g=(246, 264), k=1.0, peak=1.3, shift=(-0.42, 0.0))])
 
 HIDE = ("deck_cannon_iron", "deck_carr_w", "deck_hatchw")           # render as black blobs in the FG (QA_TECH): kept out of frame
 LANT_OFF = (1.75, 0.34, 0.30)                     # lantern centre in the camera frame: forward, right, up (D)
