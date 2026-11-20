@@ -1,7 +1,7 @@
-# QA_TECH s22 (g1683-1742): FAIL
-Re-measured: median 6.9, p90 15.4. Heads above 880. Front-3/4 startled ox card present, frozen soldier present (arms crossed, shocked face), no blade touches. No mouths.
-1. Zoom pulsing: framing jumps at g1693->1698 and g1713->1718 (zoomed in, then out). Rule 1 breach.
-2. The hero ox's flame tail is not lit/visible: its tail (gold reed with red bands at upper right) has no flame; the flames in frame are on other oxen at left behind the soldier. Mandatory item: its flame tail in frame. Fix: lit flame on the hero ox's own tail, attached, in frame.
-3. Not "close-medium": the ox is small (about 30 % of the frame width, far from the lens) and the blades are small gold tips on the horns; "both blades in frame, in full flare" does not read. Fix: bring the ox closer so the head and both blades are large.
-4. Bare ground: bottom ~40 % (y>~800) is plain pink dirt. Limit 25 %.
-Notes: the soldier stands partly at the left edge but is in frame. Caption band is mid-tone dirt, acceptable.
+# QA_TECH s22 (take g1677-1747, shot g1683-1742) - FAIL (round 3)
+Own frame-diff: median 7.90, p90 11.37 (director 7.92/11.40) - OK. Pulsing: no in-out release, but 3 held punch-ins (g1696-1699 diff 19/21/15, about g1718, g1738-1742): rule allows 1-2 (note). Band mean 100-105, bright 0 %. Heads: chin max 721. No mouths moving; no blades touching anyone.
+Earlier issues: #1 pulsing - no release now (3 holds, note). #2 hero's flame tail - NOT FIXED. #3 close-medium - NOT FIXED. #4 bare ground - NOT FIXED. QA-art: glint on "วาววับ" - NOT FIXED. Flame on soldier head - NOT FIXED.
+1. g1683-1742 - the hero ox has no flame: its two horns end in gold/red blade tips and no tail is visible or lit; the only flames belong to oxen behind and sit directly on the frozen soldier's helmet/face (g1677-1700 beside the head, g1745-1747 on top of the helmet). Rule 3 breach (flame covering a face, hero tail flame missing). Fix: lit tail on the hero ox in frame, move the background flames away from the soldier.
+2. g1732 (and g1730-1736) - no glint on "วาววับ": the blade tips are small matt gold, no sparkle or highlight in frames g1725-1740. Fix: star glint on each blade at g1731-1734.
+3. g1683-1742 - not a close-medium: ox about 35-40 % of frame width, feet and flat pink dirt fill the lower 35-40 % (limit 25 %), sky upper 30 %. Fix: camera at ox-head height, head and blades 60 % of width, dark fg prop bottom-left.
+Notes: soldier is clipped by the left edge from g1707 on (body partly out, head in); lintel beam is a flat orange-tan bar (textured enough to read as timber, borderline); 3 punch-ins exceed the 1-2 allowed; ox expression is a gentle smile, not startled/flaring.

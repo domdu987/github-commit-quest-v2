@@ -1,7 +1,10 @@
-# QA_TECH s21 (g1596-1683): FAIL
-Re-measured: median 8.2, p90 14.5. Heads above 880 (max chin 785). Three soldiers stay 3-6 D in front the whole shot (OK, but the left/right ones are heavily clipped by the edges late). No blade strikes.
-1. Zoom pulsing / pops beyond the one allowed snap: framing jumps at g1609-1611 (snap), then again at g1626-1631 and g1641-1646 (zoom out then in again). Rule 1 breach. Fix: one held snap on "สัตว์ประหลาด", no other in/out jumps.
-2. Purple band not dark: from g1610 to ~1650 a bright pink/orange-purple slab (gate lintel) crosses the top third, looking like a placeholder beam (rule 2, mandatory "purple band is dark"). Fix: darken/retexture or crop out.
-3. Tail flames: fewer than 3 clearly attached flames on screen; mostly 1-2 orange flares appear behind the oxen, and the oxen near the lens have unlit reed tails. Fix: 3+ flames on tail tips with point lights.
-4. Falling cup unreadable: only a small flat yellow shape drops at g1646-1661; it does not read as a cup on "สัตว์ประหลาด". Fix: larger bronze cup in the soldier's hand falling.
-Notes: the soldier laughing mouth at start is an expression card, not lip-sync (OK, but watch). The oxen in front show blades only as arrow-like gold shapes.
+# QA_TECH s21 (take g1590-1688, shot g1596-1683) - FAIL (round 3)
+Own frame-diff: median 8.24, p90 14.28. Pulsing: FIXED (one snap at g1645-1648, diff 22, held; smaller held punch at g1610-1614; no in-out release). Heads: chin max 825 (<880). Band 54-108, bright 0.1 %. Soldiers 3-6 D in front, in frame all shot.
+Earlier issues: #1 pulsing - FIXED. #2 purple band / lintel beam - NOT FIXED. #3 flames - NOT FIXED. #4 falling cup - NOT FIXED. QA-art: not "out of the dark" - NOT FIXED. Soldiers face the herd - NOT FIXED.
+1. g1615-1650 - a flat untextured salmon/purple lintel beam crosses the upper third (rule 2, mandatory "purple band darkened"). Fix: texture and darken, or crop out.
+2. g1645-1660 - the falling cup is a flat yellow trapezoid card hovering about 200 px above the soldier's hand (g1645) and then a yellow semicircle at the right edge; the bronze cup in the hand at g1640 vanishes. It does not read as a cup falling (placeholder look). Fix: the 3D bronze cup leaves the hand at g1646 and drops to the ground.
+3. g1596-1683 - does not come out of the dark: moonlit blue sky and fully lit gate, and the red dragon herd is already visible behind the soldiers at g1590-1620. Plan: out of the dark, held snap reveals the wall. Fix: darken sky/gate, hide the herd until about g1630.
+4. g1590-1683 - the three soldiers face the lens with their backs to the herd, laughing until g1640 and freezing with O-mouths toward the camera; they never look at the herd (rule 7, checklist "soldiers face the herd"). Fix: 3/4 or profile cards toward the oxen.
+5. g1660-1683 - fewer than 3 tail flames: only 1-2 small flames visible (g1665, 1670, 1675, 1680); 3 or more only g1620-1655. Mandatory TEAMS item. Fix: more flame cards on visible tails or pull back.
+6. g1596-1620 - bare ground about 30-35 % (limit 25 %).
+Notes: snap lands on the word at g1646 (correct); the push after the snap keeps growing so the hero ox face fills about 45 % of the frame at g1680-1683 and reads as a friendly cow, not a monster; tails look like gold arrow tips; mouths of soldiers are expression cards, no lip-sync.
