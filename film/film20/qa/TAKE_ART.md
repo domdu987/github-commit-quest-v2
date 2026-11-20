@@ -120,3 +120,16 @@ Fixes:
   the far-left run that leaves the frame. No wire should cut across the empty sky.
 - F4 (g 1441-1559): raise the camera 20-30 m (or tilt 3-4 deg down after the pull-out) so a band of lit Paris roofs is visible under
   the rings on both sides of the tower. Move the two near trees to the right of the axis out of the line of the hut and the city.
+
+---
+
+## s01 rev2 (commit df6d01b, re-checked 2026-11-20 at 4 fps full size + 2 fps 360x640): **PASS**
+Scores: set 8 / light 8 / comp 8 / act 7 / key 8 / cam 8. F1 done: the lamp-post is now upright dark-green iron with a lit lantern at the
+left edge (x 0-60). It never crosses his face or the tower, and it is gone after the snap with no corner sliver. F3 done: the head roll
+plus chin-up after g45 reads as "nose away" at phone size, together with the squint. §G: sat 0.567 / luma 97 are in band. Feet touch the
+ground with contact shadows, and no bar passes through a face. The face is at most 18 % of frame height, nothing floats, and he is not
+cut by a side edge (the waist cut after the snap is a normal medium shot).
+Non-blocking note: F2 is only partly done. For g 0-20 the bench shows as a dark grey sliver at the right edge (x 620-720). It is
+acceptable, but the wood should read lighter if this take is ever re-rendered.
+§H film-level flag for the director: s01 is 2.67 s, so it cannot hold a 3-6 s BIGZOOM. shot_plan.md has no BIGZOOM marked yet. The
+hook BIGZOOM has to be planned elsewhere (or s01 re-planned); this does not block this take.
