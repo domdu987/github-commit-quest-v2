@@ -65,15 +65,16 @@ walls, cpus = [r["wall"] for r in rows], [r["cpu"] for r in rows]
 nb = numbers(framediff(pngs))
 json.dump(nb, open(os.path.join(HERE, "framediff.json"), "w"), indent=1)
 meta = dict(CFG["meta"])
-meta.update({"take": CFG["take"], "film": 20, "shots": [CFG["shot"]], "g0": G0, "g1": G1, "first_g": FIRST, "n_frames": N,
-             "shot_ranges": {str(CFG["shot"]): [G0, G1 - 1]}, "handle_in": H_IN, "handle_out": H_OUT,
-             "transition_in": {"type": "cut", "frames": 0, "handle_frames": H_IN, "note": "cut in from shot %d; handle g %d..%d rendered in 3D" % (CFG["shot"] - 1, FIRST, G0 - 1)},
-             "transition_out": {"type": "cut", "frames": 0, "at": G1, "handle_frames": H_OUT, "note": "cut to shot %d; handle g %d..%d rendered in 3D" % (CFG["shot"] + 1, G1, G1 + H_OUT - 1)},
+meta.update({"take": CFG["take"], "film": 20, "shots": CFG.get("shots", [CFG["shot"]]), "g0": G0, "g1": G1, "first_g": FIRST, "n_frames": N,
+             "shot_ranges": CFG.get("shot_ranges", {str(CFG["shot"]): [G0, G1 - 1]}), "handle_in": H_IN, "handle_out": H_OUT,
+             "transition_in": {"type": "cut", "frames": 0, "handle_frames": H_IN, "note": "hard cut in from shot 20; handle g %d..%d rendered in 3D" % (FIRST, G0 - 1)},
+             "transition_out": {"type": "dissolve", "frames": 13, "at": G1, "handle_frames": H_OUT, "note": "dissolve 13 into shot 23 (T23); handle g %d..%d rendered in 3D" % (G1, G1 + H_OUT - 1)},
              "dof": "none", "text": "none", "samples": rows[0].get("samples"), "resolution": [720, 1280], "threads": 2, "fps": 30,
              "s_per_frame_wall_mean": round(float(np.mean(walls)), 2), "s_per_frame_cpu_mean": round(float(np.mean(cpus)), 2),
              "framediff_in_shot": {"median": nb["median"], "p90": nb["p90"]},
              "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"})
-hr = [r["heads"] for r in rows[H_IN:H_IN + G1 - G0] if r.get("heads")]
+hr = [{k: h for k, h in r["heads"].items() if 0 < h["x"] < 720 and 0 < h["y"] < 1280} for r in rows[H_IN:H_IN + G1 - G0] if r.get("heads")]
+hr = [h for h in hr if h]
 if hr:
     ws = [h["w"] for hh in hr for h in hh.values()]
     ys = [h["y"] for hh in hr for h in hh.values()]
@@ -90,7 +91,7 @@ subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", "30", "-star
 if os.path.getsize(mkv) > MB_LIMIT:
     subprocess.run(["split", "-b", "40M", mkv, mkv + ".part"], check=True, cwd=HERE)
     print("take.mkv %.1f MB: split into take.mkv.part*" % (os.path.getsize(mkv) / 1e6))
-r = subprocess.run([sys.executable, os.path.join(PROJ, "qa_auto.py"), mkv, "--first_g", str(FIRST), "--cuts", ",".join(map(str, [G0, G1]))],
+r = subprocess.run([sys.executable, os.path.join(PROJ, "qa_auto.py"), mkv, "--first_g", str(FIRST), "--cuts", str(G0)],
                    capture_output=True, text=True)
 print(r.stdout, r.stderr[-500:])
 print("delivered %d frames, %.1f MB; s/frame wall %.2f cpu %.2f; frame-diff median %.2f p90 %.2f"

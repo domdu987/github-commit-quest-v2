@@ -504,12 +504,16 @@ def person(mb, M, c, yaw, kind='man', col='dark', h=1.7):
         else: mb.ell(M['dark'], (0, 0, h - 0.04), (0.17, 0.045, 0.07), (8, 4))
     mb.pop()
 
-def flag_pole(mb, M, c, h=9.0, cols=('flag_r', 'flag_w', 'flag_b'), wind=1.0, s=1.0):
-    """flag pole with a swallow-tail pennant in plain colour bands (no text); gilt ball on top"""
+def flag_pole(mb, M, c, h=9.0, cols=None, wind=1.0, s=1.0):
+    """flag pole with a VERTICAL French tricolour (blue at the hoist, white, red), gently waved, 2.6 x 1.7 m; gilt ball on top. `cols`/`wind`: wind -1 flies it to the other side"""
     x, y, z = c; mb.rod(M['white'], (x, y, z), (x, y, z + h), 0.07 * s, 0.05 * s, 6); mb.ell(M['gold'], (x, y, z + h + 0.1), (0.14 * s,) * 3, (8, 6))
-    for i, cm in enumerate(cols): mb.quad(M[cm], [(x, y, z + h - 0.2 - i * 0.55 * s), (x + 2.6 * s * wind, y + 0.5, z + h - 0.15 - i * 0.55 * s), (x + 2.6 * s * wind, y + 0.5, z + h - 0.7 - i * 0.55 * s), (x, y, z + h - 0.75 - i * 0.55 * s)])
+    w3 = 0.9 * s * wind; fh = 1.7 * s; top = z + h - 0.15
+    for i, cm in enumerate(('flag_b', 'flag_w', 'flag_r')):
+        x0 = x + i * w3; x1 = x + (i + 1) * w3; wv0 = 0.18 * s * math.sin(i * 1.3); wv1 = 0.18 * s * math.sin((i + 1) * 1.3)
+        mb.quad(M[cm], [(x0, y + wv0, top), (x1, y + wv1, top), (x1, y + wv1, top - fh), (x0, y + wv0, top - fh)])
+        mb.quad(M[cm], [(x0, y + wv0, top - fh), (x1, y + wv1, top - fh), (x1, y + wv1, top), (x0, y + wv0, top)])
 
-def bunting(mb, M, p0, p1, sag=0.6, n=14, cols=('flag_r', 'flag_w', 'flag_b')):
+def bunting(mb, M, p0, p1, sag=0.6, n=14, cols=('flag_b', 'flag_w', 'flag_r')):
     p0 = Vector(p0); p1 = Vector(p1); prev = p0
     for i in range(1, n + 1):
         t = i / n; p = p0.lerp(p1, t); p.z -= sag * 4 * t * (1 - t); mb.rod(M['rope'], prev, p, 0.02, 0.02, 4)
@@ -526,7 +530,7 @@ def pavilion(mb, M, c, w=14.0, d=10.0, h=6.0, yaw=0.0, kind=0):
         if abs(xx) > w / 2 - 0.9: continue
         mb.box(M['navy'], (xx, -d / 2 - 0.02, h * 0.5), (1.1, 0.05, h * 0.55)); mb.cyl(M['navy'], (xx, -d / 2 - 0.02, h * 0.78), 0.55, 0.05, 'y', 10)
     for i in range(8):
-        xx = -w / 2 + (i + 0.5) * w / 8; mb.quad(M['awn_r' if i % 2 else 'awn_c'], [(xx - w / 16, -d / 2 - 0.1, h * 0.72), (xx + w / 16, -d / 2 - 0.1, h * 0.72), (xx + w / 16, -d / 2 - 2.1, h * 0.52), (xx - w / 16, -d / 2 - 2.1, h * 0.52)])
+        xx = -w / 2 + (i + 0.5) * w / 8; mb.quad(M['awn_r'], [(xx - w / 16, -d / 2 - 0.1, h * 0.72), (xx + w / 16, -d / 2 - 0.1, h * 0.72), (xx + w / 16, -d / 2 - 2.1, h * 0.52), (xx - w / 16, -d / 2 - 2.1, h * 0.52)])
     if kind == 0: mb.ell(M['dome'], (0, 0, h + 0.5), (w * 0.3, d * 0.3, h * 0.3), (16, 10))
     else:
         mb.quad(M['zinc'], [(-w / 2 - 0.5, -d / 2 - 0.5, h + 0.45), (w / 2 + 0.5, -d / 2 - 0.5, h + 0.45), (w / 2 + 0.5, 0, h + 2.6), (-w / 2 - 0.5, 0, h + 2.6)][::-1]); mb.quad(M['zincdk'], [(-w / 2 - 0.5, 0, h + 2.6), (w / 2 + 0.5, 0, h + 2.6), (w / 2 + 0.5, d / 2 + 0.5, h + 0.45), (-w / 2 - 0.5, d / 2 + 0.5, h + 0.45)][::-1])
