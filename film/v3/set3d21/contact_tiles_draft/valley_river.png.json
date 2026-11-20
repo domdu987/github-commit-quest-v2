@@ -1,1 +1,1 @@
-{"preset": "valley_river", "light": "MORNING", "build_s": 33.9, "render_s": 10.15, "mode": "draft", "samples": 20, "heads": {"e1": {"cx": 69, "cy": 910, "chin": 943, "dist": 6.0}, "e2": {"cx": 641, "cy": 761, "chin": 786, "dist": 8.0}}, "objects": 208, "tris": 994436}
+{"preset": "valley_river", "light": "MORNING", "build_s": 31.51, "render_s": 9.66, "mode": "draft", "samples": 20, "heads": {"e1": {"cx": 130, "cy": 762, "chin": 771, "dist": 22.0}, "e2": {"cx": 601, "cy": 783, "chin": 803, "dist": 10.0}}, "objects": 208, "tris": 982633}

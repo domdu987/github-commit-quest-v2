@@ -1,1 +1,1 @@
-{"preset": "camp_wide", "light": "MORNING", "build_s": 3.14, "render_s": 8.4, "mode": "draft", "samples": 20, "heads": {"k1": {"cx": 146, "cy": 1109, "chin": 1123, "dist": 15.1}, "k2": {"cx": 549, "cy": 995, "chin": 1006, "dist": 19.1}}, "objects": 184, "tris": 567317}
+{"preset": "camp_wide", "light": "MORNING", "build_s": 2.94, "render_s": 8.38, "mode": "draft", "samples": 20, "heads": {"k1": {"cx": 203, "cy": 733, "chin": 738, "dist": 46.9}, "k2": {"cx": 518, "cy": 709, "chin": 713, "dist": 52.8}}, "objects": 184, "tris": 558254}

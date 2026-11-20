@@ -24,7 +24,7 @@ per frame, stand points for the cast. Built from code only (numpy + PIL textures
 - Z up, water level z = 0. x east, y north. Camera 36 mm sensor, AUTO fit, 720x1280. **Lens: 22 mm everywhere except `hill_over` (32 mm) and `camp_bank` (30 mm)**: QA-art needed the 280 px bridge and the knights readable there; every other preset is 22 mm as the camera rules say.
 - Every preset has a foreground prop 1-2 m from the lens (`fg`), stand points (`marks`) for the cast, and room to drift (the push/slide in the shot plan fits the scene: nothing is placed inside the move path).
 - Placeholder cast: `stage_placeholders(A)` puts a near-white head `#fef7f6` with a plum ring on a flat coloured body at every stand point, turned to the camera. Head = 0.3 of the card height. `build_for_cli` stages them for presets that have marks.
-- Head screen positions: the `<out>.json` that `cli_render` writes has `heads: {mark: {cx, cy, chin, dist}}` (px at 720x1280). All heads are above y 880.
+- Head screen positions: the `<out>.json` that `cli_render` writes has `heads: {mark: {cx, cy, chin, dist}}` (px at 720x1280). The stand points are placed so heads are at cy 450-800; check the table in section 6 (a few are at 760-800: the card chin may reach 830) and call `head_report()` after your first frame. Hiding foreground props: objects are named `fg_generic_<material>` (posts and spears in `fg_generic_wood` / `fg_generic_steel`, gorse and reeds in `fg_generic_g_*`, rocks and heather in `fg_generic_r_*`).
 
 ## 2. Geography (one coherent valley)
 
@@ -48,7 +48,7 @@ K.render('/tmp/f.png', 'final')       # 720x1280, 64 samples, OIDN, 4 threads, t
 K.head_report(A)                      # {mark: {cx, cy, chin, dist}} (call after render/setup_render)
 K.project(cam, (x, y, z))             # world -> (px x, px y, depth) at 720x1280; call K.setup_render(scene, 'final') first, then bpy.context.view_layer.update()
 ```
-CLI: `python3 stirling.py render <preset> <out.png> [final|draft] [samples]`, `python3 stirling.py list`. `A` holds `marks`, `cam`, `camp` (`table`, `fires`, `pav`), `scale_beam`, `chest_lid`, `troops`.
+CLI: `python3 stirling.py render <preset> [-] <out.png> [final|draft] [samples]` (the `-` is an optional no-op placeholder for a light name; there is one light; mode other than `final`/`draft` is an error), `python3 stirling.py list`. Example: `python3 stirling.py render bridge_deck - /tmp/f.png draft`. `A` holds `marks`, `cam`, `camp` (`table`, `fires`, `pav`), `scale_beam`, `chest_lid`, `troops`.
 Other public functions: `new_scene(light, over)`, `Batch` (`box, cyl, sphere, rock, mesh, quad, tri, prism_roof, xf, wpt, finalize`), `get_mat(key)`, `ground(x, y)` (terrain z), `sd_at(x, y)` (distance to the water line: negative in the river), `river()`, `hill_h`, `rel_xy`, `mark_at`, `mark_px`, props `pavilion, bell_tent, ridge_tent, banner, campfire, cart, weapon_rack, barrel, sacks, horse, knight_pair_column, spear, gorse, reed_cluster, pine, oak, boulder, crag_group, farmstead, scots_slope_line, spear_wall`.
 
 ## 4. Hooks (all keyable per frame: call the hook with the frame's value, then render; they only set scene values)
@@ -76,16 +76,16 @@ Camera, look-at, foreground prop, stand points with their head centre in screen 
 | preset | loc | camera -> look | lens | foreground prop | stand points (head cx, cy) | room to drift | cost |
 |---|---|---|---|---|---|---|---|
 | `hill_over` | hill | (160.0, 150.0, z = ground + 2.70) -> (0.0, 2.0, -20.0) | 32 | two spear shafts (1.6-1.8 m), two gorse bushes, a boulder at the bottom edge, one pine at the left edge | `s1` (92, 758), `s2` (598, 653), `s3` (641, 588), `s4` (121, 567), `s5` (56, 664) |  | 84 s render, 4 s build |
-| `hill_eye` | hill | (128.0, 128.0, z = ground + 1.75) -> (144.0, 144.0, 20.5) | 22 | spear 1.5 m, spear 1.7 m, gorse 2.4 m, heather 1.8 m | `s1` (81, 664), `s2` (225, 659), `w` (360, 637), `s3` (505, 657), `s4` (639, 665) | slide 40 px/s; snap push x1.4 on s2 | 135 s render, 3 s build |
-| `hill_low` | hill | (118.0, 112.0, z = ground + 1.40) -> (140.0, 134.0, 22.0) | 22 | gorse 1.6 m, gorse 1.9 m, rock 2.2 m, spear 1.4 m | `s1` (99, 821), `s2` (242, 738), `horn` (389, 804), `w` (509, 692), `s3` (647, 851) | pull-out 7 %/s, tilted up 14 deg | 84 s render, 3 s build |
+| `hill_eye` | hill | (128.0, 128.0, z = ground + 1.75) -> (144.0, 144.0, 20.5) | 22 | spear 2.6 m, gorse 2.4 m | `s1` (150, 665), `s2` (265, 659), `w` (370, 637), `s3` (500, 657), `s4` (590, 665) | slide 40 px/s; snap push x1.4 on s2 | 135 s render, 3 s build |
+| `hill_low` | hill | (118.0, 112.0, z = ground + 1.40) -> (140.0, 134.0, 19.0) | 22 | gorse 1.6 m, gorse 1.9 m, rock 2.2 m, spear 1.8 m | `s1` (102, 763), `s2` (242, 682), `horn` (388, 747), `w` (509, 636), `s3` (614, 685) | pull-out 7 %/s, tilted up 14 deg | 84 s render, 3 s build |
 | `bridge_deck` | bridge | (-2.7, -2.4, z 3.0) -> (0.6, 1.6, 2.9) | 22 | post 1.1 m | `k1` (190, 563), `k2` (520, 570) | push 8 %/s | 101 s render, 2 s build |
-| `bridge_high` | bridge | (-5.0, -62.0, z 24.0) -> (0.0, 6.0, 1.0) | 22 | post 1.6 m | - | push along the bridge 8 %/s; snap pull-out x0.7 | 88 s render, 2 s build |
-| `bridge_end_north` | bridge | (-3.2, 50.0, z 2.9) -> (0.0, 22.0, 2.2) | 22 | spear 1.5 m, gorse 2.0 m, reeds 2.2 m | `e1` (170, 646), `e2` (420, 643), `e3` (600, 647), `e4` (300, 640) | push 8 %/s | 67 s render, 2 s build |
-| `bridge_end_south` | bridge | (-2.3, -40.0, z 3.0) -> (0.0, -31.0, 2.7) | 22 | spear 1.4 m, spear 1.7 m | `k1` (205, 575), `k2` (505, 579) | snap push x1.4 (16 f) | 71 s render, 2 s build |
+| `bridge_high` | bridge | (-5.0, -62.0, z 24.0) -> (0.0, 6.0, 1.0) | 22 | - | - | push along the bridge 8 %/s; snap pull-out x0.7 | 88 s render, 2 s build |
+| `bridge_end_north` | bridge | (-2.0, 50.0, z 4.6) -> (0.0, 22.0, 1.8) | 22 | gorse 2.0 m, reeds 2.0 m | `e1` (174, 774), `e2` (419, 730), `e3` (595, 751), `e4` (301, 701) | push 8 %/s | 67 s render, 2 s build |
+| `bridge_end_south` | bridge | (-2.0, -37.5, z 2.6) -> (0.0, -31.0, 2.6) | 22 | spear 2.4 m | `k1` (215, 538), `k2` (505, 549) | snap push x1.4 (16 f) | 71 s render, 2 s build |
 | `valley_wide` | valley | (445.0, 244.0, z 361.0) -> (64.0, 44.0, 0.0) | 22 | - | - | crane down + push 6 %/s | 106 s render, 35 s build |
 | `valley_loop` | valley | (-72.0, -133.0, z 229.0) -> (12.0, 36.0, 0.0) | 21 | - | - |  | 108 s render, 33 s build |
-| `valley_river` | valley | (38.0, -24.0, z = ground + 2.10) -> (105.0, 28.0, 4.0) | 22 | reeds 2.2 m, reeds 2.0 m, rock 2.4 m | `e1` (69, 910), `e2` (641, 761) | push 7 %/s + slide | 91 s render, 35 s build |
-| `camp_wide` | camp | (-78.0, -96.0, z 13.0) -> (12.0, -52.0, 2.0) | 22 | rope 1.8 m, pole 2.2 m | `k1` (146, 1109), `k2` (549, 995) | slide 50 px/s + push | 82 s render, 3 s build |
+| `valley_river` | valley | (38.0, -24.0, z = ground + 2.10) -> (105.0, 28.0, 4.0) | 22 | reeds 2.2 m, reeds 2.0 m, rock 2.4 m | `e1` (130, 762), `e2` (601, 783) | push 7 %/s + slide | 91 s render, 35 s build |
+| `camp_wide` | camp | (-78.0, -96.0, z 13.0) -> (12.0, -52.0, 2.0) | 22 | rope 1.8 m, pole 2.2 m | `k1` (203, 733), `k2` (518, 709) | slide 50 px/s + push | 82 s render, 3 s build |
 | `camp_table` | camp | (-12.0, -32.6, z = ground + 1.50) -> (-13.2, -25.0, 1.3) | 22 | barrel 1.6 m, rope 1.7 m | `cress` (360, 552) | push 8 %/s, coin chest in the middle ground | 139 s render, 3 s build |
 | `camp_bank` | camp | (-140.0, -17.3, z = ground + 2.00) -> (-43.0, 6.9, -16.6) | 30 | banner pole with its banner at the right edge, a barrel, reeds and tent pegs | `cress` (177, 589), `surrey` (640, 546), `e0` (37, 568), `e1` (110, 529), `e2` (214, 487), `e3` (601, 505), `e4` (667, 494), `e5` (709, 479) |  | 87 s render, 4 s build |
 | `riverbank` | riverbank | (-17.0, 60.0, z = ground + 1.80) -> (0.0, 30.0, 1.6) | 22 | reeds 1.6 m, reeds 2.0 m, gorse 2.4 m | `e1` (91, 679), `e2` (250, 669), `e3` (400, 661), `e4` (175, 642) | slide 40 px/s + push; water on the right for the jumps (splash()) | 73 s render, 3 s build |

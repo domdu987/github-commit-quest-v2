@@ -757,9 +757,9 @@ def gorse(B, c, s, rs):
 def reed_cluster(B, c, rs):
     x, y, z = c; n = rs.randint(6, 11); h0 = rs.uniform(0.9, 1.9) * STATE['P'].get('reed_k', 1.0)
     for i in range(n):
-        a = rs.rand() * 6.28; r = rs.rand() * 0.35; bx, by = x + r * math.cos(a), y + r * math.sin(a); h = h0 * rs.uniform(0.7, 1.15); lean = rs.uniform(0.05, 0.35) * h; la = rs.rand() * 6.28; w = 0.04
-        B.tri('reed', (bx - w, by, z - 0.05), (bx + w, by, z - 0.05), (bx + lean * math.cos(la), by + lean * math.sin(la), z + h), tint=(0.8 + 0.4 * rs.rand(),) * 3)
-        if i == 0 and rs.rand() < 0.5: B.cyl('cattail', (bx + lean * math.cos(la) * 0.8, by + lean * math.sin(la) * 0.8, z + h * 0.8), 0.04, 0.22, seg=5)
+        a = rs.rand() * 6.28; r = rs.rand() * 0.35; bx, by = x + r * math.cos(a), y + r * math.sin(a); h = h0 * rs.uniform(0.7, 1.15); lean = rs.uniform(0.05, 0.35) * h; la = rs.rand() * 6.28; w = 0.075
+        B.tri('reed', (bx - w, by, z - 0.15), (bx + w, by, z - 0.05), (bx + lean * math.cos(la), by + lean * math.sin(la), z + h), tint=(0.8 + 0.4 * rs.rand(),) * 3)
+        if i == 0 and rs.rand() < 0.5: B.cyl('cattail', (bx + lean * math.cos(la) * 0.8, by + lean * math.sin(la) * 0.8, z + h * 0.8), 0.028, 0.15, seg=5)
 def pine(B, x, y, z, h, rs, lean=0.0):
     """Scots pine: a tall bare orange-brown trunk, a flat irregular crown of dark blue-green pads at the top."""
     la = rs.rand() * 6.28; tx, ty = math.cos(la) * lean * h, math.sin(la) * lean * h; tt = rs.uniform(0.9, 1.1)
@@ -1124,24 +1124,20 @@ def bell_tent(B, c, r, h, mat, rs, seg=9):
         B.mesh(m, [(x + r * math.cos(a), y + r * math.sin(a), z), (x + r * math.cos(b), y + r * math.sin(b), z), (x + r * 0.55 * math.cos(b), y + r * 0.55 * math.sin(b), z + h * 0.62), (x + r * 0.55 * math.cos(a), y + r * 0.55 * math.sin(a), z + h * 0.62)], [(0, 1, 2, 3)], False)
         B.mesh(m, [(x + r * 0.55 * math.cos(a), y + r * 0.55 * math.sin(a), z + h * 0.62), (x + r * 0.55 * math.cos(b), y + r * 0.55 * math.sin(b), z + h * 0.62), (x, y, z + h)], [(0, 1, 2)], False)
     B.rod('wood', (x, y, z + h), (x, y, z + h + 0.5), 0.04, seg=4)
-_SPH = [None]
-def _unit_sphere(seg=8, rings=5):
-    if _SPH[0] is None:
-        t = Batch(); t.sphere('x', (0, 0, 0), 1.0, seg=seg, rings=rings); d = t.d['x']; _SPH[0] = (np.concatenate(d['v']), d['f'])
-    return _SPH[0]
+_PL_RINGS, _PL_SEG = 14, 9
 def smoke_column(Bs, x, y, z, rs, h=26.0, r0=0.25, n=10):
-    """a smoke column of n puffs as one object; set_smoke(t) makes the puffs rise, grow and fade out (radius to 0) in a loop."""
-    V0, F0 = _unit_sphere(); nv = len(V0); me = bpy.data.meshes.new('smoke_col'); allv = np.tile(V0, (n, 1)) * 0.3 + np.array([x, y, z])
-    allf = [tuple(i + k * nv for i in f) for k in range(n) for f in F0]; me.from_pydata(allv.tolist(), [], allf); me.update(); me.polygons.foreach_set('use_smooth', [True] * len(me.polygons))
-    ca = me.color_attributes.new('tint', 'FLOAT_COLOR', 'POINT'); ca.data.foreach_set('color', np.ones(len(allv) * 4, np.float32))
+    """a soft tapered smoke plume: one smooth tube that widens and thins out to a point at the top, leaning down-wind; set_smoke(t) makes it billow and drift."""
+    R, G = _PL_RINGS, _PL_SEG; me = bpy.data.meshes.new('smoke_col'); me.from_pydata(np.zeros((R * G + 1, 3)).tolist(), [], [(i * G + j, i * G + (j + 1) % G, (i + 1) * G + (j + 1) % G, (i + 1) * G + j) for i in range(R - 1) for j in range(G)] + [((R - 1) * G + j, (R - 1) * G + (j + 1) % G, R * G) for j in range(G)]); me.update()
+    me.polygons.foreach_set('use_smooth', [True] * len(me.polygons)); ca = me.color_attributes.new('tint', 'FLOAT_COLOR', 'POINT'); ca.data.foreach_set('color', np.ones((R * G + 1) * 4, np.float32))
     ob = bpy.data.objects.new('smoke_col', me); bpy.context.scene.collection.objects.link(ob); ob.data.materials.append(get_mat('smoke')); ob.visible_shadow = False
-    STATE['anim'].setdefault('smoke', []).append(dict(ob=ob.name, base=(x, y, z), h=h, r0=r0, n=n, seed=float(rs.uniform(0, 1)))); _smoke_pose(STATE['anim']['smoke'][-1], 0.0)
+    STATE['anim'].setdefault('smoke', []).append(dict(ob=ob.name, base=(x, y, z), h=h, r0=r0, n=n, seed=float(rs.uniform(0, 6.28)))); _smoke_pose(STATE['anim']['smoke'][-1], 0.0)
 def _smoke_pose(c, t, speed=0.12):
-    V0, F0 = _unit_sphere(); ob = bpy.data.objects[c['ob']]; x, y, z = c['base']; n = c['n']; out = np.empty((n * len(V0), 3))
-    for i in range(n):
-        ph = (t * speed + c['seed'] + i / n) % 1.0; rr = max((c['r0'] + 0.5 * ph * (c['h'] / 14.0) ** 0.5) * math.sin(math.pi * min(ph * 1.15, 1.0)) ** 0.6, 0.001)
-        cx, cy, cz = x + 0.5 + 5.0 * ph * ph, y + 0.4 + 3.0 * ph * ph, z + 2.0 + c['h'] * ph; out[i * len(V0):(i + 1) * len(V0)] = V0 * rr + np.array([cx, cy, cz])
-    ob.data.vertices.foreach_set('co', out.ravel()); ob.data.update()
+    R, G = _PL_RINGS, _PL_SEG; ob = bpy.data.objects[c['ob']]; x, y, z = c['base']; h = c['h']; out = np.empty((R * G + 1, 3)); ph = c['seed'] + t * speed * 6.28 * 2
+    for i in range(R):
+        s_ = i / (R - 1.0); w = 0.5 * s_ * s_ * h * 0.5; cx = x + 0.4 + 0.45 * h * s_ * s_ + 0.5 * math.sin(5.0 * s_ - ph) * s_ * (h / 14.0) ** 0.5; cy = y + 0.3 + 0.25 * h * s_ * s_ + 0.4 * math.cos(4.0 * s_ - 1.3 * ph) * s_ * (h / 14.0) ** 0.5
+        rr = max(c['r0'] * (0.6 + 4.2 * s_ ** 0.8) * (1.0 - s_ ** 3) * (h / 14.0) ** 0.4, 0.02) * (1 + 0.12 * math.sin(7 * s_ + ph)); cz = z + 2.0 + h * s_
+        for j in range(G): a = 2 * math.pi * j / G; out[i * G + j] = (cx + rr * math.cos(a), cy + rr * math.sin(a), cz)
+    out[R * G] = (x + 0.4 + 0.45 * h, y + 0.3 + 0.25 * h, z + 2.0 + h * 1.02); ob.data.vertices.foreach_set('co', out.ravel()); ob.data.update()
 def farmstead(B, Bs, x, y, rs, yaw=None):
     """a small farm: cream walls with a thatch or red-tile roof, a barn, a haystack, a few trees and a smoke column."""
     yaw = rs.uniform(0, 90) if yaw is None else yaw; z = float(ground(x, y))
@@ -1512,29 +1508,29 @@ _HV = dict(seed=5, half=30, no_chips=True, hill_grass=0.5, grass=[(2, 14, 900, 0
 _VOVR = dict(foam_k=3.0, glit_s=0.35, glit_t=0.12, glit_stretch=1.0, wake_k=4.0, haze_max=0.2, world=0.0, lift=(0.03, 0.028, 0.07), key=(2.05, 1.58, 0.84), shade=(0.12, 0.10, 0.30), tint=(0.065, 0.052, 0.15), sun_dir=(-0.68, 0.68, -0.28))
 # hill_eye / hill_low: on the Scots' shelf (x 131, y 131, 15 m up), looking up the slope at the line
 _mk('hill_eye', loc='hill', cam=(128.0, 128.0, 0.0), cam_dz=1.75, cam_ref=(128.0, 128.0), look=(144.0, 144.0, 20.5), lens=22.0, sd=9.0, over=dict(_OVR),
-    marks_spec=[('s1', 'scot:scot_b', 5.2, 80), ('s2', 'scot:scot_o', 6.0, 225), ('w', 'wallace', 5.6, 360), ('s3', 'scot:scot_m', 6.4, 505), ('s4', 'scot', 5.4, 640)],
-    veg=dict(_HV), fg_list=[('spear', 1.5, 60, (0.06, 0.14)), ('spear', 1.7, 690, (-0.08, 0.1)), ('gorse', 2.4, 610, 0.55), ('heather', 1.8, 300, 0.5)], dress_min=6.0, drift='slide 40 px/s; snap push x1.4 on s2')
-_mk('hill_low', loc='hill', cam=(118.0, 112.0, 0.0), cam_dz=1.4, cam_ref=(118.0, 112.0), look=(140.0, 134.0, 22.0), lens=22.0, sd=9.0, over=dict(_OVR),
-    marks_spec=[('s1', 'scot:scot_b', 7.0, 90), ('s2', 'scot', 8.5, 230), ('horn', 'scot:scot_o', 7.5, 390), ('w', 'wallace', 9.5, 530), ('s3', 'scot:scot_m', 7.0, 650)],
-    veg=dict(_HV), fg_list=[('gorse', 1.6, 80, 0.6), ('gorse', 1.9, 620, 0.6), ('rock', 2.2, 360, 0.6), ('spear', 1.4, 690, (0.0, 0.2))], dress_min=6.0, drift='pull-out 7 %/s, tilted up 14 deg')
+    marks_spec=[('s1', 'scot:scot_b', 5.2, 150), ('s2', 'scot:scot_o', 6.0, 265), ('w', 'wallace', 5.6, 370), ('s3', 'scot:scot_m', 6.4, 500), ('s4', 'scot', 5.4, 590)],
+    veg=dict(_HV), fg_list=[('spear', 2.6, 690, (-0.7, 0.2)), ('gorse', 2.4, 640, 0.55)], dress_min=6.0, drift='slide 40 px/s; snap push x1.4 on s2')
+_mk('hill_low', loc='hill', cam=(118.0, 112.0, 0.0), cam_dz=1.4, cam_ref=(118.0, 112.0), look=(140.0, 134.0, 19.0), lens=22.0, sd=9.0, over=dict(_OVR),
+    marks_spec=[('s1', 'scot:scot_b', 7.0, 90), ('s2', 'scot', 8.5, 230), ('horn', 'scot:scot_o', 7.5, 390), ('w', 'wallace', 9.5, 530), ('s3', 'scot:scot_m', 9.0, 640)],
+    veg=dict(_HV), fg_list=[('gorse', 1.6, 80, 0.6), ('gorse', 1.9, 620, 0.6), ('rock', 2.2, 360, 0.6), ('spear', 1.8, 30, (0.7, 0.1))], dress_min=6.0, drift='pull-out 7 %/s, tilted up 14 deg')
 # the bridge presets (cam z is absolute: the deck is DECK_Z = 1.75)
 _mk('bridge_deck', loc='bridge', cam=(-2.7, -2.4, 3.0), look=(0.6, 1.6, 2.9), lens=22.0, sd=4.0, over=dict(_OVR), stand_z=DECK_Z, hill2=False,
     marks_spec=[('k1', 'knight', 3.2, 190), ('k2', 'knight:knight_b', 3.6, 520)], fg_list=[('post', 1.1, 20)], fg_z=DECK_Z, drift='push 8 %/s')
 _mk('bridge_high', loc='bridge', cam=(-5.0, -62.0, 24.0), look=(0.0, 6.0, 1.0), lens=22.0, sd=40.0, over=dict(_OVR, wake_k=3.0), hill2=False, marks_spec=[], troops=dict(bridge=16),
-    fg_list=[('post', 1.6, 60)], fg_z=22.0, drift='push along the bridge 8 %/s; snap pull-out x0.7')
-_mk('bridge_end_south', loc='bridge', cam=(-2.3, -40.0, 3.0), look=(0.0, -31.0, 2.7), lens=22.0, sd=6.0, over=dict(_OVR), stand_z=DECK_Z, hill2=False, clear=[(0.0, -44.0, 14.0)],
-    marks_spec=[('k1', 'knight', 5.0, 205), ('k2', 'knight:knight_b', 5.6, 505)], fg_list=[('spear', 1.4, 40, (0.1, 0.0)), ('spear', 1.7, 680, (-0.1, 0.0))], fg_z=DECK_Z - 0.4, drift='snap push x1.4 (16 f)')
-_mk('bridge_end_north', loc='bridge', cam=(-3.2, 50.0, 2.9), look=(0.0, 22.0, 2.2), lens=22.0, sd=14.0, over=dict(_OVR), hill2=False,
+    fg_list=[], fg_z=22.0, drift='push along the bridge 8 %/s; snap pull-out x0.7')
+_mk('bridge_end_south', loc='bridge', cam=(-2.0, -37.5, 2.6), look=(0.0, -31.0, 2.6), lens=22.0, sd=6.0, over=dict(_OVR), stand_z=DECK_Z, hill2=False, clear=[(0.0, -44.0, 14.0)],
+    marks_spec=[('k1', 'knight', 5.0, 215), ('k2', 'knight:knight_b', 5.6, 505)], fg_list=[('spear', 2.4, 40, (0.7, 0.0))], drift='snap push x1.4 (16 f)')
+_mk('bridge_end_north', loc='bridge', cam=(-2.0, 50.0, 4.6), look=(0.0, 22.0, 1.8), lens=22.0, sd=14.0, over=dict(_OVR), hill2=False,
     marks_spec=[('e1', 'foot', 7.0, 170), ('e2', 'foot:foot_r', 9.0, 420), ('e3', 'foot', 8.0, 600), ('e4', 'foot:foot_r', 11.0, 300)], troops=dict(bridge=10, causeway=12),
-    fg_list=[('spear', 1.5, 50, (0.1, -0.1)), ('gorse', 2.0, 650, 0.5), ('reeds', 2.2, 120)], veg=dict(_VEG, reeds=[(6, 40, 160)]), drift='push 8 %/s')
+    fg_list=[('gorse', 2.0, 650, 0.5), ('reeds', 2.0, 60)], veg=dict(_VEG, reeds=[(6, 40, 160)]), drift='push 8 %/s')
 # valley
 _mk('valley_wide', loc='valley', cam=(445.0, 244.0, 361.0), look=(64.0, 44.0, 0.0), lens=22.0, sd=300.0, farms=True, over=dict(_VOVR), marks_spec=[], troops=dict(bridge=14, meadow=60, causeway=10),
     heather_n=900, gorse_n=200, crag_n=140, pine_n=60, scots_line=True, drift='crane down + push 6 %/s')
 _mk('valley_river', loc='valley', cam=(38.0, -24.0, 0.0), cam_dz=2.1, look=(105.0, 28.0, 4.0), lens=22.0, sd=12.0, over=dict(_OVR, reed_k=0.6), farms=True, scots_line=True,
-    marks_spec=[('e1', 'foot', 6.0, 70), ('e2', 'foot:foot_r', 8.0, 640)], fg_list=[('reeds', 2.2, 90), ('reeds', 2.0, 640), ('rock', 2.4, 400, 0.5)], veg=dict(_VEG, half=30, reeds=[(4, 70, 700)]), drift='push 7 %/s + slide')
+    marks_spec=[('e1', 'foot', 22.0, 130), ('e2', 'foot:foot_r', 10.0, 600)], fg_list=[('reeds', 2.2, 90), ('reeds', 2.0, 640), ('rock', 2.4, 400, 0.5)], veg=dict(_VEG, half=30, reeds=[(4, 70, 700)]), drift='push 7 %/s + slide')
 # camp
-_mk('camp_wide', loc='camp', cam=(-78.0, -96.0, 13.0), look=(12.0, -52.0, 2.0), lens=22.0, sd=40.0, over=dict(_OVR), parade=[(20, 120), (26, 300), (34, 470), (44, 600)], parade_yaw=35.0,
-    marks_spec=[('k1', 'knight', 14.0, 130), ('k2', 'knight:knight_b', 18.0, 560)], fg_list=[('rope', 1.8, 60), ('pole', 2.2, 650)], drift='slide 50 px/s + push')
+_mk('camp_wide', loc='camp', cam=(-78.0, -96.0, 13.0), look=(12.0, -52.0, 2.0), lens=22.0, sd=40.0, over=dict(_OVR), parade=[(12, 110), (17, 330), (22, 520), (30, 640)], parade_yaw=35.0,
+    marks_spec=[('k1', 'knight', 46.0, 200), ('k2', 'knight:knight_b', 52.0, 520)], fg_list=[('rope', 1.8, 60), ('pole', 2.2, 650)], drift='slide 50 px/s + push')
 _mk('camp_table', loc='camp', cam=(-12.0, -32.6, 0.0), cam_dz=1.5, look=(-13.2, -25.0, 1.3), lens=22.0, sd=5.0, over=dict(_OVR),
     marks_spec=[('cress', 'cressingham', 7.0, 360)], fg_list=[('barrel', 1.6, 700), ('rope', 1.7, 40)], veg=dict(_VEG, half=22), drift='push 8 %/s, coin chest in the middle ground')
 _mk('riverbank', loc='riverbank', cam=(-17.0, 60.0, 0.0), cam_dz=1.8, look=(0.0, 30.0, 1.6), lens=22.0, sd=10.0, over=dict(_OVR, reed_k=0.8),
@@ -1568,8 +1564,14 @@ def cli_render(preset, light='MORNING', out=None, mode='final', samples=None, pl
 if __name__ == '__main__':
     a = sys.argv[1:]
     if a and a[0] == 'render':
-        preset = a[1]; out = a[2]; mode = a[3] if len(a) > 3 else 'final'; samples = int(a[4]) if len(a) > 4 and a[4].isdigit() else None
+        if len(a) < 3: sys.exit('usage: python3 stirling.py render <preset> [-|MORNING] <out.png> [final|draft] [samples] | list')
+        preset = a[1]; rest = a[2:]
+        if rest[0] == '-' or rest[0] in LIGHTS: rest = rest[1:]              # '-' (or the light name) is a no-op placeholder: there is one light
+        if not rest: sys.exit('missing <out.png>')
+        out = rest[0]; mode = rest[1] if len(rest) > 1 else 'final'; samples = int(rest[2]) if len(rest) > 2 and rest[2].isdigit() else None
+        if mode not in ('final', 'draft'): sys.exit("error: mode must be 'final' or 'draft', got %r" % mode)
+        if preset not in PRESETS: sys.exit('error: unknown preset %r (python3 stirling.py list)' % preset)
         dt, info = cli_render(preset, 'MORNING', out, mode, samples); print('%s %.1fs build %.1fs tris %d heads %s' % (preset, dt, info['build_s'], info['tris'], {k: (v['cx'], v['cy']) for k, v in info['heads'].items()}))
     elif a and a[0] == 'list':
-        for k, v in PRESETS.items(): print('%-14s %-8s cam %s -> %s' % (k, v['loc'], v['cam'], v['look']))
-    else: print('usage: python3 stirling.py render <preset> <out.png> [final|draft] [samples] | list')
+        for k, v in PRESETS.items(): print('%-16s %-8s cam %s -> %s' % (k, v['loc'], v['cam'], v['look']))
+    else: print('usage: python3 stirling.py render <preset> [-|MORNING] <out.png> [final|draft] [samples] | list')
