@@ -1,15 +1,13 @@
-# QA sJ2 (ending splash), g 1709-1848, 140 frames, 720x1280, 32 samples + OIDN
-One travelling camera, no cut inside, hard cut on g1848 (no handles). transition_in cut/whip (whip in: g1709-1714, yaw 48 deg decaying).
-World: `K.build_world(['riverbank','river_low'], over foam_k 0.5)`; camera = `K.cam_path` through riverbank -> drift -> drop to river_low (g1821) -> push.
-- g1709-1772: English look at the bridge, the water, each other; footman_b pinches his nose from g1731.
-- Jumps (cards lifted 0.85-1.1 m, parabolic arc over 14 frames): take-offs 1773 / 1777 / 1781 / 1784 / 1788 / 1792; `K.splash()` crown at each entry; swim cards (spluttering, then paddling) and 3 floating helmets.
-- Camera drops to water level for the three big crowns: impacts 1813 / 1822 / 1831, so each is at age ~0.27 on the words (g1821 / 1830 / 1839). Last frame g1848 = crown age 0.6.
-- Rim: every cast pose goes through `K.with_rim`. Contact decals hidden while airborne / swimming.
+# QA sJ2 v2 (director gate fixes), g 1709-1848, 140 frames, 720x1280, 32 samples + OIDN
+One travelling camera (`K.cam_path`), no cut inside, hard cut on g1848, no handles. Cast = new default crimson English.
+- Whip-in: 4 frames, lands on the group by g1713 (no empty-ground frame); the first frame already shows the group edge and the water.
+- g1713-1772: camera looks toward the bridge neck (the Scots spear wall + saltire banners at the far left, small and backlit) with the group right of centre; three head turns: bridge g1713-1730, water g1731-1746, each other g1747+ (sweat drops); nose pinch from g1756.
+- Jumps g1773-1792 (moving 14-frame arcs, lift 0.8-1.1 m), thin crowns (`splash2`: 9 petal sheets + 5 streaks + 12 small drops, no hexagon beads), swimmers splutter, three converge to the cluster, floating helmets.
+- g1800-1847: camera drops to water level and stays 2.9 m from the swimmers (it does not pass them); three separate crowns beside them at 1821 / 1830 / 1839 (impact 8 frames earlier, age ~0.27). Last frame g1847/1848: three spluttering heads in medium size with a crown beside them.
 ## Numbers
-- qa_stats2: sat 0.537, vivid 54.2 %, luma 114.6 (over 110: the bright river_low half; QA-art colour exception for river_low: VIVID gamma 1.9, luma up to 150 allowed with sat >= 0.47). Motion med 10.4, p90 27.2.
-- rhythm: in-shot median 11.64, p90 31.05 (limits 4 / 12). qa_auto PASS (soft frame g1709 = whip).
+qa_stats2: sat 0.549, vivid 56.0 %, luma 98.3; motion med 7.7, p90 21.8. rhythm: in-shot median 8.98, p90 25.2. qa_auto PASS.
 ## Known weak spots
-- The near-bank white foam band is still at the bottom of frame g1815-1832; out of frame by g1839 (not by the second splash).
-- A swimmer's face is big at the bottom of frame at g1821-1832 (under 35 % of frame height). Bank-phase swimmers within 2.3 m of the lens are hidden.
-- Sky about 25-30 % in the later bank frames. Splash droplets are hexagonal beads (set material).
-- English are crimson / blue cards as in the cast sheet. Nobody speaks; open mouths are the flagged jump yells and splutters. Bloodless.
+- The bridge/wall is small and backlit in g1713-1760 (dark band at the far left): the south-east view faces the sun.
+- A crown very close to the lens at about g1800 covers the left quarter for a few frames.
+- The bare bank is about 35-40 % of the frame in the last 45 frames. Faces are large (about 20-25 % of frame height).
+- Colour levels are left to the conform (director policy).

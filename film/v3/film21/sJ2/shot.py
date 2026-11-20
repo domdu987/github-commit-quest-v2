@@ -122,26 +122,6 @@ class Rig(object):
         if self.a.contact is not None: self.a.contact.hide_render = bool(hide or not st.get('contact', True))
 
 
-# ============================================================================= BANK (shots 29 + 30)
-def stage_xy(pr, d, xp):
-    x, y = K.at_px(pr, d, xp); return Vector((float(x), float(y), ground_z(x, y)))
-
-
-CROWD = [  # name, cast, (d, px) stand point seen from the preset camera, variant, role
-    dict(n="A", cast="footman_a", d=3.3, xp=120, base="footman_a_stand", var=0),
-    dict(n="B", cast="footman_b", d=4.3, xp=330, base="footman_b_stand", var=0),       # the nose-pincher
-    dict(n="C", cast="knight_a_open", d=5.6, xp=510, base="knight_a_open_stand", var=0),
-    dict(n="D", cast="footman_a", d=6.9, xp=190, base="footman_a_stand", var=2),
-    dict(n="E", cast="knight_b", d=8.4, xp=640, base="knight_b_stand", var=0),
-    dict(n="F", cast="footman_b", d=9.8, xp=95, base="footman_b_stand", var=1),
-]
-# jumps in shot 30: takeoff frame, jump kind, peak lift (m), splash size
-JUMPS = dict(B=(1773, "jump_pinch_nose", 0.95, 1.25), A=(1777, "jump_arms_up", 1.1, 1.35), C=(1781, "jump_bomb", 0.85, 1.4),
-             D=(1784, "jump_arms_up", 1.0, 1.2), E=(1788, "jump_bomb", 0.9, 1.3), F=(1792, "jump_pinch_nose", 0.8, 1.1))
-T_AIR = 14                      # frames in the air
-G_PINCH = (1731, 1756)           # shot 29: B pinches his nose
-G_LOOK = (1709, 1725, 1745)      # shot 29: bridge -> water -> each other
-
 
 def variant(p, v):
     if v: p = dict(p, variant21=v)
@@ -153,83 +133,139 @@ def idle(p, g, k):
     p['blink'] = blink(g, 83 + 7 * int(k), int(k * 11)); return p
 
 
-def make_bank(T, gs):
-    Tcast = T
-    pr = T.pr
-    K.set_flow(0)
+# ============================================================================= J2 v2 (director fixes)
+Y0 = 46.0                                  # centre of the group along the shore (y)
+G_WHIP = 1713                              # the whip has landed on the group
+G_PH = (1713, 1731, 1747)                  # head turns: bridge -> water -> each other (each >= 0.55 s)
+G_PINCH = 1756
+JUMPS = dict(B=(1773, "jump_pinch_nose", 0.95, 1.0), A=(1777, "jump_arms_up", 1.1, 1.0), C=(1781, "jump_bomb", 0.85, 1.0),
+             D=(1784, "jump_arms_up", 1.0, 0.9), E=(1788, "jump_bomb", 0.9, 0.9), F=(1792, "jump_pinch_nose", 0.8, 0.8))
+T_AIR = 14
+CROWD = [dict(n="A", cast="footman_a", dy=-3.1, back=0.3, var=0, base="footman_a_stand"),
+         dict(n="B", cast="footman_b", dy=-1.7, back=0.9, var=0, base="footman_b_stand"),
+         dict(n="C", cast="knight_a_open", dy=-0.3, back=0.2, var=0, base="knight_a_open_stand"),
+         dict(n="D", cast="footman_a", dy=1.2, back=0.8, var=2, base="footman_a_stand"),
+         dict(n="E", cast="knight_b", dy=2.6, back=0.2, var=0, base="knight_b_stand"),
+         dict(n="F", cast="footman_b", dy=4.0, back=0.9, var=1, base="footman_b_stand")]
+
+
+def shore_x(y):
+    """x of the waterline (sd = 0) at y, scanning from the water (west) to the land (east)"""
+    x = -45.0
+    while x < -5.0:
+        if K.sd_at(x, y) > 0: return x
+        x += 0.1
+    return -25.0
+
+
+def splash2(x, y, age, size=1.0, name="a", seed=0, z=0.0):
+    """thin crown: ~9 petal sheets (tapered quads) + 5 streak rods + 12 small droplets + a thin ring; separate columns that fall back"""
+    K._del_prefix('splash_' + name + '_')
+    if age < 0 or age > 1.2: return 0
+    rs = np.random.RandomState(seed); B = K.Batch(91); k = size
+    tau = min(age / 0.7, 1.0); H = k * 1.5 * math.sin(math.pi * tau) ** 0.7 if age < 0.7 else 0.0
+    R0 = k * (0.18 + 0.35 * tau); M = 'glow_spray'; M2 = 'glow_spray2'
+    if H > 0.08:
+        n = 9
+        for i in range(n):
+            a = 2 * math.pi * (i + rs.uniform(-0.2, 0.2)) / n; hh = H * rs.uniform(0.65, 1.1); fl = math.radians(rs.uniform(25, 40)); w = 0.34 * k
+            tx, ty = -math.sin(a), math.cos(a); rx, ry = math.cos(a), math.sin(a)
+            b = (x + R0 * rx, y + R0 * ry, z); tp = (x + (R0 + hh * math.tan(fl)) * rx, y + (R0 + hh * math.tan(fl)) * ry, z + hh)
+            B.mesh(M, [(b[0] - tx * w, b[1] - ty * w, b[2]), (b[0] + tx * w, b[1] + ty * w, b[2]), (tp[0] + tx * 0.02, tp[1] + ty * 0.02, tp[2]), (tp[0] - tx * 0.02, tp[1] - ty * 0.02, tp[2])], [(0, 1, 2, 3)], False)
+        for i in range(5):
+            a = rs.uniform(0, 6.28); hh = H * rs.uniform(0.9, 1.4)
+            B.rod(M, (x + 0.1 * math.cos(a) * k, y + 0.1 * math.sin(a) * k, z), (x + 0.25 * math.cos(a) * k, y + 0.25 * math.sin(a) * k, z + hh), 0.035 * k, seg=4, r2=0.006 * k)
+    ro = R0 * 1.5 + k * 0.5 * tau; wd = max(0.02, 0.12 * k * (1 - age / 1.2)); n = 24; th = [2 * math.pi * i / n for i in range(n)]
+    B.mesh(M2, [(x + (ro - wd) * math.cos(t_), y + (ro - wd) * math.sin(t_), z + 0.05) for t_ in th] + [(x + ro * math.cos(t_), y + ro * math.sin(t_), z + 0.05) for t_ in th],
+           [(i, (i + 1) % n, n + (i + 1) % n, n + i) for i in range(n)], False)
+    for i in range(12):
+        a = rs.uniform(0, 2 * math.pi); vh = rs.uniform(0.8, 2.2) * math.sqrt(k); vz = rs.uniform(2.4, 4.6) * math.sqrt(k)
+        px, py, pz = x + vh * math.cos(a) * age, y + vh * math.sin(a) * age, z + 0.15 + vz * age - 4.9 * age * age
+        if pz > z + 0.03 and age > 0.02: B.sphere(M, (px, py, pz), rs.uniform(0.035, 0.06) * k, seg=4, rings=3)
+    return len(B.finalize('splash_' + name + '_', ink=False, shadow=False))
+
+
+def snap_to_shore(x, y, target=0.9):
+    for _ in range(60):
+        sd = K.sd_at(x, y)
+        if abs(sd - target) < 0.15: break
+        e = 0.5
+        gx = K.sd_at(x + e, y) - K.sd_at(x - e, y); gy = K.sd_at(x, y + e) - K.sd_at(x, y - e); n = math.hypot(gx, gy) or 1.0
+        st = (sd - target) * 0.7
+        x -= gx / n * st; y -= gy / n * st
+    return x, y
+
+
+CL = {}
+SPOTS = [(3.6, 400), (4.7, 540), (5.8, 330), (7.2, 570), (8.6, 440), (10.2, 640)]
+
+
+def build_state(T, gs):
+    pr = K.PRESETS['riverbank']
     for p_ in ('riverbank', 'river_low'):
-        for i in range(3): K.splash(0, 0, -1, name='%s%d' % (p_, i))     # the presets' default splashes
-    c21.hide_prefix('fg_generic_g'); c21.hide_prefix('veg_reed')                              # QA-art: the dark near reed / gorse clump reads as black shards
+        for i in range(3): K.splash(0, 0, -1, name='%s%d' % (p_, i))
+    c21.hide_prefix('fg_generic_g'); c21.hide_prefix('veg_reed')
+    K.spear_wall(14, 2, np.random.RandomState(4))                   # the blue Scots spear wall + saltire banners at the bridge neck
     C0 = Vector((-27.0, 54.0, float(K.ground(-27.0, 54.0)) + 1.8)); L0 = aim_pitch(C0, Vector(pr['look']), -4.5)
-    Fv, Rv = fwd_vec(C0, L0), right_vec(C0, L0)
-    base_dir = (L0 - C0)
-    Ar = T.A['cams']['river_low']; Cr = Vector(Ar[0]); Lr = Vector(Ar[1]); Fr = fwd_vec(Cr, Lr); Rr = right_vec(Cr, Lr); br = Lr - Cr
+    base = L0 - C0
     def yawed(d, deg, up=0.0):
         c, s = math.cos(math.radians(deg)), math.sin(math.radians(deg))
         return Vector((d.x * c + d.y * s, -d.x * s + d.y * c, d.z + up * d.length))
-    loc_b1 = C0 + Rv * 0.55 + Fv * 0.7
-    loc_b2 = C0 + Rv * 1.3 + Fv * (-0.2) + Vector((0, 0, -0.35))
-    keys = [(1709, tuple(C0), tuple(C0 + base_dir), 22.0), (1772, tuple(loc_b1), tuple(loc_b1 + base_dir), 22.0),
-            (1796, tuple(loc_b2), tuple(loc_b2 + yawed(base_dir, 10.0, 0.03)), 22.0),
-            (1821, tuple(Cr), tuple(Cr + aim_pitch(Cr, Cr + br, -1.5) - Cr), 22.0),
-            (1848, tuple(Cr + Fr * 3.2 + Rr * 0.5 + Vector((0, 0, 0.1))), tuple(Cr + Fr * 3.2 + Rr * 0.5 + Vector((0, 0, 0.1)) + aim_pitch(Cr, Cr + br, -1.5) - Cr), 22.0)]
-    def cam_g(g):
-        r = K.cam_path(None, keys, g, clearance=0.5)
-        loc, look = Vector(r['loc']), Vector(r['look'])
-        if g < 1715:            # whip in: a fast pan that settles
-            u = (g - 1709) / 6.0; th = 48.0 * (1.0 - u) ** 2
-            d = look - loc; look = loc + yawed(d, th)
-        return loc, look
-    T.cam_g = cam_g
-    for g in gs:
-        loc, look = cam_g(g)
-        T.key_cam(bf(g), loc, look, lens=K.cam_path(None, keys, g, clearance=0.5)['lens'])
-    P = {c['n']: c for c in CROWD}
-    rigs = {}
+    Fv, Rv = fwd_vec(C0, L0), right_vec(C0, L0)
+    dirA = yawed(base, -20.0)                       # looks toward the bridge neck: wall + saltires at the left, group right of centre
+    dirB = yawed(base, 0.0)
+    # stand points relative to camera direction A
+    lookA = C0 + dirA
+    rigs = {}; ents = {}
     for k, c in enumerate(CROWD):
-        n = c['n']; p0 = stage_xy(pr, c['d'], c['xp'])
-        rvec = Rv
-        ent = Vector(entry_point(p0.x, p0.y, rvec, 1.7 + 0.15 * k)).to_3d()
-        ent.z = 0.0
-        # stand point close to the edge so the jump is short
-        base = pose_of(c['base']); base = variant(base, c['var'])
-        flipbase = (k % 2 == 1)
-
-        def tl(g, n=n, k=k, p0=p0, ent=ent, base=base, c=c, flipbase=flipbase):
-            return actor_state(g, n, k, p0, ent, base, c, flipbase)
-        rigs[n] = Rig(T, n, c['cast'], tl)
-        rigs[n].ent = ent
-    # helmets (drift, bob)
-    for j, who in enumerate(("B", "D", "E")):
-        t1 = JUMPS[who][0] + T_AIR
-        ent = rigs[who].ent
-        def tlh(g, j=j, t1=t1, ent=ent, who=who):
-            if g < t1 + 5: return dict(hide=True)
-            u = g - (t1 + 5)
-            kind = ("kettle", "bascinet", "great")[j]
-            x = ent.x + Rv.x * (0.25 * u / 30 + 0.4 * j) + 0.3 * math.sin(u * 0.15 + j); y = ent.y + Rv.y * (0.25 * u / 30 + 0.4 * j)
-            return dict(pos=(x, y, 0.0), pose=dict(helm21=kind, t=(g / 40.0 + 0.3 * j) % 1.0, tilt=14 * math.sin(u * 0.2 + j)), contact=False, scale=wscale("footman_a"))
+        d, xp = SPOTS[k]
+        x, y = K.rel_xy(C0, lookA, d, (xp - 360.0) / 440.0 * d)
+        x, y = snap_to_shore(x, y, 0.8 + 0.3 * (k % 2))
+        p0 = Vector((x, y, ground_z(x, y)))
+        ent = Vector(entry_point(x, y, Rv, 1.7 + 0.15 * k)).to_3d(); ent.z = 0.0; ents[c['n']] = ent
+        bs = variant(pose_of(c['base']), c['var'])
+        def tl(g, n=c['n'], k=k, p0=p0, ent=ent, bs=bs, c=c):
+            return state_of(g, n, k, p0, ent, bs, c)
+        rigs[c['n']] = Rig(T, c['n'], c['cast'], tl); rigs[c['n']].ent = ent
+    # swimmers cluster centre (for the end framing)
+    cen = sum((ents[w] for w in ("B", "D", "E")), Vector((0, 0, 0))) / 3.0
+    Lat = Rv
+    for w_, o_ in (("B", -1.15), ("D", 0.0), ("E", 1.15)):
+        CL[w_] = cen + Lat * o_ + Fv * (0.25 * (1 if w_ == "D" else 0)); CL[w_].z = 0.0
+    loc1 = C0 + Rv * 0.5 + Fv * 0.5
+    uu = Vector((C0.x - cen.x, C0.y - cen.y, 0)).normalized()
+    loc3 = Vector((cen.x + uu.x * 2.9, cen.y + uu.y * 2.9, 0.95))
+    loc2 = C0.lerp(loc3, 0.55) + Vector((0, 0, -0.3))
+    def aimc(loc, dz=0.0):
+        lk = Vector((cen.x, cen.y, 0.62 + dz)); return lk
+    keys = [(1709, tuple(C0), tuple(C0 + dirA), 22.0), (1735, tuple(C0 + Rv * 0.2 + Fv * 0.3), tuple(C0 + Rv * 0.2 + Fv * 0.3 + yawed(base, -8.0)), 22.0),
+            (1772, tuple(loc1), tuple(loc1 + dirB), 22.0),
+            (1800, tuple(loc2), tuple(aimc(loc2, 0.2)), 22.0), (1821, tuple(loc3), tuple(aimc(loc3, 0.1)), 22.0),
+            (1847, tuple(loc3 - uu * 0.25), tuple(aimc(loc3, 0.0)), 22.0)]
+    def cam_g(g):
+        r = K.cam_path(None, keys, g, clearance=0.4)
+        loc, look = Vector(r['loc']), Vector(r['look'])
+        if g < G_WHIP:           # whip in from the wall side: the pan settles on the group by G_WHIP
+            u = (g - 1709) / float(G_WHIP - 1709); th = 28.0 * (1.0 - u) ** 2
+            d = look - loc; look = loc + yawed(d, th)
+        return loc, look, r['lens']
+    T.cam_g = lambda g: cam_g(g)[:2]
+    for g in gs:
+        loc, look, ln = cam_g(g); T.key_cam(bf(g), loc, look, lens=ln)
+    for j, off in enumerate((0.6, -2.0)):
+        def tlh(g, j=j, off=off):
+            if g < 1805 + 4 * j: return dict(hide=True)
+            u = g - (1805 + 4 * j)
+            q = cen + Lat * off + Fv * (0.5 + 0.3 * j)
+            return dict(pos=(q.x + 0.1 * math.sin(u * 0.13), q.y + 0.1 * math.cos(u * 0.1), 0.0),
+                        pose=dict(helm21=("kettle", "great")[j], t=(g / 40.0 + 0.3 * j) % 1.0, tilt=12 * math.sin(u * 0.2 + j)), contact=False, scale=wscale("footman_a") * 0.5)
         rigs["H%d" % j] = Rig(T, "H%d" % j, "helmet_float", tlh)
-    # --- low phase: three big crowns (impact 8 frames before each word), swimmers and a helmet in front of the river_low camera
-    pts = [Vector(p) for p in K.PRESETS['river_low']['splashes']]
-    IMP = (1813, 1822, 1831)
-    for j, cst in enumerate(("footman_a", "footman_b")):
-        def tll(g, j=j, cst=cst):
-            s = g - IMP[j] - 5
-            if s < 0: return dict(hide=True)
-            x = pts[j].x + (0.9 if j % 2 else -0.9) - 0.3 * s / 30.0; y = pts[j].y + 0.5
-            pp = pose_of(cst + "_" + ("swim_splutter", "swim_arms_up")[j]); pp['swim21'] = 1.0 + 0.1 * math.sin(s * 0.5); pp['t'] = (s * 0.08) % 1
-            return dict(pos=(x, y, 0.0), pose=pp, contact=False)
-        rigs["S%d" % j] = Rig(T, "S%d" % j, cst, tll)
-    def tlh2(g):
-        if g < IMP[0] + 6: return dict(hide=True)
-        u = g - IMP[0] - 6
-        return dict(pos=(pts[0].x + 1.8 - 0.01 * u, pts[0].y - 0.4, 0.0), pose=dict(helm21="kettle", t=(g / 40.0) % 1, tilt=10 * math.sin(u * 0.3)), contact=False, scale=wscale("footman_a"))
-    rigs["H9"] = Rig(T, "H9", "helmet_float", tlh2)
     for r in rigs.values(): r.pose_frames(gs)
-    T.sprites_for(128 if T.quality == 'draft' else 256)
-    T.rigs = rigs
-    T.Rv = Rv
+    T.sprites_for(128 if T.quality == 'draft' else 256); T.rigs = rigs
+    IMP = (1813, 1822, 1831)
+    lat = Rv; fw = Fv
+    CP = [cen + lat * 2.0 + fw * 1.1, cen - lat * 2.1 + fw * 0.9, cen + lat * 0.2 + fw * 2.6]
+    for p in CP: p.z = 0.0
 
     def on_g(g):
         t = g / 30.0
@@ -238,77 +274,58 @@ def make_bank(T, gs):
         for r in rigs.values():
             r.hook(g)
             st = r.state.get(g)
-            if st and not st.get('hide') and r.name[0] in 'ABCDEFSH' and g >= 1800:
-                p_ = st['pos']; dd = math.hypot(p_[0] - cl.x, p_[1] - cl.y)
-                if dd < 2.3:
+            if st and not st.get('hide') and g >= 1800:
+                p_ = st['pos']
+                if math.hypot(p_[0] - cl.x, p_[1] - cl.y) < 1.5:
                     for ob in (r.a.card, r.a.proxy): ob.hide_render = True
-        # splashes
         for who, (t0, kind, h, sz) in JUMPS.items():
             age = (g - (t0 + T_AIR)) / 30.0 + 0.02
-            e = rigs[who].ent
-            K.splash(e.x, e.y, age if age > 0 else -1, size=sz * 0.5, name=who, seed=ord(who))
+            e = ents[who]; splash2(e.x, e.y, age if age > 0 else -1, size=sz, name=who, seed=ord(who))
         for j in range(3):
             a_ = (g - IMP[j]) / 30.0
-            K.splash(pts[j].x, pts[j].y, a_ if a_ >= 0 else -1, size=K.PRESETS['river_low'].get('splash_size', 1.8), name='L%d' % j, seed=j)
+            splash2(CP[j].x, CP[j].y, a_ if a_ >= 0 else -1, size=0.85, name='L%d' % j, seed=j + 3)
     return on_g
 
 
-def actor_state(g, n, k, p0, ent, base, c, flipbase):
-    """position / pose of crowd member n at film frame g (shots 29 and 30)"""
-    jt = JUMPS.get(n)
-    flip = flipbase
-    pos = Vector(p0)
-    p = dict(base)
-    if g < CUT30:   # shot 29: looks at the bridge, the water, each other
-        ph = 0 if g < G_LOOK[1] else (1 if g < G_LOOK[2] else 2)
-        look_l = -1 if ph == 0 else (1 if ph == 1 else (-1 if k % 2 == 0 else 1))
-        p['yaw'] = 0.9 * look_l; p['gaze'] = (0.9 * look_l, 0.0)
-        p['expr'] = 'worried' if ph > 0 else 'neutral'
-        if ph > 0: p['mouth'] = 'wavy'; p['fx'] = ['sweat'] if (k + g // 20) % 3 == 0 else []
-        p['pitch'] = 0.1 if ph == 1 else 0.0
-        if n == "B" and G_PINCH[0] <= g:
-            u = ez((g - G_PINCH[0]) / 8.0)
-            pp = pose_of("footman_b_jump_pinch_nose"); pp = dict(base, **{kk: pp[kk] for kk in ("arm_r", "expr", "mouth", "head_roll")}); pp.pop('prop_r', None)
-            pp['legs'] = 'stand'; pp['expr'] = 'sweat' if 'sweat' in cast21.EXPR21 else 'worried'; p = pp
-        return dict(pos=pos, pose=idle(p, g, k), flip=flip, contact=True)
-    if jt is None: return dict(hide=True)
-    t0, kind, h, sz = jt; t1 = t0 + T_AIR
+def state_of(g, n, k, p0, ent, base, c):
+    jt = JUMPS[n]; t0, kind, h, sz = jt; t1 = t0 + T_AIR
+    pos = Vector(p0); p = dict(base); flip = bool(k % 2)
     if g < t0 - 4:
-        p['expr'] = 'worried'; p['mouth'] = 'wavy'; p['yaw'] = 0.6; p['gaze'] = (0.8, 0.0)
-        return dict(pos=pos, pose=idle(p, g, k), flip=flip, contact=True)
-    if g < t0:    # crouch before the jump: squash, arms back
-        u = (g - (t0 - 4)) / 4.0
-        p['squash'] = (1.0 + 0.05 * u, 1.0 - 0.1 * u); p['expr'] = 'shouting'
+        # three clear head turns: bridge (south-east = camera right), water (camera left / lens), each other
+        ph = 0 if g < G_PH[1] else (1 if g < G_PH[2] else 2)
+        if ph == 0: yaw, gz, fl = -0.9, (-0.9, 0.1), True
+        elif ph == 1: yaw, gz, fl = 0.8, (0.9, 0.3), False
+        else: yaw, gz, fl = (0.8 if k % 2 == 0 else -0.8), ((0.9 if k % 2 == 0 else -0.9), 0.0), (k % 2 == 1)
+        p['yaw'] = yaw; p['gaze'] = gz; p['head_roll'] = (6 if ph == 0 else -5 if ph == 1 else 4) * (1 if k % 2 else -1)
+        p['expr'] = 'neutral' if ph == 0 else 'worried'
+        if ph > 0: p['mouth'] = 'wavy'; p['fx'] = ['sweat'] if (k + g // 12) % 2 == 0 else []
+        p['pitch'] = 0.15 if ph == 1 else 0.0
+        if n == "B" and g >= G_PINCH:
+            pj = pose_of("footman_b_jump_pinch_nose"); pp = dict(base, **{kk: pj[kk] for kk in ("arm_r", "expr", "mouth", "head_roll")}); pp.pop('prop_r', None); pp['legs'] = 'stand'; p = pp
+        return dict(pos=pos, pose=idle(p, g, k), flip=fl, contact=True)
+    if g < t0:
+        u = (g - (t0 - 4)) / 4.0; p['squash'] = (1.0 + 0.05 * u, 1.0 - 0.1 * u); p['expr'] = 'shouting'
         return dict(pos=pos, pose=p, flip=flip, contact=True)
-    if g < t1:    # airborne: parabolic lift, horizontal travel to the entry point
+    if g < t1:
         u = (g - t0) / float(T_AIR)
-        x = lerp(p0.x, ent.x, u); y = lerp(p0.y, ent.y, u)
-        z = max(ground_z(p0.x, p0.y), 0.0) * (1 - u) + h * 4 * u * (1 - u) + 0.05 * u
-        pj = pose_of(c['base'].rsplit('_', 1)[0] + '_' + kind) if False else pose_of(c['cast'] + '_' + kind)
-        pj = variant(pj, c['var']); pj['yaw'] = 0.5
+        x = lerp(p0.x, ent.x, u); y = lerp(p0.y, ent.y, u); z = p0.z * (1 - u) + h * 4 * u * (1 - u) + 0.05 * u
+        pj = variant(pose_of(c['cast'] + '_' + kind), c['var']); pj['yaw'] = 0.5
         return dict(pos=(x, y, z), pose=pj, flip=flip, contact=False)
-    # in the water
     w = g - t1
     if w < 2: return dict(hide=True)
     s = w - 2
-    drift = Vector((ent.x, ent.y, 0.0)) + T_RV * 0.0
-    sw = 1.0 + 0.08 * math.sin(s * 0.5 + k) - 0.35 * max(0, 1 - s / 6.0)   # rises up out of the water
-    if s < 11: pn = "swim_splutter"
-    elif s < 22: pn = "swim_arms_up" if (k % 2 == 0) else "swim_bob"
-    else: pn = "swim_paddle"
-    pp = pose_of(c['cast'] + '_' + pn); pp = variant(pp, c['var'])
-    pp['swim21'] = max(0.45, sw); pp['t'] = (s * 0.07 + k * 0.2) % 1.0
-    mv = Vector((T_RVEC.x, T_RVEC.y, 0)) * (0.35 * s / 30.0 + (0.5 if pn == 'swim_paddle' else 0) * 0)
-    px = ent.x + mv.x + 0.06 * math.sin(s * 0.3 + k); py = ent.y + mv.y
+    sw = 1.0 + 0.08 * math.sin(s * 0.5 + k) - 0.35 * max(0, 1 - s / 6.0)
+    pn = "swim_splutter" if s < 11 else (("swim_arms_up" if k % 2 == 0 else "swim_bob") if s < 22 else "swim_paddle")
+    pp = variant(pose_of(c['cast'] + '_' + pn), c['var']); pp['swim21'] = max(0.45, sw); pp['t'] = (s * 0.07 + k * 0.2) % 1.0
+    if n in CL:
+        e_ = ez(s / 28.0); tg = CL[n]
+        px = lerp(ent.x, tg.x, e_) + 0.05 * math.sin(s * 0.3 + k); py = lerp(ent.y, tg.y, e_) + 0.05 * math.cos(s * 0.4 + k)
+    else:
+        px = ent.x - 0.25 * s / 30.0 + 0.06 * math.sin(s * 0.3 + k); py = ent.y
     return dict(pos=(px, py, 0.0), pose=pp, flip=False, contact=False)
 
 
-T_RVEC = Vector((-1.0, 0.03, 0.0))
-T_RV = Vector((0, 0, 0))
-
-
-
-
+def make_bank(T, gs): return build_state(T, gs)
 
 
 def parse(spec):
