@@ -41,7 +41,7 @@ def tweak(stage, A=None):
             sp = bpy.data.lights.new('c18_rim%d' % k_, 'SPOT'); sp.color = (0.45, 0.65, 1.0); sp.energy = en; sp.spot_size = math.radians(60); sp.spot_blend = 0.6; sp.shadow_soft_size = 1.0; sp.use_shadow = False
             so = bpy.data.objects.new('c18_rim%d' % k_, sp); bpy.context.scene.collection.objects.link(so); so.location = (lx, ly, lz); so.visible_camera = False
             tr = so.constraints.new('TRACK_TO'); tr.target = bpy.data.objects.new('c18_rimtgt%d' % k_, None); bpy.context.scene.collection.objects.link(tr.target); tr.target.location = (-5.0, 9.0, 1.2); tr.track_axis = 'TRACK_NEGATIVE_Z'; tr.up_axis = 'UP_Y'
-        C.world_plaque((-15.0, 18.6, 0.0), (-28.0, 11.0, 12.0), w=5.2, h=2.05, z=5.6)
+        C.world_plaque((-16.5, 19.6, 0.0), (-28.0, 11.0, 12.0), w=5.2, h=2.05, z=5.6)
         # warm pool + light on Tian Dan and the ox he dresses (findable from far away)
         d = bpy.data.lights.new('c18_td_light', 'POINT'); d.color = (1.0, 0.62, 0.28); d.energy = 3800.0; d.shadow_soft_size = 1.0; d.use_shadow = False
         lo = bpy.data.objects.new('c18_td_light', d); bpy.context.scene.collection.objects.link(lo); lo.location = (-2.2, 15.4, 4.5); lo.visible_camera = False
@@ -49,7 +49,7 @@ def tweak(stage, A=None):
         if not sm_.materials: sm_.materials.append(M['pool_w'])
         po = bpy.data.objects.new('c18_td_pool', sm_); C.STATE['SET'].objects.link(po); po.location = (-2.2, 15.7, 0.07); po.scale = (7.0, 7.0, 1.0); po.visible_shadow = False; C.J.no_bounce(po)
 HERD = S.herd(46, (-34, 21.5), (34, 21.5), 12.0, 31, yaw=180.0) + S.herd(24, (-30, 9.2), (30, 9.2), 2.0, 33, yaw=180.0)
-HERD = [m for m in HERD if math.hypot(m[0] + 2.0, m[1] - 15.5) > 5.0 and math.hypot(m[0] + 15.0, m[1] - 18.6) > 3.2]
+HERD = [m for m in HERD if math.hypot(m[0] + 2.0, m[1] - 15.5) > 5.0 and math.hypot(m[0] + 16.5, m[1] - 19.6) > 3.4 and not (-23.0 < m[0] < -9.0 and 15.0 < m[1] < 24.5)]
 def actors(f, cam, ctx):
     t = f / 30.0
     pull = math.sin(2 * math.pi * 2.0 * t)
@@ -57,9 +57,6 @@ def actors(f, cam, ctx):
     C.person_card('tiandan', pose, (TD.x + 0.25 * pull * (f < 90), TD.y, 0), cam, 0, bob=C.hop(f, 0, 0.04, 1.6), roll=(4.0 * pull if f < 90 else 3.0 * math.sin(2 * math.pi * 1.4 * t) + 1.5 * math.sin(2 * math.pi * 3.1 * t)), sz=1 + 0.015 * pull, k=0.8,
                   mods=dict(gaze=(0.9, 0.2), yaw=0.55) if f < 90 else dict(gaze=(0.8, -0.4), yaw=0.5))
     C.ox_card(SHOT, 0, (OX.x + 0.04 * pull, OX.y, 0), 165, 1.0, cam, gait='stand', coat=0.55 + 0.45 * min(1.0, max(0.0, (f - 4) / 80.0)), bob=C.hop(f, 1, 0.03, 0.8), roll=C.sway(f, 1, 1.6, 0.9), k=0.8)
-    # townsfolk farther back in the yard, fully in frame, heads high; they keep busy (carry baskets)
-    for q, (px, py, pose) in enumerate(((-7.2, 19.4, 'woman_carry_basket'), (1.2, 19.0, 'old_man_carry_basket'))):
-        C.person_card('townsfolk', pose, (px + 0.3 * math.sin(0.7 * t + q), py, 0), cam, 8 + q, bob=0.05 * abs(math.sin(2 * math.pi * 1.6 * t + q)), roll=C.sway(f, 8 + q, 2, 1.0))
     for i, (x, y, z, yaw, sc) in enumerate(HERD):
         dd = (V((x, y, 0)) - cam).length
         C.ox_card(SHOT, 20 + i, (x, y, 0), 175 + (i % 5) * 6, sc, cam, gait='stand' if dd > 40 else 'walk', phase=int((f * 0.25 + i * 3) % 8), shadow=(dd < 45), pitch_bb=0.9,
