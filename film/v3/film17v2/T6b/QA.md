@@ -15,10 +15,16 @@ Hard cut inside the range: **g1675** (6d framing held through g1674, g1675 opens
 - Lights: T6 `TAKE_OVER` raised (shade_mul 1.4, fill_w 600, gain 1.15). Luma stays high; the director trims at conform.
 
 ## Luma (RGB-mean, 90x160 bilinear, binding metric)
-All 166 frames: see `luma.txt`. Ranges: g1536-1547 (P1 join) ~159; g1548-1600 ~131; g1601-1674 ~126; g1675-1701 ~114.
+All 166 frames: see `luma.txt`. Mean 124.4, min 111.9, max 134.3. Ranges: g1536-1547 (P1 join) 132.9; g1548-1575 126.1; g1576-1600 125.5; g1601-1674 126.1; g1675-1701 113.1.
+Largest consecutive step in the take: 8.8 at g1675 (the planned hard cut); in g1536-1580 the largest step is 3.9 (g1563), none above 5.
+
+## Join with T6a2 (luma seam fix, director 21:15/21:35)
+- g1536-1575 were re-rendered (40 frames, one fresh process per frame, `join_one.sh`): T6a2's light setup (shade_mul 0.8, fill_w 220, gain 0.65, beam hidden) up to g1547, then a smoothstep to T6b's override (1.4 / 600 / 1.15) over g1548-1575 (beam stays hidden in g1536-1575; it is on from g1576, diff to beam-off 0.2-0.6/255).
+- T6a2 g1535 (extracted from its take.mkv) luma 133.0 vs T6b g1536 133.6; mean abs diff (grey, 90x160) 7.11 vs T6a2's own neighbour median 21.6.
+- T6b neighbour mean abs diff median over g1536-1580: 16.99.
 
 ## Frames viewed at FULL size (720x1280) and at phone size (360x640, `qa_phone_sheet.jpg`)
-1. **g1550** (full + phone): sweep out of the P1 close-up. Bertillon's face is large at the left edge and its left side is CUT by the frame edge; the open drawer front crosses his chest and beard; the blank card back fills the right. **Known fault, see below.**
+1. **g1550** (full viewed before the re-light; phone sheet viewed after it, same composition, slightly darker): sweep out of the P1 close-up. Bertillon's face is large at the left edge and its left side is CUT by the frame edge; the open drawer front crosses his chest and beard; the blank card back fills the right. **Known fault, see below.**
 2. **g1561** (full: `key/frame_g1561.png`; phone sheet): Bertillon fully inside the frame, face about 140 px clear of the left edge, glasses, goatee, raised fist, the blank card back beside him, drawer at his right, nothing across his face.
 3. **g1601** (full + phone): MARTIN card almost face-on to the right of his head, name panel with MARTIN in red and the bottle sketch, two portraits, hand print. Legible at phone size but small (the word is about 30 px wide at 360 px). Dupont's back (hair, neckerchief, jacket with blue patch) at the right edge, partly cropped; red stool top gone.
 4. **g1650** (full + phone): Bertillon (left, raised fist), Dupont (centre, wide eyes, mouth 'o', sweat drops), gendarme (right) with the empty bottle held in his raised hand and sleeve beside the card; card above Dupont's head. Nobody hides anybody. Floor about 25 %. A tiny dark dot on the floor at lower right (an existing floor mark).
@@ -29,6 +35,5 @@ Additional frames looked at in contact sheets or key stills: g1559, g1600, g1606
 
 ## Known faults (not fixed)
 - **g1549-1551**: Bertillon's face touches / is cut by the left edge. **g1550-1554**: the open drawer front crosses his chest and beard. Cause: the camera sweep out of T6a's P1 close-up passes close to the drawer with Bertillon behind it; the 3D card is near the lens. A faster offset ramp made it worse, so I left it. Frames g1556 onwards: no face on any edge in the frames I looked at.
-- g1536-1547 is brighter (about 159) than the take target; those are the P1 join frames, handled by the conform curve.
 - The MARTIN word at phone size is small (card about 29 % of the width), but readable.
 - No black slabs, veil or shaft wedges seen. beam_k 0 and beam_fx forced to 0 tests at g1600/g1640 differ by 0.2-0.56/255 (`beam_test/`).
