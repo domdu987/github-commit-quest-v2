@@ -183,11 +183,14 @@ def setup_pit(q):
     A, sc = SHB._base('TENSE', q, bar=BAR_LOW)
     for o in bpy.data.objects:                                    # grey cloth + pale tray slab on the track at (4.9, 2.7): QA 'no grey slabs'
         if o.name.startswith('officials_B_'):
-            me = o.data; co = np.empty(len(me.vertices) * 3, dtype=np.float32); me.vertices.foreach_get('co', co); co = co.reshape(-1, 3)
-            mw = np.array(o.matrix_world); w = co @ mw[:3, :3].T + mw[:3, 3]
-            m = ((np.hypot(w[:, 0] / U - 4.9, w[:, 1] / U - 2.7) < 1.1) | (np.hypot(w[:, 0] / U - 6.6, w[:, 1] / U - 8.0) < 1.3) | (np.hypot(w[:, 0] / U - 3.65, w[:, 1] / U - 4.1) < 1.0) | (np.hypot(w[:, 0] / U + 1.9, w[:, 1] / U - 9.1) < 0.8)) & (w[:, 2] / U < 0.7)
-            m |= (np.hypot(w[:, 0] / U - 5.5, w[:, 1] / U - 9.48) < 0.45)            # thin dark stake behind Dick in the hush push
-            if m.any(): co[m, 2] -= 400.0; me.vertices.foreach_set('co', co.reshape(-1)); me.update()
+            import bmesh
+            me = o.data; bm = bmesh.new(); bm.from_mesh(me); mw = np.array(o.matrix_world)
+            def hit(v):
+                x, y, z = (mw[:3, :3] @ np.array(v.co[:]) + mw[:3, 3]) / U
+                return (z < 0.7 and (math.hypot(x - 4.9, y - 2.7) < 1.1 or math.hypot(x - 6.6, y - 8.0) < 1.3 or math.hypot(x - 3.65, y - 4.1) < 1.0 or math.hypot(x + 1.9, y - 9.1) < 0.8)) or math.hypot(x - 5.5, y - 9.48) < 0.45
+            bad = [v for v in bm.verts if hit(v)]
+            if bad: bmesh.ops.delete(bm, geom=bad, context='VERTS'); bm.to_mesh(me); me.update()      # delete the faces (no stretched slivers)
+            bm.free()
     F.clear_keys()
     F.set_bar_height(BAR_LOW, frame=1, interp='CONSTANT')
     F.set_bar_height(BAR_JUMP, frame=G_PASS1[0] + 3, interp='CONSTANT')
