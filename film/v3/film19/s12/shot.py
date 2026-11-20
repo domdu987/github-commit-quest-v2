@@ -4,7 +4,7 @@
 9-frame out-handle g 1016..1024 (dissolve 11 f into shot 14).
     g 938..965   greying Harrison (default) taps a chisel at the H3 by candlelight (shop_clock spot), the camera slides along the bench
     g 955..972   the lateral WHIP PAN (SNAP, on "สิบ" of "สิบกว่าปี", caption 31.91 = g 960) travels along the bench to the shop_bench spot;
-                 at the fastest frames (g 966) the SAME Harrison's look swaps default -> old=1 (white hair, spectacles, brown coat): the whip
+                 at the fastest frames (g 961) the SAME Harrison's look swaps default -> old=1 (white hair, spectacles, brown coat): the whip
                  hides the pop
     g 973..992   white-haired Harrison bends over the H3, tired
     g 993..1003  "จนผมหงอกทั้งหัว" (caption 32.85 = g 989; หงอก spoken ~g 996): he leans back and rubs his eyes (sweat drop), g 1003.. keeps rubbing
@@ -32,7 +32,7 @@ G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1            # 929 .. 1024
 GS = list(range(G_FIRST, G_LAST + 1))
 G_WORD = C.cap_g("สิบกว่าปี")                          # 960: caption start; "สิบ" spoken right at it
 SNAP = (G_WORD - 8, G_WORD + 12)                       # 955..969 (14 f)
-G_AGE = 966                                            # the look swap, at the fastest frames of the whip pan
+G_AGE = 961                                            # the look swap, at the fastest frames of the whip pan
 G_W2 = C.cap_g("จนผมหงอกทั้งหัว")                      # 989
 G_LEAN = (G_W2 + 4, G_W2 + 14)                         # 993..1003: leans back, hand to the eyes
 BLINKS = [950, 980]
@@ -125,9 +125,59 @@ class Take(C.Take):
         for o, _b in H.STATE["lampgroups"]["candle"]:
             if o.name == "p_bench":
                 o.location = (1.7 * 1.85, 0.8 * 1.85, 1.6)
+        self._make_wipe()
         self.key_cam(bf(G_FIRST), *cam_at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
         self.har = self.actors["har"] = C.make_actor("har", "harrison19", os.path.join(WORK, "sprites"), canvas=CANVAS, contact=True, cam=self.cam)
+
+    def _make_wipe(self):
+        """a dark foreground slab (a beam passing close to the lens) sweeps across the frame around the age swap (g 958..964, full cover
+        at g 961), parented to the camera; emissive flat dark wood so it needs no light.  It hides the hair swap with the motion blur."""
+        bpy = C.bpy
+        me = bpy.data.meshes.new("wipe_m")
+        w, h = 0.42, 1.6
+        me.from_pydata([(-w / 2, -h / 2, 0), (w / 2, -h / 2, 0), (w / 2, h / 2, 0), (-w / 2, h / 2, 0)], [], [(0, 1, 2, 3)])
+        ob = bpy.data.objects.new("wipe", me)
+        bpy.context.scene.collection.objects.link(ob)
+        mat = bpy.data.materials.new("wipe_mat")
+        mat.use_nodes = True
+        nt = mat.node_tree
+        for n in list(nt.nodes):
+            nt.nodes.remove(n)
+        em = nt.nodes.new("ShaderNodeEmission")
+        em.inputs["Strength"].default_value = 1.0
+        tc = nt.nodes.new("ShaderNodeTexCoord")
+        mp = nt.nodes.new("ShaderNodeMapping")
+        mp.inputs["Scale"].default_value = (2.0, 40.0, 1.0)            # long vertical wood grain
+        nz = nt.nodes.new("ShaderNodeTexNoise")
+        nz.inputs["Scale"].default_value = 6.0
+        nz.inputs["Detail"].default_value = 6.0
+        ramp = nt.nodes.new("ShaderNodeValToRGB")
+        ramp.color_ramp.elements[0].color = (0.020, 0.011, 0.006, 1.0)
+        ramp.color_ramp.elements[1].color = (0.11, 0.063, 0.034, 1.0)
+        nt.links.new(tc.outputs["UV"], mp.inputs["Vector"])
+        nt.links.new(mp.outputs["Vector"], nz.inputs["Vector"])
+        nt.links.new(nz.outputs["Fac"], ramp.inputs["Fac"])
+        nt.links.new(ramp.outputs["Color"], em.inputs["Color"])
+        out = nt.nodes.new("ShaderNodeOutputMaterial")
+        nt.links.new(em.outputs["Emission"], out.inputs["Surface"])
+        me.materials.append(mat)
+        ob.parent = self.cam
+        ob.location = (3.0, 0.0, -0.6)
+        ob.visible_shadow = False
+        ob.visible_diffuse = False
+        ob.visible_glossy = False
+        self.wipe = ob
+
+    def key_wipe(self, f, g):
+        ob = self.wipe
+        u = clamp((g - 957.0) / 8.0)
+        on = 957 <= g <= 965
+        x = lerp(0.7, -0.7, ez(u, "sine"))             # frame half-width at 0.6 D is 0.275 D; the 0.42 D slab hides the centre 0.42 D at g 961 (face), the frame edges stay visible
+        ob.location = (x if on else 3.0, 0.0, -0.6)
+        ob.keyframe_insert("location", frame=f)
+        ob.hide_render = not on
+        ob.keyframe_insert("hide_render", frame=f)
 
     def pose(self, gs):
         mark = Vector(self.A["marks"][MARK]) + Vector((MARK_DX, MARK_DY, 0))
@@ -137,6 +187,7 @@ class Take(C.Take):
             C.place(self.har, f, mark)
             self.key_set(f, clock=CLOCK, balance=g / 30.0, candles=candle_level(g))
             self.dim(f, g)
+            self.key_wipe(f, g)
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
@@ -174,6 +225,10 @@ class Take(C.Take):
                     dof=self.cam.data.dof.use_dof, caption_shade=bool(C.bpy.data.objects.get("caption_shade")))
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):
+        r = self.scene.render
+        whip = False and any(958 <= g <= 964 for g in gs)   # motion blur dropped: QA_AUTO flags blurred frames; the wipe slab hides the swap
+        r.use_motion_blur = bool(whip)                  # camera motion blur on the whip-pan frames only (shutter 0.5)
+        r.motion_blur_shutter = 0.5
         return C.Take.render(self, [bf(g) for g in gs], out_dir, scale=scale, samples=samples, threads=threads)
 
 
