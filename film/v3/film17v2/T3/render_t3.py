@@ -40,6 +40,8 @@ def _path_take(take):
         prev = q; f['rot'] = tuple(q)
     return fr
 P.path_take = _path_take
+# item 2b: the ceiling beams span z 5.15-5.41 (slab 5.40-5.60); the stock switch at 5.25 put the camera INSIDE a beam at g722 (one-frame slab flash). Switch below the beam bottoms.
+P.CEIL_Z['measure'] = 5.15
 OUT = os.environ.get('OUT', ROOT + '/film/v3/film17v2/T3/frames')
 def assign_for(g):
     a = {'bertillon': ('bertillon_measuring', {'mirror': True}),
