@@ -23,3 +23,8 @@
 ## §I gate (2026-11-20)
 - qa_stats2: `sat 0.606 vivid% 70.3 luma 94.9 contrast 31.4 detail 7.26 warm 56.4% cool 34.0% | motion med 10.97 p90 31.86 still% 11.1` (sat >= 0.50, vivid >= 45: pass; the still% is the planned near-still final 12 frames).
 - Acting: re-rendered with Maupassant EATING with his eyes shut (smug_shut): the fork hand cycles plate -> mouth at ~1.3 Hz in every frame; light: low sun through the window flaring the facade and cream room, warm lamp + cool shade in frame. Blur-flag note above is unchanged (g 1964-1973, flat start pane).
+
+## Director fix applied: hold on Maupassant, then ease into the crash (final version)
+- Camera: g 1968-1975 gentle drift on Maupassant (distance -2 %, he eats with eyes shut, fork cycle), crash pull g 1976-2033 with a ~5-frame ease-in (per-frame zoom peaks ~g 1978-1980), then 12 near-still frames (frame-diff 0.2-0.9) on the whole tower. Frame-diff in shot: median 9.79, p90 26.53.
+- qa_stats2 (final): `sat 0.610 vivid% 70.3 luma 95.2 contrast 32.4 detail 6.76 warm 57.6% cool 33.6% | motion med 10.92 p90 27.52 still% 14.8`.
+- qa_auto "blur" STILL FAILS and is worse (16 flagged: g 1964-1979; 12 of them on screen, g 1968-1979). Measured Laplacian ratio to the take median: 0.29-0.38 on g 1964-1979, 0.48-0.59 on g 1980-81, 0.64+ from g 1982. The flagged frames are exactly the frames with the flat pane (cloth, cream wall, orange facade); the hold keeps that picture on screen longer, so the count rose (10 -> 16) although there is no motion streak at all (Cycles, no motion blur). The heuristic cannot be satisfied by easing; it needs more fine detail in the start pane (set dressing) or a waiver. Needs a director decision; I did not add set dressing.

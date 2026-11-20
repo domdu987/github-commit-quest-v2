@@ -17,7 +17,8 @@ WORK = os.path.join(HERE, "work")
 G0, G1 = C.g_bound(65.60), 2046                  # 1968 .. 2045
 H = 4
 G_FIRST, G_LAST = G0 - H, G1 - 1                 # 1964 .. 2045 (no out-handle: hard cut at the end of the film)
-G_PULL = (G0, 2036)                          # the crash pull-out; 2034..2045 near still
+G_HOLD = 8                                       # g 1968..1975: near-still gentle drift on Maupassant, then the crash pull
+G_PULL = (G0 + G_HOLD, 2033)                     # crash pull 1976..2033; 2034..2045 near still (12 frames)                          # the crash pull-out; 2034..2045 near still
 G_WORD = C.cap_g("สักครั้ง")                     # 2020: last word
 PRESET = "tower_window_pull"
 PPD = 256
@@ -35,7 +36,12 @@ def cam_at(A, g):
     along log-distance (geometric), the aim sweeps from the window to the tower's mid height, the lens shift blends 0 -> end shift."""
     a, b = cam_dicts(A)
     u = min(1.0, (g - G_PULL[0]) / float(G_PULL[1] - G_PULL[0]))
-    e = (1.0 - (1.0 - u) ** 1.9) if u >= 0 else 0.5 * 1.9 * u                     # crash ease-out: fastest on the first frames
+    hold = 0.02 * (min(g, G_PULL[0]) - G0) / float(G_HOLD)                        # gentle drift while he is read (also backwards in the handle)
+    if u <= 0:
+        e = hold
+    else:
+        ease = min(1.0, u / 0.09) ** 2 * (3 - 2 * min(1.0, u / 0.09)) if u < 0.09 else 1.0     # smooth ease-in over ~5 frames
+        e = hold + (1.0 - (1.0 - u) ** 1.9) * ease                                  # crash ease-out: the fast part lasts only a few frames
     la, lb = Vector(a["loc"]) + Vector((0.0, CLOSE, 0.0)), Vector(b["loc"])
     pa, pb = Vector(a["look_at"]), Vector(b["look_at"])
     # distance to the tower (y axis) in log space, x/z linear in the same fraction
