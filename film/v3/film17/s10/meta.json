@@ -1,0 +1,31 @@
+{
+ "take": "s10",
+ "shots": [
+  24,
+  25,
+  26
+ ],
+ "g0": 1342,
+ "g1": 1515,
+ "first_g": 1336,
+ "n_frames": 185,
+ "last_g": 1520,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "fps": 30,
+ "size": [
+  720,
+  1280
+ ],
+ "samples": 12,
+ "internal_whip_g": [
+  1367,
+  1383
+ ],
+ "snaps_g": [
+  1406,
+  1461
+ ]
+}
