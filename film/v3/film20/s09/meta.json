@@ -2,37 +2,39 @@
  "take": "s09",
  "film": 20,
  "shots": [
-  9
+  9,
+  10
  ],
  "g0": 604,
- "g1": 676,
+ "g1": 753,
  "first_g": 600,
- "n_frames": 80,
+ "n_frames": 161,
  "shot_ranges": {
   "9": [
    604,
    675
+  ],
+  "10": [
+   676,
+   752
   ]
  },
  "handle_in": 4,
- "handle_out": 4,
+ "handle_out": 8,
  "transition_in": {
-  "type": "cut",
-  "frames": 0
+  "type": "match",
+  "frames": 0,
+  "note": "no visible cut: starts on team6 T06 end framing (4 handle frames before g 604)"
  },
  "transition_out": {
-  "type": "cut",
-  "frames": 0,
-  "at": 676
+  "type": "dissolve",
+  "frames": 11,
+  "at": 753
  },
  "set": "v3/set3d20 CAFE preset cafe_low, light DAY, window view stub (hook set_window_view keyed every frame)",
- "cast": "v3/cast20 maupassant stage Actor on the standing mark; Maupassant rises from the banquette, tugs his cravat, chin up; lip-sync mouth from narration loudness (cast20.talk_mouth + MOUTH_SET open sizes) only inside the quote windows",
+ "cast": "v3/cast20 maupassant stage Actor on the standing mark; T09 (shots 9+10): Maupassant rises from the banquette, tugs his cravat, chin up, folds his arms and turns his back on the window for the vow (lip-sync), quick push-in to the close-up on 'สักครั้ง'; lip-sync mouth from narration loudness (cast20.talk_mouth + MOUTH_SET open sizes) only inside the quote windows",
  "events": {
   "rise": [
-   612,
-   634
-  ],
-  "seat_to_stand": [
    612,
    640
   ],
@@ -40,16 +42,25 @@
    640,
    658
   ],
-  "snap": [
-   657,
-   672
-  ],
-  "word_declares": 659,
   "chin_up": [
    654,
    668
   ],
-  "mouth": "none (quote starts g 682)"
+  "arms_fold_turn": [
+   664,
+   712
+  ],
+  "quote1_lipsync": [
+   682,
+   755
+  ],
+  "chin_jerk_word": 732,
+  "push_in_closeup": [
+   728,
+   752
+  ],
+  "word_sakkrang": 732,
+  "mouth": "lip-sync g 682..755 from the narration loudness"
  },
  "dof": "none",
  "text": "none",
@@ -61,20 +72,20 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 22.58,
- "s_per_frame_cpu_mean": 43.88,
+ "s_per_frame_wall_mean": 20.6,
+ "s_per_frame_cpu_mean": 40.28,
  "head_px": [
-  152,
-  230
+  104,
+  371
  ],
  "head_centre_y": [
-  658,
-  740
+  625,
+  712
  ],
- "head_bottom_max_y": 855,
+ "head_bottom_max_y": 819,
  "framediff_in_shot": {
-  "median": 4.41,
-  "p90": 10.36
+  "median": 4.46,
+  "p90": 5.75
  },
  "narration": "film20/audio/narration.wav at +0.10 s"
 }

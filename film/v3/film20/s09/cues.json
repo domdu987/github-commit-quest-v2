@@ -6,17 +6,17 @@
   {
    "kind": "ambience",
    "t": 20.0,
-   "dur": 2.667,
+   "dur": 5.367,
    "frame": 600,
-   "end_frame": 680,
-   "note": "Paris café 1887-89: low murmur of the artists, cutlery and cups, a gas lamp hiss, far street noise through the window"
+   "end_frame": 761,
+   "note": "Paris café: low murmur of the artists, cutlery and cups, a gas lamp hiss, far street noise through the window"
   },
   {
    "kind": "foley",
    "t": 20.4,
-   "dur": 0.733,
+   "dur": 0.933,
    "frame": 612,
-   "end_frame": 634,
+   "end_frame": 640,
    "note": "banquette leather creak, chair scrape and a heavy breath as he gets up; shoes on the tiles",
    "peak_frame": 624
   },
@@ -30,30 +30,30 @@
    "peak_frame": 645
   },
   {
-   "kind": "accent",
-   "t": 21.9,
-   "dur": 0.5,
-   "frame": 657,
-   "end_frame": 672,
-   "note": "snap push: short rising whoosh",
-   "peak_frame": 664
+   "kind": "foley",
+   "t": 22.133,
+   "dur": 1.6,
+   "frame": 664,
+   "end_frame": 712,
+   "note": "he turns on his heel, frock coat swish, arms-crossed creak",
+   "peak_frame": 690
   },
   {
    "kind": "accent",
-   "t": 21.8,
-   "dur": 0.467,
-   "frame": 654,
-   "end_frame": 668,
-   "note": "chin-up smug pose: a pompous low brass 'pah'",
-   "peak_frame": 660
+   "t": 24.267,
+   "dur": 0.8,
+   "frame": 728,
+   "end_frame": 752,
+   "note": "quick push-in on 'สักครั้ง': short rising whoosh and a hush from the artists",
+   "peak_frame": 740
   },
   {
-   "kind": "cut",
-   "t": 22.533,
-   "dur": 0.0,
-   "frame": 676,
-   "end_frame": 676,
-   "note": "hard cut out"
+   "kind": "dissolve",
+   "t": 25.1,
+   "dur": 0.367,
+   "frame": 753,
+   "end_frame": 764,
+   "note": "DIS 11 into T11 (site fence): café room tone crossfades to the building-site ambience"
   }
  ]
 }
