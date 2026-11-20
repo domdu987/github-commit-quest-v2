@@ -1,4 +1,4 @@
-# s07 QA: film 19, shot 7 (HALL hall_window, DAY) -- revision 4 (round-3 gate)
+# s07 QA: film 19, shot 7 (HALL hall_window, DAY) -- revision 5 (round-3 gate, chair)
 ## Delivered
 - take.mkv (97 frames, first_g 457): g 457-465 in-handle (CUT), g 466-544 = shot 7, g 545-553 out-handle (CUT). 720x1280, 8 spp. qa_auto PASS.
 ## Round-3 fixes
@@ -9,3 +9,7 @@
 - Frame-diff in-shot: median 5.16, p90 11.52.
 - Head width 110-192 px, head centre y 563-678, lowest head bottom 771 (< 880). Contact decals 1.6 x 0.75 D.
 - 14.96 s/frame wall, 29.33 s CPU.
+
+## Revision 5 (director: chair back across astro19_c's face at g508-553)
+- astro19_c now stands in FRONT of the Board chair (mark -1.60, 1.45; the chair is behind him at y 1.9), so the chair back no longer crosses his face. The camera sits further right (x -1.6, look x -2.15, i.e. 0.2 D left) so astro19's wig and arm clear the left edge.
+- Finals: frame-diff median 5.16, p90 12.19; head width 112-239 px, lowest head bottom 801 (astro19_c, close), qa_auto PASS.

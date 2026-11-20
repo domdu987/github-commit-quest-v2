@@ -25,8 +25,8 @@ LIGHT, PRESET = "DAY", "hall_window"
 FINAL_SPP = 8
 CONTACT = dict(width=1.6, depth=0.75, color="#1a1626", opacity=0.9)
 
-CAM_LOC0 = (-2.1, -3.7, 2.5)
-CAM_LOOK0 = (-1.95, 2.6, 2.55)
+CAM_LOC0 = (-1.6, -3.7, 2.5)
+CAM_LOOK0 = (-2.15, 2.6, 2.55)
 class SwayCam(C.CamPath):
     """CamPath + a slow lateral sway of the camera body (loc only): parallax of the dense hall that keeps all three astronomers framed."""
     SWAY_D, SWAY_T = 2.2, 2.4
@@ -45,7 +45,7 @@ CAM = SwayCam(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.03, slide_px=0.0, ris
 
 MARK_A = (-3.1, 2.5, 0.0)                      # astro19 lecturing (faces screen-left, points at the Moon)
 MARK_B = (-0.30, 3.4, 0.0)                      # astro19_b nodding (faces screen-left)
-MARK_C = (-1.45, 2.2, 0.0)                      # astro19_c nodding (faces screen-right)
+MARK_C = (-1.60, 1.45, 0.0)                      # astro19_c nodding (faces screen-right)
 
 
 def nod(g, ph, amp=0.25, hz=1.8):
