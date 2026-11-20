@@ -1,0 +1,16 @@
+{
+ "take": "T5",
+ "part": "T5a",
+ "first_g": 1039,
+ "n_frames": 172,
+ "g0": 1039,
+ "g1": 1210,
+ "cuts": [
+  1045
+ ],
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "note": "g1039-1044 are handle frames before the planned cut at g1045 (same ARCHIVE_NIGHT scene, no visible change at 1045)"
+}
