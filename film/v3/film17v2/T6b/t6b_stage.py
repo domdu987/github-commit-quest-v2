@@ -157,7 +157,7 @@ def bottle_prop(a, cam, ctr=(0.95, 0.10), h_D=1.15, back_off=0.04):
     _quad('t6b_bottle', c, right, up, hw, hh, _img_mat('t6b_mbottle', _tex_bottle(), False, True)); return c
 
 # per-frame offsets (world metres, eased): w is 0 while the camera is in the P1 close-up, ramps in g1546-1560, holds, and is released at the cut
-def _w(g): return _ss((g - 1548) / 26.0)
+def _w(g): return _ss((g - float(os.environ.get('W0', '1548'))) / float(os.environ.get('WL', '26.0')))
 STAGE = dict(bert=(0.62, 0.0), dup=(-0.90, 0.0), insp=(-0.30, 0.22))
 _insp_dist = [0.0]
 GEND_END = tuple(float(x) for x in os.environ.get('GEND', '0.55,-0.85').split(','))   # world offset of gend_a from his planned spot (13.95, 28.2) at the end of his walk-in
