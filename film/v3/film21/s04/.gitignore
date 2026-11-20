@@ -1,0 +1,7 @@
+raw/
+raw_d/
+raw_t/
+work/
+*.pyc
+__pycache__/
+frames/
