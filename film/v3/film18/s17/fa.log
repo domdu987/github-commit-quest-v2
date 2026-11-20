@@ -1,0 +1,36 @@
+00:00.599  cycles           | WARNING CUEW initialization failed: Error opening the library
+/home/user/github-commit-quest-v2/film/v3/film18/s17/shot.py:35: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  emm = bpy.data.materials.new('reedglow'); emm.use_nodes = True; nt = emm.node_tree; nt.nodes.clear(); em = nt.nodes.new('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.8, 0.58, 0.2, 1); em.inputs['Strength'].default_value = 0.5
+dress_ground {'n': 1, 'kinds': {'tuft_grass': 1}}
+00:30.954  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s17/frames/g_1303.png'
+s17 g1303  27.6 s (wall 27.6 cpu 33.6)
+00:59.354  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s17/frames/g_1304.png'
+s17 g1304  28.4 s (wall 28.3 cpu 32.3)
+01:23.051  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s17/frames/g_1305.png'
+s17 g1305  23.7 s (wall 23.6 cpu 32.4)
+01:51.134  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s17/frames/g_1306.png'
+s17 g1306  28.1 s (wall 27.9 cpu 32.6)
+02:18.104  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s17/frames/g_1307.png'
+s17 g1307  27.0 s (wall 26.9 cpu 31.3)
+02:45.632  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s17/frames/g_1308.png'
+s17 g1308  27.5 s (wall 27.4 cpu 33.6)
+03:14.703  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s17/frames/g_1309.png'
+s17 g1309  29.1 s (wall 28.9 cpu 34.1)
+03:40.491  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s17/frames/g_1310.png'
+s17 g1310  25.8 s (wall 25.6 cpu 30.6)
+04:05.598  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s17/frames/g_1311.png'
+s17 g1311  25.1 s (wall 25.0 cpu 31.0)
+04:30.784  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s17/frames/g_1312.png'
+s17 g1312  25.2 s (wall 25.1 cpu 29.2)
+04:57.516  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s17/frames/g_1313.png'
+s17 g1313  26.7 s (wall 26.6 cpu 31.7)
+05:21.717  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s17/frames/g_1314.png'
+s17 g1314  24.2 s (wall 24.1 cpu 28.7)
+05:44.207  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s17/frames/g_1315.png'
+s17 g1315  22.5 s (wall 22.4 cpu 29.2)
+06:00.879  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s17/frames/g_1316.png'
+s17 g1316  16.7 s (wall 16.6 cpu 30.4)
+06:17.414  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s17/frames/g_1317.png'
+s17 g1317  16.5 s (wall 16.5 cpu 28.4)
+06:45.048  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s17/frames/g_1318.png'
+s17 g1318  27.6 s (wall 27.5 cpu 27.7)

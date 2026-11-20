@@ -1,0 +1,2 @@
+WORST mouth y 858 at g1485; min flame-to-face -1314 px at g1513
+flame<60 frames 68 worst -73

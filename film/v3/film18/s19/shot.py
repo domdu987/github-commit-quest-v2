@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c18 as C
 from c18 import J, S, R2, V, bpy
 SHOT = 's19'; G0, G1 = 1427, 1514; H_IN, H_OUT = 6, 6        # cut in, whip out
-c = S.SHOTS[SHOT]['cam']; c['loc'] = (15.0, -15.5, 1.5); c['look_at'] = (32.0, -6.0, 5.6); c['lens'] = 18.0
+c = S.SHOTS[SHOT]['cam']; c['loc'] = (14.2, -15.5, 1.5); c['look_at'] = (32.0, -6.0, 5.6); c['lens'] = 18.0
 C.motion(SHOT, push=0.0, slide=-30, moves=[dict(t=0.2, d=0.9, dur=8), dict(t=0.35, d=0.9, dur=8), dict(t=0.84, pan=-85, dur=7)])
 _p0 = S.pose_at
 def _tilt(sh, t):                                            # the whip lands on the herd: tilt down from the sky onto the field while the pan runs
@@ -15,14 +15,15 @@ def _tilt(sh, t):                                            # the whip lands on
     p['loc'] = (p['loc'][0] + sw, p['loc'][1] + 0.4 * sw, p['loc'][2]); la[0] += sw; p['look_at'] = tuple(la); return p
 S.pose_at = _tilt
 HIDE = tuple(os.environ.get('HIDE', 'furrows,streaks,streak,rainstreaks,tufts').split(','))
-HX = [hx for hx in J.HOLE_X if hx > 20]
+HX0 = [hx for hx in J.HOLE_X if hx > 20]
+HX = [HX0[1], HX0[2], HX0[3]]
 rnd = random.Random(19)
 OX = []                                                      # (gs, hole x, lane jitter, scale)
 for w in range(6):
     for k, hx in enumerate(HX):
-        OX.append((G0 - 26 + 3 * k + 15 * w + rnd.randint(-2, 2), hx + rnd.uniform(-0.5, 0.5), rnd.uniform(-0.3, 0.3), rnd.uniform(0.95, 1.05)))
-OX = OX[:36]
-QI = [(G0 - 10 + 5 * k, HX[(k * 3) % len(HX)] + rnd.uniform(-1.5, 1.5)) for k in range(6)]
+        OX.append((G0 - 26 + 9 * k + 18 * w, hx + rnd.uniform(-0.5, 0.5), rnd.uniform(-0.3, 0.3), rnd.uniform(0.95, 1.05)))
+OX = OX[:60]
+QI = [(G0 - 10 + 5 * k, HX0[(k * 3) % 4] + rnd.uniform(-1.5, 1.5)) for k in range(6)]
 V_OX, V_QI = 15.0, 11.5
 
 def setup(ctx):
@@ -49,9 +50,9 @@ FGP = []
 def frame(g, t, camloc, ctx):
     J.set_holes(12)
     if not FGP:                                   # warm foreground props (pots, a helmet) low in frame, parented to nothing: placed in the world near the camera path
-        for i, (dx, dy, kind) in enumerate(((3.4, -2.2, 'pot'), (5.6, -4.5, 'jar'), (2.6, -6.5, 'bowl'), (6.8, -1.0, 'pot'))):
-            FGP.append(J.prop_pot((camloc.x + dx, camloc.y + dy, 0.0), 0.5 * i, kind=kind, scale=0.9, cd=8))
-        FGP.append(J.prop_helmet((camloc.x + 4.4, camloc.y - 8.0, 0.0), 2.4, scale=1.0, cd=8))
+        for i, (wx, wy, kind) in enumerate(((17.6, -13.2, 'pot'), (19.8, -14.8, 'jar'), (22.0, -11.8, 'bowl'), (16.6, -10.6, 'pot'), (21.0, -16.6, 'pot'), (25.0, -13.6, 'jar'), (18.6, -8.4, 'bowl'), (27.5, -11.0, 'pot'))):
+            FGP.append(J.prop_pot((wx, wy, 0.0), 0.6 * i, kind=kind, scale=0.85, cd=8))
+        FGP.append(J.prop_helmet((23.4, -9.6, 0.0), 2.4, scale=1.0, cd=8))
     for ob in bpy.data.objects:
         if ob.name in HIDE or ob.name.startswith(('rubble', 'hglow')): ob.hide_render = True
     for ob in bpy.data.objects:

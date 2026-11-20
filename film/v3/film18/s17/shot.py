@@ -17,18 +17,25 @@ R2.SKIP['s17'] = [(-22.0, 21.0, 3.0), (-14.0, 9.5, 2.5), (-30.0, 9.0, 2.5), (-44
 
 def setup(ctx):
     J.set_holes(12)
-    me = bpy.data.meshes.new('mygap'); me.from_pydata([(-70, 4.5, 0.06), (30, 4.5, 0.06), (30, 40, 0.06), (-70, 40, 0.06)], [], [(0, 1, 2, 3), (3, 2, 1, 0)]); me.update()
-    uv = me.uv_layers.new(name='UVMap')
-    for i_, c_ in enumerate(((0, 0), (12, 0), (12, 8), (0, 8), (0, 8), (12, 8), (12, 0), (0, 0))): uv.data[i_].uv = c_
-    me.materials.append(J.STATE['M']['bank']); J.STATE['SET'].objects.link(bpy.data.objects.new('mygap', me))
     for ob in bpy.data.objects:
         if ob.name in ('jars', 'reeds'): ob.hide_render = True; ob.location.z = -200; ob.hide_viewport = True
     for ob_ in J.STATE.get('fg_objs', []): ob_.hide_render = True; ob_.scale = (0.0, 0.0, 0.0)
     cam = bpy.data.objects['cam']; bpy.context.view_layer.update()
-    rb = J.prop_reed_bundle((-25.2, 14.2, 0.25), (0.0, 0.0, 2.6), scale=1.0, n=60, cd=3.0)
+    rbs = []
+    for (bx, by, rz, bs) in ((-25.2, 14.2, 2.6, 1.0), (-27.6, 12.8, 0.5, 0.9), (-24.0, 12.0, 1.4, 0.8)):
+        rbs.append(J.prop_reed_bundle((bx, by, 0.25), (0.0, 0.0, rz), scale=bs, n=60, cd=3.0))
+        shd = R2._shadow_quad('cshr', 1.0, 0.5); shd.materials.clear() if False else None
+        if not shd.materials: shd.materials.append(R2._card_mat(R2._shadow_png(), (1, 1, 1), 0.0, 'shadow'))
+        so = bpy.data.objects.new('rbshadow', shd); J.STATE['SET'].objects.link(so); so.location = (bx + 0.3, by, 0.04); so.scale = (1.4 * bs, 1.1 * bs, 1.0); so.visible_shadow = False
+    for (px_, py_, pk) in ((-29.4, 14.6, 'jar'), (-22.0, 14.0, 'pot'), (-31.0, 12.0, 'bowl')):
+        J.prop_pot((px_, py_, 0.0), 0.7, kind=pk, scale=0.6, cd=8)
+    rb = rbs[0]
+    lb = bpy.data.lights.new('rbl', 'POINT'); lb.color = J.FIRE; lb.energy = 260.0; lb.shadow_soft_size = 0.5; lb.use_shadow = False
+    lo = bpy.data.objects.new('rbl', lb); J.STATE['LIGHTS'].objects.link(lo); lo.location = (-25.0, 13.2, 1.1); lo.visible_camera = False
     emm = bpy.data.materials.new('reedglow'); emm.use_nodes = True; nt = emm.node_tree; nt.nodes.clear(); em = nt.nodes.new('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.8, 0.58, 0.2, 1); em.inputs['Strength'].default_value = 0.5
     o2 = nt.nodes.new('ShaderNodeOutputMaterial'); nt.links.new(em.outputs[0], o2.inputs[0])
-    for i_ in range(len(rb.data.materials)):
+    for rb in rbs:
+      for i_ in range(len(rb.data.materials)):
         if 'cord' not in rb.data.materials[i_].name and 'red' not in rb.data.materials[i_].name.lower() and 'ink' not in rb.data.materials[i_].name: rb.data.materials[i_] = emm
 
 HL = []

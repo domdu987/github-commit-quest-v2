@@ -111,6 +111,7 @@ def _pose_ext(sh, t):
 S.pose_at = _pose_ext
 
 # ------------------------------------------------------------------ run
+REPORT = []; LEAD = []
 def run(shot, g0, g1, frame_cb, setup_cb=None, argv=None, lights=6, keep=None):
     argv = argv or sys.argv[1:]
     mode = argv[0] if argv else 'draft'
@@ -124,7 +125,7 @@ def run(shot, g0, g1, frame_cb, setup_cb=None, argv=None, lights=6, keep=None):
     ctx = dict(shot=shot, A=A, f0=f0, n=nfr)
     if setup_cb: setup_cb(ctx)
     # ground dressing (set3d18 J.dress_ground): sample the real camera path of this shot, key it, dress, clear the keys
-    if os.environ.get('DRESS', '1') == '1' and hasattr(J, 'dress_ground'):
+    if os.environ.get('DRESS', '1') == '1' and mode != 'measure' and hasattr(J, 'dress_ground'):
         camo = bpy.data.objects['cam']; fs = [int(round(f0 + (nfr) * u / 8.0)) for u in range(9)]
         for ff in fs:
             tt = (ff - f0) / float(nfr); J.shot_camera(shot, tt); camo.keyframe_insert('location', frame=ff); camo.keyframe_insert('rotation_euler', frame=ff); camo.data.keyframe_insert('lens', frame=ff)
@@ -140,12 +141,26 @@ def run(shot, g0, g1, frame_cb, setup_cb=None, argv=None, lights=6, keep=None):
         if os.path.exists(path) and os.environ.get('SKIP', '1') == '1': continue
         t0 = time.time(); t = (g - f0) / float(nfr)
         cam = J.shot_camera(shot, t); camloc = V(S.pose_at(sh, t)['loc'])
-        R2.clear_placeholders(); R2.LIT.clear(); TAILS.clear(); clear_flames()
+        R2.clear_placeholders(); R2.LIT.clear(); TAILS.clear(); clear_flames(); MET.clear()
         frame_cb(g, t, camloc, ctx)
         lit_tails(camloc, lights)
         bpy.context.view_layer.update(); J.flicker(g)
+        if mode == 'measure':
+            m_ = measure_frame(cam, None); REPORT.append((g, round(m_['mouth_max']), round(m_['dist_min'])))
+            if MET:
+                from bpy_extras.object_utils import world_to_camera_view as _w
+                m0 = MET[0]; d = (V(m0['tail']) - V(m0['head'])); d.z = 0; d.normalize(); tip = V(m0['tail']) + d * (2.0 * m0['fs'])
+                a_, b_, h_ = [_w(bpy.context.scene, cam, q) for q in (m0['tail'], tip, m0['head'])]
+                LEAD.append((g, round(h_.x * 720), round(a_.x * 720), round(b_.x * 720), round((1 - h_.y) * 1280)))
+            continue
         w, c = T.render(path); tt.append(time.time() - t0)
         print('%s g%d  %.1f s (wall %.1f cpu %.1f)' % (shot, g, tt[-1], w, c), flush=True)
+    if LEAD:
+        print('LEAD head/tail/tip x, head y (every 10th):', LEAD[::10]); print('LEAD max tip x', max(l[3] for l in LEAD), 'min flame len px', min(abs(l[3] - l[2]) for l in LEAD))
+    if REPORT:
+        mm = max(REPORT, key=lambda r: r[1]); dm = min(REPORT, key=lambda r: r[2])
+        print('WORST mouth y %d at g%d; min flame-to-face %d px at g%d' % (mm[1], mm[0], dm[2], dm[0]))
+        print('BAD mouth>860:', [(r[0], r[1]) for r in REPORT if r[1] > 860][:40]); print('BAD flame<60:', [(r[0], r[2]) for r in REPORT if r[2] < 60])
     if tt: print('mean s/frame %.1f over %d frames' % (sum(tt) / len(tt), len(tt)))
 
 def motion(shot, push=None, slide=None, moves=None):
@@ -155,29 +170,38 @@ def motion(shot, push=None, slide=None, moves=None):
     if slide is not None: mv['slide'] = slide
     if moves is not None: mv['moves'] = list(moves)
 
-def fg_bundle(shot, side='left', n=40, length=0.4, rad=0.011, drop=0.55, ahead=1.7, lat=0.55):
-    """a tied bundle of many thin reed stalks (splayed at both ends, tones from pale straw to dark gold) with two red cords, parented to the camera."""
+def fg_bundle(shot, side='left', n=9, length=0.55, rad=0.045, drop=0.42, ahead=1.7, lat=0.62):
+    """a real tied bundle of yellow reeds laid low in the lower corner, parented to the camera (replaces the set's upright-rod 'reeds' prop)."""
     for ob in STATE.get('fg_objs', []):
         if ob.name.startswith('fgreeds'): ob.hide_render = True; ob.scale = (0.0, 0.0, 0.0)
     bpy.context.view_layer.update(); cam = bpy.data.objects['cam']; setup = S.pose_at(S.SHOTS[shot], 0.0); loc, f, r, u = J._cam_frame(setup); M = STATE['M']; Bk = J.Banks(); n0 = set(STATE['SET'].objects)
     sg = 1 if side == 'right' else -1; o = loc + f * ahead + r * (lat * sg) + u * (-drop)
-    d0 = (r * (-0.7 * sg) + f * 0.25 + u * 0.35).normalized(); rnd = random.Random(7)
-    b = {k: Bk('fgb%d' % k, hull=T.hull(3.0)) for k in range(4)}
+    b = Bk('fgbundle', hull=T.hull(3.0)); d = (r * (-0.55 * sg) + f * 0.35).normalized(); rnd = random.Random(7)
     for k in range(n):
-        a = 2 * math.pi * k / n; off = (r * math.cos(a) + u * math.sin(a)) * rad * 4.2 * rnd.uniform(0.2, 1.0)
-        d = (d0 + r * rnd.uniform(-0.12, 0.12) + u * rnd.uniform(-0.12, 0.12)).normalized(); ln = length * rnd.uniform(0.82, 1.18); q = o + off
-        J.rod(b[k % 4], q - d * ln * 0.5, q + d * ln * 0.5, rad, M['straw_d' if k % 4 == 3 else 'hay'], seg=4, r1=rad * 0.3)
-    for s in (-0.1, 0.12): J.cyl(b[0], o + d0 * s * length, rad * 5.5, 0.03, M['red_d'], seg=8, cap=False)
+        a = 2 * math.pi * k / n; off = (r * math.cos(a) + u * math.sin(a)) * (rad * 1.6 * (0.4 if k == 0 else 1.0)); q = o + off + d * rnd.uniform(-0.04, 0.04)
+        J.rod(b, q - d * length / 2, q + d * length / 2 + u * rnd.uniform(0, 0.03), rad, M['gold'], seg=6)
+    for s in (-0.2, 0.2): J.cyl(b, o + d * s * length - V((0, 0, 0)), rad * 2.0, 0.05, M['red_d'], seg=8, cap=False)
     Bk.flush(STATE['SET'])
     objs = [ob for ob in STATE['SET'].objects if ob not in n0]
-    tones = [(0.86, 0.66, 0.26), (0.70, 0.50, 0.16), (0.92, 0.76, 0.40), (0.55, 0.38, 0.12)]
-    for ob in objs:
-        T.no_bounce(ob); ob.parent = cam; ob.matrix_parent_inverse = cam.matrix_world.inverted()
-        for k in range(4):
-            if ob.name.startswith('fgb%d' % k) and ob.type == 'MESH':
-                mm = bpy.data.materials.new('reedtone%d' % k); mm.use_nodes = True; nt = mm.node_tree; nt.nodes.clear(); em = nt.nodes.new('ShaderNodeEmission'); em.inputs['Color'].default_value = tones[k] + (1.0,); em.inputs['Strength'].default_value = 0.4
-                o2 = nt.nodes.new('ShaderNodeOutputMaterial'); nt.links.new(em.outputs[0], o2.inputs[0]); ob.data.materials.clear(); ob.data.materials.append(mm)
+    for ob in objs: T.no_bounce(ob); ob.parent = cam; ob.matrix_parent_inverse = cam.matrix_world.inverted()
     STATE.setdefault('fg_objs', []).extend(objs)
+
+# ------------------------------------------------------------------ soft dust / smoke puffs (light-brown, replaces the set's dark dust squares)
+def puff_meta(alpha=0.5, tone=(226, 196, 160)):
+    from PIL import Image
+    name = 'puff2_%d_%d_%d_%d' % ((alpha * 100,) + tone); p = os.path.join(CD.CARDS, name + '.png'); os.makedirs(CD.CARDS, exist_ok=True)
+    if not os.path.exists(p):
+        n = 256; yy, xx = np.mgrid[0:n, 0:n]; a = np.zeros((n, n))
+        for (cx, cy, rad) in [(128, 140, 70), (84, 156, 48), (176, 152, 50), (124, 94, 52), (160, 104, 40), (92, 112, 40)]:
+            a = np.maximum(a, np.exp(-(np.hypot(xx - cx, yy - cy) / (rad * 0.62)) ** 2))
+        a[a < 0.03] = 0
+        im = np.zeros((n, n, 4), np.uint8); im[..., 0], im[..., 1], im[..., 2] = tone; im[..., 3] = (np.clip(a, 0, 1) * alpha * 255).astype(np.uint8)
+        Image.fromarray(im, 'RGBA').save(p)
+    return dict(path=p, w=1.0, h=1.0, x0=-0.5, feet=0.0, kind='puff')
+
+def put_puff(pos, size, camloc, alpha=0.5, name='puff', tone=(226, 196, 160)):
+    m = puff_meta(alpha, tone); p = V(pos); d = V(camloc) - p; yaw = math.degrees(math.atan2(d.x, -d.y))
+    return R2.put_card(m, (p.x, p.y, p.z), yaw, size, name=name, tint=(1, 1, 1), k=1.0, shadow=False)
 
 # ================================================================== round 2 (TAKE gate): flames parented to the tail tip, trailing backward, sparks, one warm light per lit tail
 def spark_meta():
@@ -221,6 +245,7 @@ def put_ox(i, pos, travel, scale, camloc, phase=0, flame=-1, state='dragon', vie
     meta = CD.card('ox', state=state, view=view, gait=gait, phase=ph if gait != 'stand' else 0, flame=-1, reed=1 if (reed or flame >= 0) else 0, face=face)
     CURFACE[0] = None
     ob = R2.put_card(meta, tuple(p), yaw, sc, mirror=mir, name='ox%d' % i, tint=tint, k=k, sw=2.7 * sc)
+    record_ox(p, yaw, mir, sc, state, view, gait, ph, (tfx * sc if flame >= 0 else 0.0), None)
     if flame >= 0:
         ax, ay = tail_anchor(state, view, gait, ph); ly = math.radians(yaw)
         lx = (-1.0 if mir else 1.0) * ax * sc; lz = -ay * sc
@@ -246,6 +271,46 @@ def lit_tails(cam, nlights=5):
         d = bpy.data.lights.new('ph_tail', 'POINT'); d.color = J.FIRE; d.energy = 420.0 * sc; d.shadow_soft_size = 0.5; d.use_shadow = False
         lo = bpy.data.objects.new('ph_tail', d); STATE['LIGHTS'].objects.link(lo); lo.location = t; lo.visible_camera = False; lo['placeholder'] = 1
 
+
+# ================================================================== round 11: per-frame measurement (mouth y, flame-to-face distance)
+MET = []        # per frame: list of ('mouth', world) / ('face', world, r) / ('flame', world0, world1, half)
+_ANCN = {}
+def anchor_of(name, state, view, gait, phase):
+    k = (name, state, view, gait, phase % 8)
+    if k not in _ANCN:
+        cast, P = CD._cast(); f = cast.ox_figure(state, view, gait, phase=(phase % 8) / 8.0 if gait != 'stand' else 0.0, flame=-1, blades=True, reed=True, uid='an'); _ANCN[k] = f['anchors'][name]
+    return _ANCN[k]
+
+def record_ox(p, yaw, mir, sc, state, view, gait, ph, flame_scale, flame_len_dir):
+    right = V((math.cos(math.radians(yaw)), math.sin(math.radians(yaw)), 0))
+    def w(nm):
+        ax, ay = anchor_of(nm, state, view, gait, ph); return V(p) + right * ((-1.0 if mir else 1.0) * ax * sc) + V((0, 0, -ay * sc))
+    mouth = w('mouth'); head = w('head'); tail = w('tail_tip')
+    MET.append(dict(mouth=mouth, head=head, tail=tail, sc=sc, right=right, mir=mir, fs=flame_scale))
+
+def measure_frame(cam, flames):
+    from bpy_extras.object_utils import world_to_camera_view
+    sc_ = bpy.context.scene; out = dict(mouth_max=0, mouths=[], dist_min=1e9)
+    def px(v):
+        a = world_to_camera_view(sc_, cam, v); return (a.x * 720.0, (1 - a.y) * 1280.0, a.z)
+    def ppd(v):                                                    # px per D at that point
+        a = px(v); b = px(V(v) + V((0, 0, 1.0))); return abs(b[1] - a[1])
+    faces = []
+    for m in MET:
+        x, y, z = px(m['mouth']); hx, hy, hz = px(m['head'])
+        if z > 0 and -40 < x < 760: out['mouths'].append(y); out['mouth_max'] = max(out['mouth_max'], y)
+        faces.append((hx, hy, 0.75 * ppd(m['head']) * m['sc'], hz))        # face circle: head centre, radius 0.75 D
+    for i, m in enumerate(MET):
+        if m['fs'] <= 0: continue
+        tx, ty, tz = px(m['tail']); d = (V(m['tail']) - V(m['head'])); d.z = 0; d.normalize(); tip = V(m['tail']) + d * (2.0 * m['fs']); ux, uy, uz = px(tip)
+        hh = 0.55 * m['fs'] * ppd(m['tail'])
+        for j, (fx, fy, fr, fz) in enumerate(faces):
+            if j == i or fz <= 0 or tz <= 0 or not (-40 < fx < 760): continue
+            ax, ay, bx, by = tx, ty, ux, uy; t = max(0, min(1, ((fx - ax) * (bx - ax) + (fy - ay) * (by - ay)) / max(1e-6, (bx - ax) ** 2 + (by - ay) ** 2)))
+            dd = math.hypot(fx - (ax + t * (bx - ax)), fy - (ay + t * (by - ay))) - fr - hh
+            if dd < out['dist_min']: out['dist_min'] = dd
+    return out
+
 # ================================================================== round 8: tie reeds exactly at an ox tail tip
 def person_anchors(pose, over=None):
     cast, P = CD._cast(); c, ps = cast.STORY18[pose]; ps = dict(ps); ps.update(over or {})
@@ -260,20 +325,4 @@ def tie_reeds(ox_obj, state, view, gait, phase, ox_scale, camloc, height=3.4, na
     sc_p = height / meta['height']; d = V(camloc) - tail; pyaw = math.degrees(math.atan2(d.x, -d.y)); right_p = V((math.cos(math.radians(pyaw)), math.sin(math.radians(pyaw)), 0))
     feet = tail - right_p * (rx * sc_p) - V((0, 0, (feet_y - ry) * sc_p))
     return put_person(meta, (feet.x, feet.y, max(0.0, feet.z)), camloc, height, name, yaw=pyaw, lift=lift)
-
-def puff_meta(alpha=0.5, tone=(226, 196, 160)):
-    from PIL import Image
-    name = 'puff2_%d_%d_%d_%d' % ((alpha * 100,) + tone); p = os.path.join(CD.CARDS, name + '.png'); os.makedirs(CD.CARDS, exist_ok=True)
-    if not os.path.exists(p):
-        n = 256; yy, xx = np.mgrid[0:n, 0:n]; a = np.zeros((n, n))
-        for (cx, cy, rad) in [(128, 140, 70), (84, 156, 48), (176, 152, 50), (124, 94, 52), (160, 104, 40), (92, 112, 40)]:
-            a = np.maximum(a, np.exp(-(np.hypot(xx - cx, yy - cy) / (rad * 0.62)) ** 2))
-        a[a < 0.03] = 0
-        im = np.zeros((n, n, 4), np.uint8); im[..., 0], im[..., 1], im[..., 2] = tone; im[..., 3] = (np.clip(a, 0, 1) * alpha * 255).astype(np.uint8)
-        Image.fromarray(im, 'RGBA').save(p)
-    return dict(path=p, w=1.0, h=1.0, x0=-0.5, feet=0.0, kind='puff')
-
-def put_puff(pos, size, camloc, alpha=0.5, name='puff', tone=(226, 196, 160)):
-    m = puff_meta(alpha, tone); p = V(pos); d = V(camloc) - p; yaw = math.degrees(math.atan2(d.x, -d.y))
-    return R2.put_card(m, (p.x, p.y, p.z), yaw, size, name=name, tint=(1, 1, 1), k=1.0, shadow=False)
 

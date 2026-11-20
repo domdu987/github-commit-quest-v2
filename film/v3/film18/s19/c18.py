@@ -111,6 +111,7 @@ def _pose_ext(sh, t):
 S.pose_at = _pose_ext
 
 # ------------------------------------------------------------------ run
+REPORT = []
 def run(shot, g0, g1, frame_cb, setup_cb=None, argv=None, lights=6, keep=None):
     argv = argv or sys.argv[1:]
     mode = argv[0] if argv else 'draft'
@@ -124,7 +125,7 @@ def run(shot, g0, g1, frame_cb, setup_cb=None, argv=None, lights=6, keep=None):
     ctx = dict(shot=shot, A=A, f0=f0, n=nfr)
     if setup_cb: setup_cb(ctx)
     # ground dressing (set3d18 J.dress_ground): sample the real camera path of this shot, key it, dress, clear the keys
-    if os.environ.get('DRESS', '1') == '1' and hasattr(J, 'dress_ground'):
+    if os.environ.get('DRESS', '1') == '1' and mode != 'measure' and hasattr(J, 'dress_ground'):
         camo = bpy.data.objects['cam']; fs = [int(round(f0 + (nfr) * u / 8.0)) for u in range(9)]
         for ff in fs:
             tt = (ff - f0) / float(nfr); J.shot_camera(shot, tt); camo.keyframe_insert('location', frame=ff); camo.keyframe_insert('rotation_euler', frame=ff); camo.data.keyframe_insert('lens', frame=ff)
@@ -140,12 +141,18 @@ def run(shot, g0, g1, frame_cb, setup_cb=None, argv=None, lights=6, keep=None):
         if os.path.exists(path) and os.environ.get('SKIP', '1') == '1': continue
         t0 = time.time(); t = (g - f0) / float(nfr)
         cam = J.shot_camera(shot, t); camloc = V(S.pose_at(sh, t)['loc'])
-        R2.clear_placeholders(); R2.LIT.clear(); TAILS.clear(); clear_flames()
+        R2.clear_placeholders(); R2.LIT.clear(); TAILS.clear(); clear_flames(); MET.clear()
         frame_cb(g, t, camloc, ctx)
         lit_tails(camloc, lights)
         bpy.context.view_layer.update(); J.flicker(g)
+        if mode == 'measure':
+            m_ = measure_frame(cam, None); REPORT.append((g, round(m_['mouth_max']), round(m_['dist_min']))); continue
         w, c = T.render(path); tt.append(time.time() - t0)
         print('%s g%d  %.1f s (wall %.1f cpu %.1f)' % (shot, g, tt[-1], w, c), flush=True)
+    if REPORT:
+        mm = max(REPORT, key=lambda r: r[1]); dm = min(REPORT, key=lambda r: r[2])
+        print('WORST mouth y %d at g%d; min flame-to-face %d px at g%d' % (mm[1], mm[0], dm[2], dm[0]))
+        print('BAD mouth>860:', [(r[0], r[1]) for r in REPORT if r[1] > 860][:40]); print('BAD flame<60:', [(r[0], r[2]) for r in REPORT if r[2] < 60])
     if tt: print('mean s/frame %.1f over %d frames' % (sum(tt) / len(tt), len(tt)))
 
 def motion(shot, push=None, slide=None, moves=None):
@@ -230,6 +237,7 @@ def put_ox(i, pos, travel, scale, camloc, phase=0, flame=-1, state='dragon', vie
     meta = CD.card('ox', state=state, view=view, gait=gait, phase=ph if gait != 'stand' else 0, flame=-1, reed=1 if (reed or flame >= 0) else 0, face=face)
     CURFACE[0] = None
     ob = R2.put_card(meta, tuple(p), yaw, sc, mirror=mir, name='ox%d' % i, tint=tint, k=k, sw=2.7 * sc)
+    record_ox(p, yaw, mir, sc, state, view, gait, ph, (tfx * sc if flame >= 0 else 0.0), None)
     if flame >= 0:
         ax, ay = tail_anchor(state, view, gait, ph); ly = math.radians(yaw)
         lx = (-1.0 if mir else 1.0) * ax * sc; lz = -ay * sc
@@ -254,3 +262,43 @@ def lit_tails(cam, nlights=5):
     for (t, sc) in sorted(TAILS, key=lambda a: (a[0] - cam).length)[:nlights]:
         d = bpy.data.lights.new('ph_tail', 'POINT'); d.color = J.FIRE; d.energy = 420.0 * sc; d.shadow_soft_size = 0.5; d.use_shadow = False
         lo = bpy.data.objects.new('ph_tail', d); STATE['LIGHTS'].objects.link(lo); lo.location = t; lo.visible_camera = False; lo['placeholder'] = 1
+
+
+# ================================================================== round 11: per-frame measurement (mouth y, flame-to-face distance)
+MET = []        # per frame: list of ('mouth', world) / ('face', world, r) / ('flame', world0, world1, half)
+_ANCN = {}
+def anchor_of(name, state, view, gait, phase):
+    k = (name, state, view, gait, phase % 8)
+    if k not in _ANCN:
+        cast, P = CD._cast(); f = cast.ox_figure(state, view, gait, phase=(phase % 8) / 8.0 if gait != 'stand' else 0.0, flame=-1, blades=True, reed=True, uid='an'); _ANCN[k] = f['anchors'][name]
+    return _ANCN[k]
+
+def record_ox(p, yaw, mir, sc, state, view, gait, ph, flame_scale, flame_len_dir):
+    right = V((math.cos(math.radians(yaw)), math.sin(math.radians(yaw)), 0))
+    def w(nm):
+        ax, ay = anchor_of(nm, state, view, gait, ph); return V(p) + right * ((-1.0 if mir else 1.0) * ax * sc) + V((0, 0, -ay * sc))
+    mouth = w('mouth'); head = w('head'); tail = w('tail_tip')
+    MET.append(dict(mouth=mouth, head=head, tail=tail, sc=sc, right=right, mir=mir, fs=flame_scale))
+
+def measure_frame(cam, flames):
+    from bpy_extras.object_utils import world_to_camera_view
+    sc_ = bpy.context.scene; out = dict(mouth_max=0, mouths=[], dist_min=1e9)
+    def px(v):
+        a = world_to_camera_view(sc_, cam, v); return (a.x * 720.0, (1 - a.y) * 1280.0, a.z)
+    def ppd(v):                                                    # px per D at that point
+        a = px(v); b = px(V(v) + V((0, 0, 1.0))); return abs(b[1] - a[1])
+    faces = []
+    for m in MET:
+        x, y, z = px(m['mouth']); hx, hy, hz = px(m['head'])
+        if z > 0 and -40 < x < 760: out['mouths'].append(y); out['mouth_max'] = max(out['mouth_max'], y)
+        faces.append((hx, hy, 0.75 * ppd(m['head']) * m['sc'], hz))        # face circle: head centre, radius 0.75 D
+    for i, m in enumerate(MET):
+        if m['fs'] <= 0: continue
+        tx, ty, tz = px(m['tail']); d = (V(m['tail']) - V(m['head'])); d.z = 0; d.normalize(); tip = V(m['tail']) + d * (2.0 * m['fs']); ux, uy, uz = px(tip)
+        hh = 0.55 * m['fs'] * ppd(m['tail'])
+        for j, (fx, fy, fr, fz) in enumerate(faces):
+            if j == i or fz <= 0 or tz <= 0 or not (-40 < fx < 760): continue
+            ax, ay, bx, by = tx, ty, ux, uy; t = max(0, min(1, ((fx - ax) * (bx - ax) + (fy - ay) * (by - ay)) / max(1e-6, (bx - ax) ** 2 + (by - ay) ** 2)))
+            dd = math.hypot(fx - (ax + t * (bx - ax)), fy - (ay + t * (by - ay))) - fr - hh
+            if dd < out['dist_min']: out['dist_min'] = dd
+    return out
