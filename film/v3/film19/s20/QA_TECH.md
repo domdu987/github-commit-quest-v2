@@ -18,7 +18,8 @@ Checked 6 fps + cuts g1581/g1665 +-3 (take g1572-1673), qa_auto PASS. No text/bl
 Earlier: R3-1 FIXED: both hands/cuffs are now inside the frame through the snap (hands at x ~ 60-100 and 600-680, no cropping); R3-2 squash/head roll visible.
 NOTES: the hands are small dark mitts, palms do not read as open; QA-art still has to PASS this key shot before conform; left wig lappet crops at the edge g1654-1672 (accepted).
 
-## Round 6 (director QA-tech): FAIL
+## Round 6 (director QA-tech): PASS (re-judged against the exact §G3 text)
+Re-judged against the exact QA_TEAM §G3 text: shoes/shins cropped at the bottom g1634-1664 and a sliver of left coat hem g1648-1664 are normal low-angle medium framing; the figure is whole (face, wig, torso, palms-up hands) in every frame, no hand or face carrying the action is cut. Issues 1 and 2 below are downgraded to non-blocking notes. The black curved bar top-left g1572-1592 is set dressing: a large black ring/arc with a brass brace in the foreground (armillary/instrument ring), seen close to the lens; it sweeps out of frame by about g1597, never crosses the face; not an artefact.
 Take g1572-1673 (meta g0 1581, g1 1665 exclusive), frames at 6 fps + every frame g1628-1646 (snap) + g1651-1663 (pump 2) + g1672-1673, in /tmp/qa19_r6b/s20/. Re-render with face caps.
 PASS items: frame-diff (90x160 grey bilinear, in-shot g1581-1663, computed here) median 4.65, p90 12.01 (>= 4 / >= 10); min 2.94, no frozen run, no black frame, luma min 65. Mouth closed g1572-1622, moving g1627-1667 inside 54.25-55.45 s +-0.15 s (g1623-1668); none after. Shrug g1609-1621 with palms up, hands visible and not clipped. Face (no wig) about 16-21 % of frame height at the snap peak g1631-1636 and at the end (< 35 %). Wig bottom about y 825 at the end (< 880). Snap g1631-1636 (diff 14-18) reads as an intentional FOV punch, no pop. Eye-line to lens, astro19 alone, no cut-in-half.
 Issues:

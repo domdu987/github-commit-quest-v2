@@ -11,7 +11,8 @@ Earlier issues: R2-1 NOT FIXED and worse.
 1. g662-772 (R2-1): frame-diff (take.mkv, g662-772) median 3.29 (< 4), p90 5.95 (< 10); deliver framediff.json 3.12 / 5.51 (round 2 was 4.38 / 10.74, so the move got weaker). FAIL against median >= 4 / p90 >= 10. Fix: restore the push + slide of the previous render and add the faster snap (x1.5 over 13 f, eased) at g748.
 Notes: right wig lappet crops at the right edge g756-772 (face inside, close-up, accepted in R2); bow still reads as sway; no feet visible; meta g1=773 exclusive.
 
-## Round 6 (director QA-tech): FAIL
+## Round 6 (director QA-tech): PASS (re-judged against the exact §G3 text)
+Re-judged against the exact QA_TEAM §G3 text ("No character cut in half by a frame edge"): shoes/shins cropped at the bottom g748-772 and a sliver of left coat hem/sleeve g742-772 are normal low-angle medium framing; the figure is whole (face, wig, torso, both hands and the watch all inside) in every frame. Issues 1 and 2 below are downgraded to non-blocking notes. No other blocking issue.
 Take g652-781 (meta g0 661, g1 773 exclusive), frames at 6 fps + every frame g743-762 (snap) + g720-734 + g773-780, in /tmp/qa19_r6b/s09/. Re-render with face caps.
 PASS items: frame-diff (90x160 grey bilinear, in-shot g661-771, computed here) median 5.36, p90 11.36 (>= 4 / >= 10); min 2.30, no frozen run, no black frame, luma min 57. Mouth moves only inside the quote window (meta list empty; seen open g652-777, closed/flat at g774-775, no talking after +0.15 s in the shot; handle g779-780 shows mouth movement, outside the cut, non-blocking). Face (no wig) about 16-19 % of frame height at the g748-752 punch peak (< 35 %). Wig bottom about y 780-800 at peak (< 880). Eye-line to lens, pocket watch held in glove and swings with the hand, astro19 alone, no cut-in-half. The snap g743-762 reads as an intended push. Extra push g722-729 (diff 15-18, head grows then eases back g730-734) is smooth, no pop.
 Issues:
