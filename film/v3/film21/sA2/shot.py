@@ -112,7 +112,8 @@ def pose_of(e, g):
 class Seg(object):
     def __init__(self):
         t0 = time.time()
-        self.A = K.build_world(["valley_wide", "hill_over"], fg=False, shafts=True, scots_wide=True)
+        self.A = K.build_world(["valley_wide", "hill_over"], fg=False, shafts=True, scots_wide=False)
+        K.scots_wide_line(toward=(-60.0, -260.0), banners=5)       # same call as team 1 (A1): P_A matches across the D6
         self.scene = bpy.context.scene; self.cam = self.scene.camera; self.cam.data.dof.use_dof = False
         self.scene.frame_start, self.scene.frame_end = 1, 2000
         self.acts = {}
