@@ -1,10 +1,15 @@
 import sys,os,numpy as np,subprocess
+sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
+import grade as G
 from PIL import Image
 q=sys.argv[1]; W=os.path.join(os.path.dirname(os.path.abspath(__file__)),'work_'+q); step=int(sys.argv[2]) if len(sys.argv)>2 else 1
 def ld(seg,k,f):
     p=f'{W}/{seg}/{k}_{f:04d}.png'
     if not os.path.exists(p): return None
-    return np.asarray(Image.open(p).convert('RGB'),np.float32)
+    a=np.asarray(Image.open(p).convert('RGB'),np.float32)/255
+    if seg=='B': return a*255
+    a=G.grade(a,0.95,1.30,0.0) if k=='n' else G.grade(a,1.0,1.10,0.35)
+    return a*255
 def mix(a,b,u):
     if a is None: return b
     if b is None: return a

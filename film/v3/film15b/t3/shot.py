@@ -45,7 +45,10 @@ if SEG in ('A', 'D'):
     from v2_a import F, STATE, U
     import cast15
     LIGHT = 'HERO' if SEG == 'A' else 'HERODAY'
-    EXPO = {'HERO': -1.0, 'HERODAY': float(os.environ.get('DAY_EXPO', -0.55))}[LIGHT]; SAT = {'HERO': 1.25, 'HERODAY': float(os.environ.get('DAY_SAT', 1.2))}[LIGHT]
+    EXPO = {'HERO': -1.0, 'HERODAY': float(os.environ.get('DAY_EXPO', -0.25))}[LIGHT]; SAT = {'HERO': 1.25, 'HERODAY': float(os.environ.get('DAY_SAT', 1.2))}[LIGHT]
+    _tp = os.path.join(V.TEX, 'newspaper.png'); _orig_tex = V.tex_newspaper
+    if not os.path.exists(_tp): _orig_tex()
+    V.tex_newspaper = lambda *a, **k: _tp          # never regenerate: two processes writing the same PNG gave magenta frames
     A_ = V.build_a2(LIGHT, rays=False); sc = bpy.context.scene
     F.setup_render(sc, 'final' if ARGS.q == 'final' else 'preview'); sc.render.threads = ARGS.threads
     sc.view_settings.exposure = EXPO; V.set_grade_sat(sc, SAT); ct = V.CT()
@@ -63,14 +66,14 @@ if SEG in ('A', 'D'):
 
     # ---- the live training camera: low side tracking along the pit, rises slightly, passes the standard in the foreground
     def cam_live(f):
-        u = ease((f - 872) / 56.0, 1.7); x = lerp(3.4, -3.2, u); z = lerp(0.8, 1.2, u); y = lerp(1.9, 2.6, u)
-        return (x, y, z), (x * 0.3 - 0.35, 6.4, lerp(1.7, 1.9, u))
+        u = ease((f - 872) / 56.0, 1.7); x = lerp(1.2, -4.2, u); z = lerp(1.0, 1.35, u); y = lerp(-0.9, 0.9, u)
+        return (x, y, z), (x * 0.25 + 0.4, 6.0, lerp(1.6, 1.8, u))
 
-    SPR = V.WORK
+    SPR = V.WORK; look_now = [(0, 1, 0)]
     def rim_on(): V.rim_on(to_light=(-0.8, -0.4), width=5, strength=0.95)
     def attempt(f, s, hbar, cl, tag, cast='dick', facing=-1):
         """one flop attempt starting at frame s (run-in). Dick travels toward screen LEFT (facing -1). returns nothing, places cards."""
-        k = f - s; bar_z = hbar * U; byu = J['y'] * U; run = [(3.7, 1.9), (2.9, 3.0), (1.6, 3.9), (1.15, 4.25)]
+        k = f - s; bar_z = hbar * U; byu = J['y'] * U; run = [(4.6, 0.5), (3.9, 1.9), (3.0, 3.3), (2.3, 4.0)]
         def put_stand(pose, xy, dz=0.0):
             V.ground_card(tag, cast, pose, (xy[0] * U, xy[1] * U), cl, z=(V.surface_z(xy[0] * U, xy[1] * U) + dz * U), ppd=128, contact=(1.4, 0.5))
         def put_air(pose_name, x, zlift=0.0, anchor='bar'):
@@ -82,17 +85,38 @@ if SEG in ('A', 'D'):
             u = k / 14.0; p = poly(run, u * 0.93); put_stand(cast15.run_curved(cast, k / 16.0, facing=facing), p)
         elif k == 15: put_stand(cast15.pose_for('plant', cast, facing=facing), run[2])
         elif k <= 17: put_stand(cast15.pose_for('takeoff', cast, facing=facing), run[3])
-        elif k <= 19: put_stand(cast15.pose_for('flop_rise', cast, facing=facing), (1.0, 4.4), dz=0.45 + 0.12 * (k - 18))
-        elif k <= 21: put_air('flop_head', 0.55 - 0.2 * (k - 20), 0.0)
-        elif k <= 23: put_air('flop_back', 0.2 - 0.2 * (k - 22), 0.0)
-        elif k <= 26: put_air('flop', -0.05 - 0.15 * (k - 24), 0.0)
-        elif k <= 28: put_air('flop_flick', -0.5 - 0.15 * (k - 27), 0.0)
+        elif k <= 19: put_stand(cast15.pose_for('flop_rise', cast, facing=facing), (1.9, 4.3), dz=0.45 + 0.12 * (k - 18))
+        elif k <= 21: put_air('flop_head', 1.3 - 0.24 * (k - 20), 0.0)
+        elif k <= 23: put_air('flop_back', 0.8 - 0.24 * (k - 22), 0.0)
+        elif k <= 26: put_air('flop', 0.3 - 0.2 * (k - 24), 0.0)
+        elif k <= 28: put_air('flop_flick', -0.3 - 0.15 * (k - 27), 0.0)
         elif k <= 36:
             pose = cast15.pose_for('land_back', cast, facing=facing); lz = 0.44 * U + 0.15
             V.ground_card_anchor(tag, cast, pose, ('hip', (-0.55 * U, 7.2 * U, lz + 0.5)), cl, 0.44 * U, ppd=192, canvas=cast15.CANVAS15_WIDE)
         else:
             pose = cast15.pose_for('sit_up', cast, facing=facing); V.ground_card_anchor(tag, cast, pose, ('hip', (-0.6 * U, 7.2 * U, 0.44 * U + 0.55)), cl, 0.44 * U, ppd=192, canvas=cast15.CANVAS15_WIDE)
         return True
+
+    LEAF = {}
+    def leaves(f, cl, look):
+        """falling autumn leaves (camera-space quads) g893-925: the season turns"""
+        if not 893 <= f <= 925: return
+        fwd = (Vector(look) - Vector(cl)).normalized(); right = fwd.cross(Vector((0, 0, 1))).normalized(); up = right.cross(fwd).normalized()
+        n = int(46 * min(1.0, (f - 893) / 8.0, (925 - f) / 8.0 + 0.2)); cols = ((0.95, 0.35, 0.05), (0.85, 0.12, 0.06), (1.0, 0.65, 0.08), (0.75, 0.25, 0.04))
+        import random
+        for i in range(n):
+            rr = random.Random(i * 7 + 3); d = rr.uniform(1.4, 6.0) * U; x0 = rr.uniform(-0.5, 0.5); y0 = rr.uniform(0.2, 1.3); sp = rr.uniform(0.35, 0.8); ph = rr.uniform(0, 6.28)
+            t = (f - 893) / 30.0; y = (y0 - sp * t * 1.3 + 2.0) % 1.6 - 0.8; x = x0 + 0.08 * math.sin(t * 5 + ph)
+            hw = d * 0.4 * 0.0 + d * math.tan(math.radians(24.5)) * 2 * 0.5; hh = d * math.tan(math.radians(39)) * 0.5 * 2
+            c = Vector(cl) + fwd * d + right * (x * hw * 2) + up * (y * hh * 2); sz = 0.045 * U * rr.uniform(0.8, 1.6) * (d / (3 * U)) ** 0.5; a = t * 6 + ph
+            ax = right * math.cos(a) + up * math.sin(a); ay = -right * math.sin(a) + up * math.cos(a) * 0.55
+            vs = [c + ax * sz, c + ay * sz * 0.7, c - ax * sz, c - ay * sz * 0.7]
+            me = bpy.data.meshes.new('leaf'); me.from_pydata([tuple(v) for v in vs], [], [(0, 1, 2, 3)]); me.update()
+            col = cols[i % 4]; key = 'leafm%d' % (i % 4)
+            if key not in LEAF:
+                m = bpy.data.materials.new(key); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); em = nt.nodes.new('ShaderNodeEmission'); em.inputs['Color'].default_value = (*col, 1); em.inputs['Strength'].default_value = 1.0
+                o = nt.nodes.new('ShaderNodeOutputMaterial'); nt.links.new(em.outputs[0], o.inputs[0]); LEAF[key] = m
+            me.materials.append(LEAF[key]); ob = bpy.data.objects.new('actor_leaf%d' % i, me); bpy.context.scene.collection.objects.link(ob); ob.visible_shadow = False
 
     def stage_live(f, cl):
         clear_actors(); rim_on(); h = bar_h(f); F.set_bar_height(h)
@@ -103,20 +127,21 @@ if SEG in ('A', 'D'):
             V.ground_card('bb%d' % i, cst, dict(cast15.pose_for(pn, cst), bob=cast15.laugh_bob(f + 3 * i)), (p[0] * U + 0.2, p[1] * U), cl, z=0.0, ppd=96)
         # waiting boy and the coach clapping at the run-up: always acting
         pb = M['boy_wait_a']; V.ground_card('bw', 'boy1', dict(cast15.pose_for('cheer' if (f // 5) % 2 else 'stand', 'boy1'), bob=cast15.laugh_bob(f)), (pb[0] * U, pb[1] * U), cl, ppd=96)
-        V.rim_off()
+        V.rim_off(); leaves(f, cl, look_now[0])
 
 # ---- seg A: newspaper plate ------------------------------------------------------
     def paper_plate(f):
+        """T2's page framing at g862 (see t2/QA.md): page 0.74 m wide, roll -2, bend 0.045, photo centre on the axis, distance 0.5 m at 862, dolly 0.0125 m/frame"""
         clear_actors()
         for o in list(bpy.data.objects):
             if o.name == 'newspaper': bpy.data.objects.remove(o, do_unlink=True)
         loc = (0.0, -3.0, 1.5); look = (0.0, 5.0, 1.5); cl = set_cam(loc, look)
-        u = ease((f - 856) / 21.0, 1.6); d = lerp(0.80, 0.48, u); F0, d0 = 3.3, 0.80
-        ob = V.newspaper(cl, tuple(c * 1 for c in Vector(look) * U), dist=d, fill=F0 * d0 / d, roll_deg=0.0, bend=0.03, hands=False)
-        fwd = (Vector(look) * U * V.DM - Vector(cl) * V.DM).normalized(); right = fwd.cross(Vector((0, 0, 1))).normalized(); up = right.cross(fwd).normalized()
-        wfr = 2 * d * math.tan(math.atan(18.0 / 22.0 * 720 / 1280)); w = wfr * F0 * d0 / d; h = w * 3200 / 2400
-        xx = (0.376 - 0.5) * w; yy = (0.37 - 0.5) * h - h * 0.12
-        ob.location = -(right * xx + up * yy)
+        d = 0.5 - 0.0125 * (f - 862); wfr = 2 * d * math.tan(math.atan(18.0 / 22.0 * 720 / 1280)); w = 0.74; h = w * 3200 / 2400
+        lk = Vector(look) * U; ob = V.newspaper(cl, tuple(lk), dist=d, fill=w / wfr, roll_deg=-2.0, bend=0.045, hands=False)
+        fwd = (lk * V.DM - Vector(cl) * V.DM).normalized(); right = fwd.cross(Vector((0, 0, 1))).normalized(); up = right.cross(fwd).normalized()
+        cr, sr = math.cos(math.radians(-2.0)), math.sin(math.radians(-2.0)); rt = right * cr + up * sr; upv = up * cr - right * sr
+        xx = (0.365 - 0.5) * w; yy = (0.38 - 0.5) * h - h * 0.12
+        ob.location = -(rt * xx + upv * yy)
         return ob
 
     def poster_cam(f):
@@ -133,7 +158,7 @@ if SEG in ('A', 'D'):
         else:
             for o in list(bpy.data.objects):
                 if o.name == 'newspaper': bpy.data.objects.remove(o, do_unlink=True)
-            loc, look = cam_live(f); cl = set_cam(loc, look); stage_live(f, cl); out = os.path.join(OUT, 'g_%04d.png' % f)
+            loc, look = cam_live(f); cl = set_cam(loc, look); look_now[0] = tuple(Vector(look) * U); stage_live(f, cl); out = os.path.join(OUT, 'g_%04d.png' % f)
         sc.frame_set(f); return F.T.render(out)
 
     def plates_for(f):
@@ -155,15 +180,36 @@ else:
     CT.hide_placeholders(); SHB.GROUND_LOG.clear()
     J = STATE['J']; BY = B2.BAR_Y
     # hooks keyed for the whole segment
-    F.set_bar_height(2.04, frame=926, peg='both'); F.set_bar_height(2.04, frame=972, peg='both'); F.set_bar_height(2.24, frame=992, peg='both')
+    F.set_bar_height(1.80, frame=926, peg='both'); F.set_bar_height(1.80, frame=968, peg='both'); F.set_bar_height(2.24, frame=992, peg='both')
     F.bar_fall(1014, side='back', seed=3)
     F.crowd_mode('normal', 926); F.crowd_mode('groan', 1015)
     F.stand_flashes(930, 1064, 0.30)
-    cam = SHB.apply_path(SHB.bigzoom2, 926 / FPS, 1064 / FPS, name='cam_bz2')
+    SHB.BZ_KEYS[-1] = (1.00, (-2.08, 5.26, 2.40), (0.7, 9.6, 1.6), 19.0)       # ends ~10 % closer on Dick
+    UT = [(926, 0.0), (934, 0.0), (940, 0.12), (952, 0.40), (964, 0.62), (976, 0.78), (990, 0.88), (1000, 0.92), (1030, 0.97), (1059, 1.0), (1064, 1.0)]
+    def _pchip():
+        x = [a for a, b in UT]; y = [b for a, b in UT]; n = len(x); h = [x[i + 1] - x[i] for i in range(n - 1)]; dl = [(y[i + 1] - y[i]) / h[i] for i in range(n - 1)]
+        m = [0.0] * n
+        for i in range(1, n - 1):
+            m[i] = 0.0 if dl[i - 1] * dl[i] <= 0 else 2 * dl[i - 1] * dl[i] / (dl[i - 1] + dl[i])
+        return x, y, m
+    _PX, _PY, _PM = _pchip()
+    def warp(g):
+        if g <= _PX[0]: return 0.0
+        if g >= _PX[-1]: return 1.0
+        i = max(k for k in range(len(_PX) - 1) if _PX[k] <= g); h = _PX[i + 1] - _PX[i]; u = (g - _PX[i]) / h
+        return (2*u**3 - 3*u**2 + 1) * _PY[i] + (u**3 - 2*u**2 + u) * h * _PM[i] + (-2*u**3 + 3*u**2) * _PY[i + 1] + (u**3 - u**2) * h * _PM[i + 1]
+    def bz(t):
+        u = warp(t * FPS); ks = [(k[0], k[1]) for k in SHB.BZ_KEYS]; kl = [(k[0], k[2]) for k in SHB.BZ_KEYS]; kz = [(k[0], (k[3], 0, 0)) for k in SHB.BZ_KEYS]
+        return tuple(SHB.spline(ks, u)), tuple(SHB.spline(kl, u)), float(SHB.spline(kz, u).x)
+    cam = SHB.apply_path(bz, 926 / FPS, 1064 / FPS, name='cam_bz2')
+    def set_bloom(v):
+        for ng in list(bpy.data.node_groups) + ([sc.compositing_node_group] if getattr(sc, 'compositing_node_group', None) else []):
+            for n in ng.nodes:
+                if n.bl_idname == 'CompositorNodeGlare': n.inputs['Strength'].default_value = v
     DB = SHB.DICK_B[:2]
 
     def stage_B(f):
-        clear_actors(); SHB.GROUND_LOG.clear(); t = f / FPS; loc, look, lens = SHB.bigzoom2(t); cm = loc
+        clear_actors(); SHB.GROUND_LOG.clear(); t = f / FPS; loc, look, lens = bz(t); cm = loc; set_bloom(0.12 if 994 <= f <= 1030 else 0.28)
         dist = (Vector(loc) - Vector((DB[0], DB[1], 1.0))).length; ppd = 56 if dist > 70 else 80 if dist > 30 else 128 if dist > 10 else 176
         SHB.rim(True, side='left', color=(255, 238, 210), width=0.04, k=0.6, tint=(0.97, 0.98, 1.0), cool=0.3)
         # Dick rocks at the runway (always acting)
