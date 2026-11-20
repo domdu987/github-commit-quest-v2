@@ -44,7 +44,7 @@ CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GA, GZ, push=0.085, slide_px=35.0, rise_px=
                 snaps=[dict(g=SNAP, k=1.85, peak=2.4, shift=(0.50, -0.12)), dict(g=(246, 264), k=1.0, peak=1.3, shift=(-0.42, 0.0))])
 
 HIDE = ("deck_cannon_iron", "deck_carr_w", "deck_hatchw")           # render as black blobs in the FG (QA_TECH): kept out of frame
-LANT_OFF = (1.75, 0.34, 0.30)                     # lantern centre in the camera frame: forward, right, up (D)
+LANT_OFF = (1.75, 0.38, 0.60)                     # lantern centre in the camera frame: forward, right, up (D)
 CHART_POSE = cast19.STORY19["captain_peer_chart"][1]
 
 
