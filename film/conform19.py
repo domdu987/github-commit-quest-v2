@@ -39,6 +39,9 @@ def concat_parts(d, name):
         os.rename(dst + ".tmp", dst)
     return dst, True
 
+# per-take colour grade (QA_TEAM §G), from film19/grade_solve.py; missing file = no grade
+GRADE = json.load(open(P + "/film19/grade.json")) if os.path.exists(P + "/film19/grade.json") else {}
+
 class Take:
     def __init__(s, d):
         s.name = os.path.basename(d); s.m = json.load(open(d + "/meta.json")); m = s.m
@@ -49,7 +52,7 @@ class Take:
         s.arr = None; s.diffs = None; s.got = 0
     def load(s):
         if s.arr is not None: return
-        raw = subprocess.run(["ffmpeg", "-v", "error", "-i", s.path, "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], capture_output=True).stdout
+        raw = subprocess.run(["ffmpeg", "-v", "error", "-i", s.path, *(["-vf", GRADE[s.name]] if s.name in GRADE else []), "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], capture_output=True).stdout
         k = len(raw) // (W * H * 3)
         s.arr = np.frombuffer(raw, np.uint8, k * W * H * 3).reshape(k, H, W, 3); s.got = k
         if k != s.n: log(f"  WARN {s.name}: decoded {k} frames, meta says {s.n}")
