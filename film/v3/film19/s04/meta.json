@@ -1,0 +1,72 @@
+{
+ "take": "s04",
+ "film": 19,
+ "shots": [
+  4
+ ],
+ "g0": 191,
+ "g1": 262,
+ "first_g": 182,
+ "n_frames": 89,
+ "shot_ranges": {
+  "4": [
+   191,
+   261
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 13,
+  "note": "handle g 182..190 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 262,
+  "note": "hard cut to shot 5; handle g 262..270 rendered"
+ },
+ "set": "v3/set3d19 SHIP preset ship_rocks, light STORM_DUSK; set_sea(g/30) + set_roll / lurch keyed on every frame, rain on; no caption_shade; FG lantern re-hung on a swinging pivot ~1.75 D from the lens (cuts: runtime set dressing only)",
+ "cast": "captain19 at captain_bow, rides ship_root (ride_ship); captain_peer_chart (chart19 prop: coast + compass rose, no text); fixed expression mouth; slow peer, glance at chart g 214-230; blinks 205, 246",
+ "camera": "custom 22 mm riding the deck (on_ship): CamPath push 8.5 %/s + slide 35 px/s + crane, snap x1.65 + pan g 229..244 on 'เกือบสามร้อย', decay 0.15 (moving on last frame)",
+ "events": {
+  "snap": [
+   229,
+   244
+  ],
+  "word_caption": 230,
+  "blinks": [
+   205,
+   246
+  ],
+  "lantern_swing": "period 1.9 s"
+ },
+ "dof": "none",
+ "text": "none",
+ "caption_shade": "none",
+ "light": "STORM_DUSK",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 18.38,
+ "s_per_frame_cpu_mean": 35.77,
+ "head_px": [
+  107,
+  216
+ ],
+ "head_centre_y": [
+  555,
+  641
+ ],
+ "head_bottom_max_y": 697,
+ "framediff_in_shot": {
+  "median": 6.9,
+  "p90": 13.2
+ },
+ "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
+}
