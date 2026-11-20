@@ -29,7 +29,7 @@ FIRST_G, LAST_G = G0 - 6, G1 + 6       # 483 .. 868 with handles
 def T(g): return g / 30.0
 
 # ---------------------------------------------------------------- marks (metres)
-COACH = (10.4, 2.6)
+COACH = (10.1, 3.0)
 DICK_MARK = (5.6, -0.8)
 PAGE_C = Vector((10.2, 4.2, 1.18))     # the newspaper page centre (world m); the page faces -x (towards the field)
 PAGE_W = 0.74                           # page width m (the reader holds it wide)
@@ -56,12 +56,12 @@ def hermite(knots, t):
 # ---------------------------------------------------------------- camera paths (metres)
 # A: g483..741 (before the white-out): OTS -> side tracking -> punch CU -> swing to the pit wide
 CAM_A = [  # t (s), loc, look
-    (T(483), (4.6, -2.7, 1.55), (10.2, 2.3, 1.38)),
-    (T(564), (7.9, 0.5, 1.38), (10.4, 2.7, 1.32)),
-    (T(621), (7.5, 3.5, 1.22), (10.5, 2.8, 1.28)),
-    (T(668), (8.5, 4.7, 1.15), (10.4, 2.7, 1.30)),
-    (T(684), (9.05, 4.0, 1.30), (10.4, 2.62, 1.30)),        # punch in
-    (T(707), (9.25, 3.72, 1.32), (10.4, 2.62, 1.28)),       # CU 1 (slow creep, never static)
+    (T(483), (4.6, -2.7, 1.55), (9.9, 2.7, 1.38)),
+    (T(564), (7.7, 0.9, 1.38), (10.1, 3.0, 1.32)),
+    (T(621), (7.3, 3.9, 1.22), (10.2, 3.1, 1.28)),
+    (T(668), (8.3, 5.0, 1.15), (10.1, 3.0, 1.30)),
+    (T(684), (8.75, 4.4, 1.30), (10.1, 3.0, 1.30)),        # punch in
+    (T(707), (8.95, 4.1, 1.32), (10.1, 3.0, 1.28)),       # CU 1 (slow creep, never static)
     (T(724), (3.0, -0.7, 1.6), (0.6, 5.4, 1.5)),            # swing to the pit
     (T(741), (2.1, 0.2, 1.5), (-0.1, 5.6, 1.6)),
 ]
@@ -72,20 +72,21 @@ def cam_a(t):
 def page_cam(t):
     """B: g >= 744: camera in front of the page (page faces -x). dist d (m), lateral arc, look at the page centre -> photo centre."""
     # distance profile
-    kn = [(T(744), 0.80), (T(780), 0.92), (T(800), 1.25), (T(838), 3.6), (T(862), 0.50), (T(868), 0.44)]
+    kn = [(T(744), 0.74), (T(780), 1.05), (T(800), 1.25), (T(838), 4.2), (T(862), 0.50), (T(868), 0.44)]
     # use ease between 780->838 (pull back) and 838->862 (push in) separately
     t0, t1 = T(780), T(838)
-    if t <= T(780): d = 0.80 + 0.12 * ((t - T(744)) / (T(780) - T(744)))
-    elif t <= T(838): d = 0.92 + (3.6 - 0.92) * ease((t - t0) / (t1 - t0), 1.9)
+    if t <= T(780): d = 0.74 + 0.31 * ease((t - T(744)) / (T(780) - T(744)), 1.3)
+    elif t <= T(838): d = 1.05 + (4.2 - 1.05) * ease((t - t0) / (t1 - t0), 1.9)
     else:
-        u = (t - T(838)) / (T(862) - T(838)); d = 3.6 + (0.50 - 3.6) * ease(u, 2.0) if u <= 1 else 0.50 - 0.5 * (u - 1) * 0.0 - 0.30 * (u - 1)   # after g862: keep creeping in
+        u = (t - T(838)) / (T(862) - T(838)); d = 4.2 + (0.50 - 4.2) * ease(u, 2.0) if u <= 1 else 0.50 - 0.5 * (u - 1) * 0.0 - 0.30 * (u - 1)   # after g862: keep creeping in
     # look target on the page: page centre -> photo centre as we push in
     pc = page_point(0.365, 0.62)
     w = ease((t - T(838)) / (T(862) - T(838)), 1.6) if t > T(838) else 0.0
     look = PAGE_C * (1 - w) + pc * w
     arc = 0.0
+    if t <= T(780): arc = 0.14 * ease((t - T(744)) / (T(780) - T(744)), 1.5)
     if T(780) < t < T(862):
-        u = (t - T(780)) / (T(862) - T(780)); arc = -1.1 * math.sin(math.pi * min(u, 1.0)) * (1 - ease((t - T(838)) / (T(862) - T(838)), 1.4) if t > T(838) else 1.0)
+        u = (t - T(780)) / (T(862) - T(780)); arc = -0.7 * math.sin(math.pi * min(u, 1.0)) * (1 - ease((t - T(838)) / (T(862) - T(838)), 1.4) if t > T(838) else 1.0)
     rise = 0.0
     if T(780) < t < T(862):
         u = (t - T(780)) / (T(862) - T(780)); rise = 0.30 * math.sin(math.pi * min(u, 1.0)) * (1 - w)
@@ -183,8 +184,16 @@ EXPOSURE = -1.25; GRADE = 1.12
 
 def clear_cards():
     for o in list(bpy.data.objects):
-        if o.name.startswith('actor_'): bpy.data.objects.remove(o, do_unlink=True)
-    bpy.data.orphans_purge(do_recursive=True)
+        if o.name.startswith('actor_'):
+            me = o.data; mats = list(me.materials) if me else []
+            bpy.data.objects.remove(o, do_unlink=True)
+            if me and me.users == 0: bpy.data.meshes.remove(me)
+            for m in mats:
+                if m.users == 0:
+                    if m.node_tree:
+                        for n in m.node_tree.nodes:
+                            if n.bl_idname == 'ShaderNodeTexImage' and n.image and n.image.users <= 1: bpy.data.images.remove(n.image)
+                    bpy.data.materials.remove(m)
 
 def talk(g, seed=0.0, lvl=1.0): return cast15.talk_mouth(g, lvl, seed)
 def in_quote(g): return 534 <= g <= 706          # 17.80 .. 23.55 s (g = round(t*30)), the only frames where a mouth moves
@@ -225,12 +234,12 @@ def place_cards(g, cl):
         nm = 'point_laugh' if ((g + ph) // 12) % 2 else 'laugh'
         p = dict(cast15.pose_for(nm, cast), bob=cast15.laugh_bob(g + ph))
         rep[tag] = put_stand(tag, cast, p, xy, cl, ppd=128)
-    boy('b1', 'boy1', (9.6, 0.5), 0); boy('b2', 'boy2', (9.4, 5.6), 4); boy('b3', 'boy3', (9.9, 7.0), 7)
+    boy('b1', 'boy1', (9.6, 0.5), 0); boy('b2', 'boy2', (9.8, 5.5), 4); boy('b3', 'boy3', (10.1, 6.5), 7)
     # --- Dick
     if g < 709:
         _BACK['on'] = True
         p = cast15.pose_for('rock_a' if (g // 7) % 2 else 'rock_b', 'dick')
-        rep['dick'] = put_stand('d_dick', 'dick', p, (5.8, -1.0), cl, ppd=192, yaw_fixed=None, contact=(1.4, 0.5)); _BACK['on'] = False
+        rep['dick'] = put_stand('d_dick', 'dick', p, (5.65, -0.85), cl, ppd=192, yaw_fixed=None, contact=(1.4, 0.5)); _BACK['on'] = False
     elif g < G_TAKE:
         ph = (g - G_RUN0) / 16.0; xy = run_pos((g - G_RUN0) / float(G_TAKE - G_RUN0))
         rep['dick'] = put_stand('d_dick', 'dick', cast15.run_curved('dick', ph, facing=-1), xy, cl, ppd=192, contact=(1.4, 0.5))
@@ -280,10 +289,13 @@ def white_amount(g):
 
 def render_frame(g, path):
     set_frame(g); sc = S['sc']; sc.render.filepath = path; bpy.ops.render.render(write_still=True)
+    from PIL import Image
+    import grade as GR
+    a = np.asarray(Image.open(path).convert('RGB')).astype(np.float32) / 255
+    a = GR.grade(a, 1.05, 1.15, 0.4) if g < 744 else GR.grade(a, 0.95, 1.30, 0.0)
     w = white_amount(g)
-    if w > 0.0:
-        from PIL import Image
-        a = np.asarray(Image.open(path).convert('RGB')).astype(np.float32) / 255; a = a * (1 - w) + w; Image.fromarray((np.clip(a, 0, 1) * 255).astype(np.uint8)).save(path)
+    if w > 0.0: a = a * (1 - w) + w
+    Image.fromarray((np.clip(a, 0, 1) * 255 + 0.5).astype(np.uint8)).save(path)
 
 if __name__ == '__main__':
     cmd = sys.argv[1]
