@@ -44,15 +44,20 @@ def _mix(a, b, u):
 
 
 def william_pose(g):
+    """William keeps acting (client rule: nobody still > 1.5 s): the watch is lifted and flicked every ~0.9 s, he nods, sways with
+    amusement at the astronomer's fumble, and his gaze alternates between the lens, the watch and the astronomer."""
     p = dict(cast19.STORY19["william_show_h4"][1])
-    p["arm_r"] = dict(p["arm_r"], hand=(0.64 + 0.015 * math.sin(g * 0.15), 0.62 + 0.02 * math.sin(g * 0.11)))
+    flick = math.sin(2 * math.pi * g / 27.0)                         # 1.1 Hz watch lift
+    p["arm_r"] = dict(p["arm_r"], hand=(0.62 + 0.05 * math.sin(2 * math.pi * g / 27.0 + 1.0), 0.60 - 0.16 * max(0.0, flick) + 0.04 * math.sin(g * 0.4)))
     p["expr"] = "happy"
     p["mouth"] = "smile"
-    p["yaw"] = 0.15
-    p["head_roll"] = -3 + 1.5 * math.sin(g * 0.09)
-    p["lean"] = 1.0 * math.sin(g * 0.07)
-    p["gaze"] = (-0.4, 0.0) if g > G_WORD + 20 else (0.0, 0.0)      # a sideways glance at the astronomer's trouble
-    p["blink"] = blink(g, [1672, 1718, 1750])
+    p["yaw"] = 0.15 + 0.12 * math.sin(g * 0.09)
+    p["head_roll"] = -3 + 5 * math.sin(2 * math.pi * g / 36.0)       # nods and tilts
+    p["pitch"] = 0.12 * math.sin(2 * math.pi * g / 27.0 + 0.5)
+    p["lean"] = 4.0 * math.sin(2 * math.pi * g / 45.0)               # sways towards / away from the astronomer
+    ph = (g // 24) % 3
+    p["gaze"] = [(0.0, 0.0), (-0.7, 0.1), (0.5, -0.3)][ph]            # lens, astronomer (screen-left), watch
+    p["blink"] = blink(g, [1672, 1700, 1718, 1750])
     p["t"] = g / 30.0
     return p
 
