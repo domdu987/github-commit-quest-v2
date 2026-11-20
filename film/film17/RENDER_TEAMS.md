@@ -6,7 +6,7 @@
 | 3 | s03 | 336-445 | render17/team3 | session_017iwyCsSmzngTtBs976TLbg |
 | 4 | s04 mocker | 445-651 | render17/team4 | session_017iwyCwyQc89ysPR47m3PWC |
 | 5 | s06 (s05 moved to team 2 after R1) | 651-725, 725-850 | render17/team5 | session_017iwyCt2DuFSNFsmwoKTtrA |
-| 6 | s07 montage | 850-1045 | render17/team6 | session_017iwyCu4oxwvahW3aTPmQCn |
+| 6 | s07 montage (R4 moved to team 1; shot 16 of 34bb2c8 reused) | 850-1045 | render17/team6 | session_017iwyCu4oxwvahW3aTPmQCn |
 | 7 | s08 false payoff | 1045-1196 | render17/team7 | session_017iwyCsYmurjXCp5ExvZYhg |
 | 8 | s09 crisis | 1196-1342 | render17/team8 | session_017iwyCwEH2dzudykmbCE6Ci |
 | 9 | s10 reveal | 1342-1515 | render17/team9 | session_017iwyCszfti6jj5aaxyBXiM |
