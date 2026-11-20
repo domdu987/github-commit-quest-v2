@@ -54,7 +54,7 @@ CU = 103.2
 LENS_KEYS = [(44.0, 22.0), (53.4, 22.0), (54.3, 29.0), (56.4, 29.0), (57.7, 22.0), (60.5, 22.0)]
 def _coach_cam():
     cs = B2.stand_pos(7, CU, 0.5); c0 = B2.stand_pos(3, CU + 1.2, 0.0)
-    return (c0[0], c0[1], c0[2] + 1.4), (cs[0], cs[1], cs[2] + 1.25)
+    return (c0[0], c0[1], c0[2] + 1.4), (cs[0], cs[1], cs[2] + 1.0)
 def cam_at(t):
     ks = [(a, b) for a, b, c in CAM_KEYS]; kl = [(a, c) for a, b, c in CAM_KEYS]
     lens = float(spline([(a, (b, 0, 0)) for a, b in LENS_KEYS], t).x)
@@ -63,7 +63,7 @@ def cam_at(t):
     a, b = Vector(CAM_KEYS[-1][1]), Vector(cl); la, lb = Vector(CAM_KEYS[-1][2]), Vector(ck)
     mid = (a + b) / 2 + Vector((0, 0, 14.0)) * math.sin(math.pi * u)           # arc up so it never ploughs through the stand
     p = a * (1 - u) + b * u + Vector((0, 0, 14.0 * math.sin(math.pi * u)))
-    return tuple(p), tuple(la * (1 - u) + lb * u), 22.0 + 108.0 * u * u + 12.0 * smooth((t - 59.85) / 0.5)
+    return tuple(p), tuple(la * (1 - u) + lb * u), 22.0 + 80.0 * u * u + 12.0 * smooth((t - 59.85) / 0.5)
 
 # ------------------------------------------------------------------ actors
 def bar_pt(x, z=None, y=BAR_Y): return (x, y, BAR_H if z is None else z)
@@ -168,9 +168,9 @@ CROWD = {}
 def build_coach_cluster(cam_loc):
     rr = random.Random(41); cs = B2.stand_pos(7, CU, 0.5)
     B2.hide_3d_crowd((cs[0], cs[1], cs[2]), 13.0, (-7.0, 9.5)); B2.hide_rails((cs[0], cs[1], cs[2]), 26.0)
-    bk = B2.stand_pos(21, CU, 0.0); v = Vector((bk[0] - cam_loc[0], bk[1] - cam_loc[1], 0)).normalized(); rt = Vector((v.y, -v.x, 0)); c0 = Vector((bk[0], bk[1], bk[2])) + v * 1.5
+    bk = B2.stand_pos(9, CU, 0.0); v = Vector((bk[0] - cam_loc[0], bk[1] - cam_loc[1], 0)).normalized(); rt = Vector((v.y, -v.x, 0)); c0 = Vector((bk[0], bk[1], bk[2])) + v * 1.5
     m = bpy.data.materials.new('coach_back'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); o = nt.nodes.new('ShaderNodeOutputMaterial'); e = nt.nodes.new('ShaderNodeEmission'); e.inputs['Color'].default_value = (0.05, 0.06, 0.26, 1); e.inputs['Strength'].default_value = 1.0; nt.links.new(e.outputs[0], o.inputs[0])
-    V = [tuple((c0 + rt * sx + Vector((0, 0, sz)) ) * 1.0) for sx, sz in ((-30, -12), (30, -12), (30, 16), (-30, 16))]
+    V = [tuple((c0 + rt * sx + Vector((0, 0, sz)) ) * 1.0) for sx, sz in ((-30, 1.9), (30, 1.9), (30, 22), (-30, 22))]
     me = bpy.data.meshes.new('coach_back'); me.from_pydata([tuple(c * U for c in p) for p in V], [], [(0, 1, 2, 3)]); me.update(); me.materials.append(m)
     ob = bpy.data.objects.new('coach_back', me); bpy.context.scene.collection.objects.link(ob); ob.visible_shadow = False
     SHB.rim(True, side='left', color=(255, 226, 180), width=0.045, k=0.6, tint=(0.9, 0.92, 1.0), cool=0.4)
