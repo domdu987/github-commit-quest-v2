@@ -1,0 +1,55 @@
+{
+ "take": "s11",
+ "fps": 30,
+ "note": "t = film seconds (g / 30); narration film20/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "kind": "ambience",
+   "t": 24.833,
+   "dur": 2.567,
+   "frame": 745,
+   "end_frame": 822,
+   "note": "Building-site yard, midday: distant hammering, forge roar, cart wheels, a crowd of onlookers laughing"
+  },
+  {
+   "kind": "foley",
+   "t": 25.1,
+   "dur": 1.633,
+   "frame": 753,
+   "end_frame": 802,
+   "note": "the three Parisians laugh: bubbling gentle laughter bed (lady giggle, gent guffaw, child cackle), rhythmic ~3 Hz"
+  },
+  {
+   "kind": "accent",
+   "t": 25.867,
+   "dur": 0.533,
+   "frame": 776,
+   "end_frame": 792,
+   "note": "snap push on 'เรียกไอเฟลว่า': short airy whoosh"
+  },
+  {
+   "kind": "accent",
+   "t": 26.733,
+   "dur": 0.2,
+   "frame": 802,
+   "end_frame": 808,
+   "note": "punch-in cut on 'ไอ้ช่างหมุด': hard impact thump + comic 'boing' with the speed lines"
+  },
+  {
+   "kind": "foley",
+   "t": 26.733,
+   "dur": 0.033,
+   "frame": 802,
+   "end_frame": 803,
+   "note": "2-frame camera shake: low rumble hit"
+  },
+  {
+   "kind": "cut",
+   "t": 27.4,
+   "dur": 0.0,
+   "frame": 822,
+   "end_frame": 822,
+   "note": "hard cut to shot 12 (girders): ambience swells with clanging iron"
+  }
+ ]
+}
