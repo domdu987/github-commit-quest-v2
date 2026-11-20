@@ -33,7 +33,7 @@ PRESET, LIGHT, MARK = "site_table", "DAY", "eiffel_table"
 PPD = 256
 D0, D1 = 420.0, 4.6                            # camera distance to Eiffel (D): extreme wide -> medium
 EL0, EL1 = 40.0, 10.0                          # elevation (deg): high over Paris -> low
-AZ0, AZ1 = 228.0, 195.0                        # azimuth from the table (deg): ends south-south-west of him, wall to the side
+AZ0, AZ1 = 200.0, 195.0                        # azimuth from the table (deg): ends south-south-west of him, wall to the side
 SITE_CTR = CO.W((0.0, -30.0, 25.0))            # the middle of the four legs (D) the far start looks at
 TILT1 = 16.0                                   # aim tilts UP by the end so the leg + scaffold fill the background
 
@@ -116,6 +116,9 @@ def dress(A):
     A['lamp'] = lamp
 
 
+HIDE_SCATTER = ("pf_coal", "pf_soot", "pf_rivet", "pf_metal", "pf_stonedk", "pm_coal", "pm_soot", "pm_rivet", "pm_metal", "pm_stonedk", "pn_coal", "pn_soot", "pn_rivet", "pn_stonedk")   # the small near-black scatter that reads as debris
+
+
 def smoother(u):
     u = clamp(u, 0.0, 1.0)
     return u * u * u * (u * (u * 6 - 15) + 10)
@@ -152,7 +155,7 @@ class ZoomPath(C.CamPath):
         d = math.exp(l) * (1.0 - 0.10 * tau)
         el = lerp(EL0, EL1, p)
         az = lerp(AZ0, AZ1, p) - 9.0 * tau
-        return d, el, az, lerp(0.0, TILT1, p)
+        return d, el, az, lerp(14.0, TILT1, p)          # +14 deg at the start: sky + skyline take the top of the frame
 
     def at(self, g):
         d, el, az, tilt = self.state(g)
@@ -257,7 +260,7 @@ class Take(C.Take):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s03")
         self.A["marks"][MARK] = C.on_ground(self.A["marks"][MARK])
         for ob in C.bpy.data.objects:                               # the preset's near-black FG slabs (anchored to the preset camera): camera-invisible
-            if ob.name in ("fg_redlead_sh", "fg_dark_sh", "fg_metal_sh", "fg_timber_sh") or ob.name.startswith(("derricks_", "swinggirder")):
+            if ob.name in ("fg_redlead_sh", "fg_dark_sh", "fg_metal_sh", "fg_timber_sh") or ob.name.startswith(("derricks_", "swinggirder")) or ob.name in HIDE_SCATTER:
                 ob.visible_camera = False
         self.cam.data.clip_end = 6000.0
         dress(self.A)
@@ -288,7 +291,7 @@ class Take(C.Take):
             C.place(self.eif, f, mark)
             for a, cast, mk, mirror, sc in self.riv:
                 C.place(a, f, mk, scale=sc)
-            lk = 0.6 + 6.4 * (1.0 - smoother((g - GF) / float(G_LAND - GF))) ** 3        # the warm lamp is big when we are far (findable), normal at the landing
+            lk = clamp(0.6 + self.path.state(g)[0] / 50.0, 0.6, 7.0)        # the warm lamp keeps ~8 px on screen while we are far (findable), normal size at the landing
             self.A["lamp"].scale = (lk, lk, lk)
             self.A["lamp"].keyframe_insert("scale", frame=f)
             self.key_set(f)
