@@ -31,11 +31,11 @@ RAISE = (G_WORD - 2, G_WORD + 6)               # arm rises to the point
 G_SWAP = G_WORD + 2
 PRESET, LIGHT, MARK = "site_table", "DAY", "eiffel_table"
 PPD = 256
-D0, D1 = 400.0, 4.6                            # camera distance to Eiffel (D): extreme wide -> medium
-EL0, EL1 = 52.0, 7.0                           # elevation (deg): high over Paris -> low
-AZ0, AZ1 = 228.0, 221.0                        # azimuth from the table (deg, 225 = the preset camera's side)
+D0, D1 = 420.0, 4.6                            # camera distance to Eiffel (D): extreme wide -> medium
+EL0, EL1 = 40.0, 10.0                          # elevation (deg): high over Paris -> low
+AZ0, AZ1 = 228.0, 195.0                        # azimuth from the table (deg): ends south-south-west of him, wall to the side
 SITE_CTR = CO.W((0.0, -30.0, 25.0))            # the middle of the four legs (D) the far start looks at
-TILT1 = 18.0                                   # aim tilts UP by the end so the leg + scaffold fill the background
+TILT1 = 16.0                                   # aim tilts UP by the end so the leg + scaffold fill the background
 
 
 
@@ -130,22 +130,37 @@ class ZoomPath(C.CamPath):
         self.subj = m + Vector((0.0, 0.0, 1.7))
         C.CamPath.__init__(self, self.subj + Vector((1, 0, 0)), self.subj, GF, G_LAST, push=0, decay=0.0)
 
+    KEYS = ((GF, 420.0), (G0, 330.0), (196, 39.0), (G_LAND, D1))     # camera distance to Eiffel (D): ~10 px figure at g 178, 64 px (5 %) at g 196, medium (~540 px) at g 300
+
+    def lnd(self, g):
+        ks = self.KEYS
+        g = clamp(g, ks[0][0], ks[-1][0])
+        for (ga, da), (gb, db) in zip(ks, ks[1:]):
+            if g <= gb:
+                u = (g - ga) / float(gb - ga)
+                return math.log(da) + (math.log(db) - math.log(da)) * u
+        return math.log(ks[-1][1])
+
+    def prog(self, g):
+        """smoothed log-distance (13-frame box) -> progress 0..1 of the BIGZOOM"""
+        l = sum(self.lnd(g + k) for k in range(-6, 7)) / 13.0
+        return clamp((math.log(self.KEYS[0][1]) - l) / (math.log(self.KEYS[0][1]) - math.log(D1)), 0.0, 1.0), l
+
     def state(self, g):
-        u = clamp((g - GF) / float(G_LAND - GF), 0.0, 1.0)
-        s = 0.10 * u + 0.90 * smoother(u)          # ease in/out, but already moving on frame 0 (never parked)
+        p, l = self.prog(g)
         tau = max(0.0, (g - G_LAND) / 30.0)
-        d = D0 * (D1 / D0) ** s * (1.0 - 0.10 * tau)
-        el = lerp(EL0, EL1, s)
-        az = lerp(AZ0, AZ1, s) - 9.0 * tau
-        return d, el, az, lerp(0.0, TILT1, s)
+        d = math.exp(l) * (1.0 - 0.10 * tau)
+        el = lerp(EL0, EL1, p)
+        az = lerp(AZ0, AZ1, p) - 9.0 * tau
+        return d, el, az, lerp(0.0, TILT1, p)
 
     def at(self, g):
         d, el, az, tilt = self.state(g)
         e, a = math.radians(el), math.radians(az)
         off = Vector((math.cos(a) * math.cos(e), math.sin(a) * math.cos(e), math.sin(e))) * d
         loc = self.subj + off
-        u0 = clamp((g - GF) / float(G_LAND - GF), 0.0, 1.0)
-        tgt = self.subj.lerp(SITE_CTR, 0.55 * math.exp(-7.0 * smoother(u0)))          # at the start the aim is the middle of the site (all 4 legs), then it closes on Eiffel
+        p = self.prog(g)[0]
+        tgt = self.subj.lerp(SITE_CTR, 0.55 * math.exp(-7.0 * p))          # at the start the aim is between Eiffel and the middle of the site (legs around him), then it closes on Eiffel
         fwd = (tgt - loc).normalized()
         r = Vector((fwd.y, -fwd.x, 0.0)).normalized()
         from mathutils import Matrix
