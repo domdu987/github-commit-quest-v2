@@ -1,0 +1,7 @@
+# QA sG (film 21 plan v3 segment G, g 1141-1238, 98 frames, CUT in, cut out at 1239, no handles)
+Built with K.build_world(['hill_over','hill_low']) on set3d21 e07ceb1 + cast21 528bf9d (blue Scots, no blue English); 32 samples, VIVID grade untouched.
+- Content: opens behind five Scots on the ledge (profile toward the valley, spear shafts in the foreground) looking over the bridge (column on the deck, causeway and meadow troops, yawning knight on the causeway, scaled x2.2 so it can read); one continuous eased arc (cam_path, lift out past the Scots, over the lip, through the pines and the light shafts) down to the LOW hill_low pose by g 1186; the horn blower raises the horn and blows (cheeks puff) at g 1194 ("เสียงแตร"), Wallace raises his sword arm (eyebrow g 1196, sword g 1200), 14-frame snap push x1.5 from g 1194 with a 2-frame shake (g 1194-1195), slow drift to the cut.
+- Rim: every cast pose through K.with_rim (gold). Mouths: nobody speaks (puffed cheeks only).
+- Numbers (qa_stats / qa_stats2): saturation 0.496, vivid 51 %, luma 105.4; rhythm in-shot median 15.9, p90 45.7 (take includes the fast arc); qa_auto PASS.
+- Known: the arc passes very close to a pine and a boulder (g 1146-1160, set detail, by design); the yawning knight is tiny at 230 m; Wallace and the Scots are three-quarter/front cards (no back views exist).
+- Fixes during the build: first path went through the ledge Scots (blank frame) -> lifted waypoint at g 1152; re-rendered after the cast colour change and the camp/palette set updates.

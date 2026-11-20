@@ -1,0 +1,12 @@
+{
+ "g0": 1141,
+ "g1": 1239,
+ "first_g": 1141,
+ "n_frames": 98,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "preset": "world:hill_over+hill_low",
+ "samples": 32
+}
