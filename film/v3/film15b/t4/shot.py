@@ -56,8 +56,8 @@ def attempt_spec(g, S, hit):
     if k < FLOP_OFF: return ('air', 'flop_back', (0.25 - 0.08 * (k - 21),))
     if k < FLOP_OFF + 3: return ('air', 'flop', (0.02 - 0.12 * (k - FLOP_OFF),))
     if k < FLOP_OFF + 5: return ('air', 'flop_flick', (-0.30 - 0.08 * (k - FLOP_OFF - 3),))
-    if k < FLOP_OFF + 11: return ('mat', 'land_back', (-0.8, 13.6 + 0.2 * min(1, (k - FLOP_OFF - 5) / 3.0)))
-    return ('mat', 'lie_hands_face', (-0.8, 13.8))
+    if k < FLOP_OFF + 11: return ('mat', 'land_back', (-0.7, 14.0 + 0.3 * min(1, (k - FLOP_OFF - 5) / 3.0)))
+    return ('mat', 'lie_hands_face', (-0.7, 14.3))
 
 class Dyn:
     n = 0
@@ -97,13 +97,13 @@ def place_dick(g, cam, cast='dick_olympic'):
     elif kind == 'air':
         place_air(tag, cast, a, cam, b[0], bar_h=BAR_JUMP)
     elif kind == 'mat':
-        SHB.card(tag, cast, cast15.pose_for(a, cast), (b[0], b[1]), cam, z=B2.FOAM_SURF, ppd=192, mirror=True, shadow=(2.2, 0.8), canvas=cast15.CANVAS15_WIDE, kind='seat')
+        SHB.card(tag, cast, cast15.pose_for(a, cast), (b[0], b[1]), cam, z=B2.FOAM_SURF, ppd=192, scale=1.25, mirror=True, shadow=(2.7, 1.0), canvas=cast15.CANVAS15_WIDE, kind='seat')
     SHB.rim(False)
 
 # ------------------------------------------------------------------ pit camera (metres): (g, loc, look, lens)
 PIT_KEYS = [
-    (1052, (-0.7, 8.0, 0.40), (1.7, 11.5, 2.00), 22.0),
-    (1096, (0.9, 8.4, 0.55), (2.1, 11.5, 2.05), 22.0),         # low hero beside the standard: bar ~30 cm above his head, 2.24 m board right
+    (1052, (-1.3, 8.3, 0.40), (1.9, 11.5, 2.00), 22.0),
+    (1096, (-0.4, 8.6, 0.50), (2.2, 11.5, 2.05), 22.0),         # low hero beside the standard: bar ~30 cm above his head, 2.24 m board right
     (1100, (3.0, 5.4, 0.90), (5.6, 8.1, 1.5), 22.0),
     (1105, (7.2, 3.9, 1.00), (5.6, 8.1, 1.5), 22.0),          # side tracking begins: Dick at his mark
     (1117, (6.2, 4.6, 1.05), (4.6, 8.6, 1.5), 22.0),
@@ -114,9 +114,9 @@ PIT_KEYS = [
     (1153, (6.4, 4.5, 1.05), (4.8, 8.5, 1.5), 22.0),
     (1163, (4.4, 5.7, 1.20), (2.7, 9.9, 1.6), 22.0),
     (1174, (2.0, 7.1, 1.40), (0.5, 11.2, 2.0), 22.0),
-    (1180, (1.4, 8.6, 1.70), (0.0, 12.6, 1.6), 22.0),
-    (1190, (1.0, 9.6, 1.55), (-0.7, 13.6, 1.1), 22.0),
-    (1204, (0.5, 10.3, 1.65), (-0.8, 13.9, 1.1), 22.0),
+    (1182, (1.5, 8.4, 1.95), (-0.2, 12.8, 1.5), 24.0),
+    (1192, (1.1, 9.6, 2.45), (-0.6, 13.9, 1.2), 28.0),
+    (1204, (0.9, 10.2, 2.55), (-0.7, 14.2, 1.15), 29.0),
 ]
 def pit_cam(g):
     sel = [k for k in PIT_KEYS if k[0] <= 1146] if g < 1148 else [k for k in PIT_KEYS if k[0] >= 1150]
@@ -165,15 +165,16 @@ def official_pass(cam, g, g0, g1, cast, direction):
     tag = 'dyn_pass_%d' % g; SHB.rim(False)
     CT.put(tag, cast, cast15.pose_for('official_stand', cast), mark=(pos.x * U, pos.y * U, (c.z - 3.3) * U), cam_loc=tuple(v * U for v in loc), ppd=128, scale=4.0, mirror=(direction < 0), shadow=None)
 
-HEADS = [('crowd4', 5.3, 4.5, 1.2, 0.0), ('crowd1', 7.5, 6.7, 1.1, -0.75), ('crowd6', 5.0, 6.7, 1.0, -0.7), ('crowd2', 8.6, 5.6, 1.1, -0.6), ('crowd3', 3.8, 5.9, 1.0, -0.6)]
+HEADS = [('crowd4', -0.95, 1.00, 1.15), ('crowd1', -0.30, 0.85, 1.05), ('crowd6', 0.40, 0.95, 1.10), ('crowd3', 1.05, 1.05, 1.2)]   # (cast, lateral m, distance m, scale)
 def hush_actors(cm, g):
     SHB.rim(True, side='right', color=(255, 240, 215), width=0.05, k=0.8, tint=(0.95, 0.97, 1.0), cool=0.35)
     SHB.card('dyn_dick_%d' % g, 'dick_olympic', cast15.pose_for('rock_a' if (g // 8) % 2 == 0 else 'rock_b', 'dick_olympic'), MARK, cm, ppd=192, shadow=(1.6, 0.55))
     SHB.rim(False); bg_actors(cm, g, True)
-    for i, (cast, x, y, sc_, zh) in enumerate(HEADS):
+    loc, look, lens = cam_for_pit(g); c = Vector(loc); fwd = Vector(look) - c; fwd.z = 0; fwd.normalize(); right = Vector((fwd.y, -fwd.x, 0))
+    for i, (cast, lat, dist, sc_) in enumerate(HEADS):
+        p = c + fwd * dist + right * (lat + 0.03 * math.sin(g * 0.11 + i * 1.9)); zf = c.z - 0.42 - 1.45 * sc_ + 0.02 * math.sin(g * 0.18 + i * 1.7)
         SHB.rim(True, side='left', color=(255, 214, 150), width=0.05, k=0.55, tint=(0.16, 0.17, 0.28), cool=0.0)
-        SHB.card('dyn_head%d_%d' % (i, g), cast, cast15.pose_for('stand', cast), (x, y), cm, z=zh, ppd=96, scale=sc_, shadow=None, mirror=(i % 2 == 0))
-        ob = bpy.data.objects['actor_dyn_head%d_%d' % (i, g)]; ob.location.z += 0.02 * math.sin(g * 0.18 + i * 1.7) * U
+        SHB.card('dyn_head%d_%d' % (i, g), cast, cast15.pose_for('stand', cast), (p.x, p.y), cm, z=zf, ppd=96, scale=sc_, shadow=None, mirror=(i % 2 == 0))
     SHB.rim(False)
 
 # ------------------------------------------------------------------ pit scene
@@ -197,7 +198,12 @@ def draw_pit_frame(g, sc, cam_ob):
     clear_dyn(); loc, look, lens = cam_for_pit(g)
     lc = Vector(loc) * U; cam_ob.location = lc; cam_ob.rotation_euler = SHB._cam_rot(lc, Vector(look) * U); cam_ob.data.lens = lens
     sc.frame_set(g); cm = loc
-    if g >= G_HUSH0: hush_actors(cm, g); return
+    if g >= G_HUSH0:
+        m = bpy.data.materials.get('E6|spark')
+        if m is not None:
+            for n in m.node_tree.nodes:
+                if n.bl_idname == 'ShaderNodeEmission': n.inputs['Strength'].default_value = 35.0     # sparkles dimmed 50 % in the hush
+        hush_actors(cm, g); return
     bg_actors(cm, g)
     SHB.rim(True, side='right', color=(255, 240, 215), width=0.05, k=0.8, tint=(0.95, 0.97, 1.0), cool=0.35)
     if g < G_PASS1[0]:
