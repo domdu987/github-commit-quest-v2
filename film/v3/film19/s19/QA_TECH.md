@@ -54,3 +54,22 @@ Issues:
   - Crops at 2-3x show 1 px continuous rigging, crisp battlements, cannon and roof lines, and no motion smear.
 - Director: agrees. This is the same mechanism as the v1 conform's blur flags on flat sea and the dark hall (content, not defocus).
 - Result: the automatic FAIL is overridden for g1459-1499 only. It is listed in the client report as an override.
+
+## Round 10 (director QA-tech) - PASS (with notes)
+Checked: take.mkv 131 frames 720x1280 30 fps, meta g0 1468 / g1 1581 (shot g1468-1580), first_g 1459; 6 fps frames in /tmp/qa19_r10b/s19/f6/, every frame in /tmp/qa19_r10b/s19/all/ (file index = g - 1459 + 1). Every frame g1535-1580 viewed (2-frame montages, 1:1 edge strips, right-edge crops g1546-1560).
+Numbers (measured by QA-tech, 90x160 grey bilinear, 112 in-shot pairs g1469-1580):
+- Frame-diff: median 8.99 (>= 4 OK), p90 12.38 (>= 10 OK), min 0.35, max 18.13 (g1513). Opening hold g1469-1476 at 0.4-0.5 (8 frames, 0.27 s, the planned brief hold), then smooth ease-in to 9 by g1494, snap peak 17-18 at g1510-1513, plateau 8.5-9.8 g1521-1545. No pop, no black frame (min frame mean 106), no frozen run other than that opening hold.
+- Descent g1541-1546: 8.9, 9.2, 8.9, 9.6, 9.6, 9.3, 8.1: no speed dip (FIXED), then ease-out 7.4 -> 3.7 at g1552. Small restart g1552 3.7 -> g1553 6.2 (1.7x, caused by the hat/watch action, not a camera jump; not visible as a pop).
+- Hold: camera speed is lowest g1551-1558 (diff 3.7-5.9); from g1559 the diff rises to 10-14 because of the jumps/throws, camera only drifts slightly. Arrives g1553 and holds to the end (about 0.9 s) OK.
+- EDGE CUTS g1535-1580 (round 9 blocker): sailor b (right) is fully inside the frame in every frame; head/torso right edge <= ~x 695 at g1546-1558, hat/hand inside. FIXED. Sailor a (left): hand/head >= ~x 70 in all frames, no cut. William fully inside. Heads/hands inside 20-700 OK.
+- Characters at end: William incl. hat+watch ~ 45-53 % of frame height, faces ~11-14 %, heads y centre ~ 540-640 (< 880), crate on sand with contact shadow, sailors' feet on sand with shadows, nothing floats. Mouths fixed grins, no lip-sync. No prop through a face.
+- Glint: big white 4-point star starts g1498 (g1497 itself shows nothing, 1 frame late) and grows to ~120 px by g1504 on the trio. Second glint g1550-1561: present but SMALL (~25-30 px) and sitting on sailor b's tricorne, not on the watch, and not "big".
+- William: looks at the watch with a smirk and tilted head g1538-1546, then thrusts the watch up g1547-1553 and holds it high (reads). His black tricorne flies up g1541-1556.
+- Reactions inside g1540-1584: sailors bounce constantly (feet leave the sand g1559-1563 and g1574-1578 with shadow detached = visible jumps); thrown tricornes now ARE the black tricorne model and leave from the hands/top, drifting g1556-1580 (no frozen); hug is weak: sailor a leans and wraps an arm toward William g1570-1579, sailor b does not hug.
+- Nobody still > 1.5 s (character region diff never below ~4).
+Issues / notes:
+1. g1559-1580 (peak g1561-1565, g1569-1579): the thrown tricornes cross the TOP-RIGHT frame edge and are clipped by x = 720. The team claim "all hats inside x 20-700 from g1545" is not true for these flying hats (props only, no character cut). Also sailor b's own tricorne tip reaches ~x 700-715 at g1550-1557 (inside but touching the margin). Not blocking; suggest launching them lower/left.
+2. Hug g1566-1584 is weakly readable (only sailor a leans in). Suggest b and William lean to each other for 6-8 frames.
+3. Second glint should be bigger and on the watch (g1548-1561).
+4. Note: g1469-1476 hold is 8 frames of diff 0.4 (planned).
+Sharpness (qa_auto "suspected blur" g1459-1499, 41 frames): JUDGEMENT = NOT BLUR, false positive. Evidence: (a) full-size look at g1475: horizon, ship masts and rigging lines, roof shingle lines, window frames, palm fronds and sign edges all crisp; (b) horizon 10-90 % edge width 1.2 px at g1470, 1.6 px at g1480-1498, 1.07 px at the medium frame g1530 (same as medium); (c) my own Laplacian variance ratio to median is 0.53 at g1459 and rises smoothly and monotonically 0.55 (g1475) -> 0.63 (g1491) -> 0.89 (g1499) -> 1.06 (g1501) with the zoom, no step, no focus change (meta dof none); (d) the frame is dominated by smooth sky, sea and flat ground so the variance is low by content, and distant detail is simply small (about 2 px masts). No fix needed; recommend qa_auto compare against a local/edge-normalised value for extreme-wide holds.

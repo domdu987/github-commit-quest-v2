@@ -37,3 +37,23 @@ Notes:
 2. g1720-1756: the palm trunk still runs directly behind William's head/hat (tangent), minor.
 3. Astro eye-line still squints toward the lens (carried note).
 4. At g1750-1755 astro leans so his hair-tail comes within ~25-40 px of the left edge; still inside.
+
+## Round 10 (director QA-tech) - FAIL
+Checked: take.mkv 109 frames 720x1280 30 fps, meta g0 1665 / g1 1756 (shot g1665-1755), first_g 1656; 6 fps frames in /tmp/qa19_r10b/s21/f6/, every frame in /tmp/qa19_r10b/s21/all/ (file index = g - 1656 + 1); montages of every frame g1665-1755, 1:1 crops of the quadrant/tricorne, left edge, William's face and the watch.
+Numbers (measured by QA-tech, 90x160 grey bilinear, 90 in-shot pairs g1666-1755):
+- Frame-diff: median 6.85 (>= 4 OK), p90 13.00 (>= 10 OK), min 2.04 (g1699), max 14.99 (g1749). No pop, no black frame (min frame mean 106), no frozen run.
+- Quadrant vs William's tricorne (segmented: gold fill vs the dark hat body, edge to edge, outline ~3-4 px not subtracted): gap 11 px at g1708 and g1726, 12 at g1706, 13 at g1741, 14 at g1727 and g1742, 17 at g1705, 19 at g1707, 24 at g1725 and g1740. Real gap after the outline is ~5-10 px; by eye the fan visually touches the brim at g1726-1727 and g1741. REQUIREMENT >= 20 px FAILS at g1705-1708, g1725-1727, g1740-1742.
+- Quadrant never covers William's face or eyes; never covers astro19_c's eyes/face (sits above the helmet like a crest; pivot clear of the brow all through).
+- EDGE: astro19_c is cut/touched by the LEFT frame edge at g1695-1700 (quadrant left corner and hair tail at x ~ 0-10, hand ~ x 25) and the hair tail is within ~10 px of the left edge g1752-1755. Brief says no character cut by an edge.
+- William's glance: eyes are closed arcs through g1698, switch to open half-lid eyes at g1699-1700 (56.65 s, ~5 frames after 56.5 s) and the head turns toward the astronomer g1700-1712. Reads (a smug lid-eyes glance, no pupils).
+- Thumb circular rub g1718-1750: reads as the watch/hand bobbing in a small loop (~30-50 px) under his chin, the thumb itself is not visible (sleeve hides it); the loop is legible only as watch wobble, not as a thumb rub. At g1750 his eyes become happy arcs.
+- Astronomer "looking up": head tilts back with the quadrant lifted (g1665-1680, g1736-1744), but the eyes stay a forward/downward squint, no upward pupil. Mouth: fixed wavy frown, no lip-sync.
+- Foreground crates/barrels: barrel + dark crate at right (g1665-1740) and dark crate right of William (g1721-1755) sit on the sand with shadows, boat hull at left, rope coil lower-left from g1707: nothing floats; no prop touches a face. Tangent: palm trunk runs directly behind William's head/ponytail g1668-1756 (tangent; read as an ear-pole), and the right barrel/crate is tangent to the palm base. Props are cut by the side edges (acceptable).
+- Characters: faces ~16-20 % of frame height, head centres y ~ 450-640 (< 880), feet on sand with shadows. Rim light visible and vivid colours OK.
+- Nobody still > 1.5 s (astro constant, William watch/head acts every <= 20 frames).
+Issues:
+1. FAIL: quadrant to William's tricorne gap < 20 px (5-10 px real) at g1705-1708, g1725-1727, g1740-1742. Fix: move the quadrant 25+ px left/up or shift William right ~30 px in those windows.
+2. FAIL: astro19_c cut/touched by the left edge g1695-1700 and hair tail ~10 px from it g1752-1755. Fix: shift the framing right/astro right by ~40-60 px.
+3. Thumb rub not legible as a thumb (see above). Suggest showing the thumb on the watch crystal.
+4. Palm trunk tangent behind William's head g1668-1756.
+5. Astro eye-line still squints forward, not up.
