@@ -54,7 +54,12 @@ Note: in the frames the half-lid frown that snapped open at g 1248 was the CAPTA
 - **More life in the last second:** from g 1250 a second drift segment (CAM_C: push 10 %/s, slide -50 px/s, arc -9 deg/s, continuing from the pose at g 1250) keeps the frame moving to the end; the last pairs went from ~1.7 to ~3.0; William's right brim <= ~695 px, the captain's left brim >= ~120 px, the sailors stay inside.
 - Env overrides `B_PARAMS` / `C_PARAMS` in shot.py were used for the tuning (defaults = the delivered values).
 
+## Round 12 (director: luma, p90 on both methods, captain's O) - g 1176..1288 re-rendered
+- **Exposure:** a further -0.56 EV from g 1176 to 1196 (scene exposure -0.62 -> -1.18 EV; deck and sails; the sun is a post overlay and is NOT darkened). `film/qa_stats.py`: **brightness 105.3 (was 111.1)**, saturation 0.514. (A Rec.601 luma of the same file reads 100 pre-snap / 118 post-snap, the mean-RGB tool 105 for the whole take.)
+- **p90 compensation:** the pull-back (g 1188-1202) and the dial push (g 1210-1226) are shorter and faster, the dial push is x2.2 after a x0.52 pull-back (framing at the peak unchanged: faces 235-240 px, captain's brim >= ~58 px, William's <= ~705 px), B drift push 11 %/s / slide 22 px/s / arc 5 deg/s, last-second drift slide -60 / arc -10.
+- **Captain's "O" held:** from g 1246 the pose is frozen (yaw, roll, lean, pitch, blink off, mouth ("open", 0.26, 0.20) constant): no narrowing / widening that reads as talking.
+- QA_TECH.md / QA_ART.md restored from film19/main (the branch copy was old); nothing appended.
+
 ## Numbers (final)
-- QA's method (ffmpeg bilinear 90x160 grey, pairs g 1097..1279, on the joined parts): **median 4.87, p90 11.11**. deliver.py: median 4.52 / p90 9.87.
-- `film/qa_stats.py`: **saturation 0.511, brightness 111.1** (the -0.2 EV from round 10 is kept); `qa_auto` PASS.
-- Heads in shot: centre y 430-773, width 50-237; one format: `take.mkv.partaa/partab`.
+- Frame-diff in-shot g 1097..1279: deliver.py (mean RGB, 90x160): **median 4.42, p90 10.47**; ffmpeg-grey bilinear 90x160 on the joined parts: **median 4.72, p90 11.62**. Both >= 10.
+- `film/qa_stats.py`: **saturation 0.514, brightness 105.3**; `qa_auto` PASS; heads centre y 430-773, width 49-241; one format: `take.mkv.partaa/partab`.

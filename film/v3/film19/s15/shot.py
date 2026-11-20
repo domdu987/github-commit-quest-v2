@@ -48,7 +48,7 @@ GS = list(range(G_FIRST, G_LAST + 1))
 G_SNAP = C.cap_g("อยู่ตรงหัว")                            # 1172: the sun
 G_SNAP2 = C.cap_g("บอกเวลาที่")                            # 1218: "tells the time at home"
 SNAP = (G_SNAP - 8, G_SNAP + 12)
-SNAP2 = (G_SNAP2 - 10, G_SNAP2 + 10)
+SNAP2 = (G_SNAP2 - 8, G_SNAP2 + 8)
 G_SWAP = (G_SNAP + 14, G_SNAP + 34)                       # quadrant lowered, H4 raised (1186..1206)
 LIGHT, PRESET = "NOON", "ship_deck"
 FINAL_SPP = 11
@@ -67,15 +67,15 @@ CAM_A = C.CamPath(CAM_LOC0, (0.55, -31.4, 15.5), G_FIRST, G_LAST, push=0.12, sli
                   snaps=[dict(g=SNAP, k=1.25, peak=1.4, shift=(2.0, 2.35))])
 G_B = G_SNAP + 14                                         # 1186: the sun snap has settled; B starts from A's pose there
 _lb, _kb = CAM_A.at(G_B)
-_BP = [float(v) for v in os.environ.get("B_PARAMS", "0.09,15,3,25,0.55,2.12,2.0,1.0").split(",")]     # push, slide, arc, rise, pull k, dial k, dial peak, last-2s k
+_BP = [float(v) for v in os.environ.get("B_PARAMS", "0.11,22,5,25,0.52,2.2,2.0,1.0").split(",")]     # push, slide, arc, rise, pull k, dial k, dial peak, last-2s k
 CAM_B = C.CamPath(_lb, _kb, G_B, G_LAST, push=_BP[0], slide_px=_BP[1], rise_px=_BP[3], arc_deg_s=_BP[2], decay=0.15,
-                  snaps=[dict(g=(G_B + 2, G_B + 20), k=_BP[4], peak=1.8, shift=(0.0, -0.8)),      # crane back down and away from the sun
+                  snaps=[dict(g=(G_B + 2, G_B + 16), k=_BP[4], peak=1.8, shift=(0.0, -0.8)),      # crane back down and away from the sun
                          dict(g=SNAP2, k=_BP[5], peak=_BP[6], shift=(-0.5, 0.0)),                 # push in on "บอกเวลาที่": the dial ~170-190 px
                          dict(g=(1230, 1250), k=0.72 * _BP[7], peak=1.5, shift=(0.0, 0.0))])      # ease back to a medium shot
 
 
 G_C = 1250                                                    # the last second: a livelier slow arc / slide (QA wanted more camera life in the last 2 s)
-_CP = [float(v) for v in os.environ.get("C_PARAMS", "0.10,-50,-9,0").split(",")]         # push, slide, arc, rise
+_CP = [float(v) for v in os.environ.get("C_PARAMS", "0.10,-60,-10,0").split(",")]         # push, slide, arc, rise
 _lc, _kc = CAM_B.at(G_C)
 CAM_C = C.CamPath(_lc, _kc, G_C, G_LAST, push=_CP[0], slide_px=_CP[1], rise_px=_CP[3], arc_deg_s=_CP[2], decay=0.1)
 
@@ -175,6 +175,13 @@ def captain_pose(g):
         pump = 0.07 * math.sin(2 * math.pi * g / 29.0)            # the shading hand moves (he shifts and re-shades his eyes)
         p["arm_r"] = dict(hand=(lerp(0.30, 0.34, k) + 0.03 * sh, lerp(0.9, -0.02, k) + pump * k), bend=-0.9 * k + 0.1 * (1 - k), shape="open", stretch=1.0, layer="top")
     p["blink"] = blink(g, BLINKS_C)
+    if g >= G_END[0] + 10:                                       # the "O" is HELD at its size (no sway / blink that could read as talking)
+        p["yaw"] = 0.35 + 0.15
+        p["head_roll"] = 0.0
+        p["lean"] = 9.0
+        p["pitch"] = 0.22
+        p["mouth"] = ("open", 0.26, 0.20)
+        p["blink"] = 0
     p["t"] = g / 30.0
     return p
 
@@ -255,7 +262,7 @@ class Take(C.Take):
         """after the snap the frame goes ~0.2 EV darker (the sails' base colour is texture-driven, so the scene exposure is keyed; the sun is
         composited in post and stays as is): mean luma 113 -> ~105"""
         vs = self.scene.view_settings
-        vs.exposure = -0.62 - 0.2 * u_of(g, 1188, 1204, kind="sine")
+        vs.exposure = -0.62 - 0.56 * u_of(g, 1176, 1196, kind="sine")
         vs.keyframe_insert("exposure", frame=f)
 
     def key_sail_shadows(self, f, g):
