@@ -13,3 +13,6 @@
 - Coach: mound raised to the chin, sawdust on cap, thumbs pumping at 3 Hz, push-in to head ~17 % of frame height (camera 2 m away) before the hard cut; run camera re-centred (coach no longer clipped at g2024).
 - Bar is kept and falls backwards into the sawdust from g2033; landing spray is four bursts (3.2/2.6/2.2/1.6 strength) from g2039.
 - Final numbers: see QA_AUTO.md; frames re-rendered: B all, A g1989-2100.
+
+## Round 3 (final gate)
+- Jumper 1: flop path lowered so the head hangs below the bar (never crossed by it) and the body is visible with it; all three jumpers now approach from the right and land at x -1.7 / 2.0 / 0.15 so they no longer hide each other; bar 2.16 m; crane raised at the first landing (bar clears his torso), lying pose lifted onto the mat. Stadium part re-rendered in full (g1796-1965).
