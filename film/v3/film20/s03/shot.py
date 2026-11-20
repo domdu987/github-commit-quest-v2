@@ -25,8 +25,9 @@ G_SNAP_W = C.cap_g("ปี 1887")                   # 215: the year lands -> sna
 SNAP = (G_SNAP_W - 2, G_SNAP_W + 13)
 PRESET, LIGHT = "site_wide", "DAY"
 PPD = 128
-EXT = 1.5                                      # the crane-down runs 2.6x the preset's end-pose travel (the preset pair is only 3 m apart)
-SLIDE = 55.0                                   # px/s
+EXT = 1.7                                      # the crane-down runs 2.6x the preset's end-pose travel (the preset pair is only 3 m apart)
+ARC = -5.0                                     # deg/s orbit about the yard (parallax)
+SLIDE = 60.0                                   # px/s
 WORKERS = [("w_a", "riveter_tongs", "worker_a", False), ("w_b", "riveter_hammer", "worker_b", True), ("w_c", "riveter_forge", "worker_c", False),
            ("w_d", "riveter_tongs", "worker_d", True), ("w_e", "riveter_hammer", "worker_e", False), ("w_g", "riveter_forge", "worker_g", True)]
 
@@ -53,6 +54,10 @@ class CranePath(C.CamPath):
         look = self.k0.lerp(self.k1, u * EXT)
         slide = SLIDE * self.depth / C.F_PX * (g - GF) / 30.0               # px/s at the yard depth -> D
         loc, look = loc + self.rgt * slide, look + self.rgt * slide
+        from mathutils import Matrix as _M
+        R = _M.Rotation(math.radians(ARC * (g - GF) / 30.0), 3, "Z")        # orbit about the yard: parallax on the barrels / forges
+        loc = self.subj0 + R @ (loc - self.subj0)
+        look = self.subj0 + R @ (look - self.subj0)
         s = C.snap_u(g, SNAP[0], SNAP[1], 1.7)
         fw = (look - loc).normalized()
         loc = loc + fw * (0.25 * self.depth * s)                           # snap push: 20 % of the yard distance
