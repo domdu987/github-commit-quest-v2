@@ -57,3 +57,20 @@ Issues:
 3. Thumb rub not legible as a thumb (see above). Suggest showing the thumb on the watch crystal.
 4. Palm trunk tangent behind William's head g1668-1756.
 5. Astro eye-line still squints forward, not up.
+
+## Round 11 (director QA-tech) - PASS (with notes)
+Checked: take.mkv 109 frames 720x1280 30 fps, meta g0 1665 / g1 1756 (shot g1665-1755), first_g 1656; 6 fps frames in /tmp/qa19_r11/s21/f6/ (22), every frame in /tmp/qa19_r11/s21/all/ (file index = g - 1656 + 1); 6 fps sheet viewed whole, worst-frame crops at 1:1 with a 50 px grid, left-edge strips for g1696-1700, g1752-1755, g1740-1744.
+Numbers (measured by QA-tech):
+- Frame-diff (90x160 grey, ffmpeg bilinear, 90 consecutive in-shot pairs g1666-1755, i.e. frame pairs inside g1665-1755): median 6.86 (>= 4 OK), p90 12.84 (>= 10 OK), min 2.26, max 14.87. No pop, no black frame (min frame mean 110.7), no frozen run (no pair < 2.0).
+- ROUND 10 ISSUE 1 (fan to tricorne, FIXED): quadrant gap to William's tricorne at the worst frames, measured on 1:1 crops with a grid: g1706-1708 about 60-65 px (fan right edge / sleeve to brim left tip), g1725-1727 about 60 px, g1740-1743 about 60-75 px. Automatic fan-segment (gold) to hat-body (dark) minimum is 87 px at g1707, 89 at g1706 and g1743, 98-103 at g1725-1727, 107-109 at g1741-1742 (hat body only, brim tips/outline excluded, so by-eye ~60 px is the conservative figure). All >= 20 px (was 5-10 px). The fan never touches or covers William's face/hat.
+- ROUND 10 ISSUE 2 (left edge, FIXED): astro19_c at g1695-1700: closest part is the quadrant left corner / glove at x ~ 50-55 (g1698-1699), green coat x 62 at g1699, hair tail ~ 70+; air >= ~50 px (need >= 30 OK; was 0-10). g1752-1755: hair tail x ~ 140-165, glove ~ 145: air >= ~140 px. No character touches or is cut by the left or right edge anywhere g1665-1755 (William's hat/ponytail right side x <= ~700).
+- Astronomer pupils: now look up (circle eyes with pupils at the top, visible at g1690, g1712, g1735 and the whole shot); eye-line to the quadrant/sky FIXED (carried note closed). Mouth fixed wavy frown, no lip-sync, no mouth movement.
+- William glance: eyes are closed arcs through g1697, open half-lid eyes from g1698 (not g1696 as briefed; 2 frames / 0.07 s late, not noticeable) with the head turning toward the astronomer; reads clearly now. Happy arcs again at the end.
+- Watch rub: bigger loop; the watch swings visibly (~60-80 px incl. camera drift) and the dark glove/thumb is visible against the watch at g1737-1743. Reads as a watch rub at phone scale. OK.
+- Characters: both fully inside the frame with feet on sand and contact shadows; no half-character cut; faces ~15-20 % of frame height (< 35 %); head centres y ~ 450-640 (< 880); nothing floats (crates, barrels, rope coil, boat hull sit on sand); no prop touches or crosses a face; quadrant never covers astro's eyes or William's face. Camera pulled back: wider, shows sea, ships, palm, set; vivid colours/rim light OK.
+- No-still rule: region frame-diff (astro half and William half of frame) min 5.5 / 3.4 per consecutive pair, no run < 2.0; both act continuously (astro wobble, William glance/watch loop/nod). Nobody still > 1.5 s.
+Notes (non-blocking):
+1. Palm trunk still tangent directly behind William's head/ponytail for most of the shot (carried minor).
+2. g1699 astro's glove/fan corner is the closest point to the left edge (~50 px) - fine but do not push the framing further left.
+3. William glance opens at g1698 instead of g1696 (see above).
+VERDICT: PASS - both Round 10 failures fixed (fan gap ~60 px >= 20; left air >= ~50 px >= 30), all usual checks pass, frame-diff median 6.86 / p90 12.84.
