@@ -68,8 +68,8 @@ CAM_A = C.CamPath(CAM_LOC0, (0.55, -31.4, 15.5), G_FIRST, G_LAST, push=0.12, sli
 G_B = G_SNAP + 14                                         # 1186: the sun snap has settled; B starts from A's pose there
 _lb, _kb = CAM_A.at(G_B)
 CAM_B = C.CamPath(_lb, _kb, G_B, G_LAST, push=0.09, slide_px=15.0, rise_px=25.0, arc_deg_s=3.0, decay=0.15,
-                  snaps=[dict(g=(G_B + 2, G_B + 20), k=0.75, peak=1.8, shift=(0.0, -0.9)),      # crane back down and away from the sun
-                         dict(g=SNAP2, k=1.75, peak=2.0, shift=(-0.4, 0.0)),                     # push in on "บอกเวลาที่": the dial ~170-190 px
+                  snaps=[dict(g=(G_B + 2, G_B + 20), k=0.65, peak=1.8, shift=(0.0, -0.8)),      # crane back down and away from the sun
+                         dict(g=SNAP2, k=1.79, peak=2.0, shift=(-0.5, 0.0)),                     # push in on "บอกเวลาที่": the dial ~170-190 px
                          dict(g=(1230, 1250), k=0.72, peak=1.5, shift=(0.0, 0.0))])               # ease back to a medium shot
 
 
@@ -90,7 +90,7 @@ class _Cam(object):
 
 
 CAM = _Cam()
-CAP_OFF = Vector((1.6, 1.15, 0.0))          # the captain stands close beside William for the whole shot (both fit at the pushes)
+CAP_OFF = Vector((1.7, 1.15, 0.0))          # the captain stands close beside William for the whole shot (both fit at the pushes)
 G_END = (1236, 1262)                          # the captain leans 0.2 D toward the watch
 
 
@@ -137,6 +137,9 @@ def william_pose(g):
     p["yaw"] = lerp(0.40 + 0.05 * adj2, 0.10, us)
     p["lean"] = lerp(-3 - 1.5 * ua + 1.6 * adj, 2.0 * math.sin(g * 0.13) + 1.5 * glance, us)
     p["head_roll"] = -3.0 + 2.5 * math.sin(g * 0.11) + 1.5 * adj
+    if us >= 0.5:                                              # eyes OPEN (neutral) with the smile: he looks at the watch, up at the sun, back
+        p["expr"] = "neutral"
+        p["mouth"] = "smile"
     p["blink"] = blink(g, BLINKS_W)
     p["t"] = t
     return p
@@ -206,7 +209,7 @@ class Take(C.Take):
         for ob in self.dress:
             ob.parent = self.root
             ob.matrix_parent_inverse = self.root.matrix_world.inverted()
-        self.build_sun_disc()
+        self.sun_fade = []                                    # the sun is composited in deliver.py (sunfx.py): no card in the scene (a card made a faint square in the denoiser)
 
     def grade(self):
         """round 8 colour: -0.3 EV more (target luma ~105), deeper blue sky, darker sails, saturation 1.32 (all from this script, the set is untouched)"""
@@ -226,12 +229,13 @@ class Take(C.Take):
                         if b is not None:
                             c = list(b.inputs["Base Color"].default_value)
                             b.inputs["Base Color"].default_value = (c[0] * 0.82, c[1] * 0.82, c[2] * 0.84, c[3])
-        self.sails = [ob for ob in bpy.data.objects if ob.name.startswith("ship6_sail")]
+        self.sails = [ob for ob in bpy.data.objects if ob.name.startswith(("ship6_sail", "ship6_spanker", "ship6_jib"))]
 
     def key_sail_shadows(self, f, g):
-        """noon shadows: from g 1171 the sails stop casting the big diagonal shadow (a pool under the feet remains): a pop hidden in the snap"""
-        on = g < G_SNAP - 1
-        for ob in self.sails:
+        """noon shadows: the sails / spanker / jibs stop casting one after another from g 1146 to ~1172 (the big diagonal shadow shortens
+        and goes: the sun climbing); a pool under the feet remains"""
+        for i, ob in enumerate(self.sails):
+            on = g < 1146 + 2 * i
             ob.visible_shadow = on
             ob.keyframe_insert("visible_shadow", frame=f)
             try:

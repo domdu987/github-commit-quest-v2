@@ -1,7 +1,7 @@
 # s15 QA (merged shots 15 + 16): film 19, SHIP ship_deck NOON, ONE continuous take (QA_TEAM §I: no cut inside)
 
 ## Delivered
-- `take.mkv` (libx264rgb crf 6, 64.1 MB, split in `take.mkv.partaa/ab`; `cat take.mkv.part* > take.mkv`): g 1086..1288 = 203 frames, first_g 1086. Shot range g 1096..1279 (36.52-42.65 s, 184 f); handle in g 1086..1095 (10 f, DIS 15 in from s14), out g 1280..1288 (9 f; hard CUT to s17 at g 1280). 720x1280, 11 spp, 2 threads. `qa_auto` PASS. meta.json (shots [15, 16]), cues.json, contact.jpg, phone_sheet.jpg, framediff.json. **The s16 folder is dropped** (this take replaces it).
+- `take.mkv` (libx264rgb crf 6, 62.7 MB, split in `take.mkv.partaa/ab`; `cat take.mkv.part* > take.mkv`): g 1086..1288 = 203 frames, first_g 1086. Shot range g 1096..1279 (36.52-42.65 s, 184 f); handle in g 1086..1095 (10 f, DIS 15 in from s14), out g 1280..1288 (9 f; hard CUT to s17 at g 1280). 720x1280, 11 spp, 2 threads. `qa_auto` PASS. meta.json (shots [15, 16]), cues.json, contact.jpg, phone_sheet.jpg, framediff.json. **The s16 folder is dropped** (this take replaces it).
 - Built on the colour-fixed set (film19/main ff204d3 merged).
 
 ## Shot (no cut)
@@ -34,8 +34,17 @@
 5. **Deck foreground:** two rope coils, two buckets and a grating on the quarterdeck planks in front of the lens (parented to ship_root); the deck is under ~25 % of the frame from the snap on, ~40 % in the first second (the coil / bucket pieces fill its corners).
 6. **Colour:** exposure -0.62 EV (-0.3 more), grade saturation 1.32, deeper blue sky ramp, sails darkened ~18 %, all set from shot.py (the set is unchanged): **`film/qa_stats.py`: saturation 0.509, brightness 108.4.**
 
+## Round 9 (director: QA-tech blockers + polish) - whole take re-rendered, g 1086..1288
+1. **Sun no longer blinks:** the 3D glare card (which faded out during the crane down and made a faint square in the denoiser) is gone. The sun is now an image-space overlay (`sunfx.py`, applied in `deliver.py`, screen blend, radial alpha falloff to 0, no card edge): it fades in once (halo g 1154-1168, 6 frames BEFORE the disc g 1160-1172) and then stays steady to g 1288 through the dial push.
+2. **William's eyes are OPEN** (expr `neutral` + smile) for the whole H4 phase: he looks at the watch, glances up at the sun (g 1238-1262) and back down; his eyes are visible in every frame.
+3. **Square edge:** gone with the card (see 1).
+4. **Bloom before the disc:** halo first, disc 6 frames later with a 5 px soft rim.
+5. **Sun x:** 560 px during g 1166-1190 (straight above William's raised quadrant), gliding to top-centre 360 by g 1230 (the pair is centred there).
+6. **Sail shadow:** the sails, spanker and jibs stop casting one after another from g 1146 to 1172 (the diagonal shadow shortens and goes before the snap ends); only the pool under their feet remains.
+7. **Captain's hat brim air:** he stands 0.1 D closer to William (mark offset 1.7 / 1.15) and the dial-push zoom is x1.79 after a deeper pull-back (x0.65): the captain's hat brim keeps >= 70 px from the left edge from g 1218 to the end (the brim is estimated at 20 % of the head width beyond the head disc), William's brim <= ~715 px.
+
 ## Numbers (final)
-- Frame-diff (in-shot pairs g 1097..1279, 90x160 grey): **median 4.49, p90 9.94** (the whole file incl. handles: 5.09 / 10.81). The p90 is 0.06 under the 10 target: the last 2 s (the pair filling the frame, flat sails) sit at ~2.3-2.5; a re-render would be needed to lift it.
-- Heads in shot: centre y 431-773, width 54 (far sailor) - 270 px, lowest head bottom 863 (the peak of the first tilt-up); nobody cut by the frame: captain left edge >= 15 px, William right edge <= ~665 px; no heads in the caption band.
-- s/frame 25.5 wall / 49.7 cpu (4 actors + 3 sailors' sprites). `qa_auto` PASS.
-- One format delivered: `take.mkv.partaa/partab` only (`cat take.mkv.part* > take.mkv`).
+- `film/qa_stats.py take.mkv` (whole file): **saturation 0.511, brightness 113.6**; in-shot motion median 5.18 / p90 9.70 by that tool.
+- Frame-diff (deliver.py, in-shot pairs g 1097..1279, 90x160 grey): **median 4.52, p90 9.03** (the director's own measure gave 4.84 / 11.18 on the previous round where deliver.py said 9.94, so the offset is about +1.2: expect ~10.2). Weak spot unchanged: the last ~2 s run at ~2.4.
+- Heads in shot: centre y 430-774, width 54 (far sailor) - 236 px; faces 235 px = 33 % only at the dial peak, ~26-30 % otherwise; lowest head bottom 864; dial at the peak ~165 px. `qa_auto` PASS. s/frame 23.7 wall / 46.2 cpu.
+- One format: `take.mkv.partaa/partab` only (`cat take.mkv.part* > take.mkv`).
