@@ -101,6 +101,7 @@ def pose_of(g):
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s%02d" % SHOT)
+        C.grade(self.scene, float(os.environ.get('EXPO','-0.9')), float(os.environ.get('SAT','1.45')))
         self.path = cam_path(self.A)
         self.key_cam(bf(G_FIRST), *self.path.at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))

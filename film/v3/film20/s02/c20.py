@@ -460,3 +460,19 @@ def framediff(pngs, cuts=()):
             d.append(float(np.abs(a - prev).mean()))
         prev = a
     return float(np.median(d)), float(np.percentile(d, 90)), d
+
+
+def grade(scene, exposure=0.0, sat=1.0, contrast=0.0):
+    """colour grade of the take (QA_TEAM §G: saturation >= 0.47, luma 85-110): view-transform exposure + a compositor Hue/Sat node
+    (Cycles runs the compositor on render).  Called once after Take(); the set itself is untouched."""
+    scene.view_settings.exposure = exposure
+    ng = bpy.data.node_groups.new("grade20", "CompositorNodeTree")
+    ng.interface.new_socket("Image", in_out="OUTPUT", socket_type="NodeSocketColor")
+    rl = ng.nodes.new("CompositorNodeRLayers")
+    hs = ng.nodes.new("CompositorNodeHueSat")
+    hs.inputs["Saturation"].default_value = sat
+    hs.inputs["Value"].default_value = 1.0
+    out = ng.nodes.new("NodeGroupOutput")
+    ng.links.new(rl.outputs["Image"], hs.inputs["Image"])
+    ng.links.new(hs.outputs["Image"], out.inputs[0])
+    scene.compositing_node_group = ng

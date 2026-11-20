@@ -101,6 +101,7 @@ class Take(C.Take):
         for ob in [o for o in C.bpy.data.objects if o.name.startswith("actor_")]:      # the build's stand-in cards at the marks
             ob.hide_render = True
             ob.hide_viewport = True
+        C.grade(self.scene, float(os.environ.get('EXPO','1.0')), float(os.environ.get('SAT','1.25')))
         self.path = cam_path(self.A)
         self.key_cam(bf(G_FIRST), *self.path.at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
