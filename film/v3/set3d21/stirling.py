@@ -1343,7 +1343,7 @@ def scots_wide_line(n=26, banners=3, scale=1.7, toward=(445.0, 244.0), hh0=30.0)
     """a version of the Scots line for the far wide shots (valley_wide, P_A): a row (2 ranks) along a contour of Abbey Craig (height `hh0`) on the side that FACES `toward` (default: the
     far-wide camera, north-east), on open slope out from under the pines, in blue and ochre tunics scaled up (`scale`), with `banners` oversized blue saltire banners (14 m poles,
     7 x 4.6 m cloth) that stay findable on a 360x640 sheet. preset key `scots_wide=True` or build_world(..., scots_wide=True). Returns the number of figures."""
-    B = Batch(88); rs = np.random.RandomState(13); cnt = 0; mats = ['t_saltire', 'thatch', 't_saltire', 'hay', 't_brown']; Bp = Batch(89); a_c = math.atan2(toward[1] - HILL_C[1], toward[0] - HILL_C[0]); pts = []
+    B = Batch(88); rs = np.random.RandomState(13); cnt = 0; mats = ['t_saltire', 't_saltire', 't_white', 't_saltire', 't_saltire']; Bp = Batch(89); a_c = math.atan2(toward[1] - HILL_C[1], toward[0] - HILL_C[0]); pts = []
     for rank in range(2):
         for k in range(n // 2):
             a = a_c + math.radians(-26 + 52 * (k + 0.5 * rank) / max(n // 2 - 1, 1))
