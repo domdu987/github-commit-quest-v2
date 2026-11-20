@@ -20,3 +20,4 @@ Fallback check: send_later 60 min, always re-armed.
   team4 session_017iwyCtawR3srMLUWD2qJ8k render18/team4 s13 s14 s15 s21 s22 s24
   team5 session_017iwyCuMdzWHqsTh3fMcGVY render18/team5 s16-s20 s23
 - [ ] TAKE gate per take (qa_auto + QA-tech 6 fps; QA-art key takes), conform18, FINAL gate, release18, queue row stays WAIT
+- OVERRIDE s25: QA-tech bare-ground FAIL overridden; QA-art PASS + second Opus AGREE-OVERRIDE (2026-11-20)

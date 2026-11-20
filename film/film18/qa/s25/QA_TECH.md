@@ -11,3 +11,6 @@ Checked: 6 fps (23 frames) + first/last 3. Re-measured 6.13 / 6.32 (director 6.0
 - Qi flags about 60-70 by g1953, mostly red (plan 70+): OK. The beacon / Ju glow at the horizon stays.
 - Flat grey arc ring around the near town reads as an untextured band (rule 2, mild).
 - Orange / navy tents are gone; white oval sacks lie on the field.
+
+## Override review (second Opus)
+AGREE-OVERRIDE (the take passes). Reviewed 19 frames at 6 fps from take.mkv, at full size (720x1280) and as a 360x640 sheet. In the first half, the lower part has a hedge line, rows of trees and many haystack shapes over a patchwork of fields with different hues. In the second half, the near foreground holds the walled town, the white sacks and orange carts, a hedge, and finally a wall corner at the bottom-right. The "bare" area left over is mainly the bottom-right 20-30 % of frames g1930-1965. That area is lit, shaded farmland with a strong field-tile pattern and colour variation. At phone size it reads as a dawn plain seen from above, not as a flat, untextured placeholder, so the 30 % lane/camp threshold does not fit this vista. The thing on screen that looks most like a placeholder is the flat grey ring around the near town, not the fields. That is a mild, non-blocking note.
