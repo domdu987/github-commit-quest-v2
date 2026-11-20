@@ -7,19 +7,17 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c18 as C
 from c18 import J, S, R2, V, bpy
 SHOT = 's20'; G0, G1 = 1515, 1595; H_IN, H_OUT = 6, 6
-V_OX = 11.0; XC = 20.0; Y0 = -46.0; DUR = 81 / 30.0
+V_OX = 15.0; XC = 20.0; Y0 = -46.0; DUR = 81 / 30.0
 def pose(sh, t):
     """camera rides with the herd: y = Y0 - V*t*DUR; lateral distance 10.5 -> 9.2 (slow push), whip-in during the first 7 frames."""
-    y = Y0 - V_OX * t * DUR; lat = 10.8 - 2.2 * min(1.0, max(0.0, t)) ; w = max(0.0, 1.0 - (t * 81) / 7.0) ** 2
-    return dict(loc=(XC, y, 1.3), look_at=(XC - lat, y + 3.4 + 0.4 * t * DUR + 30.0 * w, 3.3), lens=19.0)
+    y = Y0 - (V_OX + 0.45) * t * DUR; lat = 10.8 - 2.2 * min(1.0, max(0.0, t)) ; w = max(0.0, 1.0 - (t * 81) / 7.0) ** 2
+    return dict(loc=(XC, y, 1.3), look_at=(XC - lat, y + 3.4 + 0.9 * math.sin(t * 10.0) + 30.0 * w, 3.3), lens=19.0)
 S.pose_at = pose
 rnd = random.Random(20)
 R2.POST['s20'] = lambda p: None
-REL = [(-7.0, 1.5, 0.75, 0.0)]                                   # lead ox in pure profile (n = 0 of the lattice); all rows share the 9.6 D lattice so no flame meets another head
-for row, dx in enumerate((-7.0, -11.8, -16.6)):
-    for n in range(-2, 3):
-        if row == 0 and n in (0, 1): continue
-        REL.append((dx + rnd.uniform(-0.3, 0.3), 7.0 + 12.0 * n + (4.2 if (row == 0 and n == 1) else 0.0) + rnd.uniform(-0.4, 0.4), rnd.uniform(0.97, 1.03), 0.0))
+REL = [(-7.0, 1.0, 0.75, 0.0),                                   # lead ox in pure profile, starts at x ~0.15 and drifts right (camera faster by 0.9 D/s)
+       (-10.5, 7.5, 0.8, -2.4), (-13.5, 11.5, 0.8, -2.2), (-9.8, 15.5, 0.78, -2.6)]    # three oxen overtake it, right -> left, in the mid-ground
+for n in range(-2, 3): REL.append((-17.5 + rnd.uniform(-0.4, 0.4), 6.0 + 12.0 * n, rnd.uniform(0.97, 1.03), 0.0))   # far row (no overlap with the lead)
 
 def setup(ctx):
     J.set_holes(12)
@@ -60,16 +58,16 @@ def frame(g, t, camloc, ctx):
     for ob in bpy.data.objects:
         if ob.name in ('tufts', 'furrows', 'posts', 'road') or ob.name.startswith(('stk', 'flame_stk', 'flame_road', 'flame_rd', 'flame_far', 'farglow', 'fgstone', 'fgwood')): ob.hide_render = True
     if not FGP:
-        for i in range(30):
-            yy = Y0 - 2.9 * i - 1.5; xx = XC - 1.9 - 0.3 * (i % 2)
-            if i % 3 == 0: FGP.append(J.prop_reed_bundle((xx, yy + (0.8 if i % 2 else -0.8), 0.2), (0, 0, 0.3 * i), scale=0.8, n=40, cd=3.0))
-            else: FGP.append(J.prop_pot((xx, yy + (0.9 if i % 2 else -0.9), 0.0), 0.5 * i, kind=('pot', 'jar', 'bowl')[i % 3], scale=0.7, cd=4))
+        for i in range(60):
+            yy = Y0 - 2.0 * i - 1.0; xx = XC - 1.5 - 0.3 * (i % 2)
+            if i % 3 == 0: FGP.append(J.prop_reed_bundle((xx, yy + (0.8 if i % 2 else -0.8), 0.2), (0, 0, 0.3 * i), scale=1.0, n=40, cd=3.0))
+            else: FGP.append(J.prop_pot((xx, yy + (0.9 if i % 2 else -0.9), 0.0), 0.5 * i, kind=('pot', 'jar', 'bowl')[i % 3], scale=0.85, cd=4))
     for q, (qdy, qph) in enumerate(((-9.0, 0.0), (6.0, 0.25))):          # Qi runners in the near lane, cropped by the bottom edge
         yq = Y0 - V_OX * (g - G0) / 30.0 + qdy + 2.6 * k + 3.0 * math.sin(k * 1.3 + q)
         C.put_person(C.qi(k * 1.5 + qph, 1), (XC - 11.5 - 1.2 * q, yq, 0), camloc, 3.1, 'qin%d' % q, mirror=True, tint=(0.4, 0.4, 0.62), k=0.8)
     for j, (dx, dy, sc, dv) in enumerate(REL):
         ycam = Y0 - V_OX * (g - G0) / 30.0
-        pos = (XC + dx, ycam + dy + dv * k + (0.0 if j == 0 else 0.0), 0.0)
+        pos = (XC + dx, ycam + dy + dv * k + 0.0, 0.0)
         ph = int(k * 12 + j * 3) % 8
         C.put_ox(j, pos, -90, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='side', gait='gallop', theta=0, reed=True, face='rage', tfx=(1.5 if j == 0 else 0.8), lean=(62.0 if j == 0 else 86.0))
 

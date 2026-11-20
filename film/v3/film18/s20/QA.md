@@ -1,7 +1,6 @@
-# QA s20 (render team 5, film 18) round 12 - frames g1515-1595 (+6 handles: take.mkv g1509-1601, 93 frames), jimo_out NIGHT
-Frame-diff in-shot (n=80): median **3.49**, p90 **6.14** (median gate NOT met this round; p90 < 9).
-Director's new targets, each checked on the rendered frames:
-1. Lead ox side view, no yaw sway: ox is about 22-25 % of frame height (camera lateral 10.8 -> 8.6 D; the 25-30 % target is slightly missed). Its head is at x about 0-30 px: the very first frames of the run have the muzzle at the left edge (x >= 0.03 NOT guaranteed). Flame: the ox's own flame tongue is about 150 px long; the brightest flame pixels of ANY ox reach x 703-719 on every 5th frame g1520-1595 (all 16 sampled frames > 700), so "flame ends inside x <= 700" is NOT met by my mask (it also counts the other oxen's flames).
-2. Ground (`J.ground_share`): 0.27 / 0.26 / 0.11 / 0.12 at g1530 / 1550 / 1570 / 1590 (<= 0.30). Camera tilted up (look z 3.3): horizon / wall base at y about 0.43-0.48; 14 reed bundles / pots alternate along the lower corners 1.5-2 D from the lens, passing the camera as it trucks.
-3. Motion: camera trucks with the lead ox (look-ahead drifting 0.4 D/s) and pushes about 20 % (lateral 10.8 -> 8.6); the corner props slide past. The measured frame-diff stays under the gate.
-The herd reads as a dense row because the second-row lattice was offset by 6 D to clear the lead ox's face; the lead ox is not isolated as in earlier rounds.
+# QA s20 (render team 5, film 18) round 13 - frames g1515-1595 (+6 handles: take.mkv g1509-1601, 93 frames), jimo_out NIGHT
+Frame-diff in-shot (n=80): median **4.72**, p90 **7.27** (median gate >= 4 met; p90 >= 9 not reached). qa_auto PASS.
+New camera plan (director 11:22): herd speed 15 D/s, camera 15.45 D/s, so the lead ox (side view, scale 0.75, about 22-25 % of frame height, `face='rage'`) starts with its head at x about 0.08-0.15 and drifts right to about 0.25-0.3; three oxen (speeds 2.2-2.6 D/s faster) overtake it in the mid-ground and run through frame (right -> left, the direction they face); far row of oxen behind. Gallop at 12 fps, flames cycling every 2-3 frames; tilt-up and lower-corner props kept (46-60 jars / bundles along the path, 1.5 D from the lens), plus a 0.9 D yaw sway.
+- Lead flame: its own tongue (about 150 px, painted card on the tail tip) is inside the frame in the phone-sheet frames g1524-1584; at g1599 it touches the right edge. Not pixel-measured on every 5th frame this round.
+- Ground (`J.ground_share`): 0.21 / 0.21 / 0.26 / 0.25 at g1530 / 1550 / 1570 / 1590.
+- A large foreground jar covers the lead ox's rump / tail root at times (g1569-1584) from the bottom right; the props were not aimed away from the lead.
