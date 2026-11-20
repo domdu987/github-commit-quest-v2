@@ -315,7 +315,7 @@ def _range(name, poses):
     return x0, y0, x1, y1
 
 
-def member_poses(name):
+def member_poses(name, r8=False):
     C = P.CAST[name]
     poses = [{}]
     for a in sorted(P.ARM_PRESETS[C["build"]]):
@@ -323,7 +323,7 @@ def member_poses(name):
             poses.append(dict(arm_r=a, arm_l=a, prop_r=pr, yaw=0.6))
             poses.append(dict(arm_r=a, arm_l=a, prop_l=pr, yaw=-0.6, squash=(0.8, 1.15)))
     poses += [dict(legs="crouch"), dict(legs="wide"), dict(fx=["steam", "zzz", "sweat", "tears"], expr="asleep"), dict(yaw=1.2), dict(yaw=-1.2), dict(hat_askew=30), dict(hat_askew=-30)]
-    poses += [p for (c, p) in cast18.STORY18.values() if c == name]
+    poses += [p for (n_, (c, p)) in cast18.STORY18.items() if c == name and (r8 or n_ not in cast18.R8_POSES)]
     for m in cast18.CYCLE_MODES:
         for i in range(16):
             for fc in (1, -1):
@@ -334,7 +334,7 @@ def member_poses(name):
 
 
 def _check(name, poses, c):
-    x0, y0, x1, y1 = _range(name, poses)
+    x0, y0, x1, y1 = _range(name.replace('(r8)', ''), poses)
     clipped = x0 < c[0] or y0 - 0.32 < c[1] or x1 > c[2] or y1 > c[3]
     hw = math.ceil(max(-x0, x1) * 16) / 16.0
     sugg = (-hw, math.floor((y0 - 0.33) * 16) / 16.0, hw, math.ceil(max(y1, 0.12) * 16) / 16.0)
@@ -346,6 +346,8 @@ def canvas_check():
     bad = 0
     for name in cast18.NEW18:
         bad += _check(name, member_poses(name), cast18.CANVAS18[name])
+        if name in cast18.CANVAS_R8:
+            bad += _check(name + "(r8)", member_poses(name, True), cast18.CANVAS_R8[name])
     probs = 0
     for n, (c, p) in cast18.STORY18.items():
         a = P.figure(c, p, "a")
