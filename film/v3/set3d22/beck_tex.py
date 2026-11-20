@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, 'tex_beck')
-TEX_V = 18
+TEX_V = 21
 FB = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 FN = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
 FS = '/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf'
@@ -323,10 +323,18 @@ def pavement(W=512, H=512, base=(0.55, 0.52, 0.66)):
     return img
 
 def grate(W=512):
-    img = Image.new('RGB', (W, W), '#150f1a'); d = ImageDraw.Draw(img); g = Image.new('RGB', (W, W), (0, 0, 0)); gd = ImageDraw.Draw(g)
-    for i in range(10):
-        x = 30 + i * 46; d.rectangle((x, 24, x + 26, W - 24), fill=(150, 70, 30)); gd.rectangle((x, 24, x + 26, W - 24), fill=(255, 150, 55))
-    d.rectangle((0, 0, W - 1, W - 1), outline='#3a3050', width=22)
+    """Cast-iron pavement grille: dark frame with rivets, 6 x 6 slots separated by bars with cross ribs, warm light from lamps below showing through (glow mask)."""
+    img = Image.new('RGB', (W, W), (46, 50, 82)); d = ImageDraw.Draw(img); g = Image.new('RGB', (W, W), (0, 0, 0)); gd = ImageDraw.Draw(g)
+    m, n = 34, 6; cw = (W - 2 * m) / n
+    for r in range(n):
+        for c in range(n):
+            x0 = m + c * cw + 17; y0 = m + r * cw + 7; x1 = m + (c + 1) * cw - 17; y1 = m + (r + 1) * cw - 7
+            d.rounded_rectangle((x0, y0, x1, y1), radius=10, fill=(120, 60, 28))
+            gd.rounded_rectangle((x0, y0, x1, y1), radius=10, fill=(255, 140, 50))
+            gd.ellipse((x0 + 8, y0 + 8, x1 - 8, y1 - 8), fill=(255, 200, 110))                      # a lamp below each slot
+            d.line(((x0 + x1) / 2, y0, (x0 + x1) / 2, y1), fill=(46, 50, 82), width=6); gd.line(((x0 + x1) / 2, y0, (x0 + x1) / 2, y1), fill=(0, 0, 0), width=6)
+    d.rectangle((0, 0, W - 1, W - 1), outline=(70, 76, 120), width=26)
+    for (px, py) in ((14, 14), (W - 14, 14), (14, W - 14), (W - 14, W - 14), (W / 2, 12), (W / 2, W - 12), (12, W / 2), (W - 12, W / 2)): d.ellipse((px - 6, py - 6, px + 6, py + 6), fill=(130, 140, 190))
     return img, g
 
 def slate(W=256, H=256, base='#33407a'):
@@ -525,11 +533,13 @@ def paper_grid(W=1024, H=740):
     return img
 
 def rag_rug(W=512, H=512):
-    img = Image.new('RGB', (W, H), '#4a1a2a'); d = ImageDraw.Draw(img); rr = random.Random(3)
-    cols = ['#8a2a3a', '#1f3f86', '#c8982e', '#2a6a4e', '#d8c8a0', '#6a2a7a']
-    for i in range(9, 0, -1):
-        r = i * 27; d.ellipse((W / 2 - r, H / 2 - r, W / 2 + r, H / 2 + r), fill=cols[i % len(cols)], outline='#2a1430', width=3)
-    a = np.asarray(img, 'float32') / 255; nr = np.random.RandomState(4); a = a * (0.82 + noise(nr, H, W, 4, 0.3))[..., None]
+    """Calm woven rug: dark maroon field, navy and green borders, thin cream lines (no loud rings)."""
+    img = Image.new('RGB', (W, H), '#5a2030'); d = ImageDraw.Draw(img)
+    for i, (m, col) in enumerate(((8, '#1f2f66'), (28, '#e8d8a8'), (34, '#2a5a44'), (62, '#e8d8a8'), (68, '#6a2a3a'))):
+        d.rectangle((m, m, W - 1 - m, H - 1 - m), fill=col)
+    d.rectangle((90, 90, W - 91, H - 91), fill='#5a2030', outline='#c8982e', width=4)
+    d.ellipse((W / 2 - 70, H / 2 - 70, W / 2 + 70, H / 2 + 70), fill='#2a5a44', outline='#e8d8a8', width=4)
+    a = np.asarray(img, 'float32') / 255; nr = np.random.RandomState(4); a = a * (0.86 + noise(nr, H, W, 4, 0.2))[..., None]
     return Image.fromarray((np.clip(a, 0, 1) * 255).astype('uint8'))
 
 def circuit_sheet(W=640, H=460, seed=1):

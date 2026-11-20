@@ -111,8 +111,8 @@ def build_london_world(scene, P):
     pg = Part('pit_glow', ink=False, shadow=False); halo_card(pg.mb, (-33, 18.5, 1.5), 7.0, E('hpit', 'halo_warm', k=1.4, additive=True)); pg.done()
     point_light('pit_up', (-33, 19, 1.0), (1.0, 0.62, 0.3), 1200, 0.8)
     # ---- grate (pavement, warm light from below) near the middle of the far pavement
-    gr = Part('grate', (8, 19, 0.1), ink=False); plane(gr.mb, (4, 15.5, 0.06), (8, 0, 0), (0, 7, 0), TX('grate', 1.0, glow='grate_glow', glow_k=0.9), (0, 0, 1, 1)); gr.done()
-    gh = Part('grate_glow', ink=False, shadow=False); halo_card(gh.mb, (8, 19, 3.0), 4.5, E('hgr', 'halo_warm', k=0.25, additive=True)); plane(gh.mb, (-1.0, 13.5, 0.09), (18, 0, 0), (0, 11, 0), E('hgr2', 'halo_warm', k=0.5, additive=True), (0, 0, 1, 1)); gh.done()
+    gr = Part('grate', (8, 19, 0.1), ink=False); plane(gr.mb, (4, 15.5, 0.06), (8, 0, 0), (0, 7, 0), TX('grate', 1.0, glow='grate_glow', glow_k=0.3), (0, 0, 1, 1)); gr.done()
+    gh = Part('grate_glow', ink=False, shadow=False); halo_card(gh.mb, (8, 19, 3.0), 4.5, E('hgr', 'halo_warm', k=0.25, additive=True)); plane(gh.mb, (-1.0, 13.5, 0.09), (18, 0, 0), (0, 11, 0), E('hgr2', 'halo_warm', k=0.25, additive=True), (0, 0, 1, 1)); gh.done()
     point_light('grate_up', (8, 19, 0.6), (1.0, 0.6, 0.25), 450, 0.8)
     lodging_house(S)
     # near-side terrace (roofs seen from above: dark foreground) x -80..-38
@@ -322,13 +322,13 @@ LOCATIONS['london'] = dict(build=build_london, light='DUSK_CITY', sky=True, cam=
 
 
 # ============================================================================= shots
-SHOTS['s02'] = dict(location='london', light='DUSK', f0=107, f1=192, shift_y=0.12,
-    cam=[(0, (-30.5, -5.6, 10.4), (-18.0, 24.0, 11.0), 30), (9, (-30.5, -2.9, 10.6), (-18.0, 24.0, 12.5), 28), (30, (-27.0, -24.0, 46.0), (-6.0, 42.0, 0.0), 24), (46, (-13.0, -46.0, 70.0), (-3.0, 44.0, 0.0), 22),
+SHOTS['s02'] = dict(location='london', light='DUSK', f0=107, f1=192, shift_y=0.0,
+    cam=[(0, (-30.5, -5.6, 10.4), (-30.5, 10.0, 10.4), 30), (9, (-30.5, -2.9, 10.6), (-29.5, 12.0, 12.0), 28), (30, (-27.0, -24.0, 46.0), (-6.0, 42.0, 0.0), 24), (46, (-13.0, -46.0, 70.0), (-3.0, 44.0, 0.0), 22),
          (60, (-4.0, -32.0, 62.0), (6.0, 22.0, 0.0), 24), (74, (7.5, 0.0, 26.0), (8.0, 19.0, 0.0), 27), (84, (8.0, 18.7, 6.0), (8.0, 19.0, 0.0), 30)],
     marks=dict(), state=dict())
 SHOTS['s15'] = dict(location='london', light='NIGHT', f0=1752, f1=1890, shift_y=0.12,
-    cam=[(0, (-13.0, -46.0, 70.0), (-3.0, 44.0, 0.0), 22), (40, (-6.0, -30.0, 52.0), (0.0, 24.0, 11.0), 24), (80, (0.0, 1.0, 19.0), (0.0, 24.0, 11.0), 26), (100, (0.0, 13.5, 11.8), (0.0, 34.0, 10.0), 28), (112, (0.0, 22.0, 10.9), (0.0, 38.0, 9.7), 30), (137, (0.0, 34.0, 10.0), (0.0, 42.6, 9.2), 34)],
-    marks=dict(official=(0.0, 43.5, 9.23, 0)), state=dict(map_towers=0.6, crate=1.0), actors=lambda g: actors_s15(g))
+    cam=[(0, (-13.0, -46.0, 70.0), (-3.0, 44.0, 0.0), 22), (40, (-6.0, -30.0, 52.0), (0.0, 24.0, 11.0), 24), (80, (0.0, 1.0, 19.0), (0.0, 24.0, 11.0), 26), (100, (0.0, 13.5, 11.8), (0.0, 34.0, 10.0), 28), (112, (0.0, 22.0, 10.9), (0.0, 38.0, 9.7), 30), (137, (0.0, 33.6, 10.4), (0.0, 42.6, 10.0), 40)],
+    marks=dict(official=(0.0, 43.5, 9.23, 0)), state=dict(map_towers=1.0, crate=1.0), actors=lambda g: actors_s15(g))
 
 def actors_s15(g):
     import beck_hq as H
