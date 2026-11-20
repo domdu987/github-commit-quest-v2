@@ -67,15 +67,22 @@ CAM_A = C.CamPath(CAM_LOC0, (0.55, -31.4, 15.5), G_FIRST, G_LAST, push=0.12, sli
                   snaps=[dict(g=SNAP, k=1.25, peak=1.4, shift=(2.0, 2.35))])
 G_B = G_SNAP + 14                                         # 1186: the sun snap has settled; B starts from A's pose there
 _lb, _kb = CAM_A.at(G_B)
-CAM_B = C.CamPath(_lb, _kb, G_B, G_LAST, push=0.09, slide_px=15.0, rise_px=25.0, arc_deg_s=3.0, decay=0.15,
-                  snaps=[dict(g=(G_B + 2, G_B + 20), k=0.65, peak=1.8, shift=(0.0, -0.8)),      # crane back down and away from the sun
-                         dict(g=SNAP2, k=1.79, peak=2.0, shift=(-0.5, 0.0)),                     # push in on "บอกเวลาที่": the dial ~170-190 px
-                         dict(g=(1230, 1250), k=0.72, peak=1.5, shift=(0.0, 0.0))])               # ease back to a medium shot
+_BP = [float(v) for v in os.environ.get("B_PARAMS", "0.09,15,3,25,0.55,2.12,2.0,1.0").split(",")]     # push, slide, arc, rise, pull k, dial k, dial peak, last-2s k
+CAM_B = C.CamPath(_lb, _kb, G_B, G_LAST, push=_BP[0], slide_px=_BP[1], rise_px=_BP[3], arc_deg_s=_BP[2], decay=0.15,
+                  snaps=[dict(g=(G_B + 2, G_B + 20), k=_BP[4], peak=1.8, shift=(0.0, -0.8)),      # crane back down and away from the sun
+                         dict(g=SNAP2, k=_BP[5], peak=_BP[6], shift=(-0.5, 0.0)),                 # push in on "บอกเวลาที่": the dial ~170-190 px
+                         dict(g=(1230, 1250), k=0.72 * _BP[7], peak=1.5, shift=(0.0, 0.0))])      # ease back to a medium shot
+
+
+G_C = 1250                                                    # the last second: a livelier slow arc / slide (QA wanted more camera life in the last 2 s)
+_CP = [float(v) for v in os.environ.get("C_PARAMS", "0.10,-50,-9,0").split(",")]         # push, slide, arc, rise
+_lc, _kc = CAM_B.at(G_C)
+CAM_C = C.CamPath(_lc, _kc, G_C, G_LAST, push=_CP[0], slide_px=_CP[1], rise_px=_CP[3], arc_deg_s=_CP[2], decay=0.1)
 
 
 class _Cam(object):
     def at(self, g):
-        return CAM_A.at(g) if g <= G_B else CAM_B.at(g)
+        return CAM_A.at(g) if g <= G_B else (CAM_B.at(g) if g <= G_C else CAM_C.at(g))
 
     def report(self, gs, depth=None):
         rows, worst = [], 0

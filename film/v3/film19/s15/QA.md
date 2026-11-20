@@ -49,7 +49,12 @@ Note: in the frames the half-lid frown that snapped open at g 1248 was the CAPTA
 2. **Captain:** ring eyes (expr `shocked`, closed mouth) from the reveal (g ~1200) instead of half-lid slits; the mouth stays closed and opens over ~10 frames g 1234-1246 (("open", w, h) blended), no one-frame snap.
 3. **Exposure:** scene exposure keyed -0.62 -> -0.82 EV over g 1188-1204 (the sails' base colour is texture driven, so a base-colour tweak did nothing); the sun is a post overlay and stays as is. Whole-file brightness 113.6 -> 110.8 (about 105 in the last 2 s).
 
+## Round 11 (director: p90 margin) - g 1186..1288 re-rendered; glance, eyes and mouth blend unchanged
+- **Stronger dial push:** the pull-back before it is deeper (x0.55 instead of x0.65, g 1188-1206) and the dial push x2.12 (net framing unchanged: faces 235 px = 33 % at the peak, hat brims inside the frame: captain's >= ~55 px from the left edge, William's <= ~705 px), so both snaps move faster.
+- **More life in the last second:** from g 1250 a second drift segment (CAM_C: push 10 %/s, slide -50 px/s, arc -9 deg/s, continuing from the pose at g 1250) keeps the frame moving to the end; the last pairs went from ~1.7 to ~3.0; William's right brim <= ~695 px, the captain's left brim >= ~120 px, the sailors stay inside.
+- Env overrides `B_PARAMS` / `C_PARAMS` in shot.py were used for the tuning (defaults = the delivered values).
+
 ## Numbers (final)
-- `film/qa_stats.py take.mkv`: **saturation 0.512, brightness 110.8**; in-shot motion median 5.16 / p90 9.41 by that tool.
-- Frame-diff (deliver.py, in-shot g 1097..1279): **median 4.50, p90 8.54** (was 9.03 before the darkening; your measure read +1.07 above deliver.py last round, i.e. ~9.6 now: the exposure drop costs about 0.5 of p90).
-- Heads in shot: centre y 430-774; qa_auto PASS; one format: `take.mkv.partaa/partab`.
+- QA's method (ffmpeg bilinear 90x160 grey, pairs g 1097..1279, on the joined parts): **median 4.87, p90 11.11**. deliver.py: median 4.52 / p90 9.87.
+- `film/qa_stats.py`: **saturation 0.511, brightness 111.1** (the -0.2 EV from round 10 is kept); `qa_auto` PASS.
+- Heads in shot: centre y 430-773, width 50-237; one format: `take.mkv.partaa/partab`.
