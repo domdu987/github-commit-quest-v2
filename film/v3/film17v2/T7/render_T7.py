@@ -16,7 +16,7 @@ for k in P.TAKES['T7']['keys']:
 def assign_for(g):
     a = {'inspector': ('inspector_shocked', {}), 'gend_b': ('gendarme_standing_b', {})}
     if g < 1792:   # 7a
-        a['bertillon'] = ('bertillon_holding_card', {}); a['dupont'] = ('dupont_caught' if g < 1755 else 'dupont_innocent', {'dy': DUP_DY})
+        a['bertillon'] = (bert_pose(g), {}); a['dupont'] = ('dupont_caught' if g < 1755 else 'dupont_innocent', {'dy': DUP_DY})
     else:          # 7b
         a['bertillon'] = ('bertillon_triumphant', {}); a['dupont'] = ('dupont_innocent', {'dy': DUP_DY})
         a['gend_a'] = ('gendarme_escort_a', {}); a['thief1'] = ('prisoner_standing_a', {}); a['thief2'] = ('prisoner_standing_b', {})
@@ -100,6 +100,41 @@ def key_pop(g0, g1):
             else:
                 c.scale = (0.0001, 0.0001, 0.0001)
             for path in ('location', 'rotation_euler', 'scale'): c.keyframe_insert(path, frame=f)
+def remove_dupont_stool():
+    import bmesh
+    for o in bpy.data.objects:
+        if o.type != 'MESH' or not o.name.startswith('arch_'): continue
+        mw = o.matrix_world; bm = bmesh.new(); bm.from_mesh(o.data); kill = [f for f in bm.faces if (lambda c: 14.15 < c.x < 14.95 and 26.3 < c.y < 27.05 and 1.15 < c.z < 1.95)(mw @ f.calc_center_median())]
+        if kill:
+            bmesh.ops.delete(bm, geom=kill, context='FACES'); bm.to_mesh(o.data)
+        bm.free()
+def ramp(g, a, b, c, d, lo):      # 1 -> lo over a..b, hold to c, back to 1 by d (smoothstep)
+    ss = lambda t: (max(0.0, min(1.0, t)) ** 2) * (3 - 2 * max(0.0, min(1.0, t)))
+    if g <= a: return 1.0
+    if g < b: return 1.0 + (lo - 1.0) * ss((g - a) / float(b - a))
+    if g <= c: return lo
+    if g < d: return lo + (1.0 - lo) * ss((g - c) / float(d - c))
+    return 1.0
+LIGHT_RAMP = (1804, 1812, 1835, 1845, float(os.environ.get('T7_RAMP', 0.72)))
+def key_light_ramp():
+    a, b, c, d, lo = LIGHT_RAMP; sc = bpy.context.scene
+    for g in range(a, d + 1):
+        sc.frame_set(g + 1); r = ramp(g, a, b, c, d, lo)
+        for L in bpy.data.lights:
+            base = L.energy; L.energy = base * r; L.keyframe_insert('energy', frame=g + 1)
+def cull_banners(cam):
+    cl = Vector(cam.location)
+    for hg in P.W.get('banners', []):
+        near = (Vector(hg.matrix_world.translation) + Vector((0, 0, -0.7)) - cl).length < BANNER_CULL
+        for o in [hg] + list(hg.children): o.hide_render = near
+BANNER_CULL = float(os.environ.get('T7_CULL', 2.4))
+def bert_pose(g):
+    import cast17
+    c, p = cast17.STORY17['bertillon_holding_card']; p = dict(p); t = max(0, g - 1695)
+    arm = dict(p['arm_r']); lift = 0.5 - 0.5 * math.cos(2 * math.pi * t / 30.0)       # card up -> down -> up, 1 s, eased
+    h = arm['hand']; arm['hand'] = (h[0], 0.08 + 0.42 * lift); arm['bend'] = -0.6 + 0.25 * lift; p['arm_r'] = arm
+    p['head_roll'] = 6.0 * math.sin(2 * math.pi * t / 96.0); p['pitch'] = -0.15 + 0.10 * math.sin(2 * math.pi * t / 48.0 + 0.8)
+    cast17.STORY17['bertillon_t7_live'] = (c, p); return 'bertillon_t7_live'
 def clear_cast():
     import actors
     for o in list(bpy.data.objects):
@@ -111,7 +146,7 @@ def main(gl, outdir, samples=16):
     if True:   # director: beam_fx veils the crane (g1820 diff 9.5/255): beams off for the whole take
         for m in bpy.data.materials:
             if m.name.startswith('beam_fx') and m.node_tree: m.node_tree.nodes['strength'].inputs[1].default_value = float(os.environ.get('T7_BEAM', '0')) * 0.035
-    P.key_take(take); build_pop(); key_pop(1689, 1874); P.setup_render2((720, 1280), samples=samples, threads=2)
+    P.key_take(take); remove_dupont_stool(); key_light_ramp(); build_pop(); key_pop(1689, 1874); P.setup_render2((720, 1280), samples=samples, threads=2)
     sc = bpy.context.scene
     for g in gl:
         fp = os.path.join(outdir, 'g_%04d.png' % g)
@@ -119,7 +154,7 @@ def main(gl, outdir, samples=16):
         t = time.time(); sc.frame_set(g + 1)
         sc.render.use_motion_blur = 1800 <= g <= 1867
         if sc.render.use_motion_blur: sc.render.motion_blur_shutter = 0.5
-        clear_cast(); acts = P.stage_cast2(take, g, assign_for(g)); put_beard(g, acts['dupont'], sc.camera); sc.render.filepath = fp
+        clear_cast(); acts = P.stage_cast2(take, g, assign_for(g)); put_beard(g, acts['dupont'], sc.camera); cull_banners(sc.camera); sc.render.filepath = fp
         bpy.ops.render.render(write_still=True); P.grade2(fp); print('g', g, '%.0fs' % (time.time() - t), flush=True)
 if __name__ == '__main__':
     # usage: render_T7.py g0 g1 outdir [samples]   |   render_T7.py g,g,g outdir [samples]  (stills)
