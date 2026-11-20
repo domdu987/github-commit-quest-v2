@@ -283,6 +283,7 @@ class Take(C.Take):
         self.post = self.make_post()
         self.make_fence_girders()
         self.girder = self.make_carried_girder()
+        self.add_ground_detail()
         mk = self.A["marks"]
         self.marks = {}
         for k, xy in (("lady", LADY), ("gent", GENT), ("child", CHILD), ("eiffel", EIF)):
@@ -327,6 +328,30 @@ class Take(C.Take):
             ob.rotation_euler = (0, 0, math.atan2(f.y, f.x) - math.pi / 2 + rot)
             ob.data.materials.append(CO.STATE["M"]["redlead"])
             self.fg_girders.append(ob)
+
+    def add_ground_detail(self):
+        """stones, timber offcuts and a few coils on the gravel in front of the stack (x -83..-62, y -43..-35.5): the plain dark ground
+        slab there read as blur / a bare slab (qa_auto); the set puts clutter only where its preset cameras look"""
+        import random
+        rnd = random.Random(11)
+        M = CO.STATE["M"]
+        for i in range(34):
+            x, y = rnd.uniform(-83.0, -62.0), rnd.uniform(-43.0, -35.6)
+            w = CO.W((x, y, 0.0))
+            if rnd.random() < 0.55:
+                C.bpy.ops.mesh.primitive_uv_sphere_add(segments=8, ring_count=5, radius=1.0)
+                ob = C.bpy.context.active_object
+                r = rnd.uniform(0.12, 0.34)
+                ob.scale = (r * CO.SC, r * rnd.uniform(0.7, 1.2) * CO.SC, r * 0.55 * CO.SC)
+                ob.location = (w[0], w[1], r * 0.35 * CO.SC)
+                ob.data.materials.append(M["stonedk"])
+            else:
+                C.bpy.ops.mesh.primitive_cube_add(size=1.0)
+                ob = C.bpy.context.active_object
+                ob.scale = (rnd.uniform(0.8, 2.6) * CO.SC, 0.16 * CO.SC, 0.12 * CO.SC)
+                ob.location = (w[0], w[1], 0.06 * CO.SC)
+                ob.rotation_euler = (0, 0, rnd.uniform(0, 3.1))
+                ob.data.materials.append(M["timber"] if i % 2 else M["timberdk"])
 
     def make_carried_girder(self):
         M = CO.STATE["M"]
