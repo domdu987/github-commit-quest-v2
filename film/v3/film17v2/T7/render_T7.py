@@ -2,6 +2,7 @@ import sys, os, time, math, random
 CWD = os.getcwd()
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.abspath(os.path.join(HERE, '..', '..', '..', '..'))
 sys.path.insert(0, os.path.join(ROOT, 'film/v3/set3d17')); os.chdir(os.path.join(ROOT, 'film/v3/set3d17'))
+sys.path.insert(0, os.path.join(ROOT, 'film/v3/stage')); sys.path.insert(0, os.path.join(ROOT, 'film/v3/cast17'))
 import prefecture17 as P, bpy
 from mathutils import Vector
 take = 'T7'
@@ -99,6 +100,11 @@ def key_pop(g0, g1):
             else:
                 c.scale = (0.0001, 0.0001, 0.0001)
             for path in ('location', 'rotation_euler', 'scale'): c.keyframe_insert(path, frame=f)
+def clear_cast():
+    import actors
+    for o in list(bpy.data.objects):
+        if o.name.startswith(('c2_', 'back_hair_', 'back_coat_')): bpy.data.objects.remove(o, do_unlink=True)
+    actors.clear_registry()
 def main(gl, outdir, samples=16):
     assert P.check_take(take)['hits'] == [] and P.check_face(take)['ok']
     A = P.world_build(take); P.key_take(take); build_pop(); key_pop(1689, 1874); P.setup_render2((720, 1280), samples=samples, threads=2)
@@ -109,7 +115,7 @@ def main(gl, outdir, samples=16):
         t = time.time(); sc.frame_set(g + 1)
         sc.render.use_motion_blur = 1800 <= g <= 1867
         if sc.render.use_motion_blur: sc.render.motion_blur_shutter = 0.5
-        acts = P.stage_cast2(take, g, assign_for(g)); put_beard(g, acts['dupont'], sc.camera); sc.render.filepath = fp
+        clear_cast(); acts = P.stage_cast2(take, g, assign_for(g)); put_beard(g, acts['dupont'], sc.camera); sc.render.filepath = fp
         bpy.ops.render.render(write_still=True); P.grade2(fp); print('g', g, '%.0fs' % (time.time() - t), flush=True)
 if __name__ == '__main__':
     # usage: render_T7.py g0 g1 outdir [samples]   |   render_T7.py g,g,g outdir [samples]  (stills)
