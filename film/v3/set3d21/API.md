@@ -86,10 +86,10 @@ Camera, look-at, foreground prop, stand points with their head centre in screen 
 | `valley_loop` | valley | (-72.0, -133.0, z 229.0) -> (12.0, 36.0, 0.0) | 21 | - | - |  | 108 s render, 33 s build |
 | `valley_river` | valley | (38.0, -24.0, z = ground + 2.10) -> (105.0, 28.0, 4.0) | 22 | reeds 2.2 m, reeds 2.0 m, rock 2.4 m | `e1` (130, 762), `e2` (601, 783) | push 7 %/s + slide | 91 s render, 35 s build |
 | `camp_wide` | camp | (-78.0, -96.0, z 13.0) -> (12.0, -52.0, 2.0) | 22 | rope 1.8 m, pole 2.2 m | `k1` (203, 733), `k2` (518, 709) | slide 50 px/s + push | 82 s render, 3 s build |
-| `camp_table` | camp | (-13.0, -30.0, z = ground + 1.30) -> (-13.0, -26.5, 1.6) | 22 | barrel 2.4 m | `cress` (360, 506) | push 8 %/s; hooks: set_scale_tip(A, deg), set_chest_lid(A, deg) | 174 s render, 3 s build |
+| `camp_table` | camp | (-13.0, -30.0, z = ground + 1.30) -> (-13.0, -26.5, 1.7) | 22 | barrel 2.4 m | `cress` (360, 506) | push 8 %/s; hooks: set_scale_tip(A, deg), set_chest_lid(A, deg) | 174 s render, 3 s build |
 | `camp_bank` | camp | (-95.0, -15.0, z = ground + 2.00) -> (-2.3, 22.5, -16.5) | 26 | banner pole with its banner at the right edge, a barrel, reeds and tent pegs | `cress` (191, 585), `surrey` (640, 556), `e0` (56, 572), `e1` (335, 522), `e2` (441, 502), `e3` (541, 516), `e4` (612, 503) |  | 87 s render, 3 s build |
 | `riverbank` | riverbank | (-27.0, 54.0, z = ground + 1.80) -> (-28.0, 22.0, -3.5) | 22 | reeds 1.7 m, gorse 2.2 m | `e1` (81, 574), `e2` (215, 559), `e3` (129, 540), `e4` (42, 520) | slide 40 px/s + push; the channel is on the right: splash() points in PRESETS["riverbank"]["splashes"] | 78 s render, 3 s build |
-| `river_low` | riverbank | (-26.0, 46.0, z = ground + 0.90) -> (-44.0, 44.0, 0.9) | 22 | reeds 1.4 m, reeds 1.6 m, rock 1.8 m | - | quick push; splash() crowns at pr["splashes"] | 72 s render, 3 s build |
+| `river_low` | riverbank | (-26.0, 46.0, z = ground + 0.90) -> (-44.0, 44.0, 0.9) | 22 | reeds 1.4 m, reeds 1.6 m, rock 1.8 m | - | quick push; splash() crowns at pr["splashes"] | 73 s render, 3 s build |
 
 Notes per preset:
 - `hill_over`: the Scots stand on `PAD` (a levelled ledge 44 m up) with their backs to us; the far bridge (x 235-510, y 520-570, about 280 px, knights two by two) is the hook; castle rock upper left; run path coloured on the slope for shot 22 (the lens rides down it).
