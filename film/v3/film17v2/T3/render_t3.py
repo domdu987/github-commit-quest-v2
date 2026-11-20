@@ -17,13 +17,18 @@ def assign_for(g):
         a['gend_b'] = ('gendarme_standing_b', {}); a['prankster'] = ('gendarme_standing_b', {})
         a['prefect'] = ('prefect_finger_up_three', {}) if g < 792 else ('prefect_stern', {})
     return a
+def clear_cast():
+    # stage_cast2 builds NEW actors every call and never removes the old ones: stale shadow proxies/cards pile up (black slabs by ~g660). Remove them first.
+    sys.path.insert(0, ROOT + '/film/v3/stage'); import actors
+    for o in [o for o in bpy.data.objects if o.name.startswith(('c2_', 'back_hair_', 'back_coat_'))]: bpy.data.objects.remove(o, do_unlink=True)
+    actors.clear_registry()
 def main(gs):
     assert P.check_take(take)['hits'] == [] and P.check_face(take)['ok']
     A = P.world_build(take); P.key_take(take); P.setup_render2((720, 1280), samples=int(os.environ.get('SAMPLES', 16)), threads=2)
     for g in gs:
         fn = '%s/g_%04d.png' % (OUT, g)
         if os.path.exists(fn) and os.path.getsize(fn) > 50000: continue
-        t0 = time.time(); bpy.context.scene.frame_set(g + 1); P.stage_cast2(take, g, assign_for(g))
+        t0 = time.time(); bpy.context.scene.frame_set(g + 1); clear_cast(); P.stage_cast2(take, g, assign_for(g))
         bpy.context.scene.render.filepath = fn; bpy.ops.render.render(write_still=True); P.grade2(fn)
         print('g%d %.1fs' % (g, time.time() - t0), flush=True)
 if __name__ == '__main__':
