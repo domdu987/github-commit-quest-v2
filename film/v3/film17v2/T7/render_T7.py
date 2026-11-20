@@ -108,9 +108,9 @@ def clear_cast():
 def main(gl, outdir, samples=16):
     assert P.check_take(take)['hits'] == [] and P.check_face(take)['ok']
     A = P.world_build(take)
-    if 'T7_BEAM' in os.environ:
+    if True:   # director: beam_fx veils the crane (g1820 diff 9.5/255): beams off for the whole take
         for m in bpy.data.materials:
-            if m.name.startswith('beam_fx') and m.node_tree: m.node_tree.nodes['strength'].inputs[1].default_value = float(os.environ['T7_BEAM']) * 0.035
+            if m.name.startswith('beam_fx') and m.node_tree: m.node_tree.nodes['strength'].inputs[1].default_value = float(os.environ.get('T7_BEAM', '0')) * 0.035
     P.key_take(take); build_pop(); key_pop(1689, 1874); P.setup_render2((720, 1280), samples=samples, threads=2)
     sc = bpy.context.scene
     for g in gl:
