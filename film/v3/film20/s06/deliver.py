@@ -7,24 +7,18 @@ from PIL import Image, ImageDraw
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PROJ = os.path.normpath(os.path.join(HERE, "..", "..", ".."))
-TAKE, SHOT = "s06", 6
-G0, G1, H_IN, H_OUT = 404, 466, 9, 4
+TAKE, SHOT = "s06", 678
+G0, G1, H_IN, H_OUT = 404, 604, 8, 4
 GA = G0 - H_IN
 N = (G1 + H_OUT) - GA
 TRANS_IN = {"type": "dissolve", "frames": 13}
-CUTS_OUT = [G1]
-EV = dict(snap=[442, 457], word_count=444, art_arms_up=[442, 457])
-CAMERA = ("custom 22 mm cafe_wide start moved to (-5.0, -2.2, 1.2) D (preset (-4.89, -2.63, 2.07)), aim tilted +4 deg above the camera->table line (pitch ~11.5); c20.CamPath push 8 %/s toward the "
-          "artists' table + truck-left slide 40 px/s + snap x1.3 (+0.1 D pan) g 442..457 on 'สี่สิบกว่าคน'; decay 0.25 (still moving on the last frame)")
-CAST = ("v3/cast20 painter20 / composer20 / poet20 / architect20 (outraged poses, news20 / paintbrush+palette props waving at ~1.7 Hz, arm + head sway, 3 Hz breathing bounce; poet + architect flipped to face the table) + waiter_idle; "
-        "mouths held (outraged = held open, never animated); contact decal + proxy shadow")
-SET = "v3/set3d20 CAFE cafe_wide DAY, window view stub, smoke 0 (keyed every frame)"
-CUES = [
-    (0, N, "ambience", "Café 1887, day: murmur of an angry crowd, chairs scraping, gas-lamp hiss, cups clinking; far-off hammering of the building site through the window"),
-    (404, 420, "foley", "artists shaking newspapers: paper rattle + cloth swishes, indignant hubbub (no words)", {"peak_frame": 410}),
-    (442, 457, "accent", "snap push on 'สี่สิบกว่าคน' (forty-odd): short rising whoosh + a rhythmic fist-bang on the marble table", {"peak_frame": 448}),
-    (466, 466, "cut", "hard cut to shot 7 (protest sheet insert): the crowd hubbub drops to close pen scratching"),
-]
+CUTS_OUT = []
+EV = {'snap': [430, 446], 'word_count': 444, 'word_sign': 469, 'land_1': 471, 'handover': [483, 494], 'word_paper': 491, 'land_2': 496, 'smoke_ramp': [513, 572], 'word_chimney': 572, 'end_pose_g603': True}
+CAMERA = "ONE continuous travel take (WORKER20 §8): waypoint camera (Catmull-Rom on loc + look, no stop): slide past the waving artists g 396-440, push-in snap g 430-446 on 'สี่สิบกว่าคน' (444), descend and push DOWN onto the protest sheet g 446-490 (the cafe_table_insert pose at g 490), over the sheet g 490-512, rise + swing to the window g 512-572 (smoke 1.0 at 572), sweep down-right to the banquette g 572-603; last frame g603 = (3.533, 6.506, 0.983) D looking at (1.692, 13.16, 2.944) D = team7's T09 start pose, handle g604 (3.505, 6.531, 0.994), arriving with ~0.03 D/frame velocity; 22 mm, no shift, no DOF"
+CAST = "v3/cast20 painter20 / composer20 / poet20 / architect20 (outraged: wave greeked newspapers g 396-500, then jab pointing fingers at the window g 500-603, 3 Hz bounce) + waiter (idle sway, off to the right) + Maupassant SEATED on the banquette mark the whole take (maupassant_seated_toast_smug, mouth held 'smile', sips, idle breathing only after g 585); runtime meshes: quill + two sleeved hands (A cream / B plum) hand the quill over the sheet g 452-520, FONT heading 'PROTESTATION' on the sheet; signatures 14 -> 15 (g 471) -> 16 (g 496); forge smoke ramps 0 -> 1 over g 513-572"
+SET = 'v3/set3d20 CAFE cafe_wide DAY, window view stub, smoke ramp keyed per frame, add_signature keyed per frame; saturation grade 1.45'
+CUES = [(396, 607, 'ambience', 'Café 1887, day: angry crowd hubbub, gas-lamp hiss, chairs, cups; sun shafts through the windows; far site hammering'), (404, 440, 'foley', 'artists shake newspapers: paper rattle + cloth, indignant (wordless) murmur', {'peak_frame': 418}), (430, 446, 'accent', "push-in snap on 'สี่สิบกว่าคน': rising whoosh + fist bang on the marble table", {'peak_frame': 444}), (452, 481, 'foley', 'quill scratching as the first signature is written; sleeve rustle', {'peak_frame': 468}), (471, 473, 'accent', 'first signature lands: pen tick + ink thud', {'peak_frame': 471}), (483, 494, 'foley', 'quill handed over: cloth swish, fingers on the shaft', {'peak_frame': 488}), (496, 498, 'accent', 'second signature lands: pen tick + ink thud', {'peak_frame': 496}), (512, 534, 'accent', 'camera rises off the sheet and swings to the window: whoosh', {'peak_frame': 522}), (513, 572, 'accent', 'forge smoke builds in the window: low rumbling swell', {'peak_frame': 572}), (572, 590, 'accent', "'เหมือนปล่อง' black chimney of smoke: ominous brass sting", {'peak_frame': 576}), (590, 604, 'accent', 'sweep to the banquette: soft whoosh settling; room tone narrows', {'peak_frame': 598}), (604, 607, 'cut', 'handle: match into T09 (Maupassant at the banquette) at g 604')]
+END_CAM = {"g": 603, "loc_D": [3.533, 6.506, 0.983], "look_at_D": [1.692, 13.16, 2.944], "lens_mm": 22.0, "shift": [0.0, 0.0], "handle_g604": {"loc_D": [3.505, 6.531, 0.994], "look_at_D": [1.692, 13.16, 2.942]}}
 SOUND_NOTE = "t = film seconds (g / 30); narration PROJ/film20/audio/narration.wav at +0.10 s"
 MB_LIMIT = 45e6
 IN_SHOT = (G0 + 1, G1 - 1)                      # pairs (g-1 -> g) for g in this range
@@ -77,10 +71,10 @@ for r in rows[H_IN:H_IN + (G1 - G0)]:
         hd.setdefault(k, []).append(v)
 heads = {k: dict(w=[round(min(x["w"] for x in v)), round(max(x["w"] for x in v))], y=[round(min(x["y"] for x in v)), round(max(x["y"] for x in v))],
                  bottom_max=round(max(x["bottom"] for x in v))) for k, v in hd.items()}
-meta = {"take": TAKE, "film": 20, "shots": [SHOT], "g0": G0, "g1": G1, "first_g": GA, "n_frames": N, "shot_ranges": {str(SHOT): [G0, G1 - 1]},
+meta = {"take": TAKE, "film": 20, "shots": [6, 7, 8], "g0": G0, "g1": G1, "first_g": GA, "n_frames": N, "shot_ranges": {"6": [404, 465], "7": [466, 512], "8": [513, 603]},
         "handle_in": H_IN, "handle_out": H_OUT, "transition_in": TRANS_IN,
-        "transition_out": {"type": "cut", "frames": 0, "at": G1, "note": "hard cut at g %d; out-handle g %d..%d rendered in 3D (the move continues)" % (G1, G1, G1 + H_OUT - 1)},
-        "set": SET, "cast": CAST, "camera": CAMERA, "events": EV, "dof": "none", "text": "none", "light": "DAY", "year": 1887,
+        "transition_out": {"type": "match", "frames": 0, "at": G1, "note": "match cut into T09 (team7) at g %d; out-handle g %d..%d continues the move" % (G1, G1, G1 + H_OUT - 1)},
+        "set": SET, "cast": CAST, "camera": CAMERA, "end_cam": END_CAM, "events": EV, "dof": "none", "text": "none", "light": "DAY", "year": 1887,
         "samples": rows[0].get("samples"), "resolution": [720, 1280], "threads": 2, "fps": 30,
         "s_per_frame_wall_mean": round(float(np.mean(walls)), 2), "s_per_frame_cpu_mean": round(float(np.mean(cpus)), 2),
         "heads_px_in_shot": heads, "framediff_in_shot": {"median": nb["median"], "p90": nb["p90"]},
@@ -101,7 +95,7 @@ subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", "30", "-star
 if os.path.getsize(mkv) > MB_LIMIT:
     subprocess.run(["split", "-b", "40M", mkv, mkv + ".part"], check=True, cwd=HERE)
     print("take.mkv is %.1f MB: split into take.mkv.part*" % (os.path.getsize(mkv) / 1e6))
-r = subprocess.run([sys.executable, os.path.join(PROJ, "qa_auto.py"), mkv, "--first_g", str(GA), "--cuts", ",".join(map(str, CUTS_OUT))], capture_output=True, text=True, cwd=HERE)
+r = subprocess.run([sys.executable, os.path.join(PROJ, "qa_auto.py"), mkv, "--first_g", str(GA), "--cuts", ",".join(map(str, CUTS_OUT)) or "0"], capture_output=True, text=True, cwd=HERE)
 print(r.stdout, r.stderr[-500:])
 print("delivered %d frames, take.mkv %.1f MB; s/frame %.2f wall %.2f cpu; frame-diff median %.2f p90 %.2f"
       % (N, os.path.getsize(mkv) / 1e6, np.mean(walls), np.mean(cpus), nb["median"], nb["p90"]))
