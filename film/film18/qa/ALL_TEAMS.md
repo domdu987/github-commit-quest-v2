@@ -37,3 +37,8 @@ High-motion shots (s10, s14, s15, s19, s21, s24, the charge) carry the film's p9
 - Nothing floats: feet/bodies on a surface with contact shadow, no poles/props through faces, no debris hanging still in mid-air. QA-art checks every 0.5 s phone tile.
 - Camera distance: no face taller than 35 % of frame height, no character cut in half by an edge, >= half the shots wide/medium-wide.
 - FINAL: side-by-side sheet with film 2; "as vivid, wide and grounded as film 2?" — a "no" blocks release.
+
+## QA_TEAM §H (client decision via producer, 2026-11-20 12:00 UTC): BIGZOOM, angles, rich set — blocking at FINAL
+- Two BIGZOOMs re-planned in shot_plan.md: s01 (now 0-156, merges old s01+s02; team 1) and s26 (team 2). One continuous eased move, 3-6 s, from EXTREME WIDE (character < 5 % of frame height, findable) through set detail to MEDIUM (character 35-60 % of frame height). No cut, no pulsing.
+- TAKE gate for BIGZOOM: measured start height < 5 %, end 35-60 %, duration of the zoom 3-6 s, the set rich (roofs, lanterns, oxen, smoke, flags) at every stage, nothing floats, caption band clear at the end.
+- Old s01, s02 and s26 PASSED takes stay as fallback until the new takes pass; the old s02 is dropped when the new s01 passes.
