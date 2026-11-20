@@ -28,9 +28,9 @@
  "take_file": "take.mkv.part* (cat take.mkv.part* > take.mkv; libx264rgb crf6)",
  "branch": "render17/team1",
  "rhythm": {
-  "median": 7.88,
+  "median": 6.92,
   "p90": 23.15
  },
- "revision": "team1 rework",
+ "revision": "team1 R5",
  "note": "g844-899 = team 6 shot 16 frames from 34bb2c8 unchanged; g900-1051 rendered by team 1 (film/v3/film17/s07/shot.py)"
 }

@@ -19,3 +19,11 @@
 - 17b boot is a plain brown boot; 17b lower half is floor planks.
 - The card in 19 vanishes by going down behind the drawer front (as the cards do in a card index); the glove arm is a long diagonal sleeve.
 - g844-899 are team 6's frames (not re-checked here).
+
+## R5 (after QA-tech R4): re-rendered g900-1051 (shot 16 frames g844-899 still team 6's)
+- rhythm 6.92 / 23.15 (--cuts 900,924,948,972,996); qa_auto PASS, magenta 0 %, no soft frames flagged.
+- B1 sleeve: the glove sleeves (17a, 17b, 18b pen, 19) are now ~2.5 m long and leave the frame (from lower right in 19); no free tube end in g1024-1046.
+- B2 hand: 17a hand = cuffed jacket sleeve from the left frame edge, wrist, palm, thumb, three curled fingers and the middle finger along the ruler, jaw touching the fingertip at g920; gloves inside the frame. 17b boot = side-profile boot with laces, heel, sole line, ankle shaft + trouser leg rising out of frame; the block touches the toe from g945; glove with cuff and sleeve rising out of frame.
+- Should-fix: samples 28 on g900-995 (moire reduced); card sinks to just behind the drawer front (no stray edge); wastebin removed from the cabinet (blue stub gone); chair near armrest + foot rail removed from the set mesh (orange plank mostly gone, a small bit of the chair foot still shows at the bottom-left in 18a).
+- Still weak: lower third of 17a/18b is empty table top (the ledger/ink props sit below the frame); simple cartoon hand/glove.
+- Full-res check frames in full/: g910 g915 g920 g935 g940 g945 g960 g985 g1005 g1015 g1030 g1040 g1045.
