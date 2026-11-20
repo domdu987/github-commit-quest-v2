@@ -1,15 +1,176 @@
-{"take":"s11","shots":[11],"g0":753,"g1":822,"h_in":8,"h_out":4,"shot_ranges":{"11":[753,821]},
- "speed_g0":802,
- "transition_in":{"type":"dissolve","frames":11},
- "transition_out":{"type":"cut","frames":0,"at":822,"note":"hard cut to shot 12 (SITE site_girders) at g 822; handle g 822..825 rendered in 3D"},
- "cuts":[802,822],
- "set":"v3/set3d20 SITE preset site_fence, light DAY, stage 0. Runtime: preset FG mesh hidden; camera-parented timber post at the lens's left edge; two red-lead girders on the ground bottom-right of framing A; the cast stands at the fence line (y -101) outside the open timber fence, Eiffel at the gate edge (-7.4,-100.4 m).",
- "cast":"cast20 lady20 (lady_parasol, hand at mouth), gent20 (gent_cane, pointing arm), child20 (child_point) all expr laughing20 with 3 Hz squash + 0.08 D stage bounce and head roll; eiffel (eiffel_giant_rivet pose, rivet raised and bobbing, proud then determined at the punch-in). No mouth animation.",
- "camera":"custom 22 mm. A g745..801: eye level 1.0 m, pull back 10 %/s + slide 60 px/s + crane 45 px/s + arc, snap push x1.4 on 'เรียกไอเฟลว่า' (g776..792). B g802..825: PUNCH-IN CUT onto Eiffel (3.4 m, ~35 % of frame height) on 'ไอ้ช่างหมุด' with a 2-frame vertical shake and 6 frames of speed lines (post), then push 12 %/s + slide. Hand-held jitter +-0.05 D on both.",
- "events":{"word_call":778,"snap_A":[776,792],"punch_in_cut":802,"shake":[802,803],"speed_lines":[802,807]},
- "cues":[[745,822,"ambience","Building-site yard, midday: distant hammering, forge roar, cart wheels, a crowd of onlookers laughing"],
-         [753,802,"foley","the three Parisians laugh: bubbling gentle laughter bed (lady giggle, gent guffaw, child cackle), rhythmic ~3 Hz"],
-         [776,792,"accent","snap push on 'เรียกไอเฟลว่า': short airy whoosh"],
-         [802,808,"accent","punch-in cut on 'ไอ้ช่างหมุด': hard impact thump + comic 'boing' with the speed lines"],
-         [802,803,"foley","2-frame camera shake: low rumble hit"],
-         [822,822,"cut","hard cut to shot 12 (girders): ambience swells with clanging iron"]]}
+{
+ "take": "s11",
+ "shots": [
+  11,
+  12,
+  13,
+  14
+ ],
+ "g0": 753,
+ "g1": 996,
+ "h_in": 8,
+ "h_out": 8,
+ "shot_ranges": {
+  "11": [
+   753,
+   821
+  ],
+  "12": [
+   822,
+   906
+  ],
+  "13": [
+   907,
+   944
+  ],
+  "14": [
+   945,
+   995
+  ]
+ },
+ "speed_g0": 802,
+ "head_check": false,
+ "cuts": [],
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 11
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "frames": 13,
+  "at": 996,
+  "note": "dissolve 13 into T15 (1889 fair); 8 handle frames g996..1003 rendered in 3D (the last crane-up keeps drifting)"
+ },
+ "set": "v3/set3d20 SITE preset site_girders (stage hooks keyed every frame: 0 until g830, 1 until g969, 2 until g985, 3 after), DAY. Runtime: preset FG + near scatter props (pn_*) hidden; camera-parented timber post (g<819) and two red-lead girders on the ground at the fence as foreground; a runtime carried I-girder; set hooks crane_swing, spark (t0 921, period 9, strength 1.5), rivet_toss (g919-929, x3.2). One continuous take, no cuts.",
+ "cast": "cast20 lady20 / gent20 / child20 laughing at the fence (3 Hz squash + 0.10 D bounce, hand at mouth / pointing), eiffel with the giant rivet raised (dome up, prop scale 1.8); riveter_tongs + riveter_hammer carrying a girder along the stack (cast20.cycle walk); at the rivet deck riveter_tongs throws the glowing rivet, riveter_hammer catches (cheers), riveter_forge hammers every 9 frames. All stand on the ground / plank surface (on_ground / ground_z).",
+ "camera": "custom 22 mm, ONE take: A (g745-801) eye level 1 m pulling back 10 %/s, snap x1.4 on g778; punch-in snap onto Eiffel g802-810 (shake g802-803, speed lines g802-807 in deliver.py); rise over the fence and Catmull-Rom flight g817-848 (over the cart yard, past the leg) down to the stack truck g848-906 (snap on g856); flight g906-920 over the stack and under the first-platform arches up to the rivet deck; deck g920-943 (push, snap on the catch g929); three crane-up snaps g943-993 to site_rise_snap1/2/3 (stage jumps hidden in the snaps); hand-held jitter 0.07 D.",
+ "events": {
+  "word_call": 778,
+  "punch_in": 802,
+  "stage1": 830,
+  "word_steel": 856,
+  "toss": [
+   919,
+   929
+  ],
+  "catch": 929,
+  "hammer_hits": [
+   921,
+   930,
+   939,
+   948,
+   957,
+   966,
+   975,
+   984,
+   993,
+   1002
+  ],
+  "snap1": [
+   943,
+   958
+  ],
+  "snap2": [
+   962,
+   977
+  ],
+  "snap3": [
+   977,
+   993
+  ],
+  "stage2": 969,
+  "stage3": 985
+ },
+ "cues": [
+  [
+   745,
+   1004,
+   "ambience",
+   "Building site seen from the fence to the sky: crowd laughter, forge roar, hammering, wind; swells as the camera rises"
+  ],
+  [
+   753,
+   802,
+   "foley",
+   "three Parisians laugh: bubbling gentle laughter bed, rhythmic about 3 Hz"
+  ],
+  [
+   776,
+   792,
+   "accent",
+   "snap push on 'เรียกไอเฟลว่า': short airy whoosh"
+  ],
+  [
+   802,
+   810,
+   "accent",
+   "punch-in snap on 'ไอ้ช่างหมุด': hard impact thump + comic boing with the speed lines"
+  ],
+  [
+   817,
+   848,
+   "accent",
+   "rise over the fence and flight to the stacks: long rising whoosh"
+  ],
+  [
+   848,
+   906,
+   "foley",
+   "two men walking in step with a girder: boots on gravel, iron creak; derrick winch chain rattle"
+  ],
+  [
+   854,
+   870,
+   "accent",
+   "snap on 'เหล็ก 18,000': iron clang"
+  ],
+  [
+   906,
+   920,
+   "accent",
+   "flight up under the arches to the rivet deck: whoosh with echo under the iron"
+  ],
+  [
+   919,
+   929,
+   "foley",
+   "tongs release: the glowing rivet flies with a hissing whistle"
+  ],
+  [
+   929,
+   931,
+   "accent",
+   "rivet lands in the bucket: sizzle + metallic clank"
+  ],
+  [
+   921,
+   921,
+   "foley",
+   "hammer blow + sparks (every 9 frames until the end of the deck beat)"
+  ],
+  [
+   943,
+   958,
+   "accent",
+   "crane-up snap 1 'ชั้นหนึ่ง': rising whoosh + iron clang (first platform)"
+  ],
+  [
+   962,
+   977,
+   "accent",
+   "crane-up snap 2 'ชั้นสอง': rising whoosh + iron clang (second platform)"
+  ],
+  [
+   977,
+   993,
+   "accent",
+   "crane-up snap 3 'จนถึงยอด': big rising whoosh, bright ring on the finished spire"
+  ],
+  [
+   996,
+   1004,
+   "cut",
+   "dissolve 13 into the 1889 fair (T15)"
+  ]
+ ]
+}
