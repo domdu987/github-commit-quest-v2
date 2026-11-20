@@ -49,6 +49,11 @@ PROJ/v3/cast21 (`import cast21` BEFORE `sprites`/`stage.sprites`). Read API.md.
 - Make your OWN helper module inside your take folder (for example PROJ/v3/film21/sNN/c21.py) by copying film8/common.py and switching it to cast21 and set3d21/stirling.py.
 - Do not create a shared film/v3/film21/common.py.
 
+## QA_TEAM.md §G (client complaint 2026-11-20): BLOCKING at the TAKE gate
+- Colour: `python3 PROJ/qa_stats.py take.mkv` must show saturation >= 0.47 and brightness 85-110. The set's grade has a per-preset VIVID stage that gets you there (API.md §9); keep `K.STATE['preset']` set and never skip the grade.
+- Nothing floats: every character's feet on the ground with a contact shadow (`contact=True` on the Actor), riders on their horses, nothing hanging in the sky, no pole or prop passing through a face.
+- Camera distance: at least half your shots wide or medium-wide (they show the place). No face taller than 35 % of the frame height. Nobody cut in half by a frame edge.
+
 ## QA (stricter, film/QA_TEAM.md "Stricter QA")
 - Before delivering, run `python3 PROJ/qa_auto.py take.mkv --first_g <first_g> --cuts <your planned cut g's>` and fix every FAIL. Add QA_AUTO.md and phone_sheet.jpg to the take folder.
 - Then check your frames yourself at 6 fps, plus every cut ±3 frames:

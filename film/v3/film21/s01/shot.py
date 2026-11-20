@@ -19,7 +19,7 @@ WORK = os.path.join(HERE, "work")
 RANGES = {1: (0, 43), 2: (44, 88), 3: (89, 165)}
 G_SNAP = C.g_of(4.08) - 4            # snap push on "ไม่ทำอะไรเลยสักอย่าง" (4.08 s): starts just before the word
 SNAP_N = 15
-ANG = float(os.environ.get('ANG', '13'))
+ANG = float(os.environ.get('ANG', '10.5'))
 
 
 def bf(g): return g + 1
@@ -41,10 +41,10 @@ def cam_path(shot, g):
     lens = pr["lens"]
     if shot == 1:        # push 9 %/s (lens + 0.5 m dolly) + slide left (camera trucks right)
         push = 0.30 * (g1 - g0 + 1) / 30.0 * u * 1.0
-        c2 = c + fh * 0.55 * u + r * 0.30 * u; l2 = l + r * 0.30 * u
+        c2 = c + fh * 0.30 * u + r * 0.15 * u; l2 = l + r * 0.15 * u
         return c2, l2, lens * (1 + 0.09 * (g - g0) / 30.0)
     if shot == 2:        # push 8 %/s with the knights' walk, camera trucks along the rail (+y), post passes the lens
-        tk = np.array([0.10, 1.85, 0.0]) * x; c2 = c + tk + fh * 0.35 * u + np.array([0.0, 0.0, 0.0]); l2 = l + tk
+        tk = np.array([0.10, 1.85, 0.0]) * x - dirs(pr)[3] * 0.32; c2 = c + tk + fh * 0.35 * u + np.array([0.0, 0.0, 0.0]); l2 = l + tk
         return c2, l2, lens * (1 + 0.08 * (g - g0) / 30.0)
     # shot 3: truck 0.28 m/s (~40 px/s at 5.5 m) + snap x1.4 on the grass-chewer
     tr = 0.28 * t
@@ -84,6 +84,8 @@ class Take(C.Take):
         hide, extra = (), None
         if shot == 2:
             hide = ("fg_generic",)
+            def extra(A): pass
+            _unused = True
             def extra(A):
                 pr = K.PRESETS["bridge_deck"]; B = K.Batch(96); x, y = K.at_px(pr, 1.9, 40)
                 B.box("wood", (x, y, K.DECK_Z + 0.58), (0.11, 0.11, 1.12)); B.box("wood_dk", (x, y, K.DECK_Z + 1.18), (0.15, 0.15, 0.08)); B.finalize("fg_team")
@@ -123,6 +125,7 @@ class Take(C.Take):
         else:
             for nm, (a, who, k, m) in self.cfg.items():
                 x, y, z = m[0], m[1], m[2]
+                lat = LAT[sh].get(nm, 0.0); _, _, _, rr = dirs(K.PRESETS[{1: 'hill_over', 3: 'hill_eye'}[sh]]); x += rr[0] * lat; y += rr[1] * lat
                 self.place(a.name, f, (x, y, z), scale=SC_FOR.get(who, C.SC))
                 if sh == 1:
                     yaw = {"s1": 1.1, "s2": -1.0, "s3": -1.1, "s4": 1.0, "s5": 1.1}[nm]
@@ -137,6 +140,7 @@ class Take(C.Take):
         return used
 
 
+LAT = {1: {'s1': 0.55, 's4': 0.4, 's5': 0.7, 's2': -0.25, 's3': -0.15}, 3: {'s1': 0.3, 's3': -0.35, 's4': 0.35}}
 SC_FOR = {"wallace": 0.54}
 
 
