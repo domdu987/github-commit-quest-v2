@@ -181,3 +181,41 @@ Must-fix (cheap; a frame check of g 140-190 is enough to confirm it):
 2. **Remove the g 175 stall.** The camera's last moves must decrease frame by frame (for example 4, 3, 2, 1, 0 px) with no zero frame followed by a non-zero one. Start the hold drift in the same x direction as the landing, or start it from 0 with a smooth ease-in.
 
 Optional: lower the captain's chart arm so that both forearms match in the shrug.
+
+## Round 14 (director QA-art): PASS, 7.4. The touchdown is fixed; the late re-acceleration is only partly fixed (must-fix 1 stays open)
+
+Take: take.mkv.partaa + partab joined to /tmp/s02a14.mkv (first_g 48, 152 frames). All frames are extracted to /tmp/qa19_r14art/s02/gNNN.png. Sheets:
+- sheet_3fps.jpg
+- descent.jpg (every 2nd frame, g 130-182)
+- beat_phone.jpg (360x640, g 170-198)
+- spike115.jpg (g 112-116)
+
+Measurements:
+- Whole-frame diff (90x160 grey), in-shot: median 8.47, p90 14.21, max 18.39 (g 115).
+- To test the team's claim that "the hump is the gestures", I also measured a **deck-only band**: the bottom 19 % of the frame, which contains no characters. I measured it for rounds 12, 13 and 14.
+- I measured the background shift per frame by phase correlation.
+
+| Check | Status |
+|---|---|
+| Touchdown hitch (g 175-176) | **Fixed.** The background shift per frame falls monotonically: (3,-7) g 170-175, (3,-6) g 176, (2,-5) g 177, (2,-4) g 178-179, (2,-3) g 180, (1,-1) g 181, (1,0) from g 182. There is no zero frame followed by a move. The deck band falls smoothly from 7.6 at g 170 to 0.5 at g 180. On a phone the landing is the softest so far. |
+| Opposite drift | **Fixed.** The hold drift is +1 px/frame in x, the same direction as the landing, and it eases in from the landing. It reads as a living hold, not a park. |
+| Second dive (around g 150) | **Smaller, not gone, and it is the camera, not the gestures.** The deck-only band (no characters in it) dips to 6.5 at g 148, then climbs to **16.4 at g 153** before the long settle. For comparison, round 13 went from 6.4 to 18.7 at g 157, and round 12 from 5.7 to 12.2, ramping over about 12 frames. The descent sheet shows why: from g 136 to g 148 the camera hovers almost top-down over the quarterdeck, then from g 148 to g 158 it pitches down to eye level, with the horizon and sea popping up behind the rail. On a phone it reads as "hover, then a step down, then a soft settle". The final settle is lovely, but the move is not yet one continuous swoop. So the team's statement that background speed "falls steadily after g 133" does not match the frames. |
+| g 115 whole-frame diff spike (18.4) | Not a defect. At g 112-116 the ship's position steps evenly. The spike comes from the spanker sail sweeping across the centre plus the foam texture; there is no visible jump. |
+| Round-13 acting | **Intact.** The captain has his wide-eyed dumbfounded face from g 174; the shared look is at g 176-188; there is an arms-out shrug from g 184; the astronomer's head-scratch with the quadrant is there. Props stay in hand through g 199 with no pops (checked every 2nd frame on the phone sheet and g 178-199). The captain's chart arm is still level, so his shrug is a little lopsided (optional polish, as before). |
+| Regressions | None. The opening, wake, stern pass, colour (qa_stats sat 0.635+, luma ~94: G1 OK), grounding and framing are unchanged (G2/G3 OK). The flat sail and soft planks are still open polish. |
+
+| Criterion | Score |
+|---|---|
+| Set | 8 |
+| Light & colour | 8 |
+| Composition / phone | 7 |
+| Acting | 7.5 |
+| Key moment (BIGZOOM + beat) | 7.25 |
+| Match to refs | 7.5 |
+| **Overall** | **7.4 - PASS** |
+
+Status of the must-fixes:
+- **Must-fix 2 (stall / drift): closed.**
+- **Must-fix 1 (one swoop): still open, but softened.**
+
+How to fix 1: start pitching the camera down from top-down to eye level earlier, around g 132-136, and spread it to about g 170, so that it overlaps the end of the over-the-stern travel instead of starting after a hover. Target: the deck-only band, once it has passed its first peak, never rises again by more than about 20 % (for example, no climb from 6.5 to 16). Keep everything from g 160 onward exactly as it is now (the settle, the drift and the acting). A frame check of g 130-170 is enough to confirm the fix.
