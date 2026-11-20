@@ -89,3 +89,19 @@ shot.py: hx eases 1.30 -> 1.00 over G_QUOTE-5..G_QUOTE+8 (plus 0.04 pump), squas
 Acting 7, Key moment 6.5, Composition 6.5. **Overall 7.0.**
 
 Blocker (one small change): the snap keeps pushing in after g 1641, so hx 1.00 is not enough. Either take hx to about 0.85 from g 1641 to the end (and drop the 0.04 sideways pump), or lower the snap peak from 2.6 to about 2.2. The goal is that the right hand at g 1655 and the left fingertips at g 1655/1665 sit inside x 40-680. Everything else is approved, so do not touch it.
+
+## Round 6 (re-render 11:19): PASS, 7.3
+
+Frames checked (g): every frame from 1605 to 1673 (take index 33-101, frame index = g - 1572). I looked at edge crops (x 0-120 and x 600-720, y 480-1020) with guides at x 40 and x 680, and at g 1605, 1620, 1633, 1642, 1655, 1673 at full size.
+Frames: /tmp/claude-0/-home-user-github-commit-quest-v2/a108c86f-deb9-528c-85fa-39b541349af8/scratchpad/artkey7/s20/f*.png, /tmp/claude-0/-home-user-github-commit-quest-v2/a108c86f-deb9-528c-85fa-39b541349af8/scratchpad/artkey7/s20_edges_{0,1,2}.png
+
+shot.py: hx now eases 1.15 -> 0.72 over G_QUOTE-5..G_QUOTE+8, and the sideways pump is 0. The snap is unchanged (k 1.4, peak 2.6, shift (-0.60, -0.30)). Nothing else changed.
+
+| Earlier fix | Status |
+|---|---|
+| 3. Both hands inside x 40-680 through the snap | FIXED. No hand, cuff or fingertip crosses x 40 or x 680 on any frame from g 1605 to 1673. The left hand enters about g 1616 at x ~65-115 and stays at x >= 60. Through the hold (g 1660-1673) it sits at x ~85-120. The right hand stays at x <= 665, with its closest approach at g 1655-1657 (x ~600-660). It is under the wig at about x 560-600 in the hold. |
+| 1, 2, 4 (arms out, squash / roll, smug mouth) | HOLD. At g 1633-1655 the spread is clear of the wig. The -10 roll reads. The mouth is a flat slot or small "o" with a smirk. |
+
+Note (not a blocker): with hx 0.72, the hands are partly tucked under the wig lappets in the hold (g 1663-1673), so the palms read smaller than at g 1633-1655. The shrug has already landed by then. The palms are still dark mitts.
+
+Acting 7, Key moment 7, Composition 7. **Overall 7.3. PASS.**

@@ -50,3 +50,25 @@ Frames: /tmp/claude-0/-home-user-github-commit-quest-v2/a108c86f-deb9-528c-85fa-
 | **Overall** | **7.4** |
 
 Notes (not blockers): the H1 frame upright ends exactly on the H4's crown at g 1087-1097, a tangent. Nudging SNAPSX by about +0.05 would separate them. Frame-diff median 3.43 is a TECH matter.
+
+## Round 4 (re-render 11:19, after QA_TECH R4 face clip): FIX-FIRST, 6.6
+
+Frames checked (g): 1047, 1062, 1086, 1095 at full size. I also checked crops of the right edge (x 440-720, y 250-750) for every frame from g 1080 to 1104, with a guide at x 700, and an overview of every 6th frame from g 1007 to 1103.
+Frames: /tmp/claude-0/-home-user-github-commit-quest-v2/a108c86f-deb9-528c-85fa-39b541349af8/scratchpad/artkey7/s14/f*.png (frame index = g - 1007), /tmp/claude-0/-home-user-github-commit-quest-v2/a108c86f-deb9-528c-85fa-39b541349af8/scratchpad/artkey7/s14_right_edge.png, /tmp/claude-0/-home-user-github-commit-quest-v2/a108c86f-deb9-528c-85fa-39b541349af8/scratchpad/artkey7/s14_overview.png
+
+Change: Harrison's mark is 1.1 D further left. The snap is unchanged (x1.65, shift (0.7, -0.35), peak 2.5). Push 24, slide -35, arc 14.
+
+| Check | Status |
+|---|---|
+| QA_TECH R4: face cut by the right edge, g 1084-1095 | FIXED. The face disc ends at about x 690 at its widest, and the whole face, brows, eyes and smile are inside at g 1084-1095. Only the grey ponytail and bow touch x ~700-715 at g 1088-1097. That is a tangent, not a clip. In the out-handle (g 1098-1104) his hand reaches the edge, which is acceptable in the handle. |
+| Round 3 fix 4: palm toward the H4 | **REGRESSED.** With the new mark, Harrison stands directly behind the H4 and its red cloth (g 1039-1078). His arms and open palm are hidden behind the cloth, so in the wide there is no gesture: only a head over the watch. In the snap (g 1085-1095), his visible hand hangs at his apron on screen right, pointing away from the H4. The "proud palm presents the H4" beat is gone. |
+| Round 3 fix 1: two-object reveal | HOLDS. The H1 frame, wheels and balls fill the left ~40 %, and the H4 on its cloth is at centre. |
+| New overlaps in the snap | The red cloth's top corner now sits on his chin and mouth corner (g 1085-1095). The H1 front upright no longer only touches the H4's crown: it now cuts into the dial's top-left (x ~250-300, y ~540-590), so the two clocks merge at the key word. |
+
+Composition 6.5, Acting 5.5, Key moment 6.5. **Overall 6.6. FIX-FIRST.**
+
+Fixes (shot.py):
+1. Undo most of the mark move: keep Harrison about 0.4-0.5 D left of the round-3 mark, not 1.1 D, so that he stands right of the cloth, not behind it. Then get the face margin from the camera, as QA_TECH asked: SNAPSX 0.70 -> about 0.60, or slide -35 -> about -25, during g 1071-1095. Target: face right edge <= 690 and ponytail <= 705 through g 1095.
+2. The palm must again be visible in the wide (g 1039-1070), reaching left over the cloth toward the H4 (hand x 0.95, stretch 1.25, layer front if needed), and must still read after the snap.
+3. Check that at g 1085-1095 the H1 upright clears the H4 dial (a gap of >= 15 px), and that the cloth corner is below his chin.
+Keep the frame-diff gain (median 4.43). It must not drop below 4 after these changes.
