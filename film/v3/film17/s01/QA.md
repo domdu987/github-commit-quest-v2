@@ -1,4 +1,4 @@
-# film17 s01 (shots 1-3, hook) QA, round 2 (after gate round 1)
+# film17 s01 (shots 1-3, hook) QA, round 3 (after QA-art/QA-tech round 2)
 - 720x1280, 16 samples + denoise, ~55 s/frame; g 0-143 + 6 handle frames (144-149); cuts at g 48, 93.
 - rhythm (rhythm.py --cuts 48,93): in-shot median 6.22, p90 14.31 (target >= 4 / >= 12).
 - qa_auto: PASS, magenta 0 %; soft frames g131-132 = the whip's motion blur (intended).
@@ -7,3 +7,10 @@
   Shot 3: low raking near-profile on the ear (camera ~0.2 m below ear, swung ~60 deg), jaws straddle the ear, Bertillon's hand visible, one eye visible; 18-frame whip g118-136 with camera motion blur, sitter swap prisoner_a -> prisoner_c at g127 (peak of the whip); stray disc gone.
 - Known limits: jaws open along the beam so they straddle the ear front/back (director accepted); in shot 1 the jaws only partly reach the ear (solver err ~0.4 D); the gendarme is not at a door; cartoon ears are a sprite underlay (puppet has none).
 - Full-res frames for the re-check: full/g15 g40 g70 g105 g135 .png. Reassemble: cat take.mkv.part* > take.mkv
+
+## Round 3 (g0-47 and g93-149 re-rendered, spliced; g48-92 unchanged from round 2)
+- rhythm (rhythm.py --cuts 48,93): in-shot median 8.96, p90 17.84. qa_auto PASS, magenta 0 %; soft frames g126-132 = the whip's motion blur (intended).
+- Shot 1: level caliper beam at ear height pinned to the near ear with the shot-3 setup (err 0.0), a visible blue forearm, white cuff and skin hand gripping the beam end (hand_svg overlay from the sprite's own elbow/hand anchors), jaws closing g14-40, camera tighter (ear ~85 px wide by g20), bar clear of the forehead.
+- Shot 3: same hand+forearm; jaws close on ear A g96-108 and on prisoner_c's ear g128-138 and stay on screen to g149; beam shortened after the swap so the hand stays near the left edge.
+- Not done (minor): stepped coat hem against the seat; dark seam by Bertillon's beard; bar across the sitter's brow in g70-90 (shot 2 untouched).
+- Full-res frames in full/: g10 g20 g40 g70 g105 g140.
