@@ -224,7 +224,7 @@ def slide_of(g):
     if m == "ear":
         return lerp(0.30, 0.50, seg(g, G_EAR[0] + 2, G_EAR[0] + 12))
     if m == "finger":
-        return lerp(0.46, 0.60, seg(g, G_FING[0] + 3, G_FING[0] + 12))
+        return lerp(0.46, 0.71, seg(g, G_FING[0] + 2, G_FING[0] + 10))
     return 0.0 + 0.05 * max(0.0, 1.0 - abs(g - 1344.5) / 2.2) + 0.012 * math.sin(g * 0.5)      # head: jaws open to the skull's width, squeeze on the kick
 
 
@@ -269,10 +269,13 @@ def finger_tip(an, ln=0.40):
 
 
 def finger_svg(an):
-    """one distinct extended index finger pointing UP from the fist (skin, inked)."""
+    """Dupont's fist (knuckles) with ONE extended index finger pointing UP from it (skin, inked)."""
     hx, hy = an["hand_l"]; tx, ty = hx, hy - FING_LEN
+    k = "".join('<path d="M%.3f,%.3f q0.0,-0.05 0.04,-0.07" stroke="#3a2832" stroke-width="0.022" fill="none" stroke-linecap="round"/>' % (hx - 0.10 + 0.07 * i, hy + 0.07) for i in range(3))
     return ('<g><path d="M%.3f,%.3f L%.3f,%.3f" stroke="#3a2832" stroke-width="0.14" stroke-linecap="round" fill="none"/>'
-            '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="#f4d4cb" stroke-width="0.10" stroke-linecap="round" fill="none"/></g>' % (hx, hy - 0.03, tx, ty, hx, hy - 0.03, tx, ty))
+            '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="#f4d4cb" stroke-width="0.10" stroke-linecap="round" fill="none"/>'
+            '<rect x="%.3f" y="%.3f" width="0.30" height="0.22" rx="0.08" fill="#f4d4cb" stroke="#3a2832" stroke-width="0.03"/>%s</g>'
+            % (hx, hy - 0.03, tx, ty, hx, hy - 0.03, tx, ty, hx - 0.15, hy - 0.04, k))
 
 
 def hand_svg(an):
@@ -316,6 +319,20 @@ class Take(object):
         print("take %s built in %.1f s" % (part, time.time() - t0), flush=True)
 
     # one actor card on a mark (seated 'chair' or standing); scale so the true height is CAST_H
+    def cut_bin(self):
+        """delete the wastebin (merged into the room mesh) so it does not read as a tube behind the finger insert."""
+        import bmesh
+        n = 0
+        for ob in bpy.data.objects:
+            if ob.type != "MESH" or ob.name.startswith("c_"):
+                continue
+            mw = ob.matrix_world; bm = bmesh.new(); bm.from_mesh(ob.data)
+            dead = [v for v in bm.verts if -0.75 < (mw @ v.co).x < -0.05 and 3.15 < (mw @ v.co).y < 3.85 and -0.05 < (mw @ v.co).z < 0.6]
+            if dead:
+                bmesh.ops.delete(bm, geom=dead, context="VERTS"); n += len(dead); bm.to_mesh(ob.data)
+            bm.free()
+        print("cut_bin: removed", n, "verts", flush=True)
+
     def put(self, key, cast, mark, dx=0.0, dy=0.0, dz=0.0):
         a = self.acts.get(key) or mk_actor("c_" + key, cast)
         self.acts[key] = a
@@ -398,7 +415,7 @@ class Take(object):
             u = seg(g, G_FING[0], G_FING[1] + 1, lambda x: 0.3 * sine(x) + 0.7 * x)
             for _ in range(2):                                         # the card turns with the camera: two passes
                 hw = actors.local_to_world(da, (an["hand_l"][0], an["hand_l"][1] - 0.20), f, camera=self.cam)
-                off = Vector((lerp(0.50, 0.40, u), lerp(-1.05, -0.84, u), lerp(0.20, 0.14, u)))
+                off = Vector((lerp(0.50, 0.40, u), lerp(-1.05, -0.84, u), lerp(0.20, 0.14, u))) * 0.74
                 loc = hw + off
                 look = hw + Vector((0.0, 0.0, 0.03))
                 camrig.key_camera(f, loc, look, cam=self.cam, lens=LENS, interp="LINEAR", easing="AUTO")
@@ -435,6 +452,7 @@ class Take(object):
                     loc_t = (fx + 0.045 * 0.9 + 0.5 * gap - 0.5 * k, fy - 0.42 + 0.9 * k + 0.008 * math.sin(g * 0.9))
                     db, dd = self.fdist[g]
                     ang, psc = 0, 0.9 * db / dd
+                    bp["prop_r"] = dict(bp["prop_r"], scale=psc, angle=0)
                     gap = (0.775 - slide_of(g)) * 0.9
                 else:
                     hx, hy = an["head"]
@@ -445,7 +463,38 @@ class Take(object):
                 w = actors.local_to_world(da, loc_t, f, camera=self.cam)
                 hands = {"r": {"tip": w, "prop": "calipers", "angle": ang, "prop_scale": psc, "stretch": 1.15}}
             ba.pose(f, bp, hands=hands, camera=self.cam)
+            if m == "finger":
+                if not hasattr(self, "_f"):
+                    self._f = {}
+                self._f[g] = dict(bp=bp, tip=Vector(w), ang=ang, psc=psc)
+        self.refine_finger(ba, da, gs)
         self.sprites_group(ba, gs, 320, 512, hand_overlay=True)
+
+    def refine_finger(self, ba, da, gs):
+        """move the pinned tip until the jaw midpoint (calipers_r anchor) sits on the finger, measured on screen."""
+        ff = [g for g in gs if mode_of(g) == "finger"]
+        if not ff:
+            return
+        frames = [g - FIRST + 1 for g in ff]
+        for it in range(3):
+            res = ba.render_sprites(512, frames=frames)
+            for g, f, r in zip(ff, frames, res):
+                self.scene.frame_set(f)
+                an_d = self.anch[(da.name, f)]
+                fx, fy = an_d["hand_l"]
+                tgt = actors.local_to_screen(da, self.cam, (fx, fy - 0.13), f, da.feet.get(f))
+                cur = actors.local_to_screen(ba, self.cam, r["anchors"]["calipers_r"], f, ba.feet.get(f))
+                db = self.fdist[g][0]
+                half = 0.5 * (slide_of(g) - 0.46) * self._f[g]["psc"] * 782.2 * 0.539 * 1.84 / db      # (1.84 = measured ratio of the drawn prop unit to the nominal) the anchor ignores the slid jaw: the true jaw midpoint is dx/2 further along the beam
+                dx, dy = tgt[0] - half - cur[0], tgt[1] - cur[1]
+                lc = Vector(self.cam.matrix_world.translation)
+                fwd = (self.cam.matrix_world.to_quaternion() @ Vector((0, 0, -1))).normalized()
+                rt = fwd.cross(Vector((0, 0, 1))).normalized(); up = rt.cross(fwd).normalized()
+                db = self.fdist[g][0]
+                d = self._f[g]
+                d["tip"] = d["tip"] + rt * (dx * db / 782.2) + up * (-dy * db / 782.2)
+                ba.pose(f, d["bp"], hands={"r": {"tip": tuple(d["tip"]), "prop": "calipers", "angle": d["ang"], "prop_scale": d["psc"], "stretch": 1.15}}, camera=self.cam)
+            print("refine", it, "psc", round(self._f[ff[-1]]["psc"], 3), "dist", [round(v, 2) for v in self.fdist[ff[-1]]], [(g, round(math.hypot(tgt[0] - cur[0], tgt[1] - cur[1]), 1)) for g in ff[-1:]], flush=True)
 
     def sprites_group(self, a, gs, ppd_lo, ppd_hi, hand_overlay=False):
         lo = [g - FIRST + 1 for g in gs if mode_of(g) == "head"]
@@ -614,5 +663,7 @@ if __name__ == "__main__":
     if not gs:
         print("nothing to do"); sys.exit(0)
     T = Take(part)
+    if part == "M" and all(mode_of(g) == "finger" for g in gs):
+        T.cut_bin()
     T.pose_frames(gs)
     T.render(gs, out, scale=scale, samples=samples)
