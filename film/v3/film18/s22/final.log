@@ -1,3 +1,5 @@
 00:00.481  cycles           | WARNING CUEW initialization failed: Error opening the library
 00:20.215  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1677.png'
 s22 g 1677: 17.3 s wall 34.3 cpu heads {'hero': 526, 'soldier': 504}
+00:37.700  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s22/frames/g_1678.png'
+s22 g 1678: 17.5 s wall 33.8 cpu heads {'hero': 520, 'soldier': 498}
