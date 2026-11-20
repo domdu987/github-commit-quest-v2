@@ -172,17 +172,18 @@ def build(light='HERO'):
     mb = V.S.MB('rbench'); Mm = STATE['M']
     mb.box(Mm['wood'], (10.75, 4.2, 0.31), (0.6, 0.9, 0.62)); mb.box(Mm['wood'], (11.05, 4.2, 1.08), (0.5, 0.9, 0.07)); V.L.fin(mb)
     # the reader's hands grip both side edges of the page (thumbs in front, fingers behind), sleeves run back to his shoulders
-    mb = V.S.MB('rhands'); V.mk_people_mats(Mm)
+    mb = V.S.MB('rhands'); V.mk_people_mats(Mm); Mm['handskin'] = V.L.mat('handskin', '#f4c8a4', '#e8aa84', 6.0)
     for sg in (-1, 1):
         ye = PAGE_C.y + sg * (PAGE_W / 2 - 0.012); zh = PAGE_C.z - 0.12; xh = PAGE_C.x
-        mb.ell(Mm['skin1'], (xh - 0.03, ye - sg * 0.03, zh), (0.038, 0.046, 0.065), (10, 8))
-        mb.ell(Mm['skin1'], (xh - 0.045, ye - sg * 0.085, zh + 0.045), (0.024, 0.03, 0.048), (8, 6), rot=(0, 0, 0))
-        for fi in range(4): mb.ell(Mm['skin1'], (xh + 0.035, ye + sg * 0.012, zh + 0.07 - fi * 0.045), (0.03, 0.02, 0.026), (6, 5))
+        mb.ell(Mm['handskin'], (xh - 0.03, ye - sg * 0.03, zh), (0.038, 0.046, 0.065), (10, 8))
+        mb.ell(Mm['handskin'], (xh - 0.045, ye - sg * 0.085, zh + 0.045), (0.024, 0.03, 0.048), (8, 6), rot=(0, 0, 0))
+        for fi in range(4): mb.ell(Mm['handskin'], (xh + 0.035, ye + sg * 0.012, zh + 0.07 - fi * 0.045), (0.03, 0.02, 0.026), (6, 5))
         mb.rod(Mm['leather'], (xh + 0.06, ye + sg * 0.02, zh - 0.02), (xh + 0.42, PAGE_C.y + sg * 0.34, zh - 0.20), 0.05, 0.065, seg=8)
     V.L.fin(mb, cast=False)
     for o in bpy.data.objects:
         if o.name.startswith(('poster', 'sign_poster')) or 'mexico68' in o.name: o.hide_render = True; o.hide_viewport = True
     S['page'] = world_page('newspaper_f')
+    S['hands'] = [o for o in bpy.data.objects if o.name.startswith('rhands')]
     S['cam'] = F.make_camera(F.cam_from((0, 0, 0), (0, 1, 0), lens=22.0))
     sc.camera = S['cam']
     return A
@@ -288,6 +289,7 @@ def cam_for(g):
 def set_frame(g):
     sc = S['sc']; clear_cards(); sc.frame_set(g)
     loc, look = cam_for(g); cl = aim(S['cam'], loc, look)
+    for o in S['hands']: o.hide_render = g >= 852      # T3 has no hands: they leave the photo crop for the seam
     V.rim_on(to_light=(-0.7, -0.6), width=5, strength=0.9)
     rep = place_cards(g, cl)
     if g == G_FLASH: F.flash_bulb(G_FLASH, where=(PHOTO_XY[0] * U, PHOTO_XY[1] * U, 1.2 * U))

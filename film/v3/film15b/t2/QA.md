@@ -47,3 +47,6 @@ Numbers after round 2: qa_auto PASS, sat 0.63, vivid 66.7 %, luma 101.2, magenta
 - Below the photo: caption line at y about 920-950; column text below that.
 - Scale rule for T3: the frame shows 0.46 m x 0.82 m of page = 1493 x 2655 texture px (page texture 2400 x 3200), centred on texture px (876, 1985) measured from the top-left (u 0.365, v 0.38 from the bottom). 1 frame px = 2.07 texture px.
 - Velocity: still dollying in at 0.0125 m/frame (0.375 m/s).
+
+## Round 3
+The reader's hands are now skin-coloured (not bunting orange) and are hidden from g852 on (they would sit inside the photo crop; T3 has no hands). Page and camera framing g856-868 unchanged (the end framing section above still holds exactly). Re-rendered g520-707 and g744-868 (g708-743 unchanged). qa_auto PASS; numbers as round 2.
