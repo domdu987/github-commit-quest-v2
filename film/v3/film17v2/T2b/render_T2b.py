@@ -28,10 +28,36 @@ def apply_lift(g):
                     if 'g_base' not in mt: mt['g_base'] = sk.default_value
                     sk.default_value = mt['g_base'] * (1 + (LIFT['gain'] - 1) * s); sk.keyframe_insert('default_value', frame=f)
     return s
+HOLD_END, BLEND_END, TALK_FROM = 496, 500, 498   # director's join fix: laugh held g494-496, blended into the talk pose by g500
+def _sm(u): u = min(1.0, max(0.0, u)); return u * u * (3 - 2 * u)
+def _lerp(a, b, u):
+    if isinstance(a, (tuple, list)): return tuple(x + (y - x) * u for x, y in zip(a, b))
+    return a + (b - a) * u
+def blend_pose(pa, pb, u):
+    """pa (laugh) -> pb (talk): numbers and hand positions are lerped; discrete things (expr, mouth, fx, arm shapes, legs, string arm poses) switch at u 0.5."""
+    out = dict(pb); D = dict(yaw=0.0, pitch=0.0, head_roll=0.0, lean=0.0, t=0.0, squash=(1.0, 1.0))
+    for k in D: out[k] = _lerp(pa.get(k, D[k]), pb.get(k, D[k]), u)
+    sw = pb if u >= 0.5 else pa
+    for k in ('expr', 'mouth', 'legs'): out[k] = sw[k]
+    if u >= 0.5: out.pop('fx', None)
+    else: out['fx'] = pa.get('fx')
+    for k in ('arm_r', 'arm_l'):
+        a, b = pa[k], pb[k]
+        if isinstance(a, dict) and isinstance(b, dict):
+            o = dict(b); o['hand'] = _lerp(a['hand'], b['hand'], u); o['bend'] = _lerp(a.get('bend', 0.0), b.get('bend', 0.0), u); o['stretch'] = _lerp(a.get('stretch', 1.0), b.get('stretch', 1.0), u); o['shape'] = sw[k]['shape']; out[k] = o
+        else: out[k] = sw[k]
+    return out
+def story_blend(g, laugh, calm, name):
+    import cast17
+    u = _sm((g - HOLD_END) / float(BLEND_END - HOLD_END))
+    if u <= 0: return laugh
+    if u >= 1: return calm
+    (c, pa), (_, pb) = cast17.STORY17[laugh], cast17.STORY17[calm]
+    cast17.STORY17[name] = (c, blend_pose(pa, pb, u)); return name
 def assign_for(g):
-    return {'inspector': ('inspector_pointing_mock', {'talk': 493 <= g <= 651}),   # lip-sync only inside the quote window g493-651
+    return {'inspector': (story_blend(g, 'inspector_laughing', 'inspector_pointing_mock', 't2b_insp'), {'talk': TALK_FROM <= g <= 651}),   # lip-sync once the mouth is in the talk pose (g498), through g651
             'bertillon': ('bertillon_measuring', {'mirror': True}), 'prisoner_chair': ('prisoner_sitting_b', {'seated': 'chair'}),
-            'gend_room': ('gendarme_standing_a', {}), 'gend_room2': ('gendarme_standing_b', {}),   # laugh ended g493: mouths closed
+            'gend_room': (story_blend(g, 'gendarme_laughing_a', 'gendarme_standing_a', 't2b_ga'), {}), 'gend_room2': (story_blend(g, 'gendarme_laughing_b', 'gendarme_standing_b', 't2b_gb'), {}),
             'prisoner_b': ('prisoner_sitting_a', {'seated': 'bench'})}
 def clear_cards():
     import actors
