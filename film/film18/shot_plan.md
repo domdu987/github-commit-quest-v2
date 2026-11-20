@@ -29,8 +29,7 @@ hook 0.00 · pivot 5.20 · count 15.30 · boss 19.90 · nickname 28.44 · false 
 ## Shot table
 | # | t0-t1 (s) | frames | set / light | camera | action | trans in |
 |---|---|---|---|---|---|---|
-| 1 | 0.00-2.59 | 0-78 | jimo_in / NIGHT | eye, slow push-in 8 %/s, slide right; fg lantern | Lantern-lit ox yard: Tian Dan tugs a red silk coat painted with gold dragons over an ox; behind him a row of oxen already dressed. | — |
-| 2 | 2.59-5.20 | 78-156 | jimo_in / NIGHT | low (1.2 D), pull-out 7 %/s revealing the herd | He ties short blades to the ox's horns ("ผูกมีด" 3.13); pull-out reveals dozens of dressed oxen filling the lane. | CUT |
+| 1 | 0.00-5.20 | 0-156 | jimo_in / NIGHT | **BIGZOOM A** (client §H): one continuous eased crane-down + push, 0-3.6 s from EXTREME WIDE high over the moonlit wall top and tiled roofs (whole ox yard + pens + lanterns + dozens of dragon-dressed oxen; Tian Dan < 5 % of frame height but findable at the lit ox) down over the roofs to MEDIUM on Tian Dan (body 35-60 % of frame height), then 3.6-5.2 s slow push 6 %/s + slight orbit | Tian Dan tugs the dragon silk over an ox, then ties short blades to its horns ("ผูกมีด" 3.13 = g97, he is at medium by then); the herd of dressed oxen fills the yard behind. (Replaces old s01 + s02.) | — |
 | 3 | 5.20-9.89 | 156-297 | vista / DUSK | establishing high, push 6 %/s, slide left | "คืออย่างนี้นะ": the Qi plain at dusk; black Yan pennants rise one by one over small walled towns (pop on 7.32-9.89), dozens of them. | dissolve 15 |
 | 4 | 9.89-12.81 | 297-384 | vista / DUSK | high, push-in toward the near lit town | Two towns stay warm-lit with no Yan flag; push to the nearer, Jimo, on "จี๋โม่" 11.91. | — (same take, snap) |
 | 5 | 12.81-15.30 | 384-459 | jimo_in / DUSK | eye, push-in 8 %/s; fg market stall scale | Market lane: Tian Dan at a clerk's stall with tally slips and an abacus-free counting board; townsfolk hand him a general's sash (made general). | dissolve 11 |
@@ -54,10 +53,16 @@ hook 0.00 · pivot 5.20 · count 15.30 · boss 19.90 · nickname 28.44 · false 
 | 23 | 58.04-60.22 | 1742-1807 | jimo_out / NIGHT | high over the wall top, pull-out; fg torch | On the wall: old men, women, kids beat bronze pots and basins, mouths wide (no lip-sync, shout drawings), sound rings. | dissolve 9 |
 | 24 | 60.22-62.74 | 1807-1882 | yan_camp / NIGHT rout | wide high, slide 50 px/s + push | Rout (comic): tents fold down, soldiers flee in all directions, pots and helmets fly, a chariot rolls away empty; nobody hurt. | CUT |
 | 25 | 62.74-65.27 | 1882-1958 | vista / DAWN | establishing high, push 6 %/s | Qi banners return over the towns of the plain one by one (70+), warm dawn. | dissolve 15 |
-| 26 | 65.27-70.40 | 1958-2112 | jimo_out road / DAWN | low, long tracking pull with the action, push-in on "วิ่งหนีวัว" | The general runs down the road toward home, helmet askew, cup still in hand, a few dragon oxen trotting after him with smoking tails; HARD CUT on "ตลอดทาง". | dissolve 11 |
+| 26 | 65.27-70.40 | 1958-2112 | jimo_out road / DAWN | **BIGZOOM B** (client §H): one continuous eased crane-down + push, 65.3-68.9 s from EXTREME WIDE high above Jimo's wall (wall + gate + moat + road + fields + smoking far camp; the general < 5 % of frame height, a tiny figure on the road with oxen behind) down in front of him to a low MEDIUM (35-60 % of frame height), then keep tracking backward ahead of him with the push-in on "วิ่งหนีวัว" | The general runs down the road toward home, helmet askew, cup still in hand, a few dragon oxen trotting after him with smoking tails; HARD CUT on "ตลอดทาง". | dissolve 11 |
 
 Counts: 26 shots, mean 2.70 s; 9 dissolves, 12 hard cuts, 1 whip, 2 snaps; framing changes inside 4 shots (4, 7, 11, 21) for an average change about every 2.3 s.
 Lip-sync shots: 9, 10, 14, 15 (general only). Key shots for QA-art at the TAKE gate: 1-2 (hook), 7 (count payoff), 13-15 (false payoff), 19-22 (reveal), 26 (ending).
 
 ## Sound cues (SFX library to generate, fal sound-effects v2)
 ox moo, ox herd gallop, crowd laugh (men), belly laugh, cups clink, party cheer, pickaxe on earth, earth crumble, torch whoosh/ignite, fire crackle, bronze pot clangs, war panic shouts (comic), tent collapse thud, distant night insects, dawn birds.
+
+
+## Client §H (2026-11-20): BIGZOOMs and angle types
+- BIGZOOM A: s01 0.00-3.6 s (extreme wide -> medium Tian Dan), jimo_in NIGHT. BIGZOOM B: s26 65.3-68.9 s (extreme wide -> medium general), jimo_out DAWN.
+- Angle types used: high/bird's-eye (s01 start, s03, s04, s07, s13, s24, s25), low hero (s16, s19, s26 end), side tracking (s06, s20), through a foreground frame (s08 spear rack, s11 wine jars, s17 reed bundles), crane down (s01, s26), over-the-shoulder (s09 camera behind the table past the general).
+- s02 is merged into s01 (25 takes).

@@ -1,0 +1,27 @@
+[
+ {
+  "g": 297,
+  "dir": -1,
+  "shot": "s04 (vista push continues)"
+ },
+ {
+  "g": 531,
+  "dir": 1,
+  "shot": "s07 (yard -> quarter)"
+ },
+ {
+  "g": 737,
+  "dir": 1,
+  "shot": "s10 (quote 1a -> 1b)"
+ },
+ {
+  "g": 1136,
+  "dir": 1,
+  "shot": "s15 (quote 2a -> 2b)"
+ },
+ {
+  "g": 1683,
+  "dir": -1,
+  "shot": "s22 (camp reveal -> ox)"
+ }
+]
