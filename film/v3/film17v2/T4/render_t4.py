@@ -55,12 +55,18 @@ def stage_frame(g):
     assign, kind = build_assign(g); mirror = kind in ('measure', 'insert')    # calipers / card go to the screen-left (prisoner on the left; drawers on the wall at x 13)
     global BOPT
     BOPT = {}
+    P.set_tally(0)                  # the tally board texture for frame N does not exist (magenta rectangle, director item 2): hold file 0000
+    if 862 <= g <= 914:              # items 4/5: Bertillon and the prisoner enter cut by the left frame edge: slide the pair 0.75 m to the right (eased)
+        BOPT = {'dx': 0.75 * ramp(g, 862, 872) * (1 - ramp(g, 902, 914)), 'dy': 0.0}
     if g >= 1018:      # director: he stops beside the cabinet (eased from g1018): 0.5 m to the right of the MOYEN mouth on screen, 0.7 m deeper than the cabinet front, re-solved every frame because the camera is still moving
         import math as _m
         c = cam.matrix_world.translation; fw = cam.matrix_world.to_quaternion() @ Vector((0, 0, -1)); f = Vector((fw.x, fw.y, 0)).normalized(); rr = Vector((f.y, -f.x, 0))
         M = Vector((L.CAB['cx'] + 0.10, L.CAB['cy'] - 0.30, 0)); a_ = (M - c).dot(f); b_ = (M - c).dot(rr); a2 = a_ - 0.20; b2 = (b_ + 0.55) * a2 / a_
         pos = Vector((c.x, c.y, 0)) + f * a2 + rr * b2
         p = P.cast_pos(L.CASTD['bertillon'], g); r = ramp(g, 1018, 1030); BOPT = {'dx': (pos.x - p[0]) * r, 'dy': (pos.y - p[1]) * r}
+    if 994 <= g <= 1014:     # item 1: the card straddled the door jamb/wall plane and was clipped by it: bring him 0.8 m toward the camera (same screen position, card fully in front of the wall)
+        p = P.cast_pos(L.CASTD['bertillon'], g); c = cam.matrix_world.translation; v = Vector((c.x - p[0], c.y - p[1], 0)).normalized(); k = 0.8 * ramp(g, 994, 1000) * (1 - ramp(g, 1008, 1014))
+        BOPT = {'dx': BOPT.get('dx', 0.0) + v.x * k, 'dy': BOPT.get('dy', 0.0) + v.y * k}
     L.set_mid_drawer(g)
     assign['bertillon'] = (bert_pose(g, kind, mirror), BOPT)
     acts = P.stage_cast2('T4', g, assign); ab = acts['bertillon']; ps = acts['prisoner_s']; info = {}

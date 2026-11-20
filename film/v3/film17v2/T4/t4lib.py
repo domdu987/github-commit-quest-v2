@@ -83,9 +83,13 @@ def add_cabinet():
 def setup():
     P.TAKE_OVER['T4'] = {'measure': dict(shade_mul=float(os.environ.get('T4_SHADE', 0.8)), fill_w=float(os.environ.get('T4_FILL', 70)), gain=float(os.environ.get('T4_GAIN', 0.68)))}   # QA: T4 luma target 95-110, lights only
     A = P.world_build(TAKE); [setattr(o, 'hide_render', True) or setattr(o, 'hide_viewport', True) for o in bpy.data.objects if o.name.startswith('measure_beam')]   # director: the window shaft mesh showed as a dark slab at the lens edge (ray cast g930 px 680,900 = measure_beam_fx) and a shaft must not cross cast cards
-    _cut_tripod_cloth(); cut_coat_rack(); add_cabinet()
+    _cut_tripod_cloth(); cut_coat_rack(); add_cabinet(); P.key_take(TAKE)
+    for o in bpy.data.objects:
+        if o.name == 'cal_p0': o.hide_render = True        # the flipped MARS page showed upside-down and mirrored from behind (director item 3): hidden, the '3 MOIS' page stays
+    for g_ in range(P.TAKES[TAKE]['render'][0], P.TAKES[TAKE]['render'][1] + 1):      # the open casement leaf's bars crossed the prisoner's face g888-906 (item 4): it closes behind the clock macro, g852-868, where the window is not in frame
+        P.set_window(1.0 - max(0.0, min(1.0, (g_ - 852) / 16.0)), frame=g_ + 1)
     if os.environ.get('T4_NOBEAM'): [setattr(o, 'hide_render', True) for o in bpy.data.objects if o.name == 'arch_beam_fx']
-    P.key_take(TAKE); P.setup_render2((720, 1280), samples=int(os.environ.get('T4_SAMPLES', 16)), threads=2); return A
+    P.setup_render2((720, 1280), samples=int(os.environ.get('T4_SAMPLES', 16)), threads=2); return A
 
 def _basis(a, cam):
     o, x, y, z, s = actors.card_state(a, cam); return o, x, y, z, s
