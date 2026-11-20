@@ -24,7 +24,7 @@ DAY0 = copy.deepcopy(P.K.LIGHTS['ARCHIVE_DAY']); MUL = OV['light']['mul'] if OV.
 def day_scale(g):   # director: 1.0 at g1211 (matches T5a's last frame), smoothstep down to MUL by g1241. lights only: no haze, no desaturation
     u = max(0.0, min(1.0, (g - 1211) / 30.0)); u = u * u * (3 - 2 * u); return 1.0 + (MUL - 1.0) * u
 def beam_scale(g):   # director: skylight beam fx at full strength at g1211 (continuity with T5a), eased linearly to 0 by g1218, 0 to the end of the take. T5b2 imports this.
-    return max(0.0, min(1.0, (1218 - g) / 7.0))
+    return 0.0   # T5a goes beam-off for its night half too (director): beam off for the whole of T5b. (earlier schedule: max(0.0, min(1.0, (1218 - g) / 7.0)))
 def set_day(g):
     m = day_scale(g); D = P.K.LIGHTS['ARCHIVE_DAY']
     for key in ('shade', 'tint'): D[key] = tuple(x * m for x in DAY0[key])
