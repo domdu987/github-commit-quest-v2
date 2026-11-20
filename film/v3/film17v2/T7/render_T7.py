@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.join(ROOT, 'film/v3/set3d17')); os.chdir(os.path.join
 import prefecture17 as P, bpy
 from mathutils import Vector
 take = 'T7'
-SHADE_MUL = float(os.environ.get('T7_SHADE', 1.30)); FILL_W = float(os.environ.get('T7_FILL', 480))
+SHADE_MUL = float(os.environ.get('T7_SHADE', 1.38)); FILL_W = float(os.environ.get('T7_FILL', 540))
 P.TAKE_OVER['T7'] = {'archive': dict(shade_mul=SHADE_MUL, fill_w=FILL_W)}           # director: raise lights (lights only)
 _sd = P.K.set_drawer
 P.K.set_drawer = lambda name, open=1.0, frame=None: _sd(name, min(open, 0.42) if name == 'big' else open, frame)   # drawer tip stays clear of Bertillon (x 14.35)
