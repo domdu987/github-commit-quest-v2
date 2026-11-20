@@ -15,16 +15,21 @@ from mathutils import Vector
 
 G0, G1 = 885, 1044
 STORY = cast21.STORY21
-# camera travel keys: (g, loc, look, lens)
-KEYS = [(885, (0.7, 42.0, 3.1), (0.0, 34.5, 1.5), 22.0),
-        (936, (0.9, 47.5, 7.0), (0.0, 38.5, 1.0), 22.0),
-        (986, (1.0, 52.0, 17.0), (0.0, 43.0, 0.6), 22.0),
-        (1044, (-20.0, 44.0, 44.0), (88.0, 118.0, 8.0), 22.0)]
-N_WALK = 40
+N_LEAD = 10                   # "ข้ามมาสิบคน": ten men already out on the causeway
+N_WALK = 100                  # "ข้ามมาร้อยคน": ~100 in view at g938 (queue on the bridge + the fan beyond the mouth)
+N_MEAD = int(os.environ.get('N_MEAD', 280))
+POP = 985                     # "เป็นพัน": the meadow fills with hundreds on this frame
+LENS = 20.0
 SUN_K = float(os.environ.get('SUN_K', 1.3))
 GAMMA0 = float(os.environ.get('GAMMA0', 1.55))
-SPEED = 0.075                 # m per frame (1.7 m/s march)
-_CAST = [("footman_a", 0)]   # crimson only: blue is reserved for the Scots (footman_b base is blue)
+_CAST = [("footman_a", 0)]
+# camera travel keys: (g, loc, look, lens): camera on the WEST bank looking ENE, the column crosses the frame, the hill (Scots) is in the upper third
+KEYS = [(885, (-11.0, 39.0, 2.2), (70.0, 78.0, 3.0), LENS),
+        (912, (-11.5, 39.0, 3.4), (72.0, 74.0, 4.0), LENS),
+        (938, (-14.0, 37.0, 8.0), (90.0, 56.0, 6.0), LENS),
+        (975, (-18.0, 41.0, 11.0), (80.0, 74.0, 8.0), LENS),
+        (1000, (-22.0, 44.0, 27.0), (60.0, 86.0, 10.0), 22.0),
+        (1044, (-26.0, 46.0, 44.0), (40.0, 90.0, 12.0), 24.0)]
 
 
 def lerp_(a, b, t):
@@ -44,14 +49,16 @@ def parse(spec):
 
 
 def walker_xy(i, g):
-    r, c = divmod(i, 2)
-    x = (-0.65 if c == 0 else 0.65) + 0.08 * math.sin(i * 1.7)
-    y0 = 36.3 - 1.5 * r - (0.35 if c else 0.0)
-    y = y0 + SPEED * (g - G0)
-    # beyond the bridge end the column spreads out onto the causeway
-    if y > 38.5:
-        k = ez((y - 38.5) / 6.0)
-        x = x * (1 + 2.2 * k) + 0.9 * k * math.sin(i * 2.3)
+    if i < N_LEAD:
+        y = 41.0 + 1.25 * (N_LEAD - 1 - i) + 0.06 * (g - G0)
+        x = 0.0 + 1.9 * math.sin(i * 2.1)
+    else:
+        k = i - N_LEAD; row, col = divmod(k, 3)
+        x = (-0.9, 0.0, 0.9)[col] + 0.06 * math.sin(i * 1.7)
+        y = 37.4 - 1.0 * row - 0.25 * col + 0.095 * (g - G0)
+        if y > 38.5:                                  # beyond the bridge mouth the pack fans out onto the meadow
+            kf = ez((y - 38.5) / 12.0)
+            x = x * (1 + 4.0 * kf) + 1.5 * kf * math.sin(i * 2.3)
     return x, y
 
 
@@ -62,23 +69,28 @@ def z_at(x, y):
     return zg
 
 
-N_MEAD = 120
-
-
-def mead_xy(m):
-    r, c = divmod(m, 15)
-    return -24.0 + 3.3 * c + (1.6 if r % 2 else 0.0) + 0.5 * math.sin(m * 2.1), 58.0 + 3.3 * r + 0.6 * math.cos(m * 1.3)
+def mead_slots():
+    out = []; rs = np.random.RandomState(7)
+    for r in range(60):
+        for c in range(40):
+            x = -8.0 + 2.3 * c + (1.15 if r % 2 else 0.0) + rs.uniform(-0.5, 0.5); y = 50.0 + 2.2 * r + rs.uniform(-0.5, 0.5)
+            if math.hypot(x - K.LOOP_C[0], y - K.LOOP_C[1]) < K.LOOP_R - 14 and float(K.sd_at(x, y)) > 3 and y > 50:
+                out.append((x, y))
+    # the nearest first so a trimmed list keeps the crowd in front of the lens
+    out.sort(key=lambda p: (p[0] - 8) ** 2 + (p[1] - 72) ** 2)
+    return out[:N_MEAD]
 
 
 def mead_arrive(m):
-    r, c = divmod(m, 15)
-    return 955 + 9 * r + int(2.0 * ((c * 7) % 15))
+    return POP - 6 + (m * 7919) % 15
 
 
 def mead_pose(m, g):
     cast, var = _CAST[m % len(_CAST)]
     p = dict(STORY[cast + "_stand"][1]); p["variant21"] = var
-    p["lean"] = 2.0 * math.sin(g * 0.2 + m); p["head_dy"] = 0.02 * math.sin(g * 0.37 + m); p["head_roll"] = 3 * math.sin(g * 0.13 + m)
+    p["lean"] = 2.5 * math.sin(g * 0.2 + m); p["head_dy"] = 0.03 * math.sin(g * 0.37 + m); p["head_roll"] = 4 * math.sin(g * 0.13 + m)
+    if m % 5 == 0:
+        p["gaze"] = (0.9, -0.5); p["expr"] = "worried"
     p["blink"] = blink(g, m * 11); p["t"] = g / 30.0
     return K.with_rim(p)
 
@@ -86,29 +98,58 @@ def mead_pose(m, g):
 def pose_of(i, g):
     cast, var = _CAST[i % len(_CAST)]
     ph = (g + 5 * i) / 20.0
-    p = cast21.walk_spear(cast, ph, 1, "march")
-    glance = ez((g - (902 + i)) / 8.0) * (1 - ez((g - (945 + i)) / 10.0)) if i < 8 else 0.0     # the first men glance up at the hill
+    p = cast21.walk_spear(cast, ph, -1, "march")
+    glance = ez((g - (895 + 2 * i)) / 8.0) * (1 - ez((g - (950 + i)) / 10.0)) if i % 3 == 0 else 0.0     # one in three glances up at the hill
     if glance > 0:
-        p.update(expr="worried", gaze=(0.9, -0.6), pitch=-0.3 * glance)
+        p.update(expr="worried", gaze=(-0.9, -0.6), pitch=-0.3 * glance)
     p["variant21"] = var
     p["blink"] = blink(g, i * 17)
     p["t"] = g / 30.0
     return K.with_rim(p)
 
 
+def scot_slots(n=10):
+    out = []; a0, a1 = 196.0, 240.0
+    for k in range(n):
+        a = math.radians(a0 + (a1 - a0) * (k + 0.5) / n)
+        for r_ in np.arange(30, 120, 1.0):
+            x = K.HILL_C[0] + r_ * math.cos(a) * 1.05; y = K.HILL_C[1] + r_ * 0.9 * math.sin(a)
+            if float(K.hill_h(np.array([x]), np.array([y]))[0][0]) < 26.0 + 1.5 * (k % 2): break
+        out.append((x, y))
+    return out
+
+
+SCOT_SCALE = 8.0
+_SCOT_POSES = ["scot_a_fold_spear", "scot_a_chew_grass", "scot_a_scratch_nose", "scot_a_stand_still"]
+
+
+def scot_pose(k, g):
+    p = dict(STORY[_SCOT_POSES[k % 4]][1])
+    p["lean"] = 2.0 * math.sin(g * 0.11 + k * 1.3); p["head_dy"] = 0.02 * math.sin(g * 0.3 + k); p["blink"] = blink(g, k * 29); p["t"] = g / 30.0
+    p["mouth"] = "flat"
+    return K.with_rim(p)
+
+
 def run(quality, gs, samples, out):
     work = os.path.join(HERE, "work", "E2_" + quality)
     T = C.Take(['bridge_end_north', 'valley_loop'], work, quality, fg=['bridge_end_north'], over=dict(sun_k=SUN_K))
-    K.scots_wide_line(n=30, banners=4, scale=1.5, toward=(-20.0, 44.0), hh0=22.0)   # the Scots stand still on the hill: blue figures + saltire banners
     A = T.A
-    # clear the preset troops / crowd: our cast and the staged meadow crowd replace them
+    # clear the preset troops / crowd: our cast cards replace them
     K.place_troops(A, 'bridge', 0); K.place_troops(A, 'causeway', 0); K.place_troops(A, 'meadow', 0)
     for o in list(bpy.data.objects):
         if o.name.startswith("crowd") or o.name.startswith("bridge_knights"):
             bpy.data.objects.remove(o, do_unlink=True)
+    # the Scots wait on the hill: oversized saltire banners (set) + idle cast cards on the slope
+    Bp = K.Batch(89); rs_ = np.random.RandomState(13)
+    for (x, y) in scot_slots(3):
+        K.banner(Bp, (x, y, float(K.ground(x, y))), 34.0, 215.0 + 90.0, 't_saltire', 't_white', 'saltire', rs_, size=(18.0, 11.0))
+    Bp.finalize('scots_wide_banners')
     os.makedirs(out, exist_ok=True)
-    acts = [(T.make_actor("w%d" % i, _CAST[i % len(_CAST)][0]), _CAST[i % len(_CAST)][0]) for i in range(N_WALK)]
-    mact = [(T.make_actor("m%d" % m, _CAST[m % len(_CAST)][0]), _CAST[m % len(_CAST)][0]) for m in range(N_MEAD)]
+    acts = [(T.make_actor("w%d" % i, "footman_a"), "footman_a") for i in range(N_WALK)]
+    slots = mead_slots()
+    mact = [(T.make_actor("m%d" % m, "footman_a"), "footman_a") for m in range(len(slots))]
+    sslots = scot_slots(10)
+    scots = [T.make_actor("s%d" % k, "scot_a") for k in range(len(sslots))]
     paths = {}
     for g in gs:
         r = K.cam_path(None, KEYS, g)
@@ -118,35 +159,33 @@ def run(quality, gs, samples, out):
         for g in gs:
             x, y = walker_xy(i, g)
             T.place(a, g, (x, y, z_at(x, y)), cast)
-    for i, (a, cast) in enumerate(acts):
-        for g in gs:
             T.pose(a, g, pose_of(i, g))
-        T.sprites_for([(a, 64, gs)])
+        T.sprites_for([(a, 48 if i < 30 else 32, gs)])
+    s0 = C.REAL_H["footman_a"] / C.PUPPET_H["footman_a"]
     for m, (a, cast) in enumerate(mact):
-        x, y = mead_xy(m)
+        x, y = mead_xy_ = slots[m]
         for g in gs:
-            T.place(a, g, (x, y, float(K.ground(x, y))), cast)
+            pop = ez((g - mead_arrive(m)) / 6.0) if g >= mead_arrive(m) else 0.0
+            a.place(C.bf(g), (x, y, float(K.ground(x, y))), scale=s0 * max(pop, 0.02))
             T.pose(a, g, mead_pose(m, g))
         T.sprites_for([(a, 32, gs)])
+    ss0 = C.REAL_H["scot_a"] / C.PUPPET_H["scot_a"] * SCOT_SCALE
+    for k, a in enumerate(scots):
+        x, y = sslots[k]
+        for g in gs:
+            a.place(C.bf(g), (x, y, float(K.ground(x, y))), scale=ss0)
+            T.pose(a, g, scot_pose(k, g))
+        T.sprites_for([(a, 48, gs)])
 
     def hook(g):
-        K.cam_path(None, KEYS, g)                            # re-sets the camera
+        K.cam_path(None, KEYS, g)
         v0, v1 = (GAMMA0, K.VIVID['bridge_end_north'][1], 1.0), tuple(K.VIVID['valley_loop']); v1 = v1 + (1.0,) * (3 - len(v1)); u = ez((g - 940) / 80.0)
-        K.STATE['vivid'] = (math.exp(lerp(math.log(v0[0]), math.log(v1[0]), u)), lerp(v0[1], v1[1], u), lerp(v0[2], v1[2], u))   # eases into the set's valley_loop grade
+        K.STATE['vivid'] = (math.exp(lerp(math.log(v0[0]), math.log(v1[0]), u)), lerp(v0[1], v1[1], u), lerp(v0[2], v1[2], u))
         K.set_flow(g / 30.0); K.set_flutter(g / 30.0); K.set_smoke(g / 30.0)
         for m, (a, cast) in enumerate(mact):
             hid = g < mead_arrive(m)
             for ob in (a.card, a.proxy, a.contact):
                 if ob is not None: ob.hide_render = hid
-        if g >= 955:                                          # the meadow fills (placeholders: tiny at this height)
-            n = int(lerp(10, 380, ez((g - 955) / 85.0)))
-            def cb(items):
-                its = []
-                for (x, y, z, k, s) in items:
-                    xx, yy = x * 1.7, 90.0 + (y - 46.0) * 0.9
-                    its.append((xx, yy, float(K.ground(xx, yy)), "knight", 2.08))   # crimson only
-                for o in K.stage_crowd(its, cam=T.cam): o.name = "troops_meadow_" + o.name
-            K.place_troops(A, "meadow", n, seed=3, cb=cb)
     for g in gs:
         path = os.path.join(out, "g_%04d.png" % g)
         t0 = time.time()
