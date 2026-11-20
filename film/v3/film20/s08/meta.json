@@ -52,57 +52,57 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 24.58,
- "s_per_frame_cpu_mean": 43.23,
+ "s_per_frame_wall_mean": 30.27,
+ "s_per_frame_cpu_mean": 43.81,
  "heads_px_in_shot": {
   "art1": {
    "w": [
+    103,
+    215
+   ],
+   "y": [
+    706,
+    749
+   ],
+   "bottom_max": 857
+  },
+  "art2": {
+   "w": [
     94,
+    182
+   ],
+   "y": [
+    717,
+    760
+   ],
+   "bottom_max": 850
+  },
+  "art3": {
+   "w": [
+    87,
+    157
+   ],
+   "y": [
+    712,
+    744
+   ],
+   "bottom_max": 820
+  },
+  "art4": {
+   "w": [
+    111,
     257
    ],
    "y": [
     702,
-    757
+    736
    ],
-   "bottom_max": 885
-  },
-  "art2": {
-   "w": [
-    74,
-    145
-   ],
-   "y": [
-    714,
-    755
-   ],
-   "bottom_max": 827
-  },
-  "art3": {
-   "w": [
-    88,
-    216
-   ],
-   "y": [
-    706,
-    753
-   ],
-   "bottom_max": 858
-  },
-  "art4": {
-   "w": [
-    130,
-    1056
-   ],
-   "y": [
-    689,
-    789
-   ],
-   "bottom_max": 1305
+   "bottom_max": 864
   }
  },
  "framediff_in_shot": {
-  "median": 2.86,
-  "p90": 11.5
+  "median": 3.79,
+  "p90": 11.57
  },
  "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
 }
