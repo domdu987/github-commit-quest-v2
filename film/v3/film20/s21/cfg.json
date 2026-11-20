@@ -1,0 +1,11 @@
+{"take":"s21","shot":21,"g0":1431,"g1":1560,"h_in":4,"h_out":4,
+"meta":{"set":"v3/set3d20 TOWER preset tower_night_wide, light NIGHT, year 1909 (antenna wires + hut + wagon); no cast in shot",
+"camera":"custom 22 mm; g1427-1433 starts on tower_night_summit (250 m up, creeping), g1433-1445 whip pull-out (12 f, ease peak 2.1, summit -> night wide, lens shift 0 -> 0.345), then c20.CamPath pull 5 %/s + slide 30 px/s + arc 2 deg/s (decay 0.25) along the ground, snap push x1.22 g1528-1543 on 'เสาอากาศยักษ์' (g1530)",
+"events":{"summit_hold":[1427,1433],"whip":[1433,1445],"signal_rings_loop_period_frames":38,"word_antenna":1530,"snap":[1528,1543],"wire_glow_0_to_1":[1530,1539]},
+"light":"NIGHT","year":1909},
+"cues":[["ambience",1427,1564,"night over Paris: distant city murmur, a soft wind high up, a faint carrier hum"],
+["accent",1433,1445,"whip pull-out from the summit: fast rising whoosh"],
+["accent",1427,1560,"signal rings: a soft blue 'pulse' ping every ~1.3 s (period 38 f), each fading farther away"],
+["accent",1528,1543,"snap push on 'เสาอากาศยักษ์': swell"],
+["accent",1530,1540,"whole lattice glows along the wire: electric hum rising + shimmering chime"],
+["cut",1560,1560,"hard cut to shot 22 (dusk/night wagon and men): the hum drops to a low drone"]]}
