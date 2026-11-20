@@ -17,8 +17,13 @@ def setup(g0, g1):
 def mb(g):
     r = bpy.context.scene.render; on = 152 <= g <= 278; r.use_motion_blur = on
     if on: r.motion_blur_shutter = 0.5
+def clear_cast():
+    # stage_cast2 builds NEW actors every call and never removes the old ones (stale shadow proxies stack into black slabs): remove them first.
+    sys.path.insert(0, os.path.join(V3, 'stage')); import actors
+    for o in [o for o in bpy.data.objects if o.name.startswith(('c2_', 'back_hair_', 'back_coat_'))]: bpy.data.objects.remove(o, do_unlink=True)
+    actors.clear_registry()
 def one(g, out):
-    sc = bpy.context.scene; sc.frame_set(g + 1); mb(g); P.stage_cast2(TAKE, g, assign_for(g)); sc.render.filepath = out
+    clear_cast(); sc = bpy.context.scene; sc.frame_set(g + 1); mb(g); P.stage_cast2(TAKE, g, assign_for(g)); sc.render.filepath = out
     t = time.time(); bpy.ops.render.render(write_still=True); P.grade2(out); return time.time() - t
 if __name__ == '__main__':
     a = sys.argv[1:]
