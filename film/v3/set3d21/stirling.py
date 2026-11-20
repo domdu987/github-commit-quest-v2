@@ -64,6 +64,7 @@ def _pal():
     add('t_red', '#c8383a', tint=True, ink=True, sm=(0.95, 0.9, 1.18), mix=0.8)
     add('t_cream', '#efe2bb', tint=True, ink=True, sm=(0.85, 0.95, 1.18), mix=0.8)
     add('t_blue', '#2f58ad', tint=True, ink=True, sm=(0.85, 0.95, 1.2), mix=0.8)
+    add('t_saltire', '#153d9c', tint=True, ink=True, sm=(0.85, 0.95, 1.2), mix=0.8)
     add('t_gold', '#dcae3a', tint=True, ink=True, sm=(0.9, 0.95, 1.2), mix=0.8)
     add('t_green', '#3f7d4c', tint=True, ink=True, mix=0.8)
     add('t_brown', '#7a5a3a', tint=True, ink=True)
@@ -177,7 +178,7 @@ def _lit_mat(key, s):
     if s['haze']: sh = _haze_out(nt, sh)
     L(sh, out.inputs['Surface']); return m
 def _glow_mat(key):
-    spec = {'glow_flame': ('#ffb040', 6.0), 'glow_ember': ('#ff8a30', 4.0), 'glow_sun': ('#fff2cc', 6.0), 'glow_smoke': ('#cdbfc0', 0.85), 'glow_spray': ('#f0f6fb', 1.0), 'glow_spray2': ('#cfe6f2', 1.0)}[key]
+    spec = {'glow_flame': ('#ffb040', 6.0), 'glow_ember': ('#ff8a30', 4.0), 'glow_sun': ('#fff2cc', 6.0), 'glow_smoke': ('#cdbfc0', 0.85), 'glow_spray': ('#f6f8fb', 1.0), 'glow_spray2': ('#f2f6fa', 1.0)}[key]
     m = bpy.data.materials.new(key); nt = _mk_tree(m); out = nt.nodes.new('ShaderNodeOutputMaterial'); e = nt.nodes.new('ShaderNodeEmission'); e.name = 'strength'
     e.inputs[0].default_value = (*hex_lin(spec[0]), 1); e.inputs[1].default_value = spec[1]; nt.links.new(e.outputs[0], out.inputs[0]); return m
 def _ink_mat():
@@ -534,7 +535,7 @@ def _water_mat():
     P = STATE['P']; m = bpy.data.materials.new('water'); nt = _mk_tree(m); N = nt.nodes.new; L = nt.links.new; out = N('ShaderNodeOutputMaterial'); geo = N('ShaderNodeNewGeometry')
     wa = N('ShaderNodeAttribute'); wa.attribute_name = 'wattr'; wa.attribute_type = 'GEOMETRY'; fa = N('ShaderNodeAttribute'); fa.attribute_name = 'fuv'; fa.attribute_type = 'GEOMETRY'
     sp = N('ShaderNodeSeparateXYZ'); L(wa.outputs['Vector'], sp.inputs[0])
-    ramp = N('ShaderNodeValToRGB'); L(sp.outputs['X'], ramp.inputs[0]); cr = ramp.color_ramp; cr.elements[0].position = 0.0; cr.elements[0].color = (*hex_lin('#5cc8b4'), 1)
+    ramp = N('ShaderNodeValToRGB'); L(sp.outputs['X'], ramp.inputs[0]); cr = ramp.color_ramp; cr.elements[0].position = 0.0; cr.elements[0].color = (*hex_lin(P.get('shallow', '#5cc8b4')), 1)
     cr.elements[1].position = 1.0; cr.elements[1].color = (*hex_lin('#0f5e74'), 1); e = cr.elements.new(0.3); e.color = (*hex_lin('#2fa8a4'), 1); e = cr.elements.new(0.6); e.color = (*hex_lin('#1a8392'), 1)
     off = N('ShaderNodeMapping'); L(fa.outputs['Vector'], off.inputs[0]); off.name = 'flow_off'; off.inputs['Scale'].default_value = (0.045, 0.30, 1.0)
     nz = N('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 1.0; nz.inputs['Detail'].default_value = 2.0; nz.inputs['Roughness'].default_value = 0.5; L(off.outputs[0], nz.inputs['Vector'])
@@ -561,7 +562,7 @@ def _water_mat():
     core = _lit_core(nt, art2, dict(mix=0.7, sm=(0.7, 1.0, 1.2), afl=0.25), geo)
     # sky sheen at grazing angles
     lw = N('ShaderNodeLayerWeight'); lw.inputs['Blend'].default_value = 0.35; sheen = N('ShaderNodeEmission'); sheen.inputs['Color'].default_value = (*hex_lin('#bcd4ee'), 1)
-    km = N('ShaderNodeMath'); km.operation = 'MULTIPLY'; km.inputs[1].default_value = 0.22; L(lw.outputs['Facing'], km.inputs[0])
+    km = N('ShaderNodeMath'); km.operation = 'MULTIPLY'; km.inputs[1].default_value = 0.22 * P.get('sheen_k', 1.0); L(lw.outputs['Facing'], km.inputs[0])
     kf = N('ShaderNodeMath'); kf.operation = 'MULTIPLY'; L(km.outputs[0], kf.inputs[0]); nfoam = N('ShaderNodeMath'); nfoam.operation = 'SUBTRACT'; nfoam.inputs[0].default_value = 1.0; L(shm.outputs[0], nfoam.inputs[1]); L(nfoam.outputs[0], kf.inputs[1])
     L(kf.outputs[0], sheen.inputs['Strength']); a1 = N('ShaderNodeAddShader'); L(core, a1.inputs[0]); L(sheen.outputs['Emission'], a1.inputs[1])
     # sun glitter: small bright cells where a rippled normal reflects the sun toward the camera
@@ -634,9 +635,9 @@ def grade(path, sat=1.07, bloom=0.5, scale=None, gamma=1.28):
     im = np.clip(im, 0, 1) ** vg; mx = im.max(-1, keepdims=True); im = np.clip(mx - (mx - im) * vs, 0, 1)
     Image.fromarray((im * 255 + 0.5).astype(np.uint8)).save(path)
 VIVID = {'bridge_deck': (1.78, 1.15), 'bridge_end_north': (1.38, 1.23), 'bridge_end_south': (1.9, 1.15), 'bridge_high': (1.9, 1.15),
-         'camp_bank': (1.47, 1.27), 'camp_table': (1.35, 1.15), 'camp_wide': (1.9, 1.15), 'hill_eye': (0.8, 1.31), 'hill_low': (1.38, 1.15),
-         'hill_over': (1.48, 1.15), 'river_low': (1.9, 1.15), 'riverbank': (1.55, 1.38), 'valley_loop': (1.07, 1.53), 'valley_river': (1.9, 1.18),
-         'valley_wide': (1.11, 1.63)}
+         'camp_bank': (1.52, 1.3), 'camp_table': (1.05, 1.1), 'camp_wide': (1.9, 1.15), 'hill_eye': (0.8, 1.31), 'hill_low': (1.38, 1.15),
+         'hill_over': (1.48, 1.15), 'river_low': (1.9, 1.3), 'riverbank': (1.5, 1.6), 'valley_loop': (1.07, 1.71), 'valley_river': (2.28, 1.18),
+         'valley_wide': (1.11, 1.83)}
 def render(path, mode='final', samples=None, do_grade=True):
     sc = bpy.context.scene; setup_render(sc, mode, samples); sc.render.filepath = path; t = time.time(); bpy.ops.render.render(write_still=True); dt = time.time() - t
     if do_grade: grade(path)
@@ -926,6 +927,8 @@ def banner(B, base, h, yaw, field, charge, shape, rs, size=(1.9, 1.3), wave=0.12
         over(charge, [[(0.0, 0.40), (0.88, 0.40), (0.88, 0.60), (0.0, 0.60)], [(0.30, 0.0), (0.46, 0.0), (0.46, 1.0), (0.30, 1.0)]])
     elif shape == 'bend':
         over(charge, [[(0.0, 0.0), (0.3, 0.0), (0.9, 0.8), (0.9, 1.0), (0.6, 1.0), (0.0, 0.2)][:4] and [(0.0, 0.05), (0.28, 0.0), (0.88, 0.92), (0.6, 0.98)]])
+    elif shape == 'saltire':                  # the Scots' blue banner: a white diagonal cross
+        over(charge, [[(0.0, 0.0), (0.14, 0.0), (0.88, 1.0), (0.74, 1.0)], [(0.74, 0.0), (0.88, 0.0), (0.14, 1.0), (0.0, 1.0)]])
     elif shape == 'lion':                      # a rampant-lion stand-in: a gold block body, head and three small legs, no detail
         over(charge, [[(0.18, 0.25), (0.55, 0.25), (0.55, 0.75), (0.18, 0.75)], [(0.55, 0.2), (0.75, 0.2), (0.75, 0.42), (0.55, 0.42)], [(0.3, 0.75), (0.4, 0.75), (0.4, 0.95), (0.3, 0.95)], [(0.5, 0.75), (0.6, 0.75), (0.6, 0.95), (0.5, 0.95)]])
 def barrel(B, c, r=0.34, h=0.85, rs=None):
@@ -975,7 +978,7 @@ def table_set(A, B, c, yaw, rs):
             for sy in (-0.4, 0.4): B.rod('wood', (sx + sx * 0.05, sy * 1.2, 0), (sx, sy, 0.9), 0.045, seg=5)
         B.box('wood', (0, 0, 0.93), (2.3, 1.0, 0.07)); B.box('cloth_red', (0, 0, 0.985), (2.38, 1.06, 0.035)); B.box('cloth_red', (0, -0.53, 0.8), (2.38, 0.035, 0.3)); B.box('gold', (0, -0.545, 0.69), (2.38, 0.02, 0.05)); B.box('gold', (0, 0.0, 1.01), (2.38, 0.05, 0.012))
         # chest + coins
-        cx, cy_ = -0.62, -0.05; B.box('barrel', (cx, cy_, 1.22), (1.0, 0.62, 0.46)); B.box('iron', (cx + 0.2, cy_ - 0.32, 1.22), (0.07, 0.02, 0.48)); B.box('iron', (cx - 0.2, cy_ - 0.32, 1.22), (0.07, 0.02, 0.48)); B.box('gold', (cx, cy_ - 0.325, 1.32), (0.12, 0.02, 0.14)); B.box('iron', (cx + 0.34, cy_, 1.225), (0.08, 0.64, 0.48)); B.box('iron', (cx - 0.34, cy_, 1.225), (0.08, 0.64, 0.48))
+        cx, cy_ = -0.92, -0.05; B.box('barrel', (cx, cy_, 1.22), (1.0, 0.62, 0.46)); B.box('iron', (cx + 0.2, cy_ - 0.32, 1.22), (0.07, 0.02, 0.48)); B.box('iron', (cx - 0.2, cy_ - 0.32, 1.22), (0.07, 0.02, 0.48)); B.box('gold', (cx, cy_ - 0.325, 1.32), (0.12, 0.02, 0.14)); B.box('iron', (cx + 0.34, cy_, 1.225), (0.08, 0.64, 0.48)); B.box('iron', (cx - 0.34, cy_, 1.225), (0.08, 0.64, 0.48))
         B.box('gold', (cx, cy_, 1.46), (0.88, 0.5, 0.05))
         for i in range(10): B.sphere('gold', (cx + rs.uniform(-0.34, 0.34), cy_ + rs.uniform(-0.2, 0.2), 1.5 + 0.03 * rs.rand()), 0.09, seg=6, rings=4, scale=(1, 1, 0.5))
         # coin stacks in neat rows
@@ -1001,11 +1004,11 @@ def table_set(A, B, c, yaw, rs):
         with Bl.xf((0, 0, 0)): pass
     Bc.finalize('table_canopy', shadow=False)
     # chest lid: own object, hinge at the back-top edge of the chest, open 72 degrees
-    cx, cy_ = -0.62, -0.05; hp = tw((cx, cy_ + 0.31, 1.47)); Bl.box('barrel', (0, -0.31, 0.045), (1.0, 0.64, 0.09)); Bl.box('iron', (0.34, -0.31, 0.055), (0.08, 0.66, 0.11)); Bl.box('iron', (-0.34, -0.31, 0.055), (0.08, 0.66, 0.11)); Bl.box('gold', (0, -0.31, 0.1), (0.8, 0.5, 0.02))
+    cx, cy_ = -0.92, -0.05; hp = tw((cx, cy_ + 0.31, 1.47)); Bl.box('barrel', (0, -0.31, 0.045), (1.0, 0.64, 0.09)); Bl.box('iron', (0.34, -0.31, 0.055), (0.08, 0.66, 0.11)); Bl.box('iron', (-0.34, -0.31, 0.055), (0.08, 0.66, 0.11)); Bl.box('gold', (0, -0.31, 0.1), (0.8, 0.5, 0.02))
     lid = Bl.finalize('chest_lid', loc=hp)[0]; lid.rotation_euler = (math.radians(-72), 0, math.radians(yaw)); lid.rotation_mode = 'XYZ'
     A['chest_lid'] = lid.name; A['chest_lid_hinge'] = hp
     # scales: stand on the table, beam on a pivot object
-    sp = tw((0.95, -0.12, 1.0)); Bs.rod('wood_dk', (0, 0, 0), (0, 0, 0.8), 0.05, seg=6); Bs.box('wood_dk', (0, 0, 0.0), (0.3, 0.3, 0.06)); Bs.sphere('gold', (0, 0, 0.83), 0.07, seg=6, rings=4)
+    sp = tw((1.30, -0.12, 1.0)); Bs.rod('wood_dk', (0, 0, 0), (0, 0, 0.8), 0.05, seg=6); Bs.box('wood_dk', (0, 0, 0.0), (0.3, 0.3, 0.06)); Bs.sphere('gold', (0, 0, 0.83), 0.07, seg=6, rings=4)
     Bs.finalize('scale_stand', loc=sp); Bb = Batch(33); Bb.box('gold', (0, 0, 0), (1.0, 0.055, 0.055))
     for sxx in (-0.5, 0.5): Bb.rod('rope', (sxx, 0, 0), (sxx, 0, -0.34), 0.012, seg=3); Bb.cyl('steel', (sxx, 0, -0.37), 0.18, 0.03, seg=14, r2=0.18)
     beam = Bb.finalize('scale_beam', loc=(sp[0], sp[1], sp[2] + 0.83), ink=True)[0]; beam.rotation_euler = (0, math.radians(0), math.radians(yaw)); A['scale_beam'] = beam.name
@@ -1290,7 +1293,15 @@ def scots_slope_line(n, ranks, scale, rs, spear_h=3.4, a0=188.0, a1=258.0, hh0=9
             B.box(m, (x, y, z + 0.8 * scale), (0.75 * scale, 0.55 * scale, 1.5 * scale), tint=0.95 + 0.3 * rs.rand()); B.sphere('iron', (x, y, z + 1.68 * scale), 0.2 * scale, seg=6, rings=4)
             tl = (rs.uniform(-0.25, 0.25), rs.uniform(-0.25, 0.25)); spear(B, (x + 0.38 * scale, y, z), tilt=tl, h=spear_h * scale); cnt += 1
             if scale > 1.2: B.sphere('gold', (x + 0.38 * scale + tl[0], y + tl[1], z + spear_h * scale + 0.1), 0.32 * scale, seg=5, rings=3)
-    B.finalize('scots_line', ink=False); return cnt
+    B.finalize('scots_line', ink=False)
+    Bp = Batch(86)
+    for k in range(2, n, max(n // 4, 1)):                                                         # blue saltire banners on poles along the line
+        a = math.radians(a0 + (a1 - a0) * k / max(n - 1, 1))
+        for r_ in np.arange(30, 110, 1.0):
+            x = HILL_C[0] + r_ * math.cos(a) * 1.05; y = HILL_C[1] + r_ * 0.9 * math.sin(a)
+            if float(hill_h(np.array([x]), np.array([y]))[0][0]) < hh0 - 1.0: break
+        banner(Bp, (x, y, float(ground(x, y))), 5.5 * scale, rs.uniform(150, 200), 't_saltire', 't_white', 'saltire', rs, size=(2.2 * scale, 1.5 * scale))
+    Bp.finalize('scots_banners'); return cnt
 def spear_wall(n, ranks, rs, y0=27.0, half=9.0):
     """the cork: a wall of Scots across the north end of the bridge (the neck), spears level."""
     B = Batch(83); cnt = 0
@@ -1298,7 +1309,10 @@ def spear_wall(n, ranks, rs, y0=27.0, half=9.0):
         for k in range(n):
             x = -half + 2 * half * k / max(n - 1, 1); y = y0 + 1.1 * rank; z = float(ground(x, y)); B.box('thatch' if k % 2 else 't_brown', (x, y, z + 0.85), (0.8, 0.6, 1.6)); B.sphere('iron', (x, y, z + 1.78), 0.21, seg=6, rings=4)
             spear(B, (x, y - 0.4, z), tilt=(0.0, -0.9), h=2.4); cnt += 1
-    B.finalize('spear_wall', ink=False); return cnt
+    B.finalize('spear_wall', ink=False)
+    Bp = Batch(87)
+    for sx in (-half - 1.0, half + 1.0): banner(Bp, (sx, y0 - 0.5, float(ground(sx, y0))), 5.0, 190, 't_saltire', 't_white', 'saltire', rs, size=(2.2, 1.5))
+    Bp.finalize('wall_banners'); return cnt
 def crowd_loop(A, pr):
     """~120 tiny placeholder troops for valley_loop: English inside the loop meadow and the neck, a two-by-two column of mounted knights on the bridge, a queue and
     groups on the south bank; Scots along the hill's lower slope."""
@@ -1386,13 +1400,13 @@ def crowd_hill(A, pr):
         d = rs.uniform(10, 30); xp = rs.choice([rs.uniform(-120, 230), rs.uniform(500, 850)]); x, y = rel_xy(cam, look, d, px_lat(pr['lens'], d, xp)); z = float(ground(x, y))
         items.append((x, y, z, ['scot', 'scot_b', 'scot_o', 'scot_m'][i % 4], 1.0)); spear(Bsp, (x + 0.35, y, z), tilt=(rs.uniform(-0.3, 0.3), rs.uniform(-0.3, 0.3)), h=3.0)
     B.finalize('crowd_horses'); Bsp.finalize('crowd_spears'); stage_crowd(items)
-PRESETS['hill_over'] = dict(loc='hill', corridor=(70.0, 0.6, 0.2, 7.0), dress_min=26.0, cam=(160.0, 150.0, 0.0), cam_dz=2.7, cam_ref=(160.0, 150.0), look=(0.0, 2.0, -20.0), sd=8.0, lens=32.0, marks=mk_hill_over, hill2=True,
+PRESETS['hill_over'] = dict(loc='hill', shafts='pines', corridor=(70.0, 0.6, 0.2, 7.0), dress_min=26.0, cam=(160.0, 150.0, 0.0), cam_dz=2.7, cam_ref=(160.0, 150.0), look=(0.0, 2.0, -20.0), sd=8.0, lens=32.0, marks=mk_hill_over, hill2=True,
     over=dict(glit_stretch=1.0, glit_s=1.0, foam_k=2.0, wake_k=2.0, sun_k=2.0),
     veg=dict(seed=5, half=24, no_chips=True, hill_grass=0.4, grass=[(2, 14, 1100, 0.1, 0.17), (14, 40, 1100, 0.2, 0.34)], flowers=300, sprig_to=60, heather=[(1.5, 8, 700, 0.09, 0.15), (8, 17, 1000, 0.12, 0.2), (17, 40, 1400, 0.18, 0.3), (40, 100, 1000, 0.5, 0.9)], gorse=[(3, 14, 8), (14, 40, 26)], reeds=None),
     fg_spears=[(1.8, -0.55, (0.08, 0.1)), (1.6, 0.5, (-0.1, 0.1))], fg_gorse=[(2.4, -0.9, 0.55), (2.2, 0.8, 0.5)], fg_rocks=[(2.0, 0.0, 0.7)],
     dress_pines=[(20.0, -5.4, 12.0)], dress_crags=[(6, 2.8, 4, 1.2, 0.7)],
     dress_gorse=[(7, -2, 0.7), (6, 2, 0.6), (10, 2.5, 0.8), (11, -3.5, 0.9), (12, 4, 0.9), (13, -2, 0.7), (9, 3.5, 0.7), (15, -4.5, 1.0), (14, 3.5, 0.8), (20, 5, 1.1)], clear_hill=(160.0, 150.0, 6.0))
-PRESETS['camp_bank'] = dict(loc='camp', cam=(-95.0, -15.0, 0.0), cam_dz=2.0, look=(-2.3, 22.5, -16.5), sd=6.0, lens=26.0, camp_banners=False, marks=mk_camp_bank, hill2=True, far_scots=True, bridge_pairs=(-26.0, 26.0, 6.0),
+PRESETS['camp_bank'] = dict(loc='camp', signs=['stirling'], shafts='smoke', cam=(-95.0, -15.0, 0.0), cam_dz=2.0, look=(-2.3, 22.5, -16.5), sd=6.0, lens=26.0, camp_banners=False, marks=mk_camp_bank, hill2=True, far_scots=True, bridge_pairs=(-26.0, 26.0, 6.0),
     over=dict(glit_stretch=1.0, glit_s=0.9, foam_k=2.0, wake_k=2.0, sun_k=2.1, reed_k=0.5),
     veg=dict(seed=6, half=20, tuft_k=1.3, tuft_gain=1.5, grass=[(1.5, 9, 420, 0.08, 0.13), (9, 40, 700, 0.12, 0.2)], flowers=700, reeds=[(6, 70, 500)]),
     fg_banner=(7.0, 2.3), clear=[(-95.0, -15.0, 9.0)], fg_banner_yaw=30, fg_spears=[], fg_barrels=[(3.0, 1.7)], fg_rope=True, camp_fg=camp_fg)
@@ -1441,8 +1455,9 @@ def splash(x, y, age, size=1.0, z=0.0, name='a', seed=0):
                 p0 = (x + r_b * math.cos(a), y + r_b * math.sin(a), z); pm = (x + (r_b + 0.25 * hh * math.tan(fl)) * math.cos(a), y + (r_b + 0.25 * hh * math.tan(fl)) * math.sin(a), z + 0.6 * hh)
                 p1 = (x + (r_b + hh * math.tan(fl)) * math.cos(a), y + (r_b + hh * math.tan(fl)) * math.sin(a), z + hh)
                 B.rod(M, p0, pm, 0.065 * k, seg=5, r2=0.05 * k); B.rod(M, pm, p1, 0.05 * k, seg=5, r2=0.015 * k); B.sphere(M, p1, 0.1 * k * rs.uniform(0.8, 1.2), seg=6, rings=4)
-    if age < 0.85:
-        hs = k * 2.8 * math.sin(math.pi * min(age / 0.85, 1.0)) ** 0.8; B.rod(M, (x, y, z), (x, y, z + hs), 0.09 * k, seg=8, r2=0.06 * k); B.sphere(M, (x, y, z + hs), 0.14 * k, seg=8, rings=5)
+    if age < 0.85 and Hc > 0.05:                                              # a tapered column no taller than 1.2x the crown, with 3-5 droplets breaking off its tip
+        hs = 1.2 * Hc; B.rod(M, (x, y, z), (x, y, z + hs), 0.09 * k, seg=8, r2=0.012 * k)
+        for j in range(rs.randint(3, 6)): B.sphere(M, (x + rs.uniform(-0.15, 0.15) * k, y + rs.uniform(-0.15, 0.15) * k, z + hs + (0.12 + 0.16 * j) * k), rs.uniform(0.05, 0.09) * k, seg=5, rings=3)
     ro = R0 * 1.5 + k * 0.6 * tau; wd = max(0.03, 0.25 * k * (1 - age / 1.6)); n = 24; th = [2 * math.pi * i / n for i in range(n)]
     B.mesh(M2, [(x + (ro - wd) * math.cos(t_), y + (ro - wd) * math.sin(t_), z + 0.05) for t_ in th] + [(x + ro * math.cos(t_), y + ro * math.sin(t_), z + 0.05) for t_ in th], [(i, (i + 1) % n, n + (i + 1) % n, n + i) for i in range(n)], False)
     for i in range(8):                                                       # low mist: flat white discs round the base
@@ -1524,18 +1539,18 @@ _OVR = dict(glit_stretch=1.0, glit_s=0.9, foam_k=2.0, wake_k=2.0, sun_k=1.6)
 _HV = dict(seed=5, half=30, no_chips=True, hill_grass=0.5, grass=[(2, 14, 900, 0.1, 0.17), (14, 40, 900, 0.2, 0.34)], flowers=200, sprig_to=40, heather=[(1.5, 8, 500, 0.09, 0.14), (8, 20, 700, 0.12, 0.2), (20, 60, 900, 0.2, 0.4)], gorse=[(3, 14, 6), (14, 40, 14)])
 _VOVR = dict(foam_k=3.0, glit_s=0.35, glit_t=0.12, glit_stretch=1.0, wake_k=4.0, haze_max=0.2, world=0.0, lift=(0.03, 0.028, 0.07), key=(2.05, 1.58, 0.84), shade=(0.12, 0.10, 0.30), tint=(0.065, 0.052, 0.15), sun_dir=(-0.68, 0.68, -0.28))
 # hill_eye / hill_low: on the Scots' shelf (x 131, y 131, 15 m up), looking up the slope at the line
-_mk('hill_eye', loc='hill', cam=(128.0, 128.0, 0.0), cam_dz=1.75, cam_ref=(128.0, 128.0), look=(144.0, 144.0, 20.5), lens=22.0, sd=9.0, over=dict(_OVR),
+_mk('hill_eye', loc='hill', shafts='pines', cam=(128.0, 128.0, 0.0), cam_dz=1.75, cam_ref=(128.0, 128.0), look=(144.0, 144.0, 20.5), lens=22.0, sd=9.0, over=dict(_OVR),
     marks_spec=[('s1', 'scot:scot_b', 5.2, 150), ('s2', 'scot:scot_o', 6.0, 265), ('w', 'wallace', 5.6, 370), ('s3', 'scot:scot_m', 6.4, 500), ('s4', 'scot', 5.4, 590)],
     veg=dict(_HV), fg_list=[('spear', 2.6, 690, (-0.7, 0.2)), ('gorse', 2.4, 640, 0.55)], dress_min=6.0, drift='slide 40 px/s; snap push x1.4 on s2')
-_mk('hill_low', loc='hill', cam=(118.0, 112.0, 0.0), cam_dz=1.4, cam_ref=(118.0, 112.0), look=(140.0, 134.0, 19.0), lens=22.0, sd=9.0, over=dict(_OVR),
+_mk('hill_low', loc='hill', shafts='pines', cam=(118.0, 112.0, 0.0), cam_dz=1.4, cam_ref=(118.0, 112.0), look=(140.0, 134.0, 19.0), lens=22.0, sd=9.0, over=dict(_OVR),
     marks_spec=[('s1', 'scot:scot_b', 7.0, 90), ('s2', 'scot', 8.5, 230), ('horn', 'scot:scot_o', 7.5, 390), ('w', 'wallace', 9.5, 530), ('s3', 'scot:scot_m', 9.0, 640)],
     veg=dict(_HV), fg_list=[('gorse', 1.6, 80, 0.6), ('gorse', 1.9, 620, 0.6), ('rock', 2.2, 360, 0.6), ('spear', 1.8, 30, (0.7, 0.1))], dress_min=6.0, drift='pull-out 7 %/s, tilted up 14 deg')
 # the bridge presets (cam z is absolute: the deck is DECK_Z = 1.75)
 _mk('bridge_deck', loc='bridge', cam=(-2.7, -2.4, 3.0), look=(0.6, 1.6, 2.9), lens=22.0, sd=4.0, over=dict(_OVR), stand_z=DECK_Z, hill2=False,
     marks_spec=[('k1', 'knight', 3.2, 190), ('k2', 'knight:knight_b', 3.6, 520)], fg_list=[('post', 1.1, 20)], fg_z=DECK_Z, drift='push 8 %/s')
-_mk('bridge_high', loc='bridge', cam=(-5.0, -62.0, 24.0), look=(0.0, 6.0, 1.0), lens=22.0, sd=40.0, over=dict(_OVR, wake_k=3.0), hill2=False, marks_spec=[], troops=dict(bridge=16),
+_mk('bridge_high', loc='bridge', signs=['stirling'], cam=(-5.0, -62.0, 24.0), look=(0.0, 6.0, 1.0), lens=22.0, sd=40.0, over=dict(_OVR, wake_k=3.0), hill2=False, marks_spec=[], troops=dict(bridge=16),
     fg_list=[], fg_z=22.0, drift='push along the bridge 8 %/s; snap pull-out x0.7')
-_mk('bridge_end_south', loc='bridge', cam=(-2.0, -37.5, 2.6), look=(0.0, -31.0, 2.6), lens=22.0, sd=6.0, over=dict(_OVR), stand_z=DECK_Z, hill2=False, clear=[(0.0, -44.0, 14.0)],
+_mk('bridge_end_south', loc='bridge', signs=['stirling'], cam=(-2.0, -37.5, 2.6), look=(0.0, -31.0, 2.6), lens=22.0, sd=6.0, over=dict(_OVR), stand_z=DECK_Z, hill2=False, clear=[(0.0, -44.0, 14.0)],
     marks_spec=[('k1', 'knight', 5.0, 215), ('k2', 'knight:knight_b', 5.6, 505)], fg_list=[('spear', 2.4, 40, (0.7, 0.0))], drift='snap push x1.4 (16 f)')
 _mk('bridge_end_north', loc='bridge', cam=(-2.0, 50.0, 4.6), look=(0.0, 22.0, 1.8), lens=22.0, sd=14.0, over=dict(_OVR), hill2=False,
     marks_spec=[('e1', 'foot', 7.0, 170), ('e2', 'foot:foot_r', 9.0, 420), ('e3', 'foot', 8.0, 600), ('e4', 'foot:foot_r', 11.0, 300)], troops=dict(bridge=10, causeway=12),
@@ -1546,7 +1561,7 @@ _mk('valley_wide', loc='valley', cam=(445.0, 244.0, 361.0), look=(64.0, 44.0, 0.
 _mk('valley_river', loc='valley', cam=(38.0, -24.0, 0.0), cam_dz=2.1, look=(105.0, 28.0, 4.0), lens=22.0, sd=12.0, over=dict(_OVR, reed_k=0.6), farms=True, scots_line=True,
     marks_spec=[('e1', 'foot', 22.0, 130), ('e2', 'foot:foot_r', 10.0, 600)], fg_list=[('reeds', 2.2, 90), ('reeds', 2.0, 640), ('rock', 2.4, 400, 0.5)], veg=dict(_VEG, half=30, reeds=[(4, 70, 700)]), drift='push 7 %/s + slide')
 # camp
-_mk('camp_wide', loc='camp', cam=(-78.0, -96.0, 13.0), look=(12.0, -52.0, 2.0), lens=22.0, sd=40.0, over=dict(_OVR), parade=[(12, 110), (17, 330), (22, 520), (30, 640)], parade_yaw=35.0,
+_mk('camp_wide', loc='camp', signs=['english'], shafts='smoke', cam=(-78.0, -96.0, 13.0), look=(12.0, -52.0, 2.0), lens=22.0, sd=40.0, over=dict(_OVR), parade=[(12, 110), (17, 330), (22, 520), (30, 640)], parade_yaw=35.0,
     marks_spec=[('k1', 'knight', 46.0, 200), ('k2', 'knight:knight_b', 52.0, 520)], fg_list=[('rope', 1.8, 60), ('pole', 2.2, 650)], drift='slide 50 px/s + push')
 def table_extras(A, pr):
     """camp_table: Cressingham's stool with his cloak over its back (stays when he is not staged: the empty ending table) and a worn rug in front of the table."""
@@ -1556,26 +1571,209 @@ def table_extras(A, pr):
     for ox in (-0.2, 0.2):
         for oy in (-0.17, 0.17): B.rod('wood', (sx + ox, sy + oy, tz), (sx + ox * 0.9, sy + oy * 0.9, tz + 0.46), 0.03, seg=5)
     B.box('wood', (sx, sy + 0.2, tz + 0.78), (0.5, 0.05, 0.6)); B.box('cloth_red', (sx, sy + 0.25, tz + 0.72), (0.58, 0.07, 0.8)); B.box('gold', (sx, sy + 0.285, tz + 1.1), (0.4, 0.02, 0.05))
-    B.box('cloth_red', (tx, ty - 2.0, tz + 0.015), (3.4, 2.4, 0.03)); B.box('gold', (tx, ty - 0.82, tz + 0.03), (3.4, 0.07, 0.01)); B.box('gold', (tx, ty - 3.18, tz + 0.03), (3.4, 0.07, 0.01))
-    for sgn in (-1, 1): B.box('gold', (tx + sgn * 1.7, ty - 2.0, tz + 0.03), (0.07, 2.4, 0.01))
-    for i in range(6): B.box('t_cream', (tx - 1.3 + 0.52 * i, ty - 2.0, tz + 0.032), (0.2, 2.1, 0.005))
+    B.box('cloth_red', (tx, ty - 1.15, tz + 0.015), (3.4, 1.2, 0.03)); B.box('gold', (tx, ty - 0.57, tz + 0.03), (3.4, 0.06, 0.01)); B.box('gold', (tx, ty - 1.73, tz + 0.03), (3.4, 0.06, 0.01))
+    for sgn in (-1, 1): B.box('gold', (tx + sgn * 1.7, ty - 1.15, tz + 0.03), (0.07, 1.2, 0.01))
+    for i in range(6): B.box('t_gold', (tx - 1.3 + 0.52 * i, ty - 1.15, tz + 0.032), (0.2, 0.9, 0.005))
     B.finalize('table_extras')
-_mk('camp_table', loc='camp', cam=(-13.0, -30.0, 0.0), cam_dz=1.3, look=(-13.0, -26.5, 1.55), lens=22.0, sd=5.0, over=dict(_OVR), camp_fg=table_extras,
-    marks_spec=[('cress', 'cressingham', 4.0, 360)], fg_list=[('barrel', 2.4, 820)], veg=dict(_VEG, half=22), drift='push 8 %/s; hooks: set_scale_tip(A, deg), set_chest_lid(A, deg)')
+_mk('camp_table', loc='camp', signs=['treasury'], lantern=True, shafts='smoke', cam=(-13.0, -30.0, 0.0), cam_dz=1.3, look=(-13.0, -26.5, 1.70), lens=22.0, sd=5.0, over=dict(_OVR), camp_fg=table_extras, samples=40,
+    marks_spec=[('cress', 'cressingham', 4.0, 365)], fg_list=[('barrel', 2.4, 820)], veg=dict(_VEG, half=22), drift='push 8 %/s; hooks: set_scale_tip(A, deg), set_chest_lid(A, deg)')
 _mk('riverbank', loc='riverbank', cam=(-27.0, 54.0, 0.0), cam_dz=1.8, look=(-28.0, 22.0, -3.5), lens=22.0, sd=10.0, over=dict(_OVR, reed_k=0.6, foam_k=0.5),
     marks_spec=[('e1', 'foot', 4.5, 80), ('e2', 'foot:foot_r', 6.0, 215), ('e3', 'foot', 8.5, 130), ('e4', 'knight:knight_b', 11.0, 45)], fg_list=[('reeds', 1.7, 30), ('gorse', 2.2, 380, 0.4)],
     veg=dict(_VEG, half=30, reeds=[(2, 40, 90)]), drift='slide 40 px/s + push; the channel is on the right: splash() points in PRESETS["riverbank"]["splashes"]')
 PRESETS['riverbank']['splashes'] = [at_px(PRESETS['riverbank'], d, xp) + (0.0,) for d, xp in ((9.0, 520), (11.0, 640), (13.0, 380))]
 PRESETS['riverbank']['splash_size'] = 1.5; PRESETS['riverbank']['splash_ages'] = [0.2, 0.35, 0.5]
-_mk('river_low', loc='riverbank', cam=(-26.0, 46.0, 0.0), cam_dz=0.9, look=(-44.0, 44.0, 0.9), lens=22.0, sd=10.0, over=dict(_OVR, reed_k=0.4, foam_k=0.15),
+_mk('river_low', loc='riverbank', cam=(-26.0, 46.0, 0.0), cam_dz=0.9, look=(-44.0, 44.0, 0.9), lens=22.0, sd=10.0, over=dict(_OVR, reed_k=0.4, foam_k=0.6, sun_k=0.75, shallow='#2a8c86', sheen_k=0.25),
     marks_spec=[], fg_list=[('reeds', 1.4, 60), ('reeds', 1.6, 670), ('rock', 1.8, 380, 0.3)], veg=dict(_VEG, half=34, reeds=[(2, 40, 160)]), splash_size=1.8, splash_ages=[0.15, 0.3, 0.45], drift='quick push; splash() crowns at pr["splashes"]')
 PRESETS['river_low']['splashes'] = [at_px(PRESETS['river_low'], d, xp) + (0.0,) for d, xp in ((9.0, 150), (10.5, 380), (9.5, 610))]
+
+# ================================================================ SIGNS, LIGHT SHAFTS, LANTERN (client rule 2026-11-20: in-world signs; motivated light)
+def _img_mat(key, path, afl=0.55):
+    """lit material with an image on UV (the sign boards): the same Diffuse + ambient emission model, art = the image."""
+    if key in _MATS: return _MATS[key]
+    m = bpy.data.materials.new(key); nt = _mk_tree(m); N = nt.nodes.new; L = nt.links.new; out = N('ShaderNodeOutputMaterial'); geo = N('ShaderNodeNewGeometry'); uv = N('ShaderNodeUVMap')
+    it = N('ShaderNodeTexImage'); it.image = bpy.data.images.load(path, check_existing=True); it.interpolation = 'Cubic'; it.extension = 'EXTEND'; L(uv.outputs['UV'], it.inputs['Vector'])
+    sh = _lit_core(nt, it.outputs['Color'], dict(mix=0.8, sm=(0.85, 0.95, 1.15), afl=afl), geo); L(sh, out.inputs['Surface']); _MATS[key] = m; return m
+def _quad_obj(name, corners, mat, uvs=((0, 0), (1, 0), (1, 1), (0, 1)), shadow=False):
+    me = bpy.data.meshes.new(name); me.from_pydata([tuple(c) for c in corners], [], [(0, 1, 2, 3)]); me.update(); uvl = me.uv_layers.new(name='UVMap')
+    for li, loop in enumerate(me.polygons[0].loop_indices): uvl.data[loop].uv = uvs[li]
+    ob = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(ob); ob.data.materials.append(mat); ob.visible_shadow = shadow; return ob
+def face_yaw(frm, to):
+    """yaw (deg) that turns a sign's front (local -y) toward the point `to`, for a sign standing at `frm`."""
+    th = math.atan2(to[1] - frm[1], to[0] - frm[0]); return math.degrees(th) + 90.0
+def make_sign(name, center, yaw, w, h, lines, posts=0.0, slab=True):
+    """a painted sign board at `center` (board centre), turned by yaw (front = local -y). posts > 0: two posts from the ground to the board's top. Returns the textured quad."""
+    path = TX.sign(name, lines, int(w * 360), int(h * 360)); B = Batch(98); cx, cy, cz = center
+    with B.xf(center, (0, 0, yaw)):
+        if slab: B.box('wood_dk', (0, 0.02, 0), (w + 0.16, 0.12, h + 0.16))
+        if posts > 0:
+            for sx in (-w / 2 + 0.25, w / 2 - 0.25): B.box('wood', (sx, 0.05, (float(ground(cx, cy)) + cz + h / 2) / 2 - cz), (0.2, 0.2, cz + h / 2 - float(ground(cx, cy))))
+        T4 = B.stack[-1].copy()
+    B.finalize('sign_frame_' + name)
+    ca, sa = math.cos(math.radians(yaw)), math.sin(math.radians(yaw))
+    def wp(x, y, z): return (cx + x * ca - y * sa, cy + x * sa + y * ca, cz + z)
+    q = [wp(-w / 2, -0.075, -h / 2), wp(w / 2, -0.075, -h / 2), wp(w / 2, -0.075, h / 2), wp(-w / 2, -0.075, h / 2)]
+    ob = _quad_obj('sign_' + name, q, _img_mat('sign:' + name, path)); return ob
+def signs_build(A, pr):
+    """pr['signs'] = subset of ('stirling', 'treasury', 'english'). The only text in the set."""
+    sg = pr.get('signs') or []
+    if 'stirling' in sg:        # a gantry over the south end of the bridge, facing the camp
+        sx_, sy_ = -2.15, -27.5; make_sign('stirling2', (sx_, sy_, float(ground(sx_, sy_)) + 3.4), face_yaw((sx_, sy_), (-2.5, -45.0)), 1.9, 1.15, ['STIRLING', 'BRIDGE'], posts=1.0)
+    if 'treasury' in sg and A.get('camp', {}).get('table'):      # painted on the front of Cressingham's coin chest
+        tx, ty, tz = A['camp']['table']; make_sign('treasury', (tx - 0.92, ty - 0.05 - 0.322, tz + 1.2), 0.0, 0.8, 0.34, ["KING'S", 'TREASURY'], slab=False)
+    if 'english' in sg:         # the camp entrance board by the road
+        cam = pr.get('cam') or (-78.0, -96.0, 13.0); x, y = (pr['sign_at'] if pr.get('sign_at') else (-56.0, -84.0)); z0 = float(ground(x, y))
+        make_sign('english', (x, y, z0 + 4.6), face_yaw((x, y), cam), 5.8, 2.3, ['ENGLISH', 'CAMP'], posts=1.0)
+def _shaft_mat():
+    if 'shaft' in _MATS: return _MATS['shaft']
+    m = bpy.data.materials.new('shaft'); nt = _mk_tree(m); N = nt.nodes.new; L = nt.links.new; out = N('ShaderNodeOutputMaterial'); uv = N('ShaderNodeUVMap'); sp = N('ShaderNodeSeparateXYZ'); L(uv.outputs['UV'], sp.inputs[0])
+    mu = N('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = math.pi; L(sp.outputs['X'], mu.inputs[0]); sn = N('ShaderNodeMath'); sn.operation = 'SINE'; L(mu.outputs[0], sn.inputs[0])
+    pw = N('ShaderNodeMath'); pw.operation = 'POWER'; pw.inputs[1].default_value = 2.0; L(sn.outputs[0], pw.inputs[0])                      # soft across the width
+    fv = N('ShaderNodeMath'); fv.operation = 'SUBTRACT'; fv.inputs[0].default_value = 1.0; L(sp.outputs['Y'], fv.inputs[1]); pv = N('ShaderNodeMath'); pv.operation = 'POWER'; pv.inputs[1].default_value = 0.9; L(fv.outputs[0], pv.inputs[0])   # fades to the ground
+    tp = N('ShaderNodeMath'); tp.operation = 'MULTIPLY'; tp.inputs[1].default_value = 3.0; L(sp.outputs['Y'], tp.inputs[0]); tq = N('ShaderNodeMath'); tq.operation = 'SMOOTH_MIN'; tq.inputs[1].default_value = 1.0; tq.inputs[2].default_value = 0.0; L(tp.outputs[0], tq.inputs[0])
+    nz = N('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 6.0; nz.inputs['Detail'].default_value = 0.0; L(uv.outputs['UV'], nz.inputs['Vector']); nm = N('ShaderNodeMath'); nm.operation = 'MULTIPLY_ADD'; nm.inputs[1].default_value = 0.8; nm.inputs[2].default_value = 0.45; L(nz.outputs['Fac'], nm.inputs[0])
+    a1 = N('ShaderNodeMath'); a1.operation = 'MULTIPLY'; L(pw.outputs[0], a1.inputs[0]); L(pv.outputs[0], a1.inputs[1]); a2 = N('ShaderNodeMath'); a2.operation = 'MULTIPLY'; L(a1.outputs[0], a2.inputs[0]); L(nm.outputs[0], a2.inputs[1])
+    a3 = N('ShaderNodeMath'); a3.operation = 'MULTIPLY'; a3.inputs[1].default_value = STATE['P'].get('shaft_k', 0.6); L(a2.outputs[0], a3.inputs[0])
+    em = N('ShaderNodeEmission'); em.inputs['Color'].default_value = (*hex_lin('#ffe0a0'), 1); em.inputs['Strength'].default_value = 1.7; tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader'); L(a3.outputs[0], mx.inputs['Fac']); L(tr.outputs[0], mx.inputs[1]); L(em.outputs[0], mx.inputs[2]); L(mx.outputs[0], out.inputs['Surface'])
+    _MATS['shaft'] = m; return m
+def add_shaft(top, ground_pt, width=4.0):
+    """a soft god-ray: two crossed emission strips (additive look, transparent mix, no volume) from `top` down to `ground_pt`; cast no shadow."""
+    t = np.array(top, float); g = np.array(ground_pt, float); d = g - t; d /= np.linalg.norm(d); up = np.array([0, 0, 1.0]); p1 = np.cross(d, up); p1 /= (np.linalg.norm(p1) + 1e-9); p2 = np.cross(d, p1); p2 /= (np.linalg.norm(p2) + 1e-9); mat = _shaft_mat(); obs = []
+    for k, p in enumerate((p1, p2)):
+        w = width * (0.5 if k else 0.5)
+        obs.append(_quad_obj('shaft_%d' % k, [t - p * w * 0.5, t + p * w * 0.5, g + p * w * 1.0, g - p * w * 1.0], mat, uvs=((0, 0), (1, 0), (1, 1), (0, 1))))
+    return obs
+def light_shafts(A, pr):
+    """pr['shafts'] = 'pines' (rays through the Scots pines on Abbey Craig) | 'smoke' (rays through the campfire smoke columns) | 'both'. Along the sun direction, additive soft strips."""
+    kind = pr.get('shafts'); rs = np.random.RandomState(pr.get('shaft_seed', 6)); sd = -np.array(STATE['P']['sun_dir'], float); sd /= np.linalg.norm(sd); n = 0; hw = np.array([sd[0], sd[1], 0.0]); hw /= np.linalg.norm(hw) + 1e-9
+    if kind in ('pines', 'both'):
+        for i in range(10):
+            x = 138 + rs.uniform(-24, 26); y = 143 + rs.uniform(-22, 26); z = float(ground(x, y)); H = 13 + rs.uniform(0, 7)
+            top = (x + sd[0] * H / sd[2], y + sd[1] * H / sd[2], z + H); add_shaft(top, (x, y, z), width=rs.uniform(5.0, 9.0)); n += 1
+    if kind in ('smoke', 'both'):
+        fires = list((A.get('camp') or {}).get('fires', [])) + [(-18.0, -52.0), (-28.0, -52.0), (-72.0, -20.0)]
+        for (fx, fy) in fires[:8]:
+            z = float(ground(fx, fy)); H = 12; top = (fx + 3 + sd[0] * H / sd[2], fy + 2 + sd[1] * H / sd[2], z + H); add_shaft(top, (fx + 3, fy + 2, z), width=rs.uniform(2.5, 4.0)); n += 1
+    A['shafts'] = n
+def table_lantern(A, pr):
+    """a lantern hanging from the money-table canopy: a real emitter (bloom) plus a warm point light on the table."""
+    tx, ty, tz = A['camp']['table']; B = Batch(99); lx, ly, lz = tx + 0.05, ty + 0.15, tz + 2.75
+    B.rod('iron', (lx, ly, tz + 3.5), (lx, ly, lz + 0.22), 0.012, seg=4); B.cyl('iron', (lx, ly, lz + 0.18), 0.1, 0.04, seg=8); B.cyl('iron', (lx, ly, lz - 0.2), 0.1, 0.03, seg=8)
+    for a_ in range(4): B.rod('iron', (lx + 0.09 * math.cos(a_ * 1.57), ly + 0.09 * math.sin(a_ * 1.57), lz - 0.2), (lx + 0.09 * math.cos(a_ * 1.57), ly + 0.09 * math.sin(a_ * 1.57), lz + 0.18), 0.008, seg=4)
+    B.finalize('lantern'); G = Batch(100); G.sphere('glow_flame', (lx, ly, lz), 0.075, seg=8, rings=5); G.finalize('lantern_glow', ink=False, shadow=False)
+    ld = bpy.data.lights.new('lantern', 'POINT'); ld.energy = 140.0; ld.color = (1.0, 0.7, 0.38); ld.shadow_soft_size = 0.12; ob = bpy.data.objects.new('lantern', ld); bpy.context.scene.collection.objects.link(ob); ob.location = (lx, ly, lz)
+def preset_extras(A, pr):
+    if pr.get('signs'): signs_build(A, pr)
+    if pr.get('shafts'): light_shafts(A, pr)
+    if pr.get('lantern') and A.get('camp', {}).get('table'): table_lantern(A, pr)
+
+# ================================================================ CONNECTED WORLD + CAMERA PATH (client rule 2026-11-20: the camera travels instead of cutting)
+WORLD_OVR = dict(glit_stretch=1.0, glit_s=0.6, glit_t=0.11, foam_k=2.5, wake_k=3.0, sun_k=1.8, reed_k=0.6, haze_max=0.2)
+POSES = {'P_A': ((290.0, 205.0, 170.0), (120.0, 110.0, 10.0), 22.0), 'P_NECK': ((-2.0, 50.0, 4.6), (0.0, 22.0, 1.8), 22.0), 'P_TOP': ((-10.0, -40.0, 120.0), (0.0, 80.0, 0.0), 22.0),
+         'P_CAMP': 'camp_wide', 'P_BANK': 'camp_bank'}          # named join poses (loc, look, lens) for cam_path keys; P_CAMP / P_BANK are the camp_wide / camp_bank presets
+RIM_GOLD = '#ffc766'
+def with_rim(pose, color=RIM_GOLD):
+    """default warm-gold rim for a cast card: returns a copy of the pose dict with the puppet `rim` key set (v2/puppet/API.md: a light halo behind arms, hands, legs and feet where they
+    leave the body silhouette). The scene cannot light an emission card, so every cast pose a render team builds should go through this (or set rim='#ffc766' itself)."""
+    d = dict(pose); d.setdefault('rim', color); return d
+def preset_pose(name):
+    if name in POSES:
+        v = POSES[name]
+        if isinstance(v, str): return preset_pose(v)
+        return v
+    """(loc, look, lens) of a preset with the camera height resolved on the terrain (cam_dz)."""
+    pr = PRESETS[name]
+    if pr.get('cam_dz') is not None: ref = pr.get('cam_ref', pr['cam'][:2]); pr['cam'] = (pr['cam'][0], pr['cam'][1], float(ground(ref[0], ref[1])) + pr['cam_dz'])
+    return tuple(pr['cam']), tuple(pr['look']), pr.get('lens', 22.0)
+def build_world(presets, light='MORNING', fg=True, hide=(), over=None, placeholders=False):
+    """ONE scene with the whole valley (terrain, river, loop, bridge, camp, Abbey Craig, castle, farms) plus the near-camera dressing of every preset in `presets`
+    (foreground props, grass, reeds, heather, the money table extras, camp dressing, the Scots line, troops, signs, shafts, lantern). A camera can fly from one preset's pose
+    to another's in this scene (see cam_path). fg = True builds every listed preset's foreground props, False none, or a list of preset names that keep them; `hide` = preset
+    names whose foreground props are skipped (so props the camera passes through do not block the path). Returns A with A['marks'][preset] (stand points) and A['cams'][preset]
+    = (loc, look, lens). Keep `presets` to the 2-3 a segment needs: every preset adds 3-40 s of build and some render time."""
+    presets = list(presets); ov = dict(WORLD_OVR); ov.update(over or {})
+    new_scene(light, ov); STATE['preset'] = presets[0] if presets else None; STATE['loc'] = 'world'; STATE['ink_t'] = 0.02
+    A = dict(marks={}, cams={}, preset='world', presets=presets, light=light, location='world'); P0 = dict(farms=True, hill2=True, heather_n=800, gorse_n=170, crag_n=120, pine_n=55, clear=[], signs=[], troops={}, shafts=None)
+    for p in presets:
+        pr = PRESETS[p]; P0['clear'] = P0['clear'] + list(pr.get('clear', [])); P0['signs'] = sorted(set(P0['signs']) | set(pr.get('signs') or []))
+        for w_, n_ in (pr.get('troops') or {}).items(): P0['troops'][w_] = max(P0['troops'].get(w_, 0), n_)
+        if pr.get('shafts'): P0['shafts'] = 'both' if P0['shafts'] and P0['shafts'] != pr['shafts'] else pr['shafts']
+    build_terrain(); build_water(); sky_dome(); sun()
+    for fn in BUILDERS: fn(A, P0)
+    keep = (lambda p: True) if fg is True else (lambda p: False) if fg is False else (lambda p: p in fg)
+    for p in presets:
+        pr = PRESETS[p]; A['cams'][p] = preset_pose(p); has_fg = keep(p) and p not in hide
+        if pr.get('veg'): veg_near(A, pr)
+        if has_fg:
+            if pr.get('fg'): pr['fg'](A, pr)
+            if pr.get('camp_fg'): pr['camp_fg'](A, pr)
+            if pr.get('splashes'):
+                for i_, (sx_, sy_, sa_) in enumerate(pr['splashes']): splash(sx_, sy_, (pr.get('splash_ages') or [0.35, 0.55, 0.8])[i_ % 3], pr.get('splash_size', 1.0), name='%s%d' % (p, i_), seed=i_)
+        if pr.get('far_scots'): A['far_scots'] = scots_slope_line(22, 1, 1.45, np.random.RandomState(8), spear_h=3.2, a0=200, a1=250, hh0=7.0)
+        if pr.get('bridge_pairs'):
+            Bk = Batch(84); y0_, y1_, st_ = pr['bridge_pairs']; knight_pair_column(Bk, bridge_pairs(y0_, y1_, st_), BRIDGE_X, np.random.RandomState(9), KNIGHT_MATS); Bk.finalize('bridge_knights')
+    if any(PRESETS[p].get('scots_line') for p in presets): A['scots_line'] = scots_slope_line(30, 3, 1.0, np.random.RandomState(3), spear_h=4.0) + spear_wall(14, 2, np.random.RandomState(4))
+    first = presets[0] if presets else None
+    cam0 = A['cams'][first] if first else ((0, -60, 40), (0, 0, 0), 22.0); camera(cam0[0], cam0[1], cam0[2]); cam = bpy.context.scene.camera
+    for p in presets:
+        pr = PRESETS[p]
+        if pr.get('marks'): A['marks'][p] = pr['marks'](A)
+        if pr.get('crowd') and keep(p) and p not in hide: pr['crowd'](A, pr)
+    for where_, n_ in P0['troops'].items(): place_troops(A, where_, n_, seed=1)
+    preset_extras(A, dict(P0, signs=P0['signs'], cam=A['cams'][first][0] if first else None, lantern=any(PRESETS[p].get('lantern') for p in presets), shafts=P0['shafts']))
+    if placeholders:
+        for p in presets:
+            if A['marks'].get(p): stage_placeholders(A, cam=cam, marks=A['marks'][p])
+    STATE['A'] = A; STATE['cams'] = A['cams']; return A
+
+def _cr(p0, p1, p2, p3, t, dt0, dt1, dt2):
+    """Catmull-Rom between p1 and p2 for non-uniform key times (tangents scaled by the segment length): smooth, passes through every key."""
+    m1 = (p2 - p0) / (dt0 + dt1) * dt1 if dt0 + dt1 > 0 else np.zeros_like(p1); m2 = (p3 - p1) / (dt1 + dt2) * dt1 if dt1 + dt2 > 0 else np.zeros_like(p1)
+    t2, t3 = t * t, t * t * t; return (2 * t3 - 3 * t2 + 1) * p1 + (t3 - 2 * t2 + t) * m1 + (-2 * t3 + 3 * t2) * p2 + (t3 - t2) * m2
+def _nearest_vivid(loc):
+    best = None
+    for n in PRESETS:
+        c = STATE.get('cams', {}).get(n) or preset_pose(n); d = float(np.linalg.norm(np.array(c[0]) - np.array(loc)))
+        if best is None or d < best[0]: best = (d, n)
+    return VIVID.get(best[1], (1.4, 1.3)), best[1]
+def cam_path(cam, keys, g, clearance=1.2):
+    """Fly the camera: keys = [(frame, loc, look, lens), ...] or [(frame, 'preset_name'), ...] (mixed is fine). Position = a smooth Catmull-Rom curve through the keys, the look
+    target and the lens follow the same curve, with an ease-in on the first segment and an ease-out on the last one and no stops in between. STATE['vivid'] is eased between the
+    VIVID entries of the presets the keys name (or the nearest preset for a free key) so the grade never jumps. Sets the camera object `cam` (None = the scene camera) for frame g and
+    returns dict(loc, look, lens, vivid)."""
+    ks = []
+    for k in keys:
+        if isinstance(k[1], str): loc, look, lens = (STATE.get('cams') or {}).get(k[1]) or preset_pose(k[1]); nm_ = POSES[k[1]] if isinstance(POSES.get(k[1]), str) else k[1]; viv = VIVID.get(nm_) or _nearest_vivid(loc)[0]
+        else: loc, look, lens = k[1], k[2], k[3]; viv = _nearest_vivid(loc)[0]
+        ks.append((float(k[0]), np.array(loc, float), np.array(look, float), float(lens), viv))
+    ks.sort(key=lambda a: a[0]); n = len(ks); g = float(np.clip(g, ks[0][0], ks[-1][0])); i = 0
+    while i < n - 2 and g > ks[i + 1][0]: i += 1
+    f0, f1 = ks[i][0], ks[i + 1][0]; t = (g - f0) / max(f1 - f0, 1e-9)
+    if n == 2: te = t * t * (3 - 2 * t)
+    elif i == 0: te = t * t * (2 - t)                       # ease in on the first segment only (velocity 0 at the start, matches the next segment at its end)
+    elif i == n - 2: te = 1 - (1 - t) ** 2 * (1 + t)        # ease out on the last segment (velocity 1 at its start, 0 at the end)
+    else: te = t
+    def at(j): return ks[min(max(j, 0), n - 1)]
+    dts = [max(at(j + 1)[0] - at(j)[0], 1e-6) if 0 <= j < n - 1 else max(f1 - f0, 1e-6) for j in (i - 1, i, i + 1)]
+    out = []
+    for comp in (1, 2, 3):
+        vals = [np.atleast_1d(np.array(at(j)[comp], float)) for j in (i - 1, i, i + 1, i + 2)]
+        if i == 0: vals[0] = 2 * vals[1] - vals[2]
+        if i == n - 2: vals[3] = 2 * vals[2] - vals[1]
+        out.append(_cr(vals[0], vals[1], vals[2], vals[3], te, dts[0], dts[1], dts[2]))
+    loc, look, lens = out[0], out[1], float(out[2][0]); v0, v1 = ks[i][4], ks[i + 1][4]; tv = te
+    viv = (math.exp((1 - tv) * math.log(v0[0]) + tv * math.log(v1[0])), (1 - tv) * v0[1] + tv * v1[1]); STATE['vivid'] = viv
+    cam = cam or bpy.context.scene.camera
+    gz = max(float(ground(loc[0], loc[1])), 0.0) + clearance; loc = np.array([loc[0], loc[1], loc[2] + (gz - loc[2]) * (1 / (1 + math.exp(-(gz - loc[2]) * 4.0))) if loc[2] < gz + 1.5 else loc[2]])   # keep the lens above the terrain (soft)
+    cam.location = tuple(loc); cam.rotation_euler = (Vector(look) - Vector(loc)).to_track_quat('-Z', 'Y').to_euler(); cam.data.lens = lens
+    return dict(loc=tuple(loc), look=tuple(look), lens=lens, vivid=viv)
+
 
 def build_for_cli(preset, light='MORNING', placeholders=True):
     A = build(preset=preset, light=light); pr = PRESETS[preset]
     nofg = os.environ.get('DBG') == 'nofg'
     if pr.get('fg') and not nofg: pr['fg'](A, pr)
     if pr.get('camp_fg') and not nofg: pr['camp_fg'](A, pr)
+    if not nofg: preset_extras(A, pr)
     for where_, n_ in (pr.get('troops') or {}).items():
         if not nofg: place_troops(A, where_, n_, seed=pr.get('troop_seed', 1))
     if pr.get('scots_line') and not nofg and preset != 'valley_loop': A['scots_line'] = scots_slope_line(30, 3, 1.0, np.random.RandomState(3), spear_h=4.0) + spear_wall(14, 2, np.random.RandomState(4))
@@ -1588,6 +1786,7 @@ def build_for_cli(preset, light='MORNING', placeholders=True):
     if placeholders and A['marks'] and not nofg: stage_placeholders(A)
     return A
 def cli_render(preset, light='MORNING', out=None, mode='final', samples=None, placeholders=True):
+    samples = samples or PRESETS[preset].get('samples') if mode == 'final' else samples
     t0 = time.time(); A = build_for_cli(preset, light, placeholders); tb = time.time() - t0; dt = render(out, mode, samples)
     cam = bpy.context.scene.camera; heads = head_report(A, cam)
     info = dict(preset=preset, light=light, build_s=round(tb, 2), render_s=round(dt, 2), mode=mode, samples=bpy.context.scene.cycles.samples, heads=heads, objects=len(bpy.data.objects),

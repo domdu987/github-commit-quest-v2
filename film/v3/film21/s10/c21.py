@@ -75,6 +75,23 @@ class Take(object):
         self.scene.frame_start, self.scene.frame_end = 1, 9000
         print("take: built %s in %.1f s" % (preset, time.time() - t0), flush=True)
 
+    @classmethod
+    def world(cls, presets, quality="draft", samples=None, fg=True):
+        t0 = time.time()
+        self = cls.__new__(cls)
+        self.A = K.build_world(presets, fg=fg)
+        self.pr = {}
+        self.scene = bpy.context.scene
+        self.cam = self.scene.camera
+        self.cam.data.dof.use_dof = False
+        self.cam.data.clip_start = 0.05
+        self.quality, self.samples = quality, samples
+        self.actors, self.anch = {}, {}
+        self.lens = 22.0
+        self.scene.frame_start, self.scene.frame_end = 1, 9000
+        print("take: built world %s in %.1f s" % (presets, time.time() - t0), flush=True)
+        return self
+
     def actor(self, name, cast, ppd_canvas=None, contact=True):
         a = actors.Actor(name, cast)
         a.build(ppd_canvas or sprites.DEFAULT_CANVAS[cast], os.path.join(HERE, "sprites_" + self.quality), contact=contact)
@@ -91,7 +108,8 @@ class Take(object):
     def sprites_for(self, ppd, frames=None):
         for a in self.actors.values():
             fr = [f for f in (frames or a.poses.keys()) if f in a.poses]
-            for f, r in zip(fr, a.render_sprites(ppd, frames=fr)):
+            p_ = ppd.get(a.name, ppd.get("default", 256)) if isinstance(ppd, dict) else ppd
+            for f, r in zip(fr, a.render_sprites(p_, frames=fr)):
                 self.anch[(a.name, f)] = r["anchors"]
                 if r.get("clipped"):
                     print("take: WARNING sprite %s clipped f%d" % (a.name, f), flush=True)
