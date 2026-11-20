@@ -104,15 +104,17 @@ C.add_expression("grin20", eyes="happy", tilt=0.0, brows=("both", 0.105, -10.0, 
 
 # per-shot camera ---------------------------------------------------------------------------------
 CAMP = {
-    9:  dict(push=0.05, slide_px=-28.0, rise_px=38.0, arc_deg_s=-2.0, tilt0=0.0, tilt_deg_s=-1.0, decay=0.25,
-             snaps=[dict(g=(657, 672), k=1.30, peak=1.7, shift=(0.0, 0.0), tilt=0.0)]),
-    10: dict(push=0.07, slide_px=-12.0, rise_px=0.0, arc_deg_s=0.0, tilt0=0.0, tilt_deg_s=0.0, decay=0.25,
-             snaps=[dict(g=(729, 744), k=1.30, peak=1.7, shift=(0.0, 0.0), tilt=0.0)]),
-    16: dict(push=-0.05, slide_px=-30.0, rise_px=0.0, arc_deg_s=-2.0, tilt0=2.5, tilt_deg_s=0.0, decay=0.3,
-             snaps=[dict(g=(1090, 1110), k=0.65, peak=1.7, shift=(0.0, 0.0), tilt=0.0)]),
-    17: dict(push=0.07, slide_px=-12.0, rise_px=0.0, arc_deg_s=0.0, tilt0=0.0, tilt_deg_s=0.0, decay=0.25,
-             snaps=[dict(g=(1192, 1207), k=1.30, peak=1.7, shift=(0.0, 0.0), tilt=0.0)]),
+    9:  dict(push=0.07, slide_px=25.0, rise_px=38.0, arc_deg_s=22.0, arc0=-26.0, tilt0=0.0, tilt_deg_s=-1.0, decay=0.25,
+             snaps=[dict(g=(657, 670), k=1.30, peak=2.0, shift=(0.0, 0.0), tilt=0.0, arc=22.0)]),
+    10: dict(push=0.13, slide_px=30.0, rise_px=0.0, arc_deg_s=20.0, arc0=-22.0, tilt0=0.0, tilt_deg_s=0.0, decay=0.25,
+             snaps=[dict(g=(729, 742), k=1.5, peak=2.2, shift=(0.0, 0.0), tilt=-3.0, arc=30.0)]),
+    16: dict(push=-0.05, slide_px=-30.0, rise_px=0.0, arc_deg_s=22.0, arc0=-14.0, tilt0=2.5, tilt_deg_s=0.0, decay=0.3,
+             snaps=[dict(g=(1090, 1108), k=0.65, peak=2.0, shift=(0.0, 0.0), tilt=0.0, arc=14.0)]),
+    17: dict(push=0.13, slide_px=30.0, rise_px=0.0, arc_deg_s=20.0, arc0=-22.0, tilt0=0.0, tilt_deg_s=0.0, decay=0.25,
+             snaps=[dict(g=(1192, 1205), k=1.5, peak=2.2, shift=(0.0, 0.0), tilt=-3.0, arc=30.0)]),
 }[SHOT]
+if os.environ.get('CAMP'):
+    CAMP.update(json.loads(os.environ['CAMP']))          # tuning only
 CAM_SHIFT = {9: (0.0, 0.0), 10: (0.0, 0.0), 16: (0.0, 0.0), 17: (0.0, 0.0)}[SHOT]
 START_CLOSE = {16: 1.5}.get(SHOT, 1.0)                   # s16 starts this much closer than the preset (the grin), then pulls out
 
@@ -133,7 +135,7 @@ def rise_crouch():
     return p["legs"]["crouch"]
 
 
-def bounce(g, hz=3.0, a=0.015):
+def bounce(g, hz=3.0, a=0.03):
     s = math.sin(2 * math.pi * hz * g / 30.0)
     return (1.0 + a * s, 1.0 - a * s)
 
@@ -190,7 +192,7 @@ def pose_s16(g):
 
 def pose_s17(g):
     p = dict(yaw=0.30, pitch=-0.5, expr="laughing20", fx=["tears"], head_roll=-8 + 2.0 * math.sin(g * 0.3), lean=-6, t=g / 30.0, legs="wide")
-    p["squash"] = bounce(g, a=0.012)
+    p["squash"] = bounce(g, a=0.025)
     cr = u_of(g, 1190, 1196) - u_of(g, 1202, 1210)       # crumple mime on 'เป็นเศษเหล็ก!' 1195
     p["arm_l"] = arm(-0.85, 0.30, shape="point", bend=0.6, stretch=1.2)     # thumb over the shoulder at the tower
     wob = 0.04 * math.sin(g * 0.9) if cr > 0.05 else 0.0

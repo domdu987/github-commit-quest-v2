@@ -1,0 +1,59 @@
+{
+ "take": "s09",
+ "fps": 30,
+ "note": "t = film seconds (g / 30)",
+ "cues": [
+  {
+   "kind": "ambience",
+   "t": 20.0,
+   "dur": 2.667,
+   "frame": 600,
+   "end_frame": 680,
+   "note": "Paris café 1887-89: low murmur of the artists, cutlery and cups, a gas lamp hiss, far street noise through the window"
+  },
+  {
+   "kind": "foley",
+   "t": 20.4,
+   "dur": 0.733,
+   "frame": 612,
+   "end_frame": 634,
+   "note": "banquette leather creak, chair scrape and a heavy breath as he gets up; shoes on the tiles",
+   "peak_frame": 624
+  },
+  {
+   "kind": "foley",
+   "t": 21.333,
+   "dur": 0.6,
+   "frame": 640,
+   "end_frame": 658,
+   "note": "two quick tugs at the cravat: cloth rustle",
+   "peak_frame": 645
+  },
+  {
+   "kind": "accent",
+   "t": 21.9,
+   "dur": 0.5,
+   "frame": 657,
+   "end_frame": 672,
+   "note": "snap push: short rising whoosh",
+   "peak_frame": 664
+  },
+  {
+   "kind": "accent",
+   "t": 21.8,
+   "dur": 0.467,
+   "frame": 654,
+   "end_frame": 668,
+   "note": "chin-up smug pose: a pompous low brass 'pah'",
+   "peak_frame": 660
+  },
+  {
+   "kind": "cut",
+   "t": 22.533,
+   "dur": 0.0,
+   "frame": 676,
+   "end_frame": 676,
+   "note": "hard cut out"
+  }
+ ]
+}
