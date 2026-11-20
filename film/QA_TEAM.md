@@ -121,3 +121,27 @@ The client: "ได้ทุก ทำอะไรก็ได้ที่ออ
 5. **CHARACTERS ALWAYS ACT.** In every shot someone is doing something: walking, pouring, carrying, sitting cross-legged, knitting. Give them props in hand, expression changes (smile, shock, red angry face) and secondary motion. Nobody stands still for more than 1.5 s.
 6. **CLOSE-UPS AS PUNCTUATION ONLY.** A fast push into a face on a punchline is fine: about 1 s, at most 3 per film. Everything else is wide or medium inside a rich set (see §G and §H).
 7. **FINAL GATE.** Put the film's contact sheet next to two reference sheets. One reviewer answers: "Would a viewer believe this is from the same channel?" A "no" blocks release.
+
+## J. Hook rules from the reference Shorts (2026-11-20). For every NEW script (film 22 on); the blind test checks them
+How the 8 reference clips open, transcribed with STT:
+- R1: "If you plant a tree beside an empty road, cars will steer right into it." (paradox)
+- R2: "Gambling is illegal in Japan, yet there's a gambling hall on almost every street." (paradox)
+- R3: "It's impossible to get fired in Japan, but companies found something way worse." (paradox + threat)
+- R4: "They buried a man alive with a bell tied to his finger." (shocking action)
+- R5: "He poured cooking oil into the sea with a pirate ship so close behind them, he could hear the pirates laughing." (weird action + danger in ONE sentence)
+- R6: "They painted the jail cell pink, and not just any pink." (weird action + precision)
+- R7: "He bent the rollercoaster's loop out of shape." (weird deliberate action)
+- R8 (Thai, PANDA STORY): "วิศวกรคนนี้จงใจเว้นช่องว่างระหว่างรางรถไฟทุกๆ 39 ฟุต" (deliberate + exact number)
+
+Rules:
+1. **Sentence 1 runs 3.5 s or less.** It is [someone] + [a DELIBERATE weird act with a concrete object or number] + [danger, stakes or paradox].
+   - Words that work: "จงใจ", "ทั้งที่ ...", "... ผิดกฎหมาย แต่ ...".
+   - Never open with the mocker or the village laughing (film 14 did; that is weaker).
+2. **After "คืออย่างนี้นะ" ("you see"), never start with a date or place** ("อเมริกาปี 1963" kills momentum). Continue with a vivid concrete image ("ถนนตรงยาวหลายไมล์ และมีต้นไม้อยู่ต้นเดียว") and slip the date in later or into the caption.
+3. **By 8 s, add a twist teaser:** "แต่ ...", "จนกระทั่ง ...", "ยกเว้นวันที่ ...". Never a background paragraph.
+4. **First frame:**
+   - The weird act is already happening, with the character mid-motion.
+   - The key object is big and readable.
+   - The camera is already moving.
+   - An in-world sign or number is allowed (R8's "39 FT", "MIND THE GAPS").
+5. **The image illustrates every word** of the first 5 s (R5: pour, sea, pirate ship, laughing pirates).
