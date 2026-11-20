@@ -287,6 +287,43 @@ T_RV = Vector((0, 0, 0))
 
 
 
+
+# ============================================================================= CAMP (shot 28)
+G_TIP, G_SLAM = 1677, 1690          # "เร็วดี" 55.80 and "ประหยัดดี" 56.22
+
+
+def make_camp(T, gs):
+    pr = T.pr; A = T.A
+    c21.hide_prefix('ph_'); c21.hide_prefix('table_extras_t_cream')
+    C0 = Vector(pr['cam']); L0 = Vector(pr['look']); C0.z = float(K.ground(C0.x, C0.y)) + 1.3
+    L0 = L0 + Vector((0, 0, 0.18))
+    Fv = fwd_vec(C0, L0); Rv = right_vec(C0, L0)
+    def pt(fw, rt, up, lat, lz=0.0):
+        loc = C0 + Fv * fw + Rv * rt + Vector((0, 0, up))
+        return loc, L0 + Fv * (fw * 0.6) + Rv * lat + Vector((0, 0, lz))
+    W = [(1633, *pt(-0.15, -0.15, 0.0, 0.0)), (1672, *pt(0.55, 0.25, 0.0, 0.3)),
+         (1685, *pt(0.95, 0.6, -0.05, 0.8, -0.05), "snap"), (1691, *pt(1.0, 0.6, -0.05, 0.85, -0.05)),
+         (1704, *pt(0.95, -0.75, 0.0, -1.0, 0.05), 'snap'), (1708, *pt(1.0, -0.8, 0.0, -1.05, 0.05))]
+    path = CamPath(W)
+    for g in gs:
+        loc, look = path.at(g); T.key_cam(bf(g), loc, look)
+    T.rigs = {}
+    def on_g(g):
+        t = g / 30.0
+        K.set_flutter(t); K.set_smoke(t); K.set_flow(t)
+        sway = 1.6 * math.sin(g * 0.35) * math.exp(-0.0 * g)
+        if g < G_TIP: tip = sway * 0.6
+        else:
+            u = (g - G_TIP) / 9.0
+            tip = lerp(0.0, 16.0, ez(min(u, 1.0))) + (4.0 * math.sin((g - G_TIP) * 0.55) * math.exp(-(g - G_TIP) / 9.0) if u > 1 else 0)
+        K.set_scale_tip(A, tip)
+        if g < G_SLAM - 3: lid = 72 + 1.2 * math.sin(g * 0.2)
+        elif g < G_SLAM: lid = lerp(72, 0, ((g - (G_SLAM - 3)) / 3.0) ** 2)
+        else: lid = 3.0 * math.exp(-(g - G_SLAM) / 3.0) * abs(math.sin((g - G_SLAM) * 1.1))
+        K.set_chest_lid(A, lid)
+    return on_g
+
+
 # ============================================================================= LOW (shot 31)
 IMPACT = (1821, 1830, 1839)
 
