@@ -23,6 +23,7 @@ def _dress(p):
     """own road dressing along the whole tracked stretch (no 'hay' / 'plume' / rocks / rings / baskets / wheels): furrows, red silk strips, torch stakes."""
     avoid = lambda x, y: -3.4 < x < 4.6                                  # keep the lane itself clear (the group runs there); warm period props on both verges
     R2.dress(-10.5, 10.5, -126, -34, 140, 26, kinds=('stone', 'hay', 'basket', 'pot', 'hay', 'stone'), avoid=avoid)
+    R2.dress(-70.0, 70.0, -128, -36, 420, 27, kinds=('hay', 'hay', 'basket', 'stone', 'pot', 'hay'), avoid=lambda x, y: -4.5 < x < 5.5)       # field dressing for the crane over the plain (ground share <= 0.30)
     for i, yy in enumerate(range(-40, -125, -13)):
         R2.stake(-9.0 if i % 2 == 0 else 9.0, float(yy), 3.0)
 R2.POST['s26'] = _dress
@@ -74,6 +75,9 @@ def cam_bigzoom(T, g, t):
 
 T = c18.Take('s26', FIRST, LAST, draft=(mode == 'draft'), cam_fn=cam_bigzoom)
 c18.fix_sky_clean(T, 'sky_DAWN', flat_above=0.6)
+for _n in ('wallpools', 'cityglow', 'tw_glow'):        # translucent glow quads on the city wall rendered as pale rectangles (TAKE gate 16)
+    if _n in STATE['objects']:
+        STATE['objects'][_n].hide_render = True
 import bpy
 for ob in bpy.data.objects:                       # no grey rocks / wheels / ring props / hay anywhere (TAKE gate rule 2)
     if ob.name.startswith(('fgwood', 'fgstone', 'dr_hay', 'dr_plume', 'dr_pot', 'dr_rope', 'dr_stone', 'dr_wheel', 'dr_basket')) or ob.name == 'hay':
@@ -133,6 +137,36 @@ def rim(meta, pos, cam_loc, mirror=False, height=None, scale=None, name='rim', y
     return ob
 
 
+def _smoke_mat():
+    m = bpy.data.materials.get('t18_smoke')
+    if m is None:
+        m = bpy.data.materials.new('t18_smoke'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
+        out = N('ShaderNodeOutputMaterial'); em = N('ShaderNodeEmission'); tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader')
+        em.inputs['Color'].default_value = (0.78, 0.74, 0.76, 1.0); em.inputs['Strength'].default_value = 0.9; mx.inputs['Fac'].default_value = 0.45
+        L(tr.outputs['BSDF'], mx.inputs[1]); L(em.outputs['Emission'], mx.inputs[2]); L(mx.outputs['Shader'], out.inputs['Surface'])
+    return m
+
+
+SMOKE = []
+for _i in range(4 * 4):
+    _bpy_me = bpy.data.meshes.new('t18_smk_%d' % _i)
+    import bmesh as _bm
+    _b_ = _bm.new(); _bm.ops.create_uvsphere(_b_, u_segments=12, v_segments=8, radius=1.0); _b_.to_mesh(_bpy_me); _b_.free()
+    for _p in _bpy_me.polygons: _p.use_smooth = True
+    _bpy_me.materials.append(_smoke_mat())
+    _o = bpy.data.objects.new('t18_smk_%d' % _i, _bpy_me); STATE['SET'].objects.link(_o); _o.visible_shadow = False; J.no_bounce(_o); SMOKE.append(_o)
+
+
+def tail_smoke(i, pos, cam_loc, mirror, yaw_off, g, sc=1.08):
+    d = V(cam_loc) - V(pos); yaw = math.atan2(d.x, -d.y) + math.radians(yaw_off)
+    ux, uy = math.cos(yaw), math.sin(yaw); sgn = -1.0 if mirror else 1.0
+    tx = pos[0] + ux * (-2.19 * sc) * sgn; ty = pos[1] + uy * (-2.19 * sc) * sgn; tz = 2.38 * sc
+    for j in range(4):
+        o = SMOKE[i * 4 + j]; u = ((g * 0.045 + j * 0.25 + i * 0.13) % 1.0)
+        o.location = (tx + ux * (-0.35 * sgn) * u * 3 + 0.15 * math.sin(g * 0.3 + j), ty + uy * (-0.35 * sgn) * u * 3 - 0.45 * u * 2, tz + 0.2 + 1.6 * u)
+        r = 0.22 + 0.55 * u; o.scale = (r, r, r * 0.9); o.hide_render = u > 0.97
+
+
 def frame(T, g):
     gx, gy = _gen_pos(g); u_ = c18.ease((g - G0) / float(G_ZOOM - G0)) if G0 < g < G_ZOOM else (0.0 if g <= G0 else 1.0)
     POOL.location = (gx, gy + 1.5, 0.08); k = 2.4 + 15.0 * (1.0 - u_) ** 2; POOL.scale = (k, k, 1.0); POOL2.location = (gx, gy + 1.5, 0.1); POOL2.scale = (0.55 * k, 0.55 * k, 1.0)       # a warm dawn pool of light under him: findable in the wide
@@ -157,8 +191,11 @@ def frame(T, g):
             lat = c18.lerp(-1.5, 2.0, c18.ramp(g, 2040, 2100))       # the nearest ox ends at screen-right of him: its face shows at his shoulder at the cut
         pos = gen + V((lat, back, 0.0))
         phase = (int(g / 2.5) + i * 3) % 8
-        mo = c18.oxcard('dragon', 'front_three_quarter', 'gallop', phase, -1, smoke=(g // 2 + i) % 4, face='rage')
-        rim(mo, tuple(pos), cam, scale=1.08, mirror=bool(i % 2), name='orim%d' % i, yaw_off=(10 if i % 2 else -10))
+        mo = c18.oxcard('dragon', 'front_three_quarter', 'gallop', phase, -1, smoke=None, face='rage')
+        mo_ns = c18.oxcard('dragon', 'front_three_quarter', 'gallop', phase, -1, smoke=None, face='rage')      # the rim copy has NO smoke (its faint alpha showed as pale rectangles)
+        mo_ns = c18.oxcard('dragon', 'front_three_quarter', 'gallop', phase, -1, smoke=None, face='rage')
+        rim(mo_ns, tuple(pos), cam, scale=1.08, mirror=bool(i % 2), name='orim%d' % i, yaw_off=(10 if i % 2 else -10))
+        tail_smoke(i, tuple(pos), cam, bool(i % 2), (10 if i % 2 else -10), g)
         c18.put(mo, tuple(pos), cam, scale=1.08, mirror=bool(i % 2), name='ox%d' % i, sw=2.7, yaw_off=(10 if i % 2 else -10))
         heads.append(T.head_row(tuple(pos), 2.6, 'ox'))
         if i == 0:

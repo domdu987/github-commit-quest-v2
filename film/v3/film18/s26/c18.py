@@ -34,7 +34,7 @@ import jimo_cards as CD                                      # noqa: E402
 CD.CARDS = os.path.join(HERE, 'cards')                       # bake into the take folder
 os.makedirs(CD.CARDS, exist_ok=True)
 STATE = J.STATE
-FRAMES = os.path.join(HERE, 'frames')
+FRAMES = os.path.join(HERE, os.environ.get('FDIR', 'frames'))
 
 
 # ----------------------------------------------------------------------------- clock
@@ -73,19 +73,28 @@ def pcard(cast, pose, key):
 
 
 def smoke_svg(ax, ay, k, n=4, grey='#a39ea4'):
-    """tail smoke wisps rising from (ax, ay) (D units, y down); k = drawing index (drift / size vary)."""
-    s = ['<defs><filter id="sb%d" x="-50%%" y="-50%%" width="200%%" height="200%%"><feGaussianBlur stdDeviation="0.07"/></filter></defs>' % k]
+    """tail smoke wisps rising from (ax, ay) (D units, y down): soft puffs made of 3 stacked translucent circles each (NO svg filter: a blur filter region clipped the soft edge into pale rectangles)."""
+    s = []
     for i in range(n):
         u = (i + 0.35 * (k % 3)) / n
         cx = ax - 0.15 - 0.55 * u + 0.16 * math.sin(k * 1.3 + i * 2.1); cy = ay - 0.25 - 2.0 * u
-        r = 0.22 + 0.34 * u; op = 0.80 * (1.0 - 0.75 * u)
-        s.append('<ellipse cx="%.3f" cy="%.3f" rx="%.3f" ry="%.3f" fill="%s" opacity="%.2f" filter="url(#sb%d)"/>' % (cx, cy, r * 1.15, r, grey, op, k))
+        r = 0.22 + 0.34 * u; op = 0.80 * (1.0 - 0.75 * u) * min(1.0, (1.0 - u) * 3.0)
+        for j, (f, o) in enumerate(((1.25, 0.35), (1.0, 0.45), (0.72, 0.6))):
+            s.append('<circle cx="%.3f" cy="%.3f" r="%.3f" fill="%s" opacity="%.2f"/>' % (cx + 0.02 * j, cy, r * f, grey, op * o))
     return ''.join(s)
+
+
+def _clean_alpha(path, thr=24):
+    """zero the faint alpha (< thr/255) of a card PNG: it shows as pale translucent rectangles over bright backgrounds."""
+    from PIL import Image
+    im = Image.open(path).convert('RGBA'); a = np.array(im)
+    low = a[..., 3] < thr; a[low] = 0
+    Image.fromarray(a, 'RGBA').save(path)
 
 
 def oxcard(state='dragon', view='three_quarter', gait='gallop', phase=0, flame=-1, smoke=None, reed=False, face=None):
     """an ox card (8 gallop drawings, phase = 0..7); smoke = None or a drawing index for grey tail wisps (no flame)."""
-    key = 'OX3|%s|%s|%s|%d|%d|%s|%s|%s' % (state, view, gait, phase, flame, smoke, reed, face)
+    key = 'OX6|%s|%s|%s|%d|%d|%s|%s|%s' % (state, view, gait, phase, flame, smoke, reed, face)
     name = hashlib.md5(key.encode()).hexdigest()[:10] + '_ox'
     mp = os.path.join(CD.CARDS, name + '.json')
     if os.path.exists(mp) and os.path.exists(os.path.join(CD.CARDS, name + '.png')):
@@ -95,8 +104,9 @@ def oxcard(state='dragon', view='three_quarter', gait='gallop', phase=0, flame=-
     svg = f['svg']; bb = list(f['bbox'])
     if smoke is not None:
         ax, ay = f['anchors']['tail_tip']
-        svg += smoke_svg(ax, ay, smoke); bb[1] = min(bb[1], ay - 2.2); bb[0] = min(bb[0], ax - 1.2)
+        svg += smoke_svg(ax, ay, smoke); bb[1] = min(bb[1], ay - 3.6); bb[0] = min(bb[0], ax - 2.6); bb[2] = max(bb[2], ax + 1.0)
     m = CD._write(svg, bb, 0.0, CD.PXD_O, name); m['kind'] = 'ox'
+    _clean_alpha(m['path'])
     json.dump(m, open(mp, 'w')); return m
 
 
