@@ -636,8 +636,8 @@ def grade(path, sat=1.07, bloom=0.5, scale=None, gamma=1.28):
     Image.fromarray((im * 255 + 0.5).astype(np.uint8)).save(path)
 VIVID = {'bridge_deck': (1.78, 1.15), 'bridge_end_north': (1.38, 1.23), 'bridge_end_south': (1.9, 1.15), 'bridge_high': (1.9, 1.15),
          'camp_bank': (1.52, 1.3), 'camp_table': (1.05, 1.1), 'camp_wide': (1.9, 1.15), 'hill_eye': (0.8, 1.31), 'hill_low': (1.38, 1.15),
-         'hill_over': (1.48, 1.15), 'river_low': (1.9, 1.3), 'riverbank': (1.5, 1.6), 'valley_loop': (1.07, 1.53), 'valley_river': (1.9, 1.18),
-         'valley_wide': (1.11, 1.63)}
+         'hill_over': (1.48, 1.15), 'river_low': (1.9, 1.3), 'riverbank': (1.5, 1.6), 'valley_loop': (1.07, 1.71), 'valley_river': (2.28, 1.18),
+         'valley_wide': (1.11, 1.83)}
 def render(path, mode='final', samples=None, do_grade=True):
     sc = bpy.context.scene; setup_render(sc, mode, samples); sc.render.filepath = path; t = time.time(); bpy.ops.render.render(write_still=True); dt = time.time() - t
     if do_grade: grade(path)
@@ -1735,7 +1735,7 @@ def _nearest_vivid(loc):
         c = STATE.get('cams', {}).get(n) or preset_pose(n); d = float(np.linalg.norm(np.array(c[0]) - np.array(loc)))
         if best is None or d < best[0]: best = (d, n)
     return VIVID.get(best[1], (1.4, 1.3)), best[1]
-def cam_path(cam, keys, g):
+def cam_path(cam, keys, g, clearance=1.2):
     """Fly the camera: keys = [(frame, loc, look, lens), ...] or [(frame, 'preset_name'), ...] (mixed is fine). Position = a smooth Catmull-Rom curve through the keys, the look
     target and the lens follow the same curve, with an ease-in on the first segment and an ease-out on the last one and no stops in between. STATE['vivid'] is eased between the
     VIVID entries of the presets the keys name (or the nearest preset for a free key) so the grade never jumps. Sets the camera object `cam` (None = the scene camera) for frame g and
@@ -1763,6 +1763,7 @@ def cam_path(cam, keys, g):
     loc, look, lens = out[0], out[1], float(out[2][0]); v0, v1 = ks[i][4], ks[i + 1][4]; tv = te
     viv = (math.exp((1 - tv) * math.log(v0[0]) + tv * math.log(v1[0])), (1 - tv) * v0[1] + tv * v1[1]); STATE['vivid'] = viv
     cam = cam or bpy.context.scene.camera
+    gz = max(float(ground(loc[0], loc[1])), 0.0) + clearance; loc = np.array([loc[0], loc[1], loc[2] + (gz - loc[2]) * (1 / (1 + math.exp(-(gz - loc[2]) * 4.0))) if loc[2] < gz + 1.5 else loc[2]])   # keep the lens above the terrain (soft)
     cam.location = tuple(loc); cam.rotation_euler = (Vector(look) - Vector(loc)).to_track_quat('-Z', 'Y').to_euler(); cam.data.lens = lens
     return dict(loc=tuple(loc), look=tuple(look), lens=lens, vivid=viv)
 

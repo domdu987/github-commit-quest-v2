@@ -6,7 +6,7 @@ HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import numpy as np, bpy, stirling as K
 from PIL import Image
 A = K.build_world(['valley_wide', 'camp_wide', 'hill_low'], fg=False)
-keys = [(0, 'valley_wide'), (45, 'camp_wide'), (90, 'hill_low')]; frames = [int(round(i * 90 / 11)) for i in range(12)]; ims = []; last = None; steps = []; viv = []
+keys = [(0, 'valley_wide'), (36, 'camp_wide'), (66, (30, 10, 36), (120, 110, 10), 22.0), (96, 'hill_low')]; frames = [int(round(i * 96 / 11)) for i in range(12)]; ims = []; last = None; steps = []; viv = []
 for g in frames:
     r = K.cam_path(None, keys, g); p = np.array(r['loc']); steps.append(0 if last is None else float(np.linalg.norm(p - last))); last = p; viv.append(r['vivid'])
     f = os.path.join(HERE, 'styleboard', 'path_%02d.png' % g); K.render(f, 'draft', 16); ims.append(Image.open(f).convert('RGB').resize((180, 320), Image.LANCZOS))
