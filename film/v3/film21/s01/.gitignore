@@ -3,3 +3,4 @@ work/
 tmp/
 __pycache__/
 frames/
+log*.txt
