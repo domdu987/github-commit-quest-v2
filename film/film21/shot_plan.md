@@ -50,9 +50,8 @@ Set film/v3/set3d21 (stirling.py + API.md; use the closest preset in API.md if a
 ## Shots (t = NARRATION time; film time = t + 0.10)
 | # | t0-t1 | in | preset | action + camera move |
 |---|---|---|---|---|
-| 1 | 0.00-1.36 | — | hill_over | HOOK image: over the shoulders of 4-5 Scots spearmen (backs not shown full: three-quarter from behind-side, spear shafts in the fg) looking down to the far narrow bridge where tiny knights cross two by two. Already moving: push-in 9 %/s + slide left 35 px/s. |
-| 2 | 1.36-2.85 | C | bridge_deck | two English knights on horses side by side fill the bridge deck, rails brushing their knees; hooves clop. Low from beside the rail, push 8 %/s, rail post fg. |
-| 3 | 2.85-5.19 | C | hill_eye | the Scots line stands still, arms folded on spear shafts; Wallace in the centre calm; one Scot chews a grass stalk. Slide 40 px/s; quick push-in (snap 15 f, x1.4) on the grass-chewer on "ไม่ทำอะไรเลยสักอย่าง" (4.08). |
+| 1 | 0.00-4.08 | — | BIGZOOM (valley_wide -> hill) | **BIGZOOM 1 (QA §H)**: ONE continuous eased camera move, 4.1 s. Start EXTREME WIDE high over the Forth valley (like valley_wide): the loop, the narrow bridge with English knights crossing two by two (place_troops bridge), the camp, Abbey Craig; the Scots tiny (<5 % of frame height) on its slope. Ease-in, swoop down past pines and gorse on the crag (foreground parallax) and end in a MEDIUM shot (35-60 % of frame height) of the Scots line on the shelf: Wallace in the centre, arms folded on spears, unmoving, the bridge still visible far below behind them. Build the whole valley in one scene (valley preset) and stage the Scots at the hill marks (PAD2). |
+| 2 | 4.08-5.19 | C | hill_eye | quick push-in (snap 15 f, x1.4) on the Scot chewing a grass stalk on "อะไรเลยสักอย่าง"; others still. |
 | 4 | 5.19-7.74 | D11 | valley_wide | establishing: the Forth valley in morning light: river loop, bridge, hill, camp, castle rock. High, crane-down + push 6 %/s. |
 | 5 | 7.74-9.82 | C | camp_wide | English knights on caparisoned horses parade past tents and banners; lots of life (flags flutter, smoke). Slide 50 px/s + push; tent rope fg. |
 | 6 | 9.82-11.89 | D11 | hill_low | Scots spearmen on foot among rocks and gorse, long spears up against the sky. Low 1.2 D, +14 deg, pull-out 7 %/s. |
@@ -73,8 +72,7 @@ Set film/v3/set3d21 (stirling.py + API.md; use the closest preset in API.md if a
 | 21 | 39.69-41.19 | C | hill_low | the horn: a Scot raises a long cow-horn and blows (cheeks puff, no lip-sync); Wallace lifts his sword arm. Low angle, sky behind; snap push (14 f, x1.5) on "เสียงแตร" (39.69), 2-frame shake. |
 | 22 | 41.19-43.07 | C | hill_over | WHIP (4 off, 7 on) from the horn down the slope: the Scots run down the hill with spears forward, gorse flicking past in the fg. Lens rides down the slope behind them, 5 Hz shake decaying. |
 | 23 | 43.07-44.73 | C | bridge_end_north | the Scots' spear wall slams across the north end of the bridge ("ปิดหัวสะพาน", 43.78): spears level, a solid row; the English on the causeway jump back, helmets wobble. Snap push (16 f, x1.5). |
-| 24 | 44.73-47.50 | C | valley_loop | THE ONE-IMAGE REVEAL: high over the loop: the English on the north bank are boxed inside the river loop (water on three sides), the bridge mouth blocked by the Scots like a cork in a bottle, the other half of the army stuck on the south bank. Crash pull-out (17 f, x0.4) then hold-drift 5 %/s. |
-| 25 | 47.50-50.53 | C | camp_bank | the other half on the south bank can only watch: Cressingham's and Surrey's jaws drop (shocked swap behind a blink, sweat drop), soldiers on tiptoe. Slide 45 px/s + push 6 %/s. |
+| 24 | 44.73-50.53 | C | BIGZOOM (valley_loop -> camp_bank) | **BIGZOOM 2 (QA §H) + THE ONE-IMAGE REVEAL**, ONE continuous move, 5.8 s. Start high over the loop (valley_loop): the English on the north bank boxed inside the river loop, the bridge mouth blocked by the Scots spear wall like a cork, the other half on the south bank; hold-drift 5 %/s for ~1.5 s while "ครึ่งทัพที่ข้ามมาแล้ว ถอยไม่ได้ ติดอยู่ริมน้ำ" plays, then on "อีกครึ่ง" (47.50) swoop down across the river to the south bank, past banners and tents, ending MEDIUM on Cressingham and Surrey watching helplessly: jaws drop (shocked swap behind a blink, sweat drop), soldiers on tiptoe, on "ได้แต่ยืนดู". Build the whole valley in one scene. |
 | 26 | 50.53-52.50 | D11 | bridge_deck | AHA: the column tries to turn back on the bridge: two horses wedged nose to tail, everyone squeezes two at a time, a knight's helmet pops off. Push 8 %/s. |
 | 27 | 52.50-54.55 | C | bridge_high | the jam from above: two-by-two stack all along the narrow deck, nobody moves. Snap pull-out (15 f, x0.7) on "เหมือนกัน" (53.5). |
 | 28 | 54.55-56.88 | D11 | camp_table | ENDING: Cressingham's EMPTY money table on the south bank (nobody at it), the coin scale tips on "เร็วดี" (55.80) and the coin chest lid slams on "ประหยัดดี" (56.22). Push 9 %/s. |
@@ -82,9 +80,10 @@ Set film/v3/set3d21 (stirling.py + API.md; use the closest preset in API.md if a
 | 30 | 58.86-60.60 | C | riverbank | they jump into the Forth: a row of comic jumps, arms up, spray crowns; heads and helmets bob up, spluttering, and swim for the far bank. Pull-out 8 %/s. |
 | 31 | 60.60-61.50 | C | river_low | "ตูม ตูม ตูม": water level, three big spray crowns in a row on each "ตูม" (60.6, 60.9, 61.2), quick push. HARD CUT on the last splash (g 1848). |
 
-Shot count 31 in 61.6 s (mean 1.99 s; with snaps about one framing change per 1.35 s).
+Shot count 29 in 61.6 s. BIGZOOMs (QA_TEAM §H): shot 1 (film 0.10-4.18 s, g 3-125) and shot 24 (film 44.83-50.63 s, g 1345-1519).
+Angle types used: bird's-eye/high (4, 8, 17, 24, 27), low hero (6, 21), over-the-shoulder (1 end, 22), through a foreground frame (2, 9, 20, 26: rails, spears, tent ropes), side tracking (5, 15, 26), crane down (1, 4, 24).
 Angle mix (approximate): establishing/vista (4, 8, 17, 24, 27) about 20 %; eye (2, 3, 7, 14, 15, 16, 20, 23, 26, 29, 30) about 38 %; low (6, 11, 12, 21) about 12 %; high camp (13) and inserts (10, 28, 31) about 15 %.
-Key takes for QA-art at the TAKE gate: s01 (hook), s23-s24 (reveal), s18-s19 (false payoff), s28-s31 (ending).
+Key takes for QA-art at the TAKE gate: s01 (hook, BIGZOOM 1), s09 (reveal, BIGZOOM 2), s07 (false payoff), s11 (ending).
 
 ## Sound cues (conform; levels per captions-sound.md, music m1 at -31 dB under the voice)
 hooves on planks (2, 9, 20, 26), coin clink (10, 28), crowd laugh (13, 18), horn blast (21), running feet and shouts with no words (22), spear-wall clack (23), whoosh (22, 24), wood creak (26, 27), coin scale tip and chest slam (28), splashes (30, 31, one per "ตูม").

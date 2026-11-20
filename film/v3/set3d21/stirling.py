@@ -968,13 +968,14 @@ def campfire(B, Bs, c, rs, puffs=True):
 def table_set(A, B, c, yaw, rs):
     """Cressingham's money table under a striped canopy: red-clothed trestle table, iron-banded coin chest (lid on its own hinge object), balance scales (beam on its
     own pivot object), coin stacks, loose coins, a blank open ledger. c = ground point under the table centre, local +x along the table's length."""
-    x, y, z = c; Bl = Batch(31); Bs = Batch(32)
+    x, y, z = c; Bl = Batch(31); Bs = Batch(32); ca_, sa_ = math.cos(math.radians(yaw)), math.sin(math.radians(yaw))
+    tw = lambda p: (x + p[0] * ca_ - p[1] * sa_, y + p[0] * sa_ + p[1] * ca_, z + p[2])           # table-local -> world
     with B.xf((x, y, z), (0, 0, yaw)):
         for sx in (-0.9, 0.9):
             for sy in (-0.4, 0.4): B.rod('wood', (sx + sx * 0.05, sy * 1.2, 0), (sx, sy, 0.9), 0.045, seg=5)
         B.box('wood', (0, 0, 0.93), (2.3, 1.0, 0.07)); B.box('cloth_red', (0, 0, 0.985), (2.38, 1.06, 0.035)); B.box('cloth_red', (0, -0.53, 0.8), (2.38, 0.035, 0.3)); B.box('gold', (0, -0.545, 0.69), (2.38, 0.02, 0.05)); B.box('gold', (0, 0.0, 1.01), (2.38, 0.05, 0.012))
         # chest + coins
-        cx, cy_ = -0.62, -0.05; B.box('barrel', (cx, cy_, 1.22), (1.0, 0.62, 0.46)); B.box('iron', (cx, cy_ - 0.315, 1.22), (1.02, 0.02, 0.48)); B.box('iron', (cx + 0.34, cy_, 1.225), (0.08, 0.64, 0.48)); B.box('iron', (cx - 0.34, cy_, 1.225), (0.08, 0.64, 0.48))
+        cx, cy_ = -0.62, -0.05; B.box('barrel', (cx, cy_, 1.22), (1.0, 0.62, 0.46)); B.box('iron', (cx + 0.2, cy_ - 0.32, 1.22), (0.07, 0.02, 0.48)); B.box('iron', (cx - 0.2, cy_ - 0.32, 1.22), (0.07, 0.02, 0.48)); B.box('gold', (cx, cy_ - 0.325, 1.32), (0.12, 0.02, 0.14)); B.box('iron', (cx + 0.34, cy_, 1.225), (0.08, 0.64, 0.48)); B.box('iron', (cx - 0.34, cy_, 1.225), (0.08, 0.64, 0.48))
         B.box('gold', (cx, cy_, 1.46), (0.88, 0.5, 0.05))
         for i in range(10): B.sphere('gold', (cx + rs.uniform(-0.34, 0.34), cy_ + rs.uniform(-0.2, 0.2), 1.5 + 0.03 * rs.rand()), 0.09, seg=6, rings=4, scale=(1, 1, 0.5))
         # coin stacks in neat rows
@@ -990,8 +991,8 @@ def table_set(A, B, c, yaw, rs):
         # canopy: four poles + a striped roof (its own batch: the roof casts no shadow, so the table is lit)
         Bc = Batch(34); Bc.stack[-1] = B.stack[-1].copy()
         for sx in (-1.5, 1.5):
-            for sy in (-1.2, 1.2): B.rod('wood', (sx, sy, -0.1), (sx, sy, 2.6), 0.055, seg=6)
-        seg = 8; r = 2.5; hz = 2.6
+            for sy in (-1.2, 1.2): B.rod('wood', (sx, sy, -0.1), (sx, sy, 3.5), 0.055, seg=6)
+        seg = 8; r = 2.5; hz = 3.5
         for i in range(seg):
             a0 = 2 * math.pi * i / seg + math.pi / 4; a1 = 2 * math.pi * (i + 1) / seg + math.pi / 4; m = ('t_blue', 't_gold')[i % 2]
             Bc.mesh(m, [(r * 1.0 * math.cos(a0) * 1.0, r * 0.82 * math.sin(a0), hz), (r * math.cos(a1), r * 0.82 * math.sin(a1), hz), (0, 0, hz + 0.9)], [(0, 1, 2)], False)
@@ -1000,11 +1001,11 @@ def table_set(A, B, c, yaw, rs):
         with Bl.xf((0, 0, 0)): pass
     Bc.finalize('table_canopy', shadow=False)
     # chest lid: own object, hinge at the back-top edge of the chest, open 72 degrees
-    cx, cy_ = -0.62, -0.05; hp = B.wpt((cx, cy_ + 0.31, 1.47)); Bl.box('barrel', (0, -0.31, 0.045), (1.0, 0.64, 0.09)); Bl.box('iron', (0.34, -0.31, 0.055), (0.08, 0.66, 0.11)); Bl.box('iron', (-0.34, -0.31, 0.055), (0.08, 0.66, 0.11)); Bl.box('gold', (0, -0.31, 0.1), (0.8, 0.5, 0.02))
+    cx, cy_ = -0.62, -0.05; hp = tw((cx, cy_ + 0.31, 1.47)); Bl.box('barrel', (0, -0.31, 0.045), (1.0, 0.64, 0.09)); Bl.box('iron', (0.34, -0.31, 0.055), (0.08, 0.66, 0.11)); Bl.box('iron', (-0.34, -0.31, 0.055), (0.08, 0.66, 0.11)); Bl.box('gold', (0, -0.31, 0.1), (0.8, 0.5, 0.02))
     lid = Bl.finalize('chest_lid', loc=hp)[0]; lid.rotation_euler = (math.radians(-72), 0, math.radians(yaw)); lid.rotation_mode = 'XYZ'
     A['chest_lid'] = lid.name; A['chest_lid_hinge'] = hp
     # scales: stand on the table, beam on a pivot object
-    sp = B.wpt((0.95, -0.12, 1.0)); Bs.rod('wood_dk', (0, 0, 0), (0, 0, 0.8), 0.05, seg=6); Bs.box('wood_dk', (0, 0, 0.0), (0.3, 0.3, 0.06)); Bs.sphere('gold', (0, 0, 0.83), 0.07, seg=6, rings=4)
+    sp = tw((0.95, -0.12, 1.0)); Bs.rod('wood_dk', (0, 0, 0), (0, 0, 0.8), 0.05, seg=6); Bs.box('wood_dk', (0, 0, 0.0), (0.3, 0.3, 0.06)); Bs.sphere('gold', (0, 0, 0.83), 0.07, seg=6, rings=4)
     Bs.finalize('scale_stand', loc=sp); Bb = Batch(33); Bb.box('gold', (0, 0, 0), (1.0, 0.055, 0.055))
     for sxx in (-0.5, 0.5): Bb.rod('rope', (sxx, 0, 0), (sxx, 0, -0.34), 0.012, seg=3); Bb.cyl('steel', (sxx, 0, -0.37), 0.18, 0.03, seg=14, r2=0.18)
     beam = Bb.finalize('scale_beam', loc=(sp[0], sp[1], sp[2] + 0.83), ink=True)[0]; beam.rotation_euler = (0, math.radians(0), math.radians(yaw)); A['scale_beam'] = beam.name
@@ -1287,7 +1288,8 @@ def scots_slope_line(n, ranks, scale, rs, spear_h=3.4, a0=188.0, a1=258.0, hh0=9
                 if float(hill_h(np.array([x]), np.array([y]))[0][0]) < hh0 + 2.2 * rank: break
             z = float(ground(x, y)); m = mats[(k + rank) % 5]
             B.box(m, (x, y, z + 0.8 * scale), (0.75 * scale, 0.55 * scale, 1.5 * scale), tint=0.95 + 0.3 * rs.rand()); B.sphere('iron', (x, y, z + 1.68 * scale), 0.2 * scale, seg=6, rings=4)
-            spear(B, (x + 0.38 * scale, y, z), tilt=(rs.uniform(-0.25, 0.25), rs.uniform(-0.25, 0.25)), h=spear_h * scale); cnt += 1
+            tl = (rs.uniform(-0.25, 0.25), rs.uniform(-0.25, 0.25)); spear(B, (x + 0.38 * scale, y, z), tilt=tl, h=spear_h * scale); cnt += 1
+            if scale > 1.2: B.sphere('gold', (x + 0.38 * scale + tl[0], y + tl[1], z + spear_h * scale + 0.1), 0.32 * scale, seg=5, rings=3)
     B.finalize('scots_line', ink=False); return cnt
 def spear_wall(n, ranks, rs, y0=27.0, half=9.0):
     """the cork: a wall of Scots across the north end of the bridge (the neck), spears level."""
@@ -1342,8 +1344,8 @@ def mk_hill_over(A):
             's4': mark_px(cam, look, ln, 5.6, 115, 'scot:scot_m'), 's5': mark_px(cam, look, ln, 7.0, 40, 'scot')}
 def mk_camp_bank(A):
     pr = PRESETS['camp_bank']; cam, look, ln = pr['cam'], pr['look'], pr['lens']
-    m = {'cress': mark_px(cam, look, ln, 3.6, 175, 'cressingham'), 'surrey': mark_px(cam, look, ln, 5.8, 640, 'surrey')}
-    for i, (d, xp) in enumerate([(6.5, 35), (9.5, 110), (12.0, 215), (9.0, 600), (11.0, 665), (13.0, 705)]): m['e%d' % i] = mark_px(cam, look, ln, d, xp, ['foot', 'foot:foot_r', 'knight:knight_b'][i % 3])
+    m = {'cress': mark_px(cam, look, ln, 3.6, 190, 'cressingham'), 'surrey': mark_px(cam, look, ln, 5.8, 640, 'surrey')}
+    for i, (d, xp) in enumerate([(9.0, 55), (11.0, 335), (13.0, 440), (10.0, 540), (14.0, 610)]): m['e%d' % i] = mark_px(cam, look, ln, d, xp, ['foot', 'foot:foot_r', 'knight:knight_b'][i % 3])
     return m
 def camp_fg(A, pr):
     """camp_bank foreground camp: pavilions with pennants on the right, bell/ridge tents, a cook fire, a cart, a weapon rack, a horse line, small pegs. Nothing on the water."""
@@ -1351,7 +1353,7 @@ def camp_fg(A, pr):
     def at(d, xp): return rel_xy(cam, look, d, px_lat(lens, d, xp))
     dry = lambda x, y, m=3.5: float(sd_at(x, y)) > m
     mats = (('t_red', 't_cream'), ('t_blue', 't_gold'), ('t_red', 't_cream'), ('t_blue', 't_gold'), ('t_red', 't_cream'), ('t_blue', 't_gold'))
-    for i, (d, xp, r) in enumerate([(30.0, 770, 3.6), (32.0, 715, 4.4), (46.0, 700, 4.0), (60.0, 705, 4.6), (78.0, 690, 4.2)]):
+    for i, (d, xp, r) in enumerate([(26.0, 770, 4.0), (40.0, 700, 3.6), (32.0, 715, 4.4), (46.0, 700, 4.0), (60.0, 705, 4.6), (78.0, 690, 4.2)]):
         x, y = at(d, xp)
         if not dry(x, y, 6): continue
         z0 = float(ground(x, y)); pavilion(B, (x, y, z0), r, mats[i], yaw=rs.uniform(0, 30), rs=rs, hw=1.9, hr=3.4)
@@ -1390,10 +1392,10 @@ PRESETS['hill_over'] = dict(loc='hill', corridor=(70.0, 0.6, 0.2, 7.0), dress_mi
     fg_spears=[(1.8, -0.55, (0.08, 0.1)), (1.6, 0.5, (-0.1, 0.1))], fg_gorse=[(2.4, -0.9, 0.55), (2.2, 0.8, 0.5)], fg_rocks=[(2.0, 0.0, 0.7)],
     dress_pines=[(20.0, -5.4, 12.0)], dress_crags=[(6, 2.8, 4, 1.2, 0.7)],
     dress_gorse=[(7, -2, 0.7), (6, 2, 0.6), (10, 2.5, 0.8), (11, -3.5, 0.9), (12, 4, 0.9), (13, -2, 0.7), (9, 3.5, 0.7), (15, -4.5, 1.0), (14, 3.5, 0.8), (20, 5, 1.1)], clear_hill=(160.0, 150.0, 6.0))
-PRESETS['camp_bank'] = dict(loc='camp', cam=(-140.0, -17.3, 0.0), cam_dz=2.0, look=(-43.0, 6.9, -16.6), sd=6.0, lens=30.0, marks=mk_camp_bank, hill2=True, far_scots=True, bridge_pairs=(-26.0, 26.0, 6.0),
+PRESETS['camp_bank'] = dict(loc='camp', cam=(-95.0, -15.0, 0.0), cam_dz=2.0, look=(-2.3, 22.5, -16.5), sd=6.0, lens=26.0, camp_banners=False, marks=mk_camp_bank, hill2=True, far_scots=True, bridge_pairs=(-26.0, 26.0, 6.0),
     over=dict(glit_stretch=1.0, glit_s=0.9, foam_k=2.0, wake_k=2.0, sun_k=2.1, reed_k=0.5),
     veg=dict(seed=6, half=20, tuft_k=1.3, tuft_gain=1.5, grass=[(1.5, 9, 420, 0.08, 0.13), (9, 40, 700, 0.12, 0.2)], flowers=700, reeds=[(6, 70, 500)]),
-    fg_banner=(7.0, 2.3), clear=[(-140.0, -17.3, 5.0)], fg_banner_yaw=30, fg_spears=[], fg_barrels=[(3.0, 1.7)], fg_rope=True, camp_fg=camp_fg)
+    fg_banner=(7.0, 2.3), clear=[(-95.0, -15.0, 9.0)], fg_banner_yaw=30, fg_spears=[], fg_barrels=[(3.0, 1.7)], fg_rope=True, camp_fg=camp_fg)
 PRESETS['valley_loop'] = dict(loc='valley', cam=(-72.0, -133.0, 229.0), look=(12.0, 36.0, 0.0), sd=300.0, lens=21.0, marks=lambda A: {}, veg=None, farms=True, hill2=True, heather_n=900, gorse_n=200, crag_n=140, pine_n=60,
     over=dict(foam_k=3.0, glit_s=0.35, glit_t=0.12, glit_stretch=1.0, wake_k=4.0, haze_max=0.2, world=0.0, lift=(0.03, 0.028, 0.07), key=(2.05, 1.58, 0.84), shade=(0.12, 0.10, 0.30), tint=(0.065, 0.052, 0.15), sun_dir=(-0.68, 0.68, -0.28)))
 for _n, _fn in (('hill_over', fg_hill), ('camp_bank', fg_bank)): PRESETS[_n]['fg'] = _fn
@@ -1559,10 +1561,12 @@ def table_extras(A, pr):
     for i in range(6): B.box('t_cream', (tx - 1.3 + 0.52 * i, ty - 2.0, tz + 0.032), (0.2, 2.1, 0.005))
     B.finalize('table_extras')
 _mk('camp_table', loc='camp', cam=(-13.0, -30.0, 0.0), cam_dz=1.3, look=(-13.0, -26.5, 1.55), lens=22.0, sd=5.0, over=dict(_OVR), camp_fg=table_extras,
-    marks_spec=[('cress', 'cressingham', 4.0, 360)], fg_list=[('barrel', 1.8, 720)], veg=dict(_VEG, half=22), drift='push 8 %/s; hooks: set_scale_tip(A, deg), set_chest_lid(A, deg)')
-_mk('riverbank', loc='riverbank', cam=(-17.0, 60.0, 0.0), cam_dz=1.8, look=(0.0, 30.0, 1.6), lens=22.0, sd=10.0, over=dict(_OVR, reed_k=0.8),
-    marks_spec=[('e1', 'foot', 5.0, 90), ('e2', 'foot:foot_r', 6.0, 250), ('e3', 'foot', 7.5, 400), ('e4', 'knight:knight_b', 9.0, 175)], fg_list=[('reeds', 1.6, 640), ('reeds', 2.0, 40), ('gorse', 2.4, 560, 0.4)],
-    veg=dict(_VEG, half=30, reeds=[(2, 40, 600)]), drift='slide 40 px/s + push; water on the right for the jumps (splash())')
+    marks_spec=[('cress', 'cressingham', 4.0, 360)], fg_list=[('barrel', 2.4, 820)], veg=dict(_VEG, half=22), drift='push 8 %/s; hooks: set_scale_tip(A, deg), set_chest_lid(A, deg)')
+_mk('riverbank', loc='riverbank', cam=(-27.0, 54.0, 0.0), cam_dz=1.8, look=(-28.0, 22.0, -3.5), lens=22.0, sd=10.0, over=dict(_OVR, reed_k=0.6, foam_k=0.5),
+    marks_spec=[('e1', 'foot', 4.5, 80), ('e2', 'foot:foot_r', 6.0, 215), ('e3', 'foot', 8.5, 130), ('e4', 'knight:knight_b', 11.0, 45)], fg_list=[('reeds', 1.7, 30), ('gorse', 2.2, 380, 0.4)],
+    veg=dict(_VEG, half=30, reeds=[(2, 40, 90)]), drift='slide 40 px/s + push; the channel is on the right: splash() points in PRESETS["riverbank"]["splashes"]')
+PRESETS['riverbank']['splashes'] = [at_px(PRESETS['riverbank'], d, xp) + (0.0,) for d, xp in ((9.0, 520), (11.0, 640), (13.0, 380))]
+PRESETS['riverbank']['splash_size'] = 1.5; PRESETS['riverbank']['splash_ages'] = [0.2, 0.35, 0.5]
 _mk('river_low', loc='riverbank', cam=(-26.0, 46.0, 0.0), cam_dz=0.9, look=(-44.0, 44.0, 0.9), lens=22.0, sd=10.0, over=dict(_OVR, reed_k=0.4, foam_k=0.15),
     marks_spec=[], fg_list=[('reeds', 1.4, 60), ('reeds', 1.6, 670), ('rock', 1.8, 380, 0.3)], veg=dict(_VEG, half=34, reeds=[(2, 40, 160)]), splash_size=1.8, splash_ages=[0.15, 0.3, 0.45], drift='quick push; splash() crowns at pr["splashes"]')
 PRESETS['river_low']['splashes'] = [at_px(PRESETS['river_low'], d, xp) + (0.0,) for d, xp in ((9.0, 150), (10.5, 380), (9.5, 610))]
