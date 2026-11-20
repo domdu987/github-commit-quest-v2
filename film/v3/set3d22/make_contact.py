@@ -14,7 +14,7 @@ def main():
     if '--sheet-only' not in sys.argv:
         for sh in shots:
             for w in frames_for(sh):
-                while subprocess.run("pgrep -f 'beck.py (shot|still|board)|bpy|blender|render_' >/dev/null", shell=True).returncode == 0: time.sleep(0.25)
+                while subprocess.run("pgrep -f 'python.*beck[.]py (shot|still|board)' >/dev/null", shell=True).returncode == 0: time.sleep(0.25)
                 t0 = time.time(); r = subprocess.run([sys.executable, os.path.join(HERE, 'beck.py'), 'shot', sh, w], capture_output=True, text=True)
                 dt = time.time() - t0; line = [l for l in r.stdout.splitlines() if 'frame' in l]; print(sh, w, '%.1fs' % dt, line[-1] if line else r.stderr[-300:], flush=True)
                 tims['%s_%s' % (sh, w)] = round(dt, 1)
