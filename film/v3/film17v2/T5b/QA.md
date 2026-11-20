@@ -11,8 +11,8 @@ Scope: this part covers g1211-1296 only. g1297-1383 is rendered by T5b2. I did n
 ## What changed from the prepared recipe (all director-approved)
 - Camera override from g1250 (eased in by g1274), raised to about 1.5 m above floor (override.json).
 - Day lights scaled to 0.78 (eased in over g1211-1241). Night values copied from T5a.
-- Skylight beam fx faded to 0 by g1218 (beam_scale), because the beam veiled the whole frame. All of g1212-1296 are beam-off. Verified: g1240 via beam_k=0 equals a direct strength-0 render (diff 0.000).
-- Cast-leak fix: stale c2_/back_* actors cleared before every stage_cast2. Frames g1212-1264 and g1265-1296 were re-rendered after fixes; g1211 is from the first run (first frame of its process, clean).
+- Skylight beam fx OFF for the whole part (beam_scale = 0 on every frame, incl. g1211-1218, re-rendered after the director's follow-up because T5a is beam-off too), because the beam veiled the whole frame. Verified: g1240 via beam_k=0 equals a direct strength-0 render (diff 0.000). Re-measured after the g1211-1218 re-render: luma unchanged (mean 93.3, max step 2.4); g1211 viewed at 360x640 and clean.
+- Cast-leak fix: stale c2_/back_* actors cleared before every stage_cast2. Frames g1212-1264 and g1265-1296 were re-rendered after fixes; g1211-1218 were re-rendered last, beam-off, in their own process after a warm-up frame.
 - Mouths closed on every frame (no talk option used). Mid-take acting follows the plan: escort held, Dupont shrug in the second half.
 
 ## Frames viewed at FULL size (720x1280) and at phone size (360x640 strip)
