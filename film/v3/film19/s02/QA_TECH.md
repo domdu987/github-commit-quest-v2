@@ -35,3 +35,19 @@ Blur judgement (qa_auto flag on g48-85): NOT blur. Laplacian variance is 11-17 %
 - The director agrees.
 - Waived for g48-90 and g126-146.
 - The soft deck texture (g150-199) stays on the polish list.
+
+## Round 11 (director QA-tech): FAIL
+Take g48-199 (joined parts -> /tmp/s02q11.mkv, 152 frames, 720x1280 30 fps); frames g48-199 in /tmp/qa19_r11/s02/ (f<g>.png). Sheets every 6 frames and every 2 frames over g160-190 checked. Frame-diff (ffmpeg bilinear 90x160 grey, pairs g58-190): median 9.1, p90 14.1, max 15.5 at g110 (team-reported 8.45 / 14.01 is close; my pairs include the ease-in). Limits median >= 4, p90 >= 10: OK. Peak <= 20: OK.
+Verified OK:
+- Ease-in is smooth: 2.3 at g58 rising to 15.5 at g110, with no stall.
+- g58-125 is ONE hump (no dips, no pops).
+- Slab at top right is GONE (g48-90 show only sea, sky and clouds).
+- Colour: sat 0.630, luma 93.3 (range 71-117 per frame), inside 85-110.
+- No black, blank or frozen frames; no pop.
+- Start g57: ship ~7 % of frame height, findable.
+- Medium landing: nobody cut, faces about 20-25 % of frame height, head centres y ~470-540 (inside 450-760), feet have contact shadows, nothing floating, no props through faces.
+Issues:
+1. EASE-OUT TOO SHORT (blocking). The camera holds 10-12 until g167 (11.1) and then stops: g168 9.9, g169 7.6, g170 5.3, g171 3.8, then a flat 4.1-4.8 orbit. It falls from about 11 to 4 in 4 frames, so it does not ease out over 10 or more frames. There is no single-frame drop from more than 10 to less than 3 (the floor is 3.8), but it is still a visible brake, the "stops dead" failure of rounds 9 and 10 in a milder form. The speed from the hump (15.5 at g110) down to g134 is gradual, but it then climbs again and stays at 8.2-11.9 through g167. The move is a plateau with a late second rise (8.2 at g134 to 11.9 at g165) rather than a clean fall. Fix: bring the table so that the speed starts to fall by ~g125 and reaches the orbit speed (~4) smoothly at g170 (e.g. 15 -> 11 at g140 -> 7 at g155 -> 4 at g170). The easing table should have u'(g) fall linearly over the last 30-40 frames, not stay near the peak until g167.
+2. g134 dip: 8.2 vs neighbours 9.1 / 8.6 (about 90 %), so mid-move there is NO dip below 40 %; but g134 is the minimum of the shoulder before the second rise (g146-165). Folded into issue 1.
+3. Acting NOTE (not blocking): captain's mouth is wide open ("O" shock) over g158-168, and again a half-open mouth at g~168-172. The brief says no mouth movement. It is a held shock expression, not talking; the director decides. Chart flip (g160-170) is hard to read at phone size: the chart is a pale slab with no visible header band. Both characters keep moving (scratch, shrug g181-189), nobody is still for more than 1.5 s.
+Numbers: median 9.1, p90 14.1, peak 15.5 (g110), final ease-out 11.1 -> 3.8 over g167-171 (4 frames, needs 10+), luma 93.3, sat 0.630.
