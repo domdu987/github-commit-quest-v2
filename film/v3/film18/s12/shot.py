@@ -13,10 +13,10 @@ G0, G1 = 944, 1003
 H_IN, H_OUT = 7, 8                   # dissolve 11 in / dissolve 13 out
 FIRST, LAST = G0 - H_IN, G1 - 1 + H_OUT
 mode, rng = c18.parse_args(FIRST, LAST)
-T = c18.Take('s12', FIRST, LAST, draft=(mode == 'draft'), cam_fn=c18.rhythm_cam(push=0.05, slide=0.0, pulses=(), orbit=-10))
+T = c18.Take('s12', FIRST, LAST, draft=(mode == 'draft'), cam_fn=c18.compose(c18.tilt_cam(5.6), c18.rhythm_cam(push=0.05, slide=0.0, pulses=(), orbit=-10)))
 ST = cast18.STORY18
 ENV_WALK = ST['envoy_walk'][1]; ENV_BOW = dict(ST['envoy_bow'][1], prop_r=dict(type='banner', angle=-90, scale=1.0))
-FOLK = [('old_man_worried', -13.1), ('woman_worried', -9.7), ('old_man_worried', -6.3), ('woman_worried', 7.3), ('old_man_worried', 10.7), ('woman_worried', 14.1), ('child_stand', -16.5)]
+FOLK = [('old_man_worried', -13.0), ('woman_worried', -11.0), ('old_man_worried', -9.0), ('woman_worried', -7.0), ('child_stand', -5.2), ('old_man_worried', -3.6), ('woman_worried', -2.0), ('old_man_worried', 6.0), ('woman_worried', 8.0)]
 HEIGHT = dict(old_man=3.0, woman=3.0, child=2.0, envoy=3.0)
 G_WALK0, G_ARR, G_BOW1 = FIRST, 978, 992
 from mathutils import Matrix
@@ -30,25 +30,25 @@ def frame(T, g):
     heads = []
     # envoy: walks from the gate (y -14) to the bridge middle (y -28), then bows
     u = c18.ramp(g, G_WALK0, G_ARR) if g < G_ARR else 1.0
-    y = c18.lerp(-14.0, -28.5, u); x = 0.2
+    y = c18.lerp(-14.0, -25.0, u); x = -2.6
     if g < G_ARR:
-        pose = cast18.cycle('envoy', ((g - G_WALK0) % 28) / 28.0, 'walk', -1, base=ENV_WALK)
+        pose = cast18.cycle('envoy', ((g - G_WALK0) % 28) / 28.0, 'walk', -1, base=dict(ENV_WALK, prop_r=dict(type='banner', angle=-90, scale=1.5)))
     else:
         b = c18.ramp(g, G_ARR, G_BOW1)
         pose = cast18.lerp_pose(dict(ENV_WALK, legs='stand'), ENV_BOW, b) if hasattr(cast18, 'lerp_pose') else ENV_BOW
-        pose['prop_r'] = dict(type='banner', angle=-90, scale=1.0)
+        pose['prop_r'] = dict(type='banner', angle=-90, scale=1.5)
         pose['t'] = g / 30.0
     pose['t'] = g / 30.0
     m = c18.pcard('envoy', pose, 'env%d_%s' % (g, 'w' if g < G_ARR else 'b'))
-    c18.put(m, (x, y, 0.0), cam, height=3.0, name='envoy')
-    heads.append(T.head_row((x, y, 0.0), 3.0, 'envoy'))
+    c18.put(m, (x, y, 0.0), cam, height=4.4, name='envoy')
+    heads.append(T.head_row((x, y, 0.0), 4.4, 'envoy'))
     for i, (pn, fx) in enumerate(FOLK):
         c, p = ST[pn]; p = dict(p); p['t'] = g / 30.0
-        h = (2.0 if pn.startswith('child') else 3.0) * 1.7
+        h = (2.0 if pn.startswith('child') else 3.0) * 2.1
         mm = c18.pcard(c, p, 'folk_%s_%d' % (pn, g % 24))
         z = 16.0 + (0.9 if pn.startswith('child') else 0.5)                       # stand on the walk, raised so the torso clears the merlons
-        c18.put(mm, (fx, -3.0, z), cam, height=h, name='folk%d' % i)
-        heads.append(T.head_row((fx, -3.0, z), h, 'folk'))
+        c18.put(mm, (fx, -4.2, z), cam, height=h, name='folk%d' % i)
+        heads.append(T.head_row((fx, -4.2, z), h, 'folk'))
     return dict(heads=heads)
 
 

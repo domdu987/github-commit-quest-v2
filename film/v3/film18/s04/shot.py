@@ -15,11 +15,20 @@ FIRST, LAST = G0 - H_IN, G1 - 1 + H_OUT
 G_JIMO = c18.g_of(11.91)            # 360
 
 mode, rng = c18.parse_args(FIRST, LAST)
-t_snap = (G_JIMO - 8 - G0) / float(G1 - G0)
-T = c18.Take('s04', FIRST, LAST, draft=(mode == 'draft'), moves=[dict(t=round(t_snap, 3), d=0.84, dur=9)], cam_fn=c18.rhythm_cam(push=0.12, slide=0.0, orbit=-14.0, pulses=()))
+def dolly(T, g, t):
+    """one eased dolly toward Jimo with a truck: it starts high and far so Jimo (right) AND Ju (far left, beacon fire) are both in frame, then closes on Jimo; a held punch-in on "จี๋โม่"."""
+    e = c18.ease(t) * 0.75 + t * 0.25
+    L0, L1 = (-95.0, 15.0, 70.0), (8.0, -88.0, 50.0); K0, K1 = (-125.0, 175.0, -55.0), (29.0, -30.0, 5.0)
+    k = c18.ramp(g, G_JIMO - 8, G_JIMO + 1) * 0.16                                  # the held punch-in (+16 %)
+    loc = [c18.lerp(a, b, e) for a, b in zip(L0, L1)]; look = [c18.lerp(a, b, e) for a, b in zip(K0, K1)]
+    loc = [l + (kk - l) * k for l, kk in zip(loc, look)]
+    return dict(loc=tuple(loc), look_at=tuple(look), lens=22)
+
+
+T = c18.Take('s04', FIRST, LAST, draft=(mode == 'draft'), cam_fn=dolly)
 c18.fix_vista(T)
-c18.fix_sky(T)
-print('hidden pennants near Ju:', c18.clear_sightline(T, 'ju', gs=(FIRST, 330, 360, LAST)), flush=True)
+c18.fix_sky_clean(T, 'sky_DUSK')
+print('hidden pennants near Ju:', c18.clear_sightline(T, 'ju', gs=(FIRST, 330, 360, LAST), radius=130), flush=True)
 
 
 def frame(T, g):

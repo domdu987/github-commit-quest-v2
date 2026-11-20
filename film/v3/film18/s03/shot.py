@@ -15,9 +15,16 @@ FIRST, LAST = G0 - H_IN, G1 - 1 + H_OUT
 G_PEN0, G_PEN1 = c18.g_of(7.32), 294      # pennants pop (full count before the shot ends)
 
 mode, rng = c18.parse_args(FIRST, LAST)
-T = c18.Take('s03', FIRST, LAST, draft=(mode == 'draft'), cam_fn=c18.compose(c18.tilt_cam(-45.0), c18.rhythm_cam(push=0.0, slide=0.0, orbit=-19.0, pulses=())))
+def dolly(T, g, t):
+    """one eased dolly + truck over the plain (TAKE gate recipe): the camera flies from the high establishing view down toward the dense western towns, look-at drifting with it."""
+    e = c18.ease(t) * 0.7 + t * 0.3
+    L0, L1 = (40.0, -135.0, 70.0), (-95.0, 15.0, 70.0); K0, K1 = (-12.0, 100.0, -55.0), (-125.0, 175.0, -55.0)
+    return dict(loc=tuple(c18.lerp(a, b, e) for a, b in zip(L0, L1)), look_at=tuple(c18.lerp(a, b, e) for a, b in zip(K0, K1)), lens=20)
+
+
+T = c18.Take('s03', FIRST, LAST, draft=(mode == 'draft'), cam_fn=dolly)
 c18.fix_vista(T)
-c18.fix_sky(T)
+c18.fix_sky_clean(T, 'sky_DUSK')
 
 
 def frame(T, g):
