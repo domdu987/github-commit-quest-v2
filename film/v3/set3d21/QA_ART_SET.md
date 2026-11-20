@@ -213,3 +213,12 @@ The two builder patches (camp_table centre slot + rug; `splash()` spray material
 If the patch is late, the s04 fallback is: move `scale_stand*` and `scale_beam*` objects +0.4 m along the table, stage `cress` at the table centre +0.2 m, and pull the camera back 0.4 m. Check that no pan or lid edge is within 25 px of his head.
 
 Re-check after the patch: camp_table with and without Cressingham, plus the splash strip at ages 0.1-0.9 in river_low with the new VIVID. Phone sheet only.
+
+## Re-check R3 (builder commit d970319; phone sheet only: styleboard/table_pair.jpg, styleboard/chk2.jpg)
+
+| tile | verdict | finding | team note |
+|---|---|---|---|
+| camp_table | **PASS** | Cressingham now stands in a clear centre slot between the open chest and the scale. No lid edge or pan touches his head. The empty version still reads as "his place" (the cloak on the stool shows behind the table). VIVID (1.05, 1.1): sat 0.52, luma 94, in band. Remaining: the rug's pale bars fill the bottom about 25 % and the canopy the top about 20 %, so the frame is a little boxed in | Shots 10/28: start the push already about 10 % in and aim it at the table top. Or hide the rug stripes (`table_extras_t_cream`) and tilt up 2-3 deg so that, by the end of the push, the rug is at most 12 % of the frame. Keep the canopy valance in the top 15 % |
+| river_low + `splash()` | **PASS** | The spray is now white, the lollipop column is gone, and the crown, droplets and ring read as a splash on the phone at ages 0.1-0.6. Age 0.9 is a fading droplet ring, which is right for the tail. The three-crown tile reads as "ตูม ตูม ตูม". The water is daylight teal-green (acceptable at gamma 1.9). VIVID (1.9, 1.3): sat 0.507, luma 141, inside the bright-exterior exception. Remaining: the white near-bank foam band, about 15 % of the frame | Shot 31: frame the band out. Push in toward the crowns with the band below the bottom edge by the second splash (60.9 s), or set `PRESETS['river_low']['over']['foam_k'] = 0.6` before the build. Time the splash ages so that each "ตูม" frame shows age 0.25-0.4. Shot 30 (riverbank) uses the same `splash()` |
+
+**SET gate closed: every preset is PASS or PASS-WITH-NOTES. No builder work is outstanding.** Wave-2 shots 10 and 30-31 can render their final frames.
