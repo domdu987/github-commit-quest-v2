@@ -1,10 +1,15 @@
-# QA s23 (shot 23, TOWER tower_fair DAY 1910, g 1656..1731 + handles g 1648..1655 (dissolve in) and 1732..1739 (dissolve out into shot 24))
-Checked at 6 fps contact + phone sheet.
-- Heads: Eiffel_old head centre y 596-700, width 145-269 px, chin <= 786 (< 880); all frames pass head_report.
-- Mouths: never animated.
-- Callback of shot 15 (same two-shot in depth, official behind-right), but a PULL (10 %/s) with slide/arc/tilt drift; snap x1.9 on 'อีก 70 ปี' (g 1706).
-- Document: official holds it out g 1664-1676, Eiffel takes it (g 1676), moves it to the left hand behind a blink (g 1696), then on g 1706 (blink swap: bowler off, worried -> proud smile) he holds the bowler out at chest height with the right hand.
-- DEVIATION: the cast20 arm rig cannot lift a hand overhead (hand y saturates ~1.0), so the bowler is "doffed" held out beside the chest, not raised above the head.
-- 1910 vs 1889: set_year(1910) differs only in the crowd/pavilion layout and the biplane (not in frame here); the 1910 read is carried by the old-Eiffel swap (white beard, stoop) and the document, as QA_TECH 17 allowed.
-- Lamp-post FG shows at the left/right edge; bench out of frame.
-- Frame-diff (90x160 grey, in-shot g 1657..1731): median 5.23, p90 11.10 (target 4 / 12: p90 slightly under).
+# QA s23 v3 (shot 23, TOWER tower_fair DAY 1910, g 1656..1731 + handles g 1648..1655 (dissolve in) and 1732..1739 (dissolve out into shot 24))
+After TAKE_ART (F1-F3 callback), TAKE_B and QA_TEAM §G. Checked at 6 fps contact + phone sheet.
+- `qa_stats.py take.mkv`: **saturation 0.575, brightness 93.4, in-shot motion median 6.98 p90 10.61** (sat/luma met; p90 1.4 short). In-shot only (g 1657..1731): median 6.01, p90 9.46, max ~18.
+- Callback of s15 v3: same staging (camera 3.5 D from Old Eiffel, cam z 1.6; the official 0.5 D nearer and 1.25 D right, steps back g 1684-1702; gent back card FG bottom-left; 40 crowd cards bobbing; preset lamp-post/bench out of frame: the black rectangles and pole of v1 are gone), as a PULL 10 %/s + arc 17 deg/s + snap x1.6 on 'อีก 70 ปี' (g 1706).
+- Heads: Old Eiffel head width 173-263 px (centre y 536-638, chin <= 742); no head cut by the frame edge. Mouths never move.
+- Beat: the official hands the NEW sealed document (g 1664-1676), Eiffel takes it, moves it to the left hand behind a blink (g 1696); g 1706 blink swap worried -> proud and the bowler comes off (hat_off) and is held out in the right hand.
+- NOT FIXED: the bowler still reads as a dark dish held at chest height. The cast20 arm rig clamps the hand near chest height (hand y > ~1.0 has no effect), so it cannot be raised to the head; the prop is the cast20 `bowler_held` as the director asked. The dark ball on the document is the left fist holding it.
+- 1910 vs 1889: carried by Old Eiffel (white beard) and the new document; set_year(1910) differs little in this framing.
+- take.mkv 31.4 MB (single file).
+
+## v4 (QA_TEAM §I client decision)
+- Same banner "EXPOSITION UNIVERSELLE 1889", fluttering pennants and low raking sun as s15 v4 (callback), crowd + flags move.
+- `qa_stats2.py take.mkv`: sat 0.568, vivid 50.1 % (>= 45), luma 93.4, warm 39.9 % / cool 31.5 %, motion median 6.92 p90 10.74, still 0 %. In-shot g 1657..1731: median 5.89, p90 9.51 (p90 short of 12).
+- Bowler is still the flat dish (arm rig limit, see above).
+- take.mkv 31.2 MB.
