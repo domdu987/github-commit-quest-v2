@@ -11,6 +11,6 @@
 | s08 | 7 | **PASS** R3 (QA-art R2 PASS + QA-tech R3 PASS + director look) | 5866892 (USE THIS) | gate/s08/QA_TECH_R3.md, QA_ART_R2.md |
 | s09 | 8 | **PASS** R4 (QA-tech; 3 cosmetic should-fix accepted: edge touches, coat notch) | 084ef5b (USE THIS) | gate/s09/QA_TECH_R4.md |
 | s10 | 9 | FAIL R3 (head, whip, boxes count, drawer OK; re-render finger insert g1406-19 + card shot g1474-1515; dark boxes <=35) | e6fe1c2 | gate/s10/QA_TECH_R3.md, QA_ART_R3.md |
-| s11 | 10 | R2: QA-art PASS, QA-tech FAIL. Director check (director_check_R2.png): shot-28 card has no hand (propped/floating g1589-1654) + loose white crossed rods near Bertillon g1599-1609 -> small fix R3 | 95c6e9b | gate/s11/QA_TECH_R2.md, QA_ART_R2.md |
+| s11 | 10 | **PASS** R3 (QA-art R2 PASS + QA-tech R3 PASS; should-fix accepted: eye pop g1607 reads as a 'caught' take, chair post, weak fist) | 55446ee (USE THIS) | gate/s11/QA_TECH_R3.md, QA_ART_R2.md |
 | s12 | 11 | **PASS** R3 (QA-tech; chins measured all frames, cards 55-72 px) | 3c91397 (USE THIS) | gate/s12/QA_TECH_R3.md |
 | s13 | 12 | **PASS** (QA-art R3 SHIP; QA-tech R2 blocker = hand on bar, verified fixed in R3) | render17/team12 ba82a63 (USE THIS; later ca5cc1a = unreviewed head-mask variant, ignore) | rhythm 4.55/13.68; nit: tripod hood g1947-1965 |
