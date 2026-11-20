@@ -2,43 +2,99 @@
  "take": "s06",
  "film": 20,
  "shots": [
-  6
+  6,
+  7,
+  8
  ],
  "g0": 404,
- "g1": 466,
- "first_g": 395,
- "n_frames": 75,
+ "g1": 604,
+ "first_g": 396,
+ "n_frames": 212,
  "shot_ranges": {
   "6": [
    404,
    465
+  ],
+  "7": [
+   466,
+   512
+  ],
+  "8": [
+   513,
+   603
   ]
  },
- "handle_in": 9,
+ "handle_in": 8,
  "handle_out": 4,
  "transition_in": {
   "type": "dissolve",
   "frames": 13
  },
  "transition_out": {
-  "type": "cut",
+  "type": "match",
   "frames": 0,
-  "at": 466,
-  "note": "hard cut at g 466; out-handle g 466..469 rendered in 3D (the move continues)"
+  "at": 604,
+  "note": "match cut into T09 (team7) at g 604; out-handle g 604..607 continues the move"
  },
- "set": "v3/set3d20 CAFE cafe_wide DAY, window view stub, smoke 0 (keyed every frame)",
- "cast": "v3/cast20 painter20 / composer20 / poet20 / architect20 (outraged poses, news20 / paintbrush+palette props waving at ~1.7 Hz, arm + head sway, 3 Hz breathing bounce; poet + architect flipped to face the table) + waiter_idle; mouths held (outraged = held open, never animated); contact decal + proxy shadow",
- "camera": "custom 22 mm cafe_wide start moved to (-5.0, -2.2, 1.2) D (preset (-4.89, -2.63, 2.07)), aim tilted +4 deg above the camera->table line (pitch ~11.5); c20.CamPath push 8 %/s toward the artists' table + truck-left slide 40 px/s + snap x1.3 (+0.1 D pan) g 442..457 on 'สี่สิบกว่าคน'; decay 0.25 (still moving on the last frame)",
+ "set": "v3/set3d20 CAFE cafe_wide DAY, window view stub, smoke ramp keyed per frame, add_signature keyed per frame; saturation grade 1.45",
+ "cast": "v3/cast20 painter20 / composer20 / poet20 / architect20 (outraged: wave greeked newspapers g 396-500, then jab pointing fingers at the window g 500-603, 3 Hz bounce) + waiter (idle sway, off to the right) + Maupassant SEATED on the banquette mark the whole take (maupassant_seated_toast_smug, mouth held 'smile', sips, idle breathing only after g 585); runtime meshes: quill + two sleeved hands (A cream / B plum) hand the quill over the sheet g 452-520, FONT heading 'PROTESTATION' on the sheet; signatures 14 -> 15 (g 471) -> 16 (g 496); forge smoke ramps 0 -> 1 over g 513-572",
+ "camera": "ONE continuous travel take (WORKER20 \u00a78): waypoint camera (Catmull-Rom on loc + look, no stop): slide past the waving artists g 396-440, push-in snap g 430-446 on '\u0e2a\u0e35\u0e48\u0e2a\u0e34\u0e1a\u0e01\u0e27\u0e48\u0e32\u0e04\u0e19' (444), descend and push DOWN onto the protest sheet g 446-490 (the cafe_table_insert pose at g 490), over the sheet g 490-512, rise + swing to the window g 512-572 (smoke 1.0 at 572), sweep down-right to the banquette g 572-603; last frame g603 = (3.533, 6.506, 0.983) D looking at (1.692, 13.16, 2.944) D = team7's T09 start pose, handle g604 (3.505, 6.531, 0.994), arriving with ~0.03 D/frame velocity; 22 mm, no shift, no DOF",
+ "end_cam": {
+  "g": 603,
+  "loc_D": [
+   2.618,
+   9.596,
+   1.334
+  ],
+  "look_at_D": [
+   1.692,
+   13.16,
+   1.999
+  ],
+  "lens_mm": 22.0,
+  "shift": [
+   0.0,
+   0.0
+  ],
+  "handle_g604": {
+   "loc_D": [
+    2.599,
+    9.6,
+    1.35
+   ],
+   "look_at_D": [
+    1.692,
+    13.16,
+    2.0
+   ]
+  },
+  "drift_per_frame_D": [
+   -0.019,
+   0.004,
+   0.016
+  ],
+  "note": "team7's exact T09 start values (their s09/meta.json start_cam), relayed by the director; handles g604-607 keep the same drift"
+ },
  "events": {
   "snap": [
-   442,
-   457
+   430,
+   446
   ],
   "word_count": 444,
-  "art_arms_up": [
-   442,
-   457
-  ]
+  "word_sign": 469,
+  "land_1": 471,
+  "handover": [
+   483,
+   494
+  ],
+  "word_paper": 491,
+  "land_2": 496,
+  "smoke_ramp": [
+   513,
+   572
+  ],
+  "word_chimney": 572,
+  "end_pose_g603": true
  },
  "dof": "none",
  "text": "none",
@@ -51,68 +107,79 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 25.06,
- "s_per_frame_cpu_mean": 47.3,
+ "s_per_frame_wall_mean": 22.5,
+ "s_per_frame_cpu_mean": 43.74,
  "heads_px_in_shot": {
   "art1": {
    "w": [
-    91,
-    140
+    118,
+    664
    ],
    "y": [
-    642,
-    666
+    -266,
+    707
    ],
-   "bottom_max": 721
+   "bottom_max": 894
   },
   "art2": {
    "w": [
-    69,
-    94
+    95,
+    303
    ],
    "y": [
-    701,
-    709
+    -25,
+    721
    ],
-   "bottom_max": 756
+   "bottom_max": 820
   },
   "art3": {
    "w": [
-    77,
-    110
+    109,
+    590
    ],
    "y": [
-    679,
-    689
+    -287,
+    711
    ],
-   "bottom_max": 741
+   "bottom_max": 826
   },
   "art4": {
    "w": [
-    98,
-    159
+    150,
+    93654
    ],
    "y": [
-    617,
-    653
+    -28151,
+    33682
    ],
-   "bottom_max": 707
+   "bottom_max": 78284
+  },
+  "mau": {
+   "w": [
+    61,
+    138
+   ],
+   "y": [
+    128,
+    721
+   ],
+   "bottom_max": 764
   },
   "wtr": {
    "w": [
-    87,
-    131
+    117,
+    12984
    ],
    "y": [
-    655,
-    668
+    -10704,
+    695
    ],
-   "bottom_max": 720
+   "bottom_max": 788
   }
  },
  "framediff_in_shot": {
-  "median": 4.86,
-  "p90": 13.94
+  "median": 13.02,
+  "p90": 22.95
  },
  "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
 }

@@ -5,37 +5,109 @@
  "cues": [
   {
    "kind": "ambience",
-   "t": 0.0,
-   "dur": 2.5,
-   "frame": 0,
-   "end_frame": 75,
-   "note": "Café 1887, day: murmur of an angry crowd, chairs scraping, gas-lamp hiss, cups clinking; far-off hammering of the building site through the window"
+   "t": 13.2,
+   "dur": 7.033,
+   "frame": 396,
+   "end_frame": 607,
+   "note": "Café 1887, day: angry crowd hubbub, gas-lamp hiss, chairs, cups; sun shafts through the windows; far site hammering"
   },
   {
    "kind": "foley",
    "t": 13.467,
-   "dur": 0.533,
+   "dur": 1.2,
    "frame": 404,
-   "end_frame": 420,
-   "note": "artists shaking newspapers: paper rattle + cloth swishes, indignant hubbub (no words)",
-   "peak_frame": 410
+   "end_frame": 440,
+   "note": "artists shake newspapers: paper rattle + cloth, indignant (wordless) murmur",
+   "peak_frame": 418
   },
   {
    "kind": "accent",
-   "t": 14.733,
-   "dur": 0.5,
-   "frame": 442,
-   "end_frame": 457,
-   "note": "snap push on 'สี่สิบกว่าคน' (forty-odd): short rising whoosh + a rhythmic fist-bang on the marble table",
-   "peak_frame": 448
+   "t": 14.333,
+   "dur": 0.533,
+   "frame": 430,
+   "end_frame": 446,
+   "note": "push-in snap on 'สี่สิบกว่าคน': rising whoosh + fist bang on the marble table",
+   "peak_frame": 444
+  },
+  {
+   "kind": "foley",
+   "t": 15.067,
+   "dur": 0.967,
+   "frame": 452,
+   "end_frame": 481,
+   "note": "quill scratching as the first signature is written; sleeve rustle",
+   "peak_frame": 468
+  },
+  {
+   "kind": "accent",
+   "t": 15.7,
+   "dur": 0.067,
+   "frame": 471,
+   "end_frame": 473,
+   "note": "first signature lands: pen tick + ink thud",
+   "peak_frame": 471
+  },
+  {
+   "kind": "foley",
+   "t": 16.1,
+   "dur": 0.367,
+   "frame": 483,
+   "end_frame": 494,
+   "note": "quill handed over: cloth swish, fingers on the shaft",
+   "peak_frame": 488
+  },
+  {
+   "kind": "accent",
+   "t": 16.533,
+   "dur": 0.067,
+   "frame": 496,
+   "end_frame": 498,
+   "note": "second signature lands: pen tick + ink thud",
+   "peak_frame": 496
+  },
+  {
+   "kind": "accent",
+   "t": 17.067,
+   "dur": 0.733,
+   "frame": 512,
+   "end_frame": 534,
+   "note": "camera rises off the sheet and swings to the window: whoosh",
+   "peak_frame": 522
+  },
+  {
+   "kind": "accent",
+   "t": 17.1,
+   "dur": 1.967,
+   "frame": 513,
+   "end_frame": 572,
+   "note": "forge smoke builds in the window: low rumbling swell",
+   "peak_frame": 572
+  },
+  {
+   "kind": "accent",
+   "t": 19.067,
+   "dur": 0.6,
+   "frame": 572,
+   "end_frame": 590,
+   "note": "'เหมือนปล่อง' black chimney of smoke: ominous brass sting",
+   "peak_frame": 576
+  },
+  {
+   "kind": "accent",
+   "t": 19.667,
+   "dur": 0.467,
+   "frame": 590,
+   "end_frame": 604,
+   "note": "sweep to the banquette: soft whoosh settling; room tone narrows",
+   "peak_frame": 598
   },
   {
    "kind": "cut",
-   "t": 15.533,
-   "dur": 0.0,
-   "frame": 466,
-   "end_frame": 466,
-   "note": "hard cut to shot 7 (protest sheet insert): the crowd hubbub drops to close pen scratching"
+   "t": 20.133,
+   "dur": 0.1,
+   "frame": 604,
+   "end_frame": 607,
+   "note": "handle: match into T09 (Maupassant at the banquette) at g 604"
   }
  ]
 }

@@ -13,16 +13,17 @@ G0, G1 = 996, 1093                 # shot = g G0..G1-1
 H_IN, H_OUT = 8, 4
 TR_IN = dict(type="dissolve", frames=13, note="DIS 13 into shot 15 from shot 14 (handle 8 frames g 988..995 rendered in 3D)")
 TR_OUT = dict(type="cut", frames=0, at=G1, note="hard cut to shot 16 (CAFE cafe_low) at g 1093; handle g 1093..1096 rendered in 3D")
-SET = "v3/set3d20 TOWER preset tower_fair, light DAY, year 1889, set_crowd(3) keyed every frame; the 24 crowd cards get a small keyed idle bob + sway; lamp-post/bench FG moved by the camera offset + FG_SHIFT"
-CAST = "v3/cast20 eiffel (proud -> worried + sweat swapped on the closed frame of a blink at g 1067, arm reaches, takes the document) + official (tricolour sash, doc_seal in the left hand held out toward Eiffel g 1008..1020, then hand to hip, happy); contact decals + proxy shadows; no lip-sync"
-CAMERA = "custom 22 mm, shift 0.06 kept, cam z 1.7 D, 6.6 D from Eiffel; CamPath push 10 %/s + slide -40 px/s + arc 8 deg/s + tilt drift 2.5 deg/s from -8.5 deg under his head line, decay 0.25, snap x2.3 (g 1064..1080, peak 1.9, tilt -4 deg) on 'ครบแล้วต้องรื้อ'"
-EV = dict(permit_word=1000, doc_reach=[1008, 1030], doc_in_eiffel_hand=1020, twenty_years=1041, drop_word=1067, face_swap_blink=[1066, 1068], snap=[1064, 1079])
+SET = "EXPOSITION UNIVERSELLE 1889 banner (Latin text objects on a red board + two poles, behind the pair) + 6 keyed fluttering pennant poles; low raking sun (key_dir elevation ~27 deg); v3/set3d20 TOWER preset tower_fair, light DAY (runtime grade: sat 1.28, exposure -0.36 for qa_stats), year 1889, set_crowd(3) keyed every frame; 24 preset crowd cards + 16 extra cast20 crowd cards (xcrowd_*) in the midground, all with a keyed idle bob + sway; preset lamp-post/bench moved out of frame; FG = a gent20 BACK card 3 D ahead of the lens, bottom-left, camera-relative"
+CAST = "v3/cast20 eiffel (proud -> worried + sweat swapped on the closed frame of a blink at g 1067, arm reaches, takes the document) + official (tricolour sash, doc_seal in the left hand held out toward Eiffel g 1008..1020, then hand to hip, happy; he steps back/aside g 1030..1062 so the snap lands on Eiffel); contact decals + proxy shadows; no lip-sync"
+CAMERA = "custom 22 mm, shift 0.06 kept, cam z 1.6 D, 5.4 D from Eiffel (v6: wider so the tower legs + banner stay behind him); CamPath push 6 %/s + slide -22 px/s + arc 8 deg/s + tilt drift 1.5 deg/s, decay 0.25, push-in x1.45 g 1003..1011 on 'ใบอนุญาต', snap x1.6 g 1064..1080 (peak 2.0, tilt -3 deg) on 'ครบแล้วต้องรื้อ'; the official stays in frame (steps back along the depth only)"
+EV = dict(push_in=[1003, 1011], permit_word=1000, doc_reach=[1008, 1030], doc_in_eiffel_hand=1020, twenty_years=1041, drop_word=1067, face_swap_blink=[1066, 1068], snap=[1064, 1079])
 YEAR, LIGHT = 1889, "DAY"
 CUTS = [G1]
 CUES = [
     (G0, G1, "ambience", "Champ de Mars, sunny day 1889: fair crowd murmur, distant brass band, flags snapping in the breeze"),
     (1008, 1022, "foley", "the official's arm stretches out with the sealed document; paper rustle, a ceremonial 'ta-da' flourish", dict(peak_frame=1014)),
     (1020, 1024, "foley", "Eiffel takes the document: crisp paper grab + tiny pleased 'hm' (non-verbal)", dict(peak_frame=1021)),
+    (1003, 1011, "accent", "push-in on 'ใบอนุญาต': soft whoosh + a paper-flutter swish", dict(peak_frame=1007)),
     (1064, 1079, "accent", "snap push on 'ครบแล้วต้องรื้อ': short airy whoosh rising", dict(peak_frame=1070)),
     (1066, 1070, "accent", "Eiffel's smile drops: comic descending slide-whistle 'womp' + a sweat-drop 'plip'", dict(peak_frame=1067)),
     (G1, G1, "cut", "hard cut to shot 16 (CAFE): ambience changes to the cafe room tone"),

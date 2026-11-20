@@ -1,0 +1,59 @@
+{
+ "take": "s09",
+ "fps": 30,
+ "note": "t = film seconds (g / 30)",
+ "cues": [
+  {
+   "kind": "ambience",
+   "t": 20.0,
+   "dur": 5.367,
+   "frame": 600,
+   "end_frame": 761,
+   "note": "Paris café: low murmur of the artists, cutlery and cups, a gas lamp hiss, far street noise through the window"
+  },
+  {
+   "kind": "foley",
+   "t": 20.4,
+   "dur": 0.933,
+   "frame": 612,
+   "end_frame": 640,
+   "note": "banquette leather creak, chair scrape and a heavy breath as he gets up; shoes on the tiles",
+   "peak_frame": 624
+  },
+  {
+   "kind": "foley",
+   "t": 21.333,
+   "dur": 0.6,
+   "frame": 640,
+   "end_frame": 658,
+   "note": "two quick tugs at the cravat: cloth rustle",
+   "peak_frame": 645
+  },
+  {
+   "kind": "foley",
+   "t": 22.133,
+   "dur": 1.6,
+   "frame": 664,
+   "end_frame": 712,
+   "note": "he turns on his heel, frock coat swish, arms-crossed creak",
+   "peak_frame": 690
+  },
+  {
+   "kind": "accent",
+   "t": 24.267,
+   "dur": 0.8,
+   "frame": 728,
+   "end_frame": 752,
+   "note": "quick push-in on 'สักครั้ง': short rising whoosh and a hush from the artists",
+   "peak_frame": 740
+  },
+  {
+   "kind": "dissolve",
+   "t": 25.1,
+   "dur": 0.367,
+   "frame": 753,
+   "end_frame": 764,
+   "note": "DIS 11 into T11 (site fence): café room tone crossfades to the building-site ambience"
+  }
+ ]
+}

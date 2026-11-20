@@ -9,26 +9,12 @@ from PIL import Image, ImageDraw
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PROJ = os.path.normpath(os.path.join(HERE, "..", "..", ".."))
-CFG = dict(take="s18", shot=18, g0=1221, g1=1302, first_g=1210, last_g=1305, handle_in=11, handle_out=4,
-           transition_in=dict(type="dissolve", frames=17, note="dissolve 17 f from shot 17: 11 handle frames g 1210..1220 rendered in 3D (17/2 + 2)"),
-           transition_out=dict(type="cut", frames=0, at=1302, note="hard cut to shot 19 at g 1302; handle g 1302..1305 rendered in 3D"),
-           set="v3/set3d20 TOWER tower_dusk (camera = T14 tower_dusk_chars lens + shift 0.10, moved to (-7.6,-220.6,1.4) m), light DUSK, year 1909 (antenna, hut, wagon + scrap cart on); runtime: antenna wire last-segment fix (c20.fix_antenna_wires), preset FG (lamp-post, kegs, planks) moved with the camera",
-           cast="cast20 eiffel_old (eiffel_old_worried arms: hand at chin; calm -> worried swap on the closed frame of the blink g 1253..1255), officer (officer_stern), riveter_hammer / riveter_tongs / riveter_forge as demolition men (sledge, crowbar, hammer in hand; expression neutral); staging moved 2-5 m toward the wagon (marks listed in shot.py DEMO_XY), all at ground z 0.113 D; nobody speaks",
-           camera="c20.CamPath: push 20 %/s decay 0.95 toward the group, slide -60 px/s, orbit -8 deg/s, tilt DOWN -4.5 deg/s (heads rise 732 -> 635), snap x1.3 15 f at g 1252..1267 on 'ใกล้วันรื้อ' (1254)",
-           events=dict(snap=[1252, 1267], word_soon=1254, face_swap_blink=[1253, 1255], swap_calm_to_worried=1254))
+CFG = {'take': 's18', 'shot': '18+19+20 (camera-travel take T18)', 'g0': 1221, 'g1': 1431, 'first_g': 1210, 'last_g': 1434, 'handle_in': 11, 'handle_out': 4, 'transition_in': {'type': 'dissolve', 'frames': 17, 'note': 'dissolve 17 f from the cafe: 11 handle frames g 1210..1220 rendered in 3D (17/2 + 2)'}, 'transition_out': {'type': 'cut', 'frames': 0, 'at': 1431, 'note': 'hard cut to shot 21 (night) at g 1431; handle g 1431..1434 rendered in 3D (inside the hut, push continues)'}, 'set': 'v3/set3d20 TOWER tower_dusk, DUSK 1909, ONE build (exterior + hut interior); runtime: antenna last-segment fix, warm low sun (c20.warm_ground_sun) for a lit avenue + cast shadows, preset FG + shade casters hidden, own barrels/crates, hut front window glass (hut_lampsm) hidden from g 1390 so the camera passes through, own spark arc between the brass balls, exposure +0.35 inside', 'cast': 'cast20: eiffel_old (worried, calm->worried swap on the blink at g 1254; point-up from g 1304 on a blink), officer_stern, three demolition men (sledge / crowbar / hammer), telegraphist seated at the Morse key with key_press taps; nobody speaks', 'camera': 'own camera function (shot.cam_at): g 1210-1303 c20.CamPath push 20 %/s + orbit + tilt + two snaps; g 1304-1342 CRANE to 30 m while tilting up (whole tower + wires); g 1343-1360 WHIP-TILT down the wires to the post (peak 1.9); g 1361-1394 bezier DIVE to the hut window; g 1394-1410 through the window; then push on the soldier', 'events': {'snap': [1252, 1267], 'word_soon': 1254, 'point_up': 1304, 'crane': [1304, 1342], 'whip': [1343, 1360], 'dive': [1361, 1394], 'window_glass_off': 1390, 'taps': [[1396, 1398], [1402, 1404], [1409, 1414], [1419, 1421], [1425, 1429]]}}
 N = CFG["last_g"] - CFG["first_g"] + 1
 G0, G1, FIRST = CFG["g0"], CFG["g1"], CFG["first_g"]
 MB_LIMIT = 45e6
 
-CUES = [  # (g0, g1, kind, note)
-    (FIRST, CFG["last_g"] + 1, "ambience", "Champ de Mars at dusk 1909: empty, a little wind, distant city murmur, a lone horse shifting by the wagon, iron creak from the tower"),
-    (G0 - 6, G0 + 8, "accent", "dissolve in from the 1889 cafe laugh: the laugh tails off, a low cold string note enters (twenty years later)"),
-    (1233, 1240, "foley", "sledge-hammer rests on the shoulder: cloth + metal tick; a crowbar scrapes the cobbles", ),
-    (1252, 1267, "accent", "snap push on 'ใกล้วันรื้อ' (about to be torn down): short airy whoosh + a low drum hit at the end", ),
-    (1254, 1256, "foley", "Eiffel's face drops to worry: tiny rising worried 'wobble' sting (no voice)"),
-    (1272, 1290, "foley", "wind through the lattice, the antenna wire hums faintly high above"),
-    (G1, G1, "cut", "hard cut to shot 19 (summit): the hum swells"),
-]
+CUES = [(1210, 1435, 'ambience', 'Dusk on the avenue then the hut: city murmur + wind in the lattice, antenna wires hum rising during the crane, inside the hut room tone + lantern hiss'), (1210, 1222, 'accent', 'dissolve in from the cafe laugh: laugh tails off, low cold string note'), (1233, 1240, 'foley', 'sledge rests on a shoulder: cloth + metal tick; a crowbar scrapes the cobbles'), (1252, 1267, 'accent', "snap push on 'ใกล้วันรื้อ': short whoosh + low drum hit"), (1254, 1256, 'foley', "Eiffel's face drops to worry: small wobble sting (no voice)"), (1304, 1342, 'accent', 'crane up the tower: rising string/wind riser, iron creak, wire hum'), (1343, 1360, 'accent', 'WHIP-TILT down the wire: fast falling whoosh with a thin wire zing, lands on the post'), (1361, 1394, 'accent', 'dive to the hut: air rush, the lit window grows, spark crackle starts faintly'), (1390, 1396, 'foley', 'passing through the window: a brief wooden thump + room tone switch to interior'), (1396, 1398, 'prop', 'Morse tap (dot) + spark-gap zap'), (1402, 1404, 'prop', 'Morse tap (dot) + zap'), (1409, 1414, 'prop', 'Morse tap (dash) + longer zap'), (1419, 1421, 'prop', 'Morse tap (dot) + zap'), (1425, 1429, 'prop', 'Morse tap (dash) + zap'), (1431, 1431, 'cut', 'hard cut to shot 21 (night): the last zap becomes the signal-ring swell')]
 
 
 def framediff(pngs):
