@@ -385,3 +385,11 @@ def flat_mat(rgb, name='flat'):
     m = bpy.data.materials.new('JM_' + name); nt = T._tree(m); N = nt.nodes.new; L = nt.links.new
     out = N('ShaderNodeOutputMaterial'); em = N('ShaderNodeEmission'); em.inputs['Color'].default_value = (rgb[0], rgb[1], rgb[2], 1.0); em.inputs['Strength'].default_value = 1.0
     L(em.outputs['Emission'], out.inputs['Surface']); return m
+
+
+def with_mouth(var, w, h, y=0.34, x=0.04, tongue=True):
+    """overlay an open mouth below the moustache (the general's drawn mouth hides under it): dark ellipse w x h D at (x, y) in head coordinates"""
+    el = ('<g><ellipse cx="%.3f" cy="%.3f" rx="%.3f" ry="%.3f" fill="#4a1414" stroke="#3a2832" stroke-width="0.03"/>' % (x, y, w / 2, max(h / 2, 0.012)))
+    if tongue and h > 0.12: el += '<ellipse cx="%.3f" cy="%.3f" rx="%.3f" ry="%.3f" fill="#d65a5a"/>' % (x, y + h * 0.22, w * 0.3, h * 0.22)
+    el += '</g>'
+    return Var(var.svg + el, var.bbox, var.feet_y, var.height, var.anchors)

@@ -9,19 +9,19 @@
   "frames": 0
  },
  "framediff": {
-  "median": 5.72,
-  "p90": 13.25,
-  "min": 0.98,
-  "max": 18.84,
+  "median": 8.16,
+  "p90": 12.2,
+  "min": 1.85,
+  "max": 17.3,
   "n": 68,
-  "frames_lt1": 1
+  "frames_lt1": 0
  },
  "max_chin_y": {
-  "general": 732,
-  "soldier0": 699,
-  "crowd0": 710,
-  "crowd1": 694,
-  "crowd2": 678
+  "general": 780,
+  "soldier0": 789,
+  "crowd0": 739,
+  "crowd1": 732,
+  "crowd2": 734
  },
- "s_per_frame": 26.6
+ "s_per_frame": 13.6
 }

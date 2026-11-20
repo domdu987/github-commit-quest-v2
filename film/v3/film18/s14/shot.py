@@ -12,23 +12,27 @@ NAME = 's14'
 G0, G1 = 1071, 1136                                               # shot range (the next shot starts at 1136)
 H_IN, H_OUT = 6, 6
 G_TALK = C.g_of(36.99)                                            # 1113: quote 2a starts
-MOVE = dict(slide=40)                                             # lateral slide (px/s), push comes from the shot table (9 %/s)
+MOVE = dict(push=0.11, slide=55)
+CAMO = dict(loc=(-7.4, -102.4, 2.3), look_at=(-4.3, -96.2, 2.7), lens=26.0)            # eye-level medium, cut at the knees (QA-art)                                             # lateral slide (px/s), push comes from the shot table (9 %/s)
 GEN = V((-4.3, -96.2, 0.0))
-SHAKE = (0.55, 0.4, 0.3, 2.8)                                      # hand-held party rumble (deg, deg, deg, Hz)
-SNAPS = [(G0 + 20, 1.2, 3, 10), (G_TALK - 1, 1.26, 3, 12), (G_TALK + 17, 1.22, 3, 10)]      # punch-ins on the two quote words
+SHAKE = (1.0, 0.7, 0.5, 2.8)
+SNAPS = [(G0 + 22, 1.14, 3, 9999), (G_TALK - 1, 1.12, 3, 9999)]      # two HELD punch-ins (+14 %, +12 %), no return
+
+
+BIG = {'flat': (0.22, 0.03), 'talk_a': (0.30, 0.14), 'talk_b': (0.36, 0.24), 'talk_o': (0.20, 0.22), 'laugh': (0.36, 0.20)}
 
 
 def gpose(g):
     """the general: toast pose, laughing; mouth ONLY in the quote window; 3 Hz bounce comes from the card transform."""
     p = dict(cast18.STORY18['general_toast'][1]); p.pop('mouth', None)
-    if g >= G_TALK: p['mouth'] = cast18.talk_mouth(g, 1.0)
+    p['mouth'] = 'flat'; p['mouth_k'] = cast18.talk_mouth(g, 1.0) if g >= G_TALK else 'laugh'         # held open laugh before the quote; lip-sync (overlay mouth below the moustache) from g 1113
     p['blink'] = cast18.blink_at(g, 90, 17)
     p['t'] = g / 30.0
     return p
 
 
 def pkey(p):
-    return (p.get('mouth'), p.get('blink'))
+    return (p.get('mouth_k'), p.get('blink'))
 
 
 def make_driver(quality):
@@ -38,8 +42,10 @@ def make_driver(quality):
     # ---- atlases
     gv = {}
     for g in gs:
-        p = gpose(g); gv.setdefault(pkey(p), C.person_variant('general', p, 'g'))
-    at_gen = C.Atlas('s14_gen', gv, ppd=170)
+        p = gpose(g)
+        if pkey(p) not in gv:
+            q = {k: v for k, v in p.items() if k != 'mouth_k'}; gv[pkey(p)] = C.with_mouth(C.person_variant('general', q, 'g'), *BIG[p['mouth_k']])
+    at_gen = C.Atlas('s14_gen', gv, ppd=210)
     def soldier_vars(base, cast):
         out = {}
         for lvl in (0, 1):
@@ -54,7 +60,7 @@ def make_driver(quality):
     for base, cast in SOL + CRW:
         atl[base] = C.Atlas('s14_' + base, soldier_vars(base, cast), ppd=130)
     # ---- actors
-    gen = C.Actor(at_gen, 'general', height=3.47, sw=1.2, ref=list(gv.keys())[0], rim=((1.0, 0.55, 0.2), -1, 0.06, 2.4))
+    gen = C.Actor(at_gen, 'general', height=3.47, sw=1.2, ref=list(gv.keys())[0], rim=((1.0, 0.55, 0.2), -1, 0.06, 2.4), tint=(1.0, 0.84, 0.72), k=0.95)
     people = []                                                   # (actor, base, mark, phase, mirror_sign)
     for i, m in enumerate(marks.get('soldier', [])):
         base, cast = SOL[i % len(SOL)]; people.append((C.Actor(atl[base], 'soldier%d' % i, height=3.2, sw=1.0), base, m, i))
@@ -63,13 +69,26 @@ def make_driver(quality):
     actors = {'general': gen}
     for a, b, m, i in people: actors[a.role] = a
     cam_obj = C.bpy.data.objects['cam']
+    mo = C.STATE['objects'].get('moon')
+    if mo is not None: mo.scale = (0.6, 0.6, 0.6)                                                                         # QA-art: smaller, less blown moon
+    for o in list(C.STATE.get('fg_objs', [])): o.hide_render = True                                                       # the navy faceted fg jar prop
+    Bk = C.J.Banks(); Mt = C.STATE['M']; bj = Bk('jar14', hull=0.0)
+    C.J.ellipsoid(bj, V((0, 0, 0.9)), 0.75, 0.75, 0.95, Mt['clay'], seg=14, rings=9, rough=0.05, seed=3); C.J.cyl(bj, V((0, 0, 1.75)), 0.42, 0.45, Mt['clay_d'], seg=10, r1=0.5); C.J.cyl(bj, V((0, 0, 2.15)), 0.55, 0.2, Mt['red'], seg=10)
+    C.J.cyl(bj, V((0, 0, 1.5)), 0.46, 0.2, Mt['straw'], seg=10, cap=False)
+    Bk.flush(C.STATE['SET']); jar = [o for o in C.STATE['SET'].objects if o.name.startswith('jar14')][0]; C.J.no_bounce(jar)
+    jar.data.materials.clear(); jar.data.materials.append(C.flat_mat((0.34, 0.16, 0.06), 'glaze'))
+    jl = C.warm_light((0, 0, 1.5), 500.0, 'jarlight')
     # warm practicals: the camp is a blue night, add fire glow on the party side
     for (x, y, e) in ((3.0, -80.0, 900.0), (-6.0, -78.0, 700.0)):
         C.warm_light((x, y, 3.5), e)
 
     def drive(g):
-        pose = C.set_camera(NAME, g, move=MOVE, shake=SHAKE, snaps=SNAPS, focus=GEN + V((0, 0, 2.3))); cam = V(pose['loc'])
+        pose = C.set_camera(NAME, g, move=MOVE, cam=CAMO, shake=SHAKE, snaps=SNAPS, focus=GEN + V((0, 0, 2.6))); cam = V(pose['loc'])
         C.J.set_party(0.55 + 0.45 * C.smooth((g - G0) / float(G1 - G0)))
+        for o in C.bpy.data.objects:
+            if o.name.startswith('pcup'): o.hide_render = True
+        C.bpy.context.view_layer.update(); pt = C.ground_at(cam_obj, 0.9, 0.93)
+        if pt is not None: jar.location = (pt.x, pt.y, 0.0); jar.scale = (0.5, 0.5, 0.5); jl.location = (pt.x - 1.2, pt.y - 0.8, 1.8)
         ph = g / 30.0 * 3.0 * 2 * math.pi                          # 3 Hz laugh
         p = gpose(g)
         gen.show(pkey(p), GEN, cam, lift=0.06 * abs(math.sin(ph / 2.0)) , squash=(1.0 + 0.015 * math.sin(ph), 1.0 - 0.015 * math.sin(ph)))
