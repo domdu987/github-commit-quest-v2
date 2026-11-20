@@ -8,6 +8,9 @@ take = 'T3'
 CHAIR_D = (-0.4, 0.0); PRIS_D = (-0.15, 0.0)   # chair geometry dx,dy; sitter card dx,dy (card = chair offset +0.25 m: armrest rail stays in front of the card at g816, pad behind it, face >=70 % visible off the post at g793)
 _kc = P.K.measuring_chair
 P.K.measuring_chair = lambda B, c, **kw: _kc(B, (c[0] + CHAIR_D[0], c[1] + CHAIR_D[1]), **kw) if abs(c[0] - 0.7) < 1e-6 and abs(c[1] - 2.4) < 1e-6 else _kc(B, c, **kw)
+# gate fix v2 item 1 (from T3, ec3f44d): raise the measuring-room gasolier (-0.35, 1.0) by 0.6 m (pendant drop 1.45 -> 0.85) so its lamps clear gend_b's face at g741-761. Other gasolier untouched.
+GAS_DZ = 0.6; _kg = P.K.gasolier
+P.K.gasolier = lambda B, c, **kw: _kg(B, c, **dict(kw, drop=kw.get('drop', 1.45) - GAS_DZ)) if abs(c[0] + 0.35) < 1e-6 and abs(c[1] - 1.0) < 1e-6 else _kg(B, c, **kw)
 OUT = os.environ.get('OUT', ROOT + '/film/v3/film17v2/T3b/frames')
 def assign_for(g):
     a = {'bertillon': ('bertillon_measuring', {'mirror': True}),
