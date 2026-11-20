@@ -25,7 +25,7 @@ H_IN, H_OUT = 4, 8                              # cut in, dissolve 13 out (13/2 
 G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1     # 76..185
 GS = list(range(G_FIRST, G_LAST + 1))
 G_SAME = C.cap_g("เดียวกันนั้น")                 # snap pull-out event
-SNAP = (G_SAME - 2, G_SAME + 11)
+SNAP = (G_SAME - 1, G_SAME + 9)
 
 PRESET, LIGHT = "resto_table", "DAY"
 MARK = "maupassant_seated"
@@ -35,7 +35,7 @@ PPD = 256
 CANVAS = cast20.CANVAS20["maupassant"]
 CAM_CLOSER = float(os.environ.get("CAM_CLOSER", "2.0"))   # D closer than the preset along the view
 LAT = float(os.environ.get("LAT", "-1.1"))
-TILT0 = float(os.environ.get("TILT0", "4.0"))
+TILT0 = float(os.environ.get("TILT0", "6.0"))
 
 EAT = cast20.STORY20["maupassant_seated_eat"][1]
 CHEW = cast20.STORY20["maupassant_seated_eat_chew"][1]
@@ -52,7 +52,7 @@ def cam_path(A):
     lat = Vector((fw.y, -fw.x, 0.0)).normalized() * LAT        # parallel shift: head starts right of centre, the slide carries it left
     c, subj = c + lat, subj + lat
     return C.CamPath(c, subj, G_FIRST, G_LAST, push=0.17, slide_px=130.0, rise_px=0.0, arc_deg_s=8.0, tilt0=TILT0, tilt_deg_s=0.0,
-                     decay=0.3, snaps=[dict(g=SNAP, k=0.38, peak=1.9, shift=(0.35, 0.0), tilt=0.0)])
+                     decay=0.3, snaps=[dict(g=SNAP, k=0.45, peak=2.2, shift=(0.3, 0.0), tilt=0.0)])
 
 
 def cam_path_static():
@@ -88,6 +88,7 @@ class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s%02d" % SHOT)
         C.grade(self.scene, float(os.environ.get('EXPO','-0.9')), float(os.environ.get('SAT','1.45')))
+        remove_figures(CO.W((1.0, 7.5, 0.5)), CO.W((4.6, 14.0, 2.4)))          # the merged diner figures at the right-hand table: the camera slides past them
         self.path = cam_path(self.A)
         self.key_cam(bf(G_FIRST), *self.path.at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
@@ -119,6 +120,27 @@ class Take(C.Take):
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):
         return C.Take.render(self, [bf(g) for g in gs], out_dir, scale=scale, samples=samples, threads=threads)
+
+
+def remove_figures(lo, hi):
+    """delete the faces of the set's merged diner meshes (skin / hat / hair / coat / dress colours, objects furn_*) inside the world box lo..hi (D)."""
+    import bmesh
+    lo, hi = Vector(lo), Vector(hi)
+    keep = ("furn_bent", "furn_brass", "furn_earth", "furn_gold", "furn_i_cloth", "furn_i_clothtop", "furn_i_cup", "furn_i_glint", "furn_i_botr", "furn_i_lamp",
+            "furn_i_navycp", "furn_i_woodlt", "furn_metal", "furn_white", "furn_glasswine", "furn_wineamb", "furn_wineg", "furn_leafA", "furn_i_iron", "furn_i_mirror2",
+            "furn_i_crim", "furn_wallpan")
+    n = 0
+    for o in C.bpy.data.objects:
+        if o.type != "MESH" or not o.name.startswith("furn_") or o.name in keep:
+            continue
+        bm = bmesh.new(); bm.from_mesh(o.data)
+        mw = o.matrix_world
+        dead = [f for f in bm.faces if all(lo.x <= (mw @ v.co).x <= hi.x and lo.y <= (mw @ v.co).y <= hi.y and lo.z <= (mw @ v.co).z <= hi.z for v in f.verts)]
+        if dead:
+            bmesh.ops.delete(bm, geom=dead, context="FACES"); n += len(dead)
+            bm.to_mesh(o.data); o.data.update()
+        bm.free()
+    print("remove_figures: %d faces deleted" % n, flush=True)
 
 
 def bpy_objs(prefix):
