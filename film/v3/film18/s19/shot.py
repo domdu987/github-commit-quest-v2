@@ -6,13 +6,14 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c18 as C
 from c18 import J, S, R2, V, bpy
 SHOT = 's19'; G0, G1 = 1427, 1514; H_IN, H_OUT = 6, 6        # cut in, whip out
-c = S.SHOTS[SHOT]['cam']; c['loc'] = (8.0, -25.0, 1.7); c['look_at'] = (31.0, -6.0, 8.0); c['lens'] = 18.0
+c = S.SHOTS[SHOT]['cam']; c['loc'] = (8.0, -17.0, 1.7); c['look_at'] = (32.0, -6.0, 9.0); c['lens'] = 18.0
 C.motion(SHOT, push=0.06, slide=-40, moves=[dict(t=0.35, d=0.85, dur=6), dict(t=0.807, pan=-85, dur=7)])
 _p0 = S.pose_at
 def _tilt(sh, t):                                            # the whip lands on the herd: tilt down from the sky onto the field while the pan runs
     p = _p0(sh, t); k = min(1.0, max(0.0, (t - 0.80) / 0.10)); k = k * k * (3 - 2 * k)
     la = list(p['look_at']); la[2] = la[2] + (1.2 - la[2]) * k; p['look_at'] = tuple(la); return p
 S.pose_at = _tilt
+HIDE = tuple(os.environ.get('HIDE', 'furrows,streaks,streak,rainstreaks,tufts').split(','))
 HX = [hx for hx in J.HOLE_X if hx > 20]
 rnd = random.Random(19)
 OX = []                                                      # (gs, hole x, lane jitter, scale)
@@ -41,6 +42,8 @@ def setup(ctx):
 def frame(g, t, camloc, ctx):
     J.set_holes(12)
     for ob in bpy.data.objects:
+        if ob.name in HIDE or ob.name.startswith('rubble'): ob.hide_render = True
+    for ob in bpy.data.objects:
         if ob.name.startswith('hglow'): ob.hide_render = True
     for j, (gs, hx, jit, sc) in enumerate(OX):
         if g < gs: continue
@@ -48,7 +51,7 @@ def frame(g, t, camloc, ctx):
         if y < -150: continue
         pos = (hx + jit, y, 0.0); near = (V(pos) - camloc).length < 16
         ph = int((g - gs) * 12 / 30.0 + j) % 8
-        C.put_ox(j, pos, -100, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='front_three_quarter' if (near and j % 3 == 0) else 'three_quarter', gait='gallop', theta=14 if (near and j % 3 == 0) else 30, reed=True, tfx=0.55, lean=30.0)
+        C.put_ox(j, pos, -100, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='front_three_quarter' if (near and j % 3 == 0) else 'three_quarter', gait='gallop', theta=14 if (near and j % 3 == 0) else 30, reed=True, tfx=0.8, lean=84.0)
     for j, (gs, x) in enumerate(QI):
         if g < gs: continue
         y = -5.5 - V_QI * (g - gs) / 30.0
