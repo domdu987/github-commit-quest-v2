@@ -22,8 +22,8 @@ def actors(f, cam, ctx):
     C.person_card('tiandan', 'tiandan_tie_blade', (-29.0, 12.3, 0), cam, 0, bob=C.hop(f, 0, 0.04, 2.0), roll=2.5 * math.sin(2 * math.pi * 1.5 * t), mods=dict(gaze=(0.8, -0.4), yaw=0.5))
     C.ox_card(SHOT, 0, (-26.6, 11.4, 0), 180, 1.0, cam, view='front_three_quarter', gait='stand', bob=C.hop(f, 1, 0.03, 0.8), roll=C.sway(f, 1, 1.6, 0.9))
     # dark, lit carriers in the lower third (cast props: baskets of earth), walking with the herd
-    loc, look, _ = CAM((f - G0) / float(G1 - 1 - G0)); fw = look - loc; fw.z = 0; fw.normalize(); rt = V((fw.y, -fw.x, 0.0)); pw = loc + fw * (3.0 + 0.03 * (f - G0)) - rt * 0.2
-    C.person_card('townsfolk', 'woman_carry_basket', (pw.x, pw.y, 0), cam, 8, h=2.0, bob=0.05 * abs(math.sin(2 * math.pi * 1.7 * t + 1)), roll=C.sway(f, 8, 2, 1.0))
+    loc, look, _ = CAM((f - G0) / float(G1 - 1 - G0)); fw = look - loc; fw.z = 0; fw.normalize(); rt = V((fw.y, -fw.x, 0.0)); pw = loc + fw * (4.8 - 0.012 * (f - G0)) - rt * 0.3
+    C.person_card('townsfolk', 'woman_carry_basket', (pw.x, pw.y, 0), cam, 8, h=1.8, bob=0.05 * abs(math.sin(2 * math.pi * 1.7 * t + 1)), roll=C.sway(f, 8, 2, 1.0))
     for i, m in enumerate(HERD):
         x, y, z, yaw, sc = m
         xx = x - 0.9 * t

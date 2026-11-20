@@ -9,6 +9,8 @@ CAM = C.cam_path(((-68.6, 17.3, 2.6), (-75.0, 21.4, 0.4), 24), ((-69.5, 18.0, 2.
 def tweak(stage, A=None):
     if stage == 'pre':
         S.SHOTS[SHOT]['fg'] = None
+    elif stage == 'cam':
+        C.fg_rail(A, y=-1.9, z=-1.78, w=3.6)
     elif stage == 'post':
         C.hide('baskets', 'digtools', 'props'); print('sky', C.clear_sky())
         import jimo_r2 as R2
@@ -25,8 +27,8 @@ def actors(f, cam, ctx):
     C.person_card('child', 'child_stand', (-72.1, 24.5, 0), cam, 4, bob=C.hop(f, 4, 0.08, 2.4), roll=C.sway(f, 4, 3.0, 1.1))
     loc, look, _ = CAM((f - G0) / float(G1 - 1 - G0)); fw = look - loc; fw.z = 0; fw.normalize(); rt = V((fw.y, -fw.x, 0.0))
     p1 = loc + fw * 3.1 - rt * 1.0; p2 = loc + fw * 3.4 + rt * 1.75
-    p3 = loc + fw * 2.5 + rt * 0.35; p4 = loc + fw * 4.2 + rt * 0.9
-    C.person_card('townsfolk', 'old_man_carry_basket', (p3.x, p3.y, 0), cam, 7, h=1.35, bob=0.04 * abs(math.sin(2 * math.pi * 1.4 * t + 2)), roll=C.sway(f, 7, 2, 0.8))
+    p3 = loc + fw * 3.9 + rt * 0.3; p4 = loc + fw * 4.2 + rt * 0.9
+    C.person_card('townsfolk', 'old_man_carry_basket', (p3.x, p3.y, 0), cam, 7, h=1.2, bob=0.04 * abs(math.sin(2 * math.pi * 1.4 * t + 2)), roll=C.sway(f, 7, 2, 0.8))
     C.person_card('child', 'child_carry_basket', (p4.x, p4.y, 0), cam, 8, h=1.5, bob=0.05 * abs(math.sin(2 * math.pi * 2.0 * t)), roll=C.sway(f, 8, 2, 1.0), mirror=True)
     C.person_card('child', 'child_carry_basket', (p1.x, p1.y, 0), cam, 5, h=1.5, bob=0.05 * abs(math.sin(2 * math.pi * 1.8 * t)), roll=C.sway(f, 5, 2, 0.9))
     C.person_card('townsfolk', 'woman_carry_basket', (p2.x, p2.y, 0), cam, 6, h=1.6, bob=0.05 * abs(math.sin(2 * math.pi * 1.5 * t + 1)), roll=C.sway(f, 6, 2, 0.9), mirror=True)
