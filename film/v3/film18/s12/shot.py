@@ -14,6 +14,7 @@ H_IN, H_OUT = 7, 8                   # dissolve 11 in / dissolve 13 out
 FIRST, LAST = G0 - H_IN, G1 - 1 + H_OUT
 mode, rng = c18.parse_args(FIRST, LAST)
 T = c18.Take('s12', FIRST, LAST, draft=(mode == 'draft'), cam_fn=c18.compose(c18.tilt_cam(5.6), c18.rhythm_cam(push=0.10, slide=0.0, pulses=(), orbit=-13)))
+c18.fix_sky_clean(T, 'sky_DUSK')
 ST = cast18.STORY18
 ENV_WALK = ST['envoy_walk'][1]; ENV_BOW = dict(ST['envoy_bow'][1], prop_r=dict(type='banner', angle=-90, scale=1.0))
 FOLK = [('old_man_worried', -13.0), ('woman_worried', -11.0), ('old_man_worried', -9.0), ('woman_worried', -7.0), ('child_stand', -5.2), ('old_man_worried', -3.6), ('woman_worried', -2.0), ('old_man_worried', 6.0), ('woman_worried', 8.0)]

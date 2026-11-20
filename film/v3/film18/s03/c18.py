@@ -83,15 +83,15 @@ def smoke_svg(ax, ay, k, n=4, grey='#a39ea4'):
     return ''.join(s)
 
 
-def oxcard(state='dragon', view='three_quarter', gait='gallop', phase=0, flame=-1, smoke=None, reed=False):
+def oxcard(state='dragon', view='three_quarter', gait='gallop', phase=0, flame=-1, smoke=None, reed=False, face=None):
     """an ox card (8 gallop drawings, phase = 0..7); smoke = None or a drawing index for grey tail wisps (no flame)."""
-    key = 'OX2|%s|%s|%s|%d|%d|%s|%s' % (state, view, gait, phase, flame, smoke, reed)
+    key = 'OX3|%s|%s|%s|%d|%d|%s|%s|%s' % (state, view, gait, phase, flame, smoke, reed, face)
     name = hashlib.md5(key.encode()).hexdigest()[:10] + '_ox'
     mp = os.path.join(CD.CARDS, name + '.json')
     if os.path.exists(mp) and os.path.exists(os.path.join(CD.CARDS, name + '.png')):
         return json.load(open(mp))
     c18, P = _cast()
-    f = c18.ox_figure(state=state, view=view, gait=gait, phase=phase / 8.0, flame=flame, blades=True, reed=(True if reed else None), uid='c%s' % name[:6])
+    f = c18.ox_figure(state=state, view=view, gait=gait, phase=phase / 8.0, flame=flame, blades=True, reed=(True if reed else None), uid='c%s' % name[:6], face=face)
     svg = f['svg']; bb = list(f['bbox'])
     if smoke is not None:
         ax, ay = f['anchors']['tail_tip']
@@ -275,6 +275,9 @@ def fix_vista(T, hold_scale=0.5, tents=0.10, siege_fire=False, halo_k=0.0):
         for i, m in enumerate(o.data.materials):
             if m.name.endswith('b82c20_1.15_1_1_None'): o.data.materials[i] = red
             if m.name.endswith('2a6a7a_1.1_1_1_None'): o.data.materials[i] = teal
+    for nm in ('towns', 'townroofs', 'siegetents'):                  # shadow slabs: the flat navy shadow polygons of walls / roofs / tents cover half the frame at low sun (TAKE gate)
+        if nm in ob:
+            ob[nm].visible_shadow = False
     if 'vtrees' in ob:
         ob['vtrees'].hide_render = True                              # the dark spike cones (trees) read as stray blue triangles (TAKE gate)
     for p in STATE['pennants']:                                      # flag shadows made flat navy polygons on the ground (TAKE gate)
@@ -309,13 +312,42 @@ def fix_vista(T, hold_scale=0.5, tents=0.10, siege_fire=False, halo_k=0.0):
         sm = R2._shadow_quad('cpool', 1.0, 1.0)
         if not sm.materials: sm.materials.append(STATE['M']['pool_w'])
         ob_ = bpy.data.objects.new('t18_pool_' + key, sm); STATE['SET'].objects.link(ob_); ob_.location = (x, y, z + 0.9); ob_.scale = (r_, r_, 1.0); ob_.visible_shadow = False; J.no_bounce(ob_)
-    # Ju (far, behind nearer towns from the s04 camera): a beacon tower with a live flame so the second lit town reads on the horizon
-    from mathutils import Vector as V_
-    jx, jy, jz = STATE['marks']['ju']; Bk = J.Banks(); b = Bk('t18_beacon', hull=0.0)
-    J.rod(b, V_((jx + 6, jy - 6, jz)), V_((jx + 6, jy - 6, jz + 40)), 0.9, STATE['M']['wood_d'], seg=5); J.cyl(b, V_((jx + 6, jy - 6, jz + 40)), 2.2, 1.6, STATE['M']['iron'], seg=8, r1=2.8)
-    Bk.flush(STATE['SET'])
-    J.live_flame(V_((jx + 6, jy - 6, jz + 41.5)), 17.0, 5.0, seed=991, n=4, light=0.0, name='jubeacon', warm=None)
+    # Ju: a small walled town with warm lamps on the horizon, clearly separate from Jimo (the set's own Ju is lost in the haze at 500 D, so Ju stands in near the s04 horizon)
+    ju_town(JU_AT)
     STATE['hold_scale'] = hold_scale
+
+
+JU_AT = (-112.0, 125.0)
+
+
+def ju_town(at, s=46.0):
+    import math as m_
+    from mathutils import Vector as V_
+    M = STATE['M']; Bk = J.Banks(); bd = Bk('t18_ju', hull=0.0); rf = Bk('t18_juroof', hull=0.0); gl = Bk('t18_juglow', shadow=False)
+    import jimo_vista as VS_
+    z0 = VS_.terrain_h(at[0], at[1]) + 0.1; F = J.Frame((at[0], at[1], z0), 8.0); wh = s * 0.17
+    for sgn in (-1, 1):
+        J.obox(bd, F.p(sgn * s / 2, 0, wh / 2), F.X, F.Y, F.Z, s * 0.035, s / 2, wh / 2, M['rammed'], uvk=0.1); J.obox(bd, F.p(0, sgn * s / 2, wh / 2), F.X, F.Y, F.Z, s / 2, s * 0.035, wh / 2, M['rammed'], uvk=0.1)
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            J.obox(bd, F.p(sx * s / 2, sy * s / 2, wh * 0.75), F.X, F.Y, F.Z, s * 0.07, s * 0.07, wh * 0.75, M['rammed_d'], uvk=0.1)
+            J.hip_roof(rf, F.p(sx * s / 2, sy * s / 2, wh * 1.5), 8.0, s * 0.1, s * 0.1, 0.0, 0.0, s * 0.07, M, lift=0.0, nx=2, ny=2, mat=M['tiles'], wadang=False)
+    J.obox(bd, F.p(0, -s / 2, wh * 0.45), F.X, F.Y, F.Z, s * 0.07, s * 0.05, wh * 0.45, M['black'], uvk=0.1)
+    for q, (hx, hy) in enumerate(((-0.25, -0.2), (0.2, -0.25), (-0.2, 0.2), (0.25, 0.22), (0.0, 0.0), (-0.05, 0.3))):
+        hw, hd, hh = s * 0.15, s * 0.11, s * 0.09; px, py = hx * s, hy * s
+        J.obox(bd, F.p(px, py, hh / 2), F.X, F.Y, F.Z, hw / 2, hd / 2, hh / 2, M['plaster'] if q % 2 else M['plaster_d'], uvk=0.1)
+        J.hip_roof(rf, F.p(px, py, hh), 8.0, hw / 2 + s * 0.02, hd / 2 + s * 0.02, max(0.01, hw / 2 - hd / 2), 0.0, s * 0.05, M, lift=0.0, nx=4, ny=2, mat=M['tiles'], wadang=False)
+        J.flat(gl, F.p(px - hw * 0.3, py - hd / 2 - 0.05, hh * 0.25), F.X * (hw * 0.6), F.Z * (hh * 0.45), M['win'])
+    Bk.flush(STATE['SET'])
+    STATE['marks']['ju'] = (at[0], at[1], z0)
+    for sx in (-1, 1):
+        J.live_flame(F.p(sx * s * 0.07, -s / 2 - 1.2, 0.0), s * 0.12, s * 0.05, seed=77 + sx, n=2, light=0.0, name='jufire', warm=None)
+    sm = R2._shadow_quad('cpool', 1.0, 1.0)
+    if not sm.materials: sm.materials.append(STATE['M']['pool_w'])
+    ob_ = bpy.data.objects.new('t18_pool_ju', sm); STATE['SET'].objects.link(ob_); ob_.location = (at[0], at[1], z0 + 0.4); ob_.scale = (s * 0.75, s * 0.75, 1.0); ob_.visible_shadow = False; J.no_bounce(ob_)
+    for ob in STATE['SET'].objects:
+        if ob.name.startswith('t18_ju'):
+            J.no_bounce(ob)
 
 
 def hold_apply(T):
@@ -420,3 +452,20 @@ def fix_sky_clean(T, tex_name='sky_DAWN'):
         if tex_name in os.path.basename(im.filepath):
             im.filepath = out; im.reload(); return True
     return False
+
+
+def dress(T, gs, seed=0, keep_clear=None, actors=None, density=1.0):
+    """the director's J.dress_ground over the whole move: key the camera at the sampled film frames (the helper evaluates the camera per film frame), dress, drop the keys again
+    (the per-frame driver sets the camera itself)."""
+    cam = T.cam; sc = bpy.context.scene
+    gl = list(gs)
+    for g in gl[::max(1, len(gl) // 40)] + [gl[-1]]:
+        pose = T.pose(g); cam.location = pose['loc']; cam.rotation_euler = J._look_rot(pose['loc'], pose['look_at']); cam.data.lens = pose['lens']
+        cam.keyframe_insert('location', frame=g); cam.keyframe_insert('rotation_euler', frame=g); cam.data.keyframe_insert('lens', frame=g)
+    info = J.dress_ground(cam=cam, frames=gl, seed=seed, keep_clear=keep_clear, actors=actors, density=density)
+    cam.animation_data_clear()
+    try:
+        cam.data.animation_data_clear()
+    except Exception:
+        pass
+    return info
