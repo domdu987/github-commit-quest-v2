@@ -1,0 +1,54 @@
+{
+ "take": "s27",
+ "film": 20,
+ "shots": [
+  27
+ ],
+ "g0": 1968,
+ "g1": 2046,
+ "first_g": 1964,
+ "n_frames": 82,
+ "shot_ranges": {
+  "27": [
+   1968,
+   2045
+  ]
+ },
+ "handle_in": 4,
+ "handle_out": 0,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 2046
+ },
+ "set": "TOWER tower_window_pull DAY 1889",
+ "dof": "none",
+ "text": "none",
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 12.42,
+ "s_per_frame_cpu_mean": 23.96,
+ "head_px": [
+  2.1,
+  68.4
+ ],
+ "head_centre_y": [
+  507,
+  871
+ ],
+ "framediff_in_shot": {
+  "median": 9.63,
+  "p90": 29.37
+ },
+ "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json",
+ "note": "film ends on a hard cut at g 2046 (no out handle); in-handle g 1964..1967 renders the pull backwards-extended"
+}
