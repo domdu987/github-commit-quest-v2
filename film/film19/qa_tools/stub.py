@@ -25,10 +25,10 @@ c.lerp=lambda a,b,t: a+(b-a)*t
 sys.modules['c19']=c
 for nm in ['puppet','bpy']:
     mm=types.ModuleType(nm); mm.__getattr__=lambda n: (lambda *a,**k: None); sys.modules[nm]=mm
-sys.path.insert(0,os.path.join(os.path.dirname(os.path.abspath(__file__)),'../../v3/film19/s02')
+SHOT=os.path.join(os.path.dirname(os.path.abspath(__file__)),'../../v3/film19/s02'); sys.path.insert(0,SHOT)
 import builtins
-src=open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'../../v3/film19/s02/shot.py').read().split('if __name__ == "__main__":')[0]
-g={'__name__':'shotmod','__file__':os.path.join(os.path.dirname(os.path.abspath(__file__)),'../../v3/film19/s02/shot.py'}
+src=open(os.path.join(SHOT,'shot.py')).read().split('if __name__ == "__main__":')[0]
+g={'__name__':'shotmod','__file__':os.path.join(SHOT,'shot.py')}
 exec(compile(src,'shot.py','exec'),g)
 for gg in range(118,166):
     tau=g['_tau_of'](gg); s=g['_umap'](min(tau,182)); u=g['_u_of_s'](s)
