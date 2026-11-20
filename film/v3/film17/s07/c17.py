@@ -77,7 +77,11 @@ class Rig:
         a.place(g, pos or c["pos"], scale=c["sc"])
         feet = sprites.feet_of(c["cast"], p)
         loc = actors.world_to_local(a, self.cam, world, frame=g, feet=feet)
-        return cast17.hand_for_anchor(c["cast"], p, arm, anchor, loc)
+        q = cast17.hand_for_anchor(c["cast"], p, arm, anchor, loc, it=12)
+        import puppet
+        if os.environ.get("DIAG"):
+            an = puppet.figure(c["cast"], q, "q")["anchors"][anchor]; print("REACH", key, g, anchor, "err %.2f D" % math.hypot(an[0] - loc[0], an[1] - loc[1]), flush=True)
+        return q
     def hand_to(self, key, g, pose, world, arm="r", pos=None, **kw):
         """pose with arm_<arm> hand placed (puppet-local) where the world point appears on the card."""
         c = self.cast[key]; a = c["a"]; p = dict(pose); p["seat17"] = None
