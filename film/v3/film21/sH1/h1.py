@@ -43,7 +43,7 @@ def hermite(p0, v0, p1, v1, t, T):
     t2, t3 = t * t, t * t * t
     return (2 * t3 - 3 * t2 + 1) * p0 + (t3 - 2 * t2 + t) * T * v0 + (-2 * t3 + 3 * t2) * p1 + (t3 - t2) * T * v1
 NECK_LOC, NECK_LOOK, NECK_LENS = [Vector(v) if not isinstance(v, float) else v for v in K.POSES['P_NECK']]
-WP_LOC, WP_LOOK = Vector((9.0, 40.0, 3.2)), Vector((0.0, 30.0, 1.9))          # LOW and CLOSE past the bridge mouth at the slam (wall figures 12-18 % of the frame)
+WP_LOC, WP_LOOK = Vector((9.0, 47.0, 3.3)), Vector((0.0, 33.0, 1.9))          # LOW and CLOSE past the bridge mouth at the slam (wall figures 12-18 % of the frame)
 MID_LOC, MID_LOOK = Vector((62.0, 80.0, 16.0)), Vector((8.0, 44.0, 9.0))       # looks at the neck, not down at the shelf (fix 5)
 def herm_keys(keys, g):
     """keys: [(g, point, tangent or None)]; None tangents are central differences. Cubic Hermite, tangents in units per frame."""
@@ -56,8 +56,8 @@ def herm_keys(keys, g):
             g0, p0, v0 = ks[i]; g1, p1, v1 = ks[i + 1]; T = g1 - g0; t = min(1.0, max(0.0, (g - g0) / float(T))); return hermite(p0, v0, p1, v1, t, T)
 def lens_at(g):
     if g < 1300: return 22.0
-    if g <= 1316: return 22.0 + 10.0 * sstep((g - 1300) / 16.0)
-    return 22.0 + 10.0 * (1.0 - sstep((g - 1318) / 27.0))
+    if g <= 1316: return 22.0 + 12.0 * sstep((g - 1300) / 16.0)
+    return 22.0 + 12.0 * (1.0 - sstep((g - 1318) / 27.0))
 def camera(g):
     z3 = Vector((0, 0, 0))
     if g <= G_RIDE_END:
@@ -92,66 +92,102 @@ class Cast(object):
         for it in self.items.values():
             if not it['a'].card.hide_render: it['a'].render_sprites(PPD, frames=[f])
 
+CRIM, BLUE = "#b3202a", "#2b50b8"                 # same recolours as H2a (render21/team3 sH2a/shot.py): the join at P_NECK holds
+WALL_Y = 31.5                                      # the spear wall stands at the end of the (shortened) deck, as in H2a
+def add_variant(base, new, colour):
+    d = cast21._recolour(base, colour); cast21.P.CAST[new] = d
+    for tab in (cast21.CE.CANVAS, sprites.DEFAULT_CANVAS):
+        if base in tab: tab[new] = tab[base]
+def _hm(cast, pose_name, hm):
+    p = cast21.STORY21[pose_name][1]; a = sprites.sprite_svg(cast, p, 64)[1]["anchors"]
+    return hm / (a["feet"][1] - a["head_top"][1])
+def blink_in(g, centres, w=3): return any(abs(g - c) <= w // 2 for c in centres)
+
 def main(mode, gs, samples):
     CLEAR = (134.0, 133.0, 24.0)           # the run lane on the Scots' shelf: no crags, pines or gorse from the hill dressing
     K.BUILDERS[:] = [(lambda fn: (lambda A_, pr_: fn(A_, dict(pr_, clear_hill=CLEAR))) if getattr(fn, '__name__', '') in ('hill_dress', 'hill_dress2') else fn)(fn) for fn in K.BUILDERS]
-    A = K.build_world(['hill_over', 'bridge_end_north'], fg=['bridge_end_north'])
-    for o in bpy.data.objects:
-        if o.name.startswith(('fg_generic_steel', 'fg_generic_wood', 'fg_generic_g', 'spear_wall', 'troops_causeway')) and not o.name.startswith('wall_banners'): o.hide_render = True
+    K.BRIDGE_Y1 = WALL_Y - 0.4                                  # the deck ENDS at the wall (H2a staging)
+    A = K.build_world(['hill_over', 'bridge_end_north'], over=dict(foam_k=1.25), fg=['bridge_end_north'])
+    for o in [o for o in bpy.data.objects if o.name.startswith(('crowd_', 'spear_wall', 'wall_banners', 'troops_causeway'))]: bpy.data.objects.remove(o, do_unlink=True)
     scene = bpy.context.scene; cam = scene.camera
+    rs = np.random.RandomState(11)
+    # ---- the English mass in the loop and the south half (crimson), the cork back ranks (blue 3D), the big saltire banners: H2a staging verbatim
+    B = K.Batch(71)
+    for r in range(20):
+        for c in range(26):
+            x = -19.5 + c * 1.5 + (0.7 if r % 2 else 0) + rs.uniform(-0.15, 0.15); y = 58.0 + r * 1.7 + rs.uniform(-0.15, 0.15)
+            if math.hypot(x - K.LOOP_C[0], y - K.LOOP_C[1]) < K.LOOP_R - 14 and float(K.sd_at(x, y)) > 3:
+                z = float(K.ground(x, y)); B.box("cloth_red", (x, y, z + 0.8), (0.7, 0.45, 1.6)); B.sphere("cloth_red", (x, y, z + 1.78), 0.24, seg=6, rings=4)
+    B.finalize("en_loop", ink=False, shadow=False)
+    B = K.Batch(72)
+    for r in range(13):
+        for c in range(17):
+            x = -12.0 + c * 1.5 + (0.7 if r % 2 else 0) + rs.uniform(-0.15, 0.15); y = -40.0 - r * 1.8
+            z = float(K.ground(x, y)); B.box("cloth_red", (x, y, z + 0.8), (0.7, 0.45, 1.6)); B.sphere("cloth_red", (x, y, z + 1.78), 0.24, seg=6, rings=4)
+    B.finalize("en_south", ink=False, shadow=False)
+    B = K.Batch(73)
+    for rank in range(2, 5):
+        for k in range(14):
+            x = -9.0 + 18.0 * k / 13.0 + (0.5 if rank % 2 else 0.0); y = WALL_Y + 1.1 * rank; z = float(K.ground(x, y))
+            B.box("t_blue", (x, y, z + 0.85), (0.8, 0.6, 1.6)); B.sphere("steel", (x, y, z + 1.78), 0.21, seg=6, rings=4)
+            K.spear(B, (x, y - 0.4, z), tilt=(0.0, -0.9), h=2.4)
+    wb = K.Batch.finalize(B, "wall_back", ink=False)
+    Bp = K.Batch(87)
+    for k, sx in enumerate((-14.0, -10.5, 10.5, 14.0)):
+        K.banner(Bp, (sx, WALL_Y + 2.0, float(K.ground(sx, WALL_Y))), 9.0, 215, "t_saltire", "t_white", "saltire", rs, size=(6.6, 4.3))
+    Bp.finalize("wall_banners")
+    ban = [o for o in bpy.data.objects if o.name.startswith('wall_banners')]; ban0 = {o.name: o.location.z for o in ban}
+    bkb = [o for o in bpy.data.objects if o.name.startswith('wall_back')]; bkb0 = {o.name: o.location.z for o in bkb}
     # foreground gorse along the ride, close to the camera track (they whip past)
-    rs = np.random.RandomState(11); Bg = K.Batch(97)
+    rs3 = np.random.RandomState(11); Bg = K.Batch(97)
     for k in range(14):
         c = run_centre(G0 + 2.6 * k); side = 1 if k % 2 == 0 else -1
-        p = c - RUN_DIR * 6.5 + RUN_LEFT * (2.2 + side * rs.uniform(1.3, 2.2)) ; K.gorse(Bg, (p.x, p.y, float(K.ground(p.x, p.y))), rs.uniform(0.5, 0.8), rs)
+        p = c - RUN_DIR * 6.5 + RUN_LEFT * (2.2 + side * rs3.uniform(1.3, 2.2)); K.gorse(Bg, (p.x, p.y, float(K.ground(p.x, p.y))), rs3.uniform(0.5, 0.8), rs3)
     Bg.finalize('h1_gorse', ink=False)
     C = Cast()
-    runners = ['scot_a', 'scot_b', 'scot_c', 'scot_a_v1', 'scot_b_v1']
+    add_variant("footman_a", "footman_a_crim", CRIM); add_variant("footman_b", "footman_b_crim", CRIM)
+    for b_ in ("scot_a", "scot_b", "scot_c"): add_variant(b_, b_ + "_blue", BLUE)
+    runners = ['scot_a_blue', 'scot_b_blue', 'scot_c_blue', 'scot_a_blue', 'scot_b_blue']
     for i, c_ in enumerate(runners): C.add('r%d' % i, c_, tuple(runner_pos(G0, i)))
-    spots = [('e1', 'footman_a', 'footman_a', 1316, -3.2, 34.0), ('e2', 'knight_a', 'knight_a', 1318, -1.6, 35.4), ('e3', 'footman_a', 'footman_a', 1314, 1.6, 34.2),
-             ('e4', 'knight_a_open', 'knight_a', 1320, 3.2, 35.6), ('e5', 'knight_a', 'knight_a', 1317, -4.6, 36.2), ('e6', 'footman_a', 'footman_a', 1315, 4.8, 34.6),
-             ('e7', 'footman_a', 'footman_a', 1319, -0.4, 37.2), ('e8', 'knight_a_open', 'knight_a', 1313, 2.4, 37.6), ('e9', 'knight_a', 'knight_a', 1321, -3.0, 38.2), ('e10', 'footman_a', 'footman_a', 1317, 0.8, 38.4)]
+    cz = K.place_troops(A, "causeway", 12, seed=3, cb=lambda it: None)
     eng = []
-    for nm, cast, base, g_hit, x, y in spots:
-        C.add(nm, cast, (x, y, float(K.ground(x, y)))); eng.append((nm, cast, base, g_hit))
-    # popped helmets (helmet_float cards): five English lose theirs on the jump
-    pops = {'e1': 0.6, 'e3': -0.7, 'e4': 0.8, 'e6': -0.5, 'e9': 0.5}
-    himg = bpy.data.images.load(os.path.join(HERE, 'helmet.png')); himg.alpha_mode = 'STRAIGHT'
-    HM = {}
+    for i, (x, y, z, kind, sc) in enumerate(cz):
+        base = ("footman_a", "footman_b")[i % 2]; cast = base + "_crim"
+        C.add('e%d' % i, cast, (x, y, z)); C.items['e%d' % i]['scale'] = _hm(base, base + "_worried", 1.68); eng.append(('e%d' % i, cast, base, 1313 + (i * 7) % 9, i))
+    pops = {'e0': 0.6, 'e2': -0.7, 'e4': 0.8, 'e7': -0.5, 'e9': 0.5}
+    himg = bpy.data.images.load(os.path.join(HERE, 'helmet.png')); himg.alpha_mode = 'STRAIGHT'; HM = {}
     for nm in pops:
         me = actors._quad('hq_' + nm, -0.26, 0.0, 0.26, 0.35); mat, tex = actors.card_material('hmat_' + nm, himg, 'Cubic'); me.materials.append(mat)
         ob = bpy.data.objects.new('hq_' + nm, me); scene.collection.objects.link(ob); ob.visible_diffuse = False; ob.visible_glossy = False; ob.visible_shadow = False; HM[nm] = ob
-    NSC = 15; wall = []
-    for i in range(NSC * 2):
-        rank = i // NSC; i = i % NSC
-        sx = -7.5 + 15.0 * i / (NSC - 1.0) + (0.5 if rank else 0.0); sy = 29.0 + 0.45 * math.sin(i * 2.1) + 1.0 * rank; cast = ['scot_a', 'scot_b', 'scot_c', 'scot_a_v1', 'scot_b_v2', 'scot_c_v1'][i % 6]
-        nm = 'w%d_%d' % (rank, i); C.add(nm, cast, (sx, sy, float(K.ground(sx, sy)))); C.items[nm].update(base=cast.split('_v')[0], i=i, rank=rank); wall.append(nm)
-    # three tall blue saltire banners planted in the wall, they RISE on g1316
-    Bb = K.Batch(88); rs2 = np.random.RandomState(21)
-    for bx, bh in ((-6.0, 6.2), (0.0, 7.4), (6.0, 6.2)):
-        K.banner(Bb, (bx, 28.2, float(K.ground(bx, 28.2))), bh, 188, 't_saltire', 't_white', 'saltire', rs2, size=(3.0, 2.0))
-    Bb.finalize('h1_banners', shadow=False)
-    ban = [o for o in bpy.data.objects if o.name.startswith('h1_banners')]; ban0 = {o.name: o.location.z for o in ban}
+    NF = 14; wall = []; n_ = 0
+    for rank in range(2):
+        for k in range(NF):
+            tx = -9.0 + 18.0 * k / 13.0 + (0.5 if rank else 0.0); ty = WALL_Y + 1.1 * rank; base = ("scot_a", "scot_b", "scot_c")[(k + rank) % 3]; cast = base + "_blue"
+            nm = 'w%d_%d' % (rank, k); C.add(nm, cast, (tx, ty, float(K.ground(tx, ty)))); C.items[nm].update(base=base, i=k, rank=rank, scale=_hm(base, base + "_spear_wall", 1.70)); wall.append(nm)
+    def pose_en(i, base, g):
+        p = dict(cast21.STORY21[base + ("_bump" if (g + 7 * i) % 40 < 7 else "_worried")][1])
+        p["head_roll"] = p.get("head_roll", 0) + 5.0 * math.sin(g * 0.45 + i); p["lean"] = 2.0 * math.sin(g * 0.3 + 1.7 * i)
+        p["blink"] = 1 if blink_in(g, [1350 + 9 * i % 40, 1380 + 5 * i % 30]) else 0; return p
     for g in gs:
         if mode == 'final' and os.path.exists(os.path.join(HERE, os.environ.get('RAWDIR', 'raw_final'), 'g_%04d.json' % g)): continue
         t0 = time.time(); f = g
         loc, look, lens, viv = camera(g); c21.set_cam(cam, loc, look, lens); K.STATE['vivid'] = viv
         t = g / 30.0; K.set_flutter(t); K.set_smoke(t); K.set_flow(t); scene.frame_set(f)
         rise = 1.0 - sstep((g - 1312) / 9.0)
-        for o in ban: o.location.z = ban0[o.name] - 9.0 * rise
+        for o in ban: o.location.z = ban0[o.name] - 12.0 * rise
+        rise2 = 1.0 - sstep((g - 1314) / 6.0)
+        for o in bkb: o.location.z = bkb0[o.name] - 3.0 * rise2
         for o in [o for o in bpy.data.objects if o.name.startswith('dust_h1')]:
             me = o.data; bpy.data.objects.remove(o, do_unlink=True); bpy.data.meshes.remove(me)
-        # runners
         for i, c_ in enumerate(runners):
             nm = 'r%d' % i
             if g > 1296: C.hide(nm); continue
-            pose = cast21.run_spear(c_.split('_v')[0], g / 16.0 + i * 0.21, facing=1)
+            pose = cast21.run_spear(c_.split('_blue')[0], g / 16.0 + i * 0.21, facing=1)
             C.put(nm, f, pose, xyz=tuple(runner_pos(g, i)))
-        # the wall group: pre-placed at the flanks by the banner sites, sprint in (still running at g1310), SLAM on g1316 with a small overshoot, spears drop level together
         dust = []
         for nm in wall:
-            it = C.items[nm]; tx, sy, sz = it['xyz']; i = it['i']; left = i < NSC // 2; dirn = 1 if left else -1
-            fx = -dirn * (11.5 + 0.8 * (i % 4 if left else (NSC - 1 - i) % 4))
+            it = C.items[nm]; tx, sy, sz = it['xyz']; i = it['i']; left = i < NF // 2; dirn = 1 if left else -1
+            fx = -dirn * (15.5 + 0.8 * (i % 4 if left else (NF - 1 - i) % 4))
             start = 1290 + (i % 4) + 2 * it['rank']
             if g < start:
                 pose = dict(cast21.STORY21[it['base'] + '_fold_spear'][1]); pose['blink'] = cast21.blink_at(g, 84, i * 9); pose['head_roll'] = sway(g, i, 2.0, 0.4)
@@ -164,37 +200,40 @@ def main(mode, gs, samples):
                 k = g - G_SLAM; x = tx + dirn * 0.45 * max(0.0, 1.0 - k / 4.0)
                 pose = dict(cast21.STORY21[it['base'] + '_spear_wall'][1]); pose['blink'] = cast21.blink_at(g, 80, i * 7)
                 pr_ = dict(pose.get('prop_r') or {}); pr_['scale'] = 1.45; pose['prop_r'] = pr_
-                sq = 1.0 - 0.10 * math.exp(-k / 3.0) * math.cos(k * 1.0); pose['squash'] = (1.0 / sq, sq); pose['head_roll'] = sway(g, i, 1.2, 0.5)
+                sq = 1.0 - 0.10 * math.exp(-k / 3.0) * math.cos(k * 1.0)
+                if k > 18: pose['squash'] = (1.0, 1.0); pose['lean'] = 1.5 * math.sin(g * 0.2 + i); pose['head_roll'] = 2.0 * math.sin(g * 0.13 + i)      # H2a's wall pose
+                else: pose['squash'] = (1.0 / sq, sq); pose['head_roll'] = sway(g, i, 1.2, 0.5)
                 C.put(nm, f, pose, xyz=(x, sy, float(K.ground(x, sy))), mirror=not left)
                 if it['rank'] == 0 and 0 <= k <= 11: dust.append((x, sy, float(K.ground(x, sy)), k, i))
         if dust:
             Bd = K.Batch(89)
             for (x, y, z, k, i) in dust:
                 r = (0.25 + 0.075 * k) * (1.0 - max(0.0, (k - 6) / 8.0))
-                for j in range(2): Bd.sphere('hay', (x + 0.55 * (j - 0.5) + 0.05 * i % 0.3, y + 0.3 + 0.08 * k, z + 0.15 + 0.06 * k), max(r, 0.05), seg=8, rings=5, scale=(1.3, 1.0, 0.7), tint=1.5)
+                for j in range(2): Bd.sphere('hay', (x + 0.55 * (j - 0.5) + 0.05 * i % 0.3, y - 0.3 - 0.08 * k, z + 0.15 + 0.06 * k), max(r, 0.05), seg=8, rings=5, scale=(1.3, 1.0, 0.7), tint=1.5)
             Bd.finalize('dust_h1', ink=False, shadow=False)
-        for nm, cast, base, g_hit in eng:
-            it = C.items[nm]; x, y, z = it['xyz']; k = g - g_hit; n_ = int(nm[1:]); sgn = 1 if n_ % 2 else -1
+        for nm, cast, base, g_hit, i in eng:
+            it = C.items[nm]; x, y, z = it['xyz']; k = g - g_hit; sgn = 1 if i % 2 else -1
             if k < -10:
-                pose = dict(cast21.STORY21[base + '_stand'][1]); pose['blink'] = cast21.blink_at(g, 90, 13 * n_); pose['head_roll'] = sway(g, n_)
-                C.put(nm, f, pose)
-            elif k < 0:                                     # they hear it: heads turn back to look at the wall
-                pose = dict(cast21.STORY21[base + '_worried'][1]); pose['yaw'] = -0.95 * sgn; pose['gaze'] = (0.9 * -sgn, -0.1); pose['head_roll'] = sway(g, n_, 3.0, 1.0)
+                pose = pose_en(i, base, g); pose['expr'] = 'neutral' if g < 1300 else pose.get('expr', 'worried'); C.put(nm, f, pose)
+            elif k < 0:                                     # they hear it: heads turn back toward the wall
+                pose = dict(cast21.STORY21[base + '_worried'][1]); pose['yaw'] = -0.95 * sgn; pose['gaze'] = (0.9 * -sgn, -0.1); pose['head_roll'] = sway(g, i, 3.0, 1.0)
                 C.put(nm, f, pose)
             elif k <= 8:                                    # the jump back toward the lens, 8 frames
                 u = k / 8.0; hop = 4.0 * u * (1 - u)
                 pose = dict(cast21.STORY21[base + '_bump'][1]); pose['head_roll'] = 14 * math.sin(k * 1.4); pose['blink'] = 0
                 C.put(nm, f, pose, xyz=(x + 0.3 * u * sgn, y + 0.6 * sstep(u), z), lift=0.9 * hop)
-            else:
-                k2 = k - 8; pose = dict(cast21.STORY21[base + '_worried'][1]); pose['head_roll'] = 10 * math.exp(-k2 / 12.0) * math.sin(k2 * 1.2) + sway(g, 1, 2.0, 0.8)
-                pose['blink'] = cast21.blink_at(g, 70, n_ * 11)
-                C.put(nm, f, pose, xyz=(x + 0.3 * sgn, y + 0.6, z), lift=0.04 * abs(math.sin(k2 * 0.35 + n_)))
-        for nm, dx in pops.items():                          # the popped helmets: up and out, land crooked
-            it = C.items[nm]; x, y, z = it['xyz']; ob = HM[nm]; k = g - dict((e[0], e[3]) for e in eng)[nm] - 1
-            if k < 0: ob.hide_render = True; continue
+            else:                                           # nervous shuffles back to the home marks by g1340 (H2a start), wobbling, little hops
+                back = 1.0 - sstep((g - 1326) / 14.0); k2 = k - 8
+                pose = pose_en(i, base, g) if g > 1334 else dict(cast21.STORY21[base + '_worried'][1])
+                if g <= 1334: pose['head_roll'] = 10 * math.exp(-k2 / 12.0) * math.sin(k2 * 1.2) + sway(g, 1, 3.0, 1.0); pose['blink'] = 1 if blink_in(g, [g_hit + 20 + 5 * i]) else 0
+                hop2 = 0.35 * abs(math.sin((g - g_hit) * 0.42 + i)) * back
+                C.put(nm, f, pose, xyz=(x + 0.3 * sgn * back, y + 0.6 * back, z), lift=hop2)
+        for nm, dx in pops.items():
+            ob = HM[nm]; x, y, z = C.items[nm]['xyz']; k = g - dict((e[0], e[3]) for e in eng)[nm] - 1
+            if k < 0 or g > 1340: ob.hide_render = True; continue
             ob.hide_render = False; T = 14.0; u = min(1.0, k / T); sgn = 1 if int(nm[1:]) % 2 else -1
             px = x + 0.3 * sgn + dx * 1.3 * sstep(u); py = y + 0.6 + 0.5 * sstep(u)
-            hz = z + 1.55 * (1 - sstep(u)) + 1.6 * 4 * u * (1 - u) + (0.0 if u < 1 else 0.0)
+            hz = z + 1.55 * (1 - sstep(u)) + 1.6 * 4 * u * (1 - u)
             tilt = (dx * 140 * sstep(u) + 40 * math.sin(k * 0.9) * (1 - u)) if u < 1 else dx * 120
             ob.location = (px, py, hz); d_ = Vector(cam.location) - Vector((px, py, hz)); ob.rotation_euler = (0.0, math.radians(tilt), math.atan2(d_.x, -d_.y))
         C.sprites(f); bpy.context.view_layer.update(); actors.sync_all(scene, cam)

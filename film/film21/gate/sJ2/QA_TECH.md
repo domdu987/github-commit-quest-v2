@@ -1,13 +1,43 @@
-# QA-tech sJ2 (g1709-1848, 140 frames, 720x1280) - TAKE gate
-Checked: 6 fps frames, first/last 4 frames, full-size stills. Colour-only items waived. Rim light noted.
+# QA-tech sJ2 v2 (team11 0ff1b41)
 
-## Verdict: FAIL
+Take g1709-1848, 140 frames, 720x1280, cut in. Checked: phone sheet, contact sheet, every 5th frame, full-size stills at idx 4/20/40/64/76/92/112/139. qa_auto PASS; rhythm median 8.98, p90 25.23. Colour waived (conform).
 
-OK: whip-in at g1709-1714 lands on the riverbank; one soldier pinches his nose (6fps idx 6-11); jump arcs at 59.0-59.8 (idx 13-16) with moving bodies and splash crowns; swimmers splutter (squint, open mouths); helmets float (idx 25-27); the camera drops to water level; last frame g1847 is a crown; no blood, no blur/DOF, no mouths in quote windows (narration only); feet have contact shadows.
+## Verdict: PASS (no blocking issues; 4 non-blocking fixes)
+
+## Old list (v1) against this take
+| old item | status |
+|---|---|
+| 1 bridge/Scots wall not in frame | PARTLY fixed. Heads now turn left toward a bridge structure (dark timbers behind a tree) in g1715-1770, and the three turns read (bridge, water, each other with sweat drop). The wall itself is tiny and dark, no saltire is readable. Non-blocking (N1). |
+| 2 blue-clad English | FIXED. Every English figure is crimson (gold lion badge on the surcoat, grey/olive helmets). No blue figures. |
+| 3 last frames buried/empty | FIXED. g1843-1848: three heads at medium size (about 12-18 % of frame height) at y 330-480 of 1280, a crown beside them, not over them. Strong button. |
+| 4 whip-in opens on empty ground | FIXED. The group edge and water are in frame from g1709; the group is full by g1713. |
+| 5 grey spike slabs on the horizon | NOT fixed (N2). |
+| 4 (art) thin splash, no hexagon beads | FIXED. Crown sheets, streaks and small drops; three separate crowns. |
+
+## Beat table
+| g | beat | read at phone size |
+|---|---|---|
+| 1709-1713 | whip-in to the group | OK, lands on soldiers and water, no empty frame |
+| 1713-1730 | heads turn to the bridge (left) | readable direction; bridge tiny/backlit (N1) |
+| 1731-1746 | heads turn to the water | OK |
+| 1747-1772 | look at each other, sweat drop, nose pinch (g1756+) | OK, funny, face about 20 % of frame |
+| 1773-1792 | jump, arms up, wide-eyed yell | OK, moving arcs, pose reads; one jumper cut by the left edge by design (N3) |
+| 1793-1805 | camera drops, crown very close to lens | white shard covers the left quarter for a few frames (N3) |
+| 1806-1820 | swimmers in water, spluttering, floating helmet | OK, bodies sit in the water with ripple rings and read as swimming |
+| 1821 / 1830 / 1839 | three crowns, "ตูม" x3 | OK, separate, thin, each falls before the next; timing matches 59.2 / 59.75 / 60.6-61.2 within one frame |
+| 1840-1848 | three spluttering heads plus a crown beside them, hard cut | OK, readable comic image, strong button |
+
+## Other checks
+- Heads above y 880: all heads at y about 150-480 of 1280 (bank) and 330-560 (water). Pass.
+- Nothing floats: bank feet have contact shadows; swimmers are waist deep in the water with rings. Pass.
+- Colour story: English crimson with gold badge; the set palette (teal river, orange bank) counts as content and is fine.
+- Characters acting throughout, no idle. Camera: stays about 2.9 m from the swimmers, no pass-through of any face.
+- Bloodless; nobody lies still or drowns; Cressingham and his table are not in this segment (correct, plan has none here); no speech or mouths in quote windows.
 
 ## Issues
-1. g1715-1790 (idx 1-12): the "look at the blocked bridge" beat is not readable. No bridge and no Scots wall is in frame; the English stare at or past the camera. The viewer sees them looking at the water, but not why. Fix: aim the opening so the blocked bridge mouth with the blue-banner spear wall is in the far upper-right while the English turn their heads to it first (g1715-1735), then to the water, then to each other.
-2. g1709-1840 (all): the English group includes BLUE-clad figures (a blue tunic soldier with a straw helmet who pinches his nose, and a blue-white small soldier). Blue = Scots. Fix: recolour all of them to English crimson/gold.
-3. g~1830-1847 (idx 24-27, last 4 frames): "ตูม ตูม ตูม" crowns are tall white hex columns but they bury the swimmers; the last frame has the lower 55 percent as bare cyan water and the swimmers tiny at the horizon (about 4 percent of frame height). Fix: push in more and tilt the camera down 8 deg so the crown plus a spluttering head sit at 30-60 percent of frame height at g1847.
-4. g1709-1714 (first 3 frames): the whip-in opens on blurred empty ground/water with no character until n~6. Acceptable for a whip, but the whip ends at the English only at g1715; fix by landing the whip on the group by g1713.
-5. Note: grey curved spike shapes on the horizon (idx 0-20) look like unexplained slabs. Soft-plume them or delete.
+| id | g range | issue | fix | level |
+|---|---|---|---|---|
+| N1 | g1713-1772 | The Scots wall and saltire are not readable (small, dark, behind a tree at far left). The "why jump" reason relies on narration. | Lift the bridge-mouth silhouette: add rim or lighter backdrop, move the tree off it, or raise the saltire banners. | non-blocking |
+| N2 | g1709-1848 | Grey curved horn/tusk shapes on the horizon read as unexplained slabs (largest at g1799-1848 above the far bank). | Delete them or soft-plume them into smoke. | non-blocking |
+| N3 | g1800-1806 | A near-lens white crown shard covers the left quarter for a few frames; a swimmer at the left edge is cut from g1829 to the cut. | Shrink or move the first crown 20 cm from the lens; shift the camera 0.3 m left so the left swimmer is whole. | non-blocking |
+| N4 | g1793-1830 | The near-bank foam band is a bright white diagonal in the lower middle, drawing the eye away from faces. | Dim the foam band by about 30 %. | non-blocking |

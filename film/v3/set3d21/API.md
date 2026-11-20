@@ -162,9 +162,18 @@ for g in range(0, 96):
 - Known: warm ochre/orange still shows in the loop meadow and around the camp in valley_wide / P_A (the low warm sun on the straw meadow); the hill's lower skirt has a thin orange rim.
 
 ## 15. Director retune after the palette fix (2026-11-20 19:00)
-- The palette-fix VIVID of valley_wide and valley_loop (sat multipliers about 2.4) made those views violet and orange. They are now calm: valley_wide (1.3, 1.2, 0.85) and valley_loop (1.35, 1.15, 0.8), the same family as P_TOP (1.4, 1.1, 0.75).
+- The palette-fix VIVID of valley_wide and valley_loop (sat multipliers of about 2.4) made those views violet and orange. They are now calm, in the same family as P_TOP (1.4, 1.1, 0.75): valley_wide (1.3, 1.2, 0.85) and valley_loop (1.35, 1.15, 0.8).
 - The valley_wide camera looks toward the sun, so its frame is mostly shade. Do NOT use it as a hero wide.
-- **New `P_HOOK`** = (-60, -260, 230) -> (60, 60, 0), 22 mm, VIVID (1.4, 1.1, 0.75). It is the front-lit extreme wide from the south: the loop, the bridge, the camp and the dark crag in one frame (draft sat 0.48 / luma 92). BIGZOOM 1 (A1) STARTS here.
-- **P_A moved** to (40, 10, 95) -> (150, 140, 20), 22 mm, VIVID (1.3, 1.2, 0.85). It is low over the river SW of Abbey Craig, looking NE at the crag with its pines. The old pose is kept as `P_A_OLD`.
+- **New `P_HOOK`** = (-60, -260, 230) -> (60, 60, 0), 22 mm, VIVID (1.4, 1.1, 0.75). It is the front-lit extreme wide from the south: the loop, the bridge, the camp and the dark crag in one frame. BIGZOOM 1 (A1) STARTS here.
+- **P_A moved** to (40, 10, 95) -> (150, 140, 20), 22 mm, VIVID (1.3, 1.2, 0.85): low over the river SW of Abbey Craig, looking NE at the crag and its pines. The old pose is kept as `P_A_OLD`.
 - **A2** flies from P_A up the crag and arcs around over the Scots, ending behind them looking SW down at the bridge (the hill_over family of poses).
-- Turn on `scots_wide=True` with `toward` set at the P_HOOK/P_A camera, so the Scots line faces the south viewer.
+- Use `scots_wide=True` with `toward` at the P_HOOK/P_A camera, so the Scots line faces the south viewer.
+
+## 16. Banners and smoke near the lens (fix after the H2b / C gates)
+- The grey curved "blades" were the SMOKE plumes (flat grey emission tubes), not the banner cloths: the Wave-modified cloth keeps its material, its tint attribute and both sides (checked close up: crimson with the gold chevron, blue saltire). The plume material is now soft: warm-grey emission, transparent at the silhouette (facing falloff) and fading to the top, so a plume near the lens is a soft puff.
+- `K.hide_near_banners(points, radius=15.0, smoke=True, banners=True)`: hides (hide_render) every live banner (all parts of it) and, with smoke=True, every smoke plume within `radius` m of any point of the camera path (`(x, y, z)` 3D distance, or `(x, y)`); returns (banners hidden, plumes hidden). `K.show_all_banners()` undoes it. Typical: `pts = [K.cam_path(None, keys, g)['loc'] for g in range(f0, f1 + 1, 3)]; K.hide_near_banners(pts, 15)` before rendering the segment. `python3 t_banners.py` flies camp_wide -> camp_bank through the camp in drafts (`styleboard/banner_strip.jpg`).
+- Colour story: English banners crimson/gold (and cream, green), Scots banners blue saltire only (`t_saltire`); the generic banner list in the camp has no blue-and-white saltire.
+- **Blue means Scots only.** The English camp has no blue left: pavilion stripes are crimson/cream or gold/cream, the knight surcoats and caparisons (`KNIGHT_MATS`, the horse lines, the camp_wide parade) are crimson, gold or cream, the table canopy is crimson/gold, the weapon-rack shields are crimson/gold, and the `knight_b` placeholder card is gold. Blue stays on the Scots saltire banners (`t_saltire`) and the Scots tunics.
+
+## 17. Scots far-wide line in saltire blue (director, 2026-11-20 22:10)
+`K.scots_wide_line` figures are now saltire blue with a few white, with no ochre, thatch or brown: QA-art A1 found the ochre read as gold "confetti" close to the English gold. Pass `banners=5` (or more) for the hook. A1 and A2 must use the SAME call (same `n`, `banners`, `toward`) so P_A matches across the D6.

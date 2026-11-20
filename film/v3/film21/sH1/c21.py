@@ -18,7 +18,7 @@ DRAWN = {"cressingham": (3.23, 1.78), "surrey": (3.20, 1.66), "knight_a": (3.26,
 SPR = os.path.join(HERE, "sprites")
 
 def cast_scale(cast):
-    base = cast.split("_v")[0]
+    base = cast.split("_v")[0].split("_blue")[0].split("_crim")[0]
     d, h = DRAWN[base]; return h / d
 
 def make_actor(name, cast, px=None):
