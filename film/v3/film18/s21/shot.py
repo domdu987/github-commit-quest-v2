@@ -14,8 +14,8 @@ G0, G1 = 1596, 1683
 H_IN, H_OUT = 6, 6
 G_WORD = C.g_of(54.76)                                            # 1646: "สัตว์ประหลาด"
 MOVE = dict(push=0.09, slide=6, moves=[])
-SHAKE = (0.5, 0.4, 0.3, 2.6)
-SNAPS = [(G0 + 12, 1.3, 3, 10), (G0 + 31, 1.32, 3, 10), (G_WORD - 2, 1.5, 4, 70)]                                 # the x1.5 snap on the word (a lens snap that eases back slowly)
+SHAKE = (0.8, 0.6, 0.4, 2.6)
+SNAPS = [(G0 + 14, 1.12, 4, 9999), (G_WORD - 2, 1.4, 4, 9999)]      # HELD punch-ins only (ALL_TEAMS rule 1: no pulses)
 LENS0 = 22.0
 SPEED = 3.8                                                       # D/s of the herd toward the camera
 FRONT_Y = -27.0                                                   # front row of the herd at g0

@@ -1,199 +1,199 @@
-00:00.388  cycles           | WARNING CUEW initialization failed: Error opening the library
-00:33.642  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1590.png'
-s21 g 1590: 30.8 s wall 39.7 cpu heads {'soldier_stand_a': 666, 'soldier_cheer_cup_b': 665, 'soldier_stand_c': 666}
-01:08.266  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1591.png'
-s21 g 1591: 34.6 s wall 38.0 cpu heads {'soldier_stand_a': 671, 'soldier_cheer_cup_b': 669, 'soldier_stand_c': 671}
-01:31.939  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1592.png'
-s21 g 1592: 23.6 s wall 39.0 cpu heads {'soldier_stand_a': 672, 'soldier_cheer_cup_b': 670, 'soldier_stand_c': 672}
-01:53.345  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1593.png'
-s21 g 1593: 21.4 s wall 40.2 cpu heads {'soldier_stand_a': 671, 'soldier_cheer_cup_b': 667, 'soldier_stand_c': 669}
-02:13.215  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1594.png'
-s21 g 1594: 19.8 s wall 39.1 cpu heads {'soldier_stand_a': 668, 'soldier_cheer_cup_b': 665, 'soldier_stand_c': 667}
-02:33.884  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1595.png'
-s21 g 1595: 20.6 s wall 40.5 cpu heads {'soldier_stand_a': 667, 'soldier_cheer_cup_b': 665, 'soldier_stand_c': 667}
-02:54.508  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1596.png'
-s21 g 1596: 20.6 s wall 40.4 cpu heads {'soldier_stand_a': 667, 'soldier_cheer_cup_b': 666, 'soldier_stand_c': 667}
-03:15.421  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1597.png'
-s21 g 1597: 20.9 s wall 41.2 cpu heads {'soldier_stand_a': 666, 'soldier_cheer_cup_b': 666, 'soldier_stand_c': 666}
-03:37.084  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1598.png'
-s21 g 1598: 21.6 s wall 42.4 cpu heads {'soldier_stand_a': 664, 'soldier_cheer_cup_b': 666, 'soldier_stand_c': 665}
-03:59.425  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1599.png'
-s21 g 1599: 22.3 s wall 43.8 cpu heads {'soldier_stand_a': 665, 'soldier_cheer_cup_b': 668, 'soldier_stand_c': 666}
-04:22.770  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1600.png'
-s21 g 1600: 23.3 s wall 46.1 cpu heads {'soldier_stand_a': 669, 'soldier_cheer_cup_b': 672, 'soldier_stand_c': 670}
-04:44.978  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1601.png'
-s21 g 1601: 22.2 s wall 43.6 cpu heads {'soldier_stand_a': 674, 'soldier_cheer_cup_b': 677, 'soldier_stand_c': 675}
-05:08.263  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1602.png'
-s21 g 1602: 23.3 s wall 45.9 cpu heads {'soldier_stand_a': 675, 'soldier_cheer_cup_b': 678, 'soldier_stand_c': 676}
-05:30.639  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1603.png'
-s21 g 1603: 22.3 s wall 44.1 cpu heads {'soldier_stand_a': 674, 'soldier_cheer_cup_b': 676, 'soldier_stand_c': 674}
-05:52.591  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1604.png'
-s21 g 1604: 21.9 s wall 43.2 cpu heads {'soldier_stand_a': 673, 'soldier_cheer_cup_b': 673, 'soldier_stand_c': 672}
-06:11.358  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1605.png'
-s21 g 1605: 18.7 s wall 36.8 cpu heads {'soldier_stand_a': 673, 'soldier_cheer_cup_b': 673, 'soldier_stand_c': 672}
-06:31.423  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1606.png'
-s21 g 1606: 20.0 s wall 39.4 cpu heads {'soldier_stand_a': 674, 'soldier_cheer_cup_b': 673, 'soldier_stand_c': 672}
-06:49.613  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1607.png'
-s21 g 1607: 18.2 s wall 35.7 cpu heads {'soldier_stand_a': 673, 'soldier_cheer_cup_b': 672, 'soldier_stand_c': 672}
-07:09.322  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1608.png'
-s21 g 1608: 19.7 s wall 38.6 cpu heads {'soldier_stand_a': 672, 'soldier_cheer_cup_b': 671, 'soldier_stand_c': 671}
-07:28.661  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1609.png'
-s21 g 1609: 19.3 s wall 37.8 cpu heads {'soldier_stand_a': 675, 'soldier_cheer_cup_b': 675, 'soldier_stand_c': 674}
-07:49.828  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1610.png'
-s21 g 1610: 21.1 s wall 41.8 cpu heads {'soldier_stand_a': 684, 'soldier_cheer_cup_b': 686, 'soldier_stand_c': 684}
-08:13.231  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1611.png'
-s21 g 1611: 23.4 s wall 45.6 cpu heads {'soldier_stand_a': 692, 'soldier_cheer_cup_b': 696, 'soldier_stand_c': 692}
-08:36.703  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1612.png'
-s21 g 1612: 23.4 s wall 46.1 cpu heads {'soldier_stand_a': 694, 'soldier_cheer_cup_b': 699, 'soldier_stand_c': 694}
-09:00.269  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1613.png'
-s21 g 1613: 23.5 s wall 46.1 cpu heads {'soldier_stand_a': 691, 'soldier_cheer_cup_b': 697, 'soldier_stand_c': 692}
-09:22.923  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1614.png'
-s21 g 1614: 22.6 s wall 44.6 cpu heads {'soldier_stand_a': 687, 'soldier_cheer_cup_b': 694, 'soldier_stand_c': 688}
-09:44.157  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1615.png'
-s21 g 1615: 21.2 s wall 41.5 cpu heads {'soldier_stand_a': 685, 'soldier_cheer_cup_b': 692, 'soldier_stand_c': 686}
-10:05.344  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1616.png'
-s21 g 1616: 21.2 s wall 41.9 cpu heads {'soldier_stand_a': 684, 'soldier_cheer_cup_b': 690, 'soldier_stand_c': 685}
-10:26.054  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1617.png'
-s21 g 1617: 20.7 s wall 40.2 cpu heads {'soldier_stand_a': 682, 'soldier_cheer_cup_b': 687, 'soldier_stand_c': 682}
-10:45.272  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1618.png'
-s21 g 1618: 19.2 s wall 37.9 cpu heads {'soldier_stand_a': 680, 'soldier_cheer_cup_b': 683, 'soldier_stand_c': 680}
-11:04.239  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1619.png'
-s21 g 1619: 18.9 s wall 37.3 cpu heads {'soldier_stand_a': 680, 'soldier_cheer_cup_b': 682, 'soldier_stand_c': 679}
-11:23.906  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1620.png'
-s21 g 1620: 19.6 s wall 38.6 cpu heads {'soldier_stand_a': 684, 'soldier_cheer_cup_b': 685, 'soldier_stand_c': 683}
-11:43.033  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1621.png'
-s21 g 1621: 19.1 s wall 37.4 cpu heads {'soldier_stand_a': 689, 'soldier_cheer_cup_b': 690, 'soldier_stand_c': 687}
-12:03.988  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1622.png'
-s21 g 1622: 20.9 s wall 41.1 cpu heads {'soldier_stand_a': 691, 'soldier_cheer_cup_b': 693, 'soldier_stand_c': 689}
-12:24.238  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1623.png'
-s21 g 1623: 20.2 s wall 39.6 cpu heads {'soldier_stand_a': 689, 'soldier_cheer_cup_b': 692, 'soldier_stand_c': 689}
-12:44.610  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1624.png'
-s21 g 1624: 20.3 s wall 40.0 cpu heads {'soldier_stand_a': 687, 'soldier_cheer_cup_b': 692, 'soldier_stand_c': 687}
-13:05.064  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1625.png'
-s21 g 1625: 20.4 s wall 39.9 cpu heads {'soldier_stand_a': 687, 'soldier_cheer_cup_b': 692, 'soldier_stand_c': 687}
-13:25.229  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1626.png'
-s21 g 1626: 20.1 s wall 39.5 cpu heads {'soldier_stand_a': 687, 'soldier_cheer_cup_b': 694, 'soldier_stand_c': 687}
-13:45.566  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1627.png'
-s21 g 1627: 20.3 s wall 40.0 cpu heads {'soldier_stand_a': 685, 'soldier_cheer_cup_b': 693, 'soldier_stand_c': 686}
-14:07.100  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1628.png'
-s21 g 1628: 21.5 s wall 42.4 cpu heads {'soldier_stand_a': 687, 'soldier_cheer_cup_b': 696, 'soldier_stand_c': 689}
-14:31.295  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1629.png'
-s21 g 1629: 24.2 s wall 47.6 cpu heads {'soldier_stand_a': 695, 'soldier_cheer_cup_b': 705, 'soldier_stand_c': 696}
-14:56.677  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1630.png'
-s21 g 1630: 25.4 s wall 49.7 cpu heads {'soldier_stand_a': 704, 'soldier_cheer_cup_b': 715, 'soldier_stand_c': 705}
-15:22.389  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1631.png'
-s21 g 1631: 25.7 s wall 50.6 cpu heads {'soldier_stand_a': 711, 'soldier_cheer_cup_b': 720, 'soldier_stand_c': 712}
-15:47.284  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1632.png'
-s21 g 1632: 24.9 s wall 48.6 cpu heads {'soldier_stand_a': 714, 'soldier_cheer_cup_b': 722, 'soldier_stand_c': 714}
-16:11.993  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1633.png'
-s21 g 1633: 24.7 s wall 48.4 cpu heads {'soldier_stand_a': 712, 'soldier_cheer_cup_b': 718, 'soldier_stand_c': 711}
-16:35.120  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1634.png'
-s21 g 1634: 23.1 s wall 45.4 cpu heads {'soldier_stand_a': 708, 'soldier_cheer_cup_b': 714, 'soldier_stand_c': 707}
-16:58.612  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1635.png'
-s21 g 1635: 23.5 s wall 46.2 cpu heads {'soldier_stand_a': 706, 'soldier_cheer_cup_b': 711, 'soldier_stand_c': 705}
-17:21.625  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1636.png'
-s21 g 1636: 23.0 s wall 45.1 cpu heads {'soldier_stand_a': 703, 'soldier_cheer_cup_b': 709, 'soldier_stand_c': 703}
-17:43.984  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1637.png'
-s21 g 1637: 22.3 s wall 43.9 cpu heads {'soldier_stand_a': 699, 'soldier_cheer_cup_b': 706, 'soldier_stand_c': 699}
-18:06.904  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1638.png'
-s21 g 1638: 22.9 s wall 44.8 cpu heads {'soldier_stand_a': 695, 'soldier_cheer_cup_b': 703, 'soldier_stand_c': 695}
-18:29.635  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1639.png'
-s21 g 1639: 22.7 s wall 44.5 cpu heads {'soldier_stand_a': 693, 'soldier_cheer_cup_b': 703, 'soldier_stand_c': 694}
-18:53.094  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1640.png'
-s21 g 1640: 23.4 s wall 46.2 cpu heads {'soldier_freeze_a': 696, 'soldier_cheer_cup_b': 707, 'soldier_freeze_c': 698}
-19:16.251  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1641.png'
-s21 g 1641: 23.1 s wall 45.5 cpu heads {'soldier_freeze_a': 701, 'soldier_cheer_cup_b': 712, 'soldier_freeze_c': 703}
-19:40.323  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1642.png'
-s21 g 1642: 24.0 s wall 47.1 cpu heads {'soldier_freeze_a': 703, 'soldier_cheer_cup_b': 716, 'soldier_freeze_c': 706}
-20:04.713  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1643.png'
-s21 g 1643: 24.4 s wall 47.7 cpu heads {'soldier_freeze_a': 703, 'soldier_cheer_cup_b': 716, 'soldier_freeze_c': 706}
-20:29.654  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1644.png'
-s21 g 1644: 24.9 s wall 48.7 cpu heads {'soldier_freeze_a': 703, 'soldier_freeze_b': 715, 'soldier_freeze_c': 705}
-20:56.874  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1645.png'
-s21 g 1645: 27.2 s wall 53.4 cpu heads {'soldier_freeze_a': 708, 'soldier_freeze_b': 720, 'soldier_freeze_c': 710}
-21:28.759  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1646.png'
-s21 g 1646: 31.9 s wall 62.1 cpu heads {'soldier_freeze_a': 720, 'soldier_freeze_b': 733, 'soldier_freeze_c': 722}
-22:05.308  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1647.png'
-s21 g 1647: 36.5 s wall 71.4 cpu heads {'soldier_freeze_a': 731, 'soldier_freeze_b': 744, 'soldier_freeze_c': 732}
-22:44.693  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1648.png'
-s21 g 1648: 39.4 s wall 77.1 cpu heads {'soldier_freeze_a': 733, 'soldier_freeze_b': 747, 'soldier_freeze_c': 734}
-23:24.909  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1649.png'
-s21 g 1649: 40.2 s wall 78.8 cpu heads {'soldier_freeze_a': 733, 'soldier_freeze_b': 747, 'soldier_freeze_c': 734}
-24:07.383  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1650.png'
-s21 g 1650: 42.4 s wall 83.0 cpu heads {'soldier_freeze_a': 738, 'soldier_freeze_b': 752, 'soldier_freeze_c': 739}
-24:49.556  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1651.png'
-s21 g 1651: 42.1 s wall 82.8 cpu heads {'soldier_freeze_a': 745, 'soldier_freeze_b': 761, 'soldier_freeze_c': 747}
-25:38.406  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1652.png'
-s21 g 1652: 48.8 s wall 89.6 cpu heads {'soldier_freeze_a': 749, 'soldier_freeze_b': 767, 'soldier_freeze_c': 751}
-26:37.188  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1653.png'
-s21 g 1653: 58.7 s wall 84.1 cpu heads {'soldier_freeze_a': 748, 'soldier_freeze_b': 768, 'soldier_freeze_c': 751}
-27:20.132  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1654.png'
-s21 g 1654: 42.9 s wall 84.4 cpu heads {'soldier_freeze_a': 745, 'soldier_freeze_b': 768, 'soldier_freeze_c': 750}
-28:02.946  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1655.png'
-s21 g 1655: 42.8 s wall 83.6 cpu heads {'soldier_freeze_a': 745, 'soldier_freeze_b': 769, 'soldier_freeze_c': 750}
-28:45.829  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1656.png'
-s21 g 1656: 42.9 s wall 84.1 cpu heads {'soldier_freeze_a': 745, 'soldier_freeze_b': 770, 'soldier_freeze_c': 750}
-29:28.447  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1657.png'
-s21 g 1657: 42.6 s wall 83.7 cpu heads {'soldier_freeze_a': 743, 'soldier_freeze_b': 768, 'soldier_freeze_c': 749}
-30:11.930  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1658.png'
-s21 g 1658: 43.5 s wall 85.4 cpu heads {'soldier_freeze_a': 740, 'soldier_freeze_b': 764, 'soldier_freeze_c': 745}
-30:55.118  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1659.png'
-s21 g 1659: 43.2 s wall 85.2 cpu heads {'soldier_freeze_a': 740, 'soldier_freeze_b': 762, 'soldier_freeze_c': 744}
-31:40.963  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1660.png'
-s21 g 1660: 45.8 s wall 89.7 cpu heads {'soldier_freeze_a': 745, 'soldier_freeze_b': 766, 'soldier_freeze_c': 748}
-32:26.176  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1661.png'
-s21 g 1661: 45.2 s wall 88.8 cpu heads {'soldier_freeze_a': 752, 'soldier_freeze_b': 772, 'soldier_freeze_c': 755}
-33:11.447  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1662.png'
-s21 g 1662: 45.2 s wall 88.9 cpu heads {'soldier_freeze_a': 757, 'soldier_freeze_b': 776, 'soldier_freeze_c': 760}
-33:57.245  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1663.png'
-s21 g 1663: 45.8 s wall 89.9 cpu heads {'soldier_freeze_a': 757, 'soldier_freeze_b': 776, 'soldier_freeze_c': 760}
-34:43.319  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1664.png'
-s21 g 1664: 46.0 s wall 90.3 cpu heads {'soldier_freeze_a': 755, 'soldier_freeze_b': 775, 'soldier_freeze_c': 759}
-35:30.971  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1665.png'
-s21 g 1665: 47.6 s wall 93.6 cpu heads {'soldier_freeze_a': 754, 'soldier_freeze_b': 776, 'soldier_freeze_c': 758}
-36:17.744  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1666.png'
-s21 g 1666: 46.7 s wall 91.3 cpu heads {'soldier_freeze_a': 753, 'soldier_freeze_b': 778, 'soldier_freeze_c': 758}
-37:05.984  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1667.png'
-s21 g 1667: 48.2 s wall 94.6 cpu heads {'soldier_freeze_a': 750, 'soldier_freeze_b': 777, 'soldier_freeze_c': 756}
-37:51.675  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1668.png'
-s21 g 1668: 45.7 s wall 90.0 cpu heads {'soldier_freeze_a': 745, 'soldier_freeze_b': 774, 'soldier_freeze_c': 752}
-38:38.403  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1669.png'
-s21 g 1669: 46.7 s wall 91.9 cpu heads {'soldier_freeze_a': 743, 'soldier_freeze_b': 772, 'soldier_freeze_c': 750}
-39:25.418  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1670.png'
-s21 g 1670: 47.0 s wall 92.6 cpu heads {'soldier_freeze_a': 746, 'soldier_freeze_b': 776, 'soldier_freeze_c': 753}
-40:12.644  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1671.png'
-s21 g 1671: 47.2 s wall 93.0 cpu heads {'soldier_freeze_a': 752, 'soldier_freeze_b': 781, 'soldier_freeze_c': 759}
-40:58.914  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1672.png'
-s21 g 1672: 46.2 s wall 91.3 cpu heads {'soldier_freeze_a': 756, 'soldier_freeze_b': 785, 'soldier_freeze_c': 763}
-41:44.936  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1673.png'
-s21 g 1673: 46.0 s wall 90.6 cpu heads {'soldier_freeze_a': 757, 'soldier_freeze_b': 784, 'soldier_freeze_c': 763}
-42:31.326  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1674.png'
-s21 g 1674: 46.4 s wall 91.2 cpu heads {'soldier_freeze_a': 756, 'soldier_freeze_b': 781, 'soldier_freeze_c': 761}
-43:16.068  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1675.png'
-s21 g 1675: 44.7 s wall 88.1 cpu heads {'soldier_freeze_a': 756, 'soldier_freeze_b': 780, 'soldier_freeze_c': 761}
-44:00.141  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1676.png'
-s21 g 1676: 44.0 s wall 86.6 cpu heads {'soldier_freeze_a': 756, 'soldier_freeze_b': 780, 'soldier_freeze_c': 761}
-44:44.785  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1677.png'
-s21 g 1677: 44.6 s wall 87.6 cpu heads {'soldier_freeze_a': 754, 'soldier_freeze_b': 777, 'soldier_freeze_c': 758}
-45:29.470  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1678.png'
-s21 g 1678: 44.7 s wall 87.8 cpu heads {'soldier_freeze_a': 749, 'soldier_freeze_b': 774, 'soldier_freeze_c': 754}
-46:14.727  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1679.png'
-s21 g 1679: 45.2 s wall 89.0 cpu heads {'soldier_freeze_a': 745, 'soldier_freeze_b': 772, 'soldier_freeze_c': 751}
-47:01.035  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1680.png'
-s21 g 1680: 46.3 s wall 90.9 cpu heads {'soldier_freeze_a': 747, 'soldier_freeze_b': 775, 'soldier_freeze_c': 753}
-47:45.164  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1681.png'
-s21 g 1681: 44.1 s wall 87.0 cpu heads {'soldier_freeze_a': 751, 'soldier_freeze_b': 781, 'soldier_freeze_c': 758}
-48:28.996  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1682.png'
-s21 g 1682: 43.8 s wall 86.5 cpu heads {'soldier_freeze_a': 753, 'soldier_freeze_b': 785, 'soldier_freeze_c': 761}
-49:13.257  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1683.png'
-s21 g 1683: 44.2 s wall 87.2 cpu heads {'soldier_freeze_a': 753, 'soldier_freeze_b': 785, 'soldier_freeze_c': 761}
-49:55.389  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1684.png'
-s21 g 1684: 42.1 s wall 83.1 cpu heads {'soldier_freeze_a': 752, 'soldier_freeze_b': 784, 'soldier_freeze_c': 759}
-50:37.631  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1685.png'
-s21 g 1685: 42.2 s wall 83.2 cpu heads {'soldier_freeze_a': 751, 'soldier_freeze_b': 783, 'soldier_freeze_c': 759}
-51:19.628  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1686.png'
-s21 g 1686: 42.0 s wall 82.4 cpu heads {'soldier_freeze_a': 752, 'soldier_freeze_b': 782, 'soldier_freeze_c': 759}
-52:00.076  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1687.png'
-s21 g 1687: 40.4 s wall 79.8 cpu heads {'soldier_freeze_a': 750, 'soldier_freeze_b': 779, 'soldier_freeze_c': 756}
-52:38.346  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1688.png'
-s21 g 1688: 38.2 s wall 75.5 cpu heads {'soldier_freeze_a': 746, 'soldier_freeze_b': 773, 'soldier_freeze_c': 752}
+00:00.437  cycles           | WARNING CUEW initialization failed: Error opening the library
+00:20.753  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1590.png'
+s21 g 1590: 18.3 s wall 36.3 cpu heads {'soldier_stand_a': 667, 'soldier_cheer_cup_b': 666, 'soldier_stand_c': 667}
+00:39.365  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1591.png'
+s21 g 1591: 18.6 s wall 36.8 cpu heads {'soldier_stand_a': 673, 'soldier_cheer_cup_b': 671, 'soldier_stand_c': 673}
+00:58.373  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1592.png'
+s21 g 1592: 19.0 s wall 37.5 cpu heads {'soldier_stand_a': 675, 'soldier_cheer_cup_b': 672, 'soldier_stand_c': 674}
+01:17.663  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1593.png'
+s21 g 1593: 19.3 s wall 38.1 cpu heads {'soldier_stand_a': 672, 'soldier_cheer_cup_b': 668, 'soldier_stand_c': 671}
+01:36.964  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1594.png'
+s21 g 1594: 19.3 s wall 38.0 cpu heads {'soldier_stand_a': 669, 'soldier_cheer_cup_b': 665, 'soldier_stand_c': 667}
+01:55.610  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1595.png'
+s21 g 1595: 18.6 s wall 36.8 cpu heads {'soldier_stand_a': 667, 'soldier_cheer_cup_b': 664, 'soldier_stand_c': 666}
+02:14.211  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1596.png'
+s21 g 1596: 18.6 s wall 36.7 cpu heads {'soldier_stand_a': 667, 'soldier_cheer_cup_b': 665, 'soldier_stand_c': 666}
+02:32.737  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1597.png'
+s21 g 1597: 18.5 s wall 36.7 cpu heads {'soldier_stand_a': 665, 'soldier_cheer_cup_b': 665, 'soldier_stand_c': 665}
+02:51.869  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1598.png'
+s21 g 1598: 19.1 s wall 37.8 cpu heads {'soldier_stand_a': 662, 'soldier_cheer_cup_b': 664, 'soldier_stand_c': 663}
+03:11.360  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1599.png'
+s21 g 1599: 19.5 s wall 38.3 cpu heads {'soldier_stand_a': 663, 'soldier_cheer_cup_b': 667, 'soldier_stand_c': 665}
+03:31.294  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1600.png'
+s21 g 1600: 19.9 s wall 39.1 cpu heads {'soldier_stand_a': 669, 'soldier_cheer_cup_b': 673, 'soldier_stand_c': 670}
+03:50.651  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1601.png'
+s21 g 1601: 19.3 s wall 38.3 cpu heads {'soldier_stand_a': 675, 'soldier_cheer_cup_b': 679, 'soldier_stand_c': 677}
+04:10.129  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1602.png'
+s21 g 1602: 19.4 s wall 38.3 cpu heads {'soldier_stand_a': 678, 'soldier_cheer_cup_b': 681, 'soldier_stand_c': 679}
+04:29.941  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1603.png'
+s21 g 1603: 19.8 s wall 39.0 cpu heads {'soldier_stand_a': 676, 'soldier_cheer_cup_b': 678, 'soldier_stand_c': 676}
+04:49.433  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1604.png'
+s21 g 1604: 19.5 s wall 38.3 cpu heads {'soldier_stand_a': 673, 'soldier_cheer_cup_b': 673, 'soldier_stand_c': 673}
+05:05.512  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1605.png'
+s21 g 1605: 16.1 s wall 31.8 cpu heads {'soldier_stand_a': 673, 'soldier_cheer_cup_b': 672, 'soldier_stand_c': 672}
+05:22.052  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1606.png'
+s21 g 1606: 16.5 s wall 32.5 cpu heads {'soldier_stand_a': 674, 'soldier_cheer_cup_b': 672, 'soldier_stand_c': 672}
+05:39.127  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1607.png'
+s21 g 1607: 17.1 s wall 33.6 cpu heads {'soldier_stand_a': 672, 'soldier_cheer_cup_b': 670, 'soldier_stand_c': 670}
+05:56.392  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1608.png'
+s21 g 1608: 17.2 s wall 33.9 cpu heads {'soldier_stand_a': 670, 'soldier_cheer_cup_b': 669, 'soldier_stand_c': 669}
+06:13.493  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1609.png'
+s21 g 1609: 17.1 s wall 33.7 cpu heads {'soldier_stand_a': 671, 'soldier_cheer_cup_b': 670, 'soldier_stand_c': 670}
+06:30.754  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1610.png'
+s21 g 1610: 17.2 s wall 33.9 cpu heads {'soldier_stand_a': 676, 'soldier_cheer_cup_b': 677, 'soldier_stand_c': 676}
+06:48.233  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1611.png'
+s21 g 1611: 17.4 s wall 34.5 cpu heads {'soldier_stand_a': 683, 'soldier_cheer_cup_b': 686, 'soldier_stand_c': 683}
+07:06.446  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1612.png'
+s21 g 1612: 18.2 s wall 35.8 cpu heads {'soldier_stand_a': 687, 'soldier_cheer_cup_b': 691, 'soldier_stand_c': 687}
+07:25.406  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1613.png'
+s21 g 1613: 18.9 s wall 37.3 cpu heads {'soldier_stand_a': 685, 'soldier_cheer_cup_b': 692, 'soldier_stand_c': 687}
+07:44.602  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1614.png'
+s21 g 1614: 19.2 s wall 38.0 cpu heads {'soldier_stand_a': 683, 'soldier_cheer_cup_b': 690, 'soldier_stand_c': 684}
+08:03.481  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1615.png'
+s21 g 1615: 18.8 s wall 37.2 cpu heads {'soldier_stand_a': 682, 'soldier_cheer_cup_b': 689, 'soldier_stand_c': 683}
+08:22.620  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1616.png'
+s21 g 1616: 19.1 s wall 37.8 cpu heads {'soldier_stand_a': 683, 'soldier_cheer_cup_b': 689, 'soldier_stand_c': 683}
+08:41.633  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1617.png'
+s21 g 1617: 19.0 s wall 37.5 cpu heads {'soldier_stand_a': 682, 'soldier_cheer_cup_b': 686, 'soldier_stand_c': 682}
+09:00.686  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1618.png'
+s21 g 1618: 19.0 s wall 37.5 cpu heads {'soldier_stand_a': 680, 'soldier_cheer_cup_b': 683, 'soldier_stand_c': 679}
+09:19.902  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1619.png'
+s21 g 1619: 19.2 s wall 38.0 cpu heads {'soldier_stand_a': 682, 'soldier_cheer_cup_b': 683, 'soldier_stand_c': 680}
+09:39.594  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1620.png'
+s21 g 1620: 19.7 s wall 38.8 cpu heads {'soldier_stand_a': 689, 'soldier_cheer_cup_b': 689, 'soldier_stand_c': 687}
+10:00.351  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1621.png'
+s21 g 1621: 20.7 s wall 40.7 cpu heads {'soldier_stand_a': 697, 'soldier_cheer_cup_b': 697, 'soldier_stand_c': 695}
+10:20.713  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1622.png'
+s21 g 1622: 20.3 s wall 40.0 cpu heads {'soldier_stand_a': 700, 'soldier_cheer_cup_b': 701, 'soldier_stand_c': 698}
+10:41.512  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1623.png'
+s21 g 1623: 20.8 s wall 40.9 cpu heads {'soldier_stand_a': 698, 'soldier_cheer_cup_b': 700, 'soldier_stand_c': 696}
+11:02.293  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1624.png'
+s21 g 1624: 20.8 s wall 40.9 cpu heads {'soldier_stand_a': 694, 'soldier_cheer_cup_b': 698, 'soldier_stand_c': 693}
+11:23.617  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1625.png'
+s21 g 1625: 21.3 s wall 41.9 cpu heads {'soldier_stand_a': 692, 'soldier_cheer_cup_b': 699, 'soldier_stand_c': 693}
+11:45.203  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1626.png'
+s21 g 1626: 21.6 s wall 42.3 cpu heads {'soldier_stand_a': 692, 'soldier_cheer_cup_b': 700, 'soldier_stand_c': 693}
+12:06.459  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1627.png'
+s21 g 1627: 21.2 s wall 41.7 cpu heads {'soldier_stand_a': 689, 'soldier_cheer_cup_b': 699, 'soldier_stand_c': 691}
+12:27.603  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1628.png'
+s21 g 1628: 21.1 s wall 41.7 cpu heads {'soldier_stand_a': 686, 'soldier_cheer_cup_b': 696, 'soldier_stand_c': 688}
+12:49.021  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1629.png'
+s21 g 1629: 21.4 s wall 42.3 cpu heads {'soldier_stand_a': 687, 'soldier_cheer_cup_b': 697, 'soldier_stand_c': 688}
+13:10.537  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1630.png'
+s21 g 1630: 21.5 s wall 42.5 cpu heads {'soldier_stand_a': 693, 'soldier_cheer_cup_b': 703, 'soldier_stand_c': 695}
+13:32.340  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1631.png'
+s21 g 1631: 21.8 s wall 42.6 cpu heads {'soldier_stand_a': 702, 'soldier_cheer_cup_b': 710, 'soldier_stand_c': 703}
+13:53.970  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1632.png'
+s21 g 1632: 21.6 s wall 42.5 cpu heads {'soldier_stand_a': 707, 'soldier_cheer_cup_b': 714, 'soldier_stand_c': 707}
+14:15.979  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1633.png'
+s21 g 1633: 22.0 s wall 43.3 cpu heads {'soldier_stand_a': 706, 'soldier_cheer_cup_b': 712, 'soldier_stand_c': 706}
+14:38.252  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1634.png'
+s21 g 1634: 22.2 s wall 43.7 cpu heads {'soldier_stand_a': 704, 'soldier_cheer_cup_b': 709, 'soldier_stand_c': 703}
+15:00.511  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1635.png'
+s21 g 1635: 22.2 s wall 43.7 cpu heads {'soldier_stand_a': 704, 'soldier_cheer_cup_b': 709, 'soldier_stand_c': 703}
+15:22.895  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1636.png'
+s21 g 1636: 22.4 s wall 44.2 cpu heads {'soldier_stand_a': 704, 'soldier_cheer_cup_b': 709, 'soldier_stand_c': 703}
+15:46.072  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1637.png'
+s21 g 1637: 23.2 s wall 45.6 cpu heads {'soldier_stand_a': 701, 'soldier_cheer_cup_b': 708, 'soldier_stand_c': 701}
+16:09.547  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1638.png'
+s21 g 1638: 23.4 s wall 46.4 cpu heads {'soldier_stand_a': 697, 'soldier_cheer_cup_b': 706, 'soldier_stand_c': 698}
+16:33.451  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1639.png'
+s21 g 1639: 23.9 s wall 46.9 cpu heads {'soldier_stand_a': 696, 'soldier_cheer_cup_b': 707, 'soldier_stand_c': 698}
+16:57.969  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1640.png'
+s21 g 1640: 24.5 s wall 48.3 cpu heads {'soldier_freeze_a': 701, 'soldier_cheer_cup_b': 714, 'soldier_freeze_c': 703}
+17:22.409  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1641.png'
+s21 g 1641: 24.4 s wall 48.1 cpu heads {'soldier_freeze_a': 709, 'soldier_cheer_cup_b': 723, 'soldier_freeze_c': 711}
+17:47.855  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1642.png'
+s21 g 1642: 25.4 s wall 49.9 cpu heads {'soldier_freeze_a': 713, 'soldier_cheer_cup_b': 728, 'soldier_freeze_c': 716}
+18:13.629  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1643.png'
+s21 g 1643: 25.7 s wall 50.9 cpu heads {'soldier_freeze_a': 713, 'soldier_cheer_cup_b': 727, 'soldier_freeze_c': 715}
+18:40.130  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1644.png'
+s21 g 1644: 26.5 s wall 52.2 cpu heads {'soldier_freeze_a': 711, 'soldier_freeze_b': 725, 'soldier_freeze_c': 713}
+19:08.628  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1645.png'
+s21 g 1645: 28.5 s wall 56.4 cpu heads {'soldier_freeze_a': 716, 'soldier_freeze_b': 729, 'soldier_freeze_c': 718}
+19:41.456  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1646.png'
+s21 g 1646: 32.8 s wall 65.2 cpu heads {'soldier_freeze_a': 727, 'soldier_freeze_b': 740, 'soldier_freeze_c': 728}
+20:20.678  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1647.png'
+s21 g 1647: 39.2 s wall 73.9 cpu heads {'soldier_freeze_a': 735, 'soldier_freeze_b': 748, 'soldier_freeze_c': 736}
+21:01.814  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1648.png'
+s21 g 1648: 41.1 s wall 77.3 cpu heads {'soldier_freeze_a': 735, 'soldier_freeze_b': 748, 'soldier_freeze_c': 735}
+21:42.096  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1649.png'
+s21 g 1649: 40.3 s wall 79.3 cpu heads {'soldier_freeze_a': 734, 'soldier_freeze_b': 747, 'soldier_freeze_c': 734}
+22:24.068  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1650.png'
+s21 g 1650: 41.9 s wall 82.8 cpu heads {'soldier_freeze_a': 741, 'soldier_freeze_b': 755, 'soldier_freeze_c': 742}
+23:06.696  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1651.png'
+s21 g 1651: 42.6 s wall 83.9 cpu heads {'soldier_freeze_a': 752, 'soldier_freeze_b': 767, 'soldier_freeze_c': 753}
+23:49.662  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1652.png'
+s21 g 1652: 42.9 s wall 84.6 cpu heads {'soldier_freeze_a': 757, 'soldier_freeze_b': 776, 'soldier_freeze_c': 760}
+24:33.765  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1653.png'
+s21 g 1653: 44.1 s wall 87.0 cpu heads {'soldier_freeze_a': 756, 'soldier_freeze_b': 777, 'soldier_freeze_c': 760}
+25:17.639  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1654.png'
+s21 g 1654: 43.8 s wall 86.6 cpu heads {'soldier_freeze_a': 752, 'soldier_freeze_b': 777, 'soldier_freeze_c': 757}
+26:01.169  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1655.png'
+s21 g 1655: 43.5 s wall 85.9 cpu heads {'soldier_freeze_a': 751, 'soldier_freeze_b': 778, 'soldier_freeze_c': 757}
+26:45.520  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1656.png'
+s21 g 1656: 44.3 s wall 87.2 cpu heads {'soldier_freeze_a': 751, 'soldier_freeze_b': 779, 'soldier_freeze_c': 757}
+27:29.110  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1657.png'
+s21 g 1657: 43.6 s wall 86.3 cpu heads {'soldier_freeze_a': 748, 'soldier_freeze_b': 776, 'soldier_freeze_c': 754}
+28:14.795  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1658.png'
+s21 g 1658: 45.7 s wall 88.3 cpu heads {'soldier_freeze_a': 743, 'soldier_freeze_b': 770, 'soldier_freeze_c': 749}
+29:00.497  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1659.png'
+s21 g 1659: 45.7 s wall 90.3 cpu heads {'soldier_freeze_a': 742, 'soldier_freeze_b': 767, 'soldier_freeze_c': 747}
+29:49.304  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1660.png'
+s21 g 1660: 48.8 s wall 95.7 cpu heads {'soldier_freeze_a': 750, 'soldier_freeze_b': 773, 'soldier_freeze_c': 754}
+30:37.384  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1661.png'
+s21 g 1661: 48.1 s wall 95.0 cpu heads {'soldier_freeze_a': 762, 'soldier_freeze_b': 783, 'soldier_freeze_c': 765}
+31:26.966  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1662.png'
+s21 g 1662: 49.5 s wall 96.2 cpu heads {'soldier_freeze_a': 770, 'soldier_freeze_b': 790, 'soldier_freeze_c': 773}
+32:15.808  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1663.png'
+s21 g 1663: 48.8 s wall 96.4 cpu heads {'soldier_freeze_a': 771, 'soldier_freeze_b': 790, 'soldier_freeze_c': 773}
+33:06.466  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1664.png'
+s21 g 1664: 50.6 s wall 99.9 cpu heads {'soldier_freeze_a': 768, 'soldier_freeze_b': 789, 'soldier_freeze_c': 771}
+33:55.613  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1665.png'
+s21 g 1665: 49.1 s wall 97.2 cpu heads {'soldier_freeze_a': 767, 'soldier_freeze_b': 791, 'soldier_freeze_c': 772}
+34:44.843  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1666.png'
+s21 g 1666: 49.2 s wall 97.4 cpu heads {'soldier_freeze_a': 766, 'soldier_freeze_b': 793, 'soldier_freeze_c': 772}
+35:35.363  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1667.png'
+s21 g 1667: 50.5 s wall 100.0 cpu heads {'soldier_freeze_a': 762, 'soldier_freeze_b': 792, 'soldier_freeze_c': 769}
+36:24.181  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1668.png'
+s21 g 1668: 48.8 s wall 96.7 cpu heads {'soldier_freeze_a': 754, 'soldier_freeze_b': 787, 'soldier_freeze_c': 762}
+37:14.090  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1669.png'
+s21 g 1669: 49.9 s wall 98.8 cpu heads {'soldier_freeze_a': 751, 'soldier_freeze_b': 786, 'soldier_freeze_c': 759}
+38:04.058  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1670.png'
+s21 g 1670: 49.9 s wall 98.9 cpu heads {'soldier_freeze_a': 756, 'soldier_freeze_b': 792, 'soldier_freeze_c': 765}
+38:56.242  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1671.png'
+s21 g 1671: 52.2 s wall 103.2 cpu heads {'soldier_freeze_a': 767, 'soldier_freeze_b': 802, 'soldier_freeze_c': 776}
+39:48.670  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1672.png'
+s21 g 1672: 52.4 s wall 103.4 cpu heads {'soldier_freeze_a': 776, 'soldier_freeze_b': 809, 'soldier_freeze_c': 784}
+40:37.513  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1673.png'
+s21 g 1673: 48.8 s wall 96.5 cpu heads {'soldier_freeze_a': 778, 'soldier_freeze_b': 809, 'soldier_freeze_c': 785}
+41:27.668  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1674.png'
+s21 g 1674: 50.1 s wall 95.7 cpu heads {'soldier_freeze_a': 777, 'soldier_freeze_b': 806, 'soldier_freeze_c': 783}
+42:14.718  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1675.png'
+s21 g 1675: 47.0 s wall 92.8 cpu heads {'soldier_freeze_a': 779, 'soldier_freeze_b': 806, 'soldier_freeze_c': 784}
+43:01.218  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1676.png'
+s21 g 1676: 46.5 s wall 92.0 cpu heads {'soldier_freeze_a': 780, 'soldier_freeze_b': 806, 'soldier_freeze_c': 785}
+43:47.330  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1677.png'
+s21 g 1677: 46.1 s wall 90.8 cpu heads {'soldier_freeze_a': 777, 'soldier_freeze_b': 803, 'soldier_freeze_c': 781}
+44:34.310  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1678.png'
+s21 g 1678: 46.9 s wall 92.8 cpu heads {'soldier_freeze_a': 769, 'soldier_freeze_b': 797, 'soldier_freeze_c': 774}
+45:20.192  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1679.png'
+s21 g 1679: 45.9 s wall 90.8 cpu heads {'soldier_freeze_a': 764, 'soldier_freeze_b': 795, 'soldier_freeze_c': 771}
+46:05.883  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1680.png'
+s21 g 1680: 45.7 s wall 90.3 cpu heads {'soldier_freeze_a': 767, 'soldier_freeze_b': 802, 'soldier_freeze_c': 775}
+46:51.162  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1681.png'
+s21 g 1681: 45.2 s wall 89.5 cpu heads {'soldier_freeze_a': 776, 'soldier_freeze_b': 814, 'soldier_freeze_c': 785}
+47:35.486  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1682.png'
+s21 g 1682: 44.3 s wall 87.2 cpu heads {'soldier_freeze_a': 783, 'soldier_freeze_b': 823, 'soldier_freeze_c': 793}
+48:20.043  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1683.png'
+s21 g 1683: 44.5 s wall 87.7 cpu heads {'soldier_freeze_a': 784, 'soldier_freeze_b': 825, 'soldier_freeze_c': 794}
+49:04.498  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1684.png'
+s21 g 1684: 44.4 s wall 87.8 cpu heads {'soldier_freeze_a': 782, 'soldier_freeze_b': 824, 'soldier_freeze_c': 793}
+49:47.126  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1685.png'
+s21 g 1685: 42.6 s wall 84.1 cpu heads {'soldier_freeze_a': 783, 'soldier_freeze_b': 825, 'soldier_freeze_c': 794}
+50:28.067  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1686.png'
+s21 g 1686: 40.9 s wall 80.8 cpu heads {'soldier_freeze_a': 785, 'soldier_freeze_b': 825, 'soldier_freeze_c': 795}
+51:08.002  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1687.png'
+s21 g 1687: 39.9 s wall 78.3 cpu heads {'soldier_freeze_a': 783, 'soldier_freeze_b': 820, 'soldier_freeze_c': 791}
+51:58.085  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1688.png'
+s21 g 1688: 50.1 s wall 73.1 cpu heads {'soldier_freeze_a': 777, 'soldier_freeze_b': 811, 'soldier_freeze_c': 784}

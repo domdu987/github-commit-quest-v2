@@ -18,8 +18,8 @@ OX = V((1.1, -46.0, 0.0))
 SOL = V((-3.0, -47.2, 0.0))
 SCALE_OX = 1.0
 SOL_D, SOL_LAT = 6.2, -2.1
-SHAKE = (0.5, 0.4, 0.3, 2.6)
-SNAPS = [(G0 + 10, 1.14, 3, 10), (G0 + 30, 1.16, 3, 10), (C.g_of(57.64) - 1, 1.14, 3, 10)]      # punch-ins; the last on 'วาววับ'
+SHAKE = (1.1, 0.8, 0.5, 2.6)
+SNAPS = [(G0 + 12, 1.12, 4, 9999), (C.g_of(57.64) - 1, 1.12, 4, 9999)]      # HELD punch-ins only (ALL_TEAMS rule 1: no pulses)
 
 
 def make_driver(quality):
