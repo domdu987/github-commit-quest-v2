@@ -28,6 +28,8 @@ This is a REMAKE. v1 was rejected because it looked like a slideshow of medium s
 - Location B (Mexico 1968): T3 from 31.0, T4, T5, T6, T7 to 64.6. `B2.build('NIGHT'|'TENSE'|'DAY72')`. BIGZOOM 2 = `bigzoom2(t)` / `apply_bigzoom2()`; T5 ride-along = `t5_ride(t)`, `dick_t5(t)`, `apply_t5()`. Rim: `rim(True, side=...)`. Grounding: `card`, `seat_card`, `airborne_over_mat`, `check_grounding` (must return empty on every frame you check), `spot_pool`.
 - One location per process: a take that crosses locations (T3, T7) renders its parts in separate processes and dissolves them in your take.
 - Location A known leftovers (round 3, film/film15/qa/SET_v2_art.md): faint white god-ray smudges can still show in the sky/bunting on far views (s1, s2, s3): if you see them in your draft, set RAYS_ON False for those frames or lower k. Shade hue runs cyan (204-238): pull shadows toward blue-violet 240-260 in your grade. cast15 has NO back-view Dick: team 2 must add a simple back-view card (back of head + hair, no face) for the over-the-shoulder shot, or frame over the shoulder from behind/side so the coach is not hidden.
+- Location B round 3 (87ececb): beams are camera-facing ribbons: any camera NOT made with `B2.make_camera_m` must call `B2.bind_beams(cam)`. `build(..., fast=True)` drops the city for pit/stand views (use it whenever the city is not in frame). Measured final cost: pit views 25-30 s/frame, coach-in-stands 37-40 s, far views 13-14 s.
+- Location B leftovers: T4 coach in stands (team 4) is NOT finished: the coach is only ~13 % of frame height, bare seat rows in the lower third, a thin black gap top-left. Team 4: camera closer, crowd cards on every tread around him (no bare seats, no black void), a soft spot/space around the coach, coach >= 20 % frame height in the whip-pan landing (close-up 2 is the planned ~0.8 s punch). Shade hue: bz_end 286 / t7 263, grade toward 240-260. t6_top: check for stray dark specks on the mat.
 - Sprite caches (work_v2_a/sprites, work_v2_b/sprites) are not in git; they rebuild on first use.
 
 ## Cast: PROJ/v3/cast15 (read API.md)
@@ -49,7 +51,7 @@ This is a REMAKE. v1 was rejected because it looked like a slideshow of medium s
 11. **Bar height in T4 low shot:** the set uses 2.46 m so the ~30 cm gap over Dick's hair reads; the board says 2.24 m.
 
 ## Cost and process
-- Final: 720x1280, 12 samples, 2 processes x 2 threads. Location A ~12-20 s/frame; location B far views ~16-20 s, pit/stand views ~40 s/frame. Teams 4 and 5 have the heaviest takes: start the final render as soon as the draft passes.
+- Final: 720x1280, 12 samples, 2 processes x 2 threads. Location A ~17-22 s/frame; location B far views ~13-14 s, pit views ~25-30 s, stands ~40 s/frame. Teams 4 and 5 have the heaviest takes: start the final render as soon as the draft passes.
 - Draft first (360x640, 6 samples, every 2nd frame), make a contact sheet and run motion_check on the draft, fix, then final.
 
 ## QA (stricter, PROJ/QA_TEAM.md)
