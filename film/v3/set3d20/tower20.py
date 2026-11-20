@@ -29,12 +29,13 @@ CAMS_M = dict(
     tower_dusk_chars=dict(loc=(-8.0, -224.0, 1.6), look=(-2.0, -190.0, 1.6), lens=22, shift=0.10),
     tower_night_wide=dict(loc=(-8.0, -236.0, 5.0), look=(0.0, 0.0, 5.0), lens=22, shift=0.345),
     tower_night_summit=dict(loc=(-6.0, -80.0, 250.0), look=(0.0, 0.0, 290.0), lens=22),
-    tower_window_pull=dict(loc=(0.0, -43.0, 60.4), look=(0.0, -34.0, 60.4), lens=22),
+    tower_window_pull=dict(loc=(0.0, -44.0, 60.2), look=(0.0, -34.0, 59.6), lens=22),
+    tower_window_in=dict(loc=(0.0, -40.2, 59.7), look=(0.0, -34.85, 59.4), lens=55),
     tower_window_end=dict(loc=(-8.0, -236.0, 5.0), look=(0.0, 0.0, 5.0), lens=22, shift=0.345),
 )
 PRESETS = dict(tower_low=dict(light='DAY', year=1889), tower_fair=dict(light='DAY', year=1889), tower_dusk=dict(light='DUSK', year=1909), tower_dusk_summit=dict(light='DUSK', year=1909),
                tower_hut=dict(light='DUSK', year=1909), tower_night_wide=dict(light='NIGHT', year=1909), tower_window_pull=dict(light='DAY', year=1889))
-EXTRA_CAMS = ['tower_dusk_summit_end', 'tower_night_summit', 'tower_window_end', 'tower_dusk_chars']
+EXTRA_CAMS = ['tower_dusk_summit_end', 'tower_night_summit', 'tower_window_end', 'tower_dusk_chars', 'tower_window_in']
 LIGHT_CHOICES = ['DAY', 'DUSK', 'NIGHT']
 def cam_D(c):
     d = dict(loc=W(c['loc']), look_at=W(c['look']), lens=c.get('lens', 22))
@@ -142,56 +143,71 @@ def build(preset, light=None):
 
 # ------------------------------------------------------------------ first-floor gallery with the lit restaurant window (tower_window_pull)
 # window position agreed with the interior builder (int20.RESTO_WINDOW_*): table top centre (0, -35.8, 58.65) m tower-local, glass plane y = -36.8, glass 5.2 x 3.9 m, gallery floor 57.9
-WIN_X = 0.0; WIN_YG = -36.8; WIN_W, WIN_H = 5.2, 3.9; WIN_FLOOR = 57.9
+WIN_X = 0.0; WIN_YG = -37.6; WIN_W, WIN_H = 5.2, 3.85; WIN_FLOOR = 57.9
+ROOM_OY = -20.1                      # int20 room frame -> tower: rotate 180 deg about z, origin (0, ROOM_OY, 57.9); the window table (room y 15.7) lands on RESTO_WINDOW_WORLD_M y = -35.8
+GLYPH = dict(R=["11110", "10001", "10001", "11110", "10100", "10010", "10001"], E=["11111", "10000", "10000", "11110", "10000", "10000", "11111"], S=["01111", "10000", "10000", "01110", "00001", "00001", "11110"],
+             T=["11111", "00100", "00100", "00100", "00100", "00100", "00100"], A=["01110", "10001", "10001", "11111", "10001", "10001", "10001"], U=["10001"] * 6 + ["01110"], N=["10001", "11001", "10101", "10011", "10001", "10001", "10001"])
+def sign(mb, m, text, xc, y, z0, cell=0.12, depth=0.1):
+    """Latin block letters (5 x 7 cells) as boxes, centred on xc, base z0, facing -y"""
+    adv = 6 * cell; x0 = xc - (len(text) * adv - cell) / 2
+    for li, ch in enumerate(text):
+        for r_, row in enumerate(GLYPH[ch]):
+            for c_, v in enumerate(row):
+                if v == '1': mb.box(m, (x0 + li * adv + c_ * cell, y, z0 + (6 - r_) * cell), (cell * 1.02, depth, cell * 1.02))
+
 def _window_gallery(M, A):
-    """first-floor gallery with the lit restaurant window: cream facade framed by riveted red-brown lattice girders (belts, posts, X braces, two diagonals crossing the glass), lit interior (cream walls, navy carpet, white cloths, blue chairs)"""
+    """first-floor gallery with the lit restaurant window. The facade (cream, red awning, 'RESTAURANT' sign, riveted lattice belts / posts / side panels) is built here; the ROOM BEHIND THE GLASS is a copy of int20's RESTO
+    (build_resto rotated 180 deg about z, window table at RESTO_WINDOW_WORLD, its lights x4 for the tower exposure), so looking in from outside matches the inside shots."""
     R = C.root(); a1 = tw(Z1) + th(Z1); ah = a1 + 2.0; ag = ah - 1.6; zf = WIN_FLOOR; zt = Z1 + 6.8; yg = WIN_YG; I = M['iron']; IL = M['ironlt']
     cream = mat('facade_cream', '#e4d2a8', '#d6c294', 3, contrast=0.6)
     mb = MB('gallery', R)
-    mb.box(I, (0, yg + 0.55, Z1 - 0.2), (2 * ah, 1.3, 1.4))
-    wy = yg + 0.2; z0w = zf + 0.35; z1w = z0w + WIN_H
+    mb.box(I, (0, yg + 0.8, Z1 - 0.2), (2 * ah, 2.6, 1.4))
+    wy = yg - 0.1; z0w = zf + 0.05; z1w = z0w + WIN_H
     wall_cut(mb, cream, 'y', wy, -ag, ag, zf, zt, [(WIN_X - WIN_W / 2, WIN_X + WIN_W / 2, z0w, z1w)], 0.4)
     mb.box(cream, (0, ag - 0.2, (zf + zt) / 2), (2 * ag, 0.4, zt - zf))
     for sx in (-1, 1): mb.box(cream, (sx * (ag - 0.2), 0, (zf + zt) / 2), (0.4, 2 * ag, zt - zf))
     mb.box(I, (0, 0, zt + 0.3), (2 * ag + 1.6, 2 * ag + 1.6, 0.7))
-    for i_ in range(12): mb.box(M['ironlt'], (-ah + (i_ + 0.5) * 2 * ah / 12, yg + 0.45, Z1 + 0.65), (2 * ah / 12 + 0.02, 1.2, 1.6)); mb.box(M['iron'], (-ah + (i_ + 0.5) * 2 * ah / 12, yg + 0.6, zt + 0.25), (2 * ah / 12 + 0.02, 1.5, 0.9))     # solid courses: no open gaps under / over the facade
-    # lattice girders on the facade (outside, y = yg - 0.35): belt girders above / below, posts, X-braced panels each side of the window, two big diagonals across the glass
-    yl = yg - 0.35
+    yl = yg - 0.45
     def seg(m_, y_, z_, w_, d_, h_, n_=12):
         for i_ in range(n_): mb.box(m_, (-w_ / 2 + (i_ + 0.5) * w_ / n_, y_, z_), (w_ / n_ + 0.02, d_, h_))
-    seg(IL, yl, zt - 0.35, 2 * ag, 0.5, 0.7); mb.box(IL, (0, yl, z1w + 0.35), (WIN_W + 2.0, 0.5, 0.5))
+    seg(IL, yl, zt - 0.35, 2 * ag, 0.5, 0.7)
+    for i_ in range(12): mb.box(M['ironlt'], (-ah + (i_ + 0.5) * 2 * ah / 12, yg + 0.5, Z1 + 0.65), (2 * ah / 12 + 0.02, 1.2, 1.6)); mb.box(M['iron'], (-ah + (i_ + 0.5) * 2 * ah / 12, yg + 0.6, zt + 0.25), (2 * ah / 12 + 0.02, 1.5, 0.9))
     for px in (-WIN_W / 2 - 0.5, WIN_W / 2 + 0.5): mb.box(I, (WIN_X + px, yl, (zf + zt) / 2), (0.45, 0.5, zt - zf))
     for side in (-1, 1):
         xa = WIN_X + side * (WIN_W / 2 + 0.8); xb = side * (ag - 1.0); zs_ = [zf + 0.5, zf + 2.0, zf + 3.5, zf + 5.0, zt - 0.6]
-        pa = (lambda z, xa=xa: Vector((xa, yl, z))); pb = (lambda z, xb=xb: Vector((xb, yl, z)))
         for i in range(len(zs_) - 1):
             a_, b_ = Vector((xa, yl, zs_[i])), Vector((xb, yl, zs_[i + 1])); c_, d_ = Vector((xb, yl, zs_[i])), Vector((xa, yl, zs_[i + 1]))
             mb.rod(IL, a_, b_, 0.14, 0.14, 4); mb.rod(IL, c_, d_, 0.14, 0.14, 4)
         for z in zs_: mb.rod(I, Vector((xa, yl, z)), Vector((xb, yl, z)), 0.16, 0.16, 4)
-    for side in (-1, 1):                                    # X braces only in the two outer bays: the centre pane (2.6 m wide) stays clear for the diner
-        xo, xi = WIN_X + side * WIN_W / 2, WIN_X + side * 1.3
-        mb.rod(I, Vector((xo, yg - 0.55, z0w)), Vector((xi, yg - 0.55, z1w)), 0.1, 0.1, 4); mb.rod(I, Vector((xi, yg - 0.55, z0w)), Vector((xo, yg - 0.55, z1w)), 0.1, 0.1, 4)
-    for sx in (-WIN_W / 2, -1.3, 1.3, WIN_W / 2): mb.box(IL, (WIN_X + sx, wy - 0.25, (z0w + z1w) / 2), (0.1, 0.1, WIN_H))
-    # interior glimpse
-    yb = yg + 4.2; carpet = M['navy']
-    mb.box(carpet, (WIN_X, (yg + yb) / 2, zf + 0.06), (14.0, yb - yg, 0.12)); mb.box(M['cream'], (WIN_X, yb, (zf + zt) / 2), (14.0, 0.2, zt - zf))
-    mb.box(M['cream'], (WIN_X, (yg + yb) / 2, zt - 0.2), (14.0, yb - yg, 0.3))
-    for sx in (-1, 1): mb.box(M['wallres'], (WIN_X + sx * 7.0, (yg + yb) / 2, (zf + zt) / 2), (0.2, yb - yg, zt - zf))
-    for dx in (-4.2, 4.2): mb.box(M['crimson'], (WIN_X + dx, yb - 0.08, (zf + zt) / 2), (2.0, 0.08, 2.4))      # panels with gilt frames behind the diners
-    def table(tx, ty):
-        mb.cyl(M['cloth'], (tx, ty, zf + 0.4), 0.62, 0.8, 'z', 16, False); mb.cyl(M['cloth'], (tx, ty, zf + 0.82), 0.66, 0.06, 'z', 16)
-        for k in range(4): a = k * 1.57 + 0.4; mb.cyl(M['glasswine'], (tx + math.cos(a) * 0.32, ty + math.sin(a) * 0.32, zf + 0.96), 0.04, 0.14, 'z', 8); mb.cyl(M['white'], (tx + math.cos(a + 0.8) * 0.4, ty + math.sin(a + 0.8) * 0.4, zf + 0.88), 0.12, 0.05, 'z', 10)
-        mb.ell(M['wineamb'], (tx, ty - 0.1, zf + 1.0), (0.06, 0.06, 0.12), (8, 6))
-        for (cx_, cy_) in ((tx - 1.2, ty), (tx + 1.2, ty), (tx, ty + 1.0)):
-            mb.box(M['navy'], (cx_, cy_, zf + 0.46), (0.45, 0.45, 0.08)); mb.box(M['bent'], (cx_, cy_ + 0.2, zf + 0.85), (0.45, 0.07, 0.75))
-            for dx in (-0.2, 0.2):
-                for dy in (-0.2, 0.2): mb.rod(M['bent'], (cx_ + dx, cy_ + dy, zf), (cx_ + dx, cy_ + dy, zf + 0.44), 0.03, 0.03, 4)
-    table(WIN_X, -35.8); table(WIN_X - 4.6, -34.6); table(WIN_X + 4.6, -34.6)
-    for dx in (-4.4, 0.0, 4.4):
-        mb.rod(M['gold'], (WIN_X + dx, yg + 1.8, zt - 0.4), (WIN_X + dx, yg + 1.8, zt - 1.0), 0.04, 0.04, 5); mb.ell(M['lamp'], (WIN_X + dx, yg + 1.8, zt - 1.25), (0.3, 0.3, 0.38), (10, 8))
+    # red awning over the window and the Latin sign (findable from the extreme wide): short block-letter RESTAURANT on a dark red band
+    yaw_ = yg - 0.1
+    for i_ in range(10):
+        xa = WIN_X - 3.4 + i_ * 0.68; xb = xa + 0.68
+        mb.quad(M['awn_r'] if i_ % 2 == 0 else M['crimson'], [(xa, yaw_ - 0.1, z1w + 0.35), (xb, yaw_ - 0.1, z1w + 0.35), (xb, yaw_ - 1.5, z1w - 0.35), (xa, yaw_ - 1.5, z1w - 0.35)])
+        mb.quad(M['awn_r'] if i_ % 2 == 0 else M['crimson'], [(xa, yaw_ - 1.5, z1w - 0.35), (xb, yaw_ - 1.5, z1w - 0.35), (xb, yaw_ - 0.1, z1w + 0.35), (xa, yaw_ - 0.1, z1w + 0.35)])
+    mb.box(M['crimdk'], (WIN_X, yg - 0.35, z1w + 1.15), (7.6, 0.14, 1.25)); sign(mb, M['cream'], 'RESTAURANT', WIN_X, yg - 0.5, z1w + 0.72, 0.1, 0.1)
     STATE['window_room'] = mb.finish()
-    STATE['pt_lights'] = STATE.get('pt_lights', []) + [(Vector((WIN_X + dx, yg + 1.8, zt - 1.4)), (1.0, 0.72, 0.4), 800) for dx in (-4.4, 0.0, 4.4)] + [(Vector((WIN_X, yg + 2.2, zf + 1.7)), (1.0, 0.82, 0.58), 700), (Vector((WIN_X, yg + 1.0, zf + 1.5)), (1.0, 0.85, 0.65), 400)]
+    _resto_room(M)
     STATE['win_floor'] = zf; STATE['win_ag'] = 36.8
+
+def _resto_room(M):
+    """int20's RESTO (furniture, diners, mirrors, banquette, chandeliers, sconces, trusses, lattice crossing the glass) placed behind the glass; no Paris backdrop (the tower scene has its own)"""
+    import int20
+    R = C.root(); rt = bpy.data.objects.new('resto_root', None); bpy.context.scene.collection.objects.link(rt); rt.parent = R; rt.location = (0.0, ROOM_OY, WIN_FLOOR); rt.rotation_euler = (0, 0, math.pi)
+    orig_root, orig_out = C.root, int20.resto_outside
+    orig_box = C.MB.box
+    def box_(self, m, c, sz, *a, **k):                       # skip int20's railing (y 17.9) and the horizontal bar across the glass (y 16.9, z 3.4): nothing may cross the pane
+        if (abs(c[1] - 17.9) < 1e-3 and sz[1] < 0.1) or (abs(c[1] - 16.9) < 1e-3 and abs(c[2] - 3.4) < 1e-3 and sz[1] < 0.1): return
+        return orig_box(self, m, c, sz, *a, **k)
+    C.MB.box = box_; C.root = lambda: rt; int20.resto_outside = lambda P_, M_: None
+    try: lights = int20.build_resto({}, 'tower_window')
+    finally: C.MB.box = orig_box; C.root, int20.resto_outside = orig_root, orig_out
+    K_ = 4.0
+    for i, (p, colour, en) in enumerate(lights):
+        if en <= 0: continue
+        pw = (-p[0], -p[1] + ROOM_OY, p[2] + WIN_FLOOR); C.lamp('rg%d' % i, W(pw), colour, en * K_, 0.1)
+    C.lamp('rfill', W((0.0, -5.0 + ROOM_OY, WIN_FLOOR + 4.4)), (0.92, 0.84, 0.74), 24.0 * 12 * K_, area=(9.0, 24.0), kind='AREA', rot=(0, 0, 0), vis_cam=False)
+    STATE['resto_root'] = rt
 
 # ------------------------------------------------------------------ avenue, trees, lamps
 def _avenue(M, night, rr):
@@ -445,7 +461,7 @@ def _marks(A):
     m.update(maupassant_low=_m(-6.8, -116.5), eiffel_fair=_m(-4.4, -143.8), official_fair=_m(-2.6, -139.6), lady_fair=_m(-9.0, -137.0), gent_fair=_m(-0.6, -136.0), child_fair=_m(-7.4, -141.0),
              eiffel_old=_m(-3.2, -213.0), officer=_m(0.4, -212.4), demo_a=_m(-10.4, -213.4), demo_b=_m(-8.6, -211.4), demo_c=_m(-12.6, -211.6), wagon=_m(-13.0, -209.0), scrap_cart=_m(-24.0, -214.0),
              telegraphist=_m(hx - 0.35, hy + 1.3), sentry=_m(hx - 3.2, hy - 2.7), hut_door=_m(hx - 1.25, hy - 2.6), spark_gap=_m(hx + 1.0, hy + 0.45, 1.1), antenna_post=_m(POST[0], POST[1], 6.2), summit=_m(0, 0, 301),
-             maupassant_window=_m(WIN_X, -34.9, zf), window_centre=_m(WIN_X, WIN_YG, zf + 0.35 + WIN_H / 2))
+             maupassant_window=_m(WIN_X, -34.85, zf), window_centre=_m(WIN_X, WIN_YG, zf + 0.05 + WIN_H / 2))
     A['marks_m'] = {k: tuple(v / SC for v in vv) for k, vv in m.items()}
 def _staging(A):
     S = A['staging']
@@ -455,7 +471,9 @@ def _staging(A):
     S['tower_dusk_summit'] = [('eiffel_old', 'eiffel_old', dict(pose=dict(expr='determined')))]
     S['tower_hut'] = [('telegraphist', 'telegraphist', dict(pose=dict(expr='focused' if False else 'neutral')))]
     S['tower_night_wide'] = []
-    S['tower_window_pull'] = [('maupassant', 'maupassant_window', dict(pose=dict(expr='blissful', napkin=1)))]
+    C._import_tower(); import cast20
+    pose = dict(cast20.STORY20['maupassant_seated_eat'][1]); pose['yaw'] = 0.0
+    S['tower_window_pull'] = [('maupassant', 'maupassant_window', dict(pose=pose))]; S['tower_window_in'] = S['tower_window_pull']; S['tower_window_end'] = S['tower_window_pull']
     S['tower_dusk_summit_end'] = S['tower_dusk']; S['tower_dusk_chars'] = S['tower_dusk']
 FG_ITEMS = dict(
     tower_low=[('lamppost', -0.46, 0.0, 1.2), ('bench', 1.1, -0.28, 2.0, 1.57)],
