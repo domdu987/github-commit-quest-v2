@@ -66,7 +66,7 @@ def widen_sea(preset, k, nu, nv):
     P["sea_nu"], P["sea_nv"] = nu, nv
 
 
-def whitecaps_in_front(n=int(os.environ.get("WC", "28")), seed=int(os.environ.get("WCSEED", "3"))):
+def whitecaps_in_front(n=int(os.environ.get("WC", "20")), seed=int(os.environ.get("WCSEED", "3"))):
     """foreground swell crests: the hero preset's floating_spar() also places the preset's two foam streaks relative to P['cam'] (our widen_sea patched it): wrap it,
     keep the spar where the preset puts it (original camera) and add broken foam lines (the set's 'streaks' hook) between our camera and the ship, so crests
     sweep across the frame as the camera slides (frame-diff)."""
@@ -92,8 +92,8 @@ def whitecaps_in_front(n=int(os.environ.get("WC", "28")), seed=int(os.environ.ge
     LD.floating_spar = fs
 
 
-ISLAND_AT = (float(os.environ.get("ISX", "250")), float(os.environ.get("ISY", "699")), 1452)   # screen px (x, y) of the island base at g 1452
-ISLAND_W = float(os.environ.get("ISW", "54"))                                                   # metres (~10 % of the frame width at ~330 m)
+ISLAND_AT = (float(os.environ.get("ISX", "190")), float(os.environ.get("ISY", "716")), 1452)   # screen px (x, y) of the island base at g 1452
+ISLAND_W = float(os.environ.get("ISW", "80"))                                                   # metres (~10 % of the frame width at ~330 m)
 
 
 def build_island():
@@ -182,31 +182,52 @@ PPD = 224
 
 
 def pose_william(g):
-    """william19 acts (QA-tech 'one pose for 2.8 s'): g 1384-1409 looks down at the H4 on his palm; 1410-1426 glances up at the ship / the sea and turns his head;
-    1427-1437 the hand starts up; on 'จาไมกา' (g 1438) he raises the watch toward the island with a delighted face; then holds it high, bobbing"""
+    """william19 acts: g 1384-1409 looks down at the H4 on his palm; 1410-1426 glances up at the sea and turns his head; g 1427-1436 the watch goes UP; from g 1436
+    (the word) it is held ABOVE his head toward the island (screen-left: the card is mirrored), open-mouthed and excited (held to g 1460), a hop of joy, a sparkle"""
     p = dict(cast19.STORY19["william_show_h4"][1])
-    p["blink"] = blink(g, [1390, 1416, 1442, 1470])
+    p["blink"] = blink(g, [1390, 1416, 1470])
     p["t"] = g / 30.0
+    p["mirror"] = True                                                          # faces screen-left (the island side); arm keys stay unmirrored
     base = (0.64, 0.62)
-    up = _ramp(g, 1427, 1440)
-    hand = (lerp(base[0], 0.78, up), lerp(base[1], 1.65, up))
-    p["arm_r"] = dict(hand=(hand[0], hand[1] + 0.05 * math.sin(g * 0.35)), bend=lerp(-0.2, -0.35, up), shape="open", stretch=1.15, layer="top")
-    p["prop_r"] = dict(type="h4_watch", scale=2.0)                              # the H4 drawn at 2x so it reads as a watch
+    up = _ramp(g, 1427, 1437)
+    hand = (lerp(base[0], 0.50, up), lerp(base[1], -0.90, up))                # y < 0 = above the head (head top -0.51)
+    p["arm_r"] = dict(hand=(hand[0] + 0.03 * math.sin(g * 0.5), hand[1] + 0.05 * math.sin(g * 0.35)), bend=lerp(-0.2, 0.1, up), shape="open", stretch=1.2, layer="top")
+    p["prop_r"] = dict(type="h4_watch", scale=2.0)                              # the H4 drawn at 2x
     if g < 1410:
-        p["pitch"] = 0.25; p["gaze"] = (0.6, -0.7); p["expr"] = "happy"; p["head_roll"] = -3 + 2.0 * math.sin(g * 0.2)
+        p["yaw"] = -0.3; p["pitch"] = 0.25; p["gaze"] = (-0.6, -0.7); p["expr"] = "happy"; p["head_roll"] = -3 + 2.0 * math.sin(g * 0.2)
     elif g < 1427:
         k = _ramp(g, 1410, 1416)
-        p["pitch"] = lerp(0.25, -0.05, k); p["gaze"] = (lerp(0.6, -0.8, k), lerp(-0.7, 0.2, k)); p["expr"] = "happy"
-        p["yaw"] = lerp(0.3, -0.2, k); p["head_roll"] = 5.0 * math.sin((g - 1410) * 0.5)
+        p["pitch"] = lerp(0.25, -0.05, k); p["gaze"] = (lerp(-0.6, 0.8, k), lerp(-0.7, 0.2, k)); p["expr"] = "happy"
+        p["yaw"] = lerp(-0.3, 0.2, k); p["head_roll"] = 5.0 * math.sin((g - 1410) * 0.5)
     else:
         e = _ramp(g, 1432, 1440)
-        p["pitch"] = lerp(-0.05, -0.35, e); p["gaze"] = (lerp(-0.8, -1.0, e), lerp(0.2, 0.45, e))      # up and toward the island (screen-left)
-        p["expr"] = "excited" if g >= 1436 else "happy"
-        p["yaw"] = lerp(-0.2, -0.35, e); p["head_roll"] = -4.0 * e + 3.0 * math.sin(g * 0.45)
-        if g >= 1436:
-            p["mouth"] = "smile"
+        p["pitch"] = lerp(-0.05, -0.35, e); p["gaze"] = (lerp(0.8, 1.0, e), lerp(0.2, -0.8, e))        # up at the watch / the island
+        p["expr"] = "excited"
+        p["mouth"] = ("open", 0.55, 0.50) if g >= 1434 else "smile"                  # open-mouthed, held from g 1434 to the end (> 0.5 s)
+        p["yaw"] = lerp(0.2, 0.35, e); p["head_roll"] = -4.0 * e + 3.0 * math.sin(g * 0.45)
     p["lean"] = p.get("lean", 0) + 2.0 * math.sin(g * 0.2) - 4.0 * up
     return p
+
+
+def make_sparkle():
+    """one warm sparkle on the H4 at the word (g 1436-1452): two crossed diamonds, emissive; placed at the watch anchor every frame"""
+    import bmesh
+    me = bpy.data.meshes.new("sparkle")
+    bm = bmesh.new()
+    for (w, h) in ((0.16, 1.0), (1.0, 0.16)):
+        v = [bm.verts.new(p) for p in ((-w, 0, 0), (0, -h, 0), (w, 0, 0), (0, h, 0))]
+        bm.faces.new(v)
+    bm.to_mesh(me); bm.free()
+    ob = bpy.data.objects.new("sparkle", me)
+    bpy.context.scene.collection.objects.link(ob)
+    from h19_kit import mat_emit
+    ob.data.materials.append(mat_emit("sparkle_m", "#fff0b8", 14.0))
+    ob.visible_shadow = False
+    return ob
+
+
+def spark_scale(g):
+    return 1.9 * C.u_of(g, 1436, 1439) * (1.0 - C.u_of(g, 1446, 1454)) * (0.8 + 0.2 * math.sin(g * 1.7))
 
 
 def hop_z(g):
@@ -230,9 +251,14 @@ class Take(C.Take):
         self.will = self.actors["will"] = C.make_actor("will", "william19", os.path.join(WORK, "sprites"), contact=True, cam=self.cam)
         C.ride_ship(self.will, root)                                      # before place() and before any set_roll key
         self.key_cam(C.bf(FIRST_G), *CAM.at(FIRST_G))
-        self.scene.view_settings.exposure -= float(os.environ.get("EXPO", "0.8"))           # QA_TEAM section G: luma 70-135 (the foam crests brighten the frame)
+        self.scene.view_settings.exposure -= float(os.environ.get("EXPO", "0.8"))
+        self.expo0 = self.scene.view_settings.exposure           # QA_TEAM section G: luma 70-135 (the foam crests brighten the frame)
         build_island()
         tame_bow_wave()
+        self.spark = make_sparkle()
+        wv = bpy.data.objects.get('foam_wave')
+        if wv is not None:
+            wv.scale = tuple(float(os.environ.get('WAVEK', '0.5')) * v for v in wv.scale)      # cap the bow-wave pillow (QA-art round 12)
         g_ = C.bpy.data.objects.get("glint")                    # tone the blown sun glint down (QA-tech): 40 -> GLINT x the set's energy
         if g_ is not None:
             g_.data.energy *= float(os.environ.get("GLINT", "0.0"))
@@ -244,11 +270,28 @@ class Take(C.Take):
             self.key_cam(f, *CAM.at(g))
             C.key_vis([o for o in (C.bpy.data.objects.get('gulls_gullt'), C.bpy.data.objects.get('gulls_gullw'), C.bpy.data.objects.get('headland')) if o], False, f)   # no gulls; the pale old headland is hidden (JAMAICA is the island)
             C.place(self.will, f, (WILL_XYZ[0], WILL_XYZ[1], WILL_XYZ[2] + hop_z(g)), scale=WS)
+            self.scene.view_settings.exposure = self.expo0 + 0.1 * (1.0 - C.u_of(g, 1384, 1402))   # +0.1 EV in g 1384-1400 (luma 84 -> ~88)
+            self.scene.view_settings.keyframe_insert("exposure", frame=f)
         for g in gs:
             f = C.bf(g)
             self.scene.frame_set(f)
             self.will.pose(f, pose_william(g), camera=self.cam)
         self.sprites_for([(self.will, PPD)], [C.bf(g) for g in gs])
+        import actors as _actors
+        for g in gs:                                                              # the sparkle follows the watch (world point of the sprite anchor)
+            f = C.bf(g)
+            self.scene.frame_set(f)
+            sc = spark_scale(g)
+            self.spark.scale = (max(sc, 1e-4),) * 3
+            if sc > 0.0 and (self.will.name, f) in self.anch:
+                an = self.anch[(self.will.name, f)]
+                wk = [k for k in an if k.startswith("watch_")][0]                    # watch_r / watch_l (the side key follows the mirror)
+                w = _actors.local_to_world(self.will, an[wk], f, self.will.feet.get(f), self.cam)
+                fwd = (self.cam.matrix_world.to_3x3() @ Vector((0, 0, -1))).normalized()
+                self.spark.location = w - fwd * 0.6
+            self.spark.rotation_euler = self.cam.matrix_world.to_euler()
+            for path in ("location", "scale", "rotation_euler"):
+                self.spark.keyframe_insert(path, frame=f)
 
     def report(self, g):
         loc, look = CAM.at(g)
