@@ -56,8 +56,9 @@ def run_B(q, f0, f1, stride):
     import bpy
     from mathutils import Vector
     CT = SHB.CT; card = SHB.card; spline = SHB.spline
+    d_ = os.path.join(HERE, 'work', 'spr_%d' % os.getpid()); os.makedirs(d_, exist_ok=True); SHB.CT.SPR = d_; SHB.SPR = d_
     quality = 'final' if q == 'final' else 'preview'
-    A, sc = SHB._base('DAY72', quality, bar=2.24, fast=False)
+    A, sc = SHB._base('DAY72', quality, bar=2.16, fast=False)
     F.crowd_mode('cheer', 1700)
     for o in bpy.data.objects:
         if any(k in o.name for k in ('rim_banners', 'outer_banners', 'podium_back', 'board224')) and 'back' not in o.name.replace('podium_back', ''): o.hide_render = True
@@ -80,9 +81,9 @@ def run_B(q, f0, f1, stride):
     loc0, look0, _l = cam_b(59.8); cam = B2.make_camera_m(loc0, look0, lens=22.0, name='cam_t7b')
     sc.camera = cam
     # ------------------------------------------------------------------ jumpers
-    JUMPERS = [dict(cast='rival2', T0=60.45, s=+1, land=(-1.35, 13.9)),      # green kit, approaches from screen-right
-               dict(cast='rival3', T0=61.60, s=-1, land=(1.45, 14.6)),       # gold kit, from the left
-               dict(cast='rival1', T0=62.75, s=+1, land=(0.05, 14.3))]       # red kit
+    JUMPERS = [dict(cast='rival2', T0=60.45, s=+1, land=(-1.7, 13.9)),      # green kit, approaches from screen-right
+               dict(cast='rival3', T0=61.60, s=+1, land=(2.0, 14.4)),       # gold kit, from the left
+               dict(cast='rival1', T0=62.75, s=+1, land=(0.15, 14.3))]       # red kit
     RUN = [(-1.97, (8.0, 2.0)), (-1.25, (7.5, 4.6)), (-0.65, (6.0, 7.6)), (-0.25, (4.2, 9.4)), (0.0, (2.5, 10.3))]
     def jumper(i, Jd, t, cm):
         cast = Jd['cast']; s = Jd['s']; face = -s; mir = (face < 0); dt = t - Jd['T0']; tag = 'j%d' % i; lx, ly = Jd['land']
@@ -116,7 +117,7 @@ def run_B(q, f0, f1, stride):
         KZ = [(0.30, (1.0, 11.0, 1.9)), (0.55, (0.8, 11.3, 2.4)), (0.80, (0.5, 11.5, 2.52)), (1.10, (0.2, 11.5, 2.46)), (1.30, (0.0, 12.2, 2.2)), (1.45, (0.0, 12.9, 1.75))]
         if dt < 1.45:
             w = spline([(a, b) for a, b in KZ], dt); name = 'flop_head' if dt < 0.55 else 'flop_back' if dt < 0.80 else 'flop' if dt < 1.10 else 'flop_flick'
-            air(name, (ax(dt), w.y, w.z)); return
+            zc = {'flop_head': 1.98, 'flop_back': 2.14, 'flop': 2.16, 'flop_flick': 2.06}[name]; air(name, (ax(dt), w.y, min(w.z, zc))); return
         if dt < 1.62: mat('land_back'); return
         if dt < 1.80: mat('sit_up'); return
         pose = cast15.pose_for('sit_thumb', cast, facing=face)
