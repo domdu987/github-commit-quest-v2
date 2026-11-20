@@ -1,0 +1,3 @@
+T1 check_take: hits [] (PASS)
+T1 check_face: ok True (PASS)
+key still g105: real cast via stage_cast2, 78.3 s render, 16 samples + OIDN
