@@ -6,7 +6,7 @@ Fallback check: send_later 60 min, always re-armed.
 
 - [x] Facts web-checked -> FACTS.md (1,100 men; Viersen 18-24 Mar 1945; 600 dummies; 2 divisions; sound ~15 mi; 93 lb decoy; cyclist anecdote)
 - [x] Script v1, blind test 1: 7.5/10, 3 rewrites applied -> script/script_th.txt (v2), TTS text script/tts_bankky_orig.json
-- [ ] Blind retest (running)
+- [x] Blind retest PASS 8/10; 2 small rewrites applied (hook stake shortened, nickname line "ทั้งหน่วยเลยโดนเรียกว่า")
 - [ ] BLOCKED 2026-11-20 23:55 UTC: fal.ai "User is locked. Reason: Exhausted balance." Narration + music cannot be generated. Client told.
       Resume: cd film/film23 && python3 audio/gen.py && python3 audio/build_bk0.py --stt  (then python3 audio/build_bk0.py)
 - [ ] Style board (Sonnet builder running, brief STYLE_BOARD_BRIEF.md) -> QA-art
