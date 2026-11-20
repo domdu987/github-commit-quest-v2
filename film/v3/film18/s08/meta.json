@@ -1,0 +1,25 @@
+{
+ "take": "s08",
+ "film": 18,
+ "shots": [
+  8
+ ],
+ "g0": 597,
+ "g1": 674,
+ "first_g": 588,
+ "n_frames": 86,
+ "handle_in": 9,
+ "handle_out": 0,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 13
+ },
+ "fps": 30,
+ "resolution": [
+  720,
+  1280
+ ],
+ "samples": 12,
+ "framediff_median": 4.08,
+ "framediff_p90": 4.38
+}
