@@ -219,3 +219,41 @@ Status of the must-fixes:
 - **Must-fix 1 (one swoop): still open, but softened.**
 
 How to fix 1: start pitching the camera down from top-down to eye level earlier, around g 132-136, and spread it to about g 170, so that it overlaps the end of the over-the-stern travel instead of starting after a hover. Target: the deck-only band, once it has passed its first peak, never rises again by more than about 20 % (for example, no climb from 6.5 to 16). Keep everything from g 160 onward exactly as it is now (the settle, the drift and the acting). A frame check of g 130-170 is enough to confirm the fix.
+
+## Round 15 (director QA-art): PASS, 7.5. Must-fix 1 is downgraded to polish: the strip target is not met, but on a phone the drop to eye level now reads as a gentle second push
+
+Take: take.mkv.partaa + partab joined to /tmp/s02a15.mkv (first_g 48, 152 frames). All frames are extracted to /tmp/qa19_r15art/s02/gNNN.png. Sheets:
+- sheet_3fps.jpg
+- descent.jpg (every 3rd frame, g 110-182)
+- beat_phone.jpg
+- j127.jpg (g 125-129)
+
+Measurements:
+- Whole-frame diff, in-shot g 58-190: median 8.97, p90 14.08, max 15.40 (g 114).
+- The deck-only strip (bottom 19 %, no characters) for g 110-182, as asked.
+- As a cross-check: the median optical-flow speed of the background, excluding the characters' band (Farneback at 180x320, scaled to full-res px/frame), for rounds 12, 14 and 15. The deck strip turned out to be content-biased: the bare plank texture at g 137-145 under-reads motion, and the wheel shadow entering at g 146 over-reads it. The optical flow is the fairer speed measure.
+
+| Check | Status |
+|---|---|
+| Deck strip climb-back after the first peak | **Still more than 20 %.** The peak is 29.9 at g 131 (the team's single peak is confirmed). The strip falls to **5.9 at g 145**, then climbs to **13.0 at g 151**, a ratio of 2.2x, before a smooth, monotone settle to 0.4 at g 180. Round 14 was 6.5 to 16.4 (2.5x). The strict target is not met. |
+| Optical-flow background speed (px/frame) | **Round 15:** about 13 at g 131-132, a trough of **6-7 at g 134-137**, a ramp to **12-13 over g 142-149**, then a steady fall: 11 (g 151), 9 (g 156), 7 (g 161), 5 (g 165), 4 (g 168-171), 3 (g 172-177), 2 (g 178-180), 1 (g 181 on). **Round 14:** trough 5, then a sharp peak of 16 at g 151. **Round 12** (passed): trough 7, then a plateau of 12-13 at g 142-148. Round 15 is now the same shape as round 12, with no sharp peak. |
+| Phone read: one swoop? | **Close.** It is no longer "hover, then step". At g 134-140 the camera slows over the top of the quarterdeck while the characters keep growing; at g 142-158 it rolls forward and tilts down to eye level at an even speed; then the long, soft settle follows. It reads as one move with a breath in it, a gentle second push rather than a dive. The g 126-127 flow blip (17-21) is foam-texture noise; the stern steps evenly in j127.jpg, with no visible jerk. |
+| Landing, drift, acting (g 160 onward) | **Unchanged and intact.** The whole-frame diff for g 160-199 is identical to round 14, value for value. The landing eases monotonically to zero; the drift is +1 px/frame in the same direction; the dumbfounded captain, the shared look, the shrug and the head-scratch are all there; props stay in hand through g 199. |
+| Regressions | None. The opening, wake, stern pass, colour (sat 0.638, luma 94.4: G1 OK), grounding and framing are unchanged (G2/G3 OK). |
+
+| Criterion | Score |
+|---|---|
+| Set | 8 |
+| Light & colour | 8 |
+| Composition / phone | 7 |
+| Acting | 7.5 |
+| Key moment (BIGZOOM + beat) | 7.5 |
+| Match to refs | 7.5 |
+| **Overall** | **7.5 - PASS** |
+
+Status of the must-fixes:
+- **Must-fix 1 (one swoop): downgraded to optional polish.** The literal 20 % strip target is still missed (2.2x). But the true background speed now ramps gently and has the same shape as round 12, which passed, and it no longer reads as a step on a phone. I do not think another re-time pays for itself.
+- If the team wants it perfect: start the tilt-down at about g 128, so that the speed trough at g 134-137 stays at about 10 instead of dipping to 6.
+- **Must-fix 2: closed in round 14.**
+
+Nothing blocks conform. The open polish is unchanged: the captain's level chart arm in the shrug, seams on the left sail, and the soft foreground planks.
