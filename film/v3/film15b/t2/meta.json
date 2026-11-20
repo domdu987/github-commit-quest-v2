@@ -1,0 +1,17 @@
+{
+ "g0": 489,
+ "g1": 862,
+ "first_g": 483,
+ "n_frames": 386,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "handle_frames": 6,
+ "fps": 30,
+ "size": [
+  720,
+  1280
+ ],
+ "note": "T2 owns g489..861; g862..868 are the push-through handle (T3 dissolve 7 in); g483..488 cut-in handle"
+}

@@ -80,7 +80,7 @@ def page_cam(t):
     else:
         u = (t - T(838)) / (T(862) - T(838)); d = 4.2 + (0.50 - 4.2) * ease(u, 2.0) if u <= 1 else 0.50 - 0.5 * (u - 1) * 0.0 - 0.30 * (u - 1)   # after g862: keep creeping in
     # look target on the page: page centre -> photo centre as we push in
-    pc = page_point(0.365, 0.62)
+    pc = page_point(0.365, 0.38)
     w = ease((t - T(838)) / (T(862) - T(838)), 1.6) if t > T(838) else 0.0
     look = PAGE_C * (1 - w) + pc * w
     arc = 0.0
@@ -283,8 +283,8 @@ def set_frame(g):
 
 def white_amount(g):
     if g < G_FLASH: return 0.0
-    if g < 744: return min(1.0, 0.3 + 0.25 * (g - G_FLASH))
-    if g < 752: return 1.0 - (g - 744) / 8.0
+    if g < 744: return min(0.9, 0.3 + 0.25 * (g - G_FLASH))
+    if g < 752: return 0.9 - 0.9 * (g - 744) / 8.0
     return 0.0
 
 def render_frame(g, path):
