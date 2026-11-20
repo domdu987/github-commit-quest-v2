@@ -16,7 +16,7 @@ G_JIMO = c18.g_of(11.91)            # 360
 
 mode, rng = c18.parse_args(FIRST, LAST)
 t_snap = (G_JIMO - 8 - G0) / float(G1 - G0)
-T = c18.Take('s04', FIRST, LAST, draft=(mode == 'draft'), cam_fn=c18.rhythm_cam(push=0.08, slide=0.0, orbit=-9.0, pulses=(299, 312, 325, 338, G_JIMO - 6, 367, 378), width=8, amp=0.15))
+T = c18.Take('s04', FIRST, LAST, draft=(mode == 'draft'), moves=[dict(t=round(t_snap, 3), d=0.84, dur=9)], cam_fn=c18.rhythm_cam(push=0.12, slide=0.0, orbit=-14.0, pulses=()))
 c18.fix_vista(T)
 c18.fix_sky(T)
 print('hidden pennants near Ju:', c18.clear_sightline(T, 'ju', gs=(FIRST, 330, 360, LAST)), flush=True)

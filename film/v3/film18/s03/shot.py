@@ -15,7 +15,7 @@ FIRST, LAST = G0 - H_IN, G1 - 1 + H_OUT
 G_PEN0, G_PEN1 = c18.g_of(7.32), 294      # pennants pop (full count before the shot ends)
 
 mode, rng = c18.parse_args(FIRST, LAST)
-T = c18.Take('s03', FIRST, LAST, draft=(mode == 'draft'), cam_fn=c18.compose(c18.tilt_cam(-45.0), c18.rhythm_cam(push=-0.04, slide=0.0, orbit=-13.0, pulses=tuple(range(158, 300, 10)), width=7, amp=0.13)))
+T = c18.Take('s03', FIRST, LAST, draft=(mode == 'draft'), cam_fn=c18.compose(c18.tilt_cam(-45.0), c18.rhythm_cam(push=0.0, slide=0.0, orbit=-19.0, pulses=())))
 c18.fix_vista(T)
 c18.fix_sky(T)
 

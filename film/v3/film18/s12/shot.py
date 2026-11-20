@@ -13,7 +13,7 @@ G0, G1 = 944, 1003
 H_IN, H_OUT = 7, 8                   # dissolve 11 in / dissolve 13 out
 FIRST, LAST = G0 - H_IN, G1 - 1 + H_OUT
 mode, rng = c18.parse_args(FIRST, LAST)
-T = c18.Take('s12', FIRST, LAST, draft=(mode == 'draft'), cam_fn=c18.rhythm_cam(push=0.0, slide=0.0, pulses=tuple(range(940, 1010, 11)), width=7, amp=0.14, axis='pan'))
+T = c18.Take('s12', FIRST, LAST, draft=(mode == 'draft'), cam_fn=c18.rhythm_cam(push=0.05, slide=0.0, pulses=(), orbit=-10))
 ST = cast18.STORY18
 ENV_WALK = ST['envoy_walk'][1]; ENV_BOW = dict(ST['envoy_bow'][1], prop_r=dict(type='banner', angle=-90, scale=1.0))
 FOLK = [('old_man_worried', -13.1), ('woman_worried', -9.7), ('old_man_worried', -6.3), ('woman_worried', 7.3), ('old_man_worried', 10.7), ('woman_worried', 14.1), ('child_stand', -16.5)]

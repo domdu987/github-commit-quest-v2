@@ -72,20 +72,20 @@ def pcard(cast, pose, key):
     json.dump(m, open(mp, 'w')); return m
 
 
-def smoke_svg(ax, ay, k, n=4, grey='#c9c2c6'):
+def smoke_svg(ax, ay, k, n=4, grey='#a39ea4'):
     """tail smoke wisps rising from (ax, ay) (D units, y down); k = drawing index (drift / size vary)."""
     s = ['<defs><filter id="sb%d" x="-50%%" y="-50%%" width="200%%" height="200%%"><feGaussianBlur stdDeviation="0.07"/></filter></defs>' % k]
     for i in range(n):
         u = (i + 0.35 * (k % 3)) / n
-        cx = ax - 0.15 - 0.55 * u + 0.16 * math.sin(k * 1.3 + i * 2.1); cy = ay - 0.25 - 1.55 * u
-        r = 0.16 + 0.26 * u; op = 0.62 * (1.0 - 0.8 * u)
+        cx = ax - 0.15 - 0.55 * u + 0.16 * math.sin(k * 1.3 + i * 2.1); cy = ay - 0.25 - 2.0 * u
+        r = 0.22 + 0.34 * u; op = 0.80 * (1.0 - 0.75 * u)
         s.append('<ellipse cx="%.3f" cy="%.3f" rx="%.3f" ry="%.3f" fill="%s" opacity="%.2f" filter="url(#sb%d)"/>' % (cx, cy, r * 1.15, r, grey, op, k))
     return ''.join(s)
 
 
 def oxcard(state='dragon', view='three_quarter', gait='gallop', phase=0, flame=-1, smoke=None, reed=False):
     """an ox card (8 gallop drawings, phase = 0..7); smoke = None or a drawing index for grey tail wisps (no flame)."""
-    key = 'OX|%s|%s|%s|%d|%d|%s|%s' % (state, view, gait, phase, flame, smoke, reed)
+    key = 'OX2|%s|%s|%s|%d|%d|%s|%s' % (state, view, gait, phase, flame, smoke, reed)
     name = hashlib.md5(key.encode()).hexdigest()[:10] + '_ox'
     mp = os.path.join(CD.CARDS, name + '.json')
     if os.path.exists(mp) and os.path.exists(os.path.join(CD.CARDS, name + '.png')):
@@ -400,3 +400,18 @@ def compose(f1, f2):
         finally:
             T.base_pose = orig
     return fn
+
+
+def fix_sky_clean(T, tex_name='sky_DAWN'):
+    """cloud stickers out (TAKE gate): the sky texture is replaced by its row-median gradient (every cloud / sun disc column averaged away)."""
+    from PIL import Image as I
+    out = os.path.join(HERE, 'sky_clean.png')
+    if not os.path.exists(out):
+        a = np.asarray(I.open(os.path.join(SETD, 'tex_jimo', tex_name + '.png')).convert('RGB'), dtype='float32')
+        med = np.median(a, axis=1); k = np.ones(41, dtype='float32') / 41.0; pad = np.pad(med, ((20, 20), (0, 0)), mode='edge')
+        ref = np.stack([np.convolve(pad[:, c], k, mode='valid') for c in range(3)], axis=1)[:, None, :]
+        I.fromarray(np.clip(np.repeat(ref, a.shape[1], axis=1), 0, 255).astype('uint8'), 'RGB').save(out)
+    for im in bpy.data.images:
+        if tex_name in os.path.basename(im.filepath):
+            im.filepath = out; im.reload(); return True
+    return False
