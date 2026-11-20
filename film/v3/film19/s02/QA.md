@@ -10,7 +10,7 @@ The lone ship at the origin on the endless glittering sea (one narrow glitter pa
 
 ## Checked
 - DOF off, no text, no caption_shade (`dof:false`, `caption_shade:false` in every raw json). camreport: never parked (0 frames under 0.25 px/f).
-- No characters, so no heads / mouths / contact shadows to check. Ship stays clear of the caption band until the last handle frames (hull reaches y ~860 at g 118).
+- No characters, so no heads / mouths / contact shadows to check. Ship stays clear of the caption band until the last handle frames (hull bottom stays above y ~800 through g 118).
 - **Sea edge:** the set fits ONE sea grid to the preset camera, so any pull-back shows its edge. Fixed at runtime in shot.py (`widen_sea`: the grid is fitted to a virtual camera 4.5x farther on the same axis, 700x1000 vertices). No set module edited. Checked at g 48, 82, 118: no edge.
 - qa_auto: PASS; the planned cuts have "no visible change" only because the neighbours are other takes.
 
