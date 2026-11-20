@@ -21,7 +21,7 @@ G_PULL = (G0, 2036)                          # the crash pull-out; 2034..2045 ne
 G_WORD = C.cap_g("สักครั้ง")                     # 2020: last word
 PRESET = "tower_window_pull"
 PPD = 256
-CLOSE = float(os.environ.get("CLOSE", "4.0"))
+CLOSE = float(os.environ.get("CLOSE", "9.5"))
 LOOK_DROP = float(os.environ.get("LDROP", "3.3"))
 CANVAS = cast20.CANVAS20["maupassant"]
 

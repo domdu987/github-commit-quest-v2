@@ -11,3 +11,7 @@
 - `qa_stats.py take.mkv`: saturation 0.609, brightness 94.3, in-shot motion median 10.70 p90 31.46 (pass).
 - Window bars: at g 1968 the X braces sit left and right of the table, nothing crosses his face (head 68 px, y ~600). Feet are hidden by the table; he sits on the restaurant chair behind a cloth table with contact decal.
 - Camera: the pull ends on the whole tower (wide), no face taller than 35 %.
+
+## Bookend of s24 BIGZOOM (director plan change)
+- The start is now a MEDIUM of Maupassant in the clear centre pane (camera 9.5 D closer than the first version: head 128 px at g 1968, eyes shut, smug, table + cloth below; X braces left/right, only the preset iron post at the left edge 1 D from the lens). The crash pull-out then runs to the whole tower exactly as before.
+- Re-measured: qa_stats sat 0.607, luma 94.8, motion median 10.97 p90 31.86; frame-diff median 9.83 p90 30.05. qa_auto still lists "suspected blur" on g 1964-1973 (10 frames, flat orange facade + cloth slab by the relative-Laplacian heuristic; frames sharp at full size).

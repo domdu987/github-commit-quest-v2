@@ -35,19 +35,19 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 12.48,
- "s_per_frame_cpu_mean": 24.08,
+ "s_per_frame_wall_mean": 12.12,
+ "s_per_frame_cpu_mean": 23.41,
  "head_px": [
   2.1,
-  68.4
+  127.8
  ],
  "head_centre_y": [
-  507,
+  481,
   871
  ],
  "framediff_in_shot": {
-  "median": 9.63,
-  "p90": 29.39
+  "median": 9.83,
+  "p90": 30.05
  },
  "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json",
  "note": "film ends on a hard cut at g 2046 (no out handle); in-handle g 1964..1967 renders the pull backwards-extended"
