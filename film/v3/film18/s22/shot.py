@@ -15,12 +15,12 @@ G0, G1 = 1683, 1742
 H_IN, H_OUT = 6, 6
 G_GLINT = C.g_of(57.64)                                           # 1732
 MOVE = dict(push=0.09, slide=8)
-CAMO = dict(loc=(-1.4, -51.5, 1.9), look_at=(0.6, -46.0, 1.7), lens=27.0)
+CAMO = dict(loc=(-1.4, -51.5, 1.9), look_at=(0.15, -46.0, 1.45), lens=27.0)
 SHAKE = (0.8, 0.6, 0.4, 2.6)
 SNAPS = [(G_GLINT - 1, 1.08, 4, 9999)]                            # ONE held +15 % punch-in on the word
 OX = V((0.1, -46.0, 0.0))
 SCALE_OX = 0.8
-SOL_D, SOL_LAT = 4.7, 0.7
+SOL_D, SOL_LAT = 6.4, 1.9
 
 
 def make_driver(quality):
@@ -55,6 +55,15 @@ def make_driver(quality):
         bmesh.ops.delete(bm, geom=[f for f in bm.faces if 4.5 < (mw_ @ f.calc_center_median()).x < 13.0 and -44.5 < (mw_ @ f.calc_center_median()).y < -38.0], context='FACES'); bm.to_mesh(o_.data); bm.free()
     for o_ in ob:
         if o_.name.startswith(('flame_pg', 'flame_ol')) or (o_.type == 'LIGHT' and abs(o_.location.x - 8.4) < 1.5 and abs(o_.location.y + 41) < 2.5): o_.hide_render = True
+    for nm_ in ('wood', 'halos'):                       # the tripod brazier at the right edge is faces of the merged 'wood' mesh (found by ray cast): sink them under the ground
+        o_ = C.STATE['objects'].get(nm_)
+        if o_ is None: continue
+        mw_ = o_.matrix_world; vs_ = set()
+        for f in o_.data.polygons:
+            c_ = mw_ @ f.center
+            if 4.5 < c_.x < 11.0 and -43.5 < c_.y < -39.0: vs_.update(f.vertices)
+        for v in vs_: o_.data.vertices[v].co.z -= 60.0
+        o_.data.update()
     # hero ox: charging gallop front-3/4 with the charging face; unlit reed + OWN flame card
     hv = {ph: C.ox_variant('dragon', 'front_three_quarter', 'gallop', ph, -1, reed=True, uid='h', face='rage') for ph in range(8)}
     at_h = C.Atlas('s22_hero3', hv, ppd=200)
