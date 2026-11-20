@@ -41,10 +41,9 @@ def frame(g, t, camloc, ctx):
     for i, m in enumerate(marks.get('child', [])):
         ph = (g // 4) % 2
         meta = C.person('child_carry_basket', {'lean': 4 + 6 * ph})
-        C.put_person(meta, m[:3], camloc, 2.0, 'child%d' % i, lift=0.06 * abs(math.sin(g * math.pi / 4.0)))
+        C.put_person(meta, (m[0] - 5.5, m[1] - 3.3, m[2]), camloc, 1.6, 'child%d' % i, lift=0.06 * abs(math.sin(g * math.pi / 4.0)))
 
 if __name__ == '__main__':
     a = sys.argv[1:]
     if len(a) < 3 and (a[:1] or ['draft'])[0] in ('draft', 'final'): a = (a + [None, None])[:1] + [str(G0 - H_IN), str(G1 + H_OUT)] if False else a
-    KEEP = [(c, 7.4, 2.2) for c in (43.7, 38.2, 32.7, 27.2, 21.7, 16.2, 12.0)]
-    C.run(SHOT, G0 - H_IN, G1 + H_OUT, frame, setup, sys.argv[1:], keep=KEEP)
+    C.run(SHOT, G0 - H_IN, G1 + H_OUT, frame, setup, sys.argv[1:])

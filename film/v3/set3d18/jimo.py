@@ -555,6 +555,7 @@ def build(location=None, preset=None, light=None, clear=True):
     for lo in LIG.objects:                                   # the static fires' light on the wall is painted (warm weights), the real lamps must not wash it pink
         if lo.type == 'LIGHT' and lo.data.type == 'POINT': lo.light_linking.receiver_collection = nf
     scene.cycles.use_light_tree = True
+    scene.cycles.transparent_max_bounces = 64
     MN._denoise(scene); setup_grade(scene)
     W9._air_comp(scene, P); hue_guard(scene)
     for ob in SET.objects: no_bounce(ob)
