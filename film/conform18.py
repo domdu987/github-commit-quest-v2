@@ -135,6 +135,9 @@ def final(out):
             "music": {"file": mb, "at": 0, "rms_db": float(os.environ.get("MUSIC_DB", "-31")), "fade_in": 0.3, "fade_out": 0.1}, "sfx": sfx}
     json.dump(spec, open(out + "_mix.json", "w"), indent=1)
     sh(sys.executable, P + "/audio/mixer.py", out + "_mix.json")
+    # true-peak safety: linear loudnorm to -12 LUFS / -1.5 dBTP, then remux (FINAL gate: TP <= -1)
+    sh("ffmpeg", "-v", "error", "-y", "-i", out + ".wav", "-af", "loudnorm=I=-12:TP=-1.5:LRA=11:linear=true,aresample=48000", "-ar", "48000", out + "_tp.wav")
+    sh("ffmpeg", "-v", "error", "-y", "-i", out + "_silent.mp4", "-i", out + "_tp.wav", "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "256k", "-movflags", "+faststart", out + ".mp4")
 
 if __name__ == "__main__":
     cmd = sys.argv[1]
