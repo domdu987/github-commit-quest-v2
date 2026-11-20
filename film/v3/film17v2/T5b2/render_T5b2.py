@@ -19,6 +19,7 @@ ks.append(P._k(1250, (19.42, 19.38, 2.19), (16.67, 20.74, 1.58)))
 for k in OV['keys']: ks.append(P._k(k['g'], tuple(k['loc']), tuple(k['look']), hold=k.get('hold', False)))
 P.TAKES[take]['keys'] = ks
 P.K.LIGHTS['ARCHIVE_NIGHT'].update(fill_w=230, lamp_k=1.0, gasolier_k=0.7)   # = T5a's t5a_override.apply() (410265b): same night state at the start of the g1196-1211 mix
+for _k in ('ARCHIVE_NIGHT', 'ARCHIVE_DAY'): P.K.LIGHTS[_k]['beam_k'] = 0.0   # director: beam FX (skylight beam volume) = 0 for g>=1218, i.e. the whole T5b2 range
 import copy
 DAY0 = copy.deepcopy(P.K.LIGHTS['ARCHIVE_DAY']); MUL = OV['light']['mul'] if OV.get('light') else 1.0
 def day_scale(g):   # director: 1.0 at g1211 (matches T5a's last frame), smoothstep down to MUL by g1241. lights only: no haze, no desaturation
