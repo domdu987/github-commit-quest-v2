@@ -1,175 +1,175 @@
-00:00.398  cycles           | WARNING CUEW initialization failed: Error opening the library
-00:16.101  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1801.png'
-s24 g 1801: 13.7 s wall 27.5 cpu heads {'run0': 729, 'run1': 725, 'run2': 773, 'run3': 805, 'run4': 742, 'run5': 758, 'run6': 747, 'run7': 781, 'run8': 742, 'run9': 738, 'run10': 715, 'run11': 736}
-00:29.945  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1802.png'
-s24 g 1802: 13.8 s wall 27.8 cpu heads {'run0': 733, 'run1': 727, 'run2': 777, 'run3': 808, 'run4': 746, 'run5': 761, 'run6': 750, 'run7': 784, 'run8': 745, 'run9': 741, 'run10': 718, 'run11': 739}
-00:43.776  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1803.png'
-s24 g 1803: 13.8 s wall 27.7 cpu heads {'run0': 734, 'run1': 729, 'run2': 778, 'run3': 809, 'run4': 747, 'run5': 762, 'run6': 752, 'run7': 785, 'run8': 746, 'run9': 742, 'run10': 720, 'run11': 741}
-00:57.488  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1804.png'
-s24 g 1804: 13.7 s wall 27.6 cpu heads {'run0': 734, 'run1': 730, 'run2': 779, 'run3': 811, 'run4': 747, 'run5': 763, 'run6': 752, 'run7': 787, 'run8': 747, 'run9': 744, 'run10': 720, 'run11': 742}
-01:11.434  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1805.png'
-s24 g 1805: 13.9 s wall 28.0 cpu heads {'run0': 737, 'run1': 735, 'run2': 782, 'run3': 818, 'run4': 749, 'run5': 768, 'run6': 755, 'run7': 792, 'run8': 751, 'run9': 749, 'run10': 722, 'run11': 746}
-01:25.314  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1806.png'
-s24 g 1806: 13.9 s wall 27.8 cpu heads {'run0': 742, 'run1': 743, 'run2': 788, 'run3': 828, 'run4': 753, 'run5': 775, 'run6': 761, 'run7': 800, 'run8': 758, 'run9': 757, 'run10': 727, 'run11': 753}
-01:39.028  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1807.png'
-s24 g 1807: 13.7 s wall 27.5 cpu heads {'run0': 743, 'run1': 747, 'run2': 790, 'run3': 833, 'run4': 754, 'run5': 778, 'run6': 763, 'run7': 804, 'run8': 760, 'run9': 761, 'run10': 729, 'run11': 757}
-01:52.588  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1808.png'
-s24 g 1808: 13.5 s wall 27.2 cpu heads {'run0': 739, 'run1': 743, 'run2': 786, 'run3': 829, 'run4': 749, 'run5': 773, 'run6': 758, 'run7': 799, 'run8': 756, 'run9': 757, 'run10': 724, 'run11': 752}
-02:06.686  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1809.png'
-s24 g 1809: 14.1 s wall 28.5 cpu heads {'run0': 731, 'run1': 735, 'run2': 778, 'run3': 819, 'run4': 742, 'run5': 765, 'run6': 750, 'run7': 791, 'run8': 748, 'run9': 748, 'run10': 716, 'run11': 744}
-02:20.624  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1810.png'
-s24 g 1810: 13.9 s wall 28.1 cpu heads {'run0': 726, 'run1': 729, 'run2': 773, 'run3': 813, 'run4': 738, 'run5': 760, 'run6': 746, 'run7': 785, 'run8': 743, 'run9': 743, 'run10': 712, 'run11': 739}
-02:35.306  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1811.png'
-s24 g 1811: 14.7 s wall 29.5 cpu heads {'run0': 728, 'run1': 729, 'run2': 774, 'run3': 812, 'run4': 740, 'run5': 760, 'run6': 747, 'run7': 785, 'run8': 743, 'run9': 742, 'run10': 713, 'run11': 739}
-02:48.961  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1812.png'
-s24 g 1812: 13.6 s wall 27.6 cpu heads {'run0': 731, 'run1': 731, 'run2': 777, 'run3': 813, 'run4': 743, 'run5': 763, 'run6': 750, 'run7': 788, 'run8': 746, 'run9': 744, 'run10': 717, 'run11': 741}
-03:03.095  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1813.png'
-s24 g 1813: 14.1 s wall 28.3 cpu heads {'run0': 733, 'run1': 732, 'run2': 778, 'run3': 813, 'run4': 746, 'run5': 764, 'run6': 752, 'run7': 788, 'run8': 747, 'run9': 744, 'run10': 719, 'run11': 742}
-03:16.993  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1814.png'
-s24 g 1814: 13.9 s wall 27.9 cpu heads {'run0': 735, 'run1': 732, 'run2': 778, 'run3': 812, 'run4': 748, 'run5': 765, 'run6': 753, 'run7': 788, 'run8': 748, 'run9': 744, 'run10': 720, 'run11': 742}
-03:30.659  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1815.png'
-s24 g 1815: 13.6 s wall 27.4 cpu heads {'run0': 740, 'run1': 736, 'run2': 782, 'run3': 815, 'run4': 753, 'run5': 769, 'run6': 758, 'run7': 792, 'run8': 752, 'run9': 748, 'run10': 725, 'run11': 746}
-03:45.080  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1816.png'
-s24 g 1816: 14.4 s wall 29.1 cpu heads {'run0': 746, 'run1': 743, 'run2': 789, 'run3': 822, 'run4': 759, 'run5': 776, 'run6': 764, 'run7': 800, 'run8': 759, 'run9': 755, 'run10': 731, 'run11': 753}
-03:59.002  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1817.png'
-s24 g 1817: 13.9 s wall 28.0 cpu heads {'run0': 749, 'run1': 747, 'run2': 791, 'run3': 828, 'run4': 762, 'run5': 779, 'run6': 767, 'run7': 804, 'run8': 763, 'run9': 759, 'run10': 734, 'run11': 757}
-04:13.282  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1818.png'
-s24 g 1818: 14.3 s wall 28.7 cpu heads {'run0': 744, 'run1': 745, 'run2': 786, 'run3': 827, 'run4': 756, 'run5': 776, 'run6': 763, 'run7': 801, 'run8': 759, 'run9': 757, 'run10': 729, 'run11': 754}
-04:27.341  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1819.png'
-s24 g 1819: 14.0 s wall 28.3 cpu heads {'run0': 735, 'run1': 738, 'run2': 777, 'run3': 821, 'run4': 746, 'run5': 768, 'run6': 754, 'run7': 794, 'run8': 751, 'run9': 750, 'run10': 720, 'run11': 746}
-04:41.395  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1820.png'
-s24 g 1820: 14.0 s wall 28.3 cpu heads {'run0': 729, 'run1': 734, 'run2': 771, 'run3': 817, 'run4': 740, 'run5': 763, 'run6': 748, 'run7': 789, 'run8': 745, 'run9': 745, 'run10': 714, 'run11': 741}
-04:55.823  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1821.png'
-s24 g 1821: 14.4 s wall 29.0 cpu heads {'run0': 729, 'run1': 734, 'run2': 771, 'run3': 817, 'run4': 740, 'run5': 763, 'run6': 748, 'run7': 789, 'run8': 746, 'run9': 746, 'run10': 714, 'run11': 741}
-05:10.321  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1822.png'
-s24 g 1822: 14.5 s wall 29.3 cpu heads {'run0': 733, 'run1': 739, 'run2': 775, 'run3': 822, 'run4': 745, 'run5': 768, 'run6': 753, 'run7': 795, 'run8': 750, 'run9': 750, 'run10': 718, 'run11': 746}
-05:23.857  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1823.png'
-s24 g 1823: 13.5 s wall 27.2 cpu heads {'run0': 738, 'run1': 744, 'run2': 782, 'run3': 831, 'run4': 750, 'run5': 775, 'run6': 759, 'run7': 803, 'run8': 756, 'run9': 755, 'run10': 722, 'run11': 751}
-05:37.894  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1824.png'
-s24 g 1824: 14.0 s wall 28.3 cpu heads {'run0': 744, 'run1': 749, 'run2': 788, 'run3': 839, 'run4': 756, 'run5': 782, 'run6': 766, 'run7': 810, 'run8': 762, 'run9': 761, 'run10': 727, 'run11': 757}
-05:52.348  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1825.png'
-s24 g 1825: 14.4 s wall 29.0 cpu heads {'run0': 751, 'run1': 755, 'run2': 796, 'run3': 847, 'run4': 764, 'run5': 789, 'run6': 773, 'run7': 818, 'run8': 769, 'run9': 767, 'run10': 734, 'run11': 763}
-06:06.779  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1826.png'
-s24 g 1826: 14.4 s wall 29.1 cpu heads {'run0': 760, 'run1': 763, 'run2': 804, 'run3': 854, 'run4': 774, 'run5': 797, 'run6': 782, 'run7': 826, 'run8': 777, 'run9': 775, 'run10': 743, 'run11': 772}
-06:20.868  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1827.png'
-s24 g 1827: 14.1 s wall 28.4 cpu heads {'run0': 767, 'run1': 767, 'run2': 809, 'run3': 858, 'run4': 780, 'run5': 802, 'run6': 788, 'run7': 831, 'run8': 783, 'run9': 779, 'run10': 749, 'run11': 776}
-06:34.899  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1828.png'
-s24 g 1828: 14.0 s wall 28.2 cpu heads {'run0': 764, 'run1': 763, 'run2': 806, 'run3': 854, 'run4': 777, 'run5': 799, 'run6': 785, 'run7': 827, 'run8': 779, 'run9': 775, 'run10': 746, 'run11': 773}
-06:48.908  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1829.png'
-s24 g 1829: 14.0 s wall 28.2 cpu heads {'run0': 755, 'run1': 755, 'run2': 796, 'run3': 846, 'run4': 768, 'run5': 790, 'run6': 776, 'run7': 819, 'run8': 771, 'run9': 766, 'run10': 737, 'run11': 764}
-07:02.652  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1830.png'
-s24 g 1830: 13.7 s wall 27.6 cpu heads {'run0': 748, 'run1': 750, 'run2': 789, 'run3': 842, 'run4': 761, 'run5': 784, 'run6': 770, 'run7': 813, 'run8': 764, 'run9': 761, 'run10': 730, 'run11': 758}
-07:15.842  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1831.png'
-s24 g 1831: 13.2 s wall 26.7 cpu heads {'run0': 747, 'run1': 751, 'run2': 787, 'run3': 843, 'run4': 759, 'run5': 783, 'run6': 769, 'run7': 814, 'run8': 764, 'run9': 761, 'run10': 729, 'run11': 758}
-07:29.491  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1832.png'
-s24 g 1832: 13.6 s wall 27.4 cpu heads {'run0': 748, 'run1': 753, 'run2': 789, 'run3': 847, 'run4': 760, 'run5': 784, 'run6': 771, 'run7': 816, 'run8': 766, 'run9': 764, 'run10': 731, 'run11': 760}
-07:43.927  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1833.png'
-s24 g 1833: 14.4 s wall 29.1 cpu heads {'run0': 748, 'run1': 754, 'run2': 788, 'run3': 847, 'run4': 760, 'run5': 784, 'run6': 771, 'run7': 817, 'run8': 766, 'run9': 764, 'run10': 730, 'run11': 761}
-07:58.114  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1834.png'
-s24 g 1834: 14.2 s wall 28.5 cpu heads {'run0': 748, 'run1': 755, 'run2': 788, 'run3': 847, 'run4': 759, 'run5': 783, 'run6': 771, 'run7': 817, 'run8': 766, 'run9': 764, 'run10': 730, 'run11': 761}
-08:10.935  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1835.png'
-s24 g 1835: 12.8 s wall 25.8 cpu heads {'run0': 752, 'run1': 760, 'run2': 791, 'run3': 853, 'run4': 763, 'run5': 787, 'run6': 775, 'run7': 822, 'run8': 771, 'run9': 769, 'run10': 734, 'run11': 765}
-08:24.841  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1836.png'
-s24 g 1836: 13.9 s wall 27.9 cpu heads {'run0': 760, 'run1': 769, 'run2': 799, 'run3': 863, 'run4': 770, 'run5': 795, 'run6': 783, 'run7': 831, 'run8': 779, 'run9': 778, 'run10': 742, 'run11': 774}
-08:38.828  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1837.png'
-s24 g 1837: 14.0 s wall 28.2 cpu heads {'run0': 765, 'run1': 775, 'run2': 804, 'run3': 870, 'run4': 775, 'run5': 801, 'run6': 789, 'run7': 837, 'run8': 785, 'run9': 784, 'run10': 747, 'run11': 780}
-08:52.668  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1838.png'
-s24 g 1838: 13.8 s wall 27.9 cpu heads {'run0': 763, 'run1': 773, 'run2': 801, 'run3': 867, 'run4': 773, 'run5': 798, 'run6': 786, 'run7': 835, 'run8': 783, 'run9': 782, 'run10': 745, 'run11': 777}
-09:07.203  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1839.png'
-s24 g 1839: 14.5 s wall 29.1 cpu heads {'run0': 756, 'run1': 764, 'run2': 793, 'run3': 858, 'run4': 766, 'run5': 789, 'run6': 779, 'run7': 826, 'run8': 775, 'run9': 773, 'run10': 738, 'run11': 769}
-09:21.520  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1840.png'
-s24 g 1840: 14.3 s wall 28.8 cpu heads {'run0': 751, 'run1': 757, 'run2': 786, 'run3': 850, 'run4': 761, 'run5': 782, 'run6': 773, 'run7': 820, 'run8': 769, 'run9': 766, 'run10': 732, 'run11': 763}
-09:34.730  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1841.png'
-s24 g 1841: 13.2 s wall 26.6 cpu heads {'run0': 751, 'run1': 757, 'run2': 785, 'run3': 848, 'run4': 761, 'run5': 781, 'run6': 772, 'run7': 819, 'run8': 768, 'run9': 765, 'run10': 732, 'run11': 762}
-09:49.326  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1842.png'
-s24 g 1842: 14.6 s wall 29.4 cpu heads {'run0': 752, 'run1': 758, 'run2': 786, 'run3': 849, 'run4': 762, 'run5': 782, 'run6': 774, 'run7': 821, 'run8': 770, 'run9': 766, 'run10': 734, 'run11': 763}
-10:03.709  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1843.png'
-s24 g 1843: 14.4 s wall 28.9 cpu heads {'run0': 752, 'run1': 758, 'run2': 786, 'run3': 849, 'run4': 762, 'run5': 781, 'run6': 773, 'run7': 820, 'run8': 769, 'run9': 766, 'run10': 733, 'run11': 763}
-10:18.335  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1844.png'
-s24 g 1844: 14.6 s wall 29.3 cpu heads {'run0': 752, 'run1': 758, 'run2': 785, 'run3': 847, 'run4': 762, 'run5': 780, 'run6': 773, 'run7': 820, 'run8': 769, 'run9': 765, 'run10': 733, 'run11': 762}
-10:32.676  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1845.png'
-s24 g 1845: 14.3 s wall 28.7 cpu heads {'run0': 757, 'run1': 762, 'run2': 789, 'run3': 850, 'run4': 767, 'run5': 784, 'run6': 778, 'run7': 824, 'run8': 774, 'run9': 769, 'run10': 738, 'run11': 766}
-10:46.839  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1846.png'
-s24 g 1846: 14.1 s wall 28.4 cpu heads {'run0': 766, 'run1': 771, 'run2': 798, 'run3': 858, 'run4': 776, 'run5': 792, 'run6': 787, 'run7': 833, 'run8': 783, 'run9': 778, 'run10': 747, 'run11': 774}
-11:01.189  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1847.png'
-s24 g 1847: 14.3 s wall 28.7 cpu heads {'run0': 772, 'run1': 778, 'run2': 803, 'run3': 865, 'run4': 781, 'run5': 798, 'run6': 793, 'run7': 841, 'run8': 789, 'run9': 785, 'run10': 752, 'run11': 780}
-11:15.895  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1848.png'
-s24 g 1848: 14.7 s wall 29.4 cpu heads {'run0': 768, 'run1': 778, 'run2': 800, 'run3': 865, 'run4': 777, 'run5': 796, 'run6': 789, 'run7': 840, 'run8': 787, 'run9': 785, 'run10': 749, 'run11': 778}
-11:30.241  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1849.png'
-s24 g 1849: 14.3 s wall 28.8 cpu heads {'run0': 759, 'run1': 772, 'run2': 790, 'run3': 858, 'run4': 767, 'run5': 787, 'run6': 780, 'run7': 833, 'run8': 778, 'run9': 778, 'run10': 740, 'run11': 770}
-11:44.450  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1850.png'
-s24 g 1850: 14.2 s wall 28.5 cpu heads {'run0': 751, 'run1': 766, 'run2': 783, 'run3': 852, 'run4': 759, 'run5': 780, 'run6': 773, 'run7': 827, 'run8': 770, 'run9': 772, 'run10': 733, 'run11': 763}
-11:59.360  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1851.png'
-s24 g 1851: 14.9 s wall 29.9 cpu heads {'run0': 750, 'run1': 765, 'run2': 781, 'run3': 850, 'run4': 757, 'run5': 778, 'run6': 771, 'run7': 827, 'run8': 769, 'run9': 771, 'run10': 732, 'run11': 761}
-12:13.987  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1852.png'
-s24 g 1852: 14.6 s wall 29.3 cpu heads {'run0': 751, 'run1': 766, 'run2': 782, 'run3': 851, 'run4': 759, 'run5': 779, 'run6': 772, 'run7': 828, 'run8': 769, 'run9': 772, 'run10': 733, 'run11': 762}
-12:28.807  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1853.png'
-s24 g 1853: 14.8 s wall 29.6 cpu heads {'run0': 751, 'run1': 765, 'run2': 781, 'run3': 849, 'run4': 758, 'run5': 777, 'run6': 772, 'run7': 827, 'run8': 768, 'run9': 771, 'run10': 733, 'run11': 760}
-12:43.530  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1854.png'
-s24 g 1854: 14.7 s wall 29.5 cpu heads {'run0': 752, 'run1': 766, 'run2': 782, 'run3': 851, 'run4': 760, 'run5': 778, 'run6': 774, 'run7': 830, 'run8': 769, 'run9': 771, 'run10': 734, 'run11': 761}
-12:58.377  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1855.png'
-s24 g 1855: 14.8 s wall 29.8 cpu heads {'run0': 762, 'run1': 774, 'run2': 792, 'run3': 862, 'run4': 771, 'run5': 788, 'run6': 784, 'run7': 841, 'run8': 778, 'run9': 780, 'run10': 743, 'run11': 770}
-13:13.946  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1856.png'
-s24 g 1856: 15.5 s wall 31.1 cpu heads {'run0': 778, 'run1': 788, 'run2': 809, 'run3': 879, 'run4': 788, 'run5': 803, 'run6': 801, 'run7': 859, 'run8': 793, 'run9': 794, 'run10': 758, 'run11': 784}
-13:28.876  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1857.png'
-s24 g 1857: 14.9 s wall 29.9 cpu heads {'run0': 790, 'run1': 798, 'run2': 821, 'run3': 888, 'run4': 802, 'run5': 814, 'run6': 814, 'run7': 870, 'run8': 804, 'run9': 803, 'run10': 770, 'run11': 794}
-13:43.709  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1858.png'
-s24 g 1858: 14.8 s wall 29.7 cpu heads {'run0': 790, 'run1': 796, 'run2': 820, 'run3': 885, 'run4': 803, 'run5': 812, 'run6': 814, 'run7': 869, 'run8': 803, 'run9': 801, 'run10': 770, 'run11': 793}
-13:58.725  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1859.png'
-s24 g 1859: 15.0 s wall 30.1 cpu heads {'run0': 782, 'run1': 788, 'run2': 812, 'run3': 876, 'run4': 795, 'run5': 804, 'run6': 806, 'run7': 861, 'run8': 794, 'run9': 793, 'run10': 762, 'run11': 784}
-14:13.984  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1860.png'
-s24 g 1860: 15.2 s wall 30.7 cpu heads {'run0': 772, 'run1': 782, 'run2': 802, 'run3': 870, 'run4': 785, 'run5': 796, 'run6': 797, 'run7': 855, 'run8': 786, 'run9': 786, 'run10': 753, 'run11': 776}
-14:27.992  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1861.png'
-s24 g 1861: 14.0 s wall 28.1 cpu heads {'run0': 767, 'run1': 782, 'run2': 798, 'run3': 870, 'run4': 779, 'run5': 793, 'run6': 792, 'run7': 854, 'run8': 783, 'run9': 784, 'run10': 749, 'run11': 774}
-14:42.542  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1862.png'
-s24 g 1862: 14.5 s wall 29.1 cpu heads {'run0': 764, 'run1': 784, 'run2': 796, 'run3': 872, 'run4': 776, 'run5': 792, 'run6': 791, 'run7': 856, 'run8': 782, 'run9': 786, 'run10': 747, 'run11': 774}
-14:58.205  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1863.png'
-s24 g 1863: 15.6 s wall 31.4 cpu heads {'run0': 760, 'run1': 784, 'run2': 793, 'run3': 872, 'run4': 772, 'run5': 790, 'run6': 787, 'run7': 856, 'run8': 779, 'run9': 784, 'run10': 743, 'run11': 772}
-15:13.092  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1864.png'
-s24 g 1864: 14.9 s wall 29.7 cpu heads {'run0': 757, 'run1': 782, 'run2': 790, 'run3': 870, 'run4': 768, 'run5': 787, 'run6': 785, 'run7': 855, 'run8': 776, 'run9': 782, 'run10': 741, 'run11': 769}
-15:28.302  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1865.png'
-s24 g 1865: 15.2 s wall 30.3 cpu heads {'run0': 760, 'run1': 786, 'run2': 793, 'run3': 874, 'run4': 772, 'run5': 790, 'run6': 788, 'run7': 859, 'run8': 779, 'run9': 786, 'run10': 744, 'run11': 772}
-15:42.818  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1866.png'
-s24 g 1866: 14.5 s wall 29.2 cpu heads {'run0': 770, 'run1': 796, 'run2': 802, 'run3': 884, 'run4': 782, 'run5': 800, 'run6': 798, 'run7': 870, 'run8': 789, 'run9': 795, 'run10': 754, 'run11': 782}
-15:57.579  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1867.png'
-s24 g 1867: 14.7 s wall 29.6 cpu heads {'run0': 780, 'run1': 804, 'run2': 811, 'run3': 891, 'run4': 793, 'run5': 808, 'run6': 808, 'run7': 879, 'run8': 797, 'run9': 803, 'run10': 763, 'run11': 790}
-16:12.144  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1868.png'
-s24 g 1868: 14.5 s wall 29.2 cpu heads {'run0': 782, 'run1': 803, 'run2': 813, 'run3': 888, 'run4': 797, 'run5': 808, 'run6': 810, 'run7': 878, 'run8': 797, 'run9': 801, 'run10': 765, 'run11': 790}
-16:26.595  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1869.png'
-s24 g 1869: 14.4 s wall 29.0 cpu heads {'run0': 778, 'run1': 793, 'run2': 807, 'run3': 877, 'run4': 794, 'run5': 801, 'run6': 805, 'run7': 870, 'run8': 791, 'run9': 792, 'run10': 761, 'run11': 782}
-16:41.332  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1870.png'
-s24 g 1870: 14.7 s wall 29.6 cpu heads {'run0': 774, 'run1': 785, 'run2': 802, 'run3': 866, 'run4': 792, 'run5': 794, 'run6': 801, 'run7': 860, 'run8': 784, 'run9': 783, 'run10': 756, 'run11': 775}
-16:56.253  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1871.png'
-s24 g 1871: 14.9 s wall 29.8 cpu heads {'run0': 773, 'run1': 782, 'run2': 800, 'run3': 862, 'run4': 792, 'run5': 791, 'run6': 801, 'run7': 857, 'run8': 782, 'run9': 780, 'run10': 755, 'run11': 773}
-17:11.064  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1872.png'
-s24 g 1872: 14.8 s wall 29.7 cpu heads {'run0': 772, 'run1': 782, 'run2': 799, 'run3': 862, 'run4': 791, 'run5': 791, 'run6': 800, 'run7': 856, 'run8': 781, 'run9': 780, 'run10': 754, 'run11': 772}
-17:26.753  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1873.png'
-s24 g 1873: 15.7 s wall 31.4 cpu heads {'run0': 766, 'run1': 781, 'run2': 794, 'run3': 862, 'run4': 785, 'run5': 787, 'run6': 795, 'run7': 854, 'run8': 777, 'run9': 778, 'run10': 749, 'run11': 769}
-17:42.316  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1874.png'
-s24 g 1874: 15.5 s wall 31.2 cpu heads {'run0': 760, 'run1': 780, 'run2': 789, 'run3': 861, 'run4': 779, 'run5': 784, 'run6': 790, 'run7': 851, 'run8': 773, 'run9': 776, 'run10': 744, 'run11': 766}
-17:57.791  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1875.png'
-s24 g 1875: 15.5 s wall 31.0 cpu heads {'run0': 761, 'run1': 784, 'run2': 790, 'run3': 866, 'run4': 778, 'run5': 786, 'run6': 790, 'run7': 854, 'run8': 775, 'run9': 780, 'run10': 745, 'run11': 769}
-18:13.292  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1876.png'
-s24 g 1876: 15.5 s wall 31.1 cpu heads {'run0': 768, 'run1': 795, 'run2': 798, 'run3': 877, 'run4': 786, 'run5': 794, 'run6': 799, 'run7': 864, 'run8': 783, 'run9': 790, 'run10': 753, 'run11': 779}
-18:28.311  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1877.png'
-s24 g 1877: 15.0 s wall 30.1 cpu heads {'run0': 775, 'run1': 805, 'run2': 805, 'run3': 887, 'run4': 793, 'run5': 803, 'run6': 806, 'run7': 873, 'run8': 791, 'run9': 800, 'run10': 760, 'run11': 788}
-18:42.557  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1878.png'
-s24 g 1878: 14.2 s wall 28.6 cpu heads {'run0': 774, 'run1': 807, 'run2': 805, 'run3': 888, 'run4': 792, 'run5': 803, 'run6': 806, 'run7': 873, 'run8': 791, 'run9': 801, 'run10': 760, 'run11': 789}
-18:58.200  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1879.png'
-s24 g 1879: 15.6 s wall 31.3 cpu heads {'run0': 767, 'run1': 800, 'run2': 798, 'run3': 880, 'run4': 785, 'run5': 796, 'run6': 800, 'run7': 865, 'run8': 784, 'run9': 793, 'run10': 753, 'run11': 783}
-19:13.509  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1880.png'
-s24 g 1880: 15.3 s wall 30.7 cpu heads {'run0': 762, 'run1': 792, 'run2': 791, 'run3': 871, 'run4': 780, 'run5': 788, 'run6': 794, 'run7': 856, 'run8': 777, 'run9': 785, 'run10': 747, 'run11': 776}
-19:28.328  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1881.png'
-s24 g 1881: 14.8 s wall 29.6 cpu heads {'run0': 763, 'run1': 788, 'run2': 791, 'run3': 865, 'run4': 781, 'run5': 786, 'run6': 796, 'run7': 852, 'run8': 776, 'run9': 781, 'run10': 748, 'run11': 774}
-19:43.518  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1882.png'
-s24 g 1882: 15.2 s wall 30.6 cpu heads {'run0': 766, 'run1': 785, 'run2': 793, 'run3': 861, 'run4': 786, 'run5': 786, 'run6': 799, 'run7': 850, 'run8': 776, 'run9': 779, 'run10': 751, 'run11': 774}
-19:59.181  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1883.png'
-s24 g 1883: 15.6 s wall 31.3 cpu heads {'run0': 766, 'run1': 781, 'run2': 791, 'run3': 855, 'run4': 786, 'run5': 783, 'run6': 799, 'run7': 845, 'run8': 774, 'run9': 776, 'run10': 750, 'run11': 771}
-20:14.508  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1884.png'
-s24 g 1884: 15.3 s wall 30.7 cpu heads {'run0': 763, 'run1': 777, 'run2': 788, 'run3': 851, 'run4': 783, 'run5': 780, 'run6': 796, 'run7': 841, 'run8': 770, 'run9': 772, 'run10': 747, 'run11': 768}
-20:30.226  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1885.png'
-s24 g 1885: 15.7 s wall 31.4 cpu heads {'run0': 764, 'run1': 780, 'run2': 789, 'run3': 854, 'run4': 783, 'run5': 781, 'run6': 797, 'run7': 843, 'run8': 772, 'run9': 775, 'run10': 748, 'run11': 771}
-20:46.440  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1886.png'
-s24 g 1886: 16.2 s wall 32.4 cpu heads {'run0': 771, 'run1': 791, 'run2': 796, 'run3': 864, 'run4': 789, 'run5': 790, 'run6': 805, 'run7': 852, 'run8': 780, 'run9': 786, 'run10': 756, 'run11': 780}
-21:02.688  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1887.png'
-s24 g 1887: 16.2 s wall 32.5 cpu heads {'run0': 779, 'run1': 801, 'run2': 804, 'run3': 875, 'run4': 796, 'run5': 799, 'run6': 814, 'run7': 861, 'run8': 788, 'run9': 796, 'run10': 764, 'run11': 790}
+00:00.483  cycles           | WARNING CUEW initialization failed: Error opening the library
+00:17.005  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1801.png'
+s24 g 1801: 14.4 s wall 29.0 cpu heads {'run0': 754, 'run1': 751, 'run2': 791, 'run3': 791, 'run4': 765, 'run5': 776, 'run6': 760, 'run7': 769, 'run8': 743, 'run9': 765, 'run10': 751, 'run11': 768}
+00:31.303  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1802.png'
+s24 g 1802: 14.3 s wall 28.0 cpu heads {'run0': 757, 'run1': 754, 'run2': 795, 'run3': 794, 'run4': 769, 'run5': 779, 'run6': 763, 'run7': 772, 'run8': 746, 'run9': 768, 'run10': 755, 'run11': 772}
+00:45.811  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1803.png'
+s24 g 1803: 14.5 s wall 28.8 cpu heads {'run0': 758, 'run1': 755, 'run2': 796, 'run3': 796, 'run4': 770, 'run5': 781, 'run6': 764, 'run7': 774, 'run8': 747, 'run9': 769, 'run10': 756, 'run11': 773}
+01:01.417  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1804.png'
+s24 g 1804: 15.6 s wall 30.9 cpu heads {'run0': 759, 'run1': 756, 'run2': 797, 'run3': 797, 'run4': 771, 'run5': 782, 'run6': 765, 'run7': 775, 'run8': 748, 'run9': 771, 'run10': 756, 'run11': 774}
+01:16.526  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1805.png'
+s24 g 1805: 15.1 s wall 30.2 cpu heads {'run0': 763, 'run1': 761, 'run2': 801, 'run3': 802, 'run4': 774, 'run5': 786, 'run6': 768, 'run7': 779, 'run8': 752, 'run9': 776, 'run10': 759, 'run11': 778}
+01:30.789  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1806.png'
+s24 g 1806: 14.2 s wall 28.4 cpu heads {'run0': 769, 'run1': 768, 'run2': 808, 'run3': 810, 'run4': 779, 'run5': 793, 'run6': 774, 'run7': 787, 'run8': 759, 'run9': 784, 'run10': 765, 'run11': 784}
+01:45.013  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1807.png'
+s24 g 1807: 14.2 s wall 28.4 cpu heads {'run0': 771, 'run1': 772, 'run2': 811, 'run3': 815, 'run4': 781, 'run5': 796, 'run6': 777, 'run7': 790, 'run8': 762, 'run9': 788, 'run10': 767, 'run11': 787}
+01:59.787  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1808.png'
+s24 g 1808: 14.8 s wall 29.2 cpu heads {'run0': 767, 'run1': 768, 'run2': 806, 'run3': 810, 'run4': 777, 'run5': 792, 'run6': 772, 'run7': 786, 'run8': 758, 'run9': 784, 'run10': 762, 'run11': 782}
+02:15.126  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1809.png'
+s24 g 1809: 15.3 s wall 30.5 cpu heads {'run0': 758, 'run1': 760, 'run2': 798, 'run3': 801, 'run4': 769, 'run5': 784, 'run6': 764, 'run7': 777, 'run8': 749, 'run9': 775, 'run10': 754, 'run11': 774}
+02:29.525  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1810.png'
+s24 g 1810: 14.4 s wall 28.7 cpu heads {'run0': 753, 'run1': 754, 'run2': 794, 'run3': 795, 'run4': 764, 'run5': 778, 'run6': 759, 'run7': 772, 'run8': 744, 'run9': 769, 'run10': 749, 'run11': 769}
+02:44.565  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1811.png'
+s24 g 1811: 15.0 s wall 29.9 cpu heads {'run0': 754, 'run1': 755, 'run2': 795, 'run3': 795, 'run4': 765, 'run5': 779, 'run6': 760, 'run7': 772, 'run8': 745, 'run9': 769, 'run10': 751, 'run11': 770}
+02:58.617  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1812.png'
+s24 g 1812: 14.0 s wall 28.0 cpu heads {'run0': 757, 'run1': 757, 'run2': 799, 'run3': 797, 'run4': 768, 'run5': 783, 'run6': 763, 'run7': 775, 'run8': 747, 'run9': 771, 'run10': 754, 'run11': 773}
+03:13.343  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1813.png'
+s24 g 1813: 14.7 s wall 29.1 cpu heads {'run0': 759, 'run1': 758, 'run2': 801, 'run3': 797, 'run4': 769, 'run5': 784, 'run6': 765, 'run7': 776, 'run8': 748, 'run9': 771, 'run10': 756, 'run11': 774}
+03:28.433  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1814.png'
+s24 g 1814: 15.1 s wall 30.0 cpu heads {'run0': 760, 'run1': 758, 'run2': 803, 'run3': 796, 'run4': 771, 'run5': 786, 'run6': 766, 'run7': 776, 'run8': 749, 'run9': 771, 'run10': 757, 'run11': 776}
+03:43.674  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1815.png'
+s24 g 1815: 15.2 s wall 30.3 cpu heads {'run0': 764, 'run1': 762, 'run2': 808, 'run3': 800, 'run4': 775, 'run5': 791, 'run6': 771, 'run7': 780, 'run8': 753, 'run9': 775, 'run10': 762, 'run11': 781}
+03:57.898  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1816.png'
+s24 g 1816: 14.2 s wall 28.1 cpu heads {'run0': 771, 'run1': 769, 'run2': 816, 'run3': 807, 'run4': 782, 'run5': 799, 'run6': 778, 'run7': 787, 'run8': 759, 'run9': 782, 'run10': 768, 'run11': 789}
+04:12.876  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1817.png'
+s24 g 1817: 15.0 s wall 29.9 cpu heads {'run0': 774, 'run1': 774, 'run2': 821, 'run3': 811, 'run4': 784, 'run5': 804, 'run6': 782, 'run7': 791, 'run8': 762, 'run9': 787, 'run10': 771, 'run11': 793}
+04:27.157  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1818.png'
+s24 g 1818: 14.2 s wall 28.2 cpu heads {'run0': 770, 'run1': 771, 'run2': 818, 'run3': 808, 'run4': 779, 'run5': 801, 'run6': 778, 'run7': 788, 'run8': 758, 'run9': 785, 'run10': 766, 'run11': 790}
+04:41.620  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1819.png'
+s24 g 1819: 14.4 s wall 28.6 cpu heads {'run0': 761, 'run1': 764, 'run2': 810, 'run3': 801, 'run4': 770, 'run5': 795, 'run6': 769, 'run7': 781, 'run8': 749, 'run9': 779, 'run10': 757, 'run11': 783}
+04:56.180  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1820.png'
+s24 g 1820: 14.5 s wall 29.1 cpu heads {'run0': 755, 'run1': 760, 'run2': 806, 'run3': 797, 'run4': 763, 'run5': 791, 'run6': 764, 'run7': 776, 'run8': 743, 'run9': 775, 'run10': 750, 'run11': 779}
+05:10.420  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1821.png'
+s24 g 1821: 14.2 s wall 28.3 cpu heads {'run0': 755, 'run1': 760, 'run2': 807, 'run3': 797, 'run4': 763, 'run5': 792, 'run6': 764, 'run7': 776, 'run8': 743, 'run9': 776, 'run10': 750, 'run11': 780}
+05:25.175  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1822.png'
+s24 g 1822: 14.7 s wall 29.4 cpu heads {'run0': 760, 'run1': 765, 'run2': 814, 'run3': 802, 'run4': 768, 'run5': 799, 'run6': 769, 'run7': 782, 'run8': 746, 'run9': 782, 'run10': 754, 'run11': 786}
+05:40.020  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1823.png'
+s24 g 1823: 14.8 s wall 29.5 cpu heads {'run0': 766, 'run1': 772, 'run2': 824, 'run3': 810, 'run4': 774, 'run5': 808, 'run6': 777, 'run7': 789, 'run8': 751, 'run9': 790, 'run10': 760, 'run11': 795}
+05:55.787  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1824.png'
+s24 g 1824: 15.7 s wall 31.4 cpu heads {'run0': 773, 'run1': 778, 'run2': 835, 'run3': 818, 'run4': 781, 'run5': 817, 'run6': 784, 'run7': 796, 'run8': 756, 'run9': 797, 'run10': 765, 'run11': 804}
+06:11.432  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1825.png'
+s24 g 1825: 15.6 s wall 31.0 cpu heads {'run0': 780, 'run1': 785, 'run2': 831, 'run3': 825, 'run4': 789, 'run5': 827, 'run6': 792, 'run7': 804, 'run8': 762, 'run9': 805, 'run10': 772, 'run11': 813}
+06:26.892  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1826.png'
+s24 g 1826: 15.4 s wall 30.7 cpu heads {'run0': 789, 'run1': 793, 'run2': 841, 'run3': 832, 'run4': 798, 'run5': 837, 'run6': 801, 'run7': 812, 'run8': 769, 'run9': 814, 'run10': 781, 'run11': 823}
+06:42.444  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1827.png'
+s24 g 1827: 15.5 s wall 30.9 cpu heads {'run0': 795, 'run1': 798, 'run2': 834, 'run3': 836, 'run4': 804, 'run5': 830, 'run6': 808, 'run7': 816, 'run8': 773, 'run9': 819, 'run10': 786, 'run11': 830}
+06:57.727  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1828.png'
+s24 g 1828: 15.2 s wall 30.6 cpu heads {'run0': 792, 'run1': 794, 'run2': 832, 'run3': 820, 'run4': 801, 'run5': 828, 'run6': 805, 'run7': 813, 'run8': 769, 'run9': 816, 'run10': 783, 'run11': 828}
+07:13.342  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1829.png'
+s24 g 1829: 15.6 s wall 31.2 cpu heads {'run0': 783, 'run1': 786, 'run2': 824, 'run3': 824, 'run4': 791, 'run5': 821, 'run6': 797, 'run7': 804, 'run8': 760, 'run9': 808, 'run10': 773, 'run11': 820}
+07:28.188  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1830.png'
+s24 g 1830: 14.8 s wall 29.5 cpu heads {'run0': 777, 'run1': 781, 'run2': 819, 'run3': 819, 'run4': 784, 'run5': 829, 'run6': 790, 'run7': 798, 'run8': 753, 'run9': 803, 'run10': 766, 'run11': 815}
+07:43.087  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1831.png'
+s24 g 1831: 14.9 s wall 29.7 cpu heads {'run0': 776, 'run1': 781, 'run2': 833, 'run3': 819, 'run4': 783, 'run5': 830, 'run6': 789, 'run7': 799, 'run8': 752, 'run9': 805, 'run10': 764, 'run11': 816}
+07:58.059  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1832.png'
+s24 g 1832: 14.9 s wall 29.9 cpu heads {'run0': 777, 'run1': 784, 'run2': 836, 'run3': 822, 'run4': 784, 'run5': 834, 'run6': 791, 'run7': 801, 'run8': 753, 'run9': 808, 'run10': 765, 'run11': 819}
+08:13.114  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1833.png'
+s24 g 1833: 15.0 s wall 30.0 cpu heads {'run0': 777, 'run1': 785, 'run2': 823, 'run3': 823, 'run4': 783, 'run5': 836, 'run6': 792, 'run7': 802, 'run8': 752, 'run9': 809, 'run10': 765, 'run11': 821}
+08:27.476  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1834.png'
+s24 g 1834: 14.3 s wall 28.6 cpu heads {'run0': 777, 'run1': 785, 'run2': 825, 'run3': 823, 'run4': 783, 'run5': 824, 'run6': 792, 'run7': 802, 'run8': 751, 'run9': 811, 'run10': 764, 'run11': 822}
+08:42.109  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1835.png'
+s24 g 1835: 14.6 s wall 29.1 cpu heads {'run0': 781, 'run1': 791, 'run2': 830, 'run3': 828, 'run4': 786, 'run5': 830, 'run6': 797, 'run7': 807, 'run8': 755, 'run9': 816, 'run10': 767, 'run11': 828}
+08:57.300  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1836.png'
+s24 g 1836: 15.2 s wall 30.1 cpu heads {'run0': 789, 'run1': 800, 'run2': 840, 'run3': 837, 'run4': 794, 'run5': 840, 'run6': 805, 'run7': 816, 'run8': 763, 'run9': 827, 'run10': 774, 'run11': 838}
+09:11.831  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1837.png'
+s24 g 1837: 14.5 s wall 29.0 cpu heads {'run0': 795, 'run1': 806, 'run2': 834, 'run3': 831, 'run4': 799, 'run5': 834, 'run6': 811, 'run7': 823, 'run8': 768, 'run9': 834, 'run10': 779, 'run11': 832}
+09:26.953  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1838.png'
+s24 g 1838: 15.1 s wall 30.0 cpu heads {'run0': 793, 'run1': 804, 'run2': 832, 'run3': 828, 'run4': 797, 'run5': 833, 'run6': 809, 'run7': 820, 'run8': 764, 'run9': 832, 'run10': 777, 'run11': 831}
+09:41.807  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1839.png'
+s24 g 1839: 14.8 s wall 29.6 cpu heads {'run0': 785, 'run1': 795, 'run2': 826, 'run3': 819, 'run4': 789, 'run5': 826, 'run6': 802, 'run7': 811, 'run8': 755, 'run9': 824, 'run10': 769, 'run11': 824}
+09:57.069  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1840.png'
+s24 g 1840: 15.2 s wall 30.3 cpu heads {'run0': 780, 'run1': 789, 'run2': 821, 'run3': 825, 'run4': 784, 'run5': 821, 'run6': 797, 'run7': 805, 'run8': 749, 'run9': 818, 'run10': 763, 'run11': 820}
+10:12.091  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1841.png'
+s24 g 1841: 15.0 s wall 29.9 cpu heads {'run0': 780, 'run1': 788, 'run2': 821, 'run3': 825, 'run4': 783, 'run5': 822, 'run6': 797, 'run7': 804, 'run8': 747, 'run9': 818, 'run10': 762, 'run11': 835}
+10:26.277  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1842.png'
+s24 g 1842: 14.2 s wall 28.3 cpu heads {'run0': 781, 'run1': 789, 'run2': 824, 'run3': 828, 'run4': 784, 'run5': 825, 'run6': 799, 'run7': 805, 'run8': 748, 'run9': 820, 'run10': 763, 'run11': 823}
+10:41.032  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1843.png'
+s24 g 1843: 14.7 s wall 29.1 cpu heads {'run0': 781, 'run1': 789, 'run2': 825, 'run3': 829, 'run4': 784, 'run5': 826, 'run6': 799, 'run7': 805, 'run8': 747, 'run9': 821, 'run10': 762, 'run11': 825}
+10:55.808  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1844.png'
+s24 g 1844: 14.8 s wall 29.3 cpu heads {'run0': 781, 'run1': 789, 'run2': 826, 'run3': 830, 'run4': 784, 'run5': 827, 'run6': 800, 'run7': 805, 'run8': 746, 'run9': 821, 'run10': 762, 'run11': 826}
+11:10.399  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1845.png'
+s24 g 1845: 14.6 s wall 29.0 cpu heads {'run0': 786, 'run1': 793, 'run2': 832, 'run3': 836, 'run4': 788, 'run5': 833, 'run6': 805, 'run7': 809, 'run8': 749, 'run9': 826, 'run10': 766, 'run11': 832}
+11:25.515  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1846.png'
+s24 g 1846: 15.1 s wall 30.0 cpu heads {'run0': 795, 'run1': 802, 'run2': 843, 'run3': 833, 'run4': 797, 'run5': 844, 'run6': 815, 'run7': 818, 'run8': 757, 'run9': 836, 'run10': 774, 'run11': 843}
+11:40.726  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1847.png'
+s24 g 1847: 15.2 s wall 30.4 cpu heads {'run0': 801, 'run1': 809, 'run2': 837, 'run3': 842, 'run4': 802, 'run5': 838, 'run6': 821, 'run7': 825, 'run8': 763, 'run9': 832, 'run10': 779, 'run11': 837}
+11:56.378  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1848.png'
+s24 g 1848: 15.6 s wall 31.3 cpu heads {'run0': 798, 'run1': 809, 'run2': 823, 'run3': 829, 'run4': 799, 'run5': 825, 'run6': 818, 'run7': 825, 'run8': 760, 'run9': 832, 'run10': 775, 'run11': 823}
+12:11.422  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1849.png'
+s24 g 1849: 15.0 s wall 29.9 cpu heads {'run0': 789, 'run1': 802, 'run2': 815, 'run3': 824, 'run4': 789, 'run5': 818, 'run6': 809, 'run7': 818, 'run8': 751, 'run9': 827, 'run10': 766, 'run11': 816}
+12:26.823  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1850.png'
+s24 g 1850: 15.4 s wall 30.6 cpu heads {'run0': 781, 'run1': 796, 'run2': 822, 'run3': 820, 'run4': 781, 'run5': 826, 'run6': 802, 'run7': 812, 'run8': 744, 'run9': 822, 'run10': 758, 'run11': 824}
+12:42.749  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1851.png'
+s24 g 1851: 15.9 s wall 31.6 cpu heads {'run0': 780, 'run1': 795, 'run2': 821, 'run3': 834, 'run4': 779, 'run5': 827, 'run6': 801, 'run7': 812, 'run8': 742, 'run9': 822, 'run10': 756, 'run11': 825}
+12:58.143  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1852.png'
+s24 g 1852: 15.4 s wall 30.6 cpu heads {'run0': 780, 'run1': 796, 'run2': 824, 'run3': 823, 'run4': 780, 'run5': 829, 'run6': 803, 'run7': 813, 'run8': 742, 'run9': 824, 'run10': 757, 'run11': 827}
+13:13.348  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1853.png'
+s24 g 1853: 15.2 s wall 30.2 cpu heads {'run0': 779, 'run1': 795, 'run2': 825, 'run3': 823, 'run4': 780, 'run5': 830, 'run6': 803, 'run7': 812, 'run8': 741, 'run9': 824, 'run10': 756, 'run11': 828}
+13:29.999  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1854.png'
+s24 g 1854: 16.6 s wall 33.1 cpu heads {'run0': 781, 'run1': 797, 'run2': 829, 'run3': 827, 'run4': 782, 'run5': 834, 'run6': 807, 'run7': 814, 'run8': 741, 'run9': 827, 'run10': 757, 'run11': 832}
+13:46.659  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1855.png'
+s24 g 1855: 16.6 s wall 33.2 cpu heads {'run0': 791, 'run1': 807, 'run2': 828, 'run3': 826, 'run4': 793, 'run5': 833, 'run6': 819, 'run7': 824, 'run8': 749, 'run9': 825, 'run10': 767, 'run11': 831}
+14:03.235  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1856.png'
+s24 g 1856: 16.6 s wall 33.0 cpu heads {'run0': 808, 'run1': 822, 'run2': 834, 'run3': 843, 'run4': 811, 'run5': 838, 'run6': 839, 'run7': 841, 'run8': 763, 'run9': 842, 'run10': 783, 'run11': 836}
+14:20.844  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1857.png'
+s24 g 1857: 17.6 s wall 35.1 cpu heads {'run0': 820, 'run1': 833, 'run2': 835, 'run3': 841, 'run4': 824, 'run5': 838, 'run6': 840, 'run7': 838, 'run8': 772, 'run9': 839, 'run10': 794, 'run11': 836}
+14:37.848  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1858.png'
+s24 g 1858: 17.0 s wall 33.8 cpu heads {'run0': 820, 'run1': 831, 'run2': 824, 'run3': 828, 'run4': 825, 'run5': 826, 'run6': 828, 'run7': 824, 'run8': 771, 'run9': 826, 'run10': 794, 'run11': 824}
+14:54.687  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1859.png'
+s24 g 1859: 16.8 s wall 33.7 cpu heads {'run0': 811, 'run1': 822, 'run2': 817, 'run3': 822, 'run4': 817, 'run5': 819, 'run6': 820, 'run7': 816, 'run8': 762, 'run9': 819, 'run10': 785, 'run11': 816}
+15:11.446  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1860.png'
+s24 g 1860: 16.7 s wall 33.3 cpu heads {'run0': 802, 'run1': 816, 'run2': 822, 'run3': 817, 'run4': 807, 'run5': 826, 'run6': 824, 'run7': 822, 'run8': 754, 'run9': 827, 'run10': 776, 'run11': 823}
+15:28.230  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1861.png'
+s24 g 1861: 16.8 s wall 33.4 cpu heads {'run0': 797, 'run1': 815, 'run2': 820, 'run3': 832, 'run4': 802, 'run5': 825, 'run6': 820, 'run7': 822, 'run8': 750, 'run9': 828, 'run10': 771, 'run11': 822}
+15:45.141  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1862.png'
+s24 g 1862: 16.9 s wall 33.6 cpu heads {'run0': 795, 'run1': 817, 'run2': 833, 'run3': 836, 'run4': 800, 'run5': 827, 'run6': 832, 'run7': 824, 'run8': 750, 'run9': 832, 'run10': 768, 'run11': 823}
+16:02.196  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1863.png'
+s24 g 1863: 17.0 s wall 33.8 cpu heads {'run0': 792, 'run1': 816, 'run2': 832, 'run3': 823, 'run4': 797, 'run5': 827, 'run6': 829, 'run7': 823, 'run8': 747, 'run9': 833, 'run10': 765, 'run11': 823}
+16:18.566  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1864.png'
+s24 g 1864: 16.3 s wall 32.7 cpu heads {'run0': 789, 'run1': 815, 'run2': 831, 'run3': 823, 'run4': 794, 'run5': 827, 'run6': 827, 'run7': 822, 'run8': 744, 'run9': 833, 'run10': 761, 'run11': 822}
+16:34.876  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1865.png'
+s24 g 1865: 16.3 s wall 32.4 cpu heads {'run0': 792, 'run1': 819, 'run2': 836, 'run3': 829, 'run4': 798, 'run5': 832, 'run6': 831, 'run7': 826, 'run8': 747, 'run9': 838, 'run10': 764, 'run11': 826}
+16:50.918  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1866.png'
+s24 g 1866: 16.0 s wall 31.9 cpu heads {'run0': 801, 'run1': 829, 'run2': 833, 'run3': 841, 'run4': 808, 'run5': 844, 'run6': 841, 'run7': 835, 'run8': 756, 'run9': 835, 'run10': 774, 'run11': 837}
+17:07.771  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1867.png'
+s24 g 1867: 16.8 s wall 33.4 cpu heads {'run0': 811, 'run1': 837, 'run2': 844, 'run3': 837, 'run4': 819, 'run5': 841, 'run6': 838, 'run7': 842, 'run8': 764, 'run9': 831, 'run10': 783, 'run11': 832}
+17:24.566  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1868.png'
+s24 g 1868: 16.8 s wall 33.3 cpu heads {'run0': 812, 'run1': 822, 'run2': 834, 'run3': 825, 'run4': 822, 'run5': 829, 'run6': 829, 'run7': 827, 'run8': 764, 'run9': 830, 'run10': 785, 'run11': 833}
+17:41.497  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1869.png'
+s24 g 1869: 16.9 s wall 33.6 cpu heads {'run0': 807, 'run1': 825, 'run2': 829, 'run3': 817, 'run4': 818, 'run5': 823, 'run6': 825, 'run7': 817, 'run8': 757, 'run9': 821, 'run10': 780, 'run11': 826}
+17:57.571  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1870.png'
+s24 g 1870: 16.0 s wall 31.9 cpu heads {'run0': 802, 'run1': 816, 'run2': 825, 'run3': 822, 'run4': 815, 'run5': 818, 'run6': 822, 'run7': 820, 'run8': 750, 'run9': 826, 'run10': 775, 'run11': 819}
+18:14.822  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1871.png'
+s24 g 1871: 17.2 s wall 34.2 cpu heads {'run0': 801, 'run1': 813, 'run2': 825, 'run3': 821, 'run4': 814, 'run5': 831, 'run6': 835, 'run7': 829, 'run8': 748, 'run9': 824, 'run10': 774, 'run11': 832}
+18:31.803  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1872.png'
+s24 g 1872: 17.0 s wall 33.8 cpu heads {'run0': 800, 'run1': 814, 'run2': 826, 'run3': 823, 'run4': 812, 'run5': 832, 'run6': 834, 'run7': 828, 'run8': 747, 'run9': 825, 'run10': 773, 'run11': 832}
+18:49.962  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1873.png'
+s24 g 1873: 18.1 s wall 36.1 cpu heads {'run0': 795, 'run1': 813, 'run2': 823, 'run3': 824, 'run4': 806, 'run5': 831, 'run6': 829, 'run7': 826, 'run8': 743, 'run9': 825, 'run10': 768, 'run11': 829}
+19:07.185  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1874.png'
+s24 g 1874: 17.2 s wall 34.2 cpu heads {'run0': 789, 'run1': 811, 'run2': 820, 'run3': 825, 'run4': 799, 'run5': 830, 'run6': 823, 'run7': 823, 'run8': 739, 'run9': 826, 'run10': 762, 'run11': 826}
+19:23.393  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1875.png'
+s24 g 1875: 16.2 s wall 32.4 cpu heads {'run0': 790, 'run1': 816, 'run2': 837, 'run3': 831, 'run4': 798, 'run5': 835, 'run6': 824, 'run7': 826, 'run8': 741, 'run9': 831, 'run10': 762, 'run11': 829}
+19:40.530  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1876.png'
+s24 g 1876: 17.1 s wall 34.1 cpu heads {'run0': 797, 'run1': 827, 'run2': 833, 'run3': 844, 'run4': 805, 'run5': 832, 'run6': 832, 'run7': 836, 'run8': 749, 'run9': 843, 'run10': 770, 'run11': 839}
+19:56.863  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1877.png'
+s24 g 1877: 16.3 s wall 32.6 cpu heads {'run0': 805, 'run1': 837, 'run2': 842, 'run3': 842, 'run4': 811, 'run5': 843, 'run6': 840, 'run7': 844, 'run8': 757, 'run9': 840, 'run10': 777, 'run11': 835}
+20:12.868  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1878.png'
+s24 g 1878: 16.0 s wall 31.8 cpu heads {'run0': 804, 'run1': 826, 'run2': 831, 'run3': 832, 'run4': 810, 'run5': 832, 'run6': 827, 'run7': 832, 'run8': 757, 'run9': 829, 'run10': 776, 'run11': 836}
+20:29.223  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1879.png'
+s24 g 1879: 16.3 s wall 32.6 cpu heads {'run0': 797, 'run1': 819, 'run2': 825, 'run3': 826, 'run4': 802, 'run5': 827, 'run6': 820, 'run7': 823, 'run8': 750, 'run9': 822, 'run10': 769, 'run11': 817}
+20:45.361  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1880.png'
+s24 g 1880: 16.1 s wall 32.1 cpu heads {'run0': 791, 'run1': 823, 'run2': 820, 'run3': 820, 'run4': 796, 'run5': 821, 'run6': 829, 'run7': 827, 'run8': 743, 'run9': 827, 'run10': 763, 'run11': 823}
+21:00.529  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1881.png'
+s24 g 1881: 15.1 s wall 30.1 cpu heads {'run0': 791, 'run1': 818, 'run2': 835, 'run3': 831, 'run4': 796, 'run5': 820, 'run6': 830, 'run7': 822, 'run8': 741, 'run9': 822, 'run10': 763, 'run11': 822}
+21:16.074  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1882.png'
+s24 g 1882: 15.5 s wall 31.2 cpu heads {'run0': 794, 'run1': 816, 'run2': 824, 'run3': 830, 'run4': 798, 'run5': 835, 'run6': 836, 'run7': 819, 'run8': 741, 'run9': 819, 'run10': 766, 'run11': 823}
+21:32.323  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1883.png'
+s24 g 1883: 16.2 s wall 32.5 cpu heads {'run0': 793, 'run1': 811, 'run2': 825, 'run3': 828, 'run4': 797, 'run5': 820, 'run6': 824, 'run7': 814, 'run8': 738, 'run9': 829, 'run10': 765, 'run11': 821}
+21:48.174  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1884.png'
+s24 g 1884: 15.8 s wall 31.8 cpu heads {'run0': 790, 'run1': 807, 'run2': 823, 'run3': 826, 'run4': 793, 'run5': 818, 'run6': 823, 'run7': 809, 'run8': 735, 'run9': 825, 'run10': 762, 'run11': 818}
+22:04.357  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1885.png'
+s24 g 1885: 16.2 s wall 32.4 cpu heads {'run0': 791, 'run1': 810, 'run2': 826, 'run3': 831, 'run4': 794, 'run5': 836, 'run6': 825, 'run7': 811, 'run8': 736, 'run9': 829, 'run10': 763, 'run11': 835}
+22:19.770  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1886.png'
+s24 g 1886: 15.4 s wall 31.0 cpu heads {'run0': 798, 'run1': 821, 'run2': 835, 'run3': 844, 'run4': 800, 'run5': 833, 'run6': 835, 'run7': 820, 'run8': 744, 'run9': 840, 'run10': 771, 'run11': 831}
+22:35.389  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s24/frames/g_1887.png'
+s24 g 1887: 15.6 s wall 31.3 cpu heads {'run0': 806, 'run1': 831, 'run2': 832, 'run3': 842, 'run4': 807, 'run5': 845, 'run6': 831, 'run7': 829, 'run8': 753, 'run9': 837, 'run10': 778, 'run11': 841}

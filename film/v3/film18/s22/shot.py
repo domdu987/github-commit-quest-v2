@@ -8,6 +8,7 @@ import os, sys, math, random
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import c18 as C                                                    # noqa: E402
 from c18 import cast18, V
+import bmesh
 
 NAME = 's22'
 G0, G1 = 1683, 1742
@@ -25,12 +26,11 @@ SOL_D, SOL_LAT = 4.7, 0.7
 def make_driver(quality):
     C.begin(NAME, quality=quality)
     ob = C.bpy.data.objects
-    for nm in ('streaks', 'cityglow', 'moon'):
+    for nm in ('streaks', 'cityglow'):
         if nm in C.STATE['objects']: C.STATE['objects'][nm].hide_render = True
     for o in list(ob):
-        if o.type == 'LIGHT' and o.data.type == 'SUN': o.data.energy *= 0.4
+        pass
     sk = C.STATE['objects'].get('sky')
-    if sk is not None: sk.data.materials.clear(); sk.data.materials.append(C.flat_mat((0.006, 0.009, 0.03), 'sky_deep'))
     pl = C.STATE['objects'].get('palisade')
     if pl is not None:
         pl.data.materials.clear(); pl.data.materials.append(C.flat_mat((0.03, 0.022, 0.02), 'pal_dark'))
@@ -47,6 +47,18 @@ def make_driver(quality):
                 v = w2c(sc_, cam0, mw @ f.center)
                 if v.z > 0 and v.x > 0.62 and 0.12 < 1 - v.y < 0.75: kill.add(f.index)
         bm = bmesh.new(); bm.from_mesh(pl.data); bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.index in kill], context='FACES'); bm.to_mesh(pl.data); bm.free()
+    # remove the tripod brazier at the right edge: faces of set meshes (not sky / ground / wall) projecting into its screen area
+    SKIP = ('sky', 'moon', 'hills', 'ground2', 'campground', 'water', 'wall', 'banks', 'cityroof', 'citybody', 'cityglow', 'merlons', 'putlog', 'cloth', 'rainstreaks', 'halos', 'wallpools')
+    for nm_, o_ in list(C.STATE['objects'].items()):
+        if nm_ in SKIP or o_.type != 'MESH' or nm_.startswith(('c18', 'flame')): continue
+        kill = set(); mw_ = o_.matrix_world
+        for gg in (G0, (G0 + G1) // 2, G1):
+            C.set_camera(NAME, gg, move=MOVE, cam=CAMO); C.bpy.context.view_layer.update()
+            for f in o_.data.polygons:
+                v = w2c(C.bpy.context.scene, ob['cam'], mw_ @ f.center)
+                if v.z > 0 and v.z < 30 and v.x > 0.82 and 0.25 < 1 - v.y < 0.75: kill.add(f.index)
+        if kill:
+            bm = bmesh.new(); bm.from_mesh(o_.data); bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.index in kill], context='FACES'); bm.to_mesh(o_.data); bm.free()
     # hero ox: charging gallop front-3/4 with the charging face; unlit reed + OWN flame card
     hv = {ph: C.ox_variant('dragon', 'front_three_quarter', 'gallop', ph, -1, reed=True, uid='h', face='rage') for ph in range(8)}
     at_h = C.Atlas('s22_hero3', hv, ppd=200)
@@ -60,7 +72,7 @@ def make_driver(quality):
                    C.J.flame_card(parent=None, scale=0.9, name='bgfl%d' % i, light=False, lit=1.0)))
     sv = {0: C.person_variant('yan_soldier_a', dict(cast18.STORY18['soldier_freeze_a'][1]), 's')}
     at_s = C.Atlas('s22_sol', sv, ppd=170)
-    sol = C.Actor(at_s, 'soldier', height=3.2, sw=1.0, rim=((1.0, 0.5, 0.18), 1, 0.06, 2.6))
+    sol = C.Actor(at_s, 'soldier', height=3.2, sw=1.0)
     # a dark foreground barrel (toon-glazed, dark) bottom-right
     Bk = C.J.Banks(); Mt = C.STATE['M']; bb = Bk('barrel22', hull=0.0); C.J.cyl(bb, V((0, 0, 0)), 0.7, 1.5, Mt['wood_d'], seg=12, r1=0.62); C.J.cyl(bb, V((0, 0, 0.5)), 0.74, 0.12, Mt['iron'], seg=12, r1=0.74)
     Bk.flush(C.STATE['SET']); barrel = [o for o in C.STATE['SET'].objects if o.name.startswith('barrel22')][0]; C.J.no_bounce(barrel)
@@ -82,7 +94,7 @@ def make_driver(quality):
         lights[1].location = (OX.x + 0.5, OX.y - 2.0, 1.8); lights[1].data.energy = 260.0
         fwd = (V(pose['look_at']) - V(pose['loc'])); fwd.z = 0; fwd.normalize(); rt = V((fwd.y, -fwd.x, 0))
         zf = pose['lens'] / CAMO['lens']; sp = cam + fwd * SOL_D + rt * (SOL_LAT / zf); sp.z = 0.0
-        sol.show(0, sp + rt * (0.04 * math.sin(g * 2.1)), cam, mirror=True, squash=(1.0, 1.0 + 0.012 * math.sin(g * 1.3)))
+        sol.show(0, sp + rt * (0.04 * math.sin(g * 2.1)), cam, mirror=True, yaw_add=-35, squash=(1.0, 1.0 + 0.012 * math.sin(g * 1.3)))
         for i, (a, p, phs, f2) in enumerate(bg):
             pp = p + V((0, -2.5 * t, 0)); pph = (int(g / 2.5 + phs * 8)) % 8; mir = (i % 2 == 0); a.show(pph, pp, cam, mirror=mir, lift=0.04 * math.sin(g * 0.8 + i))
             dd = cam - pp; yw = math.atan2(dd.x, -dd.y); u2 = V((math.cos(yw), math.sin(yw), 0)); bx, by = at_b.anchors[pph].get('tail_tip', (-1.2, -2.0))
@@ -95,7 +107,7 @@ def make_driver(quality):
             tp = TIP[si] if TIP[si] else None
             if tp is not None and 0 <= k < 8:
                 sgn = 1.0; wx = OX + ur * (-tp[0] * SCALE_OX * sgn) + V((0, 0, -tp[1] * SCALE_OX + bob)); st.location = wx
-                sz = 3.6 * math.sin(math.pi * (k + 0.5) / 8.0) + 0.2; st.scale = (sz, sz, sz); st.rotation_euler = (0, 0, 0); st.hide_render = False
+                sz = 1.7 * math.sin(math.pi * (k + 0.5) / 8.0) + 0.1; st.scale = (sz, sz, sz); st.rotation_euler = (0, 0, 0); st.hide_render = False
             else: st.hide_render = True
     return drive, actors
 

@@ -416,10 +416,10 @@ _STAR = {}
 def star_obj(name='glint'):
     """a camera-facing 4-point star sprite (emission quad); size / position set per frame by the caller"""
     from PIL import Image, ImageDraw
-    p = os.path.join(WORK, 'star.png')
+    p = os.path.join(WORK, 'star2.png')
     if not os.path.exists(p):
         n = 128; im = Image.new('RGBA', (n, n), (0, 0, 0, 0)); d = ImageDraw.Draw(im); c = n / 2
-        d.polygon([(c, 0), (c + 6, c - 6), (n, c), (c + 6, c + 6), (c, n), (c - 6, c + 6), (0, c), (c - 6, c - 6)], fill=(255, 250, 220, 255))
+        w_ = 15; d.polygon([(c, 0), (c + w_, c - w_), (n, c), (c + w_, c + w_), (c, n), (c - w_, c + w_), (0, c), (c - w_, c - w_)], fill=(255, 250, 220, 255))
         im.save(p)
     m = bpy.data.materials.new('JM_star'); nt = T._tree(m); N = nt.nodes.new; L = nt.links.new
     out = N('ShaderNodeOutputMaterial'); em = N('ShaderNodeEmission'); tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader'); t = N('ShaderNodeTexImage')

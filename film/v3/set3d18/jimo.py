@@ -565,7 +565,7 @@ def build(location=None, preset=None, light=None, clear=True):
     return A
 
 def sky_dome(SET, P, M, location, light):
-    R = 330.0; mb = MB(); seg = 72; els = [-15 + 105 * k / 14 for k in range(15)]
+    R = 330.0 if not (location == 'vista' and os.environ.get('VISTA_R3', '1') != '0') else 1400.0; mb = MB(); seg = 72; els = [-15 + 105 * k / 14 for k in range(15)]
     for i in range(seg):
         for k in range(14):
             a0, a1 = 2 * math.pi * i / seg, 2 * math.pi * (i + 1) / seg; e0, e1 = math.radians(els[k]), math.radians(els[k + 1])
@@ -601,7 +601,7 @@ def hills(Bk, M, centre=(0.0, 0.0), r0=165.0, r1=195.0, n=26, seed=7, rad=(34, 6
         lumpy(hb, V((centre[0] + Rr * math.cos(a), centre[1] + Rr * math.sin(a), -rd * z)), rd, M['hill'], 50 + i, seg=14, rings=6, rough=0.16, squash=0.42)
 
 def make_camera(setup, name='cam'):
-    ob = T.make_camera(setup, name); ob.data.clip_end = 900.0; ob.data.clip_start = 0.1; ob.data.dof.use_dof = False
+    ob = T.make_camera(setup, name); ob.data.clip_end = 2600.0 if (STATE.get('loc') == 'vista' and os.environ.get('VISTA_R3', '1') != '0') else 900.0; ob.data.clip_start = 0.1; ob.data.dof.use_dof = False
     for fc in STATE.get('flame_cards', ()):
         for c in fc['card'].constraints:
             if c.type == 'TRACK_TO': c.target = ob
@@ -645,6 +645,8 @@ def set_party(k, frame=None): CAMP.set_party(k, frame)
 def set_rout(k, frame=None): CAMP.set_rout(k, frame)
 def set_pennants(k, side='yan', frame=None): VS.set_pennants(k, side, frame)
 def set_qi_return(k, frame=None): VS.set_qi_return(k, frame)
+def vista_pennant_order(cam=None, kind='yan'): return VS.vista_pennant_order(cam, kind)
+def set_pennant_scale(idx, k, kind='yan', frame=None): VS.set_pennant_scale(idx, k, kind, frame)
 
 def apply_state(spec, frame=None):
     """State string (comma separated): h<n> holes, g<k> gate, pt<k> party, ro<k> rout, pn<k> pennants (yan), qr<k> qi return, fl<k> flames (0 out .. 1)."""
@@ -838,6 +840,35 @@ def render_spec(spec, quality='final', outdir=None, tag=None):
     hr = head_rows(name, (t,)) if name in S.SHOTS else []
     print('%s %s: %.1f s wall, %.1f s cpu, load %s, heads %s' % (quality, tag, w, c, _load(), [(r[0], r[4]) for r in hr][:6]), flush=True)
     return dict(tag=tag, wall=round(w, 1), cpu=round(c, 1), heads=hr)
+
+
+# ----------------------------------------------------------------------------- ground dressing (jimo_dress.py, API.md "Ground dressing")
+def dress_ground(cam=None, density=1.0, seed=0, keep_clear=None, frames=None, actors=None):
+    """Scatter lit, inked, instanced ground dressing where the camera sees the ground (see jimo_dress.dress_ground / API.md)."""
+    import jimo_dress; return jimo_dress.dress_ground(cam=cam, density=density, seed=seed, keep_clear=keep_clear, frames=frames, actors=actors)
+
+def clear_dressing():
+    import jimo_dress; return jimo_dress.clear_dressing()
+
+def vista_r3(sweep=True):
+    """Vista round 3 finisher (jimo_vista3.py / API.md 'Vista round 3'): build('vista') applies it already; idempotent, also sweeps free-floating flame cards."""
+    return VS.vista_r3(sweep)
+
+def ground_share(png, **kw):
+    """Share (0..1) of plain-ground 24 x 24 blocks below y 0.4 H of a rendered frame (see jimo_dress.ground_share / API.md)."""
+    import jimo_dress; return jimo_dress.ground_share(png, **kw)
+
+# ----------------------------------------------------------------------------- round 8 shared assets (jimo_props.py / API.md "Round-8 shared assets")
+import jimo_props as PR                                      # noqa: E402
+PR.bind(sys.modules[__name__])
+
+def prop_reed_bundle(loc=(0, 0, 0), rot=None, scale=1.0, **kw): return PR.prop_reed_bundle(loc, rot, scale, **kw)
+def prop_pot(loc=(0, 0, 0), rot=None, kind='jar', **kw): return PR.prop_pot(loc, rot, kind, **kw)
+def prop_helmet(loc=(0, 0, 0), rot=None, **kw): return PR.prop_helmet(loc, rot, **kw)
+def prop_chariot(loc=(0, 0, 0), rot=None, tumble=0.0, **kw): return PR.prop_chariot(loc, rot, tumble, **kw)
+def prop_chariot_set(root, tumble, frame=None): return PR.prop_chariot_set(root, tumble, frame)
+def gapfill(cam=None, frames=None, **kw): return PR.gapfill(cam, frames, **kw)
+
 
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else 'help'; arg = sys.argv[2:]

@@ -109,3 +109,16 @@ tiandan (-2.1875, -6.1875, 2.1875, 0.125) (torch); general (-1.875, -5.0, 1.875,
 - Lamellar patterns on the soldiers become busy at small sizes.
 - `jue` reads like a small lamp at less than scale 1.4; `soldier_mock_moo` hides the helmet sides behind the arms.
 - Props held in `layer="front"` are drawn with the arm (as in cast8..10).
+
+## Round-8 shared assets (new names only; every existing pose / prop / default output is byte-identical)
+
+New pose keys (default 0 = off): `scream` 0..1 (the general's huge open wavy mouth, drawn AFTER the moustache so it sits in front of it, 0.40 D tall at 1, 0.28 D half-width, with an upper teeth row, a tongue, raised arched brows; `t` ripples the edges; squeezes with `yaw`) and `cup_grip` 0/1 (a `jue` in `prop_r` / `prop_l` is held by a DRAWN hand: skin-coloured palm, four fingers wrapped round the handle bar and a thumb over it, 0.075 D past the wrist ball, in the direction of the arm; anchor `cup_grip_r/_l` = the fist, `cup_r/_l` = the rim).
+
+| name | use |
+|---|---|
+| `STORY18["general_run_scream"]`, `cast18.general_run_scream_frame(phase, facing=1, lookback=False)` | the panic run, 16 frames per cycle (`phase = frame / 16`). Lean 22 deg forward, both arms pump (cup arm out and up in front, other arm swings), helmet askew 24, ring eyes with small pupils, raised brows, 3 sweat drops, `scream` 1, `cup_grip` 1. Feet-relative canvas: `cast18.CANVAS_R8["general"]` = (-1.9375, -5.0, 2.4375, 0.125) (the old `CANVAS18` is unchanged; pass the wider one to `Actor.build` / the sprite for these poses) |
+| `STORY18["general_run_scream_lookback"]`, `general_run_scream_frame(phase, facing, lookback=True)` | same run with the head turned back over the shoulder in near profile (yaw -1.1, opposite the run direction, head roll +6) |
+| `STORY18["townsperson_tie_reeds"]` (old_man), `["townsperson_tie_reeds_woman"]`, `cast18.townsperson_tie_reeds(member, lean=46, ang=24)` -> (cast, pose) | bent over (lean 46), both hands at hip height holding a new prop `reeds` (prop_l, 1.45 D bundle of straw / ochre stalks, fanned free end, red cord between the hands and another round the free end). Anchors on `figure()["anchors"]`: `hand_l`, `hand_r`, **`reed_mid_l`** (the cord between the hands), **`reed_tail_l`** (the bundle's free end: translate the figure so `reed_tail_l` lands on `ox_figure(...)["anchors"]["tail_tip"]` to tie it at an ox tail; `ang` is the bundle direction, + = free end down toward screen-right; `mirror=True` for the other side). Canvas `CANVAS_R8["old_man"]` (-1.9375, -4.125, 2.4375, 0.375), `["woman"]` (-2, -4.375, 2.5, 0.625) |
+| prop `reeds` (`prop_l=dict(type="reeds", angle=24, scale=0.95)`) | usable on any member; second hand -> `grip_far_l` (see `_two_hands`); tip 1.0 |
+
+QA: `python3 test_cast18.py canvas` checks the new poses against `CANVAS_R8` (rows `general(r8)`, `old_man(r8)`, `woman(r8)`); head_flip 63 poses 0 problems; `sheet` includes them (`sheet.jpg`). At a 200-250 px figure the open mouth, teeth / tongue and the cup in a fist read clearly (`set3d18/set_work/props_r8/round8_cast_phone.png`).
