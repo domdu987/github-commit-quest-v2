@@ -43,11 +43,11 @@ def cam_track(T, g, t):
 
 
 def _gen_pos(g):
-    return (1.35 + 0.3 * math.sin(g * 0.11), -50.0 - SPEED * (g - G0) / 30.0)
+    return (1.35 + 0.3 * math.sin(g * 0.11) + 7.5 * max(0.0, 1.0 - (g - G0) / 80.0) ** 2, -50.0 - SPEED * (g - G0) / 30.0)
 
 
 G_ZOOM = 2066                                       # end of the BIGZOOM: low medium on the general
-WIDE_LOC = (22.0, 60.0, 62.0); WIDE_LOOK = (0.0, -75.0, -10.0)
+WIDE_LOC = (30.0, 60.0, 62.0); WIDE_LOOK = (0.0, -75.0, -10.0)
 
 
 def cam_bigzoom(T, g, t):
@@ -87,6 +87,7 @@ _sm = R2._shadow_quad('cpool', 1.0, 1.0)
 if not _sm.materials:
     _sm.materials.append(STATE['M']['pool_w'])
 POOL = bpy.data.objects.new('t18_genpool', _sm); STATE['SET'].objects.link(POOL); POOL.visible_shadow = False; J.no_bounce(POOL)
+POOL2 = bpy.data.objects.new('t18_genpool2', _sm); STATE['SET'].objects.link(POOL2); POOL2.visible_shadow = False; J.no_bounce(POOL2)
 
 
 import numpy as _np
@@ -110,19 +111,33 @@ HERE_ = os.path.dirname(os.path.abspath(__file__))
 make_plaque()
 
 
-def rim(meta, pos, cam_loc, mirror=False, height=None, scale=None, name='rim', yaw_off=0.0, tint=(0.35, 0.62, 1.0), k=1.3, back=0.07):
+def rim_mat(path):
+    m = bpy.data.materials.get('t18_rim_' + os.path.basename(path))
+    if m is None:
+        m = bpy.data.materials.new('t18_rim_' + os.path.basename(path)); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
+        out = N('ShaderNodeOutputMaterial'); em = N('ShaderNodeEmission'); tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader'); t = N('ShaderNodeTexImage')
+        t.image = bpy.data.images.load(path, check_existing=True); t.image.alpha_mode = 'STRAIGHT'; t.extension = 'CLIP'
+        em.inputs['Color'].default_value = (0.55, 0.78, 1.0, 1.0); em.inputs['Strength'].default_value = 1.7          # a flat pale sky-blue (170, 210, 255): the silhouette, not the dark ink
+        L(t.outputs['Alpha'], mx.inputs['Fac']); L(tr.outputs['BSDF'], mx.inputs[1]); L(em.outputs['Emission'], mx.inputs[2]); L(mx.outputs['Shader'], out.inputs['Surface'])
+        m.cycles.emission_sampling = 'NONE'
+    return m
+
+
+def rim(meta, pos, cam_loc, mirror=False, height=None, scale=None, name='rim', yaw_off=0.0, tint=(0.35, 0.62, 1.0), k=1.3, back=0.05):
     """cool sky-blue rim from behind: a blue-tinted copy of the card, 4 % larger, pushed 0.07 D away from the lens (it shows as an outline round the silhouette)."""
     p = V(pos); d = V(cam_loc) - p; d.z = 0; d.normalize()
     q = p - d * back + V((0, 0, -0.0))
-    sc = (height / meta['height'] if height is not None else (scale or 1.0)) * 1.045
-    return c18.put(meta, tuple(q), cam_loc, scale=sc, mirror=mirror, name=name, yaw_off=yaw_off, tint=tint, k=k, sw=0.01, )
+    sc = (height / meta['height'] if height is not None else (scale or 1.0)) * 1.028
+    ob = c18.put(meta, tuple(q), cam_loc, scale=sc, mirror=mirror, name=name, yaw_off=yaw_off, tint=tint, k=k, sw=0.01)
+    ob.data.materials[0] = rim_mat(meta['path'])
+    return ob
 
 
 def frame(T, g):
     gx, gy = _gen_pos(g); u_ = c18.ease((g - G0) / float(G_ZOOM - G0)) if G0 < g < G_ZOOM else (0.0 if g <= G0 else 1.0)
-    POOL.location = (gx, gy + 1.5, 0.08); k = 2.4 + 15.0 * (1.0 - u_) ** 2; POOL.scale = (k, k, 1.0)       # a warm dawn pool of light under him: findable in the wide
+    POOL.location = (gx, gy + 1.5, 0.08); k = 2.4 + 15.0 * (1.0 - u_) ** 2; POOL.scale = (k, k, 1.0); POOL2.location = (gx, gy + 1.5, 0.1); POOL2.scale = (0.55 * k, 0.55 * k, 1.0)       # a warm dawn pool of light under him: findable in the wide
     cam = V(T.cur['loc']); dy = SPEED * (g - G0) / 30.0
-    gen = V((1.35 + 0.3 * math.sin(g * 0.11), -50.0 - dy, 0.0))
+    gen = V((_gen_pos(g)[0], -50.0 - dy, 0.0))
     heads = []
     ph = (g * 0.0625) % 1.0; i16 = int(ph * 16)
     lb = 2070 <= g <= 2080                                                            # head turned back over the shoulder g 2070-2080
