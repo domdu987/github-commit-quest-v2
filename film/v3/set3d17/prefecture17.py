@@ -45,13 +45,13 @@ K.LIGHTS.update({
     # archive hall, day: 5 pale blue-white skylight shafts with dust, amber banker lamps, cobalt vault and gallery iron
     'ARCHIVE_DAY': dict(_base, key=(1.95, 2.0, 2.25), sun_dir=(0.22, 0.30, -0.93), sun_angle=0.9, sun=True, sun_k=0.62, lamp_k=1.3,
                         shade=(0.13, 0.185, 0.74), tint=(0.085, 0.13, 0.49), mix=0.5, lift=(0.004, 0.012, 0.05), form=(0.0, -0.05, 0.25),
-                        ink='#141a48', world=(0.06, 0.1, 0.42), gain=0.74, glow=1.3, win_w=0, frost=('#9fbcff', 1.5), beam_k=0.9,
-                        rim='#ffb85a', fill_w=300, fill_col=(1.0, 0.72, 0.4)),
+                        ink='#141a48', world=(0.06, 0.1, 0.42), gain=0.74, glow=1.3, win_w=0, frost=('#9fbcff', 1.5), beam_k=3.2,
+                        rim='#ffb85a', fill_w=300, fill_col=(1.0, 0.72, 0.4), vault_w=140, beam_col='#e4edff'),
     # archive hall, night (false payoff): ONE banker lamp + candle, gasoliers at 40 %, moonlight-blue shafts; cobalt walls lifted (luma >= 85)
     'ARCHIVE_NIGHT': dict(_base, key=(0.55, 0.8, 1.9), sun_dir=(0.22, 0.30, -0.93), sun_angle=0.9, sun=True, sun_k=0.55, lamp_k=0.75,
                           shade=(0.13, 0.20, 0.92), tint=(0.08, 0.14, 0.62), mix=0.45, lift=(0.004, 0.014, 0.07), form=(0.0, -0.05, 0.25),
-                          ink='#10133c', world=(0.04, 0.06, 0.3), gain=0.75, glow=1.1, win_w=0, frost=('#3a62e0', 2.6), beam_k=0.8,
-                          rim='#9cc2ff', fill_w=110, fill_col=(1.0, 0.68, 0.36), gasolier_k=0.4),
+                          ink='#10133c', world=(0.04, 0.06, 0.3), gain=0.75, glow=1.1, win_w=0, frost=('#4a72f0', 2.6), beam_k=2.6,
+                          rim='#9cc2ff', fill_w=110, fill_col=(1.0, 0.68, 0.36), gasolier_k=0.4, vault_w=420, beam_col='#7f9eff'),
 })
 PRESETS_V2 = ('BLUE_HOUR_EXT', 'GASLIGHT_INT', 'SUNSET_INT', 'ARCHIVE_DAY', 'ARCHIVE_NIGHT')
 AMB_K = 0.78                      # SET-gate calibration: the painted ambient (shade, tint) of the v2 presets, x0.78 -> mean luma in the 85-110 band
@@ -92,6 +92,14 @@ def tex_facade_far(name='far_facade', lit=0.6, S=512, seed=5):
             d.rectangle([x0, y0 + 24, x0 + S / 8, y0 + S / 4 - 26], fill=_rgb('#ffb648' if on else '#1d2a7a'))
             d.rectangle([x0 - 6, y0 + S / 4 - 28, x0 + S / 8 + 6, y0 + S / 4 - 20], fill=_rgb('#8a5a30'))
     return _save(np.asarray(im, dtype=float), p)
+def tex_zinc2(name, base, S=512, seed=8):
+    """v2 zinc / slate: standing seams every 1/6 tile (6 texels, 0.55 x base), a lighter lap line per course and soft blotches; reads at 40 m."""
+    p = _tp('zinc2_' + name)
+    if os.path.exists(p): return p
+    b = _rgb(base); im = Image.new('RGB', (S, S), b); d = ImageDraw.Draw(im); lo = tuple(int(c * 0.55) for c in b); hi = tuple(min(255, int(c * 1.25)) for c in b)
+    for i in range(6): d.rectangle([i * S / 6 - 3, 0, i * S / 6 + 3, S], fill=lo)
+    for j in range(4): d.rectangle([0, j * S / 4, S, j * S / 4 + 4], fill=hi)
+    return _save(TX._std(np.asarray(im, dtype=float), 6, seed, 96), p)
 def tex_photowall(name='photowall', S=1024, seed=3):
     """the 'PHOTOGRAPHIES — SÛRETÉ' wall: rows of small sepia-amber police photographs (head silhouettes) on a cobalt ground. tile = 1.2 m."""
     p = _tp(name)
@@ -182,7 +190,7 @@ def _pal2():
     add('stone', '#D9B07A', TX.ashlar('v2_stone2', c('#d6994e'), seam=(0x8a, 0x52, 0x2a)), tile=2.0, mix=0.5, afl=0.15)
     add('stone_dk', '#c8904a', TX.ashlar('v2_stone_dk', c('#cf8f45'), seed=21, seam=(0x7a, 0x44, 0x22)), tile=2.0, mix=0.5, afl=0.15)
     add('cobble', '#4c58b0', TX.cobbles('v2_cobble', c('#5260c0')), tile=4.0, mix=0.45, afl=0.12)
-    add('zinc', '#2d45a8', TX.zinc('v2_zinc2', c('#2f48ac')), tile=2.0, ink=True, mix=0.45)
+    add('zinc', '#2d45a8', tex_zinc2('zinc', '#3049b0'), tile=3.0, ink=True, mix=0.45)
     add('terracotta', '#d0541c', ink=True, mix=0.45)
     add('wagon', '#1b2a8a', tint=True, ink=True, mix=0.45)
     add('wagon_red', KEPI, ink=True, mix=0.45)
@@ -198,7 +206,7 @@ def _pal2():
     add('tiles', '#b8481a', tex_checker('tiles2', '#c24a1a', '#d08a2c', n=8), tile=2.4, mix=0.45, afl=0.15)
     add('photowall', COBALT, tex_photowall(), tile=1.2, mix=0.4, afl=0.2)
     add('far', '#d29a5c', tex_facade_far(), tile=12.0, mix=0.55, afl=0.25)
-    add('far_zinc', '#2a3f9a', mix=0.5, afl=0.12)
+    add('far_zinc', '#2a3f9a', tex_zinc2('far_zinc', '#2f46a8'), tile=3.0, mix=0.5, afl=0.12)
     add('far_stone', '#6a74d8', mix=0.6, afl=0.35)            # Notre-Dame silhouette in the blue haze
     add('horse', '#1c2160', ink=True, mix=0.5)
     add('green', '#1f8a3a', tint=True, ink=True, mix=0.45)
@@ -224,7 +232,9 @@ class Loc:
     location's sun and fill lights only light that collection (light linking)."""
     def __init__(self, name, light, over=None): self.name, self.light, self.over = name, light, over or {}
     def __enter__(self):
-        P = dict(K.LIGHTS[self.light], **self.over); K.STATE['P'] = P; K.STATE['light'] = self.light; K._MATS.clear(); W['light'][self.name] = self.light
+        P = dict(K.LIGHTS[self.light], **self.over)
+        if 'shade_mul' in P: P['shade'] = tuple(x * P['shade_mul'] for x in P['shade']); P['tint'] = tuple(x * P['shade_mul'] for x in P['tint'])
+        K.STATE['P'] = P; K.STATE['light'] = self.light; K._MATS.clear(); W['light'][self.name] = self.light
         self.before = set(o.name for o in bpy.data.objects); self.coll = bpy.data.collections.new('loc_' + self.name); bpy.context.scene.collection.children.link(self.coll)
         self.linked = []; W['locs'][self.name] = self; return self
     def link_light(self, ob): self.linked.append(ob); return ob
@@ -303,7 +313,8 @@ def _custom_glows():
     Pp = P(); g = Pp.get('glow', 1.0)
     _emit_mat('glow_amber', '#ffa62b', 9.0 * g); _emit_mat('glow_candle', '#ffb24a', 12.0 * g); _emit_mat('glow_lantern', '#ffbe5a', 10.0 * g)
     _emit_mat('glow_blue', '#4f7ef0', 2.2); _emit_mat('glow_redsign', '#ff3a2a', 3.0); _emit_mat('glow_quay', '#ffb44a', 7.0 * g); _emit_mat('glow_reflect', '#ff9a30', 2.2)
-    _emit_mat('glow_rose', '#ffb050', 4.0 * g); _emit_mat('glow_sil', '#2a1b5a', 1.0)
+    _emit_mat('glow_rose', '#ffb050', 4.0 * g); _emit_mat('glow_sil', '#2a1b5a', 1.0); _emit_mat('glow_fan', '#ffb050', 1.4)
+    m = _emit_mat('glow_win', '#ffa640', 1.7 * min(g, 1.2)); K.STATE['glows'].append((m, 1.7 * min(g, 1.2)))          # amber, never white (v2 overrides v1 glow_win)
 _LocEnter = Loc.__enter__
 def _loc_enter(self):
     r = _LocEnter(self); _custom_glows(); return r
@@ -319,7 +330,7 @@ def lift(B, z=FZ):
     return B.xf((0, 0, z))
 
 # ================================================================ 3a. rooftop plate, Seine, Notre-Dame (far: no ink, low-poly, shadow-less)
-ND = (40.0, 140.0)          # Notre-Dame (west towers) - the Préfecture's real neighbour on the Île de la Cité. No Eiffel Tower (1887-89).
+ND = (120.0, 135.0)          # Notre-Dame (west towers) - the Préfecture's real neighbour on the Île de la Cité. No Eiffel Tower (1887-89).
 SEINE = (95.0, 118.0)
 def paris_roofscape(r=220.0, seed=7):
     """the plate under BIGZOOM 1 and the crane shots: ~300 low-poly blocks (ochre skin with lit amber windows 60 %, cobalt zinc roofs) out to r,
@@ -336,8 +347,20 @@ def paris_roofscape(r=220.0, seed=7):
             w, d = rng.uniform(15, 21), rng.uniform(13, 19); h = rng.uniform(13, 19); rot = rng.choice((0, 90))
             B.box('far', (cx, cy, h / 2 - 1.0), (w, d, h)); B.box('far_zinc', (cx, cy, h + 0.9 - 1.0), (w - 0.6, d - 0.6, 1.8))
             B.prism_roof('far_zinc', (cx, cy, h + 1.8 - 1.0), w - 1.2, d - 1.2, 1.6, rot_z=rot, ridge_frac=0.7)
+            if math.hypot(cx, cy - 10) < 90:                                            # near blocks: dormers on all four slopes (lit 40 %)
+                for sx, sy, nx, ny in ((0, -1, 0, -1), (0, 1, 0, 1), (-1, 0, -1, 0), (1, 0, 1, 0)):
+                    L_ = w if sy else d; n_ = 3 if L_ > 15 else 2
+                    for k in range(n_):
+                        t_ = (k + 0.5) / n_ - 0.5; px = cx + (t_ * (w - 4) if sy else sx * (w / 2 - 0.9)); py = cy + (t_ * (d - 4) if sx else sy * (d / 2 - 0.9)); zz = h + 0.75
+                        B.box('far', (px, py, zz), (1.3 if sy else 0.9, 0.9 if sy else 1.3, 1.5)); B.box('glow_win' if rng.random() < 0.4 else 'dark', (px + nx * (0.46), py + ny * 0.46, zz), (0.06 if sx else 0.7, 0.7 if sx else 0.06, 0.9))
             for k in range(2):
                 px, py = cx + rng.uniform(-w * 0.35, w * 0.35), cy + rng.uniform(-d * 0.3, d * 0.3); B.box('terracotta', (px, py, h + 2.4), (0.9, 0.6, 2.0)); tops.append((px, py, h + 3.6))
+    # the ground under the plate (setts, no void between the blocks) + street lamps at the block corners
+    for (ya, yb) in ((-r * 0.6 - 30, SEINE[0] - 5.0), (SEINE[1] + 5.0, r + 60)): B.box('cobble', (0, (ya + yb) / 2, -0.25), (2 * r + 80, yb - ya, 0.3))
+    for gx in np.arange(-r + 12.5, r, 25.0):
+        for gy in np.arange(-r * 0.6 + 11, r, 22.0):
+            if math.hypot(gx, gy - 40) > r * 0.8 or (abs(gx) < 20 and -24 < gy < 72) or (-3 < gx < 30 and -8 < gy < 44) or SEINE[0] - 8 < gy < SEINE[1] + 8: continue
+            B.cyl('iron', (gx, gy, 2.0), 0.08, 4.0, seg=6); B.sphere('glow_quay', (gx, gy, 4.1), 0.32, seg=8, rings=5); B.box('glow_reflect', (gx, gy, -0.08), (2.2, 2.2, 0.02))
     # the Seine: water, quay walls, lamp line and amber reflections
     y0, y1 = SEINE; B.box('stone_dk', (0, y0 - 2.5, -1.0), (2 * r, 5.0, 2.0)); B.box('stone_dk', (0, y1 + 2.5, -1.0), (2 * r, 5.0, 2.0))
     _water_mat(); B.box('water', (0, (y0 + y1) / 2, -2.4), (2 * r, y1 - y0, 0.1))
@@ -448,6 +471,14 @@ def flag(name, root_pt, direction, length=1.6, height=1.05, pole_mat='gold', B=N
     wv.use_normal = True; wv.use_normal_y = True; wv.use_normal_x = False; wv.use_normal_z = False
     sb = ob.modifiers.new('sub', 'SUBSURF'); sb.levels = 1; sb.render_levels = 1; ob.visible_shadow = True
     return ob
+def roof_back(B, c, w, d, h_wall, h_roof, rot, seed=1):
+    """dormers + a lit skylight on the BACK slope of a v1 mansard block (v1 only dresses the street side)."""
+    rr = random.Random(seed + 99); nw = max(2, int(w / 2.4))
+    with B.xf((c[0], c[1], c[2]), (0, 0, rot)):
+        for k in range(nw):
+            x = (k + 0.5) * w / nw - w / 2; on = rr.random() < 0.45; zz = h_wall + 0.2 + h_roof * 0.3
+            B.box('stone_dk', (x, d / 2 - 0.05, zz), (0.8, 0.5, 1.0)); B.box('glow_win' if on else 'dark', (x, d / 2 + 0.2, zz), (0.5, 0.03, 0.7))
+            B.prism_roof('zinc', (x, d / 2 - 0.1, zz + 0.5), 0.9, 0.7, 0.3, rot_z=90)
 def build_street2(B, A):
     """PLAN §3a: v1 street (setts, kerbs, 2 rows of Haussmann blocks, shopfronts, 16 lamps, puddles) + café terrace, Morris column with posters,
     kiosk, fiacre, the Black Maria WITH its horse, barrels / flower cart (foreground layer), pigeons; the right row gives way to the Préfecture."""
@@ -458,6 +489,7 @@ def build_street2(B, A):
     y = L0 - 1.0; i = 0
     while y < L1 - 6:
         w = r.uniform(8, 11); hw = r.uniform(12.5, 15.5); K.mansard(B, (-11.0, y + w / 2, 0), w, 10.0, hw, h_roof=2.6, rot=90, chimneys=2, seed=30 + i, stone='stone' if i % 2 else 'stone_dk', lit=lit)
+        roof_back(B, (-11.0, y + w / 2, 0), w, 10.0, hw, 2.6, 90, seed=30 + i)
         if not (16.0 < y + w / 2 < 26.0): K.shop(B, (-6.0, y + w / 2), w, rot=90, seed=i)
         y += w + 0.2; i += 1
     for (ya, yb) in ((L0 - 1.0, -2.0), (38.0, L1 - 4.0)):                       # the right row outside the Préfecture block (y -2 .. 37.5)
@@ -482,8 +514,9 @@ def build_street2(B, A):
         for sx in (-1, 1): B.cyl('red', (sx * 0.45, -0.45, 0.35), 0.35, 0.06, axis='y', seg=14)
         B.box('walnut', (0, 0.75, 0.6), (0.06, 1.2, 0.06))
         for k in range(14): B.sphere(['geranium', 'gold', 'geranium', 'cobalt_paint', 'leaf'][k % 5], (-0.55 + (k % 7) * 0.18, -0.2 + (k // 7) * 0.4, 0.9 + 0.08 * (k % 3)), 0.12, seg=8, rings=5)
-    K.puddles(B, [(-1.0, 2.0, 1.2, 0.8, 20), (1.2, 5.5, 1.6, 0.9, -10), (-0.2, 11.0, 1.4, 0.9, 5), (2.2, 14.0, 1.8, 1.0, 30), (-2.0, 17.0, 1.5, 0.8, 0), (0.0, 25.0, 2.0, 1.1, 10), (-1.8, 7.5, 0.9, 0.6, 40), (1.6, -3.0, 1.3, 0.8, 15), (-2.2, 34.0, 1.6, 0.9, -5)])
+    K.puddles(B, [(-1.0, 1.4, 0.7, 0.45, 20), (1.4, 5.2, 0.9, 0.5, -10), (-0.2, 11.0, 1.4, 0.9, 5), (2.2, 14.0, 1.8, 1.0, 30), (-2.0, 17.0, 1.5, 0.8, 0), (0.0, 25.0, 2.0, 1.1, 10), (-1.8, 7.5, 0.9, 0.6, 40), (1.6, -3.0, 1.3, 0.8, 15), (-2.2, 34.0, 1.6, 0.9, -5)])
     police_wagon_v2('wagon', (3.0, 8.6, 0), rot=0); A['wagon'] = (3.0, 8.6)
+    B.box('stone', (0.3, 3.7, 0.07), (1.2, 2.4, 0.14)); K.street_lamp(B, (0.3, 3.7, 0.14), h=4.0, watts=500, rot=0)       # refuge island + lamp post: the 1d fg layer
     pigeons(B, [(-5.6, 3.9, 0.15), (-5.4, 4.3, 0.15), (-2.6, 12.5, 0.0), (-2.1, 12.2, 0.0), (-2.4, 12.9, 0.0)])
     # crowd anchor points (feet; x, y, z, facing deg, who)
     M.update({'flaneur_a': (-2.4, 4.0, 0.0, 20, 'clerk'), 'flaneur_b': (-4.9, 15.0, 0.14, 160, 'clerk'), 'newsboy': (-4.9, 7.6, 0.14, 60, 'prisoner'),
@@ -534,7 +567,7 @@ def build_facade(B, A):
     for k in range(9):
         a = math.radians(180 - k * 22.5); B.box('stone', (fx - 0.12, 5.7 + 1.35 * math.cos(a), 4.4 + 1.35 * math.sin(a)), (0.24, 0.42, 0.55), rot=(math.degrees(a) - 90, 0, 0))
     hv = 14; a = np.linspace(0, math.pi, hv + 1); v = [(0, 0, 0)] + [(0, 1.1 * math.cos(t_), 1.1 * math.sin(t_)) for t_ in a]
-    with B.xf((fx - 0.02, 5.7, 4.4)): B.mesh('glow_door', v, [(0, i + 1, i + 2) for i in range(hv)], smooth=False)
+    with B.xf((fx - 0.02, 5.7, 4.4)): B.mesh('glow_fan', v, [(0, i + 1, i + 2) for i in range(hv)], smooth=False)
     for s in (-1, 1): B.box('stone', (fx - 0.14, 5.7 + s * 1.3, 2.2), (0.28, 0.4, 4.4))
     door_pair('main', (5.6, 4.6, 0.14), (5.6, 6.8, 0.14), h=4.26, out=(1, 0), mat='cobalt_paint', open_=0.0)
     for k in range(3): B.box('stone', (fx - 0.2 - (2 - k) * 0.36, 5.7, 0.14 + 0.153 * (k + 1) / 2 + 0.0), (0.4 + (2 - k) * 0.36 * 0, 4.2, 0.153 * (k + 1)))
@@ -553,6 +586,8 @@ def build_facade(B, A):
     B.box('stone_dk', (fx - 0.3, 13.2, 1.29), (0.6, 2.8, 0.12)); B.box('iron', (fx - 0.58, 13.2, 2.25), (0.04, 2.6, 0.04)); B.box('iron', (fx - 0.58, 13.2, 1.8), (0.03, 2.6, 0.03))
     for k in range(14): B.box('iron', (fx - 0.58, 12.0 + k * 2.4 / 13, 1.8), (0.025, 0.025, 0.9))                              # balconnet guard rail
     B.box('walnut', (fx - 0.42, 13.2, 1.45), (0.22, 2.3, 0.2))
+    for k in range(8): B.box('red' if k % 2 == 0 else 'amber_paint', (fx - 0.55, 12.0 + (k + 0.5) * 0.3, 4.85), (1.1, 0.3, 0.05), rot=(0, -18, 0))
+    B.box('red', (fx - 1.08, 13.2, 4.66), (0.04, 2.4, 0.22))
     for k in range(10): B.sphere('geranium' if k % 3 else 'leaf', (fx - 0.42, 12.2 + k * 0.22, 1.62), 0.11, seg=8, rings=5)
     pigeons(B, [(fx - 0.58, 14.25, 2.27)])
     M.update({'gend_door_l': (fx - 1.2, 3.9, 0.14, 270, 'gendarme'), 'gend_door_r': (fx - 1.2, 7.6, 0.14, 270, 'gendarme'), 'sentry': (fx - 0.8, 2.4, 0.14, 270, 'gendarme'),
@@ -623,7 +658,7 @@ def build_corridor(B, A, with_end_wall=True):
                 B.box(r.choice(['cream', 'amber_paint', 'cardedge']), (x, yy + s * 0.03, z), (0.09, 0.012, 0.13), rot=(0, r.uniform(-12, 12), 0), tint=t)
         B.box('frieze', ((CX0 + CX1) / 2, yy, zt - 0.35), (CX1 - CX0, 0.04, 0.3)); B.box('gold', ((CX0 + CX1) / 2, yy, zt - 0.18), (CX1 - CX0, 0.07, 0.05))
     sign(B, 'PHOTOGRAPHIES — SÛRETÉ', 3.6, 0.36, (8.3, CY0 + 0.06, zt - 0.62), n=(0, 1), fg=GOLD, bg=KEPI, emit=0.4)
-    sign(B, "SERVICE D'IDENTIFICATION", 2.5, 0.36, (10.3, CY1 - 0.06, z0 + 2.72), n=(0, -1), fg=GOLD, bg=COBALT, emit=0.45)
+    sign(B, "SERVICE D'IDENTIFICATION", 4.6, 0.58, (10.3, CY1 - 0.06, z0 + 3.3), n=(0, -1), fg=GOLD, bg=COBALT, emit=0.45, maxh=0.66)
     sign(B, 'CABINET DU PRÉFET', 2.0, 0.32, (10.0, CY0 + 0.06, z0 + 2.8), n=(0, 1), fg=GOLD, bg=KEPI, emit=0.4)
     sign(B, 'ARCHIVES', 1.9, 0.46, (CX1 - 0.06, 5.7, z0 + 3.05), n=(-1, 0), fg=GOLD, bg=COBALT, emit=0.45)
     for (x, s) in ((9.25, 1), (10.75, 1)): B.box('walnut', (x, CY0 + 0.08, z0 + 1.25), (0.14, 0.16, 2.5))
@@ -642,6 +677,9 @@ def build_corridor(B, A, with_end_wall=True):
         with B.xf((11.95, 6.75, 0), (0, 0, 200)):                                                 # gendarme's lectern with a ledger
             B.box('oak', (0, 0, 0.55), (0.12, 0.12, 1.1)); B.box('oak', (0, 0, 0.03), (0.5, 0.4, 0.06)); B.box('oak', (0, 0, 1.15), (0.55, 0.42, 0.06), rot=(14, 0, 0)); K.open_ledger(B, (0, 0, 1.19), rot=0)
     K.rolling_ladder(B, (8.6, 6.6, z0), (8.6, CY1 - 0.08, z0 + 3.9), width=0.46, rungs=13)
+    B.box('runner', (9.8, 5.7, z0 + 0.008), (5.6, 1.1, 0.016))                                          # foreground layer: runner, photo-box piles
+    for k in range(4): B.box('box_ochre' if k % 2 else 'cream', (7.85, 4.45, z0 + 0.12 + k * 0.22), (0.46, 0.32, 0.22), rot=(0, 0, 8 * k))
+    for k in range(2): B.box('box_ochre', (12.35, 5.0 + 0.0, z0 + 0.12 + k * 0.22), (0.4, 0.3, 0.22), rot=(0, 0, -10 * k))
     for k in range(3): B.box('cream', (8.9 + 0.06 * k, 6.95, z0 + 0.04 + 0.05 * k), (0.32, 0.24, 0.05), rot=(0, 0, 20 * k))        # dropped photo cards
     M.update({'thief_door': (4.4, 5.6, 0.14, 0, 'prisoner'), 'thief_photo': (8.3, 6.5, z0, 90, 'prisoner'), 'thief_id': (10.0, 6.2, z0, 0, 'prisoner'),
               'gend_corr': (7.6, 4.7, z0, 0, 'gendarme'), 'gend_ledger': (11.75, 6.45, z0, 200, 'gendarme'), 'clerk_ladder': (8.6, 6.95, z0 + 1.45, 90, 'clerk'),
@@ -732,7 +770,7 @@ def build_measure2(B, A):
     for y in (-3.27, -1.53): B.box('walnut', (MX1 - 0.08, y, 1.3), (0.16, 0.14, 2.6))
     B.box('walnut', (MX1 - 0.08, -2.4, 2.67), (0.16, 1.88, 0.14))
     door_pair('archive', (MX1 + 0.05, -3.18, 0), (MX1 + 0.05, -1.62, 0), h=2.56, out=(1, 0), open_=0.0)
-    sign(B, "SERVICE D'IDENTIFICATION", 2.3, 0.33, (1.1, MY0 + 0.06, 2.9), n=(0, 1), fg=GOLD, bg=COBALT, emit=0.4)
+    sign(B, "SERVICE D'IDENTIFICATION", 3.9, 0.5, (1.1, MY0 + 0.06, 3.15), n=(0, 1), fg=GOLD, bg=COBALT, emit=0.4, maxh=0.66)
     sign(B, 'ARCHIVES →', 1.7, 0.4, (MX1 - 0.06, -2.4, 3.05), n=(-1, 0), fg=GOLD, bg=KEPI, emit=0.45)
     B.box('runner', (0.75, 1.5, 0.006), (1.4, 3.6, 0.012))
     K.measuring_chair(B, (0.7, 2.4), rot=180, head_z=1.34); K.toise(B, (1.7, MY1 - 0.03), rot=180, slider=1.66); K.arm_span_scale(B, (-1.55, MY1 - 0.03), rot=180, length=2.0, z=1.42)
@@ -766,6 +804,13 @@ def build_measure2(B, A):
     K.gas_pipe(B, (-0.35, 1.0, MH - 0.08), (-0.35, MY1 - 0.1, MH - 0.08)); K.gas_pipe(B, (1.0, -1.4, MH - 0.08), (MX1 - 0.1, -1.4, MH - 0.08))
     K.crate(B, (-2.5, -3.3, 0), size=(0.6, 0.45, 0.4), rot=12); K.crate(B, (-2.5, -3.3, 0.4), size=(0.5, 0.4, 0.3), rot=-8); K.crate(B, (-1.85, -3.55, 0), size=(0.45, 0.4, 0.35), rot=20)
     K.bucket(B, (2.55, -3.45, 0)); K.wastebin(B, (-0.4, 3.5, 0)); K.stool(B, (-0.9, -0.6), h=0.55, rot=30); K.ledger_stack(B, (-0.9, -0.6, 0.58), n=4, rot=10)
+    # foreground layer by the window and the doors (SET gate B4): ledgers, a kepi on the floor, spittoon, calipers case, a dropped card, rug, crate
+    K.ledger_stack(B, (-0.6, -0.35, 0.0), n=6, rot=14); K.kepi(B, (-0.95, 0.35, 0.0), rot=35); B.cyl('brass', (-0.3, 0.95, 0.09), 0.13, 0.18, r2=0.16, seg=14); B.cyl('dark', (-0.3, 0.95, 0.185), 0.1, 0.01, seg=14)
+    with B.xf((-1.05, 1.05, 0.0), (0, 0, 25)):
+        B.box('walnut', (0, 0, 0.05), (0.55, 0.3, 0.1)); B.box('red', (0, 0, 0.101), (0.5, 0.25, 0.004)); B.box('walnut', (0, 0.17, 0.25), (0.55, 0.03, 0.3), rot=(-15, 0, 0)); K.sliding_calipers(B, (0, 0, 0.11), rot=5, length=0.42, open_=0.1)
+    B.box('cream', (-1.35, 0.55, 0.004), (0.15, 0.1, 0.004), rot=(0, 0, 30)); B.box('cream', (-0.75, 1.55, 0.004), (0.15, 0.1, 0.004), rot=(0, 0, -20))
+    B.box('runner', (0.6, -2.45, 0.006), (1.7, 1.1, 0.012)); K.crate(B, (2.0, -2.6, 0), size=(0.5, 0.4, 0.35), rot=-12); K.ledger_stack(B, (2.0, -2.6, 0.35), n=4, rot=8); K.umbrella_stand(B, (-0.4, -3.3, 0))
+    A['lights'].append(K.point((-2.0, 1.2, 2.7), color=(1.0, 0.72, 0.4), watts=P().get('win_lamp', 120), radius=0.15, name='win_glow', flicker=False))
     Pp = P(); d = np.array(Pp['sun_dir']); d = d / np.linalg.norm(d)
     cs = [(MX0 + 0.02, 0.0, 3.4), (MX0 + 0.02, 2.4, 3.4), (MX0 + 0.02, 2.4, 0.15), (MX0 + 0.02, 0.0, 0.15)]; K.light_shaft(B, cs, d)
     A['dust_local'] = dict(p0=np.array([MX0 + 0.1, 1.2, 2.2]), d=d, L=4.2, w=1.5, n=42)
@@ -923,9 +968,9 @@ def build_archive(B, A):
     B.cyl('cream', (bx + 0.2, by - 0.5, z0 + 0.95), 0.025, 0.16, seg=10); B.cyl('brass', (bx + 0.2, by - 0.5, z0 + 0.875), 0.06, 0.012, seg=12); B.sphere('glow_candle', (bx + 0.2, by - 0.5, z0 + 1.06), 0.022, scale=(1, 1, 1.8))
     A['lights'].append(K.point((bx + 0.2, by - 0.5, z0 + 1.1), color=(1.0, 0.7, 0.35), watts=28, radius=0.03, name='candle'))
     K.cards_fan_objects('fan', (bx - 0.05, by - 0.2, z0 + 0.876), n=9, w=0.2, d=0.15, rot=100, spread=75)
-    for (px, py, nn) in ((14.6, 29.6, 4), (14.4, 30.4, 3), (19.9, 28.6, 5), (15.0, 31.6, 2)):
+    for (px, py, nn) in ((14.6, 29.6, 4), (14.4, 30.4, 3), (19.9, 28.6, 5), (15.0, 31.6, 2), (16.3, 10.0, 4), (16.75, 10.35, 2)):
         for k in range(nn): B.box('box_ochre' if k % 2 else 'cream', (px + r.uniform(-0.05, 0.05), py, z0 + 0.12 + k * 0.24), (0.5, 0.36, 0.24), rot=(0, 0, r.uniform(-12, 12)))
-    for k, (tx, ty) in enumerate(((16.5, 5.6), (17.8, 11.6), (16.3, 17.4), (17.9, 31.2))):
+    for k, (tx, ty) in enumerate(((16.5, 5.6), (17.8, 11.6), (16.3, 17.4), (17.9, 31.2), (15.4, 10.7))):
         with B.xf((tx, ty, z0), (0, 0, 15 * k)):
             B.box('walnut', (0, 0, 0.62), (0.9, 0.5, 0.06)); B.box('walnut', (0, 0, 0.25), (0.9, 0.5, 0.04)); B.box('iron', (0.5, 0, 0.85), (0.04, 0.5, 0.04))
             for sx in (-1, 1):
@@ -959,10 +1004,12 @@ def build_archive(B, A):
     for (a, b) in SKY: A['lights'].append(K.area((17.0, (a + b) / 2, VCZ + VR - 0.3), (17.0, (a + b) / 2, z0), (2.4, b - a), 260 * (0.6 if night else 1.0), color=(0.75, 0.85, 1.0), name='sky_area'))
     for x, tx in ((AX0 + 1.6, AX1), (AX1 - 1.6, AX0)):
         A['lights'].append(K.area((x, 18.0, z0 + 3.5), (tx, 18.0, z0 + 2.0), (30.0, 1.2), Pp.get('fill_w', 380), color=Pp.get('fill_col', (1.0, 0.72, 0.4)), name='strip_fill', long_axis=(0, 1, 0)))
+    for x in (AX0 + 2.2, AX1 - 2.2):                                                        # moon / sky bounce on the vault and ribs (cool, cobalt)
+        A['lights'].append(K.area((x, 18.0, WT - 0.6), (17.0, 18.0, VCZ + VR + 2.0), (31.0, 1.0), Pp.get('vault_w', 140), color=(0.45, 0.6, 1.0), name='vault_fill', long_axis=(0, 1, 0)))
     d = np.array(Pp['sun_dir'], float); d /= np.linalg.norm(d); A['dust_boxes'] = []
     for (a, b) in SKY:
         cs = [(15.8, a, VCZ + VR), (18.2, a, VCZ + VR), (18.2, b, VCZ + VR), (15.8, b, VCZ + VR)]; K.light_shaft(B, cs, d, z_end=z0)
-        A['dust_boxes'].append(dict(p0=np.array([17.0, (a + b) / 2, VCZ + VR - 0.4]), d=d, L=7.5, w=1.8, n=18))
+        A['dust_boxes'].append(dict(p0=np.array([17.0, (a + b) / 2, VCZ + VR - 0.4]), d=d, L=7.5, w=1.8, n=34, scale=1.6))
     M.update({'bert_bank': (14.35, hy - 0.55, z0, 90, 'clerk'), 'dupont_stool': (14.55, hy + 0.65, z0, 180, 'prisoner'), 'insp_bank': (15.75, hy - 1.0, z0, 120, 'inspector'),
               'gend_a': (15.4, hy + 1.6, z0, 200, 'gendarme'), 'gend_b': (16.1, hy - 2.2, z0, 120, 'gendarme'), 'bert_desk': (15.85, by + 0.1, z0, 90, 'clerk'),
               'insp_door': (13.6, 9.6, z0, 90, 'inspector'), 'escort_mid': (17.0, 16.0, z0, 0, 'prisoner'), 'clerk_t0': (16.9, 5.0, z0, 0, 'clerk'), 'clerk_t1': (18.2, 11.0, z0, 200, 'clerk'),
@@ -980,7 +1027,7 @@ def _dust_box(db, seed=7):
     r = random.Random(seed); d = db['d'] / np.linalg.norm(db['d']); a = np.cross(d, [0, 0, 1.0]); a /= np.linalg.norm(a); b = np.cross(d, a); motes = []
     for i in range(db.get('n', 30)):
         B = Batch(i); B.sphere('glow_dust', (0, 0, 0), 1.0, seg=8, rings=5); o = B.finalize('dust%d_%d' % (seed, i), ink=False)[0]; o.scale = (0.001,) * 3
-        motes.append(dict(ob=o, s=r.uniform(0.0, 1.0), u=r.uniform(-0.5, 0.5), v=r.uniform(-0.5, 0.5), ph=r.uniform(0, 6.28), sz=r.uniform(0.008, 0.016)))
+        motes.append(dict(ob=o, s=r.uniform(0.0, 1.0), u=r.uniform(-0.5, 0.5), v=r.uniform(-0.5, 0.5), ph=r.uniform(0, 6.28), sz=r.uniform(0.008, 0.016) * db.get('scale', 1.0)))
     W['dust'].append(dict(p0=np.array(db['p0'], float), d=d, a=a, b=b, L=db['L'], w=db['w'], motes=motes))
 def set_smoke2(level=1.0, frame=None, speed=1.0):
     """chimney smoke (up to 30 sources on the street + rooftop plate) and the stove smoke: 8 puffs per source rising, drifting, growing, fading."""
@@ -1077,6 +1124,8 @@ TAKE_PARTS = {'T1': ('roofs', 'street', 'facade', 'measure'), 'T2': ('street', '
 TAKE_LIGHT = {'T1': {'ext': 'BLUE_HOUR_EXT', 'measure': 'SUNSET_INT'}, 'T2': {'ext': 'BLUE_HOUR_EXT', 'corridor': 'GASLIGHT_INT', 'measure': 'SUNSET_INT'},
               'T3': {'measure': 'SUNSET_INT'}, 'T4': {'measure': 'SUNSET_INT', 'archive': 'ARCHIVE_DAY'}, 'T5': {'archive': 'ARCHIVE_NIGHT'},
               'T6': {'archive': 'ARCHIVE_DAY'}, 'T7': {'archive': 'ARCHIVE_DAY'}, 'T8': {'measure': 'SUNSET_INT'}}
+TAKE_OVER = {   # per take, per location overrides of the light preset (SET gate v2b): T1 window brightest pool; T6 -12 % / T7 +5 % luma
+    'T1': {'measure': dict(win_w=360, win_lamp=260)}, 'T6': {'archive': dict(shade_mul=0.86, fill_w=250, vault_w=120)}, 'T7': {'archive': dict(shade_mul=1.06, fill_w=330)}}
 TAKE_CUTAWAY = {'T3': ('measure',), 'T7': ('archive',), 'T8': ('measure',)}
 def ML(x, y, z=0.0): return (x + MO[0], y + MO[1], z + MO[2])
 def world_build(take='ALL', light=None, parts=None, cutaway=None):
@@ -1089,7 +1138,7 @@ def world_build(take='ALL', light=None, parts=None, cutaway=None):
     for k, kind in (('card_notice', 'notice'), ('card_portrait', 'portrait'), ('card_portrait2', 'portrait2'), ('card_bertillon', 'bertillon')):
         K.STATE['cardpaths'][k] = TX.card(k, 'notice', 7) if kind == 'notice' else (TX.frame_art(k, 11 if kind == 'portrait' else 12) if kind.startswith('portrait') else TX.card(k, 'bertillon', 7))
     if 'street' in parts or 'facade' in parts:
-        with Loc('ext', lights.get('ext', 'BLUE_HOUR_EXT')) as L:
+        with Loc('ext', lights.get('ext', 'BLUE_HOUR_EXT'), TAKE_OVER.get(take, {}).get('ext')) as L:
             n0 = len(A['lights']); B = Batch(1); B.ceil = Batch(2); B.out = Batch(3)
             if 'street' in parts: build_street2(B, A)
             if 'facade' in parts: build_facade(B, A)
@@ -1108,12 +1157,12 @@ def world_build(take='ALL', light=None, parts=None, cutaway=None):
             _smoke_sources([tuple(Vector(W['wagon']['root'].location) + Vector(W['wagon']['nose_local']))], wind=(0.2, 0.3), rise=0.25, tag='brw')
             W['breath_wagon'] = W['smoke'][-1]
     if 'corridor' in parts:
-        with Loc('corridor', lights.get('corridor', 'GASLIGHT_INT')) as L:
+        with Loc('corridor', lights.get('corridor', 'GASLIGHT_INT'), TAKE_OVER.get(take, {}).get('corridor')) as L:
             n0 = len(A['lights']); B = Batch(5); B.ceil = Batch(6); build_corridor(B, A, with_end_wall='archive' not in parts); B.finalize('corr'); B.ceil.finalize('corr_ceil')
             for o in A['lights'][n0:]:
                 if o.data.type in ('AREA', 'SUN'): L.link_light(o)
     if 'measure' in parts:
-        with Loc('measure', lights.get('measure', 'SUNSET_INT')) as L:
+        with Loc('measure', lights.get('measure', 'SUNSET_INT'), TAKE_OVER.get(take, {}).get('measure')) as L:
             before = set(o.name for o in bpy.data.objects); A2 = {'marks': {}, 'lights': []}; B = Batch(7); B.ceil = Batch(8)
             build_measure2(B, A2); B.finalize('measure'); W['ceil_measure'] = B.ceil.finalize('measure_ceil'); K._place_wall_cards()
             pv = A2['pendulum_local']; pr = bpy.data.objects.new('pend_root', None); bpy.context.scene.collection.objects.link(pr); pr.location = pv['pivot']
@@ -1131,12 +1180,14 @@ def world_build(take='ALL', light=None, parts=None, cutaway=None):
             db = dict(A2['dust_local']); db['p0'] = np.array(db['p0']) + np.array(MO); _dust_box(db, seed=7)
             A['clock'] = ML(*A2['clock_local'])
     if 'archive' in parts:
-        with Loc('archive', lights.get('archive', 'ARCHIVE_DAY')) as L:
+        with Loc('archive', lights.get('archive', 'ARCHIVE_DAY'), TAKE_OVER.get(take, {}).get('archive')) as L:
             n0 = len(A['lights']); B = Batch(9); B.ceil = Batch(10); build_archive(B, A); B.finalize('arch'); W['ceil_archive'] = B.ceil.finalize('arch_ceil')
             sun = K.sun(); L.link_light(sun); L.block = [sun]
             for o in A['lights'][n0:]:
                 if o.data.type in ('AREA', 'SUN'): L.link_light(o)
             for i, db in enumerate(A['dust_boxes']): _dust_box(db, seed=20 + i)
+            bm = K._MATS.get('beam_fx')
+            if bm: bm.node_tree.nodes['strength'].inputs[0].default_value = (*hex_lin(P().get('beam_col', '#e4edff')), 1)
     for nm in cut:
         for o in W.get('ceil_' + nm, []): o.visible_camera = False
     W['marks'] = A['marks']; A['build_s'] = time.time() - t0
@@ -1210,73 +1261,74 @@ def _k(g, loc, look, lens=22.0, hold=False, tension=1.0): return dict(g=g, loc=l
 BIGZOOM = {'T1': (0, 105, 'bertillon'), 'T6': (1377, 1515, 'bertillon')}
 def _takes():
     T = {}
-    hy = HERO['y']
+    P1CARD = (14.29, 26.14, 2.876); _n = (0.9, -0.21, 0.37); P1CAM = tuple(P1CARD[i] + 0.44 * _n[i] for i in range(3)); P1CAM2 = tuple(P1CARD[i] + 0.42 * _n[i] for i in range(3))
+    hy = HERO['y']; INSP6 = (15.2, 24.35, FZ); GA6 = (13.95, 28.2, FZ); GB6 = (16.9, 29.6, FZ)
     # ---- T1 hook + Paris (g 0-336): BIGZOOM 1 roofs -> French window -> bench; out and up; swoop to the wagon; arc on the steps
     T['T1'] = dict(g=(0, 336), render=(0, 342), cast=[
         _C('bertillon', 'bertillon', (0, ML(-1.95, 1.35)), (105, ML(-1.95, 1.35)), (140, ML(-1.95, 2.05)), (336, ML(-1.95, 2.05))),
         _C('prisoner_a', 'seated', (0, ML(-2.45, 0.85))), _C('prisoner_b', 'seated', (0, ML(-2.45, 1.55))), _C('prisoner_q', 'seated', (0, ML(-2.45, 2.25))),
-        _C('gend_room', 'gendarme', (0, ML(0.4, -0.8))),
+        _C('gend_room', 'gendarme', (0, ML(1.3, -1.7))),
         _C('lamplighter', 'clerk', (0, (-3.85, 14.0, 1.05))), _C('flaneur_a', 'clerk', (0, (-2.6, 1.0, 0.0)), (336, (-1.4, 8.0, 0.0))), _C('flaneur_b', 'clerk', (0, (-4.9, 17.0, 0.14)), (336, (-4.9, 11.0, 0.14))),
         _C('newsboy', 'prisoner', (0, (-4.9, 7.6, 0.14))), _C('cafe_a', 'clerk', (0, (-4.6, 19.4, 0.14))), _C('gend_door_l', 'gendarme', (0, (4.25, 3.9, 0.14))), _C('gend_door_r', 'gendarme', (0, (4.25, 7.6, 0.14))),
         _C('prisoner_c', 'prisoner', (0, (3.0, 5.6, 0.0)), (250, (2.2, 6.0, 0.0)), (290, (2.9, 5.8, 0.0)), (330, (5.2, 5.7, 0.6))),
-        _C('gend_wagon', 'gendarme', (0, (3.9, 6.0, 0.0))), _C('desk_gend', 'gendarme', (0, (4.6, 3.6, 0.14)))],
-        keys=[_k(0, (-30.0, 2.0, 46.0), ML(-2.4, 1.3, 1.6), hold=True), _k(46, (-12.0, 9.2, 22.5), ML(-2.0, 1.3, 1.0)), _k(78, (2.6, 12.9, 4.6), ML(0.2, 0.6, 0.6)),
+        _C('gend_wagon', 'gendarme', (0, (3.9, 6.0, 0.0))), _C('desk_gend', 'gendarme', (0, (4.6, 3.6, 0.14))), _C('flaneur_c', 'clerk', (0, (1.2, 10.4, 0.0)), (336, (0.6, 13.0, 0.0))), _C('newsboy2', 'prisoner', (0, (-1.6, 8.6, 0.0)))],
+        keys=[_k(0, (-34.0, -6.0, 34.0), (5.7, 13.3, 10.5), hold=True), _k(46, (-14.0, 6.0, 17.0), ML(-2.2, 1.3, 1.6)), _k(78, (2.6, 12.9, 4.6), ML(0.2, 0.6, 0.6)),
               _k(92, (6.0, 12.75, 3.1), ML(1.2, 0.5, 0.2)), _k(105, ML(0.15, -0.55, 1.6), ML(-2.1, 1.35, 1.0), hold=True),
               _k(148, ML(0.0, 1.3, 1.55), ML(-2.2, 2.0, 1.0), hold=True),
-              _k(168, ML(-0.7, 0.45, 2.3), ML(-2.0, 1.6, 1.1)), _k(186, (4.6, 12.5, 3.4), ML(-1.8, 1.4, 1.0)), _k(218, (-8.0, -6.0, 30.0), (5.0, 14.0, 3.0), hold=True),
+              _k(158, ML(-0.7, 0.45, 2.9), ML(-2.0, 1.6, 1.1)), _k(168, (4.6, 12.5, 3.8), ML(-1.8, 1.4, 1.0)), _k(194, (0.5, 5.5, 10.5), (5.0, 12.5, 4.5)), _k(218, (-3.5, 1.0, 16.0), (5.0, 15.0, 3.5), hold=True),
               _k(255, (-3.0, -1.0, 7.0), (3.0, 8.0, 1.2)), _k(287, (-0.2, 2.6, 1.75), (2.8, 6.4, 1.15), hold=True),
               _k(336, (2.0, 2.4, 1.6), (4.9, 6.2, 1.3), hold=True)])
     # ---- T2 corridor + mockery (g 336-651)
     T['T2'] = dict(g=(336, 651), render=(330, 657), cast=[
         _C('thief', 'prisoner', (330, (4.4, 5.7, 0.14)), (350, (5.3, 5.7, 0.6)), (386, (7.6, 5.9, FZ)), (445, (9.4, 6.5, FZ)), (470, (11.6, 6.3, FZ)), (651, (12.2, 6.2, FZ))),
-        _C('gend_corr', 'gendarme', (330, (6.95, 4.55, FZ)), (651, (7.2, 4.6, FZ))), _C('clerk_ladder', 'clerk', (330, (8.6, 6.95, FZ + 1.45))), _C('gend_ledger', 'gendarme', (330, (11.75, 6.45, FZ))),
+        _C('gend_corr', 'gendarme', (330, (7.45, 4.3, FZ)), (651, (7.6, 4.3, FZ))), _C('clerk_ladder', 'clerk', (330, (8.6, 6.95, FZ + 1.45))), _C('gend_ledger', 'gendarme', (330, (11.75, 6.45, FZ))),
         _C('pris_c0', 'seated', (330, (11.0, 4.45, FZ))), _C('pris_c1', 'seated', (330, (11.6, 4.45, FZ))), _C('pris_c2', 'seated', (330, (12.2, 4.45, FZ))),
         _C('bertillon', 'bertillon', (330, ML(1.45, 1.95))), _C('prisoner_chair', 'seated', (330, ML(0.7, 2.3, 0.0))), _C('inspector', 'inspector', (330, ML(-0.6, 0.2)), (493, ML(-0.6, 0.2)), (560, ML(0.15, 0.2)), (651, ML(0.15, 0.2))),
-        _C('gend_room', 'gendarme', (330, ML(-1.4, -0.4))), _C('gend_room2', 'gendarme', (330, ML(2.3, -1.2))), _C('prisoner_b', 'seated', (330, ML(-2.45, 1.55)))],
+        _C('gend_room', 'gendarme', (330, ML(-1.4, -0.4))), _C('gend_room2', 'gendarme', (330, ML(2.6, -1.7))), _C('prisoner_b', 'seated', (330, ML(-2.45, 1.55)))],
         keys=[_k(330, (2.0, 5.2, 1.85), (8.0, 5.9, 1.9), hold=True), _k(360, (3.9, 5.5, 1.95), (9.0, 6.0, 2.0)), _k(386, (6.6, 5.2, 2.75), (10.0, 6.4, 1.7)),
-              _k(445, (8.2, 4.45, 2.7), (10.6, 6.4, 1.6)), _k(470, (9.9, 5.6, 2.55), (10.3, 9.0, 2.0)), _k(493, (10.25, 8.5, 1.55), ML(-0.6, 1.6, 1.4)),
+              _k(445, (8.2, 4.45, 2.7), (10.5, 6.6, 2.6)), _k(470, (9.9, 5.6, 2.55), (10.3, 9.0, 2.3)), _k(493, (10.25, 8.5, 1.55), ML(-0.6, 1.6, 1.75)),
               _k(560, (11.9, 14.0, 2.45), ML(-0.3, 0.6, 1.45)), _k(593, ML(2.25, 2.9, 1.65), ML(-0.1, 0.3, 1.25), hold=True),
               _k(657, ML(2.0, -0.95, 0.55), ML(0.05, 0.3, 1.3), hold=True)])
     # ---- T3 nickname + prefect (g 651-850): bird's-eye from the gasolier (ceiling cut away), crane to eye height, low under the table, into the clock
     T['T3'] = dict(g=(651, 850), render=(645, 856), cast=[
-        _C('bertillon', 'bertillon', (645, ML(1.45, 1.95))), _C('prisoner_chair', 'seated', (645, ML(0.7, 2.3))), _C('inspector', 'inspector', (645, ML(-0.4, 0.3))),
-        _C('gend_a', 'gendarme', (645, ML(-1.2, -0.3))), _C('gend_b', 'gendarme', (645, ML(2.2, -0.9))), _C('prankster', 'gendarme', (645, ML(2.0, 2.9)), (725, ML(1.9, 2.5))),
+        _C('bertillon', 'bertillon', (645, ML(1.45, 1.95)), (780, ML(1.45, 1.95)), (802, ML(1.0, 1.3))), _C('prisoner_chair', 'seated', (645, ML(0.7, 2.3))), _C('inspector', 'inspector', (645, ML(-0.4, 0.3))),
+        _C('gend_a', 'gendarme', (645, ML(-1.2, -0.3))), _C('gend_b', 'gendarme', (645, ML(2.2, -0.9))), _C('prankster', 'gendarme', (645, ML(2.0, 2.9)), (725, ML(1.9, 2.5)), (760, ML(1.6, 0.6)), (800, ML(-1.6, 1.2))),
         _C('prisoner_b', 'seated', (645, ML(-2.45, 1.55))), _C('prisoner_q', 'seated', (645, ML(-2.45, 0.85))),
         _C('prefect', 'prefect', (725, ML(1.1, -4.6)), (760, ML(1.0, -2.2)), (800, ML(0.8, -2.0)), (840, ML(1.1, -3.8)))],
         keys=[_k(645, ML(0.6, 1.3, 7.6), ML(0.75, 1.6, 0.0), hold=True), _k(700, ML(0.2, 0.6, 6.0), ML(0.7, 1.6, 0.4)), _k(745, ML(-2.0, 3.0, 3.6), ML(1.0, -1.0, 1.0)),
-              _k(792, ML(-2.4, 3.4, 1.7), ML(1.2, -2.0, 1.2), hold=True), _k(800, ML(2.95, -0.6, 0.45), ML(1.45, 1.95, 1.55), hold=True), _k(828, ML(2.4, 2.0, 2.1), ML(0.2, 4.2, 3.05)),
+              _k(792, ML(0.6, 3.75, 1.8), ML(1.2, -3.0, 1.4)), _k(812, ML(2.85, 2.75, 0.5), ML(1.45, 1.95, 1.55), hold=True), _k(834, ML(2.4, 2.6, 2.1), ML(0.2, 4.2, 3.05)),
               _k(856, ML(0.05, 3.05, 2.95), ML(0.2, 4.2, 3.05), lens=22.0, hold=True)])
     # ---- T4 montage + drawers (g 850-1045): out of the clock, track the stations, low at the desk, through ARCHIVES -> into the hall
     T['T4'] = dict(g=(850, 1045), render=(844, 1051), cast=[
-        _C('bertillon', 'bertillon', (844, ML(-1.0, 2.6)), (902, ML(-1.2, 2.9)), (930, ML(0.2, 2.6)), (955, ML(1.6, 2.6)), (971, ML(1.9, 0.7)), (991, ML(2.2, -0.9)), (1010, (13.4, 9.7, FZ)), (1051, (13.95, 11.6, FZ))),
+        _C('bertillon', 'bertillon', (844, ML(-1.0, 2.6)), (902, ML(-1.2, 2.9)), (930, ML(0.2, 2.6)), (955, ML(1.6, 2.6)), (971, ML(2.0, 0.4)), (991, ML(2.0, 0.4)), (1016, (13.6, 9.7, FZ)), (1040, (14.0, 12.4, FZ)), (1051, (14.0, 12.4, FZ))),
         _C('prisoner_s', 'prisoner', (844, ML(-1.55, 3.45)), (930, ML(-0.2, 3.3)), (955, ML(2.0, 3.0)), (1051, ML(2.1, 3.0))), _C('queue0', 'prisoner', (844, ML(-1.5, -0.6))), _C('queue1', 'prisoner', (844, ML(-0.3, -0.4))),
         _C('clerk', 'clerk', (844, ML(2.25, 0.2))), _C('clerk_arch', 'clerk', (844, (17.0, 14.0, FZ)), (1051, (17.2, 16.5, FZ)))],
-        keys=[_k(844, ML(0.05, 3.05, 2.95), ML(0.2, 4.2, 3.05), hold=True), _k(902, ML(-1.6, -0.4, 2.3), ML(-0.7, 4.2, 1.2), hold=True), _k(971, ML(2.0, -0.9, 2.2), ML(1.9, 4.2, 1.0)),
-              _k(991, ML(0.7, -1.4, 0.55), ML(2.5, -0.5, 1.3)), _k(1012, (12.0, 9.6, 2.45), (16.0, 10.6, 2.2)), _k(1051, (16.4, 8.2, 2.5), (14.4, 13.5, 2.0), hold=True)])
+        keys=[_k(844, ML(0.05, 3.05, 2.95), ML(0.2, 4.2, 3.05), hold=True), _k(902, ML(-1.6, -0.4, 2.3), ML(-0.7, 4.2, 1.2)), _k(971, ML(2.0, -0.9, 2.2), ML(1.9, 4.2, 1.0)),
+              _k(991, ML(0.7, -1.4, 0.55), ML(2.0, 0.4, 1.2)), _k(1026, (12.1, 9.6, 2.45), (16.0, 11.2, 2.2)), _k(1051, (15.7, 8.5, 2.5), (14.4, 13.5, 2.0), hold=True)])
     # ---- T5 false payoff + crisis (g 1045-1377): night crane from the gallery onto the desk, OTS push down the aisle, dawn, escort, three-shot
     T['T5'] = dict(g=(1045, 1377), render=(1039, 1383), mix=(1196, 1211, 'ARCHIVE_NIGHT', 'ARCHIVE_DAY'), cast=[
         _C('bertillon', 'bertillon', (1039, (15.85, 27.75, FZ)), (1196, (15.85, 27.75, FZ)), (1274, (14.35, hy - 0.55, FZ))),
-        _C('inspector', 'inspector', (1039, (15.4, 10.6, FZ)), (1196, (15.4, 10.8, FZ)), (1274, (15.75, hy - 1.0, FZ))),
-        _C('dupont', 'dupont', (1196, (16.2, 10.0, FZ)), (1274, (16.4, 22.0, FZ)), (1300, (14.55, hy + 0.65, FZ))), _C('gend_a', 'gendarme', (1196, (16.9, 10.2, FZ)), (1274, (17.1, 22.2, FZ)), (1300, (15.4, hy + 1.6, FZ))),
-        _C('gend_b', 'gendarme', (1196, (15.5, 9.8, FZ)), (1274, (15.8, 21.8, FZ)), (1300, (16.1, hy - 2.2, FZ)))],
-        keys=[_k(1039, (14.75, 22.6, 7.0), (16.0, 27.6, 1.6), hold=True), _k(1111, (14.9, 24.6, 3.3), (15.9, 27.8, 1.7), hold=True), _k(1125, (16.6, 29.4, 2.75), (15.4, 11.0, 2.0)),
-              _k(1196, (15.9, 13.4, 2.5), (15.4, 10.8, 1.9), hold=True), _k(1240, (18.9, 15.0, 2.2), (16.6, 17.5, 1.6)), _k(1274, (18.9, 21.0, 2.2), (16.5, 23.0, 1.6)),
+        _C('inspector', 'inspector', (1039, (15.4, 15.0, FZ)), (1196, (15.4, 15.0, FZ)), (1274, INSP6)),
+        _C('dupont', 'dupont', (1196, (16.6, 12.6, FZ)), (1274, (16.6, 22.0, FZ)), (1300, (14.55, hy + 0.65, FZ))), _C('gend_a', 'gendarme', (1196, (17.3, 12.8, FZ)), (1274, (17.3, 22.2, FZ)), (1300, GA6)),
+        _C('gend_b', 'gendarme', (1196, (15.9, 12.4, FZ)), (1274, (15.9, 21.8, FZ)), (1300, GB6))],
+        keys=[_k(1039, (14.75, 32.3, 7.0), (15.9, 27.8, 1.6), hold=True), _k(1100, (15.0, 30.8, 3.6), (15.9, 27.6, 1.7)), _k(1125, (16.3, 28.9, 2.65), (15.6, 18.0, 2.0)),
+              _k(1160, (17.9, 22.5, 2.55), (15.5, 15.0, 1.9)), _k(1196, (19.2, 16.8, 2.4), (15.6, 15.2, 1.9)), _k(1240, (19.4, 18.5, 2.2), (16.6, 19.5, 1.6)), _k(1274, (19.3, 22.0, 2.2), (16.5, 23.5, 1.6)),
               _k(1345, (17.9, 27.6, 2.2), (14.9, 26.0, 1.7), hold=True), _k(1383, (16.85, 26.7, 2.15), (14.6, 26.0, 1.9), hold=True)])
     # ---- T6 reveal (g 1377-1695): BIGZOOM 2 from the far end of the vault, P1 card, OTS, three-shot, P2 face
     T['T6'] = dict(g=(1377, 1695), render=(1371, 1701), cast=[
-        _C('bertillon', 'bertillon', (1371, (14.35, hy - 0.55, FZ))), _C('dupont', 'dupont', (1371, (14.55, hy + 0.65, FZ))), _C('inspector', 'inspector', (1371, (15.75, hy - 1.0, FZ))),
-        _C('gend_a', 'gendarme', (1371, (16.3, hy + 2.7, FZ))), _C('gend_b', 'gendarme', (1371, (16.1, hy - 2.2, FZ))), _C('clerk_gal', 'clerk', (1371, (19.85, 21.0, FZ + 4.2))), _C('clerk_t', 'clerk', (1371, (17.9, 11.6, FZ)))],
+        _C('bertillon', 'bertillon', (1371, (14.35, hy - 0.55, FZ))), _C('dupont', 'dupont', (1371, (14.55, hy + 0.65, FZ))), _C('inspector', 'inspector', (1371, INSP6)),
+        _C('gend_a', 'gendarme', (1371, GA6)), _C('gend_b', 'gendarme', (1371, GB6)), _C('clerk_gal', 'clerk', (1371, (19.85, 21.0, FZ + 4.2))), _C('clerk_t', 'clerk', (1371, (17.9, 11.6, FZ)))],
         keys=[_k(1371, (17.0, 2.9, 9.55), (15.1, 24.0, 0.4), hold=True), _k(1395, (16.95, 4.6, 9.2), (15.0, 24.5, 0.8)), _k(1440, (15.7, 9.5, 7.6), (14.9, 26.0, 1.8)), _k(1478, (15.6, 17.5, 5.4), (14.8, 26.1, 1.8)),
-              _k(1515, (16.35, 24.55, 2.35), (14.55, 26.05, 1.85), hold=True), _k(1530, (15.05, 25.95, 3.15), (14.29, 26.14, 2.86), hold=True), _k(1545, (15.0, 25.96, 3.13), (14.29, 26.14, 2.86), hold=True),
-              _k(1580, (15.6, 28.2, 2.35), (14.35, 25.7, 2.0), hold=True), _k(1640, (17.9, 27.6, 2.3), (14.9, 26.0, 1.8), hold=True), _k(1671, (17.9, 27.5, 2.3), (14.9, 26.0, 1.8), hold=True),
-              _k(1695, (16.55, 25.75, 2.4), (15.75, hy - 1.0, 2.45), hold=True), _k(1701, (16.5, 25.7, 2.4), (15.75, hy - 1.0, 2.45), hold=True)])
+              _k(1515, (16.35, 24.55, 2.35), (14.55, 26.05, 1.85), hold=True), _k(1535, P1CAM, P1CARD, hold=True), _k(1545, P1CAM2, P1CARD, hold=True),
+              _k(1560, (15.65, 26.75, 3.0), (14.35, 25.7, 2.0)), _k(1580, (15.6, 28.2, 2.35), (14.35, 25.7, 2.0), hold=True), _k(1640, (17.9, 27.6, 2.3), (14.9, 26.0, 1.8), hold=True), _k(1671, (17.9, 27.5, 2.3), (14.9, 26.0, 1.8), hold=True),
+              _k(1695, (15.95, 25.1, 2.72), (15.2, 24.35, FZ + 1.5), hold=True), _k(1701, (15.92, 25.07, 2.72), (15.2, 24.35, FZ + 1.5), hold=True)])
     # ---- T7 aha + 200 (g 1695-1868): low hero under the GRAND drawer, crane up and out to top-down (vault cut away)
     T['T7'] = dict(g=(1695, 1868), render=(1689, 1874), cast=[
-        _C('bertillon', 'bertillon', (1689, (14.35, hy - 0.55, FZ))), _C('dupont', 'dupont', (1689, (14.55, hy + 0.65, FZ))), _C('inspector', 'inspector', (1689, (15.75, hy - 1.0, FZ))),
+        _C('bertillon', 'bertillon', (1689, (14.35, hy - 0.55, FZ))), _C('dupont', 'dupont', (1689, (14.55, hy + 0.65, FZ))), _C('inspector', 'inspector', (1689, (15.5, 27.4, FZ))),
         _C('gend_a', 'gendarme', (1792, (17.0, 6.0, FZ)), (1874, (17.0, 16.0, FZ))), _C('thief1', 'prisoner', (1792, (17.0, 4.8, FZ)), (1874, (17.0, 14.8, FZ))), _C('thief2', 'prisoner', (1792, (17.0, 3.6, FZ)), (1874, (17.0, 13.6, FZ))),
-        _C('gend_b', 'gendarme', (1689, (16.1, hy - 2.2, FZ)))],
-        keys=[_k(1689, (16.15, 24.35, 1.45), (14.4, 25.6, 2.45), hold=True), _k(1792, (16.0, 24.1, 1.5), (14.4, 25.6, 2.5), hold=True), _k(1830, (16.8, 23.0, 9.0), (16.0, 22.0, 1.2)),
-              _k(1874, (17.0, 19.6, 24.0), (17.0, 19.5, 1.2), hold=True)])
+        _C('gend_b', 'gendarme', (1689, GB6))],
+        keys=[_k(1689, (16.15, 24.35, 1.45), (14.4, 25.6, 2.45), hold=True), _k(1792, (16.0, 24.1, 1.5), (14.4, 25.6, 2.5), hold=True), _k(1830, (16.9, 17.0, 11.0), (16.4, 22.0, 1.2)),
+              _k(1874, (17.0, 5.0, 23.0), (17.0, 21.0, 1.2), hold=True)])
     # ---- T8 ending (g 1868-2052): bird's-eye over the measuring room, crane down past the gasolier, OTS behind the crowd, P3 on the ear
     T['T8'] = dict(g=(1868, 2052), render=(1862, 2052), cast=[
         _C('inspector', 'seated_insp', (1862, ML(0.7, 2.3))), _C('bertillon', 'bertillon', (1862, ML(1.3, 1.85))), _C('gend_a', 'gendarme', (1862, ML(1.9, 0.95))), _C('gend_b', 'gendarme', (1862, ML(-0.4, 0.9))),
@@ -1328,7 +1380,10 @@ def cast_cards(take, g, cam=None, rim=None):
     cam = cam or bpy.context.scene.camera; cl = cam.location; seg = 20; a = np.linspace(0, 2 * math.pi, seg, endpoint=False); out = []
     for c in TAKES[take]['cast']:
         x, y, z = cast_pos(c, g); who = c['who']; H = HCAST[who]; hd = (1.78 if not who.startswith('seated') else 1.6) * 0.17; hc = H - hd * 0.55; bw = 0.5 if who != 'inspector' and who != 'seated_insp' else 0.66
+        if not who.startswith('seated') and z < FZ + 0.5: z = floor_z(x, y)                                   # feet on the surface (steps, sill, pavement)
+        yc = yaw_clamp(cast_face(take, c, g), (x, y, z), cl); back = is_back(take, c['name'], g, yc)
         body, acc = CCOL[who]; rc = rim or K.LIGHTS[W['light'].get(_loc_of((x, y, z)), 'SUNSET_INT')]['rim']
+        if back: body = '#15122a'
         V = []; F = []; M = []
         def poly(pts, mat):
             i0 = len(V); V.extend(pts); F.append(tuple(range(i0, i0 + len(pts)))); M.append(mat)
@@ -1338,9 +1393,9 @@ def cast_cards(take, g, cam=None, rim=None):
         poly([(hd * 0.56 * math.cos(t_), 0.002, hc + hd * 0.56 * math.sin(t_)) for t_ in a], 3); poly([(hd * 0.5 * math.cos(t_), -0.004, hc + hd * 0.5 * math.sin(t_)) for t_ in a], 4)
         if who in ('inspector', 'gendarme', 'seated_insp'): poly([(-hd * 0.5, -0.006, hc + hd * 0.42), (hd * 0.5, -0.006, hc + hd * 0.42), (hd * 0.42, -0.006, hc + hd * 0.85), (-hd * 0.42, -0.006, hc + hd * 0.85)], 1)
         me = bpy.data.meshes.new('cc_' + c['name']); me.from_pydata(V, [], F); me.update()
-        for m in (_flat('ccb_' + who, body), _flat('cca_' + who, acc), _flat('ccr_' + rc, rc, 1.2), _flat('cc_ink', '#1a1033'), _flat('cc_head', '#fef7f6')): me.materials.append(m)
+        for m in (_flat('ccb_' + body, body), _flat('cca_' + who, acc), _flat('ccr_' + rc, rc, 1.2), _flat('cc_ink', '#1a1033'), _flat('cc_head' if not back else 'cc_hair', '#fef7f6' if not back else '#1c1424')): me.materials.append(m)
         me.polygons.foreach_set('material_index', M); ob = bpy.data.objects.new('cc_' + c['name'], me); bpy.context.scene.collection.objects.link(ob); ob.location = (x, y, z)
-        ob.rotation_euler = (0, 0, math.atan2(-(cl.x - x), (cl.y - y)) + math.pi); ob.visible_shadow = False; out.append(ob)
+        ob.rotation_euler = (0, 0, math.radians(yc['face'] + (180.0 if back else 0.0)) + math.pi / 2); ob.visible_shadow = False; out.append(ob)        # yaw-clamped (front faces local -y)
         sh = bpy.data.meshes.new('cc_sh_' + c['name']); sh.from_pydata([(0.32 * math.cos(t_), 0.22 * math.sin(t_), 0.01) for t_ in a], [], [tuple(range(seg))]); sh.update(); sh.materials.append(_flat('cc_shadow', '#1a1440', 0.6))
         so = bpy.data.objects.new('cc_sh_' + c['name'], sh); bpy.context.scene.collection.objects.link(so); so.location = (x, y, z); so.visible_shadow = False
     return out
@@ -1416,3 +1471,107 @@ if __name__ == '__main__':
         A = world_build(a[1]); shot(a[1], int(a[2]), A); W_, H_ = (int(a[4]), int(a[5])) if len(a) > 5 else (720, 1280)
         dt = render_frame(a[3], (W_, H_), int(a[6]) if len(a) > 6 else 32, int(a[7]) if len(a) > 7 else 2); print('frame %s g%s %.1fs build %.1fs tris %d' % (a[1], a[2], dt, A['build_s'], sum(len(o.data.polygons) for o in bpy.data.objects if o.type == 'MESH')))
     else: print('usage: python3 prefecture17.py stills <T1..T8> <out_dir> [W H samples g,g,g] | report [T..] | frame <take> <g> <out.png> [W H samples threads]')
+
+# ================================================================ QA: per-frame anchor + speed check (SET gate v2b)
+PLANNED_CLOSE = {   # (take, anchor) -> [(g0, g1)] where > 75 %H is planned: OTS shoulders (back-view cards) and the punctuation pushes P1-P3
+    ('T2', 'bertillon'): [(555, 625)], ('T5', 'bertillon'): [(1100, 1150)], ('T6', 'bertillon'): [(1516, 1545)], ('T6', 'dupont'): [(1516, 1545), (1546, 1616)],
+    ('T6', 'inspector'): [(1672, 1701)], ('T8', 'gend_a'): [(1958, 2052)], ('T8', 'bertillon'): [(2018, 2052)], ('T8', 'inspector'): [(2018, 2052)]}
+WHIPS = {}          # take -> [(g0, g1)] planned whips (<= 3 frames)
+def check_take(take, limit=0.75, vmax=6.0):
+    """every frame of the take: anchors in frame above `limit` of the frame height (outside PLANNED_CLOSE), anchors closer than 1.0 m to the lens
+    (pass-through) and camera speed above vmax m/s (outside BIGZOOM / planned whips). Returns dict(hits, near, fast, max_speed)."""
+    t = TAKES[take]; fr = path_take(take); hits, near, fast = [], [], []; vm = 0.0
+    bz = BIGZOOM.get(take)
+    for i, f in enumerate(fr):
+        g = f['g']; sp = (Vector(fr[min(i + 1, len(fr) - 1)]['loc']) - Vector(fr[max(i - 1, 0)]['loc'])).length * 15.0
+        inbz = bz and bz[0] <= g <= bz[1]; vm = max(vm, sp if not inbz else 0)
+        if sp > vmax and not inbz and not any(a <= g <= b for a, b in WHIPS.get(take, [])): fast.append((g, round(sp, 1)))
+        for c in t['cast']:
+            p = cast_pos(c, g); fH, inn, d = anchor_frac(f, p, HCAST[c['who']])
+            ok = any(a <= g <= b for a, b in PLANNED_CLOSE.get((take, c['name']), []))
+            if inn and fH > limit and not ok: hits.append((g, c['name'], round(fH * 100)))
+            cen = Vector((p[0], p[1], p[2] + HCAST[c['who']] / 2)); dl = (cen - Vector(f['loc'])).length
+            if dl < 1.0 and not ok: near.append((g, c['name'], round(dl, 2)))
+    return dict(hits=hits, near=near, fast=fast, max_speed=vm)
+def _runs(lst):
+    """compress [(g, name, v)] into 'name g0-g1 (max v)' runs."""
+    out = {}
+    for g, n, v in lst: out.setdefault(n, []).append((g, v))
+    s = []
+    for n, gv in out.items():
+        a = gv[0][0]; b = a; m = gv[0][1]
+        for g, v in gv[1:]:
+            if g == b + 1: b = g; m = max(m, v)
+            else: s.append('%s g%d-%d (%s)' % (n, a, b, m)); a = b = g; m = v
+        s.append('%s g%d-%d (%s)' % (n, a, b, m))
+    return s
+
+# ================================================================ stage_cast v2 (PLAN §3e / §6.1-2): yaw clamp, floor contact on steps, walk paths, back views
+BACK_VIEW = {   # (take, anchor) -> [(g0, g1)]: the anchor is an over-the-shoulder foreground figure seen from behind
+    ('T2', 'bertillon'): [(555, 625)], ('T5', 'bertillon'): [(1100, 1150)], ('T6', 'dupont'): [(1546, 1616)], ('T8', 'gend_a'): [(1958, 2052)]}
+YAW_CLAMP = 35.0
+def floor_z(x, y):
+    """walkable surface height at (x, y): street 0, pavements 0.14, the façade's 3 outside steps (to the 0.6 sill), the 5 corridor steps (to 1.2),
+    interiors FZ. Cast feet and contact shadows use it, so nobody floats over or sinks into a step."""
+    fx = FACADE_X
+    if CX0 <= x <= CX1 and CY0 - 0.3 <= y <= CY1 + 0.3:
+        return FZ if x >= 6.95 else 0.6 + 0.12 * min(5, int((x - CX0) / 0.24) + 1)
+    if fx <= x < CX0 and abs(y - 5.7) <= 1.1: return 0.6                                              # the door sill
+    if (6.0 <= x <= 12.4 and 7.8 <= y <= 16.2) or (13.0 <= x <= 21.0 and 2.0 <= y <= 34.0): return FZ
+    if fx - 1.08 <= x <= fx and abs(y - 5.7) <= 2.0: return 0.14 + 0.155 * (3 - min(2, int((fx - x) / 0.36)))
+    if 4.0 <= abs(x) <= 6.0: return 0.14
+    return 0.0
+def _wrap(a): return (a + 180.0) % 360.0 - 180.0
+def yaw_clamp(face_deg, pos, cam_loc, max_dev=YAW_CLAMP, back_at=110.0):
+    """card yaw for an orbiting camera: the card turns toward the camera but never more than max_dev (35 deg) from its story facing face_deg
+    (azimuth, deg, of the direction the figure faces). Returns dict(face: clamped facing azimuth, dev: camera angle off the story facing,
+    pose_yaw: puppet 'yaw' key (-0.6..0.6) carrying the rest of the turn, back: True when the camera is behind (|dev| > back_at -> back view),
+    yaw_fixed: the value for stage.actors.Actor.yaw_fixed (card yaw 0 = parallel to the y = 0 wall, facing -y => yaw_fixed = face - (-90)))."""
+    az = math.degrees(math.atan2(cam_loc[1] - pos[1], cam_loc[0] - pos[0])); dev = _wrap(az - face_deg); c = max(-max_dev, min(max_dev, dev))
+    rest = dev - c; py = max(-0.6, min(0.6, rest / 90.0 * 0.6)); f = face_deg + c
+    return dict(face=f, dev=dev, pose_yaw=py, back=abs(dev) > back_at, yaw_fixed=_wrap(f + 90.0))
+def walk_path(keys, stride=0.72, g0=None, g1=None):
+    """foot-locked walk along keys [(g, (x, y)) ...] (linear in time between keys). Per frame: pos (x, y, floor_z), heading (deg azimuth of travel),
+    speed (m/s), phase = distance / (2 x stride) mod 1 (feed cast17.cycle(cast, phase, 'walk')): the gait advances with the distance actually
+    walked, so the planted foot does not skate; planted = 'L' for phase < 0.5 else 'R'; idle when speed < 0.05 (phase holds)."""
+    g0 = keys[0][0] if g0 is None else g0; g1 = keys[-1][0] if g1 is None else g1; out = []; dist = 0.0; prev = None; head = 0.0
+    for g in range(int(g0), int(g1) + 1):
+        p = cast_pos(dict(path=[(k[0], (k[1][0], k[1][1], 0.0)) for k in keys]), g); x, y = p[0], p[1]
+        sp = 0.0
+        if prev is not None:
+            dx, dy = x - prev[0], y - prev[1]; st = math.hypot(dx, dy); dist += st; sp = st * 30.0
+            if st > 1e-5: head = math.degrees(math.atan2(dy, dx))
+        ph = (dist / (2 * stride)) % 1.0; out.append(dict(g=g, pos=(x, y, floor_z(x, y)), heading=head, speed=sp, phase=ph, planted='L' if ph < 0.5 else 'R', idle=sp < 0.05)); prev = (x, y)
+    return out
+def cast_face(take, c, g):
+    """story facing of a cast anchor at g: its explicit `face`, else its walking direction, else toward the take's start camera."""
+    if c.get('face') is not None: return c['face']
+    p0 = cast_pos(c, g - 1); p1 = cast_pos(c, g + 1)
+    if math.hypot(p1[0] - p0[0], p1[1] - p0[1]) > 0.01: return math.degrees(math.atan2(p1[1] - p0[1], p1[0] - p0[0]))
+    k0 = path_take(take)[0]['loc']; p = cast_pos(c, g); return math.degrees(math.atan2(k0[1] - p[1], k0[0] - p[0]))
+def is_back(take, name, g, clamp=None):
+    if any(a <= g <= b for a, b in BACK_VIEW.get((take, name), [])): return True
+    return bool(clamp and clamp['back'])
+def stage_cast2(take, g, assign, cam=None, sprite_dir=None):
+    """the REAL cast17 cards for frame g of a take (render teams call it on every frame before rendering): assign = {anchor: (story_pose, opts)}.
+    On top of bertillon.stage_cast: feet on floor_z (steps), card yaw clamped to +-35 deg of the story facing (Actor.yaw_fixed) with the rest of the
+    turn in the puppet 'yaw' key, and the back view on BACK_VIEW frames (cast17 has no back art: the pose is mirrored, the face is covered by a
+    dark hair / back-of-head disc and the body by a dark coat silhouette). Returns {anchor: Actor}."""
+    cam = cam or bpy.context.scene.camera; cl = cam.location; t = TAKES[take]; marks = {}; out_assign = {}
+    for c in t['cast']:
+        if c['name'] not in assign: continue
+        p = cast_pos(c, g); z = floor_z(p[0], p[1]) if c['who'] not in ('seated', 'seated_insp') and p[2] < FZ + 0.5 else p[2]
+        yc = yaw_clamp(cast_face(take, c, g), p, cl); marks[c['name']] = (p[0], p[1], z, yc['face'], c['who'])
+        story, opts = assign[c['name']]; opts = dict(opts or {}); back = is_back(take, c['name'], g, yc)
+        if back: opts['mirror'] = not opts.get('mirror', False)
+        out_assign[c['name']] = (story, opts); c['_yc'] = yc; c['_back'] = back
+    acts = K.stage_cast(dict(marks=marks), out_assign, cam=cam, sprite_dir=sprite_dir)
+    for nm, a in acts.items():
+        c = [c for c in t['cast'] if c['name'] == nm][0]; a.yaw_fixed = c['_yc']['yaw_fixed']
+        if c['_back']: _back_cover(a, c, cam)
+    return acts
+def _back_cover(a, c, cam):
+    """dark back-of-head disc + coat silhouette in front of a card seen from behind (cast17 draws faces only)."""
+    H = HCAST[c['who']]; hd = 0.3 * H / 1.78 * 0.55; p = Vector(a.root.location); to = (Vector(cam.location) - p); to.z = 0; to.normalize()
+    for nm, (w, h, z, col) in (('hair', (hd * 2.1, hd * 2.2, H - hd * 1.1, '#1c1424')), ('coat', (0.5, H * 0.62, H * 0.36, '#15122a'))):
+        ob = plane('back_%s_%s' % (nm, c['name']), tuple(p + to * 0.05 + Vector((0, 0, z))), (w, h), rotz=face_rot((to.x, to.y)), mat=_flat('cc_back_' + nm, col)); ob.visible_shadow = False
