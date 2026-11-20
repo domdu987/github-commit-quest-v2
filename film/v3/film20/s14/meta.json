@@ -1,0 +1,74 @@
+{
+ "take": "s14",
+ "film": 20,
+ "shots": [
+  14
+ ],
+ "g0": 945,
+ "g1": 996,
+ "first_g": 941,
+ "n_frames": 59,
+ "shot_ranges": {
+  "14": [
+   945,
+   995
+  ]
+ },
+ "handle_in": 4,
+ "handle_out": 4,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 996
+ },
+ "set": "v3/set3d20 SITE preset site_rise (cameras site_rise_snap1/2/3), light DAY, set_stage keyed every frame: 0 until g950, 1 until g969, 2 until g982, 3 after (jumps at the snap middles). Runtime: preset FG hidden, camera-parented timber post at the left edge.",
+ "cast": "no actors (the tower is the cast)",
+ "camera": "custom 22 mm; three eased crane-up snaps (peak 1.7) on 'ชั้นหนึ่ง / ชั้นสอง / จนถึงยอด': start pose (low, close, stage 0) -> site_rise_snap1 g943..958, -> snap2 g962..977, -> snap3 g977..993, plus 5.5 %/s push and a slide between.",
+ "events": {
+  "snap1": [
+   943,
+   958
+  ],
+  "stage1": 950,
+  "snap2": [
+   962,
+   977
+  ],
+  "stage2": 969,
+  "snap3": [
+   977,
+   993
+  ],
+  "stage3": 985
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 18.39,
+ "s_per_frame_cpu_mean": 19.21,
+ "head_px": [
+  0,
+  0
+ ],
+ "head_centre_y": [
+  0,
+  0
+ ],
+ "head_bottom_max_y": 0,
+ "framediff_in_shot": {
+  "median": 6.37,
+  "p90": 9.87
+ },
+ "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
+}
