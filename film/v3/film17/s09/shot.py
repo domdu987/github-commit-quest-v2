@@ -57,7 +57,7 @@ def cam_of(g):
         s = snap(g, 1311)
         pos += fwd * (0.1 * GAIN) * s + R * (-0.3 * GAIN) * s
         s2 = snap(g, 1290); pos += fwd * (0.08 * GAIN) * s2 + R * (0.3 * GAIN) * s2
-        s3 = snap(g, 1331); pos += R * (-0.4 * GAIN) * s3
+        s3 = snap(g, 1331); pos += R * (0.15 * GAIN) * s3
         pos += R * (SWAY * math.sin(g * 0.5)) + Vector((0, 0, SWAY * 0.7 * math.sin(g * 0.77)))
         look = L23 + Vector((0.0, 0.0, -0.3)) + Vector((-0.25, 0.0, 0.1)) * s + Vector((0.2, 0, 0)) * mix(u)
     return pos, look
