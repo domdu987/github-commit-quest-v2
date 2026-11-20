@@ -1,8 +1,18 @@
 {
+ "take": "s05",
+ "shots": [
+  13
+ ],
  "g0": 651,
  "g1": 725,
  "first_g": 645,
  "n_frames": 87,
+ "handle": 6,
+ "fps": 30,
+ "size": [
+  720,
+  1280
+ ],
  "transition_in": {
   "type": "cut",
   "frames": 0

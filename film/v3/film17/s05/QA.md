@@ -1,18 +1,17 @@
-# film17 s05 (shot 13, narration 21.61-24.08 s) — render team 5
-
-take: g0 651, g1 725, first_g 645, n_frames 87 (6 handles each side), transition_in cut. measure_high / DAY_INT, 720x1280, 12 samples + OIDN denoise. take.mkv 30 MB (no split).
-
-## Numbers
-- qa_auto.py take.mkv --first_g 645: PASS (QA_AUTO.md, phone_sheet.jpg).
-- rhythm.py in-shot: median 5.09, p90 12.64 (targets >= 4 / >= 12). Camera: pull-out/slide, snap 1 g688-704 (push + reframe), snap 2 g712-724 (push + slide).
-- Heads: all chins < 880 (max ~850); every head disc inside the frame for g645-731 (seated inspector excluded: he is hidden behind the tripod hood).
-
-## Actions (shot_plan row 13: the whole room laughs, point at Bertillon, one mimics calipers on his ear, bounce 3 Hz)
-- Laughing, tears, 3 Hz bounce (0.09 m hops), head-roll/squash on every figure: bench prisoners (a, c), two gendarmes (a at the armspan, b at the clerk mark), the inspector in the chair (hidden behind the camera tripod from this angle).
-- Pointing at Bertillon: prisoner a (bench0), gendarme a, gendarme b: arm extended with `point` hand, small bob.
-- Calipers mimic: prisoner c (bench2) holds the calipers prop on his ear via cast17.hand_for_anchor (jaws on the ear anchor, jitter). At this distance the calipers are ~45 px: readable as a thin rod at the ear, not a close-up.
-- Bertillon (tripod mark): small, stiff, worried face, blinking, idle sway; silent.
-- Director fixes applied: beam_fx light shafts hidden, dust 0.4, mouths silent except the laugh.
-
-## Self-check (full-res frames g651, g670, g693, g704, g716, g725 + contact sheet every 6th)
-Bench prisoners, both gendarmes and Bertillon are fully in frame and laughing/pointing; no shaft over the cards; no chin in the caption band. Weak spots: the inspector in the chair and the green gendarme at the clerk mark are partly hidden by the tripod hood; the mimic's calipers are small.
+# film17 s05 (shot 13), takeover by team 2 from team 5 (d1bbc7c)
+Frames g645..731 (g0 651, g1 725, 6 handle each side), 720x1280, 12 samples + OIDN, cut in. take.mkv 29.9 MB, first_g 645, n_frames 87.
+## qa_auto: PASS.  Rhythm: in-shot median 4.46, p90 13.62 (targets >= 4 / >= 12). Magenta 0 %.
+## Fixes against gate QA_TECH.md
+- B1 mimic: the beret prisoner now stands near the lens (head ~130 px across), laughing, RAISED hand holding a LARGE steel calipers (~90 px beam, scale 2.0) at his head/ear level; the hand bobs with his 3 Hz laugh bounce through the whole shot. Reads at phone size (phone_sheet.jpg).
+- B2 camera: pull-out (distance factor 0.64 -> 0.86, about 10 %/s) from a high angle, with lateral slide, three snaps (g666-680, 688-704, 712-726).
+- B3 hood: nobody is behind the tripod now: Bertillon, gendarmes and prisoners are re-staged left of the hood; the inspector stands (laughing, full face) back centre-right clear of the hood.
+- Should-fix: heads turned and arms pointing toward Bertillon (seated prisoners, both gendarmes, 100+ px arms), laugh bounce 0.1 amplitude at 3 Hz with per-character phase, the green gendarme's arm is visible. The set's book-stack stool is room geometry (cannot be deleted); the mimic now stands in front of it.
+- Kept: open-held laugh mouths, chins above y 880 (mimic chin ~ y 790), beam shafts hidden, dust 0.4, silent poses.
+## Full-res self-check (full/g_0660, g_0690, g_0720.png)
+- g660: mimic front-left with raised hand and big calipers at his head, tears; both prisoners and green gendarme pointing at Bertillon (centre); blue gendarme and inspector laughing; hood clear of faces.
+- g690: same, camera pushed slightly (snap), mimic's calipers bobbing, all faces visible.
+- g720: pull-out under way, all seven figures in frame, Bertillon centre, no head above y 880.
+## Known weaknesses
+- Calipers read as a steel bar rather than a clear open pair (jaws small); beam is partly behind the head.
+- Bertillon neutral, eyes not turned toward the pointers (head yaw only).
+- Qa_auto notes low change at g651/725 (they are handle boundaries, no cut).
