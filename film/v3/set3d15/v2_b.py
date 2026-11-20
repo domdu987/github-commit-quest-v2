@@ -31,8 +31,8 @@ def M2D(p): return tuple(c * U for c in p)
 S.CROWD_HEX = ['#ff3b2f', '#ffffff', '#ffd21f', '#2f7bff', '#ff7a1a', '#fff0d8', '#19b9ff', '#2fd06b', '#e8203a', '#f8f0d8', '#ffb01f', '#3a5cff', '#ff5a2a', '#ffffff']
 
 # ------------------------------------------------------------------ light presets (B_NIGHT, B_TENSE2, B_DAY72)
-SKY_NIGHT = [(0.0, '#14127a'), (0.30, '#2a2cb0'), (0.46, '#4a3ac0'), (0.496, '#b84a9a'), (0.508, '#ff7a30'), (0.518, '#ffb25a'), (0.545, '#6a3ab8'), (0.66, '#2832b4'), (0.82, '#16168c'), (1.0, '#0c0c64')]
-SKY_TENSE = [(0.0, '#100e66'), (0.30, '#1c1c96'), (0.46, '#3a2aa6'), (0.496, '#a03a8c'), (0.508, '#e0661e'), (0.518, '#e89040'), (0.545, '#4a2aa0'), (0.66, '#1c24a0'), (0.82, '#101078'), (1.0, '#08085a')]
+SKY_NIGHT = [(0.0, '#14127a'), (0.30, '#2a2cb0'), (0.46, '#3a32b8'), (0.50, '#3a2cae'), (0.52, '#3434b4'), (0.545, '#2c30ae'), (0.66, '#2832b4'), (0.82, '#16168c'), (1.0, '#0c0c64')]
+SKY_TENSE = [(0.0, '#100e66'), (0.30, '#1c1c96'), (0.46, '#2c2a9e'), (0.50, '#2a2496'), (0.52, '#2630a0'), (0.545, '#222a9a'), (0.66, '#1c24a0'), (0.82, '#101078'), (1.0, '#08085a')]
 SKY_DAY72 = [(0.0, '#2c52ee'), (0.40, '#4a86ff'), (0.5, '#a8d4ff'), (0.54, '#78b4ff'), (0.6, '#4690ff'), (0.7, '#2c6cf4'), (0.84, '#1c52e6'), (1.0, '#1444d8')]
 MOUNT = [(3300, 160, 300, '#2a2894'), (4500, 320, 520, '#1e1e82')]
 _E = F.LIGHTS['B_EVE']
@@ -447,8 +447,8 @@ def build_jump_extras(P, M, day):
     # thick red/white bar, brighter
     swap_material('barW', mat('barW2', '#ffffff', '#ffffff', rough=0.6, emit='#ffffff', emit_k=0.55)); swap_material('barR', mat('barR2', '#e8201a', '#e8201a', rough=0.6, emit='#ff3a20', emit_k=0.5))
     # tartan: hot red
-    swap_material('tartanB', mat('tartanB2', '#b02e1e', '#e4502e', 2.4, contrast=1.5, smix=0.3, emit='#ff4a28', emit_k=0.13)); swap_material('tartan2', mat('tartan2b', '#bc3a26', '#ee5a36', 2.4, contrast=1.5, smix=0.3, emit='#ff4a28', emit_k=0.13))
-    swap_material('tartan3', mat('tartan3b', '#a62c1c', '#d44428', 2.4, contrast=1.5, smix=0.3, emit='#ff4a28', emit_k=0.13))
+    swap_material('tartanB', mat('tartanB2', '#c03a26', '#d04630', 7.0, contrast=0.5, smix=0.3, emit='#ff4a28', emit_k=0.13)); swap_material('tartan2', mat('tartan2b', '#c63e2a', '#d84a34', 7.0, contrast=0.5, smix=0.3, emit='#ff4a28', emit_k=0.13))
+    swap_material('tartan3', mat('tartan3b', '#b83624', '#c84230', 7.0, contrast=0.5, smix=0.3, emit='#ff4a28', emit_k=0.13))
     # bar-height board "2.24 m" on a post beside the right standard (faces the -y side = the approach camera)
     J = STATE['J']; bx = J['xc'] + J['half'] + 0.95; by = J['y'] - 0.5
     mb = S.MB('boardpost'); mb.rod(M['metal'], (bx - 0.55, by, 0), (bx - 0.55, by, 2.5), 0.03, 0.03, 8); mb.rod(M['metal'], (bx + 0.55, by, 0), (bx + 0.55, by, 2.5), 0.03, 0.03, 8)
