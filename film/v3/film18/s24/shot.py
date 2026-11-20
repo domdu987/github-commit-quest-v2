@@ -20,9 +20,9 @@ SNAPS = [(G0 + 14, 1.14, 4, 9999), (G0 + 46, 1.12, 4, 9999)]      # HELD punch-i
 
 # ---- the rout cast: (start x, y), run direction (deg, world), speed D/s, fall frame (None = keeps running), cast
 # (x, y, run1 angle, speed D/s, start frame offset (frozen before), fall frame offset or None, run2 angle, cast): panic spreads in waves, fallen soldiers get up and run again
-RUNNERS = [(-3.0, -76.0, 185.0, 4.4, 0, 20, 160.0, 'a'), (3.0, -75.0, 355.0, 4.4, 0, 28, 20.0, 'b'), (-1.0, -80.0, 235.0, 3.6, 2, None, 0.0, 'c'), (5.0, -80.0, 20.0, 4.2, 0, 12, 300.0, 'a'),
-           (-6.0, -78.0, 170.0, 4.4, 3, 42, 120.0, 'b'), (1.0, -78.0, 280.0, 3.4, 4, None, 0.0, 'c'), (-4.0, -77.0, 200.0, 4.4, 5, 52, 250.0, 'a'), (2.0, -77.0, 5.0, 4.4, 2, 36, 70.0, 'c'),
-           (0.0, -74.0, 120.0, 3.8, 8, None, 0.0, 'b'), (6.0, -76.0, 330.0, 4.0, 9, 58, 40.0, 'c'), (-7.0, -76.0, 150.0, 4.0, 10, None, 0.0, 'a'), (-2.0, -78.0, 300.0, 3.6, 6, 48, 200.0, 'b')]
+RUNNERS = [(-3.0, -76.0, 180.0, 5.0, 0, 20, 150.0, 'a'), (3.0, -75.0, 0.0, 5.0, 0, 28, 30.0, 'b'), (-1.0, -80.0, 225.0, 4.4, 2, None, 0.0, 'c'), (5.0, -80.0, 320.0, 4.6, 0, 12, 330.0, 'a'),
+           (-6.0, -78.0, 160.0, 5.0, 3, 42, 200.0, 'b'), (1.0, -78.0, 270.0, 4.0, 4, None, 0.0, 'c'), (-4.0, -77.0, 200.0, 5.0, 5, 52, 250.0, 'a'), (2.0, -77.0, 340.0, 5.0, 2, 36, 20.0, 'c'),
+           (0.0, -74.0, 100.0, 4.2, 8, None, 0.0, 'b'), (6.0, -76.0, 30.0, 4.6, 9, 58, 60.0, 'c'), (-7.0, -76.0, 190.0, 4.6, 10, None, 0.0, 'a'), (-2.0, -78.0, 290.0, 4.0, 6, 48, 240.0, 'b')]
 SIT = 22
 CASTS = dict(a='yan_soldier_a', b='yan_soldier_b', c='yan_soldier_c')
 
@@ -47,6 +47,10 @@ def make_driver(quality):
     items = []
     for n_ in range(8):
         o = C.J.prop_pot((0, 0, 0), kind='pot', scale=1.3) if n_ % 2 == 0 else C.J.prop_helmet((0, 0, 0), scale=1.5)
+        o.scale = (1, 1, 1)
+        for ch_ in [o] + list(o.children):
+            if ch_.type == 'MESH':
+                ch_.data.materials.clear(); ch_.data.materials.append(C.glaze_mat(((0.10, 0.04, 0.02), (0.45, 0.2, 0.08), (0.78, 0.38, 0.15), (1.0, 0.62, 0.3)) if n_ % 2 == 0 else ((0.08, 0.05, 0.02), (0.4, 0.28, 0.08), (0.7, 0.5, 0.15), (1.0, 0.8, 0.35)), 'fl%d' % n_))     # terracotta pots, bronze helmets, warm-lit
         items.append(o)
     FLY = [(-2.0, -80.0, 0.0, -9.0, -86.0, 6.0, 0.02), (5.0, -82.0, 0.0, 10.0, -90.0, 6.5, 0.14), (-9.0, -84.0, 0.0, -15.0, -92.0, 7.0, 0.26), (1.0, -78.0, 0.0, 4.0, -86.0, 5.5, 0.38), (-6.0, -78.0, 0.0, -11.0, -88.0, 6.0, 0.48), (3.0, -84.0, 0.0, 9.0, -94.0, 6.5, 0.58), (-4.0, -86.0, 0.0, -8.0, -94.0, 6.0, 0.68), (7.0, -80.0, 0.0, 13.0, -88.0, 6.5, 0.78)]
     cols = dict(pot=(0.30, 0.19, 0.07), helmet=(0.30, 0.30, 0.40), hay=(0.42, 0.30, 0.10), bowl=(0.34, 0.2, 0.08))
@@ -60,6 +64,9 @@ def make_driver(quality):
         if ch_.get('ob') is not None: ch_['ob'].hide_render = True
     chariot_root = C.J.prop_chariot((-4.0, -80.0, 0.0), rot=math.radians(200.0), tumble=0.0, scale=0.6)
     chariot = None
+    for ch_ in [chariot_root] + list(chariot_root.children):
+        if ch_.type == 'MESH':
+            ch_.data.materials.clear(); ch_.data.materials.append(C.glaze_mat(((0.06, 0.03, 0.02), (0.35, 0.12, 0.06), (0.62, 0.22, 0.1), (0.95, 0.5, 0.25)), 'chariot_warm'))
     C.set_camera(NAME, (G0 + G1) // 2, move=MOVE, cam=CAMO); C.bpy.context.view_layer.update(); C.J.gapfill(cam_obj)        # no bare ground
     actors = {}
     for i, a in enumerate(run): actors['run%d' % i] = a
@@ -78,6 +85,7 @@ def make_driver(quality):
         fwd = (V(pose['look_at']) - V(pose['loc'])); fwd.z = 0; fwd.normalize(); rt = V((fwd.y, -fwd.x, 0))
         for i, (x, y, ang1, sp, st, ff, ang2, k) in enumerate(RUNNERS):
             a = run[i]; f0 = G0 + st
+            x *= 2.4; y = -80.0 + (y + 80.0) * 1.6
             d1 = V((math.cos(math.radians(ang1)), math.sin(math.radians(ang1)), 0)); d2 = V((math.cos(math.radians(ang2)), math.sin(math.radians(ang2)), 0)); p0 = V((x, y, 0))
             if g < f0:                                   # not yet panicking: frozen, trembling
                 a.show(('freeze', 0), p0 + rt * (0.03 * math.sin(g * 2.3 + i)), cam, mirror=False); clamp(a, ('freeze', 0), p0, cam, False); continue
@@ -93,7 +101,7 @@ def make_driver(quality):
             a.show(('run', ph), pos, cam, mirror=dirv.dot(rt) < 0, lift=0.12 * abs(math.sin(g * 0.9 + i))); clamp(a, ('run', ph), pos, cam, dirv.dot(rt) < 0, 0.12 * abs(math.sin(g * 0.9 + i)))
         for n_, (o, (x0, y0, z0, x1, y1, ap, dl)) in enumerate(zip(items, FLY)):
             p = C.clamp((u - dl) / 0.5); e = p
-            o.location = (x0 + (x1 - x0) * e, y0 + (y1 - y0) * e, z0 + 0.4 + ap * math.sin(math.pi * e) * 1.0); o.rotation_euler = (g * 0.25 + n_, g * 0.17, g * 0.11); o.scale = (1.3, 1.3, 1.3)
+            o.location = (x0 + (x1 - x0) * e, y0 + (y1 - y0) * e, z0 + 0.4 + ap * math.sin(math.pi * e) * 1.0); o.rotation_euler = (g * 0.25 + n_, g * 0.17, g * 0.11); o.scale = (0.8, 0.8, 0.8)
             o.hide_render = not (0.0 < p < 1.0)
         tp = C.clamp((g - G0) / float(G1 - G0)); chariot_root.location = (-2.0 + 6.0 * tp, -78.0 - 6.0 * tp, 0.0); C.J.prop_chariot_set(chariot_root, 0.8 * tp)
     return drive, actors
