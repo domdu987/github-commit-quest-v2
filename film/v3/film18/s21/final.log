@@ -1,3 +1,5 @@
 00:00.482  cycles           | WARNING CUEW initialization failed: Error opening the library
 s21 posts wood 86 4989 0.0
 s21 posts palisade 212 2756 0.0
+00:25.495  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1590.png'
+s21 g 1590: 22.9 s wall 45.1 cpu heads {'soldier_stand_a': 634, 'soldier_cheer_cup_b': 634, 'soldier_stand_c': 634}
