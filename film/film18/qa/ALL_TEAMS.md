@@ -25,3 +25,9 @@ High-motion shots (s10, s14, s15, s19, s21, s24, the charge) carry the film's p9
 ## Gate calibration (director, 2026-11-20 01:25 UTC)
 - Rule 7 (eye-line) is a NOTE, not a blocker: this puppet style often plays to camera. Only a character who must visibly react to something (the general to the herd, soldiers to the oxen) must look at it.
 - Bare ground: <= 25 % target; 25-30 % is a note; > 30 % blocks.
+
+## Director decisions, round 12 (2026-11-20 10:30 UTC) — list these in the client report
+- s19: flame-to-face relaxed from >= 60 px to "no overlap, >= 15 px gap", checked on rendered pixels (a dense herd cannot hold 60 px and still read).
+- s20: lead ox 25-30 % of frame height (not 35-40 %), side view, whole head in frame, flame ends <= x 700 and >= 120 px (the cast ox is ~1.45x longer than tall, so the old framing could not fit).
+- s21: dark unlit ground before the snap up to 35 % is a NOTE (deep-night opening); blur on the dark opening frames accepted as design; glints optional.
+- s22: glints optional.
