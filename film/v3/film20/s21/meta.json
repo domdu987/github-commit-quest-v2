@@ -1,0 +1,72 @@
+{
+ "set": "v3/set3d20 TOWER preset tower_night_wide, light NIGHT, year 1909 (antenna wires + hut + wagon); no cast in shot",
+ "camera": "custom 22 mm; starts 40 m from the summit lamp (5 m x, 268 m up, a closer framing than the preset tower_night_summit so the empty sky is not alone), creeping; whip pull-out g1428-1440 (12 f, ease peak 2.1, summit -> night wide, lens shift 0 -> 0.345; the whip is already under way when the cut lands on g1431), then c20.CamPath pull 5 %/s + slide 30 px/s + arc 2 deg/s (decay 0.25), snap push x1.22 g1528-1543 on 'เสาอากาศยักษ์' (g1530)",
+ "events": {
+  "summit_hold": [
+   1427,
+   1433
+  ],
+  "whip": [
+   1428,
+   1440
+  ],
+  "word_antenna": 1530,
+  "snap": [
+   1528,
+   1543
+  ],
+  "wire_glow_0_to_1": [
+   1530,
+   1539
+  ],
+  "signal_rings": "6 ring objects driven in shot.py: a ring born every 6 f, 36 f life, radius 30->560 m, small halo hidden"
+ },
+ "light": "NIGHT",
+ "year": 1909,
+ "take": "s21",
+ "film": 20,
+ "shots": [
+  21
+ ],
+ "g0": 1431,
+ "g1": 1560,
+ "first_g": 1427,
+ "n_frames": 137,
+ "shot_ranges": {
+  "21": [
+   1431,
+   1559
+  ]
+ },
+ "handle_in": 4,
+ "handle_out": 4,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "handle_frames": 4,
+  "note": "cut in from shot 20; handle g 1427..1430 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 1560,
+  "handle_frames": 4,
+  "note": "cut to shot 22; handle g 1560..1563 rendered in 3D"
+ },
+ "dof": "none",
+ "text": "none",
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 7.55,
+ "s_per_frame_cpu_mean": 14.44,
+ "framediff_in_shot": {
+  "median": 9.34,
+  "p90": 12.32
+ },
+ "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
+}

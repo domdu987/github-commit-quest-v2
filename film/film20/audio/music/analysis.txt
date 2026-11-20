@@ -1,0 +1,39 @@
+== A: overall -14.3 dB, len 73.2s
+  hook         0.0-  5.9  -14.7 dB
+  pivot        5.9- 13.5  -14.4 dB
+  boss        13.5- 25.1  -13.9 dB
+  nick+count  25.1- 33.2  -14.6 dB
+  false       33.2- 40.7  -20.0 dB
+  crisis      40.7- 43.4  -11.4 dB
+  reveal      43.4- 52.0  -14.0 dB
+  aha         52.0- 57.8  -14.2 dB
+  ending      57.8- 68.2  -13.7 dB
+  RMS at 68.2s(±0.25): -14.0
+  RMS at 72.7s(±0.25): -63.5
+  frames<-45dB inside film: 3.9s
+== B: overall -15.3 dB, len 82.2s
+  hook         0.0-  5.9  -16.5 dB
+  pivot        5.9- 13.5  -15.5 dB
+  boss        13.5- 25.1  -15.4 dB
+  nick+count  25.1- 33.2  -14.9 dB
+  false       33.2- 40.7  -16.5 dB
+  crisis      40.7- 43.4  -14.4 dB
+  reveal      43.4- 52.0  -14.0 dB
+  aha         52.0- 57.8  -13.6 dB
+  ending      57.8- 68.2  -15.0 dB
+  RMS at 68.2s(±0.25): -12.2
+  RMS at 72.7s(±0.25): -15.1
+  frames<-45dB inside film: 0.7s
+== C: overall -16.3 dB, len 73.2s
+  hook         0.0-  5.9  -21.5 dB
+  pivot        5.9- 13.5  -19.7 dB
+  boss        13.5- 25.1  -16.2 dB
+  nick+count  25.1- 33.2  -15.7 dB
+  false       33.2- 40.7  -17.4 dB
+  crisis      40.7- 43.4  -18.5 dB
+  reveal      43.4- 52.0  -15.6 dB
+  aha         52.0- 57.8  -14.0 dB
+  ending      57.8- 68.2  -14.6 dB
+  RMS at 68.2s(±0.25): -14.5
+  RMS at 72.7s(±0.25): -65.1
+  frames<-45dB inside film: 0.9s

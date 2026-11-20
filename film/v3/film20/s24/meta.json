@@ -1,0 +1,83 @@
+{
+ "take": "s24",
+ "film": 20,
+ "shots": [
+  24
+ ],
+ "g0": 1732,
+ "g1": 1814,
+ "first_g": 1724,
+ "n_frames": 94,
+ "shot_ranges": {
+  "24": [
+   1732,
+   1813
+  ]
+ },
+ "handle_in": 8,
+ "handle_out": 4,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 13,
+  "from_shot": 23
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 1814,
+  "to_shot": 25
+ },
+ "set": "v3/set3d20 RESTO preset resto_wide, light DAY, year 1889 (chair-back FG, tables, diners, runner, trusses, chandeliers from the set)",
+ "cast": "v3/cast20 waiter (waiter_idle arms: right arm open-hand lead gesture, towel on the left arm) + maupassant (smug, still mouth), cast20.cycle walks, path along the runner, three-quarter views (yaw 0.55: faces visible, no back cards); stand-in cards of the build hidden",
+ "camera": "custom 22 mm, resto_wide start moved to (-0.7,-2.4,0.8) m, aim (0.2,5.0,1.4); c20.CamPath push 5 %/s + slide 30 px/s, decay 0.3 + SNAP PUSH x1.3 g 1777..1792 on 'หลังหอเปิด' (event 1779)",
+ "events": {
+  "word_hate_open": 1779,
+  "snap_push": [
+   1777,
+   1792
+  ],
+  "walk_speed_m_s": 1.25
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "year": 1889,
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 21.9,
+ "s_per_frame_cpu_mean": 42.81,
+ "heads": {
+  "mau": {
+   "head_px": [
+    78,
+    112
+   ],
+   "head_centre_y": [
+    604,
+    676
+   ],
+   "head_bottom_max_y": 722
+  },
+  "wai": {
+   "head_px": [
+    65,
+    87
+   ],
+   "head_centre_y": [
+    617,
+    675
+   ],
+   "head_bottom_max_y": 714
+  }
+ },
+ "framediff_in_shot": {
+  "median": 3.57,
+  "p90": 9.91
+ },
+ "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
+}

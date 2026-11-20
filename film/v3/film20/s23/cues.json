@@ -1,0 +1,59 @@
+{
+ "take": "s23",
+ "fps": 30,
+ "note": "t = film seconds (g / 30); narration film20/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "kind": "ambience",
+   "t": 55.2,
+   "dur": 2.533,
+   "frame": 1656,
+   "end_frame": 1732,
+   "note": "Champ de Mars, sunny morning 1910: fair-like crowd murmur, distant brass band, a faint biplane engine passing overhead, flags in the breeze"
+  },
+  {
+   "kind": "foley",
+   "t": 55.467,
+   "dur": 0.467,
+   "frame": 1664,
+   "end_frame": 1678,
+   "note": "the official hands over the NEW sealed document: paper rustle and a ceremonial flourish",
+   "peak_frame": 1670
+  },
+  {
+   "kind": "foley",
+   "t": 55.867,
+   "dur": 0.133,
+   "frame": 1676,
+   "end_frame": 1680,
+   "note": "Eiffel takes the document: crisp paper grab",
+   "peak_frame": 1677
+  },
+  {
+   "kind": "accent",
+   "t": 56.767,
+   "dur": 0.467,
+   "frame": 1703,
+   "end_frame": 1717,
+   "note": "snap push on 'อีก 70 ปี': short airy whoosh rising",
+   "peak_frame": 1709
+  },
+  {
+   "kind": "accent",
+   "t": 56.833,
+   "dur": 0.233,
+   "frame": 1705,
+   "end_frame": 1712,
+   "note": "Eiffel sweeps his bowler off with a flourish: cloth swish + a bright triumphant brass sting (relief)",
+   "peak_frame": 1706
+  },
+  {
+   "kind": "cut",
+   "t": 57.733,
+   "dur": 0.267,
+   "frame": 1732,
+   "end_frame": 1740,
+   "note": "dissolve into shot 24 (RESTO): ambience crossfades to the restaurant room tone"
+  }
+ ]
+}

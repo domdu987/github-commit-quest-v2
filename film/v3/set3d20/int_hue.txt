@@ -1,0 +1,44 @@
+int_hue.txt : CAFE + RESTO presets of int20.py at FINAL 720x1280 with cast20 placeholder actors at the marks. Numbers measured by int20.measure() (tests in int_work/).
+shade hue = circular mean hue of REAL cast-shadow pixels (sun-only render, white override, no bounces; target 240-260, cloth / wall / carpet 230-260; warm parquet / crimson shade is allowed and pulls the all-pixel mean:
+"shade all" includes it, "shade cream/cloth/wall/carpet" leaves out saturated warm (hue < 45 or > 340, sat > 0.35) pixels). hue shares = % of chroma pixels (sat > 0.2). luma = top 1/8 | middle band 3/8-5/8 | bottom 1/8 (0-255).
+floor = % of the 720x1280 frame that is floor (object-colour pass, actors included as occluders). QA gate for RESTO: floor <= 25, blue >= 12, magenta <= 10, red 30-45.
+
+cafe_wide          floor 27.4% | shade all 318.1 (median 35.3, 36.4% of shade px in 225-265) | shade cream/cloth/wall/carpet 259.5 | shade px 31.5% of frame
+                   hue shares: red 13.3 orange 64.1 yellow 0.9 green 0.6 blue 17.8 violet 0.2 magenta 3.0 | magenta of frame 1.7% | mean sat 0.46 val 0.50
+                   luma 85 | 102 | 98 | V>0.95 4.3% | dark V<0.25 7.7% | render 39.7 s wall / 41.4 s cpu (2 threads, 8 spp + OIDN, machine shared with the exterior builder)
+                   heads (role, head y, chin y; caption rule chin < 880): painter20 611/653; composer20 613/647; poet20 608/645; architect20 583/632; maupassant 631/654; waiter 592/635
+
+cafe_table_insert  floor  2.4% | shade all 17.5 (median 24.0, 9.1% of shade px in 225-265) | shade cream/cloth/wall/carpet 17.5 | shade px 43.9% of frame
+                   hue shares: red 36.1 orange 42.6 yellow 3.3 green 0.7 blue 12.5 violet 3.2 magenta 1.6 | magenta of frame 0.3% | mean sat 0.38 val 0.46
+                   luma 62 | 129 | 131 | V>0.95 0.1% | dark V<0.25 18.6% | render 35.8 s wall / 44.6 s cpu (2 threads, 8 spp + OIDN, machine shared with the exterior builder)
+
+cafe_window        floor 23.5% | shade all 244.3 (median 223.1, 42.7% of shade px in 225-265) | shade cream/cloth/wall/carpet 239.7 | shade px 19.3% of frame
+                   hue shares: red 17.2 orange 53.7 yellow 1.4 green 0.8 blue 22.5 violet 0.5 magenta 4.0 | magenta of frame 2.6% | mean sat 0.44 val 0.57
+                   luma 106 | 101 | 121 | V>0.95 10.8% | dark V<0.25 4.7% | render 22.1 s wall / 43.8 s cpu (2 threads, 8 spp + OIDN, machine shared with the exterior builder)
+                   heads (role, head y, chin y; caption rule chin < 880): painter20 718/783; composer20 702/752; poet20 706/773; architect20 694/792
+
+cafe_low           floor 10.9% | shade all 230.1 (median 227.3, 82.4% of shade px in 225-265) | shade cream/cloth/wall/carpet 228.7 | shade px 11.0% of frame
+                   hue shares: red 40.5 orange 21.8 yellow 1.8 green 0.1 blue 31.4 violet 0.3 magenta 4.1 | magenta of frame 1.9% | mean sat 0.55 val 0.52
+                   luma 154 | 113 | 95 | V>0.95 6.9% | dark V<0.25 17.5% | render 18.0 s wall / 35.1 s cpu (2 threads, 8 spp + OIDN, machine shared with the exterior builder)
+                   heads (role, head y, chin y; caption rule chin < 880): maupassant 659/739
+
+cafe_low_close     floor  0.3% | shade all 1.3 (median 0.0, 7.3% of shade px in 225-265) | shade cream/cloth/wall/carpet 224.8 | shade px 1.1% of frame
+                   hue shares: red 37.7 orange 20.1 yellow 0.6 green 0.0 blue 35.8 violet 0.2 magenta 5.4 | magenta of frame 3.4% | mean sat 0.60 val 0.52
+                   luma 41 | 113 | 38 | V>0.95 9.5% | dark V<0.25 22.2% | render 14.2 s wall / 27.6 s cpu (2 threads, 8 spp + OIDN, machine shared with the exterior builder)
+                   heads (role, head y, chin y; caption rule chin < 880): maupassant 626/742
+
+resto_wide         floor 24.2% | shade all 235.7 (median 220.2, 4.9% of shade px in 225-265) | shade cream/cloth/wall/carpet 227.7 | shade px 26.9% of frame | GATE floor<=25 OK, blue>=12 OK, magenta<=10 OK, red 30-45 OK
+                   hue shares: red 31.6 orange 38.9 yellow 0.6 green 0.2 blue 26.0 violet 0.6 magenta 2.1 | magenta of frame 1.0% | mean sat 0.56 val 0.40
+                   luma 92 | 94 | 30 | V>0.95 3.8% | dark V<0.25 16.1% | render 44.1 s wall / 43.1 s cpu (2 threads, 8 spp + OIDN, machine shared with the exterior builder)
+                   heads (role, head y, chin y; caption rule chin < 880): maupassant 702/736; waiter 678/715
+
+resto_table        floor  7.6% | shade all 229.3 (median 221.6, 9.8% of shade px in 225-265) | shade cream/cloth/wall/carpet 222.3 | shade px 9.8% of frame | GATE floor<=25 OK, blue>=12 OK, magenta<=10 OK, red 30-45 OK
+                   hue shares: red 32.9 orange 16.7 yellow 0.4 green 0.2 blue 44.3 violet 0.8 magenta 4.5 | magenta of frame 1.7% | mean sat 0.43 val 0.61
+                   luma 81 | 142 | 61 | V>0.95 11.2% | dark V<0.25 3.0% | render 31.2 s wall / 33.3 s cpu (2 threads, 8 spp + OIDN, machine shared with the exterior builder)
+                   heads (role, head y, chin y; caption rule chin < 880): maupassant 676/740
+
+resto_view         floor  4.9% | shade all 220.9 (median 223.1, 31.4% of shade px in 225-265) | shade cream/cloth/wall/carpet 220.8 | shade px 8.9% of frame
+                   hue shares: red 22.2 orange 10.2 yellow 0.3 green 10.3 blue 51.7 violet 0.3 magenta 4.8 | magenta of frame 1.9% | mean sat 0.39 val 0.64
+                   luma 106 | 101 | 170 | V>0.95 13.0% | dark V<0.25 5.1% | render 10.9 s wall / 21.2 s cpu (2 threads, 8 spp + OIDN, machine shared with the exterior builder)
+                   heads (role, head y, chin y; caption rule chin < 880): maupassant 634/755
+
