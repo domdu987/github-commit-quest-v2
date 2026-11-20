@@ -24,3 +24,9 @@ After TAKE_ART (F1-F3), TAKE_B and QA_TEAM §G. Checked at 6 fps contact + phone
 - F3 tower: the camera is wider (5.4 D, was 4.3) and the orbit is only 8 deg/s (was 24), so the tower legs, the first platform and the EXPOSITION banner stay behind Eiffel through the snap (g 1064-1080).
 - Head width 145-370 px (centre y 545-635, chin <= 764): Eiffel never exceeds 29 % of the frame height.
 - `qa_stats2.py take.mkv`: sat 0.585, vivid 49.1 %, luma 86.7, warm 42.8 % / cool 25.7 %, motion med 5.72 **p90 12.06**, still 0 %. In-shot g 997..1092: median 4.95, p90 10.87. take.mkv 38.1 MB.
+
+## v7 (TAKE2_A adds)
+- Banner raised (z 11.2) so the official's hat no longer hides it: "EXPOSITION UNIVERSELLE 1889" reads on every frame through g ~1075 (then the snap carries it out).
+- Acting g 1020-1060: stronger idle sway (lean 5, head-roll 4, breathing), the official gestures with his free arm (small wave toward the tower g 1032-1066), Eiffel bows over the permit to read it (head pitch to 0.22 g 1030-1065), crowd and pennants moving.
+- Last push eased (snap x1.5, peak 1.7, 20 frames g 1064-1083) against the soft-frame note; luma 86.9 (>= 85).
+- `qa_stats2.py take.mkv`: sat 0.585, vivid 49.4 %, luma 86.9, warm 43.2 % / cool 25.7 %, motion med 7.10 **p90 11.40** (the eased snap costs ~0.7 p90), still 0 %. In-shot g 997..1092: median 6.08, p90 10.34. Head width 145-348 px (chin <= 769). take.mkv 39.2 MB.
