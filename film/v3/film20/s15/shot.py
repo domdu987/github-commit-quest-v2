@@ -28,6 +28,7 @@ G_PERMIT = C.cap_g("แต่ใบอนุญาต")                # ~1000
 G_TWENTY = C.cap_g("ได้แค่ 20 ปี")               # ~1041
 G_DROP = C.cap_g("ครบแล้วต้องรื้อ")              # 1067: smile drops + snap
 SNAP = (G_DROP - 3, G_DROP + 13)
+PUSH1 = (1003, 1011)                             # director: push-in x1.15 over 8 frames on 'ใบอนุญาต'
 HAND = (G0 + 12, G0 + 34)                       # document handed over (official arm out, Eiffel reaches)
 G_SWAP_DOC = G0 + 24                            # doc prop moves official -> Eiffel (hands meet)
 BLINKS = [G0 + 10, G_DROP - 1]
@@ -36,24 +37,26 @@ YEAR = 1889
 PPD = 256
 
 # staging (world D): Eiffel at the preset mark, the official a step behind and to the right
-CAM_BACK = 6.6                                  # D from the camera to Eiffel at the start
-CAM_Z = 1.7
-TILT0 = -8.5
-FG_SHIFT = (2.7, -0.3, 0.0)
+CAM_BACK = 4.3                                  # D from the camera to Eiffel at the start
+CAM_Z = 1.6
+TILT0 = -6.0
+FG_SHIFT = (40.0, 0.0, 0.0)
+FG_AHEAD, FG_SIDE, FG_Z = 3.0, -1.2, -1.6        # foreground head: ahead, left, feet z (underground: only head + hat show)
 EIF_Z = 2.55                                    # head centre above the feet
 
 
 def marks(A):
     e = Vector(A["marks"]["eiffel_fair"])
-    return dict(eiffel=e, official=e + Vector((2.7, 1.3, 0.0)))
+    return dict(eiffel=e, official=e + Vector((1.55, -0.7, 0.0)))
 
 
 def cam_path(A):
     m = marks(A)
-    subj = m["eiffel"] + Vector((0.9, 0.0, EIF_Z))
-    c = Vector((subj.x - 1.2, subj.y - CAM_BACK, CAM_Z))
-    return C.CamPath(c, subj, GF, G_LAST, push=0.10, slide_px=-40.0, rise_px=0.0, arc_deg_s=8.0, tilt0=TILT0, tilt_deg_s=2.5,
-                     decay=0.25, snaps=[dict(g=SNAP, k=2.3, peak=1.9, shift=(0.0, 0.0), tilt=-4.0)])
+    subj = m["eiffel"] + Vector((0.8, 0.0, EIF_Z))
+    c = Vector((subj.x - 0.3, subj.y - CAM_BACK, CAM_Z))
+    return C.CamPath(c, subj, GF, G_LAST, push=0.06, slide_px=-45.0, rise_px=0.0, arc_deg_s=11.0, tilt0=TILT0, tilt_deg_s=1.5,
+                     decay=0.25, snaps=[dict(g=PUSH1, k=1.2, peak=1.8, shift=(0.0, 0.0), tilt=0.0),
+                           dict(g=SNAP, k=1.85, peak=2.0, shift=(0.0, 0.0), tilt=-3.0)])
 
 
 def move_fg(A, cam_loc):
@@ -135,13 +138,23 @@ class Take(C.Take):
         self.M = {k: C.on_ground(v) for k, v in marks(self.A).items()}
         self.eif = self.actors["eif"] = C.make_actor("eif", "eiffel", os.path.join(WORK, "sprites"),
                                                      contact=dict(width=1.3, depth=0.55, opacity=0.8), cam=self.cam)
+        self.fgh = C.make_actor("fgh", "gent20", os.path.join(WORK, "sprites"), contact=False, shadow=None, cam=self.cam)
         self.off = self.actors["off"] = C.make_actor("off", "official", os.path.join(WORK, "sprites"),
                                                      contact=dict(width=1.3, depth=0.55, opacity=0.8), cam=self.cam)
+
+    def fg_pos(self, g):
+        """foreground crowd head (back of a gent in a top hat): 2.5 D ahead of the lens, bottom-left corner, feet underground"""
+        loc, look = self.path.at(g)
+        fw = Vector((look.x - loc.x, look.y - loc.y, 0.0)).normalized()
+        rt = Vector((fw.y, -fw.x, 0.0))
+        p = loc + fw * FG_AHEAD + rt * FG_SIDE
+        return (p.x, p.y, FG_Z)
 
     def pose(self, gs):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *self.path.at(g))
+            C.place(self.fgh, f, self.fg_pos(g))
             C.place(self.eif, f, self.M["eiffel"])
             C.place(self.off, f, self.M["official"])
             self.key_set(f, set_year=YEAR, set_crowd=3)
@@ -151,7 +164,8 @@ class Take(C.Take):
             self.scene.frame_set(f)
             self.eif.pose(f, eiffel_pose(g), camera=self.cam)
             self.off.pose(f, official_pose(g), camera=self.cam)
-        self.sprites_for([(self.eif, PPD), (self.off, PPD)], [bf(g) for g in gs])
+            self.fgh.pose(f, dict(back=1, yaw=0.35, expr="neutral", arm_l="down", arm_r="down", lean=1.5 * math.sin(g * 0.2), t=g / 30.0), camera=self.cam)
+        self.sprites_for([(self.fgh, PPD), (self.eif, PPD), (self.off, PPD)], [bf(g) for g in gs])
 
     def bob_crowd(self, gs):
         """the fair crowd cards are static placeholders: give each a small idle bob + sway (nobody frozen), keyed every frame."""
