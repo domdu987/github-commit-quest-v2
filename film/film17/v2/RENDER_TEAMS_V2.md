@@ -22,3 +22,5 @@ Split parts (a/b) of one take join frame-exact at the split; the TAKE gate revie
 | T3b | T3 | 751-856 | render17v2/T3b | session_017iwyCvmZCB3uVB3g3GfQZ7 |
 | T6a (now) | T6 | 1371-1452 | render17v2/T6a | session_017iwyCvBhESGf4k1m8UeVeY |
 | T6a2 | T6 | 1453-1535 | render17v2/T6a2 | session_017iwyCtXKdAGttP3T7HTZ21 |
+| T5b (now) | T5 | 1211-1296 | render17v2/T5b | session_017iwyCxAjF4Zveisn3cNYtA |
+| T5b2 | T5 | 1297-1383 | render17v2/T5b2 | session_017iwyCvxitwkPTAWCQ3LEmV |
