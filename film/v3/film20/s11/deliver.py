@@ -24,11 +24,11 @@ def speed_lines(img, g, g0, n=6):
     ov = Image.new("RGBA", img.size, (0, 0, 0, 0))
     d = ImageDraw.Draw(ov)
     rnd = random.Random(100 + k)
-    for i in range(46):
+    for i in range(40):
         a = rnd.uniform(0, 2 * math.pi)
-        r0 = rnd.uniform(230, 330) * (1.0 + 0.15 * k)
-        r1 = r0 + rnd.uniform(240, 520)
-        w = rnd.uniform(0.012, 0.03)
+        r0 = rnd.uniform(300, 420) * (1.0 + 0.1 * k)
+        r1 = r0 + rnd.uniform(200, 460)
+        w = rnd.uniform(0.005, 0.012)
         col = (255, 248, 228, 215) if i % 3 else (40, 24, 30, 190)
         p = [(cx + math.cos(a - w) * r0, cy + math.sin(a - w) * r0), (cx + math.cos(a) * r1, cy + math.sin(a) * r1),
              (cx + math.cos(a + w) * r0, cy + math.sin(a + w) * r0)]

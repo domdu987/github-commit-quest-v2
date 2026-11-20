@@ -22,16 +22,16 @@ G_STEEL = C.cap_g("เหล็ก 18,000")                   # the strongest wo
 LIGHT, PRESET = "DAY", "site_girders"
 PPD = 256
 
-CAM0 = (-71.6, -39.6, 1.0)                         # metres: south of the stack (stack face y ~ -31.8), 1 m high
-SUBJ = (-72.0, -31.8, 1.45)                         # a point on the pile face the camera pushes toward
+CAM0 = (-73.0, -39.8, 1.0)                         # metres: south of the stack (stack face y ~ -31.8), 1 m high
+SUBJ = (-73.0, -31.8, 1.45)                         # a point on the pile face the camera pushes toward
 WALK_Y = -34.2                                     # the carriers walk along the stack, 2 m from the pile face, 3 m from the lens
-CARRY_X0, CARRY_X1 = -70.0, -67.9                  # metres, walking +x (screen-right) ... over the whole range
+CARRY_X0, CARRY_X1 = -71.4, -67.2                  # metres, walking +x (screen-right) ... over the whole range
 
 
 def cam_path():
-    return C.CamPath(CO.W(CAM0), CO.W(SUBJ), G_FIRST, G_LAST, push=0.03, slide_px=100.0, rise_px=-12.0, arc_deg_s=0.0,
+    return C.CamPath(CO.W(CAM0), CO.W(SUBJ), G_FIRST, G_LAST, push=0.02, slide_px=160.0, rise_px=-12.0, arc_deg_s=6.0,
                      tilt0=-3.0, tilt_deg_s=0.0, decay=0.2,
-                     snaps=[dict(g=(G_STEEL - 2, G_STEEL + 14), k=1.18, peak=1.7, shift=(0.0, 0.0), tilt=1.5)])
+                     snaps=[dict(g=(G_STEEL - 2, G_STEEL + 14), k=1.3, peak=2.0, shift=(0.0, 0.0), tilt=3.0)])
 
 
 def walk_x(g):
@@ -69,7 +69,9 @@ class Take(C.Take):
     def pose(self, gs):
         for g in gs:
             f = bf(g)
-            self.key_cam(f, *self.path.at(g))
+            loc_, look_ = self.path.at(g)
+            jv = Vector((0.08 * math.sin(g * 1.9), 0.08 * math.cos(g * 1.3), 0.05 * math.sin(g * 2.3 + 1.0)))   # hand-held energy
+            self.key_cam(f, loc_ + jv, look_ + jv * 0.4)
             xa = walk_x(g)
             for who, dx in (("a", 0.0), ("b", -2.6)):
                 m = CO.W((xa + dx, WALK_Y, 0.0))

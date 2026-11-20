@@ -27,11 +27,13 @@ G_SPEED = (G_PUNCH, G_PUNCH + 5)                   # 6 frames of speed lines (po
 G_SHAKE = (G_PUNCH, G_PUNCH + 1)
 LIGHT, PRESET = "DAY", "site_fence"
 PPD = 256
+BARREL_BOX = (-15.5, -8.8, -107.5, -102.0, 2.0)       # the scatter barrels near the camera path (metres)
+RIV_ANGLE = float(os.environ.get('RIVA', '90'))                                    # giant rivet held vertically, dome up (to be checked on stills)
 
 # ---- staging (metres, site20 marks); cards at ground z 0
 M_ = CO.W
-LADY, GENT, CHILD = (-12.4, -101.1), (-11.0, -101.3), (-9.8, -101.2)      # outside the fence, y -103
-EIF = (-7.4, -100.4)                                                      # inside, 7 m behind them
+LADY, GENT, CHILD = (-12.2, -101.1), (-10.9, -101.3), (-9.8, -101.2)      # outside the fence, y -103
+EIF = (-7.9, -100.2)                                                      # inside, 7 m behind them
 
 
 def mk(xy, A):
@@ -39,20 +41,20 @@ def mk(xy, A):
 
 
 # camera A: eye level, outside the fence at the left, pulling back; B: tight on Eiffel
-CAM_A0 = (-16.2, -106.0, 1.0)          # metres, start
-SUBJ_A = (-9.8, -100.4, 1.45)           # between the group and Eiffel
-CAM_B0 = (-8.6, -103.6, 0.95)
-SUBJ_B = (-7.4, -100.4, 1.6)
+CAM_A0 = (-14.6, -105.6, 1.0)          # metres, start
+SUBJ_A = (-10.1, -100.6, 1.45)           # between the group and Eiffel
+CAM_B0 = (-9.0, -103.4, 0.95)
+SUBJ_B = (-7.9, -100.2, 1.6)
 
 
 def cam_a():
-    return C.CamPath(CO.W(CAM_A0), CO.W(SUBJ_A), G_FIRST, G_PUNCH - 1, push=-0.10, slide_px=100.0, rise_px=45.0, arc_deg_s=-2.0,
-                     tilt0=0.0, tilt_deg_s=0.0, decay=0.25,
+    return C.CamPath(CO.W(CAM_A0), CO.W(SUBJ_A), G_FIRST, G_PUNCH - 1, push=-0.10, slide_px=-70.0, rise_px=-35.0, arc_deg_s=-2.0,
+                     tilt0=6.5, tilt_deg_s=0.0, decay=0.25,
                      snaps=[dict(g=(G_CALL - 2, G_CALL + 14), k=1.4, peak=1.7, shift=(0.0, 0.0), tilt=1.5)])
 
 
 def cam_b():
-    return C.CamPath(CO.W(CAM_B0), CO.W(SUBJ_B), G_PUNCH, G_LAST, push=0.12, slide_px=110.0, rise_px=-30.0, arc_deg_s=6.0, tilt0=0.0,
+    return C.CamPath(CO.W(CAM_B0), CO.W(SUBJ_B), G_PUNCH, G_LAST, push=0.16, slide_px=110.0, rise_px=-30.0, arc_deg_s=6.0, tilt0=0.0,
                      tilt_deg_s=0.0, decay=0.3)
 
 
@@ -66,7 +68,7 @@ def cam_at(g, pa, pb):
     return loc + j, look + j * 0.4
 
 
-def bounce(g, ph=0.0, amp=0.08, hz=3.0):
+def bounce(g, ph=0.0, amp=0.10, hz=3.0):
     return amp * 0.5 * (1.0 + math.sin(2 * math.pi * hz * g / 30.0 + ph))
 
 
@@ -80,10 +82,10 @@ def pose_of(who, g):
         p = base("eiffel_giant_rivet")
         p["expr"] = "proud" if g < G_PUNCH else "determined"
         up = 0.5 + 0.5 * math.sin(t * 3.0)
-        p["arm_r"] = dict(hand=(0.9, -0.15 + 0.12 * up), bend=-0.3, stretch=1.3)       # the rivet bobs up and down in his fist
-        p["prop_r"] = dict(p["prop_r"]); p["prop_r"]["angle"] = -5 + 9 * math.sin(t * 3.0)
+        p["arm_r"] = dict(hand=(1.0, -0.35 + 0.22 * up), bend=-0.1, stretch=1.4)       # the rivet bobs up and down in his fist
+        p["prop_r"] = dict(p["prop_r"]); p["prop_r"]["angle"] = RIV_ANGLE + 7 * math.sin(t * 3.0); p["prop_r"]["scale"] = 1.8
         p["yaw"] = -0.45 + 0.04 * math.sin(t * 1.7)                                         # faces screen-left, to the Parisians
-        p["lean"] = 1.5 * math.sin(t * 2.2)
+        p["lean"] = 4.0 * math.sin(t * 2.6)
         p["blink"] = blink(g, [757, 790, 812])
     else:
         p = base({"lady": "lady_parasol", "gent": "gent_cane", "child": "child_point"}[who])
@@ -111,6 +113,7 @@ class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s11")
         self.pa, self.pb = cam_a(), cam_b()
+        self.clear_box(BARREL_BOX)
         self.add_fg()
         self.add_girders()
         self.key_cam(C.bf(G_FIRST), *cam_at(G_FIRST, self.pa, self.pb))
@@ -121,6 +124,16 @@ class Take(C.Take):
         for who, cast in (("lady", "lady20"), ("gent", "gent20"), ("child", "child20"), ("eiffel", "eiffel")):
             self.actors[who] = C.make_actor(who, cast, os.path.join(WORK, "sprites"), cam=self.cam,
                                             contact=dict(width=1.2, depth=0.5, opacity=0.8))
+
+    def clear_box(self, box=None):
+        """hide the preset's NEAR prop band (pn_*: the scatter barrels / sacks around the preset camera): they are merged meshes and would
+        stand in front of my cast.  The mid / far props (pm_, pf_) stay."""
+        n = 0
+        for ob in C.bpy.data.objects:
+            if ob.name.startswith("pn_"):
+                ob.hide_render = True
+                n += 1
+        print("clear_box: %d pn_ objects hidden" % n, flush=True)
 
     def add_fg(self):
         """the preset FG (one mesh: post + high rail) belongs to the preset camera: hide it, build a timber post at the lens's left edge
