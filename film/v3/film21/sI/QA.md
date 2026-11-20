@@ -1,21 +1,22 @@
-# QA — film21 segment I (the AHA, bridge jam)
+# QA — film21 segment I (the AHA, bridge jam) — redo after the TAKE gate
 
-take.mkv: g 1519-1639 (121 frames @30 fps, 4.03 s), 720x1280, 32 samples, ~55 s/frame. Cut in, no handles.
-World: build_world(['bridge_deck','bridge_high']) flown with cam_path (deck ride -> crane up -> snap pull-out at local f89 = "เหมือนกัน").
+take.mkv: g 1519-1639 (121 frames @30 fps), 720x1280, 32 samples, ~60 s/frame. Cut in, no handles.
+
+## Gate fixes
+1. English all crimson and gold: second rider recoloured (crimson surcoat, red great helm, gold caparison; bare-headed variant after the pop), column mats red/gold only. Done with a manual recolour in c21.py (not the new cast21 defaults from film21/main 528bf9d, which I had not pulled when these finals were rendered).
+2. Final crane ends directly over the bridge, looking down its length, the jammed column two by two filling the frame vertically; no tents. VIVID eased to (1.4, 1.1, 0.9) at the top (set default for the ride).
+3. Nose-to-tail beat: ride camera raised ~1 m so legs and heads show; the two horses end up nose into rump.
+4. Popped helmet: bright bascinet with crimson plume, slow spin (reads as a helmet).
+5. Mouths: shocked open mouths held still, nobody speaks.
+Kept: ride-along, helmet pop (f62), snap pull-out on "เหมือนกัน" (local f89).
 
 ## Automated
-- qa_auto.py: PASS (QA_AUTO.md, phone_sheet.jpg)
-- rhythm.py: 0 cuts, in-shot frame-diff median 8.93, p90 31.86 (needs >=4 / >=12) OK
-- qa_stats.py: saturation 0.637, brightness 104.3 OK
-- qa_stats2.py: vivid 69.6 %, still 0.0 % OK
-
-## Action (viewed on phone sheet / contact.jpg)
-- Column tries to turn back (horses yaw, hop), two riders wedge nose to tail, one helmet pops off (bloodless, comic; bare-headed knight shown after f62).
-- Crane shows two-by-two column along the whole bridge, nobody moving; snap pull-out on "เหมือนกัน".
-- Rim light on all cards; English crimson/gold. Mouths closed; no text beyond set signs; no DOF/haze.
+- qa_auto.py: PASS; rhythm.py: 0 cuts, median 8.93, p90 23.32 OK
+- qa_stats.py: sat 0.673, brightness 77.0 (below the 85-110 band; per director policy luma/yellow cast is normalised at the conform, no re-render)
+- qa_stats2.py: vivid 77.6 %
 
 ## Known weaknesses
-- Far terrain in the crane shots is very yellow/saturated (within QA limits).
-- Hero horses read small side-on in the crane view (billboard cards).
-- ~30 % of frame in the ride shots is dark water.
-- path_draft.mp4 = 10 fps 360x640 draft of the final camera path.
+- Mean luma 77 (dark water in the ride); terrain in the crane is still bright yellow.
+- Bridge is narrow in the crane (~20 % of width) because the deck is 2.6 m wide.
+- ~30 % of the ride frame is dark water.
+- path_draft.mp4 = 25 frames, 10 fps, final camera path.
