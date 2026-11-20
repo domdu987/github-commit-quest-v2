@@ -47,10 +47,11 @@ WP = [
     (534, (-0.1, 5.3, 2.3), (0.3, 8.0, 2.1)),         # rise off the sheet, the aim swings up and toward the window
     (554, (0.6, 4.6, 2.55), (1.2, 11.5, 2.9)),
     (572, (1.1, 4.6, 2.65), (1.6, 13.0, 3.3)),        # stub + black smoke
-    (603, (1.7, 6.1, 2.35), (1.7, 14.0, 2.15)),        # END: turned toward the banquette (T09 match)
-    (607, (1.72, 6.4, 2.33), (1.7, 14.0, 2.15)),       # out-handle
+    (590, (2.5, 5.7, 1.75), (1.7, 13.2, 3.1)),        # sweep down + right toward the banquette
+    (604, (3.62, 6.43, 0.95), (1.69, 13.16, 2.95)),   # = T09 start pose (team7, cafe_low): the first out-handle frame
+    (607, (3.66, 6.47, 0.93), (1.69, 13.16, 2.95)),   # out-handle, continues slowly
 ]
-END_CAM = dict(g=603, loc=WP[-2][1], look=WP[-2][2], lens=22.0, shift=(0.0, 0.0), note="turned toward the banquette (Maupassant mark (1.69, 13.16), seat (1.69, 14.0)); camera moving +y ~0.07 D/frame; D units")
+END_CAM = dict(g=604, loc=WP[-2][1], look=WP[-2][2], lens=22.0, shift=(0.0, 0.0), note="turned toward the banquette (Maupassant mark (1.69, 13.16), seat (1.69, 14.0)); camera moving +y ~0.07 D/frame; D units")
 
 
 def _tang(i):
@@ -96,7 +97,7 @@ def corner_speed(g):
 
 # ----------------------------------------------------------------------------- cast
 ART = [("art1", "painter20"), ("art2", "composer20"), ("art3", "poet20"), ("art4", "architect20")]
-SPOT = {"art1": (-2.3, 6.9), "art2": (-0.9, 8.3), "art3": (3.5, 9.3), "art4": (-2.0, 5.5), "wtr": (3.3, 6.6)}
+SPOT = {"art1": (-2.3, 6.9), "art2": (-1.5, 8.7), "art3": (0.3, 8.0), "art4": (-2.0, 5.5), "wtr": (4.8, 8.5)}
 YAW = {"art1": 0.35, "art2": 0.1, "art3": -0.35, "art4": 0.3}
 PROP = {"art1": dict(type="news20", angle=-25), "art2": None, "art3": dict(type="news20", angle=20), "art4": dict(type="news20", angle=-35)}
 PHASE = {"art1": 0.0, "art2": 1.7, "art3": 3.1, "art4": 4.4}
@@ -158,6 +159,7 @@ class Take(C.Take):
         self.build_heading(M)
         for k, cast in ART:
             self.actors[k] = C.make_actor(k, cast, os.path.join(WORK, "sprites"), cam=self.cam, contact=dict(width=1.2, depth=0.5, opacity=0.7))
+        self.actors["mau"] = C.make_actor("mau", "maupassant", os.path.join(WORK, "sprites"), cam=self.cam, contact=dict(width=1.2, depth=0.5, opacity=0.7))
         self.actors["wtr"] = C.make_actor("wtr", "waiter", os.path.join(WORK, "sprites"), cam=self.cam, contact=dict(width=1.2, depth=0.5, opacity=0.7))
 
     # ---- runtime props (metres under the scaled root)
@@ -256,6 +258,7 @@ class Take(C.Take):
             self.key_cam(f, *cam_at(g))
             for k, cast in ART:
                 self.actors[k].place(f, (SPOT[k][0], SPOT[k][1], M["artist_1"][2]), scale=1.0, flip=YAW[k] < 0)
+            self.actors["mau"].place(f, (M["maupassant"][0], M["maupassant_seat"][1], M["maupassant"][2]), scale=1.0)
             self.actors["wtr"].place(f, (SPOT["wtr"][0], SPOT["wtr"][1], M["waiter"][2]), scale=1.0, flip=True)
             n = N0 + (1 if g >= LAND1 else 0) + (1 if g >= LAND2 else 0)
             self.key_set(f, set_window_view=("stub",), smoke=(self.smoke_v(g),), add_signature=(n,))
@@ -274,6 +277,11 @@ class Take(C.Take):
             self.scene.frame_set(f)
             for k, cast in ART:
                 self.actors[k].pose(f, pose_of(k, cast, g), camera=self.cam)
+            mp = dict(cast20.STORY20["maupassant_seated_toast_smug"][1])      # he sits on the banquette the whole take (rises in T09); mouth held ('smile')
+            mp["seat_h"] = float(M["maupassant_seat"][2]); mp["t"] = g / 30.0
+            mp["lean"] = 1.2 * math.sin(g * 0.11); mp["squash"] = (1.0, 1.0 + 0.01 * math.sin(g * 0.25))
+            mp["arm_r"] = dict(mp["arm_r"], hand=(0.74, 0.34 + 0.12 * (0.5 + 0.5 * math.sin(g * 0.09))))      # sips: the glass rises and falls
+            self.actors["mau"].pose(f, mp, camera=self.cam)
             w = dict(cast20.STORY20["waiter_idle"][1]); w["t"] = g / 30.0; w["lean"] = 2.5 * math.sin(g * 0.13); w["head_roll"] = 3 * math.sin(g * 0.09)
             self.actors["wtr"].pose(f, w, camera=self.cam)
         self.sprites_for([(a, PPD) for a in self.actors.values()], [bf(g) for g in gs])

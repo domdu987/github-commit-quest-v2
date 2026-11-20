@@ -10,25 +10,24 @@
  "g1": 604,
  "first_g": 396,
  "n_frames": 212,
- "status": "END CAM ONLY (take in progress)",
+ "status": "rendering",
  "end_cam": {
-  "g": 603,
+  "g": 604,
   "loc_D": [
-   1.7,
-   6.1,
-   2.35
+   3.62,
+   6.43,
+   0.95
   ],
   "look_at_D": [
-   1.7,
-   14.0,
-   2.15
+   1.69,
+   13.16,
+   2.95
   ],
   "lens_mm": 22.0,
   "shift": [
    0.0,
    0.0
   ],
-  "set": "CAFE cafe_wide scene, DAY, window view stub, smoke 1.0",
-  "note": "end of T06: camera turned toward the banquette where Maupassant sits (marks maupassant (1.692,13.16,0), maupassant_seat (1.692,14.006,0.865)); world D (1 D = 0.532 m); camera still moving ~+0.07 D/frame in +y (4 out-handle frames g 604..607 continue to loc (1.72,6.4,2.33)); T09 starts at g 604 on this framing"
+  "note": "= team7 T09 start pose (cafe_low, 'stub' view) as given by the director; T06 eases into it by g603 and holds/continues slightly for the 4 out-handle frames g604..607; Maupassant sits at the banquette seat mark for the whole take (cards)"
  }
 }
