@@ -65,7 +65,7 @@ def run_B(q, f0, f1, stride):
     BAR_Y = B2.BAR_Y; J = STATE['J']; WIDE = cast15.CANVAS15_WIDE
     # ------------------------------------------------------------------ camera: crane up over the stadium, tilt into the sky
     KEYS = [  # (t, loc m, look m, lens)
-        (59.80, (1.8, 3.0, 5.0), (1.5, 12.8, 3.0), 19.0),
+        (59.80, (2.6, 3.0, 5.0), (2.2, 12.8, 3.0), 19.0),
         (60.80, (0.6, 5.0, 5.4), (-0.2, 13.6, 2.2), 26.0),
         (61.60, (0.0, 4.5, 5.8), (0.0, 14.3, 1.4), 40.0),
         (62.60, (0.2, 4.5, 6.0), (0.0, 14.3, 1.5), 36.0),
@@ -103,7 +103,7 @@ def run_B(q, f0, f1, stride):
             card('m' + tag, cast, pose, (lx, ly), cm, ppd=ppd, mirror=mir, shadow=(2.0, 0.8), canvas=WIDE, dz_m=dz)
         x0, y0 = P(RUN[0][1])
         if dt < RUN[0][0]:                                                      # waiting at the start of the run-up, rocking
-            stand(cast15.pose_for('rock_a' if int(t * 4) % 2 == 0 else 'rock_b', cast, facing=face), (x0, y0)); return
+            stand(cast15.pose_for('rock_a' if int(t * 4) % 2 == 0 else 'rock_b', cast, facing=face), P((5.5, -2.5))); return
         if dt < 0.0:                                                            # curved run-up
             p = spline([(a, (P(b)[0], P(b)[1], 0.0)) for a, b in RUN], dt)
             stand(cast15.run_curved(cast, t * 30 / 16.0, facing=face), (p.x, p.y)); return
@@ -131,7 +131,7 @@ def run_B(q, f0, f1, stride):
         if loc[2] > 30 and look[2] > 40 and t > 64.3: return dict(cam=[round(c, 1) for c in loc], note='sky')   # nothing but sky in frame
         SHB.rim(True, side='right', color=(255, 255, 240), width=0.04, k=0.55, tint=(1.0, 1.0, 1.0))
         # officials at the standards, photographers by the mat (flash as each jumper crosses)
-        for i, (cast, x) in enumerate((('official1', -3.3), ('official2', 3.3))):
+        for i, (cast, x) in enumerate((('official1', -2.9), ('official2', 2.9))):
             pose = cast15.pose_for('official_stand' if int(t * 2 + i) % 3 else 'official_point', cast)
             card('off%d' % i, cast, pose, (x, J['y'] - 0.9), cm, ppd=112, mirror=(x > 0), shadow=(1.4, 0.5))
         for i, (x, y) in enumerate([(-4.6, 9.4), (4.5, 9.8), (-3.6, 18.2)]):

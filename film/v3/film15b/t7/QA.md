@@ -16,3 +16,8 @@
 
 ## Round 3 (final gate)
 - Jumper 1: flop path lowered so the head hangs below the bar (never crossed by it) and the body is visible with it; all three jumpers now approach from the right and land at x -1.7 / 2.0 / 0.15 so they no longer hide each other; bar 2.16 m; crane raised at the first landing (bar clears his torso), lying pose lifted onto the mat. Stadium part re-rendered in full (g1796-1965).
+
+## Round 4 (final re-check)
+- 1972 jumpers reworked: camera high behind the run-up side (z 5-6 m, pitch about 25 deg) so the mat top shows; each jumper arches over the bar in 3 short poses (flop_back / flop / flick, about 10 frames in total), heads hang BELOW the bar with the card in the bar plane, then a 3-frame fall to the mat. First mat contact (land_back): jumper 1 g1831, jumper 2 g1865, jumper 3 g1900; sit + thumbs-up follow 0.16 s later.
+- Landing hold uses lens 40 on the mat; the camera still cranes out and dissolves at g1938-1965 unchanged.
+- Known: at g1819-1824 the right-hand official is cut by the frame edge; the head crosses the bar line for 1-2 frames while the jumper falls behind the bar (g1829-1830, 1863-1864, 1898-1899).
