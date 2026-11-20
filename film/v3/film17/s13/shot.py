@@ -119,8 +119,36 @@ class Take(object):
         sd = os.path.join(TMP, "sprites"); os.makedirs(sd, exist_ok=True)
         self.act["ins"] = C.make_actor("ins", "inspector17", sd)
         self.act["ber"] = C.make_actor("ber", "bertillon", sd)
+        self.head_cut = self.make_head_cut(self.act["ber"])
         for k, (st, cast, mir) in CAST_STAND.items():
             self.act[k] = C.make_actor(k, cast, sd)
+
+    def make_head_cut(self, actor):
+        """alpha mask on Bertillon's card: only below v = cut is drawn (cut 2.0 = everything); shot 33 hides his head disc (arm and hand stay)."""
+        mats = [m for m in actor.card.data.materials if m] if actor.card.data.materials else [ms.material for ms in actor.card.material_slots]
+        out = []
+        for m in mats:
+            nt = m.node_tree; mix = [n for n in nt.nodes if n.type == "MIX_SHADER"][0]
+            src = mix.inputs["Fac"].links[0].from_socket
+            tc = nt.nodes.new("ShaderNodeTexCoord"); sp = nt.nodes.new("ShaderNodeSeparateXYZ")
+            def mth(op, a_=None, b_=None):
+                n = nt.nodes.new("ShaderNodeMath"); n.operation = op
+                for i, v_ in enumerate((a_, b_)):
+                    if v_ is None: continue
+                    if isinstance(v_, float): n.inputs[i].default_value = v_
+                    else: nt.links.new(v_, n.inputs[i])
+                return n
+            val = nt.nodes.new("ShaderNodeValue"); val.outputs[0].default_value = 2.0
+            nt.links.new(tc.outputs["UV"], sp.inputs[0])
+            above = mth("GREATER_THAN", sp.outputs["Y"], val.outputs[0]); left = mth("LESS_THAN", sp.outputs["X"], 0.78)
+            both = mth("MULTIPLY", above.outputs[0], left.outputs[0]); keep = mth("SUBTRACT", 1.0, both.outputs[0]); mu = mth("MULTIPLY", src, keep.outputs[0])
+            nt.links.new(mu.outputs[0], mix.inputs["Fac"]); out.append(val)
+        return out
+
+    def key_cut(self, f, g):
+        for v in self.head_cut:
+            v.outputs[0].default_value = 0.50 if g >= 2014 else 2.0
+            v.outputs[0].keyframe_insert("default_value", frame=f)
 
     def make_fg(self):
         c0 = Vector((-0.99, 0.17, 0)); v = V31; left = Vector((-v.y, v.x, 0))
@@ -163,7 +191,7 @@ class Take(object):
         for g in gs:
             f = F(g); loc, look = cam_of(g)
             camrig.key_camera(f, loc, look, cam=self.cam, lens=22.0, interp="LINEAR", easing="AUTO")
-            self.place_all(g)
+            self.place_all(g); self.key_cut(f, g)
             K.key_life(f, f, dust=0.4, pendulum=False); K.set_pendulum(t=g / 30.0, frame=f)
 
     def poses(self, gs):
