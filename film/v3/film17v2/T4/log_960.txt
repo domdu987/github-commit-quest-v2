@@ -1,0 +1,34 @@
+tripod cloth faces removed 109
+coat rack faces removed 1608
+00:24.623  cycles           | WARNING CUEW initialization failed: Error opening the library
+02:17.658  render           | Saved: 'frames/g_0960.png'
+g960 transit {'dx': -1.45, 'dy': -0.23} 116s
+04:10.775  render           | Saved: 'frames/g_0961.png'
+g961 transit {'dx': -1.41, 'dy': -0.22} 113s
+05:59.448  render           | Saved: 'frames/g_0962.png'
+g962 transit {'dx': -1.37, 'dy': -0.22} 109s
+07:49.473  render           | Saved: 'frames/g_0963.png'
+g963 transit {'dx': -1.32, 'dy': -0.21} 110s
+09:40.458  render           | Saved: 'frames/g_0964.png'
+g964 transit {'dx': -1.28, 'dy': -0.2} 111s
+11:30.710  render           | Saved: 'frames/g_0965.png'
+g965 transit {'dx': -1.24, 'dy': -0.2} 110s
+13:18.693  render           | Saved: 'frames/g_0966.png'
+g966 transit {'dx': -1.2, 'dy': -0.19} 108s
+15:02.699  render           | Saved: 'frames/g_0967.png'
+g967 transit {'dx': -1.16, 'dy': -0.18} 104s
+16:43.847  render           | Saved: 'frames/g_0968.png'
+g968 transit {'dx': -1.12, 'dy': -0.18} 101s
+18:24.053  render           | Saved: 'frames/g_0969.png'
+g969 transit {'dx': -1.08, 'dy': -0.17} 100s
+20:00.755  render           | Saved: 'frames/g_0970.png'
+g970 transit {'dx': -1.03, 'dy': -0.16} 97s
+21:32.261  render           | Saved: 'frames/g_0971.png'
+g971 write {'dx': -0.99, 'dy': -0.16} 92s
+23:04.567  render           | Saved: 'frames/g_0972.png'
+g972 write {'dx': -0.95, 'dy': -0.15} 92s
+24:36.553  render           | Saved: 'frames/g_0973.png'
+g973 write {'dx': -0.91, 'dy': -0.14} 92s
+26:07.612  render           | Saved: 'frames/g_0974.png'
+g974 write {'dx': -0.87, 'dy': -0.14} 91s
+FINISHED

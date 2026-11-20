@@ -4,11 +4,12 @@ Only what I saw is claimed. Frames were viewed at full size (870, 985, 1051) and
 
 ## Numbers
 - check_take(T4) hits = [] (PASS). check_face(T4) ok (PASS). See checks.txt.
-- Luma (RGB-mean at 90x160, the director's binding metric) over all 208 frames: mean 104.5, min 81.2, max 124.5 (target 95-110). Lights only: TAKE_OVER measure gain 0.68, shade_mul 0.8, fill_w 70; no haze, no saturation change.
-- qa_auto: **FAIL** on the blur heuristic only: 19 frames flagged (g857-861 clock macro on a flat wall, g1002-1013 a flat wall and door frame as the camera passes the door). I looked at g859, g1004 and g1009: they are sharp-edged flat walls, not motion blur; the Laplacian-variance test reads them as soft because there is little texture. The first version of this take passed with 9 flagged frames (under the 5 % limit). Magenta 0.0 %.
+- Luma (RGB-mean at 90x160, the director's binding metric) over all 208 frames: mean 104.7, min 81.1, max 124.5 (target 95-110). Lights only: TAKE_OVER measure gain 0.68, shade_mul 0.8, fill_w 70; no haze, no saturation change.
+- qa_auto: **FAIL** on the blur heuristic only: 13 frames flagged (g857-861 clock macro on a flat wall, g1010-1017 a flat wall and door frame as the camera passes the door). I looked at g859, g1004 and g1009: they are sharp-edged flat walls, not motion blur; the Laplacian-variance test reads them as soft because there is little texture. The first version of this take passed with 9 flagged frames (under the 5 % limit). Magenta 0.0 %.
 - rhythm.py: in-shot median 13.29, p90 23.00.
 - Shimmer: none seen; consecutive-frame wall differences follow camera motion. Stayed at 16 samples.
-- g844-974 from the first render; g975-1051 re-rendered after the director's fix list (cabinet beat, coat stand removed, archive beam hidden), in 3 runs.
+- Gate fixes (director): g860-920 and g960-1051 re-rendered: casement leaf closed during the clock macro, pair slid 0.75 m right over g862-914, flipped calendar page hidden, door-clip offset g994-1014, tally texture held on file 0000 (magenta gone: 0 magenta pixels on all 208 frames). Open: g870 dark disc (a cut head) at the bottom-left edge.
+- g844-859 and g921-959 from the first render; g975-1051 re-rendered after the director's fix list (cabinet beat, coat stand removed, archive beam hidden), in 3 runs.
 
 ## Frames viewed
 - g870 (full + phone): extreme close-up of the wall clock (10:00 face) and the 11 MESURES chart, framed pictures below. No cast visible except a dark round shape at the bottom-left edge (the edge of a card's head, cut by the frame). Reads clean otherwise; this is the clock pull-out.

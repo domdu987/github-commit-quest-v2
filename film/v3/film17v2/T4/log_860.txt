@@ -1,0 +1,126 @@
+tripod cloth faces removed 109
+coat rack faces removed 1608
+00:23.557  cycles           | WARNING CUEW initialization failed: Error opening the library
+02:00.797  render           | Saved: 'frames/g_0860.png'
+g860 measure {'dx': -0.2, 'dy': -0.72, 'ear_tgt': 0.37} 98s
+03:37.131  render           | Saved: 'frames/g_0861.png'
+g861 measure {'dx': -0.3, 'dy': -0.71, 'ear_tgt': 0.28} 96s
+05:13.439  render           | Saved: 'frames/g_0862.png'
+g862 measure {'dx': -0.39, 'dy': -0.7, 'ear_tgt': 0.19} 96s
+06:51.915  render           | Saved: 'frames/g_0863.png'
+g863 measure {'dx': -0.42, 'dy': -0.69, 'ear_tgt': 0.05} 99s
+08:32.871  render           | Saved: 'frames/g_0864.png'
+g864 measure {'dx': -0.46, 'dy': -0.67, 'ear_tgt': -0.1} 101s
+10:13.562  render           | Saved: 'frames/g_0865.png'
+g865 measure {'dx': -0.49, 'dy': -0.66, 'ear_tgt': -0.27} 101s
+11:54.408  render           | Saved: 'frames/g_0866.png'
+g866 measure {'dx': -0.51, 'dy': -0.64, 'ear_tgt': -0.45} 101s
+13:34.695  render           | Saved: 'frames/g_0867.png'
+g867 measure {'dx': -0.51, 'dy': -0.63, 'ear_tgt': -0.62} 100s
+15:14.147  render           | Saved: 'frames/g_0868.png'
+g868 measure {'dx': -0.51, 'dy': -0.61, 'ear_tgt': -0.8} 101s
+16:53.309  render           | Saved: 'frames/g_0869.png'
+g869 measure {'dx': -0.49, 'dy': -0.6, 'ear_tgt': -0.96} 99s
+18:31.447  render           | Saved: 'frames/g_0870.png'
+g870 measure {'dx': -0.46, 'dy': -0.59, 'ear_tgt': -1.11} 97s
+20:04.496  render           | Saved: 'frames/g_0871.png'
+g871 measure {'dx': -0.43, 'dy': -0.57, 'ear_tgt': -1.23} 93s
+21:38.008  render           | Saved: 'frames/g_0872.png'
+g872 measure {'dx': -0.39, 'dy': -0.56, 'ear_tgt': -1.33} 95s
+23:11.535  render           | Saved: 'frames/g_0873.png'
+g873 measure {'dx': -0.42, 'dy': -0.55, 'ear_tgt': -1.38} 93s
+24:44.452  render           | Saved: 'frames/g_0874.png'
+g874 measure {'dx': -0.44, 'dy': -0.54, 'ear_tgt': -1.41} 93s
+26:19.277  render           | Saved: 'frames/g_0875.png'
+g875 measure {'dx': -0.47, 'dy': -0.53, 'ear_tgt': -1.44} 95s
+27:51.105  render           | Saved: 'frames/g_0876.png'
+g876 measure {'dx': -0.49, 'dy': -0.52, 'ear_tgt': -1.47} 90s
+29:19.694  render           | Saved: 'frames/g_0877.png'
+g877 measure {'dx': -0.51, 'dy': -0.5, 'ear_tgt': -1.48} 90s
+30:50.009  render           | Saved: 'frames/g_0878.png'
+g878 measure {'dx': -0.53, 'dy': -0.5, 'ear_tgt': -1.5} 90s
+32:20.450  render           | Saved: 'frames/g_0879.png'
+g879 measure {'dx': -0.55, 'dy': -0.49, 'ear_tgt': -1.5} 90s
+33:52.872  render           | Saved: 'frames/g_0880.png'
+g880 measure {'dx': -0.57, 'dy': -0.48, 'ear_tgt': -1.51} 93s
+35:27.732  render           | Saved: 'frames/g_0881.png'
+g881 measure {'dx': -0.58, 'dy': -0.47, 'ear_tgt': -1.51} 95s
+37:02.357  render           | Saved: 'frames/g_0882.png'
+g882 measure {'dx': -0.6, 'dy': -0.46, 'ear_tgt': -1.51} 95s
+38:35.071  render           | Saved: 'frames/g_0883.png'
+g883 measure {'dx': -0.62, 'dy': -0.45, 'ear_tgt': -1.51} 93s
+40:07.634  render           | Saved: 'frames/g_0884.png'
+g884 measure {'dx': -0.64, 'dy': -0.44, 'ear_tgt': -1.51} 92s
+41:39.311  render           | Saved: 'frames/g_0885.png'
+g885 measure {'dx': -0.66, 'dy': -0.43, 'ear_tgt': -1.51} 92s
+43:12.182  render           | Saved: 'frames/g_0886.png'
+g886 measure {'dx': -0.67, 'dy': -0.43, 'ear_tgt': -1.51} 93s
+44:47.329  render           | Saved: 'frames/g_0887.png'
+g887 measure {'dx': -0.69, 'dy': -0.42, 'ear_tgt': -1.51} 95s
+46:22.973  render           | Saved: 'frames/g_0888.png'
+g888 measure {'dx': -0.71, 'dy': -0.41, 'ear_tgt': -1.51} 96s
+47:59.519  render           | Saved: 'frames/g_0889.png'
+g889 measure {'dx': -0.73, 'dy': -0.4, 'ear_tgt': -1.51} 96s
+49:34.561  render           | Saved: 'frames/g_0890.png'
+g890 measure {'dx': -0.75, 'dy': -0.39, 'ear_tgt': -1.51} 95s
+51:10.775  render           | Saved: 'frames/g_0891.png'
+g891 measure {'dx': -0.77, 'dy': -0.39, 'ear_tgt': -1.5} 96s
+52:47.458  render           | Saved: 'frames/g_0892.png'
+g892 measure {'dx': -0.79, 'dy': -0.38, 'ear_tgt': -1.5} 97s
+54:22.799  render           | Saved: 'frames/g_0893.png'
+g893 measure {'dx': -0.81, 'dy': -0.37, 'ear_tgt': -1.5} 95s
+55:57.552  render           | Saved: 'frames/g_0894.png'
+g894 measure {'dx': -0.83, 'dy': -0.36, 'ear_tgt': -1.5} 95s
+57:35.766  render           | Saved: 'frames/g_0895.png'
+g895 measure {'dx': -0.85, 'dy': -0.36, 'ear_tgt': -1.5} 98s
+59:14.014  render           | Saved: 'frames/g_0896.png'
+g896 measure {'dx': -0.87, 'dy': -0.35, 'ear_tgt': -1.5} 98s
+01:00:50.403  render           | Saved: 'frames/g_0897.png'
+g897 measure {'dx': -0.9, 'dy': -0.34, 'ear_tgt': -1.5} 96s
+01:02:26.618  render           | Saved: 'frames/g_0898.png'
+g898 measure {'dx': -0.92, 'dy': -0.33, 'ear_tgt': -1.5} 96s
+01:04:03.152  render           | Saved: 'frames/g_0899.png'
+g899 measure {'dx': -0.94, 'dy': -0.33, 'ear_tgt': -1.5} 97s
+01:05:42.717  render           | Saved: 'frames/g_0900.png'
+g900 measure {'dx': -0.96, 'dy': -0.32, 'ear_tgt': -1.51} 100s
+01:07:20.823  render           | Saved: 'frames/g_0901.png'
+g901 measure {'dx': -0.98, 'dy': -0.31, 'ear_tgt': -1.51} 98s
+01:09:00.458  render           | Saved: 'frames/g_0902.png'
+g902 measure {'dx': -1.0, 'dy': -0.31, 'ear_tgt': -1.51} 100s
+01:10:41.919  render           | Saved: 'frames/g_0903.png'
+g903 measure {'dx': -1.03, 'dy': -0.31, 'ear_tgt': -1.51} 101s
+01:12:21.236  render           | Saved: 'frames/g_0904.png'
+g904 measure {'dx': -1.06, 'dy': -0.32, 'ear_tgt': -1.51} 99s
+01:13:57.359  render           | Saved: 'frames/g_0905.png'
+g905 measure {'dx': -1.09, 'dy': -0.33, 'ear_tgt': -1.51} 96s
+01:15:32.619  render           | Saved: 'frames/g_0906.png'
+g906 measure {'dx': -1.12, 'dy': -0.34, 'ear_tgt': -1.51} 95s
+01:17:10.202  render           | Saved: 'frames/g_0907.png'
+g907 measure {'dx': -1.15, 'dy': -0.35, 'ear_tgt': -1.51} 98s
+01:18:49.943  render           | Saved: 'frames/g_0908.png'
+g908 measure {'dx': -1.18, 'dy': -0.35, 'ear_tgt': -1.51} 100s
+01:20:30.714  render           | Saved: 'frames/g_0909.png'
+g909 measure {'dx': -1.21, 'dy': -0.36, 'ear_tgt': -1.51} 101s
+01:22:14.075  render           | Saved: 'frames/g_0910.png'
+g910 measure {'dx': -1.25, 'dy': -0.37, 'ear_tgt': -1.52} 103s
+01:23:56.102  render           | Saved: 'frames/g_0911.png'
+g911 measure {'dx': -1.29, 'dy': -0.38, 'ear_tgt': -1.52} 102s
+01:25:37.713  render           | Saved: 'frames/g_0912.png'
+g912 measure {'dx': -1.32, 'dy': -0.39, 'ear_tgt': -1.52} 102s
+01:27:17.711  render           | Saved: 'frames/g_0913.png'
+g913 measure {'dx': -1.35, 'dy': -0.39, 'ear_tgt': -1.52} 100s
+01:28:57.062  render           | Saved: 'frames/g_0914.png'
+g914 measure {'dx': -1.39, 'dy': -0.4, 'ear_tgt': -1.52} 99s
+01:30:38.712  render           | Saved: 'frames/g_0915.png'
+g915 measure {'dx': -1.35, 'dy': -0.41, 'ear_tgt': -1.52} 102s
+01:32:17.881  render           | Saved: 'frames/g_0916.png'
+g916 measure {'dx': -1.32, 'dy': -0.42, 'ear_tgt': -1.52} 99s
+01:33:59.598  render           | Saved: 'frames/g_0917.png'
+g917 measure {'dx': -1.29, 'dy': -0.43, 'ear_tgt': -1.52} 102s
+01:35:39.733  render           | Saved: 'frames/g_0918.png'
+g918 measure {'dx': -1.25, 'dy': -0.44, 'ear_tgt': -1.52} 100s
+01:37:22.192  render           | Saved: 'frames/g_0919.png'
+g919 measure {'dx': -1.21, 'dy': -0.45, 'ear_tgt': -1.52} 103s
+01:39:06.744  render           | Saved: 'frames/g_0920.png'
+g920 measure {'dx': -1.17, 'dy': -0.46, 'ear_tgt': -1.52} 104s
+FINISHED
