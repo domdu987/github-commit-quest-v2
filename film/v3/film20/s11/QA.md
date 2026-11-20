@@ -1,8 +1,8 @@
 # s11 QA: film 20, take T11 = shots 11+12+13+14 as ONE camera-travel take (QA_TEAM §I) -- SITE, DAY
 ## Delivered
 - take.mkv (split into take.mkv.partaa/ab/ac, 95 MB; `cat take.mkv.part* > take.mkv`): g 745..1003, 259 frames, first_g 745, 720x1280, 8 spp. g 753..995 = the take (25.09-33.21 s); 8 in-handle frames (dissolve 11 in) and 8 out-handle frames g 996..1003 (dissolve 13 out), rendered in 3D. NO cut inside. s/frame wall 10.9 (two processes), cpu 20.9.
-- meta.json / cues.json (15 cues) / contact.jpg / phone_sheet.jpg / QA_AUTO.md (PASS; note: soft g 836-839 = the fast flight over the cart yard) / framediff.json. The old folders s12 s13 s14 are deleted.
-- **qa_stats: `saturation 0.558, brightness 100.3, in-shot motion median 4.69 p90 15.12`** (sat >= 0.47, luma 85-110, motion >= 4 / >= 12: all met). **qa_stats2: `sat 0.558, vivid 65.7 %, luma 100.3, warm 38.6 % / cool 46.3 %`** (it counts 7 'shots': the fast flights read as scene changes, there is no cut) (sat >= 0.50, vivid >= 45 %: met). deliver.py frame-diff 4.48 / 23.08.
+- meta.json / cues.json (15 cues) / contact.jpg / phone_sheet.jpg / QA_AUTO.md (PASS; note: soft g 836-838 and 917 = the fast flights) / framediff.json. The old folders s12 s13 s14 are deleted.
+- **qa_stats: `saturation 0.565, brightness 99.7, in-shot motion median 4.72 p90 15.45`** (sat >= 0.47, luma 85-110, motion >= 4 / >= 12: all met). **qa_stats2: `sat 0.565, vivid 66.3 %, luma 99.7, warm 37.2 % / cool 47.9 %`** (no cut inside) (sat >= 0.50, vivid >= 45 %: met). deliver.py frame-diff 4.48 / 23.08.
 ## The travel (what the viewer sees)
 | g | beat |
 |---|---|
@@ -33,3 +33,9 @@
 6. Bowl g908-912: the flight looks down (0.5-2 m targets) while passing under the arches, so the first-platform underside no longer fills the frame; dappled sun on the gravel instead.
 7. Ending: after the last snap the camera keeps pushing (+14 %/s) so g993-1003 is not still.
 - Also: plank offcuts in front of the stack have distinct thicknesses (no coplanar black slits).
+
+## TAKE gate r3 fixes (TAKE3_A.md) -- done in this delivery
+1. Rivet g814-822: rebuilt as a short fat cylinder shank (about as long as the head is wide) + a rounded dome head, dark iron with a red-lead tint, held sideways (25 deg raised) in the raised fist so the shank shows; it bobs.
+2. Black unlit box g820-821 = the set's bench at (-4, -104) m seen from above during the rise: its vertices are deleted at runtime (pf_dark / pf_timber / pnoink_plank, 120 vertices).
+3. Ground: the looks of the fence-rise flight are 5-38 m high, so sand is the lower 20-30 % at g823-841 (sky + tower leg / stack dominate); g913 looks level (not down) under the arches.
+4. Toss / catch g917-933: the thrower stands 1.7 m from the catcher (staging moved, the set's mark was 3.4 m away) so both fit a close deck framing (6.5 D, ~3 m wide); the toss is a bigger orange-hot cylinder (duller orange, no yellow bloom) on a visible arc into the steel bucket in the catcher's hands. The thrower's tongs stay small at this distance.

@@ -77,11 +77,11 @@ def cam_s(g0):
 def cam_d(A):
     """deck, close-medium from the neighbouring scaffold (as the old s13): marks in A['marks'] (world D)"""
     m = {k: Vector(A["marks"][k]) for k in ("riveter_tongs", "riveter_catch", "riveter_hammer")}
-    subj = (m["riveter_tongs"] + m["riveter_catch"]) * 0.5 + Vector((0.0, 0.0, 2.4))
+    subj = m["riveter_catch"] + (m["riveter_tongs"] - m["riveter_catch"]) * 0.25 + Vector((0.0, 0.0, 2.4))        # mid between the (moved) thrower and the catcher
     c0 = Vector(A["cams"]["site_rivet"]["loc"])
     v = c0 - subj
     v.z = 0.0
-    c = subj + v.normalized() * 9.5 + Vector((0.0, 0.0, 1.0))
+    c = subj + v.normalized() * 6.5 + Vector((0.0, 0.0, 0.6))
     return C.CamPath(c, subj, G_FLY2[1], SN[0][0] + 6, push=0.07, slide_px=55.0, rise_px=15.0, arc_deg_s=3.0, tilt0=0.0, decay=0.2,
                      snaps=[dict(g=(G_CATCH - 1, G_CATCH + 12), k=1.25, peak=1.7, shift=(0.0, -0.3), tilt=0.0)])
 
@@ -120,18 +120,18 @@ class Rig(object):
         b1, b2 = self.B.at(G_FLY1[0] - 2), self.B.at(G_FLY1[0])
         s1, s2 = self.Sx.at(G_FLY1[1]), self.Sx.at(G_FLY1[1] + 2)
         self.f1 = [(G_FLY1[0] - 2, b1[0], b1[1]), (G_FLY1[0], b2[0], b2[1]),
-                   (822, W((-9.8, -108.5, 4.6)), W((-8.0, -100.4, 3.3))),
-                   (828, W((-14.0, -113.0, 10.0)), W((-46.0, -72.0, 27.0))),
-                   (836, W((-50.0, -102.0, 11.0)), W((-76.0, -52.0, 20.0))),
-                   (842, W((-80.0, -62.0, 6.0)), W((-76.0, -34.0, 8.0))),
+                   (822, W((-9.8, -108.5, 4.6)), W((-8.0, -100.4, 5.0))),
+                   (828, W((-14.0, -113.0, 10.0)), W((-46.0, -72.0, 38.0))),
+                   (836, W((-50.0, -102.0, 11.0)), W((-76.0, -52.0, 32.0))),
+                   (842, W((-80.0, -62.0, 6.0)), W((-76.0, -34.0, 13.0))),
                    (G_FLY1[1], s1[0], s1[1]), (G_FLY1[1] + 2, s2[0], s2[1])]
         e1, e2 = self.Sx.at(G_FLY2[0] - 2), self.Sx.at(G_FLY2[0])
         d1, d2 = self.D.at(G_FLY2[1]), self.D.at(G_FLY2[1] + 2)
         self.f2 = [(G_FLY2[0] - 2, e1[0], e1[1]), (G_FLY2[0], e2[0], e2[1]),
                    (909, W((-69.0, -36.0, 6.5)), W((-55.0, -29.0, 0.5))),
                    (911, W((-58.0, -26.0, 8.0)), W((-42.0, -28.0, 0.5))),
-                   (914, W((-40.0, -23.0, 9.5)), W((-28.0, -44.0, 2.0))),
-                   (917, W((-24.0, -46.0, 14.0)), W((-42.0, -62.0, 15.0))),
+                   (914, W((-40.0, -23.0, 9.5)), W((-28.0, -44.0, 9.0))),
+                   (917, W((-24.0, -46.0, 14.0)), W((-42.0, -62.0, 22.0))),
                    (G_FLY2[1], d1[0], d1[1]), (G_FLY2[1] + 2, d2[0], d2[1])]
 
     def at(self, g):
@@ -282,6 +282,7 @@ class Take(C.Take):
         self.post = self.make_post()
         self.make_fence_girders()
         self.girder = self.make_carried_girder()
+        self.remove_bench()
         self.add_ground_detail()
         self.rivet3d, self.bucket, self.toss = self.make_rivet3d(), self.make_bucket(), self.make_toss()
         mk = self.A["marks"]
@@ -293,6 +294,9 @@ class Take(C.Take):
             v = Vector(mk[name])
             v.z = C.ground_z(v.x, v.y, top=v.z + 5.0)               # the deck planks are 0.28 D above the mark z
             self.marks[k] = tuple(v)
+        # the thrower stands 1.7 m from the catcher (the set's mark is 3.4 m away): both fit the close deck framing
+        t, c = Vector(self.marks["t"]), Vector(self.marks["c"])
+        self.marks["t"] = tuple(c + (t - c) * 0.5)
         self.key_cam(bf(G_FIRST), *self.rig.at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
         sd = os.path.join(WORK, "sprites")
@@ -329,6 +333,31 @@ class Take(C.Take):
             ob.data.materials.append(CO.STATE["M"]["redlead"])
             self.fg_girders.append(ob)
 
+    def remove_bench(self):
+        """the set's bench at (-4, -104) m (merged into pf_dark / pf_timber / pnoink_plank) is a black unlit box seen from above during the rise
+        (g820-821): delete its vertices (runtime set dressing, never the set module)"""
+        import bmesh
+        SC = CO.SC
+        n = 0
+        for name in ("pf_dark", "pf_timber", "pnoink_plank"):
+            ob = C.bpy.data.objects.get(name)
+            if ob is None:
+                continue
+            bm = bmesh.new()
+            bm.from_mesh(ob.data)
+            mw = ob.matrix_world
+            kill = []
+            for v in bm.verts:
+                w = mw @ v.co
+                if -7.0 <= w.x / SC <= -2.0 and -106.0 <= w.y / SC <= -102.0 and w.z / SC <= 1.6:
+                    kill.append(v)
+            if kill:
+                bmesh.ops.delete(bm, geom=kill, context="VERTS")
+                bm.to_mesh(ob.data)
+                n += len(kill)
+            bm.free()
+        print("remove_bench: %d verts" % n, flush=True)
+
     def add_ground_detail(self):
         """stones, timber offcuts and a few coils on the gravel in front of the stack (x -83..-62, y -43..-35.5): the plain dark ground
         slab there read as blur / a bare slab (qa_auto); the set puts clutter only where its preset cameras look"""
@@ -355,17 +384,22 @@ class Take(C.Take):
                 ob.data.materials.append(M["timber"] if i % 2 else M["timberdk"])
 
     def make_rivet3d(self):
-        """the giant rivet: a red-lead cylinder (shank) + a round dome head, built along +z with its fist point at the origin"""
-        M = CO.STATE["M"]
-        C.bpy.ops.mesh.primitive_cylinder_add(vertices=16, radius=1.0, depth=1.0)
+        """the giant rivet: a short fat cylinder shank (about as long as the head is wide) + a rounded dome head, dark iron with a red-lead tint;
+        built along +z with the fist point at the origin"""
+        mat = C.bpy.data.materials.new("rivet_iron_s11")
+        mat.use_nodes = True
+        bsdf = mat.node_tree.nodes["Principled BSDF"]
+        bsdf.inputs["Base Color"].default_value = (0.17, 0.11, 0.11, 1.0)
+        bsdf.inputs["Roughness"].default_value = 0.55
+        bsdf.inputs["Metallic"].default_value = 0.35
+        C.bpy.ops.mesh.primitive_cylinder_add(vertices=20, radius=1.0, depth=1.0)
         shank = C.bpy.context.active_object
-        shank.scale = (0.24 * CO.SC * 0.5, 0.24 * CO.SC * 0.5, 1.5 * CO.SC * 0.5)      # 0.24 m dia x 1.5 m long? (in D: 0.45 D wide, 2.8 D long)
-        shank.scale = (0.26, 0.26, 0.85)
-        C.bpy.ops.mesh.primitive_uv_sphere_add(segments=18, ring_count=10, radius=1.0)
+        shank.scale = (0.30, 0.30, 0.62)
+        C.bpy.ops.mesh.primitive_uv_sphere_add(segments=22, ring_count=12, radius=1.0)
         dome = C.bpy.context.active_object
-        dome.scale = (0.62, 0.62, 0.42)
+        dome.scale = (0.52, 0.52, 0.42)
         for ob in (shank, dome):
-            ob.data.materials.append(M["redlead"])
+            ob.data.materials.append(mat)
         return (shank, dome)
 
     def make_toss(self):
@@ -376,13 +410,13 @@ class Take(C.Take):
         for n in list(nt.nodes):
             nt.nodes.remove(n)
         em = nt.nodes.new("ShaderNodeEmission")
-        em.inputs["Color"].default_value = (1.0, 0.32, 0.04, 1.0)
-        em.inputs["Strength"].default_value = 5.0
+        em.inputs["Color"].default_value = (1.0, 0.16, 0.02, 1.0)
+        em.inputs["Strength"].default_value = 1.6
         out = nt.nodes.new("ShaderNodeOutputMaterial")
         nt.links.new(em.outputs["Emission"], out.inputs["Surface"])
         C.bpy.ops.mesh.primitive_cylinder_add(vertices=12, radius=1.0, depth=1.0)
         ob = C.bpy.context.active_object
-        ob.scale = (0.17, 0.17, 0.55)
+        ob.scale = (0.24, 0.24, 0.75)
         ob.data.materials.append(mat)
         ob.visible_shadow = False
         return ob
@@ -448,13 +482,16 @@ class Take(C.Take):
                 hx = self.anch[("eiffel", f)]["hand_r"]
                 p = actors.local_to_world(ei, hx, f, ei.feet.get(f), self.cam)
                 t = g / 30.0
-                tilt = math.radians(8 * math.sin(t * 3.0))
+                cl = self.cam.matrix_world.to_3x3()
+                right = Vector((cl[0][0], cl[1][0], 0.0)).normalized()
+                ang = math.radians(25 + 10 * math.sin(t * 3.0))
+                ax = (right * math.cos(ang) + Vector((0.0, 0.0, math.sin(ang)))).normalized()      # sideways, a little raised: the shank shows
                 sh, dm = self.rivet3d
-                ax = Vector((math.sin(tilt), 0.0, math.cos(tilt)))
-                sh.location = p + ax * 0.55
-                sh.rotation_euler = (0.0, tilt, 0.0)
-                dm.location = p + ax * 1.38
-                dm.rotation_euler = (0.0, tilt, 0.0)
+                eul = ax.to_track_quat("Z", "Y").to_euler()
+                sh.location = p + ax * 0.10
+                sh.rotation_euler = eul
+                dm.location = p + ax * (0.10 + 0.31 + 0.22)
+                dm.rotation_euler = eul
                 for ob in (sh, dm):
                     ob.keyframe_insert("location", frame=f)
                     ob.keyframe_insert("rotation_euler", frame=f)

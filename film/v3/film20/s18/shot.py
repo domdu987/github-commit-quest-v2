@@ -36,9 +36,11 @@ SNAP = (G_SOON - 2, G_SOON + 13)
 G_END1 = G_POINT - 1                                        # 1303: end of the dusk move
 CRANE = (G_POINT, G_WIRE - 1)                               # 1304..1342
 WHIP = (G_WIRE, G_GROUND - 3)                               # 1343..1360
-DIVE = (WHIP[1] + 1, 1390)                                  # 1361..1394
-INSIDE = (1390, 1399)                                       # through the window, settle
-G_GLASS = 1384                                              # the window glass panel is hidden from here
+DIVE = (WHIP[1] + 1, 1392)                                  # 1361..1394
+INSIDE = (1390, 1399) 
+END_DIVE = 1404                                             # the travel ends inside the hut (braking), then the push
+G_CROSS = 1392                                              # the camera is at the window plane                                      # through the window, settle
+G_GLASS = 1372                                              # the window glass panel is hidden from here
 
 PRESET, CAM = "tower_dusk", "tower_dusk_chars"
 CAST = [("eif", "eiffel_old", "eiffel_old"), ("off", "officer", "officer"), ("da", "riveter_hammer", "demo_a"),
@@ -68,8 +70,8 @@ TILT0, AIM_DX, AIM_DY = 0.0, -0.8, 0.0
 def cam_path1(A):
     m = Vector(A["marks"]["eiffel_old"])
     subj = m + Vector((AIM_DX * CO.SC, AIM_DY * CO.SC, HEAD_Z))
-    return C.CamPath(CO.W(CAM_M), subj, G0, G_END1, push=0.16, slide_px=-30.0, rise_px=0.0, arc_deg_s=-4.0, tilt0=TILT0,
-                     tilt_deg_s=-4.5, decay=0.95,
+    return C.CamPath(CO.W(CAM_M), subj, G0, G_END1, push=0.20, slide_px=-35.0, rise_px=0.0, arc_deg_s=-6.0, tilt0=TILT0,
+                     tilt_deg_s=-5.5, decay=0.95,
                      snaps=[dict(g=SNAP, k=1.3, peak=1.9, shift=(0.3, 0.0), tilt=-3.0),
                             dict(g=(1280, 1296), k=1.08, peak=1.7, shift=(0.0, 0.0), tilt=-2.0)])
 
@@ -92,7 +94,33 @@ def bez(p0, c, p1, u):
 L2_M = (-3.2, -228.0, 30.0)                     # top of the crane (m)
 L3_M = (-3.0, -222.0, 20.0)                     # lowest point of the whip: the dive starts here
 I_M = (0.45, -204.25, 1.45)                     # inside the hut
-IN_AIM = (-0.15, -202.0, 1.25)                  # between the soldier and the spark gap
+IN_AIM = (-0.5, -202.0, 1.25)                  # between the soldier and the spark gap
+
+
+_PL = {}
+
+
+def polyline(p0, c, p1, p2):
+    """arc-length parametrised path: quadratic bezier p0 -> c -> p1 (the dive), then a straight line p1 -> p2 (through the window)."""
+    key = (tuple(p0), tuple(p2))
+    if key in _PL:
+        return _PL[key]
+    pts = [bez(p0, c, p1, i / 60.0) for i in range(61)] + [Vector(p1).lerp(p2, i / 12.0) for i in range(1, 13)]
+    cum = [0.0]
+    for a, b in zip(pts[:-1], pts[1:]):
+        cum.append(cum[-1] + (b - a).length)
+    tot = cum[-1]
+    lw = cum[60]
+
+    def at(sl):
+        d = clamp(sl) * tot
+        for i in range(1, len(cum)):
+            if d <= cum[i]:
+                u = (d - cum[i - 1]) / max(1e-9, cum[i] - cum[i - 1])
+                return pts[i - 1].lerp(pts[i], u)
+        return pts[-1]
+    _PL[key] = dict(at=at, sw=lw / tot)
+    return _PL[key]
 
 
 def cam_at(g, path1):
@@ -118,18 +146,33 @@ def cam_at(g, path1):
     Cc = Vector(CO.W((1.1, -212.0, 2.2)))
     Ii = Vector(CO.W(I_M))
     Wc = Vector(CO.W((WINDOW[0], -203.0, WINDOW[2])))
-    if g <= DIVE[1]:
-        u = ez((g - DIVE[0] + 1) / float(DIVE[1] - DIVE[0] + 1), "sine")
-        loc = bez(L3a, Cc, Wp, u)
-        tgt = Vector(CO.W(POST_AIM)).lerp(Wc, ez(min(1.0, u * 1.2)))
+    if g <= END_DIVE:
+        pl = polyline(L3a, Cc, Wp, Ii)
+        x = (g - DIVE[0] + 1) / float(END_DIVE - DIVE[0] + 1)
+        xw = (G_CROSS - DIVE[0] + 1) / float(END_DIVE - DIVE[0] + 1)
+        sw = pl["sw"]
+        if x <= xw:
+            sl = sw * (x / xw) ** 1.3                                    # ease-in only: no slowing down before the window (<= 4 frames across)
+        else:
+            y = (x - xw) / (1.0 - xw)
+            sl = sw + (1.0 - sw) * (1.0 - (1.0 - y) ** 2)                # brake inside
+        loc = pl["at"](sl)
+        if sl <= sw:
+            tgt = Vector(CO.W(POST_AIM)).lerp(Wc, ez(min(1.0, sl / sw)))
+        else:
+            tgt = Wc.lerp(Vector(CO.W(IN_AIM)), ez((sl - sw) / (1.0 - sw)))
         return loc, tgt
+    t = (g - END_DIVE) / 30.0                                             # inside: push 9 %/s toward the soldier + a little slide
+    aim = Vector(CO.W(IN_AIM))
+    loc = Ii + (aim - Ii).normalized() * 0.09 * (aim - Ii).length * t + Vector((-0.05 * t * CO.SC, 0.0, 0.0))
+    return loc, aim
     u = ez(min(1.0, (g - INSIDE[0]) / float(INSIDE[1] - INSIDE[0])), "sine")
     loc = Wp.lerp(Ii, u)
     tgt = Wc.lerp(Vector(CO.W(IN_AIM)), ez(min(1.0, u * 1.3)))
     if g > INSIDE[1]:                                                   # inside: push 9 %/s toward the soldier + a little slide
         t = (g - INSIDE[1]) / 30.0
         aim = Vector(CO.W(IN_AIM))
-        loc = Ii + (aim - Ii).normalized() * 0.09 * (aim - Ii).length * t + Vector((0.25 * t * CO.SC, 0.0, 0.0))
+        loc = Ii + (aim - Ii).normalized() * 0.09 * (aim - Ii).length * t + Vector((-0.05 * t * CO.SC, 0.0, 0.0))
         tgt = aim
     return loc, tgt
 
@@ -226,6 +269,8 @@ class Take(C.Take):
         for o in C.bpy.data.objects:
             if o.name.startswith("wagon_"):
                 o.location = o.location + Vector(WAGON_SHIFT)
+            if o.name == "wagon_rope":                              # the set's rope coil is a jagged ring that cut the group at the waist (g 1255-1300); our flat coils replace it
+                o.hide_render = True
         self.glass = [o for o in C.bpy.data.objects if o.name in ("hut_lampsm", "hut_dark")]   # lit panes + muntin cross / black junction
         print("hut objects:", [o.name for o in C.bpy.data.objects if o.name.startswith("hut")], flush=True)
         for o in list(CO.STATE["sg_dyn"]):                        # our own arc between the brass balls (the set's arc reads as a scribble)
@@ -252,6 +297,12 @@ class Take(C.Take):
         mbw.cyl(CO.STATE["M"]["timber"], stake + Vector((0, 0, 0.2)), 0.12, 0.6, "z", 6)
         mbw.finish(shadow=False)
         # cool rim / flash light on the soldier + the wall (spark), keyed with the taps
+        self.hutl = bpy.data.lights.new("team8_hutlamp", "POINT")                  # warm light inside the hut so the window hole glows once the glass is hidden
+        self.hutl.color, self.hutl.shadow_soft_size = (1.0, 0.66, 0.34), 0.3 * CO.SC
+        hlo = bpy.data.objects.new("team8_hutlamp", self.hutl)
+        self.scene.collection.objects.link(hlo)
+        hlo.location = CO.W((0.1, -203.2, 2.5))
+        hlo.visible_camera = False
         self.flash = bpy.data.lights.new("team8_flash", "POINT")
         self.flash.color, self.flash.shadow_soft_size = (0.45, 0.68, 1.0), 0.15 * CO.SC
         fo = bpy.data.objects.new("team8_flash", self.flash)
@@ -292,7 +343,21 @@ class Take(C.Take):
             mb.box(M["timberdk"], (x, y, 0.3), (0.8, 0.6, 0.6), rz=r)
             mb.box(M["plank"], (x, y, 0.62), (0.84, 0.64, 0.05), rz=r)
         mb.cyl(M["rope"], (-1.9, -219.8, 0.08), 0.35, 0.16, "z", 12)
+        for (x, y, r) in ((-3.0, -220.8, 0.5), (-6.9, -221.4, -0.3), (-5.9, -219.0, 1.2), (-2.4, -222.2, -0.8), (-4.5, -221.4, 0.15), (-3.7, -220.2, 0.9), (-5.3, -222.0, -0.5)):   # planks lying on the cobbles (flat, no spears)
+            mb.box(M["plank"], (x, y, 0.04), (1.7, 0.2, 0.07), rz=r)
+        for (x, y) in ((-6.5, -221.8), (-2.7, -221.4), (-4.2, -218.9), (-5.0, -221.0), (-4.0, -221.9)):                                          # rope coils
+            mb.cyl(M["rope"], (x, y, 0.06), 0.32, 0.12, "z", 14)
+        mb.cyl(M["metal"], (-2.0, -220.4, 1.6), 0.05, 3.2, "z", 8)                                              # gas lamp post + lantern
+        mb.cyl(M["lamp"], (-2.0, -220.4, 3.3), 0.2, 0.34, "z", 10)
         mb.finish()
+        import bpy
+        gl = bpy.data.lights.new("team8_gas", "POINT")                                                           # warm pool of light on the cobbles
+        gl.color, gl.shadow_soft_size = (1.0, 0.62, 0.32), 0.2 * CO.SC
+        gl.energy = 400.0 * CO.SC * CO.SC
+        go = bpy.data.objects.new("team8_gas", gl)
+        self.scene.collection.objects.link(go)
+        go.location = CO.W((-2.0, -220.4, 3.0))
+        go.visible_camera = False
 
     def pose(self, gs):
         self.key_gs = gs
@@ -308,9 +373,11 @@ class Take(C.Take):
                 CO.setv(o, g < G_GLASS, f)
             self.flash.energy = (55.0 if g in SPARK_FRAMES else 0.0) * CO.SC * CO.SC
             self.flash.keyframe_insert("energy", frame=f)
-            self.rim.energy = (5.0 if g >= 1376 else 0.0) * CO.SC * CO.SC
+            self.hutl.energy = 7.0 * CO.SC * CO.SC * ez((g - 1345) / 25.0)
+            self.hutl.keyframe_insert("energy", frame=f)
+            self.rim.energy = (3.0 if g >= 1376 else 0.0) * CO.SC * CO.SC
             self.rim.keyframe_insert("energy", frame=f)
-            self.scene.view_settings.exposure = self.exp0 + 0.35 * ez((g - 1380) / 30.0)
+            self.scene.view_settings.exposure = self.exp0 + 0.15 * ez((g - 1380) / 30.0)
             self.scene.keyframe_insert(data_path="view_settings.exposure", frame=f)
         for g in gs:
             f = bf(g)

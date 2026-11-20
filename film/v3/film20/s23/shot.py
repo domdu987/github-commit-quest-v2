@@ -38,7 +38,7 @@ YEAR = 1910
 PPD = 256
 
 # staging (world D): Eiffel at the preset mark, the official a step behind and to the right
-CAM_BACK = 3.5                                  # D from the camera to Eiffel at the start
+CAM_BACK = 5.2                                  # D from the camera to Eiffel at the start
 CAM_Z = 1.6
 TILT0 = -3.0
 FG_SHIFT = (40.0, 0.0, 0.0)
@@ -56,8 +56,9 @@ def cam_path(A):
     m = marks(A)
     subj = m["eiffel"] + Vector((0.8, 0.0, EIF_Z))
     c = Vector((subj.x - 0.3, subj.y - CAM_BACK, CAM_Z))
-    return C.CamPath(c, subj, GF, G_LAST, push=-0.10, slide_px=-75.0, rise_px=0.0, arc_deg_s=24.0, tilt0=TILT0, tilt_deg_s=-2.0,
-                     decay=0.3, snaps=[dict(g=SNAP, k=1.6, peak=2.0, shift=(0.0, 0.0), tilt=-3.0)])
+    return C.CamPath(c, subj, GF, G_LAST, push=-0.10, slide_px=-50.0, rise_px=0.0, arc_deg_s=12.0, tilt0=TILT0, tilt_deg_s=-2.0,
+                     decay=0.3, snaps=[dict(g=(G0 + 6, G0 + 14), k=1.25, peak=1.9, shift=(0.0, 0.0), tilt=0.0),
+                           dict(g=SNAP, k=1.9, peak=2.2, shift=(0.55, 0.0), tilt=-3.0)])
 
 
 def move_fg(A, cam_loc):
@@ -89,11 +90,11 @@ def official_pose(g):
     held = g < G_SWAP_DOC
     p = dict(yaw=0.35, arm_r="hip", legs="wide")
     if held:
-        p["arm_l"] = dict(hand=(lerp(-0.55, -1.15, u), lerp(0.85, 0.68, u)), bend=0.2, stretch=lerp(1.0, 1.25, u))
+        p["arm_l"] = dict(hand=(lerp(-0.62, -1.1, u), lerp(0.72, 0.70, u)), bend=0.2, stretch=lerp(1.1, 1.3, u))
         p["prop_l"] = "doc_seal"
     else:
         u2 = u_of(g, G_SWAP_DOC, G_SWAP_DOC + 10)
-        p["arm_l"] = dict(hand=(lerp(-1.15, -0.4, u2), lerp(0.68, 0.30, u2)), bend=0.2, stretch=lerp(1.25, 1.0, u2))
+        p["arm_l"] = dict(hand=(lerp(-1.1, -0.4, u2), lerp(0.70, 0.30, u2)), bend=0.2, stretch=lerp(1.3, 1.0, u2))
     p["expr"] = "happy" if g > G_SWAP_DOC else "stern"
     p["pitch"] = -0.05
     p.update(idle(g, 1.3))
@@ -112,7 +113,7 @@ def eiffel_pose(g):
         p["arm_l"] = "hip"
     elif g < G_XFER:                                        # document in the right hand
         u2 = u_of(g, G_SWAP_DOC, G_SWAP_DOC + 12)
-        p["arm_r"] = dict(hand=(lerp(1.0, 0.45, u2), lerp(0.62, 0.75, u2)), bend=-0.2, stretch=lerp(1.2, 1.0, u2))
+        p["arm_r"] = dict(hand=(lerp(1.0, 0.62, u2), lerp(0.62, 0.72, u2)), bend=-0.2, stretch=lerp(1.2, 1.1, u2))
         p["prop_r"] = "doc_seal"
         p["arm_l"] = "hip"
     else:                                                   # document moved to the left hand (swap on a blink)
@@ -123,7 +124,7 @@ def eiffel_pose(g):
     if g >= G_HAT:                                          # bowler off and held out high with a flourish (hat_off bare head)
         uh = u_of(g, G_HAT, G_HAT + 8)
         p["hat_off"] = 1
-        p["arm_r"] = dict(hand=(lerp(0.45, 0.65, uh), lerp(0.4, 1.3, uh) - 0.08 * u_of(g, G_HAT + 14, G_HAT + 30)), bend=0.5)
+        p["arm_r"] = dict(hand=(lerp(0.45, 0.58, uh), lerp(0.40, -0.45, uh)), bend=lerp(0.0, -0.5, uh), stretch=lerp(1.0, 1.25, uh))
         p["prop_r"] = "bowler_held"
         p["pitch"] = -0.1
         p["head_roll"] = -4.0
@@ -250,7 +251,7 @@ class Take(C.Take):
         """the official steps back and aside after the handover (g 1684..1702) so the snap lands on Old Eiffel"""
         u = u_of(g, 1684, 1702)
         p = Vector(self.M["official"])
-        return (p.x - 0.1 * u, p.y + 4.6 * u, p.z)
+        return (p.x - 0.1 * u, p.y + 1.6 * u, p.z)
 
     def fg_pos(self, g):
         loc, look = self.path.at(g)

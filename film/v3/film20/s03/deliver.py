@@ -68,7 +68,7 @@ def stats(ims):
     return float(np.mean(sat)), float(np.mean(lum))
 
 
-def calibrate(files, tsat=0.50, tlum=97.0):
+def calibrate(files, tsat=0.54, tlum=99.0):
     """post grade (PIL Color + Brightness, one pair of factors per take) so the take meets QA_TEAM section G: saturation >= 0.47, luma 85-110"""
     from PIL import ImageEnhance
     ims = [Image.open(files[i]).convert("RGB") for i in range(0, len(files), max(1, len(files) // 12))]

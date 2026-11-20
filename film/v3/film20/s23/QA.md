@@ -16,3 +16,14 @@ After TAKE_ART (F1-F3 callback), TAKE_B and QA_TEAM §G. Checked at 6 fps contac
 
 ## v5
 - Re-rendered with more orbit (24 deg/s) and slide (-75 px/s). `qa_stats2.py take.mkv`: **sat 0.564, vivid 50.0 %, luma 94.4, warm 35.3 % / cool 35.8 %, motion med 7.30 p90 11.45, still 0 %**. In-shot g 1657..1731: median 6.44, p90 10.30. Head width 175-275 px, centre y 519-639, chin <= 743. take.mkv 29.0 MB.
+
+## v6 (TAKE2_B s23 fixes)
+- Bowler: raised overhead. Cause of the old "flat dish": cast20 arm hand y is DOWNWARD-positive (point_up uses y -0.8), so my earlier tweens had pushed the hand down; now arm_r goes to (0.58, -0.45) with bend -0.5, stretch 1.25 and the bowler_held prop (rim visible) is held above his head, bare head + proud smile (blink swap g 1705-1707).
+- Official: stays in frame the whole shot (head x 455-593 at the end, widest 232 px, right edge < 720; he only steps back 1.6 D g 1684-1702), so the new-document hand-over g 1664-1676 (stretched arm, Eiffel's hand takes it, doc moves to his left hand behind a blink g 1696) stays on screen.
+- Framing: wider (5.2 D, was 3.5): Eiffel is shown at the thighs at the end, the tower legs, first platform and banner stay behind him; head width 140-262 px (centre y 543-652, chin <= 724). Snap x1.9 with a 0.55 D pan toward the official keeps both in frame.
+- `qa_stats2.py take.mkv`: sat 0.544, vivid 47.2 %, luma 97.7, warm 47.4 % / cool 25.3 %, motion med 6.32 **p90 12.16**, still 0 %. In-shot g 1657..1731: median 5.44, p90 11.57. take.mkv 34.0 MB.
+- The set flags: my pennants are vertical blue-white-red tricolours; the preset flags are the set builder's.
+
+## v7 (director re-request; set flag fix d1511f7 merged)
+- Re-rendered with the merged set: the preset flags are vertical blue-white-red tricolours now (my own pennant poles already were). All v6 fixes stand (raised bowler with rim visible, official in frame, document passes hand to hand on screen, wider with the tower behind).
+- `qa_stats2.py take.mkv`: sat 0.544, vivid 47.2 %, luma 97.6, warm 47.4 % / cool 25.3 %, motion med 6.43 **p90 12.25**, still 0 %. In-shot g 1657..1731: median 5.52, p90 11.61. Head width 140-262 px, chin <= 724. take.mkv 34.0 MB.
