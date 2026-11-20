@@ -28,9 +28,10 @@ def keys():
     mid = (CRESS + SURREY) / 2
     return [
         (1392, 'P_TOP'),
-        (1424, (-48.0, -36.0, 66.0), (-82.0, -12.0, 3.0), 22.0),
-        (1456, (-78.0, -20.0, 17.0), (-93.0, -12.5, zc + 1.5), 24.0),
-        (1480, cam3(at(C, 10.0, -0.3), 3.6), (float(mid[0]), float(mid[1]), zc + 1.3), 26.0),
+        (1422, (-14.0, -38.0, 112.0), (2.0, 76.0, 0.0), 22.0),
+        (1446, (-50.0, -34.0, 62.0), (-82.0, -12.0, 3.0), 22.0),
+        (1467, (-78.0, -20.0, 17.0), (-93.0, -12.5, zc + 1.5), 24.0),
+        (1483, cam3(at(C, 10.0, -0.3), 3.6), (float(mid[0]), float(mid[1]), zc + 1.3), 26.0),
         (1495, cam3(CAM_M, 1.55), (float(mid[0]), float(mid[1]), zc + 1.2), 26.0),
         (1519, cam3(CAM_E, 1.62), (float(CRESS[0]), float(CRESS[1]), zc + 1.55), 26.0),
         (1530, cam3(CAM_E2, 1.64), (float(CRESS[0]), float(CRESS[1]), zc + 1.58), 26.0),
@@ -67,17 +68,17 @@ def main(quality, gs, samples):
         path(g)
         T.scene.frame_set(f)
         T.cam.data.lens = T.cam.data.lens
-        shock = g >= 1476
+        shock = g >= 1488
         # Cressingham
         cres.place(f, (float(CRESS[0]), float(CRESS[1]), gz(*CRESS)), scale=M["cressingham"])
         base = S["cressingham_shocked" if shock else "cressingham_sweating"][1]
-        p = dict(base); p["blink"] = blink(g, 9) if not (1474 <= g <= 1475) else 1.0
-        if g < 1474: p["expr"] = "worried"; p["fx"] = ["sweat"]
+        p = dict(base); p["blink"] = blink(g, 9) if not (1486 <= g <= 1487) else 1.0
+        if g < 1486: p["expr"] = "worried"; p["fx"] = ["sweat"]
         p["head_roll"] = 2.5 * math.sin(g * 0.21); p["lean"] = 1.5 * math.sin(g * 0.17)
         cres.pose(f, K.with_rim(p), camera=T.cam)
         surr.place(f, (float(SURREY[0]), float(SURREY[1]), gz(*SURREY)), scale=M["surrey"])
-        base = S["surrey_shocked" if g >= 1478 else "surrey_worried"][1]
-        p = dict(base); p["blink"] = 1.0 if 1476 <= g <= 1477 else blink(g, 31)
+        base = S["surrey_shocked" if g >= 1490 else "surrey_worried"][1]
+        p = dict(base); p["blink"] = 1.0 if 1488 <= g <= 1489 else blink(g, 31)
         p["head_roll"] = 3 * math.sin(g * 0.19 + 1)
         surr.pose(f, K.with_rim(p), camera=T.cam)
         for a, pxy, cast, i in ex:
