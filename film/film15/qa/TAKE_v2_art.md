@@ -93,3 +93,96 @@ Fixes:
 - T2: hands on the paper g744-868 (+ background reader g573-640, g800-850), motion blur on the whip g710-716, photographer for the flash g716-740.
 - T3: re-render magenta g857/859/863/865 and g912; re-frame g856-868 to T2's page framing (scale ~1/1.7, up ~170 px, headline in frame); Dick in the DAY plate g904-914; make the bar rise (g975) and the rival's fail (g1014) readable, with less bloom g1000-1025.
 - T7: remove MEXICO 68 from the 1972 stadium g1880-1930; bury the coach to the chin + animate the thumbs-up g2046-2100; the bar falls instead of vanishing g2032-2036; bigger sawdust spray g2040-2050.
+
+---
+# Round 2 (2026-11-20): T3 and T7 re-renders, T4 first review
+Method as in round 1: 3 fps sheets, ±3 frames around every cut/whip/swap/dissolve, full-res crops where needed. I scanned every frame of all three takes for magenta (R>150, B>130, G<60): the most magenta in any single frame is 0.01 % (T3), 0.16 % (T4) and 0.2 % (T7), so **no magenta anywhere**.
+
+| take | verdict |
+|---|---|
+| T3 | **PASS** (one optional polish item) |
+| T7 | **PASS** |
+| T4 | **FIX** |
+
+## T3 (re-render): PASS
+I checked each round-1 fix:
+- Magenta g857/859/863/865/912: **fixed** (no magenta in any of the 209 frames).
+- Seam vs T2 (T2 file dated 16:13; its end framing is unchanged):
+  - **Fixed.** At g862 and g868, T3 now shows the same page as T2: headline in frame, the same photo, the same tilt and grade.
+  - An average of the two frames shows only a slight ghost: a scale/offset difference of about 3-5 % (headline about 20 px, face about 10 px at full res). In a 7-frame dissolve this reads as softness, not as a double image.
+  - Optional polish: g856-858 of the handle is still tighter than T2's g856 (T2 shows the whole page with the reader). These frames are outside a 7-frame dissolve centred on g862 (859-865), so this doesn't matter unless the conform starts the dissolve earlier.
+- Dick in the season dissolve g904-914: **fixed**. He lands and sits up in both plates, autumn leaves fall g893-925, and there is no pop.
+- Bar across Dick's torso at take-off (g890): **fixed** (he takes off on the standard side).
+- Beats in BIGZOOM 2: **fixed**.
+  - The fan is a medium-wide by g992, with the 2.24 m board readable.
+  - The rival is clearly over the bar at g1014, and the bar tilts and falls at g1020.
+  - The bloom over the fan is down, so g1000-1025 is no longer a white-out.
+  - The end at g1058 has Dick at about 40 % height, in the medium range.
+  - Note: at g975 the bar change is still far away (the camera is still descending). It is readable from about g990, which is acceptable.
+- Remaining note (not blocking): golden training g878-889 is wide; the pit is empty for about 0.4 s before Dick runs in, and Dick is about 15 % tall. Within the rules.
+
+## T7 (re-render): PASS
+I checked each round-1 fix:
+- MEXICO 68 banners and the 2.24 m board in the 1972 stadium: **gone** (checked g1796-1965; only "1972" and HIGH JUMP signs remain).
+- 1972 landing readability: **fixed**. Low, close landing g1866-1880: the gold jumper's flop is big, and the green jumper sits smiling with arms up on the mat.
+- Coach buried: **fixed enough**.
+  - Sawdust comes up to his collar/chin, there is sawdust on his cap, the thumbs-up is beside his face, and his expression changes (smirk).
+  - The push-in brings his head to about 17-19 % by g2094 (medium).
+  - He is not frozen: the pose changes between g2070, 2082 and 2094.
+- Bar: **fixed**. It is knocked off and falls in front of the pit g2033-2066, so it no longer vanishes.
+- Spray: **fixed**. The burst is clearly visible at g2046-2056.
+- Coach clipped by the frame edge at g2024: **fixed**.
+- Notes (not blocking):
+  - At g2033 the falling bar passes just under the coach's head (it doesn't cross his face).
+  - The thumbs-up reads small; a slightly bigger hand would help, but it isn't required.
+
+## T4 (first review, g1052-1337): FIX
+Works:
+- The set is rich and the light is motivated: floodlights with beams, the cauldron, HIGH JUMP signs, the 2.24 m BAR HEIGHT board, flags, a dense crowd.
+- The low angle by the standard at g1052-1096 shows a clear gap between the bar and Dick's head, and Dick rocks.
+- Attempt 1: the bar falls at g1140-1146 (38.0 s). Attempt 2: Dick over the bar at g1180, bar falls at g1176-1190 (39.2 s).
+- The whip up (g1203-1208) is properly motion-blurred.
+- The coach in the stands:
+  - Same maroon cap and windbreaker with stopwatch; about 30 % of frame height in the medium at g1215-1228.
+  - A packed crowd of cards on every row and a MEXICO 68 rim banner; no black void.
+  - Mouth moves only g1211-1267 (in the quote window).
+- CLOSE-UP 2 at g1236-1262 (about 0.9 s, cap-to-chin about 34 %) lands on "แค่นี้แหละ".
+- The whip back down is blurred (g1268-1277).
+- In the hush push (g1280-1337), Dick rocks at his mark under the 2.24 m board and grows from about 25 % to 45 % of frame height.
+
+The "5 shots" qa_stats2 counts are **not only the two whips**. They are 4 internal breaks plus the opening, all hidden:
+- the masked swap at g1100 (an official's coat fills the frame g1099-1103; luma std falls to 26),
+- the masked swap at g1148 (g1147-1151; std 25),
+- the whip up at g1205,
+- the whip down at g1273.
+
+The swaps are pass-the-lens wipes. They are allowed as "through a foreground object", but they count as hidden cuts. The film total still stays far under 12.
+
+Fixes:
+1. **Pole growing out of Dick's head, g1084-1096 (§G tangent).**
+   - The near standard stands right behind his hair, so the pole appears to come out of the top of his head (crops at g1084, 1090, 1096).
+   - At g1096 a second pole runs beside his cheek.
+   - Fix: move Dick about 0.4 m sideways off the standard line, or shift the camera, so the pole clears his head by at least one head-width.
+2. **2.24 m board and official cut by the right frame edge, g1052-1096.**
+   - Only "2." or "2 m" is visible, and the official is half out of frame.
+   - The plan asks for the board in frame. Pan or frame about 10 % left so the whole "2.24 m" board reads. Show the 2.24 m bar here too; QA.md says this shot uses a 2.46 m bar, which contradicts the board. Raise the gap by camera height, not by a different bar height.
+3. **Landing flat on the mat isn't readable, g1186-1204.**
+   - The camera sits at mat-side height, so Dick lies on the far mat at about 5 % height.
+   - The fallen bar lies across the frame in front of him (g1190 its end crosses his head; g1198 it runs across the middle of the frame), and "hands on face" can't be seen.
+   - Fix: raise the camera about 0.6 m and tilt down so Dick on the mat is at least 15 % of the frame, with his hands on his face visible for at least 0.5 s. Keep the fallen bar off his head.
+4. **The hush has no real crowd frame, g1290-1337.**
+   - Two dark heads frame the edges at g1280-1300, then nothing remains in the foreground.
+   - The crowd isn't dimmed for the "stadium hushes" beat.
+   - Fix: keep 2-4 dark backlit heads/shoulders along the bottom/sides through g1337, and dim the crowd sparkle/flash cards by about 50 % from g1290.
+5. **Whip flare levels.**
+   - Both whips pass through a cream white-out: g1205-1207 have luma 160-171, and g1269-1272 have luma 141-189, then drop to 44-53 at g1273-1275.
+   - This reads as two flashes. Cap the whip frames at luma about 130, or grade the cream concrete down.
+6. Minor:
+   - At g1180 the falling bar's end touches Dick's chin as he passes over. Delay the bar's tilt by 2-3 frames.
+   - g1300-1337: a thin dark vertical line (the far standard or a stick) runs over Dick's leg and hand. Check its depth order, or move it off his silhouette.
+   - The masked-swap coat cards (g1099-1103, g1147-1151) are flat, untextured navy/maroon blobs. Add motion blur to them like the whips.
+
+## Round 2 summary
+- T3 **PASS**: all round-1 fixes verified, no magenta. Optional: tighten the scale match at g856-858 if the dissolve starts before g859.
+- T7 **PASS**: all round-1 fixes verified.
+- T4 **FIX**: pole tangent g1084-1096; board and official cut by the edge g1052-1096; landing unreadable g1186-1204; no crowd-head frame or dimming in the hush g1290-1337; whip flare frames g1205-1207 and g1269-1275. Minor: bar at Dick's chin g1180, dark line over his leg g1300-1337, flat swap cards.
