@@ -1,0 +1,18 @@
+cast21 pose keys + garbage: 9250 ok, 0 failed, deterministic True, mouth rule problems 0, earlier casts draw ok, 15.0 s
+presets, expressions, props, effects                    335482 checks  ok
+numeric key sweeps (40 and 240 steps)                   483140 checks  ok
+arm targets: circles and lines through the shoulder     2675092 checks  ok
+foot targets                                            760452 checks  ok
+garbage input                                           551112 checks  ok
+random poses                                             18132 checks  ok
+  FAIL: surrey: duplicate ids inside one figure
+  FAIL: knight_a: duplicate ids inside one figure
+  FAIL: knight_a_open: duplicate ids inside one figure
+  FAIL: knight_b: duplicate ids inside one figure
+  FAIL: knight_b_great: duplicate ids inside one figure
+  FAIL: moray: duplicate ids inside one figure
+determinism, ids, mirror, resolve / lerp                   392 checks  6 FAILED
+    slowest pose: 1.48 ms per call
+speed                                                        6 checks  ok
+4823808 checks, 6 failed, 566.6 s
+NOTE: the 6 'duplicate ids' failures above (clip id p_tc clashed with the torso's own id in surcoat21 members) were fixed afterwards (clip ids now carry a c21 prefix); a direct id check over all 29 members + 7 special cards x 4 poses reports no duplicates. The full run was not repeated.
