@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, 'tex_beck')
-TEX_V = 10
+TEX_V = 15
 FB = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 FN = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
 FS = '/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf'
@@ -82,7 +82,7 @@ def diagram(W=1536, H=1100):
     ]
     for col, pts in lines: _thick_line(d, P(pts), lw, col)
     # ticks and stations
-    rs = random.Random(5); ft = font(22 * S, FB)
+    rs = random.Random(5); ft = font(34 * S, FB)
     rings = [(520, 430), (700, 430), (1000, 330), (700, 680), (250, 560), (520, 560), (900, 870), (520, 150), (700, 150)]
     for col, pts in lines:
         for a, b in zip(pts, pts[1:]):
@@ -98,7 +98,7 @@ def diagram(W=1536, H=1100):
         R = 30 * S; d.ellipse((rx * S - R, ry * S - R, rx * S + R, ry * S + R), fill='white', outline='#1a1840', width=8 * S)
     names = {(520, 430): 'BANK', (700, 430): 'OXFORD', (1000, 330): 'EUSTON', (700, 680): 'WATERLOO', (250, 560): 'EARLS', (520, 560): 'VICTORIA', (900, 870): 'LEWISHAM', (520, 150): 'KINGS X', (700, 150): 'ANGEL'}
     for (rx, ry), nm in names.items():
-        d.text(((rx + 40) * S, (ry - 40) * S), nm, font=ft, fill='#1a1840', anchor='ls')
+        d.text(((rx + 38) * S, (ry - 38) * S), nm, font=ft, fill='#1a1840', anchor='ls')
     d.rectangle((24 * S, 24 * S, (W - 24) * S, (H - 24) * S), outline='#1a1840', width=6 * S)
     d.text((70 * S, 1040 * S), 'UNDERGROUND', font=font(46 * S, FB), fill=RED, anchor='ls')
     return img.resize((W, H), Image.LANCZOS)
@@ -110,7 +110,7 @@ def old_map(W=1100, H=800):
     pts = [(0, 520 * S)];
     for i in range(1, 40): pts.append((i * w / 39, (500 + 110 * math.sin(i * .33) + 40 * math.sin(i * .9)) * S))
     d.line(pts, fill='#7ea6c9', width=46 * S, joint='curve')
-    for _ in range(90):
+    for _ in range(170):
         x, y = rr.uniform(0, w), rr.uniform(0, h); ang = rr.uniform(0, 6.28); pl = [(x, y)]
         for k in range(rr.randint(3, 7)): ang += rr.uniform(-.8, .8); x += math.cos(ang) * rr.uniform(40, 120) * S; y += math.sin(ang) * rr.uniform(40, 120) * S; pl.append((x, y))
         d.line(pl, fill='#b9a46a', width=3 * S)
@@ -123,7 +123,9 @@ def old_map(W=1100, H=800):
     ft = font(11 * S, FN)
     for _ in range(140): d.text((rr.uniform(0, w), rr.uniform(0, h)), rr.choice(['Kings', 'Cross', 'Bank', 'Ealing', 'Hoxton', 'Soho', 'Mayfair', 'Poplar', 'Bow', 'Kew']), font=ft, fill='#3a2a18')
     d.rectangle((6 * S, 6 * S, w - 6 * S, h - 6 * S), outline='#3a2a18', width=5 * S)
-    d.rectangle((w * .25, 18 * S, w * .75, 80 * S), fill='#e8dcae'); fit_text(d, (w * .27, 22 * S, w * .73, 76 * S), 'RAILWAY MAP OF LONDON', '#3a2a18', FS)
+    d.rectangle((w * .22, 18 * S, w * .78, 90 * S), fill='#e8dcae'); fit_text(d, (w * .24, 24 * S, w * .76, 84 * S), 'MAP OF LONDON', '#3a2a18', FS)
+    a_ = np.asarray(img.convert('RGB'), 'float32'); sep = np.array([196, 160, 104], 'float32'); lum = a_.mean(-1, keepdims=True) / 255; a_ = a_ * 0.55 + (lum * sep + a_ * 0) * 0.45 + a_ * 0.0
+    img = Image.fromarray(np.clip(a_, 0, 255).astype('uint8'))
     return img.resize((W, H), Image.LANCZOS)
 
 # ----------------------------------------------------------------------------- facades
@@ -139,7 +141,7 @@ def facade(name, w, h, cols, rows, wall, lit_p, seed, trim='#d9c9a3', big=None, 
     for r in range(rows):
         d.rectangle((0, int(r * ch) + 2, w, int(r * ch) + 8), fill=trim)
         for c in range(cols):
-            x0, y0 = c * cw + cw * .2, r * ch + ch * .2; x1, y1 = c * cw + cw * .8, r * ch + ch * .86
+            x0, y0 = c * cw + cw * .28, r * ch + ch * .26; x1, y1 = c * cw + cw * .72, r * ch + ch * .8
             if big and big[0] <= c < big[0] + big[2] and big[1] <= r < big[1] + big[3]:
                 continue
             d.rectangle((x0 - 5, y0 - 5, x1 + 5, y1 + 5), fill=trim)
@@ -168,7 +170,7 @@ def facade(name, w, h, cols, rows, wall, lit_p, seed, trim='#d9c9a3', big=None, 
 
 def hq_facade():
     w, h = 1792, 1020
-    a, g = facade('hq', w, h, 14, 6, '#c9b48a', 0.62, 11, trim='#efe0b8', big=(5, 2, 4, 2), door=False)
+    a, g = facade('hq', w, h, 14, 6, '#c9b48a', 0.7, 11, trim='#efe0b8', big=(5, 2, 4, 2), door=False)
     return a, g
 
 def lodging_facade():
@@ -205,7 +207,7 @@ def dusk_sky(W=2048, H=1024):
     y = np.linspace(0, 1, H)[:, None]; t = np.clip((0.5 - y) / 0.5, 0, 1)    # 0 horizon .. 1 zenith
     top = np.array([0.04, 0.07, 0.42]); mid = np.array([0.30, 0.18, 0.62]); hor = np.array([1.0, 0.52, 0.16]); low = np.array([0.95, 0.4, 0.14])
     c = np.zeros((H, 1, 3), 'float32')
-    stops = [(0.0, (1.0, 0.55, 0.14)), (0.035, (1.0, 0.5, 0.24)), (0.09, (0.66, 0.26, 0.55)), (0.17, (0.12, 0.12, 0.55)), (0.4, (0.05, 0.08, 0.44)), (1.0, (0.03, 0.05, 0.34))]
+    stops = [(0.0, (1.0, 0.55, 0.14)), (0.03, (1.0, 0.45, 0.2)), (0.045, (0.30, 0.15, 0.50)), (0.085, (0.07, 0.10, 0.50)), (0.4, (0.04, 0.07, 0.42)), (1.0, (0.03, 0.05, 0.34))]
     for i in range(H):
         tt = t[i, 0]
         if y[i, 0] > 0.5: c[i, 0] = np.array(stops[0][1]) * (1 - min(1, (y[i, 0] - .5) * 12)) + np.array((0.2, 0.1, 0.4)) * min(1, (y[i, 0] - .5) * 12)
@@ -219,17 +221,32 @@ def dusk_sky(W=2048, H=1024):
     return Image.fromarray((np.clip(img, 0, 1) * 255).astype('uint8'))
 
 def skyline(W=2048, H=512, seed=2):
-    """Far skyline cutout (RGBA): dark blue-violet silhouettes with warm lit windows, dome + spires."""
-    rs = random.Random(seed); img = Image.new('RGBA', (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(img); base = H
+    """1930s London far skyline cutout (RGBA): low near-black blue roofs, chimneys, 2 spires, the dome, Big Ben, a gasholder, smoke plumes."""
+    rs = random.Random(seed); img = Image.new('RGBA', (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(img); base = H; sil = (20, 24, 56, 255)
     x = 0
     while x < W:
-        bw = rs.randint(50, 130); bh = rs.randint(90, 230)
-        col = (rs.randint(36, 56), rs.randint(36, 56), rs.randint(110, 150), 255); d.rectangle((x, base - bh, x + bw, base), fill=col)
-        if rs.random() < .4: d.polygon([(x, base - bh), (x + bw / 2, base - bh - rs.randint(20, 50)), (x + bw, base - bh)], fill=col)
-        for yy in range(base - bh + 14, base - 8, 24):
-            for xx in range(x + 8, x + bw - 14, 20):
-                if rs.random() < .5: d.rectangle((xx, yy, xx + 8, yy + 11), fill=rs.choice([(255, 196, 96, 255), (255, 160, 70, 255), (255, 226, 150, 255)]))
-        x += bw + rs.randint(-10, 6)
+        bw = rs.randint(40, 110); bh = rs.randint(40, 100)
+        d.rectangle((x, base - bh, x + bw, base), fill=sil)
+        k = rs.random()
+        if k < .55: d.polygon([(x - 4, base - bh), (x + bw / 2, base - bh - rs.randint(14, 30)), (x + bw + 4, base - bh)], fill=sil)
+        for cx in (x + bw * .25, x + bw * .7):
+            if rs.random() < .6:
+                ch = rs.randint(14, 28); d.rectangle((cx - 4, base - bh - ch - 6, cx + 4, base - bh - 2), fill=sil)
+                if rs.random() < .4:
+                    for j in range(3): d.ellipse((cx - 10 + j * 8, base - bh - ch - 30 - j * 14, cx + 6 + j * 8, base - bh - ch - 10 - j * 14), fill=(52, 50, 96, 255))
+        for yy in range(base - bh + 10, base - 6, 20):
+            for xx in range(x + 8, x + bw - 10, 18):
+                if rs.random() < .15: d.rectangle((xx, yy, xx + 5, yy + 8), fill=(255, 190, 100, 255))
+        x += bw + rs.randint(-4, 4)
+    def spire(cx, h, w=14):
+        d.polygon([(cx - w / 2, base - 60), (cx, base - 60 - h), (cx + w / 2, base - 60)], fill=sil); d.rectangle((cx - w / 2, base - 100, cx + w / 2, base), fill=sil)
+    spire(420, 100); spire(1500, 90)
+    # dome with lantern (St Paul's): drum + dome + lantern + ball
+    dx = 1000; d.rectangle((dx - 70, base - 110, dx + 70, base), fill=sil); d.pieslice((dx - 60, base - 215, dx + 60, base - 95), 180, 360, fill=sil); d.rectangle((dx - 8, base - 250, dx + 8, base - 205), fill=sil); d.ellipse((dx - 6, base - 262, dx + 6, base - 250), fill=sil)
+    # Big Ben: tall thin tower, lit clock face
+    bx = 1750; d.rectangle((bx - 16, base - 230, bx + 16, base), fill=sil); d.polygon([(bx - 18, base - 230), (bx, base - 290), (bx + 18, base - 230)], fill=sil); d.ellipse((bx - 11, base - 214, bx + 11, base - 192), fill=(255, 230, 150, 255))
+    # gasholder ring
+    gx = 700; d.rectangle((gx - 60, base - 70, gx + 60, base), fill=sil); d.arc((gx - 60, base - 100, gx + 60, base - 40), 180, 360, fill=sil, width=6)
     return img
 
 def river(W=1024, H=1024):
@@ -262,8 +279,8 @@ def beam_glow(rgb, W=256, H=512):
 
 # ----------------------------------------------------------------------------- vehicles, ground
 def bus_side(w=1400, h=420):
-    img = Image.new('RGB', (w, h), RED); d = ImageDraw.Draw(img); gm = Image.new('RGB', (w, h), (0, 0, 0)); gd = ImageDraw.Draw(gm)
-    d.rectangle((0, int(h * .47), w, int(h * .53)), fill=CREAM); d.rectangle((0, int(h * .93), w, h), fill='#3a0a10')
+    img = Image.new('RGB', (w, h), '#c8201e'); d = ImageDraw.Draw(img); gm = Image.new('RGB', (w, h), (0, 0, 0)); gd = ImageDraw.Draw(gm)
+    d.rectangle((w - 150, int(h * .55), w, int(h * .92)), fill='#2a0a14'); d.line((w - 140, int(h * .9), w - 20, int(h * .6)), fill='#ffd88a', width=10); d.rectangle((0, int(h * .47), w, int(h * .53)), fill=CREAM); d.rectangle((0, int(h * .93), w, h), fill='#3a0a10')
     for row, (y0, y1) in enumerate(((int(h * .08), int(h * .41)), (int(h * .56), int(h * .86)))):
         n = 11
         for i in range(n):
@@ -442,6 +459,20 @@ def train_side(w=1200, h=420):
         d.rectangle((x0 + 6, int(h * .62), x1 - 6, int(h * .84)), fill='#c01c24')
     return img, g
 
+def quilt(W=512, H=512):
+    rs = random.Random(8); img = Image.new('RGB', (W, H), '#f6ecd0'); d = ImageDraw.Draw(img); cols = [RED, BLUE, GREEN, YELLOW, '#ff7a1e', '#7a3a8a', '#f6ecd0']; n = 8; s = W // n
+    for i in range(n):
+        for j in range(n):
+            c = rs.choice(cols); d.rectangle((i * s, j * s, (i + 1) * s, (j + 1) * s), fill=c)
+            if rs.random() < .5: d.polygon([(i * s, j * s), ((i + 1) * s, j * s), ((i + 1) * s, (j + 1) * s)], fill=rs.choice(cols))
+            d.rectangle((i * s, j * s, (i + 1) * s, (j + 1) * s), outline='#1a1840', width=3)
+    return img
+
+def blob(w=128):
+    yy, xx = np.mgrid[0:w, 0:w].astype('float32'); r = np.hypot(xx - w / 2, yy - w / 2) / (w / 2)
+    a = np.clip(1 - r, 0, 1) ** 0.8 * 0.9; img = np.zeros((w, w, 4), 'uint8'); img[..., 3] = (a * 255).astype('uint8'); img[..., :3] = (6, 6, 30)
+    return Image.fromarray(img, 'RGBA')
+
 def clock_face(w=512):
     img = Image.new('RGBA', (w, w), (0, 0, 0, 0)); d = ImageDraw.Draw(img); c = w / 2
     d.ellipse((4, 4, w - 5, w - 5), fill='#1a1840'); d.ellipse((24, 24, w - 25, w - 25), fill='#fff6dc')
@@ -494,7 +525,7 @@ def ensure(verbose=False):
     add('sign_tickets', lambda: sign('TICKETS', '#12307a', 'white', border='#ffc81e', w=640, h=200)); add('sign_news', lambda: sign('NEWS', RED, CREAM, border=CREAM, w=512, h=180)); add('sign_flowers', lambda: sign('FLOWERS', '#12724a', CREAM, border=CREAM, w=640, h=180))
     add('diagram', diagram); add('old_map', old_map); add('old_map_small', lambda: old_map(700, 520))
     pair('hq', hq_facade); pair('lodging', lodging_facade)
-    pair('fac_a', lambda: facade('a', 896, 760, 7, 5, '#d8c196', 0.55, 21, trim='#f0e2b8', door=False)); pair('fac_b', lambda: facade('b', 896, 760, 7, 5, '#b04830', 0.5, 33, trim='#ecdcb0', door=False)); pair('fac_c', lambda: facade('c', 896, 760, 7, 5, '#9aa6c8', 0.6, 44, trim='#e0e4f0'))
+    pair('fac_a', lambda: facade('a', 896, 760, 7, 5, '#cbbd9a', 0.34, 21, trim='#e8dcb8', door=False)); pair('fac_b', lambda: facade('b', 896, 760, 7, 5, '#8a3a2a', 0.34, 33, trim='#d8c8a0', door=False)); pair('fac_c', lambda: facade('c', 896, 760, 7, 5, '#6a2c28', 0.34, 44, trim='#cbbd9a'))
     add('sky', dusk_sky); add('skyline', skyline); add('skyline2', lambda: skyline(2048, 512, 9)); add('river', river)
     add('farground', farground); add('halo_warm', lambda: halo((1.0, 0.62, 0.22))); add('halo_cool', lambda: halo((0.3, 0.5, 1.0))); add('halo_white', lambda: halo((1.0, 0.9, 0.7))); add('halo_green', lambda: halo((0.35, 1.0, 0.5)))
     add('beam_warm', lambda: beam_glow((1.0, 0.8, 0.45)))
@@ -508,7 +539,7 @@ def ensure(verbose=False):
     add('wood', wood); add('wood_dark', lambda: wood(base=(0.36, 0.18, 0.09)))
     add('note', lambda: paper_note('')); add('night_city', night_city)
     for i in range(6): add('poster%d' % i, lambda i=i: poster(i))
-    add('tiles', station_wall('t')); add('tiles_plain', lambda: station_wall('tp', band=None)); pair('train_side', train_side); add('tiles_green', lambda: station_wall('tg', band='#14733f'))
+    add('tiles', station_wall('t')); add('tiles_plain', lambda: station_wall('tp', band=None)); add('tiles_cool', lambda: station_wall('tc', base='#9aa6dc')); add('tiles_cool_plain', lambda: station_wall('tcp', base='#6a78c0', band=None)); add('blob', blob); add('quilt', quilt); pair('train_side', train_side); add('tiles_green', lambda: station_wall('tg', band='#14733f'))
     add('clock', clock_face); pair('train_front', train_front); add('floor_pf', floor_platform); add('ballast', ballast)
     return tx
 

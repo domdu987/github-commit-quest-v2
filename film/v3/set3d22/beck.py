@@ -33,12 +33,12 @@ def kdir(az, el):
     return (-math.sin(a) * math.cos(e), -math.cos(a) * math.cos(e), -math.sin(e))
 _B = dict(toon=1.0, key_desat=0.0, ink='#1a1450', form=(0.0, -0.05, 0.22), bloom_size=0.05, sun_angle=0.8, night=False)
 LIGHTS = dict(
-    DUSK_CITY=dict(_B, key=(1.6, 0.86, 0.38), key_dir=kdir(60, 11), shade=(0.10, 0.10, 0.40), shade_tint=(0.085, 0.095, 0.44), shade_mix=0.8,
-                   grade_offset=(-0.004, -0.008, 0.0), lift=(0.012, 0.010, 0.040), grade_saturation=1.18),
-    LODGINGS=dict(_B, key=(0.0, 0.0, 0.0), key_dir=kdir(0, 60), shade=(0.10, 0.15, 0.45), shade_tint=(0.07, 0.13, 0.52), shade_mix=0.8,
-                  grade_offset=(0.0, -0.006, 0.004), lift=(0.008, 0.013, 0.05), grade_saturation=1.2, toon=0.8),
+    DUSK_CITY=dict(_B, key=(1.9, 1.0, 0.42), key_dir=kdir(60, 11), shade=(0.10, 0.10, 0.40), shade_tint=(0.085, 0.095, 0.44), shade_mix=0.8,
+                   grade_offset=(-0.004, -0.006, 0.0), lift=(0.034, 0.030, 0.078), grade_saturation=1.18),
+    LODGINGS=dict(_B, key=(0.0, 0.0, 0.0), key_dir=kdir(0, 60), shade=(0.09, 0.15, 0.46), shade_tint=(0.06, 0.14, 0.56), shade_mix=0.92,
+                  grade_offset=(0.0, -0.006, 0.004), lift=(0.006, 0.014, 0.054), grade_saturation=1.32, toon=0.8),
     PLATFORM=dict(_B, key=(0.0, 0.0, 0.0), key_dir=kdir(0, 60), shade=(0.09, 0.14, 0.46), shade_tint=(0.06, 0.12, 0.55), shade_mix=0.8,
-                  grade_offset=(0.0, -0.006, 0.004), lift=(0.006, 0.012, 0.052), grade_saturation=1.2, toon=0.8),
+                  grade_offset=(0.0, -0.006, 0.004), lift=(0.012, 0.020, 0.070), grade_saturation=1.2, toon=0.8),
 )
 
 # ----------------------------------------------------------------------------- scene setup
@@ -102,11 +102,11 @@ class Part:
 
 def plane(mb, p0, pu, pv, mat, uv=(0, 0, 1, 1)): mb.quad(V(p0), V(pu), V(pv), mat, uv)
 
-def facing_card(mb, base, w, h, mat, cam=None, tilt=0.0, flip=False):
+def facing_card(mb, base, w, h, mat, cam=None, tilt=0.0, flip=False, v0=0.0):
     cam = cam or STATE['cam']; base = V(base); n = V((cam.x - base.x, cam.y - base.y, 0)); n.normalize()
     r = V((-n.y, n.x, 0)); u = V((0, 0, 1)) * math.cos(math.radians(tilt)) - n * math.sin(math.radians(tilt))
     pts = [base - r * w / 2, base + r * w / 2, base + r * w / 2 + u * h, base - r * w / 2 + u * h]
-    mb.pid += 1; mb.face(pts, mat, [(0, 0), (1, 0), (1, 1), (0, 1)] if not flip else [(1, 0), (0, 0), (0, 1), (1, 1)])
+    mb.pid += 1; mb.face(pts, mat, [(0, v0), (1, v0), (1, 1), (0, 1)] if not flip else [(1, v0), (0, v0), (0, 1), (1, 1)])
 
 def halo_card(mb, c, r, mat):
     cam = STATE['cam']; c = V(c); f = (c - cam).normalized(); rt = f.cross(V((0, 0, 1))).normalized(); up = rt.cross(f)
@@ -139,7 +139,7 @@ def pitched(mb, x0, x1, y0, y1, z0, z1, rise, wall, roof, ridge_x=True, tx_front
         mb.pid += 1; mb.face([V((x0, y0, z1)), V((x0, ym, zr)), V((x0, y1, z1))], wall); mb.pid += 1; mb.face([V((x1, y1, z1)), V((x1, ym, zr)), V((x1, y0, z1))], wall)
 
 # ============================================================================= STILL 1: london_dusk
-CAM1 = dict(loc=(-13, -46, 70), look_at=(-3, 40, 0), lens=22, shift_y=0.17)
+CAM1 = dict(loc=(-13, -46, 70), look_at=(-3, 44, 0), lens=22, shift_y=0.19)
 
 def build_london(scene, P):
     S = STATE; C, TX, E, CARD = S['C'], S['TX'], S['E'], S['CARD']; rs = random.Random(22)
@@ -201,7 +201,8 @@ def build_london(scene, P):
     pitched(mb, -6.4, 6.4, -5.4, 5.4, 26.2, 26.2, 5.0, brick, C('#7a3a6a'))
     for cx in (-3, 3): mb.box((cx - .8, -1, 30.5), (cx + .8, 1, 34.5), brick); mb.box((cx - 1.0, -1.2, 34.5), (cx + 1.0, 1.2, 35.2), C('#4a3a30'))
     ob = lh.done((-34, -9, 12)); ob.location = (-32, -9, 0); ob.rotation_euler = (0, 0, math.radians(-32))
-    sg = Part('sign_rooms', ink=False); plane(sg.mb, (6.2, -3.6, 4.5), (0, 7.2, 0), (0, 0, 2.2), E('rooms', 'sign_rooms', k=1.5), (0, 0, 1, 1)); o2 = sg.done(); o2.location = (-32, -9, 0); o2.rotation_euler = (0, 0, math.radians(-32))
+    sg = Part('sign_rooms', ink=False); facing_card(sg.mb, (-19, 1.0, 0.0), 10.0, 3.4, E('rooms', 'sign_rooms', k=1.7), STATE['cam'], 0.0)  # stands on the pavement, faces the camera
+    sg.done(); rm_ = Part('rooms_posts', (-19, 1, 2)); [rod(rm_.mb, (px, 1.0, 0), (px, 1.0, 3.4), 0.2, C('#26204e'), seg=6) for px in (-23.4, -14.6)]; rm_.done((-19, 1, 2))
     bw = Part('beck_window_glow', ink=False, shadow=False); halo_card(bw.mb, (-32 + 6.4 * math.cos(math.radians(-32)) - 2.0 * math.sin(math.radians(-32)), -9 + 6.4 * math.sin(math.radians(-32)) + 2.0 * math.cos(math.radians(-32)), 14.6), 4.6, E('hbw', 'halo_warm', k=1.4, additive=True)); bw.done()
     # near-side terrace (roofs seen from above: dark foreground) x -80..-38
     tr = Part('terrace', (-60, -9, 12)); mb = tr.mb
@@ -263,35 +264,45 @@ def build_london(scene, P):
     sb = Part('southbank', (0, 92, 10)); mb = sb.mb
     x = -150
     while x < 150:
-        w = rs.uniform(10, 18); hg = rs.uniform(12, 24); t = rs.choice(['fac_a', 'fac_b', 'fac_c'])
-        pitched(mb, x, x + w, 86, 98, 0, hg, 3.6, C('#b8603a'), C('#c4482c'), tx_front=TX(t, 1.0, glow=t + '_glow', glow_k=1.6)); x += w + 0.4
+        w = rs.uniform(10, 18); hg = rs.uniform(8, 13); t = rs.choice(['fac_a', 'fac_b', 'fac_c'])
+        pitched(mb, x, x + w, 86, 98, 0, hg, 3.6, C('#b8603a'), C('#3a3550'), tx_front=TX(t, 1.0, glow=t + '_glow', glow_k=1.6))
+        for cx in (x + w * .3, x + w * .7):
+            mb.box((cx - .5, 91, hg + 2), (cx + .5, 92, hg + 4.8), C('#7a3a2a'))
+            for j in (-.25, .25): rod(mb, (cx + j, 91.5, hg + 4.8), (cx + j, 91.5, hg + 5.7), 0.22, C('#c4562a'), seg=6)
+        x += w + 0.4
     sb.done((0, 92, 10), px=4)
     # dome (St Paul's-ish) and clock tower with a lit clock
-    dm = Part('dome', (-45, 108, 20)); mb = dm.mb; dc = C('#d9c8e6'); dg = C('#e8b24a', 1.3)
+    dm = Part('dome', (-45, 108, 20)); mb = dm.mb; dc = C('#cfc4a8', 1.0, 1.6, smix=0.4); dg = C('#e8b24a', 1.3)
     mb.box((-61, 98, 0), (-29, 122, 12), C('#e4d2a4'), mats={'front': TX('fac_a', 1.0, glow='fac_a_glow', glow_k=1.5)})
     mb.frustum((-45, 111, 12), (-45, 111, 26), 11, 10.5, dc, seg=24);
     for i in range(12): a = 2 * math.pi * i / 12; rod(mb, (-45 + 10.7 * math.cos(a), 111 + 10.7 * math.sin(a), 12.4), (-45 + 10.7 * math.cos(a), 111 + 10.7 * math.sin(a), 25), 0.45, C('#f0e4c8'), seg=5)
     mb.sphere((-45, 111, 26), 10.5, dc, seg=24, rings=10); mb.frustum((-45, 111, 36.5), (-45, 111, 41), 2.6, 2.4, C('#e4d2a4'), seg=12); mb.sphere((-45, 111, 43), 2.6, dg, seg=12, rings=8); rod(mb, (-45, 111, 45), (-45, 111, 50), 0.35, dg)
     dm.done((-45, 108, 20), px=3)
     ck = Part('clocktower', (52, 104, 25)); mb = ck.mb; tw = TX('fac_c', 1.0, glow='fac_c_glow', glow_k=1.6)
-    mb.box((44, 96, 0), (60, 112, 30), C('#e4d2a4'), mats={'front': tw}); mb.box((45, 163, 30), (59, 111, 44), C('#d8c498')); mb.box((44, 96, 44), (60, 112, 46), C('#c8b080'))
+    mb.box((44, 96, 0), (60, 112, 30), C('#e4d2a4'), mats={'front': tw}); mb.box((45, 97, 30), (59, 111, 44), C('#d8c498')); mb.box((44, 96, 44), (60, 112, 46), C('#c8b080'))
     mb.box((46.5, 98.5, 46), (57.5, 109.5, 54), C('#c8b080')); mb.frustum((52, 104, 54), (52, 104, 68), 6.2, 0.2, C('#3a6a98'), seg=4); rod(mb, (52, 104, 68), (52, 104, 73), 0.3, dg)
+    for px_, py_ in ((44.6, 96.6), (59.4, 96.6), (44.6, 111.4), (59.4, 111.4)): mb.frustum((px_, py_, 44), (px_, py_, 52), 1.0, 0.1, C('#c8b080'), seg=4); rod(mb, (px_, py_, 52), (px_, py_, 54), 0.1, dg)
+    mb.box((45.4, 95.6, 31.4), (58.6, 96.0, 44.6), dg)
     ck.done((52, 104, 25), px=3)
     cf = Part('clockface', ink=False); plane(cf.mb, (46.6, 95.5, 33), (10.8, 0, 0), (0, 0, 10.8), E('clk', 'clock', k=1.5, alpha=True), (0, 0, 1, 1)); cf.done()
     # far field: filler rows of blocks, a glowing far ground, two skyline cards, so there is city all the way to the horizon
     ff = Part('farfield', (0, 200, 12), ink=False); mb = ff.mb
     plane(mb, (-3000, 100, -0.6), (6000, 0, 0), (0, 2600, 0), E('farground', 'farground', k=1.0), (0, 0, 1, 1))
-    for (y0, y1, hmin, hmax) in ((100, 114, 12, 22), (118, 134, 14, 26), (140, 160, 14, 30), (170, 196, 16, 34), (210, 244, 18, 38)):
+    for (y0, y1, hmin, hmax) in ((100, 114, 8, 12), (118, 134, 8, 13), (140, 160, 9, 14), (170, 196, 9, 14), (210, 244, 9, 14)):
         x = -260
         while x < 260:
             w = rs.uniform(12, 24); hg = rs.uniform(hmin, hmax); t = rs.choice(['fac_a', 'fac_b', 'fac_c'])
             if not (y0 == 100 and -66 < x < -26 or y0 == 100 and 40 < x < 64):
-                mb.box((x, y0, 0), (x + w, y1, hg), TX(t, 1.0, 1.0, glow=t + '_glow', glow_k=1.5), mats={'front': TX(t, 1.0, glow=t + '_glow', glow_k=1.5), 'top': C('#3a4690')}); mb.box((x - .3, y0 - .3, hg), (x + w + .3, y1 + .3, hg + .8), C('#cdb888'))
+                pitched(mb, x, x + w, y0, y1, 0, hg, rs.uniform(2.4, 4), C('#8a3a2a'), C(rs.choice(['#3a3550', '#4a3a58', '#5a3a3a'])), ridge_x=rs.random() < .75, tx_front=TX(t, 1.0, glow=t + '_glow', glow_k=1.4))
+                for cx in (x + w * .25, x + w * .6, x + w * .85):
+                    if rs.random() < .6:
+                        mb.box((cx - .4, (y0 + y1) / 2 - .4, hg + 2), (cx + .4, (y0 + y1) / 2 + .4, hg + 4.5), C('#7a3a2a'))
+                        for j in (-.18, .18): rod(mb, (cx + j, (y0 + y1) / 2, hg + 4.5), (cx + j, (y0 + y1) / 2, hg + 5.3), 0.2, C('#c4562a'), seg=6)
             x += w + rs.uniform(0.3, 1.5)
     ff.done()
     sk = Part('skyline', ink=False, shadow=False)
-    plane(sk.mb, (-340, 330, 0), (680, 0, 0), (0, 0, 130), E('sky1', 'skyline', k=1.15, alpha=True), (0, 0, 1, 1))
-    plane(sk.mb, (-700, 600, 0), (1400, 0, 0), (0, 0, 250), E('sky2', 'skyline2', k=1.0, alpha=True), (0, 0, 1, 1)); sk.done()
+    plane(sk.mb, (-340, 330, 0), (680, 0, 0), (0, 0, 105), E('sky1', 'skyline', k=1.15, alpha=True), (0, 0, 1, 1))
+    plane(sk.mb, (-700, 600, 0), (1400, 0, 0), (0, 0, 150), E('sky2', 'skyline2', k=1.0, alpha=True), (0, 0, 1, 1)); sk.done()
     for n in ('river', 'embank', 'bridge', 'bridge2', 'bridge_lamps', 'bridge_lamps2'):
         bpy.data.objects[n].location.y += 12
     for n in ('bridge', 'bridge_lamps'): bpy.data.objects[n].location.x -= 46
@@ -304,13 +315,16 @@ def build_london(scene, P):
     for n in ('southbank', 'dome', 'clocktower', 'clockface', 'farfield'):
         bpy.data.objects[n].location.y += 24
     # ---- vehicles: red double-decker bus, black cabs
-    bus = Part('bus', (-4, 4, 4)); mb = bus.mb; bm = TX('bus', 1.0, 2.4, glow='bus_glow', glow_k=1.6, smix=0.22); bred = C('#e3262b', 1.0, 3.2, smix=0.22)
-    mb.box((-12, 1.4, 0.8), (6, 5.8, 8.6), bred, mats={'front': bm, 'back': bm}, skip='')
-    mb.box((-12.2, 1.2, 8.6), (6.2, 6.0, 9.0), C('#c01c24')); mb.box((-12, 1.4, 0.2), (6, 5.8, 1.1), C('#3a0a10'))
-    for wx in (-8.5, 2.5):
-        for wy in (1.6, 5.6): mb.frustum((wx, wy - .3, 0.9), (wx, wy + .3, 0.9), 0.95, 0.95, C('#14143a'), seg=12)
+    bus = Part('bus', (-4, 4, 4)); mb = bus.mb; bm = TX('bus', 1.0, 6.0, glow='bus_glow', glow_k=1.6, smix=0.15); bred = C('#c8201e', 1.0, 6.0, smix=0.15)
+    mb.box((-16, 1.2, 0.8), (8, 6.2, 10.4), bred, mats={'front': bm, 'back': bm, 'top': C('#e03a30', 1.2, 7.0, smix=0.15)}, skip='')
+    mb.box((-16.2, 1.0, 10.4), (8.2, 6.4, 10.8), C('#9a1614', 1.0, 4.0, smix=0.15)); mb.box((-16, 1.2, 0.2), (8, 6.2, 1.2), C('#3a0a10', 1.0, 3.0))
+    mb.box((-16.1, 2.0, 4.6), (-15.9, 5.4, 5.2), C('#fff2c0', 1.8))                                                       # route board
+    mb.box((7.0, 1.0, 0.8), (8.6, 1.5, 10.4), C('#2a0a14')); mb.box((7.0, 5.9, 0.8), (8.6, 6.4, 10.4), C('#2a0a14'))     # open rear platform posts
+    for wx in (-12, -9.5, 3.0):
+        for wy in (1.6, 5.8): mb.frustum((wx, wy - .35, 1.1), (wx, wy + .35, 1.1), 1.15, 1.15, C('#14143a'), seg=12)
     bus.done((-4, 4, 4))
-    bl = Part('bus_lamps', ink=False, shadow=False); halo_card(bl.mb, (-12.4, 2.4, 2.0), 2.2, E('hl', 'halo_white', k=1.8, additive=True)); halo_card(bl.mb, (-12.4, 5.0, 2.0), 2.2, E('hl', 'halo_white', k=1.8, additive=True)); bl.done()
+    point_light('bus_warm', (-4, -3, 6), (1.0, 0.7, 0.4), 5200, 1.0)
+    bl = Part('bus_lamps', ink=False, shadow=False); halo_card(bl.mb, (-16.4, 2.4, 2.2), 2.4, E('hl', 'halo_white', k=1.8, additive=True)); halo_card(bl.mb, (-16.4, 5.0, 2.2), 2.4, E('hl', 'halo_white', k=1.8, additive=True)); bl.done()
     cabs = [((14, 0.6), 1), ((26, 11.2), -1), ((-26, 11.4), -1), ((38, 0.8), 1)]
     cb = Part('cabs', (20, 6, 3)); mb = cb.mb; cm = TX('cab', 1.0, 2.0, glow='cab_glow', glow_k=1.6, smix=0.3); cbk = C('#1d2250', 1.0, 1.6)
     for (cx, cy), d in cabs:
@@ -337,13 +351,13 @@ def build_london(scene, P):
     ks = Part('kiosk', (-16, 20, 3)); mb = ks.mb
     mb.box((-19, 17.5, 0), (-13, 21.5, 4.6), C('#1f8a52'), mats={'front': C('#1f8a52')}); mb.box((-19.6, 17.0, 4.6), (-12.4, 22, 5.6), C('#e3262b')); mb.box((-18.4, 17.1, 1.6), (-13.6, 17.5, 3.4), C('#ffc65a', 1.5))
     ks.done((-16, 20, 3))
-    ksg = Part('kiosk_sign', ink=False); plane(ksg.mb, (-18.4, 16.9, 4.8), (4.8, 0, 0), (0, 0, 0.8), E('news', 'sign_news', k=1.5), (0, 0, 1, 1)); ksg.done()
+    ksg = Part('kiosk_sign', ink=False); plane(ksg.mb, (-21.0, 16.8, 5.6), (9.0, 0, 0), (0, 0, 2.7), E('news', 'sign_news', k=1.7), (0, 0, 1, 1)); ksg.done()
     fs = Part('flowers', (20, 21, 2)); mb = fs.mb
     mb.box((17, 19.5, 0), (23, 22, 1.8), C('#6a3a1a')); mb.box((16.6, 19.2, 1.8), (23.4, 22.4, 2.0), C('#f0e4c8'))
     for i in range(6): lumpy(mb, (17.6 + i * 1.0, 20.7, 2.5), 0.55, C(['#e3262b', '#ffc81e', '#d1409a', '#ffffff', '#ff7a1e', '#e3262b'][i]), i, seg=8, rings=5)
     mb.box((15.8, 18.8, 5.0), (24.2, 22.8, 5.3), C('#12724a')); rod(mb, (16, 19, 2), (16, 19, 5), 0.2, lc); rod(mb, (24, 19, 2), (24, 19, 5), 0.2, lc)
     fs.done((20, 21, 2))
-    fgn = Part('flower_sign', ink=False); plane(fgn.mb, (17.4, 18.7, 4.8), (5.2, 0, 0), (0, 0, 0.8), E('flw', 'sign_flowers', k=1.4), (0, 0, 1, 1)); fgn.done()
+    fgn = Part('flower_sign', ink=False); plane(fgn.mb, (15.4, 18.6, 5.5), (9.0, 0, 0), (0, 0, 2.5), E('flw', 'sign_flowers', k=1.4), (0, 0, 1, 1)); fgn.done()
     bol = Part('bollards', (0, -1, 1)); mb = bol.mb
     for bx in range(-30, 60, 7): rod(mb, (bx, -2.8, 0), (bx, -2.8, 1.4), 0.4, C('#e8e0c8'), seg=8)
     bol.done((0, -1, 1))
@@ -363,13 +377,19 @@ def build_london(scene, P):
     pg2.done()
     # ---- crowds (painted placeholder cards with hats, rim light)
     cr = Part('crowd', ink=False); mb = cr.mb; cam = STATE['cam']
+    PEOPLE = []
     def person(x, y, k, rimset='w', h=4.1, z=0.0):
-        card = CARD('crowd_%s%d' % (rimset, k % 10)); w = h * 200 / 440; facing_card(mb, (x, y, z), w, h, card, cam, tilt=5.0)
+        card = CARD('crowd_%s%d' % (rimset, k % 10)); w = h * 200 / 440; facing_card(mb, (x, y, z), w, h, card, cam, tilt=5.0); PEOPLE.append((x, y, w))
     n = 0
     for (x0, x1, y0, y1, num, rimset) in ((-30, -2, 15.5, 22.5, 18, 'w'), (-6, 40, 15.6, 22.5, 16, 'w'), (0, 66, 14.5, 23, 12, 'w'), (-30, 66, -7, -3, 14, 'c'), (-8, 22, 1.0, 12.5, 6, 'w'), (-20, 60, -8, -4.5, 12, 't')):
         for i in range(num): person(rs.uniform(x0, x1), rs.uniform(y0, y1), n, rimset, h=rs.uniform(5.6, 6.6)); n += 1
     for i in range(9): person(-39 + i * 1.6, 16.5 + (i % 3) * 1.6, n, 't', 6.0); n += 1        # queue at the entrance
+    for (x0, x1, y0, y1, num, rimset) in ((24, 70, -7.5, -3.5, 16, 't'), (20, 66, 0.5, 12, 8, 'c'), (-70, -40, 15.5, 22.5, 10, 'w')):
+        for i in range(num): person(rs.uniform(x0, x1), rs.uniform(y0, y1), n, rimset, h=rs.uniform(5.6, 6.6)); n += 1
     cr.done()
+    bsh = Part('contact_shadows', ink=False, shadow=False)
+    for (bx, by, bw_) in PEOPLE: plane(bsh.mb, (bx - bw_ * 0.7, by - 0.7, 0.09), (bw_ * 1.4, 0, 0), (0, 1.4, 0), E('blob', 'blob', alpha=True), (0, 0, 1, 1))
+    bsh.done()
     bl2 = Part('blobs', ink=False, shadow=False); mb = bl2.mb
     # ---- foreground dark prop: big lamp post at the bottom right, in the nearest 15 %
     fg = Part('fg_post', (10, -26, 8)); mb = fg.mb; fc = C('#1c1850', 0.8)
@@ -379,8 +399,6 @@ def build_london(scene, P):
     fh = Part('fg_halo', ink=False, shadow=False); halo_card(fh.mb, (12, -22, 17.6), 5.0, E('hh', 'halo_warm', k=2.0, additive=True)); fh.done()
 
 # ============================================================================= STILL 2: beck_lodgings_night
-CAM2 = dict(loc=(-2.8, -5.0, 3.4), look_at=(0.8, 10.5, 2.7), lens=22)
-
 def rim_card(ob, left=None, right=None, px=6):
     """Re-paint a placeholder actor card with a painted rim light (left / right colour) and swap its image."""
     from PIL import Image
@@ -396,269 +414,256 @@ def actor(role, mark, face_to, tilt=0.0, left=None, right=None):
     if left or right: rim_card(ob, left, right)
     return ob
 
+CAM2 = dict(loc=(-1.8, -9.5, 5.0), look_at=(1.2, 9.0, 3.0), lens=30)
+
 def build_lodgings(scene, P):
     S = STATE; C, TX, E, CARD = S['C'], S['TX'], S['E'], S['CARD']; rs = random.Random(5); cam = S['cam']
     X, Y, Z = V((1, 0, 0)), V((0, 1, 0)), V((0, 0, 1))
-    RW, BW, LW = 9.0, 14.0, -9.0; CE = 6.4
-    wp = TX('wallpaper', 1.0, 1.0); wpb = TX('wallpaper_b', 1.0, 1.0)
-    # ---- room shell: floor, rug, walls, ceiling, skirting, picture rail
+    RW, BW, LW = 10.0, 14.0, -10.0; CE = 13.0
+    wp = TX('wallpaper', 1.0, 1.0); wpb = TX('wallpaper_b', 1.0, 1.0); wd = C('#7a3a1a', 1.0, 1.0); wood = C('#8a4a22', 1.0, 1.0); dwood = C('#5a2c12', 1.0, 1.0)
     r = Part('room', (0, 7, 3), ink=False); mb = r.mb
-    plane(mb, (LW, -9, 0), (18, 0, 0), (0, 23, 0), TX('wood', 1.0, 1.0), (0, 0, 6, 8))
-    plane(mb, (-7.0, -5.5, 0.03), (14, 0, 0), (0, 15.5, 0), TX('wallpaper_b', 1.0, 0.9), (0, 0, 3.2, 3.2))               # rug
-    plane(mb, (LW, BW, 0), (18, 0, 0), (0, 0, CE), wp, (0, 0, 6, 2.4))                                               # back wall
-    plane(mb, (RW, -9, 0), (0, 23, 0), (0, 0, CE), wpb, (0, 0, 8, 2.4))                                              # right wall
-    plane(mb, (LW, -9, 0), (0, 23, 0), (0, 0, CE), wp, (0, 0, 8, 2.4))                                               # left wall
-    plane(mb, (LW, -9, CE), (18, 0, 0), (0, 23, 0), C('#e2c08c', 0.9, 1.0), (0, 0, 1, 1))                            # ceiling
+    plane(mb, (LW, -12, 0), (20, 0, 0), (0, 26, 0), TX('wood', 1.0, 1.0), (0, 0, 7, 9))
+    plane(mb, (-6.0, -5.0, 0.03), (13, 0, 0), (0, 15, 0), TX('wallpaper_b', 1.0, 0.9), (0, 0, 3.2, 3.6))                    # rug
+    plane(mb, (LW, BW, 0), (20, 0, 0), (0, 0, CE), wp, (0, 0, 7, 3.6)); plane(mb, (RW, -12, 0), (0, 26, 0), (0, 0, CE), wpb, (0, 0, 8, 3.6))
+    plane(mb, (LW, -12, 0), (0, 26, 0), (0, 0, CE), wp, (0, 0, 8, 3.6)); plane(mb, (LW, -12, CE), (20, 0, 0), (0, 26, 0), C('#f0a050', 0.9, 1.0), (0, 0, 1, 1))
     r.done()
-    sk = Part('skirting', (0, 7, 0.4)); mb = sk.mb; wd = C('#7a3a1a', 1.0, 1.0)
-    mb.box((LW, BW - 0.3, 0), (RW, BW, 0.7), wd); mb.box((RW - 0.3, -9, 0), (RW, BW, 0.7), wd); mb.box((LW, -9, 0), (LW + 0.3, BW, 0.7), wd)
-    mb.box((LW, BW - 0.2, CE - 0.9), (RW, BW, CE - 0.6), wd); mb.box((LW, BW - 0.3, CE - 0.4), (RW, BW, CE), C('#e8d8ae'))
+    sk = Part('skirting', (0, 14, 0.4)); mb = sk.mb
+    mb.box((LW, BW - 0.3, 0), (RW, BW, 0.8), wd); mb.box((RW - 0.3, -12, 0), (RW, BW, 0.8), wd); mb.box((LW, BW - 0.2, CE - 1.4), (RW, BW, CE - 1.1), wd); mb.box((LW, BW - 0.3, CE - 0.6), (RW, BW, CE), C('#e8d8ae'))
     sk.done((0, 14, 0.4), px=2)
-    # ---- the night window with city lights, curtains, sill (cool rim source)
-    wx0, wx1, wz0, wz1 = -8.4, 0.2, 1.7, 5.9
-    wn = Part('window_view', ink=False, shadow=False); plane(wn.mb, (wx0, BW - 0.05, wz0), (wx1 - wx0, 0, 0), (0, 0, wz1 - wz0), E('nightcity', 'night_city', k=1.15), (0, 0.0, 1, 0.52)); wn.done()
-    wf = Part('window_frame', (-2.6, 14, 4)); mb = wf.mb; wfm = C('#e8dcc0', 1.0, 1.0)
+    # ---- night window (right of the board) with the HQ and its roundel across the street, curtains
+    wx0, wx1, wz0, wz1 = 4.5, 8.7, 2.8, 8.4
+    wn = Part('window_view', ink=False, shadow=False); plane(wn.mb, (wx0, BW - 0.05, wz0), (wx1 - wx0, 0, 0), (0, 0, wz1 - wz0), E('nightcity', 'night_city', k=1.15), (0.0, 0.0, 0.56, 0.78)); wn.done()
+    wf = Part('window_frame', (6.6, 14, 5)); mb = wf.mb; wfm = C('#e8dcc0', 1.0, 1.0)
     mb.box((wx0 - 0.4, BW - 0.5, wz0 - 0.4), (wx1 + 0.4, BW + 0.1, wz0), wfm); mb.box((wx0 - 0.4, BW - 0.5, wz1), (wx1 + 0.4, BW + 0.1, wz1 + 0.4), wfm)
     mb.box((wx0 - 0.4, BW - 0.5, wz0), (wx0, BW + 0.1, wz1), wfm); mb.box((wx1, BW - 0.5, wz0), (wx1 + 0.4, BW + 0.1, wz1), wfm)
     xm = (wx0 + wx1) / 2; mb.box((xm - 0.12, BW - 0.4, wz0), (xm + 0.12, BW, wz1), wfm); mb.box((wx0, BW - 0.4, (wz0 + wz1) / 2 - 0.12), (wx1, BW, (wz0 + wz1) / 2 + 0.12), wfm)
-    mb.box((wx0 - 0.9, BW - 1.0, wz0 - 0.7), (wx1 + 0.9, BW - 0.2, wz0 - 0.4), wfm)                                       # sill
-    for sx, a, b in ((-1, wx0 - 1.8, wx0 + 0.1), (1, wx1 - 0.1, wx1 + 1.8)):                                                  # curtains
-        mb.box((a, BW - 1.1, wz0 - 0.5), (b, BW - 0.5, wz1 + 0.9), C('#c4272f', 1.0, 1.4))
-    mb.box((wx0 - 2.2, BW - 1.3, wz1 + 0.8), (wx1 + 2.2, BW - 0.6, wz1 + 1.1), C('#6a3a1a'))
-    wf.done((-2.6, 14, 4), px=2.5)
-    # ---- old tangled geographic map, pinned on the back wall beside the board
-    om = Part('old_map', (6, 14, 4.2), ink=True); mb = om.mb
-    mb.box((3.0, BW - 0.14, 3.7), (8.0, BW, 6.3), C('#8a5a2a'))
-    om.done((6, 14, 4.2), px=2.5)
-    omp = Part('old_map_img', ink=False); plane(omp.mb, (3.15, BW - 0.16, 3.85), (4.7, 0, 0), (0, 0, 2.3), TX('old_map', 1.0, 1.0, glow='old_map', glow_k=0.35), (0, 0, 1, 1)); omp.done()
-    for (px_, pz_) in ((3.5, 6.2), (8.1, 6.2), (3.5, 2.7), (8.1, 2.7)): pass
-    # ---- cork board of circuit diagrams on the right wall
-    cb = Part('cork', (8.8, 9, 4.4)); mb = cb.mb
-    mb.box((RW - 0.3, 5.5, 2.9), (RW, 12.3, 6.4), C('#5a2f14'))
-    cb.done((8.8, 9, 4.4), px=2.5)
-    cbp = Part('cork_img', ink=False); plane(cbp.mb, (RW - 0.32, 12.1, 3.05), (0, -6.4, 0), (0, 0, 3.2), TX('cork', 1.0, 1.0, glow='cork', glow_k=0.3), (0, 0, 1, 1)); cbp.done()
-    # ---- the drafting board (tilted), diagram on it, legs, ledge, ink bottles, T-square, set squares
-    th = math.radians(56); u = V((0, math.cos(th), math.sin(th))); n = V((0, -math.sin(th), math.cos(th))); c0 = V((0.4, 8.3, 3.3))
-    db = Part('drafting_board', (0.4, 8.3, 3.3)); mb = db.mb; wood = C('#8a4a22', 1.0, 1.0); dwood = C('#5a2c12', 1.0, 1.0)
-    obox(mb, c0, X, u, n, 3.7, 2.45, 0.1, wood)
+    mb.box((wx0 - 0.9, BW - 1.0, wz0 - 0.7), (wx1 + 0.9, BW - 0.2, wz0 - 0.4), wfm)
+    for a, b in ((wx0 - 1.5, wx0 + 0.1), (wx1 - 0.1, wx1 + 1.5)): mb.box((a, BW - 1.1, wz0 - 0.5), (b, BW - 0.5, wz1 + 0.9), C('#c4272f', 1.0, 1.4))
+    mb.box((wx0 - 1.9, BW - 1.3, wz1 + 0.8), (wx1 + 1.9, BW - 0.6, wz1 + 1.1), C('#6a3a1a'))
+    wf.done((6.6, 14, 5), px=2.5)
+    # ---- OLD tangled map (left of the board, facing the camera), cork board of circuits above the board
+    om = Part('old_map', (-4, 14, 5)); mb = om.mb; mb.box((-6.15, BW - 0.3, 3.65), (-1.95, BW, 6.95), C('#6a3a1a', 1.0, 1.5)); om.done((-4, 14, 5), px=2.5)
+    omp = Part('old_map_img', ink=False); plane(omp.mb, (-5.95, BW - 0.34, 3.85), (3.8, 0, 0), (0, 0, 2.76), TX('old_map', 1.15, 1.0, glow='old_map', glow_k=0.55), (0, 0, 1, 1)); omp.done()
+    cb = Part('cork', (1.6, 14, 8.6)); mb = cb.mb; mb.box((-1.7, BW - 0.3, 7.2), (4.9, BW, 10.2), C('#5a2f14')); cb.done((1.6, 14, 8.6), px=2.5)
+    cbp = Part('cork_img', ink=False); plane(cbp.mb, (-1.5, BW - 0.34, 7.4), (6.2, 0, 0), (0, 0, 2.6), TX('cork', 1.1, 1.0, glow='cork', glow_k=0.4), (0, 0, 1, 1)); cbp.done()
+    sh = Part('shelf', (-4, 13.5, 7.6)); mb = sh.mb; mb.box((-6.2, BW - 1.0, 7.6), (-1.9, BW, 7.85), wd)
+    for i in range(10): bh = 0.9 + rs.random() * .5; mb.box((-6.0 + i * 0.4, BW - 0.8, 7.85), (-6.0 + i * 0.4 + 0.34, BW - 0.2, 7.85 + bh), C(rs.choice(['#e3262b', '#1f49c8', '#12a15a', '#ffc81e', '#7a3a8a', '#d8d0b0']), 1.0, 1.5))
+    sh.done((-4, 13.5, 8), px=2.5)
+    # ---- the drafting board (tilted), diagram, legs, ledge, inks, T-square
+    th = math.radians(56); u = V((0, math.cos(th), math.sin(th))); n = V((0, -math.sin(th), math.cos(th))); c0 = V((1.2, 8.3, 3.3)); HW, HS = 3.05, 2.3
+    db = Part('drafting_board', (1.2, 8.3, 3.3)); mb = db.mb
+    obox(mb, c0, X, u, n, HW + 0.1, HS + 0.1, 0.1, wood)
     for sx in (-1, 1):
-        a = c0 + X * (3.3 * sx) - u * 1.6 - n * 0.2
-        rod(mb, a, V((3.7 * sx + 0.4, 6.2, 0.0)), 0.16, dwood, seg=6)
-        rod(mb, c0 + X * (3.0 * sx) + u * 1.2 - n * 0.2, V((3.5 * sx + 0.4, 12.0, 0.0)), 0.16, dwood, seg=6)
-    mb.box((-3.4, 6.1, 1.2), (4.2, 6.9, 1.34), wood)                                                                      # ledge for the inks
-    db.done((0.4, 8.3, 3.3), px=3)
-    dg = Part('diagram', ink=False); p0 = c0 + n * 0.115 - X * 3.5 - u * 2.25
-    dg.mb.quad(p0, X * 7.0, u * 4.5, TX('diagram', 0.9, 1.0, glow='diagram', glow_k=0.35), (0, 0, 1, 1)); dg.done()
-    ts = Part('tools', (0.4, 8.3, 3.3)); mb = ts.mb
-    obox(mb, c0 + n * 0.19 + u * 1.55, X, u, n, 3.5, 0.11, 0.045, C('#c8793a', 1.2, 1.3)); obox(mb, c0 + n * 0.19 + u * 1.55 - X * 3.45, X, u, n, 0.24, 0.95, 0.07, C('#4a2410'))   # T-square
-    for (tx_, ty_, col) in ((2.2, -1.2, '#38d68a'), (-1.6, -0.2, '#56e0ff')):
-        p = [c0 + n * 0.2 + X * (tx_ + dx) + u * (ty_ + dy) for dx, dy in ((0, 0), (1.3, 0), (0, 1.3))]; mb.pid += 1; mb.face(p, C(col, 1.5, 1.5))
-    for i, col in enumerate(('#e3262b', '#1f49c8', '#12a15a', '#ffc81e')):                                                  # ink bottles on the ledge
-        bx = -2.4 + i * 1.5; rod(mb, (bx, 6.5, 1.34), (bx, 6.5, 2.0), 0.34, C('#222244', 1.0, 1.3), seg=10); rod(mb, (bx, 6.5, 1.34), (bx, 6.5, 1.78), 0.30, C(col, 1.6, 2.0, smix=0.2), seg=10); rod(mb, (bx, 6.5, 2.0), (bx, 6.5, 2.25), 0.16, C(col, 1.2, 1.6, smix=0.2), seg=8)
-    ts.done((0.4, 7, 2), px=2.5)
-    # ---- side bench with the green-shaded key lamp stand, kettle, books on a shelf
-    bn = Part('bench', (7, 8, 1.5)); mb = bn.mb
-    mb.box((5.0, 7.2, 1.7), (8.8, 10.4, 2.0), wood)
-    for lx in (5.2, 8.6):
-        for ly in (7.4, 10.2): mb.box((lx - 0.12, ly - 0.12, 0), (lx + 0.12, ly + 0.12, 1.7), dwood)
-    kc = C('#d8d8e8', 1.3, 1.6); rod(mb, (7.4, 9.2, 2.0), (7.4, 9.2, 2.9), 0.55, kc, r1=0.4, seg=12); rod(mb, (7.4, 9.2, 2.9), (7.4, 9.2, 3.15), 0.2, C('#222244')); mb.sphere((7.4, 9.2, 3.25), 0.16, C('#222244'))   # kettle
-    rod(mb, (7.9, 9.0, 2.5), (8.75, 8.7, 2.9), 0.1, kc, seg=5)
-    bn.done((7, 8, 2), px=3)
-    lamp = V((4.4, 4.4, 0)); lm = Part('key_lamp', (6, 4.4, 3.5)); mb = lm.mb; dk = C('#2a2250')
-    rod(mb, lamp, lamp + Z * 3.8, 0.16, dk, seg=8); mb.frustum(lamp, lamp + Z * 0.2, 0.55, 0.5, dk, seg=10)
-    mb.frustum(lamp + Z * 3.9, lamp + Z * 3.1, 0.2, 1.3, C('#12a15a', 1.0, 1.8, smix=0.2), seg=16, cap0=True, cap1=False)
-    mb.sphere(lamp + Z * 3.5, 0.35, E('bulb2', color='#fff2c0', k=3.0), seg=10, rings=6)
-    lm.done((6, 4.4, 3.5), px=3)
-    lg = Part('lamp_glow', ink=False, shadow=False); halo_card(lg.mb, lamp + Z * 3.2 + V((0, -0.2, 0)), 3.4, E('hlg', 'halo_warm', k=1.4, additive=True)); lg.done()
-    point_light('key_lamp_L', lamp + Z * 3.5 + V((-0.5, -0.6, 0)), (1.0, 0.72, 0.38), 2000, 0.35)
-    # ---- letter table (foreground right): NOTICE letter propped up, tea cup, saucer, spoon
-    tb = Part('table', (2.8, 0.6, 1.4)); mb = tb.mb
-    mb.box((-0.2, -0.9, 1.55), (4.0, 2.2, 1.8), wood)
-    for lx in (0.0, 3.8):
-        for ly in (-0.7, 2.0): mb.box((lx - 0.15, ly - 0.15, 0), (lx + 0.15, ly + 0.15, 1.55), dwood)
-    rod(mb, (3.2, 0.2, 1.8), (3.2, 0.2, 1.95), 0.36, C('#fff0d0', 1.3, 3.0, smix=0.2), r1=0.28, seg=14); rod(mb, (3.2, 0.2, 1.95), (3.2, 0.2, 2.3), 0.26, C('#fff0d0', 1.3, 3.0, smix=0.2), r1=0.34, seg=14); mb.box((3.46, 0.15, 2.0), (3.62, 0.25, 2.22), C('#fff0d0', 1.3, 3.0, smix=0.2))
-    lc = C('#d8c090', 1.0, 1.4)
-    o_ = tb.done((2.8, 0.6, 1.4), px=3); o_.location = (-3.0, 1.5, 0)
-    ln = Part('letter', ink=True); mb = ln.mb
-    p0 = V((0.4, 0.2, 1.84)); pu = V((2.3, 0, 0)); pv = V((0, 1.3, 0.62))
-    mb.quad(p0, pu, pv, TX('note', 1.0, 1.0, glow='note', glow_k=0.35), (0, 0, 1, 1)); o_ = ln.done((1.4, 1.0, 2.5), px=2); o_.location = (-3.0, 1.5, 0)
-    # ---- coat on a hook (left wall), picture, rolled drawings in a stand, waste basket (dark foreground)
-    ct = Part('coat', (LW + 0.6, 7, 4)); mb = ct.mb
-    mb.box((LW, 6.2, 3.9), (LW + 0.2, 8.4, 4.1), wd)
-    mb.box((LW + 0.2, 6.5, 0.9), (LW + 0.9, 8.1, 4.1), C('#7a4a2a', 1.0, 1.6)); mb.box((LW + 0.15, 8.0, 1.0), (LW + 0.75, 8.6, 3.2), C('#7a4a2a', 1.0, 1.6)); rod(mb, (LW + 0.4, 7.3, 4.2), (LW + 0.6, 7.3, 4.8), 0.2, C('#222244'))
-    ct.done((LW + 0.6, 7, 4), px=2.5)
-    sh = Part('shelf', (LW + 0.6, 6, 5.5)); mb = sh.mb; mb.box((LW, -3.0, 4.9), (LW + 1.2, 11.0, 5.15), wd)
-    for i in range(22): bh = 0.9 + rs.random() * .6; mb.box((LW + 0.2, -2.8 + i * 0.6, 5.15), (LW + 1.0, -2.8 + i * 0.6 + 0.5, 5.15 + bh), C(rs.choice(['#e3262b', '#1f49c8', '#12a15a', '#ffc81e', '#7a3a8a', '#d8d0b0']), 1.0, 1.5))
-    sh.done((LW + 0.6, 6, 6.2), px=2.5)
-    pic = Part('picture', (LW + 0.2, 10, 4.6)); mb = pic.mb; mb.box((LW, 9.0, 4.0), (LW + 0.2, 11.6, 5.7), C('#c9a040', 1.2, 1.3)); pic.done((LW, 10.5, 5), px=2.5)
-    pi = Part('picture_img', ink=False); plane(pi.mb, (LW + 0.22, 9.2, 4.15), (0, 2.2, 0), (0, 0, 1.4), TX('poster1', 1.0, 1.0), (0, 0, 1, 1)); pi.done()
-    rl = Part('rolls', (-7.6, 9.5, 2)); mb = rl.mb
-    rod(mb, (-7.8, 9.0, 0), (-7.8, 9.0, 0.9), 0.9, C('#6a3a1a'), r1=0.75, seg=10)
-    for i, (dx, dy, tl) in enumerate(((0.0, 0.0, 0.0), (0.4, 0.3, 0.12), (-0.3, 0.35, -0.1), (0.2, -0.3, 0.05))):
-        rod(mb, (-7.8 + dx, 9.0 + dy, 0.9), (-7.8 + dx + tl * 3, 9.0 + dy, 3.7 + i * 0.1), 0.34, C('#f4eccf', 1.2, 1.7), seg=10); rod(mb, (-7.8 + dx + tl * 3, 9.0 + dy, 3.7 + i * 0.1), (-7.8 + dx + tl * 3, 9.0 + dy, 3.72 + i * 0.1), 0.2, C('#d84a3a'))
-    rl.done((-7.6, 9.5, 2), px=3)
-    ch = Part('chair', (-5.2, 3.2, 1.5)); mb = ch.mb
-    mb.box((-6.4, 2.2, 1.35), (-4.4, 4.2, 1.55), C('#8a4a22', 1.0, 1.4))
-    for lx, ly in ((-6.3, 2.3), (-4.5, 2.3), (-6.3, 4.1), (-4.5, 4.1)): mb.box((lx - .1, ly - .1, 0), (lx + .1, ly + .1, 1.35), dwood)
-    ch.done((-5.2, 3.2, 1.5), px=3)
-    wb = Part('basket', (0.4, -2.6, 0.8)); mb = wb.mb      # waste basket: dark foreground, nearest 15 %
-    rod(mb, (0.6, -3.0, 0), (0.6, -3.0, 1.7), 0.8, C('#3a1a22', 1.0, 1.0), r1=1.0, seg=14)
-    for i in range(9): lumpy(mb, (0.6 + rs.uniform(-.55, .55), -3.0 + rs.uniform(-.55, .55), 1.7 + rs.uniform(-.1, .4)), rs.uniform(.32, .5), C('#fff6e0', 1.0, 1.6, smix=0.2), i + 3, seg=8, rings=5, rough=0.35)
-    o_ = wb.done((0.6, -3.0, 1), px=3); o_.location = (-5.2, 5.0, 0)
-    bm = Part('beams', (0, 7, CE)); mb = bm.mb
-    for bx in (-7.0, -3.5, 0.0, 3.5, 7.0): mb.box((bx - 0.3, -9, CE - 0.5), (bx + 0.3, BW, CE), C('#7a3a1a', 1.0, 1.3))
-    bm.done((0, 5, CE - 0.3), px=3)
-    sc = Part('suitcase', (-6.0, -2.4, 0.8)); mb = sc.mb
-    mb.box((-7.4, -3.2, 0), (-4.4, -1.6, 1.6), C('#8a4a22', 1.0, 1.2)); mb.box((-7.5, -3.3, 0.7), (-4.3, -1.5, 0.85), C('#3a1a0a')); mb.box((-6.0, -3.35, 1.6), (-5.4, -3.2, 1.95), C('#c9a040', 1.3, 1.4))
-    for dx in (-7.0, -4.8): mb.box((dx, -3.25, 0.0), (dx + 0.18, -1.55, 1.6), C('#3a1a0a'))
-    o_ = sc.done((-6, -2.4, 0.8), px=3); o_.location = (9.4, 2.6, 0)
-    pp = Part('floor_papers', (0, -3, 0.3), ink=True); mb = pp.mb
-    for i in range(12): lumpy(mb, (0.6 + rs.uniform(-3.6, 1.6), -3.0 + rs.uniform(1.6, 4.6), 0.3), rs.uniform(.15, .26), C('#fff6e0', 1.3, 1.6, smix=0.2), i + 20, seg=8, rings=5, rough=0.35)
-    pp.done((0, -3, 0.3), px=3)
-    # ---- pendant lamp (warm room light)
-    pd = Part('pendant', (0, 3, 6.4), shadow=False); mb = pd.mb; rod(mb, (0.5, 3.0, CE), (0.5, 3.0, 5.3), 0.05, C('#222244'), seg=5)
-    mb.frustum((0.5, 3.0, 5.3), (0.5, 3.0, 4.7), 0.25, 0.85, C('#ffd2a0', 1.2, 2.0), seg=14); mb.sphere((0.5, 3.0, 4.8), 0.3, E('bulb3', color='#fff2c0', k=3.0), seg=10, rings=6)
-    pd.done((0.5, 3.0, 5.8), px=3)
-    point_light('pendant_L', (0.5, 3.0, 4.5), (1.0, 0.72, 0.4), 600, 0.3)
-    # cool window rim (blue) and a faint cool fill from the street lamp
-    point_light('window_rim', (-2.6, 15.0, 4.0), (0.28, 0.5, 1.0), 2600, 0.6); point_light('window_rim2', (-5.5, 14.8, 3.0), (0.25, 0.45, 1.0), 1200, 0.5)
-    # ---- Beck (placeholder card) at the board, rim: cool blue from the window, warm from the lamp
-    bk = actor('priest', (-4.3, 5.6, 0.0), cam, tilt=0.0, left=(110, 170, 255), right=(255, 170, 90)); bk.scale = (1.45, 1.45, 1.45)
-    actor('extra_b', (-7.6, 6.2, 0.0), cam, tilt=0.0, left=(110, 170, 255), right=(255, 170, 90)) if False else None
+        rod(mb, c0 + X * (2.7 * sx) - u * 1.6 - n * 0.2, V((3.1 * sx + 1.2, 6.2, 0.0)), 0.16, dwood, seg=6); rod(mb, c0 + X * (2.5 * sx) + u * 1.2 - n * 0.2, V((3.0 * sx + 1.2, 12.0, 0.0)), 0.16, dwood, seg=6)
+    mb.box((-1.8, 6.1, 1.2), (4.2, 6.9, 1.34), wood)
+    db.done((1.2, 8.3, 3.3), px=3)
+    dg = Part('diagram', ink=False); p0 = c0 + n * 0.115 - X * 2.75 - u * 1.97
+    dg.mb.quad(p0, X * 5.5, u * 3.94, TX('diagram', 0.9, 1.0, glow='diagram', glow_k=0.35), (0, 0, 1, 1)); dg.done()
+    ts = Part('tools', (1.2, 8.3, 3.3)); mb = ts.mb
+    obox(mb, c0 + n * 0.19 + u * 1.7, X, u, n, 2.9, 0.1, 0.04, C('#c8793a', 1.2, 1.3)); obox(mb, c0 + n * 0.19 + u * 1.7 - X * 2.85, X, u, n, 0.22, 0.9, 0.06, C('#4a2410'))
+    for k_, (sx_, col) in enumerate(((2.6, '#38d68a'), (3.4, '#56e0ff'))):                                           # set squares lie flat on the ledge, clear of the diagram
+        p = [V((sx_, 6.2, 1.36)), V((sx_ + 0.7, 6.2, 1.36)), V((sx_, 6.8, 1.36))]; mb.pid += 1; mb.face(p, C(col, 1.5, 1.5))
+    for i, col in enumerate(('#e3262b', '#1f49c8', '#12a15a', '#ffc81e')):
+        bx = -1.3 + i * 1.2; rod(mb, (bx, 6.5, 1.34), (bx, 6.5, 2.0), 0.34, C('#222244', 1.0, 1.3), seg=10); rod(mb, (bx, 6.5, 1.34), (bx, 6.5, 1.78), 0.30, C(col, 1.6, 2.0, smix=0.2), seg=10); rod(mb, (bx, 6.5, 2.0), (bx, 6.5, 2.25), 0.16, C(col, 1.2, 1.6, smix=0.2), seg=8)
+    ts.done((1.2, 7, 2), px=2.5)
+    # ---- key lamp (green shade) left of the board
+    lamp = V((-3.3, 5.6, 0)); lm = Part('key_lamp', (-3.3, 5.6, 3.5)); mb = lm.mb; dk = C('#2a2250')
+    rod(mb, lamp, lamp + Z * 3.6, 0.16, dk, seg=8); mb.frustum(lamp, lamp + Z * 0.2, 0.55, 0.5, dk, seg=10)
+    mb.frustum(lamp + Z * 3.7, lamp + Z * 2.9, 0.2, 1.2, C('#12a15a', 1.0, 1.8, smix=0.2), seg=16, cap0=True, cap1=False); mb.sphere(lamp + Z * 3.3, 0.35, E('bulb2', color='#fff2c0', k=3.0), seg=10, rings=6)
+    lm.done((-3.3, 5.6, 3.5), px=3)
+    lg = Part('lamp_glow', ink=False, shadow=False); halo_card(lg.mb, lamp + Z * 3.0 + V((0, -0.3, 0)), 3.2, E('hlg', 'halo_warm', k=1.3, additive=True)); lg.done()
+    point_light('key_lamp_L', lamp + Z * 3.3 + V((0.3, -0.5, 0)), (1.0, 0.72, 0.38), 1900, 0.35)
+    # ---- stove + kettle under the window, coat stand
+    st = Part('stove', (7.2, 12.8, 1.5)); mb = st.mb; kc = C('#d8d8e8', 1.3, 1.6)
+    mb.box((6.2, 12.0, 0), (8.4, 13.8, 2.3), C('#2a2a50', 1.0, 1.4)); mb.box((6.4, 11.9, 0.6), (8.2, 12.05, 1.6), C('#ff8a3a', 1.6))
+    rod(mb, (7.3, 12.9, 2.3), (7.3, 12.9, 3.2), 0.55, kc, r1=0.4, seg=12); rod(mb, (7.3, 12.9, 3.2), (7.3, 12.9, 3.45), 0.2, C('#222244')); rod(mb, (7.8, 12.7, 2.8), (8.6, 12.5, 3.2), 0.1, kc, seg=5); rod(mb, (6.9, 13.6, 2.3), (6.9, 13.6, 7.0), 0.22, C('#222244'), seg=6)
+    st.done((7.2, 12.8, 1.5), px=3)
+    cs = Part('coat_stand', (8.6, 10.0, 3.5)); mb = cs.mb
+    rod(mb, (8.6, 10.0, 0), (8.6, 10.0, 6.0), 0.12, dwood, seg=6); mb.box((8.0, 9.4, 3.0), (9.2, 10.6, 5.6), C('#7a4a2a', 1.0, 1.8)); mb.box((7.7, 9.5, 3.4), (8.2, 10.5, 5.2), C('#7a4a2a', 1.0, 1.8))
+    for a_ in range(4): ang = a_ * math.pi / 2; rod(mb, (8.6, 10.0, 5.9), (8.6 + 0.5 * math.cos(ang), 10.0 + 0.5 * math.sin(ang), 6.2), 0.08, dwood, seg=4)
+    cs.done((8.6, 10, 3.5), px=3)
+    # ---- letter table (right foreground): NOTICE letter lying propped toward the camera, tea cup
+    tb = Part('table', (4.0, 0.0, 1.4)); mb = tb.mb
+    mb.box((-0.8, -3.4, 1.55), (2.4, -0.6, 1.8), wood)
+    for lx in (-0.6, 2.2):
+        for ly in (-3.2, -0.8): mb.box((lx - 0.15, ly - 0.15, 0), (lx + 0.15, ly + 0.15, 1.55), dwood)
+    rod(mb, (1.8, -1.2, 1.8), (1.8, -1.2, 1.95), 0.36, C('#fff0d0', 1.3, 3.0, smix=0.2), r1=0.28, seg=14); rod(mb, (1.8, -1.2, 1.95), (1.8, -1.2, 2.3), 0.26, C('#fff0d0', 1.3, 3.0, smix=0.2), r1=0.34, seg=14)
+    tb.done((4.0, 0, 1.4), px=3)
+    ln = Part('letter', ink=True); ln.mb.quad(V((-0.5, -3.0, 1.84)), V((2.0, 0, 0)), V((0, 1.2, 0.8)), TX('note', 1.0, 1.0, glow='note', glow_k=0.35), (0, 0, 1, 1)); ln.done((1.8, -2.4, 2.2), px=2)
+    # ---- cot with a patchwork quilt (left foreground, dark foreground layer), pot of rolled drawings, waste basket
+    bd = Part('cot', (-3.2, 0.0, 1.5)); mb = bd.mb
+    mb.box((-7.4, -3.4, 0.9), (-2.6, 3.0, 1.6), C('#e8dcc0', 1.0, 1.6)); mb.box((-7.5, 3.0, 0), (-2.5, 3.3, 2.5), dwood); mb.box((-7.5, -3.5, 0), (-2.5, -3.2, 2.2), dwood)
+    for lx in (-7.3, -2.7):
+        for ly in (-3.3, 3.1): rod(mb, (lx, ly, 0), (lx, ly, 0.95), 0.12, dwood, seg=5)
+    mb.box((-7.0, 1.4, 1.6), (-3.0, 2.9, 2.0), C('#fff6e0', 1.2, 2.0, smix=0.2))
+    bd.done((-4.7, 0, 1.5), px=3)
+    qt = Part('quilt', ink=False); plane(qt.mb, (-7.2, -3.2, 1.62), (4.4, 0, 0), (0, 4.5, 0), TX('quilt', 1.0, 1.3), (0, 0, 1, 1)); qt.done()
+    rl = Part('rolls', (-5.4, 7.0, 2)); mb = rl.mb
+    rod(mb, (-5.4, 7.0, 0), (-5.4, 7.0, 0.9), 0.8, C('#6a3a1a'), r1=0.65, seg=10)
+    for i, (dx, dy, tl) in enumerate(((0.0, 0.0, 0.0), (0.35, 0.25, 0.12), (-0.3, 0.3, -0.1), (0.15, -0.3, 0.05))): rod(mb, (-5.4 + dx, 7.0 + dy, 0.9), (-5.4 + dx + tl * 3, 7.0 + dy, 3.2 + i * 0.1), 0.3, C('#f4eccf', 1.2, 1.7), seg=10)
+    rl.done((-5.4, 7, 2), px=3)
+    tk = Part('trunk', (5.4, 0.4, 0.7)); mb = tk.mb; mb.box((4.4, -0.6, 0), (6.6, 1.6, 1.3), C('#8a4a22', 1.0, 3.0, smix=0.3)); mb.box((4.3, -0.7, 0.5), (6.7, 1.7, 0.65), C('#2a1408')); mb.box((5.3, -0.75, 0.9), (5.7, -0.6, 1.2), C('#e8b84a', 1.4)); tk.done((5.4, 0.4, 0.7), px=3)
+    wb = Part('basket', (0.6, 3.0, 0.8)); mb = wb.mb
+    rod(mb, (0.2, 3.0, 0), (0.2, 3.0, 1.5), 0.7, C('#3a1a22', 1.0, 1.4), r1=0.9, seg=14)
+    for i in range(7): lumpy(mb, (0.2 + rs.uniform(-.5, .5), 3.0 + rs.uniform(-.5, .5), 1.5 + rs.uniform(-.1, .35)), rs.uniform(.28, .42), C('#fff6e0', 1.0, 1.6, smix=0.2), i + 3, seg=8, rings=5, rough=0.35)
+    wb.done((0.2, 3.0, 1), px=3)
+    pd = Part('pendant', (-1.0, 2.5, 6.8), ink=False, shadow=False); mb = pd.mb; rod(mb, (-0.8, 6.0, CE), (-0.8, 6.0, 7.6), 0.03, C('#222244'), seg=4)
+    mb.frustum((-0.8, 6.0, 7.6), (-0.8, 6.0, 7.0), 0.25, 0.85, C('#ffd2a0', 1.2, 2.0), seg=14); mb.sphere((-0.8, 6.0, 7.1), 0.3, E('bulb3', color='#fff2c0', k=3.0), seg=10, rings=6)
+    pd.done((-0.8, 6.0, 7.3), px=3)
+    point_light('pendant_L', (-0.8, 6.0, 6.8), (1.0, 0.72, 0.4), 750, 0.3)
+    point_light('window_rim', (5.5, 15.0, 5.0), (0.28, 0.5, 1.0), 2600, 0.6); point_light('window_rim2', (8.2, 14.8, 4.0), (0.25, 0.45, 1.0), 1500, 0.5)
+    # ---- Beck (placeholder card) fully in frame at the board's right side, in front of the window: blue rim from the window, warm from the lamp
+    bk = actor('priest', (5.4, 7.2, 0.0), cam, tilt=0.0, left=(110, 170, 255), right=(255, 170, 90)); bk.scale = (1.3, 1.3, 1.3)
+    cs_ = Part('contact_shadows', ink=False, shadow=False); plane(cs_.mb, (4.5, 6.4, 0.07), (1.8, 0, 0), (0, 1.6, 0), E('blob', 'blob', alpha=True), (0, 0, 1, 1)); cs_.done()
 
 # ============================================================================= STILL 3: platform_tunnel
-CAM3 = dict(loc=(-11.0, -3.0, 2.9), look_at=(0.4, 42.0, 3.4), lens=22)
+CAM3 = dict(loc=(-11.0, -3.0, 4.0), look_at=(0.4, 42.0, 2.8), lens=22)
 
 def build_platform(scene, P):
     S = STATE; C, TX, E, CARD = S['C'], S['TX'], S['E'], S['CARD']; rs = random.Random(33); cam = S['cam']
     X, Y, Z = V((1, 0, 0)), V((0, 1, 0)), V((0, 0, 1))
-    RX, SPR, RZ, YA, YB = 13.0, 7.0, 9.0, -12.0, 42.0; TZ = -1.5; PE = 4.4
-    # ---- vault outline (x, z): left wall base -> spring -> arch -> right spring -> base
+    RX, SPR, RZ, YA, YB = 13.0, 7.0, 9.0, -12.0, 42.0; TZ = -1.5; PE = 4.4; CX, CZ, CR = 0.0, 2.6, 4.6
     N = 30; outl = [(-RX, 0.0), (-RX, SPR)]
     for i in range(1, N): th = math.pi * (1 - i / N); outl.append((RX * math.cos(th), SPR + RZ * math.sin(th)))
     outl += [(RX, SPR), (RX, 0.0)]
-    vt = Part('vault', ink=False); mb = vt.mb; tw = TX('tiles', 1.0, 1.0); tp = TX('tiles_plain', 1.0, 1.0); s_acc = 0.0
+    vt = Part('vault', ink=False); mb = vt.mb; tw = TX('tiles_cool', 1.0, 1.0); tp = TX('tiles_cool_plain', 0.62, 1.0); s_acc = 0.0
     for (x0, z0), (x1, z1) in zip(outl, outl[1:]):
         L = math.hypot(x1 - x0, z1 - z0); mat = tw if z1 <= SPR + 1e-6 and z0 <= SPR + 1e-6 else tp
         v0, v1 = (s_acc / 8.0, (s_acc + L) / 8.0) if mat is tw else ((s_acc - SPR) / 8.0, (s_acc + L - SPR) / 8.0)
         mb.pid += 1; mb.face([V((x0, YA, z0)), V((x1, YA, z1)), V((x1, YB, z1)), V((x0, YB, z0))], mat, [(YA / 4, v0), (YA / 4, v1), (YB / 4, v1), (YB / 4, v0)]); s_acc += L
-    # end wall (full polygon; the tunnel mouth is a disc in front of it)
-    mb.pid += 1; mb.face([V((x, YB, z)) for x, z in outl][::-1], tw, [(x / 4, z / 8) for x, z in outl][::-1])
+    # end wall with a real round tunnel hole (annulus triangulated between the vault outline and the hole circle)
+    outer = [(-RX, -2.4)] + outl + [(RX, -2.4)] + [(x, -2.4) for x in (8.0, 0.0, -8.0)]
+    inner = [(CX + CR * math.cos(2 * math.pi * i / 40), CZ + CR * math.sin(2 * math.pi * i / 40)) for i in range(40)]
+    ang = lambda p: math.atan2(p[1] - CZ, p[0] - CX)
+    O = sorted(outer, key=ang); I = sorted(inner, key=ang); n_, m_ = len(O), len(I); i = j = 0
+    def tri(a, b, c): mb.pid += 1; mb.face([V((p[0], YB, p[1])) for p in (a, b, c)], tw, [(p[0] / 4, p[1] / 8) for p in (a, b, c)])
+    while i < n_ or j < m_:
+        ai = ang(O[(i + 1) % n_]) + (2 * math.pi if i + 1 >= n_ else 0); aj = ang(I[(j + 1) % m_]) + (2 * math.pi if j + 1 >= m_ else 0)
+        if i < n_ and (j >= m_ or ai <= aj): tri(O[i], O[(i + 1) % n_], I[j % m_]); i += 1
+        else: tri(I[j], I[(j + 1) % m_], O[i % n_]); j += 1
     vt.done()
-    # ---- platforms, track trough, platform edge, floor
+    # the tunnel: dark blue tube behind the hole
+    tb = Part('tube', ink=False); mb = tb.mb; tube = E('tube', color='#050b30', k=1.0); TL = 60.0
+    for k in range(24):
+        a0, a1 = 2 * math.pi * k / 24, 2 * math.pi * (k + 1) / 24
+        mb.pid += 1; mb.face([V((CX + (CR + 0.15) * math.cos(a0), YB, CZ + (CR + 0.15) * math.sin(a0))), V((CX + (CR + 0.15) * math.cos(a1), YB, CZ + (CR + 0.15) * math.sin(a1))), V((CX + (CR + 0.15) * math.cos(a1), YB + TL, CZ + (CR + 0.15) * math.sin(a1))), V((CX + (CR + 0.15) * math.cos(a0), YB + TL, CZ + (CR + 0.15) * math.sin(a0)))], tube, [(0, 0)] * 4)
+    mb.pid += 1; mb.face([V((CX + 4.8 * math.cos(2 * math.pi * k / 24), YB + TL, CZ + 4.8 * math.sin(2 * math.pi * k / 24))) for k in range(24)], E('tube_end', color='#02061c', k=1.0), [(0, 0)] * 24)
+    tb.done()
+    tl = Part('tunnel_lamps', ink=False, shadow=False)
+    for yy in (52.0, 62.0, 72.0): halo_card(tl.mb, (0, yy, 5.6), 2.6, E('htl', 'halo_cool', k=1.2, additive=True))
+    tl.done()
+    # ---- platforms, track trough, floor
     fl = Part('floor', ink=False); mb = fl.mb
     plane(mb, (-RX, YA, 0), (RX - PE, 0, 0), (0, YB - YA, 0), TX('floor_pf', 1.0, 1.0), (0, 0, 4, 12)); plane(mb, (PE, YA, 0), (RX - PE, 0, 0), (0, YB - YA, 0), TX('floor_pf', 1.0, 1.0), (0, 0, 4, 12))
-    plane(mb, (-PE, YA, TZ), (2 * PE, 0, 0), (0, YB - YA, 0), TX('ballast', 1.0, 1.0), (0, 0, 4, 14))
+    plane(mb, (-PE, YA, TZ), (2 * PE, 0, 0), (0, YB - YA + 60, 0), TX('ballast', 1.0, 1.0), (0, 0, 4, 20))
     plane(mb, (-PE, YA, TZ), (0, 0, -TZ), (0, YB - YA, 0), tw, (YA / 4, 0.0, YB / 4, 0.2)); plane(mb, (PE, YA, TZ), (0, 0, -TZ), (0, YB - YA, 0), tw, (YA / 4, 0.0, YB / 4, 0.2))
     fl.done()
     ed = Part('edges', (0, 15, 0.1)); mb = ed.mb; yl = C('#ffd22a', 1.3, 2.0, smix=0.2)
-    mb.box((-PE - 0.9, YA, 0), (-PE, YB, 0.12), yl); mb.box((PE, YA, 0), (PE + 0.9, YB, 0.12), yl)
-    mb.box((-PE - 0.25, YA, -0.05), (-PE, YB, 0.0), C('#2a2060')); 
+    mb.box((-PE - 0.9, YA, 0), (-PE, YB, 0.12), yl); mb.box((PE, YA, 0), (PE + 0.9, YB, 0.12), yl); mb.box((-PE - 0.25, YA, -0.05), (-PE, YB, 0.0), C('#2a2060'))
     ed.done((0, 15, 0.1), px=2.5)
-    # rails + sleepers + third rail
     rl = Part('rails', (0, 15, TZ)); mb = rl.mb; steel = C('#c8d0ff', 2.0, 3.0, smix=0.1); slp = C('#4a2a1a', 1.0, 1.6)
-    for rx in (-1.15, 1.15): mb.box((rx - 0.1, YA, TZ + 0.1), (rx + 0.1, YB + 14, TZ + 0.42), steel)
-    mb.box((2.3, YA, TZ + 0.1), (2.55, YB + 14, TZ + 0.3), C('#ff8a3a', 1.6, 2.0))
-    for yy in np.arange(YA, YB + 14, 1.4): mb.box((-1.7, yy, TZ), (1.7, yy + 0.4, TZ + 0.12), slp)
+    for rx in (-1.15, 1.15): mb.box((rx - 0.1, YA, TZ + 0.1), (rx + 0.1, YB + 60, TZ + 0.42), steel)
+    mb.box((2.3, YA, TZ + 0.1), (2.55, YB + 60, TZ + 0.3), C('#ff8a3a', 1.6, 2.0))
+    for yy in np.arange(YA, YB + 40, 1.4): mb.box((-1.7, yy, TZ), (1.7, yy + 0.4, TZ + 0.12), slp)
     rl.done((0, 15, TZ), px=2.5)
-    # ---- vault ribs (maroon, ink) and globe lamps
+    # ---- vault ribs and globe lamps (warm practicals on a cool vault)
     rb = Part('ribs', (0, 15, 12)); mb = rb.mb; rm = C('#a82838', 1.0, 1.6, smix=0.3)
     for yy in (4.0, 16.0, 28.0, 40.0):
         for (x0, z0), (x1, z1) in zip(outl[1:-1], outl[2:-1]):
-            c = V(((x0 + x1) / 2, yy, (z0 + z1) / 2)); tg = V((x1 - x0, 0, z1 - z0)); L = tg.length; tg.normalize(); nrm = V((-tg.z, 0, tg.x)); 
-            obox(mb, c + V((0, 0, 0)) - nrm * 0.0, tg, Y, nrm, L / 2 + 0.05, 0.4, 0.28, rm)
+            c = V(((x0 + x1) / 2, yy, (z0 + z1) / 2)); tg = V((x1 - x0, 0, z1 - z0)); L = tg.length; tg.normalize(); nrm = V((-tg.z, 0, tg.x))
+            obox(mb, c, tg, Y, nrm, L / 2 + 0.05, 0.4, 0.28, rm)
     rb.done((0, 15, 12), px=3)
-    gl = Part('globes', (0, 15, 11)); mb = gl.mb; gm = E('globe', color='#fff0c0', k=3.2); lcol = C('#2a2250')
+    gl = Part('globes', (0, 15, 11)); mb = gl.mb; gm = E('globe', color='#fff0c0', k=2.6); lcol = C('#2a2250')
     gh = Part('globe_halos', ink=False, shadow=False); gpos = []
     for yy in (7.0, 20.0, 33.0):
         for gx in (-5.6, 5.6):
-            gz = 11.4; gpos.append((gx, yy, gz)); rod(mb, (gx, yy, gz + 1.4), (gx, yy, gz + 0.6), 0.05, lcol, seg=5); mb.sphere((gx, yy, gz), 0.95, gm, seg=14, rings=9)
-            halo_card(gh.mb, (gx, yy, gz), 3.6, E('hg', 'halo_warm', k=1.7, additive=True))
+            gz = 11.4; gpos.append((gx, yy, gz)); rod(mb, (gx, yy, gz + 1.4), (gx, yy, gz + 0.6), 0.05, lcol, seg=5); mb.sphere((gx, yy, gz), 0.85, gm, seg=14, rings=9)
+            halo_card(gh.mb, (gx, yy, gz), 3.0, E('hg', 'halo_warm', k=1.4, additive=True))
     gl.done((0, 15, 11), px=3); gh.done()
-    for i, (gx, yy, gz) in enumerate(gpos): point_light('globe%d' % i, (gx, yy, gz - 0.6), (1.0, 0.7, 0.36), 2800 if i < 4 else 2300, 0.5)
-    # wall lamps low on the walls (warm, near the crowd)
+    for i, (gx, yy, gz) in enumerate(gpos): point_light('globe%d' % i, (gx, yy, gz - 0.6), (1.0, 0.7, 0.36), 2200 if i < 4 else 1800, 0.5)
     for yy in (10.0, 26.0):
-        for wx_, sgn in ((-RX + 0.5, 1), (RX - 0.5, -1)): point_light('wall%d_%d' % (yy, sgn), (wx_ + sgn * 0.4, yy, 6.2), (1.0, 0.68, 0.34), 900, 0.4)
-    # ---- end wall: tunnel mouth (deep blue disc + liner ring), roundel, WAY OUT, clock
-    th_ = Part('mouth', ink=False); mb = th_.mb; cx, cz, R = 0.0, 2.6, 4.6
-    pts = [V((cx + R * math.cos(2 * math.pi * i / 40), YB - 0.06, cz + R * math.sin(2 * math.pi * i / 40))) for i in range(40)]
-    mb.pid += 1; mb.face(pts, E('mouth', color='#06102e', k=1.0), [(0, 0)] * 40)
-    mb.pid += 1; mb.face([V((cx + R * 0.62 * math.cos(2 * math.pi * i / 40), YB - 0.08, cz + R * 0.62 * math.sin(2 * math.pi * i / 40))) for i in range(40)], E('mouth2', color='#0a1a4a', k=1.0), [(0, 0)] * 40)
-    th_.done()
+        for wx_, sgn in ((-RX + 0.5, 1), (RX - 0.5, -1)): point_light('wall%d_%d' % (yy, sgn), (wx_ + sgn * 0.4, yy, 6.2), (1.0, 0.68, 0.34), 520, 0.4)
+    # ---- end wall: liner ring, station roundel, WAY OUT, clock, old cramped map
     lr = Part('liner', (0, YB, 2.6)); mb = lr.mb; lc_ = C('#3a2a6a', 1.0, 1.6)
     for i in range(32):
-        a0, a1 = 2 * math.pi * i / 32, 2 * math.pi * (i + 1) / 32; am = (a0 + a1) / 2; c = V((cx + (R + 0.5) * math.cos(am), YB - 0.5, cz + (R + 0.5) * math.sin(am)))
-        tg = V((-math.sin(am), 0, math.cos(am))); nr = V((math.cos(am), 0, math.sin(am))); obox(mb, c, tg, Y, nr, (R + 0.5) * math.pi / 32 + 0.04, 0.5, 0.5, lc_)
+        a0, a1 = 2 * math.pi * i / 32, 2 * math.pi * (i + 1) / 32; am = (a0 + a1) / 2; c = V((CX + (CR + 0.5) * math.cos(am), YB - 0.5, CZ + (CR + 0.5) * math.sin(am)))
+        tg = V((-math.sin(am), 0, math.cos(am))); nr = V((math.cos(am), 0, math.sin(am))); obox(mb, c, tg, Y, nr, (CR + 0.5) * math.pi / 32 + 0.04, 0.5, 0.5, lc_)
     lr.done((0, YB, 2.6), px=3)
-    rd = Part('roundel_name', ink=False); plane(rd.mb, (-6.3, YB - 0.1, 7.9), (12.6, 0, 0), (0, 0, 7.8), E('rndl', 'roundel_piccadilly', k=1.5, alpha=True), (0, 0, 1, 1)); rd.done()
-    wo = Part('way_out', ink=True); plane(wo.mb, (6.8, YB - 0.12, 1.2), (5.6, 0, 0), (0, 0, 1.85), E('wayout', 'sign_way_out', k=1.5), (0, 0, 1, 1)); wo.done((9, YB, 2), px=3)
-    ck = Part('clock', (8, YB - 3, 12)); mb = ck.mb; rod(mb, (8.8, YB - 3.0, 14.3), (8.8, YB - 3.0, 12.3), 0.06, C('#222244'), seg=5); mb.frustum((8.8, YB - 3.3, 10.8), (8.8, YB - 2.7, 10.8), 1.55, 1.55, C('#1a1840'), seg=20)
-    ck.done((8, YB - 3, 12), px=3)
-    cf = Part('clock_face', ink=False); plane(cf.mb, (7.35, YB - 3.35, 9.35), (2.9, 0, 0), (0, 0, 2.9), E('clk', 'clock', k=1.4, alpha=True), (0, 0, 1, 1)); cf.done()
-    # ---- train: red front car emerging from the tunnel, headlights, spot light (the warm key from the far end)
-    tr = Part('train', (0, 33, 2), shadow=True); mb = tr.mb; tf = TX('train_front', 1.0, 2.6, glow='train_front_glow', glow_k=1.8, smix=0.15); ts_ = TX('train_side', 1.0, 2.6, glow='train_side_glow', glow_k=1.8, smix=0.15); red = C('#e3262b', 1.0, 2.8, smix=0.15)
-    mb.box((-3.0, 22.0, -0.8), (3.0, YB + 8, 5.6), red, mats={'front': tf, 'left': ts_, 'right': ts_}, skip='')
-    mb.box((-3.2, 21.9, 5.6), (3.2, YB + 8, 5.9), C('#8a1018', 1.0, 2.0)); mb.box((-3.1, 21.8, -1.3), (3.1, YB + 8, -0.8), C('#2a0a14'))
-    tr.done((0, 33, 2), px=3)
+    rd = Part('roundel_name', ink=False); plane(rd.mb, (-6.3, YB - 0.1, 8.1), (12.6, 0, 0), (0, 0, 7.8), E('rndl', 'roundel_piccadilly', k=1.5, alpha=True), (0, 0, 1, 1)); rd.done()
+    wo = Part('way_out', ink=True); plane(wo.mb, (6.9, YB - 0.12, 1.4), (5.4, 0, 0), (0, 0, 1.8), E('wayout', 'sign_way_out', k=1.6), (0, 0, 1, 1)); wo.done((9, YB, 2), px=3)
+    ck = Part('clock', (8, YB - 3, 12)); mb = ck.mb; rod(mb, (9.2, YB - 3.0, 14.3), (9.2, YB - 3.0, 12.3), 0.06, C('#222244'), seg=5); mb.frustum((9.2, YB - 3.3, 10.8), (9.2, YB - 2.7, 10.8), 1.55, 1.55, C('#1a1840'), seg=20)
+    ck.done((9.2, YB - 3, 12), px=3)
+    cf = Part('clock_face', ink=False); plane(cf.mb, (7.75, YB - 3.35, 9.35), (2.9, 0, 0), (0, 0, 2.9), E('clk', 'clock', k=1.4, alpha=True), (0, 0, 1, 1)); cf.done()
+    om = Part('old_map', ink=True); mb = om.mb
+    mb.box((-12.3, YB - 0.4, 1.0), (-6.1, YB - 0.1, 6.0), C('#6a3a1a', 1.0, 1.6)); om.done((-9.2, YB, 3.5), px=2.5)
+    omi = Part('old_map_img', ink=False); plane(omi.mb, (-12.0, YB - 0.44, 1.25), (5.6, 0, 0), (0, 0, 4.5), TX('old_map', 1.1, 1.0, glow='old_map', glow_k=0.5), (0, 0, 1, 1)); omi.done()
+    # ---- train: deep inside the tunnel; only two hot headlamps and a warm spill show through the hole
+    tr = Part('train', (0, 55, 2)); mb = tr.mb; tf = TX('train_front', 1.0, 1.4, glow='train_front_glow', glow_k=0.7, smix=0.15); ts_ = TX('train_side', 1.0, 2.6, glow='train_side_glow', glow_k=1.8, smix=0.15); red = C('#e3262b', 1.0, 2.8, smix=0.15)
+    mb.box((-2.8, 54.0, -0.8), (2.8, 80, 5.0), red, mats={'front': tf, 'left': ts_, 'right': ts_}); mb.box((-3.0, 53.9, 5.0), (3.0, 80, 5.25), C('#8a1018', 1.0, 2.0))
+    tr.done((0, 55, 2), px=3)
     hl = Part('headlights', ink=False, shadow=False); mb = hl.mb
-    for hx_ in (-1.7, 1.7):
-        mb.pid += 1; mb.face([V((hx_ + 0.6 * math.cos(2 * math.pi * i / 16), 21.7, 3.2 + 0.6 * math.sin(2 * math.pi * i / 16))) for i in range(16)], E('headl', color='#fffbe0', k=4.0), [(0, 0)] * 16)
-        halo_card(mb, (hx_, 21.6, 3.2), 6.0, E('hh2', 'halo_warm', k=2.2, additive=True)); halo_card(mb, (hx_, 21.6, 3.2), 3.0, E('hh3', 'halo_white', k=2.2, additive=True))
+    for hx_ in (-1.6, 1.6):
+        mb.pid += 1; mb.face([V((hx_ + 0.55 * math.cos(2 * math.pi * i / 16), 53.8, 2.4 + 0.55 * math.sin(2 * math.pi * i / 16))) for i in range(16)], E('headl', color='#fffbe0', k=4.5), [(0, 0)] * 16)
+        halo_card(mb, (hx_, 53.7, 2.4), 5.0, E('hh2', 'halo_warm', k=2.0, additive=True)); halo_card(mb, (hx_, 53.7, 2.4), 2.4, E('hh3', 'halo_white', k=2.2, additive=True))
+    plane(mb, (-3.6, 33.0, TZ + 0.06), (7.2, 0, 0), (0, 12.5, 0), E('spill', 'halo_warm', k=0.9, additive=True), (0, 0, 1, 1))
     hl.done()
-    spot_light('headlamp', (0, 21.0, 3.2), (-5.0, 0.0, 1.5), (1.0, 0.78, 0.45), 9000, 70, 0.5, 0.5)
-    # ---- posters, old cramped map, benches, signs on the walls
-    ps = Part('posters', ink=True); mb = ps.mb
-    for k, (yy, im) in enumerate(((4.0, 'poster0'), (9.0, 'poster1'), (15.0, 'poster2'), (28.0, 'poster3'))):                                  # left wall, face +x
-        mb.pid += 1; mb.face([V((-RX + 0.06, yy + 3.2, 2.0)), V((-RX + 0.06, yy, 2.0)), V((-RX + 0.06, yy, 6.0)), V((-RX + 0.06, yy + 3.2, 6.0))], TX(im, 1.0, 1.0, glow=im, glow_k=0.35), [(0, 0), (1, 0), (1, 1), (0, 1)])
-    for k, (yy, im) in enumerate(((5.0, 'poster4'), (11.0, 'poster5'), (17.0, 'poster1'), (23.0, 'poster0'))):                                  # right wall, face -x
-        mb.pid += 1; mb.face([V((RX - 0.06, yy, 2.0)), V((RX - 0.06, yy + 4.0, 2.0)), V((RX - 0.06, yy + 4.0, 6.4)), V((RX - 0.06, yy, 6.4))], TX(im, 1.0, 1.0, glow=im, glow_k=0.35), [(0, 0), (1, 0), (1, 1), (0, 1)])
+    spot_light('headlamp', (0, 52.5, 2.6), (-6.0, 0.0, 1.0), (1.0, 0.78, 0.45), 16000, 52, 0.5, 0.5)
+    # ---- posters (un-mirrored), benches, the porter's trolley, a vending machine, newspapers
+    ps = Part('posters', ink=True); mb = ps.mb; UV = [(0, 0), (1, 0), (1, 1), (0, 1)]
+    for (yy, im) in ((13.0, 'poster0'), (17.0, 'poster1'), (22.0, 'poster2'), (28.0, 'poster3')):                                   # left wall faces +x, u runs +y
+        mb.pid += 1; mb.face([V((-RX + 0.06, yy, 2.2)), V((-RX + 0.06, yy + 3.2, 2.2)), V((-RX + 0.06, yy + 3.2, 6.2)), V((-RX + 0.06, yy, 6.2))], TX(im, 1.0, 1.0, glow=im, glow_k=0.35), UV)
+    for (yy, im) in ((5.0, 'poster4'), (11.0, 'poster5'), (17.0, 'poster1'), (23.0, 'poster0')):                                     # right wall faces -x, u runs -y
+        mb.pid += 1; mb.face([V((RX - 0.06, yy + 4.0, 2.0)), V((RX - 0.06, yy, 2.0)), V((RX - 0.06, yy, 6.4)), V((RX - 0.06, yy + 4.0, 6.4))], TX(im, 1.0, 1.0, glow=im, glow_k=0.35), UV)
     ps.done((0, 12, 4), px=2.5)
-    om = Part('old_map', ink=True); mb = om.mb; mb.pid += 1; mb.face([V((-RX + 0.07, 22.0, 2.4)), V((-RX + 0.07, 16.0, 2.4)), V((-RX + 0.07, 16.0, 6.2)), V((-RX + 0.07, 22.0, 6.2))], TX('old_map', 1.1, 1.0, glow='old_map', glow_k=0.4), [(0, 0), (1, 0), (1, 1), (0, 1)])
-    om.done((-RX, 19, 4), px=2.5)
-    bn = Part('benches', (0, 15, 1)); mb = bn.mb; wood = C('#8a4a22', 1.0, 1.5); dw = C('#4a2410', 1.0, 1.4)
-    for (y0_, y1_) in ((0.5, 5.5), (19.0, 25.0)):
-        mb.box((-RX + 0.3, y0_, 1.5), (-RX + 2.0, y1_, 1.75), wood); mb.box((-RX + 0.1, y0_, 1.75), (-RX + 0.5, y1_, 3.2), wood)
+    bn = Part('benches', (0, 15, 1)); mb = bn.mb; wood = C('#a85a2a', 1.0, 2.0, smix=0.3); dw = C('#4a2410', 1.0, 1.8)
+    for (y0_, y1_) in ((7.0, 13.0), (19.0, 25.0)):
+        mb.box((-RX + 0.3, y0_, 1.5), (-RX + 2.0, y1_, 1.75), wood); mb.box((-RX + 0.1, y0_, 1.75), (-RX + 0.5, y1_, 3.4), wood)
         for yy in (y0_ + 0.3, y1_ - 0.5): mb.box((-RX + 0.4, yy, 0), (-RX + 1.9, yy + 0.2, 1.5), dw)
     for (y0_, y1_) in ((10.0, 15.0), (30.0, 35.0)):
         mb.box((RX - 2.0, y0_, 1.5), (RX - 0.3, y1_, 1.75), wood); mb.box((RX - 0.5, y0_, 1.75), (RX - 0.1, y1_, 3.2), wood)
         for yy in (y0_ + 0.3, y1_ - 0.5): mb.box((RX - 1.9, yy, 0), (RX - 0.4, yy + 0.2, 1.5), dw)
     bn.done((0, 15, 1), px=2.5)
-    sg = Part('wall_signs', ink=True); mb = sg.mb
-    for yy in (30.0,):   # TICKETS board on the right wall
-        mb.pid += 1; mb.face([V((RX - 0.08, yy, 7.2)), V((RX - 0.08, yy + 5.0, 7.2)), V((RX - 0.08, yy + 5.0, 8.7)), V((RX - 0.08, yy, 8.7))], E_mat if False else TX('poster2', 1.0, 1.0), [(0, 0), (1, 0), (1, 1), (0, 1)]) if False else None
-    sg.done((0, 15, 4), px=2.5)
-    # a bin, a pillar of the arcade between platform and track: ticket machine on the right platform
-    tm = Part('machine', (RX - 1, 20, 2)); mb = tm.mb; mb.box((RX - 1.6, 17.0, 0), (RX - 0.3, 18.8, 3.4), C('#1f49c8', 1.0, 2.0, smix=0.2)); mb.box((RX - 1.5, 17.1, 2.2), (RX - 0.4, 18.7, 3.0), C('#ffd88a', 1.6)); tm.done((RX - 1, 18, 2), px=3)
-    ab = Part('aframe', (-9.2, 9, 1.5)); mb = ab.mb
+    tm = Part('machine', (-RX + 1, 14.5, 2)); mb = tm.mb; mb.box((-RX + 0.1, 14.0, 0), (-RX + 1.6, 16.2, 4.4), C('#c8201e', 1.0, 3.0, smix=0.15)); mb.box((-RX + 1.55, 14.2, 2.0), (-RX + 1.7, 16.0, 3.8), C('#ffd88a', 1.8)); mb.box((-RX + 1.55, 14.3, 0.6), (-RX + 1.7, 15.9, 1.2), C('#3a0a10'))
+    tm.done((-RX + 1, 15, 2), px=3)
+    tl2 = Part('trolley', (-9.0, 10.5, 1.5)); mb = tl2.mb
+    mb.box((-10.0, 9.2, 1.0), (-8.2, 12.0, 1.2), C('#3a2a1a', 1.0, 2.0)); rod(mb, (-8.2, 9.4, 1.2), (-8.2, 9.4, 3.2), 0.1, C('#222244'), seg=5); rod(mb, (-8.2, 11.8, 1.2), (-8.2, 11.8, 3.2), 0.1, C('#222244'), seg=5); mb.box((-8.3, 9.3, 3.1), (-8.1, 11.9, 3.3), C('#222244'))
+    for wy in (9.4, 11.8): mb.frustum((-9.6, wy, 0.5), (-9.6, wy + 0.2, 0.5), 0.5, 0.5, C('#14143a'), seg=10)
+    mb.box((-9.9, 9.4, 1.2), (-8.5, 10.6, 2.4), C('#8a4a22', 1.0, 3.0, smix=0.3)); mb.box((-9.8, 10.8, 1.2), (-8.6, 11.9, 2.0), C('#1f49c8', 1.0, 3.0, smix=0.3)); mb.box((-9.8, 9.5, 2.4), (-8.6, 10.5, 3.1), C('#12724a', 1.0, 3.0, smix=0.3))
+    tl2.done((-9.0, 10.5, 1.5), px=3)
+    np_ = Part('newspapers', ink=True); mb = np_.mb
+    for (nx, ny, rot) in ((-8.0, 2.5, 0.5), (-6.4, 6.4, -0.4), (-9.8, 4.0, 1.0)):
+        ax = V((math.cos(rot), math.sin(rot), 0)); ay = V((-math.sin(rot), math.cos(rot), 0)); obox(mb, V((nx, ny, 0.06)), ax, ay, Z, 0.45, 0.32, 0.03, C('#e8dcb8', 1.0, 1.6, smix=0.3))
+    np_.done((-8, 6, 0.1), px=2)
+    ab = Part('aframe', (-8.6, 15.5, 1.5)); mb = ab.mb
     for sgn in (-1, 1):
-        mb.pid += 1; mb.face([V((-10.4, 8.0, 0)), V((-8.0, 8.0, 0)), V((-8.4 if False else -8.2, 8.0 + 0.55 * sgn, 3.2)), V((-10.2, 8.0 + 0.55 * sgn, 3.2))][::1], TX('sign_gap', 1.0, 2.0, glow='sign_gap', glow_k=0.3) if sgn < 0 else C('#ffd22a', 1.0, 2.0), [(0, 0), (1, 0), (1, 1), (0, 1)])
-    ab.done((-9.2, 8, 1.5), px=3)
-    sc2 = Part('luggage', (-7, 4, 1)); mb = sc2.mb
-    mb.box((-8.0, 4.0, 0), (-6.4, 5.0, 1.2), C('#8a4a22', 1.0, 2.0, smix=0.3)); mb.box((-8.1, 4.0, 0.5), (-6.3, 5.0, 0.62), C('#2a1408')); mb.box((-6.0, 6.0, 0), (-4.9, 6.9, 0.9), C('#1f49c8', 1.0, 2.2, smix=0.3)); mb.box((-8.6, 12.0, 0), (-7.0, 13.0, 1.1), C('#12724a', 1.0, 2.2, smix=0.3))
-    sc2.done((-7, 4, 1), px=3)
-    # ---- crowd: waiting passengers on the left platform (nearest the camera) and the far platform, hats, folded maps; rim from the headlight
-    cr = Part('crowd', ink=False); mb = cr.mb
-    def person(x, y, k, kind='t', h=3.5):
-        card = CARD('crowd_%s%d' % (kind, k % 10)); w = h * 200 / 440; facing_card(mb, (x, y, 0.0), w, h, card, cam, tilt=0.0)
+        mb.pid += 1; mb.face([V((-9.8, 17.5, 0)), V((-7.4, 17.5, 0)), V((-7.6, 17.5 + 0.55 * sgn, 3.2)), V((-9.6, 17.5 + 0.55 * sgn, 3.2))], TX('sign_gap', 1.0, 2.0, glow='sign_gap', glow_k=0.3) if sgn < 0 else C('#ffd22a', 1.0, 2.0), UV)
+    ab.done((-8.6, 17.5, 1.5), px=3)
+    sc3 = Part('suitcases', ink=True); mb = sc3.mb
+    mb.box((-8.4, 0.8, 0), (-6.8, 1.8, 1.3), C('#8a4a22', 1.0, 3.0, smix=0.3)); mb.box((-8.5, 0.8, 0.55), (-6.7, 1.8, 0.68), C('#2a1408')); mb.box((-6.4, 2.6, 0), (-5.3, 3.4, 0.9), C('#1f49c8', 1.0, 3.0, smix=0.3))
+    sc3.done((-7, 2, 1), px=3)
+    # ---- crowd (hats, folded maps) along the platform edge and the far platform; seated reader on the near bench
+    cr = Part('crowd', ink=False); mb = cr.mb; PEOPLE = []
+    def person(x, y, k, kind='t', h=3.5, z=0.0, crop=0.0):
+        card = CARD('crowd_%s%d' % (kind, k % 10)); w = h * 200 / 440; facing_card(mb, (x, y, z), w, h * (1 - crop), card, cam, tilt=0.0, v0=crop)
+        if not crop: PEOPLE.append((x, y, w, z))
     n = 0
-    for yy in np.arange(6.0, 25.0, 1.25):
-        person(-4.9 - rs.uniform(0, 1.3), yy + rs.uniform(-.2, .2), n, 't', rs.uniform(3.3, 3.7)); n += 1
-    for (px_, py_) in ((-9.6, 5.2), (-9.0, 8.2)): person(px_, py_, n, 'w', 3.5); n += 1
+    for yy in np.arange(8.0, 26.0, 1.2): person(-4.9 - rs.uniform(0, 1.3), yy + rs.uniform(-.2, .2), n, 't', rs.uniform(3.3, 3.7)); n += 1
     for yy in (28.0, 31.0): person(-5.4 - rs.uniform(0, .8), yy, n, 'w', 3.4); n += 1
-    for yy in list(np.arange(5.0, 36.0, 1.3)): person(5.6 + rs.uniform(0, 4.2), yy + rs.uniform(-.4, .4), n, 'c', rs.uniform(3.2, 3.6)); n += 1
+    person(-11.3, 10.0, 4, 't', 3.5, 1.75, crop=0.36); person(-11.3, 22.0, 7, 'w', 3.5, 1.75, crop=0.36)
+    for yy in list(np.arange(5.0, 36.0, 1.2)): person(5.6 + rs.uniform(0, 4.2), yy + rs.uniform(-.4, .4), n, 'c', rs.uniform(3.2, 3.6)); n += 1
     cr.done()
-    dk = Part('fg_dark', ink=False); mb = dk.mb
-    for (x, y, k, h) in ((-11.0, 3.4, 0, 3.6), (-5.2, 2.0, 3, 3.6)):
-        card = CARD('crowd_d%d' % k); facing_card(dk.mb, (x, y, 0.0), h * 200 / 440, h, card, cam, 0.0)
+    dk = Part('fg_dark', ink=False)
+    for (x, y, k, h) in ((-9.8, 6.0, 0, 3.6), (-5.3, 4.6, 3, 3.6)):
+        facing_card(dk.mb, (x, y, 0.0), h * 200 / 440, h, CARD('crowd_d%d' % k), cam, 0.0); PEOPLE.append((x, y, h * 200 / 440, 0.0))
     dk.done()
-    # two hero-ish placeholder actors (Beck with the old map in hand, passenger), rim light painted
-    actor('priest', (-6.4, 8.8, 0.0), cam, 0.0, left=(110, 170, 255), right=(255, 190, 110))
-    actor('extra_b', (-4.9, 12.0, 0.0), cam, 0.0, left=(110, 170, 255), right=(255, 190, 110))
+    actor('priest', (-6.2, 12.2, 0.0), cam, 0.0, left=(110, 170, 255), right=(255, 190, 110)); PEOPLE.append((-6.2, 12.2, 1.3, 0.0))
+    actor('extra_b', (-4.9, 16.0, 0.0), cam, 0.0, left=(110, 170, 255), right=(255, 190, 110)); PEOPLE.append((-4.9, 16.0, 1.3, 0.0))
+    sh_ = Part('contact_shadows', ink=False, shadow=False)
+    for (bx, by, bw_, bz) in PEOPLE: plane(sh_.mb, (bx - bw_ * 0.75, by - 0.7, bz + 0.09), (bw_ * 1.5, 0, 0), (0, 1.4, 0), E('blob', 'blob', alpha=True), (0, 0, 1, 1))
+    sh_.done()
     pools = Part('light_pools', ink=False, shadow=False)
-    for (gx, yy, gz) in gpos: plane(pools.mb, (gx - 4.5, yy - 4.5, 0.07), (9, 0, 0), (0, 9, 0), E('pool', 'halo_warm', k=0.55, additive=True), (0, 0, 1, 1))
+    for (gx, yy, gz) in gpos: plane(pools.mb, (gx - 4.5, yy - 4.5, 0.07), (9, 0, 0), (0, 9, 0), E('pool', 'halo_warm', k=0.45, additive=True), (0, 0, 1, 1))
     pools.done()
-    # contact blobs under the cards are implied by the bright floor; add warm light strips on the floor from the headlamp
-    gp = Part('floor_glow', ink=False, shadow=False); plane(gp.mb, (-RX, 8.0, 0.05), (RX - PE, 0, 0), (0, 34, 0), E('fg_', 'beam_warm', k=0.0, additive=True), (0, 0, 1, 1)); gp.done()
 
 def render_still(name, builder, lkey, cam, sky=False, quality='final'):
     scene, P = setup(lkey, cam, quality, sky=sky)
