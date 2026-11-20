@@ -48,7 +48,7 @@ def _cut_tripod_cloth():
     bmesh.ops.delete(bm, geom=dead, context='FACES'); bm.to_mesh(ob.data); bm.free(); print('tripod cloth faces removed', len(dead))
 
 def setup():
-    P.TAKE_OVER['T4'] = {'measure': dict(shade_mul=float(os.environ.get('T4_SHADE', 0.8)), fill_w=float(os.environ.get('T4_FILL', 70)), gain=float(os.environ.get('T4_GAIN', 0.56)))}   # QA: T4 luma target 95-110, lights only
+    P.TAKE_OVER['T4'] = {'measure': dict(shade_mul=float(os.environ.get('T4_SHADE', 0.8)), fill_w=float(os.environ.get('T4_FILL', 70)), gain=float(os.environ.get('T4_GAIN', 0.68)))}   # QA: T4 luma target 95-110, lights only
     A = P.world_build(TAKE); [setattr(o, 'hide_render', True) or setattr(o, 'hide_viewport', True) for o in bpy.data.objects if o.name.startswith('measure_beam')]   # director: the window shaft mesh showed as a dark slab at the lens edge (ray cast g930 px 680,900 = measure_beam_fx) and a shaft must not cross cast cards
     _cut_tripod_cloth()
     P.key_take(TAKE); P.setup_render2((720, 1280), samples=int(os.environ.get('T4_SAMPLES', 16)), threads=2); return A
