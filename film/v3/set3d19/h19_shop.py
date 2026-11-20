@@ -77,7 +77,7 @@ def shop_mats():
     M['rugg'] = mat('rugg', '#7c6c58', '#8a7a64', scale=14); M['rugd'] = mat('rugd', '#5c4a3a', '#6a5646', scale=14)
     M['brassm'] = metal_mat('brassm', '#cb9f48', '#dcb25a', rough=0.24, spec=0.8, metallic=0.88); M['ceilp'] = mat('ceilp', '#6a5244', '#7a6050', scale=1.4, contrast=1.2)
     M['flame'] = mat_emit('flame', '#ffc860', 28.0)
-    M['lampg'] = mat_emit('lampg', '#e89a48', 0.6)
+    M['lampg'] = mat_emit('lampg', '#c8843e', 0.28)   # director: dimmer, less saturated glass (TAKE gate s01: read as an orange slab)
     return M
 
 def box_wall(mb, m, x0, x1, y0, y1, z0, z1): mb.box(m, ((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2), (x1 - x0, y1 - y0, z1 - z0))
@@ -487,6 +487,11 @@ def build_shop(SET, preset, light):
     candle_obj('stub_sill', (wx0 + 0.55, Y1 - 0.14, wz0 + 0.035), 0.12); flame('flame_sill', (wx0 + 0.55, Y1 - 0.14, wz0 + 0.035 + 0.12 + 0.03))
     for i, p_ in enumerate(SET['wheelcandles']): flame('flame_wheel%d' % i, (p_[0], p_[1], p_[2] + 0.22), 0.02, 0.05)
     lanm = MB('lantern'); lanm.box(M['lampg'], (0, 0, 0), (0.13, 0.13, 0.28)); lo = lanm.finish(shadow=False)[0]; lo.location = (2.0, 0.95, 0.78); SET['flames'].append((lo, (2.0, 0.95, 0.78)))
+    lf = MB('lanternf')   # iron cage round the bench lantern: corner bars, top and bottom plates, ring
+    for dx in (-0.07, 0.07):
+        for dy in (-0.07, 0.07): lf.box(M['iron'], (2.0 + dx, 0.95 + dy, 0.78), (0.016, 0.016, 0.30))
+    for dz in (-0.15, 0.15): lf.box(M['iron'], (2.0, 0.95, 0.78 + dz), (0.17, 0.17, 0.025))
+    lf.box(M['iron'], (2.0, 0.95, 0.78), (0.15, 0.012, 0.012)); lf.box(M['iron'], (2.0, 0.95, 0.78), (0.012, 0.15, 0.012)); lf.finish()
     lan2 = MB('lantern2'); lan2.box(M['lampg'], (0, 0, 0), (0.11, 0.11, 0.24)); l2 = lan2.finish(shadow=False)[0]; l2.location = (-0.9, Y0 + 0.35, 1.95); SET['flames'].append((l2, (-0.9, Y0 + 0.35, 1.95)))
     mb2 = MB('lantern2f'); mb2.rod(M['iron'], (-0.9, Y0 + 0.35, 2.07), (-0.9, Y0 + 0.2, 2.35), 0.008, 0.008, 4); mb2.box(M['iron'], (-0.9, Y0 + 0.35, 2.09), (0.15, 0.15, 0.03)); mb2.box(M['iron'], (-0.9, Y0 + 0.35, 1.81), (0.15, 0.15, 0.03)); mb2.finish()
     for dx, dy in ((-0.06, -0.06), (0.06, -0.06), (-0.06, 0.06), (0.06, 0.06)):

@@ -1,0 +1,47 @@
+{
+ "take": "s11",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film19/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 28.433,
+   "duration": 3.133,
+   "frame": 853,
+   "end_frame": 947,
+   "kind": "ambience",
+   "label": "village workshop, Lincolnshire, 1730s afternoon: quiet room tone, a far rooster, birds outside the window, the candle's soft hiss"
+  },
+  {
+   "time": 28.433,
+   "duration": 3.133,
+   "frame": 853,
+   "end_frame": 947,
+   "kind": "prop",
+   "label": "the H1 sea clock running: slow heavy brass tick-tock with the rocking bars, gears ticking softly"
+  },
+  {
+   "time": 28.733,
+   "duration": 1.867,
+   "frame": 862,
+   "end_frame": 918,
+   "kind": "foley",
+   "label": "the rhythmic rasp of the file on brass, about 2.5 strokes a second"
+  },
+  {
+   "time": 30.4,
+   "duration": 0.6,
+   "frame": 912,
+   "end_frame": 930,
+   "kind": "accent",
+   "label": "snap push on 'ห้าปี': a short airy whoosh; the file scrape stops dead"
+  },
+  {
+   "time": 28.733,
+   "duration": 0.0,
+   "frame": 862,
+   "end_frame": 862,
+   "kind": "transition",
+   "label": "dissolve in from the HALL (shot 10): the hall chatter fades under workshop tone"
+  }
+ ]
+}

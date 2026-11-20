@@ -14,6 +14,7 @@ Brief: film/WORKER19.md. Worked example: film/v3/film19/s01 (director, shot 1).
 | team8 | 19, 21 | SHIP ship_coast DAY_JAMAICA / DAY_BARBADOS |
 | team9 | 23, 24, 25, 26 | HALL hall_door / hall_table / hall_low EVENING (ending) |
 
-Sessions (launched ____ UTC, Sonnet):
-team1 ____ | team2 ____ | team3 ____ | team4 ____ | team5 ____
-team6 ____ | team7 ____ | team8 ____ | team9 ____
+Sessions (launched 2026-11-20 05:14 UTC, Sonnet claude-sonnet-5-5):
+team1 session_017iwyCugYY1EQviPCTXP7XW | team2 session_017iwyCuECGHcLkiigMHgQud | team3 session_017iwyCtuVcjmpzMvKdq7KHW
+team4 session_017iwyCsiYmppjoZyU3ioSUF | team5 session_017iwyCswHz1C6uF1e2NPsbU | team6 session_017iwyCsmLTKYV2sHafjbb2x
+team7 session_017iwyCw4RCofj93DUm5BNdF | team8 session_017iwyCtjXqkPaojcfKAotsM | team9 session_017iwyCsdZPAhv4TonviMpNJ
