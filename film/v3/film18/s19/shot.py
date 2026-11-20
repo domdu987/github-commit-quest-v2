@@ -14,19 +14,24 @@ def _tilt(sh, t):                                            # the whip lands on
     la = list(p['look_at']); la[2] = la[2] + (3.0 - la[2]) * k; sw = 2.4 * math.sin(t * 21.0) * (1.0 - k)
     p['loc'] = (p['loc'][0] + sw, p['loc'][1] + 0.4 * sw, p['loc'][2]); la[0] += sw; p['look_at'] = tuple(la); return p
 S.pose_at = _tilt
-HIDE = tuple(os.environ.get('HIDE', 'furrows,streaks,streak,rainstreaks,tufts,bridge').split(','))
+HIDE = tuple(os.environ.get('HIDE', 'furrows,streaks,streak,rainstreaks,tufts').split(','))
 HX = [hx for hx in J.HOLE_X if hx > 20]
 rnd = random.Random(19)
 OX = []                                                      # (gs, hole x, lane jitter, scale)
-for w in range(8):
+for w in range(6):
     for k, hx in enumerate(HX):
-        OX.append((G0 - 26 + 3 * k + 11 * w + rnd.randint(-2, 2), hx + rnd.uniform(-0.5, 0.5), rnd.uniform(-0.3, 0.3), rnd.uniform(0.95, 1.05)))
-OX = OX[:32]
+        OX.append((G0 - 26 + 3 * k + 15 * w + rnd.randint(-2, 2), hx + rnd.uniform(-0.5, 0.5), rnd.uniform(-0.3, 0.3), rnd.uniform(0.95, 1.05)))
+OX = OX[:36]
 QI = [(G0 - 10 + 5 * k, HX[(k * 3) % len(HX)] + rnd.uniform(-1.5, 1.5)) for k in range(6)]
 V_OX, V_QI = 15.0, 11.5
 
 def setup(ctx):
     J.set_holes(12)
+    gd = bpy.data.objects['ground'].data; gm = gd.materials[-1]
+    for i in range(len(gd.materials)): gd.materials[i] = gm
+    for nm in ('banks', 'bridge', 'road', 'water', 'fields'):
+        ob = bpy.data.objects.get(nm)
+        if ob is not None and ob.type == 'MESH': ob.data.materials.clear(); ob.data.materials.append(gm)
     M = J.STATE['M']
     try:                                                     # kill the set's dark dust squares: additive material strength -> 0
         for n in M['dust'].node_tree.nodes:
