@@ -196,3 +196,16 @@ Re-render W06 only. The pass bar is fewer than 50 px under luma 40 on the wheels
 
 ### Overall SET: FIX-FIRST
 HALL and SHIP still PASS. WORKSHOP needs this one W06 fix.
+
+## SET gate round 6
+I checked W06 at full size, plus a 3x crop of x 0-510, y 150-440 with every pixel under luma 40 shown in magenta.
+
+- **The V-gaps are gone.** Both H3 rims (`K.ring`, 60 segments) are now closed, smooth annuli. No magenta pixel falls on either rim, spoke or hub.
+- **The 10,146 dark px are legitimate.** They come from two sources:
+  - the dark wall beams on the right, behind the right wheel (about 3.6k px);
+  - the voids between the teeth and spokes of the wall gears, which show the dark cavity behind them. That geometry already passed in W10.
+- My round 5 box metric was badly scoped, because it counted background. Judged on the rims only, W06 meets the bar.
+
+### WORKSHOP: PASS
+### Overall SET: PASS
+HALL, SHIP and WORKSHOP all pass. The render teams may start.
