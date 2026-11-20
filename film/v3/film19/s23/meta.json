@@ -1,0 +1,81 @@
+{
+ "take": "s23",
+ "film": 19,
+ "shots": [
+  23
+ ],
+ "g0": 1856,
+ "g1": 1933,
+ "first_g": 1847,
+ "n_frames": 95,
+ "shot_ranges": {
+  "23": [
+   1856,
+   1932
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 15,
+  "note": "DIS 15 from shot 22 (HALL hall_table DAY): 9 f in-handle g 1847..1855 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 1933,
+  "note": "hard cut to shot 24; out-handle g 1933..1941 rendered in 3D (walk and camera continue)"
+ },
+ "set": "v3/set3d19/h19.py HALL preset hall_door, light EVENING; set_candles flicker + set_regulator(True) keyed on EVERY frame; no caption_shade; no DOF",
+ "cast": "v3/cast19 harrison19 old=1 (white hair, spectacles, brown coat, stoop): cast19.cycle walk, speed 0.55, 46-frame cycle (slow shuffle), right hand holds the H4 watch (prop h4_watch) on the open palm, left arm swings; happy smile fixed mouth; blinks; no lip-sync",
+ "camera": "custom 22 mm from near the hall_door start pose raised 0.75 m: c19.CamPath crane DOWN (rise -35 px/s) + push 6 %/s + slide -135 px/s + arc 30 deg/s about the doorway, decay 0.12 (moving on the last frame); snap x1.75 + pan (shift 4.6 D, peak 2.3, 21 f) on 'พระราชา' (caption 63.18 s -> g 1898)",
+ "events": {
+  "enters_door": [
+   1847,
+   1880
+  ],
+  "walk_cycle_frames": 46,
+  "snap": [
+   1896,
+   1915
+  ],
+  "word_phra_racha_caption": 1898,
+  "word_heard_yin_rueang_nii": 1910
+ },
+ "dof": "none",
+ "text": "none",
+ "caption_shade": "none",
+ "light": "EVENING",
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 16.95,
+ "s_per_frame_cpu_mean": 33.18,
+ "heads_in_shot_px": {
+  "har": {
+   "w": [
+    96,
+    166
+   ],
+   "y": [
+    553,
+    643
+   ],
+   "x": [
+    176,
+    646
+   ],
+   "bottom_max": 691
+  }
+ },
+ "framediff_in_shot": {
+  "median": 4.54,
+  "p90": 12.94
+ },
+ "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
+}

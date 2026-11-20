@@ -1,0 +1,21 @@
+# s03 QA_TECH: FAIL
+Shot 3, HALL hall_window DAY, take g101-199 (handles 9+9, out side is DIS 13), 6 fps + cuts g110/g191 +-3 checked. qa_auto PASS. No text, no black/magenta frames, no frozen run, no pop outside the planned snap, no blur. Frame-diff re-measured median 4.73, p90 15.60: OK. Mouths: all flat, none moving: OK. Heads in y 450-760 band for g110-176; wig lappet bottom <= ~870 at g186 (inside 880).
+## Issues
+1. g190-199 (g190, g191-196 in the dissolve handle visible from g190 in shot): the dark tripod leg renders as a solid black wedge covering ~25-33 % of frame width at the left (g193: x 0-230 of 720). Reads as a black bar / missing render. Fix: give the tripod the wood material (it renders black), or move the camera so it does not cross, or hide it from g186.
+2. g186-196: astro_b (left, grey wig) is clipped by the left frame edge (wig and hand cut at x=0). Fix: end the snap framing with astro_b fully inside the frame (shift the camera right ~60 px) or reduce snap scale x2.0 -> x1.6.
+3. g110-176: plan says astro_b "peers through the brass telescope". He stands left of the tube with a hand/glove over his eyes (squint); the eyepiece is ~150 px away behind him, no eye-line to the lens, hand not on the telescope. Fix: place astro_b's mark at the eyepiece and have his head at the eyepiece end of the tube (or tilt the tube to him) so the facepalm reads as peering.
+4. g131, g146, g161 (whole wide section): no visible contact shadow under either astronomer's shoes (white legs on the floor/rug), they read as floating. Fix: contact decals darker/larger (multiply 0.5+) on both the wood floor and the navy rug.
+5. g131-166: astro (white wig) is half-hidden behind the chair back, legs cut by the chair; plan wants him "beside" the telescope scratching. Fix: offset his mark 0.4 D away from the chair.
+6. meta.json g1 = 191 is exclusive (plan g1 = 190; shot_ranges 110-190 correct). Note only.
+
+## Round 2: FAIL
+Re-checked at 6 fps + cuts g110/g191 +-3 (take g101-199). qa_auto PASS. No text, no black/magenta, no frozen, no pop, no blur. Mouths flat, none moving: OK. Heads centre in 450-760, nothing at y >= 880. Frame-diff (take.mkv): median 2.97, p90 10.99 vs target >= 4 / >= 12 (round 1 measured 4.73 / 15.60: the move is now weaker). Snap on "ทำไม่ได้" g177: visible g176-186, OK.
+Earlier issues: 1 FIXED (tripod is wood brown, no black wedge). 2 FIXED for astro_b (fully inside), but see new issue 2. 3 FIXED (astro_b holds the brass eyepiece to his eye). 4 mostly FIXED (faint shadow under astro_b's shoes; astro's feet hidden). 5 NOT FIXED but now a note (astro still behind the chair back, legs hidden; scratching reads). 6 note still true (g1=191 exclusive).
+1. g110-190 (whole shot): frame-diff median 2.97 (< 4), p90 10.99 (< 12). The slow push in g110-176 is near uniform (diff 2.4-3.5). Fix: stronger push/slide (9-10 %/s + >= 50 px/s) during g110-170 so the median reaches 4, and a faster snap (x2 over 13 f) so p90 reaches 12.
+2. g181-196: astro (white wig, right) is clipped by the right frame edge (wig lappet and sleeve cut at x = 720 for the whole snap end). Fix: shift the snap framing ~40 px left or reduce the final scale x2.0 -> x1.8 so both wigs stay inside.
+NOTES: g131-176 black curved arc (armillary/brass arm renders black) at the left, set material; chair back still overlaps astro's belly.
+
+## Round 3: PASS
+Checked 6 fps + cuts g110/g191 +-3 (take g101-199), qa_auto PASS (g110 "no visible change" = handle). No text, no black/magenta, no frozen, no pop, no blur. Mouths flat everywhere: OK. Heads centre in 450-760, nothing at 880. Frame-diff (take.mkv, 90x160 grey bilinear, g111-190): median 5.39, p90 14.79 (>= 4 / >= 10): OK.
+Earlier issues: R2-1 frame-diff FIXED; R2-2 right-wig clip: face and shoulders inside, only the outer wig lappet touches/crops at the right edge from g192 (g193-199, 300+ rows, dissolve handle frames) - NOTE; R2 astro_b left edge FIXED (inside from g187). R1 1-3 FIXED (tripod wood, astro_b at eyepiece, shadows faint), R1-5 chair overlap note.
+Notes: (a) g192-199 astro19 right wig lappet cut at x=720 in the out-handle (dissolve): shift snap end ~30 px left if the render is redone. (b) dark brass arc at left g131-176 (set). (c) meta g1=191 exclusive.

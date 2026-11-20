@@ -1,0 +1,50 @@
+{
+ "take": "s23",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film19/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 61.567,
+   "duration": 2.867,
+   "frame": 1847,
+   "end_frame": 1933,
+   "kind": "ambience",
+   "label": "grand hall, evening: soft room tone, distant clock tick from the regulator, candle hiss"
+  },
+  {
+   "time": 61.867,
+   "duration": 2.567,
+   "frame": 1856,
+   "end_frame": 1933,
+   "kind": "foley",
+   "label": "slow old-man shuffle on polished boards (soft shoe taps with a tiny cane-less drag), every ~0.8 s",
+   "peak_frame": 1870
+  },
+  {
+   "time": 62.8,
+   "duration": 0.0,
+   "frame": 1884,
+   "end_frame": 1884,
+   "kind": "accent",
+   "label": "the double door creaks wider as he comes in",
+   "peak_frame": 1870
+  },
+  {
+   "time": 63.2,
+   "duration": 0.633,
+   "frame": 1896,
+   "end_frame": 1915,
+   "kind": "accent",
+   "label": "camera snap whoosh as the camera whips across the hall on 'พระราชา'",
+   "peak_frame": 1904
+  },
+  {
+   "time": 64.433,
+   "duration": 0.0,
+   "frame": 1933,
+   "end_frame": 1933,
+   "kind": "cut",
+   "label": "hard cut to shot 24 (the King's table): footsteps cut, clock ticks continue"
+  }
+ ]
+}

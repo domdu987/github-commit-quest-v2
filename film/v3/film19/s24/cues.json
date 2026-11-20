@@ -1,0 +1,50 @@
+{
+ "take": "s24",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film19/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 64.133,
+   "duration": 3.733,
+   "frame": 1924,
+   "end_frame": 2036,
+   "kind": "ambience",
+   "label": "the hall by candlelight: low room tone, the regulator tick-tock, candle hiss"
+  },
+  {
+   "time": 64.433,
+   "duration": 3.133,
+   "frame": 1933,
+   "end_frame": 2027,
+   "kind": "foley",
+   "label": "a soft stack 'tock' each time a new burnt stub appears on the table edge (ten of them, about every 0.3 s)",
+   "peak_frame": 1950
+  },
+  {
+   "time": 64.433,
+   "duration": 3.133,
+   "frame": 1933,
+   "end_frame": 2027,
+   "kind": "foley",
+   "label": "two watch ticks, a fast gold tick and a slower silver tick, side by side as the King compares them",
+   "peak_frame": 1960
+  },
+  {
+   "time": 66.767,
+   "duration": 0.533,
+   "frame": 2003,
+   "end_frame": 2019,
+   "kind": "accent",
+   "label": "snap whoosh on 'สิบสัปดาห์'",
+   "peak_frame": 2010
+  },
+  {
+   "time": 67.6,
+   "duration": 0.0,
+   "frame": 2028,
+   "end_frame": 2028,
+   "kind": "cut",
+   "label": "hard cut to shot 25 (the astronomer's jaw drops)"
+  }
+ ]
+}
