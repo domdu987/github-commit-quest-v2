@@ -25,7 +25,7 @@ H_IN, H_OUT = 4, 8                              # cut in, dissolve 13 out (13/2 
 G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1     # 76..185
 GS = list(range(G_FIRST, G_LAST + 1))
 G_SAME = C.cap_g("เดียวกันนั้น")                 # snap pull-out event
-SNAP = (G_SAME - 2, G_SAME + 13)
+SNAP = (G_SAME - 2, G_SAME + 11)
 
 PRESET, LIGHT = "resto_table", "DAY"
 MARK = "maupassant_seated"
@@ -34,7 +34,7 @@ HEAD_Z = float(os.environ.get("HEAD_Z", "2.35"))  # head centre above the feet m
 PPD = 256
 CANVAS = cast20.CANVAS20["maupassant"]
 CAM_CLOSER = float(os.environ.get("CAM_CLOSER", "2.0"))   # D closer than the preset along the view
-LAT = float(os.environ.get("LAT", "-0.75"))
+LAT = float(os.environ.get("LAT", "-1.1"))
 TILT0 = float(os.environ.get("TILT0", "4.0"))
 
 EAT = cast20.STORY20["maupassant_seated_eat"][1]
@@ -51,8 +51,8 @@ def cam_path(A):
     fw = (subj - c).normalized()
     lat = Vector((fw.y, -fw.x, 0.0)).normalized() * LAT        # parallel shift: head starts right of centre, the slide carries it left
     c, subj = c + lat, subj + lat
-    return C.CamPath(c, subj, G_FIRST, G_LAST, push=0.15, slide_px=100.0, rise_px=0.0, arc_deg_s=5.0, tilt0=TILT0, tilt_deg_s=0.0,
-                     decay=0.3, snaps=[dict(g=SNAP, k=0.5, peak=1.7, shift=(0.25, 0.0), tilt=0.0)])
+    return C.CamPath(c, subj, G_FIRST, G_LAST, push=0.17, slide_px=130.0, rise_px=0.0, arc_deg_s=8.0, tilt0=TILT0, tilt_deg_s=0.0,
+                     decay=0.3, snaps=[dict(g=SNAP, k=0.38, peak=1.9, shift=(0.35, 0.0), tilt=0.0)])
 
 
 def cam_path_static():
