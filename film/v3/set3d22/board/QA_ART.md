@@ -138,3 +138,101 @@ What fails:
 8. **Grounding of the placeholder actors (§G.2).** Add explicit soft contact-shadow discs (dark multiply alpha, about 1.2x foot width) under every crowd card in stills 1 and 3 and under Beck in still 2. Keep the orange and blue rim as it is.
 
 After 1-4 are done, re-render the board and send it back to QA-art. 5-8 can land in the same pass.
+
+---
+
+# Round 2 (re-review after the builder applied items 1-8)
+
+Inputs: round-2 board_1..3.png at 720x1280 and at 360x640, stats.json, and the NOTES.md round-2 section. Compared with the same references as round 1 (R3, R5, R2 and R4 sheets, and the film-2 frames).
+
+All three stills now pass the colour gates:
+
+| still | sat | luma | vivid |
+|---|---|---|---|
+| 1 | 0.685 | 87.0 | 69 % |
+| 2 | 0.645 | 98.2 | 64 % |
+| 3 | 0.623 | 88.4 | 76 % |
+
+Magenta now covers 1.7 % of the top 20 % of rows in still 1 (it was 22.7 %).
+
+## Verdict: **SHIP** (look approved for the full set build)
+
+The board now reads as the intended world:
+- low 1930s London at dusk under a deep-blue sky;
+- an amber lodging room lit by a lamp against a blue night window;
+- a dark-blue tiled tube with warm globes and a headlamp in the tunnel mouth.
+
+It is in the same family as R5 (deep blue with hot practicals) and R4 (warm interior against a blue window), and as vivid as film 2. The problems that remain are local and do not change the look. They are listed below as mandatory carry-forwards for the full build, not as board blockers.
+
+## Scores, round 2 (round 1 in brackets)
+
+| still | density / ornament | light & colour | composition | period | match to refs |
+|---|---|---|---|---|---|
+| 1 london_dusk | 8 (7) | 8 (7) | 7 (6) | 7 (3) | 7 (5) |
+| 2 beck_lodgings_night | 7 (5) | 7 (6) | 7 (4) | 7 (7) | 7 (5) |
+| 3 platform_tunnel | 6 (6) | 8 (5) | 6 (5) | 7 (6) | 7 (5) |
+
+"Rich and detailed?" (§H.3): yes for 1 and 2. Still 3 is a marginal yes, because the bottom third is still mostly bare floor.
+
+## What is still wrong (fix in the full build)
+
+### Still 1
+- **Skyline cards float.** The two far skyline cards are horizontal strips with an orange band showing under each one (around y 300-320 and y 400-440 at 720 wide). They read as floating silhouette strips, not continuous ground to the horizon.
+- **Two domes.** The skyline card has a domed silhouette on the horizon AND the near St Paul's is in the frame.
+- **Plain near dome.** It is smooth lavender plastic with no ribs, drum columns or stone tone.
+- **Bus roof.** It shows red diagonal streak artefacts (glare or texture).
+- **ROOMS** is cut by the frame edge.
+
+### Still 2
+- **Floor share.** The rug still covers about 30 % of the frame (y 870-1280) with only table legs on it.
+- **Ink bottles are oversized.** Each is about the size of Beck's head.
+- **Board text hidden.** The NOTICE table hides the bottom of the diagram, and a red "UNDERGRO…" label sits half-hidden on the ledge.
+- **Beck is small.** He is about 15 % of frame height and stands idle by the window. That is fine for a set still, but not for a shot.
+
+### Still 3
+- **Bare floor.** The bottom 30 % is still bare tiles with two newspapers.
+- **Unreadable foreground blocks.** The pink-mauve box at the bottom right and the left benches read as blocky slabs, not wooden benches. They need slats, ironwork legs and a wood tone.
+- **Actor cut in half.** The right-edge passenger card (brown coat) is cut in half by the frame (§G.3).
+- **Mid-left props.** The vending machine and trolley read as grey boxes.
+- **Blown globe.** The globe lamp at the top right is still blown and cropped by the frame.
+- **Small map.** MAP OF LONDON on the end wall is borderline on a phone.
+
+## Look rules the FULL set build must carry forward (all 4 locations, all shot_plan cameras)
+
+1. **Palette.**
+   - Deep-blue night or tunnel as the base field, with warm amber practicals and the four Tube-line colours as accents.
+   - Magenta ≤ 5 % of any sky. Orange only as a thin band between low rooftops.
+   - Per shot: sat ≥ 0.50, vivid ≥ 45 %, luma 85-110. Check top-third luma ≤ 115, so ceilings and vaults never become the brightest area.
+2. **Period skyline everywhere London is seen** (s02 and s15 BIGZOOMs, window views from the lodgings and from PUBLICITY).
+   - Only 4-6 storey brick and stone, pitched roofs, chimney pots and smoke, spires, ONE St Paul's dome, ONE Big Ben. No towers taller than the clock tower.
+   - Skyline cards must sit on a continuous dark ground or overlap each other, never over an orange strip. Remove the dome from the skyline card.
+   - Give the near dome ribs, a drum colonnade and a stone colour.
+   - Re-check the skyline from every s02 and s15 camera height, not just CAM1: the cards must not show their edges or float from higher or lower viewpoints.
+3. **Floors and ceilings.**
+   - In every interior shot the ceiling is ≤ 15 % of the frame and visible bare floor is ≤ 20 %.
+   - Fill floors with motivated clutter at the right scale: rugs with edges, chairs, trunks, papers, luggage, benches with wooden slats and iron legs, light pools.
+   - Lodgings: add a chair, a trunk and a rag rug edge in the open rug area. Shrink the ink bottles to about 0.35x their size.
+   - Platform and ticket hall: benches, trolleys, litter, light pools, and passengers sitting as well as standing.
+4. **Lenses and angles.**
+   - Lens ≥ 28 for interiors. The 22 mm lens on the board caused the round-1 distortion; use it only for the extreme-wide crane moments.
+   - Keep the camera at about 4.5-5 D for rooms, looking slightly down.
+   - Follow shot_plan's "foreground prop 1-2 D from the lens", but the prop must be readable: a lamp, an ink bottle or a ticket barrier, never an anonymous box.
+   - No eye-level, straight-down-the-axis platform shots as the default.
+5. **The tunnel stays deep dark blue.**
+   - The tunnel mouths, the noodle-tunnel cutaway and the carriage windows are near-black navy.
+   - Warm light comes only from globes, headlamps and lit carriage windows.
+   - Do not light the vault to near-white again.
+6. **Story objects read on a phone.**
+   - The OLD map is ≥ 12 % of frame width whenever it is the subject: s03 ends on it, and there is a match cut from the platform to the lodgings.
+   - The diagram, NOTICE and all signs must be legible at 360x640 (cap height ≥ 14 px).
+   - Check every sign texture for mirrored UVs: this happened 3 times on the board.
+   - Nothing sits in front of a sign the beat needs (MIND THE GAP, WAY OUT, PUBLICITY DEPT, the diagram's lower edge).
+7. **Actors.**
+   - The placeholder puppets and crowd cards are replaced by the cast22 models for every named character. Crowd cards may stay only for the far crowd (under about 8 % of frame height).
+   - Every actor needs a contact shadow, a rim light (cool blue indoors from the window, warm outdoors from lamps), a prop in hand, and an action (§I.5).
+   - No actor cut in half by the frame edge (§G.3). Beck at the board holds a pen or ruler and leans in.
+   - BIGZOOM ends frame the character at 35-60 % of frame height.
+8. **Lights and artefacts.**
+   - Keep globe and lamp discs from clipping to flat white at the frame edge: dim them or reframe.
+   - Remove the red streaks on the bus roof.
+   - Keep warm halos and bloom small, as on the board, so they stay crisp on a phone.
