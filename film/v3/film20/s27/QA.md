@@ -15,3 +15,7 @@
 ## Bookend of s24 BIGZOOM (director plan change)
 - The start is now a MEDIUM of Maupassant in the clear centre pane (camera 9.5 D closer than the first version: head 128 px at g 1968, eyes shut, smug, table + cloth below; X braces left/right, only the preset iron post at the left edge 1 D from the lens). The crash pull-out then runs to the whole tower exactly as before.
 - Re-measured: qa_stats sat 0.607, luma 94.8, motion median 10.97 p90 31.86; frame-diff median 9.83 p90 30.05. qa_auto still lists "suspected blur" on g 1964-1973 (10 frames, flat orange facade + cloth slab by the relative-Laplacian heuristic; frames sharp at full size).
+
+## qa_auto blur flag: frame list and cause (answer to the director's rule)
+- Flagged: g 1964-1973 (10 frames: 4 handle + 6 in shot). Laplacian-variance ratio to the take median: 0.28-0.34 on g 1964-1971, 0.43-0.49 on g 1972-73, 0.55-0.73 on g 1974-79, ~1.0 from g ~1995. It is a CONTENT effect, not motion blur: Cycles renders no motion blur here and the start frames are the sharpest-rendered but flattest picture (cloth, cream wall, orange slab) against a median set by the detailed lattice and fair. A longer ease-in would keep the flat picture on screen longer, so I did not re-ease it. Flagging for the director's call (waive, or ask for fine dressing on the start pane).
+- qa_stats line: `saturation 0.607, brightness 94.8, in-shot motion median 10.97 p90 31.86` (s27); s26: `saturation 0.535, brightness 99.2, motion median 6.11 p90 12.46`.
