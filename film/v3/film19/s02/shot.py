@@ -89,13 +89,14 @@ _ARC = []
 
 
 def _u_of_s(sf):
-    """the spline is reparametrised by DISTANCE: s (0..1, fraction of the loc path length) -> the spline parameter u (so the speed does not surge at the key poses)"""
+    """the spline is reparametrised by LOG DISTANCE to the pair (equal steps = equal zoom rate, so the image speed has ONE hump and an ease-out): s (0..1) -> the spline parameter u"""
     if not _ARC:
         N = 1800
-        pts = [_spline_u(i / float(N), 1) for i in range(N + 1)]
-        cum = [0.0]
-        for i in range(1, N + 1):
-            cum.append(cum[-1] + (pts[i] - pts[i - 1]).length)
+        C0 = Vector((0.5, -30.5, 15.9))                                    # the pair: the zoom is measured toward it
+        lg = [math.log((_spline_u(i / float(N), 1) - C0).length) for i in range(N + 1)]
+        cum = [lg[0] - v for v in lg]                                      # progress in LOG distance (equal steps = equal zoom rate)
+        for i in range(1, len(cum)):
+            cum[i] = max(cum[i], cum[i - 1] + 1e-9)
         _ARC.extend([c / cum[-1] for c in cum])
     lo, hi = 0, len(_ARC) - 1
     while hi - lo > 1:
