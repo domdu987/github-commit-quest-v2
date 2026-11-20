@@ -195,7 +195,7 @@ def assign_for(g):
     bh, bu = _bert_hand(g); bd = dict(cast17.STORY17['bertillon_card_up'][1]); bd['arm_r'] = dict(hand=bh, bend=-0.6, stretch=1.1 + 0.2 * bu, layer='front'); cast17.STORY17['bert_dyn'] = ('bertillon', bd)
     gopt = {'dx': ox, 'dy': oy, 'H': float(os.environ.get('GH', '1.55'))}
     dup = 'dupont_sweating' if g < 1616 else 'dupont_caught_sweat'
-    if g >= 1676: return {'inspector': ('inspector_shocked', f('insp'))}                        # P2: the others are out of frame (the whip is done): not rendered
+    if g >= 1675: return {'inspector': ('inspector_shocked', f('insp'))}                        # P2: the others are out of frame (the whip is done): not rendered
     if g >= 1671: return {'inspector': ('inspector_shocked', f('insp')), 'bertillon': ('bert_dyn', f('bert')), 'dupont': ('dupont_caught_sweat', f('dup')), 'gend_a': ('gend_dyn', gopt)}
     a = {'bertillon': ('bert_dyn', f('bert')), 'dupont': (dup, f('dup')), 'inspector': ('insp_dyn', f('insp')), 'gend_a': ('gend_dyn', gopt)}
     if 1546 <= g < 1640: del a['inspector']                                     # not in frame: not rendered
@@ -222,9 +222,11 @@ def apply_cam():
         if k['g'] in (1640, 1671):
             k['look'] = tuple(float(x) for x in os.environ.get('LOOK6D', '14.6,26.55,2.45').split(',')); k['lens'] = float(os.environ.get('LENS6D', '22'))
     fl = np.array(os.environ.get('P2LOOK', '15.2,24.35,2.62').split(','), float); fc = np.array(os.environ.get('P2CAM', '16.7,25.2,2.62').split(','), float)
-    ks[:] = [k for k in ks if k['g'] not in (1674, 1677, 1695, 1701)]
-    c0 = np.array([k for k in ks if k['g'] == 1671][0]['loc'], float)
-    ks.append(P._k(1674, tuple(c0 + 0.9 * (fc - c0)), tuple(fl), 22.0, hold=False)); ks.append(P._k(1695, tuple(fc), tuple(fl), 22.0, hold=True)); ks.append(P._k(1701, tuple(fc + (fl - fc) * 0.002), tuple(fl), 22.0, hold=True))
+    ks[:] = [k for k in ks if k['g'] not in (1674, 1675, 1677, 1695, 1701)]
+    k71 = [k for k in ks if k['g'] == 1671][0]
+    ks.append(dict(k71, g=1674, hold=True))                                      # 6d holds its framing through g1674 (no swing: nobody crosses an edge)
+    p2s = fl + 1.3 * (fc - fl)                                                   # g1675 = HARD CUT (director, takes.md 06657cb): opens on the P2 framing, push-in start (~2.1 m), head ~22 % H
+    ks.append(P._k(1675, tuple(p2s), tuple(fl), 22.0, hold=False)); ks.append(P._k(1695, tuple(fc), tuple(fl), 22.0, hold=True)); ks.append(P._k(1701, tuple(fc + (fl - fc) * 0.002), tuple(fl), 22.0, hold=True))
     ks.sort(key=lambda k: k['g'])
 apply_cam()
 
