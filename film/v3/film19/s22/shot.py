@@ -29,6 +29,7 @@ G_HALF = C.cap_g("ครึ่ง")                        # 1796
 G_TAKE = C.cap_g("แล้วยึด")                      # 1807
 G_SEAL = C.cap_g("นาฬิกาไปขัง")                  # 1821
 SNAP = (G_SEAL - 3, G_SEAL + 16)
+WHIP = (G_SEAL - 3, G_SEAL + 6)                  # frames rendered with Cycles camera motion blur (shutter 0.9): Harrison leaves as a smear
 LIGHT, PRESET, FINAL_SPP = "DAY", "hall_table", 8
 
 BAG_A, BAG_B = (0.62, 1.50), (-0.30, 1.20)     # money bag path (metres, table top): pushed by astro19's hand toward the near end
@@ -55,8 +56,8 @@ class _Sway(object):
 CAM_LOC0 = (0.0, -3.9, 2.4)
 CAM_LOOK0 = (0.25, 2.9, 2.45)
 _CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.08, slide_px=-12.0, rise_px=15.0, arc_deg_s=2.0, decay=0.1,
-                snaps=[dict(g=SNAP, k=1.7, peak=1.7, shift=(0.0, -0.38)),
-                       dict(g=(G_SEAL, G_SEAL + 6), k=1.0, peak=1.6, shift=(1.1, 0.0))])      # fast pan that clears Harrison from the left edge in 3 frames
+                snaps=[dict(g=SNAP, k=1.7, peak=1.7, shift=(-0.6, -0.38)),
+                       dict(g=(G_SEAL - 1, G_SEAL + 3), k=1.0, peak=3.2, shift=(1.8, 0.0))])      # fast pan that clears Harrison from the left edge in 3 frames
 CAM = _Sway(_CAM)
 
 
@@ -193,7 +194,17 @@ class Take(C.Take):
                     caption_shade=bool(C.bpy.data.objects.get("caption_shade")))
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):
-        return C.Take.render(self, [bf(g) for g in gs], out_dir, scale=scale, samples=samples, threads=threads)
+        out = []
+        for g in gs:                                   # whip frames get Cycles camera motion blur, all others none
+            blur = WHIP[0] <= g <= WHIP[1]
+            self.scene.render.use_motion_blur = blur
+            self.scene.render.motion_blur_shutter = 0.9
+            try:
+                self.scene.cycles.motion_blur_position = "CENTER"
+            except Exception:
+                pass
+            out += C.Take.render(self, [bf(g)], out_dir, scale=scale, samples=samples, threads=threads)
+        return out
 
 
 if __name__ == "__main__":
