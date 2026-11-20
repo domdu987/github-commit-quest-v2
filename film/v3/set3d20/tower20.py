@@ -70,7 +70,7 @@ def build(preset, light=None):
     assert preset in PRESETS, preset
     PR = PRESETS[preset]; light = light or PR['light']; assert light in LIGHTS, light
     P = dict(LIGHTS[light]); night = light != 'DAY'
-    M = C.reset('tower', preset, light, spp=8, dbounce=0); R = C.root(); rr = rnd(11)
+    M = C.reset('tower', preset, light, spp=8, dbounce=1 if preset == 'tower_window_pull' else 0); R = C.root(); rr = rnd(11)
     A = dict(preset=preset, light=light, loc='tower', cams={}, marks=STATE['marks'], staging=STATE['staging'], hooks={}); STATE['A'] = A
     for n, c in CAMS_M.items(): A['cams'][n] = cam_D(c)
     STATE['year'] = PR['year']
