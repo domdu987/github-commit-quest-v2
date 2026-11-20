@@ -1,7 +1,7 @@
-story: 164 renders (82 poses x plain/mirrored), deterministic, no <text>, mouth rule ok, 54 expression sets, cycles of 17 casts, 21 props (1.0 s)
-identity: earlier STORY poses + pose-key sweep of every earlier member: 0 differ (531) 2.1 s
+story: 190 renders (95 poses x plain/mirrored), deterministic, no <text>, mouth rule ok, 54 expression sets, cycles of 17 casts, 21 props (2.2 s)
+identity: earlier STORY poses + pose-key sweep of every earlier member: 0 differ (531) 1.8 s
 canvas: 0 outside; smallest margins (D): architect20 0.15, child20 0.13, composer20 0.15, eiffel 0.15, eiffel_old 0.15, gent20 0.15, lady20 0.13, maupassant 0.15, officer 0.12, official 0.15, painter20 0.15, poet20 0.14, riveter_forge 0.12, riveter_hammer 0.13, riveter_tongs 0.15, telegraphist 0.12, waiter 0.15
-robust: 4080 garbage poses on 17 members, 0 failed (4.7 s)
+robust: 4080 garbage poses on 17 members, 0 failed (6.5 s)
 wrote /home/user/github-commit-quest-v2/film/v3/cast20/tmp/sec_lineup.png
 section lineup    4228 x   623
 wrote /home/user/github-commit-quest-v2/film/v3/cast20/tmp/sec_faces.png
@@ -11,8 +11,8 @@ section mouths    1268 x   250
 wrote /home/user/github-commit-quest-v2/film/v3/cast20/tmp/sec_props.png
 section props     2040 x  1200
 wrote /home/user/github-commit-quest-v2/film/v3/cast20/tmp/sec_poses.png
-section poses     2030 x  3132
-wrote /home/user/github-commit-quest-v2/film/v3/cast20/sheet.jpg (4228 x 8737) in 4.5 s
+section poses     2030 x  3480
+wrote /home/user/github-commit-quest-v2/film/v3/cast20/sheet.jpg (4228 x 9085) in 5.1 s
 wrote /home/user/github-commit-quest-v2/film/v3/cast20/tmp/sm.png
 wrote /home/user/github-commit-quest-v2/film/v3/cast20/sheet_small.jpg (360 x 313)
-TOTAL FAILED: 0 (15.7 s)
+TOTAL FAILED: 0 (19.9 s)

@@ -81,6 +81,14 @@ def t_story():
         m = pose.get("mouth")
         if isinstance(m, str) and m.startswith("talk") and name not in LIPSYNC:
             check(False, "talk mouth outside lip-sync pose " + name)
+    for name, (cast, pose) in cast20.STORY20.items():
+        if pose.get("seated"):
+            f = P.figure(cast, pose, "s")
+            h = f["feet_y"] - f["anchors"]["seat"][1]
+            check(abs(h - pose.get("seat_h", cast20.SEAT_DEFAULT)) < 0.03, "seat height %s %.3f" % (name, h))
+        if pose.get("back"):
+            f = P.figure(cast, pose, "b")
+            check("<ellipse" in f["svg"], "back head " + name)
     for c in cast20.NEW20:
         for lab, kw in cast20.EXPRS20[c].items():
             P.figure(c, dict(kw), "e")
@@ -185,7 +193,7 @@ def t_robust():
     rnd = random.Random(20)
     junk = [None, float("nan"), float("inf"), -1e9, 1e9, "x", [], {}, (1,), True, "happy", 0.5, -2]
     keys = ["yaw", "pitch", "expr", "mouth", "blink", "gaze", "arm_r", "arm_l", "legs", "prop_r", "prop_l", "fx", "squash", "lean", "head_roll",
-            "glow", "napkin", "bite", "key_press", "hat_off", "stool", "t", "mirror", "tint", "ink"]
+            "seated", "seat_h", "back", "glow", "napkin", "bite", "key_press", "hat_off", "stool", "t", "mirror", "tint", "ink"]
     n = bad = 0
     t0 = time.time()
     for c in cast20.NEW20:
@@ -258,6 +266,11 @@ def sec_poses(D=58, cols=10):
         x, y = (i % cols) * cw + cw // 2, (i // cols) * ch + int(5.3 * D)
         g, f = _fig(c, pose, "p%d" % i, D, x, y)
         o.append(g)
+        if pose.get("seated"):       # chair marker: seat top line + floor mark (the bentwood chair is set art)
+            sy = y - (f["feet_y"] - f["anchors"]["seat"][1]) * D
+            o.append('<path d="M%.1f,%.1f L%.1f,%.1f" stroke="#c0392b" stroke-width="2" stroke-dasharray="5 3"/><path d="M%.1f,%.1f L%.1f,%.1f" stroke="#2e2a2c" stroke-width="2"/>'
+                     % (x - 1.0 * D, sy, x + 1.0 * D, sy, x - 0.6 * D, y, x + 0.6 * D, y))
+            o.append(LABEL(x + int(0.9 * D), int(sy) - 3, "seat %.2f D" % (f["feet_y"] - f["anchors"]["seat"][1]), 10))
         o.append(LABEL((i % cols) * cw + 4, y + 22, name + ("  [LIP-SYNC]" if name in LIPSYNC else ""), 11))
     return _svgdoc(W, H, "".join(o)), W, H
 

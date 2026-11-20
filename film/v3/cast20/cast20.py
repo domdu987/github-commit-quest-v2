@@ -40,7 +40,8 @@ _X, _ln, _circ = CE._X, CE._ln, CE._circ
 _f = C6._f
 _lin = C9._lin
 _O20 = {}
-_POSE20 = {"glow": 1.0, "t": 0.0, "key": 0.0, "napkin": 0.0, "bite": 0.0, "yaw": 0.3}
+_POSE20 = {"glow": 1.0, "t": 0.0, "key": 0.0, "napkin": 0.0, "bite": 0.0, "yaw": 0.3, "back": 0.0}
+_ORIG_COS = {}
 
 cycle_people, talk_mouth, blink_at, NOD = C6.cycle, C6.talk_mouth, C6.blink_at, C6.NOD
 CYCLE_MODES = C6.CYCLE_MODES
@@ -407,6 +408,37 @@ HATS20 = {"hair20": _hat_hair20}
 
 
 # ============================================================================= costumes (torso-local)
+def _back_cover(k, C, m, inside):
+    """pose key back=1: cover the front details (waistcoat, cravat, lapels, napkin, chain) with a plain coat back: seam, collar band, side vents."""
+    X = _X(m)
+    h = C["torso_h"]
+    yB = TT + h
+    col = C["colors"]
+    o = [inside]
+    o.append('<path d="%s" fill="url(#%s_tg)"/>' % (_poly_d([X(-1.2, 0.26), X(1.2, 0.26), X(1.2, yB + 0.06), X(-1.2, yB + 0.06)]), k.uid))
+    o.append(_ln([X(0.0, 0.46), X(0.0, yB + 0.04)], k.c(col.get("dark", "#1a1418")), 0.016))
+    o.append(_ln([X(-0.26, 0.74), X(-0.20, yB - 0.10)], k.c(col.get("dark", "#1a1418")), 0.010, ' opacity="0.7"'))
+    o.append(_ln([X(0.26, 0.74), X(0.20, yB - 0.10)], k.c(col.get("dark", "#1a1418")), 0.010, ' opacity="0.7"'))
+    cl = [X(-0.16, 0.36), X(0.16, 0.36), X(0.14, 0.50), X(0.0, 0.54), X(-0.14, 0.50)]
+    o.append(_poly(k, cl, k.c(col.get("lapel", col.get("dark", "#1a1418"))), 0.014))
+    o.append(_ln([X(-0.12, 0.395), X(0.12, 0.395)], k.c(col.get("collar", "#ffffff")), 0.022))
+    for s_ in (-1, 1):
+        o.append(_ln([X(s_ * 0.12, yB - 0.20), X(s_ * 0.36, yB - 0.14)], k.c(col.get("dark", "#1a1418")), 0.012, ' opacity="0.6"'))
+    return "".join(o)
+
+
+def _wrap_cos(name):
+    orig = CE.COSTUMES[name]
+    _ORIG_COS[name] = orig
+
+    def fn(k, C, m):
+        r = orig(k, C, m)
+        if _POSE20["back"] > 0.5 and isinstance(r, tuple):
+            return (_back_cover(k, C, m, r[0]),) + tuple(r[1:])
+        return r
+    return fn
+
+
 def _cos_waiter20(k, C, m):
     """waiter: white shirt with a black waistcoat (buttons, bow tie) and a LONG white apron from the waist to the shins."""
     X = _X(m)
@@ -460,6 +492,8 @@ def _cos_bustle20(k, C, m):
 def _cos_maupassant20(k, C, m):
     """frock7 coat; with pose key napkin=1 a white napkin tucked into the collar hangs over the chest (drawn under the lapels)."""
     inside, back, ov = C7._cos_frock7(k, C, m)
+    if _POSE20["back"] > 0.5:
+        return _back_cover(k, C, m, inside), back, ov
     if _POSE20["napkin"] > 0.5:
         X = _X(m)
         nap = [X(-0.14, 0.40), X(0.14, 0.40), X(0.34, 0.72), X(0.30, 1.10), X(0.0, 1.16), X(-0.30, 1.10), X(-0.34, 0.72)]
@@ -474,7 +508,7 @@ def _cos_maupassant20(k, C, m):
     return inside, back, ov
 
 
-def _cos_official20(k, C, m):
+def _cos_official20_front(k, C, m):
     """black tailcoat (open, lapels), white waistcoat, white cravat, and a TRICOLOUR sash (blue-white-red, no text) over the shoulder to the hip with a gold-fringed knot."""
     X = _X(m)
     col = C["colors"]
@@ -522,7 +556,14 @@ def _cos_official20(k, C, m):
     return inside, "", "".join(ov)
 
 
-COSTUMES20 = {"waiter20": _cos_waiter20, "bustle20": _cos_bustle20, "maupassant20": _cos_maupassant20, "official20": _cos_official20}
+def _cos_official_back(k, C, m):
+    r = _cos_official20_front(k, C, m)
+    if _POSE20["back"] > 0.5:
+        return (_back_cover(k, C, m, r[0]),) + tuple(r[1:])
+    return r
+
+
+COSTUMES20 = {"waiter20": _cos_waiter20, "bustle20": _cos_bustle20, "maupassant20": _cos_maupassant20, "official20": _cos_official_back}
 
 
 # ============================================================================= expressions
@@ -535,6 +576,7 @@ EXPR20 = {
     "proud": dict(eyes="happy", brows=("both", 0.185, -4.0, 0.040, 0.16, 0.0), mouth="smile", mouth_dy=-0.005),
     "cheer": dict(eyes="squeeze", brows=None, mouth="talk_b", mouth_dy=0.01),
     "working": dict(eyes="half", brows=("both", 0.125, 14.0, 0.050, 0.17, 0.010), mouth="clench", mouth_dy=0.0),
+    "smug_shut": dict(eyes="closed", eye_dy=0.01, brows=("one", 0.16, -8.0, 0.050, 0.17, 0.010), mouth="smirk", mouth_dy=0.01),
     "stern": dict(eyes="half", brows=("both", 0.115, 12.0, 0.052, 0.18, 0.010), mouth="frown", mouth_dy=-0.012),
     "outraged": dict(eyes="half", tilt=10.0, brows=("both", 0.095, 26.0, 0.054, 0.19, 0.015), mouth="talk_o", mouth_dy=0.0),
 }
@@ -580,10 +622,27 @@ def _beard20(k, C, P_, L):
     return "".join(o)
 
 
+def _back_head(k, C, P_, L):
+    """pose key back=1: the BACK of the head (no face): a hair-coloured disc to a wavy nape line, two ear bumps; hats/hair masses still sit on top."""
+    hc = C.get("hat_colors", {}) if C.get("hat_style") == "hair20" else C.get("hair", {})
+    col = hc.get("base") if C.get("hat_style") == "hair20" else hc.get("color", "#3a2a22")
+    dk = hc.get("dark", "#1a1210") if C.get("hat_style") == "hair20" else "#2a1e18"
+    yaw = P_.get("yaw", 0.0) if isinstance(P_, dict) else 0.0
+    sh = -0.05 * yaw
+    o = ['<g clip-path="url(#%s_hc)"><circle cx="%.3f" cy="0" r="0.62" fill="%s"/></g>' % (k.uid, sh, k.c(col))]
+    o.append('<path d="M%.3f,-0.30 Q%.3f,-0.05 %.3f,0.30" fill="none" stroke="%s" stroke-width="0.012" stroke-linecap="round" opacity="0.8"/>' % (sh * 0.5, sh * 0.5 + 0.02, sh * 0.5, k.c(dk)))
+    for s_ in (-1, 1):
+        o.append('<path d="M%.3f,-0.20 Q%.3f,0.0 %.3f,0.22" fill="none" stroke="%s" stroke-width="0.010" stroke-linecap="round" opacity="0.7"/>' % (s_ * 0.22 + sh, s_ * 0.30 + sh, s_ * 0.18 + sh, k.c(dk)))
+        o.append('<ellipse cx="%.3f" cy="0.06" rx="0.052" ry="0.085" fill="%s" stroke="%s" stroke-width="0.012"/>' % (s_ * 0.478 + sh, k.c("#f3d6cc"), k.ink))
+    return "".join(o)
+
+
 def _face(k, C, P_, white):
     svg, L = _O20["_face"](k, C, P_, white)
     if C is None or not C.get("_cast20"):
         return svg, L
+    if _POSE20["back"] > 0.5:
+        return _back_head(k, C, P_, L), L
     return _beard20(k, C, P_, L) + svg + _headphones(k, C, P_, L), L
 
 
@@ -593,6 +652,7 @@ def _norm(C, pose):
     _POSE20["key"] = _f(g("key_press"), 0.0, 0.0, 1.0)
     _POSE20["napkin"] = _f(g("napkin"), 0.0, 0.0, 1.0)
     _POSE20["bite"] = _f(g("bite"), 0.0, 0.0, 1.0)
+    _POSE20["back"] = _f(g("back"), 0.0, 0.0, 1.0)
     y = _num(g("yaw"), 0.3)
     _POSE20["yaw"] = y if math.isfinite(y) else 0.3
     return _O20["_norm"](C, pose)
@@ -626,9 +686,48 @@ def _stool_svg(k, cx, y_seat, y_floor, w):
     return "".join(o), (cx - w / 2 - 0.1, y_seat - 0.08, cx + w / 2 + 0.1, y_floor + 0.05)
 
 
+SEAT_DEFAULT = 0.60      # seat top above the floor in D when seated=1 and no seat_h is given
+SEAT_RANGE = (0.30, 1.0)
+
+
+def _hip_h(name, pose, c):
+    p = dict(pose, legs=dict(crouch=c, spread=0.05))
+    p.pop("seated", None)
+    p.pop("stool", None)
+    f = _O20["figure"](name, p, "sh")
+    return f["feet_y"] - f["anchors"]["hip"][1] - 0.16
+
+
+def _seated(name, pose):
+    """pose key seated=1: legs crouched so the hip-seat top (anchors["seat"] = hip + 0.16) is `seat_h` D above the floor (default 0.60,
+    bentwood-chair height in these proportions); the chair itself is set art.  Returns the pose with `legs` filled in."""
+    want = _clamp(_num(pose.get("seat_h"), SEAT_DEFAULT), SEAT_RANGE[0], SEAT_RANGE[1])
+    lo, hi = 0.0, 0.75
+    h0, h1 = _hip_h(name, pose, lo), _hip_h(name, pose, hi)
+    want = _clamp(want, min(h0, h1), max(h0, h1))
+    for _ in range(14):
+        mid = (lo + hi) / 2.0
+        if _hip_h(name, pose, mid) > want:
+            lo = mid
+        else:
+            hi = mid
+    p = dict(pose)
+    p["legs"] = dict(crouch=(lo + hi) / 2.0, spread=0.05)
+    return p
+
+
 def figure(cast_name, pose=None, uid="p"):
     name = _variant(cast_name, pose)
-    f = _O20["figure"](name, pose, uid)
+    if isinstance(pose, dict) and isinstance(cast_name, str) and cast_name in P.CAST and _f(pose.get("seated"), 0.0, 0.0, 1.0) > 0.5:
+        f = _O20["figure"](name, _seated(name, pose), uid)
+        an = dict(f["anchors"])
+        an["seat"] = (an["hip"][0], an["hip"][1] + 0.16)
+        f = dict(f, anchors=an)
+        pose = dict(pose, seated=0)
+        if _f(pose.get("stool"), 0.0, 0.0, 1.0) < 0.5:
+            return f
+    else:
+        f = _O20["figure"](name, pose, uid)
     if not isinstance(pose, dict) or not isinstance(cast_name, str) or cast_name not in P.CAST:
         return f
     st = _f(pose.get("stool"), 0.0, 0.0, 1.0)
@@ -995,6 +1094,31 @@ def _story():
     add("child_wave", "child20", dict(yaw=0.30, expr="happy", arm_r="wave", arm_l="down"), "child waving")
     add("child_point", "child20", dict(yaw=0.40, pitch=-0.4, expr="shocked", arm_r=arm(0.70, -0.20, shape="point", bend=-0.5, stretch=1.3), arm_l="down"), "child pointing up in wonder")
     add("child_idle", "child20", dict(yaw=0.30, expr="neutral", arm_r="down", arm_l="down"), "standing")
+    # ---------------- Maupassant SEATED (seated=1: crouch solved so the seat top is seat_h D above the floor, default 0.60; the bentwood chair is set art)
+    SEAT = dict(seated=1)
+    add("maupassant_seated_eat", "maupassant", dict(SEAT, napkin=1, yaw=0.35, pitch=0.05, expr="blissful", mouth=("open", 0.14, 0.07), bite=1.0,
+                                                    arm_r=arm(0.62, 0.58, bend=-0.2), prop_r=dict(type="fork20", angle=-155), arm_l=arm(-0.40, 1.02, bend=0.6), prop_l=dict(type="knife20", angle=-15)),
+        "SEATED at the table: napkin tucked in, eyes closed in bliss, fork with a bite at the mouth, knife in the other hand. Card base = feet on the floor mark; seat top at anchors['seat']")
+    add("maupassant_seated_eat_chew", "maupassant", dict(SEAT, napkin=1, yaw=0.35, pitch=0.0, expr="blissful", mouth="smile", squash=(1.01, 0.99),
+                                                         arm_r=arm(0.55, 0.98, bend=0.3), prop_r=dict(type="fork20", angle=-30), arm_l=arm(-0.40, 1.02, bend=0.6), prop_l=dict(type="knife20", angle=-15)),
+        "SEATED chewing blissfully, fork down (alternate with seated_eat)")
+    add("maupassant_seated_toast", "maupassant", dict(SEAT, yaw=0.35, pitch=-0.2, expr="blissful", mouth="smile", head_roll=-4,
+                                                      arm_r=arm(0.74, 0.34, bend=-0.3, stretch=1.2), prop_r=dict(type="wine_glass", scale=1.0), arm_l=arm(-0.40, 1.04, bend=0.6)),
+        "SEATED raising the wine glass, blissful")
+    add("maupassant_seated_toast_smug", "maupassant", dict(SEAT, yaw=0.35, pitch=-0.2, expr="smug", mouth="smile", head_roll=-4, gaze=(0.6, 0.0),
+                                                           arm_r=arm(0.74, 0.34, bend=-0.3, stretch=1.2), prop_r=dict(type="wine_glass", scale=1.0), arm_l=arm(-0.40, 1.04, bend=0.6)),
+        "SEATED raising the wine glass, smug")
+    add("maupassant_seated_eyes_shut", "maupassant", dict(SEAT, yaw=-0.6, pitch=-0.45, expr="smug_shut", head_roll=-5, arm_r=FOLD_R, arm_l=FOLD_L),
+        "SEATED, eyes shut, chin up, arms crossed, face turned screen-left (smug, refusing to look)")
+    add("maupassant_seated_eyes_shut_right", "maupassant", dict(SEAT, yaw=0.5, pitch=-0.45, expr="smug_shut", head_roll=5, arm_r=FOLD_R, arm_l=FOLD_L),
+        "SEATED, eyes shut, chin up, arms crossed, face turned screen-right (or mirror=True of the above)")
+    add("maupassant_seated_back", "maupassant", dict(SEAT, back=1, yaw=0.45, pitch=0.0, napkin=0, arm_r=arm(0.50, 1.00, bend=0.4), arm_l=arm(-0.40, 1.02, bend=0.5)),
+        "SEATED seen from BEHIND (three-quarter back): back of the dark head and ears, no face, coat back with seam, hands forward on the table; for the over-the-shoulder shot")
+    add("maupassant_seated_back_eat", "maupassant", dict(SEAT, back=1, yaw=0.45, napkin=0, arm_r=arm(0.70, 0.52, bend=-0.2), prop_r=dict(type="fork20", angle=-150), arm_l=arm(-0.40, 1.02, bend=0.5)),
+        "SEATED from behind, fork raised towards the unseen mouth")
+    add("maupassant_back", "maupassant", dict(back=1, yaw=0.35, arm_r="akimbo", arm_l="akimbo", legs="wide"), "STANDING back card, hands on hips (no face)")
+    for nm in ("painter20", "composer20", "architect20", "poet20"):
+        add(nm + "_back", nm, dict(back=1, yaw=0.30, arm_r="akimbo", arm_l="akimbo", legs="wide"), "STANDING back card (no face), for crowd shots seen from behind")
     return S, M
 
 
@@ -1012,6 +1136,8 @@ def register():
     P._face = _face
     P._norm = _norm
     P.figure = figure
+    for _cn in ('frock7', 'smock7'):
+        COSTUMES20[_cn] = _wrap_cos(_cn)
     CE.COSTUMES.update(COSTUMES20)
     CE.HATS.update(HATS20)
     P.PROP_TYPES = tuple(P.PROP_TYPES) + tuple(t for t in NEW_PROPS20 if t not in P.PROP_TYPES)

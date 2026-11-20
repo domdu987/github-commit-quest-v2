@@ -67,7 +67,7 @@ Everything in `v2/puppet/API.md` and `v3/cast*/API.md` applies: pose keys, mouth
 | `bowler_held` / `tophat_held` | hat held by the brim | upright | `hat_*` |
 Existing props still work (`palette`, `paintbrush`, `paper`, `hammer`, ...). Pose keys: `napkin`, `bite`, `glow`, `key_press`, `hat_off`, `stool` (draws a three-legged stool under the hips; pair with `legs=dict(crouch=0.4)`; for the seated telegraphist, the desk is set art), `t`.
 
-## STORY20 (`cast20.STORY20[name] = (cast, pose)`, merged into `puppet.STORY`; `STORY20_META[name]["note"|"lipsync"]`; 82 poses, see `sheet.jpg`)
+## STORY20 (`cast20.STORY20[name] = (cast, pose)`, merged into `puppet.STORY`; `STORY20_META[name]["note"|"lipsync"]`; 95 poses, see `sheet.jpg`)
 - Eiffel: `eiffel_calm`, `_blueprint`, `_blueprint_chest`, `_giant_rivet`, `_giant_rivet_show`, `_hammer`, `_rivet_pinch`, `_worried`, `_sly_hammer_down`, `_hat_off`, `_point_up`. Old: `eiffel_old_calm`, `_worried`, `_point_up` (pointing-up determined), `_proud`, `_hat_off`.
 - Maupassant: `_idle`, `_read_news`, `_quote_point`, `_quote_newspaper`, `_quote_chest` (lip-sync), `_laugh_quote` (lip-sync, bounce), `_laugh_thumb` (laughing, thumb jerked over his shoulder: far arm back over the shoulder in the point shape; lip-sync flagged, `_laugh_thumb_silent` for the held laugh), `_laugh_belly`, `_smug_wine`, `_write`, `_shocked`, `_turn_away` (eyes shut, arms crossed, faces screen-left), `_eat` (napkin, blissful, fork with bite, knife), `_eat_chew`, `_eat_back`.
 - Artists: `<who>_outraged`, `_laughing`, `_sneering` for painter20 / composer20 / architect20 / poet20 + `painter20_palette`, `composer20_point`, `architect20_plan`, `poet20_quill`, `artists_protest_sheet`.
@@ -78,11 +78,17 @@ Animation recipes: laugh bounce = `squash` (1.03, 0.97) <-> (0.99, 1.01) at ~3 H
 
 `cast20.cycle(cast, phase, mode, facing, base, arms, speed)`: cast6's `walk` / `run` / `sneak` / `march` for every member. Blink: `blink_at`.
 
+## SEATED and BACK cards (added)
+- Pose key **`seated=1`** (any member): crouches the legs so the **seat top** (`anchors["seat"]` = hip + 0.16 D) is `seat_h` D above the floor; default `seat_h = 0.60 D` (range 0.30..1.0, clamped to what the leg length allows; Maupassant reaches 0.35..1.04, so a seat of 1.6 D is NOT reachable by leg geometry: scale the card instead, card scale = chair seat height in the set / 0.60 D, or pass the set's seat height in D units of this card). No stool is drawn (the bentwood chair is set art); `stool=1` still draws the walnut stool if wanted. The feet stay planted: **pivot = `anchors["feet"]` at `feet_y`, i.e. the sprite base (Actor with contact=True) sits on the floor mark**; the hips/seat are at `seat` (y above the floor = feet_y - seat_y, shown on the sheet as a red dashed line). Place the chair so its seat top meets that line, the figure's bottom (rear) just over the seat, thighs hidden by the coat.
+- Seated poses: `maupassant_seated_eat` (napkin, fork with bite at the mouth, knife, blissful), `maupassant_seated_eat_chew`, `maupassant_seated_toast` (wine glass raised, blissful), `maupassant_seated_toast_smug`, `maupassant_seated_eyes_shut` (new expression `smug_shut`, chin up, arms crossed, faces screen-left), `maupassant_seated_eyes_shut_right`, `maupassant_seated_back` (three-quarter BACK, no face), `maupassant_seated_back_eat` (fork raised).
+- Pose key **`back=1`**: the back of the head (hair-coloured, ears, no face, no beard/headphones) and a plain coat/smock back (centre seam, collar band; works for frock7 / smock7 / official costumes, i.e. all artists, Eiffel, Maupassant, gent). Use yaw 0.3..0.5 for a three-quarter back. Standing back cards: `maupassant_back`, `painter20_back`, `composer20_back`, `architect20_back`, `poet20_back`.
+- Back cards of costumes other than frock7 / smock7 / official20 (workers, waiter, lady, soldiers) are not covered: they would still show their front costume details.
+
 ## Canvases (feet-relative, D units) `cast20.CANVAS20[member]` (through `cast_ext.CANVAS`)
 Measured over all poses (plain + mirrored), 16 phases x 4 modes x 2 facings of the cycles and yaw/arm sweeps, +0.12..0.15 D margin: eiffel (-1.69,-3.69,1.69,0.19), maupassant (-1.5,-3.56,1.5,0.19), riveter_tongs (-2.44,-3.44,2.44,0.19), telegraphist (-1.81,-3.75,1.81,0.19), others see the dict. `test_cast20.py canvas`: 0 outside.
 
 ## Files and QA
-`cast20.py`, `test_cast20.py` (`story`, `identity`, `measure`, `canvas`, `robust`, `sheet`, default all), `sheet.jpg` (lineup with height ruler, all expression sets as head close-ups, Maupassant mouth set, held props, every pose labelled), `sheet_small.jpg` (360 px phone check), `run_log.txt`.
+`cast20.py`, `test_cast20.py` (`story` (also checks seat heights and back heads), `identity`, `measure`, `canvas`, `robust`, `sheet`, default all), `sheet.jpg` (lineup with height ruler, all expression sets as head close-ups, Maupassant mouth set, held props, every pose labelled), `sheet_small.jpg` (360 px phone check), `run_log.txt`.
 
 ## Known limits
 - Hands are balls/open/point only: the "thumb over the shoulder" is a pointing hand behind the shoulder; a salute is a flat hand at the kepi side (arm beside the head).
