@@ -146,3 +146,38 @@ Non-blocking polish if time allows (none is needed for FINAL):
 2. Captain's shrug: drop the chart arm to match the other one (both forearms up and out at the same angle) and add a 3-4 frame shoulder lift.
 3. Shared look: increase the head yaw to about 20 deg on g 174-180 so it reads at 360x640.
 4. Seams or a stripe on the left sail (g 118-150), and a sharper plank texture in the foreground.
+
+## Round 13 (director QA-art): PASS, 7.3, with two must-fix camera items (a regression from round 12)
+
+Take: take.mkv.partaa + partab joined to /tmp/s02a13.mkv (first_g 48, 152 frames, 720x1280, 30 fps). All frames are extracted to /tmp/qa19_r13art/s02/gNNN.png. Sheets:
+- sheet_3fps.jpg (every 10th frame)
+- descent.jpg (g 148-178)
+- beat_phone.jpg (360x640, g 166-198)
+- body.jpg (every frame g 178-199)
+- faces.jpg
+- land.jpg (g 174-178 with a 40-px grid)
+
+My own frame-diff (90x160 grey) for in-shot g 58-190: median 8.12, p90 14.28, max 16.20. I also measured the background shift per frame by phase correlation on the top 300 px.
+
+| Check | Status |
+|---|---|
+| **Landing: regression** | **Two problems that were not there in round 12.** **(1) A second speed hump.** The frame-diff falls from the swoop peak (15.0 at g 116) to 6.0 at g 141, then rises again to **16.2 at g 156**, the largest value in the take, before easing out. In round 12, g 150-160 ran at 9.5-10.4. The top-down to eye-level drop is now squeezed into about g 148-160 and reads on the phone as a second dive, the "surges" problem from round 10. The ease-out after it (g 156-175, about 20 frames) is soft. **(2) A one-frame hitch at the touchdown.** The background shift goes (3,-6) at g 173, (2,-4) at g 174, **(0,0) at g 175**, **(2,-4) at g 176**, then (0,0) from g 177. So the camera stops, moves once more and stops again; you can see it in the feet and rigging in land.jpg, and the diff jumps to 9.3 at g 176 (full-res), between 5.9 and 3.8. After that the drift starts at g 180 at 1-3 px/frame **in the opposite x direction**. That reversal is slow enough to pass. |
+| Props stay in hand | **Yes.** I checked every frame g 178-199. The quadrant stays in the astronomer's hand: raised for the scratch, lowered over g 182-187, held at hip. The chart stays in the captain's hand at chest height through g 199. Nothing pops. |
+| Puzzled beat on phone | **Clearly better.** From g 174 the captain has wide round eyes and a flat, open mouth, a dumbfounded "huh?". It reads instantly at 360x640, and it is the best face this beat has had. g 172 is a blink. Shared look: the captain's pupils and head go toward the astronomer at g 176-188, and the astronomer looks back. It reads on the phone, though gently. Shrug, g 183-199: the astronomer is symmetric with arms out. The captain's free arm now lifts out with an open hand, but his chart arm stays horizontal toward the astronomer, so his shrug is still a little lopsided; the shoulder lift is barely visible. The net is a readable, mildly funny "neither of us knows". |
+| Other regressions | None. The opening, wake, stern pass, colour (sat 0.639, luma 94.1: G1 OK), contact shadows, framing and face size (13-15 %) are all unchanged (G2/G3 OK). The flat sail g 118-150 and the soft foreground planks are still open polish. |
+
+| Criterion | Score |
+|---|---|
+| Set | 8 |
+| Light & colour | 8 |
+| Composition / phone | 7 |
+| Acting | 7.5 |
+| Key moment (BIGZOOM + beat) | 7 |
+| Match to refs | 7.5 |
+| **Overall** | **7.3 - PASS (must-fix 1-2 before FINAL)** |
+
+Must-fix (cheap; a frame check of g 140-190 is enough to confirm it):
+1. **Restore the round-12 camera curve for g 140-176.** Round 12 had one hump, a diff of about 8-10 through the descent and a monotone settle, and none of its acting depended on this change. Keep all the round-13 acting. No in-shot diff should come back above about 11 after the first peak.
+2. **Remove the g 175 stall.** The camera's last moves must decrease frame by frame (for example 4, 3, 2, 1, 0 px) with no zero frame followed by a non-zero one. Start the hold drift in the same x direction as the landing, or start it from 0 with a smooth ease-in.
+
+Optional: lower the captain's chart arm so that both forearms match in the shrug.
