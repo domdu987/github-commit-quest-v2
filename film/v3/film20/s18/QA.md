@@ -1,19 +1,18 @@
-# s18 QA (render team 8)
-Shot 18 (g 1221-1301, dissolve-in 17 f -> handle g 1210-1220; 4 handle frames g 1302-1305 after the cut). 96 frames.
+# s18 = T18 camera-travel take (shots 18+19+20), TOWER dusk 1909 (render team 8)
+One continuous take, g 1221-1430 (40.70-47.71 s), first_g 1210 (11 handle frames for DIS 17 in), 4 out-handle frames g 1431-1434 (hard cut out), 225 frames, 720x1280, 8 spp, no DOF.
+take.mkv is 100 MB: delivered as take.mkv.part{aa,ab,ac} (cat them to rebuild).
+Old s19/s20 folders deleted (merged into this take).
 
-- s/frame: 10.3 wall (2 procs x 2 threads), 20.01 cpu; 8 spp, 720x1280, no DOF, no text.
-- Heads: [41, 106] px wide, centre y [616, 718], lowest bottom y 746 (caption band 880).
-- Frame-diff in-shot: median 2.76, p90 3.47 (target 4 / 12: BELOW target except s20 p90; small figures + smooth dusk sky).
-- Mouths: all still (no quote in these shots). Checked contact sheet at 16 frames, phone sheet, cut edges via handles.
-- Set bug worked around at runtime (c20.fix_antenna_wires): tower20._antenna zips 40 points with linspace(...)[1:] (39 pairs), so the last segment of each wire to the anchor post was never built (wires ended in mid-air). s18/s19 add it. Also wire_glow 0.7 in s19 so wires read against the dusk sky.
-- Staging deviations: s18 cast marks moved 2-5 m toward the wagon so five heads fit one frame; s19 camera on the avenue at (-4.4,-218,0.5) m (not the board camera) so Eiffel is in frame; s20 soldier seated on the chair (seat_h 0.5) with the aim between him and the spark gap.
-- Known weak: bottom third is empty ground (caption zone); s20 plank grooves faintly stripe on floor/ceiling (no visible shimmer at phone size); hands/key of the soldier mostly hidden behind desk and headphones.
+## Travel
+g 1210-1303 dusk, wagon, old Eiffel worried (calm->worried on the blink at g 1254), push 20 %/s + orbit + tilt + 2 snaps | g 1304-1342 he points up on "ไอเฟลเลยขึง", camera CRANES to 30 m tilting up the tower + wires | g 1343-1360 WHIP-TILT down the wires to the post on "จากยอดหอ ลงมาถึงพื้น" | g 1361-1394 DIVE to the hut's lit window | g 1390-1410 THROUGH the window (glass panel hut_lampsm hidden) | g 1410-1434 soldier taps the Morse key, 5 taps, spark gap flashes (own jagged arc between the brass balls), push.
+Not done: the optional "T.S.F." sign on the hut.
 
-## Take-gate revision
-Re-lifted per director: stronger orbit/slide, snap x1.6 + tilt. da (left demolition man) is cropped out by the punch-in after g 1267.
-- Final numbers: s/frame 10.09 wall, frame-diff median 2.84 p90 5.58.
+## Numbers
+- qa_stats2: sat 0.618, vivid 56.2 %, luma 97.9, motion median 4.94 p90 22.36, still 3.7 %.
+- own frame-diff (in-shot, 90x160): median 5.79, p90 22.07 (target 4 / 12: met).
+- s/frame 8.66 wall, 16.74 cpu (2 processes x 2 threads).
+- QA_AUTO: PASS (see QA_AUTO.md); planned-cut note only.
 
-## Take-gate round 2 (TAKE_B + QA_TEAM §G)
-TAKE-B re-stage: own camera (-5.4,-227,0.7) m wide; group moved toward the wagon so the wheeled wagon + crowbars + horse read; the torn FG plank (set FG / crowbar bundle at the lens) is gone (camera 4 m further back, preset FG hidden); runtime warm low sun (c20.warm_ground_sun) lights the avenue warm with real cast shadows (no more flat blue slab); barrels/crates beside the lens path as FG dressing; Eiffel head 64-100 px (needs closer than 60 only at g<1254); two snaps (x1.55 + x1.15). Ground still ~40 % of the frame (heads must stay above y 880).
-- qa_stats: take.mkv: 3.2s, shots=1, mean shot 3.20s, median 3.20s, shortest 3.20s, shots<1.5s: 0 |    saturation 0.557, brightness 102.0, in-shot motion median 2.86 p90 6.07 |    shot lengths: 3.2
-- Own frame-diff (in-shot): median 2.32 p90 5.45; s/frame 8.53 wall.
+## Fixes carried from the TAKE gate
+antenna last-segment bug fixed at runtime (wires reach the post), warm low sun for a lit avenue with cast shadows, preset FG / shade casters hidden (no torn plank), wagon with wheels + horse + crowbars readable, hands on the key, duplicate headphones removed, exposure +0.35 inside (luma ok).
+Known weak: the ground is still ~40 % of the first 90 frames (heads must stay above y 880); window crossing frames g 1388-1396 are close-ups of lit panes and wall battens (about 8 frames); plank moire faint on the hut ceiling; eiffel head 52-125 px.

@@ -6,18 +6,18 @@
   {
    "kind": "ambience",
    "t": 40.333,
-   "dur": 3.2,
+   "dur": 7.5,
    "frame": 1210,
-   "end_frame": 1306,
-   "note": "Champ de Mars at dusk 1909: empty, a little wind, distant city murmur, a lone horse shifting by the wagon, iron creak from the tower"
+   "end_frame": 1435,
+   "note": "Dusk on the avenue then the hut: city murmur + wind in the lattice, antenna wires hum rising during the crane, inside the hut room tone + lantern hiss"
   },
   {
    "kind": "accent",
-   "t": 40.5,
-   "dur": 0.467,
-   "frame": 1215,
-   "end_frame": 1229,
-   "note": "dissolve in from the 1889 cafe laugh: the laugh tails off, a low cold string note enters (twenty years later)"
+   "t": 40.333,
+   "dur": 0.4,
+   "frame": 1210,
+   "end_frame": 1222,
+   "note": "dissolve in from the cafe laugh: laugh tails off, low cold string note"
   },
   {
    "kind": "foley",
@@ -25,7 +25,7 @@
    "dur": 0.233,
    "frame": 1233,
    "end_frame": 1240,
-   "note": "sledge-hammer rests on the shoulder: cloth + metal tick; a crowbar scrapes the cobbles"
+   "note": "sledge rests on a shoulder: cloth + metal tick; a crowbar scrapes the cobbles"
   },
   {
    "kind": "accent",
@@ -33,7 +33,7 @@
    "dur": 0.5,
    "frame": 1252,
    "end_frame": 1267,
-   "note": "snap push on 'ใกล้วันรื้อ' (about to be torn down): short airy whoosh + a low drum hit at the end"
+   "note": "snap push on 'ใกล้วันรื้อ': short whoosh + low drum hit"
   },
   {
    "kind": "foley",
@@ -41,23 +41,87 @@
    "dur": 0.067,
    "frame": 1254,
    "end_frame": 1256,
-   "note": "Eiffel's face drops to worry: tiny rising worried 'wobble' sting (no voice)"
+   "note": "Eiffel's face drops to worry: small wobble sting (no voice)"
+  },
+  {
+   "kind": "accent",
+   "t": 43.467,
+   "dur": 1.267,
+   "frame": 1304,
+   "end_frame": 1342,
+   "note": "crane up the tower: rising string/wind riser, iron creak, wire hum"
+  },
+  {
+   "kind": "accent",
+   "t": 44.767,
+   "dur": 0.567,
+   "frame": 1343,
+   "end_frame": 1360,
+   "note": "WHIP-TILT down the wire: fast falling whoosh with a thin wire zing, lands on the post"
+  },
+  {
+   "kind": "accent",
+   "t": 45.367,
+   "dur": 1.1,
+   "frame": 1361,
+   "end_frame": 1394,
+   "note": "dive to the hut: air rush, the lit window grows, spark crackle starts faintly"
   },
   {
    "kind": "foley",
-   "t": 42.4,
-   "dur": 0.6,
-   "frame": 1272,
-   "end_frame": 1290,
-   "note": "wind through the lattice, the antenna wire hums faintly high above"
+   "t": 46.333,
+   "dur": 0.2,
+   "frame": 1390,
+   "end_frame": 1396,
+   "note": "passing through the window: a brief wooden thump + room tone switch to interior"
+  },
+  {
+   "kind": "prop",
+   "t": 46.533,
+   "dur": 0.067,
+   "frame": 1396,
+   "end_frame": 1398,
+   "note": "Morse tap (dot) + spark-gap zap"
+  },
+  {
+   "kind": "prop",
+   "t": 46.733,
+   "dur": 0.067,
+   "frame": 1402,
+   "end_frame": 1404,
+   "note": "Morse tap (dot) + zap"
+  },
+  {
+   "kind": "prop",
+   "t": 46.967,
+   "dur": 0.167,
+   "frame": 1409,
+   "end_frame": 1414,
+   "note": "Morse tap (dash) + longer zap"
+  },
+  {
+   "kind": "prop",
+   "t": 47.3,
+   "dur": 0.067,
+   "frame": 1419,
+   "end_frame": 1421,
+   "note": "Morse tap (dot) + zap"
+  },
+  {
+   "kind": "prop",
+   "t": 47.5,
+   "dur": 0.133,
+   "frame": 1425,
+   "end_frame": 1429,
+   "note": "Morse tap (dash) + zap"
   },
   {
    "kind": "cut",
-   "t": 43.4,
+   "t": 47.7,
    "dur": 0.0,
-   "frame": 1302,
-   "end_frame": 1302,
-   "note": "hard cut to shot 19 (summit): the hum swells"
+   "frame": 1431,
+   "end_frame": 1431,
+   "note": "hard cut to shot 21 (night): the last zap becomes the signal-ring swell"
   }
  ]
 }
