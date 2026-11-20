@@ -81,3 +81,27 @@ Changes for the re-render (same set, same path geometry, same lighting):
 3. **Make him findable at the start:** turn the restaurant pane from the flat yellow emissive square into clear glass (or an open pane), so the lit interior and his white face read as a dot in the first-floor window from g1745. Optionally use a slightly warmer practical light behind him.
 4. **Move the first-bite keyframe from ~g1812 to ~g1824-1828** (60.8-60.9 s, still inside "กินข้าวบนหอ" which starts at 60.48). Keep his mouth closed until then.
 Then redo the s24 take QA (measure g1736-1852 every 4 frames against these numbers) and re-run the FINAL item 4 and joins at g1732 and g1853.
+
+## §E/FINAL ruling: BIGZOOM 2 round 10 (rc6)
+Independent Opus reviewer, measured on film20_rc6 assembled frames (f index = g), full 720x1280. Subject = visible figure, top of hair to the tabletop edge that hides him (the occlusion line), read on crops with a 0.5 % grid (+-1 %). Camera motion = dense optical flow (Farneback) on the ceiling/background band y 0-400, fitted to scale + translation per frame.
+
+**1. Subject size**
+
+| g | t (s) | fig % H | | g | t (s) | fig % H |
+|---|---|---|---|---|---|---|
+| 1736 | 57.87 | 4.5 | | 1833 | 61.10 | 33.7 |
+| 1743 | 58.10 | 4.8 | | 1836 | 61.20 | 34.7 |
+| 1750 | 58.33 | 5.4 | | 1840 | 61.33 | 35.4 |
+| 1790 | 59.67 | 13.3 | | 1850 | 61.67 | 37.2 |
+| 1826 | 60.87 | 30.5 | | | | |
+
+- Last < 5 %: ~g1745. First >= 35 %: ~g1838 (band g1835-1842, because the size grows only ~0.2 %/frame there). **< 5 % -> >= 35 %: 93 frames = 3.1 s** (band 3.0-3.2 s). The whole cut-free camera move runs from the s23 dissolve (g1732) to the s25 dissolve (g1849+), about 4 s. Monotonic. >= 35 % held g1838-1849 before the dissolve (37 % at g1850). He is findable at the start (white face and moustache at the lit table, through the open window under the RESTAURANT sign). It passes through lattice, the sign, the window frame and the dining room on the way. My numbers match QA-tech round 10 within about 1 point. **Meets §H.1 3-6 s**, at the low end.
+
+**2. Speed change at g1834/1835**
+- Background camera scale rate per frame: 0.95 % (g1816) -> 0.79 (1820) -> 0.48 (1824) -> 0.36 (1828) -> 0.30 (1831) -> 0.27 (1834) -> **0.11 (1835)**, then a flat 0.09-0.11 to g1849. Background speed 1.1 -> 0.44 px/frame (34 -> 13 px/s). So the move is already a smooth ease-out over about 0.6 s (the rate falls to 28 % of the g1816 value), and then one velocity kink of about 60 % takes it into a constant slow creep. It is not a stop, not a hold and not a reversal. The grey diff halving (6.8 -> 3.2) overstates it, because that number also contains his fork and chewing animation.
+- Viewer judgment (stepped g1825-1845 at 30 fps): the kink comes at very low screen speed (about 1 px/frame), during the bite action that draws the eye. It reads as the camera "landing" and then keeping a slow creep-in, which is a normal finish for a push-in. **Not a defect that breaks "one continuous BIGZOOM".** Optional polish, not required: blend the velocity from 0.27 to 0.10 %/frame over g1830-1840.
+
+**3. Ruling**
+- BIGZOOM 2 (57.75-61.77 s, g1732-1852): **PASS §H.1**. BIGZOOM 1 (5.93-10.60 s): PASS (earlier ruling). The angle types (8) pass. **Film 20 satisfies §H (2 BIGZOOMs). The FINAL gate is not blocked on §H.** No fix is needed.
+- Recorded note, not blocking: BIGZOOM 2 starts on a high exterior wide of the first-floor facade (ground far below fills the lower frame), not a whole-city vista. Its scale change is about 8x, against about 20x for BIGZOOM 1. I accept it because the operative tests are met (< 5 % and findable, 35-60 % landing, 3-6 s, continuous, eased, through set detail) and BIGZOOM 1 already delivers the city vista. If the director or client wants a "from very far" second zoom, that needs a re-render of s24 starting from a tower-and-Paris wide. Retiming the existing frames would not give that.
+- Not committed.
