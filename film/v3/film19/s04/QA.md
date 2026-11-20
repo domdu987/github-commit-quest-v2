@@ -1,5 +1,6 @@
-# QA s04 (shot 4, ship_rocks STORM_DUSK) — revision 3 (after the TAKE-gate QA_TECH)
-Take g 182-270 (shot g 191-261; 9 in-handle for DIS 13, 9 out-handle for the cut to shot 5). 89 frames, 720x1280, 12 spp.
-- QA_AUTO PASS. Frame-diff in-shot median 6.48 / p90 12.09 (take rule: median >= 4, p90 >= 10). 19.24 s/frame wall. Heads [108, 247] px, centre y [537, 636], chin max 693 (above 880).
-- Fixes: captain turned 3/4 toward the rail, chart in both hands at chest height, eyes alternate chart / fog, never at the lens; push + pan then a settle pan keeps him fully in frame to g 270; lantern raised and moved right so it hangs above/beside the head and never crosses the face (swing shortened); black cannon/carriage/hatch meshes hidden.
-- Known: at g 205-211 the swinging lantern touches the right frame edge for a few frames (partly cropped); lantern glass flat lemon (set NOTE); chart prop shows coast/compass rose, no text.
+# QA s04 (shot 4, ship_rocks STORM_DUSK) — revision 4 (round-3 TAKE gate)
+Take g 182-270 (shot g 191-261; 9 handle each side). 89 frames, 720x1280, 12 spp.
+- QA_AUTO PASS. Frame-diff in-shot median 6.34 / p90 11.84. 20.38 s/frame wall. Heads [108, 247] px, centre y [537, 636], chin max 692 (above 880).
+- Round-3 fixes: head turned to near-profile toward the rail (yaw 1.05) with the gaze alternating chart (down-right) and fog (up-right), never at the lens; chart held in front of the chest in both hands (elbows bent, hand x 0.22 / 0.02) at reading distance; lantern moved 0.1 D toward centre with a smaller swing: fully inside the frame on every frame (checked on the contact sheet g 182-270).
+- Kept: captain fully in frame to g 270, cannon/carriage/hatch hidden.
+- Known: the chart shows coastline + compass rose (accepted by the director); lantern glass flat lemon (set NOTE); the body drawing stays facing the lens (the puppet's yaw only turns the head).
