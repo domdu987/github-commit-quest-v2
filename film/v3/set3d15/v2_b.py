@@ -18,7 +18,7 @@ from set15_lib import S, U, DM, STATE, mat, mat_emit, rnd, adopt, root, kdir
 import v2_b_tex as TX
 
 TEXD = TX.TEX
-if not os.path.exists(os.path.join(TEXD, 'foam_top.png')): TX.make_all()
+if not os.path.exists(os.path.join(TEXD, 'foam_side.png')): TX.make_all()
 
 # ------------------------------------------------------------------ constants of B (see set15_b)
 SX, SY = LB.SX, LB.SY
@@ -31,18 +31,18 @@ def M2D(p): return tuple(c * U for c in p)
 S.CROWD_HEX = ['#ff3b2f', '#ffffff', '#ffd21f', '#2f7bff', '#ff7a1a', '#fff0d8', '#19b9ff', '#2fd06b', '#e8203a', '#f8f0d8', '#ffb01f', '#3a5cff', '#ff5a2a', '#ffffff']
 
 # ------------------------------------------------------------------ light presets (B_NIGHT, B_TENSE2, B_DAY72)
-SKY_NIGHT = [(0.0, '#14127a'), (0.30, '#2a2cb0'), (0.44, '#4a3ac0'), (0.485, '#b84a9a'), (0.505, '#ff7a30'), (0.525, '#ffb25a'), (0.56, '#6a3ab8'), (0.66, '#2832b4'), (0.82, '#16168c'), (1.0, '#0c0c64')]
-SKY_TENSE = [(0.0, '#100e66'), (0.30, '#1c1c96'), (0.44, '#3a2aa6'), (0.485, '#a03a8c'), (0.505, '#e0661e'), (0.525, '#e89040'), (0.56, '#4a2aa0'), (0.66, '#1c24a0'), (0.82, '#101078'), (1.0, '#08085a')]
+SKY_NIGHT = [(0.0, '#14127a'), (0.30, '#2a2cb0'), (0.46, '#4a3ac0'), (0.496, '#b84a9a'), (0.508, '#ff7a30'), (0.518, '#ffb25a'), (0.545, '#6a3ab8'), (0.66, '#2832b4'), (0.82, '#16168c'), (1.0, '#0c0c64')]
+SKY_TENSE = [(0.0, '#100e66'), (0.30, '#1c1c96'), (0.46, '#3a2aa6'), (0.496, '#a03a8c'), (0.508, '#e0661e'), (0.518, '#e89040'), (0.545, '#4a2aa0'), (0.66, '#1c24a0'), (0.82, '#101078'), (1.0, '#08085a')]
 SKY_DAY72 = [(0.0, '#2c52ee'), (0.40, '#4a86ff'), (0.5, '#a8d4ff'), (0.54, '#78b4ff'), (0.6, '#4690ff'), (0.7, '#2c6cf4'), (0.84, '#1c52e6'), (1.0, '#1444d8')]
 MOUNT = [(3300, 160, 300, '#2a2894'), (4500, 320, 520, '#1e1e82')]
 _E = F.LIGHTS['B_EVE']
-F.LIGHTS['B_NIGHT'] = dict(_E, name='B_NIGHT', key=(1.55, 0.78, 0.38), key_dir=kdir(-52, 9), sun_elev=9, sun_angle=1.2, shade=(0.075, 0.085, 0.36), shade_tint=(0.07, 0.085, 0.40), lift=(0.006, 0.01, 0.03),
-                           floods=1.7, crowd_k=1.0, sky=SKY_NIGHT, sky_k=1.2, glow=('#ff6a28', 0.82, 0.8), hills=MOUNT, hill_k=1.0, grade_saturation=1.22, grade_offset=(-0.004, -0.012, -0.02),
-                           beam_k=1.0, windows=3.2, day=False, exposure=0.1, bloom_size=0.06)
+F.LIGHTS['B_NIGHT'] = dict(_E, name='B_NIGHT', key=(1.25, 0.72, 0.42), key_dir=kdir(-52, 9), sun_elev=9, sun_angle=1.2, shade=(0.075, 0.085, 0.36), shade_tint=(0.07, 0.085, 0.40), lift=(0.006, 0.01, 0.03),
+                           floods=1.0, crowd_k=1.0, sky=SKY_NIGHT, sky_k=1.0, glow=('#ff7a38', 0.9, 0.0), hills=MOUNT, hill_k=1.0, grade_saturation=1.08, grade_offset=(-0.004, -0.012, -0.02),
+                           beam_k=1.0, crowd_shade_k=2.4, crowd_gain_k=1.25, windows=3.2, day=False, exposure=-0.1, bloom_size=0.06)
 F.LIGHTS['B_TENSE2'] = dict(F.LIGHTS['B_NIGHT'], name='B_TENSE2', key=(0.9, 0.42, 0.28), key_dir=kdir(-52, 7), sun_elev=7, shade=(0.055, 0.06, 0.30), shade_tint=(0.05, 0.06, 0.34), floods=2.6, crowd_k=0.42,
-                            sky=SKY_TENSE, glow=('#e0561e', 0.85, 0.6), hills=[(3300, 160, 300, '#1e1c80'), (4500, 320, 520, '#16166a')], beam_k=1.15, windows=2.4, exposure=0.0)
+                            sky=SKY_TENSE, glow=('#e0561e', 0.9, 0.0), hills=[(3300, 160, 300, '#1e1c80'), (4500, 320, 520, '#16166a')], beam_k=1.15, crowd_shade_k=0.9, crowd_gain_k=1.0, windows=2.4, exposure=-0.3)
 F.LIGHTS['B_DAY72'] = dict(F.LIGHTS['B_DAY'], name='B_DAY72', exposure=0.0, key=(1.8, 1.62, 1.3), key_dir=kdir(-36, 46), sun_elev=46, shade=(0.14, 0.13, 0.46), shade_tint=(0.12, 0.12, 0.5), floods=0.0, sky=SKY_DAY72, sky_k=1.15,
-                           glow=('#fff4d0', 0.7, 0.25), hills=[(3300, 120, 220, '#5a78e8'), (4500, 240, 400, '#4a66d8')], hill_k=1.0, grade_saturation=1.2, beam_k=0.0, windows=0.0, day=True, crowd_k=1.0)
+                           glow=('#fff4d0', 0.7, 0.25), hills=[(3300, 120, 220, '#5a78e8'), (4500, 240, 400, '#4a66d8')], hill_k=1.0, grade_saturation=1.2, beam_k=0.0, windows=0.0, day=True, crowd_k=1.0, crowd_shade_k=1.5, crowd_gain_k=1.0)
 for k in ('NIGHT', 'TENSE2', 'DAY72'):
     if k not in F.LOC_LIGHTS['B']: F.LOC_LIGHTS['B'].append(k)
 
@@ -112,16 +112,16 @@ def _math(nt, op, a=None, b=None, c=None):
     return n.outputs[0]
 
 # ------------------------------------------------------------------ materials of the city / beams / sparkles
-def mat_city(name, day):
+def mat_city(name, day, cell=1.0, kscale=1.0):
     key = '%s|city|%s' % (STATE['P']['name'], name)
     if key in S.MATS: return S.MATS[key]
     if day: m = mat('cityw_' + name, '#d8e4ff', '#f4d8b0', 0.035, contrast=0.6, smix=0.3)
     else: m = mat('cityw_' + name, '#3c46c8', '#6a3cb8', 0.03, contrast=0.6, smix=0.6)
-    nt = m.node_tree; P = STATE['P']; K = float(P.get('windows', 3.0))
+    nt = m.node_tree; P = STATE['P']; K = float(P.get('windows', 3.0)) * kscale
     def color(nt):
         tc = nt.nodes.new('ShaderNodeTexCoord'); sp = nt.nodes.new('ShaderNodeSeparateXYZ'); nt.links.new(tc.outputs['Object'], sp.inputs[0])
         u = _math(nt, 'ADD', sp.outputs['X'], sp.outputs['Y'])
-        cu = _math(nt, 'FLOOR', _math(nt, 'DIVIDE', u, 3.3)); cz = _math(nt, 'FLOOR', _math(nt, 'DIVIDE', sp.outputs['Z'], 3.4))
+        cu = _math(nt, 'FLOOR', _math(nt, 'DIVIDE', u, 3.3 * cell)); cz = _math(nt, 'FLOOR', _math(nt, 'DIVIDE', sp.outputs['Z'], 3.4 * cell))
         cb = nt.nodes.new('ShaderNodeCombineXYZ'); nt.links.new(cu, cb.inputs['X']); nt.links.new(cz, cb.inputs['Y']); nt.links.new(_math(nt, 'FLOOR', _math(nt, 'DIVIDE', sp.outputs['X'], 29.0)), cb.inputs['Z'])
         wn = nt.nodes.new('ShaderNodeTexWhiteNoise'); wn.noise_dimensions = '3D'; nt.links.new(cb.outputs[0], wn.inputs['Vector'])
         cb2 = nt.nodes.new('ShaderNodeVectorMath'); cb2.operation = 'ADD'; nt.links.new(cb.outputs[0], cb2.inputs[0]); cb2.inputs[1].default_value = (11.3, 5.7, 3.1)
@@ -130,8 +130,8 @@ def mat_city(name, day):
         nt.links.new(_math(nt, 'GREATER_THAN', wn2.outputs['Value'], 0.72), mx.inputs[0]); return mx.outputs[2]
     def strength(nt):
         tc = nt.nodes.new('ShaderNodeTexCoord'); sp = nt.nodes.new('ShaderNodeSeparateXYZ'); nt.links.new(tc.outputs['Object'], sp.inputs[0])
-        u = _math(nt, 'ADD', sp.outputs['X'], sp.outputs['Y']); fu = _math(nt, 'FRACT', _math(nt, 'DIVIDE', u, 3.3)); fz = _math(nt, 'FRACT', _math(nt, 'DIVIDE', sp.outputs['Z'], 3.4))
-        cu = _math(nt, 'FLOOR', _math(nt, 'DIVIDE', u, 3.3)); cz = _math(nt, 'FLOOR', _math(nt, 'DIVIDE', sp.outputs['Z'], 3.4))
+        u = _math(nt, 'ADD', sp.outputs['X'], sp.outputs['Y']); fu = _math(nt, 'FRACT', _math(nt, 'DIVIDE', u, 3.3 * cell)); fz = _math(nt, 'FRACT', _math(nt, 'DIVIDE', sp.outputs['Z'], 3.4 * cell))
+        cu = _math(nt, 'FLOOR', _math(nt, 'DIVIDE', u, 3.3 * cell)); cz = _math(nt, 'FLOOR', _math(nt, 'DIVIDE', sp.outputs['Z'], 3.4 * cell))
         cb = nt.nodes.new('ShaderNodeCombineXYZ'); nt.links.new(cu, cb.inputs['X']); nt.links.new(cz, cb.inputs['Y']); nt.links.new(_math(nt, 'FLOOR', _math(nt, 'DIVIDE', sp.outputs['X'], 29.0)), cb.inputs['Z'])
         wn = nt.nodes.new('ShaderNodeTexWhiteNoise'); wn.noise_dimensions = '3D'; nt.links.new(cb.outputs[0], wn.inputs['Vector'])
         rect = _math(nt, 'MULTIPLY', _math(nt, 'MULTIPLY', _math(nt, 'GREATER_THAN', fu, 0.2), _math(nt, 'LESS_THAN', fu, 0.8)), _math(nt, 'MULTIPLY', _math(nt, 'GREATER_THAN', fz, 0.28), _math(nt, 'LESS_THAN', fz, 0.82)))
@@ -149,7 +149,7 @@ def mat_beam(name, color=(1.0, 0.95, 0.82), k=2.2, power=2.2, gain=0.55, fade=0.
     out = N('ShaderNodeOutputMaterial'); lw = N('ShaderNodeLayerWeight'); lw.inputs['Blend'].default_value = blend
     core = _math(nt, 'POWER', _math(nt, 'SUBTRACT', 1.0, lw.outputs['Facing']), power)
     tc = N('ShaderNodeTexCoord'); sp = N('ShaderNodeSeparateXYZ'); Lk(tc.outputs['Generated'], sp.inputs[0])
-    along = _math(nt, 'SUBTRACT', 1.0, _math(nt, 'MULTIPLY', sp.outputs['Z'], fade)); ramp = _math(nt, 'MINIMUM', _math(nt, 'MULTIPLY', sp.outputs['Z'], 12.0), 1.0)
+    along = _math(nt, 'POWER', _math(nt, 'MAXIMUM', _math(nt, 'SUBTRACT', 1.0, _math(nt, 'DIVIDE', sp.outputs['Z'], fade)), 0.0), 0.8); ramp = _math(nt, 'MINIMUM', _math(nt, 'MULTIPLY', sp.outputs['Z'], 12.0), 1.0)
     alpha = _math(nt, 'MINIMUM', _math(nt, 'MULTIPLY', _math(nt, 'MULTIPLY', _math(nt, 'MULTIPLY', core, along), ramp), gain), 1.0)
     em = N('ShaderNodeEmission'); em.inputs['Color'].default_value = (*color, 1.0); em.inputs['Strength'].default_value = k
     tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader'); Lk(alpha, mx.inputs[0]); Lk(tr.outputs[0], mx.inputs[1]); Lk(em.outputs[0], mx.inputs[2]); Lk(mx.outputs[0], out.inputs['Surface'])
@@ -235,7 +235,7 @@ def _street_cars_and_lamps(rr, R, pitch, day, M):
 
 def build_city(P, M, day, extent=820.0, seed=68):
     rr = rnd(seed); pitch = 72.0; block = 54.0; n = int(extent / pitch)
-    cm = mat_city('near', day); cm_far = mat_city('far', day)
+    cm = mat_city('near', day); cm_far = mat_city('far', day, 3.2, 0.8)
     cen = []; siz = []; yaw = []; far_c = []; far_s = []; far_y = []
     for i in range(-n, n + 1):
         for j in range(-n, n + 1):
@@ -274,7 +274,19 @@ def build_city(P, M, day, extent=820.0, seed=68):
     wm = mat('avenue_edge', '#f2ecff', '#e0d8f8', 1.0)
     for sx in (-20.6, 20.6): mb.box(wm, (sx, (SY - BO - 40 - 2200) / 2, 0.05), (0.5, 2200 + BO + 40 - SY, 0.04))
     for k in range(60): mb.box(wm, (0, SY - BO - 55 - k * 28, 0.05), (0.6, 12, 0.04))
+    sm = mat('plaza_strip', '#b8b0f4', '#d0c8ff', 0.2, smix=0.3) if not day else mat('plaza_strip', '#ffffff', '#f0f0ff', 0.2)
+    for k in range(72):
+        u = math.radians(k * 5 + 2.5); x, y = ell(AO + 22, BO + 22, u); nn = math.atan2(math.sin(u) / (BO + 22), math.cos(u) / (AO + 22))
+        mb.box(sm, (x, y, 0.045), (34.0, 2.4, 0.03), rz=nn)
+    tm = mat('plaza_tree', '#14804a', '#1ca060', 0.3, smix=0.4)
+    for k in range(150):
+        u = math.radians(k * 2.4 + rr.uniform(-0.5, 0.5)); x, y = ell(AO + 40 + rr.uniform(-1.5, 3.5), BO + 40 + rr.uniform(-1.5, 3.5), u); mb.ell(tm, (x, y, 2.0), (2.4, 2.4, 2.2), (7, 5))
     L.fin(mb, cast=False)
+    if not day:
+        lc = []; ls = []
+        for k in range(120):
+            u = math.radians(k * 3.0 + 1.5); x, y = ell(AO + 33, BO + 33, u); lc.append((x, y, 6.0)); ls.append((1.0, 1.0, 1.0))
+        boxes_obj('plaza_lamps', lc, ls, [0.0] * len(lc), mat_emit('plaza_lamp', '#ffe0a0', 40.0), cast=False)
     # cars, lamps (night only)
     if not day:
         (cc, cs, cy, ck), (hc, hs, hy), (tc, ts, ty) = _street_cars_and_lamps(rr, 700.0, pitch, day, M)
@@ -329,11 +341,11 @@ def build_rim(P, M, day):
         u = math.radians(k * step); u2 = math.radians(k * step + step / 2); x, y = ell(AO + 0.4, BO + 0.4, u); nn = math.atan2(math.sin(u) / BO, math.cos(u) / AO)
         fin_c.append((x, y, (ZT + 1) / 2)); fin_s.append((0.9, 0.9, ZT + 1.2)); fin_y.append(nn + math.pi / 2)
         xw, yw = ell(AO + 0.2, BO + 0.2, u2); nw = math.atan2(math.sin(u2) / BO, math.cos(u2) / AO)
-        for zc, hh in ((4.5, 5.0), (11.5, 5.0), (17.5, 3.6)):
+        for zc, hh in ((5.0, 5.0), (12.5, 5.0)):
             win_c.append((xw, yw, zc)); win_s.append((0.2, 1.9, hh)); win_y.append(nw + math.pi / 2)
     fm = mat('rimfin', '#2c34b8', '#3c3ccc', 0.4, smix=0.6) if not day else mat('rimfin', '#f4f0ff', '#e4e0f4', 0.4)
     boxes_obj('rim_fins', fin_c, fin_s, fin_y, fm, cast=True)
-    boxes_obj('rim_slots', win_c, win_s, win_y, mat_emit('slot_warm', '#ffb050' if not day else '#7aa6ff', 5.5 if not day else 0.5), cast=False)
+    boxes_obj('rim_slots', win_c, win_s, win_y, mat_emit('slot_warm', '#ff9a40' if not day else '#7aa6ff', 3.0 if not day else 0.5), cast=False)
     # rim LED ring (white-warm) on the parapet and a red band below it
     lc = []; ls = []; ly = []
     for k in range(180):
@@ -373,7 +385,7 @@ def build_rim(P, M, day):
 EXTRA_TOWERS = [200, 245, 295, 340]
 def build_beams(P, M, day):
     if day: return
-    kb = float(P.get('beam_k', 1.0)); bm = mat_beam('beam', (1.0, 0.95, 0.80), 1.6 * kb, 2.4, 0.20, 0.5, 0.45); glow = mat_glow('lamp_glow', (1.0, 0.92, 0.7), 4.0, 2.6, 1.0)
+    kb = float(P.get('beam_k', 1.0)); bm = mat_beam('beam', (1.0, 0.95, 0.80), 2.2 * kb, 2.0, 0.34, 0.72, 0.45); glow = mat_glow('lamp_glow', (1.0, 0.92, 0.7), 4.0, 2.6, 1.0)
     tw = list(P['towers']) + EXTRA_TOWERS; H_ = 38.0
     mb = S.MB('flood2')
     for tdeg in EXTRA_TOWERS:                          # same tower as set15_b, for the 4 extra positions
@@ -387,11 +399,11 @@ def build_beams(P, M, day):
             for iz in range(4): mb.box(M['lamp'], (0.3, -3.9 + iy * 1.3, -2.1 + iz * 1.4), (0.12, 1.0, 1.0))
         mb.pop()
     L.fin(mb)
-    tgt0 = Vector((0.0, 12.0, 0.0)); n = 28
+    tgt0 = Vector((0.0, 12.0, 0.0)); n = 18
     for tdeg in tw:
         u = math.radians(tdeg); x, y = ell(AO + 9, BO + 9, u); head = Vector((x, y, H_ + 2.0)); tgt = Vector((3.0 * math.cos(u) * 0.6, 12.0 + 2.0 * math.sin(u), 0.0))
         d = tgt - head; Ln = d.length * 1.12
-        for off, r0, r1, k_ in ((0.0, 1.6, 10.0, 1.0), (0.0, 0.8, 4.5, 1.0)):
+        for off, r0, r1, k_ in ((0.0, 1.3, 6.0, 1.0),):
             V = [(r0 * math.cos(2 * math.pi * i / n), r0 * math.sin(2 * math.pi * i / n), 0.0) for i in range(n)] + [(r1 * math.cos(2 * math.pi * i / n), r1 * math.sin(2 * math.pi * i / n), Ln) for i in range(n)]
             Fc = [(i, (i + 1) % n, n + (i + 1) % n, n + i) for i in range(n)]
             ob = mesh_obj('beam%d' % tdeg, V, Fc, bm); ob.location = head; ob.rotation_euler = d.to_track_quat('Z', 'Y').to_euler(); ob.visible_shadow = False
@@ -399,11 +411,11 @@ def build_beams(P, M, day):
         me = bpy.data.meshes.new('flare'); mbm = S.MB('flare'); mbm.ell(glow, (0, 0, 0), (3.6, 3.6, 3.6), (14, 8)); o = L.fin(mbm, cast=False)[0]; o.location = head + Vector((0, 0, 0))
     # halo over the torch
     tx, ty, tz = STATE['torch_pos']
-    gm = mat_glow('torch_glow', (1.0, 0.62, 0.2), 6.0, 2.4, 1.0); mbm = S.MB('torchglow'); mbm.ell(gm, (0, 0, 0), (11.0, 11.0, 14.0), (16, 10)); o = L.fin(mbm, cast=False)[0]; o.location = (tx, ty, tz - 1.0)
-    gm2 = mat_glow('torch_glow2', (1.0, 0.85, 0.5), 8.0, 3.5, 1.0); mbm = S.MB('torchglow2'); mbm.ell(gm2, (0, 0, 0), (5.0, 5.0, 7.0), (14, 8)); o = L.fin(mbm, cast=False)[0]; o.location = (tx, ty, tz - 1.0)
+    gm = mat_glow('torch_glow', (1.0, 0.6, 0.2), 2.6, 3.0, 0.8); mbm = S.MB('torchglow'); mbm.ell(gm, (0, 0, 0), (3.2, 3.2, 3.8), (16, 10)); o = L.fin(mbm, cast=False)[0]; o.location = (tx, ty, tz - 1.0)
+    gm2 = mat_glow('torch_glow2', (1.0, 0.8, 0.4), 4.0, 4.0, 0.7); mbm = S.MB('torchglow2'); mbm.ell(gm2, (0, 0, 0), (2.4, 2.4, 3.4), (14, 8)); o = L.fin(mbm, cast=False)[0]; o.location = (tx, ty, tz - 1.0)
     # vertical warm column above the torch (smoke-lit heat shaft)
-    cm_ = mat_beam('torch_col', (1.0, 0.7, 0.3), 3.0, 2.0, 0.5, 0.8, 0.4)
-    V = [(2.4 * math.cos(2 * math.pi * i / 20), 2.4 * math.sin(2 * math.pi * i / 20), 0.0) for i in range(20)] + [(7.0 * math.cos(2 * math.pi * i / 20), 7.0 * math.sin(2 * math.pi * i / 20), 55.0) for i in range(20)]
+    cm_ = mat_beam('torch_col', (1.0, 0.7, 0.3), 1.6, 2.0, 0.25, 1.0, 0.4)
+    V = [(1.6 * math.cos(2 * math.pi * i / 20), 1.6 * math.sin(2 * math.pi * i / 20), 0.0) for i in range(20)] + [(3.5 * math.cos(2 * math.pi * i / 20), 3.5 * math.sin(2 * math.pi * i / 20), 55.0) for i in range(20)]
     Fc = [(i, (i + 1) % 20, 20 + (i + 1) % 20, 20 + i) for i in range(20)]; ob = mesh_obj('torch_col', V, Fc, cm_); ob.location = (tx, ty, tz - 1.0); ob.visible_shadow = False
 
 def build_sparkles(P, day, n=3200):
@@ -411,10 +423,10 @@ def build_sparkles(P, day, n=3200):
     rr = rnd(777); c = []; s = []; y = []; sd = []
     for _ in range(n):
         i = rr.randrange(2, LB.NROW - 1); a = LB.A0 + i * LB.RW + 0.5; b = LB.B0 + i * LB.RW + 0.5; t = math.radians(rr.uniform(0, 360)); x_, y_ = ell(a, b, t); z = 1.0 + i * LB.RISE + 1.1
-        yw = math.atan2(-math.sin(t) / b, -math.cos(t) / a) + math.pi; seed = rr.random(); sz = rr.uniform(0.5, 0.9)
-        for dims in ((sz, sz, sz), (sz * 2.8, 0.08, 0.08), (0.08, 0.08, sz * 2.8)):
+        yw = math.atan2(-math.sin(t) / b, -math.cos(t) / a) + math.pi; seed = rr.random(); sz = rr.uniform(0.28, 0.5)
+        for dims in ((sz * 0.6, sz * 0.6, sz * 0.6), (sz * 3.0, 0.05, 0.05), (0.05, 0.05, sz * 3.0)):
             c.append((x_, y_, z)); s.append(dims); y.append(yw); sd.append(seed)
-    boxes_obj('sparkles', c, s, y, mat_sparkle('spark', 150.0, 0.045), attrs=dict(seed=('FLOAT', np.array(sd))), cast=False)
+    boxes_obj('sparkles', c, s, y, mat_sparkle('spark', 70.0, 0.05), attrs=dict(seed=('FLOAT', np.array(sd))), cast=False)
 
 # ------------------------------------------------------------------ high jump area + signs
 def build_jump_extras(P, M, day):
@@ -424,14 +436,19 @@ def build_jump_extras(P, M, day):
     V, Fc, UV = quad_uv((px - w / 2, py - h / 2, FOAM_SURF), (px + w / 2, py - h / 2, FOAM_SURF), (px + w / 2, py + h / 2, FOAM_SURF), (px - w / 2, py + h / 2, FOAM_SURF))
     mesh_obj('foam_mat', V, [Fc], ft, uv=UV)
     # vivid sides instead of the grey-blue blocks
-    fm = mat('foamB2', '#2c48d0', '#3a5ae0', 4, contrast=0.8, smix=0.3); fd = mat('foamdkB2', '#e02a2a', '#ee3a34', 4, smix=0.3)
+    fm = mat('foamB2', '#2c48d0', '#3a5ae0', 4, contrast=0.8, smix=0.3, emit='#3a60ff', emit_k=0.30); fd = mat('foamdkB2', '#d82a2a', '#e83a34', 4, smix=0.3, emit='#ff3a30', emit_k=0.26)
     swap_material('foamB', fm); swap_material('foamdkB', fd)
     swap_material('foamtopB', ft)
+    sk = mat_lit_tex('foamside', os.path.join(TEXD, 'foam_side.png'), 1.25, 0.35)
+    px_, py_ = PIT; yf = py_ - 2.71; yb = py_ + 2.71; xl = px_ - 3.52; xr = px_ + 3.62
+    for nm, (a, b) in dict(front=((xl, yf), (xr, yf)), back=((xr, yb), (xl, yb)), left=((xl, yb), (xl, yf)), right=((xr, yf), (xr, yb))).items():
+        ln = math.hypot(b[0] - a[0], b[1] - a[1]); V, Fc, UV = quad_uv((a[0], a[1], 0.0), (b[0], b[1], 0.0), (b[0], b[1], FOAM_SURF), (a[0], a[1], FOAM_SURF), 0, 0, 1, 1); mesh_obj('foam_skirt_' + nm, V, [Fc], sk, uv=UV)
+    swap_material('lawn', mat('lawnV', '#1f9a3c' if not day else '#2fae3e', '#2fb84c' if not day else '#40c850', 0.9, wave=(0.16, '#168a34' if not day else '#25a038'), contrast=1.0, smix=0.4))
     # thick red/white bar, brighter
     swap_material('barW', mat('barW2', '#ffffff', '#ffffff', rough=0.6, emit='#ffffff', emit_k=0.55)); swap_material('barR', mat('barR2', '#e8201a', '#e8201a', rough=0.6, emit='#ff3a20', emit_k=0.5))
     # tartan: hot red
-    swap_material('tartanB', mat('tartanB2', '#d8321e', '#ee4a2a', 1.8, contrast=0.8, smix=0.3)); swap_material('tartan2', mat('tartan2b', '#e43a24', '#f85a34', 1.8, contrast=0.8, smix=0.3))
-    swap_material('tartan3', mat('tartan3b', '#c82c1a', '#e04226', 1.8, contrast=0.8, smix=0.3))
+    swap_material('tartanB', mat('tartanB2', '#b02e1e', '#e4502e', 2.4, contrast=1.5, smix=0.3, emit='#ff4a28', emit_k=0.13)); swap_material('tartan2', mat('tartan2b', '#bc3a26', '#ee5a36', 2.4, contrast=1.5, smix=0.3, emit='#ff4a28', emit_k=0.13))
+    swap_material('tartan3', mat('tartan3b', '#a62c1c', '#d44428', 2.4, contrast=1.5, smix=0.3, emit='#ff4a28', emit_k=0.13))
     # bar-height board "2.24 m" on a post beside the right standard (faces the -y side = the approach camera)
     J = STATE['J']; bx = J['xc'] + J['half'] + 0.95; by = J['y'] - 0.5
     mb = S.MB('boardpost'); mb.rod(M['metal'], (bx - 0.55, by, 0), (bx - 0.55, by, 2.5), 0.03, 0.03, 8); mb.rod(M['metal'], (bx + 0.55, by, 0), (bx + 0.55, by, 2.5), 0.03, 0.03, 8)
@@ -447,12 +464,12 @@ def build_jump_extras(P, M, day):
     V, Fc, UV = quad_uv(*[tuple(p) for p in pts]); mesh_obj('scoreboard_hj', V, [Fc], sm, uv=UV)
     # 1972 banner (DAY72) on poles over the far stand
     if day:
-        u = math.radians(104); bx2, by2 = ell(AO - 1.5, BO - 1.5, u); yw = math.atan2(-math.sin(u) / BO, -math.cos(u) / AO) + math.pi / 2
+        u = math.radians(96); bx2, by2 = ell(AO - 1.5, BO - 1.5, u); yw = math.atan2(-math.sin(u) / BO, -math.cos(u) / AO) + math.pi / 2
         Mt = Matrix.Translation((bx2, by2, ZT + 1.0)) @ Euler((0, 0, yw)).to_matrix().to_4x4()
-        pts = [Mt @ Vector(p) for p in ((-14, -0.3, 6.0), (14, -0.3, 6.0), (14, -0.3, 20.0), (-14, -0.3, 20.0))]
+        pts = [Mt @ Vector(p) for p in ((-10, -0.3, 1.0), (10, -0.3, 1.0), (10, -0.3, 11.0), (-10, -0.3, 11.0))]
         V, Fc, UV = quad_uv(*[tuple(p) for p in pts]); mesh_obj('banner1972', V, [Fc], mat_emit_tex('b1972', os.path.join(TEXD, 'banner_1972.png'), 1.0), uv=UV)
         mb = S.MB('b1972post')
-        for sx in (-13.5, 0.0, 13.5): mb.rod(M['steel'], tuple(Mt @ Vector((sx, 0.2, 0.0))), tuple(Mt @ Vector((sx, 0.2, 20.0))), 0.25, 0.2, 8)
+        for sx in (-9.6, 0.0, 9.6): mb.rod(M['steel'], tuple(Mt @ Vector((sx, 0.2, 0.0))), tuple(Mt @ Vector((sx, 0.2, 11.0))), 0.25, 0.2, 8)
         L.fin(mb)
 
 def build_podium_extras(P, M, day):
@@ -500,11 +517,20 @@ def surface_z(x_m, y_m):
     return 0.012
 
 # ------------------------------------------------------------------ build
+def tune_crowd(P):
+    k = float(P.get('crowd_shade_k', 1.0)); g = float(P.get('crowd_gain_k', 1.0))
+    for m in bpy.data.materials:
+        if not m.get('crowd') or m.node_tree is None or not m.name.startswith(P['name'] + '|'): continue
+        nt = m.node_tree; n1 = nt.nodes.get('sh_mul'); n4 = nt.nodes.get('gain_num')
+        if n1 is not None:
+            v = n1.inputs[7].default_value; n1.inputs[7].default_value = (min(v[0] * k, 0.9), min(v[1] * k, 0.9), min(v[2] * k, 0.95), 1.0)
+        if n4 is not None: n4.inputs[2].default_value = n4.inputs[2].default_value * g
+
 def build(light='NIGHT', city=True, sparkles=True, dress=True, extent=820.0):
     """F.build('B', light) + the v2 extras. light = 'NIGHT' | 'TENSE' | 'DAY72' (| the set15 names EVE / DAY / TENSE keep v1 look)."""
     lk = {'TENSE': 'TENSE2'}.get(light, light)
     A = F.build('B', lk, dress=dress); P = STATE['P']; M = STATE['M']; day = bool(P.get('day', False)); sc = bpy.context.scene
-    STATE['v2'] = dict(light=light, day=day)
+    STATE['v2'] = dict(light=light, day=day); tune_crowd(P)
     lawn = bpy.data.objects.get('lawn')
     if lawn is not None and lk in ('NIGHT', 'TENSE2', 'DAY72'): lawn.scale = (0.28, 0.28, 1.0)
     if lk in ('NIGHT', 'TENSE2', 'DAY72'):
@@ -512,7 +538,10 @@ def build(light='NIGHT', city=True, sparkles=True, dress=True, extent=820.0):
         if city: build_city(P, M, day, extent)
         build_beams(P, M, day)
         if sparkles: build_sparkles(P, day)
-    cam = bpy.context.scene.camera
+    w = sc.world
+    if w and w.node_tree:
+        for nd in w.node_tree.nodes:
+            if nd.bl_idname == 'ShaderNodeMapRange' and abs(nd.inputs['From Min'].default_value - 0.72) < 1e-6: nd.inputs['From Min'].default_value = 0.56
     for ob in bpy.data.cameras: ob.clip_end = 20000.0
     return A
 
