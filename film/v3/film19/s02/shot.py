@@ -32,7 +32,7 @@ GS = list(range(FIRST_G, G_LAST + 1))
 FINAL_SPP = 10
 S = 1.85
 PPD = 224                                                # sprite px per D (head ~110 px at the end; the start is downsampled)
-G_ARRIVE = 160                                           # the medium shot is reached (5.9 s)
+G_ARRIVE = 150                                           # the medium shot is reached (5.9 s)
 G_SCRATCH = (146, 166)                                   # astro19_c scratches his head (comic), 4.9-5.5 s
 BLINKS_C, BLINKS_A = [70, 128, 171], [92, 150, 188]
 
@@ -59,7 +59,7 @@ def _cr(p0, p1, p2, p3, t):
 def _spline(g, which):
     """position on the key spline at the eased parameter u(g) (which 1 = loc, 2 = look)"""
     # g -> u: a slow-ish wide start, a fast descent through the stern (the smooth planks / sail frames the blur check punishes), then it SETTLES on the medium
-    TM = [(48, 0.0), (80, 0.17), (112, 0.56), (126, 0.80), (140, 0.97), (G_ARRIVE, 1.0)]
+    TM = [(48, 0.0), (80, 0.17), (110, 0.54), (119, 0.82), (126, 0.97), (G_ARRIVE, 1.0)]
     j = max(i for i in range(len(TM) - 1) if TM[i][0] <= g) if g < TM[-1][0] else len(TM) - 2
     (g0_, u0_), (g1_, u1_) = TM[j], TM[j + 1]
     x = clamp((g - g0_) / float(g1_ - g0_))
