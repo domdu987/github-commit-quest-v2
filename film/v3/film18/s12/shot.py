@@ -13,7 +13,7 @@ G0, G1 = 944, 1003
 H_IN, H_OUT = 7, 8                   # dissolve 11 in / dissolve 13 out
 FIRST, LAST = G0 - H_IN, G1 - 1 + H_OUT
 mode, rng = c18.parse_args(FIRST, LAST)
-T = c18.Take('s12', FIRST, LAST, draft=(mode == 'draft'), cam_fn=c18.compose(c18.tilt_cam(5.6), c18.rhythm_cam(push=0.08, slide=0.0, pulses=(), orbit=-5)))
+T = c18.Take('s12', FIRST, LAST, draft=(mode == 'draft'), cam_fn=c18.compose(c18.tilt_cam(5.6), c18.rhythm_cam(push=0.10, slide=0.0, pulses=(), orbit=-10)))
 c18.fix_sky_clean(T, 'sky_DUSK')
 ST = cast18.STORY18
 ENV_WALK = ST['envoy_walk'][1]; ENV_BOW = dict(ST['envoy_bow'][1], prop_r=dict(type='banner', angle=-90, scale=1.0))
@@ -38,7 +38,7 @@ def frame(T, g):
     heads = []
     # envoy: walks from the gate (y -14) to the bridge middle (y -28), then bows
     u = c18.ramp(g, G_WALK0, G_ARR) if g < G_ARR else 1.0
-    y = c18.lerp(-14.0, -27.0, u); x = -4.4
+    y = c18.lerp(-14.0, -27.0, u); x = -7.4
     if g < G_ARR:
         pose = cast18.cycle('envoy', ((g - G_WALK0) % 28) / 28.0, 'walk', -1, base=dict(ENV_WALK, prop_r=dict(type='banner', angle=-90, scale=1.5)))
     else:
