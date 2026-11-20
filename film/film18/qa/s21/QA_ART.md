@@ -1,25 +1,43 @@
-# QA-art s21 (REVEAL B: "ในความมืด ทหารเยียนเห็นแต่สัตว์ประหลาดลายมังกร", 53.20-56.08 s), TAKE gate re-render — FIX-FIRST (reveal, strict)
-I reviewed take.mkv at 6 fps (art9/gNNNN.png, g 1590-1685) at full size 720x1280 and on the 360x640 sheets art9_phone_0-2.jpg (cyan line = y 880). Snap word = g 1646.
+# QA-art round 14 s21: FIX-FIRST
+Shot: REVEAL B (g 1596-1683). I extracted all 99 frames (g = 1590 + n). I judged them on a 180x320 phone sheet every 5th frame (about 6 fps), at full size at g 1610/1648/1660/1682, and on mouth crops at g 1664-1682 with guides at y 800/860/900. I measured ground with 20 px blocks (std < 9, low saturation). At g 1683 that method reads about 3 points high against a by-eye check.
 
 ## Earlier changes
-1. Rage face: DONE. V brows, red glaring eyes, fanged roaring mouth and steam read instantly. After the snap the hero is a real monster.
-2. Darkness before the flare: DONE within the director's allowance. The sky is near-black, the gate is dim, and the herd is a dull brown band until the flare at g 1630-1645 turns it blazing red. The flare reads as "out of the dark".
-3. Flames: ACCEPTED. From this head-on angle the flames rise as a wall of fire BEHIND the herd (g 1645-1670), which reads as "fire behind". They no longer look like candles on the backs. Blades: bronze, per the director. But see change 3: there is no glint at all.
+1. **Tan posts and pale edge spikes: DONE.** There are no placeholder slabs in frame.
+2. **Snap homed on the hero face, chin ≤860: DONE.**
+   - The rendered mouth bottom (outline) is about 785 at g 1664, 795 at g 1670, 815 at g 1676, 820 at g 1679 and 850 at g 1682.
+   - The face stays fully in frame.
+   - The team's "about 730 at g 1675" is optimistic, but the rule passes.
+3. **Glint: present** (star at g 1646-1650). It is optional per the director.
 
-## Remaining problems
-- **Pre-snap set, g 1590-1640:** Two flat, untextured tan posts (x 55-95 and x 615-655, y 430-790) and pale palisade spikes at both edges read as placeholder slabs (rule 2). Plain floor is about 37 % (y 800-1280). The floor is soft (QA_AUTO blur on g 1590-1629), against the client's sharp-image rule.
-- **Hero face in the caption band after the snap:** The x1.5 snap and the push carry the hero ox down. Its mouth is at y about 880 at g 1650 and at y 1050-1240 at g 1670-1685. The captions "สัตว์ประหลาด / ลายมังกร" will cross the monster's mouth on the phone.
+## Checks
+- **"A wall of glowing dragon monsters out of the dark": YES** after the snap. A row of rage-faced, red-coated oxen with flames rising behind them fills the frame from g 1650. The pre-snap darkness was accepted in round 12.
+- **Soldiers' shock: WEAK, but it reads as raised arms.**
+  - The three soldiers are black silhouettes with arms up, so no face or jaw drop can read.
+  - From g 1675 the hero covers all of them (team admits).
+  - **Rim:** yes, warm. But it is a flat 15-25 px yellow band offset to one side, which reads as a neon outline more than as firelight.
+- **Cup falling: barely.** Only a small gold blob at the right soldier's feet at about g 1658-1662.
+- **Mouth ≤860: PASS** (see above).
+
+## Blocker
+**The ground before the snap is still too bare.**
+- **Before the snap:** plain floor is 38-44 % raw at g 1596-1640 (about 36-41 % corrected). By eye, the whole band y 820-1280 is empty floor, and y 700-820 holds only the soldiers' feet and shadows. The director's allowance for the dark opening is 35 % as a note.
+- **After the snap:** 37-38 % raw at g 1648-1665 (about 34-35 % corrected), and only 28 % at g 1683.
+- I asked for a dark foreground prop in round 13. None was added, and the camera was tilted down since then. Under §I (rich, detailed sets), half the opening frame is empty floor.
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 7 | 7 | 5 | 7 | 7 |
+| 7 | 8 | 5 | 6 | 8 |
 
-## Verdict: FIX-FIRST
-1. **Pre-snap g 1590-1640:** Hide the two tan posts and the pale edge spikes. Bring plain floor to 30 % or less with a dark lit fg prop at one lower corner (an overturned camp table, wine jars, a dropped shield). Render the floor sharp: no soft gradient patch.
-2. **Snap framing g 1644-1688:** Home the snap and push on the hero's FACE, not the herd centre. Keep the chin at y 860 or above (face centre at about y 0.45) and the full face in frame through the end of the take.
-3. **Blade glint:** Fire 2-3 star glints from the s22 sprite on the hero's and neighbours' blade TIPS at g 1646-1652, at least 40 px at full size, so "flashing blades" lands with the snap.
+## Verdict: FIX-FIRST (1 blocker, measurable)
+1. **Dress the front floor of the Yan camp:**
+   - Over the whole take, put 2-3 warm-lit camp props in the lower third, 1-3 D from the lens: an overturned camp table with wine jars and cups at one lower corner, a spear rack or a drum at the other, and a dropped helmet. Or tilt up about 3°.
+   - Do not move the snap target: the hero mouth must stay ≤860 at g 1676-1682.
+   - Pass checks:
+     - Plain floor ≤35 % on rendered g 1596, 1610, 1625 and 1640.
+     - Plain floor ≤30 % on g 1648, 1655 and 1665.
+     - No prop crosses a face.
 
-## Notes
-- The three soldier silhouettes are pure black cut-outs. A thin warm rim from the fire would sit them in the light.
-- The falling cup (g 1650-1660, right soldier) reads only as a small gold blob.
-- At g 1685 one flame rises straight up behind the hero's horns. Shift it a little off-axis.
+## Notes (not blocking)
+- **Soldier rim:** Thin it to 4-8 px and soften it so it reads as firelight, not a neon outline.
+- **Shock:** Keep one soldier visible at the right edge to the end of the take (g 1675-1683), in profile with an open-mouth shape cut into the silhouette.
+- **Cup:** Make the cup 2x larger and drop it in front of the body (g 1648-1658) so the fall reads on the phone.

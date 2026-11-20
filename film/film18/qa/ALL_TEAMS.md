@@ -50,3 +50,8 @@ High-motion shots (s10, s14, s15, s19, s21, s24, the charge) carry the film's p9
 - Text signs are now ALLOWED: short in-world signs are welcome (e.g. a gate plaque 即墨 / "JIMO" on the gate in the BIGZOOMs).
 - Characters always act; close-ups only as ~1 s punctuation (max 3).
 - FINAL: the contact sheet next to two reference sheets; "same channel?" — a "no" blocks.
+
+## Director decisions, round 14 (2026-11-20 13:50 UTC) — list in the client report
+- s22: the terrified Yan soldier is REMOVED from s22 (after 6 rounds his position kept making the ox's tail flame read as his torch). s22 becomes a pure close-medium hero shot of the ox: dragon silk, blades glinting, flame tail clearly attached behind it. The soldiers' shock is carried by s21.
+- s24: the second fall may be a NEW foreground soldier placed in clear ground; the chariot pole may be hidden.
+- s01: the basket carriers may be removed.

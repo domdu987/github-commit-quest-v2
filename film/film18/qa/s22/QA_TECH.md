@@ -1,17 +1,22 @@
-# QA-tech round 13 s22: PASS
-Checked: all 71 frames at 6 fps; 1:1 frames g1683/1710/1742 with x 0.08/0.45/0.65/0.90 and y860 lines; mouth crops every 3 frames g1683-1742 with the y860 line; flame x extent every 6 frames; ground colour mask; frame-diff re-measured 90x160 (median 11.67, p90 15.55).
+# QA-tech round 14 s22: FAIL
+Checked: all 71 frames at 6 fps; 1:1 frames g1683/1713/1742 with y860 and x 0.08/0.45/0.80/0.92 guides; mouth tongue+outline mask on every frame g1683-1742 (confirmed by eye on g1725/1728/1731/1737 crops); flame/soldier crops g1683/1713/1742; sand mask; frame-diff 90x160 (director 10.95 / 15.05).
 
-## Previous blockers
-- Mouth <= 860 on every frame: DONE. Lowest edge of the mouth/tongue: about 832 g1683, 845-855 g1695-1731, 858 g1737 (worst), 845 g1742. Margin 2 px at g1737, fine.
-- Head in x 0.08-0.45: DONE for the face/muzzle (x about 0.12-0.40 g1683-1742; left tusk at x about 56 = 0.078 at g1742). The ear tip and horn spill to about x 345-360 (0.48-0.50) at g1683-1710: note.
-- Soldier x 0.65-0.90 and fully in frame: DONE (g1742 body x 504-645 = 0.70-0.90, g1683 x about 0.65-0.85), no edge clip. He is behind the ox's rump and the tail pole crosses in front of him, so he is not between the lens and the tail.
-- Own tail flame in frame: DONE, flame x 600-710 in g1683-1731; at g1737-1742 it reaches x 719 (44 edge pixels at g1737): clipped at the right edge for about 5-8 frames (note).
-- No brazier: DONE. Sky blue with moon: DONE.
-- Tail through chest: see notes.
+## Blockers
+1. Flame staging, g1683-1742 (entire take): the tall tail flame stands directly against the soldier and does not come from the hero's tail.
+   - Gap flame-to-soldier: about 12-15 px at g1683 (flame right edge x ~547, soldier shoulder/head x ~560-567); 0 px at g1713; overlapping the soldier's shoulder/torso edge at g1742 (flame x 480-573 vs soldier body from x 567; the flame also covers the glow outline). Required: >= 60 px, no "torch" read.
+   - The flame base floats about 20-30 px above the hero's own tail tuft (the unlit straw bundle at x 330-390 / 370-460, y 460-470); it is rooted behind the neighbouring ox's neck, so the hero's tail is unlit and the flame is a free-standing column next to the soldier. It reads as a torch/brazier beside him (rule 3: flame parented to the tail tip, never free).
+   - Fix: parent the flame card to the hero's tail tip (the bundle at its rump), trail it backward at the rump line; place the soldier at x >= 0.86 or move the flame/tail left so the flame's right edge is <= soldier left edge - 60 px (flame <= x ~500 at the end) on every frame; keep the whole flame <= x 700 and in frame.
+2. Soldier is not turned toward the ox: body frontal, eyes and shocked "O" at the lens on every frame (director calibration: soldiers must visibly react to the oxen). Fix: yaw him 30-40 deg toward the ox with pupils on the ox (can be combined with fix 1).
+3. Ground above 30 %: plain sand below the oxen y ~640-1280 minus pot and bundle = 33-34 % on a sand/low-variance mask (g1689 0.343, g1713 0.342, g1742 0.343; stable all take). Limit 30 %. Fix: a third dark prop at lower centre-right (x 0.45-0.9, y 950-1200), or tilt up ~40 px; QA.md's 3-5 % is wrong.
+
+## Asked checks (pass)
+- Mouth lowest pixel <= y 860 on every frame g1683-1742: PASS. Tongue bottom 794-844; mouth outline 816-846 (max 846 at g1707-1713, 840-862 only in my first heuristic and 832-840 on the eyeballed g1725-1737 crops). Margin >= 14 px.
+- Head at x 0.08-0.45: face/muzzle x ~0.18-0.46 (horn/ear spill to ~0.50): OK, ear note.
+- Soldier fully in frame at x 0.78-0.93 incl. glow, head to feet in frame: OK.
+- Flame in frame: yes, x 0.67-0.78 (not clipped).
+- Blue sky and moon: yes. Warm and cool in the same frame, rim on soldier (light blue) and oxen: yes.
+- No mouth movement (held drawings), no placeholders, no text. Frame-diff fine, no pulse (steady push).
 
 ## Notes
-- Ground: raw colour mask below y 0.55 is 0.36-0.38; minus the pot and reed bundle I read about 0.29-0.32, on the 30 % edge. QA.md's claim of 3-5 % is wrong. If anything is touched, add one more dark prop at lower right (x 0.55-0.9, y 1000-1180).
-- Reed/pole: it starts at the ox's rump, rises diagonally across the soldier's chest, ends in a straw tuft at his shoulder, and the flame is right behind his head. It reads as a long torch/broom he might hold, and the straw tuft does look like a broom head. It is acceptable as a tail torch because the root is on the ox, but a clean fix is to shorten the pole so the straw ends 40 px before his torso. Note, not blocking.
-- The soldier's face is frontal to the lens (eyes at camera, shocked "O"); body is 3/4. He does not look at the ox. Per director calibration rule 7 this is a note.
-- Glints at g1731-1739: one star at the left edge, a flash on the horn; fine (optional).
-- Frame-diff 11.67 / 15.55. No pulsing (steady push). No text, mouths held, no placeholders, plain ground not an issue otherwise.
+- The blade glint star g1731-1739 is on the neighbour ox's head/coat, not a blade tip (optional).
+- Pot (left) and reed bundle (bottom) have a soft/glowy gradient but are lit and warm: fine.

@@ -1,16 +1,19 @@
-# QA_TECH s21 (take g1590-1688, shot g1596-1683) - FAIL (round 5)
-Checked: 6 fps + first/last 3 (25 frames), continuity against s20 last / s22 first. Director 6.84 / 15.69 (my re-measure 6.84 / 15.83): OK. g1596-1645 is low (2-7, a slow push), then a held snap at g1645-1650 (diff 18) and 8-21 to the end. No pulsing. NIGHT, no text.
-Blur flag g1590-1629: ALLOWED. The frames are dark (mean 53-68) but sharp: Laplacian ratio 0.75-0.84 of the take median, no smear on silhouettes, herd or torches.
-## Earlier blockers
-- Out of the dark: FIXED. Herd dim until about g1630, then 3+ big tail flames to the end (OK).
-- Ox face: now an angry rage face with bared teeth (FIXED vs the sad frown).
-- Flat tan cylinders / pillars: NOT FIXED (see 1).
-- Bare ground about 40 %: PARTLY (see 2).
-- Soldiers lit, costumed, 3: PARTLY (now 3, still black silhouettes, see 3).
-## Issues
-1. g1590-1635 - flat untextured tan pillars at the left and right edges (rule 2 placeholder). Fix: lit textured timber posts or hide them.
-2. g1590-1640 - bare ground about 35-40 % (lavender-pink floor with diagonal shadow bands, no fg prop). Fix: tilt up or add a dark fg prop; limit 30 %.
-3. g1590-1683 - the 3 soldiers are solid black featureless silhouettes (2 left by g1675). "Jaws drop, cups fall" cannot be read; the falling cup is a tiny gold fleck at g1655-1675. Fix: lit costumed soldier cards 3-6 D in front with O-mouths.
+# QA-tech round 14 s21: FAIL
+Checked: all 99 frames at 5-frame steps plus every frame g1640-1688 for the mouth; tongue/mouth-outline mask per frame; 1:1 crops with the y860 line; frame-diff 90x160 (director 8.19 / 16.33 accepted). Dark-opening blur accepted.
+
+## Blockers
+1. g1596-1645 (pre-snap) - ground 40-46 % of the frame (limit for the round-12 note is 35 %). The wall base is at y ~690 at g1596 and ~740 at g1640, so floor = y 690-1280 = 46 % at g1596 and ~42 % at g1640 (the plaza between the soldiers and the wall counts). It is also not "dark unlit": it is a lavender/pink-orange soft gradient with long shadow bands. Fix: tilt the camera up / lower the floor so the wall base sits at y <= 830 (floor <= 35 %), or add a dark fg prop (overturned table, jars) over the bottom-right; keep the ground dark.
+   After the snap (g1650+) the herd covers it, ground ~25 %: OK.
+
+## Asked checks
+- Hero mouth lowest pixel <= y 860: PASS on every in-film frame g1596-1682. Mouth/chin outline, measured: 700-735 g1640-1650, 750-775 g1660, 820-835 g1671-1679, 849 g1681, ~858-860 g1682 (margin 0-2 px at the last in-film frame). Handle frames g1683-1688 reach 885, they are outside the film (s22 cuts in). Note: no margin at g1682; if the push is touched, shorten it by 3-4 frames.
+- Soldier rim: yes, a hard 6-8 px bright yellow-gold outline on three black silhouettes; reads as fire-side rim (a little neon). Shock reads g1646-1665 (arms raised, leaning back); after g1668 the herd hides them.
+- Cup falling: a gold cup leaves the right soldier's hand at g1647 and falls to the ground by g1664, visible as a ~25 px gold blob (small but readable on the 6 fps sheet).
+- Tan posts: none. A small grey block at the left edge, g1590-1600 (x 0-10, y 880-1000): brief, note.
+- Flames on tails: yes, flame cards on tails from g1630, a wall of fire behind the herd from g1645. Rage faces read.
+- Frame-diff: low in the pre-snap push (2-7), held snap g1645 (18). No pulsing.
+
 ## Notes
-- The hero ox face fills about 45 % of the frame at g1670-1688; the end frame shows the ox plus a soldier at left. Blade on the right horn is visible there (good, matches s22 expectation).
-- Snap at g1645 is held, not a pulse.
+- Soldiers are pure black silhouettes (no costume); accepted so far.
+- Glints: a star at g1647-1650 over the left horn; optional.
+- Opening blur: accepted by the director.

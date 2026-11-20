@@ -1,18 +1,18 @@
-# QA-tech round 13 s24: FAIL
-Checked: all 87 frames at 6 fps; soldier band y620-920 with y860 line every 6 frames; full 1:1 g1821/1846/1876; frame-diff re-measured 90x160 (median 11.75, p90 17.20).
+# QA-tech round 14 s24: FAIL
+Checked: all 87 frames; 6 fps phone sheet; action band (y 430-886) every 3rd frame g1801-1887; chariot 1:1 crops g1871/1881/1887; soldier chins on frames; ground sand mask; frame-diff 90x160 (director 12.14 / 17.31).
 
 ## Blockers
-1. Prop wider than 20 % of the frame: the tipped chariot with its pole. Measured on 1:1 frames: g1849 about 36 % of the width (x 150-410), g1876 about 61 % (x 0-440 box+pole), g1881-1886 about 75 % (x 0-540). The box alone is about 17-28 %; the long pole makes it a bar across the lower third. Fix: shorten or hide the pole (<= 0.3 of its present length) and keep the whole chariot <= 140 px wide in g1843-1886.
-2. Only ONE visible fall. The moustached soldier sits with legs splayed g1850-1875 at x 0.10-0.27 (chin about y 850). I find no second soldier on the ground in any frame: soldiers at g1807-1849 stand or step in place with "O" mouths, the other soldiers in g1855-1885 stand upright. QA.md says six fall; they are not visible. Fix: make a second soldier at x 0.55-0.85 do a pratfall/sit-down held >= 12 frames in the open between g1825-1870, >= 120 px tall, not behind tents, fire pit or the chariot.
-(The rout reads weakly overall: most soldiers stay within 150 px of where they started; at least 2 more should visibly run across the frame.)
+1. Only ONE visible fall in open ground (need >= 2). The moustached soldier at the left sits with legs splayed about g1861-1881 (x 0.05-0.30, chin ~y 800): clear. A second soldier on the ground: none. In every sampled frame g1801-1887 all other soldiers stand, run or crouch upright; none sits, falls or lies. (g1861 the left soldier is crouching into the sit; the helmet/pot props land on the ground but no second soldier.) Fix: make a second soldier at x 0.55-0.90 do a visible pratfall/sit-down held >= 12 frames in the open between g1825-1870, body >= 120 px tall, not behind the fire pit, chariot or tents.
+2. Chariot pole too long: wheel+box about 120 px = 17 % of the frame width (limit 18 %: OK), but with its pole the chariot spans x ~160-392 at g1881 = 232 px = 32 % of the width (g1887 31 %), limit 25 %. Fix: shorten the pole to <= 60 % of its current length (<= 180 px total).
 
-## Checked and passed
-- Ground: now heavily dressed (pots, stones, bundles, helmets, fire pit); no bare ground, about 0-5 % plain. Dense clutter: note.
-- Props warm, not grey: pots terracotta-yellow, helmets gold, chariot warm wood. Flying pots/helmets about 90-130 px (13-18 %): OK. They move every frame (positions change per frame across g1813-1886), none hangs still.
-- Chins: sitting soldier chin about 850 (g1855-1873), standing ones 700-840, none over 860.
-- Frame-diff 11.75 / 17.20; no pulsing; mouths held; no text; subject in frame. Flame only the camp fire (set prop).
+## Asked checks (pass)
+- Ground: plain sand 3.6-8 % (sand mask g1807 / g1831 / g1851 / g1871); floor fully dressed. OK (<= 30 %).
+- Chins <= 860: standing runners 700-840, the sitting soldier ~800-850; none over 860 in g1807-1882.
+- Props warm and moving: pots and helmets in golden/terracotta yellow, flying in arcs (positions change each frame g1813-1887); chariot warm wood, rolling/tipping across g1840-1887. None hangs still.
+- Rim: cool blue rim on every runner; fire pit key in the centre; warm + cool in frame.
+- Frame-diff fine, no pulsing, mouths held, no text, no placeholders, subject in frame.
 
 ## Notes
-- Helmets and pots are flat yellow, slightly glowing/translucent, no texture (note).
-- Pale flat white cloth slabs at left (g1849-1861) and lower right (g1879+) are untextured planes (note).
-- Fire pit flames are 3 stiff tall red cards (note).
+- The scene is very wide: soldiers are only 130-190 px tall, so a fall must be big enough (>= 120 px) to read.
+- Helmets/pots are flat glowing yellow (note, slightly translucent); the fire-pit flames are 3 stiff red wedges at frame centre all shot, they hide a lot of the action.
+- Dense ground clutter (pots, stones, bundles) is busy but grounded.

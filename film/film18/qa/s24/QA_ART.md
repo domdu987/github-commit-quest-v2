@@ -1,32 +1,40 @@
-# QA-art round 13 s24: FIX-FIRST
-s24: the comic rout in the Yan camp (g 1807-1882). I extracted all 87 frames (g = 1801 + n). I judged them on a 180x320 phone sheet every 5th frame (about 6 fps), on action-band crops every 3rd frame, at full size on the centre, left and bottom regions, and with two ground measures: smooth 20 px blocks and a chroma mask.
+# QA-art round 14 s24: FIX-FIRST
+Shot: comic rout in the Yan camp (g 1807-1882). I extracted all 87 frames (g = 1801 + n).
+- I judged them on a 180x320 phone sheet every 5th frame (about 6 fps), on action-band crops (y 600-1040) every 4th frame, and at full size at g 1820/1835/1846/1850/1858/1866/1876.
+- I measured the chariot on bottom crops at g 1870/1876/1882 with a 72 px ruler.
 
 ## Asked fixes
-1. **Ground ≤30 %: DONE.** Plain ground is at most 17 % (median 11 %) with the block method, and at most 16 % with the chroma mask. The floor is now dressed with stones, pots, sacks, helmets and reed bundles from the first frame. The bottom reads as a ransacked camp. It is busy, but grounded.
-2. **At least 2 visible falls: NOT DONE on the phone.**
-   - **Fall 1: reads.** The moustached soldier at the left sits with his legs splayed at g 1855-1873 (x 0.05-0.30, y 0.66-0.78).
-   - **Fall 2: does not read.** The team puts the second and third falls at x 0.6-0.72 (g about 1821 and 1843). On the render, the soldier who sits at g 1839-1851 (x 0.71-0.83, head at y about 800) is directly behind the fire-pit flame cards and the tipped cart, so only his head shows above the flames. I find no tile on the phone sheet with two soldiers visibly on the ground.
-3. **Warm props no wider than about 20 % of the frame: PARTLY DONE.**
-   - **Flying helmets and pots: DONE.** They now reach about 10-18 % (largest about 18 % at g 1876).
-   - **Chariot: NOT DONE.** The tipped chariot is wheel plus box about 29 % of the frame width, and about 58 % with the pole, at g 1864-1882 (x 0.08-0.66). In the last second it becomes the dominant orange shape across the bottom centre, competing with the fire pit.
-4. **The rout reads as a comic scatter: YES, with a note.** Terrified faces, flying helmets and pots, the tent folding and the cart tipping all read as comic and bloodless. The soldiers still clump in the centre band rather than streaming out to the edges. I accepted the scatter in round 12 and do not re-raise it.
+1. **Chariot ≤18 % wide (≤25 % with the pole): NOT DONE at the end.**
+   - At g 1835-1850 the whole chariot is 115-130 px (16-18 %). Good.
+   - **g 1870:** 165 px (23 %) in total.
+   - **g 1876:** about 200 px (28 %) in total.
+   - **g 1882:** pole tip to box 148-375 = 227 px (32 %), with the wheels and box alone at about 180 px (25 %).
+   - It is now a dim, low-contrast prop that no longer dominates the frame, so this is a small overrun. But the numbers fail.
+2. **At least 2 visible falls in open ground: NOT DONE (third round).**
+   - **Fall 1: reads.** The moustached soldier at the left sits on the ground with his legs splayed (g 1855-1879, x 0.12-0.32).
+   - **Fall 2: not found.** I find no second soldier on the ground on any tile or crop. The g 1850 figure at x 0.15-0.30 crouches mid-run and gets up. The x 0.42 sit-down the team moved (v 0.58) is hidden by the clutter and the crowd (team admits).
+3. **The rout reads as comic: YES.** Shocked "O" faces, flying gold helmets and pots (largest about 120 px, 17 %), the soldiers' scramble, the folding tent and the fire pit all read as comic and bloodless.
 
-## §G checks
-- Nothing hangs still in mid-air: the flying props move on every frame.
-- No character is cut in half by an edge.
-- Flying helmets pass in front of bodies (g 1865) but not across a face long enough to read.
+## §G and §I checks
+- Nothing hangs still in mid-air.
+- No face is crossed by a prop for longer than a frame.
+- Chins are ≤846.
+- **Rim:** a cool blue rim on every runner, against the warm fire and lanterns. Warm and cool are in the same frame.
+- **Ground:** dressed. The floor is busy with pots, sacks and bundles, but it is grounded.
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
 | 6 | 8 | 6 | 6 | 7 |
 
-## Verdict: FIX-FIRST (2 blockers, each measurable)
-1. **Second fall in the open:**
-   - Move the g 1839-1851 sit-down at least 120 px clear of the fire pit and the cart. Put it on the clear floor at front-right, x 0.75-0.92 and y 0.62-0.75 (the barrels/tent side), or front-left at x 0.30-0.45 before the cart arrives.
-   - Hold it for at least 12 frames, with the whole body at least 120 px tall and unoccluded.
-   - Pass check: one 0.5 s phone tile in g 1850-1870 shows both the moustached soldier and this one on the ground.
-2. **Chariot scale:** Scale the chariot so that the wheel plus box is ≤ 20 % of the frame width (≤ 145 px) and the pole is ≤ 35 %, measured at g 1870, 1876 and 1882. Or let it roll farther back, beyond the fire pit.
+## Verdict: FIX-FIRST (1 blocker, plus a quick scale fix in the same pass)
+1. **Second fall:**
+   - Clear a patch of floor of the dropped props and sacks: x 0.55-0.80, y 0.66-0.76 (the open area right of the fire pit, below the barrels), at least 160 px wide.
+   - Stage a soldier there who falls on his bottom at g about 1845 and sits for at least 15 frames, legs up, at least 120 px tall, with nothing in front of him.
+   - Pass check: one phone tile in g 1855-1870 shows both the moustached soldier and this one on the ground.
+2. **Chariot:**
+   - Scale it to 0.25, or stop its roll so it stays where it is at g 1850.
+   - Pass check: ≤130 px (18 %) for the wheels and box and ≤180 px (25 %) with the pole, on g 1870, 1876 and 1882.
 
 ## Notes (not blocking)
-- The fire-pit flame cards are flat red wedges that sit at frame centre for the whole shot. They read, but they hide action. A bit lower or narrower would free the centre.
-- Frame-diff (team): median 10.01, p90 15.51. Good.
+- The soldiers still mill in the centre band. Two runners exiting toward the side edges would make it read as a scatter. I accepted this in round 12 and do not re-raise it.
+- The fire-pit flame cards are flat red wedges at frame centre. They read, but they are a little blocky.
