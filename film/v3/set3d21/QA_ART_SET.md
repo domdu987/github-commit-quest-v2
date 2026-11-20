@@ -131,3 +131,85 @@ General, all presets:
 | camp_bank | 11, 12, 18, 19, 25 | **FIX-FIRST: wait for the rebuild** | | |
 | riverbank | 29, 30 | **FIX-FIRST: wait for the rebuild** | | |
 | river_low | 31 | **FIX-FIRST: wait for the rebuild** (and the new `splash()`) | | |
+
+## Re-check R2 (phase B)
+
+Inputs:
+- the 4 rebuilt tiles at full size
+- `styleboard/phase_b_phone.jpg`
+- `styleboard/splash_strip.jpg`
+- QA_TEAM §G/§H
+- API.md §9 / `grade()` VIVID
+
+Own checks:
+- sat/luma by the producer's measure (90x160, (max-min)/max)
+- `stirling_hue` on the 4 tiles
+- 3 drafts re-rendered with `STATE['vivid'] = (1, 1)`, so that VIVID candidates could be tried offline on the true base (river_low, riverbank, camp_table)
+- one camp_table team-fix test (Cressingham's mark moved)
+
+### Measured (final tiles as delivered)
+| tile | VIVID now | sat | luma | blue | dark | black point p1 | note |
+|---|---|---|---|---|---|---|---|
+| camp_table | (0.9, 1.45) | 0.625 | 96.5 | 26.8 | 0.03 | 0.031 | |
+| camp_bank | (1.52, 1.3) | 0.585 | 106.3 | 22.1 | 0.11 | 0.034 | |
+| riverbank | (1.63, 1.59) | 0.506 | 97.7 | **67.3** | **0.25** | 0.016 | dusk look, navy hills |
+| river_low | **(6.0, 1.04)** | 0.595 | 102.3 | 51.1 | **0.21** | **0.000** | night sky, green water |
+
+Base without VIVID (draft):
+- river_low: sat 0.27, luma 192. The frame is mostly pale sky, sand and white foam, so no sane (gamma, sat) pair reaches luma 110. Gamma 6 reaches it only by turning the scene into night.
+- riverbank: sat 0.22, luma 143.
+- camp_table: sat 0.47, luma 104. It barely needs a grade.
+
+### How to apply §G (ruling for this set)
+- §G's 0.47 / 85-110 is the producer's measure over the whole film (stats.py runs on the video), not a cap that every 1 s shot must hit by brute grading.
+- **VIVID gamma may not exceed 1.9.** Above that, skies go navy, water goes green and the black point crushes to 0 (bible: p1 0.08-0.12).
+- A bright exterior shot that cannot reach the band at gamma ≤ 1.9 is allowed up to luma 150 with sat ≥ 0.47. It is listed in the take's QA.md.
+- The film mean is checked at FINAL. River_low (0.9 s) adds under 1 luma point to the film mean.
+
+### Per tile
+| tile | verdict | score | finding | fix (owner) |
+|---|---|---|---|---|
+| camp_bank | **PASS** | 7 (was 5) | Bridge about 38 px tall with piers, about 430 px long, 5 mounted pairs about 18-20 px. The centre pole is gone. The far Scots read as a dotted line under the crag. Warm. Still open: the lower 45 % spike grass and the rainbow-streaked far hill (VIVID exaggerates the terrain mottling). **New §G breach:** the fg banner pole at x 640-720 runs behind Surrey's head (cx 640): a pole through a face | Team note: Surrey to cx 560-580, or nudge the camera 0.3 m left so the pole sits at x ≥ 680. Extras e1-e3 (heads cy 502-522) stay below the deck line (head top ≥ 480). VIVID stays (1.52, 1.3); optionally (1.4, 1.25) if the far hill stripes look loud |
+| riverbank | **PASS** (geometry) | 6 (was 4) | The water now runs along the right half at the marks' feet, the bridge and the camp are in the background, the splash lands 3-6 m out. Colour: blue 67, dark 0.25, p1 0.016, navy hills. That is VIVID (1.63, 1.59) crushing a dusky base. The fg dark spike shards at lower left read as black teeth | Team: **VIVID (1.5, 1.6)** (base-tested: sat 0.48, luma 103, less crush). Pitch down 4-5 deg so the sky is ≤ 25 % (cuts blue). Hide the near dark reed/spike clump at x 0-250, y 900-1280 if it reads as black shards (`fg_generic_g_reed`, `fg_generic_g_cattail`). For shot 29 call `splash(..., age=-1)` (no splash); the default build stages splashes |
+| camp_table | **FIX (small builder patch; not a launch blocker)** | 5 (was 4) | The chest (open lid, iron bands) and the scale now read at phone size: the props job is done. But (a) **Cressingham is hidden behind the open chest lid** (head cx 360). Tested: moving his mark +0.35 m right clears the lid, but then **the left scale pan crosses his face** (a §G bar-through-face). There is no gap at centre. (b) The striped rug, in the canopy's shadow, is a grey-violet slab over the bottom 25-30 %. (c) The canopy takes the top 20 %. This is acceptable for shot 28 (empty table) | Builder: (1) move the chest 0.3 m left and the scale 0.35 m right along the table so Cressingham has a clear 0.9 m slot at centre: head cx 330-400, cy 470-540, with no lid edge or pan within 25 px of the head. (2) Rug: shorten it to 1.2 m deep and pull it under the table front, or move it into the sun. Warm red/gold, not violet; the bottom 25 % shows lit worn grass + rug edge. (3) Raise the look target about 0.15 m so the canopy valance stays in the top 15 %. VIVID: **(1.05, 1.1)** (base sat 0.47/luma 104 → about 0.51/100). The current (0.9, 1.45) is oversaturated (vivid share 10 %, p1 0.03) |
+| river_low | **FIX (small builder patch; not a launch blocker)** | 5 (was 4) | The splash shape is right now: spiked crown, droplets, ring, readable at ages 0.25-0.6 on the strip. Two problems: (a) the foam material shades pale blue (`foam` has `sm=(0.85, 1.0, 1.15)` + haze), so the spray reads as ice-blue. (b) The central column with its ball cap rises about 2x the crown height: a lollipop on every splash. VIVID (6.0, 1.04) = night sky, toxic green water, p1 0. Reject | Builder: (1) **give `splash()` its own `spray` material**: white `#f6f8fb`, emission-mixed so that lit and shade differ by ≤ 15 %, no blue shade tint, no haze; displayed V ≥ 0.92 after VIVID. (2) **Column**: at most 1.2x the crown height, tapered (0.22 → 0.06 m), and replace the ball cap with 3-5 small droplets breaking off. (3) Preset VIVID **(1.8, 1.3)** (base-tested: sat about 0.52, luma about 150; accepted bright exterior per the ruling above). Set `over['foam_k'] = 0.6` for river_low to shrink the blown-white near-bank band (white share 4.2 %). If the water still reads green, use gamma 1.6 (sat 0.49) |
+
+### §G checks on the 4 tiles (nothing floats, wide, faces)
+- All cards stand on the ground with contact shadows; nothing hangs in the sky.
+- No face is over 35 % of the frame height (the largest is camp_bank Cressingham, head 160 px = 12.5 %, card about 35 %).
+- Bars through faces:
+  - camp_bank pole vs Surrey (note above)
+  - camp_table pan vs Cressingham if he is moved without the builder patch
+- Cut by the frame edge: riverbank e4 (cx 42) is half-cut at the left edge → move to xp 90 or drop.
+
+### §H 3 "rich and detailed?": **YES**
+The valley build has:
+- dense life: the camp with 19 pavilions plus tents, banners that flutter, smoke, horse lines, parade knights, troops by count on the bridge, causeway and meadow, a 90-figure Scots line
+- layered depth on every ground preset: fg props, mid cast, far hill, castle rock
+- textured surfaces: plank grain, crag faces, fields with hedges
+- warm key against blue-violet shade
+
+Weak spots (notes, not blockers):
+- spike-grass ground planes in camp_bank, riverbank and the hill tiles
+- the bare yellow loop meadow in bridge_high (fill it with `place_troops('meadow')` when the story allows)
+
+### BIGZOOM feasibility (shots 1 and 24)
+- Both start in a valley preset (farms, Scots line, troops) and end on a ground preset whose fg dressing, vegetation and marks are built around that preset's camera. A single valley build has no near-camera grass, reeds or camp_fg at the end point.
+- Team method until a builder helper exists:
+  - build the end preset (camp_bank for 24; hill_eye/hill_low for 1) and call the valley extras into it: `farms`, `scots_line`, `place_troops`
+  - OR render the swoop in two builds with a matched camera path and a hand-off frame high above the river (at 40-60 m, where no near vegetation is in frame), with a 3-frame cross-fade
+- QA-art judges at the TAKE gate whether the move reads as one continuous move. The end frame must match the camp_bank tile (Cressingham and Surrey 35-60 % of frame height, the bridge visible).
+
+### FINAL SET verdict: **PASS-WITH-NOTES. Wave-2 takes s04, s07, s09 and s11 may launch now.**
+The two builder patches (camp_table centre slot + rug; `splash()` spray material, column and the river_low VIVID/foam values) are small, take about 30 min, and do not change any API signature. Until they land:
+
+| take | presets | start now | waits for patch |
+|---|---|---|---|
+| s04 | camp_table, camp_bank | camp_bank shots, camp_table camera/move blocking | camp_table final frames with Cressingham (shot 10) |
+| s07 | camp_bank | all (Surrey off the pole) | — |
+| s09 | valley_loop → camp_bank BIGZOOM, bridge_end_north | all (BIGZOOM per the method above; bridge_end_north per the R1 offset notes) | — |
+| s11 | camp_table, riverbank, river_low | camp_table shot 28 (empty table: the current tile works; use VIVID (1.05, 1.1)), riverbank shot 29 | final frames of shots 30-31 (splashes) |
+
+If the patch is late, the s04 fallback is: move `scale_stand*` and `scale_beam*` objects +0.4 m along the table, stage `cress` at the table centre +0.2 m, and pull the camera back 0.4 m. Check that no pan or lid edge is within 25 px of his head.
+
+Re-check after the patch: camp_table with and without Cressingham, plus the splash strip at ages 0.1-0.9 in river_low with the new VIVID. Phone sheet only.
