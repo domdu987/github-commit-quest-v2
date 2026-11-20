@@ -55,3 +55,6 @@ High-motion shots (s10, s14, s15, s19, s21, s24, the charge) carry the film's p9
 - s22: the terrified Yan soldier is REMOVED from s22 (after 6 rounds his position kept making the ox's tail flame read as his torch). s22 becomes a pure close-medium hero shot of the ox: dragon silk, blades glinting, flame tail clearly attached behind it. The soldiers' shock is carried by s21.
 - s24: the second fall may be a NEW foreground soldier placed in clear ground; the chariot pole may be hidden.
 - s01: the basket carriers may be removed.
+
+## Ground metric is now ONE shared script (director, 2026-11-20 14:40 UTC)
+`python3 film/film18/qa/ground_share.py take.mkv <first_g> <g0> <g1> [step]` — plain = low-saturation, mid-value, UNTEXTURED (9x9 std < 6) pixels below y 0.40, as a share of the whole frame. Gate: max <= 0.30 (every 10th frame). Teams and QA both use this number; dressed/textured ground (stones, straw, props, ruts) does not count as plain. Visual "does it look empty?" stays a QA-art note, not a ground-% blocker.
