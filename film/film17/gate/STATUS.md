@@ -8,7 +8,7 @@
 | s05 | 5 | first pass | | |
 | s06 | 5 | FAIL R1 (QA-tech: 3 fingers unreadable, stick arm, pince-nez reads as scratch, scale pop g794-809, prefect exit missing) | 82cc76f | gate/s06/QA_TECH.md |
 | s07 | 6 | FAIL r2 -> inserts restage | | |
-| s08 | 7 | FAIL r1 -> re-render | | |
+| s08 | 7 | R2: QA-art PASS, QA-tech FAIL (B1: right card floats without a hand + ring loop under it, verified by director at g1144/1169/1194) -> small fix R3 | 4ce80d3 | gate/s08/QA_TECH_R2.md, QA_ART_R2.md |
 | s09 | 8 | FAIL r1 -> re-render | | |
 | s10 | 9 | FAIL r1 -> re-render | | |
 | s11 | 10 | FAIL r1 -> re-render | | |
