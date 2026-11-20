@@ -76,7 +76,7 @@ def make_driver(quality):
     C.J.ellipsoid(bj, V((0, 0, 0.9)), 0.75, 0.75, 0.95, Mt['clay'], seg=14, rings=9, rough=0.05, seed=3); C.J.cyl(bj, V((0, 0, 1.75)), 0.42, 0.45, Mt['clay_d'], seg=10, r1=0.5); C.J.cyl(bj, V((0, 0, 2.15)), 0.55, 0.2, Mt['red'], seg=10)
     C.J.cyl(bj, V((0, 0, 1.5)), 0.46, 0.2, Mt['straw'], seg=10, cap=False)
     Bk.flush(C.STATE['SET']); jar = [o for o in C.STATE['SET'].objects if o.name.startswith('jar14')][0]; C.J.no_bounce(jar)
-    jar.data.materials.clear(); jar.data.materials.append(C.flat_mat((0.34, 0.16, 0.06), 'glaze'))
+    jar.data.materials.clear(); jar.data.materials.append(C.glaze_mat())
     jl = C.warm_light((0, 0, 1.5), 500.0, 'jarlight')
     # warm practicals: the camp is a blue night, add fire glow on the party side
     for (x, y, e) in ((3.0, -80.0, 900.0), (-6.0, -78.0, 700.0)):

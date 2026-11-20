@@ -147,7 +147,7 @@ def _atlas_mat(atlas, tint, k, name):
     cm = N('ShaderNodeCombineXYZ'); L(a1.outputs['Fac'], cm.inputs['X']); L(a2.outputs['Fac'], cm.inputs['Y'])
     L(uv.outputs['UV'], mp.inputs['Vector']); L(cm.outputs['Vector'], mp.inputs['Location']); L(mp.outputs['Vector'], t.inputs['Vector'])
     mm = N('ShaderNodeMix'); mm.data_type = 'RGBA'; mm.blend_type = 'MULTIPLY'; mm.inputs[0].default_value = 1.0; mm.inputs[7].default_value = (tint[0], tint[1], tint[2], 1.0)
-    L(t.outputs['Color'], mm.inputs[6]); L(mm.outputs[2], em.inputs['Color']); em.inputs['Strength'].default_value = k
+    L(t.outputs['Color'], mm.inputs[6]); L(mm.outputs[2], em.inputs['Color']); ak = N('ShaderNodeAttribute'); ak.attribute_type = 'OBJECT'; ak.attribute_name = '["lk"]'; mu = N('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = k; L(ak.outputs['Fac'], mu.inputs[0]); L(mu.outputs[0], em.inputs['Strength'])
     L(t.outputs['Alpha'], mx.inputs['Fac']); L(tr.outputs['BSDF'], mx.inputs[1]); L(em.outputs['Emission'], mx.inputs[2]); L(mx.outputs['Shader'], out.inputs['Surface'])
     m.cycles.emission_sampling = 'NONE'; _MATS[key] = m.name; return m
 
@@ -184,7 +184,7 @@ class Actor(object):
         self.me = _atlas_quad(atlas, self.sc)
         if not self.me.materials: self.me.materials.append(_atlas_mat(atlas, tn, kk, role))
         self.ob = bpy.data.objects.new('c18_%s_%d' % (role, self.n), self.me); STATE['SET'].objects.link(self.ob)
-        self.ob.visible_shadow = False; J.no_bounce(self.ob); self.ob['ou'] = 0.0; self.ob['ov'] = 0.0
+        self.ob.visible_shadow = False; J.no_bounce(self.ob); self.ob['ou'] = 0.0; self.ob['ov'] = 0.0; self.ob['lk'] = 1.0
         self.so = None
         if shadow:
             sm = R2._shadow_quad('csh_%.2f' % sw, 1.0, 0.5)
@@ -195,6 +195,9 @@ class Actor(object):
         self.last = None
         if rim is not None:                                 # warm rim light: a second, warm-tinted, slightly bigger copy behind the card, shifted toward the fire side
             self.rim = Actor(atlas, role + '_rim', scale=self.sc, tint=rim[0], k=rim[3] if len(rim) > 3 else 1.0, shadow=False, ref=ref)
+
+    def set_lk(self, v):
+        self.ob['lk'] = float(v)
 
     def hide(self):
         self.ob.hide_render = True
@@ -297,6 +300,8 @@ def begin(name, state=None, quality='final'):
 def render_frame(path, g):
     sc = bpy.context.scene
     sc.frame_set(int(g))                                  # the frame handler flickers every fire / flame card for g
+    for fc in STATE.get('flame_cards', ()):                # the flame-card material reads fu / fk from the CARD object (the set sets them on the root): copy them
+        fc['card']['fu'] = fc['root'].get('fu', 0.0); fc['card']['fk'] = fc['root'].get('fk', 1.0)
     bpy.context.view_layer.update()
     return T.render(path)
 
@@ -391,5 +396,49 @@ def with_mouth(var, w, h, y=0.34, x=0.04, tongue=True):
     """overlay an open mouth below the moustache (the general's drawn mouth hides under it): dark ellipse w x h D at (x, y) in head coordinates"""
     el = ('<g><ellipse cx="%.3f" cy="%.3f" rx="%.3f" ry="%.3f" fill="#4a1414" stroke="#3a2832" stroke-width="0.03"/>' % (x, y, w / 2, max(h / 2, 0.012)))
     if tongue and h > 0.12: el += '<ellipse cx="%.3f" cy="%.3f" rx="%.3f" ry="%.3f" fill="#d65a5a"/>' % (x, y + h * 0.22, w * 0.3, h * 0.22)
+    el += '</g>'
+    return Var(var.svg + el, var.bbox, var.feet_y, var.height, var.anchors)
+
+
+def glaze_mat(base=((0.04, 0.02, 0.02), (0.22, 0.09, 0.03), (0.52, 0.27, 0.10), (0.85, 0.52, 0.22)), name='glaze', strength=1.0):
+    """toon-shaded glazed material: a Facing ramp (dark outline at grazing angles -> warm centre) so jars / cups read as lit, outlined volumes"""
+    m = bpy.data.materials.new('JM_' + name); nt = T._tree(m); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); em = N('ShaderNodeEmission'); lw = N('ShaderNodeLayerWeight'); lw.inputs['Blend'].default_value = 0.5; cr = N('ShaderNodeValToRGB')
+    el = cr.color_ramp.elements; el[0].position = 0.0; el[0].color = (*base[0], 1); el[1].position = 1.0; el[1].color = (*base[3], 1)
+    e1 = el.new(0.22); e1.color = (*base[1], 1); e2 = el.new(0.62); e2.color = (*base[2], 1)
+    L(lw.outputs['Facing'], cr.inputs['Fac']); L(cr.outputs['Color'], em.inputs['Color']); em.inputs['Strength'].default_value = strength; L(em.outputs['Emission'], out.inputs['Surface'])
+    return m
+
+
+_STAR = {}
+
+
+def star_obj(name='glint'):
+    """a camera-facing 4-point star sprite (emission quad); size / position set per frame by the caller"""
+    from PIL import Image, ImageDraw
+    p = os.path.join(WORK, 'star.png')
+    if not os.path.exists(p):
+        n = 128; im = Image.new('RGBA', (n, n), (0, 0, 0, 0)); d = ImageDraw.Draw(im); c = n / 2
+        d.polygon([(c, 0), (c + 6, c - 6), (n, c), (c + 6, c + 6), (c, n), (c - 6, c + 6), (0, c), (c - 6, c - 6)], fill=(255, 250, 220, 255))
+        im.save(p)
+    m = bpy.data.materials.new('JM_star'); nt = T._tree(m); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); em = N('ShaderNodeEmission'); tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader'); t = N('ShaderNodeTexImage')
+    t.image = T._img(p); t.extension = 'CLIP'; em.inputs['Strength'].default_value = 3.0
+    L(t.outputs['Color'], em.inputs['Color']); L(t.outputs['Alpha'], mx.inputs['Fac']); L(tr.outputs['BSDF'], mx.inputs[1]); L(em.outputs['Emission'], mx.inputs[2]); L(mx.outputs['Shader'], out.inputs['Surface'])
+    me = bpy.data.meshes.new('star_mesh'); me.from_pydata([(-0.5, -0.5, 0), (0.5, -0.5, 0), (0.5, 0.5, 0), (-0.5, 0.5, 0)], [], [(0, 1, 2, 3)]); me.update()
+    uv = me.uv_layers.new(name='UVMap')
+    for i, c_ in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uv.data[i].uv = c_
+    me.materials.append(m); ob = bpy.data.objects.new(name, me); STATE['SET'].objects.link(ob); ob.visible_shadow = False; J.no_bounce(ob)
+    tc = ob.constraints.new('TRACK_TO'); tc.track_axis = 'TRACK_Z'; tc.up_axis = 'UP_Y'; tc.target = bpy.data.objects.get('cam')
+    ob.hide_render = True; return ob
+
+
+def angry_ox(var, brow=True):
+    """overlay a charging expression on the front-3/4 ox: cream patch over the smile + a frown + slanted brows (anchors eye / mouth of the figure)"""
+    a = var.anchors; mx, my = a.get('mouth', (0.0, -1.0)); ex, ey = a.get('eye', (mx, my - 0.6))
+    el = '<g><ellipse cx="%.3f" cy="%.3f" rx="0.34" ry="0.12" fill="#ecd0a8"/><path d="M %.3f %.3f Q %.3f %.3f %.3f %.3f" fill="none" stroke="#3a2832" stroke-width="0.045" stroke-linecap="round"/>' % (mx, my + 0.02, mx - 0.26, my + 0.07, mx, my - 0.1, mx + 0.26, my + 0.07)
+    if brow:
+        for sx in (-1, 1):
+            cx = mx + sx * 0.36; el += '<path d="M %.3f %.3f L %.3f %.3f" stroke="#3a2832" stroke-width="0.07" stroke-linecap="round"/>' % (cx - sx * 0.2, ey - 0.12 - 0.02, cx + sx * 0.18, ey + 0.0)
     el += '</g>'
     return Var(var.svg + el, var.bbox, var.feet_y, var.height, var.anchors)

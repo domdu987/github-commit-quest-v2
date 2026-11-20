@@ -22,6 +22,16 @@ BIG = {'flat': (0.22, 0.03), 'talk_a': (0.30, 0.14), 'talk_b': (0.36, 0.24), 'ta
 G_CARVE, G_LICK = 1155, 1180
 
 
+def knife(var, lvl):
+    """knife-hand slicing across the chest (overlay: sleeve + flat hand), visible in front of the armour; lvl -1 = none"""
+    if lvl < 0: return var
+    hx = -0.75 + 1.1 * lvl / 3.0; hy = 1.05 + 0.08 * ((lvl % 2) * 2 - 1)
+    el = ('<g><path d="M -1.15 0.55 Q -1.0 1.0 %.3f %.3f" fill="none" stroke="#7a1a1a" stroke-width="0.26" stroke-linecap="round"/>'
+          '<path d="M -1.15 0.55 Q -1.0 1.0 %.3f %.3f" fill="none" stroke="#3a2832" stroke-width="0.03" stroke-linecap="round" transform="translate(0.1 0.09)"/>'
+          '<rect x="%.3f" y="%.3f" width="0.5" height="0.17" rx="0.07" fill="#f2d4b2" stroke="#3a2832" stroke-width="0.03" transform="rotate(-18 %.3f %.3f)"/></g>' % (hx, hy, hx, hy, hx - 0.05, hy - 0.085, hx, hy))
+    return C.Var(var.svg + el, var.bbox, var.feet_y, var.height, var.anchors)
+
+
 def gpose(g):
     """toast pose (cup raised in the right hand, as s14 ends) + the left hand sawing a carving mime from g 1155 + a lip-lick grin at g 1180; lip-sync all shot."""
     p = dict(cast18.STORY18['general_toast'][1]); p.pop('mouth', None)
@@ -29,7 +39,7 @@ def gpose(g):
     p['cup_tilt'] = 22 if u < 0.5 else 48                                      # the cup tilts, wine spills
     if g >= G_CARVE - 4:
         saw = 0.5 + 0.5 * math.sin(2 * math.pi * 2.6 * (g - G_CARVE) / 30.0); lvl = min(3, int(saw * 4))
-        p['arm_l'] = dict(hand=(-0.55 + 0.1 * lvl / 3.0, 0.62 + 0.05 * ((lvl % 2) * 2 - 1)), bend=0.4, stretch=1.1, shape='open', layer='front')
+        p['arm_l'] = dict(hand=(-0.95 + 0.9 * lvl / 3.0, 0.30 + 0.10 * ((lvl % 2) * 2 - 1)), bend=0.3, stretch=1.15, shape='open', layer='front')     # knife-hand slicing across the chest
         p['carve'] = lvl
     else: p['carve'] = -1
     p['mouth'] = 'flat'; p['mouth_k'] = 'lick' if G_LICK <= g <= G_LICK + 4 else cast18.talk_mouth(g, 1.0)
@@ -48,7 +58,7 @@ def make_driver(quality):
     for g in gs:
         p = gpose(g)
         if pkey(p) not in gv:
-            q = {k: v for k, v in p.items() if k not in ('mouth_k', 'carve')}; gv[pkey(p)] = C.with_mouth(C.person_variant('general', q, 'g'), *BIG[p['mouth_k']])
+            q = {k: v for k, v in p.items() if k not in ('mouth_k', 'carve')}; gv[pkey(p)] = knife(C.with_mouth(C.person_variant('general', q, 'g'), *BIG[p['mouth_k']]), p['carve'])
     print('general variants', len(gv), flush=True)
     at_gen = C.Atlas('s15_gen', gv, ppd=190)
     def svars(base, cast):
@@ -78,7 +88,7 @@ def make_driver(quality):
         C.J.ellipsoid(bj, V((0, 0, 0.9)), 0.75, 0.75, 0.95, Mt['clay'], seg=14, rings=9, rough=0.05, seed=3 + kk); C.J.cyl(bj, V((0, 0, 1.75)), 0.42, 0.45, Mt['clay_d'], seg=10, r1=0.5); C.J.cyl(bj, V((0, 0, 2.15)), 0.55, 0.2, Mt['red'], seg=10)
     Bk.flush(C.STATE['SET'])
     for kk in range(2):
-        o = [o for o in C.STATE['SET'].objects if o.name.startswith('jar15_%d' % kk)][0]; C.J.no_bounce(o); o.data.materials.clear(); o.data.materials.append(C.flat_mat((0.34, 0.16, 0.06), 'glaze')); jars.append(o)
+        o = [o for o in C.STATE['SET'].objects if o.name.startswith('jar15_%d' % kk)][0]; C.J.no_bounce(o); o.data.materials.clear(); o.data.materials.append(C.glaze_mat()); jars.append(o)
     cam_obj = ob['cam']
     mo = C.STATE['objects'].get('moon')
     if mo is not None: mo.scale = (0.6, 0.6, 0.6)

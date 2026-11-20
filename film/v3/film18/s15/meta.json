@@ -9,10 +9,10 @@
   "frames": 0
  },
  "framediff": {
-  "median": 8.16,
-  "p90": 12.2,
-  "min": 1.85,
-  "max": 17.3,
+  "median": 8.72,
+  "p90": 13.86,
+  "min": 1.89,
+  "max": 17.63,
   "n": 68,
   "frames_lt1": 0
  },
@@ -23,5 +23,5 @@
   "crowd1": 732,
   "crowd2": 734
  },
- "s_per_frame": 13.6
+ "s_per_frame": 22.6
 }
