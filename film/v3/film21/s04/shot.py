@@ -35,7 +35,8 @@ def table_cam(g):
            (611, (-12.98, -29.55, 1.92), (-13.0, -26.4, 1.52)),
            (626, (-13.05, -28.85, 1.85), (-13.0, -26.3, 1.74)),       # snap push on the laugh (x1.3)
            (641, (-12.85, -28.55, 1.82), (-12.95, -26.3, 1.78))]
-    return C.path(g, wps, mix=0.45)
+    loc, look = C.path(g, wps, mix=0.45)
+    return loc, look + Vector((0, 0, 0.30))
 
 
 def cress_table(g):
@@ -62,6 +63,10 @@ def cress_table(g):
 
 def stage_table(T, gs):
     A = T.A
+    import bpy
+    for o in bpy.data.objects:
+        if o.name == 'table_extras_t_gold':
+            o.hide_render = True                                   # QA-art: hide the pale rug stripes
     cre = T.add("cre", "cressingham")
     z = float(K.ground(*TABLE_M))
     sc = C.SCALE["cressingham"]
