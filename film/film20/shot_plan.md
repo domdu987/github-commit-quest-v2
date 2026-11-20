@@ -43,3 +43,24 @@ Handles: each take renders (dissolve frames/2 + 2) extra frames on each dissolve
 - BIGZOOM 1: shot 3, 5.93-10.60 s (g 178-317), Paris extreme wide -> Eiffel medium.
 - BIGZOOM 2: shot 24, 57.75-61.77 s (g 1732-1852), Paris + whole tower extreme wide -> Maupassant medium in the restaurant window.
 - Angle types used: high/bird's-eye (3, 21), low hero (1, 5, 9), over-the-shoulder (8, 26), through a foreground frame (8 window, 27 window, 20 hut), crane up (14), side tracking (12), whip tilt (19).
+
+## §I re-plan (client decision 2026-11-20, QA_TEAM.md §I): camera TRAVEL takes, <= 10 hard cuts
+Shots inside one take are NOT cut: the camera travels from beat to beat (follow, crane, push through, ride along). Beat timings stay as in the table above.
+| Take | Shots | t (s) | g0-g1 (excl.) | team | travel inside | join IN |
+|---|---|---|---|---|---|---|
+| T01 = s01 | 1 | 0.00-2.67 | 0-80 | done | push + snap | film start |
+| T02 = s02 | 2 | 2.67-5.93 | 80-178 | team2 | resto: snap pull-out to the girders | CUT (hook punch) |
+| T03 = s03 | 3+5 | 5.93-13.47 | 178-404 | team4 | BIGZOOM 1 Paris -> Eiffel at table, then he points up and the camera CRANES up the scaffolded leg past riveters to the sky ("สูงที่สุดในโลก") | DIS 13 |
+| T06 = s06 | 6+7+8 | 13.47-20.15 | 404-604 | team6 | café: slide past the artists, push DOWN onto the protest sheet as signatures land, rise and travel to the window (stub + black smoke); end turning toward the banquette where Maupassant sits (match framing for T09) | DIS 13 |
+| T09 = s09 | 9+10 | 20.15-25.09 | 604-753 | team7 | start on T06's end framing; crane up with Maupassant as he rises, push in for the vow (lip-sync), quick push-in on "สักครั้ง" | MATCH (no visible cut) |
+| T11 = s11 | 11+12+13+14 | 25.09-33.21 | 753-996 | team5 | fence laugh + punch-in "ไอ้ช่างหมุด", then rise over the fence, travel along the girder stacks, up to the rivet platform (toss + catch), then three crane-ups through stages 1-2-3 | DIS 11 |
+| T15 = s15 | 15 | 33.21-36.44 | 996-1093 | team1 | fair two-shot, push-in on "ใบอนุญาต", snap on worried Eiffel | DIS 13 |
+| T16 = s16 | 16+17 | 36.44-40.70 | 1093-1221 | team7 | café 1889: laugh, then push in for the jeer (lip-sync) | CUT (hard cut onto the grin) |
+| T18 = s18 | 18+19+20 | 40.70-47.71 | 1221-1431 | team8 | dusk: old Eiffel + wagon; he points up, camera CRANES up the tower to the summit, then WHIPS down along the antenna wire to the ground and pushes THROUGH the hut window to the telegraphist and the spark gap | DIS 17 |
+| T21 = s21 | 21+22 | 47.71-55.21 | 1431-1656 | team9 | night: from the hut roof RISE to the summit, rings spread over Paris, lattice glows on "เสาอากาศยักษ์", then SWOOP down to the foot: crowbars drop, officer salutes | CUT |
+| T23 = s23 | 23 | 55.21-57.75 | 1656-1732 | team1 | 1910 fair callback | DIS 13 |
+| T24 = s24 | 24 | 57.75-61.77 | 1732-1853 | team2 | BIGZOOM 2 Paris -> restaurant window | DIS 13 |
+| T25 = s25 | 25 | 61.77-63.72 | 1853-1911 | team2 | inside, eating (match the window framing) | MATCH-DISSOLVE 9 |
+| T26 = s26 | 26 | 63.72-65.60 | 1911-1968 | team3 | over-the-shoulder out of the window | CUT |
+| T27 = s27 | 27 | 65.60-68.20 | 1968-2046 | team3 | crash pull-out | CUT |
+Hard cuts: 1|2, 15|16, 18|21, 25|26, 26|27 = 5 (plus 1 match). Lighting: motivated sources in every take (sun shafts through the café / restaurant windows, forges, gas lamps, the spark gap, lamp dots at night), warm + cool in the same frame. Signature colours: Eiffel red-orange iron against deep Paris blue. Short in-world signs now ALLOWED (sharp, readable on a phone, Latin letters only to avoid Thai tofu), e.g. "LE TEMPS" masthead on the newspaper, "PROTESTATION" on the sheet, "EXPOSITION UNIVERSELLE 1889" banner at the fair, "T.S.F." on the radio hut, "RESTAURANT" on the first-floor pavilion.
