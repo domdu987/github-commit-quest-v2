@@ -2,7 +2,7 @@
 Cached in tex/<name>_v<TEX_V>.png (git-ignored, rebuilt on demand). Every feature is >= 3 texels wide (Cycles has no mip-mapping)."""
 import os, math, random
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__)); TEX = os.path.join(HERE, 'tex'); os.makedirs(TEX, exist_ok=True)
 TEX_V = 9
@@ -81,3 +81,24 @@ def meadow(name='meadow', S=512, seed=5):
             for oy in (-S, 0, S):
                 if abs(x + ox - S / 2) < S * 0.8 and abs(y + oy - S / 2) < S * 0.8: stroke(x + ox, y + oy, L, a, c, r.choice((3, 3, 4, 5)))
     im = im.filter(ImageFilter.GaussianBlur(0.7)); im.save(p); return p
+
+def sign(name, lines, W=1200, H=400, base='#4a2f1b'):
+    """a painted wooden sign (client rule 2026-11-20: in-world English signs): dark planked wood, a cream border, bold cream capitals with a dark outline, fitted to the board.
+    Sharp (supersampled 2x). Font: DejaVu Sans Bold. Cached in tex/sign_<name>_v<TEX_V>.png."""
+    p = _p('sign_' + name)
+    if os.path.exists(p): return p
+    S = 2; w, h = W * S, H * S; r = random.Random(sum(map(ord, name))); b = _rgb(base); im = Image.new('RGB', (w, h), b); d = ImageDraw.Draw(im)
+    for i in range(0, h, int(h / 7)): d.line([(0, i), (w, i)], fill=tuple(int(c * 0.65) for c in b), width=max(2, S * 2))
+    for i in range(60):
+        x = r.uniform(0, w); y = r.uniform(0, h); L = r.uniform(w * 0.05, w * 0.3); d.line([(x, y), (x + L, y + r.uniform(-3, 3))], fill=tuple(int(c * r.uniform(0.75, 1.2)) for c in b), width=S)
+    m = int(h * 0.05); d.rectangle([m, m, w - m, h - m], outline=_rgb('#e9c46a'), width=max(4, int(h * 0.025)))
+    fp = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'; n = len(lines); avail_h = (h - 4 * m) / n; size = int(avail_h * 0.92)
+    while size > 10:
+        f = ImageFont.truetype(fp, size); wmax = max(d.textbbox((0, 0), t, font=f)[2] for t in lines)
+        if wmax <= w - 6 * m: break
+        size -= 4
+    f = ImageFont.truetype(fp, size)
+    for k, t in enumerate(lines):
+        bb = d.textbbox((0, 0), t, font=f); tw, th = bb[2] - bb[0], bb[3] - bb[1]; x = (w - tw) / 2 - bb[0]; y = 2 * m + avail_h * k + (avail_h - th) / 2 - bb[1]
+        d.text((x, y), t, font=f, fill=_rgb('#f6ead0'), stroke_width=max(2, size // 22), stroke_fill=_rgb('#2a1a0e'))
+    im = im.resize((W, H), Image.LANCZOS); im.save(p); return p

@@ -28,17 +28,20 @@ def hide_prefix(*prefixes):
         if any(o.name.startswith(p) for p in prefixes): o.hide_render = True
 
 class Take(object):
-    def __init__(self, preset, mode="draft", samples=None, lens=None, hide=()):
+    def __init__(self, preset, mode="draft", samples=None, lens=None, hide=(), world=None, fg=True, whide=()):
         t0 = time.time()
         self.preset = preset
-        self.A = K.build_for_cli(preset, placeholders=False)
+        if world:
+            self.A = K.build_world(world, fg=fg, hide=whide)
+        else:
+            self.A = K.build_for_cli(preset, placeholders=False)
         self.scene = bpy.context.scene; self.cam = self.scene.camera
         self.cam.data.clip_start = 0.02; self.cam.data.dof.use_dof = False
         if lens: self.cam.data.lens = lens
         hide_prefix(*hide)
         K.setup_render(self.scene, mode, samples); self.mode = mode
         self.scene.frame_start, self.scene.frame_end = 1, 9000
-        self.actors = {}; self.casts = {}; self.sp = os.path.join(HERE, "work", "sprites_" + preset)
+        self.actors = {}; self.casts = {}; self.sp = os.path.join(HERE, "work", "sprites_" + str(preset))
         os.makedirs(self.sp, exist_ok=True)
         print("take: built %s in %.1f s" % (preset, time.time() - t0), flush=True)
 
