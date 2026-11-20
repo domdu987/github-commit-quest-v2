@@ -36,7 +36,7 @@ N_COINS = 10
 CAM_LOC0 = (-1.00, -2.70, 3.60)
 CAM_LOOK0 = (-0.90, 1.80, 2.30)
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.11, slide_px=0.0, rise_px=8.0, arc_deg_s=12.5, decay=0.10,
-                snaps=[dict(g=SNAP, k=1.10, peak=3.5, shift=(1.40, 0.90))])
+                snaps=[dict(g=SNAP, k=1.12, peak=4.3, shift=(1.35, 0.90))])
 
 HB = dict(cast19.STORY19["harrison_old_idle"][1])
 KB = dict(cast19.STORY19["king_idle"][1])
@@ -109,6 +109,22 @@ class Take(C.Take):
         self.bag = K.STATE["hooks"]["bag_full"]
         self.bag0 = Vector((BAG_XY_M[0], BAG_XY_M[1], self.bag.location.z))   # on the tabletop in front of Harrison
         self._make_coins()
+        self._make_modesty_panel()
+
+    def _make_modesty_panel(self):
+        """runtime set dressing: a dark-wood panel under the table's near edge, so Harrison's legs behind the table are hidden."""
+        bpy = C.bpy
+        bpy.ops.mesh.primitive_cube_add(size=1.0)
+        ob = bpy.context.active_object
+        ob.name = "table_panel"
+        ob.location = (-0.15, 1.16, 0.74)
+        ob.scale = (3.0, 0.06, 1.42)
+        mat = bpy.data.materials.new("panel_wood")
+        mat.use_nodes = True
+        b = mat.node_tree.nodes["Principled BSDF"]
+        b.inputs["Base Color"].default_value = (0.20, 0.10, 0.05, 1.0)
+        b.inputs["Roughness"].default_value = 0.6
+        ob.data.materials.append(mat)
 
     def _make_coins(self):
         """runtime set dressing: N_COINS gold coins spill out of the bag when it lands (g G_BAG..), plus a warm key light over the bag."""

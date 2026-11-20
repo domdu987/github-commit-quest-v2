@@ -27,9 +27,9 @@
   "at": 110,
   "note": "hard cut to shot 3 (HALL hall_window) at g 110; 9 handle frames after it rendered in 3D"
  },
- "set": "v3/set3d19/h19.py SHIP preset ship_aerial, light NOON; set_sea(g/30) + set_roll(g/30) keyed on every frame; sea grid re-fitted at runtime to a 11x wider (same azimuth as the camera, 1300x1800 vertices) virtual camera footprint (no set module edited) so the pull-back never shows the grid edge; no actors; no caption_shade",
+ "set": "v3/set3d19/h19.py SHIP preset ship_aerial, light NOON; set_sea / set_roll keyed on every frame (t = 2 g/30); sea grid re-fitted at runtime to an 11x farther virtual camera at the camera's azimuth (1300x1800 vertices; no set module edited); gulls hidden, glint light x0.45, long V wake added through the set's own streaks hook; no actors; no caption_shade",
  "cast": "none (no characters in this shot)",
- "camera": "custom 22 mm; c19.CamPath pull 9 %/s + orbit -18 deg/s + slide 150 px/s + crane 110 px/s from 0.5x the aerial distance at azimuth -30 deg, decay 0.1 (moving on frame 0 and the last), plus a small snap pull-back x0.8 (14 f, g 79..93)",
+ "camera": "custom 22 mm; c19.CamPath from BEHIND the ship (azimuth 183 deg off the preset, 0.86x its distance, start offset -44 px): pull 3 %/s + crane 119 px/s + orbit -30 deg/s + slide 140 px/s, decay 0.1 (moving on frame 0 and the last), plus a SNAP BACK x0.59 with a pan and a rise (16 f, g 92..108) on 'เรืออยู่' (caption g 98); sea clock x2; no gulls; sun glint x0.45; long V wake via the set's streaks hook",
  "events": {},
  "dof": "none",
  "text": "none",
@@ -42,11 +42,11 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 20.13,
- "s_per_frame_cpu_mean": 39.12,
+ "s_per_frame_wall_mean": 21.27,
+ "s_per_frame_cpu_mean": 41.16,
  "framediff_in_shot": {
-  "median": 3.87,
-  "p90": 4.77
+  "median": 3.6,
+  "p90": 17.57
  },
  "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
 }

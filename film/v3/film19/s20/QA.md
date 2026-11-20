@@ -15,10 +15,11 @@ astro19 stands smug at mark mocker_telescope (arched window, telescope tube behi
 - qa_auto PASS; the "no visible change at g 1581, 1665" note is the handle.
 
 ## Frame-diff (90x160 grey, in-shot pairs g 1582..1664)
-median **4.22**, p90 **10.73**: meets the per-take rule (median >= 4, p90 >= 10; the film-wide p90 target of 12 is the director's).
+median **4.22**, p90 **10.68**: meets the per-take rule (median >= 4, p90 >= 10; the film-wide p90 target of 12 is the director's).
 
 ## Revision (director's QA-art / TAKE gate round 2)
 - Shrug: both hands now go to about (+-1.30, 0.95), palms open, layered in FRONT of the wig and gown, so the palms-up pose reads from g 1615 and stays in frame through the snap (the hand tips touch the frame edges in the tightest frames g 1639-1666). Snap k 1.6 -> 1.4 with the pan keeping him centred (head x 345-377).
 - Mouth: smaller smug talk (small ('open', 0.15, 0.09) / flat ('open', 0.20, 0.05) shapes blended with the smirk) instead of the wide shouting mouth; still driven only inside the window (g 1626..1672), smirk elsewhere.
 - Smug rocking on the heels before the shrug lifts the median to 4.16.
 - Round 4: during the snap the hand targets come in from +-1.30 to +-1.00 (g 1628-1641) so both palms stay inside the frame on every frame (g 1640 to the end checked on the contact sheet); squash 0.04 and head_roll -10 on the shrug. Snap k stays 1.4 (peak 2.6).
+- Round 5: hand targets come in from +-1.15 to +-0.72 over the snap (g 1628-1641), no sideways pump; checked on every frame g 1609-1673 from the raw head positions (hand centre = head x +- hx*width, fingertips +0.3 D): both hands stay inside x 40-680 (0 frames outside; the projection matched the mitt positions seen on the contact sheet to within ~5 px).

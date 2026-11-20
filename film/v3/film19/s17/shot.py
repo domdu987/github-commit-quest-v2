@@ -29,20 +29,22 @@ FINAL_SPP = 10                                           # H.STATE['samples'] of
 
 SEAK = float(os.environ.get("SEAK", "1"))                    # sea clock rate (1 = real time)
 S = 1.85                                                 # metres -> world D
-AZ = float(os.environ.get("AZ", "-45"))                  # camera azimuth about the ship vs the aerial preset (deg): more of the wake side-on
-DIST0 = float(os.environ.get("DIST0", "0.45"))           # start distance as a fraction of the preset aerial distance (the pull-back grows it)
+AZ = float(os.environ.get("AZ", "183.59"))              # camera azimuth about the ship vs the aerial preset (deg): ~150 = from BEHIND the ship, so the long V wake
+                                                         # trails toward the camera and the ship sails away from it as the camera pulls back
+DIST0 = float(os.environ.get("DIST0", "0.9"))          # start distance as a fraction of the preset aerial distance
 _loc, _look = Vector((-70.0, 95.0, 85.0)) * S, Vector((2.0, 6.0, 14.0)) * S
-_d = (_loc - _look) * DIST0
-_d = Matrix.Rotation(math.radians(AZ), 3, "Z") @ _d
+_d = Matrix.Rotation(math.radians(AZ), 3, "Z") @ ((_loc - _look) * DIST0)
 CAM_LOOK0, CAM_LOC0 = _look, _look + _d
 _f = (CAM_LOOK0 - CAM_LOC0).normalized(); _u = Vector((_f.y, -_f.x, 0.0)).normalized().cross(_f).normalized()
-_o = _u * (-110.0 * (CAM_LOOK0 - CAM_LOC0).length / C.F_PX)       # start 110 px higher: the crane lets the ship sink on screen
+_o = _u * (float(os.environ.get("OFF", "-160")) * (CAM_LOOK0 - CAM_LOC0).length / C.F_PX)          # start framing offset (px)
 CAM_LOOK0, CAM_LOC0 = CAM_LOOK0 + _o, CAM_LOC0 + _o
-G_WORD = C.cap_g("ยิ่งไกล")                              # 1370: the strongest word -> the snap back
-SNAP = (G_WORD, G_WORD + 16)                         # 1368..1384 (16 f, x0.55: the framing pulls back to 55 %)
-_P = [float(v) for v in os.environ.get("CAMP", "-0.08,120,120,-14").split(",")]      # push (pull), slide px/s, rise px/s, arc deg/s (tuning)
+G_WORD = C.cap_g("ยิ่งไกล")                              # 1370: the strongest word
+_S = [float(v) for v in os.environ.get('SNP', '1377,15,0.85,2.3,-120,60').split(',')]   # snap: start g, frames, k, peak, shift right/up (D)
+SNAP = (int(_S[0]), int(_S[0] + _S[1]))                                       # 13 f, x1/0.58 = 1.7 pull-back with a pan (shift), landing ~10 f after the word starts
+# values found by a random search (scratchpad plan17.py) with the constraint: the whole ship inside the frame (30 px margin) on EVERY frame
+_P = [float(v) for v in os.environ.get("CAMP", "-0.035,60,106.84,-26").split(",")]      # push (pull), slide px/s, rise px/s, arc deg/s
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, FIRST_G, G_LAST, push=_P[0], slide_px=_P[1], rise_px=_P[2], arc_deg_s=_P[3], decay=0.1,
-                snaps=[dict(g=SNAP, k=0.62, peak=2.0, shift=(-12.0, 16.0))])
+                snaps=[dict(g=SNAP, k=_S[2], peak=_S[3], shift=(_S[4], _S[5]))])
 
 
 def widen_sea(preset, k, nu, nv):
@@ -53,6 +55,13 @@ def widen_sea(preset, k, nu, nv):
     loc, look = Vector(P["cam"]["loc"]), Vector(P["cam"]["look"])
     P["cam"] = dict(P["cam"], loc=tuple(look + Matrix.Rotation(math.radians(AZ), 3, "Z") @ ((loc - look) * k)))   # same azimuth as our camera
     P["sea_nu"], P["sea_nv"] = nu, nv
+    # a LONG white V wake trailing far behind the ship (the set's wake fades by ~150 m): the set's own 'streaks' hook (broken foam lines,
+    # ship frame, metres): two Kelvin arms (half-angle ~19 deg) + the turbulent centre line, each 300 m long
+    L = 300.0
+    P["streaks"] = list(P.get("streaks", [])) \
+        + [((sx * 3.5, -21.0), (sx * (3.5 + sl * L), -21.0 - L), wd, am) for sx in (-1, 1)
+           for (sl, wd, am) in ((0.34, 4.0, 1.0), (0.27, 3.4, 1.0), (0.21, 3.0, 1.0), (0.15, 2.6, 1.0), (0.09, 2.2, 1.0))] \
+        + [((0.0, -21.0), (0.0, -21.0 - L), 3.0, 0.7)]
 
 
 class Take(C.Take):
@@ -61,12 +70,16 @@ class Take(C.Take):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_" + TAKE)
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
         self.key_cam(C.bf(FIRST_G), *CAM.at(FIRST_G))
+        g_ = C.bpy.data.objects.get('glint')                      # tone down the glare patches (sun glint)
+        if g_ is not None:
+            g_.data.energy *= float(os.environ.get('GLINT', '0.45'))
 
     def pose(self, gs):
         for g in gs:
             f = C.bf(g)
             self.key_set(f, sea=g / 30.0 * SEAK, roll=g / 30.0 * SEAK)           # same t, every frame
             self.key_cam(f, *CAM.at(g))
+            C.key_vis([o for o in (C.bpy.data.objects.get('gulls_gullt'), C.bpy.data.objects.get('gulls_gullw')) if o], False, f)   # no gulls (clipped at the edge)
 
     def report(self, g):
         loc, look = CAM.at(g)
