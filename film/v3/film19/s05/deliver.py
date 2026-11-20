@@ -43,7 +43,7 @@ def contact(pngs, out, cols=8, w=270):
 
 def numbers(d):
     ins = d[G0 - GA:G1 - 1 - GA]                            # pairs (g-1, g) for g 1..56: inside shot 1 only (the handle is not screen time)
-    return dict(method="mean abs diff of consecutive frames, grey = mean(R,G,B), resized to 90x160 (bilinear), 0-255 levels; pairs g-1->g for g 192..261 (in-shot, no handle)",
+    return dict(method="mean abs diff of consecutive frames, grey = mean(R,G,B), resized to 90x160 (bilinear), 0-255 levels; pairs g-1->g for g 263..355 (in-shot, no handle)",
                 median=round(float(np.median(ins)), 2), p90=round(float(np.percentile(ins, 90)), 2), min=round(float(min(ins)), 2),
                 max=round(float(max(ins)), 2), target=dict(median=4.0, p90=12.0), per_pair=[round(v, 2) for v in d])
 

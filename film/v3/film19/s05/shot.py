@@ -32,13 +32,14 @@ GA, GZ = G0 - H_IN, G1 + H_OUT - 1                # 253 .. 364
 GS = list(range(GA, GZ + 1))
 G_SINK = C.cap_g("เรือจมกัน")                     # 330: the ONE shake
 SHAKE = (G_SINK, G_SINK + 9)                      # <= 10 f
-WHIP = (G0, G0 + 11)
+WHIP = (G0, G0 + 7)
 BLINKS = {"a": [275, 318], "b": [290, 340], "c": [268, 305]}
 
 PRESET, LIGHT = "ship_rocks", "STORM_DUSK"
 FINAL_SPP = 12
 PPD = 256
 K_ROLL = 2.2                                      # the set's roll / pitch / bob x3 (storm lurch)
+HIDE = ("deck_cannon_iron", "deck_carr_w", "deck_hatchw")           # render as black blobs in the FG (QA_TECH): kept out of frame
 LANT_OFF = (1.95, 0.80, 0.55)                     # FG lantern centre in the camera frame: forward, right, up (D)
 
 CAM_LOC0 = (2.90, 25.60, 16.60)
@@ -46,15 +47,15 @@ CAM_LOOK0 = (2.00, 34.00, 14.20)
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GA, GZ, push=0.07, slide_px=30.0, rise_px=0.0, arc_deg_s=-3.0, decay=0.15, snaps=[])
 
 # sailors / captain: ship_root-space D (deck marks of the forecastle)
-CPT_AT = (0.9, 36.4)
-SAILORS = dict(a=dict(at=(2.5, 32.8), cast="sailor19_a", key="sailor_a_bail", ph=0.00, per=22),
-               b=dict(at=(4.2, 37.6), cast="sailor19_b", key="sailor_b_bail", ph=0.37, per=26),
-               c=dict(at=(2.6, 40.0), cast="sailor19_c", key="sailor_c_bail", ph=0.71, per=24))
+CPT_AT = (1.9, 35.8)
+SAILORS = dict(a=dict(at=(0.9, 32.6), cast="sailor19_a", key="sailor_a_bail", ph=0.00, per=22),
+               b=dict(at=(3.6, 34.8), cast="sailor19_b", key="sailor_b_bail", ph=0.37, per=26),
+               c=dict(at=(3.2, 39.0), cast="sailor19_c", key="sailor_c_bail", ph=0.71, per=24))
 Z_DECK = None
 
 
 def whip_deg(g):
-    return 24.0 * (1.0 - u_of(g, WHIP[0], WHIP[1], kind="sine")) ** 2 if g < WHIP[1] else 0.0
+    return 30.0 * (1.0 - u_of(g, WHIP[0], WHIP[1], kind="sine")) ** 2 if g < WHIP[1] else 0.0
 
 
 def shake(g):
@@ -145,6 +146,11 @@ class Take(C.Take):
         for k, S in SAILORS.items():
             a = self.actors[k] = self.sl[k] = C.make_actor(k, S["cast"], sd, contact=True, cam=self.cam)
             C.ride_ship(a, self.A["ship_root"])
+        for n in HIDE:
+            ob = bpy.data.objects.get(n)
+            if ob is not None:
+                ob.hide_render = True
+                ob.hide_viewport = True
         self._hang_lantern()
 
     def _hang_lantern(self):
