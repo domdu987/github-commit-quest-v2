@@ -6,3 +6,8 @@
 - FG fix (director gotcha 7): the preset iron post (fg_iron_sh, 1 m ahead of the PRESET camera) was moved +4 D with the closer start so the lens never passes through it; re-rendered.
 - qa_auto (old note, superseded if QA_AUTO.md says PASS): one FAIL "suspected blur" on g 1964-1972 (9 frames): relative Laplacian heuristic on the flat orange facade slabs at the start; frames checked at full size and are sharp (noisy slab texture, no motion blur, no DOF). Moving closer or shortening the pull did not change it. Flagged for the director.
 - Contact/phone sheet checked; heads n/a after g ~1990.
+
+## §7 gate (2026-11-20)
+- `qa_stats.py take.mkv`: saturation 0.609, brightness 94.3, in-shot motion median 10.70 p90 31.46 (pass).
+- Window bars: at g 1968 the X braces sit left and right of the table, nothing crosses his face (head 68 px, y ~600). Feet are hidden by the table; he sits on the restaurant chair behind a cloth table with contact decal.
+- Camera: the pull ends on the whole tower (wide), no face taller than 35 %.

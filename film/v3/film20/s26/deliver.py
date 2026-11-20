@@ -16,13 +16,19 @@ CFG = {"s26": dict(shot=26, g0=1912, g1=1968, first=1908, last=1971, cut_in=1912
                          (1968, 2000, "accent", "crash pull-out: big falling whoosh with a doppler-like drop as the lit window shrinks into the lattice", 1974),
                          (2020, 2020, "accent", "last word 'สักครั้ง': one soft final note; tower hums, silence follows", 2020),
                          (2046, 2046, "cut", "hard cut to black on the last word (end of film)")])}[TAKE]
+GRADE = (1.5, 1.2, 0.9) if TAKE == "s26" else None
 G0, G1, FIRST, LAST = CFG["g0"], CFG["g1"], CFG["first"], CFG["last"]
 N = LAST - FIRST + 1
 RAW, OUT = os.path.join(HERE, "raw"), os.path.join(HERE, "frames")
 os.makedirs(OUT, exist_ok=True)
 rows, pngs = [], []
 for g in range(FIRST, LAST + 1):
-    shutil.copyfile(os.path.join(RAW, "g_%04d.png" % g), os.path.join(OUT, "g_%04d.png" % g))
+    if GRADE:      # film-20 §7 colour gate: the bright cream/white interior scored sat 0.36 / luma 129 -> post grade (gain 0.9, gamma 1.2, sat x1.5)
+        x = np.clip(np.asarray(Image.open(os.path.join(RAW, "g_%04d.png" % g)).convert("RGB"), dtype=np.float32) / 255.0 * GRADE[2], 0, 1) ** GRADE[1]
+        l = x.mean(-1, keepdims=True)
+        Image.fromarray((np.clip(l + (x - l) * GRADE[0], 0, 1) * 255 + 0.5).astype(np.uint8)).save(os.path.join(OUT, "g_%04d.png" % g))
+    else:
+        shutil.copyfile(os.path.join(RAW, "g_%04d.png" % g), os.path.join(OUT, "g_%04d.png" % g))
     rows.append(json.load(open(os.path.join(RAW, "g_%04d.json" % g)))); pngs.append(os.path.join(OUT, "g_%04d.png" % g))
 prev, d = None, []
 for i, p in enumerate(pngs):

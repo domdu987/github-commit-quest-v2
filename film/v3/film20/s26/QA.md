@@ -5,3 +5,8 @@
 - Frame-diff in shot (90x160 grey): median 4.43, p90 12.11. 25.96 s/frame wall (8 spp, 720x1280, 2 procs x 2 threads).
 - qa_auto PASS. Checked: ceiling sliver top-left on the first frames (tilt keeps it small), no tower in frame.
 - Known: the stage "head hole" retry warning is the dark hair of the back card, frames verified.
+
+## §7 gate (2026-11-20)
+- `qa_stats.py take.mkv`: saturation 0.535, brightness 99.2, in-shot motion median 6.11 p90 12.46 (pass). Raw render was sat 0.36 / luma 129 (white cloth + cream room), so deliver.py grades the frames (gain 0.9, gamma 1.2, saturation x1.5); raw/ is the ungraded render.
+- Frame-diff (our script, 90x160): median 5.17, p90 12.38. Camera push 22 %/s + slide + crane + orbit and a x1.95 snap on "หอไอเฟล" (g 1939).
+- Head width 125 -> 321 px (<= 25 % of frame height, under the 35 % limit); chin <= 813. WARNING: from the snap on (g ~1946-1971) his hair/shoulder touches the left frame edge (head x ~197 of 720, 5 px margin at g 1960): slightly crowded, not half-cut. The restaurant table + cloth fills the lower 35-40 % of the frame (it sits between the camera and him; a camera behind him is impossible, the window is 0.5 m away); tried lower / further-back cameras, they showed ceiling or hid the Seine.

@@ -34,8 +34,8 @@ def cam_path(A):
     subj = Vector(A["marks"]["maupassant_seated"]) + Vector((0.0, 0.0, 2.2))      # the back of his head
     subj = subj + Vector((AIM_R, 0.0, 0.0))                                        # aim right of him: he sits in the left third
     loc = Vector(cam["loc"]) + Vector(CAM_OFF)
-    return C.CamPath(loc, subj, G_FIRST, G_LAST, push=0.17, slide_px=-45.0, rise_px=16.0, arc_deg_s=-5.0, tilt0=TILT0, tilt_deg_s=0.0,
-                     decay=0.25, snaps=[dict(g=SNAP, k=1.45, peak=1.7, shift=(0.0, 0.0), tilt=0.0)])
+    return C.CamPath(loc, subj, G_FIRST, G_LAST, push=0.22, slide_px=-60.0, rise_px=20.0, arc_deg_s=-8.0, tilt0=TILT0, tilt_deg_s=0.0,
+                     decay=0.25, snaps=[dict(g=SNAP, k=1.95, peak=1.7, shift=(0.0, 0.0), tilt=0.0)])
 
 
 def pose_of(g):
