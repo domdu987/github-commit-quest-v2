@@ -12,7 +12,7 @@ from kit20 import tw, th, Z1, Z2
 # ------------------------------------------------------------------ lights (DAY)
 SKY_DAY = ['#f2c89a', '#eec4a4', '#cfc0cc', '#94aee8', '#6a8cdc', '#4c74d2', '#3a62c8']
 LIGHTS = dict(
-    DAY=dict(sky=SKY_DAY, sky_k=0.8, amb=('#3c78FF', 2.4), key=(1.0, 0.82, 0.58, 8.0), key_dir=(0.50, 0.42, -0.42), sun_angle=1.0, exposure=-0.7, sat=1.08, lamp=1.0),
+    DAY=dict(sky=SKY_DAY, sky_k=0.8, amb=('#5480FF', 2.4), key=(1.0, 0.82, 0.58, 8.0), key_dir=(0.50, 0.42, -0.42), sun_angle=1.0, exposure=-0.7, sat=1.08, lamp=1.0),
     LATE=dict(sky=['#f0a878', '#e8a090', '#c8a0b8', '#8a8cd8', '#6a76d0', '#5266c4', '#3a4cb8'], sky_k=0.8, amb=('#5a74F8', 2.0), key=(1.0, 0.66, 0.42, 7.0), key_dir=(0.62, 0.30, -0.30), sun_angle=1.2, exposure=-0.7, sat=1.1, lamp=1.0),
 )
 

@@ -11,7 +11,7 @@ from kit20 import tw, th, Z1, Z2, Z3
 
 # ------------------------------------------------------------------ lights
 LIGHTS = dict(
-    DAY=dict(sky=['#f2c89a', '#eec4a4', '#cfc0cc', '#94aee8', '#6a8cdc', '#4c74d2', '#3a62c8'], sky_k=0.85, amb=('#3c78FF', 2.5), key=(1.0, 0.84, 0.62, 8.5), key_dir=(0.30, 0.62, -0.46), sun_angle=1.0, exposure=-0.55, sat=1.08, lamp=0.12),
+    DAY=dict(sky=['#f2c89a', '#eec4a4', '#cfc0cc', '#94aee8', '#6a8cdc', '#4c74d2', '#3a62c8'], sky_k=0.85, amb=('#5480FF', 2.5), key=(1.0, 0.84, 0.62, 8.5), key_dir=(0.30, 0.62, -0.46), sun_angle=1.0, exposure=-0.55, sat=1.08, lamp=0.12),
     DUSK=dict(sky=['#f6a878', '#f0a07e', '#c890b4', '#8a78cc', '#5a52b8', '#3a3ca8', '#262c98'], sky_k=1.0, amb=('#2c32F0', 0.95), key=(1.0, 0.66, 0.4, 3.6), key_dir=(0.6, 0.55, -0.1), sun_angle=1.5, exposure=0.25, sat=1.1, lamp=1.0),
     NIGHT=dict(sky=['#4a3a78', '#3a3470', '#2a2c68', '#1e2260', '#161a54', '#10144a', '#0a0e3c'], sky_k=1.0, amb=('#3a44F8', 0.55), key=(0.55, 0.66, 1.0, 0.9), key_dir=(0.35, 0.55, -0.55), sun_angle=2.5, exposure=0.35, sat=1.1, lamp=1.35),
 )

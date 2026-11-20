@@ -126,3 +126,10 @@ RESTO gate: resto_wide floor 24.3 % (<= 25), blue 25.8 % (>= 12), magenta 2.1 % 
 ## Known limits (see the report)
 The seated Maupassant has no seated puppet pose yet (stand-in card is lowered); flat cut-out diners are set dressing, not cast art; the stub / full tower are 190 m / 430 m from the café (not true to the map) so the tower reads in the window; the Trocadero reads as a stylised palace with two towers; the café window view from cafe_wide only sees the lower part of the tower stub.
 
+
+## Numbers and known limits (see hue_report.txt, cost_report.txt, contact.jpg; final 720x1280, 8 spp + OIDN, 2 threads)
+* Render cost: SITE 14-26 cpu s, TOWER 10-26 (hut 25), interiors 21-42 (cpu s of the render call; wall 5-38 s under load). Build 15-45 s per process.
+* SITE site_wide: bottom eighth luma 64, shade hue 246, magenta 1.7 %, open sky 19 % (17 % with clouds), crane 92 px tall, scaffold 36 m = 0.72 of the 50 m leg, 6 worker stand-ins 59-76 px tall (5 of 6 >= 60 px). Shade hue of the other DAY tiles 228-261 except site_wide_end (291, almost no cast shade) and the interior-ish tiles (hut, window room: warm by design).
+* Weak: site_table / site_leg_low (shade magenta 13 %: the red leg iron shades crimson, and both are dark and cluttered, composition is a start pose for the render team to move), site_wide_end shade; the SITE ground cams are cluttered with the camera-frustum scatter; the crowd and the workers' 3D standees are flat colour columns; the window room in tower_window_pull is dark/striped at the start pose; hut bottom eighth / spark tile V>.95 55 % while the arc is on (a blinding flash by design).
+* Stage 0 legs are 50 m high (brief says ~30 m).
+* **Caption band conflict:** at the board camera of `tower_dusk` / `tower_night_wide` (shift 0.345) the avenue-foot marks (`eiffel_old officer demo_*`) sit at head y ~1200 px (below the y 880 caption line, 20 px heads). To keep heads above 880 the render team must raise the camera (lower `shift`, or `loc` z ~ 12 m) for the character shots 18/22, or use the marks with a camera pitched down; I kept the approved board framing for the whole-tower read.
