@@ -11,22 +11,23 @@ FIRST, LAST = G0 - H, G1 + H
 BASE_C = Vector((2.9, -3.8, 3.55)); BASE_L = Vector((-0.4, 1.9, 1.1))
 # camera waypoints: (g, s = distance factor from the look point, lateral metres (right of view), look point, vertical metres)
 WP = [
-    (FIRST, 0.64, -0.20, (-1.0, 1.2, 1.00), 0.95),
-    (688,   0.72, -0.05, (-1.0, 1.2, 1.05), 0.65),
-    (704,   0.66,  0.30, (-1.0, 1.1, 1.05), 0.40),  # snap 16 f: push-in reframe on the mimic side
-    (712,   0.68,  0.35, (-1.0, 1.1, 1.05), 0.42),
-    (726,   0.80,  0.05, (-1.0, 1.0, 1.05), 0.55),  # pull-out 14 f
-    (LAST,  0.82,  0.00, (-1.0, 1.0, 1.05), 0.60),
+    (FIRST, 0.64, -0.50, (-1.0, 1.2, 1.00), 0.95),
+    (666,   0.66, -0.15, (-1.0, 1.2, 1.00), 0.85),
+    (680,   0.60,  0.45, (-1.0, 1.2, 1.05), 0.60),  # snap 1 (14 f): push + reframe
+    (688,   0.70,  0.40, (-1.0, 1.2, 1.05), 0.65),
+    (704,   0.66,  0.70, (-1.0, 1.1, 1.05), 0.40),  # snap 2 (16 f)
+    (712,   0.68,  0.75, (-1.0, 1.1, 1.05), 0.42),
+    (726,   0.84, -0.10, (-1.0, 1.0, 1.05), 0.55),  # snap 3 (14 f): pull-out
+    (LAST,  0.86, -0.25, (-1.0, 1.0, 1.05), 0.60),
 ]
-SNAP = (688, 704)
-SNAP2 = (712, 726)
+SNAPS = {(666, 680), (688, 704), (712, 726)}
 
 
 def cam_of(g):
     for (g0, *a), (g1, *b) in zip(WP[:-1], WP[1:]):
         if g0 <= g <= g1:
             u = (g - g0) / float(g1 - g0)
-            u = ease(u) if (g0, g1) in (SNAP, SNAP2) else mix(u, 0.25)
+            u = ease(u) if (g0, g1) in SNAPS else mix(u, 0.25)
             s = lerp(a[0], b[0], u); lat = lerp(a[1], b[1], u); L = Vector([lerp(x, y, u) for x, y in zip(a[2], b[2])]); dz = lerp(a[3], b[3], u)
             d = BASE_C - BASE_L
             C = L + d * s
