@@ -5,7 +5,7 @@ T6b staging (t6b_stage.py): Dupont back view = hair + coat, MARTIN card held bes
 import sys, os, time
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import t6b_stage, prefecture17 as P, bpy
-P.TAKE_OVER['T6']['archive'].update({"shade_mul": 1.4, "fill_w": 600, "gain": 1.15})
+P.TAKE_OVER["T6"]["archive"].update({"shade_mul": 1.4, "fill_w": 600, "gain": 1.15}); P.TAKE_OVER["T6"]["archive"].update(__import__("json").loads(os.environ.get("T6EXTRA", "{}")))
 out = sys.argv[1]; LIST = [int(x) for x in sys.argv[2].split(',')] if ',' in sys.argv[2] else None
 g0 = int(sys.argv[2].split(',')[0]); g1 = int(sys.argv[3]) if len(sys.argv) > 3 else g0; step = int(sys.argv[4]) if len(sys.argv) > 4 else 1
 samples = int(sys.argv[5]) if len(sys.argv) > 5 else 16; res = (int(sys.argv[6]), int(sys.argv[7])) if len(sys.argv) > 7 else (720, 1280)
