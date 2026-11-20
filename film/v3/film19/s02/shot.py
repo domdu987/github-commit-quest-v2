@@ -45,8 +45,8 @@ AST_XY = (1.7, -30.6)                                   # astro19_c, camera-righ
 KEYS = [  # (u, loc, look)
     (0.00, (12.0, -170.0, 126.0), (0.0, -14.0, 14.0)),            # extreme wide from high above and behind (ship ~27 % of the frame height, characters ~10 px)
     (0.50, (10.0, -98.0, 74.0), (1.0, -30.0, 15.0)),              # descending
-    (0.76, (5.5, -47.0, 27.5), (0.8, -30.5, 15.6)),               # above the stern, off the starboard quarter
-    (0.91, (2.4, -41.0, 21.0), (0.6, -30.3, 15.8)),               # passes the spanker's starboard face and descends
+    (0.76, (6.8, -47.0, 27.5), (0.8, -30.5, 15.6)),               # above the stern, off the starboard quarter
+    (0.91, (3.4, -41.0, 21.0), (0.6, -30.3, 15.8)),               # passes the spanker's starboard face and descends
     (1.00, (0.45, -36.3, 16.5), (0.5, -30.0, 15.9)),           # medium on the quarterdeck
 ]
 
