@@ -1,28 +1,71 @@
 # v3/set3d17: the film 17 set ("Bertillon", Paris police 1882-83) (bpy 5.x, Cycles CPU)
 
-## v2 render recipe (film 17 remake, `prefecture17.py`; full reference in §v2 at the end)
+## v2 render recipe (render teams, film 17 remake; `prefecture17.py`; take sheet: `film/film17/v2/takes.md`; reference: §v2 at the end)
 
 ```python
 import sys; sys.path.insert(0, "film/v3/set3d17"); import prefecture17 as P, bpy
-A = P.world_build('T3')                       # only the locations take T3 can see, lit by its presets; camera 'cam' (22 mm) included
-frames = P.path_T3()                          # per-frame camera (g, loc, look, rot quaternion, lens) for the take's render range incl. handles
-P.key_cam(A['cam'], frames)                   # Blender frame = g + 1
-g0, g1 = P.TAKES['T3']['render']
-for g in range(g0, g1 + 1):
-    P.take_state('T3', g, frame=g + 1)                                # doors / window / calendar / drawer / tally / light mix, keyed
-    P.cutaway_at(frames[g - g0], frame=g + 1)                         # ceilings hide only while the camera is above them (T3, T7, T8)
-P.key_life2(g0 + 1, g1 + 1)                   # flicker, smoke, dust, pendulum, banners (flags wave by themselves)
-# per frame, before rendering: acts = P.stage_cast2('T3', g, {anchor: (story_pose, opts)})   # real cast17 cards: floor_z feet, yaw clamp, back views
-P.setup_render2((720, 1280), samples=16, threads=2)   # recommended (v2b A/B): 16 samples + OIDN, adaptive 0.03, 2 threads
-bpy.context.scene.frame_set(g + 1); bpy.ops.render.render(write_still=True); P.grade2(path)   # v2 grade: sat 1.20 + vibrance band
+take = 'T3'
+assert P.check_take(take)['hits'] == [] and P.check_face(take)['ok']          # 1. both checks PASS before anything renders (§v2.10, §v2.11)
+A = P.world_build(take)                               # 2. only what the take sees, lit by its presets + TAKE_OVER; camera 'cam'
+P.key_take(take)                                      # 3. camera path, story hooks, light schedules, cutaway, life: keyed on every frame (frame = g + 1)
+P.setup_render2((720, 1280), samples=16, threads=2)   # 4. 16 samples + OIDN, adaptive 0.03 (A/B approved). grade2 as is: never raise saturation
+g0, g1 = P.TAKES[take]['render']
+for g in range(g0, g1 + 1):                           # 5. frame by frame (resume: skip frames/gNNNN.png > 50 kB)
+    bpy.context.scene.frame_set(g + 1)
+    acts = P.stage_cast2(take, g, assign_for(g))      #    REAL cast17 cards on every frame: floor_z feet, face keys, +-35 deg clamp, back views, lip-sync via opts talk
+    bpy.context.scene.render.filepath = 'frames/g%04d.png' % g; bpy.ops.render.render(write_still=True); P.grade2(bpy.context.scene.render.filepath)
 ```
-CLI: `python3 prefecture17.py frame T6 1515 out.png 720 1280 32 2` | `stills T1 <dir> 360 640 16` | `report T1 T6` (per-frame %H + BIGZOOM verdict).
-Measured cost: **56-145 s per 720x1280 frame** at 32 samples / 2 threads (mean ~98 s; §v2.8); **16 samples halves it** (36-73 s, mean ~50 s ->
-~30 CPU-hours for 2144 frames) with no visible difference (v2_gate/AB_archive_night_16_vs_32.jpg, §v2.10). Motion blur (shutter 0.5) on the planned
-crane / swoop ranges: T1 g152-278, T7 g1800-1867. Check every take with `check_take(take)` before rendering (§v2.10).
+- **Cast:** real cast17 cards only, through `stage_cast2(take, g, assign)` on every frame. Never use `bertillon.stage_cast` or placeholder cards
+  in a delivered frame. `opts={'talk': True}` drives the mouth with `cast17.speak` and is used **only** inside the quote windows
+  (g493-651 and g1128-1196). Every other mouth stays closed, except the planned held shapes: the laugh g467-493 and the P2 jaw-drop.
+- **Motion blur:** shutter **0.5** only on T1 g152-278 and T7 g1800-1867 (optional on T4 g1035-1038 and T5 g1141-1150). Everything else is
+  sharp, so qa_auto's blur check is not tripped.
+- **Before the full render, every team:**
+  - run `check_take(take)` and `check_face(take)`;
+  - render **one full-res 720x1280 still with the real cards** at the take's key frame:
 
-Four locations, 14 camera presets, 3 light presets, life hooks, stand points for 1-4 cast cards. Built from code only (numpy + PIL textures, batched
-meshes). **No depth of field anywhere. No readable text anywhere** (notices, ledgers, the Bertillon card and the sign board are greeked or blank).
+    | take | key frame |
+    |---|---|
+    | T1 | g105 |
+    | T2 | g560 |
+    | T3 | g800 |
+    | T4 | g930 |
+    | T5 | g1150 |
+    | T6 | g1515 |
+    | T7 | g1730 |
+    | T8 | g2018 |
+
+  - commit the still and both check outputs, and wait for the director's OK.
+- **After the first 30 frames:**
+  - Check qa_stats2 luma against the take's target:
+
+    | target | takes |
+    |---|---|
+    | 95-112 | T1; T6 (P1 excluded) |
+    | 95-110 | T2, T3, T4, T8 |
+    | 90-108 | T5 |
+    | 88-105 | T7 |
+
+    Fix by light only (`TAKE_OVER` / preset), never by haze or lowering saturation.
+  - Watch the 30 frames as a clip for OIDN shimmer on flat walls (T5 night, T1 roofs). If it shimmers, use 24 samples for that take only.
+- **Façade-sign rule (T1):** PRÉFECTURE DE POLICE must be whole and readable (cap height ≥ 28 px at 720x1280) for **≥ 20 consecutive
+  frames** between g200 and g300. The g218 crane top does not show it whole today: re-aim that look-at up and toward the band, or hold the band
+  whole through the swoop g227-287. BIGZOOM 1 must still PASS.
+- **Light schedules already in `take_state` (QA v2b):**
+  - T1: the window key goes 300 W → 220 W over g96-110.
+  - T2: the door lanterns and fanlight run at -20 % for g330-360.
+  - T6: if the take mean is above 112, tone the card paper to cream (#F2E6C8).
+  - T7: if the first 30 frames are below 88, add +5 % to the `TAKE_OVER` shade.
+- **Keep:**
+  - the clock face and its screen position matching across the T3 → T4 cut;
+  - the T5 escort lanes at x 15.9 / 16.6 / 17.3;
+  - the T2 corridor gendarme's head not cut by the left edge for more than 10 frames;
+  - the OTS heads not cut by the top edge;
+  - P2 / P3 faces at no more than 35 % of the frame height.
+- **Cost:**
+  - World alone at 16 samples: 36-73 s/frame (§v2.10).
+  - Real cast sprites add about 30-40 s/frame for 4-6 cards; the 4 real-cast stills took 50-87 s each in total.
+  - Whole film about 45 CPU-hours (2 threads), about 8 h with 8 teams.
 
 ## Files
 
@@ -369,4 +412,55 @@ holds the flat-shaded look). **Recommendation: 16 samples + OIDN** for all takes
 Known after v2b: T1 g218 (crane top) still does not show the whole PRÉFECTURE DE POLICE band (QA non-blocking note); at T3 g796 a gasolier
 crosses the room-side sign for a few frames; placeholder cards seen at the clamp limit read thin (expected: the real puppets carry the rest of the
 turn in `pose_yaw`).
+
+### v2.11 B7: card facings (`face_keys`, `check_face`) and `stage_cast2` on the real cards
+
+- **Face keys.** `face_keys(take)` gives every anchor of every take per-segment story facings `[(g, deg azimuth)]`, linear between keys.
+  - They are generated from the planned camera path. Each key is the weighted circular mean of the direction to the camera over its segment:
+    weight 1 where the card is in frame above 15 %H, 0.05 elsewhere.
+  - Keys come every 20 frames, and every 8 frames for the hero inside `STRICT` windows.
+  - `FACE_OVERRIDE` holds hand keys. In T1, Bertillon (-25°) and the bench prisoners (-15°) face into the room, constant. The camera flies in
+    through the window behind them, which is a back view on g60-96 and g158-186.
+  - Export: `write_face_keys()` writes `v2_gate/face_keys.json`.
+  - `cast_face()` uses the keys, which also drive `yaw_clamp`. Walkers keep the key facing; give the puppet cycle its direction from
+    `walk_path()['heading']`.
+- **Back views.** `BACK_VIEW` adds T2 thief g330-386 (2a), T1 window passes, and T2 Bertillon g530-657 (the OTS, extended with the measured
+  prisoner as OTS foreground g600-657).
+- **`check_face(take)`.** It FAILS when:
+  - a card in frame above 15 %H, not on `BACK_VIEW`, is more than 60° off the camera, or
+  - the speaker / hero is more than 35° off the camera in a `STRICT` window: lip-sync g493-651 and g1128-1196, BIGZOOM ends g97-148 and
+    g1500-1530, P1, 6c g1545-1616, P2, P3.
+
+  It also reports the card yaw rate. All 8 takes PASS (`v2_gate/check_face_v2c.md`); the largest error anywhere is 39°, and 6° in a strict
+  window. CLI: `python3 prefecture17.py faces`.
+- **`stage_cast2(take, g, assign)`.** It is its own implementation, posing at the scene's current frame.
+
+  Per card it does this:
+  - the story pose, with `opts` expr, `talk` (cast17.speak, quote windows only), mirror, and seated `chair | bench`;
+  - the clamped facing: `Actor.yaw_fixed`, with the rest of the turn in the puppet `yaw`;
+  - feet on `floor_z`;
+  - the v2 rim colour of the location preset;
+  - on `BACK_VIEW` frames, a mirrored pose plus a dark back-of-head disc and coat panel built from the card's own head anchor
+    (`actors.local_to_world`).
+
+  Then it renders the sprites for that frame and syncs the cards. The camera and hooks are set by `shot()` / `key_take()`.
+- **Real-cast stills** (720x1280, 16 samples, `python3 prefecture17.py real <take> <g> out.png`, assignments in `REAL_STILLS`):
+
+  | still | what it shows | time |
+  |---|---|---|
+  | `v2_gate/real_T1_g0105.jpg` | BIGZOOM 1 end: Bertillon front-on, calipers at the prisoner's ear, prisoners front-on | 87 s |
+  | `v2_gate/real_T2_g0560.jpg` | inspector lip-sync, front-on, talking mouth, clear of every prop | 83 s |
+  | `v2_gate/real_T6_g1600.jpg` | 6c: Bertillon with the card, inspector arms crossed, Dupont in back view as the OTS foreground | 71 s |
+  | `v2_gate/real_T6_g1690.jpg` | P2: inspector jaw-drop front-on | 67 s |
+
+  Mouths are closed outside the quote windows (the jaw-drop is the planned held shape). No back-of-head cover sits on a speaker.
+- **T2 2d/2e re-framed for the real cards.**
+  - The inspector stands at ML(-0.2, 1.4) from g545, clear of the tripod.
+  - The OTS camera sits behind Bertillon's right, over the clerk's table (ML(2.3, 0.9) → ML(2.25, 1.0)). That keeps the measured prisoner
+    and Bertillon's calipers off the speaker.
+  - 2e is a slow 22 → 28 mm push-in on the same axis, ending with the inspector at 55 %H. The corner has no low path.
+- **Known:**
+  - The cast17 sitting poses on `seated='bench'` read as standing figures in front of the bench (grounded, feet on the floor).
+  - Card yaw rates above 2°/frame occur only on close orbit passes. The largest is 12°/frame on T8 crowd2 during the crane-down; QA-art
+    checks it on the 0.5 s tiles.
 
