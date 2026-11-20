@@ -6,3 +6,11 @@
 - Heads / framing (final raw json): William head y 453-644, astro 546-746, chins <= ~836 (< 880), William's hand edge <= x 687; astro's leftmost swing touches the left edge only with the sleeve (head inside). No text, no DOF, no caption_shade; nobody speaks.
 - The stray blob object (shoredress_boatw prefix) is hidden at runtime; on Barbados the set now names the shells shoredress_boatw_e so the prefix still catches them.
 - Joins: dissolve in 13 f from shot 20, dissolve out 11 f to shot 22.
+
+## Round 10 fixes (QA-tech FAIL on two framing points)
+- Quadrant vs William's tricorne (needs >= 20 px): astro19_c moved 0.15 D further from William (mark -1.85 D), the swing shortened and rotated away from him (hand (0.30, -0.30), angle -106 +- 12), so at the peaks g 1705-1708, 1725-1727, 1740-1742 the fan is now far to the left of the brim (60+ px; checked on stills at all three windows).
+- Left edge (needs >= 30 px of air): the camera is pulled back (start distance x1.28, push 6.3 %/s) and aimed right (snap shift -1.2 D), found with a projection search; astro's lean was cut (+-10 deg) and his free-arm swing shortened. Checked on stills at g 1692-1702 and 1752-1755: quadrant corner / hand / hair tail >= 40 px from x 0.
+- Pupils: the 'worried' / 'half' eyes have NO pupils, so astro19_c now uses the 'stunned' ring eyes WITH pupils + the wavy mouth + sweat, gaze (0.1, -1.0): the pupils look UP at the sky (checked at 1:1 crop). William's open eyes start with the glance (g 1696).
+- Thumb rub: William's watch hand now rubs in a bigger loop (radius 0.07 x 0.11 D) in front of the chest at g 1718-1750 (kept on the 'top' layer so the watch stays visible; a 'front' layer / chest-centre hand hid the watch). The thumb itself is still not drawn separately.
+- William moved 0.1 D further left (mark 0.2 D) so the palm trunk is not directly behind his head at the quadrant windows (it still crosses behind the hat at ~g 1741: the camera arc moves it; minor).
+- Numbers: frame-diff median 6.19 / p90 11.60 (rule >= 4 / >= 10); qa_stats saturation 0.672, brightness 110.0; qa_auto PASS. Heads y 481-728, chins < 880, William's hand edge <= x 653.
