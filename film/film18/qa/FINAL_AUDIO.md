@@ -38,6 +38,14 @@ STT minimum 0.983 (threshold 0.93). Integrated LUFS / true peak are film-level (
 Suggested fix: re-time captions.json from the STT character times of the mix (minus 0.10 s) per phrase, or at least for sentences 1, 3 and 5, then re-burn the ASS. Audio itself needs no change.
 
 ## Verdict
-FINAL audio: FAIL
+First-pass verdict (superseded by Re-check below): FAIL
 
 Reason: caption sync is outside the +-0.15 s rule (31/109 captions, worst 0.63 s in sentence 3, sustained 0.3-0.58 s early in sentence 5). Everything else passes: STT >= 0.983 on all 11 sentences, -12.2 LUFS, -1.1 dBTP, no SFX above voice (worst +1.3 dB), spelling identical to script, duration 70.40 s with audio = video.
+
+## Re-check (captions re-timed from clean-narration STT; new oxclerk_v1.mp4 / .ass)
+- Caption sync vs final-mix STT (re-run STT on the new mix, same method): 109/109 captions within +-0.15 s; max |offset| 0.06 s (c34), median 0.00 s, p90 0.02 s. The earlier offenders (s1 c17-19, s3 c33-36, s5 c51-58) are now 0.00..-0.06 s. PASS.
+- Spelling: 109 ASS captions == captions.json == script_th.txt (ignoring spaces/!/?), 0 diffs. PASS.
+- Loudness unchanged: -12.2 LUFS, true peak -1.1 dBTP; video and audio both 70.400 s; SFX-vs-voice re-run: 0 windows above +3 dB. PASS.
+- Note: captions now derive from the same STT family as the check, so sync is self-consistent; the earlier envelope spot checks (pause at 22.7-23.1 s, 33.75 s) agree with the new times.
+
+FINAL audio: PASS
