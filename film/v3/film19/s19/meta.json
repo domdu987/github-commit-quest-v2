@@ -28,7 +28,7 @@
  "set": "v3/set3d19/h19.py SHIP preset ship_coast, light DAY_JAMAICA; set_sea / set_roll keyed every frame with t = (g - first_g)/30; no runtime set changes; no caption_shade",
  "bigzoom": [
   1468,
-  1552
+  1578
  ],
  "events": {
   "lift": [
@@ -52,19 +52,19 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 17.56,
- "s_per_frame_cpu_mean": 34.08,
+ "s_per_frame_wall_mean": 21.79,
+ "s_per_frame_cpu_mean": 42.43,
  "head_px": [
-  9,
+  6,
   203
  ],
  "head_centre_y": [
-  540,
-  642
+  484,
+  790
  ],
  "framediff_in_shot": {
-  "median": 5.63,
-  "p90": 11.9
+  "median": 6.73,
+  "p90": 13.28
  },
  "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
 }
