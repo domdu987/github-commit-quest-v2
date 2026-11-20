@@ -80,11 +80,11 @@ I_c, I_p = S['inspector_seated_stiff']
 S['insp_red_seated'] = (I_c, dict(I_p, expr='furious', mouth='clench', flush17=1.0, fx=['sweat'], seat17='chair', pitch=0.0, yaw=0.10, gaze=(-0.8, 0.0)))   # red-faced, sitting stiff
 B_c, B_p = S['bertillon_measuring']
 BDX0 = float(os.environ.get('BDX0', -1.25)); BHS = float(os.environ.get('BHS', 1.0))
-BDXE = float(os.environ.get('BDXE', -1.1)); BDX2 = float(os.environ.get('BDX2', -1.2)); SHY = float(os.environ.get('SHY', 0.14)); SHG0 = int(os.environ.get('SHG0', 1868)); SHG1 = int(os.environ.get('SHG1', 1892)); PFDX = float(os.environ.get('PFDX', -0.6)); BDG0 = int(os.environ.get('BDG0', 2030))
+BDXE = float(os.environ.get('BDXE', -1.1)); BDX2 = float(os.environ.get('BDX2', -1.2)); SHY = float(os.environ.get('SHY', 0.14)); SHG0 = int(os.environ.get('SHG0', 1868)); SHG1 = int(os.environ.get('SHG1', 1892)); BDX3 = float(os.environ.get('BDX3', -1.1)); PFDX = float(os.environ.get('PFDX', -0.6)); BDG0 = int(os.environ.get('BDG0', 2030))
 def bnudge(g):
     """Bertillon's offset from his anchor ML(1.3,1.85): beside the chair on the inspector's right (screen-left), nearer the camera than the head so the jaws draw in front;
     he steps toward the chair for the clamp (g2012-2040) so the glove stays in frame as the camera pushes in."""
-    return (BDX0 + (BDXE - BDX0) * _ss(_ramp(g, 2012, 2040)) + (BDX2 - BDXE) * _ss(_ramp(g, BDG0, 2040)), -0.10)     # dx, dy (m): Bertillon stands beside the chair (not in front of the inspector's face), same depth as the chair
+    return (BDX0 + (BDXE - BDX0) * _ss(_ramp(g, 2012, 2040)) + (BDX2 - BDXE) * _ss(_ramp(g, BDG0, 2040)) + (BDX3 - BDX2) * _ss(_ramp(g, 2040, 2052)), -0.10)     # dx, dy (m): Bertillon stands beside the chair (not in front of the inspector's face), same depth as the chair
 EAR_X = 0.52; EAR_ANG = float(os.environ.get('EAR_ANG', -30))
 
 
@@ -100,12 +100,17 @@ def bertillon_pose(g):
 def _bert_story(g):
     S['bertillon_t8'] = (B_c, bertillon_pose(g)); return 'bertillon_t8'
 
+def _addo(d, tag, g):
+    """director fix 2/3: step the swept / cut-off crowd members out of the crane's path over g1890-1932 (in 1890-1900, out 1924-1932)."""
+    v = os.environ.get(tag, DEF_OFF.get(tag, '0,0')); dx, dy = [float(x) for x in v.split(',')]
+    a0, a1, b0, b1 = WIN.get(tag, (1890, 1900, 1924, 1932)); w = _ss(_ramp(g, a0, a1)) * (1 - _ss(_ramp(g, b0, b1))); d = dict(d); d['dx'] = d.get('dx', 0.0) + dx * w; d['dy'] = d.get('dy', 0.0) + dy * w; return d
+DEF_OFF = {'C2': '-1.8,1.2', 'GB': '-1.6,0.8'}; WIN = {'C2': (1880, 1892, 1926, 1932), 'GB': (1880, 1892, 1922, 1932)}
 def assign_for(g):
     cl = 'gendarme_laughing_a'; clb = 'gendarme_laughing_b'
     grin = lambda nm, base: (nm, {})
     t = _ss(_ramp(g, 1985, 2006)); gn = {'dx': 1.0 * t, 'dy': 2.0 * t}     # the OTS gendarme steps aside as the camera passes (his head would leave the top edge)
     a = {'inspector': ('insp_red_seated', {'seated': 'chair', 'dy': -0.14}), 'bertillon': (_bert_story(g), {'dx': bnudge(g)[0], 'dy': bnudge(g)[1], 'H': P.K.CAST_H['bertillon'] * (1 - (1 - BHS) * _ss(_ramp(g, 2012, 2040)))}),
-         'gend_a': (cl, gn), 'gend_b': (clb, {}), 'crowd2': (cl, {}),
+         'gend_a': (cl, _addo(gn, 'GA', g)), 'gend_b': (clb, _addo({}, 'GB', g)), 'crowd2': (cl, _addo({}, 'C2', g)),
          'crowd1': ('prisoner_standing_a', {'expr': 'laugh'}), 'crowd3': ('prisoner_standing_c', {'expr': 'laugh'}), 'prefect': ('prefect_neutral', {'dx': PFDX * _ss(_ramp(g, 2010, 2030))})}
     return a
 # expression overrides: opts 'expr' for the prisoners' grin
@@ -144,6 +149,19 @@ def _ink(B, c, *a, **k):          # its quill reads as a thin light stick at the
     if tuple(round(v, 3) for v in c) == (-0.3, 0.15, 0.808): return
     return _orig_ink(B, c, *a, **k)
 P.K.inkpot = _ink
+
+from mathutils import Vector as _V, Matrix as _M
+def _lookrot_smooth(loc, look, up_hint=(0, 1, 0)):
+    """director fix: the stock look-at flips its up vector (+y -> +z) at |f.z| = 0.995 (a ~18 deg roll jump at g1877). Slerp between the two look-at rotations over |f.z| 0.998 -> 0.80."""
+    f = (_V(look) - _V(loc)).normalized(); a = abs(f.z)
+    def rot(up):
+        rgt = f.cross(up).normalized(); u = rgt.cross(f); return _M((rgt, u, -f)).transposed().to_quaternion()
+    if a > 0.99999: return rot(_V((0, 1, 0)))
+    s = min(1.0, max(0.0, (0.998 - a) / 0.198)); s = s * s * (3 - 2 * s)
+    qy = rot(_V((0, 1, 0))); qz = rot(_V((0, 0, 1)))
+    if qy.dot(qz) < 0: qz.negate()
+    return qy.slerp(qz, s)
+_orig_lookrot = P._lookrot; P._lookrot = _lookrot_smooth
 def setup(still_g=None):
     A = P.world_build(TAKE); P.key_take(TAKE); P.setup_render2((720, 1280), samples=16, threads=2)
     for o in bpy.data.objects:
