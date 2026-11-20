@@ -19,7 +19,7 @@ TMP = os.path.join(HERE, "work")
 G0, G1, GJ = 77, 159, 80
 G_PUSH = C.g_of(4.08)            # 125 "อะไรเลยสักอย่าง"
 PPD = 160
-VW = ((445.0, 244.0, 361.0), (64.0, 44.0, 0.0), 22.0)
+VW = ((-60.0, -260.0, 230.0), (60.0, 60.0, 0.0), 22.0)       # P_HOOK: where A1 starts; A1 arrives at P_A from there
 
 W = np.array([158.0, 148.0])
 U = np.array([-158.0, -146.0]); U = U / np.linalg.norm(U)      # toward the bridge
@@ -51,15 +51,19 @@ def push_cam():
     return tuple(nl), tuple(nk)
 
 
+WP = [(100, (120.0, 104.0, 70.0), (160.0, 148.0, 40.0)), (110, (172.0, 150.0, 90.0), (150.0, 130.0, 30.0)), (117, (206.0, 172.0, 90.0), None)]
+
+
 def keys():
     P_A = K.POSES["P_A"]
     a = np.array(P_A[0]); b = np.array(VW[0]); back = a + (b - a) / np.linalg.norm(b - a) * 9.0
     lb = np.array(P_A[1]) + (np.array(VW[1]) - np.array(P_A[1])) * 0.02
     el, ek = end_cam()
-    return [(77, tuple(back), tuple(lb), 22.0), (80, P_A[0], P_A[1], 22.0),
-            (101, (222.0, 178.0, 84.0), (150.0, 136.0, 38.0), 22.0),
-            (114, (216.0, 178.0, 90.0), (el[0] - 10, el[1] - 10, 34.0), 22.0),
-            (125, el, ek, 22.0)]
+    ks = [(77, tuple(back), tuple(lb), 22.0), (80, P_A[0], P_A[1], 22.0)]
+    for g, loc, look in WP:
+        ks.append((g, loc, look if look else (el[0] - 10, el[1] - 10, 34.0), 22.0))
+    ks.append((125, el, ek, 22.0))
+    return ks
 
 
 def cam_state(g):
@@ -108,7 +112,7 @@ def pose_of(e, g):
 class Seg(object):
     def __init__(self):
         t0 = time.time()
-        self.A = K.build_world(["valley_wide", "hill_over"], fg=False)
+        self.A = K.build_world(["valley_wide", "hill_over"], fg=False, shafts=True, scots_wide=True)
         self.scene = bpy.context.scene; self.cam = self.scene.camera; self.cam.data.dof.use_dof = False
         self.scene.frame_start, self.scene.frame_end = 1, 2000
         self.acts = {}
