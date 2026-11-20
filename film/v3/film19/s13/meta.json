@@ -22,7 +22,7 @@
  },
  "set": "v3/set3d19 WORKSHOP preset shop_bench, light NIGHT; set_clock(3), set_balance(g/30) + set_candles(level) keyed on every frame; no runtime set changes; no caption_shade",
  "cast": "v3/cast19 harrison19 old=1 (white hair, spectacles, brown coat), harrison_tired_rub base mirrored: leans back, rubs his eyes (blink 2), sweat drop; no lip-sync",
- "camera": "custom 22 mm from (2.4,0.3,2.3) at the s01 look point; CamPath push 20 %/s + slide -80 px/s + arc 8 deg/s + snap x1.5 (16 f, peak 2.8, pan) g 986..1002",
+ "camera": "custom 22 mm from (2.2,-0.8,2.3); CamPath push 14 %/s + slide -85 px/s + arc 12 deg/s + snap x1.4 (16 f, peak 2.8) g 986..1002; mark offset -0.3 D so the face clears the leaning plank",
  "events": {
   "lean_back": [
    993,
@@ -51,20 +51,20 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 15.51,
- "s_per_frame_cpu_mean": 30.48,
+ "s_per_frame_wall_mean": 16.51,
+ "s_per_frame_cpu_mean": 32.4,
  "head_px": [
-  161,
-  308
+  132,
+  221
  ],
  "head_centre_y": [
-  606,
+  614,
   638
  ],
- "head_bottom_max_y": 778,
+ "head_bottom_max_y": 739,
  "framediff_in_shot": {
-  "median": 5.21,
-  "p90": 14.74
+  "median": 4.31,
+  "p90": 11.65
  },
  "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
 }

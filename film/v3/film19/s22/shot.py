@@ -28,17 +28,35 @@ G_BAG = C.cap_g("จ่ายให้แค่")                    # 1778
 G_HALF = C.cap_g("ครึ่ง")                        # 1796
 G_TAKE = C.cap_g("แล้วยึด")                      # 1807
 G_SEAL = C.cap_g("นาฬิกาไปขัง")                  # 1821
-SNAP = (G_SEAL - 3, G_SEAL + 13)
+SNAP = (G_SEAL - 3, G_SEAL + 16)
 LIGHT, PRESET, FINAL_SPP = "DAY", "hall_table", 8
 
-BAG_A, BAG_B = (0.55, 1.75), (-0.12, 1.15)       # money bag path (metres, table top), pushed from the right end toward Harrison
-BOX_M = (0.5, 2.05)                              # the box moved nearer the right edge (metres) so astro19_b can reach it
-STAND = dict(har=(0.3, 0.4, 0.0), bq=(2.3, 3.7, 0.0), mock=(-2.8, 6.0, 0.0))
+BAG_A, BAG_B = (0.62, 1.50), (-0.30, 1.20)     # money bag path (metres, table top): pushed by astro19's hand toward the near end
+BOX_M = (0.2, 1.65)                              # the box (metres), table centre; candelabra stands at (0.4, 1.95) m behind-right
+STAND = dict(har=(-1.6, 2.85, 0.0), mock=(1.6, 2.85, 0.0))
+FOOT_Z = 0.05                                     # lift the actors 0.05 D: the contact decal sat under the carpet (no foot shadow)
 
-CAM_LOC0 = (-1.0, -3.9, 3.3)
-CAM_LOOK0 = (0.85, 3.8, 1.95)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.10, slide_px=0.0, rise_px=35.0, arc_deg_s=-9.0, decay=0.1,
-                snaps=[dict(g=SNAP, k=2.6, peak=1.5, shift=(0.0, -0.2))])
+class _Sway(object):
+    """CamPath plus a small handheld sway (translation only, level horizon): lateral 0.045 D at ~2.3 Hz, vertical 0.035 D at ~3.1 Hz"""
+    def __init__(self, cp):
+        self.cp = cp
+
+    def at(self, g):
+        loc, look = self.cp.at(g)
+        f = (look - loc).normalized()
+        r = Vector((f.y, -f.x, 0.0)).normalized()
+        off = r * (0.065 * math.sin(2 * math.pi * g * 2.6 / 30.0 + 0.7)) + Vector((0, 0, 0.05 * math.sin(2 * math.pi * g * 3.4 / 30.0)))
+        return loc + off, look + off
+
+    def report(self, gs, depth=None):
+        return self.cp.report(gs, depth)
+
+
+CAM_LOC0 = (0.0, -3.9, 2.4)
+CAM_LOOK0 = (0.25, 2.9, 2.45)
+_CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.08, slide_px=-12.0, rise_px=15.0, arc_deg_s=2.0, decay=0.1,
+                snaps=[dict(g=SNAP, k=1.7, peak=1.7, shift=(1.1, -0.38))])
+CAM = _Sway(_CAM)
 
 
 def harrison_pose(g):
@@ -54,24 +72,17 @@ def harrison_pose(g):
 
 
 def mock_pose(g):
+    """astro19 (mirrored: faces the table at screen-left): smug; pushes the half bag across the baize g 1768..1796 (right hand);
+    then holds the H4 over the open box, lowers it in, withdraws; ends smug"""
     p = dict(cast19.STORY19["astro_idle"][1])
+    p["mirror"] = True
     p["expr"] = "smug"
     p["mouth"] = "flat"
+    p["yaw"] = 0.3
     p["head_roll"] = 4 * math.sin(g * 0.07)
     p["lean"] = 2 * math.sin(g * 0.05)
-    p["blink"] = blink(g, [1770, 1830])
-    return p
-
-
-def bq_pose(g):
-    """astro19_b (mirrored: faces the table at screen-left): pushes the bag, then holds the H4 over the open box and lowers it in"""
-    p = dict(cast19.STORY19["astro_b_idle"][1])
-    p["mirror"] = True
-    p["expr"] = "smirk"
-    p["mouth"] = "flat"
-    p["yaw"] = 0.3
-    down, push, hold, drop = (0.35, 1.15), (0.95, 0.95), (0.95, 0.5), (0.9, 0.95)
-    keys = [(0, down), (G_BAG - 8, down), (G_BAG, push), (G_HALF, push), (G_HALF + 8, down), (1796, down), (1804, hold), (1807, hold),
+    down, push, push2, hold, drop = (0.45, 0.95), (1.1, 0.95), (1.5, 0.95), (1.25, 0.55), (1.2, 0.95)
+    keys = [(0, down), (G_BAG - 10, down), (G_BAG - 4, push), (G_HALF, push2), (G_HALF + 6, down), (1796, down), (1802, hold), (1807, hold),
             (1814, drop), (1818, drop), (1826, down), (9999, down)]
     a = down
     for (g0, h0), (g1, h1) in zip(keys, keys[1:]):
@@ -79,7 +90,8 @@ def bq_pose(g):
             u = u_of(g, g0, g1)
             a = tuple(lerp(h0[i], h1[i], u) for i in range(2))
             break
-    p["arm_r"] = dict(hand=a, bend=-0.2, shape="open", stretch=1.35, layer="top")
+    if a != down or G_BAG - 10 <= g < 1830:
+        p["arm_r"] = dict(hand=a, bend=-0.2, shape="open", stretch=1.4, layer="top")
     if 1798 <= g < 1814:
         p["prop_r"] = "h4_watch"
     p["blink"] = blink(g, [1765, 1812, 1850])
@@ -97,7 +109,17 @@ def lid_angle(g):
     return -105.0 * (1.0 - u_of(g, 1814, 1820))
 
 
-SEAL_G = [G_SEAL, G_SEAL + 4, G_SEAL + 8]          # three stamps
+SEAL_G = [G_SEAL, G_SEAL + 5, G_SEAL + 10]          # three stamps (round red wax discs pressed onto the lid)
+
+
+def seal_z_scale(g, sg):
+    """(drop height in metres, z squash) of a seal stamped at sg: falls 0.3 m over 4 f, squashes to 0.55 and relaxes over 4 f"""
+    if g < sg - 4:
+        return None
+    if g < sg:
+        return 0.3 * (1.0 - u_of(g, sg - 4, sg)), 1.0
+    u = u_of(g, sg, sg + 4)
+    return 0.0, 0.55 + 0.45 * u
 
 
 class Take(C.Take):
@@ -108,22 +130,21 @@ class Take(C.Take):
         self.scene.frame_set(bf(G_FIRST))
         sd = os.path.join(WORK, "sprites")
         self.har = self.actors["har"] = C.make_actor("har", "harrison19", sd, contact=True, cam=self.cam)
-        self.bq = self.actors["bq"] = C.make_actor("bq", "astro19_b", sd, contact=True, cam=self.cam)
-        self.mock = self.actors["mock"] = C.make_actor("mock", "astro19", sd, contact=True, cam=self.cam)
+        self.mock = self.actors["mock"] = C.make_actor("mock", "astro19", sd, canvas=(-2.25, -4.0, 2.25, 0.1875), contact=True, cam=self.cam)
         Hk = K.STATE["hooks"]
         self.bag, self.box, self.lid = Hk["bag_half"], Hk["box"], Hk["boxlid"]
         self.tz = self.box.location.z
-        # my own three seals (same dimensions as the set's sealed state) so they can drop one at a time
+        # three round red wax discs (own meshes) stamped onto the lid, one after another
         M = K.STATE["M"]
         self.seals = []
-        for i, x in enumerate((-0.17, 0.0, 0.17)):
+        for i, x in enumerate((-0.16, 0.0, 0.16)):
             em = C.bpy.data.objects.new("seal22_%d" % i, None)
             C.bpy.context.scene.collection.objects.link(em)
             em.parent = self.box
-            em.location = (x, -0.17, 0.2 + 0.012)
+            em.location = (x, 0.0, 0.272)
             b = K.MB("seal22")
-            b.cyl(M["wax"], (0, 0, 0.0), 0.032, 0.014, seg=12)
-            b.cyl(M["wax"], (0, 0, 0.010), 0.022, 0.012, seg=12)
+            b.cyl(M["wax"], (0, 0, 0.012), 0.062, 0.024, seg=24)          # the disc
+            b.cyl(M["wax"], (0, 0, 0.027), 0.04, 0.012, seg=24)          # the pressed centre
             b.finish(parent=em)
             self.seals.append(em)
 
@@ -131,34 +152,35 @@ class Take(C.Take):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *CAM.at(g))
-            for a, k in ((self.har, "har"), (self.bq, "bq"), (self.mock, "mock")):
-                C.place(a, f, Vector(STAND[k]))
+            for a, k in ((self.har, "har"), (self.mock, "mock")):
+                C.place(a, f, Vector(STAND[k]) + Vector((0, 0, FOOT_Z)))
             self.key_set(f, candles=1.0)
             # money bag: appears at the start of the push, slides across the baize
             self.key_set(f, moneybag="half" if g >= G_BAG - 8 else "none")
             bx, by = bag_xy(g)
             self.bag.location = (bx, by, self.tz)
-            K._keyxf(self.bag, f, loc=True, rot=False)
+            self.bag.scale = (0.8, 0.8, 0.8)                  # a smaller, slack bag
+            K._keyxf(self.bag, f, loc=True, rot=False, scl=True)
             # box: open from g 1798, closed after the lid shuts (g 1820), sealed once the three seals are down
-            st = "none" if g < 1798 else ("open" if g < 1820 else ("closed" if g < SEAL_G[2] + 4 else "sealed"))
+            st = "none" if g < 1798 else ("open" if g < 1820 else "closed")
             self.key_set(f, box=st)
             self.box.location = (BOX_M[0], BOX_M[1], self.tz)
             K._keyxf(self.box, f, loc=True, rot=False)
             self.lid.rotation_euler = (math.radians(lid_angle(g)) if st != "none" else 0.0, 0, 0)
             K._keyxf(self.lid, f, loc=False, rot=True)
             for em, sg in zip(self.seals, SEAL_G):
-                vis = (sg <= g < SEAL_G[2] + 4)
-                C.key_vis([em] + list(em.children), vis, f)
-                drop = 0.35 * (1.0 - u_of(g, sg - 3, sg)) if g >= sg - 3 else 0.35
-                em.location = (em.location.x, -0.17, 0.212 + drop)
-                K._keyxf(em, f, loc=True, rot=False)
+                zs = seal_z_scale(g, sg)
+                C.key_vis([em] + list(em.children), zs is not None, f)
+                if zs is not None:
+                    em.location = (em.location.x, 0.0, 0.272 + zs[0])
+                    em.scale = (1.0 + 0.25 * (1.0 - zs[1]), 1.0 + 0.25 * (1.0 - zs[1]), zs[1])
+                    K._keyxf(em, f, loc=True, rot=False, scl=True)
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
             self.har.pose(f, harrison_pose(g), camera=self.cam)
-            self.bq.pose(f, bq_pose(g), camera=self.cam)
             self.mock.pose(f, mock_pose(g), camera=self.cam)
-        self.sprites_for([(self.har, 320), (self.bq, 320), (self.mock, 192)], [bf(g) for g in gs])
+        self.sprites_for([(self.har, 320), (self.mock, 320)], [bf(g) for g in gs])
 
     def report(self, g):
         f = bf(g)

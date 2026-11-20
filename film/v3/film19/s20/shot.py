@@ -35,7 +35,7 @@ LIGHT, PRESET, FINAL_SPP, PPD = "DAY", "hall_low", 8, 400
 SUBJ = Vector((-3.24, 3.24, 2.60))
 CAM_LOC0 = (-4.9, -1.30, 1.25)
 CAM = C.CamPath(CAM_LOC0, tuple(SUBJ), G_FIRST, G_LAST, push=0.10, slide_px=45.0, rise_px=0.0, arc_deg_s=13.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.6, peak=2.0, shift=(-0.3, 0.0))])
+                snaps=[dict(g=SNAP, k=1.5, peak=2.0, shift=(-0.3, -0.35))])
 
 ST = cast19.STORY19
 IDLE, SHRUG = ST["astro_idle"][1], ST["astro_shrug_fluke"][1]
@@ -96,7 +96,7 @@ class Take(C.Take):
         v = look - loc
         p = pose_of(g)
         return dict(g=g, cam=[round(c, 3) for c in loc], pitch=round(math.degrees(math.atan2(v.z, math.hypot(v.x, v.y))), 1),
-                    heads=C.head_report(self, f), mouth=str(p.get("mouth")), in_window=C.mouth_open_at(g), dof=self.cam.data.dof.use_dof,
+                    heads=C.head_report(self, f), wig_bottom=[round(h["y"] + 1.17 * h["w"]) for h in C.head_report(self, f).values()], mouth=str(p.get("mouth")), in_window=C.mouth_open_at(g), dof=self.cam.data.dof.use_dof,
                     caption_shade=bool(C.bpy.data.objects.get("caption_shade")))
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):

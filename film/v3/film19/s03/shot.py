@@ -28,7 +28,7 @@ H_IN, H_OUT = 9, 9
 G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1    # 101 .. 199
 GS = list(range(G_FIRST, G_LAST + 1))
 G_SNAP_WORD = C.g_of(5.80)                     # "ทำไม่ได้" 5.80 s -> g 177
-SNAP = (G_SNAP_WORD - 8, G_SNAP_WORD + 7)      # 15 f, lands on the word
+SNAP = (G_SNAP_WORD - 8, G_SNAP_WORD + 8)      # 15 f, lands on the word
 LIGHT, PRESET = "DAY", "hall_window"
 FINAL_SPP = 8
 CONTACT = dict(width=1.6, depth=0.75, color="#1a1626", opacity=0.9)    # QA_TECH: visible contact shadows on wood and rug
@@ -36,8 +36,20 @@ CONTACT = dict(width=1.6, depth=0.75, color="#1a1626", opacity=0.9)    # QA_TECH
 # ----------------------------------------------------------------------------- camera
 CAM_LOC0 = (0.3, -3.2, 2.3)
 CAM_LOOK0 = (-2.95, 3.0, 2.7)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.13, slide_px=-40.0, rise_px=0.0, arc_deg_s=-13.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.9, peak=1.3, shift=(0.3, 0.05))])
+class SwayCam(C.CamPath):
+    """CamPath + a slow lateral sway of the camera body (loc only): parallax of the dense hall that keeps both astronomers framed."""
+    SWAY_D, SWAY_T = 1.3, 2.8
+
+    def at(self, g):
+        loc, look = C.CamPath.at(self, g)
+        f = (look - loc).normalized()
+        r = Vector((f.y, -f.x, 0.0)).normalized()
+        ph = 2.0 * math.pi * (g - G_FIRST) / (30.0 * self.SWAY_T)
+        return loc + r * (self.SWAY_D * math.sin(ph)), look
+
+
+CAM = SwayCam(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.12, slide_px=-30.0, rise_px=0.0, arc_deg_s=-6.0, decay=0.15,
+              snaps=[dict(g=SNAP, k=1.7, peak=1.3, shift=(0.95, 0.05))])
 
 # ----------------------------------------------------------------------------- cast
 MARK_B = (-3.80, 3.45, 0.0)                    # astro19_b at the eyepiece (faces screen-left)

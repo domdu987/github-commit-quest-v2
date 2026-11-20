@@ -32,10 +32,10 @@ BLINKS = [690, 735, 770]
 
 LIGHT, PRESET, FINAL_SPP, PPD = "DAY", "hall_low", 8, 400
 
-SUBJ = Vector((-3.24, 3.24, 2.55))
-CAM_LOC0 = (-4.9, 0.55, 1.25)
-CAM = C.CamPath(CAM_LOC0, tuple(SUBJ), G_FIRST, G_LAST, push=0.07, slide_px=25.0, rise_px=0.0, arc_deg_s=5.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.5, peak=1.9, shift=(-0.2, 0.0))])
+SUBJ = Vector((-3.24, 3.24, 2.25))
+CAM_LOC0 = (-4.6, -0.60, 1.25)
+CAM = C.CamPath(CAM_LOC0, tuple(SUBJ), G_FIRST, G_LAST, push=0.05, slide_px=25.0, rise_px=0.0, arc_deg_s=5.0, decay=0.15,
+                snaps=[dict(g=SNAP, k=1.3, peak=2.0, shift=(-0.2, -0.05))])
 
 ST = cast19.STORY19
 POINT, BOW = ST["astro_mock_point"][1], ST["astro_mock_bow"][1]
@@ -94,7 +94,7 @@ class Take(C.Take):
         v = look - loc
         p = pose_of(g)
         return dict(g=g, cam=[round(c, 3) for c in loc], pitch=round(math.degrees(math.atan2(v.z, math.hypot(v.x, v.y))), 1),
-                    heads=C.head_report(self, f), mouth=str(p.get("mouth")), in_window=C.mouth_open_at(g), dof=self.cam.data.dof.use_dof,
+                    heads=C.head_report(self, f), wig_bottom=[round(h["y"] + 1.17 * h["w"]) for h in C.head_report(self, f).values()], mouth=str(p.get("mouth")), in_window=C.mouth_open_at(g), dof=self.cam.data.dof.use_dof,
                     caption_shade=bool(C.bpy.data.objects.get("caption_shade")))
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):

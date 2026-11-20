@@ -48,20 +48,20 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 9.87,
- "s_per_frame_cpu_mean": 19.45,
+ "s_per_frame_wall_mean": 15.35,
+ "s_per_frame_cpu_mean": 30.11,
  "head_px": [
   100,
-  228
+  212
  ],
  "head_centre_y": [
   598,
-  695
+  692
  ],
- "head_bottom_max_y": 764,
+ "head_bottom_max_y": 758,
  "framediff_in_shot": {
-  "median": 2.98,
-  "p90": 10.99
+  "median": 4.8,
+  "p90": 13.96
  },
  "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
 }

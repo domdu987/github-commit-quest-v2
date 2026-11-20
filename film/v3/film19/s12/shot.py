@@ -42,9 +42,9 @@ MARK_DX = float(os.environ.get("MARK_DX", -0.1))
 MARK_DY = float(os.environ.get("MARK_DY", -2.8))
 CAM_LOC0 = tuple(float(v) for v in os.environ.get("CAM_LOC0", "2.2,-1.6,2.4").split(","))
 CAM_LOOK0 = tuple(float(v) for v in os.environ.get("CAM_LOOK0", "2.6,2.9,2.3").split(","))
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get("PUSH", 0.15)), slide_px=float(os.environ.get("SLIDE", -45)),
-                rise_px=float(os.environ.get("RISE", 0)), arc_deg_s=float(os.environ.get("ARC", 0)), decay=0.25,
-                snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 1.45)), peak=float(os.environ.get("SNAPPEAK", 2.8)), shift=(float(os.environ.get("SNAPSX", 0.6)), -0.1))])
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get("PUSH", 0.07)), slide_px=float(os.environ.get("SLIDE", -70)),
+                rise_px=float(os.environ.get("RISE", 0)), arc_deg_s=float(os.environ.get("ARC", 8)), decay=0.25,
+                snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 1.2)), peak=float(os.environ.get("SNAPPEAK", 3.0)), shift=(float(os.environ.get("SNAPSX", 0.6)), -0.1))])
 
 BASE = dict(cast19.STORY19["harrison_chisel"][1])
 
@@ -69,12 +69,13 @@ def pose_of(g):
 
 def candle_level(g):
     """the bench candle stub burns down over the shot (1.0 -> 0.3)"""
-    return lerp(1.0, 0.12, clamp((g - G0) / float(G1 - G0)))
+    return lerp(1.0, 0.35, clamp((g - G0) / float(G1 - G0)))
 
 
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s12")
+        self._base = {}
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
         # the bench candle stub moves from the far left of the bench to the bench top at his right shoulder, so it stays in frame while it burns down
         st = H.STATE["stub"]
@@ -94,11 +95,34 @@ class Take(C.Take):
             self.key_cam(f, *CAM.at(g))
             C.place(self.har, f, mark)
             self.key_set(f, clock=CLOCK, balance=g / 30.0, candles=candle_level(g))
+            self.dim(f, g)
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
             self.har.pose(f, pose_of(g), camera=self.cam)
         self.sprites_for([(self.har, PPD)], [bf(g) for g in gs])
+
+    def dim(self, f, g):
+        """the room gets darker as the candle burns down: candle lights x1 -> 0.55, other lamps / fills / moon key x1 -> 0.7, the flame
+        emission follows the stub; keyed on every frame.  (set_candles resets the candle lights and flame every call, so those are
+        scaled after it; the other lights are scaled from their stored base.)"""
+        u = clamp((g - G0) / float(G1 - G0))
+        for grp, items in H.STATE["lampgroups"].items():
+            for o, _b in items:
+                if grp == "candle":
+                    o.data.energy = o.data.energy * lerp(1.0, 0.3, u)
+                else:
+                    self._base.setdefault(o.name, o.data.energy)
+                    o.data.energy = self._base[o.name] * lerp(1.0, 0.3, u)
+                o.data.keyframe_insert("energy", frame=f)
+        em = H.STATE["M"]["flame"].node_tree.nodes["Emission"].inputs["Strength"]
+        em.default_value = em.default_value * lerp(1.0, 0.5, u)
+        em.keyframe_insert("default_value", frame=f)
+        sun = H.STATE.get("sun")
+        if sun is not None:
+            self._base.setdefault("sun", sun.data.energy)
+            sun.data.energy = self._base["sun"] * lerp(1.0, 0.3, u)
+            sun.data.keyframe_insert("energy", frame=f)
 
     def report(self, g):
         f = bf(g)

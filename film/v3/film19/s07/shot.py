@@ -23,11 +23,12 @@ G_SNAP_WORD = C.g_of(16.58)                    # "คณะกรรมการ
 SNAP = (G_SNAP_WORD - 8, G_SNAP_WORD + 8)
 LIGHT, PRESET = "DAY", "hall_window"
 FINAL_SPP = 8
+CONTACT = dict(width=1.6, depth=0.75, color="#1a1626", opacity=0.9)
 
 CAM_LOC0 = (-1.2, -3.8, 2.5)
-CAM_LOOK0 = (-2.9, 2.6, 3.0)
+CAM_LOOK0 = (-2.9, 2.6, 2.55)
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.08, slide_px=-50.0, rise_px=0.0, arc_deg_s=17.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.9, peak=1.3, shift=(0.1, -0.05))])
+                snaps=[dict(g=SNAP, k=1.9, peak=1.3, shift=(0.1, -0.30))])
 
 MARK_A = (-2.9, 2.6, 0.0)                      # astro19 lecturing (faces screen-left, points at the Moon)
 MARK_B = (-1.2, 2.9, 0.0)                      # astro19_b nodding (faces screen-left)
@@ -96,9 +97,9 @@ class Take(C.Take):
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
         self.key_cam(bf(G_FIRST), *CAM.at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
-        self.ab = self.actors["ab"] = C.make_actor("ab", "astro19_b", os.path.join(WORK, "sprites"), contact=True, cam=self.cam)
-        self.aa = self.actors["aa"] = C.make_actor("aa", "astro19", os.path.join(WORK, "sprites"), contact=True, cam=self.cam)
-        self.ac = self.actors["ac"] = C.make_actor("ac", "astro19_c", os.path.join(WORK, "sprites"), contact=True, cam=self.cam)
+        self.ab = self.actors["ab"] = C.make_actor("ab", "astro19_b", os.path.join(WORK, "sprites"), contact=CONTACT, cam=self.cam)
+        self.aa = self.actors["aa"] = C.make_actor("aa", "astro19", os.path.join(WORK, "sprites"), contact=CONTACT, cam=self.cam)
+        self.ac = self.actors["ac"] = C.make_actor("ac", "astro19_c", os.path.join(WORK, "sprites"), contact=CONTACT, cam=self.cam)
 
     def pose(self, gs):
         for g in gs:

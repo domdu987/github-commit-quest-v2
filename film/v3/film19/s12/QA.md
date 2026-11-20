@@ -12,3 +12,7 @@
 - Candle burn-down now reads: at runtime the bench stub and its point light are moved onto the foreground chest (it stayed in frame only at the far left before), set_candles level 1.0 -> 0.12 keyed every frame (stub 17 cm -> 2 cm, flame follows), in frame for the whole shot.
 - Tapping continues through the end of the shot (bigger stroke, the straighten/look-up moved out of the shot); snap x1.45 g 952..972.
 - Head 198-420 px wide, centre y 463-580. Contact shadow: cast19 contact decal is on; the legs still end in thin stubs (rig limit).
+
+## Round 2 re-render (QA_TECH round-2 FAIL)
+- Candle: stub + flame + point light on the foreground chest (in frame all shot); set_candles level 1.0 -> 0.35 (stub 17 cm -> 6 cm), flame emission x0.5, candle lights x0.3, all other lamps / fills / moon key keyed down to 30 % across the shot. Frame mean luma now FALLS: 68.9 (g938) -> 59.4 (g985) (was 62.9 -> 88). The end close-up is smaller (head 295 px max, snap x1.2) because the big white face was what raised the luma.
+- Frame-diff in-shot: median 4.02 (meets), **p90 9.84 (under 12)**: the smaller snap costs p90. Tapping continues to the end.

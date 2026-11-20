@@ -39,11 +39,12 @@ PPD = 256
 T_OFFSET = 0.0                                    # sea / roll time = g / 30 + T_OFFSET (shot 5 continues the same clock)
 
 CAM_LOC0 = (3.60, 27.10, 16.30)                   # near the preset start (4.07, 26.27, 16.37), a touch left / back
-CAM_LOOK0 = (3.95, 34.55, 14.65)                  # subject point: the captain's head / chart
+CAM_LOOK0 = (3.0, 34.55, 14.65)                  # subject point: the captain's head / chart
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GA, GZ, push=0.085, slide_px=35.0, rise_px=-12.0, arc_deg_s=0.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.65, peak=1.9, shift=(0.35, -0.10))])
+                snaps=[dict(g=SNAP, k=1.85, peak=2.4, shift=(0.50, -0.12)), dict(g=(246, 264), k=1.0, peak=1.3, shift=(-0.42, 0.0))])
 
-LANT_OFF = (1.75, 0.50, 0.30)                     # lantern centre in the camera frame: forward, right, up (D)
+HIDE = ("deck_cannon_iron", "deck_carr_w", "deck_hatchw")           # render as black blobs in the FG (QA_TECH): kept out of frame
+LANT_OFF = (1.75, 0.38, 0.60)                     # lantern centre in the camera frame: forward, right, up (D)
 CHART_POSE = cast19.STORY19["captain_peer_chart"][1]
 
 
@@ -51,14 +52,16 @@ def pose_of(g):
     p = dict(CHART_POSE)
     t = g / 30.0
     u = 0.5 + 0.5 * math.sin(2 * math.pi * t / 2.2)                     # slow peer back and forth
-    p["lean"] = 8 + 2.5 * u + 3.0 * u_of(g, *SNAP) * (1 if g < SNAP[1] + 20 else 0)
-    p["pitch"] = 0.35 + 0.08 * math.sin(2 * math.pi * t / 1.7 + 1.0)
-    p["yaw"] = 0.4 + 0.08 * math.sin(2 * math.pi * t / 2.9)
-    # eyes: into the fog (screen-right, up), a quick glance down at the blank chart mid-shot
-    glance = u_of(g, 214, 218) * (1 - u_of(g, 226, 230))
-    p["gaze"] = (lerp(0.85, 0.35, glance), lerp(0.55, -0.7, glance))
-    bobx = 0.04 * math.sin(2 * math.pi * t / 1.1)
-    p["arm_r"] = dict(CHART_POSE["arm_r"], hand=(0.6 + bobx, 0.96 + 0.05 * math.sin(2 * math.pi * t / 1.3 + 0.7)))
+    p["yaw"] = 0.75 + 0.08 * math.sin(2 * math.pi * t / 2.9)            # 3/4 toward the rail (screen-right), not at the lens
+    p["lean"] = 6 + 2.5 * u + 3.0 * u_of(g, *SNAP) * (1 if g < SNAP[1] + 20 else 0)
+    # head: up into the fog on "กลางทะเล"-ish beats, down at the chart between: eyes always OFF the lens
+    look_up = 0.5 + 0.5 * math.sin(2 * math.pi * t / 2.2 + 1.6)
+    p["pitch"] = lerp(0.20, -0.20, look_up)
+    p["gaze"] = (lerp(0.9, 1.0, look_up), lerp(-0.7, 0.6, look_up))
+    # chart in both hands in front of the chest (bent elbows, fingers on the card edge)
+    bob = 0.03 * math.sin(2 * math.pi * t / 1.1)
+    p["arm_r"] = dict(CHART_POSE["arm_r"], hand=(0.30 + bob, 0.80 + 0.03 * math.sin(2 * math.pi * t / 1.3 + 0.7)), bend=0.7)
+    p["arm_l"] = dict(CHART_POSE["arm_l"], hand=(0.08 + bob, 0.76), bend=0.5, stretch=1.0)
     p["blink"] = blink(g, BLINKS)
     p["t"] = t
     return p
@@ -67,7 +70,7 @@ def pose_of(g):
 def swing(g):
     """lantern swing about its rope top, in the CAMERA's frame: (about view axis, about the camera X) radians."""
     t = g / 30.0
-    return 0.15 * math.sin(2 * math.pi * t / 1.9 + 0.4) + 0.03 * math.sin(2 * math.pi * t / 0.7), 0.06 * math.sin(2 * math.pi * t / 2.7)
+    return 0.09 * math.sin(2 * math.pi * t / 1.9 + 0.4) + 0.03 * math.sin(2 * math.pi * t / 0.7), 0.06 * math.sin(2 * math.pi * t / 2.7)
 
 
 def ship_cam(g, f):
@@ -86,6 +89,11 @@ class Take(C.Take):
         self.scene.frame_set(bf(GA))
         self.cpt = self.actors["cpt"] = C.make_actor("cpt", "captain19", os.path.join(WORK, "sprites"), canvas=None, contact=True, cam=self.cam)
         C.ride_ship(self.cpt, self.A["ship_root"])
+        for n in HIDE:
+            ob = bpy.data.objects.get(n)
+            if ob is not None:
+                ob.hide_render = True
+                ob.hide_viewport = True
         self._hang_lantern()
 
     def _hang_lantern(self):
