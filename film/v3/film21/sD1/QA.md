@@ -1,8 +1,11 @@
-# QA sD1 (film 21, plan v3): g 542-642, CUT in, whip right out
-- World camp_table (K.build_world), lantern, KING'S TREASURY sign on the chest, light shafts, 32 samples, 720x1280. Cressingham (one card, contact shadow, gold rim via K.with_rim) behind the table.
-- Camera: one continuous arc round the table (az -112 to -48 deg, radius 2.6 to 1.9 m), a director-noted extra push-in of 0.5 m during the laugh (from g 606), whip right in the last 6 frames (g 636-642, horizontal motion blur).
-- Acting: counts coins (coin hand bobbing, lean and head sway, blinks) -> looks up across the river (g 603-611) -> bursts out laughing at narration 20.29 (g 612): fixed laugh drawing, bounce, tears, NO lip-sync (no speak() call in this segment). Head about 160 px tall at the end (director note: >= 120-140), scale pan stays off his face.
-- Colour (qa_stats2): saturation 0.627, vivid 71.8 %, luma 107.6. The raw grade for camp_table came out at luma 120.7, so a uniform gamma 1.19 x 1.05 post-correction was applied to all 101 frames (sat 0.563 -> 0.627). Same factor on every frame, no flicker.
-- Rhythm (film21/rhythm.py): median in-shot diff 6.94, p90 16.88 (needs >= 4 / >= 12). Still frames 0 %.
-- qa_auto: ONE FAIL, "suspected blur" on g 637-642: this is the planned whip pan (intentional motion blur, 6 frames, plan D1 -> D2 whip). The "pops" at g 637-641 are the same frames. Nothing else flagged; magenta 0 %.
-- Not covered: the lower part of the frame in the first 40 frames is table underside and grass (planks), accepted as foreground layer.
+# QA sD1 (g542-642, CUT in, whip right out), re-render of team 7's first version
+Fixes per director note:
+1. KING'S TREASURY sign: camera starts due south of the chest at table-top height and pushes in with the board kept centred; both lines fully readable g542-~580, then the camera glides over the table front toward him (the board crops at about g584 as it leaves).
+2. Counting visible: camera at table height, the counting hand is raised so the pinched coin shows (kept until the look-up at g602); stacks and loose coins on the table recoloured GOLD (silver material swapped to the set's gold at runtime).
+3. Composition: table slab share reduced to about 25-30 % of the frame, no underside after g584. Head about 20-25 % of frame height while counting, bigger at the laugh push-in (about 280 px).
+4. Look-up beat g602-612 (head and eyes up toward the river, 7-frame ease), then the laugh drawing with bounce at g612 (narration 20.29), no lip-sync (no speak call).
+5. Lantern, arc and whip kept. Whip-right in g637-642 (6 frames, horizontal motion blur).
+Set: film21/main set3d21 + cast21 as of e07ceb1 (crimson/gold canopy). K.with_rim on Cressingham. 32 samples OIDN, no post-gamma (colour normalised at conform per director).
+Numbers (info only): qa_stats2 sat 0.574, vivid 56.6 %, luma 117.2 (above 110, left to conform); rhythm in-shot median 10.73, p90 36.04 (needs 4/12); still 0 %.
+qa_auto: one FAIL, suspected blur on g637-642 = the planned whip pan.
+Not covered: mouth is closed all segment (no speech in this window); the sign is partly cropped at g584 as the camera leaves it.

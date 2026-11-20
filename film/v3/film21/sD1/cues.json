@@ -1,0 +1,24 @@
+{
+ "cues": [
+  {
+   "g": 542,
+   "cue": "camp ambience, lantern creak, coin clink loop (counting)"
+  },
+  {
+   "g": 590,
+   "cue": "coin clink, coins into chest"
+  },
+  {
+   "g": 602,
+   "cue": "clink stops (looks up)"
+  },
+  {
+   "g": 612,
+   "cue": "crowd/Cressingham laugh (no lip-sync)"
+  },
+  {
+   "g": 637,
+   "cue": "whoosh, whip right"
+  }
+ ]
+}

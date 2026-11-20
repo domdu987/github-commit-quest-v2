@@ -1,0 +1,16 @@
+{
+ "take": "D1",
+ "g0": 542,
+ "g1": 642,
+ "first_g": 542,
+ "n_frames": 101,
+ "handle_in": 0,
+ "handle_out": 0,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "cam_out": "whip right, last 6 frames (g637-642)",
+ "samples": 32,
+ "res": "720x1280"
+}
