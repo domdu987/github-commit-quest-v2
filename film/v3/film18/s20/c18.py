@@ -203,8 +203,18 @@ def tail_anchor(state, view, gait, phase):
         cast, P = CD._cast(); f = cast.ox_figure(state, view, gait, phase=(phase % 8) / 8.0 if gait != 'stand' else 0.0, flame=-1, blades=True, reed=True, uid='an'); _ANC[k] = f['anchors']['tail_tip']
     return _ANC[k]
 
+CURFACE = [None]
+def _patch_face():
+    cast, P = CD._cast()
+    if getattr(cast, '_c18face', False): return
+    orig = cast.ox_figure
+    def wrapped(*a, **k):
+        if CURFACE[0] and 'face' not in k: k['face'] = CURFACE[0]
+        return orig(*a, **k)
+    cast.ox_figure = wrapped; cast._c18face = True
+_patch_face()
 TAILS = []                       # (world tail tip, scale) of the lit tails of this frame, for the lights
-def put_ox(i, pos, travel, scale, camloc, phase=0, flame=-1, state='dragon', view='three_quarter', gait='gallop', theta=36.0, reed=False, tint=None, k=None, lit_light=True, fcard=0.0, tfx=0.55, lean=48.0, sparks=True):
+def put_ox(i, pos, travel, scale, camloc, phase=0, flame=-1, state='dragon', view='three_quarter', gait='gallop', theta=36.0, reed=False, tint=None, k=None, lit_light=True, fcard=0.0, tfx=0.55, lean=48.0, sparks=True, face=None):
     """ox card (unlit reed bundle) + a flame card PARENTED to the tail-tip anchor, leaning backward against the run, sparks streaming behind, size ~ tfx*sc D*2 (capped ~1.1 D)."""
     p = V(pos); sc = scale * 1.08
     dvec = V((math.cos(math.radians(travel)), math.sin(math.radians(travel)), 0.0)); c = V(camloc) - p; c.z = 0.0; c.normalize(); best = None
@@ -215,7 +225,9 @@ def put_ox(i, pos, travel, scale, camloc, phase=0, flame=-1, state='dragon', vie
             if best is None or sco > best[0] + 1e-4: best = (sco, n, u, fac)
     _, n, u, fac = best; yaw = math.degrees(math.atan2(n.x, -n.y)); mir = (fac < 0) if view != 'front_three_quarter' else False
     ph = int(phase) % 8
-    meta = CD.card('ox', state=state, view=view, gait=gait, phase=ph if gait != 'stand' else 0, flame=-1, reed=1 if (reed or flame >= 0) else 0)
+    CURFACE[0] = face
+    meta = CD.card('ox', state=state, view=view, gait=gait, phase=ph if gait != 'stand' else 0, flame=-1, reed=1 if (reed or flame >= 0) else 0, face=face)
+    CURFACE[0] = None
     ob = R2.put_card(meta, tuple(p), yaw, sc, mirror=mir, name='ox%d' % i, tint=tint, k=k, sw=2.7 * sc)
     if flame >= 0:
         ax, ay = tail_anchor(state, view, gait, ph); ly = math.radians(yaw)

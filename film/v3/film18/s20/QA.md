@@ -1,8 +1,6 @@
-# QA s20 (render team 5, film 18) round 5 - frames g1515-1595 (+6 handles: take.mkv g1509-1601, 93 frames), jimo_out NIGHT
-Frame-diff in-shot (n=80): median **4.89**, p90 **6.58**. qa_auto PASS.
-- Came in about 25 % (lateral 8.8 -> 6.7 D, slow push 0.9 D): the lead ox is about 40 % of frame height, nose in frame, flame trailing level behind with sparks; flames still attached, none on a head.
-- Navy spikes (`tufts`), furrows, the white rock and foreground stones/props hidden; the road posts and the far-camp fires hidden.
-- Not fixed: a tripod torch stand still shows behind the lead ox around g1522-1540 and g1569-1590 (it is a set brazier I could not identify among the set's objects, so it is not hidden); sky is about 30 % and plain ground about 35 % (the set's `dress_ground` is not yet available).
-
-## Round 6: ground dressing
-Re-rendered with `J.dress_ground` (density 0.45, keep-clear on the herd lanes). `J.ground_share` at g1525 / 1550 / 1575 / 1590 = 0.27 / 0.38 / 0.25 / 0.25 (was 0.35-0.42). Frame-diff median 6.48, p90 9.39. qa_auto PASS. The tripod torch stand behind the lead ox is still present (set brazier, unidentified).
+# QA s20 (render team 5, film 18) round 7 - frames g1515-1595 (+6 handles: take.mkv g1509-1601, 93 frames), jimo_out NIGHT
+Frame-diff in-shot (n=80): median **4.03**, p90 **6.70**. qa_auto PASS.
+- Lead ox in pure profile at about 40 % of frame height, running screen-left, `face='rage'` (all charging oxen use it); head at x 0.25-0.35, its flame trailing at x 0.8-0.95 (still near the right edge on some frames).
+- Tripod brazier on the ox's back: raycast at g1589 hit `halos`, `wood`, `posts` (road tripods at x 9.5). Their flames, halo quads and mesh faces in the field are removed at runtime.
+- Camera pitched down (look z 0.1), eased push, no wobble; sky about 30 %.
+- NOT fixed: bare ground still about 45 % of the frame: the lane next to the low camera. The set's v2 dressing and `R2.dress` put (almost) nothing there and my own soft dark bush sprites did not render; no Qi silhouettes were added in the lower third.

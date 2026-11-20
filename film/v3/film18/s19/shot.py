@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c18 as C
 from c18 import J, S, R2, V, bpy
 SHOT = 's19'; G0, G1 = 1427, 1514; H_IN, H_OUT = 6, 6        # cut in, whip out
-c = S.SHOTS[SHOT]['cam']; c['loc'] = (8.0, -17.0, 1.7); c['look_at'] = (32.0, -6.0, 10.2); c['lens'] = 18.0
+c = S.SHOTS[SHOT]['cam']; c['loc'] = (8.0, -17.0, 1.1); c['look_at'] = (32.0, -6.0, 10.6); c['lens'] = 18.0
 C.motion(SHOT, push=0.0, slide=-30, moves=[dict(t=0.2, d=0.9, dur=8), dict(t=0.35, d=0.9, dur=8), dict(t=0.84, pan=-85, dur=7)])
 _p0 = S.pose_at
 def _tilt(sh, t):                                            # the whip lands on the herd: tilt down from the sky onto the field while the pan runs
@@ -28,22 +28,10 @@ V_OX, V_QI = 15.0, 11.5
 def setup(ctx):
     J.set_holes(12)
     gd = bpy.data.objects['ground'].data; gm = gd.materials[-1]
-    for i in range(len(gd.materials)): gd.materials[i] = gm
-    for nm in ('banks', 'bridge', 'road', 'water', 'fields'):
-        ob = bpy.data.objects.get(nm)
-        if ob is not None and ob.type == 'MESH': ob.data.materials.clear(); ob.data.materials.append(gm)
-    M = J.STATE['M']
-    try:                                                     # kill the set's dark dust squares: additive material strength -> 0
-        for n in M['dust'].node_tree.nodes:
-            for i in n.inputs:
-                if i.name == 'Strength': i.default_value = 0.0
-    except Exception as e: print('dust', e)
-    for ob in bpy.data.objects:
-        if ob.name.startswith('hglow'): ob.hide_render = True
-    import bmesh                                             # drop the 'mist' halo quads (dark translucent squares at the breaches)
-    for ob in [o for o in bpy.data.objects if o.type == 'MESH' and (o.name == 'halos' or o.name.startswith('rubble') or o.name.startswith('breach'))]:
-        bm = bmesh.new(); bm.from_mesh(ob.data); mi = [i for i, m in enumerate(ob.data.materials) if m is not None and ('mist' in m.name or 'dust' in m.name)]
-        bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.material_index in mi], context='FACES'); bm.to_mesh(ob.data); bm.free()
+    me = bpy.data.meshes.new('gapfill'); me.from_pydata([(-30, -60, -0.3), (90, -60, -0.3), (90, -7, -0.3), (-30, -7, -0.3)], [], [(0, 1, 2, 3)]); me.update()
+    uv = me.uv_layers.new(name='UVMap')
+    for i_, c_ in enumerate(((0, 0), (6, 0), (6, 3), (0, 3))): uv.data[i_].uv = c_
+    me.materials.append(gm); go = bpy.data.objects.new('gapfill', me); J.STATE['SET'].objects.link(go); J.no_bounce(go)
 
 def frame(g, t, camloc, ctx):
     J.set_holes(12)
@@ -57,7 +45,7 @@ def frame(g, t, camloc, ctx):
         if y < -150: continue
         pos = (hx + jit, y, 0.0); near = (V(pos) - camloc).length < 16
         ph = int((g - gs) * 12 / 30.0 + j) % 8
-        C.put_ox(j, pos, -100, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='front_three_quarter' if (near and j % 3 == 0) else 'three_quarter', gait='gallop', theta=14 if (near and j % 3 == 0) else 30, reed=True, tfx=0.8, lean=84.0)
+        C.put_ox(j, pos, -100, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='front_three_quarter' if (near and j % 3 == 0) else 'three_quarter', gait='gallop', theta=14 if (near and j % 3 == 0) else 30, reed=True, tfx=0.8, lean=84.0, face='rage')
     for j, (gs, x) in enumerate(QI):
         if g < gs: continue
         y = -7.0 - V_QI * (g - gs) / 30.0

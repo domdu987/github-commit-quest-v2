@@ -154,26 +154,27 @@ def motion(shot, push=None, slide=None, moves=None):
     if slide is not None: mv['slide'] = slide
     if moves is not None: mv['moves'] = list(moves)
 
-def fg_bundle(shot, side='left', n=19, length=0.5, rad=0.05, drop=0.6, ahead=1.7, lat=0.6):
-    """a tied bundle of reeds (several tones, tapered, 2 red cords) laid low in the lower corner, parented to the camera; hides the set's slab-like 'reeds' prop."""
+def fg_bundle(shot, side='left', n=40, length=0.4, rad=0.011, drop=0.55, ahead=1.7, lat=0.55):
+    """a tied bundle of many thin reed stalks (splayed at both ends, tones from pale straw to dark gold) with two red cords, parented to the camera."""
     for ob in STATE.get('fg_objs', []):
         if ob.name.startswith('fgreeds'): ob.hide_render = True; ob.scale = (0.0, 0.0, 0.0)
     bpy.context.view_layer.update(); cam = bpy.data.objects['cam']; setup = S.pose_at(S.SHOTS[shot], 0.0); loc, f, r, u = J._cam_frame(setup); M = STATE['M']; Bk = J.Banks(); n0 = set(STATE['SET'].objects)
     sg = 1 if side == 'right' else -1; o = loc + f * ahead + r * (lat * sg) + u * (-drop)
-    d = (r * (-0.6 * sg) + f * 0.3).normalized(); rnd = random.Random(7); mats = ['hay', 'straw', 'straw_d']
-    b = {k: Bk('fgb%d' % k, hull=T.hull(3.0)) for k in range(3)}
+    d0 = (r * (-0.7 * sg) + f * 0.25 + u * 0.35).normalized(); rnd = random.Random(7)
+    b = {k: Bk('fgb%d' % k, hull=T.hull(3.0)) for k in range(4)}
     for k in range(n):
-        a = 2 * math.pi * k / n; off = (r * math.cos(a) + u * math.sin(a)) * rad * (1.2 if k else 0.3); q = o + off + d * rnd.uniform(-0.05, 0.05); ln = length * rnd.uniform(0.8, 1.15)
-        J.rod(b[k % 3], q - d * ln / 2, q + d * ln / 2 + u * rnd.uniform(0, 0.04), rad, M[mats[k % 3]], seg=5, r1=rad * 0.35)
-    for s in (-0.22, 0.22): J.cyl(b[0], o + d * s * length, rad * 2.2, 0.04, M['red_d'], seg=8, cap=False)
+        a = 2 * math.pi * k / n; off = (r * math.cos(a) + u * math.sin(a)) * rad * 4.2 * rnd.uniform(0.2, 1.0)
+        d = (d0 + r * rnd.uniform(-0.12, 0.12) + u * rnd.uniform(-0.12, 0.12)).normalized(); ln = length * rnd.uniform(0.82, 1.18); q = o + off
+        J.rod(b[k % 4], q - d * ln * 0.5, q + d * ln * 0.5, rad, M['straw_d' if k % 4 == 3 else 'hay'], seg=4, r1=rad * 0.3)
+    for s in (-0.1, 0.12): J.cyl(b[0], o + d0 * s * length, rad * 5.5, 0.03, M['red_d'], seg=8, cap=False)
     Bk.flush(STATE['SET'])
     objs = [ob for ob in STATE['SET'].objects if ob not in n0]
-    tones = [(0.78, 0.56, 0.18), (0.62, 0.42, 0.14), (0.88, 0.68, 0.28)]
+    tones = [(0.86, 0.66, 0.26), (0.70, 0.50, 0.16), (0.92, 0.76, 0.40), (0.55, 0.38, 0.12)]
     for ob in objs:
         T.no_bounce(ob); ob.parent = cam; ob.matrix_parent_inverse = cam.matrix_world.inverted()
-        for k in range(3):
+        for k in range(4):
             if ob.name.startswith('fgb%d' % k) and ob.type == 'MESH':
-                mm = bpy.data.materials.new('reedtone%d' % k); mm.use_nodes = True; nt = mm.node_tree; nt.nodes.clear(); em = nt.nodes.new('ShaderNodeEmission'); em.inputs['Color'].default_value = tones[k] + (1.0,); em.inputs['Strength'].default_value = 0.35
+                mm = bpy.data.materials.new('reedtone%d' % k); mm.use_nodes = True; nt = mm.node_tree; nt.nodes.clear(); em = nt.nodes.new('ShaderNodeEmission'); em.inputs['Color'].default_value = tones[k] + (1.0,); em.inputs['Strength'].default_value = 0.4
                 o2 = nt.nodes.new('ShaderNodeOutputMaterial'); nt.links.new(em.outputs[0], o2.inputs[0]); ob.data.materials.clear(); ob.data.materials.append(mm)
     STATE.setdefault('fg_objs', []).extend(objs)
 
@@ -193,8 +194,18 @@ def tail_anchor(state, view, gait, phase):
         cast, P = CD._cast(); f = cast.ox_figure(state, view, gait, phase=(phase % 8) / 8.0 if gait != 'stand' else 0.0, flame=-1, blades=True, reed=True, uid='an'); _ANC[k] = f['anchors']['tail_tip']
     return _ANC[k]
 
+CURFACE = [None]
+def _patch_face():
+    cast, P = CD._cast()
+    if getattr(cast, '_c18face', False): return
+    orig = cast.ox_figure
+    def wrapped(*a, **k):
+        if CURFACE[0] and 'face' not in k: k['face'] = CURFACE[0]
+        return orig(*a, **k)
+    cast.ox_figure = wrapped; cast._c18face = True
+_patch_face()
 TAILS = []                       # (world tail tip, scale) of the lit tails of this frame, for the lights
-def put_ox(i, pos, travel, scale, camloc, phase=0, flame=-1, state='dragon', view='three_quarter', gait='gallop', theta=36.0, reed=False, tint=None, k=None, lit_light=True, fcard=0.0, tfx=0.55, lean=48.0, sparks=True):
+def put_ox(i, pos, travel, scale, camloc, phase=0, flame=-1, state='dragon', view='three_quarter', gait='gallop', theta=36.0, reed=False, tint=None, k=None, lit_light=True, fcard=0.0, tfx=0.55, lean=48.0, sparks=True, face=None):
     """ox card (unlit reed bundle) + a flame card PARENTED to the tail-tip anchor, leaning backward against the run, sparks streaming behind, size ~ tfx*sc D*2 (capped ~1.1 D)."""
     p = V(pos); sc = scale * 1.08
     dvec = V((math.cos(math.radians(travel)), math.sin(math.radians(travel)), 0.0)); c = V(camloc) - p; c.z = 0.0; c.normalize(); best = None
@@ -205,7 +216,9 @@ def put_ox(i, pos, travel, scale, camloc, phase=0, flame=-1, state='dragon', vie
             if best is None or sco > best[0] + 1e-4: best = (sco, n, u, fac)
     _, n, u, fac = best; yaw = math.degrees(math.atan2(n.x, -n.y)); mir = (fac < 0) if view != 'front_three_quarter' else False
     ph = int(phase) % 8
-    meta = CD.card('ox', state=state, view=view, gait=gait, phase=ph if gait != 'stand' else 0, flame=-1, reed=1 if (reed or flame >= 0) else 0)
+    CURFACE[0] = face
+    meta = CD.card('ox', state=state, view=view, gait=gait, phase=ph if gait != 'stand' else 0, flame=-1, reed=1 if (reed or flame >= 0) else 0, face=face)
+    CURFACE[0] = None
     ob = R2.put_card(meta, tuple(p), yaw, sc, mirror=mir, name='ox%d' % i, tint=tint, k=k, sw=2.7 * sc)
     if flame >= 0:
         ax, ay = tail_anchor(state, view, gait, ph); ly = math.radians(yaw)
@@ -213,10 +226,8 @@ def put_ox(i, pos, travel, scale, camloc, phase=0, flame=-1, state='dragon', vie
         right = V((math.cos(ly), math.sin(ly), 0.0)); tail = p + right * lx + V((0, 0, lz)); TAILS.append((tail, sc))
         back = 1.0 if lx > 0 else -1.0
         fm = flame_meta(flame % 3); fs = tfx * sc; bob = 1.0 + 0.1 * math.sin(i + flame)
-        dd = V(camloc) - tail; cyaw = math.degrees(math.atan2(dd.x, -dd.y))
-        fo = R2.put_card(fm, (tail.x, tail.y, tail.z), cyaw, fs * bob, name='tfl%d' % i, tint=(1, 1, 1), k=1.6, shadow=False)
-        sgn = 1.0 if (V((math.cos(math.radians(cyaw)), math.sin(math.radians(cyaw)), 0)) * back * (1 if True else 0)).dot(right) >= 0 else -1.0
-        fo.rotation_euler = (0, math.radians(sgn * back * lean + 6 * math.sin(phase * 1.7 + i)), math.radians(cyaw)); fo.location = (tail.x, tail.y, tail.z)
+        fo = R2.put_card(fm, (tail.x, tail.y, tail.z), yaw, fs * bob, name='tfl%d' % i, tint=(1, 1, 1), k=1.6, shadow=False)
+        fo.rotation_euler = (0, math.radians(back * lean + 6 * math.sin(phase * 1.7 + i)), math.radians(yaw)); fo.location = (tail.x + 0.0, tail.y + 0.0, tail.z)
         if sparks:
             sm = spark_meta(); rr = random.Random(i * 131 + int(phase * 7))
             for s in range(6):

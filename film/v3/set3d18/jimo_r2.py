@@ -203,34 +203,15 @@ def _rout_big(preset):
 POST = {'s24': _rout_big}
 
 # ------------------------------------------------------------------ ground dressing (round 2)
+DRESS_MAP = dict(stone='stone', hay='hay', silk='sack', rope='rope', basket='basket', pot='jar', plume='helmet', wheel='cart')      # old r2 kinds -> jimo_dress.LIB kinds (no flat strips, no blades)
 def dress(x0, x1, y0, y1, n, seed, kinds=('stone', 'hay', 'silk', 'rope', 'basket', 'pot'), z=0.0, avoid=None, k=1.0):
-    """Small props scattered over a ground rectangle so bare ground is broken up (all one bank each, cheap)."""
-    M = STATE['M']; r = random.Random(seed); Bk = J.Banks(); n0 = set(STATE['SET'].objects)
-    for k in range(n):
-        x, y = r.uniform(x0, x1), r.uniform(y0, y1)
-        if avoid and avoid(x, y): continue
-        kind = r.choice(kinds); p = V((x, y, z)); b = Bk('dr_' + kind, hull=0.0)
-        if kind == 'stone': J.lumpy(b, p + V((0, 0, 0.25)), r.uniform(0.25, 0.7), M['stone_d'] if k % 2 else M['stone'], seed * 13 + k, seg=7, rings=4, rough=0.3, squash=0.6)
-        elif kind == 'hay':
-            for q in range(3): a = r.uniform(0, 6.28); J.rod(b, p, p + V((0.5 * math.cos(a), 0.5 * math.sin(a), r.uniform(0.5, 0.9))), 0.07, M['hay'], seg=3)
-            J.lumpy(b, p + V((0, 0, 0.15)), 0.5, M['hay'], k, seg=6, rings=3, rough=0.3, squash=0.4)
-        elif kind == 'silk':
-            a = r.uniform(0, 3.14); L = r.uniform(0.9, 1.7); d = V((math.cos(a), math.sin(a), 0)); q = V((-d.y, d.x, 0))
-            b.oface([p, p + d * L, p + d * L + q * 0.6, p + q * 0.6 + d * 0.2], M['red'], [(0, 0), (1, 0), (1, 1), (0, 1)], (0, 0, 1)); b.oface([p + V((0, 0, 0.01)), p + d * 0.3 + q * 0.3 + V((0, 0, 0.01)), p + d * 0.5 + V((0, 0, 0.01))], M['gold'], [(0, 0)] * 3, (0, 0, 1))
-        elif kind == 'rope':
-            for q in range(10): a0, a1 = 2 * math.pi * q / 10, 2 * math.pi * (q + 1) / 10; J.rod(b, p + V((0.5 * math.cos(a0), 0.5 * math.sin(a0), 0.08)), p + V((0.5 * math.cos(a1), 0.5 * math.sin(a1), 0.08)), 0.09, M['straw_d'], seg=4)
-        elif kind == 'basket':
-            b.frustum(p, p + V((0, 0, 0.8)), 0.4, 0.62, M['straw_d'], seg=8)
-        elif kind == 'pot': J.ellipsoid(b, p + V((0, 0, 0.4)), 0.42, 0.42, 0.4, M['iron'], seg=8, rings=5, th=(0, math.pi))
-        elif kind == 'plume':
-            b.frustum(p + V((0, 0, 0.05)), p + V((0.4, 0.2, 0.8)), 0.3, 0.0, M['red'], seg=5); J.cyl(b, p + V((0, 0, 0.0)), 0.5, 0.3, M['iron'], seg=8, r1=0.3)
-        elif kind == 'wheel':
-            R = 1.3; a_ = r.uniform(0, 3.14); d = V((math.cos(a_), math.sin(a_), 0))
-            for q in range(14): a0, a1 = 2 * math.pi * q / 14, 2 * math.pi * (q + 1) / 14; J.rod(b, p + d * (R * math.cos(a0)) + V((0, 0, R + R * math.sin(a0))), p + d * (R * math.cos(a1)) + V((0, 0, R + R * math.sin(a1))), 0.14, M['wood_d'], seg=4)
-            for q in range(4): a0 = math.pi * q / 4; J.rod(b, p + d * (R * math.cos(a0)) + V((0, 0, R + R * math.sin(a0))), p - d * (R * math.cos(a0)) + V((0, 0, R - R * math.sin(a0))), 0.1, M['wood'], seg=4)
-    Bk.flush(STATE['SET'])
-    for ob in STATE['SET'].objects:
-        if ob not in n0: J.no_bounce(ob)
+    """Props scattered over a ground rectangle so bare ground is broken up. Since round 3 they are the warm, rounded, textured jimo_dress props (named dgr_*, one object each), about 40 %
+    of the old count, kept 2.5 D away from the shot's stand marks; J.dress_ground() later removes any of them that would overlap an actor card or sit within 3 D of the lens."""
+    import jimo_dress as DG; r = random.Random(seed); kc = DG.default_keep_clear() if STATE.get('preset') in S.SHOTS else []
+    for i in range(n):
+        x, y = r.uniform(x0, x1), r.uniform(y0, y1); kind = DRESS_MAP.get(r.choice(kinds), 'stone'); keep = r.random() < DG.DENSITY0
+        if not keep or (avoid and avoid(x, y)) or any(math.hypot(x - cx, y - cy) < cr + 1.0 for (cx, cy, cr) in kc): continue
+        DG.place_prop(kind, x, y, seed * 1000 + i, z=z)
 
 def furrows(x0, x1, y0, y1, step=1.1, seed=1, along='y', mat='tunnel'):
     """Dark furrow strips on a field (a thin quad per row): breaks the flat plane."""
