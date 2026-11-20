@@ -5,3 +5,10 @@ Numbers: saturation 0.701, vivid 81.2 %, luma 120.2 (OVER the 85-110 limit: sunl
 Colour note: the sand reads lemon yellow in the last third (same issue the director flagged on H2a); I will re-render this segment with the palette fix when it lands on film21/main if asked.
 Heads: centre y 520-700, whole heads above y 880, nobody cut by the frame edge, contact shadows on, riders on their horses.
 Known: the 3D column ahead of the cast pair is rigid (marches, hoof bob only); the sign is visible from g ~470 and passed in the last second.
+
+## REDO after the TAKE gate (sets e07ceb1 / cast 528bf9d)
+1. Belly-suck beat: camera lifted (end z 4.2, look z 4.45-4.55, tilt up) so both riders' torsos clear the rail and sit mid-frame (40-60 % of frame height); at g524 the near knight deflates explicitly (squash 0.74 wide, 1.05 tall, leaning back -9 deg, held, with a sweat drop), the far knight sweats 3 frames later.
+2. Colours: current cast (knights crimson/gold, caparisons crimson); my 3D column uses only crimson/gold/cream liveries (no t_blue); camp pavilions come out cream/red/yellow with the new set (no blue).
+3. End framing: rail + sand below the knights reduced (lower end position, tilt up).
+4. Horizon blades: the set now renders the smoke as soft puffs (no workaround needed).
+Numbers (redo): saturation 0.684, luma 120.4 (colour is normalised at the conform per the director), in-shot motion median 15.08 p90 27.79, qa_auto PASS.
