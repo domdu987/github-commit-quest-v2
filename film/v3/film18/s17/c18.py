@@ -157,7 +157,14 @@ def fg_bundle(shot, side='left', n=9, length=0.55, rad=0.045, drop=0.42, ahead=1
     for s in (-0.2, 0.2): J.cyl(b, o + d * s * length - V((0, 0, 0)), rad * 2.0, 0.05, M['red_d'], seg=8, cap=False)
     Bk.flush(STATE['SET'])
     objs = [ob for ob in STATE['SET'].objects if ob not in n0]
-    for ob in objs: T.no_bounce(ob); ob.parent = cam; ob.matrix_parent_inverse = cam.matrix_world.inverted()
+    ym = bpy.data.materials.get('reed_y')
+    if ym is None:
+        ym = bpy.data.materials.new('reed_y'); ym.use_nodes = True; nt = ym.node_tree; nt.nodes.clear(); em = nt.nodes.new('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.86, 0.62, 0.16, 1); em.inputs['Strength'].default_value = 0.3
+        o = nt.nodes.new('ShaderNodeOutputMaterial'); nt.links.new(em.outputs[0], o.inputs[0])
+    for ob in objs:
+        T.no_bounce(ob); ob.parent = cam; ob.matrix_parent_inverse = cam.matrix_world.inverted()
+        if ob.type == 'MESH':
+            ob.data.materials.clear(); ob.data.materials.append(ym)
     STATE.setdefault('fg_objs', []).extend(objs)
 
 # ------------------------------------------------------------------ soft dust / smoke puffs (light-brown, replaces the set's dark dust squares)
