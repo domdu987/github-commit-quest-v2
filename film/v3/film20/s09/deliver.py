@@ -71,6 +71,7 @@ meta = {"take": "s%02d" % SHOT, "film": 20, "shots": {9: [9, 10], 16: [16, 17]}[
         "transition_out": dict(TOUT, at=G1 + 1),
         "set": "v3/set3d20 CAFE preset %s, light DAY, window view %s (hook set_window_view keyed every frame)" % ("cafe_low", "stub" if SHOT == 9 else "full"),
         "cast": "v3/cast20 maupassant stage Actor on the standing mark; " + WORDS + "; lip-sync mouth from narration loudness (cast20.talk_mouth + MOUTH_SET open sizes) only inside the quote windows",
+        "start_cam": {"units": "world D (1 D = head = 0.532 m)", "lens_mm": 22, "lens_shift": 0, "g603": {"loc": [2.618, 9.596, 1.334], "look": [1.692, 13.160, 1.999]}, "g604": {"loc": [2.599, 9.600, 1.350], "look": [1.692, 13.160, 2.000]}, "drift_per_frame": [-0.019, 0.004, 0.016], "note": "match pose agreed with the director; T06 ends here"} if SHOT == 9 else None,
         "events": EV, "dof": "none", "text": "none", "light": "DAY", "samples": 8, "resolution": [720, 1280], "threads": 2, "fps": 30,
         "s_per_frame_wall_mean": round(float(np.mean(walls)), 2), "s_per_frame_cpu_mean": round(float(np.mean(cpus)), 2),
         "head_px": [round(min(h["w"] for h in heads)), round(max(h["w"] for h in heads))],
