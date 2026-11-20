@@ -28,8 +28,8 @@
   "note": "DIS 15 into shot 11 (WORKSHOP shop_wide); 10 handle frames g 862..871"
  },
  "set": "v3/set3d19/h19.py HALL preset hall_wide, light DAY; set_candles(1.0) every frame; no runtime set changes (door leaves visible, they frame Harrison); no caption_shade",
- "cast": "v3/cast19: astro19, astro19_b, astro19_c and a second astro19_b (far right) laughing (*_laugh poses via cast19.laugh_cycle, 3 Hz bounce 0.06 D, tears), each pointing at Harrison in turn (point arm alternating every 9 frames); harrison19 at the door (0,-5.0) in harrison_hopeful_door pose (hands clasped, no hat), expr sad; nobody speaks; Board at x +-2.1 D behind the chairs (not at the astro_* marks)",
- "camera": "custom 22 mm from the window end (0,9.4,3.6) looking DOWN the hall at the door; c19.CamPath push 10 %/s + slide -20 px/s, decay 0.05; the camera flies on between the Board; SNAP x3.0 (peak 1.6, shift 1.1/0.7) g 843..857 on the caption 'ไอ้ช่างไม้' (28.10 s = g 846) onto Harrison in the doorway",
+ "cast": "v3/cast19: astro19 (right of the aisle), astro19_b and astro19_c (both left, separated in depth and screen x) laughing (*_laugh poses via cast19.laugh_cycle, 3 Hz bounce 0.06 D, tears), each pointing at Harrison in turn (arms alternate every 9 frames); harrison19 at the door (0,-5.0), hands clasped (harrison_hopeful_door pose, no hat), expr sad; nobody speaks; three Board members only (the fourth, a second astro19_b, was removed in round 2: it stacked on astro19_c)",
+ "camera": "custom 22 mm from the window end (0,9.4,3.6) looking down the hall at the door; c19.CamPath push 3 %/s (low: the Board stays in frame until the snap), plus a small handheld sway (0.065 D at 2.6 Hz, 0.05 D at 3.4 Hz, translation only); SNAP x3.0 (peak 1.6, shift 1.1/0.7) g 843..857 on the caption 'ไอ้ช่างไม้' (28.10 s = g 846) onto Harrison in the doorway; the Board exits the frame during the snap",
  "events": {
   "snap": [
    843,
@@ -50,20 +50,20 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 20.17,
- "s_per_frame_cpu_mean": 39.69,
+ "s_per_frame_wall_mean": 20.94,
+ "s_per_frame_cpu_mean": 41.07,
  "head_px": [
-  56,
-  243
+  55,
+  180
  ],
  "head_centre_y": [
-  596,
-  767
+  599,
+  732
  ],
- "head_bottom_max_y": 882,
+ "head_bottom_max_y": 812,
  "framediff_in_shot": {
-  "median": 4.51,
-  "p90": 17.36
+  "median": 6.93,
+  "p90": 17.82
  },
  "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
 }
