@@ -1,0 +1,20 @@
+{
+ "take": "s12",
+ "shots": [
+  29,
+  30
+ ],
+ "g0": 1695,
+ "g1": 1868,
+ "first_g": 1689,
+ "n_frames": 186,
+ "handle": 6,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 11
+ },
+ "cut_at": 1789,
+ "res": "720x1280",
+ "samples": 12,
+ "fps": 30
+}
