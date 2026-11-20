@@ -1,4 +1,29 @@
-{"take":"s09","shots":[22,23],"g0":1196,"g1":1342,"first_g":1190,"n_frames":159,"handle_frames":6,
- "transition_in":{"type":"dissolve","frames":11},"cuts_inside":[1275],
- "resolution":"720x1280","fps":30,"samples":12,"take_file":"take.mkv.part* (cat take.mkv.part* > take.mkv; libx264rgb crf 6)",
- "rhythm":{"median":6.07,"p90":15.03},"qa_auto":"PASS"}
+{
+ "take": "s09",
+ "shots": [
+  22,
+  23
+ ],
+ "g0": 1196,
+ "g1": 1342,
+ "first_g": 1190,
+ "n_frames": 159,
+ "handle_frames": 6,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 11
+ },
+ "cuts_inside": [
+  1275
+ ],
+ "resolution": "720x1280",
+ "fps": 30,
+ "samples": 12,
+ "take_file": "take.mkv.part* (cat take.mkv.part* > take.mkv; libx264rgb crf 6)",
+ "rhythm": {
+  "median": 5.89,
+  "p90": 12.51
+ },
+ "qa_auto": "PASS",
+ "round": 2
+}
