@@ -26,8 +26,8 @@ SNAP = (G_SNAP_W - 2, G_SNAP_W + 13)
 PRESET, LIGHT = "site_wide", "DAY"
 PPD = 128
 EXT = 1.0                                      # the crane-down runs 2.6x the preset's end-pose travel (the preset pair is only 3 m apart)
-ARC = -3.0                                     # deg/s orbit about the yard (parallax)
-SLIDE = 45.0                                   # px/s
+ARC = -5.0                                     # deg/s orbit about the yard (parallax)
+SLIDE = 50.0                                   # px/s
 WSCALE = 1.9                                   # riveter cards enlarged (wide camera, set rule: hand props x1.6-2.4); heads 45-55 px
 BASE_PITCH = 3.5                               # deg UP: horizon + legs sit lower, the empty ground slab shrinks to <= 25 %
 SNAP_TRUCK = 8.0                               # D: the snap trucks the camera sideways (visible speed-up) +

@@ -39,8 +39,8 @@ def cam_path(A):
     subj = m + Vector((0.0, 0.0, HEAD_Z))
     c = Vector(A["cams"][PRESET]["loc"]) - Vector((0.0, 0.0, CAMERA_DROP))
     c = c + (subj - c).normalized() * CAM_FWD                           # closer: his head ~110 px instead of 56
-    return C.CamPath(c, subj, GF, G_LAST, push=0.05, slide_px=55.0, rise_px=0.0, arc_deg_s=-16.0, tilt0=TILT0, tilt_deg_s=TILT_RATE,
-                     decay=0.2, snaps=[dict(g=(G_WORD - 2, G_WORD + 11), k=1.4, peak=1.7, shift=(-0.4, 0.0), tilt=1.0)])
+    return C.CamPath(c, subj, GF, G_LAST, push=0.05, slide_px=55.0, rise_px=0.0, arc_deg_s=-30.0, tilt0=TILT0, tilt_deg_s=TILT_RATE,
+                     decay=0.2, snaps=[dict(g=(G_WORD - 2, G_WORD + 11), k=1.7, peak=1.8, shift=(-0.8, 0.0), tilt=-1.0)])
 
 
 def cam_path_static():
