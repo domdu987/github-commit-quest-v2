@@ -30,11 +30,12 @@ def build_assign(g):
     else: kind = 'drawer'
     return a, kind
 
-def bert_pose(g, kind, mirror=False):
+def bert_pose(g, kind, mirror=False, target=None):
     wb = L.WALK['bertillon'][g]; moving = wb['speed'] > 0.05
     name = {'measure': 'bertillon_measuring', 'transit': 'bertillon_neutral', 'write': 'bertillon_writing', 'card': 'bertillon_holding_card', 'drawer': 'bertillon_holding_card'}[kind]
     cast, pose = cast17.STORY17[name]; pose = dict(pose)
     if mirror: pose['mirror'] = True
+    if target is not None: pose = cast17.hand_for_anchor(cast, pose, 'r', 'calipers_l' if mirror else 'calipers_r', target)
     if moving:
         arms = 'l' if kind in ('measure', 'card', 'drawer') else 'both'
         cyc = cast17.cycle(cast, wb['phase'], 'run' if wb['speed'] > 1.9 else 'walk', 1, base=pose, arms=arms)
@@ -45,6 +46,7 @@ def bert_pose(g, kind, mirror=False):
 
 def ramp(g, a, b): return max(0.0, min(1.0, (g - a) / float(b - a)))
 
+OFF_REF = {}
 def stage_frame(g):
     sc = bpy.context.scene; sc.frame_set(g + 1); cam = sc.camera; bpy.context.view_layer.update(); L.clean(); camloc = Vector(cam.location)
     assign, kind = build_assign(g); mirror = kind in ('measure', 'drawer')    # calipers / card go to the screen-left (prisoner on the left; drawers on the wall at x 13)
@@ -55,11 +57,25 @@ def stage_frame(g):
         ox, x, y, z, s = L._basis(ps, cam); head = L.L2W(ps, cam, (0.0, 0.0)); want = tip + x * (-0.42 * s)      # head centre 0.42 D left of the jaw tips: the jaws grip the head's near edge
         want = want - 0.0 * z; d = want - head; dy = (L.L2W(ab, cam, (0.0, 0.0)) - head).dot(Vector((0, 1, 0))) + 0.12   # same depth as Bertillon, 12 cm behind him (his arm in front)
         off = {'dx': d.x, 'dy': dy}; L.clean_actor('prisoner_s'); acts['prisoner_s'] = P.stage_cast2('T4', g, {'prisoner_s': (assign['prisoner_s'][0], off)})['prisoner_s']; info = off
+        # jaw tips onto the EAR (head-centre height, the prisoner's near side edge): re-pose Bertillon's arm with the glove holding the beam
+        ox, x, y, z, s = L._basis(acts['prisoner_s'], cam); head = L.L2W(acts['prisoner_s'], cam, (0.0, 0.0)); ear = head + x * (0.47 * s) - z * (0.05 * s)
+        tgt = L.to_local_on_plane(ab, cam, ear, camloc); L.clean_actor('bertillon'); acts['bertillon'] = P.stage_cast2('T4', g, {'bertillon': (bert_pose(g, kind, mirror, tgt), {})})['bertillon']; info['ear_tgt'] = tgt[0]
+    if kind != 'measure' and g >= 955 and g < 995:     # the measuring offset of the prisoner ramps out (director-approved), no pop at g955
+        if not OFF_REF:
+            sc.frame_set(954 + 1); bpy.context.view_layer.update(); _, _, i0 = stage_frame_measure(954); OFF_REF.update(i0); sc.frame_set(g + 1); bpy.context.view_layer.update(); L.clean(); acts = P.stage_cast2('T4', g, assign); ab = acts['bertillon']; ps = acts['prisoner_s']
+        k = 1.0 - ramp(g, 955, 995); off = {'dx': OFF_REF['dx'] * k, 'dy': OFF_REF['dy'] * k}
+        L.clean_actor('prisoner_s'); acts['prisoner_s'] = P.stage_cast2('T4', g, {'prisoner_s': (assign['prisoner_s'][0], off)})['prisoner_s']; info = off
     elif kind == 'drawer':
         tip = L.L2W(ab, cam, cast17_anchor(g, kind, mirror, 'card')); wall = 13.04; k = ramp(g, 1030, 1042)
-        d = (wall - tip.x) * k
+        d = 0.0   # Bertillon stays on his prepared path: reaching the wall (x 13.04) would put him out of frame (screen x < 0) on g1030-1040; reported to the director
         L.clean_actor('bertillon'); acts['bertillon'] = P.stage_cast2('T4', g, {'bertillon': (assign['bertillon'][0], {'dx': d})})['bertillon']; info = {'dx': d}
+    for nm in ('queue0', 'queue1', 'clerk', 'clerk_arch'):      # background cards: gone when the head is bigger than 190 px (the card is on the lens; the origin's head-centre test missed these)
+        if nm in acts:
+            p0 = actors.local_to_screen(acts[nm], cam, (0.0, 0.0)); p1 = actors.local_to_screen(acts[nm], cam, (0.5, 0.0)); dpx = 2 * abs(p1[0] - p0[0])
+            if dpx > 190 or p0[2] < 0.3: L.clean_actor(nm); del acts[nm]
     return acts, kind, info
+
+def stage_frame_measure(g): return stage_frame(g)
 
 def cast17_anchor(g, kind, mirror, which):
     c, p = cast17.STORY17['p4_b_%d' % g]; an = L.puppet.figure(c, p, 'q')['anchors']; key = which + ('_l' if mirror else '_r'); return an[key]
