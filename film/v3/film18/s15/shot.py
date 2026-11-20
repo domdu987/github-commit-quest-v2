@@ -40,7 +40,7 @@ def gpose(g):
     if g >= G_CARVE - 4:
         saw = 0.5 + 0.5 * math.sin(2 * math.pi * 2.6 * (g - G_CARVE) / 30.0); lvl = min(3, int(saw * 4))
         p['arm_l'] = dict(hand=(-0.95 + 0.9 * lvl / 3.0, 0.30 + 0.10 * ((lvl % 2) * 2 - 1)), bend=0.3, stretch=1.15, shape='open', layer='front')     # knife-hand slicing across the chest
-        p['carve'] = lvl
+        p['carve'] = -1
     else: p['carve'] = -1
     p['mouth'] = 'flat'; p['mouth_k'] = 'lick' if G_LICK <= g <= G_LICK + 4 else cast18.talk_mouth(g, 1.0)
     p['blink'] = cast18.blink_at(g, 90, 41); p['t'] = g / 30.0
@@ -58,7 +58,7 @@ def make_driver(quality):
     for g in gs:
         p = gpose(g)
         if pkey(p) not in gv:
-            q = {k: v for k, v in p.items() if k not in ('mouth_k', 'carve')}; gv[pkey(p)] = knife(C.with_mouth(C.person_variant('general', q, 'g'), *BIG[p['mouth_k']]), p['carve'])
+            q = {k: v for k, v in p.items() if k not in ('mouth_k', 'carve')}; gv[pkey(p)] = C.with_mouth(C.person_variant('general', q, 'g'), *BIG[p['mouth_k']])      # knife-hand overlay removed (QA-art round 5)
     print('general variants', len(gv), flush=True)
     at_gen = C.Atlas('s15_gen', gv, ppd=190)
     def svars(base, cast):
