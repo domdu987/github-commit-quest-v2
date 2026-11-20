@@ -40,6 +40,7 @@ def kernel(L, ang):
     return k / k.sum()
 
 
+WHIP = {1370: 6, 1371: 14, 1372: 26, 1373: 40, 1374: 44, 1375: 40, 1376: 26, 1377: 12, 1378: 5}      # eased ramps, 3 smeared frames (director round 1)
 tab = {}
 for g in range(S.FIRST, S.LAST + 1):
     lo = g - 1 if g - 1 != S.G_M_END and g != S.G_M_END + 1 else g          # one-sided at the part junction
@@ -52,15 +53,16 @@ for g in range(S.FIRST, S.LAST + 1):
     d = (pos(hi) - pos(lo)) / max(hi - lo, 1)
     L = float(np.hypot(*d))
     tab[g] = (L, math.atan2(d[1], d[0]))
-    Lb = (min(0.3 * L, 100.0) * scale) if L >= 100 else 0.0
+    Lb = WHIP.get(g, 0.0) * scale
     src = os.path.join(raw, "g_%04d.png" % g)
     if not os.path.exists(src):
         continue
     im = cv2.imread(src)
-    if Lb >= 4:
-        if False:                      # long streaks: also a soft ghost of the unblurred frame is not wanted
-            pass
-        im = cv2.filter2D(im, -1, kernel(Lb, tab[g][1]), borderType=cv2.BORDER_REPLICATE)
+    if Lb >= 3:
+        im = cv2.filter2D(im, -1, kernel(Lb, 0.0 if g <= S.G_M_END else math.pi), borderType=cv2.BORDER_REPLICATE)
+    if g >= 1476:                                   # card shot: exposure -15..-18 % (director round 1)
+        k = 1.0 - 0.17 * min(1.0, (g - 1476) / 14.0)
+        im = np.clip(im.astype(np.float32) * k, 0, 255).astype(np.uint8)
     cv2.imwrite(os.path.join(out, "g_%04d.png" % g), im)
 big = [(g, round(v[0])) for g, v in tab.items() if v[0] > 40]
 print("blurred frames (g, px/frame):", big)

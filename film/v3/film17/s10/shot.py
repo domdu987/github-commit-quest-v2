@@ -81,8 +81,8 @@ def cam_M(g):
 
 
 # part R: reveal room.  wall y 0, camera side y > 0.  drawer front centre (0.15, 0, 1.2), pulls out toward +y (travel 0.78).
-R_DB0 = ((0.05, 3.0, 1.9), (-0.30, 0.5, 1.2))          # drawer_big start (landing of the whip)
-R_DB1 = ((-0.02, 2.40, 1.8), (-0.28, 0.5, 1.2))           # drawer_big end
+R_DB0 = ((-0.15, 3.0, 1.9), (-0.50, 0.5, 1.2))          # drawer_big start (landing of the whip)
+R_DB1 = ((-0.22, 2.40, 1.8), (-0.48, 0.5, 1.2))           # drawer_big end
 R_BX0 = ((0.09, 0.99, 1.68), (-0.03, 0.58, 1.2))          # the drawer_box preset
 R_BX1 = ((0.20, 1.12, 1.60), (0.0, 0.56, 1.2))            # push + slide inside shot 25
 R_CH0 = ((0.30, 1.55, 1.78), (0.0, 0.70, 1.38))           # card_hero preset
@@ -244,8 +244,8 @@ class Take(object):
             head_w = Vector((dpos[0], dpos[1], K.HEAD_Z["chair"] + 0.03))
             # jaw tip target: the calipers pin on the side of dupont's head (screen-left of Bertillon's hand)
             bp_cast, bp = pose_with("bertillon_measuring", g, mirror=False, sway=0.5)
-            bp["prop_r"] = dict(bp["prop_r"], angle=-10 + 6 * math.sin(g * 0.3))
-            ba.pose(f, bp, hands={"r": {"tip": (head_w.x - 0.14 - 0.45 * (1 - u0), head_w.y - 0.05, head_w.z - 0.02 - 0.40 * (1 - u0) + 0.015 * math.sin(g * 0.9)), "prop": "calipers", "angle": -4}}, camera=self.cam)
+            bp["prop_r"] = dict(bp["prop_r"], angle=-10 + 6 * math.sin(g * 0.3)); bp["gaze"] = (0.95, 0.35); bp["pitch"] = 0.25
+            ba.pose(f, bp, hands={"r": {"tip": (head_w.x - 0.10 - 0.45 * (1 - u0), head_w.y - 0.05, head_w.z + 0.09 - 0.40 * (1 - u0) + 0.012 * math.sin(g * 0.9)), "prop": "calipers", "angle": -4}}, camera=self.cam)
         for a, ppd in ((da, 320), (ba, 320)):
             for f, r in zip([g - FIRST + 1 for g in gs], a.render_sprites(ppd, frames=[g - FIRST + 1 for g in gs])):
                 self.anch[(a.name, f)] = r["anchors"]
@@ -256,12 +256,12 @@ class Take(object):
         for g in gs:
             f = g - FIRST + 1
             t = drawer_t(g)
-            ba.place(f, (-0.30, 1.12 + 0.36 * t, 0.0) if g < 1411 else (60.0, 60.0, -60.0), scale=bsc)   # leaves during the snap peak (no floating hand in shots 25-26)
+            ba.place(f, (-0.47, 1.12 + 0.36 * t, 0.0) if g < 1411 else (60.0, 60.0, -60.0), scale=bsc)   # leaves during the snap peak (no floating hand in shots 25-26)
         for g in gs:
             f = g - FIRST + 1
             self.scene.frame_set(f)
             t = drawer_t(g)
-            _, bp = pose_with("bertillon_neutral", g, mirror=True, sway=0.7, expr="determined" if g < 1395 else "proud")
+            _, bp = pose_with("bertillon_neutral", g, mirror=True, sway=0.7, expr="determined" if g < 1395 else "proud"); bp["lean"] = bp.get("lean", 0) - 9 * min(1.0, t * 1.5)
             hand = (0.14, t * 0.78 + 0.03, 1.10)
             ba.pose(f, bp, hands={"r": {"hand": hand}}, camera=self.cam)
         for a, ppd in ((ba, 256),):
