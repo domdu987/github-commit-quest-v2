@@ -2,31 +2,43 @@
  "take": "s03",
  "film": 20,
  "shots": [
-  3
+  3,
+  4,
+  5
  ],
  "g0": 178,
- "g1": 265,
- "first_g": 169,
- "n_frames": 100,
+ "g1": 404,
+ "first_g": 170,
+ "n_frames": 242,
  "shot_ranges": {
   "3": [
    178,
-   264
-  ]
+   317
+  ],
+  "5": [
+   318,
+   403
+  ],
+  "note": "T03: one continuous take, no cut inside"
  },
- "handle_in": 9,
- "handle_out": 4,
+ "handle_in": 8,
+ "handle_out": 8,
  "transition_in": {
   "type": "dissolve",
   "frames": 13
  },
  "transition_out": {
-  "type": "cut",
-  "frames": 0,
-  "at": 265,
-  "note": "next shot is a hard cut; 4 handle frames rendered in 3D"
+  "type": "dissolve",
+  "frames": 13,
+  "at": 404,
+  "note": "dissolve out (T06); 8 handle frames rendered in 3D"
  },
- "note": "SITE site_wide DAY stage 0: crane-down + orbit + slide, snap push on 'ปี 1887' (g 213-228); six riveter cards working",
+ "note": "T03: ONE continuous take = shots 3+4+5. BIGZOOM 1 from an extreme wide high over Paris 1887 down to a medium of Eiffel at the plan table (lands g 268, he points up), then the camera travels through the yard and CRANES up the scaffolded front-left leg past working riveters to the sky; snap tilt on 'สูงที่สุดในโลก' (g 344-359)",
+ "grade": {
+  "saturation_x": 0.957,
+  "brightness_x": 0.916,
+  "note": "post grade for QA_TEAM section G"
+ },
  "dof": "none",
  "text": "none",
  "light": "DAY",
@@ -37,20 +49,20 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 14.67,
- "s_per_frame_cpu_mean": 28.46,
+ "s_per_frame_wall_mean": 14.34,
+ "s_per_frame_cpu_mean": 27.79,
  "head_px": [
-  22,
-  80
+  5,
+  27586
  ],
  "head_centre_y": [
-  584,
-  1002
+  -322313,
+  53842
  ],
- "head_bottom_max_y": 1042,
+ "head_bottom_max_y": 57108,
  "framediff_in_shot": {
-  "median": 3.09,
-  "p90": 7.86
+  "median": 7.6,
+  "p90": 12.69
  },
  "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
 }

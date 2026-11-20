@@ -9,13 +9,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 PROJ = os.path.normpath(os.path.join(HERE, "..", "..", ".."))
 # ---- CONFIG (per take)
 TAKE, SHOT = "s03", 3
-G0, G1 = 178, 265                  # shot = g 178..264
-H_IN, H_OUT = 9, 4
+G0, G1 = 178, 404
+H_IN, H_OUT = 8, 8
 TRANS_IN = {"type": "dissolve", "frames": 13}
-NOTE = "SITE site_wide DAY stage 0: crane-down + orbit + slide, snap push on 'ปี 1887' (g 213-228); six riveter cards working"
-CUES = [(0, "ambience", "building site 1887: hammering on iron, forge bellows, distant carts, wind", {}),
-        (213, "accent", "snap push on 'ปี 1887': airy whoosh", dict(peak_frame=219)),
-        (0, "foley", "anvil / rivet hammer clinks, a few, irregular", {})]
+NOTE = "T03: ONE continuous take = shots 3+4+5. BIGZOOM 1 from an extreme wide high over Paris 1887 down to a medium of Eiffel at the plan table (lands g 268, he points up), then the camera travels through the yard and CRANES up the scaffolded front-left leg past working riveters to the sky; snap tilt on 'สูงที่สุดในโลก' (g 344-359)"
+CUES = [(178, 'ambience', 'building site 1887 from high above: wind, distant hammering, carts, forge bellows', {}), (190, 'accent', 'long airy descending whoosh as the camera swoops in (g 178-268)', {'peak_frame': 225}), (266, 'foley', "cloth rustle as Eiffel's arm goes up", {'peak_frame': 270}), (268, 'accent', "small bright sting on 'วิศวกรไอเฟล'", {'peak_frame': 270}), (284, 'accent', 'whoosh: the camera leaves Eiffel and sweeps across the yard (g 282-340)', {'peak_frame': 310}), (321, 'foley', 'forge roar and hammer clangs as the camera passes the forge', {'peak_frame': 318}), (344, 'accent', "snap tilt-up whoosh on 'สูงที่สุดในโลก'", {'peak_frame': 350}), (360, 'foley', 'rivet hammers ringing from the platforms high on the leg', {})]
 # ----
 GF, GL = G0 - H_IN, G1 + H_OUT - 1
 N = GL - GF + 1
@@ -60,21 +58,49 @@ if len(sys.argv) > 1 and sys.argv[1] == "draft":
     print("draft frame-diff median %.2f p90 %.2f" % (nb["median"], nb["p90"]))
     sys.exit(0)
 
+def stats(ims):
+    sat, lum = [], []
+    for im in ims:
+        a = np.asarray(im.convert("RGB").resize((90, 160), Image.BILINEAR), dtype=np.float32)
+        mx, mn = a.max(-1), a.min(-1)
+        sat.append(((mx - mn) / (mx + 1e-3)).mean())
+        lum.append(a.mean())
+    return float(np.mean(sat)), float(np.mean(lum))
+
+
+def calibrate(files, tsat=0.50, tlum=97.0):
+    """post grade (PIL Color + Brightness, one pair of factors per take) so the take meets QA_TEAM section G: saturation >= 0.47, luma 85-110"""
+    from PIL import ImageEnhance
+    ims = [Image.open(files[i]).convert("RGB") for i in range(0, len(files), max(1, len(files) // 12))]
+    ks, kb = 1.0, 1.0
+    for _ in range(6):
+        g = [ImageEnhance.Brightness(ImageEnhance.Color(im).enhance(ks)).enhance(kb) for im in ims]
+        s, l = stats(g)
+        ks *= tsat / s if s > 0 else 1.0
+        kb *= tlum / l if l > 0 else 1.0
+        ks, kb = min(ks, 2.2), min(max(kb, 0.6), 1.6)
+    return ks, kb
+
+
 RAW, OUT = os.path.join(HERE, "raw"), os.path.join(HERE, "frames")
 os.makedirs(OUT, exist_ok=True)
 rows = []
+from PIL import ImageEnhance
+KS, KB = calibrate([os.path.join(RAW, "g_%04d.png" % g) for g in range(GF, GL + 1)])
+print("grade: saturation x%.2f, brightness x%.2f" % (KS, KB))
 for g in range(GF, GL + 1):
-    shutil.copyfile(os.path.join(RAW, "g_%04d.png" % g), os.path.join(OUT, "g_%04d.png" % g))
+    im = Image.open(os.path.join(RAW, "g_%04d.png" % g)).convert("RGB")
+    ImageEnhance.Brightness(ImageEnhance.Color(im).enhance(KS)).enhance(KB).save(os.path.join(OUT, "g_%04d.png" % g))
     rows.append(json.load(open(os.path.join(RAW, "g_%04d.json" % g))))
 pngs = [os.path.join(OUT, "g_%04d.png" % g) for g in range(GF, GL + 1)]
 walls, cpus = [r["wall"] for r in rows], [r["cpu"] for r in rows]
 nb = numbers(framediff(pngs))
 json.dump(nb, open(os.path.join(HERE, "framediff.json"), "w"), indent=1)
 heads = [h for r in rows[H_IN:H_IN + G1 - G0] for h in r["heads"].values()]
-meta = {"take": TAKE, "film": 20, "shots": [SHOT], "g0": G0, "g1": G1, "first_g": GF, "n_frames": N, "shot_ranges": {str(SHOT): [G0, G1 - 1]},
+meta = {"take": TAKE, "film": 20, "shots": [3, 4, 5], "g0": G0, "g1": G1, "first_g": GF, "n_frames": N, "shot_ranges": {"3": [178, 317], "5": [318, 403], "note": "T03: one continuous take, no cut inside"},
         "handle_in": H_IN, "handle_out": H_OUT, "transition_in": TRANS_IN,
-        "transition_out": {"type": "cut", "frames": 0, "at": G1, "note": "next shot is a hard cut; 4 handle frames rendered in 3D"},
-        "note": NOTE, "dof": "none", "text": "none", "light": "DAY", "samples": rows[0].get("samples"), "resolution": [720, 1280], "threads": 2, "fps": 30,
+        "transition_out": {"type": "dissolve", "frames": 13, "at": G1, "note": "dissolve out (T06); 8 handle frames rendered in 3D"},
+        "note": NOTE, "grade": {"saturation_x": round(KS, 3), "brightness_x": round(KB, 3), "note": "post grade for QA_TEAM section G"}, "dof": "none", "text": "none", "light": "DAY", "samples": rows[0].get("samples"), "resolution": [720, 1280], "threads": 2, "fps": 30,
         "s_per_frame_wall_mean": round(float(np.mean(walls)), 2), "s_per_frame_cpu_mean": round(float(np.mean(cpus)), 2),
         "head_px": [round(min(h["w"] for h in heads)), round(max(h["w"] for h in heads))],
         "head_centre_y": [round(min(h["y"] for h in heads)), round(max(h["y"] for h in heads))],
