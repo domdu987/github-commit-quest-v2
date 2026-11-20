@@ -1306,10 +1306,10 @@ def camp_fg(A, pr):
         sacks(B, (x - r - 1.0, y - 1.5, float(ground(x, y))), 3, rs); barrel(B, (x + r + 0.9, y - 2.0, float(ground(x, y))), rs=rs)
     for i, (d, xp) in enumerate([(14, 770), (17, 20), (19, 690), (24, 60), (26, 330), (33, 150), (38, 470), (46, 90), (52, 620), (58, 20), (64, 400), (70, 690), (80, 520), (90, 200), (100, 600)]):
         x, y = at(d, xp); bell_tent(B, (x, y, float(ground(x, y))), 1.7 + 0.5 * rs.rand(), 2.7, ['t_cream', 't_white', 't_cream', 't_brown'][i % 4], rs) if i % 3 else ridge_tent(B, (x, y, float(ground(x, y))), 3.6, 3.0, 2.0, ['t_cream', 't_white', 't_brown'][i % 3], yaw=rs.uniform(-30, 30))
-    x, y = at(9.5, 45); campfire(B, Bs, (x, y, float(ground(x, y))), rs, puffs=False); smoke_column(Bs, x, y, float(ground(x, y)), rs, h=12.0)
+    x, y = at(9.5, 45); campfire(B, Bs, (x, y, float(ground(x, y))), rs, puffs=False)
     x, y = at(17.0, 120); cart(B, (x, y, float(ground(x, y))), 35, rs, cover=True)
     x, y = at(11.0, 40); weapon_rack(B, (x, y, float(ground(x, y))), 70, rs)
-    x, y = at(10.5, 690); campfire(B, Bs, (x, y, float(ground(x, y))), rs, puffs=False); smoke_column(Bs, x, y, float(ground(x, y)), rs, h=16.0)
+    x, y = at(10.5, 690); campfire(B, Bs, (x, y, float(ground(x, y))), rs, puffs=False)
     for i in range(6):                                          # horse line
         x, y = at(19 + 2.0 * i, 700 + 8 * i); horse(B, (x, y, float(ground(x, y))), 95 + rs.uniform(-15, 15), coat=['horse', 'horse_dk', 'horse'][i % 3], trap=(None, 't_red', None, 't_blue', 't_cream', None)[i], trim='t_gold', tint=0.8 + 0.4 * rs.rand(), bob=rs.uniform(0, 0.25))
         B.rod('wood', (x - 1.3, y + 0.3, float(ground(x, y))), (x - 1.3, y + 0.3, float(ground(x, y)) + 1.5), 0.05, seg=5)
@@ -1330,13 +1330,13 @@ def crowd_hill(A, pr):
         items.append((x, y, z, ['scot', 'scot_b', 'scot_o', 'scot_m'][i % 4], 1.0)); spear(Bsp, (x + 0.35, y, z), tilt=(rs.uniform(-0.3, 0.3), rs.uniform(-0.3, 0.3)), h=3.0)
     B.finalize('crowd_horses'); Bsp.finalize('crowd_spears'); stage_crowd(items)
 PRESETS['hill_over'] = dict(loc='hill', corridor=(70.0, 0.6, 0.2, 7.0), dress_min=26.0, cam=(160.0, 150.0, 0.0), cam_dz=2.7, cam_ref=(160.0, 150.0), look=(0.0, 2.0, -20.0), sd=8.0, lens=32.0, marks=mk_hill_over, hill2=True,
-    over=dict(glit_stretch=1.0, glit_s=1.0, foam_k=2.0, wake_k=2.0),
+    over=dict(glit_stretch=1.0, glit_s=1.0, foam_k=2.0, wake_k=2.0, sun_k=1.7),
     veg=dict(seed=5, half=24, no_chips=True, hill_grass=0.4, grass=[(2, 14, 2200, 0.1, 0.17), (14, 40, 2200, 0.2, 0.34)], flowers=500, sprig_to=60, heather=[(1.5, 8, 1400, 0.09, 0.16), (8, 17, 2200, 0.12, 0.22), (17, 40, 3000, 0.2, 0.34), (40, 100, 1200, 0.5, 0.9)], gorse=[(3, 14, 8), (14, 40, 26)], reeds=None),
     fg_spears=[(1.8, -0.55, (0.08, 0.1)), (1.6, 0.5, (-0.1, 0.1))], fg_gorse=[(2.4, -0.9, 0.55), (2.2, 0.8, 0.5)], fg_rocks=[(2.0, 0.0, 0.7)],
     dress_pines=[(20.0, -5.4, 12.0)], dress_crags=[(6, 2.8, 4, 1.2, 0.7)],
     dress_gorse=[(7, -2, 0.7), (6, 2, 0.6), (10, 2.5, 0.8), (11, -3.5, 0.9), (12, 4, 0.9), (13, -2, 0.7), (9, 3.5, 0.7), (15, -4.5, 1.0), (14, 3.5, 0.8), (20, 5, 1.1)], clear_hill=(160.0, 150.0, 6.0))
 PRESETS['camp_bank'] = dict(loc='camp', cam=(-122.0, -12.0, 0.0), cam_dz=2.0, look=(-24.6, 10.5, -19.0), corridor=(60.0, 3.0), sd=6.0, lens=20.0, marks=mk_camp_bank, hill2=True,
-    over=dict(glit_stretch=1.0, glit_s=0.9, foam_k=2.0, wake_k=2.0),
+    over=dict(glit_stretch=1.0, glit_s=0.9, foam_k=2.0, wake_k=2.0, sun_k=2.1),
     veg=dict(seed=6, half=26, tuft_k=1.3, tuft_gain=1.5, grass=[(1.5, 9, 900, 0.08, 0.13), (9, 40, 1500, 0.12, 0.2)], flowers=900, reeds=[(8, 60, 420)]),
     fg_banner=(7.0, 2.7), clear=[(-122.0, -12.0, 5.0)], fg_banner_yaw=30, fg_spears=[(1.7, -0.8), (2.0, 0.55)], fg_barrels=[(3.2, 1.9)], fg_rope=True, camp_fg=camp_fg)
 PRESETS['valley_loop'] = dict(loc='valley', cam=(-72.0, -133.0, 229.0), look=(12.0, 36.0, 0.0), sd=300.0, lens=21.0, marks=lambda A: {}, veg=None, farms=True, hill2=True, heather_n=900, gorse_n=200, crag_n=140, pine_n=60,
