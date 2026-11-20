@@ -1,0 +1,1 @@
+{"preset": "bridge_deck", "light": "MORNING", "build_s": 2.84, "render_s": 101.85, "mode": "final", "samples": 64, "heads": {"k1": {"cx": 190, "cy": 563, "chin": 628, "dist": 3.2}, "k2": {"cx": 520, "cy": 570, "chin": 628, "dist": 3.6}}, "objects": 169, "tris": 497985}

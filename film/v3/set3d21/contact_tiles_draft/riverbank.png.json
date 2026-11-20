@@ -1,0 +1,1 @@
+{"preset": "riverbank", "light": "MORNING", "build_s": 4.16, "render_s": 10.06, "mode": "draft", "samples": 20, "heads": {"e1": {"cx": 91, "cy": 679, "chin": 718, "dist": 5.0}, "e2": {"cx": 250, "cy": 669, "chin": 702, "dist": 6.0}, "e3": {"cx": 400, "cy": 661, "chin": 687, "dist": 7.5}, "e4": {"cx": 175, "cy": 642, "chin": 665, "dist": 9.0}}, "objects": 182, "tris": 578698}

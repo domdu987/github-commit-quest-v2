@@ -1,0 +1,1 @@
+{"preset": "bridge_end_south", "light": "MORNING", "build_s": 2.66, "render_s": 71.37, "mode": "final", "samples": 64, "heads": {"k1": {"cx": 205, "cy": 575, "chin": 617, "dist": 5.0}, "k2": {"cx": 505, "cy": 579, "chin": 617, "dist": 5.6}}, "objects": 153, "tris": 495547}

@@ -18,7 +18,7 @@ D = 1.7
 HEIGHT = {'scot': 1.70, 'wallace': 1.92, 'moray': 1.80, 'cressingham': 1.78, 'surrey': 1.66, 'knight': 1.78, 'foot': 1.68, 'archer': 1.66, 'squire': 1.55}
 STATE = {'P': None, 'ink_t': 0.012, 'anim': {}, 'loc': None, 'preset': None, 'cam': (0, 0, 0)}
 CACHE = os.path.join(HERE, 'cache'); os.makedirs(CACHE, exist_ok=True)
-TERRAIN_V = 27
+TERRAIN_V = 28
 
 def hex_lin(h):
     h = h.lstrip('#'); c = [int(h[i:i + 2], 16) / 255.0 for i in (0, 2, 4)]
@@ -342,7 +342,7 @@ def spline(pts, widths, step=1.5):
     out.append(pts[-1][None]); ws.append(np.array([widths[-1]])); return np.vstack(out), np.concatenate(ws)
 BRIDGE_X = 0.0; BRIDGE_Y0, BRIDGE_Y1 = -34.0, 38.0; DECK_Z = 1.75
 LOOP_C = (0.0, 120.0); LOOP_R = 95.0; HALF_W_MAIN = 19.0; HALF_W_LOOP = 15.0; WATER_EDGE = 1.2
-HILL_C = (200.0, 190.0); HILL_A = 72.0; CAMP_C = (0.0, -58.0); CASTLE_C = (-330.0, -480.0); SHELF = (131.0, 131.0, 15.0); PAD = (158.0, 148.0, 4.5, 44.0)         # the Scots' ledge under the hill_over lens
+HILL_C = (200.0, 190.0); HILL_A = 72.0; CAMP_C = (0.0, -58.0); CASTLE_C = (-330.0, -480.0); SHELF = (131.0, 131.0, 15.0); PAD = (158.0, 148.0, 4.5, 44.0); PAD2 = (137.0, 137.0, 13.0, 19.0)         # the Scots' ledge under the hill_over lens
 _RIVER = {}
 def river():
     if _RIVER: return _RIVER
@@ -382,7 +382,8 @@ def hill_h(X, Y):
     h = h * (1 - cm) + st * cm
     dx, dy = X - SHELF[0], Y - SHELF[1]; al = (dx - dy) / 1.4142; ac = (dx + dy) / 1.4142; sh = np.exp(-(((al / 30.0) ** 2 + (ac / 13.0) ** 2)) ** 1.6)
     h = h * (1 - sh) + SHELF[2] * sh
-    pd = smooth(PAD[2] + 9.0, PAD[2], np.hypot(X - PAD[0], Y - PAD[1])); return h * (1 - pd) + PAD[3] * pd, cm
+    pd = smooth(PAD[2] + 9.0, PAD[2], np.hypot(X - PAD[0], Y - PAD[1])); h = h * (1 - pd) + PAD[3] * pd
+    p2 = smooth(PAD2[2] + 8.0, PAD2[2], np.hypot(X - PAD2[0], Y - PAD2[1])); return h * (1 - p2) + PAD2[3] * p2, cm
 def castle_h(X, Y):
     """Stirling's castle rock: a steep crag with a flat top, sheer on the west and north faces."""
     h, r2, u, v = _hill_raw(X, Y, CASTLE_C, 52.0, 52.0, 31.0, 20.0, 0.38)
@@ -473,11 +474,11 @@ def far_fields(X, Y):
     east = smooth(600, 1500, X) * (150 + 90 * n); west = smooth(-800, -1600, X) * (160 + 110 * n)
     return (north + south + east + west) * (0.8 + 0.4 * n2) * smooth(420, 900, r) + 10 * (n2 - 0.5) * smooth(400, 700, r)
 def far_colour(X, Y, z):
-    n = fbm(X / 90.0, Y / 90.0, 61, 3); n2 = fbm(X / 300.0, Y / 300.0, 63, 3)
-    lo = hex_rgb('#6f9a52') + (hex_rgb('#a9a24e') - hex_rgb('#6f9a52')) * smooth(0.4, 0.7, n)[..., None]
-    hi = hex_rgb('#62806a') + (hex_rgb('#7a7468') - hex_rgb('#62806a')) * smooth(0.4, 0.7, n2)[..., None]
-    t = smooth(15, 120, z); col = lo + (hi - lo) * t[..., None]; return col + (hex_rgb('#7c8088') - col) * (smooth(190, 330, z) * 0.6)[..., None]
-
+    """far hills: 3 calm tint bands by height (olive-gold foot, green-brown mid, grey-blue top), very little mottling."""
+    n = fbm(X / 260.0, Y / 260.0, 61, 2)
+    lo = hex_rgb('#8fa04c') + (hex_rgb('#b0a04e') - hex_rgb('#8fa04c')) * smooth(0.45, 0.6, n)[..., None]
+    mid = hex_rgb('#6f8a56'); hi = hex_rgb('#7f8896')
+    col = lo + (mid - lo) * smooth(20, 90, z)[..., None]; col = col + (hi - col) * smooth(120, 260, z)[..., None]; return col
 LEVELS = [('A', -240.0, 340.0, -200.0, 340.0, 1.6), ('M', -760.0, 760.0, -760.0, 760.0, 4.0), ('B', -2800.0, 2800.0, -2800.0, 2800.0, 16.0)]
 _TERR = {}
 def terrain_data(key='A'):
@@ -566,9 +567,9 @@ def _water_mat():
     # sun glitter: small bright cells where a rippled normal reflects the sun toward the camera
     sd_ = Vector(P['sun_dir']).normalized(); tsun = (-sd_.x, -sd_.y, -sd_.z)
     vr = N('ShaderNodeTexVoronoi'); vr.feature = 'F1'; vr.inputs['Scale'].default_value = 1.6; L(fa.outputs['Vector'], vr.inputs['Vector'])
-    tcw = N('ShaderNodeTexCoord'); vr2 = N('ShaderNodeTexVoronoi'); vr2.inputs['Scale'].default_value = P.get('glit_s', 2.1); vr2.feature = 'F1'; L(tcw.outputs['Object'], vr2.inputs['Vector'])
+    tcw = N('ShaderNodeTexCoord'); vr2 = N('ShaderNodeTexVoronoi'); vr2.name = 'glit_vor'; vr2.voronoi_dimensions = '4D'; vr2.inputs['Scale'].default_value = P.get('glit_s', 2.1); vr2.feature = 'F1'; L(tcw.outputs['Object'], vr2.inputs['Vector'])
     gl = N('ShaderNodeMath'); gl.operation = 'LESS_THAN'; gl.inputs[1].default_value = P.get('glit_t', 0.1); L(vr2.outputs['Distance'], gl.inputs[0])
-    rnd = N('ShaderNodeTexNoise'); rnd.inputs['Scale'].default_value = 0.8; L(tcw.outputs['Object'], rnd.inputs['Vector'])
+    rnd = N('ShaderNodeTexNoise'); rnd.name = 'glit_noise'; rnd.noise_dimensions = '4D'; rnd.inputs['Scale'].default_value = 0.8; L(tcw.outputs['Object'], rnd.inputs['Vector'])
     rg = N('ShaderNodeMath'); rg.operation = 'GREATER_THAN'; rg.inputs[1].default_value = 0.5; L(rnd.outputs['Fac'], rg.inputs[0])
     g2 = N('ShaderNodeMath'); g2.operation = 'MULTIPLY'; L(gl.outputs[0], g2.inputs[0]); L(rg.outputs[0], g2.inputs[1])
     # facing the sun glint path: view direction (incoming) dotted with sun direction (towards the sun), wide lobe
@@ -754,7 +755,7 @@ def gorse(B, c, s, rs):
             q = np.array([x + ox, y + oy, z + r * 0.45]) + p * np.array([r, r, r * 0.8]) * 1.0; B.blob('gorse_fl', q, 0.07 * s, tint=(0.85 + 0.3 * rs.rand(),) * 3)
 
 def reed_cluster(B, c, rs):
-    x, y, z = c; n = rs.randint(6, 11); h0 = rs.uniform(0.9, 1.9)
+    x, y, z = c; n = rs.randint(6, 11); h0 = rs.uniform(0.9, 1.9) * STATE['P'].get('reed_k', 1.0)
     for i in range(n):
         a = rs.rand() * 6.28; r = rs.rand() * 0.35; bx, by = x + r * math.cos(a), y + r * math.sin(a); h = h0 * rs.uniform(0.7, 1.15); lean = rs.uniform(0.05, 0.35) * h; la = rs.rand() * 6.28; w = 0.04
         B.tri('reed', (bx - w, by, z - 0.05), (bx + w, by, z - 0.05), (bx + lean * math.cos(la), by + lean * math.sin(la), z + h), tint=(0.8 + 0.4 * rs.rand(),) * 3)
@@ -794,8 +795,10 @@ def foam_ring(B, x, y, r0, r1, rs, wake=0.0, z=0.03):
     seg = 18; th = np.linspace(0, 2 * math.pi, seg, endpoint=False); ro = r1 * (0.85 + 0.35 * rs.rand(seg)); V = [(x, y, z)]
     V += [(x + r0 * math.cos(t), y + r0 * math.sin(t), z) for t in th]; V += [(x + o * math.cos(t), y + o * math.sin(t), z) for t, o in zip(th, ro)]
     F = [(1 + i, 1 + (i + 1) % seg, 1 + seg + (i + 1) % seg, 1 + seg + i) for i in range(seg)]; B.mesh('foam', V, F, False)
-    if wake > 0:
-        L = wake * STATE['P'].get('wake_k', 1.0); w0 = r0 * 0.9; B.mesh('foam', [(x, y - w0, z), (x, y + w0, z), (x + L * 0.5, y + w0 * 2.2, z), (x + L, y + w0 * 1.2, z), (x + L, y - w0 * 1.2, z), (x + L * 0.5, y - w0 * 2.2, z)], [(0, 1, 2, 5), (5, 2, 3, 4)], False, tint=(0.95, 0.95, 0.95))
+    if wake > 0:                                                  # one short V foam trail per pier: two tapering arms diverging downstream
+        L = wake * STATE['P'].get('wake_k', 1.0)
+        for sg in (-1, 1):
+            B.mesh('foam', [(x + 0.1, y + sg * r0 * 0.6, z), (x + 0.1, y + sg * r0 * 1.5, z), (x + L, y + sg * (r0 * 1.2 + L * 0.34), z), (x + L * 0.55, y + sg * (r0 * 0.7 + L * 0.17), z)], [(0, 1, 2, 3)], False, tint=(0.95, 0.95, 0.95))
 def build_bridge(A, pr):
     B = Batch(21); Bf = Batch(22); rs = np.random.RandomState(7); x0 = BRIDGE_X; y0, y1 = BRIDGE_Y0, BRIDGE_Y1; W = 2.6; dz = DECK_Z
     y = y0; 
@@ -866,6 +869,9 @@ def pavilion(B, c, r, mats, yaw=0.0, hw=1.9, hr=2.6, seg=12, banner_pole=True, r
         rr2 = r * 1.18; B.mesh(m, [p(a0, hw, r), p(a1, hw, r), (x + rr2 * math.cos(a1), y + rr2 * math.sin(a1), z + hw - 0.0), (x + rr2 * math.cos(a0), y + rr2 * math.sin(a0), z + hw)], [(0, 1, 2, 3)], False)
         B.mesh(m, [(x + rr2 * math.cos(a0), y + rr2 * math.sin(a0), z + hw), (x + rr2 * math.cos(a1), y + rr2 * math.sin(a1), z + hw), (x, y, z + hw + hr)], [(0, 1, 2)], False)
         am = (a0 + a1) / 2; B.mesh(mats[(i + 1) % 2], [(x + rr2 * math.cos(a0), y + rr2 * math.sin(a0), z + hw - 0.02), (x + rr2 * math.cos(a1), y + rr2 * math.sin(a1), z + hw - 0.02), (x + (rr2 * 1.0) * math.cos(am), y + rr2 * math.sin(am), z + hw - 0.42)], [(0, 1, 2)], False)
+    for i in range(seg):                                          # dark inner valance ring under the roof edge (reads as a tent from above)
+        a0, a1 = th[i], th[i + 1]; rr2 = r * 1.18
+        B.mesh('t_dark', [(x + rr2 * math.cos(a0), y + rr2 * math.sin(a0), z + hw - 0.03), (x + rr2 * math.cos(a1), y + rr2 * math.sin(a1), z + hw - 0.03), (x + r * 0.96 * math.cos(a1), y + r * 0.96 * math.sin(a1), z + hw - 0.5), (x + r * 0.96 * math.cos(a0), y + r * 0.96 * math.sin(a0), z + hw - 0.5)], [(0, 1, 2, 3)], False)
     da = math.radians(yaw) + 0.5 * 2 * math.pi / seg; B.quad('t_dark', (x + r * 1.01 * math.cos(da - 0.18), y + r * 1.01 * math.sin(da - 0.18), z), (x + r * 1.01 * math.cos(da + 0.18), y + r * 1.01 * math.sin(da + 0.18), z),
                                                        (x + r * 1.01 * math.cos(da + 0.12), y + r * 1.01 * math.sin(da + 0.12), z + 1.5), (x + r * 1.01 * math.cos(da - 0.12), y + r * 1.01 * math.sin(da - 0.12), z + 1.5))
     B.rod('wood', (x, y, z + hw + hr), (x, y, z + hw + hr + 1.6), 0.05, seg=5); B.sphere('gold', (x, y, z + hw + hr + 1.65), 0.16, seg=8, rings=5)
@@ -878,7 +884,14 @@ def ridge_tent(B, c, w, d, h, mat, yaw=0.0, mat2=None):
         for sy in (-1, 1): B.rod('wood', (0, sy * d / 2, 0), (0, sy * d / 2, h + 0.25), 0.04, seg=4)
         B.rod('wood', (-w / 2, 0, h + 0.2), (w / 2, 0, h + 0.2), 0.035, seg=4) if False else None
         B.quad('t_dark', (-0.01 - w * 0.12, -d / 2 - 0.01, 0), (w * 0.12, -d / 2 - 0.01, 0), (w * 0.08, -d / 2 - 0.01, h * 0.62), (-w * 0.08, -d / 2 - 0.01, h * 0.62))
+def flag_live(base, h, yaw, field, charge, shape, rs, size):
+    """a banner whose cloth can flutter per frame: built in local space (origin = the pole top) and given a Wave modifier; set_flutter(t) keys the phase."""
+    Bl = Batch(rs.randint(0, 999)); Bl._local = True; x, y, z = base; banner(Bl, (0, 0, -h), h, 0.0, field, charge, shape, rs, size, wave=0.0)
+    for ob in Bl.finalize('flag', loc=(x, y, z + h), ink=False, shadow=False):
+        ob.rotation_euler = (0, 0, math.radians(yaw)); md = ob.modifiers.new('flutter', 'WAVE'); md.use_normal = True; md.use_x = True; md.use_y = False; md.height = 0.16 * size[1] / 1.3; md.width = 1.1; md.narrowness = 1.6; md.speed = 0.25
+        md.start_position_x = -0.5; md.falloff_radius = 0.0; md.time_offset = 0.0; STATE['anim'].setdefault('flags', []).append((ob.name, md.name, rs.uniform(0, 6.28), md.height))
 def banner(B, base, h, yaw, field, charge, shape, rs, size=(1.9, 1.3), wave=0.12):
+    if not getattr(B, '_local', False) and STATE['P'].get('live_banners', True): return flag_live(base, h, yaw, field, charge, shape, rs, size)
     """a banner on a pole: swallow-tailed cloth with a simple charge (chevron, bend stripes, cross, bars); no text. Rippled mesh so it reads as blown."""
     x, y, z = base; B.rod('wood', (x, y, z - 0.1), (x, y, z + h), 0.055, seg=6); B.sphere('gold', (x, y, z + h + 0.08), 0.1, seg=6, rings=4)
     ca, sa = math.cos(math.radians(yaw)), math.sin(math.radians(yaw)); fw, fh = size; zt = z + h - 0.15; nx = 8
@@ -940,7 +953,8 @@ def campfire(B, Bs, c, rs, puffs=True):
     for k in range(3): B.cone('flame', (x + rs.uniform(-0.12, 0.12), y + rs.uniform(-0.12, 0.12), z + 0.2), 0.2 - 0.04 * k, 0.75 + 0.3 * rs.rand() - 0.1 * k, seg=6)
     for sy in range(3): a = sy * 2.1; B.rod('wood', (x + 1.0 * math.cos(a), y + 1.0 * math.sin(a), z), (x + 0.05 * math.cos(a), y + 0.05 * math.sin(a), z + 2.0), 0.04, seg=5)
     B.rod('iron', (x, y, z + 1.9), (x, y, z + 1.0), 0.012, seg=4); B.sphere('iron', (x, y, z + 0.85), 0.26, seg=10, rings=6, scale=(1, 1, 0.85)); B.cyl('iron', (x, y, z + 1.05), 0.2, 0.05, seg=10)
-    for i in range(7 if puffs else 0):                           # smoke: soft puffs rising and leaning north-east
+    if puffs: smoke_column(Bs, x, y, z, rs, h=7.0, r0=0.2, n=7)
+    for i in range(0):
         t = i / 6.0; Bs.sphere('smoke', (x + 0.4 + 2.2 * t * t + rs.uniform(-0.2, 0.2), y + 0.3 + 1.6 * t * t, z + 2.6 + 5.8 * t), 0.22 + 0.4 * t, seg=9, rings=5, tint=(1.0 - 0.1 * t,) * 3)
 def table_set(A, B, c, yaw, rs):
     """Cressingham's money table under a striped canopy: red-clothed trestle table, iron-banded coin chest (lid on its own hinge object), balance scales (beam on its
@@ -1068,12 +1082,14 @@ def build_camp(A, pr):
     for (x, y, yaw) in [(-44.0, -36.0, 30), (-34.0, -33.0, -20), (-47.0, -54.0, 0)]:
         if free(x, y, 4): ridge_tent(B, (x, y, float(ground(x, y))), 3.6, 3.0, 2.0, ['t_cream', 't_white', 't_brown'][int(abs(x)) % 3], yaw=yaw)
     if free(-28.0, -52.0, 3): campfire(B, Bs, (-28.0, -52.0, float(ground(-28.0, -52.0))), rs)
-    for i in range(230):                                        # ridge and bell tents, rows 2-8
-        x = rs.uniform(-130, 130); off = rs.uniform(14, 150); y = float(bank_y(x)) - off
-        if abs(x) < 9 or abs(x - 25) < 6 and off < 20 or float(sd_at(x, y)) < 5 or not free(x, y, 3): continue
-        z = float(ground(x, y)); m = ['t_cream', 't_white', 't_brown', 't_cream', 't_green', 't_red', 't_blue'][rs.randint(0, 7)]
-        if rs.rand() < 0.4: bell_tent(B, (x, y, z), 1.8 + 0.5 * rs.rand(), 2.8, m, rs)
-        else: ridge_tent(B, (x, y, z), 3.4 + rs.rand(), 2.8 + rs.rand() * 0.6, 1.9 + rs.rand() * 0.3, m, yaw=rs.uniform(-30, 30) + (0 if rs.rand() < 0.5 else 90))
+    cl = [(-100, 30), (-62, 62), (-20, 46), (28, 40), (66, 70), (104, 36), (-84, 98), (60, 112)]           # tent clusters with lanes between them
+    for ci, (cx_, off_) in enumerate(cl):
+        for i in range(rs.randint(14, 22)):
+            x = cx_ + rs.uniform(-13, 13); off = off_ + rs.uniform(-9, 9); y = float(bank_y(x)) - off
+            if abs(x) < 9 or float(sd_at(x, y)) < 5 or not free(x, y, 3): continue
+            z = float(ground(x, y)); m = ['t_cream', 't_brown', 't_cream', 't_gold', 't_red', 't_white', 't_green'][rs.randint(0, 7)]; sz = rs.uniform(0.8, 1.35)
+            if rs.rand() < 0.35: bell_tent(B, (x, y, z), 1.8 * sz, 2.8 * sz, m, rs)
+            else: ridge_tent(B, (x, y, z), 3.6 * sz, 2.9 * sz, 2.0 * sz, m, yaw=rs.choice([0, 90, 20, -25, 70]) + rs.uniform(-8, 8))
     for i, (x, off) in enumerate([(-130, 24), (-110, 6), (116, 12), (130, 34), (-60, 52), (50, 58), (4, 62), (-34, 60)]):          # more banners on the skirts
         y = float(bank_y(x)) - off; banner(Bh, (x, y, float(ground(x, y))), 7.0, rs.uniform(-20, 60), *[('t_red', 't_gold', 'chevron'), ('t_blue', 't_gold', 'bars'), ('t_cream', 't_red', 'cross'), ('t_gold', 't_red', 'lion')][i % 4], rs)
     for (x, off, yaw) in [(-34, 26, 20), (44, 24, -10), (84, 28, 80), (-76, 28, 5), (10, 40, 30)]:
@@ -1108,9 +1124,24 @@ def bell_tent(B, c, r, h, mat, rs, seg=9):
         B.mesh(m, [(x + r * math.cos(a), y + r * math.sin(a), z), (x + r * math.cos(b), y + r * math.sin(b), z), (x + r * 0.55 * math.cos(b), y + r * 0.55 * math.sin(b), z + h * 0.62), (x + r * 0.55 * math.cos(a), y + r * 0.55 * math.sin(a), z + h * 0.62)], [(0, 1, 2, 3)], False)
         B.mesh(m, [(x + r * 0.55 * math.cos(a), y + r * 0.55 * math.sin(a), z + h * 0.62), (x + r * 0.55 * math.cos(b), y + r * 0.55 * math.sin(b), z + h * 0.62), (x, y, z + h)], [(0, 1, 2)], False)
     B.rod('wood', (x, y, z + h), (x, y, z + h + 0.5), 0.04, seg=4)
-def smoke_column(Bs, x, y, z, rs, h=26.0, r0=0.25):
-    for i in range(10):
-        t = i / 9.0; Bs.sphere('smoke', (x + 0.5 + 5.0 * t * t + rs.uniform(-0.3, 0.3), y + 0.4 + 3.0 * t * t, z + 2.0 + h * t), r0 + 0.5 * t * (h / 14.0) ** 0.5, seg=9, rings=5, tint=(1.0 - 0.12 * t,) * 3)
+_SPH = [None]
+def _unit_sphere(seg=8, rings=5):
+    if _SPH[0] is None:
+        t = Batch(); t.sphere('x', (0, 0, 0), 1.0, seg=seg, rings=rings); d = t.d['x']; _SPH[0] = (np.concatenate(d['v']), d['f'])
+    return _SPH[0]
+def smoke_column(Bs, x, y, z, rs, h=26.0, r0=0.25, n=10):
+    """a smoke column of n puffs as one object; set_smoke(t) makes the puffs rise, grow and fade out (radius to 0) in a loop."""
+    V0, F0 = _unit_sphere(); nv = len(V0); me = bpy.data.meshes.new('smoke_col'); allv = np.tile(V0, (n, 1)) * 0.3 + np.array([x, y, z])
+    allf = [tuple(i + k * nv for i in f) for k in range(n) for f in F0]; me.from_pydata(allv.tolist(), [], allf); me.update(); me.polygons.foreach_set('use_smooth', [True] * len(me.polygons))
+    ca = me.color_attributes.new('tint', 'FLOAT_COLOR', 'POINT'); ca.data.foreach_set('color', np.ones(len(allv) * 4, np.float32))
+    ob = bpy.data.objects.new('smoke_col', me); bpy.context.scene.collection.objects.link(ob); ob.data.materials.append(get_mat('smoke')); ob.visible_shadow = False
+    STATE['anim'].setdefault('smoke', []).append(dict(ob=ob.name, base=(x, y, z), h=h, r0=r0, n=n, seed=float(rs.uniform(0, 1)))); _smoke_pose(STATE['anim']['smoke'][-1], 0.0)
+def _smoke_pose(c, t, speed=0.12):
+    V0, F0 = _unit_sphere(); ob = bpy.data.objects[c['ob']]; x, y, z = c['base']; n = c['n']; out = np.empty((n * len(V0), 3))
+    for i in range(n):
+        ph = (t * speed + c['seed'] + i / n) % 1.0; rr = max((c['r0'] + 0.5 * ph * (c['h'] / 14.0) ** 0.5) * math.sin(math.pi * min(ph * 1.15, 1.0)) ** 0.6, 0.001)
+        cx, cy, cz = x + 0.5 + 5.0 * ph * ph, y + 0.4 + 3.0 * ph * ph, z + 2.0 + c['h'] * ph; out[i * len(V0):(i + 1) * len(V0)] = V0 * rr + np.array([cx, cy, cz])
+    ob.data.vertices.foreach_set('co', out.ravel()); ob.data.update()
 def farmstead(B, Bs, x, y, rs, yaw=None):
     """a small farm: cream walls with a thatch or red-tile roof, a barn, a haystack, a few trees and a smoke column."""
     yaw = rs.uniform(0, 90) if yaw is None else yaw; z = float(ground(x, y))
@@ -1238,6 +1269,27 @@ def fg_bank(A, pr):
     for (d, lat) in pr['fg_spears']: x, y = rel_xy(cam, look, d, lat); spear(B, (x, y, float(ground(x, y))), tilt=(0.05, 0.1), h=3.0)
     for (d, lat) in pr.get('fg_barrels', []): x, y = rel_xy(cam, look, d, lat); barrel(B, (x, y, float(ground(x, y))), rs=rs)
     B.finalize('fg_bank', shadow=False)
+def scots_slope_line(n, ranks, scale, rs, spear_h=3.4, a0=188.0, a1=258.0, hh0=9.0):
+    """the Scots' line on Abbey Craig's lower south-west slope: lit tan/ochre/moss tunics (scaled for the distance), dark caps, light-catching steel spear tips."""
+    B = Batch(82); mats = ['thatch', 't_brown', 'hay', 't_green', 'cloth_red']; cnt = 0
+    for rank in range(ranks):
+        for k in range(n):
+            a = math.radians(a0 + (a1 - a0) * k / max(n - 1, 1) + rs.uniform(-1.5, 1.5))
+            for r_ in np.arange(30, 110, 1.0):
+                x = HILL_C[0] + r_ * math.cos(a) * 1.05; y = HILL_C[1] + r_ * 0.9 * math.sin(a)
+                if float(hill_h(np.array([x]), np.array([y]))[0][0]) < hh0 + 2.2 * rank: break
+            z = float(ground(x, y)); m = mats[(k + rank) % 5]
+            B.box(m, (x, y, z + 0.8 * scale), (0.75 * scale, 0.55 * scale, 1.5 * scale), tint=0.95 + 0.3 * rs.rand()); B.sphere('iron', (x, y, z + 1.68 * scale), 0.2 * scale, seg=6, rings=4)
+            spear(B, (x + 0.38 * scale, y, z), tilt=(rs.uniform(-0.25, 0.25), rs.uniform(-0.25, 0.25)), h=spear_h * scale); cnt += 1
+    B.finalize('scots_line', ink=False); return cnt
+def spear_wall(n, ranks, rs, y0=27.0, half=9.0):
+    """the cork: a wall of Scots across the north end of the bridge (the neck), spears level."""
+    B = Batch(83); cnt = 0
+    for rank in range(ranks):
+        for k in range(n):
+            x = -half + 2 * half * k / max(n - 1, 1); y = y0 + 1.1 * rank; z = float(ground(x, y)); B.box('thatch' if k % 2 else 't_brown', (x, y, z + 0.85), (0.8, 0.6, 1.6)); B.sphere('iron', (x, y, z + 1.78), 0.21, seg=6, rings=4)
+            spear(B, (x, y - 0.4, z), tilt=(0.0, -0.9), h=2.4); cnt += 1
+    B.finalize('spear_wall', ink=False); return cnt
 def crowd_loop(A, pr):
     """~120 tiny placeholder troops for valley_loop: English inside the loop meadow and the neck, a two-by-two column of mounted knights on the bridge, a queue and
     groups on the south bank; Scots along the hill's lower slope."""
@@ -1267,16 +1319,7 @@ def crowd_loop(A, pr):
     for i in range(26):
         t = i / 25.0; a = math.radians(205 + 52 * t - 26); r = 66 + 5 * math.sin(i * 1.7); x = HILL_C[0] + r * 1.0 * math.cos(a) * 1.05; y = HILL_C[1] + r * 0.9 * math.sin(a)
         items.append((x, y, float(ground(x, y)), ['scot', 'scot_b', 'scot_o', 'scot_m'][i % 4], 1.0))
-    Bsc = Batch(82); n_sc = 0
-    for rank in range(3):                                        # the Scots' line on Abbey Craig's lower south-west slope: dark bodies, light-catching spear tips
-        for k in range(30):
-            a = math.radians(188 + 70 * k / 29.0 + rs.uniform(-1.5, 1.5)); rr = 20.0
-            for r_ in np.arange(30, 110, 1.0):
-                x = HILL_C[0] + r_ * math.cos(a) * 1.05; y = HILL_C[1] + r_ * 0.9 * math.sin(a)
-                if float(hill_h(np.array([x]), np.array([y]))[0][0]) < 9.0 + 2.2 * rank: break
-            z = float(ground(x, y)); Bsc.box('t_dark', (x, y, z + 0.8), (0.7, 0.5, 1.5), tint=0.9 + 0.3 * rs.rand()); Bsc.sphere('t_cream', (x, y, z + 1.65), 0.2, seg=6, rings=4)
-            spear(Bsc, (x + 0.35, y, z), tilt=(rs.uniform(-0.2, 0.2), rs.uniform(-0.2, 0.2)), h=3.4); n_sc += 1
-    Bsc.finalize('scots_line', ink=False); A['scots_line'] = n_sc
+    A['scots_line'] = scots_slope_line(30, 3, 1.0, rs, spear_h=4.0) + spear_wall(14, 2, rs)
     Bb = Batch(80)
     for i, (x, y, f, c, sh) in enumerate([(-30, 66, 't_red', 't_gold', 'chevron'), (22, 72, 't_blue', 't_gold', 'bars'), (-8, 96, 't_cream', 't_red', 'cross'), (34, 104, 't_gold', 't_red', 'lion'), (-34, 112, 't_blue', 't_white', 'chevron'),
                                            (4, 126, 't_red', 't_cream', 'bars'), (-60, -52, 't_red', 't_gold', 'chevron'), (52, -48, 't_blue', 't_gold', 'bars'), (8, -80, 't_gold', 't_red', 'lion')]):
@@ -1296,27 +1339,32 @@ def mk_camp_bank(A):
     for i, (d, xp) in enumerate([(6.5, 35), (9.5, 110), (12.0, 215), (9.0, 600), (11.0, 665), (13.0, 705)]): m['e%d' % i] = mark_px(cam, look, ln, d, xp, ['foot', 'foot:foot_r', 'knight:knight_b'][i % 3])
     return m
 def camp_fg(A, pr):
-    """camp_bank foreground camp: pavilions with pennants, bell tents, a cook fire with a pot and smoke, a cart, a weapon rack, a horse line, banner poles, tent pegs."""
+    """camp_bank foreground camp: pavilions with pennants on the right, bell/ridge tents, a cook fire, a cart, a weapon rack, a horse line, small pegs. Nothing on the water."""
     cam = np.array(pr['cam']); look = np.array(pr['look']); B = Batch(65); Bs = Batch(66); rs = np.random.RandomState(23); lens = pr['lens']
     def at(d, xp): return rel_xy(cam, look, d, px_lat(lens, d, xp))
+    dry = lambda x, y, m=3.5: float(sd_at(x, y)) > m
     mats = (('t_red', 't_cream'), ('t_blue', 't_gold'), ('t_red', 't_cream'), ('t_blue', 't_gold'), ('t_red', 't_cream'), ('t_blue', 't_gold'))
-    for i, (d, xp, r) in enumerate([(13.0, 860, 3.4), (22.0, 820, 4.2), (30.0, 640, 4.4), (44.0, 700, 4.0), (60.0, 560, 4.6), (74.0, 830, 4.2)]):
-        x, y = at(d, xp); pavilion(B, (x, y, float(ground(x, y))), r, mats[i], yaw=rs.uniform(0, 30), rs=rs, hw=1.9, hr=3.4)
-        banner(B, (x + r * 0.7, y + r * 0.3, float(ground(x + r * 0.7, y + r * 0.3))), 7.5, rs.uniform(-30, 40), *[('t_red', 't_gold', 'chevron'), ('t_blue', 't_gold', 'bars'), ('t_gold', 't_red', 'lion')][i % 3], rs)
-        sacks(B, (x - r - 1.0, y - 1.5, float(ground(x, y))), 3, rs); barrel(B, (x + r + 0.9, y - 2.0, float(ground(x, y))), rs=rs)
-    for i, (d, xp) in enumerate([(14, 770), (17, 20), (19, 690), (24, 60), (26, 330), (33, 150), (38, 470), (46, 90), (52, 620), (58, 20), (64, 400), (70, 690), (80, 520), (90, 200), (100, 600)]):
-        x, y = at(d, xp); bell_tent(B, (x, y, float(ground(x, y))), 1.7 + 0.5 * rs.rand(), 2.7, ['t_cream', 't_white', 't_cream', 't_brown'][i % 4], rs) if i % 3 else ridge_tent(B, (x, y, float(ground(x, y))), 3.6, 3.0, 2.0, ['t_cream', 't_white', 't_brown'][i % 3], yaw=rs.uniform(-30, 30))
-    x, y = at(9.5, 45); campfire(B, Bs, (x, y, float(ground(x, y))), rs, puffs=False)
-    x, y = at(17.0, 120); cart(B, (x, y, float(ground(x, y))), 35, rs, cover=True)
-    x, y = at(11.0, 40); weapon_rack(B, (x, y, float(ground(x, y))), 70, rs)
-    x, y = at(10.5, 690); campfire(B, Bs, (x, y, float(ground(x, y))), rs, puffs=False)
+    for i, (d, xp, r) in enumerate([(30.0, 770, 3.6), (32.0, 715, 4.4), (46.0, 700, 4.0), (60.0, 705, 4.6), (78.0, 690, 4.2)]):
+        x, y = at(d, xp)
+        if not dry(x, y, 6): continue
+        z0 = float(ground(x, y)); pavilion(B, (x, y, z0), r, mats[i], yaw=rs.uniform(0, 30), rs=rs, hw=1.9, hr=3.4)
+        bx, by = x + r * 0.7, y + r * 0.3; banner(B, (bx, by, float(ground(bx, by))), 7.5, rs.uniform(-30, 40), *[('t_red', 't_gold', 'chevron'), ('t_blue', 't_gold', 'bars'), ('t_gold', 't_red', 'lion')][i % 3], rs)
+        sacks(B, (x - r - 1.0, y - 1.5, z0), 3, rs); barrel(B, (x + r + 0.9, y - 2.0, z0), rs=rs)
+    for i, (d, xp) in enumerate([(12, 760), (17, 40), (19, 20), (24, 700), (26, 60), (33, 120), (38, 540), (46, 90), (52, 735), (58, 20), (64, 640), (70, 520), (80, 430)]):
+        x, y = at(d, xp)
+        if not dry(x, y, 6): continue
+        bell_tent(B, (x, y, float(ground(x, y))), 1.7 + 0.5 * rs.rand(), 2.7, ['t_cream', 't_gold', 't_cream', 't_brown'][i % 4], rs) if i % 3 else ridge_tent(B, (x, y, float(ground(x, y))), 3.6, 3.0, 2.0, ['t_cream', 't_white', 't_brown'][i % 3], yaw=rs.uniform(-30, 30))
+    for (d, xp, fn) in [(9.5, 45, 'fire'), (17.0, 130, 'cart'), (11.0, 36, 'rack'), (10.5, 690, 'fire')]:
+        x, y = at(d, xp)
+        if not dry(x, y, 5): continue
+        z = float(ground(x, y))
+        if fn == 'fire': campfire(B, Bs, (x, y, z), rs, puffs=False)
+        elif fn == 'cart': cart(B, (x, y, z), 35, rs, cover=True)
+        else: weapon_rack(B, (x, y, z), 70, rs)
     for i in range(6):                                          # horse line
-        x, y = at(19 + 2.0 * i, 700 + 8 * i); horse(B, (x, y, float(ground(x, y))), 95 + rs.uniform(-15, 15), coat=['horse', 'horse_dk', 'horse'][i % 3], trap=(None, 't_red', None, 't_blue', 't_cream', None)[i], trim='t_gold', tint=0.8 + 0.4 * rs.rand(), bob=rs.uniform(0, 0.25))
-        B.rod('wood', (x - 1.3, y + 0.3, float(ground(x, y))), (x - 1.3, y + 0.3, float(ground(x, y)) + 1.5), 0.05, seg=5)
-    for i in range(3):                                          # banner poles with their banners
-        x, y = at(34 + 16 * i, (90, 640, 700)[i]); banner(B, (x, y, float(ground(x, y))), 9.0, rs.uniform(-20, 40), *[('t_gold', 't_red', 'lion'), ('t_red', 't_gold', 'chevron'), ('t_blue', 't_white', 'cross')][i], rs, size=(2.4, 1.6))
-    for i in range(24):                                         # pegs and ropes near the lens
-        x, y = at(rs.uniform(2.5, 12.0), rs.uniform(-40, 720)); z = float(ground(x, y)); B.rod('wood', (x, y, z - 0.05), (x + 0.04, y, z + 0.22), 0.03, seg=4)
+        x, y = at(19 + 2.0 * i, 720 + 6 * i)
+        if not dry(x, y, 5): continue
+        horse(B, (x, y, float(ground(x, y))), 95 + rs.uniform(-15, 15), coat=['horse', 'horse_dk', 'horse'][i % 3], trap=(None, 't_red', None, 't_blue', 't_cream', None)[i], trim='t_gold', tint=0.8 + 0.4 * rs.rand(), bob=rs.uniform(0, 0.25))
     B.finalize('camp_fg', shadow=False); Bs.finalize('camp_fg_smoke', ink=False)
 def crowd_hill(A, pr):
     """hill_over: tiny English column on the bridge (knights two by two + a few foot), foot soldiers at the camp, the Scots line below the lens with spears."""
@@ -1330,25 +1378,184 @@ def crowd_hill(A, pr):
         items.append((x, y, z, ['scot', 'scot_b', 'scot_o', 'scot_m'][i % 4], 1.0)); spear(Bsp, (x + 0.35, y, z), tilt=(rs.uniform(-0.3, 0.3), rs.uniform(-0.3, 0.3)), h=3.0)
     B.finalize('crowd_horses'); Bsp.finalize('crowd_spears'); stage_crowd(items)
 PRESETS['hill_over'] = dict(loc='hill', corridor=(70.0, 0.6, 0.2, 7.0), dress_min=26.0, cam=(160.0, 150.0, 0.0), cam_dz=2.7, cam_ref=(160.0, 150.0), look=(0.0, 2.0, -20.0), sd=8.0, lens=32.0, marks=mk_hill_over, hill2=True,
-    over=dict(glit_stretch=1.0, glit_s=1.0, foam_k=2.0, wake_k=2.0, sun_k=1.7),
-    veg=dict(seed=5, half=24, no_chips=True, hill_grass=0.4, grass=[(2, 14, 2200, 0.1, 0.17), (14, 40, 2200, 0.2, 0.34)], flowers=500, sprig_to=60, heather=[(1.5, 8, 1400, 0.09, 0.16), (8, 17, 2200, 0.12, 0.22), (17, 40, 3000, 0.2, 0.34), (40, 100, 1200, 0.5, 0.9)], gorse=[(3, 14, 8), (14, 40, 26)], reeds=None),
+    over=dict(glit_stretch=1.0, glit_s=1.0, foam_k=2.0, wake_k=2.0, sun_k=2.0),
+    veg=dict(seed=5, half=24, no_chips=True, hill_grass=0.4, grass=[(2, 14, 1100, 0.1, 0.17), (14, 40, 1100, 0.2, 0.34)], flowers=300, sprig_to=60, heather=[(1.5, 8, 700, 0.09, 0.15), (8, 17, 1000, 0.12, 0.2), (17, 40, 1400, 0.18, 0.3), (40, 100, 1000, 0.5, 0.9)], gorse=[(3, 14, 8), (14, 40, 26)], reeds=None),
     fg_spears=[(1.8, -0.55, (0.08, 0.1)), (1.6, 0.5, (-0.1, 0.1))], fg_gorse=[(2.4, -0.9, 0.55), (2.2, 0.8, 0.5)], fg_rocks=[(2.0, 0.0, 0.7)],
     dress_pines=[(20.0, -5.4, 12.0)], dress_crags=[(6, 2.8, 4, 1.2, 0.7)],
     dress_gorse=[(7, -2, 0.7), (6, 2, 0.6), (10, 2.5, 0.8), (11, -3.5, 0.9), (12, 4, 0.9), (13, -2, 0.7), (9, 3.5, 0.7), (15, -4.5, 1.0), (14, 3.5, 0.8), (20, 5, 1.1)], clear_hill=(160.0, 150.0, 6.0))
-PRESETS['camp_bank'] = dict(loc='camp', cam=(-122.0, -12.0, 0.0), cam_dz=2.0, look=(-24.6, 10.5, -19.0), corridor=(60.0, 3.0), sd=6.0, lens=20.0, marks=mk_camp_bank, hill2=True,
-    over=dict(glit_stretch=1.0, glit_s=0.9, foam_k=2.0, wake_k=2.0, sun_k=2.1),
-    veg=dict(seed=6, half=26, tuft_k=1.3, tuft_gain=1.5, grass=[(1.5, 9, 900, 0.08, 0.13), (9, 40, 1500, 0.12, 0.2)], flowers=900, reeds=[(8, 60, 420)]),
-    fg_banner=(7.0, 2.7), clear=[(-122.0, -12.0, 5.0)], fg_banner_yaw=30, fg_spears=[(1.7, -0.8), (2.0, 0.55)], fg_barrels=[(3.2, 1.9)], fg_rope=True, camp_fg=camp_fg)
+PRESETS['camp_bank'] = dict(loc='camp', cam=(-140.0, -17.3, 0.0), cam_dz=2.0, look=(-43.0, 6.9, -16.6), sd=6.0, lens=30.0, marks=mk_camp_bank, hill2=True, far_scots=True, bridge_pairs=(-26.0, 26.0, 6.0),
+    over=dict(glit_stretch=1.0, glit_s=0.9, foam_k=2.0, wake_k=2.0, sun_k=2.1, reed_k=0.5),
+    veg=dict(seed=6, half=20, tuft_k=1.3, tuft_gain=1.5, grass=[(1.5, 9, 420, 0.08, 0.13), (9, 40, 700, 0.12, 0.2)], flowers=700, reeds=[(6, 70, 500)]),
+    fg_banner=(7.0, 2.3), clear=[(-140.0, -17.3, 5.0)], fg_banner_yaw=30, fg_spears=[], fg_barrels=[(3.0, 1.7)], fg_rope=True, camp_fg=camp_fg)
 PRESETS['valley_loop'] = dict(loc='valley', cam=(-72.0, -133.0, 229.0), look=(12.0, 36.0, 0.0), sd=300.0, lens=21.0, marks=lambda A: {}, veg=None, farms=True, hill2=True, heather_n=900, gorse_n=200, crag_n=140, pine_n=60,
-    over=dict(foam_k=3.0, glit_s=0.35, glit_t=0.12, glit_stretch=1.0, wake_k=4.0, haze_max=0.2, world=0.0, key=(2.05, 1.58, 0.84), shade=(0.12, 0.10, 0.30), tint=(0.065, 0.052, 0.15), sun_dir=(-0.68, 0.68, -0.28)))
+    over=dict(foam_k=3.0, glit_s=0.35, glit_t=0.12, glit_stretch=1.0, wake_k=4.0, haze_max=0.2, world=0.0, lift=(0.03, 0.028, 0.07), key=(2.05, 1.58, 0.84), shade=(0.12, 0.10, 0.30), tint=(0.065, 0.052, 0.15), sun_dir=(-0.68, 0.68, -0.28)))
 for _n, _fn in (('hill_over', fg_hill), ('camp_bank', fg_bank)): PRESETS[_n]['fg'] = _fn
 PRESETS['hill_over']['crowd'] = crowd_hill; PRESETS['valley_loop']['crowd'] = crowd_loop
+
+# ================================================================ HOOKS (keyable per frame; every hook takes film seconds t or a plain value and only sets scene values)
+def set_flutter(t, amp=1.0):
+    """banner flutter: keys the Wave modifier phase (and the amplitude, amp 1 = normal) of every live banner (t in seconds)."""
+    n = 0
+    for (obn, mdn, ph, h0) in STATE['anim'].get('flags', []):
+        ob = bpy.data.objects.get(obn)
+        if ob: md = ob.modifiers[mdn]; md.time_offset = -(t * 30.0 + ph * 4.0); md.height = h0 * amp; n += 1
+    return n
+def set_smoke(t, speed=0.12):
+    """smoke columns: puffs rise, grow and fade in a loop (one cycle = 1/speed seconds)."""
+    for c in STATE['anim'].get('smoke', []): _smoke_pose(c, t, speed)
+    return len(STATE['anim'].get('smoke', []))
+def set_flow(t, speed=1.0):
+    """water: shifts the current streaks, foam streaks and the sun glitter (glitter cells twinkle through the 4th noise dimension)."""
+    nt = get_mat('water').node_tree; nt.nodes['flow_off'].inputs['Location'].default_value = (-t * 0.9 * speed, 0, 0); nt.nodes['flow_off2'].inputs['Location'].default_value = (-t * 2.2 * speed, 0, 0)
+    nt.nodes['glit_vor'].inputs['W'].default_value = t * 1.7; nt.nodes['glit_noise'].inputs['W'].default_value = t * 0.9
+def set_scale_tip(A, deg):
+    """Cressingham's coin scale: tips the balance beam about its pivot (deg, + = right pan down). Needs a build that has the camp (every preset has)."""
+    ob = bpy.data.objects[A['scale_beam']]; e = ob.rotation_euler; ob.rotation_euler = (e[0], math.radians(deg), e[2])
+def set_chest_lid(A, deg_open):
+    """coin chest lid: 72 = open, 0 = shut (hinge at the back edge)."""
+    ob = bpy.data.objects[A['chest_lid']]; e = ob.rotation_euler; ob.rotation_euler = (math.radians(-deg_open), e[1], e[2])
+def _del_prefix(pfx):
+    for ob in [o for o in bpy.data.objects if o.name.startswith(pfx)]: bpy.data.objects.remove(ob, do_unlink=True)
+def splash(x, y, age, size=1.0, z=0.0, name='a', seed=0):
+    """a spray crown at (x, y) on the water, `age` seconds after impact (age < 0 = nothing, > 1.6 = gone): a scalloped crown sheet that rises, opens and falls, a central
+    column, an expanding foam ring and 40 ballistic droplets. Re-calling with the same name replaces it, so a render team calls it once per frame. Returns the object count."""
+    _del_prefix('splash_' + name + '_')
+    if age < 0 or age > 1.6: return 0
+    rs = np.random.RandomState(seed); B = Batch(91); tau = min(age / 0.9, 1.0); k = size
+    R = k * (0.35 + 1.5 * tau); Hc = k * 1.15 * math.sin(math.pi * min(tau, 1.0)) ** 0.8 * (1 - 0.35 * tau) if age < 0.95 else 0.0
+    n = 22; th = [2 * math.pi * i / n for i in range(n + 1)]; tips = 0.7 + 0.5 * rs.rand(n)
+    if Hc > 0.02:
+        V = []; F = []
+        for i in range(n):
+            a = th[i]; hh = Hc * (1.0 if i % 2 == 0 else 0.55) * tips[i]; V += [(x + R * 0.78 * math.cos(a), y + R * 0.78 * math.sin(a), z), (x + R * math.cos(a), y + R * math.sin(a), z + hh)]
+        for i in range(n): j = (i + 1) % n; F += [(2 * i, 2 * j, 2 * j + 1, 2 * i + 1)]
+        B.mesh('foam', V, F, False, tint=1.0); B.mesh('foam', V, [f[::-1] for f in F], False, tint=1.0)
+        if age < 0.8:
+            hs = k * 2.0 * math.sin(math.pi * min(age / 0.8, 1.0)); B.cyl('foam', (x, y, z + hs / 2 + 0.01), 0.1 * k, hs + 0.02, seg=8, r2=0.05 * k, caps=False); B.sphere('foam', (x, y, z + hs), 0.11 * k, seg=7, rings=4)
+    ro = R * (1.0 + 0.2 * tau); wd = max(0.02, 0.35 * k * (1 - age / 1.6))
+    B.mesh('foam', [(x + (ro - wd) * math.cos(t_), y + (ro - wd) * math.sin(t_), z + 0.04) for t_ in th[:-1]] + [(x + ro * math.cos(t_), y + ro * math.sin(t_), z + 0.04) for t_ in th[:-1]], [(i, (i + 1) % n, n + (i + 1) % n, n + i) for i in range(n)], False, tint=0.95)
+    for i in range(40):
+        a = rs.uniform(0, 2 * math.pi); vh = rs.uniform(0.6, 2.6) * math.sqrt(k); vz = rs.uniform(2.2, 5.2) * math.sqrt(k); px = x + vh * math.cos(a) * age; py = y + vh * math.sin(a) * age; pz = z + 0.2 + vz * age - 4.9 * age * age
+        if pz > z + 0.02: B.sphere('foam', (px, py, pz), rs.uniform(0.035, 0.085) * k, seg=5, rings=3)
+    return len(B.finalize('splash_' + name + '_', ink=False, shadow=False))
+
+def place_troops(A, where, n, kind=None, seed=0, cb=None, horses=True):
+    """English troops by COUNT. where = 'bridge' (n mounted knights, two by two along the deck, 3D horses unless horses=False), 'causeway' (n foot soldiers, 3 abreast on the
+    north causeway y 40..90), 'meadow' (n foot soldiers in ranks in the loop meadow), 'south' (n foot soldiers queued on the south road).
+    Returns the list of (x, y, z, kind, scale) stand points. With cb the list is handed to cb(items) so a team can place real cast sprites; without cb the default
+    placeholder cards are staged (on the bridge the 3D riders are the default). Calling again with the same `where` replaces the previous set."""
+    _del_prefix('troops_' + where); rs = np.random.RandomState(seed); items = []
+    if where == 'bridge':
+        ys = [-30.0 + 5.4 * i for i in range(12)]
+        for i in range(n): pair = i // 2; yy = ys[min(pair, len(ys) - 1)]; sx = -0.62 if i % 2 == 0 else 0.62; items.append((BRIDGE_X + sx, yy, DECK_Z, kind or 'knight', 1.0))
+        if horses and n:
+            B = Batch(85)
+            for (x, y, z, k_, s_) in items: m = KNIGHT_MATS[int(abs(y * 7 + x * 3)) % 5]; horse(B, (x, y, z), 90.0, coat=['horse', 'horse_dk', 'horse'][rs.randint(0, 3)], trap=m[0], trim=m[1], tint=0.85 + 0.3 * rs.rand(), rider=(m[0],))
+            B.finalize('troops_bridge')
+    elif where == 'causeway':
+        for i in range(n): x = (-1.8, 0.0, 1.8)[i % 3] + rs.uniform(-0.25, 0.25); y = 40.0 + 1.5 * (i // 3) + rs.uniform(-0.2, 0.2); items.append((x, y, float(ground(x, y)), kind or ['foot', 'foot_r'][i % 2], 1.0))
+    elif where == 'meadow':
+        for i in range(n):
+            r_, c_ = divmod(i, 14); x = -22.0 + c_ * 3.2 + (1.6 if r_ % 2 else 0) + rs.uniform(-0.4, 0.4); y = 46.0 + r_ * 3.6 + rs.uniform(-0.4, 0.4); items.append((x, y, float(ground(x, y)), kind or ['foot', 'foot_r', 'foot', 'knight_b'][(r_ + c_) % 4], 1.0))
+    elif where == 'south':
+        for i in range(n): x = (-1.0 if i % 2 else 1.0) + rs.uniform(-0.3, 0.3); y = -38.0 - 1.2 * i; items.append((x, y, float(ground(x, y)), kind or 'foot', 1.0))
+    if items and cb: cb(items)
+    elif items and not (where == 'bridge' and horses):
+        for o in stage_crowd(items, cam=bpy.context.scene.camera): o.name = 'troops_%s_%s' % (where, o.name)
+    A.setdefault('troops', {})[where] = items; return items
+
+# ================================================================ the other presets (generic spec -> cam, marks, foreground props)
+def at_px(pr, d, xp):
+    return rel_xy(np.array(pr['cam'], float), np.array(pr['look'], float), d, px_lat(pr['lens'], d, xp))
+def marks_from_spec(pr):
+    def f(A):
+        out = {}
+        for sp in pr['marks_spec']:
+            nm, who, d, xp = sp[:4]; dz = sp[4] if len(sp) > 4 else 0.0; x, y = at_px(pr, d, xp); z = pr.get('stand_z')
+            out[nm] = (x, y, (float(ground(x, y)) if z is None else z) + dz, 0.0, who)
+        return out
+    return f
+def fg_generic(A, pr):
+    """foreground props 1-2 m from the lens, from pr['fg_list']: ('spear', d, xp, lean) | ('gorse', d, xp, s) | ('rock', d, xp, s) | ('reeds', d, xp) | ('heather', d, xp, s) |
+    ('post', d, xp) rail post | ('pole', d, xp) banner pole | ('rope', d, xp) tent rope + peg | ('chest', d, xp) coin chest | ('barrel', d, xp) | ('bollard', d, xp)."""
+    rs = np.random.RandomState(pr.get('fg_seed', 41)); B = Batch(92); Bg = Batch(93); Br = Batch(94)
+    for sp in pr.get('fg_list', []):
+        k, d, xp = sp[:3]; x, y = at_px(pr, d, xp); z = float(ground(x, y)); zz = pr.get('fg_z'); z = z if zz is None else zz
+        if k == 'spear': spear(B, (x, y, z), tilt=sp[3] if len(sp) > 3 else (0.08, 0.1), h=3.4)
+        elif k == 'gorse': gorse(Bg, (x, y, z), sp[3] if len(sp) > 3 else 0.6, rs)
+        elif k == 'rock': boulder(Br, x, y, z, sp[3] if len(sp) > 3 else 0.7, rs)
+        elif k == 'reeds':
+            for j in range(4): reed_cluster(Bg, (x + rs.uniform(-0.5, 0.5), y + rs.uniform(-0.5, 0.5), z), rs)
+        elif k == 'heather': v0, f0 = _ico(); r_ = sp[3] if len(sp) > 3 else 0.6; Br.mesh('heather', v0 * np.array([r_ * 1.3, r_, r_ * 0.6]) + np.array([x, y, z + r_ * 0.2]), f0, False, tint=(1.0, 0.75, 0.7))
+        elif k == 'post': B.box('wood', (x, y, z + 0.58), (0.17, 0.17, 1.12)); B.box('wood_dk', (x, y, z + 1.18), (0.22, 0.22, 0.1))
+        elif k == 'pole': banner(B, (x, y, z), 6.0, rs.uniform(-20, 40), 't_red', 't_gold', 'chevron', rs, size=(2.2, 1.5))
+        elif k == 'rope': B.rod('wood', (x, y, z - 0.05), (x + 0.05, y, z + 0.3), 0.04, seg=4); B.rod('rope', (x, y, z + 0.25), (x + 1.6, y + 0.5, z + 1.7), 0.025, seg=3)
+        elif k == 'chest': B.box('wood_dk', (x, y, z + 0.35), (1.0, 0.6, 0.7)); B.box('iron', (x, y, z + 0.36), (1.02, 0.08, 0.72)); B.box('gold', (x, y, z + 0.72), (0.86, 0.46, 0.04))
+        elif k == 'barrel': barrel(B, (x, y, z), rs=rs)
+        elif k == 'bollard': B.cyl('wood_dk', (x, y, z + 0.5), 0.16, 1.0, seg=8)
+    B.finalize('fg_generic'); Bg.finalize('fg_generic_g', ink=False); Br.finalize('fg_generic_r', ink=False)
+def horses_parade(A, pr):
+    """camp_wide: caparisoned knights on horses walking past the tents (3D riders), positions pr['parade'] = [(d, px)]."""
+    B = Batch(95); rs = np.random.RandomState(12)
+    for i, (d, xp) in enumerate(pr['parade']):
+        x, y = at_px(pr, d, xp); m = KNIGHT_MATS[i % 5]; horse(B, (x, y, float(ground(x, y))), pr.get('parade_yaw', 0.0) + rs.uniform(-8, 8), coat=['horse', 'horse_dk', 'horse'][i % 3], trap=m[0], trim=m[1], tint=0.9, rider=(m[0],))
+    B.finalize('parade')
+def _mk(name, **kw):
+    pr = dict(loc=kw.pop('loc'), sd=kw.pop('sd', 8.0), lens=kw.pop('lens', 22.0), veg=kw.pop('veg', None), hill2=kw.pop('hill2', True)); pr.update(kw)
+    pr['marks'] = marks_from_spec(pr) if 'marks_spec' in pr else (lambda A: {})
+    if 'fg_list' in pr: pr['fg'] = fg_generic
+    if 'parade' in pr: pr['camp_fg'] = horses_parade
+    PRESETS[name] = pr; return pr
+_VEG = dict(seed=7, half=26, tuft_k=1.3, tuft_gain=1.5, grass=[(1.5, 9, 450, 0.08, 0.13), (9, 40, 800, 0.12, 0.2)], flowers=500)
+_OVR = dict(glit_stretch=1.0, glit_s=0.9, foam_k=2.0, wake_k=2.0, sun_k=1.6)
+_HV = dict(seed=5, half=30, no_chips=True, hill_grass=0.5, grass=[(2, 14, 900, 0.1, 0.17), (14, 40, 900, 0.2, 0.34)], flowers=200, sprig_to=40, heather=[(1.5, 8, 500, 0.09, 0.14), (8, 20, 700, 0.12, 0.2), (20, 60, 900, 0.2, 0.4)], gorse=[(3, 14, 6), (14, 40, 14)])
+_VOVR = dict(foam_k=3.0, glit_s=0.35, glit_t=0.12, glit_stretch=1.0, wake_k=4.0, haze_max=0.2, world=0.0, lift=(0.03, 0.028, 0.07), key=(2.05, 1.58, 0.84), shade=(0.12, 0.10, 0.30), tint=(0.065, 0.052, 0.15), sun_dir=(-0.68, 0.68, -0.28))
+# hill_eye / hill_low: on the Scots' shelf (x 131, y 131, 15 m up), looking up the slope at the line
+_mk('hill_eye', loc='hill', cam=(128.0, 128.0, 0.0), cam_dz=1.75, cam_ref=(128.0, 128.0), look=(144.0, 144.0, 20.5), lens=22.0, sd=9.0, over=dict(_OVR),
+    marks_spec=[('s1', 'scot:scot_b', 5.2, 80), ('s2', 'scot:scot_o', 6.0, 225), ('w', 'wallace', 5.6, 360), ('s3', 'scot:scot_m', 6.4, 505), ('s4', 'scot', 5.4, 640)],
+    veg=dict(_HV), fg_list=[('spear', 1.5, 60, (0.06, 0.14)), ('spear', 1.7, 690, (-0.08, 0.1)), ('gorse', 2.4, 610, 0.55), ('heather', 1.8, 300, 0.5)], dress_min=6.0, drift='slide 40 px/s; snap push x1.4 on s2')
+_mk('hill_low', loc='hill', cam=(118.0, 112.0, 0.0), cam_dz=1.4, cam_ref=(118.0, 112.0), look=(140.0, 134.0, 22.0), lens=22.0, sd=9.0, over=dict(_OVR),
+    marks_spec=[('s1', 'scot:scot_b', 7.0, 90), ('s2', 'scot', 8.5, 230), ('horn', 'scot:scot_o', 7.5, 390), ('w', 'wallace', 9.5, 530), ('s3', 'scot:scot_m', 7.0, 650)],
+    veg=dict(_HV), fg_list=[('gorse', 1.6, 80, 0.6), ('gorse', 1.9, 620, 0.6), ('rock', 2.2, 360, 0.6), ('spear', 1.4, 690, (0.0, 0.2))], dress_min=6.0, drift='pull-out 7 %/s, tilted up 14 deg')
+# the bridge presets (cam z is absolute: the deck is DECK_Z = 1.75)
+_mk('bridge_deck', loc='bridge', cam=(-2.7, -2.4, 3.0), look=(0.6, 1.6, 2.9), lens=22.0, sd=4.0, over=dict(_OVR), stand_z=DECK_Z, hill2=False,
+    marks_spec=[('k1', 'knight', 3.2, 190), ('k2', 'knight:knight_b', 3.6, 520)], fg_list=[('post', 1.1, 20)], fg_z=DECK_Z, drift='push 8 %/s')
+_mk('bridge_high', loc='bridge', cam=(-5.0, -62.0, 24.0), look=(0.0, 6.0, 1.0), lens=22.0, sd=40.0, over=dict(_OVR, wake_k=3.0), hill2=False, marks_spec=[], troops=dict(bridge=16),
+    fg_list=[('post', 1.6, 60)], fg_z=22.0, drift='push along the bridge 8 %/s; snap pull-out x0.7')
+_mk('bridge_end_south', loc='bridge', cam=(-2.3, -40.0, 3.0), look=(0.0, -31.0, 2.7), lens=22.0, sd=6.0, over=dict(_OVR), stand_z=DECK_Z, hill2=False, clear=[(0.0, -44.0, 14.0)],
+    marks_spec=[('k1', 'knight', 5.0, 205), ('k2', 'knight:knight_b', 5.6, 505)], fg_list=[('spear', 1.4, 40, (0.1, 0.0)), ('spear', 1.7, 680, (-0.1, 0.0))], fg_z=DECK_Z - 0.4, drift='snap push x1.4 (16 f)')
+_mk('bridge_end_north', loc='bridge', cam=(-3.2, 50.0, 2.9), look=(0.0, 22.0, 2.2), lens=22.0, sd=14.0, over=dict(_OVR), hill2=False,
+    marks_spec=[('e1', 'foot', 7.0, 170), ('e2', 'foot:foot_r', 9.0, 420), ('e3', 'foot', 8.0, 600), ('e4', 'foot:foot_r', 11.0, 300)], troops=dict(bridge=10, causeway=12),
+    fg_list=[('spear', 1.5, 50, (0.1, -0.1)), ('gorse', 2.0, 650, 0.5), ('reeds', 2.2, 120)], veg=dict(_VEG, reeds=[(6, 40, 160)]), drift='push 8 %/s')
+# valley
+_mk('valley_wide', loc='valley', cam=(445.0, 244.0, 361.0), look=(64.0, 44.0, 0.0), lens=22.0, sd=300.0, farms=True, over=dict(_VOVR), marks_spec=[], troops=dict(bridge=14, meadow=60, causeway=10),
+    heather_n=900, gorse_n=200, crag_n=140, pine_n=60, scots_line=True, drift='crane down + push 6 %/s')
+_mk('valley_river', loc='valley', cam=(38.0, -24.0, 0.0), cam_dz=2.1, look=(105.0, 28.0, 4.0), lens=22.0, sd=12.0, over=dict(_OVR, reed_k=0.6), farms=True, scots_line=True,
+    marks_spec=[('e1', 'foot', 6.0, 70), ('e2', 'foot:foot_r', 8.0, 640)], fg_list=[('reeds', 2.2, 90), ('reeds', 2.0, 640), ('rock', 2.4, 400, 0.5)], veg=dict(_VEG, half=30, reeds=[(4, 70, 700)]), drift='push 7 %/s + slide')
+# camp
+_mk('camp_wide', loc='camp', cam=(-78.0, -96.0, 13.0), look=(12.0, -52.0, 2.0), lens=22.0, sd=40.0, over=dict(_OVR), parade=[(20, 120), (26, 300), (34, 470), (44, 600)], parade_yaw=35.0,
+    marks_spec=[('k1', 'knight', 14.0, 130), ('k2', 'knight:knight_b', 18.0, 560)], fg_list=[('rope', 1.8, 60), ('pole', 2.2, 650)], drift='slide 50 px/s + push')
+_mk('camp_table', loc='camp', cam=(-12.0, -32.6, 0.0), cam_dz=1.5, look=(-13.2, -25.0, 1.3), lens=22.0, sd=5.0, over=dict(_OVR),
+    marks_spec=[('cress', 'cressingham', 7.0, 360)], fg_list=[('barrel', 1.6, 700), ('rope', 1.7, 40)], veg=dict(_VEG, half=22), drift='push 8 %/s, coin chest in the middle ground')
+_mk('riverbank', loc='riverbank', cam=(-17.0, 60.0, 0.0), cam_dz=1.8, look=(0.0, 30.0, 1.6), lens=22.0, sd=10.0, over=dict(_OVR, reed_k=0.8),
+    marks_spec=[('e1', 'foot', 5.0, 90), ('e2', 'foot:foot_r', 6.0, 250), ('e3', 'foot', 7.5, 400), ('e4', 'knight:knight_b', 9.0, 175)], fg_list=[('reeds', 1.6, 640), ('reeds', 2.0, 40), ('gorse', 2.4, 560, 0.4)],
+    veg=dict(_VEG, half=30, reeds=[(2, 40, 600)]), drift='slide 40 px/s + push; water on the right for the jumps (splash())')
+_mk('river_low', loc='riverbank', cam=(-26.0, 46.0, 0.0), cam_dz=0.55, look=(-44.0, 44.0, 0.9), lens=22.0, sd=10.0, over=dict(_OVR, reed_k=0.6),
+    marks_spec=[], fg_list=[('reeds', 1.4, 80), ('reeds', 1.6, 650), ('rock', 1.8, 380, 0.3)], veg=dict(_VEG, half=34, reeds=[(2, 40, 500)]), splashes=[(-34.0, 41.0, 0.9), (-38.5, 44.0, 0.9), (-43.0, 47.0, 0.9)], drift='quick push; splash() crowns at pr["splashes"]')
 
 def build_for_cli(preset, light='MORNING', placeholders=True):
     A = build(preset=preset, light=light); pr = PRESETS[preset]
     nofg = os.environ.get('DBG') == 'nofg'
     if pr.get('fg') and not nofg: pr['fg'](A, pr)
     if pr.get('camp_fg') and not nofg: pr['camp_fg'](A, pr)
+    for where_, n_ in (pr.get('troops') or {}).items():
+        if not nofg: place_troops(A, where_, n_, seed=pr.get('troop_seed', 1))
+    if pr.get('scots_line') and not nofg and preset != 'valley_loop': A['scots_line'] = scots_slope_line(30, 3, 1.0, np.random.RandomState(3), spear_h=4.0) + spear_wall(14, 2, np.random.RandomState(4))
+    for i_, (sx_, sy_, sa_) in enumerate(pr.get('splashes') or []):
+        if not nofg: splash(sx_, sy_, [0.35, 0.55, 0.8][i_ % 3], 1.0, name=str(i_), seed=i_)
+    if pr.get('far_scots') and not nofg: rs_ = np.random.RandomState(8); A['far_scots'] = scots_slope_line(22, 1, 1.45, rs_, spear_h=3.2, a0=200, a1=250, hh0=7.0)
+    if pr.get('bridge_pairs') and not nofg:
+        Bk = Batch(84); y0_, y1_, st_ = pr['bridge_pairs']; knight_pair_column(Bk, bridge_pairs(y0_, y1_, st_), BRIDGE_X, np.random.RandomState(9), KNIGHT_MATS); Bk.finalize('bridge_knights')
     if pr.get('crowd') and not nofg: pr['crowd'](A, pr)
     if placeholders and A['marks'] and not nofg: stage_placeholders(A)
     return A
