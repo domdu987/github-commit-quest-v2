@@ -12,5 +12,5 @@
 | s09 | 8 | FAIL R3 (B1 inspector grin not visible + beret overlap; B2 head shake too slow) | 9ddf81d | gate/s09/QA_TECH_R3.md |
 | s10 | 9 | FAIL R2 (QA-tech FAIL + QA-art FIX-FIRST: calipers not on skull, 6-box countdown not visible, finger insert weak, whip smear 5-9 f) | acdfec4 | gate/s10/QA_TECH_R2.md, QA_ART_R2.md |
 | s11 | 10 | FAIL r1 -> re-render | | |
-| s12 | 11 | FAIL r1 -> re-render | | |
+| s12 | 11 | FAIL R2 (1 blocker: fg pair chins y885-895 at g1824-1844; shot 29 OK) | aceb5fc | gate/s12/QA_TECH_R2.md |
 | s13 | 12 | **PASS** (QA-art R3 SHIP; QA-tech R2 blocker = hand on bar, verified fixed in R3) | render17/team12 ba82a63 (USE THIS; later ca5cc1a = unreviewed head-mask variant, ignore) | rhythm 4.55/13.68; nit: tripod hood g1947-1965 |
