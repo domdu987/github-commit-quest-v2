@@ -4,10 +4,10 @@ Render: `render_T2a.py` (`check_take('T2')` hits [] PASS, `check_face('T2')` ok 
 Commit that carries the take: see the message sent to the director.
 
 ## Numbers (qa_stats2-style: 90x160, luma = mean of R, G, B)
-- Part: mean **100.1**, min 86.1 (g380), max 118.7 (g332), saturation 0.646, vivid 70.0 %.
-- By range: g330-360 107.6 (façade, trimmed at conform per the director), g361-386 93.0, g387-466 101.2, g467-493 94.8.
+- Part: mean **100.5**, min 85.4 (g377), max 118.7 (g332), saturation 0.646, vivid 70.2 % (after the clerk re-render).
+- By range: g330-360 107.7 (façade, trimmed at conform per the director), g361-386 92.9, g387-466 102.0, g467-493 94.8.
 - Key still g450: 99.2 (film/v3/film17v2/T2a/key_g450.png).
-- Rhythm (`film17/rhythm.py`): median 13.82, p90 22.07 (targets >= 4 / >= 12). No hard cuts inside the range.
+- Rhythm (`film17/rhythm.py`): median 13.98, p90 21.92 (targets >= 4 / >= 12). No hard cuts inside the range.
 - First-30-frame check on g387-416 at the final light: 104.6-106.5 (taken from the paused 10-frame measurement, g387-396).
 - OIDN shimmer: I did NOT study the 30 frames as a clip, and I did not measure shimmer on flat walls. I only compared two consecutive frames (g410/g411) of the first, over-lit run (not these frames), and that crop was not examined by eye. Status: unchecked.
 
@@ -36,3 +36,12 @@ Phone size = `qa_auto_out/phone_sheet.jpg` (360x640 tiles at g330, 345, 360, 375
 
 ## Discarded frames (history)
 50 frames of an over-lit first run (RGB-mean about 121), 11 frames with the stale flat-black back cover, and 11 frames of a middle lighting run were deleted and re-rendered.
+
+## Clerk on the ladder (director's TAKE-gate fix, re-render g330-465)
+The clerk stands on rung 1 of the ladder as a constant for the whole take (dx 0, dy -0.21, dz -0.90 from the path point). g330-465 were re-rendered (136 frames); g466-493 are as first rendered. Seen in `tests/`-style strips (not committed) of g345-456 and a second strip at g386, 398, 404, 410, 416, 456:
+- **Top-edge cut (g386-410): fixed.** His hat and eyes are inside the frame, he is no longer a headless body at the top. At g386 he is not visible at all (the thief's back fills the left).
+- **g398-416:** he peeks behind the thief's shoulder with hat and eyes visible; the thief's cap covers his lower face. His face touches the left frame edge and is slightly clipped by it at g398-404 and g416 (mustache right at the edge). **Not fully fixed.**
+- **g425-440:** whole head and face inside the frame, standing on the ladder beside the thief. Fine.
+- **g456:** only a narrow sliver of the clerk (hat and body) remains at the far left edge; head mostly outside the frame. **Not fixed.**
+- I did not measure the head in pixels per frame; this is from looking at the strips.
+Test stills `clerk_fix/` (g395, g430) are the first run of the same staging.
