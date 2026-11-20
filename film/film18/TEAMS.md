@@ -45,3 +45,5 @@ Mandatory per team (from the two set-gate reports):
   - s19: no dark-square puffs, 4-6 Qi silhouettes, flat ground ≤ 25 %.
   - s20: ≥ 3 visible tail flames, with the oxen yawed so the tails show.
   - s23: the townsfolk beating pots, with shout drawings and no lip-sync.
+
+- 2026-11-20 17:35 UTC: s21 reassigned from team 4 to team 3 (render18/team3) to run in parallel; team 4 finishes s22 and s24.
