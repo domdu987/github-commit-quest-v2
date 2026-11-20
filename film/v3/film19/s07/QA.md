@@ -1,13 +1,12 @@
-# s07 QA: film 19, shot 7 (HALL hall_window, DAY)
+# s07 QA: film 19, shot 7 (HALL hall_window, DAY) -- revision 3 (round-2 gate)
 ## Delivered
-- take.mkv (97 frames, first_g 457): g 457-465 in-handle (CUT), g 466-544 = shot 7 (15.54-18.17 s), g 545-553 out-handle (CUT). 720x1280, 8 spp. qa_auto PASS.
-## Shot
-astro19 (centre, mirrored) jabs a pointing arm up at the Moon picture, chin up; astro19_c (left) and astro19_b (right, hand at chin) nod at 1.8 Hz. Push + slide + arc, SNAP x1.9 (g 492-508) on "คณะกรรมการ" (g 500) ending on astro19 with astro19_c beside him. Candles keyed every frame; mouths flat; no DOF, no text, no caption_shade.
-## Numbers
-- Frame-diff in-shot: median 4.34, p90 12.41 (targets 4 / 12: both met).
-- Head centre y: astro19 477-710, astro19_c 635-675 (never above 450 or below 760); head bottoms <= 741. (meta.json head_px / head_centre_y include astro19_b after he leaves the right edge during the snap: those values are off-screen, not real.)
-- Contact decals widened/darkened (1.6 x 0.75 D, opacity 0.9) like s03/s06 after the QA_TECH round; characters stand on the floor.
-- 12.32 s/frame wall, 23.96 s CPU.
+- take.mkv (97 frames, first_g 457): g 457-465 in-handle (CUT), g 466-544 = shot 7, g 545-553 out-handle (CUT). 720x1280, 8 spp. qa_auto PASS.
+## Round-2 fixes
+1. Clipping / parked on a cropped face: the snap is now x1.3 (g 492-508) with no pan, drift 3 %/s; all three astronomers stay fully inside the frame to g 553 (finals checked: heads x 126-620, wigs inside).
+2. Nod beat: astro19 (front, mark -2.9, 2.2), astro19_c (left) and astro19_b (right, behind) all stay in frame for the whole shot and nod at 1.8 Hz.
+3. p90 / median: 8.68 / 13.23 (targets 4 / 10 per take): a lateral camera sway (2.2 D, 2.4 s period) gives the parallax; the camera look point stays on the group.
+4. Eye-line: while he points (g 457-~494) astro19's pupils and yaw go up-left toward the Moon plate (gaze (1,-1), yaw 0.65), easing back to the lens on the snap (g 490-498).
 ## Notes
-- astro19_b leaves frame right at g ~497 during the push (only astro19 and astro19_c stay); the plan's "astro19_b nods" is visible g 466-496 only.
-- Camera look point lowered (z 2.55, snap shift -0.30) so heads stay inside the 450-760 band (first render had astro19_c at y 778-797 and astro19 bottom 908).
+- Head centre y 551-674, lowest head bottom 754 (< 880). Contact decals widened (1.6 x 0.75 D).
+- astro19_c is partly behind astro19's wig in some frames (he is the front lecturer); he stays visible and nodding.
+- 14.93 s/frame wall, 29.14 s CPU.
