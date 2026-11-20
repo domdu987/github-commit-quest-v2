@@ -61,7 +61,7 @@ def build_vista(Bk, M, light):
             for sy in (-1, 1):                                                                                   # corner towers with hip roofs
                 J.obox(bd, F.p(sx * s / 2, sy * s / 2, wh * 0.75), F.X, F.Y, F.Z, s * 0.07, s * 0.07, wh * 0.75, M['rammed_d'], uvk=0.1)
                 J.hip_roof(rf, F.p(sx * s / 2, sy * s / 2, wh * 1.5), yaw, s * 0.1, s * 0.1, 0.0, 0.0, s * 0.07, M, lift=0.0, nx=2, ny=2, mat=M['tiles'], wadang=False)
-        J.obox(bd, F.p(0, -s / 2, wh * 0.45), F.X, F.Y, F.Z, s * 0.07, s * 0.05, wh * 0.45, M['black'], uvk=0.1)                                     # gate
+        J.obox(bd, F.p(0, -s / 2, wh * 0.45), F.X, F.Y, F.Z, s * 0.07, s * 0.05, wh * 0.45, M['r3_gate'] if R3 else M['black'], uvk=0.1)                                     # gate
         J.hip_roof(rf, F.p(0, -s / 2, wh * 1.05), yaw, s * 0.12, s * 0.08, s * 0.04, 0.0, s * 0.06, M, lift=0.0, nx=3, ny=2, mat=M['tiles'], wadang=False)
         n = 10 if hold else 7
         for q in range(n):                                                                                       # houses
@@ -89,7 +89,7 @@ def build_vista(Bk, M, light):
         for sgn in ((-1, 1) if not R3 else ()): tb2.oface([F.p(sgn * w / 2, -l / 2, 0), F.p(sgn * w / 2, l / 2, 0), F.p(0, l / 2, h), F.p(0, -l / 2, h)], M['canvas'] if k % 3 else M['hide'], [(0, 0), (2, 0), (2, 1), (0, 1)], F.X * sgn + F.Z * 0.9)
         for yy_, n_ in (((-l / 2, -1), (l / 2, 1)) if not R3 else ()): tb2.oface([F.p(-w / 2, yy_, 0), F.p(w / 2, yy_, 0), F.p(0, yy_, h)], M['canvas'], [(0, 0), (1, 0), (0.5, 1)], F.Y * n_)
         if k % 4 == 0: J.live_flame(V((x + 5, y - 3, terrain_h(x, y) + 0.2)), 3.4, 0.9, seed=k, n=3, light=0.0, name='siegefire', warm=None); J.halo(hl, V((x + 5, y - 3, terrain_h(x, y) + 3)), 11.0, M['halo'])
-        if k % 3 == 0: J.banner(Bk, M, (x - 4, y, terrain_h(x, y)), 12.0, 4.2, 2.4, M['black'], M['red'], wave=k, sw=True)
+        if k % 3 == 0: J.banner(Bk, M, (x - 4, y, terrain_h(x, y)), 12.0, 4.2, 2.4, M['silk_blk'] if R3 else M['black'], M['silk_red'] if R3 else M['red'], wave=k, sw=True)
     # trees: small dark clumps along roads and fields (cones), scattered
     tr = Bk('vtrees')
     for k in range(380 if not R3 else 0):
@@ -115,22 +115,26 @@ def build_vista(Bk, M, light):
         if R3 and t.get('name') == 'ju': hgt = 24.0
         for kind, col, trim in (('yan', M['black'], M['red']), ('qi', M['red'], M['teal'])):
             if t['hold'] and kind == 'yan': continue
-            b = Bk('pen_%s_%d' % (kind, i), hull=0.0); J.banner(Bk, M, (t['x'], t['y'], z0), hgt, s * 0.5, s * 0.3, col, trim, wave=i, yaw=(i * 37) % 40 - 20, sw=True) if False else None
+            b = Bk('pen_%s_%d' % (kind, i), hull=0.0)
             pb = b; base = V((t['x'], t['y'], z0)); J.rod(pb, base, base + V((0, 0, hgt)), 0.5, M['wood_d'], seg=5); pb.sphere(base + V((0, 0, hgt + 0.4)), 0.6, M['gold'], seg=6, rings=4)
             fw, fh = s * 0.5 * 1.5, s * 0.3 * 1.5; top = hgt - 0.4
-            for q in range(6):
+            if R3: V3.cloth(Bk, M, 'pcl_%s_%d' % (kind, i), base + V((0, 0, top)), fw, fh, kind, i)
+            else:
+              for q in range(6):
                 x0_, x1_ = fw * q / 6, fw * (q + 1) / 6; sw0 = math.sin(q * 0.9 + i) * 0.25 * (q / 6) * fh; sw1 = math.sin((q + 1) * 0.9 + i) * 0.25 * ((q + 1) / 6) * fh
                 bot0 = top - fh * (1 - 0.35 * (q / 6)); bot1 = top - fh * (1 - 0.35 * ((q + 1) / 6))
                 pts_ = [base + V((x0_, sw0, top)), base + V((x1_, sw1, top)), base + V((x1_, sw1, bot1)), base + V((x0_, sw0, bot0))]
                 pb.oface(pts_, col, [(0, 0)] * 4, (0, -1, 0)); pb.oface(pts_[::-1], col, [(0, 0)] * 4, (0, 1, 0))
                 tp = [base + V((x0_, sw0, top)), base + V((x1_, sw1, top)), base + V((x1_, sw1, top - fh * 0.2)), base + V((x0_, sw0, top - fh * 0.2))]
                 pb.oface(tp, trim, [(0, 0)] * 4, (0, -1, 0)); pb.oface(tp[::-1], trim, [(0, 0)] * 4, (0, 1, 0))
-            S['pennants'].append(dict(town=i, kind=kind, name='pen_%s_%d' % (kind, i), base=tuple(base), hold=t['hold'], x=t['x'], y=t['y']))
+            S['pennants'].append(dict(town=i, kind=kind, name='pen_%s_%d' % (kind, i), cname='pcl_%s_%d' % (kind, i) if R3 else None, ctop=tuple(base + V((0, 0, top))), base=tuple(base), hold=t['hold'], x=t['x'], y=t['y']))
     def post():
         ob = S['objects']; cam = V(S['cam']['loc'])
         for p in S['pennants']:
             o = ob.get(p['name']); p['ob'] = o
             if o is not None: J.localize(o, p['base'])
+            c = ob.get(p['cname']) if p.get('cname') else None; p['cl'] = c
+            if c is not None: J.localize(c, p['ctop'])
         order = [p['town'] for p in S['pennants'] if p['kind'] == 'yan']; S['pen_order'] = {}
         pool = [(t['x'], t['y'], i) for i, t in enumerate(towns) if not t['hold']]
         orders = dict(yan=sorted(pool, key=lambda q: J._hash(int(q[0] * 10), int(q[1] * 10))), ltr=sorted(pool, key=lambda q: q[0]), rtl=sorted(pool, key=lambda q: -q[0]),
@@ -147,8 +151,30 @@ def vista_r3(sweep=True):
     """Round-3 finisher (see API.md 'Vista round 3'): idempotent; build('vista') already applies the whole round, call it again after adding your own flame cards / poles."""
     import jimo_vista3 as V3; V3.bind(J, sys.modules[__name__]); return V3.finish(sweep)
 
-def _pop(o, p, frame):
-    J._vis(o, p > 0.01, frame); J._xf(o, scl=(max(0.01, p),) * 3, frame=frame)
+def _pop(o, p, frame, cl=None):
+    if cl is None: J._vis(o, p > 0.01, frame); J._xf(o, scl=(max(0.01, p),) * 3, frame=frame)
+    else:                                                    # round 4: the pole stands as soon as the pennant is on, the cloth grows from the pole top (never flat)
+        J._vis(o, p > 0.01, frame); J._vis(cl, p > 0.01, frame); J._xf(cl, scl=(max(0.01, p),) * 3, frame=frame)
+
+def _pop2(p, v, frame): _pop(p['ob'], v, frame, p.get('cl'))
+
+def _cam_xy(cam):
+    if cam is None: cam = J.STATE['cam']['loc']
+    if hasattr(cam, 'matrix_world'): cam = cam.matrix_world.translation
+    elif hasattr(cam, 'location'): cam = cam.location
+    return float(cam[0]), float(cam[1])
+
+def vista_pennant_order(cam=None, kind='yan'):
+    """Round 4: the ordinary-town pennants sorted NEAR to FAR for camera `cam` (a Blender camera object, a Vector / (x, y, z) or None = the scene camera, ground-plane distance).
+    Returns a list of town indices (`idx` for set_pennant_scale; also `S['pennants']` entries with that `town`). Holdouts (Jimo, Ju) are not in it."""
+    cx, cy = _cam_xy(cam); T = J.STATE['towns']
+    return sorted([i for i, t in enumerate(T) if not t['hold']], key=lambda i: math.hypot(T[i]['x'] - cx, T[i]['y'] - cy))
+
+def set_pennant_scale(idx, k, kind='yan', frame=None):
+    """Round 4: pennant of town `idx` (see vista_pennant_order): k 0 .. 1; the pole stands from k > 0 and the cloth grows from the pole top (uniform scale about the attach corner,
+    so it only ever hangs, never lies flat or diagonal). Overrides set_pennants for that town until the next set_pennants / set_qi_return call."""
+    for p in J.STATE['pennants']:
+        if p['town'] == idx and p['kind'] == kind and p.get('ob') is not None: _pop2(p, min(1.0, max(0.0, float(k))), frame)
 
 def set_pennants(k, side='yan', frame=None):
     """Black Yan pennants pop up over the towns one by one: k 0 .. 1 (0 none, 1 all 62 ordinary towns). `side` = the ORDER they pop in: 'yan' (a fixed scattered order, default),
@@ -157,15 +183,15 @@ def set_pennants(k, side='yan', frame=None):
     for p in S['pennants']:
         if p['kind'] != 'yan' or p.get('ob') is None: continue
         idx = order[p['town']]; pop = min(1.0, max(0.0, k * n - idx)); back = min(1.0, max(0.0, qr * n - S['pen_orders']['qi'][p['town']]))
-        _pop(p['ob'], pop * (1.0 - (1.0 if back > 0.5 else 0.0)), frame)
+        _pop2(p, pop * (1.0 - (1.0 if back > 0.5 else 0.0)), frame)
 
 def set_qi_return(k, frame=None):
     """The Yan pennants turn to Qi colours one by one: k 0 .. 1 (the Yan pennant shrinks away and the Qi one pops, 70 % overlap). The holdouts keep their Qi pennant (always up)."""
     S = J.STATE; S['states']['qi'] = k; order = S['pen_orders']['qi']; n = len(order)
     for p in S['pennants']:
         if p.get('ob') is None: continue
-        if p['hold']: _pop(p['ob'], 1.0, frame); continue
+        if p['hold']: _pop2(p, 1.0, frame); continue
         idx = order[p['town']]; v = min(1.0, max(0.0, k * n - idx))
-        if p['kind'] == 'qi': _pop(p['ob'], v, frame)
+        if p['kind'] == 'qi': _pop2(p, v, frame)
         else:
-            pk, side = S['states'].get('pennants', (0.0, 'yan')); o2 = S['pen_orders'].get(side, order); pop = min(1.0, max(0.0, pk * n - o2[p['town']])); _pop(p['ob'], pop * (1.0 if v < 0.5 else 0.0), frame)
+            pk, side = S['states'].get('pennants', (0.0, 'yan')); o2 = S['pen_orders'].get(side, order); pop = min(1.0, max(0.0, pk * n - o2[p['town']])); _pop2(p, pop * (1.0 if v < 0.5 else 0.0), frame)

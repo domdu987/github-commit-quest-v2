@@ -50,10 +50,51 @@ def _furrow(m, axis, freq, depth, tint):
     t2 = N('ShaderNodeMix'); t2.data_type = 'RGBA'; t2.blend_type = 'MULTIPLY'; t2.inputs[0].default_value = 1.0; L(tex.outputs['Color'], t2.inputs[6]); L(t1.outputs[2], t2.inputs[7])
     for s in old: L(t2.outputs[2], s)
 
+def water_mat():
+    """Round 4: dusk / dawn water: dark teal body, a Fresnel-weighted glossy lobe that reflects the sky dome (orange horizon), ripple bump (glints)."""
+    name = J.STATE['pre'] + 'r4_water'
+    if name in _C: return _C[name]
+    base = wmat('#2c5058', 1.0, T=(0.52, 0.48, 0.52), tag='waterbase')
+    m = base.copy(); m.name = name; nt = m.node_tree; N = nt.nodes.new; L = nt.links.new
+    out = [n for n in nt.nodes if n.bl_idname == 'ShaderNodeOutputMaterial'][0]; src = out.inputs['Surface'].links[0].from_socket
+    sky = {'DUSK': (1.0, 0.50, 0.20), 'DAWN': (1.0, 0.66, 0.50)}.get(J.STATE.get('light'), (1.0, 0.5, 0.2))
+    gl = N('ShaderNodeEmission'); gl.inputs['Color'].default_value = (*sky, 1.0); gl.inputs['Strength'].default_value = 1.1               # the sky seen in the water (the dome is not visible to reflection rays)
+    tc = N('ShaderNodeTexCoord'); nz = N('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 0.55; nz.inputs['Detail'].default_value = 4.0; L(tc.outputs['Object'], nz.inputs['Vector'])
+    rp = N('ShaderNodeMapRange'); rp.inputs[1].default_value = 0.40; rp.inputs[2].default_value = 0.62; rp.inputs[3].default_value = 0.30; rp.inputs[4].default_value = 1.0; rp.clamp = True; L(nz.outputs['Fac'], rp.inputs[0])   # ripples: bright / dark streaks
+    gs = N('ShaderNodeMapRange'); gs.inputs[1].default_value = 0.66; gs.inputs[2].default_value = 0.70; gs.inputs[3].default_value = 0.0; gs.inputs[4].default_value = 1.0; gs.clamp = True; L(nz.outputs['Fac'], gs.inputs[0])  # glints
+    fr = N('ShaderNodeLayerWeight'); fr.inputs['Blend'].default_value = 0.5
+    cl = N('ShaderNodeMath'); cl.operation = 'MULTIPLY_ADD'; cl.use_clamp = True; cl.inputs[1].default_value = 1.2; cl.inputs[2].default_value = 0.30; L(fr.outputs['Facing'], cl.inputs[0])
+    mu = N('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.use_clamp = True; L(cl.outputs[0], mu.inputs[0]); L(rp.outputs[0], mu.inputs[1])
+    mx = N('ShaderNodeMixShader'); L(mu.outputs[0], mx.inputs[0]); L(src, mx.inputs[1]); L(gl.outputs['Emission'], mx.inputs[2])
+    gg = N('ShaderNodeEmission'); gg.inputs['Color'].default_value = (1.0, 0.92, 0.75, 1.0); gg.inputs['Strength'].default_value = 2.2
+    mg = N('ShaderNodeMixShader'); L(gs.outputs[0], mg.inputs[0]); L(mx.outputs['Shader'], mg.inputs[1]); L(gg.outputs['Emission'], mg.inputs[2]); L(mg.outputs['Shader'], out.inputs['Surface'])
+    _C[name] = m; return m
+
+def cloth(Bk, M, name, top, fw, fh, kind, seed):
+    """Round 4: one silk pennant cloth, own object, hanging from the point `top` (pole top): swallow-tail, a travelling fold and a slight curve, red / gold border cells
+    (no coplanar trim faces: no speckle). Origin is set to `top` by the vista post step, so scaling grows the cloth from the pole top."""
+    b = Bk(name, hull=0.0, shadow=False); nx, ny = 12, 7
+    body, edge = (M['silk_blk'], M['silk_red']) if kind == 'yan' else (M['silk_qi'], M['silk_gold'])
+    ph = seed * 1.7; amp = fh * 0.16
+    def P(u, v):
+        x = fw * u; z = -fh * v * (1.0 - 0.38 * u)
+        y = amp * u ** 0.9 * math.sin(u * 7.0 + v * 1.4 + ph) + fh * 0.07 * u * (v - 0.5) ** 2 * 2.0 + 0.12 * fh * u * u
+        return top + V((x, y, z))
+    for i in range(nx):
+        for j in range(ny):
+            pts = [P(i / nx, j / ny), P((i + 1) / nx, j / ny), P((i + 1) / nx, (j + 1) / ny), P(i / nx, (j + 1) / ny)]
+            mat = edge if (j == 0 or j == ny - 1 or i == nx - 1) else body
+            b.oface(pts, mat, [(0, 0)] * 4, (0, -1, 0)); b.oface(pts[::-1], mat, [(0, 0)] * 4, (0, 1, 0))
+
 def materials(M):
     """Round-3 materials: returns a copy of M with warm fields (8 variants: 2 textures x 4 crop tints, furrows), dusk water, and the r3 prop materials."""
     _C.clear(); M = dict(M); tx = J.STATE['tx']
-    M['vwater'] = wmat('#7e8f90', 0.95, T=(0.56, 0.48, 0.50), tag='water')
+    M['vwater'] = water_mat()
+    M['r3_gate'] = wmat(None, 0.95, image='planks', tag='gate', T=(0.66, 0.48, 0.40))                  # round 4: warm timber gate leaves (was the navy `black`)
+    M['silk_blk'] = J._glossy(wmat('#3c2c30', 1.25, T=(0.66, 0.50, 0.50), tag='silkb'), (1.0, 0.70, 0.46), 0.55, 0.26)    # round 4: lit black silk (sheen picks up the dusk rim)
+    M['silk_red'] = J._glossy(wmat('#c03022', 1.2, T=(0.66, 0.46, 0.44), tag='silkr'), (1.0, 0.62, 0.40), 0.35, 0.3)
+    M['silk_qi'] = J._glossy(wmat('#c8142c', 1.2, T=(0.64, 0.42, 0.46), tag='silkq'), (1.0, 0.6, 0.45), 0.45, 0.26)        # Qi crimson
+    M['silk_gold'] = J._glossy(wmat('#d8a848', 1.2, T=(0.66, 0.52, 0.40), tag='silkg'), (1.0, 0.8, 0.5), 0.35, 0.3)
     M['r3_glint'] = J.mat_emit(J.STATE['pre'] + 'r3_glint', '#ffe2a8', strength=2.6)
     M['r3_lampg'] = J.mat_emit(J.STATE['pre'] + 'r3_lampg', '#ffc060', strength=6.0)
     M['r3_win'] = J.mat_emit(J.STATE['pre'] + 'r3_win', '#ffb048', strength=3.2)
