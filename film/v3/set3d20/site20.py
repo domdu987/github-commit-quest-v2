@@ -23,7 +23,7 @@ CAMS_M = dict(
     site_table=dict(loc=(31.6, -88.2, 1.5), look=(34.4, -81.0, 1.9), lens=22),
     site_bigzoom_start=dict(loc=(0.0, -310.0, 235.0), look=(0.0, -90.0, 0.0), lens=22, shift=0.37),
     site_bigzoom_mid=dict(loc=(14.0, -195.0, 75.0), look=(34.0, -84.0, 4.0), lens=22, shift=0.08),
-    site_bigzoom_land=dict(loc=(32.7, -86.4, 2.0), look=(35.0, -80.6, 1.35), lens=40),
+    site_bigzoom_land=dict(loc=(32.7, -86.4, 2.0), look=(35.0, -80.6, 1.35), lens=62),
     site_leg_low=dict(loc=(-60.0, -82.0, 1.4), look=(-52.0, -58.0, 14.0), lens=22, shift=-0.2),
     site_fence=dict(loc=(-20.0, -109.5, 1.5), look=(-2.0, -98.0, 2.5), lens=22),
     site_girders=dict(loc=(-66.0, -45.0, 1.3), look=(-66.0, -25.0, 2.4), lens=22, shift=0.1),

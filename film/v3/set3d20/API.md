@@ -147,3 +147,10 @@ The seated Maupassant has no seated puppet pose yet (stand-in card is lowered); 
 * **tower_window_pull:** the facade is flat cream framed by riveted red-brown lattice girders (belts, posts, X-braced panels, two diagonals across the glass); lit interior (cream wall, navy carpet, white cloths, blue chairs, 3 gas lamps); camera 6.2 m from the glass.
 * **tower_fair:** 24 cast20 crowd cards (`set_crowd` levels 8 / 16 / 24 cards + far standees) >= 40 px in the midground; **1910 differs** from 1889: pavilions and kiosks are gone, a 1910 biplane crosses the sky, the antenna wires and hut are up (`set_year(1910)`).
 * **tower_dusk_chars** (new camera, `tower_dusk` presets, shots 18 / 22): (-8,-224,1.6) m, shift_y +0.10: old Eiffel, officer, three demolition men with heads y 600-850.
+
+## BIGZOOM 1 cameras (SITE, stage 0; Eiffel at mark `eiffel_table`)
+Metres in tower-local world (x1.88 for D). Presets/tiles: S11 site_bigzoom_start, S12 mid, S13 land. Hook `set_beacon(on)`: warm glow sphere above the plan table; ON for start/mid, OFF for land.
+- site_bigzoom_start: loc (0,-310,235) look (0,-90,0) lens 22 shift +0.37
+- site_bigzoom_mid: loc (14,-195,75) look (34,-84,4) lens 22 shift +0.08
+- site_bigzoom_land: loc (32.7,-86.4,2.0) look (35.0,-80.6,1.35) lens 62
+PLAN_TABLE moved to (34,-82); site_table camera changed accordingly. Land: Eiffel head 178 px (chin 690, feet 1071 = ~36% of height), ground small.
