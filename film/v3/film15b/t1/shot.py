@@ -33,12 +33,12 @@ def hermite(pts, t):
     return (2 * u3 - 3 * u2 + 1) * vs[i] + (u3 - 2 * u2 + u) * h * m(i) + (-2 * u3 + 3 * u2) * vs[i + 1] + (u3 - u2) * h * m(i + 1)
 
 # after BIGZOOM (the BZ1 path ends at rest at (4.6,-3.9,1.3)): low hero push, crane up, side track, low straddle, orbit
-CAM_LOC = [(4.4, (4.6, -3.9, 1.3)), (5.2, (2.2, -2.6, 0.75)), (6.1, (-3.0, 2.0, 0.6)), (7.6, (-5.0, -2.5, 5.2)), (9.0, (0.5, -6.0, 3.0)),
-           (10.4, (7.0, -5.0, 1.7)), (11.6, (8.0, -3.6, 0.95)), (12.5, (4.2, -0.6, 0.55)), (13.3, (2.5, 1.4, 0.5)), (14.4, (1.2, 1.8, 0.8)),
-           (15.4, (-0.8, 2.4, 1.0)), (16.3, (-2.4, 3.0, 1.3)), (16.5, (-2.5, 3.1, 1.35))]
-CAM_LOOK = [(4.4, (5.7, -0.6, 1.2)), (5.2, (3.0, 2.0, 1.1)), (6.1, (0.0, 5.3, 1.4)), (7.6, (1.5, 3.0, 0.8)), (9.0, (5.0, 0.5, 1.2)),
-            (10.4, (6.2, 0.3, 1.3)), (11.6, (4.5, 1.8, 1.3)), (12.5, (0.6, 5.1, 1.3)), (13.3, (0.0, 5.3, 1.4)), (14.4, (0.5, 5.0, 1.3)),
-            (15.4, (0.6, 5.0, 1.6)), (16.3, (0.3, 5.5, 1.5)), (16.5, (0.3, 5.5, 1.5))]
+CAM_LOC = [(4.4, (4.6, -3.9, 1.3)), (5.2, (2.2, -2.6, 0.75)), (6.1, (-3.0, 2.0, 0.6)), (7.0, (-4.6, 0.4, 3.2)), (8.0, (-3.6, 1.4, 1.5)),
+           (8.6, (-1.2, 1.2, 1.3)), (9.4, (1.8, 1.0, 1.6)), (10.1, (3.4, 0.5, 1.3)), (10.8, (6.0, -2.6, 1.8)), (11.6, (7.6, -3.6, 1.9)), (12.5, (4.2, -0.6, 0.55)),
+           (13.3, (3.0, 0.6, 0.6)), (14.4, (2.2, 0.0, 0.9)), (15.4, (0.2, -0.4, 1.1)), (16.3, (-2.2, 0.4, 1.4)), (16.5, (-2.3, 0.5, 1.4))]
+CAM_LOOK = [(4.4, (5.7, -0.6, 1.2)), (5.2, (3.0, 2.0, 1.1)), (6.1, (0.0, 5.3, 1.4)), (7.0, (1.0, 4.0, 1.0)), (8.0, (0.0, 5.2, 1.5)),
+            (8.6, (0.0, 5.3, 1.5)), (9.4, (0.0, 5.3, 1.5)), (10.1, (0.0, 5.3, 1.5)), (10.8, (3.0, 2.5, 1.3)), (11.6, (4.5, 1.8, 1.2)), (12.5, (0.6, 5.1, 1.3)),
+            (13.3, (0.0, 5.3, 1.4)), (14.4, (0.5, 5.0, 1.3)), (15.4, (0.6, 4.6, 1.4)), (16.3, (0.3, 5.2, 1.4)), (16.5, (0.3, 5.2, 1.4))]
 
 def cam_at(t):
     if t <= 4.4: return SHT.bigzoom1_path(t)
@@ -80,7 +80,7 @@ PO = lambda name, cast, facing=1, **ov: dict(cast15.pose_for(name, cast, facing=
 # ----------------------------------------------------------------------------- actor timelines. Each returns None (not drawn) or a spec dict:
 #   kind 'stand': xy (m), pose, z None -> surface  |  'anchor': anchor name, world (x,y,z m), zg (m) shadow plane  | canvas wide for lying/air
 def spec_stand(cast, pose, xy, z=None, contact=(1.5, 0.55)): return dict(kind='stand', cast=cast, pose=pose, xy=xy, z=z, contact=contact)
-def spec_anchor(cast, pose, anchor, wp, zg): return dict(kind='anchor', cast=cast, pose=pose, anchor=anchor, wp=wp, zg=zg)
+def spec_anchor(cast, pose, anchor, wp, zg, pull=0.0): return dict(kind='anchor', cast=cast, pose=pose, anchor=anchor, wp=wp, zg=zg, pull=pull)
 
 def idle_rock(cast, t, xy, face_xy, ph=0.0):
     f = facing_for(face_xy[0] - xy[0], face_xy[1] - xy[1]); nm = 'rock_a' if int((t + ph) * 3.75) % 2 == 0 else 'rock_b'
@@ -145,11 +145,11 @@ def dick(t):
     # --- straddle try: runs, knocks the bar at 13.3 (g 399)
     if t < 12.45: return jumper(c, t, 12.45, 'straddle', RUN[0], jog_in=0.9)
     if t < 13.2: return jumper(c, t, 12.45, 'straddle', RUN[0])
-    if t < 13.62: return spec_anchor(c, PO('knock', c, -1), 'head', (-0.25, 6.7, lerp(1.3, PIT + 0.3, sm((t - 13.2) / 0.4))), PIT)
-    if t < 14.05: return spec_anchor(c, PO('lie_hands_face', c, -1), 'head', (-0.5, 7.0, PIT + 0.28), PIT)
+    if t < 13.62: return spec_anchor(c, PO('knock', c, -1), 'head', (0.9, 6.7, lerp(1.3, PIT + 0.3, sm((t - 13.2) / 0.4))), PIT, pull=1.1)
+    if t < 14.05: return spec_anchor(c, PO('lie_hands_face', c, -1), 'head', (0.9, 7.0, PIT + 0.28), PIT, pull=1.1)
     # --- he jumps up and jogs round to the curve (turns his back, run-in 2.3 m) 14.05 - 15.1
     if t < 15.15:
-        back = [(-0.5, 7.0), (-1.9, 5.0), (0.0, 3.0), (2.9, 3.0)]
+        back = [(0.9, 7.0), (-2.2, 5.6), (-1.6, 3.4), (0.4, 2.6), (2.9, 3.0)]
         Lb = polyline(back); u = (t - 14.05) / 1.05; s = Lb[-1] * sm(u); xy = along(back, Lb, s)
         xy2 = along(back, Lb, min(s + 0.3, Lb[-1])); f = facing_for(xy2[0] - xy[0], xy2[1] - xy[1])
         return spec_stand(c, cast15.run_curved(c, s / 1.6, facing=f), xy)
@@ -161,37 +161,44 @@ def jumper_curve_short(c, t, ts):
     pts = RUN[2:]; L = polyline(pts); u = (t - 15.15) / (ts - 15.15); s = L[-1] * (u ** 1.2); xy = along(pts, L, s)
     f = facing_for(pts[-1][0] - xy[0], pts[-1][1] - xy[1]); return spec_stand(c, cast15.run_curved(c, s / 3.0, facing=f), xy)
 
+def walk_to(cast, t, t0, t1, p0, p1):
+    u = sm((t - t0) / (t1 - t0)); xy = (lerp(p0[0], p1[0], u), lerp(p0[1], p1[1], u)); f = facing_for(p1[0] - p0[0], p1[1] - p0[1])
+    d = math.dist(p0, p1) * u
+    return spec_stand(cast, cast15.run_curved(cast, d / 1.1, facing=f), xy, z=PIT if xy[1] > 6.0 else None)
+
 def boy_waiter(cast, t, xy, ph=0.0, pose='rock_b'):
     f = facing_for(BARX - xy[0], BARY - xy[1])
     if pose == 'laugh': return spec_stand(cast, dict(PO('laugh', cast, f), bob=cast15.laugh_bob(int(t * 30) + int(ph * 30))), xy)
     nm = 'rock_a' if int((t + ph) * 3.75) % 2 == 0 else 'rock_b'
     return spec_stand(cast, PO(nm, cast, f), xy)
 
+def lb(c, t, pose, off=0): return dict(PO(pose, c, -1), bob=cast15.laugh_bob(int(t * 30) + off))
+
 def boy3(t):
-    c = 'boy3'; wait = M['boy_c'][:2]
-    # 0.0 - 2.4: straddle roll seen small in the BIGZOOM (starts mid-run on the curve)
-    if t < 0.75: return jumper(c, t, 0.75, 'straddle', (3.4, 2.4), jog_in=0.75) if t > 0 else jumper(c, 0.0, 0.75, 'straddle', (3.4, 2.4), jog_in=0.75)
+    c = 'boy3'; S3 = (-3.6, 6.9)
+    if t < 0.75: return jumper(c, max(t, 0.0), 0.75, 'straddle', (3.4, 2.4), jog_in=0.75)
     if t < 1.55: return jumper(c, t, 0.75, 'straddle', (3.4, 2.4))
     if t < 3.6: return after_landing(c, t, 1.55, (0.4, 7.2), up=2.0)
-    if t < 5.0: return spec_stand(c, PO('laugh', c, -1, bob=cast15.laugh_bob(int(t * 30))), (0.4, 7.2), z=PIT)
-    return spec_stand(c, dict(PO('point_laugh', c, -1), bob=cast15.laugh_bob(int(t * 30))), (0.4, 7.2), z=PIT) if t < 7.5 else \
-           spec_stand(c, dict(PO('laugh', c, -1), bob=cast15.laugh_bob(int(t * 30))), (-1.8, 6.8), z=PIT)
+    if t < 4.6: return walk_to(c, t, 3.6, 4.6, (0.4, 7.2), S3)
+    return spec_stand(c, lb(c, t, 'point_laugh' if t < 7.5 else 'laugh'), S3)
 
 def boy1(t):
-    c = 'boy1'; w = M['boy_wait_a'][:2]
-    if t < 7.0: return boy_waiter(c, t, w, 0.1)
-    if t < 8.0: return jumper(c, t, 8.0, 'straddle', RUN[1], jog_in=0.9) if t > 7.1 else boy_waiter(c, t, w, 0.1)
+    c = 'boy1'; w = M['boy_wait_a'][:2]; S1 = (3.8, 6.6)
+    if t < 7.1: return boy_waiter(c, t, w, 0.1)
+    if t < 8.0: return jumper(c, t, 8.0, 'straddle', RUN[1], jog_in=0.9)
     if t < 8.8: return jumper(c, t, 8.0, 'straddle', RUN[1])
-    if t < 10.8: return after_landing(c, t, 8.8, (0.6, 7.3), up=1.5)
-    return spec_stand(c, dict(PO('laugh', c, -1), bob=cast15.laugh_bob(int(t * 30))), (0.6, 7.3), z=PIT)
+    if t < 10.4: return after_landing(c, t, 8.8, (0.6, 7.3), up=1.5)
+    if t < 11.6: return walk_to(c, t, 10.4, 11.6, (0.6, 7.3), S1)
+    return spec_stand(c, lb(c, t, 'laugh'), S1)
 
 def boy2(t):
-    c = 'boy2'; w = M['boy_wait_b'][:2]
-    if t < 8.6: return boy_waiter(c, t, w, 0.3)
-    if t < 9.6: return jumper(c, t, 9.6, 'straddle', RUN[1], jog_in=1.0) if t > 8.65 else boy_waiter(c, t, w, 0.3)
+    c = 'boy2'; w = M['boy_wait_b'][:2]; S2 = (-3.5, 7.7)
+    if t < 8.65: return boy_waiter(c, t, w, 0.3)
+    if t < 9.6: return jumper(c, t, 9.6, 'straddle', RUN[1], jog_in=1.0)
     if t < 10.4: return jumper(c, t, 9.6, 'straddle', RUN[1])
-    if t < 12.6: return after_landing(c, t, 10.4, (-1.5, 7.6), up=1.5)
-    return spec_stand(c, dict(PO('point_laugh', c, -1), bob=cast15.laugh_bob(int(t * 30) + 4)), (-1.5, 7.6), z=PIT)
+    if t < 12.0: return after_landing(c, t, 10.4, (-1.5, 7.6), up=1.5)
+    if t < 13.0: return walk_to(c, t, 12.0, 13.0, (-1.5, 7.6), S2)
+    return spec_stand(c, lb(c, t, 'point_laugh', 4), S2)
 
 def boy3_late(t):  # boy 3 comes back to the run-up after 7.5 s as a spectator at the curve
     return None
@@ -246,7 +253,7 @@ def place(tag, spec, cam_D, cam_m, t):
         except AssertionError: return V.ground_card(tag, cast, pose, (x * U, y * U), cam_D, z=z * U, ppd=ppd, contact=spec.get('contact', (1.5, 0.55)), canvas=cast15.CANVAS15_WIDE)
     x, y, z = spec['wp']; d = math.dist((x, y, z), cam_m); ppd = ppd_for(d)
     wp = Vector((x * U, y * U, z * U)); tc = Vector(cam_D) - wp; tc.z = 0
-    if tc.length > 1e-4: wp += tc.normalized() * 0.3        # the card stands a little in front of the bar line
+    if tc.length > 1e-4: wp += tc.normalized() * (0.3 + spec.get('pull', 0.0) * U)        # the card stands a little in front of the bar line
     return V.ground_card_anchor(tag, cast, pose, (spec['anchor'], tuple(wp)), cam_D, spec['zg'] * U, ppd=ppd, canvas=cast15.CANVAS15_WIDE)
 
 SPOT = None
@@ -259,6 +266,8 @@ def build_scene():
     F.setup_render(sc, 'final' if Q == 'final' else 'preview'); sc.cycles.samples = 12 if Q == 'final' else 6
     V.set_grade_sat(sc, 1.28); V.CT()
     loc, look = cam_at(0.0); cam = F.make_camera(F.cam_from(tuple(c * U for c in loc), tuple(c * U for c in look), lens=22.0))
+    for o in bpy.data.objects:
+        if o.name.startswith('poster'): o.hide_render = True
     SPOT = V.spot(5.6, -0.4, r=5.0, k=0.55)
     # sawdust bursts at the landings (small flecks): Dick 6.3, boy 1.6, boys 8.9 / 10.5, Dick 13.45, Dick 16.5
     for i, (tt, xy) in enumerate(((1.6, (0.4, 7.2)), (6.3, (-0.7, 7.05)), (8.85, (0.6, 7.3)), (10.45, (-1.5, 7.6)), (13.5, (-0.5, 7.0)))):
@@ -294,7 +303,7 @@ def render_frame(g, cam, sc):
     for f0, ob in FLECKS: ob.hide_render = not (f0 - 1 <= g <= f0 + 24)
     sc.view_settings.exposure = exposure_at(t)
     kd = Vector(STATE['P']['key_dir']); tl = -kd
-    V.rim_on(to_light=(tl.dot(right), -tl.dot(up)), width=5, strength=0.9)
+    V.rim_on(to_light=(tl.dot(right), -tl.dot(up)), width=3, strength=0.6, glow=0.12)
     clear_cards(); before = set(bpy.data.objects.keys()); cdD = tuple(locD)
     for tag, fn in ACTORS:
         sp = fn(t)
