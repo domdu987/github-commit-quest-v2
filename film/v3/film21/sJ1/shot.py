@@ -14,11 +14,11 @@ WHIP0 = G1 - 6                                       # 1703
 def u_lin(g, a, b): return (g - a) / float(b - a)
 
 def cam_for(g, A):
-    mid = Vector((-12.8, -26.85, 0.0)); x = u_lin(g, G0, G1); u = 0.3 * sm(x) + 0.7 * x
+    mid = Vector((-12.6, -26.85, 0.0)); x = u_lin(g, G0, G1); u = 0.3 * sm(x) + 0.7 * x
     ang = math.radians(-7.0 + 14.0 * u)                    # slow arc: starts left of the axis, swings right
-    d = 4.5 - 0.9 * u                               # push in about 8 %/s
-    c = Vector((mid.x + d * math.sin(ang), mid.y - d * math.cos(ang), 1.5 - 0.05 * u))
-    l = Vector((mid.x + 0.12 * math.sin(g * 0.2), mid.y, 1.55 + 0.0 * u))
+    d = 4.9 - 0.8 * u                               # push in about 8 %/s
+    c = Vector((mid.x + d * math.sin(ang), mid.y - d * math.cos(ang), 1.7 - 0.05 * u))
+    l = Vector((mid.x + 0.12 * math.sin(g * 0.2), mid.y, 1.85 + 0.0 * u))
     dd = l - c
     if g >= WHIP0:
         k = (g - WHIP0 + 1) / 6.0; a = math.radians(95.0 * k ** 2.2)
