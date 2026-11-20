@@ -9,7 +9,7 @@ import c18 as C                                                         # noqa: 
 
 SHOT = "s11"; G0, G1 = 853, 944; H_IN, H_OUT = 0, 8                     # dissolve 11 into s12: half + 2 = 8 handle frames
 CAMLIN = 0.5
-PARAMS = (0.0, 0, 0.0, 0.8, 0.0, 0.7, 0.0, 0.6, 2.2)      # c18.make_mod: push, slide px/s, sway D, Hz, wobble D, dz, dz/t
+PARAMS = (0.0, 0, 0.0, 0.8, 0.0, 0.1, 0.0, 0.6, 2.8)      # c18.make_mod: push, slide px/s, sway D, Hz, wobble D, dz, dz/t
 POSES = ["soldier_mock_moo_a", "soldier_laugh_point_b", "soldier_mock_moo_c", "soldier_cheer_cup_a", "soldier_mock_moo_b", "soldier_laugh_point_c"]
 MARKS = [(3.4, -83.8, 0.0), (7.6, -83.4, 0.0), (1.6, -87.4, 0.0), (9.6, -87.4, 0.0), (5.4, -88.8, 0.0), (5.4, -91.4, 0.0)]   # two big mock-mooers in front of the fire
 BIG = 1.25                                                             # the two (three) mock-moo soldiers are drawn 22 % taller: big on a phone
@@ -21,13 +21,15 @@ if os.environ.get("CAM11"):
     a, b, c = os.environ["CAM11"].split(":")
     CAM = (tuple(float(x) for x in a.split(",")), tuple(float(x) for x in b.split(",")), float(c))
 C.S.SHOTS[SHOT]["cam"] = dict(loc=CAM[0], look_at=CAM[1], lens=CAM[2])
-C.S.SHOTS[SHOT]["move"] = dict(push=0.04, slide=0, moves=[dict(t=0.55, d=0.9, dur=8)])      # eased pull-out + the planned held push-in (+20 %) on "ไอ้เสมียนวัว"
+C.S.SHOTS[SHOT]["move"] = dict(push=0.06, slide=0, moves=[dict(t=0.55, d=0.9, dur=8)])      # eased pull-out + the planned held push-in (+20 %) on "ไอ้เสมียนวัว"
 
 
 def patches(T):
+    C.J.STATE["sun"].data.energy *= 0.75          # the sunlit sand in the caption band (y 880-950) blew out above 10 %: a little less key, same dusk look
     C.patch_sky()
     # world-space foreground props (rope, jar, basket) 2.8 D from the lens: the truck + dolly make them slide across the frame (recipe, ALL_TEAMS)
-    C.fg_world_props(T, [("jar", 1.0, 0.95, 0.55), ("rope", -0.9, 1.0, 0.5), ("basket", 0.0, 1.15, 0.45)], 0.5, CAMLIN, C.make_mod(T.sh["dur"], *PARAMS))
+    C.fg_world_props(T, [("jar", 1.0, 0.95, 0.55), ("rope", -0.9, 1.0, 0.5), ("basket", 0.0, 1.15, 0.45),
+                           ("jar", -1.7, 1.9, 0.9, 4.6), ("basket", 0.3, 1.9, 0.9, 4.2), ("rope", 1.9, 1.9, 0.9, 4.8), ("jar", 3.2, 1.9, 0.8, 5.6), ("rope", -3.3, 1.9, 0.9, 5.2)], 0.5, CAMLIN, C.make_mod(T.sh["dur"], *PARAMS))
     # the dark post / pole at the left edge (unlit slab, QA): remove the small connected islands of the 'wood' mesh that project into the left strip at the start / end poses
     mk = None
     for gg in (853, 930, 944, 951):

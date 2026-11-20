@@ -423,8 +423,10 @@ def fg_world_props(T, specs, t=0.5, lin=0.5, mod=None):
     n0 = set(J.STATE["SET"].objects)
     Bk2 = J.Banks()
     b = Bk2("fgworld", hull=J.T.hull(3.0))
-    for kind, lat, down, sc in specs:
-        o = loc + f * 2.8 + r * lat + u * (-down)
+    for spec in specs:
+        kind, lat, down, sc = spec[:4]
+        dist = spec[4] if len(spec) > 4 else 2.8
+        o = loc + f * dist + r * lat + u * (-down)
         base = V((o.x, o.y, max(0.0, o.z)))
         if kind == "rope":
             for k in range(3):
