@@ -87,6 +87,12 @@ class Take21(object):
                 o.hide_render = hidden
                 o.keyframe_insert("hide_render", frame=g)
 
+    def poses_overlay(self, a, pf, g, ppd, overlay=""):
+        self.scene.frame_set(g)
+        a.pose(g, pf(g), camera=self.cam)
+        r = a.render_sprites(ppd, frames=[g], overlay=overlay or None)[0]
+        self.anch[(a.name, g)] = r["anchors"]
+
     def poses(self, jobs, gs, ppd=256):
         """jobs [(actor, {g: pose})]: store poses, rasterise sprites."""
         for g in gs:
