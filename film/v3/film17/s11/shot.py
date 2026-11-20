@@ -26,12 +26,12 @@ def u_(g, a, b): return C.smooth((g - a) / float(b - a))
 # ---------------------------------------------------------------- cameras
 if SHOT == 27:
     CAM = C.CamPath([(1509, (1.15, 3.60, 1.58), (0.30, 1.72, 1.34), 'drift'), (1528, (0.85, 3.35, 1.55), (0.20, 1.72, 1.33), 'snap'),
-                     (1542, (0.35, 3.35, 1.50), (0.05, 1.72, 1.35), 'drift'), (1556, (0.20, 3.20, 1.50), (-0.05, 1.72, 1.35), 'snap'),
+                     (1542, (0.35, 3.35, 1.50), (0.05, 1.72, 1.35), 'drift'), (1556, (0.34, 3.20, 1.50), (0.10, 1.72, 1.35), 'snap'),
                      (1570, (0.70, 2.95, 1.52), (0.24, 1.72, 1.34), 'drift'), (1584, (0.55, 2.80, 1.50), (0.20, 1.72, 1.34), 'drift')], shake=SHAKE)
 else:
     CAM = C.CamPath([(1579, (2.10, 0.50, 1.50), (1.15, 2.50, 1.28), 'drift'), (1600, (1.95, 0.70, 1.50), (1.05, 2.50, 1.30), 'snap'),
-                     (1614, (1.70, 0.90, 1.48), (1.10, 2.45, 1.30), 'drift'), (1636, (1.80, 0.62, 1.50), (0.55, 2.25, 1.27), 'snap'),
-                     (1650, (1.70, 0.75, 1.50), (0.45, 2.25, 1.26), 'snap'), (1668, (1.00, 0.85, 1.46), (0.10, 2.1, 1.30), 'drift'),
+                     (1614, (1.70, 0.90, 1.48), (1.10, 2.45, 1.30), 'drift'), (1636, (1.85, 0.65, 1.50), (0.95, 2.45, 1.29), 'snap'),
+                     (1650, (1.75, 0.80, 1.50), (0.90, 2.45, 1.29), 'snap'), (1668, (1.00, 0.85, 1.46), (0.10, 2.1, 1.30), 'drift'),
                      (1700, (0.75, 1.05, 1.45), (0.0, 2.1, 1.32), 'drift')], shake=SHAKE)
 
 # ---------------------------------------------------------------- build
@@ -42,6 +42,12 @@ cam = bpy.context.scene.camera; cam.data.clip_start = 0.02
 if SHOT == 27:
     for ob in STATE['anim']['hero']['objs'] + [STATE['anim']['hero']['root']]: ob.hide_render = True    # the in-box card is replaced by the held one
 K.clear_keys()
+if SHOT == 28:     # director R3: a loose pair of cream rods floats in the measure room at (1.54-1.79, 1.63-1.79, 0.97-1.14): delete that geometry from the merged mesh
+    import bmesh
+    _o = bpy.data.objects['measure_cream']; _bm = bmesh.new(); _bm.from_mesh(_o.data); _M = _o.matrix_world
+    _bm.verts.ensure_lookup_table()
+    _kill = [v for v in _bm.verts if 1.3 < (_M @ v.co).x < 2.1 and 1.3 < (_M @ v.co).y < 2.0 and 0.85 < (_M @ v.co).z < 1.3]
+    bmesh.ops.delete(_bm, geom=_kill, context='VERTS'); _bm.to_mesh(_o.data); _bm.free()
 for o in bpy.data.objects:      # director fix: the additive light shafts wash over the cast cards
     if any(m and m.name.startswith('beam_fx') for m in (getattr(o.data, 'materials', None) or [])): o.hide_render = True
 
@@ -66,7 +72,7 @@ def px2c(px, py, W=768, H=512): return ((px / W - 0.5) * 0.30, (0.5 - py / H) * 
 ROWS = []; TICKS = []
 for i in range(5):
     cx, cz = px2c(384, 348 + 32 * i); ROWS.append(C.emissive_bar('row%d' % i, held, 0.281, 0.0078, (cx, cz), strength=2.2, alpha=0.50))
-    tx_, tz_ = px2c(748, 348 + 32 * i); TICKS.append(C.tick_bars('tick%d' % i, held, (0.122, cz), size=0.0090))
+    tx_, tz_ = px2c(748, 348 + 32 * i); TICKS.append(C.tick_bars('tick%d' % i, held, (-0.112, cz), size=0.028))
 cx, cz = px2c(335, 218); PROF = C.emissive_bar('prof', held, 0.0773, 0.078, (cx, cz), color=(1.0, 0.9, 0.5), strength=2.0, alpha=0.30)
 BOTTLE = C.image_quad('bottle', held, 0.21, 0.0826, (-0.040, 0.0925), C.bottle_png(os.path.join(TMP, 'bottle.png')), strength=1.25)
 def glow(bar, f, on, a=None):
@@ -99,6 +105,8 @@ def pose_dup(g):
     p = dict(puppet.lerp_pose('dupont', p0, p1, t)) if 0 < t < 1 else dict(p0 if t <= 0 else p1)
     if t >= 1: p['head_dy'] = -0.03 * u_(g, 1609, 1615)
     p['legs'] = SEATLEGS; p['seat17'] = None; p['yaw'] = -0.1
+    if g < 1614: p['fx'] = ['sweat']; p['sweat'] = 1.0 - 0.7 * u_(g, 1607, 1614)
+    else: p.pop('fx', None)
     p['head_roll'] = 2.0 * math.sin(g * 0.15) if g < 1607 else 1.0 * math.sin(g * 0.3)
     p['blink'] = blink(g, 29) if g < 1604 else 0; return p
 
@@ -138,7 +146,7 @@ def card_target(g, f):
     """world centre of the held card from Dupont's head."""
     dh = actors.local_to_world(dup, dup.anch[f]['head'], f, camera=cam)
     if SHOT == 27: return Vector((dh.x + 0.56, dh.y, dh.z - 0.03))
-    return Vector((dh.x, dh.y, dh.z)) + RIGHT28 * 0.62 + Vector((0, 0, 0.02))
+    return Vector((dh.x, dh.y, dh.z)) + RIGHT28 * 0.62 + Vector((0, 0, 0.14))
 
 def pose_all(gs):
     for g in gs: key_cam_frame(g)
@@ -163,11 +171,11 @@ def pose_all(gs):
         f = bf(g); bpy.context.scene.frame_set(f)
         C_ = card_target(g, f); CT[g] = C_
         sc = 1.6 if SHOT == 27 else 2.7
-        if SHOT == 27: hp = C_ + Vector((0.22, 0, -0.12))
-        else: hp = C_ + RIGHT28 * 0.30 + Vector((0, 0, -0.18))
+        if SHOT == 27: hp = C_ + Vector((0.235, 0, -0.03))
+        else: hp = C_ + RIGHT28 * 0.22 + Vector((0, 0, -0.27))
         lx, ly = actors.world_to_local(bert, cam, tuple(hp), f)
         p = SILENT(POSE['bert'](g), 'bert', g)
-        bert.pose(f, p, hands={'r': {'hand': (lx, ly), 'bend': p['arm_r'].get('bend', -0.6)}}, camera=cam)
+        bert.pose(f, p, hands={'r': {'hand': (lx, ly), 'bend': (0.5 if SHOT == 28 else p['arm_r'].get('bend', -0.6)), 'shape': 'fist'}}, camera=cam)
     sprites_of([bert])
     for g in gs:
         f = bf(g); bpy.context.scene.frame_set(f)
@@ -177,6 +185,8 @@ def pose_all(gs):
         else:
             d = Vector((cam.location.x - C_.x, cam.location.y - C_.y, 0)); d.normalize(); t = u_(g, 1579, 1596)
             th = math.radians(lerp(0, 36, t)); d = Vector((d.x * math.cos(th) - d.y * math.sin(th), d.x * math.sin(th) + d.y * math.cos(th), 0)); rz = math.atan2(-d.x, d.y)
+        kk = 1.0 + (0.32 / max(0.5, (C_ - cam.location).length) if SHOT == 28 else 0.0)
+        scl *= kk; C_ = cam.location + (C_ - cam.location) * kk
         held.location = C_ + Vector((0, 0, 0.012 * math.sin(g * 0.3))); held.rotation_euler = (math.radians(2 * math.sin(g * 0.2)), 0, rz + math.radians(1.5 * math.sin(g * 0.17)))
         held.scale = (scl,) * 3
         held.keyframe_insert('location', frame=f); held.keyframe_insert('rotation_euler', frame=f); held.keyframe_insert('scale', frame=f)
