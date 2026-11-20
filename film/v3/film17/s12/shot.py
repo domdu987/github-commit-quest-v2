@@ -72,13 +72,16 @@ class Take(object):
 
     # ---- shot 30
     def setup30(self):
-        self.ber = self.add("ber", "bertillon", "bertillon", "aisle1")
+        self.ber = self.add("ber", "bertillon", "bertillon", "aisle1", dx=-0.3)
         # escort pairs (gendarme leads a thief by the arm), three entries staggered: (gendarme, thief, lane x, y end, start g, end g, y start)
-        spec = [("a", "gendarme_a", "prisoner_a", -0.2, 3.3, 1789, 1834, 7.0), ("b", "gendarme_b", "prisoner_b", 0.7, 4.7, 1801, 1846, 9.5), ("c", "gendarme_a", "prisoner_c", 0.05, 6.8, 1813, 1862, 12.0)]
+        spec = [("a", "gendarme_a", "prisoner_a", 0.55, 4.7, 1789, 1834, 7.5), ("b", "gendarme_b", "prisoner_b", 0.25, 6.0, 1801, 1848, 12.5), ("c", "gendarme_a", "prisoner_c", 0.62, 7.5, 1813, 1862, 13.0)]
         self.WALK = {}
         for tag, gc, pc, lx, ye, g0, g1, ys in spec:
             ga = self.add("g" + tag, gc, gc, "aisle2", dx=lx - 0.5 + 0.33); pa = self.add("p" + tag, pc, pc, "aisle2", dx=lx - 0.5 - 0.33)
             for a in (ga, pa): a.d = (a.d[0], ye - 5.4, 0.0); self.WALK[a.name] = (ys - ye, g0, g1)
+            if tag != "a":
+                for a in (ga, pa): a.fnode = C.fade_setup(a); a.appear = g0
+        self.fade_actors = [a for a in self.acts if hasattr(a, "fnode")]
         self.make_cards()
 
     def make_cards(self):
@@ -91,18 +94,18 @@ class Take(object):
         for di, n in enumerate(self.drawers):
             a = STATE["anim"][n]; self.dstart[n] = (1795 + di * 5, a["slide"].location.y / a["travel"])
             for k in range(3):
-                r = K.card_plane("pc_%s_%d" % (n, k), (0, 0, 0), (0.17, 0.114), key="card_bertillon")
-                self.cards.append(dict(root=r, drawer=n, k=k, t0=self.dstart[n][0] + 7 + k * 3, yaw=rng.uniform(-22, 22), pitch=rng.uniform(8, 18)))
+                r = K.card_plane("pc_%s_%d" % (n, k), (0, 0, 0), (0.34, 0.23), key="card_bertillon")
+                self.cards.append(dict(root=r, drawer=n, k=k, t0=self.dstart[n][0] + 7 + k * 3, yaw=rng.uniform(-12, 12), pitch=rng.uniform(8, 18)))
 
     def key_cards(self, f):
         from bertillon import STATE
         for c in self.cards:
             a = STATE["anim"][c["drawer"]]; mw = a["root"].matrix_world; r = c["root"]; g0, d0 = self.dstart[c["drawer"]]; op = lerp(d0, 1.0, smooth((f - g0) / 8.0))
             u = clamp((f - c["t0"]) / 9.0); e = smooth(u)
-            p = mw @ Vector((0.0, op * a["travel"] - 0.12 - 0.07 * c["k"], 0.09 + 0.05 * e))
+            p = mw @ Vector((0.0, op * a["travel"] - 0.12 - 0.07 * c["k"], 0.12 + 0.12 * e))
             r.location = p; r.hide_render = u <= 0
             r.rotation_euler = (math.radians(c["pitch"]), 0, math.radians(180 + c["yaw"]))
-            r.scale = (max(e, 0.01),) * 3 if u < 1 else (1.0,) * 3
+            r.scale = (max(e * (1 + 0.35 * math.sin(math.pi * u)), 0.01),) * 3
             r.keyframe_insert("location", frame=f); r.keyframe_insert("scale", frame=f); r.keyframe_insert("rotation_euler", frame=f); r.keyframe_insert("hide_render", frame=f)
 
     # ---- per-frame keying
@@ -116,6 +119,7 @@ class Take(object):
                 dy = self.walk_dy(a, g)
                 a.place(g, (x + a.d[0], y + a.d[1] + dy, z + a.d[2] + (0.02 * abs(math.sin(g * 0.36 + sum(map(ord, a.name)) % 5)) if self.shot == 30 and dy > 0.02 else 0.0)), scale=sc)
             if self.shot == 30:
+                for a in self.fade_actors: C.key_fade(a, a.fnode, g, smooth((g - a.appear + 2) / 8.0))
                 for n in self.drawers:
                     g0, d0 = self.dstart[n]; K.set_drawer(n, lerp(d0, 1.0, smooth((g - g0) / 8.0)), frame=g)
                 bpy.context.view_layer.update(); self.key_cards(g)
@@ -151,8 +155,9 @@ class Take(object):
             cn = a.cast; _, p = C.pose_of("dupont_innocent", cast=cn); p.update(idle(g, k)); p["blink"] = blink(g, [1700, 1742, 1775]); return cn, p
         gend = a.name[0] == "g"
         story = ("gendarme_escort_a" if a.cast == "gendarme_a" else "gendarme_escort_b") if gend else "prisoner_standing_" + a.cast[-1]
-        c, p = C.pose_of(story, mirror=gend)
-        if not gend: p["expr"] = "worried"; p["mouth"] = "flat"; p["pitch"] = 0.25
+        c, p = C.pose_of(story, mirror=gend, expr="smirk" if gend else "worried")
+        p["mouth"] = "flat" if not gend else "smile"
+        if not gend: p["sweat"] = 0.6; p["fx"] = ["sweat"]
         p.update(idle(g, k)); p["blink"] = blink(g, [1800 + 7 * k, 1845 + 3 * k])
         w = self.walk_w(a, g)
         if w > 0.02:
