@@ -106,12 +106,12 @@ C.add_expression("grin20", eyes="happy", tilt=0.0, brows=("both", 0.105, -10.0, 
 CAMP = {
     9:  dict(push=0.07, slide_px=25.0, rise_px=38.0, arc_deg_s=22.0, arc0=-26.0, tilt0=0.0, tilt_deg_s=-1.0, decay=0.25,
              snaps=[dict(g=(657, 670), k=1.30, peak=2.0, shift=(0.0, 0.0), tilt=0.0, arc=22.0)]),
-    10: dict(push=0.13, slide_px=30.0, rise_px=0.0, arc_deg_s=20.0, arc0=-22.0, tilt0=0.0, tilt_deg_s=0.0, decay=0.25,
-             snaps=[dict(g=(729, 742), k=1.5, peak=2.2, shift=(0.0, 0.0), tilt=-3.0, arc=30.0)]),
+    10: dict(push=0.05, slide_px=10.0, rise_px=0.0, arc_deg_s=26.0, arc0=-30.0, tilt0=0.0, tilt_deg_s=0.0, decay=0.25,
+             snaps=[dict(g=(729, 742), k=1.25, peak=2.2, shift=(0.0, 0.0), tilt=-3.0, arc=48.0)]),
     16: dict(push=-0.05, slide_px=-30.0, rise_px=0.0, arc_deg_s=22.0, arc0=-14.0, tilt0=2.5, tilt_deg_s=0.0, decay=0.3,
              snaps=[dict(g=(1090, 1108), k=0.65, peak=2.0, shift=(0.0, 0.0), tilt=0.0, arc=14.0)]),
-    17: dict(push=0.13, slide_px=30.0, rise_px=0.0, arc_deg_s=20.0, arc0=-22.0, tilt0=0.0, tilt_deg_s=0.0, decay=0.25,
-             snaps=[dict(g=(1192, 1205), k=1.5, peak=2.2, shift=(0.0, 0.0), tilt=-3.0, arc=30.0)]),
+    17: dict(push=0.05, slide_px=10.0, rise_px=0.0, arc_deg_s=26.0, arc0=-30.0, tilt0=0.0, tilt_deg_s=0.0, decay=0.25,
+             snaps=[dict(g=(1192, 1205), k=1.25, peak=2.2, shift=(0.0, 0.0), tilt=-3.0, arc=48.0)]),
 }[SHOT]
 if os.environ.get('CAMP'):
     CAMP.update(json.loads(os.environ['CAMP']))          # tuning only
