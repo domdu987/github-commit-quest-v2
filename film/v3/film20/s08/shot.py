@@ -25,7 +25,7 @@ LIGHT, PRESET, PPD = "DAY", "cafe_window", 192
 
 ART = [("art1", "painter20", "artist_1"), ("art2", "composer20", "artist_2"), ("art3", "poet20", "artist_3"), ("art4", "architect20", "artist_4")]
 # stage (D, world x/y); yaw sign = facing (negative mirrors); back = three-quarter back view toward the lens
-SPOT = {"art1": (-2.4, 6.0), "art2": (-0.5, 8.3), "art3": (2.9, 9.0), "art4": (-0.6, 3.6)}
+SPOT = {"art1": (-1.4, 5.6), "art2": (0.4, 7.6), "art3": (3.5, 8.3), "art4": (-0.1, 3.7)}
 BACK = {"art1": True, "art2": False, "art3": False, "art4": True}
 YAW = {"art1": 0.35, "art2": 0.45, "art3": -0.4, "art4": 0.3}
 PHASE = {"art1": 0.0, "art2": 1.7, "art3": 3.1, "art4": 4.4}
@@ -34,12 +34,12 @@ POINT = {"art1": (0.95, 0.35), "art2": (1.0, 0.25), "art3": (1.0, 0.3), "art4": 
 
 
 def cam_path(A):
-    c = Vector(eval(os.environ.get("CAML", "(0.9, -2.6, 2.4)")))
+    c = Vector(eval(os.environ.get("CAML", "(1.5, -0.8, 2.4)")))
     subj = Vector((1.4, 12.0, 3.3))
-    return C.CamPath(c, subj, GA, G_LAST, push=float(os.environ.get("PUSH", "0.08")), slide_px=float(os.environ.get("SLIDE", "22")),
-                     tilt0=float(os.environ.get("TILT", "3")), tilt_deg_s=0.0, decay=0.25, arc_deg_s=float(os.environ.get("ARC", "1.5")),
-                     snaps=[dict(g=SNAP, k=1.3, peak=1.7, shift=(0.0, 0.0), tilt=0.0),
-                            dict(g=(G_BLACK - 2, G_BLACK + 12), k=1.25, peak=1.7, shift=(0.0, 0.0), tilt=0.0)])
+    return C.CamPath(c, subj, GA, G_LAST, push=float(os.environ.get("PUSH", "0.05")), slide_px=float(os.environ.get("SLIDE", "30")),
+                     tilt0=float(os.environ.get("TILT", "3")), tilt_deg_s=0.0, decay=0.25, arc_deg_s=float(os.environ.get("ARC", "0")),
+                     snaps=[dict(g=SNAP, k=1.15, peak=1.7, shift=(0.0, 0.0), tilt=0.0),
+                            dict(g=(G_BLACK - 2, G_BLACK + 12), k=1.12, peak=1.7, shift=(0.0, 0.0), tilt=0.0)])
 
 
 def cam_path_static():
