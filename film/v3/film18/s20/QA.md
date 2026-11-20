@@ -1,6 +1,8 @@
-# QA s20 (render team 5, film 18) round 13 - frames g1515-1595 (+6 handles: take.mkv g1509-1601, 93 frames), jimo_out NIGHT
-Frame-diff in-shot (n=80): median **4.72**, p90 **7.27** (median gate >= 4 met; p90 >= 9 not reached). qa_auto PASS.
-New camera plan (director 11:22): herd speed 15 D/s, camera 15.45 D/s, so the lead ox (side view, scale 0.75, about 22-25 % of frame height, `face='rage'`) starts with its head at x about 0.08-0.15 and drifts right to about 0.25-0.3; three oxen (speeds 2.2-2.6 D/s faster) overtake it in the mid-ground and run through frame (right -> left, the direction they face); far row of oxen behind. Gallop at 12 fps, flames cycling every 2-3 frames; tilt-up and lower-corner props kept (46-60 jars / bundles along the path, 1.5 D from the lens), plus a 0.9 D yaw sway.
-- Lead flame: its own tongue (about 150 px, painted card on the tail tip) is inside the frame in the phone-sheet frames g1524-1584; at g1599 it touches the right edge. Not pixel-measured on every 5th frame this round.
-- Ground (`J.ground_share`): 0.21 / 0.21 / 0.26 / 0.25 at g1530 / 1550 / 1570 / 1590.
-- A large foreground jar covers the lead ox's rump / tail root at times (g1569-1584) from the bottom right; the props were not aimed away from the lead.
+# QA s20 (render team 5, film 18) round 14 - g1515-1595 (+6 handles: take.mkv g1509-1601, 93 frames), NIGHT
+Redesign per director round 13/14: side-view gallop, lead ox ~17 % frame height, `face='rage'`, tail flame lean 60.
+- Frame-diff in-shot (n=80, 90x160 grey): median **4.32**, p90 **6.01**, min 3.00, max 20.59 (median gate >= 4 met; p90 >= 9 NOT reached).
+- Camera follows at 0.97 x herd speed; lead ox head x ~83 px at minimum, lead flame max x ~651 px (<= 680) measured in measure mode.
+- Foreground: ~70 world props (jars, reed bundles) on the lower field, field planks/posts sunk, halo quads removed; plain field fraction on rendered PNGs (rough low-chroma mask) ~0.5 - not a strict colour-mask check, honest note.
+- Contact shadows present under oxen; Qi not in shot. Comic, bloodless.
+- Deviations: p90 below 9; ground plain-share not verified with a proper field-colour mask; whip-in handle 6 frames.
+- qa_auto PASS (QA_AUTO.md).

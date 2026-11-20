@@ -1,31 +1,28 @@
 #!/usr/bin/env python3
-"""s20 (frames 1515-1595): reveal A. The camera tracks ALONGSIDE the herd at herd speed: a lead ox in clean profile (35-50 % of frame height) with its flame trailing behind;
-every ox runs the same way (-y toward the Yan camp), flames on the tail tips, sparks, tail lights.  jimo_out NIGHT.  Short whip-in.
-python3 shot.py draft|final [first_g last_g] [out]"""
+"""s20 (frames 1515-1595): reveal A, round 14 REDESIGN. High side-tracking crane (5 D up, 14 D from the herd line, pitched down), truck at 92 % of herd speed + push,
+two rows of side-view oxen (spacing 2.2 ox lengths, rear row offset half a spacing and 3 D farther), lead ox whole in frame, flames capped 0.8 D tilted up 30 deg.
+python3 shot.py measure|draft|final [first_g last_g]"""
 import os, sys, math, random
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c18 as C
 from c18 import J, S, R2, V, bpy
 SHOT = 's20'; G0, G1 = 1515, 1595; H_IN, H_OUT = 6, 6
-V_OX = 15.0; XC = 20.0; Y0 = -46.0; DUR = 81 / 30.0
+V_OX = 15.0; V_CAM = 0.97 * V_OX; XC = 20.0; Y0 = -46.0; DUR = 81 / 30.0; LAT = 14.0; CZ = 5.0
 def pose(sh, t):
-    """camera rides with the herd: y = Y0 - V*t*DUR; lateral distance 10.5 -> 9.2 (slow push), whip-in during the first 7 frames."""
-    y = Y0 - (V_OX + 0.45) * t * DUR; lat = 10.8 - 2.2 * min(1.0, max(0.0, t)) ; w = max(0.0, 1.0 - (t * 81) / 7.0) ** 2
-    return dict(loc=(XC, y, 1.3), look_at=(XC - lat, y + 3.4 + 0.9 * math.sin(t * 10.0) + 30.0 * w, 3.3), lens=19.0)
+    y = Y0 - V_CAM * t * DUR; lat = LAT - 0.05 * LAT * t * DUR * 0.0 - 0.14 * LAT * t     # 5 %/s push -> about 14 % over the shot
+    w = max(0.0, 1.0 - (t * 81) / 7.0) ** 2
+    return dict(loc=(XC, y, CZ), look_at=(XC - lat, y + 2.2 + 30.0 * w, 2.6), lens=26.0)
 S.pose_at = pose
 rnd = random.Random(20)
 R2.POST['s20'] = lambda p: None
-REL = [(-7.0, 1.0, 0.75, 0.0),                                   # lead ox in pure profile, starts at x ~0.15 and drifts right (camera faster by 0.9 D/s)
-       (-10.5, 7.5, 0.8, -2.4), (-13.5, 11.5, 0.8, -2.2), (-9.8, 15.5, 0.78, -2.6)]    # three oxen overtake it, right -> left, in the mid-ground
-for n in range(-2, 3): REL.append((-17.5 + rnd.uniform(-0.4, 0.4), 6.0 + 12.0 * n, rnd.uniform(0.97, 1.03), 0.0))   # far row (no overlap with the lead)
+SP = 10.0                                                       # row spacing = 2.2 ox lengths (ox about 4.5 D)
+FRONT = [(-LAT, 2.65 + SP * n, 1.0) for n in range(-2, 3)]       # lead ox = n 0 at dy 3.0 (head at the left of frame)
+REAR = [(-LAT - 3.0, 2.65 + SP * (n + 0.5), 0.95) for n in range(-2, 3)]
+REL = FRONT[:2] + [FRONT[2]] + FRONT[3:]                         # keep list order: REL[0] must be the lead
+REL = [FRONT[2]] + [f for i, f in enumerate(FRONT) if i != 2] + REAR
 
 def setup(ctx):
     J.set_holes(12)
-    Mt = J.STATE['M']
-    me = bpy.data.meshes.new('mygap'); me.from_pydata([(0, -160, 0.06), (45, -160, 0.06), (45, -25, 0.06), (0, -25, 0.06)], [], [(0, 1, 2, 3), (3, 2, 1, 0)]); me.update()
-    uv = me.uv_layers.new(name='UVMap')
-    for i_, c_ in enumerate(((0, 0), (12, 0), (12, 8), (0, 8), (0, 8), (12, 8), (12, 0), (0, 0))): uv.data[i_].uv = c_
-    me.materials.append(Mt['bank']); J.STATE['SET'].objects.link(bpy.data.objects.new('mygap', me))
     import bmesh
     ho = bpy.data.objects.get('halos')
     import numpy as np
@@ -46,31 +43,23 @@ def setup(ctx):
         bm = bmesh.new(); bm.from_mesh(ho.data); mw = ho.matrix_world
         bad = [f for f in bm.faces if (lambda c: c.y < -25 and abs(c.x) < 60 and c.y > -135)(mw @ f.calc_center_median())]
         bmesh.ops.delete(bm, geom=bad, context='FACES'); bm.to_mesh(ho.data); bm.free()
-    import jimo_dress as _DG; _DG.DENSITY0 = 1.0
-    R2.dress(13.5, 19.2, -100.0, -42.0, 160, 31, kinds=('stone', 'hay', 'basket', 'pot', 'rope'), avoid=lambda x, y: False)
 
-BUSH = [(rnd.uniform(14.2, 18.4), rnd.uniform(-102, -42), rnd.uniform(0.9, 1.5)) for _ in range(60)]
-FGP = []
+    pr = random.Random(5)
+    for n in range(70):                                                  # dressed field between the camera and the herd (world props, all on the ground)
+        px_ = pr.uniform(8.5, 17.5); py_ = pr.uniform(-108, -40)
+        if pr.random() < 0.35: J.prop_reed_bundle((px_, py_, 0.2), (0, 0, pr.uniform(0, 6.28)), scale=pr.uniform(0.6, 0.9), n=40, cd=6.0)
+        else: J.prop_pot((px_, py_, 0.0), pr.uniform(0, 6.28), kind=pr.choice(('pot', 'jar', 'bowl')), scale=pr.uniform(0.6, 0.9), cd=6)
+
 def frame(g, t, camloc, ctx):
     J.set_holes(12); k = (g - G0) / 30.0
-    for n_, (bx, by, bs) in enumerate(BUSH):
-        if abs(by - camloc.y) < 16: C.put_puff((bx, by, bs * 0.38), bs * 1.5, camloc, alpha=0.95, name='bush%d' % n_, tone=(78, 58, 44))
     for ob in bpy.data.objects:
         if ob.name in ('tufts', 'furrows', 'posts', 'road') or ob.name.startswith(('stk', 'flame_stk', 'flame_road', 'flame_rd', 'flame_far', 'farglow', 'fgstone', 'fgwood')): ob.hide_render = True
-    if not FGP:
-        for i in range(60):
-            yy = Y0 - 2.0 * i - 1.0; xx = XC - 1.5 - 0.3 * (i % 2)
-            if i % 3 == 0: FGP.append(J.prop_reed_bundle((xx, yy + (0.8 if i % 2 else -0.8), 0.2), (0, 0, 0.3 * i), scale=1.0, n=40, cd=3.0))
-            else: FGP.append(J.prop_pot((xx, yy + (0.9 if i % 2 else -0.9), 0.0), 0.5 * i, kind=('pot', 'jar', 'bowl')[i % 3], scale=0.85, cd=4))
-    for q, (qdy, qph) in enumerate(((-9.0, 0.0), (6.0, 0.25))):          # Qi runners in the near lane, cropped by the bottom edge
-        yq = Y0 - V_OX * (g - G0) / 30.0 + qdy + 2.6 * k + 3.0 * math.sin(k * 1.3 + q)
-        C.put_person(C.qi(k * 1.5 + qph, 1), (XC - 11.5 - 1.2 * q, yq, 0), camloc, 3.1, 'qin%d' % q, mirror=True, tint=(0.4, 0.4, 0.62), k=0.8)
-    for j, (dx, dy, sc, dv) in enumerate(REL):
-        ycam = Y0 - V_OX * (g - G0) / 30.0
-        pos = (XC + dx, ycam + dy + dv * k + 0.0, 0.0)
+    ycam = Y0 - V_OX * k
+    for j, (dx, dy, sc) in enumerate(REL):
+        pos = (XC + dx, ycam + dy, 0.0)
         ph = int(k * 12 + j * 3) % 8
-        C.put_ox(j, pos, -90, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='side', gait='gallop', theta=0, reed=True, face='rage', tfx=(1.5 if j == 0 else 0.8), lean=(62.0 if j == 0 else 86.0))
+        C.put_ox(j, pos, -90, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='side', gait='gallop', theta=0, reed=True, face='rage', tfx=0.4, lean=60.0)
 
 if __name__ == '__main__':
-    KEEP = [(x, y, 3.2) for x in (13.0, 8.2, 3.4) for y in range(-40, -150, -6)]
+    KEEP = []
     C.run(SHOT, G0 - H_IN, G1 + H_OUT, frame, setup, sys.argv[1:], keep=KEEP)
