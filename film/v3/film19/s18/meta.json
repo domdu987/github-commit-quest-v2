@@ -28,8 +28,8 @@
   "note": "dissolve 13 f into shot 19 (ship_coast) centred on g 1468; handle g 1468..1476 rendered in 3D"
  },
  "set": "v3/set3d19/h19.py SHIP preset ship_hero, light NOON; set_sea(g/30) + set_roll(g/30) keyed on every frame; sea grid re-fitted at runtime to a 1.5x wider virtual camera footprint (no set module edited) so the slide never shows the grid edge; no actors; no caption_shade",
- "cast": "none (no characters in this shot)",
- "camera": "custom 22 mm; hero preset pulled back 1.15x horizontally at the preset height so the WHOLE ship stays in frame (mesh silhouette checked, >= 15 px margin), push -1 %/s + slide 12 px/s + crane 12 px/s + orbit -5.6 deg/s, plus a SNAP push x1.22 with a pan (17 f, g 1428..1445) on 'จาไมกา' (~g 1438); sea clock x2; 40 foreground swell-crest foam lines (the set's streaks hook) and the preset's floating spar kept in front of the lens; no gulls; sun glint x0.3; exposure -0.3 EV on top of the colour-fixed set",
+ "cast": "william19 (william_show_h4: the H4 on his open palm, happy), forecastle port side (-6.5, 36, 12.0), scale 4.0 for phone readability, rides ship_root; head 26-39 px wide",
+ "camera": "custom 22 mm; hero preset pulled back 1.15x horizontally at the preset height so the WHOLE ship stays in frame, push -1 %/s + slide 12 px/s + crane 12 px/s + orbit -5.6 deg/s, SNAP push x1.22 with a pan (17 f, g 1428..1445) on 'จาไมกา' (~g 1438), then a gentle second move (g 1446-1476, x1.05 + 0.8 D pan) so the camera never parks; sea clock x2; 28 foreground swell-crest foam lines + the preset's floating spar; no gulls; sun glint x0.03; exposure -0.8 EV on top of the colour-fixed set; deepened horizon sky; william19 (scale 4.0) on the forecastle holding the H4 watch",
  "events": {},
  "dof": "none",
  "text": "none",
@@ -42,15 +42,15 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 24.58,
- "s_per_frame_cpu_mean": 38.9,
+ "s_per_frame_wall_mean": 18.44,
+ "s_per_frame_cpu_mean": 35.79,
  "framediff_in_shot": {
-  "median": 4.39,
-  "p90": 10.95
+  "median": 4.79,
+  "p90": 9.96
  },
  "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json",
  "qa_stats": {
-  "saturation": 0.53,
-  "luma": 128.6
+  "saturation": 0.644,
+  "luma": 100.7
  }
 }
