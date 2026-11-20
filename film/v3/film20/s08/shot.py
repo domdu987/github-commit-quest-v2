@@ -36,9 +36,10 @@ POINT = {"art1": (0.95, 0.35), "art2": (1.0, 0.25), "art3": (1.0, 0.3), "art4": 
 def cam_path(A):
     c = Vector(eval(os.environ.get("CAML", "(0.9, -2.6, 2.4)")))
     subj = Vector((1.4, 12.0, 3.3))
-    return C.CamPath(c, subj, GA, G_LAST, push=float(os.environ.get("PUSH", "0.08")), slide_px=float(os.environ.get("SLIDE", "18")),
-                     tilt0=float(os.environ.get("TILT", "3")), tilt_deg_s=0.0, decay=0.25,
-                     snaps=[dict(g=SNAP, k=1.3, peak=1.7, shift=(0.0, 0.0), tilt=0.0)])
+    return C.CamPath(c, subj, GA, G_LAST, push=float(os.environ.get("PUSH", "0.08")), slide_px=float(os.environ.get("SLIDE", "55")),
+                     tilt0=float(os.environ.get("TILT", "3")), tilt_deg_s=0.0, decay=0.25, arc_deg_s=float(os.environ.get("ARC", "6")),
+                     snaps=[dict(g=SNAP, k=1.3, peak=1.7, shift=(0.0, 0.0), tilt=0.0),
+                            dict(g=(G_BLACK - 2, G_BLACK + 12), k=1.25, peak=1.7, shift=(-0.15, 0.0), tilt=0.0)])
 
 
 def cam_path_static():
