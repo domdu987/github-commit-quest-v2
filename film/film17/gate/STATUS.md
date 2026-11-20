@@ -4,7 +4,7 @@
 | s01 | 1 | **PASS** (QA-art R3 SHIP; QA-tech R2 blockers hand + post-whip caliper verified fixed) | render17/team1 d6ecda5 | rhythm 8.96/17.84; minor: brow bar g70-90, coat hem, beard seam |
 | s02 | 2 | PASS R3 (QA-tech; 3 should-fix accepted: no hand sprite on blue cuff, edge object, tight push) | c2c810e (USE THIS) | gate/s02/QA_TECH_R3.md |
 | s03 | 3 | **PASS** R2 (QA-tech; 5 should-fix accepted: jagged book outline, hand gap early, fg pile edge) | 3fcb09e (USE THIS) | gate/s03/QA_TECH_R2.md |
-| s04 | 4 | FAIL r1 -> re-render | | |
+| s04 | 4 | FAIL R2 (B1 floating crossed rods g445/466-470/512-538; B2 shot-12 hand on hip, no ear tap - director confirmed g614/639) | b3326ff | gate/s04/QA_TECH_R2.md, director_check_R2.png |
 | s05 | 2 (from 5) | **PASS** R2 (QA-tech + director look; should-fix accepted: edge crop, blown chandelier g685-715, hood cloth) | e553276 (USE THIS) | gate/s05/QA_TECH_R2.md |
 | s06 | 5 | **PASS** R2 (QA-tech; should-fix accepted: glove size, weak exit, double-hand g760/772) | 6fe61b4 (USE THIS) | gate/s06/QA_TECH_R2.md |
 | s07 | 6 -> 1 (reassigned R4, simplified insert spec) | FAIL R3 (no finger on gauge, foot jaws hidden, calipers not held, card never enters drawer, leftover rods, 10-20 f soft runs, g928 pop). Shot 16 OK and reusable. | 34bb2c8 | gate/s07/QA_TECH_R3.md |
