@@ -10,3 +10,6 @@ Redesign per director round 13/14: side-view gallop, lead ox ~17 % frame height,
 ## Section I rim light (final render)
 - Frame-diff in-shot (n=80): median **4.73**, p90 **6.56** (p90 < 9 not reached). qa_auto PASS.
 - Moon-blue rim (120,175,255) painted into every character/ox card on the upper/right silhouette edge (cards are unlit emission, so scene lights cannot rim them); plus two blue point lights per frame behind the nearest oxen for the ground. Warm fire key and saturated reds unchanged, no haze added. Layout unchanged; the other s19 caveats above still apply.
+
+## Round 15 (director follow-up, rim version)
+Herd and camera speed raised 8 % (V_OX 16.2). Frame-diff n=80: median **4.92**, p90 **6.75** (aim p90 >= 7 narrowly missed). Lead head min x about 134, lead flame max x about 650. qa_auto PASS.

@@ -11,3 +11,6 @@
 ## Section I rim light (final render)
 - Frame-diff in-shot (n=87): median **11.21**, p90 **14.19**. qa_auto blur flag only on the whip-out (g1504-1518).
 - Moon-blue rim (120,175,255) painted into every character/ox card on the upper/right silhouette edge (cards are unlit emission, so scene lights cannot rim them); plus two blue point lights per frame behind the nearest oxen for the ground. Warm fire key and saturated reds unchanged, no haze added. Layout unchanged; the other s19 caveats above still apply.
+
+## Round 15 (director follow-up, rim version)
+Far-lane head-on oxen increased from 9 to 15 (flames hidden, spacing 7 frames, lane depth 64+ D). Frame-diff n=87: median **11.20**, p90 **14.17**. Flame-face gap < 15 px now in g1475-1477 only (was g1443, 1445, 1457; the remaining 3 persisted when I shifted near-lane waves 2-5 by +-3..9 frames - those shifts made it worse). Density: far oxen are small at their depth, so visible oxen per 0.5 s tile is about 3-4 but the 4-per-tile target is not reliably met in every tile. Mouth worst 782 px. qa_auto fails only on the whip-out blur.

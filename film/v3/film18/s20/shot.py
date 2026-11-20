@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c18 as C
 from c18 import J, S, R2, V, bpy
 SHOT = 's20'; G0, G1 = 1515, 1595; H_IN, H_OUT = 6, 6
-V_OX = 15.0; V_CAM = 0.97 * V_OX; XC = 20.0; Y0 = -46.0; DUR = 81 / 30.0; LAT = 14.0; CZ = 5.0
+V_OX = 16.2; V_CAM = 0.97 * V_OX; XC = 20.0; Y0 = -46.0; DUR = 81 / 30.0; LAT = 14.0; CZ = 5.0
 def pose(sh, t):
     y = Y0 - V_CAM * t * DUR; lat = LAT - 0.05 * LAT * t * DUR * 0.0 - 0.14 * LAT * t     # 5 %/s push -> about 14 % over the shot
     w = max(0.0, 1.0 - (t * 81) / 7.0) ** 2

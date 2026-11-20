@@ -25,7 +25,7 @@ for w in range(9):
 OX = OX[:60]
 QI = [(G0 - 10 + 5 * k, 44.0 + 2.2 * (k % 3)) for k in range(6)]
 V_OX, V_QI = 15.0, 11.5
-FAR = [(G0 - 30 + 10 * k, 56.0 + 3.0 * (k % 3), (-0.4, 0.4, 0.0)[k % 3]) for k in range(9)]            # far lanes 8-14 D behind the near lane, head-on / 3/4 toward the camera
+FAR = [(G0 - 30 + 7 * k + 5, 64 + 3.5 * (k % 4), (-0.4, 0.4, 0.0, 0.2)[k % 4]) for k in range(15)]            # far lanes 8-14 D behind the near lane, head-on / 3/4 toward the camera
 
 def setup(ctx):
     J.set_holes(12)
