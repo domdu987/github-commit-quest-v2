@@ -24,17 +24,17 @@ H_IN, H_OUT = 9, 10                              # CUT in (9), DIS 15 out -> 10 
 G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1      # 764..871
 GS = list(range(G_FIRST, G_LAST + 1))
 G_WORD = C.cap_g("ไอ้ช่างไม้")                   # 846: caption start of the nickname
-SNAP = (G_WORD - 3, G_WORD + 10)                 # 843..856 (13 frames)
+SNAP = (G_WORD - 3, G_WORD + 11)                 # 843..857 (14 frames)
 LIGHT, PRESET, FINAL_SPP = "DAY", "hall_wide", 8
 
-HAR_XY = (0.15, 0.8)                             # Harrison just inside the doors, left of the aisle (screen-right of centre)
-CAM_LOC0 = (0.8, -6.0, 3.8)
-CAM_LOOK0 = (0.0, 0.8, 2.9)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.10, slide_px=-60.0, rise_px=30.0, arc_deg_s=-16.0, decay=0.05,
-                snaps=[dict(g=SNAP, k=2.85, peak=1.6, shift=(1.9, -1.1))])
+HAR_XY = (0.0, -5.0)                             # AT the door (harrison_door is (0, -5.55)); the open leaves frame him                             # Harrison just inside the doors, left of the aisle (screen-right of centre)
+CAM_LOC0 = (0.0, 9.4, 3.6)
+CAM_LOOK0 = (0.0, -5.0, 2.0)
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.10, slide_px=-20.0, rise_px=0.0, arc_deg_s=0.0, decay=0.05,
+                snaps=[dict(g=SNAP, k=3.0, peak=1.6, shift=(1.1, 0.7))])
 
 # ---------------------------------------------------------------------------- cast
-STAND = dict(mock=(-2.3, 2.1, 0.0), bb=(-2.3, 3.9, 0.0), cc=(2.3, 2.7, 0.0), bd=(2.3, 4.6, 0.0))   # behind the chairs; the narrow 22 mm lens needs them inboard of the marks
+STAND = dict(mock=(-2.1, 0.2, 0.0), bb=(-2.1, 1.9, 0.0), cc=(2.1, 0.9, 0.0), bd=(2.1, 2.6, 0.0))   # behind the chairs; the narrow 22 mm lens needs them inboard of the marks
 # name, cast, mark, base STORY19 pose, mirror (faces screen-left), phase offset (frames)
 BOARD = [
     ("mock", "astro19", "mocker_table", "astro_belly_laugh", True, 0),
@@ -52,10 +52,8 @@ def laugh_pose(name, g):
     p["mirror"] = mir
     p["mouth"] = None
     del p["mouth"]
-    if name in ("bb", "bd") and (g // 20) % 2 == 0:            # a pointing finger every other beat
-        p["arm_r"] = dict(hand=(1.0, 0.15), shape="point", bend=-0.4, stretch=1.2)
-    if name == "cc" and (g // 20) % 2 == 1:
-        p["arm_r"] = dict(hand=(1.0, 0.1), shape="point", bend=-0.4, stretch=1.2)
+    if (g // 9 + off) % 2 == 0:                          # a pointing finger at Harrison (screen-centre), alternating hands
+        p["arm_r"] = dict(hand=(1.0, 0.12), shape="point", bend=-0.4, stretch=1.25)
     p["blink"] = blink(g + off, [10 + off])
     p["t"] = g / 30.0
     return p
@@ -67,15 +65,13 @@ def laugh_z(g, off):
 
 
 def harrison_pose(g):
-    p = dict(cast19.STORY19["harrison_idle"][1])
+    p = dict(cast19.STORY19["harrison_hopeful_door"][1])       # hands clasped at the chest (no hat: a flat tricorne wedge read badly)
     p["expr"] = "sad"
-    p["yaw"] = 0.2
-    p["arm_r"] = dict(hand=(0.42, 0.78), bend=-0.2, shape="open", stretch=1.05, layer="top")
-    p["prop_r"] = "tricorn_held"
-    p["arm_l"] = dict(hand=(-0.3, 1.1), bend=0.4)
+    p["mirror"] = False
+    p["yaw"] = 0.0
     p["lean"] = 1.5 + 1.0 * math.sin(g * 0.12)
     p["head_roll"] = 2.0 * math.sin(g * 0.1)
-    p["pitch"] = 0.15
+    p["pitch"] = 0.1
     p["blink"] = blink(g, [800, 830, 870])
     p["t"] = g / 30.0
     return p
@@ -101,14 +97,14 @@ class Take(C.Take):
                 C.place(self.actors[b[0]], f, Vector(STAND[b[0]]) + Vector((0, 0, laugh_z(g, b[5]))))
             C.place(self.har, f, Vector((HAR_XY[0], HAR_XY[1], 0.0)))
             self.key_set(f, candles=1.0)
-            C.key_vis(self.doors, False, f)
+            pass
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
             for b in BOARD:
                 self.actors[b[0]].pose(f, laugh_pose(b[0], g), camera=self.cam)
             self.har.pose(f, harrison_pose(g), camera=self.cam)
-        self.sprites_for([(self.actors[b[0]], 192) for b in BOARD] + [(self.har, 448)], [bf(g) for g in gs])
+        self.sprites_for([(self.actors[b[0]], 192) for b in BOARD] + [(self.har, 512)], [bf(g) for g in gs])
 
     def report(self, g):
         f = bf(g)
