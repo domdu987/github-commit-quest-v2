@@ -32,4 +32,4 @@ def actors(f, cam, ctx):
     R2.lit_pools(cam, nlights=0)
 
 if __name__ == '__main__':
-    C.run(SHOT, actors, G0, G1, HB, HA, quality=sys.argv[1] if len(sys.argv) > 1 else None, tweak=tweak, shk=0.012, cam_fn=CAM)
+    C.run(SHOT, actors, G0, G1, HB, HA, quality=sys.argv[1] if len(sys.argv) > 1 else None, tweak=tweak, shk=0.012, cam_fn=CAM, dress=2)

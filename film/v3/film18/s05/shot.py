@@ -25,4 +25,4 @@ def actors(f, cam, ctx):
     C.person_card('child', 'child_carry_basket', (p1.x, p1.y, 0), cam, 5, h=1.5, bob=0.05 * abs(math.sin(2 * math.pi * 1.8 * t)), roll=C.sway(f, 5, 2, 0.9))
     C.person_card('townsfolk', 'woman_carry_basket', (p2.x, p2.y, 0), cam, 6, h=1.6, bob=0.05 * abs(math.sin(2 * math.pi * 1.5 * t + 1)), roll=C.sway(f, 6, 2, 0.9), mirror=True)
 if __name__ == '__main__':
-    C.run(SHOT, actors, G0, G1, HB, HA, quality=sys.argv[1] if len(sys.argv) > 1 else None, tweak=tweak, shk=0.016, cam_fn=CAM)
+    C.run(SHOT, actors, G0, G1, HB, HA, quality=sys.argv[1] if len(sys.argv) > 1 else None, tweak=tweak, shk=0.016, cam_fn=CAM, dress=5)
