@@ -534,7 +534,7 @@ def _water_mat():
     P = STATE['P']; m = bpy.data.materials.new('water'); nt = _mk_tree(m); N = nt.nodes.new; L = nt.links.new; out = N('ShaderNodeOutputMaterial'); geo = N('ShaderNodeNewGeometry')
     wa = N('ShaderNodeAttribute'); wa.attribute_name = 'wattr'; wa.attribute_type = 'GEOMETRY'; fa = N('ShaderNodeAttribute'); fa.attribute_name = 'fuv'; fa.attribute_type = 'GEOMETRY'
     sp = N('ShaderNodeSeparateXYZ'); L(wa.outputs['Vector'], sp.inputs[0])
-    ramp = N('ShaderNodeValToRGB'); L(sp.outputs['X'], ramp.inputs[0]); cr = ramp.color_ramp; cr.elements[0].position = 0.0; cr.elements[0].color = (*hex_lin('#5cc8b4'), 1)
+    ramp = N('ShaderNodeValToRGB'); L(sp.outputs['X'], ramp.inputs[0]); cr = ramp.color_ramp; cr.elements[0].position = 0.0; cr.elements[0].color = (*hex_lin(P.get('shallow', '#5cc8b4')), 1)
     cr.elements[1].position = 1.0; cr.elements[1].color = (*hex_lin('#0f5e74'), 1); e = cr.elements.new(0.3); e.color = (*hex_lin('#2fa8a4'), 1); e = cr.elements.new(0.6); e.color = (*hex_lin('#1a8392'), 1)
     off = N('ShaderNodeMapping'); L(fa.outputs['Vector'], off.inputs[0]); off.name = 'flow_off'; off.inputs['Scale'].default_value = (0.045, 0.30, 1.0)
     nz = N('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 1.0; nz.inputs['Detail'].default_value = 2.0; nz.inputs['Roughness'].default_value = 0.5; L(off.outputs[0], nz.inputs['Vector'])
@@ -561,7 +561,7 @@ def _water_mat():
     core = _lit_core(nt, art2, dict(mix=0.7, sm=(0.7, 1.0, 1.2), afl=0.25), geo)
     # sky sheen at grazing angles
     lw = N('ShaderNodeLayerWeight'); lw.inputs['Blend'].default_value = 0.35; sheen = N('ShaderNodeEmission'); sheen.inputs['Color'].default_value = (*hex_lin('#bcd4ee'), 1)
-    km = N('ShaderNodeMath'); km.operation = 'MULTIPLY'; km.inputs[1].default_value = 0.22; L(lw.outputs['Facing'], km.inputs[0])
+    km = N('ShaderNodeMath'); km.operation = 'MULTIPLY'; km.inputs[1].default_value = 0.22 * P.get('sheen_k', 1.0); L(lw.outputs['Facing'], km.inputs[0])
     kf = N('ShaderNodeMath'); kf.operation = 'MULTIPLY'; L(km.outputs[0], kf.inputs[0]); nfoam = N('ShaderNodeMath'); nfoam.operation = 'SUBTRACT'; nfoam.inputs[0].default_value = 1.0; L(shm.outputs[0], nfoam.inputs[1]); L(nfoam.outputs[0], kf.inputs[1])
     L(kf.outputs[0], sheen.inputs['Strength']); a1 = N('ShaderNodeAddShader'); L(core, a1.inputs[0]); L(sheen.outputs['Emission'], a1.inputs[1])
     # sun glitter: small bright cells where a rippled normal reflects the sun toward the camera
@@ -635,7 +635,7 @@ def grade(path, sat=1.07, bloom=0.5, scale=None, gamma=1.28):
     Image.fromarray((im * 255 + 0.5).astype(np.uint8)).save(path)
 VIVID = {'bridge_deck': (1.78, 1.15), 'bridge_end_north': (1.38, 1.23), 'bridge_end_south': (1.9, 1.15), 'bridge_high': (1.9, 1.15),
          'camp_bank': (1.52, 1.3), 'camp_table': (1.05, 1.1), 'camp_wide': (1.9, 1.15), 'hill_eye': (0.8, 1.31), 'hill_low': (1.38, 1.15),
-         'hill_over': (1.48, 1.15), 'river_low': (1.8, 1.3), 'riverbank': (1.5, 1.6), 'valley_loop': (1.07, 1.53), 'valley_river': (1.9, 1.18),
+         'hill_over': (1.48, 1.15), 'river_low': (1.9, 1.3), 'riverbank': (1.5, 1.6), 'valley_loop': (1.07, 1.53), 'valley_river': (1.9, 1.18),
          'valley_wide': (1.11, 1.63)}
 def render(path, mode='final', samples=None, do_grade=True):
     sc = bpy.context.scene; setup_render(sc, mode, samples); sc.render.filepath = path; t = time.time(); bpy.ops.render.render(write_still=True); dt = time.time() - t
@@ -1568,7 +1568,7 @@ _mk('riverbank', loc='riverbank', cam=(-27.0, 54.0, 0.0), cam_dz=1.8, look=(-28.
     veg=dict(_VEG, half=30, reeds=[(2, 40, 90)]), drift='slide 40 px/s + push; the channel is on the right: splash() points in PRESETS["riverbank"]["splashes"]')
 PRESETS['riverbank']['splashes'] = [at_px(PRESETS['riverbank'], d, xp) + (0.0,) for d, xp in ((9.0, 520), (11.0, 640), (13.0, 380))]
 PRESETS['riverbank']['splash_size'] = 1.5; PRESETS['riverbank']['splash_ages'] = [0.2, 0.35, 0.5]
-_mk('river_low', loc='riverbank', cam=(-26.0, 46.0, 0.0), cam_dz=0.9, look=(-44.0, 44.0, 0.9), lens=22.0, sd=10.0, over=dict(_OVR, reed_k=0.4, foam_k=0.6, sun_k=1.0),
+_mk('river_low', loc='riverbank', cam=(-26.0, 46.0, 0.0), cam_dz=0.9, look=(-44.0, 44.0, 0.9), lens=22.0, sd=10.0, over=dict(_OVR, reed_k=0.4, foam_k=0.6, sun_k=0.75, shallow='#2a8c86', sheen_k=0.25),
     marks_spec=[], fg_list=[('reeds', 1.4, 60), ('reeds', 1.6, 670), ('rock', 1.8, 380, 0.3)], veg=dict(_VEG, half=34, reeds=[(2, 40, 160)]), splash_size=1.8, splash_ages=[0.15, 0.3, 0.45], drift='quick push; splash() crowns at pr["splashes"]')
 PRESETS['river_low']['splashes'] = [at_px(PRESETS['river_low'], d, xp) + (0.0,) for d, xp in ((9.0, 150), (10.5, 380), (9.5, 610))]
 
