@@ -30,8 +30,12 @@ def set_day(g):
     mx = P.TAKES[take]['mix']; P.set_light_mix(mx[2], mx[3], 1.0, g + 1); P.set_flicker2(1.0, frame=g + 1)
 assert P.check_take(take)['hits'] == [] and P.check_face(take)['ok']
 A = P.world_build(take); P.key_take(take); RES = tuple(int(x) for x in os.environ.get('RES', '720x1280').split('x')); P.setup_render2(RES, samples=16, threads=2)
+def clear_cast():   # director fix (render17v2/T3 e86e676): stage_cast2 never removes old actors; stale shadow proxies pile up into black slabs
+    sys.path.insert(0, 'film/v3/stage'); import actors
+    for o in [o for o in bpy.data.objects if o.name.startswith(('c2_', 'back_hair_', 'back_coat_'))]: bpy.data.objects.remove(o, do_unlink=True)
+    actors.clear_registry()
 def one(g, path):
-    set_day(g); bpy.context.scene.frame_set(g + 1); P.stage_cast2(take, g, assign_for(g))
+    set_day(g); bpy.context.scene.frame_set(g + 1); clear_cast(); P.stage_cast2(take, g, assign_for(g))
     bpy.context.scene.render.filepath = path; bpy.ops.render.render(write_still=True); P.grade2(path)
 if sys.argv[1] == 'still': one(int(sys.argv[2]), sys.argv[3])
 else:
