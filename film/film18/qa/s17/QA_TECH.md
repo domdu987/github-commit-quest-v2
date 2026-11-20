@@ -1,16 +1,23 @@
-# QA-tech round 11 s17: FAIL
-Checked: 20 frames (6 fps g1309-1387 + cut +-3: g1306/1308/1309/1312/1314, g1384/1387), phone strips with y 860/880 lines, full-size crops of g1334 and g1379. Director 9.30/15.02: OK, elder slides in, truck + parallax visible, no pulsing. NIGHT, no text, mouths closed/held. No lit tail before the ignition line. Face (round head) lowest edge y ~720; heads fine.
+# QA-tech round 12 s17: FAIL
 
-## Previous blocking notes
-1. Fg reed bundle: PARTLY met. It is now a real bundle of separate stalks lying in the lower right/left that slides across (g1309-1339), but it is flat-lit yellow with a navy outline, has no contact shadow, and leaves the frame at ~g1339 so the last 50 frames have no fg prop. Not a blocker alone.
-2. Tie visible: NOT MET. The elder (g1344-1387) holds a long yellow bundle with red bands at the ox's flank, looks at the lens, and the ox tail tassel hangs beside the bundle's end; the reed is not seen being tied to the tail. Reads as "man carrying a plank". Fix: pose the bundle so its end overlaps the tassel (tail tip at the reed tie, red ties on both), the elder's eyes/head turned toward the tail for g1345-1365.
-3. Bare ground: NOT FIXED (see blocking 1).
+Checked: all 91 frames extracted; 14 frames at 6 fps (g1309-1387) on a sheet with the y 860 line; full-size looks at g1333, g1363, g1387; zoom crops of the fg bundle (g1333) and the tie (g1387). Pixel measurements on the rendered frames.
 
-## Blocking
-1. g1339-1387 (and 1309-1334 partly) - bare ground over 30 %. The lower ~35 % (y > 0.66) is plain violet pebbled gravel plus a hard-edged tan trapezoid patch, with no prop once the reed bundle exits at g1339 (measured on g1339, 1354, 1364, 1369: plain ground about 34-37 % of the frame, the elder's legs cover only ~6 %). Fix: tilt up so the horizon is at y ~0.58, or add dark lit fg props (baskets, sacks, a second reed bundle) in the lower corners for the whole shot, and slide them with the truck.
-2. g1314-1387 - the "mygap" ground plane is visible as a hard-edged, flat tan/brown polygon against the blue-lavender gravel (g1314-1359 at x 60-420, y 880-1000; g1369-1387 a large wedge across the lower half). It reads as an untextured slab. Fix: blend it with the set's ground texture/colour (match the hue, add a 30 px soft edge or extend it under all visible ground).
+## Blockers
+1. g1309-1339 (and the small bundles after) - fg reed bundle still has no shading and no contact shadow (explicit ask). Zoom of g1333: the big bundle is one flat mustard fill with a navy outline and line strokes; no light/dark side, no darker underside, and no shadow on the ground under it (the ground beneath is the same violet right up to the outline). The small bundles at g1345-1387 (x 40-120, y 1120-1280) are the same flat fill. Fix: lit toon shading on the stalks (2-3 tones from the fire/lamp side), a soft dark contact-shadow quad (~40 % opacity, 20 px blur) under every bundle, and a warm rim light.
+
+## Previous blockers
+- `mygap` tan slab: GONE. No tan trapezoid anywhere. Note: at g1309-1345 a darker violet ground area with a hard diagonal edge (g1333: from x 0,y 1090 to x 720,y 940) is still visible. It carries the same pebble texture, so it reads as a shadow/lit-patch change, not a slab. Soften the edge if you can.
+- Tie reads: ACCEPTABLE (note). g1381-1387 the old man holds the bundle with its bound end (red ties) on the ox's tail tip, the tail's reed tassel and red ties continue from it (crop 1387). He looks at the lens, not the tail (rule 7 is a note).
+- Plain road: team claim 9-15 % is NOT what I measure. Ground below y ~0.66 is ~34 % of the frame; pixels of plain ground colour (no prop, no figure): g1339 20 %, g1345 20 %, g1351 24 %, g1357 23 %, g1363 26 %, g1369 27 %, g1375 21 %; with a wider colour tolerance 29-31 % across g1315-1387 (g1363 29 %, g1387 29 %). So 20-30 %: within the 30 % gate (a note), but not 9-15 %. A dark fg prop low in frame g1351-1375 would bring it to ~20 %.
+
+## Hard checks
+- Face below y 860: none (old man's face lowest ~y 790 at g1375-1387, beard tip to ~y 880 is not the face; ox faces at y 640-820).
+- Placeholders: none grey/navy. The tub at the left (g1327-1369) is flat blue-grey with no texture, a note.
+- Flames on tails: the ignition has not started in this shot; orange flame at the wall base is the set's fire, not on a face. OK.
+- Subject in frame: oxen and elder in frame the whole take (elder leaves x range only at g1309-1312 and at the very first frames, as before).
+- No zoom pulsing seen (continuous dolly/truck). Mouths held. No text.
+- Frame diff (my re-measure, 90x160): median 10.68, p90 16.74. OK.
 
 ## Notes
-- g1374-1387 the beard tip hangs to y ~890-910, i.e. into the caption band (head/chin themselves are at y ~720). Lift the camera/elder 40 px if captions overlap.
-- Ox faces read at the lens (eye-line note); reed bundle needs a contact shadow.
-- g1329-1369 a barrel/bucket at the left edge with a glowing lamp is fine.
+- Beard tip reaches y ~890-910 at g1375-1387 (caption band).
+- Plain ground 20-30 % (see above); pebbles are the only dressing.
