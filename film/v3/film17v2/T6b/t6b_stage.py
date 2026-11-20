@@ -69,7 +69,8 @@ def clear_cast():
             bpy.data.objects.remove(a.root, do_unlink=True)
         except Exception: pass
     actors.clear_registry()
-    for o in [o for o in bpy.data.objects if o.name.startswith(('bk_', 'back_', 'cc_', 't6b_'))]: bpy.data.objects.remove(o, do_unlink=True)
+    for o in [o for o in bpy.data.objects if o.name.startswith(('c2_', 'bk_', 'back_', 'cc_', 't6b_'))]: bpy.data.objects.remove(o, do_unlink=True)
+    for b in [b for b in bpy.data.meshes if b.users == 0 and b.name.startswith(('bk_', 't6b_', 'back_', 'c2_'))]: bpy.data.meshes.remove(b)
 
 
 # ======================================================= 6c / 6d / P2 re-staging (director note: card reads, nothing crosses faces)
@@ -154,6 +155,7 @@ def bottle_prop(a, cam, ctr=(0.95, 0.10), h_D=1.15, back_off=0.04):
 # per-frame offsets (world metres, eased): w is 0 while the camera is in the P1 close-up, ramps in g1546-1560, holds, and is released at the cut
 def _w(g): return _ss((g - 1548) / 26.0)
 STAGE = dict(bert=(0.62, 0.0), dup=(-0.90, 0.0), insp=(-0.30, 0.22))
+_insp_dist = [0.0]
 GEND_END = tuple(float(x) for x in os.environ.get('GEND', '0.55,-0.85').split(','))   # world offset of gend_a from his planned spot (13.95, 28.2) at the end of his walk-in
 WALK0, WALK1 = 1616, 1617                                       # he walks in from the right edge (out of frame all through 6c), 0.5 m, then stands
 def _gend_off(g):
@@ -161,35 +163,43 @@ def _gend_off(g):
 def _gend_hand(g):
     """the hand of the gendarme pulling the empty bottle from his cape (g1640-1656): belt -> raised beside the card (head-local units, negative x = frame-left)"""
     u = _ss((g - 1640) / 16.0); return (-0.30 - 0.50 * u, 0.95 - 0.65 * u), u
+INSP_T = 1584
 def _stage_at(g, who):
     d = STAGE[who]
     if who == 'dup' and g >= 1616: d = (float(os.environ.get('DUP6', '-0.60')), 0.0)          # he turns round at g1616 (back view -> front): the step hides in the turn
     if who == 'bert' and g >= 1650: d = (d[0] + 0.50 * _ss((g - 1650) / 30.0), d[1])   # P2: he steps 0.5 m toward the inspector (behind the foreground desk in 6d) so the camera pass does not cut his raised arm at the frame edge
+    if who == 'insp' and g < INSP_T:
+        u = _ss((g - 1546) / float(INSP_T - 1546)); a = (-0.40, 3.0); return (a[0] + (d[0] - a[0]) * u, a[1] + (d[1] - a[1]) * u)   # T6a's offset at the join, then he walks to his mark
     if who == 'insp' and g >= 1655: k = 1.0 - _ss((g - 1655) / 16.0); d = (d[0] * k, d[1] * k)   # P2 centres on the inspector's own mark: ease his 6c offset away in 6d, off the viewer's eye line
     return d
 def assign_for(g):
-    w = _w(g); f = lambda who: {'dx': _stage_at(g, who)[0] * w, 'dy': _stage_at(g, who)[1] * w}
+    w = _w(g); f = lambda who: ({'dx': _stage_at(g, who)[0], 'dy': _stage_at(g, who)[1]} if who == 'insp' and g < INSP_T else {'dx': _stage_at(g, who)[0] * w, 'dy': _stage_at(g, who)[1] * w})
     sw = dict(cast17.STORY17['dupont_caught'][1]); sw.update(sweat=1.0, fx=['sweat']); cast17.STORY17['dupont_caught_sweat'] = ('dupont', sw)
     gd = dict(cast17.STORY17['gendarme_standing_a'][1]); h, u = _gend_hand(g); ox, oy, wu = _gend_off(g)
     if False:                                      # foot-locked walk: phase advances with the distance walked (stride 0.72 m)
         dist = math.hypot(ox, oy); gd = cast17.cycle('gendarme_a', (dist / (2 * 0.72)) % 1.0, 'walk', facing=-1, base=gd, arms='none')
     elif g >= 1640: gd.update(expr='determined', arm_r=dict(hand=h, bend=-0.5 * u, stretch=1.0 + 0.1 * u, layer='front'), arm_l='behind')
     cast17.STORY17['gend_dyn'] = ('gendarme_a', gd)
+    ip = dict(cast17.STORY17['inspector_arms_crossed'][1])
+    if 1546 <= g < INSP_T:
+        dist = sum(math.hypot(_stage_at(k, 'insp')[0] - _stage_at(k - 1, 'insp')[0], _stage_at(k, 'insp')[1] - _stage_at(k - 1, 'insp')[1]) for k in range(1547, g + 1))   # pure in g: resume-safe
+        ip = cast17.cycle('inspector17', (dist / (2 * 0.72)) % 1.0, 'walk', facing=-1, base=ip, arms='none')
+    cast17.STORY17['insp_dyn'] = ('inspector17', ip)
     gopt = {'dx': ox, 'dy': oy}
     dup = 'dupont_sweating' if g < 1616 else 'dupont_caught_sweat'
     if g >= 1671: return {'inspector': ('inspector_shocked', f('insp')), 'bertillon': ('bertillon_card_up', f('bert')), 'dupont': ('dupont_caught_sweat', f('dup')), 'gend_a': ('gend_dyn', gopt), 'gend_b': ('gendarme_standing_b', {})}
-    return {'bertillon': ('bertillon_card_up', f('bert')), 'dupont': (dup, f('dup')), 'inspector': ('inspector_arms_crossed', f('insp')), 'gend_a': ('gend_dyn', gopt), 'gend_b': ('gendarme_standing_b', {})}
+    return {'bertillon': ('bertillon_card_up', f('bert')), 'dupont': (dup, f('dup')), 'inspector': ('insp_dyn', f('insp')), 'gend_a': ('gend_dyn', gopt), 'gend_b': ('gendarme_standing_b', {})}
 def stage_props(g, acts, cam):
     """call after stage_cast2: Bertillon's MARTIN card (+ bottle later)"""
     hide_hero_card(g)
-    if 'bertillon' in acts and g >= 1560: martin_card(acts['bertillon'], g, cam)
+    if 'bertillon' in acts and g >= 1550: martin_card(acts['bertillon'], g, cam)
     if 'gend_a' in acts and g >= 1646:
         h, u = _gend_hand(g); bottle_prop(acts['gend_a'], cam, ctr=(h[0] - 0.02, h[1] - 0.42), h_D=1.0)
 
 def hide_hero_card(g):
     """from g1546 (right after T6a's P1) the lifted 3D hero card in the drawer box is gone: Bertillon holds the MARTIN card in his hand instead"""
     r = P.K.STATE['anim']['hero']['root']
-    for o in [r] + list(r.children_recursive): o.hide_render = g >= 1546
+    for o in [r] + list(r.children_recursive): o.hide_render = g >= 1550
 
 def apply_cam():
     """P2 (g1695 hold): pull the push-in back so the inspector's head is <= 35 % of the frame height (the plan's 1.05 m was ~50 %); same look-at, camera 1.5x farther."""
