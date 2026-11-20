@@ -40,6 +40,8 @@ SNAP = (G_ESS - 2, G_ESS + 13)
 ROLL = (G_ARMY, G_LAST)
 PRESET, CAM = "tower_dusk", "tower_dusk_chars"
 PPD = 256
+EXPO = 0.95                                     # scene exposure: QA-stats night luma >= 70
+WHIP_TILT = 12.0                               # deg: the shot opens tilted up at the lit tower and whips down onto the group (continues shot 21)
 
 # runtime marks (metres): bunched so that the group fits the frame at 18 D
 M = dict(eiffel_old=(-4.0, -217.6), officer=(-2.2, -217.4), demo_a=(-5.5, -216.6), demo_b=(-6.4, -215.6), demo_c=(-7.3, -216.8))
@@ -113,13 +115,14 @@ def cam_path(A, cam):
     c = Vector(A["cams"][CAM]["loc"])
     cen = Vector(CO.W((-4.7, -217.0, 0.0))) + Vector((0, 0, HEAD_Z))     # the centre of the bunch
     c = c + (c - cen).normalized() * CAM_BACK
-    return C.CamPath(c, cen, G_FIRST, G_LAST, push=0.08, slide_px=0.0, rise_px=0.0, arc_deg_s=10.0, tilt0=TILT0, tilt_deg_s=1.8,
-                     decay=0.25, snaps=[dict(g=(G_USELESS - 2, G_USELESS + 11), k=1.25, peak=1.8, tilt=0.5),
+    return C.CamPath(c, cen, G_FIRST, G_LAST, push=0.07, slide_px=0.0, rise_px=0.0, arc_deg_s=10.0, tilt0=TILT0, tilt_deg_s=1.8,
+                     decay=0.25, snaps=[dict(g=(G_FIRST + 1, G_FIRST + 15), k=1.0, peak=2.0, tilt=-WHIP_TILT),
+                                                          dict(g=(G_USELESS - 2, G_USELESS + 11), k=1.25, peak=1.8, tilt=0.5),
                                                           dict(g=(G_DROP - 1, G_DROP + 12), k=1.0 / 1.25, peak=1.8, tilt=-0.5),
-                                                          dict(g=SNAP, k=1.12, peak=1.7, shift=(0.0, 0.0))])
+                                                          dict(g=SNAP, k=1.1, peak=1.7, shift=(0.0, 0.0))])
 
 
-TILT0 = 3.0
+TILT0 = 3.0 + WHIP_TILT
 SHIFT = -0.03       # tower_dusk_chars has +0.10 (heads y ~770): lens shift down to the head band
 
 
@@ -157,6 +160,8 @@ class Take(C.Take):
             for ob in bpy.data.objects:
                 if ob.name.startswith(("actor_" + a, a + "_card")):
                     ob.hide_render = True
+        self.scene.view_settings.exposure = EXPO
+        self.dress_fg()
         self.key_cam(bf(G_FIRST), *self.path.at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
         self.cast = {}
@@ -170,6 +175,27 @@ class Take(C.Take):
         self.bars = make_bars(m)
         self.wagon = list(CO.STATE.get("wagon", []))
         self.wagon0 = [Vector(o.location) for o in self.wagon]
+
+    def dress_fg(self):
+        """lit foreground props at the SIDES in the lower third (kegs, a crate, a rope coil): they fill the ground slab and give the
+        move parallax; camera lateral offsets >= 1.2 m so the push passes beside them (never through)."""
+        import kit20 as K
+        M_ = CO.STATE["M"]
+        loc = self.path.loc0 / CO.SC                      # metres
+        cen = Vector(CO.W((-4.7, -217.0, 0.0))) / CO.SC
+        f = Vector((cen.x - loc.x, cen.y - loc.y, 0.0)).normalized()
+        r = Vector((f.y, -f.x, 0.0))
+        mb = CO.MB("s22fg", parent=CO.root())
+        def at(fw, ri):
+            p = Vector((loc.x, loc.y, 0.0)) + f * fw + r * ri
+            return (p.x, p.y, 0.0)
+        K.keg(mb, M_, at(5.0, -2.5), 0.9, 0.36)
+        K.keg(mb, M_, at(5.9, -3.0), 0.9, 0.36, "timberdk")
+        K.keg(mb, M_, at(7.5, -1.9), 0.9, 0.36, "timberdk")
+        K.crate(mb, M_, at(7.4, 3.0), (0.9, 0.7, 0.6), 0.5)
+        K.crate(mb, M_, at(7.45, 3.05), (0.7, 0.6, 0.5), 0.2)
+        K.keg(mb, M_, at(7.0, 3.1), 0.9, 0.36)
+        mb.finish(hull=0.00384 * 22.0)
 
     def bar_pos(self, i, g):
         """(location, euler, visible) of bar i: appears in the hand at DROP[0], falls and tumbles to the ground at DROP[1]."""
