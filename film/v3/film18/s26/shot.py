@@ -20,8 +20,8 @@ mode, rng = c18.parse_args(FIRST, LAST)
 
 def _dress(p):
     """own road dressing along the whole tracked stretch (no 'hay' / 'plume' / rocks / rings / baskets / wheels): furrows, red silk strips, torch stakes."""
-    R2.furrows(-10, 10, -125, -32, 1.0, 9, mat='bank')
-    R2.dress(-9.5, 9.5, -125, -33, 30, 11, kinds=('silk',))
+    avoid = lambda x, y: -3.4 < x < 4.6                                  # keep the lane itself clear (the group runs there); warm period props on both verges
+    R2.dress(-10.5, 10.5, -126, -34, 140, 26, kinds=('stone', 'hay', 'basket', 'pot', 'hay', 'stone'), avoid=avoid)
     for i, yy in enumerate(range(-40, -125, -13)):
         R2.stake(-9.0 if i % 2 == 0 else 9.0, float(yy), 3.0)
 R2.POST['s26'] = _dress
@@ -38,7 +38,7 @@ def cam_track(T, g, t):
     dy = SPEED * (g - G0) / 30.0
     sw = 1.2 * math.sin(2 * math.pi * 0.4 * (g - G0) / 30.0)   # smooth lateral weave of the tracking camera (the subject stays framed)
     gen_y = -50.0 - dy
-    return dict(loc=(2.0 + sw, gen_y - rel(g), 0.95), look_at=(0.8 + 0.4 * sw, gen_y + 4.0, 2.1), lens=24)
+    return dict(loc=(2.0 + sw, gen_y - rel(g), 0.95), look_at=(0.8 + 0.4 * sw, gen_y + 4.0, 3.0), lens=24)
 
 
 T = c18.Take('s26', FIRST, LAST, draft=(mode == 'draft'), cam_fn=cam_track)
@@ -58,7 +58,7 @@ def frame(T, g):
     ph = (g * 0.0625) % 1.0; i16 = int(ph * 16)
     pose = dict(cast18.general_run_frame(ph, facing=-1)); pump = math.sin(ph * 2 * math.pi)
     look = c18.ramp(g, 2066, 2072) * (1.0 - c18.ramp(g, 2078, 2084))              # head turned to profile over the shoulder g 2070-2080
-    pose.update(yaw=0.2 + 1.1 * look, lean=21.0, pitch=-0.5, expr='stunned', mouth='flat', fx=['sweat'], t=g / 30.0)
+    pose.update(yaw=0.2 + 1.1 * look, lean=21.0, pitch=-0.5, expr='stunned', mouth=('open', 0.44, 0.36), fx=['sweat'], t=g / 30.0)
     pose['arm_r'] = dict(pose['arm_r'], hand=(1.3, 0.8 + 0.1 * pump), layer='front')        # cup out at arm's length, clear of the face
     pose['arm_l'] = dict(pose['arm_l'], hand=(-0.6, 0.9 - 0.2 * pump))                      # pumping arm
     pose['prop_r'] = dict(pose['prop_r'], scale=1.25); pose['cup_tilt'] = 35 * pump
@@ -68,9 +68,12 @@ def frame(T, g):
     u = c18.ramp(g, G0, 2085)
     for i in range(4):
         back = OX_START[i] + (OX_END[i] - OX_START[i]) * u
-        pos = gen + V((OX_LAT[i] * (1.0 - 0.35 * u), back, 0.0))
+        lat = OX_LAT[i] * (1.0 - 0.35 * u)
+        if i == 0:
+            lat = c18.lerp(-1.5, 1.9, c18.ramp(g, 2040, 2100))       # the nearest ox ends at screen-right of him: its face shows at his shoulder at the cut
+        pos = gen + V((lat, back, 0.0))
         phase = (int(g / 2.5) + i * 3) % 8
-        mo = c18.oxcard('dragon', 'front_three_quarter', 'gallop', phase, -1, smoke=(g // 2 + i) % 4)
+        mo = c18.oxcard('dragon', 'front_three_quarter', 'gallop', phase, -1, smoke=(g // 2 + i) % 4, face='rage')
         c18.put(mo, tuple(pos), cam, scale=1.08, mirror=bool(i % 2), name='ox%d' % i, sw=2.7, yaw_off=(10 if i % 2 else -10))
         heads.append(T.head_row(tuple(pos), 2.6, 'ox'))
     return dict(heads=heads)

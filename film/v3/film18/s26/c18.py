@@ -83,15 +83,15 @@ def smoke_svg(ax, ay, k, n=4, grey='#a39ea4'):
     return ''.join(s)
 
 
-def oxcard(state='dragon', view='three_quarter', gait='gallop', phase=0, flame=-1, smoke=None, reed=False):
+def oxcard(state='dragon', view='three_quarter', gait='gallop', phase=0, flame=-1, smoke=None, reed=False, face=None):
     """an ox card (8 gallop drawings, phase = 0..7); smoke = None or a drawing index for grey tail wisps (no flame)."""
-    key = 'OX2|%s|%s|%s|%d|%d|%s|%s' % (state, view, gait, phase, flame, smoke, reed)
+    key = 'OX3|%s|%s|%s|%d|%d|%s|%s|%s' % (state, view, gait, phase, flame, smoke, reed, face)
     name = hashlib.md5(key.encode()).hexdigest()[:10] + '_ox'
     mp = os.path.join(CD.CARDS, name + '.json')
     if os.path.exists(mp) and os.path.exists(os.path.join(CD.CARDS, name + '.png')):
         return json.load(open(mp))
     c18, P = _cast()
-    f = c18.ox_figure(state=state, view=view, gait=gait, phase=phase / 8.0, flame=flame, blades=True, reed=(True if reed else None), uid='c%s' % name[:6])
+    f = c18.ox_figure(state=state, view=view, gait=gait, phase=phase / 8.0, flame=flame, blades=True, reed=(True if reed else None), uid='c%s' % name[:6], face=face)
     svg = f['svg']; bb = list(f['bbox'])
     if smoke is not None:
         ax, ay = f['anchors']['tail_tip']
@@ -420,3 +420,20 @@ def fix_sky_clean(T, tex_name='sky_DAWN'):
         if tex_name in os.path.basename(im.filepath):
             im.filepath = out; im.reload(); return True
     return False
+
+
+def dress(T, gs, seed=0, keep_clear=None, actors=None, density=1.0):
+    """the director's J.dress_ground over the whole move: key the camera at the sampled film frames (the helper evaluates the camera per film frame), dress, drop the keys again
+    (the per-frame driver sets the camera itself)."""
+    cam = T.cam; sc = bpy.context.scene
+    gl = list(gs)
+    for g in gl[::max(1, len(gl) // 40)] + [gl[-1]]:
+        pose = T.pose(g); cam.location = pose['loc']; cam.rotation_euler = J._look_rot(pose['loc'], pose['look_at']); cam.data.lens = pose['lens']
+        cam.keyframe_insert('location', frame=g); cam.keyframe_insert('rotation_euler', frame=g); cam.data.keyframe_insert('lens', frame=g)
+    info = J.dress_ground(cam=cam, frames=gl, seed=seed, keep_clear=keep_clear, actors=actors, density=density)
+    cam.animation_data_clear()
+    try:
+        cam.data.animation_data_clear()
+    except Exception:
+        pass
+    return info

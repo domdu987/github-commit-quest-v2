@@ -1273,10 +1273,12 @@ def _blade_on_horn(k, tip, d, sc):
     bronze #8a6a3a body, a darker #5a4424 edge and a thin highlight, three red cord wraps at the root.  sc is the old scale (1.7 / 1.5)."""
     f = sc / 1.7
     s = _T(tip[0], tip[1], d + 24.0, f)        # swung forward off the horn line so horn + blade never read as one long spike
-    s += '<path d="M-0.06,-0.095 L0.02,-0.115 L0.26,-0.105 L0.50,0 L0.26,0.105 L0.02,0.115 L-0.06,0.095 Z" fill="%s" stroke="%s" stroke-width="0.028" stroke-linejoin="round"/>' % (k.c("#8a6a3a"), k.ink)
-    s += '<path d="M0.02,-0.115 L0.26,-0.105 L0.50,0 L0.26,0.105 L0.02,0.115" fill="none" stroke="%s" stroke-width="0.030" stroke-linejoin="round" opacity="0.85"/>' % k.c("#5a4424")
-    s += '<path d="M0.02,0 L0.44,0" stroke="%s" stroke-width="0.020" stroke-linecap="round"/>' % k.c("#5a4424")
-    s += '<path d="M0.06,-0.055 L0.30,-0.050 L0.42,-0.012" fill="none" stroke="#d8c088" stroke-width="0.016" stroke-linecap="round" opacity="0.9"/>'
+    s += '<path d="M-0.06,-0.095 L0.02,-0.115 L0.26,-0.105 L0.50,0 L0.26,0.105 L0.02,0.115 L-0.06,0.095 Z" fill="%s" stroke="%s" stroke-width="0.028" stroke-linejoin="round"/>' % (k.c("#c8964a"), k.ink)
+    s += '<path d="M-0.04,-0.02 L0.02,-0.115 L0.26,-0.105 L0.50,0 L0.04,0.0 Z" fill="%s" opacity="0.9"/>' % k.c("#e2b866")        # lighter upper facet
+    s += '<path d="M0.02,0.115 L0.26,0.105 L0.50,0" fill="none" stroke="%s" stroke-width="0.026" stroke-linejoin="round" opacity="0.9"/>' % k.c("#7a5a2c")
+    s += '<path d="M0.02,0 L0.46,0" stroke="%s" stroke-width="0.016" stroke-linecap="round" opacity="0.8"/>' % k.c("#8a6a3a")
+    s += '<path d="M0.03,-0.108 L0.26,-0.100 L0.49,-0.004" fill="none" stroke="%s" stroke-width="0.022" stroke-linecap="round" stroke-linejoin="round"/>' % k.c("#f0e2b8")      # pale specular edge
+    s += '<circle cx="0.22" cy="-0.048" r="0.022" fill="#ffffff"/>'      # white highlight dot
     for x in (-0.07, 0.0, 0.07):
         s += '<path d="M%.4f,-0.105 L%.4f,0.105" stroke="%s" stroke-width="0.048" stroke-linecap="round"/>' % (x, x + 0.03, k.ink)
         s += '<path d="M%.4f,-0.105 L%.4f,0.105" stroke="%s" stroke-width="0.030" stroke-linecap="round"/>' % (x, x + 0.03, k.c(CORD["base"]))
@@ -1495,14 +1497,44 @@ def _ox_tail(k, col, a, reed, flame, root, t):
     return "".join(o), fl, end
 
 
+RAGE_RIM = "#c8342c"
+MOUTH_IN = "#3a1018"
+TONGUE = "#e8728c"
+
+
+def _steam(k, x, y, sc=1.0):
+    """one small white steam puff (two overlapping blobs) at a nostril."""
+    return ('<g opacity="0.95"><circle cx="%.4f" cy="%.4f" r="%.4f" fill="#ffffff" stroke="#d8dce6" stroke-width="0.012"/>'
+            '<circle cx="%.4f" cy="%.4f" r="%.4f" fill="#ffffff"/></g>' % (x, y, 0.075 * sc, x + 0.07 * sc, y - 0.045 * sc, 0.055 * sc))
+
+
+def _rage_eye(k, x, y, rx, ry, inner, skin, flip=1.0):
+    """a glaring eye: red-rimmed, a flat angled upper lid, a small pupil, a V brow.  inner = +1 when the inner (nose) end is at +x."""
+    o = ['<ellipse cx="%.4f" cy="%.4f" rx="%.4f" ry="%.4f" fill="#fff2ec" stroke="%s" stroke-width="0.030"/>' % (x, y, rx, ry, k.c(RAGE_RIM))]
+    o.append('<circle cx="%.4f" cy="%.4f" r="0.034" fill="%s"/>' % (x + 0.03 * inner, y + 0.02, k.ink))
+    # upper lid: a skin-coloured slab cut at a steep angle, low at the inner end
+    xo, xi = x - inner * (rx + 0.04), x + inner * (rx + 0.04)
+    o.append('<path d="M%.4f,%.4f L%.4f,%.4f L%.4f,%.4f L%.4f,%.4f Z" fill="%s" stroke="%s" stroke-width="0.022" stroke-linejoin="round"/>'
+             % (xo, y - ry - 0.06, xi, y - ry - 0.06, xi, y - 0.005, xo, y - ry * 0.95, skin, k.ink))
+    # brow: thick, high at the outer end, plunging at the inner end
+    o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="0.062" stroke-linecap="round"/>' % (xo - inner * 0.03, y - ry - 0.13, xi + inner * 0.03, y - 0.015, k.ink))
+    return "".join(o)
+
+
 def _ox_head_side(k, col, nk, ang, blades, wide, dragon):
     """the head, a chunky wedge with a pale broad muzzle, big friendly eye, a leaf ear, two horns (the far one behind); the neck pivot at nk."""
     mz = OX_COL["muzzle"]
+    face = _OXFACE[0]
+    rage = face == "rage"
+    if rage:
+        ang += 11.0          # head lowered
     o = ['<g transform="translate(%.4f %.4f) rotate(%.2f) scale(1.16)">' % (nk[0], nk[1], ang)]
+    hr = 24.0 if rage else 0.0      # horns swung forward
     # far horn and far ear first
     hs, htip, hd = _horn(k, (0.20, -0.36), 0, 1.0, far=True)
-    o.append('<g transform="translate(-0.05 0.02)">' + hs + (_blade_on_horn(k, htip, hd, 1.7) if blades else "") + '</g>')
-    o.append('<path d="M0.06,-0.30 Q-0.22,-0.42 -0.34,-0.28 Q-0.20,-0.20 0.04,-0.16 Z" fill="%s" stroke="%s" stroke-width="0.024" stroke-linejoin="round" transform="translate(0.04 0.0)"/>' % (k.c(col["dark"]), k.ink))
+    o.append('<g transform="translate(-0.05 0.02)%s">' % (" rotate(%.1f 0.20 -0.36)" % hr if hr else "") + hs + (_blade_on_horn(k, htip, hd, 1.7) if blades else "") + '</g>')
+    ear_r = 22.0 if face == "panic" else (-8.0 if rage else 0.0)     # panic: ears pinned back; rage: ears up and forward a touch
+    o.append('<path d="M0.06,-0.30 Q-0.22,-0.42 -0.34,-0.28 Q-0.20,-0.20 0.04,-0.16 Z" fill="%s" stroke="%s" stroke-width="0.024" stroke-linejoin="round" transform="translate(0.04 0.0)%s"/>' % (k.c(col["dark"]), k.ink, " rotate(%.1f 0.06 -0.24)" % ear_r if ear_r else ""))
     skull = [(-0.20, -0.30), (0.10, -0.46), (0.50, -0.36), (0.80, -0.14), (0.98, 0.08), (0.98, 0.30), (0.80, 0.44), (0.40, 0.46), (0.05, 0.42), (-0.22, 0.28), (-0.30, 0.0)]
     g = _lin(k, "ohg", col["light"], col["base"], col["dark"], -0.3, -0.4, 1.0, 0.45)
     o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.034" stroke-linejoin="round"/>' % (P._smooth_closed(skull), g, k.ink))
@@ -1512,13 +1544,24 @@ def _ox_head_side(k, col, nk, ang, blades, wide, dragon):
     o.append('<path d="M0.12,-0.44 q0.04,-0.10 0.12,-0.04 q0.04,-0.08 0.12,-0.0" fill="%s" stroke="%s" stroke-width="0.020" stroke-linejoin="round"/>' % (k.c(col["deep"]), k.ink))
     # muzzle
     gm = _lin(k, "omz", mz["light"], mz["base"], mz["dark"], 0.5, 0.0, 1.0, 0.5)
-    o.append('<path d="M0.60,0.02 Q0.84,-0.14 0.99,0.08 Q1.03,0.30 0.84,0.46 Q0.60,0.50 0.52,0.30 Z" fill="%s" stroke="%s" stroke-width="0.026" stroke-linejoin="round"/>' % (gm, k.ink))
-    o.append('<ellipse cx="0.90" cy="0.12" rx="0.045" ry="0.060" fill="%s" stroke="%s" stroke-width="0.012" transform="rotate(-20 0.90 0.12)"/>' % (k.c("#6a3a3a"), k.ink))
-    o.append('<path d="M0.62,0.36 Q0.80,0.44 0.96,0.34" fill="none" stroke="%s" stroke-width="0.020" stroke-linecap="round"/>' % k.ink)
-    o.append('<path d="M0.62,0.28 q0.04,-0.03 0.06,0.0" fill="none" stroke="%s" stroke-width="0.014" stroke-linecap="round"/>' % k.ink)
+    if rage:
+        # open bellowing mouth: a dropped lower jaw, a dark inside and a pink tongue (drawn under the upper muzzle)
+        o.append('<path d="M0.50,0.30 L0.94,0.30 Q1.04,0.56 0.90,0.78 Q0.66,0.86 0.50,0.66 Z" fill="%s" stroke="%s" stroke-width="0.026" stroke-linejoin="round"/>' % (k.c(mz["base"]), k.ink))
+        o.append('<path d="M0.56,0.34 L0.92,0.34 Q0.98,0.54 0.88,0.70 Q0.68,0.76 0.56,0.62 Z" fill="%s"/>' % k.c(MOUTH_IN))
+        o.append('<path d="M0.60,0.54 Q0.76,0.46 0.90,0.56 Q0.84,0.70 0.70,0.68 Q0.60,0.64 0.60,0.54 Z" fill="%s"/>' % k.c(TONGUE))
+    o.append('<path d="M0.60,0.02 Q0.84,-0.14 0.99,0.08 Q1.03,0.30 0.84,0.46 Q0.60,0.50 0.52,0.30 Z" fill="%s" stroke="%s" stroke-width="0.026" stroke-linejoin="round"%s/>' % (gm, k.ink, ' transform="translate(0 -0.07) scale(1 0.86)"' if rage else ""))
+    if rage:
+        o.append('<path d="M0.82,0.06 Q0.92,-0.02 0.99,0.10 Q0.93,0.20 0.84,0.16 Z" fill="%s" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (k.c("#6a2a2a"), k.ink))
+        o.append(_steam(k, 1.16, 0.02, 1.0) + _steam(k, 1.34, -0.10, 0.75))
+    else:
+        o.append('<ellipse cx="0.90" cy="0.12" rx="0.045" ry="0.060" fill="%s" stroke="%s" stroke-width="0.012" transform="rotate(-20 0.90 0.12)"/>' % (k.c("#6a3a3a"), k.ink))
+        o.append('<path d="M0.62,0.36 Q0.80,0.44 0.96,0.34" fill="none" stroke="%s" stroke-width="0.020" stroke-linecap="round"/>' % k.ink)
+        o.append('<path d="M0.62,0.28 q0.04,-0.03 0.06,0.0" fill="none" stroke="%s" stroke-width="0.014" stroke-linecap="round"/>' % k.ink)
     # eye
     ey = (0.40, -0.06)
-    if wide:
+    if rage:
+        o.append(_rage_eye(k, ey[0], ey[1], 0.095, 0.085, 1.0, k.c(col["base"])))
+    elif wide or face == "panic":
         o.append('<circle cx="%.4f" cy="%.4f" r="0.115" fill="#ffffff" stroke="%s" stroke-width="0.024"/><circle cx="%.4f" cy="%.4f" r="0.042" fill="%s"/>' % (ey[0], ey[1], k.ink, ey[0] + 0.02, ey[1], k.ink))
         o.append('<path d="M0.26,-0.24 Q0.38,-0.32 0.52,-0.22" fill="none" stroke="%s" stroke-width="0.030" stroke-linecap="round"/>' % k.ink)
     else:
@@ -1526,13 +1569,19 @@ def _ox_head_side(k, col, nk, ang, blades, wide, dragon):
                  % (ey[0], ey[1], k.ink, ey[0] + 0.020, ey[1] + 0.006, k.ink, ey[0] + 0.004, ey[1] - 0.024))
         o.append('<path d="M0.30,-0.17 Q0.40,-0.22 0.50,-0.15" fill="none" stroke="%s" stroke-width="0.024" stroke-linecap="round"/>' % k.ink)
     # near ear (pointing back and up) and near horn
+    if ear_r:
+        o.append('<g transform="rotate(%.1f 0.04 -0.12)">' % ear_r)
     o.append('<path d="M0.04,-0.20 Q-0.28,-0.34 -0.42,-0.12 Q-0.24,-0.08 0.02,-0.04 Z" fill="%s" stroke="%s" stroke-width="0.026" stroke-linejoin="round"/>' % (k.c(col["base"] if dragon else OX_COL["patch"]), k.ink))
     o.append('<path d="M-0.04,-0.17 Q-0.22,-0.22 -0.32,-0.12 Q-0.20,-0.10 -0.02,-0.08 Z" fill="%s" opacity="0.8"/>' % k.c("#d49a8a"))
+    if ear_r:
+        o.append('</g>')
     hs, htip, hd = _horn(k, (0.20, -0.38), 0, 1.0)
+    if hr:
+        o.append('<g transform="rotate(%.1f 0.20 -0.38)">' % hr)
     o.append(hs)
     if blades:
         o.append(_blade_on_horn(k, htip, hd, 1.7))
-    o.append('</g>')
+    o.append('</g></g>' if hr else '</g>')
     return "".join(o)
 
 
@@ -1541,11 +1590,16 @@ def _ox_head_34(k, col, c, ang, blades, wide, dragon, sc=1.0):
     """the head seen three-quarter (turned toward screen-right): a broad skull, a cream muzzle with two nostrils, two eyes, two horns
     curving out and up, two ears, a forehead tuft.  centre c, scale sc."""
     mz = OX_COL["muzzle"]
+    face = _OXFACE[0]
+    rage = face == "rage"
+    if rage:
+        ang += 5.0           # head lowered (the caller also drops the centre)
     o = ['<g transform="translate(%.4f %.4f) rotate(%.2f) scale(%.4f)">' % (c[0], c[1], ang, sc)]
+    ear_r = 20.0 if face == "panic" else 0.0
     # far side first: horn, ear
     hs, htip, hd = _horn(k, (0.0, 0.0), 0, 0.9, far=True)
-    o.append('<g transform="translate(0.50 -0.40) rotate(18)">' + hs + (_blade_on_horn(k, htip, hd, 1.5) if blades else "") + '</g>')
-    o.append('<path d="M0.46,-0.18 Q0.80,-0.34 0.96,-0.14 Q0.74,-0.02 0.50,0.0 Z" fill="%s" stroke="%s" stroke-width="0.024" stroke-linejoin="round"/>' % (k.c(col["dark"]), k.ink))
+    o.append('<g transform="translate(0.50 -0.40) rotate(%d)">' % (40 if rage else 18) + hs + (_blade_on_horn(k, htip, hd, 1.5) if blades else "") + '</g>')
+    o.append('<path d="M0.46,-0.18 Q0.80,-0.34 0.96,-0.14 Q0.74,-0.02 0.50,0.0 Z" fill="%s" stroke="%s" stroke-width="0.024" stroke-linejoin="round"%s/>' % (k.c(col["dark"]), k.ink, ' transform="rotate(%.1f 0.5 -0.1)"' % -ear_r if ear_r else ""))
     g = _lin(k, "o3g", col["light"], col["base"], col["dark"], -0.6, -0.5, 0.7, 0.6)
     skull = [(-0.50, -0.30), (-0.20, -0.52), (0.28, -0.54), (0.58, -0.32), (0.64, 0.05), (0.52, 0.40), (0.15, 0.62), (-0.25, 0.56), (-0.52, 0.28), (-0.58, -0.02)]
     o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.036" stroke-linejoin="round"/>' % (P._smooth_closed(skull), g, k.ink))
@@ -1556,19 +1610,34 @@ def _ox_head_34(k, col, c, ang, blades, wide, dragon, sc=1.0):
     o.append('<path d="M-0.32,0.22 Q-0.34,0.0 0.0,0.0 Q0.40,0.0 0.44,0.24 Q0.46,0.58 0.08,0.66 Q-0.34,0.62 -0.32,0.22 Z" fill="%s" stroke="%s" stroke-width="0.030" stroke-linejoin="round"/>' % (gm, k.ink))
     for x in (-0.14, 0.22):
         o.append('<ellipse cx="%.4f" cy="0.26" rx="0.048" ry="0.062" fill="%s" stroke="%s" stroke-width="0.012" transform="rotate(%.1f %.4f 0.26)"/>' % (x, k.c("#6a3a3a"), k.ink, 18 if x > 0 else -18, x))
-    o.append('<path d="M-0.18,0.50 Q0.04,0.58 0.30,0.48" fill="none" stroke="%s" stroke-width="0.022" stroke-linecap="round"/>' % k.ink)
+    if rage:
+        # flared nostrils, steam, an open bellowing mouth (dark inside, pink tongue, a hint of teeth)
+        for x, sg in ((-0.14, -1), (0.22, 1)):
+            o.append('<path d="M%.4f,0.20 Q%.4f,0.16 %.4f,0.24 Q%.4f,0.36 %.4f,0.34 Q%.4f,0.24 %.4f,0.20 Z" fill="%s" stroke="%s" stroke-width="0.014" stroke-linejoin="round"/>' % (x - 0.07, x, x + 0.08, x + 0.04, x - 0.02, x - 0.08, x - 0.07, k.c("#4a1a1e"), k.ink))
+        o.append(_steam(k, -0.44, 0.30, 1.0) + _steam(k, 0.52, 0.34, 0.85))
+        o.append('<path d="M-0.24,0.46 Q0.04,0.40 0.32,0.46 Q0.38,0.78 0.04,0.90 Q-0.30,0.78 -0.24,0.46 Z" fill="%s" stroke="%s" stroke-width="0.030" stroke-linejoin="round"/>' % (k.c(MOUTH_IN), k.ink))
+        o.append('<path d="M-0.20,0.47 Q0.04,0.42 0.28,0.47 L0.25,0.54 L0.18,0.50 L0.12,0.55 L0.04,0.50 L-0.04,0.55 L-0.10,0.50 L-0.17,0.54 Z" fill="#fff4e0"/>')
+        o.append('<ellipse cx="0.04" cy="0.72" rx="0.17" ry="0.10" fill="%s"/><path d="M0.04,0.64 L0.04,0.78" stroke="#b84a68" stroke-width="0.014" stroke-linecap="round"/>' % k.c(TONGUE))
+    else:
+        o.append('<path d="M-0.18,0.50 Q0.04,0.58 0.30,0.48" fill="none" stroke="%s" stroke-width="0.022" stroke-linecap="round"/>' % k.ink)
     for (x, y, rx, ry, big) in ((-0.20, -0.10, 0.095, 0.105, 1), (0.34, -0.12, 0.085, 0.095, 0)):
-        if wide:
+        if rage:
+            o.append(_rage_eye(k, x, y, 0.095 if big else 0.085, 0.082, 1.0 if x < 0 else -1.0, k.c(col["base"])))
+        elif wide or face == "panic":
             o.append('<circle cx="%.4f" cy="%.4f" r="%.4f" fill="#ffffff" stroke="%s" stroke-width="0.024"/><circle cx="%.4f" cy="%.4f" r="0.044" fill="%s"/>' % (x, y, rx + 0.025, k.ink, x + 0.02, y, k.ink))
             o.append('<path d="M%.4f,%.4f Q%.4f,%.4f %.4f,%.4f" fill="none" stroke="%s" stroke-width="0.030" stroke-linecap="round"/>' % (x - 0.12, y - 0.16, x, y - 0.26, x + 0.12, y - 0.15, k.ink))
         else:
             o.append('<ellipse cx="%.4f" cy="%.4f" rx="%.4f" ry="%.4f" fill="#ffffff" stroke="%s" stroke-width="0.022"/><circle cx="%.4f" cy="%.4f" r="%.4f" fill="%s"/><circle cx="%.4f" cy="%.4f" r="0.020" fill="#ffffff"/>'
                      % (x, y, rx, ry, k.ink, x + 0.015, y + 0.008, 0.060 if big else 0.052, k.ink, x - 0.004, y - 0.026))
             o.append('<path d="M%.4f,%.4f Q%.4f,%.4f %.4f,%.4f" fill="none" stroke="%s" stroke-width="0.024" stroke-linecap="round"/>' % (x - 0.11, y - 0.14 + (0.03 if not big else 0), x, y - 0.22, x + 0.11, y - 0.13, k.ink))
+    if ear_r:
+        o.append('<g transform="rotate(%.1f -0.40 -0.05)">' % ear_r)
     o.append('<path d="M-0.40,-0.10 Q-0.78,-0.22 -0.92,0.0 Q-0.70,0.14 -0.44,0.12 Z" fill="%s" stroke="%s" stroke-width="0.026" stroke-linejoin="round"/>' % (k.c(col["base"] if dragon else OX_COL["patch"]), k.ink))
     o.append('<path d="M-0.48,-0.04 Q-0.70,-0.10 -0.80,0.0 Q-0.66,0.06 -0.48,0.06 Z" fill="%s" opacity="0.8"/>' % k.c("#d49a8a"))
+    if ear_r:
+        o.append('</g>')
     hs, htip, hd = _horn(k, (0.0, 0.0), 0, 1.0)
-    o.append('<g transform="translate(-0.40 -0.42) rotate(-20)">' + hs + (_blade_on_horn(k, htip, hd, 1.7) if blades else "") + '</g>')
+    o.append('<g transform="translate(-0.40 -0.42) rotate(%d)">' % (4 if rage else -20) + hs + (_blade_on_horn(k, htip, hd, 1.7) if blades else "") + '</g>')
     o.append('</g>')
     return "".join(o)
 
@@ -1643,6 +1712,8 @@ def _ox_34(k, state, gait, phase, flame, blades, reed, wide, coat, t):
     # a crimson neck cloth under the head for the dragon ox
     if dragon:
         o.append('<path d="M0.62,-2.1 Q1.30,-2.20 1.72,-1.50 L1.60,-1.0 Q1.0,-1.1 0.62,-1.4 Z" fill="%s" stroke="%s" stroke-width="0.030" stroke-linejoin="round" opacity="0.0"/>' % (k.c(SILK["base"]), k.ink))
+    if _OXFACE[0] == "rage":
+        hc = (hc[0] + 0.03, hc[1] + 0.10)
     o.append(_ox_head_34(k, col, hc, head_a + tilt, blades, wide, dragon, 1.05))
     if tail[1] is not None:
         o.append(tail[1])
@@ -1741,7 +1812,8 @@ def _ox_front(k, state, gait, phase, flame, blades, reed, wide, coat, t):
         o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.034" stroke-linejoin="round"/>' % (P._smooth_closed(cl), gc2, k.ink))
         o.append('<path d="M-0.50,-2.42 Q0.10,-2.66 0.70,-2.50 Q1.0,-2.20 1.05,-1.80" fill="none" stroke="%s" stroke-width="0.060" stroke-linecap="round"/>' % k.c(GOLD["base"]))
     o.append('</g>')
-    o.append(_ox_head_34(k, col, hc, head_a + roll, blades, wide, dragon, 1.34))
+    hh = (hc[0], hc[1] + 0.10) if _OXFACE[0] == "rage" else hc
+    o.append(_ox_head_34(k, col, hh, head_a + roll, blades, wide, dragon, 1.34))
     if tail[1] is not None:
         o.append(tail[1])
     return "".join(o), dict(tail_tip=tail[2], head=hc, feet=feet, mouth=(hc[0] + 0.05, hc[1] + 0.62), eye=(hc[0] - 0.22, hc[1] - 0.14), hump=(0.05, -2.78 + bob), back=(-0.6, -2.5 + bob))
@@ -1749,11 +1821,13 @@ def _ox_front(k, state, gait, phase, flame, blades, reed, wide, coat, t):
 
 OX_STATES = ("plain", "dragon")
 OX_VIEWS = ("side", "three_quarter", "front_three_quarter")
+_OXFACE = [""]
+OX_FACES = ("rage", "panic")        # face=None keeps the original friendly face
 OX_GAITS = ("stand", "walk", "gallop", "startled")
 GALLOP_FRAMES = 8
 
 
-def ox_figure(state="plain", view="side", gait="stand", phase=0.0, flame=-1, blades=False, reed=None, facing=1, coat=1.0, uid="ox", t=0.0, ink=P.INK, tint=None):
+def ox_figure(state="plain", view="side", gait="stand", phase=0.0, flame=-1, blades=False, reed=None, facing=1, coat=1.0, uid="ox", t=0.0, ink=P.INK, tint=None, face=None):
     """the ox as a figure dict like puppet.figure(): {"svg", "bbox", "anchors", "feet_y"} in D units with the hooves on y = 0 and x = 0 at the
     middle of the body (anchors["feet"] = (0, 0)).  state "plain" | "dragon"; view "side" | "three_quarter" | "front_three_quarter"; gait "stand" | "walk" | "gallop"
     | "startled"; phase 0..1 loops (gallop: 8 drawings = phase i / 8, walk: 12-16); flame -1 off, 0 / 1 / 2 = the lit tail flame drawing (a
@@ -1766,8 +1840,9 @@ def ox_figure(state="plain", view="side", gait="stand", phase=0.0, flame=-1, bla
     fl = int(_f(flame, -1.0, -1.0, 2.0)) if not isinstance(flame, bool) else (0 if flame else -1)
     rd = (fl >= 0) if reed is None else bool(reed)
     k = _ctx(uid, ink, tint)
+    _OXFACE[0] = face if face in OX_FACES else ""     # read by the head drawings (reset on every call)
     ph = _num(phase, 0.0)
-    wide = gt == "startled"
+    wide = gt == "startled" or _OXFACE[0] == "panic"
     fn = {"side": _ox_side, "three_quarter": _ox_34, "front_three_quarter": _ox_front}[vw]
     svg, info = fn(k, st, gt, ph, fl, bool(blades), rd, wide, _f(coat, 1.0, 0.0, 1.0), _num(t, 0.0))
     fc = -1.0 if _num(facing, 1.0) < 0 else 1.0

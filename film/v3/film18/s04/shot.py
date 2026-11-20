@@ -18,7 +18,7 @@ mode, rng = c18.parse_args(FIRST, LAST)
 def dolly(T, g, t):
     """one eased dolly toward Jimo with a truck: it starts high and far so Jimo (right) AND Ju (far left, beacon fire) are both in frame, then closes on Jimo; a held punch-in on "จี๋โม่"."""
     e = c18.ease(t) * 0.75 + t * 0.25
-    L0, L1 = (-95.0, 15.0, 70.0), (8.0, -88.0, 50.0); K0, K1 = (-125.0, 175.0, -55.0), (29.0, -30.0, 5.0)
+    L0, L1 = (-95.0, 15.0, 70.0), (8.0, -88.0, 50.0); K0, K1 = (-122.0, 160.0, -40.0), (29.0, -30.0, 5.0)
     k = c18.ramp(g, G_JIMO - 8, G_JIMO + 1) * 0.16                                  # the held punch-in (+16 %)
     loc = [c18.lerp(a, b, e) for a, b in zip(L0, L1)]; look = [c18.lerp(a, b, e) for a, b in zip(K0, K1)]
     loc = [l + (kk - l) * k for l, kk in zip(loc, look)]

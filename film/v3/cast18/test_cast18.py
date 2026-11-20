@@ -227,20 +227,24 @@ def sec_ox(D=64):
     for (st, vw) in (("plain", "side"), ("dragon", "side"), ("dragon", "three_quarter"), ("plain", "three_quarter")):
         pass
     sub = []
-    for (st, vw) in (("dragon", "side"), ("dragon", "three_quarter"), ("dragon", "front_three_quarter")):
-        for i in range(8):
-            sub.append((st, vw, i))
+    for fc_ in (None, "rage"):          # face=None: the original friendly face; "rage": the s21 / s22 reveal face
+        for (st, vw) in (("dragon", "side"), ("dragon", "three_quarter"), ("dragon", "front_three_quarter")):
+            for i in range(8):
+                sub.append((st, vw, i, fc_))
+    for vw in ("side", "three_quarter", "front_three_quarter"):       # face="panic" on the plain ox
+        for i in range(4):
+            sub.append(("plain", vw, i * 2, "panic"))
     o2 = []
     sw_ = cw2 * 4
-    sh_ = ch2 * 6
+    sh_ = ch2 * ((len(sub) + 3) // 4)
     body = ['<rect width="%d" height="%d" fill="%s"/>' % (sw_, sh_, NIGHT)]
-    for n, (st, vw, i) in enumerate(sub):
+    for n, (st, vw, i, fc_) in enumerate(sub):
         x0, y0 = (n % 4) * cw2, (n // 4) * ch2
         body.append('<rect x="%d" y="%d" width="%d" height="%d" fill="%s"/>' % (x0, y0, cw2, ch2, NIGHT2 if (n + n // 4) % 2 else NIGHT))
-        f = cast18.ox_figure(st, vw, "gallop", i / 8.0, i % 3, True, uid="g%d" % n)
+        f = cast18.ox_figure(st, vw, "gallop", i / 8.0, i % 3 if st == "dragon" else -1, True, uid="g%d" % n, face=fc_)
         body.append('<svg x="%d" y="%d" width="%d" height="%d" viewBox="%d %d %d %d"><g transform="translate(%.1f %.1f) scale(%d)">%s</g></svg>'
                     % (x0, y0, cw2, ch2, x0, y0, cw2, ch2, x0 + cw2 * 0.58, y0 + ch2 * 0.84, GD, f["svg"]))
-        body.append(_under(x0 + cw2 / 2, y0 + ch2 - 8, "%s %s gallop %d/8 flame %d" % (st, vw.replace("three_quarter", "3/4"), i, i % 3), 13))
+        body.append(_under(x0 + cw2 / 2, y0 + ch2 - 8, "%s %s gallop %d/8 %s" % (st, vw.replace("three_quarter", "3/4"), i, fc_ or "default"), 13))
     # flame cards
     fl = []
     for i in range(3):
