@@ -38,10 +38,12 @@ def frame(g, t, camloc, ctx):
         meta = C.person('%s_dig' % base, over)
         bob = 0.07 * abs(math.sin((g + i * 3) * math.pi / 5.0))
         C.put_person(meta, m[:3], camloc, 3.0, 'dig%d' % i, lift=bob, yaw=C.math.degrees(C.math.atan2((camloc.x - m[0]), -(camloc.y - m[1]))) + 38.0, mirror=True)
-    for i, m in enumerate(marks.get('child', [])):
+    for i, m in enumerate([]):                   # final-gate fix: the little girl is removed (face in the caption band); the diggers carry the beat
+        pass
+    for i, m in enumerate([]):
         ph = (g // 4) % 2
         meta = C.person('child_carry_basket', {'lean': 4 + 6 * ph})
-        C.put_person(meta, (m[0] - 5.5, m[1] - 3.3, m[2]), camloc, 1.6, 'child%d' % i, lift=0.06 * abs(math.sin(g * math.pi / 4.0)))
+        C.put_person(meta, m[:3], camloc, 2.0, 'child%d' % i, lift=0.06 * abs(math.sin(g * math.pi / 4.0)))
 
 if __name__ == '__main__':
     a = sys.argv[1:]
