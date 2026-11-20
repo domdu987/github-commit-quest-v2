@@ -25,7 +25,7 @@ G0, G1 = C.g_bound(57.75), 1853                 # 1732, 1853 (exclusive): shot =
 H_IN, H_OUT = 8, 6                              # dissolve 13 in (13/2 + 2); 9-frame MATCH-DISSOLVE out into s25 (6 handle frames)
 G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1     # 1724..1855
 GS = list(range(G_FIRST, G_LAST + 1))
-G_BITE = 1827                                   # the first bite (fork at the mouth) lands with the camera (g 1824-1830)
+G_BITE = 1830                                   # the first bite (fork at the mouth) lands with the camera (g 1824-1830)
 PRESET, LIGHT = "tower_window_pull", "DAY"
 SEAT_H, PPD = 0.865, 256
 CANVAS = cast20.CANVAS20["maupassant"]
@@ -36,8 +36,8 @@ START_OFF = Vector((float(os.environ.get("X0", "-8.0")), -float(os.environ.get("
 END_DIR = Vector((0.0, -1.0, 0.10)).normalized()                       # landing direction: eye level, straight through the clear pane
 AIM_DROP = float(os.environ.get('AIM_DROP', '0.05'))                     # m: the landing aim sits a little below his head
 AIM_X = float(os.environ.get('AIM_X', '0.07'))                             # m: aim slightly right of him so his head sits at x ~0.46 W
-W0, W1 = float(os.environ.get("W0", "22.0")), float(os.environ.get("W1", "262.0"))      # head width px: ~3.5 % of frame height figure at g 1736 -> ~40 % at the landing
-G_ZERO, G_LAND = 1736, 1825                      # steady exponential zoom (apparent size x11.9 in 89 frames = 2.97 s), then a slow drift to the cut
+W0, W1 = float(os.environ.get("W0", "33.5")), float(os.environ.get("W1", "268.0"))      # head width px: ~3.5 % of frame height figure at g 1736 -> ~40 % at the landing
+G_ZERO, G_LAND = 1738, 1834                      # steady exponential zoom (figure 5 % at g 1738 -> 35 % at g ~1829 = 3.0 s, 38 % at the landing), then a slow drift to the cut
 LENS_AT_LAND = 55.0
 
 
@@ -47,13 +47,13 @@ def smooth(u):
 
 
 def ease(g):
-    """zoom progress e(g): 0 at G_ZERO, 1 at G_LAND; steady (60 % linear + 40 % smootherstep: eased at the end, already moving at the start); < 0 before, > 1 after."""
+    """zoom progress e(g): 0 at G_ZERO, 1 at G_LAND; steady (70 % linear + 30 % smootherstep: eased at the end, already moving at the start); < 0 before, > 1 after."""
     u = (g - G_ZERO) / float(G_LAND - G_ZERO)
     if u <= 0:
-        return 0.6 * u
+        return 0.7 * u
     if u >= 1:
         return 1.0 + 0.05 * (u - 1.0)
-    return 0.6 * u + 0.4 * smooth(u)
+    return 0.7 * u + 0.3 * smooth(u)
 
 
 def width_at(g):
