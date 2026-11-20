@@ -171,3 +171,44 @@ Other checks (all PASS):
 - Shared look: heads angle toward each other g173-179; captain's eyes open, brows raised from g172. Held "O" g158-171 allowed.
 - Usual: nobody cut, faces ~20 % of frame height, heads y ~490-530 of 1280, contact shadows, nothing floating, no props through faces, no black or frozen frames, nobody still > 1.5 s.
 Verdict: FAIL on camera monotonicity only (g115 spike, g129-130 surge, g142-153 re-acceleration). Landing and everything else PASS.
+
+## Round 15 (director QA-tech): FAIL (g115 kink fixed and landing still clean, but a one-frame camera jump at g127 and a re-acceleration g137-148 of the mid/far background remain)
+Take re-joined -> /tmp/s02q15.mkv (152 frames), frames in /tmp/qa19_r15/f/. Same measures as rounds 12-14 (px/frame at 360 wide; outside the character band x 12-96 %, y 22-72 %; deck = bottom strip y > 74 %, g130+).
+| g | whole | bgdiff | flow | deck | LK | LK dx,dy |
+| 105 | 13.4 | 26.8 | 15.1 | - | 9.5 | -0.9, 7.7 |
+| 112 | 15.2 | 25.4 | 13.2 | - | 9.1 | -1.6, 6.4 |
+| 115 | 15.3 | 24.6 | 12.2 | - | 8.7 | -1.4, 6.6 |
+| 118 | 14.9 | 21.7 | 9.7 | - | 9.5 | -2.8, 8.1 |
+| 122 | 13.6 | 21.0 | 6.5 | - | 6.5 | -2.8, 4.4 |
+| 125 | 13.0 | 20.3 | 7.0 | - | 7.0 | -2.3, 5.2 |
+| 126 | 13.7 | 20.4 | 9.2 | - | 9.6 | -1.1, 7.7 |
+| 127 | 15.3 | 21.3 | 15.2 | - | 16.4 | +2.4, 15.5 |
+| 128 | 11.4 | 16.9 | 12.4 | - | 13.4 | +2.9, 12.1 |
+| 130 | 10.8 | 15.7 | 10.3 | 13.0 | 8.3 | +0.4, 5.1 |
+| 132 | 13.1 | 16.1 | 9.6 | 13.0 | 11.8 | +5.8, 8.1 |
+| 136 | 8.6 | 10.1 | 4.7 | 12.8 | 3.4 | -0.8, 2.1 |
+| 137 | 8.8 | 10.1 | 4.4 | 12.4 | 3.8 | -1.5, 2.8 |
+| 142 | 9.2 | 9.1 | 7.4 | 9.1 | 7.3 | -3.3, 6.3 |
+| 146 | 10.3 | 9.5 | 8.7 | 9.8 | 9.1 | -3.7, 8.0 |
+| 148 | 11.3 | 10.4 | 8.5 | 9.6 | 9.5 | -3.7, 8.0 |
+| 152 | 11.7 | 10.9 | 6.8 | 8.4 | 7.0 | -4.1, 5.1 |
+| 156 | 10.2 | 10.4 | 5.5 | 6.2 | 5.6 | -2.4, 4.0 |
+| 160 | 9.8 | 10.8 | 5.1 | 5.0 | 6.5 | -2.4, 4.8 |
+| 168 | 7.7 | 9.8 | 4.0 | 2.1 | 5.3 | -1.4, 4.7 |
+| 172 | 6.7 | 8.8 | 3.2 | 1.3 | 4.1 | -1.0, 3.6 |
+| 176 | 5.5 | 6.5 | 2.5 | 1.0 | 2.7 | -0.8, 2.4 |
+| 180 | 3.3 | 4.2 | 1.2 | 0.5 | 1.3 | -0.6, 1.1 |
+| 182-199 | 1.8-5.1 | 2.5-3.8 | 0.5-0.6 | 0.9-2.2 | 0.5-0.6 | -0.5..-0.3, 0.1-0.2 |
+Findings:
+1. FIXED: the g115 one-frame spike is gone (flow 12.4, 12.2, 12.1 smooth), and the old g129-130 kink is gone.
+2. STILL BLOCKING: a one-frame camera jump at g127. Flow 7.0 (g125) -> 9.2 -> 15.2 (g127) -> 12.4 -> 10.2; LK 7.0 -> 16.4 and its direction flips (dx -2.3 -> +2.4); whole-frame 13.0 -> 15.3 (the take max) -> 11.4. The sheet g125-128 shows the framing of the ship shifting in one step between g126 and g127. It is a surge of 2x in two frames, then -25 % to -50 % back.
+3. STILL BLOCKING: the mid/far background re-accelerates after the peak. Flow 4.4 (g137) -> 8.8 (g147) = +100 %; LK 3.4 (g136) -> 9.5 (g148) and global dy 2.1 -> 8.0 (dx -0.8 -> -3.7), bgdiff 8.8 (g144) -> 11.0 (g150) = +25 %, whole-frame 8.6 -> 11.8. Then it decays 8.8 -> 5.1 by g160. The near-deck strip alone is flat (12.8 at g136, 9.1-9.8 over g142-148, no climb), which is why the team's measure (6 deck + 3 horizon points) shows monotone; the sails/rigging/horizon, as seen in the picture, speed up again (limit was no climb-back above ~20 %). The climb is coherent global motion (dx, dy rise together), so it is camera, not gestures.
+4. LANDING still PASSES, unchanged: flow 5.1 (g160) -> 4.0 -> 3.2 -> 2.5 (g176) -> 1.2 -> 0.8 -> 0.6 (g182), max step 33 %/frame; no overshoot; drift steady 0.5-0.6 with a constant direction (dx -0.5, dy 0.1) to g199.
+Fix: remove the g126-127 key discontinuity (keys 125/126/127 do not agree, pose steps), and make the far-field speed fall from the g131 peak to ~g160 without the second hump at g137-148 (e.g. 9.6 at g132, 7 at g140, 6 at g148, 5.1 at g160); measure with horizon/sail points, not only deck.
+Other checks PASS:
+- Whole-frame frame-diff (pairs g58-190): median 8.96, p90 14.08, max 15.4 (g127), min 1.8.
+- Luma 90.06 (per frame 66.6-110.0).
+- Props in hand in every sampled frame g172-199; no pop.
+- Shrug two-armed and symmetric with shoulder lift g183-189; shared head turn g173-179; captain's eyes open and brows raised from g172.
+- Usual: nobody cut, faces ~20 % of frame height, heads y ~490-530, contact shadows, nothing floating, no props through faces, no black or frozen frames, nobody still > 1.5 s.
+Verdict: FAIL (camera: g127 jump and g137-148 far-field re-acceleration). All else PASS.
