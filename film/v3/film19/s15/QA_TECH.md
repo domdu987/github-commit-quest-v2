@@ -76,3 +76,18 @@ Issues:
 2. NOTE g1176-1190: captain's hat brim ~50-65 px from the left edge (not cut).
 3. NOTE g1250-1288: captain mouth swell (see above).
 Verdict: FAIL only on item 1 (luma 111.1, limit 110); every other check, including the R10 failure (William's eyes / glance), passes.
+
+## Round 12 (director QA-tech) - PASS
+Take: s15 take.mkv.partaa+partab -> /tmp/s15q12.mkv, 203 frames 720x1280, first_g 1086. Frames: every frame g1086-1288 in /tmp/qa19_r12/s15/g####.png (6 fps sheet /tmp/qa19_r12/sheet6.png, darkening and snap sheets reviewed).
+Numbers (qa_stats formula, 90x160 bilinear):
+- Luma 105.25 whole file, 105.25 in-shot g1096-1279 (limit 85-110): PASS (was 111.1). Per segment: g1086-1156 96.0, g1156-1176 107.0, g1176-1196 117.4 (decaying), g1196-1280 109.1, tail 110.5. Min frame 89.9.
+- Saturation 0.507 whole, 0.501 in-shot (limit 0.47 / 0.50): PASS (thin margin on the 0.50 target).
+- Frame-diff, pairs g1097-1279 (183): mean-RGB grey median 4.41 / p90 10.46; ffmpeg gray median 4.72 / p90 11.66. Both >= 4 / >= 10: PASS. Min pair 1.63 (mean-RGB) / 1.74 (gray) at g1249, no pair < 1.5.
+Regression checks (all PASS):
+- William: open ring eyes + smile throughout from g1198, glance up at g1238-1254 reads (head tilts, pupils up, back).
+- Sun: steady round disc, >=230 area 6900-7800 px (720x1280) g1185-1221, no blink or square edge in crops g1188-1221. NOTE: with a strict >=245 threshold the count fluctuates (peak is 246-247) so use a lower threshold when counting; visually steady.
+- Captain mouth: continuous open g1233-1250, then frozen "O" from g1246 (crops g1244-1288 show the same O, no snap, no narrowing/widening; this removes the round-11 swell note).
+- Framing: both characters fully in frame, hat brim clear of edges (about 50-65 px at g1176-1190, as in R11; checked visually, not re-measured). Faces about 20-23 % of height at the dial push, heads y about 450-760 (< 880). Feet on deck with contact shadows, nothing floating, no props through faces (watch under William's chin). No black frames, no frozen runs.
+- Nobody still > 1.5 s: the captain's pose is frozen from g1246, but the camera keeps drifting and parallax moves rigging, sea, sailors and the sun; his head-box frame-diff stays 4.7-7.8 (180x320 scale) and whole-frame 3.7-4.1 to g1288; William blinks and sways. Alive enough: PASS. NOTE: captain's face itself is static for about 1.4 s (g1246-1288), right at the limit; a blink would make it safe.
+Darkening g1176-1196 (-0.56 EV): the ramp is smooth, deck luma 108 -> 90 over 18 frames (about 1.3 per frame, no step) and whole-frame 126 -> 109 (about 0.85 per frame); sky fades 173 -> 158. No visible exposure pop inside g1176-1196. The only step is at the planned snap g1170-1172 (deck 90 -> 113, whole-frame +8.7 at g1172), which is the "อยู่ตรงหัว" snap and the only frame-diff spike group (14-23 over g1170-1178). It reads as snap flash then settle; PASS, NOTE only (could soften by lowering the post-snap peak 126, not required).
+Verdict: PASS (luma 105.3, sat 0.501, frame-diff 4.41 / 10.46 mean-RGB, 4.72 / 11.66 ffmpeg gray).
