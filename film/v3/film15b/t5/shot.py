@@ -40,11 +40,11 @@ CAM_KEYS = [   # (t, loc, look)
     (47.8, (1.3, 9.5, 2.05), (0.0, BAR_Y, 2.3)),
     (49.0, (0.0, 9.6, 2.0), (0.0, BAR_Y, 2.3)),
     (50.3, (-1.2, 9.6, 2.0), (0.0, BAR_Y, 2.3)),
-    (52.9, (-0.7, 9.55, 2.0), (0.0, BAR_Y, 2.3)),
-    (53.5, (-0.6, 9.6, 2.2), (0.0, 12.6, 1.7)),
-    (54.3, (-0.4, 10.4, 3.2), (0.0, 13.6, 1.2)),
-    (55.08, (-0.3, 10.8, 4.0), (0.0, 13.2, 0.9)),
-    (56.2, (-0.3, 10.2, 5.4), (0.0, 13.2, 0.9)),
+    (52.9, (-0.7, 9.55, 2.0), (0.0, BAR_Y, 2.4)),
+    (53.5, (-0.9, 9.8, 2.7), (0.0, 12.4, 2.3)),
+    (54.3, (-1.0, 10.0, 3.4), (-0.2, 13.6, 1.1)),
+    (55.08, (-0.6, 10.2, 3.8), (0.0, 13.5, 1.0)),
+    (56.2, (-0.3, 10.2, 5.2), (0.0, 13.3, 0.9)),
     (57.4, (-0.2, 9.4, 7.2), (0.0, 13.2, 0.9)),                 # top-down-ish crane over the bar, mat below
     (58.2, (-3.0, 0.0, 13.0), (-6.0, 11.0, 1.0)),               # up and out
     (59.0, (-7.6, 5.2, 2.8), (-9.0, 10.0, 1.8)),                 # down to the podium, Dick with the medal
@@ -112,7 +112,7 @@ def dick_cards(t, cam, pitch_tilt):
         tf = t - 52.85
         if tf < 0.55: nm = 'flop_flick'; an = 'bar'; pt = (-0.4 + 0.3 * tf / 0.55, BAR_Y, BAR_H + 0.1 - 0.0 * tf)
         elif t < 53.75:
-            u = ((t - 52.85) - 0.55) / (53.75 - 53.40); nm = 'flop_flick'; an = 'bar'; pt = (-0.1 + 0.1 * u, BAR_Y + (LAND_Y - BAR_Y) * u, BAR_H + 0.1 + (FS + 0.9 - BAR_H - 0.1) * u * u)
+            u = ((t - 52.85) - 0.55) / (53.75 - 53.40); nm = 'flop_flick'; an = 'bar'; pt = (-0.1 - 0.4 * u, BAR_Y + (LAND_Y - BAR_Y) * u, BAR_H + 0.1 + (FS + 0.9 - BAR_H - 0.1) * u * u)
         else: nm = None
     if nm:
         SHB.rim(True, side='left', k=1.0, up=0.5, color=(255, 248, 235), width=0.07, tint=(1.0, 1.0, 1.05), cool=0.3)
@@ -123,7 +123,7 @@ MIR = dict(run=False)
 
 def dick_ground(t, cam, tilt):
     c = 'dick_olympic'; P = cast15.pose_for; SHB.rim(True, side='right', color=(255, 240, 210), width=0.045, k=0.7, tint=(0.97, 0.98, 1.0), cool=0.25)
-    base = (PX, LAND_Y)
+    base = (PX - (0.9 if t < 55.35 else 0.0), LAND_Y)
     if t < 53.75: return None
     if t < 54.55: nm = 'land_back'; dz = 0.06 * max(0, math.sin((t - 53.75) * 9)) * math.exp(-(t - 53.75) * 3)
     elif t < 55.35: nm = 'lie_back'; dz = 0
@@ -242,8 +242,13 @@ def render_frame(g, out, q):
         if w <= 0.001: continue
         k2 = kind
         if kind == 'main' and t >= 53.75: k2 = 'mat'
-        build_plate(t, loc, k2 if k2 != 'main' else 'main')
-        p = out + ('.%s.png' % kind); F.T.render(p); imgs.append((np.asarray(Image.open(p).convert('RGB'), np.float32), w, p))
+        p = out + ('.%s.png' % kind)
+        for attempt in range(4):
+            build_plate(t, loc, k2 if k2 != 'main' else 'main'); F.T.render(p); im = np.asarray(Image.open(p).convert('RGB'), np.float32)
+            sm = im[::4, ::4]; mg = ((sm[..., 0] > 200) & (sm[..., 2] > 200) & (sm[..., 1] < 60)).sum()
+            if mg < 30: break
+            print('magenta retry', g, kind, mg, flush=True)
+        imgs.append((im, w, p))
     acc = sum(a * w for a, w, _ in imgs) / sum(w for _, w, _ in imgs)
     Image.fromarray(np.clip(acc + 0.5, 0, 255).astype(np.uint8)).save(out)
     for _, _, p in imgs:
