@@ -565,7 +565,7 @@ def build(location=None, preset=None, light=None, clear=True):
     return A
 
 def sky_dome(SET, P, M, location, light):
-    R = 330.0; mb = MB(); seg = 72; els = [-15 + 105 * k / 14 for k in range(15)]
+    R = 330.0 if not (location == 'vista' and os.environ.get('VISTA_R3', '1') != '0') else 1400.0; mb = MB(); seg = 72; els = [-15 + 105 * k / 14 for k in range(15)]
     for i in range(seg):
         for k in range(14):
             a0, a1 = 2 * math.pi * i / seg, 2 * math.pi * (i + 1) / seg; e0, e1 = math.radians(els[k]), math.radians(els[k + 1])
@@ -601,7 +601,7 @@ def hills(Bk, M, centre=(0.0, 0.0), r0=165.0, r1=195.0, n=26, seed=7, rad=(34, 6
         lumpy(hb, V((centre[0] + Rr * math.cos(a), centre[1] + Rr * math.sin(a), -rd * z)), rd, M['hill'], 50 + i, seg=14, rings=6, rough=0.16, squash=0.42)
 
 def make_camera(setup, name='cam'):
-    ob = T.make_camera(setup, name); ob.data.clip_end = 900.0; ob.data.clip_start = 0.1; ob.data.dof.use_dof = False
+    ob = T.make_camera(setup, name); ob.data.clip_end = 2600.0 if (STATE.get('loc') == 'vista' and os.environ.get('VISTA_R3', '1') != '0') else 900.0; ob.data.clip_start = 0.1; ob.data.dof.use_dof = False
     for fc in STATE.get('flame_cards', ()):
         for c in fc['card'].constraints:
             if c.type == 'TRACK_TO': c.target = ob
@@ -847,6 +847,10 @@ def dress_ground(cam=None, density=1.0, seed=0, keep_clear=None, frames=None, ac
 
 def clear_dressing():
     import jimo_dress; return jimo_dress.clear_dressing()
+
+def vista_r3(sweep=True):
+    """Vista round 3 finisher (jimo_vista3.py / API.md 'Vista round 3'): build('vista') applies it already; idempotent, also sweeps free-floating flame cards."""
+    return VS.vista_r3(sweep)
 
 def ground_share(png, **kw):
     """Share (0..1) of plain-ground 24 x 24 blocks below y 0.4 H of a rendered frame (see jimo_dress.ground_share / API.md)."""
