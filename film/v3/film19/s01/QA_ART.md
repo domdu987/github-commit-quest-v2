@@ -36,3 +36,19 @@ I checked full-size g 0, 8, 18, 30, 38, 44, 50 and 56 (from take.mkv), plus cont
 1. Cap the push so his head is at most about 320 px at g 56. Use a snap of about x1.15, or no drift push after g 49. Retune shift x (0.12 to about 0) so the whole H1 with both balls and both of his hands stay in frame through g 56.
 2. Use `key_vis` to hide the stool lantern, or move it about 0.6 D screen-right, out of frame after the snap. Nothing should sit in front of him at y 880 or below.
 3. Move the g 55 blink to about g 50 so g 53-56 end on open eyes at the lens. At present the last in-shot frame, g 56, has his eyes closed.
+
+## Round 3: **FIX-FIRST**, 8/10
+I checked full-size g 0, 5, 9, 30, 40, 50, 53 and 56 from take.mkv, plus a strip of right-edge crops for g 44-56.
+
+**Round-2 fixes**
+- Head cap: **FIXED**. The head is about 300 px at g 56, and the machine now reads bigger than his head.
+- Whole H1 in frame: **FIXED**. Both balls stay inside on every frame I checked (left ball at x 80 or more).
+- Both hands and the ponytail in frame: **OPEN**. From g 47 the raised screen-right hand leaves the right edge. From about g 48 to g 56 the ponytail and the right side of his head are cut. QA.md's "inside on every frame" claim is wrong.
+- Lantern: **FIXED**. It is gone, and the crate reads as plain furniture.
+- Blink: **FIXED**. It closes at g 50-52, and his eyes are open at the lens on g 53-56.
+
+**Top-left shape at g 0-9:** this is the hanging candle ring: an orange and black banded wooden hoop with a lit white candle, cropped at x 0-55, y 0-200. On the film's first frames it is the brightest point at the frame edge, and it does not read as any object. It is a mild distraction.
+
+**Fixes (shot.py)**
+1. Bring the screen-right hand target in beside his cheek (x 680 or less), or shift the framing about 40 px so the content moves screen-left for g 44-56. The hand, ponytail and head outline must stay inside x 719 through g 56. The left H1 ball has room to about x 40.
+2. Use `key_vis` to hide the candle ring for g 0-12, or pan it fully out of frame.
