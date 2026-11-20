@@ -29,12 +29,12 @@ G_WORD = C.cap_g("วิศวกรไอเฟล")                   # 268
 G_LAND = 300                                   # the zoom lands on the medium ~g 300 (4.3 s push; at g 268 the point is already in a medium-wide)
 RAISE = (G_WORD - 2, G_WORD + 6)               # arm rises to the point
 G_SWAP = G_WORD + 2
-PRESET, LIGHT, MARK = "site_table", "DAY", "eiffel_table"
+PRESET, LIGHT, MARK = "site_bigzoom_land", "DAY", "eiffel_table"
 PPD = 256
-D0, D1 = 420.0, 4.6                            # camera distance to Eiffel (D): extreme wide -> medium
-EL0, EL1 = 40.0, 10.0                          # elevation (deg): high over Paris -> low
-AZ0, AZ1 = 200.0, 195.0                        # azimuth from the table (deg): ends south-south-west of him, wall to the side
-SITE_CTR = CO.W((0.0, -30.0, 25.0))            # the middle of the four legs (D) the far start looks at
+D0, D1 = 620.0, 4.6                            # camera distance to Eiffel (D): extreme wide -> medium
+EL0, EL1 = 45.0, 8.0                          # elevation (deg): high over Paris -> low
+AZ0, AZ1 = 261.0, 248.0                        # azimuth from the table (deg): ends south-south-west of him, wall to the side
+SITE_CTR = CO.W((0.0, -90.0, 0.0))            # the middle of the four legs (D) the far start looks at
 TILT1 = 16.0                                   # aim tilts UP by the end so the leg + scaffold fill the background
 
 
@@ -116,6 +116,47 @@ def dress(A):
     A['lamp'] = lamp
 
 
+
+def make_glow_and_fill(A):
+    """a big warm glow sphere above Eiffel's table (scaled up at the start so the eye finds him; the set's own beacon is sub-pixel) and a warm
+    fill light on the table front / Eiffel for the landing."""
+    import bpy
+    R = CO.root()
+    m = A["marks"][MARK]
+    pos = (m[0] / CO.SC * CO.SC, m[1], m[2])                                  # marks are world D: keep them as they are
+    bpy.ops.mesh.primitive_uv_sphere_add(radius=1.0, location=(0, 0, 0))
+    gl = bpy.context.active_object
+    gl.name = "bz_glow"
+    lm = bpy.data.materials.new("bz_glow_m")
+    lm.use_nodes = True
+    nd = lm.node_tree.nodes
+    for n in list(nd):
+        nd.remove(n)
+    em = nd.new("ShaderNodeEmission")
+    em.inputs["Color"].default_value = (1.0, 0.68, 0.28, 1)
+    em.inputs["Strength"].default_value = 7.0
+    out = nd.new("ShaderNodeOutputMaterial")
+    lm.node_tree.links.new(em.outputs["Emission"], out.inputs["Surface"])
+    gl.data.materials.append(lm)
+    gl.visible_shadow = False
+    gl.location = (pos[0], pos[1], pos[2] + 5.5 * CO.SC)                      # 5.5 m above the ground at his table
+    bpy.ops.object.light_add(type="POINT", location=(pos[0] - 3.0, pos[1] - 6.0, pos[2] + 4.5))
+    fill = bpy.context.active_object
+    fill.name = "bz_fill"
+    fill.data.color = (1.0, 0.78, 0.55)
+    fill.data.energy = 4000.0
+    fill.data.shadow_soft_size = 3.0
+    fb = bpy.data.materials.get("flag_b")                                      # the flag's blue renders pure black in shade: lift it to a real blue
+    if fb is not None and fb.use_nodes:
+        for n in fb.node_tree.nodes:
+            if n.type == "BSDF_PRINCIPLED":
+                n.inputs["Base Color"].default_value = (0.10, 0.22, 0.70, 1)
+            for i in n.inputs:
+                if i.type == "RGBA" and n.type in ("MIX", "VALTORGB") and hasattr(i, "default_value"):
+                    i.default_value = (0.10, 0.24, 0.72, 1)
+    A["bz_glow"], A["bz_fill"] = gl, fill
+
+
 HIDE_SCATTER = ("pf_coal", "pf_soot", "pf_rivet", "pf_metal", "pf_stonedk", "pm_coal", "pm_soot", "pm_rivet", "pm_metal", "pm_stonedk", "pn_coal", "pn_soot", "pn_rivet", "pn_stonedk")   # the small near-black scatter that reads as debris
 
 
@@ -133,7 +174,7 @@ class ZoomPath(C.CamPath):
         self.subj = m + Vector((0.0, 0.0, 1.7))
         C.CamPath.__init__(self, self.subj + Vector((1, 0, 0)), self.subj, GF, G_LAST, push=0, decay=0.0)
 
-    KEYS = ((GF, 420.0), (G0, 330.0), (196, 39.0), (G_LAND, D1))     # camera distance to Eiffel (D): ~10 px figure at g 178, 64 px (5 %) at g 196, medium (~540 px) at g 300
+    KEYS = ((GF, 620.0), (G0, 480.0), (196, 39.0), (G_LAND, D1))     # camera distance to Eiffel (D): ~10 px figure at g 178, 64 px (5 %) at g 196, medium (~540 px) at g 300
 
     def lnd(self, g):
         ks = self.KEYS
@@ -144,6 +185,16 @@ class ZoomPath(C.CamPath):
                 return math.log(da) + (math.log(db) - math.log(da)) * u
         return math.log(ks[-1][1])
 
+    @staticmethod
+    def lens(p):
+        """22 mm until p 0.55, then eased to the 62 mm of site_bigzoom_land (Eiffel head ~178 px)"""
+        return 22.0 + 40.0 * smoother((p - 0.55) / 0.45)
+
+    @staticmethod
+    def shift(p):
+        """lens shift_y: +0.37 (site_bigzoom_start: picture pushed down, sky band on top) -> 0.08 (mid) -> 0 at the landing"""
+        return 0.20 * (1.0 - smoother(p / 0.6))
+
     def prog(self, g):
         """smoothed log-distance (13-frame box) -> progress 0..1 of the BIGZOOM"""
         l = sum(self.lnd(g + k) for k in range(-6, 7)) / 13.0
@@ -152,10 +203,10 @@ class ZoomPath(C.CamPath):
     def state(self, g):
         p, l = self.prog(g)
         tau = max(0.0, (g - G_LAND) / 30.0)
-        d = math.exp(l) * (1.0 - 0.10 * tau)
+        d = math.exp(l) * (1.0 - 0.10 * tau) * self.lens(p) / 22.0          # d_eff x lens/22: the figure keeps the same on-screen size as with a 22 mm lens
         el = lerp(EL0, EL1, p)
         az = lerp(AZ0, AZ1, p) - 9.0 * tau
-        return d, el, az, lerp(14.0, TILT1, p)          # +14 deg at the start: sky + skyline take the top of the frame
+        return d, el, az, 0.0
 
     def at(self, g):
         d, el, az, tilt = self.state(g)
@@ -163,7 +214,7 @@ class ZoomPath(C.CamPath):
         off = Vector((math.cos(a) * math.cos(e), math.sin(a) * math.cos(e), math.sin(e))) * d
         loc = self.subj + off
         p = self.prog(g)[0]
-        tgt = self.subj.lerp(SITE_CTR, 0.55 * math.exp(-7.0 * p))          # at the start the aim is between Eiffel and the middle of the site (legs around him), then it closes on Eiffel
+        tgt = self.subj.lerp(SITE_CTR, 0.75 * math.exp(-7.0 * p))          # at the start the aim is between Eiffel and the middle of the site (legs around him), then it closes on Eiffel
         fwd = (tgt - loc).normalized()
         r = Vector((fwd.y, -fwd.x, 0.0)).normalized()
         from mathutils import Matrix
@@ -174,8 +225,8 @@ class ZoomPath(C.CamPath):
         return self.state(g)[3]
 
 
-LEG_FWD = 5.0                                  # m: the leg camera starts this much nearer the foot than the preset (smaller sacks)
-LIFT = 14.0                                    # D: the camera lifts over the yard / pier while it travels (clears the stone block)
+LEG_FWD = -2.0                                 # m: the leg camera starts this much nearer the foot than the preset (smaller sacks)
+LIFT = 24.0                                    # D: the camera lifts over the yard / pier while it travels (clears the stone block)
 
 
 class TravelPath(ZoomPath):
@@ -199,7 +250,7 @@ class TravelPath(ZoomPath):
             return la, ka
         u = clamp((g - G_TRAVEL) / float(G_LAST - G_TRAVEL), 0.0, 1.0)
         w = 0.06 * u + 0.94 * smoother(u ** 0.55)        # leaves Eiffel quickly (no half-body lingering at the frame edge)
-        pitch = lerp(10.0, 36.0, u) + 9.0 * C.snap_u(g, SNAP[0], SNAP[1], 1.7)
+        pitch = lerp(8.0, 26.0, u) + 6.0 * C.snap_u(g, SNAP[0], SNAP[1], 1.7)
         dC = self.h * math.cos(math.radians(pitch)) + Vector((0, 0, math.sin(math.radians(pitch))))
         dA = (ka - la).normalized()
         loc = la.lerp(self.locC, w) + Vector((0, 0, LIFT * math.sin(math.pi * w)))
@@ -235,7 +286,7 @@ def pose_of(g):
     return p
 
 
-RIV = [("rv_a", "riveter_hammer", (41.5, -68.6), False), ("rv_b", "riveter_tongs", (57.5, -69.4), True), ("rv_c", "riveter_forge", (35.0, -69.2), False)]
+RIV = [("rv_a", "riveter_hammer", (28.0, -75.0), False), ("rv_b", "riveter_tongs", (42.0, -76.0), True), ("rv_c", "riveter_forge", (24.0, -80.0), False)]
 
 
 def riv_pose(kind, g, k):
@@ -260,10 +311,10 @@ class Take(C.Take):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s03")
         self.A["marks"][MARK] = C.on_ground(self.A["marks"][MARK])
         for ob in C.bpy.data.objects:                               # the preset's near-black FG slabs (anchored to the preset camera): camera-invisible
-            if ob.name in ("fg_redlead_sh", "fg_dark_sh", "fg_metal_sh", "fg_timber_sh") or ob.name.startswith(("derricks_", "swinggirder")) or ob.name in HIDE_SCATTER:
+            if ob.name in ("fg_redlead_sh", "fg_dark_sh", "fg_metal_sh", "fg_timber_sh") or ob.name.startswith(("derricks_", "swinggirder")) or ob.name in HIDE_SCATTER or ob.name.startswith("pnoink_flag"):
                 ob.visible_camera = False
         self.cam.data.clip_end = 6000.0
-        dress(self.A)
+        make_glow_and_fill(self.A)
         self.path = cam_path(self.A)
         self.key_cam(bf(GF), *self.path.at(GF))
         self.scene.frame_set(bf(GF))
@@ -291,10 +342,19 @@ class Take(C.Take):
             C.place(self.eif, f, mark)
             for a, cast, mk, mirror, sc in self.riv:
                 C.place(a, f, mk, scale=sc)
-            lk = clamp(0.6 + self.path.state(g)[0] / 50.0, 0.6, 7.0)        # the warm lamp keeps ~8 px on screen while we are far (findable), normal size at the landing
-            self.A["lamp"].scale = (lk, lk, lk)
-            self.A["lamp"].keyframe_insert("scale", frame=f)
-            self.key_set(f)
+            d_m = self.path.state(g)[0] / CO.SC                                  # camera distance in metres
+            p = self.path.prog(g)[0]
+            gk = clamp(self.path.state(g)[0] * 7.0 / 782.0, 0.0, 40.0) * (1.0 - smoother((p - 0.40) / 0.25))   # glow radius ~ 7 px on screen while far, gone well before the landing
+            self.A["bz_glow"].scale = (max(gk, 1e-3),) * 3
+            self.A["bz_glow"].keyframe_insert("scale", frame=f)
+            self.cam.data.lens = self.path.lens(p)
+            self.cam.data.shift_y = self.path.shift(p)
+            self.cam.data.keyframe_insert("lens", frame=f)
+            self.cam.data.keyframe_insert("shift_y", frame=f)
+            fe = smoother((p - 0.7) / 0.3)
+            self.A["bz_fill"].data.energy = 4000.0 * fe
+            self.A["bz_fill"].data.keyframe_insert("energy", frame=f)
+            self.key_set(f, set_beacon=bool(p < 0.22))
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
