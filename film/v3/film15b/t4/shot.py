@@ -97,13 +97,13 @@ def place_dick(g, cam, cast='dick_olympic'):
     elif kind == 'air':
         place_air(tag, cast, a, cam, b[0], bar_h=BAR_JUMP)
     elif kind == 'mat':
-        SHB.card(tag, cast, cast15.pose_for(a, cast), (b[0], b[1]), cam, z=B2.FOAM_SURF, ppd=192, scale=1.25, mirror=True, shadow=(2.7, 1.0), canvas=cast15.CANVAS15_WIDE, kind='seat')
+        SHB.card(tag, cast, cast15.pose_for(a, cast), (b[0], b[1]), cam, z=B2.FOAM_SURF, ppd=192, scale=1.5, tilt_deg=-22, mirror=True, shadow=(3.2, 1.2), canvas=cast15.CANVAS15_WIDE, kind='seat')
     SHB.rim(False)
 
 # ------------------------------------------------------------------ pit camera (metres): (g, loc, look, lens)
 PIT_KEYS = [
-    (1052, (-1.3, 8.3, 0.40), (1.9, 11.5, 2.00), 22.0),
-    (1096, (-0.4, 8.6, 0.50), (2.2, 11.5, 2.05), 22.0),         # low hero beside the standard: bar ~30 cm above his head, 2.24 m board right
+    (1052, (-2.4, 7.5, 0.40), (3.0, 11.6, 2.05), 22.0),
+    (1096, (-1.8, 7.9, 0.50), (3.0, 11.6, 2.05), 22.0),         # low hero beside the standard: bar ~30 cm above his head, 2.24 m board right
     (1100, (3.0, 5.4, 0.90), (5.6, 8.1, 1.5), 22.0),
     (1105, (7.2, 3.9, 1.00), (5.6, 8.1, 1.5), 22.0),          # side tracking begins: Dick at his mark
     (1117, (6.2, 4.6, 1.05), (4.6, 8.6, 1.5), 22.0),
@@ -114,9 +114,9 @@ PIT_KEYS = [
     (1153, (6.4, 4.5, 1.05), (4.8, 8.5, 1.5), 22.0),
     (1163, (4.4, 5.7, 1.20), (2.7, 9.9, 1.6), 22.0),
     (1174, (2.0, 7.1, 1.40), (0.5, 11.2, 2.0), 22.0),
-    (1182, (1.5, 8.4, 1.95), (-0.2, 12.8, 1.5), 24.0),
-    (1192, (1.1, 9.6, 2.45), (-0.6, 13.9, 1.2), 28.0),
-    (1204, (0.9, 10.2, 2.55), (-0.7, 14.2, 1.15), 29.0),
+    (1182, (1.6, 8.6, 2.00), (-0.2, 12.8, 1.5), 24.0),
+    (1192, (0.9, 10.4, 2.60), (-0.7, 14.1, 1.15), 28.0),
+    (1204, (0.6, 10.9, 2.70), (-0.7, 14.2, 1.10), 29.0),
 ]
 def pit_cam(g):
     sel = [k for k in PIT_KEYS if k[0] <= 1146] if g < 1148 else [k for k in PIT_KEYS if k[0] >= 1150]
