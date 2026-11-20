@@ -94,7 +94,7 @@ def bez(p0, c, p1, u):
 L2_M = (-3.2, -228.0, 30.0)                     # top of the crane (m)
 L3_M = (-3.0, -222.0, 20.0)                     # lowest point of the whip: the dive starts here
 I_M = (0.45, -204.25, 1.45)                     # inside the hut
-IN_AIM = (-0.15, -202.0, 1.25)                  # between the soldier and the spark gap
+IN_AIM = (-0.5, -202.0, 1.25)                  # between the soldier and the spark gap
 
 
 _PL = {}
@@ -164,7 +164,7 @@ def cam_at(g, path1):
         return loc, tgt
     t = (g - END_DIVE) / 30.0                                             # inside: push 9 %/s toward the soldier + a little slide
     aim = Vector(CO.W(IN_AIM))
-    loc = Ii + (aim - Ii).normalized() * 0.09 * (aim - Ii).length * t + Vector((0.25 * t * CO.SC, 0.0, 0.0))
+    loc = Ii + (aim - Ii).normalized() * 0.09 * (aim - Ii).length * t + Vector((-0.05 * t * CO.SC, 0.0, 0.0))
     return loc, aim
     u = ez(min(1.0, (g - INSIDE[0]) / float(INSIDE[1] - INSIDE[0])), "sine")
     loc = Wp.lerp(Ii, u)
@@ -172,7 +172,7 @@ def cam_at(g, path1):
     if g > INSIDE[1]:                                                   # inside: push 9 %/s toward the soldier + a little slide
         t = (g - INSIDE[1]) / 30.0
         aim = Vector(CO.W(IN_AIM))
-        loc = Ii + (aim - Ii).normalized() * 0.09 * (aim - Ii).length * t + Vector((0.25 * t * CO.SC, 0.0, 0.0))
+        loc = Ii + (aim - Ii).normalized() * 0.09 * (aim - Ii).length * t + Vector((-0.05 * t * CO.SC, 0.0, 0.0))
         tgt = aim
     return loc, tgt
 
@@ -269,6 +269,8 @@ class Take(C.Take):
         for o in C.bpy.data.objects:
             if o.name.startswith("wagon_"):
                 o.location = o.location + Vector(WAGON_SHIFT)
+            if o.name == "wagon_rope":                              # the set's rope coil is a jagged ring that cut the group at the waist (g 1255-1300); our flat coils replace it
+                o.hide_render = True
         self.glass = [o for o in C.bpy.data.objects if o.name in ("hut_lampsm", "hut_dark")]   # lit panes + muntin cross / black junction
         print("hut objects:", [o.name for o in C.bpy.data.objects if o.name.startswith("hut")], flush=True)
         for o in list(CO.STATE["sg_dyn"]):                        # our own arc between the brass balls (the set's arc reads as a scribble)
@@ -371,11 +373,11 @@ class Take(C.Take):
                 CO.setv(o, g < G_GLASS, f)
             self.flash.energy = (55.0 if g in SPARK_FRAMES else 0.0) * CO.SC * CO.SC
             self.flash.keyframe_insert("energy", frame=f)
-            self.hutl.energy = 14.0 * CO.SC * CO.SC * ez((g - 1345) / 25.0)
+            self.hutl.energy = 7.0 * CO.SC * CO.SC * ez((g - 1345) / 25.0)
             self.hutl.keyframe_insert("energy", frame=f)
-            self.rim.energy = (5.0 if g >= 1376 else 0.0) * CO.SC * CO.SC
+            self.rim.energy = (3.0 if g >= 1376 else 0.0) * CO.SC * CO.SC
             self.rim.keyframe_insert("energy", frame=f)
-            self.scene.view_settings.exposure = self.exp0 + 0.35 * ez((g - 1380) / 30.0)
+            self.scene.view_settings.exposure = self.exp0 + 0.15 * ez((g - 1380) / 30.0)
             self.scene.keyframe_insert(data_path="view_settings.exposure", frame=f)
         for g in gs:
             f = bf(g)
