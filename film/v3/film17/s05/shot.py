@@ -11,12 +11,12 @@ FIRST, LAST = G0 - H, G1 + H
 BASE_C = Vector((2.9, -3.8, 3.55)); BASE_L = Vector((-0.4, 1.9, 1.1))
 # camera waypoints: (g, s = distance factor from the look point, lateral metres (right of view), look point, vertical metres)
 WP = [
-    (FIRST, 0.72, -0.25, (-0.95, 1.90, 0.95), 0.05),
-    (688,   0.88,  0.10, (-0.95, 1.90, 1.05), 0.10),
-    (704,   0.68, -0.20, (-1.00, 1.80, 1.10), -0.05),  # snap 16 f: push + reframe
-    (712,   0.74, -0.10, (-1.00, 1.80, 1.10), -0.02),
-    (724,   0.60,  0.40, (-0.75, 1.75, 1.10), -0.10),  # snap 2 (12 f): push + slide
-    (LAST,  0.62,  0.45, (-0.75, 1.75, 1.10), -0.10),
+    (FIRST, 0.80, -0.30, (-1.45, 1.90, 0.95), 0.05),
+    (688,   0.94,  0.00, (-1.40, 1.90, 1.05), 0.10),
+    (704,   0.76, -0.25, (-1.45, 1.80, 1.10), -0.05),  # snap 16 f: push + reframe
+    (712,   0.82, -0.15, (-1.40, 1.80, 1.10), -0.02),
+    (724,   0.68,  0.10, (-1.30, 1.75, 1.10), -0.10),  # snap 2 (12 f): push + slide
+    (LAST,  0.70,  0.15, (-1.30, 1.75, 1.10), -0.10),
 ]
 SNAP = (688, 704)
 SNAP2 = (712, 724)
@@ -87,7 +87,7 @@ class S05(C.Take):
         self.add("bench0", "bench0", "prisoner_sitting_a", seated="bench")
         self.add("bench2", "bench2", "prisoner_sitting_c", seated="bench")
         self.add("queue0", "armspan", "gendarme_laughing_a")
-        self.add("table", "clerk", "gendarme_laughing_b", dx=-0.55)
+        self.add("table", "clerk", "gendarme_laughing_b", dx=-1.2)
         self.add("chair", "chair", "inspector_seated_stiff", seated="chair")
         self.add("tripod", "tripod", "bertillon_neutral")
 
