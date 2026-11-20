@@ -56,7 +56,7 @@ def _cr(p0, p1, p2, p3, t):
     return 0.5 * ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t + (-p0 + 3 * p1 - 3 * p2 + p3) * t * t * t)
 
 
-TM = [(48, 0.0), (66, 0.07), (90, 0.27), (112, 0.55), (125, 0.70), (140, 0.85), (153, 0.935), (164, 0.98), (176, 1.0)]    # g -> FRACTION OF THE PATH LENGTH (ease in, one speed hump, ease OUT over g 138-170)
+TM = [(48, 0.0), (66, 0.07), (90, 0.27), (112, 0.52), (125, 0.66), (140, 0.80), (176, 1.0)]    # g -> FRACTION OF THE PATH LENGTH (ease in, one speed hump, ease OUT over g 138-170)
 
 
 def _slopes():
@@ -72,7 +72,67 @@ def _slopes():
 _M = _slopes()
 
 
+G_FLOW0 = 140
+FLOW_T = [(140, 5.0), (150, 5.6), (158, 5.8), (164, 5.4), (168, 3.5), (171, 2.0), (174, 0.8), (176, 0.3), (178, 0.3)]     # px/frame of the rigging / sail background at 360 wide
+_FPTS = [Vector(p) for p in ((0.5, -26, 24), (2.5, -22, 20), (-2.5, -24, 22), (4, -27, 18), (1.0, -18, 16.5), (-3, -28, 17))]
+_FU = {}
+
+
+def _flow_per_du(u):
+    """background screen speed (px at 360 wide) per unit of the spline parameter u"""
+    ua, ub = _u_of_s(u), _u_of_s(min(1.0, u + 1e-3))                      # u here is the eased path fraction s (the spline is reparametrised by log distance)
+    a, b = _spline_u(ua, 1), _spline_u(ub, 1)
+    la, lb = _spline_u(ua, 2), _spline_u(ub, 2)
+    tot = 0.0
+    for P in _FPTS:
+        pts = []
+        for (loc, look) in ((a, la), (b, lb)):
+            f = (look - loc).normalized(); r = Vector((f.y, -f.x, 0.0)).normalized(); up = r.cross(f)
+            d = P - loc; z = d.dot(f)
+            pts.append((360 + 782.2 * d.dot(r) / z, 640 - 782.2 * d.dot(up) / z))
+        tot += math.hypot(pts[0][0] - pts[1][0], pts[0][1] - pts[1][1]) / 2.0
+    return tot / len(_FPTS) / 1e-3
+
+
+def _flow_u(k):
+    """integrate du/dg = k * F(g) / q(u) from g = G_FLOW0 (u0 = the table's value) to G_ARRIVE; returns the u(g) table"""
+    u = _umap_tm(G_FLOW0)
+    out = {G_FLOW0: u}
+    for g in range(G_FLOW0, G_ARRIVE + 4):
+        Fg = None
+        for i in range(len(FLOW_T) - 1):
+            if FLOW_T[i][0] <= g <= FLOW_T[i + 1][0]:
+                t = (g - FLOW_T[i][0]) / float(FLOW_T[i + 1][0] - FLOW_T[i][0]); t = t * t * (3 - 2 * t)
+                Fg = FLOW_T[i][1] + (FLOW_T[i + 1][1] - FLOW_T[i][1]) * t
+        if Fg is None:
+            Fg = FLOW_T[-1][1]
+        u = min(1.0, u + k * Fg / max(1e-6, _flow_per_du(min(u, 0.999))))
+        out[g + 1] = u
+    return out
+
+
+def _flow_table():
+    if not _FU:
+        lo, hi = 0.3, 3.0
+        for _ in range(30):                                                      # bisect k so that u reaches 1 exactly at G_ARRIVE
+            k = 0.5 * (lo + hi)
+            if _flow_u(k)[G_ARRIVE] < 0.9995:
+                lo = k
+            else:
+                hi = k
+        _FU.update(_flow_u(0.5 * (lo + hi)))
+    return _FU
+
+
 def _umap(g):
+    if g >= G_FLOW0:
+        if g >= G_ARRIVE:
+            return 1.0
+        return _flow_table()[int(g)] * (1 - (g - int(g))) + _flow_table()[int(g) + 1] * (g - int(g))
+    return _umap_tm(g)
+
+
+def _umap_tm(g):
     if g <= TM[0][0]:
         return 0.0
     if g >= TM[-1][0]:
@@ -127,13 +187,15 @@ def _spline_u(u, which):
 def cam_rest(g):
     """(loc, look) in the ship's rest frame at film frame g.  After arrival: a slow push so the shot never parks."""
     loc, look = _spline(min(g, G_ARRIVE), 1), _spline(min(g, G_ARRIVE), 2)
-    # settle: a slow orbit about the pair (parallax against the rigging) plus a gentle push; it STARTS during the ease-out (g 140) so the camera never parks
-    d = clamp((g - 168) / 70.0)
-    ang = math.radians(17.0) * d * d * (3 - 2 * d)
+    # AFTER the landing (g 176) a very slow orbit + push keep the frame alive (a linear part so the speed never reaches zero, a smoothstep part for the ease);
+    # everything before g 176 is the spline alone, so the background flow decays with the zoom (QA-tech round 12: no 6-7 px/frame orbit until g 170)
+    d = clamp((g - 176) / 70.0)
+    ang = math.radians(17.0) * (0.15 * d + 0.85 * d * d * (3 - 2 * d))
     c = Vector((0.5, -30.5, loc.z))
     loc = c + Matrix.Rotation(ang, 3, "Z") @ (loc - c)
-    loc = loc + (look - loc) * (0.0030 * max(0.0, g - 168) * d)
-    look = look + Vector((0.0, 0.0, 0.30 * clamp((g - 134) / 36.0)))      # aim a little higher so the heads sit at y 450-760 (the camera still rides the deck)
+    loc = loc + (look - loc) * (0.0030 * max(0.0, g - 176) * (0.3 + 0.7 * d))
+    uu = _umap(min(g, G_ARRIVE))
+    look = look + Vector((0.0, 0.0, 0.30 * clamp((uu - 0.6) / 0.4)))      # aim a little higher so the heads sit at y 450-760: tied to the spline progress, so it decays with it
     return loc, look
 
 
@@ -206,11 +268,14 @@ def pose_captain(g):
     if look > 0.0:
         p["gaze"] = (lerp(0.8, 1.0, look), lerp(0.9, 0.0, look))               # at astro19_c (screen-right): the shared look
         p["head_roll"] = lerp(p["head_roll"], 8.0, look)
+        p["yaw"] = lerp(0.4, 0.9, look)                                          # the head turns ~20 deg toward astro19_c (screen-right)
+    if g >= 172:
+        p["expr"] = "shocked"; p["mouth"] = "flat"                              # eyes fully open under raised brows (no half-lid 'unimpressed'), no O
     shrug = _ramp(g, 181, 189)
     if shrug > 0.0:
-        p["arm_r"] = dict(hand=(lerp(0.45, 0.95, shrug), lerp(1.2, 0.80, shrug)), bend=lerp(0.6, 0.0, shrug), shape="open", layer="front")      # symmetric: both elbows out,
-        p["arm_l"] = dict(hand=(lerp(1.0, -0.55, shrug), lerp(1.4, 0.80, shrug)), bend=lerp(0.2, 0.0, shrug), shape="open", stretch=1.0, layer="front")   # both hands up, palms open
-        p["expr"] = "worried"                                                    # brows stay up through the shrug
+        lift4 = 0.12 * math.sin(math.pi * _ramp(g, 183, 187))                      # a 4-frame shoulder lift on the shrug
+        p["arm_r"] = dict(hand=(lerp(0.45, 0.95, shrug), lerp(1.2, 0.72, shrug) - lift4), bend=lerp(0.6, 0.0, shrug), shape="open", layer="front")      # symmetric: both forearms
+        p["arm_l"] = dict(hand=(lerp(1.0, -0.95, shrug), lerp(1.4, 0.72, shrug) - lift4), bend=lerp(0.2, 0.0, shrug), shape="open", stretch=1.0, layer="front")   # rise at the same angle, palms open
                                                                                 # the chart stays in his right hand (held low, upside down) through g 199
         p["head_roll"] = lerp(8.0, 7.0, shrug) + 2.0 * math.sin(g * 0.8)
         p["lean"] = 8 - 10.0 * shrug
@@ -243,6 +308,7 @@ def pose_astro(g):
     if look > 0.0:
         p["pitch"] = lerp(p.get("pitch", -0.75), 0.15, look)
         p["gaze"] = (lerp(0.2, -1.0, look), 0.0)                              # at the captain (screen-left; the card is mirrored)
+        p["yaw"] = lerp(p.get("yaw", 0.4), 0.9, look)                          # the head turns ~20 deg toward the captain
         p["expr"] = "worried" if look > 0.5 else p["expr"]
     shrug = _ramp(g, 181, 189)
     if shrug > 0.0:
