@@ -32,7 +32,7 @@ GS = list(range(FIRST_G, G_LAST + 1))
 FINAL_SPP = 10
 S = 1.85
 PPD = 224                                                # sprite px per D (head ~110 px at the end; the start is downsampled)
-G_ARRIVE = 170                                           # the medium shot is reached (5.9 s)
+G_ARRIVE = 176                                           # the medium shot is reached (5.9 s)
 G_SCRATCH = (155, 175)       # head scratch; 157-190 the whole puzzled beat                                   # astro19_c scratches his head (comic), 4.9-5.5 s
 BLINKS_C, BLINKS_A = [70, 128, 171], [92, 150, 188]
 
@@ -56,7 +56,7 @@ def _cr(p0, p1, p2, p3, t):
     return 0.5 * ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t + (-p0 + 3 * p1 - 3 * p2 + p3) * t * t * t)
 
 
-TM = [(48, 0.0), (66, 0.08), (90, 0.30), (115, 0.60), (140, 0.86), (160, 0.97), (170, 1.0)]    # g -> FRACTION OF THE PATH LENGTH (ease in, one speed hump, ease OUT over g 138-170)
+TM = [(48, 0.0), (66, 0.07), (90, 0.27), (112, 0.55), (125, 0.70), (140, 0.85), (153, 0.935), (164, 0.98), (176, 1.0)]    # g -> FRACTION OF THE PATH LENGTH (ease in, one speed hump, ease OUT over g 138-170)
 
 
 def _slopes():
@@ -191,7 +191,7 @@ def pose_captain(g):
     p["pitch"] = 0.35 + 0.08 * math.sin(g * 0.17)
     p["arm_r"] = dict(hand=(0.6, 0.96 + 0.05 * math.sin(g * 0.2)), bend=0.3, layer="front")
     p["arm_l"] = dict(hand=(1.3, 1.0 + 0.04 * math.sin(g * 0.23 + 1)), bend=0.0, stretch=1.3, layer="front")
-    flip = _ramp(g, 160, 170) * (1.0 - _ramp(g, 186, 190))                     # the 180 deg turn, 160-170, held until the shrug
+    flip = _ramp(g, 160, 170)                     # the 180 deg turn, 160-170, held until the shrug
     lift = _ramp(g, 157, 167) * (1.0 - _ramp(g, 175, 185))
     if lift > 0.0:
         sw = math.sin((g - 159) * 0.6) * (1.0 if g < 175 else 0.3)
@@ -208,9 +208,10 @@ def pose_captain(g):
         p["head_roll"] = lerp(p["head_roll"], 8.0, look)
     shrug = _ramp(g, 181, 189)
     if shrug > 0.0:
-        p["arm_r"] = dict(hand=(lerp(0.45, 1.05, shrug), lerp(1.2, 0.75, shrug)), bend=lerp(0.6, -0.2, shrug), shape="open", layer="front")
-        p["arm_l"] = dict(hand=(lerp(1.0, -0.15, shrug), lerp(1.4, 0.85, shrug)), bend=lerp(0.2, 0.6, shrug), shape="open", stretch=1.0, layer="front")
-        p["prop_r"] = None if shrug > 0.5 else p["prop_r"]                       # the chart is dropped as he shrugs
+        p["arm_r"] = dict(hand=(lerp(0.45, 0.95, shrug), lerp(1.2, 0.80, shrug)), bend=lerp(0.6, 0.0, shrug), shape="open", layer="front")      # symmetric: both elbows out,
+        p["arm_l"] = dict(hand=(lerp(1.0, -0.55, shrug), lerp(1.4, 0.80, shrug)), bend=lerp(0.2, 0.0, shrug), shape="open", stretch=1.0, layer="front")   # both hands up, palms open
+        p["expr"] = "worried"                                                    # brows stay up through the shrug
+                                                                                # the chart stays in his right hand (held low, upside down) through g 199
         p["head_roll"] = lerp(8.0, 7.0, shrug) + 2.0 * math.sin(g * 0.8)
         p["lean"] = 8 - 10.0 * shrug
         p["pitch"] = lerp(0.1, 0.15, shrug)
@@ -247,7 +248,7 @@ def pose_astro(g):
     if shrug > 0.0:
         p["arm_r"] = dict(hand=(lerp(0.5, 0.95, shrug), lerp(0.5, 0.7, shrug)), bend=lerp(0.5, -0.2, shrug), shape="open", stretch=1.0, layer="top")
         p["arm_l"] = dict(hand=(lerp(-0.1, -0.9, shrug), lerp(2.2, 0.75, shrug)), bend=lerp(1.0, 0.4, shrug), shape="open")
-        p["prop_r"] = None
+        p["prop_r"] = dict(type="quadrant19", angle=lerp(-8, 25, shrug), scale=0.95)   # the quadrant stays in his right hand (lowered), never pops out
         p["head_roll"] = lerp(0.0, -8.0, shrug)
         p["lean"] = lerp(-3, -8, shrug)
         p["pitch"] = 0.1
