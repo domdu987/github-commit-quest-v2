@@ -19,14 +19,19 @@ ks.append(P._k(1250, (19.42, 19.38, 2.19), (16.67, 20.74, 1.58)))
 for k in OV['keys']: ks.append(P._k(k['g'], tuple(k['loc']), tuple(k['look']), hold=k.get('hold', False)))
 P.TAKES[take]['keys'] = ks
 P.K.LIGHTS['ARCHIVE_NIGHT'].update(fill_w=230, lamp_k=1.0, gasolier_k=0.7)   # = T5a's t5a_override.apply() (410265b): same night state at the start of the g1196-1211 mix
-if OV.get('light'):   # day lights only: scale the ARCHIVE_DAY preset the set_light_mix lands on (lights, no haze, no desaturation)
-    m = OV['light']['mul']; D = P.K.LIGHTS['ARCHIVE_DAY']
-    for key in ('shade', 'tint'): D[key] = tuple(x * m for x in D[key])
-    for key in ('gain', 'fill_w', 'vault_w', 'sun_k', 'lamp_k'): D[key] = D[key] * m
+import copy
+DAY0 = copy.deepcopy(P.K.LIGHTS['ARCHIVE_DAY']); MUL = OV['light']['mul'] if OV.get('light') else 1.0
+def day_scale(g):   # director: 1.0 at g1211 (matches T5a's last frame), smoothstep down to MUL by g1241. lights only: no haze, no desaturation
+    u = max(0.0, min(1.0, (g - 1211) / 30.0)); u = u * u * (3 - 2 * u); return 1.0 + (MUL - 1.0) * u
+def set_day(g):
+    m = day_scale(g); D = P.K.LIGHTS['ARCHIVE_DAY']
+    for key in ('shade', 'tint'): D[key] = tuple(x * m for x in DAY0[key])
+    for key in ('gain', 'fill_w', 'vault_w', 'sun_k', 'lamp_k'): D[key] = DAY0[key] * m
+    mx = P.TAKES[take]['mix']; P.set_light_mix(mx[2], mx[3], 1.0, g + 1); P.set_flicker2(1.0, frame=g + 1)
 assert P.check_take(take)['hits'] == [] and P.check_face(take)['ok']
 A = P.world_build(take); P.key_take(take); RES = tuple(int(x) for x in os.environ.get('RES', '720x1280').split('x')); P.setup_render2(RES, samples=16, threads=2)
 def one(g, path):
-    bpy.context.scene.frame_set(g + 1); P.stage_cast2(take, g, assign_for(g))
+    set_day(g); bpy.context.scene.frame_set(g + 1); P.stage_cast2(take, g, assign_for(g))
     bpy.context.scene.render.filepath = path; bpy.ops.render.render(write_still=True); P.grade2(path)
 if sys.argv[1] == 'still': one(int(sys.argv[2]), sys.argv[3])
 else:
