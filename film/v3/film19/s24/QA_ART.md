@@ -59,3 +59,19 @@ Frames: /tmp/claude-0/-home-user-github-commit-quest-v2/a108c86f-deb9-528c-85fa-
 - The brass telescope eyepiece hangs as an out-of-context lump top-left in every frame. Move CAM_LOC0 x from -1.60 to about -1.2, or accept it as foreground depth.
 - The bare wooden block at the front centre (f 35-95) is a dead shape. It could take the gold pocket watch's case or be cropped by tilting down 0.1.
 - Frame-diff 3.95 / 9.96 is just under target. A slightly larger arc (12) would cover it.
+
+---
+## Round 3 (TAKE gate, key takes, regression check after polish re-render): PASS, 7.0
+
+Frames checked (take index / g): 9/1933, 35/1959, 60/1984, 82/2006, 95/2019, 112/2036 at full size and 360x640, plus contact.jpg and phone_sheet.jpg.
+Frames: /tmp/claude-0/-home-user-github-commit-quest-v2/a108c86f-deb9-528c-85fa-39b541349af8/scratchpad/artkey6/s24_*.png
+
+The camera and King mark changed (KING_M x 0.85, CAM_LOC0 (-0.50, 2.40, 2.55), snap shift (2.40, -0.25)). There are no regressions that block.
+- **The R2 passes hold.** Stubs grow left to right in the lower third. At g 2006 the King, both watches and the whole stub row (about 10) are in one frame. No blown candelabra at the end. The King ends the shot.
+- **Improved.** The orrery no longer tangles with the watches, and the two dials read clean beside his chest. After the snap (f 95-112) the King is a big, clear subject (head about 260 px) with both watches and the squint, which is the strongest image of the shot. The telescope lump top-left is gone.
+- **New, minor.** At the snap word the lit candelabra stands between the lens and the King, with its flames at his shoulder height (bright but not clipped). After the snap, the right 40 % of the frame is a plain wooden lectern block (dead shape). If re-rendering anyway, cut the snap shift from 2.40 to about 1.9 so the globe and lectern sit at the edge.
+- The first second still has the King small (about 120 px) at the far end. This is unchanged and accepted.
+
+| | R2 | R3 |
+|---|---|---|
+| **Overall** | **7.0** | **7.0** |

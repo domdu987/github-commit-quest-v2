@@ -63,3 +63,33 @@ Frames: /tmp/claude-0/-home-user-github-commit-quest-v2/a108c86f-deb9-528c-85fa-
 3. Camera: CAM_LOC0 z +0.5 and look target z -0.3 (or tilt down 6 deg), so the tabletop fills y 750-1100 and the dark floor is gone. Keep the snap at k 1.10 and moving at the cut, but add slide so the King's head stays inside x 680 at g 2159.
 4. King: move KING_M 0.4 D left (or the candelabra 0.5 D right) so no flame crosses his face. Nod pitch amplitude x2 again (about 0.25 rad) and keep the happy eyes.
 5. Light wedge: find the cone or volume that draws the pale trapezoid on the floor (likely a candle area light under or near the table edge) and hide it for this shot, or the restaged camera will crop it out anyway.
+
+---
+## Round 3 (TAKE gate, key takes, re-render): PASS, 7.0
+
+Frames checked (take index / g): 9/2086, 25/2102, 40/2117, 60/2137, 70/2147 (last word), 82/2159 (last frame) at full size and 360x640, plus contact.jpg and phone_sheet.jpg.
+Frames: /tmp/claude-0/-home-user-github-commit-quest-v2/a108c86f-deb9-528c-85fa-39b541349af8/scratchpad/artkey6/s26_*.png
+
+| Criterion | R2 | R3 |
+|---|---|---|
+| Set density / ornament | 8 | 8 |
+| Lighting & colour | 6.5 | 7 |
+| Composition / phone legibility | 6.5 | 6.5 |
+| Acting (grin, King's nod) | 6 | 6.5 |
+| Key moment (Parliament pays the carpenter) | 5 | 7.5 |
+| Match to refs / client taste | 6.5 | 7 |
+| **Overall** | **6.5** | **7.0** |
+
+## Earlier fixes (R2 list)
+1. The bag reads as money: **FIXED.** The sack is now warm gold-lit, with a ring of gold coins at its base and coins hopping off the table edge on the land. At 360x640 it reads as "a bag of gold". The shape is still a round pot with an octagonal cap rather than a tied neck, but the coins carry it.
+2. Harrison looks at the bag, then at the lens: **OPEN (minor).** His arm sweeps out over the bag (f 40-70), which links him to it, but his eyes stay on the lens throughout.
+3. The camera fills the dark floor: **PARTLY FIXED.** The final second tilts down onto the tabletop, so the end frame is all table, bag, coins and the King. Through f 9-70 the lower 25-30 % is still dark floor under the table.
+4. No flame on the King's face, and bigger nods: **FIXED.** The King is clear of Harrison and of the flames (the candelabra is beside or below his face), with a happy closed-eye smile. The nod reads modestly in motion.
+5. The light wedge on the floor: **OPEN (minor).** The pale trapezoid is still visible under the table in f 9-70, and gone in the end frames.
+
+## Ending
+The last word "ช่างไม้" (g 2147) and the final frame g 2159 give the three-part tableau the film needs: the gold bag and coins in the foreground, Harrison grinning, and the King nodding beyond, with the camera still moving into the hard cut. Harrison's hair is cut by the left edge in the final frame. That is acceptable on a moving cut.
+
+## Polish notes (not blocking)
+- Hide the under-table cone light and raise CAM_LOC0 z about 0.4 for g 2077-2140, so the dark floor and wedge leave the first two seconds.
+- Gaze (0.5, -0.6) on Harrison for g 2110-2125 would complete the look to the money.
