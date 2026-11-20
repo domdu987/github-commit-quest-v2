@@ -1,4 +1,8 @@
 {
  "zoom_end_g": 108,
- "blade_g": 97
+ "blade_g": 97,
+ "plaque_g": [
+  36,
+  66
+ ]
 }
