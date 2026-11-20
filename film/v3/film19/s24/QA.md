@@ -11,4 +11,6 @@
 - King head centre dips to y 434 (under 450) around g 2146.
 - Delivered as .part files only (take.mkv removed): `cat take.mkv.parta* > take.mkv`.
 - s/frame wall 17.8, cpu 34.95; heads (px): {"king": {"w": [108, 220], "y": [434, 621], "x": [155, 598], "bottom_max": 695}, "astro": {"w": [160, 218], "y": [574, 651], "x": [336, 548], "bottom_max": 759}, "har": {"w": [185, 242], "y": [480, 702], "x": [195, 364], "bottom_max": 823}}
-- Frame-diff in shot (90x160 grey): median 4.52, p90 18.98 (p90 inflated by the whips); qa_stats.py in-shot motion 5.15 / 12.93, saturation 0.660, brightness 64.5.
+- Round 9 (g 2086-2159 re-rendered): the pale hard-edged rectangle over the table front / carpet (g 2094-2146) was the set's window-shaft volume (H.STATE['shafts']); it is now hidden from g 2086 (key_vis), floor and table front render plain. Harrison's hands go UP on the landing (left hand 0.15, right 0.05 in puppet y). NOT done: bag with a tied neck (still a gold sack with spilled coins); the optional mocker peek.
+- Delivered as .part files only (`cat take.mkv.parta* > take.mkv`).
+- Frame-diff in shot (90x160 grey): median 4.52, p90 19.17 (p90 inflated by the whips); s/frame wall 16.28.
