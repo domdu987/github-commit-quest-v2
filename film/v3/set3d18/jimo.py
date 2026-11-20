@@ -856,6 +856,18 @@ def ground_share(png, **kw):
     """Share (0..1) of plain-ground 24 x 24 blocks below y 0.4 H of a rendered frame (see jimo_dress.ground_share / API.md)."""
     import jimo_dress; return jimo_dress.ground_share(png, **kw)
 
+# ----------------------------------------------------------------------------- round 8 shared assets (jimo_props.py / API.md "Round-8 shared assets")
+import jimo_props as PR                                      # noqa: E402
+PR.bind(sys.modules[__name__])
+
+def prop_reed_bundle(loc=(0, 0, 0), rot=None, scale=1.0, **kw): return PR.prop_reed_bundle(loc, rot, scale, **kw)
+def prop_pot(loc=(0, 0, 0), rot=None, kind='jar', **kw): return PR.prop_pot(loc, rot, kind, **kw)
+def prop_helmet(loc=(0, 0, 0), rot=None, **kw): return PR.prop_helmet(loc, rot, **kw)
+def prop_chariot(loc=(0, 0, 0), rot=None, tumble=0.0, **kw): return PR.prop_chariot(loc, rot, tumble, **kw)
+def prop_chariot_set(root, tumble, frame=None): return PR.prop_chariot_set(root, tumble, frame)
+def gapfill(cam=None, frames=None, **kw): return PR.gapfill(cam, frames, **kw)
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else 'help'; arg = sys.argv[2:]
     if cmd in ('stills', 'final'):

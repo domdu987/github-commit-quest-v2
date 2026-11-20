@@ -1,5 +1,7 @@
 # QA s04 (film 18, render team 2)
 
+> Set version: vista round 3 (set3d18 from film18/main >= 06c0207, J.vista_r3 applied by J.build); cloud base bars: clouds removed (cloudless gradient); s04 Jimo flag scaled to 50 %.
+
 - Range: take g 295..391 (97 frames); shot g 297..383; transition_in cut 0.
 - Render: 720x1280, 12 samples, OIDN, 2 threads, 3-4 processes sharing 4 cores: mean 14.2 s wall/frame (median 14.6); one frame alone takes about 9-10 s.
 - qa_auto: # QA_AUTO PASS  (take.mkv, 97 frames, 30.00 fps, g 295-391)
