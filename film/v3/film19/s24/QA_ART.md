@@ -75,3 +75,36 @@ The camera and King mark changed (KING_M x 0.85, CAM_LOC0 (-0.50, 2.40, 2.55), s
 | | R2 | R3 |
 |---|---|---|
 | **Overall** | **7.0** | **7.0** |
+
+---
+## Round 10 (director QA-art, ending g 1933-2159, after the rectangle re-render): PASS, 7.2
+
+Take: take.mkv.partaa + partab joined to /tmp/s24r10a.mkv (first_g 1924, 236 frames). I extracted every frame and viewed them at 3 fps, every 4th frame from g 2086 to 2159, key frames full size (g 2096, 2108, 2120, 2134, 2142, 2150, 2156, 2159) and a 360x640 phone sheet. I also compared g 2100/2120/2140 directly with the round-9 frames (/tmp/qa19_r9art/s24).
+Frames: /tmp/qa19_r10art/s24/all/gNNNN.png (named by g). Sheets: /tmp/qa19_r10art/s24_3fps.jpg, s24_rect.jpg, s24_key_full.jpg, s24_key_full2.jpg, s24_phone.jpg, s24_cmp.jpg (top row round 9, bottom row round 10).
+
+| Check | Status |
+|---|---|
+| Pale hard-edged rectangle over the table front / carpet (g 2094-2146) | **GONE.** In round 9 a lighter, hard-edged band crossed the table front and carpet. In round 10 the table front is plain wood and the carpet is plain navy with its red diamonds. No trace of it on any checked frame from g 2086 to 2159. |
+| Regressions | None. g 1924-2085 (King with watches, stub row, snap, whip 1, the astronomer's jaw drop and push) are unchanged and still read. Whip 2 and the landing are unchanged in timing (bag lands at about g 2107). Both men stay in frame to the end, and the camera is still moving on g 2159. Nobody is cut by an edge, and every head is above y 880. |
+| Harrison's arms up (optional) | Partly done. After the landing (g 2134-2159) his left hand is raised to about ear height with the watch. That reads as a small wave, not as both arms up in a cheer. His big grin carries the joy. |
+| Bag reads as money (optional) | Mostly. It is a gold sack with spilled coins at its base and on the table front. It reads as "treasure/gold" on a phone. Its tied neck only shows from about g 2150. |
+| Mocker peek (optional) | Not done (he is hidden from g 2089). That is acceptable. |
+| Phone read | The end frame reads: grinning Harrison, the big gold bag, the King smiling and nodding behind, the moon, the telescope and the window. Warm red and gold against the dusk blue window gives good warm/cool contrast. |
+
+| Criterion | R9 | R10 |
+|---|---|---|
+| Set (rich hall, telescope, moon, window, candelabra) | 8 | 8 |
+| Light & colour | 7 | 7 |
+| Composition / phone | 6.5 | 6.5 |
+| Acting (grin, King's nod, arms) | 7 | 7 |
+| Key moment (bag lands, he wins) | 7 | 7.5 |
+| Match to refs | 7.5 | 7.5 |
+| **Overall** | **7.2** | **7.2 - PASS** |
+
+Composition stays at 6.5 because from g 2094 to about g 2146 the lower 35-40 % of the frame is dark carpet and a plain table front: a dead area (luma about 51-56). The rectangle was the only bright thing there, and now it is just dark. The score holds because the hard-edged fault is gone; the empty lower frame was there before.
+
+Polish (not blocking; only if re-rendering g 2094-2159 anyway):
+1. Tilt down / push in about 10 % over g 2094-2146 so the table top and bag sit lower and the dark carpet band shrinks to under 20 % of the frame. Keep heads above y 450 and below y 880.
+2. Arms up: over g 2109-2125, raise BOTH arms into a V above his head (watch in one hand) for at least 0.5 s, then settle. That is the "I won" pose the beat needs.
+3. Bag: show the tied neck from the landing (g 2107), or add a large £ mark on the sack, so it reads as prize money and not as a gold pot.
+4. From about g 2150 the telescope barrel passes just above Harrison's head outline. It does not touch his face, but a 0.1 D lift of the telescope (or a small camera raise) would separate them.

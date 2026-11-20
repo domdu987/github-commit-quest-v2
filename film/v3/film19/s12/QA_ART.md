@@ -97,3 +97,32 @@ Fixes (shot.py, re-render g 994-1016 only):
 1. **Keep the card clear of the wall.** During the slump (g 996-1014), move Harrison's mark about 0.2-0.3 D away from the wall (toward the camera / screen-left), or tilt the card about its base toward the camera instead of back toward the wall. Check every frame from g 994 to 1016 with a crop of x 450-720: the puff, the ponytail and the bow must be whole, with no straight cut line.
 2. (Polish) Lift the exposure about 15 % after the pop, or add a cool moon rim on his left. The ending frames are at luma 56.
 Keep the pop timing (g 996), the puffs, the glasses and rub, the chisel and the H3 framing.
+
+## Round 10 (director QA-art): PASS, 7.2
+
+Take: take.mkv (first_g 929, g 929-1024, 96 frames). I extracted every frame and viewed them at 3 fps, every frame from g 990 to 1017 as a crop of x 400-720 / y 350-850 (the wall side), key frames full size (g 995, 996, 998, 1000, 1004, 1008, 1013, 1020) and a 360x640 phone sheet.
+Frames: /tmp/qa19_r10art/s12/all/gNNNN.png (named by g). Sheets: /tmp/qa19_r10art/s12_3fps.jpg, s12_wall.jpg, s12_key_full.jpg, s12_key_full2.jpg, s12_phone.jpg.
+
+| Check | Status |
+|---|---|
+| Round 9 blocker: card sliced by the wall (g 997-1013) | **FIXED.** On every frame from g 990 to 1017 the ponytail, bow, both puffs, the whole head and the sweat drop are whole. There is no straight cut line, and plain lit wall shows to the right of the ponytail (gap of about 60-90 px). |
+| Gag on "หงอก" | Works and is funny. At g 995 he is grey, in his apron, tapping the chisel. At g 996 he pops in one frame to white hair, spectacles, the brown coat, two puffs and a wobbly mouth. Then he slumps and rubs his eyes, with a sweat drop, closed eyes and steam. The chisel hangs in his right hand. |
+| Phone read (360x640) | Reads. The white head is the brightest shape in frame, and the grey-to-white change and the puffs read at thumbnail size. The H3 wheels stay readable at left. |
+| Grounding (§G) | He stands on the floor with a contact shadow. His white stockings and shoes now show beside the chest. Nothing floats, and no frame edge cuts him. |
+| Light | The payoff lift shows: luma about 65 at g 989 and 78-81 over g 1001-1007, then 69 by g 1019. Warm candle key, saturation 0.68-0.72. Still a single warm key with no cool rim (§I.2 warm/cool), as before. |
+| Side-effect of the 0.3 D step | Over g 990-1000 he drifts left as he slumps. It reads as a tired stagger away from the bench, not as a slide. OK. |
+
+| Criterion | R9 | R10 |
+|---|---|---|
+| Set | 7 | 7 |
+| Light & colour | 6.5 | 7 |
+| Composition / phone | 5.5 | 7 |
+| Acting | 7.5 | 7.5 |
+| Key moment (white-hair pop) | 7 | 7.5 |
+| Match to refs (R4 candle rooms) | 7 | 7 |
+| **Overall** | **6.6** | **7.2 - PASS** |
+
+Non-blocking notes (only if this take is re-rendered for another reason):
+- At g 996-1024 the lower legs read as one thin white stick beside the chest. A second leg or a slightly wider stance would read better.
+- There is no cool rim on him. A faint blue moon edge from screen-left would give the §I.2 warm/cool contrast.
+- The puffs are gone by about g 1009. Holding them to about g 1012 would sell the "poof" a little longer.
