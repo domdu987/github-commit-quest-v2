@@ -126,7 +126,7 @@ def ship6_mats():
         M['canv'] = mat('canvw', '#e8dcc0', '#e8dcc0', scale=2.2, aniso=(1.3, 1, 0.8), contrast=0.8, emit='#e8dcc0', emit_k=0.0)     # cream like ship_hero; no translucency (0)
         M['canv2'] = mat('canv2w', '#e2d6b8', '#e2d6b8', scale=2.2, aniso=(1.3, 1, 0.8), contrast=0.8, emit='#e8dcc0', emit_k=0.0)
         M['rig6'] = mat('rig6w', '#2e2620', '#40342a', scale=3); M['iron'] = mat('iron_w', '#4a4038', '#5c5248', scale=6, rough=0.6)
-        for _k in ('canv', 'canv2'): _sail_self_cream(M[_k], THEME.get('sail_k', 0.5))
+        for _k in ('canv', 'canv2'): _sail_self_cream(M[_k], THEME.get('sail_k', 0.5), THEME.get('sail_fac', 0.85))
     M['sail'] = M['canv']; M['sail2'] = M['canv2']
     return M
 def build_hull6(M):

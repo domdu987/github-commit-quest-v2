@@ -110,6 +110,8 @@ def build_ship(SET, preset, light=None):
     LTb = LIGHTS['NOON'] if lname == 'NOON' else LT
     scene = bpy.context.scene
     HU.THEME.clear(); HU.THEME['warm'] = preset in ('ship_deck', 'ship_rail', 'ship_rocks'); HU.THEME['no_stern_lamp'] = preset == 'ship_deck'; HU.THEME['sail_k'] = 0.95 if preset in ('ship_rail', 'ship_deck') else 0.42
+    if lname == 'STORM_DUSK': HU.THEME['sail_k'] = 0.12; HU.THEME['sail_fac'] = 0.4   # director r3: sails must not glow in the storm
+    elif preset == 'ship_rocks': HU.THEME['sail_k'] = 0.95
     S.clear(); S.update(preset=preset, light=lname, coast=coast, P=P, LT=LT)
     K.STATE['samples'] = P.get('samples', 12); K.STATE['dbounce'] = 0
     world = K.new_root('ship_world'); S['world_root'] = world
@@ -151,7 +153,7 @@ def build_ship(SET, preset, light=None):
     if S.get('fglamp') is not None:
         K2200 = (1.0, 0.58, 0.17)                                                            # 2200 K
         K.point_light('lampfg', S['fglamp'], K2200, P.get('lantern_e', 60.0), 0.12).parent = root
-        cb = DK.marks()['captain_bow']; K.point_light('lampfg_pool', (cb[0] + 0.5, cb[1] - 0.5, cb[2] + 1.5), K2200, P.get('pool_e', 90.0), 0.15).parent = root   # warm pool on the deck by the captain
+        cb = DK.marks()['captain_bow']; K.point_light('lampfg_pool', (cb[0] + 0.5, cb[1] - 0.5, cb[2] + 1.5), K2200, P.get('pool_e', 450.0), 0.15).parent = root   # warm pool on the deck by the captain
     # ---- lights on the ship (lanterns) at dusk
     if LT.get('lamp'):
         for i, c in enumerate(lants):

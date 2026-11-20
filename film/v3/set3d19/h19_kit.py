@@ -163,7 +163,7 @@ def gear(mb, m, c, r, nt=12, th=0.04, rim=0.03, spokes=4, tooth=0.035, rot=(0, 0
     """gear wheel from boxes: rim ring, teeth, spokes, hub. Built in the XZ plane (axis y); rot orients it. Teeth sit just OUTSIDE the rim (no coplanar faces)"""
     mb.push(Matrix.Translation(c) @ Euler(rot).to_matrix().to_4x4())
     for i in range(n):
-        a = 2 * math.pi * (i + .5) / n; seg = 2 * math.pi * r / n * 1.10
+        a = 2 * math.pi * (i + .5) / n; seg = 2 * (r + rim / 2) * math.tan(math.pi / n) * 1.08   # director r3: size at the OUTER radius so thick rims close
         mb.box(m, (r * math.cos(a), 0, r * math.sin(a)), (seg, th, rim), ry=-(a + math.pi / 2))
     for i in range(nt):
         a = 2 * math.pi * i / nt; rr_ = r + tooth * .45 + rim / 2
