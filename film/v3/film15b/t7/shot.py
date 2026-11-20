@@ -66,9 +66,9 @@ def run_B(q, f0, f1, stride):
     # ------------------------------------------------------------------ camera: crane up over the stadium, tilt into the sky
     KEYS = [  # (t, loc m, look m, lens)
         (59.80, (0.5, 8.4, 1.8), (-0.2, 12.9, 2.7), 22.0),
-        (61.00, (-0.2, 6.6, 3.2), (-0.8, 13.0, 1.9), 26.0),
-        (61.80, (-0.6, 6.0, 3.6), (-1.2, 13.9, 1.5), 36.0),
-        (62.50, (-0.4, 5.6, 3.9), (-0.8, 13.8, 1.7), 32.0),
+        (61.00, (-0.2, 6.6, 4.2), (-0.8, 13.0, 1.6), 26.0),
+        (61.80, (-0.6, 6.0, 5.3), (-1.2, 13.9, 1.3), 34.0),
+        (62.50, (-0.4, 5.6, 6.0), (-0.8, 13.8, 1.4), 30.0),
         (63.20, (1.0, 2.0, 6.0), (-0.2, 13.4, 2.4), 22.0),
         (63.90, (3.0, -5.0, 13.0), (-0.1, 14.0, 4.0), 22.0),
         (64.60, (4.8, -14.0, 26.0), (0.0, 20.0, 34.0), 22.0),
@@ -98,9 +98,9 @@ def run_B(q, f0, f1, stride):
             SHB.GROUND_LOG.append(dict(tag='a' + tag, kind='airborne', xy=(hp.x / U, hp.y / U), z_surface=B2.FOAM_SURF, mark_z=None, shadow=True, over_bar=True, shadow_xy=(sx, sy)))
         def stand(pose, xy, dz=0.0, canvas=None, ppd=128):
             card('s' + tag, cast, pose, xy, cm, ppd=ppd, mirror=mir, shadow=(1.4, 0.5), dz_m=dz, canvas=canvas)
-        def mat(pose_name, ppd=144):
+        def mat(pose_name, ppd=144, dz=0.0):
             pose = cast15.pose_for(pose_name, cast, facing=face)
-            card('m' + tag, cast, pose, (lx, ly), cm, ppd=ppd, mirror=mir, shadow=(2.0, 0.8), canvas=WIDE)
+            card('m' + tag, cast, pose, (lx, ly), cm, ppd=ppd, mirror=mir, shadow=(2.0, 0.8), canvas=WIDE, dz_m=dz)
         x0, y0 = P(RUN[0][1])
         if dt < RUN[0][0]:                                                      # waiting at the start of the run-up, rocking
             stand(cast15.pose_for('rock_a' if int(t * 4) % 2 == 0 else 'rock_b', cast, facing=face), (x0, y0)); return
@@ -118,7 +118,7 @@ def run_B(q, f0, f1, stride):
         if dt < 1.45:
             w = spline([(a, b) for a, b in KZ], dt); name = 'flop_head' if dt < 0.55 else 'flop_back' if dt < 0.80 else 'flop' if dt < 1.10 else 'flop_flick'
             zc = {'flop_head': 1.98, 'flop_back': 2.14, 'flop': 2.16, 'flop_flick': 2.06}[name]; air(name, (ax(dt), w.y, min(w.z, zc))); return
-        if dt < 1.62: mat('land_back'); return
+        if dt < 1.62: mat('land_back', dz=0.25); return
         if dt < 1.80: mat('sit_up'); return
         pose = cast15.pose_for('sit_thumb', cast, facing=face)
         pose = dict(pose, bob=0.04 * math.sin(2 * math.pi * 2.0 * (t - Jd['T0'])), thumb_angle=-90 + 22 * math.sin(2 * math.pi * 3.0 * (t - Jd['T0'])))
