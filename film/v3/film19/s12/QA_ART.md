@@ -67,3 +67,33 @@ Fixes (shot.py, re-render g 990-1024 only):
 2. (Polish) Make the puff about 1.5x bigger and hold it 2-3 frames longer (to g 1004), so the "poof" sells at phone size.
 3. (Polish) For the slump, tilt the card back (top toward the wall) rather than sideways toward screen right. That also helps fix 1.
 Keep the pop timing (g 996), the chisel continuity, the H3 framing and the candle burn-down as they are.
+
+## Round 9 (director QA-art): FIX, 6.6
+
+Take: take.mkv (first_g 929, g 929-1024). I extracted every frame and viewed them at 3 fps, every frame from g 984 to 1023, key frames at 360x640, and crops of the head (x 300-720, y 380-800) every 2nd frame from g 997 to 1015. I also measured the right-most near-white pixel per frame.
+Frames: /tmp/qa19_r9art/s12/f_NNN.png (NNN = g - 928). Sheets: /tmp/qa19_r9art/s12_3fps.jpg, s12_gag.jpg, s12_key_full.jpg, s12_clip.jpg.
+
+| Check | Status |
+|---|---|
+| Round 8 blocker: head off the right edge | **Fixed for the frame edge.** The right-most head/puff pixel is at x <= 600 on every frame from g 990 to 1024, with nothing in x 700-720. |
+| **NEW BLOCKER: the head is sliced by the wall** | **From g 997 to about g 1013 (0.55 s, the payoff) the right side of the card is cut by a straight vertical line at about x 550-590.** That is where the card tilts back into the plaster wall. The right puff, the ponytail, the bow and about 15-20 % of the head vanish into the wall (see s12_clip.jpg and s12_key_full.jpg g 1000). On a phone this reads as a cut-off head with a hard edge, the same fault as round 8 moved 150 px left. §G "nobody cut". The head comes back whole from about g 1015. |
+| Gag on "หงอก" | Works and is funny. Grey hair, apron and chisel at g 995 pop in one frame (g 996) to white hair, spectacles, the brown coat and puffs, then the tired eye-rub with a sweat drop and a wobbly mouth. The puffs are bigger and last to about g 1006, so the "poof" sells at phone size. The chisel stays in his hand. |
+| Slump | The backward tilt reads as an exhausted sag, which is better than round 8. But the tilt is exactly what drives the card into the wall. |
+| Set / H3 | The gold wheels are visible left and behind him; the candle, lantern and chest are in the foreground. Good. |
+| Light / colour | Warm candle key. Sat 0.72, vivid 80 %. Luma falls to 56 by g 1019, which is dark (the conform lifts it). There is no cool light after the pan. |
+| Face size | OK, about 20 %. |
+
+| Criterion | Score |
+|---|---|
+| Set | 7 |
+| Light & colour | 6.5 |
+| Composition / phone | 5.5 |
+| Acting | 7.5 |
+| Key moment (white-hair pop) | 7 |
+| Match to refs (R4 candle rooms) | 7 |
+| **Overall** | **6.6 - FIX (one blocker, cheap)** |
+
+Fixes (shot.py, re-render g 994-1016 only):
+1. **Keep the card clear of the wall.** During the slump (g 996-1014), move Harrison's mark about 0.2-0.3 D away from the wall (toward the camera / screen-left), or tilt the card about its base toward the camera instead of back toward the wall. Check every frame from g 994 to 1016 with a crop of x 450-720: the puff, the ponytail and the bow must be whole, with no straight cut line.
+2. (Polish) Lift the exposure about 15 % after the pop, or add a cool moon rim on his left. The ending frames are at luma 56.
+Keep the pop timing (g 996), the puffs, the glasses and rub, the chisel and the H3 framing.

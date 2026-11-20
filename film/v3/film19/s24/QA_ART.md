@@ -75,3 +75,37 @@ The camera and King mark changed (KING_M x 0.85, CAM_LOC0 (-0.50, 2.40, 2.55), s
 | | R2 | R3 |
 |---|---|---|
 | **Overall** | **7.0** | **7.0** |
+
+---
+## Round 9 (director QA-art, ENDING re-render g 2088-2159): PASS, 7.2
+
+Take: take.mkv.partaa + partab, joined to /tmp/s24_a.mkv (first_g 1924, g 1924-2159). I extracted every frame and viewed them at 3 fps, every 2nd frame from g 2082 to 2159, and key frames at full size and 360x640.
+Frames: /tmp/qa19_r9art/s24/f_NNN.png (NNN = g - 1923). Sheets: /tmp/qa19_r9art/s24_3fps.jpg, s24_end.jpg, s24_full1.jpg, s24_full2.jpg (phone), s24_band.png.
+
+| Check | Status |
+|---|---|
+| Mocker popping out after whip 2 | **Fixed.** He blurs away inside whip 2 (g 2088-2092) and is not seen again. There is no pop. |
+| Irony reads? | **Yes.** In one take: the King is at the table with the gold watch and the H4 while ten stubs grow ("the King timed it himself"), then whip 1 lands on the mocker's held jaw drop with his glasses up, a sweat drop and his wig askew, with a push on "เป๊ะ". The dare-came-true joke lands on the mocker's face. The ending does not bring him back, which is a missed final button but does not block. |
+| Harrison payoff | **Better.** He has a big grin and closed happy eyes from g 2110, one arm flung out wide over the bag ("ta-da"), and a small hop at the landing. The arms are not really "up": one arm goes out sideways and the other hides behind the bag. |
+| Money bag | Drops in at g 2104-2110, lands with coins spilling on the baize, and a knotted neck reads at the end push. In the wide (g 2110-2124) the bag reads more like a gold pot or urn. |
+| King nod | Present, small: a closed-eye content smile and a dip of the head. It reads as approving. |
+| Table front | **Fixed.** It is now a lit warm-brown wood face, not a dead black block. But see the slab below. |
+| NEW (polish): pale slab | From g 2094 to about g 2146 a straight-edged, semi-transparent pale vertical rectangle runs down the table front and the carpet (about x 420-720 at full size, +8-10 luma, hard left edge; see s24_band.png). It looks like a fill-light plane or card visible to the camera. It is noticeable on a phone, though no character is cut by it. |
+| Composition | g 2094-2140: the cast sits in the upper middle; the lower 40 % is table front plus dark navy carpet (luma 54-60). The final push (g 2146-2159) is strong: Harrison grinning big, the bag and coins in the foreground, the King smiling behind, the telescope and the moon window, all in frame and moving on the last frame. |
+| Colour | Sat 0.60-0.75 and vivid 61-81 %, with red and gold hall versus blue dusk windows. Luma 54-76 is dark before the conform. |
+
+| Criterion | Score |
+|---|---|
+| Set | 8 |
+| Light & colour | 7 |
+| Composition / phone | 6.5 |
+| Acting | 7.5 |
+| Key moment (irony + payoff) | 7.5 |
+| Match to refs | 7.5 |
+| **Overall** | **7.2 - PASS** |
+
+Polish (if anything is re-rendered anyway; not blocking):
+1. Find and hide the pale vertical plane over the table front and carpet (g 2094-2146). Set the fill or area-light mesh to camera-invisible, or move it out of frustum.
+2. Start the ending push earlier, or tilt down less, from g 2094, so the carpet is at most about 20 % of the frame and the cast sits at mid-frame.
+3. Raise both of Harrison's arms (hands above his head) on the landing frame g 2107-2116, then let one fall onto the bag.
+4. Optional button: let the mocker's jaw-dropped head peek in at the frame edge (behind the telescope) for the last 0.5 s, so the final image carries the irony too.
