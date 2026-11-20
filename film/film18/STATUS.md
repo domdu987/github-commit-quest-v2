@@ -21,3 +21,7 @@ Fallback check: send_later 60 min, always re-armed.
   team5 session_017iwyCuMdzWHqsTh3fMcGVY render18/team5 s16-s20 s23
 - [ ] TAKE gate per take (qa_auto + QA-tech 6 fps; QA-art key takes), conform18, FINAL gate, release18, queue row stays WAIT
 - OVERRIDE s25: QA-tech bare-ground FAIL overridden; QA-art PASS + second Opus AGREE-OVERRIDE (2026-11-20)
+
+## RELEASED 2026-11-20 21:40 UTC
+release18/oxclerk_v1.mp4 + caption.txt on claude/new-session-73ou27 (8e60b0d); queue row 18 WAIT (client posts himself); POSTING_LOG updated.
+Gates: TAKE 25/25 (overrides s01 s17 s21 s25), FINAL audio PASS, blind PASS, QA-art PASS (after s06 s08 s16 s21 fixes). Reports in film18/qa/FINAL_*.md.
