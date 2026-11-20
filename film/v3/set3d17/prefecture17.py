@@ -31,21 +31,21 @@ K.LIGHTS.update({
     # street at dusk: low amber sun at 0.35, gas lamps x1.6, cobalt sky dome with a thin amber horizon, blue SHADE, 70 % windows lit
     'BLUE_HOUR_EXT': dict(_base, key=(2.2, 1.25, 0.45), sun_dir=(0.55, 0.62, -0.20), sun_angle=1.0, sun=True, sun_k=0.35, lamp_k=1.6,
                           shade=(0.13, 0.20, 0.80), tint=(0.08, 0.14, 0.52), mix=0.55, lift=(0.004, 0.014, 0.06), form=(0.0, -0.05, 0.25),
-                          sky=('#1A3FB8', '#2f5be0', '#ffae4a'), sky_k=1.0, ink='#141a48', world=(0.06, 0.1, 0.42), gain=0.88, glow=1.5, win_w=0,
+                          sky=('#1A3FB8', '#2f5be0', '#ffae4a'), sky_k=1.0, ink='#141a48', world=(0.06, 0.1, 0.42), gain=0.82, glow=1.5, win_w=0,
                           win_lit=0.7, rim='#9cc2ff', fill_w=900, fill_col=(0.45, 0.6, 1.0)),
     # façade -> corridor: no sun, wall gas brackets every 2.5 m (amber/blue bands), cobalt walls, blue transom light from the street
     'GASLIGHT_INT': dict(_base, key=(1.6, 1.0, 0.5), sun_dir=(0.6, 0.2, -0.75), sun=True, sun_k=0.0, lamp_k=2.2, shade=(0.14, 0.20, 0.80),
                          tint=(0.09, 0.14, 0.52), mix=0.5, lift=(0.004, 0.012, 0.05), form=(0.0, -0.05, 0.25), ink='#141a48', world=(0.06, 0.1, 0.42),
-                         gain=0.9, glow=1.4, win_w=120, rim='#ffb85a', fill_w=60, fill_col=(0.5, 0.65, 1.0)),
+                         gain=0.8, glow=1.4, win_w=120, rim='#ffb85a', fill_w=60, fill_col=(0.5, 0.65, 1.0)),
     # measuring room: low amber sun through the open French window (hard shaft + dust), sky fill +30 %, 2 gasoliers
     'SUNSET_INT': dict(_base, key=(2.6, 1.45, 0.42), sun_dir=(0.86, 0.12, -0.42), sun_angle=0.8, sun=True, sun_k=1.0, lamp_k=1.1,
                        shade=(0.14, 0.18, 0.70), tint=(0.09, 0.125, 0.47), mix=0.5, lift=(0.004, 0.012, 0.05), form=(0.0, -0.05, 0.25),
-                       ink='#1a1440', world=(0.08, 0.12, 0.45), gain=0.82, glow=1.25, win_w=380, beam_k=1.4, rim='#ffb85a', rim2='#8fb4ff',
+                       ink='#1a1440', world=(0.08, 0.12, 0.45), gain=0.72, glow=1.25, win_w=240, beam_k=1.4, rim='#ffb85a', rim2='#8fb4ff',
                        fill_w=110, fill_col=(0.55, 0.7, 1.0)),
     # archive hall, day: 5 pale blue-white skylight shafts with dust, amber banker lamps, cobalt vault and gallery iron
     'ARCHIVE_DAY': dict(_base, key=(1.95, 2.0, 2.25), sun_dir=(0.22, 0.30, -0.93), sun_angle=0.9, sun=True, sun_k=0.62, lamp_k=1.3,
                         shade=(0.13, 0.185, 0.74), tint=(0.085, 0.13, 0.49), mix=0.5, lift=(0.004, 0.012, 0.05), form=(0.0, -0.05, 0.25),
-                        ink='#141a48', world=(0.06, 0.1, 0.42), gain=0.85, glow=1.3, win_w=0, frost=('#eaf2ff', 3.5), beam_k=0.9,
+                        ink='#141a48', world=(0.06, 0.1, 0.42), gain=0.74, glow=1.3, win_w=0, frost=('#9fbcff', 1.5), beam_k=0.9,
                         rim='#ffb85a', fill_w=300, fill_col=(1.0, 0.72, 0.4)),
     # archive hall, night (false payoff): ONE banker lamp + candle, gasoliers at 40 %, moonlight-blue shafts; cobalt walls lifted (luma >= 85)
     'ARCHIVE_NIGHT': dict(_base, key=(0.55, 0.8, 1.9), sun_dir=(0.22, 0.30, -0.93), sun_angle=0.9, sun=True, sun_k=0.55, lamp_k=0.75,
@@ -54,6 +54,8 @@ K.LIGHTS.update({
                           rim='#9cc2ff', fill_w=110, fill_col=(1.0, 0.68, 0.36), gasolier_k=0.4),
 })
 PRESETS_V2 = ('BLUE_HOUR_EXT', 'GASLIGHT_INT', 'SUNSET_INT', 'ARCHIVE_DAY', 'ARCHIVE_NIGHT')
+AMB_K = 0.78                      # SET-gate calibration: the painted ambient (shade, tint) of the v2 presets, x0.78 -> mean luma in the 85-110 band
+for _p in PRESETS_V2: K.LIGHTS[_p]['shade'] = tuple(AMB_K * x for x in K.LIGHTS[_p]['shade']); K.LIGHTS[_p]['tint'] = tuple(AMB_K * x for x in K.LIGHTS[_p]['tint'])
 RIM = {p: K.LIGHTS[p]['rim'] for p in PRESETS_V2}            # rim colour per preset (warm / cool) for stage_cast v2 (`rim_col`)
 
 # ================================================================ textures (PIL, cached in tex/, git-ignored)
@@ -157,17 +159,17 @@ def _pal2():
     add('ceil_navy', COBALT, TX.boards('v2_ceil_cobalt2', c('#1f4fd0'), seed=19), tile=1.5, mix=0.4, afl=0.2)
     add('beam', HONEY, TX.boards('v2_beam_honey', c(HONEY), seed=14, n=3), tile=1.0, ink=True, mix=0.45)
     add('frieze', COBALT, TX.frieze('v2_frieze', bg='#1a3fb8', fg='#ffbe3a'), tile=1.0, mix=0.4, afl=0.2)
-    add('floor', '#B5531F', TX.planks('v2_floor_oak', c('#b5531f'), n=6, seed=11), tile=1.5, mix=0.45, afl=0.18)
+    add('floor', '#B5531F', TX.planks('v2_floor_oak2', c('#a94a1a'), n=6, seed=11), tile=1.5, mix=0.45, afl=0.18)
     add('floor_dk', '#a8461a', TX.planks('v2_floor_oak2', c('#a8461a'), n=6, seed=12), tile=1.5, mix=0.45, afl=0.15)
     add('walnut', '#8a3a16', TX.boards('v2_walnut', c('#8a3a16'), seed=15), tile=1.0, tint=True, ink=True, mix=0.45)
     add('honey', HONEY, TX.boards('v2_honey', c(HONEY), seed=16, n=3), tile=0.9, tint=True, ink=True, mix=0.45)
-    add('drawer', HONEY, TX.boards('v2_drawer', c('#de8a2c'), seed=16, n=3), tile=0.9, tint=True, ink=False, mix=0.45, afl=0.15)
+    add('drawer', HONEY, TX.boards('v2_drawer2', c('#cc7426'), seed=16, n=3), tile=0.9, tint=True, ink=False, mix=0.45, afl=0.15)
     add('oak', '#c8661e', TX.boards('v2_oak', c('#c8661e'), seed=17, n=2), tile=0.8, tint=True, ink=True, mix=0.45)
     add('oxblood', KEPI, tint=True, ink=True, mix=0.45)
     add('navy', '#1b3ea8', tint=True, ink=True, mix=0.45)
     add('baize', '#13804a', tint=True, ink=True, mix=0.45)
     add('leather', '#9a3a12', tint=True, ink=True, mix=0.45)
-    add('cream', '#f2cf86', tint=True, ink=False, mix=0.4)
+    add('cream', '#f0bf6a', tint=True, ink=False, mix=0.4)
     add('brass', '#f0a92a', tint=True, ink=True, mix=0.4)
     add('brass_nk', '#f0a92a', tint=True, ink=False, mix=0.4)
     add('steel', '#7c9cf0', tint=True, ink=True, mix=0.4)
@@ -177,7 +179,7 @@ def _pal2():
     add('glass', '#4f8ae0', mix=0.4)
     add('dark', '#16207a', mix=0.4)
     add('runner', COBALT, tex_runner(), tile=1.4, off=(0.5, 0, 0), mix=0.45)
-    add('stone', '#D9B07A', TX.ashlar('v2_stone', c('#e0ac6a'), seam=(0x8a, 0x52, 0x2a)), tile=2.0, mix=0.5, afl=0.15)
+    add('stone', '#D9B07A', TX.ashlar('v2_stone2', c('#d6994e'), seam=(0x8a, 0x52, 0x2a)), tile=2.0, mix=0.5, afl=0.15)
     add('stone_dk', '#c8904a', TX.ashlar('v2_stone_dk', c('#cf8f45'), seed=21, seam=(0x7a, 0x44, 0x22)), tile=2.0, mix=0.5, afl=0.15)
     add('cobble', '#4c58b0', TX.cobbles('v2_cobble', c('#5260c0')), tile=4.0, mix=0.45, afl=0.12)
     add('zinc', '#2d45a8', TX.zinc('v2_zinc2', c('#2f48ac')), tile=2.0, ink=True, mix=0.45)
@@ -193,7 +195,7 @@ def _pal2():
     add('red', KEPI, tint=True, ink=True, mix=0.4)
     add('gold', '#ffbe3a', tint=True, ink=True, mix=0.35)
     add('amber_paint', AMBER, tint=True, ink=True, mix=0.4)
-    add('tiles', '#c8501c', tex_checker('tiles', '#d2561e', '#e8a33a', n=8), tile=2.4, mix=0.45, afl=0.15)
+    add('tiles', '#b8481a', tex_checker('tiles2', '#c24a1a', '#d08a2c', n=8), tile=2.4, mix=0.45, afl=0.15)
     add('photowall', COBALT, tex_photowall(), tile=1.2, mix=0.4, afl=0.2)
     add('far', '#d29a5c', tex_facade_far(), tile=12.0, mix=0.55, afl=0.25)
     add('far_zinc', '#2a3f9a', mix=0.5, afl=0.12)
@@ -541,7 +543,7 @@ def build_facade(B, A):
     sign(B, 'PRÉFECTURE DE POLICE', 11.2, 1.15, (fx - 0.12, 5.7, 6.15), n=(-1, 0), fg=GOLD, bg=COBALT, emit=0.55, depth=0.14)
     for yy in (3.5, 7.9):
         B.cyl('iron', (fx - 0.3, yy, 3.7), 0.03, 0.6, axis='x', seg=6); B.cyl('iron', (fx - 0.6, yy, 3.95), 0.14, 0.12, r2=0.04, seg=8); B.cyl('glow_lantern', (fx - 0.6, yy, 3.68), 0.12, 0.42, r2=0.15, seg=8, smooth=False)
-        B.cyl('iron', (fx - 0.6, yy, 3.42), 0.15, 0.05, seg=8); A['lights'].append(K.point((fx - 0.6, yy, 3.68), watts=160, radius=0.12, name='door_lantern'))
+        B.cyl('iron', (fx - 0.6, yy, 3.42), 0.15, 0.05, seg=8); A['lights'].append(K.point((fx - 0.6, yy, 3.68), watts=90, radius=0.12, name='door_lantern'))
     # flags (tricolour, waving), sentry box, the measuring-room French window outside: shutters open, flower box, pigeons
     for yy, dy in ((3.6, -0.5), (7.8, 0.5)): flag('flag_%d' % int(yy), (fx - 0.1, yy, 7.2), (-0.8, dy, 0.55), B=B)
     with B.xf((fx - 0.75, 2.4, 0.14)):
@@ -824,7 +826,7 @@ def set_tally(n=241, frame=None):
     t = W.get('tally')
     if t is None: return
     n = int(max(0, min(241, round(n)))); iu = t.image_user; iu.frame_offset = n - (int(bpy.context.scene.frame_current if frame is None else frame)) + 0
-    iu.frame_start = 1; iu.frame_duration = 242; iu.use_auto_refresh = True
+    iu.frame_start = 1; iu.frame_duration = 100000; iu.use_auto_refresh = True          # shown file number = frame + offset = n (the duration must not clamp the frame first)
     if frame is not None: iu.keyframe_insert('frame_offset', frame=frame)
 def set_banner_sway(t=None, frame=None, amp=4.0):
     """the PETIT / MOYEN / GRAND banners sway (deg) about their top edge; t seconds (default: from the frame)."""
@@ -952,7 +954,7 @@ def build_archive(B, A):
     with B.xf((14.75, hy - 1.25, z0), (0, 0, 15)): K.sliding_calipers(B, (-0.05, 0.0, 0.788), rot=-12, length=0.5, open_=0.17); K.inkpot(B, (-0.25, 0.14, 0.788), rot=10)
     K.banker_lamp(B, (14.95, hy - 1.4, z0 + 0.788), rot=200, watts=60); K.stool(B, (14.45, hy + 0.55, 0), h=0.62) if False else None
     with lift(B): K.stool(B, (14.5, hy + 0.65), h=0.62, rot=-10)
-    A['lights'].append(K.spot((15.25, hy + 0.4, hz + 1.5), (hx + 0.55, hy + 0.15, hz), watts=320, angle=36, blend=0.7, color=(1.0, 0.76, 0.42), name='box_lamp', radius=0.05))
+    A['lights'].append(K.spot((15.25, hy + 0.4, hz + 1.5), (hx + 0.55, hy + 0.15, hz), watts=170, angle=36, blend=0.7, color=(1.0, 0.76, 0.42), name='box_lamp', radius=0.05))
     # lights: the archive sun through the skylights, skylight fill areas, warm strip fills along both galleries
     for (a, b) in SKY: A['lights'].append(K.area((17.0, (a + b) / 2, VCZ + VR - 0.3), (17.0, (a + b) / 2, z0), (2.4, b - a), 260 * (0.6 if night else 1.0), color=(0.75, 0.85, 1.0), name='sky_area'))
     for x, tx in ((AX0 + 1.6, AX1), (AX1 - 1.6, AX0)):
@@ -1243,13 +1245,13 @@ def _takes():
         _C('prefect', 'prefect', (725, ML(1.1, -4.6)), (760, ML(1.0, -2.2)), (800, ML(0.8, -2.0)), (840, ML(1.1, -3.8)))],
         keys=[_k(645, ML(0.6, 1.3, 7.6), ML(0.75, 1.6, 0.0), hold=True), _k(700, ML(0.2, 0.6, 6.0), ML(0.7, 1.6, 0.4)), _k(745, ML(-2.0, 3.0, 3.6), ML(1.0, -1.0, 1.0)),
               _k(792, ML(-2.4, 3.4, 1.7), ML(1.2, -2.0, 1.2), hold=True), _k(800, ML(2.95, -0.6, 0.45), ML(1.45, 1.95, 1.55), hold=True), _k(828, ML(2.4, 2.0, 2.1), ML(0.2, 4.2, 3.05)),
-              _k(856, ML(0.2, 3.72, 3.05), ML(0.2, 4.2, 3.05), lens=22.0, hold=True)])
+              _k(856, ML(0.05, 3.05, 2.95), ML(0.2, 4.2, 3.05), lens=22.0, hold=True)])
     # ---- T4 montage + drawers (g 850-1045): out of the clock, track the stations, low at the desk, through ARCHIVES -> into the hall
     T['T4'] = dict(g=(850, 1045), render=(844, 1051), cast=[
         _C('bertillon', 'bertillon', (844, ML(-1.0, 2.6)), (902, ML(-1.2, 2.9)), (930, ML(0.2, 2.6)), (955, ML(1.6, 2.6)), (971, ML(1.9, 0.7)), (991, ML(2.2, -0.9)), (1010, (13.4, 9.7, FZ)), (1051, (13.95, 11.6, FZ))),
         _C('prisoner_s', 'prisoner', (844, ML(-1.55, 3.45)), (930, ML(-0.2, 3.3)), (955, ML(2.0, 3.0)), (1051, ML(2.1, 3.0))), _C('queue0', 'prisoner', (844, ML(-1.5, -0.6))), _C('queue1', 'prisoner', (844, ML(-0.3, -0.4))),
         _C('clerk', 'clerk', (844, ML(2.25, 0.2))), _C('clerk_arch', 'clerk', (844, (17.0, 14.0, FZ)), (1051, (17.2, 16.5, FZ)))],
-        keys=[_k(844, ML(0.2, 3.72, 3.05), ML(0.2, 4.2, 3.05), hold=True), _k(902, ML(-1.6, 0.3, 1.6), ML(-0.7, 4.2, 1.4), hold=True), _k(971, ML(2.0, -0.2, 1.5), ML(1.9, 4.2, 1.2)),
+        keys=[_k(844, ML(0.05, 3.05, 2.95), ML(0.2, 4.2, 3.05), hold=True), _k(902, ML(-1.6, -0.4, 2.3), ML(-0.7, 4.2, 1.2), hold=True), _k(971, ML(2.0, -0.9, 2.2), ML(1.9, 4.2, 1.0)),
               _k(991, ML(0.7, -1.4, 0.55), ML(2.5, -0.5, 1.3)), _k(1012, (12.0, 9.6, 2.45), (16.0, 10.6, 2.2)), _k(1051, (16.4, 8.2, 2.5), (14.4, 13.5, 2.0), hold=True)])
     # ---- T5 false payoff + crisis (g 1045-1377): night crane from the gallery onto the desk, OTS push down the aisle, dawn, escort, three-shot
     T['T5'] = dict(g=(1045, 1377), render=(1039, 1383), mix=(1196, 1211, 'ARCHIVE_NIGHT', 'ARCHIVE_DAY'), cast=[
@@ -1264,8 +1266,8 @@ def _takes():
     T['T6'] = dict(g=(1377, 1695), render=(1371, 1701), cast=[
         _C('bertillon', 'bertillon', (1371, (14.35, hy - 0.55, FZ))), _C('dupont', 'dupont', (1371, (14.55, hy + 0.65, FZ))), _C('inspector', 'inspector', (1371, (15.75, hy - 1.0, FZ))),
         _C('gend_a', 'gendarme', (1371, (16.3, hy + 2.7, FZ))), _C('gend_b', 'gendarme', (1371, (16.1, hy - 2.2, FZ))), _C('clerk_gal', 'clerk', (1371, (19.85, 21.0, FZ + 4.2))), _C('clerk_t', 'clerk', (1371, (17.9, 11.6, FZ)))],
-        keys=[_k(1371, (17.0, 2.9, 9.7), (14.9, 26.0, 2.0), hold=True), _k(1395, (16.95, 4.6, 9.3), (14.9, 26.0, 2.0)), _k(1440, (15.7, 9.5, 7.6), (14.9, 26.0, 1.8)), _k(1478, (15.6, 17.5, 5.4), (14.8, 26.1, 1.8)),
-              _k(1515, (16.35, 24.55, 2.35), (14.55, 26.05, 1.85), hold=True), _k(1530, (14.95, 26.3, 2.75), (14.1, 26.4, 2.55), hold=True), _k(1545, (14.92, 26.3, 2.75), (14.1, 26.4, 2.55), hold=True),
+        keys=[_k(1371, (17.0, 2.9, 9.55), (15.1, 24.0, 0.4), hold=True), _k(1395, (16.95, 4.6, 9.2), (15.0, 24.5, 0.8)), _k(1440, (15.7, 9.5, 7.6), (14.9, 26.0, 1.8)), _k(1478, (15.6, 17.5, 5.4), (14.8, 26.1, 1.8)),
+              _k(1515, (16.35, 24.55, 2.35), (14.55, 26.05, 1.85), hold=True), _k(1530, (15.05, 25.95, 3.15), (14.29, 26.14, 2.86), hold=True), _k(1545, (15.0, 25.96, 3.13), (14.29, 26.14, 2.86), hold=True),
               _k(1580, (15.6, 28.2, 2.35), (14.35, 25.7, 2.0), hold=True), _k(1640, (17.9, 27.6, 2.3), (14.9, 26.0, 1.8), hold=True), _k(1671, (17.9, 27.5, 2.3), (14.9, 26.0, 1.8), hold=True),
               _k(1695, (16.55, 25.75, 2.4), (15.75, hy - 1.0, 2.45), hold=True), _k(1701, (16.5, 25.7, 2.4), (15.75, hy - 1.0, 2.45), hold=True)])
     # ---- T7 aha + 200 (g 1695-1868): low hero under the GRAND drawer, crane up and out to top-down (vault cut away)
