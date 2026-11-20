@@ -33,9 +33,29 @@ def fetch():
             open(d + "/meta.json", "w").write(m); print("WARN meta from branch head for", shot)
         print("fetched", shot, h[:10])
 
+WHIPS = json.load(open(F18 + "/qa/whips.json")) if os.path.exists(F18 + "/qa/whips.json") else []
+
+def whip(g0, direction=1, k=3):
+    """§I: replace a hard cut at g0 with an in-camera whip: horizontal streak blur ramping up over the last k frames of the
+    outgoing shot and down over the first k frames of the incoming one (no handles needed), plus a small slide in the whip direction."""
+    import numpy as np
+    from PIL import Image
+    for j in range(-k, k):
+        g = g0 + j; f = f"{OUTF}_frames/f_{g:04d}.png"
+        if not os.path.lexists(f): continue
+        a = np.asarray(Image.open(f).convert("RGB"), np.float32)
+        w = int(90 * (1 - abs(j + 0.5) / k)) | 1          # blur width peaks at the cut
+        sh_ = int(direction * 60 * (j + 0.5) / k)           # slide: outgoing moves out, incoming moves in
+        a = np.roll(a, sh_, axis=1)
+        c = np.cumsum(np.pad(a, ((0, 0), (w // 2 + 1, w // 2), (0, 0)), mode="edge"), axis=1)
+        b = (c[:, w:, :] - c[:, :-w, :]) / w
+        os.remove(f); Image.fromarray(np.clip(b[:, :a.shape[1]] + 0.5, 0, 255).astype(np.uint8)).save(f)
+    print("whip at", g0)
+
 def frames():
     os.makedirs(os.path.dirname(OUTF), exist_ok=True)
     sh(sys.executable, P + "/conform_full.py", TAKES, OUTF, env=dict(os.environ, N=str(N)))
+    for w in WHIPS: whip(w["g"], w.get("dir", 1))
 
 def grade_filter():
     """QA_TEAM §G colour: per-shot eq grade so every shot reaches saturation >= 0.48 and luma 87-108 (film 2: 0.49 / 94).
@@ -48,7 +68,7 @@ def grade_filter():
         from PIL import Image
         x = np.stack([np.asarray(Image.open(f).convert("RGB").resize((90, 160), Image.BOX), np.float32) for f in fr])
         mx = x.max(-1); mn = x.min(-1); sat = ((mx - mn) / (mx + 1e-3)).mean(); L = x.mean()
-        k = min(1.45, max(1.0, 0.50 / max(sat, 1e-3)))
+        k = min(1.5, max(1.0, 0.54 / max(sat, 1e-3)))  # §I: film saturation >= 0.50, vivid >= 45 %
         T = 90.0 if L < 87 else (105.0 if L > 108 else L)
         gm = float(np.log(L / 255) / np.log(T / 255)) if T != L else 1.0
         gm = 1 / gm  # ffmpeg eq gamma > 1 brightens

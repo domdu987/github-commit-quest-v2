@@ -42,3 +42,11 @@ High-motion shots (s10, s14, s15, s19, s21, s24, the charge) carry the film's p9
 - Two BIGZOOMs re-planned in shot_plan.md: s01 (now 0-156, merges old s01+s02; team 1) and s26 (team 2). One continuous eased move, 3-6 s, from EXTREME WIDE (character < 5 % of frame height, findable) through set detail to MEDIUM (character 35-60 % of frame height). No cut, no pulsing.
 - TAKE gate for BIGZOOM: measured start height < 5 %, end 35-60 %, duration of the zoom 3-6 s, the set rich (roofs, lanterns, oxen, smoke, flags) at every stage, nothing floats, caption band clear at the end.
 - Old s01, s02 and s26 PASSED takes stay as fallback until the new takes pass; the old s02 is dropped when the new s01 passes.
+
+## QA_TEAM §I (client decision via producer, 2026-11-20 12:48 UTC): match the reference Shorts — blocking at FINAL
+- Hard cuts: <= 12, target 4-10. Film 18 after the s01+s02 merge has 14 hard joins; 5 same-location joins become in-camera whips at conform (film18/qa/whips.json: s04, s07, s10, s15, s22) -> 9 hard cuts.
+- Colour: film saturation >= 0.50 and vivid >= 45 % (qa_stats2.py); the conform grade now targets 0.54 per shot. Signature colours: fire orange-red + moon blue.
+- Lighting: every remaining take (s19 s20 s21 s22 s24 and the BIGZOOMs s01, s26) needs a motivated key (fire / torches / lanterns / dawn sun), a RIM light on characters and oxen, and warm+cool in the same frame.
+- Text signs are now ALLOWED: short in-world signs are welcome (e.g. a gate plaque 即墨 / "JIMO" on the gate in the BIGZOOMs).
+- Characters always act; close-ups only as ~1 s punctuation (max 3).
+- FINAL: the contact sheet next to two reference sheets; "same channel?" — a "no" blocks.
