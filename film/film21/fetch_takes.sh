@@ -14,7 +14,7 @@ sA1  render21/team1   TODO
 sA2  render21/team5   TODO
 sB1  render21/team7   TODO
 sB2  render21/team5   TODO
-sC   render21/team3   TODO
+sC   render21/team3   9756c30  # PASS TAKE gate v2 (QA-tech)
 sD1  render21/team2   TODO
 sD2  render21/team4   TODO
 sE1  render21/team7   TODO
@@ -22,7 +22,7 @@ sE2  render21/team6   TODO
 sF   render21/team1   TODO
 sG   render21/team8   TODO
 sH1  render21/team9   TODO
-sH2a render21/team3   TODO
+sH2a render21/team3   408ada8  # PASS TAKE gate v2 (QA-tech + QA-art APPROVE)
 sH2b render21/team10  TODO
 sI   render21/team12  bc7db28  # PASS TAKE gate v2 (QA-tech)
 sJ1  render21/team8   TODO

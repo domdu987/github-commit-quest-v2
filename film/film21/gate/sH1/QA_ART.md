@@ -1,25 +1,33 @@
-# QA-art, TAKE gate: sH1 THE CHARGE (g1239-1345 + handles 1346-1348), film 21
-Reviewer: QA-art (opus). Frames extracted from take.mkv (every frame; viewed at full size and as 360x640 strips: g1239-1295, g1305-1345, crop of the wall at g1308-1330). Compared with ref_shorts R5, R7 sheets.
-Director ruling applied: colour-only problems (the yellow sun haze in g1239-1275, overall luma 130) are NOT scored against the take; they go to the per-segment normalization. Rim light: film-wide limitation, comment only.
+# QA-art sH1 (TAKE gate, v2)
+Take: gate/sH1/film/v3/film21/sH1/take.mkv (g1239-1348). Viewed: every 5th frame at full size, every frame g1309-1326, crops of the bridge mouth at g1334/g1344, the team's contact and phone sheets. Compared with R5, R7 (ride and swoop) and R3. Colour level, saturation and the lemon sand (g1279-1310) are left to the conform. Rim light is ruled on at FINAL.
 
 ## Verdict: FIX-FIRST
-The ride-along is good and in the reference style (R7 ride feel). The swoop is clean. But the KEY MOMENT, the spear wall slamming shut on "ปิดหัวสะพาน" (g1316), does not read with the sound off on a phone. The wall is a thin line of ~60 px brown/green figures at the far river edge, with no blue and no saltire banner in frame. It reads as "a crowd standing by the river", not "the bridge is now corked". The English hop toward the lens with their backs to the wall, so the cause of their fright is not visible.
 
-## Scores (1-10)
-| item | score | note |
-|---|---|---|
-| set density / ornament | 7 | Gorse in the foreground of the ride, camp pavilions and castle crag on the far bank, bridge with rails. The swoop middle (g1290-1305) is only river and sand, which is fine for travel. |
-| lighting & colour | 6 | Sun shafts on the ride (g1239-1262) are motivated and lovely. Long low-sun shadows at P_NECK are good. Colour is waived. Rim: comment only. |
-| composition / phone legibility | 5 | Ride: strong. P_NECK: the subject of the beat (the wall) sits at about y 640-700 and is about 5 % of the frame height. The foreground English take the attention, and the lower 35 % is empty dirt. |
-| character acting | 6 | Runners lean in, spears forward, good. The English shocked faces and sweat drops read, but they face the lens and never look back at the wall. Helmet wobble is too small to see on a phone. |
-| key moment clarity & beauty | 4 | The slam is not visible as an event: the line is already formed at g1312, so there is no visible snap at g1316. No blue in the wall, and the bridge deck gap between the two halves still looks open. |
-| match to references / camera travel | 6 | The ride, overtake and swoop is exactly the §I travel the client wants. The end lands on a flat, distant tableau, unlike R5/R7, which put the gag at medium size. |
-| §G grounding (every 0.5 s tile) | pass | Feet and contact shadows OK, nobody floating, no face over 35 %, nobody sliced. |
+The ride-along is still the best opening of a beat in the film: running Scots, gorse whipping past, sun shafts. It is the R7 ride feel. The overtake and swoop down the river are clean §I travel. Most of the v1 items are fixed: the Scots now wear saltire-blue tunics, three blue saltire banners rise in the wall, and the helmet pop is a real gag (g1316-1326: helmets fly, the English hop with O-mouths and sweat drops). The crimson-against-blue story finally reads.
 
-Does it read sound-off? Charge: yes. Wall closing: no. Funny? The panicked English faces are mildly funny, but the gag (cornered, jump back) is lost. Beautiful and in style? The ride and swoop are. The end tableau is not yet.
+One blocking problem is left. The end of the take does not show a corked bridge, and it does not match the H2a frame it dissolves into.
 
-## Fixes (max 4)
-1. **Make the wall BLUE and give it banners (g1312-1348).** Tint the Scots wall cards' tunics saltire blue (not just a light multiply), and plant 2-3 blue saltire banners in the wall, raised on g1316. This should be the only big blue in the frame, so the crimson-vs-blue trap reads at phone size and matches the H2a/H2b cork image.
-2. **Bring the wall closer for the slam, then settle to P_NECK.** Keep the P_NECK end pose for the H2a join, but route the end of the swoop low and close past the bridge mouth (g1305-1325), so the wall figures are about 12-18 % of the frame height at g1316. Then ease back and up to P_NECK by g1345. Alternatively, move the wall itself about 8-10 m toward the lens.
-3. **Make the slam an event.** The flank Scots should still be running in at g1310 and close across the deck mouth on g1316 (2-frame overshoot, spears dropping level together, with ranks ON the deck so there is no gap). Spears need to be thicker and longer so they read at 360x640.
-4. **Make the English react to the wall.** At g1316-1322 the foreground English turn their heads back toward the wall, then hop back toward the lens. Pop their helmets visibly off their heads (about 0.3 D, then they land crooked) instead of a small wobble. That gives the comic beat.
+## Old items (v1)
+| v1 item | status |
+|---|---|
+| 1 blue wall + banners | FIXED (tunics blue; banners present but too dark, see N1) |
+| 2 wall closer at the slam | PARTLY: the wall is about 10 % of the frame height at g1316, but it sits behind the bridge rail and the English (N2) |
+| 3 slam as an event | FIXED: the flank runs in g1310-1316, then the hop and helmets |
+| 4 English react, helmets pop | FIXED, funny |
+
+## Issues
+
+**B1 (blocking), g1326-1348: the cork is open, and the end does not match H2a.** In this take the bridge deck still runs past the Scots line into the foreground, and crimson English stand ON it at the mouth (g1334, g1344). The blue Scots are a 2-rank strip behind the English along the waterline. With the sound off it reads as "English in front of some Scots by a bridge", not as "the bridge mouth is plugged". The H2a take was re-rendered on the fixed set: the deck is shortened (K.BRIDGE_Y1 = 31.1) and ends at the wall, the wall is 5 ranks deep, the banners are large, and the smoke uses the soft puffs. That means the D6 at P_NECK (g1345-1348) will blend two different bridges and two different walls.
+Fix: re-render H1 on the same set state as the H2a redo (set3d21 e07ceb1 + cast21 528bf9d, the short deck, the 5-rank wall), so that from g1316 the wall stands ACROSS the end of the deck and no English stand on the deck on the land side of the wall. Check the P_NECK frame g1345 against H2a g1345 side by side before submitting.
+
+**N1 (non-blocking), g1312-1348: the saltire banners read near-black.** The banners are backlit by the low sun, so they come out as navy rectangles with a faint violet X. On a phone they read as "dark flags", not as a saltire. Fix: give the banner cloth some translucency or emission (about 0.3) or a second-side light, so the blue is a mid saltire blue with a clearly WHITE cross, like the P_TOP banners in H2a.
+
+**N2 (non-blocking), g1312-1326: the slam is partly hidden, and the lower half is empty.** The bridge rail runs in front of the running Scots, and the bottom 45 % of the frame is bare dirt with a few grass tufts. Fix: lower the camera about 1 m and tilt up slightly, or raise the aim point, so the wall clears the rail and the dirt drops to about 25 % of the frame. Optionally add a foreground prop at the bottom edge for depth: a dropped helmet, a spear, a gorse bush.
+
+**N3 (non-blocking), g1318-1330: the tan dust puffs read as beige sacks or sheep** behind the English. Make them smaller, more transparent and faster to fade (8-10 frames).
+
+**N4 (non-blocking), g1309, g1329-1348: the old crescent smoke "blades".** Grey-beige sickle shapes show above the camp and beside the flags. The B1 re-render on the current set (soft puffs) clears this.
+
+## Scores
+phone legibility 6 (ride 8, end 5) / set density 7 / light (sun shafts, low warm sun, violet shadows) 8 / colour story 7 / acting and comedy 8 / same channel? yes for the ride and swoop / camera travel 8.
+§G pass: feet and contact shadows OK, nobody sliced, no face over 35 %. Bloodless: helmets on the ground only, nobody down.

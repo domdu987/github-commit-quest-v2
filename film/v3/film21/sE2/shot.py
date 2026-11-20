@@ -99,6 +99,7 @@ def pose_of(i, g):
 def run(quality, gs, samples, out):
     work = os.path.join(HERE, "work", "E2_" + quality)
     T = C.Take(['bridge_end_north', 'valley_loop'], work, quality, fg=['bridge_end_north'], over=dict(sun_k=SUN_K))
+    K.scots_wide_line(n=30, banners=4, scale=1.5, toward=(-20.0, 44.0), hh0=22.0)   # the Scots stand still on the hill: blue figures + saltire banners
     A = T.A
     # clear the preset troops / crowd: our cast and the staged meadow crowd replace them
     K.place_troops(A, 'bridge', 0); K.place_troops(A, 'causeway', 0); K.place_troops(A, 'meadow', 0)
@@ -130,8 +131,8 @@ def run(quality, gs, samples, out):
 
     def hook(g):
         K.cam_path(None, KEYS, g)                            # re-sets the camera
-        v0, v1 = (GAMMA0, K.VIVID['bridge_end_north'][1]), K.VIVID['valley_loop']; u = ez((g - 940) / 80.0)
-        K.STATE['vivid'] = (math.exp(lerp(math.log(v0[0]), math.log(v1[0]), u)), lerp(v0[1], v1[1], u), lerp(1.0, 0.8, ez((g - 985) / 59.0)))   # exposure down at the crane top (luma < 110)
+        v0, v1 = (GAMMA0, K.VIVID['bridge_end_north'][1], 1.0), tuple(K.VIVID['valley_loop']); v1 = v1 + (1.0,) * (3 - len(v1)); u = ez((g - 940) / 80.0)
+        K.STATE['vivid'] = (math.exp(lerp(math.log(v0[0]), math.log(v1[0]), u)), lerp(v0[1], v1[1], u), lerp(v0[2], v1[2], u))   # eases into the set's valley_loop grade
         K.set_flow(g / 30.0); K.set_flutter(g / 30.0); K.set_smoke(g / 30.0)
         for m, (a, cast) in enumerate(mact):
             hid = g < mead_arrive(m)
