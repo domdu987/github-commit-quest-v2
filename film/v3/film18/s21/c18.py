@@ -174,9 +174,9 @@ class Actor(object):
     """One card. `height` (D) scales the card so head-to-feet = height (people); for oxen pass scale=..."""
     _n = 0
 
-    def __init__(self, atlas, role, height=None, scale=None, tint=None, k=None, shadow=True, sw=1.0, warm=0.0, ref=None, rim=None, solid=False):
+    def __init__(self, atlas, role, height=None, scale=None, tint=None, k=None, shadow=True, sw=1.0, warm=0.0, ref=None, rim=None, solid=False, rim2=None):
         Actor._n += 1
-        self.rim = None; self.rim_cfg = rim
+        self.rim = None; self.rim_cfg = rim; self.rim2 = None; self.rim2_cfg = rim2
         self.atlas, self.role, self.n = atlas, role, Actor._n
         ref = ref or atlas.keys[0]
         self.sc = scale if scale is not None else height / atlas.height[ref]
@@ -194,6 +194,8 @@ class Actor(object):
             self.sw = sw * self.sc
         self.height_D = height
         self.last = None
+        if rim2 is not None:
+            self.rim2 = Actor(atlas, role + '_rim2', scale=self.sc, tint=rim2[0], k=rim2[3], shadow=False, ref=ref, solid=True)
         if rim is not None:                                 # warm rim light: a second, warm-tinted, slightly bigger copy behind the card, shifted toward the fire side
             self.rim = Actor(atlas, role + '_rim', scale=self.sc, tint=rim[0], k=rim[3] if len(rim) > 3 else 1.0, shadow=False, ref=ref, solid=(len(rim) > 4 and rim[4]))
 
@@ -202,6 +204,7 @@ class Actor(object):
 
     def hide(self):
         self.ob.hide_render = True
+        if self.rim2 is not None: self.rim2.hide()
         if self.rim is not None: self.rim.hide()
         if self.so: self.so.hide_render = True
 
@@ -219,6 +222,9 @@ class Actor(object):
         if self.so:
             so = self.so; so.hide_render = (not shadow) or bool(os.environ.get('NOSH')); so.location = (p.x, p.y, p.z); so.rotation_euler = (0, 0, math.radians(yaw)); so.scale = (self.sw * scale, self.sw * scale, 1.0)
         self.last = (p, key, scale)
+        if self.rim2 is not None:
+            side2, amt2 = self.rim2_cfg[1], self.rim2_cfg[2]; yr2 = math.radians(yaw + yaw_add); rt2 = V((math.cos(yr2), math.sin(yr2), 0.0)); nrm2 = V((math.sin(yr2), -math.cos(yr2), 0.0))
+            self.rim2.show(key, p + rt2 * (side2 * amt2 * self.sc) - nrm2 * 0.04, cam, yaw=yaw + yaw_add, mirror=mirror, squash=squash, lift=lift, roll=roll, scale=scale, shadow=False)
         if self.rim is not None:
             side, amt = self.rim_cfg[1], self.rim_cfg[2]; yr = math.radians(yaw + yaw_add)
             rt = V((math.cos(yr), math.sin(yr), 0.0)); nrm = V((math.sin(yr), -math.cos(yr), 0.0))

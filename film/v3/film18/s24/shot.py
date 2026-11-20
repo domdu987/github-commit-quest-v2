@@ -46,7 +46,7 @@ def make_driver(quality):
         pt_ = C.ground_at(cam_obj, uu, vv)
         if pt_ is not None: RUNNERS.append((pt_.x, pt_.y, 20.0, 1.2, st_, ff_, 100.0, k_))
     for i, (x, y, ang, sp, st, ff, ang2, k) in enumerate(RUNNERS):
-        run.append(C.Actor(atl[k], 'run%d' % i, height=3.2 if k != 'c' else 3.0, sw=1.0, ref=('fall', 0)))
+        run.append(C.Actor(atl[k], 'run%d' % i, height=3.2 if k != 'c' else 3.0, sw=1.0, ref=('fall', 0), rim2=((0.3, 0.5, 1.0), 1, 0.08, 1.8)))
     # ---- flying pots and helmets: the set's opaque props (J.prop_pot terracotta, J.prop_helmet bronze)
     items = []
     for n_ in range(8):

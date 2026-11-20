@@ -15,11 +15,11 @@ G0, G1 = 1683, 1742
 H_IN, H_OUT = 6, 6
 G_GLINT = C.g_of(57.64)                                           # 1732
 MOVE = dict(push=0.09, slide=8)
-CAMO = dict(loc=(-1.4, -51.5, 1.9), look_at=(0.6, -46.0, 1.3), lens=27.0)
+CAMO = dict(loc=(-1.4, -51.5, 1.9), look_at=(0.5, -46.0, 1.2), lens=27.0)
 SHAKE = (0.8, 0.6, 0.4, 2.6)
 SNAPS = []                                                         # punch removed (director gate 12): steady push only
 OX = V((0.1, -46.0, 0.0))
-SCALE_OX = 0.55
+SCALE_OX = 0.45
 SOL_D, SOL_LAT = 8.0, 2.0
 
 
@@ -67,7 +67,7 @@ def make_driver(quality):
     # hero ox: charging gallop front-3/4 with the charging face; unlit reed + OWN flame card
     hv = {ph: C.ox_variant('dragon', 'front_three_quarter', 'gallop', ph, -1, reed=True, uid='h', face='rage') for ph in range(8)}
     at_h = C.Atlas('s22_hero3', hv, ppd=200)
-    hero = C.Actor(at_h, 'hero', scale=SCALE_OX, tint=(1.0, 0.86, 0.74), k=0.95, sw=2.7 * SCALE_OX, ref=0)
+    hero = C.Actor(at_h, 'hero', scale=SCALE_OX, tint=(1.0, 0.86, 0.74), k=0.95, sw=2.7 * SCALE_OX, ref=0, rim2=((0.3, 0.5, 1.0), 1, 0.05, 1.6))
     fl = C.J.flame_card(parent=None, scale=1.0, name='herofl', light=True, lit=1.0, energy=1100.0); C.lean_flame(fl, 40.0)
     gv = {ph: C.ox_variant('dragon', 'front_three_quarter', 'gallop', ph, -1, reed=True, uid='b', face='rage') for ph in range(8)}
     at_b = C.Atlas('s22_bg3', gv, ppd=70); rnd = random.Random(22); bg = []
@@ -77,7 +77,7 @@ def make_driver(quality):
                    C.J.flame_card(parent=None, scale=0.9, name='bgfl%d' % i, light=False, lit=1.0)))
     sv = {0: C.person_variant('yan_soldier_a', dict(cast18.STORY18['soldier_freeze_a'][1]), 's')}
     at_s = C.Atlas('s22_sol', sv, ppd=170)
-    sol = C.Actor(at_s, 'soldier', height=3.2, sw=1.0)
+    sol = C.Actor(at_s, 'soldier', height=3.2, sw=1.0, rim2=((0.3, 0.5, 1.0), 1, 0.07, 1.8))
     # a dark foreground barrel (toon-glazed, dark) bottom-right
     Bk = C.J.Banks(); Mt = C.STATE['M']; bb = Bk('barrel22', hull=0.0); C.J.cyl(bb, V((0, 0, 0)), 0.7, 1.5, Mt['wood_d'], seg=12, r1=0.62); C.J.cyl(bb, V((0, 0, 0.5)), 0.74, 0.12, Mt['iron'], seg=12, r1=0.74)
     Bk.flush(C.STATE['SET']); barrel = [o for o in C.STATE['SET'].objects if o.name.startswith('barrel22')][0]; C.J.no_bounce(barrel)

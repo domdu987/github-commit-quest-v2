@@ -58,7 +58,7 @@ def make_driver(quality):
     sold = []
     for c in cfg:
         a1 = C.Atlas('s21b_' + c['st'], {0: sol(c['st'], c['base'])}, ppd=130); a2 = C.Atlas('s21c_' + c['fr'], {0: C.person_variant(c['base'], shock(c['fr'].replace('freeze', 'freeze')) if False else dict(shock(c['fr'])), 's')}, ppd=130)
-        sold.append((c, C.Actor(a1, 's_' + c['st'], height=3.2, shadow=False, rim=((1.0, 0.5, 0.15), 1 if c['lat'] < 0 else -1, 0.2, 2.2, True), **BLK), C.Actor(a2, 's_' + c['fr'], height=3.2, shadow=False, rim=((1.0, 0.5, 0.15), 1 if c['lat'] < 0 else -1, 0.2, 2.2, True), **BLK)))
+        sold.append((c, C.Actor(a1, 's_' + c['st'], height=3.2, shadow=False, rim=((1.0, 0.5, 0.15), 1 if c['lat'] < 0 else -1, 0.2, 2.2, True), rim2=((0.3, 0.5, 1.0), -1 if c['lat'] < 0 else 1, 0.14, 2.0), **BLK), C.Actor(a2, 's_' + c['fr'], height=3.2, shadow=False, rim=((1.0, 0.5, 0.15), 1 if c['lat'] < 0 else -1, 0.2, 2.2, True), rim2=((0.3, 0.5, 1.0), -1 if c['lat'] < 0 else 1, 0.14, 2.0), **BLK)))
     _v = sol('soldier_cheer_cup_b', 'yan_soldier_b'); CUPA = _v.anchors['cup_r']; FEET = _v.feet_y
     actors = {}
     for c, s1, s2 in sold: actors[c['st']] = s1; actors[c['fr']] = s2

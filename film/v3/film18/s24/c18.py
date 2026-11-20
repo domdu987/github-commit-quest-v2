@@ -133,8 +133,8 @@ class Atlas(object):
 _MATS = {}
 
 
-def _atlas_mat(atlas, tint, k, name):
-    key = (atlas.path, tuple(round(x, 3) for x in tint), round(k, 3), STATE.get('pre'))
+def _atlas_mat(atlas, tint, k, name, solid=False):
+    key = (atlas.path, tuple(round(x, 3) for x in tint), round(k, 3), STATE.get('pre'), solid)
     if key in _MATS and bpy.data.materials.get(_MATS[key]) is not None:
         return bpy.data.materials[_MATS[key]]
     m = bpy.data.materials.new('JM_card_%s_%d' % (name, len(_MATS))); nt = T._tree(m); N = nt.nodes.new; L = nt.links.new
@@ -146,7 +146,7 @@ def _atlas_mat(atlas, tint, k, name):
     a2 = N('ShaderNodeAttribute'); a2.attribute_type = 'OBJECT'; a2.attribute_name = '["ov"]'
     cm = N('ShaderNodeCombineXYZ'); L(a1.outputs['Fac'], cm.inputs['X']); L(a2.outputs['Fac'], cm.inputs['Y'])
     L(uv.outputs['UV'], mp.inputs['Vector']); L(cm.outputs['Vector'], mp.inputs['Location']); L(mp.outputs['Vector'], t.inputs['Vector'])
-    mm = N('ShaderNodeMix'); mm.data_type = 'RGBA'; mm.blend_type = 'MULTIPLY'; mm.inputs[0].default_value = 1.0; mm.inputs[7].default_value = (tint[0], tint[1], tint[2], 1.0)
+    mm = N('ShaderNodeMix'); mm.data_type = 'RGBA'; mm.blend_type = 'MIX' if solid else 'MULTIPLY'; mm.inputs[0].default_value = 1.0; mm.inputs[7].default_value = (tint[0], tint[1], tint[2], 1.0)
     L(t.outputs['Color'], mm.inputs[6]); L(mm.outputs[2], em.inputs['Color']); ak = N('ShaderNodeAttribute'); ak.attribute_type = 'OBJECT'; ak.attribute_name = '["lk"]'; mu = N('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = k; L(ak.outputs['Fac'], mu.inputs[0]); L(mu.outputs[0], em.inputs['Strength'])
     L(t.outputs['Alpha'], mx.inputs['Fac']); L(tr.outputs['BSDF'], mx.inputs[1]); L(em.outputs['Emission'], mx.inputs[2]); L(mx.outputs['Shader'], out.inputs['Surface'])
     m.cycles.emission_sampling = 'NONE'; _MATS[key] = m.name; return m
@@ -174,16 +174,17 @@ class Actor(object):
     """One card. `height` (D) scales the card so head-to-feet = height (people); for oxen pass scale=..."""
     _n = 0
 
-    def __init__(self, atlas, role, height=None, scale=None, tint=None, k=None, shadow=True, sw=1.0, warm=0.0, ref=None, rim=None):
+    def __init__(self, atlas, role, height=None, scale=None, tint=None, k=None, shadow=True, sw=1.0, warm=0.0, ref=None, rim=None, solid=False, rim2=None):
         Actor._n += 1
-        self.rim = None; self.rim_cfg = rim
+        self.rim = None; self.rim_cfg = rim; self.rim2 = None; self.rim2_cfg = rim2
         self.atlas, self.role, self.n = atlas, role, Actor._n
         ref = ref or atlas.keys[0]
         self.sc = scale if scale is not None else height / atlas.height[ref]
         tn, kk = R2._tint(warm=warm); tn = tint or tn; kk = k if k is not None else kk
         self.me = _atlas_quad(atlas, self.sc)
-        if not self.me.materials: self.me.materials.append(_atlas_mat(atlas, tn, kk, role))
+        if not self.me.materials: self.me.materials.append(None)
         self.ob = bpy.data.objects.new('c18_%s_%d' % (role, self.n), self.me); STATE['SET'].objects.link(self.ob)
+        self.ob.material_slots[0].link = 'OBJECT'; self.ob.material_slots[0].material = _atlas_mat(atlas, tn, kk, role, solid)
         self.ob.visible_shadow = False; J.no_bounce(self.ob); self.ob['ou'] = 0.0; self.ob['ov'] = 0.0; self.ob['lk'] = 1.0
         self.so = None
         if shadow:
@@ -193,14 +194,18 @@ class Actor(object):
             self.sw = sw * self.sc
         self.height_D = height
         self.last = None
+        if rim2 is not None:
+            self.rim2 = Actor(atlas, role + '_rim2', scale=self.sc, tint=rim2[0], k=rim2[3], shadow=False, ref=ref, solid=True)
         if rim is not None:                                 # warm rim light: a second, warm-tinted, slightly bigger copy behind the card, shifted toward the fire side
-            self.rim = Actor(atlas, role + '_rim', scale=self.sc, tint=rim[0], k=rim[3] if len(rim) > 3 else 1.0, shadow=False, ref=ref)
+            self.rim = Actor(atlas, role + '_rim', scale=self.sc, tint=rim[0], k=rim[3] if len(rim) > 3 else 1.0, shadow=False, ref=ref, solid=(len(rim) > 4 and rim[4]))
 
     def set_lk(self, v):
         self.ob['lk'] = float(v)
 
     def hide(self):
         self.ob.hide_render = True
+        if self.rim2 is not None: self.rim2.hide()
+        if self.rim is not None: self.rim.hide()
         if self.so: self.so.hide_render = True
 
     def show(self, key, pos, cam, yaw=None, mirror=False, squash=(1.0, 1.0), lift=0.0, roll=0.0, scale=1.0, shadow=True, yaw_add=0.0):
@@ -217,11 +222,14 @@ class Actor(object):
         if self.so:
             so = self.so; so.hide_render = (not shadow) or bool(os.environ.get('NOSH')); so.location = (p.x, p.y, p.z); so.rotation_euler = (0, 0, math.radians(yaw)); so.scale = (self.sw * scale, self.sw * scale, 1.0)
         self.last = (p, key, scale)
+        if self.rim2 is not None:
+            side2, amt2 = self.rim2_cfg[1], self.rim2_cfg[2]; yr2 = math.radians(yaw + yaw_add); rt2 = V((math.cos(yr2), math.sin(yr2), 0.0)); nrm2 = V((math.sin(yr2), -math.cos(yr2), 0.0))
+            self.rim2.show(key, p + rt2 * (side2 * amt2 * self.sc) - nrm2 * 0.04, cam, yaw=yaw + yaw_add, mirror=mirror, squash=squash, lift=lift, roll=roll, scale=scale, shadow=False)
         if self.rim is not None:
-            side, amt = self.rim_cfg[1], self.rim_cfg[2]; yr = math.radians(yaw)
+            side, amt = self.rim_cfg[1], self.rim_cfg[2]; yr = math.radians(yaw + yaw_add)
             rt = V((math.cos(yr), math.sin(yr), 0.0)); nrm = V((math.sin(yr), -math.cos(yr), 0.0))
             sgn = -1.0 if mirror else 1.0
-            self.rim.show(key, p + rt * (side * amt * self.sc) - nrm * 0.03, cam, yaw=yaw, mirror=mirror, squash=squash, lift=lift, roll=roll, scale=scale * 1.0, shadow=False)
+            self.rim.show(key, p + rt * (side * amt * self.sc) - nrm * 0.03, cam, yaw=yaw + yaw_add, mirror=mirror, squash=squash, lift=lift, roll=roll, scale=scale * 1.0, shadow=False)
 
     def head_chin_y(self, cam_obj, h=None):
         """px y (of 1280) of the chin line of the last shown pose (feet + height - 1 D)"""
