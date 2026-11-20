@@ -122,10 +122,11 @@ def key_light_ramp():
         sc.frame_set(g + 1); r = ramp(g, a, b, c, d, lo)
         for L in bpy.data.lights:
             base = L.energy; L.energy = base * r; L.keyframe_insert('energy', frame=g + 1)
-def cull_banners(cam):
+def cull_banners(cam, g=0):
     cl = Vector(cam.location)
     for hg in P.W.get('banners', []):
         near = (Vector(hg.matrix_world.translation) + Vector((0, 0, -0.7)) - cl).length < BANNER_CULL
+        if hg.name.endswith('MOYEN') and g >= 1823: near = True      # director: MOYEN stays hidden from g1823 to the end (no mid-crane pop)
         for o in [hg] + list(hg.children): o.hide_render = near
 BANNER_CULL = float(os.environ.get('T7_CULL', 2.4))
 def bert_pose(g):
@@ -154,7 +155,7 @@ def main(gl, outdir, samples=16):
         t = time.time(); sc.frame_set(g + 1)
         sc.render.use_motion_blur = 1800 <= g <= 1867
         if sc.render.use_motion_blur: sc.render.motion_blur_shutter = 0.5
-        clear_cast(); acts = P.stage_cast2(take, g, assign_for(g)); put_beard(g, acts['dupont'], sc.camera); cull_banners(sc.camera); sc.render.filepath = fp
+        clear_cast(); acts = P.stage_cast2(take, g, assign_for(g)); put_beard(g, acts['dupont'], sc.camera); cull_banners(sc.camera, g); sc.render.filepath = fp
         bpy.ops.render.render(write_still=True); P.grade2(fp); print('g', g, '%.0fs' % (time.time() - t), flush=True)
 if __name__ == '__main__':
     # usage: render_T7.py g0 g1 outdir [samples]   |   render_T7.py g,g,g outdir [samples]  (stills)
