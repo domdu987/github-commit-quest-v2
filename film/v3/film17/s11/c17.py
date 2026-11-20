@@ -66,3 +66,42 @@ def emissive_bar(name, parent, w, h, centre, color=(1.0, 0.82, 0.35), strength=2
     nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2]); nt.links.new(mx.outputs[0], out.inputs[0])
     me.materials.append(m); ob.visible_shadow = False; ob.visible_diffuse = False; ob.visible_glossy = False; ob.hide_render = True
     return ob, mx
+
+def image_quad(name, parent, w, h, centre, png, strength=1.3, off_y=0.006):
+    """camera-only emissive image plane (straight alpha) in card-local coordinates; returns (obj, emission node)."""
+    me = bpy.data.meshes.new(name); me.from_pydata([(-w/2, 0, -h/2), (-w/2, 0, h/2), (w/2, 0, h/2), (w/2, 0, -h/2)], [], [(0, 1, 2, 3)]); me.update()
+    uv = me.uv_layers.new(name='UVMap')
+    for i, (u, v) in enumerate(((0, 0), (0, 1), (1, 1), (1, 0))): uv.data[i].uv = (u, v)
+    ob = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(ob); ob.parent = parent; ob.location = (centre[0], off_y, centre[1])
+    m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
+    tx = nt.nodes.new('ShaderNodeTexImage'); tx.image = bpy.data.images.load(png); tx.image.alpha_mode = 'STRAIGHT'; tx.interpolation = 'Cubic'
+    em = nt.nodes.new('ShaderNodeEmission'); em.inputs['Strength'].default_value = strength
+    tr = nt.nodes.new('ShaderNodeBsdfTransparent'); mx = nt.nodes.new('ShaderNodeMixShader'); out = nt.nodes.new('ShaderNodeOutputMaterial')
+    nt.links.new(tx.outputs['Color'], em.inputs['Color']); nt.links.new(tx.outputs['Alpha'], mx.inputs[0])
+    nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2]); nt.links.new(mx.outputs[0], out.inputs[0])
+    me.materials.append(m); ob.visible_shadow = False; ob.visible_diffuse = False; ob.visible_glossy = False; ob.hide_render = True
+    return ob, em
+
+def bottle_png(path, W=640, H=224):
+    from PIL import Image, ImageDraw
+    if os.path.exists(path): return path
+    im = Image.new('RGBA', (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+    d.rounded_rectangle([4, 4, W - 5, H - 5], 22, fill=(255, 205, 105, 255), outline=(120, 52, 40, 255), width=10)
+    d.rounded_rectangle([26, 24, W - 27, H - 25], 14, fill=(255, 226, 150, 255))
+    cx = W // 2; top = 26; bot = H - 30
+    # empty glass bottle: dark outline, pale glass inside, a bright highlight, no liquid
+    body = [cx - 50, top + 78, cx + 50, bot]
+    d.rounded_rectangle(body, 26, fill=(205, 238, 224, 255), outline=(60, 36, 34, 255), width=9)
+    d.rectangle([cx - 17, top + 16, cx + 17, top + 86], fill=(205, 238, 224, 255), outline=(60, 36, 34, 255), width=9)
+    d.rectangle([cx - 24, top + 4, cx + 24, top + 22], fill=(130, 70, 46, 255), outline=(60, 36, 34, 255), width=8)
+    d.rounded_rectangle([cx - 36, top + 100, cx - 26, bot - 24], 5, fill=(255, 255, 255, 255))
+    for k in range(3): d.line([(cx + 120 + 50 * k, H // 2 - 30), (cx + 150 + 50 * k, H // 2 + 30)], fill=(150, 70, 56, 255), width=8) if False else None
+    im.save(path); return path
+
+def tick_bars(name, parent, centre, size=0.012):
+    """a green tick (two thin glowing bars) in card-local coordinates, returns [(obj, mix)...]."""
+    out = []
+    for k, (dx, dz, rot, ln) in enumerate(((-0.3, -0.15, -45, 0.55), (0.25, 0.1, 40, 1.0))):
+        ob, mx = emissive_bar('%s_%d' % (name, k), parent, size * ln, size * 0.28, (centre[0] + dx * size, centre[1] + dz * size), color=(0.45, 1.0, 0.5), strength=3.0, alpha=0.95)
+        ob.rotation_euler = (0, math.radians(rot), 0); ob.location.y = 0.0065; out.append((ob, mx))
+    return out
