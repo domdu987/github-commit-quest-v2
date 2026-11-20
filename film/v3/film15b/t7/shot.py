@@ -195,6 +195,7 @@ def run_A(q, f0, f1, stride):
         t = g / FPS; loc, look = cam_a(t); lc = Vector(loc) * U
         cam.location = lc; cam.rotation_euler = (Vector(look) * U - lc).to_track_quat('-Z', 'Y').to_euler(); cam.data.lens = 22.0
         sc.frame_set(g); ct.hide_placeholders(); cl = tuple(lc)
+        for c in STATE['J']['bar'].children: c.hide_render = g >= 2036
         for o in mound_objs: o.hide_render = g < G_IMP; o.hide_viewport = g < G_IMP
         V.rim_on(to_light=(-0.55, -0.8), width=5, strength=0.95)
         # boys on the bench: they watch, then laugh at the flop
