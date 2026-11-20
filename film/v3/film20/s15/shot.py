@@ -31,7 +31,7 @@ GS = list(range(GF, G_LAST + 1))
 G_PERMIT = C.cap_g("แต่ใบอนุญาต")                # ~1000
 G_TWENTY = C.cap_g("ได้แค่ 20 ปี")               # ~1041
 G_DROP = C.cap_g("ครบแล้วต้องรื้อ")              # 1067: smile drops + snap
-SNAP = (G_DROP - 3, G_DROP + 13)
+SNAP = (G_DROP - 3, G_DROP + 16)
 PUSH1 = (1003, 1011)                             # director: push-in x1.15 over 8 frames on 'ใบอนุญาต'
 HAND = (G0 + 12, G0 + 34)                       # document handed over (official arm out, Eiffel reaches)
 G_SWAP_DOC = G0 + 24                            # doc prop moves official -> Eiffel (hands meet)
@@ -41,27 +41,27 @@ YEAR = 1889
 PPD = 256
 
 # staging (world D): Eiffel at the preset mark, the official a step behind and to the right
-CAM_BACK = 4.3                                  # D from the camera to Eiffel at the start
+CAM_BACK = 5.4                                  # D from the camera to Eiffel at the start
 CAM_Z = 1.6
 TILT0 = -6.0
 FG_SHIFT = (40.0, 0.0, 0.0)
-BANNER_DEPTH, BANNER_Z, BANNER_W = 9.0, 10.2, 9.6   # banner: D behind Eiffel, centre height, width
+BANNER_DEPTH, BANNER_Z, BANNER_W = 9.0, 11.2, 9.6   # banner: D behind Eiffel, centre height, width
 FG_AHEAD, FG_SIDE, FG_Z = 3.0, -1.2, -1.6        # foreground head: ahead, left, feet z (underground: only head + hat show)
 EIF_Z = 2.55                                    # head centre above the feet
 
 
 def marks(A):
     e = Vector(A["marks"]["eiffel_fair"])
-    return dict(eiffel=e, official=e + Vector((1.25, -0.5, 0.0)))
+    return dict(eiffel=e, official=e + Vector((1.1, -0.5, 0.0)))
 
 
 def cam_path(A):
     m = marks(A)
     subj = m["eiffel"] + Vector((0.8, 0.0, EIF_Z))
     c = Vector((subj.x - 0.3, subj.y - CAM_BACK, CAM_Z))
-    return C.CamPath(c, subj, GF, G_LAST, push=0.06, slide_px=-75.0, rise_px=0.0, arc_deg_s=24.0, tilt0=TILT0, tilt_deg_s=1.5,
-                     decay=0.25, snaps=[dict(g=PUSH1, k=1.28, peak=1.9, shift=(0.0, 0.0), tilt=0.0),
-                           dict(g=SNAP, k=1.35, peak=2.3, shift=(0.0, 0.0), tilt=-3.5)])
+    return C.CamPath(c, subj, GF, G_LAST, push=0.06, slide_px=-22.0, rise_px=0.0, arc_deg_s=8.0, tilt0=TILT0, tilt_deg_s=1.5,
+                     decay=0.25, snaps=[dict(g=PUSH1, k=1.45, peak=1.9, shift=(0.0, 0.0), tilt=0.0),
+                           dict(g=SNAP, k=1.5, peak=1.7, shift=(0.0, 0.0), tilt=-3.0)])
 
 
 def move_fg(A, cam_loc):
@@ -85,19 +85,22 @@ C.add_expression("proud_smile", eyes="happy", tilt=0.0, brows=("both", 0.10, 8.0
 
 
 def idle(g, ph=0.0):
-    return dict(lean=3.0 * math.sin(g * 0.23 + ph), squash=(1.0, 1.0 + 0.015 * math.sin(g * 0.31 + ph)))
+    return dict(lean=5.0 * math.sin(g * 0.23 + ph), squash=(1.0, 1.0 + 0.025 * math.sin(g * 0.31 + ph)), head_roll=4.0 * math.sin(g * 0.19 + ph * 0.7))
 
 
 def official_pose(g):
     u = u_of(g, HAND[0], HAND[1])                                       # 0 doc held up, 1 arm stretched toward Eiffel
     held = g < G_SWAP_DOC
     p = dict(yaw=0.35, arm_r="hip", legs="wide")
+    if g >= G_SWAP_DOC + 12 and g < G_DROP:                          # after the handover: a small proud wave / gesture toward the tower
+        w = 0.5 + 0.5 * math.sin(g * 0.45)
+        p["arm_r"] = dict(hand=(0.75 + 0.15 * w, 0.35 - 0.2 * w), bend=-0.3, stretch=1.1)
     if held:
-        p["arm_l"] = dict(hand=(lerp(-0.55, -1.15, u), lerp(0.85, 0.68, u)), bend=0.2, stretch=lerp(1.0, 1.25, u))
+        p["arm_l"] = dict(hand=(lerp(-0.62, -1.1, u), lerp(0.72, 0.70, u)), bend=0.2, stretch=lerp(1.1, 1.3, u))
         p["prop_l"] = "doc_seal"
     else:
         u2 = u_of(g, G_SWAP_DOC, G_SWAP_DOC + 10)
-        p["arm_l"] = dict(hand=(lerp(-1.15, -0.4, u2), lerp(0.68, 0.30, u2)), bend=0.2, stretch=lerp(1.25, 1.0, u2))
+        p["arm_l"] = dict(hand=(lerp(-1.1, -0.4, u2), lerp(0.70, 0.30, u2)), bend=0.2, stretch=lerp(1.3, 1.0, u2))
     p["expr"] = "happy" if g > G_SWAP_DOC else "stern"
     p["pitch"] = -0.05
     p.update(idle(g, 1.3))
@@ -117,7 +120,7 @@ def eiffel_pose(g):
     p["expr"] = ex
     if got:
         u2 = u_of(g, G_SWAP_DOC, G_SWAP_DOC + 12)
-        p["arm_r"] = dict(hand=(lerp(1.0, 0.45, u2), lerp(0.62, 0.75, u2)), bend=-0.2, stretch=lerp(1.2, 1.0, u2))
+        p["arm_r"] = dict(hand=(lerp(1.0, 0.62, u2), lerp(0.62, 0.72, u2)), bend=-0.2, stretch=lerp(1.2, 1.1, u2))
         p["prop_r"] = "doc_seal"
     else:
         p["arm_r"] = dict(hand=(lerp(0.3, 1.0, u), lerp(0.2, 0.62, u)), bend=-0.2, stretch=lerp(1.0, 1.2, u))
@@ -125,7 +128,8 @@ def eiffel_pose(g):
     if g >= G_DROP:
         p["fx"] = ["sweat"]
         p["pitch"] = 0.2
-        p["head_roll"] = 4.0
+    elif got:                                                        # reads the permit: head bows over it, then looks up
+        p["pitch"] = 0.22 * math.sin(math.pi * u_of(g, G_SWAP_DOC + 6, G_DROP - 2))
     p.update(idle(g, 0.4))
     p["blink"] = bl if g < G_DROP + 2 else blink(g, [G_DROP + 40])
     p["t"] = g / 30.0

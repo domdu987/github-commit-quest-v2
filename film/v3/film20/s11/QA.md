@@ -1,8 +1,8 @@
 # s11 QA: film 20, take T11 = shots 11+12+13+14 as ONE camera-travel take (QA_TEAM §I) -- SITE, DAY
 ## Delivered
 - take.mkv (split into take.mkv.partaa/ab/ac, 95 MB; `cat take.mkv.part* > take.mkv`): g 745..1003, 259 frames, first_g 745, 720x1280, 8 spp. g 753..995 = the take (25.09-33.21 s); 8 in-handle frames (dissolve 11 in) and 8 out-handle frames g 996..1003 (dissolve 13 out), rendered in 3D. NO cut inside. s/frame wall 10.9 (two processes), cpu 20.9.
-- meta.json / cues.json (15 cues) / contact.jpg / phone_sheet.jpg / QA_AUTO.md (PASS; note: soft g 833-835 = the fast flight over the cart yard) / framediff.json. The old folders s12 s13 s14 are deleted.
-- **qa_stats: `saturation 0.556, brightness 100.8, in-shot motion median 4.82 p90 14.28`** (sat >= 0.47, luma 85-110, motion >= 4 / >= 12: all met). **qa_stats2: `sat 0.556, vivid 65.7 %, luma 100.8, warm 40.3 % / cool 45.0 %`** (sat >= 0.50, vivid >= 45 %: met). deliver.py frame-diff 4.65 / 20.28.
+- meta.json / cues.json (15 cues) / contact.jpg / phone_sheet.jpg / QA_AUTO.md (PASS; note: soft g 836-839 = the fast flight over the cart yard) / framediff.json. The old folders s12 s13 s14 are deleted.
+- **qa_stats: `saturation 0.558, brightness 100.3, in-shot motion median 4.69 p90 15.12`** (sat >= 0.47, luma 85-110, motion >= 4 / >= 12: all met). **qa_stats2: `sat 0.558, vivid 65.7 %, luma 100.3, warm 38.6 % / cool 46.3 %`** (it counts 7 'shots': the fast flights read as scene changes, there is no cut) (sat >= 0.50, vivid >= 45 %: met). deliver.py frame-diff 4.48 / 23.08.
 ## The travel (what the viewer sees)
 | g | beat |
 |---|---|
@@ -23,3 +23,13 @@
 - Hand-held jitter (+-0.07 D) is part of the motion; frame-diff is mostly real camera travel (rise, flights, crane-ups).
 - The catcher stands near the set's bucket and cheers; he does not hold it.
 - Exposure: no trim needed in this take (luma 100.8).
+
+## TAKE gate r2 fixes (TAKE2_A.md) -- done in this delivery
+1. Pop g818-819: the old spline carried the lens through the child's cap. The rise is now: eased punch-in, then up-and-back crane (g817-828) keeping Eiffel and the Parisians in frame, then the flight; no frame-to-frame jump (max in-shot diff at the punch-in snap only).
+2. Sand g819-840: the camera looks 8-25 m above the horizon line over the cart yard / leg foot / scaffold platform; ground about 25-35 % (it is the fast flight, ~1 s).
+3. Rivet g802-812: a runtime 3-D giant rivet in his fist: round red dome head + a visible cylindrical shank, held head-up and bobbing (the sprite prop is removed).
+4. Carriers g848-906: neutral expression, mouths closed.
+5. Toss / catch g917-933 (16 frames): own small orange-hot cylinder on a visible arc from the thrower's tongs to a steel bucket held in the catcher's hands (follows his hands, rises with them when he cheers); the camera is closer (9.5 D) and pushes in; sparks every 9 frames.
+6. Bowl g908-912: the flight looks down (0.5-2 m targets) while passing under the arches, so the first-platform underside no longer fills the frame; dappled sun on the gravel instead.
+7. Ending: after the last snap the camera keeps pushing (+14 %/s) so g993-1003 is not still.
+- Also: plank offcuts in front of the stack have distinct thicknesses (no coplanar black slits).

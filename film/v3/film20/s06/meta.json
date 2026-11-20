@@ -38,18 +38,18 @@
  },
  "set": "v3/set3d20 CAFE cafe_wide DAY, window view stub, smoke ramp keyed per frame, add_signature keyed per frame; saturation grade 1.45",
  "cast": "v3/cast20 painter20 / composer20 / poet20 / architect20 (outraged: wave greeked newspapers g 396-500, then jab pointing fingers at the window g 500-603, 3 Hz bounce) + waiter (idle sway, off to the right) + Maupassant SEATED on the banquette mark the whole take (maupassant_seated_toast_smug, mouth held 'smile', sips, idle breathing only after g 585); runtime meshes: quill + two sleeved hands (A cream / B plum) hand the quill over the sheet g 452-520, FONT heading 'PROTESTATION' on the sheet; signatures 14 -> 15 (g 471) -> 16 (g 496); forge smoke ramps 0 -> 1 over g 513-572",
- "camera": "ONE continuous travel take (WORKER20 §8): waypoint camera (Catmull-Rom on loc + look, no stop): slide past the waving artists g 396-440, push-in snap g 430-446 on 'สี่สิบกว่าคน' (444), descend and push DOWN onto the protest sheet g 446-490 (the cafe_table_insert pose at g 490), over the sheet g 490-512, rise + swing to the window g 512-572 (smoke 1.0 at 572), sweep down-right to the banquette g 572-603; last frame g603 = (3.533, 6.506, 0.983) D looking at (1.692, 13.16, 2.944) D = team7's T09 start pose, handle g604 (3.505, 6.531, 0.994), arriving with ~0.03 D/frame velocity; 22 mm, no shift, no DOF",
+ "camera": "ONE continuous travel take (WORKER20 \u00a78): waypoint camera (Catmull-Rom on loc + look, no stop): slide past the waving artists g 396-440, push-in snap g 430-446 on '\u0e2a\u0e35\u0e48\u0e2a\u0e34\u0e1a\u0e01\u0e27\u0e48\u0e32\u0e04\u0e19' (444), descend and push DOWN onto the protest sheet g 446-490 (the cafe_table_insert pose at g 490), over the sheet g 490-512, rise + swing to the window g 512-572 (smoke 1.0 at 572), sweep down-right to the banquette g 572-603; last frame g603 = (3.533, 6.506, 0.983) D looking at (1.692, 13.16, 2.944) D = team7's T09 start pose, handle g604 (3.505, 6.531, 0.994), arriving with ~0.03 D/frame velocity; 22 mm, no shift, no DOF",
  "end_cam": {
   "g": 603,
   "loc_D": [
-   3.533,
-   6.506,
-   0.983
+   2.618,
+   9.596,
+   1.334
   ],
   "look_at_D": [
    1.692,
    13.16,
-   2.944
+   1.999
   ],
   "lens_mm": 22.0,
   "shift": [
@@ -58,16 +58,22 @@
   ],
   "handle_g604": {
    "loc_D": [
-    3.505,
-    6.531,
-    0.994
+    2.599,
+    9.6,
+    1.35
    ],
    "look_at_D": [
     1.692,
     13.16,
-    2.942
+    2.0
    ]
-  }
+  },
+  "drift_per_frame_D": [
+   -0.019,
+   0.004,
+   0.016
+  ],
+  "note": "team7's exact T09 start values (their s09/meta.json start_cam), relayed by the director; handles g604-607 keep the same drift"
  },
  "events": {
   "snap": [
