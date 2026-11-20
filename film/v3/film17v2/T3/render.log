@@ -5,3 +5,4 @@ g645 91.7s
 g646 95.4s
 04:45.848  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film17v2/T3/frames/g_0647.png'
 g647 94.9s
+00:07.218  cycles           | WARNING CUEW initialization failed: Error opening the library
