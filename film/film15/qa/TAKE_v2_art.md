@@ -271,3 +271,44 @@ Fixes:
   - unblurred whip g1783-1793 (the 3 short shots),
   - close-up 3 with bare seats and a black band at g1792-1810.
   - Minor: top-down too small (g1645-1722), podium medal small.
+
+---
+# Round 4 (2026-11-20): T4 re-check only (take.mkv 18:47)
+Same method: 3 fps sheet, ±3 frames around the swaps and whips, full-res crops, per-frame luma and magenta scan. Magenta: at most 0.18 % in any frame, so none.
+
+## T4: FIX (one blocking item, the rest verified)
+Round-2 items:
+1. Pole growing out of Dick's head (g1084-1096): **fixed**.
+   - Dick now stands about 0.5 m off the standard line; the standard is well clear of his head (g1056, 1076, 1094).
+   - The bar sits just above his hair spikes with a visible gap (about 1/3 head height at this angle). That reads as "bar just over his head".
+   - Optional: a slightly lower camera would make the planned ~30 cm gap more dramatic.
+2. Board and official cut off (g1052-1096): **fixed**. "BAR HEIGHT 2.24" is in frame (the "m" only touches the edge at g1060), and the second official no longer covers the board.
+3. Landing (g1182-1204): **fixed**.
+   - From g1188 Dick lies flat at about 40 % of frame width, with hands on his face, and is readable for about 0.5 s.
+   - Team 4's note checks out: at g1188 the fallen bar lies diagonally across his chest and shoulder; his face is clear. This is physical (the bar lands on him) and does not break §G. **Accept.**
+   - Still minor: at g1180 the falling bar's end touches his chin for 2-3 frames. Not blocking.
+4. Hush crowd-head frame (g1273-1337): **fixed**. Dark heads and shoulders frame the bottom for the whole push, and the sparkle is reduced.
+5. Whip flares: **fixed**. Luma is 123-128 at g1205-1207 and 123-132 at g1269-1277, so there is no white flash and no dark dip.
+6. Swap motion blur: done. The swaps are accepted as pass-the-lens wipes.
+
+### The thin dark vertical line, g1280-1337: identified, BLOCKING
+- **What it looks like:**
+  - A straight, thin (about 5-8 px wide), dark navy/indigo line; sampled colour about RGB (45, 34, 67).
+  - It runs from the track surface up between Dick's legs to the crotch of his shorts, is hidden by his body, and comes out again **above his head, entering his hair spikes**.
+  - Its lower end stands on the track about 30-40 px above his feet, so it is just behind him, not in front.
+- **Where it is (full-res x, 720 px wide frame):**
+  - About x 375-380 at g1280-1300: the lower part at y about 640-945, the top part at y about 580-640, ending in his hair.
+  - About x 390-395 at g1320-1336: the lower part at y about 1000-1220, the top part at y about 590-630.
+  - It drifts with the camera at the same rate as Dick, so it stays locked to his body axis for the whole push (about 2 s).
+- **Which object:**
+  - It is a scene object on the field directly behind Dick's mark: a thin, unlit pole about 2.3-2.5 m tall whose top appears just above his head from this camera.
+  - Its height and its position (on the bar line, beyond the runway) fit **the far high-jump standard (or a wind-gauge/marker post) seen against the light, unlit side-on, so it renders dark navy instead of silver**.
+  - It is not a background stadium column. The stadium roof columns in this set end at the stand rim and do not reach the track. Its foot is on the red track, below the base of the stands.
+  - To confirm: ray-pick pixel (380, 900) at g1300 and (392, 1100) at g1320 in shot.py.
+- **Why it blocks:** for the whole hush push it reads as a stake running up through Dick: between his legs, behind his torso, and out of the top of his head. That is the §G "pole through the face/head" case, in the shot the audience is studying.
+- **Fix (either one):**
+  - Move the camera path about 0.3-0.4 m sideways (or Dick's mark about 0.4 m), so the pole sits at least one head-width beside his silhouette.
+  - Or hide that object for g1273-1337. It is not needed in the hush shot; the left standard with the 2.24 m board already shows the bar position.
+
+### Round 4 verdict
+T4 **FIX**: only the pole behind Dick, g1280-1337 (x about 375-395). After that fix, T4 passes. Minor and not blocking: the bar end touches Dick's chin at g1180.
