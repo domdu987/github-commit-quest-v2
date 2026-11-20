@@ -6,3 +6,6 @@
 - Frame-diff in-shot (29 pairs): median 5.31, p90 14.68 (draft 5.04 / 13.59).
 - s/frame 15.4 wall / 30.2 CPU.
 - Deviation: shot is 1 s, snap is part of the push-in (needed for the diff); the white hair reads like a cap (cast19 known limit); camera custom (starts closer than the preset).
+
+## Re-render (after QA_TECH PASS note + the lantern set fix)
+- Re-rendered with the new iron-cage lantern; the lean-back is stronger (lean 8 -> -17). Frame-diff median 5.21 / p90 14.74.

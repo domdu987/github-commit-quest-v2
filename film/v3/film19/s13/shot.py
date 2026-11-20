@@ -58,7 +58,7 @@ def pose_of(g):
     p["arm_r"] = dict(hand=(0.16 + 0.05 * rub * lk, 0.30 - 0.26 * lk + 0.04 * math.sin(2 * math.pi * g / 9.0 + 1.2) * lk), bend=-0.5,
                       layer="top", shape="open")
     p["arm_l"] = dict(hand=(-0.4, 0.96), bend=0.5)
-    p["lean"] = lerp(8.0, -9.0, lk)                        # from bent over to leaning back
+    p["lean"] = lerp(8.0, -17.0, lk)                        # from bent over to leaning back
     p["pitch"] = lerp(0.30, -0.15, lk)
     p["head_roll"] = lerp(0.0, 7.0, lk) + 1.5 * math.sin(g * 0.3) * lk
     p["yaw"] = 0.2
