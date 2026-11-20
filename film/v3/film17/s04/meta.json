@@ -1,0 +1,43 @@
+{
+ "take": "s04",
+ "film": 17,
+ "shots": [
+  9,
+  10,
+  11,
+  12
+ ],
+ "first_g": 439,
+ "n_frames": 218,
+ "g0": 445,
+ "g1": 651,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "cuts": [
+  493,
+  540,
+  592
+ ],
+ "resolution": "720x1280",
+ "samples": 12,
+ "rhythm": {
+  "median": 4.08,
+  "p90": 12.12
+ },
+ "lipsync_window_g": [
+  493,
+  650
+ ],
+ "laugh_g": [
+  467,
+  492
+ ]
+}

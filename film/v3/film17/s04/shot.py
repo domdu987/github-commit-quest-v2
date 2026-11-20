@@ -31,9 +31,9 @@ CAMS = {
     9: [(439, S(-2.30, -3.60, 1.50), S(0.60, 1.10, 1.30), "d"), (468, S(-1.95, -3.30, 1.50), S(0.70, 1.15, 1.30), "s"),
         (480, S(-0.95, -2.05, 1.50), S(0.75, 1.30, 1.30), "d"), (492, S(-0.55, -1.65, 1.50), S(0.90, 1.30, 1.30), "d")],
     10: [(493, S(0.15, 0.30, 0.50), S(0.55, 2.4, 1.50), "d"), (512, S(0.32, 0.44, 0.50), S(0.70, 2.4, 1.50), "s"),
-         (524, S(0.50, 0.55, 0.52), S(1.00, 2.4, 1.50), "d"), (539, S(0.78, 0.72, 0.52), S(1.25, 2.4, 1.50), "d")],
+         (522, S(0.22, 0.74, 0.50), S(0.52, 2.4, 1.60), "d"), (539, S(0.28, 0.80, 0.50), S(0.56, 2.4, 1.62), "d")],
     11: [(540, S(2.25, 0.05, 1.50), S(0.55, 2.4, 1.30), "d"), (562, S(1.95, 0.22, 1.50), S(0.45, 2.4, 1.30), "s"),
-         (574, S(1.35, 0.55, 1.50), S(0.30, 2.3, 1.30), "d"), (591, S(1.10, 0.75, 1.48), S(0.05, 2.3, 1.30), "d")],
+         (574, S(1.50, 0.50, 1.50), S(0.55, 2.3, 1.30), "d"), (591, S(1.40, 0.60, 1.48), S(0.45, 2.3, 1.30), "d")],
     12: [(592, S(1.75, 0.35, 1.50), S(0.70, 1.60, 1.38), "d"), (604, S(1.72, 0.38, 1.50), S(0.72, 1.60, 1.38), "s"),
          (617, S(1.48, 0.68, 1.48), S(0.80, 1.60, 1.38), "d"), (632, S(1.50, 0.70, 1.47), S(0.84, 1.60, 1.38), "s"), (644, S(1.92, 0.76, 1.47), S(1.05, 1.60, 1.38), "d"), (656, S(1.98, 0.78, 1.47), S(1.08, 1.60, 1.38), "d")],
 }
@@ -189,7 +189,7 @@ class Take(object):
             camrig.key_camera(f, Vector(loc), Vector(look), lens=LENS, cam=cam, interp="LINEAR", easing="AUTO")
             s = shot_of(g)
             C.key_hide(self.fg_wide, f, s != 9); C.key_hide(self.fg_low, f, s != 10)
-        K.key_life(min(gs), max(gs))
+        K.key_life(min(gs), max(gs), dust=0.5)
         plan = {}
         for g in gs:
             f = g; s = shot_of(g); vis = {}
@@ -215,7 +215,12 @@ class Take(object):
                 C.key_hide(a.objects(), f, k not in vis)
             for k, (p, cast) in vis.items():
                 self.scene.frame_set(f)
-                self.act[k].pose(f, p, camera=cam)
+                hands = None
+                if k == "bert" and s == 9:
+                    cl = Vector(cam_of(g)[0]); rv = (Vector(cam_of(g)[1]) - cl); rv = Vector((rv.y, -rv.x, 0)).normalized()
+                    ear = Vector((CHAIR[0], CHAIR[1], K.HEAD_Z["chair"])) - rv * 0.30 + (cl - Vector((CHAIR[0], CHAIR[1], cl.z))).normalized() * 0.05
+                    hands = {"r": {"tip": tuple(ear), "prop": "calipers"}}
+                self.act[k].pose(f, p, hands=hands, camera=cam)
             plan[g] = vis
         for g in gs:
             pass
