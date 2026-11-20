@@ -26,35 +26,37 @@ SNAP = (G_SNAP - 3, G_SNAP + 13)
 PRESET, LIGHT, FINAL_SPP, PPD = "hall_table", "EVENING", 8, 256
 BLINKS = [1950, 1978, 2012, 2030]
 
-KING_M = (0.0, 4.25, 0.0)
-CAM_LOC0 = (-1.30, -2.20, 2.35)
-CAM_LOOK0 = (1.00, 7.9, 2.40)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.10, slide_px=-95.0, rise_px=-10.0, arc_deg_s=11.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.30, peak=2.1, shift=(2.00, 0.30))])
+KING_M = (0.0, 4.25, 0.0)                                # metres; D below
+STUB_DY = 3.45                                           # D: the stub row is moved from the near table edge (y 1.55 D) to y 5.0 D, in front of the King
+CAM_LOC0 = (-1.60, 1.20, 2.55)
+CAM_LOOK0 = (0.20, 7.86, 2.55)
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.09, slide_px=-85.0, rise_px=0.0, arc_deg_s=10.0, decay=0.15,
+                snaps=[dict(g=SNAP, k=1.30, peak=2.5, shift=(1.30, -0.20))])
 
 KB = dict(cast19.STORY19["king_watch_squint"][1])
 
 
 def stubs_at(g):
-    return int(clamp((g - G0) / float(G1 - 1 - G0)) * 10.0 + 0.5)
+    return int(clamp((g - G0) / float(G_SNAP - G0)) * 10.0 + 0.5)     # ten stubs by the snap word
 
 
 def pose_of(g):
     p = dict(KB)
     t = (g - G_FIRST) / 30.0
-    # the comparison: the two hands alternate between "up to the eye" and "down", out of phase, ~0.9 s period
-    ph = 2 * math.pi * t / 0.9
+    ph = 2 * math.pi * t / 0.9                              # the comparison: hands alternate, 0.9 s period
     ur, ul = 0.5 + 0.5 * math.sin(ph), 0.5 + 0.5 * math.sin(ph + math.pi)
-    p["arm_r"] = dict(hand=(0.60, 0.45 + 0.42 * ur), bend=-0.2, shape="open", stretch=1.15, layer="top")
-    p["arm_l"] = dict(hand=(-0.60, 0.45 + 0.42 * ul), bend=-0.2, shape="open", stretch=1.15, layer="top")
-    p["gaze"] = (0.9 * math.sin(ph + 0.4), 0.55)           # eyes go from one watch to the other
+    p["arm_r"] = dict(hand=(0.46, 0.92 - 0.10 * ur), bend=-0.2, shape="open", stretch=1.15, layer="top")      # face height, beside the eyes
+    p["arm_l"] = dict(hand=(-0.46, 0.92 - 0.10 * ul), bend=-0.2, shape="open", stretch=1.15, layer="top")
+    p["prop_r"] = dict(type="pocketwatch19", scale=1.5)
+    p["prop_l"] = dict(type="h4_watch", scale=1.5)
+    p["gaze"] = (0.9 * math.sin(ph + 0.4), 0.55)
     p["yaw"] = 0.20 + 0.18 * math.sin(ph + 0.4)
     p["head_roll"] = 4.0 + 7.0 * math.sin(ph * 0.5)
     p["pitch"] = 0.15 + 0.05 * math.sin(ph)
     p["lean"] = 2.0 + 4.0 * math.sin(ph)
     p["expr"] = "unimpressed"
     p["mouth"] = "flat"
-    p["blink"] = 1 if (g // 10) % 4 == 1 and g % 10 < 3 else blink(g, BLINKS)   # squint: lids half down most of the time
+    p["blink"] = 1 if (g // 10) % 4 == 1 and g % 10 < 3 else blink(g, BLINKS)
     return p
 
 
@@ -68,6 +70,10 @@ class Take(C.Take):
 
     def pose(self, gs):
         mark = Vector(K.W(KING_M))
+        if not getattr(self, "_stubs_moved", False):          # runtime set dressing: stub row to y 5.0 D (in front of the King)
+            for pv in K.STATE["hooks"]["stubs"]:
+                pv.location.y += STUB_DY / 1.85
+            self._stubs_moved = True
         for g in gs:
             f = bf(g)
             self.key_cam(f, *CAM.at(g))

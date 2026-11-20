@@ -28,14 +28,15 @@ SNAP = (G_SNAP - 5, G_SNAP + 12)
 PRESET, LIGHT, FINAL_SPP, PPD = "hall_table", "EVENING", 8, 256
 BLINKS_H, BLINKS_K = [2095, 2125, 2150], [2100, 2130]
 
-HAR_M = (0.30, 0.50, 0.0)
-CAM_LOC0 = (-0.60, -3.90, 2.85)
-CAM_LOOK0 = (-0.60, 3.40, 2.55)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.08, slide_px=75.0, rise_px=-28.0, arc_deg_s=6.0, decay=0.10,
-                snaps=[dict(g=SNAP, k=1.15, peak=2.3, shift=(-2.00, 0.15))])
+HAR_M = (-0.90, 1.70, 0.0)                               # D: BEHIND the table edge (near edge y 1.1 D); the bag lands in front of him
+KING_M = (1.20, 5.60, 0.0)                               # D: beside the table head, clear of Harrison
+BAG_XY_M = (0.15, 0.80)                                  # metres on the tabletop: right of Harrison, near edge (lower third of the frame)
+BAG_SCALE = 1.35
+CAM_LOC0 = (-0.80, -3.90, 3.20)
+CAM_LOOK0 = (0.20, 3.00, 1.90)
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.07, slide_px=-8.0, rise_px=5.0, arc_deg_s=-2.0, decay=0.10,
+                snaps=[dict(g=SNAP, k=1.10, peak=2.3, shift=(-0.10, 0.20))])
 
-KING_M = (1.00, 8.00, 0.0)                               # D: the King stands at the head of the table beside his chair (chair at (0, 8.4))
-BAG_DX = 1.30                                              # D: bag lands to the right of Harrison on the table
 HB = dict(cast19.STORY19["harrison_old_idle"][1])
 KB = dict(cast19.STORY19["king_idle"][1])
 
@@ -51,16 +52,30 @@ def bag_dz(g):
     return 0.55 * abs(math.sin(math.pi * t / 0.32)) * math.exp(-t / 0.25) if t < 0.7 else 0.0
 
 
+def bag_squash(g):
+    """z scale of the bag: 0.8 for 2 frames on the land, a small rebound."""
+    d = g - G_BAG
+    return {0: 0.78, 1: 0.82, 2: 0.95, 3: 1.06, 4: 1.0}.get(d, 1.0)
+
+
 def pose_har(g):
     p = dict(HB)
     p.update(old=1, yaw=0.15, expr="grinning", mouth="smile")
     t = g / 30.0
-    u = u_of(g, G_BAG, G_BAG + 8, kind="sine")                 # arms rise with joy when the bag lands
-    p["arm_r"] = dict(hand=(lerp(0.30, 0.55, u), lerp(1.17, 0.78, u) + 0.05 * math.sin(t * 12.0)), bend=0.3, shape="open", layer="front")
-    p["arm_l"] = dict(hand=(lerp(-0.30, -0.55, u), lerp(1.17, 0.80, u) + 0.05 * math.sin(t * 12.0 + 1.0)), bend=0.3, shape="open", layer="front")
-    p["lean"] = 5.0 - 3.0 * u + 1.5 * math.sin(t * 9.0)
+    u = u_of(g, G_BAG, G_BAG + 8, kind="sine")                 # arms come to the bag
+    up = u_of(g, G_BAG + 22, G_BAG + 30, kind="sine")          # then he looks up and grins at the lens
+    bob = 0.04 * math.sin(t * 12.0)
+    p["arm_r"] = dict(hand=(lerp(0.30, 0.50, u), lerp(1.17, 1.00, u) + bob), bend=0.3, shape="open", layer="front")      # a hand on the bag
+    p["arm_l"] = dict(hand=(lerp(-0.30, -0.50, u) , lerp(1.17, 0.78, u) + bob), bend=0.3, shape="open", layer="front")
+    p["prop_l"] = dict(type="h4_watch", scale=1.4)             # the H4 in his left hand (continuity)
+    p["lean"] = 5.0 + 4.0 * u * (1.0 - up) + 1.5 * math.sin(t * 9.0)
+    p["pitch"] = 0.0 + 0.30 * u * (1.0 - up)                    # head bowed to the bag
+    p["yaw"] = 0.15 + 0.30 * u * (1.0 - up)
     p["head_roll"] = -2.0 + 3.0 * math.sin(t * 7.0)
-    p["gaze"] = (0.2, 0.1) if g > G_BAG else (0.3, 0.6)         # eyes on the bag
+    if g <= G_BAG:
+        p["gaze"] = (0.3, 0.6)
+    else:
+        p["gaze"] = (lerp(0.6, 0.15, up), lerp(-0.5, 0.05, up))   # down at the bag, then at the lens
     p["blink"] = blink(g, BLINKS_H)
     p["t"] = t
     return p
@@ -71,8 +86,8 @@ def pose_king(g):
     t = g / 30.0
     p.update(expr="happy", mouth="smile", yaw=0.2)
     nod = 0.0
-    if g >= G_BAG + 6:                                          # two firm nods after the bag lands
-        nod = 0.30 * max(0.0, math.sin(2 * math.pi * (g - G_BAG - 6) / 22.0)) * (1.0 if g < G_BAG + 6 + 44 else 0.0)
+    if g >= G_BAG + 6:                                          # bigger nods after the bag lands
+        nod = 0.60 * max(0.0, math.sin(2 * math.pi * (g - G_BAG - 6) / 22.0)) * (1.0 if g < G_BAG + 6 + 66 else 0.0)
     p["pitch"] = 0.05 + nod
     p["head_roll"] = 2.0 * math.sin(t * 6.0)
     p["lean"] = 1.0 + 1.0 * math.sin(t * 8.0)
@@ -90,7 +105,7 @@ class Take(C.Take):
         self.har = self.actors["har"] = C.make_actor("har", "harrison19", sd, contact=True, cam=self.cam)
         self.king = self.actors["king"] = C.make_actor("king", "king19", sd, contact=True, cam=self.cam)
         self.bag = K.STATE["hooks"]["bag_full"]
-        self.bag0 = Vector(self.bag.location) + Vector((BAG_DX / 1.85, 0.0, 0.0))   # slid right of Harrison so it reads (not hidden behind him)
+        self.bag0 = Vector((BAG_XY_M[0], BAG_XY_M[1], self.bag.location.z))   # on the tabletop in front of Harrison
 
     def pose(self, gs):
         hm = Vector((HAR_M[0], HAR_M[1], 0.0))
@@ -104,6 +119,9 @@ class Take(C.Take):
             if g >= G_DROP:                                       # the fall + bounces: key the bag object (local metres under the scaled root)
                 self.bag.location = self.bag0 + Vector((0, 0, bag_dz(g) / 1.85))
                 self.bag.keyframe_insert("location", frame=f)
+                sz = bag_squash(g)
+                self.bag.scale = Vector((BAG_SCALE / sz ** 0.5, BAG_SCALE / sz ** 0.5, BAG_SCALE * sz))
+                self.bag.keyframe_insert("scale", frame=f)
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
