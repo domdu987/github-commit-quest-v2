@@ -27,3 +27,6 @@ Hush g1273-1337 re-rendered: removed the wooden stake at (5.5, 9.48) and the pho
 
 ## Round 5
 Hush g1273-1337: Dick now rocks in the 'stand' pose with a lean/bob weight shift (both legs drawn with sneakers) instead of rock_a/rock_b, whose far leg was a single thin dark stroke.
+
+## Round 6
+The two official-pass swaps (g1097-1104, 1144-1152) are replaced by 3+3-frame directional whip blurs around hard cuts at g1100 and g1148 (post2.py); no person fills the frame; officials stay beside the standards.
