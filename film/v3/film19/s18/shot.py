@@ -98,7 +98,7 @@ def deepen_sky():
 
 
 # ----------------------------------------------------------------------------- william19 small at the bow holding the watch (QA-art: "his son carried it")
-WILL_XYZ = tuple(float(v) for v in os.environ.get("WXYZ", "-7.0,-31.0,14.4").split(","))   # quarterdeck, port rail (the bow is hidden behind the jibs from the hero camera)
+WILL_XYZ = tuple(float(v) for v in os.environ.get("WXYZ", "-6.5,36.0,12.0").split(","))   # forecastle, port side, in front of the foremast (visible between the jibs and the foresail)
 WS = float(os.environ.get("WSCALE", "4.0"))              # readability scale (a 3.3 D man is ~15 px tall from here)
 PPD = 224
 
@@ -128,7 +128,7 @@ class Take(C.Take):
         self.scene.view_settings.exposure -= float(os.environ.get("EXPO", "0.8"))           # QA_TEAM section G: luma 70-135 (the foam crests brighten the frame)
         g_ = C.bpy.data.objects.get("glint")                    # tone the blown sun glint down (QA-tech): 40 -> GLINT x the set's energy
         if g_ is not None:
-            g_.data.energy *= float(os.environ.get("GLINT", "0.12"))
+            g_.data.energy *= float(os.environ.get("GLINT", "0.03"))
 
     def pose(self, gs):
         for g in gs:
