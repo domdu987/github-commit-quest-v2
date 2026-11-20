@@ -29,12 +29,12 @@ def parse(spec):
 
 
 # ============================================================================ shot 15
-_XS = [(-3.4, 0.2, 2.4), (-2.4, 1.2, 3.0), (-4.2, -0.8, 1.8), (-3.0, 0.4, 2.6)]
+_XS = [(-1.9, 0.0, 1.2), (-2.0, 0.6, 1.5), (-2.6, -0.8, 1.0), (-2.2, 0.2, 1.3)]
 _CAST = [("footman_a", 0), ("footman_b", 1), ("footman_a", 2), ("footman_b", 3), ("footman_a", 1), ("footman_b", 2), ("footman_a", 3), ("footman_b", 0), ("footman_a", 0), ("footman_b", 1)]
 FOOT = []
 for _i in range(10):
     _r, _c = divmod(_i, 3)
-    _ex = 0.78 * (_XS[_r][_c if _c < 3 else 2] + (0.35 if _i % 2 else -0.3))
+    _ex = 0.66 * (_XS[_r][_c if _c < 3 else 2] + (0.35 if _i % 2 else -0.3))
     _ey = 40.8 - 1.45 * _r + (0.3 if _c == 1 else 0.0)
     FOOT.append((_CAST[_i][0], _CAST[_i][1], (0.7 if _i % 2 else -0.7, _ey - 6.5), (_ex, _ey), 4 * _r + _c))
 G_GLANCE = 915
@@ -106,14 +106,14 @@ def run(shot, quality, gs, samples):
     if shot == 15:
         T.hide("fg_generic_steel", "fg_generic_wood")
         K.place_troops(A, "causeway", 0); K.place_troops(A, "bridge", 6, seed=2)
-        rig = C.Rig((-2.0, 50.0, 4.6), (0.0, 22.0, 0.2), 14.0, 885, push=0.10, slide_px=-60, snaps=[(900, 14, 1.15), (G_GLANCE, 14, 1.2)])
+        rig = C.Rig((-0.9, 52.4, 4.7), (0.3, 22.0, 0.2), 14.0, 885, push=0.10, slide_px=12, snaps=[(900, 13, 1.25), (G_GLANCE, 13, 1.3)])
         acts = []
         for i, f_ in enumerate(FOOT):
             a = T.make_actor("f%d" % i, f_[0]); acts.append((a, f_[0]))
     elif shot == 16:
         T.hide("fg_generic_steel", "fg_generic_wood", "fg_generic_r_heather")
         B = K.Batch(96); x, y = K.at_px(pr, 2.6, 690); K.spear(B, (x, y, float(K.ground(x, y))), tilt=(-0.25, 0.1), h=3.4); B.finalize('fg_team')
-        rig = C.Rig(pr["cam"], pr["look"], 5.0, 938, push=-0.12, slide_px=60, snaps=[(938, 15, 1.0 / 0.7), (962, 13, 0.85)])
+        rig = C.Rig(pr["cam"], pr["look"], 5.0, 938, push=-0.12, slide_px=60, snaps=[(938, 15, 1.0 / 0.7), (962, 13, 0.78)])
         acts = []
         for k, (nm, cast, var, base) in enumerate(SC16):
             acts.append((T.make_actor(nm, cast), cast))
@@ -121,7 +121,7 @@ def run(shot, quality, gs, samples):
         for o in list(bpy.data.objects):
             if o.name.startswith("crowd_") or o.name.startswith("crowd"):
                 bpy.data.objects.remove(o, do_unlink=True)
-        rig = C.Rig(pr["cam"], pr["look"], 250.0, 986, push=-0.10, slide_px=-60, snaps=[(986, 14, 1.0 / 0.82)], lens=lens)
+        rig = C.Rig(pr["cam"], pr["look"], 250.0, 986, push=-0.16, slide_px=-100, snaps=[(986, 14, 1.0 / 0.76), (1016, 12, 1.12)], lens=lens)
         acts = []
 
         def hook(g):
