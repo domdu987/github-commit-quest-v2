@@ -11,7 +11,7 @@ Fallback check: send_later 60 min, always re-armed.
 - [x] Board r2 -> QA-art SHIP (board/QA_ART.md Round 2; 8 carry-forward look rules)
 - [x] cast22 built (10 members + 16 crowd, 51 poses, test ALL OK)
 - [x] Full set: builder A (london + hq, 2 revisions), builder B (under + mapworld, 1 revision) -> contact_sheet.jpg / contact_sheet_B.jpg
-- [ ] SET gate running (QA-art Opus -> SET_GATE.md, QA-tech Sonnet -> QA_TECH.md) 2026-11-20 23:40 UTC
+- [x] SET gate: QA-art PASS (SET_GATE.md, 27 team items); QA-tech FAIL r1 -> builders' SET-fix round -> QA-tech PASS r2 (QA_TECH.md); no overrides
 - [x] WORKER22.md drafted (5 teams)
 - [ ] Set + cast -> SET gate (QA-art + QA-tech)
 - [ ] shot_plan.md (≤12 hard cuts, 2 BIGZOOM), WORKER22.md, render teams (Sonnet, render22/teamK)

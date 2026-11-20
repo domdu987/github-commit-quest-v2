@@ -16,8 +16,8 @@ The set's texture cache is not in git. The first build regenerates it into `v3/s
 ## 2. Read, in this order
 1. PROJ/film22/shot_plan.md (your shots, the camera grammar, quotes and BIGZOOMs)
 2. PROJ/film22/WORLD.md
-3. PROJ/v3/set3d22/API.md: locations, `build`, cameras `key_camera('sNN', f0)`, marks, setters, join coordinates
-4. PROJ/v3/set3d22/SET_GATE.md: the gate notes. Its "Instructions for the render teams" are MANDATORY.
+3. PROJ/v3/set3d22/API.md (sections A, B and the "SECTION B, REFRESH", which supersedes older B text; builder A "Revision 2" too): locations, `build`, cameras `key_camera('sNN', f0)`, marks, setters, join coordinates
+4. PROJ/v3/set3d22/SET_GATE.md (QA-art PASS): its "Instructions for the render teams" are MANDATORY; and PROJ/v3/set3d22/QA_TECH.md: every item marked TAKE fix, DOWNGRADE-TO-TAKE or residual TAKE fix in Round 1 and Round 2 for your shots is MANDATORY too. PROJ/film22/TEAMS.md lists the cross-team join items.
 5. PROJ/v3/set3d22/board/QA_ART.md, Round 2 "carry-forward rules"
 6. PROJ/v3/cast22/API.md: members, STORY22 poses, props, `crowd_member`, `talk_mouth`, rim
 7. PROJ/QA_TEAM.md §B, §G, §H, §I
