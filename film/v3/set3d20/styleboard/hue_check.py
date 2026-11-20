@@ -19,7 +19,9 @@ for n in ('sb1_site', 'sb2_tower_dusk', 'sb3_resto'):
     c = s > 0.2; tot = max(c.sum(), 1)
     bands = [('red', (h >= 345) | (h < 15)), ('orange', (h >= 15) & (h < 45)), ('yellow', (h >= 45) & (h < 70)), ('green', (h >= 70) & (h < 170)), ('blue', (h >= 190) & (h < 265)), ('violet', (h >= 265) & (h < 290)), ('magenta', (h >= 290) & (h < 345))]
     shares = ' '.join('%s %4.1f' % (k, (b & c).sum() / tot * 100) for k, b in bands)
+    L = (0.299 * np.asarray(Image.open(p).convert('RGB'), dtype=float)[..., 0] + 0.587 * np.asarray(Image.open(p).convert('RGB'), dtype=float)[..., 1] + 0.114 * np.asarray(Image.open(p).convert('RGB'), dtype=float)[..., 2]); hh = L.shape[0] // 8
+    br = 'luma top1/8 %.0f mid-band %.0f bottom1/8 %.0f | V>0.95 %.1f%% | dark V<0.25 %.1f%%' % (L[:hh].mean(), L[hh * 3:hh * 5].mean(), L[-hh:].mean(), (v > 0.95).mean() * 100, (v < 0.25).mean() * 100)
     ok = 225 <= mh <= 265 and mag <= 10
-    rows.append('%-16s cast-shadow px %5.1f%% of frame | shade mean hue %6.1f (median %5.1f; target 240-260) | %4.1f%% of shade px in 225-265 | magenta share %5.2f%% (<=10) | %s\n%-16s hue shares of chroma %%: %s | mean sat %.2f val %.2f' % (n, m.mean() * 100, mh, med, inb, mag, 'OK' if ok else 'OUT', '', shares, s.mean(), v.mean()))
+    rows.append('%-16s cast-shadow px %5.1f%% of frame | shade mean hue %6.1f (median %5.1f; target 240-260) | %4.1f%% of shade px in 225-265 | magenta share %5.2f%% (<=10) | %s\n%-16s hue shares of chroma %%: %s | mean sat %.2f val %.2f\n%-16s %s' % (n, m.mean() * 100, mh, med, inb, mag, 'OK' if ok else 'OUT', '', shares, s.mean(), v.mean(), '', br))
 txt = '\n'.join(rows) + '\n'; print(txt)
 if not pre: open(os.path.join(HERE, 'hue_report.txt'), 'w').write(txt)

@@ -148,19 +148,20 @@ def palette():
     d['redlead'] = mat('redlead', '#c8502a', '#ec7840', 6, aniso=(0.3, 1, 1), contrast=1.4)  # red-lead primed girders (orange-red)
     d['stone'] = mat('stone', '#cdbd9c', '#e2d4b4', 3.0, contrast=1.2)
     d['stonedk'] = mat('stonedk', '#a89878', '#c4b490', 4.0, contrast=1.4)
-    d['timber'] = mat('timber', '#a06c36', '#cc9458', 5, aniso=(1, 1, 0.25), contrast=1.4)
+    d['timber'] = mat('timber', '#a87444', '#c89a64', 5, aniso=(1, 1, 0.25), contrast=1.4)
     d['timberdk'] = mat('timberdk', '#6e4220', '#946034', 5, aniso=(1, 1, 0.25), contrast=1.4)
     d['plank'] = mat('plank', '#b98448', '#dcaa6c', 6, aniso=(0.2, 1, 1), contrast=1.4)
     d['plankh'] = mat('plankh', '#b98448', '#dcaa6c', 6, aniso=(1, 0.2, 1), contrast=1.4)
     d['tarroof'] = mat('tarroof', '#4a3c3c', '#665454', 6)
     d['brick'] = mat('brick', '#a2402e', '#c25c3e', 9, aniso=(1, 1, 0.5), contrast=1.4)
     d['soot'] = mat('soot', '#2c2428', '#483a3a', 4)
-    d['coal'] = mat_emit('coal', '#ff3a08', 7.0)
+    d['coal'] = mat_emit('coal', '#ff7a22', 22.0)
     d['rivet'] = mat_emit('rivet', '#ff9a40', 60.0)
     d['metal'] = mat('metal', '#6a707c', '#9096a2', 3, rough=0.4, sheen=0.5)
     d['dark'] = mat('dark', '#2a2024', '#40302e', 3)
-    d['earth'] = mat('earth', '#a87848', '#c8985c', 6, contrast=1.3)
-    d['earthdk'] = mat('earthdk', '#8a5c38', '#a87444', 4, aniso=(1, 0.4, 1), contrast=1.3)
+    d['earth'] = mat('earth', '#c9895a', '#a86a44', 6, contrast=1.3)
+    d['gravdk'] = mat('gravdk', '#8a5a3c', '#6e4630', 8, contrast=1.4)
+    d['earthdk'] = mat('earthdk', '#8a5a3c', '#a86a44', 4, aniso=(1, 0.4, 1), contrast=1.3)
     d['grass'] = mat('grass', '#6f9440', '#a4ac48', 4, aniso=(1.2, 0.6, 1), contrast=1.5)
     d['grassdk'] = mat('grassdk', '#2e5446', '#46685a', 4, aniso=(1.2, 0.6, 1), contrast=1.5)
     d['gravel'] = mat('gravel', '#b09a7e', '#cdb898', 14, contrast=1.8)
@@ -177,6 +178,7 @@ def palette():
     d['trunk'] = mat('trunk', '#5a4030', '#7d5a44', 5, aniso=(1, 1, 0.3))
     d['horse'] = mat('horse', '#7a4020', '#a05c30', 4, contrast=1.3)
     d['horsedk'] = mat('horsedk', '#2c1e1a', '#3c2c26', 4)
+    d['wk1'] = mat('wk1', '#4a5a7a', None, 1); d['wk2'] = mat('wk2', '#8a4a3a', None, 1); d['wk3'] = mat('wk3', '#5a6a4a', None, 1)
     d['canvas'] = mat('canvas', '#cdb27c', '#dcc490', 5)
     d['smoke'] = mat('smoke', '#d8cce0', '#a89cc0', 2, rough=1.0, emit='#b8a8d0', emit_k=0.25)
     d['forgeglow'] = mat_glow('forgeglow', '#ff7a2c', 3.0, 0.07)
@@ -187,7 +189,7 @@ def palette():
     d['gold'] = mat('gold', '#d4a840', '#f0cc68', 4, rough=0.3, sheen=0.8)
     d['brass'] = mat('brass', '#d7a23a', '#f2cf70', 4, rough=0.3, sheen=0.9)
     d['white'] = mat('white', '#f6efe0', '#e6dcc6', 4, contrast=0.7)
-    d['cloth'] = mat('cloth', '#f8f1e2', '#e4dac6', 3, contrast=0.6)
+    d['cloth'] = mat('cloth', '#f0e6cc', '#dccfb2', 3, contrast=0.6)
     d['crimson'] = mat('crimson', '#a41f2c', '#c63a40', 5, contrast=1.2)
     d['crimdk'] = mat('crimdk', '#6a1220', '#8a2230', 6)
     d['floor'] = mat('floor', '#74401e', '#a06430', 7, aniso=(1, 0.2, 1), contrast=1.6, rough=0.4, sheen=0.4, wave=(7, '#5a2e16'))
@@ -196,9 +198,11 @@ def palette():
     d['wineg'] = mat('wineg', '#2a6a44', '#3a8a5a', 3, rough=0.1, sheen=1.0)
     d['wineamb'] = mat('wineamb', '#a05a1c', '#c8802c', 3, rough=0.1, sheen=1.0)
     d['lamp'] = mat_emit('lamp', '#ffc468', 16.0)
-    d['lampsm'] = mat_emit('lampsm', '#ffcf80', 40.0)
-    d['wallres'] = mat('wallres', '#f0e4cc', '#f8eedc', 2.5, contrast=0.8)
-    d['wallpan'] = mat('wallpan', '#8c2a2e', '#a63a3c', 3, aniso=(1, 1, 0.5))
+    d['lampsm'] = mat_emit('lampsm', '#ffcf80', 11.0)
+    d['wallres'] = mat('wallres', '#c8a878', '#d4b88a', 2.5, contrast=0.8)
+    d['wallpan'] = mat('wallpan', '#491309', '#6b3723', 3, aniso=(1, 1, 0.5))
+    d['navy'] = mat('navy', '#26395e', '#2f4670', 8, contrast=1.1)
+    d['cardg'] = mat('cardg', '#6a6874', None, 1)
     d['mirror'] = mat('mirror', '#b6c8d8', '#dce8f2', 2, rough=0.08, sheen=1.0)
     d['grey'] = mat('grey', '#8c8a92', '#a8a6ae', 3)
     d['sparkc'] = mat_emit('sparkc', '#d8ecff', 90.0)
@@ -232,7 +236,7 @@ def tower(mb, M, zmax=300.0, stage='full', thick=1.0, mat_main=None, mat_light=N
     k = thick; zs_leg = _zs(0, Z1) if stage == 'legs' else _zs(0, min(zmax, 300))
     legs = [(sx, sy) for sx in (-1, 1) for sy in (-1, 1)]
     def post(sx, sy, ox, oy): return lambda z: Vector((sx * tw(z) + ox * th(z), sy * tw(z) + oy * th(z), z))
-    top = Z1 if stage == 'legs' else zmax
+    top = Z1 + 40.0 if stage == 'legs' else zmax
     zs_all = _zs(0, top)
     for (sx, sy) in legs:
         P = {(ox, oy): post(sx, sy, ox, oy) for ox in (-1, 1) for oy in (-1, 1)}
@@ -252,6 +256,7 @@ def tower(mb, M, zmax=300.0, stage='full', thick=1.0, mat_main=None, mat_light=N
                 ga = (lambda z, s=sgn, o=off: Vector((s * (tw(z) + o * th(z)), -(tw(z) - th(z)), z))); gb = (lambda z, s=sgn, o=off: Vector((s * (tw(z) + o * th(z)), (tw(z) - th(z)), z)))
                 if off == 1 or True:
                     lattice_face(mb, IL, fa, fb, zs_u, 0.2 * k, 0.24 * k); lattice_face(mb, IL, ga, gb, zs_u, 0.2 * k, 0.24 * k)
+    if True:
         # arches under the first platform (one per face)
         zs0, za = 6.0, 46.0
         for face in range(4):
@@ -267,7 +272,7 @@ def tower(mb, M, zmax=300.0, stage='full', thick=1.0, mat_main=None, mat_light=N
                 u = -1 + 2 * i / 24.0; z = zs0 + (za - zs0) * math.sqrt(max(0.0, 1 - u * u)); xi = (tw(z) - th(z)) * u * 0.985
                 zb = zs0 + (za - 4.5 - zs0) * math.sqrt(max(0.0, 1 - u * u)); yy = -(tw(z) + th(z))
                 mb.rod(IL, (xi, yy, zb), (xi, yy, z), 0.2 * k, 0.2 * k, 4)
-                if abs(u) < 0.95: mb.rod(IL, (xi, yy, z), (xi, yy, Z1 - 4.0), 0.22 * k, 0.22 * k, 4)
+                if abs(u) < 0.95: mb.rod(IL, (xi, yy, z), (xi, yy, Z1 - 7.0), 0.22 * k, 0.22 * k, 4)
             mb.pop()
     # girder ring at the first platform (legs stage: open ring of lattice girders; full: deck + gallery)
     a1 = tw(Z1) + th(Z1)
@@ -280,11 +285,10 @@ def tower(mb, M, zmax=300.0, stage='full', thick=1.0, mat_main=None, mat_light=N
                 mb.rod(mmat, (x0, -a, zb), (x1, -a, zt), rd, rd, 4); mb.rod(mmat, (x0, -a, zt), (x1, -a, zb), rd, rd, 4)
                 mb.rod(mmat, (x0, -a, zt), (x1, -a, zt), rd * 1.4, rd * 1.4, 4); mb.rod(mmat, (x0, -a, zb), (x1, -a, zb), rd * 1.4, rd * 1.4, 4)
             mb.pop()
-    ring(Z1 - 4.2, Z1, a1 + 0.3, IL, 0.3 * k)
+    ring(Z1 - 7.0, Z1, a1 + 0.3, IL, 0.3 * k)
+    for face in range(4):
+        mb.push(Matrix.Rotation(face * math.pi / 2, 4, 'Z')); mb.box(I, (0, -(a1 + 0.3), Z1 + 0.3), (2 * a1 + 1.0, 0.9, 0.6)); mb.box(I, (0, -(a1 + 0.3), Z1 - 7.0), (2 * a1 + 1.0, 0.9, 0.5)); mb.pop()
     if stage == 'legs':
-        # deck beams starting to span, partial timber decking on one side
-        for x in np.linspace(-a1, a1, 9): mb.rod(M['redlead'], (x, -a1, Z1 - 0.4), (x, a1 * 0.2, Z1 - 0.4), 0.28, 0.28, 4)
-        for y in np.linspace(-a1, a1 * 0.2, 7): mb.rod(M['redlead'], (-a1, y, Z1 - 0.7), (a1, y, Z1 - 0.7), 0.3, 0.3, 4)
         return
     # ---- full tower: decks, galleries, second / third platform, lantern, spire
     ah = a1 + 2.0
@@ -294,8 +298,8 @@ def tower(mb, M, zmax=300.0, stage='full', thick=1.0, mat_main=None, mat_light=N
     for (cx, cy, sx_, sy_) in ((0, -(ag - gt / 2), 2 * ag, gt), (0, (ag - gt / 2), 2 * ag, gt), (-(ag - gt / 2), 0, gt, 2 * ag - 2 * gt), ((ag - gt / 2), 0, gt, 2 * ag - 2 * gt)):
         mb.box(gal, (cx, cy, Z1 + 3.6), (sx_, sy_, 6.2))
     mb.box(I, (0, 0, Z1 + 7.0), (2 * ag + 1.6, 2 * ag + 1.6, 0.7))       # gallery roof
-    for i in range(36):                                                   # arcade of lamps on the gallery roof edge
-        t = i / 36.0 * 4; e = int(t); f = (t - e)
+    for i in range(20):                                                   # arcade of lamps on the gallery roof edge
+        t = i / 20.0 * 4; e = int(t); f = (t - e)
         pts = [(-1, -1), (1, -1), (1, 1), (-1, 1), (-1, -1)]; p = (pts[e][0] * (1 - f) + pts[e + 1][0] * f, pts[e][1] * (1 - f) + pts[e + 1][1] * f)
         if lamps: mb.ell(M['lampsm'], (p[0] * (ag + 0.7), p[1] * (ag + 0.7), Z1 + 8.0), (0.7 * k, 0.7 * k, 0.7 * k), (8, 6))
     # second platform
@@ -303,8 +307,8 @@ def tower(mb, M, zmax=300.0, stage='full', thick=1.0, mat_main=None, mat_light=N
     ring(Z2 - 3.6, Z2, a2 - 1.2, IL, 0.26 * k)
     mb.box(I, (0, 0, Z2 - 0.2), (2 * a2, 2 * a2, 1.2)); mb.box(gal, (0, 0, Z2 + 2.2), (2 * a2 - 4, 2 * a2 - 4, 4.2)); mb.box(I, (0, 0, Z2 + 4.5), (2 * a2 - 2.6, 2 * a2 - 2.6, 0.6))
     for z in (Z2 + 0.9,):
-        for i in range(28):
-            t = i / 28.0 * 4; e = int(t); f = t - e; pts = [(-1, -1), (1, -1), (1, 1), (-1, 1), (-1, -1)]; p = (pts[e][0] * (1 - f) + pts[e + 1][0] * f, pts[e][1] * (1 - f) + pts[e + 1][1] * f)
+        for i in range(16):
+            t = i / 16.0 * 4; e = int(t); f = t - e; pts = [(-1, -1), (1, -1), (1, 1), (-1, 1), (-1, -1)]; p = (pts[e][0] * (1 - f) + pts[e + 1][0] * f, pts[e][1] * (1 - f) + pts[e + 1][1] * f)
             if lamps: mb.ell(M['lampsm'], (p[0] * (a2 - 0.3), p[1] * (a2 - 0.3), z + 0.4), (0.55 * k, 0.55 * k, 0.55 * k), (8, 6))
     # belts of the upper lattice every ~55 m
     for z in (165.0, 220.0): mb.box(I, (0, 0, z), (2 * (tw(z) + th(z)) + 0.8, 2 * (tw(z) + th(z)) + 0.8, 0.9))
@@ -339,19 +343,21 @@ def barrel(mb, M, c, h=0.9, r=0.36, mt='timber'):
 
 def crate(mb, M, c, s=(0.8, 0.6, 0.55), yaw=0.0, m='plank'): mb.box(M[m], (c[0], c[1], c[2] + s[2] / 2), s, rz=yaw)
 
-def forge(mb, M, c, yaw=0.0, lights=None):
-    mb.push(Matrix.Translation(c) @ Euler((0, 0, yaw)).to_matrix().to_4x4())
+def forge(mb, M, c, yaw=0.0, lights=None, sc=1.0):
+    mb.push(Matrix.Translation(c) @ Euler((0, 0, yaw)).to_matrix().to_4x4() @ Matrix.Scale(sc, 4))
     mb.box(M['brick'], (0, 0, 0.5), (1.4, 1.0, 1.0)); mb.box(M['stonedk'], (0, 0, 1.03), (1.5, 1.1, 0.08))
-    mb.box(M['soot'], (0, 0, 1.1), (1.1, 0.8, 0.08)); mb.ell(M['coal'], (0, 0, 1.12), (0.5, 0.36, 0.2), (14, 8))
-    for i in range(9): mb.ell(M['coal'], (-0.42 + i * 0.105, 0.2 * math.sin(i * 2.1), 1.2), (0.07, 0.07, 0.05), (6, 4))
-    mb.box(M['soot'], (0, 0.5, 1.9), (1.2, 0.12, 1.8)); mb.box(M['soot'], (0, 0.55, 2.0), (0.5, 0.5, 2.2))          # back wall + flue
-    mb.ell(M['forgeglow'], (0, -0.1, 1.4), (0.6, 0.5, 0.45), (14, 10))
+    mb.box(M['soot'], (0, 0, 1.1), (1.1, 0.8, 0.08)); mb.box(M['coal'], (0, 0, 1.14), (1.0, 0.7, 0.05))
+    pass
+    mb.rod(M['soot'], (0, 0.3, 1.6), (0, 0.5, 2.6), 0.75, 0.16, 12); mb.rod(M['soot'], (0, 0.5, 2.6), (0, 0.5, 3.6), 0.16, 0.14, 8)
+    for sx_ in (-1, 1): mb.rod(M['soot'], (sx_ * 0.55, -0.3, 1.0), (sx_ * 0.55, 0.3, 1.6), 0.05, 0.05, 5)
+    mb.rod(M['dark'], (-0.3, -0.5, 1.25), (0.3, -0.4, 1.15), 0.02, 0.02, 4); mb.ell(M['rivet'], (0.35, -0.4, 1.13), (0.05, 0.05, 0.05), (6, 4))
+    pass
     mb.box(M['plank'], (1.0, 0.0, 0.55), (0.7, 0.45, 0.35), rz=0.2); mb.rod(M['dark'], (1.3, 0.0, 0.65), (1.9, 0.0, 0.5), 0.1, 0.03, 6)      # bellows
     mb.box(M['dark'], (-1.2, 0.1, 0.55), (0.5, 0.3, 0.14)); mb.box(M['dark'], (-1.2, 0.1, 0.35), (0.22, 0.16, 0.5)); mb.box(M['dark'], (-1.45, 0.1, 0.66), (0.3, 0.12, 0.1))    # anvil
     for i in range(5): mb.ell(M['rivet'], (-0.5 + i * 0.12, -0.75, 0.97), (0.05, 0.05, 0.05), (6, 4))
     mb.box(M['timberdk'], (-0.3, -0.75, 0.45), (0.9, 0.34, 0.9)); mb.cyl(M['metal'], (0.9, -0.7, 0.2), 0.2, 0.4, 'z', 10)
     mb.pop()
-    if lights is not None: lights.append((Vector(c) + Vector((0, -0.6, 1.5)), (1.0, 0.45, 0.16), 220))
+    if lights is not None: lights.append((Vector(c) + Vector((0, -0.6, 1.5)), (1.0, 0.45, 0.16), 500))
 
 def wheel(mb, M, c, r, thick=0.05, spokes=10, axis_y=True):
     x, y, z = c
@@ -510,12 +516,15 @@ def ground_plane(zb, cols, size=2400, rough=1.0, ctr=(0, 300)):
     L(c3.outputs[2], bs.inputs['Base Color']); L(bs.outputs[0], out.inputs['Surface']); ob.data.materials.append(m)
 
 def clouds(P):
-    mb = MB('clouds'); rr = rnd(P.get('cloud_seed', 9)); a = mat_emit('cloudA', P['cloud'][0], P.get('cloud_k', 1.0)); b = mat_emit('cloudB', P['cloud'][1], P.get('cloud_k', 1.0))
+    """stacked cumulus: flat dark-warm belly + bumpy lit tops, 2-3 depth layers; emission-only, camera-only"""
+    mb = MB('clouds'); rr = rnd(P.get('cloud_seed', 9)); a = mat_emit('cloudA', P['cloud'][0], P.get('cloud_k', 1.0)); b = mat_emit('cloudB', P['cloud'][1], P.get('cloud_k', 1.0)); c = mat_emit('cloudC', P['cloud'][2] if len(P['cloud']) > 2 else P['cloud'][1], P.get('cloud_k', 1.0))
     for i in range(P.get('ncloud', 8)):
-        cx = rr.uniform(-700, 700); cy = rr.uniform(700, 1000); cz = rr.uniform(*P.get('cloud_z', (120, 320))); sz = rr.uniform(60, 120) * P.get('cloud_scale', 1.0)
-        for j in range(rr.randint(4, 7)):
-            ox = rr.uniform(-1.4, 1.4) * sz; oz = rr.uniform(0, 0.3) * sz
-            mb.ell(b, (cx + ox, cy, cz + oz - 0.25 * sz), (sz * rr.uniform(0.6, 1.0), sz * 0.5, sz * 0.28), (18, 10)); mb.ell(a, (cx + ox, cy - 10, cz + oz), (sz * rr.uniform(0.5, 0.9), sz * 0.45, sz * 0.24), (14, 8))
+        cx = rr.uniform(-700, 700); cy = rr.uniform(700, 1000); cz = rr.uniform(*P.get('cloud_z', (120, 320))); sz = rr.uniform(60, 110) * P.get('cloud_scale', 1.0)
+        mb.ell(b, (cx, cy, cz - 0.1 * sz), (sz * 1.5, sz * 0.5, sz * 0.2), (20, 10))
+        mb.ell(c, (cx, cy - 8, cz), (sz * 1.3, sz * 0.45, sz * 0.22), (20, 10))
+        for j in range(rr.randint(6, 9)):
+            ox = rr.uniform(-1.1, 1.1) * sz; r_ = sz * rr.uniform(0.25, 0.5) * (1.2 - abs(ox) / (2.0 * sz))
+            mb.ell(a, (cx + ox, cy - 14, cz + 0.12 * sz + r_ * 0.5), (r_, r_ * 0.6, r_ * 0.8), (14, 10))
     for o in mb.finish(shadow=False): o.visible_diffuse = False; o.visible_glossy = False          # painted clouds are camera-only (no warm light on the shade)
 
 # ------------------------------------------------------------------ scenes
@@ -524,125 +533,129 @@ def cam_frame(P):
 def at(P, u, f, z=0.0):
     o, F, R_ = cam_frame(P); p = o + F * f + R_ * u; return (p.x, p.y, z)
 
+def horse_card(mb, M, c, yaw=0.0, sc=1.0):
+    """flat cut-out draught horse (profile card, 6 cm thick): arched neck, head, mane, four thin legs, hooves, harness"""
+    mb.push(Matrix.Translation(c) @ Euler((0, 0, yaw)).to_matrix().to_4x4() @ Matrix.Scale(sc, 4)); h = M['horse']; t = 0.03
+    mb.ell(h, (0, 0, 1.3), (1.0, t, 0.5), (16, 8)); mb.ell(h, (0.95, 0, 1.75), (0.38, t, 0.16), (12, 6), (0, -0.9, 0)); mb.ell(h, (1.28, 0, 2.05), (0.3, t, 0.15), (12, 6), (0, -0.35, 0))
+    mb.ell(M['horsedk'], (0.85, 0, 1.95), (0.34, t * 1.2, 0.1), (10, 5), (0, -0.9, 0)); mb.ell(M['horsedk'], (-1.0, 0, 1.15), (0.1, t, 0.45), (8, 5), (0, 0.15, 0))
+    mb.ell(h, (1.5, 0, 1.98), (0.08, t, 0.07), (6, 4))
+    for (lx, k_) in ((0.62, 0), (0.45, 1), (-0.6, 0), (-0.78, 1)):
+        mb.box(h, (lx, 0, 0.62), (0.12, t * 1.2, 1.0), ry=0.08 * (1 if k_ else -1)); mb.box(M['horsedk'], (lx + (0.03 if k_ else -0.03), 0, 0.06), (0.15, t * 1.4, 0.12))
+    mb.box(M['crimson'], (0.45, 0, 1.52), (0.5, t * 1.6, 0.12)); mb.box(M['dark'], (-0.1, 0, 1.75), (1.6, t * 1.4, 0.04))
+    mb.pop()
+
+def worker_card(mb, M, c, yaw, col, h=1.7):
+    x, y, z = c; mb.push(Matrix.Translation(c) @ Euler((0, 0, yaw)).to_matrix().to_4x4())
+    mb.box(col, (0, 0, h * 0.42), (0.5, 0.04, h * 0.84)); mb.ell(M['canvas'], (0, 0, h - 0.13), (0.13, 0.03, 0.16), (10, 6)); mb.ell(M['dark'], (0, 0, h - 0.04), (0.17, 0.035, 0.07), (8, 4)); mb.pop()
+
+def derrick(mb, M, c, h=34.0, rr=None):
+    x, y, z = c
+    mb.rod(M['timber'], (x, y, z), (x, y, z + h), 0.28, 0.2, 6); mb.rod(M['timber'], (x, y, z + h * 0.7), (x + h * 0.45, y + 3, z + h * 0.8), 0.18, 0.12, 6)
+    mb.rod(M['dark'], (x + h * 0.45, y + 3, z + h * 0.8), (x + h * 0.45, y + 3, z + h * 0.2), 0.03, 0.03, 4); mb.box(M['redlead'], (x + h * 0.45, y + 3, z + h * 0.18), (3.0, 0.3, 0.3))
+    for a in (0.6, 2.2, 3.8, 5.4): mb.rod(M['rope'], (x, y, z + h * 0.95), (x + math.cos(a) * h * 0.7, y + math.sin(a) * h * 0.7, z), 0.04, 0.04, 4)
+    mb.box(M['timberdk'], (x, y, z + 0.4), (1.6, 1.6, 0.8))
+
 def build_site(P, M):
     rr = rnd(5); lights = []; mb = MB('site'); ts = P['ts']
     mb.push(Matrix.Scale(ts, 4)); tower(mb, M, stage='legs', thick=P['thick']); mb.pop()
-    # timber scaffold towers under / beside the legs + a creeper crane on the front-left leg (in tower-local metres -> scaled)
     mb.push(Matrix.Scale(ts, 4))
-    for (sx, sy) in ((-1, -1), (1, -1), (-1, 1), (1, 1)):
-        cx_, cy_ = sx * (tw(30) - 4.5), sy * (tw(30) - 4.5)
-        scaffold(mb, M, (cx_, cy_, 4.0), 7.0, 7.0, 36.0 if (sx, sy) != (1, 1) else 24.0, 6.0, 0.22)
-        scaffold(mb, M, (cx_ * 1.0 + sx * -9.0 * -1, cy_ + sy * 0.0, 4.0), 5.0, 5.0, 24.0, 6.0, 0.2) if (sx, sy) in ((-1, -1), (1, -1)) else None
-    # creeper crane: mast along inner post of front-left leg
-    zc = 30.0; px = -tw(zc) + th(zc) * 1.05; py = -tw(zc) + th(zc) * 1.05
-    mb.box(M['timber'], (px + 1.6, py + 1.6, zc + 4), (1.3, 1.3, 10.0)); mb.rod(M['redlead'], (px + 1.6, py + 1.6, zc + 9), (px + 11, py + 1.6 - 4.0, zc + 10.5), 0.28, 0.2, 6)       # jib
-    mb.rod(M['redlead'], (px + 1.6, py + 1.6, zc + 9), (px + 4, py + 1.6, zc + 13.5), 0.2, 0.2, 5); mb.rod(M['redlead'], (px + 4, py + 1.6, zc + 13.5), (px + 11, py + 1.6 - 4.0, zc + 10.5), 0.12, 0.12, 5)
-    mb.rod(M['dark'], (px + 11, py - 2.4, zc + 10.5), (px + 11, py - 2.4, zc + 1.0), 0.05, 0.05, 4); mb.box(M['redlead'], (px + 11, py - 2.4, zc + 0.6), (0.3, 3.2, 0.3)); mb.box(M['dark'], (px + 1.6, py + 1.6, zc - 1.2), (2.4, 2.4, 0.6))
-    mb.pop()
+    for (sx, sy) in ((-1, -1), (1, -1), (-1, 1), (1, 1)):                                   # timber scaffold towers propping each leg
+        cx_, cy_ = sx * (tw(24) - 3.0), sy * (tw(24) - 3.0)
+        scaffold(mb, M, (cx_, cy_, 4.0), 9.0, 9.0, 42.0 if sy < 0 else 30.0, 8.0, 0.8)
+        scaffold(mb, M, (sx * (tw(24) + 11.0), sy * (tw(24) - 3.0), 0.0), 7.0, 7.0, 30.0, 8.0, 0.7)
+        zc = Z1 + 22.0                                                                   # creeper crane on the inclined top of each leg stub
+        px, py = sx * (tw(zc) - th(zc) - 0.6), sy * (tw(zc) - th(zc) - 0.6)
+        mb.box(M['redlead'], (px, py, zc + 4.5), (2.0, 2.0, 9.0)); mb.rod(M['redlead'], (px, py, zc + 8.5), (px - sx * 11.0, py, zc + 11.0), 0.7, 0.5, 6)
+        mb.rod(M['redlead'], (px, py, zc + 8.5), (px - sx * 3.0, py, zc + 14.0), 0.45, 0.45, 5); mb.rod(M['redlead'], (px - sx * 3.0, py, zc + 14.0), (px - sx * 11.0, py, zc + 11.0), 0.3, 0.3, 5)
+        mb.rod(M['dark'], (px - sx * 11.0, py, zc + 11.0), (px - sx * 11.0, py, zc + 3.0), 0.15, 0.15, 4); mb.box(M['redlead'], (px - sx * 11.0, py, zc + 2.6), (0.9, 3.4, 0.9))
+    mb.pop(); mb.finish()
+    mb = MB('derricks')
+    derrick(mb, M, (-0.55 * 63 * ts, 0.0, 0.0), 34.0 * ts, rr); derrick(mb, M, (0.45 * 63 * ts, 12.0, 0.0), 30.0 * ts, rr)
     mb.finish()
-    # ---- world props
-    mb = MB('props')
-    ex = P['props']
+    mb = MB('props'); ex = P['props']
     for (u, f, yaw, L_, nx, nz) in ex['girders']: girder_pile(mb, M, at(P, u, f), yaw, L_, nx, nz, rr)
-    for (u, f, yaw) in ex['forges']: forge(mb, M, at(P, u, f), yaw, lights)
-    for (u, f, n, s_) in ex['barrels']:
-        for i in range(n): barrel(mb, M, at(P, u + (i % 3) * 0.78 - 0.4, f + (i // 3) * 0.78), 0.9, 0.34, 'timber' if i % 2 else 'timberdk')
+    for (u, f, yaw) in ex['forges']: forge(mb, M, at(P, u, f), yaw, lights, 1.7)
+    for (u, f, n) in ex['kegs']:
+        for i in range(n): barrel(mb, M, at(P, u + (i % 3) * 0.85 - 0.4, f + (i // 3) * 0.85), 0.95, 0.36, 'timberdk' if i % 2 else 'timber'); 
     for (u, f, yaw, w, d, h) in ex['sheds']: shed(mb, M, at(P, u, f), w, d, h, yaw)
-    for (u, f, yaw, load) in ex['carts']: cart(mb, M, at(P, u, f), yaw, load)
-    for (u, f, sx, sy) in ex['crates']: crate(mb, M, at(P, u, f), (sx, sy, 0.6), rr.uniform(0, 1.5))
-    for (u, f, s_, seed) in ex['trees']: plane_tree(mb, M, at(P, u, f), s_, seed, 'leafA', 'leafB')
-    for (u, f) in ex['planks']:
-        for i in range(5): mb.box(M['plank'], at(P, u, f + i * 0.4, 0.1 + 0.07 * i), (3.2, 0.3, 0.07), rz=0.1)
-    # wheelbarrow-ish rubble + timber stacks + loose beams + ropes near foreground
-    for (u, f, yaw) in ex['timbers']:
-        mb.push(Matrix.Translation(at(P, u, f)) @ Euler((0, 0, yaw)).to_matrix().to_4x4())
-        for k in range(4):
-            for i in range(5 - k): mb.box(M['timber'], (0, (i - (4 - k) / 2.0) * 0.26, 0.12 + 0.24 * k), (3.0, 0.2, 0.2))
-        mb.pop()
-    for i in range(60):                                                  # scattered site clutter: stones, offcuts, rivet kegs, sand/gravel heaps, coils
-        u = rr.uniform(-16, 16); f = rr.uniform(3.0, 46); k = rr.random(); p = at(P, u, f)
-        if f < 12 and 0.7 < k < 0.8: k = 0.4
-        if k < 0.3: mb.ell(M['stonedk'], (p[0], p[1], 0.1), (rr.uniform(.15, .5),) * 2 + (0.18,), (8, 6))
-        elif k < 0.55: mb.box(M['timber'], (p[0], p[1], 0.07), (rr.uniform(1.0, 2.6), 0.16, 0.14), rz=rr.uniform(0, 3.1))
-        elif k < 0.7: mb.cyl(M['metal'], (p[0], p[1], 0.2), 0.2, 0.4, 'z', 8); mb.ell(M['rivet'], (p[0], p[1], 0.42), (0.17, 0.17, 0.05), (8, 4))
-        elif k < 0.8: mb.ell(M['earthdk'], (p[0], p[1], 0.0), (rr.uniform(1.2, 2.2), rr.uniform(1.0, 1.8), rr.uniform(0.5, 0.9)), (12, 6))
-        elif k < 0.9: mb.cyl(M['rope'], (p[0], p[1], 0.1), 0.35, 0.18, 'z', 12)
-        else: mb.box(M['plank'], (p[0], p[1], 0.35), (0.7, 0.5, 0.7), rz=rr.uniform(0, 3))
-    mb.finish()
-    mb = MB('fg')
-    for (u, f, k) in [(-1.5, 2.4, 'sack'), (-0.9, 2.9, 'sack'), (-0.5, 2.2, 'sack'), (1.2, 2.7, 'bricks'), (0.2, 3.6, 'coil'), (3.0, 3.1, 'bucket'), (3.7, 3.6, 'bucket'), (-3.4, 4.3, 'bricks'), (2.0, 4.4, 'coil'),
-                      (4.6, 4.8, 'sack'), (5.2, 4.2, 'sack'), (-2.5, 6.4, 'bucket'), (-0.2, 5.2, 'hammer'), (0.9, 5.4, 'stump')]:
-        p = at(P, u, f); x, y = p[0], p[1]
-        if k == 'sack':
-            mb.ell(M['canvas'], (x, y, 0.2), (0.34, 0.24, 0.22), (10, 7), (0, 0, rr.uniform(0, 3))); mb.ell(M['canvas'], (x + 0.05, y, 0.37), (0.26, 0.2, 0.12), (8, 5))
-        elif k == 'bricks':
-            for i in range(3):
-                for j in range(2):
-                    for kk in range(3 - i): mb.box(M['brick'], (x + (kk - (2 - i) / 2.0) * 0.26, y + j * 0.13, 0.05 + i * 0.1), (0.24, 0.12, 0.09))
-        elif k == 'coil': mb.cyl(M['rope'], (x, y, 0.1), 0.38, 0.2, 'z', 14); mb.cyl(M['dark'], (x, y, 0.12), 0.12, 0.22, 'z', 8)
-        elif k == 'bucket': mb.cyl(M['metal'], (x, y, 0.25), 0.2, 0.5, 'z', 12, r2=0.26); mb.ell(M['rivet'], (x, y, 0.5), (0.2, 0.2, 0.03), (8, 4))
-        elif k == 'hammer': mb.rod(M['timber'], (x, y, 0.04), (x + 0.5, y + 0.1, 0.07), 0.025, 0.025, 5); mb.box(M['metal'], (x + 0.52, y + 0.1, 0.09), (0.18, 0.08, 0.08))
-        elif k == 'stump': mb.cyl(M['timber'], (x, y, 0.25), 0.3, 0.5, 'z', 12); mb.box(M['dark'], (x, y, 0.52), (0.5, 0.3, 0.08))
+    for (u, f, yaw, load) in ex['carts']:
+        cp = Vector(at(P, u, f)); mb.push(Matrix.Translation(cp) @ Euler((0, 0, yaw)).to_matrix().to_4x4())
+        mb.box(M['timber'], (0, 0, 1.0), (3.4, 1.5, 0.12))
+        for s_ in (-1, 1): mb.box(M['timber'], (0, s_ * 0.74, 1.3), (3.4, 0.08, 0.5))
+        wheel(mb, M, (0.2, 0.9, 0.7), 0.7); wheel(mb, M, (0.2, -0.9, 0.7), 0.7); mb.rod(M['timberdk'], (0.2, 0.9, 0.7), (0.2, -0.9, 0.7), 0.05, 0.05, 6)
+        for k in range(3): mb.box(M['redlead'], (0, (k - 1) * 0.3, 1.2), (3.2, 0.2, 0.06)); mb.box(M['redlead'], (0, (k - 1) * 0.3, 1.33), (3.2, 0.04, 0.26))
+        mb.rod(M['timberdk'], (1.7, 0.4, 1.0), (4.4, 0.4, 0.9), 0.05, 0.04, 6); mb.rod(M['timberdk'], (1.7, -0.4, 1.0), (4.4, -0.4, 0.9), 0.05, 0.04, 6)
+        mb.pop(); horse_card(mb, M, (cp.x + math.cos(yaw) * 5.6, cp.y + math.sin(yaw) * 5.6, 0.0), yaw)
+    for (u, f, yaw, col) in ex['workers']: worker_card(mb, M, at(P, u, f), yaw, M[col])
+    for (u, f) in ex['ladders']:
+        p = at(P, u, f)
+        for sd in (-0.25, 0.25): mb.rod(M['timber'], (p[0] + sd, p[1], 0), (p[0] + sd, p[1] + 1.0, 4.0), 0.04, 0.04, 5)
+        for k in range(10): mb.rod(M['timber'], (p[0] - 0.25, p[1] + 0.25 * k / 2.5 * 0.25, 0.35 + 0.37 * k), (p[0] + 0.25, p[1] + 0.25 * k / 2.5 * 0.25, 0.35 + 0.37 * k), 0.025, 0.025, 4)
+    for i in range(70):                                                  # clutter: stones, offcuts, rivet kegs, earth heaps
+        u = rr.uniform(-40, 40); f = rr.uniform(14, 120); k = rr.random(); p = at(P, u, f)
+        if k < 0.35: mb.ell(M['stonedk'], (p[0], p[1], 0.15), (rr.uniform(.2, .6),) * 2 + (0.22,), (8, 6))
+        elif k < 0.7: mb.box(M['timber'], (p[0], p[1], 0.07), (rr.uniform(1.0, 3.0), 0.16, 0.14), rz=rr.uniform(0, 3.1))
+        elif k < 0.85: barrel(mb, M, (p[0], p[1], 0), 0.6, 0.22, 'metal'); mb.ell(M['rivet'], (p[0], p[1], 0.62), (0.18, 0.18, 0.04), (8, 4))
+        else: mb.ell(M['earthdk'], (p[0], p[1], 0.0), (rr.uniform(1.2, 2.4), rr.uniform(1.0, 1.8), rr.uniform(0.4, 0.8)), (12, 6))
     mb.finish()
     mb = MB('patches')
-    for i in range(16):                                                  # trampled dark earth, plank walkways, wheel ruts
-        u = rr.uniform(-18, 18); f = rr.uniform(2.0, 50); p = at(P, u, f); a = rr.uniform(0, 3.1); w = rr.uniform(3, 9); d_ = rr.uniform(1.5, 4)
-        mb.box(M['earthdk'], (p[0], p[1], 0.012), (w, d_, 0.02), rz=a)
-    for (u, f) in ((-1.0, 9.0), (3.0, 14.0)):
-        for i in range(10): p = at(P, u + i * 0.04, f + i * 0.34); mb.box(M['plank'], (p[0], p[1], 0.05), (2.4, 0.32, 0.06), rz=0.16)
-    mb.push(Matrix.Scale(P['ts'], 4))                                     # partial timber decking on the first platform girders
-    a1 = tw(Z1) + th(Z1)
-    for i in range(9):
-        for j in range(3):
-            x = -a1 + 2 * a1 * (i + 0.5) / 9; y = -a1 + j * 2 * a1 / 7 + 4.0; mb.box(M['plankh'], (x, y, Z1 - 0.1), (2 * a1 / 9 - 0.2, 3.6, 0.22))
-    mb.pop(); mb.finish()
-    # far Paris: Seine, bridge, Trocadero, cream blocks
+    for i in range(40):                                                  # trampled dark gravel, ruts, plank walkways
+        u = rr.uniform(-60, 60); f = rr.uniform(12, 200); p = at(P, u, f); a = rr.uniform(0, 3.1); w = rr.uniform(4, 16); d_ = rr.uniform(2, 6)
+        mb.box(M['gravdk'], (p[0], p[1], 0.012), (w, d_, 0.02), rz=a)
+    cp, F_, R_ = cam_frame(P)
+    for sd in (-0.9, 0.9):
+        for i in range(60):
+            p = cp + F_ * (18.0 + i * 3.4) + R_ * (6.0 + sd); mb.box(M['gravdk'], (p.x, p.y, 0.015), (0.35, 3.6, 0.02), rz=math.atan2(F_.y, F_.x) - math.pi / 2)
+    for i in range(14): p = cp + F_ * (22.0 + i * 0.5) + R_ * 3.0; mb.box(M['plank'], (p.x, p.y, 0.06), (2.4, 0.4, 0.06), rz=math.atan2(F_.y, F_.x) - math.pi / 2 + 0.2)
+    mb.finish()
     mb = MB('city'); Sy = P['seine']
     seine(mb, M, 0.0, Sy[0], Sy[1], 22.0); bridge(mb, M, 0.0, Sy[2], Sy[0], Sy[1] + 10)
     trocadero(mb, M, (Sy[2] + 20, Sy[1] + 120, 0.0), 0.0, 1.4)
-    mb.box(M['stone'], (0, Sy[0] - 12, 0.0), (3000, 3, 2.0))      # quay wall
+    mb.box(M['stone'], (0, Sy[0] - 12, 0.0), (3000, 3, 2.0))
     city_ring(mb, M, rnd(7), 0.0, 230.0, 900.0, [(-1000, 1000, Sy[0] - 30, Sy[1] + 400)], 36.0, 300.0)
-    # buildings along the sides of the Champ de Mars
-    for i in range(-4, 5):
-        for sgn in (-1, 1):
-            haus(mb, M, sgn * (P['sidex'] + 18 * (i % 2)), -100 + 33 * (i + 4), rr.uniform(22, 28), 26, rr.choice([18.0, 21.0, 24.0]), rr, True)
+    for i in range(-3, 4):
+        for sgn in (-1, 1): haus(mb, M, sgn * (P['sidex'] + 18 * (i % 2)), -60 + 33 * (i + 3), rr.uniform(22, 28), 26, rr.choice([18.0, 21.0, 24.0]), rr, True)
     mb.finish()
-    lights.append((Vector((-40, -30, 120)), (1, 1, 1), 0))
     return lights
 
 def build_dusk(P, M):
     rr = rnd(11); lights = []; mb = MB('tower'); mb.push(Matrix.Scale(1.0, 4))
     tower(mb, M, stage='full', thick=P['thick'], gal=M['galwall']); mb.pop(); mb.finish()
-    mb = MB('antenna'); top = Vector((0, 0, 301.0)); hut = Vector(P['hut']) + Vector((0.0, 0.0, 4.4))
-    n = 40
-    for i in range(n):
-        u0, u1 = i / n, (i + 1) / n; p0 = top.lerp(hut, u0); p1 = top.lerp(hut, u1); p0.z -= 3.0 * 4 * u0 * (1 - u0); p1.z -= 3.0 * 4 * u1 * (1 - u1)
-        mb.rod(M['wirem'], p0, p1, P['wire_r'] * (1.0 - 0.7 * u0), P['wire_r'] * (1.0 - 0.7 * u1), 4)
+    mb = MB('antenna'); hx0, hy0, _ = P['hut']; post_top = Vector((hx0 + 3.6, hy0 + 1.6, 6.2)); n = 40
+    mb.rod(M['timber'], (post_top.x, post_top.y, 0), (post_top.x, post_top.y, 6.2), 0.16, 0.12, 6); mb.box(M['timber'], (post_top.x, post_top.y, 6.0), (1.6, 0.14, 0.14))
+    for wi, (ox, ex_) in enumerate(((-0.5, -0.7), (-0.15, -0.25), (0.2, 0.25), (0.55, 0.7))):
+        top = Vector((ox, 0.0, 301.0)); end = post_top + Vector((ex_, 0, -0.1)); mb.cyl(M['white'], end + Vector((0, 0, 0.1)), 0.09, 0.2, 'z', 6)
+        for i in range(n):
+            u0, u1 = i / n, (i + 1) / n; p0 = top.lerp(end, u0); p1 = top.lerp(end, u1); p0.z -= 2.0 * 4 * u0 * (1 - u0); p1.z -= 2.0 * 4 * u1 * (1 - u1)
+            mb.rod(M['wirem'], p0, p1, P['wire_r'] * (1.0 - 0.72 * u0), P['wire_r'] * (1.0 - 0.72 * u1), 4)
+    hut = Vector((hx0 + 1.6, hy0 + 0.5, 5.6))
+    for i in range(12): mb.rod(M['wirem'], post_top.lerp(hut, i / 12.0) + Vector((0, 0, -0.3 * math.sin(i / 12.0 * 3.14))), post_top.lerp(hut, (i + 1) / 12.0) + Vector((0, 0, -0.3 * math.sin((i + 1) / 12.0 * 3.14))), 0.05, 0.05, 4)
     mb.finish(shadow=False)
     # radio hut + spark gap (emitter)
     mb = MB('hut'); hx, hy, hz = P['hut']
     shed(mb, M, (hx, hy, 0), 5.2, 4.0, 3.2, 0.0, True)
-    mb.box(M['lampsm'], (hx - 1.3, hy - 2.06, 1.55), (0.7, 0.05, 0.9))                                    # warm window
+    mb.box(M['lampsm'], (hx - 1.3, hy - 2.06, 1.55), (0.7, 0.05, 0.9)); mb.box(M['dark'], (hx - 1.3, hy - 2.1, 1.55), (0.05, 0.04, 0.9)); mb.box(M['dark'], (hx - 1.3, hy - 2.1, 1.55), (0.7, 0.04, 0.05))
+    mb.box(M['plank'], (hx + 3.2, hy - 0.5, 1.0), (1.6, 2.8, 2.0)); mb.box(M['tarroof'], (hx + 3.2, hy - 0.5, 2.1), (1.9, 3.1, 0.12))
+    for i in range(4): mb.cyl(M['glasswine'], (hx + 2.7 + i * 0.35, hy - 2.1, 0.45), 0.12, 0.35, 'z', 8)
+    mb.box(M['timberdk'], (hx - 0.6, hy - 2.25, 0.12), (1.4, 0.7, 0.24))
     mb.rod(M['dark'], (hx + 1.6, hy + 0.5, 3.2), (hx + 1.6, hy + 0.5, 5.6), 0.12, 0.10, 6); mb.cyl(M['white'], (hx + 1.6, hy + 0.5, 5.3), 0.2, 0.3, 'z', 8)      # lead-in insulator
-    sgx, sgy, sgz = hx - 3.4, hy - 2.4, 1.15                                                               # spark gap on a table in front
+    sgx, sgy, sgz = hx - 3.6, hy - 2.6, 1.15                                                               # spark gap on a table in front
     mb.box(M['timber'], (sgx, sgy, 0.6), (1.4, 0.9, 1.0)); mb.rod(M['brass'], (sgx - 0.5, sgy, sgz + 0.05), (sgx - 0.12, sgy, sgz + 0.05), 0.07, 0.05, 8); mb.rod(M['brass'], (sgx + 0.5, sgy, sgz + 0.05), (sgx + 0.12, sgy, sgz + 0.05), 0.07, 0.05, 8)
     mb.cyl(M['dark'], (sgx - 0.6, sgy, sgz + 0.18), 0.22, 0.42, 'z', 10); mb.box(M['dark'], (sgx + 0.55, sgy + 0.2, sgz + 0.15), (0.5, 0.4, 0.3))
     mb.finish()
-    mb = MB('spark'); s0 = Vector((sgx, sgy, sgz + 0.05))
-    mb.ell(M['sparkc'], s0, (0.16, 0.16, 0.16), (12, 8)); mb.ell(M['sparkhalo'], s0, (0.55, 0.55, 0.55), (16, 12)); mb.ell(M['sparkhalo'], s0, (1.1, 1.1, 1.1), (16, 12))
-    for i in range(9):                                                                                       # arc bolts
-        a = i * 0.7 + 0.3; p = s0; L_ = 0.9 + 0.7 * ((i * 37) % 5) / 4.0
-        for k in range(3):
-            q = p + Vector((math.cos(a) * L_ / 3 + rr.uniform(-.15, .15), rr.uniform(-.25, .25), math.sin(a) * L_ / 3 + rr.uniform(-.1, .2))); mb.rod(M['sparkc'], p, q, 0.035, 0.03, 4); p = q
+    mb = MB('spark'); s0 = Vector((sgx, sgy, sgz + 0.08)); bb = mat('brassb', '#cba048', '#e8c068', 2, rough=0.25, sheen=0.9)
+    mb.ell(bb, s0 + Vector((-0.2, 0, 0)), (0.11, 0.11, 0.11), (12, 8)); mb.ell(bb, s0 + Vector((0.2, 0, 0)), (0.11, 0.11, 0.11), (12, 8))
+    p = s0 + Vector((-0.1, 0, 0))
+    for k in range(6):                                                                                       # jagged arc between the two balls
+        q = Vector((s0.x - 0.1 + 0.2 * (k + 1) / 6.0, s0.y, s0.z + rr.uniform(-0.09, 0.09))); mb.rod(M['sparkc'], p, q, 0.028, 0.024, 4); p = q
+    mb.ell(M['sparkhalo'], s0, (0.5, 0.5, 0.5), (14, 10)); mb.ell(M['sparkhalo'], s0, (0.22, 0.22, 0.22), (10, 8))
+    for i in range(4):
+        a = i * 1.6 + 0.4; p = s0; L_ = 0.5
+        for k in range(2): q = p + Vector((math.cos(a) * L_ / 2 + rr.uniform(-.08, .08), rr.uniform(-.1, .1), math.sin(a) * L_ / 2 + rr.uniform(-.05, .1))); mb.rod(M['sparkc'], p, q, 0.02, 0.016, 4); p = q
     mb.finish(shadow=False)
     lights.append((s0 + Vector((0, -0.8, 0.5)), (0.55, 0.72, 1.0), 1500)); lights.append((s0 + Vector((0, 0.6, 1.2)), (0.45, 0.6, 1.0), 700))
     lights.append((Vector((hx - 1.3, hy - 3.0, 1.6)), (1.0, 0.62, 0.26), 160))
     # foreground / mid dressing: lamp posts along the central avenue, fence, trees, benches, gravel paths
-    mb = MB('stars'); st = mat_emit('star', '#e8ecff', 40.0)
-    for i in range(70):
-        az = rr.uniform(-1.0, 1.0); el = rr.uniform(0.45, 1.3); r_ = 3000.0
-        mb.ell(st, (0 + r_ * math.sin(az) * math.cos(el) * 0.6, 600 + r_ * math.cos(az) * math.cos(el), r_ * math.sin(el) * 0.9), (rr.uniform(3, 7),) * 3, (4, 3))
-    for o in mb.finish(shadow=False): o.visible_diffuse = False; o.visible_glossy = False
     mb = MB('props')
     for yy in np.arange(-210.0, -60.0, 30.0):
         for sx in (-14.0, 16.0): lamppost(mb, M, (sx, yy, 0), 3.8)
@@ -650,6 +663,16 @@ def build_dusk(P, M):
     for k in range(14):
         x = -20 + k * 3.2; mb.rod(M['dark'], (x, -194, 0.0), (x, -194, 1.1), 0.05, 0.05, 5); mb.rod(M['dark'], (x, -194, 0.95), (x + 3.2, -194, 0.95), 0.03, 0.03, 4)
     for (x, y) in ((-3.0, -216), (-4.0, -217), (-13.5, -214), (9.0, -218)): barrel(mb, M, (x, y, 0), 0.95, 0.4, 'timber')
+    lamppost(mb, M, (-11.0, -227.0, 0), 4.6)
+    cp_ = (-15.0, -210.0)
+    mb.push(Matrix.Translation((cp_[0], cp_[1], 0)) @ Euler((0, 0, 0.35)).to_matrix().to_4x4())
+    mb.box(M['timberdk'], (0, 0, 1.0), (3.6, 1.6, 0.12))
+    for s_ in (-1, 1): mb.box(M['timberdk'], (0, s_ * 0.78, 1.3), (3.6, 0.08, 0.5))
+    wheel(mb, M, (0.2, 0.95, 0.7), 0.7); wheel(mb, M, (0.2, -0.95, 0.7), 0.7)
+    for i in range(7): mb.box(M['stonedk'] if i % 2 else M['dark'], (-1.2 + (i % 4) * 0.7, (i % 3 - 1) * 0.4, 1.3 + 0.12 * (i // 4)), (0.6, 0.45, 0.35), rz=i)
+    for i in range(3): mb.rod(M['metal'], (-1.4 + i * 0.4, -0.7, 1.4), (-0.6 + i * 0.4, 0.5, 2.0 + 0.1 * i), 0.03, 0.03, 4)
+    mb.rod(M['timberdk'], (1.8, 0.5, 1.0), (4.6, 0.5, 0.9), 0.05, 0.04, 6); mb.rod(M['timberdk'], (1.8, -0.5, 1.0), (4.6, -0.5, 0.9), 0.05, 0.04, 6)
+    mb.pop(); horse_card(mb, M, (cp_[0] + math.cos(0.35) * 5.8, cp_[1] + math.sin(0.35) * 5.8, 0.0), 0.35)
     mb.box(mat('pathg', '#6a7a6c', '#869484', 5), (0.0, -120.0, 0.02), (26.0, 200.0, 0.04))
     for k in range(10):
         a_ = k * 0.62; mb.box(M['gravel'], (math.cos(a_) * 6, -60.0 + k * -1.0, 0.025), (2.0, 120.0, 0.04), rz=0.0) if False else None
@@ -692,7 +715,8 @@ def chair(mb, M, c, yaw):
 
 def table(mb, M, c, rr, lit=True, lights=None, rect=False):
     x, y, z = c
-    mb.cyl(M['cloth'], (x, y, 0.745), 0.68, 0.03, 'z', 24); mb.cyl(M['cloth'], (x, y, 0.38), 0.78, 0.72, 'z', 24, r2=0.62, smooth=True)
+    mb.cyl(M['cloth'], (x, y, 0.745), 0.7, 0.03, 'z', 24); mb.cyl(M['cloth'], (x, y, 0.38), 0.68, 0.72, 'z', 24, r2=0.68, smooth=True)
+    for k in range(8): a_ = k * math.pi / 4; mb.box(M['cloth'], (x + math.cos(a_) * 0.7, y + math.sin(a_) * 0.7, 0.38), (0.04, 0.04, 0.7), rz=a_)
     mb.rod(M['gold'], (x, y, 0.76), (x, y, 1.0), 0.02, 0.02, 6)
     mb.ell(M['lamp'], (x, y, 1.05), (0.07, 0.07, 0.1), (8, 6)); mb.cyl(M['gold'], (x, y, 0.98), 0.05, 0.04, 'z', 8)
     if lights is not None and lit: lights.append((Vector((x, y, 1.1)), (1.0, 0.68, 0.34), 14))
@@ -718,10 +742,10 @@ def build_resto(P, M):
     rr = rnd(3); lights = []; mb = MB('room')
     X0, X1, Y0, Y1, ZH = -4.8, 4.8, -9.0, 17.0, 4.5
     mb.box(M['floor'], (0, (Y0 + Y1) / 2, -0.05), (X1 - X0, Y1 - Y0, 0.1))
-    mb.box(M['crimdk'], (0.0, (Y0 + Y1) / 2, 0.005), (1.9, Y1 - Y0 - 0.5, 0.012)); mb.box(M['gold'], (0.0, (Y0 + Y1) / 2, 0.008), (2.1, Y1 - Y0 - 0.5, 0.01))
-    mb.box(M['crimson'], (0.0, (Y0 + Y1) / 2, 0.012), (1.7, Y1 - Y0 - 0.7, 0.012))
-    mb.box(M['gold'], (2.9, -3.0, 0.006), (3.0, 2.6, 0.012)); mb.box(M['crimson'], (2.9, -3.0, 0.008), (2.7, 2.3, 0.012))
-    mb.box(mat("ceil", "#d6d2e4", "#e8e2f0", 3), (0, (Y0 + Y1) / 2, ZH + 0.1), (X1 - X0 + 0.6, Y1 - Y0 + 0.6, 0.3))
+    mb.box(M['gold'], (0.0, (Y0 + Y1) / 2, 0.005), (2.0, Y1 - Y0 - 0.5, 0.01)); mb.box(M['crimson'], (0.0, (Y0 + Y1) / 2, 0.008), (1.8, Y1 - Y0 - 0.6, 0.012))
+    mb.box(M['navy'], (0.0, (Y0 + Y1) / 2, 0.012), (1.35, Y1 - Y0 - 0.9, 0.012))
+    pass
+    mb.box(mat("ceil", "#8a4e28", "#a46434", 3), (0, (Y0 + Y1) / 2, ZH + 0.1), (X1 - X0 + 0.6, Y1 - Y0 + 0.6, 0.3))
     # far wall (windows onto Paris) and left wall (windows with sun), right wall (mirrors + crimson panels)
     fw = [(-4.3 + i * 3.2, -4.3 + i * 3.2 + 2.6, 0.0, 3.8) for i in range(3)]
     window_cut_wall(mb, M['wallres'], 'y', Y1, X0, X1, 0, ZH, fw, 0, ZH)
@@ -738,7 +762,7 @@ def build_resto(P, M):
     mb.box(M['gold'], (0, Y1 - 0.2, ZH - 0.3), (X1 - X0, 0.12, 0.5))
     for yy in np.arange(Y0 + 1.0, Y1, 2.6): mb.box(M['gold'], (0, yy, ZH - 0.02), (X1 - X0, 0.09, 0.05))           # ceiling coffers: gilt strips
     for xx in (-3.6, -1.2, 1.2, 3.6): mb.box(M['gold'], (xx, (Y0 + Y1) / 2, ZH - 0.02), (0.09, Y1 - Y0, 0.05))
-    cf = M['cream']
+    cf = mat('coffer', '#7a4624', '#92582c', 3)
     for yy in np.arange(Y0 + 2.3, Y1 - 1, 2.6):
         for xx in (-2.4, 0.0, 2.4): mb.box(cf, (xx, yy, ZH - 0.1), (2.0, 2.2, 0.14))
     mb.box(M['gold'], (X0 + 0.12, (Y0 + Y1) / 2, ZH - 0.3), (0.12, Y1 - Y0, 0.45)); mb.box(M['gold'], (X1 - 0.12, (Y0 + Y1) / 2, ZH - 0.3), (0.12, Y1 - Y0, 0.45))
@@ -777,6 +801,14 @@ def build_resto(P, M):
         p0 = a_.lerp(b_, k / 9.0); p1 = a_.lerp(b_, (k + 1) / 9.0)
         mb.rod(IL, p0 + Vector((-0.28, -0.28, 0)), p1 + Vector((0.28, -0.28, 0)), 0.04, 0.04, 4); mb.rod(IL, p0 + Vector((0.28, -0.28, 0)), p1 + Vector((-0.28, -0.28, 0)), 0.04, 0.04, 4)
         mb.rod(IL, p0 + Vector((0.28, -0.28, 0)), p1 + Vector((0.28, 0.28, 0)), 0.04, 0.04, 4)
+    for (a_, b_, za_, zb_) in lw:                                                                # riveted lattice girders crossing the glass from outside (left windows)
+        xo = X0 - 0.5
+        for rr_ in (0.1,): 
+            mb.rod(I, (xo, a_ - 0.1, 0.0), (xo, b_ + 0.1, zb_ + 0.3), 0.11, 0.11, 4); mb.rod(I, (xo, b_ + 0.1, 0.0), (xo, a_ - 0.1, zb_ + 0.3), 0.11, 0.11, 4)
+            mb.rod(IL, (xo, a_ - 0.1, 1.9), (xo, b_ + 0.1, 1.9), 0.08, 0.08, 4); mb.rod(I, (xo, (a_ + b_) / 2, 0.0), (xo, (a_ + b_) / 2, zb_ + 0.3), 0.07, 0.07, 4)
+    for (a_, b_, za_, zb_) in fw:
+        yo = Y1 + 0.55
+        mb.rod(I, (a_ - 0.1, yo, 0.0), (b_ + 0.1, yo, zb_ + 0.3), 0.11, 0.11, 4); mb.rod(I, (b_ + 0.1, yo, 0.0), (a_ - 0.1, yo, zb_ + 0.3), 0.11, 0.11, 4); mb.rod(IL, (a_ - 0.1, yo, 1.9), (b_ + 0.1, yo, 1.9), 0.08, 0.08, 4)
     # outside the far windows: the tower's lattice screen + stanchions and railing, a leg descending
     for i in range(14):
         x = X0 + 0.3 + i * (X1 - X0) / 13.0; mb.box(I, (x, Y1 + 0.9, 0.7), (0.06, 0.06, 1.4))
@@ -791,7 +823,7 @@ def build_resto(P, M):
     for k in range(8): mb.rod(IL, (-9 + k * 2.4, Y1 + 5.0, 3.1), (-9 + (k + 1) * 2.4, Y1 + 5.0, 2.7), 0.06, 0.06, 4)
     mb.finish()
     # ---- furniture: tables (rows), chairs, gas lamps, chandeliers
-    mb = MB('furn'); tabs = [(0.0, -3.4), (-2.9, 2.6), (-2.9, 6.6), (-2.9, 10.6), (-2.9, 14.2), (2.6, 6.0), (2.6, 10.4), (0.2, 14.4), (-0.4, 4.6)]
+    mb = MB('furn'); tabs = [(0.0, -3.4), (-2.9, 2.6), (-2.9, 6.6), (-2.9, 10.6), (-2.9, 14.2), (2.6, 6.0), (0.2, 14.4), (-0.4, 4.6)]
     lamps = []
     for i, (x, y) in enumerate(tabs):
         if (x, y) == (-0.3, 6.5): continue
@@ -801,16 +833,17 @@ def build_resto(P, M):
     # hero table (the puppet's): table + 2 chairs, grey placeholder card behind it
     hx, hy = P['hero']
     table(mb, M, (hx, hy, 0), rr, True, lights); chair(mb, M, (hx + 0.95, hy - 0.1, 0), -math.pi / 2 + 0.2); chair(mb, M, (hx, hy + 0.95, 0), 0.0); chair(mb, M, (hx - 0.9, hy - 0.1, 0), math.pi / 2 - 0.3)
+    bx, by = 3.5, 10.0                                                                                    # buffet / sideboard with a gilt mirror screen
+    mb.box(M['wallpan'], (bx, by, 0.5), (0.8, 2.8, 1.0)); mb.box(M['cloth'], (bx, by, 1.03), (0.9, 2.9, 0.06)); mb.box(M['gold'], (bx + 0.55, by, 2.4), (0.1, 2.2, 2.6)); mb.box(M['mirror'], (bx + 0.48, by, 2.4), (0.05, 1.9, 2.3))
+    for i in range(4): mb.ell(M['metal'], (bx, by - 1.1 + i * 0.7, 1.2), (0.2, 0.2, 0.16), (12, 8)); mb.cyl(M['metal'], (bx, by - 1.1 + i * 0.7, 1.07), 0.22, 0.03, 'z', 12)
+    for i in range(3): mb.cyl(M['wineg'], (bx - 0.1, by - 0.9 + i * 0.9 + 0.3, 1.2), 0.04, 0.3, 'z', 8, r2=0.025)
+    mb.ell(M['crimson'], (bx, by + 1.2, 1.13), (0.15, 0.15, 0.1), (8, 6)); mb.ell(M['gold'], (bx - 0.1, by + 1.0, 1.12), (0.12, 0.12, 0.09), (8, 6))
+    for (x, y) in ((3.9, 7.2), (3.9, 12.8)): mb.box(M['gold'], (x, y, 1.0), (0.1, 0.6, 2.0)); mb.box(M['mirror'], (x - 0.06, y, 1.2), (0.05, 0.45, 1.5))
+    for (tx, ty) in ((-2.9, 6.6), (-2.9, 10.6), (2.6, 6.0), (0.2, 14.4), (-2.9, 14.2)):                      # seated diner stand-ins
+        mb.box(M['cardg'], (tx, ty + 0.92, 0.45 + 0.62), (0.5, 0.04, 1.25)); mb.ell(M['cardg'], (tx, ty + 0.92, 1.8), (0.13, 0.03, 0.16), (10, 6))
+    for (a, b, za, zb) in lw + fw:
+        pass
     palm(mb, M, (-4.2, 15.8, 0.0), 1.5, 2); palm(mb, M, (4.1, 15.5, 0.0), 1.4, 3)
-    cols = [M['crimson'], M['white'], mat('bluef', '#2c48a0', '#3c5cb8', 3)]
-    for (yy, sag) in ((1.5, 0.45), (6.5, 0.5), (11.5, 0.45)):                                                 # tricolour bunting across the room
-        n = 36
-        for i in range(n):
-            u0 = i / n; u1 = (i + 1) / n; xa = X0 + (X1 - X0) * u0; xb = X0 + (X1 - X0) * u1
-            za = ZH - 0.9 - sag * 4 * u0 * (1 - u0); zb2 = ZH - 0.9 - sag * 4 * u1 * (1 - u1)
-            xm = (xa + xb) / 2; zm = (za + zb2) / 2
-            mb.rod(cols[i % 3], (xm, yy, zm), (xm, yy, zm - 0.36), 0.13, 0.0, 3, caps=True)
-        mb.rod(M['gold'], (X0, yy, ZH - 0.9), (X0, yy, ZH - 0.9), 0.01, 0.01, 4)
     mb.finish()
     mb = MB('card'); g = mat('card', '#6a6874', None, 1, rough=1.0)
     mb.box(g, (hx - 0.05, hy + 0.98, 0.45 + 0.625), (0.55, 0.03, 1.25)); mb.ell(g, (hx - 0.05, hy + 0.98, 1.78), (0.14, 0.03, 0.16), (10, 8)); mb.finish()
@@ -911,27 +944,26 @@ def kd_from(travel): return tuple(travel)
 
 PRESETS = {
  'site': dict(
-    sky=[(0.0, '#f8c48c'), (0.1, '#f6c89c'), (0.26, '#e0c4c4'), (0.46, '#a4b8ec'), (0.72, '#6e8cdc'), (1.0, '#4260cc')], sky_k=0.95, amb=('#5e7cFF', 2.6),
-    key=(1.0, 0.82, 0.58, 15.0), dbounce=0, key_dir=(0.50, 0.42, -0.42), sun_angle=1.0, exposure=0.0, sat=1.08, ts=0.95, thick=1.5, seine=(205.0, 245.0, 40.0), sidex=118.0,
-    cam=dict(loc=(-24.0, -104.0, 1.7), look=(6.0, 50.0, 17.0), lens=22, shift=0.0), samples=22,
+    sky=[(0.0, '#f8c48c'), (0.1, '#f6c89c'), (0.26, '#e0c4c4'), (0.46, '#a4b8ec'), (0.72, '#6e8cdc'), (1.0, '#4260cc')], sky_k=0.8, amb=('#5e84FF', 2.4),
+    key=(1.0, 0.82, 0.58, 9.0), dbounce=0, key_dir=(0.50, 0.42, -0.42), sun_angle=1.0, exposure=-0.8, sat=1.08, ts=1.0, thick=2.0, seine=(205.0, 245.0, 40.0), sidex=130.0,
+    cam=dict(loc=(-30.0, -178.0, 6.0), look=(0.0, 0.0, 44.0), lens=22, shift=-0.02), samples=22,
     props=dict(
-        girders=[(-5.2, 5.0, 1.3, 6.0, 6, 4), (9.0, 14.0, 1.35, 6.0, 6, 4), (-11.0, 20.0, 0.1, 6.5, 5, 4)],
-        forges=[(2.4, 6.5, 0.12), (-4.0, 17.0, 0.05), (10.0, 26.0, 0.1)],
-        barrels=[(-1.9, 3.2, 2, 1), (-6.0, 10.0, 4, 1), (6.5, 9.0, 5, 1)],
-        sheds=[(-17.0, 14.0, 0.15, 6.5, 4.2, 2.8), (-13.0, 29.0, -0.1, 5.5, 4.0, 2.6), (14.0, 22.0, -0.5, 7.0, 4.5, 3.0)],
-        carts=[(1.0, 22.0, 2.9, 'girders'), (-8.0, 28.0, 0.15, 'barrels')],
-        crates=[(-3.3, 2.6, 0.8, 0.6), (-2.5, 3.0, 0.6, 0.5), (5.8, 11.0, 0.9, 0.7), (-3.5, 12.0, 0.9, 0.7)],
-        trees=[(-24.0, 36.0, 1.3, 1), (24.0, 26.0, 1.2, 2)],
-        planks=[(0.5, 6.5), (-4.0, 20.0)], timbers=[(6.2, 3.4, 1.4), (-6.8, 11.5, 0.5)])),
+        girders=[(-6.0, 15.0, 1.4, 7.0, 6, 4), (9.0, 26.0, 0.1, 6.5, 6, 4), (-22.0, 62.0, 1.5, 7.0, 5, 4)],
+        forges=[(3.5, 19.0, 0.15), (-5.0, 38.0, 0.1), (16.0, 56.0, 0.05)],
+        kegs=[(-1.5, 12.0, 4), (14.0, 24.0, 5), (-14.0, 36.0, 6)],
+        sheds=[(-13.0, 14.0, 0.15, 8.0, 5.0, 5.2), (-30.0, 72.0, 0.1, 9.0, 5.0, 3.4), (30.0, 80.0, -0.3, 10.0, 5.0, 3.6)],
+        carts=[(8.0, 58.0, 3.0, 'girders'), (-12.0, 90.0, 0.2, 'girders')],
+        workers=[(1.5, 22.0, 0.3, 'wk1'), (-4.0, 28.0, 0.5, 'wk2'), (11.0, 34.0, -0.4, 'wk3'), (2.0, 48.0, 0.2, 'wk2'), (-6.0, 70.0, 0.0, 'wk1'), (18.0, 78.0, 0.4, 'wk3'), (-1.0, 110.0, 0.0, 'wk2')],
+        ladders=[(7.0, 40.0), (-18.0, 52.0)])),
  'dusk': dict(
     sky=[(0.0, '#f6a878'), (0.07, '#f0a07e'), (0.18, '#c890b4'), (0.32, '#8a78cc'), (0.52, '#5a52b8'), (0.78, '#3a3ca8'), (1.0, '#262c98')], sky_k=1.0, amb=('#2c32F0', 0.95),
-    key=(1.0, 0.66, 0.4, 3.6), dbounce=0, key_dir=(0.6, 0.55, -0.1), sun_angle=1.5, exposure=0.25, sat=1.1, thick=2.2, seine=(135.0, 175.0), wire_r=0.12, hut=(-0.5, -203.0, 0.0),
+    key=(1.0, 0.66, 0.4, 3.6), dbounce=0, key_dir=(0.6, 0.55, -0.1), sun_angle=1.5, exposure=0.25, sat=1.1, thick=2.2, seine=(135.0, 175.0), wire_r=0.32, hut=(-0.5, -203.0, 0.0),
     cam=dict(loc=(-8.0, -232.0, 4.5), look=(0.0, 0.0, 4.5), lens=22, shift=0.345), samples=22),
  'resto': dict(
     sky=[(0.0, '#f8dcb4'), (0.06, '#e8d8c4'), (0.2, '#b4c8f0'), (0.5, '#7a9ae6'), (1.0, '#4a68d0')], sky_k=1.0, amb=('#4a64FF', 3.0),
-    key=(1.0, 0.84, 0.6, 32.0), key_dir=(0.80, 0.26, -0.42), sun_angle=1.0, exposure=0.0, sat=1.06, dbounce=2, zbase=-38.0, hero=(1.9, 0.3),
-    fill=(0.92, 0.84, 0.74, 40.0, 22.0, 24.0, (0, 5, 4.9)), winfill=((0.14, 0.30, 0.78), 900.0),
-    cam=dict(loc=(3.7, -5.0, 1.5), look=(-4.8, 9.0, 1.5), lens=22, shift=-0.04), samples=24),
+    key=(1.0, 0.84, 0.6, 18.0), key_dir=(0.80, 0.26, -0.42), sun_angle=1.0, exposure=0.5, sat=1.06, dbounce=2, zbase=-38.0, hero=(1.9, 0.3),
+    fill=(0.92, 0.84, 0.74, 15.0, 22.0, 24.0, (0, 5, 4.9)), winfill=((0.14, 0.30, 0.78), 600.0),
+    cam=dict(loc=(3.7, -5.0, 1.5), look=(-4.8, 9.0, 1.1), lens=22, shift=-0.10), samples=24),
 }
 NAMES = {'site': 'sb1_site', 'dusk': 'sb2_tower_dusk', 'resto': 'sb3_resto'}
 
@@ -945,10 +977,10 @@ def run(mode, draft=False):
     if mode == 'site': lights = build_site(P, M)
     elif mode == 'dusk': lights = build_dusk(P, M)
     else: lights = build_resto(P, M)
-    if mode == 'site': ground_plane(0.0, ('#a88c58', '#7f7c44', '#946e42'), 3000, 1.0, (0, 600))
+    if mode == 'site': ground_plane(0.0, ('#c9895a', '#a86a44', '#8a5a3c'), 3000, 1.0, (0, 600))
     elif mode == 'dusk': ground_plane(0.0, ('#3a5a4e', '#4a6a58', '#6a6a5c'), 3000, 1.0, (0, 600))
     else: ground_plane(P['zbase'], ('#8a8a7a', '#a89a82', '#7a7a74'), 6000, 1.0, (0, 600))
-    if mode != 'resto': clouds(dict(cloud=('#fff0dc', '#c8b4d8') if mode == 'site' else ('#f0b4a0', '#a08ac8'), cloud_k=1.0, ncloud=7 if mode == 'site' else 5, cloud_z=(160, 320) if mode == 'site' else (200, 330), cloud_scale=1.0, cloud_seed=4))
+    if mode != 'resto': clouds(dict(cloud=('#fff0dc', '#c8a8c8', '#e8c8d0') if mode == 'site' else ('#fcd5b1', '#8a78cc', '#ca6a9c'), cloud_k=1.0, ncloud=7 if mode == 'site' else 5, cloud_z=(160, 320) if mode == 'site' else (200, 330), cloud_scale=1.0, cloud_seed=4))
     sky_world(P); lights_setup(P, lights); setup_camera(P)
     out = os.path.join(HERE, ('d_' if draft else '') + NAMES[mode])
     render(mode, out, 14 if draft else P.get('samples', 22), draft, P); print(mode, 'done %.0fs' % (time.time() - t))
