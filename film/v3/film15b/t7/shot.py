@@ -65,11 +65,11 @@ def run_B(q, f0, f1, stride):
     BAR_Y = B2.BAR_Y; J = STATE['J']; WIDE = cast15.CANVAS15_WIDE
     # ------------------------------------------------------------------ camera: crane up over the stadium, tilt into the sky
     KEYS = [  # (t, loc m, look m, lens)
-        (59.80, (0.5, 8.4, 1.8), (-0.2, 12.9, 2.7), 22.0),
-        (61.00, (-0.2, 6.6, 4.2), (-0.8, 13.0, 1.6), 26.0),
-        (61.80, (-0.6, 6.0, 5.3), (-1.2, 13.9, 1.3), 34.0),
-        (62.50, (-0.4, 5.6, 6.0), (-0.8, 13.8, 1.4), 30.0),
-        (63.20, (1.0, 2.0, 6.0), (-0.2, 13.4, 2.4), 22.0),
+        (59.80, (1.8, 3.0, 5.0), (1.5, 12.8, 3.0), 19.0),
+        (60.80, (0.6, 5.0, 5.4), (-0.2, 13.6, 2.2), 26.0),
+        (61.60, (0.0, 4.5, 5.8), (0.0, 14.3, 1.4), 40.0),
+        (62.60, (0.2, 4.5, 6.0), (0.0, 14.3, 1.5), 36.0),
+        (63.30, (1.0, -0.5, 8.0), (0.0, 13.8, 2.0), 22.0),
         (63.90, (3.0, -5.0, 13.0), (-0.1, 14.0, 4.0), 22.0),
         (64.60, (4.8, -14.0, 26.0), (0.0, 20.0, 34.0), 22.0),
         (65.30, (5.2, -22.0, 40.0), (0.0, 26.0, 90.0), 22.0),
@@ -81,10 +81,10 @@ def run_B(q, f0, f1, stride):
     loc0, look0, _l = cam_b(59.8); cam = B2.make_camera_m(loc0, look0, lens=22.0, name='cam_t7b')
     sc.camera = cam
     # ------------------------------------------------------------------ jumpers
-    JUMPERS = [dict(cast='rival2', T0=60.45, s=+1, land=(-1.7, 13.9)),      # green kit, approaches from screen-right
-               dict(cast='rival3', T0=61.60, s=+1, land=(2.0, 14.4)),       # gold kit, from the left
-               dict(cast='rival1', T0=62.75, s=+1, land=(0.15, 14.3))]       # red kit
-    RUN = [(-1.97, (8.0, 2.0)), (-1.25, (7.5, 4.6)), (-0.65, (6.0, 7.6)), (-0.25, (4.2, 9.4)), (0.0, (2.5, 10.3))]
+    JUMPERS = [dict(cast='rival2', T0=60.45, s=+1, x0=0.5, land=(-1.0, 14.5)),      # green kit, approaches from screen-right
+               dict(cast='rival3', T0=61.60, s=+1, x0=0.7, land=(1.0, 14.8)),       # gold kit, from the left
+               dict(cast='rival1', T0=62.75, s=+1, x0=0.3, land=(0.0, 14.2))]       # red kit
+    RUN = [(-1.97, (8.0, 2.0)), (-1.25, (7.8, 4.6)), (-0.65, (6.8, 7.6)), (-0.25, (5.0, 9.2)), (0.0, (3.7, 10.2))]
     def jumper(i, Jd, t, cm):
         cast = Jd['cast']; s = Jd['s']; face = -s; mir = (face < 0); dt = t - Jd['T0']; tag = 'j%d' % i; lx, ly = Jd['land']
         P = lambda p: (s * p[0], p[1])
@@ -108,18 +108,17 @@ def run_B(q, f0, f1, stride):
             p = spline([(a, (P(b)[0], P(b)[1], 0.0)) for a, b in RUN], dt)
             stand(cast15.run_curved(cast, t * 30 / 16.0, facing=face), (p.x, p.y)); return
         tx, ty = P(RUN[-1][1])
-        if dt >= 0.08: dt = 0.08 + (dt - 0.08) * 1.12
+        X0 = Jd['x0']
         if dt < 0.08: stand(cast15.pose_for('takeoff', cast, facing=face), (tx, ty)); return
-        if dt < 0.30:
-            u = (dt - 0.08) / 0.22; stand(cast15.pose_for('flop_rise', cast, facing=face), (lerp(tx, s * 1.5, u), lerp(ty, 10.9, u)), dz=0.3 * smooth(u * 1.5)); return
-        # bar anchor path (approach-from-right coordinates, x mirrored by s): flop_head .. flop .. flop_flick, then the drop to the mat
-        def ax(dt_): return lerp(s * 1.4, lx, smooth((dt_ - 0.30) / 1.2))
-        KZ = [(0.30, (1.0, 11.0, 1.9)), (0.55, (0.8, 11.3, 2.4)), (0.80, (0.5, 11.5, 2.52)), (1.10, (0.2, 11.5, 2.46)), (1.30, (0.0, 12.2, 2.2)), (1.45, (0.0, 12.9, 1.75))]
-        if dt < 1.45:
-            w = spline([(a, b) for a, b in KZ], dt); name = 'flop_head' if dt < 0.55 else 'flop_back' if dt < 0.80 else 'flop' if dt < 1.10 else 'flop_flick'
-            zc = {'flop_head': 1.98, 'flop_back': 2.14, 'flop': 2.16, 'flop_flick': 2.06}[name]; air(name, (ax(dt), w.y, min(w.z, zc))); return
-        if dt < 1.62: mat('land_back', dz=0.25); return
-        if dt < 1.80: mat('sit_up'); return
+        if dt < 0.17:
+            u = (dt - 0.08) / 0.09; stand(cast15.pose_for('flop_rise', cast, facing=face), (lerp(tx, s * (X0 + 0.9), u), lerp(ty, 10.8, u)), dz=0.3 * smooth(u)); return
+        # bar anchor path: the card stays IN FRONT of the bar plane (y < 11.45) while the head hangs, so the bar never crosses the face; short airborne phases
+        KZ = [(0.17, (X0 + 0.55, 11.7, 2.0)), (0.24, (X0 + 0.3, 11.75, 2.06)), (0.34, (X0 - 0.1, 11.75, 2.08)), (0.44, (X0 - 0.45, 11.75, 2.0)), (0.50, (lx * s, ly - 2.0, 1.55)), (0.56, (lx * s, ly - 0.7, 1.35))]
+        if dt < 0.56:
+            w = spline(KZ, dt); name = 'flop_back' if dt < 0.24 else 'flop' if dt < 0.34 else 'flop_flick'
+            zc = {'flop_back': 2.06, 'flop': 2.08, 'flop_flick': 2.0}[name]; air(name, (w.x * s, w.y, min(w.z, zc) if dt < 0.44 else w.z)); return
+        if dt < 0.72: mat('land_back', dz=0.25); return
+        if dt < 0.90: mat('sit_up'); return
         pose = cast15.pose_for('sit_thumb', cast, facing=face)
         pose = dict(pose, bob=0.04 * math.sin(2 * math.pi * 2.0 * (t - Jd['T0'])), thumb_angle=-90 + 22 * math.sin(2 * math.pi * 3.0 * (t - Jd['T0'])))
         card('m' + tag, cast, pose, (lx, ly), cm, ppd=144, mirror=mir, shadow=(2.0, 0.8), canvas=WIDE)
@@ -132,7 +131,7 @@ def run_B(q, f0, f1, stride):
         if loc[2] > 30 and look[2] > 40 and t > 64.3: return dict(cam=[round(c, 1) for c in loc], note='sky')   # nothing but sky in frame
         SHB.rim(True, side='right', color=(255, 255, 240), width=0.04, k=0.55, tint=(1.0, 1.0, 1.0))
         # officials at the standards, photographers by the mat (flash as each jumper crosses)
-        for i, (cast, x) in enumerate((('official1', -2.7), ('official2', 2.7))):
+        for i, (cast, x) in enumerate((('official1', -3.3), ('official2', 3.3))):
             pose = cast15.pose_for('official_stand' if int(t * 2 + i) % 3 else 'official_point', cast)
             card('off%d' % i, cast, pose, (x, J['y'] - 0.9), cm, ppd=112, mirror=(x > 0), shadow=(1.4, 0.5))
         for i, (x, y) in enumerate([(-4.6, 9.4), (4.5, 9.8), (-3.6, 18.2)]):
