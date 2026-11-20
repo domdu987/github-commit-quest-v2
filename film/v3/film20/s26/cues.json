@@ -1,0 +1,41 @@
+{
+ "take": "s26",
+ "fps": 30,
+ "note": "t = film seconds (g/30)",
+ "cues": [
+  {
+   "kind": "ambience",
+   "t": 63.6,
+   "dur": 2.133,
+   "frame": 1908,
+   "end_frame": 1972,
+   "note": "restaurant room tone (first-floor restaurant of the tower): murmur, cutlery, a faint string trio; open window air"
+  },
+  {
+   "kind": "foley",
+   "t": 63.733,
+   "dur": 0.533,
+   "frame": 1912,
+   "end_frame": 1928,
+   "note": "glass rises: cloth rustle of his sleeve, light glass ring",
+   "peak_frame": 1920
+  },
+  {
+   "kind": "accent",
+   "t": 64.633,
+   "dur": 0.4,
+   "frame": 1939,
+   "end_frame": 1951,
+   "note": "snap push on 'หอไอเฟล': soft airy whoosh + a tiny glass 'tink' as he lifts the glass to the view",
+   "peak_frame": 1941
+  },
+  {
+   "kind": "cut",
+   "t": 65.6,
+   "dur": 0.0,
+   "frame": 1968,
+   "end_frame": 1968,
+   "note": "hard cut to shot 27 (the last image): ambience swaps to wind + distant fair"
+  }
+ ]
+}

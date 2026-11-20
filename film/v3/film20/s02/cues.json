@@ -1,0 +1,68 @@
+{
+ "take": "s02",
+ "fps": 30,
+ "note": "t = film seconds (g / 30); narration film20/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "kind": "ambience",
+   "t": 2.533,
+   "dur": 3.667,
+   "frame": 76,
+   "end_frame": 186,
+   "note": "first-floor restaurant of the finished tower, day 1889: room murmur of diners, cutlery and plates, a light wind through the open lattice, a faint string trio"
+  },
+  {
+   "kind": "foley",
+   "t": 3.267,
+   "dur": 0.167,
+   "frame": 98,
+   "end_frame": 103,
+   "note": "fork lifted to his mouth: small cutlery clink on the plate, a happy 'mmm' hum without words (mouth stays still)",
+   "peak_frame": 100
+  },
+  {
+   "kind": "foley",
+   "t": 4.6,
+   "dur": 0.167,
+   "frame": 138,
+   "end_frame": 143,
+   "note": "fork lifted to his mouth: small cutlery clink on the plate, a happy 'mmm' hum without words (mouth stays still)",
+   "peak_frame": 140
+  },
+  {
+   "kind": "foley",
+   "t": 4.0,
+   "dur": 1.933,
+   "frame": 120,
+   "end_frame": 178,
+   "note": "napkin rustle and a chair creak as he settles; glasses tinkle on the table",
+   "peak_frame": 125
+  },
+  {
+   "kind": "accent",
+   "t": 4.567,
+   "dur": 0.5,
+   "frame": 137,
+   "end_frame": 152,
+   "note": "snap pull-out on 'เดียวกันนั้น': fast whoosh sliding back, the room tone opens up into wind and a huge airy height (reveal: the girders and Paris below)",
+   "peak_frame": 143
+  },
+  {
+   "kind": "accent",
+   "t": 4.633,
+   "dur": 0.2,
+   "frame": 139,
+   "end_frame": 145,
+   "note": "reveal sting: a bright rising 'tada' glissando as the iron lattice appears",
+   "peak_frame": 141
+  },
+  {
+   "kind": "dissolve",
+   "t": 5.933,
+   "dur": 0.0,
+   "frame": 178,
+   "end_frame": 178,
+   "note": "dissolve (13 f) into shot 3 (SITE site_wide): restaurant room tone fades, the building-site din fades in"
+  }
+ ]
+}
