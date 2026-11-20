@@ -57,13 +57,14 @@ cam14 = cam_gen([
 ], [(746, 756), (770, 780)])
 TB = (0.45, 2.4)          # Bertillon's mark in shot 15 (low_a)
 cam15 = cam_gen([
-    (783, (-0.90, -1.00, 0.55), (0.60, 2.4, 1.90)),
-    (799, (0.80, -0.95, 0.58), (0.35, 2.4, 1.90)),      # sweep right (same distance: no scale pop)
-    (812, (0.95, -0.85, 0.60), (0.20, 2.4, 1.90)),
-    (826, (-0.60, -1.00, 0.58), (0.65, 2.4, 1.90)),     # sweep left
-    (840, (0.30, -0.95, 0.58), (0.45, 2.4, 1.90)),
-    (856, (-0.50, -0.90, 0.58), (0.60, 2.4, 1.90)),
-], [(783, 799), (812, 826)])
+    (783, (-0.95, -1.00, 0.55), (0.95, 2.4, 1.90)),
+    (791, (0.95, -0.95, 0.58), (-0.05, 2.4, 1.90)),     # sweep 1 (8 f): lateral + pan, same distance (no scale pop)
+    (808, (0.55, -0.85, 0.60), (0.05, 2.4, 1.90)),
+    (816, (-0.95, -1.00, 0.58), (1.00, 2.4, 1.90)),     # sweep 2 (8 f)
+    (832, (-0.40, -0.95, 0.58), (0.90, 2.4, 1.90)),
+    (840, (0.95, -0.90, 0.60), (-0.05, 2.4, 1.90)),     # sweep 3 (8 f)
+    (856, (0.50, -0.85, 0.58), (0.05, 2.4, 1.90)),
+], [(783, 791), (808, 816), (832, 840)])
 
 
 def bertillon14(g):
@@ -92,7 +93,7 @@ def prefect14(g):
 
 def bertillon15(g):
     cast, p = cast17.STORY17["bertillon_neutral"]
-    u = ease(clamp((g - 802) / 10.0)); push = 0.025 * math.sin((g - 812) * 0.5) if g >= 812 else 0.0
+    u = ease(clamp((g - 806) / 10.0)); push = 0.025 * math.sin((g - 816) * 0.5) if g >= 816 else 0.0
     p = dict(cast17.with_expr(p, "worried"))
     # fingertips on the bridge of the pince-nez, drawn in front of the face ('top' layer)
     p["arm_r"] = dict(hand=(lerp(0.40, 0.17, u), lerp(1.0, 0.07, u) + push), bend=lerp(0.3, -0.9, u), stretch=1.0, layer="top", shape="point" if u > 0.5 else "ball")
@@ -110,7 +111,7 @@ def prefect15(g):
 
 
 def prefect15_dy(g):
-    return lerp(-0.6, 3.2, clamp((g - 783) / 74.0)) - 0.0
+    return lerp(-0.6, 3.8, clamp((g - 783) / 74.0))
 
 
 class S06(C.Take):
