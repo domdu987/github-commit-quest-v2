@@ -19,3 +19,7 @@
 ## qa_auto blur flag: frame list and cause (answer to the director's rule)
 - Flagged: g 1964-1973 (10 frames: 4 handle + 6 in shot). Laplacian-variance ratio to the take median: 0.28-0.34 on g 1964-1971, 0.43-0.49 on g 1972-73, 0.55-0.73 on g 1974-79, ~1.0 from g ~1995. It is a CONTENT effect, not motion blur: Cycles renders no motion blur here and the start frames are the sharpest-rendered but flattest picture (cloth, cream wall, orange slab) against a median set by the detailed lattice and fair. A longer ease-in would keep the flat picture on screen longer, so I did not re-ease it. Flagging for the director's call (waive, or ask for fine dressing on the start pane).
 - qa_stats line: `saturation 0.607, brightness 94.8, in-shot motion median 10.97 p90 31.86` (s27); s26: `saturation 0.535, brightness 99.2, motion median 6.11 p90 12.46`.
+
+## §I gate (2026-11-20)
+- qa_stats2: `sat 0.606 vivid% 70.3 luma 94.9 contrast 31.4 detail 7.26 warm 56.4% cool 34.0% | motion med 10.97 p90 31.86 still% 11.1` (sat >= 0.50, vivid >= 45: pass; the still% is the planned near-still final 12 frames).
+- Acting: re-rendered with Maupassant EATING with his eyes shut (smug_shut): the fork hand cycles plate -> mouth at ~1.3 Hz in every frame; light: low sun through the window flaring the facade and cream room, warm lamp + cool shade in frame. Blur-flag note above is unchanged (g 1964-1973, flat start pane).

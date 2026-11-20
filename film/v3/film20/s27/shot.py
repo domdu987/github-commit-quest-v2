@@ -92,11 +92,15 @@ class Take(C.Take):
 
 
 def pose_of(g):
-    p = dict(cast20.STORY20["maupassant_seated_eyes_shut_right"][1])
-    p.update(seated=1, seat_h=SEAT_H, yaw=0.35)
-    p["head_roll"] = 5.0 + 1.8 * math.sin(g * 0.2)
-    p["squash"] = (1.0, 1.0 + 0.01 * math.sin(g * 0.3))
-    p["lean"] = 1.2 * math.sin(g * 0.15)
+    """eating blissfully with his eyes shut (smug_shut): the fork hand travels plate -> mouth on a ~1.3 Hz cycle (never still)."""
+    p = dict(cast20.STORY20["maupassant_seated_eat_chew"][1])
+    cyc = 0.5 - 0.5 * math.cos(2 * math.pi * 1.3 * g / 30.0)
+    p.update(seated=1, seat_h=SEAT_H, yaw=0.35, expr="smug_shut", mouth="smile")
+    p["arm_r"] = dict(hand=(lerp(0.55, 0.62, cyc), lerp(0.98, 0.60, cyc)), bend=lerp(0.3, -0.2, cyc))
+    p["prop_r"] = dict(type="fork20", angle=lerp(-30, -155, cyc))
+    p["pitch"] = -0.15
+    p["head_roll"] = 3.0 + 1.8 * math.sin(g * 0.2)
+    p["squash"] = (1.0, 1.0 + 0.012 * math.sin(g * 0.3))
     p["t"] = g / 30.0
     return p
 
