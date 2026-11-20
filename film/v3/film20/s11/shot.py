@@ -348,8 +348,9 @@ class Take(C.Take):
             else:
                 C.bpy.ops.mesh.primitive_cube_add(size=1.0)
                 ob = C.bpy.context.active_object
-                ob.scale = (rnd.uniform(0.8, 2.6) * CO.SC, 0.16 * CO.SC, 0.12 * CO.SC)
-                ob.location = (w[0], w[1], 0.06 * CO.SC)
+                hz = 0.08 + 0.0004 * i                                  # a distinct height per offcut: no coplanar overlaps (black z-fight slits)
+                ob.scale = (rnd.uniform(0.8, 2.6) * CO.SC, 0.16 * CO.SC, hz * CO.SC)
+                ob.location = (w[0], w[1], hz * 0.5 * CO.SC)
                 ob.rotation_euler = (0, 0, rnd.uniform(0, 3.1))
                 ob.data.materials.append(M["timber"] if i % 2 else M["timberdk"])
 
