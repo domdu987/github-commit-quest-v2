@@ -1,0 +1,1 @@
+PASSED TAKE gate round 17 (2026-11-20 16:30 UTC): QA-tech PASS, QA-art PASS (notes). Deviation for client report: flame wisp touches the right edge g1523-1547 (spec x<=700); horn tip clipped at left edge g1575+. take hash 21a303d8915b6f9841cea35bf5472e2df6439035
