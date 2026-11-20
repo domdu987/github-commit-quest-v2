@@ -628,14 +628,14 @@ def shaft_mat(color=(1.0, 0.72, 0.30), k=1.0):
     tr = N('ShaderNodeBsdfTransparent'); ad = N('ShaderNodeAddShader'); Lk(tr.outputs[0], ad.inputs[0]); Lk(em.outputs[0], ad.inputs[1])
     out = N('ShaderNodeOutputMaterial'); Lk(ad.outputs[0], out.inputs['Surface']); m.cycles.emission_sampling = 'NONE'; _SHAFT_MAT[key] = m; return m
 
-def god_rays(P, n=16, seed=5, strength=0.9, width=(3.0, 7.0), length=(38.0, 55.0), where=None, cross=True):
+def god_rays(P, n=16, seed=5, strength=0.9, width=(3.0, 7.0), length=(38.0, 55.0), where=None, cross=True, z_range=(12.0, 16.0)):
     """fake volumetric light shafts: long additive emissive cards (Transparent + Emission, no shadow, no bounce) lying along the sun direction, starting in the pine canopy and ending on the field.
     Each shaft is a CROSS of two quads (90 deg apart about the beam axis) so it reads from any direction. strength = emission multiplier (0.9 default); shaft_k node of the material scales all."""
     rr = rnd(seed); m = shaft_mat(k=strength * 1.0); kd = Vector(P['key_dir']).normalized(); sd = -kd
     pts = where or [(rr.uniform(-60, 40), rr.uniform(20, 70)) for _ in range(n)]
     objs = []
     for i, (x, y) in enumerate(pts):
-        ln = rr.uniform(*length); wd = rr.uniform(*width); top = Vector((x, y, rr.uniform(12, 16))); end = top + kd * ln
+        ln = rr.uniform(*length); wd = rr.uniform(*width); top = Vector((x, y, rr.uniform(*z_range))); end = top + kd * ln
         if end.z < 0: ln = top.z / -kd.z; end = top + kd * ln
         ax = (end - top).normalized(); up = Vector((0, 0, 1)); side = ax.cross(up).normalized(); nrm = side.cross(ax).normalized()
         for q in range(2 if cross else 1):
@@ -747,7 +747,7 @@ def infield_life(M, rr):
     """the south half of the field is not empty: team tents (maroon / gold), a long-jump runway + pit, a pole-vault mat, hurdle rows on the straights, cones, relay runners, benches + gear piles."""
     mk_people_mats(M); mb = S.MB('infield')
     M['maroonp'] = M.get('maroonp') or mat('maroonp', '#a82040', '#bc3050'); M['goldp'] = M.get('goldp') or mat('goldp', '#f0c040', '#f4d060')
-    M['matblue'] = mat('matblue', '#1c50e0', '#3a72f4'); M['sand'] = mat('sandA', '#ffd070', '#ffe08c', 6)
+    M['sand'] = mat('sandA', '#ffd070', '#ffe08c', 6)
     # tents: four posts, striped pyramid roof, bench + coolers under it
     for i, (tx, ty, yw, c1) in enumerate([(-18, -30, 0.1, 'maroonp'), (-10, -30, 0.0, 'goldp'), (14, -28, -0.1, 'maroonp'), (22, -30, 0.1, 'blue')]):
         for dx, dy in ((-2.2, -2.2), (2.2, -2.2), (2.2, 2.2), (-2.2, 2.2)): mb.rod(M['metal'], (tx + dx, ty + dy, 0), (tx + dx, ty + dy, 2.6), 0.05, 0.05, 6)
@@ -759,7 +759,9 @@ def infield_life(M, rr):
     mb.box(M['dirt'], (-24, -62, 0.012), (30.0, 2.4, 0.02)); mb.box(M['sand'], (-6.5, -62, 0.014), (5.0, 3.2, 0.02)); mb.box(M['chalk'], (-9.0, -62, 0.03), (0.3, 2.4, 0.01))
     person(mb, M, -17.0, -62.0, 0.02, -math.pi / 2, 'maroon', 'pantsb', 'skin1', 'hair', 'run', phase=0.6)
     # pole-vault / high-jump style mats (blue) with standards
-    mb.box(M['matblue'], (18.0, -62.0, 0.5), (5.0, 4.0, 1.0)); mb.box(M['matblue'], (18.0, -56.0, 0.35), (5.0, 3.0, 0.7)); mb.rod(M['metal'], (15.0, -58.5, 0), (15.0, -58.5, 4.5), 0.05, 0.05, 6); mb.rod(M['metal'], (21.0, -58.5, 0), (21.0, -58.5, 4.5), 0.05, 0.05, 6)
+    for (yy, rx, ry) in ((-62.0, 2.6, 2.0), (-55.5, 1.6, 1.2)):                       # 1963: SAWDUST pits in a wooden frame (no foam anywhere)
+        mb.box(M['wood'], (18.0, yy, 0.2), (rx * 2 + 0.3, ry * 2 + 0.3, 0.4)); mb.ell(M['saw'], (18.0, yy, 0.38), (rx, ry, 0.22), (14, 8))
+    mb.rod(M['woodpale'], (15.0, -58.5, 0), (15.0, -58.5, 4.5), 0.05, 0.05, 6); mb.rod(M['woodpale'], (21.0, -58.5, 0), (21.0, -58.5, 4.5), 0.05, 0.05, 6)
     mb.rod(M['yellow'], (15.0, -58.5, 4.2), (21.0, -58.5, 4.2), 0.03, 0.03, 6)
     # hurdles on the straights (lane 2 / 3), cones, start blocks
     for k in range(9): S.hurdle(mb, M, (-49.0, -36.0 - k * 1.7, 0.0), math.pi / 2, 0.0); S.hurdle(mb, M, (51.0, -36.0 - k * 1.7, 0.0), math.pi / 2, 0.0)
@@ -963,3 +965,35 @@ def spot(x, y, r=5.0, k=1.2, color=(1.0, 0.8, 0.35)):
     out = N('ShaderNodeOutputMaterial'); Lk(ad.outputs[0], out.inputs['Surface']); m.cycles.emission_sampling = 'NONE'
     z = 0.06
     return quad_obj('spot', [(x - r, y - r, z), (x + r, y - r, z), (x + r, y + r, z), (x - r, y + r, z)], m)
+
+
+def sawdust_flecks(frame, position, strength=1.0, seed=0, floor=None):
+    """v2 sawdust burst: SMALL flecks (2-4 cm grains, a few 6 cm splinters), low arcs (about 0.3 m high, 1 m out) that fall back and stay on the surface within ~0.5 s: nothing hangs in the air.
+    Same geometry-node group as F.sawdust_spray; position (x, y, z) in D (z = the surface), floor = landing z in D."""
+    M = STATE['M']; rr = rnd(91 + seed * 7 + int(frame)); p = Vector(position) * DM; fz = 0.02 if floor is None else (floor * DM - p.z) + 0.02
+    items = []
+    for i in range(int(70 * strength) + 10):
+        az = rr.random() * 6.28; el = math.radians(rr.uniform(35, 68)); sp_ = rr.uniform(0.9, 2.3) * (0.6 + 0.4 * strength); ln = rr.choice((0.025, 0.03, 0.04, 0.045, 0.06)); rd = rr.uniform(0.1, 0.7)
+        items.append((rd * math.cos(az), rd * math.sin(az), 0.03, sp_ * math.cos(el) * math.cos(az), sp_ * math.cos(el) * math.sin(az), sp_ * math.sin(el), ln))
+    V_ = []; F_ = []; mi = []; C = []; Vv = []; Sp = []; Tl = []
+    for (cx, cy, cz, vx, vy, vz, ln) in items:
+        a = rr.random() * 6.28; B, Fs = F.boxes_np([(cx, cy, cz)], [(ln, ln * rr.uniform(0.4, 0.8), ln * 0.35)], [a]); t_land = (vz + math.sqrt(max(vz * vz + 19.62 * (cz - fz), 0.0))) / 9.81
+        o = len(V_); V_ += B.tolist(); F_ += [[o + i for i in f] for f in Fs.tolist()]; mi += [rr.choice((0, 0, 1))] * 6; C += [(cx, cy, cz)] * 8; Vv += [(vx, vy, vz)] * 8; Sp += [(rr.uniform(-8, 8), rr.uniform(-8, 8), rr.uniform(-8, 8))] * 8; Tl += [t_land] * 8
+    me = bpy.data.meshes.new('flecks'); me.from_pydata(V_, [], F_); me.update()
+    for nm, typ, arr in (('c', 'FLOAT_VECTOR', C), ('v', 'FLOAT_VECTOR', Vv), ('sp', 'FLOAT_VECTOR', Sp), ('tl', 'FLOAT', Tl)):
+        at = me.attributes.new(nm, typ, 'POINT')
+        if typ == 'FLOAT': at.data.foreach_set('value', np.array(arr, dtype=np.float32))
+        else: at.data.foreach_set('vector', np.array(arr, dtype=np.float32).reshape(-1))
+    me.materials.append(M['saw']); me.materials.append(M['chip']); me.polygons.foreach_set('material_index', np.array(mi, dtype=np.int32))
+    ob = bpy.data.objects.new('flecks_%d' % frame, me); STATE['SET'].objects.link(ob); ob.parent = root(); ob.location = p; L.T.no_bounce(ob)
+    ng = F._spray_group().copy(); ng.nodes['start'].outputs[0].default_value = float(frame); md = ob.modifiers.new('spray', 'NODES'); md.node_group = ng
+    return ob
+
+def burial_mound(x, y, base, top, rr=None, r=(1.15, 0.95), toward=(0.0, -0.3)):
+    """a real 3D sawdust mound (smooth ellipsoids + grains, metres) from z `base` to `top`, centred (x, y) shifted by `toward`: the buried coach sits inside it (card chest at `top`)."""
+    rr = rr or rnd(7); M = STATE['M']; mb = S.MB('burial'); cx, cy = x + toward[0], y + toward[1]; h = top - base
+    mb.ell(M['saw'], (cx, cy, base), (r[0], r[1], h), (24, 12)); mb.ell(M['saw'], (cx - 0.55, cy + 0.15, base), (r[0] * 0.7, r[1] * 0.7, h * 0.8), (18, 10)); mb.ell(M['saw'], (cx + 0.55, cy - 0.1, base), (r[0] * 0.65, r[1] * 0.7, h * 0.75), (18, 10))
+    for i in range(160):
+        a = rr.random() * 6.28; rd = rr.random() ** 0.6; xx = cx + math.cos(a) * rd * r[0]; yy = cy + math.sin(a) * rd * r[1]; zz = base + h * math.sqrt(max(0.0, 1 - rd * rd)) * 0.97
+        mb.box(M['chip'] if i % 3 else M['sawdk'], (xx, yy, zz), (rr.uniform(0.04, 0.09), rr.uniform(0.015, 0.03), 0.01), rz=rr.random() * 6, rx=rr.uniform(-0.4, 0.4))
+    L.fin(mb)

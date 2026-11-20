@@ -24,7 +24,7 @@ def catmull(pts, s):
 # east pine grove (x 36-54, tops at 13-19 m), skims the bleacher (x 11-15) 8 m up, drops behind the pit side and ends medium on Dick at his mark (5.6, -0.8): 3.1 m away, he is 40 % of the frame height.
 BZ1 = dict(dur=4.4,
            loc=[(24.0, -12.0, 100.0), (40.0, -30.0, 58.0), (37.0, -16.0, 21.0), (24.0, -9.0, 8.5), (11.0, -6.8, 3.0), (4.6, -3.9, 1.3)],
-           look=[(6.0, 50.0, 0.0), (8.0, 16.0, 0.0), (8.0, 8.0, 1.5), (6.5, 3.0, 1.5), (5.8, -0.4, 1.3), (5.7, -0.6, 1.2)],
+           look=[(6.0, 50.0, 0.0), (10.0, 22.0, 1.0), (12.0, 30.0, 4.5), (6.5, 3.0, 1.5), (5.8, -0.4, 1.3), (5.7, -0.6, 1.2)],
            ease=2.4)
 
 def bigzoom1_path(t, spec=BZ1):
@@ -62,8 +62,8 @@ def _D(p): return tuple(c * U for c in p)
 def _cam(loc_m, look_m, lens=22.0):
     c = F.make_camera(F.cam_from(_D(loc_m), _D(look_m), lens=lens)); return c, tuple(c.location)
 
-GRADE_SAT = dict(s1=1.3, s2=1.3, s3=1.2, s4=1.0, s5=1.1, s6=1.35, s7=1.15)
-EXPO = dict(s1=-0.7, s2=-0.85, s3=-1.15, s4=-1.15, s5=-1.15, s6=-0.9, s7=-1.6)
+GRADE_SAT = dict(s1=1.3, s2=1.3, s3=1.2, s4=1.0, s5=1.03, s6=1.35, s7=1.15)
+EXPO = dict(s1=-0.7, s2=-0.85, s3=-1.15, s4=-1.15, s5=-1.35, s6=-1.1, s7=-1.6)
 CUR = ['s3']
 def _base(light='HERO', **kw):
     A = V.build_a2(light, **kw); sc = bpy.context.scene; F.setup_render(sc, 'final'); sc.cycles.samples = 14; sc.view_settings.exposure = EXPO.get(CUR[0], -0.8); V.set_grade_sat(sc, GRADE_SAT.get(CUR[0], 1.15)); V.CT(); return A, sc
@@ -81,11 +81,11 @@ def _put_hero_cards(cl, dick_pose='rock_a', boys=True, coach=True, scale_ppd=128
     rep['dick'] = V.ground_card('c_dick', 'dick', cast15.pose_for(dick_pose, 'dick'), D(M['dick_mark']), cl, ppd=scale_ppd, contact=(1.4, 0.5))
     return rep
 
-RAYS_ON = False   # director review: the shafts read as glitches from these angles; set True to use them (V.god_rays)
-def rays(seed=11, k=0.28):
+RAYS_ON = True    # low, faint shafts among the pines (tops 6-10 m, k 0.09); False = none
+def rays(seed=11, k=0.09):
     """4 clean soft shafts falling out of the west pine grove edge (x -48..-38) toward the field; strength k."""
     if not RAYS_ON: return
-    rr = V.rnd(seed); V.god_rays(STATE['P'], n=4, seed=seed, strength=k, width=(6.0, 9.0), length=(15.0, 20.0), where=[(rr.uniform(-48, -38), 12 + 6 * i) for i in range(4)])
+    rr = V.rnd(seed); V.god_rays(STATE['P'], n=4, seed=seed, strength=k, width=(3.5, 5.5), length=(12.0, 16.0), z_range=(6.0, 10.0), where=[(rr.uniform(-60, -44), 12 + 6 * i) for i in range(4)])
 
 def hero_beam(x, y, k=1.5, width=4.0):
     """one visible shaft that lands on (x, y) m: the sun beam that makes Dick findable in the BIGZOOM start."""
@@ -136,15 +136,15 @@ def s6_newspaper(q):
 
 def s7_buried(q):
     import cast15
-    A, sc = _base(); M = STATE['marks_m']; cam, cl = _cam((-0.5, 6.2, 1.15), (-1.35, 8.9, 1.25)); V.rim_on(to_light=(-0.8, -0.5), width=5, strength=0.9); ct = V.CT()
-    mk = Vector(_D((-1.35, 8.0, 0.80))); pose = cast15.pose_for('coach_buried', 'coach')
-    r = ct.put('b_coach', 'coach', pose, tuple(mk), cl, canvas=cast15.CANVAS15_WIDE, dz=0.0, shadow=None, ppd=192)
-    f0 = 2040; F.sawdust_spray(f0 - 9, (mk.x, mk.y, mk.z + 0.2), strength=1.7, seed=3)
-    for i, (cast, pn, sz) in enumerate((('boy1', 'sit_laugh', 0), ('boy2', 'sit_gape', 1), ('boy3', 'sit_laugh', 2))):
-        p = M['boys_bench_a'] if i == 0 else (M['boys_bench_b'] if i == 1 else M['boys_bench_c']); V.ground_card('s_b%d' % i, cast, cast15.pose_for(pn, cast), (p[0] * U + 0.2, p[1] * U), cl, z=0.0, ppd=128)
-    rays()
-    
-    sc.frame_set(f0); return cam, 'T7 coach buried in the sawdust'
+    A, sc = _base(); M = STATE['marks_m']; X, Y = 0.9, 7.2; base = 0.46
+    cam, cl = _cam((X - 1.0, Y - 2.8, 1.15), (X, Y, 1.25)); V.rim_on(to_light=(-0.8, -0.5), width=5, strength=0.9); ct = V.CT()
+    pose = dict(cast15.pose_for('coach_buried', 'coach'), buried=0)          # no painted mound: a real 3D mound covers him
+    r = ct.put('b_coach', 'coach', pose, (X * U, Y * U, base * U), cl, canvas=cast15.CANVAS15_WIDE, shadow=None, ppd=192)
+    chest = r['world'](r['anchors']['chest']); V.burial_mound(X, Y, base, chest.z * DM - 0.12, r=(0.95, 0.8))
+    f0 = 2040; V.sawdust_flecks(f0 - 12, (X * U, Y * U, (base + 0.9) * U), strength=1.0, seed=3, floor=base * U)
+    for i, (cast, pn) in enumerate((('boy1', 'sit_laugh'), ('boy2', 'sit_gape'), ('boy3', 'sit_laugh'))):
+        p = (M['boys_bench_a'], M['boys_bench_b'], M['boys_bench_c'])[i]; V.ground_card('s_b%d' % i, cast, cast15.pose_for(pn, cast), (p[0] * U + 0.2, p[1] * U), cl, z=0.0, ppd=128)
+    rays(); sc.frame_set(f0); return cam, 'T7 coach buried in a 3D sawdust mound, small flecks falling'
 
 STILLS = [('s1', s1_bigzoom_start), ('s2', s2_bigzoom_mid), ('s3', s3_bigzoom_end), ('s4', s4_flop_low), ('s5', s5_ots_coach), ('s6', s6_newspaper), ('s7', s7_buried)]
 

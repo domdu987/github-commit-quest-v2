@@ -14,7 +14,7 @@ Signs are PIL textures in `work_v2_a/tex/` shown as emission (`V.mat_tex`).
 
 ## Light
 - Key: warm sun + painted blue-violet shade (shade hue 224-262).
-- **God rays**: `V.god_rays(P, n, seed, strength, width, length, where=[(x,y)..])` additive (Transparent+Emission) crossed quads along the sun direction; `V.tune_rays(k)`; stills use `SHT.rays()` (6 beams out of the west grove, k 0.42).
+- **God rays**: `V.god_rays(P, n, seed, strength, width, length, where=[(x,y)..], z_range=(12,16))` additive (Transparent+Emission) crossed quads along the sun direction, soft edges, no streak noise; `V.tune_rays(k)`. `SHT.RAYS_ON` (default True) / `SHT.rays()`: 4 LOW shafts (tops 6-10 m, k 0.09) out of the west pine grove. Keep k <= 0.15 and tops below the tree line, otherwise they smear over sky and bunting.
 - **Rim / back light for cards**: `V.rim_on(to_light=(-0.7,-0.5), color='#ffb040', width=5, strength=1, glow=0.5)` BEFORE `put`/`ground_card`; to_light = screen direction (x right, y down) from figure to light; `V.rim_off()`.
 
 ## Grounding
@@ -28,3 +28,10 @@ Signs are PIL textures in `work_v2_a/tex/` shown as emission (`V.mat_tex`).
 
 ## Measured / limits
 See report. Shot cost ~5 s wall/9 s CPU (preview), build 3 s. Not done: Dick hero flop uses only the cast sprite (no motion), T3 DAY shift not tuned (`HERODAY` preset only), OTS foreground Dick is a 3D stand-in, newspaper hands crude.
+
+## Round 3 (QA-art fixes)
+- 1963: no foam anywhere. The blue mats in the infield are now two sawdust pits in wooden frames (wooden standards).
+- Exposure / saturation defaults: preset `A_HERO` exposure -0.7, grade 1.22; each still overrides them in `SHT.EXPO` / `SHT.GRADE_SAT` (s1 -0.7/1.3 ... s7 -1.6/1.15; s6 -1.1/1.35). `_base()` re-applies them after `F.setup_render` (which resets exposure to 0).
+- T7: `V.burial_mound(x, y, base, top)` is a real 3D sawdust mound (ellipsoids + grains) covering the buried coach (pose `buried=0`, card chest at the mound top). `V.sawdust_flecks(frame, pos, strength, seed, floor)` = small 2-6 cm flecks on low arcs that land within ~0.5 s (replaces `F.sawdust_spray` for A: its chips are 7-15 cm).
+- BIGZOOM 1 look points now sweep over the bleacher and the MEDFORD HIGH sign at mid path.
+- Back-view Dick: cast15 has no back view (head `yaw` turn only). s5 uses the 3/4 head-turn card; a render team that needs a true back view must add a pose to cast15.
