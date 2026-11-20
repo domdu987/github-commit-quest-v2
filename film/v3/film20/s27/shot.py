@@ -61,6 +61,48 @@ def cam_at(A, g):
     return loc, look, sh, lens
 
 
+def dress_table():
+    """fine runtime detail on his window table (director: more fine interior detail at the start framing): fruit bowl with 14 fruits, 4 candles with flames,
+    a wine bottle + cork, 8 cutlery rods, bread rolls.  Table top is at the cloth (furn_i_clothtop) z; centre = the table in front of him."""
+    import bpy, math
+    top = [o for o in bpy.data.objects if o.name == "furn_i_clothtop"]
+    z0 = 110.33
+    cx, cy = 0.0, -67.2
+    def mat(name, col, em=0.0):
+        m = bpy.data.materials.new(name); m.use_nodes = True
+        b = m.node_tree.nodes["Principled BSDF"]; b.inputs["Base Color"].default_value = col; b.inputs["Roughness"].default_value = 0.5
+        if em:
+            b.inputs["Emission Color"].default_value = col; b.inputs["Emission Strength"].default_value = em
+        return m
+    mats = dict(wine=mat("d_wine", (0.05, 0.12, 0.05, 1)), gold=mat("d_gold", (0.85, 0.65, 0.2, 1)), orange=mat("d_orange", (0.95, 0.45, 0.05, 1)),
+                red=mat("d_red", (0.7, 0.08, 0.06, 1)), yellow=mat("d_yellow", (0.95, 0.8, 0.2, 1)), bread=mat("d_bread", (0.75, 0.5, 0.25, 1)),
+                flame=mat("d_flame", (1.0, 0.7, 0.2, 1), 8.0), white=mat("d_white", (0.95, 0.95, 0.9, 1)))
+    def add(kind, m, loc, size, rot=(0, 0, 0)):
+        if kind == "sph":
+            bpy.ops.mesh.primitive_uv_sphere_add(radius=1.0, location=loc, segments=12, ring_count=8)
+        else:
+            bpy.ops.mesh.primitive_cylinder_add(radius=1.0, depth=1.0, location=loc, vertices=10)
+        ob = bpy.context.active_object; ob.scale = size; ob.rotation_euler = rot; ob.data.materials.append(mats[m]); ob.name = "dress_" + m
+        return ob
+    # fruit bowl centre
+    add("cyl", "gold", (cx, cy, z0 + 0.05), (0.42, 0.42, 0.10))
+    for i in range(14):
+        a = i * 2.4; r = 0.10 + 0.22 * ((i % 5) / 5.0)
+        add("sph", ("orange", "red", "yellow")[i % 3], (cx + r * math.cos(a), cy + r * math.sin(a), z0 + 0.13 + 0.07 * (i % 3)), (0.085, 0.085, 0.085))
+    # wine bottle + cork and four candles
+    add("cyl", "wine", (cx + 1.0, cy + 0.15, z0 + 0.32), (0.09, 0.09, 0.64)); add("cyl", "white", (cx + 1.0, cy + 0.15, z0 + 0.68), (0.035, 0.035, 0.10))
+    for sx in (-1, 1):
+        for sy in (-0.9, 0.9):
+            add("cyl", "white", (cx + sx * 0.85, cy + sy * 0.55, z0 + 0.14), (0.035, 0.035, 0.28)); add("sph", "flame", (cx + sx * 0.85, cy + sy * 0.55, z0 + 0.32), (0.03, 0.03, 0.055))
+    # cutlery rods + bread rolls in a ring
+    for i in range(8):
+        a = i * math.pi / 4.0 + 0.2; r = 1.05
+        add("cyl", "gold", (cx + r * math.cos(a), cy + r * math.sin(a), z0 + 0.012), (0.012, 0.012, 0.32), (math.pi / 2, 0, a))
+    for i in range(4):
+        a = i * math.pi / 2.0 + 0.7
+        add("sph", "bread", (cx + 0.78 * math.cos(a), cy + 0.78 * math.sin(a), z0 + 0.07), (0.14, 0.10, 0.07))
+
+
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light="DAY", quality=quality, name="cam_s27")
@@ -69,6 +111,7 @@ class Take(C.Take):
                 if ob.name.startswith("fg_"):
                     ob.hide_render = True                  # director F1: the iron post slashing the opening is hidden
                     print("hid FG", ob.name, flush=True)
+        dress_table()
         self.scene.frame_set(bf(G_FIRST))
         self.key_cam(bf(G_FIRST), *cam_at(self.A, G_FIRST)[:2])
         self.cam.data.lens = cam_at(self.A, G_FIRST)[3]
