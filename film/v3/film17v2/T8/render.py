@@ -79,13 +79,13 @@ def _ramp(g, a, b): return (g - a) / float(b - a)
 I_c, I_p = S['inspector_seated_stiff']
 S['insp_red_seated'] = (I_c, dict(I_p, expr='furious', mouth='clench', flush17=1.0, fx=['sweat'], seat17='chair', pitch=0.0, yaw=0.10, gaze=(-0.8, 0.0)))   # red-faced, sitting stiff
 B_c, B_p = S['bertillon_measuring']
-BDX0 = float(os.environ.get('BDX0', -1.25)); BHS = float(os.environ.get('BHS', 0.8))
-BDXE = float(os.environ.get('BDXE', -1.1)); BDX2 = float(os.environ.get('BDX2', -1.1)); SHY = float(os.environ.get('SHY', 0.14)); SHG0 = int(os.environ.get('SHG0', 1868)); SHG1 = int(os.environ.get('SHG1', 1892)); PFDX = float(os.environ.get('PFDX', 0.5)); BDG0 = int(os.environ.get('BDG0', 2030))
+BDX0 = float(os.environ.get('BDX0', -1.25)); BHS = float(os.environ.get('BHS', 1.0))
+BDXE = float(os.environ.get('BDXE', -1.1)); BDX2 = float(os.environ.get('BDX2', -1.2)); SHY = float(os.environ.get('SHY', 0.14)); SHG0 = int(os.environ.get('SHG0', 1868)); SHG1 = int(os.environ.get('SHG1', 1892)); PFDX = float(os.environ.get('PFDX', -0.6)); BDG0 = int(os.environ.get('BDG0', 2030))
 def bnudge(g):
     """Bertillon's offset from his anchor ML(1.3,1.85): beside the chair on the inspector's right (screen-left), nearer the camera than the head so the jaws draw in front;
     he steps toward the chair for the clamp (g2012-2040) so the glove stays in frame as the camera pushes in."""
-    return (BDX0 + (BDXE - BDX0) * _ss(_ramp(g, 2012, 2040)) + (BDX2 - BDXE) * _ss(_ramp(g, BDG0, 2052)), -0.10)     # dx, dy (m): Bertillon stands beside the chair (not in front of the inspector's face), same depth as the chair
-EAR_X = 0.52; EAR_ANG = -30
+    return (BDX0 + (BDXE - BDX0) * _ss(_ramp(g, 2012, 2040)) + (BDX2 - BDXE) * _ss(_ramp(g, BDG0, 2040)), -0.10)     # dx, dy (m): Bertillon stands beside the chair (not in front of the inspector's face), same depth as the chair
+EAR_X = 0.52; EAR_ANG = float(os.environ.get('EAR_ANG', -30))
 
 
 def bertillon_pose(g):
@@ -132,7 +132,7 @@ def ear_target(g):
     hs = 1 - (1 - BHS) * _ss(_ramp(g, 2012, 2040)); sb = P.K.CAST_H['bertillon'] * hs / P.K.CAST_HD['bertillon']; si = P.K.CAST_H['inspector17'] / P.K.CAST_HD['inspector17']
     dx = (pi[0] - (pb[0] + bnudge(g)[0]) - EAR_X * si) / sb          # world +x is screen right here (camera looks +y); the ear is 0.5 D left of the inspector's head
     zi = P.FZ + P.K.HEAD_Z['chair'] + 0.10 * si; zb = P.FZ + P.K.CAST_H['bertillon'] * hs - 0.51 * sb - 0.0   # head centre height of Bertillon (head top 0.51 D above the head centre)
-    return (dx + (float(os.environ.get('TX', 0.27)) + float(os.environ.get('TX2', 0.5)) * _ss(_ramp(g, 2024, 2052))), (zb - zi) / sb + float(os.environ.get('TY', 0.18)))       # +(-0.08, +0.18) D: measured on the g2052 still (jaws onto the ear, not above it)
+    return (dx + (float(os.environ.get('TX', 0.27)) + float(os.environ.get('TX2', 0.25)) * _ss(_ramp(g, 2024, 2040))), (zb - zi) / sb + float(os.environ.get('TY', 0.18)) + float(os.environ.get('TY2', 0.0)) * _ss(_ramp(g, 2024, 2040)))       # +(-0.08, +0.18) D: measured on the g2052 still (jaws onto the ear, not above it)
 
 _orig_sc = P.K.sliding_calipers
 def _sc(B, c, *a, **k):          # director: the thin light stick by the small table = calipers lying on it; hidden for T8
