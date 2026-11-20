@@ -4,3 +4,4 @@ cards/
 work/
 *.jsonl
 __pycache__/
+raw_frames/

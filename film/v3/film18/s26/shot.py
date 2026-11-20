@@ -41,7 +41,37 @@ def cam_track(T, g, t):
     return dict(loc=(2.0 + sw, gen_y - rel(g), 0.95), look_at=(0.8 + 0.4 * sw, gen_y + 4.0, 2.5), lens=24)
 
 
-T = c18.Take('s26', FIRST, LAST, draft=(mode == 'draft'), cam_fn=cam_track)
+def _gen_pos(g):
+    return (1.35 + 0.3 * math.sin(g * 0.11), -50.0 - SPEED * (g - G0) / 30.0)
+
+
+G_ZOOM = 2066                                       # end of the BIGZOOM: low medium on the general
+WIDE_LOC = (40.0, 12.0, 52.0); WIDE_LOOK = (0.0, -100.0, -22.0)
+
+
+def cam_bigzoom(T, g, t):
+    """one continuous eased crane-down + swing round in FRONT of him: cylindrical interpolation about the general (azimuth 51 -> -83 deg through screen-right,
+    radius 38 -> 4.9 D, height 60 -> 0.95 D), look-at from the wall/road overview to his chest; from g 2066 the old tracking pull + push-in, identical at the join."""
+    end = cam_track(T, g, t)
+    if g >= G_ZOOM:
+        return end
+    gx, gy = _gen_pos(g)
+    u = c18.ease((g - G0) / float(G_ZOOM - G0)) if g > G0 else 0.0
+    u = 0.9 * u + 0.1 * u * u * (3 - 2 * u) if False else u
+    g0x, g0y = _gen_pos(G0)
+    s_off = (WIDE_LOC[0] - g0x, WIDE_LOC[1] - g0y)
+    r0 = math.hypot(*s_off); a0 = math.atan2(s_off[1], s_off[0])
+    e_off = (end['loc'][0] - gx, end['loc'][1] - gy)
+    r1 = math.hypot(*e_off); a1 = math.atan2(e_off[1], e_off[0])
+    r = r0 * (r1 / r0) ** u                          # geometric: equal zoom steps per second
+    ang = c18.lerp(a0, a1, u)
+    z = end['loc'][2] + (WIDE_LOC[2] - end['loc'][2]) * max(0.0, (r - r1) / (r0 - r1))      # height follows the radius: no top-down view in the middle
+    w = (1.0 - u) ** 6.0                                                       # the look-at lets go of the overview quickly and stays on him
+    look = tuple((end['look_at'][i] - (gx, gy, 0.0)[i]) * (1 - w) + (WIDE_LOOK[i] - (g0x, g0y, 0.0)[i]) * w + (gx, gy, 0.0)[i] for i in range(3))
+    return dict(loc=(gx + r * math.cos(ang), gy + r * math.sin(ang), z), look_at=look, lens=c18.lerp(34.0, 24.0, u))
+
+
+T = c18.Take('s26', FIRST, LAST, draft=(mode == 'draft'), cam_fn=cam_bigzoom)
 c18.fix_sky_clean(T, 'sky_DAWN', flat_above=0.6)
 import bpy
 for ob in bpy.data.objects:                       # no grey rocks / wheels / ring props / hay anywhere (TAKE gate rule 2)
@@ -51,7 +81,16 @@ OX_LAT = [-1.5, 1.7, -3.0, 3.1]
 OX_START = [9.0, 11.5, 14.0, 16.5]; OX_END = [5.0, 4.3, 6.0, 7.8]       # distance behind the general: gaining on him
 
 
+import bpy
+_sm = R2._shadow_quad('cpool', 1.0, 1.0)
+if not _sm.materials:
+    _sm.materials.append(STATE['M']['pool_w'])
+POOL = bpy.data.objects.new('t18_genpool', _sm); STATE['SET'].objects.link(POOL); POOL.visible_shadow = False; J.no_bounce(POOL)
+
+
 def frame(T, g):
+    gx, gy = _gen_pos(g); u_ = c18.ease((g - G0) / float(G_ZOOM - G0)) if G0 < g < G_ZOOM else (0.0 if g <= G0 else 1.0)
+    POOL.location = (gx, gy + 1.5, 0.08); k = 2.4 + 15.0 * (1.0 - u_) ** 2; POOL.scale = (k, k, 1.0)       # a warm dawn pool of light under him: findable in the wide
     cam = V(T.cur['loc']); dy = SPEED * (g - G0) / 30.0
     gen = V((1.35 + 0.3 * math.sin(g * 0.11), -50.0 - dy, 0.0))
     heads = []
@@ -90,6 +129,7 @@ def corner_helmet(g):
 
 _f0 = frame
 def frame(T, g):
+    HELM.hide_render = g < 2046
     corner_helmet(g)
     return _f0(T, g)
 
