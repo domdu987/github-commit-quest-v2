@@ -114,7 +114,7 @@ def main(mode, gs, samples):
         sx = -7.5 + 15.0 * i / (NSC - 1.0) + (0.5 if rank else 0.0); sy = 29.0 + 0.45 * math.sin(i * 2.1) + 1.0 * rank; cast = ['scot_a', 'scot_b', 'scot_c', 'scot_a_v1', 'scot_b_v2', 'scot_c_v1'][i % 6]
         nm = 'w%d_%d' % (rank, i); C.add(nm, cast, (sx, sy, float(K.ground(sx, sy)))); C.items[nm].update(base=cast.split('_v')[0], i=i, rank=rank); wall.append(nm)
     for g in gs:
-        if mode == 'final' and os.path.exists(os.path.join(HERE, 'raw_final', 'g_%04d.json' % g)): continue
+        if mode == 'final' and os.path.exists(os.path.join(HERE, os.environ.get('RAWDIR', 'raw_final'), 'g_%04d.json' % g)): continue
         t0 = time.time(); f = g
         loc, look, lens, viv = camera(g); c21.set_cam(cam, loc, look, lens); K.STATE['vivid'] = viv
         t = g / 30.0; K.set_flutter(t); K.set_smoke(t); K.set_flow(t); scene.frame_set(f)
@@ -156,7 +156,7 @@ def main(mode, gs, samples):
                 pose['blink'] = cast21.blink_at(g, 70, n_ * 11)
                 C.put(nm, f, pose, xyz=(x + 0.25 * sgn, y + 0.5, z), lift=0.04 * abs(math.sin(k2 * 0.35 + n_)))
         C.sprites(f); bpy.context.view_layer.update(); actors.sync_all(scene, cam)
-        out = os.path.join(HERE, 'raw_' + mode, 'g_%04d.png' % g); os.makedirs(os.path.dirname(out), exist_ok=True)
+        out = os.path.join(HERE, os.environ.get('RAWDIR', 'raw_' + mode), 'g_%04d.png' % g); os.makedirs(os.path.dirname(out), exist_ok=True)
         K.render(out, mode, samples)
         json.dump(dict(g=g, cam=[round(v, 3) for v in loc], look=[round(v, 3) for v in look], lens=lens, vivid=[round(v, 3) for v in viv]), open(out[:-4] + '.json', 'w'))
         print('H1 g', g, round(time.time() - t0, 1), flush=True)

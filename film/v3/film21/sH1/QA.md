@@ -11,3 +11,4 @@ saturation 0.508, vivid 54 %, luma 130 (over the 85-110 band: bright sunny exter
 - The Scots wall tint is a light blue multiply on the cards; the saltire banners are the world's.
 - Placeholder crowd cards (meadow) are not re-faced per frame; they are tiny in this segment.
 - qa_auto: one FAIL, 'suspected blur' on 6 frames (g1280, 1281, 1299, 1300, 1302, 1307): the sharp-frame check trips on the fast terrain/water sweep of the swoop (no blur or DOF is rendered; it is low-texture water and sky at speed). Left as is; director to judge.
+- Palette fix check (film21/main 4bb560a): re-rendered g1245, g1295, g1345 with the new set. Bridge-mouth end (g1345, the H2a join) and the swoop far hills are visually unchanged; only the hill shelf ground in the ride (g1239-1280) shifts from orange to olive-ochre, which does not touch the join. Delivered as rendered (old palette), no re-render.
