@@ -56,3 +56,11 @@ Measure every take with `python3 PROJ/qa_stats.py take.mkv` and report the line 
 - **Colour:** mean saturation >= 0.47 and mean luma 85-110 (film 2: 0.49 / 94). Night shots (s20, s21, s22) may sit darker but not below ~70 and must stay saturated; no peach haze over the frame.
 - **Nothing floats:** feet/body on a surface with a contact shadow; no heads hanging in the sky; no bars, poles or props through a face; no character sliced by a slab; no debris hanging still in the air.
 - **Camera distance:** prefer wide / medium-wide that shows the place; no face taller than ~35 % of the frame height; no character cut in half by a frame edge.
+
+## 8. QA_TEAM.md §I (client decision 2026-11-20): match the reference Shorts (film/ref_shorts/*.jpg) — BLOCKING
+- Your shots are now grouped into CAMERA-TRAVEL takes (film20/shot_plan.md "§I re-plan" table): render each group as ONE continuous take (no cuts inside), travelling between beats (follow, crane, push through a window/door, ride along). Beat times stay the same.
+- Motivated key light visible in every take (window shafts, forges, gas lamps, spark, lamps at night), warm and cool in the same frame, no flat even light.
+- Saturation >= 0.50 and vivid % >= 45: `python3 PROJ/qa_stats2.py take.mkv` (put the line in QA.md).
+- Characters always act (walking, pouring, writing, hammering, eating); nobody still > 1.5 s; props in hand.
+- Close-ups only as ~1 s punctuation (max 3 in the film: Maupassant's vow "สักครั้ง", the jeer, worried Eiffel at "ครบแล้วต้องรื้อ"); everything else wide/medium in the rich set.
+- Short in-world signs are ALLOWED (Latin letters only, sharp, readable on a phone) where they tell the viewer where we are or what a thing is.
