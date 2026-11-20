@@ -32,7 +32,9 @@ GS = list(range(G_FIRST, G_LAST + 1))
 G_WORD = C.cap_g("เท่าจานรอง")                         # 1079: caption start; "จานรอง" is spoken ~g 1085
 SNAP = (G_WORD - 8, G_WORD + 12)                       # 1073..1089 (16 f)
 G_LOOKUP = (G_WORD - 40, G_WORD - 24)                 # the palm goes out toward the H4 (g 1039..1055)
-BLINKS = [1030, 1062, 1100]
+BLINKS = [1028, 1048, 1066, 1090]
+H1_SHIFT = float(os.environ.get("H1_SHIFT", 0.14))
+H1_X0 = 0.0
 
 LIGHT, PRESET, CLOCK = "DAY", "shop_clock", [1, 4]
 FINAL_SPP = 8
@@ -46,7 +48,7 @@ CAM_LOC0 = tuple(float(v) for v in os.environ.get("CAM_LOC0", "0.9,-2.4,2.9").sp
 CAM_LOOK0 = tuple(float(v) for v in os.environ.get("CAM_LOOK0", "2.0,3.2,1.9").split(","))
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get("PUSH", 0.22)), slide_px=float(os.environ.get("SLIDE", -10)),
                 rise_px=float(os.environ.get("RISE", 25)), arc_deg_s=float(os.environ.get("ARC", 8)), decay=0.25,
-                snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 1.65)), peak=float(os.environ.get("SNAPPEAK", 2.5)), shift=(float(os.environ.get("SNAPSX", 0.6)), float(os.environ.get("SNAPSY", -0.35))))])
+                snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 1.65)), peak=float(os.environ.get("SNAPPEAK", 3.0)), shift=(float(os.environ.get("SNAPSX", 0.6)), float(os.environ.get("SNAPSY", -0.22))))])
 
 SWAY = float(os.environ.get("SWAY", 0.07))            # handheld sway (D) along the view's right axis, 1.5 Hz + a little vertical: more life in the wide, no net drift
 
@@ -64,31 +66,47 @@ def cam_at(g):
 BASE = dict(cast19.STORY19["harrison_show_h4"][1])
 
 
+G_SWEEP = (1039, 1050)                                  # the palm sweeps out toward the H4 (captions: "มันเหลือแค่" g 1038)
+G_LENS = (1056, 1068)                                   # eyes go from the H4 to a proud look at the lens
+G_TADA = (G_WORD, G_WORD + 8)                           # 1079..1087: small "ta-da" bounce on "เท่าจานรอง"
+
+
 def pose_of(g):
     p = dict(BASE)
     p.pop("prop_r", None)                                  # the H4 is the set's own (on its red cloth): his hand is an empty open palm
     p["mirror"] = True                                     # the H4 is at screen-left of him
-    lk = u_of(g, *G_LOOKUP, kind="sine")                   # palm goes out toward the H4
-    sn = u_of(g, G_WORD - 2, G_WORD + 8, kind="sine")      # a small "ta-da" thrust on the snap
+    sw = u_of(g, *G_SWEEP, kind="sine")                    # 0 hand low -> 1 palm out at shoulder height, above the cloth
+    ln = u_of(g, *G_LENS, kind="sine")                     # 0 eyes on the H4 -> 1 at the lens
+    td = math.sin(math.pi * u_of(g, G_TADA[0], G_TADA[1] + 6))   # 0..1..0 bounce
     bob = 0.04 * math.sin(2 * math.pi * g / 15.0)
-    p["arm_r"] = dict(hand=(lerp(0.30, 0.95, lk) + 0.05 * sn, lerp(1.17, 0.58, lk) + bob - 0.10 * sn), bend=-0.2, layer="top", shape="open", stretch=1.25)
+    hand = (lerp(0.42, 0.98, sw) + 0.05 * td, lerp(0.95, 0.30, sw) + bob - 0.10 * td)
+    p["arm_r"] = dict(hand=hand, bend=-0.2, layer="top", shape="open", stretch=1.3)   # layer top: in front of the body
     p["arm_l"] = "hip"
-    p["lean"] = lerp(0.0, -3.0, lk) - 2.0 * sn + 1.0 * math.sin(g * 0.2)
-    p["head_roll"] = -4.0 + 2.0 * math.sin(g * 0.15 + 0.6)
+    pulse = 0.5 + 0.5 * math.sin(2 * math.pi * g / 24.0)   # chest-puff breathing (1.25 Hz)
+    p["squash"] = (1.0 + 0.012 * pulse + 0.035 * td, 1.0 - 0.012 * pulse - 0.035 * td)
+    p["lean"] = lerp(1.0, -3.0, sw) - 3.0 * td + 1.2 * math.sin(g * 0.2)
+    p["head_roll"] = -4.0 + 2.0 * math.sin(g * 0.15 + 0.6) + 3.0 * td
     p["pitch"] = -0.05
     p["yaw"] = 0.3
-    p["gaze"] = (lerp(0.1, 0.9, lk), lerp(0.0, 0.5, lk)) if g < G_WORD + 14 else (0.1, 0.0)   # eyes to the H4, then back at the lens
-    p["expr"] = "happy"
-    p["mouth"] = "smile"
+    p["gaze"] = (lerp(0.9, 0.1, ln), lerp(0.55, 0.0, ln))   # eyes on the H4 first, then a proud look at the lens
+    p["expr"] = "smile" if g < 1058 else ("grinning" if g >= G_WORD - 4 else "happy")
     p["blink"] = blink(g, BLINKS)
     p["t"] = g / 30.0
     return p
+
+
+def bounce_z(g):
+    """a small proud rise on the toes with the ta-da (D) + a 1.25 Hz breathing lift"""
+    return 0.05 * math.sin(math.pi * u_of(g, G_TADA[0], G_TADA[1] + 6)) + 0.008 * math.sin(2 * math.pi * g / 24.0)
 
 
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s14")
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
+        global H1_X0
+        H.set_clock([1, 4])
+        H1_X0 = float(C.clock_root(1).location.x)
         self.key_cam(bf(G_FIRST), *CAM.at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
         self.har = self.actors["har"] = C.make_actor("har", "harrison19", os.path.join(WORK, "sprites"), canvas=CANVAS, contact=True, cam=self.cam)
@@ -98,8 +116,12 @@ class Take(C.Take):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *cam_at(g))
-            C.place(self.har, f, mark)
+            C.place(self.har, f, mark + Vector((0, 0, bounce_z(g))))
             self.key_set(f, clock=(CLOCK,), balance=g / 30.0, candles=1.0)
+            # the H1 stands 0.14 D further left so its corner post leaves a gap above the H4 (the root is a child of the 1.85-scaled set root)
+            r1 = C.clock_root(1)
+            r1.location.x = H1_X0 - H1_SHIFT / 1.85
+            r1.keyframe_insert("location", frame=f)
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)

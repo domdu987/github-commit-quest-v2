@@ -28,3 +28,10 @@
 
 ## Gate G check (face size / edges)
 - Max head width 237 px or less over the shot (about 20 % of the frame height); g 1083-1095 head right edge <= x 690: whole face in frame. qa_stats: saturation 0.56, brightness 95.8.
+
+## Round 8 (QA-art round 7, 6.8 FIX) - re-render
+- Palm: it is now above the red cloth: the arm sweeps out at shoulder height over g 1039-1050 (arm drawn in front, hand y 0.95 -> 0.30), toward the H4, and is visible in the wide (g 1040-1078); small "ta-da" bounce on "เท่าจานรอง" (g 1079-1087: lean back, squash 1.035/0.965, hop 0.05 D). The cloth itself still stands up (set geometry); the arm is simply drawn above it.
+- Never still: eyes on the H4 first (g 1016-1055), then a proud look at the lens (g 1056-1068); expression smile -> happy -> grinning; chest-puff breathing (squash 1.2 %, 1.25 Hz) and a 1.25 Hz lift; blinks at g 1028, 1048, 1066, 1090. No one-expression hold over 1.5 s.
+- H1 moved 0.14 D left (root.x keyed every frame): the corner post no longer lands on the H4's crown at g 1063-1095; clear gap between the clocks.
+- Snap tilted up 0.13 D (shift (0.7, -0.22)); snap framing otherwise as accepted. Mark, drift and sway unchanged.
+- Frame-diff in-shot: median 4.73, p90 10.91. QA_AUTO PASS.

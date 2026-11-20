@@ -5,43 +5,67 @@
   24
  ],
  "g0": 1933,
- "g1": 2028,
+ "g1": 2160,
  "first_g": 1924,
- "n_frames": 113,
+ "n_frames": 236,
  "shot_ranges": {
   "24": [
    1933,
-   2027
+   2159
   ]
  },
  "handle_in": 9,
- "handle_out": 9,
+ "handle_out": 0,
  "transition_in": {
   "type": "cut",
   "frames": 0,
   "at": 1933,
-  "note": "hard cut from shot 23; 9 f in-handle g 1924..1932 rendered in 3D"
+  "note": "hard cut from s23; 9 f in-handle g 1924..1932 rendered in 3D"
  },
  "transition_out": {
-  "type": "cut",
+  "type": "end",
   "frames": 0,
-  "at": 2028,
-  "note": "hard cut to shot 25; out-handle g 2028..2036 rendered in 3D (stubs 9-10, snap)"
+  "at": 2160,
+  "note": "the film ends on a hard cut on the last word: the take runs to g 2159 (N = 2160 film frames), camera still moving; no out-handle"
  },
- "set": "v3/set3d19/h19.py HALL preset hall_table, light EVENING; set_candles flicker, set_regulator(True), set_kings_chair(True), set_stubs(0 -> 10 over the shot, +1 about every 0.3 s) keyed on EVERY frame; no caption_shade; no DOF",
- "cast": "v3/cast19 king19 (king_watch_squint base): the King stands at the head of the table holding the gold pocket watch (right) beside the silver H4 (left); the two hands rise and fall out of phase (0.9 s), eyes go from one watch to the other, head roll and lean, blink; expression 'unimpressed' (squint), mouth flat; no lip-sync",
- "camera": "custom 22 mm, low and wide over the table near-edge row of candle stubs, dolly toward the King: c19.CamPath push 10 %/s + slide -95 px/s + arc 11 deg/s + snap x1.3 with a pan (shift 2.0 D, peak 2.1, 16 f) on 'สิบสัปดาห์' (66.77 s -> g 2006)",
+ "set": "v3/set3d19/h19.py HALL preset hall_table, light EVENING; set_candles flicker, set_regulator(True), set_kings_chair(True), set_stubs (0 -> 10 by g 2006, then 10), set_moneybag('full') from g 2099 keyed on EVERY frame; runtime dressing: stub row moved in front of the King, gold coins + warm bag light, dark-wood table panel (hides Harrison's legs); no caption_shade; no DOF",
+ "cast": "v3/cast19: king19 (table, compares gold pocket watch with the H4, squint; later nods), astro19 (telescope mark, held jaw drop, wig askew, tremble; NO talking), harrison19 old=1 (behind the table edge, looks at the bag then grins, arms rise, H4 in hand); cards are visible only where they are on screen",
+ "camera": "MERGED continuous take (client rule §I: no cuts inside g 1933-2159): approved s24 path (slide+push, snap on 'สิบสัปดาห์' g 2006) -> WHIP-PAN 1 g 2022-2029 (7 f, eased lerp of loc/look, Cycles motion blur shutter 0.9) -> hall_low angle on astro19 with the fast push-in on 'เป๊ะ' (g 2069-2082, face capped ~33 %) -> WHIP-PAN 2 g 2086-2093 -> table, push/orbit ending centred on Harrison + bag, both men in frame, moving on the last frame",
  "events": {
   "stubs_0_to_10": [
    1933,
-   2027
+   2006
   ],
-  "comparison_period_s": 0.9,
-  "snap": [
+  "snap_sip_sapda": [
    2003,
    2019
   ],
-  "word_sip_sapda_caption": 2006
+  "whip1": [
+   2022,
+   2029
+  ],
+  "jaw_drop_held_from": 2028,
+  "snap_pe": [
+   2069,
+   2082
+  ],
+  "whip2": [
+   2086,
+   2093
+  ],
+  "bag_falls": [
+   2099,
+   2107
+  ],
+  "bag_lands_caption": 2107,
+  "king_nods": [
+   2113,
+   2157
+  ],
+  "snap_chang_mai": [
+   2142,
+   2159
+  ]
  },
  "dof": "none",
  "text": "none",
@@ -54,28 +78,58 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 18.07,
- "s_per_frame_cpu_mean": 35.46,
+ "s_per_frame_wall_mean": 17.75,
+ "s_per_frame_cpu_mean": 34.86,
  "heads_in_shot_px": {
   "king": {
    "w": [
-    137,
-    222
+    99,
+    220
    ],
    "y": [
-    546,
+    447,
     621
    ],
    "x": [
-    154,
-    566
+    155,
+    607
    ],
    "bottom_max": 695
+  },
+  "astro": {
+   "w": [
+    137,
+    218
+   ],
+   "y": [
+    488,
+    651
+   ],
+   "x": [
+    -4,
+    548
+   ],
+   "bottom_max": 759
+  },
+  "har": {
+   "w": [
+    185,
+    241
+   ],
+   "y": [
+    497,
+    721
+   ],
+   "x": [
+    197,
+    364
+   ],
+   "bottom_max": 841
   }
  },
  "framediff_in_shot": {
-  "median": 4.06,
-  "p90": 13.94
+  "median": 4.48,
+  "p90": 19.09
  },
  "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
 }

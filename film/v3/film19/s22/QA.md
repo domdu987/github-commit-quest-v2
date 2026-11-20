@@ -8,3 +8,7 @@
 ## Round 4 (client gate QA_TEAM section G)
 - Harrison no longer lingers half out of the left edge: a second, fast lateral pan (g 1821-1827, shift 1.1 D, added to the snap) takes him out of the frame in about 3 frames (1823 half, 1825 gone); before g 1823 he is whole in frame; astro19 stays fully in frame (wig edge < 718) to the last frame.
 - Trade-off: the end frames show the sealed box small at the left of centre with astro19 large at the right (the pan moves the box left). qa_auto PASS, frame-diff (deliver.py) median 5.50 / p90 12.24. qa_stats.py take.mkv: saturation 0.664, brightness 71.7, in-shot motion median 6.46 / p90 13.33 (brightness is below the section G 85-110 band: the interior grade is the director's per-take grade).
+
+## Round 5 (director round 7: whip-pan)
+- The exit is now a steep, fast pan: a second snap g 1820-1824 (4 f, ease peak 3.2, shift 1.8 D) inside the push; Harrison is whole at g 1820, a ghosted smear at the left edge g 1821-1822 and gone from g 1823 (about 2 frames), astro19 stays whole in frame. The primary push lateral shift is -0.6 D so the sealed box ends left of centre (x about 180) and astro19 right (x about 480).
+- Cycles camera motion blur on the whip frames only (g 1818-1827, shutter 0.9, CENTER); no blur elsewhere. Frame-diff median 5.52 / p90 13.28 (deliver.py); qa_stats.py: saturation 0.659, brightness 72.1, in-shot motion median 6.47 / p90 13.87.
