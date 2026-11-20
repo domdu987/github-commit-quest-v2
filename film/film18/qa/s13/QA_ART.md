@@ -1,24 +1,20 @@
-# QA-art s13 (TAKE gate, key shot: false payoff) — FIX-FIRST
-Reviewed every 5th frame (6 fps) at full size 720x1280 and at 360x640. Frame refs: i = take frame index (0-82), g = film frame (g = 994 + i).
+# QA-art s13 (false payoff: camp party, 33.41-35.67 s), TAKE gate re-render — FIX-FIRST
+Reviewed take.mkv at 6 fps (artq6/gNNNN.png, g 994-1074) at full size 720x1280 and on the 360x640 sheet artq_phone.jpg.
 
-| criterion | score |
-|---|---|
-| Beat clarity on a phone | 5 |
-| Light and colour | 7 |
-| Composition | 4 |
-| Acting | 5 |
-| Camera | 3 |
+## Earlier changes
+1. Remove the 3 punch pairs: DONE. The move is now a smooth pull and slide with sway, with no in-out wobble.
+2. Bottom third, delete the navy lumps and blue brazier, add a lit fg prop, ground <= 25 %: NOT DONE. The untextured blue low-poly brazier/tripod still rises into the bottom centre from g 1014 and is large at g 1049-1074 (x 230-450, y 1120-1280). The navy stump is still at about (380, 1150). Bare ground with long shadow stripes covers about 35 % (y 830-1280).
+3. Hide the gridded plain and road at the horizon: NOT DONE. The teal grid plain and the striped road run to the mountains at y 300-420 in every frame.
+4. Sentry mid-ground, bigger, clear spear fall: NOT MET. The soldiers are about 60-75 px tall at full size (30-38 px on the phone). The sentry and his spear drop cannot be picked out on the phone.
 
-What works: warm campfires and torches against a blue night, a dense camp with tents, spear racks, drums and jars, and laughing soldiers with raised cups. It reads as a party.
+| Beat on phone | Light/colour | Composition | Acting | Camera |
+|---|---|---|---|---|
+| 4 | 6 | 3 | 5 | 6 |
 
-Problems:
-- ZOOM PULSING. There are punch-ins at i22-24, i42-44 and i62-64, each released by a pull-back over the next ~6 frames (i27-32, i47-52, i68-72). Frame-diff spikes at 17-21 confirm all three. This breaks the film-18 rule 1.
-- Bottom ~35-40 % is bare ground (i0-i82) with navy low-poly lumps (stools/rocks, about y 1000-1100). From i30 on, an untextured blue low-poly brazier/tripod rises into the bottom centre (i55-i82, big at i76). This breaks rules 2 and 5.
-- The horizon is a flat blue-grey ground plane with a gridded road strip running to the mountains (i0-i82, about y 300-420). It reads as an unfinished placeholder floor.
-- Soldiers are about 25-40 px tall on the phone sheet. The cheering reads, but the sentry dropping his spear (g1030 = i36) cannot be found at phone size.
+The warm fires and tents against a blue night are nice, and "a party in the camp" half-reads. But the soldiers are specks, half the frame is empty ground and stools, and the grid floor and blue brazier look unfinished.
 
-## Changes (practical)
-1. **Camera, whole take:** remove the 3 punch-in/out pairs (i22-32, i42-52, i62-72). Keep one smooth eased pull-out of 6 %/s plus a 40 px/s slide and the light sway.
-2. **Bottom third, i0-i82:** delete the navy lumps and the blue low-poly brazier. Put one lit, textured fg prop 1-2 D from the lens at lower left or lower right (wine jar or cup-laden table, warm-lit), and tilt down/raise the camera so the lit camp fills down to about y 1000. Plain ground should be at most 25 %.
-3. **Horizon, about y 300-420:** hide the gridded plain and road behind a dark palisade or tent row, or drop the plane to near-black with a soft fog. No visible grid.
-4. **Sentry, g1025-1040 (i31-46):** move the sentry to the mid-ground near the frame centre (head about 60-80 px tall at 720 wide), with a torch-lit rim. Make the spear drop a clear diagonal fall that lands by i46, then he raises a cup.
+## Verdict: FIX-FIRST
+## Changes
+1. **Bottom of frame, whole take:** Delete the blue low-poly brazier and the navy stump. Put one warm-lit, textured prop (a wine-jar table with cups) 1-2 D from the lens at the lower left. Keep plain ground at 25 % or less.
+2. **Horizon, y 300-420, whole take:** Hide the grid plain and road behind a dark palisade or tent row with torches, or fade the far plane to near-black with fog. No grid lines visible.
+3. **Framing, whole take:** Lower the camera from high-wide to about 2.5-3 D and come in about 30 %, so the cheering crowd sits at y 0.40-0.70 and the soldiers' heads are 60-80 px tall at 720 wide. Place the sentry near the centre in the mid-ground, with a torch rim light, and make the spear fall a clear diagonal by g 1040. Keep the 6 %/s pull and the 40 px/s slide.

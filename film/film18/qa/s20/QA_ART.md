@@ -1,17 +1,22 @@
-# QA-art s20 (reveal A: "ไฟอยู่ข้างหลัง วัวเลยวิ่งไปข้างหน้าอย่างเดียว", 50.51-53.20 s), TAKE gate re-render — FIX-FIRST (reveal, strict)
-Reviewed: take.mkv at 6 fps (every 5th frame, art6/gNNNN.png = global frame g) at full size 720x1280 and on the 360x640 phone sheet art_phone.jpg. Scores 1-10.
+# QA-art s20 (reveal A: fire behind, they run forward only, 50.51-53.20 s), TAKE gate round 3 — FIX-FIRST (reveal, practical)
+Reviewed take.mkv at 6 fps (artq6/gNNNN.png, g 1509-1599) at full size 720x1280 and on the 360x640 sheet artq_phone.jpg.
 
 ## Earlier changes
-1. Flames on the tail tips trailing back, never over a head: NOT MET. At g 1549-1559 the flame cards of the left oxen sit directly on the face of the ox ahead/right (full res x 520-720, y 600-740, covering its eye). On the phone that reads as "ox's head on fire", the exact opposite of the beat. At g 1574-1594 one flame card is seen edge-on and becomes a glowing red rocket/spike above the herd (x 370-400, y 580-660).
-2. All oxen run the same way, lead ox in profile at 35-50 %: NOT MET. g 1524-1559 shows profile bodies at about 25 % of frame height. From g 1564 the near oxen turn face-on to the lens, so the direction of running and the fire-behind idea are lost for the last third of the sentence ("วิ่งไปข้างหน้าอย่างเดียว").
-3. Keep pace, no receding: DONE.
-4. Ground 25 % or less, no dark stripes: PARTLY done. The stripes are gone. Sky is now about 45 % of the frame and plain ground about 30 %. The herd is a band at y 560-960.
+1. No flame on a head, never edge-on: DONE. I checked every 6-fps frame: the tail flames sit in the gaps between the oxen and face the camera, with no rockets.
+2. One lead ox in side profile, tail level, flame behind, all running the same way: DONE. This is now the clearest mechanism image in the film. The lead ox gallops screen-left with its tail, reed bundle and flame streaming right behind it. 
+3. Sky <= 25 %, ground <= 25 %, herd in the middle 50 %: NOT DONE. Sky is about 40 % (y 0-500) and plain ground about 35-38 % (y 800-1280). The herd is a band at y 0.40-0.62. Under the gate calibration, ground over 30 % blocks.
+
+New problems:
+- g 1524-1534: dark navy untextured low-poly spikes stand in the foreground (bottom centre, x 330-560, y 820-1280) and mid-ground, and there is a white low-poly rock at about (640, 730). This breaks rule 2.
+- g 1579-1599: a torch stand passes right behind the lead ox's rump. Its upright red cone flame sits on the ox's back (x 400-460, y 540-610), so on the phone the ox's back looks on fire. This blurs the "fire is BEHIND" read.
+- g 1569-1599: the lead ox's nose and face are cut by the left edge (rule 4).
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 3 | 6 | 4 | 4 | 5 |
+| 7 | 6 | 4 | 6 | 6 |
 
+## Verdict: FIX-FIRST (small; the core image is right, so keep it)
 ## Changes
-1. **Flames vs heads, g 1515-1601:** Space the oxen so no tail flame can overlap another ox: at least 1.5 body lengths nose-to-tail in the same row, or offset rows in depth so each flame sits in clear sky or ground. Turn the flame cards to the camera around the tail axis so they are never seen edge-on. Hard rule: zero frames with a flame card on a head.
-2. **One clean read of the mechanism, g 1515-1601:** Keep ONE lead ox in pure side profile for the whole take, running screen-left, nose clear of the frame edge, with its tail level behind it and a big flame (about 1/3 body) streaming right/back with sparks. Lead ox 35-45 % of frame height, on the left-centre. All other oxen also in profile, the same way. No face-on oxen to the lens.
-3. **Framing:** Lower the look-at and come closer so sky is 25 % or less, plain ground 25 % or less, and the herd band fills the middle 50 % of the frame. Keep the tail-flame lights so the ground under each flame glows orange.
+1. **Framing, g 1515-1599:** Come in about 25 % (lateral 7.2 -> about 5.5 D), keeping the pitch, so the lead ox is 40-45 % of frame height. Hold its nose at least 40 px inside the left edge for the whole take (slow the push or truck a little). Sky and plain ground should each be about 25 % or less. If ground stays over 25 %, add dark Qi-soldier silhouettes or reed tufts low in the foreground.
+2. **Placeholders, g 1519-1540:** Hide the navy spikes and the white low-poly rocks, or replace them with dark-brown grass tufts and textured stones.
+3. **Torch stands, g 1575-1599:** Move the torch stands out of the lead ox's line, or behind the far row, so no free flame overlaps any ox's body. The only flames on or near an ox must be its own tail flame.

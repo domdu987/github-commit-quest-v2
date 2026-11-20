@@ -1,19 +1,19 @@
-# QA-art s01 (hook 1, 0.00-2.59 s), TAKE gate re-render — FIX-FIRST (small)
-Reviewed: take.mkv at 6 fps (every 5th frame, art6/gNNNN.png = global frame g) at full size 720x1280 and on the 360x640 phone sheet art_phone.jpg. Scores 1-10.
+# QA-art s01 (hook 1, 0.00-2.59 s), TAKE gate round 4 — PASS (with notes)
+Reviewed take.mkv at 6 fps (artq6/gNNNN.png, every 5th frame, g = global frame) at full size 720x1280 and on the 360x640 sheet artq_phone.jpg.
 
 ## Earlier changes
-1. Ratchet instead of pulses: DONE. Two held punch-ins (g 8, g 50). No in-out wobble. He stays at 35-55 % of frame height, with the coat and the ox's head in frame.
-2. Lantern 1-2 D, emissive, warm pool, no navy planks: PARTLY done. The navy planks are gone. The "lantern" is a flat yellow cylinder with black caps at x 560-640, y 810-950. It reads as a tin can or a bin, not a lantern. It casts no glow and no visible pool.
-3. Coat draped on the ox from frame 1: DONE. From g 0 the silk lies over the second ox's neck and back, and the tug reads as dressing the ox.
+1. Real paper lantern, emissive, warm pool, world-fixed with parallax: DONE. It has ribs, caps, a stake and a cord, a bloom halo and an orange pool on the ground, and it slides across the frame with the truck. It now reads as a lantern, not a can.
+2. Bottom of frame <= 25 %: MOSTLY. Plain dirt is about 28-30 % at g 0-25 (y ~900-1280), with the dark lantern stake in it, and under 25 % after the g 50 punch-in. That is in the 25-30 % note band.
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
 | 7 | 7 | 6 | 6 | 7 |
 
-The hook reads: a deadpan clerk is dressing oxen in red dragon silk in front of a row of oxen that are already dressed. The torch-lit wall is warm and good. p90 7.0 is under 9, but the push and slide are visible, so the guide is met.
+On the phone the beat reads in the first second: a deadpan clerk is pulling a red-and-gold dragon coat over an ox, with more dressed oxen behind him. There are no pulses (two held punches, at g 8 and g 50), no placeholders and no broken frames.
 
-## Changes
-1. **Lantern, g 0-77:** Replace the yellow can with a real paper lantern: a rounded body with a red or ochre skin, dark ribs, a top cap and a hanging cord or pole. It must be emissive at least 3x the current value, with a soft bloom halo and the warm point light raised so a visible orange pool lands on the ground around it. Make it world-fixed at about 1.5 D so it slides across the frame with the truck, partly cropped at the bottom-right edge, about 220-260 px tall.
-2. **Bottom of frame, g 0-25:** Plain dirt fills about 32 % (y 870-1280). Raise the look-at so the ground is 25 % or less by g 0, or let the new lantern and a dark basket sit low-left to break it up.
+## Verdict: PASS
 
-Notes (not blocking): his eye-line reads as a sideways glance. Turning his pupils a little more toward the coat/ox would help.
+## Notes (polish, not blocking)
+- The lantern is the brightest thing in frame and stands at frame centre (x 340-500, g 0-50), right over the coat he is pulling. If it is re-rendered, slide it to the right third (x >= 520) and lower the emission about 30 % so the paper shows a gradient instead of flat clipped yellow.
+- Plain dirt at g 0-25 is about 28-30 %. Tilting up 1-2 degrees more would put it under 25 %.
+- Eye-line: he looks to camera-left, not at the coat. This is fine as a deadpan glance (calibration: note only).
