@@ -62,11 +62,11 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 7.55,
- "s_per_frame_cpu_mean": 14.44,
+ "s_per_frame_wall_mean": 7.52,
+ "s_per_frame_cpu_mean": 14.32,
  "framediff_in_shot": {
-  "median": 9.34,
-  "p90": 12.32
+  "median": 6.27,
+  "p90": 9.16
  },
  "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
 }
