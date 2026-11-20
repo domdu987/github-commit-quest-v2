@@ -1,4 +1,0 @@
-take: built ['riverbank', 'river_low'] in 31.6s
-01:15.410  cycles           | WARNING CUEW initialization failed: Error opening the library
-01:52.329  render           | Saved: 'raw/f_1710.png'
-g 1709  37.0s
