@@ -335,13 +335,13 @@ class Take(C.Take):
         import random
         rnd = random.Random(11)
         M = CO.STATE["M"]
-        for i in range(34):
-            x, y = rnd.uniform(-83.0, -62.0), rnd.uniform(-43.0, -35.6)
+        for i in range(130):
+            x, y = rnd.uniform(-84.0, -61.0), rnd.uniform(-44.0, -35.4)
             w = CO.W((x, y, 0.0))
             if rnd.random() < 0.55:
                 C.bpy.ops.mesh.primitive_uv_sphere_add(segments=8, ring_count=5, radius=1.0)
                 ob = C.bpy.context.active_object
-                r = rnd.uniform(0.12, 0.34)
+                r = rnd.uniform(0.10, 0.30)
                 ob.scale = (r * CO.SC, r * rnd.uniform(0.7, 1.2) * CO.SC, r * 0.55 * CO.SC)
                 ob.location = (w[0], w[1], r * 0.35 * CO.SC)
                 ob.data.materials.append(M["stonedk"])
