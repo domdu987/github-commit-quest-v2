@@ -19,3 +19,9 @@ Notes: p90 10.59 is just above the limit; legs end in thin stubs (rig limit); th
 ## Round 4: PASS
 Checked 6 fps (take g929-994), qa_auto PASS. No text, black/magenta, frozen, blur; mouth fixed (frown). Frame-diff g939-985 median 4.22 / p90 10.62 (>= 4 / >= 10) OK. Round 3 PASS stands: candle burn-down reads, tapping continues, eye-line to lens. New: nothing blocking.
 Notes: Harrison's ponytail/hair touches the right edge in the last frames (face intact); legs end in thin stubs; shadow under shoes faint.
+
+## Round 10 (director QA-tech): PASS
+Checked 6 fps (g929-1019) plus every frame g985-1016 on crops x 450-720 (and full frames at 10 key g). Frames in /tmp/qa19_r10/s12/. Frame-diff (own calc, 90x160 grey bilinear, in-shot pairs g938-1015): median 6.38, p90 14.31 (limits 4 / 10) OK; max 17.2 at g962 (whip), no pair < 0.3, no black frame, no frozen run.
+Round 9 blocker (hard vertical cut of the hair/bow/ponytail/puffs at g997-1016): FIXED. On every frame g985-1016 the ponytail, bow and puffs are whole; the plaster wall is a smooth gradient with no straight edge cutting the card; right-most card pixel stays well left of x 720. Mark is clear of the wall, payoff exposure is lifted (warm wall, luma readable).
+Other checks: hair grey through g995 and pops to white with puffs, spectacles and the brown coat on g996 (single frame); backward slump g996-1010 reads; the chisel stays in his hand and visible (low left) through g1016; head about 20 % of frame height, head centre y ~ 450-600 (never near 880); candle on the chest, no floating; mouth fixed (tired frown/wobble during the rub, no lip-sync); no character cut, no text, no blur; Harrison always acting (tap, lean, rub).
+Notes (not blocking): legs end in thin stubs; shoe contact shadow faint; ponytail tip is close to the wall at g996-1000 but whole.
