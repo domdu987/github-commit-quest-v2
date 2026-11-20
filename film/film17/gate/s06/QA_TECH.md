@@ -1,0 +1,23 @@
+# QA_TECH film17 take s06 (shots 14-15, g719-856) - VERDICT: FAIL
+
+Method: all 34 extracted frames (6 fps + cut +-3) on two sheets, full-res on g749, 759, 769, 794, 809, 829. Numbers: rhythm 5.64/12.23, qa_auto PASS.
+Cut g783: REAL (desk -> low aisle, clearly different frame in g782 vs g783). rhythm.py "0 hard cuts" is a detector miss (rhythm.txt), not a missing cut; qa_auto's "no visible change" note is also wrong. Numbers are fine but the tools should be fixed.
+
+## Issues
+1. g746-782 (shot 14, key beat): "three fingers" does NOT read. The prefect's raised hand is a tiny dark ball ~25 px with 2-3 hairline spikes (g759, g769), above his hat line at the frame edge. At 360x640 it is a dark dot; the count three is not legible. Fix: enlarge the hand sprite (about 2.5x), use a bright glove (white/cream, contrast against the dark wall), spread three clearly separated fingers, bring the hand down beside/in front of the face (not at hat height) and hold it still for >= 12 frames on "สามเดือน" (~g755-770); drop the bob.
+2. g759-782 (shot 14): prefect's raised arm is a straight black stick from shoulder with no elbow/hand volume; the other arm is bent behind the hip. Reads as a salute/wave, not "holding up fingers to Bertillon". Fix: turn the arm toward Bertillon/camera, bend at elbow.
+3. g769 (shot 14): prefect's disc/hat touches the right frame edge (disc overshoots; team admits <= 3 px) and the hand is pushed to the upper-left against his own hat; composition crowded right while left is desk clutter. Fix: pan so the prefect is >= 40 px inside the frame.
+4. g719-782 (shot 14): Bertillon's right arm lies horizontally across his chest holding a mug-shot card, ending in a white spike glove over the desk (g749, g759). The card is tilted pinned to the torso, looks stuck to the body, not held; the "writing" beat (nib jitter) is not visible (no pen in hand). Fix: put the card flat on the desk and a visible pen in the hand, or hand down at the desk.
+5. g746-782 (shot 14): no seat - Bertillon floats behind the desk with no chair; prefect "at the desk" stands in the aisle 2 m away, not at it. Minor; fix: add a chair back behind Bertillon or lower him behind the desk edge.
+6. g802-856 (shot 15, key beat): pince-nez tighten does not read. At g809 and g829 the hand goes BEHIND the head to the ear/hair (a scratch or ear-touch), nowhere near the glasses bridge (team admits "touches the side of the head"). A thin temple-arm line runs from the lens to the ear, hand sits on it. Fix: fingertips on the bridge/lens rim at the front of the face, hand drawn in front of the head layer, small push-up wobble on the bridge.
+7. g794 -> g809 (shot 15): scale jump. Bertillon head ~110 px at g794, ~230 px at g809 (snap 1 push), a 2x pop over ~10 frames, and he is cropped at the knees/bottom edge at g809 (coat reaches the frame bottom). It reads as a jump, not a smooth push; the lower body is lost. Fix: halve the push amount or lengthen it; keep the figure's feet in frame or accept crop only at the thighs consistently.
+8. g794 (shot 15): foreground box covers Bertillon's lower legs/feet (feet not visible), and at g829 feet are out of frame; no contact shadow visible anywhere in shot 15. Figure reads as pasted in the aisle. Fix: contact shadow disc under the feet, keep shoes visible at least at g794/g840+.
+9. Plan coverage shot 15: "prefect turns away" is not visible (team note). Judge: the beat does NOT read. Shot 15 is Bertillon alone, tightening glasses, while the line "catch an old thief or quit" is an order with no giver on screen; the prefect's menace has no payoff and Bertillon's gesture looks like a random tic. Fix: either hold the prefect at the frame edge/mid-ground in g783-800 walking away (back to camera, sash visible) before Bertillon's gesture, or end shot 14 on the prefect turning (3-4 frames of back view) so the viewer sees him leave.
+10. g719-782 vs g783 continuity: the desk lamp (teal shade) and book stack exist in both; OK. Prefect absent in 15, so no continuity break, but see 9.
+11. Tools: rhythm.py detector reports 0 cuts at a real cut (g783); qa_auto note wrong. Fix the scripts so the final-cut gate numbers are trustworthy.
+
+## Checked OK
+Mouths closed on both characters in all sampled frames (g749, 759, 769, 794, 809, 829; sheets); no blur (all full-res frames crisp; no DOF); no heads/beard past y 880 (largest chin about y 830 at g809); no black/blank/magenta, no frozen runs; Thai text none; evening lighting and warm practicals consistent; dissolve-in g719-729 clean with no ghost sprites.
+
+## Verdict
+FAIL. Both key beats (three fingers, pince-nez) are unreadable at phone size; fix 1, 2, 6, 7, 9 (required), 3, 4, 5, 8 (should), re-render shots 14 and 15.
