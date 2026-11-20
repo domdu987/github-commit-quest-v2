@@ -29,7 +29,7 @@ G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1            # 929 .. 994
 GS = list(range(G_FIRST, G_LAST + 1))
 G_WORD = C.cap_g("สิบกว่าปี")                          # 960: caption start; "สิบ" spoken right at it
 SNAP = (G_WORD - 8, G_WORD + 12)                       # 955..969 (14 f)
-G_LOOKUP = (G_WORD + 4, G_WORD + 14)                   # he straightens and looks at the lens
+G_LOOKUP = (G_WORD + 30, G_WORD + 40)                   # he straightens and looks at the lens
 BLINKS = [950, 975, 990]
 
 LIGHT, PRESET, CLOCK = "NIGHT", "shop_clock", 3
@@ -44,7 +44,7 @@ CAM_LOC0 = tuple(float(v) for v in os.environ.get("CAM_LOC0", "2.2,-1.6,2.4").sp
 CAM_LOOK0 = tuple(float(v) for v in os.environ.get("CAM_LOOK0", "2.6,2.9,2.3").split(","))
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get("PUSH", 0.15)), slide_px=float(os.environ.get("SLIDE", -45)),
                 rise_px=float(os.environ.get("RISE", 0)), arc_deg_s=float(os.environ.get("ARC", 0)), decay=0.25,
-                snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 1.4)), peak=float(os.environ.get("SNAPPEAK", 2.8)), shift=(float(os.environ.get("SNAPSX", 0.9)), -0.1))])
+                snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 1.45)), peak=float(os.environ.get("SNAPPEAK", 2.8)), shift=(float(os.environ.get("SNAPSX", 0.6)), -0.1))])
 
 BASE = dict(cast19.STORY19["harrison_chisel"][1])
 
@@ -54,7 +54,7 @@ def pose_of(g):
     p["mirror"] = True                                    # the H3 is at screen-left of him
     lk = u_of(g, *G_LOOKUP, kind="sine")
     ph = 2 * math.pi * g / 14.0                           # ~2 Hz tapping
-    tap = (1.0 - lk) * 0.10 * max(0.0, math.sin(ph))
+    tap = (1.0 - lk) * 0.16 * max(0.0, math.sin(ph))
     p["arm_r"] = dict(hand=(0.78 + 0.5 * tap, 1.0 - tap), bend=0.2, layer="front", stretch=1.2)
     p["prop_r"] = dict(type="chisel19", angle=40 - 25 * tap * 6 * (1 - lk))
     p["lean"] = lerp(8 + 1.5 * math.sin(ph), 1.0, lk)
@@ -69,13 +69,20 @@ def pose_of(g):
 
 def candle_level(g):
     """the bench candle stub burns down over the shot (1.0 -> 0.3)"""
-    return lerp(1.0, 0.3, clamp((g - G0) / float(G1 - G0)))
+    return lerp(1.0, 0.12, clamp((g - G0) / float(G1 - G0)))
 
 
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s12")
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
+        # the bench candle stub moves from the far left of the bench to the bench top at his right shoulder, so it stays in frame while it burns down
+        st = H.STATE["stub"]
+        st["pv"].location = (1.7, 0.8, 0.56)
+        st["base"] = (1.7, 0.8, 0.56)
+        for o, _b in H.STATE["lampgroups"]["candle"]:
+            if o.name == "p_bench":
+                o.location = (1.7 * 1.85, 0.8 * 1.85, 1.6)
         self.key_cam(bf(G_FIRST), *CAM.at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
         self.har = self.actors["har"] = C.make_actor("har", "harrison19", os.path.join(WORK, "sprites"), canvas=CANVAS, contact=True, cam=self.cam)

@@ -24,17 +24,31 @@ G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1
 GS = list(range(G_FIRST, G_LAST + 1))
 G_BAG = C.g_of(12.50)                          # "รางวัล" -> bag drops
 G_SNAP_WORD = C.g_of(14.81)                    # "สองหมื่นปอนด์" -> push-in snap
-SNAP = (G_SNAP_WORD - 8, G_SNAP_WORD + 8)
+SNAP = (G_SNAP_WORD - 8, G_SNAP_WORD + 9)
 LIGHT, PRESET = "DAY", "hall_table"
 FINAL_SPP = 8
+CONTACT = dict(width=1.6, depth=0.75, color="#1a1626", opacity=0.9)
 
-CAM_LOC0 = (0.3, -2.7, 3.0)
-CAM_LOOK0 = (0.0, 2.5, 2.0)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.09, slide_px=-60.0, rise_px=0.0, arc_deg_s=11.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.7, peak=1.4, shift=(1.2, 0.0))])
+CAM_LOC0 = (0.0, -2.9, 2.6)
+CAM_LOOK0 = (0.0, 3.0, 2.4)
+class SwayCam(C.CamPath):
+    """CamPath + a slow lateral sway of the camera body (loc only, the look point stays): parallax of the dense hall that keeps both
+    astronomers framed (a plain arc swings the camera past one of them)."""
+    SWAY_D, SWAY_T = 1.4, 3.0
 
-MARK_A = (-2.05, 2.60, 0.0)                    # astro19, left of the table, faces screen-right
-MARK_B = (2.05, 3.05, 0.0)                     # astro19_b, right of the table, faces screen-left (mirror)
+    def at(self, g):
+        loc, look = C.CamPath.at(self, g)
+        f = (look - loc).normalized()
+        r = Vector((f.y, -f.x, 0.0)).normalized()
+        ph = 2.0 * math.pi * (g - G_FIRST) / (30.0 * self.SWAY_T)
+        return loc + r * (self.SWAY_D * math.sin(ph)), look
+
+
+CAM = SwayCam(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.06, slide_px=0.0, rise_px=0.0, arc_deg_s=0.0, decay=0.15,
+              snaps=[dict(g=SNAP, k=1.7, peak=1.4, shift=(0.22, -0.12))])
+
+MARK_A = (-1.55, 3.40, 0.0)                    # astro19, left of the table, faces screen-right
+MARK_B = (1.55, 3.60, 0.0)                     # astro19_b, right of the table, faces screen-left (mirror)
 BAG_DROP, BAG_FALL, BAG_END = G_BAG, 5, G_BAG + 14
 
 
@@ -72,7 +86,7 @@ def pose_a(g):
     p["lean"] = 2.0 + 12.0 * u + 1.0 * math.sin(g * 0.2)
     p["pitch"] = 0.05 + 0.2 * u
     p["head_roll"] = 4.0 * u * math.sin(g * 0.3)
-    p["gaze"] = (0.9, 0.6) if u > 0.2 else (0.2, 0.0)
+    p["gaze"] = (0.9, 0.95) if u > 0.2 else (0.2, 0.0)
     p["arm_r"] = dict(hand=(lerp(0.3, 0.95, u), lerp(1.1, 0.6, u)), bend=-0.3, shape="open", layer="top")
     p["arm_l"] = "akimbo"
     p["mouth"] = "flat"
@@ -90,7 +104,7 @@ def pose_b(g):
     p["lean"] = 2.0 + 14.0 * u + 1.0 * math.sin(g * 0.17)
     p["pitch"] = 0.05 + 0.3 * u
     p["head_roll"] = -3.0 * u
-    p["gaze"] = (0.9, 0.7) if u > 0.2 else (0.2, 0.0)
+    p["gaze"] = (0.9, 0.95) if u > 0.2 else (0.2, 0.0)
     p["arm_r"] = dict(hand=(lerp(0.3, 0.55, u), lerp(1.1, 0.55, u)), bend=0.6, shape="open", layer="top")
     p["arm_l"] = dict(hand=(-0.35, 1.0), bend=0.5)
     p["mouth"] = "flat"
@@ -110,9 +124,9 @@ class Take(C.Take):
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
         self.key_cam(bf(G_FIRST), *CAM.at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
-        self.ab = self.actors["ab"] = C.make_actor("ab", "astro19_b", os.path.join(WORK, "sprites"), contact=True, cam=self.cam)
+        self.ab = self.actors["ab"] = C.make_actor("ab", "astro19_b", os.path.join(WORK, "sprites"), contact=CONTACT, cam=self.cam)
         self.bag_rest = None
-        self.aa = self.actors["aa"] = C.make_actor("aa", "astro19", os.path.join(WORK, "sprites"), contact=True, cam=self.cam)
+        self.aa = self.actors["aa"] = C.make_actor("aa", "astro19", os.path.join(WORK, "sprites"), contact=CONTACT, cam=self.cam)
 
     def pose(self, gs):
         for g in gs:

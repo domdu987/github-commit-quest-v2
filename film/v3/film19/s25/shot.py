@@ -36,7 +36,7 @@ AB = dict(cast19.STORY19["astro_jaw_drop"][1])
 def pose_of(g):
     p = dict(AB)
     t = (g - G_FIRST) / 30.0
-    u = u_of(g, G0 - 4, G0 + 6, kind="sine")                # the jaw drops in the first frames, then is HELD open
+    u = u_of(g, G0 - 12, G0 - 3, kind="sine")                # the jaw drops in the first frames, then is HELD open
     p["mouth"] = ("open", 0.10 + 0.16 * u, 0.04 + 0.16 * u)
     p["expr"] = "shocked"
     p["yaw"] = 0.05 + 0.04 * math.sin(t * 9.0)
@@ -57,7 +57,7 @@ class Take(C.Take):
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
         self.key_cam(bf(G_FIRST), *CAM.at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
-        self.astro = self.actors["astro"] = C.make_actor("astro", "astro19", os.path.join(WORK, "sprites"), contact=True, cam=self.cam)
+        self.astro = self.actors["astro"] = C.make_actor("astro", "astro19", os.path.join(WORK, "sprites"), contact=dict(width=1.3, depth=0.55, opacity=0.8), cam=self.cam)
 
     def pose(self, gs):
         mark = Vector(self.A["marks"][MARK])

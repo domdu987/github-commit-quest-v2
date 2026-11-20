@@ -22,16 +22,21 @@ H_IN, H_OUT = 9, 9
 GF, GL = G0 - H_IN, G1 + H_OUT - 1            # 1459 .. 1589
 GS = list(range(GF, GL + 1))
 G_WORD = C.cap_g("นาฬิกาแม่น")                 # 1699
-SNAP = (G_WORD - 1, G_WORD + 12)
+SNAP = (G_WORD - 2, G_WORD + 12)
 
 LIGHT, PRESET = "DAY_BARBADOS", "ship_coast"
 FINAL_SPP = 12
 PPD = 192
 
-CAM_LOC0 = (452.5, 61.0, 3.6)
-CAM_LOOK0 = (445.0, 61.6, 2.5)                 # subject point: William's chest
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GF, GL, push=0.06, slide_px=10.0, rise_px=0.0, arc_deg_s=-7.0, decay=0.1,
-                snaps=[dict(g=SNAP, k=1.5, peak=1.6, shift=(0.65, 0.2))])
+CAM_LOOK0 = (446.0, 61.984, 2.6)               # found with a projection search: both heads, the quadrant and the H4 hand stay inside the frame
+CAM_LOC0 = tuple(Vector(CAM_LOOK0) + (Vector((452.0, 61.2, 3.55)) - Vector((446.0, 62.6, 2.6))) * 1.1)
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GF, GL, push=0.05, slide_px=45.0, rise_px=4.04, arc_deg_s=-4.64, decay=0.1,
+                snaps=[dict(g=(1672, 1679), k=1.0, peak=1.3, shift=(0.0, 0.62)), dict(g=(1679, 1688), k=1.0, peak=1.3, shift=(0.0, -0.62)),
+                       dict(g=SNAP, k=1.12, peak=1.9, shift=(-0.92, -0.55)),
+                       dict(g=(1722, 1729), k=1.0, peak=1.3, shift=(0.0, 0.62)),         # second beat: two quick camera bumps
+                       dict(g=(1729, 1738), k=1.0, peak=1.3, shift=(0.0, -0.62)),
+                       dict(g=(1744, 1751), k=1.0, peak=1.3, shift=(0.0, 0.62)),
+                       dict(g=(1751, 1760), k=1.0, peak=1.3, shift=(0.0, -0.62))])
 
 
 def _mix(a, b, u):
@@ -57,16 +62,16 @@ def astro_pose(g):
     p = dict(cast19.STORY19["william_quadrant_sun"][1])
     for k in ("glint",):
         p.pop(k, None)
-    w1 = math.sin(g * 0.37)
-    w2 = math.sin(g * 0.23 + 1.0)
-    p["arm_r"] = dict(hand=(0.50 + 0.10 * w2, 0.05 + 0.10 * w1), bend=-0.7, stretch=1.1, layer="top")
+    w1 = math.sin(g * 0.55)
+    w2 = math.sin(g * 0.35 + 1.0)
+    p["arm_r"] = dict(hand=(0.50 + 0.18 * w2, 0.05 + 0.2 * w1), bend=-0.7, stretch=1.1, layer="top")
     p["arm_l"] = dict(hand=(-0.5 + 0.2 * w1, 0.80 + 0.25 * w2), bend=0.6, shape="open", layer="top")
-    p["prop_r"] = dict(type="quadrant19", angle=-62 + 26 * w1 + 10 * w2, scale=1.5)
+    p["prop_r"] = dict(type="quadrant19", angle=-62 + 34 * w1 + 14 * w2, scale=1.5)
     p["yaw"] = 0.35
     p["pitch"] = -0.6
-    p["expr"] = "worried" if g > G_WORD - 10 else "determined"
-    p["gaze"] = (0.4, -0.9)
-    p["lean"] = -4 + 9 * w2
+    p["expr"] = "worried"
+    p["gaze"] = (0.9, -1.0)
+    p["lean"] = -4 + 14 * w2
     p["head_roll"] = 5 * w1
     p["legs"] = "wide"
     p["blink"] = blink(g, [1680, 1730])
@@ -75,7 +80,7 @@ def astro_pose(g):
 
 
 def hop_z(g):
-    return 0.05 * max(0.0, math.sin(g * 0.37 + 1.5)) ** 2
+    return 0.16 * max(0.0, math.sin(g * 0.55 + 1.5)) ** 2
 
 
 class Take(C.Take):
@@ -95,7 +100,7 @@ class Take(C.Take):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *CAM.at(g))
-            C.place(self.wil, f, self.mw)
+            C.place(self.wil, f, self.mw + Vector((0, 0, 0.05 * abs(math.sin(math.pi * g / 9.0)))))
             C.place(self.ast, f, self.ma + Vector((0, 0, hop_z(g))))
             self.key_set(f, sea=(g - GF) / 30.0, roll=(g - GF) / 30.0)
         for g in gs:

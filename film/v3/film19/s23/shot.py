@@ -26,15 +26,15 @@ SNAP = (G_SNAP - 2, G_SNAP + 18)
 PRESET, LIGHT, FINAL_SPP, PPD = "hall_door", "EVENING", 8, 256
 BLINKS = [1872, 1905, 1925]
 
-D_START = Vector((0.0, -5.40, 0.0))     # harrison_door mark is (0,-5.55): one step inside the doorway
-D_END = Vector((0.50, -4.30, 0.0))
+D_START = Vector((0.0, -7.60, 0.0))     # in the corridor beyond the doorway (door mark is y -5.55): he walks THROUGH the door
+D_END = Vector((0.55, -4.00, 0.0))
 CAM_LOC0 = (2.95, 0.45, 2.20)
 CAM_LOOK0 = (0.30, -4.60, 2.50)
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.06, slide_px=-135.0, rise_px=-35.0, arc_deg_s=30.0, decay=0.12,
                 snaps=[dict(g=SNAP, k=1.75, peak=2.3, shift=(6.00, -0.25))])
 
 BASE = dict(cast19.STORY19["harrison_old_handover"][1])
-CYC = 46.0                                              # frames per shuffle cycle (slow)
+CYC = 34.0
 
 
 def walk_u(g):
@@ -53,7 +53,7 @@ def pose_of(g):
     base.update(yaw=0.30, pitch=0.08, gaze=(0.0, 0.3), head_roll=-2.0, expr="happy", mouth="smile")
     base["arm_r"] = dict(hand=(0.62, 0.84), bend=-0.1, shape="open", stretch=1.1, layer="front")
     base["prop_r"] = "h4_watch"
-    p = cast19.cycle("harrison19", (g - G_FIRST) / CYC, "walk", 1, base=base, arms="l", speed=0.55)
+    p = cast19.cycle("harrison19", (g - G_FIRST) / CYC, "walk", 1, base=base, arms="l", speed=0.80)
     p["old"] = 1
     p["lean"] = 8.0 + 1.0 * math.sin(g * 0.22)
     p["mirror"] = False
@@ -70,7 +70,7 @@ class Take(C.Take):
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
         self.key_cam(bf(G_FIRST), *CAM.at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
-        self.har = self.actors["har"] = C.make_actor("har", "harrison19", os.path.join(WORK, "sprites"), contact=True, cam=self.cam)
+        self.har = self.actors["har"] = C.make_actor("har", "harrison19", os.path.join(WORK, "sprites"), contact=dict(width=1.1, depth=0.5, opacity=0.8), cam=self.cam)
 
     def pose(self, gs):
         for g in gs:

@@ -1,0 +1,41 @@
+{
+ "take": "s20",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film19/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 52.7,
+   "duration": 2.8,
+   "frame": 1581,
+   "end_frame": 1665,
+   "kind": "ambience",
+   "label": "the Board's hall by day: room tone, a ticking regulator"
+  },
+  {
+   "time": 53.633,
+   "duration": 0.533,
+   "frame": 1609,
+   "end_frame": 1625,
+   "kind": "foley",
+   "label": "the shrug: gown and wig rustle, a smug 'hmph'",
+   "peak_frame": 1615
+  },
+  {
+   "time": 54.267,
+   "duration": 0.667,
+   "frame": 1628,
+   "end_frame": 1648,
+   "kind": "accent",
+   "label": "snap push on 'ฟลุ๊ค!' (g 1633): a whoosh and a dismissive honk",
+   "peak_frame": 1633
+  },
+  {
+   "time": 55.5,
+   "duration": 0.0,
+   "frame": 1665,
+   "end_frame": 1665,
+   "kind": "cut",
+   "label": "hard cut to shot 21 (SHIP ship_coast DAY_BARBADOS)"
+  }
+ ]
+}

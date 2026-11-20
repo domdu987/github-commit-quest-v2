@@ -27,17 +27,17 @@
   "frames": 15,
   "note": "DIS 15 into shot 11 (WORKSHOP shop_wide); 10 handle frames g 862..871"
  },
- "set": "v3/set3d19/h19.py HALL preset hall_wide, light DAY; set_candles(1.0) every frame; no runtime set changes; no caption_shade",
- "cast": "v3/cast19: astro19 (the mocker), astro19_b, astro19_c, astro19_b again (far right) laughing (STORY19 *_laugh poses via cast19.laugh_cycle, 3 bounces/s, bounce 0.06 D at 3 Hz, tears, alternate pointing fingers), mirrored to face the aisle; harrison19 default (greying hair, apron) standing sad with the tricorne held (prop tricorn_held), expr sad (fixed mouth); nobody speaks; Board stands at x +-2.3 D behind the chairs (not at the marks: the narrow 22 mm lens cannot hold x +-3.5 at this distance)",
- "camera": "custom 22 mm at the door end (0.8,-6.0,3.8) looking up the hall at Harrison (0.15,0.8) with the Board beyond; c19.CamPath drift push 10 %/s + slide -60 px/s + crane 30 px/s + arc -16 deg/s about Harrison, decay 0.05; SNAP x2.85 (peak 1.6, shift 1.9/-1.1) g 843..856 on the caption 'ไอ้ช่างไม้' (28.10 s = g 846) onto his face; still moving at the dissolve handle",
+ "set": "v3/set3d19/h19.py HALL preset hall_wide, light DAY; set_candles(1.0) every frame; no runtime set changes (door leaves visible, they frame Harrison); no caption_shade",
+ "cast": "v3/cast19: astro19, astro19_b, astro19_c and a second astro19_b (far right) laughing (*_laugh poses via cast19.laugh_cycle, 3 Hz bounce 0.06 D, tears), each pointing at Harrison in turn (point arm alternating every 9 frames); harrison19 at the door (0,-5.0) in harrison_hopeful_door pose (hands clasped, no hat), expr sad; nobody speaks; Board at x +-2.1 D behind the chairs (not at the astro_* marks)",
+ "camera": "custom 22 mm from the window end (0,9.4,3.6) looking DOWN the hall at the door; c19.CamPath push 10 %/s + slide -20 px/s, decay 0.05; the camera flies on between the Board; SNAP x3.0 (peak 1.6, shift 1.1/0.7) g 843..857 on the caption 'ไอ้ช่างไม้' (28.10 s = g 846) onto Harrison in the doorway",
  "events": {
   "snap": [
    843,
-   856
+   857
   ],
   "word_nickname_caption": 846,
   "laugh": "3 Hz bounce 0.06 D all frames",
-  "doors_hidden": "hdoorleaf_* set objects hidden (camera passes the open door leaves)"
+  "pointing": "alternating arm every 9 frames"
  },
  "dof": "none",
  "text": "none",
@@ -50,20 +50,20 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 15.97,
- "s_per_frame_cpu_mean": 31.28,
+ "s_per_frame_wall_mean": 20.17,
+ "s_per_frame_cpu_mean": 39.69,
  "head_px": [
-  72,
-  754
+  56,
+  5941
  ],
  "head_centre_y": [
-  490,
-  740
+  -4451,
+  1500
  ],
- "head_bottom_max_y": 1083,
+ "head_bottom_max_y": 2113,
  "framediff_in_shot": {
-  "median": 4.31,
-  "p90": 18.45
+  "median": 4.51,
+  "p90": 17.36
  },
  "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
 }

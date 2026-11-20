@@ -29,8 +29,8 @@ FINAL_SPP = 10                                           # H.STATE['samples'] of
 
 SEAK = float(os.environ.get("SEAK", "1"))                    # sea clock rate (1 = real time)
 S = 1.85                                                 # metres -> world D
-AZ = float(os.environ.get("AZ", "-35"))                  # camera azimuth about the ship vs the aerial preset (deg): more of the wake side-on
-DIST0 = float(os.environ.get("DIST0", "0.7"))           # start distance as a fraction of the preset aerial distance (the pull-back grows it)
+AZ = float(os.environ.get("AZ", "-45"))                  # camera azimuth about the ship vs the aerial preset (deg): more of the wake side-on
+DIST0 = float(os.environ.get("DIST0", "0.45"))           # start distance as a fraction of the preset aerial distance (the pull-back grows it)
 _loc, _look = Vector((-70.0, 95.0, 85.0)) * S, Vector((2.0, 6.0, 14.0)) * S
 _d = (_loc - _look) * DIST0
 _d = Matrix.Rotation(math.radians(AZ), 3, "Z") @ _d
@@ -39,10 +39,10 @@ _f = (CAM_LOOK0 - CAM_LOC0).normalized(); _u = Vector((_f.y, -_f.x, 0.0)).normal
 _o = _u * (-110.0 * (CAM_LOOK0 - CAM_LOC0).length / C.F_PX)       # start 110 px higher: the crane lets the ship sink on screen
 CAM_LOOK0, CAM_LOC0 = CAM_LOOK0 + _o, CAM_LOC0 + _o
 G_WORD = C.cap_g("ยิ่งไกล")                              # 1370: the strongest word -> the snap back
-SNAP = (G_WORD - 2, G_WORD + 14)                         # 1368..1384 (16 f, x0.55: the framing pulls back to 55 %)
-_P = [float(v) for v in os.environ.get("CAMP", "-0.10,60,190,-6").split(",")]      # push (pull), slide px/s, rise px/s, arc deg/s (tuning)
+SNAP = (G_WORD, G_WORD + 16)                         # 1368..1384 (16 f, x0.55: the framing pulls back to 55 %)
+_P = [float(v) for v in os.environ.get("CAMP", "-0.08,120,120,-14").split(",")]      # push (pull), slide px/s, rise px/s, arc deg/s (tuning)
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, FIRST_G, G_LAST, push=_P[0], slide_px=_P[1], rise_px=_P[2], arc_deg_s=_P[3], decay=0.1,
-                snaps=[dict(g=SNAP, k=0.65, peak=2.0, shift=(-8.0, 12.0))])
+                snaps=[dict(g=SNAP, k=0.62, peak=2.0, shift=(-12.0, 16.0))])
 
 
 def widen_sea(preset, k, nu, nv):
@@ -57,7 +57,7 @@ def widen_sea(preset, k, nu, nv):
 
 class Take(C.Take):
     def __init__(self, quality="preview"):
-        widen_sea(PRESET, float(os.environ.get('WIDEN', '9')), 800, 1150)
+        widen_sea(PRESET, float(os.environ.get("WIDEN", "11")), int(os.environ.get("NU", "1300")), int(os.environ.get("NV", "1800")))
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_" + TAKE)
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
         self.key_cam(C.bf(FIRST_G), *CAM.at(FIRST_G))

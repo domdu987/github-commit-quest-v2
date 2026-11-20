@@ -1,0 +1,39 @@
+{
+ "take": "s07",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film19/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 15.533,
+   "duration": 2.633,
+   "frame": 466,
+   "end_frame": 545,
+   "kind": "ambience",
+   "label": "hall, afternoon: quiet room tone, a distant clock tick"
+  },
+  {
+   "time": 15.667,
+   "duration": 2.5,
+   "frame": 470,
+   "end_frame": 545,
+   "kind": "foley",
+   "label": "wig and gown rustle as the astronomer jabs at the Moon; small approving 'hm' hums from the nodding colleagues (no words)"
+  },
+  {
+   "time": 16.4,
+   "duration": 0.5,
+   "frame": 492,
+   "end_frame": 507,
+   "kind": "accent",
+   "label": "snap push on 'คณะกรรมการ': short airy whoosh"
+  },
+  {
+   "time": 18.167,
+   "duration": 0.0,
+   "frame": 545,
+   "end_frame": 545,
+   "kind": "cut",
+   "label": "hard cut to shot 8"
+  }
+ ]
+}

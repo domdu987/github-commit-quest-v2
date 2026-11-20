@@ -1,8 +1,7 @@
-# s24 QA: film 19, shot 24 (HALL EVENING)
+# s24 QA: film 19, shot 24 (HALL EVENING), after the QA-art / QA-tech fix round
 - take.mkv: g 1924..2036 (113 frames), shot g 1933..2027; transition in: cut.
-- King19 compares the pocket watch with the H4 (hands alternate, squint); ten candle stubs appear left to right along the table edge (set_stubs 0->10); snap on 'สิบสัปดาห์' (g 2006). Known: the King is small (head 78->~170 px) at the far end; camera path chosen to avoid the candelabra (a candle passing the lens whites out the frame).
-- Rules: no DOF, no text, no caption_shade; all hooks keyed every frame; samples 8; heads (in shot, px): {"king": {"w": [80, 150], "y": [565, 614], "x": [322, 575], "bottom_max": 656}}
-- Mouths: only the jaw drop in s25 (held), nobody talks.
-- qa_auto: PASS (see QA_AUTO.md, phone_sheet.jpg). Checked contact sheet at full size.
-- s/frame wall 15.7 (2 procs x 2 threads), cpu 30.81.
-- Frame-diff in shot (90x160 grey): median 4.06, p90 15.07 (target 4 / 12).
+- King19 compares the pocket watch with the H4 (both watches 1.5x, at face height, hands alternate, squint); the ten candle stubs (moved in front of the King) appear left to right and reach 10 by the snap word 'สิบสัปดาห์' (g 2006); snap there; the last frames show the King and the stub row, no blown candle. King head 115-250 px. Frame-diff median 3.95 is just under the 4 target, p90 9.96 (under 12).
+- Rules: no DOF, no text, no caption_shade; set hooks keyed every frame; samples 8; heads in shot (px): {"king": {"w": [117, 217], "y": [559, 624], "x": [378, 621], "bottom_max": 694}}
+- qa_auto: see QA_AUTO.md + phone_sheet.jpg. Contact sheet checked at full size.
+- s/frame wall 29.83 (2 procs x 2 threads, some frames rendered while a second job ran), cpu 32.44.
+- Frame-diff in shot (90x160 grey): median 3.95, p90 9.96 (target 4 / 12).

@@ -19,8 +19,8 @@ N = (G1 + H_OUT) - FIRST
 TR_IN = dict(type="cut", frames=0, note="hard cut in from shot 1 (WORKSHOP shop_bench) at g %d; %d handle frames before it rendered in 3D" % (G0, H_IN))
 TR_OUT = dict(type="cut", frames=0, at=G1, note="hard cut to shot 3 (HALL hall_window) at g %d; %d handle frames after it rendered in 3D" % (G1, H_OUT))
 CUTS = [G0, G1]                                           # planned cuts for qa_auto
-SET = "v3/set3d19/h19.py SHIP preset ship_aerial, light NOON; set_sea(g/30) + set_roll(g/30) keyed on every frame; sea grid re-fitted at runtime to a 4.5x wider virtual camera footprint (no set module edited) so the pull-back never shows the grid edge; no actors; no caption_shade"
-CAMERA = "custom 22 mm from the ship_aerial start pose; c19.CamPath pull 10 %/s + orbit -8 deg/s + slide 60 px/s + crane 140 px/s (ship starts 180 px higher), decay 0.1 (moving on frame 0 and on the last frame); no snap (shot < 2 s)"
+SET = "v3/set3d19/h19.py SHIP preset ship_aerial, light NOON; set_sea(g/30) + set_roll(g/30) keyed on every frame; sea grid re-fitted at runtime to a 11x wider (same azimuth as the camera, 1300x1800 vertices) virtual camera footprint (no set module edited) so the pull-back never shows the grid edge; no actors; no caption_shade"
+CAMERA = "custom 22 mm from the ship_aerial start pose; c19.CamPath pull 9 %/s + orbit -18 deg/s + slide 150 px/s + crane 110 px/s from 0.5x the aerial distance at azimuth -30 deg, plus a small snap pull-back x0.8 (14 f, g 79..93), decay 0.1 (moving on frame 0 and on the last frame); no snap (shot < 2 s)"
 EV = dict()
 CUES = [
     (0, N, "ambience", "open sea far from land: steady wind over water, a long soft swell, distant gulls", {}),

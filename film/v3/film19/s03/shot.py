@@ -31,16 +31,17 @@ G_SNAP_WORD = C.g_of(5.80)                     # "ทำไม่ได้" 5.80
 SNAP = (G_SNAP_WORD - 8, G_SNAP_WORD + 7)      # 15 f, lands on the word
 LIGHT, PRESET = "DAY", "hall_window"
 FINAL_SPP = 8
+CONTACT = dict(width=1.6, depth=0.75, color="#1a1626", opacity=0.9)    # QA_TECH: visible contact shadows on wood and rug
 
 # ----------------------------------------------------------------------------- camera
 CAM_LOC0 = (0.3, -3.2, 2.3)
 CAM_LOOK0 = (-2.95, 3.0, 2.7)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.10, slide_px=-25.0, rise_px=0.0, arc_deg_s=-21.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=2.0, peak=1.5, shift=(0.35, 0.05))])
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.13, slide_px=-40.0, rise_px=0.0, arc_deg_s=-13.0, decay=0.15,
+                snaps=[dict(g=SNAP, k=1.9, peak=1.3, shift=(0.3, 0.05))])
 
 # ----------------------------------------------------------------------------- cast
-MARK_B = (-3.65, 2.60, 0.0)                    # astro19_b at the eyepiece (faces screen-left)
-MARK_A = (-1.95, 3.10, 0.0)                    # astro19 beside the tube
+MARK_B = (-3.80, 3.45, 0.0)                    # astro19_b at the eyepiece (faces screen-left)
+MARK_A = (-2.10, 4.00, 0.0)                    # astro19 beside the tube
 
 
 def pose_b(g):
@@ -50,15 +51,15 @@ def pose_b(g):
     p["mirror"] = True
     p["yaw"] = 0.45
     p["expr"] = "squint" if u > 0.5 else "unimpressed"
-    p["lean"] = 4.0 + 12.0 * u + 1.0 * math.sin(g * 0.15)
-    p["pitch"] = 0.10 + 0.25 * u
+    p["lean"] = 3.0 + 20.0 * u + 1.0 * math.sin(g * 0.15)
+    p["pitch"] = 0.10 + 0.30 * u
     p["head_roll"] = 3.0 * u
     p["gaze"] = (0.9, 0.5) if u > 0.5 else (0.4, 0.0)
     p["arm_r"] = dict(hand=(0.45, 0.35 + 0.1 * (1 - u)), bend=0.8, shape="open", layer="top")
     p["arm_l"] = dict(hand=(-0.35, 0.95), bend=0.6)
     p["mouth"] = "flat"
     p["blink"] = blink(g, [128, 163, 190])
-    p["legs"] = "stand"
+    p["legs"] = dict(crouch=0.30 * u) if u > 0.05 else "stand"
     return p
 
 
@@ -68,7 +69,7 @@ def pose_a(g):
     p["mirror"] = True
     p["yaw"] = 0.35
     p["expr"] = "worried" if (g // 40) % 2 == 0 else "unimpressed"
-    scrub = 0.07 * math.sin(2 * math.pi * g / 9.0)
+    scrub = 0.12 * math.sin(2 * math.pi * g / 8.0)
     p["arm_r"] = dict(hand=(0.50 + scrub, -0.42 + 0.5 * scrub), bend=0.9, shape="open", layer="top")
     p["arm_l"] = "akimbo"
     p["head_roll"] = -6.0 + 3.0 * math.sin(g * 0.11)
@@ -90,8 +91,8 @@ class Take(C.Take):
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
         self.key_cam(bf(G_FIRST), *CAM.at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
-        self.ab = self.actors["ab"] = C.make_actor("ab", "astro19_b", os.path.join(WORK, "sprites"), contact=True, cam=self.cam)
-        self.aa = self.actors["aa"] = C.make_actor("aa", "astro19", os.path.join(WORK, "sprites"), contact=True, cam=self.cam)
+        self.ab = self.actors["ab"] = C.make_actor("ab", "astro19_b", os.path.join(WORK, "sprites"), contact=CONTACT, cam=self.cam)
+        self.aa = self.actors["aa"] = C.make_actor("aa", "astro19", os.path.join(WORK, "sprites"), contact=CONTACT, cam=self.cam)
 
     def pose(self, gs):
         for g in gs:

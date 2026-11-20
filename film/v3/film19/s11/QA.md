@@ -8,3 +8,7 @@
 - s/frame: 20.2 s wall / 38.8 s CPU (two processes, other renders ran during the first minutes).
 - Deviation: Harrison is not at harrison_bench behind the clock (the H1 hid him); the camera is a custom path, not the preset.
 - Known: the file blade reads as a thin dark/silver rod; the plank fills the lower FG until the snap.
+
+## Re-render (after QA_TECH notes + the lantern set fix)
+- Re-rendered with the new iron-cage lantern (h19_shop.py from film19/main). The file hand is raised and pushed out so the file tip reaches the H1's base on the bench (hand (1.0, 1.45)); frame-diff median 4.02 / p90 12.78.
+- Contact shadow: cast19 contact decal is on; the legs still end in thin white stubs behind the plank (rig limit).
