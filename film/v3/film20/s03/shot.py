@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""shot.py -- film 20 take s03 = shot 3 + shot 4 merged = BIGZOOM 1 (g 178..317; dissolve-in handle g 170..177; cut-out handle g 318..321).
+"""shot.py -- film 20 take T03 = s03 = shots 3+4+5 as ONE continuous take (g 178..403; dissolve-in handle g 170..177, dissolve-out handle g 404..411). BIGZOOM 1 Paris -> Eiffel at the table (lands g 268), then the camera TRAVELS and CRANES up the scaffolded front-left leg past working riveters to the sky.
 "วิศวกรไอเฟล" (event g 268): SITE site_table / DAY / stage 0.  EIFFEL at the plank plan table under a front leg, a rolled blueprint in hand,
 looks at the plan, then points UP proudly (arm raises g 266..274, expression determined -> proud on the closed frame of a blink).
 Camera: the preset lowered ~0.4 m and tilted up ~8 deg so the curved leg + scaffold (not the blank pier wall) fill the background; push 8 %/s
@@ -18,9 +18,12 @@ lerp, clamp, blink, ez, u_of, bf = C.lerp, C.clamp, C.blink, C.ez, C.u_of, C.bf
 WORK = os.path.join(HERE, "work")
 import puppet                                            # noqa: E402
 
-G0, G1 = C.g_bound(5.93), C.g_bound(10.60)     # 178, 318 (shot = g 178..317)
-H_IN, H_OUT = 8, 4                             # dissolve 13: 13/2 + 2 = 8.5 -> 8 frames (director's number); cut side 4
-GF, G_LAST = G0 - H_IN, G1 + H_OUT - 1         # 170..321
+G0, G1 = C.g_bound(5.93), C.g_bound(13.47)     # 178, 404 (take = g 178..403)
+H_IN, H_OUT = 8, 8                             # dissolve 13 in and out: 8 handle frames each side (director)
+GF, G_LAST = G0 - H_IN, G1 + H_OUT - 1         # 170..411
+G_TRAVEL = 282                                 # the camera leaves Eiffel (after the point has landed)
+G_MOST = C.cap_g("สูงที่สุดในโลก")                # 346: snap up
+SNAP = (G_MOST - 2, G_MOST + 13)
 GS = list(range(GF, G_LAST + 1))
 G_WORD = C.cap_g("วิศวกรไอเฟล")                   # 268
 G_LAND = G_WORD                                # the zoom lands on the medium at the word
@@ -72,14 +75,48 @@ class ZoomPath(C.CamPath):
         return self.state(g)[3]
 
 
+LEG_FWD = 5.0                                  # m: the leg camera starts this much nearer the foot than the preset (smaller sacks)
+LIFT = 14.0                                    # D: the camera lifts over the yard / pier while it travels (clears the stone block)
+
+
+class TravelPath(ZoomPath):
+    """ZoomPath (BIGZOOM to the table, drift parked after 0.6 s) then, from G_TRAVEL, a blend of position AND aim to the front-left-leg
+    camera (site_leg_low moved LEG_FWD m nearer): crane lift over the pier, aim pans ~135 deg, pitch 14 -> 36 deg + a +9 deg SNAP on
+    'สูงที่สุดในโลก' (g 344-359).  Moving on both ends (10 % linear in the blend)."""
+
+    def __init__(self, A):
+        ZoomPath.__init__(self, A)
+        c = A["cams"]["site_leg_low"]
+        l, k = Vector(c["loc"]), Vector(c["look_at"])
+        h = k - l
+        h.z = 0.0
+        self.h = h.normalized()
+        self.locC = l + self.h * (LEG_FWD * CO.SC)
+
+    def at(self, g):
+        from mathutils import Matrix
+        la, ka = ZoomPath.at(self, min(g, G_LAST) if g <= G_TRAVEL else G_TRAVEL)
+        if g <= G_TRAVEL:
+            return la, ka
+        u = clamp((g - G_TRAVEL) / float(G_LAST - G_TRAVEL), 0.0, 1.0)
+        w = 0.10 * u + 0.90 * smoother(u)
+        pitch = lerp(10.0, 36.0, u) + 9.0 * C.snap_u(g, SNAP[0], SNAP[1], 1.7)
+        dC = self.h * math.cos(math.radians(pitch)) + Vector((0, 0, math.sin(math.radians(pitch))))
+        dA = (ka - la).normalized()
+        loc = la.lerp(self.locC, w) + Vector((0, 0, LIFT * math.sin(math.pi * w)))
+        d = (dA * (1.0 - w) + dC * w).normalized()
+        return loc, loc + d * 20.0
+
+    def tilt(self, g):
+        return 0.0
+
+
 def cam_path(A):
-    return ZoomPath(A)
+    return TravelPath(A)
 
 
 def cam_path_static():
-    import site20
-    A = dict(marks={MARK: CO.W((50.7, -71.3, 0.0))})
-    return cam_path(A)
+    return cam_path(dict(marks={MARK: CO.W((50.7, -71.3, 0.0))}, cams={"site_leg_low": dict(loc=CO.W((-60.0, -82.0, 1.4)), look_at=CO.W((-52.0, -58.0, 14.0)))}))
 
 
 EIF_A = cast20.STORY20["eiffel_blueprint"][1]
@@ -136,7 +173,11 @@ class Take(C.Take):
             a = C.make_actor(name, cast, os.path.join(WORK, "sprites"), contact=dict(width=1.2, depth=0.5, opacity=0.8), cam=self.cam)
             self.actors[name] = a
             mk = C.on_ground(CO.W((xy[0], xy[1], 0.0)))
-            self.riv.append((a, cast, mk, mirror))
+            self.riv.append((a, cast, mk, mirror, 1.0))
+        for name, cast, mark, mirror in (("rl_a", "riveter_hammer", "leg_a", False), ("rl_b", "riveter_tongs", "leg_b", True), ("rl_c", "riveter_forge", "leg_c", False)):
+            a = C.make_actor(name, cast, os.path.join(WORK, "sprites"), contact=False, cam=self.cam)       # on a deck: no ground decal
+            self.actors[name] = a
+            self.riv.append((a, cast, tuple(self.A["marks"][mark]), mirror, 2.4))                           # x2.4: reads on the platforms
 
     def pose(self, gs):
         mark = self.A["marks"][MARK]
@@ -144,19 +185,19 @@ class Take(C.Take):
             f = bf(g)
             self.key_cam(f, *self.path.at(g))
             C.place(self.eif, f, mark)
-            for a, cast, mk, mirror in self.riv:
-                C.place(a, f, mk)
+            for a, cast, mk, mirror, sc in self.riv:
+                C.place(a, f, mk, scale=sc)
             self.key_set(f)
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
             self.eif.pose(f, pose_of(g), camera=self.cam)
-            for i, (a, cast, mk, mirror) in enumerate(self.riv):
+            for i, (a, cast, mk, mirror, sc) in enumerate(self.riv):
                 p = riv_pose(cast, g, i)
                 if mirror:
                     p["mirror"] = True
                 a.pose(f, p, camera=self.cam)
-        self.sprites_for([(self.eif, PPD)] + [(a, 160) for a, _, _, _ in self.riv], [bf(g) for g in gs])
+        self.sprites_for([(self.eif, PPD)] + [(a, 160) for a, _, _, _, _ in self.riv], [bf(g) for g in gs])
 
     def report(self, g):
         f = bf(g)
