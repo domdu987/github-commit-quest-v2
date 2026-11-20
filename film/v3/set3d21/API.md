@@ -115,3 +115,11 @@ Terrain tables load in 0.2 s (first run builds them in about 15 s); scene build 
 - Placeholder heads are flat cards turned to the camera at render start; if the camera moves a lot during a drift, call `stage_placeholders(A)` again or use your cast sprites (billboards).
 - No glossy anywhere; the water glitter is emission only. Do not add a world volume or fog: QA-art rejects haze.
 - 4 cores: use `threads_mode FIXED, threads 4` (the render function does).
+
+## 9. VIVID grade (QA_TEAM.md §G, client complaint 2026-11-20) — applied automatically by `K.render()`
+`grade()` ends with a fixed per-preset VIVID stage (`K.VIVID[preset] = (gamma, sat)`), fitted so the frame saturation is >= 0.47 (as `film/qa_stats.py`
+measures it) and the mean luma is about 85-110, like film 2 (0.49 / 94). It keys on `K.STATE['preset']`, which `build(preset=...)` sets.
+If you build a scene without a preset name, or blend two presets, set `K.STATE['vivid'] = (gamma, sat)` yourself (use the preset you are closest to).
+Never call `render(..., do_grade=False)` for final frames. Check your take with `python3 film/qa_stats.py take.mkv`: saturation >= 0.47, brightness 85-110.
+The bright sand presets (bridge_end_south, bridge_high, valley_river, river_low) still measure 120-150 luma on the static tile: keep the sky and the sunlit sand
+smaller in frame there (frame lower, more water and characters), or lower `STATE['vivid']` gamma toward 2.1 if a shot stays over 115.
