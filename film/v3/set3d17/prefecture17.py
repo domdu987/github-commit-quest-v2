@@ -1282,12 +1282,12 @@ def _takes():
         _C('thief', 'prisoner', (330, (4.4, 5.7, 0.14)), (350, (5.3, 5.7, 0.6)), (386, (7.6, 5.9, FZ)), (445, (9.4, 6.5, FZ)), (470, (11.6, 6.3, FZ)), (651, (12.2, 6.2, FZ))),
         _C('gend_corr', 'gendarme', (330, (7.45, 4.3, FZ)), (651, (7.6, 4.3, FZ))), _C('clerk_ladder', 'clerk', (330, (8.6, 6.95, FZ + 1.45))), _C('gend_ledger', 'gendarme', (330, (11.75, 6.45, FZ))),
         _C('pris_c0', 'seated', (330, (11.0, 4.45, FZ))), _C('pris_c1', 'seated', (330, (11.6, 4.45, FZ))), _C('pris_c2', 'seated', (330, (12.2, 4.45, FZ))),
-        _C('bertillon', 'bertillon', (330, ML(1.45, 1.95))), _C('prisoner_chair', 'seated', (330, ML(0.7, 2.3, 0.0))), _C('inspector', 'inspector', (330, ML(-0.6, 0.2)), (493, ML(-0.6, 0.2)), (560, ML(0.15, 0.2)), (651, ML(0.15, 0.2))),
+        _C('bertillon', 'bertillon', (330, ML(1.45, 1.95))), _C('prisoner_chair', 'seated', (330, ML(0.7, 2.3, 0.0))), _C('inspector', 'inspector', (330, ML(-0.6, 0.2)), (493, ML(-0.6, 0.2)), (545, ML(-0.2, 1.4)), (657, ML(-0.2, 1.4))),
         _C('gend_room', 'gendarme', (330, ML(-1.4, -0.4))), _C('gend_room2', 'gendarme', (330, ML(2.6, -1.7))), _C('prisoner_b', 'seated', (330, ML(-2.45, 1.55)))],
         keys=[_k(330, (2.0, 5.2, 1.85), (8.0, 5.9, 1.9), hold=True), _k(360, (3.9, 5.5, 1.95), (9.0, 6.0, 2.0)), _k(386, (6.6, 5.2, 2.75), (10.0, 6.4, 1.7)),
               _k(445, (7.9, 4.4, 2.6), (9.9, 7.2, 3.1)), _k(470, (9.9, 5.6, 2.55), (10.3, 9.0, 2.3)), _k(493, (10.25, 8.5, 1.55), ML(-0.6, 1.6, 1.75)),
-              _k(560, (11.9, 14.0, 2.45), ML(-0.3, 0.6, 1.45)), _k(593, ML(2.25, 2.9, 1.65), ML(-0.1, 0.3, 1.25), hold=True),
-              _k(657, ML(2.0, -0.95, 0.55), ML(0.05, 0.3, 1.3), hold=True)])
+              _k(560, ML(2.3, 0.9, 1.5), ML(-0.2, 1.4, 1.35)), _k(593, ML(2.25, 1.0, 1.45), ML(-0.2, 1.4, 1.3), hold=True),
+              _k(657, ML(2.15, 1.05, 1.35), ML(-0.2, 1.4, 1.4), lens=28.0, hold=True)])          # 2e: the OTS push continues on a 22 -> 28 mm push-in (the chair / tripod / table corner leaves no low path)
     # ---- T3 nickname + prefect (g 651-850): bird's-eye from the gasolier (ceiling cut away), crane to eye height, low under the table, into the clock
     T['T3'] = dict(g=(651, 850), render=(645, 856), cast=[
         _C('bertillon', 'bertillon', (645, ML(1.45, 1.95)), (780, ML(1.45, 1.95)), (802, ML(1.0, 1.3))), _C('prisoner_chair', 'seated', (645, ML(0.7, 2.3))), _C('inspector', 'inspector', (645, ML(-0.4, 0.3))),
@@ -1408,11 +1408,27 @@ def _loc_of(p):
 # ================================================================ per-take hook states (doors, window, wagon, drawer, lid, card, calendar, tally, light mix)
 def _ramp(g, a, b): return max(0.0, min(1.0, (g - a) / float(b - a)))
 def _ss(u): return u * u * (3 - 2 * u)
+def _light_scale(prefixes, k, frame=None):
+    """scale the energy of the lights whose names start with one of `prefixes` relative to their built value (stored on first use)."""
+    for o in bpy.data.objects:
+        if o.type == 'LIGHT' and o.name.startswith(prefixes):
+            if 'e_built' not in o: o['e_built'] = o.data.energy
+            o.data.energy = o['e_built'] * k; W.setdefault('lampmul', {})[o.name] = k          # flickering lamps: set_flicker2 applies the same multiplier
+            if frame is not None: o.data.keyframe_insert('energy', frame=frame)
+def _glow_scale(key, k, frame=None):
+    for m in bpy.data.materials:
+        if m.name.startswith(key) and m.node_tree and 'strength' in m.node_tree.nodes:
+            sk = m.node_tree.nodes['strength'].inputs[1]
+            if 'e_built' not in m: m['e_built'] = sk.default_value
+            sk.default_value = m['e_built'] * k
+            if frame is not None: sk.keyframe_insert('default_value', frame=frame)
 def take_state(take, g, frame=None):
     """every story hook of a take at frame g (planned timings, PLAN §4). frame=None sets; frame=N keys (render teams: frame = g + 1)."""
     if take == 'T1':
         set_window(1.0, frame); set_wagon(_ss(_ramp(g, 150, 230)), frame); set_door('main', _ss(_ramp(g, 300, 330)), frame)
+        _light_scale(('win_key',), 1.0 - (1.0 - 220.0 / 300.0) * _ss(_ramp(g, 96, 110)), frame)          # QA v2b: window key 300 W (BIGZOOM start) -> 220 W inside
     elif take == 'T2':
+        _light_scale(('door_lantern',), 0.8 + 0.2 * _ss(_ramp(g, 360, 372)), frame); _glow_scale('glow_fan', 0.8 + 0.2 * _ss(_ramp(g, 360, 372)), frame)   # QA v2b: -20 % g330-360
         set_door('main', 0.35 + 0.65 * _ss(_ramp(g, 330, 362)), frame); set_door('ident', _ss(_ramp(g, 440, 470)), frame); set_window(1.0, frame); set_door('archives', 0.0, frame)
     elif take in ('T3', 'T8'):
         set_window(1.0, frame); set_door('ident', 0.6 if take == 'T3' else 0.3, frame); set_calendar(_ss(_ramp(g, 758, 778)) if take == 'T3' else 1.0, frame)
@@ -1427,6 +1443,17 @@ def take_state(take, g, frame=None):
     if take == 'T5':
         mx = TAKES['T5']['mix']; set_light_mix(mx[2], mx[3], _ss(_ramp(g, mx[0], mx[1])), frame)
 
+def key_take(take, cam=None, g0=None, g1=None):
+    """key a whole take for a frame-by-frame render (Blender frame = g + 1), in the right order per frame: camera path, story hooks
+    (take_state: doors, window, calendar, drawer, tally, light mix, the QA v2b light schedules), ceiling cutaway, then the life hooks (flicker x
+    the light-mix / schedule multipliers, smoke, dust, pendulum, banners). The cast is staged separately on every frame with stage_cast2."""
+    cam = cam or bpy.context.scene.camera; fr = path_take(take); g0 = fr[0]['g'] if g0 is None else g0; g1 = fr[-1]['g'] if g1 is None else g1
+    key_cam(cam, [f for f in fr if g0 <= f['g'] <= g1])
+    for f in fr:
+        g = f['g']
+        if not g0 <= g <= g1: continue
+        n = g + 1; take_state(take, g, frame=n); cutaway_at(f, frame=n); set_flicker2(1.0, frame=n); set_smoke2(1.0, frame=n); set_dust2(1.0, frame=n)
+        K.set_pendulum(frame=n); set_banner_sway(frame=n)
 # ================================================================ render (v2 settings + grade) and the gate stills
 def setup_render2(res=(720, 1280), samples=32, threads=2, adaptive=0.03):
     """recommended v2 settings: Cycles CPU, 2 threads, 32 samples + OIDN, adaptive 0.03, 0 diffuse bounces (ambient is emission), no DOF."""
@@ -1471,7 +1498,7 @@ def gate_stills(take, out_dir, res=(360, 640), samples=16, which=None):
 
 # ================================================================ QA: per-frame anchor + speed check (SET gate v2b)
 PLANNED_CLOSE = {   # (take, anchor) -> [(g0, g1)] where > 75 %H is planned: OTS shoulders (back-view cards) and the punctuation pushes P1-P3
-    ('T2', 'bertillon'): [(555, 625)], ('T5', 'bertillon'): [(1100, 1150)], ('T6', 'bertillon'): [(1516, 1545)], ('T6', 'dupont'): [(1516, 1545), (1546, 1616)],
+    ('T2', 'bertillon'): [(530, 657)], ('T2', 'prisoner_chair'): [(600, 657)], ('T5', 'bertillon'): [(1100, 1150)], ('T6', 'bertillon'): [(1516, 1545)], ('T6', 'dupont'): [(1516, 1545), (1546, 1616)],
     ('T6', 'inspector'): [(1672, 1701)], ('T8', 'gend_a'): [(1958, 2052)], ('T8', 'bertillon'): [(2018, 2052)], ('T8', 'inspector'): [(2018, 2052)]}
 WHIPS = {}          # take -> [(g0, g1)] planned whips (<= 3 frames)
 def check_take(take, limit=0.75, vmax=6.0):
@@ -1504,8 +1531,9 @@ def _runs(lst):
     return s
 
 # ================================================================ stage_cast v2 (PLAN §3e / §6.1-2): yaw clamp, floor contact on steps, walk paths, back views
-BACK_VIEW = {   # (take, anchor) -> [(g0, g1)]: the anchor is an over-the-shoulder foreground figure seen from behind
-    ('T2', 'bertillon'): [(555, 625)], ('T5', 'bertillon'): [(1100, 1150)], ('T6', 'dupont'): [(1546, 1616)], ('T8', 'gend_a'): [(1958, 2052)]}
+BACK_VIEW = {   # (take, anchor) -> [(g0, g1)]: the anchor is an over-the-shoulder foreground figure seen from behind (or walks away: T2 2a thief)
+    ('T2', 'thief'): [(330, 386)], ('T2', 'bertillon'): [(530, 657)],
+    ('T1', 'bertillon'): [(60, 96), (158, 186)], ('T1', 'prisoner_a'): [(60, 96), (158, 186)], ('T1', 'prisoner_b'): [(60, 96), (158, 186)], ('T1', 'prisoner_q'): [(60, 96), (158, 186)], ('T5', 'bertillon'): [(1100, 1150)], ('T6', 'dupont'): [(1546, 1616)], ('T8', 'gend_a'): [(1958, 2052)]}
 YAW_CLAMP = 35.0
 def floor_z(x, y):
     """walkable surface height at (x, y): street 0, pavements 0.14, the façade's 3 outside steps (to the 0.6 sill), the 5 corridor steps (to 1.2),
@@ -1541,7 +1569,10 @@ def walk_path(keys, stride=0.72, g0=None, g1=None):
         ph = (dist / (2 * stride)) % 1.0; out.append(dict(g=g, pos=(x, y, floor_z(x, y)), heading=head, speed=sp, phase=ph, planted='L' if ph < 0.5 else 'R', idle=sp < 0.05)); prev = (x, y)
     return out
 def cast_face(take, c, g):
-    """story facing of a cast anchor at g: its explicit `face`, else its walking direction, else toward the take's start camera."""
+    """story facing of a cast anchor at g: its per-segment face keys (FACE / face_keys, B7), else an explicit constant `face`, else its walking
+    direction, else toward the take's start camera."""
+    fk = face_keys(take).get(c['name'])
+    if fk: return _face_at(fk, g)
     if c.get('face') is not None: return c['face']
     p0 = cast_pos(c, g - 1); p1 = cast_pos(c, g + 1)
     if math.hypot(p1[0] - p0[0], p1[1] - p0[1]) > 0.01: return math.degrees(math.atan2(p1[1] - p0[1], p1[0] - p0[0]))
@@ -1549,33 +1580,135 @@ def cast_face(take, c, g):
 def is_back(take, name, g, clamp=None):
     if any(a <= g <= b for a, b in BACK_VIEW.get((take, name), [])): return True
     return bool(clamp and clamp['back'])
-def stage_cast2(take, g, assign, cam=None, sprite_dir=None):
-    """the REAL cast17 cards for frame g of a take (render teams call it on every frame before rendering): assign = {anchor: (story_pose, opts)}.
-    On top of bertillon.stage_cast: feet on floor_z (steps), card yaw clamped to +-35 deg of the story facing (Actor.yaw_fixed) with the rest of the
-    turn in the puppet 'yaw' key, and the back view on BACK_VIEW frames (cast17 has no back art: the pose is mirrored, the face is covered by a
-    dark hair / back-of-head disc and the body by a dark coat silhouette). Returns {anchor: Actor}."""
-    cam = cam or bpy.context.scene.camera; cl = cam.location; t = TAKES[take]; marks = {}; out_assign = {}
+# ---------------------------------------------------------------- B7: per-segment face keys + check_face
+STRICT = {   # (take) -> [(g0, g1, anchor)]: the speaker / hero must read front-on (<= 35 deg, the card clamp): lip-sync, BIGZOOM ends, P1-P3, 6c MARTIN
+    # T1 from g97: at g90-96 the camera is still in the window, behind him (BACK_VIEW)
+    'T1': [(97, 148, 'bertillon')], 'T2': [(493, 651, 'inspector')], 'T5': [(1128, 1196, 'inspector')],
+    'T6': [(1500, 1530, 'bertillon'), (1515, 1545, 'bertillon'), (1545, 1616, 'bertillon'), (1671, 1695, 'inspector')], 'T8': [(2018, 2052, 'inspector')]}
+FACE_OVERRIDE = {   # (take, anchor) -> [(g, deg)]: hand keys that replace the generated ones
+    # T1 hook: Bertillon and the bench prisoners face into the room (PLAN / QA B7 example); the camera flies in behind them (BACK_VIEW g60-96)
+    ('T1', 'bertillon'): [(0, -25.0), (342, -25.0)], ('T1', 'prisoner_a'): [(0, -15.0), (342, -15.0)], ('T1', 'prisoner_b'): [(0, -15.0), (342, -15.0)],
+    ('T1', 'prisoner_q'): [(0, -15.0), (342, -15.0)]}
+_FACES = {}
+def _face_at(keys, g):
+    if g <= keys[0][0]: return keys[0][1]
+    if g >= keys[-1][0]: return keys[-1][1]
+    for (ga, a), (gb, b) in zip(keys[:-1], keys[1:]):
+        if ga <= g <= gb: u = (g - ga) / float(gb - ga); return a + _wrap(b - a) * u
+def face_keys(take):
+    """per-segment story facings (B7) for every anchor of a take: [(g, deg azimuth)], linear between keys. Generated once from the planned camera
+    path: each key is the weighted circular mean of the direction to the camera over its segment (weight 1 where the card is in frame above 15 %H,
+    0.05 elsewhere), keys every 20 frames, every 8 frames for the hero inside STRICT windows. FACE_OVERRIDE replaces them by hand. Written to
+    v2_gate/face_keys.json by `write_face_keys()` for the render teams."""
+    if take in _FACES: return _FACES[take]
+    t = TAKES[take]; fr = path_take(take); g0, g1 = fr[0]['g'], fr[-1]['g']; out = {}
+    for c in t['cast']:
+        if (take, c['name']) in FACE_OVERRIDE: out[c['name']] = FACE_OVERRIDE[(take, c['name'])]; continue
+        az = []; w = []
+        for f in fr:
+            p = cast_pos(c, f['g']); a = math.atan2(f['loc'][1] - p[1], f['loc'][0] - p[0]); v, inn, d = anchor_frac(f, p, HCAST[c['who']])
+            az.append(a); w.append(1.0 if (inn and v > 0.15) else 0.05)
+        strict = [(a, b) for (a, b, n) in STRICT.get(take, []) if n == c['name']]
+        ks = []; g = g0
+        while g <= g1:
+            st = 8 if any(a - 8 <= g <= b + 8 for a, b in strict) else 20
+            lo, hi = max(g0, g - st // 2), min(g1, g + st // 2); i0, i1 = lo - g0, hi - g0 + 1
+            sx = sum(w[i] * math.cos(az[i]) for i in range(i0, i1)); sy = sum(w[i] * math.sin(az[i]) for i in range(i0, i1))
+            ks.append((g, math.degrees(math.atan2(sy, sx)))); g += st
+        if ks[-1][0] != g1: ks.append((g1, ks[-1][1]))
+        un = [ks[0]]
+        for (g, a) in ks[1:]: un.append((g, un[-1][1] + _wrap(a - un[-1][1])))                     # unwrapped, no 360 spins
+        out[c['name']] = [(g, round(a, 1)) for g, a in un]
+    _FACES[take] = out; return out
+def write_face_keys(path=None):
+    path = path or os.path.join(HERE, 'v2_gate', 'face_keys.json'); json.dump({t: face_keys(t) for t in TAKES}, open(path, 'w'), indent=0); return path
+def check_face(take):
+    """B7: per anchor, the facing error |story face - direction to the camera| on every frame where the card is in frame above 15 %H and not on
+    BACK_VIEW. FAIL when > 60 deg anywhere, or > 35 deg on the STRICT windows (lip-sync, BIGZOOM ends, P1-P3, 6c). Also the card yaw rate
+    (deg/frame) on those frames (PLAN §6.1: <= 2). Returns dict(rows: {anchor: (max_dev, max_strict, n_fail, max_rate)}, ok)."""
+    t = TAKES[take]; fr = path_take(take); rows = {}; ok = True
+    for c in t['cast']:
+        md = ms = rate = 0.0; nf = 0; prev = None
+        strict = [(a, b) for (a, b, n) in STRICT.get(take, []) if n == c['name']]
+        for f in fr:
+            g = f['g']; p = cast_pos(c, g); v, inn, d = anchor_frac(f, p, HCAST[c['who']]); fc = cast_face(take, c, g)
+            if not (inn and v > 0.15) or is_back(take, c['name'], g): prev = None; continue
+            az = math.degrees(math.atan2(f['loc'][1] - p[1], f['loc'][0] - p[0])); dev = abs(_wrap(az - fc)); st = any(a <= g <= b for a, b in strict)
+            md = max(md, dev)
+            if st: ms = max(ms, dev)
+            if dev > 60 or (st and dev > 35): nf += 1
+            yc = yaw_clamp(fc, p, f['loc'])['face']
+            if prev is not None: rate = max(rate, abs(_wrap(yc - prev)))
+            prev = yc
+        rows[c['name']] = (md, ms, nf, rate); ok = ok and nf == 0
+    return dict(rows=rows, ok=ok)
+
+# ---------------------------------------------------------------- stage_cast2: the real cast17 cards on a take frame
+def stage_cast2(take, g, assign, cam=None, sprite_dir=None, px_per_D=256):
+    """the REAL cast17 cards for frame g of a take (render teams: call it on every frame before rendering; it poses at the scene's current
+    frame). assign = {anchor: (story_pose, opts)}; opts: mirror, seated ('chair' | 'bench'), H, dx/dy/dz, expr, talk (True: cast17.speak drives
+    the mouth: lip-sync windows only), rim (default: the location preset's RIM). Adds to bertillon.stage_cast: feet on floor_z, the B7 face keys,
+    the +-35 deg yaw clamp (Actor.yaw_fixed) with the rest of the turn in the puppet 'yaw' key, and back views on BACK_VIEW frames (cast17 has no
+    back art: the pose is mirrored and a dark back-of-head disc + coat silhouette cover the card). Returns {anchor: Actor}."""
+    for pth in (os.path.join(K.V3, 'cast17'), os.path.join(K.V3, 'stage')):
+        if pth not in sys.path: sys.path.insert(0, pth)
+    import cast17, actors, sprites
+    sc = bpy.context.scene; cam = cam or sc.camera; cl = cam.location; fnum = sc.frame_current; t = TAKES[take]; out = {}
+    sprite_dir = sprite_dir or os.path.join(HERE, 'contact_work', 'sprites_v2'); os.makedirs(sprite_dir, exist_ok=True); bpy.context.view_layer.update()
     for c in t['cast']:
         if c['name'] not in assign: continue
-        p = cast_pos(c, g); z = floor_z(p[0], p[1]) if c['who'] not in ('seated', 'seated_insp') and p[2] < FZ + 0.5 else p[2]
-        yc = yaw_clamp(cast_face(take, c, g), p, cl); marks[c['name']] = (p[0], p[1], z, yc['face'], c['who'])
-        story, opts = assign[c['name']]; opts = dict(opts or {}); back = is_back(take, c['name'], g, yc)
+        story, opts = assign[c['name']]; opts = dict(opts or {}); cast, pose = cast17.STORY17[story]; pose = dict(pose)
+        if opts.get('expr'): pose = cast17.with_expr(pose, opts['expr'])
+        if opts.get('talk'): pose = cast17.speak(pose, g)
+        p = cast_pos(c, g); seated = opts.get('seated') or ('chair' if pose.get('seat17') == 'chair' else 'bench' if pose.get('seat17') == 'bench' else None); pose['seat17'] = None
+        yc = yaw_clamp(cast_face(take, c, g), p, cl); back = is_back(take, c['name'], g, yc)
         if back: opts['mirror'] = not opts.get('mirror', False)
-        out_assign[c['name']] = (story, opts); c['_yc'] = yc; c['_back'] = back
-    acts = K.stage_cast(dict(marks=marks), out_assign, cam=cam, sprite_dir=sprite_dir)
-    for nm, a in acts.items():
-        c = [c for c in t['cast'] if c['name'] == nm][0]; a.yaw_fixed = c['_yc']['yaw_fixed']
+        if opts.get('mirror'): pose['mirror'] = True
+        pose['yaw'] = max(-0.6, min(0.6, pose.get('yaw', 0.0) + (yc['pose_yaw'] if not back else 0.0)))
+        rim = opts.get('rim', RIM.get(W['light'].get(_loc_of(p), 'SUNSET_INT'), '#ffb85a'))
+        if rim: pose['rim'] = rim; pose['rim_opacity'] = 0.55; pose['rim_w'] = 0.02
+        a = actors.Actor('c2_' + c['name'], cast); a.build(sprites.DEFAULT_CANVAS[cast], sprite_dir, contact=True); a.head_flip = True; a.yaw_fixed = yc['yaw_fixed']
+        scl = opts.get('H', K.CAST_H[cast]) / K.CAST_HD[cast]
+        if seated: fx, fy = sprites.feet_of(cast, pose); zz = (p[2] - 0.0 if p[2] >= FZ - 0.01 else 0.0) + (K.HEAD_Z[seated] if p[2] < FZ - 0.01 else K.HEAD_Z[seated]) - scl * fy if False else (FZ if _loc_of(p) != 'ext' else 0.0) + K.HEAD_Z[seated] - scl * fy
+        else: zz = floor_z(p[0], p[1]) if p[2] < FZ + 0.5 else p[2]
+        a.place(fnum, (p[0] + opts.get('dx', 0.0), p[1] + opts.get('dy', 0.0), zz + opts.get('dz', 0.0)), scale=scl); a.pose(fnum, pose, camera=cam)
+        a.render_sprites(px_per_D, frames=[fnum]); out[c['name']] = a; c['_back'] = back
+    actors.sync_all(sc, cam)
+    for nm, a in out.items():
+        c = [c for c in t['cast'] if c['name'] == nm][0]
         if c['_back']: _back_cover(a, c, cam)
-    return acts
+    return out
 def _back_cover(a, c, cam):
-    """dark back-of-head disc + coat silhouette in front of a card seen from behind (cast17 draws faces only)."""
-    H = HCAST[c['who']]; hd = 0.3 * H / 1.78 * 0.55; p = Vector(a.root.location); to = (Vector(cam.location) - p); to.z = 0; to.normalize()
-    for nm, (w, h, z, col) in (('hair', (hd * 2.1, hd * 2.2, H - hd * 1.1, '#1c1424')), ('coat', (0.5, H * 0.62, H * 0.36, '#15122a'))):
-        ob = plane('back_%s_%s' % (nm, c['name']), tuple(p + to * 0.05 + Vector((0, 0, z))), (w, h), rotz=face_rot((to.x, to.y)), mat=_flat('cc_back_' + nm, col)); ob.visible_shadow = False
+    """back view on a cast17 card (no back art): a dark back-of-head disc over the head (radius 0.56 D, from the card's own head anchor) and a dark
+    coat panel over the torso (0.5-2.0 D below the head centre), both on the card plane, 3 cm toward the camera."""
+    import actors
+    L2W = lambda xy: Vector(actors.local_to_world(a, xy, camera=cam)); o = L2W((0.0, 0.0)); ex = L2W((1.0, 0.0)) - o; ey = L2W((0.0, 1.0)) - o   # ey points down the card
+    to = (Vector(cam.location) - o).normalized() * 0.03; n = 28; V = [tuple(o + to)] + [tuple(o + to + ex * 0.56 * math.cos(2 * math.pi * k / n) + ey * 0.56 * math.sin(2 * math.pi * k / n)) for k in range(n)]
+    me = bpy.data.meshes.new('back_hair_' + c['name']); me.from_pydata(V, [], [(0, 1 + k, 1 + (k + 1) % n) for k in range(n)]); me.update(); me.materials.append(_flat('cc_back_hair', '#1c1424'))
+    ob = bpy.data.objects.new(me.name, me); bpy.context.scene.collection.objects.link(ob); ob.visible_shadow = False
+    T = [tuple(o + to * 0.9 + ex * x + ey * y) for (x, y) in ((-0.64, 0.5), (0.64, 0.5), (0.7, 2.0), (-0.7, 2.0))]
+    me2 = bpy.data.meshes.new('back_coat_' + c['name']); me2.from_pydata(T, [], [(0, 1, 2, 3)]); me2.update(); me2.materials.append(_flat('cc_back_coat', '#17142e'))
+    ob2 = bpy.data.objects.new(me2.name, me2); bpy.context.scene.collection.objects.link(ob2); ob2.visible_shadow = False
+REAL_STILLS = {   # B7.3: real-cast key stills (take, g) -> assign
+    ('T1', 105): {'bertillon': ('bertillon_measuring', {'mirror': True}), 'prisoner_a': ('prisoner_sitting_a', {'seated': 'bench'}), 'prisoner_b': ('prisoner_sitting_b', {'seated': 'bench'}),
+                  'prisoner_q': ('prisoner_sitting_c', {'seated': 'bench'}), 'gend_room': ('gendarme_standing_a', {})},
+    ('T2', 560): {'inspector': ('inspector_pointing_mock', {'talk': True}), 'bertillon': ('bertillon_measuring', {'mirror': True}), 'prisoner_chair': ('prisoner_sitting_b', {'seated': 'chair'}),
+                  'gend_room': ('gendarme_laughing_a', {}), 'gend_room2': ('gendarme_laughing_b', {}), 'prisoner_b': ('prisoner_sitting_a', {'seated': 'bench'})},
+    ('T6', 1600): {'bertillon': ('bertillon_holding_card', {}), 'dupont': ('dupont_sweating', {}), 'inspector': ('inspector_arms_crossed', {}), 'gend_a': ('gendarme_standing_a', {}), 'gend_b': ('gendarme_standing_b', {})},
+    ('T6', 1690): {'inspector': ('inspector_shocked', {}), 'bertillon': ('bertillon_holding_card', {}), 'dupont': ('dupont_caught', {}), 'gend_b': ('gendarme_standing_b', {})}}
+def real_still(take, g, out, res=(720, 1280), samples=16):
+    """full-res still with the REAL cast17 cards through stage_cast2 (B7.3)."""
+    A = world_build(take); shot(take, g, A, cards=False); acts = stage_cast2(take, g, REAL_STILLS[(take, g)]); dt = render_frame(out, res, samples)
+    return dt, acts
 
 if __name__ == '__main__':
     a = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else sys.argv[1:]
     if a and a[0] == 'stills': gate_stills(a[1], a[2], res=(int(a[3]), int(a[4])) if len(a) > 4 else (360, 640), samples=int(a[5]) if len(a) > 5 else 16, which=[int(x) for x in a[6].split(',')] if len(a) > 6 else None)
+    elif a and a[0] == 'real':       # real <take> <g> <out.png>  (B7.3)
+        dt, acts = real_still(a[1], int(a[2]), a[3]); print('real %s g%s %.1fs %s' % (a[1], a[2], dt, sorted(acts)))
+    elif a and a[0] == 'faces':
+        for tk in (a[1:] or list(TAKES)):
+            r = check_face(tk); print('%s %s ' % (tk, 'PASS' if r['ok'] else 'FAIL') + '  '.join('%s %.0f/%.0f%s r%.1f' % (n, v[0], v[1], (' FAIL%d' % v[2]) if v[2] else '', v[3]) for n, v in r['rows'].items()))
     elif a and a[0] == 'report':
         for tk in (a[1:] or list(TAKES)): print('== ' + tk); cam_report(tk, step=int(os.environ.get('STEP', 12)))
     elif a and a[0] == 'frame':      # frame <take> <g> <out.png> [W H samples threads]
