@@ -133,3 +133,84 @@ Notes per still:
 - valley_loop: the top band is sharp (fix 1). A blind phone-size look shows "an army trapped in a river loop with one narrow bridge".
 - camp_bank: water visible between the camp and the hill, and the bridge visible.
 - hill_over: on the phone sheet the first thing seen is the bridge with knights on it.
+
+## Re-check R2 (after the builder's re-render; NOTES.md read, numbers re-measured)
+
+### VERDICT: APPROVE-WITH-FIXES
+The builder may build the full set in this look and must apply the fixes below. I check them at the SET gate.
+- Fixes 1-2 (the camp_bank bridge read and the camp_bank clutter) are **SET-gate blockers**.
+- The rest must be in place at the SET gate, but a small miss there can go into the takes.
+
+The R1 hard-rule breaches are gone:
+- valley_loop is sharp (Laplacian variance, top band against middle, is 464/593 = 0.78), and the haze is now done with colour only.
+- The river is an organic loop in a lit 3D valley, not a diagram.
+- camp_bank now has the river between the camp and the hill.
+- hill_over's hook bridge reads.
+
+### Measured (stirling_hue.py; caption band excluded)
+| still | red | orange | blue | violet | magenta | sat | val | dark | shade hue | sharp (Laplacian variance by band) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| hill_over | 19.8 | 28.2 | 11.6 | 11.5 | 4.9 | 0.35 | 0.58 | 0.06 | 257.8 | 73 (sky) / 1114 / 812 / 803 |
+| camp_bank | 15.5 | 32.3 | 33.3 | 9.4 | 5.3 | 0.29 | 0.60 | 0.06 | 251.8 | 165 (sky) / 1014 / 967 / 837 |
+| valley_loop | 22.1 | 28.8 | 21.8 | 2.4 | 2.7 | 0.36 | 0.48 | 0.00 | 224.1 | 464 / 593 / 933 / 354 |
+
+Heads (cy): hill_over 519-758, camp_bank 510-648. All are above y 880.
+
+### Scores R2 (density / light & colour / composition / key moment / series level)
+| still | density | light & colour | composition | key moment | series level | R1 |
+|---|---|---|---|---|---|---|
+| 1 hill_over | 7 | 7 | 7 | 8 | 7 | 6/6/5/4/6 |
+| 2 camp_bank | 6 | 6 | 4 | 5 | 5 | 4/3/3/2/4 |
+| 3 valley_loop | 7 | 6 | 7 | 7 | 6 | 5/3/5/5/3 |
+
+Notes:
+- **hill_over** is now a good hook. The bridge sits at frame centre, about 280 px long, with knights two by two readable on the phone sheet. The castle rock is off to the upper left and the camp is dense. The weak part is the bottom 40 %: a busy, dark spiky purple/orange sprig carpet (luma 62-68 in the bottom three eighths). The far mountain range is mottled pink/green noise.
+- **camp_bank** has the river and the bridge, but the bridge is a thin line about 10-15 px tall (about 6 px on the phone sheet): no piers, no knights. There are also problems that read as errors:
+  - white pyramid tents stand on the water surface at x about 140-340, y 515-565
+  - about 20 black stubs (pegs?) 20-30 px tall are scattered over the meadow at x 250-620, y 580-900
+  - two dark banner poles run the full height at x about 515-560 and split the frame in half
+  - no Scots line is visible on the far hill, so Cressingham still points at an empty hill
+- **valley_loop** now reads as the trap at phone size: a pear loop, the bridge at the neck, the English inside, the camp outside, and Abbey Craig with its crag upper right. Its problems:
+  - The white parallel bars downstream of the bridge read as a zebra crossing.
+  - The hill's camera-facing slope lies in its own shadow, so the 90-figure Scots line is a dark seam.
+  - The bottom 35 % is a uniform carpet of about 230 identical white bell tents with identical shadows, which reads like scattered teeth or confetti.
+  - The pavilions still read as beach umbrellas.
+
+### Remaining fixes (most important first)
+1. **camp_bank: make the bridge and the Scots read. BLOCKER.**
+   - Bridge at least 35 px tall (deck, rails and piers in the water) and at least 300 px long.
+   - At least 4 pairs of knights on it, each at least 10 px tall.
+   - Do it by moving the camera upstream toward the bridge's south end (bridge at most 60-80 m away), or lens 28-32 with the bridge in the middle third, y 420-560.
+   - The far-hill Scots line: at least 15 figures, each at least 6 px tall, lit, with light-catching spear tips. Cressingham must point at something.
+2. **camp_bank: clean the frame. BLOCKER.**
+   - Remove the tents standing on the water.
+   - Shrink the black stubs to at most 8 px rope-and-peg pairs, or delete them.
+   - Move the two centre banner poles to the right edge (x ≥ 640) as the foreground banner pole for shot 18, or drop one.
+   - Replace about half of the spike grass with a worn bank path, mud and reeds at the water.
+   - Bring sunlit red/cream pavilion faces into frame: red ≥ 25, sat ≥ 0.33.
+3. **valley_loop wakes.** Replace the white parallel bars with one short V foam trail per pier, 30-60 px long, fading. No straight parallel strokes.
+4. **valley_loop: the hill and the cork.**
+   - Give the hill's camera-facing slope a fill light so its shade is at least 0.3 of the lit luminance.
+   - The Scots line: a lit band of tan/ochre bodies 3-4 px tall with spear glints, readable on the phone sheet.
+   - Reserve a clear north-bridge-end slot for the spear wall (shot 24), so the cork reads as a block at least 40x15 px.
+   - Loop width 60 % → about 65-70 % if the frame allows (not a blocker).
+5. **valley_loop camp.**
+   - Cut the bell tents by about 40 % and group them into 6-8 clusters with lanes, horse lines, carts and fire rings.
+   - Vary tent sizes and colours (cream, ochre, faded red), with no identical shadow rows.
+   - Pavilions need a visible dark valance or side-wall ring and a centre pole and pennant, so from 50 deg they read as tents, not umbrellas.
+6. **hill_over foreground.**
+   - Thin the sprig carpet by about 50 % and mix in heather mounds, gorse, one rock and the run path.
+   - Bottom three eighths luma 62-68 → 80-110. Violet 11.5 → at most 8.
+   - Smooth the far range's mottled pink/green into 2-3 calm tint bands.
+7. **Remaining presets for the 31 shots** (the R1 fixes 8-9 apply), at the SET gate:
+   - bridge_deck, bridge_end_north and bridge_end_south: a deck two horses wide, piers with foam collars
+   - bridge_high
+   - riverbank and river_low: reeds, mud, ripples, splash room
+   - camp_table: chest, scale, coin stacks, a ledger with no text
+   - camp_wide, hill_eye, hill_low, valley_wide (castle rock with its castle), valley_river
+   - settable English counts on the bridge, the causeway and the loop meadow
+8. **Notes, not blocking:**
+   - valley_loop dark share 0.001 and shade hue 224: accepted for this aerial; the teal river dominates the shaded pixels and the picture reads fine.
+   - Red below 30 on the two ground stills: accepted if the real cast's red/gold surcoats and the pavilions bring it up. Re-measure at the SET gate.
+   - Clouds still look a little like stickers: acceptable.
+   - Placeholder stand points are fine. On hill_over the Scots stand on the ledge looking over to the bridge. In camp_bank, Cressingham is at x 178 on the bank and Surrey at x 640. Keep every extra on grass, not on the water's edge, once the camera moves.
