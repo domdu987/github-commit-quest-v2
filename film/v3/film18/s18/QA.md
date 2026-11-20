@@ -4,3 +4,7 @@ Frame-diff in-shot (n=38): median **5.29**, p90 **9.21** (eased push 0.12/s, sli
 - Tian Dan (-19, 13.6) with the torch stays in frame all shot.
 - Bare ground reduced to about 30-35 % (camera pitched up, pen fence out of view); the pale scratch decals, dressing props and rubble hidden.
 - Not fully met: ground just above 30 % in the first frames; only 4 of 6 tails are lit inside the shot range (g1417-1426) because the shot ends at g1426; the remaining two light in the handle frames.
+
+## Ground dressing (round 6)
+Re-rendered with `J.dress_ground` (density 0.45, seed = shot number, keep-clear circles round the oxen and actors). `J.ground_share` on this take's frames: see below; dark props kept off the actors and out of the caption band.
+s18 ground_share 0.02 / 0.06 / 0.00 at g1392 / 1410 / 1424; frame-diff median 6.27 p90 10.63.

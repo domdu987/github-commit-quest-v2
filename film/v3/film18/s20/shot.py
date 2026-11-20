@@ -35,4 +35,5 @@ def frame(g, t, camloc, ctx):
         C.put_ox(j, pos, -90, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='side', gait='gallop', theta=0, reed=True, tfx=(0.85 if j == 0 else 0.7), lean=86.0)
 
 if __name__ == '__main__':
-    C.run(SHOT, G0 - H_IN, G1 + H_OUT, frame, setup, sys.argv[1:])
+    KEEP = [(x, y, 3.2) for x in (13.0, 8.2, 3.4) for y in range(-40, -150, -6)]
+    C.run(SHOT, G0 - H_IN, G1 + H_OUT, frame, setup, sys.argv[1:], keep=KEEP)

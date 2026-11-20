@@ -37,4 +37,5 @@ def frame(g, t, camloc, ctx):
     C.put_person(C.person('tiandan_point', {'lean': (g // 6) % 2 * 3}), (-19.0, 12.6, 0), camloc, 3.0, 'td')
 
 if __name__ == '__main__':
-    C.run(SHOT, G0 - H_IN, G1 + H_OUT, frame, setup, sys.argv[1:])
+    KEEP = [(x, 11.0, 2.6) for x in (-37.0 + 4.6 * i + 3.3 for i in range(6))] + [(-19.0, 12.6, 2.5)]
+    C.run(SHOT, G0 - H_IN, G1 + H_OUT, frame, setup, sys.argv[1:], keep=KEEP)

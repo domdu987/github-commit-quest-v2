@@ -111,7 +111,7 @@ def _pose_ext(sh, t):
 S.pose_at = _pose_ext
 
 # ------------------------------------------------------------------ run
-def run(shot, g0, g1, frame_cb, setup_cb=None, argv=None, lights=6):
+def run(shot, g0, g1, frame_cb, setup_cb=None, argv=None, lights=6, keep=None):
     argv = argv or sys.argv[1:]
     mode = argv[0] if argv else 'draft'
     a = int(argv[1]) if len(argv) > 1 else g0; b = int(argv[2]) if len(argv) > 2 else g1
@@ -123,6 +123,16 @@ def run(shot, g0, g1, frame_cb, setup_cb=None, argv=None, lights=6):
     J.shot_camera(shot, 0.0)
     ctx = dict(shot=shot, A=A, f0=f0, n=nfr)
     if setup_cb: setup_cb(ctx)
+    # ground dressing (set3d18 J.dress_ground): sample the real camera path of this shot, key it, dress, clear the keys
+    if os.environ.get('DRESS', '1') == '1' and hasattr(J, 'dress_ground'):
+        camo = bpy.data.objects['cam']; fs = [int(round(f0 + (nfr) * u / 8.0)) for u in range(9)]
+        for ff in fs:
+            tt = (ff - f0) / float(nfr); J.shot_camera(shot, tt); camo.keyframe_insert('location', frame=ff); camo.keyframe_insert('rotation_euler', frame=ff); camo.data.keyframe_insert('lens', frame=ff)
+        kc = None
+        if keep is not None:
+            import jimo_dress; kc = list(jimo_dress.default_keep_clear()) + list(keep)
+        info = J.dress_ground(frames=fs, seed=int(shot[1:]), keep_clear=kc, density=float(os.environ.get('DENS', '0.45')))
+        camo.animation_data_clear(); camo.data.animation_data_clear(); print('dress_ground', {k: info.get(k) for k in ('n', 'kinds')})
     tt = []
     for g in range(a, b + 1):
         path = os.path.join(out, 'g_%04d.png' % g)

@@ -1,0 +1,8 @@
+00:00.263  cycles           | WARNING CUEW initialization failed: Error opening the library
+dress_ground {'n': 195, 'kinds': {'tuft_straw': 35, 'rut': 1, 'hay': 4, 'puddle': 10, 'pot': 5, 'stone': 52, 'basket': 14, 'tuft_grass': 59, 'sack': 11, 'reeds': 4}}
+00:11.758  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s20/frames/g_1556.png'
+s20 g1556  9.2 s (wall 8.9 cpu 17.3)
+00:28.664  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s20/frames/g_1557.png'
+s20 g1557  16.9 s (wall 16.5 cpu 17.9)
+00:45.039  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s20/frames/g_1558.png'
+s20 g1558  16.4 s (wall 15.7 cpu 17.9)

@@ -46,4 +46,5 @@ def frame(g, t, camloc, ctx):
 if __name__ == '__main__':
     a = sys.argv[1:]
     if len(a) < 3 and (a[:1] or ['draft'])[0] in ('draft', 'final'): a = (a + [None, None])[:1] + [str(G0 - H_IN), str(G1 + H_OUT)] if False else a
-    C.run(SHOT, G0 - H_IN, G1 + H_OUT, frame, setup, sys.argv[1:])
+    KEEP = [(c, 7.4, 2.2) for c in (43.7, 38.2, 32.7, 27.2, 21.7, 16.2, 12.0)]
+    C.run(SHOT, G0 - H_IN, G1 + H_OUT, frame, setup, sys.argv[1:], keep=KEEP)

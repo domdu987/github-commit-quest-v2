@@ -71,4 +71,5 @@ def frame(g, t, camloc, ctx):
             if os.environ.get('NOPUFF') != '1': C.put_puff((hx + (q - 1) * 1.6, -5.5 - 0.15 * aq, 0.8 + 0.07 * aq), 2.5 + 0.12 * aq, camloc, alpha=(0.55, 0.4, 0.25)[min(2, aq // 14)], name='pf%d_%d' % (k, q))
 
 if __name__ == '__main__':
-    C.run(SHOT, G0 - H_IN, G1 + H_OUT, frame, setup, sys.argv[1:])
+    KEEP = [(hx + dx, y, 3.2) for hx in (24.5, 30.0, 35.5, 41.0) for dx in (0,) for y in range(-6, -120, -6)]
+    C.run(SHOT, G0 - H_IN, G1 + H_OUT, frame, setup, sys.argv[1:], keep=KEEP)

@@ -41,4 +41,5 @@ def frame(g, t, camloc, ctx):
     TORCH[0].location = (m[0] + 0.9, m[1] + 0.2, 3.9); TORCH[0].data.energy = 0.0 if ff < 0 else 500.0 + 120 * ff
 
 if __name__ == '__main__':
-    C.run(SHOT, G0 - H_IN, G1 + H_OUT, frame, setup, sys.argv[1:])
+    KEEP = [(-19.0, 13.6, 2.5)] + [(-37.0 + 4.6 * i, 9.0, 2.2) for i in range(6)]
+    C.run(SHOT, G0 - H_IN, G1 + H_OUT, frame, setup, sys.argv[1:], keep=KEEP)

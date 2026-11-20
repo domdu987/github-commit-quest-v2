@@ -5,3 +5,7 @@ Frame-diff in-shot (n=78): median **5.09**, p90 **8.45** (eased push 0.05/s, sli
 3. One townsperson ties reeds: an old man bends at an ox tail (4-drawing lean cycle) for the whole shot; a woman and an old man carry reeds; Tian Dan points (x -19, y 12.6).
 4. Oxen: dragon-coat oxen in a row with their heads turned toward the wall holes (cards 40 deg off the camera axis); camera moved to (-6, 21) so they are seen obliquely. No lit tail.
 Not fixed: bare ground about 33 % (waiting for dress_ground); the oxen are 3/4 views, the cast has no back view.
+
+## Ground dressing (round 6)
+Re-rendered with `J.dress_ground` (density 0.45, seed = shot number, keep-clear circles round the oxen and actors). `J.ground_share` on this take's frames: see below; dark props kept off the actors and out of the caption band.
+s17 ground_share 0.20 / 0.16 / 0.08 at g1315 / 1350 / 1380; frame-diff median 5.55 p90 8.74.
