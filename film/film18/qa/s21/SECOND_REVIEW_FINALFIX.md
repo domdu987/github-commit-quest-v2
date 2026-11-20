@@ -1,0 +1,8 @@
+# Second review s21 (FINAL fix): AGREE-OVERRIDE
+
+- Checked all 43 frames g1640-1682 (first_g 1590, so take frames 50-92), at full 720x1280 with 1:1 crops of the cup, and on phone-size (360x640) strips.
+- The cup's path is continuous and easy to follow. The gold jue is raised at g1645-1650 with the snap sparkle. It tips out of the right soldier's hand at g1652, falls past his body at g1655-1658, then lands and tumbles at his feet at g1659-1671. It exits frame right at g1672-1674. There is no pop, jump or one-frame flash.
+- On a phone it reads as the dropped cup: a small bright gold shape falling from the raised hand to the ground. It is the same colour as the held cup, so the eye joins the two. It is clearly not a "featureless beige block". The object is faceted gold, with the jue's posts or legs visible as stubs.
+- QA-tech is right that the falling cup is flat orange with no specular, and that the right edge cuts part of it at g1655-1658 and g1669-1674. At 1:1 it looks like a disc or wedge. But this is under 1 s of secondary motion in the lower-right corner, while the hero ox charges centre frame. The motion reads as "cup dropped", which is all this beat needs. It does not read as a glitch.
+- Optional polish only (non-blocking): add a specular hit and keep x < 650 during the fall, as QA-tech suggests.
+- Other hard rules hold. There is no human face in y 880-950: that band holds only the dark ground and the opaque pots, and the hero ox's open mouth stays above about y 830 up to g1682. The pots and helmet are solid, with nothing see-through or x-ray. The spears run beside the silhouettes, so no pole passes through a face.
