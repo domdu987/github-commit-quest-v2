@@ -35,13 +35,13 @@
  },
  "set": "v3/set3d19/h19.py SHIP preset ship_aerial, light NOON (colour-fixed set, merge of film19/main ff204d3); set_sea(g/30) + set_roll(g/30) keyed on every frame; sea grid re-fitted at runtime to a 3x farther / higher virtual camera (1500x2000 vertices; no set module edited); gulls hidden; captain19 and astro19_c ride ship_root (c19.ride_ship) on the quarterdeck, camera rides the deck (c19.on_ship); no caption_shade",
  "cast": "captain19 (captain_peer_chart: holds a blank sea chart) and astro19_c (squints through the quadrant at the sky, scratches his head g 146-166), no mouth movement",
- "camera": "BIGZOOM, one continuous camera move in the ship rest frame (Catmull-Rom spline through 4 key poses, smootherstep ease in / out + 22 % linear so it never parks), g 57..177: from extreme wide high above and behind the ship (ship small, characters ~6 px) descending and pushing in, passing the spanker sail at ~2 D (parallax), to a MEDIUM on the quarterdeck by 5.9 s (g 177); then a slow push to the end of the handle; round 13: the landing path (spline + look-up aim) is TIME-WARPED for g 96-182 so the measured background flow equals a target profile exactly: peak ~6.2 px/frame at g 131, then monotone 6.0 @136, 5.0 @146, 4.5 @156, 4.0 @164, 2.9 @170, 1.9 @174, 1.1 @178, 0 at g 182 (zero slope: no overshoot); the drift (orbit + push) ramps IN from zero over 12 frames from g 170 in the SAME direction as the landing (-x)",
+ "camera": "BIGZOOM, one continuous camera move in the ship rest frame (Catmull-Rom spline through 4 key poses, smootherstep ease in / out + 22 % linear so it never parks), g 57..177: from extreme wide high above and behind the ship (ship small, characters ~6 px) descending and pushing in, passing the spanker sail at ~2 D (parallax), to a MEDIUM on the quarterdeck by 5.9 s (g 177); then a slow push to the end of the handle; round 14: for g 96-160 the warp is re-derived with a flow measure that includes the NEAR DECK points and the HORIZON (QA: the pitch from top-down to eye level was invisible to the rigging points): one rise to a peak at g 131, then a monotone fall, ending exactly where round 13's warp is at g 160; g >= 160 (landing, drift, acting) unchanged",
  "events": {
   "bigzoom": [
    57,
    190
   ],
-  "arrive_medium": 182,
+  "arrive_medium": 177,
   "astro_scratch": [
    146,
    166
@@ -68,15 +68,15 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 22.15,
- "s_per_frame_cpu_mean": 42.29,
+ "s_per_frame_wall_mean": 22.03,
+ "s_per_frame_cpu_mean": 42.09,
  "framediff_in_shot": {
-  "median": 7.8,
-  "p90": 13.69
+  "median": 8.27,
+  "p90": 13.98
  },
  "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json",
  "qa_stats": {
   "saturation": 0.638,
-  "luma": 94.1
+  "luma": 94.4
  }
 }

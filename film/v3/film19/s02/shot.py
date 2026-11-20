@@ -215,7 +215,7 @@ def _land(tau):
     return loc, look
 
 
-def _tau_of(g):
+def _tau_of_old(g):
     """time warp g -> path time tau for g in [G_W0, G_ARRIVE]: the path is re-timed so the measured background flow equals FLOW_W exactly (monotone from the g 131 peak)"""
     if not _TAU:
         n = int((G_ARRIVE - G_W0) / 0.25)
@@ -244,6 +244,76 @@ def _tau_of(g):
         return float(G_ARRIVE)
     i = int(g); fr = g - i
     return _TAU[i] * (1 - fr) + _TAU[min(i + 1, G_ARRIVE)] * fr
+
+
+# ---- round 14: for g < G_NEW1 the warp is re-derived with a flow measure that includes the NEAR DECK and the horizon (QA: the pitch from top-down to eye level showed mostly
+# in the deck / top frame, which the rigging points missed): one rise to a peak at g 131, then a monotone fall, ending exactly where round 13's warp is at g 160.
+G_NEW1 = 160
+_DPTS = [Vector(p) for p in ((0.5, -33.5, 14.3), (-1.5, -31.8, 14.3), (2.5, -31.5, 14.3), (0.5, -29.0, 14.3), (-3.0, -34.0, 14.3), (4.0, -35.0, 14.3),
+                              (0.5, 300.0, 16.0), (-80.0, 300.0, 16.0), (80.0, 300.0, 16.0))]
+_TAU2 = {}
+
+
+def _path_flow2(tau):
+    a, b = _land(tau), _land(tau + 0.25)
+    tot = 0.0
+    pts_all = _FPTS + _DPTS
+    for P in pts_all:
+        pts = []
+        for (loc, look) in (a, b):
+            f = (look - loc).normalized(); r = Vector((f.y, -f.x, 0.0)).normalized(); up = r.cross(f)
+            d = P - loc; z = d.dot(f)
+            pts.append((360 + 782.2 * d.dot(r) / z, 640 - 782.2 * d.dot(up) / z))
+        tot += math.hypot(pts[0][0] - pts[1][0], pts[0][1] - pts[1][1]) / 2.0
+    return tot / len(pts_all) / 0.25
+
+
+def _tau_of(g):
+    if g >= G_NEW1:
+        return _tau_of_old(g)
+    if g <= G_W0:
+        return float(g)
+    if not _TAU2:
+        tau160 = _tau_of_old(G_NEW1)
+        n = int(round((tau160 - G_W0) / 0.25))
+        A = [0.0]
+        for i in range(n):
+            A.append(A[-1] + _path_flow2(G_W0 + i * 0.25) * 0.25)
+        v0 = _path_flow2(G_W0)
+        v1 = _path_flow2(tau160) * (_tau_of_old(G_NEW1 + 1) - _tau_of_old(G_NEW1))
+        gp = 131.0
+        def prof(g_, vp):
+            sm = lambda t: t * t * (3 - 2 * t)
+            if g_ <= gp:
+                return v0 + (vp - v0) * sm(clamp((g_ - G_W0) / (gp - G_W0)))
+            return vp + (v1 - vp) * sm(clamp((g_ - gp) / (G_NEW1 - gp)))
+        def total(vp):
+            return sum(prof(G_W0 + i + 0.5, vp) for i in range(G_NEW1 - G_W0))
+        lo, hi = max(v0, v1), 80.0
+        for _ in range(60):
+            mid = 0.5 * (lo + hi)
+            if total(mid) < A[-1]:
+                lo = mid
+            else:
+                hi = mid
+        vp = 0.5 * (lo + hi)
+        _TAU2["vp"] = vp
+        G = [0.0]
+        for g_ in range(G_W0, G_NEW1):
+            G.append(G[-1] + prof(g_ + 0.5, vp))
+        for gi in range(G_W0, G_NEW1 + 1):
+            tgt = G[gi - G_W0]
+            lo_, hi_ = 0, n
+            while hi_ - lo_ > 1:
+                m_ = (lo_ + hi_) // 2
+                if A[m_] <= tgt:
+                    lo_ = m_
+                else:
+                    hi_ = m_
+            f = (tgt - A[lo_]) / max(1e-9, A[hi_] - A[lo_])
+            _TAU2[gi] = G_W0 + (lo_ + f) * 0.25
+    i = int(g); fr = g - i
+    return _TAU2[i] * (1 - fr) + _TAU2[min(i + 1, G_NEW1)] * fr
 
 
 _DR = {}
