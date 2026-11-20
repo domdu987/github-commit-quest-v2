@@ -20,20 +20,19 @@ Q0, Q1 = g_of(37.48), g_of(39.74)                     # quote window in film fra
 
 # ---- camera: (g, loc, look, kind-of-segment-ending-here)
 CAM = {
- 20: [(1039, (1.15, 2.40, 1.45), (-0.90, 3.40, 1.30), 'drift'),
-      (1062, (0.70, 1.20, 1.50), (-0.95, 3.40, 1.30), 'drift'),
-      (1075, (-1.00, 0.00, 1.90), (-0.80, 3.40, 1.30), 'snap'),
-      (1098, (-0.40, 0.70, 1.80), (-0.95, 3.40, 1.30), 'drift'),
-      (1111, (1.15, 2.50, 1.25), (-0.90, 3.40, 1.30), 'snap'),
-      (1126, (0.90, 1.90, 1.35), (-0.90, 3.40, 1.30), 'drift')],
- 21: [(1127, (1.00, -0.60, 2.30), (0.0, 6.4, 1.50), 'drift'),
-      (1148, (0.35, 0.00, 2.20), (0.0, 6.4, 1.50), 'drift'),
-      (1161, (-0.95, 1.40, 1.70), (0.0, 6.4, 1.50), 'snap'),
-      (1180, (-0.40, 1.80, 1.80), (0.0, 6.4, 1.50), 'drift'),
-      (1193, (0.15, 1.90, 2.30), (0.0, 6.4, 1.00), 'snap'),
-      (1201, (0.10, 2.00, 2.25), (0.0, 6.4, 0.95), 'drift')],
+ 20: [(1039, (0.80, 1.60, 1.45), (-0.90, 3.30, 1.25), 'drift'),
+      (1062, (0.55, 1.15, 1.45), (-0.95, 3.30, 1.25), 'drift'),
+      (1075, (-0.85, 0.95, 1.65), (-0.85, 3.30, 1.25), 'snap'),
+      (1098, (-0.45, 1.25, 1.60), (-0.95, 3.30, 1.25), 'drift'),
+      (1111, (0.95, 1.95, 1.40), (-0.90, 3.30, 1.25), 'snap'),
+      (1126, (0.75, 1.65, 1.45), (-0.90, 3.30, 1.25), 'drift')],
+ 21: [(1127, (0.45, -0.90, 2.25), (-0.15, 5.2, 1.35), 'drift'),
+      (1141, (0.15, 1.60, 2.10), (-0.20, 5.2, 1.30), 'snap'),
+      (1168, (0.05, 2.00, 2.05), (-0.25, 5.2, 1.30), 'drift'),
+      (1181, (0.55, 1.30, 2.00), (-0.05, 5.2, 1.30), 'snap'),
+      (1201, (0.45, 1.75, 1.95), (-0.05, 5.2, 1.30), 'drift')],
 }
-POS21 = dict(bert=(-0.55, 4.4, 0.0), ga=(0.80, 4.6, 0.0), gb=(0.80, 7.6, 0.0), ins=(-0.05, 5.8, 0.0))
+POS21 = dict(bert=(-0.85, 3.9, 0.0), ins=(0.40, 4.3, 0.0), ga=(1.00, 5.5, 0.0), gb=(-0.15, 6.2, 0.0))
 
 def drawer_open(base, i, g):
     """overflowing: every pulled drawer creeps further out, a little jitter; continuous over both shots."""
@@ -44,7 +43,7 @@ def key_set(g):
     K.set_flicker(1.5 + 0.8 * sine((g - 1039) / 160.0), frame=g, seed=3)       # the candle burns low: a stronger flicker
     K.set_dust(0.5, frame=g)
     for k, a in K.STATE['anim'].items():
-        if k[0] in 'pq' and k[1:].isdigit():
+        if k[0] in 'pqx' and k[1:].isdigit():
             K.set_drawer(k, drawer_open(BASE[k], int(k[1:]), g), frame=g)
     if 'fan' in K.STATE['anim']: K.set_cards_fan(0.85 + 0.15 * math.sin(g * 0.13), frame=g)
 
@@ -54,57 +53,113 @@ BASE = {}
 def blink(g, per, off=0): return cast17.blink_at(g, per, off)
 
 def pose_bert20(g):
-    s, w = cast17.STORY17["bertillon_tired"][1], None
-    p = dict(s)
+    p = dict(cast17.STORY17["bertillon_tired"][1])
     t = (g - 1039) / 30.0
-    cyc = math.sin(t * 2 * math.pi * 1.1)
-    p['yaw'] = 0.15 + 0.35 * math.sin(t * 2 * math.pi * 0.45)              # shakes his head: no match
-    p['head_roll'] = -7 + 3.0 * math.sin(t * 2 * math.pi * 0.45 + 0.8)
-    p['lean'] = 12 + 2.5 * math.sin(t * 2 * math.pi * 0.35) + 1.2 * cyc
-    p['pitch'] = 0.9 + 0.12 * math.sin(t * 2 * math.pi * 0.9)
+    per = 1.25                                                       # one card flip every 1.25 s, then a slow head shake
+    ph = (t % per) / per
+    flip = sine(ph / 0.35) if ph < 0.35 else 1.0                      # 0..1 during the flip
+    shake = math.sin(clamp((ph - 0.35) / 0.65) * 2 * math.pi) if ph > 0.35 else 0.0
+    p['yaw'] = 0.30 + 0.30 * shake
+    p['head_roll'] = -9 + 3.0 * shake
+    p['lean'] = 16 + 1.5 * math.sin(t * 2.4)                          # rounded shoulders
+    p['pitch'] = 1.15 + 0.08 * math.sin(t * 3.1)                      # head down ~10 deg, eyes on the cards
+    p['head_dy'] = 0.16
     p['expr'] = 'sad'
-    p['arm_r'] = dict(hand=(0.56, 1.10 + 0.10 * cyc), bend=0.5, layer='front')
-    p['prop_r'] = dict(type='card', scale=1.0, angle=-60 + 16 * cyc)
-    p['arm_l'] = dict(hand=(-0.16, 1.12 + 0.07 * math.sin(t * 2 * math.pi * 1.1 + 2.0)), bend=0.5, layer='front')
-    p['prop_l'] = dict(type='card', scale=1.0, angle=-30 - 12 * cyc)
+    p['gaze'] = (0.45, 0.55)
+    up = 0.5 + 0.5 * math.sin(math.pi * (g % 38) / 38.0)             # lifting each card to eye level
+    p['arm_r'] = dict(hand=(0.74, 0.55 + 0.25 * flip - 0.10 * (1 - flip)), bend=-0.3, stretch=1.0, layer='front')
+    p['prop_r'] = dict(type='card', scale=1.0, angle=-78 + 22 * flip)
+    p['arm_l'] = dict(hand=(-0.08, 0.80 + 0.06 * math.sin(t * 5.0)), bend=0.5, layer='front')
+    p['prop_l'] = dict(type='card', scale=1.0, angle=-24)
     p['blink'] = blink(g, 78, 5)
     return cast17.silent(p)
 
 def pose_bert21(g):
     p = dict(cast17.STORY17["bertillon_tired"][1])
     t = (g - G_CUT) / 30.0
-    p['yaw'] = -0.35 + 0.05 * math.sin(t * 5)
-    p['head_roll'] = -6 + 2 * math.sin(t * 4.1)
-    p['lean'] = 9 + 1.5 * math.sin(t * 3.0)
+    fl = smooth((g - 1130) / 8.0)                                    # flinch g1130-1138, then stays slumped
+    hit = math.exp(-((g - 1134) / 3.0) ** 2)
+    p['yaw'] = lerp(0.1, -0.45, fl)
+    p['head_roll'] = -6 - 5 * fl + 2 * math.sin(t * 3.7)
+    p['lean'] = 9 + 9 * fl + 5 * hit + 1.2 * math.sin(t * 3.0)
+    p['pitch'] = 0.9 + 0.45 * fl
+    p['head_dy'] = 0.12 + 0.1 * fl
+    p['expr'] = 'sad'
+    p['arm_r'] = dict(hand=(0.55, 1.15), bend=0.4, layer='front'); p['prop_r'] = dict(type='card', scale=1.0, angle=-70)
+    p['arm_l'] = dict(hand=(-0.18, 1.1), bend=0.5, layer='front'); p['prop_l'] = dict(type='card', scale=1.0, angle=-30)
     p['blink'] = blink(g, 66, 9)
     return cast17.silent(p)
 
 def pose_ins(g):
     p = dict(cast17.STORY17["inspector_shouting"][1])
     t = (g - G_CUT) / 30.0
-    p['lean'] = -4 + 3 * math.sin(t * 6.5)                                    # bounce while shouting
+    p = cast17.with_expr(p, 'angry') if False else p
+    p['mirror'] = True                                                # faces camera-left, toward Bertillon
+    p['yaw'] = 0.55
+    p = cast17.with_expr(p, 'surprised')                              # wide open eyes, brows up (no laugh tears)
+    p['gaze'] = (-0.9, 0.1)
+    stress = max(0.0, math.sin(t * 2 * math.pi * 2.6)) ** 0.7        # lean forward on each stressed syllable
+    p['lean'] = 4 + 14 * stress
+    p['pitch'] = -0.1 + 0.25 * stress
     p['head_roll'] = 3 * math.sin(t * 4.3)
     p['blink'] = blink(g, 60, 4)
-    p['arm_r'] = dict(p['arm_r'], hand=(0.6, 0.3 + 0.04 * math.sin(t * 6.5)))
+    p['arm_r'] = dict(hand=(0.46, 0.18 - 0.04 * stress), shape='open', bend=-1.0, stretch=1.0, layer='top')   # cupped beside the mouth
+    if g >= 1172:                                                     # "ไอ้ช่างวัดหู": the other hand points at Bertillon
+        k = smooth((g - 1172) / 6.0)
+        p['arm_l'] = dict(hand=(lerp(-0.2, -0.95, k), lerp(0.9, 0.55, k)), shape='point' if k > 0.5 else 'ball', bend=-0.5, stretch=1.05, layer='front')
     if Q0 < g <= Q1: return cast17.speak(p, g, 1.0)
     return cast17.silent(p)
 
 def pose_gend(who, g, ph):
     p = dict(cast17.STORY17["gendarme_laughing_" + who][1])
     t = (g - G_CUT) / 30.0
-    p['lean'] = -6 + 6 * math.sin(t * 2 * math.pi * 3.0 + ph)                   # snicker bounce ~3 Hz
-    p['head_roll'] = -8 + 3 * math.sin(t * 2 * math.pi * 3.0 + ph + 0.7)
+    p['lean'] = -5 + 5 * math.sin(t * 2 * math.pi * 3.0 + ph)                   # snicker bounce ~3 Hz
+    p['head_roll'] = -6 + 3 * math.sin(t * 2 * math.pi * 3.0 + ph + 0.7)
+    p['yaw'] = -0.5                                                              # looking at Bertillon
+    p = cast17.with_expr(p, 'smirk')                                             # closed-mouth snicker
+    p['fx'] = []
     p['t'] = t
     return cast17.silent(p)
+
+def dress(shot):
+    """runtime set dressing (set module untouched): more drawers jammed open, rejected cards on the desk + floor, a stub candle,
+    the floating quill removed."""
+    import random, bmesh
+    B = K.Batch(17); r = random.Random(11)
+    for i in range(24):                                              # card pile on the desk (world x -1.19..-0.41, y 1.75..3.45, top z 0.912)
+        z = 0.915 + i * 0.0045
+        B.box('cream', (-0.50 + r.uniform(-0.03, 0.03), 2.95 + r.uniform(-0.04, 0.04), z), (0.15, 0.10, 0.0035), rot=(0, 0, r.uniform(-25, 25)))
+    for i in range(10):
+        B.box('cream', (r.uniform(-1.05, -0.45), r.uniform(1.95, 2.55), 0.916), (0.15, 0.10, 0.0035), rot=(0, 0, r.uniform(0, 180)))
+    for i in range(22):                                              # spilled on the floor around the stool
+        B.box('cream', (r.uniform(-0.65, 0.55), r.uniform(1.9, 3.4), 0.003 + 0.003 * (i % 3)), (0.15, 0.10, 0.003), rot=(0, 0, r.uniform(0, 180)))
+    B.cyl('brass', (-1.05, 2.12, 0.917), 0.055, 0.012, seg=16)       # stub candle on a saucer
+    B.cyl('cream', (-1.05, 2.12, 0.955), 0.02, 0.065, seg=12)
+    B.sphere('glow_gas', (-1.05, 2.12, 1.0), 0.013, scale=(1, 1, 1.5))
+    B.finalize('s08_dress', ink_t=K.STATE['ink_t'] * 0.7)
+    K.point((-1.05, 2.12, 1.02), watts=6, radius=0.02, name='candle')
+    x1 = 1.9; CYb = 13.5                                             # more drawers hanging out of the left run beside the desk
+    for i, (yw, row) in enumerate([(1.4, 5), (1.95, 12), (3.0, 8), (3.3, 15), (4.45, 6), (4.9, 11), (5.75, 9), (3.9, 13)]):
+        xl = (CYb - yw)
+        K.drawer_assembly('x%d' % i, K.cab_world((-x1, CYb, 0), -90, xl, 0.55, 0.2 + (row + 0.5) * 0.2), -90, w=0.278, h=0.18, depth=0.5, travel=0.42,
+                          open_=0.5 + 0.1 * (i % 3), cards=20, seed=40 + i)
+    for ob in bpy.data.objects:                                      # the floating quill by the lamp (a cream stick, desk-local (0.3, 0.25))
+        if ob.type != 'MESH' or not any(m and 'cream' in m.name for m in ob.data.materials): continue
+        bm = bmesh.new(); bm.from_mesh(ob.data); mw = ob.matrix_world
+        dv = [v for v in bm.verts if -1.22 < (mw @ v.co).x < -0.84 and 2.78 < (mw @ v.co).y < 3.16 and (mw @ v.co).z > 0.975]
+        if dv:
+            bmesh.ops.delete(bm, geom=dv, context='VERTS'); bm.to_mesh(ob.data); print('quill: removed', len(dv), 'verts from', ob.name, flush=True)
+        bm.free()
 
 class Take(C.Take):
     def __init__(self, shot, quality="draft"):
         C.Take.__init__(self, PRESET[shot], LIGHT, quality, sprite_dir=os.path.join(HERE, "work", "sprites_s%d" % shot))
         self.shot = shot
+        dress(shot)
         for o in bpy.data.objects:                      # director fix: shafts wash over the cast cards -> hidden
             if any(m and m.name.startswith('beam_fx') for m in (getattr(o.data, 'materials', None) or [])): o.hide_render = True
         for k, a in K.STATE['anim'].items():
-            if k[0] in 'pq' and k[1:].isdigit(): BASE[k] = a['slide'].location.y / a['travel']
+            if k[0] in 'pqx' and k[1:].isdigit(): BASE[k] = a['slide'].location.y / a['travel']
         if shot == 20:
             self.bert = self.add_actor("bert", "bertillon_tired", "desk_clerk")
         else:
