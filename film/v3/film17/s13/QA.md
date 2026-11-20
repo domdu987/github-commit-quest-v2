@@ -27,3 +27,8 @@ take.mkv is split (`cat take.mkv.part* > take.mkv`), 190 frames 720x1280. transi
 ## Round 5 (shot 33 re-rendered again)
 - Bertillon's head disc is masked out in shot 33 (alpha mask on his card above v 0.50, left of u 0.78): only his arm, cuff and the gripping hand are in frame. A tiny dark hair/beard stub remains on the cut line at the far left edge of g2014-2030.
 - Round-4 grip/clamp unchanged. Full res: full/g2022, g2030, g2050.
+
+## Round 6 (final gate reopened shot 33; built from the ba82a63 render, head mask OFF)
+- Shot 33 (g2014-2051) re-rendered: team 1's hand rig (sleeve, white cuff, white glove) grips the horizontal caliper beam; the jaws straddle the big red ear and close about g2020-2035 (caliper scale 1.0 -> 0.62), then hold. No black bars. Camera, x1.4 push, red face, sweat drop, moustache twitch and sideways eyes unchanged; mouths closed.
+- Frames g1862-2013 are the same renders as ba82a63. rhythm in-shot median 4.56, p90 13.69; qa_auto PASS.
+- Self-check at full and phone size (check/phone_g2020-2050.jpg, full/g2020 g2030 g2040 g2050.jpg): glove on the beam and jaws on the red ear in all four.

@@ -147,7 +147,7 @@ class Take(object):
 
     def key_cut(self, f, g):
         for v in self.head_cut:
-            v.outputs[0].default_value = 0.50 if g >= 2014 else 2.0
+            v.outputs[0].default_value = 2.0
             v.outputs[0].keyframe_insert("default_value", frame=f)
 
     def make_fg(self):
@@ -201,12 +201,12 @@ class Take(object):
             pi = pose_inspector(g); ins.pose(f, pi, camera=self.cam)
             an = sprites.puppet.figure("inspector17", pi, "q")["anchors"]; hx, hy = an["head"]
             hip = sprites.hip_y("inspector17", pi); k = ins.upper_k[f]
-            ear_loc = (hx - 0.505, hip + (hy - 0.04 - hip) * k)                 # screen-left ear
+            ear_loc = (hx - 0.505, hip + (hy - (0.02 if sh == 33 else 0.04) - hip) * k)                 # screen-left ear
             ear_w = Vector(actors.local_to_world(ins, ear_loc, f, feet=ins.feet[f], camera=self.cam))
             self.ear_w = ear_w
             pb = dict(cast17.STORY17["bertillon_measuring"][1]); pb["seat17"] = None
             pb["mirror"] = False; pb["yaw"] = 0.45
-            pb["prop_r"] = dict(type="calipers", scale=(1.0 if sh != 33 else 1.0 - 0.45 * ez((g - 2018) / 10.0)), angle=-90)           # bar vertical, jaws pointing at the ear: one tip above, one below
+            pb["prop_r"] = dict(type="calipers", scale=(1.0 if sh != 33 else 1.0 - 0.38 * ez((g - 2020) / 15.0)), angle=(-90 if sh != 33 else -4))           # bar vertical, jaws pointing at the ear: one tip above, one below
             pb["rim"] = K.RIM_FOR["bertillon"]; pb["rim_opacity"] = 0.55; pb["rim_w"] = 0.02
             pb["gaze"] = (0.9, 0.45); pb["blink"] = blink(g, [1885, 1950, 2010]); pb["mouth"] = "flat"
             if sh == 31: c = 0.15 + 0.35 * ez(clamp((g - 1862) / 84.0))
@@ -217,7 +217,7 @@ class Take(object):
             pb = cast17.silent(pb)
             tl = actors.world_to_local(ber, self.cam, tgt_w, f, feet=sprites.feet_of("bertillon", pb))
             kb = actors.upper_stretch(ber, self.cam, f, pb); hipb = sprites.hip_y("bertillon", pb)
-            tl = (tl[0], hipb + (tl[1] - hipb) / kb)
+            tl = (tl[0], hipb + (tl[1] - hipb) / kb + (0.06 if sh == 33 else 0.0))
             pb = cast17.hand_for_anchor("bertillon", pb, "r", "calipers_r", tl)
             ber.pose(f, pb, camera=self.cam)
             for k2, (st, cast, mir) in CAST_STAND.items():
@@ -227,22 +227,29 @@ class Take(object):
     def ear_overlay(self, f, pose):
         ins = self.act["ins"]; an = sprites.puppet.figure("inspector17", pose, "q")["anchors"]; hx, hy = an["head"]
         hip = sprites.hip_y("inspector17", pose); k = ins.upper_k.get(f, 1.0)
-        cx, cy = hx - 0.505, hip + (hy - 0.04 - hip) * k
-        return ('<g><ellipse cx="%.4f" cy="%.4f" rx="0.075" ry="0.135" fill="#e2503f" stroke="#2a1b1b" stroke-width="0.022"/>'
-                '<path d="M%.4f,%.4f q0.05,0.02 0.02,0.10 M%.4f,%.4f q0.03,-0.04 0.0,-0.09" stroke="#9c2a22" stroke-width="0.016" fill="none" stroke-linecap="round"/></g>'
-                % (cx, cy, cx - 0.01, cy - 0.07, cx - 0.01, cy + 0.06))
+        big = (f - 1) >= 2014
+        cx, cy = hx - 0.505, hip + (hy - (0.02 if big else 0.04) - hip) * k
+        rx, ry = (0.13, 0.235) if big else (0.075, 0.135)
+        return ('<g><ellipse cx="%.4f" cy="%.4f" rx="%.3f" ry="%.3f" fill="#e2503f" stroke="#2a1b1b" stroke-width="0.03"/>'
+                '<path d="M%.4f,%.4f q%.3f,%.3f %.3f,%.3f M%.4f,%.4f q%.3f,%.3f 0.0,%.3f" stroke="#9c2a22" stroke-width="0.022" fill="none" stroke-linecap="round"/></g>'
+                % (cx, cy, rx, ry, cx - rx * 0.15, cy - ry * 0.5, rx * 0.7, ry * 0.15, rx * 0.3, ry * 0.9, cx - rx * 0.1, cy + ry * 0.35, rx * 0.4, -ry * 0.3, -ry * 0.55))
 
     def ber_overlay(self, f, pose):
+        """team 1's hand rig: forearm sleeve, white cuff and a skin hand gripping the caliper beam (shot 33 only)."""
         if f - 1 < 2014: return ""
-        ber = self.act["ber"]; an = sprites.puppet.figure("bertillon", pose, "q")["anchors"]; hx, hy = an["hand_r"]
-        hip = sprites.hip_y("bertillon", pose); k = ber.upper_k.get(f, 1.0); hy = hip + (hy - hip) * k
-        sc = pose["prop_r"]["scale"]; w = 0.075 * sc
-        out = ""
-        for i in range(3):                                       # three fingers wrapped round the vertical bar, over the hand ball
-            y = hy - 0.075 + i * 0.062
-            out += '<rect x="%.4f" y="%.4f" width="%.4f" height="0.052" rx="0.026" fill="#2b2225" stroke="#120d0f" stroke-width="0.012"/>' % (hx - 0.115, y, 0.22 + w)
-        out += '<path d="M%.4f,%.4f h0.16" stroke="#6b5a58" stroke-width="0.008" stroke-linecap="round" opacity="0.7"/>' % (hx - 0.08, hy - 0.06)
-        return out
+        ber = self.act["ber"]; an = sprites.puppet.figure("bertillon", pose, "q")["anchors"]
+        hip = sprites.hip_y("bertillon", pose); k = ber.upper_k.get(f, 1.0)
+        ex, ey = an["elbow_r"]; hx, hy = an["hand_r"]; ey = hip + (ey - hip) * k; hy = hip + (hy - hip) * k
+        dx, dy = hx - ex, hy - ey; L = math.hypot(dx, dy) or 1.0; ux, uy = dx / L, dy / L
+        cx, cy = hx - ux * 0.13, hy - uy * 0.13
+        return ('<g><path d="M%.3f,%.3f L%.3f,%.3f" stroke="#2a1b1b" stroke-width="0.17" stroke-linecap="round" fill="none"/>'
+                '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="#454053" stroke-width="0.125" stroke-linecap="round" fill="none"/>'
+                '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="#2a1b1b" stroke-width="0.155" fill="none"/>'
+                '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="#fbf3ee" stroke-width="0.115" fill="none"/>'
+                '<circle cx="%.3f" cy="%.3f" r="0.115" fill="#fbf3ee" stroke="#2a1b1b" stroke-width="0.03"/>'
+                '<path d="M%.3f,%.3f q0.05,-0.02 0.09,0.03 M%.3f,%.3f q0.05,-0.02 0.09,0.03" stroke="#2a1b1b" stroke-width="0.02" fill="none"/></g>'
+                % (ex, ey, hx, hy, ex, ey, hx, hy, cx - ux * 0.045, cy - uy * 0.045, cx + ux * 0.045, cy + uy * 0.045,
+                   cx - ux * 0.045, cy - uy * 0.045, cx + ux * 0.045, cy + uy * 0.045, hx, hy, hx - 0.07, hy - 0.04, hx - 0.07, hy + 0.03))
 
     def sprites(self, gs):
         by = {}
