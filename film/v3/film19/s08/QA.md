@@ -15,13 +15,13 @@
 Camera: low, moving on frame 0; drift push 8 %/s with a slide and a 10 deg/s orbit (parallax of the bookcases, chair-back FG), one SNAP x1.3 (g 632-651, peak 2.2) with a pan on "นาฬิกาเนี่ยนะ" (g 637).
 
 ## Checked
-- Heads: width 146-266 px, centre y 484-622, chin at most y 713; the wig lappets (centre + 1.17 x width) end above y 880 on every frame (contact sheet). No black frames.
+- Heads: width 146-274 px, centre y 458-595, chin at most y 693; the wig lappets (centre + 1.17 x width, max 854 on the raw reports) end above y 880 on every frame (contact sheet). No black frames; his face is clear on every frame.
 - Mouth: moves only for g 622..669 (inside mouth_open_at); outside: fixed expression (smug flat, laughing). `meta.json mouth_moving_outside_window_frames = []`.
 - Contact: feet on the floor with the decal and shadow; true cast19 scale; no DOF, no text, no caption_shade (all keyed false in raw/g_*.json).
 - qa_auto: PASS (no black / blank / magenta / frozen frames). The "no visible change at g 545, 661" note is the handle: the real cuts happen in the conform.
 
 ## Frame-diff (90x160 grey, in-shot pairs g 546..660)
-median **3.77**, p90 **6.71** (target >= 4 / >= 12): BELOW TARGET. Reason: this hall is dark red with low contrast, and every wider orbit that raised the numbers (median 5.4, p90 10) swung the camera behind the quadrant stand, the Board table or a chair back and hid the laughing face, so the clean, face-first camera was kept. Reported as a deviation.
+median **4.48**, p90 **10.72**: meets the per-take rule (median >= 4, p90 >= 10) since Revision 4 (lens punches); earlier revisions were below it.
 
 ## Revision
 Re-rendered after the director's TAKE gate (QA_TECH.md): the laugh mouth now starts at g 623 (mouth flat and eyes open before; the bounce and shoulder shake start earlier), the turn starts side-on with the gaze at the Board and settles on the lens by about g 598, the snap is framed up and left so the wig lappets end above y 880 and the raised pointing arm shows at g 640-660. Frame-diff stays below target because every camera that moves more either hides the face behind the quadrant stand, the Board table or chair backs, or pushes the wig below y 880; reported as a deviation.
@@ -30,3 +30,11 @@ Re-rendered after the director's TAKE gate (QA_TECH.md): the laugh mouth now sta
 - shot.py now deletes the faces of the Board table's left-row chair that stood between the orbiting camera and the mocker (hide_chairs(): 85 faces in the box x -2.95..-1.35, y 0.7..3.8, z 0.04..2.45; runtime set dressing in this shot only). Orbit +11.5 deg/s round the open (right) side with a slide past the bookcases, 2x belly squash and a 0.08 D hop at 3 Hz, snap x1.3 (g 633-651, peak 2.5) with a pan on 'นาฬิกาเนี่ยนะ'.
 - The chair was not the only limit: the Board table itself fills x > -1.3 (top z 1.5), so a camera that pushes in beyond x -1.45 goes inside the table (black frames, seen on drafts with arc 15 and with rise). With the camera kept at x <= -1.45 the frame-diff is 3.77 / 6.71 (a 4.29 / 8.06 draft went inside the table). Still below target (median >= 4, p90 >= 10).
 - Not tried: option (2), moving his mark up to +1 D away from the camera.
+
+## Revision 3 (director's option 2 as well)
+- His mark and the whole camera rig moved 0.9 D to the left (away from the Board table): MOVE = (-0.9, 0, 0) in shot.py. The camera then has 1 D of clear room before the table (x -1.3), so the orbit is 18 deg/s round the open side with a slide past the bookcases and the quadrant stand (foreground parallax), snap x1.4 (g 634-653, peak 2.8) with a pan on 'นาฬิกาเนี่ยนะ'. The chair removal from revision 2 stays. No black frames.
+- Median 4.31 meets the per-take rule; **p90 7.35 is still under 10**. Orbits above ~20 deg/s put the camera into the table / a chair again (black frames on drafts); the snap k is held at 1.4 by the wig-below-880 rule.
+
+## Revision 4 (independent review: FOV, not camera travel)
+- Added keyed lens punches (lens_scale(g) -> the 22 mm lens x z, keyed every frame): x1.17 over 8 frames at the laugh start (g 603-611, eased back by g 632), x1.065 micro-punches on each laugh bounce (3 Hz, g 611-637), an extra x1.10 with the snap at g 637; snap k 1.35, peak 3.0 (g 634-647). Look point lowered 0.12 D so the wig stays above y 880 through the punches. The camera path itself is unchanged (it never nears the table).
+- **Frame-diff now median 4.48, p90 10.72 (15 in-shot pairs >= 10)**: meets the per-take rule (median >= 4, p90 >= 10). Mouth window, turn, point and the hidden chair are unchanged.
