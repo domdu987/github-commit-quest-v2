@@ -1,15 +1,15 @@
-"""Film 16 music via fal ElevenLabs Music v2.5, instrumental, sections aligned to the narration beats. usage: python3 gen_music.py <variant>"""
+"""Film 19 music via fal ElevenLabs Music v2.5, instrumental, sections aligned to the narration beats. usage: python3 gen_music.py <variant>"""
 import json,os,sys,subprocess
 K=os.environ["Key"]; v=sys.argv[1]
-G={"A":["playful 1840s Americana parlor folk","plucky banjo","fiddle","upright bass","light brushed snare","woodblock ticks like a telegraph","108 bpm","comedic underscore"],
-   "B":["whimsical cartoon underscore","pizzicato strings","clarinet","bassoon","glockenspiel","woodblock clicks","104 bpm","mischievous storybook comedy"],
-   "C":["old-time ragtime parlor piano","banjo","tuba","tin whistle","snare brushes","telegraph-like clicks","112 bpm","cheeky silent-film comedy underscore"]}[v]
+G={"A":["playful Georgian-era chamber comedy","harpsichord","pizzicato strings","bassoon","ticking clock woodblock","100 bpm","comedic storybook underscore"],
+   "B":["whimsical 18th-century sea-shanty flavoured underscore","concertina","fiddle","pizzicato bass","clock-tick percussion","104 bpm","cheeky nautical comedy"],
+   "C":["light baroque comedy","harpsichord","recorder","cello pizzicato","glockenspiel","clock ticks","96 bpm","mischievous period storybook"]}[v]
 NEG=["vocals","singing","choir","lyrics","EDM","trap","heavy drums","rock distortion","epic orchestral"]
-S=[("hook",5600,["curious tiptoe intro","light plucks"]),("backstory",10300,["gentle wistful","soft and sparse, slightly sad"]),
-   ("mock",10300,["comic bouncy","oompah bass","cheeky"]),("count",5700,["building","steady march"]),
-   ("silence",9000,["sudden stop then sneaky tension","sparse low plucks"]),("rain",5100,["gloomy minor","sparse"]),
-   ("reveal",7800,["rising, hopeful build","brightening"]),("triumph",6300,["bright triumphant brass and fiddle hit","hoedown"]),
-   ("ending",11000,["cheeky playful finale, comedic","light and bouncy, ends on a button"])]
+S=[("hook",6400,["curious tiptoe intro","clock ticking"]),("backstory",9200,["sea and danger, slightly ominous","sparse"]),
+   ("mock",10200,["pompous comic","bouncy bassoon","cheeky"]),("nickname",3000,["comic sting"]),("count",5100,["building, steady ticking march"]),
+   ("reveal",12300,["wonder, rising discovery","brightening"]),("aha",6600,["bright triumphant sea flourish"]),
+   ("false",3000,["deflating comic shrug"]),("crisis",6200,["gloomy minor","sparse low strings"]),
+   ("ending",15000,["royal, cheeky triumphant finale","light and bouncy, ends cleanly on a button"])]
 plan={"positive_global_styles":G,"negative_global_styles":NEG,
  "chunks":[{"text":"","positive_styles":p,"negative_styles":["vocals"],"duration_ms":d} for n,d,p in S]}
 body={"composition_plan":plan,"output_format":"mp3_44100_192"}
