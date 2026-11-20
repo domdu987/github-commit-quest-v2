@@ -13,9 +13,13 @@ def clear_cast():
     sys.path.insert(0, '/home/user/github-commit-quest-v2/film/v3/stage'); import actors
     for o in [o for o in bpy.data.objects if o.name.startswith(('c2_', 'back_hair_', 'back_coat_'))]: bpy.data.objects.remove(o, do_unlink=True)
     actors.clear_registry()
+def hide_beam():
+    # director decision: ARCHIVES day beam fx OFF (milky veil + sat lift). arch_beam_fx hidden for render.
+    for o in bpy.data.objects:
+        if 'beam_fx' in o.name: o.hide_render = True
 def run(frames, out_dir, samples=16):
     os.makedirs(out_dir, exist_ok=True)
-    A = P.world_build(take); P.key_take(take); P.setup_render2((720, 1280), samples=samples, threads=2)
+    A = P.world_build(take); P.key_take(take); hide_beam(); P.setup_render2((720, 1280), samples=samples, threads=2)
     for g in frames:
         fp = os.path.join(out_dir, 'g_%04d.png' % g)
         if os.path.exists(fp) and os.path.getsize(fp) > 50000: continue
