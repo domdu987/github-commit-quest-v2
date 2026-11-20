@@ -52,3 +52,12 @@ I checked full-size g 0, 5, 9, 30, 40, 50, 53 and 56 from take.mkv, plus a strip
 **Fixes (shot.py)**
 1. Bring the screen-right hand target in beside his cheek (x 680 or less), or shift the framing about 40 px so the content moves screen-left for g 44-56. The hand, ponytail and head outline must stay inside x 719 through g 56. The left H1 ball has room to about x 40.
 2. Use `key_vis` to hide the candle ring for g 0-12, or pan it fully out of frame.
+
+## Round 4: **PASS**, 9/10
+I checked full-size g 0, 9, 30, 47, 50, 53 and 56 from take.mkv.
+
+**Round-3 items**
+- Screen-right hand, ponytail and head side in frame: **FIXED**. The hand sits beside his cheek (about x 630). The ponytail ends at about x 690-695 on g 47-56, which agrees with work/edgef_*.json (694 at most). The left H1 ball stays inside (about x 40).
+- Candle ring at top-left on g 0-9: **FIXED**. Nothing orange or black remains in the corner.
+
+**New:** nothing that blocks. The hanging shims (cream and green wedges) are clipped at x 0 on g 0-9. They are quiet decor and need no fix. framediff median 5.32 (target 4.0) is a motion item, not an art item.
