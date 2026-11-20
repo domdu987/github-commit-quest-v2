@@ -38,3 +38,10 @@ Re-rendered after the director's TAKE gate (QA_TECH.md): the laugh mouth now sta
 ## Revision 4 (independent review: FOV, not camera travel)
 - Added keyed lens punches (lens_scale(g) -> the 22 mm lens x z, keyed every frame): x1.17 over 8 frames at the laugh start (g 603-611, eased back by g 632), x1.065 micro-punches on each laugh bounce (3 Hz, g 611-637), an extra x1.10 with the snap at g 637; snap k 1.35, peak 3.0 (g 634-647). Look point lowered 0.12 D so the wig stays above y 880 through the punches. The camera path itself is unchanged (it never nears the table).
 - **Frame-diff now median 4.48, p90 10.72 (15 in-shot pairs >= 10)**: meets the per-take rule (median >= 4, p90 >= 10). Mouth window, turn, point and the hidden chair are unchanged.
+
+## qa_stats (client gate numbers, take.mkv with handles)
+```
+take.mkv: 4.5s, shots=1, mean shot 4.47s, median 4.47s, shortest 4.47s, shots<1.5s: 0
+   saturation 0.699, brightness 65.8, in-shot motion median 5.53 p90 11.58
+```
+Face at most ~27 % of the frame height (head width <= 274 px).
