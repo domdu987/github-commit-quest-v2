@@ -36,8 +36,8 @@ def bert_pose(g, kind, mirror=False, target=None):
     cast, pose = cast17.STORY17[name]; pose = dict(pose)
     if mirror: pose['mirror'] = True
     if kind == 'insert': pose['prop_r'] = dict(pose['prop_r'], angle=90)
-    if g >= 1045 and kind == 'insert': pose.pop('prop_r', None)     # the card is fully inside the drawer: no card in the glove
     if target is not None: pose = cast17.hand_for_anchor(cast, pose, 'r', ('card' if kind == 'insert' else 'calipers') + ('_l' if mirror else '_r'), target)
+    if g >= 1045 and kind == 'insert': pose.pop('prop_r', None)     # the card is fully inside the drawer: no card in the glove
     if moving:
         arms = 'l' if kind in ('measure', 'card', 'drawer') else 'both'
         cyc = cast17.cycle(cast, wb['phase'], 'run' if wb['speed'] > 1.9 else 'walk', 1, base=pose, arms=arms)

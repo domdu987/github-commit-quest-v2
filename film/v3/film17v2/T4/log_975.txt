@@ -1,0 +1,156 @@
+tripod cloth faces removed 109
+coat rack faces removed 1608
+00:26.138  cycles           | WARNING CUEW initialization failed: Error opening the library
+00:27.869  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0975.png does not exist.
+00:28.040  cycles           | ERROR Failed to load 1 image files
+02:03.639  render           | Saved: 'frames/g_0975.png'
+g975 write {'dx': -0.83, 'dy': -0.13} 100s
+02:07.030  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0976.png does not exist.
+02:07.199  cycles           | ERROR Failed to load 1 image files
+03:39.308  render           | Saved: 'frames/g_0976.png'
+g976 write {'dx': -0.79, 'dy': -0.12} 96s
+03:42.505  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0977.png does not exist.
+03:42.658  cycles           | ERROR Failed to load 1 image files
+05:15.816  render           | Saved: 'frames/g_0977.png'
+g977 write {'dx': -0.74, 'dy': -0.12} 97s
+05:19.155  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0978.png does not exist.
+05:19.274  cycles           | ERROR Failed to load 1 image files
+06:53.430  render           | Saved: 'frames/g_0978.png'
+g978 write {'dx': -0.7, 'dy': -0.11} 96s
+06:54.783  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0979.png does not exist.
+06:54.920  cycles           | ERROR Failed to load 1 image files
+08:30.991  render           | Saved: 'frames/g_0979.png'
+g979 write {'dx': -0.66, 'dy': -0.1} 100s
+08:34.507  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0980.png does not exist.
+08:34.652  cycles           | ERROR Failed to load 1 image files
+10:09.602  render           | Saved: 'frames/g_0980.png'
+g980 write {'dx': -0.62, 'dy': -0.1} 99s
+10:13.299  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0981.png does not exist.
+10:13.449  cycles           | ERROR Failed to load 1 image files
+11:48.262  render           | Saved: 'frames/g_0981.png'
+g981 write {'dx': -0.58, 'dy': -0.09} 98s
+11:51.468  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0982.png does not exist.
+11:51.612  cycles           | ERROR Failed to load 1 image files
+13:28.772  render           | Saved: 'frames/g_0982.png'
+g982 write {'dx': -0.54, 'dy': -0.08} 101s
+13:32.224  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0983.png does not exist.
+13:32.361  cycles           | ERROR Failed to load 1 image files
+15:09.308  render           | Saved: 'frames/g_0983.png'
+g983 write {'dx': -0.5, 'dy': -0.08} 100s
+15:12.378  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0984.png does not exist.
+15:12.528  cycles           | ERROR Failed to load 1 image files
+16:51.281  render           | Saved: 'frames/g_0984.png'
+g984 write {'dx': -0.46, 'dy': -0.07} 100s
+16:52.740  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0985.png does not exist.
+16:52.857  cycles           | ERROR Failed to load 1 image files
+18:30.438  render           | Saved: 'frames/g_0985.png'
+g985 write {'dx': -0.41, 'dy': -0.07} 101s
+18:33.954  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0986.png does not exist.
+18:34.100  cycles           | ERROR Failed to load 1 image files
+20:09.449  render           | Saved: 'frames/g_0986.png'
+g986 write {'dx': -0.37, 'dy': -0.06} 99s
+20:13.067  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0987.png does not exist.
+20:13.208  cycles           | ERROR Failed to load 1 image files
+21:49.005  render           | Saved: 'frames/g_0987.png'
+g987 write {'dx': -0.33, 'dy': -0.05} 99s
+21:51.870  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0988.png does not exist.
+21:51.984  cycles           | ERROR Failed to load 1 image files
+23:25.997  render           | Saved: 'frames/g_0988.png'
+g988 write {'dx': -0.29, 'dy': -0.05} 98s
+23:29.596  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0989.png does not exist.
+23:29.726  cycles           | ERROR Failed to load 1 image files
+25:06.043  render           | Saved: 'frames/g_0989.png'
+g989 write {'dx': -0.25, 'dy': -0.04} 100s
+25:09.210  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0990.png does not exist.
+25:09.346  cycles           | ERROR Failed to load 1 image files
+26:42.432  render           | Saved: 'frames/g_0990.png'
+g990 write {'dx': -0.21, 'dy': -0.03} 95s
+26:44.213  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0991.png does not exist.
+26:44.358  cycles           | ERROR Failed to load 1 image files
+28:17.293  render           | Saved: 'frames/g_0991.png'
+g991 card {'dx': -0.17, 'dy': -0.03} 95s
+28:19.031  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0992.png does not exist.
+28:19.178  cycles           | ERROR Failed to load 1 image files
+29:52.864  render           | Saved: 'frames/g_0992.png'
+g992 card {'dx': -0.12, 'dy': -0.02} 96s
+29:54.681  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0993.png does not exist.
+29:54.825  cycles           | ERROR Failed to load 1 image files
+31:26.579  render           | Saved: 'frames/g_0993.png'
+g993 card {'dx': -0.08, 'dy': -0.01} 94s
+31:28.605  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0994.png does not exist.
+31:28.786  cycles           | ERROR Failed to load 1 image files
+32:59.544  render           | Saved: 'frames/g_0994.png'
+g994 card {'dx': -0.04, 'dy': -0.01} 93s
+33:01.336  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0995.png does not exist.
+33:01.490  cycles           | ERROR Failed to load 1 image files
+34:29.475  render           | Saved: 'frames/g_0995.png'
+g995 card {} 90s
+34:31.099  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0996.png does not exist.
+34:31.230  cycles           | ERROR Failed to load 1 image files
+35:56.311  render           | Saved: 'frames/g_0996.png'
+g996 card {} 87s
+35:58.045  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0997.png does not exist.
+35:58.207  cycles           | ERROR Failed to load 1 image files
+37:24.902  render           | Saved: 'frames/g_0997.png'
+g997 card {} 89s
+37:26.527  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0998.png does not exist.
+37:26.687  cycles           | ERROR Failed to load 1 image files
+38:46.935  render           | Saved: 'frames/g_0998.png'
+g998 card {} 82s
+38:48.525  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_0999.png does not exist.
+38:48.657  cycles           | ERROR Failed to load 1 image files
+40:08.303  render           | Saved: 'frames/g_0999.png'
+g999 card {} 81s
+40:10.256  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_1000.png does not exist.
+40:10.408  cycles           | ERROR Failed to load 1 image files
+41:36.781  render           | Saved: 'frames/g_1000.png'
+g1000 card {} 90s
+41:40.585  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_1001.png does not exist.
+41:40.751  cycles           | ERROR Failed to load 1 image files
+43:08.783  render           | Saved: 'frames/g_1001.png'
+g1001 card {} 92s
+43:12.145  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_1002.png does not exist.
+43:12.294  cycles           | ERROR Failed to load 1 image files
+44:35.568  render           | Saved: 'frames/g_1002.png'
+g1002 card {} 87s
+44:39.036  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_1003.png does not exist.
+44:39.158  cycles           | ERROR Failed to load 1 image files
+46:07.851  render           | Saved: 'frames/g_1003.png'
+g1003 card {} 90s
+46:09.443  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_1004.png does not exist.
+46:09.574  cycles           | ERROR Failed to load 1 image files
+47:44.034  render           | Saved: 'frames/g_1004.png'
+g1004 card {} 96s
+47:45.960  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_1005.png does not exist.
+47:46.100  cycles           | ERROR Failed to load 1 image files
+49:14.566  render           | Saved: 'frames/g_1005.png'
+g1005 card {} 90s
+49:16.301  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_1006.png does not exist.
+49:16.434  cycles           | ERROR Failed to load 1 image files
+50:45.984  render           | Saved: 'frames/g_1006.png'
+g1006 card {} 91s
+50:47.444  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_1007.png does not exist.
+50:47.557  cycles           | ERROR Failed to load 1 image files
+52:14.615  render           | Saved: 'frames/g_1007.png'
+g1007 card {} 89s
+52:16.100  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_1008.png does not exist.
+52:16.207  cycles           | ERROR Failed to load 1 image files
+53:49.440  render           | Saved: 'frames/g_1008.png'
+g1008 card {} 95s
+53:51.145  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_1009.png does not exist.
+53:51.331  cycles           | ERROR Failed to load 1 image files
+55:19.634  render           | Saved: 'frames/g_1009.png'
+g1009 card {} 90s
+55:21.223  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_1010.png does not exist.
+55:21.367  cycles           | ERROR Failed to load 1 image files
+56:47.713  render           | Saved: 'frames/g_1010.png'
+g1010 card {} 88s
+56:49.596  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_1011.png does not exist.
+56:49.762  cycles           | ERROR Failed to load 1 image files
+58:19.516  render           | Saved: 'frames/g_1011.png'
+g1011 card {} 94s
+58:23.219  cycles           | WARNING Image file /home/user/github-commit-quest-v2/film/v3/set3d17/tex/tally/tally_1012.png does not exist.
+58:23.383  cycles           | ERROR Failed to load 1 image files
+59:50.835  render           | Saved: 'frames/g_1012.png'
+g1012 card {} 91s
+FINISHED
