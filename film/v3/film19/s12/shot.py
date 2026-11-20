@@ -53,6 +53,7 @@ CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get(
                        dict(g=(970, 996), k=1.0, peak=1.0, shift=(float(os.environ.get("SETTLE", -0.9)), 0.0))])   # the whip overshoots, then settles back left
 
 SWAY = float(os.environ.get("SWAY", 0.09))
+EXTRA = float(os.environ.get("EXTRA", 0.45))
 TRAVEL = float(os.environ.get("TRAVEL", 0.9))              # D: look point moves right (camera turns, does not move) after the pan lands
 
 
@@ -61,7 +62,7 @@ def cam_at(g):
     fwd = (look - loc).normalized()
     right = Vector((fwd.y, -fwd.x, 0.0)).normalized()
     u = u_of(g, 972, 1000, kind="sine")
-    look = look + right * (TRAVEL * u)
+    look = look + right * (TRAVEL * u + EXTRA * u_of(g, 990, 998, kind="sine"))   # EXTRA: from g 990 the view turns a bit more toward him so the whole hair / bow / ponytail / puffs stay inside x 690
     up = right.cross(fwd).normalized()
     ph = 2 * math.pi * g / 20.0                           # handheld sway (D): 1.5 Hz lateral + a little vertical, no net drift
     off = right * (SWAY * math.sin(ph)) + up * (0.5 * SWAY * math.sin(ph * 0.7 + 1.0))
@@ -99,8 +100,8 @@ def pose_of(g):
     if p["arm_l"].get("shape") is None:
         p["arm_l"].pop("shape")
     p["lean"] = lerp(8 + 1.5 * math.sin(ph), -15.0, lk) - 4.0 * pf          # real slump: 15 deg back
-    p["pitch"] = lerp(0.30 + 0.05 * math.sin(ph), -0.18, lk)
-    p["head_roll"] = lerp(0.0, 8.0, lk) + 1.5 * math.sin(g * 0.3) * lk
+    p["pitch"] = lerp(0.30 + 0.05 * math.sin(ph), -0.30, lk)
+    p["head_roll"] = lerp(0.0, 2.0, lk) + 1.0 * math.sin(g * 0.3) * lk
     p["yaw"] = lerp(0.5, 0.2, lk)
     p["gaze"] = (lerp(0.7, 0.0, lk), lerp(0.9, 0.0, lk))
     p["squash"] = (1.0 + 0.07 * pf + 0.03 * lk * (1 - pf), 1.0 - 0.07 * pf - 0.03 * lk * (1 - pf))
@@ -108,7 +109,7 @@ def pose_of(g):
         p["old"] = 1                                      # hair white (+ spectacles, brown coat): popped on "หงอก"
         p["expr"] = "worried"
         p["blink"] = 2 if lk > 0.8 else blink(g, BLINKS)
-        p["fx"] = (["steam"] if pf > 0.15 else []) + (["sweat"] if lk > 0.9 and g > G_POP[1] else [])
+        p["fx"] = ([dict(type="steam", t=(g - G_AGE + 1) / 14.0)] if G_AGE - 1 <= g <= G_AGE + 12 else []) + (["sweat"] if lk > 0.9 and g > G_POP[1] else [])
     else:
         p["expr"] = "determined" if lk < 0.5 else "worried"
         p["blink"] = blink(g, BLINKS)
