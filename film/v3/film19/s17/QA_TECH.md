@@ -18,3 +18,10 @@ Checked 6 fps + cut g1280/g1384 +-3 (take g1271-1392), qa_auto PASS (soft g1387-
 Earlier: R2-1 NOT FIXED; R2-4 ship clipping FIXED (ship stays inside x 60-560 through the crane); R2-2 V-wake: a long wake ribbon now trails, FIXED.
 1. g1281-1383 (frame-diff): median 3.54 < 4 and p90 4.49 < 10; the move is a uniform slow drift. Fix: add a clear eased push/slide accent (about 1.3x over 12 f around g1340-1355) and raise the base speed so the median >= 4.5 and p90 >= 10; re-measure.
 NOTES: g1271-1290 white glare patches at the left of the wake read as holes.
+
+## Round 10 (director QA-tech): PASS
+Take g1271-1392 (joined parts -> /tmp/s17q.mkv, 122 frames). Frames /tmp/qa19_r10c/s17/. 6 fps sheet plus the snap g1368-1384 checked. Frame-diff (90x160 grey bilinear, pairs g1281..g1383): median 4.71, p90 10.65 (limits 4 / 10: OK), max 25.7 at g1377 (the pan snap, eases in from g1370 and out by g1383). Colour sat 0.712, luma 108.0. No actors, no text, no black/magenta/frozen frames (min diff 2.36), no pop, ship intact in frame all through, no edge of the world or bare plane (horizon and sky only), whitecaps now visible, V-wake lengthens as the camera pulls back and rises.
+Notes (not blocking):
+- g1340-1369 the move is slow (diff 2-3, about 1 s) before the snap; the median clears only because of the snap.
+- g1271-1310 big white glint patches left of the ship read as holes (g1271-1290 most).
+- Sails are grey in the backlit first half and cream later (lighting angle, plausible).
