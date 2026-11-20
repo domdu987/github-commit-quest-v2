@@ -1,0 +1,41 @@
+{
+ "take": "s09",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film19/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 22.033,
+   "duration": 3.733,
+   "frame": 661,
+   "end_frame": 773,
+   "kind": "ambience",
+   "label": "the Board's hall by day: room tone, a ticking regulator"
+  },
+  {
+   "time": 22.033,
+   "duration": 3.733,
+   "frame": 661,
+   "end_frame": 773,
+   "kind": "foley",
+   "label": "mock-royal bow: gown swishes, a tiny gold pocket-watch tick held in his hand",
+   "peak_frame": 700
+  },
+  {
+   "time": 24.767,
+   "duration": 0.633,
+   "frame": 743,
+   "end_frame": 762,
+   "kind": "accent",
+   "label": "snap push on 'จับเวลาเอง' (g 748): a whoosh and a cheeky watch-click",
+   "peak_frame": 748
+  },
+  {
+   "time": 25.767,
+   "duration": 0.0,
+   "frame": 773,
+   "end_frame": 773,
+   "kind": "cut",
+   "label": "hard cut to shot 10 (hall_wide)"
+  }
+ ]
+}

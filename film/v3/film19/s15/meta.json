@@ -1,0 +1,68 @@
+{
+ "take": "s15",
+ "film": 19,
+ "shots": [
+  15
+ ],
+ "g0": 1096,
+ "g1": 1190,
+ "first_g": 1086,
+ "n_frames": 113,
+ "shot_ranges": {
+  "15": [
+   1096,
+   1189
+  ]
+ },
+ "handle_in": 10,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 15
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 1190
+ },
+ "set": "v3/set3d19/h19.py SHIP preset ship_deck, light NOON; set_sea(t), set_roll(t), set_sun_overhead(k) keyed on every frame (same t); no runtime set changes; no caption_shade",
+ "cast": "v3/cast19 william19 (quadrant / H4 pose) + captain19 (idle) at the deck marks william_deck / captain_wheel (+offset), cards parented to ship_root (c19.ride_ship)",
+ "camera": "custom 22 mm on the deck (c19.CamPath in the ship's rest frame, c19.on_ship each frame so the camera rides the roll / bob); see shot.py",
+ "events": {
+  "snap": [
+   1168,
+   1184
+  ],
+  "snap_word": "อยู่ตรงหัว",
+  "snap_word_g": 1172,
+  "sun_overhead": "set_sun_overhead keyed every frame 0 -> 1 (g 1086..1176)",
+  "deck": "set_sea(t), set_roll(t) every frame; cards parented to ship_root; camera rides the deck (c19.on_ship)"
+ },
+ "dof": "none",
+ "text": "none",
+ "caption_shade": "none",
+ "light": "NOON",
+ "samples": 11,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 22.22,
+ "s_per_frame_cpu_mean": 42.8,
+ "head_px_in_shot": [
+  99,
+  218
+ ],
+ "head_centre_y_in_shot": [
+  406,
+  669
+ ],
+ "head_bottom_max_y_in_shot": 778,
+ "framediff_in_shot": {
+  "median": 4.55,
+  "p90": 12.27
+ },
+ "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
+}

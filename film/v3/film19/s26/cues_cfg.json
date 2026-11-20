@@ -1,0 +1,87 @@
+{
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "at": 2086,
+  "note": "hard cut from shot 25; 9 f in-handle g 2077..2085 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "end",
+  "frames": 0,
+  "at": 2160,
+  "note": "the film ends on a HARD CUT on the last word: the take runs to g 2159 (N = 2160 film frames; the narration ends at 71.90 + 0.10 s = film 72.0 s), camera still moving; no out-handle"
+ },
+ "set": "v3/set3d19/h19.py HALL preset hall_table, light EVENING; set_candles flicker, set_regulator(True), set_kings_chair(True), set_stubs(10), set_moneybag('full') from g 2099 keyed on EVERY frame; no caption_shade; no DOF",
+ "cast": "v3/cast19 harrison19 old=1 (harrison_old_idle base, grin, joyful arm rise + bounce after the bag lands) and king19 (king_idle, happy smile, two firm nods after the bag lands); no lip-sync",
+ "camera": "custom 22 mm from hall_table, pulled back and left, dolly + slide + crane + arc; snap x1.15 with a pan back (shift -2.0 D, peak 2.3, 18 f) on 'ช่างไม้' (71.46 s -> g 2147), moving at the cut",
+ "events": {
+  "bag_falls": [
+   2099,
+   2107
+  ],
+  "bag_lands_caption": 2107,
+  "king_nods": [
+   2113,
+   2157
+  ],
+  "snap": [
+   2142,
+   2159
+  ],
+  "last_word_caption": 2147
+ },
+ "cues": [
+  {
+   "time": 69.233,
+   "duration": 2.733,
+   "frame": 2077,
+   "end_frame": 2159,
+   "kind": "ambience",
+   "label": "hall by candlelight; the regulator tick-tock"
+  },
+  {
+   "time": 69.967,
+   "duration": 0.267,
+   "frame": 2099,
+   "end_frame": 2107,
+   "kind": "accent",
+   "label": "the fat money bag whistles down",
+   "peak_frame": 2103
+  },
+  {
+   "time": 70.233,
+   "duration": 0.367,
+   "frame": 2107,
+   "end_frame": 2118,
+   "kind": "foley",
+   "label": "THUD of a heavy bag of coins landing on the baize, then two jingling bounces",
+   "peak_frame": 2107
+  },
+  {
+   "time": 70.433,
+   "duration": 1.233,
+   "frame": 2113,
+   "end_frame": 2150,
+   "kind": "accent",
+   "label": "the King's approving nods: soft cloth rustle; a content 'hm'",
+   "peak_frame": 2120
+  },
+  {
+   "time": 71.4,
+   "duration": 0.567,
+   "frame": 2142,
+   "end_frame": 2159,
+   "kind": "accent",
+   "label": "snap whoosh on 'ช่างไม้'",
+   "peak_frame": 2150
+  },
+  {
+   "time": 72.0,
+   "duration": 0.0,
+   "frame": 2160,
+   "end_frame": 2160,
+   "kind": "cut",
+   "label": "end of film: hard cut to black on the last word"
+  }
+ ]
+}

@@ -1,0 +1,47 @@
+{
+ "take": "s14",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film19/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 33.567,
+   "duration": 3.267,
+   "frame": 1007,
+   "end_frame": 1105,
+   "kind": "ambience",
+   "label": "workshop afternoon, 1700s: room tone, a far rooster"
+  },
+  {
+   "time": 33.567,
+   "duration": 3.267,
+   "frame": 1007,
+   "end_frame": 1105,
+   "kind": "prop",
+   "label": "H1 slow heavy tick-tock under, and a tiny bright quick tick of the H4 that rises as the camera nears it"
+  },
+  {
+   "time": 34.633,
+   "duration": 0.533,
+   "frame": 1039,
+   "end_frame": 1055,
+   "kind": "foley",
+   "label": "sleeve rustle as the palm goes out"
+  },
+  {
+   "time": 35.7,
+   "duration": 0.667,
+   "frame": 1071,
+   "end_frame": 1091,
+   "kind": "accent",
+   "label": "whoosh onto the H4, then a small bright chime sparkle on the silver watch"
+  },
+  {
+   "time": 33.867,
+   "duration": 0.0,
+   "frame": 1016,
+   "end_frame": 1016,
+   "kind": "transition",
+   "label": "dissolve in from the night workshop (shot 13) to day"
+  }
+ ]
+}

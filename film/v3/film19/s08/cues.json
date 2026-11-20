@@ -1,0 +1,50 @@
+{
+ "take": "s08",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film19/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 18.167,
+   "duration": 3.867,
+   "frame": 545,
+   "end_frame": 661,
+   "kind": "ambience",
+   "label": "the Board's hall by day: room tone, far chatter, a ticking regulator, a quill scratching"
+  },
+  {
+   "time": 20.1,
+   "duration": 1.1,
+   "frame": 603,
+   "end_frame": 636,
+   "kind": "foley",
+   "label": "the mocker's belly laugh: wheezy HA-HA-HA with gown and wig rustle, a stamp of a foot",
+   "peak_frame": 612
+  },
+  {
+   "time": 21.033,
+   "duration": 0.5,
+   "frame": 631,
+   "end_frame": 646,
+   "kind": "accent",
+   "label": "snap push on 'นาฬิกาเนี่ยนะ' (g 637): a whoosh and a sarcastic honk",
+   "peak_frame": 637
+  },
+  {
+   "time": 21.333,
+   "duration": 0.7,
+   "frame": 640,
+   "end_frame": 661,
+   "kind": "foley",
+   "label": "he straightens and points; buckles and gown swish",
+   "peak_frame": 648
+  },
+  {
+   "time": 22.033,
+   "duration": 0.0,
+   "frame": 661,
+   "end_frame": 661,
+   "kind": "cut",
+   "label": "hard cut to shot 9 (hall_low, closer)"
+  }
+ ]
+}

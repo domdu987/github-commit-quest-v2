@@ -272,9 +272,9 @@ def terrain_mat(LT, kind):
     col = mix(col, hexc('#000000'), 0.52)
     sn1 = N('ShaderNodeTexNoise'); sn1.inputs['Scale'].default_value = 0.9; sn1.inputs['Detail'].default_value = 4.0; L(tc.outputs['Object'], sn1.inputs['Vector'])
     sn2 = N('ShaderNodeTexNoise'); sn2.inputs['Scale'].default_value = 6.0; sn2.inputs['Detail'].default_value = 2.0; L(tc.outputs['Object'], sn2.inputs['Vector'])
-    dry = mix(hexc('#dcc088'), hexc('#c9a870'), mr(sn1.outputs['Fac'], 0.4, 0.62))                  # dry sand, two tones
-    dry = mix(dry, hexc('#b99a66'), mr(sn2.outputs['Fac'], 0.52, 0.7, 0.0, 0.5))                       # fine grain
-    sand = mix(hexc('#8c7550'), dry, mr(sp.outputs['Z'], 0.06, 0.34))                                  # wet sand darkens towards the waterline
+    dry = mix(hexc('#d2a45a'), hexc('#bf8f4a'), mr(sn1.outputs['Fac'], 0.4, 0.62))                  # dry sand, two tones
+    dry = mix(dry, hexc('#b58a50'), mr(sn2.outputs['Fac'], 0.52, 0.7, 0.0, 0.5))                       # fine grain
+    sand = mix(hexc('#7a5e38'), dry, mr(sp.outputs['Z'], 0.06, 0.34))                                  # wet sand darkens towards the waterline
     col = mix(sand, col, mr(sp.outputs['Z'], 0.9, 2.4))                                                # pale sand beach
     cd = N('ShaderNodeCameraData'); dmv = mr(cd.outputs['View Distance'], 200.0 * SC, 1000.0 * SC, 0.0, 0.34)
     col = mix(col, hexc('#8fb4b8' if LT.get('fog', 0) < 0.1 else LT['haze']), dmv)

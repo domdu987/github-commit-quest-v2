@@ -1,0 +1,47 @@
+{
+ "take": "s13",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film19/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 32.567,
+   "duration": 1.6,
+   "frame": 977,
+   "end_frame": 1025,
+   "kind": "ambience",
+   "label": "workshop at night: near silence, candle hiss, the H3 tick"
+  },
+  {
+   "time": 33.1,
+   "duration": 0.333,
+   "frame": 993,
+   "end_frame": 1003,
+   "kind": "foley",
+   "label": "creak of the stool as he leans back, a long tired sigh (no voice words)"
+  },
+  {
+   "time": 33.433,
+   "duration": 0.433,
+   "frame": 1003,
+   "end_frame": 1016,
+   "kind": "foley",
+   "label": "the knuckles rub his closed eyes: a soft cloth-on-skin rustle"
+  },
+  {
+   "time": 33.033,
+   "duration": 0.4,
+   "frame": 991,
+   "end_frame": 1003,
+   "kind": "accent",
+   "label": "quick push-in whoosh on 'หงอก'"
+  },
+  {
+   "time": 32.867,
+   "duration": 0.0,
+   "frame": 986,
+   "end_frame": 986,
+   "kind": "cut",
+   "label": "hard cut from shot 12 (same workshop, closer)"
+  }
+ ]
+}
