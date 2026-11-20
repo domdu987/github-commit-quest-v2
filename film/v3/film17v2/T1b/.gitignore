@@ -1,3 +1,4 @@
 frames/
 render.log
 render_rev.log
+tests/strip_g*.png
