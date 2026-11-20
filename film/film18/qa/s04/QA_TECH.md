@@ -1,10 +1,13 @@
-# QA_TECH s04 (take g295-391) - FAIL (round 4)
-Checked: 6 fps (24 frames) + first/last 3. Director 12.46 / 14.68: OK, orbit + push, no pulsing. Caption band bright share max 0.04 % (880-950), 0.01 % (880-1100): mandatory <= 1 % MET.
+# QA_TECH s04 (take g295-391) - PASS with notes (round 5)
+Checked: 6 fps (24 frames) + first/last 3 + full-size crop of the horizon at g297 / g315. Re-measured 5.54 / 5.93 (director 5.50 / 5.90): median OK, p90 well under the 9 guide, but a clear eased push + orbit is visible; no pulsing. Caption band bright share max 0.014 %, band mean max 100: mandatory <= 1 % MET. No text, characters, blur.
 ## Earlier blockers
-- Ju lit as a second warm town: NOT FIXED. Navy slabs / bare ground: NOT FIXED. Jimo roofs warm-lit g370-391: OK. Flag opaque, no bloom: OK.
+- Ju as a second warm-lit town: PARTLY FIXED. A lit tower with a beacon and an orange block, plus a row of torches, sits at the horizon with no Yan flag (g295-~335, upper left of centre). It is a recognisable warm second site but small (about 8 % of the frame width) and wrapped in a strong glow; it leaves the frame by g~335. Reads as a glow at phone size, not as a walled town.
+- Navy slabs / bare ground: FIXED to note level (see notes). The loose floating flame is gone.
+- Jimo end g360-391: roofs lit, red flag opaque, no bloom, readable. Flag is about 25-30 % of the frame width at g375+. I cannot verify "50 % of the old size" against the earlier take; it is no longer dominating.
 ## Issues
-1. g295-325 - Ju: no second warm-lit walled town exists. The only warm item is a red flag with a small torch flame on a pole at the top right (g295-310), which drifts, shrinks and at g315-325 leaves a lone flame floating in the sky. It reads as a stray flame, not a town. Mandatory item missed. Fix: frame a distinct warm lit town (lit windows, torches) as Ju before the push to Jimo and delete the loose flame.
-2. g330-375 - bare ground: 45-60 % of the frame is plain tiled green-grey field with huge flat navy shadow shapes and a navy arc ring (g345-365 worst, g355 about 60 %). Over 30 % blocks. Fix: keep towns filling the lower half, or lift/texture the field.
-3. g295-340 - lower half is dominated by dark navy shadow areas between rows of walls (untextured dark navy read, rule 2); the black slab pennants cross the lens g320-345.
+none blocking.
 ## Notes
-- Jimo end frame g375-391 is the best part: lit windows, red flag, readable. Cut in from s03 has a different camera, acceptable.
+1. g295-315 - open farmland about 28-30 % of the frame (sparse tents / sacks / flags across it). At the limit.
+2. g340-391 - a flat grey arc ring crosses the bottom (8-10 % of the frame); plain, untextured, reads as a placeholder band (rule 2, mild). Navy ribbon and navy gate boxes inside Jimo's wall are small.
+3. Black pennant slabs fill the upper third; heavy but plan-mandated.
+4. Ju needs more screen time or a larger lit footprint if the director wants it to land.

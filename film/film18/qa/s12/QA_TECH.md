@@ -1,17 +1,14 @@
-# QA_TECH s12 (take g937-1010, shot g944-1003) - FAIL (round 5)
-Checked: 6 fps + first/last 3 (20 frames), continuity against s11 last / s13 first. Director 5.44 / 6.53 (my re-measure 5.42 / 6.52): median OK, p90 below the 9 guide; slide + push are visible, no pulsing. No text, no mouths, heads < 880, caption band dark (lantern glare only).
+# QA_TECH s12 (take g937-1010, shot g944-1003) - PASS with notes (round 6)
+Checked: 6 fps + first/last 3 (20 frames). Re-measured 4.94 / 5.92 (director 5.06 / 5.91): median OK, p90 below the 9 guide, but slide + push visible; no pulsing. No text, no mouths, heads < 880. Caption band over 110 only in the handle frames g1006-1010 (lantern glare, out of the shot).
 ## Earlier blockers
-- Folk on the wall: present (about 8 on the tower balcony, readable at full size, small at phone size) - FIXED.
-- Banner: flat cream slab, readable.
-- Cloud sticker: FIXED (gone).
-- Spiky navy / green blade clumps: NOT FIXED (see 1).
-- Bare ground: PARTLY (see 2).
-- Envoy small / leaves the frame: NOT FIXED (see 3, 4).
+- Folk on the wall: present (8 on the tower balcony, readable) - FIXED. Banner: cream flag on a pole, readable g950-995 - FIXED.
+- Spiky navy / green blade clumps: FIXED (none).
+- Envoy small: FIXED from about g955 (head about 12 % of frame height, then about 40 %). At g944-952 he is still small (about 6-8 %).
+- Envoy leaves the frame: PARTLY FIXED. He stays in frame to the end, but from about g985 his body hugs the right edge, the banner is half cut and the final frames show the arm / banner outside.
+- Bare ground: PARTLY FIXED (see notes).
 ## Issues
-1. g937-982 - big spiky low-poly blade clumps at the bottom: navy at g937-947 (centre and left), flat green from g947 to g982 crossing the bridge and the water. Spiky junk per the director's navy-or-spiky rule. Fix: delete the ground-dressing helper blades in this shot or swap for warm baskets/straw.
-2. g937-957 - bare ground: dark teal-navy field with a navy shadow slab fills about 28-32 % at the bottom; improves to note level from g960 (bridge and water). Fix: tilt up 3-4 % or add a warm fg prop.
-3. g937-957 - the envoy is about 5 % of frame height (about 60 px) with a small white banner; the plan beat "bowing envoy" cannot be read at phone size.
-4. g987-1002 - the envoy walks off the right edge (half cut g987-997, gone g1002); the take ends on an empty bridge. Rule 4 breached. Fix: slide the camera right with him, or hold him mid-frame to the end.
+none blocking.
 ## Notes
-- The gate stays shut (plan: a crack); the folk group drifts to the left edge and is cropped from g962, only 4 faces left at g1010.
-- Dissolve-in range g937-943 only checked as frames, no pop.
+1. g937-955 - the bottom 25-28 % is plain dark-teal ground with a diagonal shadow wedge (at the limit); it falls to 12 % by g990 as the bridge and water come in.
+2. g985-1003 - Rule 4 touch: the envoy and banner crowd the right edge. Slide the camera 8-10 % further right at the end.
+3. The gate stays shut (plan: a crack); the folk group drifts left and is cropped to 4 faces by g1003.

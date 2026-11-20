@@ -1,15 +1,15 @@
-# QA_TECH s11 (take g853-951, shot g853-944) - FAIL (round 4)
-Checked: 6 fps + first/last 3 (25 frames) + full-size g861 / g913, continuity against s10 last / s12 first. Director 4.52 / 8.69 (my re-measure 4.53 / 8.69): median OK (earlier hard fail FIXED), p90 below the 9 guide but a push and slide are visible, push on "ไอ้เสมียนวัว" (g~904) now visible. No pulsing. Heads < 880, no text, band mid-dark, fire lit.
+# QA_TECH s11 (take g853-951, shot g853-944) - PASS with notes (round 5)
+Checked: 6 fps + first/last 3 (25 frames). Re-measured 5.24 / 8.73 (director 5.06 / 8.53): median OK, p90 close to the 9 guide, push-in and slide visible, push around the nickname (g~904) visible. No pulsing. Heads < 880, no text, band mean max 93, bright share 4.8 % only from the camp fire (not a face). Mouths open only for laughing, no quote lip-sync.
 ## Earlier blockers
-- Median < 4: FIXED.
-- Bare ground bottom 35 %: PARTLY. About 30-33 % plain navy-lavender ground at g853-880, 22-25 % from g893. See 1.
-- Dark navy post/rack slab at left edge g933-951: NOT FIXED, still a dark horizontal bar with round pegs.
-- Mock-moo readable: now OK (centre soldier holds both hands up as horns from g853).
+- Median < 4: stays fixed.
+- Navy plank / diagonal ray wedge at lower left (g853-888): MOSTLY FIXED. A thin dark beam is still visible between the jars at g853-905 (small, reads as a log / spear shaft).
+- Dark navy rack bar at left edge g933-951: FIXED (only a jar sliver).
+- Bare ground bottom: FIXED to the note level, about 25 % (plain dark-purple pebbled ground, bottom 22-25 % from g893).
+- Mock-moo: centre soldier holds both fists up beside the helmet horns; reads, together with laughing soldiers.
 ## Issues
-1. g853-888 - a flat dark-navy plank/beam lies on the ground at the lower left under the jars, plus a flat diagonal shadow/ray wedge across the bottom-left (rule 2, untextured slab). Fix: hide the beam or replace it with a lit textured prop.
-2. g853-880 - bare ground about 30-33 % (bottom third is plain lavender-navy ground, no fg prop) - at the limit; with 1 it is a blocker. Fix: push the first 1 s lower/closer or put a dark fg jar low in frame from g853.
-3. g933-951 - dark spear-rack bar with round pegs at the left edge reads as an unlit navy slab (rule 2, repeated from round 3). Fix: shift the camera or hide it.
+none blocking.
 ## Notes
-- Fg props (jars, buckets, baskets) are blue-grey faceted low-poly, not warm; lit but cool-toned (v2 warm baskets would read better).
-- Soldiers small (20-25 % of frame height) at g853-890; only 3 soldiers plus 1 ghost silhouette. Open-mouth shout drawings are static (no lip-sync, OK).
-- Sky about 35 % at g853.
+1. g915-951 - blue-grey faceted rocks and baskets at the bottom left are cool-toned and low-poly; lit but not warm.
+2. Sky about 35-40 % (flat dusk blue) at the top at g853-900.
+3. The centre soldier has very thin stick legs and a large helmet; odd but within the puppet style. Only 3 soldiers plus a ghost silhouette.
+4. Eye-line: soldiers play to the lens (note).

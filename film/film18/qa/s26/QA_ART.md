@@ -1,22 +1,24 @@
-# QA-art s26 (ending: the general runs home chased by oxen, 65.27-70.40 s), TAKE gate re-render — FIX-FIRST (ending, strict)
-I reviewed take.mkv at 6 fps (art9/gNNNN.png, g 1950-2110) at full size 720x1280 and on the 360x640 sheets art9_phone_0-4.jpg (cyan line = y 880).
+# QA-art s26 (ending: the general runs home chased by oxen, 65.27-70.40 s), TAKE gate round 8 — FIX-FIRST (ending, strict)
+Reviewed take.mkv at 6 fps (art10/f, g 1950-2105) at full size and on art10/psheet_0-2.jpg (360x640, cyan = y 880).
 
 ## Earlier changes
-1. Lower frame and no rail strips: DONE. The silk strips are gone, period props sit on the verges, and plain road is about 22-27 %.
-2. Panic face: NOT DONE. In every frame (g 1950-2110) the general has round eyes and a CLOSED small smile under the moustache (crop_g2075.png, g 2105). No scream mouth, raised brows or sweat drops are visible at full size or on the phone. The render notes say the scream mouth was added, so it is either not applied to this instance or drawn under the moustache/face layer.
-3. Lead ox beside him at the cut: DONE. From g 2085 its rage face shows at his right side and reads well.
-
-## Also
-- **Sky:** A lavender cap with a curved lower edge and a pink rim crosses the top of every frame (y 0-130). On the phone it looks like a sky-dome seam, not a dawn gradient.
-- **Final frames, g 2095-2111:** The cup has left the frame (only a gold spike at x 0-60). The lead ox's mouth sits at y 850-940, so the caption "ตลอดทาง" will cross it.
+1. Panic face (general_run_scream): DONE. The wide open mouth with top teeth and tongue now renders below the moustache in every frame. The eyes are wide, and a sweat drop shows on the look-back (g 2075). The jue cup is gripped in a drawn fist and held up. On the phone it reads as a yelling, fleeing general. The brows are still hard to see, which is a note.
+2. Sky arc: DONE (no curved seam). But the upper 25 % is now a flat beige-grey with no warmth (y 0-330), the dullest area of the frame on the last image of the film.
+3. Final image cup + ox chin: NOT DONE.
+   - Cup: from g 2095 the cup is cut by the left edge. At g 2105 (art10/f/031.png) only half the cup shows at x 0-95, and the fist is out of frame.
+   - Ox chin: the take notes say the chin max is 821, but the frames show the nearest ox's head reaching y 915-940 (mouth at y 840-940) from g 2085 to the end. The "ตลอดทาง" caption will sit on its roaring mouth, which breaks the client's head-above-880 rule on the punchline frame.
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 6 | 7 | 7 | 4 | 7 |
+| 7 | 6 | 6 | 7 | 7 |
 
-A phone viewer gets "the dressed oxen chase the general home" against a lovely warm dawn wall. But he looks calm and pleased, so the last laugh (he has to RUN from the oxen) does not land.
+The joke now lands on the phone. The armoured general runs in a panic, screaming with his cup up, and roaring dragon oxen with smoking tails gain on him in front of the warm Jimo wall. What is left is the final image and the dead sky.
 
 ## Verdict: FIX-FIRST
-1. **Panic face, whole take:** Make the scream actually render. Draw a wide wavy open mouth BELOW the moustache, at least 40 px tall at full size, plus raised tilted brows and 2-3 sweat drops of at least 14 px at 360 wide, layered ABOVE the face and moustache. Check a frame at full size before the full render. Keep the profile look-back at g 2070-2080.
-2. **Sky:** Remove the curved dome edge. Use a smooth vertical dawn gradient (lavender to peach) with no visible arc anywhere in frame, or pitch the camera so the seam is out of frame.
-3. **Final image, g 2090-2111:** Truck about 60 px left, or move him about 0.3 D right, so the cup stays in frame in his raised hand. Keep the lead ox's chin at y 860 or above, so the cut lands on a scared general, his cup and a roaring ox above the caption.
+1. **Ox head above the caption (g 2080-2111):** Raise the camera's look-at about 60 px (or lift that ox by 0.2 D, or move it 0.4 D farther back). The nearest ox's lowest head point, its open mouth, must stay at y 860 or above on every frame. Measure this on the rendered frame, not from the rig.
+2. **Cup and fist in frame (g 2090-2111):** Truck about 80 px left, or move the general 0.3 D right, so the whole cup and the fist stay at least 20 px inside the left edge through the cut.
+3. **Warm sky:** Replace the flat beige-grey top with a smooth vertical dawn gradient: pale gold at the top, through peach, to the existing pink at the horizon. Use no arc, and keep the luma at y 0-330 at or above the current value so it stays clean. The last frame of the film should glow.
+
+## Notes
+- Raised, tilted brows drawn above the eyes would make the scream more clearly panic and less "grin" at phone size.
+- In-shot frame-diff p90 is 7.6, under the 9 guide. The tracking is visible and the held push from g 2068 works, so I accept it.
