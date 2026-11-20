@@ -52,14 +52,15 @@ def pose_of(g):
     for q, sgn in (("arm_r", 1), ("arm_l", -1)):
         d = dict(p[q])
         # QA-art: palms up and OUT at about (+-1.30, 0.95), layered in front of the wig / gown so they read
-        d["hand"] = (lerp(d["hand"][0], sgn * 1.30, u) + sgn * 0.08 * pump, lerp(d["hand"][1], 0.95, u) + 0.12 * pump)
+        hx = 1.30 - 0.30 * u_of(g, G_QUOTE - 5, G_QUOTE + 8, "sine")       # hands come in to +-1.00 during the snap: both palms stay in frame
+        d["hand"] = (lerp(d["hand"][0], sgn * hx, u) + sgn * 0.04 * pump, lerp(d["hand"][1], 0.95, u) + 0.12 * pump)
         d["layer"] = "front"
         d["shape"] = "open"
         p[q] = d
     p["lean"] = 7.0 * pump + 4.0 * u * math.sin(g * 0.35) + 3.0 * (1 - u) * math.sin(g * 0.27)          # smug rocking on the heels before the shrug
-    p["head_roll"] = -6.0 * u + 5.0 * math.sin(g * 0.2) * u + 4.0 * (1 - u) * math.sin(g * 0.23)
+    p["head_roll"] = -10.0 * u + 5.0 * math.sin(g * 0.2) * u + 4.0 * (1 - u) * math.sin(g * 0.23)
     p["pitch"] = -0.2 * u - 0.1 * pump
-    p["squash"] = (1.0 + 0.02 * pump + 0.012 * (1 - u) * math.sin(g * 0.5), 1.0 - 0.02 * pump - 0.012 * (1 - u) * math.sin(g * 0.5))
+    p["squash"] = (1.0 + 0.04 * pump + 0.012 * (1 - u) * math.sin(g * 0.5), 1.0 - 0.04 * pump - 0.012 * (1 - u) * math.sin(g * 0.5))
     p["expr"] = "smug"
     if C.mouth_open_at(g):                    # smug talk: a SMALL opening blended with the smirk (not a shout), only inside the window
         tm = cast19.talk_mouth(g, 0.6)
