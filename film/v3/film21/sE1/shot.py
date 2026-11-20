@@ -16,8 +16,9 @@ G0, G1 = 793, 885
 G_FIRST = G0 - 3
 G_SNAP = C.g_of(27.80)            # 837: punch-in
 EXTRAS = [("e0", 8.0, 470, "foot"), ("e1", 6.2, 335, "foot"), ("e2", 6.7, 440, "knight"), ("e3", 7.8, 390, "foot"), ("e4", 9.0, 250, "foot")]
-CAST = [("e0", "footman_a", "footman_a_mime_hoe", 0.0), ("e1", "footman_b", "footman_b_laughing", 2.1), ("e2", "knight_b", "knight_b_point_laugh", 4.2),
-        ("e3", "footman_a", "footman_a_point_laugh", 1.2), ("e4", "footman_b", "footman_b_point_laugh", 3.3)]
+# English are CRIMSON only (set3d21/API.md section 13): footman_a (russet gambeson), knight_a and knight_a_open (red surcoats); no blue tunics.
+CAST = [("e0", "footman_a", "footman_a_mime_hoe", 0.0), ("e1", "knight_a", "knight_a_laughing", 2.1), ("e2", "knight_a_open", "knight_a_open_point_laugh", 4.2),
+        ("e3", "footman_a", "footman_a_point_laugh", 1.2), ("e4", "knight_a", "knight_a_point_laugh", 3.3)]
 SCOTS = [("s1", "s1", "scot_b", "scot_b_fold_spear"), ("s2", "s2", "scot_a", "scot_a_chew_grass"), ("w", "w", "wallace", "wallace_calm"),
          ("s3", "s3", "scot_c", "scot_c_scratch_nose"), ("s4", "s4", "scot_a", "scot_a_fold_spear")]
 

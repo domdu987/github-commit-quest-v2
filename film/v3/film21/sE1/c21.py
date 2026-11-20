@@ -13,9 +13,9 @@ from PIL import Image, ImageDraw                        # noqa: E402
 import stirling as K                                    # noqa: E402
 import actors, camrig, render, sprites                  # noqa: E402
 
-CARD_H = dict(cressingham=3.23, surrey=3.20, knight_b=3.38, knight_b_great=3.38, footman_a=3.04, footman_b=3.24,
+CARD_H = dict(cressingham=3.23, surrey=3.20, knight_b=3.38, knight_b_great=3.38, footman_a=3.04, footman_b=3.24, knight_a=3.26, knight_a_open=3.26,
               scot_a=3.18, scot_b=3.36, scot_c=3.07, wallace=3.59)
-WORLD_H = dict(cressingham=1.78, surrey=1.66, knight_b=1.78, knight_b_great=1.78, footman_a=1.68, footman_b=1.68,
+WORLD_H = dict(cressingham=1.78, surrey=1.66, knight_b=1.78, knight_b_great=1.78, footman_a=1.68, footman_b=1.68, knight_a=1.78, knight_a_open=1.78,
                scot_a=1.70, scot_b=1.70, scot_c=1.70, wallace=1.92)
 
 
