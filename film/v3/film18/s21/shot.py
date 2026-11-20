@@ -16,7 +16,7 @@ H_IN, H_OUT = 6, 6
 G_WORD = C.g_of(54.76)                                            # 1646
 G_FLARE = 1624                                                    # flames start to flare
 MOVE = dict(push=0.09, slide=6, moves=[])
-CAMO = dict(look_at=(0.0, -8.0, 2.4))                             # tilted up a little: ground <= 25 %
+CAMO = dict(look_at=(0.0, -8.0, float(os.environ.get('CAMZ', '1.2'))))                             # tilted up a little: ground <= 25 %
 SHAKE = (0.9, 0.65, 0.4, 2.6)
 SNAPS = [(G_WORD - 2, 1.5, 4, 9999)]                              # ONE x1.5 snap on the word, held to the end
 SPEED = 3.8
