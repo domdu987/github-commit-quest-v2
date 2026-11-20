@@ -186,6 +186,7 @@ def setup_pit(q):
             me = o.data; co = np.empty(len(me.vertices) * 3, dtype=np.float32); me.vertices.foreach_get('co', co); co = co.reshape(-1, 3)
             mw = np.array(o.matrix_world); w = co @ mw[:3, :3].T + mw[:3, 3]
             m = ((np.hypot(w[:, 0] / U - 4.9, w[:, 1] / U - 2.7) < 1.1) | (np.hypot(w[:, 0] / U - 6.6, w[:, 1] / U - 8.0) < 1.3) | (np.hypot(w[:, 0] / U - 3.65, w[:, 1] / U - 4.1) < 1.0) | (np.hypot(w[:, 0] / U + 1.9, w[:, 1] / U - 9.1) < 0.8)) & (w[:, 2] / U < 0.7)
+            m |= (np.hypot(w[:, 0] / U - 5.5, w[:, 1] / U - 9.48) < 0.45)            # thin dark stake behind Dick in the hush push
             if m.any(): co[m, 2] -= 400.0; me.vertices.foreach_set('co', co.reshape(-1)); me.update()
     F.clear_keys()
     F.set_bar_height(BAR_LOW, frame=1, interp='CONSTANT')
