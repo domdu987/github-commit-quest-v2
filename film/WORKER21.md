@@ -49,6 +49,15 @@ PROJ/v3/cast21 (`import cast21` BEFORE `sprites`/`stage.sprites`). Read API.md.
 - Make your OWN helper module inside your take folder (for example PROJ/v3/film21/sNN/c21.py) by copying film8/common.py and switching it to cast21 and set3d21/stirling.py.
 - Do not create a shared film/v3/film21/common.py.
 
+## QA_TEAM.md §I (client decision 2026-11-20, matching his reference Shorts): BLOCKING, and it CHANGED THE PLAN
+- READ FIRST: PROJ/film21/shot_plan.md (v3, travel segments), PROJ/film21/RENDER_TEAMS.md (your segment), PROJ/ref_shorts/README.md and the R*_sheet.jpg / R*_transition_detail.jpg (look at R5, R3 and R7 at least).
+- Each segment is ONE continuous travelling camera move (no internal cut unless the plan says so). Build the travel world with `K.build_world(presets=[...])` and fly it with `K.cam_path(...)` (set3d21/API.md). Segments that join by D6 start or end EXACTLY at the shared pose (P_CAMP, P_BANK, P_NECK) and render 3 handle frames that continue the move. A whip (W) is rendered inside your segment: 6 frames of fast pan out at the end, or in at the start.
+- Lighting: a motivated key light (sun, light shafts, lantern), warm against cool, and a RIM LIGHT on every character card (puppet `rim`, warm gold on the sun side).
+- Colour: saturation >= 0.50 and vivid % >= 45 (`python3 PROJ/qa_stats2.py take.mkv`), luma 85-110.
+- Text signs are allowed and built into the set ("STIRLING BRIDGE", "KING'S TREASURY", "ENGLISH CAMP"). Do not add other text.
+- Characters always act; nobody is still for more than 1.5 s. Close-ups only at CU1-CU3 as marked, about 1 s each.
+- The old take numbers s01-s11 and the old shot numbers are REPLACED by segments A-J2. Reuse your harness and helper code; deliver to PROJ/v3/film21/s<SEG>.
+
 ## QA_TEAM.md §G (client complaint 2026-11-20): BLOCKING at the TAKE gate
 - Colour: `python3 PROJ/qa_stats.py take.mkv` must show saturation >= 0.47 and brightness 85-110. The set's grade has a per-preset VIVID stage that gets you there (API.md §9); keep `K.STATE['preset']` set and never skip the grade.
 - Nothing floats: every character's feet on the ground with a contact shadow (`contact=True` on the Actor), riders on their horses, nothing hanging in the sky, no pole or prop passing through a face.
