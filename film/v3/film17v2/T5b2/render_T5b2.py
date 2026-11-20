@@ -35,10 +35,15 @@ def clear_cast():   # director fix (render17v2/T3 e86e676): stage_cast2 never re
     sys.path.insert(0, 'film/v3/stage'); import actors
     for o in [o for o in bpy.data.objects if o.name.startswith(('c2_', 'back_hair_', 'back_coat_'))]: bpy.data.objects.remove(o, do_unlink=True)
     actors.clear_registry()
+import sys as _s; _s.path.insert(0, 'film/v3/cast17'); import cast17 as _c17; _LEAN0 = _c17.STORY17['inspector_arms_crossed'][1].get('lean', 0.0)
 def _ss(u): u = max(0.0, min(1.0, u)); return u * u * (3 - 2 * u)
 def stage_fix(g, a):   # director TAKE-gate fix (staging only, camera untouched): inspector eased 0.5 m screen-right (+y) over g1335-1355; gend_a eased 1.3 m screen-right (+y) out of frame over g1300-1320
     if os.environ.get('STAGE_FIX', '1') == '0': return a
-    a = dict(a); pose, o = a['inspector']; a['inspector'] = (pose, dict(o, dy=0.5 * _ss((g - 1335) / 20.0)))
+    import math, sys; sys.path.insert(0, 'film/v3/cast17'); import cast17
+    mv = 1.0 if 1335 <= g <= 1355 else 0.0   # director OK: shuffle bob 0.035 m at 2 Hz (15-frame period) + a small lean into the move, same pose, over the move
+    bob = mv * 0.035 * (0.5 - 0.5 * math.cos(2 * math.pi * (g - 1335) / 15.0)); lean = mv * 3.0 * math.sin(math.pi * (g - 1335) / 20.0)
+    cast17.STORY17['inspector_arms_crossed'][1]['lean'] = _LEAN0 + lean
+    a = dict(a); pose, o = a['inspector']; a['inspector'] = (pose, dict(o, dy=0.5 * _ss((g - 1335) / 20.0), dz=bob))
     pose, o = a['gend_a']; a['gend_a'] = (pose, dict(o, dy=1.3 * _ss((g - 1300) / 20.0))); return a
 def one(g, path):
     set_day(g); bpy.context.scene.frame_set(g + 1); clear_cast(); P.stage_cast2(take, g, stage_fix(g, assign_for(g)))
