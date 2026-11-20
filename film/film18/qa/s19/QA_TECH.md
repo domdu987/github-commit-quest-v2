@@ -1,9 +1,12 @@
-# QA_TECH s19 (take g1421-1520, shot g1427-1514) - FAIL (round 3)
-Own frame-diff: median 5.54, p90 11.30 (box) - passes; but g1427-1458 is nearly static (diff 1-4 for about 1.1 s) and g1507-1520 is static (diff 2-3).
-Blur ruling (qa_auto g1503-1517): not blur. Laplacian variance falls 330 -> 160 between g1500 and g1503 and then stays constant (158-169) to g1520 = less detail (sky and distant herd), frames are sharp, no streak. The real whip pan is g1498-1506 (diff 23/28/25/21/16/13/11/8 at g1499-1506), i.e. about 8 frames EARLIER than the planned whip g1506-1515; the flagged frames sit after the whip, in a static settled shot. No streak on the whip frames. Treated as allowed, non-blocking; note the whip lands at g1503 and the camera then holds still about 0.5 s before the cut.
-Earlier issues: #1 flame always on screen - FIXED (lit ox in every sampled frame). #3 Qi silhouettes - NOT FIXED. #4 dust quads - FIXED (soft round). #5 extreme close-ups - FIXED (no lens fly-through; nearest ox about 20-30 % of frame width). #6 band - FIXED (mean 67-95). #2 ground - NOT FIXED.
-Pass: NIGHT, no text, no blood, no flame covering a face, flames on tail tips, no lens fly-through, g range OK.
-1. g1427-1514 - bare ground 40-45 % at g1427-1495 and about 55 % after the whip (g1506-1520), sand plus teal spikes (limit 25 %). Fix: tilt up, horizon at y 0.40-0.50, herd and Qi in the lower band.
-2. g1421-1501 - a flat dark-purple/navy strip (bridge/moat) runs from the bottom-left across the lower third: untextured, unlit slab (rule 2). The teal low-poly spikes are also flat shards. Fix: texture the bridge (planks) and light it, or crop it out.
-3. g1427-1520 - Qi silhouettes: only 1-3 visible at any moment (2 at g1431-1456, 1 at g1506-1511); the 6 runners are hidden behind the oxen. Requirement 4-6 readable. Fix: run them 1-2 D beside/behind the oxen in the open lane, or add 2-3 more in front of the wall.
-Notes: g1427-1458 near-static (nearly 1.1 s); whip is 8 frames early and the end of the shot is a static hold; grey rubble heaps with thick navy outline at lower left (g1471-1501) read as low-poly rocks; bridge crossing not shown.
+# QA_TECH s19 (take g1421-1520; in-shot g1427-1514) - FAIL (round 4)
+Checked: 6 fps + first/last 3, crops g1446, 1504, 1511. Frame-diff (90x160 area): median 6.68, p90 10.84 (min 1.0, max 30): passes. g1422-1445 near-static (diff 1-3, about 0.8 s) and g1507-1520 static (diff 2): notes.
+Blur flag (qa_auto g1502-1516): ALLOWED. The whip is g1498-1506 (diff 21/30/27/22/17/13/10/7); g1504 is sharp with no streak; g1507-1516 are sharp settled frames with less detail (sky, distant herd), no blur. About 8 frames earlier than the plan (g1506-1515): note.
+Pass: NIGHT, no text, no blood, flames attached to tail tips and trail behind (g1446, 1504, 1511), no flame over a face, a lit ox in every frame, soft round dust, no lens fly-through, caption band mean 59-111 (bright max 2.2 % g1480-1490 from flames, note).
+Earlier blockers: #2 bare ground NOT FIXED; #3 Qi silhouettes NOT FIXED; slab (rule 2) NOT FIXED.
+## Issues
+1. g1427-1514 - bare ground (> 30 % blocks): about 38-45 % at g1427-1495 (sand-lavender road, bottom of frame) and about 55 % after the whip (g1506-1520: lavender ground fills the lower half under a far herd). Fix: tilt up, horizon at y 0.40-0.50, herd and Qi in the lower band.
+2. g1421-1501 - a flat dark-purple strip runs from the bottom left across the ground (bridge/moat slab with no texture, g1461-1501 widest), untextured and unlit (rule 2). Fix: plank texture and light, or crop it out.
+3. g1427-1514 - Qi silhouettes: only 1-3 black figures (one beside the oxen at g1446, one in the herd at g1504/1511, one far right); requirement 4-6 readable. Fix: run 4-6 silhouettes 1-2 D beside/behind the oxen in the open lane.
+## Notes
+- Grey hex rubble at the wall base and grey boulder blobs on the horizon (g1471-1511) read as low-poly rocks with navy outline; lit, tolerated.
+- Bridge crossing is not shown (herd runs on the road).

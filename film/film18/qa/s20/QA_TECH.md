@@ -1,9 +1,9 @@
-# QA_TECH s20 (take g1509-1601, shot g1515-1595) - FAIL (round 3)
-Own frame-diff: median 4.00 (box; 3.77 bilinear; director 3.99), p90 7.48. Median is at or below the hard limit 4 and is carried by the whip-in frames (diff 13-20 at g1515-1522); the steady run is about 2-3 per frame, in a repeating 2,2,5 pattern (stepped animation every 3 frames). No pulsing. Whip-in g1509-1522 is sharp.
-Earlier issues: #1 fewer than 3 flames - NOT FIXED (see 2). #2 flames not attached - improved (cards sit at reed tips) but one reads as floating (see 3). #3 sparks - a few embers only. #4 ground stripes - changed to grey/lavender planks, still wrong (see 4). #5 band - improved (mean 88-99, bright <= 1.2 %). #6 close-up flame - FIXED (no card over a face; one flame touches a head at g1554).
-Pass: NIGHT, no text, no blood, oxen run toward/past the lens and none turns back, band mid-tone, g range OK.
-1. g1524-1601 - no lead ox in clean profile: every ox is front/3-4 facing the lens with the lead ox cut by the left edge; the plan and QA-art asked for a lead ox in profile with the fire behind it. Fix: yaw the lead ox 90 deg (side-on) in the left-centre of frame, 35-50 % of frame height.
-2. g1524-1601 - 3 or more tail flames at all times is not met: 2 clear flames (one large, one medium) with the 3rd only a small red tip behind a coat in most sampled frames (g1524, 1529, 1534, 1539, 1559, 1564, 1569, 1574). Fix: light 4-5 tails in view.
-3. g1574-1594 - an edge-on red cone with a big glow floats above the herd at the centre-back (looks like a detached flame card); g1554-1594 flame sits right against the next ox's head.
-4. g1509-1601 - bare ground 40-45 % of the frame (limit 25 %), flat grey slab/plank seams (g1524, 1584) read as unlit placeholder floor. Fix: tilt up, dark fg props, remove the slab.
-Notes: median exactly on the limit - needs a visible eased push/slide on top of the gallop; the flame leans up-right, not clearly backward.
+# QA_TECH s20 (take g1509-1601; in-shot g1515-1595) - FAIL (round 4)
+Checked: 6 fps + first/last 3, crops g1539, 1569, 1599. Frame-diff (90x160 area): median 4.86, p90 8.94 (min 2.0): median passes (the whip-in g1513-1522 is 10-16, steady run 3-6 with an eased push visible); p90 8.9 guide. No pulsing. Whip-in sharp. NIGHT, no text, no blood, oxen run left toward the lens, none turns back. Caption band mean 67-91, bright 0 %.
+Earlier blockers: #1 lead ox in profile - FIXED (g1524-1601 clean profile, head left, flames behind to the right); #2 >= 3 flames - MET but weak (big tail flame, a medium one, and a small one on the far ox: 3 in g1539/1569/1599); #3 floating cone - now reads as a lit brazier on a tripod (g1529-1601): note; #4 bare ground - NOT FIXED.
+## Issues
+1. g1519-1601 - bare ground (> 30 % blocks): the lower 37-42 % (y > ~800) is plain lavender/blue ground with faint plank stripes and a spike shape (g1529), with no fg props. In the whip-in handle g1509-1514 it is 55 %. Fix: tilt up so the ox feet sit at y 0.72+, or dark fg props along the bottom.
+## Notes
+- Flames: attached at the tail tips (reed bundle with the flame at the far end), trailing backward. At g1539 a flame sits on the forehead/horn of the background ox (touches, does not cover the face); at g1584-1601 the big flame overlaps the brazier top, reads as one object. The reed pivots up at about 30 deg from the rump (looks like a stick).
+- Only 2 flames are prominent; the third is a small red tip.
+- Few sparks.

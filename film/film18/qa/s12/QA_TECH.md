@@ -1,12 +1,12 @@
-# QA_TECH s12 (take g937-1010; in-shot g944-1002) - FAIL
-Checked: 6 fps frames + first/last 3; frame-diff re-measured (58 in-shot pairs): median 12.07, p90 18.12 (min 1.02, max 19.85). Caption band mean 37-51, bright 0.00 %.
+# QA_TECH s12 (take g937-1010; in-shot g944-1002) - FAIL (round 2)
+Checked: frames at 6 fps + first/last 3, crops at full size, 360 phone view. Frame-diff re-measured (90x160 area): median 4.89, p90 7.45 (min 3.5) - median passes, p90 < 9 but a visible eased slide-right is present (guide only). No pulsing: the old "wiggle every 11 frames" is gone, motion is steady. Caption band mean 47-56, bright max 0.38 %. No text, no mouths, no oxen, heads < 880, DUSK, no blur.
+Earlier blockers: #1 wiggles FIXED; #2 bare ground NOT FIXED; #3 navy wheel FIXED (wheel gone) but new rocks/plank (see 2); #4 folk on wall NOT FIXED; #5 banner improved (cream banner ~40 px, readable only g957-985).
 ## Issues
-1. whole shot - rule 1: the motion is the "whip-pan wiggles every 11 frames" (QA.md). The series is periodic: three or four frames of 12-19, then 3-5 frames of 1-3 (near-static), repeating. The median passes only because of the wiggles; the base camera move is about 1-3. A viewer reads this as a shake/pulse. Fix: remove the wiggles; use a steady slide-right at 40 px/s plus a push.
-2. g937-1010 - rule 5: the bottom 35-45 % (y ~700-1280) is dark, flat, nearly bare ground with a few grass blades.
-3. g~990-1010 - the foreground cart wheel is a dark navy, near-silhouette lump that covers the right 30-35 % of the frame (a flat unlit look, rule 2 borderline) and the envoy walks behind it: at g~1000-1010 the envoy is half hidden, so the subject is not clearly kept in frame. Fix: light the wheel (rim light) and keep the envoy to its left, clear of it.
-4. mandatory "folk visible on the wall": weak - only one or two tiny figures (about 8-12 px wide at 240 px; one at g~937-1002, a second at g~982) sit on the wall top at the far right, and nothing is seen in the crenel gaps. They do not read at phone size. Fix: more and larger folk along the wall crest, in the crenel gaps.
-5. mandatory "envoy's banner": MET but small - a cream banner on a pole is seen with the envoy from g~960 (about 10 px wide); it reads as a paper at phone size. Make it larger.
+1. g937-1010 - bare ground (rule 5, > 30 % blocks): the bottom about 33-38 % (y > ~800) is dark teal ground with only a few grass blades. Fix: dark fg props across the bottom, tilt up, or crop so ground <= 25 %.
+2. g937-975 - rule 2 placeholders in the foreground: a flat red-brown plank/lance with a white arrow tip crosses the lower left (g937-972) and grey faceted low-poly rocks with thick navy outline fill the lower left (g952-972). They read as untextured props. Hide them or replace with lit textured props (cart wheel, baskets).
+3. g957-1002 - envoy not readable / not kept in frame (rule 4 + shot check): he is about 100 px tall (head ~45 px), half hidden behind the bridge rail posts, visible only g957-985, and walks off the right edge from about g985; for the last ~0.6 s of the shot there is no envoy. Fix: keep him in frame, larger, left of the posts, banner larger.
+4. g937-1010 - folk on the wall: only one clear woman (about 35-40 px wide) on the wall crest right of the tower; 1-2 more are half hidden behind pillars. Nothing in the crenel gaps. At phone size it reads as one dot. Fix: 4-6 folk along the crest, 70 px or more.
 ## Notes
-- Gate opens a crack (a pale gap at the doors at g~982 on).
-- The red arrow-shaped streak at the lower left (g937-960) looks like a lit red lance/plank prop; keep an eye on it (note).
-- No text, heads < 880, no mouths, no oxen. DUSK matches. g range 944-1002 (+7 handle) matches the plan.
+- Gate: a pale gap at the doors is not clearly visible; gate looks closed (plan: "opens a crack").
+- Bottom-left blue plank bridge/moat from g982 is a plain dark-blue strip (lit, OK).
+- p90 7.45 < 9: guide only, eased slide present.
