@@ -4,3 +4,6 @@ Gate fixes: (1) qa_auto "blur" = false positive per QA-art (frames are sharp, no
 Numbers (qa_stats / qa_stats2): saturation 0.617, vivid 73.0 %, luma 100.2, in-shot motion median 22.93 p90 24.71. P_TOP frame g1392: sat 0.614, luma 103.0.
 qa_auto: FAIL only "suspected blur" on g1349-1352 = the fast crane (motion streak) and false positive, override.
 Known: sand in the loop still reads lemon (the director normalises colour at the conform); the loop army and south-bank block are 3D crimson bodies (tiny at P_TOP), cast cards only at the neck. H2b must start from the same P_TOP and use the same crimson/blue colours (crimson 0x8c2c34 'cloth_red', blue 't_blue', cast variants add_variant(...) in shot.py).
+
+## Re-rendered on the current sets (set3d21 e07ceb1 + cast21 528bf9d: no blue in the English camp, soft smoke puffs, all-crimson English / all-blue Scots defaults)
+Same path, same content, same joins (P_NECK exact at g1345, new P_TOP exact at g1392, 3 handle frames each side). Numbers: saturation 0.615, luma 100.8, in-shot motion median 22.88 p90 25.33. qa_auto: FAIL only "suspected blur" on g1347, 1349-1352 = the fast crane (false positive, QA-art override). Colour is normalised at the conform.

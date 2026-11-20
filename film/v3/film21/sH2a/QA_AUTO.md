@@ -1,7 +1,7 @@
 # QA_AUTO FAIL  (take.mkv, 54 frames, 30.00 fps, g 1342-1395)
 
 ## FAIL
-- suspected blur on 4 frames, e.g. g [1349, 1350, 1351, 1352]
+- suspected blur on 5 frames, e.g. g [1347, 1349, 1350, 1351, 1352]
 ## Notes
 - magenta share 0.0 %
 
