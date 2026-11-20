@@ -38,9 +38,9 @@ N0 = 14
 # ----------------------------------------------------------------------------- camera: waypoints (g, loc D, look D)
 WP = [
     (396, (-0.1, 0.5, 2.3), (-1.2, 6.9, 2.5)),
-    (418, (0.3, 1.1, 2.3), (-1.1, 6.9, 2.45)),
-    (430, (0.4, 1.9, 2.25), (-1.0, 6.8, 2.4)),
-    (444, (-0.1, 3.1, 2.15), (-1.0, 6.6, 2.0)),       # snap push-in on "สี่สิบกว่าคน"
+    (418, (0.1, 1.1, 2.3), (-1.2, 6.9, 2.45)),
+    (430, (-0.1, 1.9, 2.25), (-1.0, 6.8, 2.4)),
+    (444, (-0.5, 3.1, 2.15), (-0.8, 6.6, 2.0)),       # snap push-in on "สี่สิบกว่าคน"
     (466, (-0.5, 4.9, 2.1), (-0.95, 6.5, 1.55)),      # descend: the artists leave the frame cleanly
     (488, (-0.56, 5.45, 1.97), (-0.92, 6.5, 1.44)),   # the raking insert pose of cafe_table_insert
     (512, (-0.4, 5.5, 2.0), (-0.7, 6.5, 1.5)),        # still over the sheet, starts to rise
@@ -99,7 +99,7 @@ def corner_speed(g):
 
 # ----------------------------------------------------------------------------- cast
 ART = [("art1", "painter20"), ("art2", "composer20"), ("art3", "poet20"), ("art4", "architect20")]
-SPOT = {"art1": (-3.0, 6.9), "art2": (-2.0, 8.9), "art3": (-0.8, 7.9), "art4": (-2.1, 5.2), "wtr": (4.8, 8.5)}
+SPOT = {"art1": (-1.9, 7.6), "art2": (-2.5, 9.0), "art3": (0.1, 8.9), "art4": (-0.9, 8.2)}   # all on the north side of the table: the dive passes under them   # all on the north side of the table: the dive passes under them, nobody is cut at the sides
 YAW = {"art1": 0.35, "art2": 0.1, "art3": -0.35, "art4": 0.3}
 PROP = {"art1": dict(type="news20", angle=-25, scale=0.6), "art2": None, "art3": dict(type="news20", angle=20, scale=0.6), "art4": dict(type="news20", angle=-35, scale=0.6)}
 PHASE = {"art1": 0.0, "art2": 1.7, "art3": 3.1, "art4": 4.4}
@@ -112,7 +112,12 @@ def pose_of(k, cast, g):
     ph = PHASE[k]
     base = dict(cast20.STORY20[cast + "_outraged"][1])
     base["expr"] = "outraged_c"
-    if g < T_SWAP:                                  # beat 6/7: wave the newspapers
+    if g >= 452 and g < T_SWAP:                    # the dive onto the sheet: papers down, the artists lean in and watch
+        base["arm_r"] = dict(hand=(0.45, 0.62), bend=0.5)
+        base.pop("prop_r", None); base.pop("prop_l", None)
+        base["lean"] = 2.0 + 2.0 * math.sin(2 * math.pi * 1.2 * t + ph)
+        base["yaw"] = abs(YAW[k])
+    elif g < T_SWAP:                                # beat 6/7: wave the newspapers
         w = 2 * math.pi * 1.7
         up = u_of(g, G_COUNT - 2, G_COUNT + 11)
         arm = dict(base["arm_r"])
@@ -129,6 +134,7 @@ def pose_of(k, cast, g):
         jab = 0.5 + 0.5 * math.sin(w * 1.3 * t + ph)
         up = u_of(g, G_CHIM - 2, G_CHIM + 13)
         hx, hy = POINT[k]
+        base.pop("prop_l", None)
         base["arm_r"] = dict(hand=(hx + 0.30 * jab + 0.10 * up, hy + 0.10 * math.sin(w * t * 0.5 + ph)), shape="point", bend=-0.4, stretch=1.3, layer="top")
         base.pop("prop_r", None)
         base["lean"] = 2.0 * math.sin(w * t * 0.5 + ph + 1.0) + 2.0 * up
@@ -156,6 +162,7 @@ class Take(C.Take):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s06")
         CO.setup_grade(self.scene, dict(sat=float(os.environ.get("SAT", "1.45"))))      # film-wide saturation (QA_TEAM §G/§I)
         self.path = PathAdapter()
+        self.grade_ramp_setup()
         self.scene.view_settings.exposure = self.scene.view_settings.exposure - float(os.environ.get("EXPO", "0.3"))      # luma <= 110, no blown floor patch
         self.key_cam(bf(GA), *cam_at(GA))
         self.scene.frame_set(bf(GA))
@@ -166,8 +173,35 @@ class Take(C.Take):
         self.build_heading(M)
         for k, cast in ART:
             self.actors[k] = C.make_actor(k, cast, os.path.join(WORK, "sprites"), cam=self.cam, contact=dict(width=1.2, depth=0.5, opacity=0.7))
-        self.actors["mau"] = C.make_actor("mau", "maupassant", os.path.join(WORK, "sprites"), cam=self.cam, contact=dict(width=1.2, depth=0.5, opacity=0.7))
-        self.actors["wtr"] = C.make_actor("wtr", "waiter", os.path.join(WORK, "sprites"), cam=self.cam, contact=dict(width=1.2, depth=0.5, opacity=0.7))
+        mk = self.A["marks"]["maupassant"]
+        sk = self.A["marks"]["maupassant_seat"]
+        self.mau_xy = (sk[0], sk[1] - 0.30, C.ground_z(mk[0], mk[1], top=0.6))         # T09 g<612: on the banquette edge (seat.x, seat.y - 0.30)               # as team7's T09: ray from 0.6 D (the CAFE ceiling is below 40)
+        self.actors["mau"] = C.make_actor("mau", "maupassant", os.path.join(WORK, "sprites"), canvas=(-1.75, -4.0, 1.75, 0.25),
+                                          contact=dict(width=1.3, depth=0.55, opacity=0.7), cam=self.cam)
+        self.crouch = cast20._seated("maupassant", dict(cast20.STORY20["maupassant_idle"][1], seated=1, seat_h=0.80))["legs"]["crouch"]
+
+    def grade_ramp_setup(self):
+        import int20
+        self.sat0 = float(CO.STATE.get("P", {}).get("sat", 1.08))
+        self.exp_end = self.scene.view_settings.exposure - float(os.environ.get("EXPEND", "0.37"))   # measured: T09 renders ~9 % darker than cafe_wide at the same grade
+        self.exp0 = self.scene.view_settings.exposure - float(os.environ.get("EXPO", "0.3"))
+        self.sat_hi = float(os.environ.get("SAT", "1.45"))
+        self.hs = None
+        ng = self.scene.compositing_node_group
+        for n in (ng.nodes if ng else []):
+            if n.bl_idname == "CompositorNodeHueSat":
+                self.hs = n
+        print("take: grade ramp node", bool(self.hs), "sat", self.sat_hi, "->", self.sat0, "exposure", self.exp0, "->", self.exp_end, flush=True)
+
+    def grade_at(self, f, g):
+        """film-wide look until g 560, then it ramps to T09's own grade (default saturation, preset exposure) by g 603: the match cut has no colour jump"""
+        u = smooth((g - 560) / 43.0)
+        self.scene.view_settings.exposure = self.exp0 + (self.exp_end - self.exp0) * u
+        self.scene.view_settings.keyframe_insert("exposure", frame=f)
+        if self.hs is not None:
+            sock = self.hs.inputs["Saturation"]
+            sock.default_value = self.sat_hi + (self.sat0 - self.sat_hi) * u
+            sock.keyframe_insert("default_value", frame=f)
 
     # ---- runtime props (metres under the scaled root)
     @staticmethod
@@ -255,18 +289,29 @@ class Take(C.Take):
     def hands_visible(self, g):
         return 452 <= g <= 520
 
+    def mau_pose(self, g):
+        """team7's T09 pose at g 604 (pose_t09 with ur = uf = 0: crouched on the banquette, hands at the sides, sneer, mouth flat) + the same idle terms"""
+        p = dict(legs=dict(crouch=self.crouch, spread=0.05), t=g / 30.0, yaw=0.45, pitch=0.05, expr="sneer", gaze=(0.5, 0.0), mouth="flat")
+        p["arm_r"] = dict(hand=(0.40, 1.04), bend=0.6)
+        p["arm_l"] = dict(hand=(-0.40, 1.04), bend=0.6)
+        p["head_roll"] = 4.0 + 1.8 * math.sin(g * 0.17)
+        p["lean"] = 1.2 * math.sin(g * 0.19)
+        p["squash"] = (1.0, 1.0 + 0.008 * math.sin(g * 0.27))
+        p["blink"] = blink(g, [430, 520, 578])
+        return p
+
     def smoke_v(self, g):
-        return clamp((g - RAMP0) / float(G_CHIM - RAMP0))
+        return clamp((g - RAMP0) / float(G_CHIM - RAMP0)) * (1.0 - smooth((g - 586) / 17.0))      # the column thins out as the camera settles (T09 shows no smoke)
 
     def pose(self, gs):
         M = self.A["marks"]
         for g in gs:
             f = bf(g)
             self.key_cam(f, *cam_at(g))
+            self.grade_at(f, g)
             for k, cast in ART:
                 self.actors[k].place(f, (SPOT[k][0], SPOT[k][1], M["artist_1"][2]), scale=1.0, flip=YAW[k] < 0)
-            self.actors["mau"].place(f, (M["maupassant"][0], M["maupassant_seat"][1], M["maupassant"][2]), scale=1.0)
-            self.actors["wtr"].place(f, (SPOT["wtr"][0], SPOT["wtr"][1], M["waiter"][2]), scale=1.0, flip=True)
+            self.actors["mau"].place(f, self.mau_xy, scale=1.0)
             n = N0 + (1 if g >= LAND1 else 0) + (1 if g >= LAND2 else 0)
             self.key_set(f, set_window_view=("stub",), smoke=(self.smoke_v(g),), add_signature=(n,))
             vis = self.hands_visible(g)
@@ -284,14 +329,8 @@ class Take(C.Take):
             self.scene.frame_set(f)
             for k, cast in ART:
                 self.actors[k].pose(f, pose_of(k, cast, g), camera=self.cam)
-            mp = dict(cast20.STORY20["maupassant_seated_toast_smug"][1])      # he sits on the banquette the whole take (rises in T09); mouth held ('smile')
-            mp["seat_h"] = float(M["maupassant_seat"][2]); mp["t"] = g / 30.0
-            mp["lean"] = 1.2 * math.sin(g * 0.11); mp["squash"] = (1.0, 1.0 + 0.01 * math.sin(g * 0.25))
-            mp["arm_r"] = dict(mp["arm_r"], hand=(0.74, 0.34 + 0.12 * (1 - smooth((g - 585) / 12.0)) * (0.5 + 0.5 * math.sin(g * 0.09))))      # sips: the glass rises and falls
-            self.actors["mau"].pose(f, mp, camera=self.cam)
-            w = dict(cast20.STORY20["waiter_idle"][1]); w["t"] = g / 30.0; w["lean"] = 2.5 * math.sin(g * 0.13); w["head_roll"] = 3 * math.sin(g * 0.09)
-            self.actors["wtr"].pose(f, w, camera=self.cam)
-        self.sprites_for([(a, PPD) for a in self.actors.values()], [bf(g) for g in gs])
+            self.actors["mau"].pose(f, self.mau_pose(g), camera=self.cam)
+        self.sprites_for([(a, 256 if a.name == "mau" else PPD) for a in self.actors.values()], [bf(g) for g in gs])
 
     def report(self, g):
         f = bf(g)

@@ -34,11 +34,11 @@ CANVAS = cast20.CANVAS20["maupassant"]
 # ---- camera in metres, tower-local (x right, y toward Paris/camera side = -y, z up); window table at (0, -35.8, 58.65), glass y = -36.8
 TGT = Vector((0.0, -35.4, 59.2))                 # aim point: his head height
 START_OFF = Vector((float(os.environ.get("X0", "-60")), -float(os.environ.get("Y0", "360")), float(os.environ.get("Z0", "130"))))     # camera start relative to TGT (m): far, high, left
-END_OFF = Vector((float(os.environ.get("X1", "0.0")), -float(os.environ.get("D1", "1.8")), 0.25))       # camera landing relative to TGT (m)
+END_OFF = Vector((float(os.environ.get("X1", "0.0")), -float(os.environ.get("D1", "4.8")), 0.45))       # camera landing relative to TGT (m)
 AIM0 = Vector((0.0, -30.0, float(os.environ.get("AIMZ", "150"))))                                        # initial aim point: mid-tower (whole tower in frame)
 
 
-AIM_DROP = float(os.environ.get('AIM_DROP', '0.1'))      # m: the landing aim sits below his head (less bare floor, head up in the frame)
+AIM_DROP = float(os.environ.get('AIM_DROP', '0.2'))      # m: the landing aim sits below his head (less bare floor, head up in the frame)
 DIP = float(os.environ.get('DIP', '0.0'))
 LOOK_UP = float(os.environ.get('LOOK_UP', '2.5'))
 GAMMA = float(os.environ.get('GAMMA', '1.0'))
@@ -78,7 +78,16 @@ def cam_at(g):
     return Vector(CO.W(tuple(loc))), Vector(CO.W(tuple(aim)))
 
 
-EXPO_FAR, EXPO_NEAR = float(os.environ.get("EXPO_FAR", "-1.3")), float(os.environ.get("EXPO_NEAR", "-0.05"))
+GLOW = float(os.environ.get('GLOW', '40.0'))
+EXPO_FAR, EXPO_NEAR = float(os.environ.get("EXPO_FAR", "-1.3")), float(os.environ.get("EXPO_NEAR", "-0.35"))
+
+
+def lens_at(g):
+    """22 mm for the whole approach; during the final settle (progress 0.80 -> 1.0) it eases to the preset tower_window_in lens, 55 mm, so the landing
+    is the director's framing (outside the glass, ~4.8 m, through the clear centre pane: little ceiling, no X of beams)."""
+    s = prog(g)
+    w = smooth((s - 0.80) / 0.20)
+    return 22.0 * (55.0 / 22.0) ** w
 
 
 def expo_at(g):
@@ -95,21 +104,43 @@ CHEW = cast20.STORY20["maupassant_seated_eat_chew"][1]
 PERIOD = 40.0
 
 
+def _mouth_hand():
+    """arm_r hand target (puppet-local) that brings the fork's prop tip onto the mouth anchor (2 fixed-point iterations on the puppet anchors)."""
+    import puppet
+    base = dict(EAT); base["prop_r"] = dict(EAT["prop_r"], scale=FORK_SCALE); base["seated"], base["seat_h"], base["napkin"], base["mouth"], base["yaw"] = 1, SEAT_H, 1, "smile", 0.30
+    hx, hy = EAT["arm_r"]["hand"]
+    for _ in range(3):
+        base["arm_r"] = dict(EAT["arm_r"], hand=(hx, hy))
+        a = puppet.figure("maupassant", base, "f")["anchors"]
+        mx, my = a["mouth"]; tx, ty = a["prop_tip_r"]
+        hx, hy = hx + (mx - tx), hy + (my - ty)
+    return hx, hy
+
+
+MOUTH_HAND = None
+FORK_SCALE = 1.45
+
+
 def pose_of(g):
+    global MOUTH_HAND
+    if MOUTH_HAND is None:
+        MOUTH_HAND = _mouth_hand()
     """fork cycle phase locked so the first bite (fork at his mouth) is at g 1817; mouth a still smile."""
     s = 0.5 - 0.5 * math.cos(2 * math.pi * ((g - G_BITE) / PERIOD) + math.pi)      # 1 at g = G_BITE (+ k * PERIOD)
     p = dict(EAT)
     p["seated"], p["seat_h"], p["napkin"], p["mouth"] = 1, SEAT_H, 1, "smile"
-    ae, ac = EAT["arm_r"]["hand"], CHEW["arm_r"]["hand"]
-    p["arm_r"] = dict(EAT["arm_r"], hand=(lerp(ac[0], ae[0], s), lerp(ac[1], ae[1], s)), bend=lerp(CHEW["arm_r"]["bend"], EAT["arm_r"]["bend"], s))
-    pr = dict(EAT["prop_r"]); pr["scale"] = 1.45; pr["angle"] = lerp(CHEW["prop_r"]["angle"], EAT["prop_r"]["angle"], s)
+    ae, ac = MOUTH_HAND, CHEW["arm_r"]["hand"]
+    p["arm_r"] = dict(EAT["arm_r"], hand=(lerp(ac[0], ae[0], s), lerp(ac[1], ae[1], s)), bend=lerp(CHEW["arm_r"]["bend"], EAT["arm_r"]["bend"], s), layer="top")
+    pr = dict(EAT["prop_r"]); pr["scale"] = FORK_SCALE; pr["angle"] = lerp(CHEW["prop_r"]["angle"], EAT["prop_r"]["angle"], s)
     p["prop_r"] = pr
     p["bite"] = 1.0 if s > 0.5 else 0.0
     p["yaw"] = 0.30 + 0.07 * math.sin(g * 0.11)
     p["pitch"] = 0.02 + 0.06 * (1 - s)
     p["head_roll"] = 2.5 * math.sin(2 * math.pi * (g - G_BITE) / PERIOD + 1.0)
     p["lean"] = 2.0 * s + 0.8 * math.sin(g * 0.17)
-    p["squash"] = (1.0 + 0.012 * (1 - s), 1.0 - 0.012 * (1 - s))
+    ph = ((g - G_BITE) % PERIOD) / PERIOD                       # 0 at the bite; cheek-bulge chewing (3 Hz) for ~16 frames after it
+    ch = max(0.0, math.sin(math.pi * clamp((ph - 0.08) / 0.5))) * (0.5 + 0.5 * math.sin(2 * math.pi * 3.0 * (g - G_BITE) / 30.0))
+    p["squash"] = (1.0 + 0.06 * ch, 1.0 - 0.05 * ch)
     p["blink"] = blink(g, [1760, 1801, 1838])
     p["t"] = g / 30.0
     return p
@@ -126,10 +157,39 @@ class Take(C.Take):
         for ob in [o for o in C.bpy.data.objects if o.name.startswith("actor_")]:       # the build's stand-in card at the window
             ob.hide_render = True
             ob.hide_viewport = True
+        self.make_glow()
         self.key_cam(bf(G_FIRST), *cam_at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
         self.mau = self.actors["mau"] = C.make_actor("mau", "maupassant", os.path.join(WORK, "sprites"), canvas=CANVAS,
                                                      contact=dict(width=1.1, depth=0.5, opacity=0.5), shadow=None, cam=self.cam)
+
+    def make_glow(self):
+        """a warm emissive plane just outside the glass of Maupassant's window: in the extreme wide the window + red awning must be the brightest WARM spot
+        of the frame (findable from the first frames); it is faded out / hidden before the camera reaches the facade."""
+        bpy = C.bpy
+        c = Vector(self.A["marks"]["window_centre"])
+        yg = c.y - 0.12 * CO.SC
+        w, h = 2.7 * CO.SC / 2, 3.4 * CO.SC / 2
+        me = bpy.data.meshes.new("win_glow")
+        me.from_pydata([(-w, 0, -h), (w, 0, -h), (w, 0, h), (-w, 0, h)], [], [(0, 3, 2, 1)])
+        ob = bpy.data.objects.new("win_glow", me)
+        bpy.context.scene.collection.objects.link(ob)
+        ob.location = (c.x, yg, c.z)
+        mat = bpy.data.materials.new("win_glow"); mat.use_nodes = True
+        nt = mat.node_tree
+        for n in list(nt.nodes):
+            nt.nodes.remove(n)
+        em = nt.nodes.new("ShaderNodeEmission"); em.inputs["Color"].default_value = (1.0, 0.55, 0.18, 1.0); em.inputs["Strength"].default_value = GLOW
+        out = nt.nodes.new("ShaderNodeOutputMaterial"); nt.links.new(em.outputs[0], out.inputs["Surface"])
+        me.materials.append(mat)
+        ob.visible_shadow = False
+        self.glow, self.glow_em = ob, em
+
+    def glow_key(self, g, f):
+        k = clamp(1.0 - (g - 1750) / 24.0)                       # full until g 1750, gone by 1774
+        self.glow_em.inputs["Strength"].default_value = GLOW * k
+        self.glow_em.inputs["Strength"].keyframe_insert("default_value", frame=f)
+        CO.show(self.glow, k > 0.01, f)
 
     def pose(self, gs):
         mark = self.A["marks"]["maupassant_window"]
@@ -139,6 +199,9 @@ class Take(C.Take):
             self.key_set(f, set_year=1889, set_crowd=2)
             self.scene.view_settings.exposure = expo_at(g)
             self.scene.view_settings.keyframe_insert("exposure", frame=f)
+            self.cam.data.lens = lens_at(g)
+            self.cam.data.keyframe_insert("lens", frame=f)
+            self.glow_key(g, f)
             C.place(self.mau, f, mark)
         for g in gs:
             f = bf(g)

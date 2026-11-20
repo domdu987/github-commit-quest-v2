@@ -1,11 +1,13 @@
 # QA T21 = s21 (shots 21+22 as ONE camera-travel take): g1431..1655, handles g1427-1430 (hard cut in) and g1656-1663 (8 f, dissolve 13 out into T23)
 Per QA_TEAM s I / WORKER20 s8. s22 folder deleted (merged here).
 - qa_auto PASS (QA_AUTO.md; soft-frame note g1566-1582 = the swoop landing; 'cut with no visible change at 1431' = cut against shot 20, handles are 3-D).
-- qa_stats : `take.mkv: 7.9s, shots=1 ... saturation 0.578, brightness 84.5, in-shot motion median 15.69 p90 29.18`
-- qa_stats2: `sat 0.578 vivid% 62.4 luma 84.5 contrast 38.7 detail 11.55 warm 20.0% cool 65.5% | motion med 15.69 p90 29.18 still% 0.0` (sat >= 0.50, vivid >= 45, luma >= 70: PASS)
+- qa_stats : `take.mkv: 7.9s, shots=1 ... saturation 0.590, brightness 82.3, in-shot motion median 14.36 p90 28.91`
+- qa_stats2: `sat 0.578 vivid% 64.4 luma 82.3 contrast 37.2 detail 11.55 warm 21.1% cool 65.4% | motion med 14.36 p90 28.91 still% 0.0` (sat >= 0.50, vivid >= 45, luma >= 70: PASS)
+- QA-art r4 (TAKE4_ART): (1) rings now thin tori (1/3 of the old thickness), soft blue (hue ~200) mix of transparent + emission, opacity <= 0.36 and fading as they spread (age^1.3), none above 40 % opacity; (2) wire thinned per frame to ~2.5 px on screen (curve bevel keyed from the camera distance); the milky aura cone and halo tube are removed; on 'เสาอากาศยักษ์' a blue-white PULSE (window 40 m wide, node chain on the iron materials, strength 0.5) runs up the lattice from the foot to the summit g1528-1564 while the iron stays red elsewhere. Frames g1427-1575 re-rendered.
+- QA-art r3 add-on: rings/wire/halo are blue emission (strength cut so they stay blue-white, not flat white: the brightest cores still clip to white) and fade as they spread (strength x (1-age)^1.2); group landing ~15 % closer than the first r3 pass.
 - frame-diff (90x160 grey): median 13.94, p90 26.87. 237 frames, 10.99 s/frame wall, 21.18 cpu (2 procs x 2 threads, 720x1280, 8 spp). take.mkv 125 MB: take.mkv.part* (40 MB), take.mkv gitignored.
 ## Take-gate r3 fixes (QA-tech TAKE3_B)
-1. Group phase g1577-1655: camera pushed in to a medium (CAM_BACK -5 D, tilt +9) with the five bunched tighter: heads Eiffel 85-106 px, officer 74-96 px, men 66-102 px, centre y ~700-725, nobody cut; the bare ground is now a lit COBBLED forecourt (brick texture, runtime plane under the group) with kegs at the sides: no flat slab.
+1. Group phase g1577-1655: camera pushed in to a medium (CAM_BACK -5 D, tilt +9) with the five bunched tighter: heads Eiffel 89-110 px, officer 79-101 px, men 69-107 px (QA-art r3: 90-120 px), centre y ~700-725, nobody cut; the bare ground is now a lit COBBLED forecourt (brick texture, runtime plane under the group) with kegs at the sides: no flat slab.
 2. g1607-1630 the dropped crowbars land on the cobbles and the officer's salute reads at 80+ px heads.
 3. Ring edge-on slab g1526-1529: no ring is born after g1521 (RING_STOP), so no ring sits on the camera when it crosses the ring plane near g1529; the last rings die out by g1573.
 4. Glow g1530-1539: a blue-white aura cone over the upper lattice (rim over the red iron), a blue halo tube on the wire and a stronger wire; the lower iron stays red-orange.

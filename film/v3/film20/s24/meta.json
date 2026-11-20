@@ -22,11 +22,11 @@
   "from_shot": 23
  },
  "transition_out": {
-  "type": "match-dissolve",
+  "type": "dissolve",
   "frames": 9,
   "at": 1853,
   "to_shot": 25,
-  "note": "ends on the medium of Maupassant in the window; s25 starts inside on the matching framing (same pose cycle)"
+  "note": "plain 9-frame dissolve into s25"
  },
  "set": "v3/set3d20 TOWER preset tower_window_pull (lit first-floor restaurant window, whole tower + Paris + fair crowd 2), DAY 1889; preset FG iron post hidden at runtime",
  "cast": "v3/cast20 maupassant seated (maupassant_seated_eat / _eat_chew arms blended, napkin, seat_h 0.865 D, mouth a still smile) at mark maupassant_window; first bite (fork at the mouth) at g 1817 on 'กินข้าวบนหอ'; stand-in card hidden",
@@ -47,24 +47,24 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 30.25,
- "s_per_frame_cpu_mean": 37.83,
+ "s_per_frame_wall_mean": 18.19,
+ "s_per_frame_cpu_mean": 35.46,
  "heads": {
   "mau": {
    "head_px": [
     1,
-    191
+    201
    ],
    "head_centre_y": [
-    676,
-    1140
+    637,
+    884
    ],
-   "head_bottom_max_y": 1189
+   "head_bottom_max_y": 891
   }
  },
  "framediff_in_shot": {
-  "median": 4.97,
-  "p90": 13.98
+  "median": 4.34,
+  "p90": 25.91
  },
  "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
 }
