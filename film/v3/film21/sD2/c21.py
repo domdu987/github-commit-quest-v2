@@ -44,9 +44,12 @@ def path(g, wps, mix=0.5):
 
 
 class Take21(object):
-    def __init__(self, preset, tmp, quality="final", samples=24):
+    def __init__(self, preset, tmp, quality="final", samples=32, world=None):
         self.preset = preset
-        self.A = K.build_for_cli(preset, placeholders=False)
+        if world:
+            self.A = K.build_world(world)
+        else:
+            self.A = K.build_for_cli(preset, placeholders=False)
         K.STATE["preset"] = preset
         self.scene = bpy.context.scene
         self.cam = self.scene.camera
@@ -54,6 +57,7 @@ class Take21(object):
         self.cam.data.clip_start = 0.02
         self.cam.data.dof.use_dof = False
         self.lens = K.PRESETS[preset].get("lens", 22.0)
+        self.base_lens = self.lens
         K.setup_render(self.scene, quality, samples)
         self.scene.cycles.samples = samples
         self.scene.render.threads = int(os.environ.get('THREADS', '4'))
@@ -69,8 +73,8 @@ class Take21(object):
         self.actors[name] = a
         return a
 
-    def key_cam(self, g, loc, look):
-        camrig.key_camera(g, Vector(loc), Vector(look), cam=self.cam, lens=self.lens, interp="LINEAR", easing="AUTO")
+    def key_cam(self, g, loc, look, lens=None):
+        camrig.key_camera(g, Vector(loc), Vector(look), cam=self.cam, lens=lens or self.lens, interp="LINEAR", easing="AUTO")
 
     def place(self, a, g, xyz, scale, flip=False):
         a.place(g, tuple(float(v) for v in xyz), scale=scale, flip=flip, interp="LINEAR")
