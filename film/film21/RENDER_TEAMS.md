@@ -6,10 +6,10 @@ Handles: 3 frames past each D6 end (same move continued). No handles on cuts or 
 |---|---|---|---|---|---|
 | A1 (BIGZOOM 1, first half) | 0-80 | - | 1 | render21/team1 | session_017iwyCumuEopk7yR2v7VxqP |
 | A2 (BIGZOOM 1, second half + grass-chewer push) | 80-159 | D6 at P_A | 5 | render21/team5 | session_017iwyCtbZ82yNcWWj7WiwA5 |
-| B1 | 159-298 | CUT | 2 | render21/team2 | session_017iwyCueDsicSa1SXow5PeY |
+| B1 (redo on the new palette by team 7) | 159-298 | CUT | 7 | render21/team7 | session_017iwyCvpzoi5TiBV4qevt9n |
 | B2 | 298-418 | D6 at P_CAMP | 5 | render21/team5 | session_017iwyCtbZ82yNcWWj7WiwA5 |
 | C | 418-542 | CUT | 3 | render21/team3 | session_017iwyCws18qdxaGzgzAeH6X |
-| D1 | 542-642 | CUT | 7 | render21/team7 | session_017iwyCvpzoi5TiBV4qevt9n |
+| D1 (redo by team 2) | 542-642 | CUT | 2 | render21/team2 | session_017iwyCueDsicSa1SXow5PeY |
 | D2 (mocker) | 642-793 | W | 4 | render21/team4 | session_017iwyCucf86ZM8VKRSnau3L |
 | E1 | 793-885 | D6 at P_BANK | 7 | render21/team7 | session_017iwyCvpzoi5TiBV4qevt9n |
 | E2 (count) | 885-1044 | CUT | 6 | render21/team6 | session_017iwyCui16dpW5GJ7yrC9Se |
