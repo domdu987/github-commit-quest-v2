@@ -33,7 +33,7 @@ G_SHAKE = (G_NICK, G_NICK + 1)
 G_STEEL = C.cap_g("เหล็ก 18,000")                   # 856
 G_RIV = C.cap_g("สองล้านครึ่งตัว")                  # 917
 W1, W2, W3 = C.cap_g("ชั้นหนึ่ง"), C.cap_g("ชั้นสอง"), C.cap_g("จนถึงยอด")      # 948 / 967 / 981
-G_TOSS = (919, 929)                                # the glowing rivet flies
+G_TOSS = (917, 933)                                # the glowing rivet flies
 G_CATCH = G_TOSS[1]
 G_HITS = [921 + 9 * i for i in range(10)]          # hammer blows
 G_STAGE1 = 830                                     # platform appears behind the fast flight
@@ -81,9 +81,9 @@ def cam_d(A):
     c0 = Vector(A["cams"]["site_rivet"]["loc"])
     v = c0 - subj
     v.z = 0.0
-    c = subj + v.normalized() * 11.0 + Vector((0.0, 0.0, 1.3))
+    c = subj + v.normalized() * 9.5 + Vector((0.0, 0.0, 1.0))
     return C.CamPath(c, subj, G_FLY2[1], SN[0][0] + 6, push=0.07, slide_px=55.0, rise_px=15.0, arc_deg_s=3.0, tilt0=0.0, decay=0.2,
-                     snaps=[dict(g=(G_CATCH - 1, G_CATCH + 12), k=1.5, peak=1.7, shift=(0.0, -0.3), tilt=0.0)])
+                     snaps=[dict(g=(G_CATCH - 1, G_CATCH + 12), k=1.25, peak=1.7, shift=(0.0, -0.3), tilt=0.0)])
 
 
 def cr(p0, p1, p2, p3, t0, t1, t2, t3, t):
@@ -120,17 +120,18 @@ class Rig(object):
         b1, b2 = self.B.at(G_FLY1[0] - 2), self.B.at(G_FLY1[0])
         s1, s2 = self.Sx.at(G_FLY1[1]), self.Sx.at(G_FLY1[1] + 2)
         self.f1 = [(G_FLY1[0] - 2, b1[0], b1[1]), (G_FLY1[0], b2[0], b2[1]),
-                   (824, W((-16.0, -93.0, 6.0)), W((-50.0, -70.0, 3.0))),
-                   (833, W((-52.0, -90.0, 11.0)), W((-78.0, -52.0, 3.0))),
-                   (841, W((-82.0, -58.0, 5.5)), W((-76.0, -34.0, 1.5))),
+                   (822, W((-9.8, -108.5, 4.6)), W((-8.0, -100.4, 3.3))),
+                   (828, W((-14.0, -113.0, 10.0)), W((-46.0, -72.0, 27.0))),
+                   (836, W((-50.0, -102.0, 11.0)), W((-76.0, -52.0, 20.0))),
+                   (842, W((-80.0, -62.0, 6.0)), W((-76.0, -34.0, 8.0))),
                    (G_FLY1[1], s1[0], s1[1]), (G_FLY1[1] + 2, s2[0], s2[1])]
         e1, e2 = self.Sx.at(G_FLY2[0] - 2), self.Sx.at(G_FLY2[0])
         d1, d2 = self.D.at(G_FLY2[1]), self.D.at(G_FLY2[1] + 2)
         self.f2 = [(G_FLY2[0] - 2, e1[0], e1[1]), (G_FLY2[0], e2[0], e2[1]),
-                   (909, W((-69.0, -36.0, 6.5)), W((-55.0, -29.0, 7.0))),
-                   (911, W((-58.0, -26.0, 8.0)), W((-42.0, -28.0, 8.0))),
-                   (914, W((-40.0, -23.0, 9.5)), W((-28.0, -44.0, 11.0))),
-                   (917, W((-24.0, -46.0, 14.0)), W((-42.0, -62.0, 16.8))),
+                   (909, W((-69.0, -36.0, 6.5)), W((-55.0, -29.0, 0.5))),
+                   (911, W((-58.0, -26.0, 8.0)), W((-42.0, -28.0, 0.5))),
+                   (914, W((-40.0, -23.0, 9.5)), W((-28.0, -44.0, 2.0))),
+                   (917, W((-24.0, -46.0, 14.0)), W((-42.0, -62.0, 15.0))),
                    (G_FLY2[1], d1[0], d1[1]), (G_FLY2[1] + 2, d2[0], d2[1])]
 
     def at(self, g):
@@ -166,7 +167,7 @@ class Rig(object):
                 look = self.P[n][1].lerp(self.P[n + 1][1], u)
         t = (g - SN[0][0]) / 30.0
         fwd = look - loc
-        fz = 1.0 + 0.055 * t
+        fz = 1.0 + 0.055 * t + 0.14 * max(0.0, (g - 993) / 30.0)
         loc = look - fwd / fz
         right = Vector((fwd.y, -fwd.x, 0.0)).normalized()
         sh = right * (0.9 * CO.SC * t * 4.0)
@@ -198,9 +199,7 @@ def pose_fence(who, g):
         p["expr"] = "proud" if g < G_NICK else "determined"
         up = 0.5 + 0.5 * math.sin(t * 3.0)
         p["arm_r"] = dict(hand=(1.0, -0.35 + 0.22 * up), bend=-0.1, stretch=1.4)
-        p["prop_r"] = dict(p["prop_r"])
-        p["prop_r"]["angle"] = RIV_ANGLE + 7 * math.sin(t * 3.0)
-        p["prop_r"]["scale"] = 1.8
+        p.pop("prop_r", None)                                   # the giant rivet is a runtime 3-D object in his fist (round dome + shank)
         p["yaw"] = -0.45 + 0.04 * math.sin(t * 1.7)
         p["lean"] = 4.0 * math.sin(t * 2.6)
         p["blink"] = blink(g, [757, 790, 812, 860, 930])
@@ -233,7 +232,7 @@ def pose_carry(who, g):
     p = cast20.cycle(cast, (g / 30.0) * 1.6 + ph, "walk", 1, None, "both", 1.0)
     p["arm_r"] = dict(hand=(0.35, -0.35), bend=0.7, stretch=1.0, layer="front")
     p["arm_l"] = dict(hand=(0.2, -0.3), bend=0.7, stretch=1.0, layer="back")
-    p["expr"] = "working"
+    p["expr"] = "neutral"
     p["head_roll"] = 3 * math.sin(g * 0.3 + ph)
     p["blink"] = blink(g, [830 if who == "a" else 861, 890, 960])
     p["t"] = g / 30.0
@@ -284,6 +283,7 @@ class Take(C.Take):
         self.make_fence_girders()
         self.girder = self.make_carried_girder()
         self.add_ground_detail()
+        self.rivet3d, self.bucket, self.toss = self.make_rivet3d(), self.make_bucket(), self.make_toss()
         mk = self.A["marks"]
         self.marks = {}
         for k, xy in (("lady", LADY), ("gent", GENT), ("child", CHILD), ("eiffel", EIF)):
@@ -353,6 +353,50 @@ class Take(C.Take):
                 ob.rotation_euler = (0, 0, rnd.uniform(0, 3.1))
                 ob.data.materials.append(M["timber"] if i % 2 else M["timberdk"])
 
+    def make_rivet3d(self):
+        """the giant rivet: a red-lead cylinder (shank) + a round dome head, built along +z with its fist point at the origin"""
+        M = CO.STATE["M"]
+        C.bpy.ops.mesh.primitive_cylinder_add(vertices=16, radius=1.0, depth=1.0)
+        shank = C.bpy.context.active_object
+        shank.scale = (0.24 * CO.SC * 0.5, 0.24 * CO.SC * 0.5, 1.5 * CO.SC * 0.5)      # 0.24 m dia x 1.5 m long? (in D: 0.45 D wide, 2.8 D long)
+        shank.scale = (0.26, 0.26, 0.85)
+        C.bpy.ops.mesh.primitive_uv_sphere_add(segments=18, ring_count=10, radius=1.0)
+        dome = C.bpy.context.active_object
+        dome.scale = (0.62, 0.62, 0.42)
+        for ob in (shank, dome):
+            ob.data.materials.append(M["redlead"])
+        return (shank, dome)
+
+    def make_toss(self):
+        """the glowing rivet in flight: an orange-hot cylinder with a round head (own object; the set's hook rivet reads as a yellow slab)"""
+        mat = C.bpy.data.materials.new("toss_hot_s11")
+        mat.use_nodes = True
+        nt = mat.node_tree
+        for n in list(nt.nodes):
+            nt.nodes.remove(n)
+        em = nt.nodes.new("ShaderNodeEmission")
+        em.inputs["Color"].default_value = (1.0, 0.32, 0.04, 1.0)
+        em.inputs["Strength"].default_value = 5.0
+        out = nt.nodes.new("ShaderNodeOutputMaterial")
+        nt.links.new(em.outputs["Emission"], out.inputs["Surface"])
+        C.bpy.ops.mesh.primitive_cylinder_add(vertices=12, radius=1.0, depth=1.0)
+        ob = C.bpy.context.active_object
+        ob.scale = (0.17, 0.17, 0.55)
+        ob.data.materials.append(mat)
+        ob.visible_shadow = False
+        return ob
+
+    def make_bucket(self):
+        M = CO.STATE["M"]
+        C.bpy.ops.mesh.primitive_cone_add(vertices=20, radius1=0.30, radius2=0.40, depth=0.55)
+        b = C.bpy.context.active_object
+        b.data.materials.append(M.get("metal") or M["ironlt"])
+        C.bpy.ops.mesh.primitive_torus_add(major_radius=0.38, minor_radius=0.025)
+        h = C.bpy.context.active_object
+        h.scale = (1.0, 0.12, 1.0)
+        h.data.materials.append(M.get("metal") or M["ironlt"])
+        return (b, h)
+
     def make_carried_girder(self):
         M = CO.STATE["M"]
         parts = []
@@ -384,9 +428,6 @@ class Take(C.Take):
             S.set_stage(stage_of(g), frame=f)
             S.crane_swing(clamp((g - 830) / 80.0), frame=f)
             S.spark(frame=f, t0=G_HITS[0], period=9, strength=1.5)
-            S.rivet_toss(clamp((g - G_TOSS[0]) / float(G_TOSS[1] - G_TOSS[0])) if G_TOSS[0] <= g <= G_TOSS[1] else None, frame=f)
-            if CO.STATE.get("rivet") is not None:
-                CO.STATE["rivet"].scale = (3.2, 3.2, 3.2)
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
@@ -394,6 +435,64 @@ class Take(C.Take):
                 p = pose_fence(who, g) if who in ("lady", "gent", "child", "eiffel") else pose_carry(who, g) if who in ("a", "b") else pose_deck(who, g)
                 a.pose(f, p, camera=self.cam)
         self.sprites_for([(a, PPD) for a in self.actors.values()], [bf(g) for g in gs])
+        # the 3-D giant rivet in Eiffel's fist (g < 840) and the catch bucket (g 905..960): positions from the sprite anchors / the toss end point
+        ei = self.actors["eiffel"]
+        for g in gs:
+            f = bf(g)
+            self.scene.frame_set(f)
+            on = g < G_FLY1[1]
+            for ob in self.rivet3d:
+                C.key_vis(ob, on, f)
+            if on:
+                hx = self.anch[("eiffel", f)]["hand_r"]
+                p = actors.local_to_world(ei, hx, f, ei.feet.get(f), self.cam)
+                t = g / 30.0
+                tilt = math.radians(8 * math.sin(t * 3.0))
+                sh, dm = self.rivet3d
+                ax = Vector((math.sin(tilt), 0.0, math.cos(tilt)))
+                sh.location = p + ax * 0.55
+                sh.rotation_euler = (0.0, tilt, 0.0)
+                dm.location = p + ax * 1.38
+                dm.rotation_euler = (0.0, tilt, 0.0)
+                for ob in (sh, dm):
+                    ob.keyframe_insert("location", frame=f)
+                    ob.keyframe_insert("rotation_euler", frame=f)
+        # catch bucket held in the catcher's hands (g 905..962) and my own toss rivet (small orange cylinder on an arc, g G_TOSS)
+        cc, tt = self.actors["c"], self.actors["t"]
+
+        def anchor(actor, who, key, f):
+            have = [ff for (w_, ff) in self.anch if w_ == who]                 # interleaved render processes: nearest posed frame
+            if not have:
+                raise KeyError(who)
+            f2 = min(have, key=lambda ff: abs(ff - f))
+            return actors.local_to_world(actor, self.anch[(who, f2)][key], f, actor.feet.get(f2), self.cam)
+
+        f0, f1 = bf(G_TOSS[0]), bf(G_CATCH)
+        self.scene.frame_set(f0)
+        p0 = anchor(tt, "t", "rivet_r", f0)
+        for g in gs:
+            f = bf(g)
+            self.scene.frame_set(f)
+            vis = G_FLY2[1] - 6 <= g <= 962
+            hl, hr = anchor(cc, "c", "hand_l", f), anchor(cc, "c", "hand_r", f)
+            mid = (hl + hr) * 0.5
+            for ob, off in zip(self.bucket, (Vector((0, 0, 0.12)), Vector((0, 0, 0.42)))):
+                C.key_vis(ob, vis, f)
+                ob.location = mid + off
+                ob.keyframe_insert("location", frame=f)
+            k = clamp((g - G_TOSS[0]) / float(G_TOSS[1] - G_TOSS[0]))
+            on = G_TOSS[0] <= g <= G_TOSS[1]
+            C.key_vis(self.toss, on, f)
+            if on:
+                self.scene.frame_set(f1)
+                pend = anchor(cc, "c", "hand_r", f1) + Vector((0, 0, 0.45))
+                self.scene.frame_set(f)
+                pos = p0.lerp(pend, k) + Vector((0, 0, 1.6 * 4 * k * (1 - k)))
+                self.toss.location = pos
+                self.toss.rotation_euler = (math.radians(70) * (1 - k) + math.radians(20), 0.0, 6.0 * k)
+                self.toss.keyframe_insert("location", frame=f)
+                self.toss.keyframe_insert("rotation_euler", frame=f)
+        S.rivet_toss(None, frame=1)
 
     def report(self, g):
         f = bf(g)
