@@ -1,18 +1,17 @@
-# s18 = T18 camera-travel take (shots 18+19+20), TOWER dusk 1909 (render team 8)
-One continuous take, g 1221-1430 (40.70-47.71 s), first_g 1210 (11 handle frames for DIS 17 in), 4 out-handle frames g 1431-1434 (hard cut out), 225 frames, 720x1280, 8 spp, no DOF.
-take.mkv is 100 MB: delivered as take.mkv.part{aa,ab,ac} (cat them to rebuild).
-Old s19/s20 folders deleted (merged into this take).
+# s18 = T18 camera-travel take (shots 18+19+20), TOWER dusk 1909 (render team 8) -- round 3 (TAKE2_ART + TAKE2_B)
+One continuous take, g 1221-1430, first_g 1210 (11 handle frames, DIS 17 in), 4 out-handle frames g 1431-1434 (hard cut out), 225 frames, 720x1280, 8 spp, no DOF.
+take.mkv is 96 MB: committed as take.mkv.part{aa,ab,ac} (cat to rebuild); the full file is git-ignored. s19/s20 folders deleted.
 
 ## Travel
-g 1210-1303 dusk, wagon, old Eiffel worried (calm->worried on the blink at g 1254), push 20 %/s + orbit + tilt + 2 snaps | g 1304-1342 he points up on "ไอเฟลเลยขึง", camera CRANES to 30 m tilting up the tower + wires | g 1343-1360 WHIP-TILT down the wires to the post on "จากยอดหอ ลงมาถึงพื้น" | g 1361-1394 DIVE to the hut's lit window | g 1390-1410 THROUGH the window (glass panel hut_lampsm hidden) | g 1410-1434 soldier taps the Morse key, 5 taps, spark gap flashes (own jagged arc between the brass balls), push.
-Not done: the optional "T.S.F." sign on the hut.
+g 1210-1303 dusk, closer + low camera, wagon (moved 5 m toward the group) with horse + crowbars, old Eiffel worried (calm->worried on the blink g 1254), push + orbit + tilt + 2 snaps | g 1304-1342 he points up, camera CRANES (fast start so he leaves frame quickly) to 30 m tilting up | g 1343-1360 WHIP-TILT down the wires to the post | g 1361-1390 DIVE to the hut window (lit glass hidden from g 1384) | g 1390-1399 THROUGH the window between wall battens (x 1.1 m) | g 1399-1434 soldier taps, 5 taps.
+
+## Round-3 fixes
+1 closer start (Eiffel head 70 -> 123 px, officer 60+), low camera 0.3 m, wagon in frame, warm low sun + cast shadows, props moved to the sides (no barrel in the lens); ground ~30 %. | 2 crane: fast ease-out start. | 3 wire: a stay wire from the anchor post top (6.2 m) to a ground stake. | 4 crossing: path x moved to 1.1 m (battens are at 0.2/0.8/1.4 m, the earlier x 0.7-0.8 hit one), muntin/dark object + glass hidden, crossing sped up. | 5 hand: card prop removed, own brass Morse key under the soldier's right hand (hand_r anchor), lever dips on each tap. | 6 spark: blue arc (hue ~210) between the brass balls, cool point flash (55 W) keyed on taps + a faint cool rim light inside.
 
 ## Numbers
-- qa_stats2: sat 0.618, vivid 56.2 %, luma 97.9, motion median 4.94 p90 22.36, still 3.7 %.
-- own frame-diff (in-shot, 90x160): median 5.79, p90 22.07 (target 4 / 12: met).
-- s/frame 8.66 wall, 16.74 cpu (2 processes x 2 threads).
-- QA_AUTO: PASS (see QA_AUTO.md); planned-cut note only.
+- QA_AUTO: PASS (notes: soft frames g 1384-1394 = the window crossing, flat planks; pops g 1383-1384 = the glass-off + dive).
+- qa_stats2: sat 0.639, vivid 61.9 %, luma 95.8. Its motion line (median 2.74 / p90 11.56) is thrown off by 17 'shots' it detects at the window pops; my own in-shot frame-diff (90x160, g 1222-1430, no handles): median 3.58, p90 25.2 (target 4 / 12).
+- s/frame 8.92 wall, 17.24 cpu (2 processes x 2 threads).
 
-## Fixes carried from the TAKE gate
-antenna last-segment bug fixed at runtime (wires reach the post), warm low sun for a lit avenue with cast shadows, preset FG / shade casters hidden (no torn plank), wagon with wheels + horse + crowbars readable, hands on the key, duplicate headphones removed, exposure +0.35 inside (luma ok).
-Known weak: the ground is still ~40 % of the first 90 frames (heads must stay above y 880); window crossing frames g 1388-1396 are close-ups of lit panes and wall battens (about 8 frames); plank moire faint on the hut ceiling; eiffel head 52-125 px.
+## Known weak
+Frame-diff median 3.6 (< 4) in the first 90 frames (small figures, smooth sky); soft frames at the window crossing (planks are low-contrast); ground still ~30 % early; soldier's hand/key is small (about 30 px); no "T.S.F." sign; the lit-window glass pops off at g 1384.

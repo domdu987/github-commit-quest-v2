@@ -1,0 +1,10 @@
+# s16 QA: film 20, T16 = shots 16+17 (CAFE cafe_low, DAY 1889, window view FULL): the laugh and the jeer
+Delivered: take.mkv g 1089..1231 (143 frames): in-take g 1093..1220 (36.44-40.70 s), 4 handle frames before (hard CUT onto the grin from T15), 11 after (DIS 17 into T18). 720x1280, 8 spp, 19.02 s/frame wall (37.01 cpu), 2 threads, two processes at once.
+ONE continuous camera (Catmull-Rom keys in shot.py `KEYS`, no cuts): g 1093-1110 crash pull-out from the grin close-up (head 365 px) to a medium-wide (head ~130 px, full tower in the window); g 1110-1185 slow orbit/push while he laughs (3 Hz bounce, 0.06 D feet bob); g 1185-1220 push-in for the jeer to the close-up (head ~370 px, ~1 s) on "เป็นเศษเหล็ก!" (g 1195 event).
+Acting: belly laugh with tears, thumb over the shoulder at the tower from g 1136-1146, crumple mime g 1190-1210. Nobody still.
+LIP-SYNC: g 1117..1223 only (37.12-40.67 s +0.10), narration RMS loudness -> cast20 MOUTH_SET (see `python3 shot.py mouth`); before g 1117 the laughing20 grin mouth, not animated.
+Numbers: head 128-402 px wide in-take, centre y 616-698, lowest head bottom y 890; close-up face ~30 % of frame height (< 35 %) for ~1 s at each end; handle frames 1221-1231 go to head ~430 px (inside the DIS, not screen time).
+Tower: full tower visible in the window in every frame (phone sheet); contact decal under the feet on the tiles.
+qa_stats: saturation 0.510, luma 106.7. qa_stats2: sat 0.510, vivid 48.3 %, luma 106.7, warm 42.7 % / cool 32.9 %, motion median 8.28 / p90 16.05, still 0 %. Own frame-diff (deliver.py): median 7.31 / p90 17.21 (target 4 / 12: pass). qa_auto: PASS (QA_AUTO.md; its only note is the planned cut at g 1093, which is the hard cut in the conform).
+Light: window sun patch on the tiles (set key), cool window fill + warm gas lamps/chandelier in frame (set lights).
+Deviations: floor (sunlit tiles) is ~30-35 % of the frame in the medium-wide stretch g 1115-1160 (rule 25 %); the room, window and tower are the point of that stretch. No light-shaft geometry added. Luma 106.7 is close to the 110 ceiling.

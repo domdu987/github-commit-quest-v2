@@ -33,10 +33,11 @@ HEAD_Z = float(os.environ.get("HEAD_Z", "2.35"))  # head centre above the feet m
 PPD = 256
 CANVAS = cast20.CANVAS20["maupassant"]
 CAM_CLOSER = float(os.environ.get("CAM_CLOSER", "1.45"))   # D closer than the preset along the view
-TILT0 = float(os.environ.get("TILT0", "4.0"))
+TILT0 = float(os.environ.get("TILT0", "6.0"))
 
 EAT = cast20.STORY20["maupassant_seated_eat"][1]
 CHEW = cast20.STORY20["maupassant_seated_eat_chew"][1]
+DZ = float(os.environ.get('DZ', '-0.5'))
 LAT = float(os.environ.get("LAT", "0.25"))
 PERIOD = 40.0                                   # frames per fork cycle
 BLINKS = [1842, 1880]
@@ -46,7 +47,7 @@ def cam_path(A):
     m = Vector(A["marks"][MARK])
     subj = m + Vector((0.0, 0.0, HEAD_Z))
     c = Vector(A["cams"][PRESET]["loc"])
-    c = c + (subj - c).normalized() * CAM_CLOSER
+    c = c + (subj - c).normalized() * CAM_CLOSER + Vector((0.0, 0.0, DZ))        # DZ < 0: lower camera = the railing bar behind him falls below his head, less cloth
     fw = (subj - c).normalized()
     lat = Vector((fw.y, -fw.x, 0.0)).normalized() * LAT        # parallel shift: the head starts left of centre and the slide carries it right
     c, subj = c + lat, subj + lat
@@ -105,6 +106,10 @@ class Take(C.Take):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s%02d" % SHOT)
         C.grade(self.scene, float(os.environ.get('EXPO','-0.9')), float(os.environ.get('SAT','1.45')))
         self.path = cam_path(self.A)
+        for ob in C.bpy.data.objects:                           # the preset FG bentwood chair (fg_i_woodlt) swings across the lens at g ~1870: hide it
+            if ob.name.startswith("fg_i_woodlt"):
+                ob.hide_render = True
+        clear_camera_tube(self.path, radius_m=1.5, only=("furn_bent",))
         self.key_cam(bf(G_FIRST), *self.path.at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
         for ob in list(bpy_objs("actor_")):                  # the build's stand-in card(s) (resto_table stages one) are replaced by ours
@@ -135,6 +140,27 @@ class Take(C.Take):
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):
         return C.Take.render(self, [bf(g) for g in gs], out_dir, scale=scale, samples=samples, threads=threads)
+
+
+def clear_camera_tube(path, radius_m=0.65, step=4, only=None):
+    """delete the faces of the set's merged furniture (objects furn_*, fg_*) that lie within radius_m of the camera path: the FG chair back
+    the lens would pass through (a pillar across the frame at g ~1870)."""
+    import bmesh
+    C.bpy.context.view_layer.update()
+    pts = [path.at(g)[0] for g in range(G_FIRST, G_LAST + 1, step)]
+    r = radius_m * CO.SC
+    n = 0
+    for o in C.bpy.data.objects:
+        if o.type != "MESH" or not o.name.startswith(only or ("furn_", "fg_")):
+            continue
+        bm = bmesh.new(); bm.from_mesh(o.data)
+        mw = o.matrix_world
+        dead = [f for f in bm.faces if any(any((mw @ v.co - p).length < r for p in pts) for v in f.verts)]
+        if dead:
+            bmesh.ops.delete(bm, geom=dead, context="FACES"); n += len(dead)
+            bm.to_mesh(o.data); o.data.update()
+        bm.free()
+    print("clear_camera_tube: %d faces deleted" % n, flush=True)
 
 
 def bpy_objs(prefix):
