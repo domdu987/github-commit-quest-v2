@@ -7,7 +7,7 @@ import prefecture17 as P, bpy
 take = 'T2'
 import json
 # light lift (director: lights only, no haze/desat; the -20 %% lantern/fanlight schedule g330-360 stays in take_state)
-OVER = json.loads(os.environ.get('T2_OVER', 'null')) or {'corridor': dict(lamp_k=3.2, shade_mul=1.3, fill_w=160), 'measure': dict(shade_mul=1.1)}
+OVER = json.loads(os.environ.get('T2_OVER', 'null')) or {'corridor': dict(lamp_k=4.0, shade_mul=1.6, fill_w=300, gain=0.95), 'measure': dict(shade_mul=1.2)}
 P.TAKE_OVER['T2'] = OVER
 RES = tuple(int(x) for x in os.environ.get('T2_RES', '720,1280').split(','))
 LAUGH = (467, 493)
