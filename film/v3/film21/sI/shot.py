@@ -21,18 +21,19 @@ G0, N = 1519, 121                       # film frame of local frame 0; 121 frame
 FPS = 30.0
 G_SNAP = 89                             # local frame of the snap pull-out ("เหมือนกัน" 53.6 s -> g 1608)
 G_TURN = (34, 60)                       # the column tries to turn back (ขาถอย 52.29 = local 52)
-G_GIVEUP = 72                           # everybody gives up, faces north again
-G_POP = 66                              # helmet pops
+G_GIVEUP = 80                           # everybody gives up, faces north again
+G_POP = 62                              # helmet pops
 BX, DZ = K.BRIDGE_X, K.DECK_Z
 LANE_W, LANE_E = BX - 0.62, BX + 0.62
 
 # ------------------------------------------------------------------ camera
-KEYS = [(-10, (-8.6, -9.8, 3.8), (0.0, -1.8, 3.0), 22.0),
-        (0, (-8.0, -7.0, 3.8), (0.2, -0.2, 3.0), 22.0),
-        (30, (-7.3, -2.2, 4.0), (0.0, 1.8, 3.2), 22.0),
-        (58, (-6.6, 1.6, 5.2), (0.0, 3.0, 2.9), 22.0),
-        (74, (-3.4, -14.0, 11.5), (0.0, 3.0, 2.2), 22.0),
-        (88, (-1.2, -40.0, 19.0), (0.0, 12.0, 1.8), 22.0),
+KEYS = [(-10, (-3.1, -7.2, 3.5), (0.3, -1.2, 3.3), 22.0),
+        (0, (-3.6, -4.7, 3.5), (0.2, 0.0, 3.3), 22.0),          # starts 2.4 m from the set's foreground post (-2.4, -1.25) and slides away from the rail
+        (16, (-5.8, -3.0, 3.6), (0.0, 1.6, 3.4), 22.0),
+        (36, (-7.4, -1.8, 3.9), (0.0, 2.4, 3.4), 22.0),
+        (66, (-6.8, 1.4, 4.6), (0.0, 3.0, 3.1), 22.0),
+        (78, (-3.4, -14.0, 11.5), (0.0, 3.0, 2.2), 22.0),       # CRANE UP and back, fast
+        (88, (-1.2, -40.0, 19.0), (0.0, 12.0, 1.8), 22.0),      # straight down the bridge
         (112, (-5.0, -66.0, 29.0), (0.0, 8.0, 1.5), 17.0),
         (121, (-6.5, -76.0, 33.0), (0.0, 8.0, 1.5), 16.0)]
 
@@ -118,10 +119,10 @@ def hero_base(who, f):
     S = C.cast21.STORY21
     if who == 'A':
         calm, shock, wob = S['knight_a_mounted'][1], S['knight_a_mounted_shocked'][1], S['knight_a_mounted_wobble'][1]
-        flip_f, back_f, ph = 46, 76, 0.0
+        flip_f, back_f, ph = 46, 82, 0.0
     else:
         calm, shock, wob = S['knight_b_mounted'][1], S['knight_b_mounted_shocked'][1], S['knight_b_mounted_wobble'][1]
-        flip_f, back_f, ph = 51, 80, 1.7
+        flip_f, back_f, ph = 51, 86, 1.7
     turned = flip_f <= f < back_f
     p = dict(calm)
     t = f / 30.0
@@ -163,7 +164,7 @@ def hop_dy(f, flip_f, back_f):
 
 def hero_xyz(who, f):
     x, y = SX[who]
-    flip_f, back_f = (46, 76) if who == 'A' else (51, 80)
+    flip_f, back_f = (46, 82) if who == 'A' else (51, 86)
     wedge = u_of(f, 54, 60) * (1 - u_of(f, G_GIVEUP - 2, G_GIVEUP + 6))
     if who == 'A':
         y = y - 0.62 * wedge + 0.05 * math.sin(f * 0.5) * wedge
@@ -193,7 +194,7 @@ class Cast(object):
                 xyz, _, _ = hero_xyz(who, f)
                 act.place(bf, xyz, scale=S_CARD)
                 act.pose(bf, hero_base(who, f), camera=cam)
-            self.h.place(bf, self.helm_xyz(f), scale=S_CARD * 0.8)
+            self.h.place(bf, self.helm_xyz(f), scale=S_CARD * 1.15)
             self.h.pose(bf, dict(tilt=self.helm_tilt(f)), camera=cam)
 
     def helm_xyz(self, f):

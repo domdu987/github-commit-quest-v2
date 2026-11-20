@@ -42,8 +42,8 @@ def register_extras():
     """knight_b_great_bare_mtd: the blue knight with NO helmet (bare head, brown hair), for after the pop; helmet_air: a lone great helm (no foam ring)."""
     base = P.CAST["knight_b_great"]
     bare = dict(base)
-    bare.update(hat_style="bare7", hat_colors=P.CAST["scot_a"].get("hat_colors", base.get("hat_colors")),
-                hair=dict(color="#4a3020", front=0.55, grow=0.2))
+    bare.update(hat_style="bare7", hat_colors={"light": "#8a6038", "base": "#6a4a2a", "dark": "#4a3220"},
+                hair=dict(color="#6a4a2a", front=0.08, grow=0.2))
     P.CAST["knight_b_great_bare"] = bare
     cast21.MOUNTED["knight_b_great_bare_mtd"] = "knight_b_great_bare"
     cast21.DEFAULT_CAP["knight_b_great_bare"] = "blue"
