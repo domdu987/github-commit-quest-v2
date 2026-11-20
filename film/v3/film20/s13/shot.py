@@ -51,6 +51,8 @@ class Take(C.Take):
         self.scene.frame_set(C.bf(G_FIRST))
         mk = self.A["marks"]
         self.mk = dict(t=Vector(mk["riveter_tongs"]), c=Vector(mk["riveter_catch"]), h=Vector(mk["riveter_hammer"]))
+        for v in self.mk.values():                            # the deck planks are 0.28 D above the mark z: stand on the real surface (QA gotcha 4)
+            v.z = C.ground_z(v.x, v.y, top=v.z + 5.0)
         for who, cast in (("t", "riveter_tongs"), ("c", "riveter_hammer"), ("h", "riveter_forge")):
             self.actors[who] = C.make_actor(who, cast, os.path.join(WORK, "sprites"), cam=self.cam,
                                             contact=dict(width=1.2, depth=0.5, opacity=0.8))
