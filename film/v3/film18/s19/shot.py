@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c18 as C
 from c18 import J, S, R2, V, bpy
 SHOT = 's19'; G0, G1 = 1427, 1514; H_IN, H_OUT = 6, 6        # cut in, whip out
-c = S.SHOTS[SHOT]['cam']; c['loc'] = (14.2, -15.5, 1.5); c['look_at'] = (32.0, -6.0, 5.6); c['lens'] = 18.0
+c = S.SHOTS[SHOT]['cam']; c['loc'] = (14.2, -15.5, 1.5); c['look_at'] = (32.0, -6.0, 4.0); c['lens'] = 18.0
 C.motion(SHOT, push=0.0, slide=-30, moves=[dict(t=0.2, d=0.9, dur=8), dict(t=0.35, d=0.9, dur=8), dict(t=0.84, pan=-85, dur=7)])
 _p0 = S.pose_at
 def _tilt(sh, t):                                            # the whip lands on the herd: tilt down from the sky onto the field while the pan runs
@@ -25,6 +25,7 @@ for w in range(9):
 OX = OX[:60]
 QI = [(G0 - 10 + 5 * k, 44.0 + 2.2 * (k % 3)) for k in range(6)]
 V_OX, V_QI = 15.0, 11.5
+FAR = [(G0 - 30 + 10 * k, 56.0 + 3.0 * (k % 3), (-0.4, 0.4, 0.0)[k % 3]) for k in range(9)]            # far lanes 8-14 D behind the near lane, head-on / 3/4 toward the camera
 
 def setup(ctx):
     J.set_holes(12)
@@ -55,7 +56,7 @@ def frame(g, t, camloc, ctx):
         for (lx, ly) in ((19.0, -13.0), (22.5, -13.8)):
             ld = bpy.data.lights.new('potl', 'POINT'); ld.color = J.FIRE; ld.energy = 650.0; ld.shadow_soft_size = 0.6; ld.use_shadow = False
             lo = bpy.data.objects.new('potl', ld); J.STATE['LIGHTS'].objects.link(lo); lo.location = (lx, ly, 1.0); lo.visible_camera = False
-        FGP.append(J.prop_helmet((23.4, -9.6, 0.0), 2.4, scale=1.0, cd=8))
+        FGP.append(J.prop_helmet((16.2, -9.0, 0.0), 2.4, scale=0.9, cd=8))
     for ob in bpy.data.objects:
         if ob.name in HIDE or ob.name.startswith(('rubble', 'hglow')): ob.hide_render = True
     for ob in bpy.data.objects:
@@ -67,6 +68,11 @@ def frame(g, t, camloc, ctx):
         pos = (hx + jit, y, 0.0); near = (V(pos) - camloc).length < 16
         ph = int((g - gs) * 12 / 30.0 + j) % 8
         C.put_ox(j, pos, -100, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='front_three_quarter' if (near and j % 3 == 0) else 'three_quarter', gait='gallop', theta=14 if (near and j % 3 == 0) else 30, reed=True, tfx=0.4, lean=60.0, face='rage')
+    for q, (gs, fx, jit) in enumerate(FAR):
+        if g < gs: continue
+        y = -9.0 - 13.0 * (g - gs) / 30.0
+        if y < -140: continue
+        C.put_ox(40 + q, (fx + jit, y, 0.0), -100, 0.95, camloc, phase=int((g - gs) * 12 / 30.0 + q) % 8, flame=-1, state='dragon', view='front_three_quarter', gait='gallop', theta=8, reed=True, tfx=0.3, lean=60.0, face='rage', sparks=False)
     for j, (gs, x) in enumerate(QI):
         if g < gs: continue
         y = -7.0 - V_QI * (g - gs) / 30.0
