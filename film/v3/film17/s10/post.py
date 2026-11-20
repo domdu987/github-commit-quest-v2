@@ -60,6 +60,14 @@ for g in range(S.FIRST, S.LAST + 1):
     im = cv2.imread(src)
     if Lb >= 3:
         im = cv2.filter2D(im, -1, kernel(Lb, 0.0 if g <= S.G_M_END else math.pi), borderType=cv2.BORDER_REPLICATE)
+    if g >= 1476:                                   # warm pool on the card + box, surroundings -18 % (director round 3)
+        hh, ww = im.shape[:2]
+        yy, xx = np.mgrid[0:hh, 0:ww].astype(np.float32)
+        r = np.hypot((xx - 0.5 * ww) / (0.55 * ww), (yy - 0.42 * hh) / (0.40 * hh))
+        pool = np.clip(1.0 - r, 0.0, 1.0); pool = pool * pool * (3 - 2 * pool)
+        k2 = 1.0 - 0.18 * (1.0 - pool) * min(1.0, (g - 1476) / 8.0)
+        warm = np.stack([1.0 - 0.05 * pool, 1.0 + 0.0 * pool, 1.0 + 0.06 * pool], -1)[..., ::-1] if False else np.stack([1.0 + 0.06 * pool, 1.0 + 0.0 * pool, 1.0 - 0.05 * pool], -1)   # BGR: warm = less blue, more red
+        im = np.clip(im.astype(np.float32) * k2[..., None] * warm, 0, 255).astype(np.uint8)
     if g >= 1476:                                   # card shot: exposure -15..-18 % (director round 1)
         k = 1.0 - 0.17 * min(1.0, (g - 1476) / 14.0)
         im = im.astype(np.float32) * k
