@@ -44,7 +44,7 @@ def drift(g, g0, c0, tgt0, rate, slide, snaps, lift=0.0):
     return loc, look
 HEAD = Vector((0.7, 2.3, 1.22))
 D_ = 1.66 / 3.21                                   # metres per head D of the inspector card
-V31 = unit(Vector((1.54, 2.23, 0))); V32 = unit(Vector((-0.83, 1.83, 0))); V33 = unit(Vector((0.87, 0.5, 0)))
+V31 = unit(Vector((1.54, 2.23, 0))); V32 = unit(Vector((-0.83, 1.83, 0))); V33 = unit(Vector((1.16, 0.74, 0)))
 def rt_of(v): return Vector((v.y, -v.x, 0))       # camera-right (horizontal) for a view direction
 def ear_of(v):                                     # the inspector's screen-LEFT ear (the card is billboarded to a camera looking along v)
     return HEAD - rt_of(v) * (0.505 * D_) + Vector((0, 0, 0.02))
@@ -52,13 +52,15 @@ def cam31(g):
     return drift(g, RANGES[31][0], Vector((-0.99, 0.17, 1.45)), Vector((0.55, 2.40, 1.38)), 0.08, 0.16, [(1884, 11, 0.76, 0.20), (1917, 11, 0.80, -0.20)], lift=0.04)
 def cam32(g):
     return drift(g, RANGES[32][0], Vector((1.32, 0.39, 1.45)), Vector((0.46, 2.30, 1.30)), 0.09, 0.14, [(1966, 11, 0.78, 0.15), (1993, 11, 0.80, -0.15)], lift=0.04)
+S3A = (((-0.58, 1.46, 1.02), (0.58, 2.20, 1.24)), ((-0.14, 1.80, 1.06), (0.74, 2.20, 1.24)))     # team 1's shot-3 insert (film17/s01 shot.py), start -> end
+LOOK_DX = 0.0
 def cam33(g):
     t = (g - RANGES[33][0]) / 38.0
-    E = ear_of(V33); F = -V33
-    d = 0.95 / (1.0 + 0.12 * t + 0.28 * ez(clamp((t - 0.30) / 0.45)))      # slow drift, then the quick push-in: x1.4 in all
-    loc = E + F * d + rt_of(V33) * (0.04 * (t - 0.5) + 0.07 * ez(clamp((t - 0.12) / 0.2))); loc.z = E.z - 0.30
-    look = E + rt_of(V33) * 0.10 + Vector((0, 0, -0.06))
-    return loc, look
+    u = 0.3 * t + 0.7 * ez(clamp((t - 0.15) / 0.6))                       # slow drift, then the quick push-in (x1.4)
+    (c0, l0), (c1, l1) = S3A
+    loc = Vector(c0) + (Vector(c1) - Vector(c0)) * u; look = Vector(l0) + (Vector(l1) - Vector(l0)) * u
+    off = ear_of(V33) - Vector((0.58, 2.20, 1.24))               # our ear sits where team 1's ear is: same picture
+    return loc + off, look + off
 def cam_of(g):
     sh = shot_of(g); loc, look = {31: cam31, 32: cam32, 33: cam33}[sh](g)
     a = {31: 0.012, 32: 0.010, 33: 0.005}[sh]                    # handheld sway
@@ -141,7 +143,7 @@ class Take(object):
         ins = self.act["ins"]; pi = pose_inspector(g); fx, fy = sprites.feet_of("inspector17", pi)
         sc = K.CAST_H["inspector17"] / K.CAST_HD["inspector17"]
         self.put(ins, f, Vector((HEAD.x, HEAD.y, K.HEAD_Z["chair"] - sc * fy)), sc, cl)
-        E = ear_of(v); bp = E - rt_of(v) * 0.60
+        E = ear_of(v); bp = E - rt_of(v) * (0.62 if sh == 33 else 0.60)
         scb = K.CAST_H["bertillon"] / K.CAST_HD["bertillon"]
         self.put(self.act["ber"], f, Vector((bp.x, bp.y, 0.0)), scb, cl)
         for k, (st, cast, mir) in CAST_STAND.items():

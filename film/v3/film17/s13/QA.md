@@ -1,6 +1,6 @@
 # QA s13 (film 17 ending, shots 31-33), re-render round 2, g 1862-2051 (g0 1868, g1 2052, 6 handle frames before, none after: hard cut at 2052)
 take.mkv is split (`cat take.mkv.part* > take.mkv`), 190 frames 720x1280. transition_in dissolve 11. Cuts inside: 1947, 2014.
-- qa_auto PASS (magenta 0.0 %). rhythm.py (cuts 1947,2014): in-shot median 4.45, p90 12.58.
+- qa_auto PASS (magenta 0.0 %). rhythm.py (cuts 1947,2014): in-shot median 4.56, p90 13.69.
 - Full-res frames for review: full/g1917 g1987 g2007 g2030 g2050.jpg.
 
 ## Changes vs round 1 (gate: QA-tech FAIL / QA-art FIX-FIRST)
@@ -8,7 +8,7 @@ take.mkv is split (`cat take.mkv.part* > take.mkv`), 190 frames 720x1280. transi
 - Calipers: Bertillon now stands at the inspector's camera-LEFT, the calipers bar vertical in his right hand with the jaws pointing at the ear (one tip above, one below), pinned with hand_for_anchor. Ear drawn on the inspector sprite (screen-left ear). Shot 31: hand at waist/chest, clear of every face. Shot 32: jaws approach over g1960-2000 and clamp the ear (bar >= 250 px). Shot 33: clamped on the ear with Bertillon's hand low-left, no head disc at the edge.
 - Shot 31: camera starts at 2.85 m (was 3.4) and higher/closer, floor reduced; coat rack and camera-hood slabs removed from the opening (fg is a stool with a kepi that slides out); two 11 f snaps (g1884, g1917).
 - Shot 32: camera from the right-front, Bertillon never in front of the ear; inspector's eyes slide sideways toward the calipers over g1950-1972; Bertillon's gaze goes down to the ear.
-- Shot 33 (shared insert spec as I read it): camera ~0.95 m, 0.3 m below ear height, swung ~60 deg to the side, ear at x ~260-330 y ~560-620, quick x1.4 push, moustache twitch (head-roll pulse) g2027-2034, no blink after g2005 (no slit-eye frame). I used the screen-left ear with the bar vertical (jaws point at the ear) instead of "bar exits frame left": team 1's shot 3 should match this geometry; please compare.
+- Shot 33 round 3: camera = team 1's S3A numbers from film17/s01/shot.py (render17/team1), offset so our ear lands where theirs does (ear ~x 340, y 640): low near-profile ~60 deg, push x1.4, jaws on the ear, Bertillon's hand on the slider; his head disc is still visible at the left edge for ~g2014-2030 (reach limit: moving him further away made the jaws miss the ear). Earlier text, superseded: (shared insert spec as I read it): camera ~0.95 m, 0.3 m below ear height, swung ~60 deg to the side, ear at x ~260-330 y ~560-620, quick x1.4 push, moustache twitch (head-roll pulse) g2027-2034, no blink after g2005 (no slit-eye frame). I used the screen-left ear with the bar vertical (jaws point at the ear) instead of "bar exits frame left": team 1's shot 3 should match this geometry; please compare.
 - Inspector card moved 0.28 m toward the lens (image unchanged) so the 3D headrest pad never cuts his face.
 
 ## Self-check (selfcheck.py)
