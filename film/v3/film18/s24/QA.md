@@ -1,12 +1,12 @@
 # QA s24 (film 18, render team 4)
 Range g 1807-1881, take.mkv frames 1801..1887 (87 frames), transition in: cut.
-Render: 720x1280, 12 samples, OIDN, 2 threads, 15.7 s/frame wall (two renders at once).
+Render: 720x1280, 12 samples, OIDN, 2 threads, 16.5 s/frame wall (two renders at once).
 
 ## Frame diff (90x160 grey, in-shot frames only)
-median 8.66, p90 13.59, min 2.83, max 15.03, frames < 1: 0 (rule: median >= 4, p90 >= 12)
+median 10.01, p90 15.51, min 3.55, max 16.96, frames < 1: 0 (rule: median >= 4, p90 >= 12)
 
 ## Max chin y per head (rule < 880)
-{"run0": 790, "run1": 807, "run2": 846, "run3": 848, "run4": 798, "run5": 845, "run6": 838, "run7": 845, "run8": 750, "run9": 814, "run10": 798, "run11": 843}
+{"run0": 774, "run1": 790, "run2": 845, "run3": 846, "run4": 781, "run5": 842, "run6": 829, "run7": 846, "run8": 737, "run9": 797, "run10": 781, "run11": 843, "run12": 840, "run13": 843}
 
 ## Notes
 - Rout reads: camera moved behind the camp looking at the Jimo wall (sky ~28 %), 8 fleeing / falling soldiers 15-25 D from the lens (~150 px tall), 4 flying pots/helmets (1.7x), tents folding, empty chariot rolling away in the middle ground. Bloodless, nobody hit.
@@ -20,5 +20,6 @@ median 8.66, p90 13.59, min 2.83, max 15.03, frames < 1: 0 (rule: median >= 4, p
 - Round 8 (must-fix list): round-8 set/cast assets pulled from film18/main. Every chin measured on rendered frames: max 845 (rule 860) incl. handles; a clamp pushes any soldier back until its projected chin is <= 835. 12 soldiers run at 3.4-4.4 D/s in all directions, 6 fall (fall_bottom, sit, get up and run); opaque J.prop_pot / J.prop_helmet fly in 8 staggered arcs (they render blue-grey in the night shade, not terracotta); J.prop_chariot (scale 0.6) tips 0 -> 0.8 over the shot, wheel rolls away; J.gapfill lays dark earth under the visible ground. Set chariots hidden.
 - Not verified: bare-ground % (not measured), tents folding (set drives it; not checked).
 - Round 11: props recoloured warm (terracotta pots, bronze helmets, warm wood chariot), prop scale 0.8, soldiers start x2.4 wider and run in all directions (6 fall); chins max 848. Bare ground not measured.
+- Gate 12: J.dress_ground + J.gapfill + 5 larger dropped props (pots, helmets, reed bundles) from the first frame: ground_share on RENDERED frames 0.008 / 0.004 / 0 / 0 at g 1807 / 1817 / 1827 / 1837 (limit 0.30). Two extra soldiers fall in open ground (x ~0.6-0.72, g ~1821 and ~1843, sit 22 frames); flying props scaled 0.6, chariot 0.6 (the director's "36 % wide" not re-measured). Chins max 846. A real contact sheet replaces the byte-copy contact.jpg (6 frames).
 
 See QA_AUTO.md and phone_sheet.jpg.
