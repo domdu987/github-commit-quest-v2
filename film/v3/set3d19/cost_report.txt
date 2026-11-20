@@ -4,7 +4,7 @@ W02_shop_wide_NIGHT          23.7 cpu s    12.0 wall s  8 spp  heads(role,y,px,c
 W03_shop_bench_DAY           28.1 cpu s    14.3 wall s  8 spp  heads(role,y,px,chin) [('harrison', 580, 126, 643)]
 W04_shop_bench_NIGHT         23.7 cpu s    11.9 wall s  8 spp  heads(role,y,px,chin) [('harrison', 580, 126, 643)]
 W05_shop_clock_DAY           31.7 cpu s    16.0 wall s  8 spp  heads(role,y,px,chin) [('harrison', 478, 188, 570)]
-W06_shop_clock_NIGHT         25.3 cpu s    12.8 wall s  8 spp  heads(role,y,px,chin) [('harrison', 478, 188, 570)]
+W06_shop_clock_NIGHT         26.2 cpu s    13.0 wall s  8 spp  heads(role,y,px,chin) [('harrison', 478, 188, 570)]
 W07_shop_door_DAY            20.2 cpu s    10.2 wall s  8 spp  heads(role,y,px,chin) [('mocker', 565, 200, 664), ('astro', 556, 245, 678)]
 W08_shop_door_NIGHT          17.6 cpu s     8.9 wall s  8 spp  heads(role,y,px,chin) [('mocker', 565, 200, 664), ('astro', 556, 245, 678)]
 W09_shop_bench_H2            29.5 cpu s    14.9 wall s  8 spp  heads(role,y,px,chin) [('harrison', 580, 126, 643)]

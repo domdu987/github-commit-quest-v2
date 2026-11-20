@@ -170,3 +170,29 @@ I judged every re-rendered tile at full size, with crops of the gears.
 
 ### Overall: FIX-FIRST (WORKSHOP only)
 HALL and SHIP teams may start. The WORKSHOP needs only the W06/W10 wedge fix.
+
+## SET gate round 5 (WORKSHOP only)
+I judged W01-W10 at full size, with 3x crops of the gears.
+
+| Tile | Finding |
+|---|---|
+| W10 | **FIXED.** The wall gears are clean, with solid rims and no wedges. |
+| W01-W05, W07-W09 | **No regression.** |
+| W06 | **OPEN.** The dark triangles are geometry gaps, not shadows. |
+
+**Why the W06 triangles are not shadows:**
+- They are not on gear(). They sit on the two H3 balance wheels (`clock_h3`, h19_shop.py:137-138).
+- Those rims are still built from 20 box segments. Box chords overlap on the inside and open on the outside, which leaves 20 V-gaps, so the "teeth" are just segment joints.
+- The wedges are identical all the way round the wheel, including the side facing the candle. A shadow would shift with the light.
+- They reach luma 0, while the shadowed backplate behind the spokes stays at 47 or above.
+- The crop holds 13.7k px under luma 40. The wedges read as black sawteeth at phone size.
+
+### WORKSHOP: FIX-FIRST
+Replace the box loop in clock_h3 (lines 137-138) with:
+```python
+mb.push(Matrix.Rotation(math.pi / 2, 4, 'X')); ring(mb, B, r - 0.017, r + 0.017, 0.038, 60); mb.pop()
+```
+Re-render W06 only. The pass bar is fewer than 50 px under luma 40 on the wheels (x 0-510, y 150-440).
+
+### Overall SET: FIX-FIRST
+HALL and SHIP still PASS. WORKSHOP needs this one W06 fix.

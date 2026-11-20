@@ -134,8 +134,7 @@ def clock_h3(M, par):
     bars = []
     for sgn, x in ((1, -0.13), (-1, 0.13)):
         mount = pivot('h3mount%d' % sgn, par, (x * 1.45, 0.03 * sgn,  0.04 + h + 0.02 + 0.16), rot=(math.pi / 2, 0, 0)); pv = pivot('h3bal%d' % sgn, mount, (0, 0, 0)); mb = MB('h3b'); r = 0.155      # rings stand upright facing the camera; the balance turns in its own plane
-        for k in range(20):
-            a = 2 * math.pi * (k + .5) / 20; mb.box(B, (r * math.cos(a), r * math.sin(a), 0), (2 * math.pi * r / 20 * 1.12, 0.034, 0.038), rz=a + math.pi / 2)
+        mb.push(Matrix.Rotation(math.pi / 2, 4, 'X')); K.ring(mb, B, r - 0.017, r + 0.017, 0.038, 60); mb.pop()   # director r5: closed annulus (box chords left V-gaps)
         for k in range(3): mb.box(B, (0, 0, 0), (2 * r, 0.018, 0.022), rz=math.pi * k / 3)
         mb.cyl(B, (0, 0, 0), 0.02, 0.05, seg=10); mb.cyl(B, (0, 0, -0.04), 0.008, 0.08, seg=6)
         for k in range(4):
