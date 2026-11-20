@@ -3,7 +3,7 @@
 |---|---|---|---|---|
 | s01 | 1 | **PASS** (QA-art R3 SHIP; QA-tech R2 blockers hand + post-whip caliper verified fixed) | render17/team1 d6ecda5 | rhythm 8.96/17.84; minor: brow bar g70-90, coat hem, beard seam |
 | s02 | 2 | PASS R3 (QA-tech; 3 should-fix accepted: no hand sprite on blue cuff, edge object, tight push) | c2c810e (USE THIS) | gate/s02/QA_TECH_R3.md |
-| s03 | 3 | FAIL r1 -> re-render | | |
+| s03 | 3 | **PASS** R2 (QA-tech; 5 should-fix accepted: jagged book outline, hand gap early, fg pile edge) | 3fcb09e (USE THIS) | gate/s03/QA_TECH_R2.md |
 | s04 | 4 | FAIL r1 -> re-render | | |
 | s05 | 2 (from 5) | **PASS** R2 (QA-tech + director look; should-fix accepted: edge crop, blown chandelier g685-715, hood cloth) | e553276 (USE THIS) | gate/s05/QA_TECH_R2.md |
 | s06 | 5 | **PASS** R2 (QA-tech; should-fix accepted: glove size, weak exit, double-hand g760/772) | 6fe61b4 (USE THIS) | gate/s06/QA_TECH_R2.md |
