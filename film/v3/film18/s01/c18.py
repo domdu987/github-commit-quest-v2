@@ -70,9 +70,10 @@ def shake(cam, amp, f0, f1):
             kp.handle_left[1] = kp.handle_right[1] = kp.co[1]
 
 def run(shot, actors_fn, g0, g1, hb=0, ha=0, quality=None, outdir=None, tweak=None, state=None, ctx=None, only=None, shk=0.0, cam_fn=None):
-    quality = quality or os.environ.get('Q', 'final'); outdir = outdir or os.path.join(HERE, 'raw' if quality == 'final' else 'draft'); os.makedirs(outdir, exist_ok=True)
+    quality = quality or os.environ.get('Q', 'final'); outdir = outdir or os.path.join(HERE, 'raw' if quality == 'final' else ('fast' if quality == 'fast' else 'draft')); os.makedirs(outdir, exist_ok=True)
     if tweak: tweak('pre')
-    A = J.build(None, shot); sc = bpy.context.scene; MN.setup_render(sc, quality); sc.render.threads = 2
+    A = J.build(None, shot); sc = bpy.context.scene; MN.setup_render(sc, 'preview' if quality == 'fast' else quality); sc.render.threads = 2
+    if quality == 'fast': sc.render.resolution_percentage = 50; sc.cycles.samples = 3
     J.apply_state(S.SHOTS[shot]['state'] if state is None else state)
     if tweak: tweak('post', A)
     cam0 = key_cam(shot, cam_fn, g0, g1 - 1) if cam_fn else J.key_camera(shot)
