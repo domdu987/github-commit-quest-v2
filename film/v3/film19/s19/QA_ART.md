@@ -71,3 +71,81 @@ Compared with ref R5_sheet.jpg (ship story) and R4_sheet.jpg. Rules checked: QA_
    - Remove the blue blob at his feet and fix the pompom tangent.
 
 Re-review after the fixes. Expected pass: set ≥ 7 once the wedges and box are replaced and the sand is dressed. Colour passes once luma is 110 or lower and saturation is 0.50 or higher.
+
+## Round 9 (director QA-art) - 2026-11-20 - verdict: PASS (7.2), with timing fixes recommended
+
+Take: v3/film19/s19/take.mkv (g1459-1589, 131 frames; BIGZOOM g1468-1578 = 48.93-52.60 s, 3.67 s).
+Frames: /tmp/qa19_r9art/s19/ (f01-f13 = 3 fps from g1459, step 10; gNNNN = key beats at full size; pNNNN = 360x640 phone size;
+sheet3fps.jpg, phone_late.png, glint_crop.png). Compared with R5_sheet.jpg and R4_sheet.jpg. Rules checked: QA_TEAM.md §G, §H and §I.
+
+### Measured
+- qa_stats2.py, whole take: sat 0.677, vivid 79.0 %, luma 109.0, warm 36.9 %, cool 48.7 %. That passes §G1 and §I3 by a wide margin (r7 had sat 0.499 and luma 127.6).
+- Per frame (Rec.601 mean): the opening wide is 106-110. The beach descent at g1519-1559 runs 118-124, because the sand fills the frame. The landing is 112. Saturation is 0.66-0.74 on every frame.
+- Motion (mean abs frame diff, 90x160):
+  - g1459-1481: static hold. g1482-1535: smooth ease-in up to about 17. g1541-1546: a dip to about 9.
+  - Then a second, faster hump peaks at about 18 at g1562-1567 (52.1 s). It slows only at g1574-1578, and the shot cuts at 1581.
+  - So the speed peaks 0.4 s before the landing. The medium shot is reached three frames before the cut.
+
+### What works
+- **The opening wide meets §H1 now.** From high over Port Royal you see red-roofed streets, the fort with a red flag, the bay with 8 small sails, the three-master and the far headland. The crew are about 1.5 % of frame height but findable, and the "PORT ROYAL" sign helps the eye find them. It is a strong, R5-like opening image.
+- **The set is rich.** The camera descends over roofs and past two palm crowns that pass 1-2 D from the lens. Along the way: barrels, crates, a cannon, logs, coconuts, grass tufts, a rowboat, oars, footprints and gulls. The flat brown wedges, the red box and the black canopies are gone. The fronds are lit green.
+- **Colour is vivid.** Cobalt sky, turquoise sea with sun glitter, deep-gold sand and red roofs. There is no haze. The warm orange rim on the cards separates them well from the sea.
+- **The "PORT ROYAL" sign reads.** It is legible on the phone from g1539 (51.3 s), and crisp at g1555.
+- **The landing frame (g1578) is a good hero three-shot.**
+  - William is raised on the crate, holding the H4 (about 80 px) and his tricorne. The left sailor jumps and the right sailor hugs.
+  - Everyone is grinning, the palms frame the shot and two hats are in the air.
+  - Every foot has contact. No face is over 35 % (William's is about 12 %), and nothing floats or clips.
+
+### Problems
+1. **There is no ease-out on the BIGZOOM, and the medium shot is never held.**
+   - The screen-space speed is double-humped. It dips at 51.4 s, then surges to its fastest at 52.1 s, so the last half-second feels like a lurch rather than a settle.
+   - The medium shot is reached at g1578 and cut at g1581. The payoff gets about 0.1 s of stillness.
+   - The cause: ZOOM_P = 0.82 smootherstep in path space. Perspective makes screen motion grow as the lens nears the cast, so path-space easing is not enough.
+2. **The payoff reads late.**
+   - At 51.0 s (g1530) the crew are about 6 % of frame height. At 51.3 s you can read the group cheering by the sign.
+   - William and the watch only read at about 51.7 s (g1550). The full medium shot arrives at 52.6 s.
+   - The glint at 49.9 s ("ห้าวินาที") lands when the cast is about 6 % tall. On the phone it is a white speck of about 4 px (glint_crop.png), so the "5 seconds" beat has no visual punctuation.
+3. **Composition mid-landing (g1555-1570).** The cast sits hard frame-right and the right sailor is cut in half by the frame edge (§G3) for about 0.5 s. This is transient but visible at full speed.
+4. **Cheap geometry, all minor:**
+   - William's crate is an untextured brown box. It is the most visible prop in the payoff.
+   - The thrown hats are grey flat-brim discs that read as UFOs or ashtrays, not hats (g1555-1578).
+   - The fort is a bare beige box with a flat top.
+   - The far headland is a smooth pale cone.
+   - A "T"-shaped primitive stands in the sand at g1525.
+   - A raised sand terrace on the right has a straight cut edge at g1519-1530.
+   - The oar blades lie as white strips and read like skis.
+   - The footprints are large raised beans in the foreground at g1555.
+5. **The acting is better but still a pose-hold.** All three keep their arms up from first legibility to the end. William never looks at the watch.
+
+### Scores (/10)
+| Area | Score |
+|---|---|
+| Set | 7.5 |
+| Light and colour | 8 |
+| Composition | 7 |
+| Acting | 7 |
+| Key moment | 6.5 |
+| Match to references | 7.5 |
+| **Overall** | **7.2: PASS** |
+
+### Fixes (recommended; 1-2 are cheap and worth doing before FINAL)
+1. **Re-time the descent so it ends early and holds.**
+   - Set GZ to about g1556 (51.9 s), so the medium shot holds for about 0.8 s until the cut at 1581 with the drift CamPath only.
+   - Ease in screen space instead of path space: set ZOOM_P to about 1.3-1.5, or ease on log(distance-to-cast), so the speed peaks mid-move and decays smoothly.
+   - Kill the dip at g1541-1546. The Bezier control Z_LM is probably bunching the path there.
+2. **Make the glint read.**
+   - Scale the star about 3x at g1497 so it is visible at 6 % cast size.
+   - Better, add a second, bigger glint and an H4 tilt toward the lens when William first reads (about g1550-1560).
+3. **Keep the right sailor inside frame at g1555-1570.** Aim the look-at more toward the cast (about 0.1 frame-width right) during the last third.
+4. **Small dressing fixes:**
+   - Texture the crate with planks and stencil "H4" or "JAMAICA" on it.
+   - Remodel the flying hats as tricornes or dark knit caps tumbling (add rotation).
+   - Remove the T primitive. Hide the terrace edge with a rock or grass clump.
+   - Give the fort a stone texture and crenellations.
+5. **Acting:** on the glint, have William bring the watch down to eye level, glance at it, then thrust it up. Swap one sailor's arms-up for a fist-pump on the beat.
+
+### s21 note (Barbados, same set, no separate verdict)
+- The set is the same beach, palms, boat and ship, so it is consistent with s19.
+- But the grade is paler and hazier: qa_stats2 gives sat 0.476 and luma 130.2. That fails §G1 luma (85-110) and §I3 sat (0.50).
+- The lower 35 % of frame is empty plain sand.
+- Match s19's deep-gold sand and cobalt sky (or DAY_JAMAICA's exposure), and dress the foreground with barrels, rope or footprints.

@@ -23,3 +23,17 @@ Issues:
 3. g1720-1756: palm trunk runs directly behind William's head and hat (tangent), minor.
 4. William stands almost still (only the camera drift and slight sway) for the whole 3 s; allowed by the brief ("calm") but breaks the 1.5 s rule in the letter. Suggest a small watch-hand wave or head tilt at g1700 and g1730.
 5. Eye-line: astro eyes still squint toward the lens, not up (note carried from round 2).
+
+## Round 9 (director QA-tech) - PASS (with notes)
+Checked: take.mkv 109 frames, meta g0 1665 / g1 1756 (shot g1665-1755), first_g 1656; 6 fps frames in /tmp/qa19_r9b/s21/f6/ and every frame in /tmp/qa19_r9b/s21/all/ (file index = g - 1656 + 1); g1720-1756 viewed frame by frame as head crops.
+Numbers (measured by QA-tech):
+- Frame-diff (90x160 grey, bilinear, 89 consecutive in-shot pairs g1665-1755): median 6.12 (>= 4 OK), p90 11.89 (>= 10 OK), min 1.89, max 13.41. No pop, no black frame, no frozen run.
+- Quadrant: lifted. In g1720-1756 it sits above the helmet like a crest and never touches astro19_c's brow or either eye (round 7 issue 1 FIXED). It never covers William's face or eyes. The green sleeve/hand holding it passes next to astro's right cheek/ear edge at g1720-1735 but no eye is hidden.
+- Quadrant tip vs William's tricorne: closest approach at g1725-1726 and g1742-1743, about 30-35 px by eye (corner to brim tip, mostly vertical offset). >= 20 px OK (measured by eye on 1:1 crops, not pixel-segmented).
+- Characters: both fully inside the frame (x ~ 20-700), no half-character cut; astro face ~16-20 % of frame height (< 35 %); head centres y ~ 450-640 (< 880); feet on sand with contact shadows, nothing floats. Mouths fixed (astro wavy frown, William smile), no lip-sync.
+- Motion/no-still rule: astro moves constantly (region diff never below 8). William's head/torso and watch-hand region shows bursts of motion at about g1672-1680 (nod), g1692-1696, g1700-1706 (glance/turn), g1722-1730, g1744-1752 with no gap longer than ~20 frames (0.7 s); lowest region diff 3.9. Nobody still > 1.5 s.
+Notes:
+1. William's new acts are small at phone scale. The nod at g~1672-1680 (head dips ~15-20 px) reads. The glance from g~1695 is hard to read because William's eyes are closed arcs and the head turn is slight. The thumb-wipe g1722-1746 reads only as a small watch/hand jiggle (~10-20 px). Not a fail, but QA-art may want a bigger head turn toward the astronomer.
+2. g1720-1756: the palm trunk still runs directly behind William's head/hat (tangent), minor.
+3. Astro eye-line still squints toward the lens (carried note).
+4. At g1750-1755 astro leans so his hair-tail comes within ~25-40 px of the left edge; still inside.
