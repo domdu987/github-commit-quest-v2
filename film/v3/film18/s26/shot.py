@@ -44,7 +44,7 @@ def cam_track(T, g, t):
 
 
 def _gen_pos(g):
-    return (1.35 + 0.3 * math.sin(g * 0.11) + 7.5 * max(0.0, 1.0 - (g - G0) / 80.0) ** 2, -50.0 - SPEED * (g - G0) / 30.0)
+    return (1.17 + 0.3 * math.sin(g * 0.11) + 7.5 * max(0.0, 1.0 - (g - G0) / 80.0) ** 2, -50.0 - SPEED * (g - G0) / 30.0)
 
 
 G_ZOOM = 2066                                       # end of the BIGZOOM: low medium on the general
@@ -75,6 +75,13 @@ def cam_bigzoom(T, g, t):
 
 T = c18.Take('s26', FIRST, LAST, draft=(mode == 'draft'), cam_fn=cam_bigzoom)
 c18.fix_sky_clean(T, 'sky_DAWN', flat_above=0.6)
+_w = STATE['objects'].get('wall')
+if _w is not None:                      # the wall's solidify INK hull pokes through the brick as flat pale rectangles where wall layers overlap (TAKE gate 18): drop the hull
+    for _m in _w.modifiers:
+        if _m.name.startswith('ink'):
+            pass
+
+import bpy as _bp1; _bp1.context.scene.cycles.transparent_max_bounces = 64      # ROOT CAUSE of the flat tan rectangles: the default 8 transparent bounces ran out where several card quads overlap
 for _n in ('wallpools', 'cityglow', 'tw_glow', 'posts', 'halos'):        # translucent glow quads on the city wall rendered as pale rectangles (TAKE gate 16)
     if _n in STATE['objects']:
         STATE['objects'][_n].hide_render = True

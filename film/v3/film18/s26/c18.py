@@ -92,9 +92,20 @@ def _clean_alpha(path, thr=24):
     Image.fromarray(a, 'RGBA').save(path)
 
 
+def _trim(m):
+    """crop the card PNG to its alpha bounding box and fix the meta (x0 / feet / w / h in D): the empty margins of the quad (flame / smoke headroom) rendered as pale rectangles over the wall."""
+    from PIL import Image
+    im = Image.open(m['path']).convert('RGBA'); bb = im.getchannel('A').getbbox()
+    if not bb:
+        return
+    l, t, r, b = bb; D = m['D']
+    im.crop(bb).save(m['path'])
+    m['x0'] = m['x0'] + l / D; m['feet'] = m['feet'] - t / D; m['w'] = (r - l) / D; m['h'] = (b - t) / D
+
+
 def oxcard(state='dragon', view='three_quarter', gait='gallop', phase=0, flame=-1, smoke=None, reed=False, face=None):
     """an ox card (8 gallop drawings, phase = 0..7); smoke = None or a drawing index for grey tail wisps (no flame)."""
-    key = 'OX6|%s|%s|%s|%d|%d|%s|%s|%s' % (state, view, gait, phase, flame, smoke, reed, face)
+    key = 'OX7|%s|%s|%s|%d|%d|%s|%s|%s' % (state, view, gait, phase, flame, smoke, reed, face)
     name = hashlib.md5(key.encode()).hexdigest()[:10] + '_ox'
     mp = os.path.join(CD.CARDS, name + '.json')
     if os.path.exists(mp) and os.path.exists(os.path.join(CD.CARDS, name + '.png')):
@@ -106,7 +117,7 @@ def oxcard(state='dragon', view='three_quarter', gait='gallop', phase=0, flame=-
         ax, ay = f['anchors']['tail_tip']
         svg += smoke_svg(ax, ay, smoke); bb[1] = min(bb[1], ay - 3.6); bb[0] = min(bb[0], ax - 2.6); bb[2] = max(bb[2], ax + 1.0)
     m = CD._write(svg, bb, 0.0, CD.PXD_O, name); m['kind'] = 'ox'
-    _clean_alpha(m['path'])
+    _clean_alpha(m['path']); _trim(m)
     json.dump(m, open(mp, 'w')); return m
 
 
