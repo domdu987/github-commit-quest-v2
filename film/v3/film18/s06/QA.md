@@ -1,8 +1,8 @@
-# QA s06 (film 18, team 1) — "สิบตัว" (round 2, dolly + truck)
+# QA s06 (film 18, team 1) — "สิบตัว" (round 4)
 Take: g 459-530 (72 frames), first_g 459, jimo_in DUSK, 720x1280, 12 samples, ~17 s/frame. transition_in: CUT.
-Changes: camera dolly toward the lane + 2.4 D truck along it, one held +15 % punch on "สิบตัว" (g 497), camera lowered look-at so the oxen and houses sit at y ~0.4-0.5; 10 plain oxen (no coats, no blades) in a double row, all in frame; Tian Dan leads with head and pupils turned toward the oxen, inside the frame all take; townsfolk at the gates; a woman and a child carrying baskets (cast cards) in the lower third as the foreground; navy dig tools / baskets hidden; hand-held sway 0.016 rad.
+Round-4 changes: the 10 plain oxen (no coats, no blades) were moved nearer the lens (y 15-17) so they and Tian Dan fill the frame, camera look-at raised, a child and an old man carrying baskets added at the right foreground from g 459, so bare ground is about 30 % at g 459-510 (was 40 %); dolly + 2.4 D truck + one held punch at g 497 as in round 3, no pulses; Tian Dan inside the frame all take.
 ## Frame-diff (90x160 grey, in-shot)
-median 5.81 (>= 4 OK), p90 9.79 (target >= 12: not met), min 2.05, max 13.14.
+median 7.26 (>= 4 OK), p90 12.22 (>= 12 OK), min 3.07, max 15.06.
 ## Checks
 qa_auto PASS. Heads above y 880, no mouths, no flames, no blades, no text.
-Known: p90 under 12; about 30 % plain ground remains at the bottom; the gate-side townsfolk are mostly hidden behind the oxen.
+Known: Tian Dan and the child overlap in the last second; bare ground is about 28-30 %.
