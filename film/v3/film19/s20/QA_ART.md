@@ -70,3 +70,22 @@ shot.py now has hand (+/-1.30, 0.95) with layer "front", talk_mouth(g, 0.6) blen
 Acting 6, Key moment 6, Composition 6. **Overall 6.5.**
 
 Blockers: keep k 1.4, but lower the snap peak from 2.6 to about 1.6, or pull the hands in to about +/-1.05 during the snap, so both hands stay inside x 40-680 from g 1633 to 1667. Make the palms white or skin so they read as open palms.
+
+## Round 5 (re-render 09:33): FIX-FIRST, 7.0
+
+Frames checked (g): 1610, 1625, 1635, 1645, 1655, 1665 at full size (frame index = g - 1572), plus 2x crops of both frame edges at g 1645/1655/1665.
+Frames: /tmp/claude-0/-home-user-github-commit-quest-v2/a108c86f-deb9-528c-85fa-39b541349af8/scratchpad/artkey5/s20_g*.png, edges.png
+
+shot.py: hx eases 1.30 -> 1.00 over G_QUOTE-5..G_QUOTE+8 (plus 0.04 pump), squash 0.04, head_roll -10. Snap is still k 1.4, peak 2.6, shift (-0.60, -0.30).
+
+| Earlier fix | Status |
+|---|---|
+| 1. Arms out, palms up | HOLDS (g 1625, 1635): the spread is clear of the wig. |
+| 2. Squash / head roll | FIXED. The -10 roll and the 0.04 squash read as a tilted, smug shrug at g 1645 and 1655. |
+| 3. Hands in frame through the snap | MUCH BETTER, NOT MET. Both cuffs and hands are now on screen in every frame, so it reads as a shrug and not "wig and coat". Measured hand extents: g 1635 about x 25-85 and 585-635 (OK). At g 1645 the left hand is x 42-105, but the right fingertips touch x 720. At g 1655 the left fingertips touch x 0, and the right hand is cut through the palm (x 687-720, fingers off frame). At g 1665 the left fingertips are at about x 5 and the right hand is x 650-710. The x 40-680 band from Round 4 is missed at g 1645-1665. |
+| 4. Smug mouth | HOLDS. The flat slot at g 1635-1655 and the small "o" at g 1665. |
+| Nice-to-have: light palms | Still dark mitts (not a blocker). |
+
+Acting 7, Key moment 6.5, Composition 6.5. **Overall 7.0.**
+
+Blocker (one small change): the snap keeps pushing in after g 1641, so hx 1.00 is not enough. Either take hx to about 0.85 from g 1641 to the end (and drop the 0.04 sideways pump), or lower the snap peak from 2.6 to about 2.2. The goal is that the right hand at g 1655 and the left fingertips at g 1655/1665 sit inside x 40-680. Everything else is approved, so do not touch it.
