@@ -16,8 +16,9 @@ G0, G1, H = 1196, 1342, 6
 FIRST, LAST = G0 - H, G1 + H                          # 1190 .. 1348
 G_CUT = 1275                                          # shot 23 starts (plan 42.40 s + 0.10 s)
 WORK = os.path.join(HERE, "work")
-GAIN = float(os.environ.get("GAIN", "1.6"))
-SWAY = float(os.environ.get("SWAY", "0.05"))
+GAIN = float(os.environ.get("GAIN", "1.9"))
+DUST = float(os.environ.get("DUST", "0.0"))
+SWAY = float(os.environ.get("SWAY", "0.07"))
 
 # ---------------------------------------------------------------- camera
 P22 = Vector((-1.7, 0.9, 1.5)); L22 = Vector((3.2, -2.9, 1.3))
@@ -41,7 +42,7 @@ def cam_of(g):
     if g < G_CUT:
         u = (g - FIRST) / float(G_CUT - 1 - FIRST)
         fwd = (L22 - P22).normalized(); R = right_of(P22, L22)
-        pos = P22 + fwd * (-0.9 * GAIN) * mix(u) + R * (-0.45 * GAIN) * mix(u) + Vector((0, 0, 0.05)) * mix(u)
+        pos = P22 + fwd * (-0.45 * GAIN) * mix(u) + R * (-0.45 * GAIN) * mix(u) + Vector((0, 0, 0.05)) * mix(u)
         s = snap(g, 1236)
         pos += fwd * (0.1 * GAIN) * s + R * (0.35 * GAIN) * s
         s2 = snap(g, 1215); pos += fwd * (0.05 * GAIN) * s2 + R * (-0.25 * GAIN) * s2
@@ -49,7 +50,7 @@ def cam_of(g):
         pos += R * (SWAY * math.sin(g * 0.5)) + Vector((0, 0, SWAY * 0.7 * math.sin(g * 0.77)))
         track = Vector(group_pos(g)) + Vector((0, 0, 1.25))
         look = L22.lerp(track, 0.92 * C.smooth(u)) + R * (0.5 * GAIN) * s * 0.0
-        look = look + R * (0.9 * GAIN) * s
+        look = look + R * (0.9 * GAIN) * s - R * (0.5 * C.smooth(u))
     else:
         u = (g - G_CUT) / float(LAST - G_CUT)
         fwd = (L23 - P23).normalized(); R = right_of(P23, L23)
@@ -64,7 +65,7 @@ def cam_of(g):
 
 
 # ---------------------------------------------------------------- staging
-D_START = Vector((2.75, -2.4, 0.0)); D_END = Vector((0.5, -1.55, 0.0))
+D_START = Vector((2.75, -2.4, 0.0)); D_END = Vector((1.2, -1.95, 0.0))
 INS_LAG = 0.8
 
 
@@ -94,8 +95,8 @@ def bob(g, f=1.9, a=0.03, ph=0.0):
 
 
 CHAIR = (0.7, 2.3, 0.5)
-BERT23 = Vector((0.8, 3.3, 0.0))
-INS23 = Vector((-0.4, 2.5, 0.0))
+BERT23 = Vector((0.7, 3.3, 0.0))
+INS23 = Vector((0.1, 2.0, 0.0))
 INS_YAW = float(os.environ.get('INS_YAW', '0.7'))
 DUP_SEAT = Vector((0.8, 2.13, 0.0))
 
@@ -123,13 +124,13 @@ class Take(object):
     def remove_rods(self):
         # the loose spreading calipers on the small table read as floating white rods: delete their geometry (world sphere r 0.3 at (2.10, 1.70, 0.81))
         import bmesh
-        ctr = Vector((2.10, 1.70, 0.81)); ctr2 = Vector((1.55, 1.64, 0.97)); n = 0
+        ctr = Vector((2.10, 1.70, 0.81)); ctr2 = Vector((1.55, 1.64, 0.97)); ctr3 = Vector((2.44, 1.27, 1.10)); ctr4 = Vector((2.12, 2.01, 0.81)); n = 0
         for o in bpy.data.objects:
             if o.type != 'MESH' or o.name.startswith('fg') or not o.data.vertices:
                 continue
             mw = o.matrix_world
             bm = bmesh.new(); bm.from_mesh(o.data)
-            dv = [v for v in bm.verts if ((mw @ v.co - ctr).length < 0.3 and 0.78 < (mw @ v.co).z < 1.0) or (o.name.endswith('cream') and (mw @ v.co - ctr2).length < 0.25)]
+            dv = [v for v in bm.verts if ((mw @ v.co - ctr).length < 0.3 and 0.78 < (mw @ v.co).z < 1.0) or (o.name.endswith('cream') and ((mw @ v.co - ctr2).length < 0.25 or (mw @ v.co - ctr3).length < 0.3)) or (o.name.endswith('steel') and (mw @ v.co - ctr4).length < 0.12)]
             if dv:
                 n += len(dv); bmesh.ops.delete(bm, geom=dv, context='VERTS'); bm.to_mesh(o.data)
             bm.free()
@@ -167,30 +168,28 @@ class Take(object):
             p["yaw"] = 0.35; p = cast17.silent(p)
             out["dup"] = (gp, c, walk(c, p, g, 0.0), None, bob(g, f=2.0), True)
             c, p = C.story("gendarme_escort_a"); p["yaw"] = 0.3
-            out["ga"] = (gp - Rr * 0.66, c, walk(c, p, g, 0.5), None, bob(g, f=2.0, ph=0.4), True)
+            out["ga"] = (gp - Rr * 0.6, c, walk(c, p, g, 0.5), None, bob(g, f=2.0, ph=0.4), True)
             c, p = C.story("gendarme_escort_b", mirror=True); p["yaw"] = -0.3
-            out["gb"] = (gp + Rr * 0.66, c, walk(c, p, g, 0.25), None, bob(g, f=2.0, ph=0.2), True)
-            ip = group_pos(g, INS_LAG)
+            out["gb"] = (gp + Rr * 0.6, c, walk(c, p, g, 0.25), None, bob(g, f=2.0, ph=0.2), True)
+            ip = group_pos(g, 0.25 + 0.65 * C.smooth((g - FIRST) / 60.0))
             c, p = C.story("inspector_arms_crossed", expr="proud"); p["blink"] = C.blink(g, [1224, 1262]); p["yaw"] = 0.5
             p["head_roll"] = -6 + 2 * math.sin(g * 0.15); p = cast17.silent(p)
-            out["ins"] = (ip + Rr * 1.9, c, walk(c, p, g, 0.75), None, bob(g, f=2.0, ph=0.6), ip.x < 3.0)
+            out["ins"] = (ip + Rr * 1.9, c, walk(c, p, g, 0.75), None, bob(g, f=2.0, ph=0.6), True)
             c, p = C.story("bertillon_neutral"); out["ber"] = (BERT23, c, p, None, 0.0, False)
         else:
             c, p = C.story("dupont_innocent")
+            p = cast17.silent(p); p["mouth"] = "flat"; p["expr"] = "worried"; p.pop("gaze", None)
             t = (g - 1290) / 30.0
-            burst = 1.0 if (1290 <= g < 1322 or 1328 <= g <= 1345) else 0.0
-            sh = math.sin(2 * math.pi * 2.0 * t) * burst
-            p["yaw"] = 0.1 + 0.5 * sh; p["head_roll"] = -4 + 6 * sh
-            shr = 0.5 + 0.5 * math.sin(2 * math.pi * 0.9 * (g - G_CUT) / 30.0)
-            p["lean"] = 2 + 2 * shr; p["blink"] = C.blink(g, [1288, 1330])
-            p["squash"] = (1 + 0.012 * shr, 1 - 0.012 * shr)
-            p = cast17.silent(p); p["mouth"] = "flat"; p["legs"] = dict(preset="narrow", crouch=0.45, knee_r=0.0, knee_l=0.0)
+            burst = 1.0 if (1290 <= g < 1311 or 1318 <= g < 1339) else 0.0
+            sh = math.sin(2 * math.pi * 2.5 * (g - (1290 if g < 1315 else 1318)) / 30.0) * burst
+            p["yaw"] = 0.1 + 0.42 * sh; p["head_roll"] = -2 + 8 * sh
+            p["lean"] = 2; p["blink"] = C.blink(g, [1288, 1330])
+            p["legs"] = dict(preset="narrow", crouch=0.45, knee_r=0.0, knee_l=0.0)
             out["dup"] = (DUP_SEAT, c, p, "chair", 0.0, True)
-            c, p = C.story("inspector_arms_crossed", expr="proud")
+            c, p = C.story("inspector_arms_crossed", expr="happy")
             ch = math.sin(2 * math.pi * 3.0 * g / 30.0)
-            p["squash"] = (1 + 0.02 * ch, 1 - 0.02 * ch); p["head_roll"] = -8 + 2 * ch; p["yaw"] = INS_YAW; p["gaze"] = (0.9, 0.0)
-            p["blink"] = C.blink(g, [1292, 1334]); p = cast17.silent(p)
-            out["ins"] = (INS23, c, p, None, 0.03 * abs(ch), True)
+            p["squash"] = (1 + 0.02 * ch, 1 - 0.02 * ch); p["head_roll"] = -10 + 2 * ch; p["yaw"] = INS_YAW; p["pitch"] = -0.25; p["gaze"] = (0.9, 0.0); p["mouth"] = "smile"
+            p["blink"] = C.blink(g, [1292, 1334]); out["ins"] = (INS23, c, p, None, 0.03 * abs(ch), True)
             c, p = C.story("bertillon_neutral"); p["yaw"] = -0.3; p["head_roll"] = 2 * math.sin(g * 0.11); p["blink"] = C.blink(g, [1300])
             out["ber"] = (BERT23, c, cast17.silent(p), None, 0.0, True)
             c, p = C.story("gendarme_standing_a"); out["ga"] = (Vector((-1.0, 3.2, 0)), c, p, None, 0.0, False)
@@ -205,7 +204,7 @@ class Take(object):
             camrig.key_camera(f, pos, look, cam=self.cam, lens=22.0, interp="LINEAR", easing="AUTO")
             for o in self.fg:
                 o.hide_render = g >= G_CUT; o.keyframe_insert("hide_render", frame=f)
-            K.key_life(f, f, dust=0.2)
+            K.key_life(f, f, dust=DUST)
             P = self.poses(g)
             for k, (xy, c, p, seat, dz, vis) in P.items():
                 a = self.act[k]; self.place(k, f, xy, c, p, seat, dz); C.hide_keys(a, f, not vis)
