@@ -10,3 +10,12 @@
 
 ## Round 7 note
 - Motion blur on the whip frames was tried (shutter 0.5-0.9) and dropped: qa_auto then lists the blurred frames under FAIL. The foreground beam alone hides the swap. QA_AUTO PASS; its only note is soft frames g 960-961 (the beam). Frame-diff in-shot median 5.60, p90 13.68. Only g 955-968 were re-rendered; everything else is unchanged.
+
+## Round 8 (QA-art round 7: age gag as the joke, real whip, slump, leg stubs) - supersedes the age-swap notes above
+- Hair stays GREY through the whip pan and until the word: at g 996 ("หงอก", caption g 989 + the word ~g 996) it pops WHITE (+ spectacles, brown coat: harrison19 old=1) with a puff (the puppet's `steam` fx over g 995-1002) and a squash (1.07/0.93) plus a small hop (0.06 D). The beam wipe / motion blur of round 7 are removed (no swap under the whip any more).
+- The chisel stays in his hand the whole take: he taps it until g 992, slumps, and it hangs low in his right hand (angle -> pointing down) while the LEFT hand rubs his eyes. It never vanishes.
+- Tired beat: real slump g 993-1000 (lean 8 -> -15 deg back, pitch back, head roll 8, squash 1.03/0.97), then the eye-rub (blink 2) with the sweat drop.
+- Camera: the whip pan (g 952-972, shift 1.4 D) overshoots and then SETTLES BACK left (second move g 970-996, -0.9 D) with the look point turning +0.9 D: Harrison sits at the right of centre and the H3 (gold wheels) is in frame at his left while he rubs his eyes; the blank right-hand wall of round 7 is gone (it is a narrow strip). The whip peak is ~45 px per frame (a 120-180 px whip would take the 22 mm camera through the shop wall; I chose the swing-back option).
+- Legs: Harrison's mark is 0.2 D right of the old spot so the foreground chest (with the candle and the lantern) hides his lower legs: no white stubs float in front of the chest any more.
+- Face height / frame: head width max 229.5 px, head x 199-697 (nobody cut by an edge), always above y 880. Candle burn-down and the falling lights are unchanged.
+- Frame-diff in-shot: median 5.31, p90 12.24. QA_AUTO PASS. qa_stats: saturation 0.72, brightness 59.9 (night). s/frame 18.0 wall / 35.3 CPU.
