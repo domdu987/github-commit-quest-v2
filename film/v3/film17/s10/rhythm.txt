@@ -1,1 +1,1 @@
-frames 185 cuts_detected 6 in-shot median 8.69 p90 20.06
+frames 185 cuts_detected 6 in-shot median 9.07 p90 18.91
