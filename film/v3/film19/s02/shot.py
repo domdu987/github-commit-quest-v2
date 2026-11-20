@@ -128,11 +128,11 @@ def cam_rest(g):
     """(loc, look) in the ship's rest frame at film frame g.  After arrival: a slow push so the shot never parks."""
     loc, look = _spline(min(g, G_ARRIVE), 1), _spline(min(g, G_ARRIVE), 2)
     # settle: a slow orbit about the pair (parallax against the rigging) plus a gentle push; it STARTS during the ease-out (g 140) so the camera never parks
-    d = clamp((g - 150) / 70.0)
+    d = clamp((g - 168) / 70.0)
     ang = math.radians(17.0) * d * d * (3 - 2 * d)
     c = Vector((0.5, -30.5, loc.z))
     loc = c + Matrix.Rotation(ang, 3, "Z") @ (loc - c)
-    loc = loc + (look - loc) * (0.0030 * max(0.0, g - 150) * d)
+    loc = loc + (look - loc) * (0.0030 * max(0.0, g - 168) * d)
     look = look + Vector((0.0, 0.0, 0.30 * clamp((g - 134) / 36.0)))      # aim a little higher so the heads sit at y 450-760 (the camera still rides the deck)
     return loc, look
 
