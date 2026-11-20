@@ -39,10 +39,15 @@ def assign_for(g):
         bz = 0.06 * 0.5 * (1 - math.cos(2 * math.pi * 3.0 * g / 30.0)) if 1111 <= g < 1196 else 0.0
         a['gend_a'] = ('gendarme_standing_a', {'expr': 'smug', 'dz': bz}); a['gend_b'] = ('gendarme_standing_b', {'expr': 'smug', 'dz': bz * 0.8})
     else:
-        sn = 1111 <= g <= 1171                                   # snicker: 0.15 m hop at 3 Hz, open 'heh' grin on the up beat, closed smirk otherwise
-        ph = (3.0 * g / 30.0) % 1.0; bz = 0.15 * 0.5 * (1 - math.cos(2 * math.pi * ph)) if sn else 0.0; heh = sn and 0.25 <= ph < 0.75
-        a['gend_a'] = ('gendarme_heh_a' if heh else 'gendarme_standing_a', {'expr': 'smug', 'dz': bz})
-        a['gend_b'] = ('gendarme_heh_b' if heh else 'gendarme_standing_b', {'expr': 'smug', 'dz': bz, 'dx': OFF[0], 'dy': OFF[1]})
+        sn = 1111 <= g <= 1171      # planted chuckle (feet fixed): squash/stretch scale-z 0.94<->1.0 at 3 Hz about the feet + 0.04 head bob; open 'heh' grin on the up beat
+        ph = (3.0 * g / 30.0) % 1.0; c = 0.5 * (1 + math.cos(2 * math.pi * ph)) if sn else 1.0      # 1 = stretched (up), 0 = squashed
+        heh = sn and c > 0.5
+        for _s in ('a', 'b'):
+            _c, _p = cast17.STORY17['gendarme_standing_' + _s]; _p = dict(_p); _p['expr'] = 'smug'; _p['squash'] = (1.0, 0.94 + 0.06 * c); _p['head_dy'] = 0.04 * (c - 0.5) * -1 if sn else 0.0
+            if heh: _p['mouth'] = ('open', 0.22, 0.12)
+            cast17.STORY17['gendarme_snk_' + _s] = (_c, _p)
+        a['gend_a'] = ('gendarme_snk_a', {})
+        a['gend_b'] = ('gendarme_snk_b', {'dx': OFF[0], 'dy': OFF[1]})
     return a
 def clear_cast():
     # stage_cast2 builds NEW actors every call and never removes the old ones (stale shadow proxies -> black slabs): remove them first.
