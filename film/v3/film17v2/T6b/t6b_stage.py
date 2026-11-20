@@ -70,7 +70,11 @@ def clear_cast():
         except Exception: pass
     actors.clear_registry()
     for o in [o for o in bpy.data.objects if o.name.startswith(('c2_', 'bk_', 'back_', 'cc_', 't6b_'))]: bpy.data.objects.remove(o, do_unlink=True)
-    for b in [b for b in bpy.data.meshes if b.users == 0 and b.name.startswith(('bk_', 't6b_', 'back_', 'c2_'))]: bpy.data.meshes.remove(b)
+    for b in [b for b in bpy.data.meshes if b.users == 0]: bpy.data.meshes.remove(b)
+    keep = set(P.K._MATS.values())                      # materials cached by _flat / get_mat stay
+    for m in [m for m in bpy.data.materials if m.users == 0 and m not in keep]: bpy.data.materials.remove(m)
+    for im in [im for im in bpy.data.images if im.users == 0 and not im.name.startswith(('martin_', 'bottle'))]: bpy.data.images.remove(im)
+    for ac in [ac for ac in bpy.data.actions if ac.users == 0]: bpy.data.actions.remove(ac)
 
 
 # ======================================================= 6c / 6d / P2 re-staging (director note: card reads, nothing crosses faces)
