@@ -1,34 +1,44 @@
-# QA-art sJ2 (TAKE gate, v2)
-Take: gate/sJ2/film/v3/film21/sJ2/take.mkv (g1709-1848, hard cut at the end). Viewed: every 5th frame at full size, a crop of the bridge side at g1719, the last frames at full size, the team's contact and phone sheets. Compared with R5 (water, splash) and R7. Levels are left to the conform. Rim light is ruled on at FINAL. Note: the "empty money table" is row J1 in the plan, not J2, so it is not judged here.
+# QA-art sJ2 v3 (TAKE gate, team11 26285de)
+Take: gate/sJ2/film/v3/film21/sJ2/take.mkv (140 frames, 720x1280, g1709-1848, last frame g1847, hard cut). Viewed: every 5th frame (f6) at full size, a 2x crop of the bridge side at g1724, the real last frame g1847 pulled from the take, the team's contact and phone sheets, the team QA.md. Levels and saturation are left to the conform; rim light is a film-wide open item and is not judged here.
 
 ## Verdict: FIX-FIRST
 
-The middle and the end are much better. All the English are crimson now. The nose-pinch (g1759-1769) and the arms-up yelling jumps (g1779-1794) read and are funny. The splash is now petal sheets and streaks, and the three crowns at 1821/1830/1839 are separate hits beside the swimmers. The film now ends on three deadpan swimming faces at medium size, with a floating helmet: a real comic last image. The low-sun shadows on the bank are lovely.
+The why-they-jump now reads: two large lit saltire flags stand at the bridge mouth at the left of g1714-1745 and they still read at phone-thumbnail size. The big crescent smoke slabs are gone. The middle (sweat drops, nose pinch, yelling arms-up jumps, spluttering swimmers, floating helmet) stays funny and bloodless. One thing blocks it: the film's last 1.5 s. The camera sits behind a bare sand slope that fills the bottom half of the frame, the two outer swimmers are cut by the frame edges, and the "ตูม ตูม ตูม" crowns are small spikes behind the heads, so the final button is three heads peeking over a dune instead of three spluttering swimmers in the water.
 
-Two things block it. The reason for the jump is still not visible, and the old crescent smoke "blades" stand behind the very last frame of the film.
-
-## Old items (v1)
-| v1 item | status |
+## v2 items
+| v2 item | status |
 |---|---|
-| 1 show the blocked bridge, three head turns | NOT FIXED in effect: the bridge and wall are in frame but unreadable (B1) |
-| 2 end on faces | FIXED |
-| 3 thin and reshape the splash | FIXED (except N2) |
-| 4 recolour the blue English | FIXED |
+| B1 blocked bridge does not read (g1709-1772) | FIXED ENOUGH. Two saltire flags (big one about 12 % of frame height) are lit and clear at g1714-1745, with the bridge deck behind. Residuals in N1. |
+| B2 grey crescent smoke slabs (g1789-1848, last frame) | FIXED. The slabs are gone. Only thin faint grey wisps remain (N2). |
+| N1 bare bank + white foam band at the end | NOT FIXED, WORSE: the bank is now about 45-55 % of the frame from g1819 (B3). |
+| N2 first impact sheets too big | MOSTLY FIXED: petals are thinner; one white sheet still covers the right edge (N3). |
+| grey horn slabs on the horizon | FIXED (same as B2). |
+| crown shard near the lens g1800-1806 and from g1829 | PARTLY: it moved to the right edge, a tall white shard at g1799-1819 (about 25 % of frame height); a small sliver at the left edge from g1829. (N3) |
+| left swimmer cut by the edge | NOT FIXED: the left face is cut by the left edge from g1829, and now the right swimmer is cut in half by the right edge too (B3). |
+| three "ตูม" crowns at 1821/1830/1839 | Present and separate, but small thin spikes behind the heads; they do not land as three big hits (B3). |
 
 ## Issues
 
-**B1 (blocking), g1709-1772: the blocked bridge does not read.** The bridge and the Scots wall sit at the far left against the sun. They come out as one dark navy band under a black tree silhouette: the saltire banners and the blue tunics cannot be told apart from the shadow. The group faces the lens, and the "look at the bridge" is only a sideways glance at nothing visible. With the sound off nobody knows WHY they jump.
-Fix: make the wall readable for at least 1 s before the nose-pinch. Options, best first:
-a) Re-aim the bank camera so the bridge mouth is front- or side-lit (camera south-west of the group looking north-east, or swap which side of the frame the bridge is on), with the wall plus 2-3 saltire banners at 8-12 % of the frame height behind the group.
-b) If the angle must stay, light the wall: a warm bounce or fill on the wall cards, translucent banner cloth with a white cross, and remove or move the dark tree that blocks the bridge at g1714-1735.
-Make the bridge head turn a full head-card swap toward it (0.4 s), not just the eyes.
+**B3 (blocking), g1815-1847, including the film's last frame: the ending frame is weak.**
+- The near bank (bare sand, no detail) fills the bottom 45-55 % of the frame and sits BETWEEN the camera and the swimmers, so the swimmers read as peeking over a dune; the water around them is a thin band.
+- The left swimmer's face is cut by the left edge and the right swimmer (mail coif) is cut in half by the right edge in g1829-1847.
+- The crowns at 1821/1830/1839 are thin white spikes behind the middle head, under 10 % of the frame; the plan asks for 3 big crowns, with the hard cut on the last one.
+Fix (camera and placement only, re-render g1800-1847): move the end camera 0.5-1 m out over the water line (or lower it to 0.2-0.3 m above the water and tilt up 5-8 deg) so water fills the lower third under the faces and the sand is at most 15-20 % of the frame; pull the three swimmers inward so all three faces sit inside x 60-660; scale the "ตูม" crowns about 1.5-2x and place them beside (not behind) the swimmers, with the last crown peaking at g1846-1847 so the cut lands on it. Keep the deadpan mustache face centred as the button.
 
-**B2 (blocking), g1709, g1789-1848 (including the final frame): the old crescent smoke blades.** Two tall grey-beige sickle shapes stand above the camp behind the swimmers. In the last image of the film they read as giant fins or blades. The team's H2a/H2b redo replaced them with soft smoke puffs (set3d21 e07ceb1). Fix: re-render sJ2 on the current set so the end frame matches the rest of the film.
+**N1 (non-blocking), g1714-1745: the wall itself still does not read as Scots soldiers.** Next to the flags the "wall" is a row of orange and yellow blocks (it reads as crates), with no blue tunics or faces, and the warm point light makes a hard yellow hotspot on the ground at the far left. The flags carry the read, so this is not blocking. Fix: put 4-6 Scots head-cards in blue with spears above the shield row, recolour the shields blue or wood, and soften or narrow the point light so the ground hotspot goes.
 
-**N1 (non-blocking), g1815-1848: the bare bank and the white foam band.** The near bank fills the bottom 35-40 % of the frame, cut by a hard white foam stripe that reads like a slab. Lower the camera about 0.3 m toward the water line, or tilt up, so water and faces fill more of the frame, and soften or narrow the foam band (or add 2-3 reed cards at the bottom edge).
+**N2 (non-blocking), g1714-1749 and g1799-1847: faint grey smoke wisps.** Thin grey curved streaks rise near the flags and above the right-hand camp in the end frames. They are thin and read as smoke trails, not shapes, but they still pull the eye in the last frame. Fix: fade them to 50 % or replace them with one soft puff.
 
-**N2 (non-blocking), g1796-1814: the first impact sheets are too big.** They cover about 30 % of the frame and one face at g1809-1814. Scale those petals about 0.7x, or offset them away from the face.
+**N3 (non-blocking), g1799-1819: a tall white splash shard on the right edge.** About 25 % of the frame height, cut by the frame edge. Fix: cull or move that petal inward, as was done on the left.
+
+**N4 (non-blocking), g1713-1745: the "look at the bridge" is mostly eyes.** The lead faces the lens. A 0.4 s head-card swap toward the flags would make the head turn readable on a phone.
+
+## Checks
+- Colour story: English all crimson with grey helmets; Scots blue is now present as the saltire flags. Pass.
+- Heads above y 880: all faces sit at about y 450-820 through the take. Pass.
+- Comic and bloodless: everyone surfaces spluttering or deadpan, helmets float, nobody lies still. Pass.
+- §G: feet and contact shadows on the bank, jumps in motion, no face over 35 % of frame. Pass.
+- Frame edges: fail at g1829-1847 (B3), g1799-1819 (N3).
 
 ## Scores
-phone legibility 7 (bank 6, water 8) / set density 6 / light 7 (warm low sun on the bank, cool water) / colour story 7 (crimson yes, saltire blue missing on the bank) / acting and comedy 8 / same channel? yes in the water section / camera travel 8.
-§G pass: feet and contact shadows on the bank, the jumps are in motion, helmets float ON the water, no face over 35 %. Bloodless pass: everyone surfaces spluttering, and nobody lies still.
+phone legibility 7 (bank 7, end 6) / set density 6 / light 7 (warm low sun, cool water; hotspot at the wall) / colour story 8 / acting and comedy 8 / last-frame button 5 / camera travel 7.
