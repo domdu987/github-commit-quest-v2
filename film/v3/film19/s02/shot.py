@@ -268,7 +268,7 @@ def cam_rest_raw(g):
     loc, look = _land(_tau_of(g))
     ang, push = _drift(g)
     c = Vector((0.5, -30.5, loc.z))
-    loc = c + Matrix.Rotation(ang, 3, "Z") @ (loc - c)
+    loc = c + Matrix.Rotation(-ang, 3, "Z") @ (loc - c)                      # the drift continues the landing's travel direction (-x), eased in from zero
     loc = loc + (look - loc) * push
     return loc, look
 
