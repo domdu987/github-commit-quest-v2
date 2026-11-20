@@ -290,3 +290,25 @@ Measured, finals (720x1280, 12 samples, 2 threads, one render at a time): 15.8 s
 - s08: the far wall top still carries a flat red slab (gate-tower lintel colour) behind the general.
 - Ox cards: the cast has no head-on front-3/4 view yet (ART 15, cast fixer): in s21 / s22 the oxen are drawn side-body with the head turned; horn blades are the current cast (long). Re-run `jimo_cards.py` (delete `set_work/cards/*_ox.*`) when cast18 changes, then `python3 jimo.py final`.
 - Period: rammed-earth tiling, the pagoda finial of the towers and the panelled tents were not touched.
+
+## Ground dressing (render teams: call this)
+QA keeps failing shots because 35-55 % of the frame is bare tiled field, dirt lane or road. Do NOT dress shots one by one: call this once per shot, after the camera is posed / keyed.
+
+```python
+A = J.build('jimo_out', 's20'); J.apply_state(...); J.key_camera('s20')        # or J.shot_camera('s20', t)
+info = J.dress_ground(frames=range(f0, f1 + 1))                                   # keyed move: the union of the frustums
+share = J.ground_share('frame.png')                                              # 0..1, plain-ground share of a render
+```
+**`J.dress_ground(cam=None, density=1.0, seed=0, keep_clear=None, frames=None)`** (`jimo_dress.py`) scatters instanced props ONLY where the camera sees the ground: the frustum footprint from the near plane to 42 D (vista: 520 D, props scaled by distance). Returns `dict(n, kinds, stat, poses, ...)`. Calling it again replaces the previous dressing (`J.clear_dressing()` removes it).
+- `cam`: camera object or its name, default the scene camera (pose it first: `shot_camera` / `key_camera` / `make_camera`).
+- `frames`: film frames of a keyed camera; the ground is the UNION of the frustums at up to 9 frames spread evenly over them (None = the current pose only). The frame is restored afterwards.
+- `density`: 1.0 = about one prop per 13 px square of visible ground on a 360 x 640 frame (vista: 34 px), then thinned by keep-clear, existing objects and spacing; 0 = nothing; hard cap 1100 objects. Scale is boosted with distance (up to 1.8x, vista 6.5x) so far props still read; nothing within 2.8 D of the lens, nothing tall within 10 D of a low camera.
+- `seed`: deterministic (same scene + camera + seed = same digest in two processes).
+- `keep_clear`: `[(x, y, radius)]` circles that stay empty. `None` = `default_keep_clear()`: the shot's stand marks, herd positions and road path from `jimo_shots` (`marks_for`, z <= 3), each 1.5 D. `[]` = none. A given list REPLACES the default (add `default_keep_clear()` yourself to extend it).
+- Dressing by place: jimo_in / jimo_out lanes: straw / grass tufts, hay piles, stones, ruts, puddles (glossy + sky tint, they glint in the lamps), baskets, broken pots, wooden carts (some loaded), sacks, reeds (on the dry ditch floor too). yan_camp: trampled tufts, rocks, firewood stacks, spent arrows, rolled mats, rope coils, helmets, water jars. vista: hedgerows, tree clumps, haystacks, field-boundary ridges, small huts.
+- Not dressed: water / moat / berm / bridge (only the dry ditch floor at z -1.2), the wall footprint, the vista river, towns and Jimo's ring, and any cell where an existing set object stands (0.5 D grid, z 0.35-2.4).
+- Look: library of 24 small meshes x variants x 4 tones, ONE shared mesh per (kind, variant, tone), one object per prop (`dg_*`), `mat_lit` set materials, dark to mid values (gain <= 1); props within a fire's warm radius use the ochre-shaded tone; props that project into the caption band (y > 0.66 H) use the dimmed tone and never puddles, so they add no bright pixel. Every object has the 3 px ink hull (solidify, thickness = `T.hull(distance)`), `no_bounce`, shadows on (decals off).
+- Cost: 40-230 objects for a shot, 0.4-0.9 s to build, render time within noise of +0-13 % (360 x 640 draft, 6 spp).
+- Per-shot round-2 dressing (`jimo_r2.POST`: s02 / s19 / s20 / s26) is untouched and still runs; the two stack.
+
+**`J.ground_share(png, thr=1.5, detail=False)`** estimates the share of plain ground in a frame: resized to 360 px wide, Gaussian 1.5 px (so 6 / 12 spp noise, OIDN blotches and h264 blocks do not count as texture), Laplacian, fraction of 24 x 24 blocks whose top is below y = 0.4 H with variance < 1.5. Calibrated on 6 frames of the s20 take: mean 0.40 (0.29-0.47); target for a dressed frame <= 0.25. `detail=True` returns the block mask. CLI: `python3 jimo_dress.py share a.png b.png`. Note: the s20 take is plainer than a build of the current set (the take lacks the round-2 furrows), so a draft of the CLI build already reads 0.13-0.2; compare before / after of the same build.
