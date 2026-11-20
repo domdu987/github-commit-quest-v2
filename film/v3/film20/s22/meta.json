@@ -1,0 +1,83 @@
+{
+ "set": "v3/set3d20 TOWER preset tower_dusk, light NIGHT, year 1909 (antenna, hut, wagon + scrap cart), camera tower_dusk_chars moved in 1.5 D and lens shift +0.10 -> -0.03; wire_glow held 0.35; runtime: preset FG moved with the lens",
+ "cast": "v3/cast20 eiffel_old (centre, hands behind, worried -> proud at g1629), officer (right, card mirrored to face him, stern -> salute g1625-1630), 3 demolition men (riveter_hammer/tongs/forge cards) with the cast5 'pickaxe' prop as their crowbar (the card kit has no crowbar); marks bunched at runtime (-4.0..-8.2 m, y -217.6..-215.4) so the group fits at 15 D; heads 45-84 px, centre y 507-722; contact decal + proxy shadow",
+ "camera": "tower_dusk_chars (-8,-224,1.6 m) +1.5 D back, c20.CamPath push 5 %/s toward the group centre, slide -3 px/s, arc 2 deg/s, tilt -3.5 deg + 4.3 deg/s (heads sink from y ~545 to ~710 under the captions' band 880 without crossing 760), decay 0.25, snap x1.22 g1640-1655 on 'ขาดไม่ได้' (g1642)",
+ "events": {
+  "word_useless_men_freeze": 1586,
+  "word_becomes_drop_bars": [
+   1607,
+   1619
+  ],
+  "salute": [
+   1625,
+   1630
+  ],
+  "word_army": 1628,
+  "eiffel_proud_swap": 1629,
+  "men_cheer": 1632,
+  "wagon_rolls_away": [
+   1628,
+   1659
+  ],
+  "snap": [
+   1640,
+   1655
+  ],
+  "word_essential": 1642
+ },
+ "take": "s22",
+ "film": 20,
+ "shots": [
+  22
+ ],
+ "g0": 1561,
+ "g1": 1656,
+ "first_g": 1557,
+ "n_frames": 103,
+ "shot_ranges": {
+  "22": [
+   1561,
+   1655
+  ]
+ },
+ "handle_in": 4,
+ "handle_out": 4,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "handle_frames": 4,
+  "note": "cut in from shot 21; handle g 1557..1560 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 1656,
+  "handle_frames": 4,
+  "note": "cut to shot 23; handle g 1656..1659 rendered in 3D"
+ },
+ "dof": "none",
+ "text": "none",
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 10.11,
+ "s_per_frame_cpu_mean": 19.44,
+ "framediff_in_shot": {
+  "median": 4.39,
+  "p90": 5.5
+ },
+ "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json",
+ "head_px": [
+  46,
+  71
+ ],
+ "head_centre_y": [
+  598,
+  706
+ ],
+ "head_bottom_max_y": 742
+}

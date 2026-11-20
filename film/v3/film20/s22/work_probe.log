@@ -1,0 +1,12 @@
+00:48.927  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: built tower tower_dusk NIGHT in 48.6 s
+Traceback (most recent call last):
+  File "/home/user/github-commit-quest-v2/film/v3/film20/s22/shot.py", line 227, in <module>
+    Tk = Take("preview")
+  File "/home/user/github-commit-quest-v2/film/v3/film20/s22/shot.py", line 149, in __init__
+    A["marks"][k] = C.on_ground(CO.W(v))
+                                ~~~~^^^
+  File "/home/user/github-commit-quest-v2/film/v3/set3d20/core20.py", line 19, in W
+    def W(p): return (p[0] * SC, p[1] * SC, p[2] * SC)
+                                            ~^^^
+IndexError: tuple index out of range

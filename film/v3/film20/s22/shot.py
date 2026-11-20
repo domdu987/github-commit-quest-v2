@@ -39,12 +39,12 @@ SALUTE = (G_ARMY - 3, G_ARMY + 2)                 # arm up
 SNAP = (G_ESS - 2, G_ESS + 13)
 ROLL = (G_ARMY, G_LAST)
 PRESET, CAM = "tower_dusk", "tower_dusk_chars"
-PPD = 200
+PPD = 256
 
 # runtime marks (metres): bunched so that the group fits the frame at 18 D
-M = dict(eiffel_old=(-3.3, -213.0), officer=(-1.2, -213.2), demo_a=(-5.2, -213.7), demo_b=(-6.7, -212.8), demo_c=(-8.1, -213.6))
+M = dict(eiffel_old=(-4.0, -217.6), officer=(-2.2, -217.4), demo_a=(-5.5, -216.6), demo_b=(-6.4, -215.6), demo_c=(-7.3, -216.8))
 CAST = dict(eiffel_old="eiffel_old", officer="officer", demo_a="riveter_hammer", demo_b="riveter_tongs", demo_c="riveter_forge")
-CAM_BACK = 0.0       # D toward / away along the view, tuned below
+CAM_BACK = 2.5       # D toward / away along the view, tuned below
 HEAD_Z = 2.5
 
 
@@ -55,12 +55,12 @@ def A_(*a, **k):
 def pose_of(who, g):
     """the drawn pose of one actor at film frame g."""
     t = g / 30.0
-    sway = math.sin(g * 0.17 + hash(who) % 7)
+    sway = 2.2 * math.sin(g * 0.31 + hash(who) % 7)
     p = dict(legs="stand", t=t)
-    bl = [G_USELESS - 6, G_DROP - 1, G_ARMY - 4, G_ESS - 2]
+    bl = [G_USELESS - 1, DROP[0] - 1, G_ARMY, G_ARMY + 3]      # every expression / prop / arm swap is hidden on the closed frame (start + 1) of a blink
     p["blink"] = blink(g, bl)
     if who == "eiffel_old":
-        proud = g >= G_ARMY + 1 if True else False
+        proud = g >= G_ARMY + 1
         p.update(yaw=0.25, lean=5.0 + 0.6 * sway, pitch=-0.05, arm_r=A_(0.22, 0.90, bend=0.8, layer="top"), arm_l=A_(-0.22, 1.0, bend=0.7))
         p["expr"] = "proud" if proud else "worried"
         if proud:
@@ -108,16 +108,19 @@ def pose_of(who, g):
 
 
 def cam_path(A, cam):
-    ee = Vector(CO.W(M["eiffel_old"] + (HEAD_Z / CO.SC,)))
+    ee = Vector(CO.W(M["eiffel_old"] + (0.0,)))
     ee = Vector((ee.x, ee.y, HEAD_Z))
     c = Vector(A["cams"][CAM]["loc"])
-    cen = Vector(CO.W((-4.6, -213.2, 0.0))) + Vector((0, 0, HEAD_Z))     # the centre of the bunch
+    cen = Vector(CO.W((-4.7, -217.0, 0.0))) + Vector((0, 0, HEAD_Z))     # the centre of the bunch
     c = c + (c - cen).normalized() * CAM_BACK
-    return C.CamPath(c, cen, G_FIRST, G_LAST, push=0.07, slide_px=25.0, rise_px=0.0, arc_deg_s=2.0, tilt0=TILT0, tilt_deg_s=0.0,
-                     decay=0.25, snaps=[dict(g=SNAP, k=1.3, peak=1.7, shift=(0.3, 0.0))])
+    return C.CamPath(c, cen, G_FIRST, G_LAST, push=0.08, slide_px=0.0, rise_px=0.0, arc_deg_s=10.0, tilt0=TILT0, tilt_deg_s=1.8,
+                     decay=0.25, snaps=[dict(g=(G_USELESS - 2, G_USELESS + 11), k=1.25, peak=1.8, tilt=0.5),
+                                                          dict(g=(G_DROP - 1, G_DROP + 12), k=1.0 / 1.25, peak=1.8, tilt=-0.5),
+                                                          dict(g=SNAP, k=1.12, peak=1.7, shift=(0.0, 0.0))])
 
 
-TILT0 = 0.0
+TILT0 = 3.0
+SHIFT = -0.03       # tower_dusk_chars has +0.10 (heads y ~770): lens shift down to the head band
 
 
 def move_fg(A, cam_loc):
@@ -146,8 +149,9 @@ class Take(C.Take):
         C.Take.__init__(self, PRESET, light="NIGHT", quality=quality, name="cam_s22", cam_name=CAM)
         A = self.A
         for k, v in M.items():
-            A["marks"][k] = C.on_ground(CO.W(v))
+            A["marks"][k] = C.on_ground(CO.W(v + (0.0,)))
         self.path = cam_path(A, self.cam)
+        self.cam.data.shift_y = SHIFT
         move_fg(A, self.path.loc0)
         for a in ("eiffel_old", "officer", "demo_a", "demo_b", "demo_c"):          # the preset's own stand-in cards, if any
             for ob in bpy.data.objects:
@@ -186,10 +190,13 @@ class Take(C.Take):
     def pose(self, gs):
         for g in gs:
             f = bf(g)
-            self.key_cam(f, *self.path.at(g))
+            loc, look = self.path.at(g)
+            off = Vector((0.07 * math.sin(g * 1.9), 0.0, 0.07 * math.sin(g * 2.6 + 1.0)))      # light handheld sway (~4 px)
+            self.key_cam(f, loc + off, look + off)
             for k, a in self.cast.items():
                 mk = self.A["marks"][k]
-                C.place(a, f, mk)
+                bz = 0.06 * abs(math.sin(g * 0.52 + hash(k) % 5)) if (k.startswith('demo') and g >= G_ARMY + 4) else 0.0       # cheer bounce ~ 3 Hz
+                a.place(f, (float(mk[0]), float(mk[1]), float(mk[2]) + bz), scale=1.0, flip=(k == 'officer'))
             self.key_set(f, set_year=1909)
             S.signal_rings(-1.0, frame=f)
             S.wire_glow(0.0 if False else 0.35, frame=f)
