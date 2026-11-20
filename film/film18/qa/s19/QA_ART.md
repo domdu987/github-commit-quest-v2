@@ -1,23 +1,22 @@
-# QA-art — film 18 s19 (attack: oxen burst out of the wall, 47.56-50.51 s), TAKE gate
-Reviewed: take.mkv at 6 fps (frames in art6/, phone sheet art_phone.jpg 360x640) plus key frames at full size 720x1280. Frame refs = global g (30 fps).
+# QA-art s19 (attack: oxen burst out of the wall holes, 47.56-50.51 s), TAKE gate re-render — FIX-FIRST (reveal, strict)
+Reviewed: take.mkv at 6 fps (every 5th frame, art6/gNNNN.png = global frame g) at full size 720x1280 and on the 360x640 phone sheet art_phone.jpg. Scores 1-10.
 
-## What reads
-- The burst (g 1430-1455) is good. Oxen come out of the breached holes with dust puffs along a lit wall, and it reads on the phone.
-- From g ~1450 to 1500, oxen pass right through the lens. The frame fills with a single ox face or coat (g 1450-1500). One giant flat flame card floats in the sky, detached from any tail, with stair-step aliased edges (g ~1456 and ~1496). At g ~1500-1509 the frame holds the empty wall for about 0.3 s before the whip. The flames do not light anything.
-- About the qa_auto blur flag (g 1510-1520): I agree it is the low-detail whip landing, not blur. It is not an art issue.
+## Earlier changes
+1. Nearest ox at least 2.5 D away and at most 50 % of frame height: DONE, but overcorrected. The oxen are now about 8-12 % of frame height (y 760-960), small on the phone.
+2. Flames on the tail tips, capped, leaning back: PARTLY done. They are on the tips, but the tails curl up over the back, so each flame is a small (about 25x45 px) upright torch tip above the rump. The tails look like held torches, not burning tails. Flame size is about 1/8 of the body, against the 1/3 asked for.
+3. No empty-wall frames before the whip: DONE (the whip starts at g 1498 with oxen in frame).
+4. Warm light from the tails: weak. Small pools are visible under the oxen at g 1441-1471. Good, but faint.
 
-## Scores
-| Item | Score |
-|---|---|
-| Beat clarity (phone) | 6 |
-| Light / colour | 6 |
-| Composition | 5 |
-| Acting (herd) | 6 |
-| Camera move | 6 |
+New problems:
+- A flat untextured purple stripe runs diagonally across the lower left (x 0-560, y 1000-1280) in every frame, and a navy band sits along the bottom edge at g 1421-1456. This breaks rule 2.
+- Translucent teal low-poly spikes (grass?) stand on the ground and read as ice shards (rule 2).
+- Plain ground is about 35 % of the frame.
 
-## Verdict: FIX-FIRST (reveal)
+| Beat on phone | Light/colour | Composition | Acting | Camera |
+|---|---|---|---|---|
+| 6 | 6 | 5 | 6 | 6 |
+
 ## Changes
-1. **g 1445-1500, near oxen:** Keep the nearest ox at least about 2.5 D from the lens and no more than 50 % of frame height, so the shot stays "a herd pouring out of the wall" rather than "one ox face".
-2. **Flames, whole take:** Attach every flame card to its reed tail tip. Cap the card at about one third of the ox body length. Render it at a resolution high enough that the edges do not alias. Lean it backward against the run (streaming).
-3. **g ~1498:** Start the whip while the last oxen and Qi runners are still in frame, so there are no empty-wall frames.
-4. **Light:** Give each lit tail a small warm point light so the ground and the oxen's flanks pick up orange.
+1. **Placeholders, whole take:** Hide the purple diagonal stripe and the navy bottom band, or replace them with the textured moat bank/bridge. Hide or retexture the teal spikes as dark green-brown grass tufts.
+2. **Flames, whole take:** Make the tail pose trail BEHIND the ox (tail out level and backward, not curled up over the back), with the flame card about 1/3 of the body length, streaming horizontally backward with sparks. Raise the per-tail light so each ox throws an orange pool and rims its own rump and coat. On a phone, "fire on the tail, behind the ox" must be readable in this shot.
+3. **Framing, g 1427-1498:** Move the camera to about 10-12 D from the holes (from 16+ D) and lower the look-at, so the oxen leaving the holes are 18-25 % of frame height and plain ground is 25 % or less. Keep the nearest ox below 50 % height and out of the lens path.

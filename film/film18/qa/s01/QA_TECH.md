@@ -1,15 +1,17 @@
-# QA_TECH s01 (take g0-77, 78 frames) - FAIL (re-check of the re-shot)
-Checked: 6 fps frames (g0,5..75) + first/last 3, framediff re-measured from take.mkv (90x160 grey, 77 in-shot pairs): median 8.42, p90 14.84 (min 1.10, max 18.67). Caption band y880-950: mean max 78.8, bright(>200) 0.00 %.
+# QA_TECH s01 (g0-77, 78 frames) - FAIL
+Checked: 6 fps frames + first/last 3 (full-size g0/40/77 also), frame-diff re-measured (90x160 grey): median 5.32, p90 7.16 (min 1.4, max 10.6). Caption band y880-950 mean max 80, bright>200 0.00 %.
 ## Earlier issues (previous QA_TECH s01)
-- E1 p90 < 12: FIXED (14.84).
-- E2 right-edge clip at g70-77: FIXED (he is inside the frame, left edge ~25 px at g77).
-- E3 eye-line (looks at the lens with a frown, not at the ox): NOT FIXED, see 1.
-- E4 hook read, only 4-7 oxen: unchanged, non-blocking, see 4.
+- E1 p90 / snap peaks: now a smooth eased push (p90 7.16 < 9 but the push is visible; one held snap at ~g9-10). OK.
+- E2 left-edge clip: FIXED (he stays inside).
+- E3 eye-line: NOT FIXED (see 1).
+- E4 coat as free cloth: IMPROVED - the red coat is now draped over the front ox and he lifts a flap; reads as dressing.
+- E4b flat orange lantern: NOT FIXED (note 2).
 ## Issues
-1. g0-77 - eye-line: Tian Dan still faces the lens with the same frown in every sampled frame; the gaze never goes to the ox or the coat. Reads as posing. The plan beat is "tugs the coat over an ox". Fix: face card turned toward the ox / glance card on the tug beats.
-2. g40, g45, g65 (and g60-70 hat brim) - framing: the figure is clipped at the left edge: hat brim and hair touch x=0 at g40/g45/g65, body clipped at x=0. Fix: keep his mark 60 px inside the edges at the snap peaks, or reduce the slide at the peaks.
-3. g0-77 - plan beat: the red coat is held out in the air to the right as a free-standing red cloth next to an ox that already wears its coat. It reads as waving a flag, not dressing an ox. Fix: put the coat over the back of the ox he stands at, or show the ox half-dressed.
-4. g0-77 - hook read (non-blocking): only 3-5 dressed oxen visible; "พันกว่าตัว" is audio only. The fg lantern is a flat saturated-orange cylinder (RGB near 255,140,0) with no glow or pool of light; it reads as a plastic can, not a lantern. Fix: lower emission, add the warm halo and pool.
-5. g15-g45 (snap peaks) - framing: his face fills ~40 % of the frame width (chin ~y 825 at the peak, still < 880). The client rule is no extreme close-ups. Fix: reduce peak snap to about 1.15x.
+1. g0-77 - rule 7 eye-line: Tian Dan frowns straight at the lens in every sampled frame; he never looks at the ox or the coat he is handling. Same finding as the last two verdicts. Fix: turned face / glance card toward the ox on the tug beat.
+2. g0-20 - rule 5: plain pebbled lane is about 33 % of the frame (y ~850-1280 below his legs, only a flat lantern drum in it); it falls to ~25 % by g40. Fix: dark fg props (baskets, jars, rope) in the bottom third at the start, or start the tilt lower.
+## Notes (non-blocking)
+- fg lantern is a flat saturated orange cylinder with no glow or pool, reads as a plastic drum (still unfixed).
+- only 4-6 dressed oxen are readable for the hook "พันกว่าตัว".
+- face fills ~35 % of the width at g75-77, chin ~y 750 (< 880).
 ## Pass items
-heads/chin < 880 (max ~825); caption band clean, no emitters; no mouth moves (frown only); no text; ox horns have short blades and dragon coats (correct for s01); NIGHT matches plan; feet at g25-35 have contact shadows; no frozen/black/magenta frames (one low diff, 1.10 at g5, single frame); g range 0-77 matches the plan (78 frames).
+Heads < 880; subject in frame; no pulsing (smooth ramp, no return to start); dragon coats and horn blades present (correct for s01); NIGHT; no mouth movement; no text; band clean; no placeholder slabs; no frozen/black frames; g 0-77 matches the plan.

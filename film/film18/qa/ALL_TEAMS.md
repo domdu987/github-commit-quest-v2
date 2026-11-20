@@ -21,3 +21,7 @@ Several takes either pulsed (FAIL rule 1) or became too static once pulses were 
 The client rule (production-lessons §10) is a FILM-level number: median in-shot frame-diff >= 4 and p90 >= 12 across the whole film, checked at the FINAL gate.
 Per take, the TAKE gate now requires: median >= 4 (hard), no pulsing (hard), and p90 >= 9 as a guide (a take below 9 must show a visible eased dolly + slide; a take at 9-12 is fine).
 High-motion shots (s10, s14, s15, s19, s21, s24, the charge) carry the film's p90. Do NOT add pulses to reach 12 in calm shots.
+
+## Gate calibration (director, 2026-11-20 01:25 UTC)
+- Rule 7 (eye-line) is a NOTE, not a blocker: this puppet style often plays to camera. Only a character who must visibly react to something (the general to the herd, soldiers to the oxen) must look at it.
+- Bare ground: <= 25 % target; 25-30 % is a note; > 30 % blocks.

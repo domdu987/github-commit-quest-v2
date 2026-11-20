@@ -1,26 +1,19 @@
-# QA-art s21 (TAKE gate, key shot: REVEAL B) — FIX-FIRST
-Reviewed every 5th frame (6 fps) at full size 720x1280 and at 360x640. i = take frame (0-98), g = 1590 + i. Snap word "สัตว์ประหลาด" = g1646 = i56.
+# QA-art s21 (REVEAL B: "ในความมืด ทหารเยียนเห็นแต่สัตว์ประหลาดลายมังกร", 53.20-56.08 s), TAKE gate re-render — FIX-FIRST (reveal, strict)
+Reviewed: take.mkv at 6 fps (every 5th frame, art6/gNNNN.png = global frame g) at full size 720x1280 and on the 360x640 phone sheet art_phone.jpg. Scores 1-10. Snap word = g 1646.
 
-| criterion | score |
-|---|---|
-| Beat clarity on a phone | 4 |
-| Light and colour | 3 |
-| Composition | 5 |
-| Acting | 3 |
-| Camera | 3 |
+## Earlier changes
+1. Deep night, herd emerging out of the dark lit by its own tail fire: NOT DONE. The full moon and lit gate are still in frame. The herd is fully lit and visible behind the soldiers from g 1590. The tail fire gives no orange on the soldiers or the ground.
+2. No pulses, one held snap: DONE. Held steps at g ~1612 and g ~1638, then the x1.4 held snap at g 1646. Reads well.
+3. Soldiers turned to the herd, freezing at the word, 3D cup falling from the hand: PARTLY done. The freeze to O-mouths at g 1640 reads. But the soldiers still face the lens with their backs to the monsters. The falling cup at g 1645-1650 is still a flat yellow trapezoid hanging in the air (x 555-650, y 370-445, beside the moon).
+4. Salmon lintel beam textured or out of frame: NOT DONE. A flat salmon/pink beam crosses the top at y 100-250 (g 1615-1650). Hero ox face and steel blades: NOT DONE (smiling face; the horn tips are brown-gold brush shapes).
 
-What works: a dense herd of red dragon-coated oxen filling the palisade gap after the snap (i60-i98), the wall and gate tower behind them, and frozen O-mouth soldiers that read on a phone.
+New problem: after the snap (g 1655-1688) the centre soldier stands exactly in front of the hero ox's face and covers the "monster" at the moment it should land.
 
-Problems (strict, centrepiece):
-- NOT "out of the dark". The sky is bright moonlit blue with a full moon, the gate and wall are fully lit, and the herd is visible behind the soldiers from frame i0. The reveal is given away before the word. The oxen don't glow; they are lit flat like the set. The tail fire casts no orange light on the ground, the coats or the soldiers. Flames are small cards above the herd.
-- ZOOM PULSING. There are punch-ins at i19-21 and i38-40, each released back wider by i25/i45. Then comes the snap at i56. Frame-diff spikes are 20/20/23.
-- Eye-line/acting: all soldiers face the lens with their backs to the monsters, and they laugh until i55 while the herd stands behind them. It reads as "they never see it", not "jaws drop as it comes at them". This breaks rule 7.
-- Placeholder props: a flat untextured salmon/pink beam (gate lintel) runs across the top of the frame at i20-i58. At i56-i66 the falling cup is a flat yellow trapezoid hanging in the air at about y 300, roughly 300 px above any hand. It reads as a sticker, not a 3D bronze cup.
-- Monster read: the hero ox (i80-i98) has a friendly smiling face, and its horn blades read as brown brush tips, not steel.
-- Bottom ~35-40 % is bare ground at i0-i35.
+| Beat on phone | Light/colour | Composition | Acting | Camera |
+|---|---|---|---|---|
+| 5 | 4 | 5 | 4 | 6 |
 
 ## Changes
-1. **Light, i0-i98:** go to deep night. Darken the sky by about 60 %, hide the moon or dim it, and drop the fill on the wall and gate. Start the herd in darkness beyond the gap, with only a row of tail embers visible (i0-i40). Each tail flame gets a warm point light, so the oxen emerge lit by their own fire, with orange rim on the coats, the ground and the soldiers' faces. By i56 the frame should be a glowing red wall with at least 8 large flame cards trailing backward behind the oxen (parented to the tail tips, never floating free).
-2. **Camera:** remove the punch-ins at i19-21 and i38-40 and their releases. Use one eased push of 6-8 %/s plus a slide from i0, then ONE snap x1.5 at i56 (g1646), held to the end with no pull-back. Frame the start a little higher so plain ground is 25 % or less, and put a dark spear rack in the lower-left foreground.
-3. **Soldiers, i0-i98:** turn them toward the herd. Use either 3/4 or profile cards facing the oxen, or dark back-view silhouettes in the lower foreground corners (no faces needed). Have them laugh with cups up until i45, then glance and freeze, jaw dropped, toward the oxen at i56. Let the cup fall from the hand anchor as the 3D bronze cup (not the flat yellow card) to the ground by about i66.
-4. **Props/monster:** texture the salmon lintel beam (i20-i58) or reframe it out. Swap the hero oxen's smile for the startled/charging head (lowered horns, glaring eyes, steam). Make the horn blades steel-grey with a white specular glint.
+1. **Light + reveal, g 1590-1688:** Hide the moon, darken the sky and the gate by about 60 %, and keep the herd in darkness behind the gap until about g 1630, with only tail embers and orange glow visible. Raise the tail-flame point lights so the oxen, the ground and the soldiers' faces take orange rim light as the herd arrives. At g 1646 the frame must be a glowing red-and-fire wall against black.
+2. **Soldiers + cup:** Use back-view silhouettes: the same soldier cards filled solid near-black (no face) as 2-3 foreground figures at the lower-left and lower-right edges, so we look past them at the herd. Keep at most one faced soldier, at the side edge, never in front of the hero ox (clear x 200-560 after the snap). Replace the yellow trapezoid with the 3D bronze cup, falling from a hand to the ground (g 1646-1660), or remove it.
+3. **Props/monster:** Hide or texture the salmon beam (crop it out with the start framing). On the hero oxen, make the horn blades steel-grey with a white specular edge, and use the startled/charging head, not the smile.

@@ -1,9 +1,14 @@
-# QA_TECH s11 (take g853-951 incl. 8 f out handle, 99 frames) - FAIL
-Checked: 6 fps frames + first/last 3 (s11/qf/), framediff re-measured: median 13.79 (in-shot g853-943: 13.59), p90 18.38 - passes.
-1. g880-905 (f035-f045 region) - ghost props: pale, semi-transparent hexagonal/stick props float in the lower third and cross the caption band (f040 at y~890-960, f045 at y~900-1000); they change position between frames and read as rendering debris / floating objects. Fix: make the ground props opaque, grounded with contact shadows, and keep them out of y 880-950.
-2. g853-943 - sky: cream cloud sprites with dark triangular notches (f040 top-left, f090 top-left) read as stickers; sky top ~35 % empty. Fix: repaint/remove clouds, lower camera tilt.
-3. g853-943 - plan beat: "make horns with fingers / mock-moo" is only weakly present (one soldier with hands over head at f040, others laugh/cheer); no clear finger-horns pose. Fix: use the mock_moo horns drawing on 2-3 soldiers during g880-940.
-4. g915-951 (f085-f098) - continuity within shot: sky shifts from orange sunset to deep blue by f085-f098 while the fire and set stay lit; plan says DUSK throughout. Check camera tilt/sky card; keep warm band visible.
-5. g920-951 - fg soldier fills the right third with feet at y 930-960 (in the band) and a basket/rock overlapping; head/chin 819 max is OK. Non-blocking.
-6. caption band: bright (>170) share up to 6 % (fire edge/ground glow), >200 max 0.23 %. Non-blocking but near limit.
-Pass items: heads <= y 819; no mouths on quotes (only laugh/moo drawings, no quote lip-sync); fg prop present (jar, basket, rock) and varied soldier poses; fire present; DUSK start matches s10 neighbour; handle g944-951 present; no frozen/black/magenta frames; no text; g range 853-943 (+8) matches plan.
+# QA_TECH s11 (g853-951 incl. 8 f out handle, 99 frames) - FAIL
+Checked: 6 fps frames + first/last 3 (+ 4-frame strip g0-84); frame-diff re-measured: median 6.30, p90 8.42 (min 2.2, max 10.5) - passes median; p90 < 9 and a visible eased move (push + slide) is present. Band mean max 93, bright 0.00 %.
+## Earlier issues (previous QA_TECH s11)
+- E1 ghost props in the band: FIXED (none). E2 cloud stickers: FIXED. E4 sky shift: FIXED (warm sunset throughout). E5 fg soldier in the band: gone (his feet reach y ~930 at g~65-80, allowed).
+- E3 mock-moo horns: NOT FIXED (see 2).
+## Issues
+1. g853-951 - rule 5: the bottom 35-40 % (y ~790-1280) is plain dark-violet ground with only a small jar and a basket in the lower corners (the jar sits at the left edge at y ~900-1000). Over the 25-30 % limit for the entire take. Fix: dark fg props across the bottom (jars, baskets, rope), tilt up.
+2. g853-951 - plan beat: only 2 soldiers (plus one hidden) around the fire, both with open-mouth shouting faces and hands up beside the head; no finger-horns mock-moo pose is readable. Fix: use the horns drawing on 2-3 soldiers, add a 3rd/4th soldier.
+3. g853-951 - subject scale: the soldiers are small (20-25 % of the frame height) for most of the take, with 30 % plain sky above; the right-hand soldier steps in and out of depth (g55-80, grows to 2x then shrinks), which reads as a size glitch.
+## Notes
+- the two shouting faces have wide black open mouths (laugh/shout drawing, static), not lip-sync; acceptable but they look screaming.
+- the push on "ไอ้เสมียนวัว" (g~904) is not visible.
+## Pass items
+Heads < 880 (max ~y 560); fg prop present (jar, basket); fire lit; DUSK; no text; band mid-dark; no placeholder slabs; no frozen/black frames; handle g944-951 present; g 853-943 OK.

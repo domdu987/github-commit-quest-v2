@@ -1,13 +1,15 @@
-# QA_TECH s06 (take g459-530) - FAIL (re-check)
-Checked: 6 fps frames + first/last 3; frame-diff re-measured (71 pairs): median 3.23, p90 5.40 (min 1.46, max 10.03). Caption band mean 53-70; bright share max 1.30 %, mean 0.22 %.
+# QA_TECH s06 (g459-530) - FAIL
+Checked: 6 fps frames + first/last 3; frame-diff re-measured: median 5.54, p90 9.40 (min 2.0, max 12.7). Band mean max 71, bright>200 max 1.55 % (child's basket/skin highlights at the end).
 ## Earlier issues (previous QA_TECH s06)
-- E1 p90 < 12: NOT FIXED (5.40, worse than 11.00).
-- E2 ten oxen: OK (about 8-10 plain oxen in a double row).
-- E3 Tian Dan clipped at the left edge: FIXED, he stays inside the frame.
-- E4/E5 bare ground and eye-line: bare ground NOT FIXED (see 2); eye-line improved (sideways glance toward the oxen at g~500+), but the early frames still look at the lens.
+- E1 p90: FIXED (9.40, visible push + slide, no pulsing).
+- E2 ten oxen: OK (double row of plain oxen). E3 clip: FIXED.
+- E4 bare ground: NOT FIXED. E5 eye-line: partly (he glances sideways later, lens in g459-500).
 ## Issues
-1. whole shot - median 3.23 < 4 and p90 5.40 < 12; most pairs 2-3; one burst g~497-500 is the held punch. Fix: stronger eased push and slide (the lane slide of 2.2 D is not visible).
-2. g459-510 - rule 5: the bottom 40-45 % (y ~740-1280) is flat violet ground. Only at g~519-530 do the child and woman with baskets fill the lower-left. Fix: tilt up/in or add fg props from the first frame.
-3. g459-530 - plan beat: no gates opening and no townsfolk leading oxen with ropes; the oxen stand in a double row behind Tian Dan, and the old man is hidden (note, not blocking).
+1. g459-515 - rule 5: bottom 40-45 % (y ~700-1280) is plain violet ground with no props; only from g~510 do the child and basket fill the lower left, and the ground is still ~25-30 % at g530. Fix: tilt up / dark fg props from the first frame.
+2. g459-500 - rule 7 eye-line: Tian Dan faces the lens at the start (smug look); only the last third turns to the oxen.
+## Notes
+- the roof beam at upper right is a bright saturated red bar (g459-495); tone down.
+- at g~500-530 the black hair buns of two background children overlap the woman's lower face and read as a black beard/mouth blob; re-order depth.
+- plan beat (gates open, townsfolk lead oxen) only partly shown.
 ## Pass items
-Oxen PLAIN: brown, no coat, no blades, no flame in every sampled frame (continuity OK). DUSK. Heads < 880 (chin max ~y 800). No mouth moves. No text. No frozen/black frames. g range 459-530 matches the plan.
+Oxen PLAIN: brown, no coat, no blades, no flame (continuity OK); DUSK; heads < 880 (chin max ~y 800); no mouth movement; no text; band mid-dark; no placeholder slabs; no frozen/black frames; g 459-530 OK.

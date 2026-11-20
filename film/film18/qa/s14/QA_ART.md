@@ -1,22 +1,19 @@
-# QA-art — film 18 s14 (false payoff: toast, quote 2a "ไอ้เสมียนวัว…", 35.67-37.85 s), TAKE gate
-Reviewed: take.mkv at 6 fps (frames in art6/, phone sheet art_phone.jpg 360x640) plus key frames at full size 720x1280. Frame refs = global g (30 fps).
+# QA-art s14 (false payoff: toast + quote 2a, 35.67-37.85 s), TAKE gate re-render — FIX-FIRST (one small change)
+Reviewed: take.mkv at 6 fps (every 5th frame, art6/gNNNN.png = global frame g) at full size 720x1280 and on the 360x640 phone sheet art_phone.jpg. Scores 1-10.
 
-## What reads
-- Beautiful night camp: a full moon, a warm fire and a laughing soldier behind. The cup is raised high.
-- The general is only about 30 % of frame height, with sky filling the top 40 %. His face is about 35 px on the phone, so the laugh and lip-sync cannot be read: the moustache covers the mouth and the face is lit cold. The grey untextured lumps at the bottom (y 1000-1280) read as rocks or teeth, not wine jars. The punch-in on the quote cannot be seen.
+## Earlier changes
+1. Eye-level medium, general 55-65 % of frame height: DONE (about 55-65 %, head y 450-700).
+2. Held +20 % punch at the quote: DONE. Held steps at g ~1093 and g ~1113, no in-out return.
+3. Warm key on the face, open mouth below the moustache, belly bounce: DONE. The red open mouth reads on the phone, and the laugh reads.
+4. Warm brown-glazed jars instead of grey lumps: PARTLY done. The grey lumps are gone, but the new jar (x 570-720, y 935-1200, every frame) is a flat, unshaded tan silhouette with no glaze, no outline and no light. It reads as an unrendered cut-out (rule 2).
 
-## Scores
-| Item | Score |
-|---|---|
-| Beat clarity (phone) | 4 |
-| Light / colour | 7 |
-| Composition | 4 |
-| Acting | 5 |
-| Camera move | 4 |
+| Beat on phone | Light/colour | Composition | Acting | Camera |
+|---|---|---|---|---|
+| 8 | 7 | 7 | 8 | 7 |
 
-## Verdict: FIX-FIRST (false payoff)
+The beat lands: a fat general raises the bronze cup and roars with laughter, with laughing soldiers and a fire behind him. Moonlit night camp, good depth.
+
 ## Changes
-1. **g 1071-1136, framing:** Use the planned eye-level medium shot, cut at the knees. His head should be at about y 350-450 and he should fill 55-65 % of frame height. Keep the moon and the fire in the background.
-2. **Quote start 36.99 s (g 1113):** Punch in +20 % and hold it through the cut. Keep the 9 %/s push underneath; no in-out return.
-3. **Face, g 1071-1136:** Add a warm key from the fire side onto his face. Make the open laughing mouth bigger than the moustache so the lip-sync shows. Make the belly bounce of about 0.06 D at about 3 Hz visible.
-4. **Foreground:** Replace the grey lumps with 1-2 brown-glazed, warm-lit wine jars in a lower corner, not across the centre.
+1. **Jar, g 1065-1141, lower right:** Give it the jar material (dark brown glaze with a lighter shoulder highlight, a dark ink outline like the cast, a rim) and light it with the fire point light, or replace it with the set's lit wine-jar prop. If that is not possible quickly, hide it. A dark fg prop is welcome but not required here.
+
+Notes (not blocking): the face is still mostly white-cold. A little more orange on the fire side of the face and armour would tie him to the fire.

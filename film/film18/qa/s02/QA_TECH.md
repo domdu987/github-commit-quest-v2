@@ -1,11 +1,13 @@
-# QA_TECH s02 (take g78-165 = 78 in-shot + 10 handle, 88 frames) - FAIL
-Checked: 6 fps frames (g78,83,...) + first/last 3, framediff re-measured (in-shot g78-155, 77 pairs): median 5.49, p90 9.68 (min 1.81, max 12.12). Rule median>=4 OK, p90>=12 FAIL. Caption band y880-950 mean max 84.7 (<=110 OK), bright 0.00 %.
+# QA_TECH s02 (g78-165 = 78 in-shot + 10 handle) - FAIL
+Checked: 6 fps frames + first/last 3; frame-diff re-measured: all 88 frames median 4.19, p90 6.09 (in-shot 78 frames ~ 4.40 / 6.21, min 0.7 only in the handle). Band mean max 82, bright 0.00 %.
+## Earlier issues (previous QA_TECH s02)
+- E1 p90: now a visible eased pull-out (acceptable under the clarified gate).
+- E2 herd 10 D wide: NOT FIXED. E3 dark props bottom 30 %: NOT FIXED. E4 tying not readable: NOT FIXED. E5 eye-line: NOT FIXED. Navy slab removed (OK).
 ## Issues
-1. whole shot - camera: p90 9.68 < 12 (the team admits it). Fix: bigger punch snaps or a stronger pull-out so p90 >= 12.
-2. g78-165 - plan/mandatory "herd spread about 10 D wide": the herd is a single narrow file down the lane. At most 5-7 oxen are readable at any time and from g118 on they stand in a block 5-6 wide at the far end. The plan beat is "pull-out reveals dozens of dressed oxen filling the lane". Fix: widen the block to about 10 D, add two or three ranks, start the pull-out wider so 15+ oxen read at g118-155.
-3. g83-165 (bottom 40 %, y ~770-1280) - mandatory "dark props in the bottom 30 %": the bottom of the frame is bare, lit, empty lane (y 780-1280). The only fg objects are a spear rack/jar at the far left (clipped by the left edge x=0 throughout) and, from g98, a flat navy low-poly slab (cart/trough) at the right with no texture; it is a dark placeholder-looking wedge, not a prop. Fix: add dark baskets, jars and rope in the bottom third; replace or texture the slab; unclip the left rack.
-4. g98-165 - plan beat "ties blades": Tian Dan holds a blade up beside the ox only at g78-93; from g98 he is a tiny figure at the left edge, half hidden behind the rack and then the oxen, and the tying is not readable. The blades are already on all horns. Fix: keep him and the hero ox at 25-35 % of frame height through the pull-out, or show a tie on the hero ox's horn at g100-120.
-5. g78-165 - eye-line: Tian Dan looks at the lens with a frown, not at the horn he ties.
-6. g78-165 - composition (non-blocking): sky takes the top ~35 %; the herd is lined up frontally like a parade with identical poses.
+1. g83-165 - rule 5 / mandatory: from g88 on the bottom 45-50 % (y ~660-1280) is bare lit lane with nothing in it; no dark props at all. Far over 25 %. Fix: dark baskets, jars, rope or a spear rack in the bottom third, and keep the horizon at y 0.40-0.50.
+2. g98-165 - mandatory "herd spread about 10 D wide": the herd stays a narrow frontal block ~25-30 % of the frame width at the far end of the lane (8-10 oxen readable, tiny). The plan "pull-out reveals dozens of dressed oxen filling the lane" is not shown. Fix: widen to ~10 D, add ranks, stop the pull-out before the herd becomes a speck.
+3. g98-165 - plan beat / subject: Tian Dan shrinks to a ~60 px figure at the left edge, half hidden by a prop; the tie-the-blade beat (3.13 s) is not readable, and he is hard to find.
+4. g78-155 - eye-line: he frowns at the lens, not at the horn (g78-93).
+5. g78-165 - sky is ~40 % of the frame (note borderline).
 ## Pass items
-dressed oxen with short blades (correct for s02 per the plan); NIGHT; no stump/hay prop; heads < 880 (Tian Dan head max y ~360, oxen ~y 620); no mouths move; no text; hooves have faint contact shadows; no frozen/black/magenta frames; g range 78-155 matches the plan, handles g156-165 present (10 frames) for the 15-frame dissolve into s03.
+Dressed oxen with blades (correct for s02); NIGHT; no stump/hay prop; no placeholder slab; heads < 880; no mouths; no text; band mid-dark; no pulsing; no frozen/black frames; g 78-155 + 10 handle OK.

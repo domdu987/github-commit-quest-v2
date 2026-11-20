@@ -1,22 +1,19 @@
-# QA-art — film 18 s15 (false payoff: quote 2b "…ยอมแล้ว! พรุ่งนี้กินเนื้อวัวกัน!", 37.85-40.15 s), TAKE gate
-Reviewed: take.mkv at 6 fps (frames in art6/, phone sheet art_phone.jpg 360x640) plus key frames at full size 720x1280. Frame refs = global g (30 fps).
+# QA-art s15 (false payoff: quote 2b "พรุ่งนี้กินเนื้อวัวกัน!", 37.85-40.15 s), TAKE gate re-render — FIX-FIRST (one small change)
+Reviewed: take.mkv at 6 fps (every 5th frame, art6/gNNNN.png = global frame g) at full size 720x1280 and on the 360x640 phone sheet art_phone.jpg. Scores 1-10.
 
-## What reads
-- The general stands full-body in the middle ground, with tents and a spear rack behind him. Both arms are folded at his chest. The cup is not visible (s14 ends with the cup raised high, so this breaks continuity). There is no carving mime and no lip-lick. The mouth is hidden under the moustache. The face is lit cool blue, with the warm light only behind him.
-- On the phone the line "พรุ่งนี้กินเนื้อวัวกัน!" has no picture to go with it. This is the gloat the ending pays off, so it has to read.
+## Earlier changes
+1. Medium-close, push with no pulses: DONE from g ~1165 (head + chest + cup). g 1130-1160 is still nearly full-body, which is acceptable as the cut-in from s14. One held punch-in.
+2. Cup raised in the right hand matching s14, tilting; carving mime; lip-lick: PARTLY done. The cup continuity is good, and from g 1175 the cup tips over the helmet (reads as a drunken swig, fun). The carving mime is not visible (the left hand is hidden) and there is no lick.
+3. Mouth visible below the moustache: DONE. The lip-sync reads.
+4. Warm key + warm-lit wine jars in the corners: PARTLY done. The jars are the same flat unshaded tan silhouettes as in s14, now two pairs in both bottom corners (x 0-90 and 600-720, y 950-1280).
 
-## Scores
-| Item | Score |
-|---|---|
-| Beat clarity (phone) | 3 |
-| Light / colour | 6 |
-| Composition | 4 |
-| Acting | 3 |
-| Camera move | 4 |
+| Beat on phone | Light/colour | Composition | Acting | Camera |
+|---|---|---|---|---|
+| 6 | 7 | 6 | 5 | 7 |
 
-## Verdict: FIX-FIRST (false payoff)
+The gloat reads as "drunk, laughing general celebrating". The words "eat beef tomorrow" are carried by the narration. That is enough for the beat: who mocks whom is clear.
+
 ## Changes
-1. **g 1136-1205, framing:** Use the planned medium-close shot: head, chest and cup, with his head at about y 300-500. Push 10 %/s steadily, with no in-out pulses (there is one now at g 1145-1150).
-2. **Acting:** Keep the cup raised in his right hand, matching s14, and tilt it so wine spills. Have his left hand saw a carving mime at belly height on "พรุ่งนี้กิน" (38.39 s, g 1155). Do a tongue-out lick of the lips on "เนื้อวัว" (39.23 s, g 1180).
-3. **Mouth:** The lip-sync mouth must be visible below the moustache, using the same fix as s14.
-4. **Light and foreground:** Add a warm fire key on his face and chest. Replace the grey lumps at the bottom corners (y 1080-1280) with warm-lit wine jars.
+1. **Jars, g 1130-1210, both bottom corners:** Use the same fix as s14. Give them a shaded glazed material with an outline and the fire light, or hide them. They are the only thing that looks broken.
+
+Notes (not blocking): if a drawing allows it, bring the left forearm in front of the belly sawing on "พรุ่งนี้กิน" (g ~1155-1175) so the "eat the ox" idea has a picture. A few wine drops from the tipped cup at g 1175+ would also help.
