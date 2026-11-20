@@ -21,9 +21,9 @@
  "samples": 12,
  "take_file": "take.mkv.part* (cat take.mkv.part* > take.mkv; libx264rgb crf 6)",
  "rhythm": {
-  "median": 7.5,
-  "p90": 14.36
+  "median": 7.62,
+  "p90": 14.3
  },
  "qa_auto": "PASS",
- "round": 3
+ "round": 4
 }
