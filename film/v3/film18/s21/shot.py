@@ -30,12 +30,12 @@ def make_driver(quality):
     for nm in ('streaks', 'cityglow', 'moon'):
         if nm in C.STATE['objects']: C.STATE['objects'][nm].hide_render = True
     for o in list(ob):
-        if o.type == 'LIGHT' and o.data.type == 'SUN': o.data.energy *= 0.3                      # deep night
+        if o.type == 'LIGHT' and o.data.type == 'SUN': o.data.energy *= 0.8                      # moon-blue key / fill (was 0.3)
     C.R2.dim_wall_lights(0.25)
     FIRES = [(fi, fi['E0']) for fi in C.STATE.get('fires', ()) if fi['ob'].location.y > -30.0]
     for nm_g in ('ground2', 'campground', 'road'):
         o_g = C.STATE['objects'].get(nm_g)
-        if o_g is not None: o_g.data.materials.clear(); o_g.data.materials.append(C.flat_mat((0.026, 0.02, 0.03), nm_g + '_dark'))
+        if o_g is not None: o_g.data.materials.clear(); o_g.data.materials.append(C.flat_mat((0.010, 0.019, 0.060), nm_g + '_dark'))           # blue-tinted dark ground (was grey-mauve)
     for nm, rgb in (('water', (0.006, 0.008, 0.02)), ('banks', (0.015, 0.015, 0.03)), ('palisade', (0.03, 0.022, 0.02))):     # palisade bank also carries the salmon gate beam
         w = C.STATE['objects'].get(nm)
         if w is not None: w.data.materials.clear(); w.data.materials.append(C.flat_mat(rgb, nm + '_dark'))
@@ -67,9 +67,17 @@ def make_driver(quality):
     for c, s1, s2 in sold: actors[c['st']] = s1; actors[c['fr']] = s2
     # ---- the falling bronze cup (3D, toon-glazed)
     Bk = C.J.Banks(); M = C.STATE['M']; b = Bk('cup18', hull=0.0)
-    C.J.cyl(b, V((0, 0, 0)), 0.30, 0.52, M['gold'], seg=12, r1=0.42); C.J.cyl(b, V((0, 0, -0.04)), 0.14, 0.08, M['gold'], seg=8)
+    # a small bronze jue-style cup (bowl, rim ring, two posts, three legs): lit bronze with a warm point light riding with it (director final gate: no beige block)
+    C.J.cyl(b, V((0, 0, 0.10)), 0.26, 0.40, M['bronze'], seg=14, r1=0.40); C.J.cyl(b, V((0, 0, 0.48)), 0.43, 0.07, M['gold'], seg=14)
+    for sx in (-0.18, 0.18): C.J.cyl(b, V((sx, 0.0, 0.50)), 0.035, 0.22, M['gold'], seg=6)
+    for lx, ly in ((-0.16, 0.0), (0.12, 0.13), (0.12, -0.13)): C.J.cyl(b, V((lx, ly, -0.18)), 0.04, 0.28, M['bronze'], seg=6, r1=0.07)
     Bk.flush(C.STATE['SET']); cup = [o for o in C.STATE['SET'].objects if o.name.startswith('cup18')][0]; C.J.no_bounce(cup); cup.scale = (1.1, 1.1, 1.1)
-    cup.data.materials.clear(); cup.data.materials.append(C.glaze_mat(((0.05, 0.025, 0.01), (0.2, 0.1, 0.03), (0.45, 0.26, 0.08), (0.7, 0.45, 0.16)), 'bronze_cup'))
+    bm = C.bpy.data.materials.new('JM_cup_bronze'); bm.use_nodes = True; bn = bm.node_tree.nodes; bsdf = bn['Principled BSDF']
+    bsdf.inputs['Base Color'].default_value = (0.62, 0.34, 0.09, 1.0); bsdf.inputs['Metallic'].default_value = 0.5; bsdf.inputs['Roughness'].default_value = 0.38
+    bsdf.inputs['Emission Color'].default_value = (0.5, 0.25, 0.05, 1.0); bsdf.inputs['Emission Strength'].default_value = 0.55
+    cup.data.materials.clear(); cup.data.materials.append(bm)
+    cl = C.bpy.data.lights.new('cuplight', 'POINT'); cl.color = (1.0, 0.6, 0.25); cl.energy = 5.0; cl.shadow_soft_size = 0.2; cl.use_shadow = False
+    clo = C.bpy.data.objects.new('cuplight', cl); C.STATE['LIGHTS'].objects.link(clo); clo.parent = cup; clo.location = (0.0, -0.9, 0.3); clo.visible_camera = False
     # hide the tan watch posts and pale edge stakes at the gap (wood / palisade faces, their flames)
     import bmesh
     for nm_ in ('wood', 'palisade'):
@@ -87,7 +95,7 @@ def make_driver(quality):
         if o_.name.startswith('flame_pg'): o_.hide_render = True
     # deep night sky; the gate lintel (faces of the palisade bank above z 6.8 around the gap) is removed
     sk = C.STATE['objects'].get('sky')
-    if sk is not None: sk.data.materials.clear(); sk.data.materials.append(C.flat_mat((0.006, 0.009, 0.03), 'sky_deep'))
+    if sk is not None: sk.data.materials.clear(); sk.data.materials.append(C.flat_mat((0.0097, 0.0802, 0.429), 'sky_moonblue'))      # director final gate: moon-blue night, sky ~ RGB (25,80,175)
     import bmesh
     pl = C.STATE['objects'].get('palisade')
     if pl is not None:
@@ -104,9 +112,11 @@ def make_driver(quality):
     FG21 = (('jar', 0.40), ('helmet', 0.55), ('bowl', 0.55), ('pot', 0.42), ('jar', 0.32))           # director round 15: 5 dark props in the lower third, 1.5-2 D from the lens
     for n_, (kind, scl) in enumerate(FG21):
         o_ = C.J.prop_pot((0, 0, 0), kind=kind, scale=scl) if kind != 'helmet' else C.J.prop_helmet((0, 0, 0), scale=scl)
-        for c2 in [o_] + list(o_.children):
-            if c2.type == 'MESH': c2.data.materials.clear(); c2.data.materials.append(C.glaze_mat(((0.02, 0.01, 0.01), (0.1, 0.05, 0.03), (0.22, 0.1, 0.05), (0.5, 0.25, 0.1)), 'fg21_%d' % n_))
-        fgp.append(o_)
+        fgp.append(o_)                      # opaque, textured props with their own clay / bronze materials (the toon glaze read as see-through glow)
+    wl = C.bpy.data.lights.new('fgwarm', 'POINT'); wl.color = (1.0, 0.5, 0.2); wl.energy = 500.0; wl.shadow_soft_size = 1.5; wl.use_shadow = False
+    wlo = C.bpy.data.objects.new('fgwarm', wl); C.STATE['LIGHTS'].objects.link(wlo); wlo.visible_camera = False
+    wl2 = C.bpy.data.lights.new('fgcool', 'POINT'); wl2.color = (0.45, 0.6, 1.0); wl2.energy = 260.0; wl2.shadow_soft_size = 1.5; wl2.use_shadow = False
+    wlo2 = C.bpy.data.objects.new('fgcool', wl2); C.STATE['LIGHTS'].objects.link(wlo2); wlo2.visible_camera = False
     stars = [C.star_obj('g21_%d' % k) for k in range(3)]
 
     def drive(g):
@@ -117,6 +127,7 @@ def make_driver(quality):
             q_ = C.ground_at(cam_obj, u_, v_)
             if q_ is not None: o_.location = (q_.x, q_.y, 0.0)
         fwd = (V(pose['look_at']) - V(pose['loc'])); fwd.z = 0; fwd.normalize(); rt = V((fwd.y, -fwd.x, 0))
+        wlo.location = cam + fwd * 1.6 + rt * (-1.4) + V((0, 0, 1.3)); wlo2.location = cam + fwd * 1.6 + rt * 1.6 + V((0, 0, 1.0))
         ramp = C.smooth((g - G_FLARE) / 22.0)
         for fi, e0 in FIRES: fi['E0'] = e0 * (0.35 + 0.65 * C.smooth((g - 1626) / 20.0))             # gate and wall lamps come up only after the flare
         rows = []
