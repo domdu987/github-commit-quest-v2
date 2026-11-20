@@ -7,7 +7,7 @@
 | s04 | 4 | FAIL r1 -> re-render | | |
 | s05 | 5 -> 2 (reassigned) | FAIL R1 (mimic calipers unreadable, push-in instead of pull-out, tripod hood hides inspector) | d1bbc7c | gate/s05/QA_TECH.md |
 | s06 | 5 | FAIL R1 (QA-tech: 3 fingers unreadable, stick arm, pince-nez reads as scratch, scale pop g794-809, prefect exit missing) | 82cc76f | gate/s06/QA_TECH.md |
-| s07 | 6 | FAIL r2 -> inserts restage | | |
+| s07 | 6 -> 1 (reassigned R4, simplified insert spec) | FAIL R3 (no finger on gauge, foot jaws hidden, calipers not held, card never enters drawer, leftover rods, 10-20 f soft runs, g928 pop). Shot 16 OK and reusable. | 34bb2c8 | gate/s07/QA_TECH_R3.md |
 | s08 | 7 | R2: QA-art PASS, QA-tech FAIL (B1: right card floats without a hand + ring loop under it, verified by director at g1144/1169/1194) -> small fix R3 | 4ce80d3 | gate/s08/QA_TECH_R2.md, QA_ART_R2.md |
 | s09 | 8 | FAIL R3 (B1 inspector grin not visible + beret overlap; B2 head shake too slow) | 9ddf81d | gate/s09/QA_TECH_R3.md |
 | s10 | 9 | FAIL R2 (QA-tech FAIL + QA-art FIX-FIRST: calipers not on skull, 6-box countdown not visible, finger insert weak, whip smear 5-9 f) | acdfec4 | gate/s10/QA_TECH_R2.md, QA_ART_R2.md |
