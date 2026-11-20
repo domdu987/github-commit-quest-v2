@@ -1,0 +1,66 @@
+{
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "at": 2028,
+  "note": "hard cut from shot 24; 9 f in-handle g 2019..2027 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 2086,
+  "note": "hard cut to shot 26; out-handle g 2086..2094 rendered in 3D (snap push-in continues)"
+ },
+ "set": "v3/set3d19/h19.py HALL preset hall_low, light EVENING; set_candles flicker + set_regulator(True) keyed on EVERY frame; no caption_shade; no DOF",
+ "cast": "v3/cast19 astro19 (astro_jaw_drop): held wide-open mouth ('open' w 0.26 h 0.20 after the first frames), ring eyes, sweat drop, wig askew (head_roll 7 + tremble), shaky breath squash; NO talking: the jaw drop is a held open mouth; blinks 2050, 2074",
+ "camera": "custom 22 mm low angle from the hall_low start pose: c19.CamPath push 10 %/s + slide -110 px/s + crane 20 px/s + arc 14 deg/s; SNAP push-in x1.7 with a pan (shift 1.4 D, peak 2.3, 13 f) on 'เป๊ะ' (spoken ~69.35 s -> g 2081; caption phrase 68.89)",
+ "events": {
+  "jaw_drops": [
+   2024,
+   2034
+  ],
+  "sweat_drop": "from g 2019",
+  "snap": [
+   2069,
+   2082
+  ],
+  "word_pe_caption_start": 2065,
+  "word_pe_spoken": 2081
+ },
+ "cues": [
+  {
+   "time": 67.3,
+   "duration": 2.5,
+   "frame": 2019,
+   "end_frame": 2094,
+   "kind": "ambience",
+   "label": "hall by candlelight, low room tone; the regulator tick goes silent for a beat on the jaw drop"
+  },
+  {
+   "time": 67.6,
+   "duration": 0.4,
+   "frame": 2028,
+   "end_frame": 2040,
+   "kind": "accent",
+   "label": "a comic 'gulp' / deflating squeak as his jaw drops open",
+   "peak_frame": 2033
+  },
+  {
+   "time": 68.967,
+   "duration": 0.433,
+   "frame": 2069,
+   "end_frame": 2082,
+   "kind": "accent",
+   "label": "snap whoosh with a tiny sting on 'เป๊ะ'",
+   "peak_frame": 2076
+  },
+  {
+   "time": 69.533,
+   "duration": 0.0,
+   "frame": 2086,
+   "end_frame": 2086,
+   "kind": "cut",
+   "label": "hard cut to shot 26 (the money bag lands)"
+  }
+ ]
+}

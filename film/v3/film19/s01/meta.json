@@ -27,9 +27,9 @@
   "at": 57,
   "note": "hard cut to shot 2 (SHIP ship_aerial NOON) at g 57; handle g 57..65 rendered in 3D (the push, the arc, the rocking bars and his idle continue)"
  },
- "set": "v3/set3d19/h19.py WORKSHOP preset shop_bench, light DAY; set_clock(1) (H1 alone), set_balance(g/30) and set_candles(1.0) keyed on every frame; no runtime set changes; no caption_shade",
+ "set": "v3/set3d19/h19.py WORKSHOP preset shop_bench, light DAY; set_clock(1) (H1 alone), set_balance(g/30) and set_candles(1.0) keyed on every frame; no runtime set changes; no caption_shade; hanging candle ring (wheel chandelier) removed: 4 flames hidden with key_vis, its 224 mesh faces deleted at build",
  "cast": "v3/cast19 harrison19 default (greying hair, apron + shavings), mirrored (faces the H1 at screen-left): harrison_idle base, both arms rise into an open-palm presentation g 0..11, a second bigger ta-da on the snap g 37..44, proud bob; expr grinning (fixed mouth); blinks g 20, 55; no lip-sync",
- "camera": "custom 22 mm from near the shop_bench start pose, looking up 2 deg; c19.CamPath drift push 7 %/s + slide -20 px/s + arc 9 deg/s about Harrison's depth, decay 0.3 (moving on frame 0 and on the last frame) + snap x1.4 with a small pan g 36..50 (14 f, peak 1.8) on 'บอกว่านาฬิกา'",
+ "camera": "custom 22 mm, start (1.70,-1.95,2.25) looking at (2.80,3.20,2.05); c19.CamPath drift push 4 %/s + slide -25 px/s + crane 60 px/s + arc 16.5 deg/s about Harrison's depth, decay 0.1 + snap x1.18, 18 f (g 35..52), peak 3.2, shift (0.20,-0.75) on 'บอกว่านาฬิกา'; camera x max 4.16 (wall 4.25)",
  "events": {
   "arms_rise": [
    0,
@@ -66,20 +66,20 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 13.16,
- "s_per_frame_cpu_mean": 25.83,
+ "s_per_frame_wall_mean": 12.75,
+ "s_per_frame_cpu_mean": 25.0,
  "head_px": [
-  121,
-  213
+  179,
+  271
  ],
  "head_centre_y": [
-  622,
-  666
+  472,
+  625
  ],
- "head_bottom_max_y": 771,
+ "head_bottom_max_y": 728,
  "framediff_in_shot": {
-  "median": 4.38,
-  "p90": 14.4
+  "median": 5.32,
+  "p90": 12.79
  },
  "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
 }

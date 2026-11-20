@@ -1,0 +1,74 @@
+{
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "at": 1933,
+  "note": "hard cut from shot 23; 9 f in-handle g 1924..1932 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 2028,
+  "note": "hard cut to shot 25; out-handle g 2028..2036 rendered in 3D (stubs 9-10, snap)"
+ },
+ "set": "v3/set3d19/h19.py HALL preset hall_table, light EVENING; set_candles flicker, set_regulator(True), set_kings_chair(True), set_stubs(0 -> 10 over the shot, +1 about every 0.3 s) keyed on EVERY frame; no caption_shade; no DOF",
+ "cast": "v3/cast19 king19 (king_watch_squint base): the King stands at the head of the table holding the gold pocket watch (right) beside the silver H4 (left); the two hands rise and fall out of phase (0.9 s), eyes go from one watch to the other, head roll and lean, blink; expression 'unimpressed' (squint), mouth flat; no lip-sync",
+ "camera": "custom 22 mm, low and wide over the table near-edge row of candle stubs, dolly toward the King: c19.CamPath push 10 %/s + slide -95 px/s + arc 11 deg/s + snap x1.3 with a pan (shift 2.0 D, peak 2.1, 16 f) on 'สิบสัปดาห์' (66.77 s -> g 2006)",
+ "events": {
+  "stubs_0_to_10": [
+   1933,
+   2027
+  ],
+  "comparison_period_s": 0.9,
+  "snap": [
+   2003,
+   2019
+  ],
+  "word_sip_sapda_caption": 2006
+ },
+ "cues": [
+  {
+   "time": 64.133,
+   "duration": 3.733,
+   "frame": 1924,
+   "end_frame": 2036,
+   "kind": "ambience",
+   "label": "the hall by candlelight: low room tone, the regulator tick-tock, candle hiss"
+  },
+  {
+   "time": 64.433,
+   "duration": 3.133,
+   "frame": 1933,
+   "end_frame": 2027,
+   "kind": "foley",
+   "label": "a soft stack 'tock' each time a new burnt stub appears on the table edge (ten of them, about every 0.3 s)",
+   "peak_frame": 1950
+  },
+  {
+   "time": 64.433,
+   "duration": 3.133,
+   "frame": 1933,
+   "end_frame": 2027,
+   "kind": "foley",
+   "label": "two watch ticks, a fast gold tick and a slower silver tick, side by side as the King compares them",
+   "peak_frame": 1960
+  },
+  {
+   "time": 66.767,
+   "duration": 0.533,
+   "frame": 2003,
+   "end_frame": 2019,
+   "kind": "accent",
+   "label": "snap whoosh on 'สิบสัปดาห์'",
+   "peak_frame": 2010
+  },
+  {
+   "time": 67.6,
+   "duration": 0.0,
+   "frame": 2028,
+   "end_frame": 2028,
+   "kind": "cut",
+   "label": "hard cut to shot 25 (the astronomer's jaw drops)"
+  }
+ ]
+}

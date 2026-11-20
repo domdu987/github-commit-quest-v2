@@ -33,9 +33,9 @@ SKY_NOON = [(0.0, '#6c9ce0'), (0.46, '#b6cfe8'), (0.5, '#b0cbe8'), (0.56, '#8db3
 SKY_DAY = [(0.0, '#7ab0ea'), (0.46, '#c2dbee'), (0.5, '#bcd8ee'), (0.56, '#98c0ee'), (0.66, '#74a6e8'), (0.78, '#5288dc'), (0.88, '#3f72d2'), (1.0, '#315cbc')]
 SKY_STORM = [(0.0, '#4a5a74'), (0.46, '#8e9aae'), (0.5, '#8c98ac'), (0.56, '#6e7c96'), (0.66, '#5a6a86'), (0.78, '#485874'), (0.88, '#3a4a68'), (1.0, '#2c3c5a')]
 LIGHTS = dict(
-    NOON=dict(key=(1.0, 0.92, 0.78, 7.2), az=160, el=46, sun_angle=0.9, sky=SKY_NOON, sky_k=1.0, amb=('#3050FF', 2.4), gloss_sky_k=0.42, exposure=0.1, sat=1.08,
+    NOON=dict(key=(1.0, 0.92, 0.78, 7.2), az=160, el=46, sun_angle=0.9, sky=SKY_NOON, sky_k=1.0, amb=('#3050FF', 2.4), gloss_sky_k=0.42, exposure=-0.3, sat=1.18,
               cloud=('#ffffff', '#98a8ee'), haze='#b0cbe8', sea_amp=1.0, sea_near='#07505e', sea_mid='#157f8e', sea_far='#0b3a5c', foam_k=1.0, wc=(0.74, 1.05), lamp=0.0, rain_ok=False, fog=0.0),
-    DAY=dict(key=(1.0, 0.94, 0.80, 7.6), az=200, el=40, sun_angle=0.9, sky=SKY_DAY, sky_k=1.0, amb=('#3a58FF', 2.3), gloss_sky_k=0.5, exposure=0.12, sat=1.1,
+    DAY=dict(key=(1.0, 0.94, 0.80, 7.6), az=200, el=40, sun_angle=0.9, sky=SKY_DAY, sky_k=1.0, amb=('#3a58FF', 2.3), gloss_sky_k=0.5, exposure=-0.55, sat=1.2,
              cloud=('#ffffff', '#a0b0f0'), haze='#bcd8ee', sea_amp=0.55, sea_near='#0f6a78', sea_mid='#16808a', sea_far='#10405c', foam_k=0.9, wc=(0.8, 1.1), lamp=0.0, rain_ok=False, fog=0.0),
     STORM_DUSK=dict(key=(1.0, 0.62, 0.45, 2.2), az=250, el=7, sun_angle=2.5, sky=SKY_STORM, sky_k=0.85, amb=('#6c80d8', 1.75), gloss_sky_k=0.55, exposure=-0.1, sat=1.04,
                     cloud=('#98a4b6', '#4c586a'), haze='#7c8898', sea_amp=1.7, sea_near='#16384a', sea_mid='#1a4052', sea_far='#1c2a48', foam_k=1.5, wc=(0.5, 0.9), lamp=1.0, rain_ok=True, fog=1.0),

@@ -1,0 +1,13 @@
+# QA s10 (round 3: Board re-staged)
+# QA s10 (shot 10, HALL hall_wide DAY, g 773..861, handles 764..772 and 862..871) -- re-render after the TAKE gate
+- Numbers: 108 frames (first_g 764), final 720x1280 8 spp. In-shot frame-diff (90x160 grey, pairs g 774..861): see framediff.json / meta.json (draft: median 4.52, p90 17.24; target 4 / 12).
+- Gate fixes: (1) Harrison now stands AT the door (0,-5.0) with the open leaves framing him; the camera starts at the window end looking down the hall and the snap on "ไอ้ช่างไม้" (g 843-857) lands on him in the doorway. (2) the Board is separated (astro19 / astro19_b left, astro19_c / second astro19_b right, different depths) and each member points at him in turn (alternating arms) with the 3 Hz laugh bounce. (3) The carpet medallions and empty carpet are gone: the bottom of the frame is the baize table, the orrery and charts. (4) The tricorne is dropped: hands clasped at the chest.
+- qa_auto blur flag on the close-up frames after the snap is a false positive (flat close-up); confirmed by the gate.
+- Deviations: Board at x +-2.1 D behind the chairs, not at the astro_* marks (the 22 mm portrait lens); four laughers (3 Board cast members + a second astro19_b); nearest Board heads leave the frame sides as the camera pushes on (transient). Harrison's pose is the hopeful-door clasped hands with a sad face.
+
+## Round 3 (TAKE gate round 2)
+- astro_b / astro_c no longer stack: three Board members only (the second astro19_b is removed), staged apart in depth and screen x: astro19 right (x -2.3 D, y 1.0), astro19_b left far (2.1, 2.6), astro19_c left near (0.8, -0.3); checked on stills g 773-843.
+- The Board stays whole in frame until the snap (push cut to 3 %/s so nobody drifts to the edge; probe: x 88..620, all heads inside 0..720 for g 764-843); during the snap g 843-857 the camera flies past them to Harrison, so they leave the frame in 2-4 frames (fast, not half-clipped for 20 frames).
+- Tricorne already dropped (hands clasped). Frame-diff median 6.93 / p90 17.82 (a small handheld sway was added; target 4 / 10). qa_auto: soft-frame note g 850-854 = the snap (motion streak, 5 frames), no FAIL. take.mkv is 45.5 MB: delivered as take.mkv.part* (split -b 40M; `cat take.mkv.part* > take.mkv`).
+
+- Round 3b: astro19_c moved to (0.8, -0.3) so the astro19_b / astro19_c head discs are >= 1 D apart on screen (probe g 764-845: bb x 68-190, cc x 241-329 at the start, never touching; cc stays clear of Harrison at x 330-385). Board heads inside 0..720 until g 843 (astro19_b leaves at the left edge as the snap starts, g 843-846).

@@ -88,3 +88,45 @@ How the camera got there (draft numbers):
 - **Camera height:** "low" is the preset height (z 2.25 D, looking 2 deg up). Lower, the sawhorse plank fills the bottom of the frame; the bench and the H1 still sit above the eye line.
 - **Snap size:** x1.35 (bible x1.3-x3) with a pan; shot 1 is 1.91 s (under 2 s), so the snap is the plan's request, not a bible requirement. A larger snap ended inside the H1.
 - **Runtime set change:** the window-shaft volume is hidden for the whole take (haze NOTE).
+
+
+## Round 2 (QA-art FIX-FIRST fixes applied)
+- **Staging:** mark moved to (3.45, 2.19) = harrison_bench + (0.12, -2.9): beside the H1's right end, on the camera side (no longer 1.6 D behind it); apron visible from g 0. Pose re-keyed as an open V, palms up: clock-side arm out toward the H1, other arm up and outward, no arm across the chest (DOWN/PRES/TADA hand targets in shot.py).
+- **Camera:** CAM_LOC0 (2.00, -1.30, 2.25), CAM_LOOK0 (2.70, 3.20, 2.05): about 0.8 D closer to the old start, pitch -2.5 deg (ceiling beams under 30 % of frame); slide +30 px/s and arc 9 deg/s (was -45 / 15) keep him in frame and avoid the right wall's black void; snap shift x 0.12 (was 0.30): the H1 and its balls stay in frame through g 56.
+- **Lantern:** the set fix (caged, dimmer) is on film19/main; it is now a dull orange cage on the stool, clearly dimmer than the yellow floor patches and the white face. It grows in the bottom foreground after the snap; known, accepted.
+- **Top-right plank:** the lit diagonal oak plank is deleted from the scene mesh at build time (drop_top_right_plank in shot.py).
+- **Numbers (final 720x1280):** head width 214 px at g 0 (to 411 at g 56); head centre y 427-561 (all heads below top, bottom max y 687, above 880); frame-diff median 4.43, p90 13.81 (min 3.54, max 20.49); camreport: never parked (0 frames under 0.25 px/frame); 12.4 s/frame wall; qa_auto PASS; no DOF, no text, no caption_shade; H1 bars rock every frame.
+- meta.json camera string corrected.
+
+
+## Round 3 (QA-art round 2: 7/10 FIX-FIRST)
+- **Head capped:** snap x1.18 (was 1.35), drift push 4 %/s (was 8). Head width per 10 g (px, head centre y):
+
+| g | head w | head y |
+|---|---|---|
+| 0 | 182 | 538 |
+| 10 | 189 | 560 |
+| 20 | 196 | 581 |
+| 30 | 204 | 607 |
+| 40 | 217 | 615 |
+| 50 | 281 | 461 |
+| 60 | 296 | 486 |
+
+  Head 182 px at g 0, 290 px at g 56 (cap 300-320); head centre y 461-607 in shot (min 461 at g 50), bottoms max y 730 (all above 880).
+- **Whole H1 in frame (checked on the rendered frames g 0, 30, 50, 56, not only projected):** snap shift x -0.05 (about 0); camera starts at x 1.90 looking at x 2.45. Projected H1 bounding box including both balls (x0, y0, x1, y1 in 720x1280): g 0 [25, 346, 472, 715]; g 30 [48, 414, 481, 784]; g 56 [38, 228, 576, 734]; min x over all 66 frames 25, max x 598. Both hands and the ponytail are inside the frame on every frame: the arm V was narrowed (screen-right hand raised beside his head, hand targets in shot.py) because with the clock-side arm reaching the H1 and a wide second arm, the whole H1 plus both hands cannot fit at a 300 px head.
+- **Lantern:** hidden for the whole take: key_vis of lantern_lampg and lanternf_iron every frame, plus its iron cage (35 faces merged into shop_iron) deleted from the scene mesh; only the stool/crate is left, nothing in front of him at y 880 or below except the crate top.
+- **Top-right plank:** a second lit plank (shop_honey island, 6 faces) appeared with the new framing and is deleted too.
+- **Blink** moved from g 55 to g 50: eyes open at the lens on g 53-56.
+- **Frame-diff** (final): median 5.60, p90 13.53 (min 4.4, max 16.7); the snap now runs g 35..52 (18 f, peak 3.2, shift y -0.75) with arc 18 deg/s and crane 60 px/s to hold p90 at the smaller zoom. Never parked (camreport).
+- The camera stays inside the room (x 4.24 at g 65; the wall is at 4.25; an arc of 20 put it outside and rendered a black void).
+- Head size / H1-visible trade-off: whole-H1 + both hands + a head over 300 px cannot share one frame, so the head ends at 290 px.
+- qa_auto PASS; no DOF, no text, no caption_shade; H1 bars rock on every frame.
+
+
+## Round 4 (QA-art round 3: 8/10 FIX-FIRST)
+1. **Hand, ponytail and head inside the frame on every frame g 0-65 (pixel-checked).** The screen-right raised hand now sits beside his cheek (arm_l targets PRES (-0.40, 0.10), TADA (-0.30, -0.05); was -0.55 / -0.62), and the framing moved screen-left (snap shift x 0.20, was -0.05; camera start x 1.70, arc 16.5 deg/s so the camera stays inside the room: max x 4.16, wall 4.25).
+   - **Pixel check** (`shot.py edgefinal`, on the FINAL frames): each frame is re-rendered at full size and final spp with his sprite card hidden and differenced against raw/g_%04d.png; the columns that differ are exactly his sprite (hand, head, ponytail, apron). **Right-most column of his sprite: 694 px at most over g 0-56 (g 44-56: 679-694; hand about x 630), 709 over the handle g 57-65.** All 66 frames are at least 10 px inside x 719 (`work/edgef_*.json`).
+   - The H1 stays whole: the left ball is fully inside (about x 40 at g 50-56, checked on the frames), the H1's left edge is at about x 28; projected bbox x0 is -14 at g 50 only because the bbox takes the bench-level corner.
+2. **Candle ring hidden for the whole take:** the wheel chandelier's four flames are hidden with key_vis every frame and its hoop / chain / candle faces (224 faces merged into shop_brass, cream, dark, iron, oak, oakd inside r 1.15 of (0.28, 1.29), z 4.1-4.95) are deleted at build. Nothing orange or black remains top-left on any frame.
+- **Numbers (final):** head 179 px at g 0 (the 180 px start slipped by 1 px with the new camera start) rising to 271 px at g 56; head y 472-616 in shot; head bottoms max y 728; frame-diff median 5.32, p90 12.79 (min 3.87, max 16.44); never parked; qa_auto PASS; no DOF, no text, no caption_shade; blink at g 20 and g 50.
+- Old frame folders (raw_r2, frames_r2, raw_r3, frames_r3, all draft_old*, st*, edge*) deleted; work/ keeps sprites, the current draft and the edge json.
