@@ -1,6 +1,6 @@
-# QA s17 (render team 5, film 18) round 10 - frames g1309-1387 (+6 handles: take.mkv g1303-1393, 91 frames), jimo_in NIGHT
-Frame-diff in-shot (n=78): median **9.34**, p90 **15.01**. qa_auto PASS.
-1. Foreground reed: `J.prop_reed_bundle` (60 stalks) is now placed in the WORLD at (-25.2, 14.2) (not parented to the camera), warm emission; it is in the lower frame for roughly the first half of the shot and leaves frame as the camera moves on.
-2. Tie: old man 3.5 D tall (about 40 % of frame height), bent at ox 4's tail with `reed_tail_l` on the tail tip; he faces the lens, not the tail (the cast pose has no gaze key I used).
-3. Bare ground: a warm dark-earth plane (`mygap`, bank texture) over the lane plus the v2 dressing; bottom of the frame is earth with props; about 30 % bare.
-4. Holes glow behind the oxen as in round 9.
+# QA s17 (render team 5, film 18) round 11 - frames g1309-1387 (+6 handles: take.mkv g1303-1393, 91 frames), jimo_in NIGHT
+Frame-diff in-shot (n=78): median **10.62**, p90 **16.78**. qa_auto PASS.
+- Ground measured on rendered frames (`J.ground_share`): 0.15 / 0.14 / 0.09 / 0.11 at g1315 / 1340 / 1360 / 1380 (previously 34-37 % by the QA's reading).
+- Bundles: three world-placed `J.prop_reed_bundle` (60 stalks each) at (-25.2, 14.2), (-27.6, 12.8), (-24.0, 12.0) plus three `prop_pot` (jar / pot / bowl) so one prop is in the lower band through the whole camera path (see the phone sheet: a bundle or pot at the bottom in every tile). Each bundle has a contact-shadow quad and a warm point light (260 W) near the first.
+- The flat `mygap` plane is removed; ground is the set's `J.gapfill` + v2 dressing.
+- The tie (old man, `reed_tail_l` on ox 4's tail tip) is unchanged; he looks toward the lens, not the tail (the pose has no gaze key I set), and he leaves the frame around g1370-1380 when the camera sway swings away.
