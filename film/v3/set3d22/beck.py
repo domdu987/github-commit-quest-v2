@@ -843,9 +843,10 @@ def card_anchor(ob, name):
     ax, az = ob['anc'][name]; yaw = ob.rotation_euler[2]
     return V(ob.location) + V((math.cos(yaw), math.sin(yaw), 0)) * ax + V((0, 0, 1)) * az
 
-def place_tip(story, anchor, tip, face_to, ground_z=0.0, **kw):
+def place_tip(story, anchor, tip, face_to, ground_z=0.0, toward_cam=0.0, **kw):
     """Cast card whose `anchor` (e.g. 'pen_r' = pen nib) sits exactly on the world point `tip`, standing on z = ground_z, facing face_to
     (the position is solved in the card plane: x along the card, z up; depth follows from the tip). Returns the object."""
+    if toward_cam: tip = V(face_to) + (V(tip) - V(face_to)) * (1.0 - toward_cam)          # slide along the view ray: same screen point, card in front of the board
     d = V(face_to) - V(tip); kw.setdefault('yaw_deg', math.degrees(math.atan2(d.x, -d.y)))
     ob = cast_card(story, (0, 0, ground_z), shadow=False, **kw)
     yaw = ob.rotation_euler[2]; ax, az = ob['anc'][anchor]; r = V((math.cos(yaw), math.sin(yaw), 0))

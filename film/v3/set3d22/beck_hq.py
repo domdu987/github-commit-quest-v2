@@ -276,11 +276,11 @@ M_LODGE = dict(s01=dict(beck=(-1.3, 5.2, 0, 0)), s04=dict(beck=(-1.4, 11.2, 0, 0
 def actors_s01(g):
     cam = _cam_at(ALL('s01'), g); u = g / 107.0
     tip = hot_tip('red', DIAG['red'])
-    if g < 69: B.place_tip('beck_rule_line', 'pen_r', tip, cam, 0.0, pose=dict(board=0))
-    else: B.place_tip('beck_rule_line', 'pen_r', tip, cam, 0.0, pose=dict(board=0))
+    if g < 69: B.place_tip('beck_rule_line', 'pen_r', tip, cam, 0.0, toward_cam=0.09, pose=dict(board=0))
+    else: B.place_tip('beck_rule_line', 'pen_r', tip, cam, 0.0, toward_cam=0.09, pose=dict(board=0))
 def ALL(n): return B.ALL_SHOTS[n]
 
 SHOTS['s01'] = dict(location='lodgings', light='LODGINGS', f0=0, f1=108, shift_y=0.0,
-    cam=[(0, (3.2, 0.2, 2.0), (0.4, 7.0, 2.9), 30), (30, (0.6, 0.9, 2.2), (0.2, 7.2, 3.0), 30), (52, (-3.0, 1.8, 2.6), (0.8, 7.6, 3.4), 30), (69, (-3.4, 3.2, 3.0), (2.0, 8.6, 3.6), 30),
+    cam=[(0, (3.6, -2.6, 2.0), (0.4, 7.0, 3.0), 30), (30, (0.6, 0.9, 2.2), (0.2, 7.2, 3.0), 30), (52, (-3.0, 1.8, 2.6), (0.8, 7.6, 3.4), 30), (69, (-3.4, 3.2, 3.0), (2.0, 8.6, 3.6), 30),
          (90, (3.0, 4.0, 3.9), (5.5, 11.0, 4.6), 30), (100, (6.5, 8.4, 4.8), (6.6, 14.0, 5.0), 30), (107, (6.6, 12.4, 5.0), (6.6, 14.0, 5.0), 30)],
     marks=M_LODGE['s01'], state=dict(diagram=dict(red=0.55, blue=0, green=0, yellow=0, hot='red', ruler=(45.0, -0.3, -0.7))), actors=actors_s01)
