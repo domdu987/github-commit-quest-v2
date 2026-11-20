@@ -53,6 +53,8 @@ def widen_sea(preset, k, nu, nv):
     untouched): fit the grid to a virtual camera k times farther from the look point on the same axis (a k times wider footprint)."""
     import h19_ship as SH
     P = SH.PRESETS[preset]
+    global PRESET_CAM0
+    PRESET_CAM0 = dict(P['cam'])                                              # the preset's own camera (metres), before the widening patch
     loc, look = Vector(P["cam"]["loc"]), Vector(P["cam"]["look"])
     v = look + (loc - look) * k
     v.z = loc.z + (k - 1.0) * float(os.environ.get("ZUP", "6.0"))          # a farther AND higher virtual camera (the hero camera is low: scaling z down would put it under the sea)
@@ -60,12 +62,41 @@ def widen_sea(preset, k, nu, nv):
     P["sea_nu"], P["sea_nv"] = nu, nv
 
 
+def whitecaps_in_front(n=int(os.environ.get("WC", "40")), seed=int(os.environ.get("WCSEED", "3"))):
+    """foreground swell crests: the hero preset's floating_spar() also places the preset's two foam streaks relative to P['cam'] (our widen_sea patched it): wrap it,
+    keep the spar where the preset puts it (original camera) and add broken foam lines (the set's 'streaks' hook) between our camera and the ship, so crests
+    sweep across the frame as the camera slides (frame-diff)."""
+    import random as _rnd
+    import h19_ship_land as LD
+    orig = LD.floating_spar
+    cam0 = dict(PRESET_CAM0)
+
+    def fs(S_, P, sea_P):
+        P2 = dict(P, cam=cam0)
+        orig(S_, P2, sea_P)
+        rg = _rnd.Random(seed)
+        c = Vector(cam0["loc"]); lk = Vector(cam0["look"])
+        c = lk - (lk - c) * DS                                              # our (pulled back) camera, metres
+        f = Vector((lk.x - c.x, lk.y - c.y, 0)).normalized(); r = Vector((f.y, -f.x, 0))
+        for _ in range(n):
+            d, lat = rg.uniform(8.0, 60.0), rg.uniform(-22.0, 22.0)
+            m = c + f * d + r * lat
+            a = rg.uniform(-0.6, 0.6); ln = rg.uniform(7.0, 20.0)
+            dirv = r * math.cos(a) + f * math.sin(a)
+            p0, p1 = m - dirv * (ln / 2), m + dirv * (ln / 2)
+            sea_P["streaks"].append(((p0.x, p0.y), (p1.x, p1.y), rg.uniform(0.8, 1.4), rg.uniform(0.8, 1.0)))
+    LD.floating_spar = fs
+
+
 class Take(C.Take):
     def __init__(self, quality="preview"):
+        PRESET_CAM0 = None
         widen_sea(PRESET, float(os.environ.get('WIDEN', '1.8')), int(os.environ.get('NU', '900')), int(os.environ.get('NV', '1300')))
+        whitecaps_in_front()
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_" + TAKE)
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
         self.key_cam(C.bf(FIRST_G), *CAM.at(FIRST_G))
+        self.scene.view_settings.exposure -= float(os.environ.get("EXPO", "0.3"))           # QA_TEAM section G: luma 70-135 (the foam crests brighten the frame)
         g_ = C.bpy.data.objects.get("glint")                    # tone the blown sun glint down (QA-tech): 40 -> GLINT x the set's energy
         if g_ is not None:
             g_.data.energy *= float(os.environ.get("GLINT", "0.3"))
