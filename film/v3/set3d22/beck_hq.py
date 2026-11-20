@@ -156,7 +156,7 @@ def build_lodgings(scene, P):
     sk.done((0, 14, 0.4), px=2)
     # ---- night window with the HQ and the roundel across the street, curtains, sill
     wx0, wx1, wz0, wz1 = 4.5, 8.7, 2.8, 7.2
-    wn = Part('window_view', ink=False, shadow=False); plane(wn.mb, (wx0, BW - 0.05, wz0), (wx1 - wx0, 0, 0), (0, 0, wz1 - wz0), E('nightcity', 'night_city', k=1.15), (0.0, 0.0, 0.56, 0.78)); wn.done()
+    wn = Part('window_view', ink=False, shadow=False); plane(wn.mb, (wx0, BW - 0.05, wz0), (wx1 - wx0, 0, 0), (0, 0, wz1 - wz0), E('nightcity', 'night_city', k=0.85), (0.0, 0.0, 0.56, 0.78)); wn.done()
     wf = Part('window_frame', (6.6, 14, 5)); mb = wf.mb; wfm = C('#e8dcc0')
     mb.box((wx0 - 0.4, BW - 0.5, wz0 - 0.4), (wx1 + 0.4, BW + 0.1, wz0), wfm); mb.box((wx0 - 0.4, BW - 0.5, wz1), (wx1 + 0.4, BW + 0.1, wz1 + 0.4), wfm)
     mb.box((wx0 - 0.4, BW - 0.5, wz0), (wx0, BW + 0.1, wz1), wfm); mb.box((wx1, BW - 0.5, wz0), (wx1 + 0.4, BW + 0.1, wz1), wfm)
@@ -187,7 +187,7 @@ def build_lodgings(scene, P):
         rod(mb, c0 + X * (2.7 * sx) - BU * 1.6 - BN * 0.2, V((bx + 3.1 * sx, 6.2, 0.0)), 0.16, dwood, seg=6); rod(mb, c0 + X * (2.5 * sx) + BU * 1.2 - BN * 0.2, V((bx + 3.0 * sx, 12.0, 0.0)), 0.16, dwood, seg=6)
     mb.box((bx - 3.0, 6.1, LZ - 0.14), (bx + 3.0, 6.9, LZ), wood)
     db.done(tuple(c0), px=3)
-    pap = Part('diagram_paper', ink=False); pap.mb.quad(board_pt(-2.75, -1.97, -0.0), X * 5.5, BU * 3.94, TX('paper_grid', 1.0, 1.0, glow='paper_grid', glow_k=0.25), (0, 0, 1, 1)); pap.done()
+    pap = Part('diagram_paper', ink=False); pap.mb.quad(board_pt(-2.75, -1.97, -0.0), X * 5.5, BU * 3.94, TX('paper_grid', 0.7, 1.0, glow='paper_grid', glow_k=0.1), (0, 0, 1, 1)); pap.done()
     ts = Part('tools', tuple(c0)); mb = ts.mb
     obox(mb, c0 + BN * 0.19 + BU * 1.7, X, BU, BN, 2.9, 0.1, 0.04, C('#c8793a', 1.2, 1.3)); obox(mb, c0 + BN * 0.19 + BU * 1.7 - X * 2.85, X, BU, BN, 0.22, 0.9, 0.06, C('#4a2410'))   # T-square
     for sx_, col in ((bx + 2.5, '#38d68a'), (bx + 3.3, '#56e0ff')):
@@ -432,7 +432,7 @@ def build_publicity_room(S, P, embed=False, ceiling=True):
     ch.done((ccx, ccy, PZ0 + 1.5), px=3)
     # clerks' desks with typewriters and chairs
     cd = Part('clerk_desks', (0, 26.5, PZ0 + 1.5)); mb = cd.mb
-    for (dx, dy_) in ((-9.5, 27.5), (-4.0, 27.5), (2.4, 27.6), (8.0, 27.5), (12.5, 27.8), (-9.0, 31.3), (9.0, 31.0)):
+    for (dx, dy_) in ((-9.5, 27.5), (-4.0, 27.5), (8.0, 27.5), (12.5, 27.8), (-9.0, 31.3), (9.0, 31.0)):
         _desk(mb, dx, dy_, 3.2, 1.7, 2.3, wood, dwood); zt2 = PZ0 + 2.3
         mb.box((dx - 0.8, dy_ - 0.5, zt2), (dx + 0.8, dy_ + 0.5, zt2 + 0.45), C('#2a2a50', 1.0, 1.5)); mb.box((dx - 0.7, dy_ - 0.55, zt2 + 0.3), (dx + 0.7, dy_ - 0.1, zt2 + 0.5), C('#9aa6dc', 1.0, 1.5))    # typewriter
         mb.box((dx - 0.4, dy_ - 0.2, zt2 + 0.45), (dx + 0.4, dy_ + 0.2, zt2 + 0.9), C('#fff6e0', 1.2, 1.7)); mb.box((dx + 1.0, dy_ + 0.5, zt2), (dx + 1.7, dy_ + 0.9, zt2 + 0.5), C('#e3262b', 1.0, 1.6))
@@ -562,7 +562,7 @@ def actors_s07(g):
     clerk_card(cl + 'a', -9.5, 28.0, cam); clerk_card(cl + 'b', -4.0, 28.0, cam); clerk_card(cl + 'a', 8.0, 28.0, cam, mirror=True); clerk_card(cl + 'b', 12.5, 28.3, cam, mirror=True)
     clerk_card('clerk_laugh_point_b', -9.0, 31.7, cam); clerk_card('clerk_laugh_point_c', 9.0, 31.4, cam, mirror=True)
 SHOTS['s07'] = dict(location='publicity', light='HQ_EVENING', f0=823, f1=938,
-    cam=[(0, (3.7, 25.6, 10.2), (-0.2, 42.0, 9.0), 24), (50, (3.0, 25.5, 16.0), (0.0, 38.5, 8.0), 23), (114, (0.5, 26.0, 26.0), (0.0, 37.0, 7.4), 22)],
+    cam=[(0, (3.7, 25.6, 10.2), (-0.2, 42.0, 9.0), 24), (50, (3.0, 25.5, 16.0), (0.0, 38.5, 8.0), 23), (114, (0.5, 23.5, 19.0), (0.0, 35.0, 8.0), 26)],
     marks=dict(beck=(-1.7, OFF_DESK[1] - 2.7, PZ0, 0), official=(OFF_DESK[0], OFF_DESK[1] + 1.0, PZ0, 0)), pre=dict(ceiling_off=True), state=dict(drawer=1.0), actors=actors_s07,
     animate={'drawer': lambda k, n: set_drawer(1.0 if k < 8 else 0.0)})
 @setter('ceiling_off')

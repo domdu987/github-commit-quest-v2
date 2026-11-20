@@ -25,8 +25,8 @@ RX, SPR, RZ, YA, YB = 12.0, 6.0, 6.5, -14.0, 44.0
 PE, TZ, CX, CZ, CR = 3.4, -1.4, 0.0, 2.4, 4.3
 
 # light presets (point-lamp interiors; see beck.LIGHTS['PLATFORM'])
-B.LIGHTS['UNDER'] = dict(B.LIGHTS['PLATFORM'], shade=(0.07, 0.12, 0.46), shade_tint=(0.05, 0.11, 0.58), shade_mix=0.92, lift=(0.008, 0.016, 0.06), grade_saturation=1.3)
-B.LIGHTS['HALL'] = dict(B.LIGHTS['PLATFORM'], shade=(0.07, 0.12, 0.47), shade_tint=(0.05, 0.11, 0.58), shade_mix=0.95, lift=(0.008, 0.016, 0.06), grade_saturation=1.3)
+B.LIGHTS['UNDER'] = dict(B.LIGHTS['PLATFORM'], shade=(0.07, 0.12, 0.46), shade_tint=(0.05, 0.11, 0.58), shade_mix=0.92, lift=(0.016, 0.03, 0.10), grade_saturation=1.3)
+B.LIGHTS['HALL'] = dict(B.LIGHTS['PLATFORM'], shade=(0.05, 0.14, 0.47), shade_tint=(0.03, 0.14, 0.56), shade_mix=0.95, lift=(0.008, 0.016, 0.06), grade_saturation=1.3)
 B.LIGHTS['CARRIAGE'] = dict(B.LIGHTS['PLATFORM'], shade=(0.06, 0.11, 0.46), shade_tint=(0.04, 0.10, 0.58), shade_mix=0.95, lift=(0.006, 0.012, 0.05), grade_saturation=1.3)
 
 TRAIN = dict(objs=[], base=[], y0=0.0, doors_open=[], doors_closed=[], lights=[])
@@ -90,7 +90,7 @@ def build_hall(scene, P, with_train=True, crowd=True, shot=None):
     mb.pid += 1; mb.face([V((-RX, YA, 0)), V((RX, YA, 0)), V((RX, YA, SPR))] + [V((x, YA, z)) for (x, z) in reversed(outl[2:-2])] + [V((-RX, YA, SPR))], tw, [(0, 0)] * (4 + len(outl[2:-2])))
     vt.done()
     # tunnel tube behind the hole
-    tb = U.Pt('tube', ink=False); mb = tb.mb; tube = E('tube', color='#050b30', k=1.0); TL = 60.0
+    tb = U.Pt('tube', ink=False); mb = tb.mb; tube = E('tube', color='#0f2a6a', k=1.5); TL = 60.0
     for k in range(24):
         a0, a1 = 2 * math.pi * k / 24, 2 * math.pi * (k + 1) / 24; rr = CR + 0.15
         mb.pid += 1; mb.face([V((CX + rr * math.cos(a0), YB, CZ + rr * math.sin(a0))), V((CX + rr * math.cos(a1), YB, CZ + rr * math.sin(a1))), V((CX + rr * math.cos(a1), YB + TL, CZ + rr * math.sin(a1))), V((CX + rr * math.cos(a0), YB + TL, CZ + rr * math.sin(a0)))], tube, [(0, 0)] * 4)
@@ -120,12 +120,12 @@ def build_hall(scene, P, with_train=True, crowd=True, shot=None):
             c = V(((x0 + x1) / 2, yy, (z0 + z1) / 2)); tg = V((x1 - x0, 0, z1 - z0)); Lg = tg.length; tg.normalize(); nrm = V((-tg.z, 0, tg.x))
             obox(mb, c, tg, Y, nrm, Lg / 2 + 0.05, 0.4, 0.28, rm)
     rb.done((0, 15, 12), px=3)
-    gl = U.Pt('globes', (0, 15, 11)); mb = gl.mb; gm = E('globe', color='#fff0c0', k=2.4); lcol = C('#2a2250')
+    gl = U.Pt('globes', (0, 15, 11)); mb = gl.mb; gm = E('globe', color='#ffd890', k=1.1); lcol = C('#2a2250')
     gh = U.Pt('globe_halos', ink=False, shadow=False); gpos = []
     for yy in (4.0, 14.0, 24.0, 34.0):
         for gx in (-5.6, 5.6):
-            gz = 10.0; gpos.append((gx, yy, gz)); rod(mb, (gx, yy, gz + 1.8), (gx, yy, gz + 0.5), 0.05, lcol, seg=5); mb.sphere((gx, yy, gz), 0.8, gm, seg=14, rings=9)
-            B.halo_card(gh.mb, (gx, yy, gz), 2.8, E('hg', 'halo_warm', k=1.2, additive=True))
+            gz = 10.0; gpos.append((gx, yy, gz)); rod(mb, (gx, yy, gz + 1.8), (gx, yy, gz + 0.5), 0.05, lcol, seg=5); mb.sphere((gx, yy, gz), 0.6, gm, seg=14, rings=9)
+            B.halo_card(gh.mb, (gx, yy, gz), 2.0, E('hg', 'halo_warm', k=0.8, additive=True))
     gl.done((0, 15, 11), px=3); gh.done()
     for i, (gx, yy, gz) in enumerate(gpos): U.pl('globe%d' % i, (gx, yy, gz - 0.6), (1.0, 0.7, 0.36), 1400 if yy < 30 else 1050, 0.5)
     for yy in (8.0, 22.0, 36.0):
@@ -271,6 +271,7 @@ def build_platform_people(shot):
     # far platform (x 4.6 .. 10)
     for k, y in enumerate(np.arange(0.0, 40.0, 3.4)):
         crowd('fp', (k * 7 + 1) % 16, 'pass_walk', (5.2 + rs.uniform(0, 4.6), y + rs.uniform(-.4, .4), 0.0), rim=rim if k % 2 else rw, mirror=(k % 2 == 0))
+    U.actor('sit_p1', 'clerk_sit_b', (10.9, 8.0, 1.45), rim='#ffb878', pose=dict(desk=0, typewriter=0)); U.actor('sit_p2', 'clerk_sit_c', (10.9, 10.4, 1.45), rim='#a8bcff', pose=dict(desk=0, typewriter=0))
     for nm, story, mk, kw in PEOPLE.get(shot, []):
         U.actor(nm, story, mk, **kw)
 
@@ -278,7 +279,7 @@ def build_platform_people(shot):
 PEOPLE = {
     's10': [('pass_woman', 'pass_unfold_map', (-5.2, 14.5, 0.0), dict(poses={'smile': 'pass_smile_board_woman'}, rim='#a8bcff')),
             ('pass_man', 'pass_read_map', (-6.4, 20.5, 0.0), dict(rim='#ffb878')), ('pass_child', 'pass_smile_board', (-4.9, 10.8, 0.0), dict(rim='#a8bcff')),
-            ('porter', 'porter_walk', (-6.0, 30.0, 0.0), dict(rim='#ffb878')), ('official', 'off_peek', (-7.1, 4.6, 0.0), dict(poses={'jaw': 'off_jaw_drop'}, rim='#a8bcff', pose=dict(pillar=0)))],
+            ('porter', 'porter_walk', (-6.0, 30.0, 0.0), dict(rim='#ffb878')), ('official', 'off_peek', (-7.6, 12.4, 0.0), dict(poses={'jaw': 'off_jaw_drop'}, rim='#a8bcff', pose=dict(pillar=0)))],
     's03': [('old_gent', 'old_squint', (-10.3, 11.4, 0.0), dict(rim='#ffb878')), ('pass_man', 'pass_squint', (-11.0, 9.4, 0.0), dict(poses={'bump': 'pass_bump'}, rim='#a8bcff')),
             ('pass_woman', 'pass_unfold_map', (-6.6, 17.5, 0.0), dict(rim='#a8bcff')), ('porter', 'porter_walk', (-5.9, 30.0, 0.0), dict(rim='#ffb878'))],
 }
@@ -323,7 +324,7 @@ def noodle_curves():
     """The tangle: the platform tunnel's far end coils up through the cavern; 9 more tubes cross it at odd angles (seeded)."""
     rs = random.Random(17); cx, cy, cz = GX, GY + 38.0, -44.0; curves = []
     # the platform tube: straight, then coiling up into the knot
-    curves.append(('red', [(GX, GY + 48, -59.6), (GX, GY + 58, -59.6), (GX + 14, GY + 70, -54), (GX + 30, GY + 62, -46), (GX + 40, GY + 76, -40)]))
+    curves.append(('green', [(GX, GY + 48, -59.6), (GX, GY + 58, -59.6), (GX + 14, GY + 70, -54), (GX + 30, GY + 62, -46), (GX + 40, GY + 76, -40)]))
     cols = ['blue', 'green', 'yellow', 'brown', 'black', 'red', 'blue', 'green', 'yellow']
     for i, col in enumerate(cols):
         n = rs.randint(6, 8); pts = []
@@ -346,12 +347,12 @@ def build_cavern(scene, P):
     B.plane(mb, (GX - 60, GY - 60, 0), (120, 0, 0), (0, 60 - hy, 0), ptx, (0, 0, 24, 12)); B.plane(mb, (GX - 60, GY + hy, 0), (120, 0, 0), (0, 60 - hy, 0), ptx, (0, 0, 24, 12))
     B.plane(mb, (GX - 60, GY - hy, 0), (60 - hx, 0, 0), (0, 2 * hy, 0), ptx, (0, 0, 12, 1.5)); B.plane(mb, (GX + hx, GY - hy, 0), (60 - hx, 0, 0), (0, 2 * hy, 0), ptx, (0, 0, 12, 1.5)); pv.done()
     gr = U.Pt('grate_bars', (GX, GY, 0.1), hd=8); mb = gr.mb; iron = C('#26204e', 1.0, 1.2)
-    for k in range(12): xx = GX - hx + (k + 0.5) * (2 * hx / 12); mb.box((xx - 0.14, GY - hy, -0.05), (xx + 0.14, GY + hy, 0.3), iron)
+    for k in range(7): xx = GX - hx + (k + 0.5) * (2 * hx / 7); mb.box((xx - 0.14, GY - hy, -0.05), (xx + 0.14, GY + hy, 0.3), iron)
     for yy in (GY - hy + 0.2, GY, GY + hy - 0.2): mb.box((GX - hx, yy - 0.18, -0.05), (GX + hx, yy + 0.18, 0.3), iron)
     mb.box((GX - hx - 0.4, GY - hy - 0.4, -0.2), (GX + hx + 0.4, GY - hy, 0.35), C('#3a3070')); mb.box((GX - hx - 0.4, GY + hy, -0.2), (GX + hx + 0.4, GY + hy + 0.4, 0.35), C('#3a3070'))
     mb.box((GX - hx - 0.4, GY - hy, -0.2), (GX - hx, GY + hy, 0.35), C('#3a3070')); mb.box((GX + hx, GY - hy, -0.2), (GX + hx + 0.4, GY + hy, 0.35), C('#3a3070'))
     gr.done((GX, GY, 0.1), px=3)
-    sky = U.Pt('street_glow', ink=False, shadow=False); B.plane(sky.mb, (GX - hx, GY - hy, 0.6), (2 * hx, 0, 0), (0, 2 * hy, 0), E('sg', 'halo_warm', k=1.1, additive=True), (0, 0, 1, 1)); sky.done()
+    sky = U.Pt('street_glow', ink=False, shadow=False); B.plane(sky.mb, (GX - hx, GY - hy, 0.6), (2 * hx, 0, 0), (0, 2 * hy, 0), E('sg', 'halo_warm', k=0.35, additive=True), (0, 0, 1, 1)); sky.done()
     U.pl('street_light', (GX, GY, 2.0), (1.0, 0.7, 0.4), 1500, 1.0)
     # shaft: brick walls, iron ring ribs, ladder, cables, lamps
     ZB = -26.0; sh = U.Pt('shaft', (GX, GY, -12), ink=False); mb = sh.mb; bt = TX('brick', 1.0, 1.4, form=False)
@@ -370,11 +371,11 @@ def build_cavern(scene, P):
     lh = U.Pt('shaft_lamps', ink=False, shadow=False); mb = lh.mb
     for z in np.arange(-5.0, ZB, -5.5):
         for (xx, yy) in ((GX - hx + 0.5, GY), (GX + hx - 0.5, GY)):
-            mb.sphere((xx, yy, z), 0.35, E('shl', color='#fff0c0', k=3.0), seg=8, rings=6); B.halo_card(mb, (xx, yy, z), 2.4, E('hsl', 'halo_warm', k=1.4, additive=True))
-        U.pl('shaftL%d' % int(z), (GX, GY - 1.0, z), (1.0, 0.72, 0.4), 700, 0.4)
+            mb.sphere((xx, yy, z), 0.4, E('shl', color='#ffd890', k=1.6), seg=8, rings=6); B.halo_card(mb, (xx, yy, z), 2.0, E('hsl', 'halo_warm', k=1.4, additive=True))
+        U.pl('shaftL%d' % int(z), (GX, GY - 1.0, z), (1.0, 0.72, 0.4), 1500, 0.4)
     lh.done()
     # cavern: earth room (inside faces, strata), ceiling hole for the shaft; hall end wall is the front wall
-    rm = U.Pt('cavern', ink=False); mb = rm.mb; st = TX('strata', 1.0, 1.4, form=False); y0, y1, x0, x1, z0, z1 = GY - 9.9, GY + 150.0, GX - 150.0, GX + 150.0, -96.0, ZB
+    rm = U.Pt('cavern', ink=False); mb = rm.mb; st = TX('strata', 1.6, 2.2, form=False); y0, y1, x0, x1, z0, z1 = GY - 9.9, GY + 150.0, GX - 150.0, GX + 150.0, -96.0, ZB
     B.plane(mb, (x0, y0, z0), (x1 - x0, 0, 0), (0, y1 - y0, 0), st, (0, 0, 8, 4)); mb.pid += 1
     mb.face([V((x0, y0, z1)), V((x0, y1, z1)), V((x1, y1, z1)), V((x1, y0, z1))][::1] if False else [V((x0, y0, z1)), V((x1, y0, z1)), V((GX + hx, GY - hy, z1)), V((GX - hx, GY - hy, z1))], st, [(0, 0)] * 4)
     for (a, b, c_, d_) in (((x1, y0, z1), (x1, y1, z1), (GX + hx, GY + hy, z1), (GX + hx, GY - hy, z1)), ((x1, y1, z1), (x0, y1, z1), (GX - hx, GY + hy, z1), (GX + hx, GY + hy, z1)), ((x0, y1, z1), (x0, y0, z1), (GX - hx, GY - hy, z1), (GX - hx, GY + hy, z1))):
@@ -382,23 +383,30 @@ def build_cavern(scene, P):
     B.plane(mb, (x0, y0, z0), (0, y1 - y0, 0), (0, 0, z1 - z0), st, (0, 0, 4, 2)); B.plane(mb, (x1, y0, z0), (0, y1 - y0, 0), (0, 0, z1 - z0), st, (0, 0, 4, 2)); B.plane(mb, (x0, y1, z0), (x1 - x0, 0, 0), (0, 0, z1 - z0), st, (0, 0, 8, 2)); B.plane(mb, (x0, y0, z0), (x1 - x0, 0, 0), (0, 0, z1 - z0), st, (0, 0, 8, 2))
     rm.done()
     # cool and warm fills for the cavern
-    for i, (xx, yy, zz, col, en) in enumerate(((GX - 30, GY + 30, -34, (0.35, 0.5, 1.0), 9000), (GX + 30, GY + 55, -44, (1.0, 0.65, 0.3), 9000), (GX, GY + 20, -55, (0.4, 0.55, 1.0), 6000), (GX + 10, GY + 80, -60, (1.0, 0.7, 0.35), 8000), (GX - 40, GY + 80, -48, (0.9, 0.4, 0.5), 6000))):
+    for i, (xx, yy, zz, col, en) in enumerate(((GX - 30, GY + 30, -34, (0.35, 0.5, 1.0), 26000), (GX + 30, GY + 55, -44, (1.0, 0.65, 0.3), 26000), (GX, GY + 20, -55, (0.4, 0.55, 1.0), 20000), (GX + 10, GY + 80, -60, (1.0, 0.7, 0.35), 24000), (GX - 40, GY + 80, -48, (0.5, 0.5, 1.0), 20000), (GX, GY + 40, -40, (0.4, 0.55, 1.0), 20000))):
         U.pl('cav%d' % i, (xx, yy, zz), col, en, 2.0)
     # noodle tubes + trains inside
     nd = U.Pt('noodles', ink=False, shadow=False); mb = nd.mb
     for ci, (col, pts) in enumerate(noodle_curves()):
-        path = catmull(pts, 8); sweep(mb, path, 1.7 if ci else 4.0, mat_tube('tube_%s_%d' % (col, ci), TUBE_RGB[col], 0.9), n=14)
+        path = catmull(pts, 8); sweep(mb, path, 1.7 if ci else 4.0, mat_tube('tube_%s_%d' % (col, ci), TUBE_RGB[col], 1.5), n=14)
     nd.done()
-    tr = U.Pt('noodle_trains', ink=False, shadow=False); mb = tr.mb; red = E('nt_red', color='#ff4048', k=1.5); win = E('nt_win', color='#ffe6a0', k=3.0)
+    tr = U.Pt('noodle_trains', ink=False, shadow=False); mb = tr.mb; red = E('nt_red', color='#ff4048', k=1.5); win = E('nt_win', color='#ffe6a0', k=3.4)
     for ci, (col, pts) in enumerate(noodle_curves()):
         path = catmull(pts, 8)
-        for frac in ((0.25, 0.62) if ci % 2 else (0.45,)):
+        for frac in ((0.2, 0.5, 0.8) if ci % 2 else (0.3, 0.7)):
             i = int(frac * (len(path) - 2)); t = (path[i + 1] - path[i - 1]).normalized(); p = path[i]; up = V((0, 0, 1)); sd = t.cross(up)
             if sd.length < 1e-3: continue
             sd.normalize(); up2 = sd.cross(t)
             obox(mb, p + up2 * -0.3, t, sd, up2, 3.4, 1.0, 0.9, E('nt_%s' % col, color=TUBE_RGB[col], k=1.3))
             obox(mb, p + up2 * 0.1, t, sd, up2, 3.0, 1.04, 0.25, win)
     tr.done()
+    sl = U.Pt('signal_lamps', ink=False, shadow=False); mbs = sl.mb
+    for ci, (col, pts) in enumerate(noodle_curves()):
+        path = catmull(pts, 8)
+        for frac in (0.1, 0.4, 0.65, 0.9):
+            p = path[int(frac * (len(path) - 1))]; hc = E('sig%d' % ((ci + int(frac * 10)) % 3), color=['#ff7a3a', '#ffd060', '#7affc0'][(ci + int(frac * 10)) % 3], k=3.0)
+            mbs.sphere(p + V((0, 0, 2.3)), 0.35, hc, seg=8, rings=6); B.halo_card(mbs, p + V((0, 0, 2.3)), 2.2, E('hsig', 'halo_warm', k=1.1, additive=True))
+    sl.done()
     # earth detail: pipes, cables, iron props through the cavern, pebbles of light
     pp = U.Pt('props', ink=True, hd=18); mb = pp.mb
     for k in range(8):
@@ -409,9 +417,9 @@ def build_cavern(scene, P):
     build_hall(scene, P, with_train=False, crowd=True, shot='s03'); U.set_org(0, 0, 0)
     # tunnel lamps: a string of lights down the straight tube (world)
     tl = U.Pt('tube_lamps', ink=False, shadow=False)
-    for k, yy in enumerate(np.arange(GY - 4.0, GY + 52.0, 6.0)): B.halo_card(tl.mb, (GX + (1.9 if k % 2 else -1.9), yy, -62.0 + 5.8), 1.8, E('tl%d' % (k % 2), 'halo_warm', k=1.6, additive=True))
+    for k, yy in enumerate(np.arange(GY - 4.0, GY + 52.0, 3.0)): B.halo_card(tl.mb, (GX + (2.4 if k % 2 else -2.4), yy, -62.0 + 5.2), 2.2, E('tl%d' % (k % 2), 'halo_warm', k=3.2, additive=True))
     tl.done()
-    U.pl('tube_a', (GX, GY + 40, -57.0), (1.0, 0.7, 0.4), 2500, 0.5); U.pl('tube_b', (GX, GY + 16, -57.0), (1.0, 0.7, 0.4), 2500, 0.5)
+    [U.pl('tube_%d' % k, (GX, yy, -57.5), (1.0, 0.7, 0.4), 4000, 0.5) for k, yy in enumerate((GY + 44, GY + 30, GY + 16, GY + 2))]
 
 def build_under_loc(scene, P):
     U.set_org(0, 0, 0); U.ensure_u(); build_cavern(scene, P)
@@ -433,15 +441,15 @@ def build_hall_loc(scene, P):
     B.plane(mb, (HX0, HY1, 0), (HX1 - HX0, 0, 0), (0, 0, HZ), tw, (0, 0, 11, 3.5)); B.plane(mb, (HX0, HY0, 0), (HX1 - HX0, 0, 0), (0, 0, HZ), tw, (0, 0, 11, 3.5))
     B.plane(mb, (HX0, HY0, 0), (0, HY1 - HY0, 0), (0, 0, HZ), tw, (0, 0, 10, 3.5)); B.plane(mb, (HX1, HY0, 0), (0, HY1 - HY0, 0), (0, 0, HZ), tw, (0, 0, 10, 3.5))
     r.done()
-    bm = U.Pt('beams', (0, 10, 12.5)); mb = bm.mb; mar = C('#a82838', 1.0, 1.6, smix=0.3)
+    bm = U.Pt('beams', (0, 10, 12.5)); mb = bm.mb; mar = C('#8a2a58', 1.0, 1.6, smix=0.3)
     for yy in (-6.0, 4.0, 14.0, 24.0): mb.box((HX0, yy - 0.6, HZ - 1.2), (HX1, yy + 0.6, HZ), mar)
     for xx in (-14.0, 0.0, 14.0): mb.box((xx - 0.5, HY0, HZ - 0.8), (xx + 0.5, HY1, HZ), mar)
     mb.box((HX0, HY1 - 0.1, 5.2), (HX1, HY1 + 0.0, 5.8), mar); mb.box((HX0, HY0 + 0.1, 5.2), (HX1, HY0 + 0.2, 5.8), mar)
     bm.done((0, 10, 12.5), px=3)
-    gl = U.Pt('lamps', (0, 10, 11), ink=True); mb = gl.mb; gh = U.Pt('lamp_halos', ink=False, shadow=False); gm = E('globe_h', color='#fff0c0', k=2.4); gp = []
-    for yy in (0.0, 9.0, 18.0, 26.0):
+    gl = U.Pt('lamps', (0, 10, 11), ink=True); mb = gl.mb; gh = U.Pt('lamp_halos', ink=False, shadow=False); gm = E('globe_h', color='#ffd890', k=1.1); gp = []
+    for yy in (9.0, 18.0, 26.0):
         for xx in (-15.0, -7.5, 0.0, 7.5, 15.0):
-            rod(mb, (xx, yy, HZ), (xx, yy, 10.6), 0.05, C('#2a2250'), seg=4); mb.sphere((xx, yy, 10.0), 0.75, gm, seg=12, rings=8); B.halo_card(gh.mb, (xx, yy, 10.0), 2.6, E('hgh', 'halo_warm', k=1.2, additive=True)); gp.append((xx, yy))
+            rod(mb, (xx, yy, HZ), (xx, yy, 10.6), 0.05, C('#2a2250'), seg=4); mb.sphere((xx, yy, 10.0), 0.55, gm, seg=12, rings=8); B.halo_card(gh.mb, (xx, yy, 10.0), 1.9, E('hgh', 'halo_warm', k=0.8, additive=True)); gp.append((xx, yy))
     gl.done((0, 10, 11), px=3); gh.done()
     for i, (xx, yy) in enumerate(gp):
         if i % 2 == 0 or yy in (9.0,): U.pl('hl%d' % i, (xx, yy, 9.2), (1.0, 0.72, 0.38), 800, 0.5)
@@ -482,9 +490,10 @@ def build_hall_loc(scene, P):
     for r_ in range(5):
         mb.box((sx - 3.0, sy + 0.2, 2.4 + r_ * 0.78), (sx + 3.0, sy + 0.95, 2.45 + r_ * 0.78), dwood)
     st.done((sx, sy, 2.5), px=3)
-    sg = U.Pt('stand_sign', ink=True); B_ = sg.mb; B_.pid += 1
-    B_.face([V((sx - 2.4, sy - 1.2, 6.7)), V((sx + 2.4, sy - 1.2, 6.7)), V((sx + 2.4, sy - 1.2, 8.5)), V((sx - 2.4, sy - 1.2, 8.5))], E('trial_sign', 'sign_trial', k=1.7), UVq)
-    rod(B_, (sx - 2.0, sy - 1.1, 6.5), (sx - 2.0, sy - 1.1, 6.8), 0.08, C('#222244')); rod(B_, (sx + 2.0, sy - 1.1, 6.5), (sx + 2.0, sy - 1.1, 6.8), 0.08, C('#222244')); sg.done((sx, sy, 7.5), px=3)
+    for key, im in (('trial', 'sign_trial'), ('real', 'sign_new_pocket')):
+        sg = U.Pt('stand_sign_' + key, ink=True); B_ = sg.mb; B_.pid += 1
+        B_.face([V((sx - 2.4, sy - 1.2, 6.7)), V((sx + 2.4, sy - 1.2, 6.7)), V((sx + 2.4, sy - 1.2, 8.5)), V((sx - 2.4, sy - 1.2, 8.5))], E('ss_' + key, im, k=1.7), UVq)
+        rod(B_, (sx - 2.0, sy - 1.1, 6.5), (sx - 2.0, sy - 1.1, 6.8), 0.08, C('#222244')); rod(B_, (sx + 2.0, sy - 1.1, 6.5), (sx + 2.0, sy - 1.1, 6.8), 0.08, C('#222244')); HALL.setdefault('signs', {})[key] = sg.done((sx, sy, 7.5), px=3)
     cover = TX('pocket_cover', 1.1, 1.2, form=False)
     for r_ in range(5):
         for c_ in range(10):
@@ -524,12 +533,22 @@ def build_hall_loc(scene, P):
         x = rs.uniform(-17, 17); y = rs.uniform(-6, 24)
         if abs(x - STAND[0]) < 5 and abs(y - STAND[1]) < 3.2: x += 7 if x >= 0 else -7
         c = crowd('hc', (k * 5 + 2) % 16, 'pass_walk', (x, y, 0.0), rim=rm if k % 2 else rc, mirror=(k % 3 == 0)); HALL['crowd'].append('hc%02d' % (len(U.ACTORS) - 1))
-    set_trial_stack(0); set_rack(0.0); set_reprint_crates(0)
+    for k in range(6):
+        o = U.Pt('flutter_%d' % k, ink=False, shadow=False); o.mb.pid += 1
+        o.mb.face([V((-0.45, -0.33, 0)), V((0.45, -0.33, 0)), V((0.45, 0.33, 0)), V((-0.45, 0.33, 0))], cover, UVq); fo = o.done(); fo.hide_render = True; HALL.setdefault('flutter', []).append(fo)
+    HALL['crate_base'] = [V(c.location) for c in HALL['crates']]
+    set_trial_stack(0); set_rack(0.0); set_reprint_crates(0); set_stand_sign('trial')
+    U.actor('sit_h1', 'clerk_sit_a', (-19.4, 13.2, 1.45), rim='#a8bcff', pose=dict(desk=0, typewriter=0))
+    U.actor('sit_h2', 'clerk_sit_c', (-19.4, 16.6, 1.45), rim='#ffb878', pose=dict(desk=0, typewriter=0))
 
 HALL_PEOPLE = [('porter', 'porter_hand_map', (1.8, 7.6, 0.0), dict(rim='#ffb878')), ('pass_man', 'pass_read_map', (-5.0, 8.5, 0.0), dict(rim='#a8bcff')),
                ('pass_woman', 'pass_tap_map', (3.6, 6.2, 0.0), dict(rim='#ffb878')), ('official', 'off_peek', (-10.9, 17.4, 0.0), dict(poses={'rub': 'off_smug_rub'}, rim='#a8bcff', pose=dict(pillar=0))),
                ('beck', 'beck_proud', (8.0, 11.5, 0.0), dict(rim='#ffb878')), ('porter2', 'porter_push_crate', (-9.0, 4.0, 0.0), dict(rim='#ffb878', cast='porter')),
                ('pass_child', 'pass_smile_board', (5.4, 4.2, 0.0), dict(rim='#a8bcff'))]
+
+def set_stand_sign(k):
+    for n, o in HALL['signs'].items(): o.hide_render = (n != k)
+B.SETTERS['set_stand_sign'] = set_stand_sign
 
 def set_trial_stack(n):
     for i, o in enumerate(HALL['stacks']): o.hide_render = not (i < int(n))
@@ -552,7 +571,15 @@ def _anim_s09(f, n):
     U.face_cards(); set_pose = U.set_pose
     set_pose('official', 'rub' if f >= 117 else 'main'); set_trial_stack(0 if f < 14 else 1 if f < 28 else 3)
 def _anim_s13(f, n):
-    U.face_cards(); set_rack(1.0 if f < 62 else max(0.0, 1.0 - (f - 62) / 8.0)); set_reprint_crates(0 if f < 75 else min(4, 1 + (f - 75) // 8))
+    U.face_cards(); set_rack(1.0 if f < 20 else max(0.0, 1.0 - (f - 20) / 35.0))
+    for k, fo in enumerate(HALL['flutter']):
+        t0 = 30 + k * 4; u = (f - t0) / 14.0
+        if u < 0: fo.hide_render = True; continue
+        u = min(1.0, u); fo.hide_render = False
+        x0, y0, z0 = STAND[0] - 2.0 + k * 0.8, STAND[1] - 1.3, 4.0 - (k % 3) * 0.5
+        fo.location = (x0 + (k - 2.5) * 0.5 * u, y0 - (2.0 + k * 0.3) * u, 0.07 + z0 * (1 - u) ** 1.6); fo.rotation_euler = (0.0 if u >= 1 else 1.1 * math.sin(u * 7 + k), 0.0, k * 0.9 + (0 if u >= 1 else u * 5))
+    for k, (c, b) in enumerate(zip(HALL['crates'], HALL['crate_base'])):
+        u = max(0.0, min(1.0, (f - 75 - k * 4) / 18.0)); c.hide_render = (f < 75 + k * 4); c.location = b + V((-22.0 * (1 - u), 0, 0))
 
 # ============================================================================= the carriage (s11)
 CAR = dict(map_objs={}, scroll=None, glow={})
@@ -614,10 +641,10 @@ def build_carriage_loc(scene, P):
             y0 = Y0 + 2.5 + k * 7.0; p2 = [V((xx, y0, 1.5 + 0)), V((xx, y0 + 1.4, 0.0 + 1.5)), V((xx, y0 + 1.4, 3.0)), V((xx, y0, 3.0))] if False else None
     ds.done((0, 3, 4.4), px=2.5)
     # the pocket map in the hands of pass_woman: plane facing -y, texture = the mapworld paper
-    U.utex('pocket_map', lambda: M.paper_image(1560, 1080, lw=0.26, title='UNDERGROUND', ring_names=True))
+    U.utex('pocket_map', lambda: M.paper_image(1560, 1080, lw=0.36, title='UNDERGROUND', ring_names=True, paper='#e6cf9a'))
     mx, my, mz, mw, mh = -0.35, 9.0, 3.1, 1.9, 1.32
     mo = U.Pt('pocket_map', ink=True, hd=6); mo.mb.pid += 1
-    mo.mb.face([V((mx - mw / 2, my, mz - mh / 2)), V((mx + mw / 2, my, mz - mh / 2)), V((mx + mw / 2, my, mz + mh / 2)), V((mx - mw / 2, my, mz + mh / 2))], E('pmap', 'pocket_map', k=0.62), UVq); CAR['map'] = mo.done((mx, my, mz), px=2.5)
+    mo.mb.face([V((mx - mw / 2, my, mz - mh / 2)), V((mx + mw / 2, my, mz - mh / 2)), V((mx + mw / 2, my, mz + mh / 2)), V((mx - mw / 2, my, mz + mh / 2))], E('pmap', 'pocket_map', k=0.55), UVq); CAR['map'] = mo.done((mx, my, mz), px=2.5)
     def uv2w(u, v): return (mx - mw / 2 + u / M.GW * mw, mz + mh / 2 - v / M.GH * mh)
     gl_r = U.Pt('glow_red', ink=False, shadow=False); mb = gl_r.mb; gm_ = E('mapglow', color='#ff7a6a', k=3.2, additive=True)
     pts = [uv2w(*p) for p in dict(M.DIAGRAM['lines'])['red']] if False else [uv2w(*p) for p in [l for l in M.DIAGRAM['lines'] if l[0] == 'red'][0][1]]
@@ -631,6 +658,8 @@ def build_carriage_loc(scene, P):
     set_map_glow(None)
     # people
     for nm, story, mk, kw in CAR_PEOPLE: U.actor(nm, story, mk, **kw)
+    for k, (x, y, st) in enumerate(((-2.9, -4.5, 'clerk_sit_b'), (2.9, 1.0, 'clerk_sit_a'), (-2.9, 12.5, 'clerk_sit_c'))):
+        U.actor('sit_c%d' % k, st, (x, y, 1.35), rim='#ffb878' if k % 2 else '#a8bcff', pose=dict(desk=0, typewriter=0))
     rm = '#ffb878'; rc = '#a8bcff'
     for k, (x, y) in enumerate(((-2.4, -6.0), (2.5, -3.0), (-2.5, -1.0), (1.0, 3.5), (-1.6, 13.0), (2.3, 12.0), (0.2, -9.0), (2.4, 15.5), (-2.4, 16.0), (-0.2, 1.2))):
         crowd('cc', (k * 3 + 1) % 16, 'pass_walk' if k % 2 else 'pass_read_paper', (x, y, 0.0), rim=rm if k % 2 else rc, mirror=(k % 2 == 0))
@@ -686,11 +715,11 @@ SHOTS['s03'] = dict(location='under', light='UNDER', f0=192, f1=324, cam=_s03_ca
 
 LOCATIONS['hall'] = dict(build=build_hall_loc, light='HALL', sky=False, cam=dict(loc=(2, -8, 12.5), look_at=(0, 10, 5), lens=26))
 LOCATIONS['carriage'] = dict(build=build_carriage_loc, light='CARRIAGE', sky=False, cam=dict(loc=(-1.4, -9, 2.9), look_at=(0.5, 4, 2.8), lens=28))
-SHOTS['s09'] = dict(location='hall', light='HALL', f0=1005, f1=1197, animate={'a': lambda f, n: _anim_s09(f, n)}, state={'set_rack': 0.0, 'set_crowd': (22, 3)}, marks={},
+SHOTS['s09'] = dict(location='hall', light='HALL', f0=1005, f1=1197, animate={'a': lambda f, n: _anim_s09(f, n)}, state={'set_rack': 0.0, 'set_crowd': (22, 3), 'set_stand_sign': 'trial'}, marks={},
     cam=[(0, (2, -8, 12.5), (0, 10, 5), 26), (60, (3, -2, 6.5), (0, 10, 3.2), 28), (100, (4, -1, 3.0), (0, 11, 3.4), 30), (150, (3.0, 0.5, 2.3), (-9.5, 17, 3.2), 30), (191, (2.0, 2.5, 2.1), (-10.8, 17.4, 3.2), 32)])
 SHOTS['s11'] = dict(location='carriage', light='CARRIAGE', f0=1301, f1=1485, animate={'a': lambda f, n: _anim_s11(f, n)}, state={}, marks={},
     cam=[(0, (-1.4, -9, 2.9), (0.5, 4, 2.8), 28), (50, (-1.0, -2, 2.9), (0.8, 6, 2.9), 28), (90, (-1.0, 3.5, 3.4), (-0.3, 9, 3.0), 30), (150, (-0.4, 7.2, 3.5), (-0.3, 9.2, 3.1), 34), (183, (-0.3, 8.4, 3.15), (-0.3, 9.2, 3.1), 44)])
-SHOTS['s13'] = dict(location='hall', light='HALL', f0=1559, f1=1662, animate={'a': lambda f, n: _anim_s13(f, n)}, state={'set_rack': 1.0, 'set_crowd': (34, 5)}, marks={},
+SHOTS['s13'] = dict(location='hall', light='HALL', f0=1559, f1=1662, animate={'a': lambda f, n: _anim_s13(f, n)}, state={'set_rack': 1.0, 'set_crowd': (34, 5), 'set_stand_sign': 'real'}, marks={},
     cam=[(0, (3, 2, 3.0), (0, 10, 2.8), 28), (50, (6, -2, 8), (0, 12, 2.5), 28), (102, (9, -7, 10.5), (0, 12, 1.5), 26)])
 SHOTS['s10'].update(animate={'a': lambda f, n: (set_train(max(6.0, 60.0 - 54.0 * min(1.0, f / 70.0) ** 0.8)), set_doors(1.0 if f > 78 else 0.0), U.set_pose('official', 'jaw' if f > 78 else 'main'), U.face_cards())})
 SHOTS['s03']['animate'] = {'a': lambda f, n: (U.face_cards(), U.set_pose('pass_man', 'bump' if f > 95 else 'main'))}

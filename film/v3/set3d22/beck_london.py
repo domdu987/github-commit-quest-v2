@@ -251,7 +251,7 @@ def build_london_world(scene, P):
     for (cx, cy), d in cabs: halo_card(ch.mb, (cx - 3.9 * d, cy + 0.8, 1.9), 1.5, E('hl', 'halo_white', k=1.7, additive=True)); halo_card(ch.mb, (cx - 3.9 * d, cy + 2.8, 1.9), 1.5, E('hl', 'halo_white', k=1.7, additive=True))
     ch.done()
     # ---- street furniture: lamp posts + halos, kiosk, flower stall, bollards, railings
-    lp = Part('lamps', (0, 6, 7)); mb = lp.mb; lc = C('#26204e'); bulb = E('bulb', color='#ffd98a', k=2.2)
+    lp = Part('lamps', (0, 6, 7)); mb = lp.mb; lc = C('#26204e'); bulb = E('bulb', color='#ffd98a', k=1.4)
     lamps = [(-52, -3.3), (-20, -3.3), (14, -3.3), (44, -3.3), (-52, 24.5 - 9.6), (-12, 24.5 - 9.6), (30, 24.5 - 9.6), (56, 24.5 - 9.6)]
     lamps = [(-18, -3.3), (12, -3.3), (40, -3.3), (66, -3.3), (-24, 15.2), (-6, 15.2), (32, 15.2), (56, 15.2)]
     for (lx, ly) in lamps:
@@ -328,7 +328,7 @@ SHOTS['s02'] = dict(location='london', light='DUSK', f0=107, f1=192, shift_y=0.1
     marks=dict(), state=dict())
 SHOTS['s15'] = dict(location='london', light='NIGHT', f0=1752, f1=1890, shift_y=0.12,
     cam=[(0, (-13.0, -46.0, 70.0), (-3.0, 44.0, 0.0), 22), (40, (-6.0, -30.0, 52.0), (0.0, 24.0, 11.0), 24), (80, (0.0, 1.0, 19.0), (0.0, 24.0, 11.0), 26), (100, (0.0, 13.5, 11.8), (0.0, 34.0, 10.0), 28), (112, (0.0, 22.0, 10.9), (0.0, 38.0, 9.7), 30), (137, (0.0, 34.0, 10.0), (0.0, 42.6, 9.2), 34)],
-    marks=dict(official=(0.0, 43.5, 9.23, 0)), state=dict(map_towers=1.0, crate=1.0), actors=lambda g: actors_s15(g))
+    marks=dict(official=(0.0, 43.5, 9.23, 0)), state=dict(map_towers=0.6, crate=1.0), actors=lambda g: actors_s15(g))
 
 def actors_s15(g):
     import beck_hq as H

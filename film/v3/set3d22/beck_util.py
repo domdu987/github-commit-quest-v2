@@ -12,7 +12,7 @@ from beck import V, T, STATE, BX
 import bpy
 
 HERE = B.HERE
-UTEX_V = 7
+UTEX_V = 8
 ORG = V((0.0, 0.0, 0.0))
 
 def set_org(x, y, z):
@@ -145,7 +145,8 @@ def tex_ceiling_tile(W=512, H=512):
 U_PAINTERS = dict(pocket_cover=tex_pocket_cover, crate_reprint=lambda: tex_crate(word='REPRINT'), crate_maps=lambda: tex_crate(word='MAPS'),
                   moquette=tex_moquette, streak=tex_streak, strata=tex_strata, hall_floor=tex_hall_floor, wood_slats=tex_wood_slats,
                   ticket_front=tex_ticket_front, ceiling_tile=tex_ceiling_tile,
-                  sign_trial=lambda: sign_img('TRIAL MAP', '#12307a', '#fff1c0', border='#ffc81e', w=640, h=240, sub='FREE'),
+                  sign_trial=lambda: sign_img('NEW MAP', '#12307a', '#fff1c0', border='#ffc81e', w=640, h=240, sub='TRIAL'),
+                  sign_new_pocket=lambda: sign_img('NEW POCKET MAP', '#12307a', '#fff1c0', border='#ffc81e', w=900, h=240),
                   sign_to_trains=lambda: sign_img('TO TRAINS', '#12307a', 'white', border='#ffc81e', w=900, h=240),
                   sign_enquiries=lambda: sign_img('MAPS', '#12724a', '#fff1c0', border='#fff1c0', w=600, h=220),
                   sign_exit=lambda: sign_img('WAY OUT', '#12724a', 'white', border='white', w=800, h=240),

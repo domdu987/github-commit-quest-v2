@@ -64,10 +64,10 @@ def stations_on(D=None, step=2):
                 out.append((col, p, (dx, dy)))
     return out
 
-def paper_image(W=1560, H=1080, lw=0.2, title='UNDERGROUND', D=None, ring_names=True, lines=True, river=True, seed=3):
+def paper_image(W=1560, H=1080, lw=0.2, title='UNDERGROUND', D=None, ring_names=True, lines=True, river=True, seed=3, paper='#f6ecd2'):
     """The pocket map / mapworld paper: cream, faint grid, pale river, the straight-line diagram with station ticks and ring names."""
     D = D or DIAGRAM; S = 1; cs = W / GW
-    img = Image.new('RGB', (W, H), '#f6ecd2'); rs = np.random.RandomState(seed)
+    img = Image.new('RGB', (W, H), paper); rs = np.random.RandomState(seed)
     a = np.asarray(img, 'float32') / 255 * (0.95 + BX.noise(rs, H, W, 40, 0.07))[..., None]; img = Image.fromarray((np.clip(a, 0, 1) * 255).astype('uint8')); d = ImageDraw.Draw(img)
     for i in range(GW + 1): d.line((i * cs, 0, i * cs, H), fill='#e8dcb6', width=2)
     for j in range(GH + 1): d.line((0, j * cs, W, j * cs), fill='#e8dcb6', width=2)
@@ -166,19 +166,19 @@ def build_sheet(name, D, ox, oy, C, TX, E, lit=True, titles=True, cityidx=None, 
     tag = name.replace(' ', '_')
     utex_name = 'paper_' + tag
     U.utex(utex_name, lambda: paper_image(1560, 1080, lw=0.2, title=name, D=D, river=(D is DIAGRAM), seed=abs(hash(tag)) % 97 if D is not DIAGRAM else 3))
-    g = U.Pt('paper_' + tag, ink=False); B.plane(g.mb, (ox - GW * CELL / 2, oy - GH * CELL / 2, 0.0), (GW * CELL, 0, 0), (0, GH * CELL, 0), TX(utex_name, 0.58, 0.3, form=False), (0, 0, 1, 1)); g.done()
+    g = U.Pt('paper_' + tag, ink=False); B.plane(g.mb, (ox - GW * CELL / 2, oy - GH * CELL / 2, 0.0), (GW * CELL, 0, 0), (0, GH * CELL, 0), E('pp_' + tag, utex_name, k=0.5), (0, 0, 1, 1)); g.done()
     # frame of the sheet: slightly raised cream border so the sheets read as papers laid on the table
-    fr = U.Pt('paperedge_' + tag, (ox, oy, 0), ink=True, hd=40); mb = fr.mb; ec = C('#e8dcb8', 1.0, 1.4)
+    fr = U.Pt('paperedge_' + tag, (ox, oy, 0), ink=True, hd=70); mb = fr.mb; ec = C('#e8dcb8', 1.0, 1.4)
     mb.box((ox - GW * CELL / 2 - 0.6, oy - GH * CELL / 2 - 0.6, -0.5), (ox + GW * CELL / 2 + 0.6, oy - GH * CELL / 2, 0.15), ec)
     mb.box((ox - GW * CELL / 2 - 0.6, oy + GH * CELL / 2, -0.5), (ox + GW * CELL / 2 + 0.6, oy + GH * CELL / 2 + 0.6, 0.15), ec)
     mb.box((ox - GW * CELL / 2 - 0.6, oy - GH * CELL / 2, -0.5), (ox - GW * CELL / 2, oy + GH * CELL / 2, 0.15), ec)
     mb.box((ox + GW * CELL / 2, oy - GH * CELL / 2, -0.5), (ox + GW * CELL / 2 + 0.6, oy + GH * CELL / 2, 0.15), ec)
     fr.done((ox, oy, 0), px=2.5)
-    lp = U.Pt('lines_' + tag, (ox, oy, 0.4), ink=True, hd=14); mb = lp.mb
+    lp = U.Pt('lines_' + tag, (ox, oy, 0.4), ink=True, hd=40); mb = lp.mb
     tick = C('#1a1840', 1.0, 1.0); wmat = C('#ffffff', 1.1, 1.2); rmat = C('#f6ecd2', 1.0, 1.0)
     for col, pts in D['lines']:
         mat, topm = LINE_MATS[col] if cityidx is None else CITY_MATS[(cityidx, col)]
-        _raise_line(mb, [w_xy(u, v, ox, oy) for u, v in pts], 2.0, 0.6, mat, topm, hi_mat=HI_MAT)
+        _raise_line(mb, [w_xy(u, v, ox, oy) for u, v in pts], 2.6, 0.7, mat, topm, hi_mat=HI_MAT)
     for col, (u, v), (tx, ty) in stations_on(D):
         x, y = w_xy(u, v, ox, oy); nx, ny = -ty, tx
         obox(mb, V((x, y, 0.35)), V((nx, -ny * -1, 0)).normalized() if False else V((nx, ny, 0)), V((tx, ty, 0)), V((0, 0, 1)), 1.6, 0.28, 0.35, tick)
@@ -193,7 +193,8 @@ def build_mapworld(scene, P):
     U.set_org(0, 0, 0); U.ensure_u()
     B.sun_light(P)
     # table (deep violet-blue desk) under everything
-    g = U.Pt('table', ink=False); B.plane(g.mb, (-1600, -1600, -0.9), (3200, 0, 0), (0, 3200, 0), C('#1c1a58', 0.9, 1.0, form=False), (0, 0, 60, 60)); g.done()
+    g = U.Pt('table', ink=False); B.plane(g.mb, (-1300, -1300, -0.9), (2600, 0, 0), (0, 2600, 0), E('table_wood', 'wood_dark', k=0.75), (0, 0, 22, 22)); g.done()
+    build_table_props(C, TX, E)
     # line materials per city (self-lit so they can light up one by one)
     global HI_MAT
     HI_MAT = E('line_hi', color='#fff6e0', k=2.2)
@@ -210,13 +211,13 @@ def build_mapworld(scene, P):
     x, y = w_xy(16, 9)
     for nm, (u, v, dy_) in (('CHANGE HERE', (16, 9, 7.2)),):
         U.utex('tag_change', lambda: BX.sign('CHANGE HERE', '#ffc81e', '#1a1840', border='#1a1840', w=900, h=260))
-        tg = U.Pt('tag_change', (x, y + dy_, 3), ink=True, hd=14); mb = tg.mb
+        tg = U.Pt('tag_change', (x, y + dy_, 3), ink=True, hd=40); mb = tg.mb
         rod(mb, (x - 4.5, y + dy_, 0.5), (x - 4.5, y + dy_, 4.2), 0.18, C('#262050'), seg=6); rod(mb, (x + 4.5, y + dy_, 0.5), (x + 4.5, y + dy_, 4.2), 0.18, C('#262050'), seg=6)
         mb.quad(V((x - 5.0, y + dy_ - 0.2, 3.0)), V((10.0, 0, 0)), V((0, 0, 2.9)), E('tagc', 'tag_change', k=1.7), (0, 0, 1, 1)); tg.done((x, y + dy_, 3), px=2.5)
     # the tiny train (cars) on the RED line
     mk_train(C, TX, E); place_train(60.0)
     # tiny passengers around the BANK ring
-    mk_passengers(rs)
+    mk_passengers(rs); mk_line_trains(C, TX, E); mk_stations(C, TX, E); mk_ring_crowds()
 
 CARS = []
 def mk_train(C, TX, E, n=3):
@@ -256,7 +257,7 @@ def mk_passengers(rs):
 def build_bridges(C):
     """Straight bars from the edge of the London sheet across the gap onto the neighbouring sheets (the diagram style spreads)."""
     gx, gy = GW * CELL + 8, GH * CELL + 8
-    br = U.Pt('bridges', (0, 0, 0.4), ink=True, hd=14); mb = br.mb
+    br = U.Pt('bridges', (0, 0, 0.4), ink=True, hd=40); mb = br.mb
     specs = [('red', [(120, 0), (gx, 0)]), ('green', [(120, 50), (gx, 50)]), ('blue', [(120, -80), (gx, -80)]), ('yellow', [(80, 80), (80, gy)]), ('brown', [(-120, 0), (-gx, 0)]), ('black', [(-120, 70), (-gx, 70)])]
     for col, pts in specs: _raise_line(mb, pts, 1.7, 0.55, LINE_MATS[col][0], LINE_MATS[col][1], hi_mat=HI_MAT)
     br.done((0, 0, 0.4), px=2.2)
@@ -278,7 +279,7 @@ def train_s12(f):
 
 def _cam_keys_s14():
     return [(0, (60, 0, 4.2), (110, 0, 1.4), 24, 0.0), (18, (36, -6, 30), (150, 4, 6), 24, 0.0), (44, (-30, -120, 120), (110, 10, 4), 24, 0.0),
-            (70, (-50, -300, 260), (40, 20, 0), 24, 0.0), (89, (-24, -340, 330), (0, 30, 0), 24, 0.0)]
+            (70, (-50, -300, 260), (40, 20, 0), 24, 0.0), (89, (-30, -300, 250), (0, 150, 10), 24, 0.0)]
 
 def train_s14(f): return 210.0 + 44.0 * f / 89.0 + 0.0
 
@@ -290,14 +291,14 @@ def _s12_marks():
     return m
 
 def _anim_s12(f, n):
-    place_train(train_s12(f)); U.face_cards()
+    place_train(train_s12(f)); place_line_trains(f); U.face_cards()
 
 def _anim_s14(f, n):
-    place_train(train_s14(f), ext=True); set_city_diagrams(min(1.0, max(0.0, (f - 14) / 52.0))); U.face_cards()
+    place_train(train_s14(f), ext=True); place_line_trains(f); set_city_diagrams(min(1.0, max(0.0, (f - 14) / 52.0))); U.face_cards()
 
 def _loc_cam(): return dict(loc=(-60, -60, 8), look_at=(30, 0, 2), lens=24)
 
-LOCATIONS = {'mapworld': dict(build=build_mapworld, light='MAPWORLD', sky=True, cam=_loc_cam())}
+LOCATIONS = {'mapworld': dict(build=build_mapworld, light='MAPWORLD', sky=False, cam=_loc_cam())}
 SHOTS = {
     's12': dict(location='mapworld', light='MAPWORLD', f0=1485, f1=1559, cam=_cam_keys_ride(), marks=_s12_marks(), state={'set_city_diagrams': 1.0}, animate={'train': _anim_s12}),
     's14': dict(location='mapworld', light='MAPWORLD', f0=1662, f1=1752, cam=_cam_keys_s14(), marks={'train': (210.0 - 130 + 0.0, 0.0, 0.4, 0.0)}, state={'set_city_diagrams': 0.0}, animate={'train': _anim_s14}),
@@ -313,8 +314,78 @@ def set_city_diagrams(k):
     """k 0..1: the other cities' diagrams light up one by one (city i is lit when k * N > i); lit = strength 1.8, unlit 0.35."""
     k = float(k); n = len(CITIES)
     for ci in range(n):
-        u = max(0.0, min(1.0, k * n - ci)); st = 0.30 + 2.3 * (u * u * (3 - 2 * u))
+        u = max(0.0, min(1.0, k * n - ci)); st = 0.35 + 2.8 * (u * u * (3 - 2 * u))
         for col in COL:
             for m in CITY_MATS[(ci, col)]:
                 nd = m.node_tree.nodes.get('strength')
                 if nd: nd.inputs['Strength'].default_value = st * (1.0 if m is CITY_MATS[(ci, col)][0] else 1.2)
+
+
+# ----------------------------------------------------------------------------- Beck's drafting table: the far edge of the world
+def build_table_props(C, TX, E):
+    pr = U.Pt('table_props', (0, 0, 40), ink=True, hd=60); mb = pr.mb
+    def bottle(x, y, col, hexc):
+        rod(mb, (x, y, 0), (x, y, 70), 34, E('ink_%s' % col, color=hexc, k=0.9), seg=20)
+        rod(mb, (x, y, 70), (x, y, 88), 14, C('#1a1a50'), seg=14); rod(mb, (x, y, 88), (x, y, 104), 17, C('#0e0e30'), seg=14)
+        mb.box((x - 18, y - 36, 22), (x + 18, y - 35, 52), C('#f6ecd0', 1.2, 1.2))
+    for k, (x, y, col) in enumerate(((470, -150, 'red'), (500, -60, 'blue'), (480, 40, 'green'), (505, 140, 'yellow'))): bottle(x, y, col, COL[col])
+    for k, (x, y, col) in enumerate(((-120, -430, 'blue'), (-20, -450, 'red'))): bottle(x, y, col, COL[col])
+    # giant set square (amber) and ruler standing like monuments on the west side
+    A = [V((-480, -40, 0)), V((-480, 120, 0)), V((-480, -40, 0)) + V((0, 0, 0))]
+    from mine import obox as ob_
+    ob_(mb, V((-470, 40, 70)), V((0, 1, 0)), V((1, 0, 0)), V((0, 0, 1)), 90, 8, 70, C('#c8793a', 1.3, 1.5))
+    ob_(mb, V((-470, 40, 150)), V((0, 1, 0)), V((1, 0, 0)), V((0, 0, 1)), 60, 7, 12, C('#c8793a', 1.3, 1.5))
+    ob_(mb, V((-470, -140, 120)), V((0, 1, 0)), V((1, 0, 0)), V((0, 0, 1)), 12, 7, 120, C('#f2d48a', 1.3, 1.4))
+    for t in range(14): mb.box((-478, -150 + 0.0, 5 + t * 17), (-462, -131, 7 + t * 17), C('#1a1840'))
+    pr.done((0, 0, 40), px=3)
+    # the green banker's lamp far to the north-east: a warm sun
+    lp = U.Pt('giant_lamp', (560, 420, 150), ink=True, hd=80); mb = lp.mb
+    rod(mb, (560, 420, 0), (560, 420, 200), 9, C('#1a1a50')); rod(mb, (560, 420, 0), (560, 420, 14), 40, C('#1a1a50'), seg=16)
+    mb.frustum((560, 420, 215), (560, 420, 150), 26, 96, C('#12a15a', 1.4, 1.6, smix=0.2), seg=24, cap0=True, cap1=False); mb.sphere((560, 420, 165), 22, E('lamp_bulb', color='#fff0b0', k=2.2), seg=14, rings=8)
+    lp.done((560, 420, 150), px=3)
+    gh = U.Pt('lamp_halo', ink=False, shadow=False); B.halo_card(gh.mb, (560, 420, 155), 190, E('lamp_halo', 'halo_warm', k=1.2, additive=True)); gh.done()
+    U.pl('lamp_sun', (560, 400, 140), (1.0, 0.75, 0.4), 4000000, 20.0)
+    # the dark-blue night window: four big night-city walls (the HQ and its roundel across the street)
+    for k, (p0, pu) in enumerate((((1250, -1250, 0), (0, 2500, 0)), ((1250, 1250, 0), (-2500, 0, 0)), ((-1250, 1250, 0), (0, -2500, 0)), ((-1250, -1250, 0), (2500, 0, 0)))):
+        w = U.Pt('nightwall%d' % k, ink=False, shadow=False); w.mb.pid += 1
+        a = V(p0); b = a + V(pu); up = V((0, 0, 1100))
+        w.mb.face([a, b, b + up, a + up], E('nightwall%d' % k, 'night_city', k=1.0), [(1, 0.0), (0, 0.0), (0, 1), (1, 1)]); w.done()
+
+def mk_line_trains(C, TX, E):
+    for col, s0 in (('blue', 70.0), ('green', 110.0), ('yellow', 60.0), ('brown', 40.0), ('black', 70.0), ('red', 190.0)):
+        mat = E('lt_%s' % col, color=COL[col] if col != 'black' else '#6a6aa8', k=1.0); win = E('twin', color='#ffe2a0', k=2.6)
+        for i in range(2):
+            p = U.Pt('lt_%s_%d' % (col, i), (0, 0, 1), ink=True, hd=14); mb = p.mb
+            mb.box((-0.75, -2.0, 0.55), (0.75, 2.0, 1.9), mat); mb.box((-0.7, -2.0, 1.9), (0.7, 2.0, 2.05), E('ltr', color='#fff6e0', k=0.9))
+            for sx in (-1, 1):
+                x0 = 0.74 if sx > 0 else -0.8
+                for j in range(3): mb.box((x0, -1.5 + j * 1.15, 1.0), (x0 + 0.06, -0.85 + j * 1.15, 1.65), win)
+            LTRAINS.append((p.done((0, 0, 1), px=2.2), col, s0, i))
+    place_line_trains(0)
+
+LTRAINS = []
+def place_line_trains(f):
+    for ob, col, s0, i in LTRAINS:
+        xy, cum = line_path(col); (x, y), (tx, ty) = path_at(xy, cum, (s0 + f * 0.9 - 4.6 * i) % cum[-1])
+        ob.location = (x, y, 0.4); ob.rotation_euler = (0, 0, math.atan2(ty, tx) - math.pi / 2)
+
+def mk_stations(C, TX, E):
+    pt = U.Pt('platforms', (0, 0, 0.2), ink=True, hd=30); mb = pt.mb; cream = C('#f6ecd0', 1.1, 1.3); names = []
+    for k, (col, (u, v), (tx, ty)) in enumerate(stations_on()):
+        x, y = w_xy(u, v); nx, ny = -ty, tx; side = 1 if k % 2 else -1
+        px, py = x + nx * side * 3.4, y + ny * side * 3.4
+        obox(mb, V((px, py, 0.18)), V((nx, ny, 0)), V((tx, ty, 0)), V((0, 0, 1)), 1.0, 2.0, 0.18, cream)
+        if k % 3 == 0 and len(names) < 12: names.append((px, py, DIAGRAM['stations'][k % len(DIAGRAM['stations'])]))
+    pt.done((0, 0, 0.2), px=2.2)
+    tg = U.Pt('name_tags', ink=True, hd=40); mb = tg.mb
+    for k, (x, y, nm) in enumerate(names):
+        U.utex('tag_%s' % nm.replace(' ', '_'), lambda nm=nm: BX.sign(nm, '#f6ecd0', '#1a1840', border='#1a1840', w=700, h=200))
+        rod(mb, (x, y, 0.3), (x, y, 1.6), 0.1, C('#262050'), seg=5)
+        mb.pid += 1; mb.face([V((x - 2.4, y, 1.5)), V((x + 2.4, y, 1.5)), V((x + 2.4, y, 2.7)), V((x - 2.4, y, 2.7))], E('tag%d' % k, 'tag_%s' % nm.replace(' ', '_'), k=1.5), [(0, 0), (1, 0), (1, 1), (0, 1)])
+    tg.done((0, 0, 2), px=2.2)
+
+def mk_ring_crowds():
+    for (u, v) in ((21, 9), (16, 6), (9, 14)):
+        x0, y0 = w_xy(u, v)
+        for i, (dx, dy) in enumerate(((-2.4, 2.8), (2.6, 3.0), (-3.0, -2.4), (3.1, -2.2), (0.2, 4.4))):
+            U.crowd_card('mp%d' % (i + 9 * (u % 3)), i + 5 + u, 'pass_walk', (x0 + dx, y0 + dy, 0.8), scale=0.42, rim='#ffd08a', shadow=True)
