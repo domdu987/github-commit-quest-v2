@@ -1,13 +1,13 @@
-# QA s01 (film 18, team 1) — BIGZOOM A: extreme wide -> medium on Tian Dan (v2: rim light, 即墨 plaque, §I)
+# QA s01 (film 18, team 1) — BIGZOOM A: extreme wide -> medium on Tian Dan (v3: gate-14 fixes)
 Take: g 0-155 in-shot (156 frames) + 6 handle frames after (g 156-161); first_g 0, n_frames 162, g0 0, g1 156. jimo_in NIGHT, 720x1280, 12 samples, ~17 s/frame (two processes). transition_in: cut.
-Move: one continuous eased path (shot.py `camera(f)`), g 0-108 crane DOWN + push IN (86 D -> 7 D, lens 24 -> 32 mm) along a curved path over the wall top and roofs, MEDIUM on Tian Dan from g108, then g 108-155 push ~6 %/s + 7-degree orbit. No cut, no pulses.
-§I additions: (1) cool moon-blue RIM light: each of Tian Dan and the hero ox has a slightly bigger, brighter blue-tinted backing copy of its card (cards are emissive, so the rim is drawn, not lit), beside the warm lantern / brazier key and the warm pool light on them; (2) saturation kept high (reds of the silk, deep blue sky); (3) sharp wooden plaque 即墨 (WenQuanYi Zen Hei, gold on lacquered board, painted texture on a world quad, two dark posts, warm light) at (-15, 17.6) in the yard; the zoom passes it: readable on the phone sheet g ~36-72 (>= 1.2 s); (4) Tian Dan never stands still: tug 2.2 Hz with bob / roll / lean until g89, then tying with a 1.4 Hz + 3.1 Hz sway.
+Gate-14 fixes: (1) the rim backing cards (ghost duplicates: second cap, extra legs) are DELETED; the cool moon-blue rim is now LIGHTS only (two blue spot lights behind / above the hero pair aimed at the camera side, no extra geometry); full-size stills at g110 and g150 checked: no duplicate cap, legs or hooves. (2) the basket carriers are REMOVED; a woman and an old man with baskets stand farther back in the yard (y 19, fully in frame, heads far above y 860). (3) the plaque is nudged 1.0 D back (y 17.6 -> 18.6): at g79-80 no post crosses a face.
+Kept from v2: continuous eased crane-down + push over the roofs (86 D -> 7 D, lens 24 -> 32 mm, g 0-108 = 3.6 s) then 6 %/s push + 7-degree orbit; 70 dragon-dressed oxen, warm lanterns / braziers / pool on the pair; 即墨 plaque (gold on lacquer, readable g ~36-70); Tian Dan always moving (tug 2.2 Hz, then tying with 1.4 + 3.1 Hz sway); contact shadows under him and the near oxen.
 ## Measured
-- Tian Dan height / frame height (3.0 D, actual camera path): g0 2.3 % (< 5 %), g108 35.6 % (35-60 %), g155 41.7 %. Zoom duration g 0-108 = 3.6 s.
-- Plain ground share: g0 0.01, g108 0.15, g155 0.18 (<= 0.30). Caption band y 880-950 at g155: mean 104.9, bright 0.03 %.
-- Colour (frames every 10): saturation 0.49, luma 97 (target sat >= 0.47, luma 85-110).
+- Tian Dan height / frame height: g0 2.3 % (< 5 %), g108 35.6 % (35-60 %), g155 41.7 %.
+- Plain ground share: g0 0.00, g108 0.13, g155 0.20 (<= 0.30). Caption band y 880-950 at g155: mean 124.1, bright 0.0 %.
+- Colour (frames every 10): saturation 0.48, luma 100.
 ## Frame-diff (90x160 grey, in-shot g 0-155)
-median 8.38 (>= 4 OK), p90 14.89, min 2.93, max 21.24.
+median 7.93 (>= 4 OK), p90 12.42, min 2.26, max 17.87.
 ## Checks
 qa_auto PASS. Real 360x640 phone_sheet.jpg. Heads above y 880. No mouth moves, no flames on tails.
-Known: the rim reads as a thin pale-blue edge, strongest on the hat and the ox's horn; at g 62-80 the plaque post (dark pole) crosses the frame edge as the camera passes; carriers pop in at g 60; Tian Dan is a ~3 % figure at g 0-30 (findable by the lit patch).
+Known: the blue rim light mostly tints the ground and wall edges because the cards are emissive (it does not shade the drawn figures, so the rim on Tian Dan himself is faint); Tian Dan is a ~3 % figure at g 0-30; caption band mean is 124 at g155 (lit ground), above the 110 note level but with no bright pixels.
