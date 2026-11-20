@@ -260,3 +260,20 @@ def tie_reeds(ox_obj, state, view, gait, phase, ox_scale, camloc, height=3.4, na
     sc_p = height / meta['height']; d = V(camloc) - tail; pyaw = math.degrees(math.atan2(d.x, -d.y)); right_p = V((math.cos(math.radians(pyaw)), math.sin(math.radians(pyaw)), 0))
     feet = tail - right_p * (rx * sc_p) - V((0, 0, (feet_y - ry) * sc_p))
     return put_person(meta, (feet.x, feet.y, max(0.0, feet.z)), camloc, height, name, yaw=pyaw, lift=lift)
+
+def puff_meta(alpha=0.5, tone=(226, 196, 160)):
+    from PIL import Image
+    name = 'puff2_%d_%d_%d_%d' % ((alpha * 100,) + tone); p = os.path.join(CD.CARDS, name + '.png'); os.makedirs(CD.CARDS, exist_ok=True)
+    if not os.path.exists(p):
+        n = 256; yy, xx = np.mgrid[0:n, 0:n]; a = np.zeros((n, n))
+        for (cx, cy, rad) in [(128, 140, 70), (84, 156, 48), (176, 152, 50), (124, 94, 52), (160, 104, 40), (92, 112, 40)]:
+            a = np.maximum(a, np.exp(-(np.hypot(xx - cx, yy - cy) / (rad * 0.62)) ** 2))
+        a[a < 0.03] = 0
+        im = np.zeros((n, n, 4), np.uint8); im[..., 0], im[..., 1], im[..., 2] = tone; im[..., 3] = (np.clip(a, 0, 1) * alpha * 255).astype(np.uint8)
+        Image.fromarray(im, 'RGBA').save(p)
+    return dict(path=p, w=1.0, h=1.0, x0=-0.5, feet=0.0, kind='puff')
+
+def put_puff(pos, size, camloc, alpha=0.5, name='puff', tone=(226, 196, 160)):
+    m = puff_meta(alpha, tone); p = V(pos); d = V(camloc) - p; yaw = math.degrees(math.atan2(d.x, -d.y))
+    return R2.put_card(m, (p.x, p.y, p.z), yaw, size, name=name, tint=(1, 1, 1), k=1.0, shadow=False)
+

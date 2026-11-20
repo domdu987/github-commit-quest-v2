@@ -10,16 +10,16 @@ SHOT = 's20'; G0, G1 = 1515, 1595; H_IN, H_OUT = 6, 6
 V_OX = 11.0; XC = 20.0; Y0 = -46.0; DUR = 81 / 30.0
 def pose(sh, t):
     """camera rides with the herd: y = Y0 - V*t*DUR; lateral distance 10.5 -> 9.2 (slow push), whip-in during the first 7 frames."""
-    y = Y0 - V_OX * t * DUR + 1.0 * t + 1.1 * math.sin(t * 12.0); lat = 6.6 - 1.4 * min(1.0, max(0.0, t)) + 0.9 * math.sin(t * 17.0); w = max(0.0, 1.0 - (t * 81) / 7.0) ** 2
-    return dict(loc=(XC, y, 1.6), look_at=(XC - lat, y + 0.2 + 30.0 * w, 0.1 + 0.1 * t), lens=19.0)
+    y = Y0 - V_OX * t * DUR + 1.0 * t + 1.1 * math.sin(t * 12.0); lat = 5.7 - 0.9 * min(1.0, max(0.0, t)) + 0.9 * math.sin(t * 17.0); w = max(0.0, 1.0 - (t * 81) / 7.0) ** 2
+    return dict(loc=(XC, y, 1.25), look_at=(XC - lat, y - 0.5 + 30.0 * w, 1.7 + 0.1 * t), lens=19.0)
 S.pose_at = pose
 rnd = random.Random(20)
 R2.POST['s20'] = lambda p: None
-REL = [(-7.0, 1.0, 1.0, 0.0)]                                   # lead ox in pure profile (n = 0 of the lattice); all rows share the 9.6 D lattice so no flame meets another head
+REL = [(-6.0, 1.0, 1.0, 0.0)]                                   # lead ox in pure profile (n = 0 of the lattice); all rows share the 9.6 D lattice so no flame meets another head
 for row, dx in enumerate((-7.0, -11.8, -16.6)):
     for n in range(-2, 3):
         if row == 0 and n == 0: continue
-        REL.append((dx + rnd.uniform(-0.3, 0.3), 1.0 + 12.0 * n + rnd.uniform(-0.4, 0.4), rnd.uniform(0.97, 1.03), 0.0))
+        REL.append((dx + rnd.uniform(-0.3, 0.3), 1.0 + 12.0 * n + (2.4 if (row == 0 and n == 1) else 0.0) + rnd.uniform(-0.4, 0.4), rnd.uniform(0.97, 1.03), 0.0))
 
 def setup(ctx):
     J.set_holes(12)
