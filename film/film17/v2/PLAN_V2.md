@@ -1,4 +1,4 @@
-# Film 17 v2 plan: "ไอ้ช่างวัดหู" remake (PREP ONLY, remake not yet confirmed)
+# Film 17 v2 plan: "ไอ้ช่างวัดหู" remake (CONFIRMED by client 2026-11-20: "ทำเรื่อง 17 ใหม่")
 
 Status: plan only. Nothing rendered, no sessions, no commits. Written 2026-11-20 against the client rules on
 `origin/claude/new-session-73ou27` (`film/QA_TEAM.md` sections G, H, I; `film/ref_shorts/`).
