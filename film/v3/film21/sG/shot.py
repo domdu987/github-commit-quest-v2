@@ -112,6 +112,8 @@ def build(mode, samples, cast=True):
     T = C.Take(None, mode, samples, world=PRESETS)
     K.place_troops(T.A, "bridge", 12); K.place_troops(T.A, "causeway", 14, seed=2); K.place_troops(T.A, "meadow", 18, seed=3)
     items = setup(T) if cast else []
+    M2 = T.A["marks"]["hill_low"]; mh, mw = M2["horn"], M2["w"]
+    TGT[0] = Vector(((mh[0] + mw[0]) / 2, (mh[1] + mw[1]) / 2, (mh[2] + mw[2]) / 2 + 1.6))
     return T, items
 
 if __name__ == "__main__":
