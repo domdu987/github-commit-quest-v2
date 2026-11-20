@@ -3,7 +3,7 @@ Delivered: take.mkv (split in parts, `cat take.mkv.part* > take.mkv`), meta.json
 Camera: P_TOP (new, -10,-115,115 -> 0,70,0) held about 1 s (slight drift), then one Catmull-Rom swoop over the camp to a medium shot of Cressingham + Surrey (reached g1495, 3.4 s after the start), then the CU3 push into Cressingham's face g1495-1519 (cut at g1519). 32 samples + OIDN.
 Acting: worried -> shocked behind a blink (Cressingham g1486-88, Surrey g1488-90), sweat drops; 5 English on tiptoe (bobbing ~2 Hz); Cressingham does not speak. Rim light gold on every card, contact shadows on, feet on terrain. Cork image: crimson English, 5-rank blue spear wall, 6 saltire banners.
 ## Numbers (qa_stats2 on take.mkv)
-sat 0.711, vivid 81 %, luma 106.2 (raw render was 132: a uniform x0.8 exposure was applied to the frames after the render, saturation unchanged). rhythm: in-shot median 17.0, p90 27.8.
+sat 0.711, vivid 81 % (first render on the pre-palette-fix set; a palette re-render was started and stopped on the director's policy), luma 132 (raw set grade, no post pass; the director normalises brightness at the conform). rhythm: in-shot median 17.0, p90 27.8.
 ## Open notes
 - qa_auto flags 25 frames as "suspected blur" (g1389-1400 top view, g1462-1470 swoop): the metric compares against the take median and this take goes from a far aerial to a close-up; no blur or DOF is used anywhere. Judge on the phone sheet.
 - The bridge deck still runs past the spear wall into the loop (merged bridge mesh, not editable from the shot script).

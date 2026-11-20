@@ -26,5 +26,5 @@
   "loc": "near Cressingham, 2.05-2.3 m, lens 26",
   "note": "ends with a CUT at g1519; frames 1520-1522 continue the push"
  },
- "exposure_post": "x0.8 on the final frames (luma 132 -> 106)"
+ "note": "raw set grade, no post exposure; luma/sat normalised at conform per director policy"
 }
