@@ -1,7 +1,6 @@
-# QA s17 (render team 5, film 18) round 7 - frames g1309-1387 (+6 handles: take.mkv g1303-1393, 91 frames), jimo_in NIGHT
-Numbers: see meta.json (frame-diff median / p90) and QA_AUTO.md.
-1. Reed foreground prop rebuilt: 40 thin tapered stalks (4 tones) splayed round a binding, with two red cords, parented to the camera (the earlier fat bundle read as a mustard slab).
-2. One townsperson ties reeds, large: an old man bends (4-drawing lean cycle) at the tail of ox 4, about 25-35 % of frame height; a woman brings reeds; Tian Dan points.
-3. Oxen: dragon-coat oxen in a row facing the wall holes (3/4 cards 40 deg off the camera axis; the cast has no back view). No lit tail.
-4. Camera moved to (-19, 19.5, 1.9) looking at (-26.5, 8.5, 2.2): about 11 D from the oxen. Chin rule: the old man's chin is at about y 780 (checked at g1340 and g1393 with the y 880 line), above 880.
-Not met: with the camera pitched down for the chin rule, plain road is about 35-40 % of the bottom; the v2 dressing placed 4 props.
+# QA s17 (render team 5, film 18) round 8 - frames g1309-1387 (+6 handles: take.mkv g1303-1393, 91 frames), jimo_in NIGHT
+Frame-diff in-shot (n=78): median **6.66**, p90 **9.20**. qa_auto PASS.
+1. Foreground reeds: `J.prop_reed_bundle` (60 stalks, 2 red cords) at 0.5 scale parented to the camera, lower-left, recoloured with a warm straw emission so it is lit at night; nothing crosses a face. The set's own flat fg slab (the camera-parented `fgreeds` prop) is hidden.
+2. Tying: `STORY18["townsperson_tie_reeds"]` old man placed so his anchor `reed_tail_l` lands on the `tail_tip` anchor of ox 4 (computed from the ox card's yaw / mirror and scale); he bends with a 4-step lean cycle; about 35 % of frame height; chin about y 780-860 (< 880). A woman brings reeds, Tian Dan points.
+3. Oxen: 3/4 cards facing the holes (cast has no back view); no lit tail.
+4. `J.gapfill` ran; the road is warm dark earth with 4 v2 props; bare road about 35 % (not <= 30 %).
