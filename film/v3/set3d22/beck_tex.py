@@ -504,6 +504,44 @@ def way_out(w=900, h=300):
     fit_text(d, (60, 50, w * .7, h - 50), 'WAY OUT', 'white'); d.polygon([(w * .76, h * .5 - 50), (w * .76 + 90, h * .5 - 50), (w * .76 + 90, h * .5 - 90), (w - 40, h * .5), (w * .76 + 90, h * .5 + 90), (w * .76 + 90, h * .5 + 50), (w * .76, h * .5 + 50)], fill='white')
     return img
 
+
+def paper_grid(W=1024, H=740):
+    img = Image.new('RGB', (W, H), '#f4ead0'); d = ImageDraw.Draw(img); rs = np.random.RandomState(12)
+    a = np.asarray(img, 'float32') / 255 * (0.94 + noise(rs, H, W, 30, 0.08))[..., None]; img = Image.fromarray((np.clip(a, 0, 1) * 255).astype('uint8')); d = ImageDraw.Draw(img)
+    for x in range(0, W, 41): d.line((x, 0, x, H), fill='#e2d4ac', width=2)
+    for y in range(0, H, 41): d.line((0, y, W, y), fill='#e2d4ac', width=2)
+    d.rectangle((10, 10, W - 11, H - 11), outline='#1a1840', width=6)
+    d.text((40, H - 40), 'UNDERGROUND', font=font(30, FB), fill='#c8a8a0', anchor='ls')
+    return img
+
+def rag_rug(W=512, H=512):
+    img = Image.new('RGB', (W, H), '#7a2a3a'); d = ImageDraw.Draw(img); rr = random.Random(3)
+    cols = ['#c4272f', '#1f49c8', '#e8b43a', '#12a15a', '#f0e4c8', '#7a3a8a']
+    for i in range(9, 0, -1):
+        r = i * 27; d.ellipse((W / 2 - r * 1.0, H / 2 - r * 1.0, W / 2 + r * 1.0, H / 2 + r * 1.0), fill=cols[i % len(cols)], outline='#2a1430', width=4)
+    for _ in range(900):
+        x, y = rr.uniform(0, W), rr.uniform(0, H); d.line((x, y, x + rr.uniform(-8, 8), y + rr.uniform(-8, 8)), fill=rr.choice(cols), width=2)
+    return img
+
+def circuit_sheet(W=640, H=460, seed=1):
+    img = Image.new('RGB', (W, H), '#1a3a90'); d = ImageDraw.Draw(img); rr = random.Random(seed)
+    for x in range(0, W, 32): d.line((x, 0, x, H), fill='#2a52b8', width=1)
+    for y in range(0, H, 32): d.line((0, y, W, y), fill='#2a52b8', width=1)
+    for k in range(7):
+        x, y = rr.randint(1, 8) * 64, rr.randint(1, 6) * 64; pts = [(x, y)]
+        for j in range(4):
+            if j % 2 == 0: x += rr.choice([-1, 1]) * rr.randint(1, 3) * 64
+            else: y += rr.choice([-1, 1]) * rr.randint(1, 2) * 64
+            pts.append((min(W - 20, max(20, x)), min(H - 20, max(20, y))))
+        d.line(pts, fill='#ffffff', width=7, joint='curve')
+        for p in pts: d.ellipse((p[0] - 9, p[1] - 9, p[0] + 9, p[1] + 9), fill='#ffd22a', outline='white', width=2)
+    d.rectangle((6, 6, W - 7, H - 7), outline='white', width=5)
+    d.text((24, H - 20), 'CIRCUIT No.%d' % seed, font=font(26, FB), fill='white', anchor='ls')
+    return img
+
+def cork_wall(W=1024, H=700):
+    return cork_board(W, H)
+
 # ----------------------------------------------------------------------------- build all
 def ensure(verbose=False):
     tx = {}
@@ -540,6 +578,8 @@ def ensure(verbose=False):
     add('note', lambda: paper_note('')); add('night_city', night_city)
     for i in range(6): add('poster%d' % i, lambda i=i: poster(i))
     add('tiles', station_wall('t')); add('tiles_plain', lambda: station_wall('tp', band=None)); add('tiles_cool', lambda: station_wall('tc', base='#9aa6dc')); add('tiles_cool_plain', lambda: station_wall('tcp', base='#6a78c0', band=None)); add('blob', blob); add('quilt', quilt); pair('train_side', train_side); add('tiles_green', lambda: station_wall('tg', band='#14733f'))
+    add('paper_grid', paper_grid); add('rag_rug', rag_rug)
+    for i in range(3): add('circuit%d' % i, lambda i=i: circuit_sheet(seed=i + 1))
     add('clock', clock_face); pair('train_front', train_front); add('floor_pf', floor_platform); add('ballast', ballast)
     return tx
 

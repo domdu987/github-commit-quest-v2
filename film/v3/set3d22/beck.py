@@ -705,10 +705,205 @@ def sheet(res):
         if r: d.text((x + 10, H + 44), 'sat %.2f  luma %.0f  vivid %.0f%%  shade hue %.0f' % (r['sat'], r['luma'], r['vivid'], r['shade_hue']), font=fs, fill=(170, 200, 255))
     im.save(os.path.join(BOARD, 'style_board.jpg'), quality=90)
 
-if __name__ == '__main__':
-    a = sys.argv[1:] or ['board']
+
+# ============================================================================= FULL SET: registry, cameras, build(), CLI (builder A owns this block)
+SHOT_MODULES = ('beck_london', 'beck_hq', 'beck_under', 'beck_map')        # each exports SHOTS = {'sNN': {...}} and LOCATIONS = {'name': {...}}
+
+class _Merged(dict):
+    """Lazy merge of `attr` (SHOTS or LOCATIONS) of the 4 modules. A module that does not exist yet / fails to import is skipped (error kept in .errors)."""
+    def __init__(s, attr): super().__init__(); s.attr = attr; s.loaded = False; s.errors = {}
+    def _load(s):
+        if s.loaded: return
+        s.loaded = True
+        import importlib
+        for m in SHOT_MODULES:
+            try: mod = importlib.import_module(m)
+            except ModuleNotFoundError as e:
+                if e.name != m: s.errors[m] = repr(e)
+                continue
+            except Exception as e: s.errors[m] = repr(e); continue
+            for k, v in getattr(mod, s.attr, {}).items(): dict.__setitem__(s, k, dict(v, module=m))
+    def __getitem__(s, k): s._load(); return dict.__getitem__(s, k)
+    def __iter__(s): s._load(); return dict.__iter__(s)
+    def __len__(s): s._load(); return dict.__len__(s)
+    def __contains__(s, k): s._load(); return dict.__contains__(s, k)
+    def keys(s): s._load(); return dict.keys(s)
+    def items(s): s._load(); return dict.items(s)
+    def values(s): s._load(); return dict.values(s)
+    def get(s, k, d=None): s._load(); return dict.get(s, k, d)
+ALL_SHOTS = _Merged('SHOTS'); ALL_LOCATIONS = _Merged('LOCATIONS')
+MARKS = {}                                          # MARKS['sNN']['beck'] = (x, y, z, yaw_deg): modules fill it from their SHOTS (see marks_of)
+
+def marks_of(shot): return dict(ALL_SHOTS[shot].get('marks', {}))
+
+def _smooth(a, b, u): return a + (b - a) * (u * u * (3 - 2 * u))
+
+def cam_eval(keys, f):
+    """Camera at shot-local frame f (float; may be < 0 or > n for handles). keys = [(frame, loc, look_at, lens[, roll])...] ascending.
+    Cubic Hermite through the keys (tangent = centred difference, soft ends), so speed is continuous; outside the range it extrapolates
+    linearly with the end speed (the 6 handle frames)."""
+    ks = [dict(f=k[0], loc=V(k[1]), look=V(k[2]), lens=float(k[3]), roll=float(k[4]) if len(k) > 4 else 0.0) for k in keys]
+    n = len(ks)
+    def val(k): return np.array([*k['loc'], *k['look'], k['lens'], k['roll']], dtype=float)
+    vs = [val(k) for k in ks]; fs = [k['f'] for k in ks]
+    def tan(i):
+        if n == 1: return np.zeros(9)
+        if i == 0: return (vs[1] - vs[0]) / (fs[1] - fs[0]) * 0.5
+        if i == n - 1: return (vs[-1] - vs[-2]) / (fs[-1] - fs[-2]) * 0.5
+        return (vs[i + 1] - vs[i - 1]) / (fs[i + 1] - fs[i - 1])
+    if f <= fs[0]: out = vs[0] + tan(0) * (f - fs[0])
+    elif f >= fs[-1]: out = vs[-1] + tan(n - 1) * (f - fs[-1])
+    else:
+        i = max(j for j in range(n - 1) if fs[j] <= f); h = fs[i + 1] - fs[i]; u = (f - fs[i]) / h
+        h00, h10, h01, h11 = 2 * u**3 - 3 * u**2 + 1, u**3 - 2 * u**2 + u, -2 * u**3 + 3 * u**2, u**3 - u**2
+        out = h00 * vs[i] + h10 * h * tan(i) + h01 * vs[i + 1] + h11 * h * tan(i + 1)
+    return V(out[0:3]), V(out[3:6]), float(out[6]), float(out[7])
+
+def apply_cam(cam, loc, look, lens, roll=0.0):
+    cam.location = loc; fwd = (look - loc).normalized(); q = fwd.to_track_quat('-Z', 'Y')
+    e = q.to_euler()
+    if roll: e.rotate_axis('Z', math.radians(roll))
+    cam.rotation_euler = e; cam.data.lens = lens
+
+def key_camera(shot, f0=None, handles=6, scene=None):
+    """Key the shot's eased camera move from its first FILM frame f0 (default shot['f0']): one key per frame from f0-handles to f1+handles
+    (Blender frame = film frame + 1 so frame_start 1 is film frame 0 is NOT used: Blender frame == film frame g). Returns the camera object."""
+    scene = scene or bpy.context.scene; sh = ALL_SHOTS[shot] if isinstance(shot, str) else shot
+    f0 = sh['f0'] if f0 is None else f0; n = sh['f1'] - sh['f0']; cam = scene.camera
+    cam.animation_data_clear(); cam.rotation_mode = 'QUATERNION'; prev = None
+    for k in range(-handles, n + handles + 1):
+        loc, look, lens, roll = cam_eval(sh['cam'], k); g = f0 + k
+        apply_cam(cam, loc, look, lens, roll)
+        q = cam.rotation_euler.to_quaternion()
+        if prev is not None and q.dot(prev) < 0: q.negate()
+        prev = q; cam.rotation_quaternion = q
+        cam.keyframe_insert('location', frame=g); cam.keyframe_insert('rotation_quaternion', frame=g); cam.data.keyframe_insert('lens', frame=g)
+    for fc in list(cam.animation_data.action.layers[0].strips[0].channelbags[0].fcurves) if hasattr(cam.animation_data.action, 'layers') else cam.animation_data.action.fcurves:
+        for kp in fc.keyframe_points: kp.interpolation = 'LINEAR'
+    scene.frame_start = f0 - handles; scene.frame_end = sh['f1'] + handles
+    return cam
+
+def set_frame_cam(shot, g, scene=None):
+    """Point the scene camera at film frame g of the shot without keys (used by the still renderer)."""
+    scene = scene or bpy.context.scene; sh = ALL_SHOTS[shot] if isinstance(shot, str) else shot
+    loc, look, lens, roll = cam_eval(sh['cam'], g - sh['f0']); cam = scene.camera
+    cam.animation_data_clear(); cam.rotation_mode = 'XYZ'; apply_cam(cam, loc, look, lens, roll); STATE['cam'] = V(loc)
+    return cam
+
+
+# ----------------------------------------------------------------------------- cast22 cards (the real cast, painted by the puppet pipeline, as camera-facing cards)
+_CAST_CARDS = {}
+def cast_card(story, mark, face_to=None, yaw_deg=None, tilt=0.0, mirror=False, pose=None, rim='#9fb8ff', rim_w=0.022, name=None, ppd=230, scale=1.0, cast=None, shadow=True):
+    """One cast22 pose (`story` = a cast22.STORY22 key, or a (cast, pose_dict) pair) as a card standing at `mark` (x, y, z), figure units are D so
+    world scale is exact (beck about 3.1 D). The card turns to face `face_to` (yaw only), or has the explicit yaw_deg (0 = faces -y), leaning back `tilt` deg.
+    pose = dict of pose-key overrides (e.g. board=0, mouth=...). rim = painted rim light colour (cool indoors, warm '#ffb070' outdoors). Returns the object."""
+    import hashlib, subprocess
+    sys.path.insert(0, os.path.join(PROJ, 'v3', 'cast22')); sys.path.insert(0, os.path.join(PROJ, 'v3', 'cast'))
+    import cast22, puppet                                              # noqa: F401
+    if isinstance(story, str): c_, p_ = cast22.STORY22[story]
+    else: c_, p_ = story
+    c_ = cast or c_; p = dict(p_); p.update(pose or {})
+    if rim: p.setdefault('rim', rim); p.setdefault('rim_w', rim_w)
+    if mirror: p['mirror'] = True
+    name = name or ('actor_%s_%d' % (story if isinstance(story, str) else c_, len(bpy.data.objects)))
+    f = puppet.figure(c_, p, name)
+    bx0, by0, bx1, by1 = f['bbox']; pad = 0.08; bx0 -= pad; by0 -= pad; bx1 += pad; by1 = max(by1, f['feet_y']) + pad
+    w, h = bx1 - bx0, by1 - by0; Wp, Hp = int(round(w * ppd)), int(round(h * ppd))
+    svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{Wp}" height="{Hp}" viewBox="{bx0:.4f} {by0:.4f} {w:.4f} {h:.4f}" style="display:block">{f["svg"]}</svg>')
+    os.makedirs(T.ACT, exist_ok=True); tag = 'c22_' + hashlib.sha1(svg.encode()).hexdigest()[:14]
+    sp = os.path.join(T.ACT, tag + '.svg'); pp = os.path.join(T.ACT, tag + '.png')
+    if not os.path.exists(pp):
+        open(sp, 'w').write(svg); jp = os.path.join(T.ACT, tag + '_job.json'); json.dump([dict(src=sp, out=pp, w=Wp, h=Hp, transparent=True)], open(jp, 'w'))
+        r = subprocess.run(['node', T.TT.RASTER, jp], capture_output=True, env=dict(os.environ, NODE_PATH=os.environ.get('NODE_PATH', '/opt/node22/lib/node_modules')))
+        if r.returncode != 0: raise RuntimeError('cast card raster failed: ' + r.stderr.decode()[-500:])
+    fx = f['anchors']['feet'][0]; fy = f['feet_y']; k = scale
+    me = bpy.data.meshes.new(name); xs = ((bx0 - fx) * k, (bx1 - fx) * k); zs = ((fy - by1) * k, (fy - by0) * k)
+    me.from_pydata([(xs[0], 0, zs[0]), (xs[1], 0, zs[0]), (xs[1], 0, zs[1]), (xs[0], 0, zs[1])], [], [(0, 1, 2, 3)]); me.update()
+    uvl = me.uv_layers.new(name='UVMap')
+    for i, c in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uvl.data[i].uv = c
+    me.materials.append(mat_card(name + '_mat', pp))
+    ob = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(ob); ob.location = tuple(mark[:3]); no_bounce(ob)
+    yaw = 0.0
+    if yaw_deg is not None: yaw = math.radians(yaw_deg)
+    elif face_to is not None:
+        d = V(face_to) - V(mark[:3]); yaw = math.atan2(d.x, -d.y)
+    ob.rotation_euler = (math.radians(-tilt), 0, yaw)
+    ob['feet_w'] = (bx1 - bx0) * 0.45 * k; ob['anc'] = {kk: ((vv[0] - fx) * k, (fy - vv[1]) * k) for kk, vv in f['anchors'].items() if isinstance(vv, (tuple, list)) and len(vv) == 2}
+    if shadow: card_shadow(ob)
+    return ob
+
+def card_shadow(ob):
+    """Soft contact-shadow disc under a card (1.6x its foot width), flat on the floor at the card's mark."""
+    mark = ob.location; fw = ob['feet_w']
+    sh = Part('shadow_' + ob.name, ink=False, shadow=False)
+    plane(sh.mb, (mark[0] - fw * 0.8, mark[1] - fw * 0.5, mark[2] + 0.03), (fw * 1.6, 0, 0), (0, fw * 1.0, 0), STATE['E']('blob', 'blob', alpha=True), (0, 0, 1, 1)); sh.done()
+
+def card_anchor(ob, name):
+    """World position of a puppet anchor ('pen_r', 'hand_r', 'head', ...) of a cast card."""
+    ax, az = ob['anc'][name]; yaw = ob.rotation_euler[2]
+    return V(ob.location) + V((math.cos(yaw), math.sin(yaw), 0)) * ax + V((0, 0, 1)) * az
+
+def place_tip(story, anchor, tip, face_to, ground_z=0.0, **kw):
+    """Cast card whose `anchor` (e.g. 'pen_r' = pen nib) sits exactly on the world point `tip`, standing on z = ground_z, facing face_to
+    (the position is solved in the card plane: x along the card, z up; depth follows from the tip). Returns the object."""
+    d = V(face_to) - V(tip); kw.setdefault('yaw_deg', math.degrees(math.atan2(d.x, -d.y)))
+    ob = cast_card(story, (0, 0, ground_z), shadow=False, **kw)
+    yaw = ob.rotation_euler[2]; ax, az = ob['anc'][anchor]; r = V((math.cos(yaw), math.sin(yaw), 0))
+    ob.location = V(tip) - r * ax - V((0, 0, az)); ob.location.z = ground_z
+    return ob
+
+LIGHT_ALIAS = {'DUSK': 'DUSK_CITY', 'NIGHT': 'NIGHT_CITY'}
+
+def build(location, light=None, shot=None, quality='final', frame=None):
+    """Build ONE location in this process: set up the scene, call the location's builder, grade. `light` = key of LIGHTS (or an alias
+    DUSK / NIGHT / EVENING for london) ; with `shot` the camera is that shot's camera at film frame `frame` (default its f0) and the shot's
+    state setters are applied. Returns the scene. One location per process (state is global)."""
+    loc = ALL_LOCATIONS[location]; sh = ALL_SHOTS[shot] if shot else None
+    light = LIGHT_ALIAS.get(light, light) or loc.get('light')
+    cam0 = dict(loc['cam']) if 'cam' in loc else dict(loc=(0, -10, 5), look_at=(0, 10, 3), lens=30)
+    if sh: l_, k_, ln_, _ = cam_eval(sh['cam'], (sh['f0'] if frame is None else frame) - sh['f0']); cam0 = dict(loc=tuple(l_), look_at=tuple(k_), lens=ln_, shift_y=sh.get('shift_y', 0.0))
+    scene, P = setup(light, cam0, quality, sky=loc.get('sky', False))
+    loc['build'](scene, P)
+    if sh:
+        for k, v in sh.get('state', {}).items(): SETTERS[k](v)
+        if 'actors' in sh: sh['actors'](sh['f0'] if frame is None else frame)
+        set_frame_cam(shot, sh['f0'] if frame is None else frame)
+    setup_grade(scene)
+    return scene
+
+SETTERS = {}                                        # name -> fn(value): modules register theirs (set_line_progress, set_drawer, ...)
+
+def setter(name):
+    def deco(fn): SETTERS[name] = fn; return fn
+    return deco
+
+def render_frame(shot, g, out, quality='final', samples=None):
+    """Render film frame g of a shot of the CURRENT scene (built with build(..., shot)) to `out`; returns (wall s, cpu s)."""
+    sh = ALL_SHOTS[shot]; set_frame_cam(shot, g)
+    for k, fn in sh.get('animate', {}).items(): fn(g - sh['f0'], sh['f1'] - sh['f0'])
+    for o in sh.get('animate_objs', []): o(g - sh['f0'], sh['f1'] - sh['f0'])
+    sc = bpy.context.scene
+    if samples: sc.cycles.samples = samples
+    return T.render(out, sc)
+
+
+def cli(a):
+    a = a or ['board']
     if a[0] == 'board': board(a[1:] or None)
     elif a[0] == 'still':
         b, l, c, s_, o = STILLS[a[1]]
         out, wall, cpu = render_still(o, b, l, c, s_, 'preview' if (len(a) > 2 and a[2] == 'preview') else 'final')
         print(out, '%.1fs' % wall)
+    elif a[0] == 'shot':                      # beck.py shot sNN [start|mid|end|<film frame>] [preview] [out.png]  (one process = one location)
+        shot = a[1]; sh = ALL_SHOTS[shot]; w = a[2] if len(a) > 2 else 'start'
+        g = {'start': sh['f0'], 'end': sh['f1'] - 1, 'mid': (sh['f0'] + sh['f1']) // 2}.get(w) if w in ('start', 'end', 'mid') else int(w)
+        q = 'preview' if 'preview' in a else 'final'
+        o = [x for x in a[3:] if x.endswith('.png')]; out = o[0] if o else os.path.join(HERE, 'contact', '%s_%s.png' % (shot, w))
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        build(sh['location'], sh.get('light'), shot, q, g); wall, cpu = render_frame(shot, g, out, q)
+        print(out, 'frame', g, '%.1fs wall %.1fs cpu' % (wall, cpu))
+    elif a[0] == 'shots': print({k: (v['module'], v['location'], v.get('light'), v['f0'], v['f1']) for k, v in ALL_SHOTS.items()}, ALL_SHOTS.errors)
+
+if __name__ == '__main__':
+    import beck as _B                          # run the single module instance (beck_london etc. import `beck`)
+    _B.cli(sys.argv[1:])
