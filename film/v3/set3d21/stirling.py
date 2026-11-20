@@ -987,16 +987,18 @@ def table_set(A, B, c, yaw, rs):
         # ledger (no text): cover + two pages
         B.box('leather', (0.55, -0.22, 1.012), (0.6, 0.4, 0.03)); B.box('cream', (0.42, -0.22, 1.032), (0.28, 0.36, 0.015), rot=(0, 0, 2)); B.box('cream', (0.68, -0.22, 1.032), (0.28, 0.36, 0.015), rot=(0, 0, -2))
         for i in range(5): B.box('gold', (0.55, -0.4 + i * 0.1, 0.86), (0.0, 0.0, 0.0)) if False else None
-        # canopy: four poles + a striped roof
+        # canopy: four poles + a striped roof (its own batch: the roof casts no shadow, so the table is lit)
+        Bc = Batch(34); Bc.stack[-1] = B.stack[-1].copy()
         for sx in (-1.5, 1.5):
             for sy in (-1.2, 1.2): B.rod('wood', (sx, sy, -0.1), (sx, sy, 2.6), 0.055, seg=6)
         seg = 8; r = 2.5; hz = 2.6
         for i in range(seg):
             a0 = 2 * math.pi * i / seg + math.pi / 4; a1 = 2 * math.pi * (i + 1) / seg + math.pi / 4; m = ('t_blue', 't_gold')[i % 2]
-            B.mesh(m, [(r * 1.0 * math.cos(a0) * 1.0, r * 0.82 * math.sin(a0), hz), (r * math.cos(a1), r * 0.82 * math.sin(a1), hz), (0, 0, hz + 0.9)], [(0, 1, 2)], False)
-            B.mesh(m, [(r * math.cos(a0), r * 0.82 * math.sin(a0), hz), (r * math.cos(a1), r * 0.82 * math.sin(a1), hz), (r * math.cos(a1), r * 0.82 * math.sin(a1), hz - 0.5), (r * math.cos(a0), r * 0.82 * math.sin(a0), hz - 0.5)], [(0, 1, 2, 3)], False)
-        B.sphere('gold', (0, 0, hz + 1.0), 0.14, seg=8, rings=5)
+            Bc.mesh(m, [(r * 1.0 * math.cos(a0) * 1.0, r * 0.82 * math.sin(a0), hz), (r * math.cos(a1), r * 0.82 * math.sin(a1), hz), (0, 0, hz + 0.9)], [(0, 1, 2)], False)
+            Bc.mesh(m, [(r * math.cos(a0), r * 0.82 * math.sin(a0), hz), (r * math.cos(a1), r * 0.82 * math.sin(a1), hz), (r * math.cos(a1), r * 0.82 * math.sin(a1), hz - 0.5), (r * math.cos(a0), r * 0.82 * math.sin(a0), hz - 0.5)], [(0, 1, 2, 3)], False)
+        Bc.sphere('gold', (0, 0, hz + 1.0), 0.14, seg=8, rings=5)
         with Bl.xf((0, 0, 0)): pass
+    Bc.finalize('table_canopy', shadow=False)
     # chest lid: own object, hinge at the back-top edge of the chest, open 72 degrees
     cx, cy_ = -0.62, -0.05; hp = B.wpt((cx, cy_ + 0.31, 1.47)); Bl.box('barrel', (0, -0.31, 0.045), (1.0, 0.64, 0.09)); Bl.box('iron', (0.34, -0.31, 0.055), (0.08, 0.66, 0.11)); Bl.box('iron', (-0.34, -0.31, 0.055), (0.08, 0.66, 0.11)); Bl.box('gold', (0, -0.31, 0.1), (0.8, 0.5, 0.02))
     lid = Bl.finalize('chest_lid', loc=hp)[0]; lid.rotation_euler = (math.radians(-72), 0, math.radians(yaw)); lid.rotation_mode = 'XYZ'
@@ -1120,7 +1122,7 @@ def build_camp(A, pr):
         B.rod('rope', (xs[0] - 2.6, y + 0.2, zl[0] + 1.5), (xs[-1] - 2.6, y + 0.2, zl[-1] + 1.5), 0.02, seg=3)
     # Cressingham's money table by the road, west side, facing the river
     tx, toff = -13.0, 8.5; ty = float(bank_y(tx)) - toff; tz = float(ground(tx, ty)); table_set(A, B, (tx, ty, tz), 0.0, rs); camp['table'] = (tx, ty, tz)
-    stool_p = (tx - 0.1, ty - 1.3, tz); B.box('wood', (stool_p[0], stool_p[1], tz + 0.25), (0.5, 0.4, 0.5)); B.box('wood', (tx + 2.9, ty - 0.6, tz + 0.5), (0.9, 0.6, 1.0)); barrel(B, (tx + 3.5, ty + 0.5, tz))
+    barrel(B, (tx + 3.5, ty + 0.5, tz))
     for (x, off) in [(-72, 20), (70, 26), (-104, 44), (40, 70), (96, 50)]:
         y = float(bank_y(x)) - off
         if free(x, y, 3): campfire(B, Bs, (x, y, float(ground(x, y))), rs); smoke_column(Bs, x, y, float(ground(x, y)), rs, h=24.0, r0=0.5); camp.setdefault('fires', []).append((x, y))
@@ -1556,8 +1558,8 @@ def table_extras(A, pr):
     for sgn in (-1, 1): B.box('gold', (tx + sgn * 1.7, ty - 2.0, tz + 0.03), (0.07, 2.4, 0.01))
     for i in range(6): B.box('t_cream', (tx - 1.3 + 0.52 * i, ty - 2.0, tz + 0.032), (0.2, 2.1, 0.005))
     B.finalize('table_extras')
-_mk('camp_table', loc='camp', cam=(-13.0, -30.0, 0.0), cam_dz=1.3, look=(-13.0, -26.5, 1.15), lens=22.0, sd=5.0, over=dict(_OVR), camp_fg=table_extras,
-    marks_spec=[('cress', 'cressingham', 4.0, 360)], fg_list=[('barrel', 1.8, 720), ('rope', 1.8, 20)], veg=dict(_VEG, half=22), drift='push 8 %/s; hooks: set_scale_tip(A, deg), set_chest_lid(A, deg)')
+_mk('camp_table', loc='camp', cam=(-13.0, -30.0, 0.0), cam_dz=1.3, look=(-13.0, -26.5, 1.55), lens=22.0, sd=5.0, over=dict(_OVR), camp_fg=table_extras,
+    marks_spec=[('cress', 'cressingham', 4.0, 360)], fg_list=[('barrel', 1.8, 720)], veg=dict(_VEG, half=22), drift='push 8 %/s; hooks: set_scale_tip(A, deg), set_chest_lid(A, deg)')
 _mk('riverbank', loc='riverbank', cam=(-17.0, 60.0, 0.0), cam_dz=1.8, look=(0.0, 30.0, 1.6), lens=22.0, sd=10.0, over=dict(_OVR, reed_k=0.8),
     marks_spec=[('e1', 'foot', 5.0, 90), ('e2', 'foot:foot_r', 6.0, 250), ('e3', 'foot', 7.5, 400), ('e4', 'knight:knight_b', 9.0, 175)], fg_list=[('reeds', 1.6, 640), ('reeds', 2.0, 40), ('gorse', 2.4, 560, 0.4)],
     veg=dict(_VEG, half=30, reeds=[(2, 40, 600)]), drift='slide 40 px/s + push; water on the right for the jumps (splash())')
