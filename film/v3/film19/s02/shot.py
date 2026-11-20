@@ -32,7 +32,7 @@ GS = list(range(FIRST_G, G_LAST + 1))
 FINAL_SPP = 10
 S = 1.85
 PPD = 224                                                # sprite px per D (head ~110 px at the end; the start is downsampled)
-G_ARRIVE = 177                                           # the medium shot is reached (5.9 s)
+G_ARRIVE = 160                                           # the medium shot is reached (5.9 s)
 G_SCRATCH = (146, 166)                                   # astro19_c scratches his head (comic), 4.9-5.5 s
 BLINKS_C, BLINKS_A = [70, 128, 171], [92, 150, 188]
 
@@ -43,7 +43,7 @@ AST_XY = (1.7, -30.6)                                   # astro19_c, camera-righ
 
 # ----------------------------------------------------------------------------- camera: a spline through key poses in the SHIP's rest frame (D), eased in and out
 KEYS = [  # (u, loc, look)
-    (0.00, (12.0, -215.0, 160.0), (0.0, -14.0, 14.0)),            # extreme wide from high above and behind (ship ~27 % of the frame height, characters ~10 px)
+    (0.00, (12.0, -170.0, 126.0), (0.0, -14.0, 14.0)),            # extreme wide from high above and behind (ship ~27 % of the frame height, characters ~10 px)
     (0.50, (10.0, -98.0, 74.0), (1.0, -30.0, 15.0)),              # descending
     (0.76, (5.5, -47.0, 27.5), (0.8, -30.5, 15.6)),               # above the stern, off the starboard quarter
     (0.91, (2.4, -41.0, 21.0), (0.6, -30.3, 15.8)),               # passes the spanker's starboard face and descends
@@ -58,8 +58,13 @@ def _cr(p0, p1, p2, p3, t):
 
 def _spline(g, which):
     """position on the key spline at the eased parameter u(g) (which 1 = loc, 2 = look)"""
-    t = clamp((g - G0 + 4) / float(G_ARRIVE - (G0 - 4)))                 # 0 slightly before the cut-in, 1 when the medium shot is reached
-    u = 0.55 * (t * t * t * (t * (6 * t - 15) + 10)) + 0.45 * t           # eased in / out (smootherstep) with a good share of linear so it never parks
+    # g -> u: a slow-ish wide start, a fast descent through the stern (the smooth planks / sail frames the blur check punishes), then it SETTLES on the medium
+    TM = [(48, 0.0), (80, 0.17), (112, 0.56), (126, 0.80), (140, 0.97), (G_ARRIVE, 1.0)]
+    j = max(i for i in range(len(TM) - 1) if TM[i][0] <= g) if g < TM[-1][0] else len(TM) - 2
+    (g0_, u0_), (g1_, u1_) = TM[j], TM[j + 1]
+    x = clamp((g - g0_) / float(g1_ - g0_))
+    sm = x * x * (3 - 2 * x)
+    u = u0_ + (u1_ - u0_) * (0.55 * sm + 0.45 * x)                         # eased between the knots, never zero speed
     P = [Vector(k[which]) for k in KEYS]
     us = [k[0] for k in KEYS]
     j = max(i for i in range(len(us) - 1) if us[i] <= u) if u < 1.0 else len(us) - 2
