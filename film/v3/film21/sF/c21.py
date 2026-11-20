@@ -71,8 +71,8 @@ class Take(object):
             for f, r in zip(frames, res): self.anch[(name, f)] = r["anchors"]
             for f in frames:                                   # pre-compensate the grade's gamma so the cards keep their drawn colours
                 p = a.sprite_path(f); im = np.asarray(Image.open(p).convert("RGBA")).astype(np.float32) / 255
-                vg = vivid(f) if vivid else 1.4
-                im[..., :3] = im[..., :3] ** (1.0 / (GAMMA * vg))
+                vg, ve = vivid(f) if vivid else (1.4, 1.0)
+                im[..., :3] = np.clip((im[..., :3] ** (1.0 / vg)) / ve, 0, 1) ** (1.0 / GAMMA)       # undo exposure x vivid gamma x base gamma of K.grade
                 Image.fromarray((im * 255 + 0.5).astype(np.uint8)).save(p)
             a._sig.clear()
             if a.image is not None: a.image.reload()
