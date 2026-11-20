@@ -29,7 +29,8 @@ def base_path(g):
     fwd = Vector((v[0], v[1], 0))
     keys = [(G0, tuple(c0), (0.0, 14.0, 2.0), 72.0),
             (1154, tuple(c0 + fwd * 2.5 + Vector((0, 0, 0.3))), (0.0, 14.0, 2.0), 64.0),
-            (1168, (153.0, 141.0, 42.0), (132.0, 126.0, 23.0), 30.0),
+            (1162, (159.0, 149.0, 53.0), (60.0, 60.0, 10.0), 40.0),
+            (1171, (150.0, 137.0, 47.0), (134.0, 127.0, 23.0), 30.0),
             (1178, (138.0, 120.0, 29.0), (139.0, 129.0, 21.5), 25.0),
             (G_ARRIVE, end_loc, end_look, 22.0)]
     return K.cam_path(None, keys, min(g, G_ARRIVE))
@@ -66,7 +67,7 @@ def setup(T):
     g1 = [("s1", "scot_b", "scot_b_fold_spear"), ("s2", "scot_a", "scot_a_chew_grass"), ("s3", "scot_c", "scot_c_fold_spear"),
           ("s4", "scot_a_v1", "scot_a_fold_spear"), ("s5", "scot_b_v2", "scot_b_fold_spear")]
     for i, (nm, cst, pn) in enumerate(g1):
-        x, y, z = M1[nm][:3]; _c, _v = start_cam(); x += _v[0] * 4.5; y += _v[1] * 4.5; z = float(K.ground(x, y))
+        x, y, z = M1[nm][:3]; _c, _v = start_cam(); x += _v[0] * 1.5; y += _v[1] * 1.5; z = float(K.ground(x, y))
         T.actor("o_" + nm, cst); out.append(("o_" + nm, cst, pn, (x, y, z), 1, i))
     g2 = [("s1", "scot_b", "scot_b_fold_spear"), ("s2", "scot_a", "scot_a_chew_grass"), ("horn", "scot_horn", "scot_horn_lower"),
           ("w", "wallace", "wallace_calm"), ("s3", "scot_c", "scot_c_fold_spear")]
