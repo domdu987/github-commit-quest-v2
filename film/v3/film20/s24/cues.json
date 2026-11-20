@@ -1,0 +1,95 @@
+{
+ "take": "s24",
+ "fps": 30,
+ "note": "t = film seconds (g / 30); narration film20/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "kind": "ambience",
+   "t": 57.467,
+   "dur": 3.133,
+   "frame": 1724,
+   "end_frame": 1818,
+   "note": "first-floor restaurant of the finished tower, day 1889: murmur of many diners, cutlery and glasses, a faint string trio, a light wind through the lattice"
+  },
+  {
+   "kind": "foley",
+   "t": 57.633,
+   "dur": 0.133,
+   "frame": 1729,
+   "end_frame": 1733,
+   "note": "footstep on the carpet runner (alternating soft thuds of the waiter and Maupassant, the waiter's lighter)",
+   "peak_frame": 1730
+  },
+  {
+   "kind": "foley",
+   "t": 58.133,
+   "dur": 0.133,
+   "frame": 1744,
+   "end_frame": 1748,
+   "note": "footstep on the carpet runner (alternating soft thuds of the waiter and Maupassant, the waiter's lighter)",
+   "peak_frame": 1745
+  },
+  {
+   "kind": "foley",
+   "t": 58.633,
+   "dur": 0.133,
+   "frame": 1759,
+   "end_frame": 1763,
+   "note": "footstep on the carpet runner (alternating soft thuds of the waiter and Maupassant, the waiter's lighter)",
+   "peak_frame": 1760
+  },
+  {
+   "kind": "foley",
+   "t": 59.133,
+   "dur": 0.133,
+   "frame": 1774,
+   "end_frame": 1778,
+   "note": "footstep on the carpet runner (alternating soft thuds of the waiter and Maupassant, the waiter's lighter)",
+   "peak_frame": 1775
+  },
+  {
+   "kind": "foley",
+   "t": 59.633,
+   "dur": 0.133,
+   "frame": 1789,
+   "end_frame": 1793,
+   "note": "footstep on the carpet runner (alternating soft thuds of the waiter and Maupassant, the waiter's lighter)",
+   "peak_frame": 1790
+  },
+  {
+   "kind": "foley",
+   "t": 60.133,
+   "dur": 0.133,
+   "frame": 1804,
+   "end_frame": 1808,
+   "note": "footstep on the carpet runner (alternating soft thuds of the waiter and Maupassant, the waiter's lighter)",
+   "peak_frame": 1805
+  },
+  {
+   "kind": "foley",
+   "t": 57.733,
+   "dur": 0.667,
+   "frame": 1732,
+   "end_frame": 1752,
+   "note": "starched apron and tailcoat swish as the waiter sweeps his arm toward the window end",
+   "peak_frame": 1740
+  },
+  {
+   "kind": "accent",
+   "t": 59.233,
+   "dur": 0.5,
+   "frame": 1777,
+   "end_frame": 1792,
+   "note": "snap push on 'หลังหอเปิด': short airy whoosh rising",
+   "peak_frame": 1783
+  },
+  {
+   "kind": "cut",
+   "t": 60.467,
+   "dur": 0.0,
+   "frame": 1814,
+   "end_frame": 1814,
+   "note": "hard cut to shot 25 (RESTO resto_table): same room tone, nearer to the window"
+  }
+ ]
+}

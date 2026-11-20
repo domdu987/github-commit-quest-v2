@@ -1,0 +1,47 @@
+{
+ "take": "s19",
+ "fps": 30,
+ "note": "t = film seconds (g / 30); narration film20/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "kind": "ambience",
+   "t": 43.267,
+   "dur": 2.933,
+   "frame": 1298,
+   "end_frame": 1386,
+   "note": "Dusk on the avenue: wind in the lattice, the antenna wires hum high above, distant city"
+  },
+  {
+   "kind": "accent",
+   "t": 44.767,
+   "dur": 0.3,
+   "frame": 1343,
+   "end_frame": 1352,
+   "note": "WHIP-TILT down the wire: fast rising-then-falling whoosh with a thin wire zing"
+  },
+  {
+   "kind": "accent",
+   "t": 44.867,
+   "dur": 0.2,
+   "frame": 1346,
+   "end_frame": 1352,
+   "note": "wire hum swells as the camera lands on the post and hut"
+  },
+  {
+   "kind": "cut",
+   "t": 43.4,
+   "dur": 0.0,
+   "frame": 1302,
+   "end_frame": 1302,
+   "note": "hard cut from shot 18"
+  },
+  {
+   "kind": "cut",
+   "t": 46.067,
+   "dur": 0.0,
+   "frame": 1382,
+   "end_frame": 1382,
+   "note": "hard cut to the hut interior: the hum becomes the spark crackle"
+  }
+ ]
+}

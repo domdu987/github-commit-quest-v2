@@ -1,0 +1,77 @@
+{
+ "take": "s23",
+ "film": 20,
+ "shots": [
+  23
+ ],
+ "g0": 1656,
+ "g1": 1732,
+ "first_g": 1648,
+ "n_frames": 92,
+ "shot_ranges": {
+  "23": [
+   1656,
+   1731
+  ]
+ },
+ "handle_in": 8,
+ "handle_out": 8,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 13,
+  "note": "DIS 13 into shot 23 from shot 22 (handle 8 frames g 1648..1655 rendered in 3D)"
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "frames": 13,
+  "at": 1732,
+  "note": "shot 24 dissolves in over this shot's tail: handle 8 frames g 1732..1739 rendered in 3D (the move continues)"
+ },
+ "set": "v3/set3d20 TOWER preset tower_fair, light DAY, year 1910 (set_year(1910) keyed every frame), set_crowd(3); the 24 crowd cards get a keyed idle bob + sway; lamp-post FG moved by the camera offset + FG_SHIFT",
+ "cast": "v3/cast20 eiffel_old (white beard, stoop lean 4; worried -> proud swapped on the closed frame of a blink at g 1706; takes the document with the right hand g 1676..1688, moves it to the left hand behind a blink at g 1696, doffs the bowler (hat_off, bowler_held in the right hand held out at chest height) on 'อีก 70 ปี') + official (tricolour sash, doc_seal held out toward Eiffel g 1664..1676, then hand to hip, happy); no lip-sync",
+ "camera": "custom 22 mm, shift 0.06 kept, cam z 2.0 D, 4.4 D from Eiffel; CamPath PULL 10 %/s + slide -40 px/s + arc 8 deg/s + tilt drift -2 deg/s from +1 deg over his head line, decay 0.3, snap x1.9 (g 1703..1717, peak 1.9, tilt -2 deg) on 'อีก 70 ปี'",
+ "events": {
+  "doc_reach": [
+   1664,
+   1684
+  ],
+  "doc_in_eiffel_hand": 1676,
+  "doc_to_left_hand": 1696,
+  "hat_word": 1706,
+  "face_swap_blink": [
+   1705,
+   1707
+  ],
+  "snap": [
+   1703,
+   1717
+  ]
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "year": 1910,
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 8.91,
+ "s_per_frame_cpu_mean": 17.28,
+ "head_px_main": [
+  145,
+  269
+ ],
+ "head_centre_y_main": [
+  596,
+  700
+ ],
+ "head_bottom_max_y": 786,
+ "framediff_in_shot": {
+  "median": 5.23,
+  "p90": 11.1
+ },
+ "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
+}
