@@ -31,6 +31,9 @@ def set_day(g):
     for key in ('gain', 'fill_w', 'vault_w', 'sun_k', 'lamp_k'): D[key] = DAY0[key] * m
     D['beam_k'] = DAY0['beam_k'] * beam_scale(g)
     mx = P.TAKES[take]['mix']; P.set_light_mix(mx[2], mx[3], 1.0, g + 1); P.set_flicker2(1.0, frame=g + 1)
+    if os.environ.get('BEAMZERO'):   # verification only: force the beam_fx material strength node to 0 directly
+        for m in bpy.data.materials:
+            if m.name.startswith('beam_fx') and m.node_tree and 'strength' in m.node_tree.nodes: m.node_tree.nodes['strength'].inputs[1].default_value = 0.0; m.node_tree.nodes['strength'].inputs[1].keyframe_insert('default_value', frame=g + 1)
 assert P.check_take(take)['hits'] == [] and P.check_face(take)['ok']
 A = P.world_build(take); P.key_take(take); RES = tuple(int(x) for x in os.environ.get('RES', '720x1280').split('x')); P.setup_render2(RES, samples=16, threads=2)
 def clear_cast():   # stage_cast2 builds NEW actors every call and never removes the old ones (stale shadow proxies -> black slabs): remove them first
