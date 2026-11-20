@@ -366,14 +366,18 @@ def compose(f1, f2):
     return fn
 
 
-def fix_sky_clean(T, tex_name='sky_DAWN'):
+def fix_sky_clean(T, tex_name='sky_DAWN', flat_above=None):
     """cloud stickers out (TAKE gate): the sky texture is replaced by its row-median gradient (every cloud / sun disc column averaged away)."""
     from PIL import Image as I
-    out = os.path.join(HERE, 'sky_clean.png')
+    out = os.path.join(HERE, 'sky_clean%s.png' % ('' if flat_above is None else '_f'))
     if not os.path.exists(out):
         a = np.asarray(I.open(os.path.join(SETD, 'tex_jimo', tex_name + '.png')).convert('RGB'), dtype='float32')
         med = np.median(a, axis=1); k = np.ones(41, dtype='float32') / 41.0; pad = np.pad(med, ((20, 20), (0, 0)), mode='edge')
         ref = np.stack([np.convolve(pad[:, c], k, mode='valid') for c in range(3)], axis=1)[:, None, :]
+        if flat_above is not None:                                   # a smooth gradient: everything above v = flat_above eases into one colour (no curved band)
+            h = ref.shape[0]; r0 = int(h * (1 - flat_above)); top = ref[r0].copy()
+            for r in range(r0):
+                w = (r0 - r) / float(r0); w = min(1.0, w * 1.6); ref[r] = ref[r0] * (1 - w) + top * w
         I.fromarray(np.clip(np.repeat(ref, a.shape[1], axis=1), 0, 255).astype('uint8'), 'RGB').save(out)
     for im in bpy.data.images:
         if tex_name in os.path.basename(im.filepath):

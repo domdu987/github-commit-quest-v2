@@ -42,7 +42,7 @@ def cam_track(T, g, t):
 
 
 T = c18.Take('s26', FIRST, LAST, draft=(mode == 'draft'), cam_fn=cam_track)
-c18.fix_sky_clean(T, 'sky_DAWN')
+c18.fix_sky_clean(T, 'sky_DAWN', flat_above=0.5)
 import bpy
 for ob in bpy.data.objects:                       # no grey rocks / wheels / ring props / hay anywhere (TAKE gate rule 2)
     if ob.name.startswith(('fgwood', 'fgstone', 'dr_hay', 'dr_plume', 'dr_pot', 'dr_rope', 'dr_stone', 'dr_wheel', 'dr_basket')) or ob.name == 'hay':
@@ -56,13 +56,9 @@ def frame(T, g):
     gen = V((0.8 + 0.5 * math.sin(g * 0.11), -50.0 - dy, 0.0))
     heads = []
     ph = (g * 0.0625) % 1.0; i16 = int(ph * 16)
-    pose = dict(cast18.general_run_frame(ph, facing=-1)); pump = math.sin(ph * 2 * math.pi)
-    look = c18.ramp(g, 2066, 2072) * (1.0 - c18.ramp(g, 2078, 2084))              # head turned to profile over the shoulder g 2070-2080
-    pose.update(yaw=0.2 + 1.1 * look, lean=21.0, pitch=-0.5, expr='stunned', mouth=('open', 0.44, 0.36), fx=['sweat'], t=g / 30.0)
-    pose['arm_r'] = dict(pose['arm_r'], hand=(1.3, 0.8 + 0.1 * pump), layer='front')        # cup out at arm's length, clear of the face
-    pose['arm_l'] = dict(pose['arm_l'], hand=(-0.6, 0.9 - 0.2 * pump))                      # pumping arm
-    pose['prop_r'] = dict(pose['prop_r'], scale=1.25); pose['cup_tilt'] = 35 * pump
-    m = c18.pcard('general', pose, 'gq%02d_%d' % (i16, int(look * 4)))
+    lb = 2070 <= g <= 2080                                                            # head turned back over the shoulder g 2070-2080
+    pose = dict(cast18.general_run_scream_frame(ph, facing=-1, lookback=lb)); pose['t'] = g / 30.0
+    m = c18.pcard('general', pose, 'gs%02d_%d' % (i16, int(lb)))
     c18.put(m, tuple(gen), cam, height=3.4, name='general', sw=1.0)
     heads.append(T.head_row(tuple(gen), 3.4, 'general'))
     u = c18.ramp(g, G0, 2085)
