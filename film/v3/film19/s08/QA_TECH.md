@@ -21,3 +21,9 @@ Checked 6 fps + cuts g545/g661 +-3 (take g536-669), qa_auto PASS, no text/black/
 Earlier: R3-1 median now passes, p90 NOT FIXED.
 1. g545-660 (frame-diff p90 7.15 < 10): only the slow push, no accent. Fix: add the eased snap on 'นาฬิกาเนี่ยนะ' (g637, x1.8-2 over ~13 f) and a short slide so about 10 % of frames reach diff >= 10; keep his face clear of the shelves; re-measure.
 NOTES: foot shadows faint; mark moved back + Board chair hidden accepted.
+
+## Override review (independent Opus)
+**DISAGREE.** Checked 45 frames (every 3rd, g536-669) plus my own diff of take.mkv.
+- Motion is present: continuous orbit (window to bookcases), push, snap at g637. 0.5 s-span diffs stay 21-38 throughout, so no hold over 1 s and no static feel. The laugh bounce reads.
+- The stated cause is wrong. Frames are not low-contrast: grey std is about 54 (90x160). p90 is low because the camera moves at one even, gentle rate. Only g640-645 (6 of 115 pairs) reach 10 or more. The snap is the only accent.
+- Fix (no extra travel into the table): use FOV punches rather than dolly. (1) Add a punch-in x1.15-1.2 over about 8 f at the laugh onset (g603-611), framed up so the wig stays above y 880. (2) Make the g637 snap faster and longer, so that 12 or more pairs reach 10 or more. Re-measure.
