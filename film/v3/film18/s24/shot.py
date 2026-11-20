@@ -14,8 +14,8 @@ G0, G1 = 1807, 1882
 H_IN, H_OUT = 6, 6
 MOVE = dict(push=0.05, slide=40)
 CAMO = dict(loc=(3.0, -105.0, 10.0), look_at=(-1.5, -72.0, 1.5), lens=22.0)
-SHAKE = (0.5, 0.4, 0.3, 2.6)
-SNAPS = [(G0 + 10, 1.3, 3, 10), (G0 + 30, 1.32, 3, 10), (G0 + 52, 1.28, 3, 10)]
+SHAKE = (1.1, 0.8, 0.5, 2.6)
+SNAPS = [(G0 + 14, 1.14, 4, 9999), (G0 + 46, 1.12, 4, 9999)]      # HELD punch-ins only (ALL_TEAMS rule 1: no pulses)
 
 
 # ---- the rout cast: (start x, y), run direction (deg, world), speed D/s, fall frame (None = keeps running), cast
@@ -50,6 +50,9 @@ def make_driver(quality):
         o = [o for o in C.STATE['SET'].objects if o.name.startswith('fly%d' % n_)][0]; C.J.no_bounce(o); items.append(o)
         o.data.materials.clear(); o.data.materials.append(C.flat_mat((0.28, 0.17, 0.05) if n_ % 2 == 0 else (0.16, 0.16, 0.22), 'flyitem%d' % n_))
     FLY = [(-2.0, -80.0, 0.0, -9.0, -86.0, 6.0, 0.08), (5.0, -82.0, 0.0, 10.0, -90.0, 6.5, 0.20), (-9.0, -84.0, 0.0, -15.0, -92.0, 7.0, 0.32), (1.0, -78.0, 0.0, 4.0, -86.0, 5.5, 0.14)]
+    cols = dict(pot=(0.30, 0.19, 0.07), helmet=(0.30, 0.30, 0.40), hay=(0.42, 0.30, 0.10), bowl=(0.34, 0.2, 0.08))
+    for it in C.STATE['rout_items']:                      # no grey untextured lumps (ALL_TEAMS rule 2): warm flat-glazed pots / bowls / hay
+        if it.get('ob') is not None: it['ob'].data.materials.clear(); it['ob'].data.materials.append(C.flat_mat(cols[it['kind']], 'ri_' + it['kind']))
     chariot = C.STATE['rout_chariots'][1]['ob']
     actors = {}
     for i, a in enumerate(run): actors['run%d' % i] = a

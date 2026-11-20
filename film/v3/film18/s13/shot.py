@@ -14,8 +14,8 @@ H_IN, H_OUT = 9, 6                                                # dissolve in 
 MOVE = dict(slide=40)
 CAMO = dict(look_at=(2.0, -88.0, -4.0))                              # tilt down: sky was 50 % of the frame
 GEN = V((-4.3, -96.2, 0.0))
-SHAKE = (0.6, 0.45, 0.35, 2.8)
-SNAPS = [(G0 + 12, 1.36, 3, 10), (G0 + 32, 1.38, 3, 10), (G0 + 52, 1.34, 3, 10)]
+SHAKE = (1.3, 0.95, 0.6, 2.8)
+SNAPS = [(G0 + 16, 1.16, 4, 9999), (G0 + 44, 1.12, 4, 9999)]      # HELD punch-ins only (ALL_TEAMS rule 1: no pulses)
 G_DROP = 1030                                                     # the sentry drops his spear
 
 
