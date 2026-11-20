@@ -7,3 +7,4 @@ __pycache__/
 frames/
 log_*.txt
 !path_draft.mp4
+take.mkv

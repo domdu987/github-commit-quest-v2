@@ -1,0 +1,60 @@
+{
+ "take": "sD2",
+ "film": 21,
+ "segment": "D2",
+ "first_g": 642,
+ "n_frames": 155,
+ "g0": 642,
+ "g1": 793,
+ "handle_in": 0,
+ "handle_out": 3,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "whip in rendered inside: g 642-647 fast pan settling"
+ },
+ "transition_out": {
+  "type": "D6 join at P_BANK",
+  "at": 793,
+  "handle": [
+   794,
+   796
+  ]
+ },
+ "world": "K.build_world(['camp_bank'])",
+ "end_pose": "K.POSES['P_BANK'] exactly at g793",
+ "samples": 32,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "events": {
+  "whip_in": [
+   642,
+   647
+  ],
+  "tracking": [
+   648,
+   750
+  ],
+  "stop": 750,
+  "cu1_push": [
+   756,
+   765
+  ],
+  "purse_slap": 758,
+  "cu1": [
+   765,
+   778
+  ],
+  "pull_out": [
+   778,
+   793
+  ],
+  "lipsync": [
+   642,
+   791
+  ]
+ }
+}
