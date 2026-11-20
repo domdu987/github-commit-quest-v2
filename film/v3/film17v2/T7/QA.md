@@ -1,7 +1,10 @@
-# T7 QA self-check (g1689-1874, 186 frames, 720x1280, 16 samples + OIDN)
+# T7 QA self-check, fix round 2 (g1689-1874, 186 frames, 720x1280, 16 samples + OIDN)
 
-Checks: `check_take('T7')` no hits, `check_face('T7')` PASS. Render: motion blur 0.5 on g1800-1867 only; clear_cast() before every stage_cast2 (cast-object leak fix); beam_fx forced to 0 for the whole take (g1820 beam-0 diff was 9.5/255: the beams veiled the crane; g1730 diff 0.0).
-Luma (director metric: RGB mean at 90x160): take 103.8 (min 79.7, max 162.1). 7a g1689-1791: 96.2. Crane g1792-1874: 113.1 (top-down floor is bright, peak ~130-162 at g1810-1830); the target 88-105 is met by the take mean and 7a, not by the crane alone (director: overage is trimmed at conform). Shimmer: frame-to-frame flat-wall diff 0.47 grey levels on the first 30 frames, no OIDN shimmer seen.
+Checks: check_take('T7') no hits, check_face('T7') PASS. Motion blur 0.5 on g1800-1867 only. clear_cast() before every stage_cast2. beam_fx off for the whole take.
+Fix round 2: lights ramp to 0.72 over g1804-1845; the Dupont stool was removed (not moved or seated); banners within 2.4 m of the camera are hidden; the MOYEN banner is hidden from g1823 to the end of the take; Bertillon has a card bob and head roll.
+Luma (RGB mean at 90x160): take mean 96.8 (min 73.0, max 119.9). 7a g1689-1791: 96.7 (94.1-98.3). Crane g1792-1874: 96.9. g1809-1839: 104.1 (101.3-113.5, within the 115 limit). Over 105 only at g1800-1812 (up to 119.9, the ramp has not caught up yet). Under 88 at g1852-1874 (73-87), the top-down end of the crane, where the lights stay at 0.72. g1868-1874 are handle frames with the original lighting and the stool kept. Shimmer was not re-measured; none seen in the frames viewed.
+qa_auto still FAILs on blur (57 frames) and pops (g1797-1806, 1828, 1829, 1833): the planned motion blur and the fast crane. rhythm.py reports 0 cuts detected.
+Known caveats: the thieves and escort are tiny (1-3 %H) in top-down frames; the moustache reads mostly as part of the beard.
 
 ## Frames viewed (full 720x1280 unless stated; phone = 360x640)
 - **g1718 (full):** Bertillon centre-left holding the card up, Dupont right, fully inside the frame, big bushy brown beard on, surprised mouth. Nothing crosses Bertillon. Feet on the floor.
