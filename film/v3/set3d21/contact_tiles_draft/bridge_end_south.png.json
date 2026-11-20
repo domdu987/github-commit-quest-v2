@@ -1,1 +1,1 @@
-{"preset": "bridge_end_south", "light": "MORNING", "build_s": 2.67, "render_s": 8.42, "mode": "draft", "samples": 20, "heads": {"k1": {"cx": 215, "cy": 538, "chin": 580, "dist": 5.0}, "k2": {"cx": 505, "cy": 549, "chin": 586, "dist": 5.6}}, "objects": 153, "tris": 492932}
+{"preset": "bridge_end_south", "light": "MORNING", "build_s": 2.91, "render_s": 9.6, "mode": "draft", "samples": 20, "heads": {"k1": {"cx": 215, "cy": 538, "chin": 580, "dist": 5.0}, "k2": {"cx": 505, "cy": 549, "chin": 586, "dist": 5.6}}, "objects": 160, "tris": 492969}

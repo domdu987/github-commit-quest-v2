@@ -1,18 +1,25 @@
-# Film 21 render teams (wave 1 launched 2026-11-20 11:40 UTC from 51102e4: s01 s02 s03 s05 s06 s08 s10; wave 2 = s04 s07 s09 s11 after the FIX-FIRST presets pass)
-# (Sonnet cloud sessions, source film21/main, clone_depth 1, outcome branch render21/teamK)
-g = round((narration_t + 0.10) * 30). "in" = transition INTO the take (D11 = 11-frame dissolve, C = cut). Internal cuts are the planned shot boundaries inside the take (pass them to qa_auto/rhythm as --cuts).
-Internal dissolves: s02 shot 6 at g298 (D11), rendered inside the take by the team.
-| take | shots | g0-g1 | in | internal cuts | team | branch | session |
-|---|---|---|---|---|---|---|---|
-| s01 hook BIGZOOM | 1-2 | 0-159 | — | 125 | 1 | render21/team1 | session_017iwyCumuEopk7yR2v7VxqP |
-| s02 | 4-7 | 159-418 | D11 | 235,298(D11),360 | 2 | render21/team2 | session_017iwyCueDsicSa1SXow5PeY |
-| s03 | 8-9 | 418-542 | D11 | 499 | 3 | render21/team3 | session_017iwyCws18qdxaGzgzAeH6X |
-| s04 mocker | 10-12 | 542-793 | D11 | 642,707 | 4 | render21/team4 | |
-| s05 nickname | 13-14 | 793-885 | C | 837 | 5 | render21/team5 | session_017iwyCtbZ82yNcWWj7WiwA5 |
-| s06 count | 15-17 | 885-1044 | D11 | 938,986 | 6 | render21/team6 | session_017iwyCui16dpW5GJ7yrC9Se |
-| s07 false payoff | 18-19 | 1044-1141 | D11 | 1093 | 7 | render21/team7 | |
-| s08 crisis | 20-22 | 1141-1295 | C | 1194,1239 | 8 | render21/team8 | session_017iwyCtvGWYHcEnV2cnVAxQ |
-| s09 reveal BIGZOOM | 23-24 | 1295-1519 | C | 1345 | 9 | render21/team9 | |
-| s10 aha | 26-27 | 1519-1640 | D11 | 1578 | 10 | render21/team10 | session_017iwyCx6gATy4vJU2YUfeBA |
-| s11 ending | 28-31 | 1640-1848 | D11 | 1709,1769,1821 | 11 | render21/team11 | |
-Key takes for QA-art at the TAKE gate: s01, s07, s09, s11.
+# Film 21 render teams (Sonnet cloud sessions, source film21/main, clone_depth 1, outcome branch render21/teamK)
+Plan v3 (QA_TEAM.md §I camera travel), 2026-11-20. Wave 1 (11:40) and wave 2 (12:23) of plan v2 were HELD at 12:50 for §I. The same sessions get new segment assignments below.
+Folder per segment: film/v3/film21/s<SEG> (sA, sB1, ...). meta.json: g0, g1, first_g, n_frames, transition_in = {"type":"cut","frames":0} for CUT or W (whips are rendered inside the segments), {"type":"dissolve","frames":6} for D6.
+Handles: 3 frames past each D6 end (same move continued). No handles on cuts or whips.
+| seg | g0-g1 | in | team | branch | session |
+|---|---|---|---|---|---|
+| A1 (BIGZOOM 1, first half) | 0-80 | - | 1 | render21/team1 | session_017iwyCumuEopk7yR2v7VxqP |
+| A2 (BIGZOOM 1, second half + grass-chewer push) | 80-159 | D6 at P_A | 5 | render21/team5 | session_017iwyCtbZ82yNcWWj7WiwA5 |
+| B1 | 159-298 | CUT | 2 | render21/team2 | session_017iwyCueDsicSa1SXow5PeY |
+| B2 | 298-418 | D6 at P_CAMP | 5 | render21/team5 | session_017iwyCtbZ82yNcWWj7WiwA5 |
+| C | 418-542 | CUT | 3 | render21/team3 | session_017iwyCws18qdxaGzgzAeH6X |
+| D1 | 542-642 | CUT | 7 | render21/team7 | session_017iwyCvpzoi5TiBV4qevt9n |
+| D2 (mocker) | 642-793 | W | 4 | render21/team4 | session_017iwyCucf86ZM8VKRSnau3L |
+| E1 | 793-885 | D6 at P_BANK | 7 | render21/team7 | session_017iwyCvpzoi5TiBV4qevt9n |
+| E2 (count) | 885-1044 | CUT | 6 | render21/team6 | session_017iwyCui16dpW5GJ7yrC9Se |
+| F (false payoff) | 1044-1141 | CUT | 1 | render21/team1 | session_017iwyCumuEopk7yR2v7VxqP |
+| G (calm + horn) | 1141-1239 | CUT | 8 | render21/team8 | session_017iwyCtvGWYHcEnV2cnVAxQ |
+| H1 (charge) | 1239-1345 | CUT | 9 | render21/team9 | session_017iwyCtjzchAetQUqefvg7M |
+| H2a (crane up to the trap) | 1345-1392 | D6 at P_NECK | 3 | render21/team3 | session_017iwyCws18qdxaGzgzAeH6X |
+| H2b (BIGZOOM 2) | 1392-1519 | D6 at P_TOP | 10 | render21/team10 | session_017iwyCx6gATy4vJU2YUfeBA |
+| I (aha) | 1519-1640 | CUT | 12 | render21/team12 | session_017iwyCugpuWU1VefvhjgJG1 |
+| J1 (ending table) | 1640-1709 | CUT | 8 | render21/team8 | session_017iwyCtvGWYHcEnV2cnVAxQ |
+| J2 (ending splash) | 1709-1848 | W | 11 | render21/team11 | session_017iwyCsYUJ5ivPtdLSfSaHu |
+Key segments for QA-art at the TAKE gate: A1+A2, D2, F, H1, H2a+H2b, J2.
+D6 joins: A1->A2 at P_A (g80), B1->B2 at P_CAMP (g298), D2->E1 at P_BANK (g793), H1->H2a at P_NECK (g1345), H2a->H2b at P_TOP (g1392). Neighbouring teams: match the pose in shot_plan.md exactly.
