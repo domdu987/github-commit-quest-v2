@@ -34,9 +34,9 @@ BAG_XY_M = (0.15, 0.80)                                  # metres on the tableto
 BAG_SCALE = 1.6
 N_COINS = 10
 CAM_LOC0 = (-1.00, -2.70, 3.60)
-CAM_LOOK0 = (-0.90, 1.80, 2.30)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.11, slide_px=0.0, rise_px=8.0, arc_deg_s=12.5, decay=0.10,
-                snaps=[dict(g=SNAP, k=1.12, peak=4.3, shift=(1.35, 0.90))])
+CAM_LOOK0 = (-0.55, 1.80, 2.30)
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.12, slide_px=-10.0, rise_px=-28.0, arc_deg_s=13.0, decay=0.10,
+                snaps=[dict(g=SNAP, k=1.18, peak=4.8, shift=(0.55, 1.25))])
 
 HB = dict(cast19.STORY19["harrison_old_idle"][1])
 KB = dict(cast19.STORY19["king_idle"][1])

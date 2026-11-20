@@ -28,7 +28,7 @@ MARK = "mocker_telescope"                               # A['marks'] (D): (-3.24
 CAM_LOC0 = (-3.30, -1.60, 1.35)                          # near the preset hall_low start (-3.51, -2.22, 1.30): low angle
 CAM_LOOK0 = (-3.20, 3.30, 2.55)
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.10, slide_px=-110.0, rise_px=20.0, arc_deg_s=14.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.70, peak=2.3, shift=(1.40, 0.10))])
+                snaps=[dict(g=SNAP, k=1.18, peak=2.6, shift=(1.45, 0.10))])
 
 AB = dict(cast19.STORY19["astro_jaw_drop"][1])
 
