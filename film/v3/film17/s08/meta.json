@@ -1,3 +1,3 @@
-{"take":"s08","film":17,"round":2,"shots":[20,21],"g0":1045,"g1":1196,"first_g":1039,"n_frames":163,"handle_in":6,"handle_out":6,
+{"take":"s08","film":17,"round":3,"shots":[20,21],"g0":1045,"g1":1196,"first_g":1039,"n_frames":163,"handle_in":6,"handle_out":6,
  "transition_in":{"type":"dissolve","frames":11},"internal_cut_g":1127,
- "rhythm":{"median":4.77,"p90":12.49},"note":"take.mkv is split in take.mkv.part00.. (cat them back together); frames g1039-1201, 720x1280, 12 samples + OIDN"}
+ "rhythm":{"median":4.92,"p90":14.39},"note":"take.mkv is split in take.mkv.part00.. (cat them back together); frames g1039-1201, 720x1280, 12 samples + OIDN"}
