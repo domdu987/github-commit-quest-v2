@@ -32,6 +32,7 @@
  },
  "set": "v3/set3d20 CAFE preset cafe_low, light DAY, window view full (hook set_window_view keyed every frame)",
  "cast": "v3/cast20 maupassant stage Actor on the standing mark; T16 (shots 16+17): close on the grin, crash pull-out to the medium-wide with the full tower in the window, belly laugh, lip-sync jeer, thumb over the shoulder at the tower, crumple mime, push-in on 'เป็นเศษเหล็ก!'; lip-sync mouth from narration loudness (cast20.talk_mouth + MOUTH_SET open sizes) only inside the quote windows",
+ "start_cam": null,
  "events": {
   "crash_pull_out": [
    1093,
@@ -68,20 +69,20 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 19.02,
- "s_per_frame_cpu_mean": 37.01,
+ "s_per_frame_wall_mean": 17.27,
+ "s_per_frame_cpu_mean": 33.56,
  "head_px": [
   128,
-  402
+  347
  ],
  "head_centre_y": [
-  616,
-  698
+  619,
+  695
  ],
- "head_bottom_max_y": 890,
+ "head_bottom_max_y": 848,
  "framediff_in_shot": {
-  "median": 7.31,
-  "p90": 17.21
+  "median": 7.09,
+  "p90": 18.48
  },
  "narration": "film20/audio/narration.wav at +0.10 s"
 }
