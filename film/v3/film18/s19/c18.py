@@ -163,12 +163,11 @@ def fg_bundle(shot, side='left', n=9, length=0.55, rad=0.045, drop=0.42, ahead=1
 # ------------------------------------------------------------------ soft dust / smoke puffs (light-brown, replaces the set's dark dust squares)
 def puff_meta(alpha=0.5, tone=(226, 196, 160)):
     from PIL import Image
-    name = 'puff2_%d_%d_%d_%d' % ((alpha * 100,) + tone); p = os.path.join(CD.CARDS, name + '.png'); os.makedirs(CD.CARDS, exist_ok=True)
+    name = 'puff_%d_%d_%d_%d' % ((alpha * 100,) + tone); p = os.path.join(CD.CARDS, name + '.png'); os.makedirs(CD.CARDS, exist_ok=True)
     if not os.path.exists(p):
-        n = 256; yy, xx = np.mgrid[0:n, 0:n]; a = np.zeros((n, n))
-        for (cx, cy, rad) in [(128, 140, 70), (84, 156, 48), (176, 152, 50), (124, 94, 52), (160, 104, 40), (92, 112, 40)]:
-            a = np.maximum(a, np.exp(-(np.hypot(xx - cx, yy - cy) / (rad * 0.62)) ** 2))
-        a[a < 0.03] = 0
+        n = 128; yy, xx = np.mgrid[0:n, 0:n]; rr = np.random.RandomState(3); a = np.zeros((n, n))
+        for (cx, cy, rad) in [(64, 70, 40), (42, 78, 26), (88, 76, 28), (62, 46, 28), (80, 52, 22), (46, 56, 22)]:
+            a = np.maximum(a, np.clip(1.0 - np.hypot(xx - cx, yy - cy) / rad, 0, 1) ** 0.7)
         im = np.zeros((n, n, 4), np.uint8); im[..., 0], im[..., 1], im[..., 2] = tone; im[..., 3] = (np.clip(a, 0, 1) * alpha * 255).astype(np.uint8)
         Image.fromarray(im, 'RGBA').save(p)
     return dict(path=p, w=1.0, h=1.0, x0=-0.5, feet=0.0, kind='puff')
@@ -213,8 +212,10 @@ def put_ox(i, pos, travel, scale, camloc, phase=0, flame=-1, state='dragon', vie
         right = V((math.cos(ly), math.sin(ly), 0.0)); tail = p + right * lx + V((0, 0, lz)); TAILS.append((tail, sc))
         back = 1.0 if lx > 0 else -1.0
         fm = flame_meta(flame % 3); fs = tfx * sc; bob = 1.0 + 0.1 * math.sin(i + flame)
-        fo = R2.put_card(fm, (tail.x, tail.y, tail.z), yaw, fs * bob, name='tfl%d' % i, tint=(1, 1, 1), k=1.6, shadow=False)
-        fo.rotation_euler = (0, math.radians(back * lean + 6 * math.sin(phase * 1.7 + i)), math.radians(yaw)); fo.location = (tail.x + 0.0, tail.y + 0.0, tail.z)
+        dd = V(camloc) - tail; cyaw = math.degrees(math.atan2(dd.x, -dd.y))
+        fo = R2.put_card(fm, (tail.x, tail.y, tail.z), cyaw, fs * bob, name='tfl%d' % i, tint=(1, 1, 1), k=1.6, shadow=False)
+        sgn = 1.0 if (V((math.cos(math.radians(cyaw)), math.sin(math.radians(cyaw)), 0)) * back * (1 if True else 0)).dot(right) >= 0 else -1.0
+        fo.rotation_euler = (0, math.radians(sgn * back * lean + 6 * math.sin(phase * 1.7 + i)), math.radians(cyaw)); fo.location = (tail.x, tail.y, tail.z)
         if sparks:
             sm = spark_meta(); rr = random.Random(i * 131 + int(phase * 7))
             for s in range(6):

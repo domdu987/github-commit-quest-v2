@@ -1,6 +1,7 @@
-# QA s19 (render team 5, film 18) round 3 - frames g1427-1514 (+6 handles: take.mkv g1421-1520, 100 frames), jimo_out NIGHT
-Frame-diff in-shot (n=87): median **6.71**, p90 **10.94** (gate: median >= 4, no pulsing - met). qa_auto FAIL only on "suspected blur" g1502-1520: the whip pan (from g1498) and its landing on sky and sand (low edge detail); QA-tech already ruled this the whip, not blur.
-Round-3 notes from QA-art:
-- Tails trail LEVEL: each flame card is rotated to lie almost horizontal (84 deg) behind the rump, about 0.8 of a body-height long (a bit under 1/3 of the body length), with sparks and a warm light (420 W x scale) and a ground pool. The cast tail still curls up in the drawing; the flame sits at the tail tip and streams back.
-- Camera moved to (8,-17,1.7) looking at (32,-6,9): the nearest holes (x 24.5-41) are 17-35 D away, oxen about 15-22 % of frame height, no lens fly-through.
-- Hidden: the breach rubble piles, the teal `tufts` spikes, furrows/streaks. The purple diagonal stripe is the silted ditch (`banks`) between the camera and the wall: it is still visible in the lower-left of the first 40 frames (hiding it left a flat navy ground, which was worse). Plain ground is about 30-35 % in the early frames, about 25 % later.
+# QA s19 (render team 5, film 18) round 4 - frames g1427-1514 (+6 handles: take.mkv g1421-1520, 100 frames), jimo_out NIGHT
+Frame-diff in-shot (n=87): median **8.69**, p90 **11.74** (g1427-1458 median 7.6, no near-static stretch). qa_auto flags "blur" g1505-1520 = the whip and its landing on sky/sand (low edge detail), not blur (QA-tech ruled so before).
+- Whip starts at g1505 (planned 1506), with the tilt-down onto the herd.
+- Camera sway (lateral 2.4 D swing, eased) plus two held dolly steps replace the pulses; no near-static frames.
+- Qi: 6 dark runners, first one at g1417, one more every 5 frames, running behind the oxen in the 4-8 D band outside the wall (visible in g1436-1500).
+- Purple bridge slab hidden; spikes, rubble, furrows hidden; flames level behind the rumps with sparks and lights.
+- Not met: plain ground is still about 35 % in the first third (ditch silt cannot be hidden without a flat navy plane); the purple stripe (silted ditch) remains in the lower left early on.

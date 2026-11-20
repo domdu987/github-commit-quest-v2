@@ -6,14 +6,15 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c18 as C
 from c18 import J, S, R2, V, bpy
 SHOT = 's19'; G0, G1 = 1427, 1514; H_IN, H_OUT = 6, 6        # cut in, whip out
-c = S.SHOTS[SHOT]['cam']; c['loc'] = (8.0, -17.0, 1.7); c['look_at'] = (32.0, -6.0, 9.0); c['lens'] = 18.0
-C.motion(SHOT, push=0.06, slide=-40, moves=[dict(t=0.35, d=0.85, dur=6), dict(t=0.807, pan=-85, dur=7)])
+c = S.SHOTS[SHOT]['cam']; c['loc'] = (8.0, -17.0, 1.7); c['look_at'] = (32.0, -6.0, 10.2); c['lens'] = 18.0
+C.motion(SHOT, push=0.0, slide=-30, moves=[dict(t=0.2, d=0.9, dur=8), dict(t=0.35, d=0.9, dur=8), dict(t=0.84, pan=-85, dur=7)])
 _p0 = S.pose_at
 def _tilt(sh, t):                                            # the whip lands on the herd: tilt down from the sky onto the field while the pan runs
-    p = _p0(sh, t); k = min(1.0, max(0.0, (t - 0.80) / 0.10)); k = k * k * (3 - 2 * k)
-    la = list(p['look_at']); la[2] = la[2] + (1.2 - la[2]) * k; p['look_at'] = tuple(la); return p
+    p = _p0(sh, t); k = min(1.0, max(0.0, (t - 0.82) / 0.10)); k = k * k * (3 - 2 * k)
+    la = list(p['look_at']); la[2] = la[2] + (3.0 - la[2]) * k; sw = 2.4 * math.sin(t * 21.0) * (1.0 - k)
+    p['loc'] = (p['loc'][0] + sw, p['loc'][1] + 0.4 * sw, p['loc'][2]); la[0] += sw; p['look_at'] = tuple(la); return p
 S.pose_at = _tilt
-HIDE = tuple(os.environ.get('HIDE', 'furrows,streaks,streak,rainstreaks,tufts').split(','))
+HIDE = tuple(os.environ.get('HIDE', 'furrows,streaks,streak,rainstreaks,tufts,bridge').split(','))
 HX = [hx for hx in J.HOLE_X if hx > 20]
 rnd = random.Random(19)
 OX = []                                                      # (gs, hole x, lane jitter, scale)
@@ -21,7 +22,7 @@ for w in range(8):
     for k, hx in enumerate(HX):
         OX.append((G0 - 26 + 3 * k + 11 * w + rnd.randint(-2, 2), hx + rnd.uniform(-0.5, 0.5), rnd.uniform(-0.3, 0.3), rnd.uniform(0.95, 1.05)))
 OX = OX[:32]
-QI = [(G0 - 14 + 4 * k, HX[(k * 3) % len(HX)] + rnd.uniform(-0.8, 0.8)) for k in range(6)]
+QI = [(G0 - 10 + 5 * k, HX[(k * 3) % len(HX)] + rnd.uniform(-1.5, 1.5)) for k in range(6)]
 V_OX, V_QI = 15.0, 11.5
 
 def setup(ctx):
@@ -54,7 +55,7 @@ def frame(g, t, camloc, ctx):
         C.put_ox(j, pos, -100, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='front_three_quarter' if (near and j % 3 == 0) else 'three_quarter', gait='gallop', theta=14 if (near and j % 3 == 0) else 30, reed=True, tfx=0.8, lean=84.0)
     for j, (gs, x) in enumerate(QI):
         if g < gs: continue
-        y = -5.5 - V_QI * (g - gs) / 30.0
+        y = -7.0 - V_QI * (g - gs) / 30.0
         m = C.qi((g - gs) * 12 / 30.0 / 8.0 + j * 0.13, 1)
         C.put_person(m, (x, y, 0), camloc, 3.1, 'qi%d' % j, mirror=(j % 2 == 0), tint=(0.5, 0.5, 0.75), k=0.8)
     for k, hx in enumerate(HX):                              # dust puffs at the hole mouths, growing and fading after the first ox of the hole bursts out

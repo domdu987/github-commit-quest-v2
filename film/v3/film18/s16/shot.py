@@ -8,9 +8,8 @@ from c18 import J, S, R2, V, bpy
 SHOT = 's16'; G0, G1 = 1205, 1308; H_IN, H_OUT = 10, 6
 HOLE_LIGHTS = []
 def pose(sh, t):
-    t = max(0.0, t)
     e = t * t * (3 - 2 * t) * 0.35 + t * 0.65; d = 1.0 - (0.12 * min(1.0, max(0.0, (t - 0.55) / 0.06)))      # slide along the wall (x 52 -> 27), one held punch-in 12 % at t 0.55
-    lx = 43.5 - 31.0 * t; return dict(loc=(lx + 17.0, 5.0 + 12.5 * d, 2.5), look_at=(lx, 5.0, 4.4), lens=22.0)
+    lx = 43.5 - (31.0 * t if t >= 0 else 7.0 * t); return dict(loc=(lx + 15.5, 5.0 + 12.5 * d, 2.5), look_at=(lx, 5.0, 6.6), lens=22.0)
 S.pose_at = pose
 
 def setup(ctx):
@@ -27,7 +26,7 @@ def frame(g, t, camloc, ctx):
     n = sum(min(1.0, max(0.0, (g - tj) / 8.0)) for tj in TJ); J.set_holes(n)
     for ob in bpy.data.objects:
         if ob.name in ('jars', 'reeds'): ob.hide_render = True; ob.location.z = -200
-        if ob.name in ('fgdig', 'rainstreaks', 'streaks', 'streak'): ob.hide_render = True; ob.scale = (0.0, 0.0, 0.0)
+        if ob.name in ('fgdig', 'rainstreaks', 'streaks', 'streak', 'furrows', 'tufts'): ob.hide_render = True; ob.scale = (0.0, 0.0, 0.0)
     for i, o in enumerate(HOLE_LIGHTS):
         p = min(1.0, max(0.0, n - (11 - i))); o.data.energy = 4200.0 * min(1.0, p / 0.3) if p > 0.15 else 0.0
         if p > 0.3: C.put_puff((J.HOLE_X[i], 5.0, 2.0), 4.0, camloc, alpha=1.0, name='glow%d' % i, tone=(255, 160, 60))

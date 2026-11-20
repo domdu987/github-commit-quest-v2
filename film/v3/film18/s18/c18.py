@@ -212,8 +212,10 @@ def put_ox(i, pos, travel, scale, camloc, phase=0, flame=-1, state='dragon', vie
         right = V((math.cos(ly), math.sin(ly), 0.0)); tail = p + right * lx + V((0, 0, lz)); TAILS.append((tail, sc))
         back = 1.0 if lx > 0 else -1.0
         fm = flame_meta(flame % 3); fs = tfx * sc; bob = 1.0 + 0.1 * math.sin(i + flame)
-        fo = R2.put_card(fm, (tail.x, tail.y, tail.z), yaw, fs * bob, name='tfl%d' % i, tint=(1, 1, 1), k=1.6, shadow=False)
-        fo.rotation_euler = (0, math.radians(back * lean + 6 * math.sin(phase * 1.7 + i)), math.radians(yaw)); fo.location = (tail.x + 0.0, tail.y + 0.0, tail.z)
+        dd = V(camloc) - tail; cyaw = math.degrees(math.atan2(dd.x, -dd.y))
+        fo = R2.put_card(fm, (tail.x, tail.y, tail.z), cyaw, fs * bob, name='tfl%d' % i, tint=(1, 1, 1), k=1.6, shadow=False)
+        sgn = 1.0 if (V((math.cos(math.radians(cyaw)), math.sin(math.radians(cyaw)), 0)) * back * (1 if True else 0)).dot(right) >= 0 else -1.0
+        fo.rotation_euler = (0, math.radians(sgn * back * lean + 6 * math.sin(phase * 1.7 + i)), math.radians(cyaw)); fo.location = (tail.x, tail.y, tail.z)
         if sparks:
             sm = spark_meta(); rr = random.Random(i * 131 + int(phase * 7))
             for s in range(6):
