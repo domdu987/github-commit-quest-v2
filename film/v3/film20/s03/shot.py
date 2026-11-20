@@ -146,6 +146,14 @@ def make_glow_and_fill(A):
     fill.data.color = (1.0, 0.78, 0.55)
     fill.data.energy = 4000.0
     fill.data.shadow_soft_size = 3.0
+    gp = bpy.data.materials.get("gravelp")                                      # the pale gravel patches read as white domes: make them dirt-coloured
+    if gp is not None and gp.use_nodes:
+        for n in gp.node_tree.nodes:
+            if n.type == "BSDF_PRINCIPLED":
+                n.inputs["Base Color"].default_value = (0.62, 0.38, 0.22, 1)
+            for i in n.inputs:
+                if i.type == "RGBA" and n.type in ("MIX", "VALTORGB") and hasattr(i, "default_value"):
+                    i.default_value = (0.58, 0.36, 0.21, 1)
     fb = bpy.data.materials.get("flag_b")                                      # the flag's blue renders pure black in shade: lift it to a real blue
     if fb is not None and fb.use_nodes:
         for n in fb.node_tree.nodes:
@@ -154,10 +162,37 @@ def make_glow_and_fill(A):
             for i in n.inputs:
                 if i.type == "RGBA" and n.type in ("MIX", "VALTORGB") and hasattr(i, "default_value"):
                     i.default_value = (0.10, 0.24, 0.72, 1)
-    A["bz_glow"], A["bz_fill"] = gl, fill
+    bpy.ops.mesh.primitive_cylinder_add(radius=1.0, depth=1.0, location=(0, 0, 0))
+    sh = bpy.context.active_object
+    sh.name = "bz_shaft"
+    sm = bpy.data.materials.new("bz_shaft_m")
+    sm.use_nodes = True
+    nd2 = sm.node_tree.nodes
+    for n in list(nd2):
+        nd2.remove(n)
+    e2 = nd2.new("ShaderNodeEmission")
+    e2.inputs["Color"].default_value = (1.0, 0.72, 0.35, 1)
+    e2.inputs["Strength"].default_value = 4.0
+    tr = nd2.new("ShaderNodeBsdfTransparent")
+    mx = nd2.new("ShaderNodeMixShader")
+    mx.inputs[0].default_value = 0.45
+    o2 = nd2.new("ShaderNodeOutputMaterial")
+    sm.node_tree.links.new(tr.outputs[0], mx.inputs[1])
+    sm.node_tree.links.new(e2.outputs[0], mx.inputs[2])
+    sm.node_tree.links.new(mx.outputs[0], o2.inputs["Surface"])
+    sh.data.materials.append(sm)
+    sh.visible_shadow = False
+    sh.location = (pos[0], pos[1], pos[2] + 2.0)
+    bpy.ops.object.light_add(type="POINT", location=(0, 0, 0))
+    up = bpy.context.active_object
+    up.name = "bz_up"
+    up.data.color = (1.0, 0.72, 0.45)
+    up.data.energy = 0.0
+    up.data.shadow_soft_size = 4.0
+    A["bz_glow"], A["bz_fill"], A["bz_shaft"], A["bz_up"] = gl, fill, sh, up
 
 
-HIDE_SCATTER = ("pf_coal", "pf_soot", "pf_rivet", "pf_metal", "pf_stonedk", "pm_coal", "pm_soot", "pm_rivet", "pm_metal", "pm_stonedk", "pn_coal", "pn_soot", "pn_rivet", "pn_stonedk")   # the small near-black scatter that reads as debris
+HIDE_SCATTER = ("pnoink_white", "pm_timber", "pm_timberdk", "pm_metal", "pf_coal", "pf_soot", "pf_rivet", "pf_metal", "pf_stonedk", "pm_coal", "pm_soot", "pm_rivet", "pm_metal", "pm_stonedk", "pn_coal", "pn_soot", "pn_rivet", "pn_stonedk")   # the small near-black scatter that reads as debris
 
 
 def smoother(u):
@@ -174,7 +209,7 @@ class ZoomPath(C.CamPath):
         self.subj = m + Vector((0.0, 0.0, 1.7))
         C.CamPath.__init__(self, self.subj + Vector((1, 0, 0)), self.subj, GF, G_LAST, push=0, decay=0.0)
 
-    KEYS = ((GF, 620.0), (G0, 480.0), (196, 39.0), (G_LAND, D1))     # camera distance to Eiffel (D): ~10 px figure at g 178, 64 px (5 %) at g 196, medium (~540 px) at g 300
+    KEYS = ((GF, 620.0), (G0, 560.0), (203, 39.0), (G_LAND, D1))     # camera distance to Eiffel (D): ~10 px figure at g 178, 64 px (5 %) at g 196, medium (~540 px) at g 300
 
     def lnd(self, g):
         ks = self.KEYS
@@ -250,7 +285,7 @@ class TravelPath(ZoomPath):
             return la, ka
         u = clamp((g - G_TRAVEL) / float(G_LAST - G_TRAVEL), 0.0, 1.0)
         w = 0.06 * u + 0.94 * smoother(u ** 0.55)        # leaves Eiffel quickly (no half-body lingering at the frame edge)
-        pitch = lerp(8.0, 26.0, u) + 6.0 * C.snap_u(g, SNAP[0], SNAP[1], 1.7)
+        pitch = lerp(8.0, 22.0, u) + 6.0 * C.snap_u(g, SNAP[0], SNAP[1], 1.7)
         dC = self.h * math.cos(math.radians(pitch)) + Vector((0, 0, math.sin(math.radians(pitch))))
         dA = (ka - la).normalized()
         loc = la.lerp(self.locC, w) + Vector((0, 0, LIFT * math.sin(math.pi * w)))
@@ -311,8 +346,10 @@ class Take(C.Take):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s03")
         self.A["marks"][MARK] = C.on_ground(self.A["marks"][MARK])
         for ob in C.bpy.data.objects:                               # the preset's near-black FG slabs (anchored to the preset camera): camera-invisible
-            if ob.name in ("fg_redlead_sh", "fg_dark_sh", "fg_metal_sh", "fg_timber_sh") or ob.name.startswith(("derricks_", "swinggirder")) or ob.name in HIDE_SCATTER or ob.name.startswith("pnoink_flag"):
+            if ob.name in ("fg_redlead_sh", "fg_dark_sh", "fg_metal_sh", "fg_timber_sh") or ob.name.startswith(("derricks_", "swinggirder")):
                 ob.visible_camera = False
+            if ob.name in HIDE_SCATTER or ob.name.startswith("pnoink_flag"):
+                ob.hide_render = True                                  # removed entirely (no cast shadow blobs either)
         self.cam.data.clip_end = 6000.0
         make_glow_and_fill(self.A)
         self.path = cam_path(self.A)
@@ -344,9 +381,21 @@ class Take(C.Take):
                 C.place(a, f, mk, scale=sc)
             d_m = self.path.state(g)[0] / CO.SC                                  # camera distance in metres
             p = self.path.prog(g)[0]
-            gk = clamp(self.path.state(g)[0] * 7.0 / 782.0, 0.0, 40.0) * (1.0 - smoother((p - 0.40) / 0.25))   # glow radius ~ 7 px on screen while far, gone well before the landing
+            gk = clamp(self.path.state(g)[0] * 12.0 / 782.0, 0.0, 70.0) * (1.0 - smoother((p - 0.40) / 0.25))   # glow radius ~ 7 px on screen while far, gone well before the landing
             self.A["bz_glow"].scale = (max(gk, 1e-3),) * 3
             self.A["bz_glow"].keyframe_insert("scale", frame=f)
+            fade = 1.0 - smoother((p - 0.40) / 0.25)
+            wsh = max(self.path.state(g)[0] * 3.0 / 782.0 * fade, 1e-3)          # a soft vertical light shaft ~3 px wide, ~90 px tall while far
+            hsh = max(self.path.state(g)[0] * 90.0 / 782.0 * fade, 1e-3)
+            self.A["bz_shaft"].scale = (wsh, wsh, hsh)
+            self.A["bz_shaft"].location = (self.A["bz_shaft"].location[0], self.A["bz_shaft"].location[1], self.A["marks"][MARK][2] + hsh * 0.5)
+            self.A["bz_shaft"].keyframe_insert("scale", frame=f)
+            self.A["bz_shaft"].keyframe_insert("location", frame=f)
+            lc = self.path.at(g)[0]
+            self.A["bz_up"].location = (lc[0], lc[1], lc[2] + 2.5)
+            self.A["bz_up"].data.energy = 9000.0 * smoother((g - 322) / 40.0)       # warm up-light into the deck undersides during the crane-up
+            self.A["bz_up"].keyframe_insert("location", frame=f)
+            self.A["bz_up"].data.keyframe_insert("energy", frame=f)
             self.cam.data.lens = self.path.lens(p)
             self.cam.data.shift_y = self.path.shift(p)
             self.cam.data.keyframe_insert("lens", frame=f)
