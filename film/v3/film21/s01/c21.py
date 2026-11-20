@@ -62,7 +62,7 @@ class Take(object):
         self.scene.frame_set(f)
         return self.actors[name].pose(f, pose, camera=self.cam)
 
-    def sprites_for(self, frames_by_actor):
+    def sprites_for(self, frames_by_actor, vivid=None):
         for name, frames in frames_by_actor.items():
             a = self.actors[name]
             if not frames: continue
@@ -70,7 +70,7 @@ class Take(object):
             for f, r in zip(frames, res): self.anch[(name, f)] = r["anchors"]
             for f in frames:                                   # pre-compensate K.grade's gamma so the cards keep their drawn colours
                 p = a.sprite_path(f); im = np.asarray(Image.open(p).convert("RGBA")).astype(np.float32) / 255
-                im[..., :3] = im[..., :3] ** (1.0 / (GAMMA * K.VIVID.get(self.preset, (1.4, 1.3))[0]))
+                vg = vivid(f) if vivid else K.VIVID.get(self.preset, (1.4, 1.3))[0]; im[..., :3] = im[..., :3] ** (1.0 / (GAMMA * vg))
                 Image.fromarray((im * 255 + 0.5).astype(np.uint8)).save(p)
             a._sig.clear()
             if a.image is not None: a.image.reload()
