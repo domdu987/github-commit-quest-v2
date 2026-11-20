@@ -44,20 +44,21 @@ CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GA, GZ, push=0.085, slide_px=35.0, rise_px=
                 snaps=[dict(g=SNAP, k=1.85, peak=2.4, shift=(0.50, -0.12)), dict(g=(246, 264), k=1.0, peak=1.3, shift=(-0.42, 0.0))])
 
 HIDE = ("deck_cannon_iron", "deck_carr_w", "deck_hatchw")           # render as black blobs in the FG (QA_TECH): kept out of frame
-LANT_OFF = (1.75, 0.28, 0.60)                     # lantern centre in the camera frame: forward, right, up (D)
+LANT_OFF = (1.75, 0.20, 0.62)                     # lantern centre in the camera frame: forward, right, up (D)
 CHART_POSE = cast19.STORY19["captain_peer_chart"][1]
 
 
 def pose_of(g):
     p = dict(CHART_POSE)
+    p["expr"] = "neutral"                                                 # round eyes: the pupils (gaze) read, the determined half-lids do not
     t = g / 30.0
     u = 0.5 + 0.5 * math.sin(2 * math.pi * t / 2.2)                     # slow peer back and forth
-    p["yaw"] = 1.05 + 0.06 * math.sin(2 * math.pi * t / 2.9)            # 3/4 toward the rail (screen-right), not at the lens
+    p["yaw"] = 1.15 + 0.05 * math.sin(2 * math.pi * t / 2.9)            # 3/4 toward the rail (screen-right), not at the lens
     p["lean"] = 6 + 2.5 * u + 3.0 * u_of(g, *SNAP) * (1 if g < SNAP[1] + 20 else 0)
     # head: up into the fog on "กลางทะเล"-ish beats, down at the chart between: eyes always OFF the lens
     look_up = 0.5 + 0.5 * math.sin(2 * math.pi * t / 2.2 + 1.6)
-    p["pitch"] = lerp(0.20, -0.20, look_up)
-    p["gaze"] = (lerp(0.9, 1.0, look_up), lerp(-0.7, 0.6, look_up))
+    p["pitch"] = lerp(0.25, -0.45, look_up)
+    p["gaze"] = (1.0, lerp(-1.0, 1.0, look_up))
     # chart in both hands in front of the chest (bent elbows, fingers on the card edge)
     bob = 0.03 * math.sin(2 * math.pi * t / 1.1)
     p["arm_r"] = dict(CHART_POSE["arm_r"], hand=(0.22 + bob, 0.82 + 0.03 * math.sin(2 * math.pi * t / 1.3 + 0.7)), bend=0.7)
@@ -70,7 +71,7 @@ def pose_of(g):
 def swing(g):
     """lantern swing about its rope top, in the CAMERA's frame: (about view axis, about the camera X) radians."""
     t = g / 30.0
-    return 0.06 * math.sin(2 * math.pi * t / 1.9 + 0.4) + 0.03 * math.sin(2 * math.pi * t / 0.7), 0.06 * math.sin(2 * math.pi * t / 2.7)
+    return 0.035 * math.sin(2 * math.pi * t / 1.9 + 0.4) + 0.03 * math.sin(2 * math.pi * t / 0.7), 0.06 * math.sin(2 * math.pi * t / 2.7)
 
 
 def ship_cam(g, f):
