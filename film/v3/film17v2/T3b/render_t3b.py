@@ -29,7 +29,7 @@ def clear_cast():
     for o in [o for o in bpy.data.objects if o.name.startswith(('c2_', 'back_hair_', 'back_coat_'))]: bpy.data.objects.remove(o, do_unlink=True)
     actors.clear_registry()
 RAMP_LO, RAMP_G0, RAMP_G1 = 0.4, 750, 800   # lights x0.4 through g750, easing to x1.0 at g800 (high bird's-eye views run luma 120-135, the low g800 view ~95)
-DN_G0, DN_G1, DN_HI = 825, 835, 0.8   # gate fix v2 (director item 2): lights x1.0 at g825 easing to x0.8 at g835, held to g856 (g835-849 ran 125-142)
+DN_G0, DN_G1, DN_HI = 825, 835, float(os.environ.get("DN_HI", 0.8))   # gate fix v2 (director item 2): lights x1.0 at g825 easing to x0.8 at g835, held to g856 (g835-849 ran 125-142)
 def ramp_f(g):
     up = RAMP_LO if g <= RAMP_G0 else 1.0 if g >= RAMP_G1 else RAMP_LO + (1 - RAMP_LO) * (g - RAMP_G0) / (RAMP_G1 - RAMP_G0)
     dn = 1.0 if g <= DN_G0 else DN_HI if g >= DN_G1 else 1.0 + (DN_HI - 1.0) * (g - DN_G0) / (DN_G1 - DN_G0)
