@@ -24,5 +24,5 @@ S02_ship_aerial_NOON       NOON       shade-hue(cast-shadow px) 210.1  median 19
 S03_ship_deck_NOON         NOON       shade-hue(cast-shadow px) 320.3  median 273.9  in 225-265: 11.9   cast  16.3% | magenta  2.44% (<=10) | CHECK
 S04_ship_deck_overhead     NOON       shade-hue(cast-shadow px) 285.2  median 245.6  in 225-265: 53.9   cast  31.3% | magenta  2.89% (<=10) | CHECK
 S05_ship_rail_NOON         NOON       shade-hue(cast-shadow px) 9.2    median 36.7   in 225-265: 10.1   cast  29.4% | magenta  3.55% (<=10) | CHECK
-S06_ship_rocks_STORM       STORM_DUSK shade-hue(cast-shadow px) 231.4  median 225.9  in 225-265: 48.8   cast  19.4% | magenta  3.71% (<=10) | OK
+S06_ship_rocks_STORM       STORM_DUSK shade-hue(cast-shadow px) 215.7  median 211.8  in 225-265: 17.8   cast  19.4% | magenta  0.77% (<=10) | CHECK
 S07_ship_coast_DAY         DAY        shade-hue(cast-shadow px) 205.2  median 184.9  in 225-265: 29.6   cast   1.0% | magenta  0.67% (<=10) | CHECK

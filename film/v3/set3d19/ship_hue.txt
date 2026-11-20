@@ -1,19 +1,19 @@
 SHIP hue: cast-shadow pixels from a sun-only render (K.measure_hue; real cast shadows: masts, sails, rails, hull on the water). target shade hue 225-265, magenta <= 10 %.
 ship_hero    NOON        shade hue 216.7  median 213.2  in-band 36.9 %  magenta 0.05 %  cast px 0.3 %  OUT
-ship_hero    DAY         shade hue 233.7  median 232.9  in-band 80.6 %  magenta 0.08 %  cast px 1.1 %  OK
-ship_hero    STORM_DUSK  shade hue 210.4  median 203.3  in-band 16.6 %  magenta 0.12 %  cast px 1.9 %  OUT
+ship_hero    DAY         shade hue 233.8  median 232.9  in-band 80.4 %  magenta 0.08 %  cast px 1.1 %  OK
+ship_hero    STORM_DUSK  shade hue 210.5  median 203.3  in-band 16.6 %  magenta 0.12 %  cast px 1.9 %  OUT
 ship_aerial  NOON        shade hue 210.1  median 197.6  in-band 19.2 %  magenta 0.02 %  cast px 0.1 %  OUT
 ship_aerial  DAY         shade hue 234.5  median 234.4  in-band 81.0 %  magenta 0.02 %  cast px 0.6 %  OK
 ship_aerial  STORM_DUSK  shade hue 213.8  median 210.4  in-band 6.0 %  magenta 0.03 %  cast px 2.6 %  OUT
 ship_deck    NOON        shade hue 320.3  median 273.9  in-band 11.9 %  magenta 2.44 %  cast px 16.3 %  OUT
 ship_deck    DAY         shade hue 325.2  median 278.1  in-band 9.3 %  magenta 2.42 %  cast px 16.3 %  OUT
-ship_deck    STORM_DUSK  shade hue 308.4  median 278.1  in-band 12.7 %  magenta 5.38 %  cast px 49.4 %  OUT
+ship_deck    STORM_DUSK  shade hue 217.9  median 214.6  in-band 15.1 %  magenta 4.22 %  cast px 49.4 %  OUT
 ship_rail    NOON        shade hue 9.2  median 36.7  in-band 10.1 %  magenta 3.55 %  cast px 29.4 %  OUT
 ship_rail    DAY         shade hue 10.1  median 36.7  in-band 9.7 %  magenta 3.59 %  cast px 29.4 %  OUT
-ship_rail    STORM_DUSK  shade hue 352.7  median 203.3  in-band 1.6 %  magenta 1.92 %  cast px 18.2 %  OUT
-ship_rocks   NOON        shade hue 249.8  median 232.9  in-band 33.5 %  magenta 2.57 %  cast px 22.8 %  OK
-ship_rocks   DAY         shade hue 234.6  median 231.5  in-band 47.2 %  magenta 2.43 %  cast px 32.0 %  OK
-ship_rocks   STORM_DUSK  shade hue 231.4  median 225.9  in-band 48.8 %  magenta 3.71 %  cast px 19.4 %  OK
+ship_rail    STORM_DUSK  shade hue 217.6  median 217.4  in-band 29.2 %  magenta 2.2 %  cast px 18.2 %  OUT
+ship_rocks   NOON        shade hue 300.2  median 261.2  in-band 31.7 %  magenta 7.61 %  cast px 22.8 %  OUT
+ship_rocks   DAY         shade hue 266.0  median 240.0  in-band 49.5 %  magenta 9.62 %  cast px 32.0 %  OUT
+ship_rocks   STORM_DUSK  shade hue 215.7  median 211.8  in-band 17.8 %  magenta 0.77 %  cast px 19.4 %  OUT
 ship_coast   NOON        shade hue 204.8  median 184.9  in-band 30.8 %  magenta 0.65 %  cast px 1.0 %  OUT
 ship_coast   DAY         shade hue 205.2  median 184.9  in-band 29.6 %  magenta 0.67 %  cast px 1.0 %  OUT
 ship_coast   STORM_DUSK  shade hue 237.6  median 240.0  in-band 82.0 %  magenta 0.73 %  cast px 52.8 %  OK
