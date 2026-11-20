@@ -30,7 +30,7 @@ def keys():
         (1392, 'P_TOP'),
         (1422, (-14.0, -111.0, 109.0), (2.0, 66.0, 0.0), 22.0),
         (1446, (-52.0, -84.0, 46.0), (-82.0, -30.0, 2.0), 22.0),
-        (1464, (-84.0, -60.0, 12.0), (-86.0, -16.0, 2.5), 24.0),
+        (1464, (-77.0, -60.0, 13.0), (-86.0, -16.0, 2.5), 24.0),
         (1479, (-86.0, -34.0, 5.0), (-89.0, -10.0, 2.5), 26.0),
         (1495, cam3(CAM_M, 1.5), (float(lk_m[0]), float(lk_m[1]), zc + 2.7), 26.0),
         (1519, cam3(CAM_E, 1.55), (float(at(C, 1.0, 0.0)[0]), float(at(C, 1.0, 0.0)[1]), zc + 1.75), 26.0),
@@ -159,7 +159,7 @@ def main(quality, gs, samples):
             if o.name == 'crowd_banners': o.hide_render = g >= 1436
         for o in south_flags: o.hide_render = g >= 1426
         for o in bpy.data.objects:
-            if o.name.startswith('smoke_col'): o.hide_render = True
+            pass
         K.set_flow(g / 30.0); K.set_smoke(g / 30.0); K.set_flutter(g / 30.0)
         dt = T.render(g + 1, os.path.join(out, "g_%04d.png" % g))
         print("g", g, "%.1fs" % dt, "cam", [round(v, 1) for v in r['loc']], flush=True)
