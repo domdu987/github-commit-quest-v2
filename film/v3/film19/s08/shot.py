@@ -28,16 +28,17 @@ GS = list(range(G_FIRST, G_LAST + 1))
 G_QUOTE = C.cap_g("นาฬิกาเนี่ยนะ")                        # 637
 G_MOUTH0 = 623                                           # the grin / open mouth starts no earlier than g 619 (window 20.80 s = g 622 +-4)
 G_LAUGH0 = C.cap_g("หัวเราะลั่น") - 9                      # laugh starts building before the caption
-SNAP = (G_QUOTE - 4, G_QUOTE + 14)
+SNAP = (G_QUOTE - 3, G_QUOTE + 10)
 BLINKS = [560, 584]
 
 YAW0 = float(os.environ.get("YAW0", "1.35"))
 LIGHT, PRESET, FINAL_SPP, PPD = "DAY", "hall_low", 8, 320
 
-SUBJ = Vector((-3.24, 3.24, 2.62))                        # chest/neck of the mocker at his mark
-CAM_LOC0 = (-3.30, -1.85, 1.15)
-CAM = C.CamPath(CAM_LOC0, tuple(SUBJ), G_FIRST, G_LAST, push=0.07, slide_px=-45.0, rise_px=0.0, arc_deg_s=11.5, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.3, peak=2.5, shift=(0.80, -0.25))])
+MOVE = Vector((-0.9, 0.0, 0.0))                              # director option (2): his mark and the whole camera rig move 0.9 D left, away from the Board table (room for the push)
+SUBJ = Vector((-3.24, 3.24, 2.62)) + MOVE                        # chest/neck of the mocker at his mark
+CAM_LOC0 = tuple(Vector((-3.30, -1.85, 1.15)) + MOVE)
+CAM = C.CamPath(CAM_LOC0, tuple(SUBJ), G_FIRST, G_LAST, push=0.08, slide_px=-45.0, rise_px=0.0, arc_deg_s=18.0, decay=0.15,
+                snaps=[dict(g=SNAP, k=1.4, peak=2.8, shift=(1.0, -0.25))])
 
 ST = cast19.STORY19
 IDLE, LAUGH, POINT = ST["astro_idle"][1], ST["astro_belly_laugh"][1], ST["astro_mock_point"][1]
@@ -124,7 +125,7 @@ class Take(C.Take):
         self.ast = self.actors["ast"] = C.make_actor("ast", "astro19", os.path.join(WORK, "sprites"), contact=True, cam=self.cam)
 
     def pose(self, gs):
-        mark = Vector(self.A["marks"]["mocker_telescope"])
+        mark = Vector(self.A["marks"]["mocker_telescope"]) + MOVE
         for g in gs:
             f = bf(g)
             self.key_cam(f, *CAM.at(g))
