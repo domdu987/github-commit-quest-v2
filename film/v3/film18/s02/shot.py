@@ -13,13 +13,18 @@ def tweak(stage, A=None):
     elif stage == 'post':
         C.hide('baskets', 'props', 'digtools', 'straw', 'rainstreaks', 'wallpools', 'patches')
         import bpy
+        lane_mat = C.STATE['objects']['lane'].data.materials[0]
+        me = bpy.data.meshes.new('c18_gap'); me.from_pydata([(-52, 2.8, 0.05), (24, 2.8, 0.05), (24, 9.0, 0.05), (-52, 9.0, 0.05)], [], [(0, 1, 2, 3)]); me.update()
+        uv = me.uv_layers.new(name='UVMap')
+        for i_, c_ in enumerate(((0, 0), (9, 0), (9, 1), (0, 1))): uv.data[i_].uv = c_
+        me.materials.append(lane_mat); go = bpy.data.objects.new('c18_gap', me); C.STATE['SET'].objects.link(go); go.visible_shadow = False
         for k, (lx, ly) in enumerate(((-28.0, 6.0), (-18.0, 6.0), (-8.0, 6.0), (2.0, 6.0))):
             d = bpy.data.lights.new('c18_fill%d' % k, 'POINT'); d.color = (1.0, 0.62, 0.30); d.energy = 5200.0; d.shadow_soft_size = 2.0; d.use_shadow = False
             lo = bpy.data.objects.new('c18_fill%d' % k, d); bpy.context.scene.collection.objects.link(lo); lo.location = (lx, ly, 3.2); lo.visible_camera = False
 def actors(f, cam, ctx):
     t = (f - G0) / 30.0
     import atexit
-    C.person_card('tiandan', 'tiandan_tie_blade', (-29.0, 12.3, 0), cam, 0, bob=C.hop(f, 0, 0.04, 2.0), roll=2.5 * math.sin(2 * math.pi * 1.5 * t), mods=dict(gaze=(0.8, -0.4), yaw=0.5))
+    C.person_card('tiandan', 'tiandan_tie_blade', (-29.0, 12.3 - 2.4 * min(1.0, max(0.0, (f - 125) / 35.0)), 0), cam, 0, bob=C.hop(f, 0, 0.04, 2.0), roll=2.5 * math.sin(2 * math.pi * 1.5 * t), mods=dict(gaze=(0.8, -0.4), yaw=0.5))
     C.ox_card(SHOT, 0, (-26.6, 11.4, 0), 180, 1.0, cam, view='front_three_quarter', gait='stand', bob=C.hop(f, 1, 0.03, 0.8), roll=C.sway(f, 1, 1.6, 0.9))
     # dark, lit carriers in the lower third (cast props: baskets of earth), walking with the herd
     loc, look, _ = CAM((f - G0) / float(G1 - 1 - G0)); fw = look - loc; fw.z = 0; fw.normalize(); rt = V((fw.y, -fw.x, 0.0)); pw = loc + fw * (4.8 - 0.012 * (f - G0)) - rt * 0.3
@@ -27,9 +32,12 @@ def actors(f, cam, ctx):
     for i, m in enumerate(HERD):
         x, y, z, yaw, sc = m
         xx = x - 0.9 * t
+        dd = math.hypot(xx - cam.x, y - cam.y)
+        if dd > 40.0: continue
+        kk = min(2.4, 0.9 + 0.07 * max(0.0, dd - 10.0))
         near = math.hypot(x + 31, y - 11.4) < 24
         ph = int((f * 0.42 + i * 3) % 8)
-        C.ox_card(SHOT, i + 1, (xx, y, 0), 180, sc, cam, view='three_quarter', gait='walk', shadow=False, tint=(0.98, 0.84, 0.78), k=0.9, pitch_bb=0.95, phase=ph, bob=0.04 * abs(math.sin(2 * math.pi * (f * 0.42 + i) / 8)))
+        C.ox_card(SHOT, i + 1, (xx, y, 0), 180, sc, cam, view='three_quarter', gait='walk', shadow=False, tint=(1.0, 0.86, 0.78), k=kk, pitch_bb=0.95, phase=ph, bob=0.04 * abs(math.sin(2 * math.pi * (f * 0.42 + i) / 8)))
 
 if __name__ == '__main__':
     C.run(SHOT, actors, G0, G1, HB, HA, quality=sys.argv[1] if len(sys.argv) > 1 else None, tweak=tweak, shk=0.012, cam_fn=CAM)
