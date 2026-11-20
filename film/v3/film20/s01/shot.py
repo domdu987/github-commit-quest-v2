@@ -99,9 +99,9 @@ def cam_path(A):
                      snaps=[dict(g=SNAP, k=SNAP_K, peak=1.7, shift=(-0.25, 0.0), tilt=SNAP_TILT, arc=SNAP_ARC)])
 
 
-LAMP_AT = (1.2, -1.3)                           # lamp-post (m ahead, m right) of the lens at FG_ANCHOR: screen x <= 143 all shot,
-                                               # 3.1 D (1.6 m) from the lens at its closest -- nearer, it crosses his face
-BENCH_AT = (2.0, 1.1)                           # bench (m ahead, m right): lower right, x >= 608, >= 4.3 D from the lens
+LAMP_AT = (1.2, -1.3)                           # lamp-post (m ahead, m right) of the lens at FG_ANCHOR: left of his body all shot,
+                                               # 2.7 D (1.4 m) from the lens at its closest -- nearer, it crosses his face
+BENCH_AT = (2.0, 1.1)                           # bench (m ahead, m right): lower right, x >= 593, >= 4.3 D from the lens
 
 
 def _ground_basis(loc, look):
