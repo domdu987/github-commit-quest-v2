@@ -22,8 +22,8 @@ def yc(g): return -33.0 + V * (g - G0) / 30.0                # y of the cast pai
 KEYS = [(418, (7.5, 8.0, 27.0), (-2.0, -22.0, 3.0), 22.0),
         (448, (6.5, -14.0, 16.0), (-1.5, -29.0, 3.2), 22.0),
         (482, (5.6, -37.5, 6.0), (-1.2, -31.0, 3.6), 22.0),
-        (516, (4.9, yc(516) - 6.0, 4.1), (-1.5, yc(516) + 0.4, 3.7), 22.0),
-        (560, (4.9, yc(560) - 5.2, 4.1), (-1.5, yc(560) + 0.4, 3.7), 22.0)]
+        (516, (4.9, yc(516) - 6.0, 4.2), (-1.5, yc(516) + 0.4, 4.45), 22.0),
+        (560, (4.7, yc(560) - 5.0, 4.15), (-1.5, yc(560) + 0.4, 4.55), 22.0)]
 def cam_at(g):
     r = K.cam_path(None, KEYS, g)
     loc, look = Vector(r["loc"]), Vector(r["look"])
@@ -49,7 +49,7 @@ def pose(g, who):
     if who == "near":
         if g >= G_FULL - 1:
             u = ease((g - (G_FULL - 1)) / 8.0)
-            p.update(fx=["sweat"], pitch=0.1, squash=(lerp(1.0, 0.84, u), lerp(1.0, 1.03, u)), lean=-6 * u + 1.0 * math.sin(g * 0.8) * u)
+            p.update(fx=["sweat"], pitch=0.1, squash=(lerp(1.0, 0.74, u) + 0.03 * math.sin(g * 0.9) * u, lerp(1.0, 1.05, u)), lean=-9 * u + 1.2 * math.sin(g * 0.8) * u)
         else:
             p["squash"] = (1.0 + 0.012 * math.sin(g * 0.6), 1.0)
     elif g >= G_FULL + 3:
@@ -63,10 +63,11 @@ class Take(object):
         rs = np.random.RandomState(4); B = K.Batch(85)
         for i in range(14):                                   # the marching 3D column ahead of the cast pair (the pair itself is the last rank)
             pair, side = divmod(i, 2); yy = -33.0 + 6.0 + 5.2 * pair; x = (-0.62, 0.62)[side]
-            m = K.KNIGHT_MATS[(pair * 2 + side) % 5]
+            ENG = [m_ for m_ in K.KNIGHT_MATS if m_[0] != 't_blue']; m = ENG[(pair * 2 + side) % len(ENG)]       # English = crimson / gold / cream only (blue = Scots)
             K.horse(B, (x, yy, K.DECK_Z), 90.0, coat=['horse', 'horse_dk', 'horse'][rs.randint(0, 3)], trap=m[0], trim=m[1], tint=0.85 + 0.3 * rs.rand(), rider=(m[0],))
         self.col = B.finalize('troops_bridge')
         self.cam = bpy.context.scene.camera; self.cam.data.dof.use_dof = False
+        C.hide_prefix(['smoke_col'])                          # the grey blades on the horizon are the camp smoke columns (set banner bug): hidden until the set fix
         self.actors = {"near": C.make_actor("ka", "knight_a_mtd", os.path.join(TMP, "sprites")), "far": C.make_actor("kb", "knight_b_mtd", os.path.join(TMP, "sprites"))}
 
     def key(self, gs):

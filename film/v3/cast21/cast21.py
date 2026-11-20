@@ -783,10 +783,10 @@ def _norm(C, pose):
 _BOOT = dict(color="#3a2c22", cuff="#4a3a2c", h=0.20, toe=0.14)
 GREAT = dict(light="#e4e8ee", base="#9aa4b0", dark="#5a6270", shine="#ffffff")
 GREAT_RED = dict(GREAT, plume="#b3262c")
-GREAT_BLUE = dict(GREAT, plume="#2a4fa0")
+GREAT_BLUE = dict(GREAT, plume="#e0b030")   # 2026-11-20: English = crimson/gold only (blue = Scots)
 KETTLE = dict(light="#c8ccd2", base="#7c8692", dark="#464e58", shine="#f0f2f4")
 IRONCAP = dict(light="#b8bcc0", base="#7c8288", dark="#464c52", shine="#e8eaec")
-ENGLISH_RED, ENGLISH_BLUE = "#b3262c", "#2a4fa0"
+ENGLISH_RED, ENGLISH_BLUE = "#b3262c", "#8e1c22"   # ENGLISH_BLUE is now a dark crimson (name kept for compatibility)
 
 
 def _knight(seed, build, tw, th, leg, shoulder, sur, helm, hair, skin_cheek, beard=None, moustache=False, limb=0.062):
@@ -808,8 +808,8 @@ def _knight(seed, build, tw, th, leg, shoulder, sur, helm, hair, skin_cheek, bea
 
 
 SUR_LION = dict(pattern="lion", colors=dict(base=ENGLISH_RED, alt=GOLD["base"], trim=GOLD["base"], neck="#5d6672", belt="#2a1c18"))
-SUR_CHEV = dict(pattern="chevron", colors=dict(base=ENGLISH_BLUE, alt="#f2eee4", trim="#f2eee4", neck="#5d6672", belt="#2a1c18"))
-SUR_CHEQ = dict(pattern="chequy", tabard_w=0.92, colors=dict(base="#2f4f98", alt="#e8b52e", trim="#e8b52e", neck="#5d6672", belt="#2a1c18"))
+SUR_CHEV = dict(pattern="chevron", colors=dict(base=ENGLISH_BLUE, alt="#e0b030", trim="#e0b030", neck="#5d6672", belt="#2a1c18"))
+SUR_CHEQ = dict(pattern="chequy", tabard_w=0.92, colors=dict(base="#8e1c22", alt="#e8b52e", trim="#e8b52e", neck="#5d6672", belt="#2a1c18"))
 
 NEW_CAST21 = {
     # William Cressingham, the treasurer: stout, ruddy, clean-shaven double chin, crimson robe with gold trim, fur-trimmed cap,
@@ -864,7 +864,7 @@ def _footman(seed, build, tw, th, leg, shoulder, gamb, hat, hair, cheeks, mousta
     return d
 
 
-GAMBS = ("#a4482f", "#b8862e", "#3f5a8a", "#7a4a6a", "#6a6a3a")     # russet, ochre, indigo, plum, olive: mid-dark, none equals the teal
+GAMBS = ("#a4482f", "#b8862e", "#9a2a2a", "#7a2a2a", "#6a6a3a")   # 2026-11-20: indigo/plum -> crimsons (blue = Scots only)     # russet, ochre, indigo, plum, olive: mid-dark, none equals the teal
 NEW_CAST21.update({
     "footman_a": _footman(21.5, "regular", 0.92, 1.00, 1.18, (0.34, 0.47), GAMBS[0], KETTLE, dict(color="#6a4a2a", front=0.08, grow=0.18), "#e8907a",
                           moustache="bushy", limb=0.064),
@@ -894,7 +894,7 @@ def _scot(seed, build, tw, th, leg, shoulder, tunic, hat, hair, cheeks, moustach
 
 
 BARE = dict(light="#000000", base="#000000", dark="#000000")
-TUNICS = dict(brown="#7a5230", ochre="#b0842c", moss="#5e6b32", red="#a24f48")
+TUNICS = dict(brown="#2c4f9a", ochre="#3a66b0", moss="#24407e", red="#3a5aa0")   # 2026-11-20: Scots = saltire BLUE family (keys kept); English = crimson/gold
 NEW_CAST21.update({
     # Wallace: tall, strong, long brown hair, short beard, mail shirt over a dark-green tunic, a long sword on his back
     "wallace": dict(
@@ -1219,7 +1219,7 @@ def horse_pose(phase=0.0, mode="walk", cap="red", **kw):
 HORSE_KEYS = ("horse",)
 MOUNTED = {"%s_mtd" % n: n for n in ("knight_a", "knight_a_open", "knight_b", "knight_b_great", "surrey", "moray")}
 SPECIAL21 = HORSE_KEYS + ("helmet_float",) + tuple(MOUNTED)
-DEFAULT_CAP = {"knight_a": "red", "knight_a_open": "red", "knight_b": "blue", "knight_b_great": "blue", "surrey": "gold", "moray": "plain"}
+DEFAULT_CAP = {"knight_a": "red", "knight_a_open": "red", "knight_b": "gold", "knight_b_great": "gold", "surrey": "gold", "moray": "plain"}
 RIDER_KEYS = ("gait", "mode21", "horse21", "ride21")
 
 
