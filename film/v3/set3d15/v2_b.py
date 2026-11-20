@@ -146,14 +146,24 @@ def mat_beam(name, color=(1.0, 0.95, 0.82), k=2.2, power=2.2, gain=0.55, fade=0.
     key = 'E3|' + name
     if key in S.MATS: return S.MATS[key]
     m = bpy.data.materials.new(key); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; Lk = nt.links.new
-    out = N('ShaderNodeOutputMaterial'); lw = N('ShaderNodeLayerWeight'); lw.inputs['Blend'].default_value = blend
-    core = _math(nt, 'POWER', _math(nt, 'SUBTRACT', 1.0, lw.outputs['Facing']), power)
+    out = N('ShaderNodeOutputMaterial')
     tc = N('ShaderNodeTexCoord'); sp = N('ShaderNodeSeparateXYZ'); Lk(tc.outputs['Generated'], sp.inputs[0])
+    core = _math(nt, 'POWER', _math(nt, 'MAXIMUM', _math(nt, 'SUBTRACT', 1.0, _math(nt, 'ABSOLUTE', _math(nt, 'SUBTRACT', _math(nt, 'MULTIPLY', sp.outputs['X'], 2.0), 1.0))), 0.0), power)
     along = _math(nt, 'POWER', _math(nt, 'MAXIMUM', _math(nt, 'SUBTRACT', 1.0, _math(nt, 'DIVIDE', sp.outputs['Z'], fade)), 0.0), 0.8); ramp = _math(nt, 'MINIMUM', _math(nt, 'MULTIPLY', sp.outputs['Z'], 12.0), 1.0)
     alpha = _math(nt, 'MINIMUM', _math(nt, 'MULTIPLY', _math(nt, 'MULTIPLY', _math(nt, 'MULTIPLY', core, along), ramp), gain), 1.0)
     em = N('ShaderNodeEmission'); em.inputs['Color'].default_value = (*color, 1.0); em.inputs['Strength'].default_value = k
     tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader'); Lk(alpha, mx.inputs[0]); Lk(tr.outputs[0], mx.inputs[1]); Lk(em.outputs[0], mx.inputs[2]); Lk(mx.outputs[0], out.inputs['Surface'])
     m.cycles.emission_sampling = 'NONE'; S.MATS[key] = m; return m
+
+def beam_strip(name, mt, Ln, r0, r1, loc, rot):
+    """ONE camera-facing trapezoid ribbon along the beam axis (local Z): a single transparent hit per ray (the old double-sided cones ate the transparent bounces and cost 100 s per frame).
+    A LOCKED_TRACK constraint (lock Z) turns it to face the camera; bind_beams(cam) sets the target."""
+    V = [(-r0, 0, 0), (r0, 0, 0), (r1, 0, Ln), (-r1, 0, Ln)]
+    ob = mesh_obj(name, V, [[0, 1, 2, 3]], mt, uv=[(0, 0), (1, 0), (1, 1), (0, 1)]); ob.location = loc; ob.rotation_euler = rot; ob.visible_shadow = False
+    c = ob.constraints.new('LOCKED_TRACK'); c.track_axis = 'TRACK_NEGATIVE_Y'; c.lock_axis = 'LOCK_Z'; STATE.setdefault('beam_objs', []).append(ob); return ob
+
+def bind_beams(cam):
+    for o in STATE.get('beam_objs', []): o.constraints[0].target = cam
 
 def mat_glow(name, color, k=3.0, power=3.0, gain=1.0):
     """soft spherical glow: alpha = (1 - facing)^power"""
@@ -385,7 +395,7 @@ def build_rim(P, M, day):
 EXTRA_TOWERS = [200, 245, 295, 340]
 def build_beams(P, M, day):
     if day: return
-    kb = float(P.get('beam_k', 1.0)); bm = mat_beam('beam', (1.0, 0.95, 0.80), 2.2 * kb, 2.0, 0.34, 0.72, 0.45); glow = mat_glow('lamp_glow', (1.0, 0.92, 0.7), 4.0, 2.6, 1.0)
+    kb = float(P.get('beam_k', 1.0)); bm = mat_beam('beam', (1.0, 0.95, 0.80), 2.6 * kb, 1.6, 0.85, 0.8, 0.45); glow = mat_glow('lamp_glow', (1.0, 0.92, 0.7), 4.0, 2.6, 1.0)
     tw = list(P['towers']) + EXTRA_TOWERS; H_ = 38.0
     mb = S.MB('flood2')
     for tdeg in EXTRA_TOWERS:                          # same tower as set15_b, for the 4 extra positions
@@ -403,10 +413,7 @@ def build_beams(P, M, day):
     for tdeg in tw:
         u = math.radians(tdeg); x, y = ell(AO + 9, BO + 9, u); head = Vector((x, y, H_ + 2.0)); tgt = Vector((3.0 * math.cos(u) * 0.6, 12.0 + 2.0 * math.sin(u), 0.0))
         d = tgt - head; Ln = d.length * 1.12
-        for off, r0, r1, k_ in ((0.0, 1.3, 6.0, 1.0),):
-            V = [(r0 * math.cos(2 * math.pi * i / n), r0 * math.sin(2 * math.pi * i / n), 0.0) for i in range(n)] + [(r1 * math.cos(2 * math.pi * i / n), r1 * math.sin(2 * math.pi * i / n), Ln) for i in range(n)]
-            Fc = [(i, (i + 1) % n, n + (i + 1) % n, n + i) for i in range(n)]
-            ob = mesh_obj('beam%d' % tdeg, V, Fc, bm); ob.location = head; ob.rotation_euler = d.to_track_quat('Z', 'Y').to_euler(); ob.visible_shadow = False
+        beam_strip('beam%d' % tdeg, bm, Ln, 1.6, 8.0, head, d.to_track_quat('Z', 'Y').to_euler())
         # lamp flare
         me = bpy.data.meshes.new('flare'); mbm = S.MB('flare'); mbm.ell(glow, (0, 0, 0), (3.6, 3.6, 3.6), (14, 8)); o = L.fin(mbm, cast=False)[0]; o.location = head + Vector((0, 0, 0))
     # halo over the torch
@@ -415,8 +422,7 @@ def build_beams(P, M, day):
     gm2 = mat_glow('torch_glow2', (1.0, 0.8, 0.4), 4.0, 4.0, 0.7); mbm = S.MB('torchglow2'); mbm.ell(gm2, (0, 0, 0), (2.4, 2.4, 3.4), (14, 8)); o = L.fin(mbm, cast=False)[0]; o.location = (tx, ty, tz - 1.0)
     # vertical warm column above the torch (smoke-lit heat shaft)
     cm_ = mat_beam('torch_col', (1.0, 0.7, 0.3), 1.2, 2.0, 0.10, 1.0, 0.4)
-    V = [(1.6 * math.cos(2 * math.pi * i / 20), 1.6 * math.sin(2 * math.pi * i / 20), 0.0) for i in range(20)] + [(3.5 * math.cos(2 * math.pi * i / 20), 3.5 * math.sin(2 * math.pi * i / 20), 55.0) for i in range(20)]
-    Fc = [(i, (i + 1) % 20, 20 + (i + 1) % 20, 20 + i) for i in range(20)]; ob = mesh_obj('torch_col', V, Fc, cm_); ob.location = (tx, ty, tz - 1.0); ob.visible_shadow = False
+    beam_strip('torch_col', cm_, 55.0, 1.6, 3.5, (tx, ty, tz - 1.0), (0.0, 0.0, 0.0))
 
 def build_sparkles(P, day, n=3200):
     if day: return
@@ -535,7 +541,7 @@ def tune_crowd(P):
             v = n1.inputs[7].default_value; n1.inputs[7].default_value = (min(v[0] * k, 0.9), min(v[1] * k, 0.9), min(v[2] * k, 0.95), 1.0)
         if n4 is not None: n4.inputs[2].default_value = n4.inputs[2].default_value * g
 
-def build(light='NIGHT', city=True, sparkles=True, dress=True, extent=820.0):
+def build(light='NIGHT', city=True, sparkles=True, dress=True, extent=820.0, fast=False):
     """F.build('B', light) + the v2 extras. light = 'NIGHT' | 'TENSE' | 'DAY72' (| the set15 names EVE / DAY / TENSE keep v1 look)."""
     lk = {'TENSE': 'TENSE2'}.get(light, light)
     A = F.build('B', lk, dress=dress); P = STATE['P']; M = STATE['M']; day = bool(P.get('day', False)); sc = bpy.context.scene
@@ -544,16 +550,17 @@ def build(light='NIGHT', city=True, sparkles=True, dress=True, extent=820.0):
     if lawn is not None and lk in ('NIGHT', 'TENSE2', 'DAY72'): lawn.scale = (0.28, 0.28, 1.0)
     if lk in ('NIGHT', 'TENSE2', 'DAY72'):
         build_rim(P, M, day); build_jump_extras(P, M, day); build_podium_extras(P, M, day); build_mountains(P, day)
-        if city: build_city(P, M, day, extent)
+        if city and not fast: build_city(P, M, day, extent)
         build_beams(P, M, day)
-        if sparkles: build_sparkles(P, day)
+        if sparkles: build_sparkles(P, day, n=900 if fast else 3200)
     w = sc.world
     if w and w.node_tree:
         for nd in w.node_tree.nodes:
             if nd.bl_idname == 'ShaderNodeMapRange' and abs(nd.inputs['From Min'].default_value - 0.72) < 1e-6: nd.inputs['From Min'].default_value = 0.56
     for ob in bpy.data.cameras: ob.clip_end = 20000.0
+    sc.cycles.transparent_max_bounces = 12
     return A
 
 def make_camera_m(loc_m, look_m, lens=22.0, roll=0.0, name='cam'):
     """camera from metre coordinates (the v2 convention for far views); far clip 20 km"""
-    ob = F.make_camera(F.cam_from(M2D(loc_m), M2D(look_m), lens=lens, roll=roll), name); ob.data.clip_end = 20000.0; ob.data.clip_start = 0.1; return ob
+    ob = F.make_camera(F.cam_from(M2D(loc_m), M2D(look_m), lens=lens, roll=roll), name); ob.data.clip_end = 20000.0; ob.data.clip_start = 0.1; bind_beams(ob); return ob

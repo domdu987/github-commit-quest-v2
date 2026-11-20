@@ -228,8 +228,9 @@ def spot_pool(xy, r=4.0, k=1.2, color=(1.0, 0.95, 0.8)):
     V, Fc, UV = B2.quad_uv((x - r, y - r, 0.07), (x + r, y - r, 0.07), (x + r, y + r, 0.07), (x - r, y + r, 0.07)); return B2.mesh_obj('hero_pool', V, [Fc], m, uv=UV)
 
 # ============================================================================= stills
-def _base(light, q, bar=None, exposure=None, **kw):
-    A = B2.build(light, **kw); sc = bpy.context.scene; F.setup_render(sc, q); CT.hide_placeholders(); GROUND_LOG.clear()
+FAST = os.environ.get('V2B_FAST', '1') == '1'     # pit / stand stills: no city, 900 sparkles, 6 transparent bounces (far views keep everything)
+def _base(light, q, bar=None, exposure=None, fast=None, **kw):
+    A = B2.build(light, fast=(FAST if fast is None else fast), **kw); sc = bpy.context.scene; F.setup_render(sc, q); CT.hide_placeholders(); GROUND_LOG.clear()
     if bar is not None: F.set_bar_height(bar)
     if exposure is not None: sc.view_settings.exposure += exposure
     return A, sc
@@ -248,13 +249,13 @@ def _photogs(cam, pts, flash=False):
         card('ph%d' % i, 'photographer', cast15.pose_for('photog_flash' if (flash and i % 2 == 0) else 'photog_ready', 'photographer'), (x, y), cam, ppd=112, mirror=(x > 0), shadow=(1.3, 0.5))
 
 def bz_start(q):
-    A, sc = _base('NIGHT', q); t = BZ_T0; loc, look, lens = bigzoom2(t); cam = B2.make_camera_m(loc, look, lens=lens); sc.frame_set(int(round(t * FPS))); cm = loc
+    A, sc = _base('NIGHT', q, fast=False); t = BZ_T0; loc, look, lens = bigzoom2(t); cam = B2.make_camera_m(loc, look, lens=lens); sc.frame_set(int(round(t * FPS))); cm = loc
     spot_pool(DICK_B[:2], 5.0, 1.0)
     card('dick', 'dick_olympic', cast15.pose_for('stand', 'dick_olympic'), DICK_B[:2], cm, ppd=96, shadow=(1.5, 0.5))
     _officials(cm); return cam, 'BIGZOOM 2 start 31.0 s: bird eye over the city, Dick at the runway (about 4 px)'
 
 def bz_mid(q):
-    A, sc = _base('NIGHT', q); t = 33.2; loc, look, lens = bigzoom2(t); cam = B2.make_camera_m(loc, look, lens=lens); sc.frame_set(int(round(t * FPS))); cm = loc
+    A, sc = _base('NIGHT', q, fast=False); t = 33.2; loc, look, lens = bigzoom2(t); cam = B2.make_camera_m(loc, look, lens=lens); sc.frame_set(int(round(t * FPS))); cm = loc
     spot_pool(DICK_B[:2], 3.5, 1.0)
     card('dick', 'dick_olympic', cast15.pose_for('stand', 'dick_olympic'), DICK_B[:2], cm, ppd=96, shadow=(1.5, 0.5)); _officials(cm)
     _photogs(cm, [(-8.0, 19.0), (-11.0, 19.6), (12.0, 22.0)]); return cam, 'BIGZOOM 2 mid 33.2 s: through the beams over the crowd'
