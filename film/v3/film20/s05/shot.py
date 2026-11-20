@@ -73,7 +73,8 @@ class LegPath(C.CamPath):
         s = C.snap_u(g, SNAP[0], SNAP[1], 1.7)
         loc += fwd * (0.8 * s)                           # a little extra push in the snap
         ang = math.radians(self.pitch(g))
-        hy = Matrix.Rotation(math.radians(YAW), 3, 'Z') @ self.h
+        tt = (g - GF) / float(G_LAST - GF)
+        hy = Matrix.Rotation(math.radians(YAW - 24.0 * tt), 3, 'Z') @ self.h      # the aim also pans right (parallax on the pier / scaffold)
         aim = hy * math.cos(ang) + Vector((0, 0, math.sin(ang)))
         return loc, loc + aim * 20.0
 
