@@ -22,3 +22,5 @@ Numbers now: sat 0.71, vivid 76 %, luma 91, magenta 0 %, motion median 8.4 / p90
 coach-in-stands: closer camera, 3D crowd lifted, ~600 crowd cards on every tread, coach pool of light, press box hidden, black void filled in post.py; grey slab props near the run-up removed; hurdle "cloth" slab removed.
 ## Differences from plan
 Dick rocks under the bar only 35.3-36.6 s; the run starts 37.1 so the bar falls on 38.0 / 39.2. Two masked swaps (official walking across the lens) instead of a continuous camera for the attempt change. Bar 2.46 m in the low shot, 2.24 m for the jumps. Faces: only the close-up exceeds 35 %? no: close-up face ~25 %.
+## Round 4
+Hush g1273-1337 re-rendered: removed the wooden stake at (5.5, 9.48) and the photographer card ph1 behind Dick. The thin dark line seen at g1300-1337 is, as far as I could tell, Dick's own dark lower leg in the rock pose: hiding every scene mesh one at a time changed nothing at that pixel; only Dick's and the photographer's cards did. Still present at g1310/1334 after the fix. Bar-at-chin g1180 not re-checked.
