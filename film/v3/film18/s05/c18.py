@@ -11,7 +11,7 @@ HEIGHT = J.HEIGHT
 _SIDE = {}
 
 def ox_card(shot_key, i, pos, travel_deg, scale, camloc, state='dragon', view='three_quarter', gait='stand', phase=0, flame=-1, blades=True, theta=36,
-            bob=0.0, roll=0.0, tint=None, k=None, reed=0, coat=1.0, shadow=True):
+            bob=0.0, roll=0.0, tint=None, k=None, reed=0, coat=1.0, shadow=True, pitch_bb=0.0):
     """An ox card at pos; yaw ~theta deg off the camera axis, mirrored so the head points along travel_deg. (sgn, mirror) chosen once per ox so it never pops."""
     p = V(pos); sc = scale * 1.08
     dvec = V((math.cos(math.radians(travel_deg)), math.sin(math.radians(travel_deg)), 0.0)); c = camloc - p; c.z = 0.0; c.normalize()
@@ -30,7 +30,10 @@ def ox_card(shot_key, i, pos, travel_deg, scale, camloc, state='dragon', view='t
     yaw = math.degrees(math.atan2(n.x, -n.y))
     meta = card_ox(state, view, gait, phase, flame, blades, reed, coat)
     ob = R2.put_card(meta, (p.x, p.y, p.z + bob), yaw, sc, mirror=(fac < 0), name='ox%d' % i, tint=tint, k=k, sw=2.7 * sc, shadow=shadow)
-    if roll: ob.rotation_euler = (0, math.radians(roll), math.radians(yaw))
+    pitch = 0.0
+    if pitch_bb:
+        hd = math.hypot(camloc.x - p.x, camloc.y - p.y); pitch = -math.atan2(max(0.0, camloc.z - (p.z + 1.3)), max(0.5, hd)) * pitch_bb
+    if roll or pitch: ob.rotation_euler = (pitch, math.radians(roll), math.radians(yaw))
     return ob
 
 def card_ox(state, view, gait, phase, flame, blades, reed=0, coat=1.0):
@@ -167,3 +170,18 @@ def world_lantern(P, height=0.52, r=0.18, energy=700.0, sc=1.0):
     for ob in out:
         for c in ob.users_collection: pass
     return out
+
+
+def fg_rail(cam, y=-1.62, z=-1.6, w=3.4):
+    """Dark wooden fence rail with two posts and a small paper lantern across the bottom edge, parented to the camera (shows up when the lens goes wide)."""
+    import bpy as _b
+    wood = T.mat_emit('c18_rail', '#2c1c12', strength=0.5) if 'c18_rail' not in _b.data.materials else _b.data.materials['c18_rail']
+    paper = T.mat_emit('c18_paper2', '#ff8a2e', strength=3.5) if 'c18_paper2' not in _b.data.materials else _b.data.materials['c18_paper2']
+    def box(name, loc, sc, mat):
+        _b.ops.mesh.primitive_cube_add(size=1.0, location=(0, 0, 0)); ob = _b.context.active_object; ob.name = name; ob.scale = sc; ob.data.materials.append(mat); ob.visible_shadow = False
+        ob.parent = cam; ob.location = loc; ob.rotation_euler = (0, 0, 0); return ob
+    box('c18_rail_bar', (0, y, z), (w, 0.14, 0.1), wood); box('c18_rail_bar2', (0, y - 0.28, z), (w, 0.12, 0.1), wood)
+    for x in (-1.3, 0.2, 1.3): box('c18_rail_post%d' % int(x * 10), (x, y - 0.1, z), (0.11, 0.62, 0.11), wood)
+    box('c18_rail_lan', (1.3, y + 0.42, z), (0.2, 0.34, 0.2), paper); box('c18_rail_lan_cap', (1.3, y + 0.62, z), (0.24, 0.05, 0.24), wood)
+    d = _b.data.lights.new('c18_rail_light', 'POINT'); d.color = (1.0, 0.6, 0.25); d.energy = 160.0; d.shadow_soft_size = 0.3; d.use_shadow = False
+    lo = _b.data.objects.new('c18_rail_light', d); _b.context.scene.collection.objects.link(lo); lo.parent = cam; lo.location = (1.2, y + 0.5, z + 0.3); lo.visible_camera = False

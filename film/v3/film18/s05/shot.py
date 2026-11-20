@@ -1,10 +1,11 @@
 import sys, os, math
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c18 as C, jimo_shots as S
+from mathutils import Vector as V
 SHOT = 's05'; G0, G1, HB, HA = 384, 459, 8, 0
 HAND_G = 414                                   # the sash changes hands
 # real eased push (about 8 %/s) + a 1.3 D slide + ONE held punch-in (+15 %) on the hand-over
-CAM = C.cam_path(((-69.0, 17.7, 2.6), (-75.3, 21.8, 0.5), 24), ((-70.4, 18.7, 2.4), (-75.9, 23.0, 0.5), 24), punches=[(0.45, 0.06, 0.18)], slide=-0.6)
+CAM = C.cam_path(((-69.0, 17.7, 2.6), (-75.3, 21.8, -0.5), 24), ((-70.1, 18.5, 2.4), (-75.7, 22.4, 0.5), 24), punches=[(0.45, 0.06, 0.14)], slide=-0.5)
 def tweak(stage, A=None):
     if stage == 'pre':
         S.SHOTS[SHOT]['fg'] = None
@@ -19,7 +20,9 @@ def actors(f, cam, ctx):
     else: C.person_card('tiandan', 'tiandan_accept_sash', (-74.0, 21.9, 0), cam, 0, bob=C.hop(f, 0, 0.03, 1.4), roll=2.0 * math.sin(2 * math.pi * 0.9 * t), mods=dict(yaw=-0.3, gaze=(-0.6, 0.3)))
     C.person_card('townsfolk', 'woman_stand', (-75.0, 24.2, 0), cam, 2, bob=C.hop(f, 2, 0.03, 1.1), roll=C.sway(f, 2, 2.5, 0.8))
     C.person_card('child', 'child_stand', (-72.1, 24.5, 0), cam, 4, bob=C.hop(f, 4, 0.08, 2.4), roll=C.sway(f, 4, 3.0, 1.1))
-    C.person_card('child', 'child_carry_basket', (-71.9, 18.5, 0), cam, 5, h=1.5, bob=0.05 * abs(math.sin(2 * math.pi * 1.8 * t)), roll=C.sway(f, 5, 2, 0.9))
-    C.person_card('townsfolk', 'woman_carry_basket', (-71.0, 20.6, 0), cam, 6, h=2.4, bob=0.05 * abs(math.sin(2 * math.pi * 1.5 * t + 1)), roll=C.sway(f, 6, 2, 0.9), mirror=True)
+    loc, look, _ = CAM((f - G0) / float(G1 - 1 - G0)); fw = look - loc; fw.z = 0; fw.normalize(); rt = V((fw.y, -fw.x, 0.0))
+    p1 = loc + fw * 3.1 - rt * 1.0; p2 = loc + fw * 3.4 + rt * 1.75
+    C.person_card('child', 'child_carry_basket', (p1.x, p1.y, 0), cam, 5, h=1.5, bob=0.05 * abs(math.sin(2 * math.pi * 1.8 * t)), roll=C.sway(f, 5, 2, 0.9))
+    C.person_card('townsfolk', 'woman_carry_basket', (p2.x, p2.y, 0), cam, 6, h=1.6, bob=0.05 * abs(math.sin(2 * math.pi * 1.5 * t + 1)), roll=C.sway(f, 6, 2, 0.9), mirror=True)
 if __name__ == '__main__':
     C.run(SHOT, actors, G0, G1, HB, HA, quality=sys.argv[1] if len(sys.argv) > 1 else None, tweak=tweak, shk=0.016, cam_fn=CAM)
