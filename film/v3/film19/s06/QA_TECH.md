@@ -15,3 +15,8 @@ Re-checked at 6 fps + cuts g356/g466 +-3 (take g347-474). qa_auto PASS. No text,
 Earlier issues: 2 FIXED (astro_b present right of table, eyes wide), 3 FIXED for g347-377, 4 FIXED (head centre now ~ 480-560), 5 FIXED (table fills the lower frame), 6 mostly FIXED (eyes wide, glint; pupils on the bag in g397-422), 7 not verifiable at 6 fps (bag sits slightly lower at g392 than g387: acceptable), 8 note still true (g1=466 exclusive).
 1. g356-465 (whole shot): p90 10.81 vs target >= 12 (median 5.16 OK). Fix: make the g437-457 snap faster (x2.2 over 13 f) or add 60 px/s slide so p90 reaches 12.
 2. g447-466: end of the push crops both astronomers: astro (left) wig and shoulder cut by the left edge, astro_b (right) head about 40 % cut by the right edge from g452. Fix: end the push framed on the bag with both heads inside (stop at ~x1.5, or pan so the bag is centred) or tighten their marks toward the bag by 0.5 D.
+
+## Round 3: PASS
+Checked 6 fps + cuts g356/g466 +-3 (take g347-474), qa_auto PASS. No text, no black/magenta, no frozen, no blur. Mouths fixed expressions. Frame-diff (take.mkv, g357-465): median 7.70, p90 12.36: OK. Heads centre ~ 480-600, nothing at 880. Bag drop g378-387 and push on "สองหมื่นปอนด์" g447: OK. astro_b present on the right with wide eyes.
+Earlier issues: R2-1 p90 FIXED. R2-2 clipping at end of push: MOSTLY FIXED; both heads and faces inside through g465.
+Notes: (a) g463-465 astro19 outer wig lappet/sleeve touches the left edge (~230 rows cut at g464-465), astro_b wig tip touches right edge g457-463; ends on the cut, not noticeable at phone size; stop the push ~2 f earlier if re-rendered. (b) meta g1=466 exclusive.

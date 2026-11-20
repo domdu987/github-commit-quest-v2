@@ -7,3 +7,10 @@ Shot 4, SHIP ship_rocks STORM_DUSK, take g182-270 (handles 9+9; in side DIS 13),
 4. g202-217: lantern swings fully out of frame (absent for ~16 frames), so the planned FG lantern vanishes mid-shot; g261 it is clipped at the right edge. Fix: shorten the swing amplitude/offset the lantern 0.3 D toward centre so it stays in the frame.
 5. g182-207: dark trapezoid slab at the bottom of frame (y > 1150) reads as a black blob. Fix: light it or remove it.
 6. meta.json g1 = 262 is exclusive (plan g1 = 261). Note only.
+
+## Round 3: FAIL
+Checked 6 fps + cuts g262 +-3 (take g182-270), qa_auto PASS. No text, no black/magenta, no frozen, no blur. Mouth fixed. Heads in band. Frame-diff (take.mkv, g192-261): median 6.68, p90 12.80: OK.
+Earlier issues: R1-1 captain clipped at left edge: FIXED (inside, hat brim x>=60 at g255-270). R1-5 dark slab: now a small dark corner at bottom-left g182-207, NOTE. R1-2 NOT FIXED, R1-3 NOT FIXED, R1-4 PARTLY.
+1. g182-261 (R1-2, planned beat "peers into fog over a blank chart"): he still faces the lens with a grumpy stare, body square to camera; eyes never go to the chart or fog; the chart now shows coast lines and a red compass rose, not blank. Fix: turn the body 3/4 to the rail, head up into the fog on "กลางทะเล", chart blank (ticks only) held at chest height.
+2. g182-261 (R1-3): chart is held at arm's length, arm straight, horizontal at hip/chest side; attach reads weak. Fix: bend the elbow, fingers on the card edge, chart in front of the body.
+3. g205-217 (R1-4): FG lantern swings to the right frame edge and is ~70 % cut at g205-210 and still clipped at g215-217 (and g261-270 at the edge). Fix: shorten the swing / move its mark 0.3 D toward centre so it stays fully inside.

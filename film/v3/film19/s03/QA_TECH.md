@@ -14,3 +14,8 @@ Earlier issues: 1 FIXED (tripod is wood brown, no black wedge). 2 FIXED for astr
 1. g110-190 (whole shot): frame-diff median 2.97 (< 4), p90 10.99 (< 12). The slow push in g110-176 is near uniform (diff 2.4-3.5). Fix: stronger push/slide (9-10 %/s + >= 50 px/s) during g110-170 so the median reaches 4, and a faster snap (x2 over 13 f) so p90 reaches 12.
 2. g181-196: astro (white wig, right) is clipped by the right frame edge (wig lappet and sleeve cut at x = 720 for the whole snap end). Fix: shift the snap framing ~40 px left or reduce the final scale x2.0 -> x1.8 so both wigs stay inside.
 NOTES: g131-176 black curved arc (armillary/brass arm renders black) at the left, set material; chair back still overlaps astro's belly.
+
+## Round 3: PASS
+Checked 6 fps + cuts g110/g191 +-3 (take g101-199), qa_auto PASS (g110 "no visible change" = handle). No text, no black/magenta, no frozen, no pop, no blur. Mouths flat everywhere: OK. Heads centre in 450-760, nothing at 880. Frame-diff (take.mkv, 90x160 grey bilinear, g111-190): median 5.39, p90 14.79 (>= 4 / >= 10): OK.
+Earlier issues: R2-1 frame-diff FIXED; R2-2 right-wig clip: face and shoulders inside, only the outer wig lappet touches/crops at the right edge from g192 (g193-199, 300+ rows, dissolve handle frames) - NOTE; R2 astro_b left edge FIXED (inside from g187). R1 1-3 FIXED (tripod wood, astro_b at eyepiece, shadows faint), R1-5 chair overlap note.
+Notes: (a) g192-199 astro19 right wig lappet cut at x=720 in the out-handle (dissolve): shift snap end ~30 px left if the render is redone. (b) dark brass arc at left g131-176 (set). (c) meta g1=191 exclusive.

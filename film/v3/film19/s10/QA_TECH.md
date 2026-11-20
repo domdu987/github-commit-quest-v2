@@ -17,3 +17,11 @@ Earlier issues: 1 FIXED (Harrison now at the open door), 2 PARTLY (pointing arms
 2. g764-809: astro_b and astro_c (right) still overlap into one clump (two wigs, one face partly hidden). Fix: separate marks by >= 0.8 D.
 3. g829-849: the right-hand Board member is about 50 % clipped by the right frame edge (face half cut at g839-844). Fix: shift the slide end ~50 px left or put him at the mark 0.4 D inboard.
 NOTES: g854-871 a candle-like shape on the top of the painting sits right above Harrison's head (tangent): set note; Harrison's hat bow/ponytail fine; nobody on the rail issue n/a.
+
+## Round 3: FAIL
+Checked 6 fps + cuts g773/g862 +-3 (take g764-871), qa_auto PASS (soft g848/849/852 = planned snap streak). No text, no black/magenta, no frozen. Frame-diff (take.mkv, g774-861): median 4.90, p90 19.65: OK. Wide exempt from head band g764-843; Harrison close-up head centre ~ 560-600.
+Earlier issues: R2-1 NOT FIXED, R2-2 NOT FIXED, R2-3 NOT FIXED.
+1. g854-871 (R2-1, plan "Harrison with his tricorne"): still no tricorne; hands clasped/low, empty. QA.md now says "the tricorne is dropped", but the plan beat is not changed. Fix: tricorne in his raised hand, fingers over the brim, or the director amends the plan row in writing.
+2. g764-809 (R2-2): astro_b and astro_c (right) still overlap into one clump of two wigs, one face partly hidden. Fix: separate marks by >= 0.8 D.
+3. g792-846 (R2-3): Board members are cut by BOTH frame edges: the left astronomer's wig/face is ~half off the left edge from g~800 (160-290 rows cut at x=0, g798-846) and the right-hand pair is ~50 % off the right edge (g786-839). Fix: pull the slide end and the marks inboard so every face stays inside x 20-700 until the snap.
+Notes: contact shadows under Harrison faint; meta g1=862 exclusive.

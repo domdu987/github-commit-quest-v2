@@ -10,3 +10,8 @@ Issues:
 6. g1747-1800: Harrison feet on the dark navy carpet have no readable contact shadow. Fix: blob shadow.
 7. meta.json head_px / head_centre_y / head_bottom_max_y are garbage (9885 px, -5422, 5475): measurement failed; correct the numbers (heads measured by eye: Harrison centre y ~480-560, astro ~540-680, none below 880).
 Notes: Harrison default (grey) look in shot 22 is OK; astro_smug expression OK; candles lit.
+
+## Round 3: PASS
+Checked 6 fps (take g1747-1865), qa_auto PASS (blur flag gone). No text, no black/magenta, no frozen. Mouths still. Frame-diff (take.mkv, g1757-1855): median 5.86, p90 15.92: OK. Heads centre ~ 480-680, nothing at 880. Harrison default (grey) look OK, candles lit.
+Earlier issues: R2-1 H4 into the box: FIXED (astro19, mid-table, holds the watch over the open box and lowers it, g1798-1814; ~40 px watch, reads). R2-2 bag slide: FIXED (his hand pushes the slack bag across the baize g1768-1796). R2-3 seals: FIXED (flat red wax discs on the lid, three, g1821-1831; small at the end framing). R2-4 clipping: Harrison clipped at the right: FIXED; astro19 wig still cropped at the right edge in the last frames, see notes. R2-5 end composition: PARTLY (box + three seals + astro all in frame, box small at left, big green baize at the bottom). R2-6 shadows: Harrison's feet behind the table, NOTE. R2-7 meta numbers: fixed.
+Notes: (a) g1853-1855 and the dissolve handle g1856-1865: astro19's outer wig lappet is cut by the right edge (~430 rows at g1855), face inside; shift the end framing ~40 px left if re-rendered. (b) the sealed box reads small at phone size at the end. (c) one astronomer only (documented deviation).

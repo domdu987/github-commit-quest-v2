@@ -15,3 +15,8 @@ Re-checked at 6 fps + cuts g262/g356 +-3 (take g253-364). qa_auto PASS. No text,
 Earlier issues: 1 PARTLY fixed (see issue 2), 2 FIXED, 3 FIXED, 4 FIXED, 5 FIXED, 6 FIXED, 7 FIXED (label), 8 note still true (g1=356 exclusive).
 1. g343-363: the foreground sailor (stripe jersey, bobble hat) is clipped by the left frame edge (hat bobble, shoulder and arm cut at x 0-10; worst g355-363). He is the main subject. Fix: move his mark ~0.3 D inboard/right or push the slide target so he stays >= 20 px inside.
 2. g268-363: sailor C (teal jersey) is almost fully hidden behind the captain and the red-bandana sailor (only a head and sliver show); only two bailing arcs read (fg sailor, red bandana), the captain and C do not bail. Plan: "sailors bail". Fix: offset C 0.6 D toward the rail/inboard so he shows beside the captain with a visible bucket arc.
+
+## Round 3: PASS
+Checked 6 fps + cuts g262/g356 +-3 (take g253-364), qa_auto PASS. No text, no black/magenta, no frozen, no blur. Mouths expression only. Frame-diff (take.mkv, g263-355): median 5.64, p90 21.87: OK. Heads centre y ~ 520-730, nothing at 880. One shake at g330-339 present. Nobody on the bulwark, no black cannon blobs, shadows under sailors OK.
+Earlier issues: R2-1 FG sailor clipped at left edge: FIXED (inside >= 25 px to g364). R2-2 sailor C hidden: FIXED (three sailors side by side, each with bucket and a visible bail arc at g283-348). R1 items stay fixed.
+Notes: (a) g262-263 the FG sailor is half cut by the right edge on the whip entrance (2 frames, g264 inside): accepted entrance. (b) captain stands behind sailor A, body half covered, does not bail. (c) meta g1=356 exclusive.

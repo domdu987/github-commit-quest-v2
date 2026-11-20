@@ -9,3 +9,9 @@ Shot 8, HALL hall_low DAY, take g536-669 (handles 9+9, both sides hard cut), 6 f
 6. g611-641: a stray white line floats at his sleeve/wrist (g611-641) and the planned "point [640,661]" is not visible (hand out of frame / behind the wig). Fix: raise the pointing arm into frame at g640.
 7. g646-669: head grows to ~65 % of frame width and the left wig lappet is clipped at the frame edge at g656-666. Fix: reduce the snap scale or slide camera left 40 px.
 8. meta.json g1 = 661 is exclusive (plan g1 = 660). Note only.
+
+## Round 3: FAIL
+Checked 6 fps + cuts g545/g661 +-3 (take g536-669), qa_auto PASS. No text, no black/magenta, no frozen, no blur. Heads centre y 560-700, wig lappets end <= y ~ 830 (< 880): OK.
+Earlier issues: R1-1 NOT FIXED; R1-2 mouth FIXED (flat g602-621, first opening g623, inside the g622 window); R1-3 turn FIXED (starts in 3/4, faces lens by g~560); R1-4 wig below 880 FIXED; R1-5 shadows faint, NOTE; R1-6 pointing arm now visible at the right g646-660 but weak, NOTE; R1-7 left lappet inside, FIXED.
+1. g545-660 (R1-1): frame-diff (take.mkv, 90x160 grey bilinear, g546-660) median 3.82 (< 4), p90 6.60 (< 10); deliver framediff.json says 3.54 / 6.22 and QA.md reports it as a deviation. The director's per-take rule is median >= 4 and p90 >= 10: FAIL. Fix: real snap on "นาฬิกาเนี่ยนะ" (g637, x2 over 13 f, eased) plus >= 10 %/s push and a slide, orbit past the bookcases without hiding his face; re-measure.
+Notes: meta g1=661 exclusive.

@@ -7,3 +7,10 @@ Shot 7, HALL hall_window DAY, take g457-553 (handles 9/9, meta g0 466, g1 545 ex
 3. g466-545: p90 11.23 (< 12). Fix: a faster snap (x2.2 over 13 f) or more slide before it.
 4. g497-545: eye-line: astro looks at the lens while pointing; the raised hand points up-left at the Moon but his eyes/head do not turn to it. Fix: turn head/pupils toward the Moon plate for g470-500, then back to lens on the snap.
 NOTES: meta g1 = 545 is exclusive (plan g1 = 544); candle/hands fine; chair legs and left-side bookcase fine.
+
+## Round 3: FAIL
+Checked 6 fps + cuts g466/g545 +-3 (take g457-553), qa_auto PASS. No text, no black/magenta, no frozen, no blur. Mouths closed/flat. Frame-diff (take.mkv, g467-544): median 4.71, p90 13.70: OK (R2-3 FIXED). Heads centre in band.
+Earlier issues: R2-1 NOT FIXED, R2-2 NOT FIXED, R2-4 not fixed (note).
+1. g506-553 (R2-1): astro19 is still cropped by the right frame edge for the whole end of the snap: right half of the wig and the right shoulder cut (300-500 rows at the right column, g506-544), right lens of the pince-nez touches the edge at g537-544; shot parks on it. Fix: end the snap with astro19 centred (camera ~120 px right) and scale <= x1.8.
+2. g487-545 (R2-2, plan "astro_b and astro_c nod beside him"): astro_b is out of frame from g~497; astro_c is half hidden behind astro19's wig and shows no nod in the snap (g507-545). Fix: keep both inside the final framing (marks 0.6 D left of astro19, nod 0.05 D) or lessen the snap.
+Notes: eye-line still to the lens while pointing at the Moon (R2-4), feet shadows faint, meta g1=545 exclusive.
