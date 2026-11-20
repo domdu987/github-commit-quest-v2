@@ -37,23 +37,29 @@ RIM_COL, RIM_K, RIM_OFF = '#ffb24a', 1.5, (0.0045, 0.0035)    # set3d19 H.card_r
 
 CAM_LOOK0 = (446.0, 61.789, 2.6)                # subject point (found with a projection search so that all three heads, hats and raised
                                                 # hands stay inside the frame on every frame)
-CAM_LOC0 = tuple(Vector(CAM_LOOK0) + (Vector((452.0, 61.2, 3.55)) - Vector((446.0, 62.6, 2.6))) * 1.1)
+END_SCALE = float(os.environ.get('ENDS', '1.229'))
+LAT_AMP = float(os.environ.get('LAT', '1.13'))                  # round 9: aim right over the last third of the move (D)
+CAM_LOC0 = tuple(Vector(CAM_LOOK0) + (Vector((452.0, 61.2, 3.55)) - Vector((446.0, 62.6, 2.6))) * END_SCALE)
 SNAP = (G_WORD - 2, G_WORD + 12)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GF, GL, push=0.0335, slide_px=12.6, rise_px=9.4, arc_deg_s=-5.0, decay=0.1,
-                snaps=[dict(g=SNAP, k=1.108, peak=1.6, shift=(0.37, -0.10))])
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GF, GL, push=0.0226, slide_px=14.44, rise_px=9.4, arc_deg_s=1.32, decay=0.1,
+                snaps=[dict(g=SNAP, k=1.108, peak=1.6, shift=(float(os.environ.get('R1', '0.083')), -0.10)),
+                       dict(g=(1558, 1565), k=1.0, peak=1.3, shift=(0.0, 0.5)),         # round 9: a second beat on the held medium: two camera bumps
+                       dict(g=(1565, 1572), k=1.0, peak=1.3, shift=(0.0, -0.5)),
+                       dict(g=(1572, 1578), k=1.0, peak=1.3, shift=(0.0, 0.5)),
+                       dict(g=(1578, 1586), k=1.0, peak=1.3, shift=(0.0, -0.5))])
 
 
 # ----------------------------------------------------------------------------- BIGZOOM (QA_TEAM section H): one continuous descent
 # QA-art r7 fix: starts ~2x further / ~2.3x higher over Port Royal (bay, ship, far headland, red-roofed town, fort with flags), holds the
 # wide ~0.45 s (g 1468-1481, a slow creep only), then descends down the town street (set lane, Jamaica) past two palm crowns
 # (set zoom_palms, fronds 1-2 D from the lens) onto the beach; long ease-out into the medium shot at GZ.  BIGZOOM g 1468..GZ = 3.67 s.
-GH = 1481                                       # end of the hold on the extreme wide
-GZ = 1578                                       # 52.6 s: the medium shot is reached; from here on the drift CamPath CAM
+GH = 1474                                       # end of the hold on the extreme wide
+GZ = 1553                                       # 51.87 s: the medium shot is reached (round 9: held ~0.8 s with a little drift); from here on the drift CamPath CAM
 Z_L0 = Vector(json.loads(os.environ.get('ZL0', '[562.0, 58.0, 74.0]')))              # start: high over the town, the cast ~1.3 % of the frame height
 Z_K0 = Vector(json.loads(os.environ.get('ZK0', '[330.0, 12.0, -20.0]')))             # aimed between the cast and the fort: bay, ship and headland above
 Z_LM = Vector(json.loads(os.environ.get('ZLM', '[480.0, 60.5, 22.0]')))              # Bezier control: over the street, then between the two zoom palms
 Z_L1, Z_K1 = CAM.at(GZ)
-ZOOM_P = 0.82                                   # < 1 shifts the speed peak early = a longer, softer ease-out
+ZOOM_P = 1.0                                    # round 9: > 1 eases on SCREEN speed (perspective makes screen speed grow as the lens nears the cast)
 ZOOM_CREEP = 0.012                              # share of the path covered by a linear creep over GF..GZ (the hold never freezes)
 
 
@@ -62,11 +68,31 @@ def zoom_ease(u):
     return u * u * u * (u * (6.0 * u - 15.0) + 10.0)          # smootherstep: ease-in and ease-out
 
 
+def _bez(e):
+    a, b = 1.0 - e, e
+    return Z_L0 * (a * a) + Z_LM * (2.0 * a * b) + Z_L1 * (b * b)
+
+
+_CAST = Vector((447.093, 62.271, 3.3))                       # the cast (William's chest on the crate): distance reference
+_TAB = [(i / 400.0, math.log((_bez(i / 400.0) - _CAST).length)) for i in range(401)]
+
+
+def _e_of_logd(ld):
+    """path parameter whose camera-to-cast distance has log = ld (the distance falls monotonically along the path)"""
+    for (e0, l0), (e1, l1) in zip(_TAB[:-1], _TAB[1:]):
+        if (l0 - ld) * (l1 - ld) <= 0 and l0 != l1:
+            return e0 + (e1 - e0) * (ld - l0) / (l1 - l0)
+    return 0.0 if ld >= _TAB[0][1] else 1.0
+
+
 def zoom_e(g):
-    """path parameter 0..1 over GF..GZ: a slow linear creep + smootherstep(u^ZOOM_P) of the move GH..GZ"""
+    """path parameter 0..1 over GF..GZ.  Round 9: the move GH..GZ is eased on LOG(camera-to-cast distance) with a smootherstep
+    (= a constant-ish, eased ZOOM speed on screen: the cast grows evenly, no late lurch), plus a slow linear creep over GF..GZ."""
     lin = clamp((g - GF) / float(GZ - GF))
     u = clamp((g - GH) / float(GZ - GH))
-    return ZOOM_CREEP * lin + (1.0 - ZOOM_CREEP) * zoom_ease(u ** ZOOM_P)
+    l0, l1 = _TAB[0][1], _TAB[-1][1]
+    e_move = _e_of_logd(l0 + (l1 - l0) * zoom_ease(u ** ZOOM_P))
+    return ZOOM_CREEP * lin + (1.0 - ZOOM_CREEP) * e_move
 
 
 def cam_at(g):
@@ -78,6 +104,10 @@ def cam_at(g):
     loc = (Z_L0 * (a * a) + Z_LM * (2.0 * a * b) + Z_L1 * (b * b))      # quadratic Bezier down the street, past the palm fronds
     ek = e ** 0.85
     look = Z_K0 * (1.0 - ek) + Z_K1 * ek
+    if LAT_AMP:
+        f = (look - loc).normalized()
+        r = Vector((f.y, -f.x, 0.0)).normalized()
+        look = look + r * LAT_AMP * math.sin(math.pi * clamp((e - 0.45) / 0.55))
     return loc, look
 
 
@@ -85,20 +115,35 @@ def _mix(a, b, u):
     return (lerp(a[0], b[0], u), lerp(a[1], b[1], u))
 
 
+G_GLINT = ((G_WORD, G_WORD + 13), (1548, 1562))          # the glint on the word, and again when William first reads on screen
+THRUSTS = ((1486, 1497), (1536, 1546))                    # (start of the glance down at the watch, start of the thrust up); thrust lasts 7 f
+
+
+def watch_low(g):
+    """0..1: how far William has brought the watch down to look at it (glance DOWN, then THRUST UP on "ห้าวินาที" and again at g 1546)"""
+    k = 0.0
+    for a, t in THRUSTS:
+        k = max(k, u_of(g, a, a + 6) * (1.0 - u_of(g, t, t + 7)))
+    return k
+
+
 def william_pose(g):
     p = dict(cast19.STORY19["william_cheer_hat"][1])
     u = u_of(g, *G_LIFT, kind="sine")
     hi = _mix((0.5, 0.68), (0.80, -0.72), u)
-    p["arm_r"] = dict(hand=(hi[0], hi[1] + 0.20 * math.sin(2 * math.pi * g / 10.0)), bend=-0.4, stretch=1.3, shape="open", layer="top")
+    low = watch_low(g)
+    h = _mix((hi[0], hi[1] + 0.20 * math.sin(2 * math.pi * g / 10.0)), (0.46, 0.18), low)
+    p["arm_r"] = dict(hand=h, bend=-0.4, stretch=1.3, shape="open", layer="top")
     p["prop_r"] = dict(type="h4_watch", scale=1.8)
     p["arm_l"] = dict(hand=(-0.70, -0.62 + 0.20 * math.sin(2 * math.pi * g / 10.0 + 2.5)), bend=-0.5, stretch=1.3, shape="open", layer="top")
     p["prop_l"] = "tricorn_held"
     p["mirror"] = True
-    p["expr"] = "happy"
+    p["expr"] = "determined" if low > 0.5 else "happy"            # open eyes while he looks at the watch
     p["mouth"] = "grin"
     p.pop("fx", None)
     p["yaw"] = 0.25
-    p["pitch"] = -0.25
+    p["pitch"] = -0.25 + 0.65 * low
+    p["gaze"] = (0.0, 0.9 * low)
     p["head_roll"] = -4 + 8 * math.sin(g * 0.63)
     p["lean"] = 6 * math.sin(g * 0.63 + 1.0)
     p["blink"] = blink(g, [1470, 1520, 1562])
@@ -106,13 +151,23 @@ def william_pose(g):
     return p
 
 
-# sailors: sa JUMPS and throws his tricorne (g 1538..1574), sb throws his tricorne (g 1516..1552) and then HUGS himself for joy.
-HAT_FLIGHTS = {"sa": (1558, 1592, 1.3), "sb": (1548, 1584, 1.5)}        # (release g, catch g, arc height D)
+# sailors (round 9: the reactions must READ, so they happen while the cast is large, g 1540..1580):
+#   sb throws his tricorne (g 1540..1566) and then HUGS himself for joy (g 1568..); sa JUMPS high twice (g 1552..1580) and throws his tricorne at
+#   the first jump's peak (g 1558..1584).
+HAT_FLIGHTS = {"sa": (1558, 1584, 1.5), "sb": (1540, 1566, 1.2)}        # (release g, catch g, arc height D)
+JUMPS = ((1552, 1566), (1566, 1580))                                       # sa: two big jumps (0.8 D)
 
 
 def hat_in_hand(name, g):
     r0, r1, _h = HAT_FLIGHTS[name]
     return not (r0 <= g < r1)
+
+
+def sa_jump(g):
+    for a, b in JUMPS:
+        if a <= g < b:
+            return 0.8 * math.sin(math.pi * (g - a) / float(b - a))
+    return 0.0
 
 
 def sailor_pose(name, g, ph):
@@ -124,15 +179,18 @@ def sailor_pose(name, g, ph):
     if hat_in_hand(key, g):
         p["prop_r"] = "tricorn_held"
     r0, r1, _h = HAT_FLIGHTS[key]
-    if key == "sb" and 1500 <= g < 1540:                           # the self-hug: both arms across the chest, swaying
-        k = u_of(g, 1500, 1508) * (1.0 - u_of(g, 1532, 1540))
-        p["arm_r"] = dict(hand=(lerp(0.74, -0.30, k), lerp(-0.74 + 0.30 * s, 0.55, k)), bend=0.8, shape="open", layer="top")
-        p["arm_l"] = dict(hand=(lerp(-0.74, 0.30, k), lerp(-0.7 - 0.30 * s, 0.60, k)), bend=0.8, shape="open", layer="front")
-        p["prop_r"] = None
-        p["lean"] = 8 * math.sin(g * 0.3)
-        p["head_roll"] = -8 + 6 * math.sin(g * 0.3)
+    if key == "sb" and g >= r1 + 2:                                # the self-hug: both arms across the chest, swaying
+        k = u_of(g, r1 + 2, r1 + 8)
+        p["arm_r"] = dict(hand=(lerp(0.74, -0.34, k), lerp(-0.74 + 0.30 * s, 0.50, k)), bend=0.9, shape="open", layer="top")
+        p["arm_l"] = dict(hand=(lerp(-0.74, 0.34, k), lerp(-0.7 - 0.30 * s, 0.56, k)), bend=0.9, shape="open", layer="front")
+        p.pop("prop_r", None)
+        p["lean"] = 10 * math.sin(g * 0.3) * k
+        p["head_roll"] = -8 + 8 * math.sin(g * 0.3)
         p["expr"] = "happy"
         p["mouth"] = "grin"
+    if key == "sa" and any(a <= g < b for a, b in JUMPS):          # in the air: both arms thrown up and out, legs tucked wide
+        p["arm_l"] = dict(hand=(-0.85, -0.95), bend=-0.5, shape="open", stretch=1.3, layer="top")
+        p["legs"] = "wide"
     if p.get("prop_r") is None:
         p.pop("prop_r", None)
     p["blink"] = blink(g, [1478 + int(ph * 5), 1540])
@@ -178,13 +236,14 @@ class Take(C.Take):
         for ob in list(bpy.data.objects):                      # the stray lavender / blue shell blob between the feet (QA_TECH): the set's 'boatw' dressing
             if ob.name.startswith("shoredress_boatw"):
                 self.hide_obs = getattr(self, "hide_obs", []) + [ob]
-        # the crate William stands on (0.9 x 0.9 D x CRATE_H, plank-brown, a darker lid edge)
-        bpy.ops.mesh.primitive_cube_add(size=1.0, location=(self.mw.x, self.mw.y, self.mw.z + CRATE_H / 2.0 - 0.02))
-        cr = bpy.context.active_object
-        cr.name = "crate_w"
-        cr.scale = (1.0, 1.0, CRATE_H + 0.04)
-        cr.data.materials.append(self._mat("crate_wood", (0.20, 0.085, 0.02)))
-        self.crate = cr
+        # the crate William stands on: the set's own plank crate (h19_ship_land.crate: box + dark edge battens, the 'crate' / 'batten' materials)
+        import h19_ship_land as L
+        K = C.K
+        mats = dict(crate=bpy.data.materials["crate"], batten=bpy.data.materials["batten"])
+        mb = K.MB("crate_w")
+        side_m, h_m = 0.52, CRATE_H / 1.85 + 0.02                          # metres under the 1.85-scaled world root
+        L.crate(mb, mats, (self.mw.x / 1.85, self.mw.y / 1.85, (self.mw.z - 0.02) / 1.85), side_m, rz=0.2, h=h_m)
+        self.crate = mb.finish()
         # the glint: a four-point white star facing the camera, emissive
         import bmesh
         me = bpy.data.meshes.new("glint_star")
@@ -206,29 +265,64 @@ class Take(C.Take):
         tc.target = self.cam
         tc.track_axis = 'TRACK_Y'
         tc.up_axis = 'UP_Z'
-        # two flying tricornes (flattened black dome + gold rim)
+        # two flying tricornes: a real three-cornered hat (black triangular brim folded up on all three sides, a gold-trimmed upper edge, a
+        # low crown), ~0.95 D across so it reads on a phone
+        import bmesh
         self.hats = {}
         for key in HAT_FLIGHTS:
-            bpy.ops.mesh.primitive_cylinder_add(vertices=3, radius=0.48, depth=0.06, location=(0, 0, -50))      # the three-cornered brim
-            h = bpy.context.active_object
-            h.name = "hat_%s" % key
-            h.rotation_euler = (0, 0, math.pi / 6)
-            h.data.materials.append(self._mat("hat_black", (0.05, 0.05, 0.06)))
-            bpy.ops.mesh.primitive_uv_sphere_add(radius=0.22, segments=14, ring_count=7, location=(0, 0, -50))  # the crown
-            rim = bpy.context.active_object
-            rim.name = "hatcrown_%s" % key
-            rim.scale = (1.0, 1.0, 0.8)
-            rim.data.materials.append(self._mat("hat_black2", (0.05, 0.05, 0.06)))
-            rim.parent = h
-            rim.location = (0, 0, 0.08)
-            self.hats[key] = h
+            me = bpy.data.meshes.new("tricorne_%s" % key)
+            bm = bmesh.new()
+            R, rim_h, fold = 0.46, 0.20, 0.30
+            base = [(R * math.cos(math.pi / 2 + i * 2 * math.pi / 3), R * math.sin(math.pi / 2 + i * 2 * math.pi / 3)) for i in range(3)]
+            vb = [bm.verts.new((x, y, 0.0)) for x, y in base]
+            fb = bm.faces.new(vb)
+            fb.material_index = 0
+            for i in range(3):
+                j = (i + 1) % 3
+                (x0, y0), (x1, y1) = base[i], base[j]
+                mx, my = (x0 + x1) / 2, (y0 + y1) / 2
+                # the fold: the edge midpoint rises and leans outwards (the brim turned up); two quads: black lower, gold trim upper
+                o0 = bm.verts.new((x0 * 1.18, y0 * 1.18, 0.07))
+                o1 = bm.verts.new((x1 * 1.18, y1 * 1.18, 0.07))
+                t0 = bm.verts.new((x0 * 1.34, y0 * 1.34, rim_h + 0.06))
+                t1 = bm.verts.new((x1 * 1.34, y1 * 1.34, rim_h + 0.06))
+                q1 = bm.faces.new((vb[i], vb[j], o1, o0)); q1.material_index = 0
+                q2 = bm.faces.new((o0, o1, t1, t0)); q2.material_index = 0
+                tr = bm.faces.new((t0, t1, bm.verts.new((t1.co.x * 0.985, t1.co.y * 0.985, t1.co.z + 0.035)), bm.verts.new((t0.co.x * 0.985, t0.co.y * 0.985, t0.co.z + 0.035)))); tr.material_index = 1
+            bm.normal_update()
+            bm.to_mesh(me)
+            bm.free()
+            h = bpy.data.objects.new("hat_%s" % key, me)
+            bpy.context.scene.collection.objects.link(h)
+            me.materials.append(self._mat("hat_black", (0.05, 0.05, 0.06)))
+            me.materials.append(self._mat("hat_gold", (0.9, 0.68, 0.15)))
+            for pl in me.polygons:
+                pl.use_smooth = False
+            h.scale = (1.0, 1.0, 1.0)
+            bpy.ops.mesh.primitive_uv_sphere_add(radius=0.22, segments=14, ring_count=7, location=(0, 0, 0.12))     # the crown
+            cr = bpy.context.active_object
+            cr.name = "hatcrown_%s" % key
+            cr.scale = (1.0, 1.0, 0.6)
+            cr.data.materials.append(self._mat("hat_black2", (0.05, 0.05, 0.06)))
+            cr.parent = h
+            em = bpy.data.objects.new("hattilt_%s" % key, None)         # empty: tilts the hat's top towards the camera (camera looks along -x)
+            bpy.context.scene.collection.objects.link(em)
+            h.parent = em
+            em.rotation_euler = (0.0, 0.85, 0.0)
+            self.hats[key] = em
+            self.hat_obj = getattr(self, "hat_obj", {})
+            self.hat_obj[key] = h
+            self.hat_crown = getattr(self, 'hat_crown', {})
+            self.hat_crown[key] = cr
+            em.location = (0, 0, -50)
 
     def pose(self, gs):
-        for g in gs:
+        extra = sorted({x for r0, r1, _h in HAT_FLIGHTS.values() for x in (r0 - 1, r1)} - set(gs))
+        for g in list(gs) + extra:                                   # hat release / catch frames are keyed even if another process renders them
             f = bf(g)
             self.key_cam(f, *cam_at(g))
             C.place(self.wil, f, self.mw + Vector((0, 0, CRATE_H + bounce_z(g, 0.0, 0.10))))
-            C.place(self.sa, f, self.ma + Vector((0, 0, bounce_z(g, 1.3, 0.26))))
+            C.place(self.sa, f, self.ma + Vector((0, 0, bounce_z(g, 1.3, 0.26) + sa_jump(g))))
             C.place(self.sb, f, self.mb + Vector((0, 0, bounce_z(g, 2.6))))
             self.key_set(f, sea=(g - GF) / 30.0, roll=(g - GF) / 30.0)
         for g in gs:
@@ -248,42 +342,49 @@ class Take(C.Take):
         return C.actors.local_to_world(actor, loc, frame=f)
 
     def _hand_est(self, key, g):
-        """world point of a sailor's raised right hand (cheer arm): feet + 0.74 D to the camera's right + 3.55 D up."""
-        m = self.ma if key == "sa" else self.mb
-        loc, look = cam_at(g)
-        _f, r, _u = C._cam_basis(loc, look)
-        up = bounce_z(g, 1.3, 0.26) if key == "sa" else bounce_z(g, 2.6)
-        return m + r * 0.74 + Vector((0, 0, 3.55 + up))
+        """world point of a sailor's raised right (cheering) hand at film frame g: the card-local hand target through the actor's card
+        (the actor is placed and the camera keyed for the hat frames in pose() even when this process does not render them)."""
+        actor, ph = (self.sa, 1.3) if key == "sa" else (self.sb, 2.6)
+        f = bf(g)
+        self.scene.frame_set(f)
+        s_ = math.sin(2 * math.pi * g / 10.0 + ph)
+        return C.actors.local_to_world(actor, (0.74, -0.74 + 0.30 * s_), frame=f, camera=self.cam)
 
     def key_dressing(self, gs):
         C.key_vis(getattr(self, "hide_obs", []), False, 0 + 1)
         for g in gs:
             f = bf(g)
             C.key_vis(getattr(self, "hide_obs", []), False, f)
-            # glint on the watch at the word "ห้าวินาที": a star that blooms and fades over 14 frames
-            on = G_WORD <= g <= G_WORD + 13
-            C.key_vis(self.star, on, f)
-            if on:
-                u = (g - G_WORD) / 13.0
+            # glints on the watch: on "ห้าวินาที" and again when William first reads on screen.  A white four-point star whose SCREEN size is
+            # constant (~44 px radius at 720 wide, ~22 px on a phone), so it reads at any distance; blooms and fades over 14 frames.
+            gl = None
+            for a0, b0 in G_GLINT:
+                if a0 <= g <= b0:
+                    gl = (g - a0) / float(b0 - a0)
+            C.key_vis(self.star, gl is not None, f)
+            if gl is not None:
                 p = self._hand_world(self.wil, g, "prop_tip_r")
-                self.star.location = p + Vector((0, 0, 0.0))
-                self.star.scale = (0.9 * math.sin(math.pi * u) ** 0.7 + 0.05,) * 3
+                loc, _look = cam_at(g)
+                dist = (p - Vector(loc)).length
+                rad = 44.0 / 782.0 * dist * math.sin(math.pi * gl) ** 0.7 + 0.02
+                self.star.location = p
+                self.star.scale = (rad, rad, rad)
                 self.star.keyframe_insert("location", frame=f)
                 self.star.keyframe_insert("scale", frame=f)
             # flying hats
             for key, (r0, r1, hgt) in HAT_FLIGHTS.items():
                 actor = self.sa if key == "sa" else self.sb
                 fly = r0 <= g < r1
-                C.key_vis(self.hats[key], fly, f)
+                C.key_vis([self.hats[key], self.hat_obj[key], self.hat_crown[key]], fly, f)
                 if fly:
                     u = (g - r0) / float(r1 - r0)
                     p0 = self._hand_est(key, r0 - 1)
                     p1 = self._hand_est(key, r1)
                     pos = p0 * (1 - u) + p1 * u + Vector((0, 0, 4.0 * hgt * u * (1 - u)))
                     self.hats[key].location = pos
-                    self.hats[key].rotation_euler = (0.35 * math.sin(6 * math.pi * u), 0.0, math.pi / 6 + 4 * math.pi * u)
                     self.hats[key].keyframe_insert("location", frame=f)
-                    self.hats[key].keyframe_insert("rotation_euler", frame=f)
+                    self.hat_obj[key].rotation_euler = (0.0, 0.0, math.pi / 6 + 4 * math.pi * u)
+                    self.hat_obj[key].keyframe_insert("rotation_euler", frame=f)
         if not getattr(self, "_rim", False):                # warm rim light on the cards (director, QA-art r7)
             for a in (self.wil, self.sa, self.sb):
                 H.card_rim(a, color=RIM_COL, k=RIM_K, offset=RIM_OFF)
