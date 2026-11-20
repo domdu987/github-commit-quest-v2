@@ -482,7 +482,7 @@ class Take(object):
         self.fill = K.point((0.2, 1.0, 1.9), color=(1.0, 0.82, 0.55), watts=45, radius=0.1, name="box_fill", flicker=False)
         tm = bpy.data.materials.new("twin_dark")                  # unlit near-black emission: the switched-off boxes are <= 35 luma whatever the lamps do
         tm.use_nodes = True; nt = tm.node_tree; nt.nodes.clear()
-        em = nt.nodes.new("ShaderNodeEmission"); em.inputs["Color"].default_value = (0.045, 0.035, 0.05, 1.0); em.inputs["Strength"].default_value = 1.0
+        em = nt.nodes.new("ShaderNodeEmission"); em.inputs["Color"].default_value = (0.009, 0.007, 0.010, 1.0); em.inputs["Strength"].default_value = 1.0
         out = nt.nodes.new("ShaderNodeOutputMaterial"); nt.links.new(em.outputs[0], out.inputs[0])
         for nm in list(DARK_AT) + ["box2"]:
             if nm + "_d" not in K.STATE["anim"]:
