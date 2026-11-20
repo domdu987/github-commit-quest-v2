@@ -4,6 +4,7 @@ sys.path.insert(0, '/home/user/github-commit-quest-v2/film/v3/set3d17')
 import prefecture17 as P, bpy
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import t5a_override; t5a_override.apply()
+import t5a_stage   # Bertillon back view as hair + coat (T6b approach)
 take = 'T5'
 HERE = os.path.dirname(os.path.abspath(__file__))
 def assign_for(g):
@@ -21,7 +22,7 @@ def assign_for(g):
 def clear_cast():
     # stage_cast2 builds NEW actors every call and never removes the old ones (stale shadow proxies -> black slabs): remove them first.
     sys.path.insert(0, '/home/user/github-commit-quest-v2/film/v3/stage'); import actors
-    for o in [o for o in bpy.data.objects if o.name.startswith(('c2_', 'back_hair_', 'back_coat_'))]: bpy.data.objects.remove(o, do_unlink=True)
+    for o in [o for o in bpy.data.objects if o.name.startswith(('c2_', 'back_hair_', 'back_coat_', 'bk_', 't6b_'))]: bpy.data.objects.remove(o, do_unlink=True)
     actors.clear_registry()
 def setup():
     assert P.check_take(take)['hits'] == [] and P.check_face(take)['ok']
