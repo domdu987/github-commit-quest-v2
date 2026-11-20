@@ -9,13 +9,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 PROJ = os.path.normpath(os.path.join(HERE, "..", "..", ".."))
 # ---- CONFIG (per take)
 TAKE, SHOT = "s03", 3
-G0, G1 = 178, 265                  # shot = g 178..264
-H_IN, H_OUT = 9, 4
+G0, G1 = 178, 318
+H_IN, H_OUT = 8, 4
 TRANS_IN = {"type": "dissolve", "frames": 13}
-NOTE = "SITE site_wide DAY stage 0: crane-down + orbit + slide, snap push on 'ปี 1887' (g 213-228); six riveter cards working"
-CUES = [(0, "ambience", "building site 1887: hammering on iron, forge bellows, distant carts, wind", {}),
-        (213, "accent", "snap push on 'ปี 1887': airy whoosh", dict(peak_frame=219)),
-        (0, "foley", "anvil / rivet hammer clinks, a few, irregular", {})]
+NOTE = "BIGZOOM 1 (shots 3+4 merged): one continuous crane-down + push from an extreme wide high over Paris 1887 to a medium of Eiffel at the plan table, landing on 'วิศวกรไอเฟล' (g 268), then slow drift"
+CUES = [(178, 'ambience', 'building site 1887 from high above: wind, distant hammering, carts', {}), (190, 'accent', 'long airy descending whoosh as the camera swoops in (g 178-268)', {'peak_frame': 225}), (250, 'foley', 'rooftops/scaffold close pass: timber creak, rope hum', {}), (268, 'accent', "small bright sting on 'วิศวกรไอเฟล' as he points", {'peak_frame': 270}), (266, 'foley', 'cloth rustle as his arm goes up', {'peak_frame': 270})]
 # ----
 GF, GL = G0 - H_IN, G1 + H_OUT - 1
 N = GL - GF + 1
@@ -99,7 +97,7 @@ walls, cpus = [r["wall"] for r in rows], [r["cpu"] for r in rows]
 nb = numbers(framediff(pngs))
 json.dump(nb, open(os.path.join(HERE, "framediff.json"), "w"), indent=1)
 heads = [h for r in rows[H_IN:H_IN + G1 - G0] for h in r["heads"].values()]
-meta = {"take": TAKE, "film": 20, "shots": [SHOT], "g0": G0, "g1": G1, "first_g": GF, "n_frames": N, "shot_ranges": {str(SHOT): [G0, G1 - 1]},
+meta = {"take": TAKE, "film": 20, "shots": [3, 4], "g0": G0, "g1": G1, "first_g": GF, "n_frames": N, "shot_ranges": {"3": [G0, G1 - 1], "4": "merged into 3 (BIGZOOM)"},
         "handle_in": H_IN, "handle_out": H_OUT, "transition_in": TRANS_IN,
         "transition_out": {"type": "cut", "frames": 0, "at": G1, "note": "next shot is a hard cut; 4 handle frames rendered in 3D"},
         "note": NOTE, "grade": {"saturation_x": round(KS, 3), "brightness_x": round(KB, 3), "note": "post grade for QA_TEAM section G"}, "dof": "none", "text": "none", "light": "DAY", "samples": rows[0].get("samples"), "resolution": [720, 1280], "threads": 2, "fps": 30,
