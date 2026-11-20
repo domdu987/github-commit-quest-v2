@@ -189,8 +189,30 @@ def pose_astro(g):
     return p
 
 
+def whitecaps_and_wake(n=int(os.environ.get("WC", "170")), seed=int(os.environ.get("WCSEED", "5")), L=300.0):
+    """the aerial preset has no whitecaps and the set's wake fades by ~150 m, so the extreme wide start is smooth water (qa_auto: 'suspected blur').  The set's own
+    'streaks' hook (broken foam lines, ship frame, metres) is only fed by hero / rocks / coast scenery: wrap LD.scenery so the aerial sea gets scattered whitecap lines over +-320 m (the set's own wake is already a long V seen from behind).  Runtime only, no set edit."""
+    import random as _rnd
+    import h19_ship_land as LD
+    orig = LD.scenery
+
+    def sc(S_, P, LT, sea_P, marks):
+        orig(S_, P, LT, sea_P, marks)
+        st = sea_P.setdefault("streaks", [])
+        rg = _rnd.Random(seed)
+        for _ in range(n):
+            cx, cy = rg.uniform(-320, 320), rg.uniform(-330, 240)
+            if abs(cx) < 18 + 0.40 * max(0.0, -cy - 20) and cy < 50:
+                continue                                                   # not on the ship or in its wake
+            a = math.radians(rg.uniform(-35, 35)); ln = rg.uniform(20, 50)
+            st.append(((cx - 0.5 * ln * math.cos(a), cy - 0.5 * ln * math.sin(a)), (cx + 0.5 * ln * math.cos(a), cy + 0.5 * ln * math.sin(a)),
+                       rg.uniform(2.0, 3.6), rg.uniform(0.7, 0.9)))
+    LD.scenery = sc
+
+
 class Take(C.Take):
     def __init__(self, quality="preview"):
+        whitecaps_and_wake()
         widen_sea(PRESET, int(os.environ.get("NU", "1500")), int(os.environ.get("NV", "2000")))
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_" + TAKE)
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
