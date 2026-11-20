@@ -44,13 +44,13 @@ LANT_OFF = (1.95, 0.80, 0.55)                     # FG lantern centre in the cam
 
 CAM_LOC0 = (2.90, 25.60, 16.60)
 CAM_LOOK0 = (2.00, 34.00, 14.20)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GA, GZ, push=0.07, slide_px=30.0, rise_px=0.0, arc_deg_s=-3.0, decay=0.15, snaps=[])
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GA, GZ, push=0.07, slide_px=15.0, rise_px=0.0, arc_deg_s=0.0, decay=0.15, snaps=[])
 
 # sailors / captain: ship_root-space D (deck marks of the forecastle)
-CPT_AT = (1.9, 35.8)
-SAILORS = dict(a=dict(at=(0.9, 32.6), cast="sailor19_a", key="sailor_a_bail", ph=0.00, per=22),
-               b=dict(at=(3.6, 34.8), cast="sailor19_b", key="sailor_b_bail", ph=0.37, per=26),
-               c=dict(at=(3.2, 39.0), cast="sailor19_c", key="sailor_c_bail", ph=0.71, per=24))
+CPT_AT = (0.8, 38.4)
+SAILORS = dict(a=dict(at=(1.5, 32.4), cast="sailor19_a", key="sailor_a_bail", ph=0.00, per=22),
+               b=dict(at=(3.8, 34.2), cast="sailor19_b", key="sailor_b_bail", ph=0.37, per=26),
+               c=dict(at=(2.4, 36.6), cast="sailor19_c", key="sailor_c_bail", ph=0.71, per=24))
 Z_DECK = None
 
 
