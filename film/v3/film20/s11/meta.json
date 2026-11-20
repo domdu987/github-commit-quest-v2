@@ -1,0 +1,74 @@
+{
+ "take": "s11",
+ "film": 20,
+ "shots": [
+  11
+ ],
+ "g0": 753,
+ "g1": 822,
+ "first_g": 745,
+ "n_frames": 81,
+ "shot_ranges": {
+  "11": [
+   753,
+   821
+  ]
+ },
+ "handle_in": 8,
+ "handle_out": 4,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 11
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 822,
+  "note": "hard cut to shot 12 (SITE site_girders) at g 822; handle g 822..825 rendered in 3D"
+ },
+ "set": "v3/set3d20 SITE preset site_fence, light DAY, stage 0. Runtime: preset FG mesh hidden; camera-parented timber post at the lens's left edge; two red-lead girders on the ground bottom-right of framing A; the cast stands at the fence line (y -101) outside the open timber fence, Eiffel at the gate edge (-7.4,-100.4 m).",
+ "cast": "cast20 lady20 (lady_parasol, hand at mouth), gent20 (gent_cane, pointing arm), child20 (child_point) all expr laughing20 with 3 Hz squash + 0.08 D stage bounce and head roll; eiffel (eiffel_giant_rivet pose, rivet raised and bobbing, proud then determined at the punch-in). No mouth animation.",
+ "camera": "custom 22 mm. A g745..801: eye level 1.0 m, pull back 10 %/s + slide 60 px/s + crane 45 px/s + arc, snap push x1.4 on 'เรียกไอเฟลว่า' (g776..792). B g802..825: PUNCH-IN CUT onto Eiffel (3.4 m, ~35 % of frame height) on 'ไอ้ช่างหมุด' with a 2-frame vertical shake and 6 frames of speed lines (post), then push 12 %/s + slide. Hand-held jitter +-0.05 D on both.",
+ "events": {
+  "word_call": 778,
+  "snap_A": [
+   776,
+   792
+  ],
+  "punch_in_cut": 802,
+  "shake": [
+   802,
+   803
+  ],
+  "speed_lines": [
+   802,
+   807
+  ]
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 14.44,
+ "s_per_frame_cpu_mean": 23.32,
+ "head_px": [
+  37,
+  414
+ ],
+ "head_centre_y": [
+  457,
+  811
+ ],
+ "head_bottom_max_y": 906,
+ "framediff_in_shot": {
+  "median": 5.6,
+  "p90": 10.88
+ },
+ "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
+}
