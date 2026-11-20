@@ -1,8 +1,7 @@
-# QA s20 (render team 5, film 18) round 11 - frames g1515-1595 (+6 handles: take.mkv g1509-1601, 93 frames), jimo_out NIGHT
-Frame-diff in-shot (n=80): median **4.46**, p90 **6.55** (median gate met; p90 >= 9 NOT met). qa_auto PASS.
-
-## Measured (c18.py `shot.py measure`, every frame g1515-1595)
-- Lead ox (scale 0.8): head anchor x about 0-200 px (the head is partly cut by the left edge on some frames because of the camera yaw sway), tail tip x about 470-610, lead mouth y about 620-640. My flame box (tail -> tip, 2 x flame scale) ends at x 720-860, so the lead flame is NOT guaranteed inside x <= 662: on the phone sheet the flame tongue (about 150-200 px) ends at x 640-720 on most frames. Fitting a >= 150 px flame, a 35-40 % ox and the head in frame together is not geometrically possible: the cast ox is about 1.45 x longer than tall.
-- Neighbour ox in the lead's row removed (and the second row lattice at 12 D): no neighbour flame near the lead mouth in the frames I checked (not measured per pixel). The reed-bundle-in-mouth case at g1574 came from the old lattice and is gone.
-- Plain ground measured (`J.ground_share`): 0.32 / 0.42 / 0.29 / 0.33 at g1530 / 1550 / 1570 / 1590: NOT <= 0.30. Dark-earth plane + warm pools are in; the 2-3 oxen cropped by the bottom edge were not added; three Qi silhouettes run behind the herd (not in the lower band: when I put them in the lower band they covered the lead ox).
-- Camera: sway (yaw +-2.6 D, period about 2 s) plus an eased dolly in (lateral 9.8 -> 6.2 D); the lead ox drifts along the frame.
+# QA s20 (render team 5, film 18) round 12 - frames g1515-1595 (+6 handles: take.mkv g1509-1601, 93 frames), jimo_out NIGHT
+Frame-diff in-shot (n=80): median **3.49**, p90 **6.14** (median gate NOT met this round; p90 < 9).
+Director's new targets, each checked on the rendered frames:
+1. Lead ox side view, no yaw sway: ox is about 22-25 % of frame height (camera lateral 10.8 -> 8.6 D; the 25-30 % target is slightly missed). Its head is at x about 0-30 px: the very first frames of the run have the muzzle at the left edge (x >= 0.03 NOT guaranteed). Flame: the ox's own flame tongue is about 150 px long; the brightest flame pixels of ANY ox reach x 703-719 on every 5th frame g1520-1595 (all 16 sampled frames > 700), so "flame ends inside x <= 700" is NOT met by my mask (it also counts the other oxen's flames).
+2. Ground (`J.ground_share`): 0.27 / 0.26 / 0.11 / 0.12 at g1530 / 1550 / 1570 / 1590 (<= 0.30). Camera tilted up (look z 3.3): horizon / wall base at y about 0.43-0.48; 14 reed bundles / pots alternate along the lower corners 1.5-2 D from the lens, passing the camera as it trucks.
+3. Motion: camera trucks with the lead ox (look-ahead drifting 0.4 D/s) and pushes about 20 % (lateral 10.8 -> 8.6); the corner props slide past. The measured frame-diff stays under the gate.
+The herd reads as a dense row because the second-row lattice was offset by 6 D to clear the lead ox's face; the lead ox is not isolated as in earlier rounds.

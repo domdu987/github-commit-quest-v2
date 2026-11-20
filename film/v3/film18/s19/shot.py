@@ -50,8 +50,11 @@ FGP = []
 def frame(g, t, camloc, ctx):
     J.set_holes(12)
     if not FGP:                                   # warm foreground props (pots, a helmet) low in frame, parented to nothing: placed in the world near the camera path
-        for i, (wx, wy, kind) in enumerate(((17.6, -13.2, 'pot'), (19.8, -14.8, 'jar'), (22.0, -11.8, 'bowl'), (16.6, -10.6, 'pot'), (21.0, -16.6, 'pot'), (25.0, -13.6, 'jar'), (18.6, -8.4, 'bowl'), (27.5, -11.0, 'pot'))):
+        for i, (wx, wy, kind) in enumerate(((17.6, -13.2, 'pot'), (19.8, -14.8, 'jar'), (16.6, -10.6, 'pot'), (21.0, -16.6, 'pot'), (24.2, -17.4, 'jar'), (18.6, -8.4, 'bowl'), (27.5, -11.0, 'pot'), (23.6, -15.4, 'pot'))):
             FGP.append(J.prop_pot((wx, wy, 0.0), 0.6 * i, kind=kind, scale=0.85, cd=8))
+        for (lx, ly) in ((19.0, -13.0), (22.5, -13.8)):
+            ld = bpy.data.lights.new('potl', 'POINT'); ld.color = J.FIRE; ld.energy = 650.0; ld.shadow_soft_size = 0.6; ld.use_shadow = False
+            lo = bpy.data.objects.new('potl', ld); J.STATE['LIGHTS'].objects.link(lo); lo.location = (lx, ly, 1.0); lo.visible_camera = False
         FGP.append(J.prop_helmet((23.4, -9.6, 0.0), 2.4, scale=1.0, cd=8))
     for ob in bpy.data.objects:
         if ob.name in HIDE or ob.name.startswith(('rubble', 'hglow')): ob.hide_render = True
