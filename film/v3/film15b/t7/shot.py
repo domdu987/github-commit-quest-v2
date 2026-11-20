@@ -59,26 +59,29 @@ def run_B(q, f0, f1, stride):
     quality = 'final' if q == 'final' else 'preview'
     A, sc = SHB._base('DAY72', quality, bar=2.24, fast=False)
     F.crowd_mode('cheer', 1700)
+    for o in bpy.data.objects:
+        if any(k in o.name for k in ('rim_banners', 'outer_banners', 'podium_back', 'board224')) and 'back' not in o.name.replace('podium_back', ''): o.hide_render = True
     BAR_Y = B2.BAR_Y; J = STATE['J']; WIDE = cast15.CANVAS15_WIDE
     # ------------------------------------------------------------------ camera: crane up over the stadium, tilt into the sky
-    KEYS = [  # (t, loc m, look m)
-        (59.80, (0.5, 8.4, 1.8), (-0.2, 12.9, 2.7)),
-        (61.00, (1.2, 5.6, 3.2), (-0.2, 13.0, 2.7)),
-        (62.20, (2.2, 2.0, 5.6), (-0.2, 13.2, 2.5)),
-        (63.30, (3.6, -2.5, 9.6), (-0.2, 13.4, 2.4)),
-        (64.00, (4.2, -7.5, 15.0), (-0.1, 14.0, 4.5)),
-        (64.60, (4.8, -14.0, 26.0), (0.0, 20.0, 34.0)),
-        (65.30, (5.2, -22.0, 40.0), (0.0, 26.0, 90.0)),
-        (66.00, (5.5, -28.0, 52.0), (0.0, 30.0, 140.0)),
+    KEYS = [  # (t, loc m, look m, lens)
+        (59.80, (0.5, 8.4, 1.8), (-0.2, 12.9, 2.7), 22.0),
+        (61.00, (-0.2, 6.6, 3.2), (-0.8, 13.0, 1.9), 26.0),
+        (61.80, (-0.6, 6.0, 3.6), (-1.2, 13.9, 1.5), 36.0),
+        (62.50, (-0.4, 5.6, 3.9), (-0.8, 13.8, 1.7), 32.0),
+        (63.20, (1.0, 2.0, 6.0), (-0.2, 13.4, 2.4), 22.0),
+        (63.90, (3.0, -5.0, 13.0), (-0.1, 14.0, 4.0), 22.0),
+        (64.60, (4.8, -14.0, 26.0), (0.0, 20.0, 34.0), 22.0),
+        (65.30, (5.2, -22.0, 40.0), (0.0, 26.0, 90.0), 22.0),
+        (66.00, (5.5, -28.0, 52.0), (0.0, 30.0, 140.0), 22.0),
     ]
-    ks = [(a, b) for a, b, c in KEYS]; kl = [(a, c) for a, b, c in KEYS]
+    ks = [(a, b) for a, b, c, d in KEYS]; kl = [(a, c) for a, b, c, d in KEYS]; kz = [(a, (d, 0, 0)) for a, b, c, d in KEYS]
     def cam_b(t):
-        return tuple(spline(ks, t)), tuple(spline(kl, t))
-    loc0, look0 = cam_b(59.8); cam = B2.make_camera_m(loc0, look0, lens=22.0, name='cam_t7b')
+        return tuple(spline(ks, t)), tuple(spline(kl, t)), float(spline(kz, t).x)
+    loc0, look0, _l = cam_b(59.8); cam = B2.make_camera_m(loc0, look0, lens=22.0, name='cam_t7b')
     sc.camera = cam
     # ------------------------------------------------------------------ jumpers
-    JUMPERS = [dict(cast='rival2', T0=60.45, s=+1, land=(-1.35, 14.9)),      # green kit, approaches from screen-right
-               dict(cast='rival3', T0=61.60, s=-1, land=(1.45, 15.4)),       # gold kit, from the left
+    JUMPERS = [dict(cast='rival2', T0=60.45, s=+1, land=(-1.35, 13.9)),      # green kit, approaches from screen-right
+               dict(cast='rival3', T0=61.60, s=-1, land=(1.45, 14.6)),       # gold kit, from the left
                dict(cast='rival1', T0=62.75, s=+1, land=(0.05, 14.3))]       # red kit
     RUN = [(-1.97, (8.0, 2.0)), (-1.25, (7.5, 4.6)), (-0.65, (6.0, 7.6)), (-0.25, (4.2, 9.4)), (0.0, (2.5, 10.3))]
     def jumper(i, Jd, t, cm):
@@ -104,6 +107,7 @@ def run_B(q, f0, f1, stride):
             p = spline([(a, (P(b)[0], P(b)[1], 0.0)) for a, b in RUN], dt)
             stand(cast15.run_curved(cast, t * 30 / 16.0, facing=face), (p.x, p.y)); return
         tx, ty = P(RUN[-1][1])
+        if dt >= 0.08: dt = 0.08 + (dt - 0.08) * 1.12
         if dt < 0.08: stand(cast15.pose_for('takeoff', cast, facing=face), (tx, ty)); return
         if dt < 0.30:
             u = (dt - 0.08) / 0.22; stand(cast15.pose_for('flop_rise', cast, facing=face), (lerp(tx, s * 1.5, u), lerp(ty, 10.9, u)), dz=0.3 * smooth(u * 1.5)); return
@@ -114,14 +118,14 @@ def run_B(q, f0, f1, stride):
             w = spline([(a, b) for a, b in KZ], dt); name = 'flop_head' if dt < 0.55 else 'flop_back' if dt < 0.80 else 'flop' if dt < 1.10 else 'flop_flick'
             air(name, (ax(dt), w.y, w.z)); return
         if dt < 1.62: mat('land_back'); return
-        if dt < 1.95: mat('sit_up'); return
+        if dt < 1.80: mat('sit_up'); return
         pose = cast15.pose_for('sit_thumb', cast, facing=face)
-        pose = dict(pose, bob=0.04 * math.sin(2 * math.pi * 2.0 * (t - Jd['T0'])))
+        pose = dict(pose, bob=0.04 * math.sin(2 * math.pi * 2.0 * (t - Jd['T0'])), thumb_angle=-90 + 22 * math.sin(2 * math.pi * 3.0 * (t - Jd['T0'])))
         card('m' + tag, cast, pose, (lx, ly), cm, ppd=144, mirror=mir, shadow=(2.0, 0.8), canvas=WIDE)
     flashes = [Jd['T0'] + 0.75 for Jd in JUMPERS]
     def frame_B(g):
-        t = g / FPS; loc, look = cam_b(t); lc = Vector(loc) * U
-        cam.location = lc; cam.rotation_euler = SHB._cam_rot(lc, Vector(look) * U); cam.data.lens = 22.0
+        t = g / FPS; loc, look, lens = cam_b(t); lc = Vector(loc) * U
+        cam.location = lc; cam.rotation_euler = SHB._cam_rot(lc, Vector(look) * U); cam.data.lens = lens
         sc.frame_set(g); CT.hide_placeholders(); SHB.GROUND_LOG.clear(); bpy.context.view_layer.update()
         cm = loc
         if loc[2] > 30 and look[2] > 40 and t > 64.3: return dict(cam=[round(c, 1) for c in loc], note='sky')   # nothing but sky in frame
@@ -153,7 +157,7 @@ def run_A(q, f0, f1, stride):
     sc.view_settings.exposure = -1.05; V.set_grade_sat(sc, 1.28); ct = V.CT(); M = STATE['marks_m']
     SHT.RAYS_ON = True; SHT.rays(k=0.07)
     F.set_bar_height(1.05)
-    if os.environ.get('BAR_FALL', '0') == '1': F.bar_fall(2034, side='front', bounce=True, seed=2)
+    F.bar_fall(2033, side='back', bounce=True, seed=2)
     # ------------------------------------------------------------------ the coach's path
     RP = [(5.6, -0.8), (4.3, 1.5), (2.9, 3.0), (1.6, 3.9), (1.15, 4.25)]
     pts3 = [(x, y, 0.0) for x, y in RP]; samp = [SHT.catmull(pts3, i / 200.0 * (len(RP) - 1)) for i in range(201)]
@@ -165,15 +169,15 @@ def run_A(q, f0, f1, stride):
     T_RUN0, T_RUN1 = 66.3, 67.42
     def coach_run_u(t): return smooth((t - T_RUN0) / 0.35) * 0.0 + ((t - T_RUN0) / (T_RUN1 - T_RUN0)) ** 1.25 if t > T_RUN0 else 0.0
     # camera keys (metres): sky -> tilt down to the coach -> low side track beside the run -> low beside the pit -> push in on the mound
-    def side_cam(u, off=3.1, z=0.72):
+    def side_cam(u, off=3.4, z=0.72):
         a = run_xy(max(u - 0.02, 0)); b = run_xy(min(u + 0.02, 1)); d = (b[0] - a[0], b[1] - a[1]); n = math.hypot(*d) or 1; d = (d[0] / n, d[1] / n)
         p = run_xy(u); nx, ny = d[1], -d[0]           # perpendicular, camera on the screen-right (+x) side of the runner
         if nx > 0: nx, ny = -nx, -ny
-        loc = (p[0] + nx * off, p[1] + ny * off, z); look = (p[0] + d[0] * 0.9, p[1] + d[1] * 0.9, 1.15); return loc, look
+        loc = (p[0] + nx * off, p[1] + ny * off, z); look = (p[0], p[1], 1.15); return loc, look
     CK = [(64.60, (1.0, -8.5, 1.25), (5.0, 0.0, 26.0)), (65.20, (1.6, -6.5, 1.3), (5.4, -0.8, 7.0)), (65.90, (2.3, -4.6, 1.3), (5.6, -0.9, 1.5))]
     for t_, u_ in ((66.30, 0.0), (66.60, 0.16), (66.90, 0.42), (67.20, 0.74), (67.45, 1.0)):
         l_, k_ = side_cam(u_); CK.append((t_, l_, k_))
-    CK += [(67.80, (-1.6, 4.4, 0.95), (0.9, 5.9, 1.1)), (68.10, (-1.3, 4.0, 1.15), (0.9, 6.9, 1.0)), (69.00, (-0.5, 3.9, 1.28), (0.9, 6.95, 1.15)), (69.84, (0.2, 4.2, 1.32), (0.9, 6.95, 1.2)), (70.30, (0.4, 4.3, 1.33), (0.9, 6.95, 1.2))]
+    CK += [(67.80, (-1.6, 4.4, 0.95), (0.9, 5.9, 1.1)), (68.10, (-1.3, 4.0, 1.15), (0.9, 6.9, 1.05)), (69.00, (-0.6, 4.6, 1.28), (0.9, 6.95, 1.25)), (69.84, (0.0, 5.15, 1.34), (0.9, 6.95, 1.32)), (70.30, (0.1, 5.25, 1.35), (0.9, 6.95, 1.33))]
     ks = [(a, b) for a, b, c in CK]; kl = [(a, c) for a, b, c in CK]
     def cam_a(t): return tuple(spline(ks, t)), tuple(spline(kl, t))
     loc0, look0 = cam_a(64.6)
@@ -185,17 +189,16 @@ def run_A(q, f0, f1, stride):
     pose_b = dict(cast15.pose_for('coach_buried', 'coach', facing=-1), buried=0)
     r0 = ct.put('probe', 'coach', pose_b, (X * U, Y * U, base * U), cl0, canvas=WIDE, shadow=None, ppd=192, mirror=True)
     chest = r0['world'](r0['anchors']['chest']); ct.hide_placeholders()
-    V.burial_mound(X, Y, base, chest.z * DM - 0.12, r=(0.95, 0.8))
+    hd = r0['world'](r0['anchors']['head']); V.burial_mound(X, Y, base, hd.z * DM - 0.40, r=(0.95, 0.8))
     mound_objs = [o for o in bpy.data.objects if o.name not in mound_names and o.type == 'MESH']
-    V.sawdust_flecks(G_IMP - 1, (X * U, (Y - 0.2) * U, (base + 0.7) * U), strength=1.7, seed=3, floor=base * U)
-    V.sawdust_flecks(G_IMP + 2, (X * U, (Y + 0.1) * U, (base + 0.9) * U), strength=0.9, seed=8, floor=base * U)
+    for i_, (df, st_, sd_, dy_) in enumerate(((-1, 3.2, 3, -0.2), (0, 2.6, 8, 0.1), (2, 2.2, 13, -0.4), (4, 1.6, 21, 0.2))):
+        V.sawdust_flecks(G_IMP + df, (X * U, (Y + dy_) * U, (base + 0.8) * U), strength=st_, seed=sd_, floor=base * U)
     ZG_PIT = 0.44 * U
     def D(p): return (p[0] * U, p[1] * U)
     def frame_A(g):
         t = g / FPS; loc, look = cam_a(t); lc = Vector(loc) * U
         cam.location = lc; cam.rotation_euler = (Vector(look) * U - lc).to_track_quat('-Z', 'Y').to_euler(); cam.data.lens = 22.0
         sc.frame_set(g); ct.hide_placeholders(); cl = tuple(lc)
-        for c in STATE['J']['bar'].children: c.hide_render = g >= 2036
         for o in mound_objs: o.hide_render = g < G_IMP; o.hide_viewport = g < G_IMP
         V.rim_on(to_light=(-0.55, -0.8), width=5, strength=0.95)
         # boys on the bench: they watch, then laugh at the flop
@@ -222,7 +225,7 @@ def run_A(q, f0, f1, stride):
             V.ground_card_anchor('coach', 'coach', pose, ('bar', (wv.x * U, wv.y * U, wv.z * U)), cl, ZG_PIT, canvas=WIDE, ppd=192, mirror=True)
         else:                                                                             # buried to the chin, weak thumbs-up wiggle
             wob = 0.035 * math.sin(2 * math.pi * 1.6 * (t - G_IMP / FPS)) * min(1, (g - G_IMP) / 8.0)
-            pose = dict(cast15.pose_for('coach_buried', 'coach', facing=-1), buried=0, bob=wob)
+            pose = dict(cast15.pose_for('coach_buried', 'coach', facing=-1), buried=0, bob=wob, sawdust=1, thumb_angle=-90 + 28 * math.sin(2 * math.pi * 3.0 * (t - G_IMP / FPS)))
             ct.put('b_coach', 'coach', pose, (X * U, Y * U, base * U), cl, canvas=WIDE, shadow=None, ppd=192, mirror=True)
         V.rim_off()
         return dict(cam=[round(c, 2) for c in loc])
