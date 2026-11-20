@@ -1,0 +1,16 @@
+{
+ "take": "sH2a",
+ "film": 21,
+ "segment": "H2a",
+ "g0": 1345,
+ "g1": 1392,
+ "first_g": 1342,
+ "n_frames": 54,
+ "handle_in": 3,
+ "handle_out": 3,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 6
+ },
+ "note": "starts exactly at K.POSES['P_NECK'] at g1345, ends exactly at P_TOP at g1392; g1342-1344 continue H1's descent into P_NECK, g1393-1395 continue the drift"
+}

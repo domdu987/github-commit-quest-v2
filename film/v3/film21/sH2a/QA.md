@@ -1,0 +1,6 @@
+# QA sH2a (film 21, plan v3): H2a crane up to the trap, g 1345-1392 (+3 handle frames each side), D6 in
+World K.build_world(['bridge_end_north','valley_loop']), 32 samples, 720x1280, K.cam_path keys: handle (g1342) -> P_NECK (g1345 exactly) -> crane (g1356, g1366) -> P_TOP (g1392 exactly) -> drift key g1400.
+Content: at P_NECK the 12 English footmen on the causeway (cast, stunned/worried with helmet-wobble bumps, rim gold) and the Scots spear wall across the neck (28 cast Scots, two ranks, `spear_wall` pose, blue saltire banners from the set); the English army (280 placeholders, rows only from y 60 so nobody is at the lens) is boxed in the loop, the other half (45) waits on the south bank, the 10-knight column stands on the bridge.
+Numbers (qa_stats / qa_stats2): saturation 0.752, vivid 84.7 %, luma 109.3 (limit 85-110), in-shot motion median 14.95 p90 31.50.
+Known: qa_auto flags "suspected blur" on 12 frames (smooth stylised sky/water/sand at 90x160, no DOF anywhere in the render; the frames are sharp at full size). Meadow army and south-bank half are placeholders (tiny at P_TOP, about 10 px); only the neck groups are cast cards.
+Heads (near-neck frames): English heads y ~ 560-700 at P_NECK, nobody cut by the frame edge, contact shadows on (contact=True).
