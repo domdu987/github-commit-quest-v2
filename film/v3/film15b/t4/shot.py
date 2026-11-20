@@ -170,7 +170,7 @@ def official_pass(cam, g, g0, g1, cast, direction):
 HEADS = [('crowd4', -0.95, 1.00, 1.15), ('crowd1', -0.30, 0.85, 1.05), ('crowd6', 0.40, 0.95, 1.10), ('crowd3', 1.05, 1.05, 1.2)]   # (cast, lateral m, distance m, scale)
 def hush_actors(cm, g):
     SHB.rim(True, side='right', color=(255, 240, 215), width=0.05, k=0.8, tint=(0.95, 0.97, 1.0), cool=0.35)
-    SHB.card('dyn_dick_%d' % g, 'dick_olympic', cast15.pose_for('rock_a' if (g // 8) % 2 == 0 else 'rock_b', 'dick_olympic'), MARK, cm, ppd=192, shadow=(1.6, 0.55))
+    SHB.card('dyn_dick_%d' % g, 'dick_olympic', dict(cast15.pose_for('stand', 'dick_olympic'), expr='determined', lean=5.0 * math.sin(g * 2 * math.pi / 18.0), bob=0.04 * abs(math.sin(g * math.pi / 9.0))), MARK, cm, ppd=192, shadow=(1.6, 0.55))   # rocking weight-shift on both legs
     SHB.rim(False); bg_actors(cm, g, True)
     loc, look, lens = cam_for_pit(g); c = Vector(loc); fwd = Vector(look) - c; fwd.z = 0; fwd.normalize(); right = Vector((fwd.y, -fwd.x, 0))
     for i, (cast, lat, dist, sc_) in enumerate(HEADS):
