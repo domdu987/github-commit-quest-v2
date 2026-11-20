@@ -1,0 +1,118 @@
+{
+ "take": "s06",
+ "film": 20,
+ "shots": [
+  6
+ ],
+ "g0": 404,
+ "g1": 466,
+ "first_g": 395,
+ "n_frames": 75,
+ "shot_ranges": {
+  "6": [
+   404,
+   465
+  ]
+ },
+ "handle_in": 9,
+ "handle_out": 4,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 13
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 466,
+  "note": "hard cut at g 466; out-handle g 466..469 rendered in 3D (the move continues)"
+ },
+ "set": "v3/set3d20 CAFE cafe_wide DAY, window view stub, smoke 0 (keyed every frame)",
+ "cast": "v3/cast20 painter20 / composer20 / poet20 / architect20 (outraged poses, news20 / paintbrush+palette props waving at ~1.7 Hz, arm + head sway, 3 Hz breathing bounce; poet + architect flipped to face the table) + waiter_idle; mouths held (outraged = held open, never animated); contact decal + proxy shadow",
+ "camera": "custom 22 mm cafe_wide start moved to (-5.0, -2.2, 1.2) D (preset (-4.89, -2.63, 2.07)), aim tilted +4 deg above the camera->table line (pitch ~11.5); c20.CamPath push 8 %/s toward the artists' table + truck-left slide 40 px/s + snap x1.3 (+0.1 D pan) g 442..457 on 'สี่สิบกว่าคน'; decay 0.25 (still moving on the last frame)",
+ "events": {
+  "snap": [
+   442,
+   457
+  ],
+  "word_count": 444,
+  "art_arms_up": [
+   442,
+   457
+  ]
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "year": 1887,
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 25.06,
+ "s_per_frame_cpu_mean": 47.3,
+ "heads_px_in_shot": {
+  "art1": {
+   "w": [
+    91,
+    140
+   ],
+   "y": [
+    642,
+    666
+   ],
+   "bottom_max": 721
+  },
+  "art2": {
+   "w": [
+    69,
+    94
+   ],
+   "y": [
+    701,
+    709
+   ],
+   "bottom_max": 756
+  },
+  "art3": {
+   "w": [
+    77,
+    110
+   ],
+   "y": [
+    679,
+    689
+   ],
+   "bottom_max": 741
+  },
+  "art4": {
+   "w": [
+    98,
+    159
+   ],
+   "y": [
+    617,
+    653
+   ],
+   "bottom_max": 707
+  },
+  "wtr": {
+   "w": [
+    87,
+    131
+   ],
+   "y": [
+    655,
+    668
+   ],
+   "bottom_max": 720
+  }
+ },
+ "framediff_in_shot": {
+  "median": 4.86,
+  "p90": 13.94
+ },
+ "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
+}

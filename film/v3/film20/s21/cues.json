@@ -1,0 +1,55 @@
+{
+ "take": "s21",
+ "fps": 30,
+ "note": "t = film seconds (g / 30); narration film20/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "kind": "ambience",
+   "t": 47.567,
+   "dur": 4.567,
+   "frame": 1427,
+   "end_frame": 1564,
+   "note": "night over Paris: distant city murmur, a soft wind high up, a faint carrier hum"
+  },
+  {
+   "kind": "accent",
+   "t": 47.6,
+   "dur": 0.4,
+   "frame": 1428,
+   "end_frame": 1440,
+   "note": "whip pull-out from the summit: fast rising whoosh"
+  },
+  {
+   "kind": "accent",
+   "t": 47.567,
+   "dur": 4.433,
+   "frame": 1427,
+   "end_frame": 1560,
+   "note": "signal rings: a soft blue 'pulse' ping every ~1.3 s (period 38 f), each fading farther away"
+  },
+  {
+   "kind": "accent",
+   "t": 50.933,
+   "dur": 0.5,
+   "frame": 1528,
+   "end_frame": 1543,
+   "note": "snap push on 'เสาอากาศยักษ์': swell"
+  },
+  {
+   "kind": "accent",
+   "t": 51.0,
+   "dur": 0.333,
+   "frame": 1530,
+   "end_frame": 1540,
+   "note": "whole lattice glows along the wire: electric hum rising + shimmering chime"
+  },
+  {
+   "kind": "cut",
+   "t": 52.0,
+   "dur": 0.0,
+   "frame": 1560,
+   "end_frame": 1560,
+   "note": "hard cut to shot 22 (dusk/night wagon and men): the hum drops to a low drone"
+  }
+ ]
+}
