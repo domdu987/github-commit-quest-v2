@@ -14,24 +14,28 @@ F18 = P + "/film18"
 
 def sh(*a, **k): return subprocess.run(a, check=True, **k)
 
+def _find_commit(shot, h):
+    """the commit (on any render18/teamK branch) whose tree holds blob h at film/v3/film18/<shot>/take.mkv"""
+    for k in range(1, 6):
+        br = f"origin/render18/team{k}"
+        subprocess.run(["git", "-C", REPO, "fetch", "-q", "origin", f"render18/team{k}:refs/remotes/{br}"], check=False)
+        revs = subprocess.run(["git", "-C", REPO, "rev-list", br, "--", f"film/v3/film18/{shot}/take.mkv"], capture_output=True, text=True).stdout.split()
+        for c in revs:
+            t = subprocess.run(["git", "-C", REPO, "rev-parse", f"{c}:film/v3/film18/{shot}/take.mkv"], capture_output=True, text=True).stdout.strip()
+            if t == h: return c
+    raise SystemExit(f"blob {h} for {shot} not found on any render18 branch")
+
 def fetch():
     for pf in sorted(glob.glob(F18 + "/qa/s*/PASSED")):
         shot = pf.split("/")[-2]; h = re.search(r"take hash ([0-9a-f]{40})", open(pf).read()).group(1)
-        d = f"{TAKES}/{shot}"; os.makedirs(d, exist_ok=True)
-        for k in range(1, 6):  # find the branch that holds this blob, take meta.json from the same tree
-            br = f"render18/team{k}"
-            subprocess.run(["git", "-C", REPO, "fetch", "-q", "origin", br], check=False)
-            tree = subprocess.run(["git", "-C", REPO, "ls-tree", "-r", "FETCH_HEAD", f"film/v3/film18/{shot}/"], capture_output=True, text=True).stdout
-            if h in tree: break
-        with open(d + "/take.mkv", "wb") as f: f.write(subprocess.run(["git", "-C", REPO, "cat-file", "blob", h], capture_output=True, check=True).stdout)
-        # meta.json: use the staged copy whose .hash matches, else the branch head
-        st = f"{SCR}/takes/{shot}"
-        if os.path.exists(st + "/.hash") and open(st + "/.hash").read().strip() == h:
-            sh("cp", st + "/meta.json", d + "/meta.json")
-        else:
-            m = subprocess.run(["git", "-C", REPO, "show", f"FETCH_HEAD:film/v3/film18/{shot}/meta.json"], capture_output=True, text=True, check=True).stdout
-            open(d + "/meta.json", "w").write(m); print("WARN meta from branch head for", shot)
-        print("fetched", shot, h[:10])
+        d = f"{TAKES}/{shot}"
+        if os.path.exists(d + "/.hash") and open(d + "/.hash").read().strip() == h: print("have", shot); continue
+        c = _find_commit(shot, h); os.makedirs(d, exist_ok=True)
+        for f in ("take.mkv", "meta.json"):
+            data = subprocess.run(["git", "-C", REPO, "show", f"{c}:film/v3/film18/{shot}/{f}"], capture_output=True, check=True).stdout
+            open(f"{d}/{f}", "wb").write(data)
+        for fr in glob.glob(d + "/frames/*.png"): os.remove(fr)
+        open(d + "/.hash", "w").write(h); print("fetched", shot, h[:10], "from", c[:8])
 
 WHIPS = json.load(open(F18 + "/qa/whips.json")) if os.path.exists(F18 + "/qa/whips.json") else []
 
