@@ -14,3 +14,11 @@
 | T7 | T7 | 1689-1874 | render17v2/T7 | session_017iwyCsubYPTNByUFhSTNqQ |
 | T8 | T8 | 1862-2052 | render17v2/T8 | session_017iwyCvLKPn3mZSxQ5FttdH |
 Split parts (a/b) of one take join frame-exact at the split; the TAKE gate reviews the joined take.
+
+## Splits for speed (2026-11-20 15:42)
+| part | take | range | branch | session |
+|---|---|---|---|---|
+| T3 (now) | T3 | 645-750 | render17v2/T3 | session_017iwyCsVwFNzZ7DcS1E4iaB |
+| T3b | T3 | 751-856 | render17v2/T3b | session_017iwyCvmZCB3uVB3g3GfQZ7 |
+| T6a (now) | T6 | 1371-1452 | render17v2/T6a | session_017iwyCvBhESGf4k1m8UeVeY |
+| T6a2 | T6 | 1453-1535 | render17v2/T6a2 | session_017iwyCtXKdAGttP3T7HTZ21 |
