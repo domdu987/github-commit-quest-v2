@@ -22,7 +22,8 @@ def base_path(g):
     ho = K.preset_pose("hill_over"); hl = K.preset_pose("hill_low")
     end_loc = hl[0]; end_look = (hl[1][0], hl[1][1], hl[1][2] + 3.0)
     keys = [(G0, ho[0], ho[1], ho[2]),
-            (1160, (151.0, 124.0, 41.0), (136.0, 126.0, 24.0), 28.0),                # over the lip, swinging south
+            (1152, (164.0, 143.0, 55.0), (134.0, 130.0, 28.0), 30.0),                # lift up and out past the Scots on the ledge
+            (1164, (150.0, 121.0, 40.0), (136.0, 126.0, 24.0), 28.0),                # over the lip, swinging south
             (1176, (132.0, 112.0, 28.0), (140.0, 130.0, 22.0), 24.0),
             (G_ARRIVE, end_loc, end_look, 22.0)]
     return K.cam_path(None, keys, min(g, G_ARRIVE))
