@@ -1,0 +1,20 @@
+{
+ "g0": 0,
+ "g1": 80,
+ "first_g": 0,
+ "n_frames": 84,
+ "handles_after": 3,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "join_out": {
+  "type": "D6",
+  "pose": "P_A",
+  "g": 80
+ },
+ "cam_in": "valley_wide-like start (445,244,361)->(64.8,44.7,0.2) 22 mm, already moving at g0",
+ "cam_out": "P_A (290,205,170)->(120,110,10) 22 mm exactly at g80; g81-83 continue the move toward hill_over",
+ "grade": "K.cam_path eases VIVID valley_wide->P_A; extra post gamma 1.459 (post_luma.py, one constant per segment) to bring luma to 100",
+ "samples": 32
+}

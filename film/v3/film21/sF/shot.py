@@ -14,6 +14,7 @@ import stirling as K
 import cast21
 ST = cast21.STORY21
 G0, G1 = 1044, 1141
+VIV = (float(os.environ.get("VIVG", "1.52")), 1.25)      # lower VIVID gamma for the bright camp_bank sand (API.md §9: toward 2.1 when luma > 115)
 G_SPEAK = (1093, 1140)          # narration 36.32-37.89 (+0.10 s, x30)
 G_LAUGH_END = 1096
 WORK = os.path.join(HERE, "work")
@@ -54,6 +55,7 @@ def main():
     out = sys.argv[3] if len(sys.argv) > 3 else os.path.join(HERE, "raw")
     samples = int(sys.argv[4]) if len(sys.argv) > 4 else 32
     os.makedirs(out, exist_ok=True)
+    K.WORLD_OVR["sun_k"] = float(os.environ.get("SUNK", "0.7"))
     K.PRESETS["camp_bank"]["clear"] = list(K.PRESETS["camp_bank"].get("clear", [])) + [(-84.0, -18.0, 13.0), (-94.0, -17.0, 7.0)]      # keep the tracking path free of tents
     T = C.Take(["camp_bank"], WORK, fg=True, hide=("camp_fg_t_", "camp_fg_wood"))
     M = T.A["marks"]["camp_bank"]; mode = "draft" if cmd in ("draft", "probe") else "final"
@@ -61,14 +63,14 @@ def main():
     for mark, cast, story, var, phase in CAST: T.actor("c_" + mark, cast, ppd=PPD.get(mark, 160))
     viv = {}
     for g in gs:
-        f = g + 1; r = K.cam_path(None, KEYS, g); viv[f] = r["vivid"][0]
+        f = g + 1; r = K.cam_path(None, KEYS, g); K.STATE["vivid"] = VIV; viv[f] = VIV[0]
         for mark, cast, story, var, phase in CAST:
             x, y, z = M[mark][:3]; p, dy = pose_of(mark, cast, story, var, phase, g)
             T.place("c_" + mark, f, (x, y, z + dy * SCALE[cast]), scale=SCALE[cast]); T.pose("c_" + mark, f, p)
     T.sprites_for({n: [g + 1 for g in gs] for n in T.actors}, vivid=lambda f: viv[f])
     used = list(T.actors)
     for g in gs:
-        f = g + 1; r = K.cam_path(None, KEYS, g)
+        f = g + 1; r = K.cam_path(None, KEYS, g); K.STATE["vivid"] = VIV
         K.set_flow(g / 30.0); K.set_smoke(g / 30.0); K.set_flutter(g / 30.0)
         if cmd == "probe":
             print(g, np.round(r["loc"], 1), T.heads(f), flush=True); continue

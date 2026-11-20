@@ -1,0 +1,21 @@
+[
+ {
+  "g": 0,
+  "cue": "whoosh_swoop_start",
+  "note": "high wide swoop begins"
+ },
+ {
+  "g": 0,
+  "cue": "hooves_planks_far",
+  "note": "tiny knights two by two on the bridge, very quiet"
+ },
+ {
+  "g": 40,
+  "cue": "wind_rising"
+ },
+ {
+  "g": 80,
+  "cue": "whoosh_swoop_continues",
+  "note": "join to A2"
+ }
+]
