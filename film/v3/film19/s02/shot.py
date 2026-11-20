@@ -43,7 +43,7 @@ AST_XY = (1.7, -30.6)                                   # astro19_c, camera-righ
 
 # ----------------------------------------------------------------------------- camera: a spline through key poses in the SHIP's rest frame (D), eased in and out
 KEYS = [  # (u, loc, look)
-    (0.00, (14.0, -330.0, 255.0), (0.0, -14.0, 14.0)),            # extreme wide from high above and behind
+    (0.00, (12.0, -215.0, 160.0), (0.0, -14.0, 14.0)),            # extreme wide from high above and behind (ship ~27 % of the frame height, characters ~10 px)
     (0.50, (10.0, -98.0, 74.0), (1.0, -30.0, 15.0)),              # descending
     (0.76, (5.5, -47.0, 27.5), (0.8, -30.5, 15.6)),               # above the stern, off the starboard quarter
     (0.91, (2.4, -41.0, 21.0), (0.6, -30.3, 15.8)),               # passes the spanker's starboard face and descends
@@ -59,7 +59,7 @@ def _cr(p0, p1, p2, p3, t):
 def _spline(g, which):
     """position on the key spline at the eased parameter u(g) (which 1 = loc, 2 = look)"""
     t = clamp((g - G0 + 4) / float(G_ARRIVE - (G0 - 4)))                 # 0 slightly before the cut-in, 1 when the medium shot is reached
-    u = 0.78 * (t * t * t * (t * (6 * t - 15) + 10)) + 0.22 * t           # eased in / out (smootherstep) with a little linear so it never parks
+    u = 0.55 * (t * t * t * (t * (6 * t - 15) + 10)) + 0.45 * t           # eased in / out (smootherstep) with a good share of linear so it never parks
     P = [Vector(k[which]) for k in KEYS]
     us = [k[0] for k in KEYS]
     j = max(i for i in range(len(us) - 1) if us[i] <= u) if u < 1.0 else len(us) - 2
