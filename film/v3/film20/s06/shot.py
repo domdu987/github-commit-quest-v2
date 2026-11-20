@@ -21,18 +21,17 @@ SNAP = (G_COUNT - 2, G_COUNT + 13)
 LIGHT, PRESET, PPD = "DAY", "cafe_wide", 144
 
 ART = [("art1", "painter20", "artist_1"), ("art2", "composer20", "artist_2"), ("art3", "poet20", "artist_3"), ("art4", "architect20", "artist_4")]
-# stage offsets (D, world x/y) so the crowd reads round the table and nobody hides the table top
-NUDGE = {"art1": (0.25, -0.2), "art2": (0.0, 0.25), "art3": (-0.2, 0.1), "art4": (1.0, 0.0)}
+SPOT = {"art1": (-2.3, 6.9), "art2": (-0.9, 8.2), "art3": (0.5, 6.7), "art4": (-1.2, 5.9), "wtr": (2.0, 7.6)}   # stage (D, world x/y): a tight group, heads staggered
 PROP = {"art1": dict(type="news20", angle=-25), "art2": None, "art3": dict(type="news20", angle=20), "art4": dict(type="news20", angle=-35)}
-YAW = {"art1": 0.35, "art2": 0.1, "art3": -0.35, "art4": -0.3}            # toward the table centre (negative = faces screen-left: mirror)
+YAW = {"art1": 0.35, "art2": 0.1, "art3": -0.35, "art4": 0.2}            # toward the table centre (negative = faces screen-left: mirror)
 PHASE = {"art1": 0.0, "art2": 1.7, "art3": 3.1, "art4": 4.4}
 
 
 def cam_path(A):
-    c = Vector(eval(os.environ.get("CAML", "(-5.0, -2.2, 1.2)")))
-    subj = Vector((-0.94, 6.4, 2.45))
-    return C.CamPath(c, subj, GA, G_LAST, push=float(os.environ.get("PUSH","0.08")), slide_px=float(os.environ.get("SLIDE","-40")), tilt0=float(os.environ.get("TILT", "4")), tilt_deg_s=0.0, decay=0.25,
-                     snaps=[dict(g=SNAP, k=1.3, peak=1.7, shift=(0.1, 0.0), tilt=0.0)])
+    c = Vector(eval(os.environ.get("CAML", "(0.2, 0.5, 2.3)")))
+    subj = Vector((-0.6, 6.7, 2.4))
+    return C.CamPath(c, subj, GA, G_LAST, push=float(os.environ.get("PUSH","0.08")), slide_px=float(os.environ.get("SLIDE","-40")), tilt0=float(os.environ.get("TILT", "3")), tilt_deg_s=0.0, decay=0.25,
+                     snaps=[dict(g=SNAP, k=1.2, peak=1.7, shift=(0.1, 0.0), tilt=0.0)])
 
 
 def cam_path_static():
@@ -82,8 +81,8 @@ class Take(C.Take):
             self.key_cam(f, *self.path.at(g))
             for k, cast, mark in ART:
                 m = M[mark]
-                self.actors[k].place(f, (m[0] + NUDGE[k][0], m[1] + NUDGE[k][1], m[2]), scale=1.0, flip=YAW[k] < 0)
-            C.place(self.waiter, f, M["waiter"])
+                self.actors[k].place(f, (SPOT[k][0], SPOT[k][1], m[2]), scale=1.0, flip=YAW[k] < 0)
+            self.waiter.place(f, (SPOT["wtr"][0], SPOT["wtr"][1], M["waiter"][2]), scale=1.0, flip=True)
             self.key_set(f, set_window_view=("stub",), smoke=(0.0,))
         for g in gs:
             f = bf(g)
