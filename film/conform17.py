@@ -56,8 +56,8 @@ CUES=[
  ("paper_flutter",60.0,-22,2.0,{}),
  # gasp (28)
  ("gasp",53.95,-19,1.6,{}),
- # sting on "มาร์แตง" (shot 28, word starts 53.36 in captions.json); not ducked
- ("sting",53.36,-16,2.2,{"noduck":1,"fade_out":0.4}),
+ # sting on "มาร์แตง" (shot 28, word starts 53.25 in retimed captions.json); not ducked
+ ("sting",53.25,-16,2.2,{"noduck":1,"fade_out":0.4}),
  # whips / snaps
  ("whoosh",44.62,-27,0.6,{}),("whoosh",55.05,-27,0.6,{}),
  # clock tick bed under 20-21 (34.74-39.76)
