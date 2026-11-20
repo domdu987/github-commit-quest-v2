@@ -264,10 +264,10 @@ def solid_material(name, rgb, k=0.3):
     return m
 
 
-def fix_vista(T, hold_scale=0.5, tents=0.06, siege_fire=False, halo_k=0.0):
+def fix_vista(T, hold_scale=0.5, tents=0.10, siege_fire=False, halo_k=0.0):
     """opaque Qi flags without bloom, smaller holdout flags, no siege halos, dimmer sun-lit tent faces, short-bar clouds."""
     ob = STATE['objects']
-    red = solid_material('t18_qi_red', (0.46, 0.06, 0.05), 0.32); teal = solid_material('t18_qi_teal', (0.08, 0.34, 0.38), 0.3)
+    red = solid_material('t18_qi_red', (0.46, 0.06, 0.05), 0.32); teal = solid_material('t18_qi_teal', (0.42, 0.26, 0.05), 0.2)
     for p in STATE['pennants']:
         o = p.get('ob')
         if o is None or p['kind'] != 'qi':
@@ -275,6 +275,11 @@ def fix_vista(T, hold_scale=0.5, tents=0.06, siege_fire=False, halo_k=0.0):
         for i, m in enumerate(o.data.materials):
             if m.name.endswith('b82c20_1.15_1_1_None'): o.data.materials[i] = red
             if m.name.endswith('2a6a7a_1.1_1_1_None'): o.data.materials[i] = teal
+    if 'vtrees' in ob:
+        ob['vtrees'].hide_render = True                              # the dark spike cones (trees) read as stray blue triangles (TAKE gate)
+    for p in STATE['pennants']:                                      # flag shadows made flat navy polygons on the ground (TAKE gate)
+        if p.get('ob') is not None:
+            p['ob'].visible_shadow = False
     for m in ob['siegetents'].data.materials:
         for n in m.node_tree.nodes:
             if n.bl_idname == 'ShaderNodeEmission': n.inputs['Strength'].default_value *= tents
@@ -309,7 +314,7 @@ def fix_vista(T, hold_scale=0.5, tents=0.06, siege_fire=False, halo_k=0.0):
     jx, jy, jz = STATE['marks']['ju']; Bk = J.Banks(); b = Bk('t18_beacon', hull=0.0)
     J.rod(b, V_((jx + 6, jy - 6, jz)), V_((jx + 6, jy - 6, jz + 40)), 0.9, STATE['M']['wood_d'], seg=5); J.cyl(b, V_((jx + 6, jy - 6, jz + 40)), 2.2, 1.6, STATE['M']['iron'], seg=8, r1=2.8)
     Bk.flush(STATE['SET'])
-    J.live_flame(V_((jx + 6, jy - 6, jz + 41.5)), 30.0, 8.0, seed=991, n=4, light=0.0, name='jubeacon', warm=None)
+    J.live_flame(V_((jx + 6, jy - 6, jz + 41.5)), 17.0, 5.0, seed=991, n=4, light=0.0, name='jubeacon', warm=None)
     STATE['hold_scale'] = hold_scale
 
 
@@ -317,7 +322,7 @@ def hold_apply(T):
     """after set_pennants / set_qi_return (which reset the holdout flag scale): scale the two holdout flags about their pole feet."""
     for p in STATE['pennants']:
         if p.get('hold') and p.get('ob') is not None:
-            s = STATE.get('hold_scale', 1.0) * (3.2 if p['x'] < 0 else 1.0); p['ob'].scale = (s, s, s)
+            s = STATE.get('hold_scale', 1.0) * (2.2 if p['x'] < 0 else 1.0); p['ob'].scale = (s, s, s)
 
 
 def tilt_cam(dz_look, dz_loc=0.0):

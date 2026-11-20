@@ -13,15 +13,19 @@ G0, G1 = 944, 1003
 H_IN, H_OUT = 7, 8                   # dissolve 11 in / dissolve 13 out
 FIRST, LAST = G0 - H_IN, G1 - 1 + H_OUT
 mode, rng = c18.parse_args(FIRST, LAST)
-T = c18.Take('s12', FIRST, LAST, draft=(mode == 'draft'), cam_fn=c18.compose(c18.tilt_cam(5.6), c18.rhythm_cam(push=0.05, slide=0.0, pulses=(), orbit=-10)))
+T = c18.Take('s12', FIRST, LAST, draft=(mode == 'draft'), cam_fn=c18.compose(c18.tilt_cam(5.6), c18.rhythm_cam(push=0.10, slide=0.0, pulses=(), orbit=-13)))
 ST = cast18.STORY18
 ENV_WALK = ST['envoy_walk'][1]; ENV_BOW = dict(ST['envoy_bow'][1], prop_r=dict(type='banner', angle=-90, scale=1.0))
 FOLK = [('old_man_worried', -13.0), ('woman_worried', -11.0), ('old_man_worried', -9.0), ('woman_worried', -7.0), ('child_stand', -5.2), ('old_man_worried', -3.6), ('woman_worried', -2.0), ('old_man_worried', 6.0), ('woman_worried', 8.0)]
 HEIGHT = dict(old_man=3.0, woman=3.0, child=2.0, envoy=3.0)
 G_WALK0, G_ARR, G_BOW1 = FIRST, 978, 992
 from mathutils import Matrix
-for ob in c18.STATE.get('fg_objs', []):                       # QA_ART_SET_R2 13: the cart wheel hid the gate crack: slide the fg wheel left out of the way
-    ob.matrix_parent_inverse = Matrix.Translation((-0.75, -0.12, 0.0)) @ ob.matrix_parent_inverse
+for ob in c18.STATE.get('fg_objs', []):                       # the fg cart wheel / shaft: gone (it hid the gate crack, then the envoy; the red 'plank' was its shaft)
+    ob.hide_render = True
+import bpy
+for ob in bpy.data.objects:                                   # grey rocks / planks / the red lance (TAKE gate rule 2): the cart's fg wood + stone banks and the dr_* dressing
+    if ob.name.startswith(('fgwood', 'fgstone', 'dr_hay', 'dr_plume', 'dr_pot', 'dr_rope', 'dr_stone', 'dr_wheel', 'dr_basket')):
+        ob.hide_render = True
 
 
 def frame(T, g):
@@ -30,7 +34,7 @@ def frame(T, g):
     heads = []
     # envoy: walks from the gate (y -14) to the bridge middle (y -28), then bows
     u = c18.ramp(g, G_WALK0, G_ARR) if g < G_ARR else 1.0
-    y = c18.lerp(-14.0, -25.0, u); x = -2.6
+    y = c18.lerp(-14.0, -27.0, u); x = -2.6
     if g < G_ARR:
         pose = cast18.cycle('envoy', ((g - G_WALK0) % 28) / 28.0, 'walk', -1, base=dict(ENV_WALK, prop_r=dict(type='banner', angle=-90, scale=1.5)))
     else:
@@ -40,8 +44,8 @@ def frame(T, g):
         pose['t'] = g / 30.0
     pose['t'] = g / 30.0
     m = c18.pcard('envoy', pose, 'env%d_%s' % (g, 'w' if g < G_ARR else 'b'))
-    c18.put(m, (x, y, 0.0), cam, height=4.4, name='envoy')
-    heads.append(T.head_row((x, y, 0.0), 4.4, 'envoy'))
+    c18.put(m, (x, y, 0.0), cam, height=4.2, name='envoy')
+    heads.append(T.head_row((x, y, 0.0), 4.2, 'envoy'))
     for i, (pn, fx) in enumerate(FOLK):
         c, p = ST[pn]; p = dict(p); p['t'] = g / 30.0
         h = (2.0 if pn.startswith('child') else 3.0) * 2.1
