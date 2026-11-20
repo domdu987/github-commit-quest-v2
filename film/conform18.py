@@ -59,6 +59,12 @@ def whip(g0, direction=1, k=3):
 def frames():
     os.makedirs(os.path.dirname(OUTF), exist_ok=True)
     sh(sys.executable, P + "/conform_full.py", TAKES, OUTF, env=dict(os.environ, N=str(N)))
+    # teams wrote g1 as their last frame: fill any frame no take covers from the outgoing take's handle
+    for g in range(N):
+        dst = f"{OUTF}_frames/f_{g:04d}.png"
+        if not os.path.lexists(dst):
+            c = sorted(glob.glob(f"{TAKES}/s*/frames/g_{g:04d}.png"))
+            if c: os.symlink(c[0], dst); print("filled", g, "from", c[0].split("/")[-3])
     for w in WHIPS: whip(w["g"], w.get("dir", 1))
 
 def grade_filter():
@@ -75,7 +81,7 @@ def grade_filter():
         k = min(1.5, max(1.0, 0.54 / max(sat, 1e-3)))  # §I: film saturation >= 0.50, vivid >= 45 %
         T = 90.0 if L < 87 else (105.0 if L > 108 else L)
         gm = float(np.log(L / 255) / np.log(T / 255)) if T != L else 1.0
-        gm = 1 / gm  # ffmpeg eq gamma > 1 brightens
+        # ffmpeg eq: out = in^(1/gamma); gamma = log(L)/log(T) maps mean L -> T
         if k > 1.0 or abs(gm - 1) > 0.01:
             chain.append(f"eq=saturation={k:.3f}:gamma={gm:.3f}:enable='between(n,{a},{b-1})'")
         print(f"grade {shot}: sat {sat:.3f} luma {L:.1f} -> k {k:.2f} gamma {gm:.3f}")
@@ -96,7 +102,7 @@ def final(out):
            "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"]
     ts = lambda t: f"{int(t//3600)}:{int(t%3600//60):02d}:{t%60:05.2f}"
     for c in caps:
-        a = max(0, c["t"] + OFF); b = min(c["end"] + OFF, T)
+        a = max(0, c["t"] + OFF); b = min((c["end"] if c.get("end") is not None else T - OFF) + OFF, T)
         if a < T: ass.append(f"Dialogue: 0,{ts(a)},{ts(b)},Pop,,0,0,0,,{{\\pos(360,900)}}{c['text']}")
     os.makedirs(os.path.dirname(out), exist_ok=True); open(out + ".ass", "w").write("\n".join(ass))
     sh("ffmpeg", "-y", "-v", "error", "-framerate", "30", "-i", OUTF + "_frames/f_%04d.png", "-vf", ",".join(filter(None, [grade_filter() if os.environ.get("GRADE", "1") == "1" else "", f"ass={out}.ass:fontsdir={P}/fonts"])),
