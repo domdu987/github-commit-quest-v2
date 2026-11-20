@@ -29,9 +29,9 @@
   "fps": 30
  },
  "rhythm": {
-  "median": 5.51,
-  "p90": 15.67
+  "median": 6.09,
+  "p90": 12.43
  },
  "files": "take.mkv is split in take.mkv.part00..part01 (cat take.mkv.part* > take.mkv)",
- "round": 2
+ "round": 3
 }
