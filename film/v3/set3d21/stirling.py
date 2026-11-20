@@ -177,7 +177,7 @@ def _lit_mat(key, s):
     if s['haze']: sh = _haze_out(nt, sh)
     L(sh, out.inputs['Surface']); return m
 def _glow_mat(key):
-    spec = {'glow_flame': ('#ffb040', 6.0), 'glow_ember': ('#ff8a30', 4.0), 'glow_sun': ('#fff2cc', 6.0), 'glow_smoke': ('#cdbfc0', 0.85), 'glow_spray': ('#f0f6fb', 1.0), 'glow_spray2': ('#cfe6f2', 1.0)}[key]
+    spec = {'glow_flame': ('#ffb040', 6.0), 'glow_ember': ('#ff8a30', 4.0), 'glow_sun': ('#fff2cc', 6.0), 'glow_smoke': ('#cdbfc0', 0.85), 'glow_spray': ('#f6f8fb', 1.0), 'glow_spray2': ('#f2f6fa', 1.0)}[key]
     m = bpy.data.materials.new(key); nt = _mk_tree(m); out = nt.nodes.new('ShaderNodeOutputMaterial'); e = nt.nodes.new('ShaderNodeEmission'); e.name = 'strength'
     e.inputs[0].default_value = (*hex_lin(spec[0]), 1); e.inputs[1].default_value = spec[1]; nt.links.new(e.outputs[0], out.inputs[0]); return m
 def _ink_mat():
@@ -634,8 +634,8 @@ def grade(path, sat=1.07, bloom=0.5, scale=None, gamma=1.28):
     im = np.clip(im, 0, 1) ** vg; mx = im.max(-1, keepdims=True); im = np.clip(mx - (mx - im) * vs, 0, 1)
     Image.fromarray((im * 255 + 0.5).astype(np.uint8)).save(path)
 VIVID = {'bridge_deck': (1.78, 1.15), 'bridge_end_north': (1.38, 1.23), 'bridge_end_south': (1.9, 1.15), 'bridge_high': (1.9, 1.15),
-         'camp_bank': (1.52, 1.3), 'camp_table': (0.9, 1.45), 'camp_wide': (1.9, 1.15), 'hill_eye': (0.8, 1.31), 'hill_low': (1.38, 1.15),
-         'hill_over': (1.48, 1.15), 'river_low': (6.0, 1.04), 'riverbank': (1.63, 1.59), 'valley_loop': (1.07, 1.53), 'valley_river': (1.9, 1.18),
+         'camp_bank': (1.52, 1.3), 'camp_table': (1.05, 1.1), 'camp_wide': (1.9, 1.15), 'hill_eye': (0.8, 1.31), 'hill_low': (1.38, 1.15),
+         'hill_over': (1.48, 1.15), 'river_low': (1.8, 1.3), 'riverbank': (1.5, 1.6), 'valley_loop': (1.07, 1.53), 'valley_river': (1.9, 1.18),
          'valley_wide': (1.11, 1.63)}
 def render(path, mode='final', samples=None, do_grade=True):
     sc = bpy.context.scene; setup_render(sc, mode, samples); sc.render.filepath = path; t = time.time(); bpy.ops.render.render(write_still=True); dt = time.time() - t
@@ -975,7 +975,7 @@ def table_set(A, B, c, yaw, rs):
             for sy in (-0.4, 0.4): B.rod('wood', (sx + sx * 0.05, sy * 1.2, 0), (sx, sy, 0.9), 0.045, seg=5)
         B.box('wood', (0, 0, 0.93), (2.3, 1.0, 0.07)); B.box('cloth_red', (0, 0, 0.985), (2.38, 1.06, 0.035)); B.box('cloth_red', (0, -0.53, 0.8), (2.38, 0.035, 0.3)); B.box('gold', (0, -0.545, 0.69), (2.38, 0.02, 0.05)); B.box('gold', (0, 0.0, 1.01), (2.38, 0.05, 0.012))
         # chest + coins
-        cx, cy_ = -0.62, -0.05; B.box('barrel', (cx, cy_, 1.22), (1.0, 0.62, 0.46)); B.box('iron', (cx + 0.2, cy_ - 0.32, 1.22), (0.07, 0.02, 0.48)); B.box('iron', (cx - 0.2, cy_ - 0.32, 1.22), (0.07, 0.02, 0.48)); B.box('gold', (cx, cy_ - 0.325, 1.32), (0.12, 0.02, 0.14)); B.box('iron', (cx + 0.34, cy_, 1.225), (0.08, 0.64, 0.48)); B.box('iron', (cx - 0.34, cy_, 1.225), (0.08, 0.64, 0.48))
+        cx, cy_ = -0.92, -0.05; B.box('barrel', (cx, cy_, 1.22), (1.0, 0.62, 0.46)); B.box('iron', (cx + 0.2, cy_ - 0.32, 1.22), (0.07, 0.02, 0.48)); B.box('iron', (cx - 0.2, cy_ - 0.32, 1.22), (0.07, 0.02, 0.48)); B.box('gold', (cx, cy_ - 0.325, 1.32), (0.12, 0.02, 0.14)); B.box('iron', (cx + 0.34, cy_, 1.225), (0.08, 0.64, 0.48)); B.box('iron', (cx - 0.34, cy_, 1.225), (0.08, 0.64, 0.48))
         B.box('gold', (cx, cy_, 1.46), (0.88, 0.5, 0.05))
         for i in range(10): B.sphere('gold', (cx + rs.uniform(-0.34, 0.34), cy_ + rs.uniform(-0.2, 0.2), 1.5 + 0.03 * rs.rand()), 0.09, seg=6, rings=4, scale=(1, 1, 0.5))
         # coin stacks in neat rows
@@ -1001,11 +1001,11 @@ def table_set(A, B, c, yaw, rs):
         with Bl.xf((0, 0, 0)): pass
     Bc.finalize('table_canopy', shadow=False)
     # chest lid: own object, hinge at the back-top edge of the chest, open 72 degrees
-    cx, cy_ = -0.62, -0.05; hp = tw((cx, cy_ + 0.31, 1.47)); Bl.box('barrel', (0, -0.31, 0.045), (1.0, 0.64, 0.09)); Bl.box('iron', (0.34, -0.31, 0.055), (0.08, 0.66, 0.11)); Bl.box('iron', (-0.34, -0.31, 0.055), (0.08, 0.66, 0.11)); Bl.box('gold', (0, -0.31, 0.1), (0.8, 0.5, 0.02))
+    cx, cy_ = -0.92, -0.05; hp = tw((cx, cy_ + 0.31, 1.47)); Bl.box('barrel', (0, -0.31, 0.045), (1.0, 0.64, 0.09)); Bl.box('iron', (0.34, -0.31, 0.055), (0.08, 0.66, 0.11)); Bl.box('iron', (-0.34, -0.31, 0.055), (0.08, 0.66, 0.11)); Bl.box('gold', (0, -0.31, 0.1), (0.8, 0.5, 0.02))
     lid = Bl.finalize('chest_lid', loc=hp)[0]; lid.rotation_euler = (math.radians(-72), 0, math.radians(yaw)); lid.rotation_mode = 'XYZ'
     A['chest_lid'] = lid.name; A['chest_lid_hinge'] = hp
     # scales: stand on the table, beam on a pivot object
-    sp = tw((0.95, -0.12, 1.0)); Bs.rod('wood_dk', (0, 0, 0), (0, 0, 0.8), 0.05, seg=6); Bs.box('wood_dk', (0, 0, 0.0), (0.3, 0.3, 0.06)); Bs.sphere('gold', (0, 0, 0.83), 0.07, seg=6, rings=4)
+    sp = tw((1.30, -0.12, 1.0)); Bs.rod('wood_dk', (0, 0, 0), (0, 0, 0.8), 0.05, seg=6); Bs.box('wood_dk', (0, 0, 0.0), (0.3, 0.3, 0.06)); Bs.sphere('gold', (0, 0, 0.83), 0.07, seg=6, rings=4)
     Bs.finalize('scale_stand', loc=sp); Bb = Batch(33); Bb.box('gold', (0, 0, 0), (1.0, 0.055, 0.055))
     for sxx in (-0.5, 0.5): Bb.rod('rope', (sxx, 0, 0), (sxx, 0, -0.34), 0.012, seg=3); Bb.cyl('steel', (sxx, 0, -0.37), 0.18, 0.03, seg=14, r2=0.18)
     beam = Bb.finalize('scale_beam', loc=(sp[0], sp[1], sp[2] + 0.83), ink=True)[0]; beam.rotation_euler = (0, math.radians(0), math.radians(yaw)); A['scale_beam'] = beam.name
@@ -1441,8 +1441,9 @@ def splash(x, y, age, size=1.0, z=0.0, name='a', seed=0):
                 p0 = (x + r_b * math.cos(a), y + r_b * math.sin(a), z); pm = (x + (r_b + 0.25 * hh * math.tan(fl)) * math.cos(a), y + (r_b + 0.25 * hh * math.tan(fl)) * math.sin(a), z + 0.6 * hh)
                 p1 = (x + (r_b + hh * math.tan(fl)) * math.cos(a), y + (r_b + hh * math.tan(fl)) * math.sin(a), z + hh)
                 B.rod(M, p0, pm, 0.065 * k, seg=5, r2=0.05 * k); B.rod(M, pm, p1, 0.05 * k, seg=5, r2=0.015 * k); B.sphere(M, p1, 0.1 * k * rs.uniform(0.8, 1.2), seg=6, rings=4)
-    if age < 0.85:
-        hs = k * 2.8 * math.sin(math.pi * min(age / 0.85, 1.0)) ** 0.8; B.rod(M, (x, y, z), (x, y, z + hs), 0.09 * k, seg=8, r2=0.06 * k); B.sphere(M, (x, y, z + hs), 0.14 * k, seg=8, rings=5)
+    if age < 0.85 and Hc > 0.05:                                              # a tapered column no taller than 1.2x the crown, with 3-5 droplets breaking off its tip
+        hs = 1.2 * Hc; B.rod(M, (x, y, z), (x, y, z + hs), 0.09 * k, seg=8, r2=0.012 * k)
+        for j in range(rs.randint(3, 6)): B.sphere(M, (x + rs.uniform(-0.15, 0.15) * k, y + rs.uniform(-0.15, 0.15) * k, z + hs + (0.12 + 0.16 * j) * k), rs.uniform(0.05, 0.09) * k, seg=5, rings=3)
     ro = R0 * 1.5 + k * 0.6 * tau; wd = max(0.03, 0.25 * k * (1 - age / 1.6)); n = 24; th = [2 * math.pi * i / n for i in range(n)]
     B.mesh(M2, [(x + (ro - wd) * math.cos(t_), y + (ro - wd) * math.sin(t_), z + 0.05) for t_ in th] + [(x + ro * math.cos(t_), y + ro * math.sin(t_), z + 0.05) for t_ in th], [(i, (i + 1) % n, n + (i + 1) % n, n + i) for i in range(n)], False)
     for i in range(8):                                                       # low mist: flat white discs round the base
@@ -1556,18 +1557,18 @@ def table_extras(A, pr):
     for ox in (-0.2, 0.2):
         for oy in (-0.17, 0.17): B.rod('wood', (sx + ox, sy + oy, tz), (sx + ox * 0.9, sy + oy * 0.9, tz + 0.46), 0.03, seg=5)
     B.box('wood', (sx, sy + 0.2, tz + 0.78), (0.5, 0.05, 0.6)); B.box('cloth_red', (sx, sy + 0.25, tz + 0.72), (0.58, 0.07, 0.8)); B.box('gold', (sx, sy + 0.285, tz + 1.1), (0.4, 0.02, 0.05))
-    B.box('cloth_red', (tx, ty - 2.0, tz + 0.015), (3.4, 2.4, 0.03)); B.box('gold', (tx, ty - 0.82, tz + 0.03), (3.4, 0.07, 0.01)); B.box('gold', (tx, ty - 3.18, tz + 0.03), (3.4, 0.07, 0.01))
-    for sgn in (-1, 1): B.box('gold', (tx + sgn * 1.7, ty - 2.0, tz + 0.03), (0.07, 2.4, 0.01))
-    for i in range(6): B.box('t_cream', (tx - 1.3 + 0.52 * i, ty - 2.0, tz + 0.032), (0.2, 2.1, 0.005))
+    B.box('cloth_red', (tx, ty - 1.15, tz + 0.015), (3.4, 1.2, 0.03)); B.box('gold', (tx, ty - 0.57, tz + 0.03), (3.4, 0.06, 0.01)); B.box('gold', (tx, ty - 1.73, tz + 0.03), (3.4, 0.06, 0.01))
+    for sgn in (-1, 1): B.box('gold', (tx + sgn * 1.7, ty - 1.15, tz + 0.03), (0.07, 1.2, 0.01))
+    for i in range(6): B.box('t_gold', (tx - 1.3 + 0.52 * i, ty - 1.15, tz + 0.032), (0.2, 0.9, 0.005))
     B.finalize('table_extras')
-_mk('camp_table', loc='camp', cam=(-13.0, -30.0, 0.0), cam_dz=1.3, look=(-13.0, -26.5, 1.55), lens=22.0, sd=5.0, over=dict(_OVR), camp_fg=table_extras,
-    marks_spec=[('cress', 'cressingham', 4.0, 360)], fg_list=[('barrel', 2.4, 820)], veg=dict(_VEG, half=22), drift='push 8 %/s; hooks: set_scale_tip(A, deg), set_chest_lid(A, deg)')
+_mk('camp_table', loc='camp', cam=(-13.0, -30.0, 0.0), cam_dz=1.3, look=(-13.0, -26.5, 1.70), lens=22.0, sd=5.0, over=dict(_OVR), camp_fg=table_extras, samples=40,
+    marks_spec=[('cress', 'cressingham', 4.0, 365)], fg_list=[('barrel', 2.4, 820)], veg=dict(_VEG, half=22), drift='push 8 %/s; hooks: set_scale_tip(A, deg), set_chest_lid(A, deg)')
 _mk('riverbank', loc='riverbank', cam=(-27.0, 54.0, 0.0), cam_dz=1.8, look=(-28.0, 22.0, -3.5), lens=22.0, sd=10.0, over=dict(_OVR, reed_k=0.6, foam_k=0.5),
     marks_spec=[('e1', 'foot', 4.5, 80), ('e2', 'foot:foot_r', 6.0, 215), ('e3', 'foot', 8.5, 130), ('e4', 'knight:knight_b', 11.0, 45)], fg_list=[('reeds', 1.7, 30), ('gorse', 2.2, 380, 0.4)],
     veg=dict(_VEG, half=30, reeds=[(2, 40, 90)]), drift='slide 40 px/s + push; the channel is on the right: splash() points in PRESETS["riverbank"]["splashes"]')
 PRESETS['riverbank']['splashes'] = [at_px(PRESETS['riverbank'], d, xp) + (0.0,) for d, xp in ((9.0, 520), (11.0, 640), (13.0, 380))]
 PRESETS['riverbank']['splash_size'] = 1.5; PRESETS['riverbank']['splash_ages'] = [0.2, 0.35, 0.5]
-_mk('river_low', loc='riverbank', cam=(-26.0, 46.0, 0.0), cam_dz=0.9, look=(-44.0, 44.0, 0.9), lens=22.0, sd=10.0, over=dict(_OVR, reed_k=0.4, foam_k=0.15, sun_k=1.0),
+_mk('river_low', loc='riverbank', cam=(-26.0, 46.0, 0.0), cam_dz=0.9, look=(-44.0, 44.0, 0.9), lens=22.0, sd=10.0, over=dict(_OVR, reed_k=0.4, foam_k=0.6, sun_k=1.0),
     marks_spec=[], fg_list=[('reeds', 1.4, 60), ('reeds', 1.6, 670), ('rock', 1.8, 380, 0.3)], veg=dict(_VEG, half=34, reeds=[(2, 40, 160)]), splash_size=1.8, splash_ages=[0.15, 0.3, 0.45], drift='quick push; splash() crowns at pr["splashes"]')
 PRESETS['river_low']['splashes'] = [at_px(PRESETS['river_low'], d, xp) + (0.0,) for d, xp in ((9.0, 150), (10.5, 380), (9.5, 610))]
 
@@ -1588,6 +1589,7 @@ def build_for_cli(preset, light='MORNING', placeholders=True):
     if placeholders and A['marks'] and not nofg: stage_placeholders(A)
     return A
 def cli_render(preset, light='MORNING', out=None, mode='final', samples=None, placeholders=True):
+    samples = samples or PRESETS[preset].get('samples') if mode == 'final' else samples
     t0 = time.time(); A = build_for_cli(preset, light, placeholders); tb = time.time() - t0; dt = render(out, mode, samples)
     cam = bpy.context.scene.camera; heads = head_report(A, cam)
     info = dict(preset=preset, light=light, build_s=round(tb, 2), render_s=round(dt, 2), mode=mode, samples=bpy.context.scene.cycles.samples, heads=heads, objects=len(bpy.data.objects),
