@@ -17,10 +17,10 @@
  "handle_in": 6,
  "handle_out": 4,
  "transition_in": {
-  "type": "match-dissolve",
+  "type": "dissolve",
   "frames": 9,
   "from_shot": 24,
-  "note": "starts on the framing matching the end of s24 (head x~330 y~680, 165 px, same fork-cycle phase)"
+  "note": "plain 9-frame dissolve from s24 (framing and fork cycle still matched)"
  },
  "transition_out": {
   "type": "cut",
