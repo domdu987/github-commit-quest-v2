@@ -225,6 +225,8 @@ def stage(T, gs):
     M = marks["cress"]
     loc0, look0, f, R = axes()
     near_props(A, M, R, f, loc0)
+    pts = [tuple(camera_at(gg, M)[0]) for gg in range(642, 797, 4)]
+    print("hid banners/plumes near the camera path:", K.hide_near_banners(pts, 7.0), flush=True)       # no pennant floating without its pole
     # the far Scots: 2.7x bigger, and their saltire flags, so a phone viewer finds them
     for o in bpy.data.objects:
         if o.name.startswith("scots_line_") and "." not in o.name: o.hide_render = True
