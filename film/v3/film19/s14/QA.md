@@ -6,3 +6,6 @@
 - Frame-diff in-shot (79 pairs): **median 3.45 (below the 4.0 target), p90 13.86 (meets 12)**. The draft read 4.30 / 12.80; the final comes out lower on this bright warm shot (the first 2 s, a wide with little contrast change, are the weak part). Stronger drift (slide -60/-80) pushed Harrison out of the frame at the snap, so I kept him in frame instead.
 - s/frame 20.7 wall / 40.8 CPU (two processes).
 - Deviations: custom camera (the preset starts too close to show the H1 + H4 size contrast); median frame-diff under target as above. Set H4 is the set's hero-scale watch (about 30 cm), as set3d19 defines it. The H4 overlaps Harrison's lower body (he stands behind it).
+
+## Re-render (lantern set fix)
+- Re-rendered with the new iron-cage lantern (h19_shop.py from film19/main); no other change. Frame-diff median 3.44 (still under 4.0), p90 13.86.
