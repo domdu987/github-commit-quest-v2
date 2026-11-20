@@ -11,3 +11,9 @@ After TAKE_ART (F1-F3), TAKE_B and QA_TEAM §G. Checked at 6 fps contact + phone
 - Added an "EXPOSITION UNIVERSELLE 1889" banner (Latin text objects, gold on a red board, two poles) behind the pair (readable on frames g 988-1015, then the orbit carries it out of frame), 6 keyed fluttering pennant poles, and a lower raking sun (key_dir elevation ~27 deg: long cast shadows, warm sun + deep-blue shade in every frame). Crowd (40 cards) and flags move; nobody frozen. Join out = hard CUT (4 handle frames g 1093-1096), join in = DIS 13 (8 handle frames).
 - `qa_stats2.py take.mkv`: sat 0.561, vivid 47.2 % (>= 45), luma 86.0, warm 30.9 % / cool 33.6 %, motion median 7.56 p90 11.74, still 0 %. In-shot g 997..1092: median 6.46, p90 11.02 (p90 still 1 short of 12).
 - take.mkv 31.5 MB.
+
+## v5 (director re-measure request)
+- Re-rendered with more orbit (24 deg/s) and slide (-75 px/s), push-in x1.28 on 'ใบอนุญาต', snap x1.35 (peak 2.3, tilt -3.5) on worried Eiffel, grade sat 1.28 / exposure -0.36. Eiffel head width 178-458 px (centre y 469-612, chin <= 741).
+- `qa_stats2.py take.mkv` (the pushed file): **sat 0.587, vivid 47.2->48.6 %, luma 84.3 (0.7 under the 85 floor), warm 25.9 % / cool 39.7 %, motion med 7.88 p90 11.72, still 0 %**. In-shot g 997..1092: median 6.49, p90 10.62.
+- The director's earlier read (sat 0.442 / vivid 37 % / p90 8.3) did not match the pushed file at that commit (md5 2c507741...: sat 0.561 / vivid 47.2 %); re-pull before measuring.
+- take.mkv 29.4 MB.

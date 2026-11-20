@@ -2,48 +2,84 @@
  "take": "s11",
  "film": 20,
  "shots": [
-  11
+  11,
+  12,
+  13,
+  14
  ],
  "g0": 753,
- "g1": 822,
+ "g1": 996,
  "first_g": 745,
- "n_frames": 81,
+ "n_frames": 259,
  "shot_ranges": {
   "11": [
    753,
    821
+  ],
+  "12": [
+   822,
+   906
+  ],
+  "13": [
+   907,
+   944
+  ],
+  "14": [
+   945,
+   995
   ]
  },
  "handle_in": 8,
- "handle_out": 4,
+ "handle_out": 8,
  "transition_in": {
   "type": "dissolve",
   "frames": 11
  },
  "transition_out": {
-  "type": "cut",
-  "frames": 0,
-  "at": 822,
-  "note": "hard cut to shot 12 (SITE site_girders) at g 822; handle g 822..825 rendered in 3D"
+  "type": "dissolve",
+  "frames": 13,
+  "at": 996,
+  "note": "dissolve 13 into T15 (1889 fair); 8 handle frames g996..1003 rendered in 3D (the last crane-up keeps drifting)"
  },
- "set": "v3/set3d20 SITE preset site_fence, light DAY, stage 0. Runtime: preset FG mesh hidden; camera-parented timber post at the lens's left edge; two red-lead girders on the ground bottom-right of framing A; the cast stands at the fence line (y -101) outside the open timber fence, Eiffel at the gate edge (-7.4,-100.4 m).",
- "cast": "cast20 lady20 (lady_parasol, hand at mouth), gent20 (gent_cane, pointing arm), child20 (child_point) all expr laughing20 with 3 Hz squash + 0.08 D stage bounce and head roll; eiffel (eiffel_giant_rivet pose, rivet raised and bobbing, proud then determined at the punch-in). No mouth animation.",
- "camera": "custom 22 mm. A g745..801: eye level 1.0 m, pull back 10 %/s + slide 60 px/s + crane 45 px/s + arc, snap push x1.4 on 'เรียกไอเฟลว่า' (g776..792). B g802..825: PUNCH-IN CUT onto Eiffel (3.4 m, ~35 % of frame height) on 'ไอ้ช่างหมุด' with a 2-frame vertical shake and 6 frames of speed lines (post), then push 12 %/s + slide. Hand-held jitter +-0.05 D on both.",
+ "set": "v3/set3d20 SITE preset site_girders (stage hooks keyed every frame: 0 until g830, 1 until g969, 2 until g985, 3 after), DAY. Runtime: preset FG + near scatter props (pn_*) hidden; camera-parented timber post (g<819) and two red-lead girders on the ground at the fence as foreground; a runtime carried I-girder; set hooks crane_swing, spark (t0 921, period 9, strength 1.5), rivet_toss (g919-929, x3.2). One continuous take, no cuts.",
+ "cast": "cast20 lady20 / gent20 / child20 laughing at the fence (3 Hz squash + 0.10 D bounce, hand at mouth / pointing), eiffel with the giant rivet raised (dome up, prop scale 1.8); riveter_tongs + riveter_hammer carrying a girder along the stack (cast20.cycle walk); at the rivet deck riveter_tongs throws the glowing rivet, riveter_hammer catches (cheers), riveter_forge hammers every 9 frames. All stand on the ground / plank surface (on_ground / ground_z).",
+ "camera": "custom 22 mm, ONE take: A (g745-801) eye level 1 m pulling back 10 %/s, snap x1.4 on g778; punch-in snap onto Eiffel g802-810 (shake g802-803, speed lines g802-807 in deliver.py); rise over the fence and Catmull-Rom flight g817-848 (over the cart yard, past the leg) down to the stack truck g848-906 (snap on g856); flight g906-920 over the stack and under the first-platform arches up to the rivet deck; deck g920-943 (push, snap on the catch g929); three crane-up snaps g943-993 to site_rise_snap1/2/3 (stage jumps hidden in the snaps); hand-held jitter 0.07 D.",
  "events": {
   "word_call": 778,
-  "snap_A": [
-   776,
-   792
+  "punch_in": 802,
+  "stage1": 830,
+  "word_steel": 856,
+  "toss": [
+   919,
+   929
   ],
-  "punch_in_cut": 802,
-  "shake": [
-   802,
-   803
+  "catch": 929,
+  "hammer_hits": [
+   921,
+   930,
+   939,
+   948,
+   957,
+   966,
+   975,
+   984,
+   993,
+   1002
   ],
-  "speed_lines": [
-   802,
-   807
-  ]
+  "snap1": [
+   943,
+   958
+  ],
+  "snap2": [
+   962,
+   977
+  ],
+  "snap3": [
+   977,
+   993
+  ],
+  "stage2": 969,
+  "stage3": 985
  },
  "dof": "none",
  "text": "none",
@@ -55,20 +91,20 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 14.44,
- "s_per_frame_cpu_mean": 23.32,
+ "s_per_frame_wall_mean": 10.86,
+ "s_per_frame_cpu_mean": 20.9,
  "head_px": [
-  37,
-  414
+  0,
+  0
  ],
  "head_centre_y": [
-  457,
-  811
+  0,
+  0
  ],
- "head_bottom_max_y": 906,
+ "head_bottom_max_y": 0,
  "framediff_in_shot": {
-  "median": 5.6,
-  "p90": 10.88
+  "median": 4.65,
+  "p90": 20.28
  },
  "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
 }

@@ -480,3 +480,17 @@ def fix_antenna_wires():
         u0 = np.linspace(0, 1, 40)[-1]
         mb.rod(M["wirep"], pts[-2], pts[-1], 0.25 * (1.0 - 0.3 * u0), 0.25 * 0.7, 4)
     return mb.finish(shadow=False)
+
+
+def warm_ground_sun(strength=1.6, color=(1.0, 0.66, 0.42), travel=(0.5, 0.55, -0.45), name="team8_dusk_fill"):
+    """team8 (TAKE gate: 'flat saturated blue slab'): the DUSK key grazes the ground (key_dir z -0.1) and the blue sky ambient makes the
+    ground pure blue.  Add one warm low sun (a runtime light, the set stays untouched) so the avenue gets warm light, ruts and real
+    cast shadows of the cards (contact shadows).  travel = direction the light travels (x east, y toward the tower, z down)."""
+    import bpy
+    from mathutils import Vector as V
+    ld = bpy.data.lights.new(name, "SUN")
+    ld.color, ld.energy, ld.angle = color, strength, 0.05
+    ob = bpy.data.objects.new(name, ld)
+    bpy.context.scene.collection.objects.link(ob)
+    ob.rotation_euler = V(travel).normalized().to_track_quat("-Z", "Y").to_euler()
+    return ob

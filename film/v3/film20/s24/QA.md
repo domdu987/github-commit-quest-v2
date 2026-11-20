@@ -1,7 +1,8 @@
-# QA s24 (shot 24, g 1732..1813; take g 1724..1817)
-RESTO resto_wide DAY 1889. The waiter (lead gesture, towel on arm) leads Maupassant (smug) down the runner toward the window end; chair-back FG at the start, table edges FG later; trusses, chandeliers, diners from the set.
-- Checked at 6 fps + both cut sides: heads 65-105 px (a wide: exempt from the 450-760 band, they sit y 590-700, all above 880); feet on the carpet with contact decals; no mouths move; blinks only; waiter walks beside/ahead, no overlap after the lateral offset.
-- Walk is DIAGONAL-AWAY in three-quarter view (yaw 0.55): no waiter back card exists in cast20, so we show faces. Deviation from "backs to camera".
-- Snap push x1.45 on "หลังหอเปิด" (g 1777..1792). Dissolve-in handle 8 frames, cut-out handle 4.
-- Frame-diff median 3.57, p90 9.91 (target 4 / 12): slightly under, the camera moves 50 px/s + 7 %/s over a mostly static room.
-- GOTCHA: cap_g("text") returns the FIRST caption with that prefix; "แทบทุกวัน" occurs at 5.24 s and 61.15 s: use g_of(t) for repeated phrases.
+# QA s24 (shot 24 = BIGZOOM 2; g 1732..1852; take g 1724..1858)
+TOWER preset tower_window_pull, DAY 1889 (crowd 2). ONE continuous camera move, no cut: start 213 m from the lit first-floor restaurant window, 95 m above it and 30 m to the left (the whole finished tower and Paris/fair; Maupassant is a ~5 px speck in the window), eased approach across the city and up the lattice (g 1724-1777), a fast eased whip through the first-platform girders into the window gallery (g 1778-1784), a long ease-out settle onto a MEDIUM of Maupassant at his window table (head 148-167 px, ~36 % of frame height, centre pane clear), g 1822; he takes his first happy bite (fork at the mouth) on "กินข้าวบนหอ" at g 1817, then bites on (40-frame cycle) and a slow push/slide until the match-dissolve into s25 (g 1853).
+- Handles: 8 in (dissolve 13 from s23), **6 out = the 9-frame MATCH-DISSOLVE into s25** (g 1853..1858 rendered in 3D). s25 starts inside on the matching framing (head x ~330, y ~680, 165 px, same fork-cycle phase).
+- qa_stats: **saturation 0.627, brightness 102.1**, motion median 5.05 p90 12.03. qa_stats2: **vivid 63.9 %**, warm 72.9 % / cool 16.9 %. deliver.py frame-diff median 5.14 p90 12.14 (targets 4/12 met).
+- qa_auto PASS; soft frames g 1783-1791 (6, the flat gallery facade during the whip; limit 5 %) are noted: the profile is a 5-frame whip so the flat facade is crossed fast.
+- Heads: centre y 662-703 after landing, bottom max 776 (<880). No mouth movement. Runtime grade -1.0 EV + saturation 1.2 (the raw tower_window_pull frame is too bright); the preset FG iron post was hidden (it drew a black bar through the table).
+- Notes: the black thin line on the gallery floor below the table (a seam in the set) is visible in the last frames; the "RESTAURANT" sign was not added. The waiter-walk version of s24 was dropped by the director.
+- 16.4 s/frame wall (shared cores), 8 spp.
