@@ -4,7 +4,7 @@
 | s01 | 1 | **PASS** (QA-art R3 SHIP; QA-tech R2 blockers hand + post-whip caliper verified fixed) | render17/team1 d6ecda5 | rhythm 8.96/17.84; minor: brow bar g70-90, coat hem, beard seam |
 | s02 | 2 | PASS R3 (QA-tech; 3 should-fix accepted: no hand sprite on blue cuff, edge object, tight push) | c2c810e (USE THIS) | gate/s02/QA_TECH_R3.md |
 | s03 | 3 | **PASS** R2 (QA-tech; 5 should-fix accepted: jagged book outline, hand gap early, fg pile edge) | 3fcb09e (USE THIS) | gate/s03/QA_TECH_R2.md |
-| s04 | 4 | FAIL R3 (rods fixed; B2 ear tap still unreadable: only a tiny blue tab at the ear, visible arm goes to belt - director confirmed g609-634) | f62d987 | gate/s04/QA_TECH_R3.md, director_check_R3.png |
+| s04 | 4 | **PASS** R4 (QA-tech + director look; ear tap reads; should-fix accepted: glove edge clip from g624, gentle taps) | 68d44d5 (USE THIS) | gate/s04/QA_TECH_R4.md |
 | s05 | 2 (from 5) | **PASS** R2 (QA-tech + director look; should-fix accepted: edge crop, blown chandelier g685-715, hood cloth) | e553276 (USE THIS) | gate/s05/QA_TECH_R2.md |
 | s06 | 5 | **PASS** R2 (QA-tech; should-fix accepted: glove size, weak exit, double-hand g760/772) | 6fe61b4 (USE THIS) | gate/s06/QA_TECH_R2.md |
 | s07 | 1 (from 6) | FAIL R4 (structure OK; B1 floating sleeve g1024-1046, B2 finger/boot unreadable at phone size g900-947; director confirmed) | f745e43 | gate/s07/QA_TECH_R4.md, director_check_R4.png |

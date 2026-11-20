@@ -13,7 +13,7 @@ TABLE='
 s01 render17/team1  d6ecda5
 s02 render17/team2  c2c810e
 s03 render17/team3  3fcb09e
-s04 render17/team4  TODO     # FAIL R2 (last b3326ff), fill when approved
+s04 render17/team4  68d44d5  # PASS R4
 s05 render17/team2  e553276  # moved from team5 to team2
 s06 render17/team5  6fe61b4
 s07 render17/team1  TODO     # reassigned to team1, fill when approved (last 34bb2c8 = FAIL R3)
