@@ -74,6 +74,9 @@ When a film passes the FINAL gate and is sent to the client:
    Use a short Thai title that is unique per film, plus a `### N <Title>` caption section.
 3. Never mark a row READY before the client has seen the final film, unless he has said to auto-post without review.
 
+## 7b. Client decision 2026-11-20 (all films)
+Read film/QA_TEAM.md §G (vivid colour, nothing floats, not too close) and §H (2+ BIGZOOM extreme-wide-to-character moves, 4+ interesting angle types, rich detailed 3D set). Both are blocking.
+
 ## 8. From film 15: film-2 camera rhythm (client decision 2026-11-18)
 Read skill production-lessons §10 before planning shots, and use film/plan/shot_plan.md (film 2) as the camera-grammar example.
 The voice stays Bankky at the original setting.
