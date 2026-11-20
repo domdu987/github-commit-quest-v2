@@ -26,7 +26,7 @@ FINAL_SPP = 8
 CONTACT = dict(width=1.6, depth=0.75, color="#1a1626", opacity=0.9)
 
 CAM_LOC0 = (-1.6, -3.7, 2.5)
-CAM_LOOK0 = (-2.15, 2.6, 2.55)
+CAM_LOOK0 = (-1.95, 2.6, 2.55)
 class SwayCam(C.CamPath):
     """CamPath + a slow lateral sway of the camera body (loc only): parallax of the dense hall that keeps all three astronomers framed."""
     SWAY_D, SWAY_T = 2.2, 2.4
@@ -40,11 +40,11 @@ class SwayCam(C.CamPath):
         return loc + r * (self.SWAY_D * taper * math.sin(ph)), look
 
 
-CAM = SwayCam(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.03, slide_px=0.0, rise_px=0.0, arc_deg_s=0.0, decay=0.15,
-              snaps=[dict(g=SNAP, k=1.3, peak=2.0, shift=(0.0, -0.10))])
+CAM = SwayCam(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.015, slide_px=0.0, rise_px=0.0, arc_deg_s=0.0, decay=0.15,
+              snaps=[dict(g=SNAP, k=1.15, peak=2.0, shift=(0.0, -0.10))])
 
-MARK_A = (-3.1, 2.5, 0.0)                      # astro19 lecturing (faces screen-left, points at the Moon)
-MARK_B = (-0.30, 3.4, 0.0)                      # astro19_b nodding (faces screen-left)
+MARK_A = (-2.8, 2.5, 0.0)                      # astro19 lecturing (faces screen-left, points at the Moon)
+MARK_B = (-0.85, 3.4, 0.0)                      # astro19_b nodding (faces screen-left)
 MARK_C = (-1.60, 1.45, 0.0)                      # astro19_c nodding (faces screen-right)
 
 
@@ -61,7 +61,7 @@ def pose_a(g):
     p["pitch"] = -0.35 + 0.05 * math.sin(g * 0.3)                   # chin up at the Moon
     p["lean"] = -3.0 + 2.0 * math.sin(g * 0.2)
     p["head_roll"] = 4.0 * math.sin(g * 0.25)
-    p["arm_r"] = dict(hand=(1.30, -0.35 + 0.10 * math.sin(g * 0.5)), shape="point", bend=-0.2, stretch=1.45, layer="top")   # jabs up at the Moon
+    p["arm_r"] = dict(hand=(0.95, -0.60 + 0.10 * math.sin(g * 0.5)), shape="point", bend=-0.2, stretch=1.45, layer="top")   # jabs up at the Moon
     p["arm_l"] = "akimbo"
     p["blink"] = blink(g, [480, 521])
     u_look = 1.0 - u_of(g, SNAP[0] - 2, SNAP[0] + 6, "sine")                 # eyes follow the point up-left at the Moon, back to the lens on the snap
