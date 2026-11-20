@@ -2,7 +2,7 @@
 Final 720x1280, 12 samples + OIDN, Cycles CPU, ~45 s/frame (2 procs x 2 threads). Set measure / DAY_INT, one process. `shot.py` + `c17.py` reproduce it.
 
 ## Numbers
-- rhythm.py (cuts 445,493,540,592,651): **in-shot median 4.08, p90 12.12** (targets >= 4 / >= 12).
+- rhythm.py (cuts 445,493,540,592,651): **in-shot median 4.21, p90 12.12** (targets >= 4 / >= 12).
 - qa_auto.py: PASS (QA_AUTO.md, phone_sheet.jpg), magenta 0.0 %.
 
 ## Shots
@@ -22,5 +22,5 @@ heads above y 880 in all shots (inspector chin max ~ y 800 in shot 12); contact 
 - Dust halved (dust=0.5). Tripod hood shows top-right in shot 10 (known set item).
 - Sprite poses change only inside continuous motion; no pop swaps.
 
-## qa_auto note
-QA_AUTO.md reports FAIL "suspected blur" on 17 frames (g 521-537, shot 10 after the snap). It is a false positive of the Laplacian-variance test: those frames are a close low shot dominated by the smooth plain wall and chair back (sharp 3D render, sprites at 448 px/D, no motion blur, no DOF); the frames were inspected by eye (chk sheets) and are crisp. All other checks pass (no black/blank/magenta/frozen frames; pops only at the planned cuts 493/540/592).
+## v2 (director fixes applied)
+Re-rendered all 218 frames with the additive light shafts (`beam_fx`) hidden (no translucent wedges over the cast), dust 0.5, every non-quote pose through silent(). qa_auto: PASS (no blur flag this time).

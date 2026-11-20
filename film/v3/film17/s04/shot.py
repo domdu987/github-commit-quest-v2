@@ -160,6 +160,8 @@ class Take(object):
         before = set(bpy.data.objects.keys())
         K.fg_measure_low(self.A); self.fg_low = [bpy.data.objects[k] for k in set(bpy.data.objects.keys()) - before]
         K.clear_keys()
+        for o in bpy.data.objects:                              # director fix: additive light shafts wash over the cast cards -> hidden
+            if any(m and m.name.startswith('beam_fx') for m in getattr(o.data, 'materials', []) or []): o.hide_render = True
         self.cam = bpy.context.scene.camera
         self.cam.data.dof.use_dof = False; self.cam.data.clip_start = 0.02
         self.scene = bpy.context.scene

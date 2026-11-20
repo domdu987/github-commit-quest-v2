@@ -29,7 +29,7 @@
  "resolution": "720x1280",
  "samples": 12,
  "rhythm": {
-  "median": 4.08,
+  "median": 4.21,
   "p90": 12.12
  },
  "lipsync_window_g": [
