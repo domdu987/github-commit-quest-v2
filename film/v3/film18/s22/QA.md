@@ -1,12 +1,12 @@
 # QA s22 (film 18, render team 4)
 Range g 1683-1741, take.mkv frames 1677..1747 (71 frames), transition in: cut.
-Render: 720x1280, 12 samples, OIDN, 2 threads, 20.2 s/frame wall (two renders at once).
+Render: 720x1280, 12 samples, OIDN, 2 threads, 21.7 s/frame wall (two renders at once).
 
 ## Frame diff (90x160 grey, in-shot frames only)
-median 9.52, p90 13.32, min 6.04, max 15.73, frames < 1: 0 (rule: median >= 4, p90 >= 12)
+median 10.3, p90 13.8, min 4.92, max 16.33, frames < 1: 0 (rule: median >= 4, p90 >= 12)
 
 ## Max chin y per head (rule < 880)
-{"hero": 513, "soldier": 495}
+{"hero": 530}
 
 ## Notes
 - Round 4 rework: deep night (moon, cityglow and gate lintel removed, sky black); charging ox face overlay (frown + angry brows) on the front-3/4 gallop card; the hero's OWN tail flame is a flame card on the tail tip with a warm point light (found and fixed: the set's flame-card material read its flicker props from the wrong object, so flames rendered black; the card now gets fu/fk each frame).
@@ -21,5 +21,6 @@ median 9.52, p90 13.32, min 6.04, max 15.73, frames < 1: 0 (rule: median >= 4, p
 - Round 11b CORRECTION: the earlier take did NOT remove the brazier (my note was wrong; nothing had been rendered to check). Ray cast showed it is faces of the merged 'wood' mesh (watch post at 7.5,-41.4); now sunk, confirmed gone on a rendered g 1742 still. Script-side projection over g 1683-1741: ox mouth worst y 808 (rule 860), head x 0.16-0.41 (band 0.08-0.45); soldier now right and behind the ox (box x 0.49-1.11 by a crude +-1 D box). Ground ~45 %.
 - Gate 12 (rendered check, g 1738): punch removed (steady push only); ox mouth about y 800 on the RENDERED frame, muzzle inside the frame; the ox's own tail flame is in frame (right edge ~x 0.97); soldier fully inside the frame at x ~0.7-0.85; glazed pot and reed bundle in the bottom corners, ground_share 0.03-0.05 (g 1683 / 1710 / 1742). NOT fixed: the ox's reed bundle still crosses the soldier's chest and can read as a broom; I did not measure every frame.
 - Gate 13 + rule I: ox shrunk to 0.45, soldier at x ~0.88 fully in frame, cool moon-blue rim on soldier and hero. Rendered g 1713/1725/1737 (checked by eye): hero jaw about y 800-830 (projected anchor max 797). NOT fixed: the tail flame still stands right beside the soldier's head (well under the 60 px the director asked for), the soldier still faces the lens, and the flame stays in frame but touches the right edge region.
+- Gate 14: the Yan soldier is REMOVED; pure ox close-medium (hero + blue rim), own tail flame in frame, blue sky, star glints g 1732-1739, glazed pot + reed bundle bottom corners. Ground share (film18 ground_share.py) max 0.018 / median 0.015. Rendered frames g 1690/1725/1738 checked by eye: mouth y ~800-830, flame at the right edge but in frame. Projected mouth anchor max 772.
 
 See QA_AUTO.md and phone_sheet.jpg.
