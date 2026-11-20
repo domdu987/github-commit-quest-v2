@@ -27,9 +27,9 @@
   "at": 1468,
   "note": "dissolve 13 f into shot 19 (ship_coast) centred on g 1468; handle g 1468..1476 rendered in 3D"
  },
- "set": "v3/set3d19/h19.py SHIP preset ship_hero, light NOON; set_sea(g/30) + set_roll(g/30) keyed on every frame; sea grid re-fitted at runtime to a 1.5x wider virtual camera footprint (no set module edited) so the slide never shows the grid edge; no actors; no caption_shade",
+ "set": "v3/set3d19/h19.py SHIP preset ship_hero, light NOON; set_sea(g/30) + set_roll(g/30) keyed on every frame; sea grid re-fitted at runtime to a 1.8x wider, higher virtual camera footprint (no set module edited) so the slide never shows the grid edge; no actors; no caption_shade",
  "cast": "none (no characters in this shot)",
- "camera": "custom 22 mm from the ship_hero preset pose; c19.CamPath push 4 %/s + orbit -3 deg/s + slide 45 px/s, decay 0.1, plus a SNAP push x1.2 with a pan (16 f, g 1430..1446) on 'จาไมกา' (~g 1438), decay 0.1 (moving on frame 0 and on the last frame); no snap (shot < 2 s)",
+ "camera": "custom 22 mm; hero preset pulled back 1.15x horizontally at the preset height so the WHOLE ship stays in frame (checked on the mesh silhouette, >=15 px margin on every frame), push -1 %/s + slide 12 px/s + crane 12 px/s + orbit -5.6 deg/s, plus a SNAP push x1.22 with a pan (17 f, g 1428..1445) on 'จาไมกา' (~g 1438); sea clock x2 (set_sea/set_roll t = 2 g/30); no gulls; sun glint x0.3",
  "events": {},
  "dof": "none",
  "text": "none",
@@ -42,11 +42,11 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 17.02,
- "s_per_frame_cpu_mean": 33.17,
+ "s_per_frame_wall_mean": 17.9,
+ "s_per_frame_cpu_mean": 34.47,
  "framediff_in_shot": {
-  "median": 3.11,
-  "p90": 7.85
+  "median": 2.69,
+  "p90": 9.07
  },
  "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
 }
