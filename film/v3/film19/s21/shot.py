@@ -32,7 +32,7 @@ CAM_LOOK0 = (446.0, 61.984, 2.6)               # found with a projection search:
 CAM_LOC0 = tuple(Vector(CAM_LOOK0) + (Vector((452.0, 61.2, 3.55)) - Vector((446.0, 62.6, 2.6))) * 1.1)
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GF, GL, push=0.05, slide_px=45.0, rise_px=4.04, arc_deg_s=-4.64, decay=0.1,
                 snaps=[dict(g=(1672, 1679), k=1.0, peak=1.3, shift=(0.0, 0.62)), dict(g=(1679, 1688), k=1.0, peak=1.3, shift=(0.0, -0.62)),
-                       dict(g=SNAP, k=1.12, peak=1.9, shift=(-0.92, -0.55)),
+                       dict(g=SNAP, k=1.12, peak=1.9, shift=(-1.12, -0.55)),
                        dict(g=(1722, 1729), k=1.0, peak=1.3, shift=(0.0, 0.62)),         # second beat: two quick camera bumps
                        dict(g=(1729, 1738), k=1.0, peak=1.3, shift=(0.0, -0.62)),
                        dict(g=(1744, 1751), k=1.0, peak=1.3, shift=(0.0, 0.62)),
