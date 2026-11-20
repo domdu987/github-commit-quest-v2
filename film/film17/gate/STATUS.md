@@ -6,7 +6,7 @@
 | s03 | 3 | FAIL r1 -> re-render | | |
 | s04 | 4 | FAIL r1 -> re-render | | |
 | s05 | 2 (from 5) | **PASS** R2 (QA-tech + director look; should-fix accepted: edge crop, blown chandelier g685-715, hood cloth) | e553276 (USE THIS) | gate/s05/QA_TECH_R2.md |
-| s06 | 5 | FAIL R1 (QA-tech: 3 fingers unreadable, stick arm, pince-nez reads as scratch, scale pop g794-809, prefect exit missing) | 82cc76f | gate/s06/QA_TECH.md |
+| s06 | 5 | **PASS** R2 (QA-tech; should-fix accepted: glove size, weak exit, double-hand g760/772) | 6fe61b4 (USE THIS) | gate/s06/QA_TECH_R2.md |
 | s07 | 6 -> 1 (reassigned R4, simplified insert spec) | FAIL R3 (no finger on gauge, foot jaws hidden, calipers not held, card never enters drawer, leftover rods, 10-20 f soft runs, g928 pop). Shot 16 OK and reusable. | 34bb2c8 | gate/s07/QA_TECH_R3.md |
 | s08 | 7 | **PASS** R3 (QA-art R2 PASS + QA-tech R3 PASS + director look) | 5866892 (USE THIS) | gate/s08/QA_TECH_R3.md, QA_ART_R2.md |
 | s09 | 8 | **PASS** R4 (QA-tech; 3 cosmetic should-fix accepted: edge touches, coat notch) | 084ef5b (USE THIS) | gate/s09/QA_TECH_R4.md |
