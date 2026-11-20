@@ -104,7 +104,7 @@ def _addo(d, tag, g):
     """director fix 2/3: step the swept / cut-off crowd members out of the crane's path over g1890-1932 (in 1890-1900, out 1924-1932)."""
     v = os.environ.get(tag, DEF_OFF.get(tag, '0,0')); dx, dy = [float(x) for x in v.split(',')]
     a0, a1, b0, b1 = WIN.get(tag, (1890, 1900, 1924, 1932)); w = _ss(_ramp(g, a0, a1)) * (1 - _ss(_ramp(g, b0, b1))); d = dict(d); d['dx'] = d.get('dx', 0.0) + dx * w; d['dy'] = d.get('dy', 0.0) + dy * w; return d
-DEF_OFF = {'C2': '-1.8,1.2', 'GB': '-1.6,0.8'}; WIN = {'C2': (1880, 1892, 1926, 1932), 'GB': (1880, 1892, 1922, 1932)}
+DEF_OFF = {'C2': '-1.8,1.2', 'GB': '-1.6,0.8'}; WIN = {'C2': (1866, 1906, 1922, 1932), 'GB': (1866, 1906, 1922, 1932)}
 def assign_for(g):
     cl = 'gendarme_laughing_a'; clb = 'gendarme_laughing_b'
     grin = lambda nm, base: (nm, {})

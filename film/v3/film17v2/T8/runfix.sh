@@ -1,7 +1,7 @@
 #!/bin/bash
 cd /home/user/github-commit-quest-v2
-D=film/v3/film17v2/T8/frames_fix
-for r in "1862 1892" "2009 2052"; do
+D=film/v3/film17v2/T8/frames_fix2
+for r in "1877 1932" "2040 2052"; do
   set -- $r
   n=$(( $2 - $1 + 1 ))
   until [ $(ls $D 2>/dev/null | grep -c "g_") -ge 0 ] && python3 - <<P
