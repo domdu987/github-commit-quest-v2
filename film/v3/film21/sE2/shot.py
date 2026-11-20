@@ -24,8 +24,8 @@ SUN_K = float(os.environ.get('SUN_K', 1.3))
 GAMMA0 = float(os.environ.get('GAMMA0', 1.55))
 _CAST = [("footman_a", 0)]
 # camera travel keys: (g, loc, look, lens): camera on the WEST bank looking ENE, the column crosses the frame, the hill (Scots) is in the upper third
-KEYS = [(885, (-11.0, 39.0, 2.2), (70.0, 78.0, 3.0), LENS),
-        (912, (-11.5, 39.0, 3.4), (72.0, 74.0, 4.0), LENS),
+KEYS = [(885, (-8.0, 42.5, 1.7), (22.0, 49.0, 1.8), LENS),
+        (912, (-8.5, 43.0, 2.5), (23.0, 50.0, 2.2), LENS),
         (938, (-14.0, 37.0, 8.0), (90.0, 56.0, 6.0), LENS),
         (975, (-18.0, 41.0, 11.0), (80.0, 74.0, 8.0), LENS),
         (1000, (-22.0, 44.0, 27.0), (60.0, 86.0, 10.0), 22.0),
@@ -50,8 +50,8 @@ def parse(spec):
 
 def walker_xy(i, g):
     if i < N_LEAD:
-        y = 41.0 + 1.25 * (N_LEAD - 1 - i) + 0.06 * (g - G0)
-        x = 0.0 + 1.9 * math.sin(i * 2.1)
+        y = 40.5 + 0.85 * (N_LEAD - 1 - i) + 0.06 * (g - G0)
+        x = 0.2 + 1.7 * math.sin(i * 2.1)
     else:
         k = i - N_LEAD; row, col = divmod(k, 3)
         x = (-0.9, 0.0, 0.9)[col] + 0.06 * math.sin(i * 1.7)
@@ -144,6 +144,17 @@ def run(quality, gs, samples, out):
     for (x, y) in scot_slots(3):
         K.banner(Bp, (x, y, float(K.ground(x, y))), 34.0, 215.0 + 90.0, 't_saltire', 't_white', 'saltire', rs_, size=(18.0, 11.0))
     Bp.finalize('scots_wide_banners')
+    # near-ground dressing for the opening (camp clutter): barrels, a stack of spears, gorse tufts, boulders
+    Bd = K.Batch(66); rd = np.random.RandomState(5)
+    for (x, y) in [(4.6, 40.2), (5.4, 43.0), (3.9, 46.5), (-4.8, 47.5), (-5.6, 45.0)]:
+        K.barrel(Bd, (x, y, float(K.ground(x, y))), rs=rd)
+    for (x, y, sz) in [(-0.6, 38.6, 0.9), (2.6, 40.2, 0.8), (-2.2, 39.6, 1.0), (3.6, 43.5, 0.9), (-3.0, 47.0, 1.1), (4.8, 49.0, 1.0), (1.2, 52.0, 1.1), (-1.0, 36.4, 0.8), (-4.6, 41.8, 0.45), (-3.4, 44.2, 0.4), (-6.0, 44.6, 0.5)]:
+        K.gorse(Bd, (x, y, float(K.ground(x, y))), sz, rd)
+    for (x, y, sz) in [(-3.4, 41.0, 0.7), (4.2, 44.5, 0.8), (-5.0, 43.6, 0.35)]:
+        K.boulder(Bd, x, y, float(K.ground(x, y)), sz, rd)
+    for (x, y) in [(2.0, 38.9), (2.3, 39.2), (2.6, 38.8)]:
+        K.spear(Bd, (x, y, float(K.ground(x, y))), tilt=(0.25, -0.2), h=2.4)
+    Bd.finalize('dress_e2')
     os.makedirs(out, exist_ok=True)
     acts = [(T.make_actor("w%d" % i, "footman_a"), "footman_a") for i in range(N_WALK)]
     slots = mead_slots()
