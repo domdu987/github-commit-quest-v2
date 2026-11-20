@@ -48,7 +48,7 @@ def ground_share(png, thr=GS_THR, detail=False):
 TAU = 2 * math.pi
 TEXV = 'dg2'
 SHADE_TGT = (0.50, 0.40, 0.46)          # target ambient (shade side) multiplier of the art: warm brown with a touch of violet, never the navy of the set's SHADE
-SHADE_WARM = (0.62, 0.42, 0.28)         # inside a fire's warm radius: ochre shade
+SHADE_WARM = (0.52, 0.38, 0.28)         # inside a fire's warm radius: ochre shade
 
 def _tex(name):
     """Small seamless painted textures for the props (stone, straw, grass-straw, clay), made once into tex_jimo/dg2_<name>.png."""
@@ -79,9 +79,9 @@ def _pal(tone):
     def C(h, g=1.0): return mk('c_%s_%g' % (h.lstrip('#'), g), g, color=h)
     def TX(n, g=1.0): return mk('t_%s_%g' % (n, g), g, image=tx[n])
     def PT(n, g=1.0): return mk('p_%s_%g' % (n, g), g, image=_tex(n))
-    m = dict(straw=PT('straw', 0.85), straw_d=PT('straw', 0.62), hay=PT('straw', 0.74), grass=PT('grass', 0.8), grass_d=PT('grass', 0.6), reed=PT('grass', 0.8),
+    m = dict(straw=PT('straw', 0.72), straw_d=PT('straw', 0.55), hay=PT('straw', 0.66), grass=PT('grass', 0.8), grass_d=PT('grass', 0.6), reed=PT('grass', 0.8),
              stone=PT('stone', 0.95), stone_d=PT('stone', 0.72), wood=C('#7a5232', 1.0), wood_d=C('#56391f', 1.0), wood_l=C('#b08a58', 0.95), clay=PT('clay', 0.95), clay_d=PT('clay', 0.7),
-             iron=C('#6a5a4a', 1.0), sack=TX('canvas', 0.8), sack_d=TX('canvas', 0.6), red=C('#9a3426', 1.0), leaf=C('#4c6a34', 0.95), leaf2=C('#7a7a38', 0.95), thatch=C('#8a6c34', 0.95),
+             iron=C('#6a5a4a', 1.0), sack=TX('canvas', 0.66), sack_d=TX('canvas', 0.5), red=C('#9a3426', 1.0), leaf=C('#4c6a34', 0.95), leaf2=C('#7a7a38', 0.95), thatch=C('#8a6c34', 0.95),
              plaster=C('#b09a74', 0.9), rope=C('#8e7048', 0.95), black=C('#2a2220', 1.0), bronze=C('#9a7038', 1.0),
              earth=TX('earth', 0.8), earth_d=TX('bank', 0.7), planks=TX('planks_d', 1.2), hide=TX('hide', 0.8), grass_t=TX('grass', 0.8), grass2_t=TX('grass2', 0.8))
     return m
@@ -319,11 +319,19 @@ def _spawn(kind, vi, tone, loc, yaw, scl, hull_w, idx):
     return ob
 
 def clear_dressing():
-    """Remove everything dress_ground built (objects dg_*, meshes dgm_*)."""
+    """Remove everything dress_ground built (objects dg_*, meshes dgm_* no other object uses). The per-shot r2 props (dgr_*, see place_prop) stay."""
     _bind()
     for ob in [o for o in bpy.data.objects if o.name.startswith('dg_')]: bpy.data.objects.remove(ob, do_unlink=True)
-    for me in [x for x in bpy.data.meshes if x.name.startswith('dgm_')]: bpy.data.meshes.remove(me)
+    for me in [x for x in bpy.data.meshes if x.name.startswith('dgm_') and x.users == 0]: bpy.data.meshes.remove(me)
     J.STATE.pop('dg_tpl', None)
+
+def place_prop(kind, x, y, seed=0, z=0.0, scale=None):
+    """One library prop at (x, y) named dgr_* (used by jimo_r2.dress). Scale default 1.0-1.5 by seed. dress_ground() prunes the dgr_* props that touch an actor / the lens."""
+    _bind(); r = random.Random(seed); vi = r.randrange(len(LIB[kind][1])); s = scale or r.uniform(1.0, 1.4) * GAIN.get(kind, 1.0)
+    try: wm = J.warm_at(V((x, y, 0.6)))
+    except Exception: wm = 0.0
+    ob = _spawn(kind, vi, (1 if wm > 0.22 else 0, 0), (x, y, z + 0.005), r.uniform(0, TAU), (s, s, s), J.T.hull(30.0), 0)
+    ob.name = 'dgr_%s_%d' % (kind, seed); ob['dg_kind'] = kind; ob['dg_vi'] = vi; ob['dg_s'] = s; return ob
 
 # ============================================================================= camera, ground, occupancy
 def _pose(cam, scene):
@@ -398,7 +406,7 @@ def _actor_rects(p, objs, boxes):
     pu, pv = ACTOR_PAD
     return [(a - pu, b - pv, c + pu, d + pv) for (a, b, c, d) in rects]
 
-def _poses(cam, frames, actors=None, preset=None, nmax=24):
+def _poses(cam, frames, actors=None, preset=None, nmax=40):
     scene = bpy.context.scene; cam = bpy.data.objects[cam] if isinstance(cam, str) else (cam or scene.camera)
     assert cam is not None, 'dress_ground: no camera (pose one with J.shot_camera / J.make_camera first)'
     objs = _actor_objects(actors); boxes = _mark_boxes(preset)
@@ -492,7 +500,7 @@ def _exclude(loc, x, y):
 STAT = {}
 def dress_ground(cam=None, density=1.0, seed=0, keep_clear=None, frames=None, actors=None):
     """Scatter lit, inked, instanced ground dressing where the camera sees the ground (API.md). Returns dict(n, kinds, stat, poses, ...).
-    cam: camera object / name (default scene camera, already posed). frames: film frames of a keyed camera; the union of the frustums (<= 24 samples) is dressed AND every sample is checked
+    cam: camera object / name (default scene camera, already posed). frames: film frames of a keyed camera; the union of the frustums (<= 40 samples) is dressed AND every sample is checked
     against the actors. density 1.0 = about 40 % of the old helper (one candidate per ~20 px square of the ground on a 360 x 640 frame), 0 = nothing. seed: deterministic.
     keep_clear: [(x, y, r)] world circles that stay empty; None = default_keep_clear() (every stand mark / herd position / road point, 2.5 D), [] = none.
     actors: the actor cards (objects / names; children count) whose SCREEN rectangle (feet included, + a margin) no prop may overlap at any sampled frame; None = auto (ph_* placeholders,
@@ -524,7 +532,7 @@ def dress_ground(cam=None, density=1.0, seed=0, keep_clear=None, frames=None, ac
         """True when the prop's screen rectangle overlaps an actor rectangle at any sampled pose (or the prop is within LENS_CLEAR of the lens)."""
         pts = [V((x + rad * cx, y + rad * cy, z + zz)) for cx, cy in ((1, 0), (-1, 0), (0, 1), (0, -1), (0.7, 0.7), (-0.7, 0.7), (0.7, -0.7), (-0.7, -0.7)) for zz in (0.0, hgt)]
         for q in poses:
-            if not vista and (q['loc'] - V((x, y, z + hgt * 0.5))).length - rad < LENS_CLEAR: return 'lens'
+            if not vista and (q['loc'] - V((x, y, z + hgt * 0.5))).length - rad * 1.25 < LENS_CLEAR: return 'lens'
             if not q['rects']: continue
             behind = any(_project(q, P) is None for P in pts); pr = _rect(q, pts)
             if pr is None: continue
@@ -532,7 +540,13 @@ def dress_ground(cam=None, density=1.0, seed=0, keep_clear=None, frames=None, ac
             for (a, b, c, d) in q['rects']:
                 if pr[0] < c and pr[2] > a and pr[1] < d and pr[3] > b: return 'actor'
         return None
-    STAT.clear(); W = WEIGHTS[loc]; placed = []; grid = {}; counts = {}; lens = camo.data.lens
+    prune = 0
+    for ob in [o for o in bpy.data.objects if o.name.startswith('dgr_')]:
+        er, eh = _ext(ob['dg_kind'], ob['dg_vi']); sx = ob['dg_s']; why = hits_actor(ob.location.x, ob.location.y, ob.location.z, er * sx * 1.05, eh * sx * 1.05)
+        if why: bpy.data.objects.remove(ob, do_unlink=True); prune += 1
+        else:
+            dd = min([(q['loc'] - ob.location).length for q in poses]); ob.modifiers['ink_hull'].thickness = J.T.hull(dd) / max(1e-3, sx)
+    STAT.clear(); STAT['pruned_r2'] = prune; W = WEIGHTS[loc]; placed = []; grid = {}; counts = {}; lens = camo.data.lens
     for (pi, gy, gx, rv, (x, y, z, t), u, v) in sorted(cands, key=lambda c: (c[1], c[2], c[0])):
         r = random.Random(seed * 7000003 + pi * 104729 + gy * 977 + gx * 31 + 5)
         if _exclude(loc, x, y): continue
