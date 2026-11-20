@@ -11,8 +11,19 @@ def assign_for(g):
                 'gend_a': ('gendarme_standing_a', {}), 'gend_b': ('gendarme_standing_b', {})}
     return {'bertillon': ('bertillon_measuring', {}), 'inspector': ('inspector_arms_crossed', {}), 'dupont': ('dupont_innocent', {}),
             'gend_a': ('gendarme_standing_a', {}), 'gend_b': ('gendarme_standing_b', {})}
+# director fix (a)+(b): local camera override for g>=1250 (raised to eye/chest height, less down-tilt), eased in from the original path over g1250-1274; day lights lowered
+import json
+OV = json.load(open('film/v3/film17v2/T5b/override.json'))
+ks = [k for k in P.TAKES[take]['keys'] if k['g'] < 1250]
+ks.append(P._k(1250, (19.42, 19.38, 2.19), (16.67, 20.74, 1.58)))
+for k in OV['keys']: ks.append(P._k(k['g'], tuple(k['loc']), tuple(k['look']), hold=k.get('hold', False)))
+P.TAKES[take]['keys'] = ks
+if OV.get('light'):   # day lights only: scale the ARCHIVE_DAY preset the set_light_mix lands on (lights, no haze, no desaturation)
+    m = OV['light']['mul']; D = P.K.LIGHTS['ARCHIVE_DAY']
+    for key in ('shade', 'tint'): D[key] = tuple(x * m for x in D[key])
+    for key in ('gain', 'fill_w', 'vault_w', 'sun_k', 'lamp_k'): D[key] = D[key] * m
 assert P.check_take(take)['hits'] == [] and P.check_face(take)['ok']
-A = P.world_build(take); P.key_take(take); P.setup_render2((720, 1280), samples=16, threads=2)
+A = P.world_build(take); P.key_take(take); RES = tuple(int(x) for x in os.environ.get('RES', '720x1280').split('x')); P.setup_render2(RES, samples=16, threads=2)
 def one(g, path):
     bpy.context.scene.frame_set(g + 1); P.stage_cast2(take, g, assign_for(g))
     bpy.context.scene.render.filepath = path; bpy.ops.render.render(write_still=True); P.grade2(path)
