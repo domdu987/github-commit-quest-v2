@@ -7,7 +7,7 @@
    "kind": "ambience",
    "t": 5.933,
    "frame": 178,
-   "note": "building site 1887 from high above: wind, distant hammering, carts"
+   "note": "building site 1887 from high above: wind, distant hammering, carts, forge bellows"
   },
   {
    "kind": "accent",
@@ -18,23 +18,44 @@
   },
   {
    "kind": "foley",
-   "t": 8.333,
-   "frame": 250,
-   "note": "rooftops/scaffold close pass: timber creak, rope hum"
+   "t": 8.867,
+   "frame": 266,
+   "note": "cloth rustle as Eiffel's arm goes up",
+   "peak_frame": 270
   },
   {
    "kind": "accent",
    "t": 8.933,
    "frame": 268,
-   "note": "small bright sting on 'วิศวกรไอเฟล' as he points",
+   "note": "small bright sting on 'วิศวกรไอเฟล'",
    "peak_frame": 270
   },
   {
+   "kind": "accent",
+   "t": 9.467,
+   "frame": 284,
+   "note": "whoosh: the camera leaves Eiffel and sweeps across the yard (g 282-340)",
+   "peak_frame": 310
+  },
+  {
    "kind": "foley",
-   "t": 8.867,
-   "frame": 266,
-   "note": "cloth rustle as his arm goes up",
-   "peak_frame": 270
+   "t": 10.7,
+   "frame": 321,
+   "note": "forge roar and hammer clangs as the camera passes the forge",
+   "peak_frame": 318
+  },
+  {
+   "kind": "accent",
+   "t": 11.467,
+   "frame": 344,
+   "note": "snap tilt-up whoosh on 'สูงที่สุดในโลก'",
+   "peak_frame": 350
+  },
+  {
+   "kind": "foley",
+   "t": 12.0,
+   "frame": 360,
+   "note": "rivet hammers ringing from the platforms high on the leg"
   }
  ]
 }
