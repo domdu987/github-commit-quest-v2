@@ -1,26 +1,21 @@
-# film 17 take s04 (shots 9-12, narration 14.72-21.61 s, g 445..650 + 6 handle frames each side, first_g 439, 218 frames)
-Final 720x1280, 12 samples + OIDN, Cycles CPU, ~45 s/frame (2 procs x 2 threads). Set measure / DAY_INT, one process. `shot.py` + `c17.py` reproduce it.
+# film 17 take s04 round 2 (shots 9-12, g 445..650 + 6 handle frames each side, first_g 439, 218 frames)
+720x1280, 12 samples + OIDN. Built on team 1's s01 machinery (pinned calipers, ears_svg, hand_svg).
 
 ## Numbers
-- rhythm.py (cuts 445,493,540,592,651): **in-shot median 4.21, p90 12.12** (targets >= 4 / >= 12).
-- qa_auto.py: PASS (QA_AUTO.md, phone_sheet.jpg), magenta 0.0 %.
+- rhythm.py (cuts 445,493,540,592,651): **in-shot median 5.69, p90 13.18** (>= 4 / >= 12).
+- qa_auto.py: PASS (QA_AUTO.md, phone_sheet.jpg), magenta 0.0 %, no blur flag.
 
-## Shots
-- 9 (439-492) measure_wide, camera turned toward the room centre so the inspector can walk in from the right; 15 f snap push-in at the laugh (468-480) + 3D sway. Inspector strides in, shock, laughs from g 467 (15.46 s) with a 3 Hz bounce, gendarme_b and gendarme_a join (laughing poses). Bertillon's calipers are pinned (Actor.pose tip) on the seated prisoner's ear. Kepi stool fg.
-- 10 (493-539) measure_low: lip-sync starts g 493, inspector points at the calipers, Bertillon behind, unmoved; snap push 512-522.
-- 11 (540-591) measure_chair: inspector flicks the calipers, slide, snap 562-574; Bertillon visible behind right.
-- 12 (592-656) measure_chair: snap (13 f) at 604 onto the inspector tapping his own right ear (finger on the ear), second lateral snap 632-644. Lip-sync to g 650.
-- Mouths: speak() only g 493..650; laughing pose mouth is the held laugh shape; everyone else closed.
+## QA_TECH round-1 fixes
+1. Prisoner (prisoner_b) stays SEATED in the measuring chair through all four shots; Bertillon's calipers are pinned on his viewer-left ear, held in Bertillon's visible hand (sliding jaw closes during shot 9).
+2. Shot 9: camera right-front on the pair (figures ~400 px); inspector strides in from the right (g439-459), stops (g460-466, surprised face, finger out), THEN laughs from g467 (bounce 3 Hz); gendarmes b/a join the laugh in the background.
+3. Shot 10: low two-shot, calipers on the ear in frame, Bertillon fully in frame, the inspector (mirrored pose) points his arm across AT the calipers; lips from g493.
+4. Shot 11: the inspector's hand is pinned to the caliper bar (visible forearm + hand), approach g548-558, finger touches the bar g558, the bar wobbles g558-567 (caliper angle +-9 deg decaying) while Bertillon still holds it.
+5. Shot 12: visible red ear on the inspector (kepi on), arm_l hand pinned on that ear, taps twice (g604-.. second half), chest puff (squash x1.05); hand drawn over the ear, never behind the head. Lips g493-650 only.
+6. beam_fx shafts hidden (no translucent diagonal polygon), dust 0.5.
 
-## Self-check (every 5th frame sheet + snap frames + cut +-3)
-heads above y 880 in all shots (inspector chin max ~ y 800 in shot 12); contact shadows ok; shot-10 inspector head centre y ~340-450 (above the 450 band, kept whole in frame: low camera); Bertillon head clipped by the right edge for part of shot 10 post-snap (accepted).
-
-## Deviations / known issues
-- Preset stand marks not used for Bertillon/gendarmes/prisoner (they put the inspector off-frame or behind a figure); positions set in shot.py.
-- The seated prisoner has left the chair after shot 9 (chair empty in 10-12 so the inspector's offer to sit makes sense).
-- Shot 9 is a wide: figures ~200 px tall at 720x1280, heads ~40-60 px.
-- Dust halved (dust=0.5). Tripod hood shows top-right in shot 10 (known set item).
-- Sprite poses change only inside continuous motion; no pop swaps.
-
-## v2 (director fixes applied)
-Re-rendered all 218 frames with the additive light shafts (`beam_fx`) hidden (no translucent wedges over the cast), dust 0.5, every non-quote pose through silent(). qa_auto: PASS (no blur flag this time).
+## Self-check (full-res g470, g510, g560, g620 + 5-frame sheet contact.jpg)
+- g470: pair (Bertillon with calipers on the prisoner's ear) + laughing inspector with red ears, tears, no shaft wedge; all heads above y 880.
+- g510: inspector's arm crosses to the calipers, Bertillon whole head in frame, prisoner seated.
+- g560: inspector's blue forearm reaches the caliper bar at the ear (touch frame ~558); camera has just started the snap.
+- g620: inspector close-up, red ear + hand at the ear, mouth open (speech), kepi top at y ~ 70.
+- Known: the tapping hand is a small blue cuff blob at the ear (reads at phone size, finger detail lost); the ears are large cartoon ears (team-1 style); shot 11 end frames (g585-591) the inspector sits near the right edge (face fully visible).

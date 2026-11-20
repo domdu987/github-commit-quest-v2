@@ -1,283 +1,316 @@
 #!/usr/bin/env python3
-"""shot.py -- film 17 take s04: shots 9-12 (narration 14.72-21.61 s), g0 445 .. g1 651 (exclusive) + 6 handle frames each side (439..656).
-One location (measure, DAY_INT), four set-ups, all hard cuts (transition_in cut):
-  id 9   g 439..492  measure_wide : inspector strides in from the door, sees Bertillon measuring an ear, bursts out laughing (467 = 15.46 s, bounce
-                     3 Hz, gendarmes join).  Push-in + slide; kepi stool / crates foreground.
-  id 10  g 493..539  measure_low  : "วัดหูโจรเนี่ยนะ!" lip-sync (16.32 s), inspector near, points at the calipers; Bertillon behind, unmoved.
-  id 11  g 540..591  measure_chair: "ถ้าเอ็งใช้คีมนั่นจับโจรเก่าได้สักคน" inspector flicks the calipers; slide.
-  id 12  g 592..656  measure_chair: snap push-in (20 f, x1.5) on the inspector tapping his own ear "ข้าจะนั่งให้เอ็งวัดหูข้าเองเลย!".
-Lips move only g 493..650 (16.32-21.59 s narration + 0.10 s).  Blender frame = g.
-    python3 shot.py probe a:b[:s]        python3 shot.py stills a:b[:s] out [scale] [samples]        python3 shot.py final a:b[:s] [scale] [samples]
+"""shot.py -- film 17 take s04 round 2 (shots 9-12, narration 14.72-21.61 s), g 445..650 + 6 handle frames each side (439..656).  Blender frame = g + 1.
+The mock is about the calipers on an ear: the prisoner (prisoner_b) sits in the measuring chair through all four shots, Bertillon's calipers are pinned on his ear
+in Bertillon's visible hand (team-1 s01 setup: ears_svg, hand_svg, pinned tip).
+  9 (439-492)  right-front two-shot: the inspector strides in from the door side, stops, looks (shock), bursts out laughing at g 467 (bounce 3 Hz), gendarme_b laughs
+  10 (493-539) low two-shot with the calipers on the ear; the inspector points AT the calipers; lips 16.32 s
+  11 (540-591) the inspector flicks the caliper bar with a finger; the bar wobbles
+  12 (592-656) snap onto the inspector tapping his own (visible, red) ear twice, chest out
+    python3 shot.py stills a:b[:s] out [scale] [samples]     python3 shot.py final a:b[:s] [scale] [samples]
 """
-import os, sys, math, json
+import math, os, sys, json
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import c17 as C
-from c17 import K, cast17, actors, camrig, sprites, render, puppet, Vector, lerp, clamp, sm, sine, mix3
+from c17 import K, bf, ez, lerp, clamp, bpy, Vector, cast17, actors
 TMP = os.path.join(HERE, "work")
-
-G0, G1, HIN, HOUT = 445, 651, 6, 6
-FIRST, LAST = G0 - HIN, G1 + HOUT - 1                       # 439 .. 656
+FIRST, LAST, G0, G1 = 439, 656, 445, 651
 B9, B10, B11, B12 = 445, 493, 540, 592
 RANGES = {9: (FIRST, B10 - 1), 10: (B10, B11 - 1), 11: (B11, B12 - 1), 12: (B12, LAST)}
-G_LAUGH = C.g_of(15.46) - 1                                # 466: the laugh bursts (15.46 s)
-G_SPEAK0, G_SPEAK1 = C.g_of(16.32), C.g_of(21.59)          # lips 493 .. 650
+G_LAUGH = C.g_of(15.46) - 1 if hasattr(C, "g_of") else 466
+G_SPEAK0, G_SPEAK1 = 493, 650
 def shot_of(g):
     for s, (a, b) in RANGES.items():
         if a <= g <= b: return s
+def mix(a, b, u): return tuple(lerp(x, y, u) for x, y in zip(a, b))
+def sm(u): u = clamp(u); return u * u * u * (u * (6 * u - 15) + 10)
+def sine(u): return ez(u, "sine")
+SLIDE = [0.46]
 
-# ---------------------------------------------------------------- cameras: waypoints (g, loc, look, kind); kind = ease of the segment that STARTS there
-S = lambda *a: tuple(a)
+def _calipers_body(k):
+    """cast17's calipers with an adjustable sliding jaw (SLIDE[0] = x of the jaw tip line; default 0.46) so the jaws can close."""
+    c17 = cast17; dx = SLIDE[0] - 0.46
+    g = c17._lin(k, "cb", c17.STEEL["light"], c17.STEEL["base"], c17.STEEL["dark"], 0, -0.05, 0, 0.05)
+    o = ['<path d="M-0.12,-0.034 L0.88,-0.034 L0.88,0.034 L-0.12,0.034 Z" fill="%s" stroke="%s" stroke-width="0.018" stroke-linejoin="round"/>' % (g, k.ink)]
+    tk = "".join("M%.3f,0.034 L%.3f,%.3f " % (x, x, 0.034 + (0.034 if i % 5 == 0 else 0.020)) for i, x in enumerate([0.02 + 0.04 * j for j in range(20)]))
+    o.append('<path d="%s" stroke="%s" stroke-width="0.008" fill="none"/>' % (tk, k.c(c17.STEEL["deep"])))
+    o.append('<path d="M-0.08,-0.018 L0.84,-0.018" stroke="#ffffff" stroke-width="0.008" opacity="0.7" stroke-linecap="round"/>')
+    o.append('<path d="M0.80,0.030 L0.88,0.030 L0.88,0.30 L0.835,0.33 Z" fill="%s" stroke="%s" stroke-width="0.018" stroke-linejoin="round"/>' % (k.c(c17.STEEL["base"]), k.ink))
+    o.append('<path d="M%.3f,-0.050 L%.3f,-0.050 L%.3f,0.30 L%.3f,0.33 L%.3f,0.034 L%.3f,0.034 Z" fill="%s" stroke="%s" stroke-width="0.018" stroke-linejoin="round"/>'
+             % (0.40 + dx, 0.52 + dx, 0.52 + dx, 0.485 + dx, 0.46 + dx, 0.40 + dx, k.c(c17.STEEL["light"]), k.ink))
+    o.append('<circle cx="%.3f" cy="-0.075" r="0.036" fill="%s" stroke="%s" stroke-width="0.014"/>' % (0.46 + dx, k.c(c17.BRASS["base"]), k.ink))
+    return "".join(o)
+cast17._calipers_body = _calipers_body
+_orig_svg = C.sprites.sprite_svg
+def _svg(cast, pose, *a, **kw):
+    g = (pose or {}).get("t", None)
+    if g is not None and cast == "bertillon": SLIDE[0] = slide_of(int(round(g * 30)))
+    return _orig_svg(cast, pose, *a, **kw)
+C.sprites.sprite_svg = _svg
+
+
+def theta_of(yaw): return math.radians(min(abs(yaw), 1.2) * 70.0)
+
+def ear_local(an, g, name, s):
+    """target for the caliper jaws (puppet-local D): the viewer-left ear (the near ear in profile).  Shot 1 approaches from below-left."""
+    hx, hy = an["head"]
+    yw = yaw_of(name, g)
+    ex = hx - 0.52 * math.cos(theta_of(yw))
+    u = clamp((g - 1) / 13.0) if s == 1 else 1.0
+    k = 1.0 - sm(u)
+    tap = 0.015 * math.sin(g * 0.8) * (1 if u >= 1 else 0)
+    return (ex - 0.5 * k, hy + 0.02 + 1.0 * k + tap)
+
+def ears_svg(pose, fill="#f4d4cb"):
+    """cartoon ears (the puppet has none) -> (underlay, overlay) SVG, puppet-local D, y down.  Near ear in profile is drawn OVER the head."""
+    yw = pose.get("yaw", 0.0); r = pose.get("head_roll", 0.0); dx = pose.get("head_dx", 0.0); dy = pose.get("head_dy", 0.0)
+    ink = "#3a2832"
+    c = math.cos(theta_of(yw)); prof = abs(yw) > 0.5
+    def ear(x, sx, big):
+        rx, ry = (0.19, 0.27) if big else 0.15, (0.25)
+        if big: rx, ry = 0.19, 0.27
+        else: rx, ry = 0.15, 0.25
+        return ('<g transform="translate(%.3f %.3f) scale(%d 1)"><ellipse cx="0" cy="0.02" rx="%.3f" ry="%.3f" fill="%s" stroke="%s" stroke-width="0.035"/>'
+                '<path d="M-0.05,-0.13 C0.05,-0.15 0.11,0.02 0.03,0.14" fill="none" stroke="%s" stroke-width="0.03" stroke-linecap="round"/></g>' % (x, 0, sx, rx, ry, fill, ink, ink))
+    under = ear(0.52 * c, 1, False) + ear(-0.52 * c, 1, False) if not prof else ear(0.52 * c, 1, False)
+    over = ear(-0.52 * c, 1, True) if prof else ""
+    wrap = lambda g: '<g transform="rotate(%.2f %.3f %.3f) translate(%.3f %.3f)">%s</g>' % (r, dx, dy, dx, dy, g) if g else ""
+    return wrap(under), wrap(over)
+
+def hand_svg(an, side="r"):
+    """a visible forearm (lighter sleeve), white cuff and skin hand gripping the beam (puppet-local D, from the sprite's own anchors)."""
+    ex, ey = an["elbow_" + side]; hx, hy = an["hand_" + side]
+    dx, dy = hx - ex, hy - ey; L = math.hypot(dx, dy) or 1.0; ux, uy = dx / L, dy / L
+    cx, cy = hx - ux * 0.13, hy - uy * 0.13
+    return ('<g><path d="M%.3f,%.3f L%.3f,%.3f" stroke="#3a2832" stroke-width="0.17" stroke-linecap="round" fill="none"/>'
+            '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="#46598f" stroke-width="0.125" stroke-linecap="round" fill="none"/>'
+            '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="#3a2832" stroke-width="0.155" stroke-linecap="butt" fill="none"/>'
+            '<path d="M%.3f,%.3f L%.3f,%.3f" stroke="#fbf3ee" stroke-width="0.115" stroke-linecap="butt" fill="none"/>'
+            '<circle cx="%.3f" cy="%.3f" r="0.105" fill="#f4d4cb" stroke="#3a2832" stroke-width="0.03"/>'
+            '<path d="M%.3f,%.3f q0.05,-0.02 0.09,0.03" stroke="#3a2832" stroke-width="0.02" fill="none"/></g>'
+            % (ex, ey, hx, hy, ex, ey, hx, hy, cx - ux * 0.045, cy - uy * 0.045, cx + ux * 0.045, cy + uy * 0.045,
+               cx - ux * 0.045, cy - uy * 0.045, cx + ux * 0.045, cy + uy * 0.045, hx, hy, hx - 0.04, hy - 0.01))
+
+
+def slide_of(g):
+    return lerp(0.24, 0.50, ez((g - 440) / 30.0))          # jaws close during shot 9, then stay on the ear
+
+def yaw_of(name, g): return 0.55
+
+CH = (0.70, 2.30)
+def sc_of(cast): return K.CAST_H[cast] / K.CAST_HD[cast]
+SPOT = dict(pris=("prisoner_b", "prisoner_sitting_b", (CH[0], CH[1] - 0.14), "chair"),
+            bert=("bertillon", "bertillon_measuring", (0.14, 1.92), None),
+            ins=("inspector17", "inspector_pointing_mock", (1.5, 1.5), None),
+            gB=("gendarme_b", "gendarme_laughing_b", (2.15, 3.05), None),
+            gA=("gendarme_a", "gendarme_laughing_a", (-0.9, 3.0), None))
+INS_WALK = [(439, (3.00, 1.40)), (460, (1.30, 2.30)), (466, (1.25, 2.32))]
+INS_POS = {10: (1.30, 2.05), 11: (1.30, 1.80), 12: (0.95, 1.30)}
+
 CAMS = {
-    9: [(439, S(-2.30, -3.60, 1.50), S(0.60, 1.10, 1.30), "d"), (468, S(-1.95, -3.30, 1.50), S(0.70, 1.15, 1.30), "s"),
-        (480, S(-0.95, -2.05, 1.50), S(0.75, 1.30, 1.30), "d"), (492, S(-0.55, -1.65, 1.50), S(0.90, 1.30, 1.30), "d")],
-    10: [(493, S(0.15, 0.30, 0.50), S(0.55, 2.4, 1.50), "d"), (512, S(0.32, 0.44, 0.50), S(0.70, 2.4, 1.50), "s"),
-         (522, S(0.22, 0.74, 0.50), S(0.52, 2.4, 1.60), "d"), (539, S(0.28, 0.80, 0.50), S(0.56, 2.4, 1.62), "d")],
-    11: [(540, S(2.25, 0.05, 1.50), S(0.55, 2.4, 1.30), "d"), (562, S(1.95, 0.22, 1.50), S(0.45, 2.4, 1.30), "s"),
-         (574, S(1.50, 0.50, 1.50), S(0.55, 2.3, 1.30), "d"), (591, S(1.40, 0.60, 1.48), S(0.45, 2.3, 1.30), "d")],
-    12: [(592, S(1.75, 0.35, 1.50), S(0.70, 1.60, 1.38), "d"), (604, S(1.72, 0.38, 1.50), S(0.72, 1.60, 1.38), "s"),
-         (617, S(1.48, 0.68, 1.48), S(0.80, 1.60, 1.38), "d"), (632, S(1.50, 0.70, 1.47), S(0.84, 1.60, 1.38), "s"), (644, S(1.92, 0.76, 1.47), S(1.05, 1.60, 1.38), "d"), (656, S(1.98, 0.78, 1.47), S(1.08, 1.60, 1.38), "d")],
+    9: [(439, (2.05, 0.10, 1.42), (0.75, 2.2, 1.28), "d"), (466, (1.90, 0.28, 1.42), (0.75, 2.2, 1.28), "s"), (474, (1.62, 0.50, 1.40), (0.66, 2.2, 1.30), "d"), (482, (1.60, 0.52, 1.40), (0.66, 2.2, 1.30), "s"), (489, (1.44, 0.68, 1.38), (0.60, 2.2, 1.30), "d"), (492, (1.43, 0.69, 1.38), (0.60, 2.2, 1.30), "d")],
+    10: [(493, (1.62, 0.44, 1.02), (0.68, 2.1, 1.35), "d"), (512, (1.66, 0.40, 1.02), (0.68, 2.1, 1.35), "s"), (519, (2.02, 0.10, 0.95), (0.72, 2.1, 1.35), "d"), (528, (2.05, 0.08, 0.95), (0.72, 2.1, 1.35), "s"), (535, (1.78, 0.30, 1.0), (0.64, 2.1, 1.35), "d"), (539, (1.76, 0.32, 1.0), (0.64, 2.1, 1.35), "d")],
+    11: [(540, (1.62, 0.72, 1.40), (0.68, 2.0, 1.30), "d"), (566, (1.66, 0.68, 1.40), (0.68, 2.0, 1.30), "s"), (574, (2.15, 0.15, 1.42), (0.55, 2.0, 1.30), "d"), (591, (2.25, 0.08, 1.42), (0.55, 2.0, 1.30), "d")],
+    12: [(592, (1.95, 0.30, 1.48), (0.80, 1.60, 1.38), "d"), (604, (1.92, 0.34, 1.48), (0.80, 1.60, 1.38), "s"), (611, (1.50, 0.62, 1.46), (0.90, 1.55, 1.38), "d"), (632, (1.45, 0.65, 1.46), (0.92, 1.55, 1.38), "s"),
+         (639, (1.72, 0.74, 1.46), (1.00, 1.55, 1.38), "d"), (656, (1.76, 0.76, 1.46), (1.02, 1.55, 1.38), "d")],
 }
-LENS = 22.0
-
-
-def ease(kind, u):
-    if kind == "s": return sm(u)
-    return 0.35 * sine(u) + 0.65 * clamp(u, -1.0, 2.0) if 0 <= u <= 1 else u
-
-
 def cam_of(g):
-    wps = CAMS[shot_of(g)]
-    i = 0
+    wps = CAMS[shot_of(g)]; i = 0
     while i < len(wps) - 2 and g >= wps[i + 1][0]: i += 1
-    a, b = wps[i], wps[i + 1]
-    u = (g - a[0]) / float(b[0] - a[0])
-    e = ease(a[3], u)
-    loc = mix3(a[1], b[1], e); look = mix3(a[2], b[2], e)
-    am = 0.07 if shot_of(g) == 9 else 0.035
-    loc = (loc[0] + am * math.sin(2 * math.pi * g / 37.0), loc[1] + 0.5 * am * math.sin(2 * math.pi * g / 29.0), loc[2] + 0.4 * am * math.sin(2 * math.pi * g / 23.0))
-    return loc, look
-
-
-# ---------------------------------------------------------------- staging
-CHAIR = (0.7, 2.3); H = K.CAST_H; HD = K.CAST_HD
-INS_WALK = [(439, (2.6, -1.35)), (462, (0.55, -0.35)), (466, (0.5, -0.33))]       # in at the door, stops, laughs
-INS_S10 = (0.12, 1.95); INS_S11 = (0.85, 1.45); INS_S12 = (0.85, 1.45)
-BERT = {9: (-0.15, 2.15), 10: (1.55, 2.55), 11: (1.34, 2.34), 12: (1.34, 2.34)}
-
+    a, b = wps[i], wps[i + 1]; u = (g - a[0]) / float(b[0] - a[0])
+    e = sm(u) if a[3] == "s" else (0.35 * sine(u) + 0.65 * clamp(u) if 0 <= u <= 1 else u)
+    loc = mix(a[1], b[1], e); look = mix(a[2], b[2], e)
+    am = 0.08
+    return (loc[0] + am * math.sin(2 * math.pi * g / 37.0), loc[1] + 0.5 * am * math.sin(2 * math.pi * g / 29.0), loc[2] + 0.4 * am * math.sin(2 * math.pi * g / 23.0)), look
 
 def lerp_path(pts, g):
     if g <= pts[0][0]: return pts[0][1]
     for (g0, p0), (g1, p1) in zip(pts, pts[1:]):
-        if g <= g1:
-            u = (g - g0) / float(g1 - g0); return (lerp(p0[0], p1[0], u), lerp(p0[1], p1[1], u))
+        if g <= g1: u = (g - g0) / float(g1 - g0); return (lerp(p0[0], p1[0], u), lerp(p0[1], p1[1], u))
     return pts[-1][1]
+def bounce(g, amp=0.06 * 1.7, hz=3.0, ph=0.0): return amp * abs(math.sin(math.pi * hz * g / 30.0 + ph))
 
-
-def bounce(g, amp=0.06 * 1.7, hz=3.0, ph=0.0):
-    return amp * abs(math.sin(math.pi * hz * g / 30.0 + ph))
-
-
+def story(name, **kw):
+    cast, p = cast17.STORY17[name]; p = dict(p); p.update(kw); p["seat17"] = None; return p
 def rim(p, cast):
     c = K.RIM_FOR.get(cast)
     if c: p["rim"] = c; p["rim_opacity"] = 0.55; p["rim_w"] = 0.02
     return p
-
-
 def speak(p, g):
-    lvl = 0.85 + 0.15 * math.sin(g * 0.37)
-    return cast17.speak(p, g, lvl) if G_SPEAK0 <= g <= G_SPEAK1 else cast17.silent(p)
+    return cast17.speak(p, g, 0.85 + 0.15 * math.sin(g * 0.37)) if G_SPEAK0 <= g <= G_SPEAK1 else cast17.silent(p)
 
-
-def story(name, **kw):
-    cast, p = cast17.STORY17[name]; p = dict(p); p.update(kw); return cast, p
-
+def pose_pris(g):
+    t = g / 30.0; p = story("prisoner_sitting_b")
+    p.update(yaw=yaw_of("pris", g), pitch=0.0, expr="unimpressed", mouth="flat", gaze=(-0.95, 0.05), head_roll=1.5 * math.sin(t * 1.9), blink=cast17.blink_at(g, 83, 11))
+    p["squash"] = (1.0 + 0.008 * math.sin(t * 2.4), 1.0 - 0.008 * math.sin(t * 2.4))
+    return cast17.silent(p)
+def pose_bert(g):
+    t = g / 30.0
+    p = story("bertillon_measuring"); sway = math.sin(t * 2.1)
+    p.update(lean=4 + 1.5 * sway, pitch=0.22, yaw=0.62, gaze=(1.0, 0.25), blink=cast17.blink_at(g, 90, 30), t=g / 30.0)
+    return cast17.silent(p)
+def pose_gend(name, g, ph):
+    t = g / 30.0; lau = g >= G_LAUGH + 4 + ph
+    p = story(("gendarme_laughing_" if lau else "gendarme_standing_") + ("b" if name == "gB" else "a"))
+    p.update(blink=cast17.blink_at(g, 79 + ph, 9))
+    if lau: p["lean"] = -6 + 3 * math.sin(g * 0.45 + ph)
+    p["t"] = t
+    return cast17.silent(p) if not lau else p
+def pos_gend(name, g):
+    lau = g >= G_LAUGH + 4 + (0 if name == "gB" else 4)
+    return bounce(g, ph=0.8 if name == "gA" else 2.0) if lau else 0.0
 
 def pose_ins(g):
-    """(pose, floor xy, z lift) of the inspector at film frame g."""
-    s = shot_of(g)
+    """(pose, xy, lift) -- hands pinned later."""
+    s = shot_of(g); t = g / 30.0
     if s == 9:
         xy = lerp_path(INS_WALK, g)
-        if g < 462:                                           # striding in
-            ph = (g - 439) / 30.0 * 1.9
-            cast, base = story("inspector_arms_crossed")
-            p = cast17.cycle("inspector17", ph, "march", 1, base=dict(base, arm_r="down", arm_l="down"))
-            p.update(yaw=0.55, expr="smug", pitch=-0.2)
-            return speak(p, g), xy, 0.0
-        cast, a = story("inspector_arms_crossed"); cast, l = story("inspector_laughing")
-        if g < G_LAUGH:                                            # stops, sees the ear: shock (pointing finger) then the first snort
-            cast, pm = story("inspector_pointing_mock")
-            u = sm((g - 462) / 4.0) if g >= 462 else 0.0
-            p = dict(pm, expr="surprised", mouth="flat", arm_r=dict(pm["arm_r"], hand=(0.9, 0.05)))
-            p["lean"] = 2.0 * math.sin(g * 0.3); p["head_roll"] = 8 + 2 * math.sin(g * 0.21)
-            return speak(p, g), xy, 0.0
+        if g < 459:
+            base = story("inspector_arms_crossed")
+            p = cast17.cycle("inspector17", (g - 439) / 30.0 * 1.9, "march", 1, base=dict(base, arm_r="down", arm_l="down"))
+            p.update(yaw=-0.5, expr="smug", pitch=-0.2)
+            return cast17.silent(p), xy, 0.0
+        if g < G_LAUGH:
+            p = story("inspector_pointing_mock", expr="surprised", mouth="flat", yaw=-0.45)
+            p["arm_r"] = dict(p["arm_r"], hand=(1.0, 0.0)); p["lean"] = 2 + 2 * math.sin(g * 0.3); p["head_roll"] = 6
+            return cast17.silent(p), xy, 0.0
         u = sm((g - G_LAUGH) / 5.0)
-        p = dict(l); p["lean"] = -8 + 3 * math.sin(g * 0.5); p["t"] = g / 30.0
-        p["squash"] = (1.0 + 0.03 * abs(math.sin(math.pi * 3.0 * g / 30.0)), 1.0 - 0.03 * abs(math.sin(math.pi * 3.0 * g / 30.0)))
+        p = story("inspector_laughing"); p["lean"] = -8 + 3 * math.sin(g * 0.5); p["t"] = t; p["yaw"] = -0.3
+        b = abs(math.sin(math.pi * 3.0 * g / 30.0)); p["squash"] = (1.0 + 0.03 * b, 1.0 - 0.03 * b)
         return p, xy, bounce(g) * u
-    cast, p = story("inspector_pointing_mock")
+    xy = INS_POS[s]
+    p = story("inspector_pointing_mock", expr="smug"); p["yaw"] = -0.4
     if s == 10:
-        p["arm_r"] = dict(p["arm_r"], hand=(1.15 + 0.05 * math.sin(g * 0.3), 0.10 + 0.04 * math.sin(g * 0.4)))
-        p["head_roll"] = 6 + 3 * math.sin(g * 0.23); p["lean"] = -3 + 2 * math.sin(g * 0.31); p["yaw"] = 0.3
-        p["expr"] = "smug"
-        return speak(p, g), INS_S10, 0.0
-    if s == 11:
-        k = math.sin((g - B11) * 0.55)                              # the flick at the calipers
-        p["arm_r"] = dict(p["arm_r"], hand=(1.05 + 0.10 * k, 0.05 + 0.10 * math.cos((g - B11) * 0.55)))
-        p["head_roll"] = -5 + 3 * math.sin(g * 0.2); p["lean"] = 4 + 2 * math.sin(g * 0.33); p["yaw"] = 0.35; p["expr"] = "smug"
-        return speak(p, g), INS_S11, 0.0
-    # shot 12: taps his own ear, chest out
-    ph = (g - B12)
-    tap = 0.05 * math.sin(ph * 0.9)
-    p.update(yaw=0.15, expr="smug", pitch=-0.45, lean=-9 + 1.5 * math.sin(g * 0.3), head_roll=-4 + 2 * math.sin(g * 0.25),
-             arm_r=dict(hand=(0.54 + tap, 0.02 + tap), bend=0.2, shape="point", stretch=1.0, layer="front"),
-             arm_l="akimbo")
-    return speak(p, g), INS_S12, 0.0
+        p["head_roll"] = 6 + 3 * math.sin(g * 0.23); p["lean"] = -3 + 2 * math.sin(g * 0.31); p["mirror"] = True; p["yaw"] = 0.4
+        p["arm_r"] = dict(p["arm_r"], hand=(1.25 + 0.05 * math.sin(g * 0.3), 0.05), stretch=1.3)
+    if s == 11: p["head_roll"] = -4 + 3 * math.sin(g * 0.2); p["lean"] = 3 + 2 * math.sin(g * 0.33); p["yaw"] = 0.4; p["mirror"] = True
+    if s == 12:
+        k = clamp((g - B12) / 14.0)
+        p.update(yaw=0.88, expr="smug", pitch=-0.35, head_roll=-3 + 2 * math.sin(g * 0.25), lean=-6 - 3 * sm(k) + 1.2 * math.sin(g * 0.3), arm_r="akimbo")
+        sq = 1.0 + 0.05 * sm(k); p["squash"] = (sq, 1.0 - 0.01 * sm(k))
+    return speak(p, g), xy, 0.0
 
+def ins_ear_local(an, g):
+    hx, hy = an["head"]; c = math.cos(theta_of(0.88))
+    tap = 0.075 * max(0.0, math.sin((g - B12) * 0.75)) if g >= B12 + 12 else 0.0     # two taps in the second half
+    return (hx - 0.52 * c + 0.05 - tap * 0.0, hy + 0.02 - tap)
 
-def pose_bert(g):
-    s = shot_of(g)
-    cast, p = story("bertillon_measuring")
-    sway = 1.2 * math.sin(g * 0.13)
-    p = dict(p, lean=p.get("lean", 4) + sway, blink=cast17.blink_at(g, 83, 11), t=g / 30.0)
-    if s == 9:
-        p["gaze"] = (0.8, 0.2); p["yaw"] = 0.5
-        p["arm_r"] = dict(p["arm_r"], hand=(0.88 + 0.015 * math.sin(g * 0.5), 0.34))
-    else:                                                          # behind, unmoved: calipers held, eyes on the inspector
-        p["expr"] = "determined"; p["gaze"] = (0.7, 0.1) if s != 12 else (0.7, 0.1)
-        p["arm_r"] = dict(p["arm_r"], hand=(0.88 + 0.01 * math.sin(g * 0.4), 0.45))
-        if s in (11, 12): p["mirror"] = False
-    return cast17.silent(p), BERT[s], 0.0
-
-
-class Take(object):
+class Take(C.Take):
     def __init__(self, quality="draft"):
-        import bpy
-        bpy.ops.wm.read_factory_settings(use_empty=True)
-        self.A = K.build(preset="measure_chair")
-        self.fg_all = {}
-        before = set(bpy.data.objects.keys())
-        K.fg_measure_wide(self.A); self.fg_wide = [bpy.data.objects[k] for k in set(bpy.data.objects.keys()) - before]
-        before = set(bpy.data.objects.keys())
-        K.fg_measure_low(self.A); self.fg_low = [bpy.data.objects[k] for k in set(bpy.data.objects.keys()) - before]
-        K.clear_keys()
-        for o in bpy.data.objects:                              # director fix: additive light shafts wash over the cast cards -> hidden
-            if any(m and m.name.startswith('beam_fx') for m in getattr(o.data, 'materials', []) or []): o.hide_render = True
-        self.cam = bpy.context.scene.camera
-        self.cam.data.dof.use_dof = False; self.cam.data.clip_start = 0.02
-        self.scene = bpy.context.scene
-        self.scene.frame_start, self.scene.frame_end = 1, 9000
-        sd = os.path.join(TMP, "sprites"); os.makedirs(sd, exist_ok=True)
-        self.sd = sd
-        def mk(name, cast):
-            a = actors.Actor(name, cast); a.build(sprites.DEFAULT_CANVAS[cast], sd, contact=True); a.head_flip = True; return a
-        self.act = dict(ins=mk("ins", "inspector17"), bert=mk("bert", "bertillon"), pris=mk("pris", "prisoner_b"), pa=mk("pa", "prisoner_a"),
-                        gA=mk("gA", "gendarme_a"), gB=mk("gB", "gendarme_b"))
-        self.anch = {}; self.heads = {}
+        C.Take.__init__(self, "measure_chair", quality, fg=True)
+        self.q = quality
+        sd = os.path.join(TMP, "sprites_" + quality)
+        self.acts = {n: self.make_actor(n, v[0], sd) for n, v in SPOT.items()}
+        for n, fill in (("pris", "#f4d4cb"), ("ins", "#e9857a")):
+            a = self.acts[n]
+            a.jobs = (lambda orig, fl: (lambda px, frames=None, overlay=None: [dict(j, underlay=ears_svg(j["pose"], fl)[0], overlay=(j.get("overlay") or "") + ears_svg(j["pose"], fl)[1]) for j in orig(px, frames, overlay)]))(a.jobs, fill)
+        for o in bpy.data.objects:
+            if any(m and m.name.startswith("beam_fx") for m in (getattr(o.data, "materials", None) or [])): o.hide_render = True
+        self.ear = {}; self.info = {}
 
-    def stand(self, key, cast, pose, xy, lift, f, seated=None):
-        a = self.act[key]
-        fx, fy = sprites.feet_of(cast, pose)
-        sc = H[cast] / HD[cast]
-        z = 0.0
-        if seated: z = K.HEAD_Z[seated] - sc * fy
-        a.place(f, (xy[0], xy[1], z + lift), scale=sc)
-        return a
+    def ppd(self, s): return {9: 256, 10: 384, 11: 384, 12: 512}[s] * (1 if self.q == "final" else 0.5)
+
+    def sprites(self, n, a, frames, overlay=None):
+        for s in sorted(set(shot_of(f - 1) for f in frames)):
+            fr = [f for f in frames if shot_of(f - 1) == s]
+            p = int(self.ppd(s)); p -= p % 16
+            for f, r in zip(fr, a.render_sprites(p, frames=fr, overlay=overlay)): self.anch[(a.name, f)] = r["anchors"]
 
     def pose(self, gs):
-        cam = self.cam
+        gs = list(gs); cam = self.cam
+        for g in sorted(set(gs) | set(x for y in gs for x in (y - 1, y + 1))):
+            if FIRST <= g <= LAST: self.key_cam(bf(g), *cam_of(g))
         for g in gs:
-            f = g
-            loc, look = cam_of(g)
-            camrig.key_camera(f, Vector(loc), Vector(look), lens=LENS, cam=cam, interp="LINEAR", easing="AUTO")
-            s = shot_of(g)
-            C.key_hide(self.fg_wide, f, s != 9); C.key_hide(self.fg_low, f, s != 10)
-        K.key_life(min(gs), max(gs), dust=0.5)
-        plan = {}
+            f = bf(g); s = shot_of(g)
+            for n, a in self.acts.items():
+                on = n in ("pris", "bert", "ins") or (n == "gB" and s == 9) or (n == "gA" and s == 9)
+                C.vis(a, f, on)
+            self.acts["pris"].place(f, (SPOT["pris"][2][0], SPOT["pris"][2][1], K.HEAD_Z["chair"] - sc_of("prisoner_b") * C.sprites.feet_of("prisoner_b", pose_pris(g))[1]), scale=sc_of("prisoner_b"))
+            self.acts["bert"].place(f, (SPOT["bert"][2][0], SPOT["bert"][2][1], 0.10), scale=sc_of("bertillon"))
+            p, xy, lift = pose_ins(g); self.acts["ins"].place(f, (xy[0], xy[1], lift), scale=sc_of("inspector17"))
+            self.acts["gB"].place(f, (SPOT["gB"][2][0], SPOT["gB"][2][1], pos_gend("gB", g)), scale=sc_of("gendarme_b"))
+            self.acts["gA"].place(f, (SPOT["gA"][2][0], SPOT["gA"][2][1], pos_gend("gA", g)), scale=sc_of("gendarme_a"))
+            K.set_flicker(1.0, frame=f); K.set_dust(0.5, frame=f); K.set_smoke(1.0, frame=f); K.set_pendulum(frame=f)
+        # pass 1: sitter, gendarmes
         for g in gs:
-            f = g; s = shot_of(g); vis = {}
-            p, xy, lift = pose_ins(g); p = rim(dict(p), "inspector17")
-            self.stand("ins", "inspector17", p, xy, lift, f); vis["ins"] = (p, "inspector17")
-            p, xy, lift = pose_bert(g); p = rim(dict(p), "bertillon")
-            self.stand("bert", "bertillon", p, xy, lift, f); vis["bert"] = (p, "bertillon")
-            if s == 9:
-                cast, p = story("prisoner_sitting_b"); p = dict(p, seat17=None, blink=cast17.blink_at(g, 97, 5), lean=1.0 * math.sin(g * 0.15), t=g / 30.0)
-                self.stand("pris", "prisoner_b", p, CHAIR, 0.0, f, seated="chair"); vis["pris"] = (cast17.silent(p), "prisoner_b")
-                cast, p = story("prisoner_sitting_a"); p = dict(p, seat17=None, blink=cast17.blink_at(g, 101, 40), t=g / 30.0)
-                self.stand("pa", "prisoner_a", p, (-2.35, 0.85), 0.0, f, seated="bench"); vis["pa"] = (cast17.silent(p), "prisoner_a")
-                lau = g >= G_LAUGH + 3
-                cast, p = story("gendarme_laughing_a" if lau else "gendarme_standing_a")
-                p = dict(p, blink=cast17.blink_at(g, 89, 3), t=g / 30.0)
-                if lau: p["lean"] = -6 + 3 * math.sin(g * 0.45)
-                self.stand("gA", "gendarme_a", p, (1.75, 1.35), bounce(g, ph=0.8) if lau else 0.0, f); vis["gA"] = (p, "gendarme_a")
-                cast, p = story("gendarme_laughing_b" if g >= G_LAUGH + 7 else "gendarme_standing_b")
-                p = dict(p, blink=cast17.blink_at(g, 79, 9), t=g / 30.0)
-                if g >= G_LAUGH + 7: p["lean"] = -6 + 3 * math.sin(g * 0.4)
-                self.stand("gB", "gendarme_b", p, (2.45, 0.9), bounce(g, ph=2.0) if g >= G_LAUGH + 7 else 0.0, f); vis["gB"] = (p, "gendarme_b")
-            for k, a in self.act.items():
-                C.key_hide(a.objects(), f, k not in vis)
-            for k, (p, cast) in vis.items():
-                self.scene.frame_set(f)
-                hands = None
-                if k == "bert" and s == 9:
-                    cl = Vector(cam_of(g)[0]); rv = (Vector(cam_of(g)[1]) - cl); rv = Vector((rv.y, -rv.x, 0)).normalized()
-                    ear = Vector((CHAIR[0], CHAIR[1], K.HEAD_Z["chair"])) - rv * 0.30 + (cl - Vector((CHAIR[0], CHAIR[1], cl.z))).normalized() * 0.05
-                    hands = {"r": {"tip": tuple(ear), "prop": "calipers"}}
-                self.act[k].pose(f, p, hands=hands, camera=cam)
-            plan[g] = vis
+            f = bf(g); self.scene.frame_set(f)
+            self.acts["pris"].pose(f, pose_pris(g), camera=cam)
+            if shot_of(g) == 9:
+                self.acts["gB"].pose(f, pose_gend("gB", g, 0), camera=cam); self.acts["gA"].pose(f, pose_gend("gA", g, 4), camera=cam)
+        self.sprites("pris", self.acts["pris"], [bf(g) for g in gs])
+        for n in ("gB", "gA"):
+            fr = [bf(g) for g in gs if shot_of(g) == 9]
+            if fr: self.sprites(n, self.acts[n], fr)
+        # Bertillon: jaws pinned on the prisoner's viewer-left ear
         for g in gs:
-            pass
-        for s in sorted(set(shot_of(g) for g in gs)):
-            fr = [g for g in gs if shot_of(g) == s]
-            ppd = {9: 256, 10: 448, 11: 384, 12: 512}[s]
-            for k, a in self.act.items():
-                fk = [g for g in fr if k in plan[g]]
-                if fk:
-                    for g, r in zip(fk, a.render_sprites(ppd, frames=fk)):
-                        self.anch[(k, g)] = r["anchors"]
-                        if r.get("clipped"): print("WARNING clipped", k, g, flush=True)
+            f = bf(g); self.scene.frame_set(f)
+            an = self.anch[("pris", f)]; el = pris_ear_local(an, g)
+            w = actors.local_to_world(self.acts["pris"], el, f, camera=cam); self.ear[g] = tuple(w)
+            wob = self.wobble(g)
+            p, info = self.acts["bert"].pose(f, pose_bert(g), hands={"r": {"tip": w, "prop": "calipers", "angle": -4 + wob, "prop_scale": 1.15, "stretch": 1.15}}, camera=cam)
+            self.info[(g, "bert")] = round(info.get("r", {}).get("error", -1), 3)
+        fr = [bf(g) for g in gs]
+        self.sprites("bert", self.acts["bert"], fr)
+        self.sprites("bert", self.acts["bert"], fr, overlay=lambda f, pose: hand_svg(self.anch[("bert", f)]))
+        # inspector: pinned hands (needs Bertillon's anchors: the caliper bar)
+        for g in gs:
+            f = bf(g); s = shot_of(g); self.scene.frame_set(f)
+            p, xy, lift = pose_ins(g); p = rim(dict(p), "inspector17"); hands = None
+            if s == 11:
+                ban = self.anch[("bert", f)]
+                hx, hy = ban["hand_r"]; tx, ty = ban["prop_tip_r"]
+                mid = actors.local_to_world(self.acts["bert"], ((hx + tx) * 0.5, (hy + ty) * 0.5), f, camera=cam)
+                self.bar = tuple(mid)
+                if True:
+                    k = clamp((g - 548) / 10.0); out = (Vector(cam_of(g)[0]) - Vector(mid)).normalized() * (0.30 * (1 - sm(min(1.0, k))) + 0.02)
+                    hands = {"r": {"hand": tuple(Vector(mid) + out), "stretch": 1.2}}
+            if s == 12:
+                an0 = self.anch.get(("ins", f))
+            _, ii = self.acts["ins"].pose(f, p, hands=hands, camera=cam); self.info[(g, "ins")] = round(ii.get("r", {}).get("error", -1), 3) if ii else None
+        fr = [bf(g) for g in gs]
+        self.sprites("ins", self.acts["ins"], fr)
+        for g in gs:
+            if shot_of(g) == 12:
+                f = bf(g); self.scene.frame_set(f); p, xy, lift = pose_ins(g); p = rim(dict(p), "inspector17")
+                el = ins_ear_local(self.anch[("ins", f)], g)
+                self.acts["ins"].pose(f, dict(p, arm_r="akimbo", arm_l=dict(hand=(-0.5, 0.0), bend=0.3)), hands={"l": {"hand": el, "stretch": 1.2, "shape": "point"}}, camera=cam)
+        fr12 = [bf(g) for g in gs if shot_of(g) in (11, 12)]
+        if fr12:
+            self.sprites("ins", self.acts["ins"], fr12)
+            self.sprites("ins", self.acts["ins"], fr12, overlay=lambda f, pose: hand_svg(self.anch[("ins", f)], "l" if shot_of(f - 1) == 12 else "r"))
+
+    def wobble(self, g):
+        if 558 <= g <= 567: return 9.0 * math.sin((g - 558) * 1.7) * (1 - (g - 558) / 10.0)
+        return 0.0
 
     def report(self, g):
-        self.scene.frame_set(g)
-        out = {}
-        for k, a in self.act.items():
-            if a.card.hide_render or (k, g) not in self.anch: continue
-            hx, hy = self.anch[(k, g)]["head"]
-            fe = a.feet.get(g)
-            w0 = actors.local_to_world(a, (hx, hy), g, fe, camera=self.cam); w1 = actors.local_to_world(a, (hx + 0.5, hy), g, fe, camera=self.cam)
-            c = K.project(self.cam, tuple(w0)); r = K.project(self.cam, tuple(w1))
-            out[k] = dict(x=round(c[0]), y=round(c[1]), r=round(math.hypot(r[0] - c[0], r[1] - c[1])))
-        return dict(g=g, shot=shot_of(g), heads=out)
+        f = bf(g); self.scene.frame_set(f); out = dict(g=g, shot=shot_of(g), err=self.info.get((g, "bert")), ins_err=self.info.get((g, "ins")))
+        heads = {}
+        for n, a in self.acts.items():
+            if a.card.hide_render or (a.name, f) not in self.anch: continue
+            hx, hy = self.anch[(a.name, f)]["head"]; w0 = actors.local_to_world(a, (hx, hy), f, camera=self.cam); c = K.project(self.cam, tuple(w0))
+            heads[n] = (round(c[0]), round(c[1]))
+        out["heads"] = heads; return out
 
-    def render(self, gs, out_dir, scale=1.0, samples=12, threads=2):
-        K.setup_render(self.scene, "final", samples)
-        K.STATE["scale"] = scale
-        res = render.render_frames(list(gs), out_dir, scale=scale, threads=threads, scene=self.scene, camera=self.cam, verbose=False)
-        for st in res: K.grade(st["path"], scale=scale)
-        return res
-
-
-def run(cmd, gs, a):
-    T = Take()
-    T.pose(gs)
-    for g in gs:
-        print(json.dumps(T.report(g)), flush=True)
-    if cmd == "stills":
-        out = a[0]; scale = float(a[1]) if len(a) > 1 else 0.5; samples = int(a[2]) if len(a) > 2 else 6
-        os.makedirs(out, exist_ok=True)
-        for g in gs:
-            st = T.render([g], out, scale, samples)[0]; os.replace(st["path"], os.path.join(out, "g_%04d.png" % g))
-            print("g %d %.1f s wall" % (g, st["wall"]), flush=True)
-    elif cmd == "final":
-        scale = float(a[0]) if a else 1.0; samples = int(a[1]) if len(a) > 1 else 12
-        out = os.path.join(HERE, "raw_%d" % int(scale * 720)); os.makedirs(out, exist_ok=True)
-        for g in gs:
-            png = os.path.join(out, "g_%04d.png" % g)
-            if os.path.exists(png): continue
-            st = T.render([g], out, scale, samples)[0]; os.replace(st["path"], png)
-            json.dump(T.report(g), open(png[:-4] + ".json", "w"))
-            print("g %d %.1f s wall %.1f cpu" % (g, st["wall"], st["cpu"]), flush=True)
-
+def pris_ear_local(an, g):
+    hx, hy = an["head"]; return (hx - 0.52 * math.cos(theta_of(yaw_of("pris", g))), hy + 0.02 + 0.015 * math.sin(g * 0.8))
 
 if __name__ == "__main__":
     cmd = sys.argv[1]; gs = [g for g in C.parse(sys.argv[2]) if FIRST <= g <= LAST]
-    run(cmd, gs, sys.argv[3:])
+    if cmd == "stills":
+        out = sys.argv[3]; scale = float(sys.argv[4]) if len(sys.argv) > 4 else 0.5; samples = int(sys.argv[5]) if len(sys.argv) > 5 else 6
+        os.makedirs(out, exist_ok=True)
+        T = Take("draft" if scale < 1 else "final"); T.pose(gs)
+        for g in gs:
+            print(json.dumps(T.report(g)), flush=True)
+            st = T.render([bf(g)], out, scale, samples)[0]; K.grade(st["path"], scale=scale); os.replace(st["path"], os.path.join(out, "g_%04d.png" % g))
+    elif cmd == "final":
+        scale = float(sys.argv[3]) if len(sys.argv) > 3 else 1.0; samples = int(sys.argv[4]) if len(sys.argv) > 4 else 12
+        out = os.path.join(HERE, "raw_%d" % int(scale * 720)); os.makedirs(out, exist_ok=True)
+        todo = [g for g in gs if not os.path.exists(os.path.join(out, "g_%04d.png" % g))]
+        T = Take("draft" if scale < 1 else "final")
+        for i in range(0, len(todo), 12):
+            ch = todo[i:i + 12]; T.pose(ch)
+            for g in ch:
+                st = T.render([bf(g)], out, scale, samples)[0]; K.grade(st["path"], scale=scale)
+                os.replace(st["path"], os.path.join(out, "g_%04d.png" % g)); json.dump(T.report(g), open(os.path.join(out, "g_%04d.json" % g), "w"))
+                print("g", g, round(st["wall"], 1), flush=True)
