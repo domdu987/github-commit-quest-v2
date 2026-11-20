@@ -12,7 +12,10 @@ import shot as S
 CU = 103.2
 def setup(qq, S_):
     A, sc = SHB._base('TENSE', qq, sparkles=False)
+    P = STATE['P']; P['crowd_shade_k'] = 2.4; P['crowd_gain_k'] = 2.6; B2.tune_crowd(P)         # lift the far 3D crowd so no black band shows above the card rows
     F.clear_keys()
+    for o in bpy.data.objects:
+        if o.name.startswith('press_B_'): o.hide_render = True            # the dark press box behind the crowd was the 'black void'
     cs = B2.stand_pos(7, CU, 0.5); S.CS = cs
     rr = random.Random(41); seats = []
     cam0 = Vector(B2.stand_pos(2.6, CU + 1.3, 0.0)); S.CAM0 = cam0
@@ -38,7 +41,7 @@ def setup(qq, S_):
         r = SHB.seat_card('cr%d' % i, cast, pose, row, u, cam_loc, ppd=96, mirror=rr.random() < 0.5, back=0.5 + rr.uniform(-0.1, 0.1))
         ob = bpy.data.objects['actor_cr%d' % i]; cards.append((ob, ob.location.z, rr.uniform(0, 6.28), rr.choice((2.2, 2.8, 3.1)), rr.uniform(0.02, 0.05)))
     SHB.rim(False); S.CARDS = cards
-    pool = B2.mat_disc_glow('coach_pool', (1.0, 0.86, 0.6), 1.1, 0.9, 1.6); x, y, z = cs; rp = 2.1
+    pool = B2.mat_disc_glow('coach_pool', (1.0, 0.86, 0.6), 0.8, 0.8, 1.6); x, y, z = cs; rp = 1.5
     V, Fc, UV = B2.quad_uv((x - rp, y - rp, z + 0.04), (x + rp, y - rp, z + 0.04), (x + rp, y + rp, z + 0.04), (x - rp, y + rp, z + 0.04)); B2.mesh_obj('coach_pool', V, [Fc], pool, uv=UV)
     cam = B2.make_camera_m(cam_loc, (cs[0], cs[1], cs[2] + 1.0), lens=22.0); sc.camera = cam
     return A, sc, cam, lambda g: draw(g, sc, cam)
@@ -60,25 +63,24 @@ def coach_cam(g):
     cs = S.CS; c = Vector(cs); look0 = c + Vector((0, 0, 0.95))
     def ucam(u, rowf, h):
         p = Vector(B2.stand_pos(rowf, u, 0.0)); return Vector((p.x, p.y, p.z + h))
-    # medium: slides sideways along the tread and pushes in a little (parallax through the seated cards)
-    t = (g - 1205) / 67.0
-    if g < S.G_CU[0] - 8:
-        u = (g - 1205) / float(S.G_CU[0] - 8 - 1205); e = S.sm(u)
-        loc = ucam(CU + lerp(2.1, 0.9, e), lerp(3.1, 3.6, e), lerp(2.0, 1.9, e)); look = look0; lens = 22.0
-    elif g < S.G_CU[0]:                                    # punch in
-        u = S.sm5((g - (S.G_CU[0] - 8)) / 8.0); a = ucam(CU + 0.9, 3.6, 1.9)
-        b = c + Vector((0.2, -1.75, 0.55)) * 1.0; b = Vector((b.x, b.y, 0)) + Vector((0, 0, c.z + 1.15))
-        loc = a.lerp(b, u); look = look0.lerp(c + Vector((0, 0, 1.45)), u); lens = lerp(22.0, 34.0, u)
-    else:                                                  # hold the close-up with a slow drift, then ease out
-        b = Vector((c.x, c.y, c.z)) + Vector((0.2, -1.75, 0.55)); b = Vector((b.x, b.y, c.z + 1.15))
-        k = (g - S.G_CU[0]) / 24.0; loc = b + Vector((0.12 * k, 0.0, 0.03 * k)); look = c + Vector((0.0, 0.0, 1.45)); lens = 34.0
-        if g > S.G_CU[1] - 2:
-            u = S.sm5((g - (S.G_CU[1] - 2)) / 8.0); a = ucam(CU + 0.9, 3.6, 1.9); loc = loc.lerp(a, u * 0.7); look = look.lerp(look0, u); lens = lerp(34.0, 24.0, u)
+    a_end = ucam(CU + 0.5, 4.8, 1.7); dirv = Vector((a_end.x - c.x, a_end.y - c.y, 0)).normalized()
+    cu_pos = Vector((c.x, c.y, c.z + 1.05)) + dirv * 1.75 + Vector((dirv.y, -dirv.x, 0)) * 0.25        # close-up position
+    cu_look = c + Vector((0, 0, 1.25))
+    if g < S.G_CU[0] - 9:                                   # medium: slides sideways along the tread and pushes in (parallax through the seated cards)
+        u = (g - 1205) / float(S.G_CU[0] - 9 - 1205); e = S.sm(u)
+        loc = ucam(CU + lerp(2.0, 0.6, e), lerp(4.5, 4.9, e), lerp(1.8, 1.6, e)); look = look0; lens = 22.0
+    elif g < S.G_CU[0]:                                     # punch in
+        u = S.sm5((g - (S.G_CU[0] - 9)) / 9.0); a = ucam(CU + 0.6, 4.9, 1.6)
+        loc = a.lerp(cu_pos, u); look = look0.lerp(cu_look, u); lens = lerp(22.0, 32.0, u)
+    else:                                                   # hold the close-up with a slow drift, then ease out
+        k = (g - S.G_CU[0]) / 24.0; loc = cu_pos + Vector((dirv.y, -dirv.x, 0)) * (-0.14 * k) + Vector((0, 0, 0.04 * k)); look = cu_look; lens = 32.0
+        if g > S.G_CU[1] - 1:
+            u = S.sm5((g - (S.G_CU[1] - 1)) / 8.0); a = ucam(CU + 0.6, 4.9, 1.6); loc = loc.lerp(a, u); look = look.lerp(look0, u); lens = lerp(32.0, 22.0, u)
     # whip in (tilted below the coach) / whip out (tilting down to the treads)
     if g < 1211:
-        w = 1 - S.sm5((g - 1205 + 1) / 7.0); look = look - Vector((0, 0, 9.0 * w * w)) if g < 1211 else look
+        w = 1 - S.sm5((g - 1205 + 1) / 7.0); look = look - Vector((0, 0, 7.0 * w * w))
     if g >= 1268:
-        w = S.sm5((g - 1268 + 1) / 5.0); look = look - Vector((0, 0, 14.0 * w))
+        w = S.sm5((g - 1268 + 1) / 5.0); look = look - Vector((0, 0, 9.0 * w))
     return tuple(loc), tuple(look), lens
 
 def lerp(a, b, u): return a + (b - a) * u

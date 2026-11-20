@@ -163,24 +163,28 @@ def official_pass(cam, g, g0, g1, cast, direction):
     loc, look, lens = cam; c = Vector(loc); fwd = Vector(look) - c; fwd.z = 0; fwd.normalize(); right = Vector((fwd.y, -fwd.x, 0))
     pos = c + fwd * 1.0 + right * (lerp(-1.6, 1.6, u) * direction)
     tag = 'dyn_pass_%d' % g; SHB.rim(False)
-    CT.put(tag, cast, cast15.pose_for('official_stand', cast), mark=(pos.x * U, pos.y * U, (c.z - 1.55) * U), cam_loc=tuple(v * U for v in loc), ppd=128, scale=4.0, mirror=(direction < 0), shadow=None)
+    CT.put(tag, cast, cast15.pose_for('official_stand', cast), mark=(pos.x * U, pos.y * U, (c.z - 3.3) * U), cam_loc=tuple(v * U for v in loc), ppd=128, scale=4.0, mirror=(direction < 0), shadow=None)
 
-HEADS = [('crowd1', 5.3, 4.5, 1.15), ('crowd4', 6.6, 4.8, 1.3), ('crowd2', 8.2, 4.4, 1.05), ('crowd6', 4.0, 4.7, 1.0), ('crowd3', 9.1, 5.6, 1.2)]
+HEADS = [('crowd4', 5.3, 4.5, 1.2, 0.0), ('crowd1', 7.5, 6.7, 1.1, -0.75), ('crowd6', 5.0, 6.7, 1.0, -0.7), ('crowd2', 8.6, 5.6, 1.1, -0.6), ('crowd3', 3.8, 5.9, 1.0, -0.6)]
 def hush_actors(cm, g):
     SHB.rim(True, side='right', color=(255, 240, 215), width=0.05, k=0.8, tint=(0.95, 0.97, 1.0), cool=0.35)
     SHB.card('dyn_dick_%d' % g, 'dick_olympic', cast15.pose_for('rock_a' if (g // 8) % 2 == 0 else 'rock_b', 'dick_olympic'), MARK, cm, ppd=192, shadow=(1.6, 0.55))
     SHB.rim(False); bg_actors(cm, g, True)
-    for i, (cast, x, y, sc_) in enumerate(HEADS):
+    for i, (cast, x, y, sc_, zh) in enumerate(HEADS):
         SHB.rim(True, side='left', color=(255, 214, 150), width=0.05, k=0.55, tint=(0.16, 0.17, 0.28), cool=0.0)
-        SHB.card('dyn_head%d_%d' % (i, g), cast, cast15.pose_for('stand', cast), (x, y), cm, z=0.0, ppd=96, scale=sc_, shadow=None, mirror=(i % 2 == 0))
+        SHB.card('dyn_head%d_%d' % (i, g), cast, cast15.pose_for('stand', cast), (x, y), cm, z=zh, ppd=96, scale=sc_, shadow=None, mirror=(i % 2 == 0))
         ob = bpy.data.objects['actor_dyn_head%d_%d' % (i, g)]; ob.location.z += 0.02 * math.sin(g * 0.18 + i * 1.7) * U
     SHB.rim(False)
 
 # ------------------------------------------------------------------ pit scene
 def setup_pit(q):
     A, sc = SHB._base('TENSE', q, bar=BAR_LOW)
-    for o in bpy.data.objects:
-        if o.name.endswith('|clothB'): o.hide_render = True          # grey cloth slab near the table (QA: no grey slabs)
+    for o in bpy.data.objects:                                    # grey cloth + pale tray slab on the track at (4.9, 2.7): QA 'no grey slabs'
+        if o.name.startswith('officials_B_'):
+            me = o.data; co = np.empty(len(me.vertices) * 3, dtype=np.float32); me.vertices.foreach_get('co', co); co = co.reshape(-1, 3)
+            mw = np.array(o.matrix_world); w = co @ mw[:3, :3].T + mw[:3, 3]
+            m = ((np.hypot(w[:, 0] / U - 4.9, w[:, 1] / U - 2.7) < 1.1) | (np.hypot(w[:, 0] / U - 6.6, w[:, 1] / U - 8.0) < 1.3)) & (w[:, 2] / U < 0.7)
+            if m.any(): co[m, 2] -= 400.0; me.vertices.foreach_set('co', co.reshape(-1)); me.update()
     F.clear_keys()
     F.set_bar_height(BAR_LOW, frame=1, interp='CONSTANT')
     F.set_bar_height(BAR_JUMP, frame=G_PASS1[0] + 3, interp='CONSTANT')
@@ -216,14 +220,14 @@ def vblur(path, n, up=True):
     acc /= n; Image.fromarray(np.clip(acc, 0, 255).astype(np.uint8)).save(path)
 
 def whip_len(g):
-    if G_WHIP_UP[0] <= g <= 1204: return [40, 90, 150, 210][g - G_WHIP_UP[0]] if g - G_WHIP_UP[0] < 4 else 210
-    if G_COACH0 <= g < G_COACH0 + 6: return [220, 150, 90, 50, 25, 10][g - G_COACH0]
-    if 1268 <= g <= 1272: return [30, 80, 150, 210, 240][g - 1268]
-    if G_HUSH0 <= g < G_HUSH0 + 5: return [200, 120, 60, 25, 8][g - G_HUSH0]
+    if G_WHIP_UP[0] <= g <= 1204: return [20, 50, 90, 130][g - G_WHIP_UP[0]] if g - G_WHIP_UP[0] < 4 else 150
+    if G_COACH0 <= g < G_COACH0 + 6: return [150, 100, 60, 30, 14, 6][g - G_COACH0]
+    if 1268 <= g <= 1272: return [20, 60, 100, 140, 160][g - 1268]
+    if G_HUSH0 <= g < G_HUSH0 + 5: return [130, 80, 40, 18, 6][g - G_HUSH0]
     return 0
 
 def main():
-    mode, q, g0, g1 = sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4])
+    mode, q = sys.argv[1], sys.argv[2]; g0 = int(sys.argv[3].split(',')[0]); g1 = int(sys.argv[4])
     step = int(sys.argv[5]) if len(sys.argv) > 5 and sys.argv[5].isdigit() else 1
     out = os.path.join(HERE, 'frames' if q == 'final' else 'draft'); 
     if '--out' in sys.argv: out = sys.argv[sys.argv.index('--out') + 1]
@@ -232,7 +236,8 @@ def main():
     else:
         import stands; A, sc, cam, drawf = stands.setup(qq, sys.modules[__name__])
     times = []
-    for g in range(g0, g1 + 1, step):
+    glist = [int(x) for x in sys.argv[3].split(',')] if ',' in sys.argv[3] else range(g0, g1 + 1, step)
+    for g in glist:
         p = os.path.join(out, 'g_%04d.png' % g)
         if os.path.exists(p) and '--redo' not in sys.argv: continue
         drawf(g); t0 = time.time(); F.T.render(p); vblur(p, whip_len(g) // (2 if qq == 'preview' else 1) if whip_len(g) else 0)
