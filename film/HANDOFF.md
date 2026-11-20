@@ -32,7 +32,7 @@ Each film now gets its own short chat.
 - **New set for EVERY film. Never reuse a set.**
 - **Look approval = QA-art, not the client (client decision 2026-11-19).** Make a style board (2-3 stills), have Opus QA-art check it against the bible and client rules, fix, build the set and cast, pass the SET gate with QA-art, then render WITHOUT waiting for the client. Send the client the board and set sheet as FYI only. (Replaces the old "wait for client OK before rendering".)
 - Detail level the client asked for: rich and detailed sets. Water must be smooth and layered with foam, glitter and wakes, not big flat triangles. Use pleasing period colours, not harsh black and white. Make it dense with props and life.
-- Sharp picture, no DOF, wide dense lit 3D look, reveal inside the 3D world, no text signs.
+- Sharp picture, no DOF, wide dense lit 3D look, reveal inside the 3D world. (Text signs ARE allowed since 2026-11-20, see QA §I.)
 
 ## 4. Budget rules (to stay inside the weekly limit)
 | Who | Model |
@@ -76,6 +76,9 @@ When a film passes the FINAL gate and is sent to the client:
 
 ## 7b. Client decision 2026-11-20 (all films)
 Read film/QA_TEAM.md §G (vivid colour, nothing floats, not too close) and §H (2+ BIGZOOM extreme-wide-to-character moves, 4+ interesting angle types, rich detailed 3D set). Both are blocking.
+
+## 7c. Client decision 2026-11-20: the TARGET is the reference Shorts in film/ref_shorts/
+Read film/QA_TEAM.md §I. In short: the camera travels through connected sets instead of cutting (≤12 cuts), lighting is motivated (light shafts, lamps, neon, rim light), each film has a bold signature colour, text signs are now ALLOWED, characters always act, and close-ups are used only as short punctuation.
 
 ## 8. From film 15: film-2 camera rhythm (client decision 2026-11-18)
 Read skill production-lessons §10 before planning shots, and use film/plan/shot_plan.md (film 2) as the camera-grammar example.
