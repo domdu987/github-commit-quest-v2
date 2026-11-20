@@ -45,7 +45,8 @@ _S = [float(v) for v in os.environ.get("SNP", "1428,17,1.22,-2.86,-0.9").split("
 SNAP = (int(_S[0]), int(_S[0] + _S[1]))                                     # 17 f, x1.33 with a pan, landing on the word
 _P = [float(v) for v in os.environ.get("CAMP", "-0.01,12.25,12.26,-5.59").split(",")]      # push, slide px/s, rise px/s, arc deg/s
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, FIRST_G, G_LAST, push=_P[0], slide_px=_P[1], rise_px=_P[2], arc_deg_s=_P[3], decay=0.1,
-                snaps=[dict(g=SNAP, k=_S[2], peak=2.0, shift=(_S[3], _S[4]))])
+                snaps=[dict(g=SNAP, k=_S[2], peak=2.0, shift=(_S[3], _S[4])),
+                       dict(g=(1446, 1476), k=1.05, peak=1.0, shift=(0.8, 0.0))])      # a gentle second move so the camera never parks after the snap (g 1444-1467)
 
 
 def widen_sea(preset, k, nu, nv):
@@ -96,10 +97,10 @@ class Take(C.Take):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_" + TAKE)
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
         self.key_cam(C.bf(FIRST_G), *CAM.at(FIRST_G))
-        self.scene.view_settings.exposure -= float(os.environ.get("EXPO", "0.3"))           # QA_TEAM section G: luma 70-135 (the foam crests brighten the frame)
+        self.scene.view_settings.exposure -= float(os.environ.get("EXPO", "0.9"))           # QA_TEAM section G: luma 70-135 (the foam crests brighten the frame)
         g_ = C.bpy.data.objects.get("glint")                    # tone the blown sun glint down (QA-tech): 40 -> GLINT x the set's energy
         if g_ is not None:
-            g_.data.energy *= float(os.environ.get("GLINT", "0.3"))
+            g_.data.energy *= float(os.environ.get("GLINT", "0.12"))
 
     def pose(self, gs):
         for g in gs:

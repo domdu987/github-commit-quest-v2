@@ -32,7 +32,7 @@ GS = list(range(FIRST_G, G_LAST + 1))
 FINAL_SPP = 10
 S = 1.85
 PPD = 224                                                # sprite px per D (head ~110 px at the end; the start is downsampled)
-G_ARRIVE = 152                                           # the medium shot is reached (5.9 s)
+G_ARRIVE = 160                                           # the medium shot is reached (5.9 s)
 G_SCRATCH = (146, 166)       # head scratch; 150-186 the whole puzzled beat                                   # astro19_c scratches his head (comic), 4.9-5.5 s
 BLINKS_C, BLINKS_A = [70, 128, 171], [92, 150, 188]
 
@@ -56,15 +56,38 @@ def _cr(p0, p1, p2, p3, t):
     return 0.5 * ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t + (-p0 + 3 * p1 - 3 * p2 + p3) * t * t * t)
 
 
+TM = [(48, 0.0), (66, 0.08), (90, 0.33), (115, 0.68), (135, 0.90), (150, 0.985), (160, 1.0)]    # g -> u knots (ease in, one swoop, ease OUT over ~25 frames)
+
+
+def _slopes():
+    """Fritsch-Carlson monotone cubic slopes at the knots (C1: no velocity dips at the knots; zero speed at the landing)"""
+    n = len(TM)
+    h = [TM[i + 1][0] - TM[i][0] for i in range(n - 1)]
+    d = [(TM[i + 1][1] - TM[i][1]) / h[i] for i in range(n - 1)]
+    m = [d[0]] + [0.0 if d[i - 1] * d[i] <= 0 else 2 * d[i - 1] * d[i] / (d[i - 1] + d[i]) for i in range(1, n - 1)] + [0.0]
+    m[0] = 0.5 * d[0]                                                      # a gentle ease-in, never a dead start
+    return m
+
+
+_M = _slopes()
+
+
+def _umap(g):
+    if g <= TM[0][0]:
+        return 0.0
+    if g >= TM[-1][0]:
+        return 1.0
+    j = max(i for i in range(len(TM) - 1) if TM[i][0] <= g)
+    (g0_, u0_), (g1_, u1_) = TM[j], TM[j + 1]
+    h = g1_ - g0_
+    t = (g - g0_) / float(h)
+    h00, h10, h01, h11 = 2 * t ** 3 - 3 * t ** 2 + 1, t ** 3 - 2 * t ** 2 + t, -2 * t ** 3 + 3 * t ** 2, t ** 3 - t ** 2
+    return h00 * u0_ + h10 * h * _M[j] + h01 * u1_ + h11 * h * _M[j + 1]
+
+
 def _spline(g, which):
     """position on the key spline at the eased parameter u(g) (which 1 = loc, 2 = look)"""
-    # g -> u: a slow-ish wide start, a fast descent through the stern (the smooth planks / sail frames the blur check punishes), then it SETTLES on the medium
-    TM = [(48, 0.0), (66, 0.10), (90, 0.35), (115, 0.70), (135, 0.92), (G_ARRIVE, 1.0)]
-    j = max(i for i in range(len(TM) - 1) if TM[i][0] <= g) if g < TM[-1][0] else len(TM) - 2
-    (g0_, u0_), (g1_, u1_) = TM[j], TM[j + 1]
-    x = clamp((g - g0_) / float(g1_ - g0_))
-    sm = x * x * (3 - 2 * x)
-    u = u0_ + (u1_ - u0_) * (0.55 * sm + 0.45 * x)                         # eased between the knots, never zero speed
+    u = _umap(g)
     P = [Vector(k[which]) for k in KEYS]
     us = [k[0] for k in KEYS]
     j = max(i for i in range(len(us) - 1) if us[i] <= u) if u < 1.0 else len(us) - 2
@@ -77,13 +100,12 @@ def _spline(g, which):
 def cam_rest(g):
     """(loc, look) in the ship's rest frame at film frame g.  After arrival: a slow push so the shot never parks."""
     loc, look = _spline(min(g, G_ARRIVE), 1), _spline(min(g, G_ARRIVE), 2)
-    if g > G_ARRIVE:
-        # settle on the medium: a slow orbit about the pair (parallax against the rigging) plus a gentle push, so the long hold keeps moving
-        d = clamp((g - G_ARRIVE) / 50.0)
-        ang = math.radians(17.0) * d * d * (3 - 2 * d)
-        c = Vector((0.5, -30.5, loc.z))
-        loc = c + Matrix.Rotation(ang, 3, "Z") @ (loc - c)
-        loc = loc + (look - loc) * (0.0030 * (g - G_ARRIVE))
+    # settle: a slow orbit about the pair (parallax against the rigging) plus a gentle push; it STARTS during the ease-out (g 140) so the camera never parks
+    d = clamp((g - 140) / 70.0)
+    ang = math.radians(17.0) * d * d * (3 - 2 * d)
+    c = Vector((0.5, -30.5, loc.z))
+    loc = c + Matrix.Rotation(ang, 3, "Z") @ (loc - c)
+    loc = loc + (look - loc) * (0.0030 * max(0.0, g - 140) * d)
     look = look + Vector((0.0, 0.0, 0.30 * clamp((g - 124) / 26.0)))      # aim a little higher so the heads sit at y 450-760 (the camera still rides the deck)
     return loc, look
 
