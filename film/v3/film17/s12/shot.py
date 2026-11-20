@@ -74,7 +74,7 @@ class Take(object):
     def setup30(self):
         self.ber = self.add("ber", "bertillon", "bertillon", "aisle1", dx=-0.3)
         # escort pairs (gendarme leads a thief by the arm), three entries staggered: (gendarme, thief, lane x, y end, start g, end g, y start)
-        spec = [("a", "gendarme_a", "prisoner_a", 0.55, 4.7, 1789, 1834, 7.5), ("b", "gendarme_b", "prisoner_b", 0.25, 6.0, 1801, 1848, 12.5), ("c", "gendarme_a", "prisoner_c", 0.62, 7.5, 1813, 1862, 13.0)]
+        spec = [("a", "gendarme_a", "prisoner_a", 0.55, 6.2, 1789, 1834, 9.0), ("b", "gendarme_b", "prisoner_b", 0.25, 7.2, 1801, 1848, 13.0), ("c", "gendarme_a", "prisoner_c", 0.62, 8.4, 1813, 1862, 13.5)]
         self.WALK = {}
         for tag, gc, pc, lx, ye, g0, g1, ys in spec:
             ga = self.add("g" + tag, gc, gc, "aisle2", dx=lx - 0.5 + 0.33); pa = self.add("p" + tag, pc, pc, "aisle2", dx=lx - 0.5 - 0.33)

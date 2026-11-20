@@ -18,3 +18,12 @@ take.mkv is stored as take.mkv.partaa/ab (`cat take.mkv.part* > take.mkv`).
 - g1720: card + both faces clear, grey false beard still on dupont. g1760: beard gone, card unchanged. g1800: first pair entering mid-ground, Bertillon pointing, drawers open. g1830/1860: two to three pairs, cards visible on drawer rims, floor visible.
 - Heads above y 880 everywhere; no black/magenta frames. Cut g 1786-1792 inspected earlier: clean hard cut. Shot 30 far figures at the back of the aisle are small (about 60 px) by design; the escort pairs are the subject.
 - Note: cut is at plan boundary g 1789 (round(59.62*30)); narration lands about 3 frames later, within tolerance.
+
+# Round 3 (shot 30 only re-rendered, commit below in the log): rhythm median 5.48, p90 12.81, qa_auto PASS
+- B1 chins: the escort pairs now stop at y 6.2 / 7.2 / 8.4 (was 4.7 / 6.0 / 7.5); the nearest chin is at about y 740 (g 1829 crop), all chins stay above y 870 for the whole shot.
+- S1 stagger: pair A is on screen from the cut; pairs B and C are faded in at the far end at g 1801 / 1813 and walk toward the camera.
+- S2 cards: 0.34 x 0.23 m, lifted 0.24 m, scale overshoot x1.35 on each pop; visible as white cards on the drawer rims from g 1815.
+- S3 faces: thieves "worried" with sweat, closed mouths; gendarmes "smirk".
+- S4 Bertillon is on the left wall (dx -0.3), pairs on the right lanes: he and his pointing arm are clear in every frame.
+- S5 skipped (shot 29 untouched).
+- Full-res frames viewed: g1805, 1815, 1829, 1840, 1860 (chins, entries, pops, Bertillon).
