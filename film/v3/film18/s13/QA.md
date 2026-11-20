@@ -1,18 +1,16 @@
 # QA s13 (film 18, render team 4)
 Range g 1003-1070, take.mkv frames 994..1076 (83 frames), transition in: dissolve.
-Render: 720x1280, 12 samples, OIDN, 2 threads, 15.0 s/frame wall (two renders at once).
+Render: 720x1280, 12 samples, OIDN, 2 threads, 17.9 s/frame wall (two renders at once).
 
 ## Frame diff (90x160 grey, in-shot frames only)
-median 8.07, p90 10.74, min 2.27, max 12.41, frames < 1: 0 (rule: median >= 4, p90 >= 12)
+median 11.52, p90 15.37, min 2.44, max 16.36, frames < 1: 0 (rule: median >= 4, p90 >= 12)
 
 ## Max chin y per head (rule < 880)
-{"general": 494, "crowd0": 517, "crowd1": 511, "crowd2": 525, "crowd3": 589, "crowd4": 592, "crowd5": 640, "crowd6": 633, "crowd7": 661, "crowd8": 597, "crowd9": 489, "crowd10": 472, "crowd11": 519, "crowd12": 533, "crowd13": 554, "sentry": 659}
+{"general": 758, "crowd0": 695, "crowd1": 723, "crowd2": 692, "crowd3": 615, "crowd4": 603, "crowd5": 568, "crowd6": 567, "crowd7": 575, "crowd8": 613, "crowd9": 851, "crowd10": 982, "crowd11": 722, "crowd12": 694, "crowd13": 619, "sentry": 890}
 
 ## Notes
-- Transition in: dissolve 13 frames (night falls); handles 9 in / 6 out.
-- Cut dark box at the top-right removed (pennant pole at (-15.5,-84) skipped at build); camera tilted down (sky ~30 %).
-- Sentry drops a real 3D spear at g 1030 and joins the cheering; 14 crowd cards cheer/dance (bounce 0.10 D at 3 Hz, mirror turns); warm point lights and rim light; general laughs (held mouth).
-- Camera: pull-out 6 %/s, slide 40 px/s, sway 0.6 deg, 3 punch-ins. Mouths do not move.
-- Re-render after TAKE gate rules: zoom pulses removed (two held punch-ins), stronger sway; p90 frame diff just under 12 as a result.
+- Round 4 rework: transition dissolve 13 in. New camera behind the camp (high, pull-out 6 %/s, slide 30 px/s) looking toward the Jimo wall: the party fills the frame, no navy brazier/drums in the lower third; gridded horizon strip is hidden behind the wall and tents.
+- Party: 14 cheering soldiers with raised cups, dancers mirroring every ~0.8 s; the sentry stands near the camp fire (head ~55 px), drops a real 3D spear at g 1030 and joins in; one toon-glazed wine jar with a warm light in the lower left; grey rout scatter recoloured warm.
+- Two held punch-ins (+16 %, +12 %), no pulses. Mouths do not move.
 
 See QA_AUTO.md and phone_sheet.jpg.

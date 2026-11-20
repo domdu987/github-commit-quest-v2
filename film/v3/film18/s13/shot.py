@@ -11,8 +11,8 @@ from c18 import cast18, V
 NAME = 's13'
 G0, G1 = 1003, 1071
 H_IN, H_OUT = 9, 6                                                # dissolve in (13 frames: 7 + 2) and a cut out
-MOVE = dict(slide=40)
-CAMO = dict(look_at=(2.0, -88.0, -4.0))                              # tilt down: sky was 50 % of the frame
+MOVE = dict(push=-0.06, slide=30)
+CAMO = dict(loc=(7.0, -113.0, 12.5), look_at=(-1.0, -84.0, 1.0), lens=22.0)                              # tilt down: sky was 50 % of the frame
 GEN = V((-4.3, -96.2, 0.0))
 SHAKE = (1.3, 0.95, 0.6, 2.8)
 SNAPS = [(G0 + 16, 1.16, 4, 9999), (G0 + 44, 1.12, 4, 9999)]      # HELD punch-ins only (ALL_TEAMS rule 1: no pulses)
@@ -40,9 +40,9 @@ def make_driver(quality):
     crowd = []
     for i, m in enumerate(marks['party_crowd']):
         b, c = CRW[i % 3]; crowd.append((C.Actor(atl[b], 'crowd%d' % i, height=3.2, rim=RIM), m, i))
-    sm = marks['sentry'][0]
-    sentry_a = C.Actor(stand, 'sentry_stand', height=2.87)
-    sentry_b = C.Actor(atl[CRW[1][0]], 'sentry_cheer', height=2.87, rim=RIM)
+    sm = (-3.0, -101.5, 0.0, 180.0)
+    sentry_a = C.Actor(stand, 'sentry_stand', height=3.4)
+    sentry_b = C.Actor(atl[CRW[1][0]], 'sentry_cheer', height=3.4, rim=RIM)
     gen = C.Actor(at_gen, 'general', height=3.47, rim=RIM)
     actors = {'general': gen, 'sentry': sentry_b}
     for a, m, i in crowd: actors[a.role] = a
@@ -53,10 +53,19 @@ def make_driver(quality):
     # hide the cut dark box at the top-right of the frame (QA-art): objects of the set that stand in its place are found by projecting; pennants are skipped by BSKIP, see below
     for (x, y, e) in ((3.0, -80.0, 1100.0), (-6.0, -78.0, 900.0), (8.0, -90.0, 800.0)): C.warm_light((x, y, 3.0), e)
     cam_obj = ob['cam']
+    cols = dict(pot=(0.30, 0.19, 0.07), helmet=(0.30, 0.30, 0.40), hay=(0.42, 0.30, 0.10), bowl=(0.34, 0.2, 0.08))
+    for it in C.STATE['rout_items']:                      # no grey / navy untextured lumps in the lower frame
+        if it.get('ob') is not None: it['ob'].data.materials.clear(); it['ob'].data.materials.append(C.flat_mat(cols[it['kind']], 'ri_' + it['kind']))
+    Bk2 = C.J.Banks(); Mt = C.STATE['M']; bj = Bk2('jar13', hull=0.0)
+    C.J.ellipsoid(bj, V((0, 0, 0.9)), 0.75, 0.75, 0.95, Mt['clay'], seg=14, rings=9, rough=0.05, seed=3); C.J.cyl(bj, V((0, 0, 1.75)), 0.42, 0.45, Mt['clay_d'], seg=10, r1=0.5); C.J.cyl(bj, V((0, 0, 2.15)), 0.55, 0.2, Mt['red'], seg=10)
+    Bk2.flush(C.STATE['SET']); jar = [o for o in C.STATE['SET'].objects if o.name.startswith('jar13')][0]; C.J.no_bounce(jar)
+    jar.data.materials.clear(); jar.data.materials.append(C.glaze_mat()); jl = C.warm_light((0, 0, 1.5), 700.0, 'jarlight13')
 
     def drive(g):
         pose = C.set_camera(NAME, g, move=MOVE, cam=CAMO, shake=SHAKE, snaps=SNAPS); cam = V(pose['loc'])
         C.J.set_party(C.smooth((g - G0) / float(G1 - G0)))
+        C.bpy.context.view_layer.update(); pt = C.ground_at(cam_obj, 0.18, 0.9)
+        if pt is not None: jar.location = (pt.x, pt.y, 0.0); jar.scale = (1.0, 1.0, 1.0); jl.location = (pt.x + 1.0, pt.y - 1.0, 2.2)
         fwd = (V(pose['look_at']) - V(pose['loc'])); fwd.z = 0; fwd.normalize(); rt = V((fwd.y, -fwd.x, 0))
         gen.show(0, GEN, cam, lift=0.06 * abs(math.sin(g / 30.0 * 3.0 * math.pi)), squash=(1.0 + 0.015 * math.sin(2 * math.pi * 1.5 * g / 30.0), 1.0 - 0.015 * math.sin(2 * math.pi * 1.5 * g / 30.0)))
         for a, m, i in crowd:

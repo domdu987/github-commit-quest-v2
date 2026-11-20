@@ -9,30 +9,30 @@
   "frames": 13
  },
  "framediff": {
-  "median": 8.07,
-  "p90": 10.74,
-  "min": 2.27,
-  "max": 12.41,
+  "median": 11.52,
+  "p90": 15.37,
+  "min": 2.44,
+  "max": 16.36,
   "n": 67,
   "frames_lt1": 0
  },
  "max_chin_y": {
-  "general": 494,
-  "crowd0": 517,
-  "crowd1": 511,
-  "crowd2": 525,
-  "crowd3": 589,
-  "crowd4": 592,
-  "crowd5": 640,
-  "crowd6": 633,
-  "crowd7": 661,
-  "crowd8": 597,
-  "crowd9": 489,
-  "crowd10": 472,
-  "crowd11": 519,
-  "crowd12": 533,
-  "crowd13": 554,
-  "sentry": 659
+  "general": 758,
+  "crowd0": 695,
+  "crowd1": 723,
+  "crowd2": 692,
+  "crowd3": 615,
+  "crowd4": 603,
+  "crowd5": 568,
+  "crowd6": 567,
+  "crowd7": 575,
+  "crowd8": 613,
+  "crowd9": 851,
+  "crowd10": 982,
+  "crowd11": 722,
+  "crowd12": 694,
+  "crowd13": 619,
+  "sentry": 890
  },
- "s_per_frame": 15.0
+ "s_per_frame": 17.9
 }
