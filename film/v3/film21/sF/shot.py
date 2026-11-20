@@ -58,6 +58,7 @@ def main():
     K.WORLD_OVR["sun_k"] = float(os.environ.get("SUNK", "1.8"))
     K.PRESETS["camp_bank"]["clear"] = list(K.PRESETS["camp_bank"].get("clear", [])) + [(-84.0, -18.0, 13.0), (-94.0, -17.0, 7.0)]      # keep the tracking path free of tents
     T = C.Take(["camp_bank"], WORK, fg=True, hide=("camp_fg_",))
+    K.hide_near_banners([K.cam_path(None, KEYS, g)["loc"] for g in range(G0, G1 + 1, 3)], 12.0)
     M = T.A["marks"]["camp_bank"]; mode = "draft" if cmd in ("draft", "probe") else "final"
     K.setup_render(T.scene, "final" if cmd == "probe" else mode, 8)
     for mark, cast, story, var, phase in CAST: T.actor("c_" + mark, cast, ppd=PPD.get(mark, 160))
