@@ -22,9 +22,28 @@ def clear_cast():
     sys.path.insert(0, ROOT + '/film/v3/stage'); import actors
     for o in [o for o in bpy.data.objects if o.name.startswith(('c2_', 'back_hair_', 'back_coat_'))]: bpy.data.objects.remove(o, do_unlink=True)
     actors.clear_registry()
+RAMP_LO, RAMP_G0, RAMP_G1 = 0.4, 750, 800   # lights x0.4 through g750, easing to x1.0 at g800 (high bird's-eye views run luma 120-135, the low g800 view ~95)
+def ramp_f(g): return RAMP_LO if g <= RAMP_G0 else 1.0 if g >= RAMP_G1 else RAMP_LO + (1 - RAMP_LO) * (g - RAMP_G0) / (RAMP_G1 - RAMP_G0)
+def apply_ramp():
+    # every light's energy keys x ramp_f(frame-1); lights with no animation get a key per frame inside the ramp. Lights only: no haze, no saturation.
+    for o in [o for o in bpy.data.objects if o.type == 'LIGHT']:
+        d = o.data; ad = d.animation_data
+        if ad and ad.action:
+            for ly in ad.action.layers:
+                for st in ly.strips:
+                    for cb in st.channelbags:
+                        for fc in cb.fcurves:
+                            if fc.data_path != 'energy': continue
+                            for kp in fc.keyframe_points:
+                                f = ramp_f(int(round(kp.co.x)) - 1); kp.co.y *= f; kp.handle_left.y *= f; kp.handle_right.y *= f
+                            fc.update()
+        else:
+            e = d.energy
+            for g in range(645, RAMP_G1 + 3): d.energy = e * ramp_f(g); d.keyframe_insert('energy', frame=g + 1)
 def main(gs):
     assert P.check_take(take)['hits'] == [] and P.check_face(take)['ok']
     A = P.world_build(take); P.key_take(take); P.setup_render2((720, 1280), samples=int(os.environ.get('SAMPLES', 16)), threads=2)
+    if min(gs) <= RAMP_G1: apply_ramp()
     for g in gs:
         fn = '%s/g_%04d.png' % (OUT, g)
         if os.path.exists(fn) and os.path.getsize(fn) > 50000: continue
