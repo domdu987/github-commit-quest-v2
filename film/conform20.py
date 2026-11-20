@@ -61,3 +61,14 @@ spec={"duration":T,"out_wav":out+".wav","video_in":out+"_silent.mp4","video_out"
 if os.environ.get("MUSICF"): spec["music"]={"file":P+os.environ["MUSICF"],"at":0,"rms_db":float(os.environ.get("MUSIC_DB","-31")),"fade_in":0.3,"fade_out":0.6}
 json.dump(spec,open(out+"_mix.json","w"),indent=1)
 subprocess.run([sys.executable,P+"/audio/mixer.py",out+"_mix.json"],check=True)
+# true-peak guard (film 20): trim the mixed audio so the final is <= -1 dBTP; video stream copied
+import re as _re
+def _tp(f):
+    r=subprocess.run(["ffmpeg","-v","info","-nostats","-i",f,"-af","ebur128=peak=true","-f","null","-"],capture_output=True,text=True).stderr
+    return float(_re.findall(r"Peak:\s+(-?[\d.]+) dBFS",r)[-1])
+_p=_tp(out+".mp4"); _q=_p
+for _lim in (0.80,0.75,0.70):              # 4x-oversampled limiter on the mix wav, one AAC encode, video copied
+    if _q<=-1.0: break
+    subprocess.run(["ffmpeg","-y","-v","error","-i",out+"_silent.mp4","-i",out+".wav","-map","0:v","-map","1:a","-c:v","copy","-af",f"aresample=192000,alimiter=limit={_lim}:attack=1:release=50:level=disabled,aresample=48000","-c:a","aac","-b:a","192k","-movflags","+faststart","-shortest",out+"_tp.mp4"],check=True)
+    os.replace(out+"_tp.mp4",out+".mp4"); _q=_tp(out+".mp4")
+print(f"true peak before {_p:.2f} dBTP, after {_q:.2f} dBTP")
