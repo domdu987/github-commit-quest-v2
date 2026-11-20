@@ -32,19 +32,24 @@ GOTCHAS (found on film-20 s01; read before building a shot -- QA.md has the long
   * SCALE: 1 D = head = 0.532 m (CO.SC = 1.88 D per metre).  A['cams'] / A['marks'] are already in world D; set3d20 source
     files (tower20.CAMS_M, site20 ...) are in METRES: convert with CO.W().  The tower is 564 D tall, 225 D from tower_low.
   * The preset camera carries a lens SHIFT (tower_low shift_y +0.08 = 102 px at 1280): Take keeps it (make_camera applies it,
-    key_cam never touches it).  CamPath.report() ignores the shift (it only shifts the picture, speeds are the same), but
-    every head_y you compute by hand without it is 102 px off -- use head_report() (it projects through the real camera).
+    key_cam never touches it).  +shift_y moves the PICTURE DOWN (the view looks higher): the tower_low stand-in tile has the
+    head at y 793 -- s01's first hand estimate assumed the opposite and was 200 px off.  CamPath.report() ignores the shift
+    (speeds are the same); for head positions always use head_report() / probe (they project through the real camera).
   * SAMPLES: final = CO.STATE['spp'] (8, the approved set number; TOWER / SITE build with spp=8), draft = 4 at 360x640.
     Take.render() passes them explicitly.  Do not raise them (cost).  Threads = 2 per process, 2 processes max.
   * NO DOF anywhere: CO.make_camera sets dof off; Take.no_dof() repeats it before every render.  NO TEXT anywhere.
-  * The FG items of a preset (tower_low: lamp-post 1.2 m ahead, bench 2 m ahead) are built relative to the PRESET start
-    camera (tower20.FG_ITEMS / _fg).  If your camera starts elsewhere they are not 1-2 D from YOUR lens any more: keep the
-    start camera near the preset pose (s01 starts 0.35 m back and 0.25 m right of it) or move the FG objects at runtime.
+  * The FG items of a preset (tower_low: lamp-post 1.2 m ahead-left, bench 2 m ahead-right; objects fg_* + the invisible
+    'shade_casters' that shade the near ground) are built relative to the PRESET start camera (tower20.FG_ITEMS / _fg).  If
+    your camera starts elsewhere they are no longer 1-2 D from YOUR lens: move them by the same ground offset at runtime
+    (s01 shot.move_fg: they are children of the scaled root, so offset / CO.SC), or the lamp-post ends up behind the lens.
+  * Moving the camera ALONG the camera -> subject line (closer / farther) does not change how high the subject sits for a given
+    tilt; only the camera height or a horizontal move does.  s01 lowered tower_low from 1.0 m to 0.35 m AND came 1.6 D closer
+    (5.0 D from his head): he fills the lower frame instead of 40 % empty grey ground.
   * A PUSH must go toward the SUBJECT, not toward the preset look_at: tower_low looks at the tower axis 225 D away, so
     "8 %/s of that distance" would fly the camera 18 D/s through Maupassant.  CamPath pushes along camera -> subject and
     adds TILT separately (tilt_deg / tilt_deg_s: the aim pitches up about the lens, the subject sinks on screen).
   * TILT vs. CAPTION BAND: every degree of tilt-up moves a near subject down ~14 px.  Budget it: s01 starts his head centre
-    at y ~470 and ends near ~700 (rule 450-760); the snap's extra tilt is the largest part.  Check with probe before rendering.
+    at y 479 (pitch -2.6) and ends at y 700-717 (pitch 13.7-14.6) after 17 deg of tilt (drift 11 + snap 6).  Check with probe.
   * CARD LIMITS: keep the camera pitch to the card under ~40 deg (stage max_slant 50).  A low camera close to an actor gives
     upper_k ~1.1-1.2 (the upper body is drawn taller to keep the head round): pass a TALLER canvas than CANVAS20 when the
     camera is low and close, and watch the 'sprite clipped' warnings in the logs (Take.sprites_for prints them).
@@ -52,7 +57,9 @@ GOTCHAS (found on film-20 s01; read before building a shot -- QA.md has the long
     seen from the camera (tower_low DAY: sun from screen-left, behind the camera -> False).
   * CONTACT: cast20 cards have no feet shadow of their own.  make_actor(contact=True) adds the soft contact decal (a multiply
     ellipse 0.004 D over the ground) + shadow='proxy' (a hidden shadow card turned toward the sun).  QA-tech N1 on tower_low
-    found 'thin stick legs, no contact shadow' on the stand-in: the decal fixes that; check it in the first draft.
+    found 'thin stick legs, no contact shadow' on the stand-in.  At tower_low he stands inside the preset's near-ground SHADE
+    zone, so his proxy shadow does not show and the default decal (opacity 0.5) is almost invisible: s01 uses
+    contact=dict(width=1.3, depth=0.55, opacity=0.8).
   * EXPRESSIONS that cast20 does not have (s01 needs "disgust") are registered at runtime with add_expression() -- never edit
     cast20.py / puppet.py.  Expression changes and pose swaps go on the closed frame of a 3-frame blink (blink_swap).
   * CROWD: tower_low builds 8 crowd cards (set_crowd(1)) 14-34 m behind him; they are static placeholder cards (no motion):

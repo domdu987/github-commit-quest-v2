@@ -71,7 +71,7 @@ def cam_path(A):
     c = Vector(A["cams"][PRESET]["loc"]) - Vector((0.0, 0.0, CAM_DROP))
     c = c + (c - subj).normalized() * CAM_BACK
     return C.CamPath(c, subj, G0, G_LAST, push=0.08, slide_px=30.0, rise_px=0.0, arc_deg_s=3.0, tilt0=TILT0, tilt_deg_s=4.5,
-                     decay=0.3, snaps=[dict(g=SNAP, k=1.35, peak=1.7, shift=(-0.25, 0.0), tilt=6.0)])
+                     decay=0.2, snaps=[dict(g=SNAP, k=1.35, peak=1.7, shift=(-0.25, 0.0), tilt=6.0)])
 
 
 def move_fg(A, cam_loc):
@@ -131,7 +131,7 @@ class Take(C.Take):
         self.key_cam(bf(G0), *self.path.at(G0))
         self.scene.frame_set(bf(G0))
         self.mau = self.actors["mau"] = C.make_actor("mau", "maupassant", os.path.join(WORK, "sprites"), canvas=CANVAS,
-                                                     contact=dict(width=1.1, depth=0.5, opacity=0.55), cam=self.cam)
+                                                     contact=dict(width=1.3, depth=0.55, opacity=0.8), cam=self.cam)
 
     def pose(self, gs):
         mark = self.A["marks"][MARK]

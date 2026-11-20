@@ -1,5 +1,4 @@
-frames/
 raw/
+frames/
 work/
 __pycache__/
-*.png

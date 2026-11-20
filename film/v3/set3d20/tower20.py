@@ -158,7 +158,7 @@ def _window_gallery(M, A):
     yl = yg - 0.35
     def seg(m_, y_, z_, w_, d_, h_, n_=12):
         for i_ in range(n_): mb.box(m_, (-w_ / 2 + (i_ + 0.5) * w_ / n_, y_, z_), (w_ / n_ + 0.02, d_, h_))
-    seg(IL, yl, zt - 0.35, 2 * ag, 0.5, 0.7); seg(IL, yl, zf + 0.25, 2 * ag, 0.5, 0.5); mb.box(IL, (0, yl, z1w + 0.35), (WIN_W + 2.0, 0.5, 0.5)); mb.box(IL, (0, yl, z0w - 0.22), (WIN_W + 2.0, 0.5, 0.4))
+    seg(IL, yl, zt - 0.35, 2 * ag, 0.5, 0.7); mb.box(IL, (0, yl, z1w + 0.35), (WIN_W + 2.0, 0.5, 0.5))
     for px in (-WIN_W / 2 - 0.5, WIN_W / 2 + 0.5): mb.box(I, (WIN_X + px, yl, (zf + zt) / 2), (0.45, 0.5, zt - zf))
     for side in (-1, 1):
         xa = WIN_X + side * (WIN_W / 2 + 0.8); xb = side * (ag - 1.0); zs_ = [zf + 0.5, zf + 2.0, zf + 3.5, zf + 5.0, zt - 0.6]
