@@ -16,7 +16,7 @@ H_IN, H_OUT = 6, 6
 G_WORD = C.g_of(54.76)                                            # 1646
 G_FLARE = 1624                                                    # flames start to flare
 MOVE = dict(push=0.09, slide=6, moves=[])
-CAMO = dict(look_at=(0.0, -8.0, float(os.environ.get('CAMZ', '1.2'))))                             # tilted up a little: ground <= 25 %
+CAMO = dict(look_at=(0.0, -8.0, float(os.environ.get('CAMZ', '0.9'))))                             # tilted up a little: ground <= 25 %
 SHAKE = (0.9, 0.65, 0.4, 2.6)
 SNAPS = [(G_WORD - 2, 1.5, 4, 9999)]                              # ONE x1.5 snap on the word, held to the end
 SPEED = 3.8
@@ -61,7 +61,7 @@ def make_driver(quality):
     sold = []
     for c in cfg:
         a1 = C.Atlas('s21b_' + c['st'], {0: sol(c['st'], c['base'])}, ppd=130); a2 = C.Atlas('s21c_' + c['fr'], {0: C.person_variant(c['base'], shock(c['fr'].replace('freeze', 'freeze')) if False else dict(shock(c['fr'])), 's')}, ppd=130)
-        sold.append((c, C.Actor(a1, 's_' + c['st'], height=3.2, shadow=False, rim=((1.0, 0.5, 0.15), 1 if c['lat'] < 0 else -1, 0.2, 2.2, True), rim2=((0.3, 0.5, 1.0), -1 if c['lat'] < 0 else 1, 0.14, 2.0), **BLK), C.Actor(a2, 's_' + c['fr'], height=3.2, shadow=False, rim=((1.0, 0.5, 0.15), 1 if c['lat'] < 0 else -1, 0.2, 2.2, True), rim2=((0.3, 0.5, 1.0), -1 if c['lat'] < 0 else 1, 0.14, 2.0), **BLK)))
+        sold.append((c, C.Actor(a1, 's_' + c['st'], height=3.2, shadow=False, rim=((1.0, 0.5, 0.15), 1 if c['lat'] < 0 else -1, 0.07, 1.7, True), rim2=((0.3, 0.5, 1.0), -1 if c['lat'] < 0 else 1, 0.06, 1.6), **BLK), C.Actor(a2, 's_' + c['fr'], height=3.2, shadow=False, rim=((1.0, 0.5, 0.15), 1 if c['lat'] < 0 else -1, 0.07, 1.7, True), rim2=((0.3, 0.5, 1.0), -1 if c['lat'] < 0 else 1, 0.06, 1.6), **BLK)))
     _v = sol('soldier_cheer_cup_b', 'yan_soldier_b'); CUPA = _v.anchors['cup_r']; FEET = _v.feet_y
     actors = {}
     for c, s1, s2 in sold: actors[c['st']] = s1; actors[c['fr']] = s2
