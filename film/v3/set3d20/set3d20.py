@@ -6,7 +6,7 @@
     S.setup_render(S.scene(), 'final')               # 720x1280 (preview 360x640), Cycles CPU ~8 spp + OIDN, 2 threads, no DOF ever
     cam = S.make_camera(A['cams'][A['cam_name']])    # {loc, look_at, lens} in world D; every named camera of the preset is in A['cams']
     S.stage_placeholders(A, A['cam_name']); S.render('/tmp/x.png')
-Hooks (key when frame=n is given): S.set_stage(s, frame), S.crane_swing, S.spark, S.rivet_toss, S.set_antenna, S.set_wagon, S.set_crowd, S.spark_gap, S.signal_rings, S.wire_glow, S.set_light_mix ...
+Hooks (key when frame=n is given): CAFE S.set_window_view / S.smoke / S.add_signature (-> int20), S.set_stage(s, frame), S.crane_swing, S.spark, S.rivet_toss, S.set_antenna, S.set_wagon, S.set_crowd, S.spark_gap, S.signal_rings, S.wire_glow, S.set_light_mix ...
 CLI: python3 set3d20.py stills|final [preset[:LIGHT] ...]"""
 import os, sys, math, json, time
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
@@ -50,6 +50,13 @@ def spark_gap(on, frame=None): return _t('spark_gap')(on, frame)
 def signal_rings(t, frame=None): return _t('signal_rings')(t, frame)
 def wire_glow(v, frame=None): return _t('wire_glow')(v, frame)
 def set_light_mix(a, b, k, frame=None): return _t('set_light_mix')(a, b, k, frame)
+# CAFE hooks (interior builder): forwarded to int20 (also in A['hooks'] of every cafe_* preset)
+def set_window_view(view='stub', frame=None):
+    import int20; return int20.set_window_view(view, frame)
+def smoke(v, frame=None, t=None):
+    import int20; return int20.smoke(v, frame, t)
+def add_signature(n, frame=None):
+    import int20; return int20.add_signature(n, frame)
 def apply_light(name, frame=None): return _t('apply_light')(name, frame)
 
 if __name__ == '__main__':
