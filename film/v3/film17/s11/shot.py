@@ -96,7 +96,7 @@ def pose_dup(g):
     p0 = dict(p0, seat17=None); p1 = dict(p1, seat17=None)
     p1['arm_r'] = dict(p1['arm_r'], hand=(0.52, 0.80), bend=0.55); p1['arm_l'] = dict(p1['arm_l'], hand=(-0.52, 0.80), bend=0.55)   # hands up at the chest, not a T-pose
     t = u_(g, 1605, 1609)                                    # eyes go wide over ~4 frames
-    p = dict(puppet.lerp_pose(p0, p1, t)) if 0 < t < 1 else dict(p0 if t <= 0 else p1)
+    p = dict(puppet.lerp_pose('dupont', p0, p1, t)) if 0 < t < 1 else dict(p0 if t <= 0 else p1)
     if t >= 1: p['head_dy'] = -0.03 * u_(g, 1609, 1615)
     p['legs'] = SEATLEGS; p['seat17'] = None; p['yaw'] = -0.1
     p['head_roll'] = 2.0 * math.sin(g * 0.15) if g < 1607 else 1.0 * math.sin(g * 0.3)
