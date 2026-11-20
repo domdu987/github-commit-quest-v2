@@ -166,15 +166,18 @@ def _gend_off(g):
     u = _ss((g - WALK0) / float(WALK1 - WALK0)); return GEND_END[0] * u, GEND_END[1] * u, u
 def _gend_hand(g):
     """the hand of the gendarme pulling the empty bottle from his cape (g1640-1656): belt -> raised beside the card (head-local units, negative x = frame-left)"""
-    u = _ss((g - 1640) / 16.0); return (-0.30 - 0.50 * u, 0.95 - 0.65 * u), u
-INSP_T = 1584
+    u = _ss((g - 1640) / 16.0); hx, hy = [float(x) for x in os.environ.get('GHAND', '-0.85,-0.1').split(',')]; return (-0.30 + (hx + 0.30) * u, 0.95 + (hy - 0.95) * u), u
+INSP_T0, INSP_T = 1568, 1598                                   # the inspector stays at T6a's offset (hidden behind the camera/Dupont) until the sweep is over, then walks to his mark
+def _bert_hand(g):
+    """Bertillon's card hand (head-local units): beside his face in 6c; in 6d it rises so the card sits ABOVE Dupont's head, next to the bottle"""
+    u = _ss((g - 1616) / 24.0); return (0.66 + 0.29 * u, 0.08 - 1.03 * u), u
 def _stage_at(g, who):
     d = STAGE[who]
-    if who == 'dup' and g >= 1616: d = (float(os.environ.get('DUP6', '-0.60')), 0.0)          # he turns round at g1616 (back view -> front): the step hides in the turn
-    if who == 'bert' and g >= 1650: d = (d[0] + 0.50 * _ss((g - 1650) / 30.0), d[1])   # P2: he steps 0.5 m toward the inspector (behind the foreground desk in 6d) so the camera pass does not cut his raised arm at the frame edge
-    if who == 'insp' and g < INSP_T:
-        u = _ss((g - 1546) / float(INSP_T - 1546)); a = (-0.40, 3.0); return (a[0] + (d[0] - a[0]) * u, a[1] + (d[1] - a[1]) * u)   # T6a's offset at the join, then he walks to his mark
-    if who == 'insp' and g >= 1655: k = 1.0 - _ss((g - 1655) / 16.0); d = (d[0] * k, d[1] * k)   # P2 centres on the inspector's own mark: ease his 6c offset away in 6d, off the viewer's eye line
+    if who == 'dup' and g >= 1616: d = (-0.08, -0.27)          # he turns round at g1616 (back view -> front): the step hides in the turn
+    if who == 'insp':                                                             # absent g1546-1639 (out of frame is cleaner than a cut figure); back at 1640 out of frame left, then on his mark for P2
+        OUT = (-0.07, -0.22)
+        if g < 1655: return OUT
+        u = _ss((g - 1655) / 16.0); return (OUT[0] * (1 - u), OUT[1] * (1 - u))
     return d
 def assign_for(g):
     w = _w(g); f = lambda who: ({'dx': _stage_at(g, who)[0], 'dy': _stage_at(g, who)[1]} if who == 'insp' and g < INSP_T else {'dx': _stage_at(g, who)[0] * w, 'dy': _stage_at(g, who)[1] * w})
@@ -182,23 +185,28 @@ def assign_for(g):
     gd = dict(cast17.STORY17['gendarme_standing_a'][1]); h, u = _gend_hand(g); ox, oy, wu = _gend_off(g)
     if False:                                      # foot-locked walk: phase advances with the distance walked (stride 0.72 m)
         dist = math.hypot(ox, oy); gd = cast17.cycle('gendarme_a', (dist / (2 * 0.72)) % 1.0, 'walk', facing=-1, base=gd, arms='none')
-    elif g >= 1640: gd.update(expr='determined', arm_r=dict(hand=h, bend=-0.5 * u, stretch=1.0 + 0.1 * u, layer='front'), arm_l='behind')
+    elif g >= 1640: gd.update(expr='determined', arm_l=dict(hand=h, bend=0.5 * u, stretch=1.0 + float(os.environ.get('GSTR', '0.2')) * u, layer='front'), arm_r='behind')
     cast17.STORY17['gend_dyn'] = ('gendarme_a', gd)
     ip = dict(cast17.STORY17['inspector_arms_crossed'][1])
-    if 1546 <= g < INSP_T:
-        dist = sum(math.hypot(_stage_at(k, 'insp')[0] - _stage_at(k - 1, 'insp')[0], _stage_at(k, 'insp')[1] - _stage_at(k - 1, 'insp')[1]) for k in range(1547, g + 1))   # pure in g: resume-safe
+    if 1640 <= g and math.hypot(_stage_at(g, 'insp')[0] - _stage_at(g - 1, 'insp')[0], _stage_at(g, 'insp')[1] - _stage_at(g - 1, 'insp')[1]) > 1e-4:
+        dist = sum(math.hypot(_stage_at(k, 'insp')[0] - _stage_at(k - 1, 'insp')[0], _stage_at(k, 'insp')[1] - _stage_at(k - 1, 'insp')[1]) for k in range(1656, g + 1))   # pure in g: resume-safe
         ip = cast17.cycle('inspector17', (dist / (2 * 0.72)) % 1.0, 'walk', facing=-1, base=ip, arms='none')
     cast17.STORY17['insp_dyn'] = ('inspector17', ip)
-    gopt = {'dx': ox, 'dy': oy}
+    bh, bu = _bert_hand(g); bd = dict(cast17.STORY17['bertillon_card_up'][1]); bd['arm_r'] = dict(hand=bh, bend=-0.6, stretch=1.1 + 0.2 * bu, layer='front'); cast17.STORY17['bert_dyn'] = ('bertillon', bd)
+    gopt = {'dx': ox, 'dy': oy, 'H': float(os.environ.get('GH', '1.55'))}
     dup = 'dupont_sweating' if g < 1616 else 'dupont_caught_sweat'
-    if g >= 1671: return {'inspector': ('inspector_shocked', f('insp')), 'bertillon': ('bertillon_card_up', f('bert')), 'dupont': ('dupont_caught_sweat', f('dup')), 'gend_a': ('gend_dyn', gopt), 'gend_b': ('gendarme_standing_b', {})}
-    return {'bertillon': ('bertillon_card_up', f('bert')), 'dupont': (dup, f('dup')), 'inspector': ('insp_dyn', f('insp')), 'gend_a': ('gend_dyn', gopt), 'gend_b': ('gendarme_standing_b', {})}
+    if g >= 1676: return {'inspector': ('inspector_shocked', f('insp'))}                        # P2: the others are out of frame (the whip is done): not rendered
+    if g >= 1671: return {'inspector': ('inspector_shocked', f('insp')), 'bertillon': ('bert_dyn', f('bert')), 'dupont': ('dupont_caught_sweat', f('dup')), 'gend_a': ('gend_dyn', gopt)}
+    a = {'bertillon': ('bert_dyn', f('bert')), 'dupont': (dup, f('dup')), 'inspector': ('insp_dyn', f('insp')), 'gend_a': ('gend_dyn', gopt)}
+    if 1546 <= g < 1640: del a['inspector']                                     # not in frame: not rendered
+    if g < 1546: a['inspector'] = ('inspector_arms_crossed', {'dx': -0.4, 'dy': 3.0}); a['gend_b'] = ('gendarme_standing_b', {})   # T6a's join frames
+    return a
 def stage_props(g, acts, cam):
     """call after stage_cast2: Bertillon's MARTIN card (+ bottle later)"""
     hide_hero_card(g)
-    if 'bertillon' in acts and g >= 1550: martin_card(acts['bertillon'], g, cam)
+    if 'bertillon' in acts and g >= 1550: bh, _ = _bert_hand(g); wd = 1.45 + 0.45 * _bert_hand(g)[1]; martin_card(acts['bertillon'], g, cam, width_D=wd, ctr=(bh[0] + 0.84 * wd / 1.45, bh[1] - 0.42 * wd / 1.45))
     if 'gend_a' in acts and g >= 1646:
-        h, u = _gend_hand(g); bottle_prop(acts['gend_a'], cam, ctr=(h[0] - 0.02, h[1] - 0.42), h_D=1.0)
+        h, u = _gend_hand(g); bottle_prop(acts['gend_a'], cam, ctr=(h[0] - 0.02, h[1] - 0.55), h_D=1.5)
 
 def hide_hero_card(g):
     """from g1546 (right after T6a's P1) the lifted 3D hero card in the drawer box is gone: Bertillon holds the MARTIN card in his hand instead"""
@@ -206,11 +214,18 @@ def hide_hero_card(g):
     for o in [r] + list(r.children_recursive): o.hide_render = g >= 1550
 
 def apply_cam():
-    """P2 (g1695 hold): pull the push-in back so the inspector's head is <= 35 % of the frame height (the plan's 1.05 m was ~50 %); same look-at, camera 1.5x farther."""
-    for k in P.TAKES['T6']['keys']:
-        if k['g'] in (1695, 1701):
-            lk = np.array(k['look']); lc = np.array(k['loc']); k['loc'] = tuple(lk + 1.5 * (lc - lk))
-        if k['g'] in (1640, 1671): k['lens'] = float(os.environ.get('LENS6D', '16'))      # 6d three-shot: wider, so Bertillon + card, Dupont and the gendarme fit with margins
+    """6d: the look rotated right + head level (lens 22): floor <= 30 % and everyone in the row clear of the frame edges.
+    P2: the push lands front-on at the inspector from 1.65 m (head + kepi ~ 30 % of the frame height), from the ESE so Bertillon is never in frame at the end;
+    the whip from the 6d framing is done by g1677 so the others leave the frame fast (they are not rendered after g1680)."""
+    ks = P.TAKES['T6']['keys']
+    for k in ks:
+        if k['g'] in (1640, 1671):
+            k['look'] = tuple(float(x) for x in os.environ.get('LOOK6D', '14.6,26.55,2.45').split(',')); k['lens'] = float(os.environ.get('LENS6D', '22'))
+    fl = np.array(os.environ.get('P2LOOK', '15.2,24.35,2.62').split(','), float); fc = np.array(os.environ.get('P2CAM', '16.7,25.2,2.62').split(','), float)
+    ks[:] = [k for k in ks if k['g'] not in (1674, 1677, 1695, 1701)]
+    c0 = np.array([k for k in ks if k['g'] == 1671][0]['loc'], float)
+    ks.append(P._k(1674, tuple(c0 + 0.9 * (fc - c0)), tuple(fl), 22.0, hold=False)); ks.append(P._k(1695, tuple(fc), tuple(fl), 22.0, hold=True)); ks.append(P._k(1701, tuple(fc + (fl - fc) * 0.002), tuple(fl), 22.0, hold=True))
+    ks.sort(key=lambda k: k['g'])
 apply_cam()
 
 _orig_face = P.cast_face
@@ -221,3 +236,24 @@ def _face(take, c, g):
         return math.degrees(math.atan2(cam.location[1] - p[1], cam.location[0] - p[0]))
     return _orig_face(take, c, g)
 P.cast_face = _face
+
+DESK_BOXES = [((15.35, 17.25), (26.55, 28.65), (1.3, 3.0)),      # the desk
+              ((13.9, 15.3), (26.4, 28.1), (1.2, 2.1))]               # the red stool that stood in front of Dupont's chest in 6d (and the red blob at g1600)
+DESK_BOX = DESK_BOXES[0]     # Bertillon's foreground desk (+ card fan, ledger, candle, lamp, ink): 0.5 m from the 6c/6d cameras, the director's "cream slab" and "red blob"
+def remove_desk():
+    """T6b: delete the desk's faces from the batched archive meshes (and hide its fan/candle objects) for the whole T6b range"""
+    import bmesh
+    n = 0
+    for o in bpy.data.objects:
+        if o.type != 'MESH' or o.name.startswith(('c2_', 'bk_', 't6b_', 'back_', 'cc_')): continue
+        if o.name.startswith(('fan_', 'arch_glow_candle')): o.hide_render = True; o.hide_viewport = True; continue
+        me = o.data
+        if len(me.polygons) == 0: continue
+        bm = bmesh.new(); bm.from_mesh(me); mw = o.matrix_world; dead = []
+        for f in bm.faces:
+            c = mw @ f.calc_center_median()
+            if any(x0 < c.x < x1 and y0 < c.y < y1 and z0 < c.z < z1 for (x0, x1), (y0, y1), (z0, z1) in DESK_BOXES): dead.append(f)
+        if dead:
+            bmesh.ops.delete(bm, geom=dead, context='FACES'); bm.to_mesh(me); n += len(dead)
+        bm.free()
+    return n

@@ -6,12 +6,13 @@ import sys, os, time
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import t6b_stage, prefecture17 as P, bpy
 P.TAKE_OVER['T6']['archive'].update({"shade_mul": 1.4, "fill_w": 600, "gain": 1.15})
-out = sys.argv[1]; g0 = int(sys.argv[2]); g1 = int(sys.argv[3]); step = int(sys.argv[4]) if len(sys.argv) > 4 else 1
+out = sys.argv[1]; LIST = [int(x) for x in sys.argv[2].split(',')] if ',' in sys.argv[2] else None
+g0 = int(sys.argv[2].split(',')[0]); g1 = int(sys.argv[3]) if len(sys.argv) > 3 else g0; step = int(sys.argv[4]) if len(sys.argv) > 4 else 1
 samples = int(sys.argv[5]) if len(sys.argv) > 5 else 16; res = (int(sys.argv[6]), int(sys.argv[7])) if len(sys.argv) > 7 else (720, 1280)
 os.makedirs(out, exist_ok=True)
-todo = [g for g in range(g0, g1 + 1, step) if not (os.path.exists('%s/g_%04d.png' % (out, g)) and os.path.getsize('%s/g_%04d.png' % (out, g)) > 50000)]
+todo = [g for g in (LIST or range(g0, g1 + 1, step)) if not (os.path.exists('%s/g_%04d.png' % (out, g)) and os.path.getsize('%s/g_%04d.png' % (out, g)) > 50000)]
 if not todo: print('nothing to do'); sys.exit(0)
-A = P.world_build('T6'); P.key_take('T6'); P.setup_render2(res, samples=samples, threads=2)
+A = P.world_build('T6'); P.key_take('T6'); print('desk faces removed', t6b_stage.remove_desk(), flush=True); P.setup_render2(res, samples=samples, threads=2)
 for g in todo:
     t = time.time(); t6b_stage.clear_cast(); asg = t6b_stage.assign_for(g)
     P.shot('T6', g, A, cards=False); acts = P.stage_cast2('T6', g, asg); t6b_stage.stage_props(g, acts, bpy.context.scene.camera)
