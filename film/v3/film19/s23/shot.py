@@ -30,8 +30,8 @@ D_START = Vector((0.0, -7.60, 0.0))     # in the corridor beyond the doorway (do
 D_END = Vector((0.55, -4.00, 0.0))
 CAM_LOC0 = (2.95, 0.45, 2.20)
 CAM_LOOK0 = (0.30, -4.60, 2.50)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.06, slide_px=-135.0, rise_px=-35.0, arc_deg_s=30.0, decay=0.12,
-                snaps=[dict(g=SNAP, k=1.75, peak=2.3, shift=(6.00, -0.25))])
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.06, slide_px=-150.0, rise_px=-35.0, arc_deg_s=30.0, decay=0.12,
+                snaps=[dict(g=SNAP, k=1.75, peak=2.3, shift=(7.30, -0.25))])
 
 BASE = dict(cast19.STORY19["harrison_old_handover"][1])
 CYC = 34.0
@@ -70,7 +70,7 @@ class Take(C.Take):
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
         self.key_cam(bf(G_FIRST), *CAM.at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
-        self.har = self.actors["har"] = C.make_actor("har", "harrison19", os.path.join(WORK, "sprites"), contact=dict(width=1.1, depth=0.5, opacity=0.8), cam=self.cam)
+        self.har = self.actors["har"] = C.make_actor("har", "harrison19", os.path.join(WORK, "sprites"), contact=dict(width=1.5, depth=0.6, opacity=1.0), cam=self.cam)
 
     def pose(self, gs):
         for g in gs:

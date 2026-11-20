@@ -26,12 +26,12 @@ SNAP = (G_SNAP - 3, G_SNAP + 13)
 PRESET, LIGHT, FINAL_SPP, PPD = "hall_table", "EVENING", 8, 256
 BLINKS = [1950, 1978, 2012, 2030]
 
-KING_M = (0.0, 4.25, 0.0)                                # metres; D below
-STUB_DY = 3.45                                           # D: the stub row is moved from the near table edge (y 1.55 D) to y 5.0 D, in front of the King
-CAM_LOC0 = (-1.60, 1.20, 2.55)
-CAM_LOOK0 = (0.20, 7.86, 2.55)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.09, slide_px=-85.0, rise_px=0.0, arc_deg_s=10.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.30, peak=2.5, shift=(1.30, -0.20))])
+KING_M = (0.85, 4.25, 0.0)                                # metres: beside the table head, clear of the orrery (x 0, y 3.85 m)
+STUB_DY = 4.65                                           # D: stub row moved to y 6.2 D (near the King) so it stays in frame to the end
+CAM_LOC0 = (-0.50, 2.40, 2.55)
+CAM_LOOK0 = (1.30, 7.86, 2.55)
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.09, slide_px=-55.0, rise_px=0.0, arc_deg_s=-3.0, decay=0.15,
+                snaps=[dict(g=SNAP, k=1.25, peak=2.9, shift=(2.40, -0.25))])
 
 KB = dict(cast19.STORY19["king_watch_squint"][1])
 
