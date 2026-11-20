@@ -1,13 +1,17 @@
-# QA_TECH s02 (g78-165 = 78 in-shot + 10 handle) - FAIL
-Checked: 6 fps frames + first/last 3; frame-diff re-measured: all 88 frames median 4.19, p90 6.09 (in-shot 78 frames ~ 4.40 / 6.21, min 0.7 only in the handle). Band mean max 82, bright 0.00 %.
-## Earlier issues (previous QA_TECH s02)
-- E1 p90: now a visible eased pull-out (acceptable under the clarified gate).
-- E2 herd 10 D wide: NOT FIXED. E3 dark props bottom 30 %: NOT FIXED. E4 tying not readable: NOT FIXED. E5 eye-line: NOT FIXED. Navy slab removed (OK).
+# QA_TECH s02 (g78-155 + 10 handle to g165) - PASS
+Checked: 6 fps frames + first/last 3. Frame-diff re-measured: median 8.28, p90 11.09 (min 3.9, max 17.5), eased crane/pull-out clearly visible, no pulsing.
+## Earlier blockers
+- Bare ground bottom 45-50 %: FIXED (plain ground about 20-25 % at g128-165, about 28 % at g103-125 with the woman and Tian Dan in it).
+- Herd 10 D wide / dozens of oxen: FIXED, ranks of dressed oxen fill the lane g118-165.
+- Tie-the-blade beat: readable g78-100 (blade at the horn); Tian Dan then shrinks to ~65 px at the left but stays inside the frame and identifiable.
+- Eye-line: still at the lens, now a note. Navy slab / stump: absent.
 ## Issues
-1. g83-165 - rule 5 / mandatory: from g88 on the bottom 45-50 % (y ~660-1280) is bare lit lane with nothing in it; no dark props at all. Far over 25 %. Fix: dark baskets, jars, rope or a spear rack in the bottom third, and keep the horizon at y 0.40-0.50.
-2. g98-165 - mandatory "herd spread about 10 D wide": the herd stays a narrow frontal block ~25-30 % of the frame width at the far end of the lane (8-10 oxen readable, tiny). The plan "pull-out reveals dozens of dressed oxen filling the lane" is not shown. Fix: widen to ~10 D, add ranks, stop the pull-out before the herd becomes a speck.
-3. g98-165 - plan beat / subject: Tian Dan shrinks to a ~60 px figure at the left edge, half hidden by a prop; the tie-the-blade beat (3.13 s) is not readable, and he is hard to find.
-4. g78-155 - eye-line: he frowns at the lens, not at the horn (g78-93).
-5. g78-165 - sky is ~40 % of the frame (note borderline).
+None blocking.
+## Notes
+1. g108-150 a flat dark purple band (untextured shadow quad) lies along the back of the herd; reads as shadow at phone size but it is the nearest thing to a navy slab (rule 2). Fix: texture or drop the quad.
+2. g78-93 he frowns at the lens, not at the horn.
+3. g148-165 a grey-green figure is clipped by the right edge (minor).
+4. sky about 30-35 % until g103.
+5. g128-165 Tian Dan is small and half-hidden by the woman and ox head; keep a gap.
 ## Pass items
-Dressed oxen with blades (correct for s02); NIGHT; no stump/hay prop; no placeholder slab; heads < 880; no mouths; no text; band mid-dark; no pulsing; no frozen/black frames; g 78-155 + 10 handle OK.
+Dressed oxen with blades (correct); NIGHT; no stump; heads < 880; no mouths; no text; no frozen/black frames; band dark; frames g78-155 plus 10 handle OK.

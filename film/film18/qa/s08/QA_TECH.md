@@ -1,14 +1,16 @@
-# QA_TECH s08 (g597-673 in-shot, take g588-673 incl. 9 f dissolve handle) - FAIL
-Checked: 6 fps frames + first/last 3 (+ full-size g0/20/50/85); frame-diff re-measured: median 7.09, p90 9.35 (min 2.1, max 11.0) - passes; smooth eased push + slide, no pulsing. Band mean max 67, bright 0.00 %.
-## Mandatory (TEAMS.md team 3 s08)
-- "tone the red slab to #8a2a20 and hide the cut beam": NOT DONE. The red slab across the rampart is still bright orange-red (sampled ~ RGB 170-250, 60-130, 50-90; target 138,42,32) and its sawn end / vertical red post is visible at x~640 from g~620 on.
+# QA_TECH s08 (take g588-673, in-shot g597-673) - PASS
+Checked: 6 fps frames + first/last 3 (+ full-size n15/35/65). Frame-diff re-measured: median 4.70, p90 4.98 (min 3.4, max 6.2). Hard gate median >= 4 met; p90 < 9 but there is a visible eased push (general grows ~90 -> 130 px) plus spear-rack/fence slide, monotonic, no pulsing.
+## Earlier blockers
+- Red slab / cut beam (mandatory): FIXED (no bright orange slab, no sawn end; lintel gone).
+- Grey-navy lump and bare stump: FIXED (gone).
+- General too small behind the rail: improved; head/torso/legs all above the fence, chin y ~610 (< 880).
+- Sky about 30 % (note). Dissolve handle g588-596 OK.
 ## Issues
-1. g588-640 - mandatory + rule 2: the bright orange-red slab/beam (upper right, whole take) is the dominant colour block and its cut end shows (see above). Fix: tone to #8a2a20 and hide the cut end behind the tower/fence.
-2. g588-603 - rule 2: a grey-navy low-poly lump in the lower left (g588-600) and a bare brown stump/drum with a black outline in the lane (g588-615) read as untextured placeholder props. Fix: remove or replace with a lit jar/basket.
-3. g588-673 - subject: the general is a ~110 px figure (about 9 % of the frame height) behind a fence rail and spear rack; he is cropped to head and chest by the rail and the plan beat (he sees the oxen tails, bursts out laughing) is barely readable. The plank fence fills the bottom 45 %. Fix: lower/closer camera or bigger general, drop the rail below his chest.
-4. g588-673 - sky is ~40 % of the frame, plain gradient.
+None blocking. (Bare ground at g640-673 is about 30 %, borderline; see note 1.)
 ## Notes
-- the laugh is a static open-mouth drawing (not lip-sync), allowed; his eyes face the lens rather than Jimo (deliberate comic read is acceptable).
-- bare ground at g588-612 about 22 %, ok.
+1. g640-673 plain violet ground is about 30 % of the frame below his feet (limit: > 30 % blocks); lean left/low props would remove the risk.
+2. g588-640 the lower 35-45 % is fence rail and planks; the dark navy hollow rail frames with thick black outline at g598-635 read slightly as untextured navy beams. Fix: lighten or texture the rail's inner faces.
+3. plan beat "sees oxen tails behind the wall gate": no tails visible; he faces the lens with a closed mouth until the laugh at g~636 (open laugh with bounce, static drawing, allowed). Eye-line note.
+4. he is small (about 30 % of frame height) with a tall sky above.
 ## Pass items
-Heads < 880; subject in frame; no text; DUSK matches s07/s09; band mid-dark; no pulsing; no frozen/black frames; g range 597-673 with 9 handle frames for the dissolve.
+No mouth lip-sync (quote 1 starts g676); subject in frame; no text; DUSK, continuity with s07/s09 (s09 first frame matches); band mid-dark, bright 0 %; no frozen/black frames.

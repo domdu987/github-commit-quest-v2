@@ -1,10 +1,13 @@
-# QA_TECH s10 (g737-852, 116 frames) - FAIL
-Checked: 6 fps frames + first/last 3; frame-diff re-measured: median 14.15, p90 18.33 (min 3.2, max 21.3). Band mean max 56, bright 0.00 %.
+# QA_TECH s10 (g737-852, 116 frames) - PASS
+Checked: 6 fps frames + first/last 3. Frame-diff re-measured: median 7.99, p90 10.24 (min 5.0, max 11.0). Monotonic eased push + drift (diff ramps 5 -> 11 -> 7), no direction reversal.
+## Earlier blockers
+- Pendulum / pulsing (rule 1): FIXED (the background now travels in one direction only; general head stays centred, chin y ~615-654 /1280 scale).
 ## Issues
-1. g737-852 - rule 1 pulsing: the general stays centred while the whole background swings left-right in a pendulum (spear rack, tent and tower enter and leave the frame); measured horizontal drift reverses about every 22 frames (-95, +47, -88, +46, -65, +61 px at half res, i.e. up to ~190 px at full res), so the framing returns to the start about 5 times in 3.9 s. Frame-diff dips to 3-7 at each reversal. The high frame-diff comes from this swing, not from an eased move; it reads as a wobble. Fix: one monotonic slide (about 40 px/s) with the push, no reversal.
+None blocking.
 ## Notes
-- bare dark ground in the bottom ~28-30 % with no props (limit 25 %, note); the general's feet are in the band (allowed).
-- mouth: lip-sync window 22.45-28.38 covers the whole take; the mouth sits under the moustache and opens only slightly (readable open in about g750-760, g790+); weak but acceptable. No other characters move their mouths except static laugh drawings of the background soldiers.
-- the general looks at the lens (thumb at chest delivery, acceptable).
+1. whole take bare ground is about 30 % (dark violet lane below the feet; about 33 % at g737-760, about 29 % at the end); borderline, dark props or a lamp stand at the bottom corners would clear it.
+2. g832-852 a large pale salmon tile-patterned plane (tent roof/table seen from below) on the left reads as a flat light slab; tone down.
+3. mouth: opens on the quote (visible teeth/dark mouth under the moustache); the opening is small, weak but acceptable. Background soldiers are static laugh drawings only.
+4. general looks at the lens (thumb at chest delivery, acceptable).
 ## Pass items
-Heads/helmet well above y 880 (face ~y 430-620); subject in frame; no placeholder props (lit lamp stands, spear racks, tent); DUSK; band mid-dark; no text; no frozen/black frames; g 737-852 OK.
+Head/helmet well above y 880 (face ~y 430-620); subject in frame; no placeholder props (lit lamp stands, spear racks, tents); DUSK; continuity with s09 last frame and s11 first frame; band mid-dark, bright 0 %; no text; no frozen/black frames; g737-852 OK.

@@ -1,12 +1,14 @@
-# QA_TECH s03 (take g147-298; in-shot g156-296) - FAIL
-Checked: 6 fps frames + first/last 3; frame-diff re-measured (90x160 grey, AREA, 140 in-shot pairs): median 6.65, p90 11.54 (min 3.19, max 13.44). Caption band y880-950 mean 74-106, bright 0.00 %.
+# QA_TECH s03 (take g147-298, in-shot g156-296) - FAIL
+Checked: 6 fps frames + first/last 3. Frame-diff re-measured: median 6.48, p90 8.35 (min 4.2, max 8.8). Smooth monotonic ramp 4 -> 9 -> 7: NO pulsing now. p90 < 9 but orbit parallax is visible (guide only).
+## Earlier blockers
+- E1 pulsing: FIXED (orbit, smooth diff).
+- E3 bare ground: NOT FIXED. E4 sticker clouds clipped at the corners: NOT FIXED. Spike shadow triangles: NOT FIXED.
+- Pennants pop-up mandatory: met (black pennants appear g~232-262, dense by g~270).
 ## Issues
-1. whole shot - rule 1 (zoom pulsing): the motion comes from "push punches every 10 frames" (QA.md); the frame-diff is a repeating 11-frame burst (3.5 -> 10 -> 10 -> 4.7 -> 10 -> 10 -> 3.4). Between bursts the camera is near-static. Fix: remove the punches; use one eased push + slide.
-2. whole shot - p90 11.54 < 12 (rule not met).
-3. g147-258 - rule 5, bare ground: the bottom 40-50 % of the frame is flat, empty tiled green/violet ground (towns only in y 150-300 of 427) with stray dark spike shadow triangles. Only after g~260 do the towns fill the lower half. Fix: tilt or push so the towns/flag forest fill >= 75 % of the frame from the first frame.
-4. g147-282 - sky ~35 % flat orange gradient with scalloped cloud stickers clipped at the top-left corner (g147-212) and top-right (g222-282). Fix: drop the sticker clouds, tilt down.
-5. mandatory "pennants pop up": MET - black pennants appear one after another from g~227 (7.5 s) and are dense by g~262 (plan window 7.32-9.89 s). No issue.
+1. g147-232 - bare ground: the bottom 45-60 % of the frame is empty tiled grey-green ground (towns only in a band at y 0.35-0.65); until g~205 about 55 %, g205-232 about 35-40 %; even at g257-298 the bottom 25 % is plain ground. Far over 30 %. For ~55 % of the take the viewer sees sky plus an empty field. Fix: tilt/lower the camera so towns fill >= 75 % of the frame from the first frame, or fill the field.
+2. g147-298 - rule 2: dark blue spike/cone shadow triangles stand on the empty ground (g147-215 and g257-298, growing in size as the camera lowers); they read as untextured placeholder spikes. Fix: hide them.
+3. g147-170 and g257-298 - clipped cloud stickers at the top-left (g147-170) and top-right (g257-298) corners (scalloped flat cloud shapes cut by the frame edge). Fix: drop the cloud sprites.
+4. g147-232 - sky about 35 % flat orange gradient.
 ## Notes
-- Ending frames g296-298 and the dissolve handle g147-152 look the same set; the dissolve in is fine.
-- Caption band is mid-dark, no bright emitters.
-- No text, no characters, no oxen, no mouths.
+- no text, no characters, no mouths; band mid-dark, no bright emitters.
+- dissolve handle g147-155 shows the same set; s04 follows as a cut, check pairing at conform.
