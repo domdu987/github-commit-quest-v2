@@ -1,10 +1,16 @@
-# T6a2: runs T6a's render_t6a.run() UNCHANGED for g1453-1535. Resumable (skips existing frames).
+# T6a2: runs T6a's render_t6a.run() UNCHANGED for g1453-1535, plus the director's stale-actor leak fix
+# (remove c2_*/back_hair_*/back_coat_* objects and clear actors registry before every stage_cast2). Resumable.
 import sys, os
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, '..', 'T6a'))
-import render_t6a as R
+import bpy, render_t6a as R
+sys.path.insert(0, '/home/user/github-commit-quest-v2/film/v3/stage'); import actors
+_orig = R.P.stage_cast2
+def _stage(*a, **k):
+    for o in [o for o in bpy.data.objects if o.name.startswith(('c2_', 'back_hair_', 'back_coat_'))]: bpy.data.objects.remove(o, do_unlink=True)
+    actors.clear_registry()
+    return _orig(*a, **k)
+R.P.stage_cast2 = _stage
 a = sys.argv[sys.argv.index('--') + 1:]
-if a[0] == 'check':
-    R.run([1515], os.path.join(HERE, 'check'))
-else:
-    R.run(range(1453, 1536), os.path.join(HERE, 'frames'))
+if a[0] == 'check': R.run([1515], os.path.join(HERE, 'check'))
+else: R.run(range(1453, 1536), os.path.join(HERE, 'frames'))
