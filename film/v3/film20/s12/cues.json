@@ -1,0 +1,47 @@
+{
+ "take": "s12",
+ "fps": 30,
+ "note": "t = film seconds (g / 30); narration film20/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "kind": "ambience",
+   "t": 27.267,
+   "dur": 3.067,
+   "frame": 818,
+   "end_frame": 910,
+   "note": "Iron yard: clanging girders, chains and a derrick winch, distant hammering"
+  },
+  {
+   "kind": "foley",
+   "t": 27.4,
+   "dur": 2.833,
+   "frame": 822,
+   "end_frame": 907,
+   "note": "two men walking in step with a girder on their shoulders: boots on gravel, iron creak"
+  },
+  {
+   "kind": "accent",
+   "t": 28.467,
+   "dur": 0.533,
+   "frame": 854,
+   "end_frame": 870,
+   "note": "snap push on 'เหล็ก 18,000': iron clang + whoosh"
+  },
+  {
+   "kind": "foley",
+   "t": 27.4,
+   "dur": 2.833,
+   "frame": 822,
+   "end_frame": 907,
+   "note": "derrick winch with a hanging girder swinging up (chain rattle)"
+  },
+  {
+   "kind": "cut",
+   "t": 30.233,
+   "dur": 0.0,
+   "frame": 907,
+   "end_frame": 907,
+   "note": "hard cut to shot 13 (rivet deck)"
+  }
+ ]
+}

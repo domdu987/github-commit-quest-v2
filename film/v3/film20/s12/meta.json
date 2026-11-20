@@ -1,0 +1,64 @@
+{
+ "take": "s12",
+ "film": 20,
+ "shots": [
+  12
+ ],
+ "g0": 822,
+ "g1": 907,
+ "first_g": 818,
+ "n_frames": 93,
+ "shot_ranges": {
+  "12": [
+   822,
+   906
+  ]
+ },
+ "handle_in": 4,
+ "handle_out": 4,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 907
+ },
+ "set": "v3/set3d20 SITE preset site_girders, light DAY, stage 1 (set_stage keyed every frame), crane_swing(k) keyed 0->1 over the take (derrick girder swings up). Runtime: preset FG mesh hidden; a camera-parented-free scene otherwise untouched.",
+ "cast": "cast20 riveter_tongs + riveter_hammer carrying a girder (runtime 3-box I-girder, ironlt) on their shoulders along the stack (cast20.cycle walk, arms raised to the shoulder); walk 0.65 m/s.",
+ "camera": "custom 22 mm at 1.0 m, 5 m south of the 3 m high red-lead stack (walkers 4.4 m from the lens): slide 100 px/s + push 3 %/s + small snap x1.18 on 'เหล็ก 18,000' (g854..870).",
+ "events": {
+  "word_steel": 856,
+  "snap": [
+   854,
+   870
+  ]
+ },
+ "dof": "none",
+ "text": "none",
+ "light": "DAY",
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 13.03,
+ "s_per_frame_cpu_mean": 25.27,
+ "head_px": [
+  74,
+  105
+ ],
+ "head_centre_y": [
+  657,
+  726
+ ],
+ "head_bottom_max_y": 764,
+ "framediff_in_shot": {
+  "median": 3.41,
+  "p90": 8.6
+ },
+ "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
+}
