@@ -565,7 +565,7 @@ def build_facade(B, A):
     for yy in (5.0, 11.0, 17.0, 23.0, 29.0): B.box('glow_frost' if False else 'glow_blue', (17.0, yy, Hc + 2.45), (2.2, 2.8, 0.05))
     # the main door: rusticated arch, voussoirs, fanlight glow, double doors on hinges (set_door('main'))
     for k in range(9):
-        a = math.radians(180 - k * 22.5); B.box('stone', (fx - 0.12, 5.7 + 1.35 * math.cos(a), 4.4 + 1.35 * math.sin(a)), (0.24, 0.42, 0.55), rot=(math.degrees(a) - 90, 0, 0))
+        a = math.radians(180 - k * 22.5); B.box('stone', (fx - 0.12, 5.7 + 1.25 * math.cos(a), 4.4 + 1.25 * math.sin(a)), (0.24, 0.42, 0.42), rot=(math.degrees(a) - 90, 0, 0))   # T1b set fix (ba40287): radius 1.35 -> 1.25, height 0.55 -> 0.42 so the arch no longer clips the PRÉFECTURE letters
     hv = 14; a = np.linspace(0, math.pi, hv + 1); v = [(0, 0, 0)] + [(0, 1.1 * math.cos(t_), 1.1 * math.sin(t_)) for t_ in a]
     with B.xf((fx - 0.02, 5.7, 4.4)): B.mesh('glow_fan', v, [(0, i + 1, i + 2) for i in range(hv)], smooth=False)
     for s in (-1, 1): B.box('stone', (fx - 0.14, 5.7 + s * 1.3, 2.2), (0.28, 0.4, 4.4))
