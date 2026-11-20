@@ -16,14 +16,14 @@ def _tilt(sh, t):                                            # the whip lands on
 S.pose_at = _tilt
 HIDE = tuple(os.environ.get('HIDE', 'furrows,streaks,streak,rainstreaks,tufts').split(','))
 HX0 = [hx for hx in J.HOLE_X if hx > 20]
-HX = [HX0[1], HX0[2], HX0[3]]
+HX = [HX0[1]]
 rnd = random.Random(19)
 OX = []                                                      # (gs, hole x, lane jitter, scale)
-for w in range(6):
+for w in range(9):
     for k, hx in enumerate(HX):
-        OX.append((G0 - 26 + 9 * k + 18 * w, hx + rnd.uniform(-0.5, 0.5), rnd.uniform(-0.3, 0.3), rnd.uniform(0.95, 1.05)))
+        OX.append((G0 - 26 + 0 * k + 18 * w, hx + rnd.uniform(-0.5, 0.5), rnd.uniform(-0.3, 0.3), rnd.uniform(0.95, 1.05)))
 OX = OX[:60]
-QI = [(G0 - 10 + 5 * k, HX0[(k * 3) % 4] + rnd.uniform(-1.5, 1.5)) for k in range(6)]
+QI = [(G0 - 10 + 5 * k, 44.0 + 2.2 * (k % 3)) for k in range(6)]
 V_OX, V_QI = 15.0, 11.5
 
 def setup(ctx):
@@ -66,7 +66,7 @@ def frame(g, t, camloc, ctx):
         if y < -150: continue
         pos = (hx + jit, y, 0.0); near = (V(pos) - camloc).length < 16
         ph = int((g - gs) * 12 / 30.0 + j) % 8
-        C.put_ox(j, pos, -100, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='front_three_quarter' if (near and j % 3 == 0) else 'three_quarter', gait='gallop', theta=14 if (near and j % 3 == 0) else 30, reed=True, tfx=(1.0 if (V(pos) - camloc).length < 20 else 0.8), lean=84.0, face='rage')
+        C.put_ox(j, pos, -100, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='front_three_quarter' if (near and j % 3 == 0) else 'three_quarter', gait='gallop', theta=14 if (near and j % 3 == 0) else 30, reed=True, tfx=0.4, lean=60.0, face='rage')
     for j, (gs, x) in enumerate(QI):
         if g < gs: continue
         y = -7.0 - V_QI * (g - gs) / 30.0

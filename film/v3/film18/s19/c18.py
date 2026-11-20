@@ -111,6 +111,7 @@ def _pose_ext(sh, t):
 S.pose_at = _pose_ext
 
 # ------------------------------------------------------------------ run
+WHO = []
 REPORT = []
 def run(shot, g0, g1, frame_cb, setup_cb=None, argv=None, lights=6, keep=None):
     argv = argv or sys.argv[1:]
@@ -146,7 +147,7 @@ def run(shot, g0, g1, frame_cb, setup_cb=None, argv=None, lights=6, keep=None):
         lit_tails(camloc, lights)
         bpy.context.view_layer.update(); J.flicker(g)
         if mode == 'measure':
-            m_ = measure_frame(cam, None); REPORT.append((g, round(m_['mouth_max']), round(m_['dist_min']))); continue
+            m_ = measure_frame(cam, None); gp_, who_ = matte_gap(cam); REPORT.append((g, round(m_['mouth_max']), round(gp_))); WHO.append((g, who_)); continue
         w, c = T.render(path); tt.append(time.time() - t0)
         print('%s g%d  %.1f s (wall %.1f cpu %.1f)' % (shot, g, tt[-1], w, c), flush=True)
     if REPORT:
@@ -302,3 +303,57 @@ def measure_frame(cam, flames):
             dd = math.hypot(fx - (ax + t * (bx - ax)), fy - (ay + t * (by - ay))) - fr - hh
             if dd < out['dist_min']: out['dist_min'] = dd
     return out
+
+
+# ================================================================== round 13: alpha-matte distance between flame cards and OTHER oxen's head region (exact card geometry warped to the 720x1280 frame)
+import cv2
+_ALPHA = {}
+def _card_alpha(ob):
+    me = ob.data
+    if not me.materials: return None
+    m = me.materials[0]
+    for n in m.node_tree.nodes:
+        if n.bl_idname == 'ShaderNodeTexImage' and n.image is not None:
+            p = bpy.path.abspath(n.image.filepath)
+            if p not in _ALPHA:
+                from PIL import Image
+                _ALPHA[p] = np.array(Image.open(p).convert('RGBA'))[..., 3]
+            return _ALPHA[p]
+    return None
+
+def card_mask(ob, cam, W=720, H=1280):
+    """warp the card's alpha into the frame; returns (mask uint8, quad px) or None"""
+    from bpy_extras.object_utils import world_to_camera_view
+    a = _card_alpha(ob)
+    if a is None: return None
+    sc_ = bpy.context.scene; vs = [ob.matrix_world @ v.co for v in ob.data.vertices][:4]      # (u0,z0)(u1,z0)(u1,z1)(u0,z1)
+    P = []
+    for v in vs:
+        q = world_to_camera_view(sc_, cam, v)
+        if q.z <= 0.01: return None
+        P.append((q.x * W, (1 - q.y) * H))
+    h, w = a.shape; src = np.float32([(0, h), (w, h), (w, 0), (0, 0)])
+    M = cv2.getPerspectiveTransform(src, np.float32(P)); m = cv2.warpPerspective((a > 128).astype(np.uint8) * 255, M, (W, H))
+    return m, P
+
+def matte_gap(cam, rad_d=0.95):
+    """min distance (px, 720 wide) between every flame card (exact alpha) and the face circle (head anchor, radius rad_d D x scale, covers head, horns and blades) of every OTHER ox."""
+    from bpy_extras.object_utils import world_to_camera_view
+    sc_ = bpy.context.scene; fm = {}
+    for ob in bpy.data.objects:
+        if ob.name.startswith('ph_tfl') and not ob.hide_render:
+            r = card_mask(ob, cam)
+            if r: fm[ob.name[6:]] = r[0]
+    worst = 1e9; who = None
+    dts = {k: cv2.distanceTransform((f == 0).astype(np.uint8), cv2.DIST_L2, 3) for k, f in fm.items()}
+    for j, m in enumerate(MET):
+        h = world_to_camera_view(sc_, cam, m['head']); h2 = world_to_camera_view(sc_, cam, V(m['head']) + V((0, 0, 1.0)))
+        if h.z <= 0.01: continue
+        hx, hy = h.x * 720, (1 - h.y) * 1280; r = abs(h2.y - h.y) * 1280 * rad_d * m['sc']
+        if not (-r < hx < 720 + r and -r < hy < 1280 + r): continue
+        xi, yi = int(min(719, max(0, hx))), int(min(1279, max(0, hy)))
+        for fk, dt in dts.items():
+            if fk == str(j): continue
+            d = max(0.0, float(dt[yi, xi]) - r)
+            if d < worst: worst = d; who = (fk, j)
+    return worst, who
