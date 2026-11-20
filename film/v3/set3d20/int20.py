@@ -567,7 +567,7 @@ RX0, RX1, RY0, RY1, RZH = -4.8, 4.8, -9.0, 17.0, 4.5
 RBIGWIN = (-2.6, 2.6, 0.0, 3.9)                    # the big window on the far wall (the window table is in front of it)
 HERO = (0.0, 15.7)                                 # window table centre (room metres)
 RESTO_MARKS_M = dict(
-    maupassant=(HERO[0], HERO[1] + 0.95, 0.0), maupassant_seat=(HERO[0], HERO[1] + 0.95, 0.46), maupassant_seated_card=(HERO[0], HERO[1] + 0.98, -0.22), waiter=(HERO[0] + 1.3, HERO[1] - 0.8, 0.0), waiter_start=(0.35, 3.1, 0.0),
+    maupassant=(HERO[0], HERO[1] + 0.95, 0.0), maupassant_seat=(HERO[0], HERO[1] + 0.95, 0.46), maupassant_seated=(HERO[0], HERO[1] + 0.98, 0.0), waiter=(HERO[0] + 1.3, HERO[1] - 0.8, 0.0), waiter_start=(0.35, 3.1, 0.0),
     maupassant_start=(-0.45, 3.7, 0.0), hero_table=(HERO[0], HERO[1], 0.76), window=(HERO[0], RY1 - 0.05, 2.0))
 RESTO_CAMS_M = dict(
     resto_wide=((0.0, -2.4, 0.75), (0.0, 12.0, 3.4), 0.0),
@@ -577,8 +577,8 @@ RESTO_CAMS_M = dict(
 )
 RESTO_STAGING = dict(
     resto_wide=[('maupassant', 'maupassant_start'), ('waiter', 'waiter_start')],
-    resto_table=[('maupassant', 'maupassant_seated_card', dict(pose=dict(expr='happy')))],
-    resto_view=[('maupassant', 'maupassant_seated_card', dict(pose=dict(expr='happy', arm_r='up'), face_to=W((0.0, 80.0, 1.5))))])
+    resto_table=[('maupassant', 'maupassant_seated', dict(pose=dict(seated=1, seat_h=0.865, napkin=1, yaw=0.0)))],
+    resto_view=[('maupassant', 'maupassant_seated', dict(pose=dict(seated=1, seat_h=0.865, back=1, yaw=0.4), face_to=W((0.0, 80.0, 1.5))))])
 
 def table_set(mb, M, x, y, rr, nplace=4, lamp_lights=None, h=0.76, r=0.7, bread=True, lamp=True, hero=False):
     mb.cyl(M['i_cloth'], (x, y, h - 0.016), r + 0.01, 0.03, 'z', 40)                     # top (with top-cloth colour)
