@@ -75,7 +75,7 @@ def cam_bigzoom(T, g, t):
 
 T = c18.Take('s26', FIRST, LAST, draft=(mode == 'draft'), cam_fn=cam_bigzoom)
 c18.fix_sky_clean(T, 'sky_DAWN', flat_above=0.6)
-for _n in ('wallpools', 'cityglow', 'tw_glow'):        # translucent glow quads on the city wall rendered as pale rectangles (TAKE gate 16)
+for _n in ('wallpools', 'cityglow', 'tw_glow', 'posts'):        # translucent glow quads on the city wall rendered as pale rectangles (TAKE gate 16)
     if _n in STATE['objects']:
         STATE['objects'][_n].hide_render = True
 import bpy
@@ -167,7 +167,16 @@ def tail_smoke(i, pos, cam_loc, mirror, yaw_off, g, sc=1.08):
         r = 0.22 + 0.55 * u; o.scale = (r, r, r * 0.9); o.hide_render = u > 0.97
 
 
+def _near_hide(cam, r=9.0):
+    """the dark octagonal torch-stake posts of the road dressing slid past the lens as the crane came down (gate 17): hide any post within r D of the camera, every frame."""
+    for o in bpy.data.objects:
+        if o.type == 'MESH' and (o.name.startswith('stk') or o.name.startswith('flame_stk')):
+            c = o.matrix_world @ (sum((V(b) for b in o.bound_box), V((0, 0, 0))) / 8.0)
+            o.hide_render = (c - cam).length < r
+
+
 def frame(T, g):
+    _near_hide(V(T.cur['loc']))
     gx, gy = _gen_pos(g); u_ = c18.ease((g - G0) / float(G_ZOOM - G0)) if G0 < g < G_ZOOM else (0.0 if g <= G0 else 1.0)
     POOL.location = (gx, gy + 1.5, 0.08); k = 2.4 + 15.0 * (1.0 - u_) ** 2; POOL.scale = (k, k, 1.0); POOL2.location = (gx, gy + 1.5, 0.1); POOL2.scale = (0.55 * k, 0.55 * k, 1.0)       # a warm dawn pool of light under him: findable in the wide
     cam = V(T.cur['loc']); dy = SPEED * (g - G0) / 30.0
