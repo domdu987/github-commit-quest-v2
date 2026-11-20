@@ -36,3 +36,34 @@ Fixes (shot.py / cast cues):
 4. **Chisel continuity.** Keep the chisel in his hand after the swap (resting or dangling), or let it drop on the swap, instead of vanishing.
 5. **Grounding.** Hide the leg stubs behind the chest (raise the chest 0.1 D, or place Harrison 0.15 D further behind it), or give the shoes a contact shadow on the floor.
 Keep the candle burn-down and the frame-diff (median 5.6 / p90 14.5) as they are.
+
+## Round 8 (director QA-art): FIX, 6.9
+
+Take: take.mkv 14:26 (first_g 929, g 929-1024, frame index = g - 929). I extracted every frame and viewed it at 3 fps, then every frame from g 984 to 1007 (the gag), at full size and at 360x640. I also cropped the right edge (x 540-720) every 2nd frame from g 994 to 1024.
+Frames: /tmp/qa19_r8art/s12/all_NNN.png. Sheets: /tmp/qa19_r8art/s12_3fps.jpg, s12_gag.jpg, s12_phone.jpg, s12_key_full.jpg, s12_rightedge.jpg, s12_edge_strip.jpg.
+
+| Check | Status |
+|---|---|
+| Gag on the word | **FIXED, and it is funny now.** The hair stays grey through the pan. At g 996 ("หงอก") he pops in one frame to white hair, spectacles and the brown coat, with puff clouds and a hop. At 360x640 the grey-to-white change, the glasses and the puffs all read clearly, and the picture lands on the word instead of a second early. The cartoon "aged on the spot" logic gets a laugh. |
+| Slump + rub | Better. He leans and droops at g 993-1000, then the left hand rubs his eyes, with a sweat drop and a tired squint (g 1003-1024). The chisel stays in his right hand and hangs down, so continuity is good. The slump reads more as sagging sideways (toward screen right) than falling back, but it reads as tired. |
+| H3 in frame | FIXED. The gold H3 wheels and gear frames fill the left ~45 % behind him during the rub. The blank-wall frame of round 7 is gone. |
+| **Right edge (BLOCKER, §G "nobody cut by an edge")** | **The head is cut by the right frame edge from g 997 to about g 1012 (0.5 s), which is exactly the payoff.** In this range the right side of the white hair, the ear and bow, the ponytail and the right puff cloud run off x 720, and about 15 % of the head is missing. It is obvious on a phone (see s12_phone.jpg g 1003 and s12_rightedge.jpg). The head only closes inside the frame from about g 1014. The "head x 199-697" in QA.md is wrong: the detector misses the outline, the hair and the puffs. Check this by eye. |
+| Grounding | OK. The chest with the candle and lantern hides the leg stubs. |
+| Light / colour | The candle is the key and it dims; the room is warm with brass. Brightness 59.9 is dark (the conform lifts it). There is almost no cool light after the opening window. Sat 0.72. |
+| Face size | OK (head <= ~250 px, about 20 % of the frame height). |
+
+| Criterion | Score |
+|---|---|
+| Set | 7 |
+| Light & colour | 7 |
+| Composition / phone | 5.5 |
+| Acting | 7.5 |
+| Key moment (white-hair pop) | 7.5 |
+| Match to refs (R4 candle rooms) | 7 |
+| **Overall** | **6.9 - FIX (one blocker, cheap)** |
+
+Fixes (shot.py, re-render g 990-1024 only):
+1. **Keep the whole head in frame from g 994 to 1024.** Over g 990-1000, end the settle-back move about 70-90 px further left on screen: turn the look point about 0.12-0.15 D toward +x (his side), or move his mark about 0.12 D left. The hop and the slump both push him right, so do not just add slide. Target: head outline, ponytail and puff clouds at x <= 690 on every frame. Check this with a crop of x 600-720, not with the head detector.
+2. (Polish) Make the puff about 1.5x bigger and hold it 2-3 frames longer (to g 1004), so the "poof" sells at phone size.
+3. (Polish) For the slump, tilt the card back (top toward the wall) rather than sideways toward screen right. That also helps fix 1.
+Keep the pop timing (g 996), the chisel continuity, the H3 framing and the candle burn-down as they are.

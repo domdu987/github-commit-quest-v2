@@ -22,3 +22,9 @@ Checked 6 fps + g1090-1095 at full size (take g1007-1104), qa_auto PASS. No text
 Checked 6 fps + g1084-1096 at full size (take g1007-1104), qa_auto PASS, no text/black/magenta/frozen/blur. Closed-eye smile mouth. Frame-diff g1017-1095: median 4.83 / p90 13.74 OK. Heads centre y ~ 510-600 (< 880).
 Earlier: R4-1 FIXED: Harrison's whole face stays inside x <= 700 through g1095 (ponytail ends at the edge g1090-1095, face intact; at g1100+ in the out-handle the wig tip touches the edge, handle only).
 NOTES: H1 + H4 on red cloth read; gears lower-left dominate the frame.
+
+## Round 8 (director QA-tech): PASS (one spec reading flagged)
+Checked 6 fps + g1063, 1070, 1080, 1086, 1090, 1095 at full size (take g1007-1104), frames in /tmp/qa19_r8/s14. Frame-diff g1017-1095: median 5.20 / p90 11.62 OK. No text, black or frozen frames. Mouth: a closed-eye smile / small grin, no mouth movement. Heads centre y ~ 480-600, face ~ 16 % of frame height.
+Fixes: palm VERIFIED: the open (dark) hand is raised above the red cloth top edge, pointing over the H4, from g1039 through g1095. Expressions change: neutral smile g1016-1050, bigger smile g1056, closed-eye beam g1061-1075, open eyes grin g1081-1095; nobody is still for more than ~1.2 s. Harrison fully in frame at 36.1-36.5 s (g1083-1095): head right edge ~ 25 px inside, ponytail and sleeve inside, no clip.
+FLAG for the director (H1-post / H4 gap >= 15 px at g1063-1095): the gap is NOT a clean clearance: the red cloth and watch sit IN FRONT of the H1 gear box (the box's right post is behind the cloth, overlap ~ 40 px at g1063 and ~ 150 px at g1090-1095). There is no edge tangent or kiss (overlap, not touching), so I call it a pass; if the director meant a literal visible gap, this is not met.
+Notes: a dark rear arm with a small hand reads as a shadow arm beside his head g1056-1095; the gear/pendulum clutter is dense and bright left of the watch.
