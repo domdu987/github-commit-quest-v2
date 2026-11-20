@@ -42,14 +42,14 @@
  "end_cam": {
   "g": 603,
   "loc_D": [
-   2.6,
-   9.6,
-   1.35
+   2.618,
+   9.596,
+   1.334
   ],
   "look_at_D": [
-   1.69,
+   1.692,
    13.16,
-   2.0
+   1.999
   ],
   "lens_mm": 22.0,
   "shift": [
@@ -58,17 +58,22 @@
   ],
   "handle_g604": {
    "loc_D": [
-    2.63,
-    9.65,
-    1.345
+    2.599,
+    9.6,
+    1.35
    ],
    "look_at_D": [
-    1.69,
+    1.692,
     13.16,
-    1.995
+    2.0
    ]
   },
-  "note": "NEW agreed pose (director, team7 re-rendering T09's start from it): T06's last frame g603 = camera (2.6, 9.6, 1.35) D looking at (1.69, 13.16, 2.0) D, 22 mm, no shift, moving gently (~0.03 D/frame), not stopped; team7 will confirm the exact g603/g604 numbers"
+  "drift_per_frame_D": [
+   -0.019,
+   0.004,
+   0.016
+  ],
+  "note": "team7's exact T09 start values (their s09/meta.json start_cam), relayed by the director; handles g604-607 keep the same drift"
  },
  "events": {
   "snap": [

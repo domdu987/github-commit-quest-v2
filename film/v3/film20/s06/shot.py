@@ -47,10 +47,11 @@ WP = [
     (556, (0.0, 5.3, 2.3), (0.5, 8.2, 2.1)),          # calm rise, the aim swings up toward the window
     (572, (0.9, 4.7, 2.6), (1.55, 12.8, 3.2)),        # stub + black smoke
     (582, (1.3, 5.9, 2.25), (1.7, 13.0, 2.95)),         # sweep down toward the banquette
-    (593, (2.0, 7.7, 1.7), (1.7, 13.2, 2.4)),         # slowing
-    (603, (2.6, 9.6, 1.35), (1.69, 13.16, 2.0)),      # LAST frame of T06 = the agreed T09 start pose (director/team7)
-    (604, (2.63, 9.65, 1.345), (1.69, 13.16, 1.995)), # first out-handle frame, still gently moving
-    (607, (2.7, 9.8, 1.33), (1.69, 13.16, 1.98)),     # out-handle
+    (593, (2.25, 8.8, 1.5), (1.7, 13.2, 2.3)),         # slowing
+    (598, (2.55, 9.45, 1.38), (1.69, 13.17, 2.1)),
+    (603, (2.618, 9.596, 1.334), (1.692, 13.160, 1.999)),     # LAST frame of T06 = team7's exact T09 start (their meta start_cam)
+    (604, (2.599, 9.600, 1.350), (1.692, 13.160, 2.000)),     # first out-handle frame, drift (-0.019, +0.004, +0.016) D/frame
+    (607, (2.542, 9.612, 1.398), (1.692, 13.160, 2.000)),     # out-handle keeps the same drift
 ]
 END_CAM = dict(g=603, loc=WP[-3][1], look=WP[-3][2], lens=22.0, shift=(0.0, 0.0), note="turned toward the banquette (Maupassant mark (1.69, 13.16), seat (1.69, 14.0)); camera moving +y ~0.07 D/frame; D units")
 
