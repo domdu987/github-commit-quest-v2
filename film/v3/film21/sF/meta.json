@@ -1,0 +1,19 @@
+{
+ "g0": 1044,
+ "g1": 1141,
+ "first_g": 1044,
+ "n_frames": 98,
+ "handles_after": 0,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "cam_in": "(-79,-16.8,1.9)->(-85.5,-11.2,1.45) 26 mm",
+ "cam_out": "(-92.4,-14.5,2.4)->(-91.9,-13,2.4) 26 mm (CU2 on Cressingham)",
+ "grade": "STATE['vivid']=(1.52,1.3,0.75) (camp_bank gamma/sat + the 3-value exposure of API \u00a713), constant for the segment; no post pass",
+ "samples": 32,
+ "speech_window_g": [
+  1093,
+  1140
+ ]
+}

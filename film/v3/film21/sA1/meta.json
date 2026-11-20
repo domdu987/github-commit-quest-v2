@@ -13,8 +13,9 @@
   "pose": "P_A",
   "g": 80
  },
- "cam_in": "valley_wide-like start (445,244,361)->(64.8,44.7,0.2) 22 mm, already moving at g0",
- "cam_out": "P_A (290,205,170)->(120,110,10) 22 mm exactly at g80; g81-83 continue the move toward hill_over",
- "grade": "K.cam_path eases VIVID valley_wide->P_A; extra post gamma 1.459 (post_luma.py, one constant per segment) to bring luma to 100",
- "samples": 32
+ "cam_in": "P_HOOK (-60,-260,230)->(60,60,0) 22 mm, already at cruise speed at g0 (pre-roll key at g-40)",
+ "cam_out": "new P_A (40,10,95)->(150,140,20) 22 mm exactly at g80; g81-83 continue the move toward the hill_over pose",
+ "grade": "set default VIVID eased by K.cam_path P_HOOK->P_A, no post pass (colour is normalised at the conform)",
+ "samples": 32,
+ "world": "K.build_world(['valley_wide'], scots_wide=False) + K.scots_wide_line(toward=(-60,-260)) + full knight-pair column"
 }

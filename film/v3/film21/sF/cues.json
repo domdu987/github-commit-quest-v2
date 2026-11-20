@@ -1,0 +1,17 @@
+[
+ {
+  "g": 1044,
+  "cue": "crowd_laugh_loop",
+  "note": "camp laughs, bouncing out of phase, until g1096"
+ },
+ {
+  "g": 1093,
+  "cue": "duck_music_for_speech",
+  "note": "Cressingham line 36.32-37.89"
+ },
+ {
+  "g": 1100,
+  "cue": "whoosh_push_in_soft",
+  "note": "CU2 push"
+ }
+]

@@ -1,0 +1,8 @@
+# QA, segment F (FALSE PAYOFF, camp_bank) - g 1044..1141, CUT in, no handles
+
+- **Camera:** ONE travelling move with `K.cam_path`: side-track east -> west along the bank past the laughing English (g1044-1078), medium on the group (1078), medium on Cressingham (1106), then the CU2 push (1106-1141, ease-out) to his face (about 23 % of the frame height at the end). 26 mm, world `K.build_world(['camp_bank'])`. The camp-fg tent/pot/fire that stood in the track and the banners and smoke plumes within 12 m of the camera path were hidden (`K.hide_near_banners`).
+- **Cast** (cast21 with the film colour story: English crimson/gold): Cressingham (smug, hands at the belt; sways), Surrey (tired), four English laughing/pointing with `cast21.laugh` at 3 Hz, out of phase (phases 0 / 1.7 / 3.1 / 4.4 / 5.3), laughing until g1096 then a chuckle sway. All through `K.with_rim` (gold rim), contact shadows on, feet on the ground.
+- **Mouth:** `cast21.speak` ONLY for g1093..1140 (narration 36.32-37.89 +0.10 s); nobody else speaks.
+- **Grade:** `STATE['vivid'] = (1.52, 1.3, 0.75)` constant (camp_bank VIVID with the 3-value exposure, API §13), cards pre-compensated for exposure x gamma. No post pass (colour is normalised at the conform).
+- **Numbers (`take.mkv`):** `qa_stats2` sat 0.651, vivid % 73.9, luma 99.6, motion median 8.73 p90 11.35, still % 0; `rhythm.py` median 10.51, p90 14.73 (target >= 4 / >= 12); `qa_auto` PASS.
+- **Known:** Cressingham is off-screen left until about g1085 and partly in frame at the first words (g1093..1100, his mouth moves); the laughing English at the start are small (4-8 m away). The bank sand is very yellow (set colour).
