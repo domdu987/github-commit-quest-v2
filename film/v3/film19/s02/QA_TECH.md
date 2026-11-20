@@ -51,3 +51,45 @@ Issues:
 2. g134 dip: 8.2 vs neighbours 9.1 / 8.6 (about 90 %), so mid-move there is NO dip below 40 %; but g134 is the minimum of the shoulder before the second rise (g146-165). Folded into issue 1.
 3. Acting NOTE (not blocking): captain's mouth is wide open ("O" shock) over g158-168, and again a half-open mouth at g~168-172. The brief says no mouth movement. It is a held shock expression, not talking; the director decides. Chart flip (g160-170) is hard to read at phone size: the chart is a pale slab with no visible header band. Both characters keep moving (scratch, shrug g181-189), nobody is still for more than 1.5 s.
 Numbers: median 9.1, p90 14.1, peak 15.5 (g110), final ease-out 11.1 -> 3.8 over g167-171 (4 frames, needs 10+), luma 93.3, sat 0.630.
+
+## Round 12 (director QA-tech): FAIL (camera ease-out still brakes at g170-176; everything else passes)
+Take g48-199 (joined parts -> /tmp/s02q12.mkv, 152 frames, 720x1280 30 fps; frame index = g - 48). Frames in /tmp/qa19_r12/r12/ (f<g>.png, 360x640); sheets s1.png, s2.png, sheetA12.png, sheetB12.png checked. I measured camera motion separately from the actors: (a) mean abs frame-diff and textured-pixel Farneback flow (px/frame at 360 wide) in a region that EXCLUDES the character band (x 12-96 %, y 22-72 %); (b) the same on the bottom deck strip (y > 74 %, g130+, floor plane only); (c) LK feature tracks outside the character box (median |flow|). The top 15 % strip turned out NOT to be usable as pure background from g118: it is flat sail / sky (flow ~0) and then carries the near sail's strong parallax (frame-diff up to 20 at g170), so I did not use it for the verdict.
+
+Whole-frame frame-diff (ffmpeg bilinear 90x160 grey, pairs g58-190): median 9.21, p90 14.39, max 15.6, min 2.3. Limits median >= 4, p90 >= 10: OK.
+Luma 89.5 mean (per-frame 66.7-110.0), sat 0.646: OK (85-110).
+
+Camera-speed profile, background only (px/frame at 360 wide; bgdiff = mean abs diff outside character band; flow = textured-pixel median flow outside character band; deck = textured flow on the bottom deck strip; LK = tracked-feature median):
+| g | whole | bgdiff | flow | deck | LK |
+| 100 | 12.7 | 26.6 | 9.5 | 10.9 | 11.1 |
+| 112 | 15.5 | 25.0 | 12.4 | 13.4 | 8.7 |
+| 120 | 13.8 | 21.5 | 7.0 | 6.6 | 6.8 |
+| 128 | 11.4 | 16.4 | 11.3 | 14.8 | 11.4 |
+| 136 | 8.5 | 9.8 | 4.0 | 13.2 | 3.5 |
+| 144 | 9.3 | 8.6 | 8.0 | 8.9 | 8.0 |
+| 150 | 11.0 | 10.2 | 7.5 | 8.7 | 8.7 |
+| 156 | 10.8 | 10.7 | 6.1 | 6.9 | 5.9 |
+| 160 | 10.9 | 11.8 | 5.8 | 5.8 | 7.0 |
+| 164 | 8.5 | 10.5 | 4.5 | 3.5 | 6.3 |
+| 168 | 9.2 | 11.8 | 5.3 | 2.6 | 7.0 |
+| 170 | 9.2 | 12.0 | 5.4 | 2.2 | 7.2 |
+| 171 | 8.1 | 11.0 | 4.7 | 1.9 | 5.7 |
+| 172 | 7.9 | 10.1 | 4.3 | 1.5 | 5.0 |
+| 173 | 6.7 | 8.6 | 3.4 | 1.3 | 4.3 |
+| 174 | 5.8 | 6.7 | 2.6 | 0.9 | 3.0 |
+| 175 | 4.0 | 4.3 | 1.8 | 0.8 | 2.0 |
+| 176 | 2.5 | 2.1 | 0.6 | 0.7 | 0.6 |
+| 177-181 | 2.7-3.2 | 3.2-4.8 | 0.7-1.1 | 0.9-1.2 | 0.7-1.1 |
+Findings on the camera:
+1. The deck-plane speed does decay smoothly: 14.3 (g157) -> 5.8 (g160) -> 3.5 (g164) -> 2.2 (g170) -> 0.7 (g176), the largest 1-2-frame fall in that stretch is 29 % (g160-162). That part of the team's argument holds: the floor is eased out over ~15-19 frames.
+2. The mid/far background (sails, rigging, ship interior, sea windows) does NOT decay. Its speed re-rises from 8.6 (g144) to 12.0 (g170) in bgdiff (flow 4.0 at g136 -> 8.2 at g146, then 5.4 at g170 and flat 4.5-5.4 for g164-170, LK 5.9-7.2 flat g154-170), i.e. a plateau with a late rise, then it falls 12.0 -> 2.1 in six frames (g170-176): 11.0, 10.1, 8.6, 6.7, 4.3, 2.1. The last 1-2-frame steps are 4.3 -> 2.1 (-51 %, bgdiff), flow 1.8 -> 0.6 (-66 % in ONE frame; 2.6 -> 0.6 = -77 % over g174-176), LK 3.0 -> 0.6 (-80 % over 2 frames), whole-frame 5.8 -> 2.5 (-57 %). Same shape as round 11 (plateau, then a brake in ~6 frames to a near stop at g176), only the absolute step is smaller (about 2 px/frame at 360 wide on the last step). This is the orbit parallax of the rigging ending abruptly at the landing; it is camera, not acting (the region excludes the characters and the character-band diff is 2.5 at g176 anyway).
+3. Earlier in the move the speed is not monotone either: 12.4 (g114) -> 6.5 (g122) -> 12.3 (g127, flow +89 % in 5 frames, also seen in LK 6.7 -> 14.0) -> 4.0 (g136) -> 8.2 (g147). Whole-frame and bgdiff are smooth there (bgdiff falls 21.3 -> 8.6 over g118-144 with no spike), so the g126-128 spike and g136 dip may be the textured-pixel set changing as the sail edge leaves frame; I count it as a note, not as the blocker.
+Verdict on camera: FAIL on the literal rule (single-step brake > 50 % in 1-2 frames at g174-176 in the mid/far background, and no decay of that region from g144-170). Fix (cheap): start the orbit-speed fade at ~g158 and make the orbit/dolly angular speed fall to ~0 as a smoothstep landing exactly at g176 (so rigging parallax 5.4 -> 0 over >= 12 frames, e.g. 5.4 at g164, 3.5 at g168, 2 at g171, 0.8 at g174, 0.3 at g176), rather than keeping 5-7 until g170.
+
+Other checks:
+- Props PASS: the quadrant (astronomer) and chart (captain) are in hand in every frame g176-199 (checked every frame g170-199): no pop at g181-182 / g185-186 any more; chart is held out at the end of the captain's extended arm, quadrant hangs at the astronomer's hand at hip height. No frame-diff discontinuity (g176 2.5, g177 2.7).
+- Shrug NOT met: astronomer's arms go out to both sides (reads as a shrug), but the captain extends only ONE arm (the chart arm, toward the astronomer); the other hangs. No open palms are readable at phone size on either; it is not symmetric.
+- Shared look NOT met: g173-179 both heads stay front-on (no visible head turn toward each other). Brows: the captain's brows are not clearly up, the face is the half-lidded wavy-mouth "worried" look (g172-199) and the astronomer is the same. Held "O" shock g158-171 on the captain is allowed. These are acting misses, not blocking by themselves, but the team's stated change list says they were done.
+- No character cut in half (both full figures from g125 on), faces about 20 % of frame height (< 35 %), head centres at y ~490-530 of 1280 at the end (inside 450-760), contact shadows on both characters, nothing floating, no props through faces.
+- No pops, black frames or frozen runs (whole-frame diff min 2.3 at g58, never 0); both actors keep moving (blink, scratch, arm swing, bob) so nobody is still > 1.5 s.
+- Start: ship ~7-10 % of frame height, findable; ease-in smooth.
+Verdict: FAIL, single blocker = the camera/orbit brake at g170-176 and flat-then-late-rise background speed g144-170 (numbers above). Fix per item 3 of findings, then re-measure; acting items (symmetric shrug, head turn) should be fixed in the same re-render.
