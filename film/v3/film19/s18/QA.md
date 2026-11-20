@@ -14,3 +14,10 @@
 
 ## Frame-diff (in-shot g 1385..1467)
 median **5.99**, p90 **11.06** (qa_stats on all frames 5.56 / 11.52). Targets median >= 4, p90 >= 10.5: met.
+
+## v2 (round 12 follow-up)
+1. **The island is bigger (~20 % of the frame width, ~80 m) and left-ahead of the bow** (it appears on the horizon at the word and stays in frame beside the ship into the dissolve); the snap pans toward it. (No "JAMAICA" sign; the ship's heading is unchanged, +y.)
+2. **William:** mirrored to face the island; on the word (g 1434-1437) the H4 goes ABOVE his head on the island side, open-mouthed excited face held to the end of the shot (> 0.5 s), a hop, and one warm sparkle on the watch (g 1436-1454, an emissive 4-point star following the watch anchor).
+3. **Bow wave:** the pillow is half its size (x0.5); not turned into toon spray chunks.
+4. **Polish:** +0.1 EV eased out over g 1384-1402 (luma ~88 there); lower-third foam lines 28 -> 20.
+- **qa_stats: luma 98.2 (band 85-110), saturation 0.659.** Frame-diff (deliver.py, in-shot g 1385..1467): median **5.33**, p90 **10.21** (qa_stats on all frames 4.85 / 10.41): both >= 10. `qa_auto` PASS. DOF off, no text, no caption_shade.

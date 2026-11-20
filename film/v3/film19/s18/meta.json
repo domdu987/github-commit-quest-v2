@@ -27,9 +27,9 @@
   "at": 1468,
   "note": "dissolve 13 f into shot 19 (ship_coast) centred on g 1468; handle g 1468..1476 rendered in 3D"
  },
- "set": "v3/set3d19/h19.py SHIP preset ship_hero, light NOON; set_sea(g/30) + set_roll(g/30) keyed on every frame; sea grid re-fitted at runtime to a 1.5x wider virtual camera footprint (no set module edited) so the slide never shows the grid edge; no actors; no caption_shade; a green JAMAICA island (sand rim, dome, 5 palms, ~54 m wide at ~330 m = ~10 % of the frame width) built at runtime from the set's own headland / palm builders, placed so the snap pans toward it (no set edit)",
- "cast": "william19 (scale 4.0) on the forecastle, rides ship_root, ACTS: g 1384-1409 looks down at the H4 on his palm, g 1410-1426 glances up / turns his head, g 1427-1440 raises the H4 (drawn 2x) toward the island with an excited face, a little hop on 'จาไมกา' (g 1436-1456), then holds it up; head 26-42 px wide, deck contact visible",
- "camera": "custom 22 mm; hero preset pulled back 1.15x at the preset height (ship fully in frame), push -1 %/s + slide 35 px/s + crane 12 px/s + orbit -8 deg/s (more motion in the quiet start g 1384-1427), SNAP push x1.22 with a pan (17 f, g 1428..1445) on 'จาไมกา' (~g 1438) that carries the camera TOWARD the island, then a gentle second move (g 1446-1476); sea clock x2; 28 foreground crest foam lines; no gulls; old pale headland hidden; sun glint light OFF; exposure -0.8 EV on the colour-fixed set; deepened horizon sky; bow-wave tube made matte white (emission / specular cut, blue mix removed)",
+ "set": "v3/set3d19/h19.py SHIP preset ship_hero, light NOON; set_sea(g/30) + set_roll(g/30) keyed on every frame; sea grid re-fitted at runtime to a 1.5x wider virtual camera footprint (no set module edited) so the slide never shows the grid edge; no actors; no caption_shade",
+ "cast": "william19 (scale 4.0, MIRRORED to face the island at screen-left) on the forecastle: g 1384-1409 looks down at the H4 on his palm; g 1410-1426 glances up / turns his head; g 1427-1437 the H4 (drawn 2x) goes UP; from g 1434 an open-mouthed excited face held to the end, the watch held ABOVE his head toward the island; a hop of joy g 1436-1456; one warm sparkle on the watch g 1436-1454; head 26-42 px wide",
+ "camera": "custom 22 mm from the ship_hero preset pose; c19.CamPath push 4 %/s + orbit -3 deg/s + slide 45 px/s, decay 0.1, plus a SNAP push x1.2 with a pan (16 f, g 1430..1446) on 'จาไมกา' (~g 1438), decay 0.1 (moving on frame 0 and on the last frame); no snap (shot < 2 s); v2: island ~80 m (~20 % of the frame width on the word), placed left-ahead of the bow; foam_wave (bow-wave pillow) scaled x0.5; exposure +0.1 EV in g 1384-1400",
  "events": {},
  "dof": "none",
  "text": "none",
@@ -42,15 +42,15 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 17.75,
- "s_per_frame_cpu_mean": 34.32,
+ "s_per_frame_wall_mean": 17.96,
+ "s_per_frame_cpu_mean": 33.0,
  "framediff_in_shot": {
-  "median": 5.99,
-  "p90": 11.06
+  "median": 5.33,
+  "p90": 10.21
  },
  "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json",
  "qa_stats": {
-  "saturation": 0.645,
-  "luma": 100.3
+  "saturation": 0.659,
+  "luma": 98.2
  }
 }
