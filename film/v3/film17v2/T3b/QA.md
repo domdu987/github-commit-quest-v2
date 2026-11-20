@@ -11,9 +11,9 @@ An earlier run (without clear_cast) showed black slabs from the stage_cast2 leak
 - g800 of the first (pre-ramp) setup was byte-identical to T3's approved key v2; the final setup differs on purpose (gain and ramp), so that identity no longer applies.
 - Hard cut at 850: none inside this range. Frame diff is continuous across g849-851 (19.1, 17.8, 15.3); the clock push eases out through g856.
 
-## Frames viewed (each at 720x1280 full size, and in a 360x640 phone strip)
+## Frames viewed (g751, g792, g800, g830, g851, g856 at 720x1280 full size; g751, g770, g792, g800, g830, g856 in a 360x640 phone strip)
 - g751: bird's-eye-ish room view. Room signs ARCHIVES and SERVICE D'IDENTIFICATION readable. Two gendarmes in front (arms crossed, one mustache stretched), green-coated man and prefect (top hat, tricolour sash, arm raised) behind. Feet on floor with contact shadows. No black slab. Phone size: figures and signs clear. Warm/blue palette strong.
-- g770: lower view, gendarmes and prefect in a row, chandelier hanging in frame. Nothing black. (Viewed in phone strip and via luma; full-size individually not opened.)
+- g770 (phone strip only): lower view, gendarmes and prefect in a row, chandelier hanging in frame. Nothing black.
 - g792: a large dark purple wooden upright (vertical post with a crossbar) fills the middle of the frame, about 1/3 of the width. It is a real prop (outlined, textured, lit) and not a shadow slab, i.e. the planned foreground block for g792-812. The SERVICE D'IDENTIFICATION sign is cut by it. Bertillon (glasses, goatee) behind it left, a gendarme right. Phone size: readable as a foreground object.
 - g800: Bertillon measuring a head with calipers, desk with instruments left, carpet and floor right, chandelier overhead. Feet on the carpet with shadows. No slab.
 - g830: camera looking up the wall: ceiling beams, MESURES chart, clock with pendulum, bookshelf. No people. Smooth, no black areas. Phone size: fine.
@@ -22,5 +22,5 @@ An earlier run (without clear_cast) showed black slabs from the stage_cast2 leak
 
 ## Not checked / caveats
 - Shimmer: frame diffs include camera motion, so flat-wall OIDN flicker could not be separated numerically. In the full-size views of g830 and g856 the flat yellow and blue walls show faint grain/streaks (OIDN), no obvious blotches. 16 samples kept (director did not request 24).
-- Only the 7 frames above were looked at; the rest were checked by numbers (black fraction, luma, frame diff) only.
+- Only the 7 frames above were looked at (6 at full size); the rest were checked by numbers (black fraction, luma, frame diff) only.
 - Mouths: not examined in this part's frames beyond g751 and g800 where mouths are closed or small.
