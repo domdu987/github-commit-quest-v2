@@ -4,7 +4,7 @@
 | s01 | 1 | **PASS** (QA-art R3 SHIP; QA-tech R2 blockers hand + post-whip caliper verified fixed) | render17/team1 d6ecda5 | rhythm 8.96/17.84; minor: brow bar g70-90, coat hem, beard seam |
 | s02 | 2 | FAIL r1 -> re-render | | |
 | s03 | 3 | FAIL r1 -> re-render | | |
-| s04 | 4 | first pass | | |
+| s04 | 4 | FAIL r1 -> re-render | | |
 | s05/s06 | 5 | first pass | | |
 | s07 | 6 | FAIL r2 -> inserts restage | | |
 | s08 | 7 | FAIL r1 -> re-render | | |
