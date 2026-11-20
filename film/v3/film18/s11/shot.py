@@ -30,12 +30,30 @@ def patches(T):
     # world-space foreground props (rope, jar, basket) 2.8 D from the lens: the truck + dolly make them slide across the frame (recipe, ALL_TEAMS)
     C.fg_world_props(T, [("jar", 1.0, 0.95, 0.55), ("rope", -0.9, 1.0, 0.5), ("basket", 0.0, 1.15, 0.45),
                            ("jar", -1.7, 1.9, 0.9, 4.6), ("basket", 0.3, 1.9, 0.9, 4.2), ("rope", 1.9, 1.9, 0.9, 4.8), ("jar", 3.2, 1.9, 0.8, 5.6), ("rope", -3.3, 1.9, 0.9, 5.2)], 0.5, CAMLIN, C.make_mod(T.sh["dur"], *PARAMS))
+    # start-of-shot ground dressing (director round 6: bare ground 30-33 % at g853-880): extra lit period props 3-4 D from the lens placed for the START pose; the truck slides them away
+    C.fg_world_props(T, [("jar", -1.3, 1.7, 0.8, 3.6), ("basket", 0.9, 1.7, 0.8, 3.4), ("rope", -0.1, 1.8, 0.75, 3.0), ("basket", -2.2, 1.8, 0.8, 4.0), ("jar", 2.0, 1.8, 0.7, 4.2)], 0.03, CAMLIN, C.make_mod(T.sh["dur"], *PARAMS))
+    for nm in ("cloth", "shields"):
+        if nm in C.J.STATE["objects"]:
+            C.J.STATE["objects"][nm].hide_render = True
+    if "road" in C.J.STATE["objects"]:
+        C.J.STATE["objects"]["road"].hide_render = True          # the navy plank lying at lower left (g853-888) belongs to the road mesh
     # the dark post / pole at the left edge (unlit slab, QA): remove the small connected islands of the 'wood' mesh that project into the left strip at the start / end poses
     mk = None
     for gg in (853, 930, 944, 951):
         T.camera(gg, CAMLIN, C.make_mod(T.sh["dur"], *PARAMS))
         mk = C.cut_faces_in_rect("wood", (-80, 80, 90, 800), T.cam, mk)
     print("post faces cut:", C.cut_islands("wood", mk))
+    mk = None
+    for gg in (925, 935, 944, 951):
+        T.camera(gg, CAMLIN, C.make_mod(T.sh["dur"], *PARAMS))
+        mk = C.cut_faces_in_rect("tent3", (-80, 0, 130, 900), T.cam, mk)
+    print("tent3 pole faces cut:", C.cut_islands("tent3", mk, 300))
+    for tn in ("tent1", "tent12"):
+        mk = None
+        for gg in (920, 930, 940, 944, 951):
+            T.camera(gg, CAMLIN, C.make_mod(T.sh["dur"], *PARAMS))
+            mk = C.cut_faces_in_rect(tn, (-80, 380, 220, 720), T.cam, mk)
+        print(tn, "ridge pole faces cut:", C.cut_islands(tn, mk, 120))
     for nm in ("pools", "wallpools"):
         if nm in C.J.STATE["objects"]:
             C.J.STATE["objects"][nm].hide_render = True
