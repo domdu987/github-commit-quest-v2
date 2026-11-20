@@ -18,7 +18,7 @@ EV = dict(lean_back=[993, 1003], word_caption=989, word_spoken=996, rub=[1003, 1
           push=[986, 1002])
 SET = "v3/set3d19 WORKSHOP preset shop_bench, light NIGHT; set_clock(3), set_balance(g/30) + set_candles(level) keyed on every frame; no runtime set changes; no caption_shade"
 CAST = "v3/cast19 harrison19 old=1 (white hair, spectacles, brown coat), harrison_tired_rub base mirrored: leans back, rubs his eyes (blink 2), sweat drop; no lip-sync"
-CAM = "custom 22 mm from (2.4,0.3,2.3) at the s01 look point; CamPath push 20 %/s + slide -80 px/s + arc 8 deg/s + snap x1.5 (16 f, peak 2.8, pan) g 986..1002"
+CAM = "custom 22 mm from (2.2,-0.8,2.3); CamPath push 14 %/s + slide -85 px/s + arc 12 deg/s + snap x1.4 (16 f, peak 2.8) g 986..1002; mark offset -0.3 D so the face clears the leaning plank"
 CUES = [(FIRST, LAST + 1, "ambience", "workshop at night: near silence, candle hiss, the H3 tick"),
         (993, 1003, "foley", "creak of the stool as he leans back, a long tired sigh (no voice words)"),
         (1003, 1016, "foley", "the knuckles rub his closed eyes: a soft cloth-on-skin rustle"),

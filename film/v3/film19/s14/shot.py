@@ -42,11 +42,11 @@ CANVAS = None
 MARK = "harrison_bench"
 MARK_DX = float(os.environ.get("MARK_DX", 0.0))
 MARK_DY = float(os.environ.get("MARK_DY", 0.0))
-CAM_LOC0 = tuple(float(v) for v in os.environ.get("CAM_LOC0", "0.9,-2.4,2.5").split(","))
-CAM_LOOK0 = tuple(float(v) for v in os.environ.get("CAM_LOOK0", "2.0,3.2,2.2").split(","))
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get("PUSH", 0.15)), slide_px=float(os.environ.get("SLIDE", -30)),
-                rise_px=float(os.environ.get("RISE", 0)), arc_deg_s=float(os.environ.get("ARC", 10)), decay=0.25,
-                snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 2.0)), peak=float(os.environ.get("SNAPPEAK", 2.8)), shift=(float(os.environ.get("SNAPSX", 1.3)), -0.1))])
+CAM_LOC0 = tuple(float(v) for v in os.environ.get("CAM_LOC0", "0.9,-2.4,2.9").split(","))
+CAM_LOOK0 = tuple(float(v) for v in os.environ.get("CAM_LOOK0", "2.0,3.2,1.9").split(","))
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get("PUSH", 0.2)), slide_px=float(os.environ.get("SLIDE", -10)),
+                rise_px=float(os.environ.get("RISE", 25)), arc_deg_s=float(os.environ.get("ARC", 8)), decay=0.25,
+                snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 1.65)), peak=float(os.environ.get("SNAPPEAK", 2.5)), shift=(float(os.environ.get("SNAPSX", 0.65)), float(os.environ.get("SNAPSY", -0.35))))])
 
 BASE = dict(cast19.STORY19["harrison_show_h4"][1])
 
@@ -58,7 +58,7 @@ def pose_of(g):
     lk = u_of(g, *G_LOOKUP, kind="sine")                   # palm goes out toward the H4
     sn = u_of(g, G_WORD - 2, G_WORD + 8, kind="sine")      # a small "ta-da" thrust on the snap
     bob = 0.04 * math.sin(2 * math.pi * g / 15.0)
-    p["arm_r"] = dict(hand=(lerp(0.30, 0.74, lk) + 0.10 * sn, lerp(1.17, 0.58, lk) + bob - 0.10 * sn), bend=-0.2, layer="top", shape="open", stretch=1.15)
+    p["arm_r"] = dict(hand=(lerp(0.30, 0.95, lk) + 0.05 * sn, lerp(1.17, 0.58, lk) + bob - 0.10 * sn), bend=-0.2, layer="top", shape="open", stretch=1.25)
     p["arm_l"] = "hip"
     p["lean"] = lerp(0.0, -3.0, lk) - 2.0 * sn + 1.0 * math.sin(g * 0.2)
     p["head_roll"] = -4.0 + 2.0 * math.sin(g * 0.15 + 0.6)

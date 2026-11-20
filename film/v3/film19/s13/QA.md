@@ -9,3 +9,7 @@
 
 ## Re-render (after QA_TECH PASS note + the lantern set fix)
 - Re-rendered with the new iron-cage lantern; the lean-back is stronger (lean 8 -> -17). Frame-diff median 5.21 / p90 14.74.
+
+## Round 2 re-render (QA_TECH round-2 FAIL)
+- Harrison's mark moved 0.3 D left and the camera starts at (2.2,-0.8,2.3) with slide -85 px/s, push 14 %/s, arc 12 deg/s: the face clears the leaning plank and the right frame edge for the whole rub (head x 376-458 of 720, width 137-213). Lean-back is stronger (lean 8 -> -17).
+- Frame-diff in-shot: median 4.31, **p90 11.65 (just under 12)**.
