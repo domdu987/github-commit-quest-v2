@@ -5,7 +5,32 @@ import os, sys, math, json
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import c17 as C
 from c17 import lerp, clamp, ease, mix, blink, cast17, K, Vector
-import puppet
+import puppet as P
+
+_prev_hand = P._hand
+def _glove(k, H, dirv, shape, hr=P.HAND_R, fold=1.0):
+    """director fix: 'three' = a big bright glove with three clearly spread fingers (runtime override, the cast module is untouched)."""
+    if shape != "three":
+        return _prev_hand(k, H, dirv, shape, hr, fold)
+    ux, uy = dirv; g = 2.7; o = []
+    def rot(a):
+        c, s_ = math.cos(math.radians(a)), math.sin(math.radians(a)); return ux * c - uy * s_, ux * s_ + uy * c
+    for a in (-30.0, 0.0, 30.0):
+        vx, vy = rot(a); fl = 0.205 if a == 0.0 else 0.18
+        x1, y1 = H[0] + vx * fl, H[1] + vy * fl
+        o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="0.074" stroke-linecap="round"/>' % (H[0], H[1], x1, y1, k.ink))
+        k.ext.append((x1, y1, 0.05))
+    for a in (-30.0, 0.0, 30.0):
+        vx, vy = rot(a); fl = 0.205 if a == 0.0 else 0.18
+        o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="#fbf6ee" stroke-width="0.046" stroke-linecap="round"/>' % (H[0], H[1], H[0] + vx * fl, H[1] + vy * fl))
+    vx, vy = rot(-78.0)
+    o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="0.07" stroke-linecap="round"/><path d="M%.4f,%.4f L%.4f,%.4f" stroke="#fbf6ee" stroke-width="0.044" stroke-linecap="round"/>'
+             % (H[0], H[1], H[0] + vx * 0.09, H[1] + vy * 0.09, k.ink, H[0], H[1], H[0] + vx * 0.09, H[1] + vy * 0.09))
+    o.append('<circle cx="%.4f" cy="%.4f" r="0.115" fill="%s"/><circle cx="%.4f" cy="%.4f" r="0.095" fill="#fbf6ee"/>' % (H[0], H[1], k.ink, H[0], H[1]))
+    o.append('<ellipse cx="%.4f" cy="%.4f" rx="0.04" ry="0.025" fill="#ffffff" transform="rotate(-35 %.4f %.4f)"/>' % (H[0] - 0.035, H[1] - 0.04, H[0] - 0.035, H[1] - 0.04))
+    k.ext.append((H[0], H[1], 0.13))
+    return "".join(o)
+P._hand = _glove
 
 RANGE = {14: (719, 782), 15: (783, 856)}
 PRESET = {14: "records_desk", 15: "records_low"}
@@ -30,43 +55,47 @@ cam14 = cam_gen([
     (780, (0.60, 1.00, 1.50), (-0.15, 3.5, 1.45)),      # snap B (12 f): pull out + slide right
     (782, (0.63, 0.97, 1.50), (-0.14, 3.5, 1.45)),
 ], [(746, 756), (770, 780)])
+TB = (0.45, 2.4)          # Bertillon's mark in shot 15 (low_a)
 cam15 = cam_gen([
-    (783, (-0.60, -0.95, 0.50), (-0.20, 3.0, 2.0)),
-    (802, (0.55, -0.45, 0.55), (-0.10, 3.0, 2.0)),
-    (812, (-0.15, 1.15, 0.80), (0.40, 3.0, 2.0)),       # snap 1 (10 f): push in on the pince-nez; hand shape swaps at its peak
-    (828, (-0.55, 0.75, 0.70), (0.30, 3.0, 1.95)),
-    (838, (0.95, -0.45, 0.55), (-0.20, 3.0, 1.9)),      # snap 2 (10 f): pull out + slide right
-    (856, (0.35, 0.15, 0.62), (0.05, 3.0, 1.9)),
+    (783, (-0.85, -1.00, 0.55), (0.60, 2.4, 1.90)),
+    (802, (0.10, -1.00, 0.58), (0.50, 2.4, 1.90)),
+    (812, (0.95, -0.90, 0.60), (0.20, 2.4, 1.90)),      # snap 1 (10 f): lateral slide, same distance (no scale pop)
+    (828, (0.80, -0.90, 0.60), (0.15, 2.4, 1.90)),
+    (838, (-0.85, -0.95, 0.58), (0.75, 2.4, 1.90)),     # snap 2 (10 f): slide back
+    (856, (-0.70, -0.90, 0.58), (0.70, 2.4, 1.90)),
 ], [(802, 812), (828, 838)])
 
 
 def bertillon14(g):
     cast, p = cast17.STORY17["bertillon_writing"]
     p = dict(cast17.with_expr(p, "worried" if g > G_THREE - 14 else "determined"))
-    nib = 4 * math.sin(g * 0.7)
-    p["prop_r"] = dict(p["prop_r"], angle=200 + nib)
-    p["blink"] = blink(g, [735, 790 if False else 772]); p["lean"] = 5 + 1.5 * math.sin(g * 0.13); p["t"] = g / 30.0
+    p["prop_r"] = dict(p["prop_r"], angle=200 + 4 * math.sin(g * 0.7))          # the pen keeps writing
+    p["prop_l"] = None                                                           # no card across the chest (director)
+    p["arm_l"] = dict(hand=(-0.10, 1.12), bend=0.7, stretch=1.0, layer="front")  # the free hand rests on the desk
+    p["blink"] = blink(g, [735, 772]); p["lean"] = 5 + 1.5 * math.sin(g * 0.13); p["t"] = g / 30.0
     return p
 
 
 def prefect14(g):
+    """stern -> the right arm bends up beside the face, a big three-finger glove (see _glove), held still g756-772, pointing toward Bertillon."""
     _, a = cast17.STORY17["prefect_stern"]; _, b = cast17.STORY17["prefect_finger_up_three"]
-    u = clamp((g - 746) / 10.0)
+    u = ease(clamp((g - 746) / 10.0))
     p = dict(b if u >= 0.5 else a)
-    if 0 < u < 1:
-        p["arm_r"] = dict(b["arm_r"], hand=(lerp(0.3, 0.98, ease(u)), lerp(0.86, -0.42, ease(u))), bend=lerp(0.6, -0.7, ease(u)), shape="three" if u > 0.5 else "ball")
-        p["arm_l"] = dict(a["arm_l"])
-    if u >= 1:
-        p["arm_r"] = dict(b["arm_r"], hand=(0.98, -0.42 + 0.025 * math.sin((g - G_THREE) * 0.35)))   # the finger bobs on the beat
+    hold = (0.80, 0.02)
+    bob = 0.0 if g < 773 else 0.02 * math.sin((g - 773) * 0.35)
+    p["arm_r"] = dict(hand=(lerp(0.30, hold[0], u), lerp(0.86, hold[1], u) + bob), bend=lerp(0.6, -0.85, u), stretch=1.0, sharp=0.6, shape="three" if u > 0.5 else "ball", layer="front")
+    p["arm_l"] = dict(a["arm_l"])
+    p["yaw"] = 0.45                                                              # turned toward Bertillon
     p["lean"] = p.get("lean", 0) + 1.2 * math.sin(g * 0.1); p["blink"] = blink(g, [745, 790]); p["t"] = g / 30.0
     return p
 
 
 def bertillon15(g):
     cast, p = cast17.STORY17["bertillon_neutral"]
-    u = ease(clamp((g - 802) / 10.0)); w = 0.02 * math.sin((g - 812) * 0.45) * u if g >= 812 else 0.0
+    u = ease(clamp((g - 802) / 10.0)); push = 0.025 * math.sin((g - 812) * 0.5) if g >= 812 else 0.0
     p = dict(cast17.with_expr(p, "worried"))
-    p["arm_r"] = dict(hand=(lerp(0.40, 0.30, u) + w, lerp(1.0, 0.10, u) + 0.5 * w), bend=lerp(0.3, -0.8, u), stretch=1.0, layer="front", shape="point" if u > 0.5 else "ball")
+    # fingertips on the bridge of the pince-nez, drawn in front of the face ('top' layer)
+    p["arm_r"] = dict(hand=(lerp(0.40, 0.17, u), lerp(1.0, 0.07, u) + push), bend=lerp(0.3, -0.9, u), stretch=1.0, layer="top", shape="point" if u > 0.5 else "ball")
     p["arm_l"] = "down"; p["yaw"] = 0.25; p["pitch"] = 0.12 * math.sin(g * 0.09)
     p["lean"] = 1.5 * math.sin(g * 0.11) - 1 * u; p["head_roll"] = -2 + 1.5 * math.sin(g * 0.13)
     p["blink"] = blink(g, [800, 838]); p["t"] = g / 30.0
@@ -74,15 +103,26 @@ def bertillon15(g):
     return p
 
 
+def prefect15(g):
+    """the prefect walks away down the aisle (profile, 'walk' cycle)."""
+    _, base = cast17.STORY17["prefect_neutral"]
+    return cast17.cycle("prefect", (g - 783) / 30.0, "walk", 1, dict(base, yaw=0.75, arms="both"))
+
+
+def prefect15_dy(g):
+    return lerp(-0.6, 3.2, clamp((g - 783) / 74.0)) - 0.0
+
+
 class S06(C.Take):
     def __init__(self, shot, mode, samples=None, threads=2):
         self.shot = shot
-        C.Take.__init__(self, PRESET[shot], "EVENING_INT", mode=mode, samples=samples, threads=threads)
+        C.Take.__init__(self, PRESET[shot], "EVENING_INT", mode=mode, samples=samples, threads=threads, fg=(shot == 14))
         if shot == 14:
             self.add("bert", "desk_clerk", "bertillon_writing")
             self.add("pref", "desk_stand", "prefect_stern", mirror=True)
         else:
             self.add("bert", "low_a", "bertillon_neutral")
+            self.add("pref", "wall_look", "prefect_neutral", dx=-0.45)
 
     def pose(self, gs):
         K.key_life(min(gs), max(gs), dust=0.4)
@@ -92,8 +132,14 @@ class S06(C.Take):
         for g in gs:
             self.scene.frame_set(g)
             for k in self.acts:
-                p = (bertillon14(g) if self.shot == 14 else bertillon15(g)) if k == "bert" else prefect14(g)
-                self.finish_poses(g, k, self.pose_cast(k, g, cast17.silent(p)))
+                if self.shot == 14:
+                    p = bertillon14(g) if k == "bert" else prefect14(g); dy = 0.0
+                else:
+                    p = bertillon15(g) if k == "bert" else prefect15(g); dy = prefect15_dy(g) if k == "pref" else 0.0
+                p = cast17.silent(p)
+                if k == "pref" and self.shot == 15:
+                    p["mirror"] = False
+                self.finish_poses(g, k, self.pose_cast(k, g, p, dy=dy))
         self.make_sprites(gs)
 
 

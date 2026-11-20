@@ -27,11 +27,11 @@ def vl(a, b, u): return tuple(lerp(x, y, u) for x, y in zip(a, b))
 
 
 class Take(object):
-    def __init__(self, preset, light=None, mode="draft", samples=None, threads=2):
+    def __init__(self, preset, light=None, mode="draft", samples=None, threads=2, fg=True):
         t0 = time.time()
         self.preset, self.mode = preset, mode
         self.samples = samples or (6 if mode == "draft" else 12)
-        self.A = K.build(preset=preset, light=light)
+        self.A = K.build(preset=preset, light=light, fg=fg)
         K.clear_keys()
         for o in bpy.data.objects:                      # director fix: the additive light shafts wash over the cast cards
             if any(m and m.name.startswith('beam_fx') for m in (getattr(o.data, 'materials', None) or [])): o.hide_render = True
@@ -64,13 +64,13 @@ class Take(object):
         self.acts[key] = a
         return a
 
-    def pose_cast(self, key, f, pose, dz=0.0, dx=0.0):
+    def pose_cast(self, key, f, pose, dz=0.0, dx=0.0, dy=0.0):
         sp = self.spec[key]; a = self.acts[key]
         p = dict(pose); p["seat17"] = None
         if sp["mirror"]: p["mirror"] = True
         if sp["rim"]: p["rim"] = sp["rim"]; p["rim_opacity"] = 0.55; p["rim_w"] = 0.02
         x, y, z = sp["pos"]
-        a.place(f, (x + dx, y, z + dz), scale=sp["scale"])
+        a.place(f, (x + dx, y + dy, z + dz), scale=sp["scale"])
         return p
 
     def finish_poses(self, f, key, p):
