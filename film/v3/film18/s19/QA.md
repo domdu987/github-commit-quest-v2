@@ -14,3 +14,10 @@
 
 ## Round 15 (director follow-up, rim version)
 Far-lane head-on oxen increased from 9 to 15 (flames hidden, spacing 7 frames, lane depth 64+ D). Frame-diff n=87: median **11.20**, p90 **14.17**. Flame-face gap < 15 px now in g1475-1477 only (was g1443, 1445, 1457; the remaining 3 persisted when I shifted near-lane waves 2-5 by +-3..9 frames - those shifts made it worse). Density: far oxen are small at their depth, so visible oxen per 0.5 s tile is about 3-4 but the 4-per-tile target is not reliably met in every tile. Mouth worst 782 px. qa_auto fails only on the whip-out blur.
+
+## Round 16 (gate 14b)
+- Frame-diff n=87: median **11.49**, p90 **15.71**; qa_auto blur flag only on the whip-out.
+- Far lane: 18 head-on oxen (spacing 5 frames, flames hidden, lane 64-74 D). Near lane stays every 18 frames: spacing it every 9 frames put flames through every neighbour's face (gap 0 px in nearly all frames, also with flames hidden on alternate oxen or an alternate lane), which contradicts "keep your flame gaps". Flame gaps < 15 px in g1443 and g1475-1477 (g1503-1514 are whip-out frames, camera sliding).
+- Density: 4 oxen per 0.5 s tile was NOT verified or reliably reached (far oxen are small); honest miss.
+- Props: pot (16.6,-10.6), bowl (18.6,-8.4) removed, helmet moved to (15.6,-17.5); 26 small rubble props along the lower edge. Not frame-checked for g1476-1492 jaw overlap beyond the phone sheet; the tilt-up of 4 deg was not applied (it pushes mouths past 860).
+- Ground on RENDERED frames (gshare.py, horizon y 800): median **0.73** by my estimator, which includes the wall base and reads far higher than QA's; target 0.28 NOT demonstrated.

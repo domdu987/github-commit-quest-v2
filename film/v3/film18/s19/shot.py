@@ -25,7 +25,7 @@ for w in range(9):
 OX = OX[:60]
 QI = [(G0 - 10 + 5 * k, 44.0 + 2.2 * (k % 3)) for k in range(6)]
 V_OX, V_QI = 15.0, 11.5
-FAR = [(G0 - 30 + 7 * k + 5, 64 + 3.5 * (k % 4), (-0.4, 0.4, 0.0, 0.2)[k % 4]) for k in range(15)]            # far lanes 8-14 D behind the near lane, head-on / 3/4 toward the camera
+FAR = [(G0 - 30 + 5 * k + 2, 64 + 3.5 * (k % 4), (-0.4, 0.4, 0.0, 0.2)[k % 4]) for k in range(18)]  # far lanes 8-14 D behind the near lane, head-on / 3/4 toward the camera
 
 def setup(ctx):
     J.set_holes(12)
@@ -51,12 +51,17 @@ FGP = []
 def frame(g, t, camloc, ctx):
     J.set_holes(12)
     if not FGP:                                   # warm foreground props (pots, a helmet) low in frame, parented to nothing: placed in the world near the camera path
-        for i, (wx, wy, kind) in enumerate(((17.6, -13.2, 'pot'), (19.8, -14.8, 'jar'), (16.6, -10.6, 'pot'), (21.0, -16.6, 'pot'), (24.2, -17.4, 'jar'), (18.6, -8.4, 'bowl'), (27.5, -11.0, 'pot'), (23.6, -15.4, 'pot'))):
+        for i, (wx, wy, kind) in enumerate(((17.6, -13.2, 'pot'), (19.8, -14.8, 'jar'), (21.0, -16.6, 'pot'), (24.2, -17.4, 'jar'), (27.5, -11.0, 'pot'), (23.6, -15.4, 'pot'))):
             FGP.append(J.prop_pot((wx, wy, 0.0), 0.6 * i, kind=kind, scale=0.85, cd=8))
         for (lx, ly) in ((19.0, -13.0), (22.5, -13.8)):
             ld = bpy.data.lights.new('potl', 'POINT'); ld.color = J.FIRE; ld.energy = 650.0; ld.shadow_soft_size = 0.6; ld.use_shadow = False
             lo = bpy.data.objects.new('potl', ld); J.STATE['LIGHTS'].objects.link(lo); lo.location = (lx, ly, 1.0); lo.visible_camera = False
-        FGP.append(J.prop_helmet((16.2, -9.0, 0.0), 2.4, scale=0.9, cd=8))
+        FGP.append(J.prop_helmet((15.6, -17.5, 0.0), 2.4, scale=0.9, cd=8))
+        rr_ = random.Random(7)
+        for i in range(26):                                   # round 15: small dark rubble along the lower edge (bottom corners, never at head height)
+            wx, wy = rr_.uniform(15.2, 20.5), rr_.uniform(-18.5, -12.0)
+            if rr_.random() < 0.5: FGP.append(J.prop_reed_bundle((wx, wy, 0.2), (0, 0, rr_.uniform(0, 6.28)), scale=rr_.uniform(0.45, 0.7), n=30, cd=8.0))
+            else: FGP.append(J.prop_pot((wx, wy, 0.0), rr_.uniform(0, 6.28), kind=rr_.choice(('pot', 'jar', 'bowl')), scale=rr_.uniform(0.4, 0.6), cd=8))
     for ob in bpy.data.objects:
         if ob.name in HIDE or ob.name.startswith(('rubble', 'hglow')): ob.hide_render = True
     for ob in bpy.data.objects:

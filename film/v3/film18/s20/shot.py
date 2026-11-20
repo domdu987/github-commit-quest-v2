@@ -7,11 +7,11 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c18 as C
 from c18 import J, S, R2, V, bpy
 SHOT = 's20'; G0, G1 = 1515, 1595; H_IN, H_OUT = 6, 6
-V_OX = 16.2; V_CAM = 0.97 * V_OX; XC = 20.0; Y0 = -46.0; DUR = 81 / 30.0; LAT = 14.0; CZ = 5.0
+V_OX = 16.2; V_CAM = 0.97 * V_OX; XC = 20.0; Y0 = -46.0; DUR = 81 / 30.0; LAT = 12.0; CZ = 4.0
 def pose(sh, t):
     y = Y0 - V_CAM * t * DUR; lat = LAT - 0.05 * LAT * t * DUR * 0.0 - 0.14 * LAT * t     # 5 %/s push -> about 14 % over the shot
     w = max(0.0, 1.0 - (t * 81) / 7.0) ** 2
-    return dict(loc=(XC, y, CZ), look_at=(XC - lat, y + 2.2 + 30.0 * w, 2.6), lens=26.0)
+    return dict(loc=(XC, y, CZ), look_at=(XC - lat, y + 2.2 + 30.0 * w, 3.3), lens=26.0)
 S.pose_at = pose
 rnd = random.Random(20)
 R2.POST['s20'] = lambda p: None
@@ -45,10 +45,15 @@ def setup(ctx):
         bmesh.ops.delete(bm, geom=bad, context='FACES'); bm.to_mesh(ho.data); bm.free()
 
     pr = random.Random(5)
-    for n in range(70):                                                  # dressed field between the camera and the herd (world props, all on the ground)
-        px_ = pr.uniform(8.5, 17.5); py_ = pr.uniform(-108, -40)
+    for n in range(170):                                                  # dressed field between the camera and the herd (world props, all on the ground)
+        px_ = pr.uniform(14.0, 19.0); py_ = pr.uniform(-110, -40)
         if pr.random() < 0.35: J.prop_reed_bundle((px_, py_, 0.2), (0, 0, pr.uniform(0, 6.28)), scale=pr.uniform(0.6, 0.9), n=40, cd=6.0)
         else: J.prop_pot((px_, py_, 0.0), pr.uniform(0, 6.28), kind=pr.choice(('pot', 'jar', 'bowl')), scale=pr.uniform(0.6, 0.9), cd=6)
+
+    for n in range(170):                                                 # round 15: small dark rubble in the mid-ground ground band (in front of the lead row, below every ox head)
+        px_ = pr.uniform(10.6, 13.4); py_ = pr.uniform(-112, -40)
+        if pr.random() < 0.5: J.prop_reed_bundle((px_, py_, 0.2), (0, 0, pr.uniform(0, 6.28)), scale=pr.uniform(0.35, 0.55), n=30, cd=6.0)
+        else: J.prop_pot((px_, py_, 0.0), pr.uniform(0, 6.28), kind=pr.choice(('pot', 'jar', 'bowl')), scale=pr.uniform(0.3, 0.5), cd=6)
 
 def frame(g, t, camloc, ctx):
     J.set_holes(12); k = (g - G0) / 30.0
