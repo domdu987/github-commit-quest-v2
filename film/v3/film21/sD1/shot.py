@@ -23,6 +23,7 @@ def cam_fn(world):
         u = 0.25 * ez(t) + 0.75 * t
         az = math.radians(lerp(-112.0, -48.0, u))                    # arc round the table (from the south-west to the south-east)
         r = lerp(2.6, 1.9, u) + 0.12 * math.sin(t * 5)
+        r -= 0.5 * ez((g - (G_LAUGH - 6)) / 22.0)                  # director note: push in during the laugh so the head is >= 130 px
         z = lerp(1.85, 2.0, u) + K.ground(CEN[0], CEN[1]) * 0.0
         loc = np3(CEN[0] + r * math.cos(az), CEN[1] + r * math.sin(az), z)
         look = np3(CEN[0] + 0.25 * math.cos(az + 1.57), CEN[1] - 0.2 + 0.25 * math.sin(az + 1.57), lerp(2.12, 2.1, u))

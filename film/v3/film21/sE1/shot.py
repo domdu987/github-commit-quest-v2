@@ -31,7 +31,8 @@ def keys(A):
             (G0 + 38, (60.0, 78.0, 30.0), (120.0, 128.0, 18.0), 22.0),
             (G_SNAP - 2, (104.0, 108.0, 25.0), (136.0, 138.0, 20.0), 22.0),
             (G_SNAP + 6, "hill_eye"),
-            (G1, (hl[0] - 0.5 + 0.9, hl[1] - 0.5 - 0.9, hl[2] - 0.1), (hk[0] + 0.6, hk[1] - 0.3, hk[2] + 0.1), 22.0)]
+            (864, (hl[0] + 0.17, hl[1] - 0.17, hl[2] - 0.02), (hk[0] + 0.12, hk[1] - 0.05, hk[2] + 0.02), 22.0),
+            (G1, (hl[0] + 0.35, hl[1] - 0.35, hl[2] - 0.05), (hk[0] + 0.25, hk[1] - 0.1, hk[2] + 0.05), 22.0)]
 
 
 def np3(v):
@@ -46,7 +47,16 @@ def cam_fn(A):
         if g < G0:                                        # handle: team 4's pull-out continues into P_BANK (camera a little closer, backing away)
             loc = cam0 + fh * 0.012 * (G0 - g)
             return dict(loc=tuple(loc), look=tuple(look0), lens=pb[2], vivid=K.VIVID["camp_bank"])
-        c = K.cam_path(None, ks, g)
+        if g >= G_SNAP - 2:                              # the SNAP: fast punch-in onto hill_eye, easing out with no overshoot, then a slow drift
+            a = ks[4]; he = A["cams"]["hill_eye"]; L = np3(he[0]); T = np3(he[1])
+            t = min(1.0, (g - (G_SNAP - 2)) / 8.0); te = 1 - (1 - t) ** 3
+            la, ta = Vector(a[1]), Vector(a[2])
+            loc = la.lerp(Vector(L), te); look = ta.lerp(Vector(T), te)
+            d = ez((g - (G_SNAP + 6)) / float(G1 - G_SNAP - 6)) if g > G_SNAP + 6 else 0.0
+            loc = loc + Vector((0.35, -0.35, -0.05)) * d; look = look + Vector((0.25, -0.1, 0.05)) * d
+            c = dict(loc=tuple(loc), look=tuple(look), lens=22.0, vivid=K.VIVID["hill_eye"])
+        else:
+            c = K.cam_path(None, ks, g)
         loc, look = Vector(c["loc"]), Vector(c["look"])
         if G_SNAP <= g <= G_SNAP + 1:                     # 2-frame shake
             s = 1 if g == G_SNAP else -1
