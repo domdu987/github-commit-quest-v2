@@ -201,7 +201,6 @@ def near_props(A, M, R, f, loc0):
     K.sacks(B, at(0.10, 1.6, -1.5), 5, rs); K.sacks(B, at(0.62, 2.2, -1.2), 4, rs)
     K.weapon_rack(B, at(0.30, 2.0, -0.4), 20.0, rs, n=6)
     K.spear(B, at(0.82, 1.9, -1.3), tilt=(0.06, -0.1), h=3.0); K.spear(B, at(0.84, 2.2, -1.1), tilt=(-0.05, -0.12), h=3.0)
-    K.barrel(B, at(0.52, -1.7, -1.0), rs=rs)
     for k in range(7):                                            # tent pegs and rope stubs in the sand
         x, y, z = at(0.05 + 0.13 * k, rs.uniform(-1.8, 2.8), rs.uniform(-1.8, -0.4))
         B.rod("wood", (x, y, z), (x + 0.05, y, z + 0.28), 0.03, seg=5)
