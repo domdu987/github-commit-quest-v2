@@ -12,22 +12,34 @@
  "n_frames": 212,
  "status": "rendering",
  "end_cam": {
-  "g": 604,
+  "g": 603,
   "loc_D": [
-   3.62,
-   6.43,
-   0.95
+   3.533,
+   6.506,
+   0.983
   ],
   "look_at_D": [
-   1.69,
+   1.692,
    13.16,
-   2.95
+   2.944
   ],
   "lens_mm": 22.0,
   "shift": [
    0.0,
    0.0
   ],
-  "note": "= team7 T09 start pose (cafe_low, 'stub' view) as given by the director; T06 eases into it by g603 and holds/continues slightly for the 4 out-handle frames g604..607; Maupassant sits at the banquette seat mark for the whole take (cards)"
+  "handle_g604": {
+   "loc_D": [
+    3.505,
+    6.531,
+    0.994
+   ],
+   "look_at_D": [
+    1.692,
+    13.16,
+    2.942
+   ]
+  },
+  "note": "team7's exact T09 start numbers (director correction): T06's last frame g603 and handle g604; the camera arrives with velocity ~(-0.028,+0.025,+0.011) D/frame (push + crane), not a stop; handle g605-607 keeps drifting; Maupassant sits at the banquette seat mark all take, idle breathing only after g585"
  }
 }

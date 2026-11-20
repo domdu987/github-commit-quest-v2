@@ -48,10 +48,11 @@ WP = [
     (554, (0.6, 4.6, 2.55), (1.2, 11.5, 2.9)),
     (572, (1.1, 4.6, 2.65), (1.6, 13.0, 3.3)),        # stub + black smoke
     (590, (2.5, 5.7, 1.75), (1.7, 13.2, 3.1)),        # sweep down + right toward the banquette
-    (604, (3.62, 6.43, 0.95), (1.69, 13.16, 2.95)),   # = T09 start pose (team7, cafe_low): the first out-handle frame
-    (607, (3.66, 6.47, 0.93), (1.69, 13.16, 2.95)),   # out-handle, continues slowly
+    (603, (3.533, 6.506, 0.983), (1.692, 13.16, 2.944)),   # LAST frame of T06 = team7's exact T09 pose (director correction)
+    (604, (3.505, 6.531, 0.994), (1.692, 13.16, 2.942)),   # first out-handle frame (T09 g604)
+    (607, (3.421, 6.606, 1.027), (1.692, 13.16, 2.936)),   # out-handle: keeps drifting ~0.03 D/frame toward -x/+y/+z (push + crane)
 ]
-END_CAM = dict(g=604, loc=WP[-2][1], look=WP[-2][2], lens=22.0, shift=(0.0, 0.0), note="turned toward the banquette (Maupassant mark (1.69, 13.16), seat (1.69, 14.0)); camera moving +y ~0.07 D/frame; D units")
+END_CAM = dict(g=603, loc=WP[-3][1], look=WP[-3][2], lens=22.0, shift=(0.0, 0.0), note="turned toward the banquette (Maupassant mark (1.69, 13.16), seat (1.69, 14.0)); camera moving +y ~0.07 D/frame; D units")
 
 
 def _tang(i):
@@ -280,7 +281,7 @@ class Take(C.Take):
             mp = dict(cast20.STORY20["maupassant_seated_toast_smug"][1])      # he sits on the banquette the whole take (rises in T09); mouth held ('smile')
             mp["seat_h"] = float(M["maupassant_seat"][2]); mp["t"] = g / 30.0
             mp["lean"] = 1.2 * math.sin(g * 0.11); mp["squash"] = (1.0, 1.0 + 0.01 * math.sin(g * 0.25))
-            mp["arm_r"] = dict(mp["arm_r"], hand=(0.74, 0.34 + 0.12 * (0.5 + 0.5 * math.sin(g * 0.09))))      # sips: the glass rises and falls
+            mp["arm_r"] = dict(mp["arm_r"], hand=(0.74, 0.34 + 0.12 * (1 - smooth((g - 585) / 12.0)) * (0.5 + 0.5 * math.sin(g * 0.09))))      # sips: the glass rises and falls
             self.actors["mau"].pose(f, mp, camera=self.cam)
             w = dict(cast20.STORY20["waiter_idle"][1]); w["t"] = g / 30.0; w["lean"] = 2.5 * math.sin(g * 0.13); w["head_roll"] = 3 * math.sin(g * 0.09)
             self.actors["wtr"].pose(f, w, camera=self.cam)
