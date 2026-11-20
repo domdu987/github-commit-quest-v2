@@ -1,7 +1,8 @@
-# QA_TECH s20 (take g1509-1601; in-shot g1515-1595) - FAIL (round 5)
-Checked: 6 fps + first/last 3 (23 frames). Frame-diff director 4.86/6.62: median OK, p90 below 9 (guide; the eased push is visible, not a pulse). Whip-in sharp. NIGHT, no text, oxen run left toward the camera, none turns back, no flame on a head.
-Earlier blockers: #1 lead ox in profile - present (clean profile, head left, tail flame trailing right); #2 flames >= 3 - met (big tail flame, medium one, small ones on the far oxen); #3 floating cone - reads as a lit brazier (note); #4 bare ground - NOT FIXED.
+# QA_TECH s20 (take g1509-1601; in-shot g1515-1595) - FAIL (round 6)
+Checked: 6 fps + first/last 3 (23 frames). Director 6.47/9.48: median OK, p90 about the guide. Whip-in clean. NIGHT, no text. Oxen run left; the lead ox has its own tail flame on a reed stick trailing right, others have small tail flames; none on a head.
 ## Issues
-1. g1515-1595 - bare ground > 30 %: the lower 38-45 % (y > about 800) is plain blue-lavender ground with faint stripes and a faint dark strip, no fg prop; in the whip-in handle g1509-1520 about 55-60 %. Fix: tilt up so the ox feet sit at y 0.72+, or add dark fg props along the bottom.
-2. g1524-1595 - the lead ox is about 25-27 % of the frame height (horn to hoof, y 190-305 of 480), the check asks for 40-45 %. Fix: lower and push the camera closer (fixing 1 and 2 together: camera nearer to the ox, ox feet at y 0.72).
-Notes: the brazier flame sits behind the ox's back at g1574-1584 and reads as a spike on its back; the reed stick pivots up about 30 degrees; few sparks; the third flame is small.
+1. g1555-1580 - a brazier/torch stand with a tall flame passes directly behind the lead ox and its flame sits on the ox's back/neck (g1560-1575, flame over the back and between the horns at g1570). Shot check: no brazier flame on its back. Fix: remove or move the brazier out of the ox's silhouette.
+2. g1521-1595 - the lead ox is only about 25 % of frame height (y about 690-810 of 1280 in the 288x512 sheets = 24 %), the check asks about 40 %. Fix: camera closer and lower.
+3. g1515-1595 - bare ground: lower 40-45 % (y > 780) is plain blue-grey ground with stripes; at g1509-1520 about 55 %. Over 30 %.
+4. g1515-1595 - navy spiky shards and dark navy rocks fill the foreground (junk per the dressing rule), not warm baskets/straw.
+Notes: the flame on the lead ox's own tail is clear and big (OK); the oxen's faces are neutral, no rage faces.

@@ -1,10 +1,12 @@
-# QA_TECH s17 (g1303-1393) - FAIL (round 3)
-Checked: 6 fps + first/last 3. Director 5.12 / 8.46: OK; near-static start g1303-1320, push after. No lit tails (OK).
+# QA_TECH s17 (g1303-1393) - FAIL (round 4)
+Checked: 6 fps + first/last 3 (23 frames) + full frame n70. Director 5.56/8.75: median OK, p90 below 9 (guide; eased dolly+slide is visible). No lit tail before "จุดไฟ" (OK: only wall torches). No pulsing.
 ## Earlier blockers
-- Head over 880: FIXED (clerk now small, whole cast at y < 700). Foreground reed prop: NOT FIXED. Tying: NOT FIXED. Nose-first oxen: NOT FIXED. Bare ground: NOT FIXED.
+- Foreground reed: PARTLY - it is now a faceted straw bundle but still reads as a flat yellow plank/slab at lower left; no ties, sits on a grey rock. NOT convincing.
+- Tying: NOT FIXED - nobody ties reeds (the elder carries a basket and a broom, the others just walk).
+- Nose-first oxen: NOT FIXED - oxen walk side-on / 3/4 along the wall, no holes visible in frame.
+- Bare ground: NOT FIXED.
 ## Issues
-1. g1303-1393 - the foreground "reeds" is still a flat untextured mustard slab (rule 2). Fix: lit textured reed bundles with ties.
-2. g1303-1353 - bare road: bottom 50-60 % is plain dark road with nothing on it; about 35-40 % at g1358-1393 (pale scratch lines). Over 30 %. Fix: tilt up / dark fg props, or push earlier.
-3. g1309-1393 - cast is tiny (about 60-120 px) against a huge wall for the whole take; nobody ties reeds, the oxen stand side-on in a row, not nose-first to holes; holes are not readable in this framing. Fix: frame an ox tail with a townsperson tying a bundle, heads toward the holes.
-## Notes
-- Helper props along the wall base (grey-blue lumps) read as low-poly rocks but do not cover actors; a small grey tub at lower left g1378-1393.
+1. g1303-1393 - bare ground: bottom 50-55 % plain lavender road at g1303-1350, still about 35 % at g1360-1393 (over 30 %, blocks).
+2. g1303-1393 - the cast is tiny (about 60-150 px) for the first 2/3 of the take; the shot plan beat (townsperson tying reeds, oxen nose to the holes) cannot be seen.
+3. g1303-1393 - navy/grey spiky shards and dark grey low-poly rubble along the bottom and the wall base (rule 2 junk), most visible at the bottom right and left (g1360-1393).
+Fix: frame close on one ox with a clerk tying a lit, textured reed bundle to its tail, heads toward the wall holes; dark warm baskets/straw low in frame; remove the navy shards.

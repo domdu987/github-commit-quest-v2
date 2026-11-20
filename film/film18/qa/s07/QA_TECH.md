@@ -1,16 +1,14 @@
-# QA_TECH s07 (g531-605 = 66 in-shot + 9 handle) - FAIL
-Checked: 6 fps frames + first/last 3 (+ full-size g0/28/60); frame-diff re-measured: all 75 frames median 4.18, p90 7.26, max 32.6 (in-shot 4.57 / 7.41). Band mean max 91.5; bright>200 up to 3.2 % from g~553 on (horn tips / glare along y 880-950).
-## Earlier issues (previous QA_TECH s07)
-- E2 continuity: FIXED - all oxen are PLAIN (no coats, no blades, no tail flame).
-- E3 snap: now present at g~551-555 (5 frames), but see 2.
-- E1 p90: now a visible slow tilt/pull plus the snap (acceptable under the gate).
-- E5 composition: NOT FIXED, worse (see 1).
-## Issues
-1. g556-605 - composition / rule 2: the near ranks of oxen are cards rendered at steep angles, smeared into long diagonal brown slabs that fill y ~830-1100 (bottom 30 %) and read as stacked planks, not oxen; they cover the caption band. A viewer sees a pile of brown beams. Fix: yaw the near cards toward the lens (front-3/4), cull the steep ones, or keep the instancer ranks beyond ~15 D.
-2. g551-555 - plan beat / pop: the "snap pull-out x1.6" is a ~2.3x jump from a close yard (g531-550: brazier, ~10 oxen) to a wide quarter in 5 frames (diff 23-33), no easing; reads as a jump cut, not a snap pull. Fix: eased 4-6 frame snap of about 1.6x or a planned cut, and keep the end framing.
-3. g531-555 - rule 5: bottom ~35-40 % is flat dark ground with only a few horn tips; g556-605 bottom ~15-20 % is empty navy ground.
+# QA_TECH s07 (take g531-605 = 66 in-shot + 9 handle) - PASS with notes (round 4)
+Checked: 6 fps (20 frames) + first/last 3 + every frame g546-562 for the snap. Director 4.89 / 13.99 (re-measured here: snap diffs g552-558 = 17.8, 25, 30, 32, 34, 29, 23, then 5): median OK, p90 comes from the snap, no pulsing.
+## Earlier blockers
+- E2 plain oxen: still FIXED (no coats, blades, tail flames).
+- Near rows as stretched "sausage" cards: FIXED for the main mass. Front-3/4 oxen with faces and horns fill the bottom; a small group of steep, elongated brown cards remains at the bottom right (about x 60-100 %, y 76-90 %, g556-605), see note 1.
+- Snap: now an eased ramp over about 7 frames (diff rises 18 to 34 and falls back to 5 by g559), then a steady held wide. Reads as a fast pull-out, not a hard jump. MET.
+- Caption band: bright > 200 share 1.9 % mean / 3.6 % max (white horns, gate glare), no emitter in the band; the set-gate item "band clear of bright emitters" met; the 1 % rule is only mandated for s04/s25.
 ## Notes
-- caption band: bright>200 share 1.6-3.2 % (white horns), no true emitter; mandatory "band clear of bright emitters" met.
-- the central brazier flame is lit (set torch), acceptable.
+1. g556-605 - 3-4 stretched diagonal brown cards at the bottom right still read as brown planks if looked at closely; at phone size they look like ox backs. Fix at the next pass: cull steep-yaw cards. Not blocking.
+2. g531-550 - about 12 % plain mauve ground between the herd rows; the bottom of the frame holds big oxen, a dark fence rail covers the bottom 8 % from g556.
+3. The brazier flame is a set torch (OK). Wall tower and gate warm lit; DUSK matches s06.
+4. The distance herd looks like a repeated tile pattern (instancer) - dense, acceptable.
 ## Pass items
-DUSK; oxen PLAIN; heads/people none in band; no mouths; no text; no tail flames; sharp; no frozen/black frames; g 531-596 + 9 handle OK.
+Heads/people none in band; no mouths; no text; sharp; no frozen/black frames; first/last frames clean; handle g597-605 stable.

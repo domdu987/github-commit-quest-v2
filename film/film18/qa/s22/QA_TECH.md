@@ -1,8 +1,7 @@
-# QA_TECH s22 (take g1677-1747, shot g1683-1742) - FAIL (round 4)
-Checked: 6 fps + first/last 3 (19 frames). Frame-diff director 6.71/9.79: OK. No pulsing release (held pushes, 3 of them: note). Heads < 880. NIGHT, no text, no mouths, no blades touching anyone.
-Earlier: glint on "วาววับ" - FIXED: star glints on the blade tips at about g1727-1737 (g1732 included); close-medium - improved (ox about 40-45 % of width, still not tight); hero tail flame - NOT FIXED; flame on the soldier's head - NOT FIXED.
+# QA_TECH s22 (take g1683-1742, shot g1683-1742) - FAIL (round 5)
+Checked: 6 fps + first/last 3 (19 frames) + crops n15, n60. Director 10.13/14.20: OK. No pulsing (held pushes). Heads < 880. NIGHT, no text.
+Earlier: close-medium on the hero ox - FIXED (ox fills the frame); rage face - PRESENT (angry brows, bared teeth, red eyes); glint on "วาววับ" - PRESENT (white star/streak on the horn tip at about g1722-1738); hero tail flame - present, a big flame on the tail-stick tip at the right, trailing up (OK).
 ## Issues
-1. g1683-1747 - the hero ox has no tail flame: its tail rises with a gold arrow tip and no fire; the only flames belong to the oxen behind. Rule 3 / the shot check "its own tail flame" fails. Fix: a lit tail with flame card and light on the hero ox, visible in frame.
-2. g1720-1747 - a large flame from the background oxen rises directly behind and on top of the frozen soldier's helmet (growing to cover his head at g1735-1747); the flame reads as burning on his head (rule 3: never on a head). Fix: move the soldier or the background flame away from his head.
-3. g1683-1742 - bare ground about 30-35 % (pink dirt with a stump in the lower third), the soldier is clipped by the left edge. Fix: camera lower/closer to the ox head, dark fg props.
-Notes: the glints are small white crosses but visible; the ox expression is a gentle frown, not startled; the stump fg prop is lit and textured (fine).
+1. g1683-1710 and g1722-1742 - the soldier at the left edge has a flame directly behind/at his helmet (n15: orange flame touching the helmet's right side; n60: red flames at his head beside the horn). Rule 3 / shot check: no flame behind the soldier's helmet. Fix: move the soldier or the background tail flames away from his head.
+2. g1683-1742 - the soldier is clipped by the left edge for the whole take (about half his head), and an ox horn tip crosses in front of his face at g1722-1742 (reads as the prop covering the actor). Fix: pull him in 1 D or crop him out.
+Notes: bare ground about 20-25 % (warm orange dirt, dark stump fg prop, OK); the big tail flame is detached above the stick by a small gap at g1683-1700.

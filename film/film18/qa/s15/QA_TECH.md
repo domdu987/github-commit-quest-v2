@@ -1,4 +1,5 @@
-# QA_TECH s15 (take g1130-1210, shot g1136-1205) - PASS (round 4)
-Checked: 6 fps + first/last 3 (21 frames) + 3 full-size mime frames (g1165, 1172, 1180). Frame-diff director 9.94/15.24: OK. No pulsing (one held push). Heads < 880, NIGHT, no text, no flames, mouth shapes change only within quote 2.
-Earlier blockers: #1 jars flat - FIXED (faceted shaded jars, corners, about 70 %); #2 carving mime - FIXED: from about g1165 a red sleeve with a tan hand sweeps back and forth across the belly (visible sawing stroke, three distinct positions); cup tilts overhead.
-Notes: the hand is a flat tan bar (reads as a stick, not a hand); the lip-lick is a wide open red mouth (no tongue); the general fills the frame at the end, face fully in frame.
+# QA_TECH s15 (take g1130-1210, shot g1136-1205) - PASS (round 5)
+Checked: 6 fps + first/last 3 (21 frames). Director 9.40/13.82: OK. One slow push, no pulsing. NIGHT, no text, no flames, heads < 880, general fills the frame, face in frame.
+Earlier blockers: carving overlay (red sleeve / tan bar) - REMOVED, nothing sweeps across the belly now; cup tilts overhead. Jars: faceted warm jars in both corners, no navy/spiky junk, nothing covers the actor. Bare ground: none (<10 %).
+Mouth: shapes change across the shot, which sits inside quote 2 (36.99-40.10 s = g1110-1203, +-0.15 s); only the last 2-3 handle frames (g1208-1210) are past the window and are outside the shot.
+Notes: the cup is held with a thin stick-like arm; the general has no look-at target (plays to lens, eye-line note).
