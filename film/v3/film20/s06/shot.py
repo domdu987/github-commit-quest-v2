@@ -37,17 +37,16 @@ N0 = 14
 
 # ----------------------------------------------------------------------------- camera: waypoints (g, loc D, look D)
 WP = [
-    (396, (0.3, 0.5, 2.3), (-0.9, 6.9, 2.5)),
-    (418, (0.6, 1.1, 2.3), (-1.0, 6.9, 2.45)),
+    (396, (-0.1, 0.5, 2.3), (-1.2, 6.9, 2.5)),
+    (418, (0.3, 1.1, 2.3), (-1.1, 6.9, 2.45)),
     (430, (0.4, 1.9, 2.25), (-1.0, 6.8, 2.4)),
-    (446, (-0.2, 3.3, 2.2), (-1.0, 6.7, 2.1)),        # snap push-in
-    (468, (-0.45, 4.7, 2.15), (-0.95, 6.5, 1.6)),     # descend
-    (490, (-0.56, 5.45, 1.97), (-0.92, 6.5, 1.44)),   # the raking insert pose of cafe_table_insert
-    (512, (-0.35, 5.5, 2.0), (-0.7, 6.5, 1.5)),       # still over the sheet, starts to rise
-    (534, (-0.1, 5.3, 2.3), (0.3, 8.0, 2.1)),         # rise off the sheet, the aim swings up and toward the window
-    (554, (0.6, 4.6, 2.55), (1.2, 11.5, 2.9)),
-    (572, (1.1, 4.6, 2.65), (1.6, 13.0, 3.3)),        # stub + black smoke
-    (590, (2.5, 5.7, 1.75), (1.7, 13.2, 3.1)),        # sweep down + right toward the banquette
+    (444, (-0.1, 3.1, 2.15), (-1.0, 6.6, 2.0)),       # snap push-in on "สี่สิบกว่าคน"
+    (466, (-0.5, 4.9, 2.1), (-0.95, 6.5, 1.55)),      # descend: the artists leave the frame cleanly
+    (488, (-0.56, 5.45, 1.97), (-0.92, 6.5, 1.44)),   # the raking insert pose of cafe_table_insert
+    (512, (-0.4, 5.5, 2.0), (-0.7, 6.5, 1.5)),        # still over the sheet, starts to rise
+    (556, (0.0, 5.3, 2.3), (0.5, 8.2, 2.1)),          # calm rise, the aim swings up toward the window
+    (580, (1.0, 4.8, 2.6), (1.55, 12.8, 3.2)),        # stub + black smoke
+    (594, (2.3, 5.6, 1.9), (1.7, 13.1, 3.0)),         # sweep down + right toward the banquette
     (603, (3.533, 6.506, 0.983), (1.692, 13.16, 2.944)),   # LAST frame of T06 = team7's exact T09 pose (director correction)
     (604, (3.505, 6.531, 0.994), (1.692, 13.16, 2.942)),   # first out-handle frame (T09 g604)
     (607, (3.421, 6.606, 1.027), (1.692, 13.16, 2.936)),   # out-handle: keeps drifting ~0.03 D/frame toward -x/+y/+z (push + crane)
@@ -98,9 +97,9 @@ def corner_speed(g):
 
 # ----------------------------------------------------------------------------- cast
 ART = [("art1", "painter20"), ("art2", "composer20"), ("art3", "poet20"), ("art4", "architect20")]
-SPOT = {"art1": (-2.3, 6.9), "art2": (-1.5, 8.7), "art3": (0.3, 8.0), "art4": (-2.0, 5.5), "wtr": (4.8, 8.5)}
+SPOT = {"art1": (-3.0, 6.9), "art2": (-1.1, 8.9), "art3": (1.5, 7.3), "art4": (-2.1, 5.2), "wtr": (4.8, 8.5)}
 YAW = {"art1": 0.35, "art2": 0.1, "art3": -0.35, "art4": 0.3}
-PROP = {"art1": dict(type="news20", angle=-25), "art2": None, "art3": dict(type="news20", angle=20), "art4": dict(type="news20", angle=-35)}
+PROP = {"art1": dict(type="news20", angle=-25, scale=0.6), "art2": None, "art3": dict(type="news20", angle=20, scale=0.6), "art4": dict(type="news20", angle=-35, scale=0.6)}
 PHASE = {"art1": 0.0, "art2": 1.7, "art3": 3.1, "art4": 4.4}
 POINT = {"art1": (0.95, 0.35), "art2": (1.0, 0.25), "art3": (1.0, 0.3), "art4": (0.9, 0.55)}
 T_SWAP = 500                                       # while the camera is on the sheet the artists change from waving to pointing (swap not visible)
@@ -110,12 +109,13 @@ def pose_of(k, cast, g):
     t = g / 30.0
     ph = PHASE[k]
     base = dict(cast20.STORY20[cast + "_outraged"][1])
+    base["expr"] = "outraged_c"
     if g < T_SWAP:                                  # beat 6/7: wave the newspapers
         w = 2 * math.pi * 1.7
         up = u_of(g, G_COUNT - 2, G_COUNT + 11)
         arm = dict(base["arm_r"])
         hx, hy = arm["hand"]
-        arm["hand"] = (hx + 0.10 * math.sin(w * t + ph), hy + 0.12 * math.cos(w * t + ph) + 0.12 * up)
+        arm["hand"] = (hx + 0.10 * math.sin(w * t + ph), hy - 0.45 + 0.12 * math.cos(w * t + ph) + 0.12 * up)
         base["arm_r"] = arm
         if PROP[k]:
             pr = dict(PROP[k]); pr["angle"] = pr["angle"] + 22 * math.sin(w * t + ph + 0.8)
@@ -131,12 +131,15 @@ def pose_of(k, cast, g):
         base.pop("prop_r", None)
         base["lean"] = 2.0 * math.sin(w * t * 0.5 + ph + 1.0) + 2.0 * up
         base["yaw"] = 0.45 if k != "art3" else abs(YAW[k])
-        base["expr"] = "outraged"
+        base["expr"] = "outraged_c"
     base["head_roll"] = base.get("head_roll", 0) + 4 * math.sin(2 * math.pi * 0.85 * t + ph)
     base["squash"] = (1.0 + 0.012 * math.sin(2 * math.pi * 3.0 * t + ph), 1.0 - 0.012 * math.sin(2 * math.pi * 3.0 * t + ph))
     base["blink"] = blink(g, [420 + 7 * int(ph), 470 + 5 * int(ph), 560 + 3 * int(ph)])
     base["t"] = t
     return base
+
+
+C.add_expression("outraged_c", eyes="half", tilt=10.0, brows=("both", 0.095, 26.0, 0.054, 0.19, 0.015), mouth="frown", mouth_dy=0.0)   # outraged with a CLOSED mouth
 
 
 def smooth(u):
@@ -151,6 +154,7 @@ class Take(C.Take):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s06")
         CO.setup_grade(self.scene, dict(sat=float(os.environ.get("SAT", "1.45"))))      # film-wide saturation (QA_TEAM §G/§I)
         self.path = PathAdapter()
+        self.scene.view_settings.exposure = self.scene.view_settings.exposure - float(os.environ.get("EXPO", "0.3"))      # luma <= 110, no blown floor patch
         self.key_cam(bf(GA), *cam_at(GA))
         self.scene.frame_set(bf(GA))
         M = CO.STATE["M"]
