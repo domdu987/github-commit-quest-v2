@@ -1,45 +1,42 @@
-# QA-art round 14b s20: FIX-FIRST
-s20 is reveal A, the redesigned side-view gallop: "fire behind, the oxen run forward only" (g 1515-1595). I extracted all 93 frames (g = 1509 + n). I judged every 5th frame (about 6 fps) on a 144x256 phone sheet, full-size frames at g 1530/1560/1580/1595, and an action-band strip (x 0-720, y 540-800) every 6th frame from g 1521 to 1593. I measured plain ground with smooth 20 px blocks below y 600 every 6th frame. I compared against R5/R4.
+# QA-art round 16 s20: FIX-FIRST
+s20 is reveal A, the side-view gallop: "fire behind, the oxen run forward" (g 1515-1595). I extracted all 93 frames (g = 1509 + n). I judged:
+- a 144x256 phone sheet every 5th frame (about 6 fps)
+- full-size frames at g 1530/1560/1590
+- an action-band strip (x 0-720, y 480-740) every 6th frame from g 1521 to 1599
+- 1.5x crops of the rear ox's head (x 240-560, y 580-780) at g 1521-1593
+- a flame mask (orange-red, V > 235) to measure flame size
+
+Working files: /tmp/claude-0/-home-user-github-commit-quest-v2/64d228e2-e8b3-5935-8909-70298ec15c3e/scratchpad/qa16/ (s20_phone.jpg, s20_full.jpg, s20_band.jpg, s20_rear.jpg, s20_zoom.jpg).
 
 ## Checks
-1. **Does "fire behind, the oxen run forward" read on a phone? NO.**
-   - The oxen gallop screen-left in a single nose-to-tail row at the same depth (y 590-790).
-   - Each ox's reed bundle angles up and back, so it ends on the next ox's head.
-   - The flames are small (about 25-40 px).
-   - On the phone it reads as "a row of oxen holding torches at each other's heads", not as fire chasing the herd from behind.
-2. **The lead ox's head is fully in frame: DONE.** The lead is the centre ox (head at x about 180-260). The head is inside the frame from the whip landing on, with no edge cut.
-3. **Its own flame is in frame: DONE.** The lead's flame is at about x 590-620, well inside x 700.
-4. **No neighbour's flame on its face: NOT DONE, on every sampled frame.**
-   - At g 1521, 1527, ... 1593, the reed bundle and flame of the ox behind and to its left sit on the lead's horn and brow. The gap is 0-10 px, often touching the horn tip (for example g 1530: flame at about x 270, y 605, against the lead's horn at x 250-260).
-   - The same geometry puts the lead's own bundle and flame across the next ox's muzzle and mouth (g 1530: about x 520-610, y 650-670), all the way through the shot.
-   - This is the round-13 blocker in a new layout.
-5. **Ground ≤30 %: NOT DONE.**
-   - The block share is 33-38 % on every sampled frame (median about 36 %).
-   - The bottom 40 % (y 790-1280) is open field with sparse small jars and reed bundles, which do not break it up.
-   - The lead is about 200 px tall (16 % of frame height) against the director's 25-30 %, so the herd is a thin band.
-6. **Motion is real: YES (note).**
-   - The gallop cycle is visible, and the trees, tower and moat slide with the tracking.
-   - The frame diff is median 4.73 and p90 6.56. p90 is below the guide of 9, but the tracking move is visible, so I accept it.
-   - The whip-in at g 1509-1520 lands cleanly.
+1. **Two rows and a lead of about 20 %: DONE.** The lead (centre, facing left) is about 20 % of frame height. The herd band is at y about 600-780, and a second ox follows at the right. Ground: the lower field is now dressed with jars, bowls and reed bundles. It does not look empty (note: it is busy and moon-grey, but fine).
+2. **Is no flame on any ox's head? The flame is not on a head, but the lead's tail is through the rear ox's mouth. This is a hard-rule break (prop through a face) on every frame from g 1521 to 1595.**
+   - The lead's tail rope runs straight back (to the right) from its rump and passes through the rear ox's open mouth and muzzle.
+   - The lead's reed bundle lies across the rear ox's lower face and neck. The rope enters at the mouth corner at about x 420-470, y 700-720 in g 1569-1593.
+   - The flame itself sits about 40-50 px behind the rear ox's head, on its shoulder (g 1590: flame x 537-571, y 692-720, against the rear ox's head at x about 400-495).
+   - On the phone this reads as "the second ox carries the lead's torch in its teeth". It is the same failure as the round-14b blocker ("the lead's own bundle and flame across the next ox's muzzle"), and still not fixed with the 2.2-ox-length spacing.
+3. **Are the flames visible enough? NO.**
+   - The measured flame core is about 35 x 27 px (g 1545-1590), under 5 % of frame width, and only about 7 px on a phone.
+   - On the phone sheet the fire reads as small red specks on the oxen's backs, not as "fire behind them". The biggest fire in the frame is still smaller than a horn blade.
+4. **A half-cut ox at the left edge: NOTE, close to a blocker.** The ox ahead of the lead is cut by the left edge for the whole shot (only its coat and hindquarters are visible at x 0-100). The camera tracks with it, so it is never an exit.
+5. **Kept and good:**
+   - The gallop cycle and tracking move are real (frame-diff median 6.0, p90 7.7, under the guide but with a visible tracking move).
+   - The rage faces and snort puffs act well.
+   - The moon-blue rim is clean, and the warm saddle cloths stand against the blue field.
 
-## Phone read
-The cool night field and warm saddle cloths are good, and the snorts and open mouths act well. But the key reveal fails at the composition level: the flame placement, a small herd, and a large empty field below it.
+## Verdict: FIX-FIRST (2 blockers)
+1. **Tail off the rear ox's face:**
+   - Either droop each tail 25-35° downward, so that the rope and bundle pass below the following ox's chin at chest or knee height and the flame trails low behind,
+   - or open the front-row spacing to at least 3 ox lengths, so that each tail tip ends at least 30 px short of the next ox's muzzle,
+   - or put the follower in the rear row, offset at least 0.12 frame-heights higher, so that the tail line passes under its head.
+   - Pass check: no tail rope, bundle or flame pixel within 30 px of any visible ox face (eyes, muzzle, mouth, horns) on every frame from g 1521 to 1595, checked at 2x zoom.
+2. **Make the fire read:**
+   - Give the lead's flame at least 70 px of bright core (about 2x now), streaming back and up behind it, and let it carry a strong warm glow on the ground.
+   - Make it the brightest and biggest warm shape in the frame. A phone viewer must see "fire chasing them" without zooming.
+   - Keep it at least 30 px from any head.
+
+Also, in the same render, bring the left-edge ox fully in or take it fully out (no ox body cut by an edge for more than 0.5 s).
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 3 | 7 | 4 | 7 | 6 |
-
-## Verdict: FIX-FIRST (2 blockers, each measurable)
-1. **Flames behind, never on a head:**
-   - Stagger the herd in depth. Put the lead alone in the near lane and the others in a mid lane at least 0.2 frame-heights higher and at 0.6-0.7 scale.
-   - Or keep one row but space the oxen so that each tail tip ends at least 1.6 ox-lengths apart, and lean the flames 20-30° more upward.
-   - Lengthen the lead's own flame trail behind it (at least 120 px, ending at x ≤ 700) so that it is the biggest fire in frame.
-   - Pass check: no flame or reed-bundle pixel within 30 px of any visible ox head (face, horns, blades) on any frame from g 1521 to 1595, measured on the render.
-2. **Scale and ground:**
-   - Move the camera closer and lower so that the lead is 25-30 % of frame height (director spec) and the herd band sits at y 0.45-0.72.
-   - Lay dark low foreground props (jars, reed bundles, a toppled cart wheel) densely enough along the bottom that no full-width bare band remains.
-   - Pass check: block share ≤30 % at g 1524, 1533, 1548, 1554, 1563 and 1587, and no prop over the lead's head.
-
-## Notes
-- The rim works on the oxen: a thin light-blue top and right edge, clean, with no ghosting.
-- The blue point lights on the ground give a warm-plus-cool frame (§I).
+| 4 | 6 | 5 | 7 | 6 |
