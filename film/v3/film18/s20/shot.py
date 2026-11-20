@@ -7,15 +7,15 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c18 as C
 from c18 import J, S, R2, V, bpy
 SHOT = 's20'; G0, G1 = 1515, 1595; H_IN, H_OUT = 6, 6
-V_OX = 16.2; V_CAM = 0.97 * V_OX; XC = 20.0; Y0 = -46.0; DUR = 81 / 30.0; LAT = 12.0; CZ = 4.0
+V_OX = 16.2; V_CAM = 1.0 * V_OX; XC = 20.0; Y0 = -46.0; DUR = 81 / 30.0; LAT = 11.0; CZ = 4.0
 def pose(sh, t):
     y = Y0 - V_CAM * t * DUR; lat = LAT - 0.05 * LAT * t * DUR * 0.0 - 0.14 * LAT * t     # 5 %/s push -> about 14 % over the shot
     w = max(0.0, 1.0 - (t * 81) / 7.0) ** 2
-    return dict(loc=(XC, y, CZ), look_at=(XC - lat, y + 2.2 + 30.0 * w, 3.3), lens=26.0)
+    return dict(loc=(XC, y, CZ), look_at=(XC - lat, y + 2.8 + 30.0 * w, 3.0), lens=30.0)
 S.pose_at = pose
 rnd = random.Random(20)
 R2.POST['s20'] = lambda p: None
-SP = 10.0                                                       # row spacing = 2.2 ox lengths (ox about 4.5 D)
+SP = 20.0                                                       # row spacing = 2.2 ox lengths (ox about 4.5 D)
 FRONT = [(-LAT, 2.65 + SP * n, 1.0) for n in range(-2, 3)]       # lead ox = n 0 at dy 3.0 (head at the left of frame)
 REAR = [(-LAT - 3.0, 2.65 + SP * (n + 0.5), 0.95) for n in range(-2, 3)]
 REL = FRONT[:2] + [FRONT[2]] + FRONT[3:]                         # keep list order: REL[0] must be the lead
@@ -63,7 +63,7 @@ def frame(g, t, camloc, ctx):
     for j, (dx, dy, sc) in enumerate(REL):
         pos = (XC + dx, ycam + dy, 0.0)
         ph = int(k * 12 + j * 3) % 8
-        C.put_ox(j, pos, -90, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='side', gait='gallop', theta=0, reed=True, face='rage', tfx=0.4, lean=60.0)
+        C.put_ox(j, pos, -90, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='three_quarter', gait='gallop', theta=30, reed=True, face='rage', tfx=1.2, lean=60.0)
 
 if __name__ == '__main__':
     KEEP = []

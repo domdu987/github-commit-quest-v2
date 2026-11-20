@@ -20,3 +20,10 @@ Layout: two rows (front spacing 10 D = 2.2 ox lengths, rear row +3 D back, offse
 - Lead ox: height ~20 % (not 25-30 %): the side-view ox with flame is ~2.6x wider than tall, so at 25-30 % height it cannot stay inside 720 px with the flame at x <= 680. I kept the whole lead + flame in frame: lead x 143-642 at g1525 drifting to 24-531 at g1595; lead flame max x ~699 at g1525 (flame tongue ends x 639-699 at the very start, <= 668 from g1545) - the first ~20 frames exceed 680 by up to ~20 px.
 - Ground (RENDERED frames, my gshare.py: pixels below y 580 within tolerance of the modal field colour and locally smooth): median **0.50**, max 0.54. My estimator reads higher than QA's, so this is not directly comparable to the 0.28 target; the lower 45 % of the frame is now covered by props.
 - Not measured: the 30 px flame-to-any-head rule on every frame (head-to-head distances not projected for non-lead oxen).
+
+## Round 17 (director 14:28 note: lead 25-30 %, flame >= 120 px, two rows)
+Reframed: three-quarter view oxen, camera follows at 1.0 x herd speed, LAT 11, lens 30, look z 3.0, flame tfx 1.2 tilted 60 lean, rows spaced 20 D (front) and rear row offset half a spacing, 3 D back; 340 low props.
+- Lead ox height ~26 % (y 617-949 of 1280); lead head x 25 -> 0 (clipped by 0-5 px from g1575); lead flame 120-130 px wide, tip reaches the right edge x 719 in the first frames and ends x 645-710 later (clipped at the frame edge for the first ~40 frames, i.e. > 680).
+- No flame/bundle on any ox head in the phone-sheet frames; spacing 20 D leaves only ~1 ox plus a distant rear ox visible - sparse herd (deviation).
+- Frame-diff n=80: median **5.94**, p90 **8.41**; qa_auto PASS. Ground (shared ground_share.py, take.mkv): max **0.184**, median 0.131.
+- Mouth worst 813 px.

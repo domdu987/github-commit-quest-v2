@@ -21,3 +21,9 @@ Far-lane head-on oxen increased from 9 to 15 (flames hidden, spacing 7 frames, l
 - Density: 4 oxen per 0.5 s tile was NOT verified or reliably reached (far oxen are small); honest miss.
 - Props: pot (16.6,-10.6), bowl (18.6,-8.4) removed, helmet moved to (15.6,-17.5); 26 small rubble props along the lower edge. Not frame-checked for g1476-1492 jaw overlap beyond the phone sheet; the tilt-up of 4 deg was not applied (it pushes mouths past 860).
 - Ground on RENDERED frames (gshare.py, horizon y 800): median **0.73** by my estimator, which includes the wall base and reads far higher than QA's; target 0.28 NOT demonstrated.
+
+## Round 17 (director 14:28 note: reframe)
+Reframed to the director's brief: camera on the herd axis at (30.2,-26,1.7) looking at the wall (nearest hole at x ~0.5), lens 22; oxen (3 holes x staggered every 24 frames, 8 apart) burst out toward the camera at 9 D/s, head-on, ~15-25 % frame height, flames up on the tails; Qi from the outer holes (x 19, 41) behind; culled at y -13 (13 D from the camera); no pot over any ox head in the phone sheet; 75 small rubble props on the ground between run end and camera (corner ones <= 0.55 scale); no big foreground pots.
+- Frame-diff n=87: median **18.32**, p90 **23.08**. qa_auto fails only on blur at g1507-1520 (whip-out).
+- Ground (shared ground_share.py, every 5th frame): max **0.356** (g1457), median 0.269: the worst frames exceed the 0.30 target. A DENS=0.95 re-render had no effect (identical frames).
+- 4+ oxen visible per tile on the phone sheet (not counted per 0.5 s tile); mouth y and flame gaps not re-measured after the reframe (measure mode was written for the old lane layout) - phone sheet shows the lead jaw at about y 770.
