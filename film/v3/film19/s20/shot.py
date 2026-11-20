@@ -52,8 +52,8 @@ def pose_of(g):
     for q, sgn in (("arm_r", 1), ("arm_l", -1)):
         d = dict(p[q])
         # QA-art: palms up and OUT at about (+-1.30, 0.95), layered in front of the wig / gown so they read
-        hx = 1.30 - 0.30 * u_of(g, G_QUOTE - 5, G_QUOTE + 8, "sine")       # hands come in to +-1.00 during the snap: both palms stay in frame
-        d["hand"] = (lerp(d["hand"][0], sgn * hx, u) + sgn * 0.04 * pump, lerp(d["hand"][1], 0.95, u) + 0.12 * pump)
+        hx = 1.15 - 0.43 * u_of(g, G_QUOTE - 5, G_QUOTE + 8, "sine")       # hands come in to +-0.72 during the snap (no sideways pump): both palms inside x 40-680
+        d["hand"] = (lerp(d["hand"][0], sgn * hx, u) + 0.0 * pump, lerp(d["hand"][1], 0.95, u) + 0.12 * pump)
         d["layer"] = "front"
         d["shape"] = "open"
         p[q] = d
