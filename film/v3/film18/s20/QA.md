@@ -1,5 +1,5 @@
-# QA s20 (render team 5, film 18) round 9 - frames g1515-1595 (+6 handles: take.mkv g1509-1601, 93 frames), jimo_out NIGHT
-Frame-diff in-shot (n=80): median **4.65**, p90 **5.75** (gate median >= 4; p90 below 12 as allowed). qa_auto PASS.
-- Lead ox checked on rendered stills (g1522 / 1560 / 1590): camera lowered to z 1.25 and tilted up (look z 1.7), lateral distance 5.7 -> 4.8 D: the ox sits at y about 0.37-0.68 and fills about 38 % of frame height; head at x 0.2-0.3, flame trailing off the tail tip at x 0.7-0.9.
-- Left neighbour ox moved back 2.4 D (more than half a body length) and the lattice stays at 12 D: no flame within 60 px of an ox face.
-- A Qi silhouette is cropped by the left / bottom edge in the later frames; warm light pools under the flames; `J.gapfill` ground (dark earth). Not done: 2-3 oxen cropped by the bottom edge; the ground still reads cool violet-grey in the lower third.
+# QA s20 (render team 5, film 18) round 10 - frames g1515-1595 (+6 handles: take.mkv g1509-1601, 93 frames), jimo_out NIGHT
+Frame-diff in-shot (n=80): median **4.09**, p90 **4.90** (gate median >= 4: met by a hair). qa_auto PASS.
+- Lead ox: head at x about 0.12-0.25, body at y 0.38-0.68, about 37 % of frame height; its flame (scale 1.9) trails off the tail tip, but on the phone sheet the tail and flame still run to the right frame edge, so the flame is NOT fully inside x 0.75-0.92 on every frame.
+- Neighbour ox moved back 4.2 D: at g1574 its flame is well over 60 px from the lead ox's mouth.
+- Ground: a dark-earth plane (set bank texture) now covers the violet gravel; warm pools under the tails. Not done: 2-3 more oxen / Qi cropped by the bottom edge (one Qi at the left edge in some frames).
