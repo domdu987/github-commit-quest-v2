@@ -25,9 +25,14 @@ G_SNAP_W = C.cap_g("ปี 1887")                   # 215: the year lands -> sna
 SNAP = (G_SNAP_W - 2, G_SNAP_W + 13)
 PRESET, LIGHT = "site_wide", "DAY"
 PPD = 128
-EXT = 1.7                                      # the crane-down runs 2.6x the preset's end-pose travel (the preset pair is only 3 m apart)
-ARC = -5.0                                     # deg/s orbit about the yard (parallax)
-SLIDE = 60.0                                   # px/s
+EXT = 1.0                                      # the crane-down runs 2.6x the preset's end-pose travel (the preset pair is only 3 m apart)
+ARC = 0.0                                      # deg/s orbit about the yard (parallax)
+SLIDE = 25.0                                   # px/s
+WSCALE = 1.9                                   # riveter cards enlarged (wide camera, set rule: hand props x1.6-2.4); heads 45-55 px
+BASE_PITCH = 3.5                               # deg UP: horizon + legs sit lower, the empty ground slab shrinks to <= 25 %
+SNAP_TRUCK = 4.0                               # D: the snap trucks the camera sideways (visible speed-up) +
+SNAP_PUSH = 0.12                               # of the yard distance
+#                                  # px/s
 WORKERS = [("w_a", "riveter_tongs", "worker_a", False), ("w_b", "riveter_hammer", "worker_b", True), ("w_c", "riveter_forge", "worker_c", False),
            ("w_d", "riveter_tongs", "worker_d", True), ("w_e", "riveter_hammer", "worker_e", False), ("w_g", "riveter_forge", "worker_g", True)]
 
@@ -60,8 +65,8 @@ class CranePath(C.CamPath):
         look = self.subj0 + R @ (look - self.subj0)
         s = C.snap_u(g, SNAP[0], SNAP[1], 1.7)
         fw = (look - loc).normalized()
-        loc = loc + fw * (0.25 * self.depth * s)                           # snap push: 20 % of the yard distance
-        look = look + fw * (0.25 * self.depth * s)
+        loc = loc + fw * (SNAP_PUSH * self.depth * s) + self.rgt * (SNAP_TRUCK * s)
+        look = look + fw * (SNAP_PUSH * self.depth * s) + self.rgt * (SNAP_TRUCK * s)
         v = look - loc
         r = Vector((v.y, -v.x, 0.0)).normalized()
         from mathutils import Matrix
@@ -70,7 +75,7 @@ class CranePath(C.CamPath):
 
     def pitch(self, g):
         """aim DOWN 4 deg (tilt up would sink the yard into the caption band), -7 more during the snap push (heads stay < 880)"""
-        return -3.0 - 12.0 * C.snap_u(g, SNAP[0], SNAP[1], 1.7)
+        return BASE_PITCH - 4.0 * C.snap_u(g, SNAP[0], SNAP[1], 1.7)
 
     def tilt(self, g):
         return self.pitch(g)
@@ -130,7 +135,7 @@ class Take(C.Take):
             self.key_cam(f, *self.path.at(g))
             self.key_set(f)
             for a, cast, mk, mirror in self.work:
-                C.place(a, f, mk)
+                C.place(a, f, mk, scale=WSCALE)
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)

@@ -26,11 +26,12 @@ SNAP = (G_MOST - 2, G_MOST + 13)               # 344..359
 G_300 = C.cap_g("สูง 300 เมตร")                  # 321: Eiffel's arm goes up
 PRESET, LIGHT = "site_leg_low", "DAY"
 PPD_E, PPD_W = 256, 160
-PITCH0, PITCH1 = 19.0, 27.0                    # drift aim pitch (deg, up from the horizon); + snap -> ends ~35
-SNAP_PITCH = 11.0
+PITCH0, PITCH1 = 16.0, 27.0                    # drift aim pitch (deg, up from the horizon); + snap -> ends ~35
+SNAP_PITCH = 14.0
 RIVETERS = [("rv_a", "riveter_hammer", "leg_a", False), ("rv_b", "riveter_tongs", "leg_b", True), ("rv_c", "riveter_forge", "leg_c", False)]
 EIF_MARK = "eiffel_leg"
-FWD0 = 12.0
+FWD0 = 5.0
+RSCALE = 2.4                                   # riveters enlarged so they read on the platforms (heads ~50 px)
 YAW = 9.0                                      # deg: aim turned toward Eiffel (screen-left)
 
 
@@ -74,7 +75,7 @@ class LegPath(C.CamPath):
         loc += fwd * (0.8 * s)                           # a little extra push in the snap
         ang = math.radians(self.pitch(g))
         tt = (g - GF) / float(G_LAST - GF)
-        hy = Matrix.Rotation(math.radians(YAW - 24.0 * tt), 3, 'Z') @ self.h      # the aim also pans right (parallax on the pier / scaffold)
+        hy = Matrix.Rotation(math.radians(YAW - 10.0 * tt), 3, 'Z') @ self.h      # the aim also pans right (parallax on the pier / scaffold)
         aim = hy * math.cos(ang) + Vector((0, 0, math.sin(ang)))
         return loc, loc + aim * 20.0
 
@@ -148,7 +149,7 @@ class Take(C.Take):
             self.key_cam(f, *self.path.at(g))
             C.place(self.eif, f, self.eif_mark)
             for a, cast, mk, mirror in self.riv:
-                C.place(a, f, mk)
+                C.place(a, f, mk, scale=RSCALE)
             self.key_set(f)
         for g in gs:
             f = bf(g)

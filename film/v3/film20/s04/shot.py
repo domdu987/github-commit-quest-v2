@@ -28,9 +28,9 @@ G_SWAP = G_WORD + 2                            # expression swap on the closed f
 PRESET, LIGHT, MARK = "site_table", "DAY", "eiffel_table"
 HEAD_Z = 2.6
 PPD = 256
-CAMERA_DROP = 0.75                             # D (0.4 m lower)
+CAMERA_DROP = 3.0                              # D (0.4 m lower)
 CAM_FWD = 7.0                                  # D toward him
-TILT0 = 6.0                                    # deg above the camera -> head line; + drift tilt
+TILT0 = 7.0                                    # deg above the camera -> head line; + drift tilt
 TILT_RATE = 1.5
 
 
@@ -39,8 +39,8 @@ def cam_path(A):
     subj = m + Vector((0.0, 0.0, HEAD_Z))
     c = Vector(A["cams"][PRESET]["loc"]) - Vector((0.0, 0.0, CAMERA_DROP))
     c = c + (subj - c).normalized() * CAM_FWD                           # closer: his head ~110 px instead of 56
-    return C.CamPath(c, subj, GF, G_LAST, push=0.10, slide_px=60.0, rise_px=0.0, arc_deg_s=-24.0, tilt0=TILT0, tilt_deg_s=TILT_RATE,
-                     decay=0.2, snaps=[])
+    return C.CamPath(c, subj, GF, G_LAST, push=0.10, slide_px=45.0, rise_px=0.0, arc_deg_s=-8.0, tilt0=TILT0, tilt_deg_s=TILT_RATE,
+                     decay=0.2, snaps=[dict(g=(G_WORD - 2, G_WORD + 11), k=1.4, peak=1.7, shift=(-0.4, 0.0), tilt=1.0)])
 
 
 def cam_path_static():
@@ -55,7 +55,7 @@ EIF_B = cast20.STORY20["eiffel_point_up"][1]
 
 
 def pose_of(g):
-    u = u_of(g, *RAISE)
+    u = u_of(g, *RAISE) * (1.0 - u_of(g, 288, 298))                    # arm up 266-274, held, back down 288-298
     p = dict(puppet.lerp_pose("eiffel", EIF_A, EIF_B, u))
     p["expr"] = "determined" if g < G_SWAP else "proud"
     p["yaw"] = lerp(0.35, 0.45, u)
