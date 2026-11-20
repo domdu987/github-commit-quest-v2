@@ -186,3 +186,88 @@ Fixes:
 - T3 **PASS**: all round-1 fixes verified, no magenta. Optional: tighten the scale match at g856-858 if the dissolve starts before g859.
 - T7 **PASS**: all round-1 fixes verified.
 - T4 **FIX**: pole tangent g1084-1096; board and official cut by the edge g1052-1096; landing unreadable g1186-1204; no crowd-head frame or dimming in the hush g1290-1337; whip flare frames g1205-1207 and g1269-1275. Minor: bar at Dick's chin g1180, dark line over his leg g1300-1337, flat swap cards.
+
+---
+# Round 3 (2026-11-20): T1 and T2 re-renders, T5 (+T6) first review
+Same method: 3 fps sheets, ±3 frames around every join, full-res crops. Magenta scan of every frame: T1 0 %, T2 at most 0.1 % in any frame, T5 at most 0.2 %, so **no magenta**.
+
+| take | verdict |
+|---|---|
+| T1 | **PASS** |
+| T2 | **FIX** (one small item: seam hands) |
+| T5 | **FIX** |
+
+## T1 (re-render): PASS
+I checked each round-1 fix:
+- Bar through faces: **fixed**.
+  - g156-164: the boys now stand beside the pit, not behind the bar line, and Dick takes off on the near side of the standard.
+  - g405-416: the falling bar passes behind Dick, never over his face.
+- Grey bench g330-352: **fixed**. The camera is higher, and Dick's feet and shadow are visible above the bench.
+- Giant card g438-446: **fixed**. Dick's head is now about 15-25 %, inside the frame, and the halo is reduced.
+- Boy straddles g230-330: **fixed**. Pit-side camera; the straddles read large at g254 and g296.
+- MEXICO 68 poster: hidden for the whole take.
+- Note (not blocking): during the slide along the bar (g254-262 and g290-300), Dick stands half out of frame at the left or right edge. A small reframe would help but isn't required.
+
+## T2 (final): FIX (one small item)
+I checked each round-1 fix:
+- Newspaper held: **fixed**. Two hands grip the edges, and a fedora and face show above the page (g744-868). The same prop appears in the background at g573-640 and g800-850.
+  - Note: the hands are bright orange, the same colour as the bunting. Skin tone, or the reader's sleeve colour, would read better as hands. Optional.
+- Whip g709-716: **fixed**. Directional blur, lands on the pit wide, no empty lawn or bin.
+- Photographer: **fixed**. He is at the pit edge g716-744 and his flash fires at g738.
+- MEXICO 68 poster: hidden.
+
+Seam with T3 (compared T2 final against T3 at g859, 862 and 865):
+- The page geometry matches. At g862 and g865 the offset is about 10 px at full res; at g859 the headline doubles by about 60 px. Inside a 7-frame dissolve that weighs mostly toward T2 at that end, this is acceptable.
+- **Fix:** the new orange hand enters the frame in T2's seam frames. It sits at the left edge of the photo at g859-865 and the right edge at g863. T3 has no hands, so in the dissolve an orange blob ghosts over the photo and then vanishes.
+- Remedy: keep both hands outside the page crop from g850 (slide them out to the page corners, or bend the page away from them), or hide them for g856-868.
+
+## T5 + T6 (first review, g1325-1810): FIX
+Works:
+- Ride-along run g1325-1395: low side angle, Dick about 30 % of frame height, the 2.24 m board, MEXICO 68 boards, floodlights.
+- **The arch reads very well on a phone** (g1425-1505):
+  - The arch spans about 60-70 % of the frame width.
+  - The head hangs below the bar on one side and the legs on the other.
+  - There is a floodlight rim and the cauldron is in frame.
+  - The slow orbit is smooth.
+- Rival match-dissolves at g1511-1518 and g1584-1591. The red rival lies flat, high above the bar, in the same framing, and the dissolves are clean (qa_stats2 does not count them as cuts).
+- Beat timing: the head is over the bar at about g1398 (46.6 s, plan 46.4); the back is on the bar at g1416 (47.2 s). The legs stay hanging through the arch hold and flick at g1595-1610, as QA.md describes.
+- T6:
+  - Top-down crane over the mat g1645-1722; Dick sits up around g1675 and the bar doesn't move.
+  - Crane out to the podium g1735-1778: Dick on the top step with a gold medal, MEXICO 68 banner, the rival waving.
+  - Close-up 3: the coach's jaw drop with eyes wide, same maroon cap and windbreaker.
+- Luma 109: highlight clipping is low (2-3 % of pixels above 245 for most of the take, at most 6.9 % around g1775). The brightest stretch is the crane/podium at g1745-1775 (mean luma about 115-127, driven by the floodlight cone and the white podium). Nothing important is blown out. Optional: pull the exposure down about 0.15 EV for g1700-1780.
+
+**The 4 "shots" qa_stats2 counts:** the detector fires at g1784, 1788 and 1792. All three are inside the whip to the coach; the rival dissolves are not counted.
+- The whip g1783-1793 has no motion blur. Each frame lands on a sharp, unrelated view: a green field with a camera table (g1786), a washed-out white track (g1789), crowd rows (g1791).
+- Frame differences there are 64, 61, 88, 115 and 97 (the median is 8), so the whip reads as three flash cuts.
+- That gives shots of 4, 4 and about 18 frames, which are the 3 shots under 1 s.
+
+Fixes:
+1. **Bar across Dick's face at take-off, g1398-1408 (§G).**
+   - The bar runs straight across his face as his head passes the bar plane.
+   - Fix: raise his head-path about 15 cm (head clears above the bar line), or, better, lift the camera slightly so the head is seen over the bar, not through it.
+2. **Bar across Dick's face during the drop, g1604-1612 (§G).**
+   - As the legs flick, his head drops behind the bar and the bar covers his mouth and eyes for about 8 frames.
+   - Fix: offset his drop path toward the camera side of the mat, or delay the camera pan so his face is clear of the bar.
+3. **The landing on the mat happens off-screen, g1612-1645.**
+   - After g1612 the camera pans onto an empty mat; Dick lands at the far edge at about 3-5 % height (g1625-1645).
+   - The plan has "drop onto the mat" as a beat. Keep him in frame through the landing at 15 % or more, then rise into the top-down crane.
+4. **Whip to the coach strobes, g1783-1793** (these are the 3 short "shots").
+   - Add 5-sub-frame directional blur as in T2 and T4, and keep the path continuous: no sharp field/table or white-track frames.
+   - Then qa_stats2 should count 1 shot.
+5. **Close-up 3 framing, g1792-1810.**
+   - The lower ~45 % of the frame is empty blue seat rows, and there is a black void band across the top (canopy underside) at g1798-1810.
+   - Coordinator rule: no bare seats or black void. Frame tighter on the coach (face about 25-30 %, jaw drop), fill the rows around and in front of him with crowd cards, and fill or hide the black band.
+6. Minor:
+   - In the top-down g1645-1722 Dick is about 8-10 % of the frame, and "looks at the bar" doesn't read. Push in about 20 % so the sit-up and the still bar read on a phone.
+   - In the podium frames (g1765-1778) the medal is small. Hold about 0.3 s closer, or add a medal glint.
+
+## Round 3 summary
+- T1 **PASS**: all round-1 fixes verified.
+- T2 **FIX**: keep the orange hands out of the seam frames g856-868 (they ghost into the T3 dissolve at g859-865). Everything else passes; the seam geometry is OK.
+- T5 **FIX**:
+  - bar across the face at g1398-1408 and g1604-1612,
+  - landing off-screen at g1612-1645,
+  - unblurred whip g1783-1793 (the 3 short shots),
+  - close-up 3 with bare seats and a black band at g1792-1810.
+  - Minor: top-down too small (g1645-1722), podium medal small.
