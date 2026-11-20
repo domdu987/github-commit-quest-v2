@@ -31,6 +31,15 @@
   },
   {
    "kind": "accent",
+   "t": 33.433,
+   "dur": 0.267,
+   "frame": 1003,
+   "end_frame": 1011,
+   "note": "push-in on 'ใบอนุญาต': soft whoosh + a paper-flutter swish",
+   "peak_frame": 1007
+  },
+  {
+   "kind": "accent",
    "t": 35.467,
    "dur": 0.5,
    "frame": 1064,
