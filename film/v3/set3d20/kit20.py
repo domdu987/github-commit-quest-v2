@@ -202,7 +202,7 @@ def bridge(mb, M, zb, x, y0, y1, w=22.0):
     for i in range(n):
         yy = y0 - 6 + (y1 - y0 + 12) * (i + 0.5) / n; mb.box(M['stone'], (x, yy, zb + 0.55), (w - 1.0, (y1 - y0 + 12) / n - 5.0, 0.7))
 
-def ground_plane(zb, cols, size=2400, rough=1.0, ctr=(0, 300), apron=None):
+def ground_plane(zb, cols, size=2400, rough=1.0, ctr=(0, 300), apron=None, outer=None):
     """apron = (x, y, R, k, (r, g, b)): darker trampled earth (multiply colour, strength k at the centre, smooth fall-off to R metres) around a world point"""
     me = bpy.data.meshes.new('ground'); bm = bmesh.new(); bmesh.ops.create_grid(bm, x_segments=2, y_segments=2, size=size); bm.to_mesh(me)
     ob = bpy.data.objects.new('ground', me); ob.location = (ctr[0], ctr[1], zb); bpy.context.scene.collection.objects.link(ob); ob.parent = C.root()
@@ -223,6 +223,11 @@ def ground_plane(zb, cols, size=2400, rough=1.0, ctr=(0, 300), apron=None):
         vd = N('ShaderNodeVectorMath'); vd.operation = 'DISTANCE'; L(tc.outputs['Object'], vd.inputs[0]); vd.inputs[1].default_value = (ax - ctr[0], ay - ctr[1], 0.0)
         mr = N('ShaderNodeMapRange'); mr.interpolation_type = 'SMOOTHSTEP'; mr.inputs['From Min'].default_value = 0.4 * ar; mr.inputs['From Max'].default_value = ar; mr.inputs['To Min'].default_value = ak; mr.inputs['To Max'].default_value = 0.0; L(vd.outputs['Value'], mr.inputs['Value'])
         c4 = N('ShaderNodeMix'); c4.data_type = 'RGBA'; c4.blend_type = 'MULTIPLY'; L(mr.outputs['Result'], c4.inputs[0]); L(last, c4.inputs[6]); c4.inputs[7].default_value = (atint[0], atint[1], atint[2], 1.0); last = c4.outputs[2]
+    if outer:                                   # beyond R0..R1 metres from the tower axis the ground turns into Paris street paving / lawn colour
+        ox, oy, r0, r1, hx_ = outer
+        vd2 = N('ShaderNodeVectorMath'); vd2.operation = 'DISTANCE'; L(tc.outputs['Object'], vd2.inputs[0]); vd2.inputs[1].default_value = (ox - ctr[0], oy - ctr[1], 0.0)
+        mr2 = N('ShaderNodeMapRange'); mr2.interpolation_type = 'SMOOTHSTEP'; mr2.inputs['From Min'].default_value = r0; mr2.inputs['From Max'].default_value = r1; mr2.inputs['To Min'].default_value = 0.0; mr2.inputs['To Max'].default_value = 1.0; L(vd2.outputs['Value'], mr2.inputs['Value'])
+        c5 = N('ShaderNodeMix'); c5.data_type = 'RGBA'; L(mr2.outputs['Result'], c5.inputs[0]); L(last, c5.inputs[6]); c5.inputs[7].default_value = hexc(hx_); last = c5.outputs[2]
     L(last, bs.inputs['Base Color']); L(bs.outputs[0], out.inputs['Surface']); ob.data.materials.append(m)
 
 def clouds(P):
@@ -281,7 +286,7 @@ def tower_slice(mb, M, a, b, thick=1.0, piers=True, interleg=True, top_plate=Fal
             for z0, z1 in zip(zs[:-1], zs[1:]): mb.rod(I, f(z0), f(z1), 0.52 * k * (1.15 - z0 / 600.0), 0.5 * k * (1.15 - z1 / 600.0), 4)
         for p_, q_ in (((-1, -1), (1, -1)), ((1, -1), (1, 1)), ((1, 1), (-1, 1)), ((-1, 1), (-1, -1))): lattice_face(mb, IL, P[p_], P[q_], zs, 0.22 * k, 0.26 * k)
         if piers and a == 0:
-            mb.box(M['stonedk'], (sx * tw(0), sy * tw(0), 1.4), (2 * th(0) + 5.0, 2 * th(0) + 5.0, 5.2)); mb.box(M['stone'], (sx * tw(0), sy * tw(0), 4.2), (2 * th(0) + 3.2, 2 * th(0) + 3.2, 0.7))
+            mb.box(M['stonedk'], (sx * tw(0), sy * tw(0), 0.9), (2 * th(0) + 5.0, 2 * th(0) + 5.0, 3.0)); mb.box(M['stone'], (sx * tw(0), sy * tw(0), 2.6), (2 * th(0) + 3.2, 2 * th(0) + 3.2, 0.6))
         if top_plate:
             z = b; mb.box(I, (sx * tw(z), sy * tw(z), z + 0.4), (2 * th(z) + 0.8, 2 * th(z) + 0.8, 0.8))
     if interleg and b > Z1 + 2:
@@ -504,12 +509,16 @@ def person(mb, M, c, yaw, kind='man', col='dark', h=1.7):
         else: mb.ell(M['dark'], (0, 0, h - 0.04), (0.17, 0.045, 0.07), (8, 4))
     mb.pop()
 
-def flag_pole(mb, M, c, h=9.0, cols=('flag_r', 'flag_w', 'flag_b'), wind=1.0, s=1.0):
-    """flag pole with a swallow-tail pennant in plain colour bands (no text); gilt ball on top"""
+def flag_pole(mb, M, c, h=9.0, cols=None, wind=1.0, s=1.0):
+    """flag pole with a VERTICAL French tricolour (blue at the hoist, white, red), gently waved, 2.6 x 1.7 m; gilt ball on top. `cols`/`wind`: wind -1 flies it to the other side"""
     x, y, z = c; mb.rod(M['white'], (x, y, z), (x, y, z + h), 0.07 * s, 0.05 * s, 6); mb.ell(M['gold'], (x, y, z + h + 0.1), (0.14 * s,) * 3, (8, 6))
-    for i, cm in enumerate(cols): mb.quad(M[cm], [(x, y, z + h - 0.2 - i * 0.55 * s), (x + 2.6 * s * wind, y + 0.5, z + h - 0.15 - i * 0.55 * s), (x + 2.6 * s * wind, y + 0.5, z + h - 0.7 - i * 0.55 * s), (x, y, z + h - 0.75 - i * 0.55 * s)])
+    w3 = 0.9 * s * wind; fh = 1.7 * s; top = z + h - 0.15
+    for i, cm in enumerate(('flag_b', 'flag_w', 'flag_r')):
+        x0 = x + i * w3; x1 = x + (i + 1) * w3; wv0 = 0.18 * s * math.sin(i * 1.3); wv1 = 0.18 * s * math.sin((i + 1) * 1.3)
+        mb.quad(M[cm], [(x0, y + wv0, top), (x1, y + wv1, top), (x1, y + wv1, top - fh), (x0, y + wv0, top - fh)])
+        mb.quad(M[cm], [(x0, y + wv0, top - fh), (x1, y + wv1, top - fh), (x1, y + wv1, top), (x0, y + wv0, top)])
 
-def bunting(mb, M, p0, p1, sag=0.6, n=14, cols=('flag_r', 'flag_w', 'flag_b')):
+def bunting(mb, M, p0, p1, sag=0.6, n=14, cols=('flag_b', 'flag_w', 'flag_r')):
     p0 = Vector(p0); p1 = Vector(p1); prev = p0
     for i in range(1, n + 1):
         t = i / n; p = p0.lerp(p1, t); p.z -= sag * 4 * t * (1 - t); mb.rod(M['rope'], prev, p, 0.02, 0.02, 4)
@@ -526,7 +535,7 @@ def pavilion(mb, M, c, w=14.0, d=10.0, h=6.0, yaw=0.0, kind=0):
         if abs(xx) > w / 2 - 0.9: continue
         mb.box(M['navy'], (xx, -d / 2 - 0.02, h * 0.5), (1.1, 0.05, h * 0.55)); mb.cyl(M['navy'], (xx, -d / 2 - 0.02, h * 0.78), 0.55, 0.05, 'y', 10)
     for i in range(8):
-        xx = -w / 2 + (i + 0.5) * w / 8; mb.quad(M['awn_r' if i % 2 else 'awn_c'], [(xx - w / 16, -d / 2 - 0.1, h * 0.72), (xx + w / 16, -d / 2 - 0.1, h * 0.72), (xx + w / 16, -d / 2 - 2.1, h * 0.52), (xx - w / 16, -d / 2 - 2.1, h * 0.52)])
+        xx = -w / 2 + (i + 0.5) * w / 8; mb.quad(M['awn_r'], [(xx - w / 16, -d / 2 - 0.1, h * 0.72), (xx + w / 16, -d / 2 - 0.1, h * 0.72), (xx + w / 16, -d / 2 - 2.1, h * 0.52), (xx - w / 16, -d / 2 - 2.1, h * 0.52)])
     if kind == 0: mb.ell(M['dome'], (0, 0, h + 0.5), (w * 0.3, d * 0.3, h * 0.3), (16, 10))
     else:
         mb.quad(M['zinc'], [(-w / 2 - 0.5, -d / 2 - 0.5, h + 0.45), (w / 2 + 0.5, -d / 2 - 0.5, h + 0.45), (w / 2 + 0.5, 0, h + 2.6), (-w / 2 - 0.5, 0, h + 2.6)][::-1]); mb.quad(M['zincdk'], [(-w / 2 - 0.5, 0, h + 2.6), (w / 2 + 0.5, 0, h + 2.6), (w / 2 + 0.5, d / 2 + 0.5, h + 0.45), (-w / 2 - 0.5, d / 2 + 0.5, h + 0.45)][::-1])
