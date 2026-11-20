@@ -1,18 +1,19 @@
-# QA-art s07 (count payoff "ร้อยตัว … พันกว่าตัว", 17.69-19.90 s), TAKE gate re-render — FIX-FIRST
-Reviewed: take.mkv at 6 fps (every 5th frame, art6/gNNNN.png = global frame g) at full size 720x1280 and on the 360x640 phone sheet art_phone.jpg. Scores 1-10.
+# QA-art s07 (count payoff "ร้อยตัว … พันกว่าตัว", 17.69-19.90 s), TAKE gate round 6 — PASS
+I reviewed take.mkv at 6 fps (art8/gNNNN.png, every 5th frame, g 531-601) at full size 720x1280 and on the 360x640 sheets art8_phone_0/1.jpg.
 
 ## Earlier changes
-1. Near rows as upright 3/4 billboards, not sheared: NOT DONE, and now worse. After the snap (g 556-605), the lower band (y 700-1120 full res, about 33 % of the frame) is a chevron of stretched diagonal "sausage" oxen 2-3x normal body length. On the phone it reads as a rendering glitch.
-2. Empty navy ground at the bottom: PARTLY done. A plain navy ground band is still at y 1100-1280 (about 14 %) after the snap.
-3. Real x1.6 snap pull-out on "พันกว่าตัว": DONE. g 551 → 556 is a big, clear, held reveal. It is the best moment in the take.
-4. Cold shadow blob on the wall: DONE. Plain oxen for continuity: DONE.
+1. Near-row shear: MOSTLY DONE. The left and centre near rows are now upright 3/4 oxen. At the lower right (x 470-720, y 840-1110 full res, g 556-601) 4-5 cards are still stretched diagonally, about 2x body length. This is about 8 % of the frame, down from about 33 %. On the phone it reads as oxen pushing in a crowd, not as a glitch.
+2. Bottom of frame: DONE. A dark fence rail ends the frame at y 1100-1280. A strip of flat violet ground (y 1050-1130, about 6 %) remains between the herd and the rail. This is acceptable.
+3. Snap pull-out on "พันกว่าตัว": still DONE and still the best moment. g 551 → 556 goes from a full yard to a whole quarter packed under the lit gate tower at dusk.
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 7 | 7 | 4 | n/a | 8 |
+| 8 | 8 | 6 | 6 | 8 |
 
-## Changes
-1. **g 556-605, near band (y 700-1120):** Fix the shear. Each near-row card must face the camera ray: billboard on both yaw (0°, not 26°) AND pitch (tilt the card back so it is perpendicular to the view direction from the 4 D high camera). Or delete the near rows and let the far pen herd (y 520-670, which reads well) be the front. No ox may be longer than about 1.3x its drawn body length on screen.
-2. **g 556-605, bottom 14 %:** End the frame on content. Either extend a properly billboarded herd to the bottom edge, or put a dark fg element (the pen fence rail with a lit lantern, or a tiled roof eave) across y 1100-1280.
+## Verdict: PASS
+The count payoff reads instantly on the phone: first a yard filling up, then a sea of oxen.
 
-Notes: the pre-snap tight frames (g 531-551) read well as "a yard filling up". The heads cropped at the bottom edge are fine.
+## Notes (polish, not blocking)
+- Lower-right sheared cards (g 556-601): if the take is re-rendered for any other reason, billboard or delete those 4-5 cards.
+- Pre-snap (g 531-551): pale translucent tan boxes sit behind the brazier (x 240-330, y 530-610). They are minor, but they are the kind of placeholder rule 2 forbids.
+- The rail has no lit lantern. A small warm lantern on the post (x 410-440) would tie the frame to the warm set.

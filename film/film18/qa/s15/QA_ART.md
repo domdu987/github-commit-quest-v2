@@ -1,16 +1,19 @@
-# QA-art s15 (false payoff: quote 2b "พรุ่งนี้กินเนื้อวัวกัน!", 37.85-40.15 s), TAKE gate round 4 — FIX-FIRST (one small change)
-Reviewed take.mkv at 6 fps (art7/gNNNN.png, every 5th frame) at full size 720x1280 and on the 360x640 sheet art7_phone.jpg.
+# QA-art s15 (false payoff: quote 2b "พรุ่งนี้กินเนื้อวัวกัน!", 37.85-40.15 s), TAKE gate round 5 — PASS
+I reviewed take.mkv at 6 fps (art8/gNNNN.png, g 1130-1210) at full size 720x1280 and on the 360x640 sheets art8_phone_0-2.jpg.
 
 ## Earlier changes
-1. Jars in both bottom corners: DONE. They are shaded and glazed now, matching s14.
-2. Carving mime (my note): ADDED, but it looks broken. From g 1155 a flat beige pill with no fingers or outline sits across his belly. A long red sleeve ribbon comes in from the left frame edge (g 1185-1210), not from his shoulder. On the phone it reads as a stick or bandage pasted on the armour.
+1. Broken carving hand/sleeve overlay: DONE (removed). No pill, ribbon or edge-entering sleeve appears in any frame.
+2. Corner jars: still in place, shaded and glazed.
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 7 | 7 | 7 | 5 | 7 |
+| 7 | 7 | 7 | 6 | 7 |
 
-The drunk, gloating general with the tipping cup reads, and the narration carries "eat beef tomorrow".
+## Verdict: PASS
+On the phone you see a drunk, gloating general with his eyes squeezed shut and his mouth open on the quote. His bronze cup tips over in his raised hand, and the party fire and soldier are behind him. Together with the narration, "we eat beef tomorrow" lands as the false payoff.
 
-## Verdict: FIX-FIRST
-## Changes
-1. **Carving hand, g 1155-1210:** Either draw it properly or remove it. A proper hand has an ink outline, a thumb and fingers around a small knife (or a flat chopping hand), and the sleeve starts at his left shoulder inside the body silhouette, never at the frame edge. If that cannot be done quickly, remove the overlay: the take without it was acceptable.
+## Notes (polish, not blocking)
+- His left arm shows as a short red stub with a dark spiky hand at the left edge of the body (g 1175-1190, x 20-80, y 640-700). It reads only as a gesture, so it is fine.
+- The cup tilts but nothing spills. A few wine drops from the lip on the last tilt would sell "drunk".
+- The jars are slightly faceted. That is fine at phone size.
+- The sky has a bright full moon and blue clouds. s22 now has a black sky. Check at the conform that the night grades of s14/s15 and s21/s22 do not jump.
