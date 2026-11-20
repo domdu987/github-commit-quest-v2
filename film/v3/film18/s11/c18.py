@@ -44,12 +44,57 @@ QUOTE1 = (g_of(22.45), g_of(28.38))          # (676, 854): the only frames where
 
 
 # ----------------------------------------------------------------------------- cards
-def pcard(name, **over):
-    """person card (dict path/w/h/x0/feet/height) for STORY18[name] with pose overrides; cached on disk by content hash."""
+def _add_horns(m, f):
+    """paint two cream cow-horn crescents on the raised fingertips of a mock-moo card (the drawing has hands at the head but no horns): extends the canvas on top."""
+    from PIL import Image, ImageDraw
+    D = CD.PXD_P
+    x0, y0 = f["bbox"][0], f["bbox"][1]
+    pad = int(0.55 * D)
+    padx = int(0.45 * D)
+    im = Image.open(m["path"]).convert("RGBA")
+    W, H = im.size
+    big = Image.new("RGBA", (W + 2 * padx, H + pad), (0, 0, 0, 0))
+    big.paste(im, (padx, pad))
+    S = 4
+    lay = Image.new("RGBA", ((W + 2 * padx) * S, (H + pad) * S), (0, 0, 0, 0))
+    dr = ImageDraw.Draw(lay)
+    for side in (-1, 1):
+        hx, hy = f["anchors"]["hand_l" if side < 0 else "hand_r"]
+        bx, by = ((hx - x0) * D + 4 + padx, (hy - y0) * D + 4 + pad)         # fingertip (hand centre) in px
+        bx += side * 0.02 * D; by -= 0.10 * D
+        # crescent: outer and inner arcs of a horn leaning outward then curling up
+        pts_o, pts_i = [], []
+        import math as _m
+        n = 14
+        for k in range(n + 1):
+            t = k / n
+            ang = _m.radians(10 + 95 * t)                           # sweep
+            r = 0.40 * D
+            ox = bx + side * (0.20 * D * _m.sin(ang) * (1 + 0.2 * t))
+            oy = by - (0.36 * D * (1 - _m.cos(ang)) + 0.04 * D)
+            w = 0.11 * D * (1 - 0.8 * t)
+            pts_o.append((ox + side * w * 0.6, oy)); pts_i.append((ox - side * w * 0.6, oy + w))
+        poly = pts_o + pts_i[::-1]
+        dr.polygon([(x * S, y * S) for x, y in poly], fill=(244, 232, 200, 255), outline=(42, 26, 42, 255))
+        dr.line([(x * S, y * S) for x, y in pts_o + [pts_i[-1]]], fill=(42, 26, 42, 255), width=int(0.018 * D * S))
+        dr.line([(x * S, y * S) for x, y in pts_i], fill=(42, 26, 42, 255), width=int(0.014 * D * S))
+    lay = lay.resize((W + 2 * padx, H + pad), Image.LANCZOS)
+    big.alpha_composite(lay)
+    big.save(m["path"])
+    m["w"] += 2 * padx / D
+    m["x0"] -= padx / D
+    m["h"] += pad / D
+    m["feet"] += pad / D
+    return m
+
+
+def pcard(name, horns=False, **over):
+    """person card (dict path/w/h/x0/feet/height) for STORY18[name] with pose overrides; cached on disk by content hash. horns=True paints cow horns on the fingertips."""
     c, pose = cast18.STORY18[name]
+    over_key_extra = "|horns" if horns else ""
     pose = dict(pose)
     pose.update(over)
-    key = name + "|" + repr(sorted((k, repr(v)) for k, v in over.items()))
+    key = name + "|" + repr(sorted((k, repr(v)) for k, v in over.items())) + over_key_extra
     h = hashlib.md5(key.encode()).hexdigest()[:10]
     nm = h + "_person"
     mp = os.path.join(CD.CARDS, nm + ".json")
@@ -62,6 +107,8 @@ def pcard(name, **over):
     m["kind"] = "person"
     m["height"] = f["feet_y"] - a["head_top"][1]
     m["x0"] = f["bbox"][0] - 4.0 / CD.PXD_P
+    if horns:
+        m = _add_horns(m, f)
     json.dump(m, open(mp, "w"))
     return m
 
@@ -360,3 +407,66 @@ def subject_x(T, shot, role="general"):
     m = S.marks_for(shot)[role][0]
     c = w2c(T.sc, T.cam, V((m[0], m[1], m[2] + J.HEIGHT[role] - 0.5)))
     return c.x * 720 if c.z > 0 else -9999
+
+
+def fg_world_props(T, specs, t=0.5, lin=0.5, mod=None):
+    """static WORLD-space foreground props placed relative to the camera pose at shot time t (so a dolly / truck makes them slide across and grow slowly).
+    specs: (kind, lateral D (+ right), down D, scale); kind = 'rope' | 'jar' | 'basket'.  Lit period props in the set's own materials, nothing parented to the camera."""
+    sh = T.sh
+    g = sh["f0"] + t * sh["frames"]
+    pose = pose_ext(T.shot, t, lin)
+    if mod:
+        pose = mod(g, t, dict(pose))
+    loc = V(pose["loc"]); look = V(pose["look_at"])
+    f = (look - loc).normalized(); r = f.cross(V((0, 0, 1))).normalized(); u = r.cross(f).normalized()
+    M = J.STATE["M"]
+    n0 = set(J.STATE["SET"].objects)
+    Bk2 = J.Banks()
+    b = Bk2("fgworld", hull=J.T.hull(3.0))
+    for kind, lat, down, sc in specs:
+        o = loc + f * 2.8 + r * lat + u * (-down)
+        base = V((o.x, o.y, max(0.0, o.z)))
+        if kind == "rope":
+            for k in range(3):
+                c = base + V((0, 0, 0.05 + 0.08 * k))
+                rr = 0.55 * sc * (1.0 - 0.18 * k)
+                n = 16
+                for i in range(n):
+                    a0, a1 = 2 * math.pi * i / n, 2 * math.pi * (i + 1) / n
+                    J.rod(b, c + V((rr * math.cos(a0), rr * math.sin(a0), 0)), c + V((rr * math.cos(a1), rr * math.sin(a1), 0)), 0.09 * sc, M["straw_d"], seg=4)
+        elif kind == "jar":
+            J.ellipsoid(b, base + V((0, 0, 0.55 * sc)), 0.5 * sc, 0.5 * sc, 0.6 * sc, M["clay"], seg=12, rings=8, rough=0.05, seed=3)
+            J.cyl(b, base + V((0, 0, 1.05 * sc)), 0.3 * sc, 0.25 * sc, M["clay_d"], seg=10, r1=0.35 * sc)
+            J.cyl(b, base + V((0, 0, 1.28 * sc)), 0.36 * sc, 0.1 * sc, M["red"], seg=10)
+        elif kind == "basket":
+            b.frustum(base, base + V((0, 0, 0.7 * sc)), 0.35 * sc, 0.55 * sc, M["straw_d"], seg=10)
+    Bk2.flush(J.STATE["SET"])
+    objs = [ob for ob in J.STATE["SET"].objects if ob not in n0]
+    for ob in objs:
+        J.no_bounce(ob)
+    return objs
+
+
+def cut_islands(objname, mark, max_faces=500):
+    """delete whole connected islands (posts, poles) of mesh `objname` that contain a vertex flagged in `mark` (cut_faces_in_rect output), if the island is small."""
+    import bmesh
+    o = J.STATE["objects"].get(objname) or bpy.data.objects.get(objname)
+    bm = bmesh.new(); bm.from_mesh(o.data); bm.verts.ensure_lookup_table(); bm.faces.ensure_lookup_table()
+    seen = set(); kill = []
+    for f in bm.faces:
+        if f.index in seen or not any(mark[v.index] for v in f.verts):
+            continue
+        isl = []; stack = [f]; seen.add(f.index)
+        while stack:
+            c = stack.pop(); isl.append(c)
+            for e in c.edges:
+                for nf in e.link_faces:
+                    if nf.index not in seen:
+                        seen.add(nf.index); stack.append(nf)
+        if len(isl) <= max_faces:
+            kill.extend(isl)
+    for f in kill:
+        if f.is_valid:
+            bm.faces.remove(f)
+    bm.to_mesh(o.data); bm.free(); o.data.update()
+    return len(kill)
