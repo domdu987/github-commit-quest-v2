@@ -28,14 +28,43 @@ def keys():
     mid = (CRESS + SURREY) / 2
     return [
         (1392, 'P_TOP'),
-        (1422, (-14.0, -38.0, 112.0), (2.0, 76.0, 0.0), 22.0),
-        (1446, (-50.0, -34.0, 62.0), (-82.0, -12.0, 3.0), 22.0),
-        (1467, (-78.0, -20.0, 17.0), (-93.0, -12.5, zc + 1.5), 24.0),
+        (1422, (-14.0, -111.0, 109.0), (2.0, 66.0, 0.0), 22.0),
+        (1446, (-52.0, -64.0, 58.0), (-85.0, -14.0, 3.0), 22.0),
+        (1467, (-72.0, -28.0, 17.0), (-93.0, -12.5, zc + 1.5), 24.0),
         (1483, cam3(at(C, 10.0, -0.3), 3.6), (float(mid[0]), float(mid[1]), zc + 1.3), 26.0),
         (1495, cam3(CAM_M, 1.55), (float(mid[0]), float(mid[1]), zc + 1.2), 26.0),
         (1519, cam3(CAM_E, 1.62), (float(CRESS[0]), float(CRESS[1]), zc + 1.55), 26.0),
         (1530, cam3(CAM_E2, 1.64), (float(CRESS[0]), float(CRESS[1]), zc + 1.58), 26.0),
     ]
+
+def story_colours(rs):
+    """cork image (QA: team 3 H2a): English in the loop + on the south bank solid CRIMSON, packed tight; the Scots wall 5 ranks BLUE with big saltire banners."""
+    K.PH_COL['crimson'] = '#c4202c'; K.PH_COL['saltire'] = '#2456c8'
+    for o in list(bpy.data.objects):
+        if (o.name.startswith('crowd') and o.name not in ('crowd_banners', 'crowd_horses')) or o.name.startswith(('spear_wall', 'wall_banners')):
+            bpy.data.objects.remove(o, do_unlink=True)
+    items = []
+    for r in range(11):
+        for c in range(17):
+            x = -19 + c * 2.35 + rs.uniform(-0.35, 0.35) + (1.2 if r % 2 else 0); y = 36 + r * 3.0 + rs.uniform(-0.35, 0.35)
+            if math.hypot(x - K.LOOP_C[0], y - K.LOOP_C[1]) < K.LOOP_R - 20 and float(K.sd_at(x, y)) > 3: items.append((x, y, float(K.ground(x, y)), 'crimson', 1.0))
+    for i in range(30):
+        x = rs.uniform(-70, -20) if i % 2 else rs.uniform(20, 70); y = float(K.bank_y(x)) - rs.uniform(4, 26); items.append((x, y, float(K.ground(x, y)), 'crimson', 1.0))
+    for i in range(24):
+        y = -36 - i * 2.4; x = (-1.2 if i % 2 else 1.2) + rs.uniform(-0.3, 0.3); items.append((x, y, float(K.ground(x, y)), 'crimson', 1.0))
+    K.stage_crowd(items)
+    # the Scots wall: 5 ranks across the neck, spears level, blue
+    sc = []; Bs = K.Batch(83)
+    for rank in range(5):
+        for k in range(16):
+            x = -9 + 18 * k / 15.0 + (0.5 if rank % 2 else 0); y = 27.0 + 1.1 * rank; z = float(K.ground(x, y)); sc.append((x, y, z, 'saltire', 1.0))
+            K.spear(Bs, (x, y - 0.4, z), tilt=(0.0, -0.9), h=2.4)
+    Bs.finalize('spear_wall', ink=False)
+    K.stage_crowd(sc)
+    Bp = K.Batch(87)
+    for sx, yy in ((-10.5, 26.5), (-6.0, 25.5), (-2.0, 25.0), (2.0, 25.0), (6.0, 25.5), (10.5, 26.5)):
+        K.banner(Bp, (sx, yy, float(K.ground(sx, yy))), 11.0, 190, 't_saltire', 't_white', 'saltire', rs, size=(7.0, 4.7))
+    Bp.finalize('wall_banners')
 
 def blink(g, off=0, period=67): return 1.0 if (g + off) % period in (0, 1) else 0.0
 
@@ -49,7 +78,7 @@ def extra_positions():
 
 def main(quality, gs, samples):
     T = Take.world(['valley_loop', 'camp_bank'], quality, samples, fg=['valley_loop'])
-    rs = np.random.RandomState(4); K.spear_wall(14, 2, rs)
+    rs = np.random.RandomState(4); story_colours(rs)
     # foreground dressing near the end camera (world-fixed): a barrel + reeds + a rope peg, low and at the frame edges (Surrey stays clear of the pole)
     Bf = K.Batch(96); Bg = K.Batch(97)
     pb = at(C, 1.0, -1.5); K.barrel(Bf, (float(pb[0]), float(pb[1]), gz(*pb)), rs=rs)
