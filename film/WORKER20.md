@@ -50,3 +50,9 @@ A shot's g0 = round(t0*30), g1 = round(t1*30)-1. In-shot events at narration tim
 - **No broken geometry, black slabs, unlit low-poly voids, blown streaks, duplicate props, moire.** Hide or move what you cannot fix.
 - **Frame-diff measured on the final frames** (90x160 grey, in-shot): median >= 4 AND p90 >= 12, from real camera motion (push/slide/orbit + one snap), not from flashes or jitter alone.
 - Look at your own phone_sheet.jpg (360x640) and ask: would the client understand this beat in 1 second? If not, fix it before pushing.
+
+## 7. QA_TEAM.md §G (client complaints after films 15/17, 2026-11-20) — BLOCKING at TAKE and FINAL gates
+Measure every take with `python3 PROJ/qa_stats.py take.mkv` and report the line in QA.md:
+- **Colour:** mean saturation >= 0.47 and mean luma 85-110 (film 2: 0.49 / 94). Night shots (s20, s21, s22) may sit darker but not below ~70 and must stay saturated; no peach haze over the frame.
+- **Nothing floats:** feet/body on a surface with a contact shadow; no heads hanging in the sky; no bars, poles or props through a face; no character sliced by a slab; no debris hanging still in the air.
+- **Camera distance:** prefer wide / medium-wide that shows the place; no face taller than ~35 % of the frame height; no character cut in half by a frame edge.

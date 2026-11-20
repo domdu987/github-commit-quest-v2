@@ -56,3 +56,24 @@ The director may NOT override a FAIL alone any more. An override needs a second,
 (not the director's opinion) and agrees; both notes go into QA_TECH.md. Every override is listed in the client report.
 ### F. Report to the client
 Each delivery lists: what every gate checked, the numbers (STT ratios, LUFS, frozen/black counts), open non-blocking notes, and overrides.
+
+## G. Client complaints after films 15 and 17 (2026-11-20) - blocking at TAKE and FINAL gates
+Producer review vs film 2 (sky_poker_v3) found:
+- film 15: saturation 0.44, brightness 132 (washed-out peach haze).
+- film 17: saturation 0.38 (dull brown/navy).
+- film 2: saturation 0.49, brightness 94.
+
+1. **Colour:** mean saturation >= 0.47 (max-min/max over the frame, as in the producer's stats.py) and mean luma 85-110. Use clear blue skies or deep night, and saturated primaries (red roofs, green fields, blue water). No peach haze over the whole frame.
+2. **Nothing floats:**
+   - Every character's feet or body touches a surface with a contact shadow.
+   - No heads or bodies hanging in the sky (film 15 had heads floating above the sand pit and stands).
+   - No bars, poles or props passing through a face.
+   - Characters are not sliced by grey slabs.
+   - No debris hanging in mid-air without motion.
+   - QA-art must check this on EVERY 0.5 s tile of the phone sheet.
+3. **Camera distance ("กล้องสั้น" = too close):**
+   - At least half the shots are wide or medium-wide, showing the place, as in film 2's town and tower shots.
+   - No face taller than about 35 % of the frame height, i.e. no extreme close-ups (film 17 had several).
+   - No character cut in half by a frame edge.
+   - Do not repeat one room angle more than 3 times in a row.
+4. FINAL gate: add a side-by-side contact sheet with film 2. One reviewer must answer "is it as vivid, wide and grounded as film 2?" A "no" blocks release.
