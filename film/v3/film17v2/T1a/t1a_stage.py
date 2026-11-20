@@ -52,9 +52,9 @@ def bertillon_back(a, c, cam):
         L('str%d' % i, [(x0 - dx, y0 - dy), (x1 - dx, y1 - dy), (x1 + dx, y1 + dy), (x0 + dx, y0 + dy)], '#2a1e18', 8, 0.0)
 
 # ---- T1a: the three bench prisoners seen from behind (hair + coat, same layering as bertillon_back). Colours from the real cards.
-PRIS = {'prisoner_a': dict(coat='#6f869e', sh='#5d7389', hair='#4a3830', hat=None),
-        'prisoner_b': dict(coat='#6e5c3c', sh='#5a4a30', hair='#4a3a28', hat='#5a4630'),
-        'prisoner_q': dict(coat='#5f7e3e', sh='#4e6a32', hair='#4a3830', hat='#243468')}
+PRIS = {'prisoner_a': dict(coat='#6f869e', sh='#5d7389', hair='#4a3830', hi='#7a6052', str='#2a1e18', hat=None),
+        'prisoner_b': dict(coat='#6e5c3c', sh='#5a4a30', hair='#4a3a28', hi='#7a6048', str='#2a1e14', hat='bowler'),
+        'prisoner_q': dict(coat='#5f7e3e', sh='#4e6a32', hair='#4a3830', hi='#7a6052', str='#2a1e18', hat='cap')}
 def prisoner_back(a, c, cam):
     import actors
     d = PRIS[c['name']]
@@ -63,16 +63,33 @@ def prisoner_back(a, c, cam):
     L = lambda n, pts, col, k, ol=0.055: _layer('%s_%s' % (nm, n), pts, col, z0 + u * k, o, ex, ey, to, ol)
     coat = [(-0.28, 0.50), (0.28, 0.50), (0.50, 0.56), (0.68, 0.68), (0.78, 0.88), (0.80, 1.2), (0.76, 1.7), (0.70, 2.0), (-0.70, 2.0), (-0.76, 1.7), (-0.80, 1.2), (-0.78, 0.88), (-0.68, 0.68), (-0.50, 0.56)]
     L('coat', coat, d['coat'], 0); L('coat_sh', [(-0.74, 1.45), (0.74, 1.45), (0.70, 2.0), (-0.70, 2.0)], d['sh'], 1, 0.0)
-    L('seam', [(-0.02, 0.75), (0.02, 0.75), (0.02, 2.0), (-0.02, 2.0)], d['sh'], 2, 0.0)
+    L('armL', [(-0.80, 0.9), (-0.58, 0.9), (-0.56, 1.9), (-0.74, 1.9)], d['sh'], 1, 0.0); L('armR', [(0.80, 0.9), (0.58, 0.9), (0.56, 1.9), (0.74, 1.9)], d['sh'], 1, 0.0)
+    L('seam', [(-0.02, 0.75), (0.02, 0.75), (0.02, 2.0), (-0.02, 2.0)], '#16141a', 2, 0.0)
+    L('collar', [(-0.40, 0.50), (-0.22, 0.42), (0.22, 0.42), (0.40, 0.50), (0.34, 0.74), (0, 0.84), (-0.34, 0.74)], d['sh'], 2)
     L('neck', [(-0.20, 0.16), (0.20, 0.16), (0.22, 0.50), (-0.22, 0.50)], '#e0b090', 3, 0.0)
     L('earL', _poly_ellipse(-0.58, 0.02, 0.11, 0.16, 14), '#e0b090', 5, 0.025); L('earR', _poly_ellipse(0.58, 0.02, 0.11, 0.16, 14), '#e0b090', 5, 0.025)
+    # head: egg-shaped skull (narrow crown, wider cheek line, flat nape), not an oval
     hair = []
     for k in range(40):
-        t = 2 * math.pi * k / 40; s_ = math.sin(t); hair.append((0.58 * math.cos(t), -0.06 + 0.68 * s_ * (0.78 if s_ > 0 else 1.0)))
+        t = 2 * math.pi * k / 40; s_ = math.sin(t); c_ = math.cos(t)
+        rx = 0.58 * (1.0 + 0.06 * s_) if s_ < 0 else 0.58 * (1.0 - 0.10 * s_)
+        ry = 0.70 if s_ < 0 else 0.56
+        hair.append((rx * c_, -0.06 + ry * s_))
     L('hair', hair, d['hair'], 6, 0.06)
-    if d['hat']:
-        L('brim', _poly_ellipse(0.0, -0.20, 0.72, 0.16, 26), d['hat'], 7, 0.05)
-        L('crown', [(-0.5, -0.12), (0.5, -0.12), (0.46, -0.62), (0.0, -0.74), (-0.46, -0.62)], d['hat'], 8, 0.05)
+    L('hair_hi', _poly_ellipse(-0.14, -0.40, 0.24, 0.09, 20), d['hi'], 7, 0.0)
+    for i, (x0, y0, x1, y1) in enumerate(((-0.38, -0.10, -0.30, 0.20), (-0.16, -0.22, -0.12, 0.26), (0.12, -0.22, 0.10, 0.28), (0.36, -0.10, 0.30, 0.20), (0.0, -0.50, 0.02, -0.28), (-0.26, -0.40, -0.22, -0.18), (0.26, -0.38, 0.22, -0.16))):
+        dx, dy = (y1 - y0), -(x1 - x0); Ln = math.hypot(dx, dy); dx, dy = dx / Ln * 0.009, dy / Ln * 0.009
+        L('str%d' % i, [(x0 - dx, y0 - dy), (x1 - dx, y1 - dy), (x1 + dx, y1 + dy), (x0 + dx, y0 + dy)], d['str'], 8, 0.0)
+    if d['hat'] == 'bowler':      # prisoner_b: brown bowler seen from behind: wide brim, round crown, darker band
+        L('crown', [(-0.50, -0.14), (0.50, -0.14), (0.52, -0.40), (0.40, -0.68), (0.0, -0.80), (-0.40, -0.68), (-0.52, -0.40)], '#5a4630', 9, 0.06)
+        L('band', [(-0.51, -0.18), (0.51, -0.18), (0.52, -0.30), (-0.52, -0.30)], '#241a12', 10, 0.0)
+        L('crown_hi', _poly_ellipse(-0.14, -0.58, 0.20, 0.08, 16), '#8a6e4c', 10, 0.0)
+        L('brim', _poly_ellipse(0.0, -0.14, 0.86, 0.17, 30), '#4a3824', 11, 0.06)
+    elif d['hat'] == 'cap':       # prisoner_q: flat navy cap: low crown + short peak at the back
+        L('crown', [(-0.56, -0.12), (0.56, -0.12), (0.58, -0.42), (0.34, -0.66), (-0.34, -0.66), (-0.58, -0.42)], '#243468', 9, 0.06)
+        L('seamc', [(-0.02, -0.64), (0.02, -0.64), (0.02, -0.14), (-0.02, -0.14)], '#141c3a', 10, 0.0)
+        L('crown_hi', _poly_ellipse(-0.18, -0.52, 0.18, 0.07, 16), '#4a5c9a', 10, 0.0)
+        L('band', [(-0.58, -0.12), (0.58, -0.12), (0.58, -0.22), (-0.58, -0.22)], '#161e40', 10, 0.0)
 _orig = P._back_cover
 def _patched(a, c, cam):
     if c['name'] == 'bertillon': return bertillon_back(a, c, cam)
