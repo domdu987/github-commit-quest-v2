@@ -277,8 +277,8 @@ def t4_coach(q):
     cs = B2.stand_pos(7, cu, 0.5); cp = (cs[0], cs[1])
     c0 = B2.stand_pos(0, cu + 2.5, -2.4); cam_loc = (c0[0], c0[1], c0[2] + 4.0); look = (cs[0], cs[1], cs[2] + 1.0)
     cam = B2.make_camera_m(cam_loc, look, lens=22.0); sc.frame_set(1)
-    n = B2.hide_3d_crowd((cs[0], cs[1], cs[2]), 20.0, (-7.0, 14.0))
-    rim(True, side='left', color=(255, 226, 180), width=0.045, k=0.6, tint=(0.82, 0.84, 0.97), bright=0.92, cool=0.4)
+    n = B2.hide_3d_crowd((cs[0], cs[1], cs[2]), 20.0, (-7.0, 14.0)); B2.hide_rails((cs[0], cs[1], cs[2]), 24.0)
+    rim(True, side='left', color=(255, 226, 180), width=0.045, k=0.6, tint=(0.9, 0.92, 1.0), bright=1.0, cool=0.4)
     crowd = ['crowd1', 'crowd2', 'crowd3', 'crowd4', 'crowd5', 'crowd6']; poses = ['sit_cheer', 'sit_laugh', 'sit_point', 'sit_gape', 'sit_cheer', 'sit_laugh']
     k = 0
     for row in range(19, 1, -1):
@@ -287,7 +287,8 @@ def t4_coach(q):
             if row == 7 and abs(u - cu) < 0.5: continue
             c = crowd[(row * 3 + du) % 6]; pn = poses[(row + du * 2) % 6]
             seat_card('cr%d' % k, c, pn, row, u, cam_loc, ppd=96, mirror=((row + du) % 2 == 0)); k += 1
-    # the coach: his usual look (maroon cap and windbreaker), shouting, on the aisle-side step of row 7, a little larger than life size is NOT used (scale 1)
+    # the coach: his usual look (maroon cap and windbreaker), shouting, brighter than the crowd with a hard warm rim
+    rim(True, side='left', color=(255, 236, 200), width=0.06, k=0.95, tint=(1.0, 1.0, 1.04), bright=1.08, cool=0.2)
     card('coach', 'coach', cast15.pose_for('coach_shout', 'coach'), cp, cam_loc, z=cs[2], ppd=176, shadow=(1.9, 0.6), kind='seat')
     rim(False); return cam, 'T4 coach in the stands: aisle-side step of row 7, dense crowd cards (hid %d 3D figures)' % n
 
@@ -301,13 +302,13 @@ def t6_top(q):
     A, sc = _base('NIGHT', q); px, py = B2.PIT; loc = (px - 0.8, py + 0.6, 5.6); look = (px + 0.1, py - 1.7, 1.0); cam = B2.make_camera_m(loc, look, lens=22.0); sc.frame_set(1)
     rim(True, side='right', color=(255, 240, 210), width=0.045, k=0.7, tint=(0.97, 0.98, 1.0), cool=0.25)
     pitch = math.degrees(math.atan2(loc[2] - look[2], math.hypot(look[0] - loc[0], look[1] - loc[1])))
-    card('dick', 'dick_olympic', cast15.pose_for('sit_thumb', 'dick_olympic'), (px + 0.3, py - 0.2), loc, ppd=160, shadow=(1.9, 0.9), tilt_deg=-(90 - pitch) * 0.85, kind='stand', canvas=cast15.CANVAS15_WIDE)
-    _photogs(loc, [(-4.6, 11.0), (4.7, 11.2)], flash=True); rim(False)
+    card('dick', 'dick_olympic', cast15.pose_for('sit_thumb', 'dick_olympic'), (px + 0.25, py - 1.5), loc, ppd=160, shadow=(1.9, 0.9), tilt_deg=-(90 - pitch) * 0.85, kind='stand', canvas=cast15.CANVAS15_WIDE)
+    _photogs(loc, [(-1.2, 12.9), (1.7, 12.7)], flash=True); rim(False)
     B2.build_podium_extras  # podium is part of the set (-9, 10): visible left
     return cam, 'T6 top-down crane over the mat (pitch %.0f deg): Dick sits up; podium at the left, photographers flash' % pitch
 
 def t7_day(q):
-    A, sc = _base('DAY72', q); loc = (-3.8, 7.4, 2.4); look = (0.0, 13.0, 2.9); cam = B2.make_camera_m(loc, look, lens=22.0); sc.frame_set(1)
+    A, sc = _base('DAY72', q); loc = (0.7, 7.4, 2.3); look = (-0.4, 13.0, 3.1); cam = B2.make_camera_m(loc, look, lens=22.0); sc.frame_set(1)
     rim(True, side='right', color=(255, 255, 240), width=0.04, k=0.5, tint=(1.0, 1.0, 1.0))
     airborne_over_mat('rival', 'rival2', 'flop', loc, over=(0.0, 0.0), front=0.3, scale=1.0, ppd=160)
     card('boy', 'boy2', cast15.pose_for('thumb', 'boy2'), (3.8, 15.2), loc, z=B2.FOAM_SURF, ppd=112, shadow=(1.4, 0.5), mirror=True)

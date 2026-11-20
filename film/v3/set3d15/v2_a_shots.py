@@ -23,8 +23,8 @@ def catmull(pts, s):
 # BIGZOOM 1 control points (metres). Camera starts 100 m above the school's south-east looking north (pit at 68 % of the frame height, gym at 50 %, the town and hills above), descends over the
 # east pine grove (x 36-54, tops at 13-19 m), skims the bleacher (x 11-15) 8 m up, drops behind the pit side and ends medium on Dick at his mark (5.6, -0.8): 3.1 m away, he is 40 % of the frame height.
 BZ1 = dict(dur=4.4,
-           loc=[(24.0, -30.0, 100.0), (40.0, -38.0, 58.0), (37.0, -16.0, 21.0), (24.0, -9.0, 8.5), (11.0, -6.8, 3.0), (4.6, -3.9, 1.3)],
-           look=[(6.0, 38.0, 0.0), (8.0, 16.0, 0.0), (8.0, 8.0, 1.5), (6.5, 3.0, 1.5), (5.8, -0.4, 1.3), (5.7, -0.6, 1.2)],
+           loc=[(24.0, -12.0, 100.0), (40.0, -30.0, 58.0), (37.0, -16.0, 21.0), (24.0, -9.0, 8.5), (11.0, -6.8, 3.0), (4.6, -3.9, 1.3)],
+           look=[(6.0, 50.0, 0.0), (8.0, 16.0, 0.0), (8.0, 8.0, 1.5), (6.5, 3.0, 1.5), (5.8, -0.4, 1.3), (5.7, -0.6, 1.2)],
            ease=2.4)
 
 def bigzoom1_path(t, spec=BZ1):
@@ -62,8 +62,11 @@ def _D(p): return tuple(c * U for c in p)
 def _cam(loc_m, look_m, lens=22.0):
     c = F.make_camera(F.cam_from(_D(loc_m), _D(look_m), lens=lens)); return c, tuple(c.location)
 
+GRADE_SAT = dict(s1=1.3, s2=1.3, s3=1.2, s4=1.0, s5=1.1, s6=1.35, s7=1.15)
+EXPO = dict(s1=-0.7, s2=-0.85, s3=-1.15, s4=-1.15, s5=-1.15, s6=-0.9, s7=-1.6)
+CUR = ['s3']
 def _base(light='HERO', **kw):
-    A = V.build_a2(light, **kw); sc = bpy.context.scene; F.setup_render(sc, 'final'); sc.cycles.samples = 14; sc.view_settings.exposure = STATE['P'].get('exposure', 0.0); V.CT(); return A, sc
+    A = V.build_a2(light, **kw); sc = bpy.context.scene; F.setup_render(sc, 'final'); sc.cycles.samples = 14; sc.view_settings.exposure = EXPO.get(CUR[0], -0.8); V.set_grade_sat(sc, GRADE_SAT.get(CUR[0], 1.15)); V.CT(); return A, sc
 
 def _put_hero_cards(cl, dick_pose='rock_a', boys=True, coach=True, scale_ppd=128, only=None):
     """Dick at his mark, boys waiting beside him, the coach at the bleacher front: all grounded (feet on the surface, contact + cast shadow)."""
@@ -78,9 +81,11 @@ def _put_hero_cards(cl, dick_pose='rock_a', boys=True, coach=True, scale_ppd=128
     rep['dick'] = V.ground_card('c_dick', 'dick', cast15.pose_for(dick_pose, 'dick'), D(M['dick_mark']), cl, ppd=scale_ppd, contact=(1.4, 0.5))
     return rep
 
-def rays(seed=11, k=0.42):
-    """light shafts out of the west pine grove (x -68..-40): 6 beams crossing the field toward +x; strength k."""
-    rr = V.rnd(seed); V.god_rays(STATE['P'], n=6, seed=seed, strength=k, width=(3.0, 6.0), length=(24.0, 32.0), where=[(rr.uniform(-62, -42), rr.uniform(10, 34)) for _ in range(6)])
+RAYS_ON = False   # director review: the shafts read as glitches from these angles; set True to use them (V.god_rays)
+def rays(seed=11, k=0.28):
+    """4 clean soft shafts falling out of the west pine grove edge (x -48..-38) toward the field; strength k."""
+    if not RAYS_ON: return
+    rr = V.rnd(seed); V.god_rays(STATE['P'], n=4, seed=seed, strength=k, width=(6.0, 9.0), length=(15.0, 20.0), where=[(rr.uniform(-48, -38), 12 + 6 * i) for i in range(4)])
 
 def hero_beam(x, y, k=1.5, width=4.0):
     """one visible shaft that lands on (x, y) m: the sun beam that makes Dick findable in the BIGZOOM start."""
@@ -90,7 +95,7 @@ def hero_beam(x, y, k=1.5, width=4.0):
 def s1_bigzoom_start(q):
     A, sc = _base(); loc, look = bigzoom1_path(0.0); cam, cl = _cam(loc, look); import cast15
     _put_hero_cards(cl, scale_ppd=48)
-    rays()
+    V.spot(5.6, -0.4, r=6.0, k=0.9)
     
     sc.frame_set(0); return cam, 'BIGZOOM 1 start (t 0.0): bird\'s-eye over Medford, Dick at his mark'
 
@@ -106,7 +111,7 @@ def s3_bigzoom_end(q):
 
 def s4_flop_low(q):
     import cast15
-    A, sc = _base(); cam, cl = _cam((-3.0, 2.2, 0.55), (0.1, 5.6, 1.85)); V.rim_on(to_light=(-0.8, -0.4), width=5, strength=1.0)
+    A, sc = _base(); cam, cl = _cam((-1.9, 2.2, 0.45), (0.1, 5.5, 2.3)); V.rim_on(to_light=(-0.8, -0.4), width=5, strength=1.0)
     bar = Vector((0.0, STATE['J']['y'] * U, F.bar_height_m() * U)); t = Vector(cl) - bar; t.z = 0; bar += t.normalized() * 0.3
     pose = cast15.pose_for('flop', 'dick'); zg = (0.44 * U)
     r = V.ground_card_anchor('f_dick', 'dick', pose, ('bar', tuple(bar)), cl, zg, ppd=192, canvas=cast15.CANVAS15_WIDE)
@@ -118,23 +123,22 @@ def s4_flop_low(q):
 
 def s5_ots_coach(q):
     import cast15
-    A, sc = _base(); M = STATE['marks_m']; cam, cl = _cam((5.2, -0.2, 1.35), (10.4, 3.2, 1.45)); V.rim_on(to_light=(0.6, -0.7), width=5, strength=0.8)
-    # foreground: a chibi stand-in of Dick seen from behind (left of the frame), as in an over-the-shoulder
-    mb = V.S.MB('ots'); V.mk_people_mats(STATE['M']); V.person(mb, STATE['M'], 4.35, -0.55, 0.0, V.face_yaw((4.35, -0.55), (10.4, 2.6)), 'maroon', 'white', 'skin1', 'hairb', 'stand', s=1.25); V.L.fin(mb)
-    _put_hero_cards(cl, dick_pose='rock_a', boys=False, only=None)
-    # the coach is the subject: re-place him larger in the line of sight (laugh)
-    rays()
-    return cam, 'T2 over-the-shoulder toward the coach on the bleachers'
+    A, sc = _base(); M = STATE['marks_m']; cam, cl = _cam((7.6, -0.2, 1.3), (10.4, 2.6, 1.3)); V.rim_on(to_light=(0.6, -0.7), width=5, strength=0.8)
+    # coach: the subject (30 % of the frame height), 4 m from the lens; real Dick card in the left foreground, head turned away toward the coach (shoulder view)
+    V.ground_card('o_coach', 'coach', dict(cast15.pose_for('coach_laugh', 'coach'), bob=0.0), (10.4 * U, 2.6 * U), cl, ppd=160, contact=(1.9, 0.6))
+    V.ground_card('o_dick', 'dick', dict(cast15.pose_for('rock_a', 'dick'), yaw=-0.9), (8.85 * U, 1.35 * U), cl, ppd=160, yaw_off=35)
+    V.ground_card('o_b1', 'boy1', cast15.pose_for('point_laugh', 'boy1'), (11.2 * U, 0.2 * U), cl, ppd=128)
+    rays(); return cam, 'T2 over-the-shoulder toward the coach on the bleachers'
 
 def s6_newspaper(q):
-    A, sc = _base(people=True, rays=False); cam, cl = _cam((12.4, 4.0, 1.4), (0.0, 7.0, 1.2)); V.newspaper(cl, tuple(_D((0.0, 7.0, 1.2))), dist=0.72, fill=1.0, roll_deg=-2.0)
+    A, sc = _base(people=True, rays=False); cam, cl = _cam((10.7, 4.0, 1.4), (0.0, 7.0, 1.2)); V.newspaper(cl, tuple(_D((0.0, 7.0, 1.2))), dist=0.72, fill=1.0, roll_deg=-2.0, hands=False)
     sc.frame_set(1); return cam, 'T2 newspaper: the front page fills the frame'
 
 def s7_buried(q):
     import cast15
-    A, sc = _base(); M = STATE['marks_m']; cam, cl = _cam((1.8, 3.4, 0.75), (-1.5, 8.4, 1.0)); V.rim_on(to_light=(-0.8, -0.5), width=5, strength=0.9); ct = V.CT()
-    mk = Vector(_D(M['coach_end'])); pose = cast15.pose_for('coach_buried', 'coach')
-    r = ct.put('b_coach', 'coach', pose, tuple(mk), cl, canvas=cast15.CANVAS15_WIDE, dz=-0.6, shadow=None, ppd=160)
+    A, sc = _base(); M = STATE['marks_m']; cam, cl = _cam((-0.5, 6.2, 1.15), (-1.35, 8.9, 1.25)); V.rim_on(to_light=(-0.8, -0.5), width=5, strength=0.9); ct = V.CT()
+    mk = Vector(_D((-1.35, 8.0, 0.80))); pose = cast15.pose_for('coach_buried', 'coach')
+    r = ct.put('b_coach', 'coach', pose, tuple(mk), cl, canvas=cast15.CANVAS15_WIDE, dz=0.0, shadow=None, ppd=192)
     f0 = 2040; F.sawdust_spray(f0 - 9, (mk.x, mk.y, mk.z + 0.2), strength=1.7, seed=3)
     for i, (cast, pn, sz) in enumerate((('boy1', 'sit_laugh', 0), ('boy2', 'sit_gape', 1), ('boy3', 'sit_laugh', 2))):
         p = M['boys_bench_a'] if i == 0 else (M['boys_bench_b'] if i == 1 else M['boys_bench_c']); V.ground_card('s_b%d' % i, cast, cast15.pose_for(pn, cast), (p[0] * U + 0.2, p[1] * U), cl, z=0.0, ppd=128)
@@ -167,8 +171,8 @@ if __name__ == '__main__':
         if names and n not in names and names != ['sheet']: continue
         if names == ['sheet']: break
         bpy.ops.wm.read_factory_settings(use_empty=True) if False else None
-        cam, label = fn(q); sc = bpy.context.scene
-        if q == 'preview': F.setup_render(sc, 'preview'); sc.cycles.samples = 6; sc.view_settings.exposure = STATE['P'].get('exposure', 0.0)
+        CUR[0] = n; cam, label = fn(q); sc = bpy.context.scene
+        if q == 'preview': F.setup_render(sc, 'preview'); sc.cycles.samples = 6; sc.view_settings.exposure = EXPO.get(CUR[0], -0.8)
         out = os.path.join(STILL_DIR, n + ('' if q == 'final' else '_prev') + '.png'); t0 = time.time(); wall, cpu = F.T.render(out); st = ST.stats(out)
         log[n] = dict(label=label, wall=round(wall, 1), cpu=round(cpu, 1), build_s=round(STATE.get('v2_build_s', 0), 1), **{k: round(v, 3) for k, v in st.items()}); print(n, json.dumps(log[n]), flush=True)
     if q == 'final' and (not names or names == ['sheet']): sheet()

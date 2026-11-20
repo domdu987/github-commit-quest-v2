@@ -30,7 +30,7 @@ FONTS = dict(black=os.path.join(FONT_DIR, 'Kanit_900Black.ttf'), work=os.path.jo
 # ============================================================================= palette (saturated, school MAROON + GOLD, red cinder, green grass)
 MAROON = '#a01830'; GOLD = '#ffc928'
 PALETTE = {   # name -> (A, B) hex pair of the board two-tone noise (or a single colour); applied by recolor() on every material called A_<LIGHT>|name
-    'grassA': ('#2f9d16', '#58bb24'), 'lawnA': ('#2a9414', '#4cb61e'), 'gp1': ('#1f8a12', '#3ca81c'), 'gp2': ('#8ec81c', '#aedc30'), 'grass': ('#2f9d16', '#58bb24'),
+    'grassA': ('#4a9a2a', '#68b032'), 'lawnA': ('#449028', '#60aa30'), 'gp1': ('#1f8a12', '#3ca81c'), 'gp2': ('#8ec81c', '#aedc30'), 'grass': ('#2f9d16', '#58bb24'),
     'cinderA': ('#c3301a', '#e4501e'), 'dirtA': ('#9c7a4c', '#b8925a'), 'cinder': ('#c3301a', '#e4501e'),
     'saw': ('#f0aa24', '#ffc844'), 'chip': ('#c47a22', '#e29a36'), 'sawdk': ('#d08c1e', '#e8a42c'),
     'brick': ('#a0182e', '#c42a3a'), 'trim': ('#ffd23c', '#ffc020'), 'roofd': ('#5c1030', '#7a1a40'), 'roofdb': ('#5c1030', '#7a1a40'),
@@ -70,10 +70,10 @@ def recolor(light_name=None):
     return n
 
 # ============================================================================= light preset  A_HERO
-_SKY_HERO = [(0.0, '#ff9c34'), (0.035, '#ffc062'), (0.10, '#64aaff'), (0.28, '#3480f4'), (0.6, '#1f5ce4'), (1.0, '#1840cc')]
-F.LIGHTS['A_HERO'] = dict(F._B, name='A_HERO', loc='A', key=(1.8, 1.30, 0.80), key_dir=kdir(-105, 28), sun_elev=28, sun_angle=0.8, shade=(0.22, 0.17, 0.52), shade_tint=(0.22, 0.17, 0.58),
-                          lift=(0.012, 0.018, 0.07), season=1.0, grade_saturation=1.32, grade_offset=(-0.008, -0.012, -0.012), exposure=-0.85, shade_mix=0.6,
-                          sky=_SKY_HERO, sky_k=1.0, glow=('#ffb040', 0.90, 0.9), hills=[(560, 40, 70, '#4838b8'), (640, 70, 90, '#6a4ad0')], hill_k=1.0)
+_SKY_HERO = [(0.0, '#a8d4ff'), (0.04, '#7cbcff'), (0.14, '#4a98fa'), (0.34, '#2a6ee8'), (0.62, '#1c4cd0'), (1.0, '#1638b4')]
+F.LIGHTS['A_HERO'] = dict(F._B, name='A_HERO', loc='A', key=(1.8, 1.30, 0.80), key_dir=kdir(-105, 28), sun_elev=28, sun_angle=0.8, shade=(0.24, 0.20, 0.50), shade_tint=(0.25, 0.20, 0.55),
+                          lift=(0.012, 0.018, 0.07), season=1.0, grade_saturation=1.22, grade_offset=(-0.008, -0.012, -0.012), exposure=-0.7, shade_mix=0.72,
+                          sky=_SKY_HERO, sky_k=1.0, glow=('#ffd890', 0.90, 0.5), hills=[(560, 40, 70, '#4838b8'), (640, 70, 90, '#6a4ad0')], hill_k=1.0)
 F.LIGHTS['A_HERODAY'] = dict(F.LIGHTS['A_HERO'], name='A_HERODAY', key=(2.0, 1.8, 1.4), key_dir=kdir(-38, 44), sun_elev=44, season=0.0, sky=[(0.0, '#d8ecff'), (0.05, '#8cc4ff'), (0.2, '#3a84f6'), (0.5, '#1c5ae8'), (1.0, '#1244d0')], glow=('#fff0c0', 0.5, 0.3), hills=[(560, 40, 70, '#4a6ad8'), (640, 70, 90, '#6a8aee')])
 for _k in ('HERO', 'HERODAY'):
     if _k not in F.LOC_LIGHTS['A']: F.LOC_LIGHTS['A'].append(_k)
@@ -104,8 +104,8 @@ def sky_clouds(P, cloud_cover=0.55, seed=3):
         belt = N('ShaderNodeMapRange'); Lk(sp.outputs['Z'], belt.inputs['Value']); belt.inputs['From Min'].default_value = 0.04; belt.inputs['From Max'].default_value = 0.16
         bm_ = N('ShaderNodeMath'); bm_.operation = 'MULTIPLY'; Lk(cc.outputs['Result'], bm_.inputs[0]); Lk(belt.outputs['Result'], bm_.inputs[1])
         # cloud colour: shaded side lilac-blue, sun side hot gold-pink
-        sun_k = N('ShaderNodeMapRange'); Lk(dt.outputs['Value'], sun_k.inputs['Value']); sun_k.inputs['From Min'].default_value = -0.3; sun_k.inputs['From Max'].default_value = 0.9
-        cm = N('ShaderNodeMix'); cm.data_type = 'RGBA'; cm.inputs[6].default_value = S.hexc('#b49cf4'); cm.inputs[7].default_value = S.hexc('#ffd694'); Lk(sun_k.outputs['Result'], cm.inputs[0])
+        sun_k = N('ShaderNodeMapRange'); Lk(dt.outputs['Value'], sun_k.inputs['Value']); sun_k.inputs['From Min'].default_value = -1.0; sun_k.inputs['From Max'].default_value = 0.1
+        cm = N('ShaderNodeMix'); cm.data_type = 'RGBA'; cm.inputs[6].default_value = S.hexc('#ffe6c0'); cm.inputs[7].default_value = S.hexc('#ffffff'); Lk(sun_k.outputs['Result'], cm.inputs[0])
         cmix = N('ShaderNodeMix'); cmix.data_type = 'RGBA'; Lk(col, cmix.inputs[6]); Lk(cm.outputs[2], cmix.inputs[7]); Lk(bm_.outputs[0], cmix.inputs[0]); col = cmix.outputs[2]
     Lk(col, bg.inputs['Color']); Lk(bg.outputs[0], out.inputs['Surface'])
     lp = N('ShaderNodeLightPath'); m3 = N('ShaderNodeMath'); m3.operation = 'MULTIPLY'; m3.inputs[1].default_value = P['sky_k']; Lk(lp.outputs['Is Camera Ray'], m3.inputs[0]); Lk(m3.outputs[0], bg.inputs['Strength'])
@@ -445,7 +445,7 @@ def school_extras(P, M, rr):
     STATE['marks_m']['scoreboard'] = (sx_, sy_ - 0.01, sz_ + sh_ / 2)
     # --- bunting: maroon / gold / white pennants along the bleacher, over the gate and from the gym to the poles
     mb = S.MB('bunting'); mats = ['maroonp', 'goldp', 'cream']
-    M['maroonp'] = mat('maroonp', '#b01a34', '#d02a44'); M['goldp'] = mat('goldp', '#ffc820', '#ffdc40')
+    M['maroonp'] = mat('maroonp', '#a82040', '#bc3050'); M['goldp'] = mat('goldp', '#f0c040', '#f4d060')
     for (a, b, n) in [((11.0, -3.0, 4.3), (11.0, 9.5, 4.3), 22), ((4.0, 17.0, 6.4), (-24.0, 16.0, 6.3), 40), ((-24.0, 16.0, 6.3), (-48.0, 12.0, 6.0), 36), ((16.0, 38.0, 11.0), (-9.0, 38.0, 11.0), 36), ((-9.0, 15.0, 5.8), (18.0, 15.0, 5.8), 44),
                       ((32.0, -2.0, 6.0), (32.0, 22.0, 6.0), 30)]:
         S.pennant_line(mb, M, a, b, n, mats, 1.4, 0.7)
@@ -614,12 +614,12 @@ def shaft_mat(color=(1.0, 0.72, 0.30), k=1.0):
     tc = N('ShaderNodeTexCoord'); sp = N('ShaderNodeSeparateXYZ'); Lk(tc.outputs['UV'], sp.inputs[0])
     # across the beam: 1 - |2u-1|^2 smooth; along it: fade in over 18 %, out over the last 55 %; streaks: wave noise across u
     a = N('ShaderNodeMath'); a.operation = 'MULTIPLY_ADD'; a.inputs[1].default_value = 2.0; a.inputs[2].default_value = -1.0; Lk(sp.outputs['X'], a.inputs[0])
-    b = N('ShaderNodeMath'); b.operation = 'ABSOLUTE'; Lk(a.outputs[0], b.inputs[0]); c = N('ShaderNodeMath'); c.operation = 'POWER'; c.inputs[1].default_value = 1.6; Lk(b.outputs[0], c.inputs[0])
+    b = N('ShaderNodeMath'); b.operation = 'ABSOLUTE'; Lk(a.outputs[0], b.inputs[0]); c = N('ShaderNodeMath'); c.operation = 'POWER'; c.inputs[1].default_value = 2.4; Lk(b.outputs[0], c.inputs[0])
     d = N('ShaderNodeMath'); d.operation = 'SUBTRACT'; d.inputs[0].default_value = 1.0; Lk(c.outputs[0], d.inputs[0] if False else d.inputs[1]); across = d
     f1 = N('ShaderNodeMapRange'); Lk(sp.outputs['Y'], f1.inputs['Value']); f1.inputs['From Min'].default_value = 0.0; f1.inputs['From Max'].default_value = 0.16; f1.interpolation_type = 'SMOOTHSTEP'
     f2 = N('ShaderNodeMapRange'); Lk(sp.outputs['Y'], f2.inputs['Value']); f2.inputs['From Min'].default_value = 1.0; f2.inputs['From Max'].default_value = 0.35; f2.interpolation_type = 'SMOOTHSTEP'
     wv = N('ShaderNodeTexNoise'); wv.inputs['Scale'].default_value = 7.0; wv.inputs['Detail'].default_value = 2; Lk(tc.outputs['UV'], wv.inputs['Vector'])
-    st = N('ShaderNodeMapRange'); Lk(wv.outputs['Fac'], st.inputs['Value']); st.inputs['From Min'].default_value = 0.30; st.inputs['From Max'].default_value = 0.75; st.inputs['To Min'].default_value = 0.35
+    st = N('ShaderNodeMapRange'); Lk(wv.outputs['Fac'], st.inputs['Value']); st.inputs['From Min'].default_value = 0.0; st.inputs['From Max'].default_value = 1.0; st.inputs['To Min'].default_value = 0.9; st.inputs['To Max'].default_value = 1.0
     m1 = N('ShaderNodeMath'); m1.operation = 'MULTIPLY'; Lk(across.outputs[0], m1.inputs[0]); Lk(f1.outputs['Result'], m1.inputs[1])
     m2 = N('ShaderNodeMath'); m2.operation = 'MULTIPLY'; Lk(m1.outputs[0], m2.inputs[0]); Lk(f2.outputs['Result'], m2.inputs[1])
     m3 = N('ShaderNodeMath'); m3.operation = 'MULTIPLY'; Lk(m2.outputs[0], m3.inputs[0]); Lk(st.outputs['Result'], m3.inputs[1])
@@ -635,7 +635,7 @@ def god_rays(P, n=16, seed=5, strength=0.9, width=(3.0, 7.0), length=(38.0, 55.0
     pts = where or [(rr.uniform(-60, 40), rr.uniform(20, 70)) for _ in range(n)]
     objs = []
     for i, (x, y) in enumerate(pts):
-        ln = rr.uniform(*length); wd = rr.uniform(*width); top = Vector((x, y, rr.uniform(11, 17))); end = top + kd * ln
+        ln = rr.uniform(*length); wd = rr.uniform(*width); top = Vector((x, y, rr.uniform(12, 16))); end = top + kd * ln
         if end.z < 0: ln = top.z / -kd.z; end = top + kd * ln
         ax = (end - top).normalized(); up = Vector((0, 0, 1)); side = ax.cross(up).normalized(); nrm = side.cross(ax).normalized()
         for q in range(2 if cross else 1):
@@ -746,7 +746,7 @@ def populate(M, rr, density=0.72):
 def infield_life(M, rr):
     """the south half of the field is not empty: team tents (maroon / gold), a long-jump runway + pit, a pole-vault mat, hurdle rows on the straights, cones, relay runners, benches + gear piles."""
     mk_people_mats(M); mb = S.MB('infield')
-    M['maroonp'] = M.get('maroonp') or mat('maroonp', '#b01a34', '#d02a44'); M['goldp'] = M.get('goldp') or mat('goldp', '#ffc820', '#ffdc40')
+    M['maroonp'] = M.get('maroonp') or mat('maroonp', '#a82040', '#bc3050'); M['goldp'] = M.get('goldp') or mat('goldp', '#f0c040', '#f4d060')
     M['matblue'] = mat('matblue', '#1c50e0', '#3a72f4'); M['sand'] = mat('sandA', '#ffd070', '#ffe08c', 6)
     # tents: four posts, striped pyramid roof, bench + coolers under it
     for i, (tx, ty, yw, c1) in enumerate([(-18, -30, 0.1, 'maroonp'), (-10, -30, 0.0, 'goldp'), (14, -28, -0.1, 'maroonp'), (22, -30, 0.1, 'blue')]):
@@ -774,6 +774,17 @@ def infield_life(M, rr):
         person(mb, M, x, y, 0.0, rr.uniform(0, 6.28), ['maroon', 'gold', 'white', 'blue', 'maroon', 'green'][i % 6], 'pantsb' if i % 2 else 'pantsk', SKINS[i % 5], HAIRS[i % 5], rr.choice(['stretch', 'lunge', 'stand', 'wave', 'stand']))
     L.fin(mb)
 
+def ground_detail(M, rr):
+    """breaks up the flat dirt discs: grass edges, chalk arcs / dashes, dark scuffs and sand specks around the run-up and the benches."""
+    mb = S.MB('gdetail'); gm = [M['gp1'], M['gp2'], M['grass']]
+    for (cx, cy, rad) in [(1.4, 2.4, 4.4), (6.0, -2.2, 2.2), (-6.0, 1.8, 2.4), (8.2, -1.0, 1.6)]:
+        for i in range(34):
+            a = rr.uniform(0, 6.28); r = rad * rr.uniform(0.8, 1.15); S.disc(mb, gm[i % 3], (cx + r * math.cos(a), cy + r * math.sin(a)), rr.uniform(0.25, 0.7), 0.012 + 0.0003 * i, 8, rr.uniform(0.3, 0.9))
+        for i in range(40):
+            a = rr.uniform(0, 6.28); r = rad * rr.uniform(0.0, 0.8); mb.box(M['chip'] if i % 2 else M['sawdk'], (cx + r * math.cos(a), cy + r * math.sin(a), 0.014), (rr.uniform(0.1, 0.35), rr.uniform(0.03, 0.08), 0.004), rz=rr.random() * 6)
+        S.ring(mb, M['chalk'], cx, cy, rad * 0.9, rad * 0.9, rad * 0.9 + 0.07, rad * 0.9 + 0.07, 20, 300, 0.016, 4.0)
+    L.fin(mb, cast=False)
+
 # ============================================================================= build
 KILL_PREFIX = ('treesA_', 'hills_', 'tuftsA_', 'grass')       # replaced by v2 versions
 def _kill(prefixes):
@@ -792,6 +803,7 @@ def build_a2(light='HERO', town_on=True, people=True, rays=True, clouds=0.55, se
     if hills: pines(rr)
     oval_track(P, M, rr)
     school_pines(M, rr)
+    ground_detail(M, rr)
     infield_life(M, rr)
     school_extras(P, M, rr)
     if town_on:
@@ -832,10 +844,10 @@ def _shadow_mat(png, alpha):
     m = bpy.data.materials.new('castshadow'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; Lk = nt.links.new
     img = bpy.data.images.load(png); img.alpha_mode = 'STRAIGHT'; ti = N('ShaderNodeTexImage'); ti.image = img; ti.extension = 'CLIP'
     mu = N('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = alpha; Lk(ti.outputs['Alpha'], mu.inputs[0])
-    em = N('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.012, 0.01, 0.06, 1.0); tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader')
+    em = N('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.01, 0.006, 0.05, 1.0); tr = N('ShaderNodeBsdfTransparent'); mx = N('ShaderNodeMixShader')
     Lk(mu.outputs[0], mx.inputs[0]); Lk(tr.outputs[0], mx.inputs[1]); Lk(em.outputs[0], mx.inputs[2]); out = N('ShaderNodeOutputMaterial'); Lk(mx.outputs[0], out.inputs['Surface']); return m
 
-def cast_shadow(tag, r, png, zg, alpha=0.62, kd=None):
+def cast_shadow(tag, r, png, zg, alpha=0.82, kd=None):
     """the sprite's own silhouette projected onto the ground along the sun direction (a true long golden-hour shadow, dark violet). r = dict returned by put(); zg = surface z (D)."""
     kd = Vector(kd if kd is not None else STATE['P']['key_dir']).normalized(); hxy = Vector((kd.x, kd.y)); ln = hxy.length
     if ln < 1e-4 or kd.z > -0.05: return None
@@ -843,13 +855,13 @@ def cast_shadow(tag, r, png, zg, alpha=0.62, kd=None):
     x0, y0, x1, y1 = r['res']['canvas']; k = r['scale']; X0, X1 = x0 * k, x1 * k; Z0, Z1 = -y1 * k, -y0 * k
     mk = r['mk']; yaw = r['yaw']; ax = Vector((math.cos(yaw), math.sin(yaw), 0)); cs = []
     for (X, Z) in ((X0, Z0), (X1, Z0), (X1, Z1), (X0, Z1)):
-        w = mk + ax * X + Vector((0, 0, Z)); h = max(w.z - zg, 0.0); cs.append((w.x + sx * h, w.y + sy * h, zg + 0.025))
+        w = mk + ax * X + Vector((0, 0, Z)); h = max(w.z - zg, 0.0); cs.append((w.x + sx * h, w.y + sy * h, zg + 0.07))
     me = bpy.data.meshes.new('actor_s_' + tag); me.from_pydata(cs, [], [(0, 1, 2, 3)]); me.update(); uvl = me.uv_layers.new(name='UVMap')
     for i, c in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uvl.data[i].uv = c
     me.materials.append(_shadow_mat(png, alpha)); ob = bpy.data.objects.new('actor_s_' + tag, me); bpy.context.scene.collection.objects.link(ob); ob.visible_shadow = False; L.T.no_bounce(ob)
     return ob
 
-def ground_card(tag, cast, pose, xy, cam_loc, z=None, scale=1.0, shadow='cast', shadow_a=0.62, contact=(1.2, 0.45), **kw):
+def ground_card(tag, cast, pose, xy, cam_loc, z=None, scale=1.0, shadow='cast', shadow_a=0.82, contact=(1.6, 0.6), **kw):
     """Place a cast15 card so its feet TOUCH the surface: z = surface_z under xy (D) unless given (e.g. seat plank). Adds a soft contact ellipse + the long cast shadow.
     xy = (x, y) in D; cam_loc = camera position (D, the card yaws to face it). kw -> cast_test.put (ppd, mirror, yaw_off, canvas, anchor, ...). Returns put()'s dict plus ['z']."""
     ct = CT(); zz = surface_z(xy[0], xy[1]) if z is None else z
@@ -930,3 +942,24 @@ def newspaper(cam_loc, look, dist=0.85, fill=1.16, roll_deg=2.0, bend=0.05, name
             mb.pop()
         L.fin(mb, cast=False)
     return ob
+
+def set_grade_sat(sc, v):
+    """per-shot saturation of the compositor grade (HueSat node of the GradeCLP group)."""
+    for ng in bpy.data.node_groups:
+        for n in ng.nodes:
+            if n.bl_idname == 'CompositorNodeHueSat': n.inputs['Saturation'].default_value = v
+    cg = getattr(sc, 'compositing_node_group', None)
+    if cg:
+        for n in cg.nodes:
+            if n.bl_idname == 'CompositorNodeHueSat': n.inputs['Saturation'].default_value = v
+
+def spot(x, y, r=5.0, k=1.2, color=(1.0, 0.8, 0.35)):
+    """a soft additive pool of sunlight on the ground at (x, y) m (makes a tiny character findable from 100 m)."""
+    m = bpy.data.materials.new('E|spot'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; Lk = nt.links.new
+    tc = N('ShaderNodeTexCoord'); mp = N('ShaderNodeMapping'); mp.inputs['Location'].default_value = (-1.0, -1.0, 0); mp.inputs['Scale'].default_value = (2.0, 2.0, 2.0); Lk(tc.outputs['UV'], mp.inputs['Vector'])
+    gr = N('ShaderNodeTexGradient'); gr.gradient_type = 'SPHERICAL'; Lk(mp.outputs[0], gr.inputs['Vector'])
+    ma = N('ShaderNodeMath'); ma.operation = 'SUBTRACT'; ma.inputs[0].default_value = 1.0; Lk(gr.outputs['Fac'], ma.inputs[1]); mc = N('ShaderNodeMath'); mc.operation = 'MULTIPLY'; mc.inputs[1].default_value = 2.0 * k; Lk(ma.outputs[0], mc.inputs[0])
+    em = N('ShaderNodeEmission'); em.inputs['Color'].default_value = (*color, 1.0); Lk(mc.outputs[0], em.inputs['Strength']); tr = N('ShaderNodeBsdfTransparent'); ad = N('ShaderNodeAddShader'); Lk(tr.outputs[0], ad.inputs[0]); Lk(em.outputs[0], ad.inputs[1])
+    out = N('ShaderNodeOutputMaterial'); Lk(ad.outputs[0], out.inputs['Surface']); m.cycles.emission_sampling = 'NONE'
+    z = 0.06
+    return quad_obj('spot', [(x - r, y - r, z), (x + r, y - r, z), (x + r, y + r, z), (x - r, y + r, z)], m)

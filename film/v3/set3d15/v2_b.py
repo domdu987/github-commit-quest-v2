@@ -40,7 +40,7 @@ F.LIGHTS['B_NIGHT'] = dict(_E, name='B_NIGHT', key=(1.25, 0.72, 0.42), key_dir=k
                            floods=1.0, crowd_k=1.0, sky=SKY_NIGHT, sky_k=1.0, glow=('#ff7a38', 0.9, 0.0), hills=MOUNT, hill_k=1.0, grade_saturation=1.08, grade_offset=(-0.004, -0.012, -0.02),
                            beam_k=1.0, crowd_shade_k=2.4, crowd_gain_k=1.25, windows=3.2, day=False, exposure=-0.1, bloom_size=0.06)
 F.LIGHTS['B_TENSE2'] = dict(F.LIGHTS['B_NIGHT'], name='B_TENSE2', key=(0.9, 0.42, 0.28), key_dir=kdir(-52, 7), sun_elev=7, shade=(0.055, 0.06, 0.30), shade_tint=(0.05, 0.06, 0.34), floods=2.6, crowd_k=0.42,
-                            sky=SKY_TENSE, glow=('#e0561e', 0.9, 0.0), hills=[(3300, 160, 300, '#1e1c80'), (4500, 320, 520, '#16166a')], beam_k=1.15, crowd_shade_k=0.9, crowd_gain_k=1.0, windows=2.4, exposure=-0.3)
+                            sky=SKY_TENSE, glow=('#e0561e', 0.9, 0.0), hills=[(3300, 160, 300, '#1e1c80'), (4500, 320, 520, '#16166a')], beam_k=1.15, crowd_shade_k=0.9, crowd_gain_k=1.0, windows=2.4, exposure=-0.5)
 F.LIGHTS['B_DAY72'] = dict(F.LIGHTS['B_DAY'], name='B_DAY72', exposure=0.0, key=(1.8, 1.62, 1.3), key_dir=kdir(-36, 46), sun_elev=46, shade=(0.14, 0.13, 0.46), shade_tint=(0.12, 0.12, 0.5), floods=0.0, sky=SKY_DAY72, sky_k=1.15,
                            glow=('#fff4d0', 0.7, 0.25), hills=[(3300, 120, 220, '#5a78e8'), (4500, 240, 400, '#4a66d8')], hill_k=1.0, grade_saturation=1.2, beam_k=0.0, windows=0.0, day=True, crowd_k=1.0, crowd_shade_k=1.5, crowd_gain_k=1.0)
 for k in ('NIGHT', 'TENSE2', 'DAY72'):
@@ -414,7 +414,7 @@ def build_beams(P, M, day):
     gm = mat_glow('torch_glow', (1.0, 0.6, 0.2), 2.6, 3.0, 0.8); mbm = S.MB('torchglow'); mbm.ell(gm, (0, 0, 0), (3.2, 3.2, 3.8), (16, 10)); o = L.fin(mbm, cast=False)[0]; o.location = (tx, ty, tz - 1.0)
     gm2 = mat_glow('torch_glow2', (1.0, 0.8, 0.4), 4.0, 4.0, 0.7); mbm = S.MB('torchglow2'); mbm.ell(gm2, (0, 0, 0), (2.4, 2.4, 3.4), (14, 8)); o = L.fin(mbm, cast=False)[0]; o.location = (tx, ty, tz - 1.0)
     # vertical warm column above the torch (smoke-lit heat shaft)
-    cm_ = mat_beam('torch_col', (1.0, 0.7, 0.3), 1.6, 2.0, 0.25, 1.0, 0.4)
+    cm_ = mat_beam('torch_col', (1.0, 0.7, 0.3), 1.2, 2.0, 0.10, 1.0, 0.4)
     V = [(1.6 * math.cos(2 * math.pi * i / 20), 1.6 * math.sin(2 * math.pi * i / 20), 0.0) for i in range(20)] + [(3.5 * math.cos(2 * math.pi * i / 20), 3.5 * math.sin(2 * math.pi * i / 20), 55.0) for i in range(20)]
     Fc = [(i, (i + 1) % 20, 20 + (i + 1) % 20, 20 + i) for i in range(20)]; ob = mesh_obj('torch_col', V, Fc, cm_); ob.location = (tx, ty, tz - 1.0); ob.visible_shadow = False
 
@@ -492,6 +492,15 @@ def hide_3d_crowd(center_m, radius_m, zspan=(-2.0, 9.0)):
         ctr = co.mean(1); m = (np.hypot(ctr[:, 0] - cx, ctr[:, 1] - cy) < radius_m) & (ctr[:, 2] > cz + zspan[0]) & (ctr[:, 2] < cz + zspan[1])
         if m.any():
             co[m, :, 2] -= 400.0; me.vertices.foreach_set('co', co.reshape(-1)); me.update(); n += int(m.sum())
+    return n
+
+def hide_rails(center_m, radius_m):
+    """move the aisle handrails (thin metal rods of the stands) within radius of center_m below the floor, so they do not run through the spectator cards"""
+    cx, cy, cz = center_m; n = 0
+    for ob in bpy.data.objects:
+        if ob.type != 'MESH' or not ob.name.startswith('stands_') or 'metal' not in ob.name: continue
+        me = ob.data; co = np.empty(len(me.vertices) * 3, dtype=np.float32); me.vertices.foreach_get('co', co); co = co.reshape(-1, 3)
+        m = (np.hypot(co[:, 0] - cx, co[:, 1] - cy) < radius_m); co[m, 2] -= 400.0; me.vertices.foreach_set('co', co.reshape(-1)); me.update(); n += int(m.sum())
     return n
 
 # ------------------------------------------------------------------ surfaces (analytic) used by the grounding helpers
