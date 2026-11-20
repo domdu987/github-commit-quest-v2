@@ -1,25 +1,33 @@
-# QA-art, TAKE gate: sH2b BIGZOOM 2 + reveal payoff (g1392-1519, render 1389-1522), film 21
-Reviewer: QA-art (opus). Frames extracted from take.mkv (every frame; viewed at full size: g1392, and strips g1392-1470, g1462-1486, g1480-1519). Compared with ref_shorts R5, R7.
-Director ruling applied: the lemon-yellow mid-swoop (g1430-1480), the x0.8 dimming and the saturation are colour-only. They are NOT scored, and go to the normalization. Rim: comment only.
+# QA-art sH2b (TAKE gate, v2)
+Take: gate/sH2b/film/v3/film21/sH2b/take.mkv (g1389-1522, BIGZOOM 2 + CU3). Viewed: every 5th frame at full size, every frame g1479-1496 (the arc onto the pair), the team's contact and phone sheets. Compared with R5 (crane and swoop) and R7. The lemon mid-swoop (g1419-1486) and the levels are left to the conform. Rim light is ruled on at FINAL.
 
 ## Verdict: FIX-FIRST
-The P_TOP trap image is the best picture in the segment. The omega loop, the blue spear wall plugging the neck and the crimson block inside read as "bottle and cork" even at phone size. The shocked swap on Cressingham and Surrey (O-mouths, sweat drops, swap behind a blink at g1486-1490) reads and is funny. Two things stop it: (a) untextured GREY sickle-shaped banner cloths cut through the swoop near the lens (g1440-1486, largest at g1455-1470), and (b) the payoff medium shot never shows WHAT they are watching. The river and the trapped half are behind the camera, so "ได้แต่ยืนดู" (can only stand and watch) does not read sound-off.
 
-## Scores (1-10)
-| item | score | note |
-|---|---|---|
-| set density / ornament | 7 | Rich from the top: trees, banners in the loop, camp. The descent over the camp shows pavilions only as flat discs from straight above (beach-umbrella look). The medium shot has hills, tents, a pole banner, soldiers behind. |
-| lighting & colour | 5 | Colour waived. Not waived: the grey untextured cloths and the dark tent silhouette sweeping the bottom of g1462-1475 look like render errors. Low sun shadows in the 2-shot are good. |
-| composition / phone legibility | 6 | P_TOP: 8. Medium 2-shot (g1487-1505): the pair sit in the middle, and the lower 40 % of the frame is empty stubble with nothing in front. CU3: Surrey is sliced by the right edge at g1515-1519 (already noted by the team). |
-| character acting | 8 | Worried, then blink, then shock. Sweat drops and tiptoe bobbing soldiers in the back. Cressingham is mouth-closed except the gasp: correct. |
-| key moment clarity & beauty | 6 | The reveal image is 8. The payoff is 5, because the eyeline goes to the lens and not to the trap. CU3 on "อยู่อีกฝั่ง" lands on time, but it is a gentle push. |
-| match to references / camera travel | 7 | A true §H BIGZOOM: extreme wide to medium in one eased move, in the R5 crane-and-swoop manner. The start tiny-but-findable rule is borderline: Cressingham is not findable at P_TOP. |
-| §G grounding (every 0.5 s tile) | pass | Feet on the ground, contact shadows, heads above y 880. No face over 35 % (Cressingham's head is about 20 % at g1519). |
+The BIGZOOM is a good §H move. It starts on the clear trap image (crimson block, blue cork, south-bank crimson block), drops through the camp at tent height past the striped pavilions (g1454-1469), then arcs onto Cressingham with the crag coming in behind him. The shocked swap, sweat drops and CU3 push on "อยู่อีกฝั่ง" land, and Cressingham's face stays at about 22 % of the frame height, under the §G limit. These v1 items are fixed: the grey blades are gone, the swoop now passes THROUGH the camp, and the red barrel gives the 2-shot a foreground.
 
-Does it read sound-off? The trap reads. The "they can only watch" does not. Funny? Yes, the jaw-drop swap. Beautiful and in style? The top and the 2-shot yes. The mid-swoop has the grey blades.
+One blocking problem remains, and it is the story point of the take: nobody is shown WATCHING the trap.
 
-## Fixes (max 4)
-1. **Kill the grey blades.** The sickle-shaped grey banner or pennant meshes on the swoop path (g1440-1486, large at the bottom right of g1455-1470, and in the background of g1482-1487) need their cloth material (crimson/gold or saltire). Otherwise hide every banner within about 15 m of the camera path. Also hide the black tent silhouette that crosses the bottom of the frame at g1462-1475.
-2. **Put the trap behind them in the payoff.** Re-aim the swoop's end so the 2-shot is a 3/4 angle with the river and the far bank (blue wall, crimson block, saltire banners) visible over their shoulders in the background. Their eyelines should go off-frame toward it (heads turned 30-45°), not into the lens. Then do the CU3 push. This is what makes "อีกครึ่ง ข้ามมาช่วยไม่ได้ ได้แต่ยืนดู" read without sound.
-3. **Fill the empty lower half of the 2-shot (g1487-1505).** Tilt or raise the framing so the pair sit lower (feet at about y 1050-1100). Or add a foreground element at the bottom edge for depth, such as the riverbank reeds and water edge, a spear rack, or the over-the-shoulder edge of a soldier on tiptoe. Keep the barrel.
-4. **Route the mid-swoop through the camp, not over it.** At g1440-1480, drop to tent-roof height earlier and pass between pavilions, ropes and the "ENGLISH CAMP" sign for parallax (§H "passes through set detail"). Avoid looking straight down on the pavilion discs and the empty beach at g1470-1480. If possible, make Cressingham's red/gold findable as a tiny dot from P_TOP (§H 1).
+## Old items (v1)
+| v1 item | status |
+|---|---|
+| 1 kill the grey blades | FIXED |
+| 2 put the trap behind them, eyelines off-frame toward it | NOT FIXED: the far bank is in the background, but the trap is a 1-2 % sliver and they look into the lens (B1) |
+| 3 fill the empty lower half of the 2-shot | FIXED (barrel, grass, lower framing) |
+| 4 route through the camp, Cressingham findable at P_TOP | through the camp: FIXED. Findable: not done (N3) |
+
+## Issues
+
+**B1 (blocking), g1489-1519: "ได้แต่ยืนดู" does not read with the sound off.** Cressingham, Surrey and the soldiers face the lens, with their backs to the river. The trapped half on the far bank is a thin red-and-white line at the waterline (about 1-2 % of the frame), and no blue wall is visible. A sound-off viewer sees "shocked men by a river", not "they can only stand and watch their army trapped across the water".
+Fix (any one is enough; a + b is best):
+a) Acting: at g1489-1503 the pair and the soldiers look OVER THEIR SHOULDERS toward the far bank (profile or 3/4-back card swap, or head cards turned 30-45°). One soldier points across the water and two bob on tiptoe (that is in the plan). Then on the blink at about g1504 they snap back to the lens for the shocked swap and the CU3 push. This is a classic double take, and it is funnier than the current straight shock.
+b) Staging: lengthen the lens at the end of the arc (or move the far-bank army forward to the far shore) so the crimson block plus at least 2 blue saltire banners stand at 6-10 % of the frame height between Cressingham and Surrey's heads at g1494-1505.
+
+**N1 (non-blocking), g1466-1486: about 0.7 s of empty field.** After the camp, the approach crosses a bare lemon plain: 60-70 % of the frame is flat ground with the pair tiny at the waterline (§H 3: no empty flat ground). Fix: keep the camera lower (1.2-1.5 m) and pass close to camp dressing on the way (a cart, a spear rack, a cooking fire, reeds at the bank), or start the arc a little later so the pavilions stay in the bottom third longer.
+
+**N2 (non-blocking), g1500-1519: Surrey is hidden behind Cressingham**, with only a chequered sleeve visible. The plan says both watch. Offset Surrey about 0.6 m to camera-right so his shocked face stays visible beside Cressingham's in the 2-shot. In CU3 he can then be cropped off naturally.
+
+**N3 (non-blocking), g1389-1420: Cressingham is not findable at P_TOP** (§H 1: tiny but findable). If cheap, put a small gold-and-crimson pennant or a lantern glint at his spot on the south bank.
+
+## Scores
+phone legibility 6 (trap 9, payoff 5) / set density 7 / light 7 (low sun, good shadows in the 2-shot) / colour story 8 / acting and comedy 7 / same channel? yes / camera travel 8.
+§G pass: feet on the ground, no face over 35 %, nobody sliced. Bloodless pass: Cressingham is only shown shocked on the south bank.
