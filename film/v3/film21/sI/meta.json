@@ -1,0 +1,32 @@
+{
+ "take": "sI",
+ "film": 21,
+ "segment": "I",
+ "shots": [
+  "I"
+ ],
+ "first_g": 1519,
+ "n_frames": 121,
+ "g0": 1519,
+ "g1": 1640,
+ "handle_in": 0,
+ "handle_out": 0,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "note": "J1 (camp_table) follows by a hard cut at g 1640"
+ },
+ "world": [
+  "bridge_deck",
+  "bridge_high"
+ ],
+ "samples": 32,
+ "size": [
+  720,
+  1280
+ ]
+}
