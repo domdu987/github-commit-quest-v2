@@ -10,6 +10,32 @@ import json
 OVER = json.loads(os.environ.get('T2_OVER', 'null')) or {'corridor': dict(lamp_k=4.0, shade_mul=1.6, fill_w=300, gain=0.95), 'measure': dict(shade_mul=1.2)}
 P.TAKE_OVER['T2'] = OVER
 RES = tuple(int(x) for x in os.environ.get('T2_RES', '720,1280').split(','))
+
+# ---- thief back view (g330-386): hair / flat cap / patched jacket instead of the flat black slab (reported to the director)
+from mathutils import Vector
+import math
+def _poly(name, verts, color):
+    me = bpy.data.meshes.new(name); me.from_pydata(verts, [], [tuple(range(len(verts)))]); me.update(); me.materials.append(P._flat('t2a_' + color.strip('#'), color))
+    ob = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(ob); ob.visible_shadow = False; return ob
+def back_cover_thief(a, c, cam):
+    import actors
+    L2W = lambda xy: Vector(actors.local_to_world(a, xy, camera=cam)); o = L2W((0.0, 0.0)); ex = L2W((1.0, 0.0)) - o; ey = L2W((0.0, 1.0)) - o
+    to = (Vector(cam.location) - o).normalized() * 0.03
+    def at(x, y, k=1.0): return tuple(o + to * k + ex * x + ey * y)
+    def ell(cx, cy, rx, ry, k, a0=0, a1=360, n=28): return [at(cx + rx * math.cos(math.radians(a0 + (a1 - a0) * i / n)), cy + ry * math.sin(math.radians(a0 + (a1 - a0) * i / n)), k) for i in range(n + 1)]
+    _poly('back_hair_' + c['name'], ell(0, 0, 0.56, 0.56, 1.0), '#9a5a22')                         # ginger hair
+    _poly('back_hair_cap_' + c['name'], ell(0, -0.08, 0.60, 0.50, 1.2, 180, 360), '#5a6228')         # olive flat cap (upper half)
+    _poly('back_hair_nape_' + c['name'], [at(-0.5, 0.32, 1.1), at(0.5, 0.32, 1.1), at(0.42, 0.62, 1.1), at(-0.42, 0.62, 1.1)], '#e8c4a8')   # neck
+    T = [at(-0.64, 0.5, 0.9), at(0.64, 0.5, 0.9), at(0.7, 2.0, 0.9), at(-0.7, 2.0, 0.9)]
+    _poly('back_coat_' + c['name'], T, '#6a4a2c')                                                         # brown jacket
+    _poly('back_coat_seam_' + c['name'], [at(-0.03, 0.6, 1.1), at(0.03, 0.6, 1.1), at(0.03, 2.0, 1.1), at(-0.03, 2.0, 1.1)], '#3a2832')   # back seam
+    _poly('back_coat_p1_' + c['name'], [at(-0.5, 0.9, 1.1), at(-0.15, 0.9, 1.1), at(-0.15, 1.25, 1.1), at(-0.5, 1.25, 1.1)], '#2f5fb8')       # blue patch
+    _poly('back_coat_p2_' + c['name'], [at(0.2, 1.3, 1.1), at(0.55, 1.3, 1.1), at(0.55, 1.65, 1.1), at(0.2, 1.65, 1.1)], '#d89a30')          # ochre patch
+    _poly('back_coat_nk_' + c['name'], [at(-0.4, 0.5, 1.1), at(0.4, 0.5, 1.1), at(0.3, 0.72, 1.1), at(-0.3, 0.72, 1.1)], '#c4372e')          # red neckerchief
+_orig_back = P._back_cover
+def _back_dispatch(a, c, cam):
+    (back_cover_thief if c['name'] == 'thief' else _orig_back)(a, c, cam)
+P._back_cover = _back_dispatch
 LAUGH = (467, 493)
 def assign_for(g):
     """story poses of 2a-2c. Mouths closed (cast17 story poses) except the held laugh g467-493 (no lip-sync, no talk)."""
