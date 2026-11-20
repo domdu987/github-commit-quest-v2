@@ -281,6 +281,12 @@ class Take(C.Take):
         self.scene.frame_set(bf(GA))
         self.mau = self.actors["mau"] = C.make_actor("mau", "maupassant", os.path.join(WORK, "sprites"), canvas=CANVAS,
                                                      contact=dict(width=1.3, depth=0.55, opacity=0.7), cam=self.cam)
+        if SHOT == 16:                                       # TAKE3 colour: tilted-up frames lost saturation / gained luma -> exposure down, grade sat up
+            ge, gs = [float(v) for v in os.environ.get("GRADE", "-0.25,1.22").split(",")]
+            P = CO.STATE.get("P", {})
+            P["sat"] = gs
+            CO.setup_grade(self.scene, P)
+            self.scene.view_settings.exposure = float(P.get("exposure", 0.0)) + ge
         self.extra = []
         if SHOT == 16:
             build_extras(self)
