@@ -115,7 +115,7 @@ def ramp(g, a, b, c, d, lo):      # 1 -> lo over a..b, hold to c, back to 1 by d
     if g <= c: return lo
     if g < d: return lo + (1.0 - lo) * ss((g - c) / float(d - c))
     return 1.0
-LIGHT_RAMP = (1804, 1812, 1835, 1845, float(os.environ.get('T7_RAMP', 0.72)))
+LIGHT_RAMP = (1796, 1806, 1838, 1850, float(os.environ.get('T7_RAMP', 0.72)))
 def key_light_ramp():
     a, b, c, d, lo = LIGHT_RAMP; sc = bpy.context.scene
     for g in range(a, d + 1):
