@@ -3,6 +3,10 @@ ROOT = '/home/user/github-commit-quest-v2'
 sys.path.insert(0, ROOT + '/film/v3/set3d17'); os.chdir(ROOT + '/film/v3/set3d17')
 import prefecture17 as P, bpy
 take = 'T3'
+# director final offsets (T3b adf5f05): constant offset of the measuring chair + its sitter. Applies over the whole part.
+CHAIR_D = (-0.4, 0.0); PRIS_D = (-0.10, 0.0)
+_kc = P.K.measuring_chair
+P.K.measuring_chair = lambda B, c, **kw: _kc(B, (c[0] + CHAIR_D[0], c[1] + CHAIR_D[1]), **kw) if abs(c[0] - 0.7) < 1e-6 and abs(c[1] - 2.4) < 1e-6 else _kc(B, c, **kw)
 OUT = ROOT + '/film/v3/film17v2/T3/frames'
 def assign_for(g):
     a = {'bertillon': ('bertillon_measuring', {'mirror': True}),
@@ -16,6 +20,7 @@ def assign_for(g):
         a['inspector'] = ('inspector_arms_crossed', {}); a['gend_a'] = ('gendarme_standing_a', {})
         a['gend_b'] = ('gendarme_standing_b', {}); a['prankster'] = ('gendarme_standing_b', {})
         a['prefect'] = ('prefect_finger_up_three', {}) if g < 792 else ('prefect_stern', {})
+    a['prisoner_chair'] = (a['prisoner_chair'][0], dict(a['prisoner_chair'][1], dx=PRIS_D[0], dy=PRIS_D[1]))
     return a
 def clear_cast():
     # stage_cast2 builds NEW actors every call and never removes the old ones: stale shadow proxies/cards pile up (black slabs by ~g660). Remove them first.
