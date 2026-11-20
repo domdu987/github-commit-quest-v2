@@ -12,7 +12,16 @@ samples = int(sys.argv[5]) if len(sys.argv) > 5 else 16; res = (int(sys.argv[6])
 os.makedirs(out, exist_ok=True)
 todo = [g for g in (LIST or range(g0, g1 + 1, step)) if not (os.path.exists('%s/g_%04d.png' % (out, g)) and os.path.getsize('%s/g_%04d.png' % (out, g)) > 50000)]
 if not todo: print('nothing to do'); sys.exit(0)
-A = P.world_build('T6'); P.key_take('T6'); print('desk faces removed', t6b_stage.remove_desk(), flush=True); P.setup_render2(res, samples=samples, threads=2)
+A = P.world_build('T6'); P.key_take('T6')
+if os.environ.get('BEAMOFF'):                       # test: force the beam_fx material strength to 0 at the node and hide the shaft object
+    for m in bpy.data.materials:
+        if m.name == 'beam_fx' and m.node_tree:
+            if m.node_tree.animation_data: m.node_tree.animation_data_clear()
+            for n in m.node_tree.nodes:
+                if n.name == 'strength': n.inputs[1].default_value = 0.0; print('beam_fx strength ->', n.inputs[1].default_value)
+    for o in bpy.data.objects:
+        if o.name == 'arch_beam_fx': o.hide_render = True; print('hid', o.name)
+print('desk faces removed', t6b_stage.remove_desk(), flush=True); P.setup_render2(res, samples=samples, threads=2)
 for g in todo:
     t = time.time(); t6b_stage.clear_cast(); asg = t6b_stage.assign_for(g)
     P.shot('T6', g, A, cards=False); acts = P.stage_cast2('T6', g, asg); t6b_stage.stage_props(g, acts, bpy.context.scene.camera)
