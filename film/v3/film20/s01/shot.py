@@ -126,6 +126,7 @@ def pose_of(g):
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s01")
+        self.A["marks"][MARK] = C.on_ground(self.A["marks"][MARK])      # the gravel path is 0.113 D above the mark's z 0
         self.path = cam_path(self.A)
         move_fg(self.A, self.path.loc0)
         self.key_cam(bf(G0), *self.path.at(G0))

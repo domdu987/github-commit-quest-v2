@@ -1,0 +1,77 @@
+{
+ "take": "s01",
+ "fps": 30,
+ "note": "t = film seconds (g / 30); narration PROJ/film20/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "kind": "ambience",
+   "t": 0.0,
+   "dur": 2.8,
+   "frame": 0,
+   "end_frame": 84,
+   "note": "Champ de Mars, sunny day 1889: open-air crowd murmur far off, a fairground band faint in the distance, light breeze, a few pigeons"
+  },
+  {
+   "kind": "foley",
+   "t": 0.0,
+   "dur": 0.833,
+   "frame": 0,
+   "end_frame": 25,
+   "note": "Maupassant's coat creaks as he stands arms folded; a disdainful nasal breath out",
+   "peak_frame": 8
+  },
+  {
+   "kind": "accent",
+   "t": 0.833,
+   "dur": 0.5,
+   "frame": 25,
+   "end_frame": 40,
+   "note": "snap push + tilt on 'เกลียดหอคอย': short airy whoosh rising",
+   "peak_frame": 31
+  },
+  {
+   "kind": "accent",
+   "t": 0.9,
+   "dur": 0.067,
+   "frame": 27,
+   "end_frame": 29,
+   "note": "face swap to disgust: a tiny low pizzicato 'plonk' (comic sour note)",
+   "peak_frame": 27
+  },
+  {
+   "kind": "foley",
+   "t": 1.5,
+   "dur": 0.267,
+   "frame": 45,
+   "end_frame": 53,
+   "note": "he turns his nose away: sharp cloth swish of the frock coat + shoe scuff on the gravel",
+   "peak_frame": 49
+  },
+  {
+   "kind": "voice_fx",
+   "t": 1.567,
+   "dur": 0.1,
+   "frame": 47,
+   "end_frame": 50,
+   "note": "non-verbal 'hmph!' huff (breath only, no words, mouth stays still)",
+   "peak_frame": 48
+  },
+  {
+   "kind": "accent",
+   "t": 2.033,
+   "dur": 0.167,
+   "frame": 61,
+   "end_frame": 66,
+   "note": "chin jerk on 'ที่สุดในโลก': a light snooty 'tsk' / woodblock tick",
+   "peak_frame": 63
+  },
+  {
+   "kind": "cut",
+   "t": 2.667,
+   "dur": 0.0,
+   "frame": 80,
+   "end_frame": 80,
+   "note": "hard cut to shot 2 (RESTO resto_table): ambience changes to the restaurant room tone"
+  }
+ ]
+}

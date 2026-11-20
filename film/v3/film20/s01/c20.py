@@ -55,6 +55,9 @@ GOTCHAS (found on film-20 s01; read before building a shot -- QA.md has the long
     camera is low and close, and watch the 'sprite clipped' warnings in the logs (Take.sprites_for prints them).
   * HEAD_FLIP: the puppet head crescent sits lower-right (key from screen-left).  make_actor() sets head_flip from the sun as
     seen from the camera (tower_low DAY: sun from screen-left, behind the camera -> False).
+  * MARK HEIGHT: marks carry ground z 0 but the surface can be higher (tower_low: gravel avenue at z 0.113 D = 6 cm under
+    maupassant_low).  From a low lens the shoes AND the contact decal disappear into the path (s01's first final had no shoes).
+    Always place actors at C.on_ground(mark) (ray cast) and check the soles at full size in the first draft.
   * CONTACT: cast20 cards have no feet shadow of their own.  make_actor(contact=True) adds the soft contact decal (a multiply
     ellipse 0.004 D over the ground) + shadow='proxy' (a hidden shadow card turned toward the sun).  QA-tech N1 on tower_low
     found 'thin stick legs, no contact shadow' on the stand-in.  At tower_low he stands inside the preset's near-ground SHADE
@@ -287,6 +290,27 @@ def key_from_right(cam=None):
     travel = sun.matrix_world.to_3x3() @ Vector((0, 0, -1))
     right = cam.matrix_world.to_3x3() @ Vector((1, 0, 0))
     return (-travel).dot(right) > 0.0
+
+
+def ground_z(x, y, top=40.0):
+    """z (world D) of the first surface straight below (x, y) from `top` down (scene.ray_cast on the evaluated scene), ignoring
+    stage actors.  Call it after S.build and BEFORE building actors.  set3d20 marks carry ground z 0, but paths / plazas can
+    sit above it (tower_low: the gravel avenue under maupassant_low is at z 0.113 D): feet placed at z 0 sink into it."""
+    dg = bpy.context.evaluated_depsgraph_get()
+    o = Vector((x, y, top))
+    for _ in range(8):
+        hit, loc, _n, _i, ob, _m = bpy.context.scene.ray_cast(dg, o, Vector((0, 0, -1)))
+        if not hit:
+            return 0.0
+        if not ob.name.startswith(("mau", "actor_")) and ob.visible_camera and not ob.hide_render:
+            return float(loc.z)
+        o = loc - Vector((0, 0, 1e-3))
+    return 0.0
+
+
+def on_ground(mark):
+    """a set mark (x, y, z) with z replaced by the real ground height under it (ground_z)."""
+    return (float(mark[0]), float(mark[1]), ground_z(mark[0], mark[1]))
 
 
 def place(actor, f, xyz, scale=1.0):
