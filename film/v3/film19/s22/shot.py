@@ -55,7 +55,8 @@ class _Sway(object):
 CAM_LOC0 = (0.0, -3.9, 2.4)
 CAM_LOOK0 = (0.25, 2.9, 2.45)
 _CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.08, slide_px=-12.0, rise_px=15.0, arc_deg_s=2.0, decay=0.1,
-                snaps=[dict(g=SNAP, k=1.7, peak=1.7, shift=(1.1, -0.38))])
+                snaps=[dict(g=SNAP, k=1.7, peak=1.7, shift=(0.0, -0.38)),
+                       dict(g=(G_SEAL, G_SEAL + 6), k=1.0, peak=1.6, shift=(1.1, 0.0))])      # fast pan that clears Harrison from the left edge in 3 frames
 CAM = _Sway(_CAM)
 
 

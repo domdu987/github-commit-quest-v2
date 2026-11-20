@@ -4,3 +4,7 @@
 - Camera: a calm wide has little parallax, so a small handheld sway (0.065 D at 2.6 Hz, 0.05 D at 3.4 Hz, translation only, horizon level) was added to reach the frame-diff target; snap x1.7 over 19 f g 1818-1837 on "ขัง" (caption 60.60 = g 1821).
 - Deviations: the set's candelabra still stands on the table behind the box; Harrison is out of frame in the last second (the snap goes to the box and astro19); one astronomer only (astro19, no astro19_b) so the "smug" astronomer is the one who works; no mouth moves (nobody speaks in shot 22).
 - Checked by eye at 6 fps: no text, no caption_shade, mouths still, nobody frozen (blinks, lean, head roll), join DIS 11 from shot 21 (coast), DIS 15 to shot 23 (hall_door EVENING).
+
+## Round 4 (client gate QA_TEAM section G)
+- Harrison no longer lingers half out of the left edge: a second, fast lateral pan (g 1821-1827, shift 1.1 D, added to the snap) takes him out of the frame in about 3 frames (1823 half, 1825 gone); before g 1823 he is whole in frame; astro19 stays fully in frame (wig edge < 718) to the last frame.
+- Trade-off: the end frames show the sealed box small at the left of centre with astro19 large at the right (the pan moves the box left). qa_auto PASS, frame-diff (deliver.py) median 5.50 / p90 12.24. qa_stats.py take.mkv: saturation 0.664, brightness 71.7, in-shot motion median 6.46 / p90 13.33 (brightness is below the section G 85-110 band: the interior grade is the director's per-take grade).
