@@ -35,8 +35,13 @@ def clear_cast():   # director fix (render17v2/T3 e86e676): stage_cast2 never re
     sys.path.insert(0, 'film/v3/stage'); import actors
     for o in [o for o in bpy.data.objects if o.name.startswith(('c2_', 'back_hair_', 'back_coat_'))]: bpy.data.objects.remove(o, do_unlink=True)
     actors.clear_registry()
+def _ss(u): u = max(0.0, min(1.0, u)); return u * u * (3 - 2 * u)
+def stage_fix(g, a):   # director TAKE-gate fix (staging only, camera untouched): inspector eased 0.5 m screen-right (+y) over g1335-1355; gend_a eased 1.3 m screen-right (+y) out of frame over g1300-1320
+    if os.environ.get('STAGE_FIX', '1') == '0': return a
+    a = dict(a); pose, o = a['inspector']; a['inspector'] = (pose, dict(o, dy=0.5 * _ss((g - 1335) / 20.0)))
+    pose, o = a['gend_a']; a['gend_a'] = (pose, dict(o, dy=1.3 * _ss((g - 1300) / 20.0))); return a
 def one(g, path):
-    set_day(g); bpy.context.scene.frame_set(g + 1); clear_cast(); P.stage_cast2(take, g, assign_for(g))
+    set_day(g); bpy.context.scene.frame_set(g + 1); clear_cast(); P.stage_cast2(take, g, stage_fix(g, assign_for(g)))
     bpy.context.scene.render.filepath = path; bpy.ops.render.render(write_still=True); P.grade2(path)
 if sys.argv[1] == 'still': one(int(sys.argv[2]), sys.argv[3])
 else:
