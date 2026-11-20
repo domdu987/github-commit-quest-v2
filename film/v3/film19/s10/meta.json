@@ -54,13 +54,13 @@
  "s_per_frame_cpu_mean": 39.69,
  "head_px": [
   56,
-  5941
+  243
  ],
  "head_centre_y": [
-  -4451,
-  1500
+  596,
+  767
  ],
- "head_bottom_max_y": 2113,
+ "head_bottom_max_y": 882,
  "framediff_in_shot": {
   "median": 4.51,
   "p90": 17.36

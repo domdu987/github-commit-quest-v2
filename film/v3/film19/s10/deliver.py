@@ -72,7 +72,7 @@ for g in range(FIRST, G1 + H_OUT):
     rows.append(json.load(open(os.path.join(RAW, "g_%04d.json" % g))))
 pngs = [os.path.join(OUT, "g_%04d.png" % g) for g in range(FIRST, G1 + H_OUT)]
 walls, cpus = [r["wall"] for r in rows], [r["cpu"] for r in rows]
-heads = [h for r in rows[H_IN:N - H_OUT] for h in r["heads"].values()]
+heads = [h for r in rows[H_IN:N - H_OUT] for h in r["heads"].values() if 0 < h["x"] < 720 and 0 < h["y"] < 1280 and h["w"] < 600]   # on-screen heads only (an actor behind or beside the camera projects off-frame)
 nb = numbers(framediff(pngs))
 json.dump(nb, open(os.path.join(HERE, "framediff.json"), "w"), indent=1)
 
