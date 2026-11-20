@@ -122,7 +122,7 @@ def clean():
     for o in list(bpy.data.objects):
         if o.name.startswith(('c2_', 'back_')) or '_c2_' in o.name: bpy.data.objects.remove(o, do_unlink=True)
     actors.clear_registry()
-    for blk in (bpy.data.meshes, bpy.data.materials, bpy.data.images):
+    for blk in (bpy.data.meshes, bpy.data.images):
         for d in list(blk):
             if d.users == 0: blk.remove(d)
 
