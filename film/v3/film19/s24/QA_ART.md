@@ -29,3 +29,33 @@ This shot carries the hardest idea of the ending: the King timed it himself, eve
 
 ## Continuity
 Chair present (`set_kings_chair(True)`, red chair right of the King), King stands beside it, same as s26 (KING_M there is beside the chair). Blue coat consistent. Window dusk blue, warm interior: EVENING consistent with s25/s26. The H4 is in the King's left hand here; it disappears in s26.
+
+---
+# Re-review after the fix round (TAKE gate, key takes): PASS, 7.0
+
+Frames checked (take index / g): 9/1933, 35/1959, 60/1984, 82/2006 (snap word), 95/2019, 112/2036 at full size and 360x640, plus contact.jpg and phone_sheet.jpg.
+Frames: /tmp/claude-0/-home-user-github-commit-quest-v2/a108c86f-deb9-528c-85fa-39b541349af8/scratchpad/artkey/s24_*.png
+
+| Criterion | Before | Now |
+|---|---|---|
+| Set density / ornament | 8 | 8 |
+| Lighting & colour | 6 | 7 |
+| Composition / phone legibility | 4 | 6.5 |
+| Acting (squint, watch compare) | 6 | 7 |
+| Key moment ("every day, ten weeks") | 4 | 6.5 |
+| Match to refs / client taste | 6 | 7 |
+| **Overall** | **5.5** | **7.0** |
+
+## Earlier fixes
+1. Camera closer, King 160-230 px throughout: **PARTLY FIXED / OPEN (minor).** The King is 117-217 px, but the first second is still about 120 px at the far end of the table.
+2. Snap shows the stubs and the King together at g 2006: **FIXED.** Both are in frame on the word. Only about 5 of the 10 stubs are in frame, though; the rest are cut off at the right edge.
+3. Stubs grow left to right in the lower third and reach 10 by the snap: **FIXED.** The row grows visibly through f 35-82, at y 830-1030.
+4. No blown candelabra in the last frames; the King ends the shot: **FIXED.** The flames are small and not clipped, and the King is the last subject.
+5. Watches at face height, 1.5x: **FIXED** for scale. Two white dials read beside his chest at phone size and the squint reads. But the table orrery (h19_hall orrery at (0.0, 3.85)) now sits right in front of the watches and his chest, so the brass rings tangle with the dials.
+
+## New / remaining notes (polish if re-rendering anyway; not blocking)
+- Hide the orrery for this shot (in shot.py, the same way the stubs are moved: find the orrery objects and set hide_render, or move them +1.5 D in x). The two dials then read alone.
+- Snap shift (1.30, -0.20) to about (0.9, -0.25), so all ten stubs and the King's face are in frame at g 2006. The King's right shoulder is cut at the frame edge now.
+- The brass telescope eyepiece hangs as an out-of-context lump top-left in every frame. Move CAM_LOC0 x from -1.60 to about -1.2, or accept it as foreground depth.
+- The bare wooden block at the front centre (f 35-95) is a dead shape. It could take the gold pocket watch's case or be cropped by tilting down 0.1.
+- Frame-diff 3.95 / 9.96 is just under target. A slightly larger arc (12) would cover it.
