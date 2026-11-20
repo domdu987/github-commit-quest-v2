@@ -210,12 +210,12 @@ def build(preset, light=None):
         else: put(K.shed, (x, y), (x, y, 0), 7.0, 4.5, 3.6, r3.uniform(-0.4, 0.4), s=1.0)
     for i in range(int(N_ * 1.6)):                     # dark trampled patches + stones in the same frustum (calm texture on the ground)
         fw = r3.uniform(F0, F1 * 1.3); rt = r3.uniform(-0.45, 0.45) * fw; p = Vector((loc_.x, loc_.y, 0)) + fh_ * fw + rh_ * rt
-        mbn.box(M['earthpatch'], (p.x, p.y, 0.014), (r3.uniform(2, 7), r3.uniform(1.2, 3.5), 0.02), rz=r3.uniform(0, 3.1))
+        pass
     K.plank_walk(mbn, M, (0, -192), (-4, -60)); K.plank_walk(mbn, M, (30, -190), (22, -56), 1.0); K.plank_walk(mbn, M, (-30, -60), (30, -62), 1.4)
     for sd in (-0.9, 0.9):
-        for i in range(48): mbn.box(M['earthpatch'], (-2.0 + sd, -195 + i * 3.0, 0.015), (0.35, 3.2, 0.02), rz=0.0)
+        pass
     for i in range(40):
-        x = rr.uniform(-80, 80); y = rr.uniform(-190, 50); mbn.box(M['earthpatch'], (x, y, 0.012), (rr.uniform(4, 14), rr.uniform(2, 6), 0.02), rz=rr.uniform(0, 3.1))
+        pass
     # the rivet deck at z 16 on the front-left scaffold (shot 13): planks, rails, forge, kegs, bucket, anvil
     dk = Vector((-47.0, -64.0, 16.0))
     mbn.box(M['plank'], (dk.x, dk.y, dk.z), (9.0, 6.0, 0.3))
