@@ -1,0 +1,16 @@
+{
+ "take": "sC",
+ "film": 21,
+ "segment": "C",
+ "g0": 418,
+ "g1": 542,
+ "first_g": 418,
+ "n_frames": 124,
+ "handle_in": 0,
+ "handle_out": 0,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "note": "frames g418..541; the next segment D1 starts at g542 on a CUT"
+}
