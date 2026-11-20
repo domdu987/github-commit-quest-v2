@@ -184,3 +184,72 @@ motion.
 - g833-841 soft run: QA-art says acceptable (sharpness down only 7-9 %).
 
 - Fix 2 verified by director (21:40 UTC): T4 swaps at g1100 and g1148 are now 6-frame directional whip blurs with no person in frame (checked g1096-1110 and g1144-1152).
+
+---
+
+## Re-check (new conform: 2095 frames; sat 0.694, vivid 75.0, luma 98.1, LUFS -12.2)
+
+### RE-CHECK VERDICT: FIX (T7 only)
+Fixes 1 and 2 pass. Fix 3 does not: the re-rendered 1972 part still passes the bar across a face for all
+three jumpers. It also has a new head hanging below the bar.
+
+### 1. T2 purple slabs: PASS
+- **Whole-film scan:** I re-ran the per-frame violet scan (b >= r, b > 0.55, g < 0.15, sat > 0.8) on all
+  2095 frames. No frame has more than 0.4 % coverage. Earlier the worst frames had 2.6-26 %. The 68 frames
+  at 0.2-0.37 % (g1276-1887) are scattered crowd pixels in the night and 1972 stands, not slabs.
+- **Repaired frames:** I looked at g486-489, g521-524, g734-736, g769-771 and g841-842. They are clean and
+  there is no visible ghosting at phone size. g770 is slightly soft on the newspaper type, which is
+  acceptable for one frame.
+- **g487:** it sits 2 frames before the T1→T2 cut at g489 and blends T1 frames only, so nothing bleeds
+  across the cut.
+- **Pops:** the pop detector finds no single-frame pops.
+
+### 2. T4 camera through the official: PASS
+- **g1100-1105:** a directional whip blur. The only figure in it is Dick, smeared and far away (under 25 %
+  of the frame height). The landing frame g1103 is clean, with Dick, the official and the 2.24 m board.
+- **g1148-1150:** a whip blur that lands sharp on Dick at g1151.
+- No face over 35 % appears and nobody is cut by an edge. Both read as deliberate whips.
+- The whips add 2 transitions. The cut and transition count stays inside the §I target of 4-10.
+
+### 3. T7 1972 re-render (g1796-1965): FIX
+**What is OK:**
+- The seam into close-up 3 at g1795→1796 works as a punch-in on the jaw-drop. The face is about 31 % of
+  the frame height and the close-up lasts until about g1803.
+- The dissolve to the 1972 banner (g1803-1808) and the crane-out (g1905-1935) are clean.
+- The sky dissolve to Medford (g1935-1966) works, and the end seam at g1965/1966 is continuous.
+- Colour and grounding hold: the officials and photographers on the track have shadows, and each jumper
+  sits or stands on the mat after landing.
+
+**Blocking problems:**
+- **Bar through a face, all three jumpers.**
+  - Jumper 1 (red hair, green kit): g1848-1852. The bar covers his eyes at g1850 and g1852.
+  - Jumper 2 (dark, yellow kit): g1880-1887. The bar crosses his eyes and mouth at g1882-1886.
+  - Jumper 3 (red kit): g1915-1918.
+- **Heads hanging below the bar on the take-off side.**
+  - Jumper 3 hangs in the arch for about 0.8 s, g1892-1915. His head dangles below the bar, in front of
+    the mat's side wall on the run-up side, and barely moves. It reads as a head hanging in mid-air
+    (§G.2).
+  - Jumper 1 does the same at g1830-1852.
+- **Disembodied head at the frame edge.** Jumper 1 enters at the right edge at g1818-1829 as a big head
+  with his body off-frame.
+- **Root cause.** The camera is on the run-up side, but the jumpers are posed so that the head trails on
+  that side, below the bar. To reach the mat, every head has to pass under or through the bar in screen
+  space. A real flop leads with the head over the bar onto the mat.
+- **Fix (Team 6):** pick one.
+  - Mirror the flop so that the head goes over the bar first and drops onto the mat (far side), with the
+    legs flicking last, as Dick does in T5.
+  - Or move the camera to the mat side or high enough that every head stays clearly above the bar line on
+    screen.
+
+  Either way, keep the full body in frame on entry and cut the hang to at most about 8 frames. Re-render
+  g1810-1925 and check every frame from g1815 to g1925 for any bar across a face.
+
+### 1972 landings (first mat contact in the current conform)
+| jumper | first touches mat | current SFX cue | offset |
+|---|---|---|---|
+| 1 (red hair, green) | **g1853** (61.77 s) | g1831 | +22 |
+| 2 (dark, yellow) | **g1888** (62.93 s) | g1858 | +30 |
+| 3 (red kit) | **about g1919, ±1** (63.97 s; he is small in frame while the crane rises) | g1892 | about +27 |
+
+The cues are early in this conform. These landing frames will move again once T7 is fixed, so re-time the
+cues after that re-render, not now.
