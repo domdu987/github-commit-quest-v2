@@ -10,6 +10,7 @@ REPO=${REPO:-$(cd "$(dirname "$0")/../.." && pwd)}
 
 # take  branch  commit    (source: gate/STATUS.md "USE THIS" + RENDER_TEAMS.md)
 TABLE='
+sI  render21/team12 bc7db28  # PASS TAKE gate v2 (QA-tech). Old film-17 rows below are placeholders to replace.
 s01 render21/team1  d6ecda5
 s02 render21/team2  c2c810e
 s03 render21/team3  3fcb09e
