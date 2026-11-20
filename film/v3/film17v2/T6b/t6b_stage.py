@@ -157,7 +157,7 @@ def bottle_prop(a, cam, ctr=(0.95, 0.10), h_D=1.15, back_off=0.04):
     _quad('t6b_bottle', c, right, up, hw, hh, _img_mat('t6b_mbottle', _tex_bottle(), False, True)); return c
 
 # per-frame offsets (world metres, eased): w is 0 while the camera is in the P1 close-up, ramps in g1546-1560, holds, and is released at the cut
-def _w(g): return _ss((g - float(os.environ.get('W0', '1548'))) / float(os.environ.get('WL', '26.0')))
+def _w(g): return _ss((g - float(os.environ.get('W0', '1550'))) / float(os.environ.get('WL', '24.0')))
 STAGE = dict(bert=(0.62, 0.0), dup=(-0.90, 0.0), insp=(-0.30, 0.22))
 _insp_dist = [0.0]
 GEND_END = tuple(float(x) for x in os.environ.get('GEND', '0.55,-0.85').split(','))   # world offset of gend_a from his planned spot (13.95, 28.2) at the end of his walk-in
@@ -166,7 +166,7 @@ def _gend_off(g):
     u = _ss((g - WALK0) / float(WALK1 - WALK0)); return GEND_END[0] * u, GEND_END[1] * u, u
 def _gend_hand(g):
     """the hand of the gendarme pulling the empty bottle from his cape (g1640-1656): belt -> raised beside the card (head-local units, negative x = frame-left)"""
-    u = _ss((g - 1640) / 16.0); hx, hy = [float(x) for x in os.environ.get('GHAND', '-0.85,-0.1').split(',')]; return (-0.30 + (hx + 0.30) * u, 0.95 + (hy - 0.95) * u), u
+    u = _ss((g - 1640) / 16.0); hx, hy = [float(x) for x in os.environ.get('GHAND', '-0.85,-0.1').split(',')]; bob = 0.06 * math.sin(2 * math.pi * g / 29.0) * u; return (-0.30 + (hx + 0.30) * u, 0.95 + (hy - 0.95) * u + bob), u
 INSP_T0, INSP_T = 1568, 1598                                   # the inspector stays at T6a's offset (hidden behind the camera/Dupont) until the sweep is over, then walks to his mark
 def _bert_hand(g):
     """Bertillon's card hand (head-local units): beside his face in 6c; in 6d it rises so the card sits ABOVE Dupont's head, next to the bottle"""
@@ -185,18 +185,20 @@ def assign_for(g):
     gd = dict(cast17.STORY17['gendarme_standing_a'][1]); h, u = _gend_hand(g); ox, oy, wu = _gend_off(g)
     if False:                                      # foot-locked walk: phase advances with the distance walked (stride 0.72 m)
         dist = math.hypot(ox, oy); gd = cast17.cycle('gendarme_a', (dist / (2 * 0.72)) % 1.0, 'walk', facing=-1, base=gd, arms='none')
-    elif g >= 1640: gd.update(expr='determined', arm_l=dict(hand=h, bend=0.5 * u, stretch=1.0 + float(os.environ.get('GSTR', '0.2')) * u, layer='front'), arm_r='behind')
+    elif g >= 1616: gd.update(lean=3.0 * math.sin(2 * math.pi * g / 47.0), head_roll=3.0 * math.sin(2 * math.pi * g / 52.0 + 0.5))
+    if g >= 1640: gd.update(expr='determined', arm_l=dict(hand=h, bend=0.5 * u, stretch=1.0 + float(os.environ.get('GSTR', '0.2')) * u, layer='front'), arm_r='behind')
     cast17.STORY17['gend_dyn'] = ('gendarme_a', gd)
     ip = dict(cast17.STORY17['inspector_arms_crossed'][1])
     if 1640 <= g and math.hypot(_stage_at(g, 'insp')[0] - _stage_at(g - 1, 'insp')[0], _stage_at(g, 'insp')[1] - _stage_at(g - 1, 'insp')[1]) > 1e-4:
         dist = sum(math.hypot(_stage_at(k, 'insp')[0] - _stage_at(k - 1, 'insp')[0], _stage_at(k, 'insp')[1] - _stage_at(k - 1, 'insp')[1]) for k in range(1656, g + 1))   # pure in g: resume-safe
         ip = cast17.cycle('inspector17', (dist / (2 * 0.72)) % 1.0, 'walk', facing=-1, base=ip, arms='none')
     cast17.STORY17['insp_dyn'] = ('inspector17', ip)
-    bh, bu = _bert_hand(g); bd = dict(cast17.STORY17['bertillon_card_up'][1]); bd['arm_r'] = dict(hand=bh, bend=-0.6, stretch=1.1 + 0.2 * bu, layer='front'); cast17.STORY17['bert_dyn'] = ('bertillon', bd)
+    cast17.STORY17['bert_dyn'] = ('bertillon', bert_pose(g))
+    if g >= 1616: cast17.STORY17['dup_dyn'] = ('dupont', dupont_pose6d(g))
     gopt = {'dx': ox, 'dy': oy, 'H': float(os.environ.get('GH', '1.55'))}
-    dup = 'dupont_sweating' if g < 1616 else 'dupont_caught_sweat'
+    dup = 'dupont_sweating' if g < 1616 else 'dup_dyn'
     if g >= 1675: return {'inspector': ('inspector_shocked', f('insp'))}                        # P2: the others are out of frame (the whip is done): not rendered
-    if g >= 1671: return {'inspector': ('inspector_shocked', f('insp')), 'bertillon': ('bert_dyn', f('bert')), 'dupont': ('dupont_caught_sweat', f('dup')), 'gend_a': ('gend_dyn', gopt)}
+    if g >= 1671: return {'inspector': ('inspector_shocked', f('insp')), 'bertillon': ('bert_dyn', f('bert')), 'dupont': ('dup_dyn', f('dup')), 'gend_a': ('gend_dyn', gopt)}
     a = {'bertillon': ('bert_dyn', f('bert')), 'dupont': (dup, f('dup')), 'inspector': ('insp_dyn', f('insp')), 'gend_a': ('gend_dyn', gopt)}
     if 1546 <= g < 1640: del a['inspector']                                     # not in frame: not rendered
     if g < 1546: a['inspector'] = ('inspector_arms_crossed', {'dx': -0.4, 'dy': 3.0}); a['gend_b'] = ('gendarme_standing_b', {})   # T6a's join frames
@@ -204,7 +206,6 @@ def assign_for(g):
 def stage_props(g, acts, cam):
     """call after stage_cast2: Bertillon's MARTIN card (+ bottle later)"""
     hide_hero_card(g)
-    if 'bertillon' in acts and g >= 1550: bh, _ = _bert_hand(g); wd = 1.45 + 0.45 * _bert_hand(g)[1]; martin_card(acts['bertillon'], g, cam, width_D=wd, ctr=(bh[0] + 0.84 * wd / 1.45, bh[1] - 0.42 * wd / 1.45))
     if 'gend_a' in acts and g >= 1646:
         h, u = _gend_hand(g); bottle_prop(acts['gend_a'], cam, ctr=(h[0] - 0.02, h[1] - 0.55), h_D=1.5)
 
@@ -227,6 +228,12 @@ def apply_cam():
     ks.append(dict(k71, g=1674, hold=True))                                      # 6d holds its framing through g1674 (no swing: nobody crosses an edge)
     p2s = fl + 1.3 * (fc - fl)                                                   # g1675 = HARD CUT (director, takes.md 06657cb): opens on the P2 framing, push-in start (~2.1 m), head ~22 % H
     ks.append(P._k(1675, tuple(p2s), tuple(fl), 22.0, hold=False)); ks.append(P._k(1695, tuple(fc), tuple(fl), 22.0, hold=True)); ks.append(P._k(1701, tuple(fc + (fl - fc) * 0.002), tuple(fl), 22.0, hold=True))
+    # the pull-back out of P1 (g1545 hold -> g1560) starts from a dead hold: ease it in/out with smoothstep keys (director TAKE gate)
+    k45 = [k for k in ks if k['g'] == 1545][0]; k60 = [k for k in ks if k['g'] == 1560][0]
+    ks[:] = [k for k in ks if k['g'] not in (1548, 1551, 1554, 1557)]
+    for gg in (1548, 1551, 1554, 1557):
+        u = _ss((gg - 1545) / 15.0); mix = lambda a, b: tuple(np.array(a, float) * (1 - u) + np.array(b, float) * u)
+        ks.append(P._k(gg, mix(k45['loc'], k60['loc']), mix(k45['look'], k60['look']), 22.0, hold=False))
     ks.sort(key=lambda k: k['g'])
 apply_cam()
 
@@ -259,3 +266,56 @@ def remove_desk():
             bmesh.ops.delete(bm, geom=dead, context='FACES'); bm.to_mesh(me); n += len(dead)
         bm.free()
     return n
+
+
+# ======================================================= TAKE-gate fixes (director 22:24): card IN the hand, animated cast, T6a2 join, eased camera start
+CARDST = {'on': False, 'phi': 0.0}
+_orig_card_body = cast17._card_body
+def _card_body_t6b(k):
+    """the HERO card prop with the MARTIN name filled in after the flip. phi: 0 = the stock face toward the camera (T6a2's card), 180 = the MARTIN face. The squash is a flip about the card's long axis
+    (= the line through the fist), so the turn happens IN his hand."""
+    body = _orig_card_body(k)
+    if not CARDST['on']: return body
+    phi = CARDST['phi']; sx = max(abs(math.cos(math.radians(phi))), 0.04)
+    pre = '<g transform="matrix(0 1 -1 0 0 0)">'
+    inner = body[len(pre):-len('</g>')] if body.startswith(pre) and body.endswith('</g>') else body
+    extra = ''
+    if phi >= 90.0:                                          # the other face: the name panel filled in, the bottle sketch moved to the right panel
+        hw = cast17.CARD_W / 2; top = -(0.02 + cast17.CARD_LEN)
+        extra = ('<rect x="%.3f" y="%.3f" width="0.22" height="0.115" rx="0.008" fill="%s" stroke="%s" stroke-width="0.010"/>' % (-hw + 0.02, top + 0.02, k.c("#f6ecd0"), k.ink)
+                 + '<text x="%.3f" y="%.3f" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-weight="700" font-size="0.056" textLength="0.19" lengthAdjust="spacingAndGlyphs" fill="%s" stroke="%s" stroke-width="0.002">MARTIN</text>' % (-hw + 0.13, top + 0.020 + 0.073, k.c("#b01e22"), k.c("#b01e22"))
+                 + '<rect x="%.3f" y="%.3f" width="0.075" height="0.115" rx="0.006" fill="%s" stroke="%s" stroke-width="0.008"/>' % (hw - 0.095, top + 0.02, k.c("#f0dcc0"), k.ink)
+                 + cast17._bottle_icon(k, hw - 0.095 + 0.0375, top + 0.02 + 0.0575, 0.095))
+    return pre + '<g transform="scale(%.4f 1)">' % sx + inner + extra + '</g></g>'
+cast17._card_body = _card_body_t6b
+
+
+def _pe(g, a, b): return _ss((g - a) / float(b - a))
+def _sn(g, period, ph=0.0): return math.sin(2 * math.pi * g / period + ph)
+def bert_hand(g):
+    """card hand (head-local D units) + prop scale: stock T6a2 values until g1550; the hand goes out so the card hangs clear of his face (1.25, -0.05) over g1550-1574 while the card grows
+    (it keeps its screen size while the camera pulls back); in 6d the hand rises (1.25, -0.9) and the card gets bigger (it sits above everyone's head, the bottle next to it)."""
+    u = _pe(g, 1550, 1574); v = _pe(g, 1616, 1640); e = _pe(g, 1552, 1562)
+    hx = 0.66 + 0.59 * u; hy = (0.08 - 0.13 * u) * (1 - v) + (-0.90) * v
+    sc = 1.0 + 2.3 * u + 1.5 * v
+    hx += 0.045 * _sn(g, 23.0) * e; hy += 0.040 * _sn(g, 17.0, 0.8) * e                 # card shake (eased in)
+    return (hx, hy), sc
+def bert_pose(g):
+    base = dict(cast17.STORY17['bertillon_holding_card'][1])
+    if g < 1550: CARDST['on'] = False; return base                                      # T6a2's stock pose and card, exactly
+    CARDST['on'] = True; CARDST['phi'] = 180.0 * _pe(g, 1594, 1602)                       # wrist flip g1594-1602: the MARTIN face is toward the camera from g1598 (face-on by g1602)
+    (hx, hy), sc = bert_hand(g); e = _pe(g, 1552, 1562); v = _pe(g, 1616, 1640)
+    base['arm_r'] = dict(hand=(hx, hy), bend=-0.6, stretch=1.1 + 0.25 * _pe(g, 1550, 1574) + 0.1 * v, layer='front')
+    base['prop_r'] = dict(base['prop_r'], scale=sc)
+    base['yaw'] = 0.30 + 0.22 * _sn(g - 1550, 66.0) * e                                 # head turn toward Dupont and back
+    base['pitch'] = -0.15 + 0.10 * _sn(g - 1550, 51.0, 1.0) * e
+    base['head_roll'] = 4.0 * _sn(g, 60.0) * e
+    base['gaze'] = (0.5 + 0.35 * _sn(g, 45.0), 0.1 * _sn(g, 31.0, 0.7))
+    return base
+def dupont_pose6d(g):
+    p = dict(cast17.STORY17['dupont_caught'][1]); p.update(sweat=0.8 + 0.2 * _sn(g, 20.0), fx=['sweat'])
+    w = 0.05 * _sn(g, 19.0)
+    p['arm_r'] = dict(hand=(0.50 + w, 1.00 - 0.5 * w), bend=0.5, layer='front'); p['arm_l'] = dict(hand=(-0.50 - w, 1.00 + 0.5 * w), bend=0.5, layer='front')   # arms DOWN, hands wringing
+    p['lean'] = 2.5 * _sn(g, 38.0); p['head_roll'] = 5.0 * _sn(g, 46.0, 1.0); p['head_dy'] = -0.03 + 0.02 * _sn(g, 15.0)   # nervous shuffle, sweat bob
+    p['gaze'] = (0.7 * _sn(g, 34.0), 0.25 * _sn(g, 27.0, 1.0))                              # eye dart
+    return p
