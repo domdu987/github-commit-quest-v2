@@ -152,6 +152,7 @@ def bg_actors(cam, g, hush=False):
         SHB.card(tag('off%d' % i), cast, cast15.pose_for('official_stand', cast), (x, J['y'] - 0.9), cam, ppd=112, mirror=mir, shadow=(1.4, 0.5))
         ob = bpy.data.objects['actor_' + tag('off%d' % i)]; ob.location.z += 0.012 * math.sin(g * 0.45 + i * 2.0) * U
     for i, (x, y) in enumerate(((-4.6, 9.2), (4.4, 14.4), (-5.6, 14.0))):
+        if hush and i == 1: continue                              # its card drew a thin dark line through Dick in the hush push
         fl = (g % 37 == 5 * i) or (g in (1141, 1177) and i == 0)
         SHB.card(tag('ph%d' % i), 'photographer', cast15.pose_for('photog_flash' if fl else 'photog_ready', 'photographer'), (x, y), cam, ppd=112, mirror=(x > 0), shadow=(1.3, 0.5))
         ob = bpy.data.objects['actor_' + tag('ph%d' % i)]; ob.location.z += 0.010 * math.sin(g * 0.5 + i) * U
