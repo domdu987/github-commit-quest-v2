@@ -44,7 +44,7 @@ CAM_LOC0 = tuple(float(v) for v in os.environ.get("CAM_LOC0", "2.2,-1.6,2.4").sp
 CAM_LOOK0 = tuple(float(v) for v in os.environ.get("CAM_LOOK0", "2.6,2.9,2.3").split(","))
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get("PUSH", 0.07)), slide_px=float(os.environ.get("SLIDE", -70)),
                 rise_px=float(os.environ.get("RISE", 0)), arc_deg_s=float(os.environ.get("ARC", 8)), decay=0.25,
-                snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 1.2)), peak=float(os.environ.get("SNAPPEAK", 3.0)), shift=(float(os.environ.get("SNAPSX", 0.6)), -0.1))])
+                snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 1.3)), peak=float(os.environ.get("SNAPPEAK", 3.0)), shift=(float(os.environ.get("SNAPSX", 0.6)), -0.1))])
 
 BASE = dict(cast19.STORY19["harrison_chisel"][1])
 

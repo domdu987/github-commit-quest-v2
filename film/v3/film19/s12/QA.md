@@ -16,3 +16,6 @@
 ## Round 2 re-render (QA_TECH round-2 FAIL)
 - Candle: stub + flame + point light on the foreground chest (in frame all shot); set_candles level 1.0 -> 0.35 (stub 17 cm -> 6 cm), flame emission x0.5, candle lights x0.3, all other lamps / fills / moon key keyed down to 30 % across the shot. Frame mean luma now FALLS: 68.9 (g938) -> 59.4 (g985) (was 62.9 -> 88). The end close-up is smaller (head 295 px max, snap x1.2) because the big white face was what raised the luma.
 - Frame-diff in-shot: median 4.02 (meets), **p90 9.84 (under 12)**: the smaller snap costs p90. Tapping continues to the end.
+
+## Round 3 (director's relaxed per-take rule: median >= 4, p90 >= 10)
+- Snap x1.3 instead of x1.2 (everything else as round 2): frame-diff in-shot median 4.23, p90 10.62. Meets the per-take rule. Candle / luma behaviour as in round 2 (luma falls).
