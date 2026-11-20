@@ -23,3 +23,7 @@ After TAKE_ART (F1-F3 callback), TAKE_B and QA_TEAM §G. Checked at 6 fps contac
 - Framing: wider (5.2 D, was 3.5): Eiffel is shown at the thighs at the end, the tower legs, first platform and banner stay behind him; head width 140-262 px (centre y 543-652, chin <= 724). Snap x1.9 with a 0.55 D pan toward the official keeps both in frame.
 - `qa_stats2.py take.mkv`: sat 0.544, vivid 47.2 %, luma 97.7, warm 47.4 % / cool 25.3 %, motion med 6.32 **p90 12.16**, still 0 %. In-shot g 1657..1731: median 5.44, p90 11.57. take.mkv 34.0 MB.
 - The set flags: my pennants are vertical blue-white-red tricolours; the preset flags are the set builder's.
+
+## v7 (director re-request; set flag fix d1511f7 merged)
+- Re-rendered with the merged set: the preset flags are vertical blue-white-red tricolours now (my own pennant poles already were). All v6 fixes stand (raised bowler with rim visible, official in frame, document passes hand to hand on screen, wider with the tower behind).
+- `qa_stats2.py take.mkv`: sat 0.544, vivid 47.2 %, luma 97.6, warm 47.4 % / cool 25.3 %, motion med 6.43 **p90 12.25**, still 0 %. In-shot g 1657..1731: median 5.52, p90 11.61. Head width 140-262 px, chin <= 724. take.mkv 34.0 MB.
