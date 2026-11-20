@@ -19,10 +19,3 @@ Notes: p90 10.59 is just above the limit; legs end in thin stubs (rig limit); th
 ## Round 4: PASS
 Checked 6 fps (take g929-994), qa_auto PASS. No text, black/magenta, frozen, blur; mouth fixed (frown). Frame-diff g939-985 median 4.22 / p90 10.62 (>= 4 / >= 10) OK. Round 3 PASS stands: candle burn-down reads, tapping continues, eye-line to lens. New: nothing blocking.
 Notes: Harrison's ponytail/hair touches the right edge in the last frames (face intact); legs end in thin stubs; shadow under shoes faint.
-
-## Round 9 (director QA-tech): FAIL
-Checked 6 fps + every frame g985-1016 (crop x 600-720 by eye, plus head crops) in /tmp/qa19_r9/s12/. Frame-diff g939-1015: median 5.87 / p90 13.37 OK. No black/magenta/frozen/text; no mouth movement.
-Right edge: FIXED in the sense asked: nothing at all is inside x 600-720 g985-1016 (head right extent x ~545-605); no hair/bow/ponytail/puff beyond x 690. Grey hair until g995, white-hair swap with a puff at g996 (OK, ~g996), backward slump g996-1003 then eye rub OK.
-Issue (blocking, §G3-style cut):
-1. g997-1016 (every frame): Harrison's card is sliced by a hard VERTICAL line at x ~ 545-570 (it moves 565 -> 543 over the run): the right side of the hair, the bow, the ponytail and the puffs are cut off flat (very visible g997-1003 where the puff and bow are chopped; from g998 the ponytail is gone entirely; g1013-1016 the bow is half cut). It looks like the right-edge fix clips the card instead of moving it. Fix: shift/scale the card (or camera look) left so the whole head is inside, no clipping plane; re-check the same frames.
-Notes: g985-993 grey-hair frames intact; head within frame everywhere else.

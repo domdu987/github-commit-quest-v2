@@ -24,3 +24,10 @@
 - From g 990 the look point turns a further 0.45 D toward him (ramp g 990-998), so the whole figure (hair, bow, ponytail, both steam puffs) sits well inside the frame. Checked BY EYE on a crop of x 600-720 of every frame g 990-1024 (work/rightedge.png): only plain wall is in that strip, except a hairline sliver at x ~600 in g 1015-1017, so the figure's right edge never passes x ~602 (the detector's head-x range in the earlier round, 199-697, was wrong: it misses the outline and the puffs).
 - Polish: the steam puff is held g 995-1008 and pumps (t animated); the slump now tilts back (pitch -0.30, head roll 2 deg) rather than sideways. The puff size is the puppet's own (not scalable without editing the cast), so it is not 1.5x bigger.
 - Frame-diff in-shot: median 5.45, p90 12.49. QA_AUTO PASS. Frames g 929-989 are unchanged from round 8.
+
+## Round 10 (QA-art round 9: the slump tilted his card into the plaster wall at g 997-1013) - g 990-1024 re-rendered
+- Cause: his sprite card (about 4 D wide) met the right plaster wall (x 4.25) while he leaned back; the wall cut the card with a straight line. Fix: while he slumps (g 990-1000, eased) his mark steps 0.3 D away from the wall (x 3.43 -> 3.13); it reads as him slumping away from the bench. The step is applied only from g 990, so g 929-989 are unchanged.
+- Checked BY EYE on a crop of x 450-720 of every frame g 994-1016 (work/wallcheck.png): ponytail, bow, both puffs, the whole head and the sweat drop are intact, no straight cut, nothing meets the wall.
+- Light: a small exposure lift for the payoff (all lights x1.6 over g 990-1000, in the keyed dimming); mean brightness 59.9 -> 65.7 (qa_stats). The overall trend is still a darker room than the start, with a brighter payoff. No separate rim light.
+- With him 0.3 D further from the chest his white stockings and shoes show beside the chest (standing on the floor with the contact shadow) instead of hiding behind it.
+- Frame-diff in-shot: median 5.94, p90 13.48. QA_AUTO PASS.

@@ -53,6 +53,8 @@ CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get(
                        dict(g=(970, 996), k=1.0, peak=1.0, shift=(float(os.environ.get("SETTLE", -0.9)), 0.0))])   # the whip overshoots, then settles back left
 
 SWAY = float(os.environ.get("SWAY", 0.09))
+STEP_BACK = float(os.environ.get("STEP_BACK", 0.3))
+LIFT = float(os.environ.get("LIFT", 1.6))
 EXTRA = float(os.environ.get("EXTRA", 0.45))
 TRAVEL = float(os.environ.get("TRAVEL", 0.9))              # D: look point moves right (camera turns, does not move) after the pan lands
 
@@ -193,9 +195,10 @@ class Take(C.Take):
         ob.keyframe_insert("hide_render", frame=f)
 
     def pose(self, gs):
-        mark = Vector(self.A["marks"][MARK]) + Vector((MARK_DX, MARK_DY, 0))
+        mark0 = Vector(self.A["marks"][MARK])
         for g in gs:
             f = bf(g)
+            mark = mark0 + Vector((MARK_DX - STEP_BACK * u_of(g, 990, 1000, kind="sine"), MARK_DY, 0))   # he slumps AWAY from the right plaster wall (his card must not meet it)
             self.key_cam(f, *cam_at(g))
             C.place(self.har, f, mark + Vector((0, 0, bounce_z(g))))
             self.key_set(f, clock=CLOCK, balance=g / 30.0, candles=candle_level(g))
@@ -211,13 +214,14 @@ class Take(C.Take):
         emission follows the stub; keyed on every frame.  (set_candles resets the candle lights and flame every call, so those are
         scaled after it; the other lights are scaled from their stored base.)"""
         u = clamp((g - G0) / float(G1 - G0))
+        lift = lerp(1.0, LIFT, u_of(g, 990, 1000, kind="sine"))      # a small exposure lift for the payoff (the end frames were too dark)
         for grp, items in H.STATE["lampgroups"].items():
             for o, _b in items:
                 if grp == "candle":
-                    o.data.energy = o.data.energy * lerp(1.0, 0.45, u)
+                    o.data.energy = o.data.energy * lerp(1.0, 0.45, u) * lift
                 else:
                     self._base.setdefault(o.name, o.data.energy)
-                    o.data.energy = self._base[o.name] * lerp(1.0, 0.45, u)
+                    o.data.energy = self._base[o.name] * lerp(1.0, 0.45, u) * lift
                 o.data.keyframe_insert("energy", frame=f)
         em = H.STATE["M"]["flame"].node_tree.nodes["Emission"].inputs["Strength"]
         em.default_value = em.default_value * lerp(1.0, 0.5, u)
@@ -225,7 +229,7 @@ class Take(C.Take):
         sun = H.STATE.get("sun")
         if sun is not None:
             self._base.setdefault("sun", sun.data.energy)
-            sun.data.energy = self._base["sun"] * lerp(1.0, 0.45, u)
+            sun.data.energy = self._base["sun"] * lerp(1.0, 0.45, u) * lift
             sun.data.keyframe_insert("energy", frame=f)
 
     def report(self, g):

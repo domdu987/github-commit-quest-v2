@@ -19,9 +19,3 @@ Notes: an orrery sits in front of the King and covers his lower body; the King r
 ## Round 4: PASS
 Checked 6 fps + cut +-3 (take g1924-2036). qa_auto PASS. No text, black/magenta, frozen, blur. King's mouth is closed throughout (only expression changes). Frame-diff g1934-2027 median 4.05 / p90 13.91: R2-1 FIXED. R2-2 FIXED: the stub row stays in frame and grows from 0 to ~10 by g2006-2014. R2-3 FIXED: King head 135-220 px from the start, the two watches read; the candelabra no longer covers him.
 Notes: King's wig touches the left edge at g2009-2027 (face intact); a candle edge shows at the left of the last frames; the King reads seated behind a lectern; flames blown white.
-
-## Round 9 (director QA-tech): PASS
-Checked 6 fps + every frame g2088-2159 (/tmp/qa19_r9/s24/). Frame-diff g1934-2159: median 4.74 / p90 19.80 OK. No black/magenta/frozen/text, no unintended pop (spikes only in whips g2022-2029 and g2087-2093).
-Blocker re-check: g2093-2097 no card at the left edge (left strip x 0-140 empty: telescope/chairs only); the astro leaves under the whip blur (g2088-2092) and the King (blue coat, behind Harrison) and Harrison are fully inside. FIXED.
-Other points: bag falls g2105-2107, on the table g2108 (~70.2-70.3 s; ~0.1-0.15 s after 70.1, acceptable); Harrison grins from g2112, hops/bobs g2149-2153, one arm out; King nods (head dips g2149-2152) with a visible smile; tabletop + coins fill the lower third g2118-2159; Harrison's pocket watch at x ~ 50-110, fully inside g2147-2159; camera still moving on the last frame (diff 5.3, decelerating from 20). Face max ~30 %, heads above y 880, jaw-drop is the only mouth change, nobody still > 1.5 s.
-Notes (not blocking): (a) telescope tripod legs touch the top of Harrison's hair g2142-2150 (tube itself clears, full gap from g2152); (b) "arms up" reads as one arm held out sideways and the watch hand low, not both arms raised; (c) the telescope tube crosses the frame upper-left throughout the ending.
