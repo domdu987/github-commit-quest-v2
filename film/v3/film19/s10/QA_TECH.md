@@ -31,3 +31,8 @@ NOTE on files: take.mkv (09:17) is STALE; the current render is take.mkv.partaa+
 Earlier issues: R3-1 tricorne NOT FIXED; R3-2 astro_b/c clump FIXED (smaller green-coat astronomer now sits clear of the right-hand one, faces readable); R3-3 edge clipping PARTLY (left astronomer's wig is cut by the left edge g764-846 and his face touches/loses ~20 % at the edge g836-846 during the whip; right one's wig cut at the right edge, face intact: NOTE).
 1. g854-871 (R3-1, plan "Harrison with his tricorne"): still no tricorne; arms folded low, hands empty. Fix: tricorne in the raised hand (fingers over the brim) or the director amends the plan row in writing.
 Notes: the take.mkv/parts duplication should be cleaned (deliver one file); contact shadows faint.
+
+## Round 5: PASS
+Checked the concatenated take.mkv.partaa+partab (g764-871; take.mkv alongside is the stale 09:17 render), qa_auto PASS (soft g851-854 = planned snap), 6 fps + cuts g773/g862 +-3. No text/black/magenta/frozen. Frame-diff g774-861: median 7.67 / p90 22.19 OK. Wide exempt; Harrison head centre y ~ 640. Laugh grins are plan-required.
+Earlier: R4-1 tricorne dropped from the plan by the director (ruling), closed; no tricorne required.
+NOTES: left astronomer's wig cut by the left edge g764-846; face half cut at the left edge g846-850 during the planned whip (2-3 frames); right one's wig cut at the right edge (face intact); delete the stale take.mkv when delivering; contact shadows faint.

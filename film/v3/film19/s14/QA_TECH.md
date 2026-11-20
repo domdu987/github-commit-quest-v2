@@ -17,3 +17,8 @@ Notes: Harrison hair tangent on the right edge g1088-1095 (nudge SNAPSX -0.05); 
 ## Round 4: FAIL
 Checked 6 fps + g1090-1095 at full size (take g1007-1104), qa_auto PASS. No text, black/magenta, frozen, blur. Mouth: closed-eye smile. Frame-diff g1017-1095 median 4.15 / p90 11.29: R3-1 FIXED (>= 4 / >= 10). H1 + H4 on red cloth, palm toward the H4 read.
 1. g1084-1095 (new, clipping): during the snap settle Harrison drifts to the right and his head is cut by the RIGHT frame edge: ~20 % of the face (cheek, ear, hair) off at g1086, ~30 % at g1090-1095. Round 3 listed it as a tangent; it is now a face clip. Fix: shift SNAPSX by about -0.10 (or stop the slide) so his whole head stays inside x <= 700 through g1095; this also clears the H1/H4 tangent.
+
+## Round 5: PASS
+Checked 6 fps + g1084-1096 at full size (take g1007-1104), qa_auto PASS, no text/black/magenta/frozen/blur. Closed-eye smile mouth. Frame-diff g1017-1095: median 4.83 / p90 13.74 OK. Heads centre y ~ 510-600 (< 880).
+Earlier: R4-1 FIXED: Harrison's whole face stays inside x <= 700 through g1095 (ponytail ends at the edge g1090-1095, face intact; at g1100+ in the out-handle the wig tip touches the edge, handle only).
+NOTES: H1 + H4 on red cloth read; gears lower-left dominate the frame.

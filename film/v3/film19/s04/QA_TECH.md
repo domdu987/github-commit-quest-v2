@@ -21,3 +21,8 @@ Earlier issues: R3-1 NOT FIXED, R3-2 NOT FIXED, R3-3 NOT FIXED.
 1. g182-261 (R3-1, planned beat "peers into fog over a blank chart"): he still faces the lens, grumpy stare, body square to camera; eyes never go to the chart or fog; the chart shows coast lines and a red compass rose (not blank). Fix: turn body 3/4 to the rail, head up into the fog on "กลางทะเล", chart blank (ticks only).
 2. g182-261 (R3-2): chart still held out sideways at arm's length, straight arm. Fix: bend the elbow, chart at chest height in front of the body, fingers on its edge.
 3. g200-217 and g257-270 (R3-3): FG lantern still swings to the right frame edge and is cut ~half at g200-212 and at the end. Fix: shorten the swing / mark 0.3 D toward centre.
+
+## Round 5: PASS
+Checked 6 fps + cut g262 (take g182-270), qa_auto PASS, no text/black/magenta/frozen/blur, mouth closed. Frame-diff g192-261: median 6.38 / p90 12.32 OK. Heads centre y ~ 560-640, feet on deck.
+Earlier: R3-1 chart: chart with coast + compass ACCEPTED by the director; body now 3/4 to the rail, grumpy stare (eyes still near the lens, NOTE). R3-2 FIXED (elbow bent, chart at chest). R3-3 FIXED (lantern stays inside the frame, no half-clip).
+NOTES: eye-line still not clearly up into the fog; wide lower third is plain deck.

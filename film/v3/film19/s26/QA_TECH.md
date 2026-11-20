@@ -27,3 +27,8 @@ Earlier issues: R2-1 FIXED; R2-2 bag NOT FIXED; R2-3 King clipped FIXED (King in
 3. g2112-2159 (R2-4, acting): Harrison's grin is a small smile; one arm is stretched out rigidly sideways across the table, no joyful rise and no 2 bounces; King nods are barely visible. Fix: both arms up with the H4, 2 bounces ~0.06 D, firmer nods.
 4. g2077-2159 (R2-5, feet): Harrison's legs hang below the table in mid-air, disconnected from his torso, with no contact shadow on the dark carpet. Fix: hide the legs under the table (lower the camera cut-off) or ground them with a blob shadow.
 5. g2086-2150 (composition): the lower third is dark empty floor. Note only.
+
+## Round 5: PASS
+Checked 6 fps + g2140/g2150/g2159 at full size (take g2077-2159; last frame g2159, hard cut, out-handle 0). qa_auto PASS. No text/black/magenta/frozen/blur; mouths closed. Frame-diff g2087-2159: median 4.36 / p90 10.88 OK. End frame has the bag, Harrison and the King.
+Earlier: R4-1 FIXED: Harrison's face is inside the frame at g2150-2159 (wig/ponytail touches x 0 = NOTE). R4-5 floor note: lower third now table/coins. R4-4 floating legs FIXED (legs hidden under the table).
+NOTES: the bag is still a round pot with an octagonal cap (coins carry the read); Harrison's one outstretched arm and small grin, King nods modest (acting, QA-art); wig tip on the left edge in the last 6 frames.

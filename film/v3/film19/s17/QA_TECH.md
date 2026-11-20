@@ -12,3 +12,9 @@ Checked: qa_auto PASS, meta g0 1280/g1 1383 handles OK, CUT in, no actors, no te
 2. Earlier 2 (V-wake lengthening) NOT fixed: only a short white spray fan at the stern and a ring ripple round the hull, no long trailing V. Fix: long wake ribbons that grow with the pull-back.
 3. Earlier 3 (empty teal lower half) improved, the ship now sits lower from g1310; NOTE.
 4. Earlier 4 (gull clipped at the right edge) gone, but NEW g1310-1350: the ship's hull and stern are clipped by the LEFT frame edge and a large foreground gull is clipped at the left edge (g ~1340-1360), then the ship is cut at the bottom. Fix: keep the crane/slide from dragging the ship off-frame; keep the ship x 150-570.
+
+## Round 5: FAIL
+Checked 6 fps + cut g1280/g1384 +-3 (take g1271-1392), qa_auto PASS (soft g1387-1392 = dissolve handle). No actors, no text/black/magenta/frozen. Frame-diff g1281-1383: median 3.54 / p90 4.49 (rule 4 / 10): worse than round 2 (3.99 / 5.03).
+Earlier: R2-1 NOT FIXED; R2-4 ship clipping FIXED (ship stays inside x 60-560 through the crane); R2-2 V-wake: a long wake ribbon now trails, FIXED.
+1. g1281-1383 (frame-diff): median 3.54 < 4 and p90 4.49 < 10; the move is a uniform slow drift. Fix: add a clear eased push/slide accent (about 1.3x over 12 f around g1340-1355) and raise the base speed so the median >= 4.5 and p90 >= 10; re-measure.
+NOTES: g1271-1290 white glare patches at the left of the wake read as holes.

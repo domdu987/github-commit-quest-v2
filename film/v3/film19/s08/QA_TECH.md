@@ -15,3 +15,9 @@ Checked 6 fps + cuts g545/g661 +-3 (take g536-669), qa_auto PASS. No text, no bl
 Earlier issues: R1-1 NOT FIXED; R1-2 mouth FIXED (flat g602-621, first opening g623, inside the g622 window); R1-3 turn FIXED (starts in 3/4, faces lens by g~560); R1-4 wig below 880 FIXED; R1-5 shadows faint, NOTE; R1-6 pointing arm now visible at the right g646-660 but weak, NOTE; R1-7 left lappet inside, FIXED.
 1. g545-660 (R1-1): frame-diff (take.mkv, 90x160 grey bilinear, g546-660) median 3.82 (< 4), p90 6.60 (< 10); deliver framediff.json says 3.54 / 6.22 and QA.md reports it as a deviation. The director's per-take rule is median >= 4 and p90 >= 10: FAIL. Fix: real snap on "นาฬิกาเนี่ยนะ" (g637, x2 over 13 f, eased) plus >= 10 %/s push and a slide, orbit past the bookcases without hiding his face; re-measure.
 Notes: meta g1=661 exclusive.
+
+## Round 5: FAIL
+Checked 6 fps + cuts g545/g661 +-3 (take g536-669), qa_auto PASS, no text/black/magenta/frozen/blur. Heads centre y 560-700, wig <= y ~ 830. Mouth: flat until g622, first open g623 (inside g622-781 window), OK. Frame-diff g546-660: median 4.07 (OK) / p90 7.15 (< 10).
+Earlier: R3-1 median now passes, p90 NOT FIXED.
+1. g545-660 (frame-diff p90 7.15 < 10): only the slow push, no accent. Fix: add the eased snap on 'นาฬิกาเนี่ยนะ' (g637, x1.8-2 over ~13 f) and a short slide so about 10 % of frames reach diff >= 10; keep his face clear of the shelves; re-measure.
+NOTES: foot shadows faint; mark moved back + Board chair hidden accepted.

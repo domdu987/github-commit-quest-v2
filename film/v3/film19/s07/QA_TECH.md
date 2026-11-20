@@ -14,3 +14,10 @@ Earlier issues: R2-1 NOT FIXED, R2-2 NOT FIXED, R2-4 not fixed (note).
 1. g506-553 (R2-1): astro19 is still cropped by the right frame edge for the whole end of the snap: right half of the wig and the right shoulder cut (300-500 rows at the right column, g506-544), right lens of the pince-nez touches the edge at g537-544; shot parks on it. Fix: end the snap with astro19 centred (camera ~120 px right) and scale <= x1.8.
 2. g487-545 (R2-2, plan "astro_b and astro_c nod beside him"): astro_b is out of frame from g~497; astro_c is half hidden behind astro19's wig and shows no nod in the snap (g507-545). Fix: keep both inside the final framing (marks 0.6 D left of astro19, nod 0.05 D) or lessen the snap.
 Notes: eye-line still to the lens while pointing at the Moon (R2-4), feet shadows faint, meta g1=545 exclusive.
+
+## Round 5: FAIL
+Checked 6 fps + cuts g466/g545 +-3 (take g457-553), qa_auto PASS, no text/black/magenta/frozen/blur, mouths closed. Frame-diff g467-544: median 5.60 / p90 13.22 OK. Heads centre in band.
+Earlier: R2-1 changed side but NOT FIXED; R2-2 astro_b/astro_c now stay in frame (nods small).
+1. g506-553 (clipping): astro19's pointing arm/hand is cut by the LEFT frame edge for the whole end of the snap (sleeve runs off x 0, hand not visible), and his wig lappet touches x ~ 20. The pointing hand is the key gesture. Fix: end the snap with the camera ~80-100 px left (astro19 centre x ~ 300-360) so arm and hand end inside x 30-700.
+2. g520-553 (clipping): the grey-wig astronomer behind the table touches the RIGHT edge; face edge cut by about 10-15 % at g540-553 (wig cut). Fix: same re-centre, or put his mark 0.3 D toward centre.
+NOTES: astro19 eye-line to the lens while pointing at the Moon; foot shadows faint.

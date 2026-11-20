@@ -12,3 +12,8 @@ Earlier issues: R2-1 frame-diff FIXED on the mkv (marginal); R2-2 shrug: FIXED i
 1. g1640-1665 (QA_ART fix 3 / R2-2): from the snap on, both arms and hands run off the left and right frame edges (hands/cuffs cropped at x 0 and x 720), so the shrug is lost on the quote; the visible hands are small dark mitts, not open palms. Fix: snap k 1.4 -> 1.25 / peak 2.6 -> 2.0 so both palms stay inside x 40-680, hands skin/white so they read on the navy coat.
 2. g1627-1672 (QA_ART fix 2): shoulder squash/head roll not visible; the shrug carries only through the arms. Fix: squash (1.04, 0.96) and head_roll -10 on the pump.
 Notes: QA-art must PASS this key shot before conform (it is still FIX-FIRST); left wig lappet crops at the edge g1654-1672 (accepted); meta g1=1665 exclusive.
+
+## Round 5: PASS
+Checked 6 fps + cuts g1581/g1665 +-3 (take g1572-1673), qa_auto PASS. No text/black/magenta/frozen/blur. Mouth: first open g1626 (window 1626-1672), last open g1666, flat afterwards, inside g1631-1667 +-5; astro19 only. Heads centre y ~ 470-640. Frame-diff g1582-1664: median 4.48 / p90 11.28 OK.
+Earlier: R3-1 FIXED: both hands/cuffs are now inside the frame through the snap (hands at x ~ 60-100 and 600-680, no cropping); R3-2 squash/head roll visible.
+NOTES: the hands are small dark mitts, palms do not read as open; QA-art still has to PASS this key shot before conform; left wig lappet crops at the edge g1654-1672 (accepted).
