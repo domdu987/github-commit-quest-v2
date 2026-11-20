@@ -30,8 +30,8 @@ PHASE = {"art1": 0.0, "art2": 1.7, "art3": 3.1, "art4": 4.4}
 def cam_path(A):
     c = Vector(eval(os.environ.get("CAML", "(0.2, 0.5, 2.3)")))
     subj = Vector((-0.6, 6.7, 2.4))
-    return C.CamPath(c, subj, GA, G_LAST, push=float(os.environ.get("PUSH","0.08")), slide_px=float(os.environ.get("SLIDE","-40")), tilt0=float(os.environ.get("TILT", "3")), tilt_deg_s=0.0, decay=0.25,
-                     snaps=[dict(g=SNAP, k=1.2, peak=1.7, shift=(0.1, 0.0), tilt=0.0)])
+    return C.CamPath(c, subj, GA, G_LAST, push=float(os.environ.get("PUSH","0.08")), slide_px=float(os.environ.get("SLIDE","-80")), tilt0=float(os.environ.get("TILT", "3")), tilt_deg_s=0.0, decay=0.25, arc_deg_s=float(os.environ.get("ARC", "7")),
+                     snaps=[dict(g=SNAP, k=1.3, peak=1.7, shift=(0.25, 0.0), tilt=0.0)])
 
 
 def cam_path_static():

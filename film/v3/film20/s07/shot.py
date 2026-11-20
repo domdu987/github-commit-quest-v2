@@ -30,9 +30,9 @@ SHEET_Z = 0.772                                    # metres: sheet top (table to
 def cam_path(A):
     c = Vector(A["cams"][PRESET]["loc"])
     subj = Vector(A["marks"]["protest_sheet"]) + Vector((0.05, 0.0, 0.0))
-    return C.CamPath(c, subj, GA, G_LAST, push=0.14, slide_px=float(os.environ.get("SLIDE", "75")), rise_px=0.0, arc_deg_s=8.0,
+    return C.CamPath(c, subj, GA, G_LAST, push=0.14, slide_px=float(os.environ.get("SLIDE", "75")), rise_px=0.0, arc_deg_s=12.0,
                      tilt0=float(os.environ.get("TILT", "0")), tilt_deg_s=0.0, decay=0.25,
-                     snaps=[dict(g=(LAND1 - 3, LAND1 + 9), k=1.3, peak=1.7, shift=(0.0, 0.0), tilt=0.0)])
+                     snaps=[dict(g=(LAND1 - 3, LAND1 + 9), k=1.45, peak=1.7, shift=(0.0, 0.0), tilt=0.0)])
 
 
 def cam_path_static():
