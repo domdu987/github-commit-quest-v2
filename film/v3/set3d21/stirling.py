@@ -18,7 +18,7 @@ D = 1.7
 HEIGHT = {'scot': 1.70, 'wallace': 1.92, 'moray': 1.80, 'cressingham': 1.78, 'surrey': 1.66, 'knight': 1.78, 'foot': 1.68, 'archer': 1.66, 'squire': 1.55}
 STATE = {'P': None, 'ink_t': 0.012, 'anim': {}, 'loc': None, 'preset': None, 'cam': (0, 0, 0)}
 CACHE = os.path.join(HERE, 'cache'); os.makedirs(CACHE, exist_ok=True)
-TERRAIN_V = 9
+TERRAIN_V = 10
 
 def hex_lin(h):
     h = h.lstrip('#'); c = [int(h[i:i + 2], 16) / 255.0 for i in (0, 2, 4)]
@@ -439,9 +439,9 @@ def far_fields(X, Y):
     return (north + south + east + west) * (0.8 + 0.4 * n2) * smooth(420, 900, r) + 10 * (n2 - 0.5) * smooth(400, 700, r)
 def far_colour(X, Y, z):
     n = fbm(X / 90.0, Y / 90.0, 61, 3); n2 = fbm(X / 300.0, Y / 300.0, 63, 3)
-    lo = hex_rgb('#7da04a') + (hex_rgb('#b5a64e') - hex_rgb('#7da04a')) * smooth(0.4, 0.7, n)[..., None]
-    hi = hex_rgb('#745a52') + (hex_rgb('#7d6a5a') - hex_rgb('#745a52')) * smooth(0.4, 0.7, n2)[..., None]
-    t = smooth(15, 120, z); col = lo + (hi - lo) * t[..., None]; return col + (hex_rgb('#8a8590') - col) * (smooth(190, 330, z) * 0.6)[..., None]
+    lo = hex_rgb('#6f9a52') + (hex_rgb('#a9a24e') - hex_rgb('#6f9a52')) * smooth(0.4, 0.7, n)[..., None]
+    hi = hex_rgb('#62806a') + (hex_rgb('#7a7468') - hex_rgb('#62806a')) * smooth(0.4, 0.7, n2)[..., None]
+    t = smooth(15, 120, z); col = lo + (hi - lo) * t[..., None]; return col + (hex_rgb('#7c8088') - col) * (smooth(190, 330, z) * 0.6)[..., None]
 
 LEVELS = [('A', -240.0, 340.0, -200.0, 340.0, 1.6), ('M', -760.0, 760.0, -760.0, 760.0, 4.0), ('B', -2800.0, 2800.0, -2800.0, 2800.0, 16.0)]
 _TERR = {}
