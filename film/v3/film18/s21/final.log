@@ -3,3 +3,5 @@ s21 posts wood 86 4989 0.0
 s21 posts palisade 212 2756 0.0
 00:26.741  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1590.png'
 s21 g 1590: 23.9 s wall 47.4 cpu heads {'soldier_stand_a': 634, 'soldier_cheer_cup_b': 634, 'soldier_stand_c': 634}
+00:50.576  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1591.png'
+s21 g 1591: 23.8 s wall 47.0 cpu heads {'soldier_stand_a': 641, 'soldier_cheer_cup_b': 639, 'soldier_stand_c': 640}
