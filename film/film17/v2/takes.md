@@ -5,7 +5,7 @@ Recipe and checks: `film/v3/set3d17/API.md` §v2 ("v2 render recipe").
 
 **Frame rule:** g = round((t + 0.10) × 30), where t is narration time. The Blender frame is g + 1. End frame g 2052 = 68.40 s, a hard cut on "ตัวเอง".
 
-**Hard cuts (7):** g 336, 651, 850, 1045, 1377, 1695, 1868. Run `qa_auto.py --cuts 336,651,850,1045,1377,1695,1868 --first_g 0`.
+**Hard cuts (8):** g 336, 651, 850, 1045, 1377, 1675, 1695, 1868. Run `qa_auto.py --cuts 336,651,850,1045,1377,1675,1695,1868 --first_g 0`. (g1675 was added 2026-11-20 17:45. It replaces the 6d→P2 whip, which swept cast across the frame edges.)
 
 **Quote windows (lip-sync only here, ±0.15 s):**
 - 16.32-21.59 s = g 493-651: the inspector, T2.
@@ -20,7 +20,7 @@ Recipe and checks: `film/v3/set3d17/API.md` §v2 ("v2 render recipe").
 
 **Punctuation pushes:**
 - P1: T6 g 1515-1545, the MARTIN card at about 74 % of the frame width.
-- P2: T6 g 1671-1695, the inspector's jaw-drop, front-on.
+- P2: T6 g 1675-1695 (hard cut in at 1675), the inspector's jaw-drop, front-on. 6d holds through g1674.
 - P3: T8 g 2018-2052, calipers on the inspector's ear and his red face.
 
 **Every team:** 16 samples + OIDN at 720x1280, 2 threads, adaptive 0.03 (`setup_render2`).
@@ -77,6 +77,6 @@ Recipe and checks: `film/v3/set3d17/API.md` §v2 ("v2 render recipe").
 
 ## Luma trim at conform (director decision 2026-11-20 16:50)
 - The binding metric is the RGB mean at 90x160, as in qa_stats2. Several parts measured on it run 5-9 above their target: T3b's ramp half, T5b and T5b2, and T6b's stills. This happened because the earlier reports used PIL L.
-- These parts are NOT re-lit or re-rendered for luma. At conform each take gets an exposure trim, a pure RGB multiply k between 0.85 and 1.12. It can be keyed per frame as a smooth curve, eased over 10 frames or more, both at part joins and inside a take with uneven sections (T4: macro clock 116-127 vs the desk side 80-92). Above k = 1.0, check highlight clipping.
+- These parts are NOT re-lit or re-rendered for luma. At conform each take gets an exposure trim, a pure RGB multiply k between 0.85 and 1.12 (T6 6c/6d down to 0.82: the bright floor measures 125-133). It can be keyed per frame as a smooth curve, eased over 10 frames or more, both at part joins and inside a take with uneven sections (T4: macro clock 116-127 vs the desk side 80-92). Above k = 1.0, check highlight clipping.
 - The trim brings the take mean to its target. Multiplying by k leaves the qa_stats2 saturation and vivid values unchanged (checked on T6b g1600: sat 0.593 → 0.593, vivid 84.1 % → 84.1 %, luma 115.6 → 106.3 at k 0.92). It is not haze and it does not touch saturation.
 - Teams keep rendering their approved setups unchanged. Re-renders are only for real defects: slabs, shafts, edge cuts, staging.
