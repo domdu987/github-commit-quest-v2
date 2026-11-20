@@ -1,12 +1,12 @@
 # QA s21 (film 18, render team 4)
 Range g 1596-1682, take.mkv frames 1590..1688 (99 frames), transition in: cut.
-Render: 720x1280, 12 samples, OIDN, 2 threads, 39.0 s/frame wall (two renders at once).
+Render: 720x1280, 12 samples, OIDN, 2 threads, 36.1 s/frame wall (two renders at once).
 
 ## Frame diff (90x160 grey, in-shot frames only)
-median 5.76, p90 14.32, min 1.54, max 19.5, frames < 1: 0 (rule: median >= 4, p90 >= 12)
+median 5.63, p90 13.31, min 1.59, max 18.29, frames < 1: 0 (rule: median >= 4, p90 >= 12)
 
 ## Max chin y per head (rule < 880)
-{"soldier_stand_a": 750, "soldier_cheer_cup_b": 750, "soldier_stand_c": 738, "soldier_freeze_a": 864, "soldier_freeze_b": 859, "soldier_freeze_c": 829}
+{"soldier_stand_a": 672, "soldier_cheer_cup_b": 675, "soldier_stand_c": 671, "soldier_freeze_a": 702, "soldier_freeze_b": 704, "soldier_freeze_c": 695}
 
 ## Notes
 - Round 4 rework: it now comes OUT OF THE DARK. Deep night (moon, city glow, lit gate dimmed, sky black, gate lintel faces removed). The herd is dark with tiny tail embers until g 1624, then the tail flames flare over ~22 frames (flame card on every tail tip, nearest 10 carry warm point lights, coats glow warm) so at the word g 1646 there are 8+ trailing flames against black.
@@ -16,5 +16,6 @@ median 5.76, p90 14.32, min 1.54, max 19.5, frames < 1: 0 (rule: median >= 4, p9
 - QA_AUTO "blur" FAIL (36 frames, g 1590-1625) is the dark-to-fire design: the early frames are dark and soft by intent (no depth of field anywhere); not a defect.
 - Blades keep the cast's bronze colour; no new specular edge could be drawn without editing the cast.
 - Round 6: cast ox_figure(face='rage') on every ox (cast18 pulled from film18/main); flame cards leaning back (~40 deg, roll about the view axis); three soldier silhouettes (9, 9.8 and 13 D out) in a shock pose (arms up, leaning back), frozen at the snap; gate and wall lamps held at 35 % until g 1626 and brought up over 20 frames; camera tilted up a little (floor before the snap about 30 %); chins <= 862.
+- Round 8: tan watch posts and pale stakes at the gap removed (faces sunk); camera tilted down (look_at z 3.2) so the hero mouth sits ~y 900 at the end and soldier chins <= 704 (rule not fully met for the hero mouth); 3 star glints coded at g 1645-1652 (not verified in a frame). Soldiers still black silhouettes in the shock pose; jaw drop / lit rim / cup-fall rework not done. QA_AUTO blur FAIL = dark opening frames.
 
 See QA_AUTO.md and phone_sheet.jpg.

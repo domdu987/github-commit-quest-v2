@@ -191,3 +191,11 @@ s21 g 1682: 45.7 s wall 90.1 cpu heads {'soldier_freeze_a': 702, 'soldier_freeze
 s21 g 1683: 45.5 s wall 89.7 cpu heads {'soldier_freeze_a': 702, 'soldier_freeze_b': 704, 'soldier_freeze_c': 695}
 56:49.483  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1684.png'
 s21 g 1684: 46.8 s wall 91.8 cpu heads {'soldier_freeze_a': 700, 'soldier_freeze_b': 702, 'soldier_freeze_c': 693}
+57:36.017  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1685.png'
+s21 g 1685: 46.5 s wall 91.0 cpu heads {'soldier_freeze_a': 701, 'soldier_freeze_b': 702, 'soldier_freeze_c': 693}
+58:20.468  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1686.png'
+s21 g 1686: 44.4 s wall 87.7 cpu heads {'soldier_freeze_a': 702, 'soldier_freeze_b': 702, 'soldier_freeze_c': 693}
+59:04.805  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1687.png'
+s21 g 1687: 44.3 s wall 87.2 cpu heads {'soldier_freeze_a': 699, 'soldier_freeze_b': 697, 'soldier_freeze_c': 689}
+59:42.793  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1688.png'
+s21 g 1688: 37.9 s wall 74.8 cpu heads {'soldier_freeze_a': 691, 'soldier_freeze_b': 688, 'soldier_freeze_c': 681}
