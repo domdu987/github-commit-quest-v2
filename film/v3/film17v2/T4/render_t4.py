@@ -26,16 +26,18 @@ def build_assign(g):
     if g < 955: kind = 'measure'
     elif g < 971: kind = 'transit'
     elif g < 991: kind = 'write'
-    elif g < 1040: kind = 'card'
-    else: kind = 'drawer'
+    elif g < 1030: kind = 'card'
+    else: kind = 'insert'
     return a, kind
 
 def bert_pose(g, kind, mirror=False, target=None):
-    wb = L.WALK['bertillon'][g]; moving = wb['speed'] > 0.05
-    name = {'measure': 'bertillon_measuring', 'transit': 'bertillon_neutral', 'write': 'bertillon_writing', 'card': 'bertillon_holding_card', 'drawer': 'bertillon_holding_card'}[kind]
+    wb = L.WALK['bertillon'][g]; moving = wb['speed'] > 0.05 and g < 1030
+    name = {'measure': 'bertillon_measuring', 'transit': 'bertillon_neutral', 'write': 'bertillon_writing', 'card': 'bertillon_holding_card', 'insert': 'bertillon_holding_card'}[kind]
     cast, pose = cast17.STORY17[name]; pose = dict(pose)
     if mirror: pose['mirror'] = True
-    if target is not None: pose = cast17.hand_for_anchor(cast, pose, 'r', 'calipers_l' if mirror else 'calipers_r', target)
+    if kind == 'insert': pose['prop_r'] = dict(pose['prop_r'], angle=90)
+    if g >= 1045 and kind == 'insert': pose.pop('prop_r', None)     # the card is fully inside the drawer: no card in the glove
+    if target is not None: pose = cast17.hand_for_anchor(cast, pose, 'r', ('card' if kind == 'insert' else 'calipers') + ('_l' if mirror else '_r'), target)
     if moving:
         arms = 'l' if kind in ('measure', 'card', 'drawer') else 'both'
         cyc = cast17.cycle(cast, wb['phase'], 'run' if wb['speed'] > 1.9 else 'walk', 1, base=pose, arms=arms)
@@ -47,10 +49,20 @@ def bert_pose(g, kind, mirror=False, target=None):
 def ramp(g, a, b): return max(0.0, min(1.0, (g - a) / float(b - a)))
 
 OFF_REF = {}
+BOPT = {}
 def stage_frame(g):
     sc = bpy.context.scene; sc.frame_set(g + 1); cam = sc.camera; bpy.context.view_layer.update(); L.clean(); camloc = Vector(cam.location)
-    assign, kind = build_assign(g); mirror = kind in ('measure', 'drawer')    # calipers / card go to the screen-left (prisoner on the left; drawers on the wall at x 13)
-    assign['bertillon'] = (bert_pose(g, kind, mirror), {})
+    assign, kind = build_assign(g); mirror = kind in ('measure', 'insert')    # calipers / card go to the screen-left (prisoner on the left; drawers on the wall at x 13)
+    global BOPT
+    BOPT = {}
+    if g >= 1018:      # director: he stops beside the cabinet (eased from g1018): 0.5 m to the right of the MOYEN mouth on screen, 0.7 m deeper than the cabinet front, re-solved every frame because the camera is still moving
+        import math as _m
+        c = cam.matrix_world.translation; fw = cam.matrix_world.to_quaternion() @ Vector((0, 0, -1)); f = Vector((fw.x, fw.y, 0)).normalized(); rr = Vector((f.y, -f.x, 0))
+        M = Vector((L.CAB['cx'] + 0.10, L.CAB['cy'] - 0.30, 0)); a_ = (M - c).dot(f); b_ = (M - c).dot(rr); a2 = a_ - 0.20; b2 = (b_ + 0.55) * a2 / a_
+        pos = Vector((c.x, c.y, 0)) + f * a2 + rr * b2
+        p = P.cast_pos(L.CASTD['bertillon'], g); r = ramp(g, 1018, 1030); BOPT = {'dx': (pos.x - p[0]) * r, 'dy': (pos.y - p[1]) * r}
+    L.set_mid_drawer(g)
+    assign['bertillon'] = (bert_pose(g, kind, mirror), BOPT)
     acts = P.stage_cast2('T4', g, assign); ab = acts['bertillon']; ps = acts['prisoner_s']; info = {}
     if kind == 'measure':
         tip = L.L2W(ab, cam, cast17_anchor(g, kind, mirror, 'calipers'))
@@ -65,10 +77,11 @@ def stage_frame(g):
             sc.frame_set(954 + 1); bpy.context.view_layer.update(); _, _, i0 = stage_frame_measure(954); OFF_REF.update(i0); sc.frame_set(g + 1); bpy.context.view_layer.update(); L.clean(); acts = P.stage_cast2('T4', g, assign); ab = acts['bertillon']; ps = acts['prisoner_s']
         k = 1.0 - ramp(g, 955, 995); off = {'dx': OFF_REF['dx'] * k, 'dy': OFF_REF['dy'] * k}
         L.clean_actor('prisoner_s'); acts['prisoner_s'] = P.stage_cast2('T4', g, {'prisoner_s': (assign['prisoner_s'][0], off)})['prisoner_s']; info = off
-    elif kind == 'drawer':
-        tip = L.L2W(ab, cam, cast17_anchor(g, kind, mirror, 'card')); wall = 13.04; k = ramp(g, 1030, 1042)
-        d = 0.0   # Bertillon stays on his prepared path: reaching the wall (x 13.04) would put him out of frame (screen x < 0) on g1030-1040; reported to the director
-        L.clean_actor('bertillon'); acts['bertillon'] = P.stage_cast2('T4', g, {'bertillon': (assign['bertillon'][0], {'dx': d})})['bertillon']; info = {'dx': d}
+    if kind == 'insert':
+        MZ = L.CAB['MZ']; cx = L.CAB['cx']; yf = L.CAB['cy'] - 0.30; z_t = MZ + 0.15
+        u = ramp(g, 1032, 1044); zc = (z_t + 0.32) * (1 - u) + (z_t - 0.12) * u      # the card centre sinks from above the drawer mouth to inside it (g1032-1044)
+        W = Vector((cx + 0.10, yf - 0.20, zc)); tgt = L.to_local_on_plane(ab, cam, W, camloc)
+        L.clean_actor('bertillon'); acts['bertillon'] = P.stage_cast2('T4', g, {'bertillon': (bert_pose(g, kind, mirror, tgt), BOPT)})['bertillon']; info = {'card_z': zc}
     for nm in ('queue0', 'queue1', 'clerk', 'clerk_arch'):      # background cards: gone when the head is bigger than 190 px (the card is on the lens; the origin's head-centre test missed these)
         if nm in acts:
             p0 = actors.local_to_screen(acts[nm], cam, (0.0, 0.0)); p1 = actors.local_to_screen(acts[nm], cam, (0.5, 0.0)); dpx = 2 * abs(p1[0] - p0[0])
