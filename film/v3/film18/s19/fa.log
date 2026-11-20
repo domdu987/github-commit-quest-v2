@@ -1,8 +1,0 @@
-00:00.436  cycles           | WARNING CUEW initialization failed: Error opening the library
-dress_ground {'n': 2, 'kinds': {'stone': 1, 'tuft_straw': 1}}
-00:13.003  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s19/frames/g_1421.png'
-s19 g1421  10.3 s (wall 10.2 cpu 20.1)
-00:31.476  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s19/frames/g_1422.png'
-s19 g1422  18.5 s (wall 18.3 cpu 21.7)
-00:49.153  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s19/frames/g_1423.png'
-s19 g1423  17.7 s (wall 17.3 cpu 20.8)
