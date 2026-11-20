@@ -144,3 +144,26 @@ def hide(*names):
     for n in names:
         ob = STATE['objects'].get(n) if 'objects' in STATE else None
         if ob is not None: ob.hide_render = True
+
+
+def world_lantern(P, height=0.52, r=0.18, energy=700.0, sc=1.0):
+    """A real hanging paper lantern on a stake, WORLD-fixed at ground point P: warm paper body (emission x3.5), 6 dark ribs, wooden caps, a cord loop, a stake, a warm point light (orange pool on the ground)."""
+    import bpy as _b
+    P = V(P)
+    body = T.mat_emit('c18_paper', '#ff8a2e', strength=3.5) if 'c18_paper' not in _b.data.materials else _b.data.materials['c18_paper']
+    wood = T.mat_emit('c18_wood', '#3a2418', strength=0.35) if 'c18_wood' not in _b.data.materials else _b.data.materials['c18_wood']
+    height *= sc; r *= sc; zc = 1.2 * sc; out = []
+    def cyl(name, loc, rad, h, mat, v=16):
+        _b.ops.mesh.primitive_cylinder_add(vertices=v, radius=rad, depth=h, location=(P.x + loc[0], P.y + loc[1], P.z + loc[2])); ob = _b.context.active_object; ob.name = name; ob.data.materials.append(mat); ob.visible_shadow = False; out.append(ob); return ob
+    cyl('c18_lan_stake', (0, 0, 0.5 * sc), 0.04 * sc, 1.0 * sc, wood, 8)
+    cyl('c18_lan_arm', (0.0, 0.0, 0.98 * sc), 0.03 * sc, 0.1 * sc, wood, 8)
+    b = cyl('c18_lan_body', (0, 0, zc), r, height, body, 20)
+    cyl('c18_lan_cap_t', (0, 0, zc + height / 2 + 0.04), r * 1.08, 0.08, wood, 20)
+    cyl('c18_lan_cap_b', (0, 0, zc - height / 2 - 0.04), r * 1.08, 0.08, wood, 20)
+    for k in range(5): cyl('c18_lan_rib%d' % k, (0, 0, zc - height / 2 + (k + 0.5) * height / 5), r * 1.03, 0.025, wood, 20)
+    cyl('c18_lan_cord', (0, 0, zc + height / 2 + 0.2), 0.02, 0.3, wood, 6)
+    d = _b.data.lights.new('c18_lan_light', 'POINT'); d.color = (1.0, 0.6, 0.25); d.energy = energy; d.shadow_soft_size = 0.35; d.use_shadow = False
+    lo = _b.data.objects.new('c18_lan_light', d); _b.context.scene.collection.objects.link(lo); lo.location = (P.x, P.y, P.z + zc - 0.1); lo.visible_camera = False; d.energy = energy * sc * sc
+    for ob in out:
+        for c in ob.users_collection: pass
+    return out

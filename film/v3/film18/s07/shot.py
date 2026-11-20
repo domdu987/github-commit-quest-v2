@@ -8,10 +8,12 @@ HERD = S.herd(150, (-30, 16.0), (30, 16.0), 22.0, 7, yaw=200.0) + S.herd(60, (-3
 rr = random.Random(3); APPEAR = [G0 + int(rr.uniform(-6, 20)) if i % 3 else G0 - 1 for i in range(len(HERD))]
 t0 = (SNAP_G - G0) / (G1 - 1 - G0)
 # starts tight on the near yard, slow push; a real x1.6 snap pull-out over 5 frames at g 551-556, then a slow hold-pull
-CAM = C.cam_path(((0.0, 37.0, 8.0), (0.0, 18.0, 1.0), 24), ((0.0, 42.0, 10.0), (0.0, 27.0, 0.9), 24), punches=[(t0, 5 / (G1 - 1 - G0), -0.375, 0.62)])
+CAM = C.cam_path(((0.0, 37.0, 8.0), (0.0, 18.0, 1.0), 24), ((0.0, 42.0, 10.0), (0.0, 27.0, 0.9), 24), punches=[(t0, 7 / (G1 - 1 - G0), -0.375, 0.62)])
 def tweak(stage, A=None):
     if stage == 'pre':
         S.SHOTS[SHOT]['sun'] = 140.0
+    elif stage == 'cam':
+        C.fg_rail(A)
     elif stage == 'post':
         C.hide('digtools', 'baskets', 'pens', 'props', 'hay')
 def actors(f, cam, ctx):
@@ -19,7 +21,7 @@ def actors(f, cam, ctx):
     for n, (x, y, z, yaw, sc) in enumerate(HERD):
         if f < APPEAR[n]: continue
         ph = int((f * 0.25 + n * 3) % 8)
-        C.ox_card(SHOT, n, (x - 0.6 * t, y, 0), 200, sc, cam, state='plain', view='three_quarter', gait='walk', phase=ph, blades=False, theta=26, shadow=(n % 5 == 0),
+        C.ox_card(SHOT, n, (x - 0.6 * t, y, 0), 200, sc, cam, state='plain', view='three_quarter', gait='walk', phase=ph, blades=False, theta=26, shadow=(n % 5 == 0), pitch_bb=0.85,
                   bob=0.04 * abs(math.sin(2 * math.pi * (f * 0.25 + n) / 8)))
 if __name__ == '__main__':
     C.run(SHOT, actors, G0, G1, HB, HA, quality=sys.argv[1] if len(sys.argv) > 1 else None, tweak=tweak, shk=0.004, cam_fn=CAM)

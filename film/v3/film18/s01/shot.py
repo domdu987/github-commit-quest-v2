@@ -5,15 +5,16 @@ from mathutils import Vector as V
 SHOT = 's01'; G0, G1, HB, HA = 0, 78, 0, 0
 ROW = [(x, 7.4 + 0.5 * (k % 2)) for k, x in enumerate((-15.0, -9.5, -4.0, 1.5, 7.0, 12.5))]
 # eased push 4 %/s + a slow slide + TWO HELD punch-ins (g 8 and g 50, +17 %), no pulses
-CAM = C.cam_path(((-9.4, 20.3, 2.3), (-2.4, 12.8, 2.7), 24), ((-8.3, 19.0, 2.3), (-2.4, 12.8, 2.7), 24), punches=[(8 / 77.0, 3 / 77.0, 0.14), (50 / 77.0, 3 / 77.0, 0.14)], slide=-1.3)
+CAM = C.cam_path(((-9.4, 20.3, 2.3), (-2.4, 12.8, 3.6), 24), ((-8.3, 19.0, 2.3), (-2.4, 12.8, 3.4), 24), punches=[(8 / 77.0, 3 / 77.0, 0.14), (50 / 77.0, 3 / 77.0, 0.14)], slide=-0.8)
 def tweak(stage, A=None):
     if stage == 'pre':
         import jimo_shots as S
         S.SHOTS[SHOT]['fg'] = None
     elif stage == 'post':
-        C.hide('baskets', 'props', 'digtools')                                   # unlit navy pick / basket placeholders beside the lane
+        C.hide('baskets', 'props', 'digtools')
+        C.world_lantern((-5.6, 15.8, 0.0), sc=1.9)                                   # unlit navy pick / basket placeholders beside the lane
     elif stage == 'cam':
-        C.warm_lantern(A)
+        pass
 def actors(f, cam, ctx):
     t = f / 30.0
     pull = math.sin(2 * math.pi * 2.2 * t)
