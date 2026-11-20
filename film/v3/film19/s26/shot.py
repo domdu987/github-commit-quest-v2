@@ -29,13 +29,13 @@ PRESET, LIGHT, FINAL_SPP, PPD = "hall_table", "EVENING", 8, 256
 BLINKS_H, BLINKS_K = [2095, 2125, 2150], [2100, 2130]
 
 HAR_M = (-0.90, 1.70, 0.0)                               # D: BEHIND the table edge (near edge y 1.1 D); the bag lands in front of him
-KING_M = (0.10, 5.60, 0.0)                               # D: beside the table head, clear of Harrison
+KING_M = (-0.05, 5.60, 0.0)                               # D: beside the table head, clear of Harrison
 BAG_XY_M = (0.15, 0.80)                                  # metres on the tabletop: right of Harrison, near edge (lower third of the frame)
 BAG_SCALE = 1.6
 N_COINS = 10
 CAM_LOC0 = (-1.00, -2.70, 3.60)
 CAM_LOOK0 = (-0.90, 1.80, 2.30)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.11, slide_px=0.0, rise_px=8.0, arc_deg_s=11.0, decay=0.10,
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.11, slide_px=0.0, rise_px=8.0, arc_deg_s=12.5, decay=0.10,
                 snaps=[dict(g=SNAP, k=1.10, peak=3.5, shift=(1.40, 0.90))])
 
 HB = dict(cast19.STORY19["harrison_old_idle"][1])
