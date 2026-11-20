@@ -40,7 +40,7 @@ def kernel(L, ang):
     return k / k.sum()
 
 
-WHIP = {1370: 6, 1371: 14, 1372: 26, 1373: 40, 1374: 44, 1375: 40, 1376: 26, 1377: 12, 1378: 5}      # eased ramps, 3 smeared frames (director round 1)
+WHIP = {1373: 40, 1374: 44, 1375: 40}      # eased ramps, 3 smeared frames (director round 1)
 tab = {}
 for g in range(S.FIRST, S.LAST + 1):
     lo = g - 1 if g - 1 != S.G_M_END and g != S.G_M_END + 1 else g          # one-sided at the part junction

@@ -76,6 +76,8 @@ def cam_M(g):
     loc, look = vlerp(M_A[0], M_B[0], u), vlerp(M_A[1], M_B[1], u)
     # lateral slide sway on top of the push (screen-right drift, a small arc)
     loc = (loc[0] + 0.10 * math.sin(g * 0.11), loc[1], loc[2] + 0.025 * math.sin(g * 0.17))
+    kick = max(0.0, 1.0 - abs(g - 1344.5) / 2.2)                      # 2-3 frame tighten on "ระดับนี้" (g1343): a small push-in
+    loc = (loc[0] + (look[0] - loc[0]) * 0.16 * kick, loc[1] + (look[1] - loc[1]) * 0.16 * kick, loc[2] + (look[2] - loc[2]) * 0.16 * kick)
     if g > G_WHIP_M[0]:
         w = seg(g, G_WHIP_M[0], G_WHIP_M[1] + 1, lambda x: x ** 2.2)
         look = (look[0] + 3.4 * w, look[1] - 0.8 * w, look[2])           # pan right, fast
@@ -86,9 +88,9 @@ def cam_M(g):
 R_DB0 = ((-0.15, 3.0, 1.9), (-0.50, 0.5, 1.2))          # drawer_big start (landing of the whip)
 R_DB1 = ((-0.22, 2.40, 1.8), (-0.48, 0.5, 1.2))           # drawer_big end
 R_BX0 = ((0.52, 1.36, 2.20), (0.14, 0.55, 1.18))         # box beat start: all the boxes in frame
-R_BX1 = ((0.10, 1.10, 1.85), (-0.03, 0.60, 1.32))         # box beat end: the one lit box, hand at the lid
-R_CH0 = ((0.30, 1.55, 1.78), (0.0, 0.70, 1.38))           # card_hero preset
-R_CH1 = ((0.16, 1.22, 1.70), (0.0, 0.72, 1.47))           # push-in ~9 %/s + slide
+R_BX1 = ((0.06, 1.12, 1.78), (-0.12, 0.62, 1.30))         # box beat end: the one lit box, hand at the lid
+R_CH0 = ((0.32, 1.52, 1.90), (-0.13, 0.66, 1.40))           # card_hero preset
+R_CH1 = ((0.20, 1.32, 1.82), (-0.15, 0.68, 1.50))           # push-in ~9 %/s + slide
 G_WHIP_R = (1375, 1383)           # whip-on: pan settles into drawer_big
 G_FING = (1406, 1419)             # insert: calipers on dupont's raised finger ("นิ้ว")   (measure room)
 G_BOX = 1420                      # box beat starts (reveal room)
@@ -155,12 +157,15 @@ def lift_t(g):
     return seg(g, G_CARD + 2, 1500, lambda x: ease_peak(x, 1.6))
 
 
-DARK_AT = {"box2": 1424, "bxA": 1430, "bxB": 1436, "bxC": 1442, "bxD": 1448}      # lit box -> dark box, one by one; 'box' stays lit
-EXTRA = {"bxA": ((0.33, -0.12), 0.14, 0.12, 0.12, 8), "bxB": ((0.33, -0.34), 0.14, 0.16, 0.13, 8),
-         "bxC": ((-0.20, -0.46), 0.20, 0.12, 0.12, 5), "bxD": ((0.06, -0.09), 0.14, 0.10, 0.11, 7)}
+BS = 0.7                                                      # the hero box is scaled to the size of the others
+BW, BD, BH = 0.34 * BS, 0.24 * BS, 0.28 * BS
+BZ = -0.175 + 0.12                                           # the boxes stand on a ledger slab so they sit near the drawer rim
+SLOT = {"hero": (-0.28, -0.14), "bxA": (0.0, -0.14), "bxB": (0.28, -0.14), "bxC": (-0.28, -0.38), "bxD": (0.0, -0.38), "bxE": (0.28, -0.38)}
+DARK_AT = {"bxA": 1422, "bxB": 1426, "bxC": 1430, "bxD": 1434, "bxE": 1438}      # hard switch-off, one every 4 frames; the hero box stays lit
+EXTRA = {k: (SLOT[k], BW, BD, BH, 5 + i) for i, k in enumerate(("bxA", "bxB", "bxC", "bxD", "bxE"))}
 
 
-LAMP_DB, LAMP_CARD = 28.0, 38.0             # box_lamp watts (card lowered so the card reads, no near-white bloom)
+LAMP_DB, LAMP_CARD = 28.0, 20.0             # box_lamp watts (card lowered so the card reads, no near-white bloom)
 
 
 def lamp_w(g):
@@ -223,7 +228,7 @@ def slide_of(g):
         return lerp(0.30, 0.50, seg(g, G_EAR[0] + 2, G_EAR[0] + 12))
     if m == "finger":
         return lerp(0.30, 0.50, seg(g, G_FING[0] + 2, G_FING[0] + 12))
-    return 0.50 - 0.04 * math.sin(g * 0.4)
+    return 0.0 + 0.05 * max(0.0, 1.0 - abs(g - 1344.5) / 2.2) + 0.012 * math.sin(g * 0.5)      # head: jaws open to the skull's width, squeeze on the kick
 
 
 def _svg(cast, pose, *a, **kw):
@@ -347,7 +352,7 @@ class Take(object):
             f = g - FIRST + 1
             m = mode_of(g)
             dp_xy = (0.70, 2.16) if m == "ear" else (dpos[0], dpos[1])
-            bp_xy = {"head": (bpos[0], bpos[1]), "finger": (-0.15, 2.0), "ear": (0.30, 2.42)}[m]
+            bp_xy = {"head": (0.58, 1.84), "finger": (-0.15, 2.0), "ear": (0.30, 2.42)}[m]
             da.place(f, (dp_xy[0], dp_xy[1], dzz), scale=dsc)
             ba.place(f, (bp_xy[0], bp_xy[1], 0.0), scale=bsc)
         for g in gs:                                              # dupont first (his anchors give the calipers' target)
@@ -356,6 +361,8 @@ class Take(object):
             m = mode_of(g)
             _, dp = pose_with("dupont_innocent", g, expr="worried", phase=1.0, sway=0.6)
             dp["legs"] = "stand"
+            if m == "head":
+                dp["ears17"] = True
             if m == "finger":                                       # the left hand (screen-left, toward Bertillon) comes up with one finger
                 u = seg(g, G_FING[0], G_FING[0] + 6)
                 dp["arm_l"] = dict(hand=(lerp(-0.74, -0.88, u), lerp(0.60, 0.30, u)), bend=0.4, shape="point", sharp=1.0, layer="front")
@@ -365,6 +372,15 @@ class Take(object):
                 dp["ears17"] = True
             da.pose(f, dp, camera=self.cam)
         self.sprites_group(da, gs, 320, 512)
+        for g in gs:
+            if mode_of(g) != "finger":
+                continue
+            f = g - FIRST + 1
+            self.scene.frame_set(f)
+            hw = actors.local_to_world(da, self.anch[(da.name, f)]["hand_l"], f, camera=self.cam)
+            u = seg(g, G_FING[0], G_FING[1] + 1, lambda x: 0.3 * sine(x) + 0.7 * x)
+            off = Vector((lerp(0.46, 0.34, u), lerp(-0.46, -0.38, u), lerp(0.14, 0.08, u)))
+            camrig.key_camera(f, hw + off, hw + Vector((-0.02, 0.0, 0.0)), cam=self.cam, lens=LENS, interp="LINEAR", easing="AUTO")
         for g in gs:                                              # bertillon: jaws pinned
             f = g - FIRST + 1
             self.scene.frame_set(f)
@@ -373,10 +389,14 @@ class Take(object):
             bp["prop_r"] = dict(bp["prop_r"], angle=-10 + 6 * math.sin(g * 0.3)); bp["gaze"] = (0.95, 0.35); bp["pitch"] = 0.25
             bp["t"] = g / 30.0
             if m == "head":
-                u0 = seg(g, FIRST, 1350, lambda x: 1 - (1 - x) ** 2)
-                head_w = Vector((da.feet_at(f)[0] if False else 0.70, 2.08, K.HEAD_Z["chair"] + 0.03))
-                tip = (head_w.x - 0.10 - 0.45 * (1 - u0), head_w.y - 0.05, head_w.z + 0.09 - 0.40 * (1 - u0) + 0.012 * math.sin(g * 0.9))
-                hands = {"r": {"tip": tip, "prop": "calipers", "angle": -4}}
+                u0 = seg(g, FIRST, 1350, lambda x: 1 - (1 - clamp(x)) ** 2)            # calipers rise from low and close across the skull by g1350, then hold
+                bp["yaw"] = 0.35
+                lc, lk = cam_M(g)                                              # camera right vector: the far jaw goes to the right edge of the skull
+                fw = Vector(lk) - Vector(lc); rt = fw.cross(Vector((0, 0, 1))); rt.normalize()
+                head_c = Vector((0.70, 2.08, K.HEAD_Z["chair"]))
+                tip = head_c + rt * (0.40 + 0.5 * (1 - u0)) + Vector((0, 0, 0.12 - 0.55 * (1 - u0)))
+                _p, _i = ba.pose(f, bp, hands={"r": {"tip": tuple(tip), "prop": "calipers", "angle": 0, "prop_scale": 1.35, "stretch": 1.15}}, camera=self.cam)
+                continue
             else:
                 an = self.anch[(da.name, f)]
                 if m == "finger":
@@ -411,11 +431,23 @@ class Take(object):
     def build_extras(self):
         slide = K.STATE["anim"]["big"]["slide"]
         self.twin = {}
+        for nm in ("box2",):                                    # the old second box and the ledger riser go away
+            for o in K.STATE["anim"][nm]["objs"]:
+                o.hide_render = True
+        for o in bpy.data.objects:
+            if o.name.startswith("riser"):
+                o.hide_render = True
+        root = K.STATE["anim"]["box"]["root"]
+        root.scale = (BS, BS, BS)
+        root.location = (SLOT["hero"][0], SLOT["hero"][1], BZ)
+        root.rotation_euler = (0, 0, 0)
+        hero = K.STATE["anim"]["hero"]["root"]
+        hero.scale = (1.0 / BS,) * 3
         for nm, (xy, w, d, h, seed) in EXTRA.items():
-            K.card_box(nm, (xy[0], xy[1], -0.175), rot_z=seed * 7 % 20 - 10, w=w, d=d, h=h, lid=0.0, cards=6, seed=seed, parent=slide, mat="box_ochre", lining="walnut")
-            K.card_box(nm + "_d", (xy[0], xy[1], -0.175), rot_z=seed * 7 % 20 - 10, w=w, d=d, h=h, lid=0.0, cards=6, seed=seed, parent=slide, mat="dark", lining="dark")
-        xy2 = (0.1, -0.3)
-        K.card_box("box2_d", (xy2[0], xy2[1], -0.175), rot_z=6, w=0.28, d=0.22, h=0.17, lid=0.0, cards=8, seed=6, parent=slide, mat="dark", lining="dark")
+            K.card_box(nm, (xy[0], xy[1], BZ), rot_z=0, w=w, d=d, h=h, lid=0.0, cards=8, seed=seed, parent=slide, mat="box_ochre", lining="walnut")
+            K.card_box(nm + "_d", (xy[0], xy[1], BZ), rot_z=0, w=w, d=d, h=h, lid=0.0, cards=8, seed=seed, parent=slide, mat="dark", lining="dark")
+        Bs = K.Batch(23); Bs.box("navy", (0.0, -0.27, -0.175 + 0.06), (0.86, 0.62, 0.12)); Bs.finalize("slab", parent=slide, ink_t=K.STATE["ink_t"] * 0.8)
+        K.point((0.2, 1.0, 1.9), color=(1.0, 0.82, 0.55), watts=45, radius=0.1, name="box_fill", flicker=False)
         B = K.Batch(21)                                         # the hand: local +x points back along the forearm, the hand is at the origin
         B.cyl("cloth", (0.38, 0, 0), 0.048, 0.62, axis="x", seg=12)
         B.cyl("cream", (0.075, 0, 0), 0.052, 0.05, axis="x", seg=12)
@@ -439,13 +471,13 @@ class Take(object):
                 o.hide_render = dark; o.keyframe_insert("hide_render", frame=f)
             for o in self.objs_of(nm + "_d"):
                 o.hide_render = not dark; o.keyframe_insert("hide_render", frame=f)
-        for nm in ("box2",):
-            K.set_box_lid(nm, 0.0, frame=f)
 
     def lid_grip(self, t):
-        """world point of the lit box's lid front edge (+ a little in front) for lid-open amount t."""
+        """world point of the hero box's lid front edge (+ a little in front) for lid-open amount t."""
         th = math.radians(110 * t)
-        return Vector((-0.03, 0.46 + 0.24 * math.cos(th) + 0.03, 1.385 + 0.24 * math.sin(th) + 0.015))
+        px, py, pz = 0.15 + SLOT["hero"][0], 0.78 + SLOT["hero"][1], 1.2 + BZ
+        hy, hz = py - BD / 2, pz + BH
+        return Vector((px, hy + BD * math.cos(th) + 0.03, hz + BD * math.sin(th) + 0.015))
 
     def key_hand(self, g, f):
         t = lid_t(g)
@@ -465,7 +497,7 @@ class Take(object):
     def key_hero(self, g, f):
         t = lift_t(g)
         a = K.STATE["anim"]["hero"]["root"]
-        a.location = (0.03 * t, 0.02 + 0.14 * t, 0.12 + 0.45 * t)
+        a.location = (0.03 * t / BS, (0.02 + 0.14 * t) / BS, (0.12 + 0.45 * t) / BS)         # box-local units (the box root is scaled by BS)
         a.rotation_euler = (math.radians(22 * t), 0, math.radians(-9 * t))
         a.keyframe_insert("location", frame=f); a.keyframe_insert("rotation_euler", frame=f)
 
@@ -475,12 +507,12 @@ class Take(object):
         for g in gs:
             f = g - FIRST + 1
             t = drawer_t(g)
-            ba.place(f, (-0.47, 1.12 + 0.36 * t, 0.0) if g < G_FING[0] else (60.0, 60.0, -60.0), scale=bsc)   # leaves during the snap peak (no floating hand in shots 25-26)
+            ba.place(f, (-0.47, 1.12 + 0.22 * t, 0.0) if g < G_FING[0] else (60.0, 60.0, -60.0), scale=bsc)   # leaves during the snap peak (no floating hand in shots 25-26)
         for g in gs:
             f = g - FIRST + 1
             self.scene.frame_set(f)
             t = drawer_t(g)
-            _, bp = pose_with("bertillon_neutral", g, mirror=True, sway=0.7, expr="determined" if g < 1395 else "proud"); bp["lean"] = bp.get("lean", 0) - 9 * min(1.0, t * 1.5)
+            _, bp = pose_with("bertillon_neutral", g, mirror=True, sway=0.7, expr="determined" if g < 1395 else "proud"); bp["lean"] = bp.get("lean", 0) - 16 * min(1.0, t * 1.5) + 2.5 * math.sin(g * 0.8) * (1.0 if g < 1406 else 0.0)
             hand = (0.14, t * 0.78 + 0.03, 1.10)
             ba.pose(f, bp, hands={"r": {"hand": hand}}, camera=self.cam)
         for a, ppd in ((ba, 256),):
