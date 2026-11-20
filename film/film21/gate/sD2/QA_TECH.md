@@ -1,24 +1,42 @@
-# QA-tech sD2 (film 21, g642-793 + handles 794-796): FAIL
-Method: 6 fps (31 frames), first/last 4 frames, and the team's edge frames (g754-756, 760, 780-786) at full size. 155 frames confirmed.
+# QA-tech sD2 v2 (team4 047cf15)
 
-## Verdict
-FAIL on 3 blocking issues (half-cut Surrey at the frame edge, missing purse slap, barrel covering Cressingham). Everything else passes.
+Method: every 5th frame (31 in f6), full-size frames n0-8, 40, 116-135 (g758-777), 148-154, plus g667/687/692/712/747. 155 frames, 720x1280.
 
-## Checks that pass
-- Whip-in g642-647: g642 is an empty beach plus barrel (soft, motion streak allowed), Cressingham enters from g643. Settles by g648.
-- Lip-sync: mouth open only inside 21.29-26.26 (g642-791), closed smirk at g792+ and at P_BANK. g787 is a tiny mouth line, in tolerance.
-- Heads: Cressingham head centre y about 450-760, all bottoms under 880. Faces: normal about 15-20 % of frame height. CU1 face about 27 % (under 35 %, allowed at CU1).
-- CU1 push into the face on "เร็วดี ประหยัดดี!" starts about g756 and eases back out. Good.
-- Banner pole is hidden, so nothing passes through his head. Surrey is clear of any pole and is behind him, trailing.
-- Ends at P_BANK at g793: g793-796 are identical, with Cressingham hands on hips, Surrey at about 77 % of the width, smirk. Colour is saturated, with a golden rim.
-- Rim light on cards is a known limitation, noted, not failed. No blood. No blur other than g642.
+## Verdict: FAIL (1 blocking, easy fix)
+
+## Fixed against the old list
+1. Edge cut Surrey (old 1): FIXED. No head or body crosses a frame edge at g754-786. Surrey is hidden behind Cressingham during the CU, then steps back out.
+2. Purse slap (old 2): FIXED. The right hand drops to the purse at g758-762, with a glint star and hopping coins, hand held on the belt. Reads with sound off.
+3. Red barrel (old 3): FIXED. Replaced by a grey strongbox, sacks, a spear bundle and pegs. His feet stay visible. Near ground is dressed, and the tilt-up cuts the bare sand.
+4. Surrey merged into the neck (old 4): FIXED. He is offset and readable g643+.
+5. Handles (old 5): FIXED. g793-796 continue to move (RMSE g793 vs g796 about 0.14).
+6. Point (QA-art): FIXED. The arm is raised up-left toward the crag, with saltires readable on the hill. The bridge shows as a thin span behind him from about g722 (still tiny, non-blocking).
+7. Floating pennants: none seen.
+
+## Beat table
+| g | caption / beat | picture | read at phone size |
+|---|---|---|---|
+| 642-647 | whip in | empty beach, spear pair, strongbox, soft/streaked | OK (whip) |
+| 648-690 | "ชาวนาบนเนินไม่กี่คน!" | Cressingham small (about 22 % of frame height) in the mid-ground, arm up pointing at the hill, mouth moving, Surrey tired behind. Tent and campfire. | OK but small |
+| 690-720 | "อ้อมไปเปลืองเงินหลวง" | waddle, tilt up, spear pole crosses his face g686-698 | pole is a nuisance |
+| 720-750 | "ข้ามสะพานนี่แหละ" | bridge enters behind him, saltires on the crag, point held | OK |
+| 750-756 | "เร็วดี" | stop, push begins | OK |
+| 756-765 | push, slap g758 | star glint, coins, jolt | strong |
+| 765-778 | "ประหยัดดี!" CU1 | face about 25 % of frame height (hat+face about 47 %), purse in shot | OK, under the 35 % face limit. Hat ruff and arm touch the left edge at g764-776. |
+| 778-793 | pull-out | hands on hips, smirk, Surrey steps out | OK |
+| 794-796 | handles | continue the pull-out | OK |
+
+## Checks
+- Mouth: moves only inside g642-791 (open at g790, closed from g792, smirk). PASS.
+- Heads: Cressingham head centre y about 440-700, always under 880. PASS.
+- CU: only the one CU1, about 0.5 s of full push plus about 0.5 s hold. PASS.
+- Colour story: English red/gold only. Blue appears only as the Scots saltires on the crag, the dark spear tips and the purple shadow on the tent. No blue in the camp itself. PASS.
+- Bloodless: PASS. No money-counting gag is planned in the D2 row, so none is required.
+- End pose: g793 is a hands-on-hips smirk at P_BANK, Surrey at about 77 % of the width. The meta says it is exactly P_BANK. I have no E1 start frame to compare against.
 
 ## Issues
-1. g754-756 (and g784-786): Surrey is cut in half by the right frame edge. g754 shows about 40 % of his face and body, g756 about 25 %. At g784-786 he is again at the right edge (head half out), plus a background soldier sliver at the right edge at g780-782. This breaks "nobody cut in half at the frame edge" (§G3). The team noted it as "known" but it is a FAIL. Fix: move Surrey and the soldiers 1-1.5 m toward the camera centre, or hold him fully out of frame until the camera has pulled back. Do the same for the soldiers.
-2. g756-778 (CU1): the purse slap on "เร็วดี ประหยัดดี!" is not visible. His right hand hangs near the chest and never reaches the purse (the purse is at the belt, left). The raised left hand waves. Then at g780+ both hands go on the hips. The plan says "slaps his purse" (g758). Fix: animate the right hand to the purse at g758 with a 2-frame jolt, and keep the purse in shot, with the face about 27 % so the purse fits.
-3. g684-720 (approx. strip frames 8-16): a foreground barrel crosses in front of him and hides his legs and feet and most of the lower body for about 1.5 s (g690-715). He looks cut off at the waist and his contact with the ground is hidden, so he reads as "legs missing". Fix: shift the barrel off his path (or hide it once it reaches him) so his feet stay visible.
-4. g642-646: Surrey's head is directly behind his neck and mostly hidden by his head, so he reads as part of him (g643-646). Fix: offset Surrey about 0.5 m to the right.
-5. g793-796: the four handle frames are identical (frozen), not a continuing pull-out as meta.json says. A D6 dissolve into E1 will show a static start. Fix: continue the camera drift of about 1 % per frame, or accept a 4-frame hold and tell the conform.
-6. Continuity in: not checked against D1's last frame (D1 gate not in this task); his walk begins from the beach edge with no table in view, which suits the whip.
-
-Fix list: 1, 2, 3 must be fixed; 4-5 desirable.
+1. BLOCKING, g660-755: the background soldier (e1) stands at the water edge directly above Cressingham's hat, so his helmet and face sit on the hat as a stacked head. It reads as a second head on a stick and as floating. Fix: move him 1.5 m or more sideways, or hide him, so the hat has clear water behind it. The simplest option is to hide e1 until g756 or delete him from this take.
+2. Non-blocking, g684-700: a foreground spear bundle (two tall poles with tops cut at the frame top) passes over his face for about 0.5 s. It is acceptable as parallax. Better: shift the bundle 0.5 m left so the poles miss his head. The poles also have no visible base after g700, so they look slightly floating. Add a base, or accept it.
+3. Non-blocking, g643-700: Cressingham is only about 22 % of frame height and the bridge is not in frame until g720. Fix, if there is time: push the track in 10 % at the start.
+4. Non-blocking, g764-778: the hat ruff and pointing arm touch the left frame edge in CU1. Fix: slide the camera 40 px left.
+5. Non-blocking: the spear tips are dark blue (English camp). Recolour them to steel or gold.

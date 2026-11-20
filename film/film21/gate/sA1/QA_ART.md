@@ -1,26 +1,36 @@
-# QA-art, film 21 take A1 (HOOK, BIGZOOM 1 first half, g0-80 + handles)
+# QA-art sA1 (TAKE gate, v2)
 
-Looked at: g0, g40, g80 at full size, 3x crops of the bridge and the crest, contact.jpg, phone_sheet.jpg (360x640), next to ref_shorts R5_sheet.jpg (and the README stats table).
+Take: `scratchpad/gate/sA1/film/v3/film21/sA1/take.mkv` (g 0-83, BIGZOOM 1 first half, the hook). Looked at contact.jpg, phone_sheet.jpg, every 5th frame from f6/ (full size, plus 360x640 downscales of g0/20/30/50/60/70), 3x crops of the crag (g0, g80) and the bridge (g0, g40). Compared with R5, R7 and R3 sheets.
+Narration over this take: "ทหารพวกนี้ (g0-19) / ยืนดูศัตรู (g19-44) / เดินข้ามสะพาน (g44-69) / มาหาตัวเอง (g69-89)".
 
-## Scores (1-10)
-| criterion | score | note |
-|---|---|---|
-| Set density / ornament | 6 | Real geography in one frame: castle rock top-left, the river loop, bridge, camp tents, farms, pines, hills. But the fields are a procedural patchwork and Abbey Craig reads as a bald pink-white lump with red dots. |
-| Lighting & colour | 3 | Sat 0.77 is above every reference (R5, the most saturated, is 0.65). The fields are neon red / lime / yellow tiles, like a thermal or NDVI map; the river has a glowing cyan halo; shadows go to deep navy-black. The film's signature colours (English crimson + gold vs saltire blue) are not present, because everything is red-orange-green. Garish: **yes**. |
-| Composition / framing | 5 | Good map read (loop, bridge, hill in a diagonal) and the hill-to-bridge line sets up A2. But the subject of the line is the soldiers, and at phone size the bridge is a hairline and the hill crest has no figures. By g80 the lump fills the bottom 45 % of the frame. |
-| Character acting | 2 | No readable characters: knights are 2-4 px specks, Scots absent. |
-| Key moment (hook image) | 3 | In the first 1-2 s on a phone, the viewer sees a psychedelic map, not "soldiers watching the enemy cross two by two". The narration line has nothing on screen to point at. |
-| Match to references | 3 | Refs use controlled, painterly colour with one dominant hue (R5 storm blue) and clear readable subjects even in wides (the ship in R5 is always findable). This frame has neither. |
+## Verdict: FIX-FIRST
 
-- Move: continuous and eased, no pops, sharp throughout (no blur, no DOF). p90 8.15 is **not** the problem for a high extreme wide; the problem is that nothing in the frame grabs. A slightly faster first second would still help (see QA_TECH 5).
-- §G 2 (floating): nothing floats; trees and tents sit on the ground with shadows. §G 3 (distance): wide, correct for a BIGZOOM start. §H 1: the start is extreme wide and high, but the "tiny but findable" character is missing.
-- Rim light: known film-wide limitation; nothing to light here. Noted, not scored.
-- End pose matches P_A (by shot.py key); the handles continue the move, so the D6 to A2 will work. A2 must match the velocity at g80.
+The move is good now. It is one eased, continuous glide from the camp over the bridge column toward the crag, so the camera travels the same way the English march. That is elegant and serves the story, and it is close to R5/R7 in feel. The bridge column of crimson and white pairs reads well. But the hook's first words are "these soldiers", and for the first 1.5 s there are no soldiers to see. They also stand in shadow.
 
-## Verdict: **FIX-FIRST**
+## Status of the v1 items
+1. Regrade to the signature palette: **mostly fixed**. The neon field tiles are gone and Abbey Craig is a grey-green crag with pines, no longer a pink lump. The lemon-yellow loop meadow and the yellow sand in the camp still dominate the frame. The conform yellow pull-back will help, but see item 4.
+2. Scots findable from g0: **not fixed** (blocking item 1 below). The team's own note says they become findable from about g40.
+3. Bridge column two by two: **fixed**. It reads as a crimson and white dotted double line on the phone sheet from g0, and very clearly at g30-55.
+4. Flat yellow light slabs on the crag: **fixed** (removed). The pine light shaft is now A2's job.
 
-## Fixes (in order of impact)
-1. **Regrade the valley to the film's signature palette.** Target sat ~0.55-0.60, vivid ~55-60 % (still above §I's 0.50 / 45 %). Cut the red/orange field tiles to a few; make the farms 2-3 greens with some straw-gold; narrow or remove the cyan glow on the riverbanks; lift the navy shadow floor. Give Abbey Craig a grey-green crag + gorse material instead of the pale pink rock. Then the only strong crimson/gold is the English column and camp, and the only strong blue/white is the Scots and their saltires.
-2. **Make the Scots findable from g0.** Put the Scots line on the open shelf of the crest on the camera side, out from under the pines, with 2-3 oversized saltire banners (blue with a white X). It should read as a blue-white line on the 360x640 phone sheet at g0, still under 5 % of the frame height. A warm sun patch, or the fixed light shaft, landing on them would lead the eye.
-3. **Make the bridge column read "two by two".** Fill the whole deck with pairs and continue the column onto both causeways. Use crimson/white caparisons and one gold pennon per pair so the line is a red double-dotted stripe across the teal water. If it still does not read on the phone sheet, start the move 15-20 % lower or closer (the start pose is free; only P_A is fixed).
-4. **Fix the light shaft on the crag.** Replace the flat horizontal yellow slabs (crest NW edge, all frames) with a diagonal, soft volumetric shaft from the sun direction, aimed at the Scots (see fix 2). If that is not possible, remove it from A1.
+## Issues
+1. **BLOCKING: the Scots are invisible and unlit for "ทหารพวกนี้" (g0-40).** At g0 the only Scots mark is one white X about 6 px wide. On the 360x640 tiles for g0, g15 and g30 the crag is a dark lump with nothing on it. The Scots stand on the crag face that is in its own shadow (the sun comes from behind-right). They are scattered specks of orange, yellow, red, green and blue, so they read as confetti, not as a blue saltire line. The hook subject is in the darkest part of the frame.
+   Fix:
+   - Move the Scots line to the lit shoulder of the crag (the right/east flank that catches the sun at g40-80), or add a warm sun patch or soft area light on their shelf.
+   - Dress them in one colour family: saltire blue tunics and shields with white highlights.
+   - Put 2-3 large saltire banners on the front lip so the group reads as a blue-white bar at g0 on the phone sheet. It must still stay under 5 % of the frame height.
+   - Test on a 360x640 downscale of g0. If a viewer cannot point to them within 1 s, scale the flags up again.
+2. **Non-blocking: the English camp reads as a beach (g0-50).** Round red-white and gold-white striped tents seen from above on yellow sand next to turquoise water look like beach parasols. Fix:
+   - Give the pavilions visible walls and a taller peak, with a pennant pole and a crimson/gold banner on the biggest ones.
+   - Put trodden green-brown grass under the camp instead of yellow sand, plus a couple of campfire smoke plumes. This also brings the camp into the crimson/gold story and cuts the yellow area.
+3. **Non-blocking: white spikes beside the bridge (g30-55).** The pier wakes are long, straight, white strokes, as long as 3-4 pairs of knights, and they read as sticks or scratches on the water. Fix: shorten them about 60 %, soften and taper them, and add some on both sides of the piers.
+4. **Non-blocking: game-map ground and a hazy sky (g0-25).**
+   - The foreground is large flat polygon fields with stripe textures, which looks like a game map.
+   - The top 10 % of the frame is flat grey-lavender haze.
+   Fix:
+   - Break up the field edges with hedgerows, tree lines and a farm path.
+   - Make the sky a clear blue gradient (§G.1 "clear blue skies").
+   - Optionally start 10-15 % lower so the camp fills more of the bottom third than the fields do.
+5. **Non-blocking (A2 / FINAL): rim light.** It does not matter at this distance and is not judged here.
+
+Same channel as R5/R7? The camera, yes. The image, not yet: the refs always put a readable, lit subject in the wide shot, and here the subject is missing until g40.
