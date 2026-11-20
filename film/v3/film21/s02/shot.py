@@ -71,10 +71,10 @@ def cam5(g):
     uc = mixu(x, 0.25)
     us = sn(g, *G5_SNAP)
     f, lf = (0.898, 0.439), (-0.439, 0.898)
-    c0 = (-78.0, -96.0, 13.0)
-    c1 = (c0[0] + f[0] * 12 + lf[0] * 6, c0[1] + f[1] * 12 + lf[1] * 6, 12.6)
+    c0 = (-78.0, -96.0, 9.2)
+    c1 = (c0[0] + f[0] * 9 + lf[0] * 6, c0[1] + f[1] * 9 + lf[1] * 6, 8.6)
     c = vl(c0, c1, uc)
-    c = (c[0] + f[0] * 7 * us, c[1] + f[1] * 7 * us, c[2])
+    c = (c[0] + f[0] * 5 * us, c[1] + f[1] * 5 * us, c[2])
     l0 = (12.0 - lf[0] * 8, -52.0 - lf[1] * 8, 2.0)             # starts looking a little to the right of the preset line
     l1 = (12.0 + f[0] * 4 + lf[0] * 8, -52.0 + f[1] * 4 + lf[1] * 8, 2.0)
     lk = vl(l0, l1, 0.25 * uc + 0.75 * us)
@@ -104,7 +104,7 @@ def cam7(g):
     x = (g - 360) / float(423 - 360)
     uc = mixu(x, 0.2)
     us = sn(g, *G7_SNAP)
-    z0 = float(K.ground(38.0, -24.0)) + 2.10
+    z0 = float(K.ground(38.0, -24.0)) + 1.65
     fw, rt = (0.79, 0.613), (0.613, -0.79)
     c0 = (38.0, -24.0, z0)
     c1 = (c0[0] + rt[0] * 2.4 + fw[0] * 1.8, c0[1] + rt[1] * 2.4 + fw[1] * 1.8, z0)
@@ -167,9 +167,11 @@ def stage_5(Tk):
     pr = Tk.pr
     out = []
     left = (-0.439, 0.898)
-    riders = [("r1", "knight_a_mtd", "knight_a_mounted", 40.0, 380, "red"), ("r2", "knight_b_mtd", "knight_b_mounted", 44.0, 315, "blue"),
-              ("r3", "knight_a_open_mtd", "knight_a_mounted", 48.0, 250, "gold"), ("r4", "knight_b_great_mtd", "knight_b_mounted", 52.0, 190, "red"),
-              ("r5", "knight_a_mtd", "knight_a_mounted", 56.0, 130, "blue"), ("r6", "knight_b_mtd", "knight_b_mounted", 38.0, 440, "gold")]
+    riders = [("r1", "knight_a_mtd", "knight_a_mounted", 31.0, 420, "red"), ("r2", "knight_b_mtd", "knight_b_mounted", 35.0, 340, "blue"),
+              ("r3", "knight_a_open_mtd", "knight_a_mounted", 39.0, 270, "gold"), ("r4", "knight_b_great_mtd", "knight_b_mounted", 43.0, 200, "red"),
+              ("r5", "knight_a_mtd", "knight_a_mounted", 47.0, 130, "blue"), ("r6", "knight_b_mtd", "knight_b_mounted", 34.0, 470, "gold"),
+              ("r7", "knight_a_open_mtd", "knight_a_mounted", 37.0, 560, "blue"), ("r8", "knight_b_great_mtd", "knight_b_mounted", 41.0, 600, "red"),
+              ("r9", "knight_a_mtd", "knight_a_mounted", 45.0, 520, "gold"), ("r10", "knight_b_mtd", "knight_b_mounted", 50.0, 450, "blue")]
     for i, (nm, cast_, base, d, xp, cap) in enumerate(riders):
         x0, y0 = K.at_px(pr, d, xp)
         def xyz(g, x0=x0, y0=y0, i=i):
@@ -179,8 +181,8 @@ def stage_5(Tk):
         def fn(p, g=None, cap=cap, i=i):
             return dict(p, mode21="walk", horse21=cap, mirror=True)
         out.append(Member(Tk.add_actor(nm, cast_), xyz, base, i, fn=fn, mirror=True, riding=True))
-    foot = [("f1", "footman_a", 55.0, 120, 0), ("f2", "footman_b", 58.0, 200, 1), ("f3", "footman_a", 52.0, 330, 2), ("f4", "footman_b", 60.0, 440, 3),
-            ("f5", "footman_a", 56.0, 540, 1), ("f6", "footman_a", 63.0, 610, 2)]
+    foot = [("f1", "footman_a", 50.0, 110, 0), ("f2", "footman_b", 53.0, 190, 1), ("f3", "footman_a", 47.0, 330, 2), ("f4", "footman_b", 55.0, 440, 3),
+            ("f5", "footman_a", 51.0, 540, 1), ("f6", "footman_a", 58.0, 610, 2), ("f7", "footman_b", 36.0, 600, 0), ("f8", "footman_a", 33.0, 70, 3), ("f9", "footman_a", 41.0, 670, 2), ("f10", "footman_b", 44.0, 380, 1), ("f11", "footman_a", 39.0, 150, 2), ("f12", "footman_b", 46.0, 290, 3)]
     for i, (nm, cast_, d, xp, v) in enumerate(foot):
         x, y = K.at_px(pr, d, xp)
         z = Tk.ground(x, y)
