@@ -52,9 +52,9 @@ class ZoomPath(C.CamPath):
         u = clamp((g - GF) / float(G_LAND - GF), 0.0, 1.0)
         s = 0.10 * u + 0.90 * smoother(u)          # ease in/out, but already moving on frame 0 (never parked)
         tau = max(0.0, (g - G_LAND) / 30.0)
-        d = D0 * (D1 / D0) ** s * (1.0 - 0.05 * tau)
+        d = D0 * (D1 / D0) ** s * (1.0 - 0.10 * tau)
         el = lerp(EL0, EL1, s)
-        az = lerp(AZ0, AZ1, s) - 3.0 * tau
+        az = lerp(AZ0, AZ1, s) - 9.0 * tau
         return d, el, az, lerp(8.0, TILT1, s)
 
     def at(self, g):
