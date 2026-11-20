@@ -15,7 +15,7 @@ G0, G1 = 1683, 1742
 H_IN, H_OUT = 6, 6
 G_GLINT = C.g_of(57.64)                                           # 1732
 MOVE = dict(push=0.09, slide=8)
-CAMO = dict(loc=(-1.4, -51.5, 1.9), look_at=(0.6, -46.0, 2.5), lens=27.0)
+CAMO = dict(loc=(-1.4, -51.5, 1.9), look_at=(0.6, -46.0, 1.7), lens=27.0)
 SHAKE = (0.8, 0.6, 0.4, 2.6)
 SNAPS = [(G_GLINT - 1, 1.08, 4, 9999)]                            # ONE held +15 % punch-in on the word
 OX = V((0.1, -46.0, 0.0))
@@ -47,18 +47,14 @@ def make_driver(quality):
                 v = w2c(sc_, cam0, mw @ f.center)
                 if v.z > 0 and v.x > 0.62 and 0.12 < 1 - v.y < 0.75: kill.add(f.index)
         bm = bmesh.new(); bm.from_mesh(pl.data); bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.index in kill], context='FACES'); bm.to_mesh(pl.data); bm.free()
-    # remove the tripod brazier at the right edge: faces of set meshes (not sky / ground / wall) projecting into its screen area
-    SKIP = ('sky', 'moon', 'hills', 'ground2', 'campground', 'water', 'wall', 'banks', 'cityroof', 'citybody', 'cityglow', 'merlons', 'putlog', 'cloth', 'rainstreaks', 'halos', 'wallpools')
-    for nm_, o_ in list(C.STATE['objects'].items()):
-        if nm_ in SKIP or o_.type != 'MESH' or nm_.startswith(('c18', 'flame')): continue
-        kill = set(); mw_ = o_.matrix_world
-        for gg in (G0, (G0 + G1) // 2, G1):
-            C.set_camera(NAME, gg, move=MOVE, cam=CAMO); C.bpy.context.view_layer.update()
-            for f in o_.data.polygons:
-                v = w2c(C.bpy.context.scene, ob['cam'], mw_ @ f.center)
-                if v.z > 0 and v.z < 30 and v.x > 0.82 and 0.25 < 1 - v.y < 0.75: kill.add(f.index)
-        if kill:
-            bm = bmesh.new(); bm.from_mesh(o_.data); bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.index in kill], context='FACES'); bm.to_mesh(o_.data); bm.free()
+    # remove the watch-post tripod brazier at the right edge (palisade-bank faces and its flame at (8.4, -41.2))
+    for nm_ in ('palisade',):
+        o_ = C.STATE['objects'].get(nm_)
+        if o_ is None or len(o_.data.polygons) > 80000: continue
+        bm = bmesh.new(); bm.from_mesh(o_.data); mw_ = o_.matrix_world
+        bmesh.ops.delete(bm, geom=[f for f in bm.faces if 4.5 < (mw_ @ f.calc_center_median()).x < 13.0 and -44.5 < (mw_ @ f.calc_center_median()).y < -38.0], context='FACES'); bm.to_mesh(o_.data); bm.free()
+    for o_ in ob:
+        if o_.name.startswith(('flame_pg', 'flame_ol')) or (o_.type == 'LIGHT' and abs(o_.location.x - 8.4) < 1.5 and abs(o_.location.y + 41) < 2.5): o_.hide_render = True
     # hero ox: charging gallop front-3/4 with the charging face; unlit reed + OWN flame card
     hv = {ph: C.ox_variant('dragon', 'front_three_quarter', 'gallop', ph, -1, reed=True, uid='h', face='rage') for ph in range(8)}
     at_h = C.Atlas('s22_hero3', hv, ppd=200)
@@ -107,7 +103,7 @@ def make_driver(quality):
             tp = TIP[si] if TIP[si] else None
             if tp is not None and 0 <= k < 8:
                 sgn = 1.0; wx = OX + ur * (-tp[0] * SCALE_OX * sgn) + V((0, 0, -tp[1] * SCALE_OX + bob)); st.location = wx
-                sz = 1.7 * math.sin(math.pi * (k + 0.5) / 8.0) + 0.1; st.scale = (sz, sz, sz); st.rotation_euler = (0, 0, 0); st.hide_render = False
+                sz = 1.0 * math.sin(math.pi * (k + 0.5) / 8.0) + 0.1; st.scale = (sz, sz, sz); st.rotation_euler = (0, 0, 0); st.hide_render = False
             else: st.hide_render = True
     return drive, actors
 

@@ -16,7 +16,7 @@ H_IN, H_OUT = 6, 6
 G_WORD = C.g_of(54.76)                                            # 1646
 G_FLARE = 1624                                                    # flames start to flare
 MOVE = dict(push=0.09, slide=6, moves=[])
-CAMO = dict(look_at=(0.0, -8.0, 6.0))                             # tilted up a little: ground <= 25 %
+CAMO = dict(look_at=(0.0, -8.0, 7.2))                             # tilted up a little: ground <= 25 %
 SHAKE = (0.9, 0.65, 0.4, 2.6)
 SNAPS = [(G_WORD - 2, 1.5, 4, 9999)]                              # ONE x1.5 snap on the word, held to the end
 SPEED = 3.8
@@ -67,6 +67,15 @@ def make_driver(quality):
     C.J.cyl(b, V((0, 0, 0)), 0.30, 0.52, M['gold'], seg=12, r1=0.42); C.J.cyl(b, V((0, 0, -0.04)), 0.14, 0.08, M['gold'], seg=8)
     Bk.flush(C.STATE['SET']); cup = [o for o in C.STATE['SET'].objects if o.name.startswith('cup18')][0]; C.J.no_bounce(cup); cup.scale = (0.55, 0.55, 0.55)
     cup.data.materials.clear(); cup.data.materials.append(C.glaze_mat(((0.05, 0.025, 0.01), (0.2, 0.1, 0.03), (0.45, 0.26, 0.08), (0.7, 0.45, 0.16)), 'bronze_cup'))
+    # hide the tan watch posts and pale edge stakes at the gap (wood / palisade faces, their flames)
+    import bmesh
+    for nm_ in ('wood', 'palisade'):
+        o_ = C.STATE['objects'].get(nm_)
+        if o_ is None: continue
+        bm_ = bmesh.new(); bm_.from_mesh(o_.data); mw_ = o_.matrix_world
+        bmesh.ops.delete(bm_, geom=[f for f in bm_.faces if 4.8 < abs((mw_ @ f.calc_center_median()).x) < 11.0 and -43.5 < (mw_ @ f.calc_center_median()).y < -37.0], context='FACES'); bm_.to_mesh(o_.data); bm_.free()
+    for o_ in ob:
+        if o_.name.startswith('flame_pg'): o_.hide_render = True
     # deep night sky; the gate lintel (faces of the palisade bank above z 6.8 around the gap) is removed
     sk = C.STATE['objects'].get('sky')
     if sk is not None: sk.data.materials.clear(); sk.data.materials.append(C.flat_mat((0.006, 0.009, 0.03), 'sky_deep'))
@@ -80,6 +89,7 @@ def make_driver(quality):
     for k in range(2):
         d_ = ob.new('darkband%d' % k, sm) if False else C.bpy.data.objects.new('darkband%d' % k, sm); C.STATE['SET'].objects.link(d_); d_.location = (0.0, -21.0, 0.1 + 0.01 * k); d_.scale = (75.0, 17.0, 1.0); d_.visible_shadow = False; C.J.no_bounce(d_)
     cam_obj = ob['cam']
+    stars = [C.star_obj('g21_%d' % k) for k in range(3)]
 
     def drive(g):
         pose = C.set_camera(NAME, g, move=MOVE, cam=CAMO, shake=SHAKE, snaps=SNAPS); cam = V(pose['loc'])
@@ -106,6 +116,14 @@ def make_driver(quality):
             frozen = g >= G_WORD - 2
             for o in (s1, s2): o.hide()
             (s2 if frozen else s1).show(0, pos + rt * (0.025 * math.sin(g * 1.9 + k) if frozen else 0.0), cam, yaw_add=c['yaw'], mirror=False, squash=(1.0, 1.0))
+        kk_ = g - (G_WORD - 1)
+        near3 = [i for _, i in rows[:3]]
+        for si, st in enumerate(stars):
+            if 0 <= kk_ < 8 and si < len(near3):
+                a_ = oxen[near3[si]]; pos_ = a_.last[0] if a_.last else None
+                if pos_ is not None:
+                    st.location = pos_ + V((0.8 * (si - 1), 0.0, 3.0 * a_.sc)); sz_ = (1.0 * math.sin(math.pi * (kk_ + 0.5) / 8.0) + 0.1) * (pose['lens'] / 22.0); st.scale = (sz_, sz_, sz_); st.hide_render = False
+            else: st.hide_render = True
         c, s1, s2 = sold[1]; d = c['d'] + 0.3 * math.sin(t * 0.7 + 1); pos = cam + fwd * d + rt * (c['lat'] / (pose['lens'] / 22.0)); pos.z = 0.0
         ax, ay = CUPA; hand = pos + rt * (-ax * s1.sc * 0.6) + V((0, 0, (FEET - ay) * s1.sc))
         if g < G_WORD - 2: cup.hide_render = True
