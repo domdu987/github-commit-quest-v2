@@ -21,7 +21,7 @@ import puppet                                            # noqa: E402
 G0, G1 = C.g_bound(5.93), C.g_bound(13.47)     # 178, 404 (take = g 178..403)
 H_IN, H_OUT = 8, 8                             # dissolve 13 in and out: 8 handle frames each side (director)
 GF, G_LAST = G0 - H_IN, G1 + H_OUT - 1         # 170..411
-G_TRAVEL = 282                                 # the camera leaves Eiffel (after the point has landed)
+G_TRAVEL = 280                                 # the camera leaves Eiffel (after the point has landed)
 G_MOST = C.cap_g("สูงที่สุดในโลก")                # 346: snap up
 SNAP = (G_MOST - 2, G_MOST + 13)
 GS = list(range(GF, G_LAST + 1))
@@ -31,10 +31,86 @@ RAISE = (G_WORD - 2, G_WORD + 6)               # arm rises to the point
 G_SWAP = G_WORD + 2
 PRESET, LIGHT, MARK = "site_table", "DAY", "eiffel_table"
 PPD = 256
-D0, D1 = 120.0, 4.6                            # camera distance to Eiffel (D): extreme wide -> medium
-EL0, EL1 = 27.0, 7.0                           # elevation (deg): high over Paris -> low
+D0, D1 = 400.0, 4.6                            # camera distance to Eiffel (D): extreme wide -> medium
+EL0, EL1 = 52.0, 7.0                           # elevation (deg): high over Paris -> low
 AZ0, AZ1 = 228.0, 221.0                        # azimuth from the table (deg, 225 = the preset camera's side)
-TILT1 = 9.0                                    # aim tilts UP by the end so the leg + scaffold fill the background
+SITE_CTR = CO.W((0.0, -30.0, 25.0))            # the middle of the four legs (D) the far start looks at
+TILT1 = 13.0                                   # aim tilts UP by the end so the leg + scaffold fill the background
+
+
+
+def dress(A):
+    """runtime set dressing around the landing (never edits the set modules): brick texture on the pier, cream plans on the table, a warm
+    lamp so Eiffel is findable from far away, a ladder, crates, a girder and rope coils against the pier face (y -67 m)."""
+    import bpy
+    M = CO.STATE["M"]
+    # pier: brick texture on the stonedk material (object coordinates in metres)
+    mt = M["stonedk"]
+    nt = mt.node_tree
+    bsdf = [n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"][0]
+    br = nt.nodes.new("ShaderNodeTexBrick")
+    br.inputs["Color1"].default_value = (0.70, 0.52, 0.36, 1)
+    br.inputs["Color2"].default_value = (0.55, 0.38, 0.27, 1)
+    br.inputs["Mortar"].default_value = (0.30, 0.22, 0.17, 1)
+    br.inputs["Scale"].default_value = 1.1
+    br.inputs["Mortar Size"].default_value = 0.025
+    br.inputs["Brick Width"].default_value = 0.6
+    br.inputs["Row Height"].default_value = 0.22
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+    add = nt.nodes.new("ShaderNodeMath")
+    add.operation = "ADD"
+    comb = nt.nodes.new("ShaderNodeCombineXYZ")
+    nt.links.new(tc.outputs["Object"], sep.inputs["Vector"])
+    nt.links.new(sep.outputs["X"], add.inputs[0])
+    nt.links.new(sep.outputs["Y"], add.inputs[1])
+    nt.links.new(add.outputs["Value"], comb.inputs["X"])         # faces facing x or y both get (x+y, z): bricks on every wall
+    nt.links.new(sep.outputs["Z"], comb.inputs["Y"])
+    nt.links.new(comb.outputs["Vector"], br.inputs["Vector"])
+    nt.links.new(br.outputs["Color"], bsdf.inputs["Base Color"])
+    # the plans: cream sheet instead of the saturated blue block
+    mb = M["bluep"]
+    for n in mb.node_tree.nodes:
+        if n.type == "BSDF_PRINCIPLED":
+            n.inputs["Base Color"].default_value = (0.93, 0.87, 0.72, 1)
+    mb.diffuse_color = (0.93, 0.87, 0.72, 1)
+    R = CO.root()
+    mbld = CO.MB("dressing", R)
+    tx, ty = 50.7, -71.3
+    # ladder against the pier face (x 44.5, leaning on y -67.2)
+    for dx in (-0.25, 0.25):
+        mbld.rod(M["timber"], (44.5 + dx, -69.0, 0.0), (44.5 + dx, -67.3, 5.0), 0.06, 0.06, 5)
+    for i in range(1, 11):
+        z = i * 0.46
+        y = -69.0 + (-67.3 + 69.0) * z / 5.0
+        mbld.box(M["timberdk"], (44.5, y, z), (0.55, 0.05, 0.05))
+    # crates + sacks / girder lying + rope coils
+    for (x, y, z, s_) in ((38.5, -68.2, 0.35, 0.7), (39.3, -68.4, 0.35, 0.7), (38.9, -68.3, 1.05, 0.7), (53.0, -68.0, 0.3, 0.6), (54.0, -68.2, 0.3, 0.6)):
+        mbld.box(M["plank"], (x, y, z), (s_, s_, s_))
+    mbld.box(M["redlead"], (47.0, -68.4, 0.2), (4.5, 0.3, 0.4), rz=0.12)
+    mbld.box(M["redlead"], (47.0, -68.4, 0.55), (4.5, 0.1, 0.3), rz=0.12)
+    for (x, y) in ((43.0, -69.5), (56.0, -70.0)):
+        mbld.cyl(M["rope"], (x, y, 0.15), 0.45, 0.3, "z", 14)
+    # warm lamp on a pole beside the table (findable from far away)
+    mbld.rod(M["timberdk"], (tx - 1.6, ty + 0.6, 0.0), (tx - 1.6, ty + 0.6, 3.2), 0.05, 0.05, 5)
+    mbld.finish()
+    bpy.ops.mesh.primitive_uv_sphere_add(radius=0.28, location=(0, 0, 0))
+    lamp = bpy.context.active_object
+    lamp.name = "dress_lamp"
+    lm = bpy.data.materials.new("dress_lamp_m")
+    lm.use_nodes = True
+    nd = lm.node_tree.nodes
+    for n in list(nd):
+        nd.remove(n)
+    em = nd.new("ShaderNodeEmission")
+    em.inputs["Color"].default_value = (1.0, 0.62, 0.18, 1)
+    em.inputs["Strength"].default_value = 18.0
+    out = nd.new("ShaderNodeOutputMaterial")
+    lm.node_tree.links.new(em.outputs["Emission"], out.inputs["Surface"])
+    lamp.data.materials.append(lm)
+    lamp.parent = R
+    lamp.location = (tx - 1.6, ty + 0.6, 3.4)
+    A['lamp'] = lamp
 
 
 def smoother(u):
@@ -58,14 +134,16 @@ class ZoomPath(C.CamPath):
         d = D0 * (D1 / D0) ** s * (1.0 - 0.10 * tau)
         el = lerp(EL0, EL1, s)
         az = lerp(AZ0, AZ1, s) - 9.0 * tau
-        return d, el, az, lerp(8.0, TILT1, s)
+        return d, el, az, lerp(0.0, TILT1, s)
 
     def at(self, g):
         d, el, az, tilt = self.state(g)
         e, a = math.radians(el), math.radians(az)
         off = Vector((math.cos(a) * math.cos(e), math.sin(a) * math.cos(e), math.sin(e))) * d
         loc = self.subj + off
-        fwd = (self.subj - loc).normalized()
+        u0 = clamp((g - GF) / float(G_LAND - GF), 0.0, 1.0)
+        tgt = self.subj.lerp(SITE_CTR, (1.0 - smoother(u0)) ** 1.5)          # at the start the aim is the middle of the site (all 4 legs), then it closes on Eiffel
+        fwd = (tgt - loc).normalized()
         r = Vector((fwd.y, -fwd.x, 0.0)).normalized()
         from mathutils import Matrix
         aim = Matrix.Rotation(math.radians(tilt), 3, r) @ fwd
@@ -99,7 +177,7 @@ class TravelPath(ZoomPath):
         if g <= G_TRAVEL:
             return la, ka
         u = clamp((g - G_TRAVEL) / float(G_LAST - G_TRAVEL), 0.0, 1.0)
-        w = 0.10 * u + 0.90 * smoother(u)
+        w = 0.06 * u + 0.94 * smoother(u ** 0.55)        # leaves Eiffel quickly (no half-body lingering at the frame edge)
         pitch = lerp(10.0, 36.0, u) + 9.0 * C.snap_u(g, SNAP[0], SNAP[1], 1.7)
         dC = self.h * math.cos(math.radians(pitch)) + Vector((0, 0, math.sin(math.radians(pitch))))
         dA = (ka - la).normalized()
@@ -136,7 +214,7 @@ def pose_of(g):
     return p
 
 
-RIV = [("rv_a", "riveter_hammer", (57.0, -63.0), False), ("rv_b", "riveter_tongs", (66.0, -57.0), True), ("rv_c", "riveter_forge", (41.0, -50.0), False)]
+RIV = [("rv_a", "riveter_hammer", (41.5, -68.6), False), ("rv_b", "riveter_tongs", (57.5, -69.4), True), ("rv_c", "riveter_forge", (35.0, -69.2), False)]
 
 
 def riv_pose(kind, g, k):
@@ -161,8 +239,10 @@ class Take(C.Take):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s03")
         self.A["marks"][MARK] = C.on_ground(self.A["marks"][MARK])
         for ob in C.bpy.data.objects:                               # the preset's near-black FG slabs (anchored to the preset camera): camera-invisible
-            if ob.name in ("fg_redlead_sh", "fg_dark_sh", "fg_metal_sh"):
+            if ob.name in ("fg_redlead_sh", "fg_dark_sh", "fg_metal_sh", "fg_timber_sh") or ob.name.startswith(("derricks_", "swinggirder")):
                 ob.visible_camera = False
+        self.cam.data.clip_end = 6000.0
+        dress(self.A)
         self.path = cam_path(self.A)
         self.key_cam(bf(GF), *self.path.at(GF))
         self.scene.frame_set(bf(GF))
@@ -187,6 +267,9 @@ class Take(C.Take):
             C.place(self.eif, f, mark)
             for a, cast, mk, mirror, sc in self.riv:
                 C.place(a, f, mk, scale=sc)
+            lk = 1.0 + 6.0 * (1.0 - smoother((g - GF) / float(G_LAND - GF)))        # the warm lamp is big when we are far (findable), normal at the landing
+            self.A["lamp"].scale = (lk, lk, lk)
+            self.A["lamp"].keyframe_insert("scale", frame=f)
             self.key_set(f)
         for g in gs:
             f = bf(g)
