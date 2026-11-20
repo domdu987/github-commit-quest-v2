@@ -24,7 +24,7 @@ N_WALK = 40
 SUN_K = float(os.environ.get('SUN_K', 1.3))
 GAMMA0 = float(os.environ.get('GAMMA0', 1.55))
 SPEED = 0.075                 # m per frame (1.7 m/s march)
-_CAST = [("footman_a", 0), ("footman_b", 0)]   # crimson only: blue is reserved for the Scots
+_CAST = [("footman_a", 0)]   # crimson only: blue is reserved for the Scots (footman_b base is blue)
 
 
 def lerp_(a, b, t):
