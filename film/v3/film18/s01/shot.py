@@ -35,6 +35,7 @@ def tweak(stage, A=None):
         import bpy
         C.hide('baskets', 'props', 'digtools', 'jars', 'reeds')
         C.world_lantern((-1.4, 14.0, 0.0), sc=1.1)
+        C.world_plaque((-15.0, 17.6, 0.0), (-28.0, 11.0, 12.0), w=5.2, h=2.05, z=5.6)
         # warm pool + light on Tian Dan and the ox he dresses (findable from far away)
         d = bpy.data.lights.new('c18_td_light', 'POINT'); d.color = (1.0, 0.62, 0.28); d.energy = 3800.0; d.shadow_soft_size = 1.0; d.use_shadow = False
         lo = bpy.data.objects.new('c18_td_light', d); bpy.context.scene.collection.objects.link(lo); lo.location = (-2.2, 15.4, 4.5); lo.visible_camera = False
@@ -42,14 +43,14 @@ def tweak(stage, A=None):
         if not sm_.materials: sm_.materials.append(M['pool_w'])
         po = bpy.data.objects.new('c18_td_pool', sm_); C.STATE['SET'].objects.link(po); po.location = (-2.2, 15.7, 0.07); po.scale = (7.0, 7.0, 1.0); po.visible_shadow = False; C.J.no_bounce(po)
 HERD = S.herd(46, (-34, 21.5), (34, 21.5), 12.0, 31, yaw=180.0) + S.herd(24, (-30, 9.2), (30, 9.2), 2.0, 33, yaw=180.0)
-HERD = [m for m in HERD if math.hypot(m[0] + 2.0, m[1] - 15.5) > 5.0]
+HERD = [m for m in HERD if math.hypot(m[0] + 2.0, m[1] - 15.5) > 5.0 and math.hypot(m[0] + 15.0, m[1] - 17.6) > 3.2]
 def actors(f, cam, ctx):
     t = f / 30.0
     pull = math.sin(2 * math.pi * 2.0 * t)
     pose = 'tiandan_tug_cloth' if f < 90 else 'tiandan_tie_blade'
-    C.person_card('tiandan', pose, (TD.x + 0.25 * pull * (f < 90), TD.y, 0), cam, 0, bob=C.hop(f, 0, 0.04, 1.6), roll=(4.0 * pull if f < 90 else 2.0 * math.sin(2 * math.pi * 1.4 * t)), sz=1 + 0.015 * pull,
+    C.person_card('tiandan', pose, (TD.x + 0.25 * pull * (f < 90), TD.y, 0), cam, 0, bob=C.hop(f, 0, 0.04, 1.6), roll=(4.0 * pull if f < 90 else 3.0 * math.sin(2 * math.pi * 1.4 * t) + 1.5 * math.sin(2 * math.pi * 3.1 * t)), sz=1 + 0.015 * pull, rim=True, k=0.8,
                   mods=dict(gaze=(0.9, 0.2), yaw=0.55) if f < 90 else dict(gaze=(0.8, -0.4), yaw=0.5))
-    C.ox_card(SHOT, 0, (OX.x + 0.04 * pull, OX.y, 0), 165, 1.0, cam, gait='stand', coat=0.55 + 0.45 * min(1.0, max(0.0, (f - 4) / 80.0)), bob=C.hop(f, 1, 0.03, 0.8), roll=C.sway(f, 1, 1.6, 0.9))
+    C.ox_card(SHOT, 0, (OX.x + 0.04 * pull, OX.y, 0), 165, 1.0, cam, gait='stand', coat=0.55 + 0.45 * min(1.0, max(0.0, (f - 4) / 80.0)), bob=C.hop(f, 1, 0.03, 0.8), roll=C.sway(f, 1, 1.6, 0.9), rim=True, k=0.8)
     if f >= 60:                                                                          # basket carriers in the lower third once the camera is low
         loc, look, _ = camera(f); fw = look - loc; fw.z = 0; fw.normalize(); rt = V((fw.y, -fw.x, 0.0)); k = min(1.0, (f - 60) / 40.0)
         pa = loc + fw * 4.8 - rt * 1.25; pb = loc + fw * 4.2 + rt * 1.55

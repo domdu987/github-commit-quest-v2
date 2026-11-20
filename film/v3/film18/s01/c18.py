@@ -11,7 +11,7 @@ HEIGHT = J.HEIGHT
 _SIDE = {}
 
 def ox_card(shot_key, i, pos, travel_deg, scale, camloc, state='dragon', view='three_quarter', gait='stand', phase=0, flame=-1, blades=True, theta=36,
-            bob=0.0, roll=0.0, tint=None, k=None, reed=0, coat=1.0, shadow=True, pitch_bb=0.0):
+            bob=0.0, roll=0.0, tint=None, k=None, reed=0, coat=1.0, shadow=True, pitch_bb=0.0, rim=False):
     """An ox card at pos; yaw ~theta deg off the camera axis, mirrored so the head points along travel_deg. (sgn, mirror) chosen once per ox so it never pops."""
     p = V(pos); sc = scale * 1.08
     dvec = V((math.cos(math.radians(travel_deg)), math.sin(math.radians(travel_deg)), 0.0)); c = camloc - p; c.z = 0.0; c.normalize()
@@ -30,6 +30,7 @@ def ox_card(shot_key, i, pos, travel_deg, scale, camloc, state='dragon', view='t
     yaw = math.degrees(math.atan2(n.x, -n.y))
     meta = card_ox(state, view, gait, phase, flame, blades, reed, coat)
     ob = R2.put_card(meta, (p.x, p.y, p.z + bob), yaw, sc, mirror=(fac < 0), name='ox%d' % i, tint=tint, k=k, sw=2.7 * sc, shadow=shadow)
+    if rim: rim_card(meta, (p.x, p.y, p.z + bob), yaw, sc, mirror=(fac < 0), roll_deg=roll)
     pitch = 0.0
     if pitch_bb:
         hd = math.hypot(camloc.x - p.x, camloc.y - p.y); pitch = -math.atan2(max(0.0, camloc.z - (p.z + 1.3)), max(0.5, hd)) * pitch_bb
@@ -53,9 +54,10 @@ def card_person_mod(pose, **mods):
     m = CD._write(f['svg'], f['bbox'], f['feet_y'], CD.PXD_P, name); m['kind'] = 'person'; m['height'] = f['feet_y'] - a['head_top'][1]; m['x0'] = f['bbox'][0] - 4.0 / CD.PXD_P
     json.dump(m, open(mp, 'w')); return m
 
-def person_card(role, pose, pos, camloc, i=0, h=None, bob=0.0, roll=0.0, sx=1.0, sz=1.0, mirror=False, tint=None, k=None, yaw_off=0.0, mods=None):
+def person_card(role, pose, pos, camloc, i=0, h=None, bob=0.0, roll=0.0, sx=1.0, sz=1.0, mirror=False, tint=None, k=None, yaw_off=0.0, mods=None, rim=False):
     p = V(pos); meta = card_person_mod(pose, **mods) if mods else CD.card('person', pose=pose); h = h or HEIGHT.get(role, 3.0); sc = h / meta['height']
     d = camloc - p; yaw = math.degrees(math.atan2(d.x, -d.y)) + yaw_off
+    if rim: rim_card(meta, (p.x, p.y, p.z + bob), yaw, sc, mirror=mirror, roll_deg=roll)
     ob = R2.put_card(meta, (p.x, p.y, p.z + bob), yaw, sc, mirror=mirror, name='%s%d' % (role, i), tint=tint, k=k, sw=0.9 * h / 3.0)
     ob.rotation_euler = (0, math.radians(roll), math.radians(yaw)); ob.scale = ((-1.0 if mirror else 1.0) * sx, 1.0, sz)
     return ob
@@ -207,3 +209,49 @@ def fg_rail(cam, y=-1.62, z=-1.6, w=3.4):
     box('c18_rail_lan', (1.3, y + 0.42, z), (0.2, 0.34, 0.2), paper); box('c18_rail_lan_cap', (1.3, y + 0.62, z), (0.24, 0.05, 0.24), wood)
     d = _b.data.lights.new('c18_rail_light', 'POINT'); d.color = (1.0, 0.6, 0.25); d.energy = 160.0; d.shadow_soft_size = 0.3; d.use_shadow = False
     lo = _b.data.objects.new('c18_rail_light', d); _b.context.scene.collection.objects.link(lo); lo.parent = cam; lo.location = (1.2, y + 0.5, z + 0.3); lo.visible_camera = False
+
+
+def plaque_png(path, text='\u5373\u58a8', size=(1024, 400)):
+    """Sharp painted wooden plaque: dark lacquered board, red-brown border, gold characters (WenQuanYi Zen Hei)."""
+    from PIL import Image, ImageDraw, ImageFont
+    W, H = size; im = Image.new('RGB', size, (58, 30, 20)); d = ImageDraw.Draw(im)
+    for y in range(H):                                   # lacquer gradient + wood grain streaks
+        k = 0.85 + 0.25 * (1 - abs(y - H / 2) / (H / 2)); d.line((0, y, W, y), fill=(int(78 * k), int(38 * k), int(24 * k)))
+    import random; r = random.Random(4)
+    for _ in range(90):
+        y = r.randint(10, H - 10); x0 = r.randint(0, W - 200); d.line((x0, y, x0 + r.randint(80, 320), y + r.randint(-3, 3)), fill=(60, 28, 18), width=1)
+    d.rectangle((6, 6, W - 7, H - 7), outline=(214, 150, 52), width=10); d.rectangle((26, 26, W - 27, H - 27), outline=(150, 40, 28), width=6)
+    f = ImageFont.truetype('/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc', 300)
+    bb = d.textbbox((0, 0), text, font=f); tw, th = bb[2] - bb[0], bb[3] - bb[1]
+    x, y = (W - tw) / 2 - bb[0], (H - th) / 2 - bb[1]
+    d.text((x + 6, y + 6), text, font=f, fill=(30, 12, 8))                                  # drop shadow
+    d.text((x, y), text, font=f, fill=(255, 214, 96))
+    im.save(path); return path
+
+def world_plaque(pos, face_to, w=4.6, h=1.8, text='\u5373\u58a8', z=5.2):
+    """A plaque board on two dark posts at ground point pos, turned to face the point face_to, with a warm light on it."""
+    import bpy as _b
+    from mathutils import Vector
+    P = Vector(pos); tgt = Vector(face_to); d = tgt - P; d.z = 0; yaw = math.atan2(d.x, -d.y)
+    png = plaque_png(os.path.join(HERE, 'plaque.png'))
+    mat = T.mat_emit('c18_plaque', '#ffffff', image=png, strength=1.15) if 'c18_plaque' not in _b.data.materials else _b.data.materials['c18_plaque']
+    wood = T.mat_emit('c18_post', '#2a1810', strength=0.4) if 'c18_post' not in _b.data.materials else _b.data.materials['c18_post']
+    me = _b.data.meshes.new('c18_plaque'); me.from_pydata([(-w / 2, 0, z - h / 2), (w / 2, 0, z - h / 2), (w / 2, 0, z + h / 2), (-w / 2, 0, z + h / 2)], [], [(0, 1, 2, 3)]); me.update()
+    uv = me.uv_layers.new(name='UVMap')
+    for i, c in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uv.data[i].uv = c
+    me.materials.append(mat); ob = _b.data.objects.new('c18_plaque', me); STATE['SET'].objects.link(ob); ob.location = P; ob.rotation_euler = (0, 0, yaw); ob.visible_shadow = False
+    off = Vector((math.cos(yaw), math.sin(yaw), 0.0))
+    for sgn in (-1, 1):
+        _b.ops.mesh.primitive_cube_add(size=1.0); pb = _b.context.active_object; pb.name = 'c18_post'; pb.scale = (0.22, 0.22, z + h / 2 + 0.3); pb.data.materials.append(wood); pb.visible_shadow = False
+        pb.location = P + off * (sgn * (w / 2 + 0.15)) + Vector((0, 0, (z + h / 2 + 0.3) / 2)); pb.rotation_euler = (0, 0, yaw)
+    dl = _b.data.lights.new('c18_plaque_light', 'POINT'); dl.color = (1.0, 0.7, 0.4); dl.energy = 1600.0; dl.use_shadow = False
+    lo = _b.data.objects.new('c18_plaque_light', dl); _b.context.scene.collection.objects.link(lo); lo.location = P + Vector((0, 0, z)) + (-d.normalized()) * -2.0; lo.visible_camera = False
+    return ob
+
+def rim_card(meta, pos, yaw_deg, scale, mirror=False, roll_deg=0.0, pitch=0.0, away=0.05, grow=1.09, k=3.0, tint=(0.30, 0.55, 1.0)):
+    """Cool moon-blue rim: a second, slightly bigger, brighter blue-tinted copy of the card pushed just behind it (away from the camera)."""
+    yaw = math.radians(yaw_deg); back = V((-math.sin(yaw), math.cos(yaw), 0.0)) * -away * -1.0          # card faces (sin yaw, -cos yaw): behind = opposite
+    back = V((-math.sin(yaw), math.cos(yaw), 0.0)) * away
+    ob = R2.put_card(meta, (pos[0] + back.x, pos[1] + back.y, pos[2] - 0.02), yaw_deg, scale * grow, mirror=mirror, name='rim', tint=tint, k=k, shadow=False)
+    if roll_deg or pitch: ob.rotation_euler = (pitch, math.radians(roll_deg), yaw)
+    return ob
