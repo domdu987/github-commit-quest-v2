@@ -13,3 +13,6 @@
 - Heads in shot: centre y 406-669 (the 406 is the transient before the tilt, g ~1170), width 99-218 px, bottom max 778. No head near y 880. No DOF, no text, no caption_shade.
 - Frame-diff (in-shot, 90x160 grey): **median 4.55, p90 12.27** (draft 4.55 / 12.15). s/frame 22 wall / 43 cpu.
 - Known: the "sun" is a screen-space glare disc, not a sun object in the set; the shadow of the sail still lies across the deck at noon (the set's sail is large). The quadrant reads as a gold fan pointing up-right.
+
+## Round 3: colour re-render (QA_TEAM §G; set fix ff204d3 merged: ship NOON exposure -0.3, grade sat 1.18)
+Re-rendered unchanged shot code on the new set. `film/qa_stats.py take.mkv`: saturation 0.398, brightness 118.4 (in-shot motion median 4.32 p90 9.40). Frame-diff (deliver.py, in-shot): 3.96 / 11.05.

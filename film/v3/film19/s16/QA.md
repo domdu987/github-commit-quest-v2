@@ -13,3 +13,6 @@
 - Heads in shot: centre y 418-765, width 112-299 px, bottom max 825 (the start frames, head at y ~760 before the tilt); heads end above y 440-460 after the tilt. No DOF, no text, no caption_shade; mouths still.
 - Frame-diff: **median 4.60, p90 12.89**. s/frame 21 wall / 41 cpu.
 - Known: the captain looks larger than William at the end (he is a little nearer the lens); the watch is held in front of William's chest rather than centred on the screen axis (the pair is centred).
+
+## Round 3: colour re-render (QA_TEAM §G; set fix ff204d3 merged: ship NOON exposure -0.3, grade sat 1.18)
+Re-rendered unchanged shot code on the new set. `film/qa_stats.py take.mkv`: saturation 0.458, brightness 127.3 (in-shot motion median 4.98 p90 11.92). Frame-diff (deliver.py, in-shot): 4.11 / 11.52.
