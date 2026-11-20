@@ -24,3 +24,8 @@ Split parts (a/b) of one take join frame-exact at the split; the TAKE gate revie
 | T6a2 | T6 | 1453-1535 | render17v2/T6a2 | session_017iwyCtXKdAGttP3T7HTZ21 |
 | T5b (now) | T5 | 1211-1296 | render17v2/T5b | session_017iwyCxAjF4Zveisn3cNYtA |
 | T5b2 | T5 | 1297-1383 | render17v2/T5b2 | session_017iwyCvxitwkPTAWCQ3LEmV |
+
+## T1 re-split after the TAKE gate (2026-11-20 22:35)
+- T1a now delivers g0-190: it re-routes g150-190 around the cast.
+- T1b delivers g191-342: street liveliness pass.
+- assemble_v2.py PARTS is updated to match.
