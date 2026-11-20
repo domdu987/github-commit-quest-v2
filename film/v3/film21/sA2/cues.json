@@ -1,0 +1,27 @@
+[
+ {
+  "g": 80,
+  "kind": "sfx",
+  "label": "whoosh: swoop begins from P_A"
+ },
+ {
+  "g": 100,
+  "kind": "sfx",
+  "label": "wind and pine rustle as the camera dives past the branches"
+ },
+ {
+  "g": 114,
+  "kind": "sfx",
+  "label": "light-shaft shimmer"
+ },
+ {
+  "g": 125,
+  "kind": "sfx",
+  "label": "quick whoosh push-in on the grass-chewer, tiny stalk-chew foley"
+ },
+ {
+  "g": 145,
+  "kind": "sfx",
+  "label": "soft hill wind under the calm Scots"
+ }
+]

@@ -1,0 +1,22 @@
+{
+ "segment": "sA2",
+ "g0": 80,
+ "g1": 159,
+ "first_g": 77,
+ "n_frames": 83,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 6
+ },
+ "handle_frames_before": 3,
+ "cam_in": "P_A",
+ "cam_out": "end of the grass-chewer push (see shot.py)",
+ "samples": 32,
+ "fps": 30,
+ "size": [
+  720,
+  1280
+ ],
+ "take_mkv_bytes": 31929270,
+ "split": false
+}

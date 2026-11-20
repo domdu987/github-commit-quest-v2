@@ -1,0 +1,7 @@
+# QA A2 (BIGZOOM 1, second half), g 77-159 (3 handle frames 77-79), D6 in at P_A, cut out at g159
+World `K.build_world(['valley_wide','hill_over'], fg=False)`, 32 samples, VIVID grade via `cam_path`. Cast: Wallace centre (wallace_fold_spear), 6 Scots (fold_spear / stand_still / chew_grass), `K.with_rim` on every pose, contact shadows on.
+- Camera: g80 = `K.POSES['P_A']` exactly (g77-79 extrapolate the A1 move back toward the valley_wide camera, ~3 m/frame). Swoop over the crag, through pine branches and a light shaft (g100-120), medium shot of the Scots line from behind-side at g125 (bridge with knights far below at the right), then the 15 f x1.4 push onto the grass-chewer (g125-140: "อะไรเลยสักอย่าง" = g125) and a slow drift to g159.
+- Numbers: qa_stats saturation 0.580, brightness 94.9 (target >= 0.47, 85-110); qa_stats2 vivid 69.1 %; rhythm median 15.32 / p90 37.76 (target >= 4 / >= 12); qa_auto PASS (soft frame g122 = pine-branch motion streak, 1 frame).
+- Mouths: nobody speaks; the chewer has the stalk, closed mouth. Heads y 540-880 at g125-159; no head below y 880.
+- Known notes (non-blocking, tell me if the director wants them fixed, ~35 min re-render of g125-159): at g159 the right-hand Scot (s4) is cut about 30 % by the right frame edge after the push; the Scots are drawn three-quarter from the front (cards are front-facing puppets), not from behind.
+- Rendering died once (container restart at g84) and was resumed from the last frame; frames are identical to an uninterrupted run (same seed).
