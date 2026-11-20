@@ -25,3 +25,18 @@ Issues:
 3. g1384-1425 (NOTE): sun glint still shows as 2-4 bright white blobs on the lower-third water (g1384-1412 largest). Reads as a sparkle, not a hole, but still the brightest thing in the bottom third. Lower further (x0.01) or drop it.
 4. g1384-1440 (NOTE): William is about 2-4 % of frame height and in front of the sails, so the watch is barely readable; at g1450-1467 a foresail panel covers his lower legs/feet, so contact with the deck is hard to see. Fix: move him to the bow rail clear of the jib, or crane/push more on him after the snap.
 Colour (round 10 blocker, luma 122.7) FIXED. Sun-glint lowering and camera drift in g1444-1467 confirmed present (no parking).
+
+## Round 12 (director QA-tech) - PASS
+Take g1375-1476 (102 f, 720x1280, 30 fps). Frames: /tmp/qa19_r12/s18/ (f6_*.jpg at 6 fps, snap_1425..1450.jpg every frame, full_*.png, crops wil.jpg / wil2.jpg).
+Numbers (in-shot g1384-1467, 84 frames / 84 consecutive pairs, 90x160 bilinear):
+- luma 100.7 (85-110) PASS; per-frame 89.8-111.7 (mean is what counts; two or three frames touch 111). saturation 0.640 (>= 0.47) PASS.
+- frame-diff mean-RGB grey: median 5.87, p90 11.03 PASS (>= 4 / >= 10). ffmpeg gray: median 5.82, p90 10.81 PASS. Min 1.98, max 17.8 (snap peak g1431-1435). meta.json 5.99 / 11.06 agrees within method noise.
+Checks:
+- William acts: g1384-1416 looks down at the watch (eyes closed/down); g1424-1432 head turn/glance up; g1436+ raises watch toward the island, hand on hip, excited eyes, small hop g1436-1456; g1448-1467 holds up. Visible change about every 1 s; longest near-static stretch g1384-1416 (about 1.1 s, only small head/arm drift) < 1.5 s PASS.
+- Island: green sand-rim dome with palms is a sliver at the left horizon from g1425, clear on the snap (g1438, about 6 % width) and about 14 % of width at g1467; the snap pans toward it PASS (R11 art issue fixed).
+- No character cut by a frame edge (ship whole throughout, at g1467 William is at x about 516 of 720). Face about 3 % of frame height (<= 35 %). Head y about 590-700 (< 880). William's feet are on the forecastle deck, no float. No prop through a face. No pops (only the planned snap), no black/magenta, no frozen runs (min diff 1.98), mouth closed (no movement). Pure-white fraction <= 0.43 % per frame; no blown-out holes; no bare planes. Bow foam is matte white, no sun glint blobs.
+NOTES (non-blocking):
+1. g1384-1398: diffs are flat ~2.0-2.3 (quiet start), steady but the slowest part; the median is carried by g1400-1470.
+2. g1444-1467: a foreground foresail panel covers William's shin/feet region, so deck contact is only partly visible (the legs end on the deck line behind the panel). Not floating, but crop at g1450+ shows no contact shadow.
+3. g1384-1410: a small log floats in the sea at lower left, reads as a prop and is fine.
+4. William's pose change in g1384-1416 is subtle at phone size (head about 26-40 px); the clear action is g1436+.

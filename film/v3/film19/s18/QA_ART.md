@@ -70,3 +70,40 @@ Fixes, in priority order:
    - Have him lift it toward the island on "จาไมกา" (a hand raise, plus an excited mouth or eyes swap) so he is acting (I.5).
 3. **Bow wave.** Replace the glossy glowing tube with a matte white foam or spray toon shape, or cut its emission/specular by about 70 %.
 4. (Polish) Reduce the two remaining lower-third glint blobs by another x0.5, or move them under the foam.
+
+## Round 12 (director QA-art): FIX, 6.9
+
+Take: take.mkv as delivered (first_g 1375, 102 frames, frame index = g - 1375). Frames: /tmp/qa19_r12art/s18/f_NNN.png (f_000 = g 1375, every frame). Sheets: /tmp/qa19_r12art/s18_sheet3fps.jpg (every 10 f), s18_snap.jpg (every frame g 1425-1450), s18_phone.jpg (360x640: g 1390, 1420, 1438, 1450, 1467), s18_william.jpg (son crops g 1390-1467), s18_g1438_island_bow.png (crop), s18_g1438_phone.png.
+
+Stats (Rec.601 luma, PIL HSV saturation, in-shot g 1384-1467):
+- Mean luma **94.2** (min 83.8 at g 1384-1400, max 105.0 at g 1464). The shot mean passes G.1. The opening ~17 frames sit just under 85, which is marginal but not blocking.
+- Saturation **0.654** (passes G.1 and I.3).
+
+| Check | Status |
+|---|---|
+| Island / "Jamaica" | **Improved, but still weak on a phone.** There is now a green dome with a sand rim and 5 palms. It is hidden behind the hull until about g 1430, then the snap brings it into frame at left of the jib, where it stays until the dissolve. That is correct. At full size it is about 90-110 px (13-15 % of width) and reads as "tropical island". At phone size it is about 40 px wide on the horizon line and the palms are 1-2 px specks. It reads as "a green bump", not a destination. There is no sign. **Story logic:** the ship sails TOWARD the camera, and the island is BEHIND it, so the shot reads as the ship *leaving* the island, not arriving at Jamaica. |
+| Son / watch | **The watch now reads at full size**: a clear white pocket-watch face, about 25 px. On a phone it is about 6 px, a white dot next to his hip. William reads on a phone (about 40 px tall, hat, blue coat, deck contact OK, no float). |
+| Acting | There is some change: a closed-eye smile early (looking down), then round eyes from g 1430 and a small hop. **The "raise toward the island" does not read.** The H4 stays at his right hip/waist (screen-right) through g 1430-1467, while the island is screen-left. There is no arm lift above the shoulder and no point. At most it is a 15-20 px rise. The face goes neutral/flat-mouth at the key word (g 1438-1446), not excited. |
+| Foam | **Not fixed.** The bow wave is now matte, so the gloss is gone. But it is still a smooth, solid, shaded white/lavender pillow or tube under the stem, with a hard silhouette. It grows to about 35 % of the frame width by g 1467 and still reads as a plastic cushion, not spray. The crest lines and wake rings are good. Glint blobs are gone. The foreground foam at g 1415-1432 is a busy, noisy white mass across the lower third. It is acceptable, but it pulls the eye. |
+| Colour | Vivid. Deep blue sky, teal sea, warm sails, green island. Warm/cool contrast is OK. |
+| Composition / camera | There is more motion (slide, orbit, crane), the snap lands at g 1438-1445, and a second move follows. The ship is still centred and close to straight-on throughout (H.2 prefers a non-default angle). Nothing is cut by a frame edge, and nothing floats on any tile. |
+
+| Criterion | Score |
+|---|---|
+| Set | 7 (bow-wave pillow persists) |
+| Light & colour | 7.5 |
+| Composition / phone | 7 |
+| Acting | 6.5 (no legible raise or point toward the island) |
+| Key moment ("across the sea to Jamaica") | 6.5 (island present on the word but tiny on a phone; ship sails away from it) |
+| Match to refs (R5) | 7 |
+| **Overall** | **6.9 - FIX** (real progress; the remaining issues are targeted) |
+
+Fixes, in priority order:
+1. **(Blocking) Make the ship go TO the island, and make the island big on the word.**
+   - Option A (preferred): use a 3/4-rear or side-tracking camera, so the ship sails away from the camera toward the island. The snap on "จาไมกา" pushes past the stern and frames the island beside the bow.
+   - Option B: keep this camera, but put the island in FRONT of the ship's course (screen-left foreground-mid, nearer), so the ship is clearly heading for it.
+   - Either way, the island is at least 20-25 % of the frame width at g 1440-1467, with palms 6+ px thick at phone size.
+   - Optional (I.4): a "JAMAICA" banner or flag on the beach.
+2. **William's gesture.** At g 1430-1440, raise the H4 above head height on the island side (screen-left arm). Swap the face to open-mouth excitement and hold for 0.5 s or more. Add one warm sparkle on the watch at g ~1438 so it reads as more than 6 px on a phone.
+3. **Bow wave.** Replace the solid tube mesh with broken toon spray: 3-6 separate white chunks or a particle spray with an alpha edge. Do not just re-shade it. Alternatively, cap its size at about 15 % of the frame width.
+4. (Polish) Lift the first 17 frames by about +0.1 EV (luma 84 → 87). Thin the lower-third foam mass at g 1415-1432 by about 30 %.
