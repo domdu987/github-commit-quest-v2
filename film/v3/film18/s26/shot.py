@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c18
 from c18 import J, S, R2, STATE
 import cast18
+import os
 from mathutils import Vector as V
 
 G0, G1 = 1958, 2112
@@ -46,7 +47,7 @@ def _gen_pos(g):
 
 
 G_ZOOM = 2066                                       # end of the BIGZOOM: low medium on the general
-WIDE_LOC = (40.0, 12.0, 52.0); WIDE_LOOK = (0.0, -100.0, -22.0)
+WIDE_LOC = (22.0, 60.0, 62.0); WIDE_LOOK = (0.0, -75.0, -10.0)
 
 
 def cam_bigzoom(T, g, t):
@@ -88,6 +89,35 @@ if not _sm.materials:
 POOL = bpy.data.objects.new('t18_genpool', _sm); STATE['SET'].objects.link(POOL); POOL.visible_shadow = False; J.no_bounce(POOL)
 
 
+import numpy as _np
+PLAQUE = None
+
+
+def make_plaque():
+    global PLAQUE
+    me = bpy.data.meshes.new('t18_plaque'); w, h = 12.0, 4.5
+    me.from_pydata([(-w / 2, 0, 0), (w / 2, 0, 0), (w / 2, 0, h), (-w / 2, 0, h)], [], [(0, 1, 2, 3)]); me.update()
+    uv = me.uv_layers.new(name='UVMap')
+    for i, c in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uv.data[i].uv = c
+    m = R2._card_mat(os.path.join(HERE_, 'plaque.png'), (1.0, 1.0, 1.0), 1.15, 'plaque')
+    me.materials.append(m)
+    ob = bpy.data.objects.new('t18_plaque', me); STATE['SET'].objects.link(ob)
+    ob.location = (0.0, 3.35, 9.6); ob.rotation_euler = (0, 0, math.pi); ob.visible_shadow = False; J.no_bounce(ob)
+    PLAQUE = ob
+
+
+HERE_ = os.path.dirname(os.path.abspath(__file__))
+make_plaque()
+
+
+def rim(meta, pos, cam_loc, mirror=False, height=None, scale=None, name='rim', yaw_off=0.0, tint=(0.35, 0.62, 1.0), k=1.3, back=0.07):
+    """cool sky-blue rim from behind: a blue-tinted copy of the card, 4 % larger, pushed 0.07 D away from the lens (it shows as an outline round the silhouette)."""
+    p = V(pos); d = V(cam_loc) - p; d.z = 0; d.normalize()
+    q = p - d * back + V((0, 0, -0.0))
+    sc = (height / meta['height'] if height is not None else (scale or 1.0)) * 1.045
+    return c18.put(meta, tuple(q), cam_loc, scale=sc, mirror=mirror, name=name, yaw_off=yaw_off, tint=tint, k=k, sw=0.01, )
+
+
 def frame(T, g):
     gx, gy = _gen_pos(g); u_ = c18.ease((g - G0) / float(G_ZOOM - G0)) if G0 < g < G_ZOOM else (0.0 if g <= G0 else 1.0)
     POOL.location = (gx, gy + 1.5, 0.08); k = 2.4 + 15.0 * (1.0 - u_) ** 2; POOL.scale = (k, k, 1.0)       # a warm dawn pool of light under him: findable in the wide
@@ -97,8 +127,11 @@ def frame(T, g):
     ph = (g * 0.0625) % 1.0; i16 = int(ph * 16)
     lb = 2070 <= g <= 2080                                                            # head turned back over the shoulder g 2070-2080
     pose = dict(cast18.general_run_scream_frame(ph, facing=-1, lookback=lb)); pose['t'] = g / 30.0
+    wob = int(round(math.sin(g * 0.55) * 4))                                   # helmet wobble + cup slosh every few frames (quantised so cards are reused)
+    pose['hat_askew'] = 24 + 5 * wob; pose['cup_tilt'] = 22 * wob
     pose['prop_r'] = dict(pose['prop_r'], scale=pose['prop_r'].get('scale', 1.0) * 0.62)    # the cup was head-sized: 62 %
-    m = c18.pcard('general', pose, 'gs%02d_%d' % (i16, int(lb)))
+    m = c18.pcard('general', pose, 'gs%02d_%d_%d' % (i16, int(lb), wob))
+    rim(m, tuple(gen), cam, height=3.4, name='grim')
     c18.put(m, tuple(gen), cam, height=3.4, name='general', sw=1.0)
     heads.append(T.head_row(tuple(gen), 3.4, 'general'))
     u = c18.ramp(g, G0, 2085)
@@ -110,6 +143,7 @@ def frame(T, g):
         pos = gen + V((lat, back, 0.0))
         phase = (int(g / 2.5) + i * 3) % 8
         mo = c18.oxcard('dragon', 'front_three_quarter', 'gallop', phase, -1, smoke=(g // 2 + i) % 4, face='rage')
+        rim(mo, tuple(pos), cam, scale=1.08, mirror=bool(i % 2), name='orim%d' % i, yaw_off=(10 if i % 2 else -10))
         c18.put(mo, tuple(pos), cam, scale=1.08, mirror=bool(i % 2), name='ox%d' % i, sw=2.7, yaw_off=(10 if i % 2 else -10))
         heads.append(T.head_row(tuple(pos), 2.6, 'ox'))
         if i == 0:
