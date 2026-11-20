@@ -1,0 +1,31 @@
+00:00.500  cycles           | WARNING CUEW initialization failed: Error opening the library
+s21 posts wood 86 4989 0.0
+s21 posts palisade 212 2756 0.0
+00:26.741  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1590.png'
+s21 g 1590: 23.9 s wall 47.4 cpu heads {'soldier_stand_a': 634, 'soldier_cheer_cup_b': 634, 'soldier_stand_c': 634}
+00:50.576  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1591.png'
+s21 g 1591: 23.8 s wall 47.0 cpu heads {'soldier_stand_a': 641, 'soldier_cheer_cup_b': 639, 'soldier_stand_c': 640}
+01:15.827  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1592.png'
+s21 g 1592: 25.2 s wall 49.8 cpu heads {'soldier_stand_a': 642, 'soldier_cheer_cup_b': 639, 'soldier_stand_c': 641}
+01:41.276  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1593.png'
+s21 g 1593: 25.4 s wall 50.5 cpu heads {'soldier_stand_a': 639, 'soldier_cheer_cup_b': 635, 'soldier_stand_c': 637}
+02:06.527  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1594.png'
+s21 g 1594: 25.2 s wall 50.1 cpu heads {'soldier_stand_a': 634, 'soldier_cheer_cup_b': 630, 'soldier_stand_c': 632}
+02:31.287  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1595.png'
+s21 g 1595: 24.7 s wall 49.0 cpu heads {'soldier_stand_a': 632, 'soldier_cheer_cup_b': 629, 'soldier_stand_c': 631}
+02:56.323  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1596.png'
+s21 g 1596: 25.0 s wall 49.6 cpu heads {'soldier_stand_a': 630, 'soldier_cheer_cup_b': 629, 'soldier_stand_c': 630}
+03:19.907  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1597.png'
+s21 g 1597: 23.5 s wall 46.7 cpu heads {'soldier_stand_a': 628, 'soldier_cheer_cup_b': 628, 'soldier_stand_c': 628}
+03:43.628  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1598.png'
+s21 g 1598: 23.7 s wall 46.8 cpu heads {'soldier_stand_a': 624, 'soldier_cheer_cup_b': 627, 'soldier_stand_c': 625}
+04:08.965  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1599.png'
+s21 g 1599: 25.3 s wall 50.4 cpu heads {'soldier_stand_a': 625, 'soldier_cheer_cup_b': 628, 'soldier_stand_c': 626}
+04:33.704  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1600.png'
+s21 g 1600: 24.7 s wall 49.2 cpu heads {'soldier_stand_a': 630, 'soldier_cheer_cup_b': 634, 'soldier_stand_c': 632}
+04:58.192  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1601.png'
+s21 g 1601: 24.4 s wall 48.7 cpu heads {'soldier_stand_a': 637, 'soldier_cheer_cup_b': 640, 'soldier_stand_c': 638}
+05:22.973  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1602.png'
+s21 g 1602: 24.7 s wall 49.3 cpu heads {'soldier_stand_a': 638, 'soldier_cheer_cup_b': 641, 'soldier_stand_c': 640}
+05:49.278  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s21/frames/g_1603.png'
+s21 g 1603: 26.2 s wall 52.2 cpu heads {'soldier_stand_a': 635, 'soldier_cheer_cup_b': 637, 'soldier_stand_c': 636}
