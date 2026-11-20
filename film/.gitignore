@@ -16,3 +16,4 @@ v3/set3d*/*_work/*
 !v3/set3d*/*_work/*.py
 v3/film*/*/raw_prev*/
 v3/film*/*/draft_*/
+v3/film20/s*/take.mkv
