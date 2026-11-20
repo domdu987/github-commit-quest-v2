@@ -34,8 +34,8 @@ LIGHT, PRESET, FINAL_SPP, PPD = "DAY", "hall_low", 8, 400
 
 SUBJ = Vector((-3.24, 3.24, 2.60))
 CAM_LOC0 = (-4.9, -1.30, 1.25)
-CAM = C.CamPath(CAM_LOC0, tuple(SUBJ), G_FIRST, G_LAST, push=0.10, slide_px=45.0, rise_px=0.0, arc_deg_s=13.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.5, peak=2.0, shift=(-0.3, -0.35))])
+CAM = C.CamPath(CAM_LOC0, tuple(SUBJ), G_FIRST, G_LAST, push=0.12, slide_px=30.0, rise_px=0.0, arc_deg_s=14.0, decay=0.15,
+                snaps=[dict(g=SNAP, k=1.4, peak=2.6, shift=(-0.60, -0.30))])
 
 ST = cast19.STORY19
 IDLE, SHRUG = ST["astro_idle"][1], ST["astro_shrug_fluke"][1]
@@ -51,21 +51,28 @@ def pose_of(g):
     pump = (math.sin(math.pi * u_of(g, G_QUOTE - 3, G_QUOTE + 8)) + 0.7 * math.sin(math.pi * u_of(g, G_QUOTE + 18, G_QUOTE + 30))) * u
     for q, sgn in (("arm_r", 1), ("arm_l", -1)):
         d = dict(p[q])
-        d["hand"] = (d["hand"][0] + sgn * 0.16 * pump, d["hand"][1] + 0.30 * pump)
+        # QA-art: palms up and OUT at about (+-1.30, 0.95), layered in front of the wig / gown so they read
+        d["hand"] = (lerp(d["hand"][0], sgn * 1.30, u) + sgn * 0.08 * pump, lerp(d["hand"][1], 0.95, u) + 0.12 * pump)
+        d["layer"] = "front"
+        d["shape"] = "open"
         p[q] = d
-    p["lean"] = 7.0 * pump + 4.0 * u * math.sin(g * 0.35)
-    p["head_roll"] = -6.0 * u + 5.0 * math.sin(g * 0.2) * u
+    p["lean"] = 7.0 * pump + 4.0 * u * math.sin(g * 0.35) + 3.0 * (1 - u) * math.sin(g * 0.27)          # smug rocking on the heels before the shrug
+    p["head_roll"] = -6.0 * u + 5.0 * math.sin(g * 0.2) * u + 4.0 * (1 - u) * math.sin(g * 0.23)
     p["pitch"] = -0.2 * u - 0.1 * pump
-    p["squash"] = (1.0 + 0.02 * pump, 1.0 - 0.02 * pump)
+    p["squash"] = (1.0 + 0.02 * pump + 0.012 * (1 - u) * math.sin(g * 0.5), 1.0 - 0.02 * pump - 0.012 * (1 - u) * math.sin(g * 0.5))
     p["expr"] = "smug"
-    p["mouth"] = cast19.talk_mouth(g, 1.0) if C.mouth_open_at(g) else "smirk"
+    if C.mouth_open_at(g):                    # smug talk: a SMALL opening blended with the smirk (not a shout), only inside the window
+        tm = cast19.talk_mouth(g, 0.6)
+        p["mouth"] = ("open", 0.15, 0.09) if tm in ("talk_b", "talk_o") else ("open", 0.20, 0.05) if tm == "talk_a" else "smirk"
+    else:
+        p["mouth"] = "smirk"
     p["blink"] = blink(g, BLINKS)
     p["t"] = g / 30.0
     return p
 
 
 def hop_z(g):
-    return 0.03 * math.sin(math.pi * u_of(g, G_QUOTE - 3, G_QUOTE + 6)) ** 2      # a hop of smugness on "ฟลุ๊ค"
+    return 0.03 * math.sin(math.pi * u_of(g, G_QUOTE - 3, G_QUOTE + 6)) ** 2 + 0.012 * math.sin(2 * math.pi * g / 20.0) ** 2      # a hop of smugness on "ฟลุ๊ค"
 
 
 class Take(C.Take):
