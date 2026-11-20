@@ -6,90 +6,63 @@
   {
    "kind": "ambience",
    "t": 57.467,
-   "dur": 3.133,
+   "dur": 4.4,
    "frame": 1724,
-   "end_frame": 1818,
-   "note": "first-floor restaurant of the finished tower, day 1889: murmur of many diners, cutlery and glasses, a faint string trio, a light wind through the lattice"
-  },
-  {
-   "kind": "foley",
-   "t": 57.633,
-   "dur": 0.133,
-   "frame": 1729,
-   "end_frame": 1733,
-   "note": "footstep on the carpet runner (alternating soft thuds of the waiter and Maupassant, the waiter's lighter)",
-   "peak_frame": 1730
-  },
-  {
-   "kind": "foley",
-   "t": 58.133,
-   "dur": 0.133,
-   "frame": 1744,
-   "end_frame": 1748,
-   "note": "footstep on the carpet runner (alternating soft thuds of the waiter and Maupassant, the waiter's lighter)",
-   "peak_frame": 1745
-  },
-  {
-   "kind": "foley",
-   "t": 58.633,
-   "dur": 0.133,
-   "frame": 1759,
-   "end_frame": 1763,
-   "note": "footstep on the carpet runner (alternating soft thuds of the waiter and Maupassant, the waiter's lighter)",
-   "peak_frame": 1760
-  },
-  {
-   "kind": "foley",
-   "t": 59.133,
-   "dur": 0.133,
-   "frame": 1774,
-   "end_frame": 1778,
-   "note": "footstep on the carpet runner (alternating soft thuds of the waiter and Maupassant, the waiter's lighter)",
-   "peak_frame": 1775
-  },
-  {
-   "kind": "foley",
-   "t": 59.633,
-   "dur": 0.133,
-   "frame": 1789,
-   "end_frame": 1793,
-   "note": "footstep on the carpet runner (alternating soft thuds of the waiter and Maupassant, the waiter's lighter)",
-   "peak_frame": 1790
-  },
-  {
-   "kind": "foley",
-   "t": 60.133,
-   "dur": 0.133,
-   "frame": 1804,
-   "end_frame": 1808,
-   "note": "footstep on the carpet runner (alternating soft thuds of the waiter and Maupassant, the waiter's lighter)",
-   "peak_frame": 1805
-  },
-  {
-   "kind": "foley",
-   "t": 57.733,
-   "dur": 0.667,
-   "frame": 1732,
-   "end_frame": 1752,
-   "note": "starched apron and tailcoat swish as the waiter sweeps his arm toward the window end",
-   "peak_frame": 1740
+   "end_frame": 1856,
+   "note": "high above Paris, day 1889: wind, a far fairground band and crowd murmur that thins out as the camera climbs, then the warm restaurant murmur, cutlery and a faint string trio when it lands at the window"
   },
   {
    "kind": "accent",
-   "t": 59.233,
-   "dur": 0.5,
-   "frame": 1777,
-   "end_frame": 1792,
-   "note": "snap push on 'หลังหอเปิด': short airy whoosh rising",
-   "peak_frame": 1783
+   "t": 57.467,
+   "dur": 2.533,
+   "frame": 1724,
+   "end_frame": 1800,
+   "note": "BIGZOOM: a long rising airy whoosh / swoosh with a gentle pitch rise as the camera dives across the city and up the lattice",
+   "peak_frame": 1770
+  },
+  {
+   "kind": "foley",
+   "t": 59.067,
+   "dur": 0.333,
+   "frame": 1772,
+   "end_frame": 1782,
+   "note": "the camera passes through the lattice girders: a quick iron whoomp, close to the first platform",
+   "peak_frame": 1777
+  },
+  {
+   "kind": "accent",
+   "t": 60.333,
+   "dur": 0.4,
+   "frame": 1810,
+   "end_frame": 1822,
+   "note": "landing on Maupassant: soft glass-and-room 'pop' as the window room tone arrives",
+   "peak_frame": 1815
+  },
+  {
+   "kind": "foley",
+   "t": 60.5,
+   "dur": 0.133,
+   "frame": 1815,
+   "end_frame": 1819,
+   "note": "first happy bite on 'กินข้าวบนหอ': fork clinks on the plate, a blissful nasal hum without words (mouth stays still)",
+   "peak_frame": 1817
+  },
+  {
+   "kind": "foley",
+   "t": 61.133,
+   "dur": 0.2,
+   "frame": 1834,
+   "end_frame": 1840,
+   "note": "second bite, napkin rustle and a glass tinkle",
+   "peak_frame": 1837
   },
   {
    "kind": "cut",
-   "t": 60.467,
+   "t": 61.733,
    "dur": 0.0,
-   "frame": 1814,
-   "end_frame": 1814,
-   "note": "hard cut to shot 25 (RESTO resto_table): same room tone, nearer to the window"
+   "frame": 1852,
+   "end_frame": 1852,
+   "note": "hard cut to shot 25 (RESTO resto_table, eating from inside): the outdoor wind drops to the room tone"
   }
  ]
 }
