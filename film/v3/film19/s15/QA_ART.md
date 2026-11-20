@@ -52,3 +52,37 @@ Frames: /tmp/claude-0/-home-user-github-commit-quest-v2/a108c86f-deb9-528c-85fa-
 ## Polish notes (not blocking)
 - At f 76-84 (just before the snap) the disc fades in as a hard, flat white circle with almost no halo, and because it is 12 D from the lens it sits IN FRONT of the yard and shrouds. For those few frames it looks like a paper moon stuck on the rigging. Fade the halo in first (halo fade leads the disc by about 6 f), or hold the disc at 0 until the snap peak, so the sun first appears already blooming.
 - A long diagonal sail shadow remains on the lower-left deck at the end. It matches the opening of s16, so continuity holds, but a shorter shadow would support "overhead" a little better.
+
+---
+## Round 9 (director QA-art): PASS, 7.2
+
+Take: take.mkv.partaa+ab -> /tmp/s15r9a.mkv (203 f, first_g 1086). Frames: /tmp/qa19_r9art/s15/ (3 fps `f3_*`, key beats `k_60..k_200`, phone sheet `phone_sheet.png`, phone triptych `ph_key3.png` = idx 86/132/190, punch strip `punch.png` = idx 116-128, sun crop `crop_sun190.png`). Each frame was checked at 720x1280 and at 360x640.
+
+| Criterion | R2 | R9 |
+|---|---|---|
+| Set (rich / detailed) | 8 | 8 |
+| Light / colour | 8 | 7.5 |
+| Composition / phone legibility | 7 | 7 |
+| Acting | 6 | 7 |
+| Key moment (mechanism) | 7 | 7 |
+| Match to refs (R4/R5, §G-I) | 7 | 7 |
+| **Overall** | 7.0 | **7.2** |
+
+### Does the mechanism read on a phone?
+**Yes, with the narration.** At idx 86 a hot white sun sits top-centre (360,125), with both men saluting or shading under it and the quadrant raised. At idx 132 the H4 dial reads clearly as **8:00** at 360x640 (a big white face with black hands). At idx 190 the sun is at the top, the 8:00 watch is at the bottom and the captain is shocked (round eyes, open mouth) in ONE frame. That frame is the thesis frame, and it works. "Sun overhead" plus "noon" in the voice, against a watch plainly at 8, is a clear contrast. Without a "LONDON"/home cue, "home time" still rests on the narration alone. That is acceptable, because the narration says it at exactly that moment.
+
+### Punch-in on the watch
+It is acceptable as punctuation, and gentler than briefed. At the peak (idx 132) the dial is about 130 px wide (not 180), and William's head is about 30 % of frame height including the hat (the face alone is about 20 %). That is under the §G 35 % rule, so there is no breach. The push lasts about 1 s and eases back. It counts as 1 of the 3 allowed close-ups (§I.6).
+
+### Ending: alive or static?
+**Alive.** In idx 175-200 the captain switches to `shocked`, William smiles at the watch and glances up, both sailors haul in the background, and a slow crane/arc moves the sails behind them. The last 2 s are the strongest image in the take.
+
+### Still wrong (polish, not blocking)
+1. **The sun card has a visible square edge.** Around the disc at (310-410, 75-175) there is a faint textured square, best seen in `crop_sun190.png` at idx 86 and 190. The halo/glow plane is a square texture whose corners do not fade to 0 alpha. Fix: give the glow card a radial alpha falloff to 0 at the edge, or use a circular card mesh.
+2. **The sun pops in as a flat white disc with no bloom** (idx ~78-82, see `extra.png` panel 2). It sits IN FRONT of the mast and yard, so for a few frames it looks like a paper moon (the R2 note is still open). Fix: lead the halo fade by about 6 f before the disc, and start the disc at 50 % size/alpha.
+3. **The quadrant is not under the sun.** At the snap the sun is at x 360, but William's quadrant is at x ~620 and the captain's salute at x ~390. The "tilt up" is mild: the deck still fills about 45 % of the frame at idx 86. Fix (optional): shift the sun disc screen-x to about 560 during g 1166-1190 so it is directly above the quadrant, or slide the pair left.
+4. **A diagonal sail shadow is still there before the snap.** In idx 0-80 it covers half the deck, and a dark band stays on the lower left through idx 200. This works as a "before" image, but the "noon shadows" read only around the feet. Fix (optional): key `visible_shadow` off by about g 1150, or shorten the band.
+5. At idx 190 the captain's hat brim touches x≈5. He is not cut, but give him 20-30 px of air (slide the pair right by 15 px).
+
+### Verdict
+**PASS (7.2).** The mechanism now reads on a phone: sun overhead (noon here) against an 8:00 watch (home), and the final frame holds both images with a shocked reaction. Fixes 1-2 are cheap and should go in if s15 is re-rendered for any other reason. They do not block conform.
