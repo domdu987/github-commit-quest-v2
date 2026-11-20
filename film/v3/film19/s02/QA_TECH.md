@@ -212,3 +212,89 @@ Other checks PASS:
 - Shrug two-armed and symmetric with shoulder lift g183-189; shared head turn g173-179; captain's eyes open and brows raised from g172.
 - Usual: nobody cut, faces ~20 % of frame height, heads y ~490-530, contact shadows, nothing floating, no props through faces, no black or frozen frames, nobody still > 1.5 s.
 Verdict: FAIL (camera: g127 jump and g137-148 far-field re-acceleration). All else PASS.
+
+## §E independent override review (round 15)
+Reviewer: independent Opus override reviewer (QA_TEAM §E). I had not seen this shot before. I judged from the frames and my own measurements only.
+Take re-joined from partaa + partab -> /tmp/s02ov.mkv (152 frames, 720x1280, 30 fps). Frames g110-165 extracted at full size to /tmp/qa19_ov/s02/gNNN.png (index = g - 48). Sheets: sheet120_132.jpg, full125_128.jpg, phone124_130.jpg (180x320 per frame), sheet132_164.jpg.
+Methods:
+- Rigid ship features tracked by hand-seeded NCC template chains at full size (px/frame at 720 wide).
+- A per-frame similarity fit (RANSAC) on LK points with the SEA MASKED OUT (teal water, white foam and blue foam lines removed), so foam texture cannot enter it.
+- Regional LK medians.
+- The camera path itself, evaluated from shot.py (_tau_of, _land) outside Blender.
+
+### (a) g127: REAL visible defect (a velocity hitch plus an aim reversal; not foam)
+The sea is masked out of every number below, so foam cannot be the cause.
+Rigid features on the ship, position (x, y) and per-frame displacement d:
+| g | capstan (deck) | d | grate (main deck) | d | lantern (rail) | d | boat block (hull side) | d |
+| 120 | 275.0, 770.0 | - | 435.0, 435.0 | - | 458.0, 572.0 | - | 520.0, 625.0 | - |
+| 121 | 266.5, 780.3 | -8.5,+10.3 | 440.9, 424.3 | +5.9,-10.7 | 465.2, 568.8 | +7.2,-3.2 | 528.7, 624.8 | +8.7,-0.2 |
+| 122 | 258.4, 790.8 | -8.1,+10.5 | 447.6, 413.2 | +6.7,-11.2 | 472.5, 565.9 | +7.3,-2.9 | 538.2, 624.7 | +9.5,-0.1 |
+| 123 | 249.0, 802.9 | -9.4,+12.1 | 455.2, 401.9 | +7.6,-11.2 | 481.1, 562.8 | +8.6,-3.1 | 547.8, 625.0 | +9.6,+0.3 |
+| 124 | 237.4, 815.1 | -11.6,+12.1 | 462.8, 390.8 | +7.6,-11.1 | 489.2, 559.7 | +8.1,-3.0 | 558.7, 625.2 | +10.9,+0.1 |
+| 125 | 225.3, 828.9 | -12.1,+13.9 | 470.0, 379.3 | +7.2,-11.6 | 497.3, 556.4 | +8.2,-3.4 | 571.0, 625.1 | +12.3,-0.1 |
+| 126 | 214.1, 846.9 | -11.2,+18.0 | 477.5, 366.6 | +7.5,-12.7 | 506.6, 551.8 | +9.2,-4.6 | 585.0, 624.4 | +14.0,-0.7 |
+| 127 | 218.2, 877.9 | **+4.1,+31.0** | 481.2, 354.6 | +3.7,-12.0 | 518.1, 546.1 | **+11.5,-5.7** | 603.3, 620.2 | **+18.2,-4.2** |
+| 128 | 215.7, 896.1 | -2.5,+18.1 | 476.7, 351.4 | **-4.5,-3.3** | 523.3, 541.7 | +5.2,-4.3 | 614.2, 614.6 | +11.0,-5.7 |
+| 129 | 211.9, 909.0 | -3.8,+13.0 | 471.5, 351.0 | -5.2,-0.3 | 526.4, 538.7 | +3.1,-3.1 | 622.7, 609.5 | +8.5,-5.1 |
+| 130 | 209.0, 925.0 | -3.0,+16.0 | 467.2, 350.9 | -4.3,-0.1 | 530.0, 535.6 | +3.6,-3.1 | 632.8, 603.2 | +10.0,-6.3 |
+(g131+ capstan and boat-block chains are lost under the sail tip and the frame edge, so they are not used.)
+
+Ship-only similarity fit, per frame (sea masked):
+| g | image rotation (deg/frame) | median point speed (px/frame) | median dx |
+| 124 | +0.56 | 12.4 | +7.7 |
+| 125 | +0.52 | 13.3 | +7.8 |
+| 126 | +0.33 | 13.2 | +8.4 |
+| 127 | -0.33 | 12.5 | +3.9 |
+| 128 | -0.86 | 6.0 | -1.0 |
+| 129 | -0.83 | 4.7 | -1.5 |
+
+Camera path from shot.py, per frame:
+| g | tau step | pitch rate (deg/frame) | yaw rate (deg/frame) |
+| 125 | 1.15 | -0.67 | +0.50 |
+| 126 | 1.28 | -0.54 | +0.33 |
+| 127 | **1.65** | +0.09 | -0.35 |
+| 128 | 1.09 | +0.80 | -0.91 |
+| 129 | 0.87 | +1.04 | -1.03 |
+
+Reading:
+- The hull does not jump in position: no frame moves 2-3x its neighbours.
+- But g127 is a one-frame overshoot followed by a hard brake. Rigid-feature speed is 1.3-1.7x the neighbours at g127. At g128 it drops by 40-75 % (grate dy -12.0 -> -3.3; lantern 12.9 -> 6.8 px). The x direction flips (capstan dx -11.2 -> +4.1 -> -2.5; grate dx +7.5 -> +3.7 -> -4.5).
+- The camera aim reverses in pitch and in yaw within 2 frames, while the warp gives g127 a 1.65-frame time step against 1.28 and 1.09 either side.
+- In the phone-size flip g124-130, the hull's clockwise swing stops and swings back between g126 and g128. It reads as a catch or bump in the middle of the fastest part of the swoop.
+- QA-art's "foam noise" reading does not hold: the effect is on the deck, rail and hull with the sea masked out.
+
+### (b) g137-152: REAL second acceleration; breaks §H.1 "one continuous move with ease"
+Ship-only median point speed (sea masked), px/frame at 720 wide:
+| g | 132 | 134 | 136 | 137 | 138 | 140 | 142 | 144 | 146 | 148 | 150 | 152 | 154 | 156 | 158 | 160 |
+| speed | 6.7 | 4.5 | 4.3 | **4.2** | 4.6 | 5.2 | 5.2 | 5.4 | 6.1 | 7.4 | 7.4 | **7.8** | 7.6 | 7.2 | 7.6 | 6.9 |
+The climb-back from the g137 trough is +86 %, against the director's ~20 % limit.
+
+Regional speed, top frame (y < 35 %: sail, rigging, then horizon/sea), px/frame:
+| g | 135 | 137 | 140 | 142 | 145 | 148 | 150 | 152 | 156 | 160 |
+| speed | **1.6** | 4.3 | 9.9 | 12.1 | 15.5 | 17.6 | 18.4 | **18.9** | 18.1 | 16.6 |
+dx stays at -4 to -6 and dy rises from 0 to +18: one coherent downward slide of the whole top frame, which is the camera tilting up. It is not the head-scratch, which starts at g146.
+Near rail / deck sides (y 35-75 %, outside the cast): 10.6 (g130) -> 4.7 (g141) -> 3.7 (g145) -> 5.1 (g151) -> 6.0-7.2 (g153-160). This also dips, then climbs again.
+
+Camera path from shot.py:
+- Translation speed falls monotonically: |dloc| 1.28 (g132) -> 0.68 (g137) -> 0.41 (g147) -> 0.20 (g160).
+- Angular speed of the aim falls to 0.64 deg/frame at g133, then climbs to 1.0 (g137), 1.37 (g142), 1.52 (g145) and 1.65 (g151). That is **+158 %**, held at 1.4-1.6 deg/frame until g157.
+- Pitch goes from -58.7 deg (g127) to -18.4 deg (g160), with the tilt-up concentrated in g137-160.
+- The round-14 warp measure (6 deck points + 3 horizon points at y = 300 D) under-weights this rotation, which is why the team's numbers read monotone.
+
+Visually (sheet132_164.jpg), g132-138 is a near-hold: the framing barely changes. From g140 the camera visibly tips up: the horizon, sea and rail slide in from the top, and the move peaks again around g150-156. On a phone this reads as "swoop, settle, then a second tilt-up move", not one swoop with a breath. The trough (4.2) drops below the speed the landing starts from at g160 (6.9), so this cannot be an ease-out.
+
+### Decision: UPHOLD the QA-tech FAIL. No override.
+- (a) g127: REAL visible defect.
+- (b) g137-152: REAL second acceleration that breaks §H.1.
+- The landing g160-199 was not re-judged.
+
+Root cause (one cause for both points): the aim pitches DOWN to -58.8 deg at g126 and then back UP. The down-to-up reversal is squeezed into 2 frames at g127, amplified by a time-warp kink (tau step 1.65 against 1.28 and 1.09). Most of the following up-pitch is then left until after g137, which produces the second hump.
+
+Minimal fix (camera only, g112-159; leave g >= 160 exactly as it is):
+1. Remove the g127 kink by smoothing the _TAU2 increments over g120-134 so the per-frame tau step changes smoothly, with no 1.65 spike.
+2. Make the aim's pitch and yaw rates cross zero over at least 8 frames, not 2. The cheapest way is to actually switch on the Gaussian time smoothing in cam_rest: `w` is hard-coded to 0.0, so the sigma-3 smoothing its docstring describes never runs. Blend it in over g112-128 and fade it out before g156, so g >= 160 stays bit-identical.
+3. Re-time g128-159 so that the TOTAL image speed of the ship falls monotonically from the g125-127 peak (~12.5 px/frame at 720 wide) to the g160 value (~6.9). Total means rotation included: the top-frame sails/rigging and the rail, not only deck and far-horizon points. Two conditions must hold:
+   - no trough below ~7 between g128 and g160;
+   - no rise of more than 20 % after any local minimum.
+   In practice: start the tilt-up right after g127 at about 1.0 deg/frame and keep the angular rate steady or falling (about 1.3-1.4 deg/frame into g160), instead of 0.64 deg/frame at g133 climbing to 1.65 deg/frame at g151.
+4. Re-measure with the sea masked out (ship-point similarity fit plus top-band and rail medians).
