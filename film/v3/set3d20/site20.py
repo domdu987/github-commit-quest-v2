@@ -20,7 +20,10 @@ LIGHTS = dict(
 CAMS_M = dict(
     site_wide=dict(loc=(-44.0, -178.0, 10.0), look=(4.0, -30.0, 8.0), lens=22, shift=-0.2),
     site_wide_end=dict(loc=(-43.5, -175.0, 8.0), look=(2.0, -30.0, 8.0), lens=22, shift=-0.28),
-    site_table=dict(loc=(45.4, -76.6, 1.5), look=(50.0, -72.0, 1.9), lens=22),
+    site_table=dict(loc=(31.6, -88.2, 1.5), look=(34.4, -81.0, 1.9), lens=22),
+    site_bigzoom_start=dict(loc=(0.0, -310.0, 235.0), look=(0.0, -90.0, 0.0), lens=22, shift=0.37),
+    site_bigzoom_mid=dict(loc=(14.0, -195.0, 75.0), look=(34.0, -84.0, 4.0), lens=22, shift=0.08),
+    site_bigzoom_land=dict(loc=(32.7, -86.4, 2.0), look=(35.0, -80.6, 1.35), lens=40),
     site_leg_low=dict(loc=(-60.0, -82.0, 1.4), look=(-52.0, -58.0, 14.0), lens=22, shift=-0.2),
     site_fence=dict(loc=(-20.0, -109.5, 1.5), look=(-2.0, -98.0, 2.5), lens=22),
     site_girders=dict(loc=(-66.0, -45.0, 1.3), look=(-66.0, -25.0, 2.4), lens=22, shift=0.1),
@@ -31,18 +34,19 @@ CAMS_M = dict(
     site_rise_snap3=dict(loc=(-40.0, -290.0, 75.0), look=(0.0, 0.0, 150.0), lens=22),
 )
 PRESETS = dict(site_wide=dict(stage=0), site_table=dict(stage=0), site_leg_low=dict(stage=0), site_fence=dict(stage=0), site_girders=dict(stage=1), site_rivet=dict(stage=1),
-               site_rise=dict(stage=1), site_rise_snap1=dict(stage=1), site_rise_snap2=dict(stage=2), site_rise_snap3=dict(stage=3))
-EXTRA_CAMS = ['site_wide_end', 'site_rise_snap1', 'site_rise_snap2', 'site_rise_snap3']
+               site_rise=dict(stage=1), site_rise_snap1=dict(stage=1), site_rise_snap2=dict(stage=2), site_rise_snap3=dict(stage=3),
+               site_bigzoom_start=dict(stage=0), site_bigzoom_mid=dict(stage=0), site_bigzoom_land=dict(stage=0))
+EXTRA_CAMS = ['site_wide_end', 'site_rise_snap1', 'site_rise_snap2', 'site_rise_snap3', 'site_bigzoom_mid', 'site_bigzoom_land']
 
 def cam_D(c):
     d = dict(loc=W(c['loc']), look_at=W(c['look']), lens=c.get('lens', 22))
     if c.get('shift'): d['shift'] = c['shift']
     return d
 
-SCATTER = dict(site_wide=(15.0, 60.0, 34), site_rise=(30.0, 150.0, 36), site_rise_snap1=(30.0, 150.0, 36), site_rise_snap2=(40.0, 190.0, 34), site_rise_snap3=(60.0, 260.0, 30), site_table=(7.0, 26.0, 14), site_leg_low=(7.0, 26.0, 10), site_fence=(7.0, 30.0, 12), site_girders=(7.0, 30.0, 10), site_rivet=(5.0, 12.0, 3))
+SCATTER = dict(site_bigzoom_start=(10.0, 60.0, 0), site_bigzoom_mid=(10.0, 60.0, 0), site_bigzoom_land=(10.0, 60.0, 0), site_wide=(15.0, 60.0, 34), site_rise=(30.0, 150.0, 36), site_rise_snap1=(30.0, 150.0, 36), site_rise_snap2=(40.0, 190.0, 34), site_rise_snap3=(60.0, 260.0, 30), site_table=(7.0, 26.0, 14), site_leg_low=(7.0, 26.0, 10), site_fence=(7.0, 30.0, 12), site_girders=(7.0, 30.0, 10), site_rivet=(5.0, 12.0, 3))
 APRON = dict(site_wide=(13.0, 12.0, 0.6), site_wide_end=(9.0, 9.0, 0.6), site_table=(3.5, 5.0, 0.6), site_leg_low=(3.5, 5.0, 0.6), site_fence=(3.5, 5.0, 0.6), site_girders=(3.5, 5.0, 0.6), site_rivet=(3.0, 5.0, 0.5),
              site_rise=(45.0, 30.0, 0.55), site_rise_snap1=(45.0, 30.0, 0.55), site_rise_snap2=(60.0, 45.0, 0.55), site_rise_snap3=(80.0, 60.0, 0.55))
-PLAN_TABLE = (49.0, -73.4)
+PLAN_TABLE = (34.0, -82.0)
 LEG_ZS = (5.5, 9.5, 13.5); LEG_DX = (-1.8, 1.6, -0.4)
 GIRDER_CARRY = ((-68.2, -37.0), (-63.8, -37.0))
 def leg_pt(z, dx=0.0):
@@ -109,7 +113,9 @@ def build(preset, light=None):
     assert preset in PRESETS, preset
     light = light or 'DAY'; P = dict(LIGHTS[light])
     M = C.reset('site', preset, light, spp=8, dbounce=1 if preset in ('site_table', 'site_leg_low', 'site_fence', 'site_girders', 'site_rivet') else 0); R = C.root(); rr = rnd(5)
-    M['bluep'] = mat('bluep', '#4a6ea8', '#5a7eb8', 6, contrast=0.8)
+    M['hwall'] = C.mat_windows('hwall_s', '#ecd9b0', '#dcc698', '#8c94b4', '#ffc070', 0.0, 0.0); M['hwallt'] = C.mat_windows('hwallt_s', '#e6d0a2', '#d6bc8a', '#8c94b4', '#ffc070', 0.0, 0.3, (6.0, 8.0), (0.3, 0.6), 2.0)
+    M['tablewood'] = mat('tablewood', '#dcb47c', '#ecc890', 6, aniso=(0.2, 1, 1), contrast=0.6)
+    M['bluep'] = mat('plans', '#f2e8cc', '#e6dab8', 6, contrast=0.5); M['plink'] = mat('plink', '#5a4030', '#6a5038', 3)
     A = dict(preset=preset, light=light, loc='site', cams={}, marks=STATE['marks'], staging=STATE['staging'], hooks={}); STATE['A'] = A
     for n, c in CAMS_M.items(): A['cams'][n] = cam_D(c)
     _marks(A)
@@ -118,7 +124,7 @@ def build(preset, light=None):
     ap = APRON.get(preset)
     if ap:
         cl_, fl_, rl_, u_ = K.cam_basis(cam0); fh0 = Vector((fl_.x, fl_.y, 0)); fh0.normalize(); ac = Vector((cl_.x, cl_.y, 0)) + fh0 * ap[0]; ap = (ac.x, ac.y, ap[1], ap[2], (0.6, 0.47, 0.37))
-    K.ground_plane(0.0, ('#c98a54', '#b07444', '#8a5a3a'), 3000, 1.0, (0, 600), apron=ap)
+    K.ground_plane(0.0, ('#c98a54', '#b07444', '#8a5a3a'), 3000, 1.0, (0, 600), apron=ap, outer=((0.0, 0.0, 230.0, 330.0, '#9a9382') if preset.startswith('site_bigzoom') else None))
     K.clouds(dict(cloud=('#fff0dc', '#c8a8c8', '#e8c8d0'), cloud_k=1.0, ncloud=11, cloud_z=(70, 250), cloud_scale=0.9, cloud_seed=4))
     # ---- tower stages (groups) + creepers
     stages = K.build_tower_stages(M, thick=2.0, lamps=False, gal=M['galwall']); STATE['stage_objs'] = stages
@@ -249,16 +255,29 @@ def build(preset, light=None):
     tx_, ty_ = PLAN_TABLE
     def plan_table(mb, M_, c):
         x, y, z0 = c
-        mb.box(M_['plank'], (x, y, 0.88), (2.8, 1.2, 0.07))
+        mb.box(M_['tablewood'], (x, y, 0.88), (2.8, 1.2, 0.08))
         for sx_ in (-1.2, 1.2):
             for sy_ in (-0.45, 0.45): mb.rod(M_['timberdk'], (x + sx_, y + sy_, 0.0), (x + sx_ * 0.9, y + sy_ * 0.6, 0.86), 0.05, 0.045, 5)
-        mb.box(M_['bluep'], (x + 0.1, y, 0.945), (1.7, 0.95, 0.07), rz=0.04)
-        for i in range(9): mb.box(M_['canvasw'], (x + 0.1, y - 0.38 + i * 0.095, 0.99), (1.3 - 0.07 * (i % 3), 0.03, 0.05), rz=0.04)
-        for i in range(4): mb.box(M_['canvasw'], (x - 0.4 + i * 0.35, y + 0.05, 0.99), (0.03, 0.5, 0.05), rz=0.04)
-        mb.cyl(M_['canvasw'], (x - 1.0, y + 0.3, 0.97), 0.07, 0.9, 'y', 10); mb.cyl(M_['bluep'], (x - 1.0, y + 0.76, 0.97), 0.075, 0.03, 'y', 10); mb.cyl(M_['bluep'], (x - 1.0, y - 0.16, 0.97), 0.075, 0.03, 'y', 10)
-        mb.box(M_['timber'], (x + 0.3, y - 0.5, 0.99), (1.4, 0.05, 0.05), rz=0.04); mb.cyl(M_['dark'], (x + 1.05, y + 0.35, 0.96), 0.045, 0.07, 'z', 8)
+        mb.box(M_['bluep'], (x + 0.1, y, 0.95), (1.9, 0.95, 0.07), rz=0.04)
+        for i in range(9): mb.box(M_['plink'], (x + 0.1, y - 0.38 + i * 0.095, 0.99), (1.3 - 0.07 * (i % 3), 0.03, 0.05), rz=0.04)
+        for i in range(4): mb.box(M_['plink'], (x - 0.4 + i * 0.35, y + 0.05, 0.99), (0.03, 0.5, 0.05), rz=0.04)
+        mb.cyl(M_['bluep'], (x - 1.0, y + 0.3, 0.97), 0.08, 0.9, 'y', 10); mb.cyl(M_['plink'], (x - 1.0, y + 0.76, 0.97), 0.085, 0.04, 'y', 10); mb.cyl(M_['plink'], (x - 1.0, y - 0.16, 0.97), 0.085, 0.04, 'y', 10)
+        mb.cyl(M_['dark'], (x + 1.05, y + 0.35, 0.96), 0.045, 0.07, 'z', 8)
         mb.box(M_['plank'], (x + 0.4, y + 1.05, 0.5), (0.5, 0.5, 0.05)); [mb.rod(M_['timberdk'], (x + 0.4 + a_, y + 1.05 + b_, 0.0), (x + 0.4 + a_, y + 1.05 + b_, 0.5), 0.03, 0.03, 4) for a_ in (-0.2, 0.2) for b_ in (-0.2, 0.2)]
     mbp = bands[0]; plan_table(mbp, M, (tx_, ty_, 0.0))
+    # warm table lantern (small, on the table, with a soft glow) + a cream canvas awning with a red pennant NE of the table: findable from the extreme wide
+    mbp.cyl(M['brass'], (tx_ + 1.0, ty_ - 0.3, 0.99), 0.1, 0.05, 'z', 10); mbp.cyl(M['glasswine'], (tx_ + 1.0, ty_ - 0.3, 1.12), 0.08, 0.22, 'z', 10); mbp.ell(mat_emit('lantern', '#ffcf80', 14.0), (tx_ + 1.0, ty_ - 0.3, 1.1), (0.06, 0.06, 0.1), (8, 6))
+    lights.append((Vector((tx_ + 1.0, ty_ - 0.3, 1.2)), (1.0, 0.7, 0.35), 45))
+    tx2, ty2 = tx_ + 3.6, ty_ + 2.6; cv_ = M['canvasw']
+    for ox, oy in ((-2.0, -1.6), (2.0, -1.6), (-2.0, 1.6), (2.0, 1.6)): mbn.rod(M['timber'], (tx2 + ox, ty2 + oy, 0.0), (tx2 + ox, ty2 + oy, 3.4), 0.07, 0.06, 5)
+    mbn.quad(cv_, [(tx2 - 2.3, ty2 - 1.9, 3.3), (tx2 + 2.3, ty2 - 1.9, 3.3), (tx2 + 2.3, ty2, 4.0), (tx2 - 2.3, ty2, 4.0)][::-1]); mbn.quad(cv_, [(tx2 - 2.3, ty2, 4.0), (tx2 + 2.3, ty2, 4.0), (tx2 + 2.3, ty2 + 1.9, 3.3), (tx2 - 2.3, ty2 + 1.9, 3.3)][::-1])
+    mbn.quad(cv_, [(tx2 - 2.3, ty2 - 1.9, 3.3), (tx2 - 2.3, ty2, 4.0), (tx2 - 2.3, ty2 + 1.9, 3.3)]); mbn.quad(cv_, [(tx2 + 2.3, ty2 - 1.9, 3.3), (tx2 + 2.3, ty2 + 1.9, 3.3), (tx2 + 2.3, ty2, 4.0)])
+    mbn.box(M['crimson'], (tx2, ty2 - 1.9, 3.3), (4.7, 0.12, 0.35)); mbn.rod(M['timber'], (tx2, ty2, 4.0), (tx2, ty2, 6.0), 0.05, 0.04, 5)
+    mbn.rod(M['white'], (tx2 + 2.4, ty2 - 1.6, 0.0), (tx2 + 2.4, ty2 - 1.6, 15.0), 0.1, 0.07, 6)
+    for i_, cm_ in enumerate(('flag_b', 'flag_w', 'flag_r')): mbn.quad(M[cm_], [(tx2 + 2.4 + i_ * 1.4, ty2 - 1.6, 14.8), (tx2 + 3.8 + i_ * 1.4, ty2 - 1.6, 14.8), (tx2 + 3.8 + i_ * 1.4, ty2 - 1.6, 11.6), (tx2 + 2.4 + i_ * 1.4, ty2 - 1.6, 11.6)]); mbn.quad(M[cm_], [(tx2 + 2.4 + i_ * 1.4, ty2 - 1.6, 11.6), (tx2 + 3.8 + i_ * 1.4, ty2 - 1.6, 11.6), (tx2 + 3.8 + i_ * 1.4, ty2 - 1.6, 14.8), (tx2 + 2.4 + i_ * 1.4, ty2 - 1.6, 14.8)])
+    if preset.startswith('site_bigzoom'):
+        gm = MB('beacon', R); gm.ell(C.mat_glow('beacon_g', '#ffc878', 3.0, 0.28), (tx_ + 1.0, ty_ - 0.3, 1.4), (4.0, 4.0, 4.0), (14, 10)); gm.finish(shadow=False)
+    mbn.quad(M['flag_r'], [(tx2, ty2, 5.9), (tx2 + 1.2, ty2, 5.6), (tx2, ty2, 5.2)]); mbn.quad(M['flag_r'], [(tx2, ty2, 5.2), (tx2 + 1.2, ty2, 5.6), (tx2, ty2, 5.9)])
     # shot 5: cantilever work platforms on the OUTER (sunlit) -y face of the front-left leg, with rails and braces: riveters stand on them
     for (zz_, dx_) in zip(LEG_ZS, LEG_DX):
         px_, py_, pz_ = leg_pt(zz_, dx_)
@@ -274,16 +293,72 @@ def build(preset, light=None):
     for (x, y) in ((-69.5, -42.0), (-62.5, -43.0)): put(K.coil, (x, y), (x, y, 0), 0.7, 0.08, 4)
     put(K.wheelbarrow, (-59.5, -37.0), (-59.5, -37.0, 0), 2.6, 'glow'); put(K.bucket, (-72.0, -37.5), (-72.0, -37.5, 0), True, 1.3)
     for j in range(4): put(K.keg, (-72.5, -42.5), (-72.5 + (j % 2) * 0.85, -42.5 + (j // 2) * 0.85, 0), 0.95, 0.36, 'timberdk' if j % 2 else 'timber')
+    if preset.startswith('site_bigzoom'):
+        # BIGZOOM 1 yard: big readable stacks, carts with horses, sheds, forges with smoke, kegs and worker standees, plank roads; true size near the plan table, oversize with distance (reads from 300 m)
+        rb = rnd(88); tabc = Vector((PLAN_TABLE[0], PLAN_TABLE[1], 0.0)); pb = []
+        def sc_(x, y): return min(3.0, 1.0 + max(0.0, (Vector((x, y, 0)) - tabc).length - 16.0) / 50.0)
+        def freeb(x, y, r_):
+            if any(abs(x - sx_ * 57.6) < 14 and abs(y - sy_ * 57.6) < 14 for sx_, sy_ in K.LEGS): return False
+            if (Vector((x, y, 0)) - tabc).length < 10.0: return False
+            return all((x - a_) ** 2 + (y - b_) ** 2 > (r_ + c_) ** 2 for a_, b_, c_ in pb)
+        def spot(r_, xr=(-125, 125), yr=(-215, -70)):
+            for _ in range(80):
+                x = rb.uniform(*xr); y = rb.uniform(*yr)
+                if freeb(x, y, r_): pb.append((x, y, r_)); return x, y
+            return None
+        for i in range(9):
+            p = spot(9.0)
+            if p: x, y = p; sc2 = sc_(x, y); put(K.girder_pile, (x, y), (x, y, 0), rb.choice([0.0, 1.57, 0.15]), 8.0, 5, 4, rr, ink=False, s=sc2)
+        for i in range(7):
+            p = spot(8.0)
+            if not p: continue
+            x, y = p; sc2 = sc_(x, y); yaw = rb.uniform(0, 6.28); cp = Vector((x, y, 0)); mbc = band((x, y, 0), limits)
+            mbc.push(Matrix.Translation(cp) @ Euler((0, 0, yaw)).to_matrix().to_4x4() @ Matrix.Scale(sc2, 4))
+            mbc.box(M['timber'], (0, 0, 1.0), (3.4, 1.5, 0.12))
+            for s_ in (-1, 1): mbc.box(M['timber'], (0, s_ * 0.74, 1.3), (3.4, 0.08, 0.5))
+            K.wheel(mbc, M, (0.2, 0.9, 0.7), 0.7); K.wheel(mbc, M, (0.2, -0.9, 0.7), 0.7); mbc.rod(M['timberdk'], (0.2, 0.9, 0.7), (0.2, -0.9, 0.7), 0.05, 0.05, 6)
+            for k in range(3): mbc.box(M['redlead'], (0, (k - 1) * 0.3, 1.2), (3.2, 0.2, 0.08)); mbc.box(M['redlead'], (0, (k - 1) * 0.3, 1.33), (3.2, 0.08, 0.26))
+            mbc.rod(M['timberdk'], (1.7, 0.4, 1.0), (4.4, 0.4, 0.9), 0.05, 0.04, 6); mbc.rod(M['timberdk'], (1.7, -0.4, 1.0), (4.4, -0.4, 0.9), 0.05, 0.04, 6)
+            mbc.pop(); K.horse_card(mbc, M, (cp.x + math.cos(yaw) * 5.6 * sc2, cp.y + math.sin(yaw) * 5.6 * sc2, 0.0), yaw, sc2)
+        for i in range(7):
+            p = spot(7.0)
+            if p: x, y = p; put(K.shed, (x, y), (x, y, 0), rb.uniform(7, 10), rb.uniform(4.5, 5.5), rb.uniform(3.6, 4.6), rb.choice([0.0, 0.2, -0.2, 1.57]), s=min(2.2, sc_(x, y)))
+        for i in range(9):
+            p = spot(5.0)
+            if not p: continue
+            x, y = p; sc2 = min(2.4, sc_(x, y)); K.forge(band((x, y, 0), limits), M, (x, y, 0), rb.uniform(0, 6.28), lights, 1.7 * sc2)
+            mbn.push(Matrix.Translation((x, y, 0)) @ Matrix.Scale(sc2, 4) @ Matrix.Translation((-x, -y, 0))); K.smoke_puffs(mbn, M, (x - 0.2, y + 1.0, 6.4), 5, 0.6); mbn.pop()
+        for i in range(12):
+            p = spot(3.0)
+            if p:
+                x, y = p; sc2 = sc_(x, y)
+                for j in range(rb.randint(3, 6)): put(K.keg, (x, y), (x + (j % 3) * 0.85 - 0.4, y + (j // 3) * 0.85, 0), 0.95, 0.36, 'timberdk' if j % 2 else 'timber', s=sc2)
+        for i in range(9):
+            p = spot(2.5)
+            if p: x, y = p; sc2 = sc_(x, y); put(K.sack, (x, y), (x, y, 0), rb.uniform(0, 3), 1.15, s=sc2); put(K.coil, (x + 1.5, y), (x + 1.5, y, 0), 0.65, 0.08, 4, s=sc2)
+        cols_ = ['wk1', 'wk2', 'wk3', 'wk4', 'wk5']
+        for i in range(30):
+            p = spot(1.5)
+            if p: x, y = p; sc2 = sc_(x, y); K.person(mbn, M, (x, y, 0), rb.uniform(-0.6, 0.6), 'worker', cols_[i % 5], 1.7 * sc2)
+        for x0_ in (-20.0, 76.0):                                   # plank roads (thick planks) down the yard
+            for i in range(36): mbn.box(M['plank'], (x0_ + 0.8 * math.sin(i * 0.4), -205.0 + i * 4.0, 0.09), (3.4, 4.1, 0.18), rz=0.02 * math.sin(i))
+        for i in range(30): mbn.box(M['plank'], (-120.0 + i * 8.0, -118.0, 0.09), (8.1, 3.0, 0.18))
     # camera foreground dressing (1-2 D from the lens, in shade)
     fgmb = MB('fg', R); fg_pts = K.fg_dress(fgmb, C.ShadeMats(M), CAMS_M[preset], FG_ITEMS.get(preset, [])); fgmb.finish(hull=0.004)
     STATE['fg_pts'] = fg_pts
     for mbx in bands:
-        t = 0.00384 * {id(bands[0]): 10.0, id(bands[1]): 28.0, id(bands[2]): 80.0}[id(mbx)]; mbx.finish(hull=t)
+        t = 0.00384 * {id(bands[0]): 10.0, id(bands[1]): 28.0, id(bands[2]): 80.0}[id(mbx)]; mbx.finish(hull=(None if mbx is bands[2] else t))
     mbn.finish()
     # ---- Paris: Seine, bridge, Trocadero, Haussmann ring, side blocks (static)
     mb = MB('city', R); Sy = SEINE
+    M['water'] = mat('water_s', '#3f7cc4', '#6aa0dc', 0.12, rough=0.7, emit='#3a68b0', emit_k=0.45, contrast=0.8)
     K.seine(mb, M, 0.0, Sy[0], Sy[1], 22.0); K.bridge(mb, M, 0.0, Sy[2], Sy[0], Sy[1] + 10); K.trocadero(mb, M, (Sy[2] + 20, Sy[1] + 120, 0.0), 0.0, 1.4)
-    mb.box(M['stone'], (0, Sy[0] - 12, 0.0), (3000, 3, 2.0))
+    mb.box(M['stone'], (0, Sy[0] - 12, 0.0), (3000, 3, 2.0)); mb.box(M['stone'], (0, Sy[1] + 12, 0.0), (3000, 3, 2.0))
+    K.bridge(mb, M, 0.0, -150.0, Sy[0], Sy[1] + 10, 22.0)
+    gl = mat_emit('glintw', '#d8ecff', 1.4); rg_ = rnd(41)
+    for i in range(160): mb.box(gl, (rg_.uniform(-400, 400), rg_.uniform(Sy[0] + 3, Sy[1] - 3), 0.05), (rg_.uniform(5, 12), 1.4, 0.12))
+    for k_, (bx, by) in enumerate(((-90, 222), (-40, 236), (70, 214), (130, 232), (-200, 226), (210, 220))):
+        mb.box(M['timberdk'], (bx, by, 0.6), (11, 3.0, 1.2), rz=0.1 * k_); mb.box(M['white'], (bx, by, 2.0), (5, 2.4, 1.6), rz=0.1 * k_)
     K.city_ring(mb, M, rnd(7), 0.0, 230.0, 900.0, [(-1000, 1000, Sy[0] - 30, Sy[1] + 400)], 36.0, 300.0)
     for i in range(-3, 4):
         for sgn in (-1, 1): K.haus(mb, M, sgn * (150.0 + 18 * (i % 2)), -60 + 33 * (i + 3) + 10, rr.uniform(22, 28), 26, rr.choice([18.0, 21.0, 24.0]), rr, True)
@@ -291,6 +366,7 @@ def build(preset, light=None):
     # ---- trees along the Seine quay (plane trees) for scale/life
     mb = MB('trees', R)
     for i in range(14): K.plane_tree(mb, M, (-180 + i * 28, Sy[0] - 24, 0), 1.4, 20 + i)
+    for i in range(26): K.plane_tree(mb, M, (-360 + i * 28, Sy[1] + 16, 0), 1.5, 80 + i)
     mb.finish()
     # ---- lights: forges (warm point lights)
     for i, (p, c_, e) in enumerate(lights): C.lamp('forge%d' % i, W(p), c_, e, 0.25, group='lamp')
@@ -356,7 +432,7 @@ def _m(x, y, z=0.0): return (x * SC, y * SC, z * SC)
 def _marks(A):
     m = A['marks']
     lp = [leg_pt(z, dx) for z, dx in zip(LEG_ZS, LEG_DX)]
-    m.update(eiffel_table=_m(50.7, -71.3), plan_table=_m(PLAN_TABLE[0], PLAN_TABLE[1]), eiffel_plan_a=_m(PLAN_TABLE[0], PLAN_TABLE[1], 0.95), eiffel_fence=_m(-1.5, -96.5), eiffel_leg=_m(-58.5, -70.5),
+    m.update(eiffel_table=_m(35.3, -80.4), plan_table=_m(PLAN_TABLE[0], PLAN_TABLE[1]), eiffel_plan_a=_m(PLAN_TABLE[0], PLAN_TABLE[1], 0.95), eiffel_fence=_m(-1.5, -96.5), eiffel_leg=_m(-58.5, -70.5),
              lady_fence=_m(-8.0, -103.6), gent_fence=_m(-4.6, -103.2), child_fence=_m(-1.6, -103.0), gent2_fence=_m(1.8, -103.4),
              riveter_tongs=_m(-48.5, -63.6, 16.0), riveter_catch=_m(-45.3, -64.8, 16.0), riveter_hammer=_m(-46.8, -61.3, 16.0), forge_deck=_m(-44.6, -62.6, 16.0),
              worker_a=_m(-44.9, -161.4), worker_b=_m(-41.0, -160.6), worker_c=_m(-37.9, -164.2), worker_d=_m(-34.0, -161.8), worker_e=_m(-44.3, -157.9), worker_g=_m(-32.9, -166.4),
@@ -369,6 +445,7 @@ def _staging(A):
     S = A['staging']
     S['site_wide'] = [('riveter_tongs', 'worker_a', dict(pose=dict(expr='working'))), ('riveter_hammer', 'worker_b'), ('riveter_forge', 'worker_c'), ('riveter_tongs', 'worker_d'), ('riveter_hammer', 'worker_e'), ('riveter_forge', 'worker_g')]
     S['site_wide_end'] = S['site_wide']
+    for n_ in ('site_bigzoom_start', 'site_bigzoom_mid', 'site_bigzoom_land'): S[n_] = [('eiffel', 'eiffel_table', dict(pose=dict(expr='proud', yaw=0.0)))]
     S['site_table'] = [('eiffel', 'eiffel_table', dict(pose=dict(expr='proud', yaw=-0.5)))]
     S['site_leg_low'] = [('eiffel', 'eiffel_leg', dict(pose=dict(expr='proud', arm_r='up'))), ('riveter_hammer', 'leg_a'), ('riveter_tongs', 'leg_b'), ('riveter_forge', 'leg_c')]
     S['site_fence'] = [('eiffel', 'eiffel_fence', dict(pose=dict(expr='proud', yaw=-0.3))), ('lady20', 'lady_fence'), ('gent20', 'gent_fence'), ('child20', 'child_fence')]
