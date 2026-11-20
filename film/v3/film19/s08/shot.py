@@ -26,16 +26,18 @@ H_IN, H_OUT = 9, 9
 G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1              # 536 .. 669
 GS = list(range(G_FIRST, G_LAST + 1))
 G_QUOTE = C.cap_g("นาฬิกาเนี่ยนะ")                        # 637
+G_MOUTH0 = 623                                           # the grin / open mouth starts no earlier than g 619 (window 20.80 s = g 622 +-4)
 G_LAUGH0 = C.cap_g("หัวเราะลั่น") - 9                      # laugh starts building before the caption
 SNAP = (G_QUOTE - 5, G_QUOTE + 17)
 BLINKS = [560, 584]
 
+YAW0 = float(os.environ.get("YAW0", "1.35"))
 LIGHT, PRESET, FINAL_SPP, PPD = "DAY", "hall_low", 8, 320
 
 SUBJ = Vector((-3.24, 3.24, 2.62))                        # chest/neck of the mocker at his mark
 CAM_LOC0 = (-3.30, -1.85, 1.15)
-CAM = C.CamPath(CAM_LOC0, tuple(SUBJ), G_FIRST, G_LAST, push=0.10, slide_px=-40.0, rise_px=0.0, arc_deg_s=9.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.35, peak=1.7, shift=(0.55, 0.20))])
+CAM = C.CamPath(CAM_LOC0, tuple(SUBJ), G_FIRST, G_LAST, push=0.08, slide_px=-45.0, rise_px=0.0, arc_deg_s=10.0, decay=0.15,
+                snaps=[dict(g=SNAP, k=1.3, peak=2.2, shift=(0.95, -0.20))])
 
 ST = cast19.STORY19
 IDLE, LAUGH, POINT = ST["astro_idle"][1], ST["astro_belly_laugh"][1], ST["astro_mock_point"][1]
@@ -43,9 +45,9 @@ LR = lambda a, b, u: puppet.lerp_pose("astro19", a, b, u)
 
 
 def pose_of(g):
-    turn = u_of(g, G_FIRST, G0 + 55, "sine")
+    turn = u_of(g, G_FIRST + 12, G0 + 52, "sine")
     smug = dict(IDLE)
-    smug.update(yaw=lerp(0.95, 0.12, turn), pitch=-0.05, head_roll=2.0 * math.sin(g * 0.15), expr="smug", mouth="flat")
+    smug.update(yaw=lerp(YAW0, 0.12, turn), pitch=-0.05, head_roll=2.0 * math.sin(g * 0.15), expr="smug", mouth="flat")
     if g < G_LAUGH0:
         shake = u_of(g, G_LAUGH0 - 30, G_LAUGH0)               # shoulders begin to shake
         p = dict(smug)
@@ -55,22 +57,25 @@ def pose_of(g):
         base = LR(smug, LAUGH, u) if u < 1 else dict(LAUGH)
         base["yaw"] = lerp(smug["yaw"], 0.12, u)
         p = cast19.laugh_cycle(((g - G_LAUGH0) % 30) / 30.0, base)
-        p["expr"] = "laughing" if u >= 0.5 else "smug"
+        p["expr"] = "laughing" if (u >= 0.5 and g >= G_MOUTH0) else "smug"
+        if g < G_MOUTH0:
+            p["mouth"] = "flat"
         if g >= G_QUOTE + 3:                                    # the quote: he straightens up and points
             v = u_of(g, G_QUOTE + 3, G_QUOTE + 13, "sine")
             tgt = dict(POINT, yaw=0.30)
             q = LR(p, tgt, v)
             q["squash"] = (1.02 + 0.015 * math.sin(g * 0.9), 0.98 - 0.015 * math.sin(g * 0.9))
-            q["expr"] = "laughing" if v < 0.5 else "smug"
+            q["expr"] = "smug"
             p = q
     # mouth: still outside the quote window; inside, driven
-    if C.mouth_open_at(g):
+    if C.mouth_open_at(g) and g >= G_MOUTH0:
         if G_QUOTE - 2 > g:                                     # "ฮ่า ฮ่า ฮ่า!" belly laugh: mouth driven, wide
             p["mouth"] = cast19.talk_mouth(g, 1.0, seed=3, hold=3) if g % 10 < 5 else "talk_b"
         else:
             p["mouth"] = cast19.talk_mouth(g, 1.0)
     else:
         p.pop("mouth", None) if p.get("expr") == "laughing" else p.__setitem__("mouth", "flat")
+    p["gaze"] = (lerp(0.9, 0.0, u_of(g, G0 + 20, G0 + 55, "sine")), 0.0)
     p["blink"] = blink(g, BLINKS)
     p["t"] = g / 30.0
     return p
@@ -80,7 +85,7 @@ def hop_z(g):
     if g < G_LAUGH0 + 6 or g > G_QUOTE + 3:
         return 0.0
     ph = (g - G_LAUGH0) / 30.0 * 3.0
-    return 0.03 * (1.0 + math.sin(2 * math.pi * ph - math.pi / 2))      # 0..0.06 D at 3 Hz
+    return 0.045 * (1.0 + math.sin(2 * math.pi * ph - math.pi / 2))      # 0..0.06 D at 3 Hz
 
 
 class Take(C.Take):
@@ -111,7 +116,7 @@ class Take(C.Take):
         v = look - loc
         p = pose_of(g)
         return dict(g=g, cam=[round(c, 3) for c in loc], pitch=round(math.degrees(math.atan2(v.z, math.hypot(v.x, v.y))), 1),
-                    heads=C.head_report(self, f), mouth=str(p.get("mouth")), in_window=C.mouth_open_at(g), dof=self.cam.data.dof.use_dof,
+                    heads=C.head_report(self, f), wig_bottom=[round(h["y"] + 1.17 * h["w"]) for h in C.head_report(self, f).values()], mouth=str(p.get("mouth")), in_window=C.mouth_open_at(g), dof=self.cam.data.dof.use_dof,
                     caption_shade=bool(C.bpy.data.objects.get("caption_shade")))
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):

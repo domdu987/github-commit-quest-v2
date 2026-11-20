@@ -12,7 +12,7 @@
 | 603-636 | BELLY LAUGH: cast19.laugh_cycle (3 Hz squash, head-roll rocking, tears) plus a 0.06 D hop of the feet at 3 Hz. Fixed laughing mouth until the window opens. |
 | 622-669 | lip-sync window (20.80 s -0.15 = g 622): "ฮ่า ฮ่า ฮ่า!" (driven laugh mouth), then "นาฬิกาเนี่ยนะ!" from g 637 (caption 21.14 s): the mouth is driven with cast19.talk_mouth. |
 | 640-669 | he straightens and mock-points (astro_mock_point). |
-Camera: low, moving on frame 0; drift push 10 %/s with a slide and a slow orbit (parallax of the bookcases, chair-back FG), one SNAP x1.35 (g 632-651, peak 1.7) with a pan on "นาฬิกาเนี่ยนะ" (g 637).
+Camera: low, moving on frame 0; drift push 8 %/s with a slide and a 10 deg/s orbit (parallax of the bookcases, chair-back FG), one SNAP x1.3 (g 632-651, peak 2.2) with a pan on "นาฬิกาเนี่ยนะ" (g 637).
 
 ## Checked
 - Heads: width 146-314 px, centre y 570-655, lowest head bottom y 807 (caption band y 880 stays clear of heads). Face never covered by a foreground prop (an earlier orbit swung the camera behind the quadrant stand at g 607-634; rejected).
