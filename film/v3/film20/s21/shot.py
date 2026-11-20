@@ -46,10 +46,10 @@ RING_STOP = 1521                                  # no ring is born after g1521 
 FX_OFF = 1566                                     # wire + glow halo + aura leave the frame (group framing must stay clean)          # first ring born at the lamp at g1468, a ring every 18 f, life 54 f
 WIRE_R = 0.22
 SHIFT = -0.03
-CAM_BACK = -5.0
+CAM_BACK = -5.5
 TILT0 = 9.0
 HEAD_Z = 2.5
-M = dict(eiffel_old=(-3.8, -217.6), officer=(-2.7, -217.5), demo_a=(-5.0, -217.2), demo_b=(-5.9, -216.4), demo_c=(-4.6, -215.6))
+M = dict(eiffel_old=(-3.8, -217.6), officer=(-2.7, -217.5), demo_a=(-5.0, -217.2), demo_b=(-5.6, -216.3), demo_c=(-4.6, -215.6))
 CAST = dict(eiffel_old="eiffel_old", officer="officer", demo_a="riveter_hammer", demo_b="riveter_tongs", demo_c="riveter_forge")
 
 def A_(*a, **k):
@@ -117,7 +117,7 @@ def group_path(A):
     import tower20
     cm = tower20.CAMS_M["tower_dusk_chars"]
     c = Vector(CO.W(cm["loc"]))
-    cen = Vector(CO.W((-3.9, -217.0, 0.0))) + Vector((0, 0, HEAD_Z))
+    cen = Vector(CO.W((-4.0, -217.0, 0.0))) + Vector((0, 0, HEAD_Z))
     c = c + (c - cen).normalized() * CAM_BACK
     return C.CamPath(c, cen, G_ARR, G_LAST, push=0.04, slide_px=0.0, rise_px=0.0, arc_deg_s=7.0, tilt0=TILT0, tilt_deg_s=0.4,
                      decay=0.25, snaps=[dict(g=SNAP, k=1.08, peak=1.7, shift=(0.0, 0.0))])
@@ -229,7 +229,7 @@ class Take(C.Take):
         import kit20 as K
         M_ = CO.STATE["M"]
         loc = self.path.loc0 / CO.SC                      # metres
-        cen = Vector(CO.W((-3.9, -217.0, 0.0))) / CO.SC
+        cen = Vector(CO.W((-4.0, -217.0, 0.0))) / CO.SC
         f = Vector((cen.x - loc.x, cen.y - loc.y, 0.0)).normalized()
         r = Vector((f.y, -f.x, 0.0))
         mb = CO.MB("s22fg", parent=CO.root())
@@ -310,7 +310,7 @@ class Take(C.Take):
             bpy.ops.mesh.primitive_torus_add(major_radius=1.0, minor_radius=0.011, major_segments=128, minor_segments=8)
             ob = bpy.context.object
             ob.name = "sig_ring_%d" % i
-            ob.data.materials.append(emat("sigm%d" % i, (0.55, 0.75, 1.0, 1.0)))
+            ob.data.materials.append(emat("sigm%d" % i, (0.28, 0.55, 1.0, 1.0)))
             ob.visible_shadow = ob.visible_diffuse = ob.visible_glossy = False
             ob.location = (0.0, 0.0, 300.0 * SC)
             self.rings_ob.append(ob)
@@ -333,7 +333,7 @@ class Take(C.Take):
             p.co = (q.x * SC, q.y * SC, q.z * SC, 1.0)
         self.wire = bpy.data.objects.new("sig_wire", cu)
         self.scene.collection.objects.link(self.wire)
-        self.wire.data.materials.append(emat("sigwire", (0.80, 0.88, 1.0, 1.0), 2.0))
+        self.wire.data.materials.append(emat("sigwire", (0.45, 0.68, 1.0, 1.0), 2.0))
         self.wire.visible_shadow = self.wire.visible_diffuse = self.wire.visible_glossy = False
         def gmat(name, col, k, fac):
             m = bpy.data.materials.new(name)
@@ -393,7 +393,7 @@ class Take(C.Take):
             r = 6.0 + 500.0 * age ** 0.7
             ob.scale = (r * CO.SC,) * 3
             CO.key(ob, "scale", f, "LINEAR")
-            CO.keysock(ob.active_material.node_tree.nodes["em"].inputs["Strength"], 9.0 * (1.0 - age) ** 1.4, f)
+            CO.keysock(ob.active_material.node_tree.nodes["em"].inputs["Strength"], 2.6 * (1.0 - age) ** 1.2, f)
             CO.setv(ob, on, f)
         t = g - RING_T0
         if g > RING_STOP:
@@ -405,7 +405,7 @@ class Take(C.Take):
         CO.keysock(self.flash.active_material.node_tree.nodes["em"].inputs["Strength"], 3.5 * fl, f)
         CO.setv(self.flash, fl > 0.05, f)
         gl = u_of(g, *GLOW)
-        CO.keysock(self.wire.active_material.node_tree.nodes["em"].inputs["Strength"], 2.0 + 5.0 * gl, f)
+        CO.keysock(self.wire.active_material.node_tree.nodes["em"].inputs["Strength"], 1.6 + 3.2 * gl, f)
         vis = g < FX_OFF
         CO.setv(self.wire, vis, f)
         CO.keysock(self.halo.active_material.node_tree.nodes["mix"].inputs[0], 0.35 * gl, f)
