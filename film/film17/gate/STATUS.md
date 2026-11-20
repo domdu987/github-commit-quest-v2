@@ -13,4 +13,4 @@
 | s10 | 9 | **PASS** R5 (QA-tech R4 PASS + QA-art R5 PASS; R5 changed only g1406-19 and card post) | 669e44b (USE THIS) | gate/s10/QA_TECH_R4.md, QA_ART_R5.md |
 | s11 | 10 | **PASS** R3 (QA-art R2 PASS + QA-tech R3 PASS; should-fix accepted: eye pop g1607 reads as a 'caught' take, chair post, weak fist) | 55446ee (USE THIS) | gate/s11/QA_TECH_R3.md, QA_ART_R2.md |
 | s12 | 11 | **PASS** R3 (QA-tech; chins measured all frames, cards 55-72 px) | 3c91397 (USE THIS) | gate/s12/QA_TECH_R3.md |
-| s13 | 12 | **PASS** (QA-art R3 SHIP; QA-tech R2 blocker = hand on bar, verified fixed in R3) | render17/team12 ba82a63 (USE THIS; later ca5cc1a = unreviewed head-mask variant, ignore) | rhythm 4.55/13.68; nit: tripod hood g1947-1965 |
+| s13 | 12 | REOPENED at FINAL (QA-art): shot 33 g2014-2051 hand = black bars, calipers not on ear; re-render shot 33 | ba82a63 (shots 31-32 OK) | FINAL_QA_ART.md, FINAL_director_end.png |
