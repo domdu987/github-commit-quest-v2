@@ -77,35 +77,34 @@ The camera and King mark changed (KING_M x 0.85, CAM_LOC0 (-0.50, 2.40, 2.55), s
 | **Overall** | **7.0** | **7.0** |
 
 ---
-## Round 9 (director QA-art, ENDING re-render g 2088-2159): PASS, 7.2
+## Round 10 (director QA-art, ending g 1933-2159, after the rectangle re-render): PASS, 7.2
 
-Take: take.mkv.partaa + partab, joined to /tmp/s24_a.mkv (first_g 1924, g 1924-2159). I extracted every frame and viewed them at 3 fps, every 2nd frame from g 2082 to 2159, and key frames at full size and 360x640.
-Frames: /tmp/qa19_r9art/s24/f_NNN.png (NNN = g - 1923). Sheets: /tmp/qa19_r9art/s24_3fps.jpg, s24_end.jpg, s24_full1.jpg, s24_full2.jpg (phone), s24_band.png.
+Take: take.mkv.partaa + partab joined to /tmp/s24r10a.mkv (first_g 1924, 236 frames). I extracted every frame and viewed them at 3 fps, every 4th frame from g 2086 to 2159, key frames full size (g 2096, 2108, 2120, 2134, 2142, 2150, 2156, 2159) and a 360x640 phone sheet. I also compared g 2100/2120/2140 directly with the round-9 frames (/tmp/qa19_r9art/s24).
+Frames: /tmp/qa19_r10art/s24/all/gNNNN.png (named by g). Sheets: /tmp/qa19_r10art/s24_3fps.jpg, s24_rect.jpg, s24_key_full.jpg, s24_key_full2.jpg, s24_phone.jpg, s24_cmp.jpg (top row round 9, bottom row round 10).
 
 | Check | Status |
 |---|---|
-| Mocker popping out after whip 2 | **Fixed.** He blurs away inside whip 2 (g 2088-2092) and is not seen again. There is no pop. |
-| Irony reads? | **Yes.** In one take: the King is at the table with the gold watch and the H4 while ten stubs grow ("the King timed it himself"), then whip 1 lands on the mocker's held jaw drop with his glasses up, a sweat drop and his wig askew, with a push on "เป๊ะ". The dare-came-true joke lands on the mocker's face. The ending does not bring him back, which is a missed final button but does not block. |
-| Harrison payoff | **Better.** He has a big grin and closed happy eyes from g 2110, one arm flung out wide over the bag ("ta-da"), and a small hop at the landing. The arms are not really "up": one arm goes out sideways and the other hides behind the bag. |
-| Money bag | Drops in at g 2104-2110, lands with coins spilling on the baize, and a knotted neck reads at the end push. In the wide (g 2110-2124) the bag reads more like a gold pot or urn. |
-| King nod | Present, small: a closed-eye content smile and a dip of the head. It reads as approving. |
-| Table front | **Fixed.** It is now a lit warm-brown wood face, not a dead black block. But see the slab below. |
-| NEW (polish): pale slab | From g 2094 to about g 2146 a straight-edged, semi-transparent pale vertical rectangle runs down the table front and the carpet (about x 420-720 at full size, +8-10 luma, hard left edge; see s24_band.png). It looks like a fill-light plane or card visible to the camera. It is noticeable on a phone, though no character is cut by it. |
-| Composition | g 2094-2140: the cast sits in the upper middle; the lower 40 % is table front plus dark navy carpet (luma 54-60). The final push (g 2146-2159) is strong: Harrison grinning big, the bag and coins in the foreground, the King smiling behind, the telescope and the moon window, all in frame and moving on the last frame. |
-| Colour | Sat 0.60-0.75 and vivid 61-81 %, with red and gold hall versus blue dusk windows. Luma 54-76 is dark before the conform. |
+| Pale hard-edged rectangle over the table front / carpet (g 2094-2146) | **GONE.** In round 9 a lighter, hard-edged band crossed the table front and carpet. In round 10 the table front is plain wood and the carpet is plain navy with its red diamonds. No trace of it on any checked frame from g 2086 to 2159. |
+| Regressions | None. g 1924-2085 (King with watches, stub row, snap, whip 1, the astronomer's jaw drop and push) are unchanged and still read. Whip 2 and the landing are unchanged in timing (bag lands at about g 2107). Both men stay in frame to the end, and the camera is still moving on g 2159. Nobody is cut by an edge, and every head is above y 880. |
+| Harrison's arms up (optional) | Partly done. After the landing (g 2134-2159) his left hand is raised to about ear height with the watch. That reads as a small wave, not as both arms up in a cheer. His big grin carries the joy. |
+| Bag reads as money (optional) | Mostly. It is a gold sack with spilled coins at its base and on the table front. It reads as "treasure/gold" on a phone. Its tied neck only shows from about g 2150. |
+| Mocker peek (optional) | Not done (he is hidden from g 2089). That is acceptable. |
+| Phone read | The end frame reads: grinning Harrison, the big gold bag, the King smiling and nodding behind, the moon, the telescope and the window. Warm red and gold against the dusk blue window gives good warm/cool contrast. |
 
-| Criterion | Score |
-|---|---|
-| Set | 8 |
-| Light & colour | 7 |
-| Composition / phone | 6.5 |
-| Acting | 7.5 |
-| Key moment (irony + payoff) | 7.5 |
-| Match to refs | 7.5 |
-| **Overall** | **7.2 - PASS** |
+| Criterion | R9 | R10 |
+|---|---|---|
+| Set (rich hall, telescope, moon, window, candelabra) | 8 | 8 |
+| Light & colour | 7 | 7 |
+| Composition / phone | 6.5 | 6.5 |
+| Acting (grin, King's nod, arms) | 7 | 7 |
+| Key moment (bag lands, he wins) | 7 | 7.5 |
+| Match to refs | 7.5 | 7.5 |
+| **Overall** | **7.2** | **7.2 - PASS** |
 
-Polish (if anything is re-rendered anyway; not blocking):
-1. Find and hide the pale vertical plane over the table front and carpet (g 2094-2146). Set the fill or area-light mesh to camera-invisible, or move it out of frustum.
-2. Start the ending push earlier, or tilt down less, from g 2094, so the carpet is at most about 20 % of the frame and the cast sits at mid-frame.
-3. Raise both of Harrison's arms (hands above his head) on the landing frame g 2107-2116, then let one fall onto the bag.
-4. Optional button: let the mocker's jaw-dropped head peek in at the frame edge (behind the telescope) for the last 0.5 s, so the final image carries the irony too.
+Composition stays at 6.5 because from g 2094 to about g 2146 the lower 35-40 % of the frame is dark carpet and a plain table front: a dead area (luma about 51-56). The rectangle was the only bright thing there, and now it is just dark. The score holds because the hard-edged fault is gone; the empty lower frame was there before.
+
+Polish (not blocking; only if re-rendering g 2094-2159 anyway):
+1. Tilt down / push in about 10 % over g 2094-2146 so the table top and bag sit lower and the dark carpet band shrinks to under 20 % of the frame. Keep heads above y 450 and below y 880.
+2. Arms up: over g 2109-2125, raise BOTH arms into a V above his head (watch in one hand) for at least 0.5 s, then settle. That is the "I won" pose the beat needs.
+3. Bag: show the tied neck from the landing (g 2107), or add a large £ mark on the sack, so it reads as prize money and not as a gold pot.
+4. From about g 2150 the telescope barrel passes just above Harrison's head outline. It does not touch his face, but a 0.1 D lift of the telescope (or a small camera raise) would separate them.

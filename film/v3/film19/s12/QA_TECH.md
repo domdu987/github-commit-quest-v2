@@ -20,9 +20,8 @@ Notes: p90 10.59 is just above the limit; legs end in thin stubs (rig limit); th
 Checked 6 fps (take g929-994), qa_auto PASS. No text, black/magenta, frozen, blur; mouth fixed (frown). Frame-diff g939-985 median 4.22 / p90 10.62 (>= 4 / >= 10) OK. Round 3 PASS stands: candle burn-down reads, tapping continues, eye-line to lens. New: nothing blocking.
 Notes: Harrison's ponytail/hair touches the right edge in the last frames (face intact); legs end in thin stubs; shadow under shoes faint.
 
-## Round 9 (director QA-tech): FAIL
-Checked 6 fps + every frame g985-1016 (crop x 600-720 by eye, plus head crops) in /tmp/qa19_r9/s12/. Frame-diff g939-1015: median 5.87 / p90 13.37 OK. No black/magenta/frozen/text; no mouth movement.
-Right edge: FIXED in the sense asked: nothing at all is inside x 600-720 g985-1016 (head right extent x ~545-605); no hair/bow/ponytail/puff beyond x 690. Grey hair until g995, white-hair swap with a puff at g996 (OK, ~g996), backward slump g996-1003 then eye rub OK.
-Issue (blocking, §G3-style cut):
-1. g997-1016 (every frame): Harrison's card is sliced by a hard VERTICAL line at x ~ 545-570 (it moves 565 -> 543 over the run): the right side of the hair, the bow, the ponytail and the puffs are cut off flat (very visible g997-1003 where the puff and bow are chopped; from g998 the ponytail is gone entirely; g1013-1016 the bow is half cut). It looks like the right-edge fix clips the card instead of moving it. Fix: shift/scale the card (or camera look) left so the whole head is inside, no clipping plane; re-check the same frames.
-Notes: g985-993 grey-hair frames intact; head within frame everywhere else.
+## Round 10 (director QA-tech): PASS
+Checked 6 fps (g929-1019) plus every frame g985-1016 on crops x 450-720 (and full frames at 10 key g). Frames in /tmp/qa19_r10/s12/. Frame-diff (own calc, 90x160 grey bilinear, in-shot pairs g938-1015): median 6.38, p90 14.31 (limits 4 / 10) OK; max 17.2 at g962 (whip), no pair < 0.3, no black frame, no frozen run.
+Round 9 blocker (hard vertical cut of the hair/bow/ponytail/puffs at g997-1016): FIXED. On every frame g985-1016 the ponytail, bow and puffs are whole; the plaster wall is a smooth gradient with no straight edge cutting the card; right-most card pixel stays well left of x 720. Mark is clear of the wall, payoff exposure is lifted (warm wall, luma readable).
+Other checks: hair grey through g995 and pops to white with puffs, spectacles and the brown coat on g996 (single frame); backward slump g996-1010 reads; the chisel stays in his hand and visible (low left) through g1016; head about 20 % of frame height, head centre y ~ 450-600 (never near 880); candle on the chest, no floating; mouth fixed (tired frown/wobble during the rub, no lip-sync); no character cut, no text, no blur; Harrison always acting (tap, lean, rub).
+Notes (not blocking): legs end in thin stubs; shoe contact shadow faint; ponytail tip is close to the wall at g996-1000 but whole.

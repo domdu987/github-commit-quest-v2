@@ -108,7 +108,8 @@ def pose_har(g):
         p["expr"] = "laughing"
         p.pop("mouth", None)
     u = u_of(g, Cm.G_BAG + 14, Cm.G_BAG + 24, kind="sine")
-    p["arm_l"] = dict(hand=(lerp(-0.45, -0.58, u), 0.50), bend=0.2, shape="open", layer="front")      # the raised watch stays inside the frame
+    p["arm_l"] = dict(hand=(lerp(-0.45, -0.50, u), lerp(0.50, 0.15, u)), bend=0.2, shape="open", layer="front")      # the raised watch stays inside the frame
+    p["arm_r"] = dict(hand=(lerp(0.55, 0.62, u), lerp(0.80, 0.05, u)), bend=0.2, shape="open", layer="front")          # round 9: arms go UP on the landing
     p["prop_l"] = dict(type="h4_watch", scale=1.25)
     return p
 
@@ -153,6 +154,7 @@ class Take(C.Take):
             C.place(self.astro, f, am + Vector((0, 0, 0.012 * math.sin(2 * math.pi * g / 20.0))))
             C.key_vis(self.har.objects(), HAR_ON[0] <= g <= HAR_ON[1], f)
             C.key_vis(self.astro.objects(), ASTRO_ON[0] <= g <= ASTRO_ON[1], f)
+            C.key_vis(H.STATE.get("shafts", []), g < 2086, f)            # round 9: the pale window-shaft volume lay over the table front / carpet g 2094-2146: hidden from g 2086
             self.key_set(f, candles=1.0, regulator=True, kings_chair=True, stubs=stubs_at(g),
                          moneybag="full" if g >= Cm.G_DROP else "none", box="none")
             if g >= Cm.G_DROP:
