@@ -7,7 +7,8 @@ Fallback check: send_later 60 min, always re-armed.
 - [x] Narration Bankky original (speed 1.15, atempo 1.134), 12 sentences, STT 0.946-1.0 (s05 0.946 only because STT wrote "Beck" in Latin), 62.66 s -> audio/narration.wav, script/captions.json (76 phrases)
 - [x] Music 3 takes (fal elevenlabs/music/v2.5, 68 s) -> audio QA pick m2 (runner-up m3), audio/music/PICK.md; vocals STT open (fal locked) -> local check
 - !! 2026-11-20 21:55 UTC fal.ai returns "User is locked. Reason: Exhausted balance." Client told. Narration and music were done before; SFX + fal STT need a top-up (fallback: older films' SFX libraries, local whisper)
-- [ ] Style board (3 stills, Sonnet builder running) -> QA-art   (WORLD.md = the connected world)
+- [x] Style board r1 (v3/set3d22/board) -> QA-art FIX-FIRST (board/QA_ART.md: period skyline, sky magenta, tunnel not dark blue, still 2 framing)
+- [ ] Board r2 fixes (builder) -> QA-art re-check; cast22 builder running
 - [ ] Set + cast -> SET gate (QA-art + QA-tech)
 - [ ] shot_plan.md (≤12 hard cuts, 2 BIGZOOM), WORKER22.md, render teams (Sonnet, render22/teamK)
 - [ ] TAKE gates, conform22, FINAL gate (4 reviewers + film 2 side-by-side + ref sheets), release22, queue WAIT
