@@ -25,13 +25,13 @@ PPD = 256
 CAM0 = (-73.0, -39.8, 1.0)                         # metres: south of the stack (stack face y ~ -31.8), 1 m high
 SUBJ = (-73.0, -31.8, 1.45)                         # a point on the pile face the camera pushes toward
 WALK_Y = -34.2                                     # the carriers walk along the stack, 2 m from the pile face, 3 m from the lens
-CARRY_X0, CARRY_X1 = -71.4, -67.2                  # metres, walking +x (screen-right) ... over the whole range
+CARRY_X0, CARRY_X1 = -71.4, -66.7                  # metres, walking +x (screen-right) ... over the whole range
 
 
 def cam_path():
     return C.CamPath(CO.W(CAM0), CO.W(SUBJ), G_FIRST, G_LAST, push=0.02, slide_px=160.0, rise_px=-12.0, arc_deg_s=6.0,
                      tilt0=-3.0, tilt_deg_s=0.0, decay=0.2,
-                     snaps=[dict(g=(G_STEEL - 2, G_STEEL + 14), k=1.3, peak=2.0, shift=(0.0, 0.0), tilt=3.0)])
+                     snaps=[dict(g=(G_STEEL - 2, G_STEEL + 14), k=1.12, peak=2.0, shift=(0.0, 0.0), tilt=0.0)])
 
 
 def walk_x(g):
