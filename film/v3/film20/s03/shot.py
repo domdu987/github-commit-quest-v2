@@ -21,12 +21,12 @@ import puppet                                            # noqa: E402
 G0, G1 = C.g_bound(5.93), C.g_bound(13.47)     # 178, 404 (take = g 178..403)
 H_IN, H_OUT = 8, 8                             # dissolve 13 in and out: 8 handle frames each side (director)
 GF, G_LAST = G0 - H_IN, G1 + H_OUT - 1         # 170..411
-G_TRAVEL = 280                                 # the camera leaves Eiffel (after the point has landed)
+G_TRAVEL = 312                                 # the camera leaves Eiffel (after the point has landed)
 G_MOST = C.cap_g("สูงที่สุดในโลก")                # 346: snap up
 SNAP = (G_MOST - 2, G_MOST + 13)
 GS = list(range(GF, G_LAST + 1))
 G_WORD = C.cap_g("วิศวกรไอเฟล")                   # 268
-G_LAND = G_WORD                                # the zoom lands on the medium at the word
+G_LAND = 300                                   # the zoom lands on the medium ~g 300 (4.3 s push; at g 268 the point is already in a medium-wide)
 RAISE = (G_WORD - 2, G_WORD + 6)               # arm rises to the point
 G_SWAP = G_WORD + 2
 PRESET, LIGHT, MARK = "site_table", "DAY", "eiffel_table"
@@ -35,7 +35,7 @@ D0, D1 = 400.0, 4.6                            # camera distance to Eiffel (D): 
 EL0, EL1 = 52.0, 7.0                           # elevation (deg): high over Paris -> low
 AZ0, AZ1 = 228.0, 221.0                        # azimuth from the table (deg, 225 = the preset camera's side)
 SITE_CTR = CO.W((0.0, -30.0, 25.0))            # the middle of the four legs (D) the far start looks at
-TILT1 = 13.0                                   # aim tilts UP by the end so the leg + scaffold fill the background
+TILT1 = 18.0                                   # aim tilts UP by the end so the leg + scaffold fill the background
 
 
 
@@ -73,6 +73,9 @@ def dress(A):
     for n in mb.node_tree.nodes:
         if n.type == "BSDF_PRINCIPLED":
             n.inputs["Base Color"].default_value = (0.93, 0.87, 0.72, 1)
+        if n.type == "MIX":                                          # the base colour is fed by a noise-driven Mix of two blues: make both cream
+            n.inputs["A"].default_value = (0.80, 0.72, 0.52, 1)
+            n.inputs["B"].default_value = (0.95, 0.88, 0.70, 1)
     mb.diffuse_color = (0.93, 0.87, 0.72, 1)
     R = CO.root()
     mbld = CO.MB("dressing", R)
@@ -104,7 +107,7 @@ def dress(A):
         nd.remove(n)
     em = nd.new("ShaderNodeEmission")
     em.inputs["Color"].default_value = (1.0, 0.62, 0.18, 1)
-    em.inputs["Strength"].default_value = 18.0
+    em.inputs["Strength"].default_value = 5.0
     out = nd.new("ShaderNodeOutputMaterial")
     lm.node_tree.links.new(em.outputs["Emission"], out.inputs["Surface"])
     lamp.data.materials.append(lm)
@@ -142,7 +145,7 @@ class ZoomPath(C.CamPath):
         off = Vector((math.cos(a) * math.cos(e), math.sin(a) * math.cos(e), math.sin(e))) * d
         loc = self.subj + off
         u0 = clamp((g - GF) / float(G_LAND - GF), 0.0, 1.0)
-        tgt = self.subj.lerp(SITE_CTR, (1.0 - smoother(u0)) ** 1.5)          # at the start the aim is the middle of the site (all 4 legs), then it closes on Eiffel
+        tgt = self.subj.lerp(SITE_CTR, 0.55 * math.exp(-7.0 * smoother(u0)))          # at the start the aim is the middle of the site (all 4 legs), then it closes on Eiffel
         fwd = (tgt - loc).normalized()
         r = Vector((fwd.y, -fwd.x, 0.0)).normalized()
         from mathutils import Matrix
@@ -202,7 +205,7 @@ EIF_B = cast20.STORY20["eiffel_point_up"][1]
 
 
 def pose_of(g):
-    u = u_of(g, *RAISE) * (1.0 - u_of(g, 292, 302))                    # arm up g 266-274, held, down g 292-302 (hand on hip, proud)
+    u = u_of(g, *RAISE) * (1.0 - u_of(g, 316, 326))                    # arm up g 266-274, held, down g 316-326 (hand on hip, proud)
     p = dict(puppet.lerp_pose("eiffel", EIF_A, EIF_B, u))
     p["expr"] = "determined" if g < G_SWAP else "proud"
     p["yaw"] = lerp(0.35, 0.45, u)
@@ -254,10 +257,13 @@ class Take(C.Take):
             self.actors[name] = a
             mk = C.on_ground(CO.W((xy[0], xy[1], 0.0)))
             self.riv.append((a, cast, mk, mirror, 1.0))
-        for name, cast, mark, mirror in (("rl_a", "riveter_hammer", "leg_a", False), ("rl_b", "riveter_tongs", "leg_b", True), ("rl_c", "riveter_forge", "leg_c", False)):
+        for name, cast, mark, mirror in (("rl_a", "riveter_hammer", "leg_a", False), ("rl_b", "riveter_tongs", "leg_b", True), ("rl_c", "riveter_forge", "leg_c", False), ("rl_d", "riveter_forge", "leg_a", True), ("rl_e", "riveter_hammer", "leg_b", False), ("rl_f", "riveter_tongs", "leg_c", True)):
             a = C.make_actor(name, cast, os.path.join(WORK, "sprites"), contact=False, cam=self.cam)       # on a deck: no ground decal
             self.actors[name] = a
-            self.riv.append((a, cast, tuple(self.A["marks"][mark]), mirror, 2.4))                           # x2.4: reads on the platforms
+            mk3 = list(self.A["marks"][mark])
+            if name in ("rl_d", "rl_e", "rl_f"):
+                mk3[0] += 1.6                                   # second worker on the same platform
+            self.riv.append((a, cast, tuple(mk3), mirror, 2.4))                           # x2.4: reads on the platforms
 
     def pose(self, gs):
         mark = self.A["marks"][MARK]
@@ -267,7 +273,7 @@ class Take(C.Take):
             C.place(self.eif, f, mark)
             for a, cast, mk, mirror, sc in self.riv:
                 C.place(a, f, mk, scale=sc)
-            lk = 1.0 + 6.0 * (1.0 - smoother((g - GF) / float(G_LAND - GF)))        # the warm lamp is big when we are far (findable), normal at the landing
+            lk = 0.6 + 6.4 * (1.0 - smoother((g - GF) / float(G_LAND - GF))) ** 3        # the warm lamp is big when we are far (findable), normal at the landing
             self.A["lamp"].scale = (lk, lk, lk)
             self.A["lamp"].keyframe_insert("scale", frame=f)
             self.key_set(f)
