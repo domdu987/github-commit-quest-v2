@@ -7,7 +7,7 @@ import prefecture17 as P, bpy
 from mathutils import Vector
 take = 'T7'
 SHADE_MUL = float(os.environ.get('T7_SHADE', 1.38)); FILL_W = float(os.environ.get('T7_FILL', 540))
-P.TAKE_OVER['T7'] = {'archive': dict(shade_mul=SHADE_MUL, fill_w=FILL_W)}           # director: raise lights (lights only)
+P.TAKE_OVER['T7'] = {'archive': dict(shade_mul=SHADE_MUL, fill_w=FILL_W, **({'beam_k': float(os.environ['T7_BEAM'])} if 'T7_BEAM' in os.environ else {}))}           # director: raise lights (lights only)
 _sd = P.K.set_drawer
 P.K.set_drawer = lambda name, open=1.0, frame=None: _sd(name, min(open, 0.42) if name == 'big' else open, frame)   # drawer tip stays clear of Bertillon (x 14.35)
 LOOK_DY = float(os.environ.get('T7_LOOKDY', 0.35)); DUP_DY = float(os.environ.get('T7_DUPDY', -0.3))
@@ -107,7 +107,11 @@ def clear_cast():
     actors.clear_registry()
 def main(gl, outdir, samples=16):
     assert P.check_take(take)['hits'] == [] and P.check_face(take)['ok']
-    A = P.world_build(take); P.key_take(take); build_pop(); key_pop(1689, 1874); P.setup_render2((720, 1280), samples=samples, threads=2)
+    A = P.world_build(take)
+    if 'T7_BEAM' in os.environ:
+        for m in bpy.data.materials:
+            if m.name.startswith('beam_fx') and m.node_tree: m.node_tree.nodes['strength'].inputs[1].default_value = float(os.environ['T7_BEAM']) * 0.035
+    P.key_take(take); build_pop(); key_pop(1689, 1874); P.setup_render2((720, 1280), samples=samples, threads=2)
     sc = bpy.context.scene
     for g in gl:
         fp = os.path.join(outdir, 'g_%04d.png' % g)
