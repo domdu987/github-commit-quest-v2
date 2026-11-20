@@ -27,17 +27,22 @@ H_IN, H_OUT = 9, 9
 GF, GL = G0 - H_IN, G1 + H_OUT - 1            # 1459 .. 1589
 GS = list(range(GF, GL + 1))
 G_WORD = C.cap_g("แค่ห้าวินาที")               # 1497
-SNAP = (G_WORD - 2, G_WORD + 12)
 G_LIFT = (GF, GF + 20)
 
 LIGHT, PRESET = "DAY_JAMAICA", "ship_coast"
 FINAL_SPP = 12
 PPD = 192
 
-CAM_LOC0 = (452.0, 61.2, 3.55)                 # near the preset start pose, 25 % closer to the subject
-CAM_LOOK0 = (446.0, 61.0, 2.6)                 # subject point: William's chest
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GF, GL, push=0.04, slide_px=-4.0, rise_px=6.0, arc_deg_s=-14.0, decay=0.1,
-                snaps=[dict(g=SNAP, k=1.65, peak=1.5, shift=(1.9, 0.25))])
+CAM_LOOK0 = (446.0, 61.789, 2.6)                # subject point (found with a projection search so that all three heads, hats and raised
+                                                # hands stay inside the frame on every frame)
+CAM_LOC0 = tuple(Vector(CAM_LOOK0) + (Vector((452.0, 61.2, 3.55)) - Vector((446.0, 62.6, 2.6))) * 1.1)
+SNAP = (G_WORD - 2, G_WORD + 12)
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GF, GL, push=0.0335, slide_px=12.6, rise_px=9.4, arc_deg_s=-5.0, decay=0.1,
+                snaps=[dict(g=SNAP, k=1.108, peak=1.6, shift=(0.37, -0.10)),
+                       dict(g=(1526, 1533), k=1.0, peak=1.3, shift=(0.0, 0.68)),        # second beat: two quick camera bumps (tilt down and back)
+                       dict(g=(1533, 1542), k=1.0, peak=1.3, shift=(0.0, -0.68)),
+                       dict(g=(1556, 1563), k=1.0, peak=1.3, shift=(0.0, 0.68)),
+                       dict(g=(1563, 1572), k=1.0, peak=1.3, shift=(0.0, -0.68))])
 
 
 def _mix(a, b, u):
@@ -47,10 +52,10 @@ def _mix(a, b, u):
 def william_pose(g):
     p = dict(cast19.STORY19["william_cheer_hat"][1])
     u = u_of(g, *G_LIFT, kind="sine")
-    hi = _mix((0.5, 0.55), (0.80, -0.72), u)
-    p["arm_r"] = dict(hand=(hi[0], hi[1] + 0.05 * math.sin(2 * math.pi * g / 14.0)), bend=-0.4, stretch=1.3, shape="open", layer="top")
+    hi = _mix((0.5, 0.68), (0.80, -0.72), u)
+    p["arm_r"] = dict(hand=(hi[0], hi[1] + 0.20 * math.sin(2 * math.pi * g / 10.0)), bend=-0.4, stretch=1.3, shape="open", layer="top")
     p["prop_r"] = "h4_watch"
-    p["arm_l"] = dict(hand=(-0.70, -0.62 + 0.05 * math.sin(2 * math.pi * g / 14.0 + 1.0)), bend=-0.5, stretch=1.3, shape="open", layer="top")
+    p["arm_l"] = dict(hand=(-0.70, -0.62 + 0.20 * math.sin(2 * math.pi * g / 10.0 + 2.5)), bend=-0.5, stretch=1.3, shape="open", layer="top")
     p["prop_l"] = "tricorn_held"
     p["mirror"] = True
     p["expr"] = "happy"
@@ -58,7 +63,8 @@ def william_pose(g):
     p.pop("fx", None)
     p["yaw"] = 0.25
     p["pitch"] = -0.25
-    p["head_roll"] = -4 + 3 * math.sin(g * 0.2)
+    p["head_roll"] = -4 + 8 * math.sin(g * 0.63)
+    p["lean"] = 6 * math.sin(g * 0.63 + 1.0)
     p["blink"] = blink(g, [1470, 1520, 1562])
     p["t"] = g / 30.0
     return p
@@ -67,15 +73,16 @@ def william_pose(g):
 def sailor_pose(name, g, ph):
     p = dict(cast19.STORY19[name + "_cheer"][1])
     s = math.sin(2 * math.pi * g / 10.0 + ph)                     # ~3 Hz cheer
-    p["arm_r"] = dict(p["arm_r"], hand=(0.74, -0.74 + 0.12 * s))
-    p["arm_l"] = dict(p["arm_l"], hand=(-0.74, -0.7 - 0.12 * s))
+    p["arm_r"] = dict(p["arm_r"], hand=(0.74, -0.74 + 0.30 * s))
+    p["arm_l"] = dict(p["arm_l"], hand=(-0.74, -0.7 - 0.30 * s))
     p["blink"] = blink(g, [1478 + int(ph * 5), 1540])
     p["t"] = g / 30.0
     return p
 
 
-def bounce_z(g, ph, amp=0.06):
-    return amp * abs(math.sin(math.pi * g / 10.0 + ph))
+def bounce_z(g, ph, amp=0.16):
+    w = 1.0 + 2.6 * math.sin(math.pi * clamp((g - (SNAP[0] - 2)) / 26.0)) ** 1.5      # the cheer erupts on the word: bigger hops
+    return amp * w * abs(math.sin(math.pi * g / 10.0 + ph))
 
 
 class Take(C.Take):
@@ -90,14 +97,14 @@ class Take(C.Take):
         self.sb = self.actors["sb"] = C.make_actor("sb", "sailor_b", sd, contact=True, cam=self.cam)
         M = self.A["marks"]
         self.mw = Vector(M["shore_a"])
-        self.ma = Vector(M["shore_b"]) + Vector((-0.4, -0.3, 0.0))
-        self.mb = Vector(M["shore_c"]) + Vector((0.5, 2.1, 0.0))
+        self.ma = self.mw + Vector((-0.2, 1.35, -0.10))
+        self.mb = self.mw + Vector((-0.2, -1.35, -0.17))
 
     def pose(self, gs):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *CAM.at(g))
-            C.place(self.wil, f, self.mw + Vector((0, 0, bounce_z(g, 0.0, 0.04))))
+            C.place(self.wil, f, self.mw + Vector((0, 0, bounce_z(g, 0.0, 0.14))))
             C.place(self.sa, f, self.ma + Vector((0, 0, bounce_z(g, 1.3))))
             C.place(self.sb, f, self.mb + Vector((0, 0, bounce_z(g, 2.6))))
             self.key_set(f, sea=(g - GF) / 30.0, roll=(g - GF) / 30.0)
