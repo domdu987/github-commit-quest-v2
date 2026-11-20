@@ -9,16 +9,16 @@
   "frames": 0
  },
  "framediff": {
-  "median": 10.47,
-  "p90": 13.95,
-  "min": 5.61,
-  "max": 16.32,
+  "median": 9.52,
+  "p90": 13.32,
+  "min": 6.04,
+  "max": 15.73,
   "n": 58,
   "frames_lt1": 0
  },
  "max_chin_y": {
-  "hero": 554,
-  "soldier": 528
+  "hero": 513,
+  "soldier": 495
  },
- "s_per_frame": 17.7
+ "s_per_frame": 20.2
 }

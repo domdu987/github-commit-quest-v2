@@ -1,12 +1,12 @@
 # QA s24 (film 18, render team 4)
 Range g 1807-1881, take.mkv frames 1801..1887 (87 frames), transition in: cut.
-Render: 720x1280, 12 samples, OIDN, 2 threads, 16.5 s/frame wall (two renders at once).
+Render: 720x1280, 12 samples, OIDN, 2 threads, 17.6 s/frame wall (two renders at once).
 
 ## Frame diff (90x160 grey, in-shot frames only)
-median 10.01, p90 15.51, min 3.55, max 16.96, frames < 1: 0 (rule: median >= 4, p90 >= 12)
+median 10.26, p90 15.55, min 3.61, max 17.28, frames < 1: 0 (rule: median >= 4, p90 >= 12)
 
 ## Max chin y per head (rule < 880)
-{"run0": 774, "run1": 790, "run2": 845, "run3": 846, "run4": 781, "run5": 842, "run6": 829, "run7": 846, "run8": 737, "run9": 797, "run10": 781, "run11": 843, "run12": 840, "run13": 843}
+{"run0": 774, "run1": 790, "run2": 845, "run3": 846, "run4": 781, "run5": 842, "run6": 829, "run7": 846, "run8": 737, "run9": 797, "run10": 781, "run11": 843, "run12": 840, "run13": 738}
 
 ## Notes
 - Rout reads: camera moved behind the camp looking at the Jimo wall (sky ~28 %), 8 fleeing / falling soldiers 15-25 D from the lens (~150 px tall), 4 flying pots/helmets (1.7x), tents folding, empty chariot rolling away in the middle ground. Bloodless, nobody hit.
@@ -21,5 +21,6 @@ median 10.01, p90 15.51, min 3.55, max 16.96, frames < 1: 0 (rule: median >= 4, 
 - Not verified: bare-ground % (not measured), tents folding (set drives it; not checked).
 - Round 11: props recoloured warm (terracotta pots, bronze helmets, warm wood chariot), prop scale 0.8, soldiers start x2.4 wider and run in all directions (6 fall); chins max 848. Bare ground not measured.
 - Gate 12: J.dress_ground + J.gapfill + 5 larger dropped props (pots, helmets, reed bundles) from the first frame: ground_share on RENDERED frames 0.008 / 0.004 / 0 / 0 at g 1807 / 1817 / 1827 / 1837 (limit 0.30). Two extra soldiers fall in open ground (x ~0.6-0.72, g ~1821 and ~1843, sit 22 frames); flying props scaled 0.6, chariot 0.6 (the director's "36 % wide" not re-measured). Chins max 846. A real contact sheet replaces the byte-copy contact.jpg (6 frames).
+- Gate 13 + rule I: chariot scale 0.33, cool blue rim on all runners, second fall moved to x 0.42 / v 0.58. NOT confirmed: in rendered g 1846 and g 1870 I cannot see that second fall (the ground clutter and crowd hide it), so the director's blocker 2 is probably not fixed.
 
 See QA_AUTO.md and phone_sheet.jpg.
