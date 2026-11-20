@@ -90,7 +90,8 @@ KS, KB = calibrate([os.path.join(RAW, "g_%04d.png" % g) for g in range(GF, GL + 
 print("grade: saturation x%.2f, brightness x%.2f" % (KS, KB))
 for g in range(GF, GL + 1):
     im = Image.open(os.path.join(RAW, "g_%04d.png" % g)).convert("RGB")
-    ImageEnhance.Brightness(ImageEnhance.Color(im).enhance(KS)).enhance(KB).save(os.path.join(OUT, "g_%04d.png" % g))
+    gain = 1.0 + 0.18 * min(1.0, max(0.0, (g - 362) / 14.0)) ** 2 * (3 - 2 * min(1.0, max(0.0, (g - 362) / 14.0)))   # +18 % from g 376 on: the crane-up under the decks stays >= 80 luma
+    ImageEnhance.Brightness(ImageEnhance.Color(im).enhance(KS)).enhance(KB * gain).save(os.path.join(OUT, "g_%04d.png" % g))
     rows.append(json.load(open(os.path.join(RAW, "g_%04d.json" % g))))
 pngs = [os.path.join(OUT, "g_%04d.png" % g) for g in range(GF, GL + 1)]
 walls, cpus = [r["wall"] for r in rows], [r["cpu"] for r in rows]
