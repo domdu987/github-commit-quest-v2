@@ -1,0 +1,12 @@
+{
+ "g0": 1640,
+ "g1": 1709,
+ "first_g": 1640,
+ "n_frames": 69,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "preset": "camp_table",
+ "samples": 32
+}
