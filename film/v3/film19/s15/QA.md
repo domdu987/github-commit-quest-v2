@@ -43,8 +43,13 @@
 6. **Sail shadow:** the sails, spanker and jibs stop casting one after another from g 1146 to 1172 (the diagonal shadow shortens and goes before the snap ends); only the pool under their feet remains.
 7. **Captain's hat brim air:** he stands 0.1 D closer to William (mark offset 1.7 / 1.15) and the dial-push zoom is x1.79 after a deeper pull-back (x0.65): the captain's hat brim keeps >= 70 px from the left edge from g 1218 to the end (the brim is estimated at 20 % of the head width beyond the head disc), William's brim <= ~715 px.
 
+## Round 10 (director: the glance) - g 1186..1288 re-rendered
+Note: in the frames the half-lid frown that snapped open at g 1248 was the CAPTAIN (the left figure; William is the right one with the watch). Both are fixed.
+1. **William:** ring (open) eyes with a smile (expr `excited`, mouth `smile`) for the whole H4 phase from g ~1196 (he looks at the watch, pupils low); the glance: g 1236-1241 head pitch -0.32 and roll +11 deg, pupils at the very top of the eye whites (gaze y -1.2), held g 1241-1248, back down g 1248-1254 to the watch.
+2. **Captain:** ring eyes (expr `shocked`, closed mouth) from the reveal (g ~1200) instead of half-lid slits; the mouth stays closed and opens over ~10 frames g 1234-1246 (("open", w, h) blended), no one-frame snap.
+3. **Exposure:** scene exposure keyed -0.62 -> -0.82 EV over g 1188-1204 (the sails' base colour is texture driven, so a base-colour tweak did nothing); the sun is a post overlay and stays as is. Whole-file brightness 113.6 -> 110.8 (about 105 in the last 2 s).
+
 ## Numbers (final)
-- `film/qa_stats.py take.mkv` (whole file): **saturation 0.511, brightness 113.6**; in-shot motion median 5.18 / p90 9.70 by that tool.
-- Frame-diff (deliver.py, in-shot pairs g 1097..1279, 90x160 grey): **median 4.52, p90 9.03** (the director's own measure gave 4.84 / 11.18 on the previous round where deliver.py said 9.94, so the offset is about +1.2: expect ~10.2). Weak spot unchanged: the last ~2 s run at ~2.4.
-- Heads in shot: centre y 430-774, width 54 (far sailor) - 236 px; faces 235 px = 33 % only at the dial peak, ~26-30 % otherwise; lowest head bottom 864; dial at the peak ~165 px. `qa_auto` PASS. s/frame 23.7 wall / 46.2 cpu.
-- One format: `take.mkv.partaa/partab` only (`cat take.mkv.part* > take.mkv`).
+- `film/qa_stats.py take.mkv`: **saturation 0.512, brightness 110.8**; in-shot motion median 5.16 / p90 9.41 by that tool.
+- Frame-diff (deliver.py, in-shot g 1097..1279): **median 4.50, p90 8.54** (was 9.03 before the darkening; your measure read +1.07 above deliver.py last round, i.e. ~9.6 now: the exposure drop costs about 0.5 of p90).
+- Heads in shot: centre y 430-774; qa_auto PASS; one format: `take.mkv.partaa/partab`.
