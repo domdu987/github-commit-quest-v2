@@ -108,8 +108,8 @@ CAMP = {
              snaps=[dict(g=(657, 670), k=1.30, peak=2.0, shift=(0.0, 0.0), tilt=0.0, arc=22.0)]),
     10: dict(push=0.05, slide_px=10.0, rise_px=0.0, arc_deg_s=26.0, arc0=-30.0, tilt0=0.0, tilt_deg_s=0.0, decay=0.25,
              snaps=[dict(g=(729, 742), k=1.25, peak=2.2, shift=(0.0, 0.0), tilt=-3.0, arc=48.0)]),
-    16: dict(push=-0.05, slide_px=-30.0, rise_px=0.0, arc_deg_s=22.0, arc0=-14.0, tilt0=2.5, tilt_deg_s=0.0, decay=0.3,
-             snaps=[dict(g=(1090, 1108), k=0.65, peak=2.0, shift=(0.0, 0.0), tilt=0.0, arc=14.0)]),
+    16: dict(push=-0.16, slide_px=10.0, rise_px=0.0, arc_deg_s=-14.0, arc0=6.0, tilt0=5.5, tilt_deg_s=0.0, decay=0.3,
+             snaps=[dict(g=(1090, 1108), k=0.65, peak=2.0, shift=(0.0, 0.0), tilt=0.0, arc=-6.0)]),
     17: dict(push=0.05, slide_px=10.0, rise_px=0.0, arc_deg_s=26.0, arc0=-30.0, tilt0=0.0, tilt_deg_s=0.0, decay=0.25,
              snaps=[dict(g=(1192, 1205), k=1.25, peak=2.2, shift=(0.0, 0.0), tilt=-3.0, arc=48.0)]),
 }[SHOT]
@@ -236,7 +236,8 @@ class Take(C.Take):
             f = bf(g)
             self.key_cam(f, *self.path.at(g))
             x, y = stand_mark(self.A, g)
-            C.place(self.mau, f, (x, y, z))
+            bob = 0.06 * abs(math.sin(2 * math.pi * 1.5 * g / 30.0)) if SHOT in (16, 17) else 0.0     # laugh bounce ~0.06 D at 3 Hz
+            C.place(self.mau, f, (x, y, z + bob))
             self.key_set(f, set_window_view=(VIEW,), smoke=(0.0,)) if False else self.key_set(f, set_window_view=VIEW)
             if SHOT == 9:
                 self.A["hooks"]["smoke"](0.0, frame=f)

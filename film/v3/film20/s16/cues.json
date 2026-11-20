@@ -1,0 +1,50 @@
+{
+ "take": "s16",
+ "fps": 30,
+ "note": "t = film seconds (g / 30)",
+ "cues": [
+  {
+   "kind": "ambience",
+   "t": 36.3,
+   "dur": 1.933,
+   "frame": 1089,
+   "end_frame": 1147,
+   "note": "Paris café 1887-89: low murmur of the artists, cutlery and cups, a gas lamp hiss, far street noise through the window"
+  },
+  {
+   "kind": "accent",
+   "t": 36.333,
+   "dur": 0.667,
+   "frame": 1090,
+   "end_frame": 1110,
+   "note": "crash pull-out: fast whoosh falling",
+   "peak_frame": 1098
+  },
+  {
+   "kind": "voice_fx",
+   "t": 36.433,
+   "dur": 1.633,
+   "frame": 1093,
+   "end_frame": 1142,
+   "note": "belly laugh bounce (his own laugh: the narration voice carries the words; add a light 'ha ha' under it)",
+   "peak_frame": 1110
+  },
+  {
+   "kind": "accent",
+   "t": 37.233,
+   "dur": 0.833,
+   "frame": 1117,
+   "end_frame": 1142,
+   "note": "tower reveal in the window: a tiny sting",
+   "peak_frame": 1117
+  },
+  {
+   "kind": "cut",
+   "t": 38.1,
+   "dur": 0.0,
+   "frame": 1143,
+   "end_frame": 1143,
+   "note": "hard cut out"
+  }
+ ]
+}
