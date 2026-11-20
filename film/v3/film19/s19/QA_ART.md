@@ -149,3 +149,65 @@ sheet3fps.jpg, phone_late.png, glint_crop.png). Compared with R5_sheet.jpg and R
 - But the grade is paler and hazier: qa_stats2 gives sat 0.476 and luma 130.2. That fails §G1 luma (85-110) and §I3 sat (0.50).
 - The lower 35 % of frame is empty plain sand.
 - Match s19's deep-gold sand and cobalt sky (or DAY_JAMAICA's exposure), and dress the foreground with barrels, rope or footprints.
+
+## Round 10 (director QA-art, opus)
+Frames: all 131 frames of take.mkv plus 3 fps and key-beat sheets, phone strip (360x640), crops, in /tmp/qa19_r10art/s19/ (sheet3fps.jpg, sheetkey.jpg, phone_key.png, glint1_crop.png, act_strip*.png, hat_face.png, f1562_1566.png, blurcheck_*.png).
+qa_stats2 (take): sat 0.673, vivid 76 %, luma 110.8, warm 39 % / cool 48 %.
+
+### Round 9 fixes, checked
+- **Hold: fixed.** The descent settles by g1553 (51.77 s). From g1553 to the cut at g1581 there is only a slow drift: the ship moves about 10 px and the cast grows slightly. That is about 0.9 s of readable medium three-shot. The ease reads smooth, with no lurch.
+- **Glint 1: fixed.** A four-point star of about 60-70 px appears on the cast at g1498-1506. That is 4 frames after "ห้าวินาที" (g1494 / 49.80 s), which is close enough. It reads on the phone strip.
+- **Glint 2: weaker.** At g1548-1561 the second glint is about 40 px and sits on the brim of the tricorne in William's LEFT hand, not on the H4 (glint on g1553 at x 480, watch at x 285). It reads as a hat sparkle, not a watch sparkle.
+- **Acting: fixed.**
+  - William brings the watch to face level with a sly side-glance (g1537-1546), then thrusts it up (g1549 on).
+  - The right sailor makes a clear two-foot jump with the shadow left on the sand (g1562).
+  - The left sailor does a hands-to-chest hug (g1568-1580).
+  - Grins and bounce run throughout.
+- **Crate: improved.** It now has planks and dark corner battens, but no stencil.
+- **Edge (QA-tech blocker): resolved.** At g1552-1562 all three cards are fully inside the frame on every frame. Only a barrel and the flying hats touch the right edge.
+
+### Remaining problems (non-blocking)
+1. **The thrown tricornes still don't read as hats.**
+   - Seen from below, they are black triangular trays with a grey dome inside and gold rims.
+   - On the phone at g1548-1556, the big one hovers right above the watch like a lampshade.
+   - At g1561-1564 it passes over the H4 and occludes it during the payoff hold (no face crossing, so §G2 is OK).
+   - Fix: spin them so their top or side faces the lens, scale them about 0.7x, and route them away from the watch.
+2. **Glint 2 is on the wrong prop** (see above). Move it to the H4 face.
+3. **Luma is 110.8, 0.8 over the §G1 cap of 110.** It is marginal, and the same as s21. A 1-2 % exposure trim at the FINAL grade fixes both.
+4. **The near palms in the wide are soft and smeary.** They are denoiser-smoothed, not blurred (see the override review). The PORT ROYAL sign is unreadable in the wide at about 20 px, which is expected; it reads from g1539.
+
+### Scores (/10)
+| Area | Score |
+|---|---|
+| Set (rich and detailed? yes) | 8 |
+| Light and colour | 8 |
+| Composition | 7.5 |
+| Acting | 7.5 |
+| Key moment | 7.5 |
+| Match to references (R5/R4) | 7.5 |
+| **Overall** | **7.7: PASS** |
+
+### Override review: qa_auto blur flag
+**Verdict: FALSE POSITIVE. The frames g1459-1499 are acceptably sharp, and I agree the FAIL can be overridden.**
+
+Evidence (my own measurements and crops, not the render team's claim):
+- **Numbers.** Take median Laplacian variance is 319, so the threshold is 191. The wide frames measure 170-172 (g1459-1480), rising to 193 at g1490.
+  - Split by region, the lower half (town, beach, palms) is 235-241. That is equal to or higher than the medium frames' lower half (g1553: 217, g1560: 218).
+  - The deficit is entirely the top 47 % of the frame: flat sky and sea at about 96, against about 440 in the medium frames, where that area holds faces and the sign.
+  - So the low score comes from content (half the frame is empty sky and sea), not from softness.
+- **Crops at 2-3x nearest-neighbour from g1465 (blurcheck_0.png):**
+  - The ship's rigging lines are 1 px and continuous.
+  - The flagpole and flag have hard edges.
+  - The fort's crenellations and cannons are crisp.
+  - The roof-tile and thatch lines are resolved, and the house edges and windows are sharp.
+  - The tiny cast (about 3 % tall) is readable as three figures.
+  - Edge gradient p99.9 is 68 against 88 in the medium frame. That fits small distant geometry and aerial perspective, not a defocus kernel.
+  - There is no motion smear or doubling between frames: it is a slow lift.
+- **Comparison with the medium frame (blurcheck_1.png, g1560):** the watch face, the "OYAL" lettering, the crate planks and the face line-work are crisp to the same per-pixel standard.
+- **One caveat:** the near palm fronds and their shadows are slightly smeary in both the wide and the medium frames. This is denoiser smoothing at 12 samples. It is a texture-softness note, not a blur defect, and it is not limited to the flagged frames.
+
+### s21 note
+s21 now matches s19 (qa_stats2: sat 0.661, vivid 69.5 %, luma 111.0; same cobalt sky, turquoise sea and deep-gold sand). There is nothing glaring. Minor points:
+- The lower 25-30 % is still bare sand.
+- Luma is 1 over the §G1 cap, as in s19.
+- The green character's quadrant overlaps his own head.

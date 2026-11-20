@@ -45,3 +45,12 @@ Issues:
 4. Note: left sailor's raised hand sits ~10-30 px from the left edge at g1570-1580.
 5. Note: palm crown top right at g1570-1580 is very dark green (mean RGB ~ 7,19,3 in the core, 2.7 % of the top band under 28) but not pure black.
 6. Note: start height ~1.9 % is tiny; findable only by zooming into the sign/boat area.
+
+## Override: qa_auto "suspected blur" g1459-1499 (QA_TEAM §E), director + independent Opus reviewer, 2026-11-20 round 10
+- qa_auto flags 41 frames of the extreme-wide hold (Laplacian variance below 0.6x the take median).
+- Independent Opus QA-art (s19/QA_ART.md "Override review: qa_auto blur flag"): this is a FALSE POSITIVE.
+  - The wide frames score 170-172 against a cut-off of 191. Their lower half (town, beach, palms) scores 235-241, at or above the medium frames (217-218).
+  - The whole deficit comes from the top 47 % of the frame, which is flat sky and sea.
+  - Crops at 2-3x show 1 px continuous rigging, crisp battlements, cannon and roof lines, and no motion smear.
+- Director: agrees. This is the same mechanism as the v1 conform's blur flags on flat sea and the dark hall (content, not defocus).
+- Result: the automatic FAIL is overridden for g1459-1499 only. It is listed in the client report as an override.
