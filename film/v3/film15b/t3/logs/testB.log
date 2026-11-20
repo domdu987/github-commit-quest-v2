@@ -1,0 +1,16 @@
+crowd figures 18500 flags 87
+00:02.703  cycles           | WARNING CUEW initialization failed: Error opening the library
+00:08.436  render           | Saved: 'work_test/B/g_0930.png'
+B 930 g 3.5 6.3
+crowd figures 18500 flags 87
+00:02.229  cycles           | WARNING CUEW initialization failed: Error opening the library
+00:06.910  render           | Saved: 'work_test/B/g_0975.png'
+B 975 g 3.2 5.9
+crowd figures 18500 flags 87
+00:02.169  cycles           | WARNING CUEW initialization failed: Error opening the library
+00:07.823  render           | Saved: 'work_test/B/g_1012.png'
+B 1012 g 3.9 7.0
+crowd figures 18500 flags 87
+00:02.115  cycles           | WARNING CUEW initialization failed: Error opening the library
+00:09.571  render           | Saved: 'work_test/B/g_1050.png'
+B 1050 g 5.2 10.0
