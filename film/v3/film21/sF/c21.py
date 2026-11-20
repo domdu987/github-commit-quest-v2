@@ -73,6 +73,7 @@ class Take(object):
                 p = a.sprite_path(f); im = np.asarray(Image.open(p).convert("RGBA")).astype(np.float32) / 255
                 vg, ve = vivid(f) if vivid else (1.4, 1.0)
                 im[..., :3] = np.clip((im[..., :3] ** (1.0 / vg)) / ve, 0, 1) ** (1.0 / GAMMA)       # undo exposure x vivid gamma x base gamma of K.grade
+                os.remove(p)                                         # sprites are hard links to sprites._cache: write a NEW file, never modify the cached one
                 Image.fromarray((im * 255 + 0.5).astype(np.uint8)).save(p)
             a._sig.clear()
             if a.image is not None: a.image.reload()
