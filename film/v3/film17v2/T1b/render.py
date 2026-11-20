@@ -30,7 +30,8 @@ if __name__ == '__main__':
     if a[0] == 'still': setup(max(G0, int(a[1]) - 3), int(a[1]) + 3); print('still g%s %.1fs' % (a[1], one(int(a[1]), a[2])))
     else:
         g0 = int(a[1]) if len(a) > 1 else G0; g1 = int(a[2]) if len(a) > 2 else G1; setup(g0, g1); fd = os.path.join(HERE, 'frames')
-        for g in range(g0, g1 + 1):
+        rng = range(g1, g0 - 1, -1) if 'rev' in a else range(g0, g1 + 1)   # 'rev' as 4th arg: render downward so two processes meet in the middle
+        for g in rng:
             out = os.path.join(fd, 'g_%04d.png' % g)
             if os.path.exists(out) and os.path.getsize(out) > 50000: continue
             print('g%d %.1fs' % (g, one(g, out)), flush=True)
