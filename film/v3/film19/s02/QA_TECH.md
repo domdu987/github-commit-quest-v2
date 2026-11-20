@@ -27,3 +27,11 @@ Issues:
 3. Peak frame-diff is 24 at g148 (target ~15-20), caused by issue 1.
 4. Acting: the astro "head-scratch" g146-166 reads as holding/wobbling the quadrant at his head, not a free-hand scratch. The chart is blank so "upside down" cannot be seen at all; there is no visible turn of the chart. Shrug g172-186 is readable. NOTE, fix with issue 1 if re-rendering.
 Blur judgement (qa_auto flag on g48-85): NOT blur. Laplacian variance is 11-17 % of the take median for g48-81, rising smoothly to 60 % at g85 as the ship grows, with no per-frame spikes: it tracks the amount of detail, not softness. The crop of g57 at 4x shows a crisp ship (sail panels, mast, deck, hull edge are pixel sharp, ~26 x 92 px) over flat gradient sea and sky; the low variance is flat sea and sky plus a tiny subject. Waive it.
+
+## Override: qa_auto "suspected blur" on the s02 extreme-wide frames (QA_TEAM §E), round 10
+- Two independent reviewers, QA-tech (Sonnet) and QA-art (Opus, see QA_ART.md "Override review: qa_auto blur flag (s02)"), both judged it a FALSE POSITIVE.
+  - The horizon is a crisp 1 px edge, the yards and sail panels resolve to single pixels, and there is no defocus halo.
+  - The low Laplacian variance comes from about 90 % smooth sea and sky with a tiny subject.
+- The director agrees.
+- Waived for g48-90 and g126-146.
+- The soft deck texture (g150-199) stays on the polish list.
