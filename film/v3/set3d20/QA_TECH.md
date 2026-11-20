@@ -80,3 +80,9 @@ R2-N3. S09/S10 crane-up shots: bottom-eighth luma 88-106 (ground far away); keep
 R2-N4. Empty slab in the lower 30-35 % of S03-S06 and T14: keep the move tilting up or push in so that area is under the captions.
 R2-N5. resto_wide: aim to include mirrors/buffet on the right wall; QA-art to confirm density.
 R2-N6. All earlier notes N1-N10 stand (tower_low legs/contact shadow, T02 child chin 869 on pushes, cafe_wide_end architect chin 884, T13 invisible actor, window/interior chair match for T12).
+
+---
+# ROUND 3 (T12/T13 re-measured by QA-tech)
+T12: pure-black (max channel <= 8) 0.0000 (was 5.9 %), <= 25: 0.61 %, min 5; p1 luma rows 900-1010 = 58, rows 100-170 = 64: black strip FIXED. T13: black 0.0000, V>.95 5.9 %. Cost T12 38.9, T13 18.3 cpu s (< 45). Hue T12/T13 now shade 357.7/22.1 (rust-orange wall, magenta 0.19 %/0.20 %): metric artifact, NOTE.
+NEW on screen (T12 at 360x640): the window's diagonal X-brace and vertical post cross exactly at Maupassant's head/torso (head y 748, 51 px): the shot-27 subject is cut by three iron bars and the room is dim, so "tiny Maupassant eating, eyes shut, smug" does not read. BLOCKING R3-B1: shift the brace crossing / table mark sideways (or move the camera 1-2 m) so his head and face sit in a clear pane (>= 60 px wide clear of bars), and lift the room fill so the window reads as lit.
+## Round 3 VERDICT: FAIL (T12 black fixed; subject occluded by the brace, one fix left). All other items as in Round 2.
