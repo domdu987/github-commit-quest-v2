@@ -64,15 +64,15 @@ def astro_pose(g):
         p.pop(k, None)
     w1 = math.sin(g * 0.55)
     w2 = math.sin(g * 0.35 + 1.0)
-    p["arm_r"] = dict(hand=(0.50 + 0.18 * w2, 0.05 + 0.2 * w1), bend=-0.7, stretch=1.1, layer="top")
+    p["arm_r"] = dict(hand=(0.34 + 0.05 * w2, 0.0 + 0.06 * w1), bend=-0.7, stretch=1.1, layer="top")
     p["arm_l"] = dict(hand=(-0.5 + 0.2 * w1, 0.80 + 0.25 * w2), bend=0.6, shape="open", layer="top")
-    p["prop_r"] = dict(type="quadrant19", angle=-62 + 34 * w1 + 14 * w2, scale=1.5)
+    p["prop_r"] = dict(type="quadrant19", angle=-100 + 20 * w1 + 8 * w2, scale=1.5)
     p["yaw"] = 0.35
     p["pitch"] = -0.6
     p["expr"] = "worried"
     p["gaze"] = (0.9, -1.0)
-    p["lean"] = -4 + 14 * w2
-    p["head_roll"] = 5 * w1
+    p["lean"] = -4 + 22 * w2
+    p["head_roll"] = 9 * w1
     p["legs"] = "wide"
     p["blink"] = blink(g, [1680, 1730])
     p["t"] = g / 30.0
@@ -80,7 +80,7 @@ def astro_pose(g):
 
 
 def hop_z(g):
-    return 0.16 * max(0.0, math.sin(g * 0.55 + 1.5)) ** 2
+    return 0.2 * max(0.0, math.sin(g * 0.55 + 1.5)) ** 2
 
 
 class Take(C.Take):
