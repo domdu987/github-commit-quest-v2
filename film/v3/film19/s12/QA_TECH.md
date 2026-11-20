@@ -4,3 +4,9 @@ Issues:
 1. g929-959 (plan coverage): "candle stub burns down" is not readable. The one candle visible (left of the H3 frame) has the same height at g938 and g958 and scene luminance does not drop (mean 65.6 -> 66.3); after the snap (g964+) the candle is out of frame. Fix: keep the candle in frame (lower the camera slide or move the stub to the bench in front of H3), drive visible stub-length + flame-size 1.0 -> 0.3, and dim the set_candles key light.
 2. g964-994: ~1 s of near-static huge head (head 401 px) with only a blink; the tapping (~2 Hz) is not visible after the snap. Fix: keep the chisel hand-stroke in frame or cut the move earlier.
 3. g929-994: no contact shadow under the shoes (g929-959). Minor.
+
+## Round 2 - FAIL
+Checked: qa_auto PASS, meta g0 938/g1 985 OK, handles OK, framediff median 4.42 / p90 13.37 OK, default look OK, NIGHT OK, no text/blur, mouth fixed, snap g952-972 OK.
+1. NOT FIXED (was 1), g938-985: candle stub burn-down not readable. Candle now stays in frame (small table at right, then bottom-right) but its height and flame look the same g929 -> g985; mean luminance does not fall (62.9 at g929 -> 66.8 at g959 -> 88 after the snap, it rises). Fix: drive visible stub length + flame size 1.0 -> 0.3 and actually dim set_candles; the push-in raises exposure, so compensate.
+2. Earlier 2 (tapping after snap) improved: chisel angle changes after the snap, accepted, NOTE.
+3. Earlier 3 (no contact shadow under shoes g929-959): NOT fixed, NOTE.

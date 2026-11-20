@@ -3,3 +3,9 @@ Checked: qa_auto PASS (note: planned cut g986 has no visible change; expected, h
 Issues (non-blocking):
 1. g993-1003: "leans back" is not distinct; he only moves toward lens with the push and the hand goes to the face. Fix: add a 2-3 deg head-back + torso lean before the rub.
 2. g977-1022: torso is cut by the bench top (he stands behind it); no feet seen. Acceptable occlusion, note only.
+
+## Round 2 - FAIL
+Checked: qa_auto PASS, meta g0 986/g1 1015 OK, handles OK, framediff 5.21 / 14.74 OK, old look OK, NIGHT bench OK, mouth fixed, snap OK.
+1. g1000-1015 (new): head is half hidden behind the foreground plank at right and cut by the right frame edge (x ~ 720) during the rub / sweat-drop payoff. Fix: slide the camera left or move the mark left ~0.3 m so the face clears the plank and the edge.
+2. Earlier 1 (lean back not distinct) NOT fixed, g993-1003; now also lost to the occlusion. Fix: head-back lean before the rub.
+3. Earlier 2 (torso cut by bench): note only.
