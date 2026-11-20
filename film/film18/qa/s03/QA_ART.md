@@ -1,22 +1,16 @@
-# QA-art s03 (vista: Yan pennants rise over the plain, 5.20-9.89 s), TAKE gate, Vista round 4 — FIX-FIRST
-I reviewed take.mkv at 6 fps (art11/f/NNN.png, g = 147 + 5*(NNN-1)) at full size and on art11/psheet_1-4.jpg (360x640, cyan line = y 880).
+# QA-art round 11 s03: PASS (notes)
+s03 is the vista where Yan pennants rise over the plain (g 156-297). I extracted every 5th frame (g = 147 + 5*(NNN-1)), viewed them at full size, and zoomed the town centres and the bottom third at g 277-297.
 
-## Earlier changes
-1. Pennant count, scale and placement: PARTLY done. The flags now grow from the pole top and are capped in size, which is good. But the camera drifts right and down over the near town blocks, so at the end (g 292, art11/f/030.png) only about 7 flags are in frame, not the 30 or more I asked for. The "51 up by g 296" are mostly outside the frame. s04 then opens on about 35 flags.
-2. Pop animation: Mostly done. No flag lies flat any more. But the nearest pole at the bottom right (g 272-282, f/026-028) leans about 30° across the lower third, and its cloth is cut by the right edge. On the phone it still reads as a falling pole.
-3. Material: The pennants are DONE (dark silk, red border, lit by the dusk; they read as cloth). The moat is now a textured, glinting gravel or mud ring, which is acceptable. The navy slabs are NOT done. The flat navy ramp/plank is still inside the first town (g 147-200), and flat navy L-shaped strips lie at the pole bases of the later towns. At g 277 (f/027.png, bottom right) a navy slab carries a lump of yellow cubes, which reads as a placeholder prop (rule 2).
+## Round-10 fixes
+1. **25 or more black flags at the end: DONE.** The camera now eases up and back from about g 240. On the last frame (g 297) I count about 25 pennants: around 12 large ones around Jimo and the far towns, and about 12 smaller ones over the near grid. "Seventy towns fell" reads, and the shot matches the opening of s04.
+2. **Nearest pole out of the bottom third: Mostly done, accepted.** The big leaning pole at the lower right is gone. Small distant poles, 70-95 px long, still sit in the bottom third. One at g 277 is at x 5-75, y 1050-1120, leaning about 35° and less than 40 px from the left edge. At phone size it is about 45 px and reads as a far flag, not a falling pole.
+3. **Navy strips and the yellow cube: Mostly done, accepted.** The navy ramp/plank and the yellow-cube lump are gone. What remains is thin navy path lines inside the towns, about 5-10 px wide (for example x 300-470, y 465 and around x 300-360, y 640-670 at g 297), plus tiny multicolour figure lumps of 10-15 px. None of these read on the phone.
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 5 | 7 | 5 | n/a (no cast) | 6 |
+| 7 | 7 | 7 | n/a | 6 |
 
-On the phone you see a warm dusk plain with lit towns, and a handful of black flags appear near the lens over the last second. The line is "Yan took 70+ towns". The image says "a few towns" instead.
-
-## Verdict: FIX-FIRST
-1. **End framing shows the whole plain (g 255-296):** Stop the drift down into the near blocks. From about g 240, ease the camera up and back (or pull its look-at toward the horizon) so the last frame looks over the plain with 25 or more black flags visible, matching s04's opening field. Keep the eased move; no pulse.
-2. **Nearest pole (g 262-292):** Keep every pole out of the bottom third and at least 40 px inside the frame edges. Either skip the nearest town's pennant in this shot or pop it before it reaches the lower-right corner.
-3. **Navy slabs (set-level, also affects s04 and s25):** Give the navy ramp/plank and the L-shaped pole-base strips an earth or timber texture (or hide them), and remove the yellow-cube lump at the pole base. Check the last 10 frames for zero flat navy areas.
-
-## Notes
-- The bright Jimo "sun flare" on the horizon is pretty, but it is stronger than any town light. Less bloom would read more like a town.
-- Frame-diff median 5.8 / p90 6.5, below the 9 guide. The move is visible, so this is fine for a vista.
+## Notes (not blocking)
+- The thin navy path lines would look better in the earth road colour (set polish, also affects s04 and s25).
+- Jimo's sun-like flare is still stronger than the other town lights (repeat note).
+- Frame-diff p90 6.3, below the 9 guide. The eased rise is visible, which is fine for a vista.

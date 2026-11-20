@@ -1,16 +1,16 @@
-# QA_TECH s17 (take g1303-1393, shot g1309-1387) - FAIL (take gate)
-Checked: 6 fps (23 frames incl. first/last 3), phone-size sheets. Director 8.77 / 15.00: median and p90 OK; no pulsing (elder slides in, push eased). NIGHT, no text, no mouths, heads < 880. No lit tail before "จุดไฟ" (only warm ground glow/brazier behind the oxen). Oxen are dragon-dressed with plain tails.
-## Earlier blockers
-- Holes in the wall: MET. Rubble-ringed holes are visible along the wall base.
-- Oxen nose-first: PARTLY. The oxen are front-3/4 and look at the lens, not at the holes; acceptable as a note.
-- Real 3D reed bundle foreground prop: NOT MET (see 1).
-- Tying visible: NOT MET (see 2).
-- Bare ground: NOT FIXED (see 3).
-- Navy rubble lumps along the wall base: gone (holes now textured grey-lilac); OK.
-## Issues
-1. g1303-1393 - fg reed bundle is a flat, outlined yellow card pinned to the bottom-left of the screen in every frame (same position, no parallax, no shadow). It is not a 3D reed bundle and reads as a sticker on the lens. Fix: a real lit, textured 3D bundle placed in the world 1-2 D from the lens that slides across with the truck.
-2. g1345-1393 - the elder carries a yellow plank-like bundle beside an ox, looking at the lens; the tie to the tail is not seen (bundle sits next to the tail tassel). Plan beat "reeds tied to the tails" does not read on a phone.
-3. g1303-1345 - bare ground: the bottom 35-40 % of the frame is plain dark-purple pebbled road with only the pinned card and one stone (about 35 % visually, over 30 %). Fix: tilt up / push in, or add dark lit fg props (baskets, sacks, a 3D reed bundle) in the bottom corners.
+# QA-tech round 11 s17: FAIL
+Checked: 20 frames (6 fps g1309-1387 + cut +-3: g1306/1308/1309/1312/1314, g1384/1387), phone strips with y 860/880 lines, full-size crops of g1334 and g1379. Director 9.30/15.02: OK, elder slides in, truck + parallax visible, no pulsing. NIGHT, no text, mouths closed/held. No lit tail before the ignition line. Face (round head) lowest edge y ~720; heads fine.
+
+## Previous blocking notes
+1. Fg reed bundle: PARTLY met. It is now a real bundle of separate stalks lying in the lower right/left that slides across (g1309-1339), but it is flat-lit yellow with a navy outline, has no contact shadow, and leaves the frame at ~g1339 so the last 50 frames have no fg prop. Not a blocker alone.
+2. Tie visible: NOT MET. The elder (g1344-1387) holds a long yellow bundle with red bands at the ox's flank, looks at the lens, and the ox tail tassel hangs beside the bundle's end; the reed is not seen being tied to the tail. Reads as "man carrying a plank". Fix: pose the bundle so its end overlaps the tassel (tail tip at the reed tie, red ties on both), the elder's eyes/head turned toward the tail for g1345-1365.
+3. Bare ground: NOT FIXED (see blocking 1).
+
+## Blocking
+1. g1339-1387 (and 1309-1334 partly) - bare ground over 30 %. The lower ~35 % (y > 0.66) is plain violet pebbled gravel plus a hard-edged tan trapezoid patch, with no prop once the reed bundle exits at g1339 (measured on g1339, 1354, 1364, 1369: plain ground about 34-37 % of the frame, the elder's legs cover only ~6 %). Fix: tilt up so the horizon is at y ~0.58, or add dark lit fg props (baskets, sacks, a second reed bundle) in the lower corners for the whole shot, and slide them with the truck.
+2. g1314-1387 - the "mygap" ground plane is visible as a hard-edged, flat tan/brown polygon against the blue-lavender gravel (g1314-1359 at x 60-420, y 880-1000; g1369-1387 a large wedge across the lower half). It reads as an untextured slab. Fix: blend it with the set's ground texture/colour (match the hue, add a 30 px soft edge or extend it under all visible ground).
+
 ## Notes
-- g1303-1340 cast is small (herd 60-150 px) with the elder out of frame; he enters about g1340.
-- A stray ox head peeks at the left edge at g1318 and g1348 (clipped, inside a hole); minor.
+- g1374-1387 the beard tip hangs to y ~890-910, i.e. into the caption band (head/chin themselves are at y ~720). Lift the camera/elder 40 px if captions overlap.
+- Ox faces read at the lens (eye-line note); reed bundle needs a contact shadow.
+- g1329-1369 a barrel/bucket at the left edge with a glowing lamp is fine.

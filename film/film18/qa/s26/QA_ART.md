@@ -1,23 +1,15 @@
-# QA-art s26 (ending: the general runs home chased by oxen, 65.27-70.40 s), TAKE gate round 9 — FIX-FIRST (ending, strict; two small changes)
-I reviewed take.mkv at 6 fps (art11/f/NNN.png, g = 1950 + 5*(NNN-1)) at full size (art11/h.png, g 2055 and g 2105 with a y 880 line; art11/c32.png zoom) and on art11/psheet_1-4.jpg (360x640).
+# QA-art round 11 s26: PASS (notes)
+s26 is the ending: the general runs home chased by oxen (g 1958-2111). I extracted every 5th frame (g = 1950 + 5*(NNN-1)), viewed them at full size 720x1280 with lines at y 860 and 880, and zoomed the nearest ox heads at g 2075-2110.
 
-## Earlier changes
-1. Ox head above the caption: ALMOST done. The nearest ox at the right edge on the final frames (g 2095-2111) has the bottom of its open-mouth outline at about y 885-890, measured on the zoomed pixels (art11/c32.png). It is no longer at 915-940, but it is still about 10 px into the band I asked to keep clear (860). The take notes say "max chin 757", which does not match the pixels.
-2. Cup and fist in frame: DONE. The whole jue cup and the fist sit at x 30-200 on the last frame.
-3. Warm sky: DONE. There is a smooth pale-gold to peach to pink gradient with no arc, and the last frame glows.
+## Round-10 fixes
+1. **Nearest ox mouth at y 860 or above: DONE.** I measured the lowest dark outline of the open mouth on rendered pixels. It sits at y 827 at g 2075, 855 at g 2080, 843 at g 2085, 847 at g 2090, 840 at g 2095 and 850 at g 2105. On the last frame (g 2110) the visible ox mouths are at about y 830-850. Nothing roars into the caption band.
+2. **Dark foreground prop, plain dirt 25 % or less: PARTLY done, accepted.** The dropped helmet is in the bottom-left corner for the whole take and slides with the move. I estimate plain dirt at about 28-30 % of the frame (pixel mask plus a geometric check, y about 860-1280 minus the helmet, legs and feet). It peaks near 30 % at g 2010-2025. That is in the 25-30 % note band, so it does not block.
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 8 | 8 | 6 | 7 | 7 |
+| 8 | 8 | 7 | 7 | 7 |
 
-The joke lands on the phone. The armoured general sprints away screaming, with his cup still up, in front of the warm Jimo gate. Rage-faced dragon oxen with smoking tails gain on him, and the push holds on him and the nearest ox at "ตลอดทาง".
-
-## Verdict: FIX-FIRST (small; the next take should PASS)
-1. **Nearest ox mouth at y 860 or above, g 2085-2111:** Move that ox about 0.3 D farther back, or lower it 0.15 D. Do not raise the camera look-at, which would add bare ground. Measure the lowest dark outline pixel of the mouth on the rendered last frame.
-2. **Bare ground in the bottom third:** Plain dirt below the feet is about 30-32 % of the frame for the whole shot (y 880-1280 minus the legs). Add one dark, lit foreground prop low in a corner and sliding with the move, such as a dropped Yan helmet, a broken pennant pole or the tipped wine jar from g 1960. Aim for 25 % or less plain ground.
-
-## Notes
-- g 1960-1990 (f/003-009): the tipped orange wine jar sits in front of the lead ox's lower face. Moving it 40 px left or down would show the full rage face during "ส่วนขุนพลเยียน".
-- Raised, tilted brows would make the scream read as panic rather than a grin at phone size (repeat note).
-- A faint warm rim on the general's sprite from the dawn sky would seat him in the light of the set.
-- Frame-diff median 6.0 / p90 7.3, below the 9 guide. The tracking and the held push from g 2068 are visible, so I accept it.
+## Notes (not blocking)
+- The helmet is small and half cut by the left edge. Scaling it up about 1.3x, or adding a broken pennant pole lying in the lower right, would bring the dirt under 25 %.
+- Repeat notes: raised, tilted brows would make the scream read as panic, and a faint warm rim from the dawn sky on the general would help seat him in the set.
+- Frame-diff p90 7.2, below the 9 guide. The tracking pull and the push are visible, so I accept it.
