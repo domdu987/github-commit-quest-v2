@@ -7,3 +7,10 @@ Shot 3, HALL hall_window DAY, take g101-199 (handles 9+9, out side is DIS 13), 6
 4. g131, g146, g161 (whole wide section): no visible contact shadow under either astronomer's shoes (white legs on the floor/rug), they read as floating. Fix: contact decals darker/larger (multiply 0.5+) on both the wood floor and the navy rug.
 5. g131-166: astro (white wig) is half-hidden behind the chair back, legs cut by the chair; plan wants him "beside" the telescope scratching. Fix: offset his mark 0.4 D away from the chair.
 6. meta.json g1 = 191 is exclusive (plan g1 = 190; shot_ranges 110-190 correct). Note only.
+
+## Round 2: FAIL
+Re-checked at 6 fps + cuts g110/g191 +-3 (take g101-199). qa_auto PASS. No text, no black/magenta, no frozen, no pop, no blur. Mouths flat, none moving: OK. Heads centre in 450-760, nothing at y >= 880. Frame-diff (take.mkv): median 2.97, p90 10.99 vs target >= 4 / >= 12 (round 1 measured 4.73 / 15.60: the move is now weaker). Snap on "ทำไม่ได้" g177: visible g176-186, OK.
+Earlier issues: 1 FIXED (tripod is wood brown, no black wedge). 2 FIXED for astro_b (fully inside), but see new issue 2. 3 FIXED (astro_b holds the brass eyepiece to his eye). 4 mostly FIXED (faint shadow under astro_b's shoes; astro's feet hidden). 5 NOT FIXED but now a note (astro still behind the chair back, legs hidden; scratching reads). 6 note still true (g1=191 exclusive).
+1. g110-190 (whole shot): frame-diff median 2.97 (< 4), p90 10.99 (< 12). The slow push in g110-176 is near uniform (diff 2.4-3.5). Fix: stronger push/slide (9-10 %/s + >= 50 px/s) during g110-170 so the median reaches 4, and a faster snap (x2 over 13 f) so p90 reaches 12.
+2. g181-196: astro (white wig, right) is clipped by the right frame edge (wig lappet and sleeve cut at x = 720 for the whole snap end). Fix: shift the snap framing ~40 px left or reduce the final scale x2.0 -> x1.8 so both wigs stay inside.
+NOTES: g131-176 black curved arc (armillary/brass arm renders black) at the left, set material; chair back still overlaps astro's belly.

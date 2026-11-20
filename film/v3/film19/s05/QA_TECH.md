@@ -9,3 +9,9 @@ Shot 5, SHIP ship_rocks STORM_DUSK, take g253-364 (handles 9+9, out side DIS 13)
 6. g262-273 whip: the whip pan is gentle (diff 7 in g262-270, peaks only at g271-279 after the arrival), so the "whip arrival" is actually late; the first 8 frames are near-static. Fix: put the whip peak on g262-268.
 7. framediff.json says "pairs g 192..261" (shot 4's range) but the numbers are shot 5's (re-measured 6.22 / 21.73); fix the label.
 8. meta.json g1 = 356 is exclusive (plan g1 = 355). Note only.
+
+## Round 2: FAIL
+Re-checked at 6 fps + cuts g262/g356 +-3 (take g253-364). qa_auto PASS. No text, no black/magenta, no frozen, no blur. Frame-diff (take.mkv): median 6.26, p90 22.01: OK. Whip peak now g262-268 (diff up to 33): OK. ONE shake at g330-339: OK. Mouths expression only. Heads centre y ~ 650-740, nothing at 880. Nobody on the bulwark: OK. Black cannon blobs gone (hatch/cannon hidden): OK. Contact shadows under fg and red-bandana sailors: OK.
+Earlier issues: 1 PARTLY fixed (see issue 2), 2 FIXED, 3 FIXED, 4 FIXED, 5 FIXED, 6 FIXED, 7 FIXED (label), 8 note still true (g1=356 exclusive).
+1. g343-363: the foreground sailor (stripe jersey, bobble hat) is clipped by the left frame edge (hat bobble, shoulder and arm cut at x 0-10; worst g355-363). He is the main subject. Fix: move his mark ~0.3 D inboard/right or push the slide target so he stays >= 20 px inside.
+2. g268-363: sailor C (teal jersey) is almost fully hidden behind the captain and the red-bandana sailor (only a head and sliver show); only two bailing arcs read (fg sailor, red bandana), the captain and C do not bail. Plan: "sailors bail". Fix: offset C 0.6 D toward the rail/inboard so he shows beside the captain with a visible bucket arc.

@@ -9,3 +9,11 @@ Shot 10, HALL hall_wide DAY, take g764-871 (handles 9 in / 10 out, out side DIS 
 6. g859-871: Harrison's ponytail bow/hair edge touches the left of the frame and the tricorne is a flat black wedge hanging in front of the belly at an angle (g860); hand does not visibly hold it (fingers hidden behind the apron). Fix: raise the hat in his right hand at chest height with the fingers over the brim.
 7. g764-843: no visible contact shadows under Harrison's and astro19's feet on the rug (g814: legs end in shoes with no decal). Fix: contact decals.
 8. meta.json g1 = 862 is exclusive (plan g1 = 861). Note only. Handles 9 in / 10 out present.
+
+## Round 2: FAIL
+Re-checked at 6 fps + cuts g773/g862 +-3 (take g764-871; handles 9 in / 10 out). qa_auto PASS (soft g848/849/852 = the planned snap streak, 3 frames: OK; the old g852-871 blur run is gone). No text, no black/magenta, no frozen, no pop outside the snap. Frame-diff (take.mkv): median 4.50, p90 17.36: OK. Snap on "ไอ้ช่างไม้" g846-849: OK.
+Earlier issues: 1 FIXED (Harrison now at the open door), 2 PARTLY (pointing arms now visible g814-844; astro_b/c still stack at g764-809), 3 FIXED, 4 FIXED, 5 FIXED (slow push continues), 6 NOT FIXED, 7 faint shadow under Harrison at the door: OK; the astronomers' feet are hidden by the table, 8 note still true (g1=862 exclusive).
+1. g854-871: plan "Harrison with his tricorne": no tricorne visible; his arms are folded/crossed low with empty hands (the QA_TECH round-1 item 6 fix of "hat in the right hand at chest height" is not done). Fix: put the tricorne in his raised hand, fingers over the brim.
+2. g764-809: astro_b and astro_c (right) still overlap into one clump (two wigs, one face partly hidden). Fix: separate marks by >= 0.8 D.
+3. g829-849: the right-hand Board member is about 50 % clipped by the right frame edge (face half cut at g839-844). Fix: shift the slide end ~50 px left or put him at the mark 0.4 D inboard.
+NOTES: g854-871 a candle-like shape on the top of the painting sits right above Harrison's head (tangent): set note; Harrison's hat bow/ponytail fine; nobody on the rail issue n/a.

@@ -9,3 +9,9 @@ Shot 6, HALL hall_table DAY, take g347-474 (handles 9+9, in side DIS 13), 6 fps 
 6. g392-474: eye-line: astro's pupils stay on the lens/up-right, never on the bag (planned "eyes on it, glint"). Fix: aim the pupils at the bag on the drop (g378-390) and keep the glint.
 7. g392-474: the bag shows no bounce squash after landing (g387 lands, g392 same shape). Fix: add a 2-3 frame 0.08 D bounce.
 8. meta.json g1 = 466 is exclusive (plan g1 = 465). Note only.
+
+## Round 2: FAIL
+Re-checked at 6 fps + cuts g356/g466 +-3 (take g347-474). qa_auto PASS. No text, no black/magenta, no frozen, no blur. Bag drop on "รางวัล" g378-387 and push on "สองหมื่นปอนด์" g447: OK. Mouths: fixed expressions, no lip-sync: OK. Frame-diff (take.mkv): median 5.16, p90 10.81 (< 12). Handles 9/9 and g0 = 356 OK.
+Earlier issues: 2 FIXED (astro_b present right of table, eyes wide), 3 FIXED for g347-377, 4 FIXED (head centre now ~ 480-560), 5 FIXED (table fills the lower frame), 6 mostly FIXED (eyes wide, glint; pupils on the bag in g397-422), 7 not verifiable at 6 fps (bag sits slightly lower at g392 than g387: acceptable), 8 note still true (g1=466 exclusive).
+1. g356-465 (whole shot): p90 10.81 vs target >= 12 (median 5.16 OK). Fix: make the g437-457 snap faster (x2.2 over 13 f) or add 60 px/s slide so p90 reaches 12.
+2. g447-466: end of the push crops both astronomers: astro (left) wig and shoulder cut by the left edge, astro_b (right) head about 40 % cut by the right edge from g452. Fix: end the push framed on the bag with both heads inside (stop at ~x1.5, or pan so the bag is centred) or tighten their marks toward the bag by 0.5 D.
