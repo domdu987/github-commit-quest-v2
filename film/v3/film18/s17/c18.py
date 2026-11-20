@@ -144,45 +144,28 @@ def motion(shot, push=None, slide=None, moves=None):
     if slide is not None: mv['slide'] = slide
     if moves is not None: mv['moves'] = list(moves)
 
-def fg_bundle(shot, side='left', n=9, length=0.55, rad=0.045, drop=0.42, ahead=1.7, lat=0.62):
-    """a real tied bundle of yellow reeds laid low in the lower corner, parented to the camera (replaces the set's upright-rod 'reeds' prop)."""
+def fg_bundle(shot, side='left', n=19, length=0.5, rad=0.05, drop=0.6, ahead=1.7, lat=0.6):
+    """a tied bundle of reeds (several tones, tapered, 2 red cords) laid low in the lower corner, parented to the camera; hides the set's slab-like 'reeds' prop."""
     for ob in STATE.get('fg_objs', []):
         if ob.name.startswith('fgreeds'): ob.hide_render = True; ob.scale = (0.0, 0.0, 0.0)
     bpy.context.view_layer.update(); cam = bpy.data.objects['cam']; setup = S.pose_at(S.SHOTS[shot], 0.0); loc, f, r, u = J._cam_frame(setup); M = STATE['M']; Bk = J.Banks(); n0 = set(STATE['SET'].objects)
     sg = 1 if side == 'right' else -1; o = loc + f * ahead + r * (lat * sg) + u * (-drop)
-    b = Bk('fgbundle', hull=T.hull(3.0)); d = (r * (-0.55 * sg) + f * 0.35).normalized(); rnd = random.Random(7)
+    d = (r * (-0.6 * sg) + f * 0.3).normalized(); rnd = random.Random(7); mats = ['hay', 'straw', 'straw_d']
+    b = {k: Bk('fgb%d' % k, hull=T.hull(3.0)) for k in range(3)}
     for k in range(n):
-        a = 2 * math.pi * k / n; off = (r * math.cos(a) + u * math.sin(a)) * (rad * 1.6 * (0.4 if k == 0 else 1.0)); q = o + off + d * rnd.uniform(-0.04, 0.04)
-        J.rod(b, q - d * length / 2, q + d * length / 2 + u * rnd.uniform(0, 0.03), rad, M['gold'], seg=6)
-    for s in (-0.2, 0.2): J.cyl(b, o + d * s * length - V((0, 0, 0)), rad * 2.0, 0.05, M['red_d'], seg=8, cap=False)
+        a = 2 * math.pi * k / n; off = (r * math.cos(a) + u * math.sin(a)) * rad * (1.2 if k else 0.3); q = o + off + d * rnd.uniform(-0.05, 0.05); ln = length * rnd.uniform(0.8, 1.15)
+        J.rod(b[k % 3], q - d * ln / 2, q + d * ln / 2 + u * rnd.uniform(0, 0.04), rad, M[mats[k % 3]], seg=5, r1=rad * 0.35)
+    for s in (-0.22, 0.22): J.cyl(b[0], o + d * s * length, rad * 2.2, 0.04, M['red_d'], seg=8, cap=False)
     Bk.flush(STATE['SET'])
     objs = [ob for ob in STATE['SET'].objects if ob not in n0]
-    ym = bpy.data.materials.get('reed_y')
-    if ym is None:
-        ym = bpy.data.materials.new('reed_y'); ym.use_nodes = True; nt = ym.node_tree; nt.nodes.clear(); em = nt.nodes.new('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.86, 0.62, 0.16, 1); em.inputs['Strength'].default_value = 0.3
-        o = nt.nodes.new('ShaderNodeOutputMaterial'); nt.links.new(em.outputs[0], o.inputs[0])
+    tones = [(0.78, 0.56, 0.18), (0.62, 0.42, 0.14), (0.88, 0.68, 0.28)]
     for ob in objs:
         T.no_bounce(ob); ob.parent = cam; ob.matrix_parent_inverse = cam.matrix_world.inverted()
-        if ob.type == 'MESH':
-            ob.data.materials.clear(); ob.data.materials.append(ym)
+        for k in range(3):
+            if ob.name.startswith('fgb%d' % k) and ob.type == 'MESH':
+                mm = bpy.data.materials.new('reedtone%d' % k); mm.use_nodes = True; nt = mm.node_tree; nt.nodes.clear(); em = nt.nodes.new('ShaderNodeEmission'); em.inputs['Color'].default_value = tones[k] + (1.0,); em.inputs['Strength'].default_value = 0.35
+                o2 = nt.nodes.new('ShaderNodeOutputMaterial'); nt.links.new(em.outputs[0], o2.inputs[0]); ob.data.materials.clear(); ob.data.materials.append(mm)
     STATE.setdefault('fg_objs', []).extend(objs)
-
-# ------------------------------------------------------------------ soft dust / smoke puffs (light-brown, replaces the set's dark dust squares)
-def puff_meta(alpha=0.5, tone=(226, 196, 160)):
-    from PIL import Image
-    name = 'puff2_%d_%d_%d_%d' % ((alpha * 100,) + tone); p = os.path.join(CD.CARDS, name + '.png'); os.makedirs(CD.CARDS, exist_ok=True)
-    if not os.path.exists(p):
-        n = 256; yy, xx = np.mgrid[0:n, 0:n]; a = np.zeros((n, n))
-        for (cx, cy, rad) in [(128, 140, 70), (84, 156, 48), (176, 152, 50), (124, 94, 52), (160, 104, 40), (92, 112, 40)]:
-            a = np.maximum(a, np.exp(-(np.hypot(xx - cx, yy - cy) / (rad * 0.62)) ** 2))
-        a[a < 0.03] = 0
-        im = np.zeros((n, n, 4), np.uint8); im[..., 0], im[..., 1], im[..., 2] = tone; im[..., 3] = (np.clip(a, 0, 1) * alpha * 255).astype(np.uint8)
-        Image.fromarray(im, 'RGBA').save(p)
-    return dict(path=p, w=1.0, h=1.0, x0=-0.5, feet=0.0, kind='puff')
-
-def put_puff(pos, size, camloc, alpha=0.5, name='puff', tone=(226, 196, 160)):
-    m = puff_meta(alpha, tone); p = V(pos); d = V(camloc) - p; yaw = math.degrees(math.atan2(d.x, -d.y))
-    return R2.put_card(m, (p.x, p.y, p.z), yaw, size, name=name, tint=(1, 1, 1), k=1.0, shadow=False)
 
 # ================================================================== round 2 (TAKE gate): flames parented to the tail tip, trailing backward, sparks, one warm light per lit tail
 def spark_meta():
@@ -220,8 +203,10 @@ def put_ox(i, pos, travel, scale, camloc, phase=0, flame=-1, state='dragon', vie
         right = V((math.cos(ly), math.sin(ly), 0.0)); tail = p + right * lx + V((0, 0, lz)); TAILS.append((tail, sc))
         back = 1.0 if lx > 0 else -1.0
         fm = flame_meta(flame % 3); fs = tfx * sc; bob = 1.0 + 0.1 * math.sin(i + flame)
-        fo = R2.put_card(fm, (tail.x, tail.y, tail.z), yaw, fs * bob, name='tfl%d' % i, tint=(1, 1, 1), k=1.6, shadow=False)
-        fo.rotation_euler = (0, math.radians(back * lean + 6 * math.sin(phase * 1.7 + i)), math.radians(yaw)); fo.location = (tail.x + 0.0, tail.y + 0.0, tail.z)
+        dd = V(camloc) - tail; cyaw = math.degrees(math.atan2(dd.x, -dd.y))
+        fo = R2.put_card(fm, (tail.x, tail.y, tail.z), cyaw, fs * bob, name='tfl%d' % i, tint=(1, 1, 1), k=1.6, shadow=False)
+        sgn = 1.0 if (V((math.cos(math.radians(cyaw)), math.sin(math.radians(cyaw)), 0)) * back * (1 if True else 0)).dot(right) >= 0 else -1.0
+        fo.rotation_euler = (0, math.radians(sgn * back * lean + 6 * math.sin(phase * 1.7 + i)), math.radians(cyaw)); fo.location = (tail.x, tail.y, tail.z)
         if sparks:
             sm = spark_meta(); rr = random.Random(i * 131 + int(phase * 7))
             for s in range(6):
