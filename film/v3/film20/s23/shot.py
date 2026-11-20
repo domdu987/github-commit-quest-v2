@@ -1,0 +1,218 @@
+#!/usr/bin/env python3
+"""shot.py -- film 20 take s23 = shot 23, THE EXTENSION (g 1656..1731 + handles: 8 in-dissolve g 1648..1655, 8 out-dissolve g 1732..1739).
+"เมืองเลยให้ หอตั้งอยู่ต่อ อีก 70 ปี" -- the city let the tower stand 70 more years.
+
+TOWER tower_fair / DAY 1910 (set_year 1910: pavilions gone, biplane over the fair, antenna + hut up; crowd level 3).  Callback of shot 15:
+same two-shot in depth, Old Eiffel (white beard, stoop) in front, the official behind-right hands him a NEW sealed document, then on
+"อีก 70 ปี" (event g 1706) Eiffel sweeps his bowler off and raises it (worried -> proud, hat swap on the closed frame of a blink) while the
+camera SNAPS in.  Overall move: PULL 8 %/s (callback), slide, arc.  Mouths never move.
+    python3 shot.py probe a:b[:step] | camreport | stills a:b[:step] <out> [scale] [spp] | final a:b[:step] [scale] [spp]
+"""
+import math, os, sys, json
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import c20 as C                                          # noqa: E402
+from mathutils import Vector                             # noqa: E402
+
+S, CO, actors, cast20 = C.S, C.CO, C.actors, C.cast20
+lerp, clamp, blink, ez, u_of, bf = C.lerp, C.clamp, C.blink, C.ez, C.u_of, C.bf
+WORK = os.path.join(HERE, "work")
+
+G0, G1 = C.g_bound(55.21), C.g_bound(57.75)      # 1656, 1733 -> shot = g 1656..1732
+H_IN, H_OUT = 8, 8                              # DIS 13 in: 13/2 + 2 = 8 ; hard cut out: 4
+GF = G0 - H_IN                                  # first rendered frame
+G_LAST = G1 + H_OUT - 1
+GS = list(range(GF, G_LAST + 1))
+G_HAT = C.cap_g("อีก 70 ปี")                    # 1706: the bowler comes off + snap
+SNAP = (G_HAT - 3, G_HAT + 11)
+HAND = (G0 + 8, G0 + 28)                        # document handed over (official arm out, Eiffel reaches)
+G_SWAP_DOC = G0 + 20                            # doc prop moves official -> Eiffel (hands meet)
+G_XFER = G0 + 40                                # doc moves to the left hand behind a blink
+BLINKS = [G0 + 12, G_HAT - 1]
+LIGHT, PRESET = "DAY", "tower_fair"
+YEAR = 1910
+PPD = 256
+
+# staging (world D): Eiffel at the preset mark, the official a step behind and to the right
+CAM_BACK = 4.4                                  # D from the camera to Eiffel at the start
+CAM_Z = 2.0
+TILT0 = 1.0
+FG_SHIFT = (2.7, -0.3, 0.0)
+EIF_Z = 2.55                                    # head centre above the feet
+
+
+def marks(A):
+    e = Vector(A["marks"]["eiffel_fair"])
+    return dict(eiffel=e, official=e + Vector((2.7, 1.3, 0.0)))
+
+
+def cam_path(A):
+    m = marks(A)
+    subj = m["eiffel"] + Vector((0.9, 0.0, EIF_Z))
+    c = Vector((subj.x - 1.2, subj.y - CAM_BACK, CAM_Z))
+    return C.CamPath(c, subj, GF, G_LAST, push=-0.10, slide_px=-40.0, rise_px=0.0, arc_deg_s=8.0, tilt0=TILT0, tilt_deg_s=-2.0,
+                     decay=0.3, snaps=[dict(g=SNAP, k=1.9, peak=1.9, shift=(0.0, 0.0), tilt=-2.0)])
+
+
+def move_fg(A, cam_loc):
+    d = Vector(cam_loc) - Vector(A["cams"][PRESET]["loc"])
+    d.z = 0.0
+    d = d + Vector(FG_SHIFT)                       # (right, forward) D: slide the bench out of the official's way
+    for ob in C.bpy.data.objects:
+        if ob.name.startswith(("fg_", "shade_casters")):
+            ob.location = ob.location + d / CO.SC
+
+
+def cam_path_static():
+    import tower20
+    cam = tower20.CAMS_M[PRESET]
+    A = dict(marks=dict(eiffel_fair=CO.W((-4.4, -143.8, 0.0))), cams={PRESET: dict(loc=CO.W(cam["loc"]))})
+    return cam_path(A)
+
+
+# ----------------------------------------------------------------------------- poses
+C.add_expression("proud_smile", eyes="happy", tilt=0.0, brows=("both", 0.10, 8.0, 0.045, 0.16, 0.012), mouth="smile")
+
+
+def idle(g, ph=0.0):
+    return dict(lean=3.0 * math.sin(g * 0.23 + ph), squash=(1.0, 1.0 + 0.015 * math.sin(g * 0.31 + ph)))
+
+
+def official_pose(g):
+    u = u_of(g, HAND[0], HAND[1])                                       # 0 doc held up, 1 arm stretched toward Eiffel
+    held = g < G_SWAP_DOC
+    p = dict(yaw=0.35, arm_r="hip", legs="wide")
+    if held:
+        p["arm_l"] = dict(hand=(lerp(-0.55, -1.15, u), lerp(0.85, 0.68, u)), bend=0.2, stretch=lerp(1.0, 1.25, u))
+        p["prop_l"] = "doc_seal"
+    else:
+        u2 = u_of(g, G_SWAP_DOC, G_SWAP_DOC + 10)
+        p["arm_l"] = dict(hand=(lerp(-1.15, -0.4, u2), lerp(0.68, 0.30, u2)), bend=0.2, stretch=lerp(1.25, 1.0, u2))
+    p["expr"] = "happy" if g > G_SWAP_DOC else "stern"
+    p["pitch"] = -0.05
+    p.update(idle(g, 1.3))
+    p["blink"] = blink(g, [G0 + 30])
+    p["t"] = g / 30.0
+    return p
+
+
+def eiffel_pose(g):
+    u = u_of(g, HAND[0], HAND[1])
+    p = dict(yaw=0.40)
+    bl, ex = C.blink_swap(g, G_HAT, "worried", "proud")
+    p["expr"] = ex
+    if g < G_SWAP_DOC:                                      # reaching for the document
+        p["arm_r"] = dict(hand=(lerp(0.3, 1.0, u), lerp(0.2, 0.62, u)), bend=-0.2, stretch=lerp(1.0, 1.2, u))
+        p["arm_l"] = "hip"
+    elif g < G_XFER:                                        # document in the right hand
+        u2 = u_of(g, G_SWAP_DOC, G_SWAP_DOC + 12)
+        p["arm_r"] = dict(hand=(lerp(1.0, 0.45, u2), lerp(0.62, 0.75, u2)), bend=-0.2, stretch=lerp(1.2, 1.0, u2))
+        p["prop_r"] = "doc_seal"
+        p["arm_l"] = "hip"
+    else:                                                   # document moved to the left hand (swap on a blink)
+        p["arm_l"] = dict(hand=(-0.45, 0.75), bend=0.4)
+        p["prop_l"] = "doc_seal"
+        if g < G_HAT:
+            p["arm_r"] = "hip"
+    if g >= G_HAT:                                          # bowler off and held out high with a flourish (hat_off bare head)
+        uh = u_of(g, G_HAT, G_HAT + 8)
+        p["hat_off"] = 1
+        p["arm_r"] = dict(hand=(lerp(0.45, 0.65, uh), lerp(0.4, 1.3, uh) - 0.08 * u_of(g, G_HAT + 14, G_HAT + 30)), bend=0.5)
+        p["prop_r"] = "bowler_held"
+        p["pitch"] = -0.1
+        p["head_roll"] = -4.0
+    else:
+        p["pitch"] = 0.15
+    p.update(idle(g, 0.4)); p["lean"] = 4.0 + 3.0 * math.sin(g * 0.23 + 0.4)
+    p["blink"] = bl if g < G_HAT + 2 else blink(g, [G_HAT + 36])
+    if G_XFER - 1 <= g <= G_XFER + 1 and g < G_HAT - 1:
+        p["blink"] = blink(g, [G_XFER - 1])
+    p["t"] = g / 30.0
+    return p
+
+
+# ----------------------------------------------------------------------------- the take
+class Take(C.Take):
+    def __init__(self, quality="preview"):
+        C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s23")
+        self.path = cam_path(self.A)
+        move_fg(self.A, self.path.loc0)
+        self.key_cam(bf(GF), *self.path.at(GF))
+        self.scene.frame_set(bf(GF))
+        self.M = {k: C.on_ground(v) for k, v in marks(self.A).items()}
+        self.eif = self.actors["eif"] = C.make_actor("eif", "eiffel_old", os.path.join(WORK, "sprites"),
+                                                     contact=dict(width=1.3, depth=0.55, opacity=0.8), cam=self.cam)
+        self.off = self.actors["off"] = C.make_actor("off", "official", os.path.join(WORK, "sprites"),
+                                                     contact=dict(width=1.3, depth=0.55, opacity=0.8), cam=self.cam)
+
+    def pose(self, gs):
+        for g in gs:
+            f = bf(g)
+            self.key_cam(f, *self.path.at(g))
+            C.place(self.eif, f, self.M["eiffel"])
+            C.place(self.off, f, self.M["official"])
+            self.key_set(f, set_year=YEAR, set_crowd=3)
+        self.bob_crowd(gs)
+        for g in gs:
+            f = bf(g)
+            self.scene.frame_set(f)
+            self.eif.pose(f, eiffel_pose(g), camera=self.cam)
+            self.off.pose(f, official_pose(g), camera=self.cam)
+        self.sprites_for([(self.eif, PPD), (self.off, PPD)], [bf(g) for g in gs])
+
+    def bob_crowd(self, gs):
+        """the fair crowd cards are static placeholders: give each a small idle bob + sway (nobody frozen), keyed every frame."""
+        cards = [ob for grp in CO.STATE.get("cards", []) for ob in grp]
+        if not hasattr(self, "_card0"):
+            self._card0 = [(ob, ob.location.copy(), ob.rotation_euler.copy()) for ob in cards]
+        for g in gs:
+            f = bf(g)
+            for i, (ob, loc0, rot0) in enumerate(self._card0):
+                ph = i * 1.9
+                ob.location = (loc0.x, loc0.y, loc0.z + 0.10 * abs(math.sin(g * 0.28 + ph)))
+                ob.rotation_euler = (rot0.x, rot0.y, rot0.z + 0.05 * math.sin(g * 0.13 + ph))
+                ob.keyframe_insert("location", frame=f)
+                ob.keyframe_insert("rotation_euler", frame=f)
+                for fc in (ob.animation_data.action.fcurves if hasattr(ob.animation_data.action, "fcurves") else []):
+                    for kp in fc.keyframe_points:
+                        kp.interpolation = "LINEAR"
+
+    def report(self, g):
+        f = bf(g)
+        self.scene.frame_set(f)
+        loc, look = self.path.at(g)
+        v = look - loc
+        return dict(g=g, cam=[round(c, 3) for c in loc], pitch=round(math.degrees(math.atan2(v.z, math.hypot(v.x, v.y))), 1),
+                    heads=C.head_report(self, f))
+
+    def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):
+        return C.Take.render(self, [bf(g) for g in gs], out_dir, scale=scale, samples=samples, threads=threads)
+
+
+if __name__ == "__main__":
+    cmd = sys.argv[1]
+    if cmd == "camreport":
+        P = cam_path_static()
+        rows, worst = P.report(GS[:-1])
+        for r in rows[::4]:
+            print(r)
+        print("longest run under 0.25 px/frame: %d frames (bible max 6)" % worst)
+        sys.exit(0)
+    gs = [g for g in C.parse(sys.argv[2]) if GF <= g <= G_LAST]
+    if cmd in ("probe", "stills"):
+        Tk = Take("preview")
+        Tk.pose(gs)
+        for g in gs:
+            print(json.dumps(Tk.report(g)), flush=True)
+            if cmd == "stills":
+                out = sys.argv[3]
+                scale = float(sys.argv[4]) if len(sys.argv) > 4 else 0.5
+                samples = int(sys.argv[5]) if len(sys.argv) > 5 else 4
+                st = Tk.render([g], out, scale=scale, samples=samples)[0]
+                os.replace(st["path"], os.path.join(out, "g_%04d.png" % g))
+                print("g %d  %.1f s wall %.1f cpu" % (g, st["wall"], st["cpu"]), flush=True)
+    elif cmd == "final":
+        scale = float(sys.argv[3]) if len(sys.argv) > 3 else 1.0
+        samples = int(sys.argv[4]) if len(sys.argv) > 4 else CO.FINAL_SPP
+        out = os.path.join(HERE, "raw") if scale >= 1.0 else os.path.join(WORK, "draft")
+        C.final_loop(lambda: Take("final" if scale >= 1.0 else "preview"), gs, out, scale=scale, samples=samples)
