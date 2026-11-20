@@ -34,7 +34,7 @@ def cam30(g):
     t = (g - 1789) / 84.0
     P0 = Vector((0.55, 1.4, 3.0)); L0 = Vector((-0.1, 8.0, 1.8))
     P1 = Vector((0.75, -1.8, 3.7)); L1 = Vector((-0.2, 6.5, 2.0))
-    u = 0.3 * smooth(t) + 0.7 * t
+    u = 0.65 * smooth(t) + 0.35 * t
     s = snap(g, 1822, 14)                         # mid snap: swing left and tilt
     P = P0 + (P1 - P0) * u + Vector((-0.5 * s + 0.5 * smooth((g - 1850) / 14.0), 0, 0))
     L = L0 + (L1 - L0) * u + Vector((-0.7 * s + 0.7 * smooth((g - 1850) / 14.0), 0.5 * s, -0.2 * s))
@@ -61,56 +61,47 @@ class Take(object):
 
     # ---- shot 29
     def setup29(self):
-        self.ber = self.add("ber", "bertillon", "bertillon", "low_a", dx=-0.25)
-        self.dfb = self.add("dfb", "dupont_fb", "dupont", "wall_look", dx=-0.8, dy=-0.03)
-        self.dcl = self.add("dcl", "dupont", "dupont", "wall_look", dx=-0.8)
+        self.ber = self.add("ber", "bertillon", "bertillon", "low_a", dx=-0.3)
+        for o in bpy.data.objects:
+            if o.name.startswith("fg"): o.hide_render = True
+        self.dfb = self.add("dfb", "dupont_fb", "dupont", "wall_look", dx=0.55, dy=-0.33)
+        self.dcl = self.add("dcl", "dupont", "dupont", "wall_look", dx=0.55, dy=-0.30)
         self.fn_fb = C.fade_setup(self.dfb)
         self.dcl_cast = "dupont"
 
     # ---- shot 30
     def setup30(self):
-        self.ber = self.add("ber", "bertillon", "bertillon", "ladder_foot")
-        self.g1 = self.add("g1", "gendarme_a", "gendarme_a", "aisle2", dx=0.35)
-        self.p1 = self.add("p1", "prisoner_a", "prisoner_a", "aisle2", dx=-0.45, dy=0.1)
-        self.g2 = self.add("g2", "gendarme_b", "gendarme_b", "aisle1", dx=-0.35)
-        self.p2 = self.add("p2", "prisoner_b", "prisoner_b", "aisle1", dx=0.45, dy=0.1)
-        self.g3 = self.add("g3", "gendarme_a", "gendarme_a", "aisle_far", dx=0.5)
-        self.p3 = self.add("p3", "prisoner_c", "prisoner_c", "aisle_far", dx=-0.3)
+        self.ber = self.add("ber", "bertillon", "bertillon", "aisle1")
+        # escort pairs (gendarme leads a thief by the arm), three entries staggered: (gendarme, thief, lane x, y end, start g, end g, y start)
+        spec = [("a", "gendarme_a", "prisoner_a", -0.2, 3.3, 1789, 1834, 7.0), ("b", "gendarme_b", "prisoner_b", 0.7, 4.7, 1801, 1846, 9.5), ("c", "gendarme_a", "prisoner_c", 0.05, 6.8, 1813, 1862, 12.0)]
+        self.WALK = {}
+        for tag, gc, pc, lx, ye, g0, g1, ys in spec:
+            ga = self.add("g" + tag, gc, gc, "aisle2", dx=lx - 0.5 + 0.33); pa = self.add("p" + tag, pc, pc, "aisle2", dx=lx - 0.5 - 0.33)
+            for a in (ga, pa): a.d = (a.d[0], ye - 5.4, 0.0); self.WALK[a.name] = (ys - ye, g0, g1)
         self.make_cards()
 
     def make_cards(self):
-        """14 drawers x 16 cards = 224 cream cards that pop out of the opened drawers and hover (a swarm along the aisle)."""
-        from bertillon import STATE, Batch
-        B = Batch(5); B.box("cream", (0, 0, 0), (0.30, 0.004, 0.20)); B.box("oxblood", (-0.09, -0.003, 0.108), (0.07, 0.004, 0.02)); B.box("navy", (0.06, -0.003, 0.0), (0.10, 0.004, 0.10))
-        protos = B.finalize("popcard", ink_t=0.0)
-        rng = random.Random(30); self.drawers = [n for n in sorted(STATE["anim"]) if n[0] in "pq" and n[1:].isdigit()]
-        self.cards = []; self.dstart = {}
+        """3 true-size mugshot cards (0.14 x 0.094 m, the hero-card texture) per opened drawer: each pops up out of its drawer in turn, far to near."""
+        from bertillon import STATE
+        names = [n for n in sorted(STATE["anim"]) if n[0] in "pq" and n[1:].isdigit()]
+        ys = {n: STATE["anim"][n]["root"].location.y for n in names}
+        self.drawers = sorted(names, key=lambda n: -ys[n]); self.cards = []; self.dstart = {}
+        rng = random.Random(30)
         for di, n in enumerate(self.drawers):
-            a = STATE["anim"][n]; self.dstart[n] = (1789 + 3 + di * 4, a["slide"].location.y / a["travel"])
-            for k in range(16):
-                root = bpy.data.objects.new("pc_%s_%d" % (n, k), None); bpy.context.scene.collection.objects.link(root)
-                for pr in protos:
-                    o = pr.copy(); o.data = pr.data; bpy.context.scene.collection.objects.link(o); o.parent = root; o.visible_shadow = False; o.visible_glossy = False
-                    o.matrix_parent_inverse = o.parent.matrix_world.inverted() if False else o.matrix_parent_inverse
-                self.cards.append(dict(root=root, drawer=n, k=k, t0=self.dstart[n][0] + 4 + k * 1.3, side=1 if n[0] == "p" else -1,
-                                       off=(rng.uniform(0.15, 1.0), rng.uniform(-1.0, 1.0), rng.uniform(0.3, 2.8)), yaw=rng.uniform(-35, 35), roll=rng.uniform(-14, 14), ph=rng.uniform(0, 6.3)))
-        for pr in protos: pr.hide_render = True; pr.hide_viewport = True
+            a = STATE["anim"][n]; self.dstart[n] = (1795 + di * 5, a["slide"].location.y / a["travel"])
+            for k in range(3):
+                r = K.card_plane("pc_%s_%d" % (n, k), (0, 0, 0), (0.17, 0.114), key="card_bertillon")
+                self.cards.append(dict(root=r, drawer=n, k=k, t0=self.dstart[n][0] + 7 + k * 3, yaw=rng.uniform(-22, 22), pitch=rng.uniform(8, 18)))
 
     def key_cards(self, f):
         from bertillon import STATE
         for c in self.cards:
-            a = STATE["anim"][c["drawer"]]; mw = a["root"].matrix_world; trav = a["travel"]
-            mouth = mw @ Vector((0, trav * 1.0 + 0.05, 0.0)); u = clamp((f - c["t0"]) / 11.0)
-            r = c["root"]
-            if u <= 0: r.hide_render = True; r.scale = (0.01,) * 3; r.location = mouth
-            else:
-                e = ez(u, "out") if False else smooth(u)
-                tx = mouth.x - c["side"] * c["off"][0]; ty = mouth.y + c["off"][1]; tz = mouth.z + c["off"][2]
-                bob = 0.03 * math.sin(f * 0.17 + c["ph"])
-                arc = 0.25 * math.sin(math.pi * u)
-                r.location = (lerp(mouth.x, tx, e), lerp(mouth.y, ty, e), lerp(mouth.z, tz, e) + arc + bob)
-                s = 0.85 * e; r.scale = (s, s, s); r.hide_render = False
-                r.rotation_euler = (0, math.radians(c["roll"] + 20 * (1 - e)), math.radians(c["yaw"] + 180 * (1 - e) * 0 + 40 * (1 - e)))
+            a = STATE["anim"][c["drawer"]]; mw = a["root"].matrix_world; r = c["root"]; g0, d0 = self.dstart[c["drawer"]]; op = lerp(d0, 1.0, smooth((f - g0) / 8.0))
+            u = clamp((f - c["t0"]) / 9.0); e = smooth(u)
+            p = mw @ Vector((0.0, op * a["travel"] - 0.12 - 0.07 * c["k"], 0.09 + 0.05 * e))
+            r.location = p; r.hide_render = u <= 0
+            r.rotation_euler = (math.radians(c["pitch"]), 0, math.radians(180 + c["yaw"]))
+            r.scale = (max(e, 0.01),) * 3 if u < 1 else (1.0,) * 3
             r.keyframe_insert("location", frame=f); r.keyframe_insert("scale", frame=f); r.keyframe_insert("rotation_euler", frame=f); r.keyframe_insert("hide_render", frame=f)
 
     # ---- per-frame keying
@@ -122,11 +113,11 @@ class Take(object):
                 x, y, z, fz, who = self.A["marks"][a.mark]; sc = a.sc
                 bob = 0.0
                 dy = self.walk_dy(a, g)
-                a.place(g, (x + a.d[0], y + a.d[1] + dy, z + a.d[2] + (0.02 * abs(math.sin(g * 0.36 + hash(a.name) % 5)) if self.shot == 30 and dy > 0.02 else 0.0)), scale=sc)
+                a.place(g, (x + a.d[0], y + a.d[1] + dy, z + a.d[2] + (0.02 * abs(math.sin(g * 0.36 + sum(map(ord, a.name)) % 5)) if self.shot == 30 and dy > 0.02 else 0.0)), scale=sc)
             if self.shot == 30:
                 for n in self.drawers:
                     g0, d0 = self.dstart[n]; K.set_drawer(n, lerp(d0, 1.0, smooth((g - g0) / 8.0)), frame=g)
-                self.key_cards(g)
+                bpy.context.view_layer.update(); self.key_cards(g)
             else:
                 u = smooth((g - 1722) / 34.0)
                 C.key_fade(self.dfb, self.fn_fb, g, 1.0 - u)
@@ -138,27 +129,30 @@ class Take(object):
         for a in self.acts:
             for g, r in zip(gs, a.render_sprites(PPD[self.shot], frames=gs)): pass
 
-    WALK = {"g1": (4.0, 1836), "p1": (4.0, 1836), "g2": (3.2, 1826), "p2": (3.2, 1826), "g3": (2.6, 1816), "p3": (2.6, 1816)}
     def walk_dy(self, a, g):
         if self.shot != 30 or a.name not in self.WALK: return 0.0
-        d, ge = self.WALK[a.name]; return d * (1.0 - smooth((g - 1789) / float(ge - 1789)))
+        d, g0, ge = self.WALK[a.name]; return d * (1.0 - smooth((g - g0) / float(ge - g0)))
     def walk_w(self, a, g):
         if self.shot != 30 or a.name not in self.WALK: return 0.0
-        ge = self.WALK[a.name][1]; return 1.0 if g < ge - 8 else clamp(1.0 - (g - (ge - 8)) / 8.0)
+        ge = self.WALK[a.name][2]; return 1.0 if g < ge - 8 else clamp(1.0 - (g - (ge - 8)) / 8.0)
 
     def pose_for(self, a, g):
-        k = hash(a.name) % 7
+        k = sum(map(ord, a.name)) % 7
         if a is getattr(self, "ber", None):
             if self.shot == 29:
                 u = smooth((g - 1689) / 30.0)
-                c, p = C.pose_of("bertillon_holding_card", expr="proud")
+                c, p = C.pose_of("bertillon_holding_card", expr="proud", mirror=True)
+                p["prop_r"] = dict(p["prop_r"], scale=2.1)
                 p.update(idle(g, k)); p["arm_r"] = dict(p["arm_r"], hand=(0.66 + 0.03 * math.sin(g * 0.2), lerp(0.42, 0.06, u) + 0.03 * math.sin(g * 0.27)))
                 p["pitch"] = -0.15 - 0.25 * u; p["blink"] = blink(g, [1706, 1750, 1781]); return c, p
             c, p = C.pose_of("bertillon_pointing"); p.update(idle(g, k)); p["arm_r"] = dict(p["arm_r"], hand=(1.05 + 0.04 * math.sin(g * 0.3), 0.18 - 0.12 * math.sin(g * 0.15) ** 2)); p["blink"] = blink(g, [1810, 1850]); return c, p
         if a in (getattr(self, "dfb", None), getattr(self, "dcl", None)):
             cn = a.cast; _, p = C.pose_of("dupont_innocent", cast=cn); p.update(idle(g, k)); p["blink"] = blink(g, [1700, 1742, 1775]); return cn, p
-        story = {"g1": "gendarme_escort_a", "g2": "gendarme_escort_b", "g3": "gendarme_laughing_a", "p1": "prisoner_standing_a", "p2": "prisoner_standing_b", "p3": "prisoner_standing_c"}[a.name]
-        c, p = C.pose_of(story, mirror=(a.name == "g1")); p.update(idle(g, k)); p["blink"] = blink(g, [1800 + 7 * k, 1845 + 3 * k])
+        gend = a.name[0] == "g"
+        story = ("gendarme_escort_a" if a.cast == "gendarme_a" else "gendarme_escort_b") if gend else "prisoner_standing_" + a.cast[-1]
+        c, p = C.pose_of(story, mirror=gend)
+        if not gend: p["expr"] = "worried"; p["mouth"] = "flat"; p["pitch"] = 0.25
+        p.update(idle(g, k)); p["blink"] = blink(g, [1800 + 7 * k, 1845 + 3 * k])
         w = self.walk_w(a, g)
         if w > 0.02:
             cy = cast17.cycle(c, g / 26.0 + 0.2 * k, "march", base=dict(p), arms="none"); L = dict(cy["legs"])
