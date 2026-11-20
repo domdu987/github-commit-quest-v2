@@ -1,0 +1,8 @@
+{"take":"T4","g0":1058,"g1":1331,"first_g":1052,"n_frames":286,"handle_in":6,"handle_out":6,
+ "transition_in":{"type":"cut","frames":0},
+ "internal":[{"at":1100,"type":"masked swap (official walks across the lens)","frames":[1097,1104]},
+             {"at":1148,"type":"masked swap (official walks across the lens)","frames":[1144,1152]},
+             {"at":1205,"type":"whip pan up to the coach (pit g1203-1204 blurred, stands from 1205)"},
+             {"at":1273,"type":"whip back down (stands g1268-1272 blurred, pit from 1273)"}],
+ "set":"v3/set3d15/v2_b.py TENSE","samples":12,"resolution":[720,1280],"s_per_frame_wall":{"pit":26,"stands":55,"hush":23},
+ "mkv":"cat take.mkv.part* > take.mkv"}
