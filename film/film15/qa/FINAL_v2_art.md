@@ -253,3 +253,56 @@ three jumpers. It also has a new head hanging below the bar.
 
 The cues are early in this conform. These landing frames will move again once T7 is fixed, so re-time the
 cues after that re-render, not now.
+
+---
+
+## Re-check 2 (T7 only; new conform: 2095 frames, sat 0.694, luma 98, LUFS -12.2)
+
+### RE-CHECK 2 VERDICT: PASS
+I checked every frame from g1810 to g1925 (full frame, plus every-frame crops of each jump) and the seam
+from g1934 to g1972.
+
+### Landing frames (first mat contact): confirmed
+| jumper | landing | what the frames show |
+|---|---|---|
+| 1 (red hair, green) | **g1831** | g1830 head passing behind the bar, g1831 lying on the mat |
+| 2 (dark, yellow) | **g1865** | g1864 behind the bar, g1865 lying |
+| 3 (red kit) | **g1900** | g1899 behind the bar, g1900 lying |
+
+The sound cues at g1831, g1865 and g1900 match.
+
+### Team 6's flags
+- **(a) Head crosses the bar line: not blocking.**
+  - Jumper 1: the bar covers part of the face only in g1829-1830.
+  - Jumper 2: only in g1863-1864.
+  - Jumper 3: g1899, plus a partial cover at g1900-1902 while he lies just behind the bar (the bar covers his
+    mouth and chin, the eyes stay visible).
+    His face there is about 2 % of the frame height because the crane is rising, so you cannot see it at
+    phone size.
+  - During each arch the bar touches the hairline, but the eyes and mouth stay clear: g1819-1828,
+    g1854-1862 and g1888-1898, about 10 frames each. Torso and legs show over the bar all the time, so this
+    reads as a body draped over the bar, not a floating head.
+  - The old problems are gone. The 5-8 frame bar-across-eyes runs are gone, and so is the 0.8 s hang.
+- **(b) Right-hand official at the frame edge, g1819-1824: not blocking.** He leaves the frame by the right
+  edge as the camera moves. He is whole at g1815-1818 and a sliver by g1822. This is a normal exit during
+  a camera move, not a person framed cut in half.
+- **Head showing with the body missing:** none. Jumper 1 enters at the right edge (g1817-1818) and jumper
+  2 at the right edge (g1853), each with the torso visible. Jumper 3 enters at the bottom right
+  (g1886-1887) with his red kit visible.
+- **Floating heads or people cut in half:** none.
+
+### Rest of the stadium part and the seam: OK
+- From g1905 the crane-out is clean. All three jumpers sit on the mat with thumbs up, and the officials
+  and photographers have shadows.
+- The sky dissolve from g1935 to g1958 is smooth. Frame-to-frame differences rise and fall evenly
+  (0.06-0.15). There is no spike at g1965/1966 and the Medford move continues.
+
+### Non-blocking note: pose pop on standing up
+Each jumper goes from lying flat to sitting upright with thumbs up in a single frame:
+- g1835→1836
+- g1869→1870
+- g1904→1905
+
+The figures are only 5-10 % of the frame height and the moment sits under the crowd cheer, so it is minor.
+**The cheapest polish is in post:** a 3-frame crossfade over each pop (g1834-1837, g1868-1871,
+g1903-1906), limited to the mat area if needed. This is optional and does not block release.

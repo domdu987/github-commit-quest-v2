@@ -38,3 +38,6 @@
 | 5 | T5+T6 | session_017iwyCsh7wzcZ2b11gWkQUs | render15b/team5 |
 | 6 | T7 | session_017iwyCwwfBJHXAGDxAB6iUE | render15b/team6 |
 Teams 3-6 launched 14:17 UTC after location B round 3 (87ececb: render 128 -> 25 s/frame).
+
+## v2 release (2026-11-20 23:50 UTC)
+FINAL gate PASS: QA-tech/audio PASS with notes (FINAL_v2_auto.md), blind viewer PASS (FINAL_v2_blind.md), QA-art PASS after 3 local fixes (FINAL_v2_art.md: T2 slabs repaired in post, T4 swaps -> whip blurs, T7 1972 jumpers re-rendered). Released film/release15/fosbury_v2.mp4.
