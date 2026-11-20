@@ -18,7 +18,7 @@ Handles: 3 frames past each D6 end (same move continued). No handles on cuts or 
 | H1 (charge) | 1239-1345 | CUT | 9 | render21/team9 | session_017iwyCtjzchAetQUqefvg7M |
 | H2a (crane up to the trap) | 1345-1392 | D6 at P_NECK | 3 | render21/team3 | session_017iwyCws18qdxaGzgzAeH6X |
 | H2b (BIGZOOM 2) | 1392-1519 | D6 at P_TOP | 10 | render21/team10 | session_017iwyCx6gATy4vJU2YUfeBA |
-| I (aha) | 1519-1640 | CUT | 12 | render21/team12 | (new) |
+| I (aha) | 1519-1640 | CUT | 12 | render21/team12 | session_017iwyCugpuWU1VefvhjgJG1 |
 | J1 (ending table) | 1640-1709 | CUT | 8 | render21/team8 | session_017iwyCtvGWYHcEnV2cnVAxQ |
 | J2 (ending splash) | 1709-1848 | W | 11 | render21/team11 | session_017iwyCsYUJ5ivPtdLSfSaHu |
 Key segments for QA-art at the TAKE gate: A1+A2, D2, F, H1, H2a+H2b, J2.
