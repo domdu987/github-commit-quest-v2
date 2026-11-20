@@ -1,0 +1,59 @@
+{
+ "take": "s01",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film19/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 0.0,
+   "duration": 2.2,
+   "frame": 0,
+   "end_frame": 66,
+   "kind": "ambience",
+   "label": "village workshop, Lincolnshire, 1730s afternoon: quiet room tone, a far rooster and birds outside the window, the candle's soft hiss"
+  },
+  {
+   "time": 0.0,
+   "duration": 2.2,
+   "frame": 0,
+   "end_frame": 66,
+   "kind": "prop",
+   "label": "the H1 sea clock running: a slow heavy brass tick-tock with the rocking bars (1.3 s period), gears ticking softly; continuous under the shot",
+   "peak_frame": 20
+  },
+  {
+   "time": 0.0,
+   "duration": 0.367,
+   "frame": 0,
+   "end_frame": 11,
+   "kind": "foley",
+   "label": "apron and sleeves rustle as Harrison swings both arms up to present the clock",
+   "peak_frame": 8
+  },
+  {
+   "time": 1.2,
+   "duration": 0.467,
+   "frame": 36,
+   "end_frame": 50,
+   "kind": "accent",
+   "label": "snap push on 'บอกว่านาฬิกา': a short airy whoosh",
+   "peak_frame": 42
+  },
+  {
+   "time": 1.233,
+   "duration": 0.233,
+   "frame": 37,
+   "end_frame": 44,
+   "kind": "accent",
+   "label": "his 'ta-da!' (no voice): a bright brass chime sparkle on the clock",
+   "peak_frame": 40
+  },
+  {
+   "time": 1.9,
+   "duration": 0.0,
+   "frame": 57,
+   "end_frame": 57,
+   "kind": "cut",
+   "label": "hard cut to shot 2 (ship_aerial, the lone ship at sea): the workshop tone cuts to wind and sea"
+  }
+ ]
+}

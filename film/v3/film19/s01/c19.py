@@ -39,7 +39,8 @@ API DIFFERENCES FROM c16 / telegraph (what changed when this file was ported):
     exactly level at t = 0).  set_roll(t) rolls / pitches / bobs ship_root.  A card placed at a deck mark does NOT ride the deck
     unless its root is parented to ship_root: call C.ride_ship(actor, A['ship_root']) right after make_actor and BEFORE any
     place(); place() then keys the root in ship_root's space (= world D at rest), so the feet stay on the deck in every frame.
-    Call set_sea(t) and set_roll(t) with the SAME t on every frame.  Shore marks (shore_a..c, ship_coast) are world points:
+    Call set_sea(t) and set_roll(t) with the SAME t on every frame.  The deck bobs up to ~1.6 D (ship_deck, measured): for a camera
+    standing ON the deck, key set_roll first, then key_cam(f, *C.on_ship(A['ship_root'], f, loc, look)).  Shore marks (shore_a..c, ship_coast) are world points:
     do not ride_ship those.
   * cast19: CANVAS19[cast] (not CANVAS16), key19("sailor_a") -> "sailor19_a", STORY19 poses, cast19.laugh_cycle, talk_mouth,
     blink_at.  harrison19 variants are pose keys: young=1 / old=1 (re-add them after lerp_pose).
@@ -64,6 +65,13 @@ GOTCHAS (found on s01, shot 1 WORKSHOP shop_bench; read before building a shot):
   * FRAME-DIFF target (median >= 4, p90 >= 12 on 90x160 grey, framediff()): the MEDIAN comes from the drift (slide + arc =
     parallax of the dense set); the P90 only from a FAST snap that also PANS (shift), not a pure zoom.  Measure on the 360x640
     draft (deliver.py draft): the final comes out within ~0.5 of it.
+  * MATRIX_WORLD is identity right after H.build (no depsgraph update yet): clock_world() calls view_layer.update() first;
+    do the same before reading any set object's world position (s01's first probe read the H1 at the origin).
+  * shop_bench DAY "milky haze" (QA_ART NOTE) = the window-shaft volume H.STATE['shafts'] running toward the camera: s01 hides it
+    on every frame with key_vis(H.STATE['shafts'], False, f) (clearer frame, +0.25 median frame-diff).
+  * The WORKSHOP is small: right wall x 4.25 D, front wall y -5.4 D, chest lantern at (3.7, 1.3) D.  Print the camera path
+    (shot.py probe) before rendering a big push / arc.  An arc of more than ~30 deg over a shot turns the H1 side-on.
+  * Characters at harrison_bench stand 1.6 D BEHIND the H1: a gesture toward it is partly hidden by the clock.
   * Runtime set dressing is allowed (add / hide / move objects from your shot.py); never edit the set modules.
     Useful: H.STATE['M'] / H.STATE['mats'] (materials), K.MB(name) mesh builder (.finish() -> objects), H.project(world_pt) -> pixel
     in the scene camera.
@@ -303,6 +311,17 @@ def ride_ship(actor, ship_root):
     r.parent = ship_root
     r.matrix_parent_inverse = ship_root.matrix_world.inverted()
     return actor
+
+
+def on_ship(ship_root, f, loc, look):
+    """SHIP deck shots: (loc, look) given in the ship's rest frame (world D at t = 0) -> world (loc, look) at Blender frame f, so the
+    camera rides the deck with the cards.  set_roll(t, frame=f) must already be keyed for f.  Measured on ship_deck: the deck bobs
+    up to ~1.6 D and pitches ~2.6 deg over 2 s, which a world-fixed camera sees as the whole ship heaving.  Use a world camera
+    (no on_ship) only when that heave is wanted (storm, ship_rocks) or the camera is off the ship (hero, aerial, coast)."""
+    sc = bpy.context.scene
+    sc.frame_set(int(f))
+    M = ship_root.matrix_world.copy()
+    return M @ Vector(loc), M @ Vector(look)
 
 
 # ----------------------------------------------------------------------------- the take
