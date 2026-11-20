@@ -7,6 +7,7 @@ contact.jpg (16 frames, cyan line = caption band y 880), framediff.json (in-shot
 import os, sys, json, glob, shutil, subprocess
 import numpy as np
 from PIL import Image, ImageDraw
+import sunfx
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -57,6 +58,11 @@ def numbers(d):
 if len(sys.argv) > 1 and sys.argv[1] == "draft":
     src = [os.path.join(HERE, "work", "draft", "g_%04d.png" % g) for g in range(FIRST, FIRST + N)]
     assert all(os.path.exists(p) for p in src), "draft incomplete"
+    os.makedirs(os.path.join(HERE, "work", "draft_sun"), exist_ok=True)
+    for g, p in zip(range(FIRST, FIRST + N), src):
+        q = os.path.join(HERE, "work", "draft_sun", "g_%04d.png" % g)
+        Image.fromarray(sunfx.apply(np.asarray(Image.open(p).convert("RGB")), g)).save(q)
+        src[g - FIRST] = q
     contact(src, os.path.join(HERE, "work", "draft_contact.jpg"))
     nb = numbers(framediff(src))
     json.dump(nb, open(os.path.join(HERE, "work", "draft_framediff.json"), "w"), indent=1)
@@ -67,7 +73,7 @@ RAW, OUT = os.path.join(HERE, "raw"), os.path.join(HERE, "frames")
 os.makedirs(OUT, exist_ok=True)
 rows = []
 for g in range(FIRST, FIRST + N):
-    shutil.copyfile(os.path.join(RAW, "g_%04d.png" % g), os.path.join(OUT, "g_%04d.png" % g))
+    Image.fromarray(sunfx.apply(np.asarray(Image.open(os.path.join(RAW, "g_%04d.png" % g)).convert("RGB")), g)).save(os.path.join(OUT, "g_%04d.png" % g))
     rows.append(json.load(open(os.path.join(RAW, "g_%04d.json" % g))))
 pngs = [os.path.join(OUT, "g_%04d.png" % g) for g in range(FIRST, FIRST + N)]
 walls, cpus = [r["wall"] for r in rows], [r["cpu"] for r in rows]
