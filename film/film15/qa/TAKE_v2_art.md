@@ -361,3 +361,37 @@ T5 + T6 **FIX** (small):
 - Minor: Dick's head is half cut by the right edge at g1624-1632.
 
 Everything else from the round-3 list is verified.
+
+---
+# Round 6 (2026-11-20): T5 + T6 short re-check (take.mkv 21:11)
+
+## 1. Landing in-betweens, g1605-1630: FIXED
+- I checked every frame g1605-1628. The legs now swing down over g1608-1615 in 8 even steps (vertical, then about 60°, then about 30°), with no pop.
+- The head passes below the bar with the face visible under it (g1611-1615), so the bar doesn't cross the face.
+- **Back contact is g1616 (53.87 s)**, the first frame lying flat. This agrees with team 5.
+- Note for the sound: at g1616-1618 the contact happens behind the bar (only hair and shoulder show). Dick is fully readable lying on the mat from g1619. The sound effect belongs on g1616.
+
+## 2. Close-up 3, g1796-1810: still BLOCKING, but fixable in post
+What I see (g1796, 1802, 1808):
+- With the wider lens it is no longer a close-up. The coach is a medium: his face (cap to chin) is about 20 % of frame height and his whole body to the shins is in frame.
+- The **top ~35 % of the frame is a flat, empty navy backdrop**, and the **bottom ~30 % is plain navy steps**. Only two crowd heads show, both at shoulder height beside him.
+- **Black void wedges are back** behind the crowd cards: x about 0-30 and 600-720 (full res), y about 430-660.
+- Against the rules: §H.3 says no bare backdrops; the close-up rule (§I.6) says it must be a punch, about 1 s, onto the face. Today about 60 % of the frame is empty flat colour, plus a black void. It is only 0.5 s, but it is the payoff beat ("the coach's jaw drops") that hands over to T7, so it is the most-watched 0.5 s of the take.
+
+**Cheapest fix: post crop only, no re-render.** Apply this in compose/post for g1796-1810 (and the handle to 1810):
+- Crop window 450x800 at x=105, y=250 (full-res 720x1280), scaled back up to 720x1280 (1.6x).
+- For life, animate the window from 450x800 at (105,250) to 420x747 at (120,265) over the 15 frames: a slow push.
+- Result (I tested this crop at g1796, 1802 and 1808):
+  - The coach's face is about 30-32 % of frame height, a real punch close-up, with his wide eyes and dropped jaw dominant.
+  - His jacket and stopwatch fill the lower half, so the bare steps are gone.
+  - Both black wedges fall outside the crop.
+  - The flat navy above the cap shrinks to about 12 %.
+  - The two crowd heads (a laughing kid and a shocked woman) frame both sides of his face. That is enough "crowd" for a 0.5 s punch.
+- A 1.6x upscale is soft, but for 15 frames at 30 fps right before a dissolve that is acceptable. If team 5 prefers to re-render, a lens of about 1.6x the current focal length from the same camera position gives the same framing at full sharpness.
+- After the crop, ignore the bare stand rows; they are out of frame.
+
+## Round 6 verdict
+T5 + T6 **FIX**: only the close-up 3 crop, g1796-1810 (post crop as above; about 10 minutes of work, no render). The landing is fixed, and the sound-effect frame is **g1616**. Once the crop is in, T5 + T6 passes.
+
+## Round 6b (director, 21:25 UTC) - T5+T6
+Applied QA-art's post crop on g1796-1810 (crop 450x800 at (105,250) easing to 420x747 at (120,265), smoothstep, Lanczos up to 720x1280), re-encoded take.mkv (486 frames, libx264rgb crf 6). Verified at g1796, g1803 and g1810: the coach's face is about 30 % tall with wide eyes, no black gaps, and crowd heads either side. Landing contact g1616 confirmed (SFX moved). T5+T6 PASS. All six takes PASS.
