@@ -27,13 +27,13 @@ SNAP = (G_OPEN - 2, G_OPEN + 13)
 
 PRESET, LIGHT = "resto_wide", "DAY"
 PPD = 256
-CAM_START = tuple(float(v) for v in os.environ.get("CAM_START", "-0.7,-2.4,0.8").split(","))     # metres
-CAM_AIM = tuple(float(v) for v in os.environ.get("CAM_AIM", "0.2,5.0,1.4").split(","))          # metres (subject point for pushes)
+CAM_START = tuple(float(v) for v in os.environ.get("CAM_START", "-0.9,4.2,0.9").split(","))     # metres
+CAM_AIM = tuple(float(v) for v in os.environ.get("CAM_AIM", "0.2,12.0,1.4").split(","))          # metres (subject point for pushes)
 TILT0 = float(os.environ.get("TILT0", "0.0"))
-PATH_M = [(-0.7, 1.0), (-0.1, 2.7), (0.6, 4.9), (1.1, 7.0)]                  # waiter floor path (metres), x right, y away
-SPEED = float(os.environ.get("SPEED", "1.25"))                               # m/s
+PATH_M = [(-0.5, 8.0), (0.0, 11.0), (0.1, 14.0)]                  # waiter floor path along the runner to the window table (metres)
+SPEED = float(os.environ.get("SPEED", "1.7"))                               # m/s
 GAP = float(os.environ.get("GAP", "1.0"))                                   # Maupassant follows this far behind (m)
-ARC0 = float(os.environ.get("ARC0", "1.9"))                                  # waiter's arc length (m) at G0
+ARC0 = float(os.environ.get("ARC0", "1.05"))                                  # waiter's arc length (m) at G0
 
 
 def path_pos(sm):
@@ -66,7 +66,7 @@ def mark_of(g, who):
 def cam_path(A):
     loc = Vector(CO.W(CAM_START))
     subj = Vector(CO.W(CAM_AIM))
-    return C.CamPath(loc, subj, G_FIRST, G_LAST, push=float(os.environ.get('PUSH', '0.07')), slide_px=float(os.environ.get('SLIDE', '50')), rise_px=0.0, arc_deg_s=0.0, tilt0=TILT0, tilt_deg_s=0.0,
+    return C.CamPath(loc, subj, G_FIRST, G_LAST, push=float(os.environ.get('PUSH', '0.09')), slide_px=float(os.environ.get('SLIDE', '25')), rise_px=0.0, arc_deg_s=3.0, tilt0=TILT0, tilt_deg_s=0.0,
                      decay=0.3, snaps=[dict(g=SNAP, k=1.45, peak=1.7, shift=(0.1, 0.0), tilt=1.5)])
 
 
@@ -80,13 +80,13 @@ WAI_BASE = dict(yaw=0.55, expr="happy", arm_r=dict(hand=(0.78, 0.62), bend=-0.3,
 
 
 def pose_of(g, who):
-    ph = (walker_s(g, who) / 1.15) % 1.0                      # one cycle (two steps) per 1.15 m
+    ph = (walker_s(g, who) / 1.5) % 1.0                      # one cycle (two steps) per 1.15 m
     if who == "mau":
-        p = cast20.cycle("maupassant", ph, "walk", 1, dict(MAU_BASE), "both", 0.85)
+        p = cast20.cycle("maupassant", ph, "walk", 1, dict(MAU_BASE), "both", 1.1)
         p["pitch"] = -0.10
         p["head_roll"] = 2.0 * math.sin(g * 0.2)
     else:
-        p = cast20.cycle("waiter", ph, "walk", 1, dict(WAI_BASE), "l", 0.9)
+        p = cast20.cycle("waiter", ph, "walk", 1, dict(WAI_BASE), "l", 1.15)
         p["arm_r"] = dict(WAI_BASE["arm_r"], hand=(0.78, 0.62 + 0.04 * math.sin(g * 0.23)))
         p["pitch"] = 0.04
     p["yaw"] = 0.55 + 0.04 * math.sin(g * 0.13 + (0 if who == "mau" else 1.5))
