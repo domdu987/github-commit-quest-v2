@@ -32,3 +32,18 @@ Grade on page frames: gain 0.95, sat 1.30, no shadow shift (`grade.grade(a, 0.95
 - Run-up Dick is only in view for ~1 s before the flash (g720-744), because the whip back to the pit costs 0.8 s.
 - Coach pose in the quote is not mouth-synced to words (talk_mouth random), only restricted to the quote window.
 - God rays turned off (build rays=False) to avoid the sky smudges; clutter in the OTS area removed from midA/folk meshes (`clean_set`).
+
+## Round 2 (director TAKE gate FIX) — changes
+1. Newspaper no longer floats: the page is now one world prop at every frame (g483-868): the reader sits on a riser behind it, two 3D hands grip the side edges (thumbs in front), sleeves run back to the reader, and a fedora brim + eyes show above the top edge (card scale 1.12). Same prop in the background at g540-640 and g790-850.
+2. Whip: shortened to g709-716 (CU creep knot 709, mid knot 712, pit wide from 716) with a 5-sub-frame directional blur on g710-715 (qa_auto lists these as soft = intended). It now lands on the pit wide, no empty lawn / bin.
+3. Press photographer with flash camera stands at the pit edge (0.5, 2.6 m) in the wide, g716-744; the flash bulb fires from his gun at g738.
+4. The MEXICO 68 poster on the Medford wall is hidden (hide_render) for the whole take.
+Page framing (g856-868) is unchanged: same page, same camera path (g862 diff vs round 1: mean 2 / 255, g868 0.7; g856 differs only by the new hat/hands at the frame edge).
+Numbers after round 2: qa_auto PASS, sat 0.63, vivid 66.7 %, luma 101.2, magenta 0 %; motion median 7.1, p90 19.4.
+
+## EXACT END FRAMING at g862 in pixels (720x1280 frame, 22 mm lens = 782.2 px focal length, camera 0.500 m from the page, axis perpendicular to the page, roll -2 deg page tilt)
+- Photo (halftone, black frame line) spans x about -9..729 (it just overflows both sides, 0.472 m wide = 738 px), y about 382..898 (0.330 m = 516 px), centred on (360, 640). Dick's arched figure sits at the photo centre area.
+- Headline: line 1 "FOSBURY FLOPS" is cut by the top edge (y -9..165); line 2 "OVER BAR" fully in frame, y about 172..343, letters ~170 px tall, left edge x about -20 (the O is clipped slightly), the page shows the whole headline width ~1530 px at this scale (about 2x the frame width), i.e. only the left part "OVER B" is visible.
+- Below the photo: caption line at y about 920-950; column text below that.
+- Scale rule for T3: 1 px in the frame = 0.00064 m of page = 0.78 texture px; the page texture is 2400 px = 0.74 m wide, so the frame shows 0.46 m = 1.49 x 1.99 texture px per... (frame = 1493 x 2655 texture px? use: texture px = frame px * 1.28 / ... ) -> simply: texture width visible = 720 * 0.0006393 / 0.74 * 2400 = 1493 px, centred on texture (u 0.365, v 0.38) = tex px (876, 1985 from the top).
+- Velocity: still dollying in at 0.0125 m/frame (0.375 m/s).

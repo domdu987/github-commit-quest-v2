@@ -30,6 +30,7 @@ def T(g): return g / 30.0
 
 # ---------------------------------------------------------------- marks (metres)
 COACH = (10.1, 3.0)
+PHOTO_XY = (0.5, 2.6)
 DICK_MARK = (5.6, -0.8)
 PAGE_C = Vector((10.2, 4.2, 1.18))     # the newspaper page centre (world m); the page faces -x (towards the field)
 PAGE_W = 0.74                           # page width m (the reader holds it wide)
@@ -61,8 +62,9 @@ CAM_A = [  # t (s), loc, look
     (T(621), (7.3, 3.9, 1.22), (10.2, 3.1, 1.28)),
     (T(668), (8.3, 5.0, 1.15), (10.1, 3.0, 1.30)),
     (T(684), (8.75, 4.4, 1.30), (10.1, 3.0, 1.30)),        # punch in
-    (T(707), (8.95, 4.1, 1.32), (10.1, 3.0, 1.28)),       # CU 1 (slow creep, never static)
-    (T(724), (3.0, -0.7, 1.6), (0.6, 5.4, 1.5)),            # swing to the pit
+    (T(709), (9.0, 4.05, 1.32), (10.1, 3.0, 1.28)),       # CU 1 (slow creep, never static)
+    (T(712), (6.6, 2.4, 2.3), (2.4, 4.6, 1.4)),
+    (T(716), (3.0, -0.7, 1.6), (0.6, 5.4, 1.5)),            # swing to the pit
     (T(741), (2.1, 0.2, 1.5), (-0.1, 5.6, 1.6)),
 ]
 def cam_a(t):
@@ -168,7 +170,18 @@ def build(light='HERO'):
     sc.frame_start = FIRST_G; sc.frame_end = LAST_G
     S['A'] = A; S['sc'] = sc; S['M'] = STATE['marks_m']
     mb = V.S.MB('rbench'); Mm = STATE['M']
-    mb.box(Mm['wood'], (10.75, 4.2, 0.15), (0.6, 0.9, 0.30)); mb.box(Mm['wood'], (11.0, 4.2, 0.62), (0.5, 0.9, 0.07)); V.L.fin(mb)
+    mb.box(Mm['wood'], (10.75, 4.2, 0.31), (0.6, 0.9, 0.62)); mb.box(Mm['wood'], (11.05, 4.2, 1.08), (0.5, 0.9, 0.07)); V.L.fin(mb)
+    # the reader's hands grip both side edges of the page (thumbs in front, fingers behind), sleeves run back to his shoulders
+    mb = V.S.MB('rhands'); V.mk_people_mats(Mm)
+    for sg in (-1, 1):
+        ye = PAGE_C.y + sg * (PAGE_W / 2 - 0.012); zh = PAGE_C.z - 0.12; xh = PAGE_C.x
+        mb.ell(Mm['skin1'], (xh - 0.03, ye - sg * 0.03, zh), (0.038, 0.046, 0.065), (10, 8))
+        mb.ell(Mm['skin1'], (xh - 0.045, ye - sg * 0.085, zh + 0.045), (0.024, 0.03, 0.048), (8, 6), rot=(0, 0, 0))
+        for fi in range(4): mb.ell(Mm['skin1'], (xh + 0.035, ye + sg * 0.012, zh + 0.07 - fi * 0.045), (0.03, 0.02, 0.026), (6, 5))
+        mb.rod(Mm['leather'], (xh + 0.06, ye + sg * 0.02, zh - 0.02), (xh + 0.42, PAGE_C.y + sg * 0.34, zh - 0.20), 0.05, 0.065, seg=8)
+    V.L.fin(mb, cast=False)
+    for o in bpy.data.objects:
+        if o.name.startswith(('poster', 'sign_poster')) or 'mexico68' in o.name: o.hide_render = True; o.hide_viewport = True
     S['page'] = world_page('newspaper_f')
     S['cam'] = F.make_camera(F.cam_from((0, 0, 0), (0, 1, 0), lens=22.0))
     sc.camera = S['cam']
@@ -255,10 +268,10 @@ def place_cards(g, cl):
     fl = max(0.0, 1.0 - (g - G_FLASH) / 4.0) if g >= G_FLASH else 0.0
     pn = 'photog_flash' if G_FLASH <= g < G_FLASH + 6 else 'photog_ready'
     pp = dict(cast15.pose_for(pn, 'photographer', facing=1), flash=fl)
-    rep['ph'] = put_stand('p_ph', 'photographer', pp, (-3.6, 3.4), cl, ppd=160, contact=(1.5, 0.5))
+    rep['ph'] = put_stand('p_ph', 'photographer', pp, PHOTO_XY, cl, ppd=192, contact=(1.5, 0.5))
     # --- reader on the bleacher (card faces the field, -x), 3D page in front of him
     rp = dict(cast15.pose_for('sit_read', 'crowd4'), bob=0.0)
-    rep['reader'] = V.ground_card('r_reader', 'crowd4', rp, D((PAGE_C.x + 0.45, PAGE_C.y)), cl, z=0.30 * U, ppd=192, yaw_fixed=-math.pi / 2, contact=(1.2, 0.5))
+    rep['reader'] = V.ground_card('r_reader', 'crowd4', rp, D((PAGE_C.x + 0.45, PAGE_C.y)), cl, z=0.62 * U, scale=1.12, ppd=192, yaw_fixed=-math.pi / 2, contact=(1.2, 0.5))
     return rep
 
 def aim(cam, loc_m, look_m):
@@ -277,8 +290,7 @@ def set_frame(g):
     loc, look = cam_for(g); cl = aim(S['cam'], loc, look)
     V.rim_on(to_light=(-0.7, -0.6), width=5, strength=0.9)
     rep = place_cards(g, cl)
-    S['page'].hide_render = g < 744; S['page'].hide_viewport = g < 744
-    if g == G_FLASH: F.flash_bulb(G_FLASH)
+    if g == G_FLASH: F.flash_bulb(G_FLASH, where=(PHOTO_XY[0] * U, PHOTO_XY[1] * U, 1.2 * U))
     return rep
 
 def white_amount(g):
@@ -287,11 +299,20 @@ def white_amount(g):
     if g < 752: return 0.9 - 0.9 * (g - 744) / 8.0
     return 0.0
 
+BLUR = (710, 715)
 def render_frame(g, path):
-    set_frame(g); sc = S['sc']; sc.render.filepath = path; bpy.ops.render.render(write_still=True)
-    from PIL import Image
+    set_frame(g); sc = S['sc']; from PIL import Image
     import grade as GR
-    a = np.asarray(Image.open(path).convert('RGB')).astype(np.float32) / 255
+    if BLUR[0] <= g <= BLUR[1]:                       # whip: 5 sub-frames across a 360-degree shutter (cards stay, camera sweeps) averaged = directional blur
+        acc = None; n = 5
+        for k in range(n):
+            gg = g + (k - (n - 1) / 2.0) * 0.4; loc, look = cam_for(gg); aim(S['cam'], loc, look)
+            sc.render.filepath = path; bpy.ops.render.render(write_still=True)
+            im = np.asarray(Image.open(path).convert('RGB')).astype(np.float32) / 255; acc = im if acc is None else acc + im
+        a = acc / n
+    else:
+        sc.render.filepath = path; bpy.ops.render.render(write_still=True)
+        a = np.asarray(Image.open(path).convert('RGB')).astype(np.float32) / 255
     a = GR.grade(a, 1.05, 1.15, 0.4) if g < 744 else GR.grade(a, 0.95, 1.30, 0.0)
     w = white_amount(g)
     if w > 0.0: a = a * (1 - w) + w
