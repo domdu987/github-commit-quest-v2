@@ -2,7 +2,7 @@
 
 ## Notes
 - planned cuts with no visible change within +-2 frames: g [404]
-- soft frames (check by eye; motion streak allowed 1-3 frames): g [174, 175, 176, 357, 358, 359, 360, 361, 362, 363, 364, 365]
+- soft frames (check by eye; motion streak allowed 1-3 frames): g [174, 176, 357, 358, 359, 360, 361, 362, 363, 364, 365]
 - magenta share 0.0 %
 
 Phone sheet: phone_sheet.jpg (cyan line = caption band y 880). Judge legibility on it.
