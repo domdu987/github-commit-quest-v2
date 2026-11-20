@@ -39,3 +39,44 @@ N10. SITE dressing at phone size is dense in S01/S07/S08, thin in S03-S06 (flat 
 SITE: 1 bottom luma <= 70: MET S01/S03-S06/S08, NOT MET S02 96.6, S07 109.2, S09 88.1, S10 107.0; shade hue mean 240-260: MET S01 246.0 (NOT S02 291.0, S08 261.5). 2 foreground: NOT MET S06/S08-S10. 3 crane 92 px MET, scaffold 0.72 MET, workers 6 MET but one body 59 px (< 60) NOT MET. 4 sky <= 30 % MET S01 19.3 %. 5 object count: S01 estimated >= 12 MET, S03-S06 not countable (thin). 6 stages converge: MET S08-S10 (stage 1 stubs visible).
 TOWER: 1 wires 2-3 px / emit <= 0.6: NOT MET. 2 spark gap halo 12-24 px: NOT MET (flood 55 % V>.95). 3 clouds bumpy cumulus: MET (T04/T05). 4 wagon + crowbars + FG lamp-post: MET (lamp is a bare pole); objects >= 12: MET. 5 V>.95 <= 9 %: MET T04 5.4, T05 2.7, T06 3.8, T07 4.8; NOT MET T10 18.7, T09 55; stars <= 15 MET.
 RESTO: 1 floor <= 25 % MET 24.3 (resto_wide); FG chair MET; parquet pitch not measurable on a still. 2 dressing 20-26 / mirrors / buffet / 4-6 diners: NOT MET. 3 cloth flutes 6-8: NOT MET. 4 window view >= 120 px, Seine, Trocadero, no tower: MET (I12). 5 blue >= 12: MET 25.8 / 42.6; magenta <= 10: MET 1.1 / 1.7; red 30-45: MET 33.8 / 33.1; cloth/wall/carpet shade 230-260: MET resto_wide 231.2, NOT MET resto_table 226.1. 6 hero stand-in card: MET (head < 880, contact shadow on the chair ok).
+
+---
+# ROUND 2 (re-check at full size; numbers measured on the new tiles by QA-tech, hue/luma from the rebuilt hue_report/int_hue)
+## Round 2 VERDICT: FAIL (one blocking item left, small); everything else PASS or NOTE
+Cost: all <= 41.7 cpu s: PASS. No blur/DOF, no readable text/tofu, no magenta > 10 % (max frame magenta S07 7.85 %).
+
+## Round-1 blocking items, re-checked
+1. Heads in band: S01 now chins 745-848, S02 chins 628-751: FIXED. S06 chin 824, S03 723: OK.
+2. S04: Eiffel head 770/793 (< 880), riveters 12-19 px on the scaffold deck (standing on the platform now, not in the sky): FIXED.
+3. Black quads on the ground: S01/S02/S03/S04 black px 0-0.5 % (no black blocks, measured): FIXED. NEW: T12_tower_window_pull has 5.9 % pure-black pixels, a full-width black band at y ~960-990 under the window (and a dark band at y ~130): REMAINS, see R2-B1.
+4. Magenta: S03 1.6 %, S04 0.9 % (frame): FIXED.
+5. Ground luma bottom-eighth: S01 67.4, S02 55.0, S03 54.2, S04 51.3, S05 48.0, S06 47.2, S08 58.3 met; S07 92.8, S09 87.7, S10 106.1 not met: NOTE (S07 bottom is the scaffold rail over sunlit iron; S09/S10 are crane-up pulls with ground miles away; render workers keep a shaded FG post/rail at the bottom). Lower third of S03-S06 is still a flat blue-grey slab (about 35 % of the frame, caption zone): NOTE, keep camera tilted up 3-5 deg so < 30 % of the frame is empty slab.
+6. Site foreground 1-2 D: now S01 (black chimney block + barrels), S03/S04/S06 (shed block + post), S07 (rail): MET. S08-S10 crane-up shots (far from everything): NOTE, nothing to put 1-2 D from a crane camera; ok.
+7. Workers body px [84, 75, 87, 71, 69, 90], all >= 60: MET.
+8. tower_dusk: T04/T05 still have the heads at y 1200-1211, 20 px (the board camera): the new staged tile T14_tower_dusk_chars has heads at y 775-783 (32-42 px), chins 791-875, feet <= 893, actors at the wagon foot: PASS for shots 18/22 PROVIDED the takes use the T14 camera (NOTE R2-N1). The T14 bottom third is empty blue ground (bottom luma 27.5).
+9. Spark (T09): V>.95 8.4 % (was 55 %), white 1.3 %: FIXED; the gap is a pale blue ball with a white X, not two brass balls + jagged arc: NOTE for the take (halo ok, arc only on taps).
+10. Wires: T04/T14 are now 4-5 px pale white lines (ok at phone size, still brighter than #d8ccc0), T10 still bright-white lines about 6-8 px with rings; T10 V>.95 5.3 % (met, was 18.7 %): NOTE.
+11. cafe_window (shot 8): the window now shows the smoke column (black chimney smoke over the arch) and the stub/arch with Paris roofs, painter/poet/composer/architect heads 702-794, chins <= 792: FIXED (the lattice still reads as a taller arch than a stub; NOTE).
+12. cafe_low full vs stub: the full tower with lamp rings now stands on the right of the window, readable behind his shoulder (cafe_low_full, cafe_low_close_full): FIXED. Black joint squares gone. Remaining: the window top has a white glare band (29 rows, 3 % of frame, close-up 48 rows): NOTE (soften the sill glare, not blown to V=1 across the full width).
+13. resto_table: bottle no longer covers his mouth, head 676/740 clear, cloth folds visible (about 6), chair back at the edge: FIXED. Cloth/wall/carpet shade 222.3 (< 230): on screen the cloth reads white-blue and the carpet navy, metric artifact of the cream-wall/parquet pixels: NOTE.
+14. resto_wide: floor 24.2 %, blue/magenta/red gates OK, carpet is now striped (no white discs). Still no gilt mirrors, buffet or coat stand visible, 5-6 small diners: dressing target (20-26 objects, 2-3 mirrors) NOT MET: NOTE for QA-art to score; render worker may raise the camera shift to include the right wall.
+15. resto_view: now over his shoulder (back of the head at left, Paris, Seine, Trocadero in the window, no tower, view well over 120 px): FIXED. A tiny black rectangle sits on the garden path (about 20 x 10 px): NOTE.
+16. Hue, judged on screen:
+   - S03 271 (median 255.5), S06 290 / S07 294 (red-lead girders and scaffold in shade: they read crimson-orange on screen, the metric counts saturated red as hue 290): metric artifact, NOTE (bible allows crimson shade).
+   - T01 239.8, T02 236.0, T03 237.7: within 4 degrees of the band, looks correctly blue-violet: NOTE.
+   - T04 262.3 / T14 249.8: OK. T05/T10/T11 night: night exception, OK on screen.
+   - T12 335.9: the frame is a rust-orange iron wall with a warm interior glimpse, reads orange not magenta (magenta 4.45 %): NOTE.
+   - T13 296.7: 1.7 % shadow pixels only, sky/tower read correct: NOTE.
+   - S02 249.3 and S08 257.3 now in band.
+17. T03 (1910) vs T02: still identical except the crowd; the plan swaps actors only: NOTE, director to confirm.
+
+## BLOCKING (Round 2)
+R2-B1. T12_tower_window_pull: 5.9 % pure black pixels (full-width black strip at y ~960-990 under the lit window, plus a dark strip near y 130). It is an unlit gap between the rust wall panels and will read as a black bar through the first frames of shot 27. Fix: close/fill the gap geometry or add fill light so min luma >= 25 in those rows; re-render T12 and T13 (crash pull-out must stay lit). Also T12 Maupassant head 51 px (chin 774): acceptable as is.
+
+## NOTES FOR RENDER WORKERS (Round 2)
+R2-N1. Shots 18/22 must use the T14 tower_dusk camera (heads 775-783), not the board camera of T04/T05 (heads at y 1200).
+R2-N2. Window glare strips at the top of cafe_low / cafe_low_close windows (white, V=1): keep the framing so the strip is cropped or accept it as sky glare.
+R2-N3. S09/S10 crane-up shots: bottom-eighth luma 88-106 (ground far away); keep a shaded FG element in the lowest 15 %.
+R2-N4. Empty slab in the lower 30-35 % of S03-S06 and T14: keep the move tilting up or push in so that area is under the captions.
+R2-N5. resto_wide: aim to include mirrors/buffet on the right wall; QA-art to confirm density.
+R2-N6. All earlier notes N1-N10 stand (tower_low legs/contact shadow, T02 child chin 869 on pushes, cafe_wide_end architect chin 884, T13 invisible actor, window/interior chair match for T12).

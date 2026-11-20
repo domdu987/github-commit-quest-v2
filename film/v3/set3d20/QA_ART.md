@@ -179,3 +179,56 @@ Re-tile only the cameras in the blocking list:
 - resto_view.
 
 Send them with the hue numbers. Everything else is approved now: site_rise snaps 1-3, tower_low, tower_dusk (+ NIGHT), tower_dusk_summit(_end), tower_window_end, cafe_window, resto_wide and resto_table.
+
+---
+
+# Round 2 (2026-11-20, re-tiles in work/final S*/T* 08:48-09:05 and int_work/*.png 08:31-08:38)
+
+Looked at every re-tiled camera at 720x1280 and 360x640 (the I* files in work/final are the OLD 07:38-07:46 renders; I judged the interiors on int_work/).
+
+## Verdict: **SHIP** (render teams may start). No blocking items remain. The notes below go to the render workers and the take gate.
+
+| # | round-1 blocking item | result | decision |
+|---|---|---|---|
+| 1 | SITE black ground holes | gone in S01/S02/S03/S05/S06 | PASS |
+| 2 | site_table | Eiffel at a lit table with a blue unrolled plan reads at phone size; magenta 1.6 %, dark 0.33. Weak: a blank pale pier wall fills about 30 % of the background, and the bottom 35 % is empty ground | PASS, note R1 |
+| 3 | site_leg_low | the leg now reads as one big lit diagonal with pale timber scaffolds, a deck and riveters; magenta 0.9 %, dark 0.23. Sky 22 % (asked 35) | PASS, note R2 (the tilt-up in the take adds the sky) |
+| 4 | site_girders | the stack and the hanging girder are in frame; dark 0.42 with bare shadow ground in the lower third | PASS, note R3 |
+| 5 | smoke / sparks / rivet | the bead chains are gone (soft puffs); the rivet-deck spark is still a small yellow dot at phone size, but tiny, no longer a ball | PASS, note R4 |
+| 6 | night wide rings / white tower | the tower is Eiffel red with lamp dots; the rings now read as wide arcs spreading over the city. The small circle at the summit is still a flat halo. T11 is mostly empty sky over a sea-like horizon | PASS, notes R5/R6 |
+| 7 | hut / spark | plank walls, exposure in band (V>.95 8.4 %), brass balls on rods with a blue-white arc and halo readable | PASS, note R7 (plank stripe shimmer) |
+| 8 | tower_window_pull | an iron X lattice frames a lit restaurant window (chandelier, cloth, Maupassant at the table); reads as "eating inside the iron". I meant the head-to-table group ≥ 90 px; the head is 51 px and the head-to-cloth group is about 100 px, so it passes. The façade slabs above and below are still flat noisy orange | PASS, note R8 |
+| 9 | cafe 1889 tower | cafe_low_full / close_full: the complete lit Eiffel silhouette now stands beside his head in the right half of the window, clearly different from the stub legs | PASS |
+| 10 | resto_view | true over-the-shoulder shot: the back of his head and shoulder in the left third, the window over the Seine, Trocadéro, gardens and roofs, lattice crossing it, no tower | PASS |
+| 11 | CAFE dressing | the ceiling is cream with plain discs (no face roundels); the chandeliers have 3D arms with candles; the signatures are varied scribbles with no letter shapes. Checker contrast barely changed | PASS, note R9 |
+| 12 | fair crowd | 20+ cast cards with heads, hats and parasols | PASS |
+
+## Builders' admitted misses: decisions (all NOTES, none blocking)
+- **Shade hue S03 271, S06 290, S07 294:** the cast pixels fall on red-lead iron and red girders, which shade toward crimson (bible rule 3, the same exception granted to the resto crimson). Frame magenta stays ≤ 7.9 % everywhere. Accept, and log it in the set QA.md.
+- **Bottom-eighth luma S07 93, S09 88, S10 106:** these are the high crane snaps and the rivet deck, where the yard is in sun far below. Accept, because a darker bottom would kill the key "tower rises" read.
+- **site_leg_low sky 22 %:** the planned tilt-up from 13 to 35 deg ends with more sky. Accept.
+- **site_girders dark 0.42 / bare lower third:** camera note R3.
+- **cafe_window smoke a short dark blob, artist covering the window:** the script line is "black factory chimney", so dark smoke is right. Staging note R10.
+- **resto cloth/wall shade 222:** 8 deg under the band, on cool window fill. Accept with a note.
+- **T11 empty sky:** note R6.
+
+## NOTES FOR RENDER WORKERS (round 2, adding to the round-1 notes)
+- R1 site_table (shot 4):
+  - lower the camera by about 0.4 m and tilt it up about 8 deg so the curved leg and scaffold, not the blank pier wall, fill the background;
+  - keep a girder end in the nearest 15 %;
+  - push in at 8 %/s so the empty ground leaves the frame within the first second.
+- R2 site_leg_low (shot 5): the tilt must reach a look_at of z 28 m by the snap at 11.44 s, so the sky ends at 35 % or more.
+- R3 site_girders (shot 12): camera at 1.0 m and 2-3 m from the nearest pile, sliding along it, so the stack fills the lower half. Frame out the bare ground and the dark box at the right.
+- R4 site_rivet (shot 13): key `spark(strength=1.5)` on the hammer hits, and snap-push onto the catch so the rivet reads at least 10 px.
+- R5 tower_night_wide (shot 21):
+  - stagger the rings so 3-4 arcs are visible and fading;
+  - hide or shrink the small summit circle once the first arc has left;
+  - the whole-lattice glow comes only on "เสาอากาศยักษ์" (50.90).
+- R6 tower_night_summit (whip pull-out start, shot 21): hold it at most 4 frames before the whip so the empty sky is never on screen alone; or start the pull-out from a closer T10 framing.
+- R7 tower_hut (shot 20): the fine plank grooves can shimmer on a moving camera. Push at most 9 %/s and check a draft strip at 360x640 for moiré. If it shimmers, use the same preset at 1.3x the plank pitch (set tweak allowed at the take gate).
+- R8 tower_window_pull (shot 27): the crash pull-out starts on the window group. The flat façade slabs are on screen only for the first few frames of the pull, so start them already moving (no static first frame on the slab).
+- R9 CAFE checker: keep the camera height so floor is at most 25 % in cafe_wide/cafe_window (currently 27.4/23.5) and put a foreground chair or table over the nearest checker.
+- R10 cafe_window (shot 8): move the nearest artist card about 0.5 D to the side so the tower stub and the dark smoke are fully clear in the window by "ปล่องโรงงานสีดำ" (18.96).
+- Interior finals: the director/QA-tech must take the CAFE/RESTO stills from int_work/ (the work/final I* tiles and the contact sheet interiors are the old round-1 renders); rebuild contact.jpg before showing the client.
+
+QA-art round 2: **SHIP**.
