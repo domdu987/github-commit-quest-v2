@@ -46,7 +46,7 @@ GS = list(range(G0, G_LAST + 1))
 G_HATE = C.cap_g("เกลียดหอคอย")                 # 27: "hates the tower" -> snap + face swap sneer -> disgust
 G_ONE = C.cap_g("ต้นหนึ่ง")                     # 47: "one (tower)" -> he turns his nose away
 G_MOST = C.cap_g("ที่สุดในโลก")                  # 61: "most in the world" -> hmph chin jerk
-SNAP = (G_HATE - 2, G_HATE + 13)               # 25..40 (15 frames)
+SNAP = (G_HATE - 2, G_HATE + 13)               # 25..40 (15 frames; 13 gave FEWER high frame-diff pairs: p90 fell 12.3 -> 11.9)
 G_SWAP = G_HATE                                # closed frame of the blink 26..28
 TURN = (G_ONE - 2, G_ONE + 6)                  # 45..53 yaw turn
 G_AVOID = G_ONE + 1                            # 48: expression -> avoid (eyes squeezed) mid-turn
@@ -75,10 +75,10 @@ SHIFT = -0.12                                  # lens shift_y (preset +0.08): ne
 TILT0 = 8.0                                    # aim pitched 8 deg ABOVE the lens -> head line on frame 0 (pitch ~32 deg)
 TILT_RATE = 2.0                                # deg/s drift tilt-up (the push raises the head line, so his head stays in band)
 SNAP_TILT = 2.0                                # extra tilt in the snap
-ARC0, ARC_RATE, SNAP_ARC = -11.0, 8.0, 18.0    # orbit round his head (deg, deg/s, deg in the snap): the far tower slides behind
+ARC0, ARC_RATE, SNAP_ARC = -13.0, 8.0, 22.0    # orbit round his head (deg, deg/s, deg in the snap): the far tower slides behind
                                                # him; it carries the frame-diff (tilt alone gave median 3.2 / p90 6.3 on the draft)
 SLIDE = 45.0                                   # px/s lateral slide
-SNAP_K = 1.4                                   # snap framing factor
+SNAP_K = 1.5                                   # snap framing factor
 FG_ANCHOR = G_LAST                             # the preset FG is placed relative to the lens at THIS frame.  Anchored at g 0 the
                                                # push + arc drove the lens THROUGH the bench at g 53-64 (frame-diff pop 50.9);
                                                # anchored at the end (+ LAMP_AT / BENCH_AT) both stay clear of the lens and of him
@@ -100,9 +100,11 @@ def cam_path(A):
                      snaps=[dict(g=SNAP, k=SNAP_K, peak=1.7, shift=(-0.25, 0.0), tilt=SNAP_TILT, arc=SNAP_ARC)])
 
 
-BENCH_AT = (2.0, 1.5)                          # bench (m ahead, m right of the lens at FG_ANCHOR): lower right, only its end shows
-                                               # (QA-art F2: it was 1.1 m right and read as a black slab)
-LAMP_X, LAMP_BASE_Y = 30.0, 1150.0             # our own lamp-post (QA-art F1): its base on the path at screen (30, 1150) on g 0
+BENCH_AT = (2.0, 2.0)                          # bench (m ahead, m right of the lens at FG_ANCHOR): lower right, only its end shows
+                                               # (QA-art F2: at 1.1 m right it read as a black slab; the preset shade casters keep it
+                                               # in shade, so it is pushed out until only its end shows)
+LAMP_X, LAMP_BASE_Y = 40.0, 1045.0             # our own lamp-post (QA-art F1): base on the path at screen (40, 1045) on g 0 =
+                                               # 4.9 D from the lens, lantern at y ~83; centre line leaves frame left by g 25-30
 LAMP_H_M = 3.6                                 # pole height, metres (kit20.lamppost default)
 LAMP_HIDE = 41                                 # hidden from this g on (it leaves frame left with the snap g 25-40)
 
