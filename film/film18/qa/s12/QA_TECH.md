@@ -1,16 +1,17 @@
-# QA_TECH s12 (take g937-1010, in-shot g944-1003) - FAIL (round 4)
-Checked: 6 fps (20 frames) + first/last 3 + full-size g937 and g972. Director 5.59 / 6.67: median OK, p90 < 9 guide; slide + push visible, no pulsing. Caption band bright share max 1.5 % (880-950) but this is lantern glare on the rail and the band stays dark; no text, no mouths, heads < 880.
+# QA_TECH s12 (take g937-1010, shot g944-1003) - FAIL (round 5)
+Checked: 6 fps + first/last 3 (20 frames), continuity against s11 last / s13 first. Director 5.44 / 6.53 (my re-measure 5.42 / 6.52): median OK, p90 below the 9 guide; slide + push are visible, no pulsing. No text, no mouths, heads < 880, caption band dark (lantern glare only).
 ## Earlier blockers
-- Folk on the wall: present (about 8 on the tower balcony) - still FIXED, readable at full size, small at phone size.
-- Envoy and banner: banner is a flat white-cream slab, readable; envoy larger than before only from g960.
-- Plank/lance placeholder: lance gone. BUT it is replaced by spiky low-poly grass blades from the helper (see 1).
-- Bare ground: NOT FIXED. Cloud sticker: NOT FIXED.
+- Folk on the wall: present (about 8 on the tower balcony, readable at full size, small at phone size) - FIXED.
+- Banner: flat cream slab, readable.
+- Cloud sticker: FIXED (gone).
+- Spiky navy / green blade clumps: NOT FIXED (see 1).
+- Bare ground: PARTLY (see 2).
+- Envoy small / leaves the frame: NOT FIXED (see 3, 4).
 ## Issues
-1. g937-950 - spiky navy blade clump at the lower centre and dark-navy spikes at the left (spiky navy junk, rule 2 / director note) and later flat green spiky tufts g950-985 crossing the bridge and the water at the bottom. FAIL by the director's navy-or-spiky rule.
-2. g937-957 - bare ground: dark teal / navy field fills the bottom 27-30 % of the frame with a navy shadow slab; notes-level beyond g960 (water and bridge fill the bottom).
-3. g947-1010 - flat three-bump beige cloud sticker at the top right, growing into a flat two-lobed stripe (g967-1010). Same sticker that blocked earlier; the client dislikes it.
-4. g937-957 - the envoy is tiny (about 5 % of frame height, about 60 px) with a small white banner, hard to read at phone size; the plan beat is "bowing envoy walks out".
-5. g987-1002 - the envoy walks off the right edge (half cut at g987-997, gone by g1002) and the take ends with only the empty bridge. Rule 4 (subject in frame the whole take) breached; mandatory "envoy readable" not held to the end.
+1. g937-982 - big spiky low-poly blade clumps at the bottom: navy at g937-947 (centre and left), flat green from g947 to g982 crossing the bridge and the water. Spiky junk per the director's navy-or-spiky rule. Fix: delete the ground-dressing helper blades in this shot or swap for warm baskets/straw.
+2. g937-957 - bare ground: dark teal-navy field with a navy shadow slab fills about 28-32 % at the bottom; improves to note level from g960 (bridge and water). Fix: tilt up 3-4 % or add a warm fg prop.
+3. g937-957 - the envoy is about 5 % of frame height (about 60 px) with a small white banner; the plan beat "bowing envoy" cannot be read at phone size.
+4. g987-1002 - the envoy walks off the right edge (half cut g987-997, gone g1002); the take ends on an empty bridge. Rule 4 breached. Fix: slide the camera right with him, or hold him mid-frame to the end.
 ## Notes
-- Folk: the group drifts to the left edge, cropped at the edge from g962 and reduced to 4 faces by g1010.
-- Gate stays closed (plan: opens a crack); envoy leans over the rail.
+- The gate stays shut (plan: a crack); the folk group drifts to the left edge and is cropped from g962, only 4 faces left at g1010.
+- Dissolve-in range g937-943 only checked as frames, no pop.

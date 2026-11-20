@@ -1,21 +1,25 @@
-# QA-art s21 (REVEAL B: "ในความมืด ทหารเยียนเห็นแต่สัตว์ประหลาดลายมังกร", 53.20-56.08 s), TAKE gate round 4 — FIX-FIRST (reveal, strict)
-Reviewed take.mkv at 6 fps (art7/gNNNN.png, every 5th frame) at full size 720x1280 and on the 360x640 sheet art7_phone.jpg. Snap word = g 1646.
+# QA-art s21 (REVEAL B: "ในความมืด ทหารเยียนเห็นแต่สัตว์ประหลาดลายมังกร", 53.20-56.08 s), TAKE gate re-render — FIX-FIRST (reveal, strict)
+I reviewed take.mkv at 6 fps (art9/gNNNN.png, g 1590-1685) at full size 720x1280 and on the 360x640 sheets art9_phone_0-2.jpg (cyan line = y 880). Snap word = g 1646.
 
 ## Earlier changes
-1. Out of the dark, moon hidden, herd lit by its own fire: PARTLY done. The moon is gone, the sky is black and the fire flare at g 1630-1650 lands, which is a real improvement. But the gate tower and wall stay lit grey-violet from g 1590, and the herd is visible (dim) the whole time, so there is no "out of the darkness" moment.
-2. Back-view silhouettes, nothing in front of the hero ox, 3D cup: DONE. There are two black silhouettes at the sides, the centre is clear, and a small gold cup drops at g 1645-1655.
-3. Salmon beam: DONE (gone). Steel blades: NOT DONE (still bronze brush tips). Startled/charging face: NOT MET. The new overlay reads as a SAD, sleepy cow: half-lidded eyes, brows drooping outward, a down-turned mouth. After the snap (g 1655-1688) the whole frame is one big sad cow face. That is the opposite of "monster".
+1. Rage face: DONE. V brows, red glaring eyes, fanged roaring mouth and steam read instantly. After the snap the hero is a real monster.
+2. Darkness before the flare: DONE within the director's allowance. The sky is near-black, the gate is dim, and the herd is a dull brown band until the flare at g 1630-1645 turns it blazing red. The flare reads as "out of the dark".
+3. Flames: ACCEPTED. From this head-on angle the flames rise as a wall of fire BEHIND the herd (g 1645-1670), which reads as "fire behind". They no longer look like candles on the backs. Blades: bronze, per the director. But see change 3: there is no glint at all.
 
-New problems:
-- The flames stand straight up like candles above the oxen's backs (g 1645-1688). From this angle they read as "backs on fire", not "tails on fire behind them".
-- Plain lit floor is about 40 % before the snap (g 1590-1640).
+## Remaining problems
+- **Pre-snap set, g 1590-1640:** Two flat, untextured tan posts (x 55-95 and x 615-655, y 430-790) and pale palisade spikes at both edges read as placeholder slabs (rule 2). Plain floor is about 37 % (y 800-1280). The floor is soft (QA_AUTO blur on g 1590-1629), against the client's sharp-image rule.
+- **Hero face in the caption band after the snap:** The x1.5 snap and the push carry the hero ox down. Its mouth is at y about 880 at g 1650 and at y 1050-1240 at g 1670-1685. The captions "สัตว์ประหลาด / ลายมังกร" will cross the monster's mouth on the phone.
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 6 | 6 | 5 | 3 | 7 |
+| 7 | 7 | 5 | 7 | 7 |
 
 ## Verdict: FIX-FIRST
-## Changes
-1. **Monster face + blades, g 1625-1688:** Draw the overlay as rage, not sorrow: brows in a hard V down toward the nose, narrowed glaring eyes with small pupils, flared nostrils with steam puffs, and an open bellowing mouth or a flat snarl. Use no down-turned mouth and no droopy lids. Make the horn blades steel-grey with a white edge (a recolour of the tip shapes is enough), plus 2-3 glints at the snap.
-2. **Darkness, g 1590-1630:** Dim the gate tower and wall another 60-70 % so they are near-black blue until the flare. Let only tail embers and the orange fire glow (rising from g 1625) light the oxen, the ground and the soldiers' rims. Raise the look-at or lower the camera so plain floor is 25 % or less before the snap.
-3. **Flames, g 1630-1688:** Root each flame at the tail tip behind the rump and lean it back and up 35-45 degrees, away from the lens, with the glow spilling over the backs. Do not stand it upright on the back. Fewer, bigger trailing flames read better than a row of candles.
+1. **Pre-snap g 1590-1640:** Hide the two tan posts and the pale edge spikes. Bring plain floor to 30 % or less with a dark lit fg prop at one lower corner (an overturned camp table, wine jars, a dropped shield). Render the floor sharp: no soft gradient patch.
+2. **Snap framing g 1644-1688:** Home the snap and push on the hero's FACE, not the herd centre. Keep the chin at y 860 or above (face centre at about y 0.45) and the full face in frame through the end of the take.
+3. **Blade glint:** Fire 2-3 star glints from the s22 sprite on the hero's and neighbours' blade TIPS at g 1646-1652, at least 40 px at full size, so "flashing blades" lands with the snap.
+
+## Notes
+- The three soldier silhouettes are pure black cut-outs. A thin warm rim from the fire would sit them in the light.
+- The falling cup (g 1650-1660, right soldier) reads only as a small gold blob.
+- At g 1685 one flame rises straight up behind the hero's horns. Shift it a little off-axis.

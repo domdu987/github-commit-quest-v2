@@ -1,21 +1,25 @@
-# QA-art s19 (oxen burst out of the wall holes, 47.56-50.51 s), TAKE gate round 6 — FIX-FIRST (reveal, practical)
-I reviewed take.mkv at 6 fps (art8/gNNNN.png, g 1421-1516) at full size 720x1280 and on the 360x640 sheets art8_phone_0-2.jpg.
+# QA-art s19 (oxen burst out of the wall holes, 47.56-50.51 s), TAKE gate re-render — FIX-FIRST (reveal, strict)
+I reviewed take.mkv at 6 fps (art9/gNNNN.png, g 1421-1516) at full size 720x1280 and on the 360x640 sheets art9_phone_0-2.jpg (cyan line = y 880).
 
 ## Earlier changes
-1. Purple ditch: NOT DONE. There is still a flat purple chevron at the lower left (g 1421-1456, y 1000-1280) and a vertical purple strip at the bottom centre/right (g 1461-1516). It is the most visible colour in the lower third.
-2. Ground <= 25 %: FORMALLY done by dressing, but the dressing breaks rule 2. It is untextured blue-grey low-poly rocks and navy spiky tufts (g 1426-1456 lower right; g 1501-1516 after the whip). On the phone they read as placeholder lumps, the same navy spikes that were removed from s20 earlier.
-3. Flames off heads: still DONE.
+1. Tail flames like s22, leaned back, warm pools: PARTLY done. The flames are now red teardrops with a yellow core that trail back from the bundle, and they read as fire at full size (g 1486). On the phone they are still small (about 15-25 px). Warm pools show on the ground at g 1461-1501.
+2. Purple strip: DONE. The `gapfill` earth plane removed it in every frame.
+3. Rocks/tufts recoloured, oxen at least 20 % of height, sky 30 % or less: rocks DONE (no navy lumps). Scale NOT MET: the oxen are about 10-20 % of frame height and the sky plus the dark wall top is about 40 %.
+
+## New blocker: oxen in the caption band
+The camera is low (z 1.1), so the oxen run along the horizon at y 840-1100. Every visible ox face has its chin below y 880, e.g. g 1436 (chin about y 940), g 1466 (y 1020) and g 1486 (y 1060). On the phone the captions "วัวพันกว่าตัวพุ่ง / ออกจากรู" will sit right across the faces of the oxen bursting out. This breaks the client's heads-above-880 rule for the key actors of the shot.
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 5 | 5 | 4 | 6 | 6 |
+| 6 | 6 | 4 | 6 | 6 |
 
-"Oxen come out of holes in the wall" reads from g 1466. The burning tail does not read. The tail flames are flat red rectangles with a yellow centre, held horizontal, and on the phone they look like small red flags (g 1471-1496). The oxen are also small (10-18 % of the frame height) under a 35-40 % sky.
+From g 1431 "oxen come out of holes in the wall, with dust" reads. The rage faces are good at full size. On the phone the oxen are small and low, under a large wall and sky.
 
 ## Verdict: FIX-FIRST
-## Changes
-1. **Tail flames, whole take:** Use the flame card from s22. It is tall and licking, with a yellow-white core and a red rim, it reads as fire, and it is parented to the bundle tip. Lean it back about 30-40°. Give each one a warm point light so a warm pool shows on the ground under every lit tail.
-2. **Purple strip, whole take:** Find the object by raycast, e.g. `scene.ray_cast` from the camera through g 1481 pixel (x 560, y 1150). Print the hit object and material, then give it the dirt material in dark brown or hide it. If the raycast is not done, pitch the camera up so y > 1000 holds no purple. It must not appear in any frame.
-3. **Ground dressing + scale:** Recolour the rocks and tufts warm brown/ochre (earth clods, dark straw, trampled reed), or replace them. No navy or blue-grey lumps. Bring the camera about 30 % closer to the hole row, so the oxen are 20 % or more of the frame height and the sky is 30 % or less.
+1. **Lift the herd out of the caption band, whole take:** Pitch the camera down about 6-8° so the hole row sits at y 0.50-0.58. Bring the exit path of the first 2-3 oxen about 35 % nearer the lens so each is 25 % or more of the frame height with the chin at y 860 or above. Their legs and dust then fill the lower third, so plain ground stays at 30 % or less.
+2. **Flames at phone size:** Scale the tail flame cards on the near oxen about 1.6x (at least 40 px long at 360 wide). Keep them rooted on the bundle tip and trailing back. The warm pool under each stays.
+3. **Fg prop:** Put earth clods/rubble from the broken wall (warm brown, lit, textured) at the lower-left corner in front of the hole row, 1-2 D from the lens, so it slides with the truck. Use no navy or grey lumps.
 
-Notes: The stone rings around the holes and the dust puffs are good; keep them. The whip landing on the field (g 1506-1516) is fine as a whip.
+## Notes
+- The whip landing (g 1506-1516) shows about 37 % plain cold ground. It is acceptable for 9 frames of whip.
+- The wall is grey-lavender under a blue starry sky with warm torches. It is consistent with s14/s15.

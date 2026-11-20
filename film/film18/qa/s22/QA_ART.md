@@ -1,27 +1,23 @@
-# QA-art s22 (REVEAL close-medium: "หางลุกเป็นไฟ เขาติดมีดวาววับ", 56.08-58.04 s), TAKE gate round 5 — FIX-FIRST (reveal, strict; close)
-I reviewed take.mkv at 6 fps (art8/gNNNN.png, g 1677-1747) at full size 720x1280 and on the 360x640 sheets art8_phone_0/1.jpg. "วาววับ" = g 1732.
+# QA-art s22 (REVEAL close-medium: "หางลุกเป็นไฟ เขาติดมีดวาววับ", 56.08-58.04 s), TAKE gate re-render — FIX-FIRST (reveal, strict; regressed)
+I reviewed take.mkv at 6 fps (art9/gNNNN.png, g 1677-1747) at full size 720x1280 and on the 360x640 sheets art9_phone_0-1.jpg (cyan line = y 880). "วาววับ" = g 1732.
 
 ## Earlier changes
-1. Fire: DONE. No flame sits near the soldier's head. The hero's own flame stands on its reed bundle tip (g 1682-1727, x 620-690), with a warm glow. The grey post is gone.
-2. Framing: DONE until the punch-in. The ox is about 55-60 % of the width and the ground is about 25 %.
-3. Rage face: DONE and it works. V brows, red glaring eyes, fanged roaring mouth and steam puffs read instantly on the phone. This is now the strongest image in the reveal.
-4. Steel blades: NOT DONE. The horn blades are still gold with red bands. The glint reads as a big white star only at g 1737. At g 1732 it is a tiny "+" that is invisible on the phone.
+1. Punch-in keeps the full face and tail flame in frame: NOT DONE. At g 1742-1747 the hero's face is cut in half by the left edge (x 0).
+2. Frozen soldier, full figure at the right, 3/4 toward the ox: DONE WRONG. He now stands IN FRONT of the ox's body at x 0.42-0.75, square to the lens, calm, looking at the camera. He hides the dragon silk. The hero's tail bundle sticks out behind his shoulder, so on the phone he seems to carry a broom, with a "torch" flame beside it.
+3. Glint on the word: PARTLY done. A 4-point star appears at g 1732, but on the coat/horn root, not a blade tip. At g 1737 it becomes a tall white vertical spike at the left edge (x 70-130, y 250-620) with a white bar across the ox, which reads as a render glitch.
+
+## Also
+- **Night grade:** The sky is near-black (RGB about 17,24,62), the same as s21. The passed s14/s15 have a blue moonlit sky (about 25,76,165). Only s21 may be darker, per the director.
+- **Caption band:** The hero's mouth is at y 950-1060 in most frames. The meta value of "hero chin 741" is wrong.
+- **Placeholder:** A tan-legged tripod brazier with a flat navy cone sits at the right edge (g 1737-1747, x 630-720, y 500-830).
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 7 | 7 | 5 | 7 | 5 |
+| 4 | 5 | 3 | 4 | 4 |
 
-On the phone: "a furious dragon-silk ox charges with its tail on fire". The tail-fire and dragon half of the line lands. The blades and the frozen soldier do not.
+On the phone you see a calm soldier posing in front of an angry ox, holding a broom next to a torch. Neither "tail on fire" nor "glinting blades" reads.
 
 ## Verdict: FIX-FIRST
-## Changes
-1. **Punch-in g 1731-1747:** The +15 % punch crops the hero at BOTH edges. The face and left horn are cut at x 0 (g 1737-1747), and the hero's own tail flame leaves the right edge, so only a red sliver shows at x 715 from g 1737. Reduce the punch to about +8 % and centre it on the head-to-bundle span. Both the full face (x >= 0.03) and the whole tail flame (x <= 0.95) must stay in frame through the hold.
-2. **Frozen soldier:** He shows only as half a face at the left edge (g 1677-1712) and is then hidden behind the horn. Either move him to the right-hand ground gap in place of the barrel (x 0.60-0.80, full figure, head y 650-800, front-3/4 toward the ox, frozen pose with sweat drop, at least 80 px from the tail flame), or remove the sliver entirely. A half-face at the frame edge looks like a mistake.
-3. **Blades + glint:** Recolour the horn blades steel-grey with a white edge (keep the red bindings). Fire the star glint at full size on g 1732-1738, not only at g 1737, so "วาววับ" lands on the word.
-
-## Notes
-- The dark navy flat shape at the right edge (x 680-720, y 560-890, every frame) looks like a pennant. It reads as an unlit slab. Hide it or light it warm.
-- The barrel at the lower right is faceted and flat brown. Acceptable, but a band of wood grain or rim highlight would help.
-- The tail flames of the oxen behind sit just above the heads of the next oxen (g 1712 x 450-480, g 1737 x 180-230). They do not cover faces, so they pass rule 3, but they can be lowered a little.
-- The background is the Jimo wall/gate tower, not the Yan camp (plan: yan_camp). Logically this works, since the oxen come from Jimo and the camera is on the Yan side. Keep it consistent with s21.
-- Use the same rage face in s20 and s21 for continuity.
+1. **Staging:** Move the soldier off the ox, to the right-hand ground at x 0.65-0.90, a little further back than the ox. Turn him front-3/4 TOWARD the ox (eyes on it), with a recoil pose and the sweat drop, head above y 880. Keep the ox's body, tail rope, bundle and its trailing flame unobstructed: the flame streams back from the bundle tip and nothing stands between the lens and the tail. Remove the right-edge tripod brazier.
+2. **Ox framing, whole take including the punch:** Hero face at x 0.08-0.45 and chin at y 860 or above in every frame. The +8 % punch from g 1731 must keep x 0.03 or more on the face. Pan or truck with the push so it does not drift out left.
+3. **Grade + glint:** Bring the sky back to the s14/s15 blue moonlit grade (same sky object/colour, moon may stay off-frame). Replace the g 1737 white spike and bar with clean 4-point stars (60-90 px) on the two blade TIPS, firing from g 1732 to 1739.

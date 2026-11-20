@@ -1,22 +1,21 @@
-# QA-art s02 (hook 2: blades + herd reveal, 2.59-5.20 s), TAKE gate round 5 — FIX-FIRST (hook, strict)
-Reviewed take.mkv at 6 fps (art7/gNNNN.png, every 5th frame) at full size 720x1280 and on the 360x640 sheet art7_phone.jpg.
+# QA-art s02 (hook 2: blades + herd reveal, 2.59-5.20 s), TAKE gate re-render — FIX-FIRST (hook)
+I reviewed take.mkv at 6 fps (art9/gNNNN.png, g 78-163) at full size 720x1280 and on the 360x640 sheets art9_phone_0-2.jpg (cyan line = y 880).
 
 ## Earlier changes
-1. Purple floor gone: PARTLY done. The lane now shows dirt, but a flat violet band is still there between the herd and the wall (g 118-163, about y 500-620 at g 123) and behind the far rows.
-2. Far herd cards pitched to camera: DONE. The far rows now read as packed red coats with horns, not stripes.
-3. Woman clear of the near ox, green figure removed: DONE. But from g 143 her face is cut by the left edge (half a face at g 153-163).
-
-## Ground dressing (J.dress_ground): reads as JUNK
-The "straw, stones, baskets" come out as untextured navy/violet low-poly star-shaped spikes and faceted lumps over the whole bottom 35 % (g 78-163). They are the same colour as the old placeholder spikes and break rule 2. In the opening close shot (g 78-103) they are the biggest shapes in the lower frame.
+1. Dressing material: DONE. The dressing is removed. No navy or violet spikes or lumps are left.
+2. Violet band between the herd and the wall: NOT DONE (third round). A flat, unlit navy-violet sheet lies under the far rows from g 108 to g 163. At g 153 it covers x 200-500, y 420-640, and on the phone it is the largest flat shape behind the herd.
+3. Woman clear of the edge: DONE. She stays whole and right of the left edge for the whole take, with her head above y 880.
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 7 | 6 | 5 | 6 | 7 |
+| 7 | 7 | 6 | 6 | 8 |
 
-The beat now reads on the phone: he ties blades on, the crane rises, and the lane is packed with dressed oxen. What stops it is the junk on the floor.
+On the phone you see a calm clerk holding a bronze blade up at the horn of a dragon-silk ox. The crane then rises on a lane packed with dressed oxen under a blue moonlit sky and a warm wall. The hook reads. The only thing that looks broken is the violet sheet.
 
-## Verdict: FIX-FIRST
-## Changes
-1. **Dressing material, whole take:** Give the dressing real materials and light: straw in golden ochre (a thin-blade texture, not star spikes), stones in warm grey-brown with a lit top face, baskets in wicker tan. Or turn the dressing off here. No navy or violet prop may stay in frame. Fewer, larger, readable items are better than a carpet of shards.
-2. **Violet band, g 113-163:** Put the lane dirt material (or dark trampled straw) on the strip between the herd and the wall, or let the fill light reach it. There must be no flat violet area.
-3. **Woman, g 143-163:** Slide her about 0.4 D right, or ease her out of frame cleanly by g 145. Do not leave a half face on the edge.
+## Verdict: FIX-FIRST (one change)
+1. **Violet band, g 108-163:** Use the s19 fix. In s19 the purple strip was a hole in the set's ground, and the world colour showed through it. A dark earth plane (`gapfill`) placed just under the ground fixed it. Put the same kind of plane (lane dirt colour, dark brown) under the herd lane between the herd and the wall base, and check g 153 for zero flat violet pixels behind the herd. If that fails, a warm fill light on the strip is the fallback.
+
+## Notes (not blocking)
+- Plain dirt is about 28-30 % from g 113 to the end, which is a note band. A dark fg prop (basket, trough) at a bottom corner would bring it under 25 %.
+- At g 78-98 Tian Dan's face is cropped about 20 % at the left edge. It is acceptable as an over-the-shoulder start.
+- The blade is held near the horn rather than visibly tied. With the narration this is fine.

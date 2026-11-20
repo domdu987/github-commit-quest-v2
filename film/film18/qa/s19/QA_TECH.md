@@ -1,9 +1,13 @@
-# QA_TECH s19 (take g1421-1520; in-shot g1427-1514) - FAIL (round 6)
-Checked: 6 fps + first/last 3 (25 frames). Director 8.95/11.76: OK, no pulsing. Blur flag g1505-1519: ALLOWED - it is the whip, the last frames (sky, distant herd, torch) are sharp. Flames sit on the tail tips and trail backward, none on a head. NIGHT, no text, soft dust, heads fine.
-Earlier blockers: bare ground NOT FIXED; purple strip NOT FIXED; Qi silhouettes NOT FIXED.
+# QA_TECH s19 (take g1421-1520, shot g1427-1514) - FAIL (round 7)
+Checked: 6 fps + first/last 3 (25 frames) + full-size crop g1511. Director 7.92 / 11.24 (my re-measure 7.87 / 11.24): OK, no pulsing. Whip: the blur flag g1505-1519 is ALLOWED. At full size the sky, stars, herd and torch are crisp; Laplacian ratio 0.5-0.57 is the flat sky/ground content, not smear. Flames sit on tail tips and trail backward (behind the oxen); none on a head. NIGHT, no text, soft dust (no dark-square puffs), heads fine.
+## Earlier blockers
+- Flat saturated purple strip: FIXED (gone).
+- Qi silhouettes 4-6: NOT FIXED (see 1).
+- Bare ground > 30 %: NOT FIXED (see 2).
+- Navy spiky plants: gone; only a few small navy boulder lumps on the horizon after the whip (note).
 ## Issues
-1. g1421-1505 - the flat saturated purple strip (untextured slab) still crosses the ground from the bottom left, and again after the whip (g1506-1520) in the lower right. Rule 2, previous blocker unfixed.
-2. g1427-1520 - bare ground > 30 %: about 35-40 % at g1427-1495 (pale road under the strip), about 50 % after the whip.
-3. g1427-1514 - Qi silhouettes: 1-2 black figures visible (g1457-1480), not 4-6.
-4. g1427-1520 - navy spiky plants and dark navy rock lumps in the lower band (junk per the dressing rule), only a few warm props.
-Notes: the oxen faces are neutral, not rage; after the whip the herd is distant and small.
+1. g1427-1514 - Qi silhouettes: only 1-2 black figures, visible g1426-1456 and a lone one at g1511; the plan and TEAMS ask for 4-6.
+2. g1506-1520 - bare ground: after the whip about 40-45 % of the frame is plain lavender ground (0.3 s inside the shot plus the handle). Also about 30 % at g1427-1446. Fix: end the whip with the horizon higher / dark fg prop, or tilt up.
+## Notes
+- Oxen faces are neutral, not rage; after the whip the herd is small and distant (about 8 % of frame height).
+- Warm dust and ground glow under the herd read well. Navy boulder lumps (outlined) on the horizon g1506-1520.

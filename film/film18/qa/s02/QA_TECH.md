@@ -1,8 +1,13 @@
-# QA_TECH s02 (g78-165) - FAIL (round 3)
-Checked: 6 fps + first/last 3 sheet. Director frame-diff 10.48 / 14.09: OK, no pulsing, eased pull-out visible.
+# QA_TECH s02 (take g78-165, shot g78-156) - PASS (round 4)
+Checked: 6 fps + first/last 3 (22 frames), continuity against s01 last / s03 first. Director 9.30 / 12.58 (my re-measure 9.09 / 12.56): OK. Eased pull-out visible, no pulsing. NIGHT, no text, no mouths, heads < 880, caption band dark.
 ## Earlier blockers
-- Herd/ground/blade beat: still fine. No stump.
+- Navy untextured rocks / navy spikes / dark stripes on the ground (round-3 blocker): FIXED. Ground is a plain pink-brown road, no junk. No stump.
+- Herd reveal: dozens of dragon-dressed oxen fill the lane from g108; blades/tassels on horns visible at g78-103. OK.
 ## Issues
-1. g78-165 - ground-dressing helper (rule 2 / junk): the lower 35-45 % is covered with navy untextured low-poly rocks, navy spiky star-shapes and dark flat shadow stripes. They read as placeholder junk at phone size; at g138-165 rocks cover the woman's lower body and basket (bottom-left) and Tian Dan's feet. Fix: remove the rocks/spikes or replace with lit textured props (jars, baskets, straw) kept out of the actors.
-## Notes
-- g108-165 flat purple band behind the herd (shadow quad). Tian Dan small/half hidden by woman g128-165. Eye-line at lens (note). Sky ~30 % to g103.
+none blocking.
+## Notes (non-blocking)
+1. g108-150 - bare road below the herd is about 28-33 % of the frame (visual estimate; a smooth-block mask gives about 23-25 %). Borderline. Cheap fix if the director wants margin: one dark/warm fg prop (jar, basket) in a bottom corner.
+2. g108-165 - a flat dark-purple band (shadow quad) runs along the back of the herd at the wall base; reads as a shadow, small at phone size.
+3. g153-165 - Tian Dan drifts to the left edge and is partly cropped (head still inside). The woman fg figure is small and static from g108.
+4. Tian Dan and the lead ox look at the lens (eye-line note).
+5. Sky about 30 % to g103.
