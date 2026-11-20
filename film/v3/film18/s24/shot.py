@@ -13,7 +13,7 @@ NAME = 's24'
 G0, G1 = 1807, 1882
 H_IN, H_OUT = 6, 6
 MOVE = dict(push=0.05, slide=40)
-CAMO = dict(loc=(3.0, -105.0, 10.0), look_at=(-1.5, -72.0, 6.5), lens=22.0)
+CAMO = dict(loc=(3.0, -105.0, 10.0), look_at=(-1.5, -72.0, 6.0), lens=22.0)
 SHAKE = (1.1, 0.8, 0.5, 2.6)
 SNAPS = [(G0 + 14, 1.14, 4, 9999), (G0 + 46, 1.12, 4, 9999)]      # HELD punch-ins only (ALL_TEAMS rule 1: no pulses)
 
@@ -41,6 +41,10 @@ def make_driver(quality):
         v[('freeze', 0)] = C.person_variant(cn, dict(cast18.STORY18['soldier_freeze_' + k][1]), 'z')
         atl[k] = C.Atlas('s24_' + k, v, ppd=110)
     run = []
+    C.set_camera(NAME, G0 + 24, move=MOVE, cam=CAMO); C.bpy.context.view_layer.update()
+    for (uu, vv, st_, ff_, k_) in ((0.72, 0.66, 14, 20, 'b'), (0.6, 0.72, 30, 36, 'c')):          # two clear falls in open ground at x 0.6-0.75 (director gate 12)
+        pt_ = C.ground_at(cam_obj, uu, vv)
+        if pt_ is not None: RUNNERS.append((pt_.x, pt_.y, 20.0, 1.2, st_, ff_, 100.0, k_))
     for i, (x, y, ang, sp, st, ff, ang2, k) in enumerate(RUNNERS):
         run.append(C.Actor(atl[k], 'run%d' % i, height=3.2 if k != 'c' else 3.0, sw=1.0, ref=('fall', 0)))
     # ---- flying pots and helmets: the set's opaque props (J.prop_pot terracotta, J.prop_helmet bronze)
@@ -64,6 +68,13 @@ def make_driver(quality):
         if ch_.get('ob') is not None: ch_['ob'].hide_render = True
     chariot_root = C.J.prop_chariot((-4.0, -80.0, 0.0), rot=math.radians(200.0), tumble=0.0, scale=0.6)
     chariot = None
+    C.set_camera(NAME, G0, move=MOVE, cam=CAMO); C.bpy.context.view_layer.update()
+    for n_, (uu, vv) in enumerate(((0.16, 0.86), (0.48, 0.94), (0.82, 0.88), (0.32, 0.78), (0.66, 0.8))):       # dropped camp props from the first frame (ground <= 30 %)
+        pt_ = C.ground_at(cam_obj, uu, vv)
+        if pt_ is None: continue
+        o_ = (C.J.prop_pot(tuple(pt_), kind='jar', scale=1.0) if n_ % 3 == 0 else C.J.prop_helmet(tuple(pt_), scale=1.1) if n_ % 3 == 1 else C.J.prop_reed_bundle(tuple(pt_), scale=1.8))
+        for ch2 in [o_] + list(o_.children):
+            if ch2.type == 'MESH': ch2.data.materials.clear(); ch2.data.materials.append(C.glaze_mat(((0.06, 0.03, 0.02), (0.3, 0.14, 0.05), (0.55, 0.28, 0.1), (0.85, 0.55, 0.25)), 'drop%d' % n_))
     for ch_ in [chariot_root] + list(chariot_root.children):
         if ch_.type == 'MESH':
             ch_.data.materials.clear(); ch_.data.materials.append(C.glaze_mat(((0.06, 0.03, 0.02), (0.35, 0.12, 0.06), (0.62, 0.22, 0.1), (0.95, 0.5, 0.25)), 'chariot_warm'))
@@ -85,7 +96,7 @@ def make_driver(quality):
         fwd = (V(pose['look_at']) - V(pose['loc'])); fwd.z = 0; fwd.normalize(); rt = V((fwd.y, -fwd.x, 0))
         for i, (x, y, ang1, sp, st, ff, ang2, k) in enumerate(RUNNERS):
             a = run[i]; f0 = G0 + st
-            x *= 2.4; y = -80.0 + (y + 80.0) * 1.6
+            if i < 12: x *= 2.4; y = -80.0 + (y + 80.0) * 1.6
             d1 = V((math.cos(math.radians(ang1)), math.sin(math.radians(ang1)), 0)); d2 = V((math.cos(math.radians(ang2)), math.sin(math.radians(ang2)), 0)); p0 = V((x, y, 0))
             if g < f0:                                   # not yet panicking: frozen, trembling
                 a.show(('freeze', 0), p0 + rt * (0.03 * math.sin(g * 2.3 + i)), cam, mirror=False); clamp(a, ('freeze', 0), p0, cam, False); continue
@@ -101,7 +112,7 @@ def make_driver(quality):
             a.show(('run', ph), pos, cam, mirror=dirv.dot(rt) < 0, lift=0.12 * abs(math.sin(g * 0.9 + i))); clamp(a, ('run', ph), pos, cam, dirv.dot(rt) < 0, 0.12 * abs(math.sin(g * 0.9 + i)))
         for n_, (o, (x0, y0, z0, x1, y1, ap, dl)) in enumerate(zip(items, FLY)):
             p = C.clamp((u - dl) / 0.5); e = p
-            o.location = (x0 + (x1 - x0) * e, y0 + (y1 - y0) * e, z0 + 0.4 + ap * math.sin(math.pi * e) * 1.0); o.rotation_euler = (g * 0.25 + n_, g * 0.17, g * 0.11); o.scale = (0.8, 0.8, 0.8)
+            o.location = (x0 + (x1 - x0) * e, y0 + (y1 - y0) * e, z0 + 0.4 + ap * math.sin(math.pi * e) * 1.0); o.rotation_euler = (g * 0.25 + n_, g * 0.17, g * 0.11); o.scale = (0.6, 0.6, 0.6)
             o.hide_render = not (0.0 < p < 1.0)
         tp = C.clamp((g - G0) / float(G1 - G0)); chariot_root.location = (-2.0 + 6.0 * tp, -78.0 - 6.0 * tp, 0.0); C.J.prop_chariot_set(chariot_root, 0.8 * tp)
     return drive, actors

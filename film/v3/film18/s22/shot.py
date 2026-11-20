@@ -15,12 +15,12 @@ G0, G1 = 1683, 1742
 H_IN, H_OUT = 6, 6
 G_GLINT = C.g_of(57.64)                                           # 1732
 MOVE = dict(push=0.09, slide=8)
-CAMO = dict(loc=(-1.4, -51.5, 1.9), look_at=(0.15, -46.0, 1.45), lens=27.0)
+CAMO = dict(loc=(-1.4, -51.5, 1.9), look_at=(0.55, -46.0, 1.45), lens=27.0)
 SHAKE = (0.8, 0.6, 0.4, 2.6)
-SNAPS = [(G_GLINT - 1, 1.08, 4, 9999)]                            # ONE held +15 % punch-in on the word
+SNAPS = []                                                         # punch removed (director gate 12): steady push only
 OX = V((0.1, -46.0, 0.0))
-SCALE_OX = 0.8
-SOL_D, SOL_LAT = 6.4, 1.9
+SCALE_OX = 0.72
+SOL_D, SOL_LAT = 6.4, 1.3
 
 
 def make_driver(quality):
@@ -82,6 +82,8 @@ def make_driver(quality):
     Bk = C.J.Banks(); Mt = C.STATE['M']; bb = Bk('barrel22', hull=0.0); C.J.cyl(bb, V((0, 0, 0)), 0.7, 1.5, Mt['wood_d'], seg=12, r1=0.62); C.J.cyl(bb, V((0, 0, 0.5)), 0.74, 0.12, Mt['iron'], seg=12, r1=0.74)
     Bk.flush(C.STATE['SET']); barrel = [o for o in C.STATE['SET'].objects if o.name.startswith('barrel22')][0]; C.J.no_bounce(barrel)
     barrel.data.materials.clear(); barrel.data.materials.append(C.glaze_mat(((0.01, 0.006, 0.004), (0.05, 0.03, 0.015), (0.14, 0.08, 0.03), (0.3, 0.17, 0.07)), 'barrel_dark'))
+    pot = C.J.prop_pot((0, 0, 0), kind='jar', scale=0.45); pot.data.materials.clear(); pot.data.materials.append(C.glaze_mat(((0.05, 0.02, 0.01), (0.3, 0.12, 0.05), (0.55, 0.25, 0.1), (0.85, 0.5, 0.25)), 'pot22'))
+    reed = C.J.prop_reed_bundle((0, 0, 0), scale=0.7)
     stars = [C.star_obj('glint%d' % k) for k in range(2)]
     lights = [C.warm_light((0, 0, 0), 250.0, 'tl%d' % k) for k in range(2)]
     actors = {'hero': hero, 'soldier': sol}; cam_obj = ob['cam']
@@ -106,6 +108,9 @@ def make_driver(quality):
             f2.location = pp + u2 * ((-1.0 if mir else 1.0) * bx * a.sc) + V((0, 0, -by * a.sc)); f2.scale = (a.sc * 0.9,) * 3
         c_pt = C.ground_at(cam_obj, 0.88, 0.97)
         barrel.hide_render = True
+        for o_, (u_, v_) in ((pot, (0.06, 0.93)), (reed, (0.55, 0.97))):
+            q_ = C.ground_at(cam_obj, u_, v_)
+            if q_ is not None: o_.location = (q_.x, q_.y, 0.0)
         # star glints on both blade tips on "วาววับ"
         k = g - G_GLINT
         for si, st in enumerate(stars):
