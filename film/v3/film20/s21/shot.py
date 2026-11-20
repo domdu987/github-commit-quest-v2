@@ -220,6 +220,7 @@ class Take(C.Take):
         self.dress_fg()
         self.cobbles()
         self.build_fx()
+        self.build_pulse()
         self.key_cam(bf(G_FIRST), *cam_at(A, G_FIRST, self.path)[:2])
         self.scene.frame_set(bf(G_FIRST))
 
@@ -272,6 +273,40 @@ class Take(C.Take):
         ob.data.materials.append(m)
         ob.visible_shadow = False
 
+    def build_pulse(self):
+        """emission of the lattice iron = a bright blue-white WINDOW (width 55 m) running up the tower in object z: strength = A * max(0, 1 - |z - zc| / w);
+        zc and A are keyed; elsewhere the iron stays red.  Node chain added to the set's two iron materials (runtime)."""
+        self.pulse_nodes = []
+        for m_ in CO.STATE["glow_mats"]:
+            nt = m_.node_tree
+            bs = nt.nodes["Principled BSDF"]
+            tc = nt.nodes.new("ShaderNodeTexCoord")
+            sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+            sub = nt.nodes.new("ShaderNodeMath"); sub.operation = "SUBTRACT"
+            ab = nt.nodes.new("ShaderNodeMath"); ab.operation = "ABSOLUTE"
+            dv = nt.nodes.new("ShaderNodeMath"); dv.operation = "DIVIDE"
+            inv = nt.nodes.new("ShaderNodeMath"); inv.operation = "SUBTRACT"
+            mx = nt.nodes.new("ShaderNodeMath"); mx.operation = "MAXIMUM"
+            mul = nt.nodes.new("ShaderNodeMath"); mul.operation = "MULTIPLY"
+            sub.inputs[1].default_value = 0.0
+            dv.inputs[1].default_value = 40.0
+            inv.inputs[0].default_value = 1.0
+            mx.inputs[1].default_value = 0.0
+            mul.inputs[1].default_value = 0.0
+            L = nt.links.new
+            L(tc.outputs["Object"], sep.inputs[0]); L(sep.outputs["Z"], sub.inputs[0]); L(sub.outputs[0], ab.inputs[0])
+            L(ab.outputs[0], dv.inputs[0]); L(dv.outputs[0], inv.inputs[1]); L(inv.outputs[0], mx.inputs[0]); L(mx.outputs[0], mul.inputs[0])
+            L(mul.outputs[0], bs.inputs["Emission Strength"])
+            bs.inputs["Emission Color"].default_value = (0.45, 0.70, 1.0, 1.0)
+            self.pulse_nodes.append((sub, mul))
+
+    def pulse(self, g, f):
+        gl = u_of(g, G_ANT, G_ANT + 6) * (1.0 - u_of(g, FX_OFF - 6, FX_OFF))
+        zc = lerp(-30.0, 340.0, u_of(g, G_ANT - 2, FX_OFF - 2, "sine"))
+        for sub, mul in self.pulse_nodes:
+            CO.keysock(sub.inputs[1], zc, f)
+            CO.keysock(mul.inputs[1], 0.5 * gl, f)
+
     def bar_pos(self, i, g):
         """(location, euler, visible) of bar i: appears in the hand at DROP[0], falls and tumbles to the ground at DROP[1]."""
         who = ("demo_a", "demo_b", "demo_c")[i]
@@ -305,36 +340,6 @@ class Take(C.Take):
             em.inputs["Strength"].default_value = k
             nt.links.new(em.outputs[0], out.inputs["Surface"])
             return m
-        self.rings_ob = []
-        for i in range(N_RINGS):
-            bpy.ops.mesh.primitive_torus_add(major_radius=1.0, minor_radius=0.011, major_segments=128, minor_segments=8)
-            ob = bpy.context.object
-            ob.name = "sig_ring_%d" % i
-            ob.data.materials.append(emat("sigm%d" % i, (0.28, 0.55, 1.0, 1.0)))
-            ob.visible_shadow = ob.visible_diffuse = ob.visible_glossy = False
-            ob.location = (0.0, 0.0, 300.0 * SC)
-            self.rings_ob.append(ob)
-        bpy.ops.mesh.primitive_uv_sphere_add(radius=1.0, segments=16, ring_count=8)
-        self.flash = bpy.context.object
-        self.flash.name = "sig_flash"
-        self.flash.data.materials.append(emat("sigflash", (0.8, 0.9, 1.0, 1.0)))
-        self.flash.visible_shadow = self.flash.visible_diffuse = self.flash.visible_glossy = False
-        self.flash.location = (0.0, 0.0, 302.0 * SC)
-        import tower20
-        post = Vector((tower20.POST[0], tower20.POST[1], 6.2))
-        pts = tower20.wire_path(Vector((0.0, 0.0, 301.0)), post + Vector((0.0, 0.0, -0.1)), 3.0, 40)
-        cu = bpy.data.curves.new("sig_wire", "CURVE")
-        cu.dimensions = "3D"
-        cu.bevel_depth = WIRE_R * SC
-        cu.bevel_resolution = 2
-        sp = cu.splines.new("POLY")
-        sp.points.add(len(pts) - 1)
-        for p, q in zip(sp.points, pts):
-            p.co = (q.x * SC, q.y * SC, q.z * SC, 1.0)
-        self.wire = bpy.data.objects.new("sig_wire", cu)
-        self.scene.collection.objects.link(self.wire)
-        self.wire.data.materials.append(emat("sigwire", (0.45, 0.68, 1.0, 1.0), 2.0))
-        self.wire.visible_shadow = self.wire.visible_diffuse = self.wire.visible_glossy = False
         def gmat(name, col, k, fac):
             m = bpy.data.materials.new(name)
             m.use_nodes = True
@@ -352,6 +357,37 @@ class Take(C.Take):
             nt.links.new(em.outputs[0], mx.inputs[2])
             nt.links.new(mx.outputs[0], out.inputs["Surface"])
             return m
+        self.rings_ob = []
+        for i in range(N_RINGS):
+            bpy.ops.mesh.primitive_torus_add(major_radius=1.0, minor_radius=0.004, major_segments=128, minor_segments=8)
+            ob = bpy.context.object
+            ob.name = "sig_ring_%d" % i
+            ob.data.materials.append(gmat("sigm%d" % i, (0.30, 0.62, 1.0, 1.0), 6.0, 0.3))
+            ob.visible_shadow = ob.visible_diffuse = ob.visible_glossy = False
+            ob.location = (0.0, 0.0, 300.0 * SC)
+            self.rings_ob.append(ob)
+        bpy.ops.mesh.primitive_uv_sphere_add(radius=1.0, segments=16, ring_count=8)
+        self.flash = bpy.context.object
+        self.flash.name = "sig_flash"
+        self.flash.data.materials.append(emat("sigflash", (0.8, 0.9, 1.0, 1.0)))
+        self.flash.visible_shadow = self.flash.visible_diffuse = self.flash.visible_glossy = False
+        self.flash.location = (0.0, 0.0, 302.0 * SC)
+        import tower20
+        post = Vector((tower20.POST[0], tower20.POST[1], 6.2))
+        pts = tower20.wire_path(Vector((0.0, 0.0, 301.0)), post + Vector((0.0, 0.0, -0.1)), 3.0, 40)
+        cu = bpy.data.curves.new("sig_wire", "CURVE")
+        cu.dimensions = "3D"
+        cu.bevel_depth = WIRE_R * SC
+        self.wire_pts = [Vector(p) * SC for p in pts]
+        cu.bevel_resolution = 2
+        sp = cu.splines.new("POLY")
+        sp.points.add(len(pts) - 1)
+        for p, q in zip(sp.points, pts):
+            p.co = (q.x * SC, q.y * SC, q.z * SC, 1.0)
+        self.wire = bpy.data.objects.new("sig_wire", cu)
+        self.scene.collection.objects.link(self.wire)
+        self.wire.data.materials.append(emat("sigwire", (0.45, 0.68, 1.0, 1.0), 2.0))
+        self.wire.visible_shadow = self.wire.visible_diffuse = self.wire.visible_glossy = False
         cu2 = bpy.data.curves.new("sig_halo", "CURVE")
         cu2.dimensions = "3D"
         cu2.bevel_depth = 0.7 * SC
@@ -393,7 +429,7 @@ class Take(C.Take):
             r = 6.0 + 500.0 * age ** 0.7
             ob.scale = (r * CO.SC,) * 3
             CO.key(ob, "scale", f, "LINEAR")
-            CO.keysock(ob.active_material.node_tree.nodes["em"].inputs["Strength"], 2.6 * (1.0 - age) ** 1.2, f)
+            CO.keysock(ob.active_material.node_tree.nodes["mix"].inputs[0], 0.36 * (1.0 - age) ** 1.3 * min(1.0, age / 0.06 + 0.4), f)
             CO.setv(ob, on, f)
         t = g - RING_T0
         if g > RING_STOP:
@@ -407,11 +443,16 @@ class Take(C.Take):
         gl = u_of(g, *GLOW)
         CO.keysock(self.wire.active_material.node_tree.nodes["em"].inputs["Strength"], 1.6 + 3.2 * gl, f)
         vis = g < FX_OFF
+        cam_loc = Vector(cam_at(self.A, g, self.path)[0])
+        dmin = min((p - cam_loc).length for p in self.wire_pts)
+        rd = max(0.0035 * min(dmin, 120.0 * CO.SC), 0.02 * CO.SC)          # ~2.5 px on screen at the nearest part of the wire (D)
+        self.wire.data.bevel_depth = rd
+        self.wire.data.keyframe_insert("bevel_depth", frame=f)
         CO.setv(self.wire, vis, f)
         CO.keysock(self.halo.active_material.node_tree.nodes["mix"].inputs[0], 0.35 * gl, f)
-        CO.setv(self.halo, vis and gl > 0.0, f)
+        CO.setv(self.halo, False, f)
         CO.keysock(self.aura.active_material.node_tree.nodes["mix"].inputs[0], 0.03 * gl, f)
-        CO.setv(self.aura, vis and gl > 0.0, f)
+        CO.setv(self.aura, False, f)
 
     def pose(self, gs):
         for g in gs:
@@ -428,11 +469,7 @@ class Take(C.Take):
             self.key_set(f, set_year=1909)
             S.signal_rings(-1.0, frame=f)
             S.wire_glow(0.0, frame=f)
-            gl = u_of(g, *GLOW)
-            for m_ in CO.STATE["glow_mats"]:
-                bs = m_.node_tree.nodes["Principled BSDF"]
-                bs.inputs["Emission Color"].default_value = (0.55, 0.75, 1.0, 1.0)
-                CO.keysock(bs.inputs["Emission Strength"], 0.03 * gl, f)
+            self.pulse(g, f)
             self.rings(g, f)
             for i, ob in enumerate(self.bars):
                 loc_, eul, vis = self.bar_pos(i, g)
