@@ -24,14 +24,14 @@ G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1
 GS = list(range(G_FIRST, G_LAST + 1))
 G_BAG = C.g_of(12.50)                          # "รางวัล" -> bag drops
 G_SNAP_WORD = C.g_of(14.81)                    # "สองหมื่นปอนด์" -> push-in snap
-SNAP = (G_SNAP_WORD - 8, G_SNAP_WORD + 7)
+SNAP = (G_SNAP_WORD - 8, G_SNAP_WORD + 8)
 LIGHT, PRESET = "DAY", "hall_table"
 FINAL_SPP = 8
 
-CAM_LOC0 = (0.3, -3.9, 2.9)
-CAM_LOOK0 = (0.0, 2.7, 2.4)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.06, slide_px=0.0, rise_px=0.0, arc_deg_s=-4.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.7, peak=1.5, shift=(0.0, -0.25))])
+CAM_LOC0 = (0.3, -2.7, 3.0)
+CAM_LOOK0 = (0.0, 2.5, 2.0)
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.09, slide_px=-60.0, rise_px=0.0, arc_deg_s=11.0, decay=0.15,
+                snaps=[dict(g=SNAP, k=1.7, peak=1.4, shift=(1.2, 0.0))])
 
 MARK_A = (-2.05, 2.60, 0.0)                    # astro19, left of the table, faces screen-right
 MARK_B = (2.05, 3.05, 0.0)                     # astro19_b, right of the table, faces screen-left (mirror)
