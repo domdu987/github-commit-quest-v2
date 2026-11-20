@@ -631,13 +631,13 @@ def grade(path, sat=1.07, bloom=0.5, scale=None, gamma=1.28):
     im = np.clip(im, 0, 1) ** gamma; mx = im.max(-1, keepdims=True); im = np.clip(mx - (mx - im) * sat, 0, 1)
     # VIVID stage (QA_TEAM.md §G, client 2026-11-20): per-preset (gamma, sat) fitted on the SET-gate tiles so frame saturation >= 0.47
     # (qa_stats.py measure) and mean luma about 85-110, like film 2 (0.49 / 94). Fixed per preset -> no flicker. STATE['vivid'] overrides.
-    vg, vs = STATE.get('vivid') or VIVID.get(STATE.get('preset'), (1.4, 1.3))
-    im = np.clip(im, 0, 1) ** vg; mx = im.max(-1, keepdims=True); im = np.clip(mx - (mx - im) * vs, 0, 1)
+    vv = tuple(STATE.get('vivid') or VIVID.get(STATE.get('preset'), (1.4, 1.3))); vg, vs = vv[0], vv[1]; ve = vv[2] if len(vv) > 2 else 1.0
+    im = np.clip(im * ve, 0, 1) ** vg; mx = im.max(-1, keepdims=True); im = np.clip(mx - (mx - im) * vs, 0, 1)
     Image.fromarray((im * 255 + 0.5).astype(np.uint8)).save(path)
 VIVID = {'bridge_deck': (1.78, 1.15), 'bridge_end_north': (1.38, 1.23), 'bridge_end_south': (1.9, 1.15), 'bridge_high': (1.9, 1.15),
          'camp_bank': (1.52, 1.3), 'camp_table': (1.05, 1.1), 'camp_wide': (1.9, 1.15), 'hill_eye': (0.8, 1.31), 'hill_low': (1.38, 1.15),
          'hill_over': (1.48, 1.15), 'river_low': (1.9, 1.3), 'riverbank': (1.5, 1.6), 'valley_loop': (1.07, 1.71), 'valley_river': (2.28, 1.18),
-         'valley_wide': (1.11, 1.83)}
+         'valley_wide': (1.11, 1.83), 'P_TOP': (1.4, 1.1, 0.75)}
 def render(path, mode='final', samples=None, do_grade=True):
     sc = bpy.context.scene; setup_render(sc, mode, samples); sc.render.filepath = path; t = time.time(); bpy.ops.render.render(write_still=True); dt = time.time() - t
     if do_grade: grade(path)
@@ -1668,7 +1668,8 @@ def preset_extras(A, pr):
 
 # ================================================================ CONNECTED WORLD + CAMERA PATH (client rule 2026-11-20: the camera travels instead of cutting)
 WORLD_OVR = dict(glit_stretch=1.0, glit_s=0.6, glit_t=0.11, foam_k=2.5, wake_k=3.0, sun_k=1.8, reed_k=0.6, haze_max=0.2)
-POSES = {'P_A': ((290.0, 205.0, 170.0), (120.0, 110.0, 10.0), 22.0), 'P_NECK': ((-2.0, 50.0, 4.6), (0.0, 22.0, 1.8), 22.0), 'P_TOP': ((-10.0, -40.0, 120.0), (0.0, 80.0, 0.0), 22.0),
+POSES = {'P_A': ((290.0, 205.0, 170.0), (120.0, 110.0, 10.0), 22.0), 'P_NECK': ((-2.0, 50.0, 4.6), (0.0, 22.0, 1.8), 22.0), 'P_TOP': ((-10.0, -115.0, 115.0), (0.0, 70.0, 0.0), 22.0),  # v2 2026-11-20: from the south, heading north (no spin), south bank in frame
+         'P_TOP_OLD': ((-10.0, -40.0, 120.0), (0.0, 80.0, 0.0), 22.0),
          'P_CAMP': 'camp_wide', 'P_BANK': 'camp_bank'}          # named join poses (loc, look, lens) for cam_path keys; P_CAMP / P_BANK are the camp_wide / camp_bank presets
 RIM_GOLD = '#ffc766'
 def with_rim(pose, color=RIM_GOLD):
@@ -1761,7 +1762,8 @@ def cam_path(cam, keys, g, clearance=1.2):
         if i == n - 2: vals[3] = 2 * vals[2] - vals[1]
         out.append(_cr(vals[0], vals[1], vals[2], vals[3], te, dts[0], dts[1], dts[2]))
     loc, look, lens = out[0], out[1], float(out[2][0]); v0, v1 = ks[i][4], ks[i + 1][4]; tv = te
-    viv = (math.exp((1 - tv) * math.log(v0[0]) + tv * math.log(v1[0])), (1 - tv) * v0[1] + tv * v1[1]); STATE['vivid'] = viv
+    e0 = v0[2] if len(v0) > 2 else 1.0; e1 = v1[2] if len(v1) > 2 else 1.0
+    viv = (math.exp((1 - tv) * math.log(v0[0]) + tv * math.log(v1[0])), (1 - tv) * v0[1] + tv * v1[1], (1 - tv) * e0 + tv * e1); STATE['vivid'] = viv
     cam = cam or bpy.context.scene.camera
     gz = max(float(ground(loc[0], loc[1])), 0.0) + clearance; loc = np.array([loc[0], loc[1], loc[2] + (gz - loc[2]) * (1 / (1 + math.exp(-(gz - loc[2]) * 4.0))) if loc[2] < gz + 1.5 else loc[2]])   # keep the lens above the terrain (soft)
     cam.location = tuple(loc); cam.rotation_euler = (Vector(look) - Vector(loc)).to_track_quat('-Z', 'Y').to_euler(); cam.data.lens = lens
