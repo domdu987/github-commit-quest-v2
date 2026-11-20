@@ -100,17 +100,29 @@ class Scene(C.Take):
         add_pal()
         for o in bpy.data.objects:                       # the set's light shafts wash over cards: hide them
             if any(m and m.name.startswith("beam_fx") for m in (getattr(o.data, "materials", None) or [])): o.hide_render = True
+        self.cut_region((0.30, 0.50), (2.0, 2.65), (0.55, 0.86)); self.cut_region((0.30, 1.10), (1.85, 2.12), (0.12, 0.28)); self.cut_region((-0.70, -0.10), (3.15, 3.90), (-0.05, 0.70))          # the chair's near armrest (orange bar in the 18a foreground)
         self.build_table(); self.build_17a(); self.build_17b(); self.build_18b(); self.build_19()
         self.build_18a_actors()
         self.lamps = []
         for tag, loc, w in (("17a", LT(-0.30, -0.30, Z0 + 0.55), 80), ("17b", LF(-0.3, -0.4, 0.75), 160), ("18b", LT(-0.30, -0.30, Z0 + 0.55), 80), ("19", (CAB[0] + 0.5, CAB[1] - 0.9, 1.9), 220)):
             L = K.point(loc, watts=w, radius=0.15, name="ins_" + tag, flicker=False); self.lamps.append((tag, L))
 
+    def cut_region(self, xr, yr, zr):
+        import bmesh
+        n = 0
+        for ob in bpy.data.objects:
+            if ob.type != "MESH": continue
+            mw = ob.matrix_world; me = ob.data; bm = bmesh.new(); bm.from_mesh(me)
+            dead = [v for v in bm.verts if xr[0] < (mw @ v.co).x < xr[1] and yr[0] < (mw @ v.co).y < yr[1] and zr[0] < (mw @ v.co).z < zr[1]]
+            if dead: bmesh.ops.delete(bm, geom=dead, context="VERTS"); n += len(dead); bm.to_mesh(me)
+            bm.free()
+        print("cut_region removed", n, "verts", flush=True)
+
     # ---- shared table
     def build_table(self):
         B = K.Batch(7); K.table(B, TBL, size=(1.0, 0.7), h=0.80, mat="oak", top="leather")
         w = lambda lx, ly: (TBL[0] - ly, TBL[1] + lx)           # table-local -> world (turned +90 deg)
-        K.ledger_stack(B, (*w(-0.40, -0.25), Z0), n=4, rot=100); K.inkpot(B, (*w(0.36, -0.27), Z0), rot=30); K.inkpot(B, (*w(0.28, -0.29), Z0), quill=False)
+        K.ledger_stack(B, (*w(-0.30, -0.30), Z0), n=5, rot=100); K.inkpot(B, (*w(0.28, -0.31), Z0), rot=30); K.inkpot(B, (*w(0.20, -0.33), Z0), quill=False)
         B.finalize("tbl", ink_t=0.004)
 
     # ---- 17a finger gauge
@@ -121,15 +133,17 @@ class Scene(C.Take):
             B.box("honey", (0, 0, 0.015), (0.64, 0.17, 0.03)); B.box("brass", (0, -0.073, 0.032), (0.58, 0.012, 0.004))
             for k in range(30): B.box("iron", (-0.29 + 0.02 * k, -0.073, 0.035), (0.003, 0.011 if k % 5 else 0.019, 0.004))
             B.box("walnut", (-0.31, 0.0, 0.06), (0.02, 0.17, 0.06))
-            # the thief's hand lying flat (palm, middle finger long along the ruler, the other fingers short, thumb), jacket sleeve
-            B.sphere("skin", (-0.205, 0.0, 0.052), 0.085, scale=(1.0, 0.82, 0.26)); B.cyl("pcoat", (-0.36, 0.0, 0.052), 0.042, 0.16, axis="x", seg=12)
-            B.cyl("cardedge", (-0.275, 0.0, 0.052), 0.047, 0.035, axis="x", seg=12)
-            for y, x0, x1 in ((0.0, -0.13, 0.075), (0.034, -0.13, 0.008), (-0.034, -0.13, 0.014), (-0.066, -0.13, -0.045)):
-                B.cyl("skin", ((x0 + x1) / 2, y, 0.043), 0.0125, x1 - x0, axis="x", seg=10); B.sphere("skin", (x1, y, 0.043), 0.0125)
-            B.cyl("skin", (-0.16, 0.074, 0.043), 0.0135, 0.075, axis="x", seg=10, rot=(0, 0, -35))
+            # the thief's hand lying flat: cuffed jacket sleeve from the frame edge, wrist, palm, thumb, three curled fingers, the middle finger long along the ruler
+            B.cyl("pcoat", (-0.62, 0.0, 0.058), 0.046, 0.66, axis="x", seg=14); B.cyl("cardedge", (-0.285, 0.0, 0.058), 0.052, 0.04, axis="x", seg=14)
+            B.cyl("skin", (-0.255, 0.0, 0.056), 0.034, 0.06, axis="x", seg=12)
+            B.sphere("skin", (-0.175, 0.0, 0.055), 0.085, scale=(1.0, 0.86, 0.34))
+            for y in (0.036, -0.034, -0.066):
+                B.sphere("skin", (-0.112, y, 0.050), 0.0155); B.cyl("skin", (-0.088, y, 0.040), 0.0125, 0.05, axis="x", seg=10); B.sphere("skin", (-0.063, y, 0.036), 0.0125)
+            B.cyl("skin", (-0.012, 0.0, 0.043), 0.0125, 0.188, axis="x", seg=10); B.sphere("skin", (0.082, 0.0, 0.043), 0.0125)
+            B.cyl("skin", (-0.150, -0.088, 0.045), 0.0145, 0.075, axis="x", seg=10, rot=(0, 0, 30)); B.sphere("skin", (-0.113, -0.100, 0.045), 0.0145)
         build("g17a", gauge, self.r17a_static, ink=0.0022)
         def fixed(B):
-            caliper_fixed(B); glove_fist(B, (0.255, 0.165, 0.084), 0.95); sleeve(B, (0.30, 0.175, 0.09), (0.62, 0.30, 0.20))
+            caliper_fixed(B); glove_fist(B, (0.255, 0.165, 0.084), 0.95); sleeve(B, (0.30, 0.175, 0.09), (1.60, 0.62, 0.50))
         build("c17a_f", fixed, self.r17a, ink=0.0022)
         self.s17a = new_root("s17a"); self.s17a.rotation_euler = (0, 0, math.pi / 2)
         def slide(B):
@@ -156,12 +170,13 @@ class Scene(C.Take):
             B.box("leather", (-0.08, 0.0, 0.0525), (0.34, 0.105, 0.025)); B.box("dark", (-0.08, 0.0, 0.068), (0.345, 0.108, 0.006))
             B.box("leather", (-0.10, 0.0, 0.098), (0.22, 0.098, 0.066)); B.sphere("leather", (0.045, 0.0, 0.092), 0.055, scale=(1.25, 0.95, 0.85))
             B.cyl("leather", (-0.17, 0.0, 0.27), 0.056, 0.30, seg=14); B.cyl("pants", (-0.17, 0.0, 0.78), 0.068, 0.80, seg=14)
-            B.cyl("brass", (-0.21, 0.056, 0.30), 0.009, 0.01, axis="y", seg=8)
+            B.cyl("brass", (-0.21, 0.056, 0.30), 0.009, 0.01, axis="y", seg=8); B.box("dark", (-0.215, 0.0, 0.0425), (0.06, 0.1, 0.02)); B.cyl("dark", (-0.17, 0.0, 0.415), 0.062, 0.03, seg=14)
+            for k in range(5): B.box("cardedge", (-0.095 + 0.03 * k, 0.0, 0.133 - 0.004 * k), (0.012, 0.102, 0.006), rot=(0, 15, 0))
         build("b17b", board, self.r17b, ink=0.0024)
         self.s17b = new_root("s17b"); self.s17b.rotation_euler = (0, 0, math.pi / 2)
         def block(B):
             B.box("walnut", (0, 0, 0.09), (0.05, 0.22, 0.1)); B.cyl("brass", (0, 0, 0.17), 0.02, 0.06, seg=10)
-            glove_fist(B, (0, 0.0, 0.225), 0.95); sleeve(B, (0.03, 0.0, 0.25), (0.34, 0.10, 0.65))
+            glove_fist(B, (0, 0.0, 0.225), 0.95); sleeve(B, (0.03, 0.0, 0.25), (0.90, 0.30, 1.60))
         build("k17b", block, self.s17b, ink=0.0024)
         self.group17b = [self.r17b, self.s17b]
 
@@ -197,7 +212,7 @@ class Scene(C.Take):
             B.cone = None
             B.cyl("steel", (0, 0, 0.012), 0.0042, 0.024, r2=0.0008, seg=10); B.cyl("brass", (0, 0, 0.030), 0.0072, 0.012, seg=12)
             B.cyl("dark", (0, 0, 0.130), 0.0066, 0.19, seg=12); B.cyl("brass", (0, 0, 0.228), 0.0072, 0.008, seg=12)
-            glove_fist(B, (0.0, 0.0, 0.16), 0.9); sleeve(B, (0, 0, 0.215), (0.0, -0.02, 0.50))
+            glove_fist(B, (0.0, 0.0, 0.16), 0.9); sleeve(B, (0, 0, 0.215), (0.0, -0.12, 1.60))
         build("pen", pen, self.pen, ink=0.0016)
         self.group18b = [self.r18b, self.pen] + [m[2][0] for m in self.marks if m[2]]
 
@@ -275,7 +290,7 @@ class Scene(C.Take):
         build("nc19", newcard, self.card19, ink=0.0016)
         self.glove19 = new_root("glove19")
         def g19(B):
-            glove_fist(B, (0, -0.03, 0.0), 1.15); sleeve(B, (0.03, -0.02, 0.03), (0.40, 0.10, 0.50))
+            glove_fist(B, (0, -0.03, 0.0), 1.15); sleeve(B, (0.05, -0.02, -0.01), (2.60, 0.30, -0.45))
         build("gl19", g19, self.glove19, ink=0.0022)
         self.group19 = [self.r19, self.med, self.card19, self.glove19]
 
@@ -290,8 +305,8 @@ class Scene(C.Take):
         # the card: held above the drawer, lowered into the slot behind the front panel, gone from g1013
         slot_y = -TR + 0.10
         if g < 1000: u = t_of(g, 996, 1000); cx = lerp(0.28, 0.0, sm(u)); cz = zt + lerp(0.24, 0.14, sm(u))
-        elif g < 1012: u = t_of(g, 1000, 1012); cx = 0.0; cz = lerp(zt + 0.14, MED_Z - 0.14, sm(u))
-        else: cx = 0.0; cz = MED_Z - 0.16
+        elif g < 1012: u = t_of(g, 1000, 1012); cx = 0.0; cz = lerp(zt + 0.14, MED_Z + 0.005, sm(u))
+        else: cx = 0.0; cz = MED_Z + 0.005
         card_on = g < 1013
         kloc(self.card19, f, (X0 + MED_X + cx, Yc + slot_y, cz)); kvis([self.card19], f, card_on)
         # the glove: holds the card top (centre) until it is down, then lifts away up-right; later pushes the drawer front shut
@@ -405,9 +420,9 @@ def LF(lx, ly, z): return (FB[0] - ly, FB[1] + lx, z)
 def cam_of(g):
     s = shot_of(g)
     if s == "17a":
-        u = lin(t_of(g, 900, 923)); a = (LT(0.05, -0.34, Z0 + 0.16), LT(0.07, 0.03, Z0 + 0.05)); b = (LT(0.10, -0.29, Z0 + 0.13), LT(0.09, 0.03, Z0 + 0.05))
+        u = lin(t_of(g, 900, 923)); a = (LT(-0.04, -0.47, Z0 + 0.20), LT(-0.02, 0.02, Z0 + 0.05)); b = (LT(0.04, -0.41, Z0 + 0.16), LT(0.02, 0.02, Z0 + 0.05))
     elif s == "17b":
-        u = lin(t_of(g, 924, 947)); a = (LF(-0.06, -0.26, 0.22), LF(0.04, 0, 0.09)); b = (LF(0.08, -0.22, 0.19), LF(0.09, 0, 0.09))
+        u = lin(t_of(g, 924, 947)); a = (LF(-0.12, -0.52, 0.26), LF(-0.04, 0, 0.17)); b = (LF(0.0, -0.44, 0.22), LF(0.02, 0, 0.15))
     elif s == "18a":
         u = lin(t_of(g, 948, 971)); a = ((-0.58, 1.46, 1.02), (0.58, 2.20, 1.24)); b = ((-0.30, 1.66, 1.05), (0.70, 2.20, 1.24))
     elif s == "18b":
