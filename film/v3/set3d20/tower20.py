@@ -153,9 +153,12 @@ def _window_gallery(M, A):
     mb.box(cream, (0, ag - 0.2, (zf + zt) / 2), (2 * ag, 0.4, zt - zf))
     for sx in (-1, 1): mb.box(cream, (sx * (ag - 0.2), 0, (zf + zt) / 2), (0.4, 2 * ag, zt - zf))
     mb.box(I, (0, 0, zt + 0.3), (2 * ag + 1.6, 2 * ag + 1.6, 0.7))
+    for i_ in range(12): mb.box(M['ironlt'], (-ah + (i_ + 0.5) * 2 * ah / 12, yg + 0.45, Z1 + 0.65), (2 * ah / 12 + 0.02, 1.2, 1.6)); mb.box(M['iron'], (-ah + (i_ + 0.5) * 2 * ah / 12, yg + 0.6, zt + 0.25), (2 * ah / 12 + 0.02, 1.5, 0.9))     # solid courses: no open gaps under / over the facade
     # lattice girders on the facade (outside, y = yg - 0.35): belt girders above / below, posts, X-braced panels each side of the window, two big diagonals across the glass
     yl = yg - 0.35
-    mb.box(IL, (0, yl, zt - 0.35), (2 * ag, 0.5, 0.7)); mb.box(IL, (0, yl, zf + 0.25), (2 * ag, 0.5, 0.5)); mb.box(IL, (0, yl, z1w + 0.35), (WIN_W + 2.0, 0.5, 0.5)); mb.box(IL, (0, yl, z0w - 0.22), (WIN_W + 2.0, 0.5, 0.4))
+    def seg(m_, y_, z_, w_, d_, h_, n_=12):
+        for i_ in range(n_): mb.box(m_, (-w_ / 2 + (i_ + 0.5) * w_ / n_, y_, z_), (w_ / n_ + 0.02, d_, h_))
+    seg(IL, yl, zt - 0.35, 2 * ag, 0.5, 0.7); seg(IL, yl, zf + 0.25, 2 * ag, 0.5, 0.5); mb.box(IL, (0, yl, z1w + 0.35), (WIN_W + 2.0, 0.5, 0.5)); mb.box(IL, (0, yl, z0w - 0.22), (WIN_W + 2.0, 0.5, 0.4))
     for px in (-WIN_W / 2 - 0.5, WIN_W / 2 + 0.5): mb.box(I, (WIN_X + px, yl, (zf + zt) / 2), (0.45, 0.5, zt - zf))
     for side in (-1, 1):
         xa = WIN_X + side * (WIN_W / 2 + 0.8); xb = side * (ag - 1.0); zs_ = [zf + 0.5, zf + 2.0, zf + 3.5, zf + 5.0, zt - 0.6]
