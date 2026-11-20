@@ -77,3 +77,7 @@ When a film passes the FINAL gate and is sent to the client:
 ## 8. From film 15: film-2 camera rhythm (client decision 2026-11-18)
 Read skill production-lessons §10 before planning shots, and use film/plan/shot_plan.md (film 2) as the camera-grammar example.
 The voice stays Bankky at the original setting.
+
+## Client decision 2026-11-20 (film 15)
+- Music: the team generates candidates on fal.ai (ElevenLabs Music v2.5, instrumental), measures them and PICKS one itself. Do not ask the client to choose the music.
+- Posting: add the POST_QUEUE row as WAIT (the client posts himself). Do not ask READY/WAIT.

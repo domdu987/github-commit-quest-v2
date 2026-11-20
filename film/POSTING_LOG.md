@@ -8,4 +8,4 @@
 | 9 | ไอ้ช่างขนม (sticky-rice mortar) | posted (all films posted as of 2026-11-18) | film/release9/rice_v1.mp4 |
 | 10 | ไอ้ช่างม้าลาย (dazzle ships) | posted by owner 2026-11-18 | film/release10/zebra_v2.mp4 |
 | 11 | ไอ้หมอวัว (smallpox vaccine) | posted by owner 2026-11-19 | film11/main film/release11/cowdoc_v1.mp4 |
-| 15 | ไอ้ปลาดิ้น (Fosbury Flop) | ready, waiting for client music choice/approval | film/release15/fosbury_v1.mp4 |
+| 15 | ไอ้ปลาดิ้น (Fosbury Flop) | approved 2026-11-20 (music C); client posts himself | film/release15/fosbury_v1.mp4 |
