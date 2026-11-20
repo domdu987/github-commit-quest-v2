@@ -131,15 +131,19 @@ def william_pose(g):
         p["glint"] = (0.5 + 0.5 * math.sin(2 * math.pi * g / 12.0)) if g >= G_SNAP - 6 else 0.4 + 0.4 * max(0.0, adj)
     else:
         p["prop_r"] = dict(type="h4_watch", scale=watch_scale(g))
-    glance = u_of(g, 1238, 1246, kind="sine") * (1.0 - u_of(g, 1252, 1262, kind="sine"))   # a glance up at the sun, then back to the watch
+    glance = u_of(g, 1236, 1241, kind="sine") * (1.0 - u_of(g, 1248, 1254, kind="sine"))   # a glance up at the sun, then back to the watch
     p["pitch"] = lerp(-0.45 + 0.08 * adj2, -0.30 * glance, us)
     p["gaze"] = (lerp(0.2, 0.0, us), lerp(-1.0, 0.2, us) - 1.1 * glance)
     p["yaw"] = lerp(0.40 + 0.05 * adj2, 0.10, us)
     p["lean"] = lerp(-3 - 1.5 * ua + 1.6 * adj, 2.0 * math.sin(g * 0.13) + 1.5 * glance, us)
     p["head_roll"] = -3.0 + 2.5 * math.sin(g * 0.11) + 1.5 * adj
-    if us >= 0.5:                                              # eyes OPEN (neutral) with the smile: he looks at the watch, up at the sun, back
-        p["expr"] = "neutral"
+    if us >= 0.5:                                              # eyes OPEN (ring eyes, expr excited) + a smile: the watch, UP at the sun, back down
+        p["expr"] = "excited"
         p["mouth"] = "smile"
+        up = glance
+        p["gaze"] = (lerp(0.25, 0.0, up), lerp(0.75, -1.2, up))        # pupils at the very top of the eye whites on the glance
+        p["pitch"] = -0.32 * up + 0.05 * (1 - up)                        # head tilts UP toward the sun for ~7 frames
+        p["head_roll"] = -3.0 + 2.5 * math.sin(g * 0.11) + 11.0 * up
     p["blink"] = blink(g, BLINKS_W)
     p["t"] = t
     return p
@@ -147,7 +151,7 @@ def william_pose(g):
 
 def captain_pose(g):
     us = u_of(g, G_SWAP[0] + 4, G_SWAP[1] + 6, kind="sine")    # he drops the hand and leans in to look at the watch
-    ue = u_of(g, G_END[0] - 4, G_END[1], kind="sine")          # then he turns, leans toward the watch and looks surprised
+    ue = u_of(g, G_END[0] - 2, G_END[0] + 10, kind="sine")          # then he turns, leans toward the watch and looks surprised
     sh = math.sin(2 * math.pi * g / 37.0)
     p = dict(C_IDLE)
     p["yaw"] = lerp(0.25 + 0.12 * math.sin(2 * math.pi * g / 47.0), 0.35, us) + 0.15 * ue
@@ -155,7 +159,10 @@ def captain_pose(g):
     p["head_roll"] = 2.0 * math.sin(g * 0.07 + 1.0) + 1.5 * sh
     p["pitch"] = lerp(-0.40, 0.10, us) + 0.12 * ue
     p["gaze"] = (lerp(0.2, 0.9, us), lerp(-1.0, 0.3, us))
-    p["expr"] = "determined" if us < 0.5 else ("shocked" if ue > 0.5 else "neutral")
+    p["expr"] = "determined" if us < 0.5 else "shocked"                # ring (open) eyes from the reveal (g ~1200)
+    if us >= 0.5:
+        m = clamp((ue - 0.1) / 0.5, 0.0, 1.0)                           # mouth: closed, then opens over ~4 frames (no one-frame snap)
+        p["mouth"] = "flat" if m <= 0.0 else ("open", 0.06 + 0.20 * m, 0.04 + 0.16 * m)
     if us < 0.5:
         k = clamp(1.0 - us * 2.0, 0.0, 1.0)
         pump = 0.07 * math.sin(2 * math.pi * g / 29.0)            # the shading hand moves (he shifts and re-shades his eyes)
@@ -230,6 +237,19 @@ class Take(C.Take):
                             c = list(b.inputs["Base Color"].default_value)
                             b.inputs["Base Color"].default_value = (c[0] * 0.82, c[1] * 0.82, c[2] * 0.84, c[3])
         self.sails = [ob for ob in bpy.data.objects if ob.name.startswith(("ship6_sail", "ship6_spanker", "ship6_jib"))]
+        self.sail_mats = []
+        for ob in self.sails:
+            for m in ob.data.materials:
+                b = m.node_tree.nodes.get("bsdf") if m and m.use_nodes else None
+                if b is not None and all(m is not x[0] for x in self.sail_mats):
+                    self.sail_mats.append((m, b, list(b.inputs["Base Color"].default_value)))
+
+    def key_sail_tone(self, f, g):
+        """after the snap the frame goes ~0.2 EV darker (the sails' base colour is texture-driven, so the scene exposure is keyed; the sun is
+        composited in post and stays as is): mean luma 113 -> ~105"""
+        vs = self.scene.view_settings
+        vs.exposure = -0.62 - 0.2 * u_of(g, 1188, 1204, kind="sine")
+        vs.keyframe_insert("exposure", frame=f)
 
     def key_sail_shadows(self, f, g):
         """noon shadows: the sails / spanker / jibs stop casting one after another from g 1146 to ~1172 (the big diagonal shadow shortens
@@ -415,6 +435,7 @@ class Take(C.Take):
             self.key_cam(f, *C.on_ship(self.root, f, *CAM.at(g)))
             self.key_sun_disc(f, g)
             self.key_sail_shadows(f, g)
+            self.key_sail_tone(f, g)
             C.place(self.wil, f, Vector(M["william_deck"]))
             C.place(self.cap, f, Vector(M["captain_wheel"]) + cap_off(g))
             for a, key, mark, mir, ph in self.sail:
