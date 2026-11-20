@@ -74,3 +74,9 @@ Recipe and checks: `film/v3/set3d17/API.md` §v2 ("v2 render recipe").
 - **T6:** if the take mean is above 112, tone the card paper to cream (#F2E6C8). The P2 face may fill at most 35 % of the frame height.
 - **T7:** if the first 30 frames are below 88, add +5 % to the `TAKE_OVER` shade.
 - **T8:** P3 lasts about 1.1 s. The crowd faces the chair (face keys). The OTS gendarme's head must not be cut by the top edge.
+
+## Luma trim at conform (director decision 2026-11-20 16:50)
+- The binding metric is the RGB mean at 90x160, as in qa_stats2. Several parts measured on it run 5-9 above their target: T3b's ramp half, T5b and T5b2, and T6b's stills. This happened because the earlier reports used PIL L.
+- These parts are NOT re-lit or re-rendered for luma. At conform each take gets an exposure trim, a pure RGB multiply k between 0.88 and 1.0, eased over 10 frames at part joins.
+- The trim brings the take mean to its target. Multiplying by k leaves the qa_stats2 saturation and vivid values unchanged (checked on T6b g1600: sat 0.593 → 0.593, vivid 84.1 % → 84.1 %, luma 115.6 → 106.3 at k 0.92). It is not haze and it does not touch saturation.
+- Teams keep rendering their approved setups unchanged. Re-renders are only for real defects: slabs, shafts, edge cuts, staging.
