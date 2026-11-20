@@ -36,46 +36,48 @@ def parse(spec):
 
 
 class Take(object):
-    def __init__(self, preset, work, hide=(), extra=None, lens=None):
+    """cast cards in a K.build_world scene; the camera is moved by K.cam_path (set per frame before posing AND before rendering)."""
+    def __init__(self, presets, work, fg=True, hide=(), extra=None):
         t0 = time.time()
-        self.preset = preset; self.work = work
-        self.A = K.build_for_cli(preset, placeholders=False)
+        self.work = work; self.presets = presets
+        self.A = K.build_world(presets, fg=fg)
         for o in bpy.data.objects:
             if any(o.name.startswith(h) for h in hide): o.hide_render = True
         if extra: extra(self.A)
         self.scene = bpy.context.scene; self.cam = self.scene.camera
         self.cam.data.dof.use_dof = False
         self.actors = {}; self.anch = {}
-        print("take: built %s in %.1f s" % (preset, time.time() - t0), flush=True)
+        print("take: built %s in %.1f s" % (presets, time.time() - t0), flush=True)
 
     def actor(self, name, cast, ppd=192):
         a = actors.Actor(name, cast); a.build(sprites.DEFAULT_CANVAS[cast], os.path.join(self.work, "sprites"), contact=True)
         a.head_flip = False; a.ppd = ppd; self.actors[name] = a; return a
-
-    def key_cam(self, f, loc, look, lens):
-        camrig.key_camera(f, Vector(loc), Vector(look), cam=self.cam, lens=lens, interp="LINEAR", easing="AUTO")
 
     def place(self, name, f, xyz, scale=SC, flip=False):
         self.actors[name].place(f, tuple(map(float, xyz)), scale=scale, flip=flip)
 
     def pose(self, name, f, pose):
         self.scene.frame_set(f)
-        return self.actors[name].pose(f, pose, camera=self.cam)
+        return self.actors[name].pose(f, K.with_rim(pose), camera=self.cam)
 
     def sprites_for(self, frames_by_actor, vivid=None):
         for name, frames in frames_by_actor.items():
             a = self.actors[name]
             if not frames: continue
+            for f in frames:
+                try: os.remove(a.sprite_path(f))
+                except OSError: pass
             res = a.render_sprites(a.ppd, frames=frames)
             for f, r in zip(frames, res): self.anch[(name, f)] = r["anchors"]
-            for f in frames:                                   # pre-compensate K.grade's gamma so the cards keep their drawn colours
+            for f in frames:                                   # pre-compensate the grade's gamma so the cards keep their drawn colours
                 p = a.sprite_path(f); im = np.asarray(Image.open(p).convert("RGBA")).astype(np.float32) / 255
-                vg = vivid(f) if vivid else K.VIVID.get(self.preset, (1.4, 1.3))[0]; im[..., :3] = im[..., :3] ** (1.0 / (GAMMA * vg))
+                vg = vivid(f) if vivid else 1.4
+                im[..., :3] = im[..., :3] ** (1.0 / (GAMMA * vg))
                 Image.fromarray((im * 255 + 0.5).astype(np.uint8)).save(p)
             a._sig.clear()
             if a.image is not None: a.image.reload()
 
-    def render(self, f, path, samples=24, mode="final", used=()):
+    def render(self, f, path, samples=32, mode="final", used=()):
         sc = self.scene; sc.frame_set(f)
         for n, a in self.actors.items(): a.set_hidden(n not in used)
         for n in used: self.actors[n].sync(self.cam, sc)
@@ -84,11 +86,10 @@ class Take(object):
         return time.time() - t
 
     def heads(self, f):
-        """screen px of each visible actor's head centre (puppet-local (0,0)) at Blender frame f."""
         out = {}
         self.scene.frame_set(f)
         for n, a in self.actors.items():
             if a.card.hide_render or f not in a.poses: continue
-            hx, hy = self.anch.get((n, f), {}).get('head', (0.0, 0.0)); c = actors.local_to_screen(a, self.cam, (hx, hy), f, a.feet.get(f))
+            hx, hy = self.anch.get((n, f), {}).get("head", (0.0, 0.0)); c = actors.local_to_screen(a, self.cam, (hx, hy), f, a.feet.get(f))
             out[n] = (round(c[0]), round(c[1]))
         return out

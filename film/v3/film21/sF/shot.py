@@ -19,10 +19,10 @@ G_LAUGH_END = 1096
 WORK = os.path.join(HERE, "work")
 
 # camera keys: side-track along the bank (east -> west), medium on the group, medium on Cressingham, then the CU push (last ~1 s)
-KEYS = [(1044, (-74.5, -22.5, 2.5), (-83.5, -11.5, 1.55), 26.0),
-        (1078, (-90.0, -21.5, 2.4), (-88.8, -11.5, 1.6), 26.0),
-        (1106, (-92.6, -18.5, 2.15), (-91.6, -12.5, 1.75), 26.0),
-        (1141, (-92.35, -14.9, 2.45), (-91.9, -13.0, 2.4), 26.0)]
+KEYS = [(1044, (-79.0, -16.8, 1.9), (-85.5, -11.2, 1.45), 26.0),
+        (1078, (-90.0, -16.8, 1.9), (-88.7, -11.2, 1.5), 26.0),
+        (1106, (-92.6, -17.2, 2.05), (-91.7, -12.5, 1.75), 26.0),
+        (1141, (-92.4, -14.5, 2.4), (-91.9, -13.0, 2.4), 26.0)]
 
 # who stands where: (mark, cast, pose, variant, phase)
 CAST = [("cress", "cressingham", "cressingham_smug_belt", 0, 0.0), ("surrey", "surrey", "surrey_tired", 0, 0.0),
@@ -54,7 +54,8 @@ def main():
     out = sys.argv[3] if len(sys.argv) > 3 else os.path.join(HERE, "raw")
     samples = int(sys.argv[4]) if len(sys.argv) > 4 else 32
     os.makedirs(out, exist_ok=True)
-    T = C.Take(["camp_bank"], WORK, fg=True)
+    K.PRESETS["camp_bank"]["clear"] = list(K.PRESETS["camp_bank"].get("clear", [])) + [(-84.0, -18.0, 13.0), (-94.0, -17.0, 7.0)]      # keep the tracking path free of tents
+    T = C.Take(["camp_bank"], WORK, fg=True, hide=("camp_fg_t_", "camp_fg_wood"))
     M = T.A["marks"]["camp_bank"]; mode = "draft" if cmd in ("draft", "probe") else "final"
     K.setup_render(T.scene, "final" if cmd == "probe" else mode, 8)
     for mark, cast, story, var, phase in CAST: T.actor("c_" + mark, cast, ppd=PPD.get(mark, 160))

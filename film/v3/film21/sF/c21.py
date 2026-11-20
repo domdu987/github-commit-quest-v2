@@ -64,6 +64,9 @@ class Take(object):
         for name, frames in frames_by_actor.items():
             a = self.actors[name]
             if not frames: continue
+            for f in frames:
+                try: os.remove(a.sprite_path(f))
+                except OSError: pass
             res = a.render_sprites(a.ppd, frames=frames)
             for f, r in zip(frames, res): self.anch[(name, f)] = r["anchors"]
             for f in frames:                                   # pre-compensate the grade's gamma so the cards keep their drawn colours
