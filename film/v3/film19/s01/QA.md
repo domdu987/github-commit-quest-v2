@@ -88,3 +88,12 @@ How the camera got there (draft numbers):
 - **Camera height:** "low" is the preset height (z 2.25 D, looking 2 deg up). Lower, the sawhorse plank fills the bottom of the frame; the bench and the H1 still sit above the eye line.
 - **Snap size:** x1.35 (bible x1.3-x3) with a pan; shot 1 is 1.91 s (under 2 s), so the snap is the plan's request, not a bible requirement. A larger snap ended inside the H1.
 - **Runtime set change:** the window-shaft volume is hidden for the whole take (haze NOTE).
+
+
+## Round 2 (QA-art FIX-FIRST fixes applied)
+- **Staging:** mark moved to (3.45, 2.19) = harrison_bench + (0.12, -2.9): beside the H1's right end, on the camera side (no longer 1.6 D behind it); apron visible from g 0. Pose re-keyed as an open V, palms up: clock-side arm out toward the H1, other arm up and outward, no arm across the chest (DOWN/PRES/TADA hand targets in shot.py).
+- **Camera:** CAM_LOC0 (2.00, -1.30, 2.25), CAM_LOOK0 (2.70, 3.20, 2.05): about 0.8 D closer to the old start, pitch -2.5 deg (ceiling beams under 30 % of frame); slide +30 px/s and arc 9 deg/s (was -45 / 15) keep him in frame and avoid the right wall's black void; snap shift x 0.12 (was 0.30): the H1 and its balls stay in frame through g 56.
+- **Lantern:** the set fix (caged, dimmer) is on film19/main; it is now a dull orange cage on the stool, clearly dimmer than the yellow floor patches and the white face. It grows in the bottom foreground after the snap; known, accepted.
+- **Top-right plank:** the lit diagonal oak plank is deleted from the scene mesh at build time (drop_top_right_plank in shot.py).
+- **Numbers (final 720x1280):** head width 214 px at g 0 (to 411 at g 56); head centre y 427-561 (all heads below top, bottom max y 687, above 880); frame-diff median 4.43, p90 13.81 (min 3.54, max 20.49); camreport: never parked (0 frames under 0.25 px/frame); 12.4 s/frame wall; qa_auto PASS; no DOF, no text, no caption_shade; H1 bars rock every frame.
+- meta.json camera string corrected.

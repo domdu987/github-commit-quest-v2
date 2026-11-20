@@ -58,18 +58,20 @@ HIDE_SHAFTS = True                             # the faint window-shaft volume r
                                                # QA_ART round-2 NOTE (shop_bench DAY); hidden here, the sun patches stay
 CANVAS = None                                  # cast19.CANVAS19['harrison19'] is enough here (no clipping warnings)
 
-CAM_LOC0 = (2.10, -1.25, 2.25)                 # near the preset start (2.31, -1.11, 2.22); lower = the sawhorse plank fills the frame
-CAM_LOOK0 = (2.85, 5.0, 2.50)                  # subject point at HARRISON's depth, between him and the H1: the arc keeps him put
+CAM_LOC0 = (2.00, -1.30, 2.25)                 # near the preset start (2.31, -1.11, 2.22); lower = the sawhorse plank fills the frame
+CAM_LOOK0 = (2.70, 3.2, 2.05)                  # subject point at HARRISON's depth, between him and the H1: the arc keeps him put
                                                # while the nearer H1 swings across (parallax); the push keeps both in frame
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G0, G_LAST, push=0.08, slide_px=-45.0, rise_px=35.0, arc_deg_s=15.0, decay=0.1,
-                snaps=[dict(g=SNAP, k=1.35, peak=1.9, shift=(0.30, -0.30))])
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G0, G_LAST, push=0.08, slide_px=30.0, rise_px=35.0, arc_deg_s=9.0, decay=0.1,
+                snaps=[dict(g=SNAP, k=1.35, peak=1.9, shift=(0.12, -0.30))])
 
+
+MARK_OFF = Vector((0.12, -2.9, 0.0))             # QA_ART fix: beside the H1 on the camera side (was 1.6 D behind it)
 
 # ----------------------------------------------------------------------------- pose (cast19 harrison19 default; mirrored: faces the H1 at screen-left)
 BASE = cast19.STORY19["harrison_idle"][1]
-DOWN_R, DOWN_L = (0.30, 1.17), (-0.30, 1.17)          # arms down (puppet-local, unmirrored)
-PRES_R, PRES_L = (0.86, 0.52), (0.55, 0.72)           # presenting: both open palms out toward screen-right (screen-left mirrored)
-TADA_R, TADA_L = (1.00, 0.30), (0.70, 0.50)           # the ta-da on the snap: higher and further out
+DOWN_R, DOWN_L = (0.70, 0.85), (-0.70, 0.85)          # arms down (puppet-local, unmirrored)
+PRES_R, PRES_L = (0.92, 0.42), (-0.82, 0.30)           # presenting: both open palms out toward screen-right (screen-left mirrored)
+TADA_R, TADA_L = (1.0, 0.22), (-0.9, 0.12)           # the ta-da on the snap: higher and further out
 
 
 def _mix(a, b, u):
@@ -112,13 +114,36 @@ class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s01")
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
+        self.drop_top_right_plank()
         self.key_cam(bf(G0), *CAM.at(G0))
         self.scene.frame_set(bf(G0))
         self.har = self.actors["har"] = C.make_actor("har", "harrison19", os.path.join(WORK, "sprites"), canvas=CANVAS, contact=True,
                                                      cam=self.cam)
 
+    def drop_top_right_plank(self):
+        """QA_ART fix: the bright diagonal oak plank hanging near the ceiling at the top right (shop_oak island holding the face
+        hit by a ray at x 3.2, y 2.1, z 4.7) pulled the eye: its connected island is deleted from the (scene-local) mesh."""
+        import bmesh
+        ob = C.bpy.data.objects["shop_oak"]
+        bm = bmesh.new()
+        bm.from_mesh(ob.data)
+        bm.faces.ensure_lookup_table()
+        seed = [bm.faces[814]]
+        island, stack = set(), list(seed)
+        while stack:
+            f = stack.pop()
+            if f in island:
+                continue
+            island.add(f)
+            for e in f.edges:
+                stack.extend(o for o in e.link_faces if o not in island)
+        print("plank island faces:", len(island), flush=True)
+        bmesh.ops.delete(bm, geom=list(island), context="FACES")
+        bm.to_mesh(ob.data)
+        bm.free()
+
     def pose(self, gs):
-        mark = Vector(self.A["marks"]["harrison_bench"])
+        mark = Vector(self.A["marks"]["harrison_bench"]) + MARK_OFF
         for g in gs:
             f = bf(g)
             self.key_cam(f, *CAM.at(g))
