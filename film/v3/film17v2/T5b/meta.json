@@ -1,0 +1,2 @@
+{"take": "T5", "part": "T5b", "first_g": 1211, "n_frames": 86, "g0": 1211, "g1": 1296, "cuts": [], "transition_in": {"type": "cut", "frames": 0},
+ "note": "T5b covers g1211-1296 only; g1297-1383 is rendered by T5b2 from this branch's render_T5b.py (beam_scale, override.json)."}
