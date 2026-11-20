@@ -26,23 +26,26 @@ FIRST_G, G_LAST = G0 - H_IN, G1 + H_OUT - 1
 GS = list(range(FIRST_G, G_LAST + 1))
 FINAL_SPP = 12                                           # H.STATE['samples'] of ship_hero (cost_report): Take() checks it
 
-SEAK = float(os.environ.get("SEAK", "1"))                    # sea clock rate (1 = real time)
+SEAK = float(os.environ.get("SEAK", "2"))                    # sea clock rate (1 = real time)
 S = 1.85                                                 # metres -> world D
 # hero preset pose, pulled back (DS x the preset distance) so the WHOLE ship fits the frame with a margin; the ship then travels across the frame
 # (slide + orbit) and a snap pushes in x1.33 with a pan on the word.  Values from a random search (scratchpad plan18.py) under the constraint:
 # every key point of the ship's bbox (bow, stern, mast tops, flanks) inside the frame with >= 30 px margin on EVERY frame.
 _loc, _look = Vector((-30.200786086416148, 60.27572081495611, 4.2)) * S, Vector((24.26311741508658, -23.591335979586283, 9.440777928304122)) * S
-DS = float(os.environ.get("DS", "1.51"))
+DS = float(os.environ.get("DS", "1.15"))
+_z0 = _loc.z
 _loc = _look - (_look - _loc) * DS
+_loc.z = _z0                                          # pull back horizontally at the preset's own height
 _L = (_look - _loc).length
 _f = (_look - _loc).normalized(); _r = Vector((_f.y, -_f.x, 0.0)).normalized(); _u = _r.cross(_f).normalized()
-_o = _r * (float(os.environ.get("OX", "-47.8")) * _L / C.F_PX) + _u * (float(os.environ.get("OY", "22.95")) * _L / C.F_PX)
+_o = _r * (float(os.environ.get("OX", "-7.81")) * _L / C.F_PX) + _u * (float(os.environ.get("OY", "6.99")) * _L / C.F_PX)
 CAM_LOC0, CAM_LOOK0 = _loc + _o, _look + _o
 G_WORD = C.cap_g("ไปจาไมกา") + 5                         # ~1438: the word จาไมกา (the caption phrase starts at ไป, 1433)
-SNAP = (1428, 1445)                                     # 17 f, x1.33 with a pan, landing on the word
-_P = [float(v) for v in os.environ.get("CAMP", "0.02,94.55,7.59,-13.76").split(",")]      # push, slide px/s, rise px/s, arc deg/s
+_S = [float(v) for v in os.environ.get("SNP", "1428,17,1.22,-2.86,-0.9").split(",")]   # snap: start g, frames, k, shift right/up (D)
+SNAP = (int(_S[0]), int(_S[0] + _S[1]))                                     # 17 f, x1.33 with a pan, landing on the word
+_P = [float(v) for v in os.environ.get("CAMP", "-0.01,12.25,12.26,-5.59").split(",")]      # push, slide px/s, rise px/s, arc deg/s
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, FIRST_G, G_LAST, push=_P[0], slide_px=_P[1], rise_px=_P[2], arc_deg_s=_P[3], decay=0.1,
-                snaps=[dict(g=SNAP, k=1.33, peak=2.0, shift=(-1.06, -0.91))])
+                snaps=[dict(g=SNAP, k=_S[2], peak=2.0, shift=(_S[3], _S[4]))])
 
 
 def widen_sea(preset, k, nu, nv):
@@ -51,19 +54,21 @@ def widen_sea(preset, k, nu, nv):
     import h19_ship as SH
     P = SH.PRESETS[preset]
     loc, look = Vector(P["cam"]["loc"]), Vector(P["cam"]["look"])
-    P["cam"] = dict(P["cam"], loc=tuple(look + (loc - look) * k))
+    v = look + (loc - look) * k
+    v.z = loc.z + (k - 1.0) * float(os.environ.get("ZUP", "6.0"))          # a farther AND higher virtual camera (the hero camera is low: scaling z down would put it under the sea)
+    P["cam"] = dict(P["cam"], loc=tuple(v))
     P["sea_nu"], P["sea_nv"] = nu, nv
 
 
 class Take(C.Take):
     def __init__(self, quality="preview"):
-        widen_sea(PRESET, float(os.environ.get('WIDEN', '3.2')), int(os.environ.get('NU', '900')), int(os.environ.get('NV', '1300')))
+        widen_sea(PRESET, float(os.environ.get('WIDEN', '1.8')), int(os.environ.get('NU', '900')), int(os.environ.get('NV', '1300')))
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_" + TAKE)
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
         self.key_cam(C.bf(FIRST_G), *CAM.at(FIRST_G))
         g_ = C.bpy.data.objects.get("glint")                    # tone the blown sun glint down (QA-tech): 40 -> GLINT x the set's energy
         if g_ is not None:
-            g_.data.energy *= float(os.environ.get("GLINT", "0.45"))
+            g_.data.energy *= float(os.environ.get("GLINT", "0.3"))
 
     def pose(self, gs):
         for g in gs:

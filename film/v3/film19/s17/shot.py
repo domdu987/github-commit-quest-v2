@@ -39,11 +39,12 @@ _f = (CAM_LOOK0 - CAM_LOC0).normalized(); _u = Vector((_f.y, -_f.x, 0.0)).normal
 _o = _u * (float(os.environ.get("OFF", "-160")) * (CAM_LOOK0 - CAM_LOC0).length / C.F_PX)          # start framing offset (px)
 CAM_LOOK0, CAM_LOC0 = CAM_LOOK0 + _o, CAM_LOC0 + _o
 G_WORD = C.cap_g("ยิ่งไกล")                              # 1370: the strongest word
-SNAP = (1377, 1392)                                      # 13 f, x1/0.58 = 1.7 pull-back with a pan (shift), landing ~10 f after the word starts
+_S = [float(v) for v in os.environ.get('SNP', '1377,15,0.70,2.3,-120,60').split(',')]   # snap: start g, frames, k, peak, shift right/up (D)
+SNAP = (int(_S[0]), int(_S[0] + _S[1]))                                       # 13 f, x1/0.58 = 1.7 pull-back with a pan (shift), landing ~10 f after the word starts
 # values found by a random search (scratchpad plan17.py) with the constraint: the whole ship inside the frame (30 px margin) on EVERY frame
 _P = [float(v) for v in os.environ.get("CAMP", "-0.035,60,106.84,-26").split(",")]      # push (pull), slide px/s, rise px/s, arc deg/s
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, FIRST_G, G_LAST, push=_P[0], slide_px=_P[1], rise_px=_P[2], arc_deg_s=_P[3], decay=0.1,
-                snaps=[dict(g=SNAP, k=0.70, peak=2.3, shift=(-120.0, 60.0))])
+                snaps=[dict(g=SNAP, k=_S[2], peak=_S[3], shift=(_S[4], _S[5]))])
 
 
 def widen_sea(preset, k, nu, nv):
@@ -69,6 +70,9 @@ class Take(C.Take):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_" + TAKE)
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
         self.key_cam(C.bf(FIRST_G), *CAM.at(FIRST_G))
+        g_ = C.bpy.data.objects.get('glint')                      # tone down the glare patches (sun glint)
+        if g_ is not None:
+            g_.data.energy *= float(os.environ.get('GLINT', '0.45'))
 
     def pose(self, gs):
         for g in gs:
