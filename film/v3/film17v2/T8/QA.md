@@ -26,3 +26,12 @@ Known weaknesses (what I could not fix inside the rules):
 - Top-hat prefect walks off to screen-left over g2010-2030 (not seen on screen in the frames I viewed there).
 - Bertillon's face leaves through the left edge between about g2036 and g2041 (6 frames, face partly cut on the edge during that time); from g2042 only the glove and calipers remain in frame.
 - Luma after the fix: mean 100.0, min 90.8, max 110.1. qa_auto PASS, rhythm in-shot median 10.84.
+
+## Fix pass 2 (director gate list 2)
+Re-rendered g1877-1932 and g2040-2052 (69 frames); the rest is unchanged.
+- g1876→1877 jump: the stock `_lookrot` flips its up-vector from +y to +z near a straight-down view, which snapped the roll. It is replaced by a smoothstep slerp between the two up-vectors (camera positions unchanged). Frame step at 1876→1877 is now 16.5 against 16.0 for the next step (90x160 mean abs diff), so no visible jump. The roll eases slowly over g1877-1915.
+- Crane vs crowd: crowd2 (laughing gendarme) and gend_b (tilted card) walk off left slowly over g1866-1906 and return over g1922-1932. They never glide fast. Checked at g1914-1928: the crane path is clear. The crying gendarme at g1896-1906 is no longer cut by the rod.
+- Ending: BDX3 holds the hand and sleeve in frame to g2052 (glove on the calipers at the ear).
+- Luma, RGB mean 90x160: take mean 100.0, min 90.8, max 112.9 (target 95-110). A few frames at the extremes sit just outside the band; the mean is in.
+- qa_auto: PASS (cut 1868 shows no change within ±2 frames, as before). rhythm.py: in-shot median 10.84, p90 16.76.
+- Honest notes: Bertillon's head leaves the frame at g2036-2041 (accepted earlier). The returning crowd members touch the left edge at g1928-1932.
