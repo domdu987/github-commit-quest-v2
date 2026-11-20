@@ -15,7 +15,7 @@ astro19 stands smug at mark mocker_telescope (arched window, telescope tube behi
 - qa_auto PASS; the "no visible change at g 1581, 1665" note is the handle.
 
 ## Frame-diff (90x160 grey, in-shot pairs g 1582..1664)
-median **4.30**, p90 **11.06** (10 in-shot pairs >= 10): meets the per-take rule (median >= 4, p90 >= 10).
+median **4.33**, p90 **11.34** (11 in-shot pairs >= 10): meets the per-take rule (median >= 4, p90 >= 10).
 
 ## Revision (director's QA-art / TAKE gate round 2)
 - Shrug: both hands now go to about (+-1.30, 0.95), palms open, layered in FRONT of the wig and gown, so the palms-up pose reads from g 1615 and stays in frame through the snap (the hand tips touch the frame edges in the tightest frames g 1639-1666). Snap k 1.6 -> 1.4 with the pan keeping him centred (head x 345-377).
@@ -31,3 +31,8 @@ median **4.30**, p90 **11.06** (10 in-shot pairs >= 10): meets the per-take rule
 take.mkv: 3.4s, shots=1, mean shot 3.40s, median 3.40s, shortest 3.40s, shots<1.5s: 0
    saturation 0.692, brightness 70.4, in-shot motion median 5.07 p90 11.23
 ```
+
+## Revision (optional hands pass, QA-art 7.0)
+- Hands: the puppet draws every hand as a dark ink ball. s20/shot.py now patches puppet._hand at runtime (this process only; v2/puppet is untouched): an open hand is drawn 1.35x bigger with a light skin fill (#f4d6b8), an ink outline, a shaded palm and four light fingers, so the palms-up read as open palms against the navy coat at phone size.
+- Hand height lerps 0.95 -> 1.10 from G_QUOTE-5 over 13 frames; spread +-1.02 -> +-0.80 (the sideways limit that keeps both hands inside x 40-680 on every frame, projection check from the raw head positions: 0 frames outside); the lens punch x1.12 holds as a plateau ~3 frames longer around g 1635-1637. Snap strength and peak are unchanged (k 1.25, peak 3.0); head width at most 264 px, wig estimate at most y 862.
+- Numbers: frame-diff median 4.33, p90 11.34; no clipped-sprite warnings, no black frames; mouth only inside the window.

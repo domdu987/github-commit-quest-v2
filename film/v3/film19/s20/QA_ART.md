@@ -105,37 +105,3 @@ shot.py: hx now eases 1.15 -> 0.72 over G_QUOTE-5..G_QUOTE+8, and the sideways p
 Note (not a blocker): with hx 0.72, the hands are partly tucked under the wig lappets in the hold (g 1663-1673), so the palms read smaller than at g 1633-1655. The shrug has already landed by then. The palms are still dark mitts.
 
 Acting 7, Key moment 7, Composition 7. **Overall 7.3. PASS.**
-
-## Round 6 (director QA-art) (client-gate re-render 12:58, face cap §G): PASS, 7.0
-
-Frames checked: 3 fps through the whole take (f3_00-09) and the punch frames g 1581, 1609, 1615, 1621, 1626, 1633, 1638, 1641, 1646, 1651, 1657, 1664, 1667, 1672 at full size and at phone size (360x640). I also put a y-grid on g 1657, the tightest frame.
-Frames: /tmp/qa19_s20art/f3_*.png, /tmp/qa19_s20art/g*.png, /tmp/qa19_s20art/sheet_3fps.png, /tmp/qa19_s20art/sheet_punch.png, /tmp/qa19_s20art/quad_phone.png, /tmp/qa19_s20art/grid1657.png
-
-shot.py now has: snap k 1.25 / peak 3.0 / shift (-0.50, -0.25); push 0.12; lens punches x1.12 on "ฟลุ๊ค" (g 1628-1643), x1.06 on the shrug and x1.05 on the second pump; hx 1.02 -> 0.72 over the snap.
-
-| Check | Result |
-|---|---|
-| Face size (§G 3, at most ~35 %) | MET. At g 1657, the tightest frame, the face oval is y ~415-640 (about 18 % of the frame height). From the top of the wig to the chin it is y ~300-640 (about 27 %, which matches the 28 % in QA.md). The whole wig mass, lappets included, is y ~300-850 (about 43 %). That is hair, not face, and it is still a medium shot (waist to crown, set visible on both sides). It is not an extreme close-up, and it fits §I.6 (a push on the punchline, about 1 s). |
-| Smug shrug reads on a phone | YES, mostly through the face and the head. At 360x640 the half-lid eyes, the one raised brow, the smirk and the -10 head roll read at once (g 1621, 1646, 1664). In the wide (g 1615-1633) the arm spread reads through the white cuffs outside the wig. From g 1641 on, the hands are dark mitts (~25 px at phone size) on a navy coat and dark wood next to the lappet tips, so the palms are effectively gone at phone size during "ต้องลองใหม่". |
-| Comedy beat vs before the trim | ABOUT THE SAME, slightly softer. The wide-to-medium jump g 1626 -> 1641 is still a clear snap, and the x1.12 punch lands on "ฟลุ๊ค" (g 1633). The end head is 264 px wide instead of 289 (-9 %), which hardly costs any punch. The smug face carries the gag. |
-| Expression / hands | Expression 8: still smirk, then a small "o" or slot, then the smirk again. It is not a shout. Hands 6: inside the frame on every frame (no edge clipping), but they are dark and below the shoulders (y ~790-830 vs shoulders ~690), so they read as "arms out", not "palms up". |
-| Framing / float / clip | OK. The feet are on the floor with the carpet and bench in the wide half, and the shins cut at the bottom edge in the push (medium, not halved). No prop passes through the face. The telescope tube sits behind the wig. Rich set: chandelier, star chart, arched window, red and gold. The low angle keeps him pompous. Minor point: the coat-to-skirt seam (y ~920 at g 1646) reads as a flat box edge. That is card style, so not a blocker. |
-
-| Criterion | Score |
-|---|---|
-| Set density / ornament | 9 |
-| Lighting & colour | 8 |
-| Composition / phone legibility | 7 |
-| Acting (smug shrug) | 7 |
-| Key moment ("ฟลุ๊ค!") | 7 |
-| Hands clarity | 6 |
-| Match to refs / client taste | 7 |
-| **Overall** | **7.0 (Round-6 pass was 7.3)** |
-
-**PASS (7.0).** The §G face cap is met with a margin (~27 % crown to chin). The trim cost about 0.3, all of it from the palms reading smaller in the tighter half.
-
-Recommended fixes if there is another render (not blocking, in order of value):
-1. Light palms. Give astro19's hands a white-glove or skin fill (palms facing camera, shape "open") so they read against the navy coat. This is the one change that would make "palms up" read at phone size through g 1641-1672. It has been open since Round 4.
-2. Lift the hands during the snap. Hand y 0.95 -> ~1.10 from G_QUOTE-5 to the end, so the palms sit at shoulder height above the lappet tips (y ~850 at g 1657) and not beside them. Keep hx >= 0.80 and re-check the x 40-680 band.
-3. Optional: an extra 2-3 frames of the lens punch hold on "ฟลุ๊ค" (x1.12 peaking at g 1635-1637), so the beat has a clear accent with no extra push. Face stays under 30 %.
-Do not raise the snap peak or k: the face-size margin should stay.
