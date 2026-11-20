@@ -1,8 +1,7 @@
-# s23 QA: film 19, shot 23 (HALL EVENING)
+# s23 QA: film 19, shot 23 (HALL EVENING), after the QA-art / QA-tech fix round
 - take.mkv: g 1847..1941 (95 frames), shot g 1856..1932; transition in: dissolve.
-- Old Harrison (old=1) shuffles in through the panelled door holding the H4 on his palm; camera crane-down + arc, whip-pan snap on 'พระราชา' (g 1898). In-handle 9 f (DIS 15 in), out-handle 9 f. Known: the door leaf covers him briefly after the snap; heads grow 120->~210 px; head bottom < 880.
-- Rules: no DOF, no text, no caption_shade; all hooks keyed every frame; samples 8; heads (in shot, px): {"har": {"w": [121, 191], "y": [534, 631], "x": [164, 614], "bottom_max": 693}}
-- Mouths: only the jaw drop in s25 (held), nobody talks.
-- qa_auto: PASS (see QA_AUTO.md, phone_sheet.jpg). Checked contact sheet at full size.
-- s/frame wall 15.13 (2 procs x 2 threads), cpu 29.64.
-- Frame-diff in shot (90x160 grey): median 4.44, p90 12.31 (target 4 / 12).
+- Old Harrison (old=1) starts in the corridor beyond the door, shuffles THROUGH the doorway toward the camera (about 3.5 D of travel, 34-frame stride cycle, wider contact shadow) holding the H4 on his palm; crane-down + arc camera, whip-pan snap on 'พระราชา' (g 1898). qa_auto reports FAIL 'suspected blur' on the 7 in-handle frames g 1847-1853: false positive, the frames are sharp (full size checked); he is half hidden behind the door leaf there (dark, low-detail). Not screen time (the dissolve in uses the handle). The door leaf covers him briefly after the snap.
+- Rules: no DOF, no text, no caption_shade; set hooks keyed every frame; samples 8; heads in shot (px): {"har": {"w": [96, 162], "y": [534, 643], "x": [207, 620], "bottom_max": 691}}
+- qa_auto: see QA_AUTO.md + phone_sheet.jpg. Contact sheet checked at full size.
+- s/frame wall 27.14 (2 procs x 2 threads, some frames rendered while a second job ran), cpu 31.21.
+- Frame-diff in shot (90x160 grey): median 4.42, p90 11.34 (target 4 / 12).
