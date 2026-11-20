@@ -23,10 +23,8 @@ def dolly(T, g, t):
 
 
 T = c18.Take('s03', FIRST, LAST, draft=(mode == 'draft'), cam_fn=dolly)
-c18.fix_vista(T)
+c18.fix_vista(T); c18.vista_quiet(T)
 c18.fix_sky_clean(T, 'sky_DUSK')
-INFO = c18.dress(T, range(FIRST, LAST + 1), seed=3, keep_clear=[])
-print('dress_ground:', INFO.get('n'), INFO.get('kinds'), INFO.get('stat'), flush=True)
 
 
 def frame(T, g):

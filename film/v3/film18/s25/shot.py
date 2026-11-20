@@ -13,7 +13,7 @@ H_IN, H_OUT = 9, 8                   # dissolve 15 in / dissolve 11 out
 FIRST, LAST = G0 - H_IN, G1 - 1 + H_OUT
 mode, rng = c18.parse_args(FIRST, LAST)
 T = c18.Take('s25', FIRST, LAST, draft=(mode == 'draft'), cam_fn=c18.compose(c18.tilt_cam(-34.0), c18.rhythm_cam(push=0.04, slide=0.0, orbit=14.0, pulses=())))
-c18.fix_vista(T, siege_fire=False)
+c18.fix_vista(T); c18.vista_quiet(T)
 c18.fix_sky_clean(T, 'sky_DAWN')
 G_Q0, G_Q1 = G0 + 4, G1 - 6
 

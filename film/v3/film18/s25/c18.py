@@ -264,9 +264,8 @@ def solid_material(name, rgb, k=0.3):
     return m
 
 
-def fix_vista(T, hold_scale=0.5, tents=0.10, siege_fire=False, halo_k=0.0):
-    """opaque Qi flags without bloom, smaller holdout flags, no siege halos, dimmer sun-lit tent faces, short-bar clouds."""
-    ob = STATE['objects']
+def fix_vista(T, hold_scale=0.5, **kw):
+    """vista round 3 does the farmland / Ju / shadows itself; here only: opaque Qi cloth flags (no bloom), Jimo's flag at half size."""
     red = solid_material('t18_qi_red', (0.46, 0.06, 0.05), 0.32); teal = solid_material('t18_qi_teal', (0.42, 0.26, 0.05), 0.2)
     for p in STATE['pennants']:
         o = p.get('ob')
@@ -275,46 +274,6 @@ def fix_vista(T, hold_scale=0.5, tents=0.10, siege_fire=False, halo_k=0.0):
         for i, m in enumerate(o.data.materials):
             if m.name.endswith('b82c20_1.15_1_1_None'): o.data.materials[i] = red
             if m.name.endswith('2a6a7a_1.1_1_1_None'): o.data.materials[i] = teal
-    if 'vtrees' in ob:
-        ob['vtrees'].hide_render = True                              # the dark spike cones (trees) read as stray blue triangles (TAKE gate)
-    for p in STATE['pennants']:                                      # flag shadows made flat navy polygons on the ground (TAKE gate)
-        if p.get('ob') is not None:
-            p['ob'].visible_shadow = False
-    for m in ob['siegetents'].data.materials:
-        for n in m.node_tree.nodes:
-            if n.bl_idname == 'ShaderNodeEmission': n.inputs['Strength'].default_value *= tents
-    if not siege_fire:
-        for k in list(ob):
-            if k.startswith('flame_siegefire'):
-                ob[k].hide_render = True
-        for fi in STATE.get('fires', ()):
-            if fi['ob'].name.startswith('flame_siegefire'):
-                fi['ob'].hide_render = True
-    # halos: drop the siege-camp ones (y < -60) and tone the holdout halos down
-    import bmesh
-    h = ob.get('halos')
-    if h is not None:
-        bm = bmesh.new(); bm.from_mesh(h.data); mw = h.matrix_world
-        big = [i for i, m in enumerate(h.data.materials) if m.name.endswith('halo_big')]
-        dl = [f for f in bm.faces if (mw @ f.calc_center_median()).y < -60.0 or f.material_index in big]
-        bmesh.ops.delete(bm, geom=dl, context='FACES'); bm.to_mesh(h.data); bm.free()           # the big vertical halos made the blown glow stalk / bloom: gone; the small town halos stay (Ju visibly lit)
-        if halo_k <= 0.0:
-            h.hide_render = True                                    # no halo at all: Jimo's pool of light is the windows + gate fires + ground pool (no blown glow)
-        else:
-            for m in h.data.materials:
-                for n in m.node_tree.nodes:
-                    if n.bl_idname == 'ShaderNodeEmission': n.inputs['Strength'].default_value *= halo_k
-    for key in ('jimo', 'ju'):                                       # the two holdouts stay visibly lit: a soft warm ground pool + windows + gate fires (no bloom)
-        x, y, z = STATE['marks'][key]; r_ = 34.0 if key == 'jimo' else 30.0
-        sm = R2._shadow_quad('cpool', 1.0, 1.0)
-        if not sm.materials: sm.materials.append(STATE['M']['pool_w'])
-        ob_ = bpy.data.objects.new('t18_pool_' + key, sm); STATE['SET'].objects.link(ob_); ob_.location = (x, y, z + 0.9); ob_.scale = (r_, r_, 1.0); ob_.visible_shadow = False; J.no_bounce(ob_)
-    # Ju (far, behind nearer towns from the s04 camera): a beacon tower with a live flame so the second lit town reads on the horizon
-    from mathutils import Vector as V_
-    jx, jy, jz = STATE['marks']['ju']; Bk = J.Banks(); b = Bk('t18_beacon', hull=0.0)
-    J.rod(b, V_((jx + 6, jy - 6, jz)), V_((jx + 6, jy - 6, jz + 40)), 0.9, STATE['M']['wood_d'], seg=5); J.cyl(b, V_((jx + 6, jy - 6, jz + 40)), 2.2, 1.6, STATE['M']['iron'], seg=8, r1=2.8)
-    Bk.flush(STATE['SET'])
-    J.live_flame(V_((jx + 6, jy - 6, jz + 41.5)), 17.0, 5.0, seed=991, n=4, light=0.0, name='jubeacon', warm=None)
     STATE['hold_scale'] = hold_scale
 
 
@@ -322,7 +281,7 @@ def hold_apply(T):
     """after set_pennants / set_qi_return (which reset the holdout flag scale): scale the two holdout flags about their pole feet."""
     for p in STATE['pennants']:
         if p.get('hold') and p.get('ob') is not None:
-            s = STATE.get('hold_scale', 1.0) * (2.2 if p['x'] < 0 else 1.0); p['ob'].scale = (s, s, s)
+            s = STATE.get('hold_scale', 1.0) if p['x'] > 0 else 1.0; p['ob'].scale = (s, s, s)
 
 
 def tilt_cam(dz_look, dz_loc=0.0):
@@ -437,3 +396,19 @@ def dress(T, gs, seed=0, keep_clear=None, actors=None, density=1.0):
     except Exception:
         pass
     return info
+
+
+def vista_quiet(T, ju_y=100.0):
+    """caption-band / bloom control for the round-3 vista: glints off, the halo cards of the Jimo side removed (Ju's stay), the siege-camp fire flames off, the grey Jimo ring road stays."""
+    import bmesh
+    ob = STATE['objects']
+    if 'r3glints' in ob:
+        ob['r3glints'].hide_render = True
+    for k in list(ob):
+        if k.startswith('flame_siegefire'):
+            ob[k].hide_render = True
+    h = ob.get('halos')
+    if h is not None:
+        bm = bmesh.new(); bm.from_mesh(h.data); mw = h.matrix_world
+        dl = [f for f in bm.faces if (mw @ f.calc_center_median()).y < ju_y]
+        bmesh.ops.delete(bm, geom=dl, context='FACES'); bm.to_mesh(h.data); bm.free()
