@@ -1,6 +1,0 @@
-00:00.455  cycles           | WARNING CUEW initialization failed: Error opening the library
-/home/user/github-commit-quest-v2/film/v3/film18/s17/shot.py:29: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
-  emm = bpy.data.materials.new('reedglow'); emm.use_nodes = True; nt = emm.node_tree; nt.nodes.clear(); em = nt.nodes.new('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.8, 0.58, 0.2, 1); em.inputs['Strength'].default_value = 0.5
-dress_ground {'n': 1, 'kinds': {'tuft_grass': 1}}
-00:26.150  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s17/frames/g_1303.png'
-s17 g1303  23.2 s (wall 23.1 cpu 30.2)
