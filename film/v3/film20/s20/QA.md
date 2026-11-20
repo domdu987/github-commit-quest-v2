@@ -12,3 +12,8 @@ Shot 20 (g 1382-1430, cut in/out; handles g 1378-1381 and 1431-1434). 57 frames.
 ## Take-gate revision
 Orbit 12 deg/s + slide -40 px/s; ARC chosen so the spark gap stays in the right third for all six taps (x <= 670 at g 1428). A stronger orbit hit median 4.2 but lost the spark from frame.
 - Final numbers: s/frame 11.19 wall, frame-diff median 3.03 p90 17.97.
+
+## Take-gate round 2 (TAKE_B + QA_TEAM §G)
+TAKE-B: soldier raised 0.15 m so torso, arm and key prop clear the desk (hand on the key on each tap); duplicate FG headphones + FG post removed; the set's arc/forks/halo spheres replaced by our own jagged arc between the two brass balls (3 variants swapped per frame); aim keeps head and spark gap inside both edges; exposure +0.35 (luma 70 -> 76); plank moire only faintly visible on ceiling, floor mostly out of frame (pitch -0.8).
+- qa_stats: take.mkv: 1.9s, shots=1, mean shot 1.90s, median 1.90s, shortest 1.90s, shots<1.5s: 0 |    saturation 0.873, brightness 76.1, in-shot motion median 3.95 p90 15.93 |    shot lengths: 1.9
+- Own frame-diff (in-shot): median 3.62 p90 15.89; s/frame 10.64 wall.

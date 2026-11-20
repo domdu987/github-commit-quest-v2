@@ -40,20 +40,21 @@ CAST = [  # (key, cast, mark, canvas-key, extra pose, yaw)
 ]
 HEAD_Z = 2.75                                  # old Eiffel's head centre above his feet (D)
 PPD = 160
-DEMO_XY = dict(eiffel_old=(-6.2, -214.4), officer=(-4.8, -213.2), demo_a=(-8.7, -213.4), demo_b=(-8.0, -211.4), demo_c=(-7.2, -209.8))
+DEMO_XY = dict(eiffel_old=(-5.6, -219.0), officer=(-6.7, -216.6), demo_a=(-8.4, -215.2), demo_b=(-7.2, -213.6), demo_c=(-9.6, -214.0))
 
 
 def cam_path(A):
     m = Vector(A["marks"]["eiffel_old"])
-    subj = m + Vector((AIM_DX * CO.SC, 0.0, HEAD_Z))
+    subj = m + Vector((AIM_DX * CO.SC, AIM_DY * CO.SC, HEAD_Z))
     c = CO.W(CAM_M)
-    return C.CamPath(c, subj, G0, G_LAST, push=0.20, slide_px=-60.0, rise_px=0.0, arc_deg_s=-12.0, tilt0=TILT0, tilt_deg_s=-4.5,
-                     decay=0.95, snaps=[dict(g=SNAP, k=1.6, peak=1.7, shift=(0.0, 0.0), tilt=-3.0)])
+    return C.CamPath(c, subj, G0, G_LAST, push=0.20, slide_px=-30.0, rise_px=0.0, arc_deg_s=-4.0, tilt0=TILT0, tilt_deg_s=-4.5,
+                     decay=0.95, snaps=[dict(g=SNAP, k=1.55, peak=1.9, shift=(0.75, 0.0), tilt=-3.0), dict(g=(1280, 1296), k=1.15, peak=1.7, shift=(0.0, 0.0), tilt=-2.0)])
 
 
-CAM_M = (-7.6, -220.6, 1.4)                     # start camera (m): T14 lens + shift, moved so all five stand in frame
+CAM_M = (-5.4, -227.0, 0.7)                     # start camera (m): T14 lens + shift, moved so all five stand in frame
 TILT0 = -3.0
-AIM_DX = -0.3                                  # aim point 2.2 m left of old Eiffel (between him and the wagon)
+AIM_DY = 0.0                                   # aim 4 m behind Eiffel (toward the wagon group)
+AIM_DX = -0.9                                  # aim point 2.2 m left of old Eiffel (between him and the wagon)
 
 
 def cam_path_static():
@@ -120,7 +121,12 @@ class Take(C.Take):
         self.path = cam_path(self.A)
         self.key_cam(bf(G0), *self.path.at(G0))
         self.scene.frame_set(bf(G0))
-        self.fg = [o for o in C.bpy.data.objects if o.name.startswith(("fg_", "shade_casters"))]
+        for o in C.bpy.data.objects:                                 # warm dusk ground: the invisible shade casters make the near ground a flat blue slab; the torn FG planks are broken geometry
+            if o.name.startswith(("shade_casters", "fg_")):
+                o.hide_render = True
+        self.fg = []
+        C.warm_ground_sun(strength=2.2, color=(1.0, 0.56, 0.30))
+        self.dress_ground()
         self.fg0 = {o.name: o.location.copy() for o in self.fg}
         self.marks = {m: C.on_ground(self.A["marks"][m]) for _k, _c, m in CAST}
         for m in self.marks:                                             # kegs / carts under a mark would lift the card: the avenue is z 0.113 D everywhere here
@@ -129,6 +135,21 @@ class Take(C.Take):
         for k, cast, mark in CAST:
             self.actors[k] = C.make_actor(k, cast, os.path.join(WORK, "sprites"), cam=self.cam,
                                           contact=dict(width=1.2, depth=0.5, opacity=0.8))
+
+    def dress_ground(self):
+        """FG dressing at the sides of the lens path (the camera passes beside them: parallax whoosh): barrels, crates, a rope coil and
+        stones on the avenue; metres, parented to the scaled root like the set's own props."""
+        M = CO.STATE["M"]
+        mb = CO.MB("team8_fg", CO.root())
+        for (x, y) in ((-8.6, -223.6), (-9.2, -221.4), (-3.0, -222.6)):
+            mb.cyl(M["timber"], (x, y, 0.45), 0.34, 0.9, "z", 14)
+            mb.cyl(M["metal"], (x, y, 0.2), 0.355, 0.05, "z", 14)
+            mb.cyl(M["metal"], (x, y, 0.7), 0.355, 0.05, "z", 14)
+        for (x, y, r) in ((-2.4, -220.2, 0.3), (-8.0, -219.8, -0.4)):
+            mb.box(M["timberdk"], (x, y, 0.3), (0.8, 0.6, 0.6), rz=r)
+            mb.box(M["plank"], (x, y, 0.62), (0.84, 0.64, 0.05), rz=r)
+        mb.cyl(M["rope"], (-7.4, -222.2, 0.08), 0.35, 0.16, "z", 12)
+        mb.finish()
 
     def pose(self, gs):
         for g in gs:

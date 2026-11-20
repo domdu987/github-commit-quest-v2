@@ -12,3 +12,8 @@ Shot 18 (g 1221-1301, dissolve-in 17 f -> handle g 1210-1220; 4 handle frames g 
 ## Take-gate revision
 Re-lifted per director: stronger orbit/slide, snap x1.6 + tilt. da (left demolition man) is cropped out by the punch-in after g 1267.
 - Final numbers: s/frame 10.09 wall, frame-diff median 2.84 p90 5.58.
+
+## Take-gate round 2 (TAKE_B + QA_TEAM §G)
+TAKE-B re-stage: own camera (-5.4,-227,0.7) m wide; group moved toward the wagon so the wheeled wagon + crowbars + horse read; the torn FG plank (set FG / crowbar bundle at the lens) is gone (camera 4 m further back, preset FG hidden); runtime warm low sun (c20.warm_ground_sun) lights the avenue warm with real cast shadows (no more flat blue slab); barrels/crates beside the lens path as FG dressing; Eiffel head 64-100 px (needs closer than 60 only at g<1254); two snaps (x1.55 + x1.15). Ground still ~40 % of the frame (heads must stay above y 880).
+- qa_stats: take.mkv: 3.2s, shots=1, mean shot 3.20s, median 3.20s, shortest 3.20s, shots<1.5s: 0 |    saturation 0.557, brightness 102.0, in-shot motion median 2.86 p90 6.07 |    shot lengths: 3.2
+- Own frame-diff (in-shot): median 2.32 p90 5.45; s/frame 8.53 wall.

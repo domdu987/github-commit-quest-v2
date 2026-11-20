@@ -29,7 +29,7 @@ G_WIRE = C.cap_g("จากยอดหอ")                                 # 1
 WHIP = (G_WIRE, G_WIRE + 9)
 
 PRESET, LIGHT = "tower_dusk_summit", None
-CAM_M = (-2.2, -215.4, 0.4)                    # camera (m)
+CAM_M = (-2.75, -215.4, 0.4)                    # camera (m)
 PITCH_A0, PITCH_A1 = 28.0, 30.0
 SHIFT_A, SHIFT_B = 0.0, 0.15                                  # lens shift: the picture moves up, so a high pitch still keeps Eiffel's head above y 880                # aim pitch above the horizon before the whip (deg), tilts up slowly
 SUMMIT = (0.0, 0.0, 300.0)
@@ -77,6 +77,7 @@ def cam_at(g):
 # ----------------------------------------------------------------------------- poses
 def pose_eif(g):
     p = dict(cast20.STORY20["eiffel_old_point_up"][1])
+    p["arm_r"] = dict(p["arm_r"], hand=(1.15, -1.25), stretch=1.3, bend=-0.3)      # the arm clearly extended UP at the summit (TAKE gate: reads as a salute)
     ph = 0.4
     p["yaw"] = 0.55 + 0.05 * math.sin(g * 0.11)
     p["lean"] = 3.0 + 1.0 * math.sin(g * 0.17)
@@ -95,8 +96,12 @@ class Take(C.Take):
         C.fix_antenna_wires()
         self.key_cam(bf(G0), *cam_at(G0))
         self.scene.frame_set(bf(G0))
-        self.fg = [o for o in C.bpy.data.objects if o.name.startswith(("fg_", "shade_casters"))]
-        self.fg0 = {o.name: o.location.copy() for o in self.fg}
+        for o in C.bpy.data.objects:                                 # warm dusk ground (TAKE gate): no shade casters, no preset FG
+            if o.name.startswith(("shade_casters", "fg_")):
+                o.hide_render = True
+        self.fg = []
+        self.fg0 = {}
+        C.warm_ground_sun(strength=2.2, color=(1.0, 0.56, 0.30))
         self.board = Vector(self.A["cams"][PRESET]["loc"])
         self.mark = C.on_ground(self.A["marks"]["eiffel_old"])
         self.actors["eif"] = C.make_actor("eif", "eiffel_old", os.path.join(WORK, "sprites"), cam=self.cam,

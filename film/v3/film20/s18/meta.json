@@ -51,20 +51,20 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 10.09,
- "s_per_frame_cpu_mean": 19.6,
+ "s_per_frame_wall_mean": 8.53,
+ "s_per_frame_cpu_mean": 16.49,
  "head_px": [
-  41,
-  143
+  32,
+  126
  ],
  "head_centre_y": [
-  572,
-  718
+  565,
+  743
  ],
- "head_bottom_max_y": 746,
+ "head_bottom_max_y": 759,
  "framediff_in_shot": {
-  "median": 2.84,
-  "p90": 5.58
+  "median": 2.32,
+  "p90": 5.45
  },
  "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
 }

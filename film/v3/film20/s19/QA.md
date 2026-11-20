@@ -12,3 +12,8 @@ Shot 19 (g 1302-1381, cut in/out; handles g 1298-1301 and 1382-1385). 88 frames.
 ## Take-gate revision
 RE-BLOCKED per TAKE_ART F1-F4: Eiffel's pointing arm is a big foreground silhouette (head 160 px, fully in frame) with the spire + wires above; pitch 28-30 deg, whip g 1343-1352 from pitch 30 to 0 with animated lens shift 0 -> 0.15 (about 48 deg of apparent tilt, yaw follows the wire, peak 1.9); Eiffel leaves frame in the whip and is parked out at g 1349 (fully out afterwards); then push on the hut at ~1.6 m/s. Ground after the whip is ~35 %, not 20 % (the hut base would otherwise fall into the caption zone). Spire top is at y ~250 at the start (not the top edge): head band and summit cannot both fit tighter. Ground desaturation not done.
 - Final numbers: s/frame 6.54 wall, frame-diff median 3.04 p90 3.75.
+
+## Take-gate round 2 (TAKE_B + QA_TEAM §G)
+TAKE-B: arm now extended up-right at the summit (reads as a point), warm ground + shadows, Eiffel fully in until the whip and parked out after. Wire ends at the post (top 6.2 m) with its lead-in to the hut; the ground end of the wire is the post's guy ropes, not shown separately.
+- qa_stats: take.mkv: 2.9s, shots=3, mean shot 0.98s, median 1.20s, shortest 0.13s, shots<1.5s: 2 |    saturation 0.606, brightness 101.2, in-shot motion median 2.66 p90 2.93 |    shot lengths: 1.6 0.1 1.2
+- Own frame-diff (in-shot): median 2.33 p90 3.94; s/frame 6.82 wall.

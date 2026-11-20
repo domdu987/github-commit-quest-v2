@@ -26,10 +26,11 @@ G_WORD = C.cap_g("โทรเลขไร้สาย")                        
 
 PRESET, LIGHT = "tower_hut", None
 TEL_DX, TEL_DY = 0.0, -0.4                    # m: soldier mark offset (desk centre; the desk top hides the card below 0.87 m)
-AIM_DX = 0.65                                  # m: the aim point is 0.65 m to his right (screen: soldier left third, spark gap right third)
+AIM_DX = 0.6                                  # m: the aim point is 0.65 m to his right (screen: soldier left third, spark gap right third)
 HEAD_Z = 2.2                                  # soldier's head centre above his feet (D)
 PPD = 224
-FLOOR_Z = 0.23 * 1.88                       # hut floor plank top: z 0.19 + 0.04 m -> D
+RAISE_M = 0.15                              # soldier raised on a (hidden) box so his torso, hands and the key prop clear the desk top
+FLOOR_Z = (0.23 + RAISE_M) * 1.88                       # hut floor plank top: z 0.19 + 0.04 m -> D
 SEAT_H = 0.5                                # D above the floor: the bentwood chair seat is at 0.50 m world (0.27 m above the plank = 0.5 D)
 # Morse taps (film frames, inclusive first/last frame of each tap): dot dot dash dot dash dot
 TAPS = [(1387, 1389), (1393, 1395), (1399, 1404), (1410, 1412), (1416, 1421), (1426, 1428)]
@@ -52,14 +53,14 @@ def tap_amount(g):
 
 def cam_path(A):
     m = Vector(A["marks"]["telegraphist"])
-    subj = m + Vector((AIM_DX * CO.SC, 0.35 * CO.SC, HEAD_Z - 0.55))   # aim between the soldier (left) and the spark gap (right)
+    subj = m + Vector((AIM_DX * CO.SC, 0.35 * CO.SC, HEAD_Z + 0.45))   # aim between the soldier (left) and the spark gap (right)
     c = Vector(A["cams"][PRESET]["loc"])
-    return C.CamPath(c, subj, G0, G_LAST, push=0.09, slide_px=-40.0, rise_px=0.0, arc_deg_s=ARC, tilt0=TILT0, tilt_deg_s=0.0,
+    return C.CamPath(c, subj, G0, G_LAST, push=0.09, slide_px=-40.0, rise_px=0.0, arc_deg_s=ARC, tilt0=TILT0, tilt_deg_s=-3.0,
                      decay=0.3, snaps=[])
 
 
-TILT0 = 0.0
-ARC = 12.0
+TILT0 = 2.0
+ARC = 20.0
 
 
 def pose_tel(g):
@@ -84,6 +85,27 @@ class Take(C.Take):
         self.A['marks']['telegraphist'] = (m[0] + TEL_DX * CO.SC, m[1] + TEL_DY * CO.SC, m[2])   # staging: pulled 1.2 m forward to the desk centre so his hands + the key sit ABOVE the desk top
         self.mark = (self.A['marks']['telegraphist'][0], self.A['marks']['telegraphist'][1], FLOOR_Z)                  # the hut floor plank top (0.23 m); a ray cast would hit the chair / the roof
         print("floor z (D):", round(self.mark[2], 3), flush=True)
+        for o in C.bpy.data.objects:                                 # TAKE gate: duplicate headphones + the FG post clipping the spark -> no preset FG
+            if o.name.startswith("fg_"):
+                o.hide_render = True
+        old = list(CO.STATE["sg_dyn"])                                # the set's arc + forks + pale halo spheres read as 'a ball with a scribble' (TAKE gate)
+        for o in old:
+            o.hide_render = True
+        CO.STATE["sg_dyn"] = []                                      # S.spark_gap keeps only the blue point light; the arc is ours:
+        import random
+        rr = random.Random(20)
+        sgp = Vector((-0.5 + 1.0, -203.0 + 0.45, 1.1))
+        amat = CO.mat_emit("team8_arc", "#dff2ff", 14.0)
+        self.arcs = []
+        for k in range(3):                                           # three jagged variants between the two brass balls, swapped per frame
+            mb = CO.MB("team8_arc%d" % k, CO.root())
+            pts = [sgp + Vector((-0.115 + 0.23 * i / 7.0, rr.uniform(-0.02, 0.02), rr.uniform(-0.035, 0.035) if 0 < i < 7 else 0.0)) for i in range(8)]
+            for a, b in zip(pts[:-1], pts[1:]):
+                mb.rod(amat, a, b, 0.016, 0.016, 5)
+            self.arcs += mb.finish(shadow=False)
+            for o in self.arcs[-1:]:
+                o.hide_render = True
+        self.scene.view_settings.exposure = self.scene.view_settings.exposure + 0.35        # hut interior luma 70 -> ~80 (qa_stats floor)
         self.path = cam_path(self.A)
         self.key_cam(bf(G0), *self.path.at(G0))
         self.scene.frame_set(bf(G0))
@@ -96,6 +118,8 @@ class Take(C.Take):
             self.key_cam(f, *self.path.at(g))
             C.place(self.actors["tel"], f, self.mark)
             self.key_set(f, spark_gap=(g in SPARK_FRAMES))
+            for k, o in enumerate(self.arcs):
+                CO.setv(o, (g in SPARK_FRAMES) and (g % 3 == k), f)
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
