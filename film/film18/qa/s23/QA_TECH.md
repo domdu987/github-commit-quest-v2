@@ -1,0 +1,7 @@
+# QA_TECH s23 (take g1736-1812, shot g1742-1806) - PASS (4 non-blocking notes; fix before FINAL if time allows)
+Checked: 6 fps frames, first/last 3, band stats. Frame-diff in-shot (area): median 5.17, p90 12.96 - passes (bilinear 4.62 / 12.2).
+Pass items: NIGHT jimo_out wall top; old man, woman and child beat bronze pots with sticks, with arcs / sound rings (the "shout drawings"); mouths are open shout shapes that do not change with speech (no lip-sync); heads y 430-700 (<880); feet on the deck; pots held at belly height; foreground torch at right (lit, fg prop 1-2 D); no text; no black/magenta/frozen frames; caption band mean 44-69, bright 0 %; g range 1742-1806 +6 handles matches the plan; pull-out and slide visible; no blade contact.
+1. g1736-1770 - the large dark-navy faceted slab in the lower left (about 25 % of the frame) and, g1786-1812, a flat dark-navy block at the top right (x 560-720, y 0-700) look like untextured junk geometry clipped at the frame edge. Fix: texture or hide them.
+2. Camera: the plan says "high over the wall top, pull-out"; the take is at eye height on the deck with a pull-out. Non-blocking, but it shows only 5-6 townsfolk and the crowd behind them is tiny. Fix: raise the camera 1-2 D, add 3-4 more beaters.
+3. g1742-1806 - sticks swing away from the pots (not striking them) at g1736-1761; fix: hit frames on the pot rim with a small spark/ring on the contact frame.
+4. g1751-1781 - roof eaves have stair-stepped aliased edges at the top; minor.
