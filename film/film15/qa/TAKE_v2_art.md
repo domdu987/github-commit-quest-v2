@@ -318,3 +318,46 @@ T2 round-3 fix verified on frames g848-868: hands are skin-coloured and hidden f
 
 ## Round 4c (director check, 20:00 UTC) - T4
 The dark "pole" in the hush (g1280-1337) was Dick's far leg in the rock pose, drawn as a thin navy stroke. Team 4 replaced it with a 'stand' weight-shift pose (lean + bob, both legs with sneakers). Verified at g1280, g1310 and g1334: no stake, two clear legs, crowd-head frame kept. All other round-2 items were verified in Round 4. T4 PASS.
+
+---
+# Round 5 (2026-11-20): T5 + T6 re-check (take.mkv 20:11)
+Same method: 3 fps sheet, every frame g1608-1623, ±3 frames around the whip, full-res tiles. Magenta: at most 0.3 % in any frame, so none.
+- qa_stats2 counts 1 shot. Frame differences in the whip are now an even 22-49 (median 7.5), not single spikes: a continuous move.
+- Highlight clipping is at most 5.7 % of pixels (the close-up), so luma 106 is fine.
+
+## T5 + T6: FIX (two small items; everything else verified)
+Round-3 items:
+1. Bar vs face at take-off (g1398-1408): **fixed**. The head travels in front of and below the bar; the bar runs behind the top of his hair and the face stays fully visible.
+2. Bar vs face at the flick (g1604-1612): **acceptable**.
+   - At g1604-1609 the face is clear, below and in front of the bar.
+   - At g1610-1612 his head drops behind the bar, which hides his forehead and then his face for 2-3 frames. This reads as depth-correct occlusion (he falls beyond the bar), not as a bar through the face.
+3. Landing in frame (g1612-1645): **fixed, with notes**.
+   - Dick stays in frame from the landing on, lying at about 45-55 % of frame width, and is readable from g1619.
+   - g1613-1618: he lies behind the bar, which hides his face. That is fine for 6 frames.
+   - g1624-1632: his head is half cut by the right frame edge (minor). Pan about 5 % right.
+   - Lying height is about 5-7 %, not 15 %, because it is a side view of a lying body; accepted.
+4. Whip (g1782-1795): **fixed**. One continuous arc (podium, then field, then crowd rows) with directional blur and no sharp unrelated frames.
+5. Close-up 3 (g1796-1810): **partly fixed**.
+   - The black band is gone. The coach's face is about 30 % of frame height, eyes wide and jaw dropped, which reads well.
+   - **Still bare:** the area behind him is now a flat, empty navy backdrop with only two crowd heads at the sides. The lower ~30 % is plain navy treads (the team notes this too).
+   - Coordinator rule: rows filled. **Fix:** put crowd cards on the treads in front of and behind him (even blurred, they fill it), or push in about 15 % so his body fills the lower frame and add 4-6 crowd heads across the backdrop.
+6. Top-down push (g1645-1725): **fixed**. Dick is about 15-20 % of the frame, sits up at about g1660, and looks toward the bar, which doesn't move.
+7. Medal (g1765-1778): **fixed**. Dick is larger on the top step, and the gold medal is visible on his chest at g1775; the exposure is pulled down.
+
+### New item: pose pop at the landing, g1612 to g1613
+- At g1612 Dick is still mid-air, legs pointing straight up and hips above the mat.
+- At g1613 he is lying fully flat. There is no in-between frame, so the landing is a one-frame snap (the frame difference also jumps at g1608-1609).
+- **Fix:** add 3-4 in-between frames (legs swing down, back flattens), and put the contact at about g1615-1616.
+
+### Sound-effect frame: back hits the foam mat
+- **In the current render it is g1613** (53.77 s on the narration clock, take frame index 288). That is the first frame where his back lies on the mat.
+- If the in-betweens above are added, re-take it as the first frame where the back sits flat, expected at about g1615-1616 (53.83-53.87 s). Re-check after the re-render.
+- Fact check: a foam landing mat is correct for 1968 (sawdust only in 1963).
+
+### Round 5 verdict
+T5 + T6 **FIX** (small):
+- Add in-betweens for the landing pop at g1612 to g1613.
+- Fill the bare navy backdrop and treads in close-up 3, g1796-1810.
+- Minor: Dick's head is half cut by the right edge at g1624-1632.
+
+Everything else from the round-3 list is verified.
