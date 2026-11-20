@@ -24,19 +24,20 @@ def cam29(g):
     t = (g - 1695) / 94.0
     P0 = Vector((0.05, -0.8, 0.55)); L0 = Vector((-0.75, 6.0, 2.85))
     fwd = Vector((0.12, 1.0, 0.02)).normalized()
-    u = 0.15 * smooth(t) + 0.85 * t
-    s = snap(g, 1730, 14)                         # reframe snap: slide right + look shift
-    P = P0 + fwd * (1.15 * u) + Vector((0.55 * s - 0.12 * t, 0, 0.18 * t))
-    L = L0 + Vector((0.35 * s + 0.15 * t, 0.2 * t, -0.1 * s))
+    u = 0.1 * smooth(t) + 0.9 * t
+    s1 = snap(g, 1708, 10); s2 = snap(g, 1740, 10); s3 = snap(g, 1768, 10)
+    P = P0 + fwd * (1.2 * u) + Vector((0.42 * s1 - 0.42 * s2 + 0.34 * s3 + 0.35 * t, 0, 0.18 * t + 0.06 * s2))
+    L = L0 + Vector((0.25 * s1 - 0.25 * s2 + 0.2 * s3 + 0.3 * t, 0.2 * t, -0.08 * s1 + 0.1 * s2))
     return P, L
 
 def cam30(g):
     t = (g - 1789) / 84.0
     P0 = Vector((0.55, 1.4, 3.0)); L0 = Vector((-0.1, 8.0, 1.8))
     P1 = Vector((0.75, -1.8, 3.7)); L1 = Vector((-0.2, 6.5, 2.0))
-    u = 0.65 * smooth(t) + 0.35 * t
+    u = 0.45 * smooth(t) + 0.55 * t
     s = snap(g, 1822, 14)                         # mid snap: swing left and tilt
-    P = P0 + (P1 - P0) * u + Vector((-0.5 * s + 0.5 * smooth((g - 1850) / 14.0), 0, 0))
+    s4 = snap(g, 1800, 12) - snap(g, 1812, 12); s5 = snap(g, 1862, 10)
+    P = P0 + (P1 - P0) * u + Vector((-0.5 * s + 0.5 * smooth((g - 1850) / 14.0) + 0.3 * s4 - 0.3 * s5, 0, 0))
     L = L0 + (L1 - L0) * u + Vector((-0.7 * s + 0.7 * smooth((g - 1850) / 14.0), 0.5 * s, -0.2 * s))
     return P, L
 
