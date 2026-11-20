@@ -18,7 +18,7 @@ D = 1.7
 HEIGHT = {'scot': 1.70, 'wallace': 1.92, 'moray': 1.80, 'cressingham': 1.78, 'surrey': 1.66, 'knight': 1.78, 'foot': 1.68, 'archer': 1.66, 'squire': 1.55}
 STATE = {'P': None, 'ink_t': 0.012, 'anim': {}, 'loc': None, 'preset': None, 'cam': (0, 0, 0)}
 CACHE = os.path.join(HERE, 'cache'); os.makedirs(CACHE, exist_ok=True)
-TERRAIN_V = 10
+TERRAIN_V = 12
 
 def hex_lin(h):
     h = h.lstrip('#'); c = [int(h[i:i + 2], 16) / 255.0 for i in (0, 2, 4)]
@@ -29,7 +29,7 @@ def lin_arr(c): c = np.asarray(c, float); return np.where(c <= 0.04045, c / 12.9
 # ---------------------------------------------------------------- light preset (the series model, exterior morning)
 LIGHTS = {
     'MORNING': dict(key=(2.35, 1.82, 0.98), sun_dir=(-0.58, 0.58, -0.58), sun_angle=0.9, shade=(0.165, 0.15, 0.40), tint=(0.125, 0.11, 0.28), mix=0.85,
-                    lift=(0.006, 0.010, 0.030), form=(0.0, -0.05, 0.28), gain=1.0, ink='#2e1a26', haze='#e2d8d6', haze_d=(120.0, 2400.0), haze_max=0.62, sun_k=1.0),
+                    lift=(0.006, 0.010, 0.030), form=(0.0, -0.05, 0.28), gain=1.0, ink='#2e1a26', haze='#d6d8ea', haze_d=(180.0, 2600.0), haze_max=0.68, sun_k=1.0),
 }
 SUN_STRENGTH = 3.94
 
@@ -410,6 +410,14 @@ def terrain_colour(X, Y, z, sd, hh, cm):
     wet = smooth(7.0, 1.5, sd); col = col + (hex_rgb('#4d7f3c') - col) * (wet * 0.4)[..., None]
     mud = smooth(2.2, 0.2, sd) * (0.6 + 0.4 * m2); col = col + (hex_rgb('#7a6850') - col) * mud[..., None]
     bed = smooth(-1.0, -2.6, sd); col = col + (hex_rgb('#3a5a60') - col) * bed[..., None]
+    # patchwork fields on the plains (period farmland): rotated cells of green, gold, pale green and plough, hedgerow lines between
+    ca, sa_ = math.cos(math.radians(14)), math.sin(math.radians(14)); fu = (X * ca + Y * sa_) / 64.0; fv = (-X * sa_ + Y * ca) / 46.0 if False else (-X * sa_ + Y * ca) / 46.0
+    ci = np.floor(fu); cj = np.floor(fv); hsh = np.sin(ci * 12.9898 + cj * 78.233) * 43758.5453; hsh = hsh - np.floor(hsh)
+    pal = np.array([hex_rgb('#7cae3c'), hex_rgb('#c8b44e'), hex_rgb('#9ec444'), hex_rgb('#8a7a4e'), hex_rgb('#5f9a3c'), hex_rgb('#d2bd5a')]); fc = pal[np.minimum((hsh * 6).astype(int), 5)]
+    fc = fc * (0.94 + 0.12 * m3[..., None]); fx_ = np.abs(fu - ci - 0.5) * 2; fy_ = np.abs(fv - cj - 0.5) * 2; hedge = smooth(0.965, 0.985, np.maximum(fx_, fy_) * (1 - 0.0))
+    fc = fc + (hex_rgb('#3e6a30') - fc) * hedge[..., None] * 0.9
+    dm_ = np.hypot(X - LOOP_C[0], Y - LOOP_C[1]); fw = smooth(LOOP_R + 18, LOOP_R + 40, dm_) * smooth(2.5, 8.0, sd) * smooth(4.0, 1.0, np.maximum(hh, 0)) * (1 - smooth(-30, -45, Y) * 0) * smooth(6, 24, np.abs(Y + 30) + 0 * X) * 0.8
+    col = col + (fc - col) * (fw * (1 - np.clip(camp_tramp(X, Y) * 1.7, 0, 1)))[..., None]
     # tracks: the road over the bridge (x 0) south into the camp and north up the neck; the camp trample
     rx = BRIDGE_X + 1.5 * np.sin(Y / 30.0)
     road = smooth(5.0, 2.4, np.abs(X - rx)) * (smooth(-150, -34, Y) * (1 - smooth(-26, -20, Y)) + smooth(20, 26, Y) * (1 - smooth(50, 62, Y)))
@@ -1022,8 +1030,8 @@ def build_camp(A, pr):
     for (x, y, yaw) in [(-44.0, -36.0, 30), (-34.0, -33.0, -20), (-47.0, -54.0, 0)]:
         if free(x, y, 4): ridge_tent(B, (x, y, float(ground(x, y))), 3.6, 3.0, 2.0, ['t_cream', 't_white', 't_brown'][int(abs(x)) % 3], yaw=yaw)
     if free(-28.0, -52.0, 3): campfire(B, Bs, (-28.0, -52.0, float(ground(-28.0, -52.0))), rs)
-    for i in range(34):                                         # ridge tents, rows 2-4
-        x = rs.uniform(-108, 108); off = rs.uniform(16, 70); y = float(bank_y(x)) - off
+    for i in range(70):                                         # ridge tents, rows 2-6
+        x = rs.uniform(-125, 125); off = rs.uniform(16, 135); y = float(bank_y(x)) - off
         if abs(x) < 9 or abs(x - 25) < 6 and off < 20 or float(sd_at(x, y)) < 5 or not free(x, y, 3): continue
         z = float(ground(x, y)); m = ['t_cream', 't_white', 't_brown', 't_cream', 't_green'][rs.randint(0, 5)]; ridge_tent(B, (x, y, z), 3.4 + rs.rand(), 2.8 + rs.rand() * 0.6, 1.9 + rs.rand() * 0.3, m, yaw=rs.uniform(-30, 30) + (0 if rs.rand() < 0.5 else 90))
     for i, (x, off) in enumerate([(-130, 24), (-110, 6), (116, 12), (130, 34), (-60, 52), (50, 58), (4, 62), (-34, 60)]):          # more banners on the skirts
@@ -1073,7 +1081,7 @@ def head_report(A, cam=None, W=720, Hh=1280):
     for nm, (x, y, z, fz, who) in A['marks'].items():
         key = who.split(':')[0]; H = HEIGHT.get(key, 1.7); hd = H * 0.3; px, py, dz = project(cam, (x, y, z + H - hd * 0.52), W, Hh); res[nm] = dict(cx=round(px), cy=round(py), chin=round(py + hd * 0.5 * 782.2 / dz), dist=round(dz, 1))
     return res
-def stage_crowd(items, cam=None, seg=10):
+def stage_crowd(items, cam=None, seg=10, shadow=True):
     """many small placeholder cards in one go. items: (x, y, z, kind, scale) with kind a ph_ colour key ('foot', 'foot_r', 'knight', 'scot', ...). One object per colour."""
     cam = cam or bpy.context.scene.camera; cl = cam.location; B = Batch(77)
     for (x, y, z, kind, sc) in items:
@@ -1081,7 +1089,7 @@ def stage_crowd(items, cam=None, seg=10):
         with B.xf((x, y, z), (0, 0, math.degrees(yaw))):
             _disc(B, 'ph_ring', 0, hc, hd * 0.5 * 1.06, hd * 0.5 * 1.06, 0.0, seg); _disc(B, 'ph_head', 0, hc, hd * 0.5, hd * 0.5, 0.003, seg)
             B.mesh('ph_' + kind, [(-bw / 2, 0.001, 0), (bw / 2, 0.001, 0), (bw * 0.36, 0.001, H - hd * 1.0), (-bw * 0.36, 0.001, H - hd * 1.0)], [(0, 1, 2, 3)], False)
-    return B.finalize('crowd', ink=False, shadow=False)
+    return B.finalize('crowd', ink=False, shadow=shadow)
 
 # ================================================================ PRESETS, hooks, CLI
 def rel_xy(cam, look, dist, lat):
@@ -1119,7 +1127,7 @@ def crowd_loop(A, pr):
     knight_pair_column(B, bridge_pairs(-30, 33, 6.5), BRIDGE_X, rs, KNIGHT_MATS)
     # meadow: ranks in the south half of the bulb, spreading out, a few mounted
     n = 0
-    while n < 66:
+    while n < 96:
         x = rs.uniform(-62, 62); y = rs.uniform(36, 150)
         if math.hypot(x - LOOP_C[0], y - LOOP_C[1]) > LOOP_R - 22 or (y < 80 and abs(x) > 17) or float(sd_at(x, y)) < 3: continue
         if rs.rand() < 0.5 and y > 100: continue
@@ -1139,9 +1147,9 @@ def crowd_loop(A, pr):
     Bb = Batch(80)
     for i, (x, y, f, c, sh) in enumerate([(-30, 66, 't_red', 't_gold', 'chevron'), (22, 72, 't_blue', 't_gold', 'bars'), (-8, 96, 't_cream', 't_red', 'cross'), (34, 104, 't_gold', 't_red', 'lion'), (-34, 112, 't_blue', 't_white', 'chevron'),
                                            (4, 126, 't_red', 't_cream', 'bars'), (-60, -52, 't_red', 't_gold', 'chevron'), (52, -48, 't_blue', 't_gold', 'bars'), (8, -80, 't_gold', 't_red', 'lion')]):
-        banner(Bb, (x, y, float(ground(x, y))), 8.5, 20 + 25 * i % 70, f, c, sh, rs, size=(3.0, 2.0))
+        banner(Bb, (x, y, float(ground(x, y))), 11.0, 20 + 25 * i % 70, f, c, sh, rs, size=(4.4, 3.0))
     for i, (a, f, c, sh) in enumerate([(220, 't_blue', 't_white', 'cross'), (242, 't_red', 't_gold', 'lion')]):
-        x = HILL_C[0] + 66 * math.cos(math.radians(a)) * 1.05; y = HILL_C[1] + 66 * 0.9 * math.sin(math.radians(a)); banner(Bb, (x, y, float(ground(x, y))), 8.5, 30, f, c, sh, rs, size=(3.0, 2.0))
+        x = HILL_C[0] + 66 * math.cos(math.radians(a)) * 1.05; y = HILL_C[1] + 66 * 0.9 * math.sin(math.radians(a)); banner(Bb, (x, y, float(ground(x, y))), 11.0, 30, f, c, sh, rs, size=(4.4, 3.0))
     Bb.finalize('crowd_banners'); B.finalize('crowd_horses'); stage_crowd(items)
 def crowd_hill(A, pr):
     """hill_over: tiny English column on the bridge (knights two by two + a few foot), a few foot soldiers at the camp, Scots along the line near the foreground."""

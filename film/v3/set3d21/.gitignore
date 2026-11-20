@@ -1,4 +1,6 @@
-__pycache__/
-cache/
 tex/
-*_work/
+cache/
+work/
+contact_work/
+__pycache__/
+*.blend1
