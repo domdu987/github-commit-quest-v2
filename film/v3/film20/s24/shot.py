@@ -78,6 +78,8 @@ def cam_at(g):
     return Vector(CO.W(tuple(loc))), Vector(CO.W(tuple(aim)))
 
 
+ROOM_BOX = ((-3.6, -34.45, 57.95), (3.6, -17.0, 63.0))         # tower-local metres: behind the glass, behind him
+ROOM_KILL = tuple(os.environ.get('ROOM_KILL', 'tower_ironlt_t').split(','))
 GLOW = float(os.environ.get('GLOW', '40.0'))
 EXPO_FAR, EXPO_NEAR = float(os.environ.get("EXPO_FAR", "-1.3")), float(os.environ.get("EXPO_NEAR", "-0.35"))
 
@@ -157,11 +159,55 @@ class Take(C.Take):
         for ob in [o for o in C.bpy.data.objects if o.name.startswith("actor_")]:       # the build's stand-in card at the window
             ob.hide_render = True
             ob.hide_viewport = True
+        self.clear_room_wedges()
         self.make_glow()
         self.key_cam(bf(G_FIRST), *cam_at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
         self.mau = self.actors["mau"] = C.make_actor("mau", "maupassant", os.path.join(WORK, "sprites"), canvas=CANVAS,
                                                      contact=dict(width=1.1, depth=0.5, opacity=0.5), shadow=None, cam=self.cam)
+
+    def clear_box(self, box, names):
+        import bmesh
+        lo, hi = Vector(CO.W(box[0])), Vector(CO.W(box[1]))
+        n = 0
+        for o in C.bpy.data.objects:
+            if o.type != "MESH" or not o.name.startswith(names):
+                continue
+            bm = bmesh.new(); bm.from_mesh(o.data); mw = o.matrix_world
+            dead = []
+            for f in bm.faces:
+                ws = [mw @ v.co for v in f.verts]
+                if all(min(w[k] for w in ws) <= hi[k] and max(w[k] for w in ws) >= lo[k] for k in range(3)):
+                    dead.append(f)
+            if dead:
+                bmesh.ops.delete(bm, geom=dead, context="FACES"); n += len(dead)
+                bm.to_mesh(o.data); o.data.update()
+            bm.free()
+        return n
+
+    def clear_room_wedges(self):
+        """the tilted flat iron members (object tower_ironlt_t) that stand just behind Maupassant inside the room copy read as a chevron / X of orange planes
+        behind his head from the landing camera: delete the faces of tower_ironlt_t inside the room box (behind the glass, behind him) only: the exterior
+        lattice (y < -36 m) is untouched, so the approach frames keep their tower."""
+        import bmesh
+        C.bpy.context.view_layer.update()
+        lo, hi = Vector(CO.W(ROOM_BOX[0])), Vector(CO.W(ROOM_BOX[1]))
+        n = 0
+        for o in C.bpy.data.objects:
+            if o.type != "MESH" or not o.name.startswith(ROOM_KILL):
+                continue
+            bm = bmesh.new(); bm.from_mesh(o.data); mw = o.matrix_world
+            dead = []
+            for f in bm.faces:
+                ws = [mw @ v.co for v in f.verts]
+                if all(min(w[k] for w in ws) <= hi[k] and max(w[k] for w in ws) >= lo[k] for k in range(3)):      # the face's bounding box meets the room box
+                    dead.append(f)
+            if dead:
+                bmesh.ops.delete(bm, geom=dead, context="FACES"); n += len(dead)
+                bm.to_mesh(o.data); o.data.update()
+            bm.free()
+        n += self.clear_box(((-1.9, -42.0, 57.0), (1.9, -36.2, 58.6)), ("gallery_ironlt",))      # the flat gallery slab outside the sill (an orange strip with a black seam) in the landing view
+        print("clear_room_wedges: %d faces deleted" % n, flush=True)
 
     def make_glow(self):
         """a warm emissive plane just outside the glass of Maupassant's window: in the extreme wide the window + red awning must be the brightest WARM spot
