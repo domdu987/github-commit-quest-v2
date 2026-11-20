@@ -133,8 +133,8 @@ def make_glow_and_fill(A):
     for n in list(nd):
         nd.remove(n)
     em = nd.new("ShaderNodeEmission")
-    em.inputs["Color"].default_value = (1.0, 0.68, 0.28, 1)
-    em.inputs["Strength"].default_value = 7.0
+    em.inputs["Color"].default_value = (1.0, 0.58, 0.10, 1)
+    em.inputs["Strength"].default_value = 2.2
     out = nd.new("ShaderNodeOutputMaterial")
     lm.node_tree.links.new(em.outputs["Emission"], out.inputs["Surface"])
     gl.data.materials.append(lm)
@@ -351,6 +351,7 @@ class Take(C.Take):
             if ob.name in HIDE_SCATTER or ob.name.startswith("pnoink_flag"):
                 ob.hide_render = True                                  # removed entirely (no cast shadow blobs either)
         self.cam.data.clip_end = 6000.0
+        self.smoke, self.gravel = C.bpy.data.objects.get("pnoink_smokep"), C.bpy.data.objects.get("pn_gravelp")
         make_glow_and_fill(self.A)
         self.path = cam_path(self.A)
         self.key_cam(bf(GF), *self.path.at(GF))
@@ -381,21 +382,26 @@ class Take(C.Take):
                 C.place(a, f, mk, scale=sc)
             d_m = self.path.state(g)[0] / CO.SC                                  # camera distance in metres
             p = self.path.prog(g)[0]
-            gk = clamp(self.path.state(g)[0] * 12.0 / 782.0, 0.0, 70.0) * (1.0 - smoother((p - 0.40) / 0.25))   # glow radius ~ 7 px on screen while far, gone well before the landing
+            gk = clamp(self.path.state(g)[0] * 12.0 / 782.0, 0.0, 70.0) * (1.0 - smoother((p - 0.40) / 0.25)) * (1.0 - smoother((g - 176) / 14.0))   # glow radius ~ 7 px on screen while far, gone well before the landing
             self.A["bz_glow"].scale = (max(gk, 1e-3),) * 3
             self.A["bz_glow"].keyframe_insert("scale", frame=f)
             fade = 1.0 - smoother((p - 0.40) / 0.25)
-            wsh = max(self.path.state(g)[0] * 3.0 / 782.0 * fade, 1e-3)          # a soft vertical light shaft ~3 px wide, ~90 px tall while far
-            hsh = max(self.path.state(g)[0] * 90.0 / 782.0 * fade, 1e-3)
+            wsh = 1e-3                                                          # the shaft is dropped (the warm glow alone is findable)
+            _unused = max(self.path.state(g)[0] * 3.0 / 782.0 * fade, 1e-3)          # a soft vertical light shaft ~3 px wide, ~90 px tall while far
+            hsh = 1e-3
             self.A["bz_shaft"].scale = (wsh, wsh, hsh)
             self.A["bz_shaft"].location = (self.A["bz_shaft"].location[0], self.A["bz_shaft"].location[1], self.A["marks"][MARK][2] + hsh * 0.5)
             self.A["bz_shaft"].keyframe_insert("scale", frame=f)
             self.A["bz_shaft"].keyframe_insert("location", frame=f)
             lc = self.path.at(g)[0]
             self.A["bz_up"].location = (lc[0], lc[1], lc[2] + 2.5)
-            self.A["bz_up"].data.energy = 9000.0 * smoother((g - 322) / 40.0)       # warm up-light into the deck undersides during the crane-up
+            self.A["bz_up"].data.energy = 9000.0 * smoother((g - 322) / 40.0) + 18000.0 * smoother((g - 345) / 20.0)       # warm up-light into the deck undersides during the crane-up
             self.A["bz_up"].keyframe_insert("location", frame=f)
             self.A["bz_up"].data.keyframe_insert("energy", frame=f)
+            for ob, hid in ((self.smoke, g >= 340), (self.gravel, g <= 215)):          # source-less smoke puffs g 340+, the pale gravel disc g <= 215
+                if ob is not None:
+                    ob.hide_render = bool(hid)
+                    ob.keyframe_insert("hide_render", frame=f)
             self.cam.data.lens = self.path.lens(p)
             self.cam.data.shift_y = self.path.shift(p)
             self.cam.data.keyframe_insert("lens", frame=f)
