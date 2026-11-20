@@ -32,7 +32,7 @@ def f_of(g):
 
 
 # ============================================================================ cameras
-CAM13 = dict(cam=(-60.0, -86.0, 8.5), look=(12.0, -52.0, -4.0), lens=22.0)     # preset camp_wide moved ~14 m forward, 3.5 m lower, tilted down
+CAM13 = dict(cam=(-52.0, -81.0, 7.0), look=(12.0, -52.0, -4.0), lens=22.0)     # preset camp_wide moved ~14 m forward, 3.5 m lower, tilted down
 
 
 def cam13(g):
@@ -126,16 +126,16 @@ class Take(object):
         pr = CAM13
         bpy.data.objects["cam"].location = pr["cam"]
         # (name, cast, pose name, d, px, flip, phase, kind)  d = metres ahead of the first-frame camera, px = screen x at that frame
-        L = [("f1", "footman_a_v1", "footman_a_point_laugh", 19.0, 200, True, 0.0, "laugh"),
-             ("f2", "footman_b_v2", "footman_b_point_laugh", 24.0, 290, True, 0.33, "laugh"),
-             ("k1", "knight_a_open", "knight_a_open_point_laugh", 21.0, 385, True, 0.62, "laugh"),
-             ("hoe", "footman_a", "footman_a_mime_hoe", 17.0, 470, False, 0.15, "hoe"),
-             ("f3", "footman_b", "footman_b_point_laugh", 26.0, 540, True, 0.8, "laugh"),
-             ("k2", "knight_b_great", "knight_b_great_laughing", 28.0, 235, False, 0.5, "laugh"),
-             ("f4", "footman_a_v2", "footman_a_laughing", 22.0, 620, False, 0.95, "laugh"),
-             ("f5", "footman_b_v1", "footman_b_point_laugh", 30.0, 440, True, 0.22, "laugh"),
-             ("f6", "footman_a_v3", "footman_a_point_laugh", 25.0, 110, True, 0.45, "laugh"),
-             ("f7", "knight_a", "knight_a_point_laugh", 31.0, 330, True, 0.7, "laugh")]
+        L = [("f1", "footman_a_v1", "footman_a_point_laugh", 11.8, 200, True, 0.0, "laugh"),
+             ("f2", "footman_b_v2", "footman_b_point_laugh", 14.9, 290, True, 0.33, "laugh"),
+             ("k1", "knight_a_open", "knight_a_open_point_laugh", 13.0, 385, True, 0.62, "laugh"),
+             ("hoe", "footman_a", "footman_a_mime_hoe", 10.5, 470, False, 0.15, "hoe"),
+             ("f3", "footman_b", "footman_b_point_laugh", 16.1, 540, True, 0.8, "laugh"),
+             ("k2", "knight_b_great", "knight_b_great_laughing", 17.4, 235, False, 0.5, "laugh"),
+             ("f4", "footman_a_v2", "footman_a_laughing", 13.6, 620, False, 0.95, "laugh"),
+             ("f5", "footman_b_v1", "footman_b_point_laugh", 18.6, 440, True, 0.22, "laugh"),
+             ("f6", "footman_a_v3", "footman_a_point_laugh", 15.5, 110, True, 0.45, "laugh"),
+             ("f7", "knight_a", "knight_a_point_laugh", 19.2, 330, True, 0.7, "laugh")]
         self.L13 = []
         for nm, cast, pose, d, xp, flip, ph, kind in L:
             x, y = K.at_px(pr, d, xp)
@@ -149,7 +149,10 @@ class Take(object):
         for ob in bpy.data.objects:
             if ob.name.startswith("fg_generic"):
                 ob.hide_render = True
-        K.fg_generic(self.A, dict(CAM13, fg_list=[("rope", 1.8, 60), ("pole", 2.2, 650)], fg_seed=41, name="fg13"))
+        before = set(o.name for o in bpy.data.objects)
+        K.fg_generic(self.A, dict(CAM13, fg_list=[("rope", 1.8, 60), ("pole", 2.4, 700)], fg_seed=41, name="fg13"))
+        self.fg13 = [o for o in bpy.data.objects if o.name not in before]
+        for o in self.fg13: o["_base"] = tuple(o.location)
         # solve the look-at height so the group's heads land at screen y ~ 680 at the first frame
         K.setup_render(self.scene, "final")
         hp = Vector((GROUP[0], GROUP[1], GROUP[2] + 1.4))
@@ -196,6 +199,11 @@ class Take(object):
             loc, look = camf(g)
             C.key_cam(cam, f, loc, look)
             if self.shot == 13:
+                dlt = (loc - Vector(CAM13["cam"])) * 0.88          # the foreground props travel with the lens (parallax 12 %)
+                for o in self.fg13:
+                    if g == gs[0] or True:
+                        o.location = Vector(o.get("_base", (0, 0, 0))) + dlt
+                        o.keyframe_insert("location", frame=f)
                 for e in self.L13:
                     p, dy = self.pose13(e, g)
                     x, y, z = e["xyz"]
