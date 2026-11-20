@@ -67,7 +67,7 @@ def widen_sea(preset, k, nu, nv):
     P["sea_nu"], P["sea_nv"] = nu, nv
 
 
-def whitecaps_in_front(n=int(os.environ.get("WC", "20")), seed=int(os.environ.get("WCSEED", "3"))):
+def whitecaps_in_front(n=int(os.environ.get("WC", "32")), seed=int(os.environ.get("WCSEED", "3"))):
     """foreground swell crests: the hero preset's floating_spar() also places the preset's two foam streaks relative to P['cam'] (our widen_sea patched it): wrap it,
     keep the spar where the preset puts it (original camera) and add broken foam lines (the set's 'streaks' hook) between our camera and the ship, so crests
     sweep across the frame as the camera slides (frame-diff)."""
