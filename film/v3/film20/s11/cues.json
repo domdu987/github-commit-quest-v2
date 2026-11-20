@@ -6,10 +6,10 @@
   {
    "kind": "ambience",
    "t": 24.833,
-   "dur": 2.567,
+   "dur": 8.633,
    "frame": 745,
-   "end_frame": 822,
-   "note": "Building-site yard, midday: distant hammering, forge roar, cart wheels, a crowd of onlookers laughing"
+   "end_frame": 1004,
+   "note": "Building site seen from the fence to the sky: crowd laughter, forge roar, hammering, wind; swells as the camera rises"
   },
   {
    "kind": "foley",
@@ -17,7 +17,7 @@
    "dur": 1.633,
    "frame": 753,
    "end_frame": 802,
-   "note": "the three Parisians laugh: bubbling gentle laughter bed (lady giggle, gent guffaw, child cackle), rhythmic ~3 Hz"
+   "note": "three Parisians laugh: bubbling gentle laughter bed, rhythmic about 3 Hz"
   },
   {
    "kind": "accent",
@@ -30,26 +30,98 @@
   {
    "kind": "accent",
    "t": 26.733,
-   "dur": 0.2,
+   "dur": 0.267,
    "frame": 802,
-   "end_frame": 808,
-   "note": "punch-in cut on 'ไอ้ช่างหมุด': hard impact thump + comic 'boing' with the speed lines"
+   "end_frame": 810,
+   "note": "punch-in snap on 'ไอ้ช่างหมุด': hard impact thump + comic boing with the speed lines"
+  },
+  {
+   "kind": "accent",
+   "t": 27.233,
+   "dur": 1.033,
+   "frame": 817,
+   "end_frame": 848,
+   "note": "rise over the fence and flight to the stacks: long rising whoosh"
   },
   {
    "kind": "foley",
-   "t": 26.733,
-   "dur": 0.033,
-   "frame": 802,
-   "end_frame": 803,
-   "note": "2-frame camera shake: low rumble hit"
+   "t": 28.267,
+   "dur": 1.933,
+   "frame": 848,
+   "end_frame": 906,
+   "note": "two men walking in step with a girder: boots on gravel, iron creak; derrick winch chain rattle"
+  },
+  {
+   "kind": "accent",
+   "t": 28.467,
+   "dur": 0.533,
+   "frame": 854,
+   "end_frame": 870,
+   "note": "snap on 'เหล็ก 18,000': iron clang"
+  },
+  {
+   "kind": "accent",
+   "t": 30.2,
+   "dur": 0.467,
+   "frame": 906,
+   "end_frame": 920,
+   "note": "flight up under the arches to the rivet deck: whoosh with echo under the iron"
+  },
+  {
+   "kind": "foley",
+   "t": 30.633,
+   "dur": 0.333,
+   "frame": 919,
+   "end_frame": 929,
+   "note": "tongs release: the glowing rivet flies with a hissing whistle"
+  },
+  {
+   "kind": "accent",
+   "t": 30.967,
+   "dur": 0.067,
+   "frame": 929,
+   "end_frame": 931,
+   "note": "rivet lands in the bucket: sizzle + metallic clank"
+  },
+  {
+   "kind": "foley",
+   "t": 30.7,
+   "dur": 0.0,
+   "frame": 921,
+   "end_frame": 921,
+   "note": "hammer blow + sparks (every 9 frames until the end of the deck beat)"
+  },
+  {
+   "kind": "accent",
+   "t": 31.433,
+   "dur": 0.5,
+   "frame": 943,
+   "end_frame": 958,
+   "note": "crane-up snap 1 'ชั้นหนึ่ง': rising whoosh + iron clang (first platform)"
+  },
+  {
+   "kind": "accent",
+   "t": 32.067,
+   "dur": 0.5,
+   "frame": 962,
+   "end_frame": 977,
+   "note": "crane-up snap 2 'ชั้นสอง': rising whoosh + iron clang (second platform)"
+  },
+  {
+   "kind": "accent",
+   "t": 32.567,
+   "dur": 0.533,
+   "frame": 977,
+   "end_frame": 993,
+   "note": "crane-up snap 3 'จนถึงยอด': big rising whoosh, bright ring on the finished spire"
   },
   {
    "kind": "cut",
-   "t": 27.4,
-   "dur": 0.0,
-   "frame": 822,
-   "end_frame": 822,
-   "note": "hard cut to shot 12 (girders): ambience swells with clanging iron"
+   "t": 33.2,
+   "dur": 0.267,
+   "frame": 996,
+   "end_frame": 1004,
+   "note": "dissolve 13 into the 1889 fair (T15)"
   }
  ]
 }
