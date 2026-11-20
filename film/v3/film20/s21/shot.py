@@ -29,15 +29,17 @@ H_IN, H_OUT = 4, 4
 G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1    # 1427 .. 1563
 GS = list(range(G_FIRST, G_LAST + 1))
 G_ANT = C.g_of(50.90)                          # 1530 "เสาอากาศยักษ์": snap + whole-lattice glow
-WHIP = (G0 + 2, G0 + 14)                       # 1433..1445
+WHIP = (G0 - 3, G0 + 9)                       # 1428..1440 (the whip is under way when the cut lands on 1431)
 SNAP = (G_ANT - 2, G_ANT + 13)
 GLOW = (G_ANT, G_ANT + 9)
-RING_PERIOD, RING_SPAN, RING_OFF = 30.0, 1.17, 14.0            # frames per burst; signal_rings t runs 0..1.17 (6 rings x 0.11 stagger + 0.62)
+RING_PERIOD, RING_SPAN, RING_OFF = 36.0, 1.17, 9.0            # frames per burst; signal_rings t runs 0..1.17 (6 rings x 0.11 stagger + 0.62)
 PRESET = "tower_night_wide"
 
 
 def cams(A):
-    a, b = A["cams"]["tower_night_summit"], A["cams"][PRESET]
+    a, b = dict(A["cams"]["tower_night_summit"]), A["cams"][PRESET]
+    a["loc"] = CO.W((-5.0, -40.0, 268.0))          # closer than the preset summit camera (6 m x 250 m up, 80 m away): the lamp + rings fill the frame
+    a["look_at"] = CO.W((0.0, 0.0, 289.0))
     return a, b
 
 
@@ -76,18 +78,16 @@ class Take(C.Take):
         self.scene.frame_set(bf(G_FIRST))
 
     def rings(self, g, f):
-        """S.signal_rings looping; the radius is re-keyed 30 -> 520 m (the set goes to 820 m: those arcs flatten into the horizon
-        line and the sky is empty for ~10 frames, which also reads as soft to qa_auto).  Phase offset: bursts already spread on g 1427."""
-        t = ((g - G_FIRST + RING_OFF) % RING_PERIOD) / RING_PERIOD * RING_SPAN
-        S.signal_rings(t, frame=f)
+        """6 set ring objects driven here (S.signal_rings only emits during half of its cycle, which leaves the sky empty for ~15 f
+        and reads as soft to qa_auto): ring i has age ((g+off)/P + i/6) % 1, radius 30 -> 560 m, strength 5 (1-age)^1.2, hidden
+        while age < 0.1 (the small summit halo) -> a ring is born every 6 f and 5 arcs are always visible."""
         for i, ob in enumerate(CO.STATE["rings"]):
-            age = (t - i * 0.11) / 0.62
-            if 0.0 < age < 1.0:
-                r = 30.0 + age * 500.0
-                ob.scale = (r, r, r)
-                CO.key(ob, "scale", f, "LINEAR")
-                if age < 0.12:                              # the small summit halo: shown only until the first arc has left, then hidden
-                    CO.setv(ob, False, f)
+            age = (((g - G_FIRST + RING_OFF) / RING_PERIOD) + i / 6.0) % 1.0
+            r = 30.0 + 530.0 * age ** 0.85
+            ob.scale = (r, r, r)
+            CO.key(ob, "scale", f, "LINEAR")
+            CO.keysock(ob.active_material.node_tree.nodes["em"].inputs["Strength"], 5.0 * (1.0 - age) ** 1.2, f)
+            CO.setv(ob, age >= 0.1, f)
 
     def pose(self, gs):
         for g in gs:
