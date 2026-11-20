@@ -60,11 +60,39 @@ if len(sys.argv) > 1 and sys.argv[1] == "draft":
     print("draft frame-diff median %.2f p90 %.2f" % (nb["median"], nb["p90"]))
     sys.exit(0)
 
+def stats(ims):
+    sat, lum = [], []
+    for im in ims:
+        a = np.asarray(im.convert("RGB").resize((90, 160), Image.BILINEAR), dtype=np.float32)
+        mx, mn = a.max(-1), a.min(-1)
+        sat.append(((mx - mn) / (mx + 1e-3)).mean())
+        lum.append(a.mean())
+    return float(np.mean(sat)), float(np.mean(lum))
+
+
+def calibrate(files, tsat=0.50, tlum=97.0):
+    """post grade (PIL Color + Brightness, one pair of factors per take) so the take meets QA_TEAM section G: saturation >= 0.47, luma 85-110"""
+    from PIL import ImageEnhance
+    ims = [Image.open(files[i]).convert("RGB") for i in range(0, len(files), max(1, len(files) // 12))]
+    ks, kb = 1.0, 1.0
+    for _ in range(6):
+        g = [ImageEnhance.Brightness(ImageEnhance.Color(im).enhance(ks)).enhance(kb) for im in ims]
+        s, l = stats(g)
+        ks *= tsat / s if s > 0 else 1.0
+        kb *= tlum / l if l > 0 else 1.0
+        ks, kb = min(ks, 2.2), min(max(kb, 0.6), 1.6)
+    return ks, kb
+
+
 RAW, OUT = os.path.join(HERE, "raw"), os.path.join(HERE, "frames")
 os.makedirs(OUT, exist_ok=True)
 rows = []
+from PIL import ImageEnhance
+KS, KB = calibrate([os.path.join(RAW, "g_%04d.png" % g) for g in range(GF, GL + 1)])
+print("grade: saturation x%.2f, brightness x%.2f" % (KS, KB))
 for g in range(GF, GL + 1):
-    shutil.copyfile(os.path.join(RAW, "g_%04d.png" % g), os.path.join(OUT, "g_%04d.png" % g))
+    im = Image.open(os.path.join(RAW, "g_%04d.png" % g)).convert("RGB")
+    ImageEnhance.Brightness(ImageEnhance.Color(im).enhance(KS)).enhance(KB).save(os.path.join(OUT, "g_%04d.png" % g))
     rows.append(json.load(open(os.path.join(RAW, "g_%04d.json" % g))))
 pngs = [os.path.join(OUT, "g_%04d.png" % g) for g in range(GF, GL + 1)]
 walls, cpus = [r["wall"] for r in rows], [r["cpu"] for r in rows]
@@ -74,7 +102,7 @@ heads = [h for r in rows[H_IN:H_IN + G1 - G0] for h in r["heads"].values()]
 meta = {"take": TAKE, "film": 20, "shots": [SHOT], "g0": G0, "g1": G1, "first_g": GF, "n_frames": N, "shot_ranges": {str(SHOT): [G0, G1 - 1]},
         "handle_in": H_IN, "handle_out": H_OUT, "transition_in": TRANS_IN,
         "transition_out": {"type": "cut", "frames": 0, "at": G1, "note": "next shot is a hard cut; 4 handle frames rendered in 3D"},
-        "note": NOTE, "dof": "none", "text": "none", "light": "DAY", "samples": rows[0].get("samples"), "resolution": [720, 1280], "threads": 2, "fps": 30,
+        "note": NOTE, "grade": {"saturation_x": round(KS, 3), "brightness_x": round(KB, 3), "note": "post grade for QA_TEAM section G"}, "dof": "none", "text": "none", "light": "DAY", "samples": rows[0].get("samples"), "resolution": [720, 1280], "threads": 2, "fps": 30,
         "s_per_frame_wall_mean": round(float(np.mean(walls)), 2), "s_per_frame_cpu_mean": round(float(np.mean(cpus)), 2),
         "head_px": [round(min(h["w"] for h in heads)), round(max(h["w"] for h in heads))],
         "head_centre_y": [round(min(h["y"] for h in heads)), round(max(h["y"] for h in heads))],
