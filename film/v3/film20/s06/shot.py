@@ -17,7 +17,7 @@ H_IN, H_OUT = 9, 4                                 # DIS 13 -> 13/2 + 2 = 9 (rou
 GA, G_LAST = G0 - H_IN, G1 + H_OUT - 1             # 395 .. 469
 GS = list(range(GA, G_LAST + 1))
 G_COUNT = C.cap_g("สี่สิบกว่าคน")                  # 444: strongest word -> snap + arms up
-SNAP = (G_COUNT - 2, G_COUNT + 13)
+SNAP = (G_COUNT - 2, G_COUNT + 11)
 LIGHT, PRESET, PPD = "DAY", "cafe_wide", 144
 
 ART = [("art1", "painter20", "artist_1"), ("art2", "composer20", "artist_2"), ("art3", "poet20", "artist_3"), ("art4", "architect20", "artist_4")]
@@ -30,8 +30,8 @@ PHASE = {"art1": 0.0, "art2": 1.7, "art3": 3.1, "art4": 4.4}
 def cam_path(A):
     c = Vector(eval(os.environ.get("CAML", "(0.2, 0.5, 2.3)")))
     subj = Vector((-0.6, 6.7, 2.4))
-    return C.CamPath(c, subj, GA, G_LAST, push=float(os.environ.get("PUSH","0.08")), slide_px=float(os.environ.get("SLIDE","-80")), tilt0=float(os.environ.get("TILT", "3")), tilt_deg_s=0.0, decay=0.25, arc_deg_s=float(os.environ.get("ARC", "7")),
-                     snaps=[dict(g=SNAP, k=1.3, peak=1.7, shift=(0.25, 0.0), tilt=0.0)])
+    return C.CamPath(c, subj, GA, G_LAST, push=float(os.environ.get("PUSH","0.08")), slide_px=float(os.environ.get("SLIDE","-8")), tilt0=float(os.environ.get("TILT", "3")), tilt_deg_s=0.0, decay=0.25, arc_deg_s=float(os.environ.get("ARC", "7")),
+                     snaps=[dict(g=SNAP, k=1.5, peak=1.9, shift=(0.0, 0.0), tilt=0.0)])
 
 
 def cam_path_static():
