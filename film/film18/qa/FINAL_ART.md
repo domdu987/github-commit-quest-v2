@@ -136,3 +136,32 @@ Angle types used (more than the 4 required):
 - **N8:** Large plain ground in the lower third at s05 (13-15 s), s16 (40.5-41.5 s) and s18 (46.5-47.0 s). It is textured, so it is within the ground_share gate. This is a visual note only.
 - **N9 (s22, 56.1-58.0 s):** The foreground pot at lower left is soft and glowing, like s21's but opaque. Fix it in the same pass as B4 if it is cheap.
 - **N10 (QA_AUTO):** QA_AUTO.md reports "planned cuts with no visible change" at every planned g. The frame-diff spikes are in fact at the planned g (see the cut list above), so that line looks like a first_g offset in the script run, not a film problem.
+
+## Re-check after fixes (rebuilt film)
+
+Film checked: `rel18/oxclerk_v1.mp4` (720x1280, 30 fps, 2112 frames, 70.4 s, captions burned in). I checked only the conformed film. I looked at each window at full size, on a 180x320 phone sheet at 10 fps, and frame by frame at each join, and ran a frame-diff scan from 15 to 57 s.
+
+| Blocker | Window | Result |
+|---|---|---|
+| B1, s06 half-cut Tian Dan | 15.3-17.7 s | **Fixed.** Tian Dan stays whole and inside the frame from the s05→s06 cut (15.3 s, diff 50.9) to the whip into s07 (17.6-17.8 s, 2-3 streak frames, no pop). Cap and face are clear of the left edge on every tile. The captions (ตลาด / เกียนต้นขอ / วัวจากทุก / บ้าน / สิบตัว) sit on his robe hem, below his face. |
+| B2, s08 pole through face | 19.9-22.5 s | **Fixed.** The spear rack now stays in the left third, and both Yan figures (general and headband soldier) stand clear right of it on every frame. No shaft crosses a head. The s07→s08 dissolve at 19.9-20.1 s ghosts as planned. A dark foreground post enters at the far left edge at 22.2-22.4 s, well away from the faces. The hard cut into s09 at 22.47 s is clean. Captions are at y about 900, below the waists. |
+| B3, s16 face in caption band | 40.15-43.6 s | **Fixed.** The townsfolk faces now stay at y about 750-860 and never enter y 880-950. At 42.6-43.0 s the nearest face's chin is about 20-30 px above the band. The s15→s16 dissolve (40.15 s) ghosts as planned (dissolve 15). At the s16→s17 hard cut (43.63 s, clean), the old man's beard tip ends about 40 px above the band. |
+| B4, s21 see-through pots / palette | 53.2-56.1 s | **Fixed.** The foreground pots and the broom bundle are now solid and outlined, with no translucency on any frame. The beige-block cups are gone. The grey-mauve cast is replaced by a saturated night blue (sky, ground and the Yan silhouettes rim-lit in gold). It is grounded and on-brand. |
+
+- **s21 → s22 whip (56.1 s):** 3 streak frames on each side, with matching direction and no pop.
+  - **Palettes now match:** both shots have a saturated blue night sky with warm fire, red-and-gold dragon oxen, and wall and torches behind.
+  - Frame stats: s21 at 55.9 s sat 0.54 / luma 92; s22 at 56.5 s sat 0.54 / luma 98.
+  - Remaining difference: s22's ground is warm tan (the road), against s21's navy field, and s21's pots read lavender in the blue light where s22's pot is brown. These are different sets lit by the same night, so they read as one sequence. This is not a blocker (N11).
+  - N9 (soft pot in s22) is now opaque and fine.
+- **Hard rules in all four windows:**
+  - No face in y 880-950. Only ox muzzles and silhouette legs come near it.
+  - No pole through a face.
+  - No half-cut main character.
+  - No glitch or pop: every frame-diff spike is at a planned cut or whip.
+  - No see-through artefact apart from the planned dissolves.
+- **Captions:** legible on the phone sheet (bold white Thai, dark outline, no tofu). They are not over any face in these windows.
+- **§G / §H / §I:** unchanged, except that the s21 caveats in §G (grounded) and §I (off-brand frame set) no longer apply. The cut count is unchanged.
+- Director's numbers (sat 0.509, vivid 46.2 %, luma 96.3, -12.2 LUFS / -1.1 dBTP) are accepted. They do not change any art answer.
+- **N11 (new, non-blocking):** the s21 foreground pots read cool lavender against the warm brown pot in s22. Warm them slightly if s21 is ever re-rendered.
+
+FINAL QA-art: PASS
