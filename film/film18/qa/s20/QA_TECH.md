@@ -1,17 +1,19 @@
-# QA-tech round 13 s20: FAIL
-Checked: all frames g1515-1595 at 6 fps, every 2nd frame band y520-860, 2x crops of the lead head g1517-1533 and the left flame g1547-1567, red-flame x-extent measured per 2 frames, frame-diff re-measured 90x160 (median 4.78, p90 7.38: median gate met; p90 <9 is a guide only), ground colour mask, hoof crops.
+# QA-tech round 14b s20: FAIL
+Checked: all frames g1515-1595 at 6 fps, every frame g1515-1523, every 2nd g1523-1595 (crops y520-860), red-flame x-extent measured on all 81 frames (hsv mask), ground block mask, frame-diff 90x160 (median 4.74, p90 6.56; matches meta, so the median gate passes).
 
 ## Blockers
-1. Lead ox head cut by the left edge. g1515-1519 the lead is a small ox at x 110-240, then from g1517-1519 a big ox enters left already cut; g1521-1533 the head is cut: snout/horn tip at x<0 (g1521, g1527-1531 muzzle at x 0-5, horn root cut), at g1523 the nose touches x 0. Requirement is whole head in frame from the first frame. Fix: start the camera 60-80 px further left (head x 40-200 from g1515) and hold the head inside x >= 30 through g1535.
-2. Neighbour's flame touches the lead ox's face. A small tail flame (from a pole held beside the black Qi at the left, g1547-1567) trails right into the lead's head: g1553 flame tip touches the brow (gap 0), g1555 about 5 px, g1557 and g1559 overlap the forehead/horn root, g1561 and g1563 overlap the ear/horn base, g1565 about 5 px. Gap >= 15 px only from g1567. Fix: move that ox/Qi pair 150 px further left or higher/lower so the flame stays 40 px clear of the lead's head from g1547 to g1567.
-3. Lead's own flame (the large flame at the end of the long pole, about 160 px) runs to the right edge: red flame max x = 717-719 (frame edge) g1545-1567 and g1591-1595, x 702 at g1543. The requirement is x <= 700. Fix: pan/truck 30-40 px right in those windows or shorten the pole 0.1 D; keep >= 120 px length.
-4. Contact shadows absent. At g1530/1550/1564/1578 crops: hooves end on motion-blurred gravel with no dark shadow; the lit orange blobs on the ground are floating spots unrelated to hoof positions. Fix: dark soft contact ellipse under every hoof of the lead and the two nearest oxen (30-40 % black, ~60 px wide).
-
-## Judged
-- Fg jar covering the lead's rump (g1569-1584): it covers the neighbours' hindquarters/legs rather than the lead's head, and at g1583-1591 hides the lead's rear legs. The problem is the look more than the position: the jar is a flat violet-navy shape with a single outline and almost no texture (read as a navy slab, rule 2), also a clipped bowl of logs low-left. Fix: retexture/warm-glaze the jar (terracotta with the film's grade) and keep it at x > 0.55 and below y 900 so it never covers an ox leg.
-- The lead's tail pole passes in front of the second ox's horn/ear at g1523-1535 (pole through a neighbour's head). Note.
+1. Neighbour's flame at the lead's face (repeat of round 13). The ox just ahead (left) of the lead trails a tail pole whose red flame sits on the lead's horn root/brow: 0-8 px gap at g1529-1567 (tip touches the horn at g1529, 1539, 1547, 1553, 1559, 1567; checked 1.6x crop at g1553). Rule is >= 15 px. Fix: delay or drop the ahead ox's pole/flame so it is >= 40 px clear of the lead's head, horns and ears for g1521-1595 (e.g. shift that ox 150 px left or raise its pole 60 px), or shorten its pole.
+2. Lead's flame ends beyond x 700. Max red-flame x: 705 g1515, 701 g1521, then 717-719 (frame edge, clipped) on g1525-1532, 1536-1537, 1539, 1541-1542, 1544, 1547, 1550-1552, 1559, 1561, 1563-1565, 1575, and 719 on every frame g1584-1595. The flame is cut by the right edge. Fix: truck the camera ~40 px right in g1525-1565 and g1584-1595 or shorten/raise the pole by ~0.15 D; keep >= 120 px length (it is ~160 px).
+3. Ground > 30 %. Block mask (outline-free smooth blocks below the horizon, props excluded) 0.38-0.45 on all frames (0.39 g1517, 0.44 g1541, 0.45 g1553, 0.44 g1589). Team's "rough mask 0.5" admits it. The band y 860-1280 is dirt with only a few small jars/bundles. Fix: lower the camera/raise the herd line so the herd sits at y 0.55-0.70, and fill the bottom third with dark low props (jars, sacks, reed bundles with outlines) covering >= 15 % of the frame.
 
 ## Passed
-- Lead is side view, face rage, about 22-25 % of frame height. Flame >= 120 px: yes (about 160 px).
-- Ground (mask incl. props): 0.32 g1529, 0.30 g1549, 0.295 g1564, 0.294 g1579, 0.33 g1589; plain ground about 0.26-0.30 after subtracting the jar: note, borderline.
-- Frame-diff 4.78 / 7.38. No pulsing. No text, mouths held. Flames on tails (yes). Whip landing g1515-1519 OK.
+- Lead ox head fully in frame from g1515 (big lead enters g1517, head x >= 60 from g1518; the ox cut at the left edge is the one ahead, not the lead). Side view, rage face, ~17-20 % of frame height.
+- Lead flame length ~160 px (>= 120).
+- Contact shadows: soft dark smear under planted hooves, light warm pools alongside. Faint (see notes), counted as present.
+- Frame-diff median 4.74 >= 4; p90 6.56 < 9 but the follow camera slide (0.97x herd speed, wall/ground parallax) is a visible eased slide, no pulsing.
+- No placeholders, no pulsing, mouths held (open, no lipsync flap), blue rim clean, no props across the lead's face (fg jar low, below y 860 after g1550).
+
+## Notes
+- Contact shadows are weak (about 15-20 % darkening); the orange pools are not tied to the hooves (e.g. g1553 pool ~100 px right of the lead). Strengthen to 35 % dark ellipses.
+- The lead's own tail pole passes in front of the following ox's muzzle (g1529-1553); the flame the trailing ox shows reads as lying on its own back.
+- Whip landing g1515-1517: lead is small and the wall fills the frame; fine as a landing.
