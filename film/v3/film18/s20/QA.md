@@ -27,3 +27,6 @@ Reframed: three-quarter view oxen, camera follows at 1.0 x herd speed, LAT 11, l
 - No flame/bundle on any ox head in the phone-sheet frames; spacing 20 D leaves only ~1 ox plus a distant rear ox visible - sparse herd (deviation).
 - Frame-diff n=80: median **5.94**, p90 **8.41**; qa_auto PASS. Ground (shared ground_share.py, take.mkv): max **0.184**, median 0.131.
 - Mouth worst 813 px.
+
+## Gate 16 follow-up
+Gate 16 blockers were on the older layout. Round 17 has one lead ox with its large flame (about 120-130 px), the ox ahead of the lead removed from the left edge (not visible in the phone sheet), and rows spaced 20 D so the tail/rope/bundle of the lead no longer reach another ox head in the phone-sheet frames. Not pixel-measured for 30 px on every frame.

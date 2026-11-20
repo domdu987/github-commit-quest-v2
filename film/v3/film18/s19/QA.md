@@ -27,3 +27,6 @@ Reframed to the director's brief: camera on the herd axis at (30.2,-26,1.7) look
 - Frame-diff n=87: median **18.32**, p90 **23.08**. qa_auto fails only on blur at g1507-1520 (whip-out).
 - Ground (shared ground_share.py, every 5th frame): max **0.356** (g1457), median 0.269: the worst frames exceed the 0.30 target. A DENS=0.95 re-render had no effect (identical frames).
 - 4+ oxen visible per tile on the phone sheet (not counted per 0.5 s tile); mouth y and flame gaps not re-measured after the reframe (measure mode was written for the old lane layout) - phone sheet shows the lead jaw at about y 770.
+
+## Round 18 (gate 16 follow-up)
+Gate 16 judged the older lane layout (pot in the lead's path); the round-17 head-on reframe removed those pots, and no prop is in the oxen's run (props only y -24.5..-14.8, oxen culled at y -13). Rubble raised 75 -> 150 props at the lower edge. Frame-diff n=87: median 19.97, p90 25.21. Ground (shared ground_share.py, every 5th frame): max **0.306**, median 0.227 (0.30 target missed by 0.006). qa_auto: blur flag only on the whip-out. Not re-checked at 2x zoom frame by frame.

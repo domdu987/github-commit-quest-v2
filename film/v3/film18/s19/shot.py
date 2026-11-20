@@ -55,7 +55,7 @@ def frame(g, t, camloc, ctx):
             ld = bpy.data.lights.new('potl', 'POINT'); ld.color = J.FIRE; ld.energy = 650.0; ld.shadow_soft_size = 0.6; ld.use_shadow = False
             lo = bpy.data.objects.new('potl', ld); J.STATE['LIGHTS'].objects.link(lo); lo.location = (lx, ly, 1.0); lo.visible_camera = False
         rr_ = random.Random(7)
-        for i in range(75):                                   # round 16: dark rubble / pots on the ground between the oxen's end of run (y -13) and the camera, low in frame
+        for i in range(150):                                   # round 16: dark rubble / pots on the ground between the oxen's end of run (y -13) and the camera, low in frame
             wx, wy = rr_.uniform(22.5, 38.0), rr_.uniform(-24.5, -14.8)
             corner = abs(wx - 30.0) > 4.5
             if rr_.random() < 0.5: FGP.append(J.prop_reed_bundle((wx, wy, 0.2), (0, 0, rr_.uniform(0, 6.28)), scale=rr_.uniform(0.35, 0.55), n=30, cd=8.0))
