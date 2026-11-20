@@ -57,6 +57,10 @@ def cam_at(A, g):
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light="DAY", quality=quality, name="cam_s27")
+        for ob in C.bpy.data.objects:                      # the preset FG (iron post, 1 m ahead of the PRESET camera) rides with our closer start
+            if ob.name.startswith(("fg_", "shade_casters")):
+                ob.location = ob.location + Vector((0.0, CLOSE / CO.SC, 0.0))
+                print("moved FG", ob.name, flush=True)
         self.scene.frame_set(bf(G_FIRST))
         self.key_cam(bf(G_FIRST), *cam_at(self.A, G_FIRST)[:2])
         self.mau = self.actors["mau"] = C.make_actor("mau", "maupassant", os.path.join(WORK, "sprites"), canvas=CANVAS,
