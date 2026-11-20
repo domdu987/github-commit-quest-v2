@@ -12,5 +12,5 @@
   "type": "dissolve",
   "frames": 6
  },
- "note": "starts exactly at K.POSES['P_NECK'] at g1345, ends exactly at P_TOP at g1392; g1342-1344 continue H1's descent into P_NECK, g1393-1395 continue the drift"
+ "note": "starts exactly at K.POSES['P_NECK'] at g1345, ends exactly at the NEW K.POSES['P_TOP'] (-10,-115,115)->(0,70,0) at g1392; g1342-1344 continue H1's descent, g1393-1395 continue the drift"
 }
