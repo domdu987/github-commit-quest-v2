@@ -80,3 +80,15 @@ Recipe and checks: `film/v3/set3d17/API.md` §v2 ("v2 render recipe").
 - These parts are NOT re-lit or re-rendered for luma. At conform each take gets an exposure trim, a pure RGB multiply k between 0.85 and 1.12 (T6 6c/6d down to 0.82: the bright floor measures 125-133). It can be keyed per frame as a smooth curve, eased over 10 frames or more, both at part joins and inside a take with uneven sections (T4: macro clock 116-127 vs the desk side 80-92). Above k = 1.0, check highlight clipping.
 - The trim brings the take mean to its target. Multiplying by k leaves the qa_stats2 saturation and vivid values unchanged (checked on T6b g1600: sat 0.593 → 0.593, vivid 84.1 % → 84.1 %, luma 115.6 → 106.3 at k 0.92). It is not haze and it does not touch saturation.
 - Teams keep rendering their approved setups unchanged. Re-renders are only for real defects: slabs, shafts, edge cuts, staging.
+
+## ARCHIVES day skylight beam fx OFF (director decision 2026-11-20 19:05)
+- The beam_fx volume puts a milky veil over the whole frame whenever the camera's view passes through the beams. Measured effect:
+  - T5b2: beam on 114, beam off 90.
+  - T6a: mean abs diff 4-7.5/255, saturation +0.03-0.06 with the beam off.
+  - This is haze, which the client rules forbid.
+- From now on, ARCHIVES day renders force the beam_fx Emission strength node to 0, or hide arch_beam_fx. Setting beam_k through TAKE_OVER alone does not always reach the node (T7).
+- Per take:
+  - T5: the beam fades out over g1211-1218 (T5b beam_scale, 6cdc298), then stays off.
+  - T6a and T6a2: re-rendered beam-off.
+  - T6b: no measurable contribution (0.56/255), so it stays as rendered.
+  - T7: the crane frames g1800+ are tested and switched off if the diff is above 3/255.
