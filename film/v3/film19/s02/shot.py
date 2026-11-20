@@ -26,7 +26,7 @@ FIRST_G, G_LAST = G0 - H_IN, G1 + H_OUT - 1
 GS = list(range(FIRST_G, G_LAST + 1))
 FINAL_SPP = 10                                           # H.STATE['samples'] of ship_aerial (cost_report): Take() checks it
 
-SEAK = float(os.environ.get("SEAK", "1"))                    # sea clock rate (1 = real time)
+SEAK = float(os.environ.get("SEAK", "2"))                    # sea clock rate (1 = real time)
 S = 1.85                                                 # metres -> world D
 AZ = float(os.environ.get("AZ", "183.29"))               # camera azimuth about the ship vs the aerial preset: ~180 = from BEHIND the ship (it sails away, the wake trails to us)
 DIST0 = float(os.environ.get("DIST0", "0.86"))           # start distance as a fraction of the preset aerial distance
@@ -39,7 +39,7 @@ CAM_LOOK0, CAM_LOC0 = CAM_LOOK0 + _o, CAM_LOC0 + _o
 G_WORD = C.cap_g("เรืออยู่")                              # g 98: "เรืออยู่ตรงไหน" -> the snap
 SNAP = (92, 108)                                         # 16 f, x1/0.59 = 1.7 pull-back with a pan (shift), peak 2.0
 # values from a random search (scratchpad plan17.py): the whole ship inside the frame (30 px margin) on EVERY frame, the ship travels across the frame
-_P = [float(v) for v in os.environ.get("CAMP", "-0.03,100.3,119.26,-23.55").split(",")]      # push (pull), slide px/s, rise px/s, arc deg/s
+_P = [float(v) for v in os.environ.get("CAMP", "-0.03,140,119,-30").split(",")]      # push (pull), slide px/s, rise px/s, arc deg/s
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, FIRST_G, G_LAST, push=_P[0], slide_px=_P[1], rise_px=_P[2], arc_deg_s=_P[3], decay=0.1,
                 snaps=[dict(g=SNAP, k=0.59, peak=2.0, shift=(-251.88, -177.73))])
 
