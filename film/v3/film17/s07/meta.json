@@ -1,0 +1,36 @@
+{
+ "take": "s07",
+ "shots": [
+  16,
+  17,
+  18,
+  19
+ ],
+ "g0": 850,
+ "g1": 1045,
+ "first_g": 844,
+ "last_g": 1051,
+ "n_frames": 208,
+ "fps": 30,
+ "resolution": "720x1280",
+ "samples": 16,
+ "cuts_g": [
+  900,
+  924,
+  948,
+  972,
+  996
+ ],
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 11
+ },
+ "take_file": "take.mkv.part* (cat take.mkv.part* > take.mkv; libx264rgb crf6)",
+ "branch": "render17/team1",
+ "rhythm": {
+  "median": 7.88,
+  "p90": 23.15
+ },
+ "revision": "team1 rework",
+ "note": "g844-899 = team 6 shot 16 frames from 34bb2c8 unchanged; g900-1051 rendered by team 1 (film/v3/film17/s07/shot.py)"
+}
