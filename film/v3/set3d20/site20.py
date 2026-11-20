@@ -12,14 +12,14 @@ from kit20 import tw, th, Z1, Z2
 # ------------------------------------------------------------------ lights (DAY)
 SKY_DAY = ['#f2c89a', '#eec4a4', '#cfc0cc', '#94aee8', '#6a8cdc', '#4c74d2', '#3a62c8']
 LIGHTS = dict(
-    DAY=dict(sky=SKY_DAY, sky_k=0.8, amb=('#5480FF', 2.4), key=(1.0, 0.82, 0.58, 8.0), key_dir=(0.50, 0.42, -0.42), sun_angle=1.0, exposure=-0.7, sat=1.08, lamp=1.0),
+    DAY=dict(sky=SKY_DAY, sky_k=0.8, amb=('#6286FF', 2.4), key=(1.0, 0.82, 0.58, 8.0), key_dir=(0.50, 0.42, -0.42), sun_angle=1.0, exposure=-0.7, sat=1.08, lamp=1.0),
     LATE=dict(sky=['#f0a878', '#e8a090', '#c8a0b8', '#8a8cd8', '#6a76d0', '#5266c4', '#3a4cb8'], sky_k=0.8, amb=('#5a74F8', 2.0), key=(1.0, 0.66, 0.42, 7.0), key_dir=(0.62, 0.30, -0.30), sun_angle=1.2, exposure=-0.7, sat=1.1, lamp=1.0),
 )
 
 # ------------------------------------------------------------------ cameras (metres: loc, look, lens, shift) -> world D in A['cams']
 CAMS_M = dict(
     site_wide=dict(loc=(-44.0, -178.0, 10.0), look=(4.0, -30.0, 8.0), lens=22, shift=-0.2),
-    site_wide_end=dict(loc=(-42.0, -168.0, 6.0), look=(2.0, -30.0, 6.0), lens=22, shift=-0.2),
+    site_wide_end=dict(loc=(-43.5, -175.0, 8.0), look=(2.0, -30.0, 8.0), lens=22, shift=-0.28),
     site_table=dict(loc=(45.4, -76.6, 1.5), look=(50.0, -72.0, 1.9), lens=22),
     site_leg_low=dict(loc=(-60.0, -82.0, 1.4), look=(-52.0, -58.0, 14.0), lens=22, shift=-0.2),
     site_fence=dict(loc=(-20.0, -109.5, 1.5), look=(-2.0, -98.0, 2.5), lens=22),
@@ -377,14 +377,14 @@ def _staging(A):
     for n in ('site_rise', 'site_rise_snap1', 'site_rise_snap2', 'site_rise_snap3'): S[n] = []
     STATE['staging'] = S
 SHADE_ZONE = dict(site_wide=(13.5, 18.0, 9.0, 20.0), site_wide_end=(9.0, 16.0, 8.0, 18.0), site_table=(3.5, 9.0, 5.0, 14.0), site_leg_low=(3.0, 9.0, 5.0, 14.0), site_fence=(3.5, 9.0, 5.0, 14.0),
-                  site_girders=(3.5, 9.0, 5.0, 14.0), site_rivet=(3.0, 8.0, 5.0, 14.0), site_rise=(50.0, 50.0, 30.0, 30.0), site_rise_snap1=(50.0, 50.0, 30.0, 30.0), site_rise_snap2=(70.0, 70.0, 40.0, 40.0), site_rise_snap3=(90.0, 90.0, 50.0, 50.0))
+                  site_girders=(3.5, 9.0, 5.0, 14.0), site_rivet=(17.0, 16.0, 12.0, 22.0), site_rise=(50.0, 50.0, 30.0, 30.0), site_rise_snap1=(50.0, 50.0, 30.0, 30.0), site_rise_snap2=(70.0, 70.0, 40.0, 40.0), site_rise_snap3=(90.0, 90.0, 50.0, 50.0))
 def _shade_casters(A, P):
     """invisible sun-blockers (shadow only, not seen by the camera) that put the foreground ground / props of the preset camera in cast shade (QA: the nearest 15 % of the frame in shade)."""
     sun = Vector(P['key_dir']).normalized(); M = STATE['M']; R = C.root(); mb = MB('shade_casters', R); cam = CAMS_M[A['preset']]
     def caster(c, w, d, hgt):
         off = Vector((-sun.x, -sun.y, 0)) * (hgt / -sun.z); mb.box(M['dark'], (c.x + off.x, c.y + off.y, c.z + hgt), (w, d, 0.2))
     loc, f, r, u = K.cam_basis(cam)
-    z = None
+    z = SHADE_ZONE.get(A['preset'])
     if z:
         fh = Vector((f.x, f.y, 0)); fh.normalize(); caster(Vector((loc.x, loc.y, 0)) + fh * z[0], z[1], z[2], z[3])
     for o in mb.finish(): o.visible_camera = False

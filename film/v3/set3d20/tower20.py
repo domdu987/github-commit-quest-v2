@@ -11,8 +11,8 @@ from kit20 import tw, th, Z1, Z2, Z3
 
 # ------------------------------------------------------------------ lights
 LIGHTS = dict(
-    DAY=dict(sky=['#f2c89a', '#eec4a4', '#cfc0cc', '#94aee8', '#6a8cdc', '#4c74d2', '#3a62c8'], sky_k=0.85, amb=('#5480FF', 2.5), key=(1.0, 0.84, 0.62, 8.5), key_dir=(0.30, 0.62, -0.46), sun_angle=1.0, exposure=-0.55, sat=1.08, lamp=0.12),
-    DUSK=dict(sky=['#f6a878', '#f0a07e', '#c890b4', '#8a78cc', '#5a52b8', '#3a3ca8', '#262c98'], sky_k=1.0, amb=('#2c32F0', 0.95), key=(1.0, 0.66, 0.4, 3.6), key_dir=(0.6, 0.55, -0.1), sun_angle=1.5, exposure=0.25, sat=1.1, lamp=1.0),
+    DAY=dict(sky=['#f2c89a', '#eec4a4', '#cfc0cc', '#94aee8', '#6a8cdc', '#4c74d2', '#3a62c8'], sky_k=0.85, amb=('#7088FF', 2.5), key=(1.0, 0.84, 0.62, 8.5), key_dir=(0.30, 0.62, -0.46), sun_angle=1.0, exposure=-0.55, sat=1.08, lamp=0.12),
+    DUSK=dict(sky=['#f6a878', '#f0a07e', '#c890b4', '#8a78cc', '#5a52b8', '#3a3ca8', '#262c98'], sky_k=1.0, amb=('#2a3cFF', 0.95), key=(1.0, 0.66, 0.4, 3.6), key_dir=(0.6, 0.55, -0.1), sun_angle=1.5, exposure=0.25, sat=1.1, lamp=1.0),
     NIGHT=dict(sky=['#4a3a78', '#3a3470', '#2a2c68', '#1e2260', '#161a54', '#10144a', '#0a0e3c'], sky_k=1.0, amb=('#3a44F8', 0.55), key=(0.55, 0.66, 1.0, 0.9), key_dir=(0.35, 0.55, -0.55), sun_angle=2.5, exposure=0.35, sat=1.1, lamp=1.35),
 )
 HUT = (-0.5, -203.0)               # hut centre (m)
@@ -25,15 +25,16 @@ CAMS_M = dict(
     tower_dusk=dict(loc=(-8.0, -232.0, 4.5), look=(0.0, 0.0, 4.5), lens=22, shift=0.345),
     tower_dusk_summit=dict(loc=(-8.0, -232.0, 4.5), look=(0.0, 0.0, 285.0), lens=22),
     tower_dusk_summit_end=dict(loc=(-8.0, -232.0, 4.5), look=(-3.0, -205.0, 4.5), lens=22, shift=0.22),
-    tower_hut=dict(loc=(HUT[0] + 0.5, HUT[1] - 1.5, 1.45), look=(HUT[0] - 0.2, HUT[1] + 1.4, 1.25), lens=22),
+    tower_hut=dict(loc=(HUT[0] + 0.5, HUT[1] - 1.5, 1.45), look=(HUT[0] + 0.5, HUT[1] + 1.4, 1.3), lens=22),
+    tower_dusk_chars=dict(loc=(-8.0, -224.0, 1.6), look=(-2.0, -190.0, 1.6), lens=22, shift=0.10),
     tower_night_wide=dict(loc=(-8.0, -236.0, 5.0), look=(0.0, 0.0, 5.0), lens=22, shift=0.345),
     tower_night_summit=dict(loc=(-6.0, -80.0, 250.0), look=(0.0, 0.0, 290.0), lens=22),
-    tower_window_pull=dict(loc=(0.0, -44.0, 60.4), look=(0.0, -34.0, 60.4), lens=22),
+    tower_window_pull=dict(loc=(0.0, -43.0, 60.4), look=(0.0, -34.0, 60.4), lens=22),
     tower_window_end=dict(loc=(-8.0, -236.0, 5.0), look=(0.0, 0.0, 5.0), lens=22, shift=0.345),
 )
 PRESETS = dict(tower_low=dict(light='DAY', year=1889), tower_fair=dict(light='DAY', year=1889), tower_dusk=dict(light='DUSK', year=1909), tower_dusk_summit=dict(light='DUSK', year=1909),
                tower_hut=dict(light='DUSK', year=1909), tower_night_wide=dict(light='NIGHT', year=1909), tower_window_pull=dict(light='DAY', year=1889))
-EXTRA_CAMS = ['tower_dusk_summit_end', 'tower_night_summit', 'tower_window_end']
+EXTRA_CAMS = ['tower_dusk_summit_end', 'tower_night_summit', 'tower_window_end', 'tower_dusk_chars']
 LIGHT_CHOICES = ['DAY', 'DUSK', 'NIGHT']
 def cam_D(c):
     d = dict(loc=W(c['loc']), look_at=W(c['look']), lens=c.get('lens', 22))
@@ -100,9 +101,10 @@ def build(preset, light=None):
     # ---- avenue: path, lamp posts, hedges, trees, benches, fountain-less lawns
     _avenue(M, night, rr)
     # ---- fair (1889 / 1910): pavilions, flags, bunting; crowd cards
-    STATE['fair'] = _fair(M, rr); STATE['crowd'] = _crowd(M, rr)
+    STATE['fair'], STATE['flags'] = _fair(M, rr); STATE['crowd'] = _crowd(M, rr); STATE['cards'] = _crowd_cards(M, preset)
     # ---- 1909: antenna wires, hut, wagon, scrap cart, demolition men props
     STATE['antenna'] = _antenna(M, P); STATE['hut'] = _hut(M, night); STATE['wagon'] = _wagon(M, night)
+    STATE['plane'] = _plane(M)
     _spark_gap(M); _rings(M); _wire_glow_setup(M)
     # ---- Paris backdrop
     mb = MB('city', R); Sy = (135.0, 175.0)
@@ -112,6 +114,13 @@ def build(preset, light=None):
     K.city_ring(mb, M, rnd(21), 0.0, 105.0, 900.0, [(-52, 52, -300, Sy[0] - 30)], 36.0, 520.0, wall='hwall')
     M['hwall'], M['hwallt'] = saved
     mb.finish()
+    if night:
+        mb = MB('citylights', R); ml = mat_emit('citylamp', '#ffcf80', 9.0); rl = rnd(55)
+        for i in range(520):
+            a_ = rl.uniform(0, 6.283); r_ = rl.uniform(120.0, 860.0); x, y = math.cos(a_) * r_, math.sin(a_) * r_ + 100.0
+            if abs(x) < 60 and y < 150: continue
+            mb.ell(ml, (x, y, rl.uniform(1.0, 14.0)), (1.1, 1.1, 1.1), (6, 4))
+        for o in mb.finish(shadow=False): o.visible_diffuse = False; o.visible_glossy = False
     # ---- lights: avenue lamps, tower gas lamps, hut etc.
     lights = STATE.pop('pt_lights', [])
     for yy in np.arange(-210.0, -60.0, 30.0):
@@ -134,35 +143,48 @@ def build(preset, light=None):
 # window position agreed with the interior builder (int20.RESTO_WINDOW_*): table top centre (0, -35.8, 58.65) m tower-local, glass plane y = -36.8, glass 5.2 x 3.9 m, gallery floor 57.9
 WIN_X = 0.0; WIN_YG = -36.8; WIN_W, WIN_H = 5.2, 3.9; WIN_FLOOR = 57.9
 def _window_gallery(M, A):
-    R = C.root(); a1 = tw(Z1) + th(Z1); ah = a1 + 2.0; ag = ah - 1.6; zf = WIN_FLOOR; zt = Z1 + 6.8; gal = M['galwall']; yg = WIN_YG
+    """first-floor gallery with the lit restaurant window: cream facade framed by riveted red-brown lattice girders (belts, posts, X braces, two diagonals crossing the glass), lit interior (cream walls, navy carpet, white cloths, blue chairs)"""
+    R = C.root(); a1 = tw(Z1) + th(Z1); ah = a1 + 2.0; ag = ah - 1.6; zf = WIN_FLOOR; zt = Z1 + 6.8; yg = WIN_YG; I = M['iron']; IL = M['ironlt']
+    cream = mat('facade_cream', '#e4d2a8', '#d6c294', 3, contrast=0.6)
     mb = MB('gallery', R)
-    # front bay: the facade stands on a small bracket deck so its outer face is the glass plane (-36.8); front wall 0.4 thick with the big window, three small windows beside it
-    mb.box(M['iron'], (0, yg + 0.55, Z1 - 0.2), (2 * ah, 1.3, 1.4))
-    wall_cut(mb, gal, 'y', yg + 0.2, -ag, ag, zf, zt, [(WIN_X - WIN_W / 2, WIN_X + WIN_W / 2, zf + 0.35, zf + 0.35 + WIN_H)], 0.4)
-    mb.box(gal, (0, ag - 0.2, (zf + zt) / 2), (2 * ag, 0.4, zt - zf))
-    for sx in (-1, 1): mb.box(gal, (sx * (ag - 0.2), 0, (zf + zt) / 2), (0.4, 2 * ag, zt - zf))
-    mb.box(M['iron'], (0, 0, zt + 0.3), (2 * ag + 1.6, 2 * ag + 1.6, 0.7))
-    # interior glimpse: floor, ceiling, back partition, side walls (warm), table + cloth + chairs, glasses, gas lamps
-    yb = yg + 4.2
-    mb.box(M['floor'], (WIN_X, (yg + yb) / 2, zf + 0.04), (14.0, yb - yg, 0.08)); mb.box(M['wallres'], (WIN_X, yb, (zf + zt) / 2), (14.0, 0.2, zt - zf))
-    mb.box(M['crimdk'], (WIN_X, (yg + yb) / 2, zt - 0.2), (14.0, yb - yg, 0.3))
+    mb.box(I, (0, yg + 0.55, Z1 - 0.2), (2 * ah, 1.3, 1.4))
+    wy = yg + 0.2; z0w = zf + 0.35; z1w = z0w + WIN_H
+    wall_cut(mb, cream, 'y', wy, -ag, ag, zf, zt, [(WIN_X - WIN_W / 2, WIN_X + WIN_W / 2, z0w, z1w)], 0.4)
+    mb.box(cream, (0, ag - 0.2, (zf + zt) / 2), (2 * ag, 0.4, zt - zf))
+    for sx in (-1, 1): mb.box(cream, (sx * (ag - 0.2), 0, (zf + zt) / 2), (0.4, 2 * ag, zt - zf))
+    mb.box(I, (0, 0, zt + 0.3), (2 * ag + 1.6, 2 * ag + 1.6, 0.7))
+    # lattice girders on the facade (outside, y = yg - 0.35): belt girders above / below, posts, X-braced panels each side of the window, two big diagonals across the glass
+    yl = yg - 0.35
+    mb.box(IL, (0, yl, zt - 0.35), (2 * ag, 0.5, 0.7)); mb.box(IL, (0, yl, zf + 0.25), (2 * ag, 0.5, 0.5)); mb.box(IL, (0, yl, z1w + 0.35), (WIN_W + 2.0, 0.5, 0.5)); mb.box(IL, (0, yl, z0w - 0.22), (WIN_W + 2.0, 0.5, 0.4))
+    for px in (-WIN_W / 2 - 0.5, WIN_W / 2 + 0.5): mb.box(I, (WIN_X + px, yl, (zf + zt) / 2), (0.45, 0.5, zt - zf))
+    for side in (-1, 1):
+        xa = WIN_X + side * (WIN_W / 2 + 0.8); xb = side * (ag - 1.0); zs_ = [zf + 0.5, zf + 2.0, zf + 3.5, zf + 5.0, zt - 0.6]
+        pa = (lambda z, xa=xa: Vector((xa, yl, z))); pb = (lambda z, xb=xb: Vector((xb, yl, z)))
+        for i in range(len(zs_) - 1):
+            a_, b_ = Vector((xa, yl, zs_[i])), Vector((xb, yl, zs_[i + 1])); c_, d_ = Vector((xb, yl, zs_[i])), Vector((xa, yl, zs_[i + 1]))
+            mb.rod(IL, a_, b_, 0.14, 0.14, 4); mb.rod(IL, c_, d_, 0.14, 0.14, 4)
+        for z in zs_: mb.rod(I, Vector((xa, yl, z)), Vector((xb, yl, z)), 0.16, 0.16, 4)
+    for sgn in (-1, 1): mb.rod(I, Vector((WIN_X - sgn * (WIN_W / 2), yg - 0.55, z0w)), Vector((WIN_X + sgn * (WIN_W / 2), yg - 0.55, z1w)), 0.12, 0.12, 4)
+    for sx in (-WIN_W / 2, 0.0, WIN_W / 2): mb.box(IL, (WIN_X + sx, wy - 0.25, (z0w + z1w) / 2), (0.1, 0.1, WIN_H))
+    # interior glimpse
+    yb = yg + 4.2; carpet = M['navy']
+    mb.box(carpet, (WIN_X, (yg + yb) / 2, zf + 0.06), (14.0, yb - yg, 0.12)); mb.box(M['cream'], (WIN_X, yb, (zf + zt) / 2), (14.0, 0.2, zt - zf))
+    mb.box(M['cream'], (WIN_X, (yg + yb) / 2, zt - 0.2), (14.0, yb - yg, 0.3))
     for sx in (-1, 1): mb.box(M['wallres'], (WIN_X + sx * 7.0, (yg + yb) / 2, (zf + zt) / 2), (0.2, yb - yg, zt - zf))
-    tx, ty = WIN_X, -35.8
-    mb.cyl(M['cloth'], (tx, ty, zf + 0.4), 0.62, 0.8, 'z', 16, False); mb.cyl(M['cloth'], (tx, ty, zf + 0.82), 0.66, 0.05, 'z', 16)
-    for k in range(4): a = k * 1.57 + 0.4; mb.cyl(M['glasswine'], (tx + math.cos(a) * 0.32, ty + math.sin(a) * 0.32, zf + 0.93), 0.04, 0.12, 'z', 8); mb.cyl(M['white'], (tx + math.cos(a + 0.8) * 0.4, ty + math.sin(a + 0.8) * 0.4, zf + 0.86), 0.12, 0.02, 'z', 10)
-    mb.ell(M['wineamb'], (tx, ty - 0.1, zf + 1.0), (0.06, 0.06, 0.12), (8, 6))
-    for (cx_, cy_) in ((tx - 1.3, ty - 0.2), (tx + 1.3, ty - 0.1), (tx, ty + 1.0)):
-        mb.box(M['bent'], (cx_, cy_, zf + 0.46), (0.45, 0.45, 0.06)); mb.box(M['bent'], (cx_, cy_ + 0.2, zf + 0.85), (0.45, 0.05, 0.75))
-        for dx in (-0.2, 0.2):
-            for dy in (-0.2, 0.2): mb.rod(M['bent'], (cx_ + dx, cy_ + dy, zf), (cx_ + dx, cy_ + dy, zf + 0.44), 0.025, 0.025, 4)
-    for dx in (-4.0, 0.0, 4.0):
-        mb.rod(M['gold'], (WIN_X + dx, yg + 1.6, zt - 0.4), (WIN_X + dx, yg + 1.6, zt - 0.9), 0.03, 0.03, 5); mb.ell(M['lamp'], (WIN_X + dx, yg + 1.6, zt - 1.1), (0.2, 0.2, 0.26), (10, 8))
-    yo = yg + 0.2
-    mb.box(M['ironlt'], (WIN_X, yo - 0.2, zf + 0.35 - 0.06), (WIN_W + 0.3, 0.1, 0.12)); mb.box(M['ironlt'], (WIN_X, yo - 0.2, zf + 0.35 + WIN_H + 0.06), (WIN_W + 0.3, 0.1, 0.12))
-    for sx in (-WIN_W / 2, 0.0, WIN_W / 2): mb.box(M['ironlt'], (WIN_X + sx, yo - 0.2, zf + 0.35 + WIN_H / 2), (0.1, 0.1, WIN_H))
-    mb.box(M['ironlt'], (WIN_X, yo - 0.2, zf + 0.35 + WIN_H * 0.62), (WIN_W, 0.08, 0.08))
+    for dx in (-4.2, 4.2): mb.box(M['crimson'], (WIN_X + dx, yb - 0.08, (zf + zt) / 2), (2.0, 0.08, 2.4))      # panels with gilt frames behind the diners
+    def table(tx, ty):
+        mb.cyl(M['cloth'], (tx, ty, zf + 0.4), 0.62, 0.8, 'z', 16, False); mb.cyl(M['cloth'], (tx, ty, zf + 0.82), 0.66, 0.06, 'z', 16)
+        for k in range(4): a = k * 1.57 + 0.4; mb.cyl(M['glasswine'], (tx + math.cos(a) * 0.32, ty + math.sin(a) * 0.32, zf + 0.96), 0.04, 0.14, 'z', 8); mb.cyl(M['white'], (tx + math.cos(a + 0.8) * 0.4, ty + math.sin(a + 0.8) * 0.4, zf + 0.88), 0.12, 0.05, 'z', 10)
+        mb.ell(M['wineamb'], (tx, ty - 0.1, zf + 1.0), (0.06, 0.06, 0.12), (8, 6))
+        for (cx_, cy_) in ((tx - 1.2, ty), (tx + 1.2, ty), (tx, ty + 1.0)):
+            mb.box(M['navy'], (cx_, cy_, zf + 0.46), (0.45, 0.45, 0.08)); mb.box(M['bent'], (cx_, cy_ + 0.2, zf + 0.85), (0.45, 0.07, 0.75))
+            for dx in (-0.2, 0.2):
+                for dy in (-0.2, 0.2): mb.rod(M['bent'], (cx_ + dx, cy_ + dy, zf), (cx_ + dx, cy_ + dy, zf + 0.44), 0.03, 0.03, 4)
+    table(WIN_X, -35.8); table(WIN_X - 4.6, -34.6); table(WIN_X + 4.6, -34.6)
+    for dx in (-4.4, 0.0, 4.4):
+        mb.rod(M['gold'], (WIN_X + dx, yg + 1.8, zt - 0.4), (WIN_X + dx, yg + 1.8, zt - 1.0), 0.04, 0.04, 5); mb.ell(M['lamp'], (WIN_X + dx, yg + 1.8, zt - 1.25), (0.3, 0.3, 0.38), (10, 8))
     STATE['window_room'] = mb.finish()
-    STATE['pt_lights'] = STATE.get('pt_lights', []) + [(Vector((WIN_X + dx, yg + 1.6, zt - 1.0)), (1.0, 0.7, 0.36), 700) for dx in (-4.0, 0.0, 4.0)]
+    STATE['pt_lights'] = STATE.get('pt_lights', []) + [(Vector((WIN_X + dx, yg + 1.8, zt - 1.4)), (1.0, 0.72, 0.4), 420) for dx in (-4.4, 0.0, 4.4)] + [(Vector((WIN_X, yg + 2.6, zf + 1.6)), (1.0, 0.8, 0.55), 160)]
     STATE['win_floor'] = zf; STATE['win_ag'] = 36.8
 
 # ------------------------------------------------------------------ avenue, trees, lamps
@@ -196,11 +218,12 @@ def _fair(M, rr):
         for sx in (-1, 1):
             K.pavilion(mb, M, (sx * 11.6, yy, 0), 6.0 + (i % 2), 3.6, 3.4 + (i % 3) * 0.4, -sx * math.pi / 2, (i + (sx > 0)) % 2)
             for j in range(3): K.keg(mb, M, (sx * (9.2 - 0.2 * j), yy - 1.4 + j * 1.0, 0), 0.8, 0.3, 'timberdk' if j % 2 else 'timber')
+    pav = mb.finish(); mb = MB('flags', R)
     for i in range(14):
         yy = -70.0 - i * 12.5; sx = -1 if i % 2 == 0 else 1; K.flag_pole(mb, M, (sx * 14.5, yy, 0), 9.0 + (i % 3), ('flag_r', 'flag_w', 'flag_b') if i % 2 else ('flag_b', 'flag_w', 'flag_r'), 1.0 if sx > 0 else -1.0, 1.1)
     for yy in np.arange(-210.0, -90.0, 30.0): K.bunting(mb, M, (-14.0, yy, 3.9), (-14.0, yy + 30.0, 3.9), 0.9, 12); K.bunting(mb, M, (16.0, yy, 3.9), (16.0, yy + 30.0, 3.9), 0.9, 12)
     K.flag_pole(mb, M, (0.0, 0.0, 300.0), 7.0, ('flag_b', 'flag_w', 'flag_r'), 1.0, 1.6)
-    return mb.finish()
+    return pav, mb.finish()
 
 # ------------------------------------------------------------------ crowd (flat standees), three density levels
 def _crowd(M, rr):
@@ -210,7 +233,7 @@ def _crowd(M, rr):
         for i in range(n):
             while True:
                 x = r2.uniform(-12.5, 12.5); y = r2.uniform(-150, -78) if r2.random() < 0.8 else r2.uniform(-210, -150)
-                if any(math.hypot(x - cx, y - cy) < 9.0 for cx, cy in ((-7.0, -120.0), (-6.0, -150.0))): continue   # nothing within 9 m of the start cameras
+                if any(math.hypot(x - cx, y - cy) < 32.0 for cx, cy in ((-7.0, -120.0), (-6.0, -150.0))): continue   # the flat standees only fill the far field; cast20 cards stand nearer
                 if abs(x) < 3.0 and -158 < y < -138: continue          # keep the hero marks clear
                 if abs(x) < 3.5 and -128 < y < -110: continue
                 break
@@ -238,19 +261,19 @@ def _antenna(M, P):
     return mb.finish(shadow=False)
 
 def _hut(M, night):
-    R = C.root(); hx, hy = HUT; mb = MB('hut', R); w, d, h = 5.2, 4.0, 3.0; t = 0.16; pl = M['plank']
+    R = C.root(); hx, hy = HUT; mb = MB('hut', R); w, d, h = 5.2, 4.0, 3.0; t = 0.16; pl = mat('hutplank', '#9a6a40', None, 4, wave=(15, '#6e4a2c'), contrast=1.0)
     # floor + walls (front -y with door + lit window; back +y with the open window to the tower; sides)
-    mb.box(M['timberdk'], (hx, hy, 0.08), (w, d, 0.16)); mb.box(M['plank'], (hx, hy, 0.17), (w - 0.2, d - 0.2, 0.04))
+    mb.box(M['timberdk'], (hx, hy, 0.08), (w, d, 0.16)); mb.box(pl, (hx, hy, 0.19), (w - 0.2, d - 0.2, 0.08))
     wall_cut(mb, pl, 'y', hy - d / 2, hx - w / 2, hx + w / 2, 0.0, h, [(hx - 1.7, hx - 0.8, 0.0, 2.1), (hx + 0.7, hx + 2.1, 1.0, 2.2)], t)
     wall_cut(mb, pl, 'y', hy + d / 2, hx - w / 2, hx + w / 2, 0.0, h, [(hx - 1.0, hx + 1.0, 1.0, 2.4)], t)
     wall_cut(mb, pl, 'x', hx - w / 2, hy - d / 2, hy + d / 2, 0.0, h, [], t); wall_cut(mb, pl, 'x', hx + w / 2, hy - d / 2, hy + d / 2, 0.0, h, [(hy - 0.5, hy + 0.7, 1.1, 2.1)], t)
     for i in range(int(w / 0.6)): mb.box(M['timberdk'], (hx - w / 2 + 0.3 + i * 0.6, hy - d / 2 - 0.1, h / 2), (0.07, 0.04, h))
     for i in range(int(w / 0.6)): mb.box(M['timberdk'], (hx - w / 2 + 0.3 + i * 0.6, hy + d / 2 + 0.1, h / 2), (0.07, 0.04, h))
     hh = h + 0.95
-    for sgn in (-1, 1): mb.quad(M['plank'], [(hx + sgn * w / 2, hy - d / 2, h), (hx + sgn * w / 2, hy, hh), (hx + sgn * w / 2, hy + d / 2, h)])
+    for sgn in (-1, 1): mb.quad(pl, [(hx + sgn * w / 2, hy - d / 2, h), (hx + sgn * w / 2, hy, hh), (hx + sgn * w / 2, hy + d / 2, h)])
     mb.quad(M['tarroof'], [(hx - w / 2 - 0.5, hy - d / 2 - 0.55, h - 0.05), (hx + w / 2 + 0.5, hy - d / 2 - 0.55, h - 0.05), (hx + w / 2 + 0.5, hy, hh + 0.05), (hx - w / 2 - 0.5, hy, hh + 0.05)][::-1])
     mb.quad(M['tarroof'], [(hx - w / 2 - 0.5, hy, hh + 0.05), (hx + w / 2 + 0.5, hy, hh + 0.05), (hx + w / 2 + 0.5, hy + d / 2 + 0.55, h - 0.05), (hx - w / 2 - 0.5, hy + d / 2 + 0.55, h - 0.05)][::-1])
-    mb.box(M['timberdk'], (hx, hy, h + 0.02), (w + 0.1, d + 0.1, 0.1))                                   # ceiling plate (inside view)
+    mb.box(pl, (hx, hy, h + 0.02), (w + 0.1, d + 0.1, 0.1))                                   # ceiling plate (inside view): planks, no noise
     mb.cyl(M['metal'], (hx + 1.6, hy + 0.5, h + 1.3), 0.14, 1.9, 'z', 8)                                  # stovepipe
     # door + lit window (front), lead-in insulator, lean-to with battery jars, sentry box, steps
     mb.box(M['dark'], (hx - 1.25, hy - d / 2 - 0.02, 1.05), (0.9, 0.08, 2.1)); mb.box(M['timberdk'], (hx - 1.25, hy - d / 2 - 0.08, 1.05), (0.1, 0.05, 2.1))
@@ -273,9 +296,9 @@ def _hut(M, night):
     mb.cyl(M['lamp'], (dx + 0.65, dy + 0.1, 0.99), 0.07, 0.15, 'z', 10); mb.cyl(M['brass'], (dx + 0.65, dy + 0.1, 0.86), 0.1, 0.04, 'z', 10)
     mb.box(M['white'], (dx + 0.15, dy - 0.05, 0.84), (0.34, 0.24, 0.01), rz=0.2)
     mb.box(M['bent'], (hx - 0.3, hy + 1.2, 0.5), (0.5, 0.5, 0.05)); mb.box(M['bent'], (hx - 0.3, hy + 1.45, 0.85), (0.5, 0.05, 0.7))
-    mb.box(M['timber'], (hx + 1.6, hy + 0.8, 0.85), (1.1, 0.6, 0.06)); 
-    for sx in (-0.5, 0.5): mb.box(M['timberdk'], (hx + 1.6 + sx, hy + 0.8, 0.42), (0.06, 0.5, 0.84))
-    mb.box(M['dark'], (hx + 1.3, hy + 0.8, 1.02), (0.45, 0.35, 0.25)); mb.cyl(M['brass'], (hx + 1.0, hy + 0.5, 0.98), 0.07, 0.12, 'z', 10)
+    mb.box(M['timber'], (hx + 1.1, hy + 0.5, 0.85), (1.5, 0.6, 0.08)); 
+    for sx in (-0.65, 0.65): mb.box(M['timberdk'], (hx + 1.1 + sx, hy + 0.5, 0.42), (0.08, 0.5, 0.84))
+    mb.box(M['dark'], (hx + 1.55, hy + 0.55, 1.05), (0.4, 0.3, 0.25)); mb.cyl(M['brass'], (hx + 0.55, hy + 0.5, 0.98), 0.06, 0.12, 'z', 10)
     mb.box(M['timber'], (hx + 1.0, hy + d / 2 - 0.45, 1.6), (1.6, 0.25, 0.05))
     for i in range(5): mb.cyl(M['glasswine'] if i % 2 else M['wineg'], (hx + 0.4 + i * 0.28, hy + d / 2 - 0.45, 1.75), 0.08, 0.25, 'z', 8)
     mb.cyl(M['soot'], (hx - 2.2, hy + 0.9, 0.5), 0.3, 1.0, 'z', 10); mb.cyl(M['soot'], (hx - 2.2, hy + 0.9, 2.2), 0.08, 2.2, 'z', 8)
@@ -319,7 +342,7 @@ def _spark_gap(M):
     mb.rod(bb, sg + Vector((-0.55, 0, -0.02)), sg + Vector((-0.2, 0, 0)), 0.022, 0.02, 8); mb.rod(bb, sg + Vector((0.55, 0, -0.02)), sg + Vector((0.2, 0, 0)), 0.022, 0.02, 8)
     mb.box(M['dark'], sg + Vector((0, 0.05, -0.2)), (1.3, 0.4, 0.06)); mb.cyl(M['glasswine'], sg + Vector((-0.45, 0.1, -0.1)), 0.05, 0.16, 'z', 8); mb.cyl(M['glasswine'], sg + Vector((0.45, 0.1, -0.1)), 0.05, 0.16, 'z', 8)
     mb.finish()
-    mb = MB('sg_dyn', R); mat_e = M['sparkc']
+    mb = MB('sg_dyn', R); mat_e = mat_emit('sparkc_h', '#e6f2ff', 35.0)
     p = sg + Vector((-0.07, 0, 0))
     for k in range(7):                                                  # jagged arc between the balls (thin, blue-white)
         q = Vector((sg.x - 0.07 + 0.14 * (k + 1) / 7.0, sg.y, sg.z + rr.uniform(-0.035, 0.035))); mb.rod(mat_e, p, q, 0.011, 0.01, 4); p = q
@@ -327,12 +350,12 @@ def _spark_gap(M):
         a = i * 1.6 + 0.4; p = sg + Vector((0, 0, 0)); L_ = 0.16
         for k in range(2): q = p + Vector((math.cos(a) * L_ / 2 + rr.uniform(-.03, .03), rr.uniform(-.04, .04), math.sin(a) * L_ / 2 + rr.uniform(-.02, .04))); mb.rod(mat_e, p, q, 0.008, 0.006, 4); p = q
     dyn = mb.finish(shadow=False)
-    hm = MB('sg_halo', R); hm.ell(M['sparkhalo'], sg, (0.15, 0.15, 0.15), (14, 10)); hm.ell(M['sparkhalo'], sg, (0.095, 0.095, 0.095), (12, 8)); dyn += hm.finish(shadow=False)
+    hm = MB('sg_halo', R); hm.ell(mat_glow('sparkhalo_s', '#9ac0ff', 2.4, 0.13), sg, (0.15, 0.15, 0.15), (14, 10)); hm.ell(mat_glow('sparkhalo_s2', '#9ac0ff', 2.4, 0.10), sg, (0.10, 0.10, 0.10), (12, 8)); dyn += hm.finish(shadow=False)
     STATE['sg_dyn'] = dyn
     l = bpy.data.lights.new('sg_light', 'POINT'); l.color = (0.55, 0.72, 1.0); l.energy = 0.0; l.shadow_soft_size = 0.1 * SC
     ob = bpy.data.objects.new('sg_light', l); bpy.context.scene.collection.objects.link(ob); ob.location = W(sg + Vector((0, -0.3, 0.1))); ob.visible_camera = False; STATE['sg_light'] = ob
     for o in dyn: o.hide_render = True
-SG_ENERGY = 2400.0
+SG_ENERGY = 110.0
 def spark_gap(on, frame=None):
     """spark gap on the hut bench: two brass balls + a thin jagged blue-white arc + a small halo (12-24 px at tower_hut) and a blue point light, only while on. Key it on every frame of the Morse taps."""
     for o in STATE['sg_dyn']: C.setv(o, bool(on), frame)
@@ -340,45 +363,71 @@ def spark_gap(on, frame=None):
     if frame is not None: l.keyframe_insert('energy', frame=frame)
 
 def _rings(M):
-    R = C.root(); rings = []; me = bpy.data.meshes.new('ring_m'); bm = bmesh.new(); n = 72; r_maj, r_min = 1.0, 0.014
+    """signal rings: thin glowing HORIZONTAL tori lying in the plane of the summit (they read as flattened ellipses spreading over the city), #9ac0ff"""
+    R = C.root(); rings = []; me = bpy.data.meshes.new('ring_m'); bm = bmesh.new(); n = 96; r_maj, r_min = 1.0, 0.007
     for i in range(n):
-        a0 = 2 * math.pi * i / n; a1 = 2 * math.pi * (i + 1) / n
-        th_ = (a0 + a1) / 2
-        bmesh.ops.create_cone(bm, cap_ends=True, segments=6, radius1=r_min, radius2=r_min, depth=2 * math.pi * r_maj / n * 1.05, matrix=Matrix.Translation((math.cos(th_) * r_maj, 0, math.sin(th_) * r_maj)) @ Matrix.Rotation(-th_, 4, 'Y'))
+        th_ = 2 * math.pi * (i + 0.5) / n
+        bmesh.ops.create_cone(bm, cap_ends=True, segments=6, radius1=r_min, radius2=r_min, depth=2 * math.pi * r_maj / n * 1.08, matrix=Matrix.Translation((math.cos(th_) * r_maj, math.sin(th_) * r_maj, 0)) @ Matrix.Rotation(th_, 4, 'Z') @ Matrix.Rotation(-math.pi / 2, 4, 'X'))
     bm.to_mesh(me); bm.free()
     for i in range(6):
         m = bpy.data.materials.new('ringm%d' % i); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); out = nt.nodes.new('ShaderNodeOutputMaterial'); em = nt.nodes.new('ShaderNodeEmission'); em.name = 'em'
-        em.inputs['Color'].default_value = C.hexc('#bfe2ff'); em.inputs['Strength'].default_value = 0.0; nt.links.new(em.outputs[0], out.inputs['Surface'])
-        ob = bpy.data.objects.new('ring_%d' % i, me); ob.data.materials.append(m) if i == 0 else None
-        if i > 0:
-            ob.data = me.copy(); ob.data.materials.clear(); ob.data.materials.append(m)
+        em.inputs['Color'].default_value = C.hexc('#9ac0ff'); em.inputs['Strength'].default_value = 0.0; nt.links.new(em.outputs[0], out.inputs['Surface'])
+        ob = bpy.data.objects.new('ring_%d' % i, me.copy()); ob.data.materials.clear(); ob.data.materials.append(m)
         bpy.context.scene.collection.objects.link(ob); ob.parent = R; ob.visible_shadow = False; ob.visible_diffuse = False; ob.visible_glossy = False; ob.hide_render = True; ob.location = (0, 0, 300.0); rings.append(ob)
     STATE['rings'] = rings
 def signal_rings(t, frame=None):
-    """glowing blue-white rings expanding from the summit (billboard circles facing the camera along y): t 0..1 phase of the burst (6 rings, staggered 0.1); t < 0 hides them. Key every frame."""
+    """radio rings spreading from the summit: horizontal glowing ellipses in the plane z = 300 m, radius 12 -> 820 m (reach the city lights), fading with radius, 3-4 visible at once: t 0..1 phase of the burst (6 rings staggered 0.11); t < 0 hides them. Key every frame."""
     for i, ob in enumerate(STATE['rings']):
-        age = (t - i * 0.1) / 0.7 if t >= 0 else -1.0; on = 0.0 < age < 1.0
-        rad = 12.0 + (age if on else 0.0) * 650.0; k = 28.0 * (1.0 - (age if on else 0.0)) ** 1.5 if on else 0.0
+        age = (t - i * 0.11) / 0.62 if t >= 0 else -1.0; on = 0.0 < age < 1.0
+        rad = 12.0 + (age if on else 0.0) * 810.0; k = 5.0 * (1.0 - (age if on else 0.0)) ** 1.4 if on else 0.0
         ob.scale = (rad, rad, rad); C.setv(ob, on, frame); C.keysock(ob.active_material.node_tree.nodes['em'].inputs['Strength'], k, frame)
         if frame is not None: C.key(ob, 'scale', frame)
 
 def _wire_glow_setup(M): pass
 def wire_glow(v, frame=None):
     """the lattice glows blue-white along the wire: v 0..1 (emission of the tower iron + the wires). Key every frame."""
-    for m in STATE['glow_mats']: C.keysock(m.node_tree.nodes['Principled BSDF'].inputs['Emission Strength'], 0.9 * v, frame)
-    wm = STATE['M']['wirep']; C.keysock(wm.node_tree.nodes['Principled BSDF'].inputs['Emission Strength'], 0.2 + 3.0 * v, frame)
+    for m in STATE['glow_mats']: C.keysock(m.node_tree.nodes['Principled BSDF'].inputs['Emission Strength'], 0.10 * v, frame)      # the lattice keeps its red: only a faint blue-white rim tint
+    wm = STATE['M']['wirep']; C.keysock(wm.node_tree.nodes['Principled BSDF'].inputs['Emission Strength'], 0.2 + 1.4 * v, frame)       # the wires carry the glow (<= 3)
 
 # ------------------------------------------------------------------ state hooks
 def set_year(y, frame=None):
-    """1889 fair (pavilions, flags, bunting on; no antenna / hut / wagon); 1909 (antenna, hut, wagon on, fair off); 1910 (fair on, antenna + hut stay, wagon off)"""
+    """1889 fair (pavilions, kiosks, flags, bunting on; no antenna / hut / wagon); 1909 (antenna, hut, wagon on, fair + flags off); 1910 (pavilions and kiosks gone, flags stay, antenna wires + hut on the avenue, wagon off)"""
     STATE['year'] = y
-    C.show(STATE['fair'], y in (1889, 1910), frame); set_antenna(y in (1909, 1910), frame); set_wagon(y == 1909, frame)
+    C.show(STATE['plane'], y == 1910, frame); C.show(STATE['fair'], y == 1889, frame); C.show(STATE['flags'], y in (1889, 1910), frame); set_antenna(y in (1909, 1910), frame); set_wagon(y == 1909, frame)
 def set_antenna(on, frame=None):
     C.show(STATE['antenna'], bool(on), frame); C.show(STATE['hut'], bool(on), frame)
 def set_wagon(on, frame=None): C.show(STATE['wagon'], bool(on), frame)
+def _plane(M):
+    """1910 biplane (cream canvas wings, timber struts, engine, tail) flying over the fair: only in year 1910"""
+    R = C.root(); mb = MB('plane', R); cx, cy, cz = 26.0, -112.0, 48.0; cv = M['canvasw']; yaw = -0.5
+    mb.push(Matrix.Translation((cx, cy, cz)) @ Euler((0, 0.08, yaw)).to_matrix().to_4x4() @ Matrix.Scale(1.3, 4))
+    for zz in (0.0, 1.3): mb.box(cv, (0, 0, zz), (9.0, 1.5, 0.16)); 
+    for sx in (-3.5, -1.2, 1.2, 3.5): mb.rod(M['timber'], (sx, 0.3, 0.0), (sx, 0.3, 1.3), 0.05, 0.05, 4); mb.rod(M['timberdk'], (sx, -0.3, 0.0), (sx, -0.3, 1.3), 0.05, 0.05, 4)
+    mb.box(M['timber'], (0, 0.0, 0.65), (0.9, 6.0, 0.8)); mb.box(M['metal'], (0, -3.2, 0.65), (0.9, 0.5, 0.9)); mb.cyl(M['dark'], (0, -3.6, 0.65), 0.07, 0.06, 'y'); mb.box(M['dark'], (0, -3.8, 0.65), (0.1, 0.06, 2.2))
+    mb.box(cv, (0, 3.0, 0.9), (3.4, 0.9, 0.1)); mb.box(cv, (0, 3.2, 1.6), (0.1, 0.9, 1.4))
+    for sx in (-1.0, 1.0): mb.rod(M['dark'], (sx, -1.0, 0.3), (sx, -1.2, -0.9), 0.05, 0.05, 4); mb.cyl(M['dark'], (sx, -1.2, -0.95), 0.3, 0.1, 'x', 10)
+    mb.pop(); return mb.finish()
+
+def _crowd_cards(M, preset):
+    """15-25 cast20 crowd cards (lady / gent / child / artists with hats and parasols as drawn by the cast) in the midground of tower_fair (and a few behind Maupassant at tower_low): list of 3 level groups (8 / 16 / 24 cumulative)"""
+    if preset not in ('tower_fair', 'tower_low'): return [[], [], []]
+    cam = CAMS_M[preset]; cx, cy = cam['loc'][0], cam['loc'][1]; rr = rnd(31); roles = ['lady20', 'gent20', 'child20', 'painter20', 'gent20', 'lady20', 'composer20', 'architect20', 'poet20', 'lady20']
+    keep = [(-4.4, -143.8), (-2.6, -139.6), (-9.0, -137.0), (-0.6, -136.0), (-7.4, -141.0), (-6.8, -116.5)]; pts = []
+    n = 0
+    while len(pts) < 24 and n < 500:
+        n += 1; f = rr.uniform(9.0, 30.0) if preset == 'tower_fair' else rr.uniform(14.0, 34.0); r_ = rr.uniform(-0.42, 0.42) * f; x = cx + r_; y = cy + f
+        if any(math.hypot(x - kx, y - ky) < 2.4 for kx, ky in keep) or any(math.hypot(x - px, y - py) < 1.9 for px, py in pts): continue
+        pts.append((x, y))
+    cards = []
+    for i, (x, y) in enumerate(pts):
+        role = roles[i % len(roles)]; ob = C.placeholder_actor(role, (x * SC, y * SC, 0.0), face_to=W((cx + rr.uniform(-6, 6), cy, 1.6)), name='crowd_%d' % i, pose=dict(yaw=rr.choice([-0.6, -0.3, 0.3, 0.6]), expr=rr.choice(['neutral', 'smile' if False else 'neutral'])))
+        cards.append(ob)
+    return [cards[:8], cards[8:16], cards[16:24]]
+
 def set_crowd(level, frame=None):
-    """crowd level 0..3 (0 none, 1 ~40 standees, 2 ~95, 3 ~165)"""
+    """crowd level 0..3 (0 none; 1 = 8 cast20 cards + ~60 far standees; 2 = 16 cards + 130; 3 = 24 cards + 220)"""
     for i, g in enumerate(STATE['crowd']): C.show(g, i < level, frame)
+    for i, g in enumerate(STATE.get('cards', [])): C.show(g, i < level, frame)
 def apply_light(name, frame=None):
     P = dict(LIGHTS[name]); C.apply_P(P, frame); STATE['light'] = name; return P
 def set_light_mix(a, b, k, frame=None):
@@ -388,7 +437,7 @@ def set_light_mix(a, b, k, frame=None):
 def _marks(A):
     m = A['marks']; hx, hy = HUT; zf = STATE.get('win_floor', Z1 + 0.85); ag = STATE.get('win_ag', 34.7)
     m.update(maupassant_low=_m(-6.8, -116.5), eiffel_fair=_m(-4.4, -143.8), official_fair=_m(-2.6, -139.6), lady_fair=_m(-9.0, -137.0), gent_fair=_m(-0.6, -136.0), child_fair=_m(-7.4, -141.0),
-             eiffel_old=_m(-3.2, -213.0), officer=_m(0.4, -212.4), demo_a=_m(-10.4, -213.4), demo_b=_m(-8.6, -211.4), demo_c=_m(-16.6, -205.6), wagon=_m(-13.0, -209.0), scrap_cart=_m(-24.0, -214.0),
+             eiffel_old=_m(-3.2, -213.0), officer=_m(0.4, -212.4), demo_a=_m(-10.4, -213.4), demo_b=_m(-8.6, -211.4), demo_c=_m(-12.6, -211.6), wagon=_m(-13.0, -209.0), scrap_cart=_m(-24.0, -214.0),
              telegraphist=_m(hx - 0.35, hy + 1.3), sentry=_m(hx - 3.2, hy - 2.7), hut_door=_m(hx - 1.25, hy - 2.6), spark_gap=_m(hx + 1.0, hy + 0.45, 1.1), antenna_post=_m(POST[0], POST[1], 6.2), summit=_m(0, 0, 301),
              maupassant_window=_m(WIN_X, -34.9, zf), window_centre=_m(WIN_X, WIN_YG, zf + 0.35 + WIN_H / 2))
     A['marks_m'] = {k: tuple(v / SC for v in vv) for k, vv in m.items()}
@@ -401,7 +450,7 @@ def _staging(A):
     S['tower_hut'] = [('telegraphist', 'telegraphist', dict(pose=dict(expr='focused' if False else 'neutral')))]
     S['tower_night_wide'] = []
     S['tower_window_pull'] = [('maupassant', 'maupassant_window', dict(pose=dict(expr='blissful', napkin=1)))]
-    S['tower_dusk_summit_end'] = S['tower_dusk']
+    S['tower_dusk_summit_end'] = S['tower_dusk']; S['tower_dusk_chars'] = S['tower_dusk']
 FG_ITEMS = dict(
     tower_low=[('lamppost', -0.46, 0.0, 1.2), ('bench', 1.1, -0.28, 2.0, 1.57)],
     tower_fair=[('lamppost', -0.46, 0.0, 1.2), ('bench', 1.0, -0.26, 2.0, 1.57)],

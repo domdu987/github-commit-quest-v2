@@ -34,6 +34,7 @@ TILES = [   # name, preset, light, hooks, label, camera (None = preset camera), 
     ('T11_tower_night_summit', 'tower_night_wide', 'NIGHT', 'S.signal_rings(0.2); S.wire_glow(0.5)', 'tower_night_summit / NIGHT (whip pull-out start)', 'tower_night_summit', ""),
     ('T12_tower_window_pull', 'tower_window_pull', 'DAY', '', 'tower_window_pull / DAY 1889 (start at the lit window)', None, ""),
     ('T13_tower_window_end', 'tower_window_pull', 'DAY', '', 'tower_window_end / DAY 1889 (crash pull-out end)', 'tower_window_end', ""),
+    ('T14_tower_dusk_chars', 'tower_dusk', 'DUSK', '', 'tower_dusk_chars / DUSK 1909 (shot 18 staging camera)', 'tower_dusk_chars', ""),
 ]
 def interior_tiles():
     try:
