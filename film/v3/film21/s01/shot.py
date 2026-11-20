@@ -70,6 +70,7 @@ def zoom_path(g):
     p = (1 - u) ** 2 * S_CAM + 2 * u * (1 - u) * M_CAM + u * u * E_CAM
     if u > 0.85:
         tt = (1 - u) / 0.15; f = tt * tt * (3 - 2 * tt); p[2] = E_CAM[2] + (p[2] - E_CAM[2]) * f * 0.6 + (p[2] - E_CAM[2]) * 0.4 * tt * tt * tt
+    gz = float(K.ground(p[0], p[1])); p[2] = max(p[2], gz + lerp(1.55, 5.0, clamp((1 - u) / 0.12)))      # never inside the hill
     w = clamp((u - 0.05) / 0.78); w = w * w * (3 - 2 * w)
     d = (1 - w) * S_DIR + w * E_DIR; d /= np.linalg.norm(d)
     right = np.array([d[1], -d[0], 0.0]); right /= np.linalg.norm(right)
@@ -133,7 +134,7 @@ def add_bigzoom_preset():
     pr.pop("scots_line", None)
     veg = dict(HE["veg"]); veg["seed"] = 11
     pr.update(cam=tuple(E_CAM), look=tuple(E_CAM + E_DIR * 60.0), lens=22.0, sd=12.0, veg=veg, dress_min=6.0, hill2=True,
-              heather_n=900, gorse_n=420, crag_n=140, pine_n=90, troops=dict(bridge=14, meadow=60, causeway=10))
+              clear_hill=(143.0, 137.0, 8.0), heather_n=900, gorse_n=420, crag_n=140, pine_n=90, troops=dict(bridge=14, meadow=60, causeway=10))
     K.PRESETS["bigzoom"] = pr
 
 
@@ -144,6 +145,9 @@ class Take(C.Take):
             add_bigzoom_preset(); pn = "bigzoom"
             def extra(A):
                 rs = np.random.RandomState(3)
+                v2 = dict(HE["veg"]); v2.update(seed=12, half=16, heather=[(1.5, 8, 700, 0.09, 0.15), (8, 22, 900, 0.12, 0.22), (22, 60, 900, 0.2, 0.4)], gorse=[(3, 16, 22), (16, 40, 24)], sprig_to=24, grass=[(1.5, 14, 500, 0.1, 0.17)])
+                K.veg_near(A, dict(cam=(176.0, 148.0, 0.0), look=(136.0, 135.0, 0.0), veg=v2))
+                K.veg_near(A, dict(cam=(158.0, 142.0, 0.0), look=(134.0, 134.0, 0.0), veg=dict(v2, seed=13)))
                 K.scots_slope_line(14, 3, 1.0, rs, spear_h=4.0, a0=188.0, a1=214.0); K.scots_slope_line(14, 3, 1.0, rs, spear_h=4.0, a0=236.0, a1=258.0)
         else:
             pn = "hill_eye"; hide = ("fg_generic_steel", "fg_generic_wood", "fg_generic_r_")
