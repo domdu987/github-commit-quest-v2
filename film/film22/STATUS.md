@@ -14,5 +14,5 @@ Fallback check: send_later 60 min, always re-armed.
 - [x] SET gate: QA-art PASS (SET_GATE.md, 27 team items); QA-tech FAIL r1 -> builders' SET-fix round -> QA-tech PASS r2 (QA_TECH.md); no overrides
 - [x] WORKER22.md drafted (5 teams)
 - [ ] Set + cast -> SET gate (QA-art + QA-tech)
-- [ ] shot_plan.md (≤12 hard cuts, 2 BIGZOOM), WORKER22.md, render teams (Sonnet, render22/teamK)
+- [x] shot_plan.md, WORKER22.md, TEAMS.md; render teams launched 23:59 UTC (see TEAMS.md)
 - [ ] TAKE gates, conform22, FINAL gate (4 reviewers + film 2 side-by-side + ref sheets), release22, queue WAIT
