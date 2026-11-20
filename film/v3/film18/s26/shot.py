@@ -75,7 +75,7 @@ def cam_bigzoom(T, g, t):
 
 T = c18.Take('s26', FIRST, LAST, draft=(mode == 'draft'), cam_fn=cam_bigzoom)
 c18.fix_sky_clean(T, 'sky_DAWN', flat_above=0.6)
-for _n in ('wallpools', 'cityglow', 'tw_glow', 'posts'):        # translucent glow quads on the city wall rendered as pale rectangles (TAKE gate 16)
+for _n in ('wallpools', 'cityglow', 'tw_glow', 'posts', 'halos'):        # translucent glow quads on the city wall rendered as pale rectangles (TAKE gate 16)
     if _n in STATE['objects']:
         STATE['objects'][_n].hide_render = True
 import bpy
