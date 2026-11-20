@@ -290,8 +290,11 @@ def decode_small(w, h, vfx):
 def sheet(frames, times, cols, path, w, h):
     rows = (len(frames) + cols - 1) // cols; S = Image.new("RGB", (cols * w, rows * (h + 14)), (20, 20, 20)); d = ImageDraw.Draw(S)
     for k, (f, tt) in enumerate(zip(frames, times)):
-        x, y = (k % cols) * w, (k // cols) * (h + 14); S.paste(Image.fromarray(f), (x, y)); d.text((x + 3, y + h), f"{tt:.0f}s", fill=(235, 235, 235))
+        x, y = (k % cols) * w, (k // cols) * (h + 14); S.paste(Image.fromarray(f), (x, y)); d.text((x + 3, y + h), f"{tt:.1f}s", fill=(235, 235, 235))
     S.save(path, quality=86)
-f1 = decode_small(160, 284, "fps=1"); sheet(f1, range(len(f1)), 9, REL + f"/sheet_1fps_{TAG}.jpg", 160, 284)
-fp = decode_small(360, 640, "fps=1/3"); sheet(fp, [3 * i for i in range(len(fp))], 6, REL + f"/sheet_phone_360x640_{TAG}.jpg", 360, 640)
+# exact frame picks (select on frame number, so labels are true times: frame n = n/30 s)
+f1 = decode_small(160, 284, "select='not(mod(n\\,30))',setpts=N/30/TB"); sheet(f1, [float(i) for i in range(len(f1))], 9, REL + f"/sheet_1fps_{TAG}.jpg", 160, 284)
+# phone sheet: 360x640 tiles every 0.5 s (QA_TEAM §G2), four pages of 18 s
+fp = decode_small(360, 640, "select='not(mod(n\\,15))',setpts=N/30/TB"); tp = [0.5 * i for i in range(len(fp))]
+for k in range(0, len(fp), 36): sheet(fp[k:k + 36], tp[k:k + 36], 9, REL + f"/sheet_phone_360x640_{TAG}_p{k // 36 + 1}.jpg", 360, 640)
 log("sheets written;", OUT)
