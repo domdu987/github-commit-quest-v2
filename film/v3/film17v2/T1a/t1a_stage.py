@@ -87,12 +87,15 @@ def clear_cast():
 
 # ---- white-out / flat-colour fixes (camera path untouched): per frame, drop the faces of the one mesh the lens is inside of, within R of the camera
 #   ext_glow_win g55-64 (lit roof-window quad at 0.13 m), ext_stone g57-64 (roof block wall at 0.14 m), measure_glow_gas g145-165 (gasolier glow at 0.07 m)
-CULL = {'ext_glow_win': (55, 64, 3.0), 'measure_glow_gas': (145, 165, 1.6)}
+CULL = {'measure_glow_gas': (145, 165, 1.6)}
 _ST = {}
 CLIP = {g: 1.2 for g in range(58, 62)}   # camera grazes a roof-block wall at 0.14 m in g59-61: clip it
 def fix_whiteouts(g, cam):
     import bmesh
     cam.data.clip_start = CLIP.get(g, 0.05)
+    for nm, (a, b) in (('measure_beam_fx', (76, 171)), ('ext_glow_win', (60, 61))):   # director: beam fx off for all interior frames; window glow off on g60-61 only
+        o_ = bpy.data.objects.get(nm)
+        if o_ is not None: o_.hide_render = a <= g <= b
     cp = cam.matrix_world.translation
     for name, (g0, g1, R) in CULL.items():
         ob = bpy.data.objects.get(name)
