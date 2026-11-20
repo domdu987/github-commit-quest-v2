@@ -1,0 +1,27 @@
+[
+ {
+  "g": 298,
+  "kind": "sfx",
+  "label": "camp ambience, hooves, banners"
+ },
+ {
+  "g": 310,
+  "kind": "sfx",
+  "label": "crane-up whoosh over the pavilions"
+ },
+ {
+  "g": 350,
+  "kind": "sfx",
+  "label": "river glitter, water ambience as the camera crosses"
+ },
+ {
+  "g": 395,
+  "kind": "sfx",
+  "label": "wind rising as the camera climbs Abbey Craig"
+ },
+ {
+  "g": 410,
+  "kind": "sfx",
+  "label": "spears shifting on the ground, soft wood clack"
+ }
+]
