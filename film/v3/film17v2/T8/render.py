@@ -79,11 +79,12 @@ def _ramp(g, a, b): return (g - a) / float(b - a)
 I_c, I_p = S['inspector_seated_stiff']
 S['insp_red_seated'] = (I_c, dict(I_p, expr='furious', mouth='clench', flush17=1.0, fx=['sweat'], seat17='chair', pitch=0.0, yaw=0.10, gaze=(-0.8, 0.0)))   # red-faced, sitting stiff
 B_c, B_p = S['bertillon_measuring']
+BDX0 = float(os.environ.get('BDX0', -1.25)); BHS = float(os.environ.get('BHS', 0.8))
 BDXE = float(os.environ.get('BDXE', -1.1))
 def bnudge(g):
     """Bertillon's offset from his anchor ML(1.3,1.85): beside the chair on the inspector's right (screen-left), nearer the camera than the head so the jaws draw in front;
     he steps toward the chair for the clamp (g2012-2040) so the glove stays in frame as the camera pushes in."""
-    return (-1.49 + (BDXE + 1.49) * _ss(_ramp(g, 2012, 2040)), -0.10)     # dx, dy (m): Bertillon stands beside the chair (not in front of the inspector's face), same depth as the chair
+    return (BDX0 + (BDXE - BDX0) * _ss(_ramp(g, 2012, 2040)), -0.10)     # dx, dy (m): Bertillon stands beside the chair (not in front of the inspector's face), same depth as the chair
 EAR_X = 0.52; EAR_ANG = -30
 
 
@@ -103,7 +104,7 @@ def assign_for(g):
     cl = 'gendarme_laughing_a'; clb = 'gendarme_laughing_b'
     grin = lambda nm, base: (nm, {})
     t = _ss(_ramp(g, 1985, 2006)); gn = {'dx': 1.0 * t, 'dy': 2.0 * t}     # the OTS gendarme steps aside as the camera passes (his head would leave the top edge)
-    a = {'inspector': ('insp_red_seated', {'seated': 'chair', 'dy': -0.14}), 'bertillon': (_bert_story(g), {'dx': bnudge(g)[0], 'dy': bnudge(g)[1]}),
+    a = {'inspector': ('insp_red_seated', {'seated': 'chair', 'dy': -0.14}), 'bertillon': (_bert_story(g), {'dx': bnudge(g)[0], 'dy': bnudge(g)[1], 'H': P.K.CAST_H['bertillon'] * (1 - (1 - BHS) * _ss(_ramp(g, 2012, 2040)))}),
          'gend_a': (cl, gn), 'gend_b': (clb, {}), 'crowd2': (cl, {}),
          'crowd1': ('prisoner_standing_a', {'expr': 'laugh'}), 'crowd3': ('prisoner_standing_c', {'expr': 'laugh'}), 'prefect': ('prefect_neutral', {})}
     return a
@@ -128,13 +129,25 @@ def clean():
 def ear_target(g):
     """jaw-target in Bertillon's puppet-local D: the inspector's (screen-right) ear relative to Bertillon's head, from the cast geometry."""
     ct = {c['name']: c for c in P.TAKES[TAKE]['cast']}; pi = P.cast_pos(ct['inspector'], g); pb = P.cast_pos(ct['bertillon'], g)
-    sb = P.K.CAST_H['bertillon'] / P.K.CAST_HD['bertillon']; si = P.K.CAST_H['inspector17'] / P.K.CAST_HD['inspector17']
+    hs = 1 - (1 - BHS) * _ss(_ramp(g, 2012, 2040)); sb = P.K.CAST_H['bertillon'] * hs / P.K.CAST_HD['bertillon']; si = P.K.CAST_H['inspector17'] / P.K.CAST_HD['inspector17']
     dx = (pi[0] - (pb[0] + bnudge(g)[0]) - EAR_X * si) / sb          # world +x is screen right here (camera looks +y); the ear is 0.5 D left of the inspector's head
-    zi = P.FZ + P.K.HEAD_Z['chair'] + 0.10 * si; zb = P.FZ + P.K.CAST_H['bertillon'] - 0.51 * sb - 0.0   # head centre height of Bertillon (head top 0.51 D above the head centre)
+    zi = P.FZ + P.K.HEAD_Z['chair'] + 0.10 * si; zb = P.FZ + P.K.CAST_H['bertillon'] * hs - 0.51 * sb - 0.0   # head centre height of Bertillon (head top 0.51 D above the head centre)
     return (dx + (float(os.environ.get('TX', 0.27)) + float(os.environ.get('TX2', 0.22)) * _ss(_ramp(g, 2024, 2052))), (zb - zi) / sb + float(os.environ.get('TY', 0.18)))       # +(-0.08, +0.18) D: measured on the g2052 still (jaws onto the ear, not above it)
 
+_orig_sc = P.K.sliding_calipers
+def _sc(B, c, *a, **k):          # director: the thin light stick by the small table = calipers lying on it; hidden for T8
+    if tuple(round(v, 3) for v in c) == (-0.02, -0.05, 0.808): return
+    return _orig_sc(B, c, *a, **k)
+P.K.sliding_calipers = _sc
+_orig_ink = P.K.inkpot
+def _ink(B, c, *a, **k):          # its quill reads as a thin light stick at the right edge: skipped on the small calipers table
+    if tuple(round(v, 3) for v in c) == (-0.3, 0.15, 0.808): return
+    return _orig_ink(B, c, *a, **k)
+P.K.inkpot = _ink
 def setup(still_g=None):
     A = P.world_build(TAKE); P.key_take(TAKE); P.setup_render2((720, 1280), samples=16, threads=2)
+    for o in bpy.data.objects:
+        if 'beam' in o.name: o.hide_render = True; o.visible_camera = False; o.visible_shadow = False; print('hidden shaft', o.name)
     return A
 
 def do_frame(g, out, sprite_dir):
