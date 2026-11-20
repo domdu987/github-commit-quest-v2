@@ -67,7 +67,7 @@ FG_ITEMS = dict(
 
 # ------------------------------------------------------------------ layout (metres)
 # the site: yard between the four legs, fence line y -100, left / right sheds, derricks with the work gantry, Paris behind (Seine y 205-245)
-SEINE = (205.0, 245.0, 40.0)
+SEINE = (195.0, 265.0, 40.0)
 def _band(cam_m):
     c = Vector(cam_m['loc'])
     def f(p, bands):
@@ -276,7 +276,7 @@ def build(preset, light=None):
     mbn.rod(M['white'], (tx2 + 2.4, ty2 - 1.6, 0.0), (tx2 + 2.4, ty2 - 1.6, 15.0), 0.1, 0.07, 6)
     for i_, cm_ in enumerate(('flag_b', 'flag_w', 'flag_r')): mbn.quad(M[cm_], [(tx2 + 2.4 + i_ * 1.4, ty2 - 1.6, 14.8), (tx2 + 3.8 + i_ * 1.4, ty2 - 1.6, 14.8), (tx2 + 3.8 + i_ * 1.4, ty2 - 1.6, 11.6), (tx2 + 2.4 + i_ * 1.4, ty2 - 1.6, 11.6)]); mbn.quad(M[cm_], [(tx2 + 2.4 + i_ * 1.4, ty2 - 1.6, 11.6), (tx2 + 3.8 + i_ * 1.4, ty2 - 1.6, 11.6), (tx2 + 3.8 + i_ * 1.4, ty2 - 1.6, 14.8), (tx2 + 2.4 + i_ * 1.4, ty2 - 1.6, 14.8)])
     if preset.startswith('site_bigzoom'):
-        gm = MB('beacon', R); gm.ell(C.mat_glow('beacon_g', '#ffc878', 3.0, 0.28), (tx_ + 1.0, ty_ - 0.3, 1.4), (4.0, 4.0, 4.0), (14, 10)); gm.finish(shadow=False)
+        gm = MB('beacon', R); gm.ell(C.mat_glow('beacon_g', '#ffc878', 3.0, 0.30), (tx_ + 1.0, ty_ + 0.5, 4.5), (2.6, 2.6, 2.6), (14, 10)); STATE['beacon'] = gm.finish(shadow=False)
     mbn.quad(M['flag_r'], [(tx2, ty2, 5.9), (tx2 + 1.2, ty2, 5.6), (tx2, ty2, 5.2)]); mbn.quad(M['flag_r'], [(tx2, ty2, 5.2), (tx2 + 1.2, ty2, 5.6), (tx2, ty2, 5.9)])
     # shot 5: cantilever work platforms on the OUTER (sunlit) -y face of the front-left leg, with rails and braces: riveters stand on them
     for (zz_, dx_) in zip(LEG_ZS, LEG_DX):
@@ -351,8 +351,8 @@ def build(preset, light=None):
     mbn.finish()
     # ---- Paris: Seine, bridge, Trocadero, Haussmann ring, side blocks (static)
     mb = MB('city', R); Sy = SEINE
-    M['water'] = mat('water_s', '#3f7cc4', '#6aa0dc', 0.12, rough=0.7, emit='#3a68b0', emit_k=0.45, contrast=0.8)
-    K.seine(mb, M, 0.0, Sy[0], Sy[1], 22.0); K.bridge(mb, M, 0.0, Sy[2], Sy[0], Sy[1] + 10); K.trocadero(mb, M, (Sy[2] + 20, Sy[1] + 120, 0.0), 0.0, 1.4)
+    M['water'] = mat('water_s', '#2c64b4', '#3c80cc', 0.12, rough=0.7, emit='#2c5cac', emit_k=0.6, contrast=0.8)
+    K.seine(mb, M, 0.7, Sy[0], Sy[1], 22.0); K.bridge(mb, M, 0.0, Sy[2], Sy[0], Sy[1] + 10); K.trocadero(mb, M, (Sy[2] + 20, Sy[1] + 120, 0.0), 0.0, 1.4)
     mb.box(M['stone'], (0, Sy[0] - 12, 0.0), (3000, 3, 2.0)); mb.box(M['stone'], (0, Sy[1] + 12, 0.0), (3000, 3, 2.0))
     K.bridge(mb, M, 0.0, -150.0, Sy[0], Sy[1] + 10, 22.0)
     gl = mat_emit('glintw', '#d8ecff', 1.4); rg_ = rnd(41)
@@ -372,7 +372,7 @@ def build(preset, light=None):
     for i, (p, c_, e) in enumerate(lights): C.lamp('forge%d' % i, W(p), c_, e, 0.25, group='lamp')
     # ---- hidden shade casters + marks + staging
     _marks(A); _staging(A); _shade_casters(A, P)
-    A['hooks'] = dict(set_stage=set_stage, crane_swing=crane_swing, spark=spark, rivet_toss=rivet_toss)
+    A['hooks'] = dict(set_stage=set_stage, crane_swing=crane_swing, spark=spark, rivet_toss=rivet_toss, set_beacon=set_beacon)
     set_stage(PRESETS[preset]['stage'])
     STATE['light_table'] = LIGHTS
     C.apply_P(P)
@@ -388,6 +388,10 @@ def set_stage(s, frame=None):
     for i, grp in enumerate(st): C.show(grp, i <= s, frame)
     for i, grp in enumerate(cr): C.show(grp, i == s, frame)
     C.show(STATE['scaff'], s <= 2, frame); STATE['stage'] = s
+
+def set_beacon(on, frame=None):
+    """BIGZOOM: the soft warm glow sphere (radius 2.6 m) above the plan table that makes Eiffel findable from the extreme wide; switch it OFF for the landing (site_bigzoom_land). Default on at site_bigzoom_start / mid."""
+    for o in STATE.get('beacon', []): C.setv(o, bool(on), frame)
 
 def crane_swing(k, frame=None):
     """the derrick (left, mast (-62,-88)) swings its hanging red-lead girder: k 0..1 -> yaw from the front-left to over the yard (rotation of the pivot at the mast head)"""

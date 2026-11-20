@@ -40,6 +40,7 @@ def build(preset, light=None):
 def set_stage(s, frame=None): return ST.set_stage(s, frame)
 def crane_swing(k, frame=None): return ST.crane_swing(k, frame)
 def spark(frame=None, **kw): return ST.spark(frame, **kw)
+def set_beacon(on, frame=None): return ST.set_beacon(on, frame)
 def rivet_toss(k, frame=None): return ST.rivet_toss(k, frame)
 def _t(name): return getattr(_tower(), name)
 def set_antenna(on, frame=None): return _t('set_antenna')(on, frame)
