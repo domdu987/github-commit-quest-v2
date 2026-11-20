@@ -13,7 +13,7 @@ import math, os, sys, json
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import c19 as C                                          # noqa: E402
-from mathutils import Vector                             # noqa: E402
+from mathutils import Vector, Matrix                             # noqa: E402
 
 H, K = C.H, C.K
 WORK = os.path.join(HERE, "work")
@@ -28,14 +28,16 @@ FINAL_SPP = 10                                           # H.STATE['samples'] of
 
 SEAK = float(os.environ.get("SEAK", "1"))                    # sea clock rate (1 = real time)
 S = 1.85                                                 # metres -> world D
-CAM_LOC0 = Vector((-70.0, 95.0, 85.0)) * S               # preset start pose (metres * 1.85)
-CAM_LOOK0 = Vector((2.0, 6.0, 14.0)) * S
-_P = [float(v) for v in os.environ.get('CAMP', '-0.10,60,140,-8,-180').split(',')]      # push, slide px/s, rise px/s, arc deg/s (tuning)
-# start offset: the ship starts higher in the frame (px, - = up) because the crane (+rise) lets the world sink on screen
-_f = (CAM_LOOK0 - CAM_LOC0).normalized(); _u = Vector((_f.y, -_f.x, 0.0)).normalized().cross(_f).normalized()
-_o = _u * (_P[4] * (CAM_LOOK0 - CAM_LOC0).length / C.F_PX)
-CAM_LOC0, CAM_LOOK0 = CAM_LOC0 + _o, CAM_LOOK0 + _o
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, FIRST_G, G_LAST, push=_P[0], slide_px=_P[1], rise_px=_P[2], arc_deg_s=_P[3], decay=0.1, snaps=[])
+AZ = float(os.environ.get("AZ", "-30"))                  # camera azimuth about the ship vs the aerial preset (deg)
+DIST0 = float(os.environ.get("DIST0", "0.5"))            # start distance as a fraction of the preset aerial distance
+_loc, _look = Vector((-70.0, 95.0, 85.0)) * S, Vector((2.0, 6.0, 14.0)) * S
+_d = Matrix.Rotation(math.radians(AZ), 3, "Z") @ ((_loc - _look) * DIST0)
+CAM_LOOK0, CAM_LOC0 = _look, _look + _d
+G_SNAP = G0 + 22                                         # a short snap pull-back mid-shot (shot < 2 s: not required, adds p90)
+SNAP = (G_SNAP, G_SNAP + 14)
+_P = [float(v) for v in os.environ.get("CAMP", "-0.09,150,110,-18").split(",")]      # push (pull), slide px/s, rise px/s, arc deg/s
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, FIRST_G, G_LAST, push=_P[0], slide_px=_P[1], rise_px=_P[2], arc_deg_s=_P[3], decay=0.1,
+                snaps=[dict(g=SNAP, k=0.8, peak=1.9, shift=(-8.0, 10.0))])
 
 
 def widen_sea(preset, k, nu, nv):
@@ -44,13 +46,13 @@ def widen_sea(preset, k, nu, nv):
     import h19_ship as SH
     P = SH.PRESETS[preset]
     loc, look = Vector(P["cam"]["loc"]), Vector(P["cam"]["look"])
-    P["cam"] = dict(P["cam"], loc=tuple(look + (loc - look) * k))
+    P["cam"] = dict(P["cam"], loc=tuple(look + Matrix.Rotation(math.radians(AZ), 3, "Z") @ ((loc - look) * k)))
     P["sea_nu"], P["sea_nv"] = nu, nv
 
 
 class Take(C.Take):
     def __init__(self, quality="preview"):
-        widen_sea(PRESET, float(os.environ.get('WIDEN', '4.5')), 700, 1000)
+        widen_sea(PRESET, float(os.environ.get('WIDEN', '11')), int(os.environ.get('NU', '1300')), int(os.environ.get('NV', '1800')))
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_" + TAKE)
         assert self.final_samples() == FINAL_SPP, "set final samples changed: %s" % self.final_samples()
         self.key_cam(C.bf(FIRST_G), *CAM.at(FIRST_G))
