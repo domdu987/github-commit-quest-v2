@@ -34,34 +34,36 @@ CAM_KEYS = [   # (t, loc, look)
     (44.38, (12.2, 0.3, 0.9), (7.4, 3.6, 1.0)),
     (45.2, (10.6, 4.6, 0.9), (6.8, 6.4, 1.1)),
     (45.9, (8.4, 9.3, 1.0), (4.6, 9.2, 1.1)),
-    (46.35, (5.6, 7.5, 1.2), (1.9, 10.4, 1.3)),
-    (46.9, (3.2, 8.2, 1.7), (0.5, BAR_Y, 2.2)),
+    (46.35, (5.6, 7.5, 1.5), (1.9, 10.4, 1.4)),
+    (46.9, (3.2, 8.2, 1.9), (0.5, BAR_Y, 2.1)),
     (47.4, (1.6, 9.2, 2.0), (0.2, BAR_Y, 2.3)),
     (47.8, (1.3, 9.5, 2.05), (0.0, BAR_Y, 2.3)),
     (49.0, (0.0, 9.6, 2.0), (0.0, BAR_Y, 2.3)),
     (50.3, (-1.2, 9.6, 2.0), (0.0, BAR_Y, 2.3)),
     (52.9, (-0.7, 9.55, 2.0), (0.0, BAR_Y, 2.4)),
-    (53.5, (-0.9, 9.8, 2.7), (0.0, 12.4, 2.3)),
-    (54.3, (-1.0, 10.0, 3.4), (-0.2, 13.6, 1.1)),
-    (55.08, (-0.6, 10.2, 3.8), (0.0, 13.5, 1.0)),
-    (56.2, (-0.3, 10.2, 5.2), (0.0, 13.3, 0.9)),
-    (57.4, (-0.2, 9.4, 7.2), (0.0, 13.2, 0.9)),                 # top-down-ish crane over the bar, mat below
+    (53.5, (-1.0, 8.7, 2.8), (0.0, 12.4, 2.2)),
+    (54.3, (-0.5, 10.4, 3.5), (-0.6, 13.7, 0.7)),
+    (55.08, (-0.4, 10.4, 3.9), (0.0, 13.6, 0.9)),
+    (56.2, (-0.3, 10.8, 4.4), (0.0, 13.4, 0.9)),
+    (57.4, (-0.2, 10.2, 6.0), (0.0, 13.3, 0.9)),                 # top-down-ish crane over the bar, mat below
     (58.2, (-3.0, 0.0, 13.0), (-6.0, 11.0, 1.0)),               # up and out
-    (59.0, (-7.6, 5.2, 2.8), (-9.0, 10.0, 1.8)),                 # down to the podium, Dick with the medal
-    (59.4, (-7.9, 5.6, 2.6), (-9.0, 10.0, 1.8)),
+    (59.0, (-7.8, 6.0, 2.6), (-9.0, 10.0, 2.0)),                 # down to the podium, Dick with the medal
+    (59.4, (-8.0, 6.4, 2.4), (-9.0, 10.0, 2.0)),
 ]
 CU = 103.2
+LENS_KEYS = [(44.0, 22.0), (53.4, 22.0), (54.3, 29.0), (56.4, 29.0), (57.7, 22.0), (60.5, 22.0)]
 def _coach_cam():
     cs = B2.stand_pos(7, CU, 0.5); c0 = B2.stand_pos(3, CU + 1.2, 0.0)
-    return (c0[0], c0[1], c0[2] + 1.4), (cs[0], cs[1], cs[2] + 0.45)
+    return (c0[0], c0[1], c0[2] + 1.4), (cs[0], cs[1], cs[2] + 1.25)
 def cam_at(t):
     ks = [(a, b) for a, b, c in CAM_KEYS]; kl = [(a, c) for a, b, c in CAM_KEYS]
-    if t <= 59.4: return tuple(spline(ks, t)), tuple(spline(kl, t)), 22.0
-    cl, ck = _coach_cam(); u = smoother((t - 59.4) / 0.4)          # whip fly to the stands 59.4-59.8
+    lens = float(spline([(a, (b, 0, 0)) for a, b in LENS_KEYS], t).x)
+    if t <= 59.4: return tuple(spline(ks, t)), tuple(spline(kl, t)), lens
+    cl, ck = _coach_cam(); u = smoother(min(1.0, (t - 59.4) / 0.45))          # whip fly to the stands 59.4-59.85
     a, b = Vector(CAM_KEYS[-1][1]), Vector(cl); la, lb = Vector(CAM_KEYS[-1][2]), Vector(ck)
     mid = (a + b) / 2 + Vector((0, 0, 14.0)) * math.sin(math.pi * u)           # arc up so it never ploughs through the stand
     p = a * (1 - u) + b * u + Vector((0, 0, 14.0 * math.sin(math.pi * u)))
-    return tuple(p), tuple(la * (1 - u) + lb * u), 22.0 + 34.0 * u
+    return tuple(p), tuple(la * (1 - u) + lb * u), 22.0 + 108.0 * u * u + 12.0 * smooth((t - 59.85) / 0.5)
 
 # ------------------------------------------------------------------ actors
 def bar_pt(x, z=None, y=BAR_Y): return (x, y, BAR_H if z is None else z)
@@ -102,30 +104,31 @@ def dick_cards(t, cam, pitch_tilt):
     if t < 52.85 or t >= 52.85:
         pass
     # flight: anchor 'bar'
+    FR = 0.30 * 0.54
     if t < 46.6:
-        u = smooth((t - 46.3) / 0.3); pt = (2.5 + (1.0 - 2.5) * u, 10.3 + (BAR_Y - 0.35 - 10.3) * u, 1.3 + (BAR_H - 1.3) * u); nm = 'flop_rise'; an = 'bar'
-    elif t < 47.0: nm = 'flop_head'; an = 'bar'; u = (t - 46.6) / 0.4; pt = (1.0 + (0.5 - 1.0) * u, BAR_Y, BAR_H)
-    elif t < 47.55: nm = 'flop_back'; an = 'bar'; u = (t - 47.0) / 0.55; pt = (0.5 + (0.1 - 0.5) * u, BAR_Y, BAR_H)
+        u = smooth((t - 46.3) / 0.3); pt = (2.5 + (1.0 - 2.5) * u, 10.3 + (BAR_Y - 0.35 - 10.3) * u, 1.3 + (BAR_H - 0.2 - 1.3) * u); nm = 'flop_rise'; an = 'bar'; FR = 0.5
+    elif t < 47.0: nm = 'flop_head'; an = 'bar'; u = (t - 46.6) / 0.4; pt = (1.0 + (0.5 - 1.0) * u, BAR_Y, BAR_H - 0.2); FR = 0.5
+    elif t < 47.55: nm = 'flop_back'; an = 'bar'; u = (t - 47.0) / 0.55; pt = (0.5 + (0.1 - 0.5) * u, BAR_Y, BAR_H - 0.2 * (1 - smooth(u))); FR = 0.5 - 0.34 * smooth(u)
     elif t < 52.85:
         nm = 'flop'; an = 'bar'; u = (t - 47.55) / 3.0; pt = (0.1 - 0.5 * smooth(u), BAR_Y, BAR_H + 0.03 * math.sin((t - 47.55) * 2.4))
     else:
         tf = t - 52.85
-        if tf < 0.55: nm = 'flop_flick'; an = 'bar'; pt = (-0.4 + 0.3 * tf / 0.55, BAR_Y, BAR_H + 0.1 - 0.0 * tf)
+        if tf < 0.55: nm = 'flop_flick'; an = 'bar'; pt = (-0.4 + 0.3 * tf / 0.55, BAR_Y, BAR_H - 0.15); FR = 0.3
         elif t < 53.75:
-            u = ((t - 52.85) - 0.55) / (53.75 - 53.40); nm = 'flop_flick'; an = 'bar'; pt = (-0.1 - 0.4 * u, BAR_Y + (LAND_Y - BAR_Y) * u, BAR_H + 0.1 + (FS + 0.9 - BAR_H - 0.1) * u * u)
+            u = ((t - 52.85) - 0.55) / (53.75 - 53.40); nm = 'flop_flick'; an = 'bar'; uy = smooth(max(0.0, (u - 0.45) / 0.55)); pt = (-0.1 - 0.4 * u, BAR_Y - 0.15 + (LAND_Y - BAR_Y + 0.15) * uy, BAR_H - 0.15 + (FS + 0.9 - BAR_H + 0.15) * smooth(u)); FR = 0.25 if u < 0.5 else 0.2
         else: nm = None
     if nm:
         SHB.rim(True, side='left', k=1.0, up=0.5, color=(255, 248, 235), width=0.07, tint=(1.0, 1.0, 1.05), cool=0.3)
-        return put_anchor('dick', c, P(nm, c), cam, an, pt, front=0.30 * 0.54)
+        return put_anchor('dick', c, P(nm, c), cam, an, pt, front=FR)
     return None
 
 MIR = dict(run=False)
 
 def dick_ground(t, cam, tilt):
     c = 'dick_olympic'; P = cast15.pose_for; SHB.rim(True, side='right', color=(255, 240, 210), width=0.045, k=0.7, tint=(0.97, 0.98, 1.0), cool=0.25)
-    base = (PX - (0.9 if t < 55.35 else 0.0), LAND_Y)
+    base = (PX - 0.9 if t < 55.35 else PX + 0.5, LAND_Y)
     if t < 53.75: return None
-    if t < 54.55: nm = 'land_back'; dz = 0.06 * max(0, math.sin((t - 53.75) * 9)) * math.exp(-(t - 53.75) * 3)
+    if t < 54.55: nm = 'lie_back'; dz = 0.06 * max(0, math.sin((t - 53.75) * 9)) * math.exp(-(t - 53.75) * 3)
     elif t < 55.35: nm = 'lie_back'; dz = 0
     else: nm = 'sit_up'; dz = 0
     pose = dict(P(nm, c), bob=(bobq(t, 1.5, 0.03) if nm == 'sit_up' else 0.0))
@@ -157,7 +160,7 @@ def common_cards(t, cam, topdown):
 
 def podium_cards(t, cam):
     SHB.rim(True, side='left', color=(255, 236, 200), width=0.05, k=0.8, tint=(1.0, 1.0, 1.04), cool=0.2)
-    SHB.card('dickp', 'dick_olympic', dict(cast15.pose_for('podium', 'dick_olympic'), medal=1, bob=bobq(t, 2.5, 0.04)), POD, cam, ppd=176, shadow=(1.6, 0.6))
+    SHB.card('dickp', 'dick_olympic', dict(cast15.pose_for('podium', 'dick_olympic'), medal=1, bob=bobq(t, 2.5, 0.04)), POD, cam, ppd=176, shadow=(1.6, 0.6), scale=1.25)
     for i, (cast, x, y, nm) in enumerate((('rival1', -11.6, 10.4, 'cheer'), ('rival3', -6.4, 10.6, 'cheer'))):
         SHB.card('pr%d' % i, cast, dict(cast15.pose_for(nm, cast), bob=bobq(t + i * .3, 2.8, 0.05)), (x, y), cam, ppd=112, shadow=(1.4, 0.5))
 
@@ -218,7 +221,7 @@ def set_env(sc, t, f):
     F.crowd_mode('tense', frame=None) if t < 57.3 else None
     if t >= 57.3:
         k = smooth((t - 57.3) / 0.8); a = dict(hush=(0.006, 0.4, 0.0)); sc_c = STATE['crowd_ctl']; sc_c.location = (0.012 + 0.098 * k, 0.7 + 2.3 * k, k)
-    sc.view_settings.exposure = BASE_EXP + 0.30 * smooth((t - 57.2) / 0.9)
+    sc.view_settings.exposure = BASE_EXP + 0.30 * smooth((t - 57.2) / 0.9) - 0.15 * smooth((t - 58.2) / 0.3) * (1 - smooth((t - 59.1) / 0.3))
 
 BASE_EXP = 0.0
 def render_frame(g, out, q):
@@ -238,6 +241,12 @@ def render_frame(g, out, q):
     elif t >= 58.25: plates = [('pod', 1.0)]
     elif t >= 55.1: plates = [('mat', 1.0)]
     imgs = []
+    if 59.38 <= t <= 59.9 and CROWD.get('built'):                 # directional motion blur on the whip: 5 sub-frames across a full-frame shutter
+        acc = 0; NS = 5
+        for j in range(NS):
+            tj = t + (j - (NS - 1) / 2) / NS / FPS; lj, kj, nj = cam_at(tj); lcj = Vector(lj) * U; cam.location = lcj; cam.rotation_euler = SHB._cam_rot(lcj, Vector(kj) * U); cam.data.lens = nj
+            build_plate(tj, lj, 'pod'); pj = out + '.w.png'; F.T.render(pj); acc = acc + np.asarray(Image.open(pj).convert('RGB'), np.float32) / NS
+        Image.fromarray(np.clip(acc + 0.5, 0, 255).astype(np.uint8)).save(out); os.remove(pj); return [1.0]
     for kind, w in plates:
         if w <= 0.001: continue
         k2 = kind
