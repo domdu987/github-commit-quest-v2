@@ -26,8 +26,8 @@ def lerp(a, b, u): return a + (b - a) * u
 def vlerp(a, b, u): return tuple(lerp(x, y, u) for x, y in zip(a, b))
 
 # ------------------------------------------------------------------ timeline (g)
-G_PASS1 = (1097, 1104)          # official walks across the lens (masks Dick under the bar -> Dick at his mark)
-G_PASS2 = (1144, 1152)          # same (masks attempt 1 -> attempt 2, bar re-seated)
+G_PASS1 = (1100, 1100)          # official walks across the lens (masks Dick under the bar -> Dick at his mark)
+G_PASS2 = (1148, 1148)          # same (masks attempt 1 -> attempt 2, bar re-seated)
 S1, S2 = 1117, 1153             # first run frame of attempt 1 / 2
 FLOP_OFF = 23                   # offset of the 'flop' stage (bar knocked) from the first run frame -> bar falls 1140 (38.0 s) and 1176 (39.2 s)
 BAR_LOW, BAR_JUMP = 2.46, 2.24
@@ -120,7 +120,7 @@ PIT_KEYS = [
     (1204, (0.6, 10.9, 2.70), (-0.7, 14.2, 1.10), 29.0),
 ]
 def pit_cam(g):
-    sel = [k for k in PIT_KEYS if k[0] <= 1146] if g < 1148 else [k for k in PIT_KEYS if k[0] >= 1150]
+    sel = [k for k in PIT_KEYS if k[0] <= 1096] if g < 1100 else ([k for k in PIT_KEYS if 1100 <= k[0] <= 1146] if g < 1148 else [k for k in PIT_KEYS if k[0] >= 1150])
     ks = [(a, b) for a, b, c, d in sel]; kl = [(a, c) for a, b, c, d in sel]; kz = [(a, (d, 0, 0)) for a, b, c, d in sel]
     return tuple(SPLINE(ks, g)), tuple(SPLINE(kl, g)), float(SPLINE(kz, g).x)
 
@@ -194,9 +194,9 @@ def setup_pit(q):
             bm.free()
     F.clear_keys()
     F.set_bar_height(BAR_LOW, frame=1, interp='CONSTANT')
-    F.set_bar_height(BAR_JUMP, frame=G_PASS1[0] + 3, interp='CONSTANT')
+    F.set_bar_height(BAR_JUMP, frame=G_PASS1[0], interp='CONSTANT')
     F.bar_fall(S1 + FLOP_OFF, 'back', seed=1)
-    F.bar_reset(G_PASS2[0] + 4)
+    F.bar_reset(G_PASS2[0])
     F.bar_fall(S2 + FLOP_OFF, 'back', seed=2)
     return A, sc
 
@@ -217,11 +217,13 @@ def draw_pit_frame(g, sc, cam_ob):
     elif g < S1:
         if g >= G_PASS1[1]:
             SHB.card('dyn_dick_%d' % g, 'dick_olympic', cast15.pose_for('rock_a' if (g // 5) % 2 == 0 else 'rock_b', 'dick_olympic'), MARK, cm, ppd=160, mirror=True, shadow=(1.5, 0.5))
+    elif G_PASS2[0] <= g < S2:
+        SHB.card('dyn_dick_%d' % g, 'dick_olympic', cast15.pose_for('rock_a' if (g // 5) % 2 == 0 else 'rock_b', 'dick_olympic'), MARK, cm, ppd=160, mirror=True, shadow=(1.5, 0.5))
     else:
         SHB.rim(False); place_dick(g, cm)
     SHB.rim(False)
     for (a, b, cast, d) in ((G_PASS1[0], G_PASS1[1], 'official1', 1), (G_PASS2[0], G_PASS2[1], 'official2', -1)):
-        official_pass((loc, look, lens), g, a, b, cast, d)
+        pass  # (official pass cards removed: replaced by a directional whip blur in post2.py)
 
 # ------------------------------------------------------------------ post: whip blur
 def vblur(path, n, up=True):
