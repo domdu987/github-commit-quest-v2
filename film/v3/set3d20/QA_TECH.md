@@ -86,3 +86,8 @@ R2-N6. All earlier notes N1-N10 stand (tower_low legs/contact shadow, T02 child 
 T12: pure-black (max channel <= 8) 0.0000 (was 5.9 %), <= 25: 0.61 %, min 5; p1 luma rows 900-1010 = 58, rows 100-170 = 64: black strip FIXED. T13: black 0.0000, V>.95 5.9 %. Cost T12 38.9, T13 18.3 cpu s (< 45). Hue T12/T13 now shade 357.7/22.1 (rust-orange wall, magenta 0.19 %/0.20 %): metric artifact, NOTE.
 NEW on screen (T12 at 360x640): the window's diagonal X-brace and vertical post cross exactly at Maupassant's head/torso (head y 748, 51 px): the shot-27 subject is cut by three iron bars and the room is dim, so "tiny Maupassant eating, eyes shut, smug" does not read. BLOCKING R3-B1: shift the brace crossing / table mark sideways (or move the camera 1-2 m) so his head and face sit in a clear pane (>= 60 px wide clear of bars), and lift the room fill so the window reads as lit.
 ## Round 3 VERDICT: FAIL (T12 black fixed; subject occluded by the brace, one fix left). All other items as in Round 2.
+
+---
+# ROUND 4 (T12 re-measured)
+T12: black (<= 8) 0.0000, min luma 8, room mean luma 135 (lit), cost 36.3 cpu s. Full size: Maupassant (head y 748, chin 774, 51 px, eyes shut, smug) sits in a bar-free centre pane about 330 px wide, bread/glasses on the white cloth, chair backs and warm light on the wall: R3-B1 FIXED. T13 unchanged (clean).
+## Round 4 VERDICT: PASS. No blocking items remain; Round 2/3 notes (hue metric artifacts, flat lower slab, window glare bands, resto_wide dressing, T03 = T02 except crowd, T14 camera for shots 18/22) are NOTES FOR RENDER WORKERS.
