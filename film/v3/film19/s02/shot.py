@@ -32,8 +32,8 @@ GS = list(range(FIRST_G, G_LAST + 1))
 FINAL_SPP = 10
 S = 1.85
 PPD = 224                                                # sprite px per D (head ~110 px at the end; the start is downsampled)
-G_ARRIVE = 150                                           # the medium shot is reached (5.9 s)
-G_SCRATCH = (146, 166)                                   # astro19_c scratches his head (comic), 4.9-5.5 s
+G_ARRIVE = 152                                           # the medium shot is reached (5.9 s)
+G_SCRATCH = (146, 166)       # head scratch; 150-186 the whole puzzled beat                                   # astro19_c scratches his head (comic), 4.9-5.5 s
 BLINKS_C, BLINKS_A = [70, 128, 171], [92, 150, 188]
 
 # ----------------------------------------------------------------------------- staging (ship rest frame = world D at t = 0; z of the quarterdeck 14.34)
@@ -43,11 +43,11 @@ AST_XY = (1.7, -30.6)                                   # astro19_c, camera-righ
 
 # ----------------------------------------------------------------------------- camera: a spline through key poses in the SHIP's rest frame (D), eased in and out
 KEYS = [  # (u, loc, look)
-    (0.00, (12.0, -170.0, 126.0), (0.0, -14.0, 14.0)),            # extreme wide from high above and behind (ship ~27 % of the frame height, characters ~10 px)
-    (0.50, (10.0, -98.0, 74.0), (1.0, -30.0, 15.0)),              # descending
-    (0.76, (6.8, -47.0, 27.5), (0.8, -30.5, 15.6)),               # above the stern, off the starboard quarter
-    (0.91, (3.4, -41.0, 21.0), (0.6, -30.3, 15.8)),               # passes the spanker's starboard face and descends
-    (1.00, (0.45, -36.3, 16.5), (0.5, -30.0, 15.9)),           # medium on the quarterdeck
+    (0.00, (30.0, -530.0, 395.0), (0.0, -14.0, 14.0)),            # truly extreme wide: ~640 D away, the ship <= 12 % of the frame height, the crew ~4 px
+    (0.50, (13.0, -125.0, 96.0), (1.0, -30.0, 15.0)),             # descending
+    (0.76, (5.0, -52.0, 46.0), (0.8, -30.5, 16.0)),               # high over the stern, level with the mizzen yards / sails
+    (0.91, (1.9, -40.5, 31.0), (0.6, -30.3, 16.0)),               # passes the spanker sail at ~1.9 D and the rigging, then dives
+    (1.00, (0.45, -36.3, 16.5), (0.5, -30.0, 15.9)),              # medium on the quarterdeck
 ]
 
 
@@ -59,7 +59,7 @@ def _cr(p0, p1, p2, p3, t):
 def _spline(g, which):
     """position on the key spline at the eased parameter u(g) (which 1 = loc, 2 = look)"""
     # g -> u: a slow-ish wide start, a fast descent through the stern (the smooth planks / sail frames the blur check punishes), then it SETTLES on the medium
-    TM = [(48, 0.0), (80, 0.26), (108, 0.57), (114, 0.84), (118, 0.97), (G_ARRIVE, 1.0)]
+    TM = [(48, 0.0), (66, 0.10), (90, 0.35), (115, 0.70), (135, 0.92), (G_ARRIVE, 1.0)]
     j = max(i for i in range(len(TM) - 1) if TM[i][0] <= g) if g < TM[-1][0] else len(TM) - 2
     (g0_, u0_), (g1_, u1_) = TM[j], TM[j + 1]
     x = clamp((g - g0_) / float(g1_ - g0_))
@@ -84,7 +84,7 @@ def cam_rest(g):
         c = Vector((0.5, -30.5, loc.z))
         loc = c + Matrix.Rotation(ang, 3, "Z") @ (loc - c)
         loc = loc + (look - loc) * (0.0030 * (g - G_ARRIVE))
-    look = look + Vector((0.0, 0.0, 0.34 * clamp((g - 124) / 26.0)))      # aim a little higher so the heads sit at y 450-760 (the camera still rides the deck)
+    look = look + Vector((0.0, 0.0, 0.30 * clamp((g - 124) / 26.0)))      # aim a little higher so the heads sit at y 450-760 (the camera still rides the deck)
     return loc, look
 
 
@@ -98,37 +98,94 @@ def widen_sea(preset, nu, nv):
     P["foam_k"] = float(os.environ.get("FOAMK", "0.55"))                # a calmer wake: less white lace (it dominated the frame statistics)
 
 
+# ----------------------------------------------------------------------------- the BLANK chart (QA-art: no coastline, no compass, no red mark: "nobody knows where we are")
+def _blank_chart_body(k):
+    """the unrolled sea chart of cast19.chart19, but BLANK: parchment with a fold crease and a worn edge, nothing drawn on it (no text, no coast, no compass)."""
+    g = cast19._g3(k, "ch", cast19.PARCH, 0, 0, 0.74, 0)
+    o = ['<path d="M0,-0.26 L0.74,-0.26 L0.74,0.26 L0,0.26 Z" fill="%s" stroke="%s" stroke-width="0.022" stroke-linejoin="round"/>' % (g, k.ink)]
+    o.append('<path d="M0.37,-0.25 L0.37,0.25" stroke="%s" stroke-width="0.006" opacity="0.18"/>' % k.ink)          # the fold
+    o.append('<path d="M0.03,-0.02 L0.71,-0.02" stroke="%s" stroke-width="0.005" opacity="0.10"/>' % k.ink)
+    return "".join(o)
+
+
+cast19._chart_body = _blank_chart_body                        # the prop drawer looks it up at call time
+
+
 # ----------------------------------------------------------------------------- poses
+def _ramp(g, a, b):
+    return u_of(g, a, b)
+
+
 def pose_captain(g):
+    """captain19: peers at the blank chart; from g 150 he lifts it, turns it round (upside down), brows up, looks at astro19_c and shrugs"""
     p = dict(cast19.STORY19["captain_peer_chart"][1])
-    p["lean"] = 8 + 1.5 * math.sin(g * 0.11)
-    p["head_roll"] = 3.0 * math.sin(g * 0.07)
+    p["lean"] = 8 + 2.0 * math.sin(g * 0.13)
+    p["head_roll"] = 4.0 * math.sin(g * 0.09)
     p["blink"] = blink(g, BLINKS_C)
+    p["pitch"] = 0.35 + 0.08 * math.sin(g * 0.17)
+    p["arm_r"] = dict(hand=(0.6, 0.96 + 0.05 * math.sin(g * 0.2)), bend=0.3, layer="front")
+    p["arm_l"] = dict(hand=(1.3, 1.0 + 0.04 * math.sin(g * 0.23 + 1)), bend=0.0, stretch=1.3, layer="front")
+    # 150-164: lifts the chart and TURNS it (the hands swing round), brows up, 164-172: looks at astro19_c, 172-186: shrug
+    lift = _ramp(g, 148, 158) * (1.0 - _ramp(g, 166, 176))
+    if lift > 0.0:
+        sw = math.sin((g - 150) * 0.55) * (1.0 if g < 166 else 0.3)             # the chart is turned over: a rocking wrist
+        p["arm_r"] = dict(hand=(lerp(0.6, 0.45, lift), lerp(0.96, 1.7, lift) + 0.12 * sw), bend=lerp(0.3, 0.9, lift), layer="front")
+        p["arm_l"] = dict(hand=(lerp(1.3, 1.0, lift), lerp(1.0, 1.85, lift) - 0.12 * sw), bend=0.2, stretch=1.2, layer="front")
+        p["pitch"] = lerp(0.35, -0.05, lift)
+        p["head_roll"] = -9.0 * lift + 3.0 * sw
+    wor = _ramp(g, 150, 156)
+    if wor > 0.0:
+        p["expr"] = "worried"                                                  # brows up
+    look = _ramp(g, 164, 170)
+    if look > 0.0:
+        p["gaze"] = (lerp(0.8, 1.0, look), lerp(0.9, 0.0, look))               # at astro19_c (screen-right)
+    shrug = _ramp(g, 172, 180)
+    if shrug > 0.0:
+        p["arm_r"] = dict(hand=(lerp(0.45, 1.05, shrug), lerp(1.2, 0.75, shrug)), bend=lerp(0.6, -0.2, shrug), shape="open", layer="front")
+        p["arm_l"] = dict(hand=(lerp(1.0, -0.15, shrug), lerp(1.4, 0.85, shrug)), bend=lerp(0.2, 0.6, shrug), shape="open", stretch=1.0, layer="front")
+        p["prop_r"] = None if shrug > 0.5 else p.get("prop_r")                   # the chart is dropped to the deck hand (chart held low) as he shrugs
+        p["head_roll"] = lerp(-9.0 * 0.0, 7.0, shrug) + 2.0 * math.sin(g * 0.8)
+        p["lean"] = 8 - 10.0 * shrug
+        p["pitch"] = lerp(0.1, 0.15, shrug)
     p["t"] = g / 30.0
+    p = {k: v for k, v in p.items() if v is not None}
     return p
 
 
 def pose_astro(g):
-    """astro19_c: squints through the quadrant at the sky, then scratches his head, shrugs, and goes back to the quadrant"""
-    p = dict(cast19.STORY19["william_quadrant_sun"][1])                    # arms / prop of the quadrant pose (william19's pose key set)
+    """astro19_c: squints through the quadrant at the sky; g 148-164 an OBVIOUS head-scratch; 164-172 looks at the captain; 172-186 shrugs, palms up"""
+    p = dict(cast19.STORY19["william_quadrant_sun"][1])                    # arms / prop of the quadrant pose
     p["expr"] = "squint"
     p["blink"] = blink(g, BLINKS_A)
-    p["lean"] = -3
-    a, b = G_SCRATCH
-    u = u_of(g, a, a + 6) * (1.0 - u_of(g, b - 6, b))                      # 0 -> 1 -> 0 over the scratch window
-    if u > 0.0:
-        # the quadrant hand lowers, the other hand goes to the head, a small shrug
-        p["arm_r"] = dict(hand=(lerp(0.46, 0.55, u), lerp(0.1, 0.55, u)), bend=lerp(-0.7, 0.5, u), stretch=1.1, layer="top")
-        p["prop_r"] = dict(type="quadrant19", angle=lerp(-62, -10, u), scale=0.95)
-        p["arm_l"] = dict(hand=(lerp(-0.46, -0.12, u), lerp(0.96, 2.25, u)), bend=lerp(0.5, 0.9, u), shape="open")
-        p["pitch"] = lerp(-0.75, 0.2, u)
-        p["expr"] = "unimpressed" if u > 0.4 else "squint"
-        p["head_roll"] = 8.0 * u * math.sin(g * 0.9)                       # the scratching wobble
-        p["gaze"] = (0.2, 0.2)
+    p["lean"] = -3 + 1.2 * math.sin(g * 0.15)
+    p["head_roll"] = 3.0 * math.sin(g * 0.11 + 1.0)
+    p["glint"] = 0.5 + 0.5 * math.sin(g * 0.2)
+    scr = _ramp(g, 146, 152) * (1.0 - _ramp(g, 164, 168))
+    if scr > 0.0:
+        w = math.sin(g * 1.35)                                                 # the scratching wobble
+        p["arm_r"] = dict(hand=(lerp(0.46, 0.5, scr), lerp(0.1, 0.5, scr)), bend=lerp(-0.7, 0.5, scr), stretch=1.1, layer="top")
+        p["prop_r"] = dict(type="quadrant19", angle=lerp(-62, -8, scr), scale=0.95)
+        p["arm_l"] = dict(hand=(lerp(-0.46, -0.10 + 0.10 * w, scr), lerp(0.96, 2.3 + 0.12 * w, scr)), bend=lerp(0.5, 1.0, scr), shape="open")
+        p["pitch"] = lerp(-0.75, 0.2, scr)
+        p["expr"] = "unimpressed" if scr > 0.4 else "squint"
+        p["head_roll"] = 9.0 * scr * math.sin(g * 1.35 + 0.7)
+        p["gaze"] = (0.2, 0.3)
         p["glint"] = 0.0
-    else:
-        p["glint"] = 0.5 + 0.5 * math.sin(g * 0.2)
+    look = _ramp(g, 164, 170)
+    if look > 0.0:
+        p["pitch"] = lerp(p.get("pitch", -0.75), 0.15, look)
+        p["gaze"] = (lerp(0.2, -1.0, look), 0.0)                              # at the captain (screen-left; the card is mirrored)
+        p["expr"] = "worried" if look > 0.5 else p["expr"]
+    shrug = _ramp(g, 172, 180)
+    if shrug > 0.0:
+        p["arm_r"] = dict(hand=(lerp(0.5, 0.95, shrug), lerp(0.5, 0.7, shrug)), bend=lerp(0.5, -0.2, shrug), shape="open", stretch=1.0, layer="top")
+        p["arm_l"] = dict(hand=(lerp(-0.1, -0.9, shrug), lerp(2.2, 0.75, shrug)), bend=lerp(1.0, 0.4, shrug), shape="open")
+        p["prop_r"] = None                                                     # the quadrant is lowered / dropped into the free hand
+        p["head_roll"] = lerp(0.0, -8.0, shrug)
+        p["lean"] = lerp(-3, -8, shrug)
+        p["pitch"] = 0.1
     p["t"] = g / 30.0
+    p = {k: v for k, v in p.items() if v is not None}
     return p
 
 
