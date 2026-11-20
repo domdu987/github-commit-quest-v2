@@ -102,16 +102,17 @@ def main(mode, gs, samples):
     runners = ['scot_a', 'scot_b', 'scot_c', 'scot_a_v1', 'scot_b_v1']
     for i, c_ in enumerate(runners): C.add('r%d' % i, c_, tuple(runner_pos(G0, i)))
     pr = K.PRESETS['bridge_end_north']
-    spots = [('e1', 'footman_a', 'footman_a', 1316, -3.2, 39.0), ('e2', 'knight_a', 'knight_a', 1318, -2.1, 40.6), ('e3', 'footman_b', 'footman_b', 1314, 2.0, 39.4),
-             ('e4', 'footman_a_v2', 'footman_a', 1320, 3.0, 40.8), ('e5', 'knight_b', 'knight_b', 1317, -4.4, 41.0), ('e6', 'footman_a_v1', 'footman_a', 1315, 4.2, 41.4),
-             ('e7', 'footman_b_v1', 'footman_b', 1319, -1.0, 44.0), ('e8', 'knight_a_open', 'knight_a', 1313, 1.2, 45.5), ('e9', 'footman_a_v3', 'footman_a', 1321, -3.8, 46.8), ('e10', 'footman_b_v2', 'footman_b', 1317, 3.6, 47.0)]
+    spots = [('e1', 'footman_a', 'footman_a', 1316, -3.2, 39.0), ('e2', 'knight_a', 'knight_a', 1318, -2.1, 40.6), ('e3', 'footman_a', 'footman_a', 1314, 2.0, 39.4),
+             ('e4', 'knight_a_open', 'knight_a', 1320, 3.0, 40.8), ('e5', 'knight_a', 'knight_a', 1317, -4.4, 41.0), ('e6', 'footman_a', 'footman_a', 1315, 4.2, 41.4),
+             ('e7', 'footman_a', 'footman_a', 1319, -1.0, 44.0), ('e8', 'knight_a_open', 'knight_a', 1313, 1.2, 45.5), ('e9', 'knight_a', 'knight_a', 1321, -3.8, 46.8), ('e10', 'footman_a', 'footman_a', 1317, 3.6, 47.0)]   # all crimson English (continuity with H2a)
     eng = []
     for nm, cast, base, g_hit, x, y in spots:
         C.add(nm, cast, (x, y, float(K.ground(x, y)))); eng.append((nm, cast, base, g_hit))
     NSC = 15; wall = []
-    for i in range(NSC):
-        sx = -7.5 + 15.0 * i / (NSC - 1.0); sy = 29.0 + 0.45 * math.sin(i * 2.1); cast = ['scot_a', 'scot_b', 'scot_c', 'scot_a_v1', 'scot_b_v2', 'scot_c_v1'][i % 6]
-        nm = 'w%d' % i; C.add(nm, cast, (sx, sy, float(K.ground(sx, sy)))); C.items[nm].update(base=cast.split('_v')[0], i=i); wall.append(nm)
+    for i in range(NSC * 2):
+        rank = i // NSC; i = i % NSC
+        sx = -7.5 + 15.0 * i / (NSC - 1.0) + (0.5 if rank else 0.0); sy = 29.0 + 0.45 * math.sin(i * 2.1) + 1.0 * rank; cast = ['scot_a', 'scot_b', 'scot_c', 'scot_a_v1', 'scot_b_v2', 'scot_c_v1'][i % 6]
+        nm = 'w%d_%d' % (rank, i); C.add(nm, cast, (sx, sy, float(K.ground(sx, sy)))); C.items[nm].update(base=cast.split('_v')[0], i=i, rank=rank); wall.append(nm)
     for g in gs:
         if mode == 'final' and os.path.exists(os.path.join(HERE, 'raw_final', 'g_%04d.json' % g)): continue
         t0 = time.time(); f = g
@@ -127,7 +128,7 @@ def main(mode, gs, samples):
         for nm in wall:
             it = C.items[nm]; sx, sy, sz = it['xyz']; i = it['i']; left = i < NSC // 2
             fx = (-1 if left else 1) * (10.5 + 0.9 * (i % 4 if left else (NSC - 1 - i) % 4))
-            start, run_len = 1292 + (i % 5), 24 - (i % 3)
+            start, run_len = 1292 + (i % 5) + 2 * it['rank'], 24 - (i % 3)
             if g < start:
                 pose = dict(cast21.STORY21[it['base'] + '_fold_spear'][1]); pose['blink'] = cast21.blink_at(g, 84, i * 9); pose['head_roll'] = sway(g, i, 2.0, 0.4)
                 C.put(nm, f, pose, xyz=(fx, sy, float(K.ground(fx, sy))), mirror=not left)
