@@ -32,7 +32,7 @@ def girder_pile(mb, M, c, yaw, L=6.0, nx=6, nz=5, rr=None):
         z = 0.38 + k * 0.34
         for i in range(nx - (k // 2)):
             y = (i - (nx - (k // 2) - 1) / 2.0) * 0.36 + rr.uniform(-0.02, 0.02); l = L * rr.uniform(0.9, 1.0); x0 = rr.uniform(-0.2, 0.2)
-            mb.box(M['redlead'], (x0, y, z), (l, 0.22, 0.03)); mb.box(M['redlead'], (x0, y, z + 0.14), (l, 0.04, 0.26)); mb.box(M['redlead'], (x0, y, z + 0.27), (l, 0.22, 0.03))
+            mb.box(M['redlead'], (x0, y, z), (l, 0.22, 0.08)); mb.box(M['redlead'], (x0, y, z + 0.14), (l, 0.08, 0.26)); mb.box(M['redlead'], (x0, y, z + 0.27), (l, 0.22, 0.08))
         if k < nz - 1:
             for xx in (-L * 0.36, 0, L * 0.36): mb.box(M['timberdk'], (xx, 0, z + 0.28), (0.14, nx * 0.4, 0.07))
     for xx in (-L * 0.36, 0, L * 0.36): mb.box(M['timberdk'], (xx, 0, 0.08), (0.2, nx * 0.4, 0.16))
@@ -202,7 +202,8 @@ def bridge(mb, M, zb, x, y0, y1, w=22.0):
     for i in range(n):
         yy = y0 - 6 + (y1 - y0 + 12) * (i + 0.5) / n; mb.box(M['stone'], (x, yy, zb + 0.55), (w - 1.0, (y1 - y0 + 12) / n - 5.0, 0.7))
 
-def ground_plane(zb, cols, size=2400, rough=1.0, ctr=(0, 300)):
+def ground_plane(zb, cols, size=2400, rough=1.0, ctr=(0, 300), apron=None):
+    """apron = (x, y, R, k, (r, g, b)): darker trampled earth (multiply colour, strength k at the centre, smooth fall-off to R metres) around a world point"""
     me = bpy.data.meshes.new('ground'); bm = bmesh.new(); bmesh.ops.create_grid(bm, x_segments=2, y_segments=2, size=size); bm.to_mesh(me)
     ob = bpy.data.objects.new('ground', me); ob.location = (ctr[0], ctr[1], zb); bpy.context.scene.collection.objects.link(ob); ob.parent = C.root()
     m = bpy.data.materials.new('ground'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
@@ -216,7 +217,13 @@ def ground_plane(zb, cols, size=2400, rough=1.0, ctr=(0, 300)):
     c2 = N('ShaderNodeMix'); c2.data_type = 'RGBA'; L(c1.outputs[2], c2.inputs[6]); c2.inputs[7].default_value = hexc(cols[2]); L(ramp(noise(0.12, 5), 0.5, 0.7).outputs[0], c2.inputs[0])
     c3 = N('ShaderNodeMix'); c3.data_type = 'RGBA'; c3.blend_type = 'MULTIPLY'; c3.inputs[0].default_value = 0.8; L(c2.outputs[2], c3.inputs[6])
     r3 = ramp(noise(4.0, 6), 0.35, 0.65); r3.color_ramp.elements[0].color = (0.86, 0.86, 0.86, 1); r3.color_ramp.elements[1].color = (1.08, 1.08, 1.08, 1); L(r3.outputs[0], c3.inputs[7])
-    L(c3.outputs[2], bs.inputs['Base Color']); L(bs.outputs[0], out.inputs['Surface']); ob.data.materials.append(m)
+    last = c3.outputs[2]
+    if apron:
+        ax, ay, ar, ak, atint = apron
+        vd = N('ShaderNodeVectorMath'); vd.operation = 'DISTANCE'; L(tc.outputs['Object'], vd.inputs[0]); vd.inputs[1].default_value = (ax - ctr[0], ay - ctr[1], 0.0)
+        mr = N('ShaderNodeMapRange'); mr.interpolation_type = 'SMOOTHSTEP'; mr.inputs['From Min'].default_value = 0.4 * ar; mr.inputs['From Max'].default_value = ar; mr.inputs['To Min'].default_value = ak; mr.inputs['To Max'].default_value = 0.0; L(vd.outputs['Value'], mr.inputs['Value'])
+        c4 = N('ShaderNodeMix'); c4.data_type = 'RGBA'; c4.blend_type = 'MULTIPLY'; L(mr.outputs['Result'], c4.inputs[0]); L(last, c4.inputs[6]); c4.inputs[7].default_value = (atint[0], atint[1], atint[2], 1.0); last = c4.outputs[2]
+    L(last, bs.inputs['Base Color']); L(bs.outputs[0], out.inputs['Surface']); ob.data.materials.append(m)
 
 def clouds(P):
     """stacked cumulus: flat dark-warm belly + bumpy lit tops, 2-3 depth layers; emission-only, camera-only"""
@@ -274,7 +281,7 @@ def tower_slice(mb, M, a, b, thick=1.0, piers=True, interleg=True, top_plate=Fal
             for z0, z1 in zip(zs[:-1], zs[1:]): mb.rod(I, f(z0), f(z1), 0.52 * k * (1.15 - z0 / 600.0), 0.5 * k * (1.15 - z1 / 600.0), 4)
         for p_, q_ in (((-1, -1), (1, -1)), ((1, -1), (1, 1)), ((1, 1), (-1, 1)), ((-1, 1), (-1, -1))): lattice_face(mb, IL, P[p_], P[q_], zs, 0.22 * k, 0.26 * k)
         if piers and a == 0:
-            mb.box(M['stone'], (sx * tw(0), sy * tw(0), 1.4), (2 * th(0) + 5.0, 2 * th(0) + 5.0, 5.2)); mb.box(M['stonedk'], (sx * tw(0), sy * tw(0), 4.2), (2 * th(0) + 3.2, 2 * th(0) + 3.2, 0.7))
+            mb.box(M['stonedk'], (sx * tw(0), sy * tw(0), 1.4), (2 * th(0) + 5.0, 2 * th(0) + 5.0, 5.2)); mb.box(M['stone'], (sx * tw(0), sy * tw(0), 4.2), (2 * th(0) + 3.2, 2 * th(0) + 3.2, 0.7))
         if top_plate:
             z = b; mb.box(I, (sx * tw(z), sy * tw(z), z + 0.4), (2 * th(z) + 0.8, 2 * th(z) + 0.8, 0.8))
     if interleg and b > Z1 + 2:
@@ -467,9 +474,10 @@ def plank_walk(mb, M, p0, p1, w=1.2, z=0.04):
         q = Vector((-d.y, d.x, 0)).normalized() * sd; mb.rod(M['timberdk'], p0 + q, p1 + q, 0.05, 0.05, 4)
 
 def smoke_puffs(mb, M, c, n=6, s=1.0, drift=(0.4, 0.0)):
-    x, y, z = c
+    """3-5 overlapping soft translucent puffs widening upward (grey-lilac #b8aec8, low opacity)"""
+    x, y, z = c; sm = mat_glow('smokep', '#b8aec8', 0.9, 0.34); n = min(n, 5)
     for i in range(n):
-        r_ = (0.35 + 0.18 * i) * s; mb.ell(M['smoke'], (x + drift[0] * i * s, y + drift[1] * i * s, z + 1.0 * i * s), (r_, r_, r_ * 0.9), (10, 7))
+        r_ = (0.30 + 0.20 * i) * s; mb.ell(sm, (x + drift[0] * i * s * 0.8, y + drift[1] * i * s * 0.8, z + 0.55 * i * s), (r_, r_, r_ * 0.85), (12, 8))
 
 def fence(mb, M, p0, p1, h=1.6, pitch=1.4, rail=2):
     """timber site fence (posts + boards) between two ground points"""
@@ -544,7 +552,7 @@ def fg_dress(mb, M, cam, items, hull=None):
             L = q; a = p; b = p + f * L
             mb.box(M['redlead'], (a + b) / 2 + Vector((0, 0, -0.1)), (0.26, L, 0.04) if False else (0.26, 0.04, 0.04)) if False else None
             d = f.copy(); yaw = math.atan2(d.y, d.x)
-            mb.box(M['redlead'], (p + f * L / 2), (L, 0.3, 0.05), rz=yaw); mb.box(M['redlead'], (p + f * L / 2 + Vector((0, 0, 0.17))), (L, 0.05, 0.3), rz=yaw); mb.box(M['redlead'], (p + f * L / 2 + Vector((0, 0, 0.34))), (L, 0.3, 0.05), rz=yaw)
+            mb.box(M['redlead'], (p + f * L / 2), (L, 0.3, 0.09), rz=yaw); mb.box(M['redlead'], (p + f * L / 2 + Vector((0, 0, 0.17))), (L, 0.09, 0.3), rz=yaw); mb.box(M['redlead'], (p + f * L / 2 + Vector((0, 0, 0.34))), (L, 0.3, 0.09), rz=yaw)
         elif kind == 'plank': mb.box(M['plank'], p, (0.9, 0.22, 0.05) if len(pa) < 2 else pa[1], rz=math.atan2(r.y, r.x))
         elif kind == 'keg': keg(mb, M, (p.x, p.y, p.z), 0.8, q)
         elif kind == 'sack': sack(mb, M, (p.x, p.y, p.z), 0.5, q)

@@ -319,7 +319,7 @@ CWIN = (-0.6, 2.4, 0.95, 3.5)                     # window x0, x1, z0, z1 on the
 CAFE_FLOOR_BELOW = -6.0
 CAFE_WINDOW_D = W((0.9, CY1, 1.9))
 STUB_X, STUB_D = 40.0, 190.0                     # stub tower (stage 0/1): lateral offset / distance (m); the finished tower is further out, on a raised plateau, right of the window axis
-FULL_X, FULL_D, FULL_LIFT = 175.0, 800.0, 100.0                           # the café is on an upper floor: Paris street level is 22 m below its floor
+FULL_X, FULL_D, FULL_LIFT = 135.0, 700.0, 80.0                           # the café is on an upper floor: Paris street level is 22 m below its floor
 T1 = (-0.5, 3.4)                                   # the artists' marble table
 T5 = (-0.7, 6.5)                                 # Maupassant's own small table
 CAFE_MARKS_M = dict(
@@ -331,7 +331,7 @@ CAFE_CAMS_M = dict(
     cafe_wide=((-2.6, -1.4, 1.1), (-0.3, 5.8, 1.25), 0.0),
     cafe_wide_end=((-1.3, -1.4, 1.1), (0.2, 5.8, 1.45), 0.0),
     cafe_table_insert=((T1[0] + 0.2, T1[1] - 0.5, 1.05), (T1[0] + 0.0, T1[1] + 0.06, 0.765)),
-    cafe_window=((0.6, 1.6, 1.45), (1.0, 8.0, 2.3)),
+    cafe_window=((0.4, 0.3, 1.5), (1.0, 8.0, 2.3)),
     cafe_low=((0.9, 4.6, 0.5), (0.9, 7.0, 1.45)),
     cafe_low_close=((0.95, 5.3, 0.85), (0.9, 7.0, 1.35)),
 )
@@ -521,7 +521,7 @@ def build_cafe_outside(P, M):
     dim_objects(objs, P.get('out_dim', 0.6)); clouds(P, 6, 7, (120, 300), (900, 1500))
     # the tower: 'stub' (stage 0/1: legs + the ring girders, 330 m away) and 'full' (finished, 600 m away)
     objs = {}
-    for nm, (stage, dist, tx, thick, lift) in dict(stub=('legs', STUB_D, STUB_X, 1.5, 0.0), full=('full', FULL_D, FULL_X, 3.0, FULL_LIFT)).items():
+    for nm, (stage, dist, tx, thick, lift) in dict(stub=('legs', STUB_D, STUB_X, 1.5, 0.0), full=('full', FULL_D, FULL_X, 3.6, FULL_LIFT)).items():
         mb = MB('tower_' + nm, parent=C.root()); mb.push(Matrix.Translation((tx, dist, zb + lift)))
         SB.tower(mb, M, stage=stage, thick=thick); mb.pop()
         if lift: mb.box(M['i_lawn2'], (tx, dist, zb + lift - 1.0), (500, 400, 2.0))
@@ -573,7 +573,7 @@ RESTO_CAMS_M = dict(
     resto_wide=((0.0, -2.4, 0.75), (0.0, 12.0, 3.4), 0.0),
     resto_wide_end=((0.0, 0.8, 0.8), (0.0, 13.0, 2.3), 0.0),
     resto_table=((0.15, 13.4, 1.12), (0.0, 16.4, 1.5), 0.0),
-    resto_view=((0.95, 15.0, 1.45), (-0.4, 60.0, -0.7), 0.0),
+    resto_view=((0.75, 15.0, 1.45), (-0.4, 60.0, -0.7), 0.0),
 )
 RESTO_STAGING = dict(
     resto_wide=[('maupassant', 'maupassant_start'), ('waiter', 'waiter_start')],
