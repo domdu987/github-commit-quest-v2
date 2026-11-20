@@ -1,5 +1,22 @@
 # v3/set3d17: the film 17 set ("Bertillon", Paris police 1882-83) (bpy 5.x, Cycles CPU)
 
+## v2 render recipe (film 17 remake, `prefecture17.py`; full reference in §v2 at the end)
+
+```python
+import sys; sys.path.insert(0, "film/v3/set3d17"); import prefecture17 as P, bpy
+A = P.world_build('T3')                       # only the locations take T3 can see, lit by its presets; camera 'cam' (22 mm) included
+frames = P.path_T3()                          # per-frame camera (g, loc, look, rot quaternion, lens) for the take's render range incl. handles
+P.key_cam(A['cam'], frames)                   # Blender frame = g + 1
+g0, g1 = P.TAKES['T3']['render']
+for g in range(g0, g1 + 1): P.take_state('T3', g, frame=g + 1)      # doors / window / calendar / drawer / tally / light mix, keyed
+P.key_life2(g0 + 1, g1 + 1)                   # flicker, smoke, dust, pendulum, banners (flags wave by themselves)
+# ... stage the real cast cards on the anchors in P.TAKES['T3']['cast'] (P.cast_cards(...) = placeholders) ...
+P.setup_render2((720, 1280), samples=32, threads=2)   # recommended: 32 samples + OIDN, adaptive 0.03, 2 threads
+bpy.context.scene.frame_set(g + 1); bpy.ops.render.render(write_still=True); P.grade2(path)   # v2 grade: sat 1.20 + vibrance band
+```
+CLI: `python3 prefecture17.py frame T6 1515 out.png 720 1280 32 2` | `stills T1 <dir> 360 640 16` | `report T1 T6` (per-frame %H + BIGZOOM verdict).
+Measured cost: **56-135 s per 720x1280 frame** at 32 samples / 2 threads (mean ~98 s; table in §v2.8) -> ~58 CPU-hours for 2144 frames.
+
 Four locations, 14 camera presets, 3 light presets, life hooks, stand points for 1-4 cast cards. Built from code only (numpy + PIL textures, batched
 meshes). **No depth of field anywhere. No readable text anywhere** (notices, ledgers, the Bertillon card and the sign board are greeked or blank).
 
@@ -160,3 +177,123 @@ Measured (`hue.md`, `contact_work/final/*.json`): **75-133 s per frame** (street
 - The records and measure rooms are lit by area fills plus the sun, so shadows from the fill are soft; the sun shadows are hard (0.8 degrees).
 - Light shafts are flat additive prisms (a cartoon read), not volumetric.
 - `street` is an exterior: its hue numbers may leave the interior band (the sky is large and saturated by design, and the lit stone is pale).
+
+## v2. `prefecture17.py`: one connected world (PLAN_V2 §3) + takes T1-T8
+
+Imports `bertillon.py` (the v1 kit, behaviour unchanged: v1 `build()` / presets / hooks still work; the only edit there names the ambient nodes of
+`_lit_mat` and stores the palette params on the material, so `set_light_mix` can drive them; renders are identical).
+`t_hooks.py` still prints `ok 14 bad ['lift mid']`, as before this change (that check predates the v1 hero-card height fix).
+
+### v2.1 World frame (metres, Z up; street floor z 0, interior floor `FZ` = 1.2)
+
+| part | where | built by |
+|---|---|---|
+| street at dusk | carriageway x -4..4 along +y (y -24..64), pavements to x +-6, left row of Haussmann blocks, café terrace (y 17-25), Morris column, kiosk, fiacre + horse, Black Maria + horse (root, `set_wagon`), 17 gas lamps, puddles, flower cart, barrels | `build_street2` |
+| rooftop plate | ~300 low-poly blocks out to r 220 (ochre skin, lit amber windows 60 % as emission, cobalt zinc), chimneys, the Seine (y 95-118) with quay lamps + amber reflections, a bridge, **Notre-Dame** silhouette at (40, 140) (towers, rose, nave, flèche). No Eiffel Tower. No ink, shadow-less | `paris_roofscape` |
+| Préfecture façade | outer face x = `FACADE_X` 5.45 (deviation, see v2.9), y -1.6..37.6, 3 storeys + mansard, ochre ashlar, cobalt shutters, balconies, lit windows with silhouettes, pigeons, flags (WAVE modifier), sentry box, desk gendarme, **PRÉFECTURE DE POLICE** band (11.2 x 1.15 m, z 6.15) + 2 lanterns, main door y 4.6-6.8 (`set_door('main')`), outside steps to the sill at z 0.6, the measuring room's French window y 12-14.4, **z 1.35-4.6** with balconnet and geraniums | `build_facade` |
+| corridor | x 5.7-12.7, y 4.0-7.4, ceiling 5.7: 5 steps up from the door, red/ochre tiles, cobalt walls, photo walls (texture + 360 relief cards) with **PHOTOGRAPHIES — SÛRETÉ**, gas brackets (5), rolling ladder, bench, lectern; doors **SERVICE D'IDENTIFICATION** (`ident`, x 9.8-10.8, into the measuring room), **CABINET DU PRÉFET** (`prefet`), **ARCHIVES** (`archives`, end wall) | `build_corridor` |
+| measuring room | v1 room + `MO` = (9.2, 12.0, 1.2): x 6.0-12.4, y 7.8-16.2. Repainted (ochre walls, cobalt dado / ceiling, honey beams, oak, cobalt rug with red border); open French casement (`set_window`), the SERVICE D'IDENTIFICATION door + sign, the ARCHIVES double door (`archive`) with **ARCHIVES →**, the **11 MESURES** chart (11 pictograms) beside the clock, the calendar **MARS 1882 / 3 MOIS** (`set_calendar`) | `build_measure2` |
+| ARCHIVES hall | x 13-21, y 2-34, walls to 8.6, segmental cobalt vault to 10.2 with honey ribs and 5 skylights (y 5, 11, 17, 23, 29: shafts + dust); two storeys of cabinets: **PETIT** y 2-12.7 (0.30x0.20 drawers), **MOYEN** 12.7-23.3 (0.45x0.25), **GRAND** 23.3-34 (0.90x0.40); gallery at 4.2 m (red rail), spiral stair (19.6, 32.6), 3 rolling ladders, 3 gasoliers, hanging banners PETIT (y 9.5) / MOYEN (18) / GRAND (27.4), big **ARCHIVES** on the north wall + over both doors, 3 clerk desks with banker lamps, 4 card trolleys, overflow piles, Bertillon's desk (16.5, 27.7: banker lamp, candle, card fan `fan`), tally board **RÉCIDIVISTES 1884** (`set_tally`), reveal: drawer `big` at (13.55, 26.25, 2.4) opening +x, `box`, `box2`, hero card (`card_bertillon_martin_v2.png`: **MARTIN** + the bottle sketch), labels GRAND + number ranges on the hero row, `box_lamp` spot | `build_archive` |
+
+Marks (stand points) are in `A['marks']` (world; the measure ones from `marks_local` + MO). Cast anchors per take are in `TAKES[take]['cast']`.
+
+### v2.2 `world_build(take, light=None, parts=None, cutaway=None)` and the visibility sets
+
+Each location is its own collection `loc_<name>` built with its own light preset (materials are made per location). Suns and area fills are
+light-linked to their collection (receiver), and the interior suns also use it as the shadow blocker set, so the street buildings never block the
+measuring-room window sun and the façade roof never blocks the skylights.
+
+| take | parts built | light per location | ceiling cut away |
+|---|---|---|---|
+| T1 | roofs, street, facade, measure | ext BLUE_HOUR_EXT, measure SUNSET_INT | - |
+| T2 | street, facade, corridor, measure | + corridor GASLIGHT_INT | - |
+| T3, T8 | measure | SUNSET_INT | measure (bird's-eye) |
+| T4 | measure, archive | SUNSET_INT, ARCHIVE_DAY | - |
+| T5 | archive | ARCHIVE_NIGHT -> DAY (`set_light_mix`, g 1196-1211) | - |
+| T6 | archive | ARCHIVE_DAY | - |
+| T7 | archive | ARCHIVE_DAY | archive vault (top-down) |
+`world_build('ALL')` builds everything (6 s, 170 k faces). Per take 0.2-0.9 s, 16-96 k faces.
+
+### v2.3 Light presets (in `bertillon.LIGHTS`, usable by v1 `build(light=...)` too)
+
+| preset | key | ambient (shade) / fill | rim (`RIM[p]`) |
+|---|---|---|---|
+| `BLUE_HOUR_EXT` | low amber sun x0.35, gas lamps x1.6, windows 70 % lit | cobalt SHADE, blue sky fill area 900 W; dome: zenith #1A3FB8, thin amber horizon | cool #9cc2ff |
+| `GASLIGHT_INT` | gas brackets every 2.5 m (lamp_k 2.2), no sun | cobalt, blue transom glow, cool area fill 60 W | warm #ffb85a |
+| `SUNSET_INT` | low amber sun through the French window (hard shaft + dust), window key 240 W | blue sky fill area (+30 %) | warm #ffb85a (cool #8fb4ff as `rim2`) |
+| `ARCHIVE_DAY` | pale blue-white sun through 5 skylights (x0.62), banker lamps, gasoliers | cobalt, warm strip fills 300 W along both galleries, cool skylight areas | warm #ffb85a |
+| `ARCHIVE_NIGHT` | moon-blue skylights, ONE banker lamp + candle on Bertillon's desk (other desk lamps off), gasoliers x0.4 | lifted cobalt (luma >= 85), strip fills 110 W | cool #9cc2ff |
+`AMB_K` = 0.78 scales the painted ambient of the five presets (SET-gate calibration). `set_light_mix(a, b, t, frame, loc)` blends sun, every
+material's ambient, skylight glow, beams, fills and gas lamps (through `set_flicker2`'s multiplier).
+
+### v2.4 Signs and textures
+
+`sign(B, text, w, h, c, n, fg, bg, font, sub, emit, ...)`: PIL texture (2x supersampled, >= 520 texels/m) on a plane whose front faces the
+horizontal direction `n` (+ a painted board in `B`). Fonts: `fonts/LiberationSerif-Bold.ttf` (bundled, SIL OFL, drawn condensed 0.84; film/fonts
+has no serif or condensed face), `'sans'` = film/fonts/WorkSans-Black, `'thai'` = film/fonts/Kanit_900Black. Signs emit a little (0.3-0.55) so they
+read in shade. `tex_sign`, `tex_chart11`, `tex_page`, `tex_tally(n)` (sequence `tex/tally/tally_0000..0241.png`), `tex_hero_v2`, `tex_photowall`,
+`tex_runner`, `tex_flag`, `tex_facade_far` cache to `tex/v2_*.png` (git-ignored, rebuilt on demand). Cap heights at the nearest planned frame:
+PRÉFECTURE DE POLICE 0.6 m, ARCHIVES (north) 0.7 m, banners 0.7 m, door signs 0.18-0.25 m, drawer labels 0.06 m (read at the P1 push).
+
+### v2.5 Hooks (`frame=None` sets, `frame=N` keys; key every frame, as in v1)
+
+`set_door(name, open)` (`main`, `ident`, `archive`, `archives`, `prefet`), `set_window(open)`, `set_calendar(page)`, `set_tally(n)`,
+`set_banner_sway(t)`, `set_wagon(t)`, `set_light_mix(a, b, t)`, `set_flicker2`, `set_smoke2` (30 chimneys + stove + 2 horse breaths),
+`set_dust2` (window shaft + 5 skylight shafts), `key_life2(f0, f1)`, `life_at(g)` (stills). v1 hooks `set_drawer('big')`, `set_box_lid('box')`,
+`set_card_lift`, `set_cards_fan`, `set_pendulum` work on the world. `take_state(take, g, frame)` applies every planned story hook of a take.
+
+### v2.6 Camera paths (PLAN §4 / §5)
+
+`cam_path(keys)`: cubic Hermite in time through keys `{g, loc, look, lens=22, hold, tension}` (Catmull-Rom tangents; first / last / `hold`
+keys have zero velocity, so takes and BIGZOOMs ease in and out), look-at with world up (roll 0; straight down uses +y as up). Returns one dict per
+frame: `g, loc, look, rot` (quaternion), `lens`. `path_T1() .. path_T8()` = `path_take(take)` over the take's render range with handles
+(T1 0-342, T2 330-657, T3 645-856, T4 844-1051, T5 1039-1383, T6 1371-1701, T7 1689-1874, T8 1862-2052). `key_cam(cam, frames)` keys
+Blender frame g + 1. Lens 22 mm everywhere (the BIGZOOM starts too). Paths: T1 roofs (45 m) -> over the smoke and the wagon -> through the
+French window -> bench (track) -> back out and up to 30 m -> swoop to the wagon -> arc on the steps; T2 street -> main door -> corridor track
+-> SERVICE D'IDENTIFICATION door -> low drift -> OTS -> low push (kepi rack fg); T3 bird's-eye (cutaway) -> crane to eye height -> low under
+the calipers table -> into the clock; T4 out of the clock -> station track -> low at the desk -> through ARCHIVES into the hall; T5 gallery crane
+-> OTS push down the aisle -> escort track -> arc to the three-shot -> push; T6 BIGZOOM 2 (8.4 m up at the south end, past the PETIT banner and the
+gasolier, between the galleries) -> P1 on the card -> OTS -> three-shot -> P2; T7 low hero -> crane up to a top-down at 24 m (vault cut away);
+T8 bird's-eye (cutaway) -> crane down past the gasolier -> OTS behind the crowd -> P3.
+
+### v2.7 Size check: `cam_report(take, names=None, step=6)` / `anchor_frac(fr, feet, H)`
+
+Per frame: every cast anchor's height in % of the frame height (feet to head top projected, 720x1280, lens from the path) + in/out of frame +
+camera speed. BIGZOOM verdict (start < 5 %, end 35-60 %, both in frame), measured:
+
+| BIGZOOM | g | start | end | verdict |
+|---|---|---|---|---|
+| 1 (T1, Bertillon in the French window) | 0 -> 105 | 1.2 %H | 36.4 %H | PASS |
+| 2 (T6, Bertillon at the GRAND bank) | 1377 -> 1515 | 4.4 %H | 48.0 %H | PASS |
+`python3 prefecture17.py report T1 T6` prints it (`STEP=` env sets the sampling). Placeholder cards: `cast_cards(take, g)`.
+
+### v2.8 SET gate and render cost (measured)
+
+`v2_gate/`: 24 stills (3 per take, 360x640, 16 samples + OIDN, placeholder cards), `contact_v2.jpg`, `stats.md`, and one 720x1280 frame per
+location (`full720_*.jpg`). qa_stats2.py on an mp4 of the stills: **sat 0.642, vivid 82.0 %, luma 104.6** (targets >= 0.50, >= 45 %, 85-110);
+no take below sat 0.59. Per take luma: T6 121 (the skylight band in the BIGZOOM 2 start, the P1 card push) and T7 84 are just outside 85-110; watch them at the TAKE gate (all others 104-110). Stills: 7-20 s each at 360x640 / 16 samples / 2 threads.
+
+Full frame 720x1280, Cycles CPU **2 threads, 32 samples** + OIDN, adaptive 0.03 (`setup_render2`), placeholder cast:
+
+| location (take, g) | s / frame @ 32 | s / frame @ 16 |
+|---|---|---|
+| rooftop plate, BIGZOOM 1 start (T1 g0) | 76 | |
+| street + façade (T1 g287) | 115 | |
+| corridor (T2 g400) | 123 | 62 |
+| measuring room (T3 g750) | 84 | |
+| archive, day (T6 g1515) | 56 | |
+| archive, night (T5 g1060) | 135 | 69 |
+Mean ~98 s at 32 samples -> 2144 frames ~ 58 CPU-hours (PLAN §5's "100 s/frame" case: use 11-16 teams). 16 samples halves it (OIDN holds
+the flat-shaded look; check the night archive for noise first). Build per take <= 1 s; textures cache in tex/ on first run (~10 s).
+
+### v2.9 Deviations from PLAN_V2 §3
+
+- Façade outer face at x 5.45 (not 6.0): the v1 measuring-room wall occupies x 5.7-6.0, the façade skin sits in front of it.
+- The French window is z 1.35-4.6 (to the floor) instead of 3.15-4.6, so a figure inside is visible from the BIGZOOM 1 start (the v1 sill was
+  1.95 m above the room floor). The prisoners' bench stands in front of it.
+- Corridor is 7 m long (x 5.7-12.7) instead of 10: the archive west wall is at x 13 per the same plan.
+- PETIT banner at y 9.5 (not 1/3 of the hall) so it clears the BIGZOOM 2 line; banners hang just under the vault.
+- Notre-Dame at (40, 140) beyond the Seine (y 95-118) so it falls in the T1 crane-up frame.
+- 11 MESURES chart is 1.2 x 1.5 m (fits under the frieze).
+- `stage_cast` v2 (yaw clamp, walk_path, contact decals) is not in this build: cast anchors + placeholder cards + `RIM` colours only.
+- Bundled serif font (film/fonts has only Kanit Black and Work Sans Black).
