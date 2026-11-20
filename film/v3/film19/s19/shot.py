@@ -32,6 +32,7 @@ G_LIFT = (GF, GF + 20)
 LIGHT, PRESET = "DAY_JAMAICA", "ship_coast"
 FINAL_SPP = 12
 PPD = 192
+RIM_COL, RIM_K, RIM_OFF = '#ffb24a', 1.5, (0.0045, 0.0035)    # set3d19 H.card_rim: warm rim on the upper-right (sun-glint / sea side) edges
 
 CAM_LOOK0 = (446.0, 61.789, 2.6)                # subject point (found with a projection search so that all three heads, hats and raised
                                                 # hands stay inside the frame on every frame)
@@ -42,11 +43,17 @@ CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GF, GL, push=0.0335, slide_px=12.6, rise_px
 
 
 # ----------------------------------------------------------------------------- BIGZOOM (QA_TEAM section H): one continuous descent
-GZ = 1552                                       # 51.7 s: the medium shot is reached (William 35-60 % of frame height); BIGZOOM g 1468..1552
-Z_L0 = Vector(json.loads(os.environ.get('ZL0', '[525.0, 66.0, 36.0]')))              # start: extreme wide from high above the bay (the characters ~3 % of the frame height)
-Z_K0 = Vector(json.loads(os.environ.get('ZK0', '[420.0, 62.0, -8.0]')))
-Z_LM = Vector((490.0, 66.0, 14.0))              # passes through the palm-frond layer (z 16-24, x 470-515): fronds at 1-2 D = foreground parallax
+# QA-art r7 fix: starts ~2x further / ~2.3x higher over Port Royal (bay, ship, far headland, red-roofed town, fort with flags), holds the
+# wide ~0.45 s (g 1468-1481, a slow creep only), then descends down the town street (set lane, Jamaica) past two palm crowns
+# (set zoom_palms, fronds 1-2 D from the lens) onto the beach; long ease-out into the medium shot at GZ.  BIGZOOM g 1468..GZ = 3.67 s.
+GH = 1481                                       # end of the hold on the extreme wide
+GZ = 1578                                       # 52.6 s: the medium shot is reached; from here on the drift CamPath CAM
+Z_L0 = Vector(json.loads(os.environ.get('ZL0', '[562.0, 58.0, 74.0]')))              # start: high over the town, the cast ~1.3 % of the frame height
+Z_K0 = Vector(json.loads(os.environ.get('ZK0', '[330.0, 12.0, -20.0]')))             # aimed between the cast and the fort: bay, ship and headland above
+Z_LM = Vector(json.loads(os.environ.get('ZLM', '[480.0, 60.5, 22.0]')))              # Bezier control: over the street, then between the two zoom palms
 Z_L1, Z_K1 = CAM.at(GZ)
+ZOOM_P = 0.82                                   # < 1 shifts the speed peak early = a longer, softer ease-out
+ZOOM_CREEP = 0.012                              # share of the path covered by a linear creep over GF..GZ (the hold never freezes)
 
 
 def zoom_ease(u):
@@ -54,14 +61,21 @@ def zoom_ease(u):
     return u * u * u * (u * (6.0 * u - 15.0) + 10.0)          # smootherstep: ease-in and ease-out
 
 
+def zoom_e(g):
+    """path parameter 0..1 over GF..GZ: a slow linear creep + smootherstep(u^ZOOM_P) of the move GH..GZ"""
+    lin = clamp((g - GF) / float(GZ - GF))
+    u = clamp((g - GH) / float(GZ - GH))
+    return ZOOM_CREEP * lin + (1.0 - ZOOM_CREEP) * zoom_ease(u ** ZOOM_P)
+
+
 def cam_at(g):
-    """the take's camera: the BIGZOOM descent g GF..GZ (eased), then the drift CamPath."""
+    """the take's camera: the BIGZOOM descent g GF..GZ (hold, then eased), then the drift CamPath."""
     if g >= GZ:
         return CAM.at(g)
-    e = zoom_ease((g - GF) / float(GZ - GF))
+    e = zoom_e(g)
     a, b = 1.0 - e, e
-    loc = (Z_L0 * (a * a) + Z_LM * (2.0 * a * b) + Z_L1 * (b * b))      # quadratic Bezier through the fronds
-    ek = zoom_ease(clamp((g - GF) / float(GZ - GF)) ** 0.8)
+    loc = (Z_L0 * (a * a) + Z_LM * (2.0 * a * b) + Z_L1 * (b * b))      # quadratic Bezier down the street, past the palm fronds
+    ek = e ** 0.85
     look = Z_K0 * (1.0 - ek) + Z_K1 * ek
     return loc, look
 
@@ -137,6 +151,10 @@ class Take(C.Take):
             self.sb.pose(f, sailor_pose("sailor_b", g, 2.6), camera=self.cam)
         fr = [bf(g) for g in gs]
         self.sprites_for([(self.wil, PPD), (self.sa, PPD), (self.sb, PPD)], fr)
+        if not getattr(self, "_rim", False):                # warm back / rim light on the cards (QA-art r7, section I2): sea-side edge
+            for a in (self.wil, self.sa, self.sb):
+                H.card_rim(a, color=RIM_COL, k=RIM_K, offset=RIM_OFF)
+            self._rim = True
 
     def report(self, g):
         f = bf(g)
