@@ -28,11 +28,11 @@ def hide_prefix(*prefixes):
         if any(o.name.startswith(p) for p in prefixes): o.hide_render = True
 
 class Take(object):
-    def __init__(self, preset, mode="draft", samples=None, lens=None, hide=(), world=None, fg=True, whide=()):
+    def __init__(self, preset, mode="draft", samples=None, lens=None, hide=(), world=None, fg=True, whide=(), over=None):
         t0 = time.time()
         self.preset = preset
         if world:
-            self.A = K.build_world(world, fg=fg, hide=whide)
+            self.A = K.build_world(world, fg=fg, hide=whide, over=over)
         else:
             self.A = K.build_for_cli(preset, placeholders=False)
         self.scene = bpy.context.scene; self.cam = self.scene.camera

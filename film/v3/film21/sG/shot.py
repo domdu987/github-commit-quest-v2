@@ -18,13 +18,19 @@ PRESETS = ["hill_over", "hill_low"]
 def u_lin(g, a, b): return (g - a) / float(b - a)
 
 # ------------------------------------------------------------------ camera
+def start_cam():
+    ho = K.preset_pose("hill_over"); v = (np.array(ho[1][:2]) - np.array(ho[0][:2])); v = v / np.linalg.norm(v)
+    c = np.array(ho[0][:2]) - v * 2.5
+    return Vector((c[0], c[1], max(ho[0][2], float(K.ground(c[0], c[1])) + 3.0))), v
+
 def base_path(g):
-    ho = K.preset_pose("hill_over"); hl = K.preset_pose("hill_low")
+    hl = K.preset_pose("hill_low"); c0, v = start_cam()
     end_loc = hl[0]; end_look = (hl[1][0], hl[1][1], hl[1][2] + 3.0)
-    keys = [(G0, ho[0], ho[1], ho[2]),
-            (1152, (164.0, 143.0, 55.0), (134.0, 130.0, 28.0), 30.0),                # lift up and out past the Scots on the ledge
-            (1164, (150.0, 121.0, 40.0), (136.0, 126.0, 24.0), 28.0),                # over the lip, swinging south
-            (1176, (132.0, 112.0, 28.0), (140.0, 130.0, 22.0), 24.0),
+    fwd = Vector((v[0], v[1], 0))
+    keys = [(G0, tuple(c0), (0.0, 14.0, 2.0), 72.0),
+            (1154, tuple(c0 + fwd * 2.5 + Vector((0, 0, 0.3))), (0.0, 14.0, 2.0), 64.0),
+            (1168, (153.0, 141.0, 42.0), (132.0, 126.0, 23.0), 30.0),
+            (1178, (138.0, 120.0, 29.0), (139.0, 129.0, 21.5), 25.0),
             (G_ARRIVE, end_loc, end_look, 22.0)]
     return K.cam_path(None, keys, min(g, G_ARRIVE))
 
@@ -32,15 +38,11 @@ TGT = [None]
 def cam_for(g):
     r = base_path(g)
     cam = bpy.context.scene.camera
-    if g <= G_ARRIVE:
-        t = 0.0
     loc = Vector(r["loc"]); look = Vector(r["look"]); lens = r["lens"]
     if g > G_ARRIVE:
         k = g - G_ARRIVE
         tgt = TGT[0]
         snap = C.sm(clamp((g - G_HORN) / 14.0))
-        push = 1.0 + 0.0
-        # drift: slow push + lateral slide, plus the snap x1.5
         zoom = lerp(1.0, 1.5, snap) * (1.0 + 0.0035 * k)
         fwd = (tgt - loc).normalized(); right = Vector((fwd.y, -fwd.x, 0)).normalized()
         d = (tgt - loc).length
@@ -64,17 +66,37 @@ def setup(T):
     g1 = [("s1", "scot_b", "scot_b_fold_spear"), ("s2", "scot_a", "scot_a_chew_grass"), ("s3", "scot_c", "scot_c_fold_spear"),
           ("s4", "scot_a_v1", "scot_a_fold_spear"), ("s5", "scot_b_v2", "scot_b_fold_spear")]
     for i, (nm, cst, pn) in enumerate(g1):
-        x, y, z = M1[nm][:3]; T.actor("o_" + nm, cst); out.append(("o_" + nm, cst, pn, (x, y, z), 1, i))
+        x, y, z = M1[nm][:3]; _c, _v = start_cam(); x += _v[0] * 4.5; y += _v[1] * 4.5; z = float(K.ground(x, y))
+        T.actor("o_" + nm, cst); out.append(("o_" + nm, cst, pn, (x, y, z), 1, i))
     g2 = [("s1", "scot_b", "scot_b_fold_spear"), ("s2", "scot_a", "scot_a_chew_grass"), ("horn", "scot_horn", "scot_horn_lower"),
           ("w", "wallace", "wallace_calm"), ("s3", "scot_c", "scot_c_fold_spear")]
     for i, (nm, cst, pn) in enumerate(g2):
         x, y, z = M2[nm][:3]; T.actor("l_" + nm, cst); out.append(("l_" + nm, cst, pn, (x, y, z), 2, 10 + i))
     mh, mw = M2["horn"], M2["w"]
     TGT[0] = Vector(((mh[0] + mw[0]) / 2, (mh[1] + mw[1]) / 2, (mh[2] + mw[2]) / 2 + 1.1))
+    # causeway foot soldiers (x2 so the crowd reads from 230 m), marching north in threes
+    rs2 = np.random.RandomState(5); cs = ["footman_a", "footman_b", "footman_a_v1", "footman_b_v2", "footman_a_v3", "footman_b_v1"]
+    for i in range(12):
+        row, col = divmod(i, 3); x = (-2.4, 0.2, 2.6)[col] + rs2.uniform(-0.4, 0.4); y = 40.5 + 2.6 * row + rs2.uniform(-0.4, 0.4)
+        cst = cs[i % len(cs)]; T.actor("c_%d" % i, cst, scale=2.0 * C.TRUE_H["footman_a"] / C.CAST_H[cst.split("_v")[0]])
+        out.append(("c_%d" % i, cst, cst.split("_v")[0] + "_stand", (x, y, float(K.ground(x, y))), 4, 50 + i))
     # the yawning knight on the causeway (true height, scaled x2.2 so it reads from 230 m)
-    cx, cy = 1.4, 41.0
-    T.actor("knight", "knight_a_open", scale=2.2 * C.TRUE_H["knight_a_open"] / C.CAST_H["knight_a_open"])
+    cx, cy = 1.2, 44.0
+    T.actor("knight", "knight_a_open", scale=4.0 * C.TRUE_H["knight_a_open"] / C.CAST_H["knight_a_open"])
     out.append(("knight", "knight_a_open", "knight_a_open_yawn", (cx, cy, float(K.ground(cx, cy))), 3, 20))
+    # more Scots behind the hero group: two ranks up the slope, a ragged line across the frame
+    rs = np.random.RandomState(11); hl = K.preset_pose("hill_low"); cxy = np.array(hl[0][:2]); lk = np.array(hl[1][:2]); vv = (lk - cxy) / np.linalg.norm(lk - cxy); LL = np.array([-vv[1], vv[0]])
+    types = ["scot_a", "scot_b", "scot_c", "scot_a_v1", "scot_b_v2", "scot_c_v1", "scot_a_v2"]
+    poses = ["fold_spear", "stand_still", "fold_spear", "scratch_nose", "fold_spear"]
+    n = 0
+    for rank, (dist, cnt) in enumerate(((13.5, 7), (19.0, 8))):
+        for j in range(cnt):
+            lat = (j - (cnt - 1) / 2.0) * (3.1 if rank == 0 else 3.4) + rs.uniform(-0.8, 0.8)
+            q = cxy + vv * (dist + rs.uniform(-1.0, 1.0)) + LL * lat
+            cst = types[(n + rank) % len(types)]; base = cst.split("_v")[0]
+            pn = base + "_" + poses[n % len(poses)]
+            if pn not in S21: pn = base + "_fold_spear"
+            T.actor("x_%d" % n, cst); out.append(("x_%d" % n, cst, pn, (q[0], q[1], float(K.ground(q[0], q[1]))), 2, 30 + n)); n += 1
     return out
 
 def pose_of(nm, cst, pn, grp, i, g):
@@ -83,6 +105,9 @@ def pose_of(nm, cst, pn, grp, i, g):
         p["yaw"] = 1.15 * (1 if i % 2 == 0 else -1) * 0.0 + 1.15      # profile toward the valley (screen-right = away from camera's left? profile reads as looking out)
         p["lean"] = 2 * math.sin(g * 0.09 + i)
         if "stalk21" in p and p["stalk21"]: p["stalk21"] = 1.0
+    elif grp == 4:
+        ph = (g * 0.034 + i * 0.27); p = cast21.walk_spear(cst.split("_v")[0], ph, 1 if i % 2 else -1, "march"); p["yaw"] = 0.3 * (1 if i % 2 else -1)
+        if "_v" in cst: p["variant21"] = int(cst.split("_v")[1])
     elif nm == "l_horn":
         blow = sm(u_lin(g, G_HORN, G_HORN + 4)) if g >= G_HORN else 0.0
         if g >= G_HORN: p = dict(S21["scot_horn_blow"][1]); p["puff21"] = blow * (0.75 + 0.25 * math.sin(g * 0.9)); p["lean"] = 1.5 * math.sin(g * 0.4)
@@ -91,14 +116,16 @@ def pose_of(nm, cst, pn, grp, i, g):
         if g >= G_HORN + 6: p = dict(S21["wallace_raise_sword"][1])
         elif g >= G_HORN + 2: p = dict(S21["wallace_eyebrow"][1])
     elif nm == "knight":
-        yw = sm(u_lin(g, 1150, 1158)) * (1 - sm(u_lin(g, 1180, 1188)))
+        yw = sm(u_lin(g, 1144, 1148)) * (1 - sm(u_lin(g, 1158, 1161)))        # held about 14 frames
         p = dict(S21["knight_a_open_yawn"][1] if yw > 0.5 else S21["knight_a_open_stand_arms_down"][1])
         p["lean"] = 3 * yw + 1.2 * math.sin(g * 0.11)
     if grp != 3: p["head_roll"] = p.get("head_roll", 0) + 2.5 * math.sin(g * 0.13 + i * 2)
     p["blink"] = blink(g, 53 + 9 * (i % 6), 4 * i); p["t"] = g / 30.0
     return rim(p)
 
+T_REF = [None]
 def hooks(g):
+    for o in getattr(T_REF[0], "col", []): o.location.y = 0.7 * (g - G0) / 30.0
     K.set_flutter(g / 30.0); K.set_smoke(g / 30.0); K.set_flow(g / 30.0)
 
 def parse(spec):
@@ -109,9 +136,19 @@ def parse(spec):
         else: out.append(int(part))
     return out
 
+def column(T):
+    """the English column on the bridge, two by two, about half over: pairs from the middle to the north end (3D riders), moving north slowly."""
+    Bk = K.Batch(84); ys = [-4.0 + 3.9 * i for i in range(11)]
+    K.knight_pair_column(Bk, ys, K.BRIDGE_X, np.random.RandomState(9), K.KNIGHT_MATS)
+    return Bk.finalize('s08_column')
+
 def build(mode, samples, cast=True):
-    T = C.Take(None, mode, samples, world=PRESETS)
-    K.place_troops(T.A, "bridge", 12); K.place_troops(T.A, "causeway", 14, seed=2); K.place_troops(T.A, "meadow", 18, seed=3)
+    T = C.Take(None, mode, samples, world=PRESETS, fg=["hill_low"], over=dict(shaft_k=1.4))
+    for o in bpy.data.objects:
+        if o.name.startswith(("fg_generic_steel", "fg_generic_wood")): o.hide_render = True        # the spear that crossed the hero faces
+    T.col = column(T)
+    K.place_troops(T.A, "meadow", 18, seed=3)
+    T_REF[0] = T
     items = setup(T) if cast else []
     M2 = T.A["marks"]["hill_low"]; mh, mw = M2["horn"], M2["w"]
     TGT[0] = Vector(((mh[0] + mw[0]) / 2, (mh[1] + mw[1]) / 2, (mh[2] + mw[2]) / 2 + 1.1))
