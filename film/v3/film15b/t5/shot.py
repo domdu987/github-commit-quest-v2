@@ -43,17 +43,17 @@ CAM_KEYS = [   # (t, loc, look)
     (52.9, (-0.7, 9.55, 2.0), (0.0, BAR_Y, 2.3)),
     (53.5, (-0.6, 9.6, 2.2), (0.0, 12.6, 1.7)),
     (54.3, (-0.4, 10.4, 3.2), (0.0, 13.6, 1.2)),
-    (55.08, (-0.3, 10.8, 4.0), (0.0, 13.6, 0.9)),
-    (56.2, (-0.3, 10.2, 5.4), (0.0, 13.6, 0.9)),
-    (57.4, (-0.2, 9.4, 7.2), (0.0, 13.6, 0.9)),                 # top-down-ish crane over the bar, mat below
+    (55.08, (-0.3, 10.8, 4.0), (0.0, 13.2, 0.9)),
+    (56.2, (-0.3, 10.2, 5.4), (0.0, 13.2, 0.9)),
+    (57.4, (-0.2, 9.4, 7.2), (0.0, 13.2, 0.9)),                 # top-down-ish crane over the bar, mat below
     (58.2, (-3.0, 0.0, 13.0), (-6.0, 11.0, 1.0)),               # up and out
-    (59.0, (-7.4, 3.6, 3.4), (-9.0, 10.0, 1.9)),                 # down to the podium, Dick with the medal
-    (59.4, (-7.8, 4.4, 3.0), (-9.0, 10.0, 1.9)),
+    (59.0, (-7.6, 5.2, 2.8), (-9.0, 10.0, 1.8)),                 # down to the podium, Dick with the medal
+    (59.4, (-7.9, 5.6, 2.6), (-9.0, 10.0, 1.8)),
 ]
 CU = 103.2
 def _coach_cam():
     cs = B2.stand_pos(7, CU, 0.5); c0 = B2.stand_pos(3, CU + 1.2, 0.0)
-    return (c0[0], c0[1], c0[2] + 1.4), (cs[0], cs[1], cs[2] + 0.55)
+    return (c0[0], c0[1], c0[2] + 1.4), (cs[0], cs[1], cs[2] + 0.45)
 def cam_at(t):
     ks = [(a, b) for a, b, c in CAM_KEYS]; kl = [(a, c) for a, b, c in CAM_KEYS]
     if t <= 59.4: return tuple(spline(ks, t)), tuple(spline(kl, t)), 22.0
@@ -61,7 +61,7 @@ def cam_at(t):
     a, b = Vector(CAM_KEYS[-1][1]), Vector(cl); la, lb = Vector(CAM_KEYS[-1][2]), Vector(ck)
     mid = (a + b) / 2 + Vector((0, 0, 14.0)) * math.sin(math.pi * u)           # arc up so it never ploughs through the stand
     p = a * (1 - u) + b * u + Vector((0, 0, 14.0 * math.sin(math.pi * u)))
-    return tuple(p), tuple(la * (1 - u) + lb * u), 22.0 + 16.0 * u
+    return tuple(p), tuple(la * (1 - u) + lb * u), 22.0 + 34.0 * u
 
 # ------------------------------------------------------------------ actors
 def bar_pt(x, z=None, y=BAR_Y): return (x, y, BAR_H if z is None else z)
@@ -164,11 +164,16 @@ def podium_cards(t, cam):
 CROWD = {}
 def build_coach_cluster(cam_loc):
     rr = random.Random(41); cs = B2.stand_pos(7, CU, 0.5)
-    B2.hide_3d_crowd((cs[0], cs[1], cs[2]), 22.0, (-7.0, 9.5)); B2.hide_rails((cs[0], cs[1], cs[2]), 26.0)
+    B2.hide_3d_crowd((cs[0], cs[1], cs[2]), 13.0, (-7.0, 9.5)); B2.hide_rails((cs[0], cs[1], cs[2]), 26.0)
+    bk = B2.stand_pos(21, CU, 0.0); v = Vector((bk[0] - cam_loc[0], bk[1] - cam_loc[1], 0)).normalized(); rt = Vector((v.y, -v.x, 0)); c0 = Vector((bk[0], bk[1], bk[2])) + v * 1.5
+    m = bpy.data.materials.new('coach_back'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); o = nt.nodes.new('ShaderNodeOutputMaterial'); e = nt.nodes.new('ShaderNodeEmission'); e.inputs['Color'].default_value = (0.05, 0.06, 0.26, 1); e.inputs['Strength'].default_value = 1.0; nt.links.new(e.outputs[0], o.inputs[0])
+    V = [tuple((c0 + rt * sx + Vector((0, 0, sz)) ) * 1.0) for sx, sz in ((-30, -12), (30, -12), (30, 16), (-30, 16))]
+    me = bpy.data.meshes.new('coach_back'); me.from_pydata([tuple(c * U for c in p) for p in V], [], [(0, 1, 2, 3)]); me.update(); me.materials.append(m)
+    ob = bpy.data.objects.new('coach_back', me); bpy.context.scene.collection.objects.link(ob); ob.visible_shadow = False
     SHB.rim(True, side='left', color=(255, 226, 180), width=0.045, k=0.6, tint=(0.9, 0.92, 1.0), cool=0.4)
     crowd = ['crowd1', 'crowd2', 'crowd3', 'crowd4', 'crowd5', 'crowd6']; poses = ['sit_cheer', 'sit_laugh', 'sit_cheer', 'sit_point', 'sit_gape', 'sit_cheer']; k = 0
-    for row in range(25, 2, -1):
-        for du in range(-14, 15):
+    for row in range(19, 0, -1):
+        for du in range(-12, 13):
             u = CU + du * 0.62 + (0.31 if row % 2 else 0.0) + rr.uniform(-0.12, 0.12)
             if 3 <= row <= 6 and abs(u - (CU + 0.75)) < 0.8: continue
             if row in (7, 8) and abs(u - CU) < 0.9: continue
