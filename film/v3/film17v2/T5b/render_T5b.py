@@ -23,10 +23,13 @@ import copy
 DAY0 = copy.deepcopy(P.K.LIGHTS['ARCHIVE_DAY']); MUL = OV['light']['mul'] if OV.get('light') else 1.0
 def day_scale(g):   # director: 1.0 at g1211 (matches T5a's last frame), smoothstep down to MUL by g1241. lights only: no haze, no desaturation
     u = max(0.0, min(1.0, (g - 1211) / 30.0)); u = u * u * (3 - 2 * u); return 1.0 + (MUL - 1.0) * u
+def beam_scale(g):   # director: skylight beam fx at full strength at g1211 (continuity with T5a), eased linearly to 0 by g1218, 0 to the end of the take. T5b2 imports this.
+    return max(0.0, min(1.0, (1218 - g) / 7.0))
 def set_day(g):
     m = day_scale(g); D = P.K.LIGHTS['ARCHIVE_DAY']
     for key in ('shade', 'tint'): D[key] = tuple(x * m for x in DAY0[key])
     for key in ('gain', 'fill_w', 'vault_w', 'sun_k', 'lamp_k'): D[key] = DAY0[key] * m
+    D['beam_k'] = DAY0['beam_k'] * beam_scale(g)
     mx = P.TAKES[take]['mix']; P.set_light_mix(mx[2], mx[3], 1.0, g + 1); P.set_flicker2(1.0, frame=g + 1)
 assert P.check_take(take)['hits'] == [] and P.check_face(take)['ok']
 A = P.world_build(take); P.key_take(take); RES = tuple(int(x) for x in os.environ.get('RES', '720x1280').split('x')); P.setup_render2(RES, samples=16, threads=2)
@@ -41,6 +44,7 @@ if sys.argv[1] == 'still': one(int(sys.argv[2]), sys.argv[3])
 else:
     os.makedirs(OUT, exist_ok=True)
     G0, G1 = (int(sys.argv[2]), int(sys.argv[3])) if len(sys.argv) > 3 else (1211, 1383)   # usage: full [g0 g1]
+    one(G0, '/tmp/warmup_T5b.png')   # throwaway warm-up frame (first frames of a process were seen hazy in T5b2)
     for g in range(G0, G1 + 1):
         p = '%s/g_%04d.png' % (OUT, g)
         if os.path.exists(p) and os.path.getsize(p) > 50000: continue
