@@ -1,5 +1,5 @@
 """T5a render: g1039-1210. usage: python3 render_t5a.py still <g> <out.png> | range [g0 g1]  (resume: skips frames > 50 kB)"""
-import sys, os
+import sys, os, math
 sys.path.insert(0, '/home/user/github-commit-quest-v2/film/v3/set3d17')
 import prefecture17 as P, bpy
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -15,7 +15,8 @@ def assign_for(g):
     if g >= 1196:
         a['dupont'] = ('dupont_held', {}); a['gend_a'] = ('gendarme_escort_a', {}); a['gend_b'] = ('gendarme_escort_b', {})
     else:
-        a['gend_a'] = ('gendarme_standing_a', {'expr': 'smug'}); a['gend_b'] = ('gendarme_standing_b', {'expr': 'smug'})
+        bz = 0.06 * 0.5 * (1 - math.cos(2 * math.pi * 3.0 * g / 30.0)) if 1111 <= g < 1196 else 0.0   # snicker bounce 0.06 m at 3 Hz, mouth closed
+        a['gend_a'] = ('gendarme_standing_a', {'expr': 'smug', 'dz': bz}); a['gend_b'] = ('gendarme_standing_b', {'expr': 'smug', 'dz': bz * 0.8})
     return a
 def setup():
     assert P.check_take(take)['hits'] == [] and P.check_face(take)['ok']
