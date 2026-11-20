@@ -1,7 +1,6 @@
-# QA s25 (shot 25, g 1853..1911; take g 1849..1915)
-RESTO resto_table DAY 1889, callback of shot 2 from the same table: fork bite, chew, a sip of wine (glass raised ~g 1891-1911), napkin, blissful. Starts at the framing where s02 ended (head 143 px, girders + Paris), pushes 15 %/s with slide + orbit; SNAP PUSH x1.6 g 1877..1892 on "ที่เดียว" (event g 1879) to head ~285 px (22 % of frame height).
-- Colour (QA §G): runtime grade -0.9 EV, saturation 1.45. qa_stats: **saturation 0.564, brightness 98.5**, in-shot motion **median 4.99 p90 11.13** (deliver.py in-shot 4.42 / 11.45; target 4 / 12: median passes, p90 marginally under).
-- Heads: centre y 659-686, bottom max 806; never cut; no face > 35 % of frame height. No mouth moves. Nothing floats; no bars over his face.
-- qa_auto PASS. 4-frame handles each side (cut in from shot 24, cut out to shot 26).
-- The shot is 58 frames (the plan moved its start from 1814 to 1853): the fork cycle and wine sip were re-timed to fit.
+# QA s25 (shot 25, g 1853..1911; take g 1847..1915)
+RESTO resto_table DAY 1889, inside, callback of shot 2 and the far side of s24's **MATCH-DISSOLVE (9 frames)**: the take starts (6 handle frames g 1847..1852) on the framing that matches the end of s24 (head x 322-339, y 684, 165-170 px vs s24's x 331, y 675, 164 px) with the SAME fork cycle (bites at g 1817 / 1857 / ...), so the dissolve is seamless. Then a push with slide + orbit; SNAP PUSH x1.6 g 1877..1892 on "ที่เดียว" (event g 1879) to head ~330 px (26 % of frame height, < 35 %); a sip of wine g 1873..1913 (glass raised ~1893); napkin tucked; he is eating / sipping the whole shot. Hard cut out to s26 at g 1912 (4 handle frames).
+- Colour (QA §G/§I): runtime grade -0.9 EV + saturation 1.45. qa_stats: **saturation 0.550, brightness 105.8**, motion **median 5.66 p90 11.68** (deliver.py in-shot 5.03 / 11.59; target 4 / 12: p90 just under). qa_stats2: **vivid 50.9 %**, warm 19.4 % / cool 53.2 % (the cool window light + warm lamps and bread: warm and cool in the same frame).
+- Heads: centre y 656-686, bottom max 828 (<880), never cut by an edge, no face > 35 % of frame height. No mouth moves (still smile). Nothing floats (seated behind the cloth); no bars over his face (girders at the sides).
+- qa_auto PASS. s/frame 10.9 wall / 21 cpu. The shot is 58 frames long (plan 1853-1911).
 - GOTCHA: cap_g("แทบทุกวัน") matches the 5.24 s caption first; use g_of(t) for repeated phrases.

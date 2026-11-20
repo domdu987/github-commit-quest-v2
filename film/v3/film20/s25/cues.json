@@ -5,29 +5,29 @@
  "cues": [
   {
    "kind": "ambience",
-   "t": 61.633,
-   "dur": 2.233,
-   "frame": 1849,
+   "t": 61.567,
+   "dur": 2.3,
+   "frame": 1847,
    "end_frame": 1916,
    "note": "first-floor restaurant of the finished tower, day 1889: room murmur, cutlery and plates, a faint string trio, wind through the open lattice"
   },
   {
    "kind": "foley",
-   "t": 62.333,
+   "t": 61.833,
    "dur": 0.167,
-   "frame": 1870,
-   "end_frame": 1875,
+   "frame": 1855,
+   "end_frame": 1860,
    "note": "fork lifted to his mouth: small cutlery clink on the plate, blissful nasal hum without words (mouth stays still)",
-   "peak_frame": 1872
+   "peak_frame": 1857
   },
   {
    "kind": "foley",
-   "t": 63.433,
-   "dur": 0.6,
-   "frame": 1903,
-   "end_frame": 1921,
+   "t": 62.833,
+   "dur": 0.8,
+   "frame": 1885,
+   "end_frame": 1909,
    "note": "wine glass raised and set down: a light crystal 'tink' and a soft swallow",
-   "peak_frame": 1911
+   "peak_frame": 1895
   },
   {
    "kind": "foley",

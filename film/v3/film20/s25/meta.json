@@ -6,19 +6,21 @@
  ],
  "g0": 1853,
  "g1": 1912,
- "first_g": 1849,
- "n_frames": 67,
+ "first_g": 1847,
+ "n_frames": 69,
  "shot_ranges": {
   "25": [
    1853,
    1911
   ]
  },
- "handle_in": 4,
+ "handle_in": 6,
  "handle_out": 4,
  "transition_in": {
-  "type": "cut",
-  "frames": 0
+  "type": "match-dissolve",
+  "frames": 9,
+  "from_shot": 24,
+  "note": "starts on the framing matching the end of s24 (head x~330 y~680, 165 px, same fork-cycle phase)"
  },
  "transition_out": {
   "type": "cut",
@@ -38,9 +40,9 @@
   "fork_bite_rel": [
    19
   ],
-  "wine_sip_rel": [
-   38,
-   78
+  "wine_sip": [
+   1873,
+   1913
   ]
  },
  "dof": "none",
@@ -54,24 +56,24 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 18.01,
- "s_per_frame_cpu_mean": 23.07,
+ "s_per_frame_wall_mean": 10.89,
+ "s_per_frame_cpu_mean": 21.0,
  "heads": {
   "mau": {
    "head_px": [
-    143,
-    285
+    171,
+    331
    ],
    "head_centre_y": [
-    659,
-    686
+    656,
+    684
    ],
-   "head_bottom_max_y": 806
+   "head_bottom_max_y": 821
   }
  },
  "framediff_in_shot": {
-  "median": 4.42,
-  "p90": 11.45
+  "median": 5.03,
+  "p90": 11.59
  },
  "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
 }
