@@ -1,6 +1,6 @@
-# QA s17 (render team 5, film 18) round 8 - frames g1309-1387 (+6 handles: take.mkv g1303-1393, 91 frames), jimo_in NIGHT
-Frame-diff in-shot (n=78): median **6.66**, p90 **9.20**. qa_auto PASS.
-1. Foreground reeds: `J.prop_reed_bundle` (60 stalks, 2 red cords) at 0.5 scale parented to the camera, lower-left, recoloured with a warm straw emission so it is lit at night; nothing crosses a face. The set's own flat fg slab (the camera-parented `fgreeds` prop) is hidden.
-2. Tying: `STORY18["townsperson_tie_reeds"]` old man placed so his anchor `reed_tail_l` lands on the `tail_tip` anchor of ox 4 (computed from the ox card's yaw / mirror and scale); he bends with a 4-step lean cycle; about 35 % of frame height; chin about y 780-860 (< 880). A woman brings reeds, Tian Dan points.
-3. Oxen: 3/4 cards facing the holes (cast has no back view); no lit tail.
-4. `J.gapfill` ran; the road is warm dark earth with 4 v2 props; bare road about 35 % (not <= 30 %).
+# QA s17 (render team 5, film 18) round 9 - frames g1309-1387 (+6 handles: take.mkv g1303-1393, 91 frames), jimo_in NIGHT
+Frame-diff in-shot (n=78): median **8.88**, p90 **14.96**. qa_auto PASS.
+1. Wall holes visible and glowing: all 12 breaches open (`set_holes 12`), the camera is lower and closer (-22, 17, 1.8) so the dark openings sit behind the oxen; a warm point light (900 W) and a soft orange glow card at each hole mouth; the navy breach rubble / dig heaps are hidden.
+2. Oxen turned more nose-first toward the holes (cards 58 deg off the camera axis, heads toward the wall); no lit tail.
+3. The old man (`townsperson_tie_reeds`, 3.5 D tall, about 40 % of frame height) bends at ox 4's tail with his `reed_tail_l` anchor on the ox's `tail_tip`. The flat reed card pinned to the lens (the set's fg prop) is removed; the foreground prop is the 3D `J.prop_reed_bundle` (60 stalks, red cords).
+4. Chin stays about y 760 (< 880). `J.gapfill` ground, warm; bare ground about 30 %.
