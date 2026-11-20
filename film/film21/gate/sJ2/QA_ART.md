@@ -1,27 +1,34 @@
-# QA-art, TAKE gate: sJ2 THE ENDING (g1709-1848), film 21
-Reviewer: QA-art (opus). Frames extracted from take.mkv (every frame; viewed at full size and as 360x640 strips: g1709-1775, g1785-1826, g1830-1848). Compared with ref_shorts R5 (sea, storm, splash) and R7.
-Director ruling applied: the bright river_low luma, the saturation and the yellow far bank are colour-only and NOT scored. Rim: comment only.
+# QA-art sJ2 (TAKE gate, v2)
+Take: gate/sJ2/film/v3/film21/sJ2/take.mkv (g1709-1848, hard cut at the end). Viewed: every 5th frame at full size, a crop of the bridge side at g1719, the last frames at full size, the team's contact and phone sheets. Compared with R5 (water, splash) and R7. Levels are left to the conform. Rim light is ruled on at FINAL. Note: the "empty money table" is row J1 in the plan, not J2, so it is not judged here.
 
 ## Verdict: FIX-FIRST
-The middle is good and funny: the nose-pinch (g1731+), the arms-up yell jump at g1785, and the spluttering swimmers with a floating helmet. But the ending is the most important frame of the film, and it is weak:
-(a) the blocked bridge is never in frame, so sound-off viewers do not see WHY they jump. The background is only the far-bank camp, and they look mostly at the lens.
-(b) on "ตูม ตูม ตูม" the hexagonal splash beads build into a white wall across the upper half while the camera pushes PAST the swimmers. The last frames (g1843-1848) are mostly empty teal water with tiny half-hidden heads, so the hard cut lands on nothing.
 
-## Scores (1-10)
-| item | score | note |
-|---|---|---|
-| set density / ornament | 6 | Bank: grass, the river, the far-bank pavilions and hills. It is fairly plain: no bridge, no Scots, no reeds or props on the near bank. Water level: ripple rings and the far bank. |
-| lighting & colour | 6 | Colour waived. Low-sun long shadows on the bank are nice. The water stage is flat sky-lit with no motivated key; it is acceptable at a splash. |
-| composition / phone legibility | 5 | Bank phase: medium group, readable, good (§G wide/medium OK). Water phase: g1815-1830 is busy but readable. g1834-1848: the white bead wall covers 40-60 % of the frame and the subjects are lost. The near-bank foam band sits at the bottom of g1815-1832 (already noted by the team). |
-| character acting | 7 | Nose-pinch, the swap to fear, the arms-up yell jump, and spluttering faces in the water all read. The "look at the bridge, the water, each other" beat is not readable because the bridge is not shown and the head turns are small. |
-| key moment clarity & beauty | 4 | The three crowns are timed right (1821/1830/1839), but the 2nd and 3rd merge into one white mass. The final image has no character and no gag. |
-| match to references / camera travel | 6 | The whip-in, drift and drop to water level is good §I travel. The splash beads look like popcorn, not like the R5 water style. |
-| §G grounding (every 0.5 s tile) | pass | Bank feet have contact shadows. The airborne jump is intentional with motion. Helmets float ON the water. No face over 35 % (the swimmer at g1826-1830 is about 15 %). |
+The middle and the end are much better. All the English are crimson now. The nose-pinch (g1759-1769) and the arms-up yelling jumps (g1779-1794) read and are funny. The splash is now petal sheets and streaks, and the three crowns at 1821/1830/1839 are separate hits beside the swimmers. The film now ends on three deadpan swimming faces at medium size, with a floating helmet: a real comic last image. The low-sun shadows on the bank are lovely.
 
-Does it read sound-off? The jump yes. The reason and the final punch no. Funny? Yes in the middle, but not at the cut. Beautiful and in style? Partly. The splash material lets it down.
+Two things block it. The reason for the jump is still not visible, and the old crescent smoke "blades" stand behind the very last frame of the film.
 
-## Fixes (max 4)
-1. **Show the blocked bridge (g1709-1760).** Re-aim the bank camera so the bridge mouth with the BLUE saltire spear wall and its banners is in the background, beside or behind the English. Stage the beat as three clear head turns, each at least 0.4 s: heads to the bridge, then down to the water, then to each other (with a sweat drop). Then the nose-pinch. This is the cause of the gag.
-2. **End on faces, not empty water (g1834-1848).** Stop the push before it passes the swimmers. Keep 2-3 spluttering heads plus the floating helmet in the lower-middle third at medium size (10-20 % of the frame height). Place the 3rd crown BESIDE them, not across the whole frame, so the cut on the last "ตูม" lands on a readable comic image (for example a swimmer spitting water, or a helmet plopping onto a head).
-3. **Thin and reshape the splash.** Use fewer and smaller droplets, crown sheets and streaks instead of hexagonal beads. Each crown should be a separate column that falls back before the next one rises, so the three "ตูม" read as three distinct hits. No white mass should cover more than about 25 % of the frame or any face.
-4. **Recolour the blue English footman** (the nose-pincher and the others in blue tunics). Blue is the Scots' signature colour in this film (saltire wall). A blue soldier jumping in reads as "a Scot jumps" with the sound off. Use crimson/gold or another non-blue English colour (for example tan or grey) for this take and for any neighbouring takes that use the same cards.
+## Old items (v1)
+| v1 item | status |
+|---|---|
+| 1 show the blocked bridge, three head turns | NOT FIXED in effect: the bridge and wall are in frame but unreadable (B1) |
+| 2 end on faces | FIXED |
+| 3 thin and reshape the splash | FIXED (except N2) |
+| 4 recolour the blue English | FIXED |
+
+## Issues
+
+**B1 (blocking), g1709-1772: the blocked bridge does not read.** The bridge and the Scots wall sit at the far left against the sun. They come out as one dark navy band under a black tree silhouette: the saltire banners and the blue tunics cannot be told apart from the shadow. The group faces the lens, and the "look at the bridge" is only a sideways glance at nothing visible. With the sound off nobody knows WHY they jump.
+Fix: make the wall readable for at least 1 s before the nose-pinch. Options, best first:
+a) Re-aim the bank camera so the bridge mouth is front- or side-lit (camera south-west of the group looking north-east, or swap which side of the frame the bridge is on), with the wall plus 2-3 saltire banners at 8-12 % of the frame height behind the group.
+b) If the angle must stay, light the wall: a warm bounce or fill on the wall cards, translucent banner cloth with a white cross, and remove or move the dark tree that blocks the bridge at g1714-1735.
+Make the bridge head turn a full head-card swap toward it (0.4 s), not just the eyes.
+
+**B2 (blocking), g1709, g1789-1848 (including the final frame): the old crescent smoke blades.** Two tall grey-beige sickle shapes stand above the camp behind the swimmers. In the last image of the film they read as giant fins or blades. The team's H2a/H2b redo replaced them with soft smoke puffs (set3d21 e07ceb1). Fix: re-render sJ2 on the current set so the end frame matches the rest of the film.
+
+**N1 (non-blocking), g1815-1848: the bare bank and the white foam band.** The near bank fills the bottom 35-40 % of the frame, cut by a hard white foam stripe that reads like a slab. Lower the camera about 0.3 m toward the water line, or tilt up, so water and faces fill more of the frame, and soften or narrow the foam band (or add 2-3 reed cards at the bottom edge).
+
+**N2 (non-blocking), g1796-1814: the first impact sheets are too big.** They cover about 30 % of the frame and one face at g1809-1814. Scale those petals about 0.7x, or offset them away from the face.
+
+## Scores
+phone legibility 7 (bank 6, water 8) / set density 6 / light 7 (warm low sun on the bank, cool water) / colour story 7 (crimson yes, saltire blue missing on the bank) / acting and comedy 8 / same channel? yes in the water section / camera travel 8.
+§G pass: feet and contact shadows on the bank, the jumps are in motion, helmets float ON the water, no face over 35 %. Bloodless pass: everyone surfaces spluttering, and nobody lies still.

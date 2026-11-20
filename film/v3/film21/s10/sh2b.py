@@ -16,25 +16,25 @@ def parse(spec):
     return out
 
 # ---- stage (south bank, west of the bridge). 3/4 two-shot: the camera looks NE (az 50), the trap (river, blue wall, crimson block) is in the background at the right
-C = np.array([-92.0, -13.0]); AZ = math.radians(50.0); VIEW = np.array([math.cos(AZ), math.sin(AZ)]); RV = np.array([math.sin(AZ), -math.cos(AZ)])
+C = np.array([-30.0, -21.0]); AZ = math.radians(70.0); VIEW = np.array([math.cos(AZ), math.sin(AZ)]); RV = np.array([math.sin(AZ), -math.cos(AZ)])
 def gz(x, y): return float(K.ground(x, y))
-CRESS = C; SURREY = C + RV * 0.65 + VIEW * 2.0
+CRESS = C; SURREY = C + RV * 0.95 + VIEW * 0.9
 def at(base, along, lat): return base + VIEW * along + RV * lat
-CAM_M = at(C, -4.4, -0.3); CAM_E = at(C, -2.4, -0.1); CAM_E2 = at(C, -2.15, -0.1)
+CAM_M = at(C, -6.4, 0.0); CAM_E = at(C, -3.9, 0.1); CAM_E2 = at(C, -3.6, 0.1)
 def cam3(p, h): return (float(p[0]), float(p[1]), gz(p[0], p[1]) + h)
 def keys():
     zc = gz(*C)
     mid = (CRESS + SURREY) / 2
-    lk_m = at(mid, 3.0, 0.0)
+    lk_m = at(mid, 2.0, 0.0)
     return [
         (1392, 'P_TOP'),
         (1422, (-14.0, -111.0, 109.0), (2.0, 66.0, 0.0), 22.0),
-        (1446, (-52.0, -84.0, 46.0), (-82.0, -30.0, 2.0), 22.0),
-        (1464, (-77.0, -60.0, 13.0), (-86.0, -16.0, 2.5), 24.0),
-        (1479, (-86.0, -34.0, 5.0), (-89.0, -10.0, 2.5), 26.0),
-        (1495, cam3(CAM_M, 1.5), (float(lk_m[0]), float(lk_m[1]), zc + 2.7), 26.0),
-        (1519, cam3(CAM_E, 1.55), (float(at(C, 1.0, 0.0)[0]), float(at(C, 1.0, 0.0)[1]), zc + 1.75), 26.0),
-        (1530, cam3(CAM_E2, 1.57), (float(at(C, 1.0, 0.0)[0]), float(at(C, 1.0, 0.0)[1]), zc + 1.78), 26.0),
+        (1446, (-26.0, -86.0, 46.0), (-30.0, -30.0, 2.0), 22.0),
+        (1464, (-31.0, -62.0, 11.0), (-30.0, -20.0, 2.5), 24.0),
+        (1479, (-31.5, -42.0, 6.0), (-30.0, -14.0, 2.5), 30.0),
+        (1495, cam3(CAM_M, 3.8), (float(lk_m[0]), float(lk_m[1]), zc + 1.5), 40.0),
+        (1519, cam3(CAM_E, 3.2), (float(at(C, 0.6, 0.2)[0]), float(at(C, 0.6, 0.2)[1]), zc + 1.75), 40.0),
+        (1530, cam3(CAM_E2, 3.1), (float(at(C, 0.6, 0.2)[0]), float(at(C, 0.6, 0.2)[1]), zc + 1.8), 40.0),
     ]
 
 def story_colours(rs):
@@ -49,8 +49,8 @@ def story_colours(rs):
             x = -19 + c * 2.35 + rs.uniform(-0.35, 0.35) + (1.2 if r % 2 else 0); y = 36 + r * 3.0 + rs.uniform(-0.35, 0.35)
             if math.hypot(x - K.LOOP_C[0], y - K.LOOP_C[1]) < K.LOOP_R - 20 and float(K.sd_at(x, y)) > 3: items.append((x, y, float(K.ground(x, y)), 'crimson', 1.0))
     for i in range(30):
-        x = rs.uniform(-70, -20) if i % 2 else rs.uniform(20, 70); y = float(K.bank_y(x)) - rs.uniform(4, 26); items.append((x, y, float(K.ground(x, y)), 'crimson', 1.0))
-    for i in range(24):
+        x = rs.uniform(-110, -80) if i % 2 else rs.uniform(50, 90); y = float(K.bank_y(x)) - rs.uniform(4, 26); items.append((x, y, float(K.ground(x, y)), 'crimson', 1.0))
+    for i in range(0):
         y = -36 - i * 2.4; x = (-1.2 if i % 2 else 1.2) + rs.uniform(-0.3, 0.3); items.append((x, y, float(K.ground(x, y)), 'crimson', 1.0))
     K.stage_crowd(items)
     # the Scots wall: 5 ranks across the neck, spears level, blue
@@ -72,7 +72,7 @@ def blink(g, off=0, period=67): return 1.0 if (g + off) % period in (0, 1) else 
 # stand points (world xy) of the other English: 2nd rank behind and to the sides, fully inside the frame at the medium shot
 def extra_positions():
     out = []
-    for (d, lat, who, cast) in [(4.0, -1.7, "footman_a", "a"), (5.0, 2.3, "footman_b", "b"), (7.0, -0.2, "footman_a", "c"), (6.0, -3.2, "knight_b", "d"), (9.0, 3.0, "footman_b", "e")]:
+    for (d, lat, who, cast) in [(1.6, -1.35, "footman_a", "a"), (3.5, 1.7, "footman_b", "b"), (4.5, -1.5, "footman_a", "c"), (6.0, 0.4, "knight_b", "d"), (8.0, -2.6, "footman_b", "e")]:
         out.append((at(C, d, lat), who, cast))
     return out
 
@@ -129,27 +129,34 @@ def main(quality, gs, samples):
         path(g)
         T.scene.frame_set(f)
         T.cam.data.lens = T.cam.data.lens
-        shock = g >= 1488
-        # Cressingham
+        shock = g >= 1494
+        # LOOK-OVER phase (g < 1494): the pair and the soldiers look OVER the river at the trap (heads turned, Cressingham points); then a blink and the double take
+        yaw_look = 1.0 if not shock else 0.0
         cres.place(f, (float(CRESS[0]), float(CRESS[1]), gz(*CRESS)), scale=M["cressingham"])
-        base = S["cressingham_shocked" if shock else "cressingham_sweating"][1]
-        p = dict(base); p["blink"] = blink(g, 9) if not (1486 <= g <= 1487) else 1.0
-        if g < 1486: p["expr"] = "worried"; p["fx"] = ["sweat"]
-        p["head_roll"] = 2.5 * math.sin(g * 0.21); p["lean"] = 1.5 * math.sin(g * 0.17); p["yaw"] = YAW
+        if shock: p = dict(S["cressingham_shocked"][1])
+        else:
+            p = dict(S["cressingham_pointing"][1]); p.update(expr="worried", mouth="flat", fx=["sweat"])
+        p["blink"] = 1.0 if 1492 <= g <= 1493 else blink(g, 9)
+        p["head_roll"] = 2.5 * math.sin(g * 0.21); p["lean"] = 1.5 * math.sin(g * 0.17); p["yaw"] = yaw_look
         cres.pose(f, K.with_rim(p), camera=T.cam)
         surr.place(f, (float(SURREY[0]), float(SURREY[1]), gz(*SURREY)), scale=M["surrey"])
-        base = S["surrey_shocked" if g >= 1490 else "surrey_worried"][1]
-        p = dict(base); p["blink"] = 1.0 if 1488 <= g <= 1489 else blink(g, 31)
-        p["head_roll"] = 3 * math.sin(g * 0.19 + 1); p["yaw"] = YAW
+        sh2 = g >= 1496
+        p = dict(S["surrey_shocked" if sh2 else "surrey_worried"][1])
+        p["blink"] = 1.0 if 1494 <= g <= 1495 else blink(g, 31)
+        p["head_roll"] = 3 * math.sin(g * 0.19 + 1); p["yaw"] = 1.0 if not sh2 else 0.0
         surr.pose(f, K.with_rim(p), camera=T.cam)
         for a, pxy, cast, i in ex:
             ph = i * 1.3
             tip = 0.18 * (0.5 + 0.5 * math.sin(g * 2 * math.pi / 14.0 + ph))     # tiptoe bobbing, about 2 Hz
             a.place(f, (float(pxy[0]), float(pxy[1]), gz(*pxy) + tip * M[cast] * 1.0), scale=M[cast])
-            nm = cast + ("_tiptoe" if cast != "knight_b" else "_worried")
-            p = dict(S[nm][1])
+            if i == 0 and not shock:                                            # the soldier who points across the water
+                p = dict(S["footman_a_point_laugh"][1]); p.update(expr="worried", mouth="flat", fx=["sweat"])
+            else:
+                nm = cast + ("_tiptoe" if cast != "knight_b" else "_worried")
+                p = dict(S[nm][1])
             if shock and (i % 2 == 0): p = dict(S[cast + "_shocked"][1])
-            p["blink"] = blink(g, 13 * i + 5); p["head_roll"] = 4 * math.sin(g * 0.23 + ph); p["yaw"] = 0.45
+            p["blink"] = 1.0 if (shock and 1494 <= g <= 1495) else blink(g, 13 * i + 5)
+            p["head_roll"] = 4 * math.sin(g * 0.23 + ph); p["yaw"] = 0.9 if not shock else 0.2
             a.pose(f, K.with_rim(p), camera=T.cam)
     T.sprites_for(dict(default=256, cress=384, surrey=384))
     out = os.path.join(HERE, "raw", "h2b_" + quality); os.makedirs(out, exist_ok=True)
