@@ -34,7 +34,7 @@ def bigzoom1_path(t, spec=BZ1):
 
 def key_camera(cam, fn, t0, t1, fps=30, lens=22.0, interp='LINEAR'):
     """Key `cam` (object from F.make_camera) every frame from round(t0*fps) to round(t1*fps) following fn(t) -> (loc_m, look_m). Scene frame = round(t*30), as the plan. Returns (f0, f1)."""
-    f0 = int(round(t0 * fps)); f1 = int(round(t1 * fps)); sc = bpy.context.scene; sc.frame_start = min(sc.frame_start, f0); sc.frame_end = max(sc.frame_end, f1)
+    f0 = int(round(t0 * fps)); f1 = int(round(t1 * fps)); sc = bpy.context.scene; sc.frame_start, sc.frame_end = f0, f1
     for f in range(f0, f1 + 1):
         loc, look = fn(f / fps); loc = Vector(loc) * U; look = Vector(look) * U
         cam.location = loc; cam.rotation_euler = (look - loc).to_track_quat('-Z', 'Y').to_euler()
