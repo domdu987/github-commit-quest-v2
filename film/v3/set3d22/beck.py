@@ -34,7 +34,7 @@ def kdir(az, el):
 _B = dict(toon=1.0, key_desat=0.0, ink='#1a1450', form=(0.0, -0.05, 0.22), bloom_size=0.05, sun_angle=0.8, night=False)
 LIGHTS = dict(
     DUSK_CITY=dict(_B, key=(1.9, 1.0, 0.42), key_dir=kdir(60, 11), shade=(0.10, 0.10, 0.40), shade_tint=(0.085, 0.095, 0.44), shade_mix=0.8,
-                   grade_offset=(-0.004, -0.006, 0.0), lift=(0.034, 0.030, 0.078), grade_saturation=1.18),
+                   grade_offset=(-0.004, -0.006, 0.0), lift=(0.040, 0.036, 0.086), grade_saturation=1.18),
     LODGINGS=dict(_B, key=(0.0, 0.0, 0.0), key_dir=kdir(0, 60), shade=(0.09, 0.15, 0.46), shade_tint=(0.06, 0.14, 0.56), shade_mix=0.92,
                   grade_offset=(0.0, -0.006, 0.004), lift=(0.006, 0.014, 0.054), grade_saturation=1.32, toon=0.8),
     PLATFORM=dict(_B, key=(0.0, 0.0, 0.0), key_dir=kdir(0, 60), shade=(0.09, 0.14, 0.46), shade_tint=(0.06, 0.12, 0.55), shade_mix=0.8,
@@ -484,12 +484,12 @@ def build_lodgings(scene, P):
     cs.done((8.6, 10, 3.5), px=3)
     # ---- letter table (right foreground): NOTICE letter lying propped toward the camera, tea cup
     tb = Part('table', (4.0, 0.0, 1.4)); mb = tb.mb
-    mb.box((-0.8, -3.4, 1.55), (2.4, -0.6, 1.8), wood)
+    mb.box((-0.8, -1.0, 1.55), (2.4, 1.8, 1.8), wood)
     for lx in (-0.6, 2.2):
-        for ly in (-3.2, -0.8): mb.box((lx - 0.15, ly - 0.15, 0), (lx + 0.15, ly + 0.15, 1.55), dwood)
-    rod(mb, (1.8, -1.2, 1.8), (1.8, -1.2, 1.95), 0.36, C('#fff0d0', 1.3, 3.0, smix=0.2), r1=0.28, seg=14); rod(mb, (1.8, -1.2, 1.95), (1.8, -1.2, 2.3), 0.26, C('#fff0d0', 1.3, 3.0, smix=0.2), r1=0.34, seg=14)
+        for ly in (-0.8, 1.6): mb.box((lx - 0.15, ly - 0.15, 0), (lx + 0.15, ly + 0.15, 1.55), dwood)
+    rod(mb, (1.8, 1.2, 1.8), (1.8, 1.2, 1.95), 0.36, C('#fff0d0', 1.3, 3.0, smix=0.2), r1=0.28, seg=14); rod(mb, (1.8, 1.2, 1.95), (1.8, 1.2, 2.3), 0.26, C('#fff0d0', 1.3, 3.0, smix=0.2), r1=0.34, seg=14)
     tb.done((4.0, 0, 1.4), px=3)
-    ln = Part('letter', ink=True); ln.mb.quad(V((-0.5, -3.0, 1.84)), V((2.0, 0, 0)), V((0, 1.2, 0.8)), TX('note', 1.0, 1.0, glow='note', glow_k=0.35), (0, 0, 1, 1)); ln.done((1.8, -2.4, 2.2), px=2)
+    ln = Part('letter', ink=True); ln.mb.quad(V((-0.5, -0.4, 1.84)), V((2.0, 0, 0)), V((0, 1.2, 0.8)), TX('note', 1.0, 1.0, glow='note', glow_k=0.35), (0, 0, 1, 1)); ln.done((1.8, -2.4, 2.2), px=2)
     # ---- cot with a patchwork quilt (left foreground, dark foreground layer), pot of rolled drawings, waste basket
     bd = Part('cot', (-3.2, 0.0, 1.5)); mb = bd.mb
     mb.box((-7.4, -3.4, 0.9), (-2.6, 3.0, 1.6), C('#e8dcc0', 1.0, 1.6)); mb.box((-7.5, 3.0, 0), (-2.5, 3.3, 2.5), dwood); mb.box((-7.5, -3.5, 0), (-2.5, -3.2, 2.2), dwood)

@@ -1,25 +1,25 @@
 {
  "london_dusk": {
-  "sat": 0.6960071325302124,
-  "luma": 87.48922729492188,
-  "vivid": 78.39322916666667,
-  "shade_hue": 252.072265625,
-  "shade_frac": 40.43793402777778,
+  "sat": 0.6854328513145447,
+  "luma": 87.0352783203125,
+  "vivid": 69.16536458333333,
+  "shade_hue": 250.06430053710938,
+  "shade_frac": 51.13194444444444,
   "name": "london_dusk",
   "file": "board_1.png",
-  "wall_s": 7.2,
-  "cpu_s": 26.5
+  "wall_s": 6.9,
+  "cpu_s": 26.1
  },
  "beck_lodgings_night": {
-  "sat": 0.6348603367805481,
-  "luma": 100.41423034667969,
-  "vivid": 60.96484375,
-  "shade_hue": 253.808837890625,
-  "shade_frac": 32.62760416666667,
+  "sat": 0.6451879143714905,
+  "luma": 98.21308898925781,
+  "vivid": 63.85677083333333,
+  "shade_hue": 256.32244873046875,
+  "shade_frac": 29.00173611111111,
   "name": "beck_lodgings_night",
   "file": "board_2.png",
-  "wall_s": 6.3,
-  "cpu_s": 24.0
+  "wall_s": 6.4,
+  "cpu_s": 24.6
  },
  "platform_tunnel": {
   "sat": 0.6233901381492615,
@@ -29,7 +29,7 @@
   "shade_frac": 37.204427083333336,
   "name": "platform_tunnel",
   "file": "board_3.png",
-  "wall_s": 7.3,
-  "cpu_s": 28.2
+  "wall_s": 7.2,
+  "cpu_s": 27.8
  }
 }
