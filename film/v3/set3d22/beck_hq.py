@@ -170,7 +170,7 @@ def build_lodgings(scene, P):
     wf.done((6.6, 14, 5), px=2.5)
     # ---- the OLD tangled map (framed, back wall, left) and the cork board of circuits (back wall, middle-left)
     om = Part('old_map', (-6.1, 14, 4.7)); mb = om.mb; mb.box((-8.25, BW - 0.3, 2.95), (-3.95, BW, 6.25), C('#6a3a1a', 1.0, 1.5)); om.done((-6.1, 14, 4.7), px=2.5)
-    omp = Part('old_map_img', ink=False); plane(omp.mb, (-8.05, BW - 0.34, 3.15), (3.9, 0, 0), (0, 0, 2.9), TX('old_map', 1.15, 1.0, glow='old_map', glow_k=0.55), (0, 0, 1, 1)); omp.done()
+    omp = Part('old_map_img', ink=False); plane(omp.mb, (-8.05, BW - 0.34, 3.15), (3.9, 0, 0), (0, 0, 2.9), TX('old_map', 1.15, 1.0, glow='old_map', glow_k=0.5), (0, 0, 1, 1)); omp.done()
     cb = Part('cork', (-1.2, 14, 4.8)); mb = cb.mb; mb.box((-3.5, BW - 0.3, 3.0), (1.1, BW, 6.6), C('#5a2f14')); cb.done((-1.2, 14, 4.8), px=2.5)
     cbp = Part('cork_img', ink=False); plane(cbp.mb, (-3.3, BW - 0.34, 3.2), (4.2, 0, 0), (0, 0, 3.2), TX('cork', 1.1, 1.0, glow='cork', glow_k=0.4), (0, 0, 1, 1)); cbp.done()
     for i, (x0, z0, w_, h_) in enumerate(((-3.1, 4.2, 1.5, 1.1), (-1.3, 3.5, 1.5, 1.1), (-2.8, 5.3, 1.4, 1.0), (-0.9, 5.0, 1.6, 1.15))):
@@ -349,7 +349,7 @@ def _desk(mb, x, y, w, d, h, wood, dwood, drawer_side=True):
 def build_publicity_room(S, P, embed=False, ceiling=True):
     C, TX, E = S['C'], S['TX'], S['E']; rs = random.Random(31)
     pan = TX('wood', 1.15, (0.45, 0.85, 1.6)); wd = C('#7a3a1a'); wood = C('#b0703a', 1.0, 1.8); dwood = C('#4a2410'); green = C('#12a15a', 1.0, 1.8, smix=0.2); steel = C('#6a7a9a', 1.0, 1.6)
-    ceil_m = C('#d8b878', 0.6, 1.0)
+    ceil_m = C('#a07848', 0.4, 1.0)
     r = Part('pub_room', ink=False); mb = r.mb
     W = PX1 - PX0; D = PY1 - PY0; H = PZ1 - PZ0
     plane(mb, (PX0, PY0, PZ0), (W, 0, 0), (0, D, 0), TX('wood', 1.0, (0.5, 0.85, 1.5)), (0, 0, 9, 6))                          # honey boards
@@ -358,14 +358,16 @@ def build_publicity_room(S, P, embed=False, ceiling=True):
     plane(mb, (PX0, PY0, PZ0), (0, D, 0), (0, 0, H), pan, (0, 0, 4, 2.2)); plane(mb, (PX1, PY0, PZ0), (0, D, 0), (0, 0, H), pan, (0, 0, 4, 2.2))
     # south wall (inside face) with the real window opening
     for (a, b, c, d_) in ((PX0, PX1, PZ0, PWZ0), (PX0, PX1, PWZ1, PZ1), (PX0, PWX0, PWZ0, PWZ1), (PWX1, PX1, PWZ0, PWZ1)):
+        if not ceiling: continue
         if b - a > 0.01 and d_ - c > 0.01: plane(mb, (b, PY0, c), (a - b, 0, 0), (0, 0, d_ - c), pan, (0, 0, (b - a) / 3.5, (d_ - c) / 3.2))
     r.done()
     cr_ = Part('pub_trim', (0, 29, 8)); mb = cr_.mb
     mb.box((PX0, PY1 - 0.3, PZ0), (PX1, PY1, PZ0 + 0.6), dwood); mb.box((PX0, PY0, PZ0), (PX0 + 0.3, PY1, PZ0 + 0.6), dwood); mb.box((PX1 - 0.3, PY0, PZ0), (PX1, PY1, PZ0 + 0.6), dwood)
-    mb.box((PX0, PY1 - 0.3, PZ1 - 0.5), (PX1, PY1, PZ1), C('#e8d8ae')); mb.box((PX0, PY0, PZ0), (PWX0, PY0 + 0.3, PZ0 + 0.6), dwood); mb.box((PWX1, PY0, PZ0), (PX1, PY0 + 0.3, PZ0 + 0.6), dwood)
+    mb.box((PX0, PY1 - 0.3, PZ1 - 0.5), (PX1, PY1, PZ1), C('#b89868')); mb.box((PX0, PY0, PZ0), (PWX0, PY0 + 0.3, PZ0 + 0.6), dwood); mb.box((PWX1, PY0, PZ0), (PX1, PY0 + 0.3, PZ0 + 0.6), dwood)
     mb.box((PWX0 - 0.4, PY0 - 0.5, PWZ0 - 0.3), (PWX1 + 0.4, PY0 + 0.4, PWZ0), C('#e8dcc0'))                   # sill
     for xx in (PWX0 - 0.3, PWX1 + 0.1): mb.box((xx, PY0 - 0.5, PWZ0 - 0.3), (xx + 0.2, PY0 + 0.4, PWZ1 + 0.3), C('#e8dcc0'))
     mb.box((PWX0 - 0.4, PY0 - 0.5, PWZ1), (PWX1 + 0.4, PY0 + 0.4, PWZ1 + 0.3), C('#e8dcc0'))
+    if not ceiling: cr_.mb.__init__(); cr_.mb.box((PX0, PY1 - 0.3, PZ0), (PX1, PY1, PZ0 + 0.6), dwood); cr_.mb.box((PX0, PY0, PZ0), (PX0 + 0.3, PY1, PZ0 + 0.6), dwood); cr_.mb.box((PX1 - 0.3, PY0, PZ0), (PX1, PY1, PZ0 + 0.6), dwood)
     cr_.done((0, 29, 8), px=2.5)
     if not embed and ceiling:                                                                                  # the street seen through the window (standalone location, not in the bird's-eye)
         sc = Part('pub_street', ink=False, shadow=False); plane(sc.mb, (PWX0 - 6, PY0 - 3.5, PWZ0 - 4), (PWX1 - PWX0 + 12, 0, 0), (0, 0, PWZ1 - PWZ0 + 8), E('pubstreet', 'night_city', k=1.0), (0.0, 0.0, 0.56, 0.78)); sc.done()
@@ -374,7 +376,7 @@ def build_publicity_room(S, P, embed=False, ceiling=True):
     dr_ = Part('pub_dado_rail', (0, 33, PZ0 + 3)); mb = dr_.mb
     mb.box((PX0, PY1 - 0.3, PZ0 + 3.0), (PX1, PY1, PZ0 + 3.2), wood); mb.box((PX0, PY0, PZ0 + 3.0), (PX0 + 0.3, PY1, PZ0 + 3.2), wood); mb.box((PX1 - 0.3, PY0, PZ0 + 3.0), (PX1, PY1, PZ0 + 3.2), wood)
     dr_.done((0, 33, PZ0 + 3), px=2.5)
-    if not embed:                                                                                              # venetian blind (standalone only: the s15 camera flies through the window)
+    if not embed and ceiling:                                                                                  # venetian blind (standalone only: the s15 camera flies through the window)
         bl_ = Part('pub_blind', (0, PY0, PWZ1), shadow=False); mb = bl_.mb
         for i in range(10): mb.box((PWX0 - 0.2, PY0 + 0.15, PWZ1 - 0.1 - i * 0.2), (PWX1 + 0.2, PY0 + 0.55, PWZ1 - 0.02 - i * 0.2), C('#f0e4c0', 1.1, 1.5))
         mb.box((PWX0 - 0.3, PY0 + 0.1, PWZ1), (PWX1 + 0.3, PY0 + 0.6, PWZ1 + 0.3), wood); bl_.done((0, PY0, PWZ1), px=2.5)
@@ -395,11 +397,11 @@ def build_publicity_room(S, P, embed=False, ceiling=True):
     # glass partition of the official's office (x -7..7, y PART_Y) with an open door gap x 2.6..4.8, lettering PUBLICITY DEPT
     gp = Part('pub_partition', (0, PART_Y, 10)); mb = gp.mb
     for xx in (-7.0, -3.5, 2.6, 4.8, 7.0): mb.box((xx - 0.12, PART_Y - 0.1, PZ0), (xx + 0.12, PART_Y + 0.1, PZ0 + 6.2), wood)
-    mb.box((-7.1, PART_Y - 0.12, PZ0), (7.1, PART_Y + 0.12, PZ0 + 1.3), wood); mb.box((-7.1, PART_Y - 0.12, PZ0 + 6.0), (7.1, PART_Y + 0.12, PZ0 + 6.3), wood)
+    mb.box((-7.1, PART_Y - 0.12, PZ0), (7.1, PART_Y + 0.12, PZ0 + 0.4), wood); mb.box((-7.1, PART_Y - 0.12, PZ0 + 6.0), (7.1, PART_Y + 0.12, PZ0 + 6.3), wood)
     mb.box((7.0, PART_Y, PZ0), (7.2, PY1, PZ0 + 6.3), wood); mb.box((-7.2, PART_Y, PZ0), (-7.0, PY1, PZ0 + 6.3), wood)
     gp.done((0, PART_Y, 9), px=2.5)
     gl = Part('pub_glass', ink=False, shadow=False)
-    for (xa, xb) in ((-7.0, 2.6), (4.8, 7.0)): plane(gl.mb, (xa, PART_Y - 0.14, PZ0 + 1.3), (xb - xa, 0, 0), (0, 0, 4.7), E('glass', 'halo_cool', k=0.16, additive=True), (0, 0, 1, 1))
+    for (xa, xb) in ((-7.0, 2.6), (4.8, 7.0)): plane(gl.mb, (xa, PART_Y - 0.14, PZ0 + 0.4), (xb - xa, 0, 0), (0, 0, 5.6), E('glass', 'halo_cool', k=0.16, additive=True), (0, 0, 1, 1))
     gl.done()
     sg = Part('pub_glass_sign', ink=False); plane(sg.mb, (-2.2, PART_Y - 0.16, PZ0 + 4.75), (4.4, 0, 0), (0, 0, 1.0), E('pubsign', 'sign_publicity', k=1.4), (0, 0, 1, 1)); sg.done()
     # official's desk with drawer, lamp, in-tray, stamp, blotter, phone; his chair
@@ -425,7 +427,7 @@ def build_publicity_room(S, P, embed=False, ceiling=True):
     ch = Part('off_chair', (x, y + 1.9, PZ0 + 2)); mb = ch.mb; ccx, ccy = x, y + 1.9
     mb.box((ccx - 0.9, ccy - 0.8, PZ0 + 1.0), (ccx + 0.9, ccy + 0.8, PZ0 + 1.25), C('#6a1a1a', 1.0, 1.6)); rod(mb, (ccx, ccy, PZ0), (ccx, ccy, PZ0 + 1.0), 0.12, dwood, seg=6)
     for a_ in range(5): ang = a_ * 2 * math.pi / 5; rod(mb, (ccx, ccy, PZ0 + 0.1), (ccx + 0.9 * math.cos(ang), ccy + 0.9 * math.sin(ang), PZ0 + 0.05), 0.06, dwood, seg=4)
-    mb.box((ccx - 0.9, ccy + 0.7, PZ0 + 1.25), (ccx + 0.9, ccy + 0.95, PZ0 + 3.2), C('#6a1a1a', 1.0, 1.6))
+    mb.box((ccx - 0.7, ccy + 0.7, PZ0 + 1.25), (ccx + 0.7, ccy + 0.85, PZ0 + 2.4), C('#a0522a', 1.0, 1.6))
     ch.done((ccx, ccy, PZ0 + 1.5), px=3)
     # clerks' desks with typewriters and chairs
     cd = Part('clerk_desks', (0, 26.5, PZ0 + 1.5)); mb = cd.mb; green2 = C('#12a15a', 1.0, 1.8, smix=0.2); paper = C('#fff6e0', 1.2, 1.7)
@@ -492,13 +494,13 @@ def rebuild_towers():
         if o: bpy.data.objects.remove(o, do_unlink=True)
     h = PUB['towers']
     if h <= 0.01: return
-    C, TX = STATE['C'], STATE['TX']; rs = random.Random(8); tp = Part('map_towers', ink=True); mb = tp.mb; tm = TX('pocket_map', 1.0, 1.0); top = C('#f6ecd0', 1.1, 1.5, smix=0.2)
+    C, TX = STATE['C'], STATE['TX']; rs = random.Random(8); tp = Part('map_towers', ink=True); mb = tp.mb; tm = TX('pocket_map', 0.8, 1.0); top = C('#f0dcb0', 0.85, 1.4, smix=0.2)
     oy = OFF_DESK[1]; spots = [(-3.2, oy - 1.0, 6.8), (3.2, oy - 1.0, 6.6), (-3.6, oy + 1.2, 7.0), (3.6, oy + 1.4, 6.8), (-5.3, oy + 0.2, 6.2), (5.3, oy + 0.3, 6.0), (-2.2, oy + 2.6, 5.6), (2.3, oy + 2.8, 6.0), (-5.6, oy - 1.6, 4.0), (5.6, oy - 1.8, 4.4)]
     for (sx, sy, mx) in spots:
         nH = max(1, int(mx * h / 0.32)); z = PZ0
         for i in range(nH):
             yaw = rs.uniform(-0.12, 0.12); ax = V((math.cos(yaw), math.sin(yaw), 0)); ay = V((-math.sin(yaw), math.cos(yaw), 0))
-            obox(mb, V((sx + rs.uniform(-0.08, 0.08), sy + rs.uniform(-0.08, 0.08), z + 0.16)), ax, ay, Z, 0.62, 0.45, 0.16, tm if i % 2 == 0 else top); z += 0.32
+            obox(mb, V((sx + rs.uniform(-0.08, 0.08), sy + rs.uniform(-0.08, 0.08), z + 0.16)), ax, ay, Z, 0.62, 0.45, 0.16, (tm if i % 2 == 0 else top) if i % 7 else [C('#e3262b', 1.2, 1.6), C('#1f49c8', 1.2, 1.6), C('#ffc81e', 1.2, 1.6), C('#12a15a', 1.2, 1.6)][(i // 7) % 4]); z += 0.32
     tp.done((0, 31.5, PZ0 + 3), px=2.5)
 
 def rebuild_crate():
@@ -662,7 +664,7 @@ def build_corridor(scene, P):
         rod(mb, (lx, -1.0, CZ), (lx, -1.0, CZ - 1.3), 0.04, C('#222244'), seg=4); mb.frustum((lx, -1.0, CZ - 1.3), (lx, -1.0, CZ - 2.0), 0.2, 1.0, green, seg=14); mb.sphere((lx, -1.0, CZ - 1.95), 0.3, E('cbulb', color='#ffd58a', k=1.4), seg=8, rings=5)
         halo_card(lg.mb, (lx, -1.0, CZ - 2.2), 2.6, E('hcl', 'halo_warm', k=0.9, additive=True))
     lp.done(); lg.done()
-    for lx in lxs[::1]: point_light('corL%d' % lx, (lx, -1.0, CZ - 2.2), (1.0, 0.72, 0.38), 380, 0.4)
+    for lx in lxs[::1]: point_light('corL%d' % lx, (lx, -1.0, CZ - 2.2), (1.0, 0.72, 0.38), 560, 0.4)
     for sx_, nx in ((X0, 1), (X1, -1)):
         wn = Part('cor_end_window%d' % nx, ink=False, shadow=False); mb = wn.mb; mb.pid += 1
         mb.face([V((sx_ + nx * 0.05, -3.0, 2.0)), V((sx_ + nx * 0.05, 1.0, 2.0)), V((sx_ + nx * 0.05, 1.0, 7.0)), V((sx_ + nx * 0.05, -3.0, 7.0))][::nx], E('cwin', 'night_city', k=1.0), [(0, 0), (1, 0), (1, 1), (0, 1)])
@@ -684,15 +686,18 @@ def build_corridor(scene, P):
     rebuild_hand()
 
 def rebuild_hand():
+    """The clerk's hand inside the PUBLICITY door: a side-on suit sleeve with a white cuff, skin hand and three fingers reaching along x across the doorway to take the roll."""
     o = bpy.data.objects.get('cor_hand')
     if o: bpy.data.objects.remove(o, do_unlink=True)
     t = COR['hand']
     if t <= 0.01: return
-    C = STATE['C']; hp = Part('cor_hand', ink=True); mb = hp.mb; x = DOOR_X['publicity']; y0 = CY1 + 0.4; reach = 1.6 * min(1.0, t)
-    sleeve, skin = C('#2a3a78', 1.0, 1.6, smix=0.2), C('#f0be94', 1.1, 1.8, smix=0.25)
-    rod(mb, (x - 0.2, y0 + 1.5, 3.5), (x - 0.2, CY1 - reach + 0.4, 3.4), 0.24, sleeve, r1=0.2, seg=10); rod(mb, (x - 0.2, CY1 - reach + 0.4, 3.4), (x - 0.2, CY1 - reach - 0.1, 3.38), 0.14, skin, r1=0.12, seg=8)
-    mb.sphere((x - 0.2, CY1 - reach - 0.15, 3.36), 0.17, skin, seg=10, rings=6)
-    hp.done((x, CY1 - 1, 3.4), px=2.5)
+    C = STATE['C']; hp = Part('cor_hand', ink=True); mb = hp.mb; x = DOOR_X['publicity']; y = CY1 - 0.35; z = 3.5; reach = min(1.0, t)
+    sleeve, skin, cuff = C('#2a3a78', 1.0, 1.6, smix=0.2), C('#f0be94', 1.1, 1.8, smix=0.25), C('#f4ecd8', 1.1, 1.6, smix=0.25)
+    xe = x + 1.0 - 1.9 * reach                                                                      # hand tip x
+    rod(mb, (x + 1.1, y + 0.1, z + 0.2), (xe + 0.9, y, z), 0.24, sleeve, r1=0.2, seg=10); rod(mb, (xe + 0.9, y, z), (xe + 0.75, y, z), 0.21, cuff, seg=10)
+    rod(mb, (xe + 0.75, y, z), (xe + 0.3, y, z - 0.02), 0.15, skin, r1=0.13, seg=8)
+    for dz in (-0.12, 0.0, 0.12): rod(mb, (xe + 0.3, y, z + dz), (xe - 0.1, y - 0.02, z + dz * 1.3), 0.045, skin, seg=6)
+    hp.done((x, y, z), px=2.5)
 @setter('door_hand')
 def set_door_hand(t): COR['hand'] = float(t); rebuild_hand()
 

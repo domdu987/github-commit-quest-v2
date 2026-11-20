@@ -67,21 +67,22 @@ def lodging_house(S):
     for cx_ in (-31, -23): mb.box((cx_ - .8, -12, H + 5.5), (cx_ + .8, -10, H + 9.5), brick); mb.box((cx_ - 1.0, -12.2, H + 9.5), (cx_ + 1.0, -9.8, H + 10.2), C('#4a3a30'))
     lh.done((-27, -10, 12))
     sg = Part('sign_rooms', ink=False); plane(sg.mb, (-30.0, Y1 + 0.08, 4.0), (5.2, 0, 0), (0, 0, 1.7), E('rooms', 'sign_rooms', k=1.7), (0, 0, 1, 1)); sg.done()
-    point_light('lodge_in', (cx, -9.0, cz), (1.0, 0.7, 0.35), 600, 0.8); point_light('lodge_out', (cx, Y1 + 1.5, cz), (1.0, 0.7, 0.35), 700, 0.8)
+    point_light('lodge_in', (cx, -9.0, cz), (1.0, 0.7, 0.35), 600, 0.8); point_light('lodge_out', (cx, Y1 + 1.5, cz), (1.0, 0.7, 0.35), 400, 0.8)
     bw = Part('beck_window_glow', ink=False, shadow=False); halo_card(bw.mb, (cx, Y1 + 1.6, cz), 3.0, E('hbw', 'halo_warm', k=0.5, additive=True)); bw.done()
 
 
 def build_london_world(scene, P):
+    PV = lambda g: (STATE['TX']('pave', g * 0.5, (0.45, 0.8, 1.6)) if STATE['lkey'] == 'NIGHT_CITY' else STATE['TX']('pave', g))
     S = STATE; C, TX, E, CARD = S['C'], S['TX'], S['E'], S['CARD']; rs = random.Random(22)
     sun_light(P)
     # ---- ground: road, pavements, kerbs
     g = Part('ground', (0, 10, 0), ink=False); mb = g.mb
-    plane(mb, (-160, -80, -0.05), (320, 0, 0), (0, 80, 0), TX('pave', 0.8), (0, 0, 40, 10))                     # far foreground ground
-    plane(mb, (-160, -8, 0.0), (320, 0, 0), (0, 6, 0), TX('pave', 1.0), (0, 0, 40, 1))                          # near pavement
+    plane(mb, (-160, -80, -0.05), (320, 0, 0), (0, 80, 0), PV(0.8), (0, 0, 40, 10))                     # far foreground ground
+    plane(mb, (-160, -8, 0.0), (320, 0, 0), (0, 6, 0), PV(1.0), (0, 0, 40, 1))                          # near pavement
     plane(mb, (-160, -2, 0.0), (320, 0, 0), (0, 16, 0), TX('road', 1.0), (0, 0, 40, 2))                         # road
-    plane(mb, (-160, 14, 0.0), (120, 0, 0), (0, 10, 0), TX('pave', 1.0), (0, 0, 15, 1)); plane(mb, (-26, 14, 0.0), (186, 0, 0), (0, 10, 0), TX('pave', 1.0), (0, 0, 22, 1))
-    plane(mb, (-40, 14, 0.0), (14, 0, 0), (0, 0.5, 0), TX('pave', 1.0), (0, 0, 2, 1)); plane(mb, (-40, 22.5, 0.0), (14, 0, 0), (0, 1.5, 0), TX('pave', 1.0), (0, 0, 2, 1))   # far pavement with the stair well
-    plane(mb, (-160, 24, -0.02), (320, 0, 0), (0, 52, 0), TX('pave', 0.8), (0, 0, 40, 6)); plane(mb, (-160, 110, -0.02), (320, 0, 0), (0, 26, 0), TX('pave', 0.8), (0, 0, 40, 3))   # ground behind HQ (river gap y 76-98)
+    plane(mb, (-160, 14, 0.0), (120, 0, 0), (0, 10, 0), PV(1.0), (0, 0, 15, 1)); plane(mb, (-26, 14, 0.0), (186, 0, 0), (0, 10, 0), PV(1.0), (0, 0, 22, 1))
+    plane(mb, (-40, 14, 0.0), (14, 0, 0), (0, 0.5, 0), PV(1.0), (0, 0, 2, 1)); plane(mb, (-40, 22.5, 0.0), (14, 0, 0), (0, 1.5, 0), PV(1.0), (0, 0, 2, 1))   # far pavement with the stair well
+    plane(mb, (-160, 24, -0.02), (320, 0, 0), (0, 52, 0), PV(0.8), (0, 0, 40, 6)); plane(mb, (-160, 110, -0.02), (320, 0, 0), (0, 26, 0), PV(0.8), (0, 0, 40, 3))   # ground behind HQ (river gap y 76-98)
     g.done()
     k = Part('kerbs', (0, 6, 0)); mb = k.mb; kc = C('#b8a890')
     mb.box((-160, -2.4, 0), (160, -2.0, 0.5), kc); mb.box((-160, 13.6, 0), (160, 14.0, 0.5), kc); k.done()
@@ -111,8 +112,19 @@ def build_london_world(scene, P):
     pg = Part('pit_glow', ink=False, shadow=False); halo_card(pg.mb, (-33, 18.5, 1.5), 7.0, E('hpit', 'halo_warm', k=1.4, additive=True)); pg.done()
     point_light('pit_up', (-33, 19, 1.0), (1.0, 0.62, 0.3), 1200, 0.8)
     # ---- grate (pavement, warm light from below) near the middle of the far pavement
-    gr = Part('grate', (8, 19, 0.1), ink=False); plane(gr.mb, (4, 15.5, 0.06), (8, 0, 0), (0, 7, 0), TX('grate', 1.0, glow='grate_glow', glow_k=0.3), (0, 0, 1, 1)); gr.done()
-    gh = Part('grate_glow', ink=False, shadow=False); halo_card(gh.mb, (8, 19, 3.0), 4.5, E('hgr', 'halo_warm', k=0.25, additive=True)); plane(gh.mb, (-1.0, 13.5, 0.09), (18, 0, 0), (0, 11, 0), E('hgr2', 'halo_warm', k=0.25, additive=True), (0, 0, 1, 1)); gh.done()
+    GX, GY = GRATE_XY; hx, hy = GRATE_SIZE[0] / 2, GRATE_SIZE[1] / 2
+    gu = Part('grate_under', ink=False, shadow=False); plane(gu.mb, (GX - hx, GY - hy, 0.12), (2 * hx, 0, 0), (0, 2 * hy, 0), E('gu', color='#ff9a3a', k=0.85), (0, 0, 1, 1))
+    for (lx_, ly_) in ((GX - 2.4, GY - 1.6), (GX + 2.4, GY - 1.6), (GX - 2.4, GY + 1.6), (GX + 2.4, GY + 1.6), (GX, GY)): halo_card(gu.mb, (lx_, ly_, 0.25), 1.1, E('gl', 'halo_white', k=0.9, additive=True))   # shaft lamps seen between the bars
+    gu.done()
+    gr = Part('grate', (GX, GY, 0.1), ink=True); mb = gr.mb; iron = C('#26204e', 0.5, 1.0)                                   # SAME layout as beck_under: 7 bars x 0.28, 3 cross bars 0.36, frame 0.4 (see API.md)
+    for k in range(7): xx = GX - hx + (k + 0.5) * (2 * hx / 7); mb.box((xx - 0.14, GY - hy, -0.05), (xx + 0.14, GY + hy, 0.3), iron)
+    for yy in (GY - hy + 0.2, GY, GY + hy - 0.2): mb.box((GX - hx, yy - 0.18, -0.05), (GX + hx, yy + 0.18, 0.3), iron)
+    fr_ = C('#3a3070'); mb.box((GX - hx - 0.4, GY - hy - 0.4, -0.2), (GX + hx + 0.4, GY - hy, 0.35), fr_); mb.box((GX - hx - 0.4, GY + hy, -0.2), (GX + hx + 0.4, GY + hy + 0.4, 0.35), fr_)
+    mb.box((GX - hx - 0.4, GY - hy, -0.2), (GX - hx, GY + hy, 0.35), fr_); mb.box((GX + hx, GY - hy, -0.2), (GX + hx + 0.4, GY + hy, 0.35), fr_)
+    for k in range(7):
+        for yy in (GY - hy + 0.2, GY, GY + hy - 0.2): xx = GX - hx + (k + 0.5) * (2 * hx / 7); mb.sphere((xx, yy, 0.32), 0.11, C('#8a90c8', 1.2, 1.4), seg=6, rings=4)   # rivets
+    gr.done((GX, GY, 0.1), px=3)
+    gh = Part('grate_glow', ink=False, shadow=False); halo_card(gh.mb, (8, 19, 3.0), 4.5, E('hgr', 'halo_warm', k=0.18, additive=True)); plane(gh.mb, (-1.0, 13.5, 0.09), (18, 0, 0), (0, 11, 0), E('hgr2', 'halo_warm', k=0.25, additive=True), (0, 0, 1, 1)); gh.done()
     point_light('grate_up', (8, 19, 0.6), (1.0, 0.6, 0.25), 450, 0.8)
     lodging_house(S)
     # near-side terrace (roofs seen from above: dark foreground) x -80..-38
@@ -231,7 +243,7 @@ def build_london_world(scene, P):
         bpy.data.objects[n].location.y += 24
     # ---- vehicles: red double-decker bus, black cabs
     bus = Part('bus', (-4, 4, 4)); mb = bus.mb; bm = TX('bus', 1.0, 6.0, glow='bus_glow', glow_k=1.6, smix=0.15); bred = C('#c8201e', 1.0, 6.0, smix=0.15)
-    mb.box((-16, 1.2, 0.8), (8, 6.2, 10.4), bred, mats={'front': bm, 'back': bm, 'top': C('#e03a30', 1.2, 7.0, smix=0.15)}, skip='')
+    mb.box((-16, 1.2, 0.8), (8, 6.2, 10.4), bred, mats={'front': bm, 'back': bm, 'top': bred, 'left': bred, 'right': bred}, skip='')
     mb.box((-16.2, 1.0, 10.4), (8.2, 6.4, 10.8), C('#9a1614', 1.0, 4.0, smix=0.15)); mb.box((-16, 1.2, 0.2), (8, 6.2, 1.2), C('#3a0a10', 1.0, 3.0))
     mb.box((-16.1, 2.0, 4.6), (-15.9, 5.4, 5.2), C('#fff2c0', 1.8))                                                       # route board
     mb.box((7.0, 1.0, 0.8), (8.6, 1.5, 10.4), C('#2a0a14')); mb.box((7.0, 5.9, 0.8), (8.6, 6.4, 10.4), C('#2a0a14'))     # open rear platform posts
@@ -251,16 +263,16 @@ def build_london_world(scene, P):
     for (cx, cy), d in cabs: halo_card(ch.mb, (cx - 3.9 * d, cy + 0.8, 1.9), 1.5, E('hl', 'halo_white', k=1.7, additive=True)); halo_card(ch.mb, (cx - 3.9 * d, cy + 2.8, 1.9), 1.5, E('hl', 'halo_white', k=1.7, additive=True))
     ch.done()
     # ---- street furniture: lamp posts + halos, kiosk, flower stall, bollards, railings
-    lp = Part('lamps', (0, 6, 7)); mb = lp.mb; lc = C('#26204e'); bulb = E('bulb', color='#ffd98a', k=1.4)
+    lp = Part('lamps', (0, 6, 7)); mb = lp.mb; lc = C('#26204e'); bulb = E('bulb', color='#ffd98a', k=0.85)
     lamps = [(-52, -3.3), (-20, -3.3), (14, -3.3), (44, -3.3), (-52, 24.5 - 9.6), (-12, 24.5 - 9.6), (30, 24.5 - 9.6), (56, 24.5 - 9.6)]
     lamps = [(-18, -3.3), (12, -3.3), (40, -3.3), (66, -3.3), (-24, 15.2), (-6, 15.2), (32, 15.2), (56, 15.2)]
     for (lx, ly) in lamps:
         rod(mb, (lx, ly, 0), (lx, ly, 12.5), 0.34, lc, r1=0.22, seg=8); mb.box((lx - .8, ly - .8, 0), (lx + .8, ly + .8, 1.5), lc); mb.box((lx - 1.0, ly - 1.0, 12.5), (lx + 1.0, ly + 1.0, 13.0), lc)
-        mb.frustum((lx, ly, 13.0), (lx, ly, 13.8), 0.9, 0.6, lc, seg=8); mb.sphere((lx, ly, 15.0), 1.4, bulb, seg=12, rings=8)
+        mb.frustum((lx, ly, 13.0), (lx, ly, 13.8), 0.9, 0.6, lc, seg=8); mb.sphere((lx, ly, 15.0), 1.2, bulb, seg=12, rings=8)
     lp.done((0, 6, 7))
     lh_ = Part('lamp_halos', ink=False, shadow=False)
     for (lx, ly) in lamps:
-        halo_card(lh_.mb, (lx, ly, 13.9), 4.4, E('hh', 'halo_warm', k=1.9, additive=True)); plane(lh_.mb, (lx - 5, ly - 5, 0.07), (10, 0, 0), (0, 10, 0), E('hp', 'halo_warm', k=0.9, additive=True), (0, 0, 1, 1))
+        halo_card(lh_.mb, (lx, ly, 13.9), 2.8, E('hh', 'halo_warm', k=1.0, additive=True)); plane(lh_.mb, (lx - 4, ly - 4, 0.07), (8, 0, 0), (0, 8, 0), E('hp', 'halo_warm', k=0.3, additive=True), (0, 0, 1, 1))
     lh_.done()
     for i, (lx, ly) in enumerate(lamps[:4]): point_light('lamp%d' % i, (lx, ly, 13.2), (1.0, 0.68, 0.34), 2200, 0.6)
     ks = Part('kiosk', (-16, 20, 3)); mb = ks.mb
@@ -311,7 +323,7 @@ def build_london_world(scene, P):
     rod(mb, (12, -22, 0), (12, -22, 15), 0.55, fc, r1=0.3, seg=10); mb.box((11, -23, 0), (13, -21, 2.2), fc); mb.box((10.6, -22.6, 15), (13.4, -21.4, 16))  if False else None
     mb.frustum((12, -22, 15), (12, -22, 16.2), 1.8, 1.0, fc, seg=10); mb.sphere((12, -22, 18.0), 1.7, bulb, seg=14, rings=9)
     fg.done((12, -22, 10))
-    fh = Part('fg_halo', ink=False, shadow=False); halo_card(fh.mb, (12, -22, 17.6), 5.0, E('hh', 'halo_warm', k=2.0, additive=True)); fh.done()
+    fh = Part('fg_halo', ink=False, shadow=False); halo_card(fh.mb, (12, -22, 17.6), 3.0, E('hh', 'halo_warm', k=1.0, additive=True)); fh.done()
 
 
 

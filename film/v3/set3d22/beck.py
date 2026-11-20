@@ -36,7 +36,7 @@ LIGHTS = dict(
     DUSK_CITY=dict(_B, key=(1.9, 1.0, 0.42), key_dir=kdir(60, 11), shade=(0.10, 0.10, 0.40), shade_tint=(0.085, 0.095, 0.44), shade_mix=0.8,
                    grade_offset=(-0.004, -0.006, 0.0), lift=(0.040, 0.036, 0.086), grade_saturation=1.18),
     NIGHT_CITY=dict(_B, key=(0.55, 0.72, 1.3), key_dir=kdir(235, 38), shade=(0.07, 0.09, 0.40), shade_tint=(0.06, 0.08, 0.44), shade_mix=0.9,
-                    grade_offset=(-0.004, -0.006, 0.002), lift=(0.050, 0.048, 0.100), grade_saturation=1.3, night=True),
+                    grade_offset=(-0.004, -0.006, 0.002), lift=(0.050, 0.048, 0.100), grade_saturation=1.5, night=True),
     LODGINGS=dict(_B, key=(0.0, 0.0, 0.0), key_dir=kdir(0, 60), shade=(0.09, 0.16, 0.48), shade_tint=(0.05, 0.17, 0.60), shade_mix=0.92,
                   grade_offset=(0.0, -0.006, 0.004), lift=(0.006, 0.014, 0.054), grade_saturation=1.32, toon=0.8),
     PLATFORM=dict(_B, key=(0.0, 0.0, 0.0), key_dir=kdir(0, 60), shade=(0.09, 0.14, 0.46), shade_tint=(0.06, 0.12, 0.55), shade_mix=0.8,

@@ -84,3 +84,8 @@ See `SHOTS[sNN]['cam']` in beck_hq.py (s01, s04, s05, s06, s07, s08) and beck_lo
 - s05: Beck is a card all the time (cast pose, tilt + roll -60 toward the camera, hand/pen anchored on the line), no 3D arm; diagram geometry is strictly 0/45/90: the green run is drawn flat first, then (set square lands, local 58..64) the 45 deg diagonal and vertical; paper toned warm cream.
 - `keycam_check.py sNN [step]`: builds the shot, runs `beck.key_camera`, renders 360x640 4-sample drafts of every step-th frame from the KEYED camera (bpy frame_set) and prints speed. Verified on s04 (contact/keycam_s04/, keycam_s04_strip.jpg): the move eases in/out (0 -> 3.1 D/s peak -> 1 D/s), frames 318..456 keyed. Note the s04 pull-back is about 35 %/s of the subject distance (it must travel from a close-up of the map to a medium of Beck in 4.2 s); other shots are slower.
 - Lights: HQ_EVENING/HQ_NIGHT shade bluer (hue 235-255), LODGINGS shade_tint bluer, NIGHT_CITY key raised.
+
+## Grate layout (london s02 end = beck_under s03 start; both modules use this geometry)
+Centre GRATE_XY (8, 19), opening 8 x 7 (hx 4, hy 3.5), top at z 0. 7 vertical iron bars 0.28 wide (x = GX - hx + (k + 0.5) * 2hx/7, k 0..6) spanning y GY +- hy, z -0.05..0.3; 3 cross bars 0.36 wide at y = GY - hy + 0.2, GY, GY + hy - 0.2; frame 0.4 wide, z -0.2..0.35, colour #3a3070; bar colour #26204e (london uses gain 0.5 so the bars read dark); rivets (r 0.11, #8a90c8) at every bar/cross-bar crossing; in london a warm orange emissive plane (#ff9a3a, k 0.85) sits under the bars with 5 shaft-lamp halos (white, r 1.1).
+## OLD map tone (lodgings = platform)
+Lodgings uses `TX('old_map', 1.15, 1.0, glow='old_map', glow_k=0.5)` (texture old_map, gain 1.15, shade_mul 1.0, glow 0.5), the same call as beck_under.

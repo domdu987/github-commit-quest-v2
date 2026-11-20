@@ -147,7 +147,7 @@ def build_hall(scene, P, with_train=True, crowd=True, shot=None):
     om = U.Pt('old_map', ink=True); mb = om.mb
     mb.box((-RX + 0.02, 11.9, 2.3), (-RX + 0.4, 20.1, 8.5), C('#6a3a1a', 1.0, 1.6)); om.done((-RX, 16, 5), px=2.5)
     omi = U.Pt('old_map_img', ink=False); mb = omi.mb; mb.pid += 1
-    mb.face([V((-RX + 0.44, 12.2, 2.6)), V((-RX + 0.44, 19.8, 2.6)), V((-RX + 0.44, 19.8, 8.2)), V((-RX + 0.44, 12.2, 8.2))], TX('old_map', 1.15, 1.0, glow='old_map', glow_k=0.5), [(0, 0), (1, 0), (1, 1), (0, 1)]); omi.done()
+    mb.face([V((-RX + 0.44, 12.2, 2.6)), V((-RX + 0.44, 19.8, 2.6)), V((-RX + 0.44, 19.8, 8.2)), V((-RX + 0.44, 12.2, 8.2))], old_map_mat(), [(0, 0), (1, 0), (1, 1), (0, 1)]); omi.done()
     # posters on both walls (un-mirrored UVs)
     ps = U.Pt('posters', ink=True); mb = ps.mb
     for (yy, im) in ((24.0, 'poster0'), (28.0, 'poster1'), (32.0, 'poster2'), (3.0, 'poster3'), (7.0, 'poster5')):
@@ -195,7 +195,7 @@ def build_hall(scene, P, with_train=True, crowd=True, shot=None):
     ab.done((-4.6, 36.5, 1.5), px=3)
     # MIND THE GAP edge boards, fire bucket, a wall lamp box
     kd = U.Pt('edge_signs', (0, 15, 1)); mb = kd.mb
-    for yy in (10.0, 30.0): mb.pid += 1; mb.face([V((-PE - 0.1, yy, 0.12)), V((-PE - 0.1, yy + 2.4, 0.12)), V((-PE - 0.1, yy + 2.4, 0.6)), V((-PE - 0.1, yy, 0.6))], E('gapb%d' % yy, 'sign_gap', k=1.3), UV_)
+    for yy in (10.0, 30.0): mb.pid += 1; mb.face([V((-PE - 0.1, yy, 0.12)), V((-PE - 0.1, yy + 2.4, 0.12)), V((-PE - 0.1, yy + 2.4, 0.6)), V((-PE - 0.1, yy, 0.6))], E('gapb%d' % yy, 'sign_gap', k=1.3), [(1, 0), (0, 0), (0, 1), (1, 1)])
     kd.done((0, 15, 1), px=2.5)
     # light pools on the floor
     pools = U.Pt('light_pools', ink=False, shadow=False)
@@ -208,9 +208,17 @@ def build_hall(scene, P, with_train=True, crowd=True, shot=None):
 
 UV_ = [(0, 0), (1, 0), (1, 1), (0, 1)]
 
+def old_map_mat():
+    """Same material as the lodgings old map (beck_hq: TX('old_map', 1.15, 1.0, glow='old_map', glow_k=0.55) under the LODGINGS preset): built while STATE['P'] is the LODGINGS preset so the tone matches s04."""
+    from mine import _untoon
+    keep = STATE['P']; STATE['P'] = dict(B.LIGHTS['LODGINGS'])
+    try: m = _untoon(T.mat_lit('BK_oldmap_lodg', image=STATE['tx']['old_map'], gain=1.15, shade_mul=1.0, form=tuple(STATE['P']['form']), glow=STATE['tx']['old_map'], glow_k=0.55))
+    finally: STATE['P'] = keep
+    return m
+
 def build_train(y_front=60.0, n_cars=3, car=15.0):
     C, TX, E, CARD = _cs(); L_ = n_cars * car; X = V((1, 0, 0))
-    tf = TX('train_front', 1.0, 1.4, glow='train_front_glow', glow_k=0.7, smix=0.15); ts_ = TX('train_side', 1.0, 2.2, glow='train_side_glow', glow_k=1.8, smix=0.15)
+    tf = TX('train_front', 1.0, 1.4, glow='train_front_glow', glow_k=0.7, smix=0.15); ts_ = TX('train_side', 1.0, 2.2, glow='train_side_glow', glow_k=0.9, smix=0.15)
     red = C('#e3262b', 1.0, 2.8, smix=0.15); dark = C('#8a1018', 1.0, 2.0); HW = 2.7; z0, z1 = -0.9, 4.9
     tr = U.Pt('train', (0, y_front, 2), hd=10); mb = tr.mb
     mb.box((-HW, y_front, z0), (HW, y_front + L_, z1), red, mats={'front': tf}, skip='left,right'); mb.box((-HW - 0.2, y_front - 0.1, z1), (HW + 0.2, y_front + L_, z1 + 0.25), dark)
@@ -225,7 +233,7 @@ def build_train(y_front=60.0, n_cars=3, car=15.0):
         for off in (3.5, 11.0):
             for sx in (-1, 1):
                 y_a = y_front + k * car + off - 1.0; xx = sx * (HW + 0.05); zz0, zz1 = z0 + 0.55, z1 - 0.9
-                for part, mat in ((dc, C('#fff0c8', 1.1, 1.5)), (do, E('door_open', color='#ffd890', k=2.4))):
+                for part, mat in ((dc, C('#fff0c8', 1.1, 1.5)), (do, E('door_open', color='#ffc870', k=1.0))):
                     pts = [V((xx, y_a, zz0)), V((xx, y_a + 2.0, zz0)), V((xx, y_a + 2.0, zz1)), V((xx, y_a, zz1))]
                     if sx < 0: pts = pts[::-1]
                     part.mb.pid += 1; part.mb.face(pts, mat, UV_)
@@ -234,8 +242,8 @@ def build_train(y_front=60.0, n_cars=3, car=15.0):
     TRAIN['doors_closed'] = [TRAIN['objs'][-2]]; TRAIN['doors_open'] = [TRAIN['objs'][-1]]; TRAIN['doors_open'][0].hide_render = True
     hl = U.Pt('headlights', ink=False, shadow=False); mb = hl.mb
     for hx_ in (-1.6, 1.6):
-        mb.pid += 1; mb.face([V((hx_ + 0.5 * math.cos(2 * math.pi * i / 16), y_front - 0.1, 2.4 + 0.5 * math.sin(2 * math.pi * i / 16))) for i in range(16)], E('headl', color='#fffbe0', k=4.5), [(0, 0)] * 16)
-        B.halo_card(mb, (hx_, y_front - 0.3, 2.4), 4.6, E('hh2', 'halo_warm', k=1.9, additive=True)); B.halo_card(mb, (hx_, y_front - 0.3, 2.4), 2.2, E('hh3', 'halo_white', k=2.0, additive=True))
+        mb.pid += 1; mb.face([V((hx_ + 0.5 * math.cos(2 * math.pi * i / 16), y_front - 0.1, 2.4 + 0.5 * math.sin(2 * math.pi * i / 16))) for i in range(16)], E('headl', color='#ffe9b0', k=1.6), [(0, 0)] * 16)
+        B.halo_card(mb, (hx_, y_front - 0.3, 2.4), 4.6, E('hh2', 'halo_warm', k=0.7, additive=True)); B.halo_card(mb, (hx_, y_front - 0.3, 2.4), 2.2, E('hh3', 'halo_white', k=0.7, additive=True))
     B.plane(mb, (-3.6, y_front - 30.0, TZ + 0.06), (7.2, 0, 0), (0, 30.0, 0), E('spill', 'halo_warm', k=0.8, additive=True), (0, 0, 1, 1))
     o = hl.done(); TRAIN['objs'].append(o); TRAIN['base'].append(V(o.location))
     sp = U.spot('headlamp', (0, y_front - 1.5, 2.6), (-5.0, y_front - 22.0, 1.0), (1.0, 0.78, 0.45), 14000, 55, 0.5, 0.5)
@@ -346,14 +354,12 @@ def build_cavern(scene, P):
     pv = U.Pt('pavement', ink=False, shadow=False); mb = pv.mb; ptx = TX('pave', 1.0, 1.0, form=False)
     B.plane(mb, (GX - 60, GY - 60, 0), (120, 0, 0), (0, 60 - hy, 0), ptx, (0, 0, 24, 12)); B.plane(mb, (GX - 60, GY + hy, 0), (120, 0, 0), (0, 60 - hy, 0), ptx, (0, 0, 24, 12))
     B.plane(mb, (GX - 60, GY - hy, 0), (60 - hx, 0, 0), (0, 2 * hy, 0), ptx, (0, 0, 12, 1.5)); B.plane(mb, (GX + hx, GY - hy, 0), (60 - hx, 0, 0), (0, 2 * hy, 0), ptx, (0, 0, 12, 1.5)); pv.done()
-    gr = U.Pt('grate_bars', (GX, GY, 0.1), hd=8); mb = gr.mb; iron = C('#26204e', 1.0, 1.2)
-    for k in range(7): xx = GX - hx + (k + 0.5) * (2 * hx / 7); mb.box((xx - 0.14, GY - hy, -0.05), (xx + 0.14, GY + hy, 0.3), iron)
-    for yy in (GY - hy + 0.2, GY, GY + hy - 0.2): mb.box((GX - hx, yy - 0.18, -0.05), (GX + hx, yy + 0.18, 0.3), iron)
-    mb.box((GX - hx - 0.4, GY - hy - 0.4, -0.2), (GX + hx + 0.4, GY - hy, 0.35), C('#3a3070')); mb.box((GX - hx - 0.4, GY + hy, -0.2), (GX + hx + 0.4, GY + hy + 0.4, 0.35), C('#3a3070'))
-    mb.box((GX - hx - 0.4, GY - hy, -0.2), (GX - hx, GY + hy, 0.35), C('#3a3070')); mb.box((GX + hx, GY - hy, -0.2), (GX + hx + 0.4, GY + hy, 0.35), C('#3a3070'))
-    gr.done((GX, GY, 0.1), px=3)
-    sky = U.Pt('street_glow', ink=False, shadow=False); B.plane(sky.mb, (GX - hx, GY - hy, 0.6), (2 * hx, 0, 0), (0, 2 * hy, 0), E('sg', 'halo_warm', k=0.35, additive=True), (0, 0, 1, 1)); sky.done()
-    U.pl('street_light', (GX, GY, 2.0), (1.0, 0.7, 0.4), 1500, 1.0)
+    gr = U.Pt('grate', (GX, GY, 0.1), ink=False); B.plane(gr.mb, (GX - hx, GY - hy, 0.06), (2 * hx, 0, 0), (0, 2 * hy, 0), TX('grate', 1.0, glow='grate_glow', glow_k=0.3), (0, 0, 1, 1)); gr.done()
+    ba = U.Pt('grate_beams', (GX, GY, -0.4), hd=8); mb = ba.mb; iron = C('#26204e', 1.0, 1.2)
+    for k in range(5): xx = GX - hx + (k + 0.5) * (2 * hx / 5); mb.box((xx - 0.2, GY - hy, -0.9), (xx + 0.2, GY + hy, -0.3), iron)
+    ba.done((GX, GY, -0.4), px=3)
+    sky = U.Pt('street_glow', ink=False, shadow=False); B.plane(sky.mb, (GX - hx, GY - hy, 0.5), (2 * hx, 0, 0), (0, 2 * hy, 0), E('sg', 'halo_warm', k=0.2, additive=True), (0, 0, 1, 1)); sky.done()
+    U.pl('street_light', (GX, GY, 2.0), (1.0, 0.7, 0.4), 700, 1.0)
     # shaft: brick walls, iron ring ribs, ladder, cables, lamps
     ZB = -26.0; sh = U.Pt('shaft', (GX, GY, -12), ink=False); mb = sh.mb; bt = TX('brick', 1.0, 1.4, form=False)
     for (p0, pu, n_) in (((GX - hx, GY - hy, ZB), (2 * hx, 0, 0), 0), ((GX + hx, GY - hy, ZB), (0, 2 * hy, 0), 1), ((GX + hx, GY + hy, ZB), (-2 * hx, 0, 0), 2), ((GX - hx, GY + hy, ZB), (0, -2 * hy, 0), 3)):
@@ -375,7 +381,7 @@ def build_cavern(scene, P):
         U.pl('shaftL%d' % int(z), (GX, GY - 1.0, z), (1.0, 0.72, 0.4), 1500, 0.4)
     lh.done()
     # cavern: earth room (inside faces, strata), ceiling hole for the shaft; hall end wall is the front wall
-    rm = U.Pt('cavern', ink=False); mb = rm.mb; st = TX('strata', 1.6, 2.2, form=False); y0, y1, x0, x1, z0, z1 = GY - 9.9, GY + 150.0, GX - 150.0, GX + 150.0, -96.0, ZB
+    rm = U.Pt('cavern', ink=False); mb = rm.mb; st = E('strata_e', 'strata', k=1.6); y0, y1, x0, x1, z0, z1 = GY - 9.9, GY + 150.0, GX - 150.0, GX + 150.0, -96.0, ZB
     B.plane(mb, (x0, y0, z0), (x1 - x0, 0, 0), (0, y1 - y0, 0), st, (0, 0, 8, 4)); mb.pid += 1
     mb.face([V((x0, y0, z1)), V((x0, y1, z1)), V((x1, y1, z1)), V((x1, y0, z1))][::1] if False else [V((x0, y0, z1)), V((x1, y0, z1)), V((GX + hx, GY - hy, z1)), V((GX - hx, GY - hy, z1))], st, [(0, 0)] * 4)
     for (a, b, c_, d_) in (((x1, y0, z1), (x1, y1, z1), (GX + hx, GY + hy, z1), (GX + hx, GY - hy, z1)), ((x1, y1, z1), (x0, y1, z1), (GX - hx, GY + hy, z1), (GX + hx, GY + hy, z1)), ((x0, y1, z1), (x0, y0, z1), (GX - hx, GY - hy, z1), (GX - hx, GY + hy, z1))):
@@ -389,6 +395,7 @@ def build_cavern(scene, P):
     nd = U.Pt('noodles', ink=False, shadow=False); mb = nd.mb
     for ci, (col, pts) in enumerate(noodle_curves()):
         path = catmull(pts, 8); sweep(mb, path, 1.7 if ci else 4.0, mat_tube('tube_%s_%d' % (col, ci), TUBE_RGB[col], 1.5), n=14)
+    sweep(mb, [V((GX, y_, -59.6)) for y_ in np.linspace(GY - 10.0, GY + 52.0, 14)], 4.8, mat_tube('tube_platform', '#3a8cff', 1.6), n=16)
     nd.done()
     tr = U.Pt('noodle_trains', ink=False, shadow=False); mb = tr.mb; red = E('nt_red', color='#ff4048', k=1.5); win = E('nt_win', color='#ffe6a0', k=3.4)
     for ci, (col, pts) in enumerate(noodle_curves()):
@@ -404,8 +411,8 @@ def build_cavern(scene, P):
     for ci, (col, pts) in enumerate(noodle_curves()):
         path = catmull(pts, 8)
         for frac in (0.1, 0.4, 0.65, 0.9):
-            p = path[int(frac * (len(path) - 1))]; hc = E('sig%d' % ((ci + int(frac * 10)) % 3), color=['#ff7a3a', '#ffd060', '#7affc0'][(ci + int(frac * 10)) % 3], k=3.0)
-            mbs.sphere(p + V((0, 0, 2.3)), 0.35, hc, seg=8, rings=6); B.halo_card(mbs, p + V((0, 0, 2.3)), 2.2, E('hsig', 'halo_warm', k=1.1, additive=True))
+            p = path[int(frac * (len(path) - 1))]; hc = E('sig%d' % ((ci + int(frac * 10)) % 3), color=['#ff7a3a', '#ffd060', '#7affc0'][(ci + int(frac * 10)) % 3], k=1.6)
+            mbs.sphere(p + V((0, 0, 2.3)), 0.35, hc, seg=8, rings=6); B.halo_card(mbs, p + V((0, 0, 2.3)), 2.2, E('hsig', 'halo_warm', k=0.5, additive=True))
     sl.done()
     # earth detail: pipes, cables, iron props through the cavern, pebbles of light
     pp = U.Pt('props', ink=True, hd=18); mb = pp.mb
@@ -417,7 +424,7 @@ def build_cavern(scene, P):
     build_hall(scene, P, with_train=False, crowd=True, shot='s03'); U.set_org(0, 0, 0)
     # tunnel lamps: a string of lights down the straight tube (world)
     tl = U.Pt('tube_lamps', ink=False, shadow=False)
-    for k, yy in enumerate(np.arange(GY - 4.0, GY + 52.0, 3.0)): B.halo_card(tl.mb, (GX + (2.4 if k % 2 else -2.4), yy, -62.0 + 5.2), 2.2, E('tl%d' % (k % 2), 'halo_warm', k=3.2, additive=True))
+    for k, yy in enumerate(np.arange(GY - 4.0, GY + 52.0, 3.0)): B.halo_card(tl.mb, (GX + (2.4 if k % 2 else -2.4), yy, -62.0 + 5.2), 2.2, E('tl%d' % (k % 2), 'halo_warm', k=1.3, additive=True))
     tl.done()
     [U.pl('tube_%d' % k, (GX, yy, -57.5), (1.0, 0.7, 0.4), 4000, 0.5) for k, yy in enumerate((GY + 44, GY + 30, GY + 16, GY + 2))]
 
@@ -468,7 +475,7 @@ def build_hall_loc(scene, P):
     tb.done((-10, HY1 - 2, 3), px=3)
     ts = U.Pt('tickets_signs', ink=True); mb = ts.mb
     for k in range(2):
-        x0 = -17.0 + k * 8.2; mb.pid += 1; mb.face([V((x0, HY1 - 3.1, 4.4)), V((x0 + 6.0, HY1 - 3.1, 4.4)), V((x0 + 6.0, HY1 - 3.1, 6.2)), V((x0, HY1 - 3.1, 6.2))], E('tk%d' % k, 'sign_tickets', k=1.6), UVq)
+        x0 = -18.5 + k * 8.2; mb.pid += 1; mb.face([V((x0, HY1 - 3.1, 4.1)), V((x0 + 6.0, HY1 - 3.1, 4.1)), V((x0 + 6.0, HY1 - 3.1, 5.5)), V((x0, HY1 - 3.1, 5.5))], E('tk%d' % k, 'sign_tickets', k=1.6), UVq)
     mb.pid += 1; mb.face([V((6.0, HY1 - 0.1, 7.8)), V((16.0, HY1 - 0.1, 7.8)), V((16.0, HY1 - 0.1, 10.0)), V((6.0, HY1 - 0.1, 10.0))], E('tt', 'sign_to_trains', k=1.6), UVq); ts.done((0, HY1, 6), px=3)
     esc = U.Pt('escalators', (11, HY1 - 4, 2)); mb = esc.mb; stl = C('#c8d0ff', 1.8, 2.0, smix=0.1); dk = C('#14143a')
     for x0 in (6.5, 12.0):
@@ -627,10 +634,10 @@ def build_carriage_loc(scene, P):
         y = Y0 + 1.0 + k * 1.7; x = -1.3 if k % 2 else 1.3
         rod(mb, (x, y, 4.6), (x, y, 3.8), 0.03, C('#222244'), seg=4); mb.frustum((x, y, 3.8), (x, y + 0.02, 3.8), 0.17, 0.17, C('#8a5a2a', 1.0, 1.6), seg=8)
     po.done((0, 3, 3), px=3)
-    lp = U.Pt('lamp_strips', ink=False, shadow=False); mb = lp.mb; lm = E('strip_l', color='#fff0c0', k=2.6)
+    lp = U.Pt('lamp_strips', ink=False, shadow=False); mb = lp.mb; lm = E('strip_l', color='#ffd890', k=0.9)
     for k in range(8):
-        y = Y0 + 1.5 + k * 3.9; mb.box((-0.4, y, 5.15), (0.4, y + 1.8, 5.22), lm); B.halo_card(mb, (0, y + 0.9, 5.0), 3.2, E('hcl', 'halo_warm', k=1.0, additive=True))
-        if k % 2 == 0: U.pl('cl%d' % k, (0, y + 0.9, 4.6), (1.0, 0.76, 0.46), 170, 0.4)
+        y = Y0 + 1.5 + k * 3.9; mb.box((-0.4, y, 5.15), (0.4, y + 1.8, 5.22), lm); B.halo_card(mb, (0, y + 0.9, 5.0), 3.2, E('hcl', 'halo_warm', k=0.3, additive=True))
+        if k % 2 == 0: U.pl('cl%d' % k, (0, y + 0.9, 4.6), (1.0, 0.76, 0.46), 120, 0.4)
     lp.done()
     ds = U.Pt('diagram_strips', ink=True); mb = ds.mb
     for sx in (-1, 1):
@@ -708,8 +715,9 @@ B.SETTERS['set_doors'] = set_doors
 
 def _s03_cam():
     hl = lambda x, y, z: (ORG_HALL[0] + x, ORG_HALL[1] + y, ORG_HALL[2] + z)
-    return [(0, (GX, GY, 6.0), (GX, GY, -60.0), 22), (10, (GX, GY, -11.0), (GX, GY, -60.0), 22), (20, (GX, GY + 1, -25.0), (GX, GY + 24, -42.0), 24),
-            (34, (GX + 4, GY + 26, -38.0), (GX, GY + 55, -50.0), 24), (50, (GX - 8, GY + 44, -50.0), (GX, GY + 50, -59.0), 24), (62, (GX, GY + 54, -58.4), (GX, GY + 20, -59.6), 24),
+    kn = (GX, GY + 40, -46.0)
+    return [(0, (GX, GY, 6.0), (GX, GY, -60.0), 22), (10, (GX, GY, -11.0), (GX, GY, -60.0), 22), (20, (GX, GY + 1, -25.0), (GX, GY + 20, -40.0), 24),
+            (31, (GX - 31.4, GY + 19.3, -46.5), kn, 26), (41, (GX - 41.6, GY + 21.4, -45.2), kn, 26), (52, (GX + 6, GY + 30, -41.0), (GX - 4, GY + 62, -54.0), 26), (62, (GX, GY + 54, -58.4), (GX, GY + 20, -59.6), 24),
             (80, (GX, GY + 20, -59.6), (GX, GY - 20, -59.6), 22), (94, hl(0.5, 40.0, 2.6), hl(-4.0, 20.0, 2.8), 24), (112, hl(-2.0, 22.0, 5.0), hl(-10.0, 14.0, 3.2), 28), (131, hl(-3.9, 8.5, 5.0), hl(-10.4, 13.2, 3.2), 30)]
 SHOTS['s03'] = dict(location='under', light='UNDER', f0=192, f1=324, cam=_s03_cam(), marks={}, state={})
 
@@ -720,6 +728,6 @@ SHOTS['s09'] = dict(location='hall', light='HALL', f0=1005, f1=1197, animate={'a
 SHOTS['s11'] = dict(location='carriage', light='CARRIAGE', f0=1301, f1=1485, animate={'a': lambda f, n: _anim_s11(f, n)}, state={}, marks={},
     cam=[(0, (-1.4, -9, 2.9), (0.5, 4, 2.8), 28), (50, (-1.0, -2, 2.9), (0.8, 6, 2.9), 28), (90, (-1.0, 3.5, 3.4), (-0.3, 9, 3.0), 30), (150, (-0.4, 7.2, 3.5), (-0.3, 9.2, 3.1), 34), (183, (-0.3, 8.4, 3.15), (-0.3, 9.2, 3.1), 44)])
 SHOTS['s13'] = dict(location='hall', light='HALL', f0=1559, f1=1662, animate={'a': lambda f, n: _anim_s13(f, n)}, state={'set_rack': 1.0, 'set_crowd': (34, 5), 'set_stand_sign': 'real'}, marks={},
-    cam=[(0, (3, 2, 3.0), (0, 10, 2.8), 28), (50, (6, -2, 8), (0, 12, 2.5), 28), (102, (9, -7, 10.5), (0, 12, 1.5), 26)])
+    cam=[(0, (3, 2, 3.6), (0, 10, 4.6), 28), (50, (6, -2, 8), (0, 12, 2.5), 28), (102, (9, -7, 10.5), (0, 12, 1.5), 26)])
 SHOTS['s10'].update(animate={'a': lambda f, n: (set_train(max(6.0, 60.0 - 54.0 * min(1.0, f / 70.0) ** 0.8)), set_doors(1.0 if f > 78 else 0.0), U.set_pose('official', 'jaw' if f > 78 else 'main'), U.face_cards())})
 SHOTS['s03']['animate'] = {'a': lambda f, n: (U.face_cards(), U.set_pose('pass_man', 'bump' if f > 95 else 'main'))}

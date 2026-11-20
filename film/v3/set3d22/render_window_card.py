@@ -8,7 +8,7 @@ import beck, beck_london as L, bpy
 from mathutils import Vector as V
 beck.build('london', 'DUSK', None, 'final')
 sc = bpy.context.scene; cam = sc.camera
-sc.render.resolution_x = 1024; sc.render.resolution_y = 1073; sc.render.resolution_percentage = 100
+sc.render.resolution_x = 2048; sc.render.resolution_y = 2146; sc.render.resolution_percentage = 100; sc.cycles.samples = 24
 cam.data.sensor_fit = 'HORIZONTAL'; cam.data.shift_y = 0.0; cam.data.shift_x = 0.0
 beck.apply_cam(cam, V((-30.5, -5.6, 10.4)), V((-30.5, 10.0, 10.4)), 14.4)
 beck.STATE['cam'] = V((-30.5, -5.6, 10.4))

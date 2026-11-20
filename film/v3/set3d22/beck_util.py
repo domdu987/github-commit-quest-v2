@@ -12,7 +12,7 @@ from beck import V, T, STATE, BX
 import bpy
 
 HERE = B.HERE
-UTEX_V = 8
+UTEX_V = 10
 ORG = V((0.0, 0.0, 0.0))
 
 def set_org(x, y, z):
@@ -98,7 +98,7 @@ def tex_streak(W=1024, H=256):
 
 def tex_strata(W=1024, H=1024):
     rs = np.random.RandomState(11); y = np.linspace(0, 1, H)[:, None]; base = np.zeros((H, W, 3), 'float32')
-    cols = [np.array(c, 'float32') / 255 for c in ((0.20, 0.14, 0.42), (0.10, 0.12, 0.40), (0.26, 0.16, 0.36), (0.08, 0.10, 0.34))]
+    cols = [np.array(c, 'float32') * 1.5 for c in ((0.20, 0.14, 0.42), (0.10, 0.12, 0.40), (0.26, 0.16, 0.36), (0.08, 0.10, 0.34))]
     for i in range(H):
         t = (i / H * 5.0 + 0.4 * math.sin(i * 0.05)) % 4; k = int(t); f = t - k; base[i, :] = cols[k] * (1 - f) + cols[(k + 1) % 4] * f
     base *= (0.8 + BX.noise(rs, H, W, 10, 0.5))[..., None]
