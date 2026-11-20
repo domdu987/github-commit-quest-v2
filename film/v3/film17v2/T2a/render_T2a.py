@@ -31,7 +31,7 @@ def assign_for(g):
 def clear_cards():
     import actors
     for o in list(bpy.data.objects):
-        if 'c2_' in o.name or o.name.startswith('back_hair_') or o.name.startswith('back_coat_'): bpy.data.objects.remove(o, do_unlink=True)
+        if 'c2_' in o.name or o.name.startswith('back_hair_') or o.name.startswith('back_coat_') or o.name.startswith('bk2_') or o.name.startswith('bk_'): bpy.data.objects.remove(o, do_unlink=True)
     actors.clear_registry()
 def frame(g, out):
     clear_cards(); bpy.context.scene.frame_set(g + 1)
