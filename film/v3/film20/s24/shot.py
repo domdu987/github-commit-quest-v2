@@ -25,78 +25,75 @@ G0, G1 = C.g_bound(57.75), 1853                 # 1732, 1853 (exclusive): shot =
 H_IN, H_OUT = 8, 6                              # dissolve 13 in (13/2 + 2); 9-frame MATCH-DISSOLVE out into s25 (6 handle frames)
 G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1     # 1724..1855
 GS = list(range(G_FIRST, G_LAST + 1))
-G_BITE = C.g_of(60.48 - 0.10)                   # 1817: "กินข้าวบนหอ" starts at 60.48 narration s -> first bite lands here
-G_LAND = G_BITE + 2                             # camera lands on the medium
+G_BITE = 1830                                   # the first bite (fork at the mouth) lands with the camera (g 1824-1830)
 PRESET, LIGHT = "tower_window_pull", "DAY"
 SEAT_H, PPD = 0.865, 256
 CANVAS = cast20.CANVAS20["maupassant"]
 
 # ---- camera in metres, tower-local (x right, y toward Paris/camera side = -y, z up); window table at (0, -35.8, 58.65), glass y = -36.8
 TGT = Vector((0.0, -35.4, 59.2))                 # aim point: his head height
-START_OFF = Vector((float(os.environ.get("X0", "-60")), -float(os.environ.get("Y0", "360")), float(os.environ.get("Z0", "130"))))     # camera start relative to TGT (m): far, high, left
-END_OFF = Vector((float(os.environ.get("X1", "0.0")), -float(os.environ.get("D1", "4.8")), 0.45))       # camera landing relative to TGT (m)
-AIM0 = Vector((0.0, -30.0, float(os.environ.get("AIMZ", "150"))))                                        # initial aim point: mid-tower (whole tower in frame)
-
-
-AIM_DROP = float(os.environ.get('AIM_DROP', '0.2'))      # m: the landing aim sits below his head (less bare floor, head up in the frame)
-DIP = float(os.environ.get('DIP', '0.0'))
-LOOK_UP = float(os.environ.get('LOOK_UP', '2.5'))
-GAMMA = float(os.environ.get('GAMMA', '1.0'))
+START_OFF = Vector((float(os.environ.get("X0", "-8.0")), -float(os.environ.get("Y0", "17.0")), float(os.environ.get("Z0", "4.0"))))   # camera start relative to TGT (m): oblique, high, left
+END_DIR = Vector((0.0, -1.0, 0.10)).normalized()                       # landing direction: eye level, straight through the clear pane
+AIM_DROP = float(os.environ.get('AIM_DROP', '0.05'))                     # m: the landing aim sits a little below his head
+AIM_X = float(os.environ.get('AIM_X', '0.07'))                             # m: aim slightly right of him so his head sits at x ~0.46 W
+W0, W1 = float(os.environ.get("W0", "33.5")), float(os.environ.get("W1", "268.0"))      # head width px: ~3.5 % of frame height figure at g 1736 -> ~40 % at the landing
+G_ZERO, G_LAND = 1738, 1834                      # steady exponential zoom (figure 5 % at g 1738 -> 35 % at g ~1829 = 3.0 s, 38 % at the landing), then a slow drift to the cut
+LENS_AT_LAND = 55.0
 
 
 def smooth(u):
     u = clamp(u)
-    return u * u * u * (u * (6 * u - 15) + 10)    # smootherstep: ease in and out, zero velocity ends
+    return u * u * u * (u * (6 * u - 15) + 10)    # smootherstep
 
 
-_GG = np.arange(G_FIRST, G_LAST + 1)
-_V = 1.0 * np.exp(-0.5 * ((_GG - 1755) / 20.0) ** 2) + 20.0 * np.exp(-0.5 * ((_GG - 1781) / 2.0) ** 2) + 1.0 * np.exp(-0.5 * ((_GG - 1802) / 9.0) ** 2)
-_V[_GG > 1822] = 0.0
-_C = np.cumsum(_V); _C = _C - _C[0]; _C = np.minimum(_C / _C[np.where(_GG <= 1822)[0][-1]], 1.0)
+def ease(g):
+    """zoom progress e(g): 0 at G_ZERO, 1 at G_LAND; steady (70 % linear + 30 % smootherstep: eased at the end, already moving at the start); < 0 before, > 1 after."""
+    u = (g - G_ZERO) / float(G_LAND - G_ZERO)
+    if u <= 0:
+        return 0.7 * u
+    if u >= 1:
+        return 1.0 + 0.05 * (u - 1.0)
+    return 0.7 * u + 0.3 * smooth(u)
 
 
-def prog(g):
-    """camera progress 0..1: eased-in approach across the city and up the lattice (g 1724-1777), a fast eased whip into the window gallery
-    (g 1778-1784, the flat gallery facade is on screen for only ~5 frames), then a long ease-out settle onto the medium (-> g 1822)."""
-    return float(_C[int(clamp(g, G_FIRST, G_LAST)) - G_FIRST])
+def width_at(g):
+    """apparent head width px: exponential in e(g) (constant zoom rate), + a slow 12 %/s drift push after the landing."""
+    e = ease(g)
+    w = W0 * (W1 / W0) ** e if e <= 1.0 else W1 * (1.0 + 0.12 * (g - G_LAND) / 30.0)
+    return w
+
+
+def lens_at(g):
+    """22 mm early; eases to the preset tower_window_in lens (55 mm) from e 0.35 to 1.0."""
+    e = clamp(ease(g))
+    return 22.0 * (LENS_AT_LAND / 22.0) ** smooth((e - 0.35) / 0.65)
 
 
 def cam_at(g):
-    """(loc, look) in world D at film frame g."""
-    s = prog(g)
-    d0, d1 = START_OFF.length, END_OFF.length
-    dist = d0 * (d1 / d0) ** s
-    dir0, dir1 = START_OFF.normalized(), END_OFF.normalized()
-    dr = (dir0 * (1 - s) + dir1 * s).normalized()
-    drift = (g - G_LAND) / 30.0 if g > G_LAND else 0.0                   # after landing: slow push + slide, never parked
-    bump = math.exp(-(((s - 0.80) / 0.13) ** 2))
-    loc = TGT + dr * dist + Vector((0.0, 0.0, -DIP * bump))     # swoops below the window, looking up through the first-platform lattice (texture), then rises to his eye level
-    aim = TGT + (AIM0 - TGT) * (1 - s) ** 3.0 + Vector((0.0, 0.0, -AIM_DROP * s + LOOK_UP * bump))
-    if drift > 0:
-        loc = loc + Vector((0.10 * drift, 0.22 * drift, 0.0)) * (1.0 - 0.3 * drift / 1.2)
-        aim = aim + Vector((0.10 * drift, 0.0, 0.0))
-    return Vector(CO.W(tuple(loc))), Vector(CO.W(tuple(aim)))
+    """(loc, look) in world D at film frame g: distance solved from the wanted head width and the lens, direction blended oblique -> frontal."""
+    e = clamp(ease(g))
+    lens = lens_at(g)
+    dist_d = 782.2 * (lens / 22.0) / width_at(g)                         # D: head = 1 D wide
+    dir0 = START_OFF.normalized()
+    k = smooth(e)
+    dr = (dir0 * (1 - k) + END_DIR * k).normalized()
+    tgt_d = Vector(CO.W(tuple(TGT)))
+    loc = tgt_d + dr * dist_d
+    aim = tgt_d + Vector((AIM_X * CO.SC * k, 0.0, -AIM_DROP * CO.SC * k))
+    return loc, aim
 
 
 ROOM_BOX = ((-3.6, -34.45, 57.95), (3.6, -17.0, 63.0))         # tower-local metres: behind the glass, behind him
 ROOM_KILL = tuple(os.environ.get('ROOM_KILL', 'tower_ironlt_t').split(','))
-GLOW = float(os.environ.get('GLOW', '40.0'))
-EXPO_FAR, EXPO_NEAR = float(os.environ.get("EXPO_FAR", "-1.3")), float(os.environ.get("EXPO_NEAR", "-0.35"))
-
-
-def lens_at(g):
-    """22 mm for the whole approach; during the final settle (progress 0.80 -> 1.0) it eases to the preset tower_window_in lens, 55 mm, so the landing
-    is the director's framing (outside the glass, ~4.8 m, through the clear centre pane: little ceiling, no X of beams)."""
-    s = prog(g)
-    w = smooth((s - 0.80) / 0.20)
-    return 22.0 * (55.0 / 22.0) ** w
+GLOW = float(os.environ.get('GLOW', '0.0'))              # no opaque glow panel: the window stays clear glass, his lit table shows through
+EXPO_FAR, EXPO_NEAR = float(os.environ.get("EXPO_FAR", "-0.85")), float(os.environ.get("EXPO_NEAR", "-0.55"))
 
 
 def expo_at(g):
-    """grade exposure follows the distance: the sunlit exterior is bright (-1.3 EV), the lamp-lit room darker (-0.05 EV): keeps luma ~95 through the whole zoom."""
+    """grade exposure follows the distance: the sunlit exterior is bright (-1.3 EV), the lamp-lit room darker (-0.35 EV): keeps luma ~95 through the zoom."""
     d = (cam_at(g)[0] - Vector(CO.W(tuple(TGT)))).length / CO.SC
-    k = clamp(math.log(150.0 / max(d, 1.0)) / math.log(150.0 / 6.0))
-    bump = 0.5 * math.exp(-((math.log(max(d, 0.5)) - math.log(3.8)) / 0.45) ** 2)       # the dark ceiling / beams while the camera crosses the gallery
+    k = clamp(math.log(20.0 / max(d, 1.0)) / math.log(20.0 / 4.0))
+    bump = 0.35 * math.exp(-((math.log(max(d, 0.5)) - math.log(6.0)) / 0.5) ** 2)      # the dark facade / ceiling while the camera crosses the window
     return EXPO_FAR + (EXPO_NEAR - EXPO_FAR) * k + bump
 
 
@@ -160,7 +157,8 @@ class Take(C.Take):
             ob.hide_render = True
             ob.hide_viewport = True
         self.clear_room_wedges()
-        self.make_glow()
+        if GLOW > 0:
+            self.make_glow()
         self.key_cam(bf(G_FIRST), *cam_at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
         self.mau = self.actors["mau"] = C.make_actor("mau", "maupassant", os.path.join(WORK, "sprites"), canvas=CANVAS,
@@ -247,7 +245,8 @@ class Take(C.Take):
             self.scene.view_settings.keyframe_insert("exposure", frame=f)
             self.cam.data.lens = lens_at(g)
             self.cam.data.keyframe_insert("lens", frame=f)
-            self.glow_key(g, f)
+            if GLOW > 0:
+                self.glow_key(g, f)
             C.place(self.mau, f, mark)
         for g in gs:
             f = bf(g)
@@ -260,8 +259,16 @@ class Take(C.Take):
         self.scene.frame_set(f)
         loc, look = cam_at(g)
         v = look - loc
-        return dict(g=g, cam=[round(c, 3) for c in loc], pitch=round(math.degrees(math.atan2(v.z, math.hypot(v.x, v.y))), 1),
-                    dist_m=round((loc - Vector(CO.W(tuple(TGT)))).length / CO.SC, 1), heads=C.head_report(self, f), upper_k=round(self.mau.upper_k.get(f, 1.0), 3))
+        hr = C.head_report(self, f)
+        tb = CO.project(CO.W((0.0, -35.8, 58.65)))
+        out = dict(g=g, lens=round(lens_at(g), 1), pitch=round(math.degrees(math.atan2(v.z, math.hypot(v.x, v.y))), 1),
+                   dist_m=round((loc - Vector(CO.W(tuple(TGT)))).length / CO.SC, 1), heads=hr, upper_k=round(self.mau.upper_k.get(f, 1.0), 3))
+        if "mau" in hr:
+            h = hr["mau"]
+            top = h["y"] - 0.62 * h["w"]
+            out["fig_pct"] = round(100.0 * (tb[1] - top) / 1280.0, 1)          # visible figure: hair to tabletop
+            out["table_y"] = round(float(tb[1]), 1)
+        return out
 
     def render(self, gs, out_dir, scale=1.0, samples=None, threads=2):
         return C.Take.render(self, [bf(g) for g in gs], out_dir, scale=scale, samples=samples, threads=threads)
