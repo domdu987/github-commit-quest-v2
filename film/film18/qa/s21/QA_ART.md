@@ -1,19 +1,21 @@
-# QA-art s21 (REVEAL B: "ในความมืด ทหารเยียนเห็นแต่สัตว์ประหลาดลายมังกร", 53.20-56.08 s), TAKE gate re-render — FIX-FIRST (reveal, strict)
-Reviewed: take.mkv at 6 fps (every 5th frame, art6/gNNNN.png = global frame g) at full size 720x1280 and on the 360x640 phone sheet art_phone.jpg. Scores 1-10. Snap word = g 1646.
+# QA-art s21 (REVEAL B: "ในความมืด ทหารเยียนเห็นแต่สัตว์ประหลาดลายมังกร", 53.20-56.08 s), TAKE gate round 4 — FIX-FIRST (reveal, strict)
+Reviewed take.mkv at 6 fps (art7/gNNNN.png, every 5th frame) at full size 720x1280 and on the 360x640 sheet art7_phone.jpg. Snap word = g 1646.
 
 ## Earlier changes
-1. Deep night, herd emerging out of the dark lit by its own tail fire: NOT DONE. The full moon and lit gate are still in frame. The herd is fully lit and visible behind the soldiers from g 1590. The tail fire gives no orange on the soldiers or the ground.
-2. No pulses, one held snap: DONE. Held steps at g ~1612 and g ~1638, then the x1.4 held snap at g 1646. Reads well.
-3. Soldiers turned to the herd, freezing at the word, 3D cup falling from the hand: PARTLY done. The freeze to O-mouths at g 1640 reads. But the soldiers still face the lens with their backs to the monsters. The falling cup at g 1645-1650 is still a flat yellow trapezoid hanging in the air (x 555-650, y 370-445, beside the moon).
-4. Salmon lintel beam textured or out of frame: NOT DONE. A flat salmon/pink beam crosses the top at y 100-250 (g 1615-1650). Hero ox face and steel blades: NOT DONE (smiling face; the horn tips are brown-gold brush shapes).
+1. Out of the dark, moon hidden, herd lit by its own fire: PARTLY done. The moon is gone, the sky is black and the fire flare at g 1630-1650 lands, which is a real improvement. But the gate tower and wall stay lit grey-violet from g 1590, and the herd is visible (dim) the whole time, so there is no "out of the darkness" moment.
+2. Back-view silhouettes, nothing in front of the hero ox, 3D cup: DONE. There are two black silhouettes at the sides, the centre is clear, and a small gold cup drops at g 1645-1655.
+3. Salmon beam: DONE (gone). Steel blades: NOT DONE (still bronze brush tips). Startled/charging face: NOT MET. The new overlay reads as a SAD, sleepy cow: half-lidded eyes, brows drooping outward, a down-turned mouth. After the snap (g 1655-1688) the whole frame is one big sad cow face. That is the opposite of "monster".
 
-New problem: after the snap (g 1655-1688) the centre soldier stands exactly in front of the hero ox's face and covers the "monster" at the moment it should land.
+New problems:
+- The flames stand straight up like candles above the oxen's backs (g 1645-1688). From this angle they read as "backs on fire", not "tails on fire behind them".
+- Plain lit floor is about 40 % before the snap (g 1590-1640).
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 5 | 4 | 5 | 4 | 6 |
+| 6 | 6 | 5 | 3 | 7 |
 
+## Verdict: FIX-FIRST
 ## Changes
-1. **Light + reveal, g 1590-1688:** Hide the moon, darken the sky and the gate by about 60 %, and keep the herd in darkness behind the gap until about g 1630, with only tail embers and orange glow visible. Raise the tail-flame point lights so the oxen, the ground and the soldiers' faces take orange rim light as the herd arrives. At g 1646 the frame must be a glowing red-and-fire wall against black.
-2. **Soldiers + cup:** Use back-view silhouettes: the same soldier cards filled solid near-black (no face) as 2-3 foreground figures at the lower-left and lower-right edges, so we look past them at the herd. Keep at most one faced soldier, at the side edge, never in front of the hero ox (clear x 200-560 after the snap). Replace the yellow trapezoid with the 3D bronze cup, falling from a hand to the ground (g 1646-1660), or remove it.
-3. **Props/monster:** Hide or texture the salmon beam (crop it out with the start framing). On the hero oxen, make the horn blades steel-grey with a white specular edge, and use the startled/charging head, not the smile.
+1. **Monster face + blades, g 1625-1688:** Draw the overlay as rage, not sorrow: brows in a hard V down toward the nose, narrowed glaring eyes with small pupils, flared nostrils with steam puffs, and an open bellowing mouth or a flat snarl. Use no down-turned mouth and no droopy lids. Make the horn blades steel-grey with a white edge (a recolour of the tip shapes is enough), plus 2-3 glints at the snap.
+2. **Darkness, g 1590-1630:** Dim the gate tower and wall another 60-70 % so they are near-black blue until the flare. Let only tail embers and the orange fire glow (rising from g 1625) light the oxen, the ground and the soldiers' rims. Raise the look-at or lower the camera so plain floor is 25 % or less before the snap.
+3. **Flames, g 1630-1688:** Root each flame at the tail tip behind the rump and lean it back and up 35-45 degrees, away from the lens, with the glow spilling over the backs. Do not stand it upright on the back. Fewer, bigger trailing flames read better than a row of candles.

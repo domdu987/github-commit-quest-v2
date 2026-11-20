@@ -1,19 +1,22 @@
-# QA-art s02 (hook 2: blades + herd reveal, 2.59-5.20 s), TAKE gate round 4 — FIX-FIRST (hook, strict)
-Reviewed take.mkv at 6 fps (artq6/gNNNN.png, g 78-163) at full size 720x1280 and on the 360x640 sheet artq_phone.jpg.
+# QA-art s02 (hook 2: blades + herd reveal, 2.59-5.20 s), TAKE gate round 5 — FIX-FIRST (hook, strict)
+Reviewed take.mkv at 6 fps (art7/gNNNN.png, every 5th frame) at full size 720x1280 and on the 360x640 sheet art7_phone.jpg.
 
 ## Earlier changes
-1. Crane up so 40-60 oxen fill 50 % or more by the end: PARTLY done. The crane works and the end frame (g 153-163) is a sea of red coats over about 45 % of the frame. But the far rows, seen from the crane, are thin slanted cards: only stripes of horns and gold edges float over a flat purple floor (x 160-720, y 420-640 at g 163).
-2. Purple slab gone: NOT DONE. A flat untextured violet plane still fills the space between and behind the herd rows (g 108-163; at g 118 it is a band at y 580-660 behind the oxen, and at g 163 it fills the whole far herd area). This breaks rule 2 and reads as a placeholder.
-3. Bare ground <= 25 %: about DONE. Roughly 25 % at the end and 25-30 % at g 108-133.
+1. Purple floor gone: PARTLY done. The lane now shows dirt, but a flat violet band is still there between the herd and the wall (g 118-163, about y 500-620 at g 123) and behind the far rows.
+2. Far herd cards pitched to camera: DONE. The far rows now read as packed red coats with horns, not stripes.
+3. Woman clear of the near ox, green figure removed: DONE. But from g 143 her face is cut by the left edge (half a face at g 153-163).
+
+## Ground dressing (J.dress_ground): reads as JUNK
+The "straw, stones, baskets" come out as untextured navy/violet low-poly star-shaped spikes and faceted lumps over the whole bottom 35 % (g 78-163). They are the same colour as the old placeholder spikes and break rule 2. In the opening close shot (g 78-103) they are the biggest shapes in the lower frame.
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 6 | 6 | 4 | 6 | 6 |
+| 7 | 6 | 5 | 6 | 7 |
 
-The blade-tying close shot (g 78-103) is good. The reveal now reads as "lots of dressed oxen", but the far half looks like cardboard slices on a purple sheet, and at the end the near ox's head is pasted across the blue woman's body. In the hook, that looks broken.
+The beat now reads on the phone: he ties blades on, the crane rises, and the lane is packed with dressed oxen. What stops it is the junk on the floor.
 
 ## Verdict: FIX-FIRST
 ## Changes
-1. **Purple floor, g 108-163:** Give the ground under and between the herd the same lit dirt material as the lane (or a dark-brown trampled straw texture). There must be no flat violet area anywhere in frame. If the colour comes from the shadow catcher, turn it off.
-2. **Far herd cards, g 128-163:** Turn each herd card's yaw toward the camera and tilt it back by about the camera pitch (25-30 degrees) so the bodies and coats read, not just horns. Or use the 3/4-front card for the rows past the third. The far rows should read as packed oxen backs, not stripes.
-3. **Woman vs near ox, g 148-163:** Move the woman with the basket 0.6-0.8 D toward the camera and to the left (or move the near ox's path behind her), so the ox's head never overlaps her body. Also keep the green-robed figure at the right edge either fully in frame or out of it.
+1. **Dressing material, whole take:** Give the dressing real materials and light: straw in golden ochre (a thin-blade texture, not star spikes), stones in warm grey-brown with a lit top face, baskets in wicker tan. Or turn the dressing off here. No navy or violet prop may stay in frame. Fewer, larger, readable items are better than a carpet of shards.
+2. **Violet band, g 113-163:** Put the lane dirt material (or dark trampled straw) on the strip between the herd and the wall, or let the fill light reach it. There must be no flat violet area.
+3. **Woman, g 143-163:** Slide her about 0.4 D right, or ease her out of frame cleanly by g 145. Do not leave a half face on the edge.

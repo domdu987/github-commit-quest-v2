@@ -1,22 +1,19 @@
-# QA-art s20 (reveal A: fire behind, they run forward only, 50.51-53.20 s), TAKE gate round 3 — FIX-FIRST (reveal, practical)
-Reviewed take.mkv at 6 fps (artq6/gNNNN.png, g 1509-1599) at full size 720x1280 and on the 360x640 sheet artq_phone.jpg.
+# QA-art s20 (reveal A: fire behind, they run forward only, 50.51-53.20 s), TAKE gate round 5 — FIX-FIRST (reveal, practical)
+Reviewed take.mkv at 6 fps (art7/gNNNN.png, every 5th frame) at full size 720x1280 and on the 360x640 sheet art7_phone.jpg.
 
 ## Earlier changes
-1. No flame on a head, never edge-on: DONE. I checked every 6-fps frame: the tail flames sit in the gaps between the oxen and face the camera, with no rockets.
-2. One lead ox in side profile, tail level, flame behind, all running the same way: DONE. This is now the clearest mechanism image in the film. The lead ox gallops screen-left with its tail, reed bundle and flame streaming right behind it. 
-3. Sky <= 25 %, ground <= 25 %, herd in the middle 50 %: NOT DONE. Sky is about 40 % (y 0-500) and plain ground about 35-38 % (y 800-1280). The herd is a band at y 0.40-0.62. Under the gate calibration, ground over 30 % blocks.
+1. Come in 25 %, lead ox 40-45 % of height, sky and ground <= 25 %: NOT MET. The lead ox is about 20-25 % of frame height, at y 0.45-0.60. Sky is about 38 % and flat striped grey ground about 40 % (y 760-1280), which blocks.
+2. Navy spikes and white rocks hidden: DONE. A dark navy blob tree shape stands behind the ox at g 1579-1599 (minor).
+3. Torch stands out of the ox's line: NOT DONE. The tripod brazier sits right behind the lead ox's rump/back at g 1524-1534 and g 1574-1599. Its upright flame reads as the ox's back on fire.
 
-New problems:
-- g 1524-1534: dark navy untextured low-poly spikes stand in the foreground (bottom centre, x 330-560, y 820-1280) and mid-ground, and there is a white low-poly rock at about (640, 730). This breaks rule 2.
-- g 1579-1599: a torch stand passes right behind the lead ox's rump. Its upright red cone flame sits on the ox's back (x 400-460, y 540-610), so on the phone the ox's back looks on fire. This blurs the "fire is BEHIND" read.
-- g 1569-1599: the lead ox's nose and face are cut by the left edge (rule 4).
+New problem: the mechanism image is weaker than last round. The lead ox's own tail flame is mostly out of the right edge (g 1549-1599). The flames we see belong to background oxen and sit in front of and beside its face (g 1559, x 690-820 at full size). So the "fire BEHIND, run forward" read is lost.
 
 | Beat on phone | Light/colour | Composition | Acting | Camera |
 |---|---|---|---|---|
-| 7 | 6 | 4 | 6 | 6 |
+| 5 | 5 | 3 | 6 | 6 |
 
-## Verdict: FIX-FIRST (small; the core image is right, so keep it)
+## Verdict: FIX-FIRST
 ## Changes
-1. **Framing, g 1515-1599:** Come in about 25 % (lateral 7.2 -> about 5.5 D), keeping the pitch, so the lead ox is 40-45 % of frame height. Hold its nose at least 40 px inside the left edge for the whole take (slow the push or truck a little). Sky and plain ground should each be about 25 % or less. If ground stays over 25 %, add dark Qi-soldier silhouettes or reed tufts low in the foreground.
-2. **Placeholders, g 1519-1540:** Hide the navy spikes and the white low-poly rocks, or replace them with dark-brown grass tufts and textured stones.
-3. **Torch stands, g 1575-1599:** Move the torch stands out of the lead ox's line, or behind the far row, so no free flame overlaps any ox's body. The only flames on or near an ox must be its own tail flame.
+1. **Framing, g 1515-1595:** Put the lead ox's head at x 0.20-0.30 and let its tail, bundle and flame trail into x 0.65-0.90, fully in frame the whole take. Come about 35 % closer (lead ox 40 % of height) and aim so the herd band is at y 0.40-0.65.
+2. **Bottom/sky, whole take:** Plain ground and sky 25 % or less each. Fill the lower third with ground dressing in warm brown (straw, stones, trampled reed) plus 2-3 dark Qi-soldier silhouettes or reed tufts as fg. The current flat striped floor must not show bare.
+3. **Torch brazier:** Find it by raycasting the camera at the brazier pixel (g 1589, x about 680, y 470) and hide the hit object(s). The only flames on screen should be tail flames, each behind its own ox.
