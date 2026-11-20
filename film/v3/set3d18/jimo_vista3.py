@@ -57,8 +57,8 @@ def water_mat():
     base = wmat('#2c5058', 1.0, T=(0.52, 0.48, 0.52), tag='waterbase')
     m = base.copy(); m.name = name; nt = m.node_tree; N = nt.nodes.new; L = nt.links.new
     out = [n for n in nt.nodes if n.bl_idname == 'ShaderNodeOutputMaterial'][0]; src = out.inputs['Surface'].links[0].from_socket
-    sky = {'DUSK': (1.0, 0.50, 0.20), 'DAWN': (1.0, 0.66, 0.50)}.get(J.STATE.get('light'), (1.0, 0.5, 0.2))
-    gl = N('ShaderNodeEmission'); gl.inputs['Color'].default_value = (*sky, 1.0); gl.inputs['Strength'].default_value = 1.1               # the sky seen in the water (the dome is not visible to reflection rays)
+    sky = {'DUSK': (1.0, 0.42, 0.14), 'DAWN': (1.0, 0.66, 0.50)}.get(J.STATE.get('light'), (1.0, 0.5, 0.2))
+    gl = N('ShaderNodeEmission'); gl.inputs['Color'].default_value = (*sky, 1.0); gl.inputs['Strength'].default_value = 0.85               # the sky seen in the water (the dome is not visible to reflection rays)
     tc = N('ShaderNodeTexCoord'); nz = N('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 0.55; nz.inputs['Detail'].default_value = 4.0; L(tc.outputs['Object'], nz.inputs['Vector'])
     rp = N('ShaderNodeMapRange'); rp.inputs[1].default_value = 0.40; rp.inputs[2].default_value = 0.62; rp.inputs[3].default_value = 0.30; rp.inputs[4].default_value = 1.0; rp.clamp = True; L(nz.outputs['Fac'], rp.inputs[0])   # ripples: bright / dark streaks
     gs = N('ShaderNodeMapRange'); gs.inputs[1].default_value = 0.66; gs.inputs[2].default_value = 0.70; gs.inputs[3].default_value = 0.0; gs.inputs[4].default_value = 1.0; gs.clamp = True; L(nz.outputs['Fac'], gs.inputs[0])  # glints
@@ -66,7 +66,7 @@ def water_mat():
     cl = N('ShaderNodeMath'); cl.operation = 'MULTIPLY_ADD'; cl.use_clamp = True; cl.inputs[1].default_value = 1.2; cl.inputs[2].default_value = 0.30; L(fr.outputs['Facing'], cl.inputs[0])
     mu = N('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.use_clamp = True; L(cl.outputs[0], mu.inputs[0]); L(rp.outputs[0], mu.inputs[1])
     mx = N('ShaderNodeMixShader'); L(mu.outputs[0], mx.inputs[0]); L(src, mx.inputs[1]); L(gl.outputs['Emission'], mx.inputs[2])
-    gg = N('ShaderNodeEmission'); gg.inputs['Color'].default_value = (1.0, 0.92, 0.75, 1.0); gg.inputs['Strength'].default_value = 2.2
+    gg = N('ShaderNodeEmission'); gg.inputs['Color'].default_value = (1.0, 0.85, 0.6, 1.0); gg.inputs['Strength'].default_value = 1.8
     mg = N('ShaderNodeMixShader'); L(gs.outputs[0], mg.inputs[0]); L(mx.outputs['Shader'], mg.inputs[1]); L(gg.outputs['Emission'], mg.inputs[2]); L(mg.outputs['Shader'], out.inputs['Surface'])
     _C[name] = m; return m
 
