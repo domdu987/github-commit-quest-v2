@@ -39,6 +39,7 @@ _reg = {}
 def reg(key, cast, pose): cast17.STORY17[key] = (cast, pose); return key
 
 def setup():
+    P.TAKE_OVER['T4'] = {'measure': dict(shade_mul=float(os.environ.get('T4_SHADE', 0.8)), fill_w=float(os.environ.get('T4_FILL', 70)), gain=float(os.environ.get('T4_GAIN', 0.5)))}   # QA: T4 luma target 95-110, lights only
     A = P.world_build(TAKE); P.key_take(TAKE); P.setup_render2((720, 1280), samples=int(os.environ.get('T4_SAMPLES', 16)), threads=2); return A
 
 def _basis(a, cam):
