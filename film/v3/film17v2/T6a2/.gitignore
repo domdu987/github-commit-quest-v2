@@ -1,3 +1,6 @@
 frames/
 check/
 render.log
+beam0test/
+frames_*/
+*.log
