@@ -93,3 +93,40 @@ Other checks:
 - No pops, black frames or frozen runs (whole-frame diff min 2.3 at g58, never 0); both actors keep moving (blink, scratch, arm swing, bob) so nobody is still > 1.5 s.
 - Start: ship ~7-10 % of frame height, findable; ease-in smooth.
 Verdict: FAIL, single blocker = the camera/orbit brake at g170-176 and flat-then-late-rise background speed g144-170 (numbers above). Fix per item 3 of findings, then re-measure; acting items (symmetric shrug, head turn) should be fixed in the same re-render.
+
+## Round 13 (director QA-tech): FAIL (landing now decays, but a one-frame camera jerk at g176 and a 4x re-acceleration g142-156 remain)
+Take re-joined -> /tmp/s02q13.mkv (152 frames), frames in /tmp/qa19_r13/f/. Same three measures as round 12 (bgdiff = mean abs diff outside the character band; flow = textured Farneback outside the band; deck = bottom strip; LK = tracked-feature median; px/frame at 360 wide). My numbers do not match the team's "4.8-5.2 at g140-152": the background speed there is 3.0-9.7, not flat.
+| g | whole | bgdiff | flow | deck | LK |
+| 112 | 14.5 | 25.1 | 11.7 | - | 8.2 |
+| 124 | 13.0 | 21.1 | 5.9 | - | 5.7 |
+| 131 | 10.9 | 16.5 | 11.6 | 14.4 | 13.4 |
+| 136 | 8.8 | 11.0 | 6.2 | 7.8 | 6.4 |
+| 141 | 6.0 | 7.5 | 3.3 | 8.2 | 2.2 |
+| 146 | 8.2 | 9.7 | 4.8 | 9.3 | 4.3 |
+| 150 | 9.9 | 9.3 | 8.3 | 9.7 | 8.3 |
+| 155 | 17.0 | 14.8 | 11.9 | 14.1 | 16.6 |
+| 158 | 16.2 | 15.6 | 9.2 | 10.6 | 10.4 |
+| 162 | 11.5 | 12.8 | 6.8 | 6.0 | 8.0 |
+| 166 | 10.3 | 12.7 | 6.0 | 3.3 | 8.2 |
+| 168 | 8.8 | 11.2 | 4.8 | 2.2 | 6.1 |
+| 170 | 7.7 | 10.1 | 4.5 | 1.5 | 5.1 |
+| 172 | 5.6 | 7.0 | 2.5 | 1.0 | 3.1 |
+| 173 | 4.7 | 6.1 | 2.1 | 0.9 | 2.6 |
+| 174 | 3.9 | 4.4 | 1.4 | 0.6 | 1.7 |
+| 175 | 3.3 | 3.5 | 1.2 | 0.6 | 1.3 |
+| 176 | 5.6 | 6.3 | 2.5 | 1.1 | 2.7 |
+| 177 | 2.1 | 1.5 | 0.3 | 0.9 | 0.3 |
+| 178-181 | 1.8-2.3 | 1.8-3.0 | 0.3-0.6 | 0.8-1.0 | 0.3-0.6 |
+Findings:
+1. GOOD: the ramp-down g158-175 is now smooth: flow 9.2 -> 6.0 (g166) -> 4.5 (g170) -> 2.5 -> 2.1 -> 1.4 -> 1.2 (g175); no 1-2 frame step above ~35 % in that stretch. Deck strip likewise (4.6 at g164 -> 0.6 at g174).
+2. BLOCKER: g176 is a one-frame camera jerk. g175 -> g176 the speed goes back UP (flow 1.2 -> 2.5, bgdiff 3.5 -> 6.3, whole 3.3 -> 5.6, LK 1.3 -> 2.7) and then drops to 0.3 at g177 (-88 % in one frame; bgdiff 6.3 -> 1.5, -76 %). So the landing frame is an overshoot followed by a dead stop, a visible hitch at the exact landing, and it breaks the "no step > 50 %" rule (also 1.2 -> 0.3 = -75 % over g175-177). The slab of head motion (astronomer head turn) is inside the character band and excluded from these background numbers, so this is the camera/orbit key at g176, not acting.
+3. The mid-move is NOT flat or monotone: flow 3.0 (g142) rises to 11.9 (g155) (whole-frame 6.0 -> 18.2 at g156, max of the take), LK 2.2 -> 16.6, i.e. a 4x re-acceleration over 13 frames after the speed had already dropped to ~3 at g140-142, then decays over g156-175. That is the same "late second rise" the round 11 and 12 notes asked to remove. It is camera (deck strip also 8.2 -> 14.3, bgdiff 7.5 -> 16.2).
+Fix: remove the g176 overshoot (make the orbit/dolly parameter reach its landing value at g176 with zero slope, monotone: the key at g176 must not be past the g177 pose), and flatten the g142-156 re-rise so speed decays monotonically from the g131 peak (e.g. 6 at g136, 5 at g146, 4.5 at g156).
+Other checks:
+- Whole-frame frame-diff (pairs g58-190): median 8.45, p90 14.44, max 18.2 (g156), min 1.76. Limits OK (peak <= 20).
+- Luma 89.6 (per frame 66.5-110.0), OK.
+- Props PASS: quadrant and chart in hand in every frame g170-199 (checked g180-198 every 2); no pop.
+- Shrug PASS: captain now raises both arms symmetrically, chart held in one hand, astronomer both arms out; shoulders up visible g184-190. Palms are small but the pose reads as a two-armed shrug.
+- Shared look PASS (modest): heads angle toward each other g173-179; captain's eyes open and brows raised from g172 (visible at phone size). Held "O" g158-171 allowed.
+- Usual checks PASS: nobody cut, faces ~20 % of frame height, heads at y ~490-530 of 1280, contact shadows, nothing floating, no props through faces, no black or frozen frames, nobody still > 1.5 s.
+Verdict: FAIL on the camera only (g176 jerk + g142-156 re-rise). All other round 12 items are fixed.
