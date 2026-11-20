@@ -41,3 +41,43 @@ Nothing in film 20 is worse than film 2 by > 10 % (shot length is longer, which 
 - Hard cuts g80 (luma 97->89), g1093 (84->108), g1431 (89->74), g1912, g1968 (97->68): single-frame cuts, no black/flash frames. Frame count 2046 = expected, so no dropped frames.
 - Odd frame: g1430 (last frame before the night cut) is a darker warm frame (luma 71 vs 89 around it, spark-gap lamp pulse inside the hut), 1 frame, matches the "spark gap flashes" beat; acceptable, mentioned for the director.
 - Luma by 10 s window: 98, 101, 96, 95, 96, 88, 93: no dark outlier; darkest frame 49 (night, g1393 = hut interior), not black.
+
+## §E review: BIGZOOM 2 (FINAL gate)
+Independent second reviewer (Opus), measured on film20_rc2 assembled frames (f index = g), full 720x1280, frame-diff on 90x160 grey. Rule QA_TEAM §H.1: one continuous move, start EXTREME WIDE with the character < 5 % of frame height **but findable**, end on a medium of the **character** at 35-60 %, lasting 3-6 s with ease in/out.
+
+**1. BIGZOOM 2 measurements (s24, g1732-1852).** Subject A = Maupassant (visible figure, top of hair to tabletop; in brackets the implied seated figure, hair to seat, ~1.3x, since the table hides his lap). Subject B = the restaurant window unit (sign top to sill).
+
+| g | t (s) | Maupassant | window unit | what is seen |
+|---|---|---|---|---|
+| 1732 | 57.73 | not visible | ~0.6 % | dissolve from s23 (crowd overlay), tower small |
+| 1750 | 58.33 | not visible (pane renders as a flat yellow lit square) | ~1.0 % | whole tower + Paris, slow push |
+| 1770 | 59.00 | not visible (yellow square) | ~2.2 % | tower fills frame, first floor centred |
+| 1785 | 59.50 | ~6 % (~8 %) | ~53 % | through the lattice, RESTAURANT sign, he is in the opening |
+| 1795 | 59.83 | ~11 % (~14 %) | > 100 % (sign cropped) | crossing the window frame |
+| 1805 | 60.17 | ~20 % (~26 %) | inside | inside the restaurant |
+| 1815 | 60.50 | ~26 % (~34 %) | inside | bite starts |
+| 1830 | 61.00 | ~29 % (~38 %) | inside | landed, slow drift |
+(Finer: window 3.2 % at g1778, 7.3 % at g1780, 20 % at g1782. Maupassant first readable as a figure ~g1776 at < 1 %, ~3 % at g1782.)
+
+- Frame diff shows the move's shape: g1736-1775 slow drift (diff 4-6/frame), then **g1776-1800 a whoosh (diff 20-44/frame, peak 42-44 at g1783 and g1795)**, settle g1800-1818 (19 -> 5), hold/drift g1818-1852 (2.5-3.7). It is continuous (smooth diff envelope, no single-frame spike), so it is not a cut, but about 80 % of the zoom happens in 0.8 s.
+- Window unit: last < 5 % g1779, first >= 35 % ~g1784: **0.17 s**.
+- Maupassant: last < 5 % g1784; >= 35 % visible figure **never** (peaks ~29 %); implied seated figure >= 35 % ~g1818: **~1.1 s**. Whole camera move from the clean wide (g1745) to landing (g1818): **2.4 s**.
+- Start condition: at g1736-1772 he is not findable at all; the window pane renders as a flat yellow lit square (no interior). The "< 5 % but findable" start only exists for about 8 frames (g1776-1783) in the middle of the whoosh.
+- The s24 take reviewer's "3.2 s" counts camera time from g1724 (pre-dissolve handle) to g1819, not subject < 5 % -> 35 %. The FINAL tech reviewer's numbers (0.7 s, 2.2-2.7 s overall, he not findable at the start) are confirmed; my 5 % -> landing is even a little longer (1.1 s) only because I put the landing at the 35 % implied-figure point.
+- **Ruling: BIGZOOM 2 FAILS §H.1** (duration 3-6 s not met by any reasonable subject definition; character not findable at the wide start; visible-figure landing 29 %, under the 35 % floor). It is a good continuous, eased push with foreground lattice and sign, but it is a whoosh-in, not a big zoom.
+
+**2. Other candidate moves in the film (contact sheet every 24 f, then every 6 f on candidates).**
+- BIGZOOM 1 s03 g178-317: not re-measured in detail; the frames I saw agree with the PASS above. It is the only qualifying move.
+- Night antenna take g1302-1430 (s19-s20), the best other candidate: tower wide g1336 -> tilt down the wire -> hut g1366 -> through the hut window g1391 -> soldier at the key g1396. The soldier is hidden inside the hut until g1391 (never findable at < 5 %), lands at ~24 % of frame height, move ~2 s. **Does not qualify.**
+- Whip pull-out g1431-1560 (s21) and crash pull-out g1968-2045 (s27): reverse moves (character -> wide), §H needs wide -> character. **Do not qualify.**
+- Café slide (s06), construction count snaps (s12-s14), fair (s15/s23), dusk/AHA pushes (s18/s22): the characters are already 15-40 % at the start, and the moves are 8-10 %/s slides or snaps. **Do not qualify.**
+
+**3. Rule: the film does NOT satisfy §H ">= 2 BIGZOOMs" (1 of 2). FINAL gate BLOCKED on §H until s24 is fixed.**
+
+Cheapest fix: re-render s24 only (take g1724-1858 with handles; splice g1732-1852, same dissolves and cut, audio unchanged). Re-timing the existing frames cannot work: the zoom is spread over about 25 rendered frames at 20-44 diff/frame, and slowing it 4x would need invented viewpoints (optical-flow interpolation through the lattice will ghost). A 2D crop-in on the wide frames would need about 10x enlargement at 720p.
+Changes for the re-render (same set, same path geometry, same lighting):
+1. **Re-time the camera along its existing path with log-distance (constant perceived zoom rate) easing** instead of the current back-loaded curve: the distance to the window table falls exponentially from g1736 to g1828 with a short ease-in/out at each end. Target: window unit < 5 % until ~g1745, Maupassant < 5 % until ~g1790 and then rising steadily, landing at >= 35 % at ~g1826-1828. That gives **wide -> landing about 3.0-3.1 s**, then a 0.8 s slow drift to the cut at g1852. Keep the pass through the lattice and the RESTAURANT sign, now taking about 1 s instead of 0.3 s.
+2. **Move the end pose closer by about 1.25x** (or narrow the FOV about 20 %) so his visible figure (hair to tabletop) is 36-40 % at landing, with the table edge and the chair top still in the bottom of the frame.
+3. **Make him findable at the start:** turn the restaurant pane from the flat yellow emissive square into clear glass (or an open pane), so the lit interior and his white face read as a dot in the first-floor window from g1745. Optionally use a slightly warmer practical light behind him.
+4. **Move the first-bite keyframe from ~g1812 to ~g1824-1828** (60.8-60.9 s, still inside "กินข้าวบนหอ" which starts at 60.48). Keep his mouth closed until then.
+Then redo the s24 take QA (measure g1736-1852 every 4 frames against these numbers) and re-run the FINAL item 4 and joins at g1732 and g1853.
