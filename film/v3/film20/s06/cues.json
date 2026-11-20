@@ -1,0 +1,41 @@
+{
+ "take": "s06",
+ "fps": 30,
+ "note": "t = film seconds (g / 30); narration PROJ/film20/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "kind": "ambience",
+   "t": 0.0,
+   "dur": 2.5,
+   "frame": 0,
+   "end_frame": 75,
+   "note": "Café 1887, day: murmur of an angry crowd, chairs scraping, gas-lamp hiss, cups clinking; far-off hammering of the building site through the window"
+  },
+  {
+   "kind": "foley",
+   "t": 13.467,
+   "dur": 0.533,
+   "frame": 404,
+   "end_frame": 420,
+   "note": "artists shaking newspapers: paper rattle + cloth swishes, indignant hubbub (no words)",
+   "peak_frame": 410
+  },
+  {
+   "kind": "accent",
+   "t": 14.733,
+   "dur": 0.5,
+   "frame": 442,
+   "end_frame": 457,
+   "note": "snap push on 'สี่สิบกว่าคน' (forty-odd): short rising whoosh + a rhythmic fist-bang on the marble table",
+   "peak_frame": 448
+  },
+  {
+   "kind": "cut",
+   "t": 15.533,
+   "dur": 0.0,
+   "frame": 466,
+   "end_frame": 466,
+   "note": "hard cut to shot 7 (protest sheet insert): the crowd hubbub drops to close pen scratching"
+  }
+ ]
+}

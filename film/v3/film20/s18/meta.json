@@ -1,0 +1,70 @@
+{
+ "take": "s18",
+ "film": 20,
+ "shots": [
+  18
+ ],
+ "g0": 1221,
+ "g1": 1302,
+ "first_g": 1210,
+ "n_frames": 96,
+ "shot_ranges": {
+  "18": [
+   1221,
+   1301
+  ]
+ },
+ "handle_in": 11,
+ "handle_out": 4,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 17,
+  "note": "dissolve 17 f from shot 17: 11 handle frames g 1210..1220 rendered in 3D (17/2 + 2)"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "at": 1302,
+  "note": "hard cut to shot 19 at g 1302; handle g 1302..1305 rendered in 3D"
+ },
+ "set": "v3/set3d20 TOWER tower_dusk (camera = T14 tower_dusk_chars lens + shift 0.10, moved to (-7.6,-220.6,1.4) m), light DUSK, year 1909 (antenna, hut, wagon + scrap cart on); runtime: antenna wire last-segment fix (c20.fix_antenna_wires), preset FG (lamp-post, kegs, planks) moved with the camera",
+ "cast": "cast20 eiffel_old (eiffel_old_worried arms: hand at chin; calm -> worried swap on the closed frame of the blink g 1253..1255), officer (officer_stern), riveter_hammer / riveter_tongs / riveter_forge as demolition men (sledge, crowbar, hammer in hand; expression neutral); staging moved 2-5 m toward the wagon (marks listed in shot.py DEMO_XY), all at ground z 0.113 D; nobody speaks",
+ "camera": "c20.CamPath: push 20 %/s decay 0.95 toward the group, slide -60 px/s, orbit -8 deg/s, tilt DOWN -4.5 deg/s (heads rise 732 -> 635), snap x1.3 15 f at g 1252..1267 on 'ใกล้วันรื้อ' (1254)",
+ "events": {
+  "snap": [
+   1252,
+   1267
+  ],
+  "word_soon": 1254,
+  "face_swap_blink": [
+   1253,
+   1255
+  ],
+  "swap_calm_to_worried": 1254
+ },
+ "dof": "none",
+ "text": "none",
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 10.3,
+ "s_per_frame_cpu_mean": 20.01,
+ "head_px": [
+  41,
+  106
+ ],
+ "head_centre_y": [
+  616,
+  718
+ ],
+ "head_bottom_max_y": 746,
+ "framediff_in_shot": {
+  "median": 2.76,
+  "p90": 3.47
+ },
+ "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
+}
