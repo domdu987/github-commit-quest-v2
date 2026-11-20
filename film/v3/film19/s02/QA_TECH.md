@@ -298,3 +298,32 @@ Minimal fix (camera only, g112-159; leave g >= 160 exactly as it is):
    - no rise of more than 20 % after any local minimum.
    In practice: start the tilt-up right after g127 at about 1.0 deg/frame and keep the angular rate steady or falling (about 1.3-1.4 deg/frame into g160), instead of 0.64 deg/frame at g133 climbing to 1.65 deg/frame at g151.
 4. Re-measure with the sea masked out (ship-point similarity fit plus top-band and rail medians).
+
+## Round 16 (director QA-tech): FAIL (aim reversal fixed; the second move g133-152 remains)
+Take re-joined -> /tmp/s02q16.mkv (152 frames); g110-165 extracted at 720x1280 to /tmp/qa19_r16b/s02/ and the §E scripts re-run on them (copies in /tmp/qa19_r16b/sc/: reg.py regional LK, sim.py sea-masked ship-only similarity fit, stub.py camera path from the current shot.py). Rigid-feature NCC tracks were not re-seeded (feature positions changed), I relied on the sea-masked similarity fit, regional LK and the path.
+(a) Aim reversal / step in g120-135: FIXED. Camera path from shot.py: pitch rate -0.75 (g120) -> -0.44 (g125) -> -0.15 (g127) -> -0.03 (g128) -> +0.16 -> +0.27 -> +0.39 (g131) -> +0.56 -> +0.71 (g134) -> +0.87 (g136): it crosses zero over ~8 frames, no 2-frame reversal; yaw rate +0.36 -> 0.03 (g127) -> -0.14 -> -0.51 (g132), smooth; tau step 1.11-1.17 over g119-130 (no 1.65 spike); |dloc| 2.07 -> 1.17 falls monotonically. Sea-masked ship fit, median point speed px/frame at 720 wide: 9.5 (g122), 9.0 (g125), 8.0 (g126), 7.5 (g127), 6.8 (g128), 5.9, 5.0, 4.7 (g131): monotone with no spike, rotation +0.28 -> -0.03 -> -0.28 deg/f smooth. Frames g122-134 (sheet a.png) show a continuous swing, no catch. Whole-frame diff has no step (14.3 g110 ... 12.5 g125, 11.1 g128, 9.4 g131).
+(b) Second move before g160: STILL THERE.
+| g | ship-only speed (720w) | top band <35 % (LK) | deck >75 % (LK) | mid-sides (LK) | whole-frame diff | path ang rate deg/f | |dloc| |
+| 123 | 9.8 | - | - | - | 13.7 | 0.63 | 1.74 |
+| 128 | 6.8 | - | - | - | 11.1 | 0.08 | 1.31 |
+| 131 | 4.7 | 3.2 | 21.4 | 6.6 | 9.4 | 0.45 | 1.11 |
+| 133 | 3.5 | 1.4 | 19.8 | 5.8 | 9.4 | 0.62 | 0.99 |
+| 136 | 4.1 | 2.8 | 15.7 | 5.8 | 8.1 | 0.92 | 0.83 |
+| 140 | 5.2 | 5.2 | 12.1 | 3.7 | 7.2 | 1.22 | 0.67 |
+| 144 | 5.9 | 7.8 | 10.3 | 5.8 | 7.7 | 1.50 | 0.52 |
+| 148 | 6.5 | 9.4 | 8.5 | 3.7 | 9.2 | 1.64 | 0.42 |
+| 152 | 7.3 | 11.4 | 8.2 | 2.2 | 9.1 | 1.65 | 0.33 |
+| 156 | 5.3 | 14.7 | 6.1 | 4.0 | 8.4 | 1.55 | 0.26 |
+| 160 | 6.9 | 16.9 | 9.3 | 6.8 | 9.4 | 1.34 | 0.20 |
+Ship-only speed trough 3.5 at g133 -> 7.3 at g152 = +109 % (limit 20 %); top band (sails/rigging) 1.4 -> 16.9 (12x, one coherent downward slide, dx -4 to -5, dy 0 -> +16: the tilt-up); mid-sides trough 0.2 at g154; whole-frame diff trough 7.2 (g140) -> 9.7 (g158) = +35 %. So the team's rigid-feature figure (25 -> 16 -> 29) reading is right in kind: it is a visible second move, i.e. (b) exists. The team's explanation (rotation adds image speed while translation falls) is accurate but is exactly the problem: translation falls fast (|dloc| 2.07 -> 0.33) while the angular rate collapses to ~0.1-0.6 deg/f at g128-133 (the zero crossing) and only then climbs to 1.65 at g148-152, so the sum dips at g133 and climbs back. The zero crossing is too late (g128): it falls just when translation image speed is already dying.
+Concrete schedule to resolve (camera only, g108-160; g160+ unchanged, the g160 values stay: pitch +1.31, ang ~1.34 deg/f, |dloc| 0.20):
+1. Move the pitch-rate zero crossing EARLIER, to ~g112-116, where the translation image speed is still 25+ px/f and hides the reversal: pitch rate -0.87 (g109) -> -0.3 (g111) -> 0 (g114) -> +0.3 (g117) -> +0.6 (g120) -> +0.8 (g124) -> +0.95 (g130) -> +1.05 (g136) -> +1.15 (g142) -> +1.25 (g150) -> +1.31 (g160). Keep yaw rate magnitude 0.3-0.5 through the same span (do not let it go to 0 and back).
+2. Result: the angular rate (image speed from rotation) never drops below ~0.6-0.8 deg/f after g117 and rises slowly to 1.3, so ship-only speed = falling translation + rising rotation stays within +-15 % of ~7-8 px/f (720 w) from g128 to g160 instead of 3.5 -> 7.3. If the director prefers to keep the zero crossing at g124, the alternative is a slower tilt-up: hold the angular rate at >= 0.8 deg/f from g128 (do not let it dip to 0.08) and cap it at 1.34 (the g160 value) with NO rise above that, i.e. pitch rate 0 (g124), +0.8 (g128), 1.0 (g134), 1.15 (g142), 1.25 (g150), 1.31 (g160); this keeps the trough above ~6 and the climb-back below ~20 %.
+3. Re-measure with the same sea-masked sim.py fit plus reg.py top-band and mid-side medians; targets: ship-only median monotone non-increasing within 20 % from g124 (9.5) to g160 (6.9, no trough below ~6), top-band speed rising smoothly without a flat 1.4-2.8 hold at g132-136.
+Other checks PASS:
+- Whole-frame frame-diff (pairs g58-190): median 8.13, p90 13.68, max 14.55, min 1.80 (limits median >= 4, p90 >= 10).
+- Luma 89.6 (per frame 67.4-110.0).
+- Props: g160+ is unchanged from round 14; quadrant and chart in hand in every sampled frame g170-199 (sheet p.png), no pop.
+- Shrug two-armed and symmetric g183-190, shared head turn g173-179, captain's eyes open with brows raised; held "O" g158-171 allowed.
+- Usual: nobody cut, faces ~20 % of frame height, heads at y ~490-530, contact shadows, nothing floating, no props through faces, no black or frozen frames (min diff 1.8), nobody still > 1.5 s. Landing g160-199 still clean (unchanged).
+Verdict: FAIL (single blocker: the second move g133-152; the g127 aim reversal is fixed).

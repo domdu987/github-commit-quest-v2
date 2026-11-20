@@ -257,3 +257,56 @@ Status of the must-fixes:
 - **Must-fix 2: closed in round 14.**
 
 Nothing blocks conform. The open polish is unchanged: the captain's level chart arm in the shrug, seams on the left sail, and the soft foreground planks.
+
+## Round 16 (director QA-art): FIX. The g 127 catch is fixed, but the "settle, then second tilt-up" (§H.1) is still there
+
+**Correction to my round 15 note.** I called the g 127 flow blip "foam-texture noise". That was wrong. Re-running my own sea-masked feature tracker on the round-15 frames reproduces the §E reviewer's finding:
+- median rigid speed: 15.1 → 12.8 → 6.4 px/frame at g 126 → 127 → 128;
+- median dx: +8.2 → +4.8 → -0.8;
+- similarity-fit rotation: +0.29° → -0.32° → -0.86°.
+
+That is a real two-frame catch-and-swing-back on the hull. My downgrade of must-fix 1 in round 15 was also too generous: the second tilt-up was real, and the deck-strip and optical-flow numbers I leaned on under-read the rotation in the top band. The QA-tech FAIL and the §E uphold were right.
+
+**Round 16 method.** Take: take.mkv.partaa + partab joined to /tmp/s02a16.mkv (152 frames, first_g 48). All frames are extracted to /tmp/qa19_r16art/s02/gNNN.png. I viewed every frame g 115-165 (f115_140.jpg and f140_165.jpg, 150 px wide tiles, i.e. smaller than phone size). I tracked them with a sea-masked rigid-feature tracker: Shi-Tomasi corners outside teal water and foam, pyramidal LK with a forward/backward check, and a RANSAC similarity fit per frame. The script is /tmp/claude-0/qa16/track.py. It reports:
+- median speed and dx/dy;
+- rotation and scale;
+- the median speed of the top band (y < 35 %);
+- the median speed of the rail strips (x < 150 or x > 570, y 35-75 %).
+
+**Rigid-feature table, round 16** (px/frame at 720 wide):
+
+| g | 116 | 120 | 124 | 126 | 127 | 128 | 130 | 132 | 133 | 135 | 137 | 140 | 143 | 146 | 149 | 152 | 155 | 158 | 160 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| median speed | 12.2 | 10.0 | 10.4 | 8.4 | 7.8 | 7.0 | 5.2 | 4.4 | **3.8** | 4.0 | 4.7 | 5.4 | 5.8 | 6.0 | 7.2 | **7.3** | 6.6 | 6.6 | 7.0 |
+| median dx | 4.4 | 2.0 | 3.3 | 3.7 | 3.3 | 3.1 | 2.3 | 1.4 | 0.8 | -0.3 | -0.8 | -1.5 | -2.5 | -2.3 | -2.6 | -2.9 | -2.3 | -2.2 | -1.6 |
+| median dy | 4.6 | 5.9 | 2.9 | -0.1 | -1.0 | -1.4 | -1.8 | -1.3 | -0.9 | -0.7 | -1.4 | -2.6 | -3.4 | -2.9 | -1.8 | -0.3 | 1.1 | 4.4 | 6.2 |
+| top band | 14.1 | 10.3 | 12.8 | 14.1 | 10.6 | 7.5 | 4.8 | 2.1 | **1.6** | 2.5 | 3.3 | 5.3 | 7.1 | 8.7 | 9.6 | 11.7 | 14.2 | 16.3 | **16.8** |
+
+| Check | Status |
+|---|---|
+| 1. Hull catch or swing-back, g 115-165 | **Fixed.** The rotation runs +0.26° (g 115-121), +0.11° (g 126), -0.05° (g 127), -0.20° (g 129), -0.38° (g 133), -0.58° (g 136-137), then about -0.2° to 0°. That is a smooth zero crossing over about 6 frames. dx eases from +3.7 through 0 at g 134-135 to -2.5 over about 12 frames, with no reversal inside 2 frames and no speed spike at g 127. The upstream re-time (g 97-109, which differs from round 15) is also smooth: the dy zero crossing is spread over g 111-114. Frame by frame on the sheets, the stern swings and slides continuously through g 115-131 with no visible catch. |
+| 2. One move on a phone? | **No: it is still "swoop, settle, then a second tilt-up".** g 131-139 is a near-hold. The tiles barely change, with the top band at 1.6-3.3 px/frame and the median at 3.8-4.7. From g 140 the camera tips up: the rail, sea and horizon slide in from the top (horizon at about g 150, sky at about g 158), and the top band climbs **1.6 → 16.8 px/frame (10x)** and the median **3.8 → 7.3 (+92 %)** by g 152-160. The image vertical motion also reverses twice (dy + → − at g 126, then − → + at g 153). The team's "tilt-up starts around g 127" is not visible in the frames: the top band is still decelerating until g 133. Compared with round 15 (median trough 4.3, top-band trough 3.1), the trough is now even deeper. The ease-out cannot start from the g 160 speed (about 7 median, about 17 top band) after dropping to 3.8 / 1.6, so §H.1 ("one continuous move with ease") is still broken. |
+| 3. Regressions | **None.** g 48-96 are bit-identical to round 15. g 159-199 differ only by render noise (mean absolute difference about 0.6/255; g 158 is 3.6, the warp seam), so the landing, drift, acting, props and the s04 dissolve handle are unchanged. Colour: sat 0.634, luma 94.1 (G1 OK). Grounding and framing are unchanged. |
+
+| Criterion | Score |
+|---|---|
+| Set | 8 |
+| Light & colour | 8 |
+| Composition / phone | 7 |
+| Acting | 7.5 |
+| Key moment (BIGZOOM + beat) | 6 |
+| Match to refs (R5 continuous crane) | 7 |
+| **Overall** | **7.25 on average, but the verdict is FIX: a blocking §H.1 defect is confirmed (upheld by §E)** |
+
+**Must-fix (camera only, g 127-159; g ≥ 160 untouched).** The landing begins at g 160 with the camera already tilting up fast (top band about 17 px/frame, about 1.4°/frame of pitch). Because g 160 onward is frozen, the only monotone solution is to **have the tilt-up already running at about that rate from about g 128 onward**, instead of letting it decay to nearly nothing at g 133 and re-accelerating.
+
+Concretely: the pitch rate should cross zero at g 120-127 (it does now), rise to about 1.0°/frame by g 130 and about 1.3-1.4°/frame by g 135, and then hold or fall gently into g 160. Translation keeps falling monotonically, as it does now.
+
+Acceptance on the sea-masked tracker, g 128-160:
+- the top-band speed never drops below about 10 px/frame;
+- the median rigid speed never drops below about 6;
+- neither rises more than 20 % after a local minimum.
+
+If that pushes the horizon into frame too early, it is acceptable to let the g 160-176 tilt ease out a bit more slowly. Unfreezing the start of the landing is better than keeping a dead hold.
+
+Not blocking: the captain's level chart arm in the shrug, the left-sail seams, the soft foreground planks.
