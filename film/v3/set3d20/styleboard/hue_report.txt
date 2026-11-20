@@ -1,6 +1,6 @@
-sb1_site         cast-shadow px   5.6% of frame | shade mean hue  321.5 (median 323.3; target 240-260) | 16.2% of shade px in 225-265 | magenta share  5.84% (<=10) | OUT
-                 hue shares of chroma %: red 15.2 orange 39.5 yellow  9.5 green  0.2 blue 24.9 violet  1.1 magenta  9.5 | mean sat 0.40 val 0.81
-sb2_tower_dusk   cast-shadow px  16.2% of frame | shade mean hue  309.2 (median 240.0; target 240-260) | 29.7% of shade px in 225-265 | magenta share  6.58% (<=10) | OUT
-                 hue shares of chroma %: red 14.8 orange  9.1 yellow  0.7 green  0.0 blue 65.6 violet  1.9 magenta  7.9 | mean sat 0.57 val 0.71
-sb3_resto        cast-shadow px  49.8% of frame | shade mean hue    2.0 (median  16.9; target 240-260) |  2.2% of shade px in 225-265 | magenta share  3.59% (<=10) | OUT
-                 hue shares of chroma %: red 63.3 orange 24.1 yellow  1.7 green  0.1 blue  2.2 violet  1.6 magenta  7.1 | mean sat 0.45 val 0.71
+sb1_site         cast-shadow px   4.4% of frame | shade mean hue  245.4 (median 235.8; target 240-260) | 54.0% of shade px in 225-265 | magenta share  3.40% (<=10) | OK
+                 hue shares of chroma %: red 14.5 orange 46.9 yellow  3.1 green  0.3 blue 28.6 violet  1.1 magenta  5.4 | mean sat 0.40 val 0.78
+sb2_tower_dusk   cast-shadow px  15.0% of frame | shade mean hue  239.7 (median 231.5; target 240-260) | 63.8% of shade px in 225-265 | magenta share  3.20% (<=10) | OK
+                 hue shares of chroma %: red 12.4 orange  8.2 yellow  0.6 green  0.0 blue 72.7 violet  1.9 magenta  4.2 | mean sat 0.57 val 0.72
+sb3_resto        cast-shadow px  42.9% of frame | shade mean hue  345.3 (median 348.7; target 240-260) |  5.6% of shade px in 225-265 | magenta share  2.07% (<=10) | OUT
+                 hue shares of chroma %: red 77.1 orange  7.6 yellow  1.1 green  0.1 blue  4.4 violet  2.0 magenta  7.8 | mean sat 0.50 val 0.67
