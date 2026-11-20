@@ -1,15 +1,13 @@
-# QA_TECH s06 (take g459-530, 72 frames) - FAIL (re-check of the re-shot)
-Checked: 6 fps frames + first/last 3, framediff re-measured (71 pairs): median 6.66, p90 11.00 (min 2.08, max 14.01). Caption band y880-950 mean max 56.5, bright 0.00 %.
+# QA_TECH s06 (take g459-530) - FAIL (re-check)
+Checked: 6 fps frames + first/last 3; frame-diff re-measured (71 pairs): median 3.23, p90 5.40 (min 1.46, max 10.03). Caption band mean 53-70; bright share max 1.30 %, mean 0.22 %.
 ## Earlier issues (previous QA_TECH s06)
-- E1 p90 < 12: NOT FIXED (11.00).
-- E2 ten oxen at "สิบตัว": FIXED (about 9-10 readable).
-- E3 Tian Dan leaves the frame: FIXED, he is in frame to g530 (one clip, see 2).
-- E4 top 40 % empty sky: partly fixed (sky ~25 % now) but the bottom is now empty, see 3.
-- E5 eye-line: NOT FIXED, see 4.
+- E1 p90 < 12: NOT FIXED (5.40, worse than 11.00).
+- E2 ten oxen: OK (about 8-10 plain oxen in a double row).
+- E3 Tian Dan clipped at the left edge: FIXED, he stays inside the frame.
+- E4/E5 bare ground and eye-line: bare ground NOT FIXED (see 2); eye-line improved (sideways glance toward the oxen at g~500+), but the early frames still look at the lens.
 ## Issues
-1. whole shot - camera: p90 11.00 < 12. Fix: stronger snaps or a larger lateral slide so p90 >= 12.
-2. g474 (and g469-479) - framing: Tian Dan's body and hat brim are clipped by the left edge at g474 (his head touches x=0). Fix: keep his mark 60 px inside the left edge during the walk.
-3. g459-530 - composition: the bottom ~40 % of the frame (y ~800-1280) is flat, empty dark-violet ground with no props; caption band sits on it. Fix: add fg dressing (baskets, a gate post, a lantern at 1-2 D) and tilt up a little so the lane and houses fill more.
-4. g459-530 - plan beat/eye-line: the plan has townsfolk leading oxen out of gates and Tian Dan going house to house. No townsfolk or gates are visible (the old man and woman are fully hidden); the oxen are a frontal parade in one file. Tian Dan walks and smirks at the lens, never at a house or the oxen. Fix: show one or two townsfolk with ropes at the left of the lane and a gate opening; turn his face along the lane.
+1. whole shot - median 3.23 < 4 and p90 5.40 < 12; most pairs 2-3; one burst g~497-500 is the held punch. Fix: stronger eased push and slide (the lane slide of 2.2 D is not visible).
+2. g459-510 - rule 5: the bottom 40-45 % (y ~740-1280) is flat violet ground. Only at g~519-530 do the child and woman with baskets fill the lower-left. Fix: tilt up/in or add fg props from the first frame.
+3. g459-530 - plan beat: no gates opening and no townsfolk leading oxen with ropes; the oxen stand in a double row behind Tian Dan, and the old man is hidden (note, not blocking).
 ## Pass items
-oxen PLAIN, NO blades, no dragon silk, no flame in every sampled frame (continuity for s06 correct); DUSK light consistent; heads < 880 (chin max ~y 800 at g469-514, passes); no mouths move; no text; hooves grounded with soft shadows; no frozen/black/magenta frames; g range 459-530 matches the plan.
+Oxen PLAIN: brown, no coat, no blades, no flame in every sampled frame (continuity OK). DUSK. Heads < 880 (chin max ~y 800). No mouth moves. No text. No frozen/black frames. g range 459-530 matches the plan.
