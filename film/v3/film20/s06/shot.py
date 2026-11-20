@@ -65,6 +65,7 @@ class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s06")
         self.path = cam_path(self.A)
+        CO.setup_grade(self.scene, dict(sat=float(os.environ.get("SAT", "1.30"))))      # SAT_GRADE: film-wide saturation >= 0.47 (QA_TEAM §G)
         self.key_cam(bf(GA), *self.path.at(GA))
         self.scene.frame_set(bf(GA))
         self.cafe = self.A["hooks"]
