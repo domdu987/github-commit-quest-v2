@@ -16,3 +16,8 @@ Several takes either pulsed (FAIL rule 1) or became too static once pulses were 
 - One held snap on the planned beat only (+15-20 %, eased 4-6 frames, then HOLD).
 - Measure before rendering finals: draft the whole move at 180x320, compute frame-diff (90x160 grey, area), and adjust the dolly/truck speed until median >= 4 and p90 >= 12. Then render.
 - Bare ground: aim the look-at so the horizon / main action sits at y 0.40-0.50 and put a dark fg prop low in frame; plain ground <= 25 %.
+
+## Frame-diff gate clarified (director, 2026-11-20 01:05 UTC)
+The client rule (production-lessons §10) is a FILM-level number: median in-shot frame-diff >= 4 and p90 >= 12 across the whole film, checked at the FINAL gate.
+Per take, the TAKE gate now requires: median >= 4 (hard), no pulsing (hard), and p90 >= 9 as a guide (a take below 9 must show a visible eased dolly + slide; a take at 9-12 is fine).
+High-motion shots (s10, s14, s15, s19, s21, s24, the charge) carry the film's p90. Do NOT add pulses to reach 12 in calm shots.
