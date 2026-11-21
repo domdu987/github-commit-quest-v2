@@ -34,3 +34,9 @@ The moon rim against the lantern pools and the orange tent works, and the frames
 - **S17**: the left observer is cut off at the frame edge. Slide the camera so both Germans are whole and the far field fills the band behind them.
 - **S19**: in the first frame the "DECOY M4" text is at about y 925. Lower the crate or start the camera higher. Shade hue 273 (violet under the pile): tint the shadow on the grass under the pile toward blue (248).
 - **S07**: mid shade hue 236. Use the same dirt-ambient fix as S12.
+
+## Director acceptance of the FIELDS/RHINE fix round (2026-11-21)
+FIELDS S01: all 4 fixes applied (oblique start 120 D up, end 3/4 on lead tank, hue 241) -> PASS.
+RHINE: no lavender cast, warm lantern pools vs navy, river reflections, dressed foregrounds, S17 observers whole -> PASS for render.
+Accepted deviations (night exterior, allowed by the skill's hue note): shade hue 227-234, dark share low, S16 mid luma 62.
+Team 3 shot notes: S16 lift exposure a little (lanterns/cab glow) so luma ≥ 70; S18 add a second boat and keep water ≤ 40 % by tilting up.

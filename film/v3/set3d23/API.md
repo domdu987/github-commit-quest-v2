@@ -50,7 +50,7 @@ keeps moving into the tail and never holds near-still. Moves: `push` (fraction o
 (px/s at 720 wide, measured at `sdist` D), `rise`, `zoom_rate` (lens push, S17), `end` (crane / reveal to an end pose; the tail extrapolates on the same
 eased line), `path` (BIGZOOM key poses, Catmull-Rom with the subject distance interpolated in log space: S01 (r2) a high OBLIQUE start 120 D up, 37 deg down, lens 18 -> 21 D, 3/4 on the lead tank;
 S12 4.7 D on the cyclists' faces -> 25 D wide on the lift). No random shake anywhere. `GH.key_camera` keys location, rotation and lens per frame (LINEAR).
-Foreground props (`fg`): real grounded props placed ('cam', dist, lateral) from the start camera, 1.5-2.2 D from the lens: 12 shots have one (S02 S03 S07 S08 S09 S10 S13 S15 S16 S17 S18 S19), S05 starts on the sign, S06 shoots over the crew, S11 through the low hedge; S01 S04 S12 S14 are high / BIGZOOM moves (S01 sweeps past two poplars).
+Foreground props (`fg`): real grounded props placed ('cam', dist, lateral) from the start camera, 1.5-2.2 D from the lens: 12 shots have one (S02 S03 S07 S08 S09 S10 S13 S15 S16 S17 S18 S19), S05 starts on the sign, S06 shoots over the crew, S11 through the low hedge; S01 S04 S12 S14 are high / BIGZOOM moves.
 
 ## Marks
 `GH.marks(shot)` -> {role: [(x, y, z, yaw_deg, extra)]} in WORLD coordinates at the built state; z is the surface under the mark (ray cast).
