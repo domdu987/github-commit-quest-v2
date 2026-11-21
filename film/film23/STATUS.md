@@ -12,3 +12,4 @@ Fallback check: send_later 60 min, always re-armed.
 - [x] Style board r1 (v3/set3d23/board) -> QA-art FIX-FIRST (board/QA_ART.md: overall 5/10, still 2 recompose, shadows, night tanks, caption band)
 - [ ] Board r2 (builder fixing all 8 QA-art items) -> QA-art re-check
 - [ ] Set + cast -> SET gate -> shot plan (≤12 cuts, 2 BIGZOOM) -> WORKER23.md -> render teams
+- [x] QA §K adopted (producer 2026-11-21): ground_check before every render, contact shadow on every card/prop, independent float hunter at TAKE+FINAL. Tanks sit on the ground except in the lift gag.
