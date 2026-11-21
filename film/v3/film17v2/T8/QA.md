@@ -35,3 +35,12 @@ Re-rendered g1877-1932 and g2040-2052 (69 frames); the rest is unchanged.
 - Luma, RGB mean 90x160: take mean 100.0, min 90.8, max 112.9 (target 95-110). A few frames at the extremes sit just outside the band; the mean is in.
 - qa_auto: PASS (cut 1868 shows no change within ±2 frames, as before). rhythm.py: in-shot median 10.84, p90 16.76.
 - Honest notes: Bertillon's head leaves the frame at g2036-2041 (accepted earlier). The returning crowd members touch the left edge at g1928-1932.
+
+## Fix pass 3 (director: float hunter, client rule K)
+Whole take re-rendered (191 frames) because the contact blobs apply to every frame.
+- Top-down cards: for camera pitch steeper than 40-45 deg down (g1862 to about g1925), each card is yawed to the camera (blend from the face-key yaw over pitch 40-50 deg) and leaned back by 35 deg x smoothstep((pitch-45)/45), pivot at the feet (`render.py` `_basis_steep`). Before, the cards leaned 40 deg at a random yaw and read as people lying on the floor. Checked g1862, 1880, 1890, 1900, 1920, 1930: people stand and face the lens.
+- Contact shadows: every card keeps its decal (alpha 0.5), now 1 mm above the floor; props: the room furniture is batched into one mesh per material, so each measure_* mesh is split into loose pieces, floor-touching pieces are merged by footprint, and one soft ellipse (alpha 0.5, 1 mm up) goes under each cluster: 79 blobs.
+- g1920 dark blob: not a stray. It is the photographer's camera on its tripod with its dark focusing cloth (`measure_cloth`), a real prop of the room; kept.
+- Ground check (`GROUND.md`, `ground.py` + `film/v3/tools/ground_check.py`, every 30 frames, 7 frames, 81 objects): 0 FAIL. Cards are measured by their feet point (the sprite alpha was unreadable for the checker, so its bbox fallback would be too lenient). Dust motes, the pendulum bob and stove smoke are tagged airborne; wall and ceiling mounted items are listed as MOUNTED. Honest note: the gendarme `gend_b` stands 19 cm inside a brass base (sunk, not floating).
+- Numbers: luma (RGB mean 90x160) mean 99.9, min 90.5, max 112.7 (target 95-110); qa_jitter median 0.49 px; qa_auto PASS; rhythm in-shot median 10.60, p90 16.68.
+- Honest notes: at g1894-1910 the walking-out gendarmes cross the left frame edge for about 12 frames (same staging the director accepted at f432f9a).
