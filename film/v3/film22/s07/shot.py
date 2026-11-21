@@ -37,10 +37,13 @@ def beck_xy(g):
 
 def actors(g, T):
     t = nt(g); cam = T.path(g)[0]; k = g - G0
-    story, pose = ('off_toss_drawer', dict(mouth='flat')) if g < g_of(28.08) else ('off_laugh_back', dict(mouth='flat'))
+    if g < 832:      # J5: keep s06's last pose (bite mime, quote ended at 27.44 s = g 823) so the join is seamless
+        story, pose = 'off_eat_mime', dict(mouth=cast22.talk_mouth((g // 3) * 3, 1.0) if g < 823 else 'flat')
+    elif g < g_of(28.08): story, pose = 'off_toss_drawer', dict(mouth='flat')
+    else: story, pose = 'off_laugh_back', dict(mouth='flat')
     c_, p_ = cast22.STORY22[story]; dy_ = p_.get('desk_y', 1.3)
     pp = dict(desk=0, typewriter=0, **pose)
-    ob = T.card(story, (OFF[0], OFF[1] + 1.0, 0.0), face_to=cam, pose=pp, shadow=False, rim='#9fb8ff', ppd=(520 if g <= 850 else 230))
+    ob = T.card(story, (OFF[0], OFF[1] + 1.0, 0.0), face_to=cam, tilt=(0.0 if g < 850 else None), pose=pp, shadow=False, rim='#9fb8ff', ppd=(520 if g <= 850 else 230))
     ob.location.z = PZ0 + 1.9 + dy_ - ob['anc']['head'][1]; ob['mounted'] = True        # seated on his chair behind the desk
     if story == 'off_laugh_back': ob.location.z += 0.06 * abs(math.sin(2 * math.pi * 3.0 * t))
     bx, by, dx, walking = beck_xy(g)
@@ -68,8 +71,8 @@ MOUNT = ['pub_blind', 'pub_street', 'clerk_desks', 'pub_dado_rail', 'pub_posters
 SNAP = {'pubpool': -0.04}
 
 def make(quality):
-    return C.Take('s07', PATH, quality, state=dict(drawer=1.0), pre=dict(ceiling_off=True), hide=['pub_aisle_props', 'off_desk_items', 'pub_shafts'], post=fix_desks, mounted=MOUNT, snap=SNAP,
-                  animate=lambda g, T: (HQ.set_drawer(1.0 if g < g_of(28.08) else 0.0), setattr(bpy.data.objects['pub_glass_sign'], 'hide_render', g > 856)))
+    return C.Take('s07', PATH, quality, state=dict(drawer=0.0), pre=dict(ceiling_off=True), hide=['pub_aisle_props', 'off_desk_items', 'pub_shafts'], post=fix_desks, mounted=MOUNT, snap=SNAP,
+                  animate=lambda g, T: (HQ.set_drawer(1.0 if 832 <= g < g_of(28.08) else 0.0), setattr(bpy.data.objects['pub_glass_sign'], 'hide_render', g > 856)))
 
 if __name__ == '__main__':
     mode = sys.argv[1] if len(sys.argv) > 1 else 'draft'; spec = sys.argv[2] if len(sys.argv) > 2 else '823:937:10'
