@@ -23,3 +23,10 @@ Passes: no black, magenta or blank frames, no frozen runs, no pops (0 cuts detec
 7. g410-418, non-blocking. The red and black spiky grass tufts at the Scots' feet look like small flames or thorns. Fix: recolour them green or yellow-brown.
 
 Continuity with neighbours (B1 last frame, next take first frame) not checked here: the neighbour takes were not supplied. The D6 in (g295-297 from B1 at P_CAMP) shows the same camp, tents and parade, consistent with the QA.md note.
+
+## Independent override review (Opus, film-13 QA §E)
+Reviewer: independent Opus, 2026-11-21. Looked at every 5th frame g295-415 at 360x640, and checked the caption timing in script/captions.json.
+- Confirmed: the Scots are specks or missing until about g400. They read as five faces only at g405-418 (about 0.45 s), reach about 20 % of frame height, and the camera is still moving at the cut.
+- Why it blocks: this take is the audience's first real look at the Scots, the film's other side. The narration says "ส่วนใหญ่เดินเท้า / ถือหอก" (mostly on foot, with spears) at 10.59-11.89 s (g318-357), while the picture shows English tents and the river. By the time the Scots are visible the line has moved on to "อีกฝั่งของแม่น้ำ". The landing (the planned key image: low hero angle, spears against the sky, the spear shift and lean) gets under half a second, and nobody can see the spear beat on a phone. That breaks plan coverage and the client's phone-legibility rule. The director's "flight is nice" reasoning does not cover this.
+- Minimum fix: re-render g370-418 only. Shorten the river climb so the camera reaches the hill_low landing by about g385, closer and lower (the group at 30-35 % of frame height, the dead slope under about 15 %). Then hold it, still or as a slow drift, for at least 1.0 s (about 30 frames), with the spear shift and the lean inside that hold. Do not touch g295-370.
+**Verdict: FAIL STANDS.**

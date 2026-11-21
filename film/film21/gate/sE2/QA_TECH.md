@@ -17,3 +17,10 @@ Checked: all 160 frames (frame diff, no spikes, no frozen run), every 5th frame 
 
 ## Director ruling (film-13 workflow, 2026-11-21)
 ACCEPTED. At full size, g900 shows the near ground dressed with a barrel, gorse and rocks, and the soldiers at about 15 % of the frame height; the bare-dirt item is not blocking under film-13 QA. The crowd heads below y 880 are background extras, not main characters.
+
+## Independent override review (Opus, film-13 QA §E)
+Reviewer: independent Opus, 2026-11-21. Looked at every 5th frame g885-1044 scaled to 360x640 (an 8x4 sheet), and g900/g925/g935 side by side at phone size.
+- Measured: at g885-935 the soldiers sit in a band at about y 270-360 of 640 and the ground below them takes about 45 % of the frame. That part of QA-tech's finding is accurate.
+- Why it does not block: that ground is warm, lit, textured dirt with long cast shadows, a barrel, gorse and rocks. It is not a flat or empty plane, and it is not the old grey "empty dirt" look. About two thirds of it falls inside the caption band (y >= 880, i.e. >= 440 on the phone frame), where captions will cover it anyway, so the dead area left above the captions is about 15 %. At phone size the beat reads: about ten red footmen with readable faces in mid-frame, the river behind, and the hill with blue saltires at upper left. By g935 the bridge queue thickens, and the crane to the full meadow (g979+) lands on the word. The camera keeps moving and the set stays dense.
+- Non-blocking note: the footmen face the camera, though the plan wants a ride-along from behind. A 5-10 deg pitch-down at g885-935 would tighten the frame if the take is re-rendered for any other reason.
+**Verdict: OVERRIDE AGREED (ship).**
