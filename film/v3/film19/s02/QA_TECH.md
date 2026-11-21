@@ -402,3 +402,21 @@ Full checklist, frame numbers:
 Descent g100-165 as one move: yes, one continuous descend/swing/tilt-up with a soft settle at g161-166 (issue 1).
 Numbered issues (all non-blocking): 1. g160-170 camera dip (2.8 px/f at g162) and shove (5.2 at g166) with the vertical image velocity reversing; ask for a monotone pitch-rate decay to 0 by ~g172. 2. g190-199 captain's hand grazes the left edge. 3. g64 one-frame sea shimmer glitch (sub-visible). 4. Captain's held "O" mouth g158-171 (director's call).
 Verdict: PASS under film-13 rules.
+
+## Round 20 (film-13 rules): PASS (g150-199; two non-blocking notes)
+Take re-joined from take.mkv.part* (commit b1827ce) -> /tmp/s02q20.mkv (152 frames, 720x1280, 30 fps, g48-199); my frames in /tmp/qa19_r20/f/gNNN.png; qa_auto run myself on the joined file: FAIL only on the waived "suspected blur" (54 frames from g48, extreme-wide sea) plus the usual g57 cut note; magenta 0.0 %. JITTER.md median 0.81 (3.4 / 2.7 px at 1 / 2 s); GROUND 0 FAIL. g<150 confirmed unchanged vs round 19 (frame diff 90x160 max mean abs 0.10 over g48-147), so the round-19 pass for g48-149 stands.
+Dip-and-shove at g160-170: GONE. Background (character band masked out, 360x640 LK on background features):
+| g | 150 | 152 | 154 | 156 | 158 | 160 | 162 | 164 | 166 | 168 | 170 | 172 | 174 | 176 | 178 | 180 | 182 | 186 | 191 |
+| bg speed px/f | 10.7 | 7.2 | 4.7 | 4.0 | 3.5 | 3.0 | 3.1 | 3.1 | 2.5 | 1.9 | 1.6 | 1.4 | 1.3 | 1.1 | 0.9 | 0.7 | 0.6 | 0.6 | 0.5 |
+| bg vertical dy | +8.8 | +5.5 | +3.2 | +2.1 | +1.4 | +0.8 | +0.2 | +0.4 | -0.1 | -0.3 | -0.5 | -0.7 | -0.7 | -0.7 | -0.5 | -0.3 | 0.0 | +0.1 | +0.2 |
+Speed falls monotonically 10.7 -> 0.5 with a flat shoulder 3.0-3.1 over g160-164 (no dip to 2.8 then +80 % to 5.2 as in round 19); the vertical image velocity eases to ~0 at g162-166 and drifts to only -0.7 px/f (sub-visible, 1.4 px at 720) before settling at 0 by g182; no sign flip of consequence, no step larger than ~20 % per frame after g152. Camera drift after g182 is a steady 0.5-0.6 px/f.
+Whole-frame frame-diff (ffmpeg bilinear 90x160 grey, g58-190): median 10.75, p90 19.32, max 20.63, min 1.80; g150-181: 14.4 (g150) -> 9.0 (g157) -> 11.1 (g166) -> 6.0 (g177) -> 2.5 (g181), a gentle +23 % swell g157-166 that is the characters (character-band diff 15.2 -> 17.3 with the shock/chart-flip acting; masked background speed does not rise); largest 1-frame ratios in g150-199: 1.39 (g182) and 1.38 (g184) = the shrug acting, 1.14 (g185); camera frames g150-181 max ratio 1.05 up (g158), 0.77 down (g181). No pop. Frozen runs: none (min 1.80). Luma 89.2 (per frame 66.9-109.3), no black/blank/magenta frames.
+Checklist, g150-199:
+- Heads above y 880: yes, heads at y ~410-520 of 1280 from g166 to g199 (captain's head highest ~y 410 at g176), never near 880. PASS.
+- Clipping: nobody cut in half. NOTE 1 (non-blocking, unchanged since round 18): g190-199 the captain's outstretched glove sits on the left frame edge (glove tip at x ~0-6 of 720 in the g192 and g199 crops, a few px cut); sleeve and cuff are visible, the hand reads as reaching out of frame. Fix if ever re-rendered: shorten the arm swing by ~10 px.
+- Feet and contact shadows: both characters stand on the deck with contact shadows in every sampled frame g150-199 (GROUND 30/30). PASS.
+- Props: chart (captain) and quadrant (astronomer) in hand in all sampled frames g150-199 (g158, 166, 176, 186, 192, 199 and every 2 frames g170-199 checked); no pop, nothing through a face. PASS.
+- Continuity into s04: s02 g191 (captain with blank chart, noon, tricorne and costume) dissolves 13 f into s04 (captain with the chart on the STORM_DUSK deck, s04 starts at g182 and covers the g185-197 window); handle frames g191-199 are present and steady (diff 1.7-1.9, no jump). PASS.
+- Mouth: no lip-sync; NOTE 2: captain's held shock "O" g158-171 and small open mouth afterwards (director's call, as before).
+- Nobody still > 1.5 s: both characters animate throughout.
+Verdict: PASS under film-13 rules; issue 1 of round 19 (g160-170 dip and shove) is resolved. Non-blocking: glove at the left edge g190-199; held "O" mouth.
