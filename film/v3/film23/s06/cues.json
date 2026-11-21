@@ -1,0 +1,23 @@
+{
+ "take": "s06",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration timing is an estimate",
+ "cues": [
+  {
+   "time": 20.333,
+   "duration": 3.0,
+   "frame": 610,
+   "end_frame": 700,
+   "kind": "prop",
+   "label": "jeep engine and gravel, brakes, a squeak"
+  },
+  {
+   "time": 21.333,
+   "duration": 2.533,
+   "frame": 640,
+   "end_frame": 716,
+   "kind": "prop",
+   "label": "the Major's belly laugh (voice via narration), cigar puffs"
+  }
+ ]
+}

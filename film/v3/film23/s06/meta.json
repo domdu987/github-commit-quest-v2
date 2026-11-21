@@ -1,0 +1,23 @@
+{
+ "take": "s06",
+ "film": 23,
+ "shot": "S06",
+ "first_g": 610,
+ "n_frames": 106,
+ "g0": 618,
+ "g1": 696,
+ "g1_render": 716,
+ "handle_in": 8,
+ "handle_out": 0,
+ "seconds_per_frame_wall": 15.3,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 11
+ },
+ "note": "timing is an ESTIMATE (timing_EST.json); take renders g0..g0+ceil((g1-g0)*1.25) then the out-handle; camera and action continue through the tail",
+ "parts": [
+  "take.mkv.part00",
+  "take.mkv.part01"
+ ],
+ "mkv_mb": 51.1
+}
