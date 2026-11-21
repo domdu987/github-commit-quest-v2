@@ -1,32 +1,15 @@
-# QA-tech sB2 v3 (film-13 QA, team5 6d883ba)
+# QA-tech sB2 v4 (film-13 QA, team5 e0be015)
+Checked: all 124 frames (frame diff, phase correlation, sharpness), g367-372 and g376-387 every frame, the landing hold g387-418, full-size crops at g350/366/378, QA.md, QA_AUTO.md, GROUND.md, plan row B2. Colour/exposure ignored (conform).
 
-Verdict: FAIL (1 blocking issue)
+**Verdict: PASS**
 
-Checked: every 5th frame g295-415 (6 fps) at 360x640 and full size, the last take frames, QA.md, meta.json, GROUND.md, rhythm (median 23.0, p90 30.3), plan row B2. Colour and exposure ignored (normalised at the conform).
+## Checks on the v3 blocker and the gate questions
+- Landing: the camera arrives at g386 and holds g387-418 (32 frames = 1.07 s) with a gentle drift (about 0.7 px per frame, phase-correlation r 0.8-0.9, no shake). It is low and looks up at the five Scots against the sky and the pine light shaft. The group fills about 35-40 % of frame height (heads y about 510-680, all above y 880), and the dead slope is cropped to the bottom fifth. The spear swing, the lean and the nose scratch all play inside the hold. Mouths are closed. The v3 blocker is fixed.
+- qa_auto "suspected blur" g364-383: this is not softness. At full size, tree, shadow and rock edges are crisp at g366 and g378. The low Laplacian score comes from large smooth-shaded slopes, dark shade and sky while the camera travels fast down the hill foot. The renderer has no DOF and no motion blur. Acceptable.
+- Splice g369/370: clean. The motion continues (dy 6.2 to 4.7 px per frame, diff 26.0 to 25.5), and the light shafts, trees and river edge are continuous. No jump.
+- No black, magenta or frozen frames. Plan beats in order: crane over the pavilions, flight north across the river with the bridge at the left, climb Abbey Craig, land low on the Scots.
 
-Passes: no black, magenta or blank frames, no frozen runs, no pops (0 cuts detected). Crane over the pavilions, flight north over the river with the bridge at the left, and the climb to Abbey Craig are all there in order. Parade is in English red/gold, and the costumes are consistent. The Scots' mouths stay closed (g405-418). The landing is low and looks up, with the five Scots against sky and light shafts (fixes the old looking-down fail). Scots heads sit at y ~600-720 (< 880). GROUND FAIL 0 (the SUNK lines are canvas margin, accepted). Smoke and river glitter direction is consistent with the flight. No Thai text in the take.
-
-## Issues
-
-1. g378-418, BLOCKING. The landing beat barely reads at phone size, so the old fail ("Scots small, on screen only briefly") is only half fixed. At 360x640 the Scots are specks at g385-400 (about 5-8 % of frame height), still small at g405 (about 12 %), and reach only about 22 % of frame height (not the 30-38 % in QA.md) in the last ~8 frames (g410-418). So the Scots are readable for about 0.3 s at the very end of the take, and the camera is still moving at the cut. The frame is also unbalanced at the end: the bottom ~30 % is empty dark slope and the top ~45 % is empty blue sky, with the group in a thin band. The spear shift and the lean are tiny at this size, so they are hard to see on a phone. Fix: land earlier (reach the low position by about g392) and hold still for at least 1.0-1.5 s with the Scots at 30-40 % of frame height. To do that, move the camera closer and lower (about 3 m from the shelf lip) and tilt up less, so the dead slope is cropped to under 15 % of the frame and the group fills the middle third. Keep the spear swing, the lean and the nose scratch inside the held part, and make the spear shift read bigger (spears visibly tilting against the sky). Re-render only g376-418.
-
-2. g410-418, non-blocking. Only 2 of the 5 Scots show a spear (left and right); the plan says they all shift their spears. Fix: give the other three a spear in hand, or have them shift or lean in some visible way.
-
-3. g414-418, non-blocking. The foreground dirt at the bottom of the frame looks soft, which looks like motion streak or soft texture from the camera still creeping at the cut. The client rule is sharp, no DOF. Fix: hold the camera still for the last 15 frames (solved by fix 1).
-
-4. g384-386, non-blocking. The fast climb gives soft, streaked frames and a 2.7 px jitter second (known from qa_auto). Acceptable as a real whip move, but keep it to 3 frames or fewer.
-
-5. g300-325, non-blocking. Small parade extras and horsemen cross y 880 at the bottom of the frame (g305-320), where the caption band will be. They are tiny background extras, not hero heads, so it is acceptable. Check that the caption does not hide the key beat.
-
-6. g295-325, non-blocking. The "ENGLISH CAMP" sign is dark navy with low contrast and is lit from behind. It is readable, but the text is English in a Thai film. Check that it fits the film's sign rules, or drop it.
-
-7. g410-418, non-blocking. The red and black spiky grass tufts at the Scots' feet look like small flames or thorns. Fix: recolour them green or yellow-brown.
-
-Continuity with neighbours (B1 last frame, next take first frame) not checked here: the neighbour takes were not supplied. The D6 in (g295-297 from B1 at P_CAMP) shows the same camp, tents and parade, consistent with the QA.md note.
-
-## Independent override review (Opus, film-13 QA §E)
-Reviewer: independent Opus, 2026-11-21. Looked at every 5th frame g295-415 at 360x640, and checked the caption timing in script/captions.json.
-- Confirmed: the Scots are specks or missing until about g400. They read as five faces only at g405-418 (about 0.45 s), reach about 20 % of frame height, and the camera is still moving at the cut.
-- Why it blocks: this take is the audience's first real look at the Scots, the film's other side. The narration says "ส่วนใหญ่เดินเท้า / ถือหอก" (mostly on foot, with spears) at 10.59-11.89 s (g318-357), while the picture shows English tents and the river. By the time the Scots are visible the line has moved on to "อีกฝั่งของแม่น้ำ". The landing (the planned key image: low hero angle, spears against the sky, the spear shift and lean) gets under half a second, and nobody can see the spear beat on a phone. That breaks plan coverage and the client's phone-legibility rule. The director's "flight is nice" reasoning does not cover this.
-- Minimum fix: re-render g370-418 only. Shorten the river climb so the camera reaches the hill_low landing by about g385, closer and lower (the group at 30-35 % of frame height, the dead slope under about 15 %). Then hold it, still or as a slow drift, for at least 1.0 s (about 30 frames), with the spear shift and the lean inside that hold. Do not touch g295-370.
-**Verdict: FAIL STANDS.**
+## Non-blocking
+1. g383-387: the descent ends in a hard stop. The Scots grow from about 8 % to 38 % of frame height in 3 frames (diff 40-61), and then the camera stops dead at g387 (diff 4). It reads like a snap-zoom. Ease out over 6-8 frames (g380-388) if a re-render happens anyway.
+2. g385-418: the bright yellow light shaft behind the Scots' legs, together with the dark and red spiky tufts in front, makes them look as if they stand in flames. Recolour the tufts or move the shaft above the knees.
+3. 4 of 5 Scots carry a spear (the horn blower does not). Known and accepted.
