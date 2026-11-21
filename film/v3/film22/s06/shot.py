@@ -38,7 +38,7 @@ def actors(g, T):
     elif t < 25.93: story, pose = 'off_wave_sheet', dict(mouth=cast22.talk_mouth((g // 3) * 3, 1.0))
     else: story, pose = 'off_eat_mime', dict(mouth=cast22.talk_mouth((g // 3) * 3, 1.0))
     c_, p_ = cast22.STORY22[story]; dy_ = p_.get('desk_y', 1.3)
-    ob = T.card(story, (OFF[0], OFF[1] + 1.0, 0.0), face_to=cam, tilt=0.0, pose=dict(desk=0, typewriter=0, **pose), shadow=False, rim='#9fb8ff')
+    ob = T.card(story, (OFF[0], OFF[1] + 1.0, 0.0), face_to=cam, tilt=0.0, pose=dict(desk=0, typewriter=0, **pose), shadow=False, rim='#9fb8ff', ppd=(520 if g >= 765 else 230))
     ob.location.z = PZ0 + 1.9 + dy_ - ob['anc']['head'][1]; ob['mounted'] = True        # seated on his chair behind the desk
     if story == 'off_laugh_back': ob.location.z += 0.06 * abs(math.sin(2 * math.pi * 3.0 * t))
     # Beck: hopeful with the roll, then deflated after the stamp

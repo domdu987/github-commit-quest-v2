@@ -40,7 +40,7 @@ def actors(g, T):
     story, pose = ('off_toss_drawer', dict(mouth='flat')) if g < g_of(28.08) else ('off_laugh_back', dict(mouth='flat'))
     c_, p_ = cast22.STORY22[story]; dy_ = p_.get('desk_y', 1.3)
     pp = dict(desk=0, typewriter=0, **pose)
-    ob = T.card(story, (OFF[0], OFF[1] + 1.0, 0.0), face_to=cam, pose=pp, shadow=False, rim='#9fb8ff')
+    ob = T.card(story, (OFF[0], OFF[1] + 1.0, 0.0), face_to=cam, pose=pp, shadow=False, rim='#9fb8ff', ppd=(520 if g <= 850 else 230))
     ob.location.z = PZ0 + 1.9 + dy_ - ob['anc']['head'][1]; ob['mounted'] = True        # seated on his chair behind the desk
     if story == 'off_laugh_back': ob.location.z += 0.06 * abs(math.sin(2 * math.pi * 3.0 * t))
     bx, by, dx, walking = beck_xy(g)
