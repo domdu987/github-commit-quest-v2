@@ -34,6 +34,12 @@ def fetch():
         for f in ("take.mkv", "meta.json"):
             data = subprocess.run(["git", "-C", REPO, "show", f"{c}:film/v3/film22/{shot}/{f}"], capture_output=True, check=True).stdout
             open(f"{d}/{f}", "wb").write(data)
+        m = json.load(open(f"{d}/meta.json")); ti = m.get("transition_in") or {}
+        if isinstance(ti, str): ti = {"type": ti}
+        t = ti.get("type", "cut")
+        if t in ("match", "match_dissolve"): ti = {"type": "dissolve", "frames": ti.get("frames", 9)}
+        elif t in ("travel", "whip", "none", "—"): ti = {"type": "cut"}
+        m["transition_in"] = ti; json.dump(m, open(f"{d}/meta.json", "w"), indent=1)
         for fr in glob.glob(d + "/frames/*.png"): os.remove(fr)
         open(d + "/.hash", "w").write(h); print("fetched", shot, h[:10], "from", c[:8])
 
