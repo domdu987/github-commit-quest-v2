@@ -1,0 +1,3 @@
+# Float hunter (QA §K) sI bc7db28 — PASS after director check
+Independent reviewer (fresh Sonnet, 1 fps sheet only) flagged: the bridge pylons "end in mid-air over the water" with a blue ring (g1519-1579); a long bridge shadow at g1609-1639; small brown dots and white lines on the water; riders cut by the bridge rail.
+Director check at full size (sG/float_check_full.jpg, right): the pylon stands IN the water with a foam/contact ring, so it is grounded. The shadow is the bridge's own cast shadow from the low sun. The white lines are the stylised water glitter. The rail occlusion is staging. No blocking item. Noted for FINAL: the violet tint of the pylon water ring.
