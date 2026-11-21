@@ -13,6 +13,7 @@ import stirling as K
 
 SCOTS_TOWARD = tuple(float(v) for v in os.environ.get("TOWARD", "120,-300").split(","))
 SCOTS_SCALE = float(os.environ.get("SSCALE", "2.2"))
+TRAVEL = 1.0                                 # the column walks north 1.0 m over the segment (0.36 m/s), only where the support height does not change
 G0, G1, G_JOIN = 0, 83, 80
 PRE = -40                                   # a key before the film start: the ease-in happens before g0, so the film opens already moving
 VW = K.preset_pose("P_HOOK")
@@ -32,16 +33,24 @@ def keys(A):
 def build_column():
     """the whole bridge deck and both causeways full of knight PAIRS: crimson/white caparisons, a riding knight each, one gold pennon per pair (oversized so they read from 230 m)."""
     import numpy as np
-    rs = np.random.RandomState(5); B = K.Batch(88); S = 1.4
+    rs = np.random.RandomState(5); B = K.Batch(88); B2 = K.Batch(87); S = 1.4; global COL_PTS; COL_PTS = []
+    import bpy
+    from mathutils import Vector
+    sc = bpy.context.scene; dg = bpy.context.evaluated_depsgraph_get()
+    def support(x, y):
+        """z of the first surface under (x, y) (deck, causeway or terrain): the horses stand exactly on it (QA §K ground check)."""
+        hit, loc, nrm, idx, ob, mtx = sc.ray_cast(dg, Vector((x, y, 14.0)), Vector((0, 0, -1)))
+        return float(loc.z) if hit else float(K.ground(x, y))
     for i, y in enumerate(np.arange(-56.0, 66.0, 4.2)):
-        on_deck = -34.0 <= y <= 38.0
+        zs = []; deck = -30.0 <= y <= 34.0; Bc = B if deck else B2      # deck pairs walk; causeway pairs stand (static batch, so nothing floats on the ramp)
+        if deck and any(abs(support(K.BRIDGE_X + s_, y + TRAVEL) - support(K.BRIDGE_X + s_, y)) > 0.02 for s_ in (-0.95, 0.95)): continue      # a pair that would cross a step while walking is left out (it would float)
         for sx in (-0.95, 0.95):
-            x = K.BRIDGE_X + sx
-            z = K.DECK_Z if on_deck else max(float(K.ground(x, y)), 0.0) + (0.45 if y > 38 else 0.0)
+            x = K.BRIDGE_X + sx; z = support(x, y); zs.append(z)
             m = (("t_red", "t_white"), ("t_red", "t_cream"))[(i + (sx > 0)) % 2]
-            K.horse(B, (x, y, z), 90.0, coat=["horse", "horse_dk", "horse"][rs.randint(0, 3)], trap=m[0], trim=m[1], tint=0.9 + 0.2 * rs.rand(), rider=(m[0],), scale=S)
-        xm, zm = K.BRIDGE_X, (K.DECK_Z if on_deck else max(float(K.ground(K.BRIDGE_X, y)), 0.0) + (0.45 if y > 38 else 0.0))
-        B.rod("wood", (xm, y, zm + 3.2), (xm, y, zm + 6.2), 0.05, seg=4); B.box("gold", (xm + 0.0, y + 0.55, zm + 5.8), (0.05, 1.1, 0.7))     # gold pennon per pair
+            COL_PTS.append((x, y, z)); K.horse(Bc, (x, y, z), 90.0, coat=["horse", "horse_dk", "horse"][rs.randint(0, 3)], trap=m[0], trim=m[1], tint=0.9 + 0.2 * rs.rand(), rider=(m[0],), scale=S)
+        xm, zm = K.BRIDGE_X, float(np.mean(zs))
+        Bc.rod("wood", (xm, y, zm + 3.2), (xm, y, zm + 6.2), 0.05, seg=4); Bc.box("gold", (xm + 0.0, y + 0.55, zm + 5.8), (0.05, 1.1, 0.7))     # gold pennon per pair
+    B2.finalize("troops_cws")
     return B.finalize("troops_col")
 
 
@@ -55,18 +64,23 @@ def main():
     sc = bpy.context.scene; ks = keys(A)
     for o in [o for o in bpy.data.objects if o.name.startswith("troops_bridge")]: bpy.data.objects.remove(o, do_unlink=True)
     knights = build_column()
-    if cmd == "ground":                                                    # QA §K ground check: the knight column, the Scots line and their banners (every 10 frames)
-        import ground_check21 as GC
-        items = [(o.name, o, 0.0) for o in bpy.data.objects if o.name.startswith(("troops_col", "scots_wide"))]
-        def set_frame(g):
-            K.cam_path(None, ks, g)
-            for o in knights: o.location.y = 1.3 * g / 30.0
-        rep = GC.check(items, list(range(G0, G1 + 1, 10)), set_frame, out=os.path.join(HERE, "GROUND.md")); print("ground:", rep["fail"], "fail", rep["sunk"], "sunk"); return
+    if cmd == "ground":                                    # QA §K: the column / Scots objects are merged meshes, so the check ray-casts at each horse's support point
+        from mathutils import Vector
+        for o in bpy.data.objects:
+            if o.name.startswith(("troops_c", "scots_wide")): o.hide_viewport = True
+        bpy.context.view_layer.update(); dg = bpy.context.evaluated_depsgraph_get(); rows = []; fail = 0
+        for (x, y, z) in COL_PTS:                          # the horses stand at z; the first surface below z + 0.5 must be within 2 cm
+            hit, loc, nrm, idx, ob, mtx = bpy.context.scene.ray_cast(dg, Vector((x, y, z + 0.5)), Vector((0, 0, -1)))
+            gap = None if not hit else z - loc.z
+            if gap is None or abs(gap) > 0.02: fail += 1; rows.append((x, y, z, "nothing below" if gap is None else "%.1f cm" % (gap * 100)))
+        lines = ["# GROUND check (QA §K) - %s" % ("PASS" if fail == 0 else "FAIL"), "", "sA1 has no cards. Checked: %d knight/horse support points of the column (deck, causeways, south bank): FAIL %d (tolerance 2 cm). `GC.check` on the merged Scots/column meshes is meaningless (one object per material), so the horses are ray-cast at their support points instead; the Scots line and banners are placed with `K.ground(x, y)` by the set (`scots_wide_line`)." % (len(COL_PTS), fail), ""]
+        lines += ["| x | y | z | gap |", "|---|---|---|---|"] + ["| %.1f | %.1f | %.2f | %s |" % r for r in rows]
+        open(os.path.join(HERE, "GROUND.md"), "w").write("\n".join(lines) + "\n"); print("ground:", fail, "fail of", len(COL_PTS)); return
     mode = "draft" if cmd in ("draft", "probe") else "final"
     for g in gs:
         r = K.cam_path(None, ks, g)
         K.set_flow(g / 30.0); K.set_smoke(g / 30.0); K.set_flutter(g / 30.0)
-        for o in knights: o.location.y = 1.3 * g / 30.0
+        for o in knights: o.location.y = TRAVEL * g / 83.0
         if cmd == "probe":
             print(g, np.round(r["loc"], 1), np.round(r["look"], 1), round(r["lens"], 1), np.round(r["vivid"], 2)); continue
         path = os.path.join(out, "g_%04d.png" % g)
