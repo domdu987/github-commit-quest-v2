@@ -2,10 +2,10 @@
 
 - Integrated loudness: **-12.2 LUFS** (target -14..-11): PASS; LRA 2.3 LU
 - True peak: **-1.10 dBTP** (limit -1.0): PASS (limiter 0.850)
-- Voice RMS -14.4 dB (target -14.4), music RMS -31.0 dB (target -31.0; music_B trimmed to 72 s, 1.5 s fade-out, -3 dB duck under speech), SFX stem RMS -42.8 dB
+- Voice RMS -14.4 dB (target -14.4), music RMS -31.0 dB (target -31.0; music_B trimmed to 72 s, 1.5 s fade-out, -3 dB duck under speech), SFX stem RMS -43.3 dB
 - Point effects: 17 placed, 22 dropped for spacing (>= 2.0 s apart); min gap 2.07 s
 - Beds: 13, prop loops: 5; SFX under speech ducked 6 dB (3 dB if >= 3 s; laugh/gasp/cheer a further 4 dB)
-- In-shot frame-diff (90x160 grey, deliver.py method): median 4.81, p90 12.58 over 2139 pairs (target 4 / 12)
+- In-shot frame-diff (90x160 grey, deliver.py method): median 4.82, p90 12.58 over 2139 pairs (target 4 / 12)
 - Frames: 2160, dissolve blends 141, missing 0; planned cuts g [57, 262, 466, 545, 661, 773, 1280, 1581, 1933]
 
 ## Point effects
@@ -16,7 +16,7 @@
 | 11.00 | wave_crash | -22 | s05 |
 | 14.63 | whoosh_fast | -31 | s06 |
 | 20.10 | belly_laugh | -27 | s08 |
-| 25.77 | hall_laugh | -25 | s10 |
+| 25.77 | hall_laugh | -29 | s10 |
 | 28.73 | file_rasp | -28 | s11 |
 | 31.73 | whoosh_fast | -31 | s12 |
 | 35.80 | glint_shimmer | -27 | s14 |

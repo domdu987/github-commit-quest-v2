@@ -175,7 +175,7 @@ BED = [(r"storm", "storm_sea", -28), (r"candlelight|evening", "hall_evening", -3
        (r"workshop", "workshop_day", -30), (r"tropical|barbados|beach", "tropical_shore", -30), (r"sea|sail", "sea_open", -30)]
 PROP = [(r"watch|h3 ticking|h4", "watch_tick", -33), (r"h1|clock|regulator", "clock_tick", -33)]
 # (regex on label, library file, peak dB, length s, priority, onset offset s); priority 3 > 2 > 1 when two point effects are < GAP s apart
-POINT = [(r"mocker's belly laugh", "belly_laugh", -17, 1.8, 3, 0.0), (r"board's belly laughs", "hall_laugh", -18, 3.0, 3, 0.0),
+POINT = [(r"mocker's belly laugh", "belly_laugh", -17, 1.8, 3, 0.0), (r"board's belly laughs", "hall_laugh", -22, 3.0, 3, 0.0),
          (r"money bag drops|thud of a heavy bag", "coins_bag", -17, 0.9, 3, 0.0), (r"cloth money bag scraping", "coins_half", -19, 0.9, 3, 0.0),
          (r"lid shut", "box_lock", -18, 0.9, 2, 0.0), (r"wax seals", "wax_seal", -17, 1.5, 3, 0.0),
          (r"double door creaks", "door_creak", -18, 1.5, 3, 0.0), (r"sailors' cheers", "crowd_cheer", -20, 2.0, 3, 0.1),
