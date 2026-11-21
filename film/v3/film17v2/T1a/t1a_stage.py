@@ -9,6 +9,11 @@ for _p in ('stage', 'cast17'): sys.path.insert(0, os.path.join(HERE, '..', '..',
 import prefecture17 as P
 
 INK = '#1a1020'
+def _billboard_axes(o, ex, ey, cam):
+    """the covers face the camera whatever the card yaw (cards at the +-35 deg clamp are edge-on from behind): same scale as the card axes"""
+    ray = (o - Vector(cam.location)).normalized(); up = Vector((0, 0, 1)); right = ray.cross(up)
+    if right.length < 1e-4: return ex, ey
+    right.normalize(); return right * ex.length, -up * ey.length
 def _poly_ellipse(cx, cy, rx, ry, n=28): return [(cx + rx * math.cos(2 * math.pi * k / n), cy + ry * math.sin(2 * math.pi * k / n)) for k in range(n)]
 def _grow(pts, d):
     cx = sum(p[0] for p in pts) / len(pts); cy = sum(p[1] for p in pts) / len(pts)
@@ -29,6 +34,7 @@ def _layer(name, pts, hexc, lay, o, ex, ey, to, outline=0.035):
 def bertillon_back(a, c, cam):
     import actors
     L2W = lambda xy: Vector(actors.local_to_world(a, xy, camera=cam)); o = L2W((0.0, 0.0)); ex = L2W((1.0, 0.0)) - o; ey = L2W((0.0, 1.0)) - o
+    ex, ey = _billboard_axes(o, ex, ey, cam)
     to = (Vector(cam.location) - o).normalized(); u = 0.006; z0 = 0.03; nm = 'bk_' + c['name']
     L = lambda n, pts, col, k, ol=0.055: _layer('%s_%s' % (nm, n), pts, col, z0 + u * k, o, ex, ey, to, ol)
     coat = [(-0.28, 0.50), (0.28, 0.50), (0.50, 0.56), (0.68, 0.68), (0.78, 0.88), (0.80, 1.2), (0.76, 1.7), (0.70, 2.0), (-0.70, 2.0), (-0.76, 1.7), (-0.80, 1.2), (-0.78, 0.88), (-0.68, 0.68), (-0.50, 0.56)]
@@ -59,6 +65,7 @@ def prisoner_back(a, c, cam):
     import actors
     d = PRIS[c['name']]
     L2W = lambda xy: Vector(actors.local_to_world(a, xy, camera=cam)); o = L2W((0.0, 0.0)); ex = L2W((1.0, 0.0)) - o; ey = L2W((0.0, 1.0)) - o
+    ex, ey = _billboard_axes(o, ex, ey, cam)
     to = (Vector(cam.location) - o).normalized(); u = 0.006; z0 = 0.03; nm = 'bk_' + c['name']
     L = lambda n, pts, col, k, ol=0.055: _layer('%s_%s' % (nm, n), pts, col, z0 + u * k, o, ex, ey, to, ol)
     coat = [(-0.28, 0.50), (0.28, 0.50), (0.50, 0.56), (0.68, 0.68), (0.78, 0.88), (0.80, 1.2), (0.76, 1.7), (0.70, 2.0), (-0.70, 2.0), (-0.76, 1.7), (-0.80, 1.2), (-0.78, 0.88), (-0.68, 0.68), (-0.50, 0.56)]
@@ -106,11 +113,11 @@ def clear_cast():
 #   ext_glow_win g55-64 (lit roof-window quad at 0.13 m), ext_stone g57-64 (roof block wall at 0.14 m), measure_glow_gas g145-165 (gasolier glow at 0.07 m)
 CULL = {'measure_glow_gas': (145, 165, 1.6)}
 _ST = {}
-CLIP = {g: 1.2 for g in range(58, 62)}   # camera grazes a roof-block wall at 0.14 m in g59-61: clip it
+CLIP = {}   # camera grazes a roof-block wall at 0.14 m in g59-61: clip it
 def fix_whiteouts(g, cam):
     import bmesh
     cam.data.clip_start = CLIP.get(g, 0.05)
-    for nm, (a, b) in (('measure_beam_fx', (76, 171)), ('ext_glow_win', (60, 61))):   # director: beam fx off for all interior frames; window glow off on g60-61 only
+    for nm, (a, b) in (('measure_beam_fx', (76, 171)),):   # director: beam fx off for all interior frames; window glow off on g60-61 only
         o_ = bpy.data.objects.get(nm)
         if o_ is not None: o_.hide_render = a <= g <= b
     cp = cam.matrix_world.translation
@@ -124,3 +131,26 @@ def fix_whiteouts(g, cam):
             kill = [f for f in b.faces if (mw @ f.calc_center_median() - cp).length < R or min((mw @ v.co - cp).length for v in f.verts) < R * 0.6]; bmesh.ops.delete(b, geom=kill, context='FACES'); b.to_mesh(ob.data); b.free(); _ST[name][1] = True
         elif applied:
             b = bmesh.new(); b.from_mesh(orig); b.to_mesh(ob.data); b.free(); _ST[name][1] = False
+
+# ---- edge-on rule (director): a cast card whose plane is under ~20 deg to the camera ray reads as a dark sliver -> hide card + back cover for that frame
+def edge_on_hide(acts, cam, thresh=0.34, cover_ok=None):
+    cover_ok = cover_ok or {}
+    import actors
+    hid = []
+    for name, a in acts.items():
+        o, x, y, z, s = actors.card_state(a, cam)
+        ray = (o + z * 0.8 * s - cam.matrix_world.translation).normalized()
+        if abs(y.normalized().dot(ray)) < thresh:
+            hid.append(name)
+            if False:       # back view: the camera-facing cover stands in, only the edge-on card art goes
+                if a.card is not None: a.card.hide_render = True
+                continue
+            def walk(ob):
+                ob.hide_render = True
+                for ch in ob.children: walk(ch)
+            walk(a.root)
+            for ob in bpy.data.objects:
+                if ob.name.startswith('bk_' + name + '_') or ob.name.startswith('back_hair_' + name) or ob.name.startswith('back_coat_' + name): ob.hide_render = True
+    for name, a in acts.items():       # any cast member with a camera-facing back cover: the cover stands in for the card art (no card edge peeks out)
+        if any(ob.name.startswith('bk_' + name + '_') for ob in bpy.data.objects) and a.card is not None: a.card.hide_render = True
+    return hid
