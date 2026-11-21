@@ -17,8 +17,9 @@ qa_stats2: sat 0.549, vivid 56.0 %, luma 98.3; motion med 7.7, p90 21.8. rhythm:
 - B2: set3d21 / cast21 re-pulled from film21/main (soft smoke puffs); the grey crescent slabs are gone.
 - Near-lens crown shards are culled (no crown within 3.0 m / 2.2 m of the camera); the left swimmer is re-centred (offsets computed along the end-camera axis).
 
-## v4 (gate B3, g1788-1848 re-rendered)
-- The end camera now floats just over open water 3 m beside the swimmers (no sand between lens and swimmers; sand is out of frame), looking slightly up; three swimmers (all heads fully inside the frame) with floating helmets in the lower-middle third at medium size; swimmer heads are turned (yaw) toward the bridge side.
-- The "ตูม" crowns are scaled 1.5x and stand beside the heads: crowns at 1813 / 1822 / 1836 impact, so the third peaks at about g1846-1847 (last frame g1848) while the first two stay on the 1821 / 1830 cues.
-- Tall near-lens shards are culled (jump crowns within 4.8 m of the lens are not drawn from g1790); smoke columns are hidden.
-- Weak: g1795-1805 is a camera transit shot (sky and water, swimmers re-enter at about g1812); sky is about 40 % at the end; the lower 30 % is flat teal water.
+## v5 (gate B3, g1773-1848 re-rendered; qa_auto PASS, no blur frames)
+- The end camera stays on the approach side (north of the swimmers) and floats just over open water 3 m from them, looking slightly up: no sand between the lens and the swimmers; the path from the bank to the water is continuous (no sky-only transit frames; the lit saltire flag of the Scots wall is visible at the left in g1815-1848).
+- Three swimmers (heads fully inside the frame) with floating helmets in the lower-middle third at medium size; swimmer heads turned (yaw) toward the bridge side.
+- The "ตูม" crowns are scaled 1.5x and stand beside the heads; impacts 1813 / 1822 / 1836 so the third peaks at about g1846-1847 (last frame g1848). Near-lens crown shards are culled; smoke columns are hidden.
+- Numbers: qa_stats2 sat 0.579, vivid 58.3 %, luma 100.7; rhythm in-shot median 13.7, p90 23.9.
+- Weak: sky is about 35-40 % in the last 40 frames; the lowest 25-30 % is dark-blue water; a near swimmer card touches the left edge at about g1821.

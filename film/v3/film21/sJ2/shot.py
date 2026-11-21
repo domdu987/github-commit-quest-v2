@@ -238,9 +238,9 @@ def build_state(T, gs):
     uu = Vector((C0.x - cen.x, C0.y - cen.y, 0)).normalized()
     e_ = 0.5; gx_ = K.sd_at(cen.x + e_, cen.y) - K.sd_at(cen.x - e_, cen.y); gy_ = K.sd_at(cen.x, cen.y + e_) - K.sd_at(cen.x, cen.y - e_); gn_ = math.hypot(gx_, gy_) or 1.0
     w_ = Vector((-gx_ / gn_, -gy_ / gn_, 0))                          # toward open water
-    cen = cen + w_ * 2.4; cen.z = 0.0                               # the cluster floats well out in open water (no bank between lens and swimmers)
+    cen0 = cen.copy(); cen = cen + w_ * 2.4; cen.z = 0.0                               # the cluster floats well out in open water (no bank between lens and swimmers)
     t_ = Vector((-w_.y, w_.x, 0))
-    if t_.y > 0: t_ = -t_                                             # camera stands south of the swimmers, along the shore, over the water
+    if t_.y < 0: t_ = -t_                                             # camera stands NORTH of the swimmers (same side as the approach), over the water
     loc3 = Vector((cen.x, cen.y, 0.6)) + t_ * 3.0 + w_ * 1.0
     for _i in range(10):
         if K.sd_at(loc3.x, loc3.y) < -0.4: break
@@ -250,12 +250,12 @@ def build_state(T, gs):
     for w_, o_ in (("B", -0.8), ("D", 0.1), ("E", 0.95)):
         CL[w_] = cen + Lat * o_ + Fw * (0.3 if w_ == "D" else 0.0); CL[w_].z = 0.0
     loc1 = C0 + Rv * 0.5 + Fv * 0.5
-    loc2 = C0.lerp(loc3, 0.55) + Vector((0, 0, -0.3))
+    loc2 = C0.lerp(Vector((cen0.x + uu.x * 3.2, cen0.y + uu.y * 3.2, 1.0)), 0.6) + Vector((0, 0, -0.2))   # transit: still looking at the jumpers' entry area
     def aimc(loc, dz=0.0):
         lk = Vector((cen.x, cen.y, 1.55 + dz)); return lk
     keys = [(1709, tuple(C0), tuple(C0 + dirA), 22.0), (1735, tuple(C0 + Rv * 0.2 + Fv * 0.3), tuple(C0 + Rv * 0.2 + Fv * 0.3 + yawed(base, -8.0)), 22.0),
             (1772, tuple(loc1), tuple(loc1 + dirB), 22.0),
-            (1800, tuple(loc2), tuple(aimc(loc2, 0.2)), 22.0), (1821, tuple(loc3), tuple(aimc(loc3, 0.1)), 22.0),
+            (1800, tuple(loc2), (cen0.x, cen0.y, 0.6), 22.0), (1821, tuple(loc3), tuple(aimc(loc3, -0.6)), 22.0),
             (1847, tuple(loc3 + Fw * 0.3), tuple(aimc(loc3, 0.0)), 22.0)]
     def cam_g(g):
         r = K.cam_path(None, keys, g, clearance=0.4)
