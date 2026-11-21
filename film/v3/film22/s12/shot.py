@@ -12,7 +12,7 @@ XY, CUM = M.line_path('red')
 RING = M.w_xy(16, 9)               # (30, 0)
 
 def s_of(f):
-    u = C.clamp(f / 74.0); return 70.0 + 102.0 * (0.30 * u + 0.70 * (1 - (1 - u) ** 2))
+    u = C.clamp(f / 74.0); return 104.0 + 62.0 * (0.30 * u + 0.70 * (1 - (1 - u) ** 2))
 
 def P(s): return M.path_at(XY, CUM, s)
 
@@ -28,9 +28,17 @@ def _sph(v):
     r = math.sqrt(v[0] ** 2 + v[1] ** 2 + v[2] ** 2); el = math.asin(v[2] / r); az = math.atan2(v[1], v[0]); return r, el, az
 def _fromsph(r, el, az): return (r * math.cos(el) * math.cos(az), r * math.cos(el) * math.sin(az), r * math.sin(el))
 # join with s11: f0 looks (almost) straight down on the paper centre (the pocket-map strip, about 100 x 178 D at z 67), then dives and banks into the ride at f26
-DIVE = 36
-_c26 = cam_at(DIVE)
-_T0 = (0.0, 0.0, 0.0); _O0 = (0.0, -12.0, 66.0)
+import numpy as np
+def _smooth_cam(sig=7.0):
+    fs = list(range(-30, 110)); arr = np.array([[*cam_at(f)[0], *cam_at(f)[1]] for f in fs])
+    k = np.exp(-0.5 * (np.arange(-24, 25) / sig) ** 2); k /= k.sum()
+    pad = np.pad(arr, ((24, 24), (0, 0)), mode='edge'); out = np.stack([np.convolve(pad[:, j], k, mode='valid') for j in range(6)], 1)
+    return {f: (tuple(out[i, :3]), tuple(out[i, 3:6]), 24.0) for i, f in enumerate(fs)}
+SM = _smooth_cam()
+def cam_s(f): return SM[f]
+DIVE = 40
+_c26 = cam_s(DIVE)
+_T0 = (0.0, 0.0, 0.0); _O0 = (0.0, -5.0, 22.0)
 _O26 = tuple(_c26[0][i] - _c26[1][i] for i in range(3))
 _r0, _e0, _a0 = _sph(_O0); _r1, _e1, _a1 = _sph(_O26)
 while _a1 - _a0 > math.pi: _a1 -= 2 * math.pi
@@ -39,7 +47,7 @@ def dive(f):
     u = C.ez(f / float(DIVE)); T = tuple(_T0[i] + (_c26[1][i] - _T0[i]) * u for i in range(3))
     O = _fromsph(_r0 + (_r1 - _r0) * u, _e0 + (_e1 - _e0) * u, _a0 + (_a1 - _a0) * u)
     return (tuple(T[i] + O[i] for i in range(3)), T, 24.0)
-CAM = [(f,) + dive(f) for f in (0, 5, 10, 15, 20, 25, 30, 33)] + [(f,) + cam_at(f) for f in range(DIVE, 75, 5)] + [(74,) + cam_at(74)]
+CAM = [(f,) + dive(f) for f in (0, 5, 10, 15, 20, 25, 30, 33)] + [(f,) + cam_s(f) for f in range(DIVE, 75, 6)] + [(74,) + cam_s(74)]
 
 WALK = []
 def post_build():
