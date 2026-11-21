@@ -22,7 +22,7 @@ def sh(*a, **k): return subprocess.run(a, check=True, **k)
 
 def fetch():
     for k in (1, 2, 3):
-        subprocess.run(["git", "-C", REPO, "fetch", "-q", "--depth", "1", "origin", f"render23/team{k}:refs/remotes/origin/render23/team{k}"], check=False)
+        subprocess.run(["git", "-C", REPO, "fetch", "-q", "--depth", "1", "origin", f"+render23/team{k}:refs/remotes/origin/render23/team{k}"], check=False)
     for s in SHOTS:
         shot = s["shot"]; n = shot.lower(); br = f"origin/render23/team{TEAM[shot]}"; src = f"film/v3/film23/{n}"
         ls = subprocess.run(["git", "-C", REPO, "ls-tree", "--name-only", f"{br}:{src}"], capture_output=True, text=True).stdout.split()
@@ -54,12 +54,23 @@ def frames():
     # end composition inside the real slot; never slower than 1:1 (a longer slot runs on into the tail 1:1)
     fac = []
     for k in range(len(SHOTS)):
-        t = tk[k]; L = max(1, R[k + 1] - R[k]); end = min(t["hi"], t.get("g1r") or t["hi"])
+        t = tk[k]; nxt = tk[k + 1]["tin"] if k + 1 < len(tk) else {}
+        Dn = int(nxt.get("frames", 0)) if nxt.get("type") == "dissolve" else 0
+        L = max(1, R[k + 1] - R[k] + (Dn - Dn // 2)); end = t["hi"]
         fac.append(min(1.4, max(1.0, (end - t["g0"]) / L))); print(f"{SHOTS[k]['shot']}: slot {L} f, take {end - t['g0']} f, speed x{fac[-1]:.2f}")
     def src(k, f):
-        t = tk[k]; g = t["g0"] + int(round((f - R[k]) * fac[k])); c = min(max(g, t["lo"]), t["hi"])
-        if c != g and abs(c - g) > 1: print(f"  clamp {SHOTS[k]['shot']} f{f} g{g}->{c}")
-        return f"{t['dir']}/g_{c:04d}.png"
+        """(pathA, pathB, w): fractional take position -> blend of the two neighbouring frames (no skip-step jitter)"""
+        t = tk[k]; x = t["g0"] + (f - R[k]) * fac[k]
+        x = min(max(x, t["lo"]), t["hi"]); a = int(np.floor(x)); w = x - a; b = min(a + 1, t["hi"])
+        if w < 0.08 or b == a: return (f"{t['dir']}/g_{a:04d}.png", None, 0.0)
+        if w > 0.92: return (f"{t['dir']}/g_{b:04d}.png", None, 0.0)
+        return (f"{t['dir']}/g_{a:04d}.png", f"{t['dir']}/g_{b:04d}.png", w)
+    _c = {}
+    def img(sp):
+        a, b, w = sp
+        A = np.asarray(Image.open(a).convert("RGB"), np.float32)
+        if b is None: return A
+        return A * (1 - w) + np.asarray(Image.open(b).convert("RGB"), np.float32) * w
     blend = {}
     for k in range(1, len(SHOTS)):
         tin = tk[k]["tin"]; D = int(tin.get("frames", 0)) if tin.get("type") == "dissolve" else 0
@@ -70,10 +81,11 @@ def frames():
             dst = f"{OUTF}_frames/f_{f:04d}.png"
             if f in blend:
                 kk, a = blend[f]
-                A = np.asarray(Image.open(src(kk - 1, f)).convert("RGB"), np.float32); B = np.asarray(Image.open(src(kk, f)).convert("RGB"), np.float32)
-                Image.fromarray(np.clip(A * (1 - a) + B * a + 0.5, 0, 255).astype(np.uint8)).save(dst)
+                Image.fromarray(np.clip(img(src(kk - 1, f)) * (1 - a) + img(src(kk, f)) * a + 0.5, 0, 255).astype(np.uint8)).save(dst)
             else:
-                os.symlink(src(k, f), dst)
+                sp = src(k, f)
+                if sp[1] is None: os.symlink(sp[0], dst)
+                else: Image.fromarray(np.clip(img(sp) + 0.5, 0, 255).astype(np.uint8)).save(dst)
     print("frames", N, "->", OUTF + "_frames")
 
 def music_bed(out):
@@ -117,7 +129,7 @@ def final(out):
         if talk(e["at"], e["len"]) and f in ("laugh", "gasp", "rumble"): e["peak_db"] -= 4
         sfx.append(e)
     spec = {"duration": T, "out_wav": out + ".wav", "video_in": out + "_silent.mp4", "video_out": out + ".mp4",
-            "voice": {"file": v, "at": OFF, "gain": 10 ** ((-14.4 - narr_db) / 20)},
+            "voice": {"file": v, "at": OFF, "gain": float(10 ** ((-14.4 - narr_db) / 20))},
             "music": {"file": mb, "at": 0, "rms_db": float(os.environ.get("MUSIC_DB", "-31")), "fade_in": 0.3, "fade_out": 0.1}, "sfx": sfx}
     json.dump(spec, open(out + "_mix.json", "w"), indent=1)
     sh(sys.executable, P + "/audio/mixer.py", out + "_mix.json")
