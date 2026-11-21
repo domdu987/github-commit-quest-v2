@@ -35,6 +35,7 @@ def post_build():
     U.move_actor('pass_woman', WOMAN); U.move_actor('pass_man', (1.85, -1.2, 0.0))
     for k, o in U.ACTORS['pass_woman']['poses'].items(): o.hide_render = True
     C.scale_lights('mapl', 0.8)
+    C.mount(('shell', 'windows', 'window_frames', 'lamp_strips', 'diagram_strips', 'pocket_map', 'glow_red', 'glow_ring', 'glow_station'))
     for nm, (x, y) in CROWD.items(): U.move_actor(nm, (x, y, 0.0))
     for nm in GONE:
         for o in U.ACTORS[nm]['poses'].values(): o.hide_render = True
@@ -48,7 +49,8 @@ def post_build():
 SWAY = []
 def animate(f, n):
     U.face_cards(); t = f / 30.0
-    B.SETTERS['set_carriage_rock'](t)
+    import beck_under as BU
+    BU.CAR['scroll'].inputs['Location'].default_value = (-(t * 1.6) % 1.0, 0.0, 0.0)      # window streaks only: the camera never rocks
     man = 'main' if f < 70 else 'shrug'
     U.set_pose('pass_man', man)
     # woman: holds the map up from f60 (unfold), taps from f100 on
@@ -63,7 +65,6 @@ def animate(f, n):
     for i, (nm, d) in enumerate(U.ACTORS.items()):
         for k, ob in d['poses'].items():
             e = ob.rotation_euler; ob.rotation_euler = (e[0], math.radians(1.6 * math.sin(t * 6.2 + i * 1.3)), e[2])
-            ob.location.z = d['mark'][2] + 0.03 * abs(math.sin(t * 5.0 + i))
 
 if __name__ == '__main__':
     C.drive('s11', CAM, 'carriage', 'CARRIAGE', animate, post_build, sys.argv[1:], F0, F1)

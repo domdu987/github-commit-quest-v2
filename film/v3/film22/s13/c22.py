@@ -119,3 +119,15 @@ def set_emission_color(matname_sub, rgb, strength=None):
                     for l in list(nd.inputs['Color'].links): nt.links.remove(l)
                     nd.inputs['Color'].default_value = (rgb[0], rgb[1], rgb[2], 1.0)
                     if strength is not None: nd.inputs['Strength'].default_value = strength
+
+def mount(names=(), prefixes=('shadow_',)):
+    """mark objects as touching their wall/floor (seen in the frames) for ground_check22"""
+    for o in bpy.context.scene.objects:
+        if o.name in names or any(o.name.startswith(p) for p in prefixes): o['mounted'] = True
+
+def move_card(name, x, y, z):
+    """move an actor card AND its contact shadow (the shadow quad is built at the mark, so it is offset by the delta)"""
+    d = U.ACTORS[name]; m = d['mark']
+    for ob in d['poses'].values(): ob.location = (x, y, z)
+    for o in bpy.data.objects:
+        if o.name.startswith('shadow_act_%s_main' % name): o.location = (x - m[0], y - m[1], z - m[2])
