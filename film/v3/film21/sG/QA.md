@@ -7,3 +7,6 @@ Gate fixes:
 4. Low shot g 1186-1238: 5 hero Scots + 15 more in two ranks up the slope (20 visible), the hill_low fg spear that crossed the faces is hidden (gorse and rock kept), horn on cue g 1194 (cheeks puff), Wallace eyebrow g 1196 / sword up g 1200, 14-frame snap push x1.5 from g 1194 with a 2-frame shake g 1194-1195, slow drift to the cut. Nobody speaks.
 Numbers: saturation 0.515, luma 99.5, rhythm in-shot median 12.8 / p90 50.9; qa_auto PASS (soft g 1174-1177 = the fast arc through the light shaft).
 Known: the hero Scots at the very start are large at 72 mm (heads about 11 % of frame height, one cut by the left edge at g 1141-1146); Wallace is a three-quarter card.
+
+## v3 update (QA §K, ground check)
+GC.check on all cards and the column horses found the ledge Scots floating up to 39 cm or sunk 45 cm against the real mesh (K.ground differs on the steep slope). Fixed: feet z by ray cast onto the terrain mesh (`surf_z`), cards nudged out of boulders/gorse (`free_spot`), column lowered 7 cm into the deck. `gc_run.py` -> GROUND.md PASS (0 FAIL, 0 SUNK). All 98 frames re-rendered (32 samples, set3d21 bb7aa85+ and cast21 528bf9d). Numbers: saturation 0.514, luma 99.7, rhythm in-shot median 12.6 / p90 50.8, qa_auto PASS (soft g 1174-1177 = the arc through the light shaft). 1 fps sheet: sheet1fps.jpg.
