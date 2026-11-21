@@ -30,3 +30,7 @@ No extra review layers (§G-§L multi-reviewer gates dropped). fal still exhaust
 - [x] FIELDS + RHINE fixed (director accepted, notes in QA_ART_SET.md)
   team3 session_017iwyCtMyJ4HG42ELGQD298 render23/team3 S01 S14-S18 (launched 04:44 UTC from a29598b)
 - [ ] fal top-up -> narration (gen.py, build_bk0.py --stt), music 2-3 takes -> retime conform -> release23
+- [x] fal back (client top-up, producer 04:47 UTC). Narration: 12 sentences STT 1.0 (s08 reworded "กองทัพตัวจริง"), 68.15 s, captions.json 108 phrases.
+- [x] shot_times_REAL.json: every shot fits its x1.25 render (S14 0.06 s short -> team3 told to render 5.6 s)
+- [x] Music m1 picked (music/PICK.md), mix -31 dB
+- [ ] Takes -> conform23 (retime to shot_times_REAL) -> captions, SFX, mix -> automatic checks -> release23 -> queue row WAIT
