@@ -23,3 +23,9 @@ qa_stats2: sat 0.549, vivid 56.0 %, luma 98.3; motion med 7.7, p90 21.8. rhythm:
 - The "ตูม" crowns are scaled 1.5x and stand beside the heads; impacts 1813 / 1822 / 1836 so the third peaks at about g1846-1847 (last frame g1848). Near-lens crown shards are culled; smoke columns are hidden.
 - Numbers: qa_stats2 sat 0.579, vivid 58.3 %, luma 100.7; rhythm in-shot median 13.7, p90 23.9.
 - Weak: sky is about 35-40 % in the last 40 frames; the lowest 25-30 % is dark-blue water; a near swimmer card touches the left edge at about g1821.
+
+## v6 (gate B4/B5 + §K ground check), full 140-frame re-render from one camera path
+- B4: the whole segment is re-rendered from ONE key set, so there is no join between old and new renders; the camera runs bank -> transit (still looking at the jumpers' entry area) -> water level with no empty-sky stretch.
+- B5: the end camera looks nearly level at the swimmers (aim z 0.55), heads sit at about y 560-700 (above the caption line at y 880); crowns are 1.3x, inside the frame and separate; crown 3 impacts g1837 (rises from g1838, peaks about g1847), crowns 1/2 at g1813/g1822 (visible on 1821/1830).
+- §K: `gc_check.py` runs `ground_check21.check` on every cast card (frames every 10): PASS (GROUND.md); standing cards are snapped 3.5 cm into the grass; swimmer cards sit on the water (z 0); airborne jump frames are listed; every card has a contact decal (hidden while airborne or swimming; the sun shadow stays). `sheet1fps.jpg` checked: nothing floats.
+- Numbers: qa_stats2 sat 0.577, vivid 58.2 %, luma 99.6; rhythm median 11.0, p90 23.2; qa_auto PASS.
