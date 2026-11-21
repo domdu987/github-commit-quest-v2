@@ -1,0 +1,8 @@
+  3s shake   3.4px
+ 20s shake   3.0px
+ 21s shake   4.0px
+ 26s shake   2.2px
+ 27s shake   2.5px
+ 43s shake   2.9px
+ 48s shake   2.1px
+overall median jitter px 0.51

@@ -24,6 +24,7 @@ Branch: `claude/new-session-73ou27`. Only rows with status `READY` may be posted
 | 17 | ไอ้ช่างวัดหู | ไอ้ช่างวัดหู | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release17/ear_v1.mp4 | WAIT (client to review; client posts himself) |
 | 18 | ไอ้เสมียนวัว | ไอ้เสมียนวัว | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release18/oxclerk_v1.mp4 | WAIT (in production; client posts himself) |
 | 15 | ไอ้ปลาดิ้น | ไอ้ปลาดิ้น | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release15/fosbury_v1.mp4 | WAIT (client posts himself; music C approved 2026-11-20) |
+| 21 | ไอ้ชาวนาบนเนิน | ไอ้ชาวนาบนเนิน | https://github.com/domdu987/github-commit-quest-v2/raw/film21/main/film/release21/farmers_v1.mp4 | WAIT (client to review; client posts himself) |
 
 ## Captions
 (Each READY clip gets a heading here, `### <#> <Title>`, followed by the exact description text to paste.)
@@ -48,3 +49,13 @@ Branch: `claude/new-session-73ou27`. Only rows with status `READY` may be posted
 แล้วโค้ชต้องทำตามที่พูดไว้ไหม ดูให้จบ 😂
 
 #ไอ้ปลาดิ้น #กระโดดสูง #FosburyFlop #โอลิมปิก #เรื่องจริง #กีฬา #เรื่องเล่า #การ์ตูน #shorts
+
+### 21 ไอ้ชาวนาบนเนิน
+ทหารพวกนี้ยืนดูศัตรูเดินข้ามสะพานมาหาตัวเอง ทีละสองคน แล้วไม่ทำอะไรเลยสักอย่าง 🌉 เหรัญญิกของกองทัพอังกฤษหัวเราะลั่น "ชาวนาบนเนินไม่กี่คน! ข้ามสะพานนี่แหละ เร็วดี ประหยัดดี!" ทั้งค่ายเลยเรียกพวกเขาว่า "ไอ้ชาวนาบนเนิน"...
+
+แล้วใครกันแน่ที่ต้องว่ายน้ำกลับบ้าน ดูให้จบ 😂
+
+เรื่องจริงของยุทธการที่สะพานสเตอร์ลิง สกอตแลนด์ 11 กันยายน ค.ศ. 1297 (วิลเลียม วอลเลซ และแอนดรูว์ มอเรย์)
+ส่วนที่แต่งเพิ่มเพื่อความสนุก: คำพูดของเหรัญญิกฮิวจ์ เดอ เครสซิงแฮมในคลิปเป็นการเรียบเรียงใหม่ (เรื่องไม่ยอมอ้อมไปข้ามที่อื่นเพราะเปลืองเงินหลวงมีบันทึกจริง แต่คำว่า "ชาวนาบนเนินไม่กี่คน" ถูกแต่งขึ้น) คำพูดของทหารในค่าย ชื่อเล่น "ไอ้ชาวนาบนเนิน" และเสียงแตรสัญญาณบุกก็แต่งขึ้นเช่นกัน ส่วนเรื่องที่สะพานแคบจนม้าเดินได้แค่สองตัว ทัพอังกฤษถูกตีตอนข้ามมาราวครึ่งหนึ่ง และทหารบางส่วนต้องว่ายน้ำหนี เป็นเรื่องจริง
+
+#ไอ้ชาวนาบนเนิน #สะพานสเตอร์ลิง #วิลเลียมวอลเลซ #สกอตแลนด์ #เรื่องจริง #ประวัติศาสตร์ #สงคราม #เรื่องเล่า #การ์ตูน #shorts
