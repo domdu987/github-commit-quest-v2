@@ -1,0 +1,23 @@
+{
+ "take": "s08",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration timing is an estimate",
+ "cues": [
+  {
+   "time": 27.4,
+   "duration": 3.767,
+   "frame": 822,
+   "end_frame": 935,
+   "kind": "prop",
+   "label": "chalk scratching on a wooden crate"
+  },
+  {
+   "time": 28.667,
+   "duration": 2.5,
+   "frame": 860,
+   "end_frame": 935,
+   "kind": "prop",
+   "label": "a tired sigh from the crew"
+  }
+ ]
+}
