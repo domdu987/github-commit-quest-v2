@@ -105,3 +105,38 @@ shot.py: hx now eases 1.15 -> 0.72 over G_QUOTE-5..G_QUOTE+8, and the sideways p
 Note (not a blocker): with hx 0.72, the hands are partly tucked under the wig lappets in the hold (g 1663-1673), so the palms read smaller than at g 1633-1655. The shrug has already landed by then. The palms are still dark mitts.
 
 Acting 7, Key moment 7, Composition 7. **Overall 7.3. PASS.**
+
+## Round 6b (light palms) (re-render 13:11): PASS, 7.6
+
+Frames checked: 3 fps through the whole take, plus g 1609, 1615, 1621, 1622, 1626, 1633, 1635, 1636, 1638, 1641, 1645, 1646, 1651, 1657, 1664, 1667, 1672, at full size and at phone size. I also made 2x crops of the hand rows (g 1621/1636/1657/1667) and edge crops with guides at x 40 and x 680 (g 1635/1638/1645).
+Frames: /tmp/qa19_s20art/r6b/f3_*.png, /tmp/qa19_s20art/r6b/g*.png, /tmp/qa19_s20art/r6b/sheet_3fps.png, /tmp/qa19_s20art/r6b/sheet_punch.png, /tmp/qa19_s20art/r6b/hands.png, /tmp/qa19_s20art/r6b/edges.png
+
+Changes: light skin open hands, 1.35x larger, with an ink outline, a palm pad and four fingers (runtime patch of puppet._hand in shot.py). Hand y 0.95 -> 1.10 from G_QUOTE-5. Spread +/-0.80. The x1.12 punch is now a plateau around g 1635-1637. Snap k 1.25 and peak 3.0 are unchanged.
+
+| Check | Result |
+|---|---|
+| 1. Palms read as "palms up" | YES, at phone size, as two open palms on both sides of the body. This is the big win: in every frame from g 1615 to 1672 the two light hands pop off the navy coat and the dark wood, where before they were invisible mitts. One limit: the four fingers fan DOWN and out, and the hands sit at waist height (y ~880-930 in the push, below the lappet tips). So the gesture is "open palms out, so what?" rather than a strict palms-up-at-the-shoulders shrug. With the head tilt and the smirk it still reads as the shrug. |
+| 2a. Hand clipping | NONE. In the edge crops the hands stay well inside x 40-680 (g 1635: left x ~55-120, right x ~535-600; g 1645: right x ~560-640). |
+| 2b. Hands over the face or wig | NO. The hands are always in front of the coat, below the face. The right hand nearly touches the tip of the right lappet (g 1638-1645), which is a small tangent but not an overlap. |
+| 2c. Pasted-on look | SLIGHT. The white cuff, a short band of navy sleeve, then a flat disc hand: the joint is simple, but it matches the cut-paper card style of the whole cast. Not a blocker. |
+| 2d. Face size | UNCHANGED (same camera). Crown to chin is about 27 % at the tightest frame, and the face oval is about 18 %. Within §G. |
+| 2e. Beat timing | SAME OR BETTER. The snap starts at g 1628 and the x1.12 plateau holds g 1635-1637 right after "ฟลุ๊ค" (g 1633). It reads as a short accent, not a drift. The second pump is still at g 1651-1663. |
+| 2f. Mouth outside the window | OK. meta.json has mouth_window [1626, 1672] and mouth_moving_outside_window_frames []. The mouth is a closed smirk at g 1609-1622 and a small "o" or slot from g 1633. Note that meta's window is g 1626-1672, not the g 1627-1667 named in the brief. g 1665-1672 is the out-handle after the cut, so nothing shows on screen outside the line. |
+| Float / clip / set | No change. Feet on the floor in the wide half, a medium cut at the shins in the push, rich hall, nothing through the face. |
+
+| Criterion | 6 | 6b |
+|---|---|---|
+| Set density / ornament | 9 | 9 |
+| Lighting & colour | 8 | 8 |
+| Composition / phone legibility | 7 | 7.5 |
+| Acting (smug shrug) | 7 | 7.5 |
+| Key moment ("ฟลุ๊ค!") | 7 | 7.5 |
+| Hands clarity | 6 | 8 |
+| Match to refs / client taste | 7 | 7 |
+| **Overall** | **7.0** | **7.6** |
+
+**PASS, 7.6, BETTER than Round 6 (7.0) and the earlier pre-trim pass (7.3).**
+
+Optional polish (not blocking; do not re-render for this alone):
+1. Rotate the finger fan up and out by about 60-90 degrees (fingertips toward the shoulders and sides, not toward the floor) so it is a literal "palms up" shrug.
+2. If the hands are touched again, go to y ~1.20 during g 1633-1645 so the hands rise on "ฟลุ๊ค", then settle. Re-check the x 40-680 band and keep them off the lappet tips.
