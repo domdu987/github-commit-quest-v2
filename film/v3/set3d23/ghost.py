@@ -57,9 +57,9 @@ LIGHTS = dict(
 # set r1: the Rhine night (moon south-east, over the German bank: it rims the decoys toward the enemy and lights the river) and the pre-dawn blue
 LIGHTS['NIGHT'].update(sky='sky_night2', exposure=-0.2, shade=(0.31, 0.22, 0.58), shade_tint=(0.27, 0.17, 0.54), shade_mix=0.8, key=(0.44, 0.40, 1.25), grade_saturation=1.12)
 LIGHTS['MORNING'].update(sky_k=0.95)
-LIGHTS['NIGHT_R'] = dict(LIGHTS['NIGHT'], sun_az=-35.0, sun_el=26.0, sun_vis_el=21.0, sky='sky_night2r', exposure=0.3)
-LIGHTS['DAY'] = dict(LIGHTS['MORNING'], sun_az=200.0, sun_el=34.0, exposure=-0.7, sky_k=1.0)
-LIGHTS['PREDAWN'] = dict(LIGHTS['NIGHT'], key=(0.42, 0.56, 1.15), sun_az=8.0, sun_el=12.0, sun_vis_el=-8.0, sky='sky_predawn', lamps=0.4, exposure=0.05,
+LIGHTS['NIGHT_R'] = dict(LIGHTS['NIGHT'], sun_az=-35.0, sun_el=26.0, sun_vis_el=21.0, sky='sky_night2r', exposure=0.3, key=(0.58, 0.42, 1.25))
+LIGHTS['DAY'] = dict(LIGHTS['MORNING'], sun_az=200.0, sun_el=34.0, exposure=-0.9, sky_k=1.0, shade=(0.36, 0.17, 0.68), shade_tint=(0.28, 0.13, 0.54), shade_mix=0.92, fol_mix=0.92)
+LIGHTS['PREDAWN'] = dict(LIGHTS['NIGHT'], key=(0.42, 0.56, 1.15), sun_az=8.0, sun_el=12.0, sun_vis_el=-8.0, sky='sky_predawn', lamps=0.4, exposure=0.45, grade_saturation=0.92,
                          shade=(0.24, 0.30, 0.58), shade_tint=(0.22, 0.22, 0.54))
 for _k, _v in LIGHTS.items(): _v['key_dir'] = kd_of(_v['sun_az'], _v['sun_el'])
 SCENE_LIGHT = dict(dawn='DAWN', morning='MORNING', night='NIGHT', rhine='NIGHT_R')
@@ -594,7 +594,13 @@ def _place(ob, p_local, yaw, frame=None, ground=True):
 
 def set_inflate(name, v, frame=None):
     """Tank `name`: inflate 0 (flat rubber sheet) .. 1 (full).  Also sinks a flat tank's contact blob."""
-    ob = _own(_ob(name)); STATE['PR'].set_tank_shape(ob, inflate=v, frame=frame)
+    ob = _own(_ob(name)); STATE['PR'].set_tank_shape(ob, inflate=v, frame=frame); _resnap(ob, frame)
+
+def _resnap(ob, frame=None):
+    """A tank's lowest points move a little as it inflates: drop it back onto the ground (and key its z when keying)."""
+    if ob.get('airborne'): return
+    ground_snap(ob, max_move=1.0)
+    if frame is not None: _key(ob, 'location', frame, index=2)
 
 def set_sag(name, v, frame=None):
     """Tank `name`: barrel sag 0 (straight) .. 1 (limp)."""
@@ -606,7 +612,7 @@ def set_barrel(name, deg, frame=None):
 
 def set_deflate(v, frame=None, name='tank_hero'):
     """S03: the pricked hero tank goes 'ฟู่ แฟบ': v 0 (full, barrel straight) .. 1 (flat, barrel draped on the pricked soldier's helmet)."""
-    ob = _own(_ob(name)); v = max(0.0, min(1.0, v)); STATE['PR'].set_tank_shape(ob, inflate=1.0 - 0.82 * v, sag=min(1.0, v * 1.6), frame=frame)
+    ob = _own(_ob(name)); v = max(0.0, min(1.0, v)); STATE['PR'].set_tank_shape(ob, inflate=1.0 - 0.82 * v, sag=min(1.0, v * 1.6), frame=frame); _resnap(ob, frame)
 
 def set_lift(h, frame=None, name='tank_lift'):
     """S12 / S13: the 4-man lift.  h 0 = the tank on the grass, 1 = overhead (its belly 3.55 D up, on the four lifters' hands); flagged

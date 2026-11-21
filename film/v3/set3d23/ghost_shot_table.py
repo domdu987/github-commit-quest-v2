@@ -43,9 +43,9 @@ shot(5, 16.20, 20.55, 'LANE', 'MORNING', C((-10.5, 20.0, 4.0), (-15.0, 27.2, 4.4
      note='pull back and up past the 23rd HQ SPECIAL TROOPS sign: a dozen men vs a field filling with rubber tanks', fg=None,
      marks=dict(crew=[M_(x + 3.6, y - 3.2, pose=('pump' if i % 3 == 0 else 'carry' if i % 3 == 1 else 'stand')) for i, (x, y) in enumerate(_F)]))
 # S06 OTS from behind the crew toward the jeep pulling up; the Major laughs in the passenger seat
-shot(6, 20.60, 23.20, 'LANE', 'MORNING', C((1.6, 16.4, 4.6), (6.4, 1.0, 3.0), 24), dict(push=0.07, slide=-35, sdist=12.0),
+shot(6, 20.60, 23.20, 'LANE', 'MORNING', C((1.6, 16.4, 4.6), (6.4, 1.0, 0.6), 24), dict(zoom_rate=0.07, slide=-25, sdist=12.0),
      note='medium-wide OTS from behind the crew toward the jeep (set_jeep 0.55 -> 1)',
-     marks=dict(crew=[M_(-1.0, 8.6, ph='clipboard'), M_(-3.8, 10.2, ph='soldier')], major=[M_(-0.3, -0.75, ph='major', pose='sit', z=2.1, parent='jeep')],
+     marks=dict(crew=[M_(5.1, 10.2, ph='clipboard'), M_(2.4, 7.8, ph='soldier')], major=[M_(-0.3, -0.75, ph='major', pose='sit', z=2.1, parent='jeep')],
                 driver=[M_(-0.3, 0.75, ph='driver', pose='sit', z=2.1, parent='jeep')]), state='jeep=0.8,deflate=1')
 # S07 low angle on the Major (out of the jeep) pointing at the flat tank, slow push, crew small behind
 shot(7, 23.20, 27.40, 'LANE', 'MORNING', C((2.2, -3.8, 1.05), (4.8, 8.6, 3.7), 24), dict(push=0.07, slide=-30),
@@ -119,13 +119,13 @@ shot(14, 50.20, 54.20, 'RHINE', 'NIGHT_R', C((-128.0, -268.0, 74.0), (-30.0, -96
 shot(15, 54.30, 57.60, 'RHINE', 'NIGHT_R', C((-52.0, -162.0, 2.6), (-84.0, -112.0, 2.8), 22), dict(end=C((-40.0, -152.0, 18.0), (-92.0, -96.0, 0.0), 22)),
      note='crane up over rows inflating in lantern light (set_inflate decoyN staggered); pump crews',
      fg=('reeds', ('cam', 1.7, 0.9), 0, 0.9),
-     marks=dict(pumpcrew=[M_(-58.8, -131.4, ph='pumpman', pose='pump'), M_(-72.6, -119.0, ph='pumpman', pose='pump'), M_(-85.4, -128.4, ph='pumpman', pose='pump'),
-                          M_(-99.0, -112.0), M_(-111.6, -125.0, pose='carry')]))
+     marks=dict(pumpcrew=[M_(-62.0 + 1.5, -131.0 + 6.0, ph='pumpman', pose='pump'), M_(-72.0 + 1.5, -125.0 + 6.0, ph='pumpman', pose='pump'), M_(-88.0 + 1.5, -131.0 + 6.0, ph='pumpman', pose='pump'),
+                          M_(-98.0 + 1.5, -106.0 + 6.0), M_(-114.0 + 1.5, -112.0 + 6.0, pose='carry')]))
 # S16 push along the sound truck and the radio tent; crates stencilled 30th INF DIV / 79th INF DIV
 shot(16, 57.60, 60.90, 'RHINE', 'NIGHT_R', C((-45.5, -104.0, 4.5), (-60.0, -58.0, 2.5), 22), dict(push=0.07, slide=30, sdist=20.0),
      note='push along the sound truck and the radio tent; 30th / 79th INF DIV crates; sound truck booming (spin_record), radio chatter',
      fg=('lantern', ('cam', 1.9, -1.2), 0, 0.8),
-     marks=dict(soundman=[M_(-55.0, -80.6, ph='soundman', pose='point')], radioman=[M_(-64.6, -50.0, ph='radioman', pose='sit')], soldier=[M_(-53.0, -55.0, pose='carry')]))
+     marks=dict(soundman=[M_(-55.0, -80.6, ph='soundman', pose='point')], radioman=[M_(-51.6, -36.6, ph='radioman', pose='sit')], soldier=[M_(-53.0, -55.0, pose='carry')]))
 # S17 OTS from behind the German observers across the river to the glowing balloon field
 shot(17, 60.90, 63.50, 'RHINE', 'NIGHT_R', C((69.0, -53.6, 3.8), (-90.0, -104.0, 0.5), 24), dict(zoom_rate=0.08, slide=-25, sdist=10.0),
      note='OTS from behind the German observers (binoculars, a telescope) across the river to the glowing decoy field; one drops his sausage', fg=('sandbags', ('cam', 1.8, -0.9), 90, 0.9, 3),

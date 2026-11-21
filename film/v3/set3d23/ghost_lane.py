@@ -191,14 +191,14 @@ def build_pile(Bk, M, gz):
         tmp = PR._obj(mb, 'balmesh_' + k, STATE['SET']); meshes[k] = tmp.data; bpy.data.objects.remove(tmp, do_unlink=True)
         for p in meshes[k].polygons: p.use_smooth = True
     # core: a lumpy mound of mixed colour (radius PILE_R, height PILE_H at k = 1)
-    mb = PR.MB(); lumpy(mb, V(0, 0, 0), 1.0, mats['bal_r'], 5, seg=20, rings=10, rough=0.12, squash=1.0)
-    core = PR._obj(mb, 'pile_core', STATE['SET']); core['gc_role'] = 'prop'; core['gc_gap'] = 0.05
+    mb = PR.MB(); lumpy(mb, V(0, 0, 0), 1.0, mats['bal_r'], 5, seg=20, rings=10, rough=0.02, squash=1.0)
+    core = PR._obj(mb, 'pile_core', STATE['SET']); core['gc_role'] = 'ground'      # the heap's body, sunk into the grass: a surface the balloons rest on
     cz = gz(*PILE_C); core.location = (PILE_C[0], PILE_C[1], cz - 0.15); core.scale = (PILE_R, PILE_R * 0.85, PILE_H)
     rr = _rnd(61); bal = []
     for i in range(120):
         a = i * 2.39996 + rr.uniform(-0.2, 0.2); r = PILE_R * math.sqrt((i + 0.5) / 120.0) * 0.97; x = PILE_C[0] + r * math.cos(a); y = PILE_C[1] + r * math.sin(a) * 0.85
         k = cols[i % 5][1]; ob = bpy.data.objects.new('balloon%03d' % i, meshes[k]); STATE['SET'].objects.link(ob); GH.no_bounce(ob)
-        ob.rotation_euler = (rr.uniform(-0.9, 0.9), rr.uniform(-0.9, 0.9), rr.uniform(0, 6.3)); ob['gc_role'] = 'prop'; ob['gc_gap'] = 0.06
+        ob.rotation_euler = (rr.uniform(-0.08, 0.08), rr.uniform(-0.08, 0.08), rr.uniform(0, 6.3)); ob['gc_role'] = 'prop'; ob['gc_gap'] = 0.04
         bal.append((ob, x, y, r / PILE_R, cz))
     for j, (x, y) in enumerate(((SEAT[0] - 1.3, SEAT[1] - 0.9), (SEAT[0] + 0.9, SEAT[1] - 1.6), (SEAT[0] - 0.2, SEAT[1] - 2.0))):   # strays at his feet
         k = cols[j % 5][1]; ob = bpy.data.objects.new('balloon_s%d' % j, meshes[k]); STATE['SET'].objects.link(ob); ob.location = (x, y, gz(x, y) - 0.08); ob.rotation_euler = (1.4, 0, j * 2.0)
@@ -216,7 +216,7 @@ def set_pile(k, frame=None):
         if frame is not None: ob.keyframe_insert('hide_render', frame=frame)
     root = STATE['root'].matrix_world.translation
     for (ob, x, y, rn, cz) in Pp['balloons']:
-        vis = rn <= rk * 0.98; u = rn / rk if vis else 1.0
-        z = cz - 0.15 + PILE_H * hk * math.sqrt(max(0.0, 1.0 - u * u)) - 0.2
-        ob.location = (x + root.x, y + root.y, max(z, cz - 0.12) + root.z) if ob.parent is None else (x, y, max(z, cz - 0.12)); ob.hide_render = not vis
+        vis = rn <= min(rk * 0.98, 0.88); u = rn / rk if vis else 1.0
+        z = max(cz - 0.15 + PILE_H * hk * math.sqrt(max(0.0, 1.0 - u * u)), STATE['gz'](x, y)) - 0.1 - 0.35 * u ** 3
+        ob.location = (x + root.x, y + root.y, z + root.z) if ob.parent is None else (x, y, z); ob.hide_render = not vis
         if frame is not None: ob.keyframe_insert('location', frame=frame); ob.keyframe_insert('hide_render', frame=frame)

@@ -37,7 +37,7 @@ Build takes 3-9 s, a 720x1280 12-sample frame about 4-9 s wall on 4 threads (NOT
 | FIELDS | DAWN | (0, 0, 0) | bocage valley, painted patchwork + 3D hedges/poplars; far patchwork ring to +-1900 D; the column `col0..col8` (+ `jeep_tow`) on the lane heading SSW, lead tank col0 at (-18, -20); farm (-30, 92) with netted tanks `park0..2`, trucks, gun, tents, jeeps, hay, cows; river y ~260; village + church y ~340 |
 | LANE | MORNING / DAY | (-700, -260, 0) | the farm lane 700 D west of the column (inside the FIELDS far ring): see ghost_lane.py docstring — hero tank `tank_hero` (-1.1, 16.9), `tank_paint` (12.5, 25), decoy field `field0..11` + flat sheets `flat0..2` (x -26..-62), sign (-14.5, 27.4), `jeep` path up the lane to (8.6, 4.2), `crate_chalk` (10.6, 1.4), lift `tank_lift` (-5, -30) [built only for S12/S13 and the bare location], ending seat (11.2, 9.4) + pile (14.8, 12.2), low hedge on the east verge y -114..-32 (cyclists) |
 | CAMP | NIGHT | (760, -180, 0) | tank rows `row0..16` (three rows, broadside, moon rim), `sound_truck` (-7.9, -9.2) + desk with `record`, radio tent (2.4, -5.3), `truck_paint` (13.5, -4.2) with the fresh badge, jeep, 7 lantern poles, crates, cables |
-| RHINE | NIGHT_R / PREDAWN (S18) | (0, 9000, 0) | river along +y (centre x = -2 + 6 sin(0.004 y), 76 D wide, water z -0.6); decoy field `decoy0..41` (x -62..-140, y -150..-20), 24 lanterns; `sound_truck_r` (-52, -70) + desk + `record`; radio tent (-66, -48); 30th / 79th INF DIV crates (-57, -60); unloading trucks (-78, -177) / (-93, -172); RHINE sign (-50, -179); convoy park y -205..-246; German OP (60, -60): sandbags, hut, telescope; pontoon bridge y 380; boats `boat0..4` |
+| RHINE | NIGHT_R / PREDAWN (S18) | (0, 9000, 0) | river along +y (centre x = -2 + 6 sin(0.004 y), 76 D wide, water z -0.6); decoy field `decoy0..41` (x -62..-140, y -150..-20), 24 lanterns; `sound_truck_r` (-52, -70) + desk + `record`; radio tent (-52, -36); 30th / 79th INF DIV crates (-57, -60); unloading trucks (-78, -177) / (-93, -172); RHINE sign (-50, -179); convoy park y -205..-246; German OP (60, -60): sandbags, hut, telescope; pontoon bridge y 380; boats `boat0..4` |
 
 Light presets: DAWN (low gold sun from the west-north-west, blue dawn sky), MORNING (board 2), DAY (sun south-west, LANE S11-S19), NIGHT (moon key, warm lamps),
 NIGHT_R (the Rhine moon in the south-east), PREDAWN (blue, a pale band low in the east, lamps dimmed). Shade is a painted blue-violet replacement colour (shade_cut).
@@ -140,9 +140,9 @@ Heights: soldier/major 3.0 D (+ hat), cyclist with bike 4.0 D card, dog 1.8 D. H
   - crew (12): (-22.4, -35.2) soldier/pump; (-22.4, -16.7) soldier/carry; (-22.4, 1.8) soldier/stand; (-22.4, 20.3) soldier/pump; (-38.4, -29.2) soldier/carry; (-38.4, -10.7) soldier/stand; (-38.4, 7.8) soldier/pump; (-38.4, 26.3) soldier/carry; (-54.4, -35.2) soldier/stand; (-54.4, -16.7) soldier/pump; (-54.4, 1.8) soldier/carry; (-54.4, 20.3) soldier/stand
 ### S06  (LANE, MORNING, 2.60 s planned -> 98 frames at x1.25, trans per plan)
 - medium-wide OTS from behind the crew toward the jeep (set_jeep 0.55 -> 1)
-- camera (local) start (1.6, 16.4, 4.6) -> (6.4, 1.0, 3.0) lens 24; planned end (3.8, 14.1, 4.3) -> (7.7, 1.4, 3.0) lens 24.0; tail end (4.1, 13.7, 4.3); move: push 0.07, slide -35, sdist 12.0
+- camera (local) start (1.6, 16.4, 4.6) -> (6.4, 1.0, 0.6) lens 24; planned end (2.5, 16.7, 4.6) -> (7.3, 1.3, 0.6) lens 29.2; tail end (2.7, 16.7, 4.6); move: zoom_rate 0.07, slide -25, sdist 12.0
 - state at build: `jeep=0.8,deflate=1`
-  - crew (2): (-1.0, 8.6) clipboard/stand; (5.8, 9.2) soldier/stand
+  - crew (2): (5.1, 10.2) clipboard/stand; (2.4, 7.8) soldier/stand
   - major (1): (-0.3, -0.8, z 2.10) major/sit on jeep
   - driver (1): (-0.3, 0.8, z 2.10) driver/sit on jeep
 ### S07  (LANE, MORNING, 4.20 s planned -> 158 frames at x1.25, trans per plan)

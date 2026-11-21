@@ -3,7 +3,7 @@
 the US bank is west (x < -38), the German bank east (x > 38).
   decoy field   south-west, x -60 .. -140, y -150 .. -20: 42 rubber tanks `decoy0..41` in 6 rows facing the river (set_inflate each; S15 inflates
                 rows), 12 lantern poles with tight halos and pools, the sound truck `sound_truck_r` (-52, -70) with its horn toward the enemy and its
-                gramophone desk (`record`), the radio tent (-64, -48), crates '30th INF DIV' / '79th INF DIV', two trucks unloading rubber crates at
+                gramophone desk (`record`), the radio tent (-52, -36), crates '30th INF DIV' / '79th INF DIV', two trucks unloading rubber crates at
                 (-78, -177) / (-93, -172), the riverbank sign 'RHINE' (-50, -179)
   the crossing  north, y 330 .. 400: a pontoon bridge (two thirds built) and five assault boats `boat0..4` crossing (set_boats), in blue pre-dawn
   German OP     east bank (60, -60): a sandbag ring, a small plank hut, a telescope on a tripod; comic, no fired weapons
@@ -26,7 +26,7 @@ def _rnd(s): return random.Random(s)
 HALF = 38.0; WATER_Z = -0.6
 def xc(y): return -2.0 + 6.0 * math.sin(y * 0.004)
 DECOYS = [(-62.0 - 13.0 * r + (3.0 if r % 2 else 0.0), -150.0 + 19.0 * i + (6.0 if r % 2 else 0.0)) for r in range(6) for i in range(7)]
-TRUCK = (-52.0, -70.0, 180.0); TENT = (-66.0, -48.0, 100.0); OP = (60.0, -60.0); SIGN = (-50.0, -179.0, -36.9)
+TRUCK = (-52.0, -70.0, 180.0); TENT = (-52.0, -36.0, 100.0); OP = (60.0, -60.0); SIGN = (-50.0, -179.0, -36.9)
 UNLOAD = [(-78.0, -177.0, 120.0), (-93.0, -172.0, 100.0)]
 BRIDGE_Y = 380.0; BOAT_Y = (338.0, 348.0, 357.0, 366.0, 330.0)
 
@@ -59,7 +59,7 @@ def build(Bk, M, shot):
     for i, (x, y) in enumerate(DECOYS):
         ob = PR.make_tank('decoy%d' % i, (x, y, gz(x, y)), rr.uniform(-6, 6), M, lod=0.95 if (x > -90) else 0.7, seed=1 + i % 3, hull=0.12, elev=4.0 * (i % 4))
         ob['gc_role'] = 'prop'; STATE['props'].append((ob, 5.8, True))
-    for k, (x, y) in enumerate([(-68.5 - 13 * r, -141 + 19 * i + 9.5 * (r % 2)) for r in range(6) for i in range(0, 7, 2)]):
+    for k, (x, y) in enumerate([(-62.0 - 13 * r + 3.0 * (r % 2), -140.5 + 19 * i + 6.0 * (r % 2)) for r in range(6) for i in range(0, 7, 2)]):
         with Bk.prop('lantern', shadow_r=0.6): lantern_pole(Bk, M, (x, y), gz, h=5.2, light=1000.0, halo_r=0.8, name='lpr_%d' % k)
     stk = PR.make_obj(PR.truck_mesh(M, 1.0, False, True, seed=3), 'sound_truck_r', (TRUCK[0], TRUCK[1], gz(*TRUCK[:2])), TRUCK[2], hull=0.14); stk['gc_role'] = 'prop'; STATE['props'].append((stk, 6.4, True))
     import ghost_camp as GC
@@ -107,7 +107,7 @@ def river(Bk, M, gz):
     out = N('ShaderNodeOutputMaterial'); tc = N('ShaderNodeTexCoord'); mp = N('ShaderNodeMapping'); mp.inputs['Scale'].default_value = (1 / 24.0, 1 / 24.0, 1.0); L(tc.outputs['Object'], mp.inputs['Vector'])
     tw = N('ShaderNodeTexImage'); tw.image = T._img(tx['water_night']); L(mp.outputs['Vector'], tw.inputs['Vector'])
     em = N('ShaderNodeEmission'); em.inputs['Strength'].default_value = 0.32
-    tn = N('ShaderNodeMix'); tn.data_type = 'RGBA'; tn.blend_type = 'MULTIPLY'; tn.inputs[0].default_value = 1.0; tn.inputs[7].default_value = (1.35, 0.92, 1.0, 1); L(tw.outputs['Color'], tn.inputs[6]); L(tn.outputs[2], em.inputs['Color'])
+    tn = N('ShaderNodeMix'); tn.data_type = 'RGBA'; tn.blend_type = 'MULTIPLY'; tn.inputs[0].default_value = 1.0; tn.inputs[7].default_value = (2.4, 0.7, 1.0, 1); L(tw.outputs['Color'], tn.inputs[6]); L(tn.outputs[2], em.inputs['Color'])
     wv = N('ShaderNodeTexWave'); wv.wave_type = 'BANDS'; wv.bands_direction = 'Y'; wv.inputs['Scale'].default_value = 0.9; wv.inputs['Distortion'].default_value = 6.0; wv.inputs['Detail'].default_value = 3.0
     mp2 = N('ShaderNodeMapping'); mp2.inputs['Scale'].default_value = (0.25, 1.6, 1.0); L(tc.outputs['Object'], mp2.inputs['Vector']); L(mp2.outputs['Vector'], wv.inputs['Vector'])
     bu = N('ShaderNodeBump'); bu.inputs['Strength'].default_value = 0.22; L(wv.outputs['Fac'], bu.inputs['Height'])
