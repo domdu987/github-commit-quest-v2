@@ -11,3 +11,4 @@
 | 15 | ไอ้ปลาดิ้น (Fosbury Flop) | approved 2026-11-20 (music C); client posts himself | film/release15/fosbury_v1.mp4 |
 | 17 | ไอ้ช่างวัดหู (Bertillon ear calipers) | delivered for client review 2026-11-20; client posts himself (queue row WAIT) | film/release17/ear_v1.mp4 |
 | 18 | ไอ้เสมียนวัว (Tian Dan's fire oxen, Jimo 279 BC) | delivered for client review 2026-11-20; client posts himself (queue row WAIT) | film/release18/oxclerk_v1.mp4 |
+| 22 | ไอ้ช่างวงจร (Harry Beck's Tube diagram) | released 2026-11-21 on film22/main; client posts himself (queue row WAIT) | film/release22/circuit_v1.mp4 |

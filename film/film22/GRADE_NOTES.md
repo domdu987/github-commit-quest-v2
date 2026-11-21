@@ -16,3 +16,6 @@ Test on the accepted lodgings takes (hue_report, caption band included):
 - **Dark 0.19-0.26:** night interior; the room is lit by one desk lamp.
 
 The final film's per-shot values are written to grade22.json next to the conformed frames, and the full-film hue rows are added below at release.
+
+## Final film (after grade22 on all 1890 frames)
+hue_report at 1 fps over the whole film: red 35.8, orange 24.3, yellow 5.4, green 2.5, cyan 2.6, blue 22.8, violet 5.2, magenta 1.5 %; sat 0.41, val 0.52, dark 0.13. Everything is in band except violet, which is 0.2 over its 5 % limit.

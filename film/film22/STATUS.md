@@ -28,3 +28,6 @@ Fallback check: send_later 60 min, always re-armed.
 - 11:22 UTC: producer relayed client: limit nearly used, finish fast; meet COLOUR_SPEC with the conform grade only (like film 21), no set rebuild. Builder A re-dress stopped and its partial edits reverted; s01 s04 s05 stay accepted.
 - 11:31 UTC check: team4 running (s10 114/116, s03 70/144, s09 62/204); team3 pushed s06/s07 camera fixes (s08 on branch); team2 working (hue numbers in QA.md); team5 waits. Re-armed 60-min check.
 - 13:40 UTC: ACCEPTED 11/15: s01 s02 s03 s04 s05 s06 s07 s08 s09 s10 s15 (film22/qa/sNN/PASSED). Teams 1-4 archived. Team5 resumed: s11, s13, s12 ground fixes (s14 pushed). All takes read blue/violet vs COLOUR_SPEC -> grade22 at conform (per-shot spec pre-grade + v1.1).
+
+## RELEASED 2026-11-21 15:10 UTC
+release22/circuit_v1.mp4 (63.0 s, 41 MB) + caption.txt on film22/main. All 15 takes PASSED; final checks in film22/qa/FINAL_AUTO.md; colour in film22/GRADE_NOTES.md. Queue row: WAIT (client posts himself) - the producer adds it on claude/new-session-73ou27 (this session may push only film22/main).
