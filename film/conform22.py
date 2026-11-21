@@ -14,15 +14,21 @@ F22 = P + "/film22"
 
 def sh(*a, **k): return subprocess.run(a, check=True, **k)
 
+def _parts(commit, shot):
+    """take.mkv, or its split parts (take.mkv.aa/.ab or take.mkv.part00/01) in order"""
+    names = subprocess.run(["git", "-C", REPO, "ls-tree", "--name-only", commit, f"film/v3/film22/{shot}/"], capture_output=True, text=True).stdout.split()
+    whole = [n for n in names if n.endswith("/take.mkv")]
+    return whole or sorted(n for n in names if re.search(r"/take\.mkv\.(part\d+|a[a-z])$", n))
+
 def _find_commit(shot, h):
-    """the commit (on any render22/teamK branch) whose tree holds blob h at film/v3/film22/<shot>/take.mkv"""
+    """the commit (on any render22/teamK branch) whose first take file (take.mkv or its first part) is blob h"""
     for k in range(1, 6):
         br = f"origin/render22/team{k}"
         subprocess.run(["git", "-C", REPO, "fetch", "-q", "origin", f"render22/team{k}:refs/remotes/{br}"], check=False)
-        revs = subprocess.run(["git", "-C", REPO, "rev-list", br, "--", f"film/v3/film22/{shot}/take.mkv"], capture_output=True, text=True).stdout.split()
+        revs = subprocess.run(["git", "-C", REPO, "rev-list", br, "--", f"film/v3/film22/{shot}/"], capture_output=True, text=True).stdout.split()
         for c in revs:
-            t = subprocess.run(["git", "-C", REPO, "rev-parse", f"{c}:film/v3/film22/{shot}/take.mkv"], capture_output=True, text=True).stdout.strip()
-            if t == h: return c
+            ps = _parts(c, shot)
+            if ps and subprocess.run(["git", "-C", REPO, "rev-parse", f"{c}:{ps[0]}"], capture_output=True, text=True).stdout.strip() == h: return c
     raise SystemExit(f"blob {h} for {shot} not found on any render22 branch")
 
 def fetch():
@@ -31,9 +37,9 @@ def fetch():
         d = f"{TAKES}/{shot}"
         if os.path.exists(d + "/.hash") and open(d + "/.hash").read().strip() == h: print("have", shot); continue
         c = _find_commit(shot, h); os.makedirs(d, exist_ok=True)
-        for f in ("take.mkv", "meta.json"):
-            data = subprocess.run(["git", "-C", REPO, "show", f"{c}:film/v3/film22/{shot}/{f}"], capture_output=True, check=True).stdout
-            open(f"{d}/{f}", "wb").write(data)
+        with open(f"{d}/take.mkv", "wb") as fo:
+            for part in _parts(c, shot): fo.write(subprocess.run(["git", "-C", REPO, "show", f"{c}:{part}"], capture_output=True, check=True).stdout)
+        open(f"{d}/meta.json", "wb").write(subprocess.run(["git", "-C", REPO, "show", f"{c}:film/v3/film22/{shot}/meta.json"], capture_output=True, check=True).stdout)
         m = json.load(open(f"{d}/meta.json")); ti = m.get("transition_in") or {}
         if isinstance(ti, str): ti = {"type": ti}
         t = ti.get("type", "cut")
