@@ -26,6 +26,7 @@ Branch: `claude/new-session-73ou27`. Only rows with status `READY` may be posted
 | 15 | ไอ้ปลาดิ้น | ไอ้ปลาดิ้น | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release15/fosbury_v2.mp4 | WAIT (client posts himself; v2 remake to QA_TEAM G/H/I, FINAL gate PASS 2026-11-20; music C) |
 | 23 | ไอ้กองทัพลูกโป่ง | ไอ้กองทัพลูกโป่ง | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release23/ghost_v1.mp4 | WAIT (client to review; client posts himself) |
 | 19 | ไอ้ช่างไม้ | ไอ้ช่างไม้ | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release19/harrison_v1.mp4 | WAIT (client to review; client posts himself) |
+| 22 | ไอ้ช่างวงจร | ไอ้ช่างวงจร | https://github.com/domdu987/github-commit-quest-v2/raw/film22/main/film/release22/circuit_v1.mp4 | WAIT (client posts himself) |
 
 ## Captions
 (Each READY clip gets a heading here, `### <#> <Title>`, followed by the exact description text to paste.)
