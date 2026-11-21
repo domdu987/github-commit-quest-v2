@@ -68,6 +68,14 @@ def drive(shot, cam, location, light, animate, post_build, args, f0, f1, state=N
     B.build(location, light, shot, q, a)
     if post_build: post_build()
     sc = bpy.context.scene
+    if mode == 'ground':
+        sys.path.insert(0, os.path.join(PROJ, 'v3', 'tools')); import ground_check22 as G
+        allf = []
+        for g in range(a, b + 1, 10):
+            B.set_frame_cam(shot, g); animate(g - f0, f1 - f0); allf += G.check_frame(sc, g)
+        L = ['# GROUND.md (QA_TEAM section K, ground_check22, animate applied per frame)', 'frames %d-%d step 10' % (a, b), 'RESULT: %s (%d failures)' % ('PASS' if not allf else 'FAIL', len(allf)), '', '| frame | object | problem |', '|---|---|---|']
+        L += ['| %d | %s | %s |' % x for x in allf[:400]]
+        open(os.path.join(out, 'GROUND.md'), 'w').write('\n'.join(L) + '\n'); print('ground', 'PASS' if not allf else 'FAIL %d' % len(allf)); return
     if mode == 'stills':
         sc.render.resolution_percentage = int(args[3]) if len(args) > 3 else 50
         sc.cycles.samples = int(args[4]) if len(args) > 4 else 6
