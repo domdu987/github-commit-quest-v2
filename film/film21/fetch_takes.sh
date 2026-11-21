@@ -19,7 +19,7 @@ sD1  render21/team2   TODO
 sD2  render21/team4   68b6ea5  # PASS v3 (film-13 QA-tech PASS, QA-art SHIP)
 sE1  render21/team7   TODO
 sE2  render21/team6   1f68f93  # PASS v2 (film-13 QA, director ruling)
-sF   render21/team1   TODO
+sF   render21/team1   4277f66  # ACCEPTED v5 (QA-tech PASS; QA-art taste notes logged, producer hard-defects-only rule)
 sG   render21/team8   5d87052  # PASS (v2 content; v3 feet snapped to terrain, GROUND PASS)
 sH1  render21/team9   TODO
 sH2a render21/team3   60c1be8  # PASS (v2 content approved; v3 warm-tent set + GROUND)

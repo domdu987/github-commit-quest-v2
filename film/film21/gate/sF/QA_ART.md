@@ -21,3 +21,6 @@ Fix: in CU2 lower the camera about 0.3 m and tilt up, or move n3/m1 right of him
 - Clean up the dark banner fragment in the top-right corner (g1044-~1098) and the edge-cut sack on the right (g1044-1090).
 - Lower third is bare sand under the caption band; acceptable (captions cover it).
 - Keep: CU2 face size, smug lids, chin-lift at g1093, big laughers.
+
+## Director ruling (2026-11-21 14:30, producer: the client's limit is nearly gone; block only HARD defects)
+ACCEPTED as is. QA-tech PASS. The QA-art items (two laughers pointing at the crag; the Scots hidden behind helmets in the close-up) are art-taste notes, logged and not fixed.
