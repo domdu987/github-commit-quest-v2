@@ -1,0 +1,31 @@
+{
+ "take": "s02",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration timing is an estimate",
+ "cues": [
+  {
+   "time": 4.0,
+   "duration": 5.5,
+   "frame": 120,
+   "end_frame": 285,
+   "kind": "ambience",
+   "label": "morning lane, birds, a distant tractor, a light breeze in the poplars"
+  },
+  {
+   "time": 4.167,
+   "duration": 4.167,
+   "frame": 125,
+   "end_frame": 250,
+   "kind": "prop",
+   "label": "soft rubbing of a rag on rubber, rhythmic"
+  },
+  {
+   "time": 5.333,
+   "duration": 0.833,
+   "frame": 160,
+   "end_frame": 185,
+   "kind": "prop",
+   "label": "a boot snap and a salute"
+  }
+ ]
+}
