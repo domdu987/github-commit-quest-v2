@@ -1,0 +1,23 @@
+{
+ "take": "s14",
+ "fps": 30,
+ "note": "time = film seconds (g / 30) on the ESTIMATED clock",
+ "cues": [
+  {
+   "time": 49.867,
+   "duration": 5.333,
+   "frame": 1496,
+   "end_frame": 1656,
+   "kind": "ambience",
+   "label": "Rhine at night, March 1945: slow water, a cold wind, distant artillery thump far off"
+  },
+  {
+   "time": 50.533,
+   "duration": 4.667,
+   "frame": 1516,
+   "end_frame": 1656,
+   "kind": "foley",
+   "label": "crates dropped on the bank, canvas rustle, boots on gravel from the unloading trucks"
+  }
+ ]
+}

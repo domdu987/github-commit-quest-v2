@@ -11,7 +11,7 @@
 - `qa_auto.py`: QA_AUTO PASS  (take_full.mkv, 151 frames, 30.00 fps, g 0-150)
 - `qa_jitter.py` (every second must be <= 2.0 px; no line = clean): ```overall median jitter px 0.23```
 - ground_check (`--every 10` equivalent on the built scene, GROUND.md): checked objects: 39   rows: 624   FAIL rows: 0   **result: PASS**
-- frame-diff (90x160 grey, body frames): median 5.56, p90 11.34, min 1.57 (rhythm target median >= 4, p90 >= 12)
+- frame-diff (90x160 grey, body frames): median 5.56, p90 11.34, min 1.57 (rhythm target median >= 4, p90 >= 12) (p90 just under 12: the descend starts slowly by design)
 - luma (mean of RGB, every 5th frame): 90.1 .. 100.6 (mean 94.8)
 - shade hue (target 240-260; first / mid / last): g0 241.3, g75 245.7, g150 246.3
 - heads: max head-centre y 817.4 px over the whole take (caption band starts y 880; head radius at most ~30 px): rider 801, walk0 817, walk1 766

@@ -13,7 +13,8 @@
   "dev": [
    "Frame-diff p90 is 11.3 (target 12): the first 40 frames of the BIGZOOM descend slowly by design (the set's approved move); median 5.6 passes. No camera edits were made.",
    "Nothing else differs from the plan. The three marks of the set row (rider + 2 walkers) were kept; no extra troops were added."
-  ]
+  ],
+  "diff_note": " (p90 just under 12: the descend starts slowly by design)"
  },
  "s18": {
   "delivered": "`take.mkv` (libx264rgb crf 6, 30 fps, 720x1280, {n_frames} frames g {first_g}..) is under 45 MB (single file). Also `shot.py` (stills / final / ground), shared `../c23.py` `../deliver.py` `../qa_md.py`, `meta.json`, `cues.json`, `contact.jpg`, `phone_sheet.jpg`, `QA_AUTO.md`, `QA_JITTER.txt`, `GROUND.md`, `numbers.json`. Frames / raw / work stay out of git.",
@@ -31,7 +32,9 @@
    "Camera replaced at runtime (see above); boats 0, 1, 4 are out of frame at every frame so they have no cards; the 5-boat marks of the set row were reduced to boat2 + boat3.",
    "A dog card was drawn (no cast23 dog). Frame-diff stays low (night water, slow pan): see the numbers."
   ],
-  "head_r": "28"
+  "head_r": "28",
+  "hue_note": " (night exterior: the director accepted shade hue 227-234 for RHINE in QA_ART_SET.md)",
+  "diff_note": " -- BELOW target: dark, low-contrast night frames with the set's own slow eased camera; the camera never shakes and no frame is static (qa_auto: no frozen runs)"
  },
  "s14": {
   "delivered": "`take.mkv` (libx264rgb crf 6, 30 fps, 720x1280, {n_frames} frames g {first_g}..) see meta.json mkv_parts. Also `shot.py` (stills / final / ground), shared `../c23.py` `../deliver.py` `../qa_md.py`, `meta.json`, `cues.json`, `contact.jpg`, `phone_sheet.jpg`, `QA_AUTO.md`, `QA_JITTER.txt`, `GROUND.md`, `numbers.json`. Frames / raw / work stay out of git.",
@@ -44,9 +47,12 @@
    "Cards stand on the real terrain / mark z (ground_z - 0.03 sink); lanterns flicker per frame (GH.flicker)."
   ],
   "dev": [
-   "The set row has 4 unloaders; 4 extra carriers were added to make the unloading read. u2 was moved 5 D east and 1.5 D south of its mark (it stood in a tree trunk, ground_check hit 'trees')."
+   "The set row has 4 unloaders; 4 extra carriers were added to make the unloading read. u2 was moved 5 D east and 1.5 D south of its mark (it stood in a tree trunk, ground_check hit 'trees').",
+   "Frame-diff median / p90 are below the 4 / 12 rhythm targets (night wide); the camera is the set's approved descend, I did not add speed because that would read as a rush on an extreme wide."
   ],
-  "head_r": "12"
+  "head_r": "12",
+  "hue_note": " (night exterior: the director accepted shade hue 227-234 for RHINE in QA_ART_SET.md)",
+  "diff_note": " -- BELOW target: dark, low-contrast night frames with the set's own slow eased camera; the camera never shakes and no frame is static (qa_auto: no frozen runs)"
  },
  "s15": {
   "delivered": "`take.mkv` (libx264rgb crf 6, 30 fps, 720x1280, {n_frames} frames g {first_g}..) see meta.json mkv_parts. Also `shot.py` (stills / final / ground), shared `../c23.py` `../deliver.py` `../qa_md.py`, `meta.json`, `cues.json`, `contact.jpg`, `phone_sheet.jpg`, `QA_AUTO.md`, `QA_JITTER.txt`, `GROUND.md`, `numbers.json`. Frames / raw / work stay out of git.",
@@ -59,9 +65,12 @@
    "Tanks stay snapped while inflating (the shape keys and the z key are evaluated on each frame before `ground_snap`: frame_set(f) at the top of the per-frame state function; without it the first run had 39 float FAILs)."
   ],
   "dev": [
-   "Pump crew positions changed as above; hoses are not tied to the tank valves (the sprite's own hose end lies on the ground)."
+   "Pump crew positions changed as above; hoses are not tied to the tank valves (the sprite's own hose end lies on the ground).",
+   "Pump men re-placed twice: first moved near the lens (heads left the frame into the caption band at the crane end, y 1162), then re-placed from the LAST frame camera rays so heads stay above y 880 throughout."
   ],
-  "head_r": "14"
+  "head_r": "14",
+  "hue_note": " (night exterior: the director accepted shade hue 227-234 for RHINE in QA_ART_SET.md)",
+  "diff_note": " -- BELOW target: dark, low-contrast night frames with the set's own slow eased camera; the camera never shakes and no frame is static (qa_auto: no frozen runs)"
  },
  "s16": {
   "delivered": "`take.mkv` (libx264rgb crf 6, 30 fps, 720x1280, {n_frames} frames g {first_g}..) see meta.json mkv_parts. Also `shot.py` (stills / final / ground), shared `../c23.py` `../deliver.py` `../qa_md.py`, `meta.json`, `cues.json`, `contact.jpg`, `phone_sheet.jpg`, `QA_AUTO.md`, `QA_JITTER.txt`, `GROUND.md`, `numbers.json`. Frames / raw / work stay out of git.",
@@ -74,9 +83,12 @@
    "Ground check PASS."
   ],
   "dev": [
-   "Exposure +0.6 EV; radio man / carrier re-placed; the radio tent stays behind the truck (not visible)."
+   "Exposure +0.6 EV; radio man / carrier re-placed; the radio tent stays behind the truck (not visible).",
+   "Frame-diff is below target for the same reason (night, slow push 0.07)."
   ],
-  "head_r": "30"
+  "head_r": "30",
+  "hue_note": " (night exterior: the director accepted shade hue 227-234 for RHINE in QA_ART_SET.md)",
+  "diff_note": " -- BELOW target: dark, low-contrast night frames with the set's own slow eased camera; the camera never shakes and no frame is static (qa_auto: no frozen runs)"
  },
  "s17": {
   "delivered": "`take.mkv` (libx264rgb crf 6, 30 fps, 720x1280, {n_frames} frames g {first_g}..) see meta.json mkv_parts. Also `shot.py` (stills / final / ground), shared `../c23.py` `../deliver.py` `../qa_md.py`, `meta.json`, `cues.json`, `contact.jpg`, `phone_sheet.jpg`, `QA_AUTO.md`, `QA_JITTER.txt`, `GROUND.md`, `numbers.json`. Frames / raw / work stay out of git.",
@@ -89,8 +101,11 @@
    "The sausage is flagged `airborne_frames` for its fall only, then rests on the ground (ground_check PASS)."
   ],
   "dev": [
-   "The set row has 3 observer marks; 2 cards are used (QA_ART_SET: 'both Germans whole'); their feet were put at chosen screen spots rather than the OP marks."
+   "The set row has 3 observer marks; 2 cards are used (QA_ART_SET: 'both Germans whole'); their feet were put at chosen screen spots rather than the OP marks.",
+   "Frame-diff median / p90 are far below the targets: the OTS lens push is the set's 0.06 zoom + 15 px/s slide on a 98-frame shot; the action (nudge, point, sausage drop) carries the shot."
   ],
-  "head_r": "35"
+  "head_r": "35",
+  "hue_note": " (night exterior: the director accepted shade hue 227-234 for RHINE in QA_ART_SET.md)",
+  "diff_note": " -- BELOW target: dark, low-contrast night frames with the set's own slow eased camera; the camera never shakes and no frame is static (qa_auto: no frozen runs)"
  }
 }

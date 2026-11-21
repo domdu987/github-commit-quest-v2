@@ -11,9 +11,9 @@
 - `qa_auto.py`: QA_AUTO PASS  (take.mkv, 104 frames, 30.00 fps, g 1896-1999)
 - `qa_jitter.py` (every second must be <= 2.0 px; no line = clean): ```overall median jitter px 0.28```
 - ground_check (`--every 10` equivalent on the built scene, GROUND.md): checked objects: 157   rows: 1716   FAIL rows: 0   **result: PASS**
-- frame-diff (90x160 grey, body frames): median 0.87, p90 1.05, min 0.45 (rhythm target median >= 4, p90 >= 12)
+- frame-diff (90x160 grey, body frames): median 0.87, p90 1.05, min 0.45 (rhythm target median >= 4, p90 >= 12) -- BELOW target: dark, low-contrast night frames with the set's own slow eased camera; the camera never shakes and no frame is static (qa_auto: no frozen runs)
 - luma (mean of RGB, every 5th frame): 79.0 .. 83.5 (mean 81.3)
-- shade hue (target 240-260; first / mid / last): g1896 231.0, g1948 231.1, g1999 231.3
+- shade hue (target 240-260; first / mid / last): g1896 231.0, g1948 231.1, g1999 231.3 (night exterior: the director accepted shade hue 227-234 for RHINE in QA_ART_SET.md)
 - heads: max head-centre y 848.4 px over the whole take (caption band starts y 880; head radius at most ~28 px): pad0 848, pad1 836, pad2 832, pad3 834, pad4 830, tip0 753, tip1 770, tip2 787, tip3 793, far0 824, far1 813, far2 819, far3 814, far4 813
 - water share of the frame (far water line): 34.9 % .. 36.5 %
 - render: 720x1280, 12 samples, OIDN, 8.67 s/frame wall (16.21 s CPU), 2 threads while a second render ran.
