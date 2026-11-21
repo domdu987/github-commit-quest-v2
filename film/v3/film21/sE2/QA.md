@@ -1,7 +1,14 @@
-# sE2 "the COUNT" g885-1044 (cut in, no handles) - team 6
-- One continuous camera travel in K.build_world(['bridge_end_north','valley_loop']); 160 frames, 32 samples, libx264rgb crf 6 (take.mkv split in parts <=40 MB: `cat take.mkv.part* > take.mkv`).
-- g885 ride-along ahead of the first footmen on the bridge (cards are front-only, so the camera leads rather than follows); first 8 glance up at the hill (g902-955). Camera rises as the column grows; from g986 ("เป็นพัน") it cranes up to ~44 m, angled back to the hill. Meadow fills with real cast cards (120) plus crimson placeholder pins.
-- English are crimson only: footman_a variant 0 (footman_b base is blue, so not used) and crimson placeholder crowd. No blue/white caps.
-- Colour (qa_stats2): sat 0.528, vivid 58.9 %, luma 86.7. Exposure ramps 1.0 -> 0.8 over g985-1044 via 3-value VIVID so the crane-top sky stays < 110.
-- Rhythm: in-shot median 8.24, p90 18.86. qa_auto PASS (QA_AUTO.md); soft frames g990-993 (fast crane, motion streak).
-- Known weaknesses for the gate: the meadow crowd is "hundreds" only as small placeholder pins at the crane top (real cards are the nearer ~60-120); the Scots' saltire banners on the hill are tiny/not readable at 44 m; all footmen are one costume colour (crimson). Scots do not appear mouth-open (none in frame). No wounds/text.
+# sE2 "the COUNT" g885-1044 v2 (cut in, no handles) - team 6
+take.mkv is split in parts <= 40 MB: `cat take.mkv.part* > take.mkv`. 160 frames, 32 samples, libx264rgb crf 6.
+Built on film21/main set3d21 + cast21 (colour story: English crimson, Scots blue; valley_loop VIVID).
+
+Gate fixes (QA_TECH sE2 5830dbc):
+1. Scots from g885: the hill is in the upper left of every frame; 10 idle Scots cards (fold-spear, chew-grass, scratch-nose, stand-still; mouths closed; oversized x8 for the distance) and 3 giant blue saltire banners on bare terrain.
+2. Count steps on the words: 10 men at g885; a dense block of ~100 at g938 (bridge queue + the fan past the mouth, revealed as the camera rises and pans); crane starts g975; 280 real crimson footman cards pop in around g985 (scale pop, 979-991). No pins.
+3. No soft streak: the crane never aims at bare ground; the crowd is in frame throughout.
+Should-fix: opening camera is close and low (men ~15 % of frame height, lower-middle) with gorse, boulders, barrels and spears; footmen (1 in 3) glance toward the hill; the crowd block is kept off the left edge at the crane top.
+
+Ground (QA §K): GROUND.md PASS (0 FAIL, 390 cards, frames every 10). The men step down at the bridge mouth (deck top 1.75 -> terrain 1.2 at y 38.25), no hover; every card has contact=True shadows. SUNK warnings are heather/rock within ~0.4 m of a Scots foot point.
+
+Numbers (informational; normalized at the conform): qa_stats2 sat 0.473, vivid 49.5 %, luma 100.0. Rhythm median 6.62, p90 11.08 (p90 just under 12). qa_auto PASS.
+Known: Scots figures are tiny white-faced cards at 260 m (oversized); the meadow at the crane top is a regular grid of cards (staggered rows, sway).
