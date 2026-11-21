@@ -21,7 +21,7 @@ Branch: `claude/new-session-73ou27`. Only rows with status `READY` may be posted
 | 11 | ไอ้หมอวัว | ไอ้หมอวัว | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release11/cowdoc_v1.mp4 | POSTED (manually by owner, 2026-11-19) — do not post |
 | 13 | ไอ้แม่แรง | ไอ้แม่แรง | https://github.com/domdu987/github-commit-quest-v2/raw/film13/main/film/release13/maeraeng_v1.mp4 | WAIT (client posts himself) |
 | 16 | ไอ้บ้าลวด | ไอ้บ้าลวด | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release16/wire_v2.mp4 | WAIT (client to review; client posts himself) |
-| 17 | ไอ้ช่างวัดหู | ไอ้ช่างวัดหู | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release17/ear_v1.mp4 | WAIT (client to review; client posts himself) |
+| 17 | ไอ้ช่างวัดหู | ไอ้ช่างวัดหู | https://github.com/domdu987/github-commit-quest-v2/raw/film17/main/film/release17/ear_v2.mp4 | WAIT (v2 remake replaces v1; client posts himself) |
 | 18 | ไอ้เสมียนวัว | ไอ้เสมียนวัว | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release18/oxclerk_v1.mp4 | WAIT (client to review; client posts himself) |
 | 15 | ไอ้ปลาดิ้น | ไอ้ปลาดิ้น | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release15/fosbury_v2.mp4 | WAIT (client posts himself; v2 remake to QA_TEAM G/H/I, FINAL gate PASS 2026-11-20; music C) |
 | 23 | ไอ้กองทัพลูกโป่ง | ไอ้กองทัพลูกโป่ง | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release23/ghost_v1.mp4 | WAIT (client to review; client posts himself) |
