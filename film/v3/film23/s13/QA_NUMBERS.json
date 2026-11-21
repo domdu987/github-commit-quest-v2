@@ -1,0 +1,72 @@
+{
+ "take_mb": 83.5,
+ "qa_auto_rc": 0,
+ "qa_auto_tail": "# QA_AUTO PASS  (_tmp_S13.mkv, 170 frames, 30.00 fps, g 1368-1537)\n\n## Notes\n- magenta share 0.0 %\n\nPhone sheet: phone_sheet.jpg (cyan line = caption band y 880). Judge legibility on it.\n",
+ "qa_jitter": "overall median jitter px 0.13",
+ "fdiff_median": 1.83,
+ "fdiff_p90": 2.39,
+ "fdiff_min": 0.88,
+ "shade_hue": {
+  "first": {
+   "g": 1368,
+   "hue": 258.0,
+   "shaded_frac": 0.092
+  },
+  "mid": {
+   "g": 1435,
+   "hue": 253.6,
+   "shaded_frac": 0.078
+  },
+  "last": {
+   "g": 1537,
+   "hue": 250.9,
+   "shaded_frac": 0.061
+  }
+ },
+ "heads": {
+  "cya": {
+   "ymax": 518.3,
+   "ymin": 399.1,
+   "xmin": 248.7,
+   "xmax": 279.0,
+   "wmax": 157.7
+  },
+  "cyb": {
+   "ymax": 671.2,
+   "ymin": 472.1,
+   "xmin": 341.5,
+   "xmax": 408.7,
+   "wmax": 184.1
+  },
+  "lf0": {
+   "ymax": 428.2,
+   "ymin": 268.2,
+   "xmin": 339.4,
+   "xmax": 362.9,
+   "wmax": 82.1
+  },
+  "lf1": {
+   "ymax": 465.5,
+   "ymin": 333.7,
+   "xmin": 196.6,
+   "xmax": 236.9,
+   "wmax": 111.1
+  },
+  "lf2": {
+   "ymax": 432.0,
+   "ymin": 275.0,
+   "xmin": 523.4,
+   "xmax": 688.1,
+   "wmax": 87.1
+  },
+  "lf3": {
+   "ymax": 472.0,
+   "ymin": 345.1,
+   "xmin": 483.6,
+   "xmax": 634.0,
+   "wmax": 120.5
+  }
+ },
+ "s_per_frame_wall_mean": 16.1,
+ "cpu_s_per_frame_mean": 31.7
+}

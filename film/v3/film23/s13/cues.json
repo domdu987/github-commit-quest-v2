@@ -1,0 +1,39 @@
+{
+ "take": "s13",
+ "fps": 30,
+ "note": "time = film seconds (g/30); estimated narration timing",
+ "cues": [
+  {
+   "time": 45.6,
+   "duration": 5.667,
+   "frame": 1368,
+   "end_frame": 1538,
+   "kind": "ambience",
+   "label": "bright lane, birds, a faint creak of the rubber tank held overhead"
+  },
+  {
+   "time": 45.6,
+   "duration": 0.5,
+   "frame": 1368,
+   "end_frame": 1384,
+   "kind": "prop",
+   "label": "two bicycles rolling to a stop: brake squeal, a bell tink"
+  },
+  {
+   "time": 47.6,
+   "duration": 2.5,
+   "frame": 1428,
+   "end_frame": 1503,
+   "kind": "voice",
+   "label": "QUOTE (smiling GI, lip-synced, dry): 'พวกเราอเมริกัน แข็งแรงมาก' (estimated window; re-time to the real narration)"
+  },
+  {
+   "time": 49.333,
+   "duration": 0.8,
+   "frame": 1480,
+   "end_frame": 1504,
+   "kind": "prop",
+   "label": "cyclist sits down in the grass: soft thump, a bike clatter, a dizzy 'bwoing' with circling stars"
+  }
+ ]
+}
