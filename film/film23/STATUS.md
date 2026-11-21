@@ -13,3 +13,4 @@ Fallback check: send_later 60 min, always re-armed.
 - [ ] Board r2 (builder fixing all 8 QA-art items) -> QA-art re-check
 - [ ] Set + cast -> SET gate -> shot plan (≤12 cuts, 2 BIGZOOM) -> WORKER23.md -> render teams
 - [x] QA §K adopted (producer 2026-11-21): ground_check before every render, contact shadow on every card/prop, independent float hunter at TAKE+FINAL. Tanks sit on the ground except in the lift gag.
+- [x] QA §L adopted (producer 17bbec1): no random shake; shake() only on real impact (amp ≤0.15 deg, ≤0.6 s); qa_jitter.py ≤2 px/s. Max 3 render teams at once.
