@@ -1,0 +1,23 @@
+{
+ "take": "s05",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration timing is an estimate",
+ "cues": [
+  {
+   "time": 16.2,
+   "duration": 5.8,
+   "frame": 486,
+   "end_frame": 660,
+   "kind": "prop",
+   "label": "a dozen hand pumps wheezing, rubber creaking as tanks rise"
+  },
+  {
+   "time": 16.2,
+   "duration": 5.8,
+   "frame": 486,
+   "end_frame": 660,
+   "kind": "ambience",
+   "label": "wide lane, crew chatter far off"
+  }
+ ]
+}

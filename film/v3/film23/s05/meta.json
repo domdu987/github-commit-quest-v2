@@ -1,0 +1,24 @@
+{
+ "take": "s05",
+ "film": 23,
+ "shot": "S05",
+ "first_g": 486,
+ "n_frames": 171,
+ "g0": 486,
+ "g1": 616,
+ "g1_render": 649,
+ "handle_in": 0,
+ "handle_out": 8,
+ "seconds_per_frame_wall": 12.2,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "note": "timing is an ESTIMATE (timing_EST.json); take renders g0..g0+ceil((g1-g0)*1.25) then the out-handle; camera and action continue through the tail",
+ "parts": [
+  "take.mkv.part00",
+  "take.mkv.part01",
+  "take.mkv.part02"
+ ],
+ "mkv_mb": 102.0
+}
