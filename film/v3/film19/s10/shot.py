@@ -27,6 +27,21 @@ G_WORD = C.cap_g("ไอ้ช่างไม้")                   # 846: capt
 SNAP = (G_WORD - 10, G_WORD + 4)                 # 836..850 (14 frames): the whip peaks about g 843, the word is at g 846
 WHIP = (SNAP[0] - 1, SNAP[1] + 2)                # frames rendered with Cycles motion blur (shutter 0.9): the Board leaves as a smear
 LIGHT, PRESET, FINAL_SPP = "DAY", "hall_wide", 8
+# EV added to the scene exposure.  The faint window-shaft volume is hidden on every frame (see Take.pose), which made the hall ~20 % darker
+# than the old take; and the crane changes what the frame contains (less bright wall / ceiling, more table and floor, the close-up of
+# Harrison after the whip), so the mean luma would drift 110 -> 80.  A slow, smooth, keyed exposure curve (no pop, camera-independent
+# LIGHTING) holds the mean luma near 102 through the shot.  Points were measured on stills (python3 shot.py stills ...).
+EXPO_TAB = {int(k): v for k, v in json.load(open(os.path.join(HERE, "expo.json"))).items()} if os.path.exists(os.path.join(HERE, "expo.json")) else None   # per-frame table measured on the draft (python3 tune_expo.py)
+EXPO_PTS = [(764, 0.20), (800, 0.52), (824, 0.75), (836, 0.80), (845, 1.20), (852, 1.06), (860, 0.93), (871, 0.90)]
+
+
+def expo_at(g):
+    if EXPO_TAB and g in EXPO_TAB:
+        return EXPO_TAB[g]
+    for (g0, e0), (g1, e1) in zip(EXPO_PTS, EXPO_PTS[1:]):
+        if g0 <= g <= g1:
+            return e0 + (e1 - e0) * (g - g0) / float(g1 - g0)
+    return EXPO_PTS[0][1] if g < EXPO_PTS[0][0] else EXPO_PTS[-1][1]
 
 HAR_XY = (0.0, -5.0)                             # AT the door (harrison_door is (0, -5.55)); the open leaves frame him                             # Harrison just inside the doors, left of the aisle (screen-right of centre)
 CAM_LOC0 = (0.0, 9.4, 3.6)
@@ -81,6 +96,7 @@ class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s10")
         assert self.final_samples() == FINAL_SPP
+        self.expo0 = self.scene.view_settings.exposure
         self.key_cam(bf(G_FIRST), *CAM.at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
         for b in BOARD:
@@ -97,6 +113,9 @@ class Take(C.Take):
                 C.place(self.actors[b[0]], f, Vector(STAND[b[0]]) + Vector((0, 0, laugh_z(g, b[5]))))
             C.place(self.har, f, Vector((HAR_XY[0], HAR_XY[1], 0.0)))
             self.key_set(f, candles=1.0)
+            self.scene.view_settings.exposure = self.expo0 + expo_at(g)
+            self.scene.view_settings.keyframe_insert("exposure", frame=f)
+            C.key_vis(H.STATE.get("shafts", []), False, f)   # camera-independent lighting: the shaft volume added ~+13 luma only while the (rising) camera was inside it, then popped off at g825
             pass
         for g in gs:
             f = bf(g)
