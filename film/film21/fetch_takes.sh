@@ -10,7 +10,7 @@ REPO=${REPO:-$(cd "$(dirname "$0")/../.." && pwd)}
 
 # take  branch  commit    (source: gate/STATUS.md "USE THIS" + RENDER_TEAMS.md)
 TABLE='
-sA1  render21/team1   TODO
+sA1  render21/team1   3cfad63  # PASS (film-13 QA: QA-tech PASS, QA-art SHIP)
 sA2  render21/team5   TODO
 sB1  render21/team7   TODO
 sB2  render21/team5   TODO
@@ -28,7 +28,7 @@ sI   render21/team12  bc7db28  # PASS TAKE gate v2 (QA-tech)
 sJ1  render21/team8   5d87052  # PASS v2 (film-13 QA, director ruling)
 sJ2  render21/team11  50d781b  # PASS v6 (QA-tech PASS, QA-art SHIP); conform: splash cue 3 at g1841
 '
-FORCE_CUT="sH2b sE1"   # film-13 workflow: these joins are hard cuts, whatever the take's meta says
+FORCE_CUT="sH2b sE1 sA2"   # film-13 workflow: these joins are hard cuts, whatever the take's meta says
 WANT=" $* "
 cd "$REPO"; mkdir -p "$OUT"; fetched=(); skipped=()
 while read -r take branch commit _; do

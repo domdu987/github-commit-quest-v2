@@ -1,43 +1,29 @@
-# QA-tech sA1 v2 (team1 9cc4f6f)
+# film-13 QA, QA-tech: sA1 v3 (team1 3cfad63), TAKE gate
 
-**Verdict: PASS** (no blocking issue; 4 non-blocking notes).
+**Verdict: PASS** (no blocking issue in the take; the D6 defect at P_A belongs to A2, see gate/sA2/QA_TECH.md).
 
-Inputs: take.mkv (84 frames, g0-83, 720x1280), QA.md, meta.json, contact.jpg, phone_sheet.jpg, f6/ (every 5th g). Full-size frames g0, g20, g40, g60, g80 viewed; 2x crops of the crest (g60) and the bridge (g20). Team figures taken from QA.md (qa_auto PASS, rhythm median 9.63, p90 12.01). Colour judged as content only (colour policy).
+Inputs: take.mkv (84 frames, g0-83, 720x1280, 30 fps), QA.md, meta.json, GROUND.md, QA_AUTO.md, sheet1fps.jpg, phone_sheet.jpg, f6/. All 84 frames extracted full size; full-size views of g0, g40, g80; 3x crops of the crag (g0, g80) and the bridge (g0); 360x640 downscales of g0 and g30. Optical flow and Laplacian on every frame. Shot plan rows A, A split, P_HOOK, P_A.
 
-## Old list, item by item
+## Old items
 | old item | status |
 |---|---|
-| 1 Scots not findable (blocking) | FIXED. Three blue saltire banners and a blue/gold line sit on the open slope, clear of the pines. Banners read at full size from g30-40 and are clear at g60-80. At g0 only a 2 px white X shows (the crag is under 5 % of the frame, as the plan wants). |
-| 2 Two-by-two knights not readable (blocking) | MOSTLY FIXED. Crimson/white caparisoned pairs fill the deck and the causeways with a gold pennon each. At g20 the crop shows a clear double red-white column; at g40 full size it is a red-white double line along the bridge. At g0 on the phone sheet it is still a thin brown-red line (non-blocking, note 1). |
-| 3 Flat yellow light-shaft slabs | FIXED. No slabs on the crag in any viewed frame. |
-| 4 Velocity into the D6 | OK. Pre-roll key at g-40 and the g159 key keep the move going through g81-83. A2 must match the g81-83 handle velocity. |
-| 5 Slow first second | FIXED. Cruise speed from g0. p90 12.01 against the old 8.15. |
-| Palette (old art fix 1) | FIXED. The neon pink crag is gone: it is now a grey-green crag with a dark pine crown. The fields are green and straw-gold with some brown strips. The river is teal. No neon fields. The loop meadow is a large ochre-yellow flat; that is set colour (see note 3). |
-
-## Beat table
-| g | what is on screen | read at phone size |
-|---|---|---|
-| 0-15 | Extreme wide from the south. Loop, bridge, camp and the crag in one frame, with the mountain ridge above. Everything is under 5 % of frame height. | Strong map read. The bridge is a thin line. The crag is small and dark. |
-| 15-35 | The camera drops towards the bridge. The pair column becomes a red-white double dotted line. | The "two by two" idea reads from about g25-30. |
-| 35-55 | The bridge runs diagonally across the frame, with a teal river and the camp tents with red-white parasols. The crag grows, with three saltires. | Best beat. Knights and Scots are both findable. |
-| 55-70 | The bridge leaves the frame. The crag with its saltire line is centre. | The Scots line reads (blue banners, blue/gold figures). |
-| 70-80 | The camera flies over the river towards the crag, with the pines on top and the slope in the lower half. | Reads as the arrival at P_A. |
-| 81-83 | The handles continue the move. | OK. |
+| Scots not findable at g0-40 (shadow, confetti colours) | FIXED. 26 blue/white Scots and 5 saltire banners stand on the lit grey middle of the crag face, not in the crag shadow. At 360x640 g0 they are a small blue-white bar with white X glints, under 5 % of frame height as planned; clear from g30 on. |
+| Knights two by two | FIXED. Crimson/white pairs fill the whole deck and both causeways; at g0 (3x crop) a clean double red-white column, on the phone sheet a dotted double line from about g15. |
+| Flat yellow light-shaft slabs | Still absent in A1. |
 
 ## Checks
-- **BIGZOOM:** one continuous, eased move through set detail (river, bridge, parasols, pines). Start under 5 %. A1 ends at the fixed P_A, not yet medium; that is correct for the half (A2 carries it to 35-60 %). Figures at g80 are about 1-2 % of the height. No pop (rhythm median 9.63, p90 12.01).
-- **Heads above y 880:** not applicable (no cast cards). At g80 the figures are around y 580-740.
-- **Floating:** nothing floats. Trees, tents and pines are grounded with shadows. The knights ride on the deck. No figures are cut by the frame edge (the bridge leaves at the left/bottom, which is scenery).
-- **Faces over 35 %:** none.
-- **Colour story:** English crimson/white/gold (caparisons, parasols). Scots saltire blue/white. No blue on the English. The Scots line also carries orange/gold blocks (see note 2).
-- **Characters acting:** the riders walk north at 1.3 m/s. The Scots stand still. Both are too small for acting at this distance; the hook needs only presence.
-- **Camera clearance:** the camera is clear of the ground and the pines at P_A (g80 pose 95 m high, over the river). No clipping.
-- **Bloodless:** yes.
-- **D6 handle:** continues the same direction and speed. OK.
+- **Camera:** one continuous eased move, P_HOOK at g0 to P_A at g80 (probed), handles g81-83 continue it. Flow 3.0 px/frame at g0, peak 4.9 at g33-39, 3.3 at g70, 4.4-5.4 at g81-83: smooth, no spike, no shake. rhythm median 9.57 / p90 11.88.
+- **Sharpness:** Laplacian 596-700 (g0-50) falling to 290-300 (g60-83) as the frame fills with smooth crag rock and river; no DOF, no streaks. qa_auto PASS.
+- **Frozen / black / magenta / pops:** none (0 % still, magenta 0 %, cuts_detected 0).
+- **Caption band / cast cards:** no cards. The Scots line is at y 480-510 (g0) and y 520-600 (g80), above 880.
+- **Ground:** GROUND.md PASS (54 horse support points, FAIL 0). No floating seen in the crops.
+- **Continuity into A2 (g77-83 overlap):** camera geometry matches A2 frame for frame (crag, river and trees line up at g77, g80, g83). Content does not: see A2 blocking items 1-2.
+- **Mouths / Thai text:** none in shot.
 
-## Issues
-1. **g0-25, non-blocking.** The bridge column is a thin brown line on the phone sheet at g0-15; the pairs only read from about g25. Fix, if there is time: widen the pair scale from 1.4x to about 1.8x, or start the camera about 15 % lower. Not required: the narration "ทีละสองคน" falls later than g0, and by g30-45 the column reads clearly.
-2. **g40-80, non-blocking.** The Scots are small blue and gold blocks scattered on the slope; they read as a banner-and-block crowd more than as soldiers. The gold/orange blocks are close to the English gold. Fix: make the Scots all blue/white, with the tartan/gold limited to banners. The saltires carry the read, so this is optional.
-3. **g0-30, non-blocking.** A large ochre-yellow meadow dominates the loop, with a yellow cast over the lower frame. It is set colour and the conform pulls yellows back, so it is not a fail. If the set can be changed, make the meadow green-straw.
-4. **g0-80, non-blocking.** The pine crown hides the crest top where the Scots stand at g60-80, so the line is read from the saltires only. Fix: thin the pines on the crest on the camera side. A2 sees the same crag, so tell team 5 to match it.
-5. **Join note (info).** A2 (team 5) starts at P_A (40, 10, 95 -> 150, 140, 20, 22 mm) at g80, and must keep the velocity of the g81-83 handles, not a fresh ease-in.
+## Blocking issues
+None.
+
+## Non-blocking notes
+1. **meta.json `world` string is stale.** It says `scots_wide_line(toward=(-60,-260))`; the real call (QA.md, meta `scots_wide_line_call`) is `toward=(120.0,-300.0), scale=2.2`. Team 5 copied the stale value. Fix the string so the next re-render of A2 uses the right call.
+2. **g40-83, crag foot:** a second, old crowd of tiny multicoloured figures (orange, yellow, red, green, with small saltire flags) still stands on the lower slope below the new blue line (3x crop g80, x 150-500, y 650-760). At phone size it reads as speckle, not soldiers, but it is the old "confetti" look and A2 inherits it. Remove it or recolour it blue/white.
+3. **g0-50:** pier wakes are still long straight white spikes beside the bridge.
