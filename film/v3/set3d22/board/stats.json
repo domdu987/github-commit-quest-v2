@@ -1,0 +1,35 @@
+{
+ "london_dusk": {
+  "sat": 0.6854328513145447,
+  "luma": 87.0352783203125,
+  "vivid": 69.16536458333333,
+  "shade_hue": 250.06430053710938,
+  "shade_frac": 51.13194444444444,
+  "name": "london_dusk",
+  "file": "board_1.png",
+  "wall_s": 6.9,
+  "cpu_s": 26.1
+ },
+ "beck_lodgings_night": {
+  "sat": 0.6451879143714905,
+  "luma": 98.21308898925781,
+  "vivid": 63.85677083333333,
+  "shade_hue": 256.32244873046875,
+  "shade_frac": 29.00173611111111,
+  "name": "beck_lodgings_night",
+  "file": "board_2.png",
+  "wall_s": 6.4,
+  "cpu_s": 24.6
+ },
+ "platform_tunnel": {
+  "sat": 0.6233901381492615,
+  "luma": 88.4395523071289,
+  "vivid": 75.80338541666667,
+  "shade_hue": 245.78634643554688,
+  "shade_frac": 37.204427083333336,
+  "name": "platform_tunnel",
+  "file": "board_3.png",
+  "wall_s": 7.2,
+  "cpu_s": 27.8
+ }
+}

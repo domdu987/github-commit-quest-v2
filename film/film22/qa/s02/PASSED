@@ -1,0 +1,2 @@
+PASSED (film-13 workflow: qa_stats + ground_check22 PASS + qa_jitter) take hash 7ca7b2cb9c98c6257cdf5eb01dc144c53cefa00c from origin/render22/team2 e54d82b (2 part(s))
+  note: qa_jitter flags (up to 24 px) are the BIGZOOM rise/dive (phase correlation fails on fast zooms; 28/95 low-confidence frames); frame strip shows a continuous move, no back-and-forth shake.

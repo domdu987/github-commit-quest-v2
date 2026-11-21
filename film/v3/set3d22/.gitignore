@@ -1,0 +1,4 @@
+tex_beck/*.png
+__pycache__/
+actors/
+_prev/

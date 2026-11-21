@@ -1,0 +1,18 @@
+# BUILD_NOTES, builder B (under + mapworld)
+Files: beck_under.py, beck_map.py, beck_util.py (helpers), API.md section B, contact/B_sNN_start|mid|end.png, contact_sheet_B.jpg, contact_phone_B.jpg, hue_rows_B.txt. Textures: tex_beck/u_*_v7.png (own painters, not beck_tex).
+Render cost (720x1280, 14 samples + OIDN, 4 threads, while the other builder was also rendering): under/shaft+noodles 4-8 s per frame wall (about 16-32 s CPU), platform 7 s, hall 7-8 s, carriage 5-7 s, mapworld 5-6 s. Scene build 3-5 s; first run adds about 1 s per new cast22 card (cached in actors/).
+Known issues: see below (honest list).
+- Colour: see hue_rows_B.txt. s11 end (paper close) luma 127, s14 mid hue off (table brown), s03 end hue 270 (pink map). Mapworld is now Becks drafting table (ink bottles, set square, ruler, green lamp, night window, tiny trains, ring crowds, name tags).
+- s03: the camera passes through translucent tube walls in the noodle part (by design) and flies the long straight tunnel with little light (frames 262-290 are very dark navy); needs a lamp string if the director wants more read there.
+- s09: the official's pillar peek is only seen at the end; crowd is thin near the camera. s10: train doors are overlays; the official at the bench is not hidden by it from every view (card).
+- Ink hulls in mapworld are sized for ~11-14 D camera distance and thin out in the s14 high view.
+- Cast cards are static pose images (billboards); lip-sync and walking need the render team's real animation.
+
+## SET fix round (1)
+- s03: camera re-keyed (waypoints found by a clearance search against the tube polylines): the camera stays about 7 D clear of every noodle tube for local frames 31-52 (about 0.7 s) and the knot with lit trains and signal lamps reads (frames 215-244 checked). Earth is now strata-textured (the strata painter had a /255 bug: it was black), the straight platform tunnel has a glowing outer shell, lit lamp string. Frame 250 (the move into the tunnel mouth) still shows the tube close up for about 0.2 s. Start frame = A's grille texture plate (TX('grate') + glow 0.3) at z 0.06 with 5 beams under it, so s02 end and s03 start use the same plate.
+- Lamps: globe/ceiling panel/strip emission cut (carriage strips k 0.9, headlights k 1.6, door glow k 1.0, train window glow 0.9, tunnel and signal halos halved). No blown discs seen on the sheet.
+- Mirrored text: MIND THE GAP floor boards (s10) UV fixed; CHANGE HERE now has a correctly reading back face.
+- Mapworld: the four night walls are now a 170 D high period skyline band (texture `skyline`, alpha), no towers; the red train is scaled 0.62 with cream roof, lit windows and tighter spacing, readable on the red line; ghost streets drawn on the paper; paper k 0.34 / table k 0.5 (luma s12 107-113, was 119-124). s14: end key is HIGH (0,-40,880) looking straight down at London; NEW YORK, PARIS, SYDNEY, TOKYO, LONDON, BANGKOK, MOSCOW, MADRID, CAIRO banners are large on the papers and read; new setter `set_london_glow(k 0..1)` ramps London lines to city-light glow over local frames 40-85 (cities light up 14-66).
+- Old map: the platform old map material is built with the LODGINGS preset (same texture, gain 1.15, glow_k 0.55) via `beck_under.old_map_mat()`; the hall point lights still add a little warm diffuse, so a residual tint difference vs s04 is possible (not measured against A's tile).
+- s13: TICKETS boards lowered to z 4.1-5.5 and shifted left; s13 start camera raised/tilted (sign no longer cut at the top, no overlap at mid).
+- Out of band after the round: s03 end (luma 129, hue 270), s11 mid/end (luma 114/127), s14 mid (sat 0.33, luma 124), s14 end hue 20 (table brown dominates), s10 end hue 279.

@@ -1,0 +1,106 @@
+{
+ "fps": 30,
+ "time_base": "film seconds (narration clock + 0.100); frame g starts at g / 30",
+ "take": "s26",
+ "events": [
+  {
+   "time": 62.44,
+   "duration": 0.5,
+   "frame": 1873,
+   "end_frame": 1888,
+   "kind": "flash",
+   "label": "flash hiss with a ringing tail (white flash into the kitchen; the window is still lit by lightning g1873-1876)",
+   "clock": 62.34
+  },
+  {
+   "time": 62.55,
+   "duration": 2.55,
+   "frame": 1876,
+   "end_frame": 1953,
+   "kind": "bed",
+   "label": "muffled roar outside, house timbers groan (bed); the wall of water fills the panes",
+   "clock": 62.45
+  },
+  {
+   "time": 62.6,
+   "duration": 1.0,
+   "frame": 1878,
+   "end_frame": 1908,
+   "kind": "rattle",
+   "label": "cup rattling on its saucer (cup hops, saucer jitters)",
+   "clock": 62.5
+  },
+  {
+   "time": 62.55,
+   "duration": 0.45,
+   "frame": 1876,
+   "end_frame": 1890,
+   "kind": "chair",
+   "label": "the chair is shoved back by the shaking house (out of the frame edge at right)",
+   "clock": 62.45
+  },
+  {
+   "time": 63.0,
+   "duration": 0.3,
+   "frame": 1890,
+   "end_frame": 1899,
+   "kind": "thunder",
+   "label": "thunder crack with the lightning in the window (g1890-1894)",
+   "clock": 62.9
+  },
+  {
+   "time": 63.38,
+   "duration": 0.54,
+   "frame": 1901,
+   "end_frame": 1918,
+   "kind": "whoosh",
+   "label": "whoosh: the snap pull-back from the window into the table framing",
+   "clock": 63.28
+  },
+  {
+   "time": 64.0,
+   "duration": 0.7,
+   "frame": 1920,
+   "end_frame": 1941,
+   "kind": "flutter",
+   "label": "newspaper flutter under the saucer",
+   "clock": 63.9
+  },
+  {
+   "time": 64.1,
+   "duration": 0.2,
+   "frame": 1923,
+   "end_frame": 1929,
+   "kind": "crack",
+   "label": "a window pane cracks (lower right pane, crack grows over 4 frames)",
+   "clock": 64.0
+  },
+  {
+   "time": 64.3,
+   "duration": 0.8,
+   "frame": 1929,
+   "end_frame": 1953,
+   "kind": "push",
+   "label": "slow push onto the weather box (no sound needed; music under)",
+   "clock": 64.2
+  },
+  {
+   "time": 65.05,
+   "duration": 0.1,
+   "frame": 1952,
+   "end_frame": 1954,
+   "kind": "plip",
+   "label": "single plip on paper and one soft piano note: the drop lands on ฝนตก, the ink starts to bleed",
+   "clock": 64.95
+  },
+  {
+   "time": 65.1,
+   "duration": 0.4,
+   "frame": 1953,
+   "end_frame": 1965,
+   "kind": "silence",
+   "label": "everything cuts to silence; music out on the drip",
+   "clock": 65.0
+  }
+ ]
+}

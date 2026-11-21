@@ -1,0 +1,78 @@
+{
+ "take": "s20",
+ "time": "film seconds (narration clock + 0.100)",
+ "cues": [
+  {
+   "t": 47.3,
+   "clock": 47.2,
+   "g": 1419,
+   "dur": 0.4,
+   "kind": "whoosh",
+   "label": "whoosh: the dissolve into the corridor view behind the spinner"
+  },
+  {
+   "t": 47.5,
+   "clock": 47.4,
+   "g": 1425,
+   "dur": 0.5,
+   "kind": "gust",
+   "label": "gust 1 (low): first wave of wind arrows streams past from behind the lens"
+  },
+  {
+   "t": 47.8,
+   "clock": 47.7,
+   "g": 1434,
+   "dur": 0.5,
+   "kind": "gust",
+   "label": "gust 2 (higher): second wave"
+  },
+  {
+   "t": 48.1,
+   "clock": 48.0,
+   "g": 1443,
+   "dur": 0.5,
+   "kind": "gust",
+   "label": "gust 3 (highest): third wave catches the spinner, it squashes flat"
+  },
+  {
+   "t": 48.1,
+   "clock": 48.0,
+   "g": 1443,
+   "dur": 0.5,
+   "kind": "thwump",
+   "label": "cannon thwump and slingshot twang: the spinner is flung north, the camera launches after it"
+  },
+  {
+   "t": 48.3,
+   "clock": 48.2,
+   "g": 1449,
+   "dur": 2.2,
+   "kind": "roar",
+   "label": "doppler roar bed with rattle, whine rising (48.2-50.4): travel up the bent lane, red-hot wake; music: the ostinato doubles in tempo"
+  },
+  {
+   "t": 49.2,
+   "clock": 49.1,
+   "g": 1476,
+   "dur": 0.3,
+   "kind": "vwip",
+   "label": "pass-by vwip: the spinner blasts past the speed sign"
+  },
+  {
+   "t": 49.22,
+   "clock": 49.12,
+   "g": 1477,
+   "dur": 0.9,
+   "kind": "ratchet",
+   "label": "sign-spin ratchet: the sign spins two turns on its pin in the wake"
+  },
+  {
+   "t": 50.4,
+   "clock": 50.3,
+   "g": 1512,
+   "dur": 0.6,
+   "kind": "ting",
+   "label": "sign settles on 100 (ting)"
+  }
+ ]
+}
