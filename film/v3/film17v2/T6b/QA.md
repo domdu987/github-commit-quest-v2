@@ -37,3 +37,17 @@ Additional frames looked at in contact sheets or key stills: g1559, g1600, g1606
 - **g1549-1551**: Bertillon's face touches / is cut by the left edge. **g1550-1554**: the open drawer front crosses his chest and beard. Cause: the camera sweep out of T6a's P1 close-up passes close to the drawer with Bertillon behind it; the 3D card is near the lens. A faster offset ramp made it worse, so I left it. Frames g1556 onwards: no face on any edge in the frames I looked at.
 - The MARTIN word at phone size is small (card about 29 % of the width), but readable.
 - No black slabs, veil or shaft wedges seen. beam_k 0 and beam_fx forced to 0 tests at g1600/g1640 differ by 0.2-0.56/255 (`beam_test/`).
+
+
+## Gate re-render (g1536-1674 re-rendered; g1675-1701 unchanged)
+Frames viewed full-frame sheet (360x640 each) and phone-size sheet: g1536, 1560, 1598, 1601, 1640, 1674.
+- g1536: card face-on with MARTIN panel, drawer below; matches T6a2's last frame.
+- g1560: Bertillon, glasses and beard, arm out to the wall, card pinned beside him with bottle icon.
+- g1598: card seen edge-on (mid flip), arm extended; g1601: card shows MARTIN red text, bottle icon.
+- g1640 / g1674: row of Bertillon, Dupont (sweat drops, open mouth), gendarme; g1674 gendarme holds the bottle up in his raised hand. Floor fills the lower ~25%.
+Numbers (RGB-mean 90x160): T6a2 g1535 vs T6b g1536 mean abs diff 6.46 (T6a2's own neighbours ~21.6); mean luma 132.96 vs 134.95. Neighbour diffs g1536-1544: 0.9-5.2.
+Known faults, stated plainly:
+- Luma step across g1536-1580 is NOT <=5: g1549->1550 is -15.7 (134 -> 114, settles ~109 by g1553). It is content: the camera sweep g1548-1554 brings the dark floor and drawer front into frame; lights are unchanged and ease smoothly (no step in g1536-1548 above 5.2). Accepted sweep per director, but it is a numeric miss.
+- g1545->1546 frame diff 28.5: the inspector card drops out of the T6a2 cast there (planned cast change), a visible pop.
+- g1675 planned hard cut: luma step -7.2, frame diff 47.6.
+`qa_auto.py --cuts 1675 --first_g 1536`: PASS (cut g1675 flagged only because of the 8x-median threshold). `rhythm.py`: 1 cut, in-shot median 9.57, p90 20.47.
