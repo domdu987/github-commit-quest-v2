@@ -2,3 +2,4 @@ frames/
 frames_v1/
 render*.log
 tests/strip_g*.png
+sup_*.log
