@@ -318,7 +318,6 @@ def crate(Bk, M, pos, yaw, size=(3.0, 1.9, 1.9), front='crate_a', open_=False, n
     face([(-hx, hy, 0), (-hx, -hy, 0), (-hx, -hy, sz), (-hx, hy, sz)], M['crate_p'], [(0, 0), (1, 0), (1, 1), (0, 1)], (-1, 0, 0))
     if not open_:
         face([(-hx, -hy, sz), (hx, -hy, sz), (hx, hy, sz), (-hx, hy, sz)], wood, [(0, 0), (1, 0), (1, 1), (0, 1)], (0, 0, 1))
-        for k in (-1, 1): obox(b, F.p(k * hx * 0.62, 0, sz + 0.05), F.X, F.Y, F.Z, 0.17, hy * 1.02, 0.07, M['crate'])
     else:                                                                                                                       # open: inner floor + inner walls, bundle of rubber inside, lid propped up at the back
         face([(-hx, -hy, sz * 0.78), (hx, -hy, sz * 0.78), (hx, hy, sz * 0.78), (-hx, hy, sz * 0.78)], M['rubber'], [(0, 0), (3, 0), (3, 2), (0, 2)], (0, 0, 1))
         for (a, c_, n_) in (((-hx, -hy), (hx, -hy), (0, 1)), ((hx, hy), (-hx, hy), (0, -1))):
@@ -380,36 +379,52 @@ def pump(Bk, M, pos, yaw, valve_pos, gz=lambda x, y: 0.0, seed=1):
         pts.append(V((q.x + 0.35 * math.sin(t * 6.0), q.y + 0.3 * math.sin(t * 4.0 + 1), zz)))
     tube(b, pts, [0.1] * len(pts), M['rubber_black'], seg=6, uvk=0.2)
 
-def bicycle(Bk, M, pos, yaw, lean=14.0, s=1.0):
-    """French bicycle (leaning, local +x = the bike's forward, rests on its wheels with the lean about x): blue frame, wicker basket, brass bell."""
-    F = BK.Frame(pos, yaw); b = Bk('bike', hull=0.0); rw = 1.15 * s
-    la = math.radians(lean)
+def bicycle(Bk, M, pos, yaw, lean=14.0, s=1.0, name='bike'):
+    """French roadster at real scale (a 3 D soldier: wheel radius 0.58 D, wheelbase 1.75 D): black tyres, grey rims and spokes, blue frame, swept
+    handlebar, brown saddle, wicker basket on the front rack with a baguette.  Local +x = forward; it rests on both tyres, leaning `lean` deg about x."""
+    F = BK.Frame(pos, yaw); b = Bk(name, hull=0.0); la = math.radians(lean); R = 0.58
     def P(x, y, z):
         z2 = z * math.cos(la) - y * math.sin(la); y2 = y * math.cos(la) + z * math.sin(la); return F.p(x * s, y2 * s, z2 * s)
-    for cx in (-1.45, 1.45):
-        pts = [P(cx, 0, rw + rw * math.sin(2 * math.pi * k / 28) * 0.0) for k in range(1)]
-        ring = [P(cx + rw * math.cos(2 * math.pi * k / 28), 0, rw + rw * math.sin(2 * math.pi * k / 28)) for k in range(29)]
-        for a, c_ in zip(ring, ring[1:]): rod(b, a, c_, 0.075 * s, M['dark'], seg=5)
-        for k in range(0, 28, 3): rod(b, P(cx, 0, rw), ring[k], 0.014 * s, M['white_p'], seg=3)
-        rod(b, P(cx, -0.1, rw), P(cx, 0.1, rw), 0.12 * s, M['metal'], seg=6)
-    fr = M['blue']
-    rod(b, P(-1.45, 0, rw), P(-0.2, 0, rw * 1.65), 0.075 * s, fr, seg=6); rod(b, P(-0.2, 0, rw * 1.65), P(1.3, 0, rw * 1.75), 0.075 * s, fr, seg=6)
-    rod(b, P(-1.45, 0, rw), P(0.2, 0, rw * 0.5), 0.075 * s, fr, seg=6); rod(b, P(0.2, 0, rw * 0.5), P(-0.2, 0, rw * 1.65), 0.075 * s, fr, seg=6); rod(b, P(0.2, 0, rw * 0.5), P(1.45, 0, rw), 0.075 * s, fr, seg=6)
-    rod(b, P(1.3, 0, rw * 1.75), P(1.45, 0, rw), 0.075 * s, fr, seg=6); rod(b, P(1.3, 0, rw * 1.75), P(1.15, 0, rw * 2.05), 0.06 * s, M['metal'], seg=5)
-    rod(b, P(1.15, -0.8, rw * 2.05), P(1.15, 0.8, rw * 2.05), 0.06 * s, M['metal'], seg=5)
-    rod(b, P(-0.2, 0, rw * 1.65), P(-0.3, 0, rw * 1.95), 0.05 * s, M['metal'], seg=5); obox(b, F.p(-0.4 * s, 0, 0), F.X, F.Y, F.Z, 0.01, 0.01, 0.01, M['dark']) if False else None
-    sd = P(-0.35, 0, rw * 2.0); obox(b, sd, F.X, F.Y, F.Z, 0.4 * s, 0.18 * s, 0.07 * s, M['dark'])
-    rod(b, P(1.2, 0.0, rw * 2.0), P(1.2, 0.0, rw * 2.05), 0.28 * s, M['brass'], seg=8)
-    bk = P(1.65, 0, rw * 1.85); rod(b, bk - V(0, 0, 0.0), bk + V(0, 0, 0.4 * s), 0.3 * s, M['trunk'], seg=10, r1=0.38 * s); rod(b, bk + V(0, 0, 0.38 * s), bk + V(0, 0, 0.45 * s), 0.4 * s, M['trunk_l'], seg=10)
-    for k_, dy in enumerate((-0.12, 0.12)): rod(b, bk + V(0.0, dy * s, 0.3 * s), bk + V(0.7 * s, dy * s * 1.6, 1.15 * s + 0.1 * k_), 0.1 * s, M['hay'], seg=5)
+    fr, mt, dk = M['blue'], M['metal'], M['dark']
+    for cx in (-0.87, 0.87):
+        ring = [P(cx + R * math.cos(2 * math.pi * k / 32), 0, R + R * math.sin(2 * math.pi * k / 32)) for k in range(33)]
+        for a, c_ in zip(ring, ring[1:]): rod(b, a, c_, 0.045 * s, M['tire'], seg=6)
+        rim = [P(cx + R * 0.9 * math.cos(2 * math.pi * k / 32), 0, R + R * 0.9 * math.sin(2 * math.pi * k / 32)) for k in range(33)]
+        for a, c_ in zip(rim, rim[1:]): rod(b, a, c_, 0.018 * s, mt, seg=4)
+        for k in range(0, 32, 2): rod(b, P(cx, 0, R), rim[k], 0.006 * s, mt, seg=3)
+        rod(b, P(cx, -0.06, R), P(cx, 0.06, R), 0.045 * s, mt, seg=8)
+    bb_ = (0.0, 0, 0.36); st = (-0.22, 0, 1.12); ht = (0.62, 0, 1.12); hb_ = (0.68, 0, 0.92)
+    for a, c_ in ((( -0.87, 0, R), bb_), (bb_, st), (st, ht), (bb_, hb_), ((-0.87, 0, R), st), (hb_, ht)): rod(b, P(*a), P(*c_), 0.034 * s, fr, seg=6)
+    rod(b, P(*hb_), P(0.87, 0, R), 0.028 * s, mt, seg=5); rod(b, P(*ht), P(0.6, 0, 1.3), 0.028 * s, mt, seg=5)
+    hbar = [(0.48, -0.32, 1.33), (0.62, -0.26, 1.33), (0.62, 0.26, 1.33), (0.48, 0.32, 1.33)]
+    for a, c_ in zip(hbar, hbar[1:]): rod(b, P(*a), P(*c_), 0.024 * s, mt, seg=5)
+    for g in (hbar[0], hbar[-1]): rod(b, P(*g), P(g[0] - 0.1, g[1], g[2]), 0.035 * s, dk, seg=5)
+    rod(b, P(-0.22, 0, 1.12), P(-0.25, 0, 1.26), 0.026 * s, mt, seg=5); obox(b, P(-0.27, 0, 1.3), F.X, F.Y, F.Z, 0.15 * s, 0.08 * s, 0.035 * s, M['trunk'])
+    rod(b, P(0, -0.12, 0.36), P(0, 0.12, 0.36), 0.1 * s, mt, seg=10)
+    for sy in (-1, 1): rod(b, P(0, sy * 0.12, 0.36), P(0.1 * sy, sy * 0.2, 0.36 - 0.16 * sy), 0.016 * s, dk, seg=3)
+    # front rack + wicker basket + baguette
+    rod(b, P(0.75, 0, 1.0), P(0.98, 0, 1.0), 0.016 * s, mt, seg=3)
+    bc = P(0.92, 0, 1.13); obox(b, bc, F.X, F.Y, F.Z, 0.19 * s, 0.22 * s, 0.13 * s, M['hay_d'])
+    for k in range(4): rod(b, P(0.73, -0.225, 1.03 + k * 0.065), P(1.11, -0.225, 1.03 + k * 0.065), 0.01 * s, M['trunk'], seg=3)
+    rod(b, P(0.82, -0.08, 1.12), P(1.18, 0.12, 1.52), 0.045 * s, M['bread'], seg=7)
+    rod(b, P(0.86, 0.06, 1.12), P(1.0, 0.1, 1.36), 0.04 * s, M['bread'], seg=7)
+    return F
 
-def stone_wall(Bk, M, p0, p1, h=1.4, w=1.1, seed=1, gz=lambda x, y: 0.0, step=0.9):
-    """Low field wall of rough stone blocks between p0 and p1, capped with flat stones."""
-    p0, p1 = V(p0), V(p1); L = (p1 - p0).length; d = (p1 - p0).normalized(); nrm = V((-d.y, d.x, 0)); rr = _rnd(seed); b = Bk('wall', hull=0.0); n = int(L / step)
-    for i in range(n):
-        c = p0 + d * (i + 0.5) * step; z0 = gz(c.x, c.y); hh = h * rr.uniform(0.9, 1.08); ww = w * rr.uniform(0.92, 1.08)
-        obox(b, V(c.x, c.y, z0 + hh * 0.5), d, nrm, V((0, 0, 1)), step * 0.52, ww * 0.5, hh * 0.5, M['stone_w'], uvk=0.4)
-        obox(b, V(c.x + rr.uniform(-0.05, 0.05), c.y, z0 + hh + 0.08), d, nrm, V((0, 0, 1)), step * 0.54, ww * 0.56, 0.1, M['stone_w'], uvk=0.4)
+def stone_wall(Bk, M, p0, p1, h=1.4, w=1.1, seed=1, gz=lambda x, y: 0.0, step=0.9, name='wall'):
+    """Low dry-stone field wall p0 -> p1: two courses of irregular stones (random size, small yaw/tilt, staggered joints) and flat cap stones."""
+    p0, p1 = V(p0), V(p1); L = (p1 - p0).length; d = (p1 - p0).normalized(); nrm = V((-d.y, d.x, 0)); rr = _rnd(seed); b = Bk(name, hull=0.0)
+    ch = h * 0.42
+    for course in range(2):
+        x = -rr.uniform(0, step * 0.5) if course else 0.0
+        while x < L:
+            ln = step * rr.uniform(0.55, 1.05); c = p0 + d * min(L - 0.1, x + ln / 2); z0 = gz(c.x, c.y) + course * ch; a = rr.uniform(-0.12, 0.12)
+            dd = (d * math.cos(a) + nrm * math.sin(a)).normalized(); nn = V((-dd.y, dd.x, 0)); up = V((0, 0, 1)) + dd * rr.uniform(-0.06, 0.06)
+            obox(b, V((c.x, c.y, z0 + ch * 0.5)) + nn * rr.uniform(-0.05, 0.05), dd, nn, up.normalized(), ln * 0.47, w * 0.5 * rr.uniform(0.85, 1.0), ch * 0.5 * rr.uniform(0.85, 1.05), M['stone_w'], uvk=0.4)
+            x += ln
+    x = 0.0
+    while x < L:
+        ln = step * rr.uniform(0.4, 0.75); c = p0 + d * min(L - 0.05, x + ln / 2); z0 = gz(c.x, c.y) + 2 * ch
+        obox(b, V((c.x, c.y, z0 + h * 0.07)), d, nrm, V((0, 0, 1)), ln * 0.5, w * 0.55, h * 0.07 + rr.uniform(0, 0.03), M['stone_w'], uvk=0.4); x += ln
 
 def card(name, tex, pos, face_to, height=3.0, lean=0.0, flip=False):
     """Camera-facing (yaw) puppet card with feet at pos. Card art is 2.6 x 3.2 D at height 3.0: scale = height/3.0."""

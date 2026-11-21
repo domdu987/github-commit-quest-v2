@@ -276,7 +276,7 @@ def install_handlers():
 # ----------------------------------------------------------------------------- cameras (lens 22 mm, no DOF, far clip 2500)
 CAMS = dict(
     dawn=dict(loc=(-16.0, -72.0, 66.0), look_at=(4.0, 62.0, 0.0), lens=24),
-    morning=dict(loc=(0.4, -9.5, 2.3), look_at=(-0.6, 13.0, 2.6), lens=24),
+    morning=dict(loc=(0.8, -12.5, 2.0), look_at=(-0.3, 17.0, 2.45), lens=30),
     night=dict(loc=(-2.0, -31.0, 9.5), look_at=(3.0, 12.0, 6.4), lens=22),
 )
 def make_camera(setup, name='cam'):
