@@ -1,0 +1,268 @@
+[
+{
+"shot": "S01",
+"est": [
+0.0,
+4.0
+],
+"real": [
+0.0,
+4.03
+],
+"real_len": 4.03,
+"rendered_len": 5.0,
+"ok": true
+},
+{
+"shot": "S02",
+"est": [
+4.0,
+8.4
+],
+"real": [
+4.03,
+8.62
+],
+"real_len": 4.59,
+"rendered_len": 5.5,
+"ok": true
+},
+{
+"shot": "S03",
+"est": [
+8.4,
+11.9
+],
+"real": [
+8.62,
+12.27
+],
+"real_len": 3.65,
+"rendered_len": 4.38,
+"ok": true
+},
+{
+"shot": "S04",
+"est": [
+11.9,
+16.2
+],
+"real": [
+12.27,
+15.69
+],
+"real_len": 3.43,
+"rendered_len": 5.37,
+"ok": true
+},
+{
+"shot": "S05",
+"est": [
+16.2,
+20.55
+],
+"real": [
+15.69,
+19.16
+],
+"real_len": 3.47,
+"rendered_len": 5.44,
+"ok": true
+},
+{
+"shot": "S06",
+"est": [
+20.6,
+23.2
+],
+"real": [
+19.2,
+21.73
+],
+"real_len": 2.53,
+"rendered_len": 3.25,
+"ok": true
+},
+{
+"shot": "S07",
+"est": [
+23.2,
+27.4
+],
+"real": [
+21.73,
+25.81
+],
+"real_len": 4.08,
+"rendered_len": 5.25,
+"ok": true
+},
+{
+"shot": "S08",
+"est": [
+27.4,
+30.2
+],
+"real": [
+25.81,
+28.21
+],
+"real_len": 2.4,
+"rendered_len": 3.5,
+"ok": true
+},
+{
+"shot": "S09",
+"est": [
+30.2,
+35.0
+],
+"real": [
+28.21,
+32.65
+],
+"real_len": 4.44,
+"rendered_len": 6.0,
+"ok": true
+},
+{
+"shot": "S10",
+"est": [
+35.0,
+39.7
+],
+"real": [
+32.65,
+36.99
+],
+"real_len": 4.35,
+"rendered_len": 5.88,
+"ok": true
+},
+{
+"shot": "S11",
+"est": [
+39.7,
+42.8
+],
+"real": [
+36.99,
+40.1
+],
+"real_len": 3.1,
+"rendered_len": 3.87,
+"ok": true
+},
+{
+"shot": "S12",
+"est": [
+42.8,
+45.6
+],
+"real": [
+40.1,
+42.9
+],
+"real_len": 2.8,
+"rendered_len": 3.5,
+"ok": true
+},
+{
+"shot": "S13",
+"est": [
+45.6,
+50.1
+],
+"real": [
+42.9,
+46.98
+],
+"real_len": 4.08,
+"rendered_len": 5.62,
+"ok": true
+},
+{
+"shot": "S14",
+"est": [
+50.2,
+54.2
+],
+"real": [
+47.08,
+52.13
+],
+"real_len": 5.06,
+"rendered_len": 5.0,
+"ok": false
+},
+{
+"shot": "S15",
+"est": [
+54.3,
+57.6
+],
+"real": [
+52.23,
+55.35
+],
+"real_len": 3.13,
+"rendered_len": 4.13,
+"ok": true
+},
+{
+"shot": "S16",
+"est": [
+57.6,
+60.9
+],
+"real": [
+55.35,
+58.48
+],
+"real_len": 3.12,
+"rendered_len": 4.12,
+"ok": true
+},
+{
+"shot": "S17",
+"est": [
+60.9,
+63.5
+],
+"real": [
+58.48,
+61.06
+],
+"real_len": 2.58,
+"rendered_len": 3.25,
+"ok": true
+},
+{
+"shot": "S18",
+"est": [
+63.5,
+66.0
+],
+"real": [
+61.06,
+63.54
+],
+"real_len": 2.48,
+"rendered_len": 3.12,
+"ok": true
+},
+{
+"shot": "S19",
+"est": [
+66.0,
+70.3
+],
+"real": [
+63.54,
+68.45
+],
+"real_len": 4.91,
+"rendered_len": 5.37,
+"ok": true
+}
+]
