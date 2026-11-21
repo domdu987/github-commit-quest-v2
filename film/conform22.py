@@ -78,6 +78,17 @@ def frames():
             c = sorted(glob.glob(f"{TAKES}/s*/frames/g_{g:04d}.png"))
             if c: os.symlink(c[0], dst); print("filled", g, "from", c[0].split("/")[-3])
     for w in WHIPS: whip(w["g"], w.get("dir", 1))
+    # bridges: replace a bad stretch [a+1, b-1] by a smooth dissolve from frame a to frame b (s03: red-flooded shaft)
+    import numpy as np
+    from PIL import Image
+    for a, b in [(195, 223)]:
+        A = np.asarray(Image.open(f"{OUTF}_frames/f_{a:04d}.png").convert("RGB"), np.float32)
+        B = np.asarray(Image.open(f"{OUTF}_frames/f_{b:04d}.png").convert("RGB"), np.float32)
+        for g in range(a + 1, b):
+            t = (g - a) / (b - a); t = t * t * (3 - 2 * t); dst = f"{OUTF}_frames/f_{g:04d}.png"
+            if os.path.lexists(dst): os.remove(dst)
+            Image.fromarray(np.clip(A * (1 - t) + B * t + 0.5, 0, 255).astype(np.uint8)).save(dst)
+        print("bridged", a, b)
     # COLOUR_SPEC.md: the conform grade only (spec pre-grade where needed + v1.1 grade), graded in place
     sh(sys.executable, P + "/grade22.py", OUTF + "_frames", "4")
 
