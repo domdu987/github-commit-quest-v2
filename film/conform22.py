@@ -72,6 +72,8 @@ def frames():
             c = sorted(glob.glob(f"{TAKES}/s*/frames/g_{g:04d}.png"))
             if c: os.symlink(c[0], dst); print("filled", g, "from", c[0].split("/")[-3])
     for w in WHIPS: whip(w["g"], w.get("dir", 1))
+    # COLOUR_SPEC.md: the conform grade only (spec pre-grade where needed + v1.1 grade), graded in place
+    sh(sys.executable, P + "/grade22.py", OUTF + "_frames", "4")
 
 def grade_filter():
     """QA_TEAM §G colour: per-shot eq grade so every shot reaches saturation >= 0.48 and luma 87-108 (film 2: 0.49 / 94).
@@ -110,7 +112,7 @@ def final(out):
         a = max(0, c["t"] + OFF); b = min((c["end"] if c.get("end") is not None else T - OFF) + OFF, T)
         if a < T: ass.append(f"Dialogue: 0,{ts(a)},{ts(b)},Pop,,0,0,0,,{{\\pos(360,900)}}{c['text']}")
     os.makedirs(os.path.dirname(out), exist_ok=True); open(out + ".ass", "w").write("\n".join(ass))
-    sh("ffmpeg", "-y", "-v", "error", "-framerate", "30", "-i", OUTF + "_frames/f_%04d.png", "-vf", ",".join(filter(None, [grade_filter() if os.environ.get("GRADE", "1") == "1" else "", f"ass={out}.ass:fontsdir={P}/fonts"])),
+    sh("ffmpeg", "-y", "-v", "error", "-framerate", "30", "-i", OUTF + "_frames/f_%04d.png", "-vf", ",".join(filter(None, [grade_filter() if os.environ.get("GRADE", "0") == "1" else "", f"ass={out}.ass:fontsdir={P}/fonts"])),
        "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "17", "-movflags", "+faststart", out + "_silent.mp4")
     mb = SCR + "/conf22/music_bed.wav"; music_bed(mb)
     B = F22 + "/audio/sfx/"; sfx = []

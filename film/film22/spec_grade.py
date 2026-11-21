@@ -5,8 +5,13 @@ usage: python3 spec_grade.py <in_dir> <out_dir> [warm 0..1] [sat_k]"""
 import sys, os, glob, numpy as np
 from PIL import Image
 
-def grade(a, warm=0.5, k=0.82):
+def grade(a, warm=1.0, k=0.82, kb=0.6):
     x = a.astype(np.float32) / 255
+    # blue/violet chroma toward grey (kb): the night set is blue-heavy; spec blue share 14-30 %
+    _mx = x.max(-1); _mn = x.min(-1); _d = _mx - _mn + 1e-6
+    _h = np.where(_mx == x[..., 0], ((x[..., 1] - x[..., 2]) / _d) % 6, np.where(_mx == x[..., 1], (x[..., 2] - x[..., 0]) / _d + 2, (x[..., 0] - x[..., 1]) / _d + 4)) * 60
+    _m = ((_h >= 190) & (_h < 290))[..., None]; _L = x.mean(-1, keepdims=True)
+    x = np.where(_m, _L + (x - _L) * kb, x)
     mx = x.max(-1); mn = x.min(-1); d = mx - mn + 1e-6
     r, g, b = x[..., 0], x[..., 1], x[..., 2]
     h = np.where(mx == r, ((g - b) / d) % 6, np.where(mx == g, (b - r) / d + 2, (r - g) / d + 4)) * 60
@@ -26,7 +31,7 @@ def grade(a, warm=0.5, k=0.82):
     return (np.clip(out, 0, 1) * 255 + 0.5).astype(np.uint8)
 
 if __name__ == "__main__":
-    src, dst = sys.argv[1], sys.argv[2]; warm = float(sys.argv[3]) if len(sys.argv) > 3 else 0.5; k = float(sys.argv[4]) if len(sys.argv) > 4 else 0.82
+    src, dst = sys.argv[1], sys.argv[2]; warm = float(sys.argv[3]) if len(sys.argv) > 3 else 1.0; k = float(sys.argv[4]) if len(sys.argv) > 4 else 0.82
     os.makedirs(dst, exist_ok=True)
     for f in sorted(glob.glob(src + "/*.png")):
         Image.fromarray(grade(np.asarray(Image.open(f).convert("RGB")), warm, k)).save(dst + "/" + os.path.basename(f))
