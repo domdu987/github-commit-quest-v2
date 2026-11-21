@@ -26,7 +26,7 @@ sH2a render21/team3   60c1be8  # PASS (v2 content approved; v3 warm-tent set + G
 sH2b render21/team10  4cc1296  # ACCEPTED v3: H2a->H2b is a hard cut (film-13 workflow)
 sI   render21/team12  bc7db28  # PASS TAKE gate v2 (QA-tech)
 sJ1  render21/team8   5d87052  # PASS v2 (film-13 QA, director ruling)
-sJ2  render21/team11  50d781b  # QA-tech PASS v6 (QA-art pending)
+sJ2  render21/team11  50d781b  # PASS v6 (QA-tech PASS, QA-art SHIP); conform: splash cue 3 at g1841
 '
 FORCE_CUT="sH2b sE1"   # film-13 workflow: these joins are hard cuts, whatever the take's meta says
 WANT=" $* "
