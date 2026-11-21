@@ -27,11 +27,31 @@ CAM = [(0, (2.0, -8.0, 12.5), (0.0, 10.0, 5.0), 26),
 WALKS = [(2, (-18.0, 4.0), (-16.5, 14.0), False), (7, (15.0, 5.0), (6.5, 5.0), True), (11, (14.0, 14.0), (6.0, 15.0), True),
          (4, (-4.0, 24.0), (-14.0, 22.0), True), (13, (16.0, 22.0), (9.0, 21.0), True), (9, (-17.0, 20.0), (-17.0, 8.0), False)]
 
+def ground_fixes():
+    # QA section K: nothing floats.  (1) pendant globes hang on their cords from the ceiling -> mounted; (2) the entrance WAY OUT sign is behind the
+    # camera and hovers above the door frame -> hidden; (3) the TRIAL sign gets real struts from its rods back to the stand cap; (4) floor light pools
+    # sit on the floor (lowered 4 cm)
+    for n in ('lamps', 'lamp_halos'):
+        ob = bpy.data.objects.get(n)
+        if ob: ob['mounted'] = True
+    ob = bpy.data.objects.get('way_out_sign')
+    if ob: ob.hide_render = True
+    ob = bpy.data.objects.get('pools_h')
+    if ob: ob.location = (ob.location[0], ob.location[1], ob.location[2] - 0.04)
+    C_ = BU._cs()[0]; sx, sy = BU.STAND; br = beck.Part('stand_struts', (sx, sy, 6.5), ink=True); dark = C_('#4a2410', 1.0, 1.8)
+    for dx in (-2.0, 2.0):
+        br.mb.box((sx + dx - 0.12, sy - 1.2, 6.38), (sx + dx + 0.12, sy + 0.9, 6.62), dark)
+    ob = br.done((sx, sy, 6.5), px=3); ob['mounted'] = True   # struts run back into the cap strip of the stand (seen touching)
+    for n in ('stand_sign_trial', 'stand_sign_real'):
+        o2 = bpy.data.objects.get(n)
+        if o2: o2['mounted'] = True   # sign rods stand on the struts
+
 def hook():
+    ground_fixes()
     # people: named cast restaged away from the camera-to-pillar line
     for nm in ('beck', 'porter2', 'pass_man', 'pass_woman', 'porter', 'pass_child', 'official'): C.hide_actor(nm)
     C.POR = C.Idle('por', 'porter_hand_map', (1.6, 7.9, 0.0), '#ffb878', period=30, n=8, lean=2.0, roll=3.0)
-    C.PMN = C.Idle('pmn', 'pass_read_map', (-0.2, 8.0, 0.0), '#a8bcff', period=46, n=8, lean=1.5, roll=2.5, phase=0.3)
+    C.PMN = C.Idle('pmn', 'pass_read_map', (-3.0, 14.5, 0.0), '#a8bcff', period=46, n=8, lean=1.5, roll=2.5, phase=0.3)
     C.PWM = C.Idle('pwm', 'pass_tap_map', (3.4, 5.6, 0.0), '#ffb878', period=38, n=8, lean=1.5, roll=3.0, phase=0.6)
     C.PCH = C.Idle('pch', 'pass_smile_board', (5.2, 3.6, 0.0), '#a8bcff', period=28, n=8, lean=2.0, roll=3.0, phase=0.1)
     # the official: peek (idle) then the smug rub with Q2 mouths (4 mouths x 2 hand phases)
