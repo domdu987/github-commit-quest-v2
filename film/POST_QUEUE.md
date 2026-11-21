@@ -25,6 +25,7 @@ Branch: `claude/new-session-73ou27`. Only rows with status `READY` may be posted
 | 18 | ไอ้เสมียนวัว | ไอ้เสมียนวัว | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release18/oxclerk_v1.mp4 | WAIT (client to review; client posts himself) |
 | 15 | ไอ้ปลาดิ้น | ไอ้ปลาดิ้น | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release15/fosbury_v2.mp4 | WAIT (client posts himself; v2 remake to QA_TEAM G/H/I, FINAL gate PASS 2026-11-20; music C) |
 | 23 | ไอ้กองทัพลูกโป่ง | ไอ้กองทัพลูกโป่ง | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release23/ghost_v1.mp4 | WAIT (client to review; client posts himself) |
+| 19 | ไอ้ช่างไม้ | ไอ้ช่างไม้ | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release19/harrison_v1.mp4 | WAIT (client to review; client posts himself) |
 
 ## Captions
 (Each READY clip gets a heading here, `### <#> <Title>`, followed by the exact description text to paste.)
@@ -59,3 +60,13 @@ Branch: `claude/new-session-73ou27`. Only rows with status `READY` may be posted
 *ผู้พันปากดีและฉากเป่าลูกโป่งตอนจบเป็นการแต่งเติมเพื่อความสนุก เรื่องหนุ่มฝรั่งเศสปั่นจักรยานมาเห็นทหารยกรถถังมาจากคำเล่าของทหารผ่านศึก
 
 #ไอ้กองทัพลูกโป่ง #GhostArmy #สงครามโลกครั้งที่2 #เรื่องจริง #ประวัติศาสตร์ #เรื่องเล่า #การ์ตูน #shorts
+
+### 19 ไอ้ช่างไม้
+ช่างไม้บ้านนอกคนนี้ทำนาฬิกาที่บอกได้ว่าเรืออยู่ตรงไหนกลางทะเล ⏱️🌊 เรื่องที่นักปราชญ์ทั้งอังกฤษยังทำไม่ได้ นักดาราศาสตร์หัวเราะลั่น "ถ้านาฬิกาของช่างไม้แม่นขนาดนั้น ให้พระราชามาจับเวลาเองเลย!" ทุกคนเรียกเขาว่า "ไอ้ช่างไม้"...
+
+แล้วพระราชามาจับเวลาจริงไหม ดูให้จบ 😂
+
+เรื่องจริงของ จอห์น แฮร์ริสัน กับรางวัลลองจิจูด (ค.ศ. 1714-1773)
+ส่วนที่แต่งเพิ่มเพื่อความสนุก: นักดาราศาสตร์ขี้เยาะเป็นตัวละครสมมุติ (รวมหลายคนในคณะกรรมการ ไม่ใช่บุคคลจริงคนใด) คำท้า "ให้พระราชามาจับเวลาเอง" คำว่า "ไอ้ช่างไม้" และคำพูด "ฟลุ๊ค!" ถูกแต่งขึ้น มงกุฎกับเสื้อคลุมของพระราชาในการ์ตูนใส่ไว้ให้ดูออกว่าเป็นพระราชา ส่วนเรื่องที่พระเจ้าจอร์จที่ 3 ทดสอบนาฬิกาด้วยพระองค์เองทุกวันนาน 10 สัปดาห์ (ค.ศ. 1772) เป็นเรื่องจริง
+
+#ไอ้ช่างไม้ #จอห์นแฮร์ริสัน #ลองจิจูด #นาฬิกา #เรือ #เรื่องจริง #ประวัติศาสตร์ #เรื่องเล่า #การ์ตูน #shorts
