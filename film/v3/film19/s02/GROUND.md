@@ -1,8 +1,6 @@
-# GROUND.md (QA_TEAM §K), s02 round 18
+# GROUND.md (QA_TEAM §K), s02 round 19
 
-Check: every 10th frame g48-199, ray cast straight down from each card's feet point (cap, ast), tolerance 0.02 scene units; both cards carry a contact decal (cap_contact, ast_contact) under the feet. Implemented as `python3 shot.py ground 48:199` (the shared ground_check.py had not landed).
-
-Result: 30 checks, 0 FAIL (gap -0.004 / -0.005 at g160-190: feet on the deck, decal hit first).
+Every 10th frame g48-199, ray cast straight down from each card's feet point (cap, ast), tolerance 0.02 scene units (`python3 shot.py ground 48:199`). 30 checks, 0 FAIL.
 
 | g | card | feet z | gap | surface | |
 |---|---|---|---|---|---|
