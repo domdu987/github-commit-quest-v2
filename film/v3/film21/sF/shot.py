@@ -34,22 +34,21 @@ def rel(xc, f_, r_):
 
 
 def layout(M):
-    """(name, cast, story, variant, phase, f_, r_) around Cressingham: a near group (30-40 % of the frame height), a mid group pointing across the river, the camp's own stand points."""
-    L = [("n1", "footman_a", "footman_a_laughing", 0, 0.0, 0.8, 1.4), ("n2", "footman_b", "footman_b_point_laugh", 0, 1.7, -0.3, 2.4),
-         ("n3", "footman_a", "footman_a_point_laugh", 1, 3.1, 1.6, -1.2), ("n4", "knight_b", "knight_b_laughing", 0, 4.4, 2.6, 0.7),
-         ("m1", "footman_b", "footman_b_laughing", 0, 5.3, 4.5, -1.5), ("m2", "footman_a", "footman_a_point_laugh", 0, 2.2, 5.2, 3.0),
-         ("m3", "footman_b", "footman_b_point_laugh", 0, 0.9, 3.4, 2.6), ("m4", "footman_a", "footman_a_laughing", 1, 3.8, 6.5, -0.4)]
-    return L
+    """(name, cast, story, variant, phase, f_, r_): a column of laughing / pointing English in DEPTH behind Cressingham (narrow lateral spread, so they stay inside the frame while the camera pushes in and end up behind him in CU2)."""
+    return [("n1", "footman_a", "footman_a_point_laugh", 0, 0.0, 1.5, -1.0), ("n2", "footman_b", "footman_b_point_laugh", 0, 1.7, 2.6, 1.1),
+            ("n3", "footman_a", "footman_a_laughing", 1, 3.1, 3.8, -0.8), ("n4", "knight_b", "knight_b_point_laugh", 0, 4.4, 4.8, 0.9),
+            ("m1", "footman_b", "footman_b_point_laugh", 0, 5.3, 6.2, -1.5), ("m2", "footman_a", "footman_a_laughing", 1, 2.2, 7.0, 1.4),
+            ("m3", "footman_b", "footman_b_laughing", 0, 0.9, 8.2, 0.0), ("m4", "footman_a", "footman_a_point_laugh", 0, 3.8, 9.5, -1.0)]
 
 
 def cam_keys(xc, gz):
     """one travelling move: from behind-right of the group, sliding left and pushing in, ending low and slightly off-axis on Cressingham's face (CU2)."""
     def P(f_, r_, z): c = rel(xc, f_, r_); return (c[0], c[1], z)
     def Lk(f_, r_, z): c = rel(xc, f_, r_); return (c[0], c[1], z)
-    return [(1044, P(-5.8, 2.2, gz + 2.0), Lk(3.0, 0.4, gz + 1.15), 26.0),
-            (1078, P(-4.0, 0.9, gz + 1.8), Lk(3.0, -0.2, gz + 1.3), 26.0),
-            (1110, P(-2.7, -0.15, gz + 1.55), Lk(3.0, 0.0, gz + 1.5), 26.0),
-            (1141, P(-1.8, 0.45, gz + 1.15), Lk(1.0, 0.0, gz + 1.5), 26.0)]
+    return [(1044, P(-7.2, 1.2, gz + 2.0), Lk(3.0, 0.2, gz + 1.2), 26.0),
+            (1078, P(-4.6, 0.5, gz + 1.8), Lk(3.0, 0.0, gz + 1.3), 26.0),
+            (1110, P(-2.8, -0.1, gz + 1.55), Lk(3.0, 0.0, gz + 1.5), 26.0),
+            (1141, P(-1.8, 0.4, gz + 1.15), Lk(1.0, 0.0, gz + 1.5), 26.0)]
 
 
 def pose_of(mark, cast, story, var, phase, g):
@@ -76,9 +75,9 @@ def main():
     T = C.Take(["camp_bank"], WORK, fg=True, hide=("fg_bank_barrel", "fg_bank_iron"))
     M = T.A["marks"]["camp_bank"]; mode = "draft" if cmd in ("draft", "probe", "ground") else "final"
     xc = np.array(M["cress"][:3], float); gz = xc[2]; KEYS = cam_keys(xc, gz)
-    K.hide_near_banners([K.cam_path(None, KEYS, g)["loc"] for g in range(G0, G1 + 1, 3)], 3.5)
+    K.hide_near_banners([K.cam_path(None, KEYS, g)["loc"] for g in range(G0, G1 + 1, 3)], 2.5)
     K.setup_render(T.scene, "final" if cmd == "probe" else mode, 8)
-    cast = [("cress", "cressingham", "cressingham_smug_belt", 0, 0.0, None), ("surrey", "surrey", "surrey_laughing" if "surrey_laughing" in ST else "surrey_standing", 0, 2.6, (4.2, -0.7))]
+    cast = [("cress", "cressingham", "cressingham_smug_belt", 0, 0.0, None), ("surrey", "surrey", "surrey_laughing" if "surrey_laughing" in ST else "surrey_standing", 0, 2.6, (1.6, 0.9))]
     for nm, c, st, var, ph, f_, r_ in layout(M): cast.append((nm, c, st, var, ph, (f_, r_)))
     pos = {}
     for nm, c, st, var, ph, fr in cast:
