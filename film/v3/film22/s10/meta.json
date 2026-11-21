@@ -1,0 +1,15 @@
+{
+ "take": "s10",
+ "film": 22,
+ "g0": 1197,
+ "g1": 1301,
+ "first_g": 1191,
+ "n_frames": 116,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "notes": "CUT on \"\u0e41\u0e15\u0e48\u0e27\u0e31\u0e19\u0e19\u0e31\u0e49\u0e19\"; ends on the 1-s jaw-drop punch-in; J6 to s11 = dissolve of at most 6 frames (see QA.md)"
+}

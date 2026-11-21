@@ -1,0 +1,41 @@
+{
+ "take": "s09",
+ "fps": 30,
+ "cues": [
+  {
+   "time": 33.55,
+   "duration": 0.4,
+   "frame": 1006,
+   "kind": "prop",
+   "label": "porter sets the small stack of pocket maps on the stand: soft paper thump"
+  },
+  {
+   "time": 35.03,
+   "duration": 1.0,
+   "frame": 1051,
+   "kind": "prop",
+   "label": "porter hands out a few maps: paper rustle, a polite thank you murmur"
+  },
+  {
+   "time": 36.19,
+   "duration": 0.6,
+   "frame": 1086,
+   "kind": "sfx",
+   "label": "sly sneaky sting as the official peeks from the pillar"
+  },
+  {
+   "time": 37.38,
+   "duration": 2.5,
+   "frame": 1121,
+   "kind": "voice",
+   "label": "Q2 official line, smug, hands rubbing: dry palm rub"
+  },
+  {
+   "time": 33.5,
+   "duration": 6.4,
+   "frame": 1005,
+   "kind": "ambience",
+   "label": "ticket hall: echoing crowd, footsteps on tiles, a distant announcement"
+  }
+ ]
+}

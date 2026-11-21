@@ -1,0 +1,48 @@
+{
+ "take": "s10",
+ "fps": 30,
+ "cues": [
+  {
+   "time": 39.9,
+   "duration": 3.5,
+   "frame": 1197,
+   "kind": "ambience",
+   "label": "platform: crowd murmur, rising rumble of an arriving train"
+  },
+  {
+   "time": 40.3,
+   "duration": 1.4,
+   "frame": 1209,
+   "kind": "sfx",
+   "label": "red train pulls in out of the tunnel: roar, rail squeal, brake hiss"
+  },
+  {
+   "time": 41.28,
+   "duration": 0.5,
+   "frame": 1238,
+   "kind": "prop",
+   "label": "all the passengers unfold their pocket maps at once: a flutter of paper"
+  },
+  {
+   "time": 42.2,
+   "duration": 0.5,
+   "frame": 1266,
+   "kind": "sfx",
+   "label": "train doors slide open: pneumatic hiss, door chime"
+  },
+  {
+   "time": 42.4,
+   "duration": 0.6,
+   "frame": 1272,
+   "kind": "sting",
+   "label": "comic jaw-drop sting for the official (record scratch / slide whistle down)"
+  },
+  {
+   "time": 42.6,
+   "duration": 0.8,
+   "frame": 1278,
+   "kind": "sfx",
+   "label": "confident footsteps stepping onto the train, a child going ooh"
+  }
+ ]
+}

@@ -1,0 +1,15 @@
+{
+ "take": "s09",
+ "film": 22,
+ "g0": 1005,
+ "g1": 1197,
+ "first_g": 999,
+ "n_frames": 204,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 11
+ },
+ "notes": "ticket hall; official peeks from the pillar, Q2 lip-sync 37.38-39.90 (g 1122..1197)"
+}

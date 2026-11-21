@@ -1,0 +1,48 @@
+{
+ "take": "s03",
+ "fps": 30,
+ "cues": [
+  {
+   "time": 6.4,
+   "duration": 0.5,
+   "frame": 192,
+   "kind": "whoosh",
+   "label": "camera dives through the iron grate, warm light and street murmur dropping away"
+  },
+  {
+   "time": 7.0,
+   "duration": 1.2,
+   "frame": 210,
+   "kind": "ambience",
+   "label": "echoing shaft, distant rumble of trains in the earth, low pad"
+  },
+  {
+   "time": 7.4,
+   "duration": 1.0,
+   "frame": 222,
+   "kind": "sfx",
+   "label": "trains threading the noodle tunnels: muffled rumble and a faint bell"
+  },
+  {
+   "time": 8.7,
+   "duration": 0.8,
+   "frame": 261,
+   "kind": "whoosh",
+   "label": "fast fly down the straight tunnel, rails singing, lamps ticking past"
+  },
+  {
+   "time": 9.3,
+   "duration": 1.5,
+   "frame": 279,
+   "kind": "ambience",
+   "label": "platform: footsteps, murmur, a distant train"
+  },
+  {
+   "time": 9.9,
+   "duration": 0.5,
+   "frame": 297,
+   "kind": "sfx",
+   "label": "pass_man bumps old_gent: oof, a hat knocked askew, a squeak of the magnifier"
+  }
+ ]
+}

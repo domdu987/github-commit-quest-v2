@@ -1,0 +1,15 @@
+{
+ "take": "s03",
+ "film": 22,
+ "g0": 192,
+ "g1": 324,
+ "first_g": 186,
+ "n_frames": 144,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "travel",
+  "frames": 0
+ },
+ "notes": "BIGZOOM 1 part B; travel join through the grate from s02 (J2: same iron grille, 7 bars/3 cross bars/rivets; fall back to a 4-6 frame dissolve if s02 differs); ends on the OLD map (J3: tinted to the lodgings lilac-grey, 9-frame eased match dissolve into s04)"
+}
