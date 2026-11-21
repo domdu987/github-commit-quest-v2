@@ -6,3 +6,5 @@
 - **Grade:** `STATE['vivid'] = (1.52, 1.3, 0.75)` constant (camp_bank VIVID + exposure, API §13); cards compensated for gamma and exposure; no post pass.
 - **Numbers (`take.mkv`):** `qa_stats2` sat 0.504, vivid % 48.6, luma 83.9, motion med 5.49 / p90 6.24, still % 1.0; `rhythm.py` median 6.91, **p90 7.88 (below the 12 target)**; `qa_auto` PASS.
 - **Known:** members at the right edge of the group leave the frame while the camera slides left (g1060-1090), a few transient partial cuts at the frame edge; the sand is mostly under grass tufts now, but the pavilions are behind the camera (the view is across the river). Colour is normalised at the conform.
+
+- **qa_jitter:** overall median jitter 0.4 px (see the tool's output in the repo run). **GROUND.md:** PASS (10 cards, frames every 10). Rendered on set e07ceb1 (English camp has no blue); the pavilions are behind the camera in this view, so the warm-tent-shade fix (bb7aa85) does not change this take.
