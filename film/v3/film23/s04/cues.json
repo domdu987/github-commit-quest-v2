@@ -1,0 +1,23 @@
+{
+ "take": "s04",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration timing is an estimate",
+ "cues": [
+  {
+   "time": 11.633,
+   "duration": 5.7,
+   "frame": 349,
+   "end_frame": 520,
+   "kind": "ambience",
+   "label": "busy work area: a hand pump wheezing, brush strokes, a record scratch"
+  },
+  {
+   "time": 11.633,
+   "duration": 5.7,
+   "frame": 349,
+   "end_frame": 520,
+   "kind": "prop",
+   "label": "pump stroke every 0.67 s"
+  }
+ ]
+}

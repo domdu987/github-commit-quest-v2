@@ -1,0 +1,24 @@
+{
+ "take": "s04",
+ "film": 23,
+ "shot": "S04",
+ "first_g": 349,
+ "n_frames": 170,
+ "g0": 357,
+ "g1": 486,
+ "g1_render": 519,
+ "handle_in": 8,
+ "handle_out": 0,
+ "seconds_per_frame_wall": 14.4,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 11
+ },
+ "note": "timing is an ESTIMATE (timing_EST.json); take renders g0..g0+ceil((g1-g0)*1.25) then the out-handle; camera and action continue through the tail",
+ "parts": [
+  "take.mkv.part00",
+  "take.mkv.part01",
+  "take.mkv.part02"
+ ],
+ "mkv_mb": 123.1
+}
