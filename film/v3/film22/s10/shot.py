@@ -17,8 +17,8 @@ DOORS_ON = 78
 CAM = [(0, (-11.2, -5.0, 3.7), (-1.2, 17.0, 2.9), 30),
        (36, (-11.0, -0.6, 3.7), (-2.5, 18.0, 3.0), 30),
        (62, (-10.9, 3.4, 3.6), (-6.0, 12.0, 3.1), 31),
-       (74, (-10.7, 5.2, 3.4), (-8.2, 9.0, 2.9), 34),
-       (103, (-10.5, 5.6, 3.0), (-8.2, 9.0, 2.7), 40)]
+       (74, (-10.7, 5.2, 3.6), (-8.2, 9.0, 2.9), 33),
+       (103, (-10.4, 5.8, 3.8), (-8.2, 9.0, 2.6), 37)]
 OFF = (-8.4, 9.0, 0.0)
 
 def pre_pose(c, p):
@@ -36,6 +36,8 @@ for _k in range(6):
     JAWS['jaw%d' % _k] = (_c, _q)
 
 def hook():
+    C.mount(['ribs', 'globes', 'hang_s10', 'clock', 'clock_face', 'liner', 'way_out', 'old_map', 'old_map_img', 'doors_closed', 'doors_open', 'benches_s10', 'roundel_name', 'name_panels', 'posters'])
+    C.mount(['tunnel_lamps', 'globe_halos', 'light_pools', 'headlights'], airborne=True)
     sc = bpy.context.scene
     # MIND THE GAP edge plate: hide it (mirrored from this side)
     for nm in ('edge_signs',):

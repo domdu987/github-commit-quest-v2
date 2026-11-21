@@ -134,9 +134,65 @@ def render_range(shot, g0, g1, outdir, quality='final', samples=None, step=1, ta
         print('frame', g, '%.1fs' % (time.time() - t0), flush=True)
     return n
 
+_ORIG_CAM_EVAL = beck.cam_eval
+def smooth_cam(keys, n, sigma=3.0, pad=40, ramp_start=(-2.0, 8.0)):
+    """QA_TEAM section L (no shake): replace the Hermite camera of `keys` by a Gaussian-smoothed copy (sigma frames), so no overshoot or velocity
+    reversal survives between the keys.  Installed over beck.cam_eval for that key list only."""
+    import numpy as np
+    fr = np.arange(-pad, n + pad + 1)
+    raw = []
+    for f in fr:
+        l, k, ln, r = _ORIG_CAM_EVAL(keys, float(f)); raw.append([*l, *k, ln, r])
+    raw = np.array(raw, float); rad = int(math.ceil(sigma * 4)); w = np.exp(-0.5 * (np.arange(-rad, rad + 1) / sigma) ** 2); w /= w.sum()
+    sm = np.stack([np.convolve(np.pad(raw[:, i], rad, mode='edge'), w, mode='valid') for i in range(raw.shape[1])], axis=1)
+    def ev(ks, f):
+        if ks is not keys: return _ORIG_CAM_EVAL(ks, f)
+        x = f + pad
+        if x <= 0: i = 0; u = 0.0
+        elif x >= len(fr) - 1: i = len(fr) - 2; u = 1.0
+        else: i = int(math.floor(x)); u = x - i
+        v = sm[i] * (1 - u) + sm[i + 1] * u
+        if ramp_start:
+            r_ = clamp((f - ramp_start[0]) / (ramp_start[1] - ramp_start[0])); ro = _ORIG_CAM_EVAL(keys, float(f)); rv = np.array([*ro[0], *ro[1], ro[2], ro[3]]); v = rv + (v - rv) * r_
+        if f < -pad or f > n + pad: v = v + (sm[1] - sm[0]) * (f + pad) if f < -pad else v + (sm[-1] - sm[-2]) * (f - n - pad)
+        return V(v[0:3]), V(v[3:6]), float(v[6]), float(v[7])
+    beck.cam_eval = ev
+    return ev
+
+MOUNT_LOG = []
+def mount(names, airborne=False):
+    """QA section K: flag set pieces that are SEEN touching their wall / vault / cord (mounted) or are glow quads (airborne)."""
+    for n in names:
+        ob = bpy.data.objects.get(n)
+        if ob is None: continue
+        ob['airborne' if airborne else 'mounted'] = True; MOUNT_LOG.append((n, 'airborne' if airborne else 'mounted'))
+
+def ground(shot, f0, f1, out_md, step=10):
+    """QA_TEAM section K: run the director's ground_check22 on the animated scene (per-frame python animation applied before each check)."""
+    for p in (os.path.join(PROJ, 'v3', 'tools'), os.path.join(HERE, 'work')):
+        if os.path.exists(os.path.join(p, 'ground_check22.py')) and p not in sys.path: sys.path.insert(0, p)
+    import ground_check22 as GC
+    sh = beck.ALL_SHOTS[shot]; sc = bpy.context.scene; allf = []
+    frames = list(range(f0, f1 + 1, step)) + ([f1] if (f1 - f0) % step else [])
+    for g in frames:
+        beck.set_frame_cam(shot, g)
+        for k, fn in sh.get('animate', {}).items(): fn(g - sh['f0'], sh['f1'] - sh['f0'])
+        allf += GC.check_frame(sc, g)
+    ok = not allf
+    L = ['# GROUND.md (QA_TEAM section K, ground_check22)', 'take %s frames %d-%d step %d, tolerance 0.02' % (shot, f0, f1, step),
+         'RESULT: %s (%d failures)' % ('PASS' if ok else 'FAIL', len(allf)), '', '| frame | object | problem |', '|---|---|---|']
+    L += ['| %s | %s | %s |' % f for f in allf[:400]]
+    open(out_md, 'w').write('\n'.join(L) + '\n'); print('ground_check', 'PASS' if ok else 'FAIL %d' % len(allf)); return ok, allf
+
 def run(shot, cfg, argv, hook_after_build=None):
     """argv: stills a,b,c outdir [q] | final a:b [samples] | draft a:b[:step]"""
     mode = argv[0]
+    if mode == 'ground':
+        a = argv[1].split(':'); sc = build(shot, cfg, 'preview', int(a[0]), threads=4)
+        if hook_after_build: hook_after_build()
+        ok, allf = ground(shot, int(a[0]), int(a[1]), os.path.join(HERE, 'GROUND.md'), int(a[2]) if len(a) > 2 else 10)
+        for f in allf[:60]: print(f)
+        return
     if mode == 'stills':
         frames = [int(x) for x in argv[1].split(',')]; out = argv[2]; q = argv[3] if len(argv) > 3 else 'preview'
         sc = build(shot, cfg, q, frames[0], threads=4)
