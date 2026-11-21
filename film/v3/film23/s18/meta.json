@@ -1,0 +1,32 @@
+{
+ "take": "s18",
+ "film": 23,
+ "shots": [
+  "S18"
+ ],
+ "g0": 1905,
+ "g1": 1980,
+ "g1_render": 1999,
+ "first_g": 1896,
+ "n_frames": 104,
+ "handle_in": 9,
+ "handle_out": 0,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 13
+ },
+ "location": "RHINE",
+ "light": "PREDAWN",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "threads": 2,
+ "s_per_frame_wall_mean": 8.67,
+ "s_per_frame_cpu_mean": 16.21,
+ "dof": "none",
+ "timing": "ESTIMATE (timing_EST.json): rendered planned length x 1.25 (the camera move and the action continue through the tail)",
+ "mkv_parts": null
+}

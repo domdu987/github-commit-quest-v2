@@ -1,0 +1,49 @@
+{
+ "take": "s18",
+ "first_g": 1896,
+ "n_frames": 104,
+ "diff_median": 0.87,
+ "diff_p90": 1.05,
+ "diff_min": 0.45,
+ "luma_min": 79.0,
+ "luma_max": 83.5,
+ "luma_mean": 81.3,
+ "shade_hue": {
+  "1896": {
+   "shade_hue": 231.0,
+   "share": 0.654
+  },
+  "1948": {
+   "shade_hue": 231.1,
+   "share": 0.603
+  },
+  "1999": {
+   "shade_hue": 231.3,
+   "share": 0.554
+  }
+ },
+ "max_head_centre_y": 848.4,
+ "head_y_by_card": {
+  "pad0": 848.4,
+  "pad1": 836.0,
+  "pad2": 831.7,
+  "pad3": 834.4,
+  "pad4": 830.0,
+  "tip0": 753.4,
+  "tip1": 769.8,
+  "tip2": 786.7,
+  "tip3": 792.6,
+  "far0": 823.5,
+  "far1": 812.6,
+  "far2": 819.1,
+  "far3": 814.3,
+  "far4": 813.0
+ },
+ "water_frac_range": [
+  0.349,
+  0.365
+ ],
+ "s_per_frame_wall": 8.67,
+ "s_per_frame_cpu": 16.21,
+ "jitter": "overall median jitter px 0.28"
+}

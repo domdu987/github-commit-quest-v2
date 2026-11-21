@@ -1,10 +1,96 @@
 {
-"s01": {
- "delivered": "`take.mkv` (libx264rgb crf 6, 30 fps, 720x1280, {n_frames} frames g {first_g}..150) is 106 MB, so it is split with `split -b 40M` into `take.mkv.part_aa/ab/ac` (`cat take.mkv.part_* > take.mkv`). Also `shot.py` (stills / final / ground), `../c23.py` + `../deliver.py` + `../qa_md.py` (shared helpers), `meta.json`, `cues.json`, `contact.jpg`, `phone_sheet.jpg`, `QA_AUTO.md`, `QA_JITTER.txt`, `GROUND.md`, `numbers.json`. Frames / raw / work stay out of git.",
- "look": ["BIGZOOM 1 as planned: g 0 a high OBLIQUE extreme wide (120 D up, 37 deg down, dawn horizon in the top 15 %) along the lane over the bocage, descend and push past two poplars, end 3/4 on the lead tank with the waving soldier (rider on col0's deck, head centre y 0.48 H at g 150; the QA target was 0.40-0.55).",
-  "Cast: gi_smile rides col0 and waves (wave_frame 12-frame cycle), gi_pump waves from the verge, gi_designer stands and sways (all real cast23 cards, front-3/4: there are no back views). The column rolls 4 D over the planned length (set_column keyed every frame).",
-  "No heads in the caption band; nothing floats (ground_check PASS; the rider stands on the tank deck mark, the walkers on the grass)."],
- "rules": ["No mouth moves (held expression drawings only). No weapons. No camera shake: eased keys only (set's BIGZOOM path, no noise). No depth of field.", "Every character card has the stage contact decal on its surface (rider on the deck, walkers on the grass)."],
- "dev": ["Frame-diff p90 is 11.3 (target 12): the first 40 frames of the BIGZOOM descend slowly by design (the set's approved move); median 5.6 passes. No camera edits were made.", "Nothing else differs from the plan. The three marks of the set row (rider + 2 walkers) were kept; no extra troops were added."]
-}
+ "s01": {
+  "delivered": "`take.mkv` (libx264rgb crf 6, 30 fps, 720x1280, {n_frames} frames g {first_g}..150) is 106 MB, so it is split with `split -b 40M` into `take.mkv.part_aa/ab/ac` (`cat take.mkv.part_* > take.mkv`). Also `shot.py` (stills / final / ground), `../c23.py` + `../deliver.py` + `../qa_md.py` (shared helpers), `meta.json`, `cues.json`, `contact.jpg`, `phone_sheet.jpg`, `QA_AUTO.md`, `QA_JITTER.txt`, `GROUND.md`, `numbers.json`. Frames / raw / work stay out of git.",
+  "look": [
+   "BIGZOOM 1 as planned: g 0 a high OBLIQUE extreme wide (120 D up, 37 deg down, dawn horizon in the top 15 %) along the lane over the bocage, descend and push past two poplars, end 3/4 on the lead tank with the waving soldier (rider on col0's deck, head centre y 0.48 H at g 150; the QA target was 0.40-0.55).",
+   "Cast: gi_smile rides col0 and waves (wave_frame 12-frame cycle), gi_pump waves from the verge, gi_designer stands and sways (all real cast23 cards, front-3/4: there are no back views). The column rolls 4 D over the planned length (set_column keyed every frame).",
+   "No heads in the caption band; nothing floats (ground_check PASS; the rider stands on the tank deck mark, the walkers on the grass)."
+  ],
+  "rules": [
+   "No mouth moves (held expression drawings only). No weapons. No camera shake: eased keys only (set's BIGZOOM path, no noise). No depth of field.",
+   "Every character card has the stage contact decal on its surface (rider on the deck, walkers on the grass)."
+  ],
+  "dev": [
+   "Frame-diff p90 is 11.3 (target 12): the first 40 frames of the BIGZOOM descend slowly by design (the set's approved move); median 5.6 passes. No camera edits were made.",
+   "Nothing else differs from the plan. The three marks of the set row (rider + 2 walkers) were kept; no extra troops were added."
+  ]
+ },
+ "s18": {
+  "delivered": "`take.mkv` (libx264rgb crf 6, 30 fps, 720x1280, {n_frames} frames g {first_g}..) is under 45 MB (single file). Also `shot.py` (stills / final / ground), shared `../c23.py` `../deliver.py` `../qa_md.py`, `meta.json`, `cues.json`, `contact.jpg`, `phone_sheet.jpg`, `QA_AUTO.md`, `QA_JITTER.txt`, `GROUND.md`, `numbers.json`. Frames / raw / work stay out of git.",
+  "look": [
+   "QA_ART_SET notes applied: a SECOND boat (boat2: three paddlers) now rides behind boat3 (two paddlers + the dog); both are re-placed at runtime on the water 13 and 22 D from the lens and drift east at 1.6 D/s with a small bob. Water share of the frame 32-37 % (far water line; limit 40 %): the camera tilts up about 11 deg.",
+   "Camera (runtime override of the set's row): start (-33, 361.5, 1.35) look (20, 386, 14.3) lens 22 -> end (-27, 360, 1.0) look (16, 385, 10.9) lens 27 (a slow pan along the boats, a 4.5 %/s lens push, and the camera drifts east); the set's own end pose moved only 0.7 D and measured a frame-diff median of 0.45. Camera height 1.0-1.35 D above the water line is lower than the QA's 2-3 D because heads must stay above y 880 at this tilt.",
+   "Cast: 5 kneeling paddlers (paddle_frame, 24-frame stroke, phases staggered, blinks), 4 tiptoe soldiers on the pontoon deck (tiptoe_frame, finger to the lips, drifting east 0.7 D/s), 5 far-bank soldiers (3 carry crates, 1 waves, 1 stands). The dog has no cast23 card: it is my own flat-fill + plum-ink card drawn with PIL (`c23.dog_pngs`), parented to boat3, two tail frames. All soldiers get the cast `tint` / `ink` pre-dawn grade (tint #c0caf2, ink #1e1a3a).",
+   "Set dressing added at runtime: 3 tall poplars on both banks (to fill the tall sky) and 4 bridge-rail lanterns (700 W) whose warm streaks lie on the water. Pre-dawn blue with the warm orange band low in the east-north-east is the set's own."
+  ],
+  "rules": [
+   "No mouth moves. No weapons (paddles only). No camera shake (eased keys). No depth of field.",
+   "Nothing floats: paddlers kneel on the boat-floor mark of their boat (matrix_world of the moving boat every frame); the paddle blade dips below the knees on purpose (cast23), so the paddlers' card gc_gap tolerance is 1.8 D (the knee/boat contact itself is the mark). Tiptoers stand on the deck top (0.50), far-bank troops on the terrain."
+  ],
+  "dev": [
+   "Camera replaced at runtime (see above); boats 0, 1, 4 are out of frame at every frame so they have no cards; the 5-boat marks of the set row were reduced to boat2 + boat3.",
+   "A dog card was drawn (no cast23 dog). Frame-diff stays low (night water, slow pan): see the numbers."
+  ],
+  "head_r": "28"
+ },
+ "s14": {
+  "delivered": "`take.mkv` (libx264rgb crf 6, 30 fps, 720x1280, {n_frames} frames g {first_g}..) see meta.json mkv_parts. Also `shot.py` (stills / final / ground), shared `../c23.py` `../deliver.py` `../qa_md.py`, `meta.json`, `cues.json`, `contact.jpg`, `phone_sheet.jpg`, `QA_AUTO.md`, `QA_JITTER.txt`, `GROUND.md`, `numbers.json`. Frames / raw / work stay out of git.",
+  "look": [
+   "Extreme wide high over the river, slow descend (the set's camera), the RHINE sign on the bank, moon path on the water. Eight GIs act on the near bank: 3 carry crates (carry_pose walk cycle, drifting 0.5-0.6 D/s down toward the supply dump), 1 stands and sways, plus 4 more carriers around the trucks and crate stacks. All real cast23 cards in the night grade (tint #c8ccf0, ink #1e142e).",
+   "They are small in the first second (the camera is 120 D away, heads about 10 px) and grow to about 20 px heads by the end of the descend; that is the extreme-wide brief."
+  ],
+  "rules": [
+   "No mouth moves. No weapons. No camera shake. No depth of field.",
+   "Cards stand on the real terrain / mark z (ground_z - 0.03 sink); lanterns flicker per frame (GH.flicker)."
+  ],
+  "dev": [
+   "The set row has 4 unloaders; 4 extra carriers were added to make the unloading read. u2 was moved 5 D east and 1.5 D south of its mark (it stood in a tree trunk, ground_check hit 'trees')."
+  ],
+  "head_r": "12"
+ },
+ "s15": {
+  "delivered": "`take.mkv` (libx264rgb crf 6, 30 fps, 720x1280, {n_frames} frames g {first_g}..) see meta.json mkv_parts. Also `shot.py` (stills / final / ground), shared `../c23.py` `../deliver.py` `../qa_md.py`, `meta.json`, `cues.json`, `contact.jpg`, `phone_sheet.jpg`, `QA_AUTO.md`, `QA_JITTER.txt`, `GROUND.md`, `numbers.json`. Frames / raw / work stay out of git.",
+  "look": [
+   "Crane up over the rows (set camera): set_inflate keyed every frame on all 42 decoys with the set's staggered _a15 schedule (0.2 -> 1.0), lantern light, house and poplars at the horizon. Pump crews: three gi pump men pump (pump_frame 20-frame stroke, staggered), a watcher stands and sways, a carrier walks with a crate (carry_pose).",
+   "Two of the three pump men were moved from their marks to 12-18 D from the start lens (beside the lane) so the crews read; the third stays at its mark."
+  ],
+  "rules": [
+   "No mouth moves. No weapons. No camera shake. No depth of field.",
+   "Tanks stay snapped while inflating (the shape keys and the z key are evaluated on each frame before `ground_snap`: frame_set(f) at the top of the per-frame state function; without it the first run had 39 float FAILs)."
+  ],
+  "dev": [
+   "Pump crew positions changed as above; hoses are not tied to the tank valves (the sprite's own hose end lies on the ground)."
+  ],
+  "head_r": "14"
+ },
+ "s16": {
+  "delivered": "`take.mkv` (libx264rgb crf 6, 30 fps, 720x1280, {n_frames} frames g {first_g}..) see meta.json mkv_parts. Also `shot.py` (stills / final / ground), shared `../c23.py` `../deliver.py` `../qa_md.py`, `meta.json`, `cues.json`, `contact.jpg`, `phone_sheet.jpg`, `QA_AUTO.md`, `QA_JITTER.txt`, `GROUND.md`, `numbers.json`. Frames / raw / work stay out of git.",
+  "look": [
+   "Push along the sound truck (record spinning at 78 rpm via set_record keyed every frame), the horn; 30th / 79th INF DIV crates, a rope coil and a lantern in the foreground. Exposure lifted +0.6 EV over the set so luma stays >= 70 (QA_ART_SET director acceptance note); see the luma line.",
+   "Cast: the sound man (gi_sound, point at the horn with a small sway), the radio man seated on a crate with the handset (held `talk_a` mouth drawing, no mouth movement), a carrier walking in with a crate. The radio man and the carrier were moved from their marks (they stood behind the truck at 55-65 D and could not be seen) to feet-on-ground spots chosen from the mid-frame camera rays (c23.ground_at_screen)."
+  ],
+  "rules": [
+   "No mouth moves: the radio man's `talk_a` is a single held drawing. No weapons. No camera shake. No depth of field.",
+   "Ground check PASS."
+  ],
+  "dev": [
+   "Exposure +0.6 EV; radio man / carrier re-placed; the radio tent stays behind the truck (not visible)."
+  ],
+  "head_r": "30"
+ },
+ "s17": {
+  "delivered": "`take.mkv` (libx264rgb crf 6, 30 fps, 720x1280, {n_frames} frames g {first_g}..) see meta.json mkv_parts. Also `shot.py` (stills / final / ground), shared `../c23.py` `../deliver.py` `../qa_md.py`, `meta.json`, `cues.json`, `contact.jpg`, `phone_sheet.jpg`, `QA_AUTO.md`, `QA_JITTER.txt`, `GROUND.md`, `numbers.json`. Frames / raw / work stay out of git.",
+  "look": [
+   "OTS from the German OP with the sandbag foreground; both observers whole in frame (QA_ART_SET note), heads at y 660-800, far decoy field glowing across the river. cast23 has no back views, so the two Germans are front-3/4 cards facing the lens, a known cast weakness.",
+   "Comic action: the tall one (ger_tall) lowers his binoculars, nudges and then points south; the round one (ger_round) eats his sausage, then drops it (`ger_drop_sausage`), the sausage (cast23 `sausage_svg`, 12 rotation variants) falls 0.3 s from his drawn hand anchor, lands flat on the ground next to his boot, and he turns to stunned. Expression swaps sit behind blinks."
+  ],
+  "rules": [
+   "No weapons (binoculars only) and nobody is hurt. Mouths are held expression drawings only (`stunned` open mouth is one drawing). No camera shake. No depth of field.",
+   "The sausage is flagged `airborne_frames` for its fall only, then rests on the ground (ground_check PASS)."
+  ],
+  "dev": [
+   "The set row has 3 observer marks; 2 cards are used (QA_ART_SET: 'both Germans whole'); their feet were put at chosen screen spots rather than the OP marks."
+  ],
+  "head_r": "35"
+ }
 }

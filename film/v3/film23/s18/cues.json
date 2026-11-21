@@ -1,0 +1,23 @@
+{
+ "take": "s18",
+ "fps": 30,
+ "note": "time = film seconds (g / 30) on the ESTIMATED clock",
+ "cues": [
+  {
+   "time": 63.2,
+   "duration": 3.433,
+   "frame": 1896,
+   "end_frame": 1999,
+   "kind": "foley",
+   "label": "pre-dawn Rhine: quiet water, paddles dipping softly, boards creaking under tiptoeing boots"
+  },
+  {
+   "time": 63.2,
+   "duration": 3.433,
+   "frame": 1896,
+   "end_frame": 1999,
+   "kind": "ambience",
+   "label": "bird calls starting, a hushed dog whine"
+  }
+ ]
+}
