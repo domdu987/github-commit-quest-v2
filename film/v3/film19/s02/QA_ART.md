@@ -357,3 +357,49 @@ Trackers: the same sea-masked LK tracker as round 16 (/tmp/claude-0/qa16/track.p
 - **B: keep g ≥ 160 frozen and lift g 139-157 to at least 7 ship median and at least 12 total mean.** Move about 15 % of the travel and tilt out of the g 115-127 peak (which has headroom: 16-20) into g 136-157. Use the same acceptance as A.
 
 A frame check of g 125-182 with the same tracker is enough to confirm either fix. Everything else in the shot (opening, stern pass, beat, props, colour, framing) is ready.
+
+## Round 18 (film-13 rules): FIX-FIRST. The descent g 128-165 is now one move, but the hook gained a lurch-and-brake at g 91-112, and a one-frame pop at g 88
+
+**Rules and inputs.** I judged this only by film/skill_film13/QA_TEAM_film13.md: the QA-art section plus §C (the hook is a key shot). The later G/H/I acceptance numbers are not applied.
+
+Inputs:
+- Frames: /tmp/qa19_ov/s02/gNNN.png. I verified them against take.mkv.part*: g 128 matches exactly.
+- References: film/analysis/sheets/oil_0.jpg (the ship short).
+- Sheets in /tmp/claude-0/qa16/: r18_full.jpg (every 8th frame), r18a.jpg and r18b.jpg (every frame g 86-165), r18_88.jpg (g 86-90 with a grid).
+- Sea-masked trackers: track.py and total.py (both in /tmp/claude-0/qa16/).
+
+**Correction.** The g 88 pop below was already present in round 16. I did not catch it in rounds 9-17, because the 3 fps sheets skip that frame and my trackers started at g 96 or later.
+
+| Check | Finding |
+|---|---|
+| **g 88: one-frame pop** | g 88 is a frame from a different camera state. The ship is about 8 % smaller than at g 87 and g 89 (similarity scale 0.918 between g 87 and g 88, then 1.048), the horizon jumps 5-10 px, and the image motion flips sign (dy -4.3 → +6.1 → -3.1). On a phone it reads as a twitch of the hero ship 2.9 s into the hook. QA-tech's "pops/jumps outside cuts" list should carry it too. |
+| **g 91-112: lurch, brake, second push (new in round 18)** | Total rigid-point motion (sea masked, cast excluded) goes from 10-12 px/f (g 84-90) **up to 67 px/f at g 98**, then **brakes to 6-8 px/f at g 108-111**, then pushes again to 24 at g 121, before falling smoothly. Ship-only median: 4 → 54 (g 100) → 6.5 (g 111) → 25 (g 121). In round 16 this stretch ran at about 5-10 px/f. On a phone: the ship rockets up the frame and swells (the stronger tilt-down, down to -81° pitch at g 114), then stops dead with the bow pressed against the top edge for about 4 frames, then the stern pass starts. This is not the client's "calm but always-moving" camera, and a viewer will notice the stop. It is the cost of paying for the extra tilt-up with "more tilt-down earlier" (QA.md, round 18). |
+| g 104-113: composition | During the brake, the ship is jammed against the top edge (bow and rigging cut off) and 60-70 % of the frame is wake foam. For about 0.3 s the hook stops being a picture of a ship. |
+| **g 128-165: tilt-up into the landing** | **Fixed: it now reads as one move.** Every tile g 126-165 changes steadily from the stern pass, over the deck, into the rail, horizon and eye level, then lands. There is no hold and no second shove. Rotation runs smoothly -0.0 → -0.56 → -0.1 °/f. Ship median falls 19.9 (g 126) → 11-12 (g 131-142) → 10 (g 146-153) → 7.9 (g 160) → 0 (g 182); total motion stays at 15-19 and then eases out. The g 157-160 join is no longer visible. |
+| Hook read (g 48-90) | Still strong: a lone ship (about 10 %) on a big blue sea, a crisp horizon and clouds, with the wake leading the eye. |
+| Set density | Good for the deck: cannons, lanterns, crates, rigging, the wheel and its shadow, sails layered at three depths. The ship's own design is plainer than the reference: oil_0 has a bold red and white hull, striped orange sails and warm wood, against our navy hull and grey-lilac sails. |
+| Light & colour | Hard noon sun with crisp shadows; warm orange deck against blue sea, sky and rigging. Sat 0.648, luma 92.8 (in-shot, my own measure). |
+| Composition / phone | The medium shot is fine: faces about 13-15 % of the frame height, both characters full figures, heads well above y 880, contact shadows on every tile, nothing floating (GROUND.md: 0 FAIL). The weak spot is g 104-113 (above). |
+| Acting | Intact: the round-eyed dumbfounded captain, the shared look, the arms-out shrug; the astronomer's head-scratch with the quadrant; props in hand through g 199. The captain's shrug is still a little lopsided (chart arm level). |
+| Sharpness | No depth of field; the frames are sharp. The blur flag on the opening is a statistic of empty sea (waived earlier). |
+
+| Criterion (film-13 QA-art) | Score |
+|---|---|
+| Set density / ornament | 8 |
+| Lighting & colour | 8 |
+| Composition / framing / phone legibility | 6.5 |
+| Character acting | 7.5 |
+| Key moment (hook: BIGZOOM) clarity and beauty | 6.5 |
+| Overall match to references | 7 |
+| **Overall** | **7.25, FIX-FIRST** (the hook is a key shot, and the g 88 pop and the g 98-111 lurch-and-brake are visible on a phone) |
+
+Does the camera read as calm but always moving? **From g 115 to g 199, yes. From g 88 to g 112, no**: a one-frame twitch, then a 67 px/f surge that brakes to near-zero before the stern pass.
+
+**Changes, in order:**
+1. **Re-render or replace g 88** from the current camera path, so that the scale and position sit between g 87 and g 89. Then run a frame-to-frame similarity check over all of g 48-199 (scale step < 1 %, no sign flip in dy outside a smooth crossing). This is cheap.
+2. **Take the extra tilt-down back out of g 88-114.** Return the minimum pitch to about -69° (round 17's g 88-127 path, which was calm) and keep the round-18 tilt-up plateau for g 128-160. To pay for it, let the camera aim at g 160-170 ease the remaining pitch out. The acting is keyed to g, not to the camera, so it is unaffected. Target for the sea-masked total motion: a peak of at most about 25 px/f anywhere in g 88-127, and never below about 10 before g 160 except where it settles into the landing.
+3. **Re-aim g 100-115** so that the ship sits in the upper third with a clear margin above the masts, not jammed against the top edge. At most about half the frame should be foam.
+4. (Polish, raises the match to the references) Warm the ship toward the oil reference: cream or striped sails, or a red band on the hull. This also fixes the flat lilac sail face on the left at g 118-150.
+5. (Polish) Lower the captain's chart arm so the shrug is symmetric.
+
+To confirm: a frame check of g 84-130 with the same tracker, plus a look at the 360x640 sheet.
