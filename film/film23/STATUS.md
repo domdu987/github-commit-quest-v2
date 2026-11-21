@@ -9,5 +9,6 @@ Fallback check: send_later 60 min, always re-armed.
 - [x] Blind retest PASS 8/10; 2 small rewrites applied (hook stake shortened, nickname line "ทั้งหน่วยเลยโดนเรียกว่า")
 - [ ] BLOCKED 2026-11-20 23:55 UTC: fal.ai "User is locked. Reason: Exhausted balance." Narration + music cannot be generated. Client told.
       Resume: cd film/film23 && python3 audio/gen.py && python3 audio/build_bk0.py --stt  (then python3 audio/build_bk0.py)
-- [ ] Style board (Sonnet builder running, brief STYLE_BOARD_BRIEF.md) -> QA-art
+- [x] Style board r1 (v3/set3d23/board) -> QA-art FIX-FIRST (board/QA_ART.md: overall 5/10, still 2 recompose, shadows, night tanks, caption band)
+- [ ] Board r2 (builder fixing all 8 QA-art items) -> QA-art re-check
 - [ ] Set + cast -> SET gate -> shot plan (≤12 cuts, 2 BIGZOOM) -> WORKER23.md -> render teams
