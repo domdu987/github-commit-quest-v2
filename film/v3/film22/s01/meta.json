@@ -1,0 +1,48 @@
+{
+ "take": "s01",
+ "film": 22,
+ "shots": [
+  "s01"
+ ],
+ "g0": 0,
+ "g1": 108,
+ "first_g": 0,
+ "last_g": 113,
+ "n_frames": 114,
+ "handle_in": 0,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "film start"
+ },
+ "transition_out": {
+  "type": "travel",
+  "frames": 0,
+  "note": "s01 end = window pane push; s02 starts at london (-30.5,-5.6,10.4) = room (6.6,12.4,5.0), lens 30 (J1); 6 handle frames 108-113 continue the push"
+ },
+ "location": "lodgings NIGHT",
+ "camera": "low hero 3/4, push + arc left past the ink bottles, from frame 56 swing right to the window, lens 36->30",
+ "events": {
+  "red_line_ruled": [
+   0,
+   16
+  ],
+  "set_square_snap": [
+   17,
+   36
+  ],
+  "snap_beat_0_65s": 22,
+  "thumb_slides_tick": [
+   56,
+   72
+  ],
+  "tick_beat_1_82s": 58,
+  "swing_to_window": [
+   56,
+   107
+  ],
+  "million_beat_2_35s": 74
+ },
+ "window_card": "tex_beck/window_london.png re-rendered by film22/s01/window_card.py (hides the flat static crowd, adds cast22 crowd walkers)"
+}
