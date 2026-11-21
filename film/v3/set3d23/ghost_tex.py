@@ -12,7 +12,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEX = os.path.join(HERE, 'tex_ghost')
-TEX_V = 'g23.12'
+TEX_V = 'g23.15'
 JOBS = {}
 FONT_B = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 FONT_N = '/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf'
@@ -64,7 +64,7 @@ LANE2 = spline([(-6, -40), (-4, -10), (0, 14), (8, 46), (18, 84), (30, 126), (40
 LANE3 = spline([(-30, -90), (-26, -40), (-18, 0), (-10, 30), (-16, 70), (-30, 110)], 10)
 SCENES = dict(
     dawn=dict(rect=(-270, 270, -130, 450), res=4096, xs=[-270 + 540 * i / 14 for i in range(15)], ys=[-130 + 580 * j / 17 for j in range(18)], jit=0.24, seed=11, lane=LANE1, lane_w=7.0, river=RIVER1, river_w=10.0, pal='day', hedge_p=0.55),
-    morning=dict(rect=(-80, 80, -40, 150), res=4096, xs=[-80, -9, 11, 80], ys=[-40, 52, 150], jit=0.02, seed=5, lane=LANE2, lane_w=9.0, river=None, river_w=0, pal='day', hedge_p=1.0, warp=1.2),
+    morning=dict(rect=(-80, 80, -40, 150), res=4096, xs=[-80, -14, 16, 80], ys=[-40, 40, 150], jit=0.02, seed=5, lane=LANE2, lane_w=9.0, river=None, river_w=0, pal='day', hedge_p=1.0, warp=1.2),
     night=dict(rect=(-130, 130, -100, 160), res=4096, xs=[-130, -58, 20, 62, 130], ys=[-100, -8, 66, 160], jit=0.06, seed=7, lane=LANE3, lane_w=8.0, river=None, river_w=0, pal='night', hedge_p=1.0, warp=2.0),
 )
 
@@ -99,15 +99,15 @@ def layout(sc):
     for k, pts in list(H.items()) + list(Vv.items()):
         border = (k in H and k[1] in (0, ny)) or (k in Vv and k[0] in (0, nx))
         edges.append(dict(pts=pts, hedge=(not border) and rng.random() < c['hedge_p'], key=k))
-    pal = ['#3fb02c', '#58c235', '#2f9d3c', '#7acb38', '#24893c', '#4cbf40', '#8ad03a', '#33a838'] if c['pal'] == 'day' else ['#3a9a34', '#4cae3a', '#2a8a3c', '#62b238', '#2e9440']
+    pal = ['#5cb026', '#6cc22e', '#4ea01c', '#8acb34', '#46921c', '#62bf26', '#9ad036', '#52a822'] if c['pal'] == 'day' else ['#3a9a2a', '#4cae30', '#348a26', '#62b238', '#389428']
     cells = []
     for i in range(nx):
         for j in range(ny):
             pts = list(H[(i, j)]) + list(Vv[(i + 1, j)]) + list(reversed(H[(i, j + 1)])) + list(reversed(Vv[(i, j)]))
             r = rng.random(); kind = 'grass'
-            if r < 0.14: kind = 'wheat'
-            elif r < 0.19: kind = 'plough'
-            elif r < 0.30: kind = 'clover'
+            if r < 0.17: kind = 'wheat'
+            elif r < 0.24: kind = 'plough'
+            elif r < 0.34: kind = 'clover'
             cells.append(dict(poly=pts, col=rng.choice(pal), kind=kind, ang=rng.uniform(0, math.pi), idx=len(cells), ij=(i, j)))
     _LAY[sc] = dict(cells=cells, edges=edges); return _LAY[sc]
 
@@ -124,22 +124,30 @@ def paint_ground(p, out):
         i = cell['idx'] + 1; col = hexf(cell['col']); k = cell['kind']
         if k == 'wheat': col = hexf('#d8b838') * 0.9 + 0.1 * col
         elif k == 'plough': col = hexf('#94653a')
-        elif k == 'clover': col = hexf('#58cc50')
+        elif k == 'clover': col = hexf('#5ccc38')
         base[i] = col; ang[i] = cell['ang']; per[i] = rs.uniform(5.0, 9.0) if k != 'plough' else rs.uniform(2.4, 3.2); kind[i] = {'grass': 0, 'wheat': 1, 'plough': 2, 'clover': 3}[k]; ph[i] = rs.uniform(0, 6.3)
     img = base[lab]
     xw = (np.arange(R, dtype='float32') + 0.5) / R * W_ + x0; yw = y1 - (np.arange(R, dtype='float32') + 0.5) / R * H_
     ca, sa = np.cos(ang[lab]), np.sin(ang[lab]); proj = xw[None, :] * ca + yw[:, None] * sa
     st = np.sin(proj * (2 * math.pi) / per[lab] + ph[lab]); sm = (st > 0).astype('float32') * 0.5 + 0.5 * st * 0.5 + 0.5
-    mow = np.where(kind[lab] == 2, 0.90 + 0.14 * (st > 0.2), np.where(kind[lab] == 1, 0.96 + 0.04 * st, 0.95 + 0.09 * sm))
+    # r3: real field texture - mown grass in broad soft two-tone stripes (the light stripe yellower), wheat in fine crop rows with tramlines,
+    # plough in strong furrows with lit ridges, clover in mid stripes; visible in sun AND in shade (luminance carries through the shade tint)
+    K = kind[lab]; prow = per[lab]
+    rows = np.sin(proj * (2 * math.pi) / 1.25 + ph[lab]); tram = (np.abs(np.sin(proj * math.pi / 13.0 + ph[lab])) < 0.07).astype('float32')
+    fur = np.sin(proj * (2 * math.pi) / 1.7 + ph[lab]); ridge = np.clip(fur, 0, 1) ** 3
+    smooth_st = np.clip(st * 2.2, -1, 1) * 0.5 + 0.5
+    mow = np.where(K == 2, 0.76 + 0.24 * (fur * 0.5 + 0.5) + 0.10 * ridge,
+          np.where(K == 1, (0.91 + 0.09 * rows) * (1 - 0.2 * tram), 0.89 + 0.15 * smooth_st))
     n1 = fbm(R, R, 7, 5, c['seed'] + 1); n2 = fbm(R, R, 48, 3, c['seed'] + 2)
-    img = img * (mow * (0.86 + 0.30 * n1) * (0.92 + 0.16 * n2))[..., None]
+    img = img * (mow * (0.88 + 0.24 * n1) * (0.93 + 0.14 * n2))[..., None]
+    yel = ((K == 0) | (K == 3)) * smooth_st * 0.07; img = img * (1 - yel[..., None]) + yel[..., None] * hexf('#c8e040')
     wh = (kind[lab] == 1)[..., None]; img = np.where(wh, img * (0.92 + 0.2 * fbm(R, R, 160, 2, 3)[..., None]), img)
     # hedge shadow bands (dark, soft) under the 3D hedges
     m = Image.new('L', (R, R), 0); d = ImageDraw.Draw(m)
     for e in Lay['edges']:
         if e['hedge']: d.line([P(q) for q in e['pts']], fill=255, width=max(2, int(4.4 / W_ * R)), joint='curve')
     m = np.asarray(m.filter(ImageFilter.GaussianBlur(R / W_ * 1.0))).astype('float32') / 255
-    img = img * (1 - 0.62 * m[..., None]) + 0.62 * m[..., None] * hexf('#1e5a24')
+    img = img * (1 - 0.62 * m[..., None]) + 0.62 * m[..., None] * hexf('#22561a')
     # grass wear / flowers (white-yellow dots in some fields)
     fl = (fbm(R, R, 220, 1, 9) > 0.86).astype('float32') * (kind[lab] == 3) * 0.45
     img = img * (1 - fl[..., None]) + fl[..., None] * hexf('#ffe86a')
@@ -190,6 +198,40 @@ def paint_detail(p, out):
     blades = (b > 0.66).astype('float32') * 0.35 - (b < 0.28).astype('float32') * 0.22
     v = np.clip(a + blades, 0.35, 1.25) * 0.82; save(np.repeat(v[..., None], 3, 2), out)
 reg('grass_detail', {}, paint_detail)
+
+def paint_dirt(p, out):
+    """Tileable lane dirt (u along the lane): warm ochre packed earth, darker damp patches, pebbles, a few straw bits; 1 tile = 4 D."""
+    S = 1024; rs = random.Random(p['seed'])
+    n1 = fbm(S, S, 6, 4, 21, tile=True); n2 = fbm(S, S, 40, 3, 22, tile=True); n3 = fbm(S, S, 160, 2, 23, tile=True)
+    img = hexf(p['col'])[None, None] * (0.80 + 0.30 * n1[..., None]) * (0.90 + 0.16 * n2[..., None]) * (0.95 + 0.1 * n3[..., None])
+    damp = np.clip((fbm(S, S, 5, 3, 24, tile=True) - 0.58) * 6, 0, 1); img = img * (1 - 0.35 * damp[..., None]) + 0.35 * damp[..., None] * hexf('#6a4424')
+    im = Image.fromarray((np.clip(img, 0, 1) * 255).astype('uint8')); d = ImageDraw.Draw(im)
+    for _ in range(420):
+        x, y, r = rs.uniform(0, S), rs.uniform(0, S), rs.uniform(2.5, 7); c = rs.choice(['#e8d8b0', '#cdb88c', '#9a8460', '#f0e4c8', '#7a6448'])
+        for ox in (-S, 0, S):
+            for oy in (-S, 0, S): d.ellipse([x + ox - r, y + oy - r * 0.75, x + ox + r, y + oy + r * 0.75], fill=hex8(c), outline=hex8('#5a4430'))
+    for _ in range(70):
+        x, y, a, l = rs.uniform(0, S), rs.uniform(0, S), rs.uniform(0, 6.3), rs.uniform(14, 34)
+        for ox in (-S, 0, S):
+            for oy in (-S, 0, S): d.line([x + ox, y + oy, x + ox + l * math.cos(a), y + oy + l * math.sin(a)], fill=hex8('#e8c860'), width=2)
+    save(np.asarray(im).astype('float32') / 255, out)
+reg('dirt', dict(col='#c49860', seed=3), paint_dirt)
+
+def paint_rut(p, out):
+    """Tileable rut bottom (u along the rut, v across, 1 tile = 2 D along x 1 D across): dark damp earth with tyre/track tread chevrons, wet sheen streak."""
+    W, H = 1024, 512; rs = random.Random(5)
+    n1 = fbm(H, W, 8, 4, 31, tile=True); img = hexf('#7a5230')[None, None] * (0.78 + 0.34 * n1[..., None])
+    vv = (np.arange(H, dtype='float32') + 0.5) / H; edge = np.clip(np.abs(vv - 0.5) * 2, 0, 1) ** 2; img = img * (1 - 0.35 * edge[:, None, None]) + 0.35 * edge[:, None, None] * hexf('#b08a5a')
+    im = Image.fromarray((np.clip(img, 0, 1) * 255).astype('uint8')); d = ImageDraw.Draw(im)
+    for k in range(16):                                                    # chevron tread (track pads of the trucks)
+        x = k * W / 16
+        for ox in (-W, 0, W):
+            d.line([x + ox, H * 0.22, x + ox + 22, H * 0.5, x + ox, H * 0.78], fill=hex8('#4e321c'), width=14)
+            d.line([x + ox + 9, H * 0.24, x + ox + 31, H * 0.5, x + ox + 9, H * 0.76], fill=hex8('#9a7448'), width=4)
+    a = np.asarray(im).astype('float32') / 255
+    wet = np.exp(-((vv - 0.42) / 0.07) ** 2)[:, None] * (0.5 + 0.5 * fbm(H, W, 6, 2, 33, tile=True)); a = a * (1 - 0.25 * wet[..., None]) + 0.25 * wet[..., None] * hexf('#a8b8c8')
+    save(a, out)
+reg('rut', {}, paint_rut)
 
 # ============================================================================= sky dome (u = azimuth/360 from +x CCW, v = (elevation + 15) / 105)
 SKY_W = 4096
@@ -248,7 +290,7 @@ def paint_sky(p, out):
         img = clouds(img, 22, 6, 34, '#5a7cd0', '#3a54a6', '#22308a', (10, 26), (1.4, 3.0), 25, '#7a9cf0', 25.0)
     save(np.clip(img, 0, 1), out)
 reg('sky_dawn', dict(mode='dawn', sun=(140.0, 6.0)), paint_sky)
-reg('sky_morning', dict(mode='morning', sun=(200.0, 21.0)), paint_sky)
+reg('sky_morning', dict(mode='morning', sun=(172.0, 22.0)), paint_sky)
 reg('sky_night', dict(mode='night', sun=(64.0, 17.0)), paint_sky)
 
 # ============================================================================= glow images
@@ -267,8 +309,8 @@ reg('mist', {}, paint_mist)
 
 # ============================================================================= materials: stone, tile, wood, hedge, leaf, canvas, net, rubber, water
 def paint_hedge(p, out):
-    S = 512; img = Image.new('RGB', (S, S), hex8('#1f6a2a')); d = ImageDraw.Draw(img); rr = random.Random(3)
-    cols = ['#1a5a26', '#237a2c', '#2f9a36', '#46b640', '#14481f', '#58c448']
+    S = 512; img = Image.new('RGB', (S, S), hex8('#2a6a1c')); d = ImageDraw.Draw(img); rr = random.Random(3)
+    cols = ['#24581a', '#2e7a20', '#3a9a26', '#52b630', '#1c4814', '#64c438']
     for _ in range(900):
         x, y, r = rr.uniform(0, S), rr.uniform(0, S), rr.uniform(8, 22); c = rr.choice(cols)
         for ox in (-S, 0, S):
@@ -295,9 +337,9 @@ def paint_leaf(p, out):
         for ox in (-S, 0, S):
             for oy in (-S, 0, S): d.ellipse([x + ox - 4, y + oy - 4, x + ox + 4, y + oy + 4], fill=hex8(p['dotc']))
     save(np.asarray(img).astype('float32') / 255, out)
-reg('leaf', dict(base='#2a8a30', cols=['#1c6a28', '#2f9a36', '#46b840', '#58cc4c', '#176024'], seed=4), paint_leaf)
+reg('leaf', dict(base='#348a22', cols=['#266a1a', '#3a9a26', '#52b832', '#66cc3c', '#1f6018'], seed=4), paint_leaf)
 reg('poplar', dict(base='#46aa2c', cols=['#2f8a28', '#5cc434', '#7ad83c', '#3a9c2c', '#a0e44c'], seed=6), paint_leaf)
-reg('apple', dict(base='#2f9a36', cols=['#1c7a2c', '#3cae3c', '#52c446', '#2a8c34'], seed=8, dots=60, dotc='#e83a2a'), paint_leaf)
+reg('apple', dict(base='#3a9a26', cols=['#267a1c', '#46ae2c', '#5cc436', '#348c24'], seed=8, dots=60, dotc='#e83a2a'), paint_leaf)
 
 def paint_roof(p, out):
     S = 512; img = np.zeros((S, S, 3), 'float32'); rows = 16; rh = S // rows; rs = np.random.RandomState(2)
@@ -502,10 +544,11 @@ def paint_soldier(p, out):
     save(a[..., :3], out, alpha=a[..., 3])
 POSES = dict(stand=dict(), pump=dict(arm_l=40, arm_r=30, bend=30, lean=0.8, prop=None), lift=dict(arm_l=150, arm_r=160, bend=-10, mouth='o'), carry=dict(arm_l=35, arm_r=35, bend=-20),
              clip=dict(arm_l=10, arm_r=60, bend=35, prop='clip', mouth='smile'), walk=dict(stride=0.35, arm_l=-25, arm_r=25, bend=10), point=dict(arm_l=8, arm_r=100, bend=5, mouth='smile'),
-             radio=dict(sit=True, arm_l=50, arm_r=70, bend=30, prop='phones'), wave=dict(arm_l=8, arm_r=155, bend=-15, mouth='smile'), guard=dict(arm_l=20, arm_r=20, bend=15), push=dict(arm_l=75, arm_r=80, bend=-10, lean=1.0, mouth='o'))
+             radio=dict(sit=True, arm_l=50, arm_r=70, bend=30, prop='phones'), wave=dict(arm_l=8, arm_r=155, bend=-15, mouth='smile'), guard=dict(arm_l=20, arm_r=20, bend=15), push=dict(arm_l=75, arm_r=80, bend=-10, lean=1.0, mouth='o'),
+             hold=dict(arm_l=95, arm_r=110, bend=-25, lean=0.6, mouth='o', look=0.25))
 for _pn, _pose in POSES.items():
     for _tn, _tone in (('d', (1.0, 1.0, 1.0)), ('n', (0.62, 0.72, 1.1))):
-        reg('sol_%s_%s' % (_pn, _tn), dict(pose=_pose, tone=_tone, rim=('#ffc060', 1, 7, 0.9) if _tn == 'd' else ('#ffb050', -1, 6, 0.85), tv=2), paint_soldier)
+        reg('sol_%s_%s' % (_pn, _tn), dict(pose=_pose, tone=_tone, rim=('#ffc060', -1, 7, 0.9) if _tn == 'd' else ('#ffb050', -1, 6, 0.85), tv=3), paint_soldier)
 
 # ============================================================================= driver
 def _key(name):

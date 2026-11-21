@@ -39,12 +39,17 @@ def kd_of(az, el):
 
 _B = dict(toon=1.0, key_desat=0.0, ink='#1c1a2e', night=False, form=(0.0, -0.05, 0.22), bloom_size=0.06, sun_angle=0.6, lambert=False, lift=(0.030, 0.024, 0.060), lamps=0.0, ground_k=1.0)
 LIGHTS = dict(
-    DAWN=dict(_B, key=(1.30, 0.95, 0.52), sun_az=165.0, sun_el=19.0, sun_vis_el=6.0, sky='sky_dawn', sky_k=0.82, exposure=-0.5, shade=(0.27, 0.17, 0.48), shade_tint=(0.27, 0.17, 0.50), shade_mix=1.0, lift=(0.030, 0.024, 0.060),
-              grade_offset=(-0.004, -0.006, -0.002), grade_saturation=1.4, bounce=(1.0, 0.7, 0.45, 0.12)),
-    MORNING=dict(_B, key=(1.45, 1.05, 0.62), sun_az=200.0, sun_el=21.0, sky='sky_morning', sky_k=0.8, exposure=-0.7, shade=(0.23, 0.19, 0.47), shade_tint=(0.23, 0.19, 0.49), shade_mix=0.85,
-                 grade_offset=(-0.004, -0.006, -0.002), grade_saturation=1.18, bounce=(1.0, 0.7, 0.45, 0.14)),
+    # r3 shade model: shade = art x `shade` (cooled local colour) mixed with luminance x `shade_tint` at `shade_mix` (foliage: `fol_mix`); measured shade
+    # hue ~245, sat ~0.40, value ~0.35 (about 0.5 of lit).  The shade is a REPLACEMENT colour: shade_cut() removes `amb_cut` of it where the key lands,
+    # so lit colours stay clean and saturated.  sun_angle 2-2.5 deg gives soft penumbrae.  Saturation comes from the materials: grade_saturation ~1.05.
+    DAWN=dict(_B, key=(1.50, 1.13, 0.69), sun_az=165.0, sun_el=19.0, sun_vis_el=6.0, sun_angle=2.5, sky='sky_dawn', sky_k=0.82, exposure=-0.5,
+              shade=(0.30, 0.17, 0.66), shade_tint=(0.23, 0.14, 0.52), shade_mix=0.8, fol_mix=0.85, lift=(0.016, 0.018, 0.040), amb_cut=0.85,
+              grade_offset=(-0.004, -0.006, -0.002), grade_saturation=1.06, bounce=(1.0, 0.7, 0.45, 0.12)),
+    MORNING=dict(_B, key=(1.62, 1.20, 0.74), sun_az=172.0, sun_el=22.0, sun_angle=2.0, sky='sky_morning', sky_k=0.8, exposure=-0.65,
+                 shade=(0.30, 0.17, 0.66), shade_tint=(0.23, 0.14, 0.52), shade_mix=0.8, fol_mix=0.85, lift=(0.016, 0.018, 0.040), amb_cut=0.85,
+                 grade_offset=(-0.004, -0.006, -0.002), grade_saturation=1.04, bounce=(1.0, 0.7, 0.45, 0.14)),
     NIGHT=dict(_B, key=(0.30, 0.42, 1.25), sun_az=64.0, sun_el=24.0, sun_vis_el=17.0, sky='sky_night', sky_k=1.0, night=True, lambert=True, key_desat=0.2, ink='#10143a', lamps=1.0, bloom_size=0.07,
-               shade=(0.23, 0.15, 0.42), shade_tint=(0.23, 0.15, 0.44), shade_mix=0.8, lift=(0.026, 0.020, 0.052), grade_offset=(0.002, 0.003, 0.010), grade_saturation=1.16),
+               shade=(0.22, 0.26, 0.52), shade_tint=(0.20, 0.18, 0.50), shade_mix=0.5, lift=(0.016, 0.018, 0.044), grade_offset=(0.002, 0.003, 0.010), grade_saturation=1.04),
 )
 for _k, _v in LIGHTS.items(): _v['key_dir'] = kd_of(_v['sun_az'], _v['sun_el'])
 SCENE_LIGHT = dict(dawn='DAWN', morning='MORNING', night='NIGHT')
@@ -94,7 +99,9 @@ def mat_g(name, art='#808080', gain=1.0, shade_mul=1.0, form=True, smooth_n=Fals
     if glow is not None and glow_k > 0:
         gt = N('ShaderNodeTexImage'); gt.image = T._img(glow); gs = N('ShaderNodeVectorMath'); gs.operation = 'SCALE'; gs.inputs['Scale'].default_value = glow_k
         L(gt.outputs['Color'], gs.inputs[0]); ga = N('ShaderNodeVectorMath'); ga.operation = 'ADD'; L(amb, ga.inputs[0]); L(gs.outputs['Vector'], ga.inputs[1]); amb = ga.outputs['Vector']
-    L(amb, emi.inputs['Color']); L(md.outputs['Vector'], dif.inputs['Color']); L(dif.outputs['BSDF'], add.inputs[0]); L(emi.outputs['Emission'], add.inputs[1])
+    L(amb, emi.inputs['Color']); L(md.outputs['Vector'], dif.inputs['Color'])
+    L(dif.outputs['BSDF'], add.inputs[0]); L(emi.outputs['Emission'], add.inputs[1])
+    aov = N('ShaderNodeOutputAOV'); aov.aov_name = 'amb'; L(amb, aov.inputs['Color'])          # r3: the ambient (shade) term, cut in sun by shade_cut()
     last = add.outputs['Shader']
     if rim:
         rc, rk, rp = rim; inc = N('ShaderNodeNewGeometry')
@@ -178,6 +185,7 @@ def tex_path(name): return STATE['tx'][name]
 # ----------------------------------------------------------------------------- build
 def build(scene_name):
     sc = bpy.context.scene; lk = SCENE_LIGHT[scene_name]; P = dict(LIGHTS[lk])
+    if os.environ.get('GH_P'): P.update(json.loads(os.environ['GH_P'])); P['key_dir'] = kd_of(P['sun_az'], P['sun_el'])     # tuning override (JSON)
     STATE.clear(); STATE.update(P=P, scene=scene_name, light=lk)
     for h in (bpy.app.handlers.render_pre, bpy.app.handlers.frame_change_pre):
         for f in list(h):
@@ -191,7 +199,7 @@ def build(scene_name):
     for m in list(bpy.data.materials):
         if m.name.startswith(('GH_', 'ink')): bpy.data.materials.remove(m)
     names = ['glow', 'pool', 'mist', 'hedge', 'leaf', 'poplar', 'apple', 'roof_red', 'roof_red_d', 'roof_slate', 'stone_farm', 'stone_wall', 'stone_church', 'barn_wood', 'wood', 'canvas_khaki', 'canvas_olive',
-             'camonet', 'rubber', 'rubber_d', 'rubber_l', 'star', 'water', 'cow', 'cow_b', 'puff', 'grass_detail', 'sign', 'tankmark', 'crate_a', 'crate_b', 'crate_c', 'crate_plain', 'fields_' + scene_name, 'sky_' + scene_name]
+             'camonet', 'rubber', 'rubber_d', 'rubber_l', 'star', 'water', 'cow', 'cow_b', 'puff', 'grass_detail', 'sign', 'tankmark', 'crate_a', 'crate_b', 'crate_c', 'crate_plain', 'dirt', 'rut', 'fields_' + scene_name, 'sky_' + scene_name]
     names += [n for n in GX.JOBS if n.startswith('sol_')]
     STATE['tx'] = GX.ensure(names, verbose=False)
     w = bpy.data.worlds.get('W_ghost') or bpy.data.worlds.new('W_ghost'); sc.world = w; nt = T._tree(w)
@@ -216,11 +224,34 @@ def build(scene_name):
     SCN.build_scene(scene_name, Bk, STATE['M'])
     Bk.flush(SET)
     sc.cycles.use_light_tree = (scene_name == 'night')
-    MN._denoise(sc); setup_grade(sc)
+    MN._denoise(sc); setup_grade(sc); shade_cut(sc, P)
     for ob in SET.objects: no_bounce(ob)
     for ob in STATE.get('cards', ()): no_bounce(ob)
     A = dict(scene=scene_name, light=lk, cam=cams, marks=dict(STATE['marks']), key_dir=tuple(kd))
     STATE['A'] = A; return A
+
+def shade_cut(sc, P):
+    """r3: make the painted shade a REPLACEMENT colour, not an additive one.  mat_g adds its ambient (blue shade) term as emission everywhere,
+    so in sunlight it greys the key colour.  Here, before the grade: Image - amb x q x vis, where vis = smoothstep(lo, hi, lum(diffuse) / lum(amb))
+    is 1 where the key light lands and 0 in shade (the AOV 'amb' is written by mat_g; cards, sky and emitters have none and are untouched)."""
+    q = float(P.get('amb_cut', 0.0))
+    if q <= 0: return
+    vl = sc.view_layers[0]; vl.use_pass_diffuse_direct = True; vl.use_pass_diffuse_color = True
+    if 'amb' not in [a.name for a in vl.aovs]: a = vl.aovs.add(); a.name = 'amb'; a.type = 'COLOR'
+    ng = sc.compositing_node_group; src = next(n for n in ng.nodes if n.bl_idname == 'CompositorNodeRLayers')
+    lk = next(l for l in ng.links if l.from_node == src and l.from_socket.name == 'Image'); dst = lk.to_socket; ng.links.remove(lk)
+    N = ng.nodes.new; L = ng.links.new
+    def mix(bt, a_, b_, fac=1.0):
+        m = N('ShaderNodeMix'); m.data_type = 'RGBA'; m.blend_type = bt; m.inputs[0].default_value = fac; L(a_, m.inputs[6]); L(b_, m.inputs[7]); return m.outputs[2]
+    dif = mix('MULTIPLY', src.outputs['Diffuse Direct'], src.outputs['Diffuse Color'])
+    bd = N('CompositorNodeRGBToBW'); L(dif, bd.inputs[0]); ba = N('CompositorNodeRGBToBW'); L(src.outputs['amb'], ba.inputs[0])
+    ad = N('ShaderNodeMath'); ad.operation = 'ADD'; ad.inputs[1].default_value = 0.003; L(ba.outputs[0], ad.inputs[0])
+    dv = N('ShaderNodeMath'); dv.operation = 'DIVIDE'; L(bd.outputs[0], dv.inputs[0]); L(ad.outputs[0], dv.inputs[1])
+    mr = N('ShaderNodeMapRange'); mr.interpolation_type = 'SMOOTHSTEP'; mr.inputs['From Min'].default_value = float(P.get('amb_lo', 0.6)); mr.inputs['From Max'].default_value = float(P.get('amb_hi', 1.6)); L(dv.outputs[0], mr.inputs['Value'])
+    k = N('ShaderNodeMath'); k.operation = 'MULTIPLY'; k.inputs[1].default_value = q; L(mr.outputs['Result'], k.inputs[0])
+    sub = mix('SUBTRACT', src.outputs['Image'], src.outputs['amb']); ng.nodes[-1].inputs[0].default_value = 0.0; L(k.outputs[0], ng.nodes[-1].inputs[0])
+    if os.environ.get('GH_VIS'): L(mr.outputs['Result'], dst)
+    else: L(sub, dst)
 
 def sky_dome(SET, P):
     R = 900.0; mb = MB(); seg = 72; els = [-15 + 105 * k / 14 for k in range(15)]; M = STATE['M']
@@ -245,7 +276,7 @@ def install_handlers():
 # ----------------------------------------------------------------------------- cameras (lens 22 mm, no DOF, far clip 2500)
 CAMS = dict(
     dawn=dict(loc=(-16.0, -72.0, 66.0), look_at=(4.0, 62.0, 0.0), lens=24),
-    morning=dict(loc=(-0.5, -8.2, 1.3), look_at=(0.4, 2.0, 2.3), lens=19),
+    morning=dict(loc=(0.4, -9.5, 2.3), look_at=(-0.6, 13.0, 2.6), lens=24),
     night=dict(loc=(-2.0, -31.0, 9.5), look_at=(3.0, 12.0, 6.4), lens=22),
 )
 def make_camera(setup, name='cam'):

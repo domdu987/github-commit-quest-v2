@@ -24,7 +24,7 @@ def bb(mb, c, w, h, mat, cam=None, z0=False):
 
 def hedge_run(Bk, M, pts, gz, h=3.0, w=2.4, seed=0, skip=None, spacing=1.7, lumps=True, name='hedge', cull=True):
     """Hedgerow: a lumpy ribbon (rounded profile) along the polyline + leafy lumps on top; skip(x, y) -> True leaves a gap (gates, the lane)."""
-    rr = _rnd(seed); hb = Bk(name, hull=0.0); st = []; acc = 0.0; pts = [V(p[0], p[1], 0) for p in pts]
+    rr = _rnd(seed); hb = Bk(name, hull=0.0, smooth_=True); st = []; acc = 0.0; pts = [V(p[0], p[1], 0) for p in pts]
     for a, b in zip(pts, pts[1:]):
         L = (b - a).length; d = (b - a) / max(L, 1e-9); k = 0.0
         while k < L:
@@ -57,7 +57,7 @@ def hedge_run(Bk, M, pts, gz, h=3.0, w=2.4, seed=0, skip=None, spacing=1.7, lump
                 lumpy(hb, V(p.x + rr.uniform(-0.3, 0.3), p.y + rr.uniform(-0.3, 0.3), z + hh * 0.92), w * rr.uniform(0.45, 0.7), M['hedge'], seed + i, seg=7, rings=4, rough=0.35, squash=0.7)
 
 def poplar(Bk, M, p, h=24.0, seed=0, r=1.5):
-    p = V(p); pb = Bk('poplar', hull=0.0); rr = _rnd(seed)
+    p = V(p); pb = Bk('poplar', hull=0.0, smooth_=True); rr = _rnd(seed)
     rod(pb, p, p + V(0, 0, h * 0.18), 0.28, M['trunk'], seg=5, r1=0.2)
     n = 6
     for k in range(n):
@@ -65,7 +65,7 @@ def poplar(Bk, M, p, h=24.0, seed=0, r=1.5):
         lumpy(pb, V(p.x + rr.uniform(-0.15, 0.15), p.y + rr.uniform(-0.15, 0.15), z), rad, M['poplar'], seed * 7 + k, seg=8, rings=5, rough=0.28, squash=h / (n * rad) * 0.62)
 
 def round_tree(Bk, M, p, r=4.0, seed=0, mat='leaf'):
-    p = V(p); tb = Bk('trees', hull=0.0); rr = _rnd(seed)
+    p = V(p); tb = Bk('trees', hull=0.0, smooth_=True); rr = _rnd(seed)
     rod(tb, p, p + V(0, 0, r * 0.9), r * 0.09, M['trunk'], seg=6, r1=r * 0.07)
     for k in range(4):
         a = 2 * math.pi * k / 4 + rr.uniform(0, 1); rr_ = rr.uniform(0.3, 0.6) * r
@@ -175,8 +175,8 @@ def ground_fn(scene):
         for (fx, fy, fr, fk) in flats:
             d = math.hypot(x - fx, y - fy)
             if d < fr * 2: k = min(k, 1 - fk * (1 - smooth(fr, fr * 2, d)))
-        base = 0.0
-        return r * k + far + side * (0.4 + 0.6 * k)
+        rs_ = STATE.get('rise'); rise = rs_[2] * smooth(rs_[0], rs_[1], y) if rs_ else 0.0
+        return r * k + far + side * (0.4 + 0.6 * k) + rise
     return gz
 
 def hills(Bk, M, y0=470.0, z=-8.0):
@@ -211,7 +211,8 @@ def extra_materials(M, P):
     pre = STATE['pre']; C = PR.mat_g_factory(P, STATE['tx'], pre)['C']
     M['hill'] = GH.mat_g(pre + 'hillt', art=STATE['tx']['leaf'], gain=1.15, form=False); M['hill_f'] = C('#5a9ad8', 1.0, form=False)
     M['sun_disc'] = mat_emit(pre + 'sun_disc', '#fff0c8', strength=4.0)
-    M['pebble'] = C('#a89a88', 1.0); M['puddle'] = mat_emit(pre + "puddle", "#7ab4ec", strength=0.6); M['brown_h'] = C('#a0562a', 1.0)
+    M['pebble'] = C('#b4a48c', 1.0); M['puddle'] = mat_emit(pre + "puddle", "#8cc4f4", strength=0.75); M['brown_h'] = C('#a0562a', 1.0)
+    TX = PR.mat_g_factory(P, STATE['tx'], pre)['TX']; M['lane_dirt'] = TX('dirt', 1.15); M['rut'] = TX('rut', 1.1)
     M['tuft'] = C('#3fb02e', 1.1, form=False); M['tuft2'] = C('#74cc3a', 1.1, form=False); M['fl_y'] = C('#ffd830', 1.2, form=False); M['fl_w'] = C('#fff8f0', 1.2, form=False); M['fl_r'] = C('#ff6a50', 1.1, form=False)
     M['star_w'] = GH.mat_g(pre + 'star_w', art=STATE['tx']['star'], gain=1.1, alpha=True, form=False)
     M['tent_glow'] = mat_emit(pre + 'tent_glow', '#ff9a3a', strength=1.5)
@@ -394,81 +395,70 @@ def barbed(Bk, M, p0, p1, gz, n=10):
 
 # ============================================================================= MORNING: inflate lane
 def build_morning(Bk, M):
+    """r3: inflate_lane_morning rebuilt as a clean hero shot.  Low camera on the lane; the half-inflated rubber M4 centred and fully visible (~57 % of
+    the width), barrel sagging to camera-right and held up by a soldier, a second soldier on the hand pump with the hose in the valve, the
+    '23rd HQ SPECIAL TROOPS' sign on a post and the 'DECOY M4' crates on the left, a stone wall + bicycle as the foreground frame at the right edge,
+    a lane with real ruts, grass verges; behind: hedgerow, red-roof farmhouse on a rise, poplars, blue sky.  Room is left on the lane in front of
+    the tank for the 4-man lift and the two cycling Frenchmen."""
     P = STATE['P']; cam = STATE['cam_ob']; cam_loc = cam.matrix_world.translation; extra_materials(M, P)
-    STATE['flats'] = [(0, 0, 22, 0.95), (-14, 36, 14, 0.9)]
+    STATE['flats'] = [(0, 4, 24, 0.95)]; STATE['rise'] = (40.0, 95.0, 5.0)
     gz = ground_fn('morning'); STATE['gz'] = gz; GH.make_terrain('morning'); sun_disc(Bk, M); hills(Bk, M, y0=300)
     lane = GX.LANE2; lw = GX.SCENES['morning']['lane_w']; rr = _rnd(21)
     def near_lane(x, y, m=0.0): return GX.dist_poly(x, y, lane) < lw / 2 + 1.0 + m
+    at = PR.lane_strip(Bk, M, lane, gz, 22.0, 75.0, width=lw - 1.0, puddle=(30.5, 34.5, 0))
+    # hedgerows: the field edges (a gap where the lane runs) + poplars and round trees in them
     Lay = GX.layout('morning')
     for ei, e in enumerate(Lay['edges']):
         if not e['hedge']: continue
-        k = e['key']
-        hedge_run(Bk, M, e['pts'], gz, h=3.4 + (0.6 if k[0] == 'x' else 0), w=2.8, seed=ei + 40, skip=lambda x, y: near_lane(x, y, 0.5) or (-0.2 < y < 0.0 and False), spacing=1.4, cull=False)
+        hedge_run(Bk, M, e['pts'], gz, h=3.6, w=2.8, seed=ei + 40, skip=lambda x, y: near_lane(x, y, 0.8), spacing=1.3, cull=False)
         for q in e['pts'][1:-1:2]:
-            if rr.random() < 0.22 and not near_lane(q[0], q[1], 3):
-                if rr.random() < 0.6: poplar(Bk, M, V(q[0], q[1], gz(q[0], q[1])), h=rr.uniform(24, 30), seed=int(q[1] * 3) & 0xffff)
-                else: round_tree(Bk, M, V(q[0], q[1], gz(q[0], q[1])), r=rr.uniform(3.4, 4.8), seed=int(q[1] * 5) & 0xffff)
-    # the stage, blocked in screen space: feet pixels -> ground points (gp)
-    tpos = gp(420, 770); tyaw = 238.0; tz0 = gz(*tpos)
-    tk = PR.tank_obj('tank_hero', (tpos[0], tpos[1], tz0), tyaw, M, inflate=0.66, sag=0.9, seed=5, lod=1.6, hull=0.07)
-    info = STATE['tank_info']; TF = BK.Frame((tpos[0], tpos[1], tz0), tyaw)
-    K_ = 1.15; tk.scale = (K_, K_, K_); tip = TF.p(*[c * K_ for c in info['tip']]); valve = TF.p(*[c * K_ for c in info['valve']])
-    PR.blob(Bk, V(tpos[0], tpos[1], tz0), 8.4, 4.8, M, 0.07)
-    pumppos = gp(540, 822); PR.pump(Bk, M, (pumppos[0], pumppos[1], gz(*pumppos)), 5, valve, gz=gz)
-    ca = gp(78, 860); PR.crate(Bk, M, V(ca[0], ca[1], gz(*ca)), 12, size=(2.1, 1.3, 1.3), front='crate_a', open_=False, name='crateA', seed=1)
-    PR.crate(Bk, M, V(ca[0] + 0.05, ca[1], gz(*ca) + 1.3), 6, size=(2.0, 1.25, 1.25), front='crate_b', open_=True, name='crateB', seed=2)
-    C0 = V(*STATE['cam']['loc']); LA = V(*STATE['cam']['look_at']); fw = V(LA.x - C0.x, LA.y - C0.y, 0).normalized(); rt = V(fw.y, -fw.x, 0)
-    sgp = C0 + fw * 17.5 + rt * 0.3; PR.sign_post(Bk, M, V(sgp.x, sgp.y, gz(sgp.x, sgp.y)), 0, w=8.4, h=2.7, ph=6.8)
-    w2 = gp(1000, 905); w3 = gp(660, 918); PR.stone_wall(Bk, M, V(w2[0], w2[1], 0), V(w3[0], w3[1], 0), h=0.85, w=0.95, seed=4, gz=gz)
-    bk_ = gp(1230, 1060); PR.bicycle(Bk, M, V(bk_[0], bk_[1], gz(*bk_)), 8, lean=14, s=0.85)
-    # foreground fill: puddle, flat deflated sheet, coiled hose, toolbox, straw, chickens
-    fb = Bk('fg', hull=0.0, shadow=False); fs = Bk('fg_s', hull=0.0); fr = Bk('fg_r', hull=0.0, smooth_=True); rr3 = _rnd(41)
-    pc_ = gp(300, 1060); pz = gz(*pc_) + 0.04
-    for i in range(24):
-        a0, a1 = 2 * math.pi * i / 24, 2 * math.pi * (i + 1) / 24
-        fb.face([V(pc_[0], pc_[1], pz), V(pc_[0] + 1.2 * math.cos(a0), pc_[1] + 0.65 * math.sin(a0), pz), V(pc_[0] + 1.2 * math.cos(a1), pc_[1] + 0.65 * math.sin(a1), pz)], M['puddle'], [(0.5, 0.5), (0.5, 0.5), (0.5, 0.5)])
-    sh_ = gp(210, 1000); PR.puffball(fr, V(sh_[0], sh_[1], gz(*sh_) + 0.1), (1.2, 0.8, 0.1), M['rubber'], e=(0.7, 0.8), seg=20, rings=6, lat=(0, math.pi / 2), deflate=1.0, seed=3, noise=0.5)
-    PR.puffball(fr, V(sh_[0], sh_[1], gz(*sh_) + 0.2), (0.4, 0.4, 0.12), M['rubber_white'], e=(0.7, 0.7), seg=10, rings=3, lat=(0, math.pi / 2))
-    hc_ = gp(560, 1040); hz_ = gz(*hc_)
-    pts = [V(hc_[0] + (0.3 - 0.015 * k) * math.cos(k * 0.5), hc_[1] + (0.22 - 0.01 * k) * math.sin(k * 0.5), hz_ + 0.1 + 0.02 * k) for k in range(36)]
-    PR.tube(fs, pts, [0.05] * 36, M['rubber_black'], seg=6, uvk=0.2)
-    tx_, ty_ = gp(440, 1110); obox(fs, V(tx_, ty_, gz(tx_, ty_) + 0.1), V(1, 0, 0), V(0, 1, 0), V(0, 0, 1), 0.3, 0.12, 0.1, M['red']); rod(fs, V(tx_ - 0.3, ty_, gz(tx_, ty_) + 0.33), V(tx_ + 0.3, ty_, gz(tx_, ty_) + 0.33), 0.05, M['metal'], seg=4)
-    sx_, sy_ = gp(130, 930)
-    for i in range(70):
-        ax_ = rr3.uniform(0, 3.14); x_, y_ = sx_ + rr3.uniform(-1.6, 1.8), sy_ + rr3.uniform(-0.9, 0.9); z_ = gz(x_, y_) + 0.04
-        rod(fb, V(x_, y_, z_), V(x_ + 0.5 * math.cos(ax_), y_ + 0.5 * math.sin(ax_), z_ + 0.03), 0.018, M['hay'], seg=3)
-    for (cx_, cy_, ck_) in ((gp(330, 1150), 0.0), (gp(400, 1200), 2.0), (gp(215, 1180), 4.0)) if False else ():
-        pass
-    for k_, (px_, py_) in enumerate((gp(300, 1020), gp(392, 1046), gp(200, 1070))):
-        s_ = 0.4; F_ = BK.Frame((px_, py_, gz(px_, py_)), 40 + k_ * 70); cz = 0.55 * s_
-        P_ = lambda x, y, z: F_.p(x * s_, y * s_, z * s_)
-        PR.puffball(fr, P_(0, 0, 0.55), (0.42 * s_, 0.28 * s_, 0.3 * s_), M['white_p'], e=(0.9, 0.9), seg=10, rings=5); PR.puffball(fr, P_(0.38, 0, 0.85), (0.15 * s_, 0.13 * s_, 0.17 * s_), M['white_p'], e=(1, 1), seg=8, rings=4)
-        PR.puffball(fr, P_(0.36, 0, 1.05), (0.05 * s_, 0.04 * s_, 0.09 * s_), M['red'], e=(1, 1), seg=6, rings=3); fs.frustum(P_(0.5, 0, 0.85), P_(0.62, 0, 0.83), 0.04 * s_, 0.0, M['yellow'], seg=4)
-        PR.puffball(fr, P_(-0.42, 0, 0.7), (0.2 * s_, 0.06 * s_, 0.25 * s_), M['brown_h'], e=(1, 1), seg=6, rings=3)
-        for sy in (-1, 1): rod(fs, P_(0, sy * 0.1, 0.35), P_(0.05, sy * 0.1, 0.0), 0.025 * s_, M['yellow'], seg=3)
-    # farmhouse behind (red roof), barn, orchard, poplar row, chimney smoke
-    house(Bk, M, (-13.0, 33.0, 0), -4, L=17, Wd=9.5, wh=5.6, rise=4.4, gz=gz, wins=4, door=0.62, chimney=2, dormers=2, name='farm', ink=0.2, seed=2)
-    house(Bk, M, (-36.0, 40.0, 0), 8, L=14, Wd=10, wh=6.0, rise=4.4, gz=gz, roof='roof_d', wall='barn', wins=0, name='barn', ink=0.2, seed=3, dormers=0, chimney=0)
-    for i in range(3):
-        for j in range(3): apple_tree(Bk, M, V(-34 + i * 11, 8 + j * 10, gz(-34 + i * 11, 8 + j * 10)), seed=i * 10 + j + 7, r=2.4)
-    for i in range(7): poplar(Bk, M, V(19.0 + 1.2 * math.sin(i), 12 + i * 8.5, gz(19.0, 12 + i * 8.5)), h=rr.uniform(26, 31), seed=90 + i, r=1.7)
-    for i in range(4): haybale(Bk, M, V(2 + i * 2.5, 40 + (i % 2), gz(2, 40)), yaw=rr.uniform(0, 180), seed=i)
-    sb = Bk('smoke', hull=0.0, shadow=False)
-    for (cx_, cy_, cz_) in STATE.get('chimneys', [])[:2]:
-        for k in range(6): bb(sb, V(cx_ + 0.6 * k, cy_ + 0.2 * k, cz_ + 1.5 + 2.0 * k), 2.6 + 0.55 * k, 2.6 + 0.55 * k, M['puff'])
-    # cows beyond the right hedge
-    for i in range(3):
-        cx, cy = 22 + i * 7, 22 + (i % 2) * 6; cow(Bk, M, V(cx, cy, gz(cx, cy)), rr.uniform(0, 360), seed=i, mat='cow' if i % 2 else 'cow_b')
-    # grass tufts and flowers around the stage (avoid the lane's ruts a bit)
-    tufts(Bk, M, (-14, 16, -13, 10), 1700, gz, seed=3, h=(0.15, 0.4), avoid=lambda x, y: near_lane(x, y, -3.0), flowers=0.2)
-    tufts(Bk, M, (-14, 16, -13, 10), 500, gz, seed=4, h=(0.1, 0.25))
-    lt = Bk('litter', hull=0.0); rr2 = _rnd(77)
-    for i in range(18):
-        x, y = gp(rr2.uniform(0, 720), rr2.uniform(1000, 1270)); lumpy(lt, V(x, y, gz(x, y) + 0.02), rr2.uniform(0.03, 0.08), M['pebble'], i, seg=6, rings=4, rough=0.3, squash=0.6)
-    # soldiers (placeholder cards, olive, helmets): pump, barrel lift, valve, clipboard
-    pl = gp(120, 790); pu_ = gp(600, 806); pc = gp(676, 790); pp = gp(232, 800)
-    sp = [(pu_[0], pu_[1], 'pump', None, True), (pl[0], pl[1], 'lift', None, False), (pp[0], pp[1], 'point', None, False), (pc[0], pc[1], 'clip', None, True)]
+            if rr.random() < 0.3 and not near_lane(q[0], q[1], 3) and q[1] > 20:
+                if rr.random() < 0.55: poplar(Bk, M, V(q[0], q[1], gz(q[0], q[1])), h=rr.uniform(24, 30), seed=int(q[1] * 3 + q[0]) & 0xffff)
+                else: round_tree(Bk, M, V(q[0], q[1], gz(q[0], q[1])), r=rr.uniform(3.4, 4.6), seed=int(q[1] * 5 + q[0]) & 0xffff)
+    # ---- the hero tank, blocked in screen space (feet pixel -> ground point)
+    tpos = gp(372, 770); tyaw = -14.0; tz0 = gz(*tpos); K_ = 1.12
+    tk = PR.tank_obj('tank_hero', (tpos[0], tpos[1], tz0), tyaw, M, inflate=0.66, sag=0.34, seed=5, lod=1.6, hull=0.07, valve_x=-2.3, valve_side=-1)
+    tk.scale = (K_, K_, K_); info = STATE['tank_info']; TF = BK.Frame((tpos[0], tpos[1], tz0), tyaw)
+    tip = TF.p(*[c * K_ for c in info['tip']]); valve = TF.p(*[c * K_ for c in info['valve']])
+    PR.blob(Bk, V(tpos[0], tpos[1], tz0), 7.6, 4.4, M, 0.07)
+    # ---- barrel holder (under the muzzle, arms forward, the barrel rests on his hands) and the pump crew at the rear
+    hp = (tip.x + 0.3, tip.y - 0.55)
+    pm = TF.p(-6.4, -3.0, 0); pump_yaw = tyaw + 90
+    PR.pump(Bk, M, (pm.x, pm.y, gz(pm.x, pm.y)), pump_yaw, valve, gz=gz)
+    pu = TF.p(-7.3, -2.2, 0)
+    sp = [(hp[0], hp[1], 'hold', None, True), (pu.x, pu.y, 'pump', None, False)]
     soldiers(sp, cam_loc, gz, lean=0.0, tone='d')
+    # ---- left side: the sign on its post (back) and the stencilled crates (mid), all words whole
+    sg = gp(150, 640); PR.sign_post(Bk, M, V(sg[0], sg[1], gz(*sg)), 14, w=6.4, h=2.3, ph=6.6)
+    c1 = gp(96, 858); PR.crate(Bk, M, V(c1[0], c1[1], gz(*c1)), 10, size=(2.0, 1.25, 1.25), front='crate_b', open_=False, name='crateA', seed=1)
+    PR.crate(Bk, M, V(c1[0] - 0.1, c1[1] + 0.15, gz(*c1) + 1.25), 4, size=(1.9, 1.2, 1.15), front='crate_b', open_=True, name='crateB', seed=2)
+    # ---- right edge foreground frame: low stone wall + the French bicycle leaning on it
+    w0 = gp(735, 1010); w1 = gp(600, 800); PR.stone_wall(Bk, M, V(w0[0], w0[1], 0), V(w1[0], w1[1], 0), h=0.9, w=0.9, seed=4, gz=gz, step=0.8)
+    bk_ = gp(668, 940); wd = math.degrees(math.atan2(w1[1] - w0[1], w1[0] - w0[0])); PR.bicycle(Bk, M, V(bk_[0], bk_[1], gz(*bk_)), wd + 180, lean=-12, s=0.82)
+    # ---- small props on the verges: jerrycan by the pump, toolbox and patch roll by the crates
+    jc = TF.p(-6.0, -4.6, 0); PR.jerrycan(Bk, M, V(jc.x, jc.y, gz(jc.x, jc.y)), tyaw + 20)
+    tb_ = gp(232, 880); PR.toolbox(Bk, M, V(tb_[0], tb_[1], gz(*tb_)), 8)
+    # ---- behind: farmhouse (red roof) and barn on the rise, orchard, poplar row, hay, chimney smoke, cows
+    house(Bk, M, (-24.0, 66.0, 0), -6, L=17, Wd=9.5, wh=5.6, rise=4.4, gz=gz, wins=4, door=0.62, chimney=2, dormers=2, name='farm', ink=0.2, seed=2)
+    house(Bk, M, (-46.0, 74.0, 0), 8, L=14, Wd=10, wh=6.0, rise=4.4, gz=gz, roof='roof_d', wall='barn', wins=0, name='barn', ink=0.2, seed=3, dormers=0, chimney=0)
+    for i in range(3):
+        for j in range(2): apple_tree(Bk, M, V(-40 + i * 10, 46 + j * 9, gz(-40 + i * 10, 46 + j * 9)), seed=i * 10 + j + 7, r=2.4)
+    for i in range(6): poplar(Bk, M, V(24.0 + 1.2 * math.sin(i), 40 + i * 9.0, gz(24.0, 40 + i * 9.0)), h=rr.uniform(26, 31), seed=90 + i, r=1.7)
+    for i in range(3): haybale(Bk, M, V(8 + i * 2.6, 52 + (i % 2), gz(8, 52)), yaw=rr.uniform(0, 180), seed=i)
+    sb = Bk('smoke', hull=0.0, shadow=False)
+    for (cx_, cy_, cz_) in STATE.get('chimneys', [])[:1]:
+        for k in range(6): bb(sb, V(cx_ + 0.7 * k, cy_ + 0.2 * k, cz_ + 1.5 + 2.0 * k), 2.6 + 0.55 * k, 2.6 + 0.55 * k, M['puff'])
+    for i in range(3):
+        cx, cy = 30 + i * 7, 30 + (i % 2) * 6; cow(Bk, M, V(cx, cy, gz(cx, cy)), rr.uniform(0, 360), seed=i, mat='cow' if i % 2 else 'cow_b'); PR.blob(Bk, V(cx, cy, gz(cx, cy)), 2.6, 1.3, M, 0.07)
+    # ---- verges: dense tufts and flowers off the lane, sparse on the grass hump between the ruts
+    keep_v = lambda x, y: not near_lane(x, y, -1.2)
+    tufts(Bk, M, (-16, 18, -9, 30), 5200, gz, seed=3, h=(0.18, 0.5), keep=keep_v, flowers=0.16)
+    def hump(x, y):
+        d_ = GX.dist_poly(x, y, lane); return d_ < 0.8
+    tufts(Bk, M, (-8, 6, -9, 30), 2600, gz, seed=4, h=(0.1, 0.28), keep=hump)
+    lt = Bk('litter', hull=0.0); rr2 = _rnd(77)
+    for i in range(26):
+        x, y = gp(rr2.uniform(0, 720), rr2.uniform(960, 1270)); lumpy(lt, V(x, y, gz(x, y) + 0.03), rr2.uniform(0.04, 0.09), M['pebble'], i, seg=6, rings=4, rough=0.3, squash=0.6)
     STATE['marks'].update(tank=(tpos[0], tpos[1], tz0), tip=tuple(tip), valve=tuple(valve))
 
 # ============================================================================= NIGHT: the sound truck

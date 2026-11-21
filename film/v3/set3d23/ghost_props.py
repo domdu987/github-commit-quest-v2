@@ -24,7 +24,8 @@ def setup_materials(P, tx, pre):
     M = {}
     M['ground'] = mg(pre + 'ground', art=GH.art_detail(tx['fields_' + sc], tx['grass_detail'], (x1 - x0) / 7.0, 0.55), gain=1.5 * P['ground_k'], shade_mul=0.95, form=False, glow=tx.get('fields_' + sc + '_glint'), glow_k=0.9)
     M['sky'] = mat_emit(pre + 'sky', image=tx['sky_' + sc], strength=P['sky_k'])
-    M['hedge'] = TX('hedge', 0.95); M['leaf'] = TX('leaf', 1.0); M['poplar'] = TX('poplar', 1.05); M['apple'] = TX('apple', 1.0)
+    fm = P.get('fol_mix')                                                     # foliage: own shade mix (cool shade side) + smooth normals (rounded volume)
+    M['hedge'] = TX('hedge', 0.95, smix=fm, sn=True); M['leaf'] = TX('leaf', 1.0, smix=fm, sn=True); M['poplar'] = TX('poplar', 1.05, smix=fm, sn=True); M['apple'] = TX('apple', 1.0, smix=fm, sn=True)
     M['trunk'] = C('#6a4a2c', 1.0); M['trunk_l'] = C('#8a6a44', 1.0)
     M['roof'] = TX('roof_red', 1.1); M['roof_d'] = TX('roof_red_d', 1.1); M['slate'] = TX('roof_slate', 1.15)
     M['stone'] = TX('stone_farm', 1.05); M['stone_w'] = TX('stone_wall', 1.05); M['stone_c'] = TX('stone_church', 1.1); M['barn'] = TX('barn_wood', 1.05); M['wood'] = TX('wood', 1.05)
@@ -63,7 +64,7 @@ def setup_materials(P, tx, pre):
 def mat_g_factory(P, tx, pre):
     def _k(v): return 'x'.join('%g' % x for x in v) if isinstance(v, (tuple, list)) else '%g' % v
     def C(hexcol, gain=1.0, sm=1.0, form=True, smix=None, spec=None): return GH.mat_g('%sc_%s_%g_%s_%d_%s' % (pre, hexcol.lstrip('#'), gain, _k(sm), form, spec), art=hexcol, gain=gain, shade_mul=sm, form=form, shade_mix=smix, spec=spec)
-    def TX(name, gain=1.0, sm=1.0, form=True, alpha=False, smix=None): return GH.mat_g('%st_%s_%g_%s_%d_%d' % (pre, name, gain, _k(sm), form, alpha), art=tx[name], gain=gain, shade_mul=sm, form=form, alpha=alpha, shade_mix=smix)
+    def TX(name, gain=1.0, sm=1.0, form=True, alpha=False, smix=None, sn=False): return GH.mat_g('%st_%s_%g_%s_%d_%d_%s_%d' % (pre, name, gain, _k(sm), form, alpha, smix, sn), art=tx[name], gain=gain, shade_mul=sm, form=form, alpha=alpha, shade_mix=smix, smooth_n=sn)
     return dict(C=C, TX=TX)
 
 def _mat_blob(name, glow):
@@ -169,7 +170,7 @@ def make_obj(mb, name, loc=(0, 0, 0), yaw=0.0, hull=0.0, smooth_=True, shadow=Tr
     return ob
 
 # ----------------------------------------------------------------------------- the rubber M4 Sherman
-def tank_mesh(M, inflate=1.0, sag=0.0, seed=1, lod=1.0, valve=True, wheels=True):
+def tank_mesh(M, inflate=1.0, sag=0.0, seed=1, lod=1.0, valve=True, wheels=True, valve_x=0.9, valve_side=1):
     """Local frame: +x = barrel, y left, z up, tracks on the ground. Returns an MB (materials from M). inflate 0 = flat sheet; sag 0..1 = limp barrel."""
     f = max(0.0, min(1.0, inflate)); de = 1.0 - f; mb = MB(); n = max(4, int(7 * lod)); n2 = max(5, int(9 * lod))
     zf = 0.12 + 0.88 * f ** 0.75; wf = 1.0 + 0.10 * de; pf = f; cave = 0.55 * de
@@ -213,11 +214,12 @@ def tank_mesh(M, inflate=1.0, sag=0.0, seed=1, lod=1.0, valve=True, wheels=True)
     # barrel: sausage sections, droops with sag (and with deflation); muzzle brake ring
     sg = max(sag, min(1.0, de * 1.4)); L_ = 4.9; r = 0.30 * (0.55 + 0.45 * f); p0 = V((X(2.2), 0, tz + Z(0.32))); drop = min(sg * 3.3, max(0.3, p0.z - 1.0))
     sausage(mb, p0, p0 + V((L_, 0, 0)), r, rb, n=6, seg=max(6, int(9 * lod)), sag=drop)
-    mz = p0 + V((L_, 0, -drop)); mb.info = dict(tip=tuple(mz), valve=(X(0.9), W(1.62) + 0.6, Z(1.55)), top=tz + Z(1.3)); puffball(mb, mz, (0.34 * (0.5 + 0.5 * f) + 0.06, r * 1.35, r * 1.35), rl, e=(0.8, 0.8), seg=10, rings=5)
+    vs = 1 if valve_side >= 0 else -1
+    mz = p0 + V((L_, 0, -drop)); mb.info = dict(tip=tuple(mz), valve=(X(valve_x), vs * (W(1.62) + 0.6), Z(1.55)), top=tz + Z(1.3)); puffball(mb, mz, (0.34 * (0.5 + 0.5 * f) + 0.06, r * 1.35, r * 1.35), rl, e=(0.8, 0.8), seg=10, rings=5)
     # inflation valve (small brass nozzle + white cap) at the rear left, with seam rods along the hull edges
     if valve:
-        vb = V((X(0.9), W(1.62), Z(1.55))); rod(mb, vb, vb + V((0, 0.42, 0)), 0.17, M['brass'], seg=8); rod(mb, vb + V((0, 0.42, 0)), vb + V((0, 0.58, 0)), 0.24, M['white_p'], seg=8)
-        puffball(mb, vb + V((0, 0.12, 0)), (0.3, 0.3, 0.3), rl, e=(1, 1), seg=8, rings=4)
+        vb = V((X(valve_x), vs * W(1.62), Z(1.55))); rod(mb, vb, vb + V((0, vs * 0.42, 0)), 0.17, M['brass'], seg=8); rod(mb, vb + V((0, vs * 0.42, 0)), vb + V((0, vs * 0.58, 0)), 0.24, M['white_p'], seg=8)
+        puffball(mb, vb + V((0, vs * 0.12, 0)), (0.3, 0.3, 0.3), rl, e=(1, 1), seg=8, rings=4)
     if f > 0.45:
         for sy in (-1, 1):
             seam(mb, V((X(-4.4), W(1.55 * sy), Z(2.8))), V((X(3.0), W(1.55 * sy), Z(2.8))), M); seam(mb, V((X(-4.4), W(1.55 * sy), Z(0.72))), V((X(4.3), W(1.55 * sy), Z(0.72))), M)
@@ -226,10 +228,10 @@ def tank_mesh(M, inflate=1.0, sag=0.0, seed=1, lod=1.0, valve=True, wheels=True)
     if not hasattr(mb, 'info'): mb.info = {}
     return mb
 
-def tank_obj(name, loc, yaw, M, inflate=1.0, sag=0.0, seed=1, lod=1.0, hull=0.0, shared=None):
-    """Create a tank object. Pass shared=<an earlier tank object> to reuse its mesh (instances)."""
+def tank_obj(name, loc, yaw, M, inflate=1.0, sag=0.0, seed=1, lod=1.0, hull=0.0, shared=None, **kw):
+    """Create a tank object. Pass shared=<an earlier tank object> to reuse its mesh (instances). kw: valve_x, valve_side."""
     if shared is not None: return inst(shared, name, loc, yaw, hull)
-    mb = tank_mesh(M, inflate, sag, seed, lod); ob = make_obj(mb, name, loc, yaw, hull=hull); ob['info'] = str(mb.info); STATE['tank_info'] = mb.info; return ob
+    mb = tank_mesh(M, inflate, sag, seed, lod, **kw); ob = make_obj(mb, name, loc, yaw, hull=hull); ob['info'] = str(mb.info); STATE['tank_info'] = mb.info; return ob
 
 # ----------------------------------------------------------------------------- vehicles
 def truck_mesh(M, inflate=1.0, rubber=True, horn=False, seed=3, lod=1.0):
@@ -419,3 +421,73 @@ def card(name, tex, pos, face_to, height=3.0, lean=0.0, flip=False):
     mat = bpy.data.materials.get(mn) or T.mat_card(mn, tex)
     me.materials.append(mat); ob = bpy.data.objects.new(name, me); STATE['SET'].objects.link(ob); ob.location = pos; no_bounce(ob)
     d = V(face_to) - V(pos); yaw = math.atan2(d.x, -d.y); ob.rotation_euler = (math.radians(-lean), 0, yaw); STATE.setdefault('cards', []).append(ob); return ob
+
+# ----------------------------------------------------------------------------- r3: lane strip with real ruts, small props (jerrycan, toolbox)
+def lane_strip(Bk, M, lane, gz, s0, s1, width=8.0, ruts=(-1.95, 1.95), rut_w=0.95, depth=0.10, step=0.35, puddle=None):
+    """The lane as geometry between arc lengths s0..s1 of the polyline: packed-dirt crown, two tread-marked ruts (sunk `depth`, with raised
+    berms), a grassy hump between them, edges that fall back to the terrain.  u runs along the lane (UVs in D).  puddle=(s_a, s_b, rut index)
+    fills a stretch of one rut with a sky-reflecting puddle."""
+    pts = [V((p[0], p[1], 0)) for p in lane]; acc = [0.0]
+    for a, b in zip(pts, pts[1:]): acc.append(acc[-1] + (b - a).length)
+    def at(s):
+        for i in range(len(pts) - 1):
+            if acc[i + 1] >= s:
+                t = (s - acc[i]) / max(1e-9, acc[i + 1] - acc[i]); d = (pts[i + 1] - pts[i]).normalized(); return pts[i].lerp(pts[i + 1], t), d
+        return pts[-1], (pts[-1] - pts[-2]).normalized()
+    hw = width / 2
+    prof = [(-hw - 0.9, -0.03, 'g'), (-hw, 0.05, 'd')]                      # (lateral offset, height, material key of the band that STARTS here)
+    for rc in ruts:
+        a = rc - rut_w / 2; b = rc + rut_w / 2
+        prof += [(a - 0.28, 0.09, 'd'), (a, 0.05, 'r'), (a + 0.14, -depth + 0.04, 'r'), (rc, -depth, 'r'), (b - 0.14, -depth + 0.04, 'r'), (b, 0.05, 'd'), (b + 0.28, 0.09, 'd')]
+    prof += [(hw, 0.05, 'g'), (hw + 0.9, -0.03, 'g')]
+    prof.sort(key=lambda q: q[0])
+    mats = dict(d=M['lane_dirt'], r=M['rut'], g=M['ground'])
+    b = Bk('lane', hull=0.0, smooth_=True); n = max(2, int((s1 - s0) / step)); rows = []
+    for k in range(n + 1):
+        s = s0 + (s1 - s0) * k / n; c, d = at(s); lat = V((-d.y, d.x, 0)); row = []
+        for (o, h, mk) in prof:
+            q = c + lat * o; wob = 0.03 * math.sin(s * 1.7 + o * 3.1) if mk == 'r' else 0.0; row.append(V((q.x, q.y, gz(q.x, q.y) + h + wob)))
+        rows.append((s, row))
+    x0, x1, y0, y1 = GH.GX.SCENES[STATE['scene']]['rect']
+    for (sa, ra), (sb, rb_) in zip(rows, rows[1:]):
+        b.pid += 1
+        for j in range(len(prof) - 1):
+            mk = prof[j][2]; o0, o1 = prof[j][0], prof[j + 1][0]
+            if mk == 'g':                                                   # verge: ground UVs so the painted fields line up
+                uv = [((p.x - x0) / (x1 - x0), (p.y - y0) / (y1 - y0)) for p in (ra[j], rb_[j], rb_[j + 1], ra[j + 1])]
+            elif mk == 'r':
+                rc = min(ruts, key=lambda r_: abs(r_ - (o0 + o1) / 2)); v0 = (o0 - rc) / rut_w + 0.5; v1 = (o1 - rc) / rut_w + 0.5
+                uv = [(sa / 2.0, v0), (sb / 2.0, v0), (sb / 2.0, v1), (sa / 2.0, v1)]
+            else: uv = [(sa / 4.0, o0 / 4.0), (sb / 4.0, o0 / 4.0), (sb / 4.0, o1 / 4.0), (sa / 4.0, o1 / 4.0)]
+            b.face([ra[j], rb_[j], rb_[j + 1], ra[j + 1]], mats[mk], uv)
+    if puddle:
+        sa_, sb_, ri = puddle; rc = ruts[ri]; pb = Bk('puddle', hull=0.0, shadow=False); m_ = 16
+        for k in range(m_):
+            t0, t1 = k / m_, (k + 1) / m_; wa = math.sin(math.pi * t0) ** 0.6 * rut_w * 0.42; wb = math.sin(math.pi * t1) ** 0.6 * rut_w * 0.42
+            ca, da = at(sa_ + (sb_ - sa_) * t0); cb, db = at(sa_ + (sb_ - sa_) * t1); la, lb = V((-da.y, da.x, 0)), V((-db.y, db.x, 0))
+            za = gz(ca.x, ca.y) - depth + 0.045; zb = gz(cb.x, cb.y) - depth + 0.045
+            P = [ca + la * (rc - wa), cb + lb * (rc - wb), cb + lb * (rc + wb), ca + la * (rc + wa)]
+            pb.face([V((P[0].x, P[0].y, za)), V((P[1].x, P[1].y, zb)), V((P[2].x, P[2].y, zb)), V((P[3].x, P[3].y, za))], M['puddle'], [(t0, 0), (t1, 0), (t1, 1), (t0, 1)])
+    return at
+
+def jerrycan(Bk, M, pos, yaw, s=1.0):
+    """Olive 5-gallon jerrycan (0.7 x 0.35 x 0.95 D at s=1) with the X pressings and a 3-bar handle."""
+    F = BK.Frame(pos, yaw); b = Bk('jerry', hull=0.0); hx, hy, hz = 0.33 * s, 0.17 * s, 0.46 * s
+    obox(b, F.p(0, 0, hz), F.X, F.Y, F.Z, hx, hy, hz, M['olive'])
+    for sy in (-1, 1):
+        for (a, c) in (((-0.8, -0.8), (0.8, 0.8)), ((-0.8, 0.8), (0.8, -0.8))):
+            rod(b, F.p(a[0] * hx, sy * (hy + 0.012), hz + a[1] * hz), F.p(c[0] * hx, sy * (hy + 0.012), hz + c[1] * hz), 0.03 * s, M['olive_d'], seg=4)
+    for xx in (-0.18, 0.0, 0.18): rod(b, F.p(xx * s, 0, 2 * hz), F.p(xx * s, 0, 2 * hz + 0.16 * s), 0.03 * s, M['olive_d'], seg=4)
+    rod(b, F.p(-0.22 * s, 0, 2 * hz + 0.16 * s), F.p(0.22 * s, 0, 2 * hz + 0.16 * s), 0.035 * s, M['olive_d'], seg=4)
+    rod(b, F.p(0.24 * s, 0, 2 * hz), F.p(0.3 * s, 0, 2 * hz + 0.12 * s), 0.07 * s, M['metal'], seg=6)
+
+def toolbox(Bk, M, pos, yaw, s=1.0):
+    """Open wooden tool tray: four sides, a centre handle bar, a mallet and a spanner lying in it, a rubber patch roll beside it."""
+    F = BK.Frame(pos, yaw); b = Bk('toolbox', hull=0.0); hx, hy, hz = 0.55 * s, 0.28 * s, 0.17 * s; t = 0.03 * s
+    obox(b, F.p(0, 0, 0.02 * s), F.X, F.Y, F.Z, hx, hy, 0.02 * s, M['wood'])
+    for sy in (-1, 1): obox(b, F.p(0, sy * (hy - t), hz), F.X, F.Y, F.Z, hx, t, hz, M['wood'])
+    for sx in (-1, 1): obox(b, F.p(sx * (hx - t), 0, hz + 0.08 * s), F.X, F.Y, F.Z, t, hy, hz + 0.08 * s, M['wood'])
+    rod(b, F.p(-hx, 0, 2 * hz + 0.12 * s), F.p(hx, 0, 2 * hz + 0.12 * s), 0.035 * s, M['trunk_l'], seg=6)
+    rod(b, F.p(-0.35 * s, -0.12 * s, 0.12 * s), F.p(0.25 * s, -0.1 * s, 0.14 * s), 0.03 * s, M['trunk_l'], seg=5); obox(b, F.p(0.3 * s, -0.1 * s, 0.14 * s), F.X, F.Y, F.Z, 0.07 * s, 0.12 * s, 0.06 * s, M['metal'])
+    rod(b, F.p(-0.3 * s, 0.12 * s, 0.1 * s), F.p(0.3 * s, 0.1 * s, 0.1 * s), 0.025 * s, M['metal'], seg=5)
+    c = F.p(0.0, -hy - 0.45 * s, 0.16 * s); rod(b, c - F.Y * (0.0) - F.X * 0.22 * s, c + F.X * 0.22 * s, 0.16 * s, M['rubber_d'], seg=12)
