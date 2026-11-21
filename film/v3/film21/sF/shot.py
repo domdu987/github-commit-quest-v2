@@ -45,7 +45,7 @@ def cam_keys(xc, gz):
     """one travelling move: from behind-right of the group, sliding left and pushing in, ending low and slightly off-axis on Cressingham's face (CU2)."""
     def P(f_, r_, z): c = rel(xc, f_, r_); return (c[0], c[1], z)
     def Lk(f_, r_, z): c = rel(xc, f_, r_); return (c[0], c[1], z)
-    return [(1044, P(-7.2, 1.2, gz + 2.0), Lk(3.0, 0.2, gz + 1.2), 26.0),
+    return [(1044, P(-7.2, 1.2, gz + 1.6), Lk(3.0, 0.2, gz + 1.5), 26.0),
             (1078, P(-4.6, 0.5, gz + 1.8), Lk(3.0, 0.0, gz + 1.3), 26.0),
             (1110, P(-2.8, -0.1, gz + 1.55), Lk(3.0, 0.0, gz + 1.5), 26.0),
             (1141, P(-1.8, 0.4, gz + 1.15), Lk(1.0, 0.0, gz + 1.5), 26.0)]
@@ -75,6 +75,14 @@ def main():
     T = C.Take(["camp_bank"], WORK, fg=True, hide=("fg_bank_barrel", "fg_bank_iron"))
     M = T.A["marks"]["camp_bank"]; mode = "draft" if cmd in ("draft", "probe", "ground") else "final"
     xc = np.array(M["cress"][:3], float); gz = xc[2]; KEYS = cam_keys(xc, gz)
+    # camp life on the bare foreground sand (left of the camera path, out of frame by g1078): a supply cart, sacks and a weapon rack
+    rs_ = np.random.RandomState(4); Bp = K.Batch(99)
+    for kind_, f_, r_, yaw_ in (("sacks", -2.6, -1.5, 0), ("sacks", -1.0, 2.0, 0), ("rack", 0.4, -2.9, 100.0), ("cart", 2.4, 3.2, 20.0), ("sacks", 5.5, -2.6, 0), ("rack", 4.0, 2.8, 80.0)):
+        p_ = rel(xc, f_, r_); z_ = float(K.ground(p_[0], p_[1]))
+        if kind_ == "sacks": K.sacks(Bp, (p_[0], p_[1], z_), 4, rs_)
+        elif kind_ == "rack": K.weapon_rack(Bp, (p_[0], p_[1], z_), yaw_, rs_)
+        else: K.cart(Bp, (p_[0], p_[1], z_), yaw_, rs_)
+    Bp.finalize("f_props")
     K.hide_near_banners([K.cam_path(None, KEYS, g)["loc"] for g in range(G0, G1 + 1, 3)], 2.5)
     K.setup_render(T.scene, "final" if cmd == "probe" else mode, 8)
     cast = [("cress", "cressingham", "cressingham_smug_belt", 0, 0.0, None), ("surrey", "surrey", "surrey_laughing" if "surrey_laughing" in ST else "surrey_standing", 0, 2.6, (1.6, 0.9))]
