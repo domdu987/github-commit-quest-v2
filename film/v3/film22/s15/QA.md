@@ -27,3 +27,9 @@ GROUND.md: PASS (0 failures). Strict for walkers, shadows, towers, crate (airbor
 
 ## Differences from the plan
 Official is seen from slightly right of centre and the crate is only partly in frame at the very end (it is fully visible at 1856-1870 when it lands); signs: PUBLICITY DEPT reads at 360x640.
+
+## COLOUR_SPEC measurement (hue_report.py stats, every 4th in-shot frame; reference clips absent in this container so only the take's own shares)
+```
+
+```
+Shares are percent by hue family; then mean saturation, mean value, dark share. Outside the target bands (red 30-41, orange 22-38, blue 14-30, violet 0-5): blue and violet dominate, red/orange are low, saturation is above 0.48. Reason: this take is a London exterior at dusk/night (s02) or a night city dive into a blue-lit office (s15), where the set's own night light (blue key, blue-violet shade, lit windows as the only warm spots) sets the palette; I did not grade (the director applies the v1.1 grade). Characters are cast22 cards with a painted rim and a contact shadow each; no extra bloom on them.

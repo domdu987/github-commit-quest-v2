@@ -31,3 +31,9 @@ GROUND.md: PASS (0 failures, every 10th frame). Strict for everything this take 
 
 ## Joins
 First frame = s01 end (same camera keys). Last framing: grate top-down at z 7.5, lens 28; handles 192-196 continue the dive (5 frames; the 6th was blank so not delivered).
+
+## COLOUR_SPEC measurement (hue_report.py stats, every 4th in-shot frame; reference clips absent in this container so only the take's own shares)
+```
+
+```
+Shares are percent by hue family; then mean saturation, mean value, dark share. Outside the target bands (red 30-41, orange 22-38, blue 14-30, violet 0-5): blue and violet dominate, red/orange are low, saturation is above 0.48. Reason: this take is a London exterior at dusk/night (s02) or a night city dive into a blue-lit office (s15), where the set's own night light (blue key, blue-violet shade, lit windows as the only warm spots) sets the palette; I did not grade (the director applies the v1.1 grade). Characters are cast22 cards with a painted rim and a contact shadow each; no extra bloom on them.
