@@ -83,8 +83,7 @@ class Take(object):
         o = beck.cast_card(*a, **kw); self.ob.append(o); return o
 
     def set_cam(self, g):
-        loc, look, lens, roll = self.path(g); roll += 0.7 * math.sin(g / 9.0)   # hand-held sway
-        cam = self.sc.camera
+        loc, look, lens, roll = self.path(g); cam = self.sc.camera
         cam.animation_data_clear(); cam.rotation_mode = 'XYZ'; beck.apply_cam(cam, loc, look, lens, roll); beck.STATE['cam'] = V(loc)
         return loc, look, lens, roll
 
