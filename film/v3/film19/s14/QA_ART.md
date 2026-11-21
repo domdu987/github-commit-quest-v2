@@ -104,3 +104,37 @@ Polish (only if the take is re-rendered for another reason):
 1. Separate the H1 from the back-wall gear rack: darken or hide the rack behind the H1 (or push it 0.5 D back and out of the key light), or add a cool rim on the H1 frame, so the H1 reads as ONE big machine.
 2. At the snap, keep more of the H1's height in frame (snap x1.65 to about x1.5, or a 0.1 D tilt up), so the big-versus-tiny comparison is in the same frame on the word.
 3. Lighten Harrison's open hand (skin tone, not dark), so it reads as a palm.
+
+## Round (camera-shake pass, film-13 rules): FIX-FIRST, 7.3. The camera is now calm, but the stronger whip lands with the H4 cut by the left frame edge
+
+**Rules.** I judged this only by film/skill_film13/QA_TEAM_film13.md: the QA-art section, plus §C (the reveal image is a key shot).
+
+**Inputs.** Frames: /tmp/qa19_ov/s14/gNNNN.png (g 1007-1104, 98 frames). Also film/v3/film19/s14/contact.jpg and phone_sheet.jpg. My phone-size key frames are /tmp/claude-0/qa16/s14_key.jpg (g 1040 / 1070 / 1082 / 1088 / 1095 / 1104). I measured motion with a rigid LK similarity fit on every frame g 1008-1104, and measured edges on the full-res frames (white-pixel extents of the dial and the face).
+
+| Check | Finding |
+|---|---|
+| **Camera: calm but always moving?** | **Yes.** The 1.5 Hz sway is gone. The push is one-way and smooth: median 2.8 px/f (scale +1.2 %/f) easing to 1.9 px/f (+0.6 %/f) over g 1008-1073, with no oscillation in x or y. The whip ramps g 1074-1082 (2.7 → 22.2 px/f), lands at g 1087-1088 (5.9 → 3.6) and settles into a 2.1 px/f drift. There is no overshoot and no bounce-back (x goes from -1.6 to +0.3, a fade, not a recoil). The peak at g 1082 sits between the caption (g 1079) and the spoken word (g 1085), so it lands on "เท่าจานรอง". |
+| Reveal read in the wide (g 1016-1073) | **Good.** On a phone the small white H4 on its red cloth sits in front of the big brass H1 machine, with Harrison's open palm reaching toward it, his proud look moving from the watch to the lens, and his chest puffed. Small-next-to-big reads at a glance. |
+| **Whip landing (g 1088-1104)** | **The hero is cut.** The H4 dial is complete at g 1085 (x 32-419), but from **g 1088 its left side runs off the left frame edge** (the dial's white touches column 0 at g 1088, 1091 and 1095). About a quarter to a third of the watch is cut off for the rest of the shot. The H1 is also almost gone: only a brass ball and gears at the top left remain. So the key image on the word is a cropped watch, with no "giant" beside it to compare. It still reads as "this watch" on a phone, but it is a cropped, unbalanced reveal frame. Harrison is fine: the face's right edge is at most x 676 and the hair is inside the frame. This is most likely a side effect of the stronger whip (SNAPK 1.95 against the accepted x 1.65). |
+| Grounding / heads / colour | The H4 sits on its cloth, the cloth lies on the bench, and Harrison stands behind the bench. Heads are well above y 880. Warm brass and candle light with the red cloth pop; colour is as accepted earlier (sat 0.56, luma 95.8). Frames are sharp with no depth of field. |
+
+| Criterion (film-13 QA-art) | Score |
+|---|---|
+| Set density / ornament | 8.5 |
+| Lighting & colour | 7.5 |
+| Composition / framing / phone | 6.5 |
+| Character acting | 7.5 |
+| Key moment (size reveal + whip on the word) | 6.5 |
+| Overall match to references | 7.5 |
+| **Overall** | **7.33, FIX-FIRST** (the reveal's hero object is clipped by the frame on its key word) |
+
+**Single smallest change.** Re-frame only the whip's end, keeping the push and everything before g 1074 untouched, and re-render g 1074-1104 (about 31 frames):
+- either lower the whip zoom back to the accepted ×1.65 (SNAPK 1.95 → about 1.65);
+- or keep ×1.95 and shift the snap aim about 0.15 D to the left.
+
+Acceptance:
+- the whole H4 dial is inside the frame with at least about 30 px margin from g 1085 to g 1104;
+- Harrison's face and hair stay inside x 700;
+- ideally a slice of the H1's gearwork stays visible at the left, so "tiny beside giant" is still in the frame on the word.
+
+Keep the same ease and no overshoot. A re-check of these frames is enough; no full review is needed.
