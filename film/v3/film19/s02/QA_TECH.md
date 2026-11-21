@@ -368,3 +368,37 @@ Numbered issues (all non-blocking):
 2. g158-171: captain's mouth held open as a shock "O"; allowed if the director accepts it as expression.
 3. g48-87: the extreme-wide sea reads soft on the Laplacian measure (flat water); visually sharp; keep the two-reviewer waiver.
 Verdict: PASS under film-13 rules.
+
+## Round 19 (film-13 rules): PASS (4 non-blocking issues; issue 1, the g160-170 dip-and-shove, is the one I would fix first)
+Judged only by film/skill_film13/QA_TEAM_film13.md (base checklist + §B at 6 fps and every cut +-3). Take re-joined from take.mkv.part* (render19/team1 commit f544b2a in this tree) -> /tmp/s02q19.mkv (152 frames, 720x1280, 30 fps, g48-199); my own frames in /tmp/qa19_r19/f/gNNN.png. I ran qa_auto.py myself on the joined file (/tmp/take19.mkv, --cuts 57 --first_g 48): FAIL only on "suspected blur on 55 frames from g48" (the waived extreme-wide sea) plus the note "planned cut g57: no visible change within +-2" (the take carries identical handle frames before g57); magenta 0.0 %. JITTER.md 3.4 / 2.7 px at 1 / 2 s, median 0.87; GROUND.md 0 FAIL.
+g87-89 (the old bad raw frame): FIXED. Whole-frame frame-diff (ffmpeg bilinear 90x160 grey) g84-93 = 7.65, 8.01, 8.30, 8.61, 8.89, 9.26, 9.64, 10.07, 10.50, 10.71: a smooth +4 %/frame ease-in, no one-frame jump (g88 ratio is no longer the take's worst).
+g160-170 (the team's 6.3 / 5.9 / 10.8 / 14.2): CAMERA, with some acting riding on it; not a one-frame pop. Measured with the character band (x 12-96 %, y 22-72 %) masked out, 360x640 LK on background features:
+| g | whole diff | bg-region diff | character-band diff | bg LK speed | bg dy (px/f) |
+| 158 | 15.4 | 14.7 | 16.3 | 5.4 | +3.9 |
+| 160 | 13.9 | 12.7 | 15.6 | 4.2 | +3.2 |
+| 161 | 12.8 | 11.2 | 15.0 | 3.3 | +2.1 |
+| 162 | 12.8 | 11.3 | 14.9 | 2.8 | +1.1 |
+| 163 | 14.8 | 14.1 | 15.9 | 3.0 | -0.4 |
+| 164 | 17.3 | 16.8 | 18.1 | 3.3 | -2.7 |
+| 165 | 19.8 | 19.5 | 20.3 | 5.0 | -4.8 |
+| 166 | 20.4 | 19.7 | 21.3 | 5.2 | -5.0 |
+| 168 | 19.0 | 17.0 | 21.6 | 4.2 | -4.0 |
+| 172 | 16.5 | 13.0 | 21.3 | 3.1 | -3.0 |
+| 175 | 13.7 | 10.0 | 18.7 | 2.2 | -2.0 |
+(the ffmpeg-bilinear whole-frame series is 9.8 g160, 8.9 g161, 9.0 g162, 10.7 g163, 13.2 g164, 15.9 g165, 16.4 g166 then 15.9, 15.0, 14.1, 13.8 ...). So the background itself dips to 2.8 px/f at g162 (still moving, never stops) and then speeds up +80 % to 5.2 at g166, and its vertical image velocity REVERSES (dy +3.2 -> -5.0): the tilt-up brakes at g161-163 and the aim then eases back down for about 10 frames (decaying to -2 at g175), i.e. a small overshoot-and-settle of the pitch. The character band rises 15 -> 21 at the same time (captain's shock "O", chart flip, head turn), which adds to the whole-frame number, but the masked background shows the camera part. Visibility: it is a 4-frame soft dip then shove (about 6-10 px/f at 720), no frame-to-frame discontinuity (largest ratios 1.23 at g164 and 1.20 at g165), so it is not a pop; on a phone it reads as the camera settling with a small bounce. Fix I would ask for (optional, re-render): make the pitch rate decay monotonically to 0 by ~g172 without changing sign (so bg speed 4.2 g160 -> 3.5 -> 2.8 -> 2.0 -> 1.2 -> 0.6 and dy never leaves +).
+Full checklist, frame numbers:
+- Blur/DOF: none; g48-87 horizon, clouds, hull and wake crisp (flat sea only reads soft on the Laplacian); descent sharp, no streak. Waiver stands.
+- Heads below y 880: none (heads at y ~450-590 from g140; ~490-520 at g178-199).
+- Clipped sprites/props: nobody cut in half; NOTE 2: g190-199 the captain's outstretched hand grazes the left frame edge (x ~4-8 of 360 at g190, g195, g199), same as round 18.
+- Floating feet / contact shadows: both characters have contact shadows and stand on the deck in every sampled frame g143-199 (GROUND 30/30). Nothing floating.
+- Props: chart and quadrant in hand in all frames g130-199 (sampled every 2 frames g170-199, and g156-176 sheet); no pop, no prop through a face.
+- Pops/jumps outside cuts: none. Whole-frame diff (g58-190): median 11.83, p90 19.32, max 20.63, min 1.80. One-frame ratios: g64 0.69 then g65 1.45 (NOTE 3, below), g182/g184 (shrug acting), and the g164-165 camera swell above; nothing else.
+- NOTE 3 (non-blocking): g64 is the first re-rendered frame; the sea/horizon texture there moves 2.6 vs 3.6 px (diff 2.6 against 3.6 either side) and the LK dy flips sign for that one frame (+1.1 vs -1.5); the ship, tracked by template matching at full size g62-68, is exactly still (0,0) through g65, so the glitch is about 1 px of sea shimmer in the extreme wide: not visible at phone size.
+- Black / blank / magenta frames: none (luma 89.0, per frame 66.9-109.3; saturation 0.661; magenta 0 %). Frozen runs: none (min frame-diff 1.80, no frame under 0.3).
+- Continuity in/out: unchanged from round 18: s01 g56 (workshop) -> s02 g57 planned hard cut; s02 g191 dissolves 13 f into s04 (STORM_DUSK deck, same captain costume and chart, s04 starts at g182 so the dissolve window g185-197 is covered).
+- Plan coverage (row 2): BIGZOOM opening, extreme wide ship (< 5 % crew, g57) to a medium on captain (blank chart) and astronomer (quadrant), both puzzled, medium by ~g176, sail parallax g118-165; present.
+- Mouth: no lip-sync; NOTE 4: the captain's held shock "O" g158-171 is an expression, director's call.
+- Nobody still more than 1.5 s: both move throughout.
+Descent g100-165 as one move: yes, one continuous descend/swing/tilt-up with a soft settle at g161-166 (issue 1).
+Numbered issues (all non-blocking): 1. g160-170 camera dip (2.8 px/f at g162) and shove (5.2 at g166) with the vertical image velocity reversing; ask for a monotone pitch-rate decay to 0 by ~g172. 2. g190-199 captain's hand grazes the left edge. 3. g64 one-frame sea shimmer glitch (sub-visible). 4. Captain's held "O" mouth g158-171 (director's call).
+Verdict: PASS under film-13 rules.
