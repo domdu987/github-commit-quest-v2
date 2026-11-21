@@ -51,6 +51,11 @@ def animate(f, n):
     for i in range(2):
         u = C.ez((f - 62 - 5 * i) / 34.0); x = -22.0 + 17.0 * u + (0.0 if i == 0 else 0.0)
         C.move_card('pcrate%d' % i, x - 2.2, 4.5 + i * 2.2, 0.0)
+    for i in range(2):
+        for ob in U.ACTORS['pcrate%d' % i]['poses'].values(): ob.hide_render = ob.location.x < -19.5
+    for k in range(4):
+        c = C.obj('crate_%d' % k)
+        if c is not None and c.location.x < -13.5: c.hide_render = True
     crate3 = C.obj('crate_3')
     if crate3 is not None: crate3.hide_render = True            # the stacked crate would ride in the air while the others slide in
     U.face_cards()
