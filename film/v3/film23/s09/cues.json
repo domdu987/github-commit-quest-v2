@@ -1,0 +1,31 @@
+{
+ "take": "s09",
+ "fps": 30,
+ "note": "time = film seconds (g/30); estimated narration timing",
+ "cues": [
+  {
+   "time": 29.867,
+   "duration": 6.367,
+   "frame": 896,
+   "end_frame": 1087,
+   "kind": "ambience",
+   "label": "moonlit camp at night: crickets, a distant generator, a low electrical hum that grows toward the sound truck"
+  },
+  {
+   "time": 33.2,
+   "duration": 3.0,
+   "frame": 996,
+   "end_frame": 1086,
+   "kind": "prop",
+   "label": "sound man flips switches on the field desk: heavy bakelite clicks, the amplifier hums up, a record spins with soft surface crackle (33 rpm)"
+  },
+  {
+   "time": 34.533,
+   "duration": 2.0,
+   "frame": 1036,
+   "end_frame": 1086,
+   "kind": "sting",
+   "label": "the flared horn swells: a deep truck-engine rumble with a brass-like boom (no speech)"
+  }
+ ]
+}

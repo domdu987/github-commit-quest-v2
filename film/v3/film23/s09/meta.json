@@ -1,0 +1,27 @@
+{
+ "take": "s09",
+ "film": 23,
+ "shots": [
+  9
+ ],
+ "first_g": 896,
+ "n_frames": 191,
+ "g0": 906,
+ "g1": 1050,
+ "g1_render": 1086,
+ "handle_in": 10,
+ "tail_frames": 36,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 15
+ },
+ "fps": 30,
+ "size": [
+  720,
+  1280
+ ],
+ "samples": 12,
+ "location": "CAMP",
+ "light": "NIGHT",
+ "split": true
+}

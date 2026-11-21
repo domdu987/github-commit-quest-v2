@@ -1,0 +1,51 @@
+{
+ "take_mb": 83.2,
+ "qa_auto_rc": 0,
+ "qa_auto_tail": "# QA_AUTO PASS  (_tmp_S09.mkv, 191 frames, 30.00 fps, g 896-1086)\n\n## Notes\n- magenta share 0.0 %\n\nPhone sheet: phone_sheet.jpg (cyan line = caption band y 880). Judge legibility on it.\n",
+ "qa_jitter": "overall median jitter px 0.25",
+ "fdiff_median": 4.35,
+ "fdiff_p90": 6.28,
+ "fdiff_min": 1.44,
+ "shade_hue": {
+  "first": {
+   "g": 896,
+   "hue": 242.3,
+   "shaded_frac": 0.683
+  },
+  "mid": {
+   "g": 978,
+   "hue": 244.1,
+   "shaded_frac": 0.545
+  },
+  "last": {
+   "g": 1086,
+   "hue": 244.0,
+   "shaded_frac": 0.627
+  }
+ },
+ "heads": {
+  "snd": {
+   "ymax": 1978.1,
+   "ymin": 692.9,
+   "xmin": 378.0,
+   "xmax": 3564.7,
+   "wmax": 127.3
+  },
+  "gd0": {
+   "ymax": 1132.9,
+   "ymin": 576.9,
+   "xmin": 264.6,
+   "xmax": 1056.6,
+   "wmax": 63.1
+  },
+  "gd1": {
+   "ymax": 763.2,
+   "ymin": 586.8,
+   "xmin": 596.2,
+   "xmax": 1041.1,
+   "wmax": 43.1
+  }
+ },
+ "s_per_frame_wall_mean": 19.6,
+ "cpu_s_per_frame_mean": 35.2
+}
