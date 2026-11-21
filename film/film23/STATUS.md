@@ -44,3 +44,4 @@ No extra review layers (§G-§L multi-reviewer gates dropped). fal still exhaust
 Automatic checks (film/skill_film13): qa_auto PASS (2060 frames, 0 black/frozen, magenta 0 %); qa_jitter no second > 2 px (median 0.15);
 loudness -12.3 LUFS, peak -1.1 dB; per-sentence STT on the final mix 0.992-1.0 (qa/final/stt_mix.json); ground_check per take by teams.
 Teams: team2 + team3 archived; team1 to archive after release.
+- Posting branch claude/new-session-73ou27 @07d5f34: release23 + queue row 23 WAIT + POSTING_LOG. Team1 archived; all teams archived; 60-min check cancelled. Producer notified.
