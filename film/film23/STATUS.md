@@ -20,3 +20,6 @@ Fallback check: send_later 60 min, always re-armed.
 Process = film/skill_film13 (skill as of films 1-13) + standing decisions: music on fal (elevenlabs/music/v2.5), QA-art approves the look,
 text signs allowed, queue row WAIT, max 3 render teams, free automatic checks on every take (qa_auto, v3/tools/ground_check.py, qa_jitter).
 No extra review layers (§G-§L multi-reviewer gates dropped). fal still exhausted -> picture first on ESTIMATED timing, narration/music later.
+- [x] Board r3 (Opus, partial) re-rendered: still 2 now hero tank; numbers sat 0.53-0.58, luma 95-107, shade hue 245/252/223(night). Look accepted as base; final look check at SET gate.
+- [x] Estimated timing audio/timing_EST.json (70.3 s); shot_plan.md v1 (19 shots, BIGZOOM S01+S12, takes render x1.25 length for retiming)
+- [ ] Full set (Opus builder, running) + cast23 (Opus builder, running) -> one QA-art SET check -> WORKER23.md -> 3 render teams
