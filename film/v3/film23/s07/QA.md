@@ -32,3 +32,9 @@ overall median jitter px 0.1
 Phone sheet: phone_sheet.jpg (cyan line = caption band y 880). Judge legibility on it.
 
 ```
+
+## Shade hue note (S07, QA_ART_SET)
+The lane-dirt shade was tinted toward hue 248 at build (red x2 on lane_dirt, rut, ground, poplar, hedge, leaf, olive, plaster, roof, slate, stone). Measured on the final frames:
+first 242.8, mid 234.0, last 237.5 (target 240-260). The mid / last values stay below 240: the shaded pixels that dominate the stat are the poplars, the house and the jeep, and
+scaling the shade colour of every material (73 shade nodes, red x1.6 / x2.4, tested at full size) moved the mid frame by only +1.3. Not fixed; flagged for the director.
+Lip-sync: only the Major's mouth moves (talk_mouth, 5 Hz loudness, one pause at g 748..756 between the two quotes); every other mouth is still.
