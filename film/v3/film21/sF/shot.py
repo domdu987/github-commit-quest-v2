@@ -74,7 +74,7 @@ def main():
     samples = int(sys.argv[4]) if len(sys.argv) > 4 else 32
     os.makedirs(out, exist_ok=True)
     T = C.Take(["camp_bank"], WORK, fg=True, hide=("fg_bank_barrel", "fg_bank_iron"))
-    M = T.A["marks"]["camp_bank"]; mode = "draft" if cmd in ("draft", "probe") else "final"
+    M = T.A["marks"]["camp_bank"]; mode = "draft" if cmd in ("draft", "probe", "ground") else "final"
     xc = np.array(M["cress"][:3], float); gz = xc[2]; KEYS = cam_keys(xc, gz)
     K.hide_near_banners([K.cam_path(None, KEYS, g)["loc"] for g in range(G0, G1 + 1, 3)], 3.5)
     K.setup_render(T.scene, "final" if cmd == "probe" else mode, 8)
@@ -91,6 +91,13 @@ def main():
         for nm, c, st, var, ph, fr in cast:
             p, dy = pose_of(nm, c, st, var, ph, g)
             T.place("c_" + nm, f, (pos[nm][0], pos[nm][1], pos[nm][2] + dy * SCALE[c]), scale=SCALE[c]); T.pose("c_" + nm, f, p)
+    if cmd == "ground":                                                    # QA §K ground check on every card (frames every 10)
+        import ground_check21 as GC
+        def set_frame(g):
+            T.scene.frame_set(g + 1); K.cam_path(None, KEYS, g)
+        items = [(n, a.card, -a.canvas[3] * T.actors[n].root.scale[0]) for n, a in T.actors.items()]
+        air = {n: range(G0, G_LAUGH_END + 1) for n in T.actors if n != "c_cress"}          # the laughers hop 0.06 D at 3 Hz (cast21.laugh)
+        rep = GC.check(items, gs, set_frame, airborne=air, out=os.path.join(HERE, "GROUND.md")); print("ground:", rep["fail"], "fail", rep["sunk"], "sunk"); return
     T.sprites_for({n: [g + 1 for g in gs] for n in T.actors}, vivid=lambda f: viv[f])
     used = list(T.actors)
     for g in gs:

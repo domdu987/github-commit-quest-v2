@@ -55,6 +55,13 @@ def main():
     sc = bpy.context.scene; ks = keys(A)
     for o in [o for o in bpy.data.objects if o.name.startswith("troops_bridge")]: bpy.data.objects.remove(o, do_unlink=True)
     knights = build_column()
+    if cmd == "ground":                                                    # QA §K ground check: the knight column, the Scots line and their banners (every 10 frames)
+        import ground_check21 as GC
+        items = [(o.name, o, 0.0) for o in bpy.data.objects if o.name.startswith(("troops_col", "scots_wide"))]
+        def set_frame(g):
+            K.cam_path(None, ks, g)
+            for o in knights: o.location.y = 1.3 * g / 30.0
+        rep = GC.check(items, list(range(G0, G1 + 1, 10)), set_frame, out=os.path.join(HERE, "GROUND.md")); print("ground:", rep["fail"], "fail", rep["sunk"], "sunk"); return
     mode = "draft" if cmd in ("draft", "probe") else "final"
     for g in gs:
         r = K.cam_path(None, ks, g)
