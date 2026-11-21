@@ -31,3 +31,12 @@ GROUND RESULT: PASS (0 failures)
 
 ## Joins
 - In: dissolve 11 from s08 (corridor). Out: s09 -> s10 is the hard CUT on "แต่วันนั้น" (the take ends in the official's Q2 line; s10 starts at 39.90 s).
+
+## Colour (film/COLOUR_SPEC.md, film/v3/tools/hue_report.py `stats` on every 3rd final frame, caption band excluded)
+```
+set     red orange yellow  green   cyan   blue violet magent   sat  val dark | target red 30-41, orange 22-38, blue 14-30, violet 0-5, magenta 0-10, sat 0.38-0.48, val 0.45-0.63, dark 0.08-0.15
+s03     12.6    8.2    2.3    1.0    0.6   61.9    4.6    8.8  0.73 0.68 0.00   OUT: red,orange,blue,sat,val,dark
+s09      1.8    3.1    1.0    0.1    0.7   71.4    9.9   11.8  0.66 0.57 0.00   OUT: red,orange,blue,violet,magenta,sat,dark
+s10      6.2    7.9    1.8    1.2    0.2   58.5    6.5   17.8  0.68 0.59 0.01   OUT: red,orange,blue,violet,magenta,sat,dark
+```
+Ticket hall interior lit by warm globes under a violet-blue shade tint (set preset HALL). Blue 71 %, red 1.8 %, orange 3 %, violet 9.9 %, magenta 11.8 %: clearly outside the new bands (too blue/magenta, too little red/orange). I did not grade. Not graded by team 4 (the director applies the v1.1 grade). The set light presets (UNDER/HALL) are the cause; a per-take re-light (more warm key, less blue shade) would be needed to reach the bands and was not done. The tool itself could not run its reference rows here (the reference clips are not in this container).

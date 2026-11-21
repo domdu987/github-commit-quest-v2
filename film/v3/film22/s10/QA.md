@@ -33,3 +33,12 @@ GROUND RESULT: PASS (0 failures)
 ## Join notes
 - J6 s10 -> s11: the take ends on the required 1-s jaw-drop punch-in, so it cannot also travel through the train door. Use a dissolve of at most 6 frames into team 5's door view of the carriage (the handle frames 1301-1306 hold the push-in and are there for it). transition_in of s10 is a hard cut.
 - Frame 0 of the take (g 1197) is the first picture after the cut: the platform from the bench, official behind it.
+
+## Colour (film/COLOUR_SPEC.md, film/v3/tools/hue_report.py `stats` on every 3rd final frame, caption band excluded)
+```
+set     red orange yellow  green   cyan   blue violet magent   sat  val dark | target red 30-41, orange 22-38, blue 14-30, violet 0-5, magenta 0-10, sat 0.38-0.48, val 0.45-0.63, dark 0.08-0.15
+s03     12.6    8.2    2.3    1.0    0.6   61.9    4.6    8.8  0.73 0.68 0.00   OUT: red,orange,blue,sat,val,dark
+s09      1.8    3.1    1.0    0.1    0.7   71.4    9.9   11.8  0.66 0.57 0.00   OUT: red,orange,blue,violet,magenta,sat,dark
+s10      6.2    7.9    1.8    1.2    0.2   58.5    6.5   17.8  0.68 0.59 0.01   OUT: red,orange,blue,violet,magenta,sat,dark
+```
+Platform: red train and warm lamps against the blue vault; blue 58 %, red 6 %, orange 8 %, magenta 17.8 % (the maroon ribs/train read magenta in the metric). Outside the bands. Not graded by team 4 (the director applies the v1.1 grade). The set light presets (UNDER/HALL) are the cause; a per-take re-light (more warm key, less blue shade) would be needed to reach the bands and was not done. The tool itself could not run its reference rows here (the reference clips are not in this container).
