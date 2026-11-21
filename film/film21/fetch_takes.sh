@@ -11,13 +11,13 @@ REPO=${REPO:-$(cd "$(dirname "$0")/../.." && pwd)}
 # take  branch  commit    (source: gate/STATUS.md "USE THIS" + RENDER_TEAMS.md)
 TABLE='
 sA1  render21/team1   3cfad63  # PASS (film-13 QA: QA-tech PASS, QA-art SHIP)
-sA2  render21/team5   TODO
+sA2  render21/team2   bef3a22  # PASS (hard-defects rule; team2 fix of team5 v4)
 sB1  render21/team9   2d7500a  # PASS (warm tents; hard-defects rule)
 sB2  render21/team5   e0be015  # PASS v4 (film-13 QA-tech)
 sC   render21/team3   60c1be8  # PASS (v2 content; v3 = warm-tent set + GROUND, same content)
 sD1  render21/team2   c546fa1  # PASS v5 (hard-defects rule)
 sD2  render21/team4   68b6ea5  # PASS v3 (film-13 QA-tech PASS, QA-art SHIP)
-sE1  render21/team7   TODO
+sE1  render21/team5   3c112e7  # PASS (hard-defects rule; team5 v3 splice of team9 v2)
 sE2  render21/team6   1f68f93  # PASS v2 (film-13 QA, director ruling)
 sF   render21/team1   4277f66  # ACCEPTED v5 (QA-tech PASS; QA-art taste notes logged, producer hard-defects-only rule)
 sG   render21/team8   5d87052  # PASS (v2 content; v3 feet snapped to terrain, GROUND PASS)

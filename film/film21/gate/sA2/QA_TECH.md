@@ -1,11 +1,12 @@
-# QA-tech sA2 (hard-defects rule, team5 7748ab4)
+# QA-tech sA2 (hard-defects rule, bef3a22)
 
-**FAIL** (g80-159, 80 frames)
+**PASS** (hard defects only)
 
-Hard defects:
-1. **g102 -> g103: camera roll flip.** The view turns 180 degrees in one frame. Rotating g103 by 180 degrees matches g102 (diff 40 vs 55 unrotated), and ORB gives rot 175.8. Cause: the top-down dive passes the nadir, so the look-at up-vector flips (gimbal). Fix: give the camera an explicit roll/up-vector or a continuous quaternion path through the nadir, or lift the dive angle so it never reaches -90 degrees.
-2. **g123-g125: unplanned splice through a dark frame.** The dive ends in tree shadow (g124 mean luma 41), then g125 is a different ground-level shot (ORB shows no overlap, 125 -> 126 is stable). This is a camera position/angle jump that is not a planned cut (meta lists only the cut in at g80). Fix: continue the swoop physically to the g125 medium pose (pass through the trunks with a short dissolve), or declare it a planned hide-cut in meta/rhythm.
+Checked consecutive frames g90-130 (frame-by-frame diff, phase-correlation shift, contact sheets).
+- Splice g94/95: smooth, continuous slow descent, no jump.
+- Roll flip g102/103: none. The river runs diagonally at g101-103 and levels out smoothly by g108; horizon rolls in one direction only.
+- Splice g125/126: smooth. The 124-126 frames match, with no cut and no dark frame. Brightness 77, 79, 79.
+- No black, blank or magenta frames; no frozen run (g126-130 drift slowly, diff 2-10).
+- qa_auto blur g100-116 and jitter 15.5 px in second 0: a fast forward dive through the pine canopy. Motion is monotonic (down and forward, content grows each frame), with no sign-flipping back-and-forth. Blur is motion blur on a fast move, so it is OK.
 
-Not defects:
-- The dive g80-g102 and g103-g121 is fast but smooth (no frame-to-frame sign-flipping shake). The "jitter 11.7 px" in second 0 and the qa_auto blur at g96-103 and g123-124 are fast-dive motion blur and the dark pass.
-- g126-159: stable push, no frozen run (diff about 2 per frame).
+Notes (not blocking): g100-110 is dark and the exposure ramp is heavy. g116-119 is very busy, with trunks and a rock slab passing close, and g119 is a brightness spike (mean 108).
