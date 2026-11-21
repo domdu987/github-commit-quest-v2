@@ -36,3 +36,5 @@ No extra review layers (§G-§L multi-reviewer gates dropped). fal still exhaust
 - [ ] Takes -> conform23 (retime to shot_times_REAL) -> captions, SFX, mix -> automatic checks -> release23 -> queue row WAIT
 - 05:45 sweep: delivered S01 S02 S03 (t1) S09 S10 S12 (t2). Director redo requests: S02 (empty grass, backlit tank, tiny soldiers) -> team1; S12 (lift reveal too small/hidden by hedge) -> team2.
 - 06:50 sweep 2: OK S01 S03 S09 S10 S11; redo requested S04+S05 (crew invisible) -> team1, S18 (boats specks, smoke columns) -> team3; S02, S12 redo pending.
+- 07:55 review 1: team3 S01 S14-S18 accepted -> session archived. team2 asked: S12 redo (lift centred, reach end comp by g1), S19 Major head out of band, S10 crate text. team1 pending S05 S07 S08.
+- conform23: speed map (up to x1.4) so each take reaches its end composition (moves end at g1_render), instead of trimming the tail.

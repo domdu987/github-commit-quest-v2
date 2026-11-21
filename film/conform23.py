@@ -4,7 +4,7 @@ usage:
   python3 conform23.py frames           # retime + dissolves -> $OUT_frames/f_%04d.png (N frames)
   python3 conform23.py final <out>      # captions + music + sfx + mix -> <out>.mp4
 Retime rule: shot k occupies real frames [R_k, R_k+1) from film23/shot_times_REAL.json; output frame f shows take frame g0_k + (f - R_k)
-(1:1 speed, the x1.25 tail is trimmed). Dissolves of D frames are centred on R_k and use the outgoing tail and the incoming handle.
+(sped up to at most x1.4 so the move reaches the take's end composition at g1_render). Dissolves of D frames are centred on R_k and use the outgoing tail and the incoming handle.
 """
 import sys, os, json, glob, subprocess
 import numpy as np
@@ -43,15 +43,21 @@ def fetch():
 def _take(shot):
     n = shot.lower(); m = json.load(open(f"{TAKES}/{n}/meta.json"))
     fr = sorted(glob.glob(f"{TAKES}/{n}/frames/g_*.png")); lo = int(fr[0][-8:-4]); hi = int(fr[-1][-8:-4])
-    return dict(dir=f"{TAKES}/{n}/frames", g0=m["g0"], lo=lo, hi=hi, tin=m.get("transition_in") or {})
+    return dict(dir=f"{TAKES}/{n}/frames", g0=m["g0"], lo=lo, hi=hi, g1r=m.get("g1_render"), tin=m.get("transition_in") or {})
 
 def frames():
     from PIL import Image
     os.makedirs(OUTF + "_frames", exist_ok=True)
     for f in glob.glob(OUTF + "_frames/*.png"): os.remove(f)
     tk = [_take(s["shot"]) for s in SHOTS]; R = [int(round(s["real"][0] * FPS)) for s in SHOTS] + [N]
+    # speed map: the set's camera moves end at g1_render (planned length x1.25), so play the take up to 1.4x faster to reach the
+    # end composition inside the real slot; never slower than 1:1 (a longer slot runs on into the tail 1:1)
+    fac = []
+    for k in range(len(SHOTS)):
+        t = tk[k]; L = max(1, R[k + 1] - R[k]); end = min(t["hi"], t.get("g1r") or t["hi"])
+        fac.append(min(1.4, max(1.0, (end - t["g0"]) / L))); print(f"{SHOTS[k]['shot']}: slot {L} f, take {end - t['g0']} f, speed x{fac[-1]:.2f}")
     def src(k, f):
-        t = tk[k]; g = t["g0"] + (f - R[k]); c = min(max(g, t["lo"]), t["hi"])
+        t = tk[k]; g = t["g0"] + int(round((f - R[k]) * fac[k])); c = min(max(g, t["lo"]), t["hi"])
         if c != g and abs(c - g) > 1: print(f"  clamp {SHOTS[k]['shot']} f{f} g{g}->{c}")
         return f"{t['dir']}/g_{c:04d}.png"
     blend = {}
