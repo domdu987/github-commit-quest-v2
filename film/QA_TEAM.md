@@ -145,3 +145,20 @@ Rules:
    - The camera is already moving.
    - An in-world sign or number is allowed (R8's "39 FT", "MIND THE GAPS").
 5. **The image illustrates every word** of the first 5 s (R5: pour, sea, pirate ship, laughing pirates).
+
+## K. NOTHING FLOATS: automatic ground check plus an independent float hunter (2026-11-21, BLOCKING)
+The client complained again about films 18 and 20: "มุมกล้องของลอยอีกแล้ว". §G-2 was judged by eye by the same team that made the shots, and it missed:
+- film 18 6 s: flat discs and flags hovering over the field
+- film 18 29 s: soldiers with no feet or ground behind pots
+- film 18 51.5 s: the ox's shadow detached and lying to the side; bundles hanging in the air
+- film 18 54 s: black soldier silhouettes standing on nothing
+- film 20 7.5 s: a canopy/table with no legs; a tower-leg slab hovering
+- film 20 11 s: a girder chunk in the sky
+- film 20 52.5 s: people on cobbles with no contact shadow
+- film 20 57 s: a giant bald head blocking the foreground
+
+New mandatory steps:
+1. **ground_check (automatic, before every render).** Run film/v3/tools/ground_check.py on the shot scene. It samples every 10th frame. For every character card and prop that is not flagged `airborne=True` (birds, thrown things, flags on poles, smoke), it ray-casts down from the object's lowest point. It fails when the gap to the first surface is more than 2 cm in scene units, or when nothing is below the object. Fix the scene (snap to ground) until it passes. Commit the report as GROUND.md with the take.
+2. **Contact shadows.** Every character card and free prop gets a soft contact shadow (a blob or shadow catcher) under its feet or base. Nobody stands on nothing.
+3. **Float hunter (independent).** At the TAKE gate and again at the FINAL gate, a fresh reviewer that did not plan or render the shot gets ONLY the 1 fps sheets (scale 270x480, timestamps) and one question: "List every person or object that floats, has no contact with a surface, has a detached shadow, or is cut weirdly by the frame or foreground." Any item listed blocks the shot until fixed or explained (e.g. mid-jump).
+4. **Producer check.** Before a film is sent to the client, the producer looks at 1 fps sheets too. A float found there sends the film back.
