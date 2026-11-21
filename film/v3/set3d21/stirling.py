@@ -62,13 +62,13 @@ def _pal():
     add('flower', '#f4e6a0', tint=True, mix=0.6, afl=0.5)
     # canvas, cloth, metal
     add('t_red', '#c8383a', tint=True, ink=True, sm=(0.95, 0.9, 1.18), mix=0.8)
-    add('t_cream', '#efe2bb', tint=True, ink=True, sm=(0.85, 0.95, 1.18), mix=0.8)
+    add('t_cream', '#efe2bb', tint=True, ink=True, sm=(1.9, 1.8, 0.65), mix=0.2)   # warm-neutral shade (QA sB1: cream/white tents went violet-blue in shade)
     add('t_blue', '#2f58ad', tint=True, ink=True, sm=(0.85, 0.95, 1.2), mix=0.8)
     add('t_saltire', '#153d9c', tint=True, ink=True, sm=(0.85, 0.95, 1.2), mix=0.8)
     add('t_gold', '#dcae3a', tint=True, ink=True, sm=(0.9, 0.95, 1.2), mix=0.8)
     add('t_green', '#3f7d4c', tint=True, ink=True, mix=0.8)
     add('t_brown', '#7a5a3a', tint=True, ink=True)
-    add('t_white', '#f2ece0', tint=True, ink=True, mix=0.7)
+    add('t_white', '#f2ece0', tint=True, ink=True, sm=(2.0, 1.9, 0.6), mix=0.15)
     add('t_dark', '#3b3346', tint=True, ink=True, mix=0.7)
     add('rope', '#b59b6a', tint=True, mix=0.5)
     add('iron', '#474b5e', tint=True, ink=True, mix=0.5)
@@ -1343,7 +1343,7 @@ def scots_wide_line(n=26, banners=3, scale=1.7, toward=(445.0, 244.0), hh0=30.0)
     """a version of the Scots line for the far wide shots (valley_wide, P_A): a row (2 ranks) along a contour of Abbey Craig (height `hh0`) on the side that FACES `toward` (default: the
     far-wide camera, north-east), on open slope out from under the pines, in blue and ochre tunics scaled up (`scale`), with `banners` oversized blue saltire banners (14 m poles,
     7 x 4.6 m cloth) that stay findable on a 360x640 sheet. preset key `scots_wide=True` or build_world(..., scots_wide=True). Returns the number of figures."""
-    B = Batch(88); rs = np.random.RandomState(13); cnt = 0; mats = ['t_saltire', 'thatch', 't_saltire', 'hay', 't_brown']; Bp = Batch(89); a_c = math.atan2(toward[1] - HILL_C[1], toward[0] - HILL_C[0]); pts = []
+    B = Batch(88); rs = np.random.RandomState(13); cnt = 0; mats = ['t_saltire', 't_saltire', 't_white', 't_saltire', 't_saltire']; Bp = Batch(89); a_c = math.atan2(toward[1] - HILL_C[1], toward[0] - HILL_C[0]); pts = []
     for rank in range(2):
         for k in range(n // 2):
             a = a_c + math.radians(-26 + 52 * (k + 0.5 * rank) / max(n // 2 - 1, 1))
