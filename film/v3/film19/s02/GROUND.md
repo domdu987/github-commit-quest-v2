@@ -1,6 +1,6 @@
-# GROUND.md (QA_TEAM §K), s02 round 19
+# GROUND.md (QA_TEAM §K), s02 round 20
 
-Every 10th frame g48-199, ray cast straight down from each card's feet point (cap, ast), tolerance 0.02 scene units (`python3 shot.py ground 48:199`). 30 checks, 0 FAIL.
+Every 10th frame g48-199, ray cast down from each card's feet point (cap, ast), tolerance 0.02. `python3 shot.py ground 48:199`: 30 checks, 0 FAIL.
 
 | g | card | feet z | gap | surface | |
 |---|---|---|---|---|---|

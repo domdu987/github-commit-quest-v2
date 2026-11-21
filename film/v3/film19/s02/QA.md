@@ -43,3 +43,9 @@ Ground check (QA_TEAM section K): GROUND.md, 0 FAIL.
 - Tilt-up: round-18 rates 130-150 (1.35 -> 1.85), tail (156, 1.5), (160, 1.05). The surplus pitch (11.4 deg at g160) is paid by a cosine brake over g160-165 (4.7 frames), pitch held -4 deg to g176, then the landing aim.
 - NOT met: dip of whole-frame motion to 7.3-8.7 px/f at g106-113 (pitch turnaround, approach speed alone; target about 10); ship-only 6.6 / 5.7 at g159-160 (target >= 7), then a bump to 10-14 at g164-168; composition g104-113 (masts cut by the top edge, foam about 55 %) needs a pull-back, not an aim change.
 - frame-diff median 10.91 / p90 19.20; qa_stats sat 0.643, luma 93.6, motion median 11.47 / p90 21.42. qa_auto blur flag only (waived). GROUND.md 0 FAIL.
+
+## Round 20 (landing: one smooth ease g150-182)
+cam_rest_raw is now a cubic Hermite over g150-182 in (loc xyz, pitch, yaw, distance), from the exact round-19 position and velocity at g150 to the round-19 rest pose and its tiny velocity at g182; g<=150 and g>=182 are the base path. Pitch -22.5 -> -2.73 deg, one direction, rate 1.85 -> 0 (no reversal; no overshoot). g150-199 re-rendered (g<150 untouched).
+Whole-frame motion (sea masked, mot.py): g140-150 9.5-11.4, g152 9.1, g154 7.0, g156 6.2, g158 7.4, g160 6.9, g162 8.1, g164 7.3, g166 6.8, g168 6.6, g170 6.5, g172 5.8, g174 4.7, g176 3.0, g177 3.1, g180 1.5, g182+ about 1.2 (the dead stop 5.5 -> 2.6 at g176/177 is gone; the worst single-frame fall is 7.0 -> 6.9 ... g175 4.3 -> g176 3.0, which is the ease's tail). Local bumps +17 % (g161-162) and +14 % (g157-158) fall on the shock/ring-eye acting.
+Heads at g180/190: cap y 482/477, ast y 554/556 (450-760), face width 140-164 px, cap left edge about 86 px from the frame edge.
+frame-diff median 10.02 / p90 19.20; qa_stats sat 0.644, luma 93.8; qa_jitter 1 s 3.4 / 2 s 2.7 / median 0.81 px; qa_auto blur flag only (waived); GROUND 0 FAIL.
