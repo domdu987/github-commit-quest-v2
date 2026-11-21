@@ -17,5 +17,6 @@
  "cam_out": "new P_A (40,10,95)->(150,140,20) 22 mm exactly at g80; g81-83 continue the move toward the hill_over pose",
  "grade": "set default VIVID eased by K.cam_path P_HOOK->P_A, no post pass (colour is normalised at the conform)",
  "samples": 32,
- "world": "K.build_world(['valley_wide'], scots_wide=False) + K.scots_wide_line(toward=(-60,-260)) + full knight-pair column"
+ "world": "K.build_world(['valley_wide'], scots_wide=False) + K.scots_wide_line(toward=(-60,-260)) + full knight-pair column; Scots line on the sunlit south-east flank",
+ "scots_wide_line_call": "K.scots_wide_line(n=26, banners=5, scale=2.2, toward=(120.0, -300.0))   # build_world(['valley_wide'], fg=False, scots_wide=False) first"
 }
