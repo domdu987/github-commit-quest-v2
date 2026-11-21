@@ -1,0 +1,27 @@
+{
+ "take": "s12",
+ "film": 23,
+ "shots": [
+  12
+ ],
+ "first_g": 1284,
+ "n_frames": 106,
+ "g0": 1284,
+ "g1": 1368,
+ "g1_render": 1389,
+ "handle_in": 0,
+ "tail_frames": 21,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "fps": 30,
+ "size": [
+  720,
+  1280
+ ],
+ "samples": 12,
+ "location": "LANE",
+ "light": "DAY",
+ "split": true
+}

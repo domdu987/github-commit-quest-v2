@@ -1,0 +1,31 @@
+{
+ "take": "s12",
+ "fps": 30,
+ "note": "time = film seconds (g/30); estimated narration timing",
+ "cues": [
+  {
+   "time": 42.8,
+   "duration": 3.533,
+   "frame": 1284,
+   "end_frame": 1390,
+   "kind": "ambience",
+   "label": "sunny Normandy lane: birds, a light breeze in the hedgerow, distant field work"
+  },
+  {
+   "time": 42.8,
+   "duration": 0.9,
+   "frame": 1284,
+   "end_frame": 1311,
+   "kind": "prop",
+   "label": "two bicycles rattling up a dirt lane, then the squeal of two sets of brakes and tyres skidding to a stop"
+  },
+  {
+   "time": 43.8,
+   "duration": 1.5,
+   "frame": 1314,
+   "end_frame": 1359,
+   "kind": "sting",
+   "label": "comic reveal swell as the camera pulls back: four soldiers grunt and heave a rubber tank overhead (a stretching rubber squeak)"
+  }
+ ]
+}
