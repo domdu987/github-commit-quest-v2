@@ -24,6 +24,7 @@ Branch: `claude/new-session-73ou27`. Only rows with status `READY` may be posted
 | 17 | ไอ้ช่างวัดหู | ไอ้ช่างวัดหู | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release17/ear_v1.mp4 | WAIT (client to review; client posts himself) |
 | 18 | ไอ้เสมียนวัว | ไอ้เสมียนวัว | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release18/oxclerk_v1.mp4 | WAIT (client to review; client posts himself) |
 | 15 | ไอ้ปลาดิ้น | ไอ้ปลาดิ้น | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release15/fosbury_v2.mp4 | WAIT (client posts himself; v2 remake to QA_TEAM G/H/I, FINAL gate PASS 2026-11-20; music C) |
+| 23 | ไอ้กองทัพลูกโป่ง | ไอ้กองทัพลูกโป่ง | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release23/ghost_v1.mp4 | WAIT (client to review; client posts himself) |
 
 ## Captions
 (Each READY clip gets a heading here, `### <#> <Title>`, followed by the exact description text to paste.)
@@ -48,3 +49,13 @@ Branch: `claude/new-session-73ou27`. Only rows with status `READY` may be posted
 แล้วโค้ชต้องทำตามที่พูดไว้ไหม ดูให้จบ 😂
 
 #ไอ้ปลาดิ้น #กระโดดสูง #FosburyFlop #โอลิมปิก #เรื่องจริง #กีฬา #เรื่องเล่า #การ์ตูน #shorts
+
+### 23 ไอ้กองทัพลูกโป่ง
+ทหารกลุ่มนี้จงใจบุกด้วยรถถังลูกโป่ง ทั้งที่เยอรมันอยู่ใกล้แค่นี้ 🎈🪖 ผู้พันหน่วยข้างๆ หัวเราะลั่น "ถ้าพวกแกหลอกเยอรมันได้ ข้าจะเป่าลูกโป่งให้เองทุกลูก!" ทั้งหน่วยเลยโดนเรียกว่า "ไอ้กองทัพลูกโป่ง"...
+
+แล้วใครกันแน่ที่ต้องนั่งเป่าลูกโป่ง ดูให้จบ 😂
+
+เรื่องจริง: หน่วย 23rd Headquarters Special Troops หรือ "Ghost Army" ของสหรัฐฯ ในสงครามโลกครั้งที่ 2 มีศิลปิน นักออกแบบ และคนทำเสียงราว 1,100 คน ใช้รถถังยางเป่าลม เสียงรถถังจากลำโพง และวิทยุปลอม แกล้งเป็นกองทัพที่ใหญ่กว่าตัวเอง ปฏิบัติการ Viersen (มี.ค. 1945) ใช้หุ่นเป่าลมราว 600 ตัว แกล้งเป็น 2 กองพล ก่อนกองทัพที่ 9 ข้ามแม่น้ำไรน์
+*ผู้พันปากดีและฉากเป่าลูกโป่งตอนจบเป็นการแต่งเติมเพื่อความสนุก เรื่องหนุ่มฝรั่งเศสปั่นจักรยานมาเห็นทหารยกรถถังมาจากคำเล่าของทหารผ่านศึก
+
+#ไอ้กองทัพลูกโป่ง #GhostArmy #สงครามโลกครั้งที่2 #เรื่องจริง #ประวัติศาสตร์ #เรื่องเล่า #การ์ตูน #shorts

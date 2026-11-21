@@ -11,3 +11,4 @@
 | 15 | ไอ้ปลาดิ้น (Fosbury Flop) | approved 2026-11-20 (music C); client posts himself | film/release15/fosbury_v2.mp4 (v2 remake, replaces v1) |
 | 17 | ไอ้ช่างวัดหู (Bertillon ear calipers) | delivered for client review 2026-11-20; client posts himself (queue row WAIT) | film/release17/ear_v1.mp4 |
 | 18 | ไอ้เสมียนวัว (Tian Dan's fire oxen, Jimo 279 BC) | delivered for client review 2026-11-20; client posts himself (queue row WAIT) | film/release18/oxclerk_v1.mp4 |
+| 23 | ไอ้กองทัพลูกโป่ง (Ghost Army, WWII rubber tanks) | delivered for client review 2026-11-21; client posts himself (queue row WAIT) | film/release23/ghost_v1.mp4 |
