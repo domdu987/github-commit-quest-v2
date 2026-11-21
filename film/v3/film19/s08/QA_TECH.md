@@ -39,3 +39,26 @@ Take g536-669 (134 frames, 720x1280, 30 fps). Frames extracted at 6 fps (/tmp/qa
 7. Frame-diff (90x160 grey, bilinear, g546-660, 115 pairs): median 4.48 (>= 4), p90 10.72 (>= 10), max 22.3, 15 pairs >= 10: PASS. (Round 5: 4.07 / 7.15.)
 Earlier issues: R1-1/R3-1/R5-1 FIXED (punches + snap). R1-2, R1-3, R1-4, R1-7 stay fixed.
 NOTES (non-blocking): (a) small white lace-cuff bars at the sleeve (g611-641) look detached from the dark sleeve (R1-6), gone when the arm rises g646+; (b) the sheet "sections B and G" of QA_TEAM.md: no section G exists (only A-F); B and A were applied; (c) meta g1 = 661 is exclusive; (d) the pose step at g609->610 is the sharpest single-frame change, acceptable as the laugh punch.
+
+## Round (camera-shake pass, film-13 rules): PASS (4 non-blocking notes)
+Take s08 (HALL, g545-660, handles g536-669), re-rendered by team 4 for camera shake. Judged only by film/skill_film13/QA_TEAM_film13.md (base checklist + §B). My frames: /tmp/qa19_r21/s08/gNNNN.png extracted from take.mkv (g600 byte-identical to /tmp/qa19_ov/s08). I ran qa_auto myself (python3 qa_auto.py take --cuts 545,661 --first_g 536): PASS (only the note "planned cuts with no visible change within +-2: g545, g661" because the handle frames are rendered in-camera; magenta 0.0 %). qa_jitter reproduced: 2s 7.5 px, 3s 8.8 px, median 2.82. GROUND.md PASS (15 rows, 0 FAIL).
+Where the remaining qa_jitter number comes from (checked, not trusted): I tracked static background (bookcases, window frame, ceiling, floor) with the actor masked out (wig / coat / vest colour mask closed and dilated 41 px, LK features + RANSAC similarity fit at 720x1280, /tmp/qa19_r21/bg.py), then took the second difference of the camera's image-centre shift per frame, seconds aligned to the take start like qa_jitter:
+| second (take) | g | camera median |d2| (px) | p90 | max (g) | camera speed px/f |
+| 0 | 537-566 | 0.57 | 2.16 | 3.0 (g541, handle) | 4.7 |
+| 1 | 567-596 | 0.39 | 0.73 | 0.9 | 3.5 |
+| 2 | 597-626 | 0.12 | 0.64 | 1.0 | 2.3 |
+| 3 | 627-656 | 0.09 | 4.39 | 5.7 (g639, the planned snap pan g637-646) | 2.6 |
+Overall camera median 0.27 px (equals team 4's actor-hidden 0.27). In the two seconds qa_jitter flags (2 and 3) the camera's own jitter is 0.12 and 0.09 px; the only frames with camera |d2| > 2 px are g540-541, 551-552, 557 (<= 3.0 px, handle / first second) and the planned snap g637-646. So the remaining 7.5 / 8.8 px is the actor (qa_jitter's whole-frame phase correlation locks onto the large laughing figure), not the camera: confirmed.
+Does the laugh bounce read as shake or as a laugh? As a laugh. Tracking the wig top (g596-644): vertical bounce at 3.4 Hz, detrended peak-to-peak ~70-100 px of 1280 (5-8 % of frame height, +-20 px at phone size), while the bookcases, window and ceiling behind move smoothly (camera 0.1 px second difference). A moving subject over a steady frame reads as a belly laugh; it would read as shake only if the background moved with it. If the client still calls it shaky, the cheap lever is the bounce amplitude (about -30 %), not the camera.
+Checklist:
+- Blur/DOF: none; Laplacian variance median 184, min 127 (g669, close-up); sharp.
+- Heads below y 880: none (wig top y ~210-410, chin <= ~600 of 1280 even in the g650-660 close-up).
+- Clipped sprites/props: in the last ~1.2 s (g~650-660, the quote punch x1.14) the figure fills the frame and the feet/legs leave the bottom edge: a crop from the punch-in, not a clipped sprite; nothing cut mid-face.
+- Floating feet / contact shadows: feet on the carpet with contact shadows in g536-640 (sheet); GROUND PASS; close-up has no feet in frame.
+- Pops/jumps outside cuts: none. Frame-diff in shot g546-660: median 5.05, p90 10.47, max 27.4 (the planned snap g637-640), min 3.00. Ratio jumps g608 (laugh-start punch, 3.8 -> 10.5 over 6 frames, eased), g617/g622 (bounce), g637 (x2.28, the snap on the quote word 21.14 s, planned) are all the eased one-shot punches / planned snap. No black/blank/magenta frames (luma 67.0, per frame 58.9-82.7; saturation 0.704). No frozen runs (nothing under 0.3).
+- Continuity: s07 g543-544 (three astronomers, hall_window, the mocker on the left with the pointing arm) -> s08 g545 (low angle hall_low, the mocker alone, same blue star-spangled coat, red vest, wig, glasses) is the planned hard cut; s08 g659-660 (close-up) -> s09 g661 (medium, same actor/costume, same hall) planned hard cut. Eye-lines and lighting (DAY, warm candles) consistent.
+- Plan coverage (shot_plan row 8, 18.17-22.02): turn toward camera, belly-laugh bounce, quote "นาฬิกาเนี่ยนะ!" with mouth from 20.80 s, low angle with push and snap on the quote: all visible (turn g536-600, laugh g598-640, quote g637, mouth window g622-669).
+- Mouth: mouth open in the belly-laugh pose g598-640 is the laugh expression (meta: expression mouths only); lip-sync mouth moves only in the quote window (g622-669). OK.
+- Nobody still > 1.5 s: the actor moves throughout.
+Numbered notes (non-blocking): 1. qa_jitter will still print 7.5 / 8.8 px for seconds 2-3: it is the 3.4 Hz laugh bounce, verified camera-clean (0.12 / 0.09 px). 2. Bounce amplitude 70-100 px p2p; reduce ~30 % if the client reads it as shake. 3. g650-660 close-up crops the legs (brief punch, acceptable punctuation). 4. Luma 67 / saturation 0.70 (deep red hall); film-13 has no luma rule.
+Verdict: PASS.
