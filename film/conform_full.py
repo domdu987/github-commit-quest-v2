@@ -12,8 +12,11 @@ for d in sorted(glob.glob(root+"/s*/meta.json")):
     m["have"]={int(f[-8:-4]):f for f in glob.glob(fr+"/g_*.png")}; m["name"]=os.path.basename(td); T.append(m)
 T.sort(key=lambda m:m["g0"])
 os.makedirs(out+"_frames",exist_ok=True); missing=[]; blends=0
-CF=None
-if os.environ.get("COLOUR21"):
+CF=None; GR=None
+if os.environ.get("GRADE21"):          # client COLOUR_SPEC v1.1 grade (replaces COLOUR21)
+    sys.path.insert(0,os.path.dirname(os.path.abspath(__file__))); import grade21
+    GP=grade21.setup(T,N); json.dump(GP,open(out+"_grade.json","w"),indent=1); GR=grade21.grade; print("grade21 SHOT",{k:{x:round(v[x],2) for x in v} for k,v in GP.items()})
+elif os.environ.get("COLOUR21"):
     sys.path.insert(0,os.path.dirname(os.path.abspath(__file__))); import colour21
     CP=colour21.solve(T); json.dump(CP,open(out+"_colour.json","w"),indent=1); CF=colour21.per_g(T,CP,N); print("colour",{k:v["result"] for k,v in CP.items()})
 for g in range(N):
@@ -38,8 +41,10 @@ for g in range(N):
         a_=np.asarray(Image.open(A["have"][g]).convert("RGB"),float); b_=np.asarray(Image.open(B["have"][g]).convert("RGB"),float)
         im=np.clip(a_*(1-p)+b_*p+0.5,0,255).astype(np.uint8)
         if CF and CF[g]: im=colour21.fix(im,CF[g])
+        if GR: im=GR(im,g)
         Image.fromarray(im).save(dst); blends+=1; continue
     if src is None: missing.append(g); continue
-    if CF and CF[g]: Image.fromarray(colour21.fix(np.asarray(Image.open(src).convert("RGB")),CF[g])).save(dst)
+    if GR: Image.fromarray(GR(np.asarray(Image.open(src).convert("RGB")),g)).save(dst)
+    elif CF and CF[g]: Image.fromarray(colour21.fix(np.asarray(Image.open(src).convert("RGB")),CF[g])).save(dst)
     else: os.symlink(os.path.abspath(src),dst)
 print("takes",[t["name"] for t in T],"blended",blends,"missing",len(missing),(missing[0],missing[-1]) if missing else "")
