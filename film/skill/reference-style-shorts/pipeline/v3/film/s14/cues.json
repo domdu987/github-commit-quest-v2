@@ -1,0 +1,97 @@
+{
+ "fps": 30,
+ "time_base": "film seconds (narration clock + 0.100); frame g starts at g / 30",
+ "take": "s14",
+ "events": [
+  {
+   "time": 28.92,
+   "duration": 0.3,
+   "frame": 868,
+   "end_frame": 877,
+   "kind": "whoosh",
+   "label": "soft whoosh (dissolve in, window_side drift)",
+   "clock": 28.82
+  },
+  {
+   "time": 29.05,
+   "duration": 0.85,
+   "frame": 872,
+   "end_frame": 897,
+   "kind": "clatter",
+   "label": "teletype clatter: the official forecast feeds up out of the machine",
+   "clock": 28.95
+  },
+  {
+   "time": 29.7,
+   "duration": 0.3,
+   "frame": 891,
+   "end_frame": 900,
+   "kind": "bell",
+   "label": "teletype carriage bell",
+   "clock": 29.6
+  },
+  {
+   "time": 29.92,
+   "duration": 0.15,
+   "frame": 898,
+   "end_frame": 902,
+   "kind": "thump",
+   "label": "rubber-stamp thump on the sheet's header ('ทางการ')",
+   "clock": 29.82
+  },
+  {
+   "time": 30.05,
+   "duration": 0.2,
+   "frame": 902,
+   "end_frame": 908,
+   "kind": "tear",
+   "label": "paper tear: the chief tears the sheet off the machine",
+   "clock": 29.95
+  },
+  {
+   "time": 30.15,
+   "duration": 0.3,
+   "frame": 904,
+   "end_frame": 914,
+   "kind": "whoosh",
+   "label": "crash whoosh in onto the sheet thrust at the lens, paper snap",
+   "clock": 30.05
+  },
+  {
+   "time": 30.95,
+   "duration": 0.3,
+   "frame": 928,
+   "end_frame": 938,
+   "kind": "clack",
+   "label": "heavy typebar clack and bell: 'ฝนตก' pops",
+   "clock": 30.85
+  },
+  {
+   "time": 31.4,
+   "duration": 0.2,
+   "frame": 942,
+   "end_frame": 948,
+   "kind": "clack",
+   "label": "clack: 'ลมกระโชก' pops",
+   "clock": 31.3
+  },
+  {
+   "time": 31.6,
+   "duration": 0.6,
+   "frame": 948,
+   "end_frame": 966,
+   "kind": "rain",
+   "label": "soft rain pre-lap",
+   "clock": 31.5
+  },
+  {
+   "time": 31.6,
+   "duration": 0.4,
+   "frame": 948,
+   "end_frame": 960,
+   "kind": "music",
+   "label": "snare roll, cymbal choke at 31.8",
+   "clock": 31.5
+  }
+ ]
+}

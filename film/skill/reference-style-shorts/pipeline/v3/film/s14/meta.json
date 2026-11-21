@@ -1,0 +1,31 @@
+{
+ "take": "s14",
+ "shots": [
+  14
+ ],
+ "g0": 868,
+ "g1": 956,
+ "handle_in": 8,
+ "handle_out": 9,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 11,
+  "note": "from shot 13 (label insert)"
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "frames": 13,
+  "note": "match dissolve paper to paper into s15 (kitchen, next morning)"
+ },
+ "set": "office",
+ "light": "office_day",
+ "samples": 12,
+ "frames_dir": "frames",
+ "first_rendered": 860,
+ "last_rendered": 964,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30
+}

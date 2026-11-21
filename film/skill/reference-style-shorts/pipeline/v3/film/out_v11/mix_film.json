@@ -1,0 +1,414 @@
+{
+ "duration": 65.5,
+ "out_wav": "__PROJ__/v3/film/out_v11/film_mix.wav",
+ "video_in": "__PROJ__/v3/film/out_v11/film_silent_sharp.mp4",
+ "video_out": "__PROJ__/deliver/film_v1_1_sharp_thai.mp4",
+ "voice": {
+  "file": "__PROJ__/audio/th/full_v2/narration.wav",
+  "at": 0.1,
+  "gain": 1.3471317173297255
+ },
+ "music": {
+  "file": "__PROJ__/audio/music/music_fit.wav",
+  "at": 0.0,
+  "start": 0.0,
+  "rms_db": -38,
+  "fade_out": 0.4
+ },
+ "sfx": [
+  {
+   "file": "__PROJ__/audio/sfx/whoosh_fast.wav",
+   "at": 0.0,
+   "peak_db": -19,
+   "len": 0.3,
+   "pan": -0.3
+  },
+  {
+   "file": "__PROJ__/audio/sfx/map_marker.wav",
+   "at": 0.233,
+   "peak_db": -16,
+   "align": "onset",
+   "len": 0.12
+  },
+  {
+   "file": "__PROJ__/audio/sfx/pencil_scratch.wav",
+   "at": 0.233,
+   "rms_db": -27,
+   "len": 0.97,
+   "fade_out": 0.08
+  },
+  {
+   "file": "__PROJ__/audio/sfx/whoosh_fast.wav",
+   "at": 0.31,
+   "peak_db": -15,
+   "len": 0.45
+  },
+  {
+   "file": "__PROJ__/audio/sfx/whoosh_whip.wav",
+   "at": 1.17,
+   "peak_db": -11,
+   "pan": 0.2
+  },
+  {
+   "file": "__PROJ__/audio/sfx/pencil_scratch.wav",
+   "at": 1.2,
+   "rms_db": -31,
+   "start": 0.5,
+   "len": 0.63,
+   "fade_in": 0.05,
+   "fade_out": 0.1
+  },
+  {
+   "file": "__PROJ__/audio/sfx/pencil_scratch.wav",
+   "at": 1.9,
+   "rms_db": -24,
+   "start": 0.2,
+   "len": 0.11
+  },
+  {
+   "file": "__PROJ__/audio/sfx/whoosh_fast.wav",
+   "at": 1.93,
+   "peak_db": -19,
+   "len": 0.3
+  },
+  {
+   "file": "__PROJ__/audio/sfx/thump_jab.wav",
+   "at": 2.0,
+   "peak_db": -9,
+   "align": "onset"
+  },
+  {
+   "file": "__PROJ__/audio/sfx/whoosh_whip.wav",
+   "at": 2.3,
+   "peak_db": -10,
+   "pan": 0.4
+  },
+  {
+   "file": "__PROJ__/audio/sfx/thump_jab.wav",
+   "at": 2.56,
+   "peak_db": -22,
+   "align": "onset",
+   "len": 0.25
+  },
+  {
+   "file": "__PROJ__/audio/sfx/thump_jab.wav",
+   "at": 2.86,
+   "peak_db": -23,
+   "align": "onset",
+   "len": 0.25
+  },
+  {
+   "file": "__PROJ__/audio/sfx/thump_jab.wav",
+   "at": 3.133,
+   "peak_db": -19,
+   "align": "onset",
+   "len": 0.2,
+   "pan": -0.3
+  },
+  {
+   "file": "__PROJ__/audio/sfx/eraser_rub.wav",
+   "at": 3.133,
+   "rms_db": -25,
+   "len": 0.95,
+   "fade_out": 0.08,
+   "pan": -0.3
+  },
+  {
+   "file": "__PROJ__/audio/sfx/pop_surprise.wav",
+   "at": 3.6,
+   "peak_db": -11,
+   "pan": 0.3
+  },
+  {
+   "file": "__PROJ__/audio/sfx/whoosh_fast.wav",
+   "at": 3.63,
+   "peak_db": -18,
+   "len": 0.4
+  },
+  {
+   "file": "__PROJ__/audio/sfx/office_tone.wav",
+   "at": 5.0,
+   "rms_db": -34.4,
+   "start": 0.3,
+   "len": 1.65,
+   "fade_in": 0.3,
+   "fade_out": 0.4
+  },
+  {
+   "file": "__PROJ__/audio/sfx/beach_calm.wav",
+   "at": 13.3,
+   "rms_db": -33.2,
+   "start": 0.0,
+   "len": 3.55,
+   "fade_in": 0.8,
+   "fade_out": 0.6
+  },
+  {
+   "file": "__PROJ__/v3/film/out_v11/sound/rain_drizzle_lim.wav",
+   "at": 31.6,
+   "rms_db": -34.0,
+   "start": 0.0,
+   "len": 5.85,
+   "fade_in": 0.4,
+   "fade_out": 0.3
+  },
+  {
+   "file": "__PROJ__/audio/sfx/office_tone.wav",
+   "at": 31.95,
+   "rms_db": -34.1,
+   "start": 0.0,
+   "len": 1.85,
+   "fade_in": 0.3,
+   "fade_out": 0.4
+  },
+  {
+   "file": "__PROJ__/audio/sfx/beach_calm.wav",
+   "at": 33.77,
+   "rms_db": -34,
+   "start": 1.5,
+   "len": 2.45,
+   "fade_in": 0.4,
+   "fade_out": 0.5
+  },
+  {
+   "file": "__PROJ__/audio/sfx/office_tone.wav",
+   "at": 36.2,
+   "rms_db": -33,
+   "start": 2.0,
+   "len": 1.24,
+   "fade_in": 0.3,
+   "fade_out": 0.03
+  },
+  {
+   "file": "__PROJ__/audio/sfx/wind_storm.wav",
+   "at": 39.62,
+   "rms_db": -33,
+   "start": 0.0,
+   "len": 5.0,
+   "fade_in": 3.0,
+   "fade_out": 1.0
+  },
+  {
+   "file": "__PROJ__/audio/sfx/wind_storm.wav",
+   "at": 45.0,
+   "rms_db": -30,
+   "start": 0.0,
+   "len": 5.55,
+   "fade_in": 2.5,
+   "fade_out": 0.6
+  },
+  {
+   "file": "__PROJ__/v3/film/out_v11/sound/rain_drizzle_lim.wav",
+   "at": 59.55,
+   "rms_db": -34.0,
+   "start": 0.0,
+   "len": 3.0,
+   "fade_in": 0.3,
+   "fade_out": 0.3
+  },
+  {
+   "file": "__PROJ__/audio/sfx/wave_roar.wav",
+   "at": 62.55,
+   "rms_db": -32.6,
+   "start": 1.6,
+   "len": 1.85,
+   "fade_in": 0.2,
+   "fade_out": 0.8
+  },
+  {
+   "file": "__PROJ__/audio/sfx/whoosh_whip.wav",
+   "at": 6.6,
+   "peak_db": -13,
+   "pan": 0.3
+  },
+  {
+   "file": "__PROJ__/audio/sfx/thunder_low.wav",
+   "at": 7.9,
+   "peak_db": -20,
+   "align": "onset",
+   "len": 1.8,
+   "fade_out": 0.8
+  },
+  {
+   "file": "__PROJ__/audio/sfx/pencil_scratch.wav",
+   "at": 11.35,
+   "rms_db": -26.1,
+   "start": 0.2,
+   "len": 0.85,
+   "fade_out": 0.1
+  },
+  {
+   "file": "__PROJ__/audio/sfx/thump_jab.wav",
+   "at": 13.05,
+   "peak_db": -12,
+   "align": "onset",
+   "len": 0.25
+  },
+  {
+   "file": "__PROJ__/audio/sfx/whoosh_fast.wav",
+   "at": 14.95,
+   "peak_db": -15,
+   "len": 0.5
+  },
+  {
+   "file": "__PROJ__/audio/sfx/pencil_scratch.wav",
+   "at": 18.4,
+   "rms_db": -27.5,
+   "start": 0.5,
+   "len": 0.9,
+   "fade_out": 0.1
+  },
+  {
+   "file": "__PROJ__/audio/sfx/eraser_rub.wav",
+   "at": 21.675,
+   "rms_db": -28.3,
+   "start": 0.3,
+   "len": 0.38,
+   "fade_out": 0.06
+  },
+  {
+   "file": "__PROJ__/audio/sfx/eraser_rub.wav",
+   "at": 23.25,
+   "rms_db": -28.1,
+   "start": 0.0,
+   "len": 0.6,
+   "fade_out": 0.08,
+   "pan": -0.2
+  },
+  {
+   "file": "__PROJ__/audio/sfx/crowd_chuckle.wav",
+   "at": 26.5,
+   "peak_db": -15,
+   "len": 1.48,
+   "fade_in": 0.08,
+   "fade_out": 0.5
+  },
+  {
+   "file": "__PROJ__/audio/sfx/thump_jab.wav",
+   "at": 28.1,
+   "peak_db": -12,
+   "align": "onset",
+   "len": 0.25
+  },
+  {
+   "file": "__PROJ__/audio/sfx/teletype.wav",
+   "at": 29.05,
+   "rms_db": -33.7,
+   "start": 0.0,
+   "len": 2.45,
+   "fade_in": 0.15,
+   "fade_out": 0.3
+  },
+  {
+   "file": "__PROJ__/audio/sfx/whoosh_fast.wav",
+   "at": 32.58,
+   "peak_db": -17,
+   "len": 0.5
+  },
+  {
+   "file": "__PROJ__/audio/sfx/whistle_tune.wav",
+   "at": 36.3,
+   "peak_db": -14,
+   "start": 0.0,
+   "len": 1.12,
+   "fade_in": 0.05,
+   "fade_out": 0.02,
+   "pan": 0.25
+  },
+  {
+   "file": "__PROJ__/audio/sfx/whoosh_fast.wav",
+   "at": 37.42,
+   "peak_db": -14,
+   "len": 0.5
+  },
+  {
+   "file": "__PROJ__/audio/sfx/thunder_low.wav",
+   "at": 39.6,
+   "peak_db": -14,
+   "align": "onset",
+   "len": 2.4,
+   "fade_out": 1.0
+  },
+  {
+   "file": "__PROJ__/audio/sfx/thump_jab.wav",
+   "at": 43.3,
+   "peak_db": -11.1,
+   "align": "onset",
+   "len": 0.4,
+   "pan": -0.3
+  },
+  {
+   "file": "__PROJ__/audio/sfx/thump_jab.wav",
+   "at": 46.55,
+   "peak_db": -14,
+   "align": "onset",
+   "len": 0.25,
+   "pan": 0.3
+  },
+  {
+   "file": "__PROJ__/audio/sfx/thump_jab.wav",
+   "at": 48.1,
+   "peak_db": -15.0,
+   "align": "onset",
+   "len": 0.35
+  },
+  {
+   "file": "__PROJ__/audio/sfx/whoosh_whip.wav",
+   "at": 50.6,
+   "peak_db": -13,
+   "pan": -0.3
+  },
+  {
+   "file": "__PROJ__/audio/sfx/shimmer_reveal.wav",
+   "at": 53.72,
+   "peak_db": -14,
+   "len": 1.0,
+   "fade_out": 0.3
+  },
+  {
+   "file": "__PROJ__/audio/sfx/riser_tension.wav",
+   "at": 55.79,
+   "peak_db": -16,
+   "len": 1.56,
+   "fade_in": 0.3,
+   "fade_out": 0.03
+  },
+  {
+   "file": "__PROJ__/audio/sfx/thump_jab.wav",
+   "at": 57.35,
+   "peak_db": -11.1,
+   "align": "onset",
+   "len": 0.35
+  },
+  {
+   "file": "__PROJ__/audio/sfx/wave_roar.wav",
+   "at": 58.1,
+   "peak_db": -12,
+   "len": 3.1,
+   "fade_in": 0.4,
+   "fade_out": 0.7
+  },
+  {
+   "file": "__PROJ__/audio/sfx/thunder_low.wav",
+   "at": 60.1,
+   "peak_db": -16,
+   "align": "onset",
+   "len": 2.2,
+   "fade_out": 0.9
+  },
+  {
+   "file": "__PROJ__/audio/sfx/thump_jab.wav",
+   "at": 62.08,
+   "peak_db": -12,
+   "align": "onset",
+   "len": 0.4
+  },
+  {
+   "file": "__PROJ__/audio/sfx/paper_slide.wav",
+   "at": 64.0,
+   "rms_db": -28,
+   "len": 0.7,
+   "fade_out": 0.15
+  }
+ ]
+}

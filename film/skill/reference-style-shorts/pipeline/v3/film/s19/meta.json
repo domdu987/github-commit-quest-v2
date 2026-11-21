@@ -1,0 +1,30 @@
+{
+ "take": "s19",
+ "shots": [
+  19
+ ],
+ "g0": 1189,
+ "g1": 1419,
+ "handle_in": 8,
+ "handle_out": 7,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 12,
+  "note": "match dissolve inside the crash push (the map behind the chief becomes the frame)"
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "frames": 9
+ },
+ "set": "office (wall map as terrain) + set3d_ext/props + set3d_ext/mech",
+ "light": "office_grey",
+ "samples": 12,
+ "frames_dir": "frames",
+ "first_rendered": 1181,
+ "last_rendered": 1425,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30
+}
