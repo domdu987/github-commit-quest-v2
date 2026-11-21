@@ -57,9 +57,12 @@ LIGHTS = dict(
 # set r1: the Rhine night (moon south-east, over the German bank: it rims the decoys toward the enemy and lights the river) and the pre-dawn blue
 LIGHTS['NIGHT'].update(sky='sky_night2', exposure=-0.2, shade=(0.31, 0.22, 0.58), shade_tint=(0.27, 0.17, 0.54), shade_mix=0.8, key=(0.44, 0.40, 1.25), grade_saturation=1.12)
 LIGHTS['MORNING'].update(sky_k=0.95)
-LIGHTS['NIGHT_R'] = dict(LIGHTS['NIGHT'], sun_az=-35.0, sun_el=26.0, sun_vis_el=21.0, sky='sky_night2r', exposure=0.3, key=(0.58, 0.42, 1.25))
+# set r2 (QA_ART_SET RHINE): no lavender cast - the ambient is cut where the moon lands (amb_cut), moonlit ground at hue ~220, shade navy ~247, deep darks;
+# the moon in the north-east (its path lies on the river in S14 / S16), sky_night3r
+LIGHTS['NIGHT_R'] = dict(LIGHTS['NIGHT'], sun_az=55.0, sun_el=26.0, sun_vis_el=12.0, sky='sky_night3r', sky_k=0.6, exposure=0.75, key=(0.42, 0.48, 1.45),
+                         shade=(0.10, 0.075, 0.32), shade_tint=(0.09, 0.065, 0.30), shade_mix=0.85, lift=(0.006, 0.006, 0.022), amb_cut=0.85, grade_saturation=1.1)
 LIGHTS['DAY'] = dict(LIGHTS['MORNING'], sun_az=200.0, sun_el=34.0, exposure=-0.9, sky_k=1.0, shade=(0.36, 0.17, 0.68), shade_tint=(0.28, 0.13, 0.54), shade_mix=0.92, fol_mix=0.92)
-LIGHTS['PREDAWN'] = dict(LIGHTS['NIGHT'], key=(0.42, 0.56, 1.15), sun_az=8.0, sun_el=12.0, sun_vis_el=-8.0, sky='sky_predawn', lamps=0.4, exposure=0.45, grade_saturation=0.92,
+LIGHTS['PREDAWN'] = dict(LIGHTS['NIGHT'], key=(0.42, 0.56, 1.15), sun_az=8.0, sun_el=12.0, sun_vis_el=-8.0, sky='sky_predawn2', lamps=0.4, exposure=0.45, grade_saturation=0.98, amb_cut=0.85, lift=(0.008, 0.008, 0.026),
                          shade=(0.24, 0.30, 0.58), shade_tint=(0.22, 0.22, 0.54))
 for _k, _v in LIGHTS.items(): _v['key_dir'] = kd_of(_v['sun_az'], _v['sun_el'])
 SCENE_LIGHT = dict(dawn='DAWN', morning='MORNING', night='NIGHT', rhine='NIGHT_R')

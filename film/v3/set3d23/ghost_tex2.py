@@ -216,3 +216,26 @@ SWAP = {'#1c2c66': '#2a2868', '#2a4690': '#3c3a9a', '#2c4aa0': '#3a36a6', '#1a30
         '#6a8cf0': '#7a80f0', '#a0c0ff': '#b0b8ff', '#5a7cd0': '#6a6ad0', '#3a54a6': '#4a4aa6', '#22308a': '#2a2a8a', '#7a9cf0': '#8a8cf0'}
 reg('sky_night2', dict(sun=(64.0, 17.0), swap=SWAP, v=1), paint_sky_night2)
 reg('sky_night2r', dict(sun=(-35.0, 21.0), swap=SWAP, v=1), paint_sky_night2)
+
+# ----------------------------------------------------------------------------- set r2 (QA_ART_SET RHINE fixes): navy night sky at hue ~247, pre-dawn sky with a warm band
+SWAP_R = {'#1c2c66': '#221a62', '#2a4690': '#322888', '#2c4aa0': '#30289a', '#1a3080': '#20167a', '#101e5c': '#140e54', '#0a1244': '#0c0a40',
+          '#6a8cf0': '#7a78f0', '#a0c0ff': '#c0c4ff', '#5a7cd0': '#5e58c0', '#3a54a6': '#3e3aa0', '#22308a': '#26208a', '#7a9cf0': '#8a84f0'}
+reg('sky_night3r', dict(sun=(55.0, 12.0), swap=SWAP_R, v=1), paint_sky_night2)
+
+def paint_sky_predawn2(p, out):
+    """Pre-dawn: deep blue zenith, and low in the east a warm orange band (el -3..5) fading into a pale blue."""
+    W = GX.SKY_W; H = int(round(W * 105 / 360)); el = 90.0 - (np.arange(H, dtype='float32') + 0.5) / H * 105.0; az = (np.arange(W, dtype='float32') + 0.5) / W * 2 * math.pi
+    stops = [(-15, '#1c2464'), (0, '#3a4aa8'), (4, '#34449e'), (12, '#22348a'), (35, '#142670'), (90, '#0c164a')]
+    o = np.zeros((H, 3), 'float32'); e = np.clip(el, -15, 90)
+    for ch in range(3): o[:, ch] = np.interp(e, [s[0] for s in stops], [hexf(s[1])[ch] for s in stops])
+    img = np.repeat(o[:, None, :], W, 1); A = az[None, :]; E = el[:, None]
+    face = np.clip(np.cos(A - math.radians(30.0)), 0, 1) ** 1.5                 # the warm side: east to north-east
+    band = np.exp(-((E - 1.0) / 2.6) ** 2) * face; pale = np.exp(-np.clip(E - 2.0, 0, 90) / 9.0) * face * (E > -2)
+    img = img * (1 - 0.55 * pale[..., None]) + 0.55 * pale[..., None] * hexf('#9ab4e6')
+    img = img * (1 - 0.9 * band[..., None]) + 0.9 * band[..., None] * hexf('#ff8a3a')
+    rs2 = np.random.RandomState(41); stars = np.zeros((H, W), 'float32')
+    for _ in range(700):
+        y_ = int(rs2.beta(1.2, 1.0) * (H * 0.7)); x_ = rs2.randint(0, W); stars[y_, x_] = max(stars[y_, x_], rs2.uniform(0.3, 0.9))
+    stars *= np.clip((el[:, None] - 14.0) / 10.0, 0, 1) * (1 - 0.8 * face)
+    img = img * (1 - stars[..., None]) + stars[..., None] * hexf('#f0f4ff'); save(np.clip(img, 0, 1), out)
+reg('sky_predawn2', dict(v=1), paint_sky_predawn2)

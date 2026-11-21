@@ -37,16 +37,18 @@ Build takes 3-9 s, a 720x1280 12-sample frame about 4-9 s wall on 4 threads (NOT
 | FIELDS | DAWN | (0, 0, 0) | bocage valley, painted patchwork + 3D hedges/poplars; far patchwork ring to +-1900 D; the column `col0..col8` (+ `jeep_tow`) on the lane heading SSW, lead tank col0 at (-18, -20); farm (-30, 92) with netted tanks `park0..2`, trucks, gun, tents, jeeps, hay, cows; river y ~260; village + church y ~340 |
 | LANE | MORNING / DAY | (-700, -260, 0) | the farm lane 700 D west of the column (inside the FIELDS far ring): see ghost_lane.py docstring — hero tank `tank_hero` (-1.1, 16.9), `tank_paint` (12.5, 25), decoy field `field0..11` + flat sheets `flat0..2` (x -26..-62), sign (-14.5, 27.4), `jeep` path up the lane to (8.6, 4.2), `crate_chalk` (10.6, 1.4), lift `tank_lift` (-5, -30) [built only for S12/S13 and the bare location], ending seat (11.2, 9.4) + pile (14.8, 12.2), low hedge on the east verge y -114..-32 (cyclists) |
 | CAMP | NIGHT | (760, -180, 0) | tank rows `row0..16` (three rows, broadside, moon rim), `sound_truck` (-7.9, -9.2) + desk with `record`, radio tent (2.4, -5.3), `truck_paint` (13.5, -4.2) with the fresh badge, jeep, 7 lantern poles, crates, cables |
-| RHINE | NIGHT_R / PREDAWN (S18) | (0, 9000, 0) | river along +y (centre x = -2 + 6 sin(0.004 y), 76 D wide, water z -0.6); decoy field `decoy0..41` (x -62..-140, y -150..-20), 24 lanterns; `sound_truck_r` (-52, -70) + desk + `record`; radio tent (-52, -36); 30th / 79th INF DIV crates (-57, -60); unloading trucks (-78, -177) / (-93, -172); RHINE sign (-50, -179); convoy park y -205..-246; German OP (60, -60): sandbags, hut, telescope; pontoon bridge y 380; boats `boat0..4` |
+| RHINE | NIGHT_R / PREDAWN (S18) | (0, 9000, 0) | river along +y (centre x = -2 + 6 sin(0.004 y), 76 D wide, water z -0.6; r2: deep navy glossy water, low-frequency swell + fine ripple noise, real reflections of the moon and lamps, no glint dashes); decoy field `decoy0..41` (x -62..-140, y -150..-20), 24 lanterns at 2400 W with tight 1.8 D warm pools (`ghost_rhine.lamp`), 7 bank lanterns, lit truck cabs; supply dump y -190..-235 (crate stacks, rubber bundles, coils, lanterns); `sound_truck_r` (-52, -70) + desk + `record`; radio tent (-52, -36); 30th / 79th INF DIV crates (-57, -60); unloading trucks (-78, -177) / (-93, -172); RHINE sign (-50, -179); convoy park y -205..-246; German OP (60, -60): sandbags, hut, telescope; pontoon bridge y 380; boats `boat0..4` |
 
 Light presets: DAWN (low gold sun from the west-north-west, blue dawn sky), MORNING (board 2), DAY (sun south-west, LANE S11-S19), NIGHT (moon key, warm lamps),
-NIGHT_R (the Rhine moon in the south-east), PREDAWN (blue, a pale band low in the east, lamps dimmed). Shade is a painted blue-violet replacement colour (shade_cut).
+NIGHT_R (r2: moon in the NORTH-EAST, low over the river so its path lies on the water in S14 / S16; moonlit ground ~hue 220, navy shade ~247, the ambient
+cut where the moon lands (amb_cut) so there is no lavender cast; sky_night3r), PREDAWN (r2: blue with a warm orange band low in the east-north-east,
+sky_predawn2, lamps dimmed). Shade is a painted blue-violet replacement colour (shade_cut).
 
 ## Camera move model (ghost_shots.py)
 Every move runs over **planned length x 1.25** (t = 0 .. 1.25; t = 1 is the planned end) and is eased: s = 0.6 sine-in-out + 0.4 linear of t/1.25, so it
 keeps moving into the tail and never holds near-still. Moves: `push` (fraction of the subject distance per second, exponential: 0.06-0.10), `slide`
 (px/s at 720 wide, measured at `sdist` D), `rise`, `zoom_rate` (lens push, S17), `end` (crane / reveal to an end pose; the tail extrapolates on the same
-eased line), `path` (BIGZOOM key poses, Catmull-Rom with the subject distance interpolated in log space: S01 1693 D up -> 15 D medium on the lead tank;
+eased line), `path` (BIGZOOM key poses, Catmull-Rom with the subject distance interpolated in log space: S01 (r2) a high OBLIQUE start 120 D up, 37 deg down, lens 18 -> 21 D, 3/4 on the lead tank;
 S12 4.7 D on the cyclists' faces -> 25 D wide on the lift). No random shake anywhere. `GH.key_camera` keys location, rotation and lens per frame (LINEAR).
 Foreground props (`fg`): real grounded props placed ('cam', dist, lateral) from the start camera, 1.5-2.2 D from the lens: 12 shots have one (S02 S03 S07 S08 S09 S10 S13 S15 S16 S17 S18 S19), S05 starts on the sign, S06 shoots over the crew, S11 through the low hedge; S01 S04 S12 S14 are high / BIGZOOM moves (S01 sweeps past two poplars).
 
@@ -101,13 +103,16 @@ Heights: soldier/major 3.0 D (+ hat), cyclist with bike 4.0 D card, dog 1.8 D. H
 - RHINE renders with one glossy bounce (the river reflects lanterns / decoys / moon): call `GH.quality()` after any `setup_render` of your own, or the river turns matte.
 - The sky dome follows the camera via a frame handler; FIELDS uses a 2700 D dome (the S01 start is 1693 D up), clip end 3000.
 - The ground textures are painted per location; the far ring (fields_far) is shared, so the horizon around LANE / CAMP is the same valley as FIELDS.
+- RHINE foregrounds use the fg kind `bankdress` (ghost_fg.bankdress: crate stack 30th/79th, folded-rubber bundle, rope coil, hand pump, small lantern).
+- S18 (r2) is a low oblique 2.4 D over the water from the west end of the pontoon bridge looking east-north-east: the bridge runs diagonally, boat3
+  (two paddlers + the dog) passes about 7 D from the lens at set_boats 0.19-0.23 (the other boats are behind the camera at that t).
 - Placeholder cards are FLAT SILHOUETTES (one colour per role: olive soldiers, khaki Major with cigar, blue/brown cyclists with bikes, grey Germans,
   brown dog). They show staging and head rows only.
 
 ## Shots, cameras and marks (generated from ghost_shot_table.py; local coordinates of each location; world = local + origin)
 ### S01  (FIELDS, DAWN, 4.00 s planned -> 150 frames at x1.25, trans per plan)
-- BIGZOOM 1: extreme wide high over the patchwork, descend + push along the lane past two poplars, end medium on the lead tank
-- camera (local) start (-3.0, -118.0, 1693.0) -> (-3.0, 30.0, 0.0) lens 24; planned end (-32.5, -31.0, 5.6) -> (-19.0, -20.5, 3.2) lens 24.0; tail end (-30.2, -29.3, 5.2); move: BIGZOOM path (4 key poses)
+- BIGZOOM 1 (r2): high OBLIQUE extreme wide (120 D up, 37 deg down, dawn horizon in the top 15 %) along the lane over the bocage, descend + push past two poplars, end 3/4 on the lead tank
+- camera (local) start (-25.0, -110.0, 120.0) -> (-8.0, 50.0, 0.0) lens 18; planned end (-29.0, -43.0, 7.0) -> (-19.5, -25.0, 5.6) lens 24.0; tail end (-27.4, -39.9, 6.8); move: BIGZOOM path (4 key poses)
 - state at build: `column=0`
   - rider (1): (-2.9, 0.4, z 3.30) soldier/wave on col0
   - walkers (2): (-23.6, -17.0) soldier/wave; (-19.0, -4.0) soldier/stand
@@ -208,28 +213,29 @@ Heights: soldier/major 3.0 D (+ hat), cyclist with bike 4.0 D card, dog 1.8 D. H
 ### S15  (RHINE, NIGHT_R, 3.30 s planned -> 124 frames at x1.25, trans per plan)
 - crane up over rows inflating in lantern light (set_inflate decoyN staggered); pump crews
 - camera (local) start (-52.0, -162.0, 2.6) -> (-84.0, -112.0, 2.8) lens 22; planned end (-40.0, -152.0, 18.0) -> (-92.0, -96.0, 0.0) lens 22.0; tail end (-38.1, -150.4, 20.5); move: to an end pose
-- foreground prop: ('reeds', ('cam', 1.7, 0.9), 0, 0.9)
-  - pumpcrew (5): (-58.8, -131.4) pumpman/pump; (-72.6, -119.0) pumpman/pump; (-85.4, -128.4) pumpman/pump; (-99.0, -112.0) soldier/stand; (-111.6, -125.0) soldier/carry
+- foreground prop: ('bankdress', ('cam', 1.9, 1.1), 200, 0.85)
+  - pumpcrew (5): (-60.5, -125.0) pumpman/pump; (-70.5, -119.0) pumpman/pump; (-86.5, -125.0) pumpman/pump; (-96.5, -100.0) soldier/stand; (-112.5, -106.0) soldier/carry
 ### S16  (RHINE, NIGHT_R, 3.30 s planned -> 124 frames at x1.25, trans per plan)
 - push along the sound truck and the radio tent; 30th / 79th INF DIV crates; sound truck booming (spin_record), radio chatter
 - camera (local) start (-45.5, -104.0, 4.5) -> (-60.0, -58.0, 2.5) lens 22; planned end (-46.1, -93.0, 4.1) -> (-57.4, -57.2, 2.5) lens 22.0; tail end (-46.1, -91.5, 4.0); move: push 0.07, slide 30, sdist 20.0
-- foreground prop: ('lantern', ('cam', 1.9, -1.2), 0, 0.8)
+- foreground prop: [('bankdress', ('cam', 1.8, -1.1), 160, 0.9), ('bankdress', ('cam', 6.5, 1.8), 210, 1.0), ('crate', ('cam', 10.0, -2.6), 20, 1.3, 'crate_79')]
   - soundman (1): (-55.0, -80.6) soundman/point
-  - radioman (1): (-64.6, -50.0) radioman/sit
+  - radioman (1): (-51.6, -36.6) radioman/sit
   - soldier (1): (-53.0, -55.0) soldier/carry
 ### S17  (RHINE, NIGHT_R, 2.60 s planned -> 98 frames at x1.25, trans per plan)
 - OTS from behind the German observers (binoculars, a telescope) across the river to the glowing decoy field; one drops his sausage
-- camera (local) start (69.0, -53.6, 3.8) -> (-90.0, -104.0, 0.5) lens 24; planned end (69.2, -54.4, 3.8) -> (-89.8, -104.8, 0.5) lens 30.0; tail end (69.3, -54.5, 3.8); move: zoom_rate 0.08, slide -25, sdist 10.0
+- camera (local) start (69.0, -53.6, 3.8) -> (-63.0, -124.0, 0.5) lens 24; planned end (69.2, -54.0, 3.8) -> (-62.8, -124.4, 0.5) lens 28.4; tail end (69.3, -54.1, 3.8); move: zoom_rate 0.06, slide -15, sdist 10.0
 - foreground prop: ('sandbags', ('cam', 1.8, -0.9), 90, 0.9, 3)
   - observers (3): (58.4, -59.0) german/look; (59.6, -61.6) german/point; (61.2, -58.6) german/stand
 ### S18  (RHINE, PREDAWN, 2.50 s planned -> 94 frames at x1.25, trans per plan)
-- wide, slow pan along the assault boats / pontoon crossing in blue pre-dawn shadow (set_boats 0.3 -> 0.6)
-- camera (local) start (-37.5, 334.0, 3.2) -> (-2.0, 350.0, -0.2) lens 22; planned end (-36.5, 337.0, 3.1) -> (16.0, 360.0, -0.2) lens 24.0; tail end (-36.3, 337.5, 3.1); move: to an end pose
-- foreground prop: ('reeds', ('cam', 1.8, -1.0), 0, 1.0)
+- low oblique over the water: the pontoon bridge diagonal, a boat with paddlers and a dog close, troops tiptoe on the bridge (set_boats 0.19 -> 0.23)
+- camera (local) start (-33.0, 361.5, 1.8) -> (20.0, 386.0, 9.0) lens 22; planned end (-32.6, 360.9, 1.8) -> (24.0, 383.0, 9.0) lens 24.0; tail end (-32.5, 360.8, 1.8); move: to an end pose
+- state at build: `boats=0.2`
   - boat0 (3): (-1.5, 0.0, z -0.76) soldier/paddle on boat0; (0.0, 0.0, z -0.76) soldier/paddle on boat0; (1.3, 0.0, z -0.76) soldier/paddle on boat0
   - boat1 (3): (-1.5, 0.0, z -0.76) soldier/paddle on boat1; (0.0, 0.0, z -0.76) soldier/paddle on boat1; (1.3, 0.0, z -0.76) soldier/paddle on boat1
   - boat2 (3): (-1.5, 0.0, z -0.76) soldier/paddle on boat2; (0.0, 0.0, z -0.76) soldier/paddle on boat2; (1.3, 0.0, z -0.76) soldier/paddle on boat2
-  - boat3 (3): (-1.5, 0.0, z -0.76) soldier/paddle on boat3; (0.0, 0.0, z -0.76) soldier/paddle on boat3; (1.3, 0.0, z -0.76) soldier/paddle on boat3
+  - boat3 (2): (-1.5, 0.0, z -0.76) soldier/paddle on boat3; (0.0, 0.0, z -0.76) soldier/paddle on boat3
   - boat4 (3): (-1.5, 0.0, z -0.76) soldier/paddle on boat4; (0.0, 0.0, z -0.76) soldier/paddle on boat4; (1.3, 0.0, z -0.76) soldier/paddle on boat4
-  - dog (1): (1.9, 0.0, z -0.76) dog/stand on boat2
-  - tiptoe (2): (-40.0, 382.0, z 0.52) soldier/carry; (-33.0, 382.6, z 0.52) soldier/stand
+  - dog (1): (1.9, 0.0, z -0.76) dog/stand on boat3
+  - tiptoe (4): (-20.0, 381.0, z 0.52) soldier/carry; (-11.0, 379.4, z 0.52) soldier/stand; (-2.0, 381.2, z 0.52) soldier/carry; (8.0, 379.6, z 0.52) soldier/stand
+  - farbank (5): (46.0, 383.0) soldier/carry; (49.5, 389.0) soldier/stand; (45.0, 395.0) soldier/wave; (52.0, 380.0) soldier/carry; (55.0, 392.0) soldier/stand

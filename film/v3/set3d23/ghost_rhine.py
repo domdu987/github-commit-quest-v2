@@ -60,8 +60,12 @@ def build(Bk, M, shot):
         ob = PR.make_tank('decoy%d' % i, (x, y, gz(x, y)), rr.uniform(-6, 6), M, lod=0.95 if (x > -90) else 0.7, seed=1 + i % 3, hull=0.12, elev=4.0 * (i % 4))
         ob['gc_role'] = 'prop'; STATE['props'].append((ob, 5.8, True))
     for k, (x, y) in enumerate([(-62.0 - 13 * r + 3.0 * (r % 2), -140.5 + 19 * i + 6.0 * (r % 2)) for r in range(6) for i in range(0, 7, 2)]):
-        with Bk.prop('lantern', shadow_r=0.6): lantern_pole(Bk, M, (x, y), gz, h=5.2, light=1000.0, halo_r=0.8, name='lpr_%d' % k)
+        with Bk.prop('lantern', shadow_r=0.6): lamp(Bk, M, (x, y), gz, h=5.2, light=2400.0, name='lpr_%d' % k)
+    for k, y in enumerate((-160.0, -136.0, -114.0, -64.0, -32.0, 0.0, 30.0)):                        # bank lanterns: their warm streaks lie on the river
+        x = xc(y) - HALF - 4.0
+        with Bk.prop('lantern', shadow_r=0.6): lamp(Bk, M, (x, y), gz, h=4.6, light=1800.0, name='lpb_%d' % k)
     stk = PR.make_obj(PR.truck_mesh(M, 1.0, False, True, seed=3), 'sound_truck_r', (TRUCK[0], TRUCK[1], gz(*TRUCK[:2])), TRUCK[2], hull=0.14); stk['gc_role'] = 'prop'; STATE['props'].append((stk, 6.4, True))
+    cab_glow(Bk, M, TRUCK, gz)
     import ghost_camp as GC
     old = GC.DESK; GC.DESK = (-58.0, -78.0, 200.0); GC.desk(Bk, M, gz); GC.DESK = old
     with Bk.prop('tent', shadow_r=None): TF, lant = tent(Bk, M, TENT[:2], TENT[2], gz)
@@ -71,6 +75,7 @@ def build(Bk, M, shot):
         with Bk.prop('crate', shadow_r=1.8): PR.crate(Bk, M, V(cx, cy, gz(cx, cy)), yaw, size=(2.6, 1.6, 1.6), front=fr, name='crate', seed=i + 3)
     for j, (x, y, yaw) in enumerate(UNLOAD):
         ob = PR.make_obj(PR.truck_mesh(M, 1.0, False, False, seed=5 + j), 'truck_unload%d' % j, (x, y, gz(x, y)), yaw, hull=0.12); ob['gc_role'] = 'prop'; STATE['props'].append((ob, 6.2, True))
+        cab_glow(Bk, M, (x, y, yaw), gz)
         F = PR.BK.Frame((x, y, gz(x, y)), yaw)
         for k, (lx, ly) in enumerate(((-7.6, -1.2), (-8.0, 1.4), (-9.6, 0.0))):
             p = F.p(lx, ly, 0)
@@ -79,10 +84,12 @@ def build(Bk, M, shot):
     # the convoy park south of the field (the S14 foreground): trucks, a jeep, tents, crates along the track
     for j, (x, y, yaw) in enumerate(((-70.0, -212.0, 95.0), (-58.0, -232.0, 80.0), (-80.0, -246.0, 100.0))):
         ob = PR.make_obj(PR.truck_mesh(M, 1.0, False, False, seed=9 + j), 'truck_park%d' % j, (x, y, gz(x, y)), yaw, hull=0.12); ob['gc_role'] = 'prop'; STATE['props'].append((ob, 6.2, True))
+        cab_glow(Bk, M, (x, y, yaw), gz)
     for j, (x, y, yaw) in enumerate(((-96.0, -214.0, 80.0), (-104.0, -236.0, 95.0), (-48.0, -206.0, 60.0))):
         with Bk.prop('tent', shadow_r=None): tent(Bk, M, (x, y), yaw, gz, W_=6.0, D_=7.5, wh=3.0, rise=2.1, glow=(j == 0))
     for j, (x, y) in enumerate(((-66.0, -222.0), (-86.0, -228.0), (-52.0, -246.0))):
-        with Bk.prop('lantern', shadow_r=0.6): lantern_pole(Bk, M, (x, y), gz, h=5.0, light=800.0, halo_r=0.8, name='lpc_%d' % j)
+        with Bk.prop('lantern', shadow_r=0.6): lamp(Bk, M, (x, y), gz, h=5.0, light=2000.0, name='lpc_%d' % j)
+    supply_dump(Bk, M, gz)
     # ---- the German OP
     german_op(Bk, M, gz)
     # ---- the crossing (north): pontoon bridge + boats
@@ -90,6 +97,7 @@ def build(Bk, M, shot):
     # ---- banks: reeds, tufts
     for i in range(70):
         y = -260 + i * 6.5 + rr.uniform(-2, 2); x = xc(y) - HALF - rr.uniform(-1.5, 3.0)
+        if -165 < y < 40 and abs(y - round(y / 32.0) * 32.0) < 4: continue                         # keep the bank lanterns' feet clear
         FG.reeds(Bk, M, V(x, y, gz(x, y)), rr.uniform(0.7, 1.1))
     for i in range(40):
         y = -130 + i * 3.0 + rr.uniform(-1, 1); x = xc(y) + HALF + rr.uniform(-1.0, 3.0); FG.reeds(Bk, M, V(x, y, gz(x, y)), rr.uniform(0.6, 1.0))
@@ -106,13 +114,16 @@ def river(Bk, M, gz):
     m = bpy.data.materials.new(nm); nt = T._tree(m); N = nt.nodes.new; L = nt.links.new
     out = N('ShaderNodeOutputMaterial'); tc = N('ShaderNodeTexCoord'); mp = N('ShaderNodeMapping'); mp.inputs['Scale'].default_value = (1 / 24.0, 1 / 24.0, 1.0); L(tc.outputs['Object'], mp.inputs['Vector'])
     tw = N('ShaderNodeTexImage'); tw.image = T._img(tx['water_night']); L(mp.outputs['Vector'], tw.inputs['Vector'])
-    em = N('ShaderNodeEmission'); em.inputs['Strength'].default_value = 0.32
-    tn = N('ShaderNodeMix'); tn.data_type = 'RGBA'; tn.blend_type = 'MULTIPLY'; tn.inputs[0].default_value = 1.0; tn.inputs[7].default_value = (2.4, 0.7, 1.0, 1); L(tw.outputs['Color'], tn.inputs[6]); L(tn.outputs[2], em.inputs['Color'])
-    wv = N('ShaderNodeTexWave'); wv.wave_type = 'BANDS'; wv.bands_direction = 'Y'; wv.inputs['Scale'].default_value = 0.9; wv.inputs['Distortion'].default_value = 6.0; wv.inputs['Detail'].default_value = 3.0
-    mp2 = N('ShaderNodeMapping'); mp2.inputs['Scale'].default_value = (0.25, 1.6, 1.0); L(tc.outputs['Object'], mp2.inputs['Vector']); L(mp2.outputs['Vector'], wv.inputs['Vector'])
-    bu = N('ShaderNodeBump'); bu.inputs['Strength'].default_value = 0.22; L(wv.outputs['Fac'], bu.inputs['Height'])
-    gl = N('ShaderNodeBsdfGlossy'); gl.distribution = 'GGX'; gl.inputs['Roughness'].default_value = 0.09; gl.inputs['Color'].default_value = (0.70, 0.70, 0.95, 1); L(bu.outputs['Normal'], gl.inputs['Normal'])
-    fr = N('ShaderNodeLayerWeight'); fr.inputs['Blend'].default_value = 0.35
+    # r2: deep navy body (flat, no tiled texture: no static), long low-frequency swell + fine cross-ripple noise that stretch the moon / lamp
+    # reflections into paths; the painted current texture only modulates the body by +-15 %
+    em = N('ShaderNodeEmission'); em.inputs['Strength'].default_value = 1.0
+    bw = N('ShaderNodeRGBToBW'); L(tw.outputs['Color'], bw.inputs[0]); mr = N('ShaderNodeMapRange'); mr.inputs['To Min'].default_value = 0.85; mr.inputs['To Max'].default_value = 1.15; L(bw.outputs[0], mr.inputs['Value'])
+    tn = N('ShaderNodeMix'); tn.data_type = 'RGBA'; tn.blend_type = 'MULTIPLY'; tn.inputs[0].default_value = 1.0; tn.inputs[6].default_value = (0.010, 0.011, 0.046, 1); L(mr.outputs['Result'], tn.inputs[7]); L(tn.outputs[2], em.inputs['Color'])
+    nz = N('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 0.9; nz.inputs['Detail'].default_value = 3.0; nz.inputs['Roughness'].default_value = 0.45
+    mp2 = N('ShaderNodeMapping'); mp2.inputs['Scale'].default_value = (0.35, 2.2, 1.0); L(tc.outputs['Object'], mp2.inputs['Vector']); L(mp2.outputs['Vector'], nz.inputs['Vector'])
+    bu = N('ShaderNodeBump'); bu.inputs['Strength'].default_value = 0.55; bu.inputs['Distance'].default_value = 0.35; L(nz.outputs['Fac'], bu.inputs['Height'])
+    gl = N('ShaderNodeBsdfGlossy'); gl.distribution = 'GGX'; gl.inputs['Roughness'].default_value = 0.04; gl.inputs['Color'].default_value = (0.85, 0.85, 1.0, 1); L(bu.outputs['Normal'], gl.inputs['Normal'])
+    fr = N('ShaderNodeLayerWeight'); fr.inputs['Blend'].default_value = 0.5
     ad = N('ShaderNodeAddShader'); mx = N('ShaderNodeMixShader'); tr = N('ShaderNodeBsdfTransparent')
     L(fr.outputs['Fresnel'], mx.inputs['Fac']); L(em.outputs['Emission'], mx.inputs[1]); L(gl.outputs['BSDF'], ad.inputs[0]); L(em.outputs['Emission'], ad.inputs[1]); L(ad.outputs['Shader'], mx.inputs[2])
     L(mx.outputs['Shader'], out.inputs['Surface']); m.cycles.emission_sampling = 'NONE'
@@ -123,7 +134,7 @@ def river(Bk, M, gz):
     # glint dashes: additive camera-only layers (warm off the west bank lamps, cold in the moon path), tiled
     gm_w = PR.BK._mat_add(pre + 'glint_w', tx['glints'], (1.0, 0.66, 0.34), 0.55); gm_c = PR.BK._mat_add(pre + 'glint_c', tx['glints'], (0.7, 0.82, 1.0), 0.24)
     gb = Bk('glints', hull=0.0, shadow=False); rr = _rnd(4)
-    for (y0, y1, x0, x1, mat, til) in ((-170, 70, -HALF, -12, gm_w, 9.0), (-170, 70, -12, HALF, gm_c, 11.0), (352, 470, -HALF, HALF, gm_c, 11.0)):
+    for (y0, y1, x0, x1, mat, til) in ():                                                   # r2: the glint dashes read as static - the real reflections carry it
         for y in range(y0, y1, 20):
             for x in range(int(x0), int(x1), 20):
                 if rr.random() < 0.5: continue
@@ -185,6 +196,13 @@ def crossing(Bk, M, gz, shot):
         with Bk.prop('=boat%d' % i, shadow_r=None, snap=False): assault_boat(Bk, M)
         STATE['boats'].append(('boat%d' % i, (by, 0.15 * i)))
     STATE.setdefault('post_flush', []).append(lambda: GH.set_boats(0.45))
+    # r2: the far (east) bank at the bridgehead is busy - trees, a truck, crates, lanterns dimmed for the pre-dawn
+    c2 = xc(y0) + HALF
+    for k, (dx, dy) in enumerate(((14, 18), (22, -8), (30, 26), (12, 40), (36, 4), (26, 48))):
+        (poplar(Bk, M, V(c2 + dx, y0 + dy, gz(c2 + dx, y0 + dy)), h=20 + 2 * k, seed=1300 + k) if k % 2 else round_tree(Bk, M, V(c2 + dx, y0 + dy, gz(c2 + dx, y0 + dy)), r=3.4, seed=1300 + k))
+    ob = PR.make_obj(PR.truck_mesh(M, 1.0, False, False, seed=14), 'truck_far', (c2 + 16, y0 - 2, gz(c2 + 16, y0 - 2)), 100, hull=0.12); ob['gc_role'] = 'prop'; STATE['props'].append((ob, 6.2, True))
+    for k, (dx, dy) in enumerate(((7, -6), (9, 8))):
+        with Bk.prop('crate', shadow_r=1.6): PR.crate(Bk, M, V(c2 + dx, y0 + dy, gz(c2 + dx, y0 + dy)), 30 * k, size=(2.4, 1.5, 1.5), front='crate_c', name='crate', seed=60 + k)
 
 def assault_boat(Bk, M):
     """Plywood assault boat (local, centred at the origin, bow +x): 5.2 x 1.8 D, flat bottom at z -0.75 (sits in the water), sloped bow, thwarts."""
@@ -201,3 +219,49 @@ def boat_at(path, t):
     """(local (x, y), yaw) of a boat: path = (y, phase); it crosses from the west bank (t 0) to the east bank (t 1), staggered by phase."""
     y, ph = path; u = max(0.0, min(1.0, (t - ph * 0.4) / 0.85 + 0.05)); c = xc(y); x = c - HALF + 4.0 + (2 * HALF - 8.0) * u
     return (x, y + 3.0 * math.sin(u * 3.0 + ph * 7)), 4.0 * math.cos(u * 3.0 + ph * 7)
+
+
+# ----------------------------------------------------------------------------- set r2 (QA_ART_SET RHINE fixes)
+def lamp(Bk, M, p, gz, h=5.0, light=2400.0, name='lp', r_pool=1.8):
+    """Lantern on a post with a strong, tight warm pool (1.8 D) and a small halo: warm against the navy night, no haze."""
+    if 'pool_r' not in M: M['pool_r'] = PR.BK._mat_add(STATE['pre'] + 'pool_r', STATE['tx']['pool'], (1.0, 0.46, 0.14), 1.7)
+    z = gz(p[0], p[1]); c = V(p[0], p[1], z + h); PR.lantern(Bk, M, c, 1.0, light, 0.7, (1.0, 0.58, 0.26), name, pole=h); PR.pool(Bk, M, V(p[0], p[1], z), r_pool, 'pool_r')
+    STATE.setdefault('lamp_marks', []).append((p[0], p[1]))
+
+def cab_glow(Bk, M, t, gz):
+    """Lit truck cab: warm glowing side windows + windscreen glow (decals on the cab, camera-visible, reflected by the river)."""
+    x, y, yaw = t; F = PR.BK.Frame((x, y, gz(x, y)), yaw); b = Bk('cabglow', shadow=False)
+    for sy in (-1, 1):
+        q = [F.p(1.1, sy * 1.84, 3.2), F.p(2.5, sy * 1.84, 3.2), F.p(2.5, sy * 1.84, 4.3), F.p(1.1, sy * 1.84, 4.3)]; b.oface(q, M['glow_win'], [(0, 0), (1, 0), (1, 1), (0, 1)], F.Y * sy)
+    q = [F.p(2.86, -1.3, 3.3), F.p(2.86, 1.3, 3.3), F.p(2.86, 1.3, 4.3), F.p(2.86, -1.3, 4.3)]; b.oface(q, M['glow_win'], [(0, 0), (1, 0), (1, 1), (0, 1)], F.X)
+    if 'cabglow_tag' not in STATE:
+        STATE['cabglow_tag'] = True; STATE.setdefault('post_flush', []).append(lambda: [o.__setitem__('gc_role', 'skip') for o in STATE['SET'].objects if o.name.endswith('cabglow')])
+
+def bundle(Bk, M, p, yaw, s=1.0):
+    """Folded-rubber bundle: a flattened olive roll tied with two straps."""
+    F = PR.BK.Frame(p, yaw); b = Bk('bundle', smooth_=True)
+    PR.puffball(b, F.p(0, 0, 0.42 * s), (0.95 * s, 0.55 * s, 0.42 * s), M['rubber_d'], e=(0.6, 0.7), seg=14, rings=6)
+    for sx in (-0.45, 0.45): rod(b, F.p(sx * s, -0.58 * s, 0.4 * s), F.p(sx * s, 0.58 * s, 0.4 * s), 0.46 * s, M['canvas'], seg=12, r1=0.46 * s) if False else PR.puffball(b, F.p(sx * s, 0, 0.42 * s), (0.06 * s, 0.57 * s, 0.44 * s), M['canvas'], e=(1, 1), seg=12, rings=6)
+
+def coil(Bk, M, p, s=1.0):
+    """A coil of rope on the ground (three stacked rings)."""
+    b = Bk('coil')
+    for k in range(3):
+        r = (0.55 - 0.07 * k) * s; z = p.z + (0.06 + 0.1 * k) * s; pts = [V(p.x + r * math.cos(2 * math.pi * i / 16), p.y + r * math.sin(2 * math.pi * i / 16), z) for i in range(17)]
+        for a, c in zip(pts, pts[1:]): rod(b, a, c, 0.06 * s, M['hay_d'], seg=5)
+
+def supply_dump(Bk, M, gz):
+    """The S14 lower frame: a lit supply dump south of the field - crate stacks, folded-rubber bundles, rope coils, a pump, lanterns."""
+    rr = _rnd(31)
+    for i in range(12):
+        x = -112.0 + (i % 6) * 9.0 + rr.uniform(-1.5, 1.5); y = -196.0 - (i // 6) * 14.0 + rr.uniform(-1.5, 1.5); yaw = rr.uniform(-20, 20)
+        with Bk.prop('crates', shadow_r=2.4):
+            F = PR.BK.Frame((x, y, gz(x, y)), yaw)
+            for (lx, ly, lz) in ((0, 0, 0), (2.7, 0.1, 0), (1.3, 0.0, 1.6)):
+                p = F.p(lx, ly, 0); PR.crate(Bk, M, V(p.x, p.y, gz(x, y) + lz), yaw, size=(2.6, 1.6, 1.6), front=('crate_30', 'crate_79', 'crate_c')[(i + int(lx)) % 3], name='crate', seed=40 + i)
+        bx, by = x + 1.5, y - 3.2
+        with Bk.prop('bundle', shadow_r=1.2): bundle(Bk, M, V(bx, by, gz(bx, by)), yaw + 70)
+    for j, (x, y) in enumerate(((-108.0, -203.0), (-90.0, -203.0), (-72.0, -217.0), (-100.0, -224.0))):
+        with Bk.prop('lantern', shadow_r=0.6): lamp(Bk, M, (x, y), gz, h=4.8, light=2000.0, name='lpd_%d' % j)
+    for j, (x, y) in enumerate(((-98.0, -207.0), (-80.0, -221.0))):
+        with Bk.prop('coil', shadow_r=0.8): coil(Bk, M, V(x, y, gz(x, y)))

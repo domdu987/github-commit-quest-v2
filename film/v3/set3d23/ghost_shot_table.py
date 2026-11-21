@@ -5,12 +5,12 @@ from ghost_shots import shot, C, M_
 # ============================================================================= FIELDS (dawn)
 # S01 BIGZOOM 1: extreme wide bird's-eye (column < 5 % of the frame height) -> descend + push along the lane past the poplars -> medium on the
 # lead tank (col0 at (-18, -20), heading SSW, towed by a jeep), a soldier on its rear deck waves the column on.
-shot(1, 0.00, 4.00, 'FIELDS', 'DAWN', C((-3, -118, 1693), (-3, 30, 0), 24),
-     dict(path=[(0.0, C((-3, -118, 1693), (-3, 30, 0), 24)),
-                (0.42, C((-110, -200, 230), (-10, 0, 0), 24)),
-                (0.78, C((-62, -76, 24), (-17, -17, 1.5), 24)),
-                (1.0, C((-32.5, -31.0, 5.6), (-19.0, -20.5, 3.2), 24))]),
-     note='BIGZOOM 1: extreme wide high over the patchwork, descend + push along the lane past two poplars, end medium on the lead tank',
+shot(1, 0.00, 4.00, 'FIELDS', 'DAWN', C((-25, -110, 120), (-8, 50, 0), 18),
+     dict(path=[(0.0, C((-25, -110, 120), (-8, 50, 0), 18)),
+                (0.45, C((-50, -86, 46), (-16, -10, 1), 20)),
+                (0.8, C((-38, -56, 15), (-18.5, -22, 3), 22)),
+                (1.0, C((-29.0, -43.0, 7.0), (-19.5, -25.0, 5.6), 24))]),
+     note='BIGZOOM 1 (r2): high OBLIQUE extreme wide (120 D up, 37 deg down, dawn horizon in the top 15 %) along the lane over the bocage, descend + push past two poplars, end 3/4 on the lead tank',
      marks=dict(rider=[M_(-2.9, 0.4, pose='wave', z=3.3, parent='col0')],
                 walkers=[M_(-23.6, -17.0, pose='wave'), M_(-19.0, -4.0, pose='stand')]),
      state='column=0')
@@ -118,24 +118,27 @@ shot(14, 50.20, 54.20, 'RHINE', 'NIGHT_R', C((-128.0, -268.0, 74.0), (-30.0, -96
 # S15 crane up over the rows inflating in lantern light; pump crews
 shot(15, 54.30, 57.60, 'RHINE', 'NIGHT_R', C((-52.0, -162.0, 2.6), (-84.0, -112.0, 2.8), 22), dict(end=C((-40.0, -152.0, 18.0), (-92.0, -96.0, 0.0), 22)),
      note='crane up over rows inflating in lantern light (set_inflate decoyN staggered); pump crews',
-     fg=('reeds', ('cam', 1.7, 0.9), 0, 0.9),
+     fg=('bankdress', ('cam', 1.9, 1.1), 200, 0.85),
      marks=dict(pumpcrew=[M_(-62.0 + 1.5, -131.0 + 6.0, ph='pumpman', pose='pump'), M_(-72.0 + 1.5, -125.0 + 6.0, ph='pumpman', pose='pump'), M_(-88.0 + 1.5, -131.0 + 6.0, ph='pumpman', pose='pump'),
                           M_(-98.0 + 1.5, -106.0 + 6.0), M_(-114.0 + 1.5, -112.0 + 6.0, pose='carry')]))
 # S16 push along the sound truck and the radio tent; crates stencilled 30th INF DIV / 79th INF DIV
 shot(16, 57.60, 60.90, 'RHINE', 'NIGHT_R', C((-45.5, -104.0, 4.5), (-60.0, -58.0, 2.5), 22), dict(push=0.07, slide=30, sdist=20.0),
      note='push along the sound truck and the radio tent; 30th / 79th INF DIV crates; sound truck booming (spin_record), radio chatter',
-     fg=('lantern', ('cam', 1.9, -1.2), 0, 0.8),
+     fg=[('bankdress', ('cam', 1.8, -1.1), 160, 0.9), ('bankdress', ('cam', 6.5, 1.8), 210, 1.0), ('crate', ('cam', 10.0, -2.6), 20, 1.3, 'crate_79')],
      marks=dict(soundman=[M_(-55.0, -80.6, ph='soundman', pose='point')], radioman=[M_(-51.6, -36.6, ph='radioman', pose='sit')], soldier=[M_(-53.0, -55.0, pose='carry')]))
 # S17 OTS from behind the German observers across the river to the glowing balloon field
-shot(17, 60.90, 63.50, 'RHINE', 'NIGHT_R', C((69.0, -53.6, 3.8), (-90.0, -104.0, 0.5), 24), dict(zoom_rate=0.08, slide=-25, sdist=10.0),
+shot(17, 60.90, 63.50, 'RHINE', 'NIGHT_R', C((69.0, -53.6, 3.8), (-63.0, -124.0, 0.5), 24), dict(zoom_rate=0.06, slide=-15, sdist=10.0),
      note='OTS from behind the German observers (binoculars, a telescope) across the river to the glowing decoy field; one drops his sausage', fg=('sandbags', ('cam', 1.8, -0.9), 90, 0.9, 3),
      marks=dict(observers=[M_(58.4, -59.0, ph='german', pose='look'), M_(59.6, -61.6, ph='german', pose='point'), M_(61.2, -58.6, ph='german', pose='stand')]))
-# S18 pre-dawn blue: wide slow pan along the boats and the pontoon bridge; soldiers paddle, tiptoe, a dog in a boat
-shot(18, 63.50, 66.00, 'RHINE', 'PREDAWN', C((-37.5, 334.0, 3.2), (-2.0, 350.0, -0.2), 22), dict(end=C((-36.5, 337.0, 3.1), (16.0, 360.0, -0.2), 24)),
-     note='wide, slow pan along the assault boats / pontoon crossing in blue pre-dawn shadow (set_boats 0.3 -> 0.6)', fg=('reeds', ('cam', 1.8, -1.0), 0, 1.0),
-     marks=dict(**{'boat%d' % i: [M_(x, 0.0, pose='paddle', z=-0.76, parent='boat%d' % i) for x in (-1.5, 0.0, 1.3)] for i in range(5)},
-                dog=[M_(1.95, 0.0, ph='dog', pose='stand', z=-0.76, parent='boat2')], tiptoe=[M_(-40.0, 382.0, z=0.52, pose='carry'), M_(-33.0, 382.6, z=0.52)]))
+# S18 (r2) pre-dawn: LOW oblique 2.4 D over the water, the pontoon bridge diagonal through the frame, boat2 (paddlers + the dog) 3-5 D from the lens,
+# troops on the bridge and the far bank, a warm orange band on the horizon (sky_predawn2)
+shot(18, 63.50, 66.00, 'RHINE', 'PREDAWN', C((-33.0, 361.5, 1.8), (20.0, 386.0, 9.0), 22), dict(end=C((-32.6, 360.9, 1.8), (24.0, 383.0, 9.0), 24)),
+     note='low oblique over the water: the pontoon bridge diagonal, a boat with paddlers and a dog close, troops tiptoe on the bridge (set_boats 0.19 -> 0.23)', state='boats=0.2',
+     marks=dict(**{'boat%d' % i: [M_(x, 0.0, pose='paddle', z=-0.76, parent='boat%d' % i) for x in ((-1.5, 0.0) if i == 3 else (-1.5, 0.0, 1.3))] for i in range(5)},
+                dog=[M_(1.95, 0.0, ph='dog', pose='stand', z=-0.76, parent='boat3')],
+                tiptoe=[M_(-20.0, 381.0, z=0.52, pose='carry'), M_(-11.0, 379.4, z=0.52), M_(-2.0, 381.2, z=0.52, pose='carry'), M_(8.0, 379.6, z=0.52)],
+                farbank=[M_(46.0, 383.0, pose='carry'), M_(49.5, 389.0), M_(45.0, 395.0, pose='wave'), M_(52.0, 380.0, pose='carry'), M_(55.0, 392.0)]))
 def _a15(GH, t):
     for i in range(42): GH.set_inflate('decoy%d' % i, 0.2 + 0.8 * _sm(0.08 * (i % 7) - 0.1 + 0.05 * (i // 7), 0.5 + 0.08 * (i % 7) + 0.05 * (i // 7), t))
-def _a18(GH, t): GH.set_boats(0.3 + 0.3 * t / 1.25)
+def _a18(GH, t): GH.set_boats(0.19 + 0.04 * t / 1.25)
 ACTION.update(S15=_a15, S18=_a18)

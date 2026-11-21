@@ -34,6 +34,8 @@ def make(spec, Bk, M):
             c = V(x, y, z + 2.2 * s); PR.lantern(Bk, M, c, 0.8 * s, 120.0 * s, 0.9 * s, (1.0, 0.62, 0.3), 'fg_lamp', pole=2.2 * s)
     elif kind == 'sandbags':
         with Bk.prop('fg_sandbags', shadow_r=None): sandbag_wall(Bk, M, V(x, y, z), yaw, n=spec[4] if len(spec) > 4 else 4, rows=3, s=s)
+    elif kind == 'bankdress':
+        bankdress(Bk, M, V(x, y, z), yaw, s)
     elif kind == 'reeds':
         reeds(Bk, M, V(x, y, z), s)
     elif kind == 'wheel':
@@ -56,3 +58,19 @@ def reeds(Bk, M, c, s=1.0):
     for i in range(26):
         a = i * 2.39996; r = 0.12 + 0.35 * ((i * 7) % 10) / 10.0; p = V(c.x + r * math.cos(a), c.y + r * math.sin(a), c.z - 0.2); h = (1.6 + 1.1 * ((i * 3) % 7) / 7.0) * s
         tip = p + V(0.25 * math.cos(a * 1.3), 0.25 * math.sin(a * 1.3), h); rod(b, p, tip, 0.035 * s, M['hay_d'] if i % 3 else M['tuft'], seg=3, r1=0.01)
+
+def bankdress(Bk, M, c, yaw, s=1.0):
+    """r2 (RHINE foregrounds): a dressed near-bank group facing the camera - a crate stack, a folded-rubber bundle, a rope coil, a hand pump, a
+    small lantern - one prop group each (snapped, contact blobs)."""
+    import ghost_rhine as GR
+    F = PR.BK.Frame(c, yaw); gz = STATE['gz']
+    def at(x, y): p = F.p(x * s, y * s, 0); return V(p.x, p.y, gz(p.x, p.y))
+    with Bk.prop('fg_crates', shadow_r=1.6 * s):
+        p = at(0, 0); PR.crate(Bk, M, p, yaw + 8, size=(1.5 * s, 1.0 * s, 1.0 * s), front='crate_30', name='crate', seed=51)
+        PR.crate(Bk, M, V(p.x, p.y, p.z + 1.0 * s), yaw - 6, size=(1.3 * s, 0.9 * s, 0.9 * s), front='crate_79', name='crate', seed=52)
+    with Bk.prop('fg_bundle', shadow_r=1.0 * s): GR.bundle(Bk, M, at(1.9, 0.6), yaw + 60, 0.8 * s)
+    with Bk.prop('fg_coil', shadow_r=0.6 * s): GR.coil(Bk, M, at(-0.9, -1.5), 0.8 * s)
+    v = at(2.6, 2.2); v.z += 0.6
+    with Bk.prop('fg_pump', shadow_r=1.2 * s): PR.pump(Bk, M, tuple(at(-2.6, 1.8)), yaw + 90, v, gz=gz)
+    with Bk.prop('fg_lantern', shadow_r=0.5):
+        q = at(3.0, 1.0); PR.lantern(Bk, M, V(q.x, q.y, q.z + 0.45 * s), 0.6 * s, 160.0, 0.5 * s, (1.0, 0.6, 0.28), 'fg_lamp_b')

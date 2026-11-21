@@ -23,18 +23,35 @@ glints, light-pool decals, mist, smoke) is HIDDEN from the rays while snapping a
 | S19 | LANE | 2559 rows, 145 objects | 0 | balloon_loose |
 | S09 | CAMP | 779 rows, 41 objects | 0 | - |
 | S10 | CAMP | 779 rows, 41 objects | 0 | - |
-| S14 | RHINE | 1680 rows, 105 objects | 0 | - |
-| S15 | RHINE | 1484 rows, 106 objects | 0 | - |
-| S16 | RHINE | 1470 rows, 105 objects | 0 | - |
-| S17 | RHINE | 1155 rows, 105 objects | 0 | - |
-| S18 | RHINE | 1309 rows, 119 objects | 0 | - |
+| S14 | RHINE | 2320 rows, 145 objects | 0 | - |
+| S15 | RHINE | 2114 rows, 151 objects | 14 | - |
+| S16 | RHINE | 2170 rows, 155 objects | 0 | - |
+| S17 | RHINE | 1595 rows, 145 objects | 0 | - |
+| S18 | RHINE | 1815 rows, 165 objects | 0 | - |
 
-**Total: 18537 checks, 0 FAIL.**
+**Total: 21453 checks, 14 FAIL.**
 
 - FIELDS bare location: - checked objects: 36   rows: 36   FAIL rows: 0   **result: PASS** (set_work/ground/GROUND_FIELDS.md)
 - LANE bare location: - checked objects: 39   rows: 39   FAIL rows: 0   **result: PASS** (set_work/ground/GROUND_LANE.md)
 - CAMP bare location: - checked objects: 37   rows: 37   FAIL rows: 0   **result: PASS** (set_work/ground/GROUND_CAMP.md)
-- RHINE bare location: - checked objects: 101   rows: 101   FAIL rows: 0   **result: PASS** (set_work/ground/GROUND_RHINE.md)
+- RHINE bare location: - checked objects: 141   rows: 141   FAIL rows: 0   **result: PASS** (set_work/ground/GROUND_RHINE.md)
+
+## Remaining fails
+
+| shot | frame | object | gap | hit |
+|---|---|---|---|---|
+| S15 | 1 | fg_coil.096 | 0.1987 | fg_pump.097 |
+| S15 | 11 | fg_coil.096 | 0.1987 | fg_pump.097 |
+| S15 | 21 | fg_coil.096 | 0.1987 | fg_pump.097 |
+| S15 | 31 | fg_coil.096 | 0.1987 | fg_pump.097 |
+| S15 | 41 | fg_coil.096 | 0.1987 | fg_pump.097 |
+| S15 | 51 | fg_coil.096 | 0.1987 | fg_pump.097 |
+| S15 | 61 | fg_coil.096 | 0.1987 | fg_pump.097 |
+| S15 | 71 | fg_coil.096 | 0.1987 | fg_pump.097 |
+| S15 | 81 | fg_coil.096 | 0.1987 | fg_pump.097 |
+| S15 | 91 | fg_coil.096 | 0.1987 | fg_pump.097 |
+| S15 | 101 | fg_coil.096 | 0.1987 | fg_pump.097 |
+| S15 | 111 | fg_coil.096 | 0.1987 | fg_pump.097 |
 
 ## Allowed off the ground (flagged `airborne`)
 - `tank_lift` while lifted (S12 / S13, the ONLY airborne tank); its contact blob stays on the grass and shrinks.
