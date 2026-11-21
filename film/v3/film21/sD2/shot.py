@@ -189,29 +189,63 @@ def surrey_xy(g, M, R, sf, loc_of):
     return behind.lerp(Vector((sf[0], sf[1], 0)), w)
 
 
+PROPS = []
+
+
+def _join(objs, name):
+    import bpy
+    objs = [o for o in objs if o is not None]
+    for o in bpy.context.view_layer.objects: o.select_set(False)
+    for o in objs: o.select_set(True)
+    bpy.context.view_layer.objects.active = objs[0]
+    if len(objs) > 1: bpy.ops.object.join()
+    ob = bpy.context.view_layer.objects.active; ob.name = name
+    return ob
+
+
+def _decal(name, x, y, z, rx, ry):
+    """soft contact shadow under a free prop (QA §K 2)"""
+    import bpy, actors
+    me = bpy.data.meshes.new(name)
+    me.from_pydata([(-rx, -ry, 0), (rx, -ry, 0), (rx, ry, 0), (-rx, ry, 0)], [], [(0, 1, 2, 3)])
+    uv = me.uv_layers.new(name="UVMap")
+    for i, t in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uv.data[i].uv = t
+    ob = bpy.data.objects.new(name, me); ob.data.materials.append(actors.contact_material(name + "_m", "#252432", 0.5))
+    bpy.context.scene.collection.objects.link(ob); ob.location = (x, y, z + 0.012)
+    ob.visible_shadow = False; ob.visible_diffuse = False; ob.visible_glossy = False
+    return ob
+
+
 def near_props(A, M, R, f, loc0):
-    """near-ground dressing along the follow track (QA-art: no bare sand) + a grey strongbox instead of the red barrel, placed to wipe through fast."""
+    """near-ground dressing along the follow track (QA-art: no bare sand): sacks, a spear bundle, two short stacked spears, pegs and a grey strongbox. Each prop is ONE
+    object standing on the terrain with its own contact shadow (QA §K); GC.check ray-casts every one of them."""
     import numpy as np
     rs = np.random.RandomState(31)
     def at(u, lat, dep):                                          # u along the walk, lat = along R, dep = along f from the line of the track
         c = Vector((M[0], M[1], 0)) + R * (WALK_D * (1 - u))
         p = c + R * lat + f * dep
         return (p.x, p.y, float(K.ground(p.x, p.y)))
-    B = K.Batch(91)
-    K.sacks(B, at(0.10, 1.6, -1.5), 5, rs); K.sacks(B, at(0.62, 2.2, -1.2), 4, rs)
-    bx, by, bz = at(0.30, 2.0, -0.4)                              # a stacked bundle of spears (the weapon rack's shield discs read as black rings)
-    for i in range(6): K.spear(B, (bx + 0.12 * (i % 3), by + 0.1 * (i // 3), bz), tilt=(0.10 * (i - 2.5) / 2.5, 0.05 * (i % 2)), h=1.2)
-    B.rod('wood', (bx - 0.2, by, bz + 0.9), (bx + 0.4, by + 0.05, bz + 0.9), 0.04, seg=5)
-    K.spear(B, at(0.82, 1.9, -1.3), tilt=(0.06, -0.1), h=1.1); K.spear(B, at(0.84, 2.2, -1.1), tilt=(-0.05, -0.12), h=1.0)
+    def prop(name, pos, rx, ry, fn):
+        B = K.Batch(91 + len(PROPS)); fn(B, pos)
+        ob = _join(B.finalize(name, shadow=True), name); PROPS.append(ob)
+        _decal(name + "_contact", pos[0], pos[1], pos[2], rx, ry)
+    prop("d2_sacks_a", at(0.10, 1.6, -1.5), 1.1, 1.0, lambda B, p: K.sacks(B, p, 5, rs))
+    prop("d2_sacks_b", at(0.62, 2.2, -1.2), 1.0, 0.9, lambda B, p: K.sacks(B, p, 4, rs))
+    def bundle(B, p):
+        for i in range(6): K.spear(B, (p[0] + 0.12 * (i % 3), p[1] + 0.1 * (i // 3), p[2]), tilt=(0.10 * (i - 2.5) / 2.5, 0.05 * (i % 2)), h=1.2)
+        B.rod("wood", (p[0] - 0.2, p[1], p[2] + 0.9), (p[0] + 0.4, p[1] + 0.05, p[2] + 0.9), 0.04, seg=5)
+    prop("d2_bundle", at(0.30, 2.0, -0.4), 0.5, 0.4, bundle)
+    prop("d2_spear_a", at(0.82, 1.9, -1.3), 0.25, 0.25, lambda B, p: K.spear(B, p, tilt=(0.06, -0.1), h=1.1))
+    prop("d2_spear_b", at(0.84, 2.2, -1.1), 0.25, 0.25, lambda B, p: K.spear(B, p, tilt=(-0.05, -0.12), h=1.0))
     for k in range(7):                                            # tent pegs and rope stubs in the sand
-        x, y, z = at(0.05 + 0.13 * k, rs.uniform(-1.8, 2.8), rs.uniform(-1.8, -0.4))
-        B.rod("wood", (x, y, z), (x + 0.05, y, z + 0.28), 0.03, seg=5)
-    # a grey-blue strongbox with iron bands and a gold lock (not red), 1.2 m toward the camera of the old barrel's line
-    x, y, z = at(0.37, 1.25, -2.0)
-    B.box("iron", (x, y, z + 0.28), (0.95, 0.55, 0.56)); B.box("wood", (x, y, z + 0.30), (0.88, 0.5, 0.52))
-    for dx in (-0.3, 0.3): B.box("iron", (x + dx, y, z + 0.30), (0.07, 0.56, 0.56))
-    B.box("gold", (x, y - 0.28, z + 0.38), (0.12, 0.03, 0.14))
-    B.finalize("d2_props", shadow=True)
+        p = at(0.05 + 0.13 * k, rs.uniform(-1.8, 2.8), rs.uniform(-1.8, -0.4))
+        prop("d2_peg%d" % k, p, 0.12, 0.12, lambda B, p=p: B.rod("wood", (p[0], p[1], p[2]), (p[0] + 0.05, p[1], p[2] + 0.28), 0.03, seg=5))
+    def chest(B, p):                                              # a grey-blue strongbox with iron bands and a gold lock (not red)
+        x, y, z = p
+        B.box("iron", (x, y, z + 0.28), (0.95, 0.55, 0.56)); B.box("wood", (x, y, z + 0.30), (0.88, 0.5, 0.52))
+        for dx in (-0.3, 0.3): B.box("iron", (x + dx, y, z + 0.30), (0.07, 0.56, 0.56))
+        B.box("gold", (x, y - 0.28, z + 0.38), (0.12, 0.03, 0.14))
+    prop("d2_chest", at(0.37, 1.25, -2.0), 0.75, 0.5, chest)
 
 
 # ------------------------------------------------------------------ staging
@@ -285,7 +319,7 @@ if __name__ == "__main__":
     if mode == "draft":
         step = int(sys.argv[2]) if len(sys.argv) > 2 else 3; gs = list(range(G0, GH + 1, step)); out = os.path.join(HERE, "raw_d")
         q = "draft"
-    elif mode == "check":
+    elif mode in ("check", "ground"):
         gs = list(range(G0, GH + 1, int(sys.argv[2]) if len(sys.argv) > 2 else 2)); q = "final"; out = None
     else:
         gs = C.parse(sys.argv[2]); out = os.path.join(HERE, "raw"); q = "final"
@@ -297,6 +331,14 @@ if __name__ == "__main__":
     on_frame = stage(T, gs)
     if mode == "check":
         check(T, gs); sys.exit(0)
+    if mode == "ground":                                          # QA_TEAM §K: ray-cast every card / free prop down to the terrain
+        import bpy, actors
+        sys.path.insert(0, os.path.join(C.V3, "set3d21")); import ground_check21 as GC
+        items = [(a.name, a.card, -0.5625 * SC[a.cast]) for a in T.actors.values()] + list(PROPS)
+        def set_frame(g):
+            T.scene.frame_set(g); on_frame(g); actors.sync_all(T.scene, T.cam)
+        rep = GC.check(items, frames=gs, set_frame=set_frame, airborne={}, out=os.path.join(HERE, "GROUND.md"))
+        print(rep); sys.exit(0)
     for g in gs:
         st = T.render([g], out, on_frame)[0]
         print("g %d %.1f s wall heads %s" % (g, st["wall"], json.dumps(T.heads(g))), flush=True)
