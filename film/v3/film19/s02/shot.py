@@ -376,7 +376,7 @@ def _aim_design(g, loc, look):
             return math.degrees(math.atan2(d.z, math.hypot(d.x, d.y))), math.degrees(math.atan2(d.x, d.y)), d.length
         R = {gi: raw(gi) for gi in range(G_A0 - 20, G_A1 + 21)}
         sm = lambda t: t * t * (3 - 2 * t)
-        KN = [(108, -0.87), (111, -0.3), (114, 0.0), (117, 0.3), (120, 0.6), (124, 0.8), (130, 1.0), (136, 1.1), (142, 1.2), (150, 1.25), (160, 1.31)]
+        KN = [(108, -0.87), (111, -0.3), (114, 0.0), (117, 0.4), (120, 0.8), (124, 1.05), (130, 1.2), (136, 1.27), (142, 1.3), (150, 1.3), (160, 1.31)]
         def rate0(gi):
             for i in range(len(KN) - 1):
                 if KN[i][0] <= gi <= KN[i + 1][0]:
