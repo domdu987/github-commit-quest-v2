@@ -359,7 +359,9 @@ def _tau_of(g):
 
 
 _AD = {}
-G_A0, G_A1 = 90, 160
+G_A0, G_A1 = 90, 176
+G_PK = 160                                                 # end of the tilt-up (round-18 rates); the surplus pitch is eased out over G_PK..G_A1
+D108 = float(os.environ.get('D108', '-22.66'))             # tilt-down at g108 vs the raw aim (round 17: -22.66 -> min pitch -69)
 
 
 def _aim_design(g, loc, look):
@@ -376,7 +378,7 @@ def _aim_design(g, loc, look):
             return math.degrees(math.atan2(d.z, math.hypot(d.x, d.y))), math.degrees(math.atan2(d.x, d.y)), d.length
         R = {gi: raw(gi) for gi in range(G_A0 - 20, G_A1 + 21)}
         sm = lambda t: t * t * (3 - 2 * t)
-        KN = [(108, -0.87), (111, -0.3), (114, 0.0), (117, 0.4), (120, 0.8), (124, 1.05), (130, 1.35), (136, 1.65), (142, 1.85), (150, 1.85), (156, 1.6), (160, 1.31)]
+        KN = [(108, -0.87), (111, -0.3), (114, 0.0), (117, 0.4), (120, 0.8), (124, 1.05), (130, 1.35), (136, 1.65), (142, 1.85), (150, 1.85), (156, 1.5), (160, 1.05)]
         def rate0(gi):
             for i in range(len(KN) - 1):
                 if KN[i][0] <= gi <= KN[i + 1][0]:
@@ -384,14 +386,34 @@ def _aim_design(g, loc, look):
                     return KN[i][1] + (KN[i + 1][1] - KN[i][1]) * t
             return KN[-1][1]
         rs = {gi: rate0(gi) for gi in range(100, 175)}
-        rate = {gi: (rs[gi - 1] + 2 * rs[gi] + rs[gi + 1]) / 4.0 for gi in range(108, 161)}            # light smoothing of the knot corners
-        p1 = R[G_A1][0]
-        P = {G_A1: p1}
-        for gi in range(G_A1 - 1, 107, -1):
+        rate = {gi: (rs[gi - 1] + 2 * rs[gi] + rs[gi + 1]) / 4.0 for gi in range(108, G_PK)}            # light smoothing of the knot corners
+        # round 19: the tilt-down at g108 is the round-17 one (min pitch about -69), so the round-18 tilt-up rates end DELTA deg ABOVE the landing aim at g160;
+        # that surplus is eased out over g160..g176 (smoothstep, zero rate change at g160, so the rate stays continuous)
+        tot_rate = sum(rate[gi] for gi in range(108, G_PK))
+        DELTA = (R[108][0] + D108 + tot_rate) - R[G_PK][0]
+        P = {G_PK: R[G_PK][0] + DELTA}
+        for gi in range(G_PK - 1, 107, -1):
             P[gi] = P[gi + 1] - rate[gi]                                         # integrate backward: P(g+1) = P(g) + rate(g)
+        r160 = rate[G_PK - 1] * 0.0 + rs[G_PK]
+        need = R[G_A1][0] - P[G_PK]                                              # the pitch still to go after g160 (the surplus is already in P160)
+        def taper_total(T):
+            return sum(r160 * 0.5 * (1 + math.cos(math.pi * (k / float(T)))) for k in range(0, int(math.ceil(T))) if k < T)
+        lo, hi = 1.0, 16.0
+        for _ in range(40):
+            mid = 0.5 * (lo + hi)
+            if taper_total(mid) < need: lo = mid
+            else: hi = mid
+        T_TAP = 0.5 * (lo + hi)
+        _AD["T_TAP"] = T_TAP; _AD["need"] = need
+        pcur = P[G_PK]
+        for gi in range(G_PK + 1, G_A1 + 1):
+            k = gi - 1 - G_PK
+            pcur += (r160 * 0.5 * (1 + math.cos(math.pi * k / T_TAP))) if k < T_TAP else 0.0
+            P[gi] = pcur
         d108 = P[108] - R[108][0]
         for gi in range(G_A0, 108):
             P[gi] = R[gi][0] + d108 * sm(clamp((gi - G_A0) / float(108 - G_A0)))
+        _AD["DELTA"] = DELTA
         for gi in range(G_A0, G_A1 + 1):
             ks = [math.exp(-0.5 * (j / 4.0) ** 2) for j in range(-12, 13)]
             tot = sum(ks); y = sum(R[min(max(gi + j, G_A0 - 20), G_A1 + 20)][1] * w for j, w in zip(range(-12, 13), ks)) / tot
