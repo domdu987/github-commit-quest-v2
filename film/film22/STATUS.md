@@ -16,3 +16,4 @@ Fallback check: send_later 60 min, always re-armed.
 - [ ] Set + cast -> SET gate (QA-art + QA-tech)
 - [x] shot_plan.md, WORKER22.md, TEAMS.md; render teams launched 23:59 UTC (see TEAMS.md)
 - [ ] TAKE gates, conform22, FINAL gate (4 reviewers + film 2 side-by-side + ref sheets), release22, queue WAIT
+- 2026-11-21 00:44 UTC check: all 5 teams running (team4 s03 81/144; team1 s01 rerender + s05; team2 s02/s15 camera previews; team3, team5 scripts pushed, renders in progress). conform22.py + SFX library ready.
