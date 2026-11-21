@@ -51,3 +51,6 @@ Known faults, stated plainly:
 - g1545->1546 frame diff 28.5: the inspector card drops out of the T6a2 cast there (planned cast change), a visible pop.
 - g1675 planned hard cut: luma step -7.2, frame diff 47.6.
 `qa_auto.py --cuts 1675 --first_g 1536`: PASS (cut g1675 flagged only because of the 8x-median threshold). `rhythm.py`: 1 cut, in-shot median 9.57, p90 20.47.
+
+## Fix: g1546 inspector pop (director)
+The T6a2 inspector (and second gendarme) are now kept exactly as in T6a2 through g1556 instead of being dropped at g1546; the camera sweep carries him out of frame. g1546-1556 re-rendered with the eased join lights; g1557 onward unchanged. Viewed g1545, 1546, 1549, 1552, 1555, 1556, 1557 (sheet + frame diffs): the dark left-edge shape stays through g1556 and is out of frame by g1557 (g1556->1557 diff 16.8, in line with the sweep's neighbours 21-25). Frame diff g1545->1546 is still 28.3 in the 90x160 metric (the 3D hero card is swapped for the held sprite card there); I did not look into it further.
