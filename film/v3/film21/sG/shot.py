@@ -15,6 +15,32 @@ G_HORN = C.g_of(39.69)         # 1194
 G_ARRIVE = 1186
 PRESETS = ["hill_over", "hill_low"]
 
+def surf_z(x, y, default=None):
+    """z of the real terrain / deck mesh under (x, y) by ray cast (the analytic K.ground differs by up to 45 cm on the steep slope)."""
+    sc = bpy.context.scene; dg = bpy.context.evaluated_depsgraph_get(); org = Vector((x, y, 200.0)); d = Vector((0, 0, -1))
+    for _ in range(8):
+        hit, loc, nrm, idx, ob, mtx = sc.ray_cast(dg, org, d)
+        if not hit: break
+        if ob.name.startswith(("terrain", "bridge_deck", "causeway")): return float(loc.z)
+        org = loc + Vector((0, 0, -1e-3))
+    return float(K.ground(x, y)) if default is None else default
+
+def free_spot(x, y):
+    """nudge (x, y) sideways (max ~2 m) until the first surface from above is the terrain itself (no boulder, gorse or heather clump under the feet)."""
+    sc = bpy.context.scene; dg = bpy.context.evaluated_depsgraph_get()
+    def clear(px, py):
+        hit, loc, nrm, idx, ob, mtx = sc.ray_cast(dg, Vector((px, py, 200.0)), Vector((0, 0, -1)))
+        k = 0
+        while hit and ob.name.startswith(("shaft", "sky")) and k < 6:
+            hit, loc, nrm, idx, ob, mtx = sc.ray_cast(dg, loc + Vector((0, 0, -1e-3)), Vector((0, 0, -1))); k += 1
+        return hit and ob.name.startswith(("terrain", "bridge_deck", "causeway"))
+    if clear(x, y): return x, y
+    for r in (0.6, 1.0, 1.5, 2.0):
+        for a in range(0, 360, 45):
+            px, py = x + r * math.cos(math.radians(a)), y + r * math.sin(math.radians(a))
+            if clear(px, py): return px, py
+    return x, y
+
 def u_lin(g, a, b): return (g - a) / float(b - a)
 
 # ------------------------------------------------------------------ camera
@@ -67,12 +93,12 @@ def setup(T):
     g1 = [("s1", "scot_b", "scot_b_fold_spear"), ("s2", "scot_a", "scot_a_chew_grass"), ("s3", "scot_c", "scot_c_fold_spear"),
           ("s4", "scot_a_v1", "scot_a_fold_spear"), ("s5", "scot_b_v2", "scot_b_fold_spear")]
     for i, (nm, cst, pn) in enumerate(g1):
-        x, y, z = M1[nm][:3]; _c, _v = start_cam(); x += _v[0] * 1.5; y += _v[1] * 1.5; z = float(K.ground(x, y))
+        x, y, z = M1[nm][:3]; _c, _v = start_cam(); x += _v[0] * 1.5; y += _v[1] * 1.5; x, y = free_spot(x, y); z = surf_z(x, y)
         T.actor("o_" + nm, cst); out.append(("o_" + nm, cst, pn, (x, y, z), 1, i))
     g2 = [("s1", "scot_b", "scot_b_fold_spear"), ("s2", "scot_a", "scot_a_chew_grass"), ("horn", "scot_horn", "scot_horn_lower"),
           ("w", "wallace", "wallace_calm"), ("s3", "scot_c", "scot_c_fold_spear")]
     for i, (nm, cst, pn) in enumerate(g2):
-        x, y, z = M2[nm][:3]; T.actor("l_" + nm, cst); out.append(("l_" + nm, cst, pn, (x, y, z), 2, 10 + i))
+        x, y, z = M2[nm][:3]; z = surf_z(x, y); T.actor("l_" + nm, cst); out.append(("l_" + nm, cst, pn, (x, y, z), 2, 10 + i))
     mh, mw = M2["horn"], M2["w"]
     TGT[0] = Vector(((mh[0] + mw[0]) / 2, (mh[1] + mw[1]) / 2, (mh[2] + mw[2]) / 2 + 1.1))
     # causeway foot soldiers (x2 so the crowd reads from 230 m), marching north in threes
@@ -80,11 +106,11 @@ def setup(T):
     for i in range(12):
         row, col = divmod(i, 3); x = (-2.4, 0.2, 2.6)[col] + rs2.uniform(-0.4, 0.4); y = 40.5 + 2.6 * row + rs2.uniform(-0.4, 0.4)
         cst = cs[i % len(cs)]; T.actor("c_%d" % i, cst, scale=2.0 * C.TRUE_H["footman_a"] / C.CAST_H[cst.split("_v")[0]])
-        out.append(("c_%d" % i, cst, cst.split("_v")[0] + "_stand", (x, y, float(K.ground(x, y))), 4, 50 + i))
+        out.append(("c_%d" % i, cst, cst.split("_v")[0] + "_stand", (x, y, surf_z(x, y)), 4, 50 + i))
     # the yawning knight on the causeway (true height, scaled x2.2 so it reads from 230 m)
     cx, cy = 1.2, 44.0
     T.actor("knight", "knight_a_open", scale=4.0 * C.TRUE_H["knight_a_open"] / C.CAST_H["knight_a_open"])
-    out.append(("knight", "knight_a_open", "knight_a_open_yawn", (cx, cy, float(K.ground(cx, cy))), 3, 20))
+    out.append(("knight", "knight_a_open", "knight_a_open_yawn", (cx, cy, surf_z(cx, cy)), 3, 20))
     # more Scots behind the hero group: two ranks up the slope, a ragged line across the frame
     rs = np.random.RandomState(11); hl = K.preset_pose("hill_low"); cxy = np.array(hl[0][:2]); lk = np.array(hl[1][:2]); vv = (lk - cxy) / np.linalg.norm(lk - cxy); LL = np.array([-vv[1], vv[0]])
     types = ["scot_a", "scot_b", "scot_c", "scot_a_v1", "scot_b_v2", "scot_c_v1", "scot_a_v2"]
@@ -93,11 +119,11 @@ def setup(T):
     for rank, (dist, cnt) in enumerate(((13.5, 7), (19.0, 8))):
         for j in range(cnt):
             lat = (j - (cnt - 1) / 2.0) * (3.1 if rank == 0 else 3.4) + rs.uniform(-0.8, 0.8)
-            q = cxy + vv * (dist + rs.uniform(-1.0, 1.0)) + LL * lat
+            q = cxy + vv * (dist + rs.uniform(-1.0, 1.0)) + LL * lat; q = np.array(free_spot(q[0], q[1]))
             cst = types[(n + rank) % len(types)]; base = cst.split("_v")[0]
             pn = base + "_" + poses[n % len(poses)]
             if pn not in S21: pn = base + "_fold_spear"
-            T.actor("x_%d" % n, cst); out.append(("x_%d" % n, cst, pn, (q[0], q[1], float(K.ground(q[0], q[1]))), 2, 30 + n)); n += 1
+            T.actor("x_%d" % n, cst); out.append(("x_%d" % n, cst, pn, (q[0], q[1], surf_z(q[0], q[1])), 2, 30 + n)); n += 1
     return out
 
 def pose_of(nm, cst, pn, grp, i, g):
@@ -126,7 +152,7 @@ def pose_of(nm, cst, pn, grp, i, g):
 
 T_REF = [None]
 def hooks(g):
-    for o in getattr(T_REF[0], "col", []): o.location.y = 0.7 * (g - G0) / 30.0
+    for o in getattr(T_REF[0], "col", []): o.location.y = 0.7 * (g - G0) / 30.0; o.location.z = -0.07
     K.set_flutter(g / 30.0); K.set_smoke(g / 30.0); K.set_flow(g / 30.0)
 
 def parse(spec):

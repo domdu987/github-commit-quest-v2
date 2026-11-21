@@ -1,25 +1,45 @@
-# QA-art, TAKE gate: sH2b BIGZOOM 2 + reveal payoff (g1392-1519, render 1389-1522), film 21
-Reviewer: QA-art (opus). Frames extracted from take.mkv (every frame; viewed at full size: g1392, and strips g1392-1470, g1462-1486, g1480-1519). Compared with ref_shorts R5, R7.
-Director ruling applied: the lemon-yellow mid-swoop (g1430-1480), the x0.8 dimming and the saturation are colour-only. They are NOT scored, and go to the normalization. Rim: comment only.
+# QA-art sH2b v3 (TAKE gate, team10 4cc1296)
+Take: gate/sH2b/film/v3/film21/sH2b/take.mkv (g1389-1522, 134 frames, BIGZOOM 2 + CU3). Viewed: every 5th frame (f6/) at full size, every frame g1486-1496 (the look and the double take), full-size crops of P_TOP, the team's contact and phone sheets. Also compared H2b g1389/1392/1395 against H2a v3 (approved) at the same g, for the D6. Levels and the lemon cast are left to the conform. Rim light is ruled on at FINAL. The violet tents (g1425-1480) are known and handled separately; noted, not failed.
 
 ## Verdict: FIX-FIRST
-The P_TOP trap image is the best picture in the segment. The omega loop, the blue spear wall plugging the neck and the crimson block inside read as "bottle and cork" even at phone size. The shocked swap on Cressingham and Surrey (O-mouths, sweat drops, swap behind a blink at g1486-1490) reads and is funny. Two things stop it: (a) untextured GREY sickle-shaped banner cloths cut through the swoop near the lens (g1440-1486, largest at g1455-1470), and (b) the payoff medium shot never shows WHAT they are watching. The river and the trapped half are behind the camera, so "ได้แต่ยืนดู" (can only stand and watch) does not read sound-off.
 
-## Scores (1-10)
-| item | score | note |
-|---|---|---|
-| set density / ornament | 7 | Rich from the top: trees, banners in the loop, camp. The descent over the camp shows pavilions only as flat discs from straight above (beach-umbrella look). The medium shot has hills, tents, a pole banner, soldiers behind. |
-| lighting & colour | 5 | Colour waived. Not waived: the grey untextured cloths and the dark tent silhouette sweeping the bottom of g1462-1475 look like render errors. Low sun shadows in the 2-shot are good. |
-| composition / phone legibility | 6 | P_TOP: 8. Medium 2-shot (g1487-1505): the pair sit in the middle, and the lower 40 % of the frame is empty stubble with nothing in front. CU3: Surrey is sliced by the right edge at g1515-1519 (already noted by the team). |
-| character acting | 8 | Worried, then blink, then shock. Sweat drops and tiptoe bobbing soldiers in the back. Cressingham is mouth-closed except the gasp: correct. |
-| key moment clarity & beauty | 6 | The reveal image is 8. The payoff is 5, because the eyeline goes to the lens and not to the trap. CU3 on "อยู่อีกฝั่ง" lands on time, but it is a gentle push. |
-| match to references / camera travel | 7 | A true §H BIGZOOM: extreme wide to medium in one eased move, in the R5 crane-and-swoop manner. The start tiny-but-findable rule is borderline: Cressingham is not findable at P_TOP. |
-| §G grounding (every 0.5 s tile) | pass | Feet on the ground, contact shadows, heads above y 880. No face over 35 % (Cressingham's head is about 20 % at g1519). |
+The v2 blocker is fixed: from g1489 the trapped army, the bridge and the blue saltire wall stand as a big band behind the pair, Cressingham points, and the blink-and-swap double take with sweat drops lands right on "อยู่อีกฝั่ง". The BIGZOOM is a good §H move. But the new set state broke the P_TOP start: the armies do not match H2a inside the D6 dissolve (B1 below).
 
-Does it read sound-off? The trap reads. The "they can only watch" does not. Funny? Yes, the jaw-drop swap. Beautiful and in style? The top and the 2-shot yes. The mid-swoop has the grey blades.
+## v2 item
+| v2 item | status |
+|---|---|
+| B1 "ได้แต่ยืนดู" sound-off | FIXED (via staging, option b). At g1499-1519 the far bank reads: blue saltire wall plus a crimson-and-blue rank row (rank row about 5 % of frame height, the whole far-bank band with banners about 15-18 %), bridge on the right. Pointing g1484-1493, blink g1492-93, shocked swap g1494-96, sweat drops. Option a (over-the-shoulder look) only partly done: see N1. |
+| N1 empty field | FIXED (the approach crosses the camp; now tent-heavy instead, see N3) |
+| N2 Surrey hidden | FIXED (Surrey beside Cressingham, face visible to g1519) |
+| N3 Cressingham findable at P_TOP | NOT DONE (non-blocking, carried as N4) |
 
-## Fixes (max 4)
-1. **Kill the grey blades.** The sickle-shaped grey banner or pennant meshes on the swoop path (g1440-1486, large at the bottom right of g1455-1470, and in the background of g1482-1487) need their cloth material (crimson/gold or saltire). Otherwise hide every banner within about 15 m of the camera path. Also hide the black tent silhouette that crosses the bottom of the frame at g1462-1475.
-2. **Put the trap behind them in the payoff.** Re-aim the swoop's end so the 2-shot is a 3/4 angle with the river and the far bank (blue wall, crimson block, saltire banners) visible over their shoulders in the background. Their eyelines should go off-frame toward it (heads turned 30-45°), not into the lens. Then do the CU3 push. This is what makes "อีกครึ่ง ข้ามมาช่วยไม่ได้ ได้แต่ยืนดู" read without sound.
-3. **Fill the empty lower half of the 2-shot (g1487-1505).** Tilt or raise the framing so the pair sit lower (feet at about y 1050-1100). Or add a foreground element at the bottom edge for depth, such as the riverbank reeds and water edge, a spear rack, or the over-the-shoulder edge of a soldier on tiptoe. Keep the barrel.
-4. **Route the mid-swoop through the camp, not over it.** At g1440-1480, drop to tent-roof height earlier and pass between pavilions, ropes and the "ENGLISH CAMP" sign for parallax (§H "passes through set detail"). Avoid looking straight down on the pavilion discs and the empty beach at g1470-1480. If possible, make Cressingham's red/gold findable as a tiny dot from P_TOP (§H 1).
+## qa_auto "suspected blur" ruling: FALSE POSITIVE
+The 32 flagged frames (g1389-1420 and the tent pass) are not soft. At full size the tent stripes, flag poles, bridge planks and soldier cards have hard edges. The flag comes from low contrast: the take opens on the same dark, hazy exposure that H2a ends on (luma 116 at g1392, rising to 155 by g1422), and the top view has big flat areas. Edge energy divided by contrast is 0.23 at g1392-1420, the same as the approved H2a end (0.22-0.23) and the later aerial frames. There is no DOF or blur. The same false positive happened on the lawn in v2.
+
+## Issues
+
+**B1 (blocking), g1389-1395 (the D6 at P_TOP): the armies do not match H2a.** The camera matches H2a exactly at g1392, but the set state does not:
+- The south-bank crimson block (the "other half" in front of the bridge foot among the tents, about 8 % of the frame in H2a) is GONE in H2b, and it does not appear anywhere later in the take.
+- The trapped block inside the loop goes from H2a's solid crimson rectangle to sparse, thin red cones with a smudge shadow. It reads much weaker as "trapped army".
+- The Scots cork changes from 2 banners plus a blue line to a 5-banner wall, the loop banners change (black and red-black flags are added), and the camp tents are re-laid out.
+During a 6-frame dissolve this shows as whole regiments ghosting away. The story also loses its "other half" ("อีกครึ่ง ข้ามมาช่วยไม่ได้"), which needs the south-bank army.
+Fix: render H2b on the same army and dressing state as H2a for at least g1389-1440: put back the south-bank crimson block and the solid loop block. The new 5-banner blue wall is better, so if you keep it, it must also go into H2a's tail g1386-1395 (only re-render H2a if that is cheaper). After that, H2a g1392 and H2b g1392 must be the same picture: a pixel MAD of about 1 or less, against 5.9 now. If the south-bank block cannot stay in the camp because of the swoop path, keep it at least through P_TOP and let it fall behind the camera.
+
+**N1 (non-blocking), g1484-1493: the "look across" does not read as a look.** All faces stay frontal to the lens with half-lidded eyes, and Cressingham points to camera-right along the bank, not back across the water. The staging now carries the meaning, so this is not blocking. If cheap: a 3/4-back or profile head swap toward the far bank for about 8 frames before the blink, and point his arm up and back over his shoulder.
+
+**N2 (non-blocking), g1499-1519: the top of the blue banner wall is cut by the top frame edge**, and a soldier is sliced at the left edge at g1514-1519. Tilt down about 3-5 % or lower the end lens target so the banner tops clear the frame. Feet stay just inside the bottom edge at g1519. Watch that through the handle.
+
+**N3 (non-blocking, known set issue), g1464-1480: the tents dominate.** At g1470-1479 white and violet tent roofs fill the lower 40-50 % of the frame for about 0.4 s, and with the violet set shading they read as a purple mass. When the set fix is patched in, also either lift the path about 0.5 m over the plaza tents or start the arc a few frames later, so the pair and the river hold the frame.
+
+**N4 (non-blocking), g1389-1420: Cressingham is still not findable at P_TOP.** The pair are dark specks at the south-bank waterline left of the bridge. A gold-and-crimson pennant at their spot would do it.
+
+## Checks
+- BIGZOOM: near-hold g1389-1421, descent g1422 to medium g1489, so wide to medium is about 3.2 s. PASS.
+- Heads above y 880: pair heads y about 430-660 in the medium and CU3. PASS. Face size at CU3 (g1519): Cressingham's head about 14-15 % of the frame height, under the §G limit. PASS.
+- Nothing floats: feet on the sand, barrel and props grounded. PASS.
+- Colour story: English crimson/gold (Cressingham, Surrey's red-gold check, crimson rank), Scots blue saltire wall. PASS.
+- No lip movement: the O-mouth swap holds static g1494-1519, and Cressingham does not speak. PASS.
+- Bloodless. PASS.
+
+## Scores
+phone legibility 7 (trap 8, payoff 8; the P_TOP trap is weaker than in H2a) / set density 7 / light 7 / colour story 8 / acting and comedy 7 / same channel? yes / camera travel 8.
