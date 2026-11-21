@@ -58,7 +58,7 @@ CAM_LOOK0 = (0.25, 2.9, 2.45)
 _CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.08, slide_px=-12.0, rise_px=15.0, arc_deg_s=2.0, decay=0.1,
                 snaps=[dict(g=SNAP, k=1.7, peak=1.7, shift=(-0.6, -0.38)),
                        dict(g=(G_SEAL - 1, G_SEAL + 3), k=1.0, peak=3.2, shift=(1.8, 0.0))])      # fast pan that clears Harrison from the left edge in 3 frames
-CAM = _Sway(_CAM)
+CAM = _CAM                                      # client rule (no camera shake): the plain CamPath, the handheld _Sway removed
 
 
 def harrison_pose(g):

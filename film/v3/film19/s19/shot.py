@@ -16,7 +16,7 @@ import math, os, sys, json
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import c19 as C                                          # noqa: E402
-from mathutils import Vector                             # noqa: E402
+from mathutils import Vector, Matrix                             # noqa: E402
 
 H, K, actors, cast19 = C.H, C.K, C.actors, C.cast19
 lerp, clamp, blink, ez, u_of, bf = C.lerp, C.clamp, C.blink, C.ez, C.u_of, C.bf
@@ -37,16 +37,12 @@ RIM_COL, RIM_K, RIM_OFF = '#ffb24a', 1.5, (0.0045, 0.0035)    # set3d19 H.card_r
 
 CAM_LOOK0 = (446.0, 61.789, 2.6)                # subject point (found with a projection search so that all three heads, hats and raised
                                                 # hands stay inside the frame on every frame)
-END_SCALE = float(os.environ.get('ENDS', '1.229'))
+END_SCALE = float(os.environ.get('ENDS', '1.3'))
 LAT_AMP = float(os.environ.get('LAT', '1.13'))                  # round 9: aim right over the last third of the move (D)
 CAM_LOC0 = tuple(Vector(CAM_LOOK0) + (Vector((452.0, 61.2, 3.55)) - Vector((446.0, 62.6, 2.6))) * END_SCALE)
 SNAP = (G_WORD - 2, G_WORD + 12)
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GF, GL, push=0.0226, slide_px=14.44, rise_px=9.4, arc_deg_s=1.32, decay=0.1,
-                snaps=[dict(g=SNAP, k=1.108, peak=1.6, shift=(float(os.environ.get('R1', '0.083')), -0.10)),
-                       dict(g=(1558, 1565), k=1.0, peak=1.3, shift=(0.0, 0.5)),         # round 9: a second beat on the held medium: two camera bumps
-                       dict(g=(1565, 1572), k=1.0, peak=1.3, shift=(0.0, -0.5)),
-                       dict(g=(1572, 1578), k=1.0, peak=1.3, shift=(0.0, 0.5)),
-                       dict(g=(1578, 1586), k=1.0, peak=1.3, shift=(0.0, -0.5))])
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GF, GL, push=0.0226, slide_px=9.87, rise_px=9.4, arc_deg_s=1.3, decay=0.1,
+                snaps=[dict(g=SNAP, k=1.108, peak=1.6, shift=(float(os.environ.get('R1', '0.083')), -0.10))])
 
 
 # ----------------------------------------------------------------------------- BIGZOOM (QA_TEAM section H): one continuous descent
@@ -54,12 +50,13 @@ CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, GF, GL, push=0.0226, slide_px=14.44, rise_p
 # wide ~0.45 s (g 1468-1481, a slow creep only), then descends down the town street (set lane, Jamaica) past two palm crowns
 # (set zoom_palms, fronds 1-2 D from the lens) onto the beach; long ease-out into the medium shot at GZ.  BIGZOOM g 1468..GZ = 3.67 s.
 GH = 1474                                       # end of the hold on the extreme wide
+ORBIT_DEG = float(os.environ.get('ORBIT', '0'))
 GZ = 1553                                       # 51.87 s: the medium shot is reached (round 9: held ~0.8 s with a little drift); from here on the drift CamPath CAM
 Z_L0 = Vector(json.loads(os.environ.get('ZL0', '[562.0, 58.0, 74.0]')))              # start: high over the town, the cast ~1.3 % of the frame height
 Z_K0 = Vector(json.loads(os.environ.get('ZK0', '[330.0, 12.0, -20.0]')))             # aimed between the cast and the fort: bay, ship and headland above
 Z_LM = Vector(json.loads(os.environ.get('ZLM', '[480.0, 60.5, 22.0]')))              # Bezier control: over the street, then between the two zoom palms
 Z_L1, Z_K1 = CAM.at(GZ)
-ZOOM_P = 1.0                                    # round 9: > 1 eases on SCREEN speed (perspective makes screen speed grow as the lens nears the cast)
+ZOOM_P = float(os.environ.get('ZP', '1.4'))                                    # round 9: > 1 eases on SCREEN speed (perspective makes screen speed grow as the lens nears the cast)
 ZOOM_CREEP = 0.012                              # share of the path covered by a linear creep over GF..GZ (the hold never freezes)
 
 
@@ -91,14 +88,24 @@ def zoom_e(g):
     lin = clamp((g - GF) / float(GZ - GF))
     u = clamp((g - GH) / float(GZ - GH))
     l0, l1 = _TAB[0][1], _TAB[-1][1]
-    e_move = _e_of_logd(l0 + (l1 - l0) * zoom_ease(u ** ZOOM_P))
+    uu = clamp(u ** ZOOM_P)
+    e_move = _e_of_logd(l0 + (l1 - l0) * (uu * uu * (3.0 - 2.0 * uu)))          # smoothstep: a flatter speed peak than smootherstep
     return ZOOM_CREEP * lin + (1.0 - ZOOM_CREEP) * e_move
 
 
 def cam_at(g):
     """the take's camera: the BIGZOOM descent g GF..GZ (hold, then eased), then the drift CamPath."""
     if g >= GZ:
-        return CAM.at(g)
+        loc, look = CAM.at(g)
+        # JITTER rule: NO oscillating bumps on the held medium; instead one eased, ONE-WAY dolly-in (13 % over 14 frames: a snap on the held medium)
+        u = clamp((g - GZ - 2) / 20.0) if not os.environ.get('NODOLLY') else 0.0
+        k = 0.09 * (u * u * (3.0 - 2.0 * u))
+        loc = loc + (look - loc) * k
+        # plus a slow ONE-WAY orbit about the cast (eased in, 11 deg over the hold): the background slides smoothly (parallax), no oscillation
+        ua = clamp((g - GZ) / 40.0)
+        ang = math.radians(ORBIT_DEG) * (ua * ua * (3.0 - 2.0 * ua))
+        d = loc - look
+        return look + Matrix.Rotation(ang, 3, "Z") @ d, look
     e = zoom_e(g)
     a, b = 1.0 - e, e
     loc = (Z_L0 * (a * a) + Z_LM * (2.0 * a * b) + Z_L1 * (b * b))      # quadratic Bezier down the street, past the palm fronds
@@ -145,7 +152,9 @@ def william_pose(g):
     p["pitch"] = -0.25 + 0.65 * low
     p["gaze"] = (0.0, 0.9 * low)
     p["head_roll"] = -4 + 8 * math.sin(g * 0.63)
-    p["lean"] = 6 * math.sin(g * 0.63 + 1.0)
+    p["lean"] = 9 * math.sin(g * 0.63 + 1.0)
+    sy = 1.0 + 0.035 * math.sin(2 * math.pi * g / 10.0)                 # the cheer bounce is a squash (the feet stay planted)
+    p["squash"] = (1.0 / sy, sy)
     p["blink"] = blink(g, [1470, 1520, 1562])
     p["t"] = g / 30.0
     return p
@@ -154,8 +163,8 @@ def william_pose(g):
 # sailors (round 9: the reactions must READ, so they happen while the cast is large, g 1540..1580):
 #   sb throws his tricorne (g 1540..1566) and then HUGS himself for joy (g 1568..); sa JUMPS high twice (g 1552..1580) and throws his tricorne at
 #   the first jump's peak (g 1558..1584).
-HAT_FLIGHTS = {"sa": (1558, 1584, 1.5), "sb": (1540, 1566, 1.2)}        # (release g, catch g, arc height D)
-JUMPS = ((1552, 1566), (1566, 1580))                                       # sa: two big jumps (0.8 D)
+HAT_FLIGHTS = {"sa": (1560, 1586, 1.5), "sb": (1540, 1566, 1.2)}        # (release g, catch g, arc height D)
+JUMPS = ((1552, 1570), (1570, 1588))                                       # sa: two big jumps (0.8 D)
 
 
 def hat_in_hand(name, g):
@@ -164,9 +173,11 @@ def hat_in_hand(name, g):
 
 
 def sa_jump(g):
+    if os.environ.get('NOJUMP'):
+        return 0.0
     for a, b in JUMPS:
         if a <= g < b:
-            return 0.8 * math.sin(math.pi * (g - a) / float(b - a))
+            return 0.55 * math.sin(math.pi * (g - a) / float(b - a)) ** 1.0
     return 0.0
 
 
@@ -174,8 +185,8 @@ def sailor_pose(name, g, ph):
     key = "sa" if name == "sailor_a" else "sb"
     p = dict(cast19.STORY19[name + "_cheer"][1])
     s = math.sin(2 * math.pi * g / 10.0 + ph)                     # ~3 Hz cheer
-    p["arm_r"] = dict(p["arm_r"], hand=(0.74, -0.74 + 0.30 * s))
-    p["arm_l"] = dict(p["arm_l"], hand=(-0.74, -0.7 - 0.30 * s))
+    p["arm_r"] = dict(p["arm_r"], hand=(0.74, -0.74 + 0.70 * s))
+    p["arm_l"] = dict(p["arm_l"], hand=(-0.74, -0.7 - 0.70 * s))
     if hat_in_hand(key, g):
         p["prop_r"] = "tricorn_held"
     r0, r1, _h = HAT_FLIGHTS[key]
@@ -193,6 +204,11 @@ def sailor_pose(name, g, ph):
         p["legs"] = "wide"
     if p.get("prop_r") is None:
         p.pop("prop_r", None)
+    sy = 1.0 + 0.04 * math.sin(2 * math.pi * g / 10.0 + ph)             # the cheer bounce is a squash (the feet stay planted)
+    if not (key == "sa" and any(a <= g < b for a, b in JUMPS)):
+        p["squash"] = (1.0 / sy, sy)
+    if not (key == "sb" and g >= HAT_FLIGHTS["sb"][1] + 2) and not (key == "sa" and any(a <= g < b for a, b in JUMPS)):
+        pass
     p["blink"] = blink(g, [1478 + int(ph * 5), 1540])
     p["t"] = g / 30.0
     return p
@@ -215,8 +231,10 @@ class Take(C.Take):
         self.sb = self.actors["sb"] = C.make_actor("sb", "sailor_b", sd, contact=True, cam=self.cam)
         M = self.A["marks"]
         self.mw = Vector(M["shore_a"])
-        self.ma = self.mw + Vector((-0.2, 1.35, -0.10))
-        self.mb = self.mw + Vector((-0.2, -1.35, -0.17))
+        self.ma = self.mw + Vector((-0.2, 1.35, 0.0))
+        self.mb = self.mw + Vector((-0.2, -1.35, 0.0))
+        for v in (self.mw, self.ma, self.mb):                       # GROUND CHECK: the feet stand ON the terrain (the marks' z are only nominal)
+            v.z = self.terrain_z(v.x, v.y)
         self.dress()
 
     # ------------------------------------------------------------------------- runtime dressing: crate, glint star, flying hats
@@ -230,6 +248,58 @@ class Take(C.Take):
             bs.inputs["Emission Color"].default_value = (rgb[0], rgb[1], rgb[2], 1.0)
             bs.inputs["Emission Strength"].default_value = emit
         return m
+
+    def make_contact(self):
+        """GROUND CHECK / client 'floating': a soft contact-shadow blob under every card (keyed to the feet's XY and the ground z under them),
+        real shoes on the left sailor (his cream legs ended in blunt stubs), and the airborne tags the checker reads."""
+        sys.path.insert(0, os.path.join(C.V3, "tools"))
+        import ground_check as gc
+        self.gc = gc
+        bpy = C.bpy
+        self.blobs = {}
+        for key, act, w in (("wil", self.wil, 1.0), ("sa", self.sa, 0.95), ("sb", self.sb, 0.95)):
+            me = bpy.data.meshes.new("blob_" + key)
+            hw, hd = w / 2.0, w * 0.24
+            me.from_pydata([(-hw, -hd, 0.0), (hw, -hd, 0.0), (hw, hd, 0.0), (-hw, hd, 0.0)], [], [(0, 1, 2, 3)])
+            uv = me.uv_layers.new(name="UVMap")
+            for i, c in enumerate(((0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0))):
+                uv.data[i].uv = c
+            me.materials.append(gc._shadow_material((0.04, 0.03, 0.02), 0.85))
+            ob = bpy.data.objects.new("%s_gcshadow" % key, me)
+            bpy.context.scene.collection.objects.link(ob)
+            ob["gc_role"] = "shadow"
+            ob.visible_shadow = False
+            ob.visible_diffuse = False
+            ob.visible_glossy = False
+            self.blobs[key] = ob
+        # two shoes for the left sailor (dark brown, flat, with a pale buckle): placed at his foot anchors every frame
+        self.shoes = []
+        for i in range(2):
+            bpy.ops.mesh.primitive_uv_sphere_add(radius=0.5, segments=14, ring_count=8, location=(0, 0, -50))
+            sh = bpy.context.active_object
+            sh.name = "shoe_sb_%d" % i
+            sh.scale = (0.46, 0.27, 0.15)
+            sh.data.materials.append(self._mat("shoe_leather", (0.012, 0.007, 0.004)))
+            sh["gc_role"] = "skip"
+            self.shoes.append(sh)
+        # the left-over airborne tags: the jumper in his two jumps; the thrown hats while they fly
+        r = self.sa.root
+        r["airborne_frames"] = ",".join("%d:%d" % (bf(a), bf(b)) for a, b in JUMPS)
+
+    def terrain_z(self, x, y):
+        """z of the beach terrain under (x, y) by a ray cast straight down (the first hit on the object named 'terrain')."""
+        sc = self.scene
+        C.bpy.context.view_layer.update()
+        dg = C.bpy.context.evaluated_depsgraph_get()
+        o, d = Vector((x, y, 40.0)), Vector((0.0, 0.0, -1.0))
+        for _i in range(8):
+            ok, loc, _n, _idx, ob, _m = sc.ray_cast(dg, o, d)
+            if not ok:
+                break
+            if ob.name.startswith("terrain"):
+                return float(loc.z)
+            o = loc + d * 0.001
+        return 0.5
 
     def dress(self):
         bpy = C.bpy
@@ -269,6 +339,7 @@ class Take(C.Take):
         # low crown), ~0.95 D across so it reads on a phone
         import bmesh
         self.hats = {}
+        self.make_contact()
         for key in HAT_FLIGHTS:
             me = bpy.data.meshes.new("tricorne_%s" % key)
             bm = bmesh.new()
@@ -321,9 +392,9 @@ class Take(C.Take):
         for g in list(gs) + extra:                                   # hat release / catch frames are keyed even if another process renders them
             f = bf(g)
             self.key_cam(f, *cam_at(g))
-            C.place(self.wil, f, self.mw + Vector((0, 0, CRATE_H + bounce_z(g, 0.0, 0.10))))
-            C.place(self.sa, f, self.ma + Vector((0, 0, bounce_z(g, 1.3, 0.26) + sa_jump(g))))
-            C.place(self.sb, f, self.mb + Vector((0, 0, bounce_z(g, 2.6))))
+            C.place(self.wil, f, self.mw + Vector((0, 0, CRATE_H)))
+            C.place(self.sa, f, self.ma + Vector((0, 0, sa_jump(g))))
+            C.place(self.sb, f, self.mb)
             self.key_set(f, sea=(g - GF) / 30.0, roll=(g - GF) / 30.0)
         for g in gs:
             f = bf(g)
@@ -348,9 +419,35 @@ class Take(C.Take):
         f = bf(g)
         self.scene.frame_set(f)
         s_ = math.sin(2 * math.pi * g / 10.0 + ph)
-        return C.actors.local_to_world(actor, (0.74, -0.74 + 0.30 * s_), frame=f, camera=self.cam)
+        return C.actors.local_to_world(actor, (0.74, -0.74 + 0.70 * s_), frame=f, camera=self.cam)
+
+    def key_blobs_shoes(self, gs):
+        for g in gs:
+            f = bf(g)
+            loc, look = cam_at(g)
+            fwd, rgt, _u = C._cam_basis(loc, look)
+            yaw = math.atan2(rgt.y, rgt.x)
+            for key, act, m, top in (("wil", self.wil, self.mw, CRATE_H), ("sa", self.sa, self.ma, 0.0), ("sb", self.sb, self.mb, 0.0)):
+                b = self.blobs[key]
+                lift_ = sa_jump(g) if key == "sa" else 0.0
+                k = 1.0 / (1.0 + 1.2 * lift_)
+                b.location = (m.x, m.y, m.z + top + 0.01)
+                b.scale = (k, k, 1.0)
+                b.rotation_euler = (0.0, 0.0, yaw)
+                b.keyframe_insert("location", frame=f)
+                b.keyframe_insert("scale", frame=f)
+                b.keyframe_insert("rotation_euler", frame=f)
+            # the left sailor's shoes at his foot anchors (card-local points through the actor card), flat on the ground
+            for i, anc in enumerate(("foot_l", "foot_r")):
+                p = C.actors.local_to_world(self.sb, self.anch[("sb", f)][anc], frame=f, camera=self.cam)
+                sh = self.shoes[i]
+                sh.location = (p.x + fwd.x * -0.06, p.y + fwd.y * -0.06, self.mb.z + 0.075)
+                sh.rotation_euler = (0.0, 0.0, yaw)
+                sh.keyframe_insert("location", frame=f)
+                sh.keyframe_insert("rotation_euler", frame=f)
 
     def key_dressing(self, gs):
+        self.key_blobs_shoes(gs)
         C.key_vis(getattr(self, "hide_obs", []), False, 0 + 1)
         for g in gs:
             f = bf(g)

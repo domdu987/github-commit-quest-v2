@@ -52,7 +52,7 @@ CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get(
                 snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 1.05)), peak=float(os.environ.get("SNAPPEAK", 3.0)), shift=(float(os.environ.get("SNAPSX", 1.4)), -0.1)),
                        dict(g=(970, 996), k=1.0, peak=1.0, shift=(float(os.environ.get("SETTLE", -0.9)), 0.0))])   # the whip overshoots, then settles back left
 
-SWAY = float(os.environ.get("SWAY", 0.09))
+SWAY = float(os.environ.get("SWAY", 0.0))           # client rule (no camera shake): the handheld sway is OFF
 STEP_BACK = float(os.environ.get("STEP_BACK", 0.3))
 LIFT = float(os.environ.get("LIFT", 1.6))
 EXTRA = float(os.environ.get("EXTRA", 0.45))

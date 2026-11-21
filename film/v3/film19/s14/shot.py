@@ -50,7 +50,7 @@ CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get(
                 rise_px=float(os.environ.get("RISE", 25)), arc_deg_s=float(os.environ.get("ARC", 8)), decay=0.25,
                 snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 1.65)), peak=float(os.environ.get("SNAPPEAK", 3.0)), shift=(float(os.environ.get("SNAPSX", 0.6)), float(os.environ.get("SNAPSY", -0.22))))])
 
-SWAY = float(os.environ.get("SWAY", 0.07))            # handheld sway (D) along the view's right axis, 1.5 Hz + a little vertical: more life in the wide, no net drift
+SWAY = float(os.environ.get("SWAY", 0.0))           # client rule (no camera shake): the handheld sway is OFF            # handheld sway (D) along the view's right axis, 1.5 Hz + a little vertical: more life in the wide, no net drift
 
 
 def cam_at(g):
