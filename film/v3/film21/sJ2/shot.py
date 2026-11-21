@@ -204,7 +204,7 @@ def build_state(T, gs):
     pr = K.PRESETS['riverbank']
     for p_ in ('riverbank', 'river_low'):
         for i in range(3): K.splash(0, 0, -1, name='%s%d' % (p_, i))
-    c21.hide_prefix('fg_generic_g'); c21.hide_prefix('veg_reed'); c21.hide_prefix('smoke_col_far')
+    c21.hide_prefix('fg_generic_g'); c21.hide_prefix('veg_reed'); c21.hide_prefix('smoke_col')
     K.spear_wall(14, 2, np.random.RandomState(4))
     c21.hide_prefix('meadow_trees'); c21.hide_prefix('farms_leaf'); c21.hide_prefix('farms_bark')                                  # the dark tree that stood in front of the wall
     rs_ = np.random.RandomState(5); Bq = K.Batch(88)
@@ -236,18 +236,27 @@ def build_state(T, gs):
     # swimmers cluster centre (for the end framing)
     cen = sum((ents[w] for w in ("B", "D", "E")), Vector((0, 0, 0))) / 3.0
     uu = Vector((C0.x - cen.x, C0.y - cen.y, 0)).normalized()
-    Lat = Vector((-uu.y, uu.x, 0)); Fw = -uu                         # camera-right / camera-forward at the end framing
-    for w_, o_ in (("B", -0.95), ("D", 0.1), ("E", 1.2)):
+    e_ = 0.5; gx_ = K.sd_at(cen.x + e_, cen.y) - K.sd_at(cen.x - e_, cen.y); gy_ = K.sd_at(cen.x, cen.y + e_) - K.sd_at(cen.x, cen.y - e_); gn_ = math.hypot(gx_, gy_) or 1.0
+    w_ = Vector((-gx_ / gn_, -gy_ / gn_, 0))                          # toward open water
+    cen = cen + w_ * 2.4; cen.z = 0.0                               # the cluster floats well out in open water (no bank between lens and swimmers)
+    t_ = Vector((-w_.y, w_.x, 0))
+    if t_.y > 0: t_ = -t_                                             # camera stands south of the swimmers, along the shore, over the water
+    loc3 = Vector((cen.x, cen.y, 0.6)) + t_ * 3.0 + w_ * 1.0
+    for _i in range(10):
+        if K.sd_at(loc3.x, loc3.y) < -0.4: break
+        loc3 = loc3 + w_ * 0.4
+    print('DBG cen', tuple(round(v,1) for v in cen), 'uu', tuple(round(v,2) for v in uu), 'loc3', tuple(round(v,1) for v in loc3), 'sd', round(K.sd_at(loc3.x, loc3.y),2), 'sdcen', round(K.sd_at(cen.x,cen.y),2), flush=True)
+    Fw = Vector((cen.x - loc3.x, cen.y - loc3.y, 0)).normalized(); Lat = Vector((Fw.y, -Fw.x, 0))   # camera forward / right at the end framing
+    for w_, o_ in (("B", -0.8), ("D", 0.1), ("E", 0.95)):
         CL[w_] = cen + Lat * o_ + Fw * (0.3 if w_ == "D" else 0.0); CL[w_].z = 0.0
     loc1 = C0 + Rv * 0.5 + Fv * 0.5
-    loc3 = Vector((cen.x + uu.x * 2.9, cen.y + uu.y * 2.9, 0.95))
     loc2 = C0.lerp(loc3, 0.55) + Vector((0, 0, -0.3))
     def aimc(loc, dz=0.0):
-        lk = Vector((cen.x, cen.y, 0.62 + dz)); return lk
+        lk = Vector((cen.x, cen.y, 1.55 + dz)); return lk
     keys = [(1709, tuple(C0), tuple(C0 + dirA), 22.0), (1735, tuple(C0 + Rv * 0.2 + Fv * 0.3), tuple(C0 + Rv * 0.2 + Fv * 0.3 + yawed(base, -8.0)), 22.0),
             (1772, tuple(loc1), tuple(loc1 + dirB), 22.0),
             (1800, tuple(loc2), tuple(aimc(loc2, 0.2)), 22.0), (1821, tuple(loc3), tuple(aimc(loc3, 0.1)), 22.0),
-            (1847, tuple(loc3 - uu * 0.25), tuple(aimc(loc3, 0.0)), 22.0)]
+            (1847, tuple(loc3 + Fw * 0.3), tuple(aimc(loc3, 0.0)), 22.0)]
     def cam_g(g):
         r = K.cam_path(None, keys, g, clearance=0.4)
         loc, look = Vector(r['loc']), Vector(r['look'])
@@ -268,9 +277,9 @@ def build_state(T, gs):
         rigs["H%d" % j] = Rig(T, "H%d" % j, "helmet_float", tlh)
     for r in rigs.values(): r.pose_frames(gs)
     T.sprites_for(128 if T.quality == 'draft' else 256); T.rigs = rigs
-    IMP = (1813, 1822, 1831)
+    IMP = (1813, 1822, 1836)
     lat = Lat; fw = Fw
-    CP = [cen + lat * 2.3 + fw * 1.3, cen - lat * 2.4 + fw * 1.1, cen + lat * 0.3 + fw * 2.8]
+    CP = [cen + lat * 1.9 + fw * 0.9, cen - lat * 1.9 + fw * 0.7, cen + lat * 0.2 + fw * 2.2]
     for p in CP: p.z = 0.0
 
     def on_g(g):
@@ -286,11 +295,11 @@ def build_state(T, gs):
                     for ob in (r.a.card, r.a.proxy): ob.hide_render = True
         for who, (t0, kind, h, sz) in JUMPS.items():
             age = (g - (t0 + T_AIR)) / 30.0 + 0.02
-            e = ents[who]; near = math.hypot(e.x - cl.x, e.y - cl.y) < 3.0
+            e = ents[who]; near = math.hypot(e.x - cl.x, e.y - cl.y) < (4.8 if g >= 1790 else 3.0)
             splash2(e.x, e.y, age if (age > 0 and not near) else -1, size=sz, name=who, seed=ord(who))
         for j in range(3):
             a_ = (g - IMP[j]) / 30.0
-            splash2(CP[j].x, CP[j].y, a_ if (a_ >= 0 and math.hypot(CP[j].x - cl.x, CP[j].y - cl.y) > 2.2) else -1, size=0.85, name='L%d' % j, seed=j + 3)
+            splash2(CP[j].x, CP[j].y, a_ if (a_ >= 0 and math.hypot(CP[j].x - cl.x, CP[j].y - cl.y) > 2.2) else -1, size=1.5, name='L%d' % j, seed=j + 3)
     return on_g
 
 
@@ -324,6 +333,7 @@ def state_of(g, n, k, p0, ent, base, c):
     sw = 1.0 + 0.08 * math.sin(s * 0.5 + k) - 0.35 * max(0, 1 - s / 6.0)
     pn = "swim_splutter" if s < 11 else (("swim_arms_up" if k % 2 == 0 else "swim_bob") if s < 22 else "swim_paddle")
     pp = variant(pose_of(c['cast'] + '_' + pn), c['var']); pp['swim21'] = max(0.45, sw); pp['t'] = (s * 0.07 + k * 0.2) % 1.0
+    if s > 6: pp['yaw'] = 0.9; pp['head_roll'] = pp.get('head_roll', 0) + 6
     if n in CL:
         e_ = ez(s / 28.0); tg = CL[n]
         px = lerp(ent.x, tg.x, e_) + 0.05 * math.sin(s * 0.3 + k); py = lerp(ent.y, tg.y, e_) + 0.05 * math.cos(s * 0.4 + k)

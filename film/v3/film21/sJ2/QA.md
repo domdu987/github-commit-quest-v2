@@ -16,3 +16,9 @@ qa_stats2: sat 0.549, vivid 56.0 %, luma 98.3; motion med 7.7, p90 21.8. rhythm:
 - B1: the Scots wall's saltire banners are lit by a local warm point light and doubled in size (4.2 x 2.9 m on 9 m poles); the dark trees near the wall (meadow_trees, farms_leaf/bark) are hidden; the camera yaws 27 deg toward the bridge neck. The big saltire flag and the lit wall read at the left of g1713-1745; later the move follows the group so the wall leaves the frame.
 - B2: set3d21 / cast21 re-pulled from film21/main (soft smoke puffs); the grey crescent slabs are gone.
 - Near-lens crown shards are culled (no crown within 3.0 m / 2.2 m of the camera); the left swimmer is re-centred (offsets computed along the end-camera axis).
+
+## v4 (gate B3, g1788-1848 re-rendered)
+- The end camera now floats just over open water 3 m beside the swimmers (no sand between lens and swimmers; sand is out of frame), looking slightly up; three swimmers (all heads fully inside the frame) with floating helmets in the lower-middle third at medium size; swimmer heads are turned (yaw) toward the bridge side.
+- The "ตูม" crowns are scaled 1.5x and stand beside the heads: crowns at 1813 / 1822 / 1836 impact, so the third peaks at about g1846-1847 (last frame g1848) while the first two stay on the 1821 / 1830 cues.
+- Tall near-lens shards are culled (jump crowns within 4.8 m of the lens are not drawn from g1790); smoke columns are hidden.
+- Weak: g1795-1805 is a camera transit shot (sky and water, swimmers re-enter at about g1812); sky is about 40 % at the end; the lower 30 % is flat teal water.
