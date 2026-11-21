@@ -671,7 +671,24 @@ if __name__ == "__main__":
         camreport()
         sys.exit(0)
     gs = [g for g in C.parse(sys.argv[2]) if FIRST_G <= g <= G_LAST]
-    if cmd in ("probe", "stills"):
+    if cmd == "ground":
+        # QA_TEAM section K: every 10th frame, ray-cast down from each card's feet point; the gap to the first surface must be <= 0.02 (scene units)
+        Tk = Take("preview"); Tk.pose(gs)
+        from mathutils import Vector as _V
+        dg = C.bpy.context.evaluated_depsgraph_get(); lines = []; bad = 0
+        for g in gs:
+            if g % 10:
+                continue
+            Tk.scene.frame_set(bf(g)); dg = C.bpy.context.evaluated_depsgraph_get()
+            for nm, a in (("cap", Tk.cap), ("ast", Tk.ast)):
+                p = a.root.matrix_world.translation.copy()
+                hit, loc_, nrm, idx, ob, mw = Tk.scene.ray_cast(dg, p + _V((0, 0, 0.6)), _V((0, 0, -1)), distance=60.0)
+                gap = (p.z - loc_.z) if hit else None
+                ok = gap is not None and abs(gap) <= 0.02
+                bad += (not ok)
+                lines.append("| %d | %s | %.3f | %s | %s | %s |" % (g, nm, p.z, "%.3f" % gap if gap is not None else "none", ob.name if hit else "-", "ok" if ok else "FAIL"))
+        print("\n".join(lines)); print("FAILS", bad)
+    elif cmd in ("probe", "stills"):
         Tk = Take("preview")
         Tk.pose(gs)
         for g in gs:
