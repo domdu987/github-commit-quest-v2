@@ -27,5 +27,6 @@ No extra review layers (§G-§L multi-reviewer gates dropped). fal still exhaust
 - [x] Render teams launched 2026-11-21 04:13 UTC (Sonnet, source film23/main @2cdcb73):
   team1 session_017iwyCtvhJgyg3a8pwiDW3V render23/team1 S02-S08
   team2 session_017iwyCwdz3vZPczGX7PPrA4 render23/team2 S09 S10 S11 S12 S13 S19
-- [ ] Set builder fixing FIELDS + RHINE -> then team3 (S01 S14-S18)
+- [x] FIELDS + RHINE fixed (director accepted, notes in QA_ART_SET.md)
+  team3 session_017iwyCtMyJ4HG42ELGQD298 render23/team3 S01 S14-S18 (launched 04:44 UTC from a29598b)
 - [ ] fal top-up -> narration (gen.py, build_bk0.py --stt), music 2-3 takes -> retime conform -> release23
