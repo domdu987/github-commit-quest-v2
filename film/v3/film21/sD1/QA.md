@@ -7,9 +7,11 @@ Fixes per director note:
 5. Lantern, arc and whip kept. Whip-right in g637-642 (6 frames, horizontal motion blur).
 Set: film21/main set3d21 + cast21 as of e07ceb1 (crimson/gold canopy). K.with_rim on Cressingham. 32 samples OIDN, no post-gamma (colour normalised at conform per director).
 Fix v3 (director gate item): g562-582 head cut by the right edge. The aim now eases ~0.34 m toward him from g548 and the glide to him starts 10 frames earlier (g564, ends g598 as before); only g548-600 re-rendered, other frames kept. His head is fully inside the frame throughout. The sign is read g542-~565 and then leaves frame left as the camera glides (crop at g570-590 remains, a transition).
-Fix v4 (director gate item, g622-636): the laugh drift is halved (0.45->0.25) and the aim eases onto his head (x -13.05) from g604, so his head stays inside the frame until the whip. Whole take is on set bb7aa85 (g542-559 and g593-603 kept from the earlier bb7aa85 render with the g548-600 framing fix; g560-592 and g604-642 re-rendered), one consistent set.
+Fix v4 (director gate item, g622-636): the laugh drift is halved (0.45->0.25) and the aim eases onto his head (x -13.05) from g604, so his head stays inside the frame until the whip. Whole take is on set bb7aa85 (g542-559 kept from the earlier bb7aa85 render with the g548-600 framing fix; g560-642 re-rendered on the v4 camera path), one consistent set.
 GROUND (QA §K, gc_d1.py, frames every 10): PASS, 0 fail, 0 sunk (GROUND.md). Cressingham's card uses foot_offset -0.31 m (transparent padding under the soles, measured as the SUNK gap); canopy roof excluded as overhead on poles. During the laugh bounce (g612+) the card is listed airborne by design. Table, chest and stool are batched set meshes that pass. Contact shadow: contact=True on the actor.
 qa_jitter: overall median jitter 1.28 px, one 7.5 px shake reading in second 2 (the planned glide/laugh push; no shake added).
 Numbers (info only): qa_stats2 sat 0.591, vivid 59.7 %, luma 116.2 (above 110, left to conform); rhythm in-shot median 15.82, p90 27.41 (needs 4/12); still 0 %.
 qa_auto: one FAIL, suspected blur on g637-642 = the planned whip pan.
 Not covered: mouth is closed all segment (no speech in this window); the sign is partly cropped at g584 as the camera leaves it.
+
+Splice fix (v5): g593-603 re-rendered on the v4 path, so there is no camera jump at g603/604 (background x-motion across g595-610 stays within about +-5 px/frame, no -6.9 px jump). qa_jitter median 1.32 px; qa_auto unchanged (only the planned whip blur).
