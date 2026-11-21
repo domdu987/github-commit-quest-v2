@@ -22,7 +22,7 @@
   "note": "s01 end = window pane push; s02 starts at london (-30.5,-5.6,10.4) = room (6.6,12.4,5.0), lens 30 (J1); 6 handle frames 108-113 continue the push"
  },
  "location": "lodgings NIGHT",
- "camera": "low hero 3/4, push + arc left past the ink bottles, from frame 56 swing right to the window, lens 36->30",
+ "camera": "low hero 3/4, push + arc left past the ink bottles, swing right to the window from frame 50 (smoothed), lens 36->30; end pinned to s02 start pose",
  "events": {
   "red_line_ruled": [
    0,

@@ -1,0 +1,2 @@
+  2s shake   2.3px
+overall median jitter px 1.62
