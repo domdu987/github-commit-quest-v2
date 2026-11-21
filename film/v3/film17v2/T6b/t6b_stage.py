@@ -207,7 +207,7 @@ def stage_props(g, acts, cam):
     """call after stage_cast2: Bertillon's MARTIN card (+ bottle later)"""
     hide_hero_card(g)
     if 'gend_a' in acts and g >= 1646:
-        h, u = _gend_hand(g); bottle_prop(acts['gend_a'], cam, ctr=(h[0] - 0.02, h[1] - 0.55), h_D=1.5)
+        h, u = _gend_hand(g); bottle_prop(acts["gend_a"], cam, ctr=(h[0] - 0.02, h[1] - 0.32), h_D=1.5, back_off=-0.02)
 
 def hide_hero_card(g):
     """from g1546 (right after T6a's P1) the lifted 3D hero card in the drawer box is gone: Bertillon holds the MARTIN card in his hand instead"""
