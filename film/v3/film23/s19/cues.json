@@ -1,0 +1,31 @@
+{
+ "take": "s19",
+ "fps": 30,
+ "note": "time = film seconds (g/30); estimated narration timing",
+ "cues": [
+  {
+   "time": 65.633,
+   "duration": 5.8,
+   "frame": 1969,
+   "end_frame": 2143,
+   "kind": "ambience",
+   "label": "bright Normandy afternoon: birds, a light breeze, the crew chuckling in the distance"
+  },
+  {
+   "time": 65.633,
+   "duration": 3.2,
+   "frame": 1969,
+   "end_frame": 2065,
+   "kind": "prop",
+   "label": "the Major puffing and wheezing, rubber squeaking as a balloon swells; steam hiss"
+  },
+  {
+   "time": 69.867,
+   "duration": 1.5,
+   "frame": 2096,
+   "end_frame": 2141,
+   "kind": "sting",
+   "label": "the last balloon slips away: a long raspberry-fart squeal flying off up and left, then a comic spring boing"
+  }
+ ]
+}
