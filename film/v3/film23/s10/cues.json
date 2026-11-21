@@ -1,0 +1,39 @@
+{
+ "take": "s10",
+ "fps": 30,
+ "note": "time = film seconds (g/30); estimated narration timing",
+ "cues": [
+  {
+   "time": 35.0,
+   "duration": 5.933,
+   "frame": 1050,
+   "end_frame": 1228,
+   "kind": "ambience",
+   "label": "camp at night: deep quiet, crickets, distant generator hum, a faint gramophone/amplifier hiss from the sound truck"
+  },
+  {
+   "time": 35.0,
+   "duration": 3.0,
+   "frame": 1050,
+   "end_frame": 1140,
+   "kind": "voice-bed",
+   "label": "radio man chattering into the field telephone handset: muffled, rhythmic, no words (held mouth, not lip-sync)"
+  },
+  {
+   "time": 35.833,
+   "duration": 3.5,
+   "frame": 1075,
+   "end_frame": 1180,
+   "kind": "prop",
+   "label": "painter's brush sweeps a stencil on the truck bumper: soft bristle strokes, a tin paint pot clink"
+  },
+  {
+   "time": 37.0,
+   "duration": 1.2,
+   "frame": 1110,
+   "end_frame": 1146,
+   "kind": "prop",
+   "label": "GI carrying a wooden crate: boots on grass, the crate creaks"
+  }
+ ]
+}

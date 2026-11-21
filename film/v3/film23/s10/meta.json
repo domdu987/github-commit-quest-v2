@@ -1,0 +1,27 @@
+{
+ "take": "s10",
+ "film": 23,
+ "shots": [
+  10
+ ],
+ "first_g": 1050,
+ "n_frames": 178,
+ "g0": 1050,
+ "g1": 1191,
+ "g1_render": 1227,
+ "handle_in": 0,
+ "tail_frames": 36,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "fps": 30,
+ "size": [
+  720,
+  1280
+ ],
+ "samples": 12,
+ "location": "CAMP",
+ "light": "NIGHT",
+ "split": true
+}
