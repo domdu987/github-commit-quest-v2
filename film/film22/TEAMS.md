@@ -18,3 +18,10 @@ Cross-team join items (both teams make their side match; the director checks at 
 | 3 | render22/team3 | s06, s07, s08 | publicity + corridor; Q1 lip-sync in s06 | s06 |
 | 4 | render22/team4 | s03, s09, s10 | under: shaft, tunnels, platform, ticket hall; Q2 lip-sync in s09 | s03, s10 |
 | 5 | render22/team5 | s11, s12, s13, s14 | carriage, mapworld, ticket hall | s11, s12 |
+
+## Launched 2026-11-20 23:59 UTC (Sonnet, source film22/main @ c5fd8c4)
+- team1 session_017iwyCvyQKRRpFCbzUspi3C render22/team1 s01 s04 s05
+- team2 session_017iwyCvpJPfEuty53ToQ3mu render22/team2 s02 s15
+- team3 session_017iwyCtw4NvG6rc1fTvHwKR render22/team3 s06 s07 s08
+- team4 session_017iwyCvs5owtUuFcZYK2sTU render22/team4 s03 s09 s10
+- team5 session_017iwyCueLLFHToT5iBMUvJ9 render22/team5 s11 s12 s13 s14
