@@ -34,11 +34,11 @@ def rel(xc, f_, r_):
 
 
 def layout(M):
-    """(name, cast, story, variant, phase, f_, r_, flip): 3-4 big laughers beside Cressingham (25-35 % of the frame at the start), two of them pointing at the crag (flip = point screen-left), a column in depth behind."""
-    return [("n1", "footman_a", "footman_a_point_laugh", 0, 0.0, 0.1, -1.05, True), ("n2", "footman_b", "footman_b_laughing", 0, 1.7, 0.4, 1.1, False),
-            ("n3", "knight_b", "knight_b_point_laugh", 0, 3.1, 1.6, -1.35, True), ("n4", "footman_a", "footman_a_laughing", 1, 4.4, 1.9, 1.4, False),
-            ("m1", "footman_b", "footman_b_point_laugh", 0, 5.3, 4.2, -1.4, True), ("m2", "footman_a", "footman_a_laughing", 1, 2.2, 4.8, 1.3, False),
-            ("m3", "footman_b", "footman_b_laughing", 0, 0.9, 6.4, -0.2, False), ("m4", "footman_a", "footman_a_point_laugh", 0, 3.8, 7.6, -1.0, True)]
+    """(name, cast, story, variant, phase, f_, r_, flip): 4 big laughers beside Cressingham on the RIGHT (the crag is on the left, so the hill and the Scots line stay clear over his shoulder), two of them pointing UP at the Scots banners (flip = toward screen-left), a column in depth behind."""
+    return [("n1", "footman_a", "footman_a_point_laugh", 0, 0.0, 0.1, 1.0, True), ("n2", "footman_b", "footman_b_laughing", 0, 1.7, 0.5, 1.6, False),
+            ("n3", "knight_b", "knight_b_point_laugh", 0, 3.1, 1.3, 1.3, True), ("n4", "footman_a", "footman_a_laughing", 1, 4.4, 2.0, 1.7, False),
+            ("m1", "footman_b", "footman_b_point_laugh", 0, 5.3, 4.2, -0.9, True), ("m2", "footman_a", "footman_a_laughing", 1, 2.2, 4.8, 1.3, False),
+            ("m3", "footman_b", "footman_b_laughing", 0, 0.9, 6.4, 0.3, False), ("m4", "footman_a", "footman_a_point_laugh", 0, 3.8, 7.6, -0.6, True)]
 
 
 def cam_keys(xc, gz):
@@ -53,6 +53,8 @@ def cam_keys(xc, gz):
 def pose_of(mark, cast, story, var, phase, g):
     p = dict(ST[story][1]); dy = 0.0
     if var: p["variant21"] = var
+    if "point_laugh" in story:                                                     # the pointing arm goes UP toward the Scots banners on the crag (mirrored by flip)
+        p["arm_r"] = dict(hand=(0.95, -0.7), shape="point", bend=-0.6, stretch=1.35, layer="front")
     if mark == "cress":
         p["lean"] = 1.2 * math.sin(g * 0.11); p["head_roll"] = p.get("head_roll", 0) + 1.5 * math.sin(g * 0.07)
         if 1093 <= g <= 1095: p["head_dy"] = -0.05 * (1 - abs(g - 1094))          # a 2-frame chin-lift on "เห็นไหม"
