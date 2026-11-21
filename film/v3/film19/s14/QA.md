@@ -39,3 +39,8 @@
 ## Last pass (render19 team8): no sway, smooth one-way travel
 - `SWAY` 0. To keep frame-diff without oscillation: push 0.36 (start pulled back 8 % so the end head size stays <= ~235 px), slide -4 px/s, whip SNAPK 1.95. All one-way, eased.
 - Frame-diff in-shot: median 4.12, p90 12.47. qa_jitter overall 0.25 px (JITTER.md). qa_auto PASS. GROUND.md PASS (set objects skipped, see notes).
+
+## Whip end fix (director round): H4 dial inside the frame
+- Whip zoom 1.95 -> 1.5, pan SNAPSX 0.6 -> 0.5, whip window 1073..1094 (21 f); same ease, no overshoot. Only g1074-1104 re-rendered; g1007-1073 bit-identical.
+- H4 dial (h4_silver) bbox x: g1085 148..380, g1090 68..344, g1095 53..342, g1104 37..343 (y 557..846); margin >= 37 px. Face/hair right edge <= 683 (< 700).
+- Frame-diff in-shot median 4.18 / p90 10.20; JITTER 0.25 px; qa_auto PASS; GROUND PASS (set objects skipped).

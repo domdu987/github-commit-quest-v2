@@ -30,7 +30,7 @@ H_IN, H_OUT = 9, 9
 G_FIRST, G_LAST = G0 - H_IN, G1 + H_OUT - 1            # 1007 .. 1104
 GS = list(range(G_FIRST, G_LAST + 1))
 G_WORD = C.cap_g("เท่าจานรอง")                         # 1079: caption start; "จานรอง" is spoken ~g 1085
-SNAP = (G_WORD - 8, G_WORD + 12)                       # 1073..1089 (16 f)
+SNAP = (G_WORD - 8, G_WORD + 15)                       # 1073..1094 (21 f)
 G_LOOKUP = (G_WORD - 40, G_WORD - 24)                 # the palm goes out toward the H4 (g 1039..1055)
 BLINKS = [1028, 1048, 1066, 1090]
 H1_SHIFT = float(os.environ.get("H1_SHIFT", 0.14))
@@ -48,7 +48,7 @@ CAM_LOC0 = tuple(float(v) for v in os.environ.get("CAM_LOC0", "0.812,-2.848,2.98
 CAM_LOOK0 = tuple(float(v) for v in os.environ.get("CAM_LOOK0", "2.0,3.2,1.9").split(","))
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get("PUSH", 0.36)), slide_px=float(os.environ.get("SLIDE", -4)),
                 rise_px=float(os.environ.get("RISE", 25)), arc_deg_s=float(os.environ.get("ARC", 8)), decay=0.25,
-                snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 1.95)), peak=float(os.environ.get("SNAPPEAK", 3.0)), shift=(float(os.environ.get("SNAPSX", 0.6)), float(os.environ.get("SNAPSY", -0.22))))])
+                snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 1.5)), peak=float(os.environ.get("SNAPPEAK", 3.0)), shift=(float(os.environ.get("SNAPSX", 0.5)), float(os.environ.get("SNAPSY", -0.22))))])
 
 SWAY = float(os.environ.get("SWAY", 0.0))           # client rule (no camera shake): the handheld sway is OFF            # handheld sway (D) along the view's right axis, 1.5 Hz + a little vertical: more life in the wide, no net drift
 
