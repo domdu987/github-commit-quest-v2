@@ -80,6 +80,20 @@ def apply_ramp():
         else:
             e = d.energy
             for g in range(645, RAMP_G1 + 3): d.energy = e * ramp_f(g); d.keyframe_insert('energy', frame=g + 1)
+# ---- float-hunter BLOCK (client rule K): top-down cards read as lying/floating ----
+LEAN_MAX = float(os.environ.get('LEAN_MAX', 55.0))   # deg: card leans back (top toward screen-up), pivot at the feet
+def topdown_fix(acts, g):
+    # stock Actor.basis leans a card back by (|pitch| - max_slant) = 0 deg up to 40 deg when the view axis is steeper than 50 deg; a vertical figure seen from above
+    # is stretched radially, so low-frame cards read inverted/sideways. For |pitch| > 45 deg lean to LEAN_MAX (eased in over 45-70 deg) about the feet.
+    sys.path.insert(0, ROOT + '/film/v3/stage'); import actors
+    cam = bpy.context.scene.camera; f = -(cam.matrix_world.to_3x3() @ Vector((0, 0, -1)))
+    pitch = math.degrees(math.asin(max(-1.0, min(1.0, -(cam.matrix_world.to_3x3() @ Vector((0, 0, -1))).z)))) if False else math.degrees(math.asin(max(-1, min(1, (cam.matrix_world.to_3x3() @ Vector((0, 0, -1))).z))))
+    a = abs(pitch)
+    if a > 45.0:
+        t = min(1.0, (a - 45.0) / 25.0); t = t * t * (3 - 2 * t); lean = LEAN_MAX * t
+        for ac in acts.values(): ac.max_slant = max(0.0, a - lean)
+    actors.sync_all(bpy.context.scene, cam)
+    return pitch
 def main(gs):
     assert P.check_take(take)['hits'] == [] and P.check_face(take)['ok']
     A = P.world_build(take); P.key_take(take); P.setup_render2((720, 1280), samples=int(os.environ.get('SAMPLES', 16)), threads=2)
@@ -87,7 +101,8 @@ def main(gs):
     for g in gs:
         fn = '%s/g_%04d.png' % (OUT, g)
         if os.path.exists(fn) and os.path.getsize(fn) > 50000: continue
-        t0 = time.time(); bpy.context.scene.frame_set(g + 1); clear_cast(); P.stage_cast2(take, g, assign_for(g))
+        t0 = time.time(); bpy.context.scene.frame_set(g + 1); clear_cast(); acts = P.stage_cast2(take, g, assign_for(g))
+        if os.environ.get('TOPDOWN') == '1': topdown_fix(acts, g)   # WIP, off by default: accepted take a523e14 renders without it
         bpy.context.scene.render.filepath = fn; bpy.ops.render.render(write_still=True); P.grade2(fn)
         print('g%d %.1fs' % (g, time.time() - t0), flush=True)
 if __name__ == '__main__':
