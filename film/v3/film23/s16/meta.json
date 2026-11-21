@@ -1,0 +1,32 @@
+{
+ "take": "s16",
+ "film": 23,
+ "shots": [
+  "S16"
+ ],
+ "g0": 1728,
+ "g1": 1827,
+ "g1_render": 1852,
+ "first_g": 1728,
+ "n_frames": 125,
+ "handle_in": 0,
+ "handle_out": 0,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "location": "RHINE",
+ "light": "NIGHT_R",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "threads": 2,
+ "s_per_frame_wall_mean": 17.15,
+ "s_per_frame_cpu_mean": 19.34,
+ "dof": "none",
+ "timing": "ESTIMATE (timing_EST.json): rendered planned length x 1.25 (the camera move and the action continue through the tail)",
+ "mkv_parts": null
+}

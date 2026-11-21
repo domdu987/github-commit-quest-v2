@@ -1,0 +1,23 @@
+{
+ "take": "s16",
+ "fps": 30,
+ "note": "time = film seconds (g / 30) on the ESTIMATED clock",
+ "cues": [
+  {
+   "time": 57.6,
+   "duration": 4.167,
+   "frame": 1728,
+   "end_frame": 1853,
+   "kind": "foley",
+   "label": "sound truck booming a recorded tank column across the water, with static radio chatter from the tent"
+  },
+  {
+   "time": 57.6,
+   "duration": 4.167,
+   "frame": 1728,
+   "end_frame": 1853,
+   "kind": "ambience",
+   "label": "night camp ambience: lantern hiss, river lap"
+  }
+ ]
+}
