@@ -72,7 +72,7 @@ def main():
     samples = int(sys.argv[4]) if len(sys.argv) > 4 else 32
     os.makedirs(out, exist_ok=True)
     T = C.Take(["camp_bank"], WORK, fg=True, hide=("fg_bank_barrel", "fg_bank_iron"))
-    K.scots_wide_line(n=26, banners=5, scale=3.0, toward=(-92.0, -13.0))          # the Scots line on the crag facing the camp, readable at 30 mm (figures about 20 px, big saltire banners)
+    K.scots_wide_line(n=26, banners=7, scale=3.6, toward=(-92.0, -13.0))          # the Scots line on the crag facing the camp, readable at 30 mm (figures about 20 px, big saltire banners)
     M = T.A["marks"]["camp_bank"]; mode = "draft" if cmd in ("draft", "probe", "ground") else "final"
     xc = np.array(M["cress"][:3], float); gz = xc[2]; KEYS = cam_keys(xc, gz)
     # camp life on the bare foreground sand (left of the camera path, out of frame by g1078): a supply cart, sacks and a weapon rack
