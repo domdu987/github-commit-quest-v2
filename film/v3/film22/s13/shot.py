@@ -22,18 +22,19 @@ def post_build():
         if abs(y - STAND[1]) < 3.0 and abs(x - STAND[0]) < 5.0: y = 5.3 if y < STAND[1] else 13.8
         if abs(y - BECK[1]) < 2.5 and abs(x - BECK[0]) < 5.0: y += 4.0
         sp = (1.6 + 0.5 * (k % 4)) * (1 if k % 2 else -1)
-        WALK.append((d, x, y, sp, k))
+        d['name'] = nm; WALK.append((d, x, y, sp, k))
     rr = random.Random(9)
     for k in range(12):
         nm = 'xc%d' % k; x, y = rr.uniform(-15, 15), rr.uniform(5.0, 7.5)
         U.crowd_card(nm, (k * 7 + 3) % 16, 'pass_walk', (x, y, 0.0), rim='#ffb878' if k % 2 else '#a8bcff', mirror=(k % 3 == 0))
-        sp = (1.6 + 0.4 * (k % 3)) * (1 if k % 2 else -1); WALK.append((U.ACTORS[nm], x, y, sp, 40 + k))
+        sp = (1.6 + 0.4 * (k % 3)) * (1 if k % 2 else -1); U.ACTORS[nm]['name'] = nm; WALK.append((U.ACTORS[nm], x, y, sp, 40 + k))
     U.move_actor('beck', BECK)
     # the stranger with an open map beside Beck, a porter pair wheeling the crates in
     U.actor('stranger', 'pass_read_map', (BECK[0] + 2.1, BECK[1] - 0.2, 0.0), rim='#a8bcff')
     U.actor('stranger2', 'pass_read_map', (BECK[0] - 2.4, BECK[1] + 0.6, 0.0), rim='#ffb878')
     for i in range(2):
         U.actor('pcrate%d' % i, 'porter_push_crate', (-22.0, 4.5 + i * 2.2, 0.0), rim='#ffb878', cast='porter')
+    C.mount(('way_out_sign', 'stand_sign_real', 'stand_sign_trial', 'pools_h', 'lamps', 'lamp_halos'))
     C.scale_lights('hl', 1.8); C.scale_lights('hall_fill', 1.6)
     U.pl('beck_key', (BECK[0] + 0.5, BECK[1] - 3.0, 4.6), (1.0, 0.82, 0.55), 700, 0.6)
 
@@ -45,14 +46,13 @@ def animate(f, n):
         x = x0 + sp * t
         # wrap inside the hall
         x = (x + 17.5) % 35.0 - 17.5
-        z = 0.14 * abs(math.sin(t * 6.3 + k))
-        for ob in d['poses'].values(): ob.location = (x, y0, z); ob.scale = (1.0 if sp > 0 else -1.0, 1.0, 1.0) if False else ob.scale
+        C.move_card(d['name'], x, y0, 0.0)
     # porters + crates arrive from the west (REPRINT) at 54.71 s (f 85)
     for i in range(2):
         u = C.ez((f - 62 - 5 * i) / 34.0); x = -22.0 + 17.0 * u + (0.0 if i == 0 else 0.0)
-        for ob in U.ACTORS['pcrate%d' % i]['poses'].values(): ob.location = (x - 2.2, 4.5 + i * 2.2, 0.12 * abs(math.sin(t * 5 + i)) if u < 1 else 0.0)
-    for nm, k in (('beck', 0), ('stranger', 1), ('stranger2', 2)):
-        for ob in U.ACTORS[nm]['poses'].values(): ob.location.z = 0.04 * abs(math.sin(t * 4.2 + k * 2.0)) if f > 60 else 0.0
+        C.move_card('pcrate%d' % i, x - 2.2, 4.5 + i * 2.2, 0.0)
+    crate3 = C.obj('crate_3')
+    if crate3 is not None: crate3.hide_render = True            # the stacked crate would ride in the air while the others slide in
     U.face_cards()
 
 if __name__ == '__main__':
