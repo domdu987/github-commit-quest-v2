@@ -34,21 +34,20 @@ def rel(xc, f_, r_):
 
 
 def layout(M):
-    """(name, cast, story, variant, phase, f_, r_): a column of laughing / pointing English in DEPTH behind Cressingham (narrow lateral spread, so they stay inside the frame while the camera pushes in and end up behind him in CU2)."""
-    return [("n1", "footman_a", "footman_a_point_laugh", 0, 0.0, 1.5, -1.0), ("n2", "footman_b", "footman_b_point_laugh", 0, 1.7, 2.6, 1.1),
-            ("n3", "footman_a", "footman_a_laughing", 1, 3.1, 3.8, -0.8), ("n4", "knight_b", "knight_b_point_laugh", 0, 4.4, 4.8, 0.9),
-            ("m1", "footman_b", "footman_b_point_laugh", 0, 5.3, 6.2, -1.5), ("m2", "footman_a", "footman_a_laughing", 1, 2.2, 7.0, 1.4),
-            ("m3", "footman_b", "footman_b_laughing", 0, 0.9, 8.2, 0.0), ("m4", "footman_a", "footman_a_point_laugh", 0, 3.8, 9.5, -1.0)]
+    """(name, cast, story, variant, phase, f_, r_, flip): 3-4 big laughers beside Cressingham (25-35 % of the frame at the start), two of them pointing at the crag (flip = point screen-left), a column in depth behind."""
+    return [("n1", "footman_a", "footman_a_point_laugh", 0, 0.0, 0.1, -1.05, True), ("n2", "footman_b", "footman_b_laughing", 0, 1.7, 0.4, 1.1, False),
+            ("n3", "knight_b", "knight_b_point_laugh", 0, 3.1, 1.6, -1.35, True), ("n4", "footman_a", "footman_a_laughing", 1, 4.4, 1.9, 1.4, False),
+            ("m1", "footman_b", "footman_b_point_laugh", 0, 5.3, 4.2, -1.4, True), ("m2", "footman_a", "footman_a_laughing", 1, 2.2, 4.8, 1.3, False),
+            ("m3", "footman_b", "footman_b_laughing", 0, 0.9, 6.4, -0.2, False), ("m4", "footman_a", "footman_a_point_laugh", 0, 3.8, 7.6, -1.0, True)]
 
 
 def cam_keys(xc, gz):
     """one travelling move: from behind-right of the group, sliding left and pushing in, ending low and slightly off-axis on Cressingham's face (CU2)."""
     def P(f_, r_, z): c = rel(xc, f_, r_); return (c[0], c[1], z)
     def Lk(f_, r_, z): c = rel(xc, f_, r_); return (c[0], c[1], z)
-    return [(1044, P(-7.2, 1.2, gz + 1.6), Lk(3.0, 0.2, gz + 1.5), 26.0),
-            (1078, P(-4.6, 0.5, gz + 1.8), Lk(3.0, 0.0, gz + 1.3), 26.0),
-            (1110, P(-2.8, -0.1, gz + 1.55), Lk(3.0, 0.0, gz + 1.5), 26.0),
-            (1141, P(-1.8, 0.4, gz + 1.15), Lk(1.0, 0.0, gz + 1.5), 26.0)]
+    return [(1044, P(-4.7, 0.5, gz + 1.5), Lk(3.0, 0.0, gz + 1.5), 30.0),
+            (1098, P(-4.1, 0.2, gz + 1.45), Lk(3.0, -0.3, gz + 1.5), 30.0),
+            (1141, P(-1.9, 0.55, gz + 1.15), Lk(1.0, -0.75, gz + 1.5), 30.0)]
 
 
 def pose_of(mark, cast, story, var, phase, g):
@@ -73,31 +72,31 @@ def main():
     samples = int(sys.argv[4]) if len(sys.argv) > 4 else 32
     os.makedirs(out, exist_ok=True)
     T = C.Take(["camp_bank"], WORK, fg=True, hide=("fg_bank_barrel", "fg_bank_iron"))
+    K.scots_wide_line(n=26, banners=5, scale=3.0, toward=(-92.0, -13.0))          # the Scots line on the crag facing the camp, readable at 30 mm (figures about 20 px, big saltire banners)
     M = T.A["marks"]["camp_bank"]; mode = "draft" if cmd in ("draft", "probe", "ground") else "final"
     xc = np.array(M["cress"][:3], float); gz = xc[2]; KEYS = cam_keys(xc, gz)
     # camp life on the bare foreground sand (left of the camera path, out of frame by g1078): a supply cart, sacks and a weapon rack
     rs_ = np.random.RandomState(4); Bp = K.Batch(99)
-    for kind_, f_, r_, yaw_ in (("sacks", -2.6, -1.5, 0), ("sacks", -1.0, 2.0, 0), ("rack", 0.4, -2.9, 100.0), ("cart", 2.4, 3.2, 20.0), ("sacks", 5.5, -2.6, 0), ("rack", 4.0, 2.8, 80.0)):
+    for kind_, f_, r_, yaw_ in (("sacks", -2.2, -1.7, 0), ("sacks", -1.2, 2.3, 0), ("cart", 5.5, -3.4, 20.0), ("sacks", 3.0, 2.9, 0)):
         p_ = rel(xc, f_, r_); z_ = float(K.ground(p_[0], p_[1]))
         if kind_ == "sacks": K.sacks(Bp, (p_[0], p_[1], z_), 4, rs_)
-        elif kind_ == "rack": K.weapon_rack(Bp, (p_[0], p_[1], z_), yaw_, rs_)
         else: K.cart(Bp, (p_[0], p_[1], z_), yaw_, rs_)
     Bp.finalize("f_props")
     K.hide_near_banners([K.cam_path(None, KEYS, g)["loc"] for g in range(G0, G1 + 1, 3)], 2.5)
     K.setup_render(T.scene, "final" if cmd == "probe" else mode, 8)
-    cast = [("cress", "cressingham", "cressingham_smug_belt", 0, 0.0, None), ("surrey", "surrey", "surrey_laughing" if "surrey_laughing" in ST else "surrey_standing", 0, 2.6, (1.6, 0.9))]
-    for nm, c, st, var, ph, f_, r_ in layout(M): cast.append((nm, c, st, var, ph, (f_, r_)))
+    cast = [("cress", "cressingham", "cressingham_smug_belt", 0, 0.0, None, False), ("surrey", "surrey", "surrey_standing", 0, 2.6, (2.2, 0.8), False)]
+    for nm, c, st, var, ph, f_, r_, fl_ in layout(M): cast.append((nm, c, st, var, ph, (f_, r_), fl_))
     pos = {}
-    for nm, c, st, var, ph, fr in cast:
+    for nm, c, st, var, ph, fr, fl_ in cast:
         if nm == "cress": pos[nm] = xc.copy()
         else: p_ = rel(xc, *fr); pos[nm] = np.array([p_[0], p_[1], float(K.ground(p_[0], p_[1]))])
         T.actor("c_" + nm, c, ppd=PPD.get(nm, 176))
     viv = {}
     for g in gs:
         f = g + 1; r = K.cam_path(None, KEYS, g); K.STATE["vivid"] = VIV; viv[f] = (VIV[0], VIV[2])
-        for nm, c, st, var, ph, fr in cast:
+        for nm, c, st, var, ph, fr, fl_ in cast:
             p, dy = pose_of(nm, c, st, var, ph, g)
-            T.place("c_" + nm, f, (pos[nm][0], pos[nm][1], pos[nm][2] + dy * SCALE[c]), scale=SCALE[c]); T.pose("c_" + nm, f, p)
+            T.place("c_" + nm, f, (pos[nm][0], pos[nm][1], pos[nm][2] + dy * SCALE[c]), scale=SCALE[c], flip=fl_); T.pose("c_" + nm, f, p)
     if cmd == "ground":                                                    # QA §K ground check on every card (frames every 10)
         import ground_check21 as GC
         def set_frame(g):
