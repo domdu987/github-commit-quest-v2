@@ -11,7 +11,7 @@
                   grins at the lens; ends centred on Harrison + bag with both men in frame, moving on the last frame (hard end, N = 2160)
                                                                                                         [camera: shot_c.CAM]
 Characters: king19 (table), harrison19 old (behind the table edge), astro19 (telescope mark); cards are shown only where they are on screen.
-The three camera paths and the poses are those of the approved takes (shot_a.py = old s24, ../s25/shot.py, ../s26/shot.py); this file only
+The three camera paths and the poses are those of the approved takes (shot_a.py = old s24, shot_b.py = old s25, shot_c.py = old s26); this file only
 joins them (whip = eased lerp of loc / look between the end of one path and the start of the next, motion blur keyed on those frames).
     python3 shot.py camreport | probe a:b[:step] | stills a:b[:step] out [scale] [spp] | final a:b[:step] [scale] [spp]
 """
@@ -19,6 +19,8 @@ import math, os, sys, json, importlib.util
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import c19 as C                                          # noqa: E402
+import king_royal                                        # noqa: E402  (s24-local royal look for king19)
+king_royal.apply()
 from mathutils import Vector                             # noqa: E402
 
 H, K, cast19 = C.H, C.K, C.cast19
@@ -35,8 +37,8 @@ def _load(name, path):
 
 
 A = _load("shot_a", os.path.join(HERE, "shot_a.py"))
-B = _load("shot_b", os.path.join(HERE, "..", "s25", "shot.py"))
-Cm = _load("shot_c", os.path.join(HERE, "..", "s26", "shot.py"))
+B = _load("shot_b", os.path.join(HERE, "shot_b.py"))
+Cm = _load("shot_c", os.path.join(HERE, "shot_c.py"))
 
 G0, G1 = A.G0, C.N_FILM                                 # 1933 .. 2159 (film end at g 2160)
 H_IN = 9
@@ -57,6 +59,15 @@ KING_C = (Cm.KING_M[0], 4.90, 0.0)                       # round 8: 0.3 D closer
 ASTRO_ON = (W1[0] - 3, W2[0] + 2)                        # round 8 (minimum fix): his card is hidden from g 2089, inside the heaviest blur
 
 
+_a = A.CAM
+LOOK_DX = float(os.environ.get("LOOK_DX", "1.2"))
+SNAP_SX = float(os.environ.get("SNAP_SX", "0.6"))
+_sn = [dict(x) for x in _a.snaps]
+_sn[0]["shift"] = (SNAP_SX, _sn[0]["shift"][1])
+CAM_A = C.CamPath(_a.loc0, _a.look0 + Vector((LOOK_DX, 0.0, 0.0)), _a.g0, _a.g1, push=_a.push, slide_px=_a.slide_px, rise_px=_a.rise_px,
+                  arc_deg_s=_a.arc, decay=_a.decay, snaps=_sn)         # final-gate fix: King more central, never at a frame edge
+
+
 def _blend(a, b, u):
     u = u * u * (3.0 - 2.0 * u)
     return a[0].lerp(b[0], u), a[1].lerp(b[1], u)
@@ -64,9 +75,9 @@ def _blend(a, b, u):
 
 def cam_at(g):
     if g < W1[0]:
-        return A.CAM.at(g)
+        return CAM_A.at(g)
     if g <= W1[1]:
-        return _blend(A.CAM.at(W1[0]), B.CAM.at(W1[1]), (g - W1[0]) / float(W1[1] - W1[0]))
+        return _blend(CAM_A.at(W1[0]), B.CAM.at(W1[1]), (g - W1[0]) / float(W1[1] - W1[0]))
     if g < W2[0]:
         return B.CAM.at(g)
     if g <= W2[1]:
@@ -126,15 +137,41 @@ class Take(C.Take):
         self.key_cam(bf(G_FIRST), *cam_at(G_FIRST))
         self.scene.frame_set(bf(G_FIRST))
         sd = os.path.join(WORK, "sprites")
-        self.king = self.actors["king"] = C.make_actor("king", "king19", sd, contact=True, cam=self.cam)
+        self.king = self.actors["king"] = C.make_actor("king", "king19", sd, canvas=(-1.375, -4.125, 1.375, 0.1875), contact=True, cam=self.cam)
         self.har = self.actors["har"] = C.make_actor("har", "harrison19", sd, contact=dict(width=1.1, depth=0.5, opacity=0.8), cam=self.cam)
         self.astro = self.actors["astro"] = C.make_actor("astro", "astro19", sd, contact=dict(width=1.9, depth=0.8, opacity=1.0), cam=self.cam)
         self.bag = K.STATE["hooks"]["bag_full"]
         self.bag0 = Vector((Cm.BAG_XY_M[0], Cm.BAG_XY_M[1], self.bag.location.z))
         self._make_coins()
         self._make_modesty_panel()
+        print("candelabra vertices moved:", self._move_candelabra((-1.30, -0.35, 4.90, 6.10, 1.40, 3.60), -0.50), flush=True)   # final-gate fix: 0.5 D left, clear of the King
         for pv in K.STATE["hooks"]["stubs"]:                  # stub row in front of the King (as the approved s24)
             pv.location.y += A.STUB_DY / 1.85
+
+    def _move_candelabra(self, region, dx):
+        """set dressing (never the set module): translate the vertices of the candelabra standing in `region` (world D box x0,x1,y0,y1,z0,z1)
+        by dx D along x in the three merged meshes that hold candelabra parts (brass, candles, flames), and its candle lights."""
+        bpy = C.bpy
+        bpy.context.view_layer.update()
+        x0, x1, y0, y1, z0, z1 = region
+        n = 0
+        for ob in bpy.data.objects:
+            if ob.type != "MESH" or not ob.name.split(".")[0] in ("hall_hbrass", "hall_hgold", "hall_hbrassd", "candles_hcream", "flame_hflame"):
+                continue
+            M = ob.matrix_world
+            Mi = M.to_3x3().inverted()
+            dl = Mi @ Vector((dx, 0.0, 0.0))
+            for v in ob.data.vertices:
+                w = M @ v.co
+                if x0 <= w.x <= x1 and y0 <= w.y <= y1 and z0 <= w.z <= z1:
+                    v.co += dl
+                    n += 1
+            ob.data.update()
+        for o, base in K.STATE["lampgroups"]["candle"]:
+            w = o.matrix_world.translation
+            if x0 <= w.x <= x1 and y0 <= w.y <= y1:
+                o.location.x += dx / 1.85 if o.parent is not None else dx
+        return n
 
     _make_coins = Cm.Take._make_coins
     _make_modesty_panel = Cm.Take._make_modesty_panel
