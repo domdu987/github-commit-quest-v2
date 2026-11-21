@@ -4,15 +4,15 @@
   "cue": "camp ambience, distant river, quiet creak"
  },
  {
-  "g": 1677,
+  "g": 1678,
   "cue": "coin scale tip: wooden tilt and settle, small coin clink"
  },
  {
-  "g": 1690,
-  "cue": "chest lid slam (hard wood thud) on '\u0e1b\u0e23\u0e30\u0e2b\u0e22\u0e31\u0e14\u0e14\u0e35'"
+  "g": 1692,
+  "cue": "chest lid slam (hard wood thud); the lid starts closing at g 1690 on the word"
  },
  {
   "g": 1703,
-  "cue": "whoosh on the whip pan left"
+  "cue": "whoosh on the whip pan left (pass g 1705-1708 as the whip, not cuts)"
  }
 ]
