@@ -24,3 +24,7 @@ median **4.99**, p90 **10.57** (12 in-shot pairs >= 10): meets the per-take rule
 take.mkv: 4.3s, shots=1, mean shot 4.33s, median 4.33s, shortest 4.33s, shots<1.5s: 0
    saturation 0.677, brightness 69.6, in-shot motion median 5.87 p90 11.25
 ```
+
+## Revision (camera-shake pass, film-13 rules)
+- lens_scale: the 1.5 Hz periodic zoom pump is removed; eased one-shot punches only (x1.10 deep bow g 722, x1.16 quote g 748). Smooth one-directional travel keeps the frame-diff: slide 25 -> 60 px/s, orbit 7 -> 11 deg/s, snap k 1.16 (peak 3.0).
+- Frame-diff (in-shot g662-772): **median 4.27, p90 10.61** (14 pairs >= 10). qa_auto PASS, GROUND PASS (GROUND.md), JITTER.md: only second 3 listed, 2.1 px (was 2.2 / 3.2 px); overall median 1.59 px. Head width 196-254 px, wig estimate <= y 827, no black frames.

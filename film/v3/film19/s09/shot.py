@@ -34,8 +34,8 @@ LIGHT, PRESET, FINAL_SPP, PPD = "DAY", "hall_low", 8, 400
 
 SUBJ = Vector((-3.24, 3.24, 2.22))
 CAM_LOC0 = (-5.28, 0.22, 1.15)
-CAM = C.CamPath(CAM_LOC0, tuple(SUBJ), G_FIRST, G_LAST, push=0.04, slide_px=25.0, rise_px=0.0, arc_deg_s=7.0, decay=0.15,
-                snaps=[dict(g=SNAP, k=1.12, peak=2.6, shift=(-0.2, -0.05))])
+CAM = C.CamPath(CAM_LOC0, tuple(SUBJ), G_FIRST, G_LAST, push=0.045, slide_px=60.0, rise_px=0.0, arc_deg_s=11.0, decay=0.15,
+                snaps=[dict(g=SNAP, k=1.16, peak=3.0, shift=(-0.3, -0.05))])
 
 ST = cast19.STORY19
 POINT, BOW = ST["astro_mock_point"][1], ST["astro_mock_bow"][1]
@@ -64,10 +64,9 @@ def pose_of(g):
 
 def lens_scale(g):
     """FOV punches instead of a long push (client gate: no face taller than ~30 % of the frame): x1.10 punch with the deep bow
-    (g 722), x1.06 micro-punches on the bow beats (1.5 Hz), a x1.10 punch with the snap on "จับเวลาเอง" (g 748) that eases back."""
-    z = 1.0 + 0.10 * math.sin(math.pi * u_of(g, G_KING - 4, G_KING + 10)) ** 2
-    z *= 1.0 + 0.06 * max(0.0, math.sin(2 * math.pi * 1.5 * (g - G0) / 30.0)) ** 2
-    z *= 1.0 + 0.06 * math.sin(math.pi * u_of(g, G_QUOTE - 5, G_QUOTE + 12)) ** 2
+    (g 722), a x1.06 punch with the snap on "จับเวลาเอง" (g 748) that eases back."""
+    z = 1.0 + 0.10 * math.sin(math.pi * u_of(g, G_KING - 4, G_KING + 10)) ** 2           # eased one-shot punches only: no periodic zoom pump
+    z *= 1.0 + 0.16 * math.sin(math.pi * u_of(g, G_QUOTE - 5, G_QUOTE + 12)) ** 2
     return z
 
 

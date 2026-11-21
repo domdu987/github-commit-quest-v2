@@ -36,3 +36,6 @@ take.mkv: 3.4s, shots=1, mean shot 3.40s, median 3.40s, shortest 3.40s, shots<1.
 - Hands: the puppet draws every hand as a dark ink ball. s20/shot.py now patches puppet._hand at runtime (this process only; v2/puppet is untouched): an open hand is drawn 1.35x bigger with a light skin fill (#f4d6b8), an ink outline, a shaded palm and four light fingers, so the palms-up read as open palms against the navy coat at phone size.
 - Hand height lerps 0.95 -> 1.10 from G_QUOTE-5 over 13 frames; spread +-1.02 -> +-0.80 (the sideways limit that keeps both hands inside x 40-680 on every frame, projection check from the raw head positions: 0 frames outside); the lens punch x1.12 holds as a plateau ~3 frames longer around g 1635-1637. Snap strength and peak are unchanged (k 1.25, peak 3.0); head width at most 264 px, wig estimate at most y 862.
 - Numbers: frame-diff median 4.33, p90 11.34; no clipped-sprite warnings, no black frames; mouth only inside the window.
+
+## Camera-shake pass check (film-13 rules)
+- No change to the take. qa_jitter: nothing above 2.0 px, overall median 0.47 px (JITTER.md); GROUND PASS (GROUND.md); qa_auto PASS.
