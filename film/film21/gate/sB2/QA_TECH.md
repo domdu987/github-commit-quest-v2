@@ -1,36 +1,25 @@
-# QA-tech sB2 (team5 9fa3189)
+# QA-tech sB2 v3 (film-13 QA, team5 6d883ba)
 
-**Verdict: FAIL** (2 blocking, both about the Scots payoff; the travel itself is good).
+Verdict: FAIL (1 blocking issue)
 
-Checked: every 5th frame g295-415 (f6), full-size frames g295/298/405/413/418, handles, team QA.md, meta.json. qa_auto PASS, rhythm 21.3 / 27.3 (fine).
+Checked: every 5th frame g295-415 (6 fps) at 360x640 and full size, the last take frames, QA.md, meta.json, GROUND.md, rhythm (median 23.0, p90 30.3), plan row B2. Colour and exposure ignored (normalised at the conform).
 
-## Beat table
-| g | beat | read at phone size | verdict |
-|---|---|---|---|
-| 295-298 | handles + P_CAMP: parade of red/gold knights and footmen, ENGLISH CAMP sign, tents, light shafts | Camp readable, soldiers tiny (about 40-60 px) but a wide shot; g295 to g298 differ only slightly, a correct continuation of B1 (the move runs backwards, fine for the D6) | OK |
-| 298-325 | crane up over the pavilions, striped canopies fill the lower frame, parade falls away | Moves, rich set, no floating | OK |
-| 325-350 | fly NE over the river, bridge on the left, glitter | Moves clearly; river is saturated turquoise with white shore line and fills about 40 % of the frame (see issue 3) | OK, see 3 |
-| 350-376 | meadow bank, trees with shadows, Abbey Craig ahead with light shafts | Clear, pines visible; empty of characters for about 2 s | OK, see 4 |
-| 376-398 | climb to the foot of the crag, pines, shafts | Good; shaft glare at right g385-405 is bright but not covering the subject | OK |
-| 398-418 | land and arrive on the Scots: five blue-tunic spearmen on the slope | Scots appear only from about g392 (about 0.9 s), 130-190 px tall (10-15 % of the frame), heads y 600-800 (OK) | FAIL, see 1, 2 |
-
-## Checks
-- Heads above y 880: pass (Scots y 600-800, English parade far up the frame).
-- Nothing floats: pass. Scots have contact shadows; the Scot behind the brown rock/boar shape at the bottom centre is covered to the knees, reads as standing behind a boulder (ok).
-- Nobody cut by the frame edge: pass. Face over 35 %: pass (max about 6 %).
-- Characters acting: English parade walks the whole time g295-330. Scots shift in the last 25 frames; nobody still over 1.5 s on the visible figures. The spear shift and "one leans on his" cannot be read at this size (issue 2).
-- Camera clearance: pass, no pine, crag or banner clipping the lens seen; left-edge pine trunk g405-418 is close but clear. Hidden banners: none near the lens.
-- Smoke/banners near the lens: none.
-- Bloodless: pass. Mouths: Scots mouths closed (checked at g413-418).
-- Join: g418 is exactly P_HILL raised 0.8 m, the camera is still moving at the cut, which is good for the cut to C.
+Passes: no black, magenta or blank frames, no frozen runs, no pops (0 cuts detected). Crane over the pavilions, flight north over the river with the bridge at the left, and the climb to Abbey Craig are all there in order. Parade is in English red/gold, and the costumes are consistent. The Scots' mouths stay closed (g405-418). The landing is low and looks up, with the five Scots against sky and light shafts (fixes the old looking-down fail). Scots heads sit at y ~600-720 (< 880). GROUND FAIL 0 (the SUNK lines are canvas margin, accepted). Smoke and river glitter direction is consistent with the flight. No Thai text in the take.
 
 ## Issues
-1. **BLOCKING, g395-418: the landing is not the plan's "LOW hero angle looking up at the Scots against the sky".** The camera ends above the Scots looking down the slope; the hill's grass slope is behind them, the sky and pines are above them. They are not silhouetted against the sky and there is no hero feeling. The team notes it as "P_HILL is a fixed pose". Fix: lower the end pose (about 1.0-1.5 m, below the Scots' hip height) and tilt up, or lift the Scots' stand points to the crest line so they read against the sky; the 0.8 m raise of hill_low is what makes it look down. Keep the same trajectory, only change the last 30 frames; P_HILL is not tied to any neighbouring segment (C is a cut), so the change is free.
-2. **BLOCKING, g392-418: the narration is about the Scots ("ส่วนฝั่งสกอต" from g298) but they are on screen for only about 25 frames, small, and their action cannot be read.** Fix: make them larger (end closer, about 4-5 m instead of 8-10 m, so figures are 25-35 % of the frame height, heads still below y 880) and start them entering the frame earlier (about g380), with the lean on the spear a big readable swing (about 0.15 D) and spear shifts at 1-2 Hz.
-3. **Non-blocking, g330-375: river colour.** The turquoise water with the white shore line is a neon-like field filling about 40 % of the frame. The set palette is content. Fix if a re-render happens anyway: pull the river toward a deeper blue-green, or frame the meadow bank more than the water.
-4. **Non-blocking, g350-392: about 1.3 s with no character in frame.** The rule is "characters acting", and the plan has glitter and the bridge here. Fix: add a few distant English soldiers on the bridge or bank, or Scots scouts on the crag foot.
-5. **Non-blocking, g298-310: soldiers of the parade tiny.** The crane-up leaves them at about 40 px quickly. Optional: slow the first 12 frames of the crane so the parade stays readable through the D6.
-6. **Non-blocking: take.mkv is split in two parts (partaa/partab, 40 MB) and the full take.mkv is also present.** Make sure only one form goes to the conform.
 
-## Re-render scope
-Only the last about 40 frames (g378-418) need re-rendering for issues 1 and 2; the rest can be kept.
+1. g378-418, BLOCKING. The landing beat barely reads at phone size, so the old fail ("Scots small, on screen only briefly") is only half fixed. At 360x640 the Scots are specks at g385-400 (about 5-8 % of frame height), still small at g405 (about 12 %), and reach only about 22 % of frame height (not the 30-38 % in QA.md) in the last ~8 frames (g410-418). So the Scots are readable for about 0.3 s at the very end of the take, and the camera is still moving at the cut. The frame is also unbalanced at the end: the bottom ~30 % is empty dark slope and the top ~45 % is empty blue sky, with the group in a thin band. The spear shift and the lean are tiny at this size, so they are hard to see on a phone. Fix: land earlier (reach the low position by about g392) and hold still for at least 1.0-1.5 s with the Scots at 30-40 % of frame height. To do that, move the camera closer and lower (about 3 m from the shelf lip) and tilt up less, so the dead slope is cropped to under 15 % of the frame and the group fills the middle third. Keep the spear swing, the lean and the nose scratch inside the held part, and make the spear shift read bigger (spears visibly tilting against the sky). Re-render only g376-418.
+
+2. g410-418, non-blocking. Only 2 of the 5 Scots show a spear (left and right); the plan says they all shift their spears. Fix: give the other three a spear in hand, or have them shift or lean in some visible way.
+
+3. g414-418, non-blocking. The foreground dirt at the bottom of the frame looks soft, which looks like motion streak or soft texture from the camera still creeping at the cut. The client rule is sharp, no DOF. Fix: hold the camera still for the last 15 frames (solved by fix 1).
+
+4. g384-386, non-blocking. The fast climb gives soft, streaked frames and a 2.7 px jitter second (known from qa_auto). Acceptable as a real whip move, but keep it to 3 frames or fewer.
+
+5. g300-325, non-blocking. Small parade extras and horsemen cross y 880 at the bottom of the frame (g305-320), where the caption band will be. They are tiny background extras, not hero heads, so it is acceptable. Check that the caption does not hide the key beat.
+
+6. g295-325, non-blocking. The "ENGLISH CAMP" sign is dark navy with low contrast and is lit from behind. It is readable, but the text is English in a Thai film. Check that it fits the film's sign rules, or drop it.
+
+7. g410-418, non-blocking. The red and black spiky grass tufts at the Scots' feet look like small flames or thorns. Fix: recolour them green or yellow-brown.
+
+Continuity with neighbours (B1 last frame, next take first frame) not checked here: the neighbour takes were not supplied. The D6 in (g295-297 from B1 at P_CAMP) shows the same camp, tents and parade, consistent with the QA.md note.
