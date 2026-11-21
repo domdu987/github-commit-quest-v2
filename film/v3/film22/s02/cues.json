@@ -1,0 +1,60 @@
+{
+ "take": "s02",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film22/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 3.57,
+   "duration": 2.8,
+   "frame": 107,
+   "end_frame": 191,
+   "kind": "ambience",
+   "label": "London at dusk: low city roar, distant traffic, a river-side breeze, church bells far off; a soft rising pad as the camera climbs"
+  },
+  {
+   "time": 3.57,
+   "duration": 0.5,
+   "frame": 107,
+   "end_frame": 122,
+   "kind": "whoosh",
+   "label": "soft airy push through the window glass (no glass sound), a gentle lift-off whoosh as the camera cranes up",
+   "peak_frame": 111
+  },
+  {
+   "time": 4.2,
+   "duration": 1.0,
+   "frame": 126,
+   "end_frame": 156,
+   "kind": "foley",
+   "label": "footsteps and murmur of the crowd streaming into the UNDERGROUND entrance, far below, thinning as the camera rises",
+   "peak_frame": 132
+  },
+  {
+   "time": 4.8,
+   "duration": 0.8,
+   "frame": 144,
+   "end_frame": 168,
+   "kind": "vehicle",
+   "label": "red double-decker bus engine passing under the lens (Doppler left to right), tyres on the road",
+   "peak_frame": 150
+  },
+  {
+   "time": 5.6,
+   "duration": 0.8,
+   "frame": 168,
+   "end_frame": 192,
+   "kind": "whoosh",
+   "label": "falling dive whoosh toward the pavement, rising pitch",
+   "peak_frame": 177
+  },
+  {
+   "time": 6.1,
+   "duration": 0.3,
+   "frame": 183,
+   "end_frame": 192,
+   "kind": "impact",
+   "label": "warm iron grating: low metallic hum and a breath of warm air from below, ready for the shaft",
+   "peak_frame": 189
+  }
+ ]
+}

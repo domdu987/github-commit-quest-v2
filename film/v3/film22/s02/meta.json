@@ -1,0 +1,49 @@
+{
+ "take": "s02",
+ "film": 22,
+ "shots": [
+  2
+ ],
+ "first_g": 101,
+ "n_frames": 96,
+ "g0": 107,
+ "g1": 192,
+ "handle_in": 6,
+ "handle_out": 5,
+ "transition_in": {
+  "type": "travel",
+  "frames": 0,
+  "note": "push through the window glass; first frame = s01 end (re-render of the window card: window_london_s02.png)"
+ },
+ "transition_out": {
+  "type": "travel",
+  "frames": 0,
+  "note": "ends at (8,18.7,7.5) looking straight down on the grate (1.5 D higher than API.md 6.0); handle g 192..196 continues the dive; s03 (team 4) starts on the same grate"
+ },
+ "events": [
+  {
+   "g": 107,
+   "what": "start: window view, crowd walking into the UNDERGROUND entrance"
+  },
+  {
+   "g": 113,
+   "what": "push through the glass"
+  },
+  {
+   "g": 137,
+   "what": "crane up past the HQ"
+  },
+  {
+   "g": 145,
+   "what": "extreme wide: dome, clock tower, river, HQ, roundel; Beck tiny at his lit window (lower left)"
+  },
+  {
+   "g": 170,
+   "what": "dive past roofs, bus and crowd"
+  },
+  {
+   "g": 191,
+   "what": "grate fills the frame (brick shaft below)"
+  }
+ ]
+}

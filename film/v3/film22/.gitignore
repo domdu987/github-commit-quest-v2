@@ -1,0 +1,7 @@
+*/frames/
+*/draft/
+*/raw/
+*/work/
+*/*.log
+*/__pycache__/
+__pycache__/

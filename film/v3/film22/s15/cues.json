@@ -1,0 +1,60 @@
+{
+ "take": "s15",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film22/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 58.4,
+   "duration": 2.3,
+   "frame": 1752,
+   "end_frame": 1821,
+   "kind": "ambience",
+   "label": "night city: soft low roar, a few distant car horns, a quiet clock-tower chime far away; calm warm pad (the film resolves)"
+  },
+  {
+   "time": 59.0,
+   "duration": 0.9,
+   "frame": 1770,
+   "end_frame": 1797,
+   "kind": "whoosh",
+   "label": "dive toward the lit window: airy descending whoosh past roofs, a bus rumbles by",
+   "peak_frame": 1782
+  },
+  {
+   "time": 60.3,
+   "duration": 0.5,
+   "frame": 1809,
+   "end_frame": 1824,
+   "kind": "whoosh",
+   "label": "soft glide through the window opening (no glass), the room tone opens up: quiet office, a ticking clock, a lamp hum",
+   "peak_frame": 1812
+  },
+  {
+   "time": 61.1,
+   "duration": 1.0,
+   "frame": 1833,
+   "end_frame": 1863,
+   "kind": "foley",
+   "label": "official: napkin tuck rustle, fork and knife tapping the plate, a nervous swallow",
+   "peak_frame": 1839
+  },
+  {
+   "time": 61.85,
+   "duration": 0.3,
+   "frame": 1856,
+   "end_frame": 1864,
+   "kind": "impact",
+   "label": "a heavy crate of paper maps lands on the desk: wooden thud, paper rustle, a small dust puff",
+   "peak_frame": 1856
+  },
+  {
+   "time": 62.0,
+   "duration": 0.5,
+   "frame": 1860,
+   "end_frame": 1875,
+   "kind": "voice",
+   "label": "the official gulps (short comic gulp), then silence; hard end at 63.00",
+   "peak_frame": 1863
+  }
+ ]
+}

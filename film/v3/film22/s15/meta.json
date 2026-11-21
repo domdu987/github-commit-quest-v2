@@ -1,0 +1,49 @@
+{
+ "take": "s15",
+ "film": 22,
+ "shots": [
+  15
+ ],
+ "first_g": 1742,
+ "n_frames": 148,
+ "g0": 1752,
+ "g1": 1890,
+ "handle_in": 10,
+ "handle_out": 0,
+ "transition_in": {
+  "type": "match",
+  "frames": 15,
+  "note": "match dissolve from s14 (glowing London diagram) to the high night city"
+ },
+ "transition_out": {
+  "type": "end",
+  "frames": 0,
+  "note": "hard end on the last word (g 1889 = 62.97 s)"
+ },
+ "events": [
+  {
+   "g": 1752,
+   "what": "extreme wide high over night London"
+  },
+  {
+   "g": 1798,
+   "what": "PUBLICITY window grows (ตามสัญญา)"
+  },
+  {
+   "g": 1814,
+   "what": "through the window opening (ตอนนี้มีแผนที่)"
+  },
+  {
+   "g": 1840,
+   "what": "official, napkin, fork+map, towers of maps (รอให้กิน)"
+  },
+  {
+   "g": 1856,
+   "what": "crate of maps lands on the desk, he gulps (อยู่หลายแสนแผ่น)"
+  },
+  {
+   "g": 1889,
+   "what": "MEDIUM end: official about 42 % of frame height"
+  }
+ ]
+}
