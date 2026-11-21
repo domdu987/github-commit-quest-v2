@@ -1,0 +1,58 @@
+{
+ "take": "s05",
+ "fps": 30,
+ "note": "time = film seconds (g/30)",
+ "cues": [
+  {
+   "time": 15.0,
+   "duration": 4.2,
+   "frame": 450,
+   "end_frame": 576,
+   "kind": "ambience",
+   "label": "lodging at night, lamp hum, clock tick, the street murmur fading as the camera rises"
+  },
+  {
+   "time": 16.0,
+   "duration": 0.55,
+   "frame": 483,
+   "end_frame": 497,
+   "kind": "foley",
+   "label": "ruling pen drawn hard along a wooden ruler, long blue ink stroke (scratch)",
+   "peak_frame": 488
+  },
+  {
+   "time": 16.9,
+   "duration": 0.3,
+   "frame": 506,
+   "end_frame": 516,
+   "kind": "foley",
+   "label": "wooden set square lands flat on the paper with a clean clack",
+   "peak_frame": 509
+  },
+  {
+   "time": 17.1,
+   "duration": 0.7,
+   "frame": 512,
+   "end_frame": 532,
+   "kind": "foley",
+   "label": "pen scratches the green line at an angle, then runs the vertical"
+  },
+  {
+   "time": 17.6,
+   "duration": 0.6,
+   "frame": 530,
+   "end_frame": 548,
+   "kind": "foley",
+   "label": "pen scratch of the yellow line"
+  },
+  {
+   "time": 18.1,
+   "duration": 0.7,
+   "frame": 546,
+   "end_frame": 567,
+   "kind": "foley",
+   "label": "thumb squeezes the far stations inward, little papery slide and soft taps",
+   "peak_frame": 552
+  }
+ ]
+}

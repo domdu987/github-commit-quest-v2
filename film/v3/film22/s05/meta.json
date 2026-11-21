@@ -1,0 +1,54 @@
+{
+ "take": "s05",
+ "film": 22,
+ "shots": [
+  "s05"
+ ],
+ "g0": 450,
+ "g1": 577,
+ "first_g": 444,
+ "last_g": 576,
+ "n_frames": 133,
+ "handle_in": 6,
+ "handle_out": 0,
+ "transition_in": {
+  "type": "travel",
+  "frames": 0,
+  "note": "one continuous move from s04 (J4); 6 handle frames 444-449 are the s04 camera/pose continued"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "note": "hard cut 1 at g 577 (s06 starts); no out handle"
+ },
+ "location": "lodgings NIGHT",
+ "camera": "crane up from Beck at the board to top-down over it, roll -10 deg, lens 30 -> 31.5; Beck card only k0-30 then his own 3D forearms/hands",
+ "events": {
+  "circuit_beside_map": [
+   4,
+   30
+  ],
+  "blue_line_ruled": [
+   28,
+   46
+  ],
+  "set_square_lands": [
+   56,
+   64
+  ],
+  "green_bends_45": [
+   58,
+   64
+  ],
+  "yellow_drawn": [
+   70,
+   86
+  ],
+  "thumb_squeezes_yellow": [
+   88,
+   112
+  ],
+  "old_map_in_corner": "whole take, floor lower-left"
+ },
+ "notes": "arm3d: sleeve, garter, rolled cuff, forearm, hand + pen built at runtime in shot.py"
+}

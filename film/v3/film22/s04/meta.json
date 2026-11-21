@@ -1,0 +1,50 @@
+{
+ "take": "s04",
+ "film": 22,
+ "shots": [
+  "s04"
+ ],
+ "g0": 324,
+ "g1": 450,
+ "first_g": 318,
+ "last_g": 455,
+ "n_frames": 138,
+ "handle_in": 6,
+ "handle_out": 5,
+ "transition_in": {
+  "type": "match",
+  "frames": 9,
+  "note": "match dissolve from s03 end (OLD map on the platform wall) to the same OLD map in Beck's room; s04 starts 25% closer on the map, title not cut"
+ },
+ "transition_out": {
+  "type": "travel",
+  "frames": 0,
+  "note": "s05 frame 450 continues the move (J4): s05 camera key 0 = s04 camera at local 126, same pose of Beck (rule_line)"
+ },
+ "location": "lodgings NIGHT",
+ "camera": "close on the OLD map, pull back + slide right along the wall to Beck, follows him to the table then to the board",
+ "events": {
+  "beck_turns": 3,
+  "pins_circuit": [
+   26,
+   40
+  ],
+  "holds_circuit_up": [
+   40,
+   70
+  ],
+  "steps_to_table": [
+   70,
+   78
+  ],
+  "reads_notice_and_pushes_aside": [
+   78,
+   98
+  ],
+  "takes_ruler_and_leans_in": [
+   94,
+   126
+  ]
+ },
+ "runtime_set_changes": "wastebasket moved to the far-left corner; little table (+ NOTICE letter) shifted 1.2 D left so Beck at the cork board is not behind it"
+}

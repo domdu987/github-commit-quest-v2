@@ -1,0 +1,58 @@
+{
+ "take": "s04",
+ "fps": 30,
+ "note": "time = film seconds (g/30)",
+ "cues": [
+  {
+   "time": 10.6,
+   "duration": 0.5,
+   "frame": 318,
+   "end_frame": 333,
+   "kind": "transition",
+   "label": "soft dissolve-whoosh: the underground echo falls away, quiet room tone of the lodging takes over"
+  },
+  {
+   "time": 10.9,
+   "duration": 3.9,
+   "frame": 327,
+   "end_frame": 449,
+   "kind": "ambience",
+   "label": "quiet lodging at night, gas lamp hum, a clock ticking, muffled street noise"
+  },
+  {
+   "time": 11.55,
+   "duration": 0.4,
+   "frame": 350,
+   "end_frame": 362,
+   "kind": "foley",
+   "label": "drawing pin pushes into cork, paper rustle",
+   "peak_frame": 356
+  },
+  {
+   "time": 12.3,
+   "duration": 0.4,
+   "frame": 373,
+   "end_frame": 385,
+   "kind": "foley",
+   "label": "stiff blueprint paper held up and flapped once"
+  },
+  {
+   "time": 13.0,
+   "duration": 0.9,
+   "frame": 394,
+   "end_frame": 420,
+   "kind": "foley",
+   "label": "sad sigh, a letter slid across the table, a little weary footstep",
+   "peak_frame": 408
+  },
+  {
+   "time": 13.97,
+   "duration": 0.5,
+   "frame": 422,
+   "end_frame": 437,
+   "kind": "foley",
+   "label": "wooden ruler picked up off the bench, soft clack",
+   "peak_frame": 424
+  }
+ ]
+}

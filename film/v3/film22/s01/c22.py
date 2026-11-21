@@ -41,7 +41,7 @@ def configure(shot, cams, marks=None, state=None, animate=None, light=None):
     dict.__setitem__(B.ALL_SHOTS, shot, d)
     return B.ALL_SHOTS[shot]
 
-def main(shot, g_first, g_last, actors_fn, quality='final', outdir=None, only=None, samples=None, scale=None):
+def main(shot, g_first, g_last, actors_fn, quality='final', outdir=None, only=None, samples=None, scale=None, pre=None):
     """build the lodgings once and render frames g_first..g_last (film frames) -> outdir/g_%04d.png (skips existing)."""
     sh = B.ALL_SHOTS[shot]
     outdir = outdir or os.path.join(HERE, 'frames')
@@ -51,6 +51,7 @@ def main(shot, g_first, g_last, actors_fn, quality='final', outdir=None, only=No
     if not todo: print('nothing to do'); return
     scene = B.build(sh['location'], sh.get('light'), shot, quality, todo[0])
     scene.render.threads = 2
+    if pre: pre()
     if samples: scene.cycles.samples = samples
     if scale: scene.render.resolution_percentage = scale
     t0 = time.time()
