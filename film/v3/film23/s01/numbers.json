@@ -1,0 +1,35 @@
+{
+ "take": "s01",
+ "first_g": 0,
+ "n_frames": 151,
+ "diff_median": 5.56,
+ "diff_p90": 11.34,
+ "diff_min": 1.57,
+ "luma_min": 90.1,
+ "luma_max": 100.6,
+ "luma_mean": 94.8,
+ "shade_hue": {
+  "0": {
+   "shade_hue": 241.3,
+   "share": 0.131
+  },
+  "75": {
+   "shade_hue": 245.7,
+   "share": 0.212
+  },
+  "150": {
+   "shade_hue": 246.3,
+   "share": 0.224
+  }
+ },
+ "max_head_centre_y": 817.4,
+ "head_y_by_card": {
+  "rider": 800.7,
+  "walk0": 817.4,
+  "walk1": 766.4
+ },
+ "water_frac_range": null,
+ "s_per_frame_wall": 11.96,
+ "s_per_frame_cpu": 16.44,
+ "jitter": "overall median jitter px 0.23"
+}

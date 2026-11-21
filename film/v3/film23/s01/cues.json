@@ -1,0 +1,31 @@
+{
+ "take": "s01",
+ "fps": 30,
+ "note": "time = film seconds (g / 30) on the ESTIMATED clock",
+ "cues": [
+  {
+   "time": 0.0,
+   "duration": 5.0,
+   "frame": 0,
+   "end_frame": 150,
+   "kind": "ambience",
+   "label": "dawn countryside, Normandy 1944: birds, a light breeze, far-off diesel rumble growing as the column nears"
+  },
+  {
+   "time": 1.5,
+   "duration": 3.5,
+   "frame": 45,
+   "end_frame": 150,
+   "kind": "foley",
+   "label": "tank column rolling on the lane: engines, tracks clanking, a jeep tow chain jingling"
+  },
+  {
+   "time": 3.333,
+   "duration": 1.667,
+   "frame": 100,
+   "end_frame": 150,
+   "kind": "foley",
+   "label": "soldier on the lead tank waves: cloth flap, a cheerful shout far away"
+  }
+ ]
+}

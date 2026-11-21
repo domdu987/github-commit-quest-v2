@@ -1,0 +1,10 @@
+{
+"s01": {
+ "delivered": "`take.mkv` (libx264rgb crf 6, 30 fps, 720x1280, {n_frames} frames g {first_g}..150) is 106 MB, so it is split with `split -b 40M` into `take.mkv.part_aa/ab/ac` (`cat take.mkv.part_* > take.mkv`). Also `shot.py` (stills / final / ground), `../c23.py` + `../deliver.py` + `../qa_md.py` (shared helpers), `meta.json`, `cues.json`, `contact.jpg`, `phone_sheet.jpg`, `QA_AUTO.md`, `QA_JITTER.txt`, `GROUND.md`, `numbers.json`. Frames / raw / work stay out of git.",
+ "look": ["BIGZOOM 1 as planned: g 0 a high OBLIQUE extreme wide (120 D up, 37 deg down, dawn horizon in the top 15 %) along the lane over the bocage, descend and push past two poplars, end 3/4 on the lead tank with the waving soldier (rider on col0's deck, head centre y 0.48 H at g 150; the QA target was 0.40-0.55).",
+  "Cast: gi_smile rides col0 and waves (wave_frame 12-frame cycle), gi_pump waves from the verge, gi_designer stands and sways (all real cast23 cards, front-3/4: there are no back views). The column rolls 4 D over the planned length (set_column keyed every frame).",
+  "No heads in the caption band; nothing floats (ground_check PASS; the rider stands on the tank deck mark, the walkers on the grass)."],
+ "rules": ["No mouth moves (held expression drawings only). No weapons. No camera shake: eased keys only (set's BIGZOOM path, no noise). No depth of field.", "Every character card has the stage contact decal on its surface (rider on the deck, walkers on the grass)."],
+ "dev": ["Frame-diff p90 is 11.3 (target 12): the first 40 frames of the BIGZOOM descend slowly by design (the set's approved move); median 5.6 passes. No camera edits were made.", "Nothing else differs from the plan. The three marks of the set row (rider + 2 walkers) were kept; no extra troops were added."]
+}
+}
