@@ -78,38 +78,38 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 16.28,
- "s_per_frame_cpu_mean": 31.92,
+ "s_per_frame_wall_mean": 11.28,
+ "s_per_frame_cpu_mean": 22.28,
  "heads_in_shot_px": {
   "king": {
    "w": [
     108,
-    220
+    226
    ],
    "y": [
     434,
     621
    ],
    "x": [
-    155,
+    278,
     598
    ],
-   "bottom_max": 695
+   "bottom_max": 698
   },
   "astro": {
    "w": [
     160,
-    218
+    251
    ],
    "y": [
     574,
-    651
+    777
    ],
    "x": [
     336,
-    548
+    637
    ],
-   "bottom_max": 759
+   "bottom_max": 903
   },
   "har": {
    "w": [
@@ -128,8 +128,8 @@
   }
  },
  "framediff_in_shot": {
-  "median": 4.52,
-  "p90": 19.17
+  "median": 4.36,
+  "p90": 15.87
  },
  "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json"
 }
