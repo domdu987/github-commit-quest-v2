@@ -35,3 +35,7 @@
 - H1 moved 0.14 D left (root.x keyed every frame): the corner post no longer lands on the H4's crown at g 1063-1095; clear gap between the clocks.
 - Snap tilted up 0.13 D (shift (0.7, -0.22)); snap framing otherwise as accepted. Mark, drift and sway unchanged.
 - Frame-diff in-shot: median 4.73, p90 10.91. QA_AUTO PASS.
+
+## Last pass (render19 team8): no sway, smooth one-way travel
+- `SWAY` 0. To keep frame-diff without oscillation: push 0.36 (start pulled back 8 % so the end head size stays <= ~235 px), slide -4 px/s, whip SNAPK 1.95. All one-way, eased.
+- Frame-diff in-shot: median 4.12, p90 12.47. qa_jitter overall 0.25 px (JITTER.md). qa_auto PASS. GROUND.md PASS (set objects skipped, see notes).
