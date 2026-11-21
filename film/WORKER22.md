@@ -98,3 +98,10 @@ The set's texture cache is not in git. The first build regenerates it into `v3/s
    - Commit GROUND.md with the take.
 2. **Contact shadows.** Every character card and every free prop gets a soft contact shadow: use `beck.card_shadow(ob)` or a shadow catcher. Nobody stands on nothing, and shadows stay attached to their feet.
 3. **Float hunter.** The director runs an independent float hunter on your 1 fps sheet at the TAKE gate. It gets only the sheet and the question: "List every person or object that floats, has no contact with a surface, has a detached shadow, or is cut weirdly by the frame or foreground." Any item it lists blocks the take, so check this yourself first.
+
+## 8. QA_TEAM.md §L (client complaint 2026-11-21, BLOCKING): no camera shake
+- **Smooth moves only.** Every camera move is eased: travel, dolly, crane and BIGZOOM. No random pan or tilt keys and no LINEAR noise.
+- **No shake in this film.** `camrig.shake()` is NOT planned for film 22. Do not add shake, wobble or handheld noise anywhere.
+- **Measure every take.** Run `python3 PROJ/qa_jitter.py take.mkv` and paste its output into QA.md.
+  - Every second must measure ≤ 2.0 px.
+  - A fast travel or whip that the tool reports as shake must be re-eased so the motion is smooth, with no back-and-forth.
