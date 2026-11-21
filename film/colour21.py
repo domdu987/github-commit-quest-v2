@@ -5,7 +5,7 @@ they step. Overrides: film/film21/colour21.json {"sA1": {"gamma":..,"chroma":..,
 API: params = solve(takes) ; fix(rgb_uint8, p) -> uint8 ; per_g(takes, params, N) -> list of p per film frame g"""
 import json, os, numpy as np
 from PIL import Image
-LUMA, SAT, YEL, EASE = 100.0, 0.55, 0.30, 12
+LUMA, SAT, YEL, EASE = 100.0, 0.55, 0.40, 12
 OVR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "film21", "colour21.json")
 
 def fix(im, p):
@@ -14,7 +14,7 @@ def fix(im, p):
     yel = np.clip(np.minimum(R, G) - B, 0, 1) * (1 - np.clip(np.abs(R - G) * 4, 0, 1))   # pure yellows only, not orange/red
     a[..., 2] = B + p["yellow"] * yel
     Y = (a @ np.array([0.299, 0.587, 0.114], np.float32))[..., None]
-    a = np.clip(Y + (a - Y) * p["chroma"], 0, 1) ** p["gamma"]
+    a = np.clip((Y + (a - Y) * p["chroma"]) * p.get("gain", 1.0), 0, 1) ** p["gamma"]
     return (a * 255 + 0.5).astype(np.uint8)
 
 def stats(ims):
@@ -25,12 +25,17 @@ def stats(ims):
     return float(np.mean(L)), float(np.mean(S))
 
 def solve_one(ims):
-    p = dict(gamma=1.0, chroma=1.0, yellow=YEL)
+    # over-bright segments are pulled down with a linear gain (keeps contrast and hue), dark ones lifted with gamma;
+    # chroma is only nudged (0.8-1.25) so a segment never goes grey or neon
+    p = dict(gain=1.0, gamma=1.0, chroma=1.0, yellow=YEL)
     small = [np.asarray(Image.fromarray(i).resize((180, 320))) for i in ims]
-    for _ in range(6):
+    for _ in range(8):
         l, s = stats([fix(i, p) for i in small])
-        p["gamma"] = float(np.clip(p["gamma"] * np.log(LUMA / 255) / np.log(max(l, 1) / 255), 0.6, 1.6))
-        p["chroma"] = float(np.clip(p["chroma"] * SAT / max(s, 1e-3), 0.6, 1.3))
+        if l > LUMA and p["gamma"] <= 1.0001:
+            p["gain"] = float(np.clip(p["gain"] * LUMA / l, 0.72, 1.0))
+        else:
+            p["gamma"] = float(np.clip(p["gamma"] * np.log(LUMA / 255) / np.log(max(l, 1) / 255), 0.65, 1.0))
+        p["chroma"] = float(np.clip(p["chroma"] * SAT / max(s, 1e-3), 0.8, 1.25))
     l, s = stats([fix(i, p) for i in small]); p["result"] = [round(l, 1), round(s, 3)]
     return p
 
@@ -44,7 +49,7 @@ def solve(takes, every=8):
     return P
 
 def per_g(takes, P, N):
-    keys = ("gamma", "chroma", "yellow"); out = [None] * N
+    keys = ("gain", "gamma", "chroma", "yellow"); out = [None] * N
     for i, t in enumerate(takes):
         for g in range(max(0, t["g0"]), min(N, t["g1"])): out[g] = {k: P[t["name"]][k] for k in keys}
     for i in range(1, len(takes)):                      # ease across dissolve joins (D6)
