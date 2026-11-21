@@ -39,3 +39,8 @@ No extra review layers (§G-§L multi-reviewer gates dropped). fal still exhaust
 - 07:55 review 1: team3 S01 S14-S18 accepted -> session archived. team2 asked: S12 redo (lift centred, reach end comp by g1), S19 Major head out of band, S10 crate text. team1 pending S05 S07 S08.
 - conform23: speed map (up to x1.4) so each take reaches its end composition (moves end at g1_render), instead of trimming the tail.
 - 07:55 team2 accepted (S12 redo good; S10/S19 rechecked: my flag was wrong, team correct) -> session archived. 16/19 takes in hand. Team1: S05 redo + S07 rendering, S08 next.
+
+## RELEASED v1 2026-11-21 ~09:30 UTC: film/release23/ghost_v1.mp4 (68.7 s) + caption.txt
+Automatic checks (film/skill_film13): qa_auto PASS (2060 frames, 0 black/frozen, magenta 0 %); qa_jitter no second > 2 px (median 0.15);
+loudness -12.3 LUFS, peak -1.1 dB; per-sentence STT on the final mix 0.992-1.0 (qa/final/stt_mix.json); ground_check per take by teams.
+Teams: team2 + team3 archived; team1 to archive after release.
