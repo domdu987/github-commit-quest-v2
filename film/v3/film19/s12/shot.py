@@ -47,7 +47,7 @@ MARK_DX = float(os.environ.get("MARK_DX", 0.2))
 MARK_DY = float(os.environ.get("MARK_DY", -2.8))
 CAM_LOC0 = tuple(float(v) for v in os.environ.get("CAM_LOC0", "2.2,-1.6,2.4").split(","))
 CAM_LOOK0 = tuple(float(v) for v in os.environ.get("CAM_LOOK0", "2.6,2.9,2.3").split(","))
-CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get("PUSH", 0.06)), slide_px=float(os.environ.get("SLIDE", -60)),
+CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=float(os.environ.get("PUSH", 0.085)), slide_px=float(os.environ.get("SLIDE", -70)),
                 rise_px=float(os.environ.get("RISE", 0)), arc_deg_s=float(os.environ.get("ARC", 0)), decay=0.25,
                 snaps=[dict(g=SNAP, k=float(os.environ.get("SNAPK", 1.05)), peak=float(os.environ.get("SNAPPEAK", 3.0)), shift=(float(os.environ.get("SNAPSX", 1.4)), -0.1)),
                        dict(g=(970, 996), k=1.0, peak=1.0, shift=(float(os.environ.get("SETTLE", -0.9)), 0.0))])   # the whip overshoots, then settles back left
@@ -126,7 +126,9 @@ def bounce_z(g):
 
 def candle_level(g):
     """the bench candle stub burns down over the whole take (1.0 -> 0.25)"""
-    return lerp(1.0, 0.25, clamp((g - G0) / float(G1 - G0)))
+    base = lerp(1.0, 0.25, clamp((g - G0) / float(G1 - G0)))
+    flick = 0.55 * math.sin(g * 1.7) + 0.3 * math.sin(g * 2.9 + 1.3) + 0.15 * math.sin(g * 0.9 + 0.4)      # candle flicker (no camera sway any more)
+    return max(0.15, min(1.0, base * (1.0 + 0.16 * flick)))
 
 
 class Take(C.Take):

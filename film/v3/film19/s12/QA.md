@@ -31,3 +31,7 @@
 - Light: a small exposure lift for the payoff (all lights x1.6 over g 990-1000, in the keyed dimming); mean brightness 59.9 -> 65.7 (qa_stats). The overall trend is still a darker room than the start, with a brighter payoff. No separate rim light.
 - With him 0.3 D further from the chest his white stockings and shoes show beside the chest (standing on the floor with the contact shadow) instead of hiding behind it.
 - Frame-diff in-shot: median 5.94, p90 13.48. QA_AUTO PASS.
+
+## Last pass (render19 team8): handheld sway removed
+- `SWAY` default 0 (no oscillation). Candle flicker is brightness only (no camera). To keep frame-diff, a smooth one-way push 0.085 / slide -70 px/s was added (eased, no oscillation).
+- Frame-diff in-shot: median 4.37, p90 12.74. qa_jitter: overall 0.7 px, no second > 2.0 (JITTER.md). qa_auto PASS. GROUND.md: characters pass.
