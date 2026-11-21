@@ -29,3 +29,10 @@
 Pitch schedule knots (rate deg/f): 108 -0.87, 111 -0.3, 114 0, 117 .4, 120 .8, 124 1.05, 130 1.2, 136 1.27, 142-160 1.3. Extra tilt-down 22.7 deg (min pitch about -69 at g116).
 Delivered 152 f, 21.79 s/frame; frame-diff median 8.27 / p90 19.28; qa_stats sat 0.640, luma 95.4. qa_auto blur flag on the opening (waived by director).
 sim.py ship-only mag_med: g128 13.1, g134 7.6, g140 5.6, g144 5.1, g150 5.6, g155 5.9, g160 6.9, g161 7.1. Low-to-g161 climb-back about +39 % (not under 20 %); median g134-157 about 5.6 (just under the ~6 target). No aim reversal. Residual conflict between ship image speed and the pitch schedule.
+
+## Round 18 (pitch plateau lifted so the shot only slows into the landing)
+Pitch-rate knots (deg/f): ... 124 1.05, 130 1.35, 136 1.65, 142 1.85, 150 1.85, 156 1.6, 160 1.31. g160 aim is anchored, so the g160 pose is unchanged; the extra pitch-up is paid for by more tilt-down earlier: d108 -35.0 deg (was -22.7), min pitch -81.4 deg at g114. The shape of the g108-127 rates is unchanged but its absolute pitch is lower. g>=166 raw frames were not re-rendered (same files; encoded diff vs round 17 mean 0.64, max 13).
+Delivered 152 f, 21.75 s/frame; frame-diff median 10.49 / p90 20.76; qa_stats sat 0.642, luma 96.5, motion median 9.31 / p90 24.25.
+sim.py ship-only mag_med: g126 19.1, 130 12.9, 134 11.4, 138 11.8, 142 11.2, 146 10.2, 150 10.8, 154 9.9, 158 8.7, 159 7.9, 160 7.9, 161 7.1, 162 6.9, 164 5.7. Every frame g128-160 >= 7.9; eases down into the landing, no climb-back (local bumps +7 % at g147-149).
+reg.py top band (y<35 %): g130 11.6, g133-138 9.5-10.0, g139 11.2, g142 14.8, g143-157 19-22.6, g160 18.0. (g133-138 sit at 9.5-9.8, just under 10.)
+Ground check (QA_TEAM section K): GROUND.md, 0 FAIL.
