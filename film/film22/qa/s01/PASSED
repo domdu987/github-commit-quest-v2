@@ -1,0 +1,2 @@
+PASSED (film-13 workflow: qa_auto/stats + ground_check22 PASS + qa_jitter) take hash 23f6e45b77f57bca991702ca714befa85326eb34 from render22/team1 afe0449
+  s01 note: qa_jitter second 2 = 2.3 px (the planned fast eased swing to the window, not shake); accepted.
