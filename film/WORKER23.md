@@ -25,6 +25,20 @@ The narration is not recorded yet (fal.ai is out of balance). Shot times come fr
   - Use a talk cycle over the shot's whole quote part, with `talk_mouth` driven by a synthetic loudness: a 4-6 Hz pattern with pauses.
   - Everywhere else, mouths are still.
 
+## SET gate result (QA-art, film/v3/set3d23/QA_ART_SET.md): READ IT
+- LANE and CAMP PASS. FIELDS (S01) and RHINE (S14-S18) were being fixed by the set builder; team 3 starts after that.
+- **The per-shot notes in QA_ART_SET.md for your shots are MANDATORY.** Apply them in your shot.py at runtime: move marks or camera end-points,
+  move crate text out of y 880-950, and tint the lane-dirt shade toward hue 248 in S07/S12.
+  Examples: S04 head out of the band, S09 sound man's head ≤ y 760, S10 crate text and the tent wall dressing, S13 cyclists brake and stay in frame,
+  S17 both observers whole, S19 crate text and the shadow hue.
+- Replace every placeholder card with real cast23 cards: pick the pose from the cast API that matches the plan's action.
+- Measure the shade hue (target 240-260) on the first, mid and last frame, and put it in QA.md.
+
+## Teams (max 3 at once)
+- team1: S02 S03 S04 S05 S06 S07 S08 (LANE morning)
+- team2: S09 S10 S11 S12 S13 S19 (CAMP night, LANE day)
+- team3: S01 S14 S15 S16 S17 S18 (FIELDS dawn, RHINE): starts after the set fix
+
 ## Look (client rules)
 - Sharp picture with NO depth of field.
 - Wide and medium framings that show the dense lit set. Close-ups only as a quick punch-in.
