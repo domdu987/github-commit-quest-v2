@@ -1,0 +1,27 @@
+{
+ "take": "s11",
+ "film": 23,
+ "shots": [
+  11
+ ],
+ "first_g": 1182,
+ "n_frames": 127,
+ "g0": 1191,
+ "g1": 1284,
+ "g1_render": 1308,
+ "handle_in": 9,
+ "tail_frames": 24,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 13
+ },
+ "fps": 30,
+ "size": [
+  720,
+  1280
+ ],
+ "samples": 12,
+ "location": "LANE",
+ "light": "DAY",
+ "split": true
+}

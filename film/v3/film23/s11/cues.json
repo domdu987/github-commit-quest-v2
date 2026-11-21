@@ -1,0 +1,23 @@
+{
+ "take": "s11",
+ "fps": 30,
+ "note": "time = film seconds (g/30); estimated narration timing",
+ "cues": [
+  {
+   "time": 39.4,
+   "duration": 4.233,
+   "frame": 1182,
+   "end_frame": 1309,
+   "kind": "ambience",
+   "label": "bright Normandy morning lane: birds, wind in the hedgerow, distant tank-park murmur"
+  },
+  {
+   "time": 39.4,
+   "duration": 4.233,
+   "frame": 1182,
+   "end_frame": 1309,
+   "kind": "prop",
+   "label": "two bicycles ticking along a dirt lane: chain click, a bell tink, tyres on gravel, the two riders chatting in French (indistinct, no words)"
+  }
+ ]
+}
