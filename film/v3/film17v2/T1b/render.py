@@ -3,7 +3,7 @@ usage: python3 render.py still <g> <out.png> | full [g_first g_last]   (resume: 
 import sys, os, time, math
 HERE = os.path.dirname(os.path.abspath(__file__)); V3 = os.path.abspath(os.path.join(HERE, '..', '..'))
 sys.path.insert(0, os.path.join(V3, 'set3d17')); import prefecture17 as P, bpy
-TAKE = 'T1'; G0, G1 = 191, 342; IDLE = True
+TAKE = 'T1'; G0, G1 = 191, 342; IDLE = True; HIDE_PUDDLES = True
 CIV = {'lamplighter': 'prisoner_standing_b', 'flaneur_a': 'prisoner_standing_a', 'flaneur_b': 'prisoner_standing_c', 'flaneur_c': 'prisoner_standing_b',
        'newsboy': 'prisoner_standing_c', 'newsboy2': 'prisoner_standing_a', 'cafe_a': 'prisoner_standing_b', 'prisoner_c': 'prisoner_standing_a'}
 def assign_for(g):
@@ -47,6 +47,9 @@ def clear_cast():
     for o in [o for o in bpy.data.objects if o.name.startswith(('c2_', 'back_hair_', 'back_coat_'))]: bpy.data.objects.remove(o, do_unlink=True)
     actors.clear_registry()
 def one(g, out):
+    if HIDE_PUDDLES:
+        for o in bpy.data.objects:
+            if o.name == 'ext_puddle': o.hide_render = True   # float-hunter (client rule): puddle reflections read as flat dark slabs / a figure lying on the cobbles
     clear_cast(); sc = bpy.context.scene; sc.frame_set(g + 1); mb(g); P.stage_cast2(TAKE, g, assign_for(g)); sc.render.filepath = out
     t = time.time(); bpy.ops.render.render(write_still=True); P.grade2(out); return time.time() - t
 if __name__ == '__main__':
