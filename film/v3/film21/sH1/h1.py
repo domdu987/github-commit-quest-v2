@@ -45,6 +45,7 @@ def hermite(p0, v0, p1, v1, t, T):
 NECK_LOC, NECK_LOOK, NECK_LENS = [Vector(v) if not isinstance(v, float) else v for v in K.POSES['P_NECK']]
 WP_LOC, WP_LOOK = Vector((9.0, 47.0, 3.3)), Vector((0.0, 33.0, 1.9))          # LOW and CLOSE past the bridge mouth at the slam (wall figures 12-18 % of the frame)
 MID_LOC, MID_LOOK = Vector((62.0, 80.0, 16.0)), Vector((8.0, 44.0, 9.0))       # looks at the neck, not down at the shelf (fix 5)
+TREE_LOC, TREE_LOOK = Vector((22.5, 43.0, 8.0)), Vector((3.0, 36.0, 3.0))       # passes 6+ m clear of the meadow trees at (14-27, 51-58)
 def herm_keys(keys, g):
     """keys: [(g, point, tangent or None)]; None tangents are central differences. Cubic Hermite, tangents in units per frame."""
     ks = [list(k) for k in keys]
@@ -73,8 +74,8 @@ def camera(g):
     else:
         l0, k0 = ride_cam(G_RIDE_END); l1, k1 = ride_cam(G_RIDE_END + 1); vl0, vk0 = l1 - l0, k1 - k0
         gb = min(g, 1345)
-        loc = herm_keys([(G_RIDE_END, l0, vl0), (1297, MID_LOC, None), (G_SLAM, WP_LOC, Vector((-0.05, 0.10, 0.02))), (1345, NECK_LOC, z3)], gb)
-        look = herm_keys([(G_RIDE_END, k0, vk0), (1297, MID_LOOK, None), (G_SLAM, WP_LOOK, Vector((0.0, -0.05, 0.0))), (1345, NECK_LOOK, z3)], gb)
+        loc = herm_keys([(G_RIDE_END, l0, vl0), (1297, MID_LOC, None), (1307, TREE_LOC, None), (G_SLAM, WP_LOC, Vector((-0.05, 0.10, 0.02))), (1345, NECK_LOC, z3)], gb)
+        look = herm_keys([(G_RIDE_END, k0, vk0), (1297, MID_LOOK, None), (1307, TREE_LOOK, None), (G_SLAM, WP_LOOK, Vector((0.0, -0.05, 0.0))), (1345, NECK_LOOK, z3)], gb)
         look = look - Vector((0, 0, 1.2 * math.sin(math.pi * min(1.0, max(0.0, (g - 1322) / 22.0)))))       # tilt down a little 1322-1344: front chins stay above y 880
         w = sstep((g - 1326) / 12.0)                                  # from g1338 on: H2a's exact camera (same path and velocity: D6 handles)
         if w > 0: hl, hk = h2a_cam(g); loc = loc * (1 - w) + hl * w; look = look * (1 - w) + hk * w
@@ -148,6 +149,7 @@ def main(mode, gs, samples):
         K.banner(Bp, (sx, WALL_Y + 2.0, float(K.ground(sx, WALL_Y))), 9.0, 215, "t_saltire", "t_white", "saltire", rs, size=(6.6, 4.3))
     Bp.finalize("wall_banners")
     ban = [o for o in bpy.data.objects if o.name.startswith('wall_banners')]; ban0 = {o.name: o.location.z for o in ban}
+    bpy.context.view_layer.update(); bcx = {o.name: sum((o.matrix_world @ Vector(c)).x for c in o.bound_box) / 8.0 for o in ban}
     bkb = [o for o in bpy.data.objects if o.name.startswith('wall_back')]; bkb0 = {o.name: o.location.z for o in bkb}
     # foreground gorse along the ride, close to the camera track (they whip past)
     rs3 = np.random.RandomState(11); Bg = K.Batch(97)
@@ -187,7 +189,7 @@ def main(mode, gs, samples):
         loc, look, lens, viv = camera(g); c21.set_cam(cam, loc, look, lens); K.STATE['vivid'] = viv
         t = g / 30.0; K.set_flutter(t); K.set_smoke(t); K.set_flow(t); scene.frame_set(f)
         rise = 1.0 - sstep((g - 1312) / 9.0)
-        for o in ban: o.location.z = ban0[o.name] - 12.0 * rise
+        for o in ban: o.location.z = ban0[o.name] - 12.0 * rise; o.hide_render = (1306 <= g <= 1332 and bcx[o.name] > 5.0)    # right-hand banners (navy cloth) sit at the frame edge while the camera is near: hidden g1306-1332
         rise2 = 1.0 - sstep((g - 1318) / 8.0)
         for o in bkb: o.location.z = bkb0[o.name] - 3.0 * rise2
         for o in [o for o in bpy.data.objects if o.name.startswith('dust_h1')]:
@@ -261,7 +263,7 @@ def main(mode, gs, samples):
     for g in gs:
         if mode == 'final' and os.path.exists(os.path.join(HERE, os.environ.get('RAWDIR', 'raw_final'), 'g_%04d.json' % g)): continue
         t0 = time.time(); f = g
-        setframe(g)
+        setframe(g); loc, look, lens, viv = camera(g)
         C.sprites(f); bpy.context.view_layer.update(); actors.sync_all(scene, cam)
         out = os.path.join(HERE, os.environ.get('RAWDIR', 'raw_' + mode), 'g_%04d.png' % g); os.makedirs(os.path.dirname(out), exist_ok=True)
         K.render(out, mode, samples)

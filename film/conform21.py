@@ -58,7 +58,7 @@ CUES=[
  ("splash_big",59.75,-19,1.2,{}),
  ("splash_big",60.6,-14,0.9,{"noduck":1}),
  ("splash_big",60.9,-14,0.9,{"noduck":1}),
- ("splash_big",61.2,-13,0.45,{"noduck":1}),
+ ("splash_big",61.27,-13,0.40,{"noduck":1}),   # crown 3 rises at g1841 (QA-art sJ2 v6)
  # nickname punch-in whoosh (14) and snaps
  ("whoosh",27.8,-25,0.6,{}),
 ]

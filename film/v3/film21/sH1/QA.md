@@ -16,3 +16,8 @@ for rank in range(2):                                   # card ranks, rank 0 is 
 - §K ground check: `GROUND.md` (GC.check on 50 items, frames 1239..1348 step 10): FAIL 0. SUNK rows are the transparent card margin below the soles. Contact shadows on every card (contact=True). `sheet1fps.jpg` made.
 ## Numbers
 qa_auto PASS (1 soft frame g1310 = motion), motion median 14.3 / p90 27.8. Colour left to the conform.
+
+## v5 partial re-render (film-13 workflow, g1276-1332 only; g1239-1275 and 1333-1348 unchanged from v4)
+- Camera passed through the meadow tree canopy at g1308-1312: new path key at g1307 (22.5, 43, 8.0) keeps 8 m clear of the trees (checked with a nearest-vertex scan g1296-1338); the path of g1276-1332 changed slightly, so the whole range was re-rendered.
+- Black rectangles at the right edge (x 640-720) g1311-1314 / 1324-1328: they were the navy right-hand saltire banners (cloth edge entering the frame while the camera is at x 9). The two right banners are hidden g1306-1332 (they leave the frame at the right anyway); the left banners and the g1345 match to H2a are unchanged.
+- qa_auto PASS (one soft frame g1279 = motion), qa_jitter overall median 3.6 px (the 5 Hz ride shake in g1239-1275 is the only shake; it is in the plan for the charge and was left as delivered, say if it must go).
