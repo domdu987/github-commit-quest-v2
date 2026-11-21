@@ -105,3 +105,11 @@ The set's texture cache is not in git. The first build regenerates it into `v3/s
 - **Measure every take.** Run `python3 PROJ/qa_jitter.py take.mkv` and paste its output into QA.md.
   - Every second must measure ≤ 2.0 px.
   - A fast travel or whip that the tool reports as shake must be re-eased so the motion is smooth, with no back-and-forth.
+
+## 9. COLOUR_SPEC.md (client's binding colour standard, 2026-11-21)
+film/COLOUR_SPEC.md overrides every colour rule above (QA §G/§I saturation ≥ 0.50 and vivid ≥ 45 % are void).
+- Targets: hue shares red 30-41 %, orange 22-38 %, blue 14-30 %, purple 0-5 %, magenta 0-10 %; saturation 0.38-0.48; brightness 0.45-0.63; dark 8-15 %.
+- Characters are unlit and cast ground shadows. Shade is blue-violet (hue 240-260).
+- Measure every take with `python3 PROJ/v3/tools/hue_report.py` on its frames or contact, and paste the result into QA.md.
+- Night, exterior, map close-up and tunnel shots may fall outside the bands: write the reason in QA.md.
+- Do NOT grade inside your take. The director applies the v1.1 grade to the whole film at conform.

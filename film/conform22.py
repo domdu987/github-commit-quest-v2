@@ -94,11 +94,10 @@ def grade_filter():
     return ",".join(chain)
 
 def music_bed(out):
-    """music m2 (audio QA PICK.md): HPF 90 Hz (bass-heavy take), -1.5 dB 26-28 s, -1.5 dB 43-58 s (reveal lines), 2.5 s fade to 63.0."""
-    src = F22 + "/audio/music_pick.mp3"
-    vol = ("volume='if(between(t,25.5,26),1-0.16*(t-25.5)/0.5,if(between(t,26,28),0.84,if(between(t,28,28.5),0.84+0.16*(t-28)/0.5,"
-           "if(between(t,42.5,43),1-0.16*(t-42.5)/0.5,if(between(t,43,58),0.84,if(between(t,58,58.5),0.84+0.16*(t-58)/0.5,1))))))':eval=frame")
-    sh("ffmpeg", "-y", "-v", "error", "-i", src, "-af", f"highpass=f=90,equalizer=f=2500:t=q:w=1:g=-2,{vol},afade=t=out:st={T-2.5:.2f}:d=2.5", "-t", f"{T:.3f}", "-ar", "48000", out)
+    """music = the client's own Suno track "The Curious Commuter" (87.2 s; film22/audio/music_suno.mp3, from claude/new-session-73ou27 d4927bc).
+    MUSIC=m2 uses the fal backup take instead. Light HPF and -2 dB at 2.5 kHz under the voice, trimmed and faded at the film end."""
+    src = F22 + ("/audio/music_pick.mp3" if os.environ.get("MUSIC") == "m2" else "/audio/music_suno.mp3")
+    sh("ffmpeg", "-y", "-v", "error", "-i", src, "-af", f"highpass=f=70,equalizer=f=2500:t=q:w=1:g=-2,afade=t=out:st={T-2.5:.2f}:d=2.5", "-t", f"{T:.3f}", "-ar", "48000", out)
 
 def final(out):
     caps = json.load(open(F22 + "/script/captions.json"))
