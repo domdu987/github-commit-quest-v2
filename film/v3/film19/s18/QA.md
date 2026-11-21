@@ -21,3 +21,10 @@ median **5.99**, p90 **11.06** (qa_stats on all frames 5.56 / 11.52). Targets me
 3. **Bow wave:** the pillow is half its size (x0.5); not turned into toon spray chunks.
 4. **Polish:** +0.1 EV eased out over g 1384-1402 (luma ~88 there); lower-third foam lines 28 -> 20.
 - **qa_stats: luma 98.2 (band 85-110), saturation 0.659.** Frame-diff (deliver.py, in-shot g 1385..1467): median **5.33**, p90 **10.21** (qa_stats on all frames 4.85 / 10.41): both >= 10. `qa_auto` PASS. DOF off, no text, no caption_shade.
+
+## v3 (round 13 follow-up)
+- **Early motion (blocking):** the quiet start now moves: an eased 9 D pan over g 1375-1412 and a faster ship roll (clock x3.5). Mean pair diff g 1385-1404 is 2.7 (was 1.5-1.9); **ffmpeg-gray bilinear 90x160, pairs g 1385-1467: median 6.71, p90 12.17** (target >= 10.3); deliver.py (mean RGB) median 6.90, p90 12.39.
+- **Luma:** +0.2 EV eased out over g 1384-1404 (was +0.1). qa_stats: luma **102.1**, saturation 0.628.
+- **Foam:** the foreground foam lines are 32 (was 28 -> 20 in an earlier try): 20 failed `qa_auto` "suspected blur" on g 1394-1405 once the early pan was added (the smooth sea there); so the optional thinning of g 1415-1432 was not done.
+- **Violet glow under the bow (g 1430-1467): NOT removed.** The bluish bow-mist cards (`skyobj_mist*` under `bow_fx`) are hidden and the foam / sea foam colours warmed, but the violet patch left of the bow is hull-shaded foam lit only by the blue sky ambient; it did not change. Removing it would need a change of the approved scene ambient.
+- qa_auto PASS. DOF off, no text, no caption_shade. Island, William's acting, the sparkle and the colour unchanged.

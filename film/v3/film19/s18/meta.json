@@ -28,8 +28,8 @@
   "note": "dissolve 13 f into shot 19 (ship_coast) centred on g 1468; handle g 1468..1476 rendered in 3D"
  },
  "set": "v3/set3d19/h19.py SHIP preset ship_hero, light NOON; set_sea(g/30) + set_roll(g/30) keyed on every frame; sea grid re-fitted at runtime to a 1.5x wider virtual camera footprint (no set module edited) so the slide never shows the grid edge; no actors; no caption_shade",
- "cast": "william19 (scale 4.0, MIRRORED to face the island at screen-left) on the forecastle: g 1384-1409 looks down at the H4 on his palm; g 1410-1426 glances up / turns his head; g 1427-1437 the H4 (drawn 2x) goes UP; from g 1434 an open-mouthed excited face held to the end, the watch held ABOVE his head toward the island; a hop of joy g 1436-1456; one warm sparkle on the watch g 1436-1454; head 26-42 px wide",
- "camera": "custom 22 mm from the ship_hero preset pose; c19.CamPath push 4 %/s + orbit -3 deg/s + slide 45 px/s, decay 0.1, plus a SNAP push x1.2 with a pan (16 f, g 1430..1446) on 'จาไมกา' (~g 1438), decay 0.1 (moving on frame 0 and on the last frame); no snap (shot < 2 s); v2: island ~80 m (~20 % of the frame width on the word), placed left-ahead of the bow; foam_wave (bow-wave pillow) scaled x0.5; exposure +0.1 EV in g 1384-1400",
+ "cast": "none (no characters in this shot)",
+ "camera": "custom 22 mm from the ship_hero preset pose; c19.CamPath push 4 %/s + orbit -3 deg/s + slide 45 px/s, decay 0.1, plus a SNAP push x1.2 with a pan (16 f, g 1430..1446) on 'จาไมกา' (~g 1438), decay 0.1 (moving on frame 0 and on the last frame); no snap (shot < 2 s); v3: an eased early pan (g 1375-1412, 9 D), ship roll clock x3.5 (the ship rocks faster so the quiet start moves), foreground foam lines 32, the bluish bow-mist cards hidden, sea foam colours warmed, +0.2 EV eased out over g 1384-1404",
  "events": {},
  "dof": "none",
  "text": "none",
@@ -42,15 +42,15 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 17.96,
- "s_per_frame_cpu_mean": 33.0,
+ "s_per_frame_wall_mean": 16.43,
+ "s_per_frame_cpu_mean": 30.88,
  "framediff_in_shot": {
-  "median": 5.33,
-  "p90": 10.21
+  "median": 6.9,
+  "p90": 12.39
  },
  "narration": "film19/audio/narration.wav at +0.10 s; captions film19/script/captions.json",
  "qa_stats": {
-  "saturation": 0.659,
-  "luma": 98.2
+  "saturation": 0.628,
+  "luma": 102.1
  }
 }

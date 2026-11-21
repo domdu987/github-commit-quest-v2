@@ -49,7 +49,8 @@ SNAP = (int(_S[0]), int(_S[0] + _S[1]))                                     # 17
 _P = [float(v) for v in os.environ.get("CAMP", "-0.01,35,12.26,-8").split(",")]      # push, slide px/s, rise px/s, arc deg/s
 CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, FIRST_G, G_LAST, push=_P[0], slide_px=_P[1], rise_px=_P[2], arc_deg_s=_P[3], decay=0.1,
                 snaps=[dict(g=SNAP, k=_S[2], peak=2.0, shift=(_S[3], _S[4])),
-                       dict(g=(1446, 1476), k=1.05, peak=1.0, shift=(0.8, 0.0))])      # a gentle second move so the camera never parks after the snap (g 1444-1467)
+                       dict(g=(1446, 1476), k=1.05, peak=1.0, shift=(0.8, 0.0)),
+                       dict(g=(1375, 1412), k=1.0, peak=1.0, shift=(9.0, 0.0))])      # an eased early pan (g 1375-1412: the quiet start moves; QA-tech round 13)      # a gentle second move so the camera never parks after the snap (g 1444-1467)
 
 
 def widen_sea(preset, k, nu, nv):
@@ -66,7 +67,7 @@ def widen_sea(preset, k, nu, nv):
     P["sea_nu"], P["sea_nv"] = nu, nv
 
 
-def whitecaps_in_front(n=int(os.environ.get("WC", "20")), seed=int(os.environ.get("WCSEED", "3"))):
+def whitecaps_in_front(n=int(os.environ.get("WC", "32")), seed=int(os.environ.get("WCSEED", "3"))):
     """foreground swell crests: the hero preset's floating_spar() also places the preset's two foam streaks relative to P['cam'] (our widen_sea patched it): wrap it,
     keep the spar where the preset puts it (original camera) and add broken foam lines (the set's 'streaks' hook) between our camera and the ship, so crests
     sweep across the frame as the camera slides (frame-diff)."""
@@ -154,8 +155,8 @@ def tame_bow_wave():
                         for l in list(nt_.links):                                    # matte white foam: drop the blue mix from the base / emission colour
                             if l.to_node == n and l.to_socket.name in ("Base Color", "Emission Color"):
                                 nt_.links.remove(l)
-                        n.inputs["Base Color"].default_value = (0.94, 0.97, 0.98, 1.0)
-                        n.inputs["Emission Color"].default_value = (0.9, 0.96, 1.0, 1.0)
+                        n.inputs["Base Color"].default_value = (1.0, 0.95, 0.84, 1.0)                  # warm white: the blue sky ambient turns shaded foam violet otherwise
+                        n.inputs["Emission Color"].default_value = (1.0, 0.93, 0.80, 1.0)
                         if "Specular IOR Level" in n.inputs:
                             n.inputs["Specular IOR Level"].default_value = 0.0
                         n.inputs["Roughness"].default_value = 0.95
@@ -255,7 +256,18 @@ class Take(C.Take):
         self.expo0 = self.scene.view_settings.exposure           # QA_TEAM section G: luma 70-135 (the foam crests brighten the frame)
         build_island()
         tame_bow_wave()
+        sea_nt = bpy.data.materials["sea"].node_tree                    # warm the sea's foam colours: shaded foam under the blue ambient reads violet at the bow
+        for nm, col in (("Mix.004", (1.0, 0.95, 0.86, 1.0)), ("Mix.005", (1.0, 0.95, 0.86, 1.0))):
+            nd = sea_nt.nodes.get(nm)
+            if nd is not None and not nd.inputs[7].is_linked:
+                nd.inputs[7].default_value = col
+        nd = sea_nt.nodes.get("Mix.002")
+        if nd is not None and not nd.inputs[7].is_linked:
+            nd.inputs[7].default_value = (0.50, 0.64, 0.74, 1.0)
         self.spark = make_sparkle()
+        for o in list(bpy.data.objects):
+            if o.name.startswith('skyobj_mist') and o.parent is not None and o.parent.name == 'bow_fx':
+                o.hide_render = True                                  # the bluish bow-mist cards under the bow read as a violet glow (QA-tech round 13)
         wv = bpy.data.objects.get('foam_wave')
         if wv is not None:
             wv.scale = tuple(float(os.environ.get('WAVEK', '0.5')) * v for v in wv.scale)      # cap the bow-wave pillow (QA-art round 12)
@@ -266,11 +278,11 @@ class Take(C.Take):
     def pose(self, gs):
         for g in gs:
             f = C.bf(g)
-            self.key_set(f, sea=g / 30.0 * SEAK, roll=g / 30.0 * SEAK)           # same t, every frame
+            self.key_set(f, sea=g / 30.0 * SEAK, roll=g / 30.0 * float(os.environ.get('ROLLK', '3.5')))           # same t, every frame
             self.key_cam(f, *CAM.at(g))
             C.key_vis([o for o in (C.bpy.data.objects.get('gulls_gullt'), C.bpy.data.objects.get('gulls_gullw'), C.bpy.data.objects.get('headland')) if o], False, f)   # no gulls; the pale old headland is hidden (JAMAICA is the island)
             C.place(self.will, f, (WILL_XYZ[0], WILL_XYZ[1], WILL_XYZ[2] + hop_z(g)), scale=WS)
-            self.scene.view_settings.exposure = self.expo0 + 0.1 * (1.0 - C.u_of(g, 1384, 1402))   # +0.1 EV in g 1384-1400 (luma 84 -> ~88)
+            self.scene.view_settings.exposure = self.expo0 + 0.2 * (1.0 - C.u_of(g, 1384, 1404))   # +0.1 EV in g 1384-1400 (luma 84 -> ~88)
             self.scene.view_settings.keyframe_insert("exposure", frame=f)
         for g in gs:
             f = C.bf(g)
