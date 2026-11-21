@@ -34,3 +34,4 @@ No extra review layers (§G-§L multi-reviewer gates dropped). fal still exhaust
 - [x] shot_times_REAL.json: every shot fits its x1.25 render (S14 0.06 s short -> team3 told to render 5.6 s)
 - [x] Music m1 picked (music/PICK.md), mix -31 dB
 - [ ] Takes -> conform23 (retime to shot_times_REAL) -> captions, SFX, mix -> automatic checks -> release23 -> queue row WAIT
+- 05:45 sweep: delivered S01 S02 S03 (t1) S09 S10 S12 (t2). Director redo requests: S02 (empty grass, backlit tank, tiny soldiers) -> team1; S12 (lift reveal too small/hidden by hedge) -> team2.
