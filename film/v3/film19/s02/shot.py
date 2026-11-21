@@ -447,7 +447,7 @@ def _drift(g):
     return _DR.get(int(g), (0.0, 0.0) if g < 170 else _DR[259])
 
 
-def cam_rest_raw(g):
+def cam_rest_base(g):
     """(loc, look) in the ship's rest frame at film frame g: the time-warped landing path + the drift"""
     loc, look = _land(_tau_of(g))
     loc, look = _aim_design(g, loc, look)
@@ -456,6 +456,29 @@ def cam_rest_raw(g):
     loc = c + Matrix.Rotation(-ang, 3, "Z") @ (loc - c)                      # the drift continues the landing's travel direction (-x), eased in from zero
     loc = loc + (look - loc) * push
     return loc, look
+
+
+G_E0, G_E1 = 150, 182                                                       # round 20: ONE smooth ease from the round-19 pose and velocity at g150 to the landing rest pose at g182
+_EZ = {}
+
+
+def cam_rest_raw(g):
+    """round 20 (QA-art: the landing nearly settled at g160-162, moved again g164-176 and stopped dead at g177): over g150-182 the camera follows a cubic Hermite from the exact
+    round-19 position and velocity at g150 to the landing rest pose (and its tiny drift velocity) at g182, for loc and look alike; g <= 150 and g >= 182 are the base path."""
+    if g <= G_E0 or g >= G_E1:
+        return cam_rest_base(g)
+    def aim(gi):
+        l, k = cam_rest_base(gi); d = k - l
+        return [l.x, l.y, l.z, math.degrees(math.atan2(d.z, math.hypot(d.x, d.y))), math.degrees(math.atan2(d.x, d.y)), d.length]
+    if not _EZ:
+        _EZ["a"], _EZ["b"] = aim(G_E0), aim(G_E1)
+        _EZ["va"] = [(p - m) * 0.5 for p, m in zip(aim(G_E0 + 1), aim(G_E0 - 1))]
+        _EZ["vb"] = [(p - m) * 0.5 for p, m in zip(aim(G_E1 + 1), aim(G_E1 - 1))]
+    T = float(G_E1 - G_E0); t = (g - G_E0) / T
+    h00 = 2 * t ** 3 - 3 * t ** 2 + 1; h10 = t ** 3 - 2 * t ** 2 + t; h01 = -2 * t ** 3 + 3 * t ** 2; h11 = t ** 3 - t ** 2
+    q = [_EZ["a"][i] * h00 + _EZ["va"][i] * (T * h10) + _EZ["b"][i] * h01 + _EZ["vb"][i] * (T * h11) for i in range(6)]
+    loc = Vector((q[0], q[1], q[2])); pr, yr = math.radians(q[3]), math.radians(q[4])
+    return loc, loc + Vector((math.cos(pr) * math.sin(yr), math.cos(pr) * math.cos(yr), math.sin(pr))) * q[5]
 
 
 # ----------------------------------------------------------------------------- the sea (ONE camera-fitted grid): fit it to a virtual camera far above and behind
