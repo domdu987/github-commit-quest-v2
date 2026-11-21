@@ -55,7 +55,7 @@ def setup_materials(P, tx, pre):
     M['halo'] = BK._mat_add(pre + 'halo', tx['glow'], (1.0, 0.62, 0.26), 0.75); M['halo_w'] = BK._mat_add(pre + 'halo_w', tx['glow'], (1.0, 0.72, 0.4), 0.8)
     M['halo_s'] = BK._mat_add(pre + 'halo_s', tx['glow'], (1.0, 0.8, 0.5), 1.0); M['pool'] = BK._mat_add(pre + 'pool', tx['pool'], (1.0, 0.42, 0.10), 0.7)
     M['sun_halo'] = BK._mat_add(pre + 'sun_halo', tx['glow'], (1.0, 0.8, 0.45), 0.5)
-    M['mist'] = BK._mat_add(pre + 'mist', tx['mist'], (0.8, 0.88, 1.0), 0.55); M['puff'] = mg(pre + 'puff', art=tx['puff'], gain=1.1, alpha=True, form=False, shade_mix=0.1, shade_mul=2.2)
+    M['mist'] = BK._mat_add(pre + 'mist', tx['mist'], (0.8, 0.88, 1.0), 0.55); M['puff'] = mg(pre + 'puff', art=tx['puff'], gain=1.1, alpha=True, form=False, shade_mix=0.0, shade_mul=tuple(c / s_ for c, s_ in zip((0.78, 0.8, 0.88), P['shade'])))   # white-grey smoke, cool grey side
     M['blob'] = _mat_blob(pre + 'blob', tx['glow'])
     M['water'] = mg(pre + 'water', art=tx['water'], gain=1.0, form=False, glow=tx['water'], glow_k=0.14)
     M['glow_win'] = mat_emit(pre + 'glow_win', '#ffcf80', strength=2.6); M['screen'] = mat_emit(pre + 'screen', '#8affc0', strength=2.0)

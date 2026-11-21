@@ -416,7 +416,7 @@ def build_morning(Bk, M):
                 if rr.random() < 0.55: poplar(Bk, M, V(q[0], q[1], gz(q[0], q[1])), h=rr.uniform(24, 30), seed=int(q[1] * 3 + q[0]) & 0xffff)
                 else: round_tree(Bk, M, V(q[0], q[1], gz(q[0], q[1])), r=rr.uniform(3.4, 4.6), seed=int(q[1] * 5 + q[0]) & 0xffff)
     # ---- the hero tank, blocked in screen space (feet pixel -> ground point)
-    tpos = gp(372, 770); tyaw = -14.0; tz0 = gz(*tpos); K_ = 1.12
+    tpos = (-0.6, 17.0); tyaw = -36.0; tz0 = gz(*tpos); K_ = 1.1
     tk = PR.tank_obj('tank_hero', (tpos[0], tpos[1], tz0), tyaw, M, inflate=0.66, sag=0.34, seed=5, lod=1.6, hull=0.07, valve_x=-2.3, valve_side=-1)
     tk.scale = (K_, K_, K_); info = STATE['tank_info']; TF = BK.Frame((tpos[0], tpos[1], tz0), tyaw)
     tip = TF.p(*[c * K_ for c in info['tip']]); valve = TF.p(*[c * K_ for c in info['valve']])
@@ -429,15 +429,15 @@ def build_morning(Bk, M):
     sp = [(hp[0], hp[1], 'hold', None, True), (pu.x, pu.y, 'pump', None, False)]
     soldiers(sp, cam_loc, gz, lean=0.0, tone='d')
     # ---- left side: the sign on its post (back) and the stencilled crates (mid), all words whole
-    sg = gp(150, 640); PR.sign_post(Bk, M, V(sg[0], sg[1], gz(*sg)), 14, w=6.4, h=2.3, ph=6.6)
-    c1 = gp(96, 858); PR.crate(Bk, M, V(c1[0], c1[1], gz(*c1)), 10, size=(2.0, 1.25, 1.25), front='crate_b', open_=False, name='crateA', seed=1)
+    sg = (-9.2, 25.5); PR.sign_post(Bk, M, V(sg[0], sg[1], gz(*sg)), 16, w=7.6, h=2.8, ph=7.0)
+    c1 = (-6.3, 9.2); PR.crate(Bk, M, V(c1[0], c1[1], gz(*c1)), 10, size=(2.0, 1.25, 1.25), front='crate_b', open_=False, name='crateA', seed=1)
     PR.crate(Bk, M, V(c1[0] - 0.1, c1[1] + 0.15, gz(*c1) + 1.25), 4, size=(1.9, 1.2, 1.15), front='crate_b', open_=True, name='crateB', seed=2)
     # ---- right edge foreground frame: low stone wall + the French bicycle leaning on it
-    w0 = gp(735, 1010); w1 = gp(600, 800); PR.stone_wall(Bk, M, V(w0[0], w0[1], 0), V(w1[0], w1[1], 0), h=0.9, w=0.9, seed=4, gz=gz, step=0.8)
-    bk_ = gp(668, 940); wd = math.degrees(math.atan2(w1[1] - w0[1], w1[0] - w0[0])); PR.bicycle(Bk, M, V(bk_[0], bk_[1], gz(*bk_)), wd + 180, lean=-12, s=0.82)
+    w0 = (1.9, -7.4); w1 = (4.6, 8.0); PR.stone_wall(Bk, M, V(w0[0], w0[1], 0), V(w1[0], w1[1], 0), h=0.9, w=0.9, seed=4, gz=gz, step=0.8)
+    bk_ = (1.75, -5.6); wd = math.degrees(math.atan2(w1[1] - w0[1], w1[0] - w0[0])); PR.bicycle(Bk, M, V(bk_[0], bk_[1], gz(*bk_)), wd + 180, lean=-12, s=0.82)
     # ---- small props on the verges: jerrycan by the pump, toolbox and patch roll by the crates
     jc = TF.p(-6.0, -4.6, 0); PR.jerrycan(Bk, M, V(jc.x, jc.y, gz(jc.x, jc.y)), tyaw + 20)
-    tb_ = gp(232, 880); PR.toolbox(Bk, M, V(tb_[0], tb_[1], gz(*tb_)), 8)
+    tb_ = (-4.6, 5.0); PR.toolbox(Bk, M, V(tb_[0], tb_[1], gz(*tb_)), 8)
     # ---- behind: farmhouse (red roof) and barn on the rise, orchard, poplar row, hay, chimney smoke, cows
     house(Bk, M, (-24.0, 66.0, 0), -6, L=17, Wd=9.5, wh=5.6, rise=4.4, gz=gz, wins=4, door=0.62, chimney=2, dormers=2, name='farm', ink=0.2, seed=2)
     house(Bk, M, (-46.0, 74.0, 0), 8, L=14, Wd=10, wh=6.0, rise=4.4, gz=gz, roof='roof_d', wall='barn', wins=0, name='barn', ink=0.2, seed=3, dormers=0, chimney=0)

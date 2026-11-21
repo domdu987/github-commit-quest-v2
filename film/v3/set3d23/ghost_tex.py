@@ -12,7 +12,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEX = os.path.join(HERE, 'tex_ghost')
-TEX_V = 'g23.15'
+TEX_V = 'g23.16'
 JOBS = {}
 FONT_B = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 FONT_N = '/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf'
