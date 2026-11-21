@@ -47,7 +47,7 @@ def post_build():
     tg = C.obj('tag_change')
     cx, cy, cz = RING[0], RING[1] + 7.2, 3.0
     tg.scale = (1.6, 1.6, 1.6); tg.location = (cx - 1.6 * cx, cy - 1.6 * cy, cz - 1.6 * cz)
-    C.scale_lights('key_sun', 0.88); C.tint_emission('BK_e_pp_LONDON', (1.0, 0.84, 0.58)); C.scale_emission('BK_e_pp_LONDON', 1.0)
+    C.scale_lights('key_sun', 0.88); C.tint_emission('BK_e_pp_LONDON', (1.0, 0.74, 0.42)); C.scale_emission('BK_e_pp_LONDON', 0.85)
     for i in range(4):
         d = U.ACTORS['mp%d' % i]; WALK.append((d, i))
 
