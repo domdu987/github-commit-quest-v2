@@ -1,0 +1,86 @@
+{
+ "take": "s01",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film6/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 0.0,
+   "duration": 2.333,
+   "frame": 0,
+   "end_frame": 70,
+   "kind": "ambience",
+   "label": "bakery at dawn, inside: the oven fire roaring low and crackling, a soft street murmur through the counter opening"
+  },
+  {
+   "time": 0.233,
+   "duration": 0.067,
+   "frame": 7,
+   "end_frame": 9,
+   "kind": "prop",
+   "label": "loaf 10 dropped onto the pile in the wicker basket: soft crusty thump + wicker creak",
+   "peak_frame": 8
+  },
+  {
+   "time": 0.667,
+   "duration": 0.067,
+   "frame": 20,
+   "end_frame": 22,
+   "kind": "prop",
+   "label": "loaf 11 dropped onto the pile in the wicker basket: soft crusty thump + wicker creak",
+   "peak_frame": 21
+  },
+  {
+   "time": 1.1,
+   "duration": 0.067,
+   "frame": 33,
+   "end_frame": 35,
+   "kind": "prop",
+   "label": "loaf 12 dropped onto the pile in the wicker basket: soft crusty thump + wicker creak",
+   "peak_frame": 34
+  },
+  {
+   "time": 1.333,
+   "duration": 0.167,
+   "frame": 40,
+   "end_frame": 45,
+   "kind": "accent",
+   "label": "kit winks at the camera: tiny bright 'ting' / sparkle accent",
+   "peak_frame": 40
+  },
+  {
+   "time": 1.533,
+   "duration": 0.133,
+   "frame": 46,
+   "end_frame": 50,
+   "kind": "gesture",
+   "label": "quick glance over his shoulder at henry (short cloth swish)",
+   "peak_frame": 48
+  },
+  {
+   "time": 1.633,
+   "duration": 0.233,
+   "frame": 49,
+   "end_frame": 56,
+   "kind": "prop",
+   "label": "the sneaky 13th loaf: tiptoe pizzicato pluck as it rises, thump on the top of the pile",
+   "peak_frame": 57
+  },
+  {
+   "time": 1.933,
+   "duration": 0.4,
+   "frame": 58,
+   "end_frame": 70,
+   "kind": "accent",
+   "label": "kit grins at us (cheeky little musical sting)",
+   "peak_frame": 58
+  },
+  {
+   "time": 2.1,
+   "duration": 0.0,
+   "frame": 63,
+   "end_frame": 63,
+   "kind": "cut",
+   "label": "plan: cut to shot 2, ECU of the extra loaf landing on the pile with a steam puff"
+  }
+ ]
+}
