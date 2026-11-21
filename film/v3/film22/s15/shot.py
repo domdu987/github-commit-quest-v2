@@ -109,4 +109,4 @@ def frame(g, k, n):
 
 if __name__ == '__main__':
     unp = C.hide_static_crowd(BOXES)
-    C.run('s15', 'london', 'NIGHT', F0, F1, (HANDLES_PRE, HANDLES_POST), setup, frame, segments=[(-10**6, 12), (40, 54), (68, 125)])
+    C.run('s15', 'london', 'NIGHT', F0, F1, (HANDLES_PRE, HANDLES_POST), setup, frame, segments=[(-10**6, 12), (40, 54), (68, 100)])

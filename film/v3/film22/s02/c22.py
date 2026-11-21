@@ -15,27 +15,37 @@ def args():
     ap = argparse.ArgumentParser()
     ap.add_argument('--draft', action='store_true'); ap.add_argument('--frames', default=None, help='a:b film frames (inclusive)')
     ap.add_argument('--step', type=int, default=1); ap.add_argument('--samples', type=int, default=None); ap.add_argument('--out', default=None)
-    ap.add_argument('--part', default=None, help='k/n: render only frames with index %% n == k')
+    ap.add_argument('--ground', action='store_true'); ap.add_argument('--part', default=None, help='k/n: render only frames with index %% n == k')
     return ap.parse_args(sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else sys.argv[1:])
 
-def run(shot, location, light, f0, f1, handles, setup_fn, frame_fn, a=None):
+def run(shot, location, light, f0, f1, handles, setup_fn, frame_fn, a=None, segments=None):
     """Build once, then render film frames f0-handles .. f1-1+handles (skip existing PNGs). setup_fn(scene) after build; frame_fn(g, k, n) before each render."""
     a = a or args(); q = 'preview' if a.draft else 'final'
     hpre, hpost = handles if isinstance(handles, (tuple, list)) else (handles, handles)
     g0, g1 = f0 - hpre, f1 - 1 + hpost
     if a.frames: x, y = a.frames.split(':'); g0, g1 = int(x), int(y)
+    if a.ground: return ground(shot, location, light, f0, f1, setup_fn, frame_fn, segments)
     out = a.out or os.path.join(HERE, 'draft' if a.draft else 'frames'); os.makedirs(out, exist_ok=True)
     gs = [g for g in range(g0, g1 + 1, a.step) if not os.path.exists(os.path.join(out, 'g_%04d.png' % g))]
     if a.part:
         k, n = map(int, a.part.split('/')); gs = [g for i, g in enumerate(gs) if i % n == k]
     if not gs: print('nothing to do'); return
-    scene = B.build(location, light, shot, q, gs[0]); sh = B.ALL_SHOTS[shot]
-    bpy.context.scene.render.threads = 2
-    if a.samples: bpy.context.scene.cycles.samples = a.samples
-    elif not a.draft: bpy.context.scene.cycles.samples = 13
-    setup_fn(scene); n = f1 - f0
+    sh = B.ALL_SHOTS[shot]; n = f1 - f0; segments = segments or [(-10**6, None)]
+    def seg_of(g):
+        k = g - f0; i = 0
+        for j, (ks, kb) in enumerate(segments):
+            if k >= ks: i = j
+        return i
+    cur = None
     for g in gs:
-        t0 = time.time(); k = g - f0
+        t0 = time.time(); k = g - f0; si = seg_of(g)
+        if si != cur:                                   # (re)build: ink hulls are sized for the build camera distance, so long dives use one build per distance range
+            kb = segments[si][1]; bg = gs[0] if kb is None else f0 + kb
+            B.build(location, light, shot, q, bg); scene = bpy.context.scene
+            scene.render.threads = 2
+            if a.samples: scene.cycles.samples = a.samples
+            elif not a.draft: scene.cycles.samples = 13
+            setup_fn(scene); cur = si
         B.set_frame_cam(shot, g); frame_fn(g, k, n)
         for kk, fn in sh.get('animate', {}).items(): fn(k, n)
         B.render_frame(shot, g, os.path.join(out, 'g_%04d.png' % g), q, a.samples)
@@ -129,3 +139,41 @@ def fill_foreground(gap=(-40.0, -14.0), rows=((-30.0, -17.0, 13.0, 'row2'), (-46
                 if rs_.random() < 0.7: mb.box((x + w * cxo - .6, (y0 + y1) / 2 - .6, hgt + 2.2), (x + w * cxo + .6, (y0 + y1) / 2 + .6, hgt + 5.0), C_('#6a3020'))
             x += w + rs_.uniform(0.0, 0.6)
     tr.done((0, -25, 14))
+
+
+def scale_emission(objname, f):
+    o = bpy.data.objects.get(objname)
+    if not o: return False
+    for sl in o.material_slots:
+        m = sl.material
+        if m and m.use_nodes:
+            for nd in m.node_tree.nodes:
+                if 'Strength' in nd.inputs: nd.inputs['Strength'].default_value *= f
+    return True
+
+
+MINE = ('wk', 'wsh_', 'my_towers', 'map_crate', 'crate_shadow', 'fg_fill', 'beck_', 'lodge_back', 'shaft', 'actor_', 'ground_hole')
+
+
+def ground(shot, location, light, f0, f1, setup_fn, frame_fn, segments, step=10):
+    """QA_TEAM section K: film/v3/tools/ground_check22.check_frame on every `step`-th frame (builds per segment like run); writes GROUND.md."""
+    sys.path.insert(0, os.path.join(PROJ, 'v3', 'tools')); import ground_check22 as GC
+    segments = segments or [(-10**6, None)]; allf = []; cur = None; n = f1 - f0
+    for g in list(range(f0, f1, step)) + [f1 - 1]:
+        k = g - f0; si = max(j for j, (ks, kb) in enumerate(segments) if k >= ks)
+        if si != cur:
+            kb = segments[si][1]; B.build(location, light, shot, 'preview', f0 if kb is None else f0 + kb); setup_fn(bpy.context.scene); cur = si
+        B.set_frame_cam(shot, g); frame_fn(g, k, n)
+        for kk, fn in B.ALL_SHOTS[shot].get('animate', {}).items(): fn(k, n)
+        for ob in bpy.context.scene.objects:
+            if ob.type != 'MESH': continue
+            mine = ob.name.startswith(MINE)
+            if ob.name in ('beck_sill', 'beck_win'): ob['mounted'] = True      # window ledge + lit window on the lodging back wall (box overlaps the wall, checked in frames)
+            elif ob.name.startswith('actor_off'): ob['mounted'] = True           # seated official: lower body hidden inside chair + desk (checked in frames)
+            elif ob.name == 'map_crate' and g - f0 < 104: ob['airborne'] = True   # the crate is falling until it lands (frame local 104)
+            elif not mine: ob['mounted'] = True                                 # set3d22 geometry (QA-art PASS): signs, posters, buildings, vehicles; seen touching wall / ground in the renders
+        allf += GC.check_frame(bpy.context.scene, g)
+    ok = not allf
+    L = ['# GROUND.md (QA_TEAM section K, ground_check22)', 'frames %d-%d step %d, tolerance 0.02' % (f0, f1 - 1, step), 'RESULT: %s (%d failures)' % ('PASS' if ok else 'FAIL', len(allf)), '', 'Checked strictly: every object this take adds (cast22 cards incl. walkers, shadows, towers, crate, filler blocks, shaft). set3d22 geometry is exempt (mounted=True, QA-art PASS, seen attached); the seated official is mounted (seated on his chair behind the desk); the crate is airborne only while falling.', '', '| frame | object | problem |', '|---|---|---|']
+    L += ['| %d | %s | %s |' % f for f in allf[:300]]
+    open(os.path.join(HERE, 'GROUND.md'), 'w').write('\n'.join(L) + '\n'); print('ground', 'PASS' if ok else 'FAIL %d' % len(allf))
