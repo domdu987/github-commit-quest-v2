@@ -16,27 +16,31 @@ def hl(x, y, z): return (O[0] + x, O[1] + y, O[2] + z)
 
 # ------------------------------------------------------------------ camera (local frames; g = 192 + local)
 kn = (GX, GY + 38, -46.0)
-CAM = [(0, (GX, GY - 0.3, 6.0), (GX, GY - 0.3, -60.0), 30),
-       (3, (GX + 0.57, GY - 0.9, 2.0), (GX + 0.57, GY - 0.9, -60.0), 29),
-       (9, (GX + 0.4, GY - 0.9, -9.0), (GX + 0.4, GY - 0.9, -60.0), 28),
-       (19, (GX, GY - 1.5, -24.5), (GX, GY + 12, -40.0), 24),
-       (27, (GX - 13.0, GY - 8.0, -32.0), (GX + 2, GY + 40, -50.0), 22),
-       (40, (GX - 12.0, GY - 8.0, -37.0), (GX + 3, GY + 42, -49.0), 22),
-       (50, (GX - 4.0, GY + 2.0, -52.0), (GX, GY - 20, -59.6), 24),
-       (56, (GX, GY + 14.0, -59.0), (GX, GY - 20, -59.6), 24),
+CAM = [(0, (GX, GY - 0.3, 6.0), (GX, GY + 3.7, -66.0), 30),
+       (4, (GX + 0.57, GY - 0.9, 2.0), (GX + 0.57, GY + 3.1, -70.0), 30),
+       (16, (GX + 0.57, GY - 0.9, -10.0), (GX + 0.57, GY + 3.1, -80.0), 29),
+       (30, (GX, GY - 1.5, -26.5), (GX, GY + 12, -42.0), 25),
+       (38, (GX - 6.0, GY - 6.0, -31.0), (GX, GY + 38, -47.0), 22),
+       (47, (GX - 12.0, GY - 8.0, -36.0), (GX + 3, GY + 42, -49.0), 22),
+       (54, (GX - 4.0, GY + 2.0, -52.0), (GX, GY - 20, -59.6), 24),
+       (60, (GX, GY + 12.0, -59.0), (GX, GY - 20, -59.6), 24),
        (70, (GX, GY - 8.0, -59.6), (GX, GY - 30, -59.6), 24),
        (72, hl(0.3, 43.0, 2.6), hl(-3.0, 28.0, 2.9), 24),
        (80, hl(-1.0, 32.0, 3.6), hl(-9.0, 18.0, 3.4), 26),
-       (88, hl(-2.4, 24.0, 3.7), hl(-10.5, 15.8, 3.4), 28),
-       (96, hl(-3.2, 18.8, 3.7), hl(-11.0, 15.0, 3.5), 28),
-       (110, hl(-3.5, 16.6, 3.7), hl(-11.5, 15.4, 3.5), 29),
-       (131, hl(-4.2, 16.0, 3.8), hl(-12.0, 15.9, 3.6), 32)]
+       (88, hl(-2.4, 24.0, 3.5), hl(-10.5, 15.8, 3.0), 28),
+       (96, hl(-3.2, 18.8, 3.3), hl(-11.0, 15.0, 2.9), 28),
+       (110, hl(-3.5, 16.6, 3.3), hl(-11.5, 15.4, 2.9), 29),
+       (131, hl(-4.2, 16.0, 3.4), hl(-12.0, 15.9, 3.0), 32)]
 G0, G1 = 192, 324
 OLD_X, OLD_Y = -10.5, 14.4
 
 def hook():
+    C.mount(['ribs', 'globes', 'hang_signs', 'clock', 'clock_face', 'liner', 'way_out', 'old_map', 'old_map_img', 'posters', 'name_panels', 'roundel_name', 'columns'])
+    C.mount(['tunnel_lamps', 'globe_halos', 'light_pools', 'headlights', 's03_lamps', 'noodle_trains', 'noodles', 'tube'], airborne=True)
+    ob = bpy.data.objects.get('machine')
+    if ob: ob.hide_render = True    # vending machine on the left wall is never in frame in this take
     # --- J2: the s02 grille (7 bars, 3 cross bars, frame, rivets) replaces the old pill-tile plate; warm plane + lamps only for the first frames
-    for n in ('grate', 'grate_beams', 'street_glow'):
+    for n in ('grate', 'grate_beams', 'street_glow', 'shaft_ribs'):
         ob = bpy.data.objects.get(n)
         if ob: ob.hide_render = True
     C_, TX, E, CARD = BU._cs(); B = beck
@@ -103,6 +107,7 @@ def anim(f, n):
         o = getattr(C, nm, None)
         if o is not None: o.update(f, alt=(f >= 103) if nm == 'PM' else False)
 
+C.smooth_cam(CAM, G1 - G0, sigma=3.0)
 CFG = dict(f0=G0, f1=G1, cam=CAM, animate={'a': anim}, state={})
 if __name__ == '__main__':
     C.run('s03', CFG, sys.argv[1:], hook_after_build=hook)
