@@ -52,3 +52,16 @@ Checks:
 - Island: clear green dome with palms at the left horizon; width about 32 % at g1440 and 36 % at g1467 (mask measure; the request was 20-25 %, so it is larger, fine), also about 27 % from g1425. Clearly in frame on the word. PASS. Note: the ship still sails toward the camera while the island sits at left horizon level with / behind the hull, so "ahead of the ship" is only partly met (it reads as beside the ship). QA-art to judge; not a tech item.
 - Bow wave: smaller, matte white spray with wake rings. No cut by frame edge (ship whole). Face about 3 % of frame height. Head y about 590-700 (< 880). William on the forecastle deck, a sail panel hides his shins from g1445 (contact not fully visible, not floating). No prop through a face. No pops (only the planned snap g1431-1437), no black frames, no frozen runs (min diff 1.75). Pure-white (>=250) fraction <= 0.02 %, no blown-out holes, no bare planes.
 VERDICT: FAIL on the single number (gray p90 9.97). Everything else passes; re-measure after adding early motion.
+
+## Round 14 (director QA-tech) - PASS
+Take v3 g1375-1476 (102 f). Frames: /tmp/qa19_r14/s18/ (f6_*.jpg, full_000..101.png, sheet.jpg, wil.jpg). Same method as round 13 (/tmp/qa19_r13/m.py).
+Numbers (in-shot g1384-1467, 84 frames / 83 pairs, 90x160 bilinear):
+- luma 102.04 (85-110) PASS; per-frame 91.9-111.1 (a few frames touch 111, mean is what counts). saturation 0.622 (>= 0.47) PASS.
+- frame-diff mean-RGB grey: median 6.90, p90 12.38 PASS. ffmpeg gray: median 6.71, p90 12.17 PASS. g1384-1468 window: gray 6.78 / 12.15, RGB 6.86 / 12.37. Min 2.32 (no frozen run), max 19.9 (snap). Matches team numbers (6.71 / 12.17).
+Checks:
+- Early pan g1384-1412 works: the near-static stretch is gone (diffs now >= 2.3 from the first pair). No blur or smear: edge-energy (sharpness) is constant g1384-1407 (8.6-9.3) and rises with the push, crops are crisp, no ghosting.
+- William: looks down at the H4 g1384-1409, glances up g1410-1426, H4 overhead on the island (screen-left) side with open-mouth excited face from g1434, sparkle about g1436-1454, hop g1436-1456. Change about every 1 s, longest static about 1.1 s. PASS. Open mouth is a held expression.
+- Island: green dome with palms at left horizon, about 33 % of width at g1440 and 31 % at g1467 (27 % at g1425); clearly in frame on the word. PASS. Same note as R13: it sits beside/behind the bow rather than strictly ahead (QA-art call).
+- No character cut by frame edge; face about 3 % of height; head y about 590-700 (< 880); William on the forecastle deck (sail panel hides shins late, not floating); no prop through a face; no pops except the planned snap, no black frames; pure-white fraction <= 0.13 % (foam only), no blown-out holes, no bare planes.
+- NOTE: the violet glow at the bow waterline is still visible as a lavender tint under the hull (not a hole, not blown out). QA-art matter.
+VERDICT: PASS.
