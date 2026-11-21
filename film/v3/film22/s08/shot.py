@@ -31,7 +31,7 @@ def anim(g, T):
     HQ.set_door_hand(max(0.0, min(1.0, (g - GRAB + 10) / 8.0)))
 
 def make(quality):
-    T = C.Take('s08', PATH, quality, state=dict(door_hand=0.0), hide=[], animate=anim)
+    T = C.Take('s08', PATH, quality, state=dict(door_hand=0.0), hide=[], animate=anim, mounted=['cor_plaques', 'cor_hand'])
     for o in bpy.data.objects:
         if o.type == 'LIGHT' and o.name.startswith('corL'): o.data.energy *= 1.2
     return T

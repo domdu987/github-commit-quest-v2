@@ -44,7 +44,7 @@ def actors(g, T):
     c_, p_ = cast22.STORY22[story]; dy_ = p_.get('desk_y', 1.3)
     pp = dict(desk=0, typewriter=0, **pose)
     ob = T.card(story, (OFF[0], OFF[1] + 1.0, 0.0), face_to=cam, pose=pp, shadow=False, rim='#9fb8ff')
-    ob.location.z = PZ0 + 1.9 + dy_ - ob['anc']['head'][1]
+    ob.location.z = PZ0 + 1.9 + dy_ - ob['anc']['head'][1]; ob['mounted'] = True        # seated on his chair behind the desk
     if story == 'off_laugh_back': ob.location.z += 0.06 * abs(math.sin(2 * math.pi * 3.0 * t))
     bx, by, dx, walking = beck_xy(g)
     if walking: sto = ('beck', cast22.walk_sag((g - 841) / 28.0))
@@ -54,10 +54,24 @@ def actors(g, T):
     for i, (cx, cy) in enumerate(HQ.CLERK_DESKS):
         st = ('clerk_laugh_belly_' if (i % 2 and t < 30.0) else 'clerk_laugh_point_') + nm[i % 3]
         o = HQ.clerk_card(st, cx, cy + 0.3, cam, mirror=cx > 0); T.ob.append(o)
+        o['airborne'] = True
         o.location.z += 0.06 * abs(math.sin(2 * math.pi * 3.0 * t + i))
 
+
+def fix_desks(T):
+    """QA 'nothing floats': beck_hq builds the clerk desk boxes at z 0..1.55 (sunk 7.4 below the floor), so the typewriters float. Build the real desks."""
+    S_ = beck.STATE; Cc = S_['C']; wood = Cc('#b0703a', 1.0, 1.8); dwood = Cc('#4a2410')
+    P_ = beck.Part('clerk_desks_fix', (0, 29.5, PZ0 + 1.5)); mb = P_.mb
+    for (dx, dy) in HQ.CLERK_DESKS:
+        mb.box((dx - 1.6, dy - 0.85, PZ0 + 1.35), (dx + 1.6, dy + 0.85, PZ0 + 1.55), wood)
+        for sx in (-1, 1): mb.box((dx + sx * 1.3 - 0.25, dy - 0.75, PZ0), (dx + sx * 1.3 + 0.25, dy + 0.75, PZ0 + 1.35), dwood)
+        mb.box((dx - 1.0, dy + 0.55, PZ0 + 0.4), (dx + 1.0, dy + 0.75, PZ0 + 1.35), dwood)
+    P_.done((0, 29.5, PZ0 + 1.5), px=3)
+MOUNT = ['pub_blind', 'pub_street', 'clerk_desks', 'pub_dado_rail', 'pub_posters', 'pub_clock', 'pub_door_sign', 'pub_glass_sign', 'pub_lamps', 'pub_partition', 'pub_glass', 'off_drawer', 'pub_trim', 'pub_door', 'pub_dado', 'pub_furniture']
+SNAP = {'pubpool': -0.04}
+
 def make(quality):
-    return C.Take('s07', PATH, quality, state=dict(drawer=1.0), pre=dict(ceiling_off=True), hide=['pub_aisle_props', 'off_desk_items', 'pub_shafts'],
+    return C.Take('s07', PATH, quality, state=dict(drawer=1.0), pre=dict(ceiling_off=True), hide=['pub_aisle_props', 'off_desk_items', 'pub_shafts'], post=fix_desks, mounted=MOUNT, snap=SNAP,
                   animate=lambda g, T: (HQ.set_drawer(1.0 if g < g_of(28.08) else 0.0), setattr(bpy.data.objects['pub_glass_sign'], 'hide_render', g > 856)))
 
 if __name__ == '__main__':

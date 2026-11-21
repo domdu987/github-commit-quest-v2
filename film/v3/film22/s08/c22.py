@@ -48,7 +48,7 @@ class Path(object):
 
 
 class Take(object):
-    def __init__(self, shot, keys, quality='final', state=None, pre=None, hide=(), animate=None, light=None, samples=None, here=HERE):
+    def __init__(self, shot, keys, quality='final', state=None, pre=None, hide=(), animate=None, light=None, samples=None, here=HERE, mounted=(), snap=None, post=None):
         self.shot, self.here = shot, here
         TW.ACT = os.path.join(here, 'actors'); os.makedirs(TW.ACT, exist_ok=True)       # cast card cache lives in the take folder
         sh = beck.ALL_SHOTS[shot]; self.sh = sh; self.path = Path(keys)
@@ -63,6 +63,11 @@ class Take(object):
             o = bpy.data.objects.get(nme)
             if o is None: print('WARNING hide: no object', nme, flush=True)
             else: o.hide_render = True; o.hide_viewport = True
+        if post: post(self)
+        for nme in mounted:
+            for o in [o for o in bpy.data.objects if o.name == nme or o.name.startswith(nme)]: o['mounted'] = True
+        for nme, dz in (snap or {}).items():
+            for o in [o for o in bpy.data.objects if o.name.startswith(nme)]: o.location.z += dz
         self.static = set(o.name for o in bpy.data.objects)
         self.sc.render.threads = 2; self.sc.cycles.samples = 13 if quality == 'final' else self.sc.cycles.samples
         self.ob = []; self.animate = animate or (lambda g, T: None)

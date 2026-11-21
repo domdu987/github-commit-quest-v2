@@ -42,7 +42,7 @@ def actors(g, T):
     else: story, pose = 'off_eat_mime', dict(mouth=cast22.talk_mouth(g, 1.0))
     c_, p_ = cast22.STORY22[story]; dy_ = p_.get('desk_y', 1.3)
     ob = T.card(story, (OFF[0], OFF[1] + 1.0, 0.0), face_to=cam, tilt=0.0, pose=dict(desk=0, typewriter=0, **pose), shadow=False, rim='#9fb8ff')
-    ob.location.z = PZ0 + 1.9 + dy_ - ob['anc']['head'][1]
+    ob.location.z = PZ0 + 1.9 + dy_ - ob['anc']['head'][1]; ob['mounted'] = True        # seated on his chair behind the desk
     if story == 'off_laugh_back': ob.location.z += 0.06 * abs(math.sin(2 * math.pi * 3.0 * t))
     # Beck: hopeful with the roll, then deflated after the stamp
     bsto = 'beck_present_roll' if t < 20.6 else 'beck_sag'
@@ -51,6 +51,7 @@ def actors(g, T):
     if 21.85 < t < 23.65:
         for j, (cx, cy, st, mr) in enumerate(((-0.3, 34.4, 'clerk_laugh_point_a', False), (2.3, 34.4, 'clerk_laugh_belly_b', True))):
             o = T.card(st, (cx, cy, PZ0), face_to=cam, mirror=mr, pose=dict(desk=0, typewriter=0), rim='#9fb8ff', scale=0.9)
+            o['airborne'] = True
             o.location.z += 0.06 * abs(math.sin(2 * math.pi * 3.0 * t + 1.7 * j))
     # clerks
     nm = 'abc'
@@ -59,13 +60,27 @@ def actors(g, T):
         if laugh:
             st = ('clerk_laugh_belly_' if i % 2 else 'clerk_laugh_point_') + nm[i % 3]
             o = HQ.clerk_card(st, dx, dy + 0.3, cam, mirror=dx > 0)
+            o['airborne'] = True
             o.location.z += 0.06 * abs(math.sin(2 * math.pi * 3.0 * t + i))
         else:
             o = HQ.clerk_card('clerk_type_' + nm[i % 3], dx, dy, cam, mirror=dx > 0)
         T.ob.append(o)
 
+
+def fix_desks(T):
+    """QA 'nothing floats': beck_hq builds the clerk desk boxes at z 0..1.55 (sunk 7.4 below the floor), so the typewriters float. Build the real desks."""
+    S_ = beck.STATE; Cc = S_['C']; wood = Cc('#b0703a', 1.0, 1.8); dwood = Cc('#4a2410')
+    P_ = beck.Part('clerk_desks_fix', (0, 29.5, PZ0 + 1.5)); mb = P_.mb
+    for (dx, dy) in HQ.CLERK_DESKS:
+        mb.box((dx - 1.6, dy - 0.85, PZ0 + 1.35), (dx + 1.6, dy + 0.85, PZ0 + 1.55), wood)
+        for sx in (-1, 1): mb.box((dx + sx * 1.3 - 0.25, dy - 0.75, PZ0), (dx + sx * 1.3 + 0.25, dy + 0.75, PZ0 + 1.35), dwood)
+        mb.box((dx - 1.0, dy + 0.55, PZ0 + 0.4), (dx + 1.0, dy + 0.75, PZ0 + 1.35), dwood)
+    P_.done((0, 29.5, PZ0 + 1.5), px=3)
+MOUNT = ['pub_blind', 'pub_street', 'clerk_desks', 'pub_dado_rail', 'pub_posters', 'pub_clock', 'pub_door_sign', 'pub_glass_sign', 'pub_lamps', 'pub_partition', 'pub_glass', 'off_drawer', 'pub_trim', 'pub_door', 'pub_dado', 'pub_furniture']
+SNAP = {'pubpool': -0.04}
+
 def make(quality):
-    return C.Take('s06', PATH, quality, state=dict(stamp_mark=False), hide=['pub_aisle_props','off_desk_items'], animate=lambda g, T: HQ.set_stamp_mark(g >= g_of(20.44)))
+    return C.Take('s06', PATH, quality, state=dict(stamp_mark=False), hide=['pub_aisle_props','off_desk_items'], post=fix_desks, mounted=MOUNT, snap=SNAP, animate=lambda g, T: HQ.set_stamp_mark(g >= g_of(20.44)))
 
 if __name__ == '__main__':
     mode = sys.argv[1] if len(sys.argv) > 1 else 'draft'; spec = sys.argv[2] if len(sys.argv) > 2 else '577:822:30'
