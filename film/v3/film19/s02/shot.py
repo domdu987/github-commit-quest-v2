@@ -359,7 +359,7 @@ def _tau_of(g):
 
 
 _AD = {}
-G_A0, G_A1 = 90, 176
+G_A0, G_A1 = int(os.environ.get("GA0", "64")), 176
 G_PK = 160                                                 # end of the tilt-up (round-18 rates); the surplus pitch is eased out over G_PK..G_A1
 D108 = float(os.environ.get('D108', '-22.66'))             # tilt-down at g108 vs the raw aim (round 17: -22.66 -> min pitch -69)
 
