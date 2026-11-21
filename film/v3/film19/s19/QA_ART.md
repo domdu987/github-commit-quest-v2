@@ -211,3 +211,39 @@ s21 now matches s19 (qa_stats2: sat 0.661, vivid 69.5 %, luma 111.0; same cobalt
 - The lower 25-30 % is still bare sand.
 - Luma is 1 over the §G1 cap, as in s19.
 - The green character's quadrant overlaps his own head.
+
+## Round (float fix, film-13 rules): SHIP, 7.75
+
+**Rules.** I judged this only by film/skill_film13/QA_TEAM_film13.md: the QA-art section, plus §C (the reveal is a key shot).
+
+**Inputs.** Frames: /tmp/qa19_ov/s19/gNNNN.png (g 1459-1589, 131 frames). Also film/v3/film19/s19/contact.jpg and phone_sheet.jpg. My sheets, in /tmp/claude-0/qa16/:
+- s19_feet.jpg: full-res crops of the bottom half at g 1550-1589;
+- s19_cheer.jpg: every 3rd frame g 1544-1589, phone size;
+- s19_hat.jpg: the right top corner, g 1556-1589.
+
+Motion: Farneback flow over the whole take, plus a rigid LK similarity fit for g 1498-1521.
+
+| Check | Finding |
+|---|---|
+| **Feet / contact (the reason for the re-render)** | **Fixed.** In every crop from g 1550 to g 1589:<br>• The gingham sailor stands on the sand in real dark shoes, each with its own contact shadow. The white stubs are gone.<br>• William stands on the top of the plank crate. His shoes rest on its top boards, the crate's front face sits below them, and he casts a shadow onto the crate and the sand. He reads as standing on it, not hidden or cut by it.<br>• The blue-coat (striped) sailor stands in clear sand in front of the barrels, shoes and shadow visible, with nothing in front of his feet.<br>• Nobody is cut by the foreground or by the frame edge. The heads are about y 500-690, well above 880. |
+| Cheer: joyful payoff? | **Yes.** All three grin with closed, happy eyes. William thrusts the pocket watch up with both arms, with a glint on the beat. The striped sailor waves both arms; the gingham sailor hugs himself and laughs (g 1568+). Tricornes fly. The planted-feet squash reads as bouncing with joy without anyone floating. At 360x640 it is instantly a celebration, which is what this payoff needs. |
+| BIGZOOM: still one move? | **Yes.** It holds high over Port Royal (g 1459-1475), then eases in from g 1476. Speed ramps smoothly: rigid median 4.2 → 6.3 → 8.9 → 11.9 px/f over g 1498-1514, with no step at g 1505. The camera comes down the street past the two palm crowns (g 1511-1520, where the fronds' near parallax adds the only frame-to-frame noise), along the beach, and decelerates to the medium by g 1553-1554 (about 14 → 0.7 px/f over 8 frames). The new **9 % dolly-in** (g 1555-1575) is one-way and eased: about 0.7 → 1.6 → 0.6 px/f median, settling into a constant 0.8 px/f drift. On a phone it reads as "land on the group, then lean into the celebration", a motivated second beat, not a hitch. The old four-bump wobble is gone. |
+| Thrown tricorne (minor) | The hat thrown by the right-hand sailor rises out of the group (g 1562), arcs up to the right frame edge and passes its apex half out of frame (g 1571-1583), then drops out (gone by g 1586). It is always moving along a believable arc, so it is not floating debris. Its apex hugs the edge, so for about 0.4 s a dark, half-cut wedge sits in the top-right sky. This does not block. |
+| Set / light / colour | A rich Port Royal: red-roofed town, fort, harbour full of small sails, the ship, palms, beach boats, barrels, cannons, the PORT ROYAL sign, gulls. Strong sun with hard shadows; cobalt sky against warm gold sand, the red bandana and the flag stripes. Sat 0.674, luma 110.4 (team). It is bright but not hazy, and film-13 has no luma cap. The frames are sharp with no depth of field. The blur flag on the wide hold is a known false positive (override recorded). |
+| Weak spots (non-blocking) | The lower 25-30 % of the medium is plain sand with footprints (fine, but empty). The near palm fronds are slightly denoiser-soft. |
+
+| Criterion (film-13 QA-art) | Score |
+|---|---|
+| Set density / ornament | 8 |
+| Lighting & colour | 8 |
+| Composition / framing / phone legibility | 7.5 |
+| Character acting | 8 |
+| Key moment (reveal BIGZOOM + payoff) clarity and beauty | 7.5 |
+| Overall match to references | 7.5 |
+| **Overall** | **7.75, SHIP** |
+
+**Verdict: SHIP.** The float and cut-off issue that triggered the re-render is resolved, the payoff reads joyful, and the BIGZOOM is still one move.
+
+Optional, only if this take is re-rendered for another reason:
+1. Throw the right-hand tricorne about 10-15° more to the left (or slightly lower), so that its apex stays fully inside the frame before it falls out.
+2. Add a few shells, a rope coil or a shadow across the empty bottom 25 % of sand.
