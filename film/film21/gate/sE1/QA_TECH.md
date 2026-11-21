@@ -1,36 +1,20 @@
-# QA-tech sE1 (team7 2bcd73a)
+# QA-tech sE1 v2 (film-13 QA, team9 86941e2)
 
-**Verdict: FAIL** (1 blocking issue: the opening beat is not readable). Everything else passes. g790-885, 96 frames, 720x1280.
+**Verdict: FAIL** (4 blocking items, all fixable in the camera/props/framing of shot.py)
 
-Method: frames every 5th (f6), full-size ffmpeg extracts of g790-794, 833-843, 848, a gray frame-diff on all 96 frames, and a crop-diff on the Scots.
+Method: all 96 frames at 360x640 (tiles of every frame g793-885), 6 fps full-size frames, and Farneback/phase-correlation global motion on every frame, checked for sign flips.
 
-## Beat by beat
-| Beat (plan row E1) | g | Result |
-|---|---|---|
-| Laughing soldiers on the bank point across | 790-797 | FAIL. The soldiers are 4 small figures in the top third (heads about 6 % of frame height). The bottom 60 % is empty yellow ground and grass. The camera leaves them by about g797. Only g793-796 are non-handle frames, and the first 3 are dissolve-covered. The laugh drawing and bounce read, but pointing across is not readable. |
-| One mimes hoeing | 790-797 | FAIL. Not discernible at phone size, and no time to see it. |
-| Camera rises, flies over river and up the hill | 797-834 | PASS. Clear eased flight over river, loop meadow, bridge and Abbey Craig. Parallax and the sun shafts read well. Diffs 16-31 (blur flag is the planned swoop). |
-| SNAP punch-in on 27.80 (g837), 6 frames of speed lines, 2-frame shake | 835-843 | PASS. The jump is at g834-836 (diff 49 at g835). Speed lines are on g837-842. Shake is visible. Lands about g843. The snap peaks about on the narration word. |
-| Scots line, Wallace unbothered, eyebrow | 843-885 | PASS, weak. Five Scots in blue, with Wallace in the middle (long hair, beard, grey mail, green kilt) and identifiable. Eyes are half-lidded and calm. The eyebrow raise from g848 is only a small lopsided shift and does not read at phone size. |
+## Shake ruling
+**No sign-flipping camera shake. The 9.3 / 9.8 px jitter in g790-849 comes from the fast fly-over, not from shaking.** Every frame-pair in g793-812 (drift left/down), g818-842 (rise over river, climb hill) and g843-885 (push-in) moves in one direction. The snap at g835 is one forward jump followed by speed lines g837-842; there is no 2-frame shake and no reversal after it (g843-885 flow is monotone, <3 px/frame). The measured "reversals" at g813-816 (dx +10 against -24 before) are the pole/banner foreground occluding the flow estimate, not the camera (see item 1).
 
-## Checks
-- **Final-hold motion:** the last 50 frames (g836-885) have median diff 8.1. The only low frames are g844-846 (<2.2) and g882-885 (<2.9), about 3-4 frames each. No near-static hold over 1 s. Scots crop-diff 6-18, so the Scots are always moving. PASS.
-- **Spear pole:** the pole runs through the right third from g841 on. At g841-846 it overlaps the edge of the right-most Scot's face (x 560-600) and his shoulder. After about g860 it clears the face. Non-blocking, see issue 2.
-- **Character size:** Wallace head about 12 % of frame height, readable by hair and beard. PASS. The Scots are small at the end, and the faces carry little detail.
-- **Head position:** Scots heads at y about 560-660, above y 880. Bank soldiers' heads about y 290-350. PASS. No face over 35 %. No one floats, with contact shadows and rocks under the Scots. Nobody is cut by the frame edge, but the right-most Scot is partly hidden by the pole.
-- **Colour story:** English crimson and gold only, Scots saltire blue tunics, saltire flags visible on the hill. The loop meadow g810-830 is a strong orange-yellow set colour, but no neon, no red or lime tiles. PASS (the grade is normalised at the conform).
-- **Mouths:** the English laugh drawing is open throughout, with no lip-sync. The Scots' mouths are closed. PASS.
-- **Always acting:** the English bounce, and the Scots sway, blink and shift. PASS.
-- **D6 handles g790-792:** the dissolve is continuous. g790-792 are the same bank framing, backing out (diff 7.5-8.1), and g793 is the P_BANK pose with no pop (diff 15 at the start of the rise). Soldiers' positions match g793. PASS. Nothing in D (a previous segment) was available to compare, so the continuity of the shared pose is by meta.json only.
-- **Bloodless:** PASS.
+## Old fails
+- Bank group too small: PARTLY FIXED. g805-815 the laughing/pointing/hoeing group is large and reads. g793-803 it is still small (heads about 50 px at 720 wide) - see item 4.
+- Spear pole over the right-most Scot's face: FIXED (pole at far left, g845-850; right-most Scot's face is clear g845-885). A thin golden shaft crosses the 2nd Scot's moustache g850-885 (non-blocking).
+- Wallace's brow too subtle: NOT FIXED enough - see item 3.
+- Scots' mouths: closed everywhere. OK. No heads at y>=880. Feet grounded (the e4 "3 cm above" is the terrain mesh, accepted).
 
-## Issues
-1. **BLOCKING, g790-797. The opening beat (laughing soldiers pointing across, one hoeing) is invisible.**
-   - Soldiers are about 6 % of frame height at the top of the frame, hold for only about 4 frames after the dissolve, and the lower 60 % of the frame is empty ground.
-   - Fix: re-stage the bank crew bigger, so they fill the middle third at about 12-15 % head height and sit lower in the frame. Add 1-2 more soldiers if possible.
-   - Hold P_BANK about 10-12 frames (about g793-805), a slow drift only. Start the rise about g803 and keep the flight and the snap landing at g837 by shortening the early flight, or shift the flight a little.
-   - Make the pointing arm and the hoe pantomime large and distinct. Add a few props to the foreground ground (crates, tent rope, barrels) so there is no empty plane.
-2. Non-blocking, g841-860. The spear pole overlaps the right-most Scot's face and shoulder. Move the foreground pole 0.3-0.5 m to the right or left (out of the face) or fade it out at g841-860.
-3. Non-blocking, g848-885. Wallace's eyebrow raise is subtle. Exaggerate the brow (higher, tilted) and add a 2-3 frame hold so it reads at phone size.
-4. Non-blocking, g843-885. The final slide is slow at the ends (diff under 3 at g844-846 and g882-885) and fine overall. An easing change would add a small push: 6-10 % over the hold.
-5. Non-blocking, g810-830. The loop meadow is intensely yellow-orange. Normalisation at the conform should pull it back. Re-check at the conform stage.
+## Blocking items
+1. **g813-817 whip / black-out.** In 4 frames the view jumps from the close group (g812-813) to the campfire and then a dark pole/banner fills most of the frame (g816, about 70 % black-maroon), then the river at g817. It reads as a glitch pop, not a rise. Fix: keep the camera path continuous (rise first, slide right second) and move the flag pole/banner (prop at the camera start) out of the flight path, or fade its alpha. No single-frame jump over 40 px.
+2. **g836-842 snap framing.** The snap lands at g835 (speed lines start g837, 2 frames later), and for g837-842 the Scots line is only about 60 px wide, so the punch-in does not land on them and the lines hide them. Fix: end the snap at g837 on the Scots at final push-in framing (Scots 20 % bigger), or keep the lines to the frame edges; make the speed lines start with the jump (g835).
+3. **g850-880 Wallace's brow.** Still only a slight tilt, unreadable at 360x640 until g885; the first half of the hold shows a neutral face. Fix: raise the brow at about g845 and by 2-3 times (clear arch, other brow lowered), and start the push-in at g845 so the face is large by g860.
+4. **g793-803 bank group too small, and g870-885 left Scot clipped.** (a) At the start the English group is about 40 % of the frame width and the mime cannot be read: start the camera closer (or lens 32-35) so the group is at least 60 % of the width. (b) A helmeted Scot at the left edge is cut by the frame from g868 to the end (the push-in crops him): pan 0.2-0.3 m left or reduce the push-in to 20 %.
