@@ -29,15 +29,15 @@ def cam_fn(world):
         s1 = min(1.0, (g - G0) / float(G_SIGN - G0)); u1 = 0.35 * ez(s1) + 0.65 * s1
         d = lerp(1.95, 1.4, u1)
         c1 = (SIGN[0] + lerp(-0.30, 0.12, u1), SIGN[1] - d, tz + lerp(1.28, 1.34, u1))
-        l1 = (SIGN[0], SIGN[1], SIGN[2])
+        l1 = (SIGN[0] + 0.34 * ez(max(0.0, min(1.0, (g - 548) / 24.0))), SIGN[1], SIGN[2])     # aim eased ~0.34 m toward him so his head stays in frame
         # 2) glide over the table front to him: head >= 15 % of the frame, coins and the counting hand in view
-        s2 = max(0.0, min(1.0, (g - G_SIGN) / 24.0)); u2 = ez(s2)
+        s2 = max(0.0, min(1.0, (g - (G_SIGN - 10)) / 34.0)); u2 = ez(s2)
         c2 = (lerp(c1[0], -13.30, u2), lerp(c1[1], -27.95, u2), lerp(c1[2], tz + 1.5, u2))
         l2 = (lerp(l1[0], -12.75, u2), lerp(l1[1], -26.3, u2), lerp(l1[2], tz + 1.62, u2))
         # 3) slow lateral drift and a push during the laugh
         dr = (g - G_SIGN - 24) / float(G1 - G_SIGN - 24) if g > G_SIGN + 24 else 0.0
         c2 = (c2[0] + 0.45 * dr, c2[1] + 0.5 * ez(max(0.0, (g - (G_LAUGH - 8)) / 24.0)), c2[2])
-        loc, look = (c1, l1) if g <= G_SIGN else (c2, l2)
+        loc, look = (c1, l1) if g <= G_SIGN - 10 else (c2, l2)
         if g > G_SIGN:
             pass
         if g > G_WHIP - 1:                                           # whip right: the view yaws clockwise, accelerating
