@@ -1,0 +1,6 @@
+tex_ghost/
+__pycache__/
+ghost_work/
+set_work/sheet/
+set_work/drafts/
+set_work/final/*.png

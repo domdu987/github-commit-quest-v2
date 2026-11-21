@@ -1,0 +1,74 @@
+[
+{
+"beat": "hook",
+"chars": 43,
+"start": 0,
+"end": 3.94
+},
+{
+"beat": "pivot",
+"chars": 86,
+"start": 4.0,
+"end": 11.87
+},
+{
+"beat": "who",
+"chars": 94,
+"start": 11.93,
+"end": 20.53
+},
+{
+"beat": "mocker",
+"chars": 74,
+"start": 20.59,
+"end": 27.36
+},
+{
+"beat": "nickname",
+"chars": 30,
+"start": 27.42,
+"end": 30.17
+},
+{
+"beat": "count",
+"chars": 103,
+"start": 30.23,
+"end": 39.66
+},
+{
+"beat": "bikes",
+"chars": 64,
+"start": 39.72,
+"end": 45.58
+},
+{
+"beat": "cover",
+"chars": 49,
+"start": 45.64,
+"end": 50.12
+},
+{
+"beat": "turn",
+"chars": 44,
+"start": 50.18,
+"end": 54.21
+},
+{
+"beat": "plan",
+"chars": 72,
+"start": 54.27,
+"end": 60.86
+},
+{
+"beat": "reveal",
+"chars": 55,
+"start": 60.92,
+"end": 65.95
+},
+{
+"beat": "ending",
+"chars": 46,
+"start": 66.01,
+"end": 70.22
+}
+]

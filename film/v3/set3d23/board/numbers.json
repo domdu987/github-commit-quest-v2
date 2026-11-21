@@ -1,0 +1,83 @@
+[
+ {
+  "file": "board_1.png",
+  "sat_qa": 0.581,
+  "vivid_pct": 54.1,
+  "luma_qa": 99.4,
+  "luma_709": 115.9,
+  "magenta_pct": 0.3,
+  "hue": {
+   "red": 0.3,
+   "orange": 14.7,
+   "yellow": 10.3,
+   "green": 49.4,
+   "cyan": 1.7,
+   "blue": 21.3,
+   "violet": 2.0,
+   "magenta": 0.3
+  },
+  "sat_hue_report": 0.593,
+  "dark_v025": 0.014,
+  "shade_hue": 244.9,
+  "shaded_frac": 0.215,
+  "scene": "dawn",
+  "still": "dawn_fields_high",
+  "wall_s": 7.6,
+  "cpu_s": 24.4,
+  "process_s": 37.8
+ },
+ {
+  "file": "board_2.png",
+  "sat_qa": 0.576,
+  "vivid_pct": 66.1,
+  "luma_qa": 107.4,
+  "luma_709": 111.4,
+  "magenta_pct": 0.6,
+  "hue": {
+   "red": 5.7,
+   "orange": 20.0,
+   "yellow": 14.5,
+   "green": 9.6,
+   "cyan": 0.2,
+   "blue": 46.9,
+   "violet": 2.5,
+   "magenta": 0.6
+  },
+  "sat_hue_report": 0.586,
+  "dark_v025": 0.02,
+  "shade_hue": 251.5,
+  "shaded_frac": 0.122,
+  "scene": "morning",
+  "still": "inflate_lane_morning",
+  "wall_s": 6.2,
+  "cpu_s": 22.2,
+  "process_s": 9.3
+ },
+ {
+  "file": "board_3.png",
+  "sat_qa": 0.534,
+  "vivid_pct": 44.8,
+  "luma_qa": 95.4,
+  "luma_709": 88.0,
+  "magenta_pct": 1.1,
+  "hue": {
+   "red": 0.5,
+   "orange": 7.2,
+   "yellow": 3.7,
+   "green": 1.0,
+   "cyan": 3.6,
+   "blue": 81.1,
+   "violet": 1.8,
+   "magenta": 1.1
+  },
+  "sat_hue_report": 0.55,
+  "dark_v025": 0.002,
+  "shade_hue": 222.9,
+  "shaded_frac": 0.523,
+  "scene": "night",
+  "still": "night_sound_truck",
+  "wall_s": 6.6,
+  "cpu_s": 24.5,
+  "process_s": 26.6
+ }
+]
