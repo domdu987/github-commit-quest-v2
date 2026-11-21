@@ -39,12 +39,12 @@ def kd_of(az, el):
 
 _B = dict(toon=1.0, key_desat=0.0, ink='#1c1a2e', night=False, form=(0.0, -0.05, 0.22), bloom_size=0.06, sun_angle=0.6, lambert=False, lift=(0.030, 0.024, 0.060), lamps=0.0, ground_k=1.0)
 LIGHTS = dict(
-    DAWN=dict(_B, key=(1.30, 0.95, 0.52), sun_az=165.0, sun_el=19.0, sun_vis_el=6.0, sky='sky_dawn', sky_k=0.82, exposure=-0.3, shade=(0.23, 0.19, 0.47), shade_tint=(0.23, 0.19, 0.49), shade_mix=0.85, lift=(0.030, 0.024, 0.060),
-              grade_offset=(-0.004, -0.006, -0.002), grade_saturation=1.18, bounce=(1.0, 0.7, 0.45, 0.12)),
-    MORNING=dict(_B, key=(1.45, 1.05, 0.62), sun_az=200.0, sun_el=21.0, sky='sky_morning', sky_k=0.8, exposure=-0.4, shade=(0.23, 0.19, 0.47), shade_tint=(0.23, 0.19, 0.49), shade_mix=0.85,
+    DAWN=dict(_B, key=(1.30, 0.95, 0.52), sun_az=165.0, sun_el=19.0, sun_vis_el=6.0, sky='sky_dawn', sky_k=0.82, exposure=-0.5, shade=(0.27, 0.17, 0.48), shade_tint=(0.27, 0.17, 0.50), shade_mix=1.0, lift=(0.030, 0.024, 0.060),
+              grade_offset=(-0.004, -0.006, -0.002), grade_saturation=1.4, bounce=(1.0, 0.7, 0.45, 0.12)),
+    MORNING=dict(_B, key=(1.45, 1.05, 0.62), sun_az=200.0, sun_el=21.0, sky='sky_morning', sky_k=0.8, exposure=-0.7, shade=(0.23, 0.19, 0.47), shade_tint=(0.23, 0.19, 0.49), shade_mix=0.85,
                  grade_offset=(-0.004, -0.006, -0.002), grade_saturation=1.18, bounce=(1.0, 0.7, 0.45, 0.14)),
     NIGHT=dict(_B, key=(0.30, 0.42, 1.25), sun_az=64.0, sun_el=24.0, sun_vis_el=17.0, sky='sky_night', sky_k=1.0, night=True, lambert=True, key_desat=0.2, ink='#10143a', lamps=1.0, bloom_size=0.07,
-               shade=(0.20, 0.17, 0.42), shade_tint=(0.20, 0.17, 0.44), shade_mix=0.8, lift=(0.026, 0.020, 0.052), grade_offset=(0.002, 0.003, 0.010), grade_saturation=1.16),
+               shade=(0.23, 0.15, 0.42), shade_tint=(0.23, 0.15, 0.44), shade_mix=0.8, lift=(0.026, 0.020, 0.052), grade_offset=(0.002, 0.003, 0.010), grade_saturation=1.16),
 )
 for _k, _v in LIGHTS.items(): _v['key_dir'] = kd_of(_v['sun_az'], _v['sun_el'])
 SCENE_LIGHT = dict(dawn='DAWN', morning='MORNING', night='NIGHT')
@@ -245,7 +245,7 @@ def install_handlers():
 # ----------------------------------------------------------------------------- cameras (lens 22 mm, no DOF, far clip 2500)
 CAMS = dict(
     dawn=dict(loc=(-16.0, -72.0, 66.0), look_at=(4.0, 62.0, 0.0), lens=24),
-    morning=dict(loc=(-0.5, -4.6, 1.3), look_at=(0.4, 2.0, 2.6), lens=19),
+    morning=dict(loc=(-0.5, -8.2, 1.3), look_at=(0.4, 2.0, 2.3), lens=19),
     night=dict(loc=(-2.0, -31.0, 9.5), look_at=(3.0, 12.0, 6.4), lens=22),
 )
 def make_camera(setup, name='cam'):

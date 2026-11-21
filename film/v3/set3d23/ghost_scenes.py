@@ -161,6 +161,10 @@ def gp(px, py, zg=0.0):
     d = cam.matrix_world.to_3x3() @ V((px / 720.0 - 0.5) * 2 * tx_, (0.5 - py / 1280.0) * 2 * ty, -1.0); C = cam.matrix_world.translation
     t = (zg - C.z) / d.z; p = C + d * t; return (p.x, p.y)
 
+def GH_px(x, y, z):
+    from bpy_extras.object_utils import world_to_camera_view
+    sc = bpy.context.scene; v = world_to_camera_view(sc, STATE['cam_ob'], V(x, y, z)); return (1 - v.y) * 1280
+
 def ground_fn(scene):
     """Terrain height z(x, y): gentle rolling fields, flat pads (farmyard, lane), rising slope and hills to the far valley."""
     flats = STATE.get('flats', [])
@@ -207,7 +211,7 @@ def extra_materials(M, P):
     pre = STATE['pre']; C = PR.mat_g_factory(P, STATE['tx'], pre)['C']
     M['hill'] = GH.mat_g(pre + 'hillt', art=STATE['tx']['leaf'], gain=1.15, form=False); M['hill_f'] = C('#5a9ad8', 1.0, form=False)
     M['sun_disc'] = mat_emit(pre + 'sun_disc', '#fff0c8', strength=4.0)
-    M['pebble'] = C('#a89a88', 1.0); M['puddle'] = mat_emit(pre + 'puddle', '#5aa0e8', strength=0.8); M['brown_h'] = C('#a0562a', 1.0)
+    M['pebble'] = C('#a89a88', 1.0); M['puddle'] = mat_emit(pre + "puddle", "#7ab4ec", strength=0.6); M['brown_h'] = C('#a0562a', 1.0)
     M['tuft'] = C('#3fb02e', 1.1, form=False); M['tuft2'] = C('#74cc3a', 1.1, form=False); M['fl_y'] = C('#ffd830', 1.2, form=False); M['fl_w'] = C('#fff8f0', 1.2, form=False); M['fl_r'] = C('#ff6a50', 1.1, form=False)
     M['star_w'] = GH.mat_g(pre + 'star_w', art=STATE['tx']['star'], gain=1.1, alpha=True, form=False)
     M['tent_glow'] = mat_emit(pre + 'tent_glow', '#ff9a3a', strength=1.5)
@@ -250,6 +254,7 @@ def build_dawn(Bk, M):
         s = s_of_y(-26 + k * 19.0 + (k % 2) * 3.0); p, d = lane_at(s); latv = V(-d.y, d.x, 0); side = -1 if k % 2 == 0 else 1; off = side * (1.2 if k % 3 else 0.2)
         pos = p + latv * off; yaw = math.degrees(math.atan2(d.y, d.x)) + (3 if side > 0 else -3)
         netted = k in (2, 5, 8)
+        if 840 < GH_px(pos.x, pos.y, gz(pos.x, pos.y)) < 1000: k += 1; continue
         z = gz(pos.x, pos.y); STATE['tanks'].append((pos.x, pos.y, yaw))
         PR.inst(base_tank, 'tank%d' % k, (pos.x, pos.y, z), yaw, hull=0.3, scale=1.2)
         PR.blob(Bk, V(pos.x, pos.y, z), 6.6, 3.8, M, 0.08)
@@ -404,30 +409,30 @@ def build_morning(Bk, M):
                 if rr.random() < 0.6: poplar(Bk, M, V(q[0], q[1], gz(q[0], q[1])), h=rr.uniform(24, 30), seed=int(q[1] * 3) & 0xffff)
                 else: round_tree(Bk, M, V(q[0], q[1], gz(q[0], q[1])), r=rr.uniform(3.4, 4.8), seed=int(q[1] * 5) & 0xffff)
     # the stage, blocked in screen space: feet pixels -> ground points (gp)
-    tpos = gp(380, 784); tyaw = 214.0; tz0 = gz(*tpos)
+    tpos = gp(420, 770); tyaw = 238.0; tz0 = gz(*tpos)
     tk = PR.tank_obj('tank_hero', (tpos[0], tpos[1], tz0), tyaw, M, inflate=0.66, sag=0.9, seed=5, lod=1.6, hull=0.07)
     info = STATE['tank_info']; TF = BK.Frame((tpos[0], tpos[1], tz0), tyaw)
-    tip = TF.p(*info['tip']); valve = TF.p(*info['valve'])
-    PR.blob(Bk, V(tpos[0], tpos[1], tz0), 6.4, 3.6, M, 0.07)
-    pumppos = gp(470, 842); PR.pump(Bk, M, (pumppos[0], pumppos[1], gz(*pumppos)), 5, valve, gz=gz)
-    ca = gp(118, 872); PR.crate(Bk, M, V(ca[0], ca[1], gz(*ca)), 12, size=(2.1, 1.3, 1.3), front='crate_a', open_=False, name='crateA', seed=1)
+    K_ = 1.15; tk.scale = (K_, K_, K_); tip = TF.p(*[c * K_ for c in info['tip']]); valve = TF.p(*[c * K_ for c in info['valve']])
+    PR.blob(Bk, V(tpos[0], tpos[1], tz0), 8.4, 4.8, M, 0.07)
+    pumppos = gp(540, 822); PR.pump(Bk, M, (pumppos[0], pumppos[1], gz(*pumppos)), 5, valve, gz=gz)
+    ca = gp(78, 860); PR.crate(Bk, M, V(ca[0], ca[1], gz(*ca)), 12, size=(2.1, 1.3, 1.3), front='crate_a', open_=False, name='crateA', seed=1)
     PR.crate(Bk, M, V(ca[0] + 0.05, ca[1], gz(*ca) + 1.3), 6, size=(2.0, 1.25, 1.25), front='crate_b', open_=True, name='crateB', seed=2)
     C0 = V(*STATE['cam']['loc']); LA = V(*STATE['cam']['look_at']); fw = V(LA.x - C0.x, LA.y - C0.y, 0).normalized(); rt = V(fw.y, -fw.x, 0)
     sgp = C0 + fw * 17.5 + rt * 0.3; PR.sign_post(Bk, M, V(sgp.x, sgp.y, gz(sgp.x, sgp.y)), 0, w=8.4, h=2.7, ph=6.8)
     w2 = gp(1000, 905); w3 = gp(660, 918); PR.stone_wall(Bk, M, V(w2[0], w2[1], 0), V(w3[0], w3[1], 0), h=0.85, w=0.95, seed=4, gz=gz)
-    bk_ = gp(1130, 1060); PR.bicycle(Bk, M, V(bk_[0], bk_[1], gz(*bk_)), 8, lean=14, s=0.85)
+    bk_ = gp(1230, 1060); PR.bicycle(Bk, M, V(bk_[0], bk_[1], gz(*bk_)), 8, lean=14, s=0.85)
     # foreground fill: puddle, flat deflated sheet, coiled hose, toolbox, straw, chickens
     fb = Bk('fg', hull=0.0, shadow=False); fs = Bk('fg_s', hull=0.0); fr = Bk('fg_r', hull=0.0, smooth_=True); rr3 = _rnd(41)
     pc_ = gp(300, 1060); pz = gz(*pc_) + 0.04
     for i in range(24):
         a0, a1 = 2 * math.pi * i / 24, 2 * math.pi * (i + 1) / 24
-        fb.face([V(pc_[0], pc_[1], pz), V(pc_[0] + 1.9 * math.cos(a0), pc_[1] + 1.0 * math.sin(a0), pz), V(pc_[0] + 1.9 * math.cos(a1), pc_[1] + 1.0 * math.sin(a1), pz)], M['puddle'], [(0.5, 0.5), (0.5, 0.5), (0.5, 0.5)])
-    sh_ = gp(210, 1000); PR.puffball(fr, V(sh_[0], sh_[1], gz(*sh_) + 0.1), (2.6, 1.6, 0.16), M['rubber'], e=(0.7, 0.8), seg=20, rings=6, lat=(0, math.pi / 2), deflate=1.0, seed=3, noise=0.5)
-    PR.puffball(fr, V(sh_[0], sh_[1], gz(*sh_) + 0.2), (0.7, 0.7, 0.14), M['rubber_white'], e=(0.7, 0.7), seg=10, rings=3, lat=(0, math.pi / 2))
+        fb.face([V(pc_[0], pc_[1], pz), V(pc_[0] + 1.2 * math.cos(a0), pc_[1] + 0.65 * math.sin(a0), pz), V(pc_[0] + 1.2 * math.cos(a1), pc_[1] + 0.65 * math.sin(a1), pz)], M['puddle'], [(0.5, 0.5), (0.5, 0.5), (0.5, 0.5)])
+    sh_ = gp(210, 1000); PR.puffball(fr, V(sh_[0], sh_[1], gz(*sh_) + 0.1), (1.2, 0.8, 0.1), M['rubber'], e=(0.7, 0.8), seg=20, rings=6, lat=(0, math.pi / 2), deflate=1.0, seed=3, noise=0.5)
+    PR.puffball(fr, V(sh_[0], sh_[1], gz(*sh_) + 0.2), (0.4, 0.4, 0.12), M['rubber_white'], e=(0.7, 0.7), seg=10, rings=3, lat=(0, math.pi / 2))
     hc_ = gp(560, 1040); hz_ = gz(*hc_)
-    pts = [V(hc_[0] + (0.5 - 0.03 * k) * math.cos(k * 0.5), hc_[1] + (0.35 - 0.02 * k) * math.sin(k * 0.5), hz_ + 0.1 + 0.02 * k) for k in range(36)]
-    PR.tube(fs, pts, [0.09] * 36, M['rubber_black'], seg=6, uvk=0.2)
-    tx_, ty_ = gp(440, 1110); obox(fs, V(tx_, ty_, gz(tx_, ty_) + 0.22), V(1, 0, 0), V(0, 1, 0), V(0, 0, 1), 0.7, 0.28, 0.22, M['red']); rod(fs, V(tx_ - 0.4, ty_, gz(tx_, ty_) + 0.46), V(tx_ + 0.4, ty_, gz(tx_, ty_) + 0.46), 0.05, M['metal'], seg=4)
+    pts = [V(hc_[0] + (0.3 - 0.015 * k) * math.cos(k * 0.5), hc_[1] + (0.22 - 0.01 * k) * math.sin(k * 0.5), hz_ + 0.1 + 0.02 * k) for k in range(36)]
+    PR.tube(fs, pts, [0.05] * 36, M['rubber_black'], seg=6, uvk=0.2)
+    tx_, ty_ = gp(440, 1110); obox(fs, V(tx_, ty_, gz(tx_, ty_) + 0.1), V(1, 0, 0), V(0, 1, 0), V(0, 0, 1), 0.3, 0.12, 0.1, M['red']); rod(fs, V(tx_ - 0.3, ty_, gz(tx_, ty_) + 0.33), V(tx_ + 0.3, ty_, gz(tx_, ty_) + 0.33), 0.05, M['metal'], seg=4)
     sx_, sy_ = gp(130, 930)
     for i in range(70):
         ax_ = rr3.uniform(0, 3.14); x_, y_ = sx_ + rr3.uniform(-1.6, 1.8), sy_ + rr3.uniform(-0.9, 0.9); z_ = gz(x_, y_) + 0.04
@@ -435,7 +440,7 @@ def build_morning(Bk, M):
     for (cx_, cy_, ck_) in ((gp(330, 1150), 0.0), (gp(400, 1200), 2.0), (gp(215, 1180), 4.0)) if False else ():
         pass
     for k_, (px_, py_) in enumerate((gp(300, 1020), gp(392, 1046), gp(200, 1070))):
-        s_ = 0.62; F_ = BK.Frame((px_, py_, gz(px_, py_)), 40 + k_ * 70); cz = 0.55 * s_
+        s_ = 0.4; F_ = BK.Frame((px_, py_, gz(px_, py_)), 40 + k_ * 70); cz = 0.55 * s_
         P_ = lambda x, y, z: F_.p(x * s_, y * s_, z * s_)
         PR.puffball(fr, P_(0, 0, 0.55), (0.42 * s_, 0.28 * s_, 0.3 * s_), M['white_p'], e=(0.9, 0.9), seg=10, rings=5); PR.puffball(fr, P_(0.38, 0, 0.85), (0.15 * s_, 0.13 * s_, 0.17 * s_), M['white_p'], e=(1, 1), seg=8, rings=4)
         PR.puffball(fr, P_(0.36, 0, 1.05), (0.05 * s_, 0.04 * s_, 0.09 * s_), M['red'], e=(1, 1), seg=6, rings=3); fs.frustum(P_(0.5, 0, 0.85), P_(0.62, 0, 0.83), 0.04 * s_, 0.0, M['yellow'], seg=4)
@@ -461,7 +466,7 @@ def build_morning(Bk, M):
     for i in range(18):
         x, y = gp(rr2.uniform(0, 720), rr2.uniform(1000, 1270)); lumpy(lt, V(x, y, gz(x, y) + 0.02), rr2.uniform(0.03, 0.08), M['pebble'], i, seg=6, rings=4, rough=0.3, squash=0.6)
     # soldiers (placeholder cards, olive, helmets): pump, barrel lift, valve, clipboard
-    pl = gp(70, 800); pu_ = gp(560, 826); pc = gp(668, 800); pp = gp(214, 812)
+    pl = gp(120, 790); pu_ = gp(600, 806); pc = gp(676, 790); pp = gp(232, 800)
     sp = [(pu_[0], pu_[1], 'pump', None, True), (pl[0], pl[1], 'lift', None, False), (pp[0], pp[1], 'point', None, False), (pc[0], pc[1], 'clip', None, True)]
     soldiers(sp, cam_loc, gz, lean=0.0, tone='d')
     STATE['marks'].update(tank=(tpos[0], tpos[1], tz0), tip=tuple(tip), valve=tuple(valve))
@@ -496,17 +501,23 @@ def build_night(Bk, M):
     PR.blob(Bk, V(tp[0], tp[1], gz(*tp)), 6.6, 3.8, M, 0.08)
     jp = at(19.0, 10.0); jeep(Bk, M, jp, 200, gz, ink=0.1)
     tt_ = at(26.0, 1.4); TF, lant = tent(Bk, M, tt_, 4, gz)
-    PR.lantern(Bk, M, lant, 1.5, 1600.0, 5.5, (1.0, 0.62, 0.3), 'tent_lantern')
+    PR.lantern(Bk, M, lant, 1.5, 1600.0, 2.2, (1.0, 0.62, 0.3), 'tent_lantern')
     for sx in (-1, 1):
         d = bpy.data.lights.new('tent_fill%d' % sx, 'POINT'); d.color = (1.0, 0.6, 0.28); d.energy = 800; d.shadow_soft_size = 0.8; o = bpy.data.objects.new('tent_fill%d' % sx, d); STATE['LIGHTS'].objects.link(o)
         o.location = TF.p(sx * 1.2, -7.5, 2.2); o.visible_camera = False; STATE['lamps'].append(o)
     fp_ = TF.p(0, -9.5, 0); PR.pool(Bk, M, V(fp_.x, fp_.y, gz(fp_.x, fp_.y)), 5.5, 'pool')
     for (d_, l_, hh_) in ((16.0, -3.4, 5.2), (21.0, 6.6, 5.4), (32.0, -3.0, 5.0), (30.0, 12.0, 5.2), (12.0, -9.0, 5.2), (28.0, -14.0, 5.2)):
-        px_, py_ = at(d_, l_); lantern_pole(Bk, M, (px_, py_), gz, h=hh_, light=700.0, halo_r=3.6, name='lp_%d_%d' % (d_, l_))
+        px_, py_ = at(d_, l_); lantern_pole(Bk, M, (px_, py_), gz, h=hh_, light=700.0, halo_r=1.6, name='lp_%d_%d' % (d_, l_))
     c1 = at(19.0, 9.6); PR.crate(Bk, M, V(c1[0], c1[1], gz(*c1)), 20, size=(3.0, 1.9, 1.9), front='crate_b', name='crN1', seed=1)
     c2 = at(19.2, 12.4); PR.crate(Bk, M, V(c2[0], c2[1], gz(*c2)), 5, size=(3.0, 1.9, 1.9), front='crate_a', name='crN2', seed=2)
+    tufts(Bk, M, (-45, 60, -40, 40), 1200, gz, seed=6, h=(0.2, 0.5), flowers=0.0)
+    cb0 = V(*tp); cb1 = V(*TF.p(-3.5, -3.0, 0)); prevp = None
+    cpts = [V(tp[0] + (cb1.x - tp[0]) * t, tp[1] + (cb1.y - tp[1]) * t, gz(tp[0], tp[1]) + 0.15 + 0.5 * math.sin(math.pi * t) * (1 - t)) for t in [i / 16 for i in range(17)]]
+    PR.tube(Bk('cables', hull=0.0), cpts, [0.08] * 17, M['rubber_black'], seg=5, uvk=0.2)
+    for (dd, ll) in ((12.0, -1.0), (14.0, 4.5), (11.0, -5.0)):
+        c3 = at(dd, ll); PR.crate(Bk, M, V(c3[0], c3[1], gz(*c3)), 20 * ll, size=(2.4, 1.5, 1.5), front='crate_c', name='crX%d' % int(dd * ll), seed=int(dd))
     # soldiers (night-toned cards, warm rim): at the radio inside the tent, by the lantern, by the truck, guard
-    rp = TF.p(-1.1, 0.4, 0); sp1 = at(21.2, 0.2); sp2 = at(17.6, -3.6); sp3 = at(18.0, 7.6)
+    rp = TF.p(-1.1, 0.4, 0); sp1 = at(21.2, 0.2); sp2 = at(15.0, 1.4); sp3 = at(18.0, 7.6)
     sp = [(rp.x, rp.y, 'radio', None, False), (sp1[0], sp1[1], 'clip', None, False), (sp2[0], sp2[1], 'walk', None, False), (sp3[0], sp3[1], 'guard', None, True)]
     soldiers(sp, cam_loc, gz, lean=4.0, tone='n')
     STATE['marks'].update(tent=tuple(TF.o), truck=tuple(tp))

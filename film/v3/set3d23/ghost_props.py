@@ -33,7 +33,7 @@ def setup_materials(P, tx, pre):
     M['dark'] = C('#26222c', 1.0); M['metal'] = GH.mat_g(pre + 'metal', art='#5e6470', gain=1.0, spec=((0.9, 0.9, 1.0), 0.3, 0.4) if not night else None); M['brass'] = mg(pre + 'brass', art='#d0a040', gain=1.1, spec=((1.0, 0.85, 0.5), 0.6, 0.3))
     M['red'] = C('#d03020', 1.1); M['white_p'] = C('#f6f2e8', 1.1); M['yellow'] = C('#f0c030', 1.1); M['blue'] = C('#2a5ab0', 1.1)
     M['hay'] = C('#ecc040', 1.1); M['hay_d'] = C('#c89a2c', 1.0); M['soil'] = C('#8a5a34', 1.0)
-    M['canvas'] = TX('canvas_khaki', 1.05); M['canvas_o'] = TX('canvas_olive', 1.0); M['camonet'] = mg(pre + 'camonet', art=tx['camonet'], gain=1.0 if not night else 0.6, alpha=True, form=False)
+    M['canvas'] = TX('canvas_khaki', 1.05); M['canvas_o'] = TX('canvas_olive', 1.0); M['camonet'] = mg(pre + 'camonet', art=tx['camonet'], gain=1.0 if not night else 0.3, alpha=True, form=False)
     M['olive'] = mg(pre + 'olive', art='#6a7a34', gain=1.1, spec=((0.9, 0.95, 0.8), 0.12 if not night else 0.0, 0.5) if not night else None); M['olive_d'] = C('#4a5a26', 1.0); M['khaki'] = C('#c0aa62', 1.05)
     M['tire'] = C('#2a2a30', 1.0, spec=None); M['crate'] = TX('wood', 1.05)
     M['crate_a'] = TX('crate_a', 1.1); M['crate_b'] = TX('crate_b', 1.1); M['crate_c'] = TX('crate_c', 1.1); M['crate_p'] = TX('crate_plain', 1.1); M['sign'] = TX('sign', 1.1)
