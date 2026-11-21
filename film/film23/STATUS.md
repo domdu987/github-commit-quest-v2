@@ -15,3 +15,8 @@ Fallback check: send_later 60 min, always re-armed.
 - [x] QA §K adopted (producer 2026-11-21): ground_check before every render, contact shadow on every card/prop, independent float hunter at TAKE+FINAL. Tanks sit on the ground except in the lift gag.
 - [x] QA §L adopted (producer 17bbec1): no random shake; shake() only on real impact (amp ≤0.15 deg, ≤0.6 s); qa_jitter.py ≤2 px/s. Max 3 render teams at once.
 - STOPPED 2026-11-21 by client order (via producer): no renders, no agents, no send_later. Board r3 builder killed mid-work; its WIP is committed. Resume only when the producer says continue.
+
+## RESUMED 2026-11-21 ~02:30 UTC (client in this chat: "ทำต่อได้ ใช้สกิลใน film/skill_film13 ทำให้เสร็จ")
+Process = film/skill_film13 (skill as of films 1-13) + standing decisions: music on fal (elevenlabs/music/v2.5), QA-art approves the look,
+text signs allowed, queue row WAIT, max 3 render teams, free automatic checks on every take (qa_auto, v3/tools/ground_check.py, qa_jitter).
+No extra review layers (§G-§L multi-reviewer gates dropped). fal still exhausted -> picture first on ESTIMATED timing, narration/music later.
