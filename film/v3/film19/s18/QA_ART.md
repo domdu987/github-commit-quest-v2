@@ -143,3 +143,36 @@ Optional polish (not blocking):
 2. Thin the lower-third foam at g 1415-1432 by about 30 %.
 3. Yaw the ship about 10-15 deg toward the island, or add a small "JAMAICA" flag or banner on the beach, so the ship's course also points at the destination.
 4. Lift g 1384-1400 by another +0.1 EV.
+
+## Round 14 (director QA-art): PASS, 7.1 (slight regression vs v2's 7.3 on the key word)
+
+Take: take.mkv v3 (first_g 1375, 102 frames). Frames: /tmp/qa19_r14art/s18/gNNNN.png (every frame, named by g). Sheets: /tmp/qa19_r14art/s18_pan.jpg (g 1375-1411, every 4 f), s18_phone.jpg (360x640: g 1385, 1400, 1415, 1430, 1438, 1445, 1455, 1467), s18_william.jpg, s18_sparkle.jpg (g 1440-1452), s18_g1445_island_bow.png.
+
+The meta lists more changes than the brief did. Besides the pan, the roll x3.5 and the EV lift, it also hides the bow-mist cards, warms the sea foam colours and uses 32 foreground foam lines. The frames differ from v2 throughout the shot (mean abs diff 18-32 per pixel), not only at the start.
+
+Stats (g 1384-1467):
+- Mean luma **95.8** (min 85.8, max 104.5). The opening is now 90.6 falling to 85.9, so the round 12/13 dark-start note is **fixed**.
+- Saturation **0.640** (v2 0.668). It still passes G.1 and I.3.
+
+| Check | Status |
+|---|---|
+| Early pan (g 1375-1412) | **Reads well.** It is a gentle eased drift with the ship slightly right of centre. The faster roll makes the quiet start feel alive without looking seasick. The opening still sets up the ship, the son on the forecastle and the floating spar in the foreground. There is no pop and no float. |
+| Island / destination | **Regressed on the word.** The heavier roll and new framing push the jib and fore sails across the island at g 1436-1450. Green-pixel area against v2: 5361 vs 8132 at g 1436, 5874 vs 9760 at g 1444 and 6700 vs 9937 at g 1448. That is about 60 % of v2's visible island at "จาไมกา". At g 1445 only the left half and 2 palms show; the rest is behind the sails. The island also appears later, at about g 1412 instead of g 1400. It recovers fully by g 1456-1467: 5 palms, sand rim and about 35 % of the width, so the hand-off to s19 is intact. On the phone it still reads as a green palm island to the left of the ship, so this is not blocking, but the key word is weaker than in v2. |
+| William / watch | **Holds.** The arm-up raise on the island side, the open-mouth excited face, the hop and the sparkle at g 1436-1450 all match v2. Hand and watch stay attached, and the clock face reads at full size. The sparkle twinkles and jumps a few px to the left of the watch at g 1443 and 1446; I read this as a twinkle, not an error. It still reads on the phone. |
+| Bow / foam | The violet glow at the stem remains as noted (accepted as hull-shaded foam). The bow wave stays small. The foreground foam is denser: more lines over the lower half for the whole shot, and the white mass at g 1415-1432 is as heavy as before. It is busier but still clears enough by g 1438. |
+| Grounding (G.2) | OK on every 0.5 s tile. The son stands on the deck with contact, and the spar rides the water. |
+
+| Criterion | Score (v2 → v3) |
+|---|---|
+| Set | 7.5 → 7.5 |
+| Light & colour | 7.5 → 7.5 (opening fixed; saturation slightly lower) |
+| Composition / phone | 7 → 7 (pan good; foam busier) |
+| Acting | 7.5 → 7.5 |
+| Key moment | 7 → 6.5 (sails hide about 40 % of the island on the word) |
+| Match to refs (R5) | 7 → 7 |
+| **Overall** | **7.1 - PASS** (v2 was 7.3) |
+
+Recommended (cheap) fix if a re-render is allowed:
+- Damp the roll amplitude over g 1430-1450, or move the island about 40-60 px further screen-left, so the jib clears it on the word as in v2.
+
+Otherwise v3 can go.
