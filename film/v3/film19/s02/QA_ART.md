@@ -403,3 +403,47 @@ Does the camera read as calm but always moving? **From g 115 to g 199, yes. From
 5. (Polish) Lower the captain's chart arm so the shrug is symmetric.
 
 To confirm: a frame check of g 84-130 with the same tracker, plus a look at the 360x640 sheet.
+
+## Round 19 (film-13 rules): FIX-FIRST. g 88 and the mid-move surge are fixed; the landing gained a "settle, then shove, then dead stop" at g 160-177
+
+**Inputs.** Frames: /tmp/qa19_ov/s02/gNNN.png (round 19). I verified them against take.mkv.part*: g 88 matches exactly. Trackers: /tmp/claude-0/qa16/track.py (ship / rigid median, sea masked, with dx, dy, rotation, scale and the top-band speed) and /tmp/claude-0/qa16/total.py (mean rigid-point speed, sea and cast masked). Outputs are in /tmp/claude-0/qa16/r19_track.txt and r19_total.txt. Sheets:
+- r19_mid.jpg (every 2nd frame g 94-120, phone size)
+- r19_land.jpg (g 156-180, every 2nd frame, round 19 above round 16, with a 20-px grid)
+
+**Measured, g 84-182 (px/f at 720 wide):**
+
+| g | 84 | 90 | 94 | 98 | 102 | 106 | 109 | 112 | 116 | 122 | 128 | 134 | 140 | 146 | 152 | 158 | 160 | 162 | 164 | 166 | 170 | 174 | 176 | 177 | 180 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| total (no sea / cast) | 20.5 | 23.2 | 23.9 | 18.1 | 16.5 | 10.7 | 6.8 | 7.4 | 14.8 | 17.0 | 19.6 | 17.4 | 18.1 | 17.4 | 14.1 | 10.0 | 8.4 | 6.7 | 8.4 | **11.2** | 8.1 | 5.5 | 5.7 | 4.1 | 2.1 |
+| ship median | 13.6 | 16.7 | 18.9 | 14.0 | 11.4 | 7.6 | 7.5 | 7.9 | 16.6 | 20.0 | 14.7 | 11.4 | 11.3 | 9.5 | 10.4 | 7.9 | 5.6 | 5.8 | 10.9 | **14.3** | 11.4 | 7.4 | 5.5 | **2.6** | 1.2 |
+| ship dy | -13.6 | -16.7 | -18.9 | -13.8 | -10.9 | -6.8 | -0.5 | +2.7 | +15.2 | +19.3 | +12.6 | +10.7 | +10.4 | +9.1 | +9.8 | +6.4 | +4.1 | 0.0 | **-10.6** | **-13.7** | -11.2 | -7.2 | -5.3 | **+0.5** | +0.5 |
+
+| Check | Finding |
+|---|---|
+| g 88 pop | **Fixed.** The scale steps evenly, 1.054 → 1.057 → 1.058 → 1.061 → 1.062 (g 85-89), with no sign flip. A similarity check over g 60-182 shows no other one-frame scale pop. |
+| g 84-127: surge, brake, push | **Fixed enough.** The 67 px/f surge is gone; the peak is 24. The dip at g 106-113 (total 6.8-10.7) is the vertical drift turning around at the bottom of the tilt-down (dy -14 → 0 → +15 over about 12 frames). The ship keeps growing at 5-7 % a frame throughout, so the zoom never pauses. On the phone strip (r19_mid.jpg) it reads as one dive onto the stern, then the pass over it. This is the same shape I accepted in round 17. |
+| g 104-113: masts cut at the top | **Accepted.** At this distance, nearly overhead, the camera is arriving at the deck: the hull, deck, wheel and both tiny characters are fully in frame, and the cut masts read as "we are diving onto the ship", not as a framing error. Foam is about 50 % of the frame. No pull-back is needed. |
+| g 128-160: tilt-up | Still one move: total motion 19.6 → 17-18 → 14 → 10 → 8.4, with rotation crossing zero smoothly at g 127. |
+| **g 160-177: settle, shove, stop (new in round 19)** | **This is camera motion, not acting:** total.py masks the cast out and still shows it. The camera nearly settles (total 6.7, ship 5.6-5.8, dy 0 at g 160-162). It then **re-accelerates** the other way (dy **-10.6 → -13.7 px/f** at g 164-166, total 11.2), runs for about 12 frames, and **stops in one frame** at g 176 → 177 (ship median 5.5 → 2.6, dy -5.3 → +0.5). On r19_land.jpg you can see the characters, who are lower and smaller at g 156-162 than in round 16, rise about 120 px (full-res) in the frame between g 162 and g 176. From g 176 the frames are identical to round 16 (mean absolute difference 0.6-0.7). Cause: the round-19 path at g 160 lags behind the frozen landing path, and g 162-176 is a catch-up that joins it at g 176 at full speed. On a phone it reads as "landed... then a second little crane-up and a bump". It sits on the beat (the captain's shock face), which is the worst place for it. |
+| Hook read / faces / grounding / colour | All unchanged and fine: a lone ship on a big blue sea at g 48-90; faces about 13-15 %; heads above y 880; contact shadows on every tile; props in hand; sharp, no depth of field. |
+
+| Criterion (film-13 QA-art) | Round 18 | Round 19 |
+|---|---|---|
+| Set density / ornament | 8 | 8 |
+| Lighting & colour | 8 | 8 |
+| Composition / phone | 6.5 | 7 |
+| Character acting | 7.5 | 7.5 |
+| Key moment (hook BIGZOOM) | 6.5 | 6.5 |
+| Match to references | 7 | 7 |
+| **Overall** | **7.25, FIX-FIRST** | **7.33, FIX-FIRST** |
+
+The front half is now SHIP quality. The only blocker left is the landing catch-up at g 160-177.
+
+**Single smallest change to SHIP.** Re-time the camera only over **g 150-182** as one monotone ease from the round-19 pose and velocity at g 150 to the rest pose at g 182. Use a smoothstep or cubic in the camera's own parameters, with no catch-up toward the old g 176 frame and no velocity reversal. Then re-render g 150-182 (about 33 frames); the acting is keyed to g and is unaffected. The end framing may sit slightly lower than in round 16: anything with faces about 12-15 % and heads above y 880 is fine.
+
+Acceptance with the same trackers over g 140-190:
+- ship dy keeps one sign (positive, falling) until it reaches 0;
+- total and ship speed never rise by more than about 10 % from frame to frame;
+- no one-frame drop of more than about 2 px/f at the end.
+
+A tracker run plus a look at r19_land.jpg-style tiles is enough to re-check it; it does not need a full review.
