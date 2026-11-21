@@ -1,0 +1,34 @@
+{
+ "take": "s17",
+ "first_g": 1820,
+ "n_frames": 106,
+ "diff_median": 0.8,
+ "diff_p90": 1.17,
+ "diff_min": 0.46,
+ "luma_min": 70.4,
+ "luma_max": 76.0,
+ "luma_mean": 73.0,
+ "shade_hue": {
+  "1820": {
+   "shade_hue": 233.7,
+   "share": 0.619
+  },
+  "1873": {
+   "shade_hue": 234.1,
+   "share": 0.576
+  },
+  "1925": {
+   "shade_hue": 234.6,
+   "share": 0.52
+  }
+ },
+ "max_head_centre_y": 796.7,
+ "head_y_by_card": {
+  "tall": 738.8,
+  "round": 796.7
+ },
+ "water_frac_range": null,
+ "s_per_frame_wall": 16.53,
+ "s_per_frame_cpu": 17.33,
+ "jitter": "overall median jitter px 0.18"
+}

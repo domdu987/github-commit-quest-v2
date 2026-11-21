@@ -1,0 +1,23 @@
+{
+ "take": "s17",
+ "fps": 30,
+ "note": "time = film seconds (g / 30) on the ESTIMATED clock",
+ "cues": [
+  {
+   "time": 60.667,
+   "duration": 3.5,
+   "frame": 1820,
+   "end_frame": 1925,
+   "kind": "ambience",
+   "label": "far-bank night, quiet wind; binocular strap creak, a muttered gasp"
+  },
+  {
+   "time": 62.567,
+   "duration": 0.6,
+   "frame": 1877,
+   "end_frame": 1895,
+   "kind": "prop",
+   "label": "sausage drops on the ground: soft thud"
+  }
+ ]
+}
