@@ -200,8 +200,8 @@ def assign_for(g):
     if g >= 1675: return {'inspector': ('inspector_shocked', f('insp'))}                        # P2: the others are out of frame (the whip is done): not rendered
     if g >= 1671: return {'inspector': ('inspector_shocked', f('insp')), 'bertillon': ('bert_dyn', f('bert')), 'dupont': ('dup_dyn', f('dup')), 'gend_a': ('gend_dyn', gopt)}
     a = {'bertillon': ('bert_dyn', f('bert')), 'dupont': (dup, f('dup')), 'inspector': ('insp_dyn', f('insp')), 'gend_a': ('gend_dyn', gopt)}
-    if 1546 <= g < 1640: del a['inspector']                                     # not in frame: not rendered
-    if g < 1546: a['inspector'] = ('inspector_arms_crossed', {'dx': -0.4, 'dy': 3.0}); a['gend_b'] = ('gendarme_standing_b', {})   # T6a's join frames
+    if 1557 <= g < 1640: del a['inspector']                                     # not in frame: not rendered
+    if g < 1557: a["inspector"] = ('inspector_arms_crossed', {'dx': -0.4, 'dy': 3.0}); a['gend_b'] = ('gendarme_standing_b', {})   # T6a's join frames
     return a
 def stage_props(g, acts, cam):
     """call after stage_cast2: Bertillon's MARTIN card (+ bottle later)"""
