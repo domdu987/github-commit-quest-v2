@@ -73,12 +73,12 @@ def pose(name, t, local=False):
         loc, look = c0['loc'], c0['look_at']; d = _sub(loc, look); D = _len(d); tau = T * s
         D2 = D * math.exp(-mv.get('push', 0.0) * tau); loc = _add(look, _mul(_norm(d), D2))
         fwd = _norm((look[0] - c0['loc'][0], look[1] - c0['loc'][1], 0.0)); right = (fwd[1], -fwd[0], 0.0)
-        half_w = D * 10.125 / c0['lens']; sh_ = mv.get('slide', 0.0) * tau * (2.0 * half_w / 720.0)
+        half_w = mv.get('sdist', D) * 10.125 / c0['lens']; sh_ = mv.get('slide', 0.0) * tau * (2.0 * half_w / 720.0)
         loc = _add(loc, _mul(right, sh_)); look = _add(look, _mul(right, sh_))
         dz = mv.get('rise', 0.0) * tau; loc = _add(loc, (0, 0, dz)); look = _add(look, (0, 0, dz * mv.get('rise_look', 0.3)))
         if mv.get('orbit'):
             a = math.radians(mv['orbit'] * tau); v = _sub(loc, look); v = (v[0] * math.cos(a) - v[1] * math.sin(a), v[0] * math.sin(a) + v[1] * math.cos(a), v[2]); loc = _add(look, v)
-        c = dict(loc=loc, look_at=look, lens=c0['lens'] + mv.get('zoom', 0.0) * tau)
+        c = dict(loc=loc, look_at=look, lens=(c0['lens'] + mv.get('zoom', 0.0) * tau) * math.exp(mv.get('zoom_rate', 0.0) * tau))
     if local: return c
     import ghost as GH
     return dict(loc=GH.to_world(c['loc'], sh['loc']), look_at=GH.to_world(c['look_at'], sh['loc']), lens=c['lens'])

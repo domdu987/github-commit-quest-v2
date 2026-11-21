@@ -28,7 +28,7 @@ def _rnd(s): return random.Random(s)
 
 HERO = (-1.128, 16.949); HERO_YAW = -36.0
 PAINT_T = (12.5, 25.0, 205.0)
-LIFT = (-3.6, -6.0, 92.0)
+LIFT = (-5.0, -30.0, 92.0)
 JEEP_PARK = (8.6, 4.2, 112.0)
 SEAT = (11.2, 9.4); PILE_C = (14.8, 12.2); PILE_R = 3.4; PILE_H = 2.7
 FIELD = [(-26.0 - 16.0 * r, -32.0 + 18.5 * i + (r % 2) * 6.0) for r in range(3) for i in range(4)]
@@ -73,13 +73,14 @@ def loose_path(t):
 def build(Bk, M, shot):
     P = STATE['P']; SC.extra_materials(M, P)
     STATE['flats'] = [(0, 4, 26, 0.95), (-42, -6, 30, 0.85)]; STATE['rise'] = (40.0, 95.0, 5.0)
-    gz = SC.ground_fn('morning'); STATE['gz'] = gz; GH.make_terrain('morning', step=3.0); sun_disc(Bk, M); hills(Bk, M, y0=300)
+    gz = SC.ground_fn('morning'); STATE['gz'] = gz; GH.make_terrain('morning', step=3.0)
+    SC.outer_ring(M, 'LANE', (-600, 600, -480, 720), (-75, 75, -115, 135)); sun_disc(Bk, M); hills(Bk, M, y0=300)
     lane = GX.LANE2; lw = GX.SCENES['morning']['lane_w']; rr = _rnd(21)
     def near_lane(x, y, m=0.0): return GX.dist_poly(x, y, lane) < lw / 2 + 1.0 + m
     PR.lane_strip(Bk, M, lane, gz, 20.0, 170.0, width=lw - 1.0, puddle=(120.5, 124.5, 0))
     # hedgerows (the west field edge x -14 opens 70 D toward the lane: the decoy field shows), poplars and round trees
     Lay = GX.layout('morning')
-    def gap(x, y): return near_lane(x, y, 0.8) or (abs(x + 14) < 6 and -72 < y < 34)
+    def gap(x, y): return near_lane(x, y, 0.8) or (abs(x + 14) < 6 and -72 < y < 34) or (abs(x - 16) < 7 and -140 < y < 34)
     for ei, e in enumerate(Lay['edges']):
         if not e['hedge']: continue
         hedge_run(Bk, M, e['pts'], gz, h=3.6, w=2.8, seed=ei + 40, skip=gap, spacing=1.3, cull=False)
@@ -89,7 +90,7 @@ def build(Bk, M, shot):
                 else: round_tree(Bk, M, V(q[0], q[1], gz(q[0], q[1])), r=rr.uniform(3.4, 4.6), seed=int(q[1] * 5 + q[0]) & 0xffff)
     # the low clipped hedge on the east verge (S11 foreground, the cyclists ride behind it)
     hedge_run(Bk, M, [(2.4, -114.0), (2.6, -90.0), (2.9, -60.0), (3.2, -32.0)], gz, h=1.7, w=1.5, seed=77, spacing=0.9, cull=False, name='hedge_low')
-    for i, y in enumerate((-104.0, -78.0, -50.0)): round_tree(Bk, M, V(6.5, y, gz(6.5, y)), r=3.0 + 0.4 * i, seed=500 + i)
+    for i, y in enumerate((-104.0,)): round_tree(Bk, M, V(21.0, y, gz(21.0, y)), r=3.0 + 0.4 * i, seed=500 + i)
     # ---- the hero tank (board look) + pump crew site
     tz0 = gz(*HERO); K_ = 1.08
     tk = PR.make_tank('tank_hero', (HERO[0], HERO[1], tz0), HERO_YAW, M, inflate=0.66, sag=0.34, lod=1.6, seed=5, hull=0.07, scale=K_, own=True, valve_x=-2.3, valve_side=-1)
@@ -122,10 +123,11 @@ def build(Bk, M, shot):
     for i, (x, y) in enumerate(((-36.0, -46.0), (-54.0, -40.0), (-70.0, 4.0))):                 # flat rubber sheets waiting to be pumped
         make_field_tank('flat%d' % i, (x, y), 10.0 * i, M, gz, inflate=0.0, seed=2, lod=0.75, hull=0.0)
     # ---- the lift tank, the jeep, the chalk crate, the ending seat + pile
-    lt = make_field_tank('tank_lift', LIFT[:2], LIFT[2], M, gz, inflate=1.0, elev=0.0, seed=7, lod=1.2, hull=0.08); lt['gc_gap'] = 0.05
+    if shot in (None, 'S12', 'S13'):
+        lt = make_field_tank('tank_lift', LIFT[:2], LIFT[2], M, gz, inflate=1.0, elev=0.0, seed=7, lod=1.2, hull=0.08); lt['gc_gap'] = 0.05
     with Bk.prop('=jeep', shadow_r=3.4):
         jeep(Bk, M, (0.0, 0.0), 0.0, lambda x, y: 0.0, name='jeepbody', lamps=False, lamp_on=0.0, ink=0.08)
-    STATE['movers'] = ['jeep']; STATE.setdefault('post_flush', []).append(lambda: GH.set_jeep(1.0))
+    STATE['movers'] = ['jeep']; STATE.setdefault('post_flush', []).extend([lambda: GH.set_jeep(0.0), lambda: set_pile(0.0)])
     with Bk.prop('=crate_chalk', shadow_r=1.6):
         F = PR.BK.Frame((CHALK[0], CHALK[1], gz(*CHALK[:2])), CHALK[2]); chalk_crate(Bk, M, F)
     with Bk.prop('=crate_seat', shadow_r=1.3): PR.crate(Bk, M, V(SEAT[0], SEAT[1], gz(*SEAT)), -25, size=(1.4, 1.0, 1.15), front='crate_b', name='seat', seed=9)
@@ -200,7 +202,7 @@ def build_pile(Bk, M, gz):
         bal.append((ob, x, y, r / PILE_R, cz))
     for j, (x, y) in enumerate(((SEAT[0] - 1.3, SEAT[1] - 0.9), (SEAT[0] + 0.9, SEAT[1] - 1.6), (SEAT[0] - 0.2, SEAT[1] - 2.0))):   # strays at his feet
         k = cols[j % 5][1]; ob = bpy.data.objects.new('balloon_s%d' % j, meshes[k]); STATE['SET'].objects.link(ob); ob.location = (x, y, gz(x, y) - 0.08); ob.rotation_euler = (1.4, 0, j * 2.0)
-        ob['gc_role'] = 'prop'; STATE['props'].append((ob, 0.5, True))
+        ob['gc_role'] = 'prop'; STATE['props'].append((ob, 0.5, True)); STATE.setdefault('strays', []).append(ob)
     lo = bpy.data.objects.new('balloon_loose', meshes['bal_r']); STATE['SET'].objects.link(lo); lo['airborne'] = True; lo['gc_role'] = 'prop'; lo.location = (SEAT[0] + 0.4, SEAT[1] - 0.8, gz(*SEAT) + 3.3)
     STATE['pile'] = dict(core=core, balloons=bal, cz=cz); STATE['objects'].update(balloon_loose=lo, pile_core=core)
 
@@ -209,6 +211,9 @@ def set_pile(k, frame=None):
     Pp = STATE['pile']; core = Pp['core']; k = max(0.0, min(1.0, k)); rk = max(0.02, math.sqrt(k)); hk = max(0.02, k)
     core.scale = (PILE_R * rk, PILE_R * 0.85 * rk, PILE_H * hk); core.hide_render = k < 0.01
     if frame is not None: core.keyframe_insert('scale', frame=frame); core.keyframe_insert('hide_render', frame=frame)
+    for ob in STATE.get('strays', []):
+        ob.hide_render = k < 0.5
+        if frame is not None: ob.keyframe_insert('hide_render', frame=frame)
     root = STATE['root'].matrix_world.translation
     for (ob, x, y, rn, cz) in Pp['balloons']:
         vis = rn <= rk * 0.98; u = rn / rk if vis else 1.0

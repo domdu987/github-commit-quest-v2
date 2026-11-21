@@ -11,7 +11,13 @@ STATE = T.STATE
 V = lambda *a: Vector(a[0] if len(a) == 1 else a)
 
 def make(spec, Bk, M):
-    kind, xy, yaw = spec[0], spec[1], spec[2]; s = spec[3] if len(spec) > 3 else 1.0; gz = STATE['gz']; x, y = xy; z = gz(x, y)
+    kind, xy, yaw = spec[0], spec[1], spec[2]; s = spec[3] if len(spec) > 3 else 1.0; gz = STATE['gz']
+    if xy[0] in ('cam', 'camend'):                                       # ('cam', dist, lateral): dist D ahead of the start camera (horizontal), lateral D to its right
+        import ghost_shots as SH
+        c = SH.pose(STATE['shot'], 0.0 if xy[0] == 'cam' else 1.0, local=True); f = Vector((c['look_at'][0] - c['loc'][0], c['look_at'][1] - c['loc'][1], 0)).normalized(); r = Vector((f.y, -f.x, 0))
+        p = Vector((c['loc'][0], c['loc'][1], 0)) + f * xy[1] + r * xy[2]; xy = (p.x, p.y)
+        yaw = math.degrees(math.atan2(f.y, f.x)) + yaw
+    x, y = xy; z = gz(x, y)
     if kind == 'crate':
         with Bk.prop('fg_crate', shadow_r=1.4 * s): PR.crate(Bk, M, V(x, y, z), yaw, size=(1.5 * s, 1.0 * s, 1.0 * s), front=spec[4] if len(spec) > 4 else 'crate_c', name='fgcrate', seed=3)
     elif kind == 'jerrycan':

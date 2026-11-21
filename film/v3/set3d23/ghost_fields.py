@@ -71,7 +71,8 @@ def build(Bk, M, shot):
     # tow jeep in front of the lead tank (towed / pushed slowly) and a rope
     (jx, jy), jyaw = lane_pose(column_s()[0] - 12.5, 0.0)
     with Bk.prop('=jeep_tow', shadow_r=3.4):
-        jeep(Bk, M, (jx, jy), jyaw, gz, name='jeep_tow', lamps=False, lamp_on=0.0, ink=0.12)
+        jeep(Bk, M, (0.0, 0.0), 0.0, lambda x, y: 0.0, name='jeep_tow', lamps=False, lamp_on=0.0, ink=0.12)
+    STATE['column'].append(('jeep_tow', column_s()[0] - 12.5)); STATE['movers'].append('jeep_tow'); STATE.setdefault('post_flush', []).append(lambda: GH.set_column(0.0))
     # ---- parked by the farm: netted tanks, trucks, a towed gun
     fx, fy = -30.0, 92.0
     for i, (x, y, yaw) in enumerate(((-6, 108, 200), (8, 122, 215), (-48, 60, 160))):
@@ -87,7 +88,7 @@ def build(Bk, M, shot):
     house(Bk, M, (fx, fy, 0), 8, L=15, Wd=8.5, wh=5.2, rise=4.0, gz=gz, wins=3, door=0.35, chimney=2, dormers=2, name='farm', ink=0.3, seed=2)
     house(Bk, M, (fx - 19, fy + 6, 0), 10, L=17, Wd=11, wh=6.2, rise=4.6, gz=gz, roof='roof_d', wall='barn', wins=0, door=0.0, chimney=0, dormers=0, name='barn', ink=0.3, seed=3)
     house(Bk, M, (fx + 10, fy + 16, 0), 95, L=9, Wd=6, wh=3.6, rise=2.6, gz=gz, wins=2, door=0.0, chimney=1, dormers=0, name='shed', ink=0.3, seed=4)
-    for (tp, ty, w_, d_, wh_, rs_) in (((fx + 12, fy - 22), 20, 7.0, 8.5, 3.4, 2.4), ((fx + 26, fy - 26), 8, 6.0, 7.5, 3.0, 2.1)):
+    for (tp, ty, w_, d_, wh_, rs_) in (((fx + 12, fy - 22), 20, 7.0, 8.5, 3.4, 2.4), ((fx + 18, fy - 32), 8, 6.0, 7.5, 3.0, 2.1)):
         with Bk.prop('tent', shadow_r=None):
             tent(Bk, M, tp, ty, gz, W_=w_, D_=d_, wh=wh_, rise=rs_, glow=False)
     for i, (jp, jyw) in enumerate((((fx + 2, fy - 24), 160), ((fx - 8, fy - 28), 190))):

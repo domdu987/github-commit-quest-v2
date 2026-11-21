@@ -16,8 +16,7 @@ def frames_main(a):
     name = a[1]; ts = [float(x) for x in a[2].split(',')] if len(a) > 2 and a[2] else list(SHEET_T)
     out = a[3] if len(a) > 3 else os.path.join(WORK, 'drafts'); scale = float(a[4]) if len(a) > 4 else 0.5; spp = int(a[5]) if len(a) > 5 else 6
     os.makedirs(out, exist_ok=True); t0 = time.time(); A = GH.build(name); tb = time.time() - t0; sc = bpy.context.scene
-    GH.MN.setup_render(sc, 'final'); sc.render.resolution_percentage = int(round(scale * 100)); sc.cycles.samples = spp; sc.render.threads = 4; GH.MN._denoise(sc)
-    sc.view_settings.exposure = float(GH.STATE['P'].get('exposure', 0.0))
+    GH.quality(sc, 'final', scale=scale, samples=spp)
     from ghost_shots import frames as NF
     n = NF(name); rows = []
     for t in ts:

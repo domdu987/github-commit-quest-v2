@@ -55,8 +55,11 @@ LIGHTS = dict(
                shade=(0.22, 0.26, 0.52), shade_tint=(0.20, 0.18, 0.50), shade_mix=0.5, lift=(0.016, 0.018, 0.044), grade_offset=(0.002, 0.003, 0.010), grade_saturation=1.04),
 )
 # set r1: the Rhine night (moon south-east, over the German bank: it rims the decoys toward the enemy and lights the river) and the pre-dawn blue
-LIGHTS['NIGHT_R'] = dict(LIGHTS['NIGHT'], sun_az=-35.0, sun_el=26.0, sun_vis_el=21.0, sky='sky_night', exposure=-0.25)
-LIGHTS['PREDAWN'] = dict(LIGHTS['NIGHT'], key=(0.42, 0.56, 1.15), sun_az=8.0, sun_el=12.0, sun_vis_el=-8.0, sky='sky_predawn', lamps=0.4, exposure=-0.1,
+LIGHTS['NIGHT'].update(sky='sky_night2', exposure=-0.2, shade=(0.31, 0.22, 0.58), shade_tint=(0.27, 0.17, 0.54), shade_mix=0.8, key=(0.44, 0.40, 1.25), grade_saturation=1.12)
+LIGHTS['MORNING'].update(sky_k=0.95)
+LIGHTS['NIGHT_R'] = dict(LIGHTS['NIGHT'], sun_az=-35.0, sun_el=26.0, sun_vis_el=21.0, sky='sky_night2r', exposure=0.3)
+LIGHTS['DAY'] = dict(LIGHTS['MORNING'], sun_az=200.0, sun_el=34.0, exposure=-0.7, sky_k=1.0)
+LIGHTS['PREDAWN'] = dict(LIGHTS['NIGHT'], key=(0.42, 0.56, 1.15), sun_az=8.0, sun_el=12.0, sun_vis_el=-8.0, sky='sky_predawn', lamps=0.4, exposure=0.05,
                          shade=(0.24, 0.30, 0.58), shade_tint=(0.22, 0.22, 0.54))
 for _k, _v in LIGHTS.items(): _v['key_dir'] = kd_of(_v['sun_az'], _v['sun_el'])
 SCENE_LIGHT = dict(dawn='DAWN', morning='MORNING', night='NIGHT', rhine='NIGHT_R')
@@ -268,7 +271,7 @@ def build(location, shot=None, light=None, cards=True, dress=True):
     names = ['glow', 'pool', 'mist', 'hedge', 'leaf', 'poplar', 'apple', 'roof_red', 'roof_red_d', 'roof_slate', 'stone_farm', 'stone_wall', 'stone_church', 'barn_wood', 'wood', 'canvas_khaki', 'canvas_olive',
              'camonet', 'rubber', 'rubber_d', 'rubber_l', 'star', 'water', 'cow', 'cow_b', 'puff', 'grass_detail', 'sign', 'tankmark', 'crate_a', 'crate_b', 'crate_c', 'crate_plain', 'dirt', 'rut',
              'fields_' + scene_name, P['sky'], 'crate_30', 'crate_79', 'crate_chalk', 'sign_rhine', 'sandbag', 'record', 'water_night', 'glints']
-    if scene_name == 'dawn': names.append('fields_far')
+    names.append('fields_far')
     names += [n for n in GX.JOBS if n.startswith('sol_')]
     STATE['tx'] = GX.ensure(names, verbose=False)
     w = bpy.data.worlds.get('W_ghost') or bpy.data.worlds.new('W_ghost'); sc.world = w; nt = T._tree(w)
@@ -298,6 +301,7 @@ def build(location, shot=None, light=None, cards=True, dress=True):
     sc.cycles.use_light_tree = (lk in ('NIGHT', 'NIGHT_R', 'PREDAWN'))
     MN._denoise(sc); setup_grade(sc); shade_cut(sc, P)
     for ob in SET.objects: no_bounce(ob)
+    if STATE.get('glossy_ok'): _glossy_setup()
     sc.view_settings.exposure = float(P.get('exposure', 0.0))
     if sh:
         if sh.get('state'): apply_state(sh['state'])
@@ -308,6 +312,23 @@ def build(location, shot=None, light=None, cards=True, dress=True):
     A = dict(location=location, shot=shot, light=lk, key_dir=tuple(kd), origin=tuple(loc_origin()), marks=marks(shot) if sh else {},
              anchors={k_: tuple(to_world(v)) for k_, v in STATE['marks'].items()}, tanks=sorted(STATE['tank_objs']))
     STATE['A'] = A; return A
+
+def _glossy_setup():
+    """RHINE: the river reflects (one glossy bounce): lanterns, halos, the tent glow, the decoys, trucks, trees, sky and moon are seen by glossy rays."""
+    for ob in STATE['SET'].objects:
+        n = ob.name
+        if ob.get('tank') or n.startswith(('lantern', 'tent', 'sound_truck', 'truck', 'sky', 'sun_disc', 'poplar', 'trees', 'boat', 'pontoons', 'sign', 'crate', 'farm', 'sandbags', 'hut', 'tripod')) or '~halos' in n or '~lanterns' in n or '~tent_in' in n:
+            ob.visible_glossy = True
+    for ob in STATE['CARDS'].objects: ob.visible_glossy = True
+
+def quality(sc=None, q='final', scale=None, samples=None):
+    """Render settings of the set (tower.setup_render + OIDN + 4 threads + this location's extras: RHINE gets one glossy bounce for the river)."""
+    sc = sc or bpy.context.scene; MN.setup_render(sc, q); sc.render.threads = 4
+    if scale: sc.render.resolution_percentage = int(round(scale * 100))
+    if samples: sc.cycles.samples = samples
+    if STATE.get('glossy_ok'): sc.cycles.glossy_bounces = 1; sc.cycles.max_bounces = 2
+    sc.cycles.use_light_tree = STATE.get('light') in ('NIGHT', 'NIGHT_R', 'PREDAWN')
+    MN._denoise(sc); sc.view_settings.exposure = float(STATE['P'].get('exposure', 0.0)); return sc
 
 def finish_location(location):
     """Parent the location to its root (origin in the world), then ground-snap every prop and give it a contact shadow."""
@@ -336,7 +357,22 @@ def _gc():
     if p not in sys.path: sys.path.insert(0, p)
     import ground_check as GC; return GC
 
+DRESS = ('tufts', 'tufts2', 'flowers', 'litter', 'glints', 'mist', 'smoke', 'pools', 'blobs', 'halos', 'puddle', 'fg_reeds', 'stars', 'hills', 'treeline', 'sun_disc')
+class dress_hidden:
+    """Hide the fine dressing (grass tufts, flowers, pebbles, glints, decals, mist) from ray casts: props are snapped to (and checked against) the
+    real surface, never to a grass blade."""
+    def __enter__(s):
+        s.obs = [o for o in STATE['SET'].objects if o.name.split('~')[-1] in DRESS and not o.hide_viewport]
+        for o in s.obs: o.hide_viewport = True
+        bpy.context.view_layer.update(); return s
+    def __exit__(s, *a):
+        for o in s.obs: o.hide_viewport = False
+        bpy.context.view_layer.update(); return False
+
 def ground_snap(ob, sink=0.012, max_move=6.0):
+    with dress_hidden(): return _ground_snap(ob, sink, max_move)
+
+def _ground_snap(ob, sink=0.012, max_move=6.0):
     """Drop (or lift) `ob` so its lowest contact point sits `sink` D into the first surface below it (scene.ray_cast through everything but the
     object itself, its children, cards and shadows).  Returns the move (D).  Works on props (lowest vertices) and cards (lowest visible alpha row)."""
     GC = _gc(); sc = bpy.context.scene; bpy.context.view_layer.update(); dg = bpy.context.evaluated_depsgraph_get()
@@ -350,7 +386,8 @@ def ground_snap(ob, sink=0.012, max_move=6.0):
             g = p.z - hz
             if best is None or g < best: best = g
     if best is None or abs(best) > max_move: return 0.0
-    dz = -(best + sink); ob.location.z += dz; bpy.context.view_layer.update(); return dz
+    dz = -(best + sink); k = ob.parent.matrix_world.to_scale().z if ob.parent is not None else 1.0
+    ob.location.z += dz / k; bpy.context.view_layer.update(); return dz
 
 def ground_z(x, y, z0=500.0):
     """World height of the set surface under (x, y) (ray cast from z0 down through ground-like objects only)."""
@@ -358,7 +395,7 @@ def ground_z(x, y, z0=500.0):
     for _ in range(40):
         ok, loc, n, i, hit, m = sc.ray_cast(dg, o, Vector((0, 0, -1)))
         if not ok: return None
-        if hit.get('gc_role') == 'ground' and hit.name not in ('sky',): return loc.z
+        if hit.get('gc_role') == 'ground' and hit.name not in ('sky',) and hit.name.split('~')[-1] not in DRESS: return loc.z
         o = Vector((loc.x, loc.y, loc.z - 1e-3))
     return None
 
@@ -456,15 +493,23 @@ def key_camera(shot, f0=1, step=1):
     sc = bpy.context.scene; sc.frame_start = f0; sc.frame_end = f0 + n; sc.camera = cam; return f0, f0 + n
 
 def marks(shot):
-    """{role: [(x, y, z, yaw_deg), ...]} world marks of a shot (z = the surface under the mark after the build; yaw turns a card that faces -y
-    at yaw 0 toward the shot's start camera).  Requires the location to be built (z is ray cast); see ghost_shots.MARKS for the local table."""
+    """{role: [(x, y, z, yaw_deg, extra), ...]} WORLD marks of a shot at the current set state.  z = the surface under the mark (ray cast; marks with
+    a fixed z keep it).  yaw turns a card that faces -y at yaw 0 toward the shot's start camera.  extra: ph / pose (placeholder silhouette),
+    parent (a mover name: the mark is in the PARENT's local frame - parent the card to it: jeep seats, the lift, boats, the lead tank's deck),
+    airborne.  Requires the location to be built."""
     SH = _shots(); out = {}
     for role, lst in SH.marks_local(shot).items():
         out[role] = []
         for m in lst:
-            x, y, z = to_world(m[:3]); gz_ = ground_z(x, y, z + 6.0) if m[3] is None else z
-            if gz_ is None: gz_ = z
-            out[role].append((round(x, 3), round(y, 3), round(gz_, 3), m[4], m[5]))
+            extra = m[5]
+            if extra.get('parent'):
+                par = _ob(extra['parent']); bpy.context.view_layer.update(); w = par.matrix_world @ Vector(m[:3]); x, y, gz_ = w.x, w.y, w.z
+                c0 = SH.pose(shot, 0.0)['loc']; yaw = round(math.degrees(math.atan2(c0[0] - x, -(c0[1] - y))), 1)
+                out[role].append((round(x, 3), round(y, 3), round(gz_, 3), yaw, extra)); continue
+            else:
+                x, y, z = to_world(m[:3]); gz_ = ground_z(x, y, z + 6.0) if m[3] is None else z
+                if gz_ is None: gz_ = z
+            out[role].append((round(x, 3), round(y, 3), round(gz_, 3), m[4], extra))
     return out
 
 # ----------------------------------------------------------------------------- placeholder cards
@@ -482,7 +527,9 @@ def ph_card(name, role, pose, pos, yaw=None, face_to=None, night=None, parent=No
     ob = bpy.data.objects.new(name + '_card', me); STATE['CARDS'].objects.link(ob); no_bounce(ob); ob['gc_role'] = 'card'; ob['role'] = role; ob['pose'] = pose
     if face_to is not None: d_ = Vector(face_to) - Vector(pos); yaw = math.degrees(math.atan2(d_.x, -d_.y))
     if parent is not None:
-        ob.parent = parent; ob.location = parent.matrix_world.inverted() @ Vector(pos); ob.rotation_euler = (0, 0, math.radians(yaw or 0.0) - parent.matrix_world.to_euler().z)
+        ob.parent = parent; ob.matrix_parent_inverse.identity(); bpy.context.view_layer.update()
+        ob.location = parent.matrix_world.inverted() @ Vector(pos); ob.rotation_euler = (0, 0, math.radians(yaw or 0.0) - parent.matrix_world.to_euler().z)
+        ps = parent.matrix_world.to_scale(); ob.scale = (1.0 / ps.x, 1.0 / ps.y, 1.0 / ps.z)
     else:
         ob.location = pos; ob.rotation_euler = (0, 0, math.radians(yaw or 0.0))
     STATE['cards'].append(ob); return ob
@@ -497,8 +544,8 @@ def place_cards(shot):
             if extra.get('airborne'): ob['airborne'] = True
     bpy.context.view_layer.update()
     for ob in out:
-        if not ob.get('airborne') and ob.parent is None: ground_snap(ob, sink=0.005, max_move=1.0)
-        if not ob.get('airborne'): contact_shadow(ob, 0.9, 0.42, follow=True)
+        if not ob.get('airborne'): ground_snap(ob, sink=0.005, max_move=1.5)
+        if not ob.get('airborne') and ob.parent is None: contact_shadow(ob, 0.9, 0.42, follow=True)
     return out
 
 def remove_placeholders():
@@ -542,6 +589,7 @@ def _place(ob, p_local, yaw, frame=None, ground=True):
         w = to_world((p_local[0], p_local[1], 0.0)); g = ground_z(w[0], w[1], w[2] + ob.matrix_world.translation.z + 30.0)
         if g is not None: z = g - loc_origin().z + ob['zoff']
     ob.location = (p_local[0], p_local[1], z); ob.rotation_euler = (0, 0, math.radians(yaw))
+    if ground and 'zoff' in ob.keys() and not ob.hide_render: ground_snap(ob, max_move=2.0)
     _key(ob, 'location', frame); _key(ob, 'rotation_euler', frame)
 
 def set_inflate(name, v, frame=None):
@@ -570,7 +618,12 @@ def set_lift(h, frame=None, name='tank_lift'):
 
 def set_jeep(s, frame=None, name='jeep'):
     """The Major's jeep along its path (ghost_lane.JEEP_PATH): s 0 = far down the lane (out of the S06 frame) .. 1 = parked at its mark."""
-    import ghost_lane as GL; ob = _ob(name); p, yaw = GL.jeep_at(max(0.0, min(1.0, s))); _place(ob, p, yaw, frame)
+    import ghost_lane as GL; ob = _ob(name); p, yaw = GL.jeep_at(max(0.0, min(1.0, s)))
+    hid = s <= 0.001
+    for o in [ob] + list(ob.children_recursive):
+        o.hide_render = hid
+        if frame is not None: o.keyframe_insert('hide_render', frame=frame)
+    _place(ob, p, yaw, frame)
 
 def set_column(d, frame=None):
     """S01: the column rolls: every column tank moves d D along the FIELDS lane (towed / pushed slowly; about 1.2 D/s looks right)."""
@@ -635,9 +688,7 @@ def animate(setter, f0, f1, v0, v1, step=1, ease=True, **kw):
 def render_still(spec, quality='final', out=None, samples=None):
     """spec: 'S07' | 'S07@0.5' (t of the move, 0..1.25) | 'LANE' (default camera).  Builds, poses, renders; prints RENDER ... wall s."""
     name, _, t = spec.partition('@'); t = float(t) if t else 0.0
-    A = build(name); sc = bpy.context.scene; MN.setup_render(sc, quality); sc.render.threads = 4
-    if samples: sc.cycles.samples = samples
-    MN._denoise(sc); sc.view_settings.exposure = float(STATE['P'].get('exposure', 0.0))
+    A = build(name); sc = globals()['quality'](None, quality, samples=samples)
     if A['shot']: shot_camera(A['shot'], t)
     out = out or os.path.join(WORK, '%s_%s.png' % (spec.replace('@', '_'), quality)); os.makedirs(os.path.dirname(out), exist_ok=True)
     wall, cpu = T.render(out)

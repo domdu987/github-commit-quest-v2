@@ -28,12 +28,13 @@ def _layout(sc):
         rng = random.Random(3)
         for c in L['cells']:
             c['col'] = rng.choice(['#4e7a2a', '#5a8430', '#46702a', '#6a7c34', '#5e7230'])
-            if rng.random() < 0.35: c['kind'] = 'plough'
+            if rng.random() < 0.12: c['kind'] = 'plough'
+            elif c['kind'] == 'plough': c['kind'] = 'grass'
         L['_r'] = True
     return L
 GX.layout = _layout
 reg('fields_far', dict(scene='far', pal='day', v=2), paint_ground)
-reg('fields_rhine', dict(scene='rhine', pal='rhine', v=3), paint_ground)
+reg('fields_rhine', dict(scene='rhine', pal='rhine', v=4), paint_ground)
 
 # ----------------------------------------------------------------------------- pre-dawn sky (S18): deep blue, cold pale band low in the east
 def paint_sky_predawn(p, out):
@@ -202,3 +203,16 @@ GX.LANE2[:] = spline([(-8, -130), (-7.5, -80), (-6, -40), (-4, -10), (0, 14), (8
 GX.SCENES['morning'].update(rect=(-90, 90, -130, 150), xs=[-90, -14, 16, 90], ys=[-130, -50, 40, 150])
 reg('fields_morning', dict(scene='morning', pal='day', v=2), paint_ground)
 reg('crate_d4', dict(size=(1024, 640), seed=11, lines=['DECOY M4', ''], sizes=[120, 10]), paint_crate)
+
+# ----------------------------------------------------------------------------- set r1 night sky: the board's night sky pushed from cyan-blue (hue ~226) to blue-violet (~242)
+def paint_sky_night2(p, out):
+    import ghost_tex as G
+    old = G.hexf; sw = p['swap']
+    def hexf2(h): return old(sw.get(h, h))
+    G.hexf = hexf2
+    try: G.paint_sky(dict(mode='night', sun=p['sun']), out)
+    finally: G.hexf = old
+SWAP = {'#1c2c66': '#2a2868', '#2a4690': '#3c3a9a', '#2c4aa0': '#3a36a6', '#1a3080': '#26248a', '#101e5c': '#181862', '#0a1244': '#100e4a',
+        '#6a8cf0': '#7a80f0', '#a0c0ff': '#b0b8ff', '#5a7cd0': '#6a6ad0', '#3a54a6': '#4a4aa6', '#22308a': '#2a2a8a', '#7a9cf0': '#8a8cf0'}
+reg('sky_night2', dict(sun=(64.0, 17.0), swap=SWAP, v=1), paint_sky_night2)
+reg('sky_night2r', dict(sun=(-35.0, 21.0), swap=SWAP, v=1), paint_sky_night2)

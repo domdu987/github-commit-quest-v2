@@ -220,7 +220,7 @@ def extra_materials(M, P):
     TX = PR.mat_g_factory(P, STATE['tx'], pre)['TX']; M['lane_dirt'] = TX('dirt', 1.15); M['rut'] = TX('rut', 1.1)
     M['tuft'] = C('#3fb02e', 1.1, form=False); M['tuft2'] = C('#74cc3a', 1.1, form=False); M['fl_y'] = C('#ffd830', 1.2, form=False); M['fl_w'] = C('#fff8f0', 1.2, form=False); M['fl_r'] = C('#ff6a50', 1.1, form=False)
     M['star_w'] = GH.mat_g(pre + 'star_w', art=STATE['tx']['star'], gain=1.1, alpha=True, form=False)
-    M['tent_glow'] = mat_emit(pre + 'tent_glow', '#ff9a3a', strength=1.5)
+    M['tent_glow'] = mat_emit(pre + 'tent_glow', '#ff9a3a', strength=0.9)
 
 # ============================================================================= DAWN: fields from high
 def build_dawn(Bk, M):
@@ -518,3 +518,14 @@ def build_night(Bk, M):
 
 def build_scene(name, Bk, M):
     {'dawn': build_dawn, 'morning': build_morning, 'night': build_night}[name](Bk, M)
+
+
+def outer_ring(M, location, rect, hole, step=15.0, drop=0.3):
+    """set r1: the far patchwork around a location (the same painted ring as FIELDS: world UVs of fields_far), 0.3 D below the location's
+    own terrain so the seam never opens.  Fills the horizon of the low cameras."""
+    tx = STATE['tx']; o = GH.LOCATIONS[location]['origin']; fx0, fx1, fy0, fy1 = GX.SCENES['far']['rect']
+    if 'ground_far' not in M:
+        M['ground_far'] = GH.mat_g(STATE['pre'] + 'ground_far', art=GH.art_detail(tx['fields_far'], tx['grass_detail'], 3800 / 30.0, 0.35), gain=1.5, shade_mul=0.95, form=False)
+    gz0 = STATE['gz']; STATE['gz'] = lambda x, y: gz0(x, y) - drop
+    GH.make_terrain('far', rect=rect, step=step, mat='ground_far', name='terrain_far', hole=hole, uvrect=(fx0 - o[0], fx1 - o[0], fy0 - o[1], fy1 - o[1]))
+    STATE['gz'] = gz0
