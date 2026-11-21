@@ -17,7 +17,7 @@ from c21 import K, actors, Vector, lerp, ez              # noqa: E402
 
 TMP = os.path.join(HERE, "work")
 G0, G1, GJ = 295, 418, 298
-PPD = 128
+PPD = 192
 STAND = [("s1", "scot_b", "scot_b_fold_spear", "s1", 0.0), ("s2", "scot_a", "scot_a_fold_spear", "s2", 1.1),
          ("horn", "scot_horn", "scot_horn_lower", "horn", 2.0), ("w", "wallace", "wallace_fold_spear", "w", 0.6),
          ("s3", "scot_c", "scot_c_stand_still", "s3", 2.9)]
@@ -47,24 +47,75 @@ def K_g(x, y):
     return float(K.ground(x, y))
 
 
-def cam_state(g):
+CTR = np.array([137.0, 137.0]); TH = math.radians(224.0)
+U_R = np.array([math.cos(TH), math.sin(TH)]); T_R = np.array([-math.sin(TH), math.cos(TH)])
+G_SPLIT = 377
+G_ARR = 408          # the landing is reached at g408; the last 10 frames creep on up the slope
+
+
+def end_landing():
+    """LOW HERO landing: the camera 3.3 m (horizontal) below the lip of the shelf, 1.3 m above the slope, looking UP 36 deg at the Scots on the lip: sky behind them."""
+    rc = 17.1; p = CTR + U_R * rc
+    loc = (float(p[0]), float(p[1]), float(K.ground(p[0], p[1])) + 1.3)
+    q = CTR + U_R * 13.3
+    look = (float(q[0]), float(q[1]), float(K.ground(q[0], q[1])) + 1.9)
+    return loc, look
+
+
+def _old(g):
     r = K.cam_path(None, keys(), g)
-    return r["loc"], r["look"], r["lens"], r["vivid"]
+    return np.array(r["loc"]), np.array(r["look"]), r["lens"], r["vivid"]
+
+
+def _herm(p0, m0, p1, m1, t):
+    t2, t3 = t * t, t * t * t
+    return (2 * t3 - 3 * t2 + 1) * p0 + (t3 - 2 * t2 + t) * m0 + (-2 * t3 + 3 * t2) * p1 + (t3 - t2) * m1
+
+
+def cam_state(g):
+    if g <= G_SPLIT:
+        loc, look, lens, viv = _old(g); return tuple(loc), tuple(look), lens, viv
+    l0, k0, _, v0 = _old(G_SPLIT); l0b, k0b, _, _ = _old(G_SPLIT - 1)
+    el, ek = end_landing(); n = float(G_ARR - G_SPLIT)
+    t = min((g - G_SPLIT) / n, 1.0)
+    m_l0 = (l0 - l0b) * n; m_k0 = (k0 - k0b) * n                         # continue the old velocity (no bump)
+    dirv = np.array(ek) - np.array(el); dirv /= np.linalg.norm(dirv)
+    m_l1 = dirv * 0.35 * n * 0.6; m_k1 = np.zeros(3)                      # still creeping up the slope at the cut
+    loc = _herm(l0, m_l0, np.array(el), m_l1, t); look = _herm(k0, m_k0, np.array(ek), m_k1, t)
+    if g > G_ARR:
+        u = (g - G_ARR) / float(G1 - G_ARR); loc = loc + dirv * 0.55 * u + np.array([T_R[0], T_R[1], 0.0]) * 0.35 * u; look = look + np.array([0, 0, 0.12 * u])
+    gz = float(K.ground(loc[0], loc[1])) + 1.3
+    if loc[2] < gz: loc[2] = gz
+    viv = v0
+    return tuple(loc), tuple(look), 22.0, viv
 
 
 def pose_of(e, g):
     nm, cast, pname, mk, ph = e
     c, p = cast21.STORY21[pname]; p = dict(p)
     p["yaw"] = 0.3
-    sh = math.sin(g * 0.09 + ph * 2.1)
-    p["lean"] = p.get("lean", 0.0) + 2.4 * sh
-    p["head_roll"] = p.get("head_roll", 0.0) + 2.0 * math.sin(g * 0.12 + ph)
-    p["blink"] = cast21.blink_at(g, 92 + int(ph * 11), int(ph * 29))
-    p["t"] = g / 30.0
-    if nm in ("s1", "s3"):                       # shift the spear: the whole figure rocks a little more, the head follows
-        p["lean"] += 3.0 * math.sin(g * 0.21 + ph)
-    if nm == "s2":                               # leans on his spear: a steady lean into it
-        p["lean"] = p.get("lean", 0.0) + 7.0 + 1.5 * math.sin(g * 0.07)
+    t = g / 30.0
+    p["lean"] = p.get("lean", 0.0) + 3.5 * math.sin(g * 0.10 + ph * 2.1)             # weight shifts: big
+    p["head_roll"] = p.get("head_roll", 0.0) + 3.0 * math.sin(g * 0.13 + ph)
+    p["blink"] = cast21.blink_at(g, 70 + int(ph * 9), int(ph * 29))
+    p["t"] = t
+    sw = math.sin(g * 0.17 + ph * 1.3)
+    if nm == "s1":                                   # swings his spear: shaft angle sways +-14 deg and the hand follows with a lean
+        pr_ = p.get("prop_r")
+        if isinstance(pr_, dict): p["prop_r"] = dict(pr_, angle=-90 + 14 * sw)
+        p["lean"] += 5 * sw
+    if nm == "s2":                                   # leans hard on his spear
+        p["lean"] = 11.0 + 2.5 * math.sin(g * 0.06) + 1.5 * math.sin(g * 0.21)
+        p["head_roll"] += 5.0
+    if nm == "horn":                                 # looks around: slow head turns
+        p["yaw"] = 0.3 + 0.55 * math.sin(g * 0.08 + 1.0)
+    if nm == "s3" and 392 <= g <= 412:               # scratches his nose (switch hidden behind a blink)
+        c2, p2 = cast21.STORY21["scot_c_scratch_nose"]; p2 = dict(p2)
+        p2.update(lean=p["lean"], head_roll=p["head_roll"], t=t, blink=1.0 if g in (392, 412) else 0.0, yaw=0.45)
+        p = p2
+    if nm == "w":                                    # Wallace raises one eyebrow (behind a blink) and holds it
+        if g >= 398:
+            c2, p2 = cast21.STORY21["wallace_eyebrow"]; p2 = dict(p2); p2.update(lean=p["lean"] * 0.5, t=t, blink=1.0 if g in (398, 399) else p["blink"]); p = p2
     return K.with_rim(p)
 
 
@@ -79,10 +130,9 @@ class Seg(object):
         self.acts = {}
         for ob in bpy.data.objects:                       # no fg spear shaft crossing the Scots' faces
             if ob.name.startswith(("fg_generic_steel", "fg_generic_wood")): ob.hide_render = True
-        ph = p_hill(); pr2 = dict(cam=ph[0], look=ph[1], lens=22.0)      # stand points for the RAISED camera (heads at y ~ 650-740)
         self.marks = {}
-        for mk, d, xp in (("s1", 8.2, 100), ("s2", 9.4, 250), ("horn", 7.8, 395), ("w", 10.5, 520), ("s3", 8.8, 640)):
-            x, y = K.at_px(pr2, d, xp); self.marks[mk] = (x, y, float(K.ground(x, y)))
+        for mk, k, dr in (("s1", -1.3, 0.3), ("s2", -0.64, -0.1), ("w", 0.0, 0.2), ("horn", 0.64, -0.1), ("s3", 1.3, 0.3)):
+            p = CTR + U_R * (13.3 + dr) + T_R * k; self.marks[mk] = (float(p[0]), float(p[1]), float(K.ground(p[0], p[1])))
         for nm, cast, pname, mk, ph in STAND:
             self.acts[nm] = C.make_actor(nm, cast, os.path.join(TMP, "sprites"))
         pts = [K.cam_path(None, keys(), g)["loc"] for g in range(G0, 419, 3)]
