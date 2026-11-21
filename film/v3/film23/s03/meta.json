@@ -1,0 +1,23 @@
+{
+ "take": "s03",
+ "film": 23,
+ "shot": "S03",
+ "first_g": 252,
+ "n_frames": 140,
+ "g0": 252,
+ "g1": 357,
+ "g1_render": 384,
+ "handle_in": 0,
+ "handle_out": 8,
+ "seconds_per_frame_wall": 12.4,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "note": "timing is an ESTIMATE (timing_EST.json); take renders g0..g0+ceil((g1-g0)*1.25) then the out-handle; camera and action continue through the tail",
+ "parts": [
+  "take.mkv.part00",
+  "take.mkv.part01"
+ ],
+ "mkv_mb": 48.5
+}

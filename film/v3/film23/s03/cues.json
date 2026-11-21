@@ -1,0 +1,31 @@
+{
+ "take": "s03",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration timing is an estimate",
+ "cues": [
+  {
+   "time": 9.0,
+   "duration": 2.0,
+   "frame": 270,
+   "end_frame": 330,
+   "kind": "prop",
+   "label": "a pin pricks rubber then a long comic fsssss hiss"
+  },
+  {
+   "time": 10.833,
+   "duration": 0.333,
+   "frame": 325,
+   "end_frame": 335,
+   "kind": "prop",
+   "label": "the limp barrel flops onto a helmet, hollow bonk"
+  },
+  {
+   "time": 11.167,
+   "duration": 0.333,
+   "frame": 335,
+   "end_frame": 345,
+   "kind": "prop",
+   "label": "tiny comic sweat-drop plink"
+  }
+ ]
+}
