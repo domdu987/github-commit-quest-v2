@@ -227,7 +227,7 @@ def build_state(T, gs):
         d, xp = SPOTS[k]
         x, y = K.rel_xy(C0, lookA, d, (xp - 360.0) / 440.0 * d)
         x, y = snap_to_shore(x, y, 0.8 + 0.3 * (k % 2))
-        p0 = Vector((x, y, ground_z(x, y)))
+        p0 = Vector((x, y, ground_z(x, y) - 0.035))      # sole slightly into the grass: grounded (ground check)
         ent = Vector(entry_point(x, y, Rv, 1.7 + 0.15 * k)).to_3d(); ent.z = 0.0; ents[c['n']] = ent
         bs = variant(pose_of(c['base']), c['var'])
         def tl(g, n=c['n'], k=k, p0=p0, ent=ent, bs=bs, c=c):
@@ -252,10 +252,10 @@ def build_state(T, gs):
     loc1 = C0 + Rv * 0.5 + Fv * 0.5
     loc2 = C0.lerp(Vector((cen0.x + uu.x * 3.2, cen0.y + uu.y * 3.2, 1.0)), 0.6) + Vector((0, 0, -0.2))   # transit: still looking at the jumpers' entry area
     def aimc(loc, dz=0.0):
-        lk = Vector((cen.x, cen.y, 1.55 + dz)); return lk
+        lk = Vector((cen.x, cen.y, 0.55 + dz)); return lk
     keys = [(1709, tuple(C0), tuple(C0 + dirA), 22.0), (1735, tuple(C0 + Rv * 0.2 + Fv * 0.3), tuple(C0 + Rv * 0.2 + Fv * 0.3 + yawed(base, -8.0)), 22.0),
             (1772, tuple(loc1), tuple(loc1 + dirB), 22.0),
-            (1800, tuple(loc2), (cen0.x, cen0.y, 0.6), 22.0), (1821, tuple(loc3), tuple(aimc(loc3, -0.6)), 22.0),
+            (1800, tuple(loc2), (cen0.x, cen0.y, 0.6), 22.0), (1821, tuple(loc3), tuple(aimc(loc3, -0.1)), 22.0),
             (1847, tuple(loc3 + Fw * 0.3), tuple(aimc(loc3, 0.0)), 22.0)]
     def cam_g(g):
         r = K.cam_path(None, keys, g, clearance=0.4)
@@ -277,9 +277,9 @@ def build_state(T, gs):
         rigs["H%d" % j] = Rig(T, "H%d" % j, "helmet_float", tlh)
     for r in rigs.values(): r.pose_frames(gs)
     T.sprites_for(128 if T.quality == 'draft' else 256); T.rigs = rigs
-    IMP = (1813, 1822, 1836)
+    IMP = (1813, 1822, 1837)
     lat = Lat; fw = Fw
-    CP = [cen + lat * 1.9 + fw * 0.9, cen - lat * 1.9 + fw * 0.7, cen + lat * 0.2 + fw * 2.2]
+    CP = [cen + lat * 1.5 + fw * 1.0, cen - lat * 1.5 + fw * 0.8, cen + lat * 0.2 + fw * 2.3]
     for p in CP: p.z = 0.0
 
     def on_g(g):
@@ -299,7 +299,7 @@ def build_state(T, gs):
             splash2(e.x, e.y, age if (age > 0 and not near) else -1, size=sz, name=who, seed=ord(who))
         for j in range(3):
             a_ = (g - IMP[j]) / 30.0
-            splash2(CP[j].x, CP[j].y, a_ if (a_ >= 0 and math.hypot(CP[j].x - cl.x, CP[j].y - cl.y) > 2.2) else -1, size=1.5, name='L%d' % j, seed=j + 3)
+            splash2(CP[j].x, CP[j].y, a_ if (a_ >= 0 and math.hypot(CP[j].x - cl.x, CP[j].y - cl.y) > 2.2) else -1, size=1.3, name='L%d' % j, seed=j + 3)
     return on_g
 
 
