@@ -9,7 +9,7 @@
  "g1_render": 519,
  "handle_in": 8,
  "handle_out": 0,
- "seconds_per_frame_wall": 14.4,
+ "seconds_per_frame_wall": 15.2,
  "transition_in": {
   "type": "dissolve",
   "frames": 11
@@ -20,5 +20,5 @@
   "take.mkv.part01",
   "take.mkv.part02"
  ],
- "mkv_mb": 123.1
+ "mkv_mb": 116.3
 }
