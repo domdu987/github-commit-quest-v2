@@ -58,7 +58,7 @@ def hedge_run(Bk, M, pts, gz, h=3.0, w=2.4, seed=0, skip=None, spacing=1.7, lump
 
 def poplar(Bk, M, p, h=24.0, seed=0, r=1.5):
     p = V(p); pb = Bk('poplar', hull=0.0, smooth_=True); rr = _rnd(seed)
-    rod(pb, p, p + V(0, 0, h * 0.18), 0.28, M['trunk'], seg=5, r1=0.2)
+    rod(pb, p - V(0, 0, 0.5), p + V(0, 0, h * 0.18), 0.28, M['trunk'], seg=5, r1=0.2)
     n = 6
     for k in range(n):
         t = k / (n - 1); rad = r * (0.75 + 0.55 * math.sin(math.pi * (0.2 + 0.7 * t))) * (1.0 - 0.45 * t * t); z = p.z + h * (0.2 + 0.78 * t)
@@ -66,7 +66,7 @@ def poplar(Bk, M, p, h=24.0, seed=0, r=1.5):
 
 def round_tree(Bk, M, p, r=4.0, seed=0, mat='leaf'):
     p = V(p); tb = Bk('trees', hull=0.0, smooth_=True); rr = _rnd(seed)
-    rod(tb, p, p + V(0, 0, r * 0.9), r * 0.09, M['trunk'], seg=6, r1=r * 0.07)
+    rod(tb, p - V(0, 0, 0.5), p + V(0, 0, r * 0.9), r * 0.09, M['trunk'], seg=6, r1=r * 0.07)
     for k in range(4):
         a = 2 * math.pi * k / 4 + rr.uniform(0, 1); rr_ = rr.uniform(0.3, 0.6) * r
         lumpy(tb, p + V(rr_ * math.cos(a), rr_ * math.sin(a), r * (1.35 + rr.uniform(-0.2, 0.3))), r * rr.uniform(0.62, 0.8), M[mat], seed * 5 + k, seg=9, rings=5, rough=0.3, squash=0.8)

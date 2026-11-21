@@ -23,7 +23,7 @@ def setup_materials(P, tx, pre):
     C, TX = G['C'], G['TX']; mg = GH.mat_g
     M = {}
     M['ground'] = mg(pre + 'ground', art=GH.art_detail(tx['fields_' + sc], tx['grass_detail'], (x1 - x0) / 7.0, 0.55), gain=1.5 * P['ground_k'], shade_mul=0.95, form=False, glow=tx.get('fields_' + sc + '_glint'), glow_k=0.9)
-    M['sky'] = mat_emit(pre + 'sky', image=tx['sky_' + sc], strength=P['sky_k'])
+    M['sky'] = mat_emit(pre + 'sky', image=tx[P.get('sky', 'sky_' + sc)], strength=P['sky_k'])
     fm = P.get('fol_mix')                                                     # foliage: own shade mix (cool shade side) + smooth normals (rounded volume)
     M['hedge'] = TX('hedge', 0.95, smix=fm, sn=True); M['leaf'] = TX('leaf', 1.0, smix=fm, sn=True); M['poplar'] = TX('poplar', 1.05, smix=fm, sn=True); M['apple'] = TX('apple', 1.0, smix=fm, sn=True)
     M['trunk'] = C('#6a4a2c', 1.0); M['trunk_l'] = C('#8a6a44', 1.0)
@@ -170,17 +170,20 @@ def make_obj(mb, name, loc=(0, 0, 0), yaw=0.0, hull=0.0, smooth_=True, shadow=Tr
     return ob
 
 # ----------------------------------------------------------------------------- the rubber M4 Sherman
-def tank_mesh(M, inflate=1.0, sag=0.0, seed=1, lod=1.0, valve=True, wheels=True, valve_x=0.9, valve_side=1):
+def tank_mesh(M, inflate=1.0, sag=0.0, seed=1, lod=1.0, valve=True, wheels=True, valve_x=0.9, valve_side=1, elev=0.0, mb=None, star_f=None):
     """Local frame: +x = barrel, y left, z up, tracks on the ground. Returns an MB (materials from M). inflate 0 = flat sheet; sag 0..1 = limp barrel."""
-    f = max(0.0, min(1.0, inflate)); de = 1.0 - f; mb = MB(); n = max(4, int(7 * lod)); n2 = max(5, int(9 * lod))
+    f = max(0.0, min(1.0, inflate)); de = 1.0 - f; mb = mb if mb is not None else MB(); n = max(4, int(7 * lod)); n2 = max(5, int(9 * lod))
+    # set r1: FIXED TOPOLOGY - every part is always built (parts that only exist when inflated shrink to specks), so meshes built at different
+    # inflate / sag / elev have the same vertex order and become shape keys (make_tank).  elev = barrel elevation (deg, 'barrels up').
+    kw_ = GH.smooth(0.15, 0.5, f) * 0.97 + 0.03; ks_ = GH.smooth(0.35, 0.6, f) * 0.95 + 0.05
     zf = 0.12 + 0.88 * f ** 0.75; wf = 1.0 + 0.10 * de; pf = f; cave = 0.55 * de
     def Z(z): return z * zf
     def W(y): return y * wf
     def X(x): return x * wf
     rb, rd, rl = M['rubber'], M['rubber_d'], M['rubber_l']
-    tx_, spec_, rim_ = STATE['star_args']; fk = '%.2f' % f; pre_ = STATE['pre']
-    star_h = GH.mat_g('%sstar_h_%s' % (pre_, fk), art=GH.art_star(tx_['rubber'], tx_['star'], (X(1.7), Z(2.3)), 0.95 * (0.5 + 0.5 * f)), gain=1.5, shade_mul=STATE['smr'], smooth_n=True, spec=spec_, rim=rim_)
-    star_t = GH.mat_g('%sstar_t_%s' % (pre_, fk), art=GH.art_star(tx_['rubber'], tx_['star'], (X(-0.4), Z(2.78) + 0.55 * (1.3 * zf + 0.05)), 1.35 * (0.55 + 0.45 * f)), gain=1.5, shade_mul=STATE['smr'], smooth_n=True, spec=spec_, rim=rim_)
+    tx_, spec_, rim_ = STATE['star_args']; sf = f if star_f is None else star_f; fk = '%.2f' % sf; pre_ = STATE['pre']
+    star_h = GH.mat_g('%sstar_h_%s' % (pre_, fk), art=GH.art_star(tx_['rubber'], tx_['star'], (X(1.7), Z(2.3)) if star_f is None else (1.7, 2.3), 0.95 * (0.5 + 0.5 * sf)), gain=1.5, shade_mul=STATE['smr'], smooth_n=True, spec=spec_, rim=rim_)
+    star_t = GH.mat_g('%sstar_t_%s' % (pre_, fk), art=GH.art_star(tx_['rubber'], tx_['star'], (X(-0.4), Z(2.78) + 0.55 * (1.3 * zf + 0.05)) if star_f is None else (-0.4, 2.78 + 0.55 * 1.35), 1.35 * (0.55 + 0.45 * sf)), gain=1.5, shade_mul=STATE['smr'], smooth_n=True, spec=spec_, rim=rim_)
     pu = 0.30 * pf + 0.02; wr = 0.5
     # tracks (two), then road wheels on their outer sides
     for sy in (-1, 1):
@@ -188,12 +191,12 @@ def tank_mesh(M, inflate=1.0, sag=0.0, seed=1, lod=1.0, valve=True, wheels=True,
         c = box8(0, 0, 0, 0, 0, 0)
         pillow(mb, [(X(-4.6), W(y0), 0), (X(4.5), W(y0), 0), (X(4.5), W(y1), 0), (X(-4.6), W(y1), 0), (X(-4.1), W(y0), Z(1.95)), (X(4.0), W(y0), Z(1.95)), (X(4.0), W(y1), Z(1.95)), (X(-4.1), W(y1), Z(1.95))],
                pu, rd, n=n2, deflate=de, cave=0.3 * cave, seed=seed + (3 if sy > 0 else 5), uvk=0.35, noise=wr * pu, faces=('top', 'front', 'back', 'left', 'right'))
-        if wheels and f > 0.25:
+        if wheels:
             yw = W(y1 if sy > 0 else y0) + sy * 0.05
             for k in range(6):
-                x = X(-3.35 + 1.34 * k); rr = 0.62 * (0.55 + 0.45 * f)
-                puffball(mb, (x, yw, Z(1.02)), (rr, 0.2 * f + 0.06, rr * zf ** 0.5), rl, e=(0.75, 0.9), seg=max(8, int(14 * lod)), rings=max(4, int(6 * lod)))
-            for xs_ in (-4.0, 3.8): puffball(mb, (X(xs_), yw, Z(1.2)), (0.62 * f + 0.1, 0.2 * f + 0.06, 0.62 * f * zf ** 0.5 + 0.1), rl, e=(0.75, 0.9), seg=max(8, int(12 * lod)), rings=5)
+                x = X(-3.35 + 1.34 * k); rr = 0.62 * (0.55 + 0.45 * f) * kw_
+                puffball(mb, (x, yw, Z(1.02)), (rr, (0.2 * f + 0.06) * kw_, rr * zf ** 0.5), rl, e=(0.75, 0.9), seg=max(8, int(14 * lod)), rings=max(4, int(6 * lod)))
+            for xs_ in (-4.0, 3.8): puffball(mb, (X(xs_), yw, Z(1.2)), ((0.62 * f + 0.1) * kw_, (0.2 * f + 0.06) * kw_, (0.62 * f * zf ** 0.5 + 0.1) * kw_), rl, e=(0.75, 0.9), seg=max(8, int(12 * lod)), rings=5)
     # hull body (sloped glacis in front, rear slightly raised)
     pillow(mb, box8(0, 0, 0, 0, 0, 0, ) if False else [(X(-4.4), W(-1.55), Z(0.7)), (X(4.3), W(-1.55), Z(0.7)), (X(4.3), W(1.55), Z(0.7)), (X(-4.4), W(1.55), Z(0.7)),
                       (X(-4.2), W(-1.55), Z(2.8)), (X(3.0), W(-1.55), Z(2.8)), (X(3.0), W(1.55), Z(2.8)), (X(-4.2), W(1.55), Z(2.8))],
@@ -208,23 +211,25 @@ def tank_mesh(M, inflate=1.0, sag=0.0, seed=1, lod=1.0, valve=True, wheels=True,
     # hatches, cupola, MG
     for (hx, hy, hz, hr) in ((-0.3, -0.85, 1.28, 0.46), (-1.15, 0.75, 1.3, 0.5)):
         puffball(mb, (X(hx), W(hy), tz + Z(hz)), (hr * (0.4 + 0.6 * f), hr * (0.4 + 0.6 * f), 0.26 * zf + 0.04), rl, e=(0.7, 0.85), seg=max(10, int(14 * lod)), rings=4, lat=(0, math.pi / 2))
-    if f > 0.3:
-        sausage(mb, (X(-1.15), W(0.75), tz + Z(1.5)), (X(-0.35), W(0.75), tz + Z(1.72)), 0.1, M['rubber_black'], seg=6)
-        puffball(mb, (X(3.55), W(-0.75), Z(2.1)), (0.34, 0.34, 0.3 * zf + 0.05), rl, e=(0.8, 0.8), seg=10, rings=4)
+    if True:
+        sausage(mb, (X(-1.15), W(0.75), tz + Z(1.5)), (X(-0.35), W(0.75), tz + Z(1.5) + 0.22 * kw_), 0.1 * kw_, M['rubber_black'], seg=6)
+        puffball(mb, (X(3.55), W(-0.75), Z(2.1)), (0.34 * kw_, 0.34 * kw_, (0.3 * zf + 0.05) * kw_), rl, e=(0.8, 0.8), seg=10, rings=4)
     # barrel: sausage sections, droops with sag (and with deflation); muzzle brake ring
     sg = max(sag, min(1.0, de * 1.4)); L_ = 4.9; r = 0.30 * (0.55 + 0.45 * f); p0 = V((X(2.2), 0, tz + Z(0.32))); drop = min(sg * 3.3, max(0.3, p0.z - 1.0))
-    sausage(mb, p0, p0 + V((L_, 0, 0)), r, rb, n=6, seg=max(6, int(9 * lod)), sag=drop)
+    ea = math.radians(elev) * (1.0 - min(1.0, sg)); bd_ = V((math.cos(ea), 0, math.sin(ea)))
+    sausage(mb, p0, p0 + bd_ * L_, r, rb, n=6, seg=max(6, int(9 * lod)), sag=drop)
     vs = 1 if valve_side >= 0 else -1
-    mz = p0 + V((L_, 0, -drop)); mb.info = dict(tip=tuple(mz), valve=(X(valve_x), vs * (W(1.62) + 0.6), Z(1.55)), top=tz + Z(1.3)); puffball(mb, mz, (0.34 * (0.5 + 0.5 * f) + 0.06, r * 1.35, r * 1.35), rl, e=(0.8, 0.8), seg=10, rings=5)
+    mz = p0 + bd_ * L_ - V((0, 0, drop)); mb.info = dict(tip=tuple(mz), valve=(X(valve_x), vs * (W(1.62) + 0.6), Z(1.55)), top=tz + Z(1.3)); puffball(mb, mz, (0.34 * (0.5 + 0.5 * f) + 0.06, r * 1.35, r * 1.35), rl, e=(0.8, 0.8), seg=10, rings=5)
     # inflation valve (small brass nozzle + white cap) at the rear left, with seam rods along the hull edges
     if valve:
         vb = V((X(valve_x), vs * W(1.62), Z(1.55))); rod(mb, vb, vb + V((0, vs * 0.42, 0)), 0.17, M['brass'], seg=8); rod(mb, vb + V((0, vs * 0.42, 0)), vb + V((0, vs * 0.58, 0)), 0.24, M['white_p'], seg=8)
         puffball(mb, vb + V((0, vs * 0.12, 0)), (0.3, 0.3, 0.3), rl, e=(1, 1), seg=8, rings=4)
-    if f > 0.45:
+    if True:
+        sr_ = 0.07 * ks_
         for sy in (-1, 1):
-            seam(mb, V((X(-4.4), W(1.55 * sy), Z(2.8))), V((X(3.0), W(1.55 * sy), Z(2.8))), M); seam(mb, V((X(-4.4), W(1.55 * sy), Z(0.72))), V((X(4.3), W(1.55 * sy), Z(0.72))), M)
-            seam(mb, V((X(3.0), W(1.55 * sy), Z(2.8))), V((X(4.3), W(1.55 * sy), Z(0.72))), M)
-        seam(mb, V((X(3.0), W(-1.55), Z(2.8))), V((X(3.0), W(1.55), Z(2.8))), M)
+            seam(mb, V((X(-4.4), W(1.55 * sy), Z(2.8))), V((X(3.0), W(1.55 * sy), Z(2.8))), M, sr_); seam(mb, V((X(-4.4), W(1.55 * sy), Z(0.72))), V((X(4.3), W(1.55 * sy), Z(0.72))), M, sr_)
+            seam(mb, V((X(3.0), W(1.55 * sy), Z(2.8))), V((X(4.3), W(1.55 * sy), Z(0.72))), M, sr_)
+        seam(mb, V((X(3.0), W(-1.55), Z(2.8))), V((X(3.0), W(1.55), Z(2.8))), M, sr_)
     if not hasattr(mb, 'info'): mb.info = {}
     return mb
 
@@ -506,3 +511,105 @@ def toolbox(Bk, M, pos, yaw, s=1.0):
     rod(b, F.p(-0.35 * s, -0.12 * s, 0.12 * s), F.p(0.25 * s, -0.1 * s, 0.14 * s), 0.03 * s, M['trunk_l'], seg=5); obox(b, F.p(0.3 * s, -0.1 * s, 0.14 * s), F.X, F.Y, F.Z, 0.07 * s, 0.12 * s, 0.06 * s, M['metal'])
     rod(b, F.p(-0.3 * s, 0.12 * s, 0.1 * s), F.p(0.3 * s, 0.1 * s, 0.1 * s), 0.025 * s, M['metal'], seg=5)
     c = F.p(0.0, -hy - 0.45 * s, 0.16 * s); rod(b, c - F.Y * (0.0) - F.X * 0.22 * s, c + F.X * 0.22 * s, 0.16 * s, M['rubber_d'], seg=12)
+
+# ============================================================================= set r1: animatable tanks (shape keys), the production prop kit
+class MBRec(MB):
+    """MB that records which vertex index every _vert call returned (the call order of a builder)."""
+    def __init__(s): MB.__init__(s); s.calls = []
+    def _vert(s, p):
+        i = MB._vert(s, p); s.calls.append(i); return i
+
+class MBFollow(MB):
+    """Replays a builder against a recorded MBRec: the k-th _vert call maps to the recorded index, its position is stored -> same topology."""
+    def __init__(s, rec):
+        MB.__init__(s); s.rec = rec; s.k = 0; s.pos = [None] * len(rec.v)
+    def _vert(s, p):
+        i = s.rec.calls[s.k]; s.k += 1
+        if s.pos[i] is None: s.pos[i] = (p[0], p[1], p[2])
+        return i
+    def face(s, pts, mat, uvs=None):
+        for p in pts: s._vert(p)
+    def oface(s, pts, mat, uvs, normal):
+        # same flip decision as the recording is NOT guaranteed, so follow the recorded call order: positions only, no flip
+        for p in pts: s._vert(Vector(p))
+
+INFLATE_KEYS = (0.0, 0.25, 0.5, 0.75)
+_TANK_CACHE = {}
+
+def tank_shape_mesh(M, lod=1.0, seed=1, valve_x=0.9, valve_side=1, elev_key=35.0):
+    """One tank mesh (basis = fully inflated, sag 0, barrel level) with shape keys i0 / i25 / i50 / i75 (the shape at that inflate),
+    sag (barrel limp at full inflate) and elev (barrel raised `elev_key` deg).  Cached per (lod, seed, valve)."""
+    key = (round(lod, 2), seed, valve_x, valve_side, STATE['pre'])
+    if key in _TANK_CACHE and _TANK_CACHE[key].name in bpy.data.meshes: return _TANK_CACHE[key]
+    kw = dict(seed=seed, lod=lod, valve_x=valve_x, valve_side=valve_side, star_f=1.0)
+    rec = MBRec(); tank_mesh(M, 1.0, 0.0, mb=rec, **kw); info = rec.info
+    tmp = _obj(rec, 'tankmesh_tmp', STATE['SET'], hull=0.0); me = tmp.data; bpy.data.objects.remove(tmp, do_unlink=True)
+    me.name = 'tankmesh_%s_%d_%g' % (STATE['pre'], seed, lod)
+    for p in me.polygons: p.use_smooth = True
+    ob = bpy.data.objects.new('tank_keys_tmp', me); STATE['SET'].objects.link(ob)
+    ob.shape_key_add(name='Basis', from_mix=False)
+    def add(name, **a):
+        fo = MBFollow(rec); tank_mesh(M, mb=fo, **dict(kw, **a)); assert fo.k == len(rec.calls), (name, fo.k, len(rec.calls))
+        sk = ob.shape_key_add(name=name, from_mix=False)
+        for i, p in enumerate(fo.pos):
+            if p is not None: sk.data[i].co = p
+    for v in INFLATE_KEYS: add('i%d' % int(v * 100), inflate=v, sag=0.0)
+    add('sag', inflate=1.0, sag=1.0); add('elev', inflate=1.0, sag=0.0, elev=elev_key)
+    bpy.data.objects.remove(ob, do_unlink=True); me['info'] = str(info); me['elev_key'] = elev_key
+    _TANK_CACHE[key] = me; return me
+
+def tank_weights(inflate):
+    """Shape key weights for an inflate value (piecewise linear between the i-keys and the basis at 1)."""
+    lv = list(INFLATE_KEYS) + [1.0]; v = max(0.0, min(1.0, inflate)); w = {('i%d' % int(k * 100)): 0.0 for k in INFLATE_KEYS}
+    for a, b in zip(lv, lv[1:]):
+        if a <= v <= b:
+            t = (v - a) / (b - a)
+            if a < 1.0: w['i%d' % int(a * 100)] = 1.0 - t
+            if b < 1.0: w['i%d' % int(b * 100)] = t
+            break
+    return w
+
+def make_tank(name, loc, yaw, M, inflate=1.0, sag=0.0, elev=0.0, lod=1.0, seed=1, hull=0.0, scale=1.0, own=True, **kw):
+    """A rubber tank object with live inflate / sag / elev (shape keys).  own=True gives it its own mesh copy (needed when its shape is
+    keyed per tank; GH.set_inflate makes the copy on demand)."""
+    me = tank_shape_mesh(M, lod, seed, **kw)
+    if own: me = me.copy(); me.name = name + '_mesh'
+    ob = bpy.data.objects.new(name, me); STATE['SET'].objects.link(ob); ob.location = loc; ob.rotation_euler = (0, 0, math.radians(yaw)); ob.scale = (scale,) * 3
+    if hull > 0:
+        mats = me.materials; ink = [i for i, m in enumerate(mats) if m.name.startswith('ink')]
+        if not ink: mats.append(T.mat_ink()); ink = [len(mats) - 1]
+        mod = ob.modifiers.new('ink_hull', 'SOLIDIFY'); mod.thickness = hull / max(scale, 1e-3); mod.offset = 1.0; mod.use_flip_normals = True; mod.use_rim = False; mod.material_offset = ink[0]; mod.use_even_offset = True
+    no_bounce(ob); ob['tank'] = True; ob['inflate'] = 1.0; ob['sag'] = 0.0; ob['elev'] = 0.0; ob['info'] = me.get('info', '')
+    STATE.setdefault('objects', {})[name] = ob; STATE.setdefault('tank_objs', {})[name] = ob
+    set_tank_shape(ob, inflate, sag, elev)
+    return ob
+
+def set_tank_shape(ob, inflate=None, sag=None, elev=None, frame=None):
+    """Drive the shape keys of one tank object; with frame: key them (LINEAR)."""
+    kb = ob.data.shape_keys.key_blocks
+    if inflate is not None:
+        ob['inflate'] = float(inflate)
+        for k, w in tank_weights(inflate).items(): kb[k].value = w
+    if sag is not None: ob['sag'] = float(sag); kb['sag'].value = max(0.0, min(1.0, sag)) * max(0.0, min(1.0, ob['inflate']))
+    if elev is not None: ob['elev'] = float(elev); kb['elev'].value = max(0.0, min(1.5, elev / ob.data.get('elev_key', 35.0)))
+    if frame is not None:
+        for k in kb[1:]:
+            k.keyframe_insert('value', frame=frame)
+        _lin(ob.data.shape_keys)
+
+def _lin(idb):
+    ad = idb.animation_data
+    if ad and ad.action:
+        for fc in _fcs(ad.action):
+            for kp in fc.keyframe_points: kp.interpolation = 'LINEAR'
+
+def _fcs(action):
+    """F-curves of an action (Blender 4.4+ layered actions or legacy)."""
+    try:
+        out = []
+        for l in action.layers:
+            for st in l.strips:
+                for cb in st.channelbags: out += list(cb.fcurves)
+        if out: return out
+    except Exception: pass
+    return list(getattr(action, 'fcurves', []))
