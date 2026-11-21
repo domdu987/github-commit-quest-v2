@@ -35,3 +35,4 @@ No extra review layers (§G-§L multi-reviewer gates dropped). fal still exhaust
 - [x] Music m1 picked (music/PICK.md), mix -31 dB
 - [ ] Takes -> conform23 (retime to shot_times_REAL) -> captions, SFX, mix -> automatic checks -> release23 -> queue row WAIT
 - 05:45 sweep: delivered S01 S02 S03 (t1) S09 S10 S12 (t2). Director redo requests: S02 (empty grass, backlit tank, tiny soldiers) -> team1; S12 (lift reveal too small/hidden by hedge) -> team2.
+- 06:50 sweep 2: OK S01 S03 S09 S10 S11; redo requested S04+S05 (crew invisible) -> team1, S18 (boats specks, smoke columns) -> team3; S02, S12 redo pending.
