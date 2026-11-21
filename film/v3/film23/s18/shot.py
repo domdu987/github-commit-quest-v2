@@ -12,13 +12,13 @@ SHOT = 'S18'; G0 = 1905; G1 = 1980; HANDLE = 9
 G_OF = lambda i: G0 + i
 
 # ---- runtime camera (QA_ART_SET note: water <= 40 % of the frame): tilt up ~11 deg, horizon at ~0.62 H; boats pushed out to 13-22 D so heads stay above y 880
-SH.SHOTS[SHOT]['cam'] = dict(loc=(-33.0, 361.5, 1.35), look_at=(20.0, 386.0, 14.3), lens=22)
-SH.SHOTS[SHOT]['move'] = dict(end=dict(loc=(-27.0, 360.0, 1.0), look_at=(16.0, 385.0, 10.9), lens=27.0))      # a real pan east along the boats + a lens push (rhythm: the set's own end pose moved only 0.7 D)
+SH.SHOTS[SHOT]['cam'] = dict(loc=(-33.0, 361.5, 0.4), look_at=(20.0, 386.0, 11.6), lens=22)
+SH.SHOTS[SHOT]['move'] = dict(end=dict(loc=(-29.5, 361.5, 0.4), look_at=(23.5, 386.0, 12.2), lens=24.0))   # slow slide along with the boat (director redo)
 
 C.TINT.update(tint='#c0caf2', ink='#1e1a3a')
 MEM = ['gi_radio', 'gi_pump', 'gi_smile', 'gi_driver', 'gi_designer', 'gi_painter', 'gi_sound']
-BOAT_V = 1.6                                    # D/s drift east
-BOATS = {'boat3': (-21.5, 367.0), 'boat2': (-14.0, 373.5)}   # local RHINE (x, y) at i = 0
+BOAT_V = 1.0                                    # D/s drift east
+BOATS = {'boat3': (-24.2, 364.6), 'boat2': (-14.0, 372.5)}   # local RHINE (x, y) at i = 0
 
 def boat_xy(name, i):
     x0, y0 = BOATS[name]; t = i / 30.0
@@ -31,7 +31,6 @@ def make_take():
     Tk = Take(SHOT, handle=HANDLE)
     ox, oy, oz = GH.loc_origin()
     # near-bank + far-bank poplars (silhouette height for the tall frame; the sky is no longer empty)
-    C.add_poplars([((ox - 44.0, oy + 372.0), 38.0, 7001), ((ox - 6.0, oy + 392.0), 30.0, 7002), ((ox + 30.0, oy + 398.0), 34.0, 7003)])
     # warm lanterns on the bridge rail: their streaks lie on the water (pre-dawn, dimmed but warm against the blue)
     C.add_lanterns([((ox - 26.0, oy + 377.7, 2.7), 700.0, 0.9, 0.8), ((ox - 12.0, oy + 377.7, 2.7), 700.0, 0.9, 0.8), ((ox + 2.0, oy + 377.7, 2.7), 700.0, 0.9, 0.8), ((ox + 16.0, oy + 377.7, 2.7), 700.0, 0.9, 0.8)])
     return Tk
@@ -45,7 +44,7 @@ def specs_of(Tk):
     Tk.boats = boats
     sd = os.path.join(TMP, 'sprites')
     # paddlers: (boat, member, local x)
-    plan = [('boat3', 'gi_pump', -1.5), ('boat3', 'gi_radio', 0.0),
+    plan = [('boat3', 'gi_pump', -2.0), ('boat3', 'gi_radio', -0.7), ('boat3', 'gi_designer', 0.6),
             ('boat2', 'gi_smile', -1.5), ('boat2', 'gi_driver', 0.0), ('boat2', 'gi_designer', 1.3)]
     for k, (bn, cast, lx) in enumerate(plan):
         a = C.make_actor('pad%d' % k, cast, sd, canvas=canvas_for(cast, lambda ph, c=cast: cast23.paddle_frame(c, ph, 1)))
@@ -53,7 +52,7 @@ def specs_of(Tk):
         pos = (lambda i, f, par=par, lx=lx: C.world_of(par, (lx, 0.0, -0.76)))
         pose = (lambda i, g, c=cast, k=k: dict(cast23.paddle_frame(c, ((g - 0) / 24.0 + 0.19 * k) % 1.0, 1), blink=blink(g, [20 + 17 * k, 60 + 11 * k])))
         a.card['gc_gap'] = 1.8        # cast23: the paddle blade dips below the knees ON PURPOSE; its tip meets the river bed, the knees stand on the boat-floor mark
-        S.append(C.Spec(a, pos, pose, 96 if bn == 'boat3' else 64))
+        S.append(C.Spec(a, pos, pose, 192 if bn == 'boat3' else 96))
     # tiptoe troops on the bridge deck (z 0.52), world = local + origin (0, 9000)
     ox, oy, oz = GH.loc_origin()
     for k, (x, y, cast) in enumerate([(-20.0, 381.0, 'gi_designer'), (-11.0, 379.4, 'gi_painter'), (-2.0, 381.2, 'gi_sound'), (8.0, 379.6, 'gi_driver')]):
@@ -78,7 +77,7 @@ def specs_of(Tk):
         S.append(C.Spec(a, pos, pose, 32))
     # the dog on boat3 (no cast23 card: own drawing)
     paths, size = C.dog_pngs(os.path.join(TMP, 'dog'))
-    c0 = SH.pose(SHOT, 0.0)['loc']; dp = Vector(boat_xy('boat3', 0)) + Vector((ox, oy)) + Vector((1.95, 0))
+    c0 = SH.pose(SHOT, 0.0)['loc']; dp = Vector(boat_xy('boat3', 0)) + Vector((ox, oy)) + Vector((2.0, 0))
     yaw = math.degrees(math.atan2(c0[0] - dp.x, -(c0[1] - dp.y)))
     Tk.dog = C.DogCard('dog', paths, size, parent=boats['boat3'], local=(1.95, 0.0, -0.76), yaw_world=yaw, sc=1.0)
     Tk.dog.root['gc_role'] = 'skip'

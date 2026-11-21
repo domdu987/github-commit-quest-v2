@@ -24,8 +24,8 @@
  ],
  "fps": 30,
  "threads": 2,
- "s_per_frame_wall_mean": 8.67,
- "s_per_frame_cpu_mean": 16.21,
+ "s_per_frame_wall_mean": 8.49,
+ "s_per_frame_cpu_mean": 16.6,
  "dof": "none",
  "timing": "ESTIMATE (timing_EST.json): rendered planned length x 1.25 (the camera move and the action continue through the tail)",
  "mkv_parts": null

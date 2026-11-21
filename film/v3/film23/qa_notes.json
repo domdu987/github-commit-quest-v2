@@ -19,20 +19,19 @@
  "s18": {
   "delivered": "`take.mkv` (libx264rgb crf 6, 30 fps, 720x1280, {n_frames} frames g {first_g}..) is under 45 MB (single file). Also `shot.py` (stills / final / ground), shared `../c23.py` `../deliver.py` `../qa_md.py`, `meta.json`, `cues.json`, `contact.jpg`, `phone_sheet.jpg`, `QA_AUTO.md`, `QA_JITTER.txt`, `GROUND.md`, `numbers.json`. Frames / raw / work stay out of git.",
   "look": [
-   "QA_ART_SET notes applied: a SECOND boat (boat2: three paddlers) now rides behind boat3 (two paddlers + the dog); both are re-placed at runtime on the water 13 and 22 D from the lens and drift east at 1.6 D/s with a small bob. Water share of the frame 32-37 % (far water line; limit 40 %): the camera tilts up about 11 deg.",
-   "Camera (runtime override of the set's row): start (-33, 361.5, 1.35) look (20, 386, 14.3) lens 22 -> end (-27, 360, 1.0) look (16, 385, 10.9) lens 27 (a slow pan along the boats, a 4.5 %/s lens push, and the camera drifts east); the set's own end pose moved only 0.7 D and measured a frame-diff median of 0.45. Camera height 1.0-1.35 D above the water line is lower than the QA's 2-3 D because heads must stay above y 880 at this tilt.",
-   "Cast: 5 kneeling paddlers (paddle_frame, 24-frame stroke, phases staggered, blinks), 4 tiptoe soldiers on the pontoon deck (tiptoe_frame, finger to the lips, drifting east 0.7 D/s), 5 far-bank soldiers (3 carry crates, 1 waves, 1 stands). The dog has no cast23 card: it is my own flat-fill + plum-ink card drawn with PIL (`c23.dog_pngs`), parented to boat3, two tail frames. All soldiers get the cast `tint` / `ink` pre-dawn grade (tint #c0caf2, ink #1e1a3a).",
-   "Set dressing added at runtime: 3 tall poplars on both banks (to fill the tall sky) and 4 bridge-rail lanterns (700 W) whose warm streaks lie on the water. Pre-dawn blue with the warm orange band low in the east-north-east is the set's own."
+   "Director redo (S18): the camera is low and oblique (start z 0.4 = 1.0 D over the water, look up about 11 deg, horizon at 0.62 H, water 36-38 % of the frame), sliding east WITH the boats (boat 1.0 D/s, camera ~1.1 D/s) with a lens push 22 -> 24. Boat3 (3 paddling GIs: gi_pump, gi_radio, gi_designer, + the dog) is ~6.5 D from the lens, heads ~120-130 px wide at y 690-750; boat2 (3 paddlers) ~15 D further back; the pontoon bridge runs diagonally behind with 4 tiptoe soldiers; far-bank troops; warm orange dawn band; bridge-rail lanterns reflect in the water.",
+   "The tall grey columns of the first delivery were three poplars I had added (38 D); they are removed. The camera is 1.0 D over the water, not 2-3 D: at 2-3 D the heads of a boat 6 D away fall below the caption band at this tilt.",
+   "The dog has no cast23 card: own drawing (c23.dog_pngs). Cast `tint` / `ink` pre-dawn grade."
   ],
   "rules": [
    "No mouth moves. No weapons (paddles only). No camera shake (eased keys). No depth of field.",
    "Nothing floats: paddlers kneel on the boat-floor mark of their boat (matrix_world of the moving boat every frame); the paddle blade dips below the knees on purpose (cast23), so the paddlers' card gc_gap tolerance is 1.8 D (the knee/boat contact itself is the mark). Tiptoers stand on the deck top (0.50), far-bank troops on the terrain."
   ],
   "dev": [
-   "Camera replaced at runtime (see above); boats 0, 1, 4 are out of frame at every frame so they have no cards; the 5-boat marks of the set row were reduced to boat2 + boat3.",
-   "A dog card was drawn (no cast23 dog). Frame-diff stays low (night water, slow pan): see the numbers."
+   "Camera / boats replaced at runtime as above (camera height 1.0 D instead of 2-3 D, reason above); boats 0, 1, 4 are out of frame and have no cards.",
+   "Frame-diff is low (night water, slow slide)."
   ],
-  "head_r": "28",
+  "head_r": "65",
   "hue_note": " (night exterior: the director accepted shade hue 227-234 for RHINE in QA_ART_SET.md)",
   "diff_note": " -- BELOW target: dark, low-contrast night frames with the set's own slow eased camera; the camera never shakes and no frame is static (qa_auto: no frozen runs)"
  },
