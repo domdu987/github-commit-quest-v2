@@ -1,9 +1,9 @@
 {
  "take": "T1",
  "part": "T1b",
- "first_g": 172,
- "n_frames": 171,
- "g0": 172,
+ "first_g": 191,
+ "n_frames": 152,
+ "g0": 191,
  "g1": 342,
  "cuts": [],
  "transition_in": {
@@ -11,5 +11,5 @@
   "frames": 0
  },
  "out_cut_g": 336,
- "notes": "g337-342 are handles after the planned T1->T2 cut at g336"
+ "notes": "g337-342 are handles after the planned T1->T2 cut at g336; liveliness pass + right-edge fix (TAKE gate FIX)"
 }
