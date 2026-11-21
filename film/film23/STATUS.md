@@ -38,3 +38,4 @@ No extra review layers (§G-§L multi-reviewer gates dropped). fal still exhaust
 - 06:50 sweep 2: OK S01 S03 S09 S10 S11; redo requested S04+S05 (crew invisible) -> team1, S18 (boats specks, smoke columns) -> team3; S02, S12 redo pending.
 - 07:55 review 1: team3 S01 S14-S18 accepted -> session archived. team2 asked: S12 redo (lift centred, reach end comp by g1), S19 Major head out of band, S10 crate text. team1 pending S05 S07 S08.
 - conform23: speed map (up to x1.4) so each take reaches its end composition (moves end at g1_render), instead of trimming the tail.
+- 07:55 team2 accepted (S12 redo good; S10/S19 rechecked: my flag was wrong, team correct) -> session archived. 16/19 takes in hand. Team1: S05 redo + S07 rendering, S08 next.
