@@ -14,15 +14,21 @@ F22 = P + "/film22"
 
 def sh(*a, **k): return subprocess.run(a, check=True, **k)
 
+def _parts(commit, shot):
+    """take.mkv, or its split parts (take.mkv.aa/.ab or take.mkv.part00/01) in order"""
+    names = subprocess.run(["git", "-C", REPO, "ls-tree", "--name-only", commit, f"film/v3/film22/{shot}/"], capture_output=True, text=True).stdout.split()
+    whole = [n for n in names if n.endswith("/take.mkv")]
+    return whole or sorted(n for n in names if re.search(r"/take\.mkv\.(part\d+|a[a-z])$", n))
+
 def _find_commit(shot, h):
-    """the commit (on any render22/teamK branch) whose tree holds blob h at film/v3/film22/<shot>/take.mkv"""
+    """the commit (on any render22/teamK branch) whose first take file (take.mkv or its first part) is blob h"""
     for k in range(1, 6):
         br = f"origin/render22/team{k}"
         subprocess.run(["git", "-C", REPO, "fetch", "-q", "origin", f"render22/team{k}:refs/remotes/{br}"], check=False)
-        revs = subprocess.run(["git", "-C", REPO, "rev-list", br, "--", f"film/v3/film22/{shot}/take.mkv"], capture_output=True, text=True).stdout.split()
+        revs = subprocess.run(["git", "-C", REPO, "rev-list", br, "--", f"film/v3/film22/{shot}/"], capture_output=True, text=True).stdout.split()
         for c in revs:
-            t = subprocess.run(["git", "-C", REPO, "rev-parse", f"{c}:film/v3/film22/{shot}/take.mkv"], capture_output=True, text=True).stdout.strip()
-            if t == h: return c
+            ps = _parts(c, shot)
+            if ps and subprocess.run(["git", "-C", REPO, "rev-parse", f"{c}:{ps[0]}"], capture_output=True, text=True).stdout.strip() == h: return c
     raise SystemExit(f"blob {h} for {shot} not found on any render22 branch")
 
 def fetch():
@@ -31,9 +37,9 @@ def fetch():
         d = f"{TAKES}/{shot}"
         if os.path.exists(d + "/.hash") and open(d + "/.hash").read().strip() == h: print("have", shot); continue
         c = _find_commit(shot, h); os.makedirs(d, exist_ok=True)
-        for f in ("take.mkv", "meta.json"):
-            data = subprocess.run(["git", "-C", REPO, "show", f"{c}:film/v3/film22/{shot}/{f}"], capture_output=True, check=True).stdout
-            open(f"{d}/{f}", "wb").write(data)
+        with open(f"{d}/take.mkv", "wb") as fo:
+            for part in _parts(c, shot): fo.write(subprocess.run(["git", "-C", REPO, "show", f"{c}:{part}"], capture_output=True, check=True).stdout)
+        open(f"{d}/meta.json", "wb").write(subprocess.run(["git", "-C", REPO, "show", f"{c}:film/v3/film22/{shot}/meta.json"], capture_output=True, check=True).stdout)
         m = json.load(open(f"{d}/meta.json")); ti = m.get("transition_in") or {}
         if isinstance(ti, str): ti = {"type": ti}
         t = ti.get("type", "cut")
@@ -72,6 +78,19 @@ def frames():
             c = sorted(glob.glob(f"{TAKES}/s*/frames/g_{g:04d}.png"))
             if c: os.symlink(c[0], dst); print("filled", g, "from", c[0].split("/")[-3])
     for w in WHIPS: whip(w["g"], w.get("dir", 1))
+    # bridges: replace a bad stretch [a+1, b-1] by a smooth dissolve from frame a to frame b (s03: red-flooded shaft)
+    import numpy as np
+    from PIL import Image
+    for a, b in [(195, 223)]:
+        A = np.asarray(Image.open(f"{OUTF}_frames/f_{a:04d}.png").convert("RGB"), np.float32)
+        B = np.asarray(Image.open(f"{OUTF}_frames/f_{b:04d}.png").convert("RGB"), np.float32)
+        for g in range(a + 1, b):
+            t = (g - a) / (b - a); t = t * t * (3 - 2 * t); dst = f"{OUTF}_frames/f_{g:04d}.png"
+            if os.path.lexists(dst): os.remove(dst)
+            Image.fromarray(np.clip(A * (1 - t) + B * t + 0.5, 0, 255).astype(np.uint8)).save(dst)
+        print("bridged", a, b)
+    # COLOUR_SPEC.md: the conform grade only (spec pre-grade where needed + v1.1 grade), graded in place
+    sh(sys.executable, P + "/grade22.py", OUTF + "_frames", "4")
 
 def grade_filter():
     """QA_TEAM §G colour: per-shot eq grade so every shot reaches saturation >= 0.48 and luma 87-108 (film 2: 0.49 / 94).
@@ -94,11 +113,10 @@ def grade_filter():
     return ",".join(chain)
 
 def music_bed(out):
-    """music m2 (audio QA PICK.md): HPF 90 Hz (bass-heavy take), -1.5 dB 26-28 s, -1.5 dB 43-58 s (reveal lines), 2.5 s fade to 63.0."""
-    src = F22 + "/audio/music_pick.mp3"
-    vol = ("volume='if(between(t,25.5,26),1-0.16*(t-25.5)/0.5,if(between(t,26,28),0.84,if(between(t,28,28.5),0.84+0.16*(t-28)/0.5,"
-           "if(between(t,42.5,43),1-0.16*(t-42.5)/0.5,if(between(t,43,58),0.84,if(between(t,58,58.5),0.84+0.16*(t-58)/0.5,1))))))':eval=frame")
-    sh("ffmpeg", "-y", "-v", "error", "-i", src, "-af", f"highpass=f=90,equalizer=f=2500:t=q:w=1:g=-2,{vol},afade=t=out:st={T-2.5:.2f}:d=2.5", "-t", f"{T:.3f}", "-ar", "48000", out)
+    """music = the client's own Suno track "The Curious Commuter" (87.2 s; film22/audio/music_suno.mp3, from claude/new-session-73ou27 d4927bc).
+    MUSIC=m2 uses the fal backup take instead. Light HPF and -2 dB at 2.5 kHz under the voice, trimmed and faded at the film end."""
+    src = F22 + ("/audio/music_pick.mp3" if os.environ.get("MUSIC") == "m2" else "/audio/music_suno.mp3")
+    sh("ffmpeg", "-y", "-v", "error", "-i", src, "-af", f"highpass=f=70,equalizer=f=2500:t=q:w=1:g=-2,afade=t=out:st={T-2.5:.2f}:d=2.5", "-t", f"{T:.3f}", "-ar", "48000", out)
 
 def final(out):
     caps = json.load(open(F22 + "/script/captions.json"))
@@ -111,7 +129,7 @@ def final(out):
         a = max(0, c["t"] + OFF); b = min((c["end"] if c.get("end") is not None else T - OFF) + OFF, T)
         if a < T: ass.append(f"Dialogue: 0,{ts(a)},{ts(b)},Pop,,0,0,0,,{{\\pos(360,900)}}{c['text']}")
     os.makedirs(os.path.dirname(out), exist_ok=True); open(out + ".ass", "w").write("\n".join(ass))
-    sh("ffmpeg", "-y", "-v", "error", "-framerate", "30", "-i", OUTF + "_frames/f_%04d.png", "-vf", ",".join(filter(None, [grade_filter() if os.environ.get("GRADE", "1") == "1" else "", f"ass={out}.ass:fontsdir={P}/fonts"])),
+    sh("ffmpeg", "-y", "-v", "error", "-framerate", "30", "-i", OUTF + "_frames/f_%04d.png", "-vf", ",".join(filter(None, [grade_filter() if os.environ.get("GRADE", "0") == "1" else "", f"ass={out}.ass:fontsdir={P}/fonts"])),
        "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "17", "-movflags", "+faststart", out + "_silent.mp4")
     mb = SCR + "/conf22/music_bed.wav"; music_bed(mb)
     B = F22 + "/audio/sfx/"; sfx = []
