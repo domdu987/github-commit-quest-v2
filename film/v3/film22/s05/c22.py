@@ -51,6 +51,7 @@ def main(shot, g_first, g_last, actors_fn, quality='final', outdir=None, only=No
     if not todo: print('nothing to do'); return
     scene = B.build(sh['location'], sh.get('light'), shot, quality, todo[0])
     scene.render.threads = 2
+    mark_mounted()
     if pre: pre()
     if samples: scene.cycles.samples = samples
     if scale: scene.render.resolution_percentage = scale
@@ -88,3 +89,50 @@ def fade_card(ob, a):
     mix = [n for n in nt.nodes if n.type == 'MIX_SHADER'][0]; tex = [n for n in nt.nodes if n.type == 'TEX_IMAGE'][0]
     mul = nt.nodes.new('ShaderNodeMath'); mul.operation = 'MULTIPLY'; mul.inputs[1].default_value = float(a)
     nt.links.new(tex.outputs['Alpha'], mul.inputs[0]); nt.links.new(mul.outputs[0], mix.inputs['Fac'])
+
+
+def ground(shot, g_first, g_last, actors_fn, md, pre=None, step=10):
+    """QA_TEAM §K: build the scene once, place the actors of every `step`-th frame and run set3d-independent ground_check22 on it -> md (GROUND.md)."""
+    sys.path.insert(0, os.path.join(PROJ, 'v3', 'tools')); import ground_check22 as GC
+    sh = B.ALL_SHOTS[shot]
+    scene = B.build(sh['location'], sh.get('light'), shot, 'preview', g_first)
+    mark_mounted()
+    if pre: pre()
+    frames = list(range(g_first, g_last + 1, step)) + ([g_last] if (g_last - g_first) % step else [])
+    allf = []
+    for g in frames:
+        clear_actors(); B.set_frame_cam(shot, g)
+        for k, fn in sh.get('animate', {}).items(): fn(g - sh['f0'], sh['f1'] - sh['f0'])
+        track(actors_fn, g)
+        allf += [(g, b, c) for (_a, b, c) in GC.check_frame(scene, scene.frame_current)]
+    ok = not allf
+    L = ['# GROUND.md (QA_TEAM section K ground_check, film22 fallback tool)', 'take %s, frames %d-%d step %d, tolerance 0.02' % (shot, g_first, g_last, step),
+         'RESULT: %s (%d failures)' % ('PASS' if ok else 'FAIL', len(allf)), '', '| frame | object | problem |', '|---|---|---|']
+    seen = {}
+    for a, b, c in allf: seen.setdefault((b, c), []).append(a)
+    L += ['| %s | %s | %s |' % (','.join(map(str, v[:6])), k[0], k[1]) for k, v in seen.items()]
+    open(md, 'w').write('\n'.join(L) + '\n'); print('ground', 'PASS' if ok else 'FAIL', len(allf)); return ok, allf
+
+
+MOUNTED = ('window_frame', 'old_map', 'old_map_img', 'cork', 'cork_img', 'shelf', 'wall_posters', 'pendant', 'coat_hook', 'pin_new', 'window_back', 'window_view')
+def mark_mounted():
+    """wall / cord mounted set items that were SEEN touching their wall or cord in the stills (frames, map, cork, shelf, posters, coat hook, pendant on its cord)"""
+    for n in MOUNTED:
+        o = bpy.data.objects.get(n)
+        if o: o['mounted'] = True
+
+
+def smooth_keys(cams, n, sigma=3.0, pad=24):
+    """one key per frame 0..n (and 6+ handles) from the spline `cams`, gaussian-smoothed (sigma frames) so velocity/acceleration are continuous: no jitter, no kinks (QA §L)."""
+    import numpy as np
+    fr = list(range(-pad - 12, n + pad + 13))
+    raw = []
+    for f in fr:
+        l, la, ln, ro = B.cam_eval(cams, f); raw.append([*l, *la, ln, ro])
+    a = np.array(raw); r = int(sigma * 3); w = np.exp(-0.5 * (np.arange(-r, r + 1) / sigma) ** 2); w /= w.sum()
+    pad_a = np.concatenate([np.repeat(a[:1], r, 0), a, np.repeat(a[-1:], r, 0)])
+    sm = np.stack([np.convolve(pad_a[:, i], w, mode='valid') for i in range(a.shape[1])], 1)
+    out = []
+    for f, v in zip(fr, sm):
+        if -10 <= f <= n + 12: out.append((f, tuple(v[0:3]), tuple(v[3:6]), float(v[6]), float(v[7])))
+    return out

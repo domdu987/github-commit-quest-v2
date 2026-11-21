@@ -20,9 +20,10 @@ CAMS = [  # local frame, loc, look_at, lens, roll
     (10,  (-2.45, -2.45, 4.75), (0.75, 7.9, 1.95), 30),
     (24,  (-1.5, -1.9, 5.6), (1.4, 7.6, 0.8), 30, -1),
     (44,  (0.0, -0.8, 6.7), (2.0, 7.7, 1.2), 29, -2.5),
-    (84,  (1.6, 2.0, 8.3), (2.4, 8.0, 1.5), 26, -6.5),
-    (126, (2.4, 3.6, 9.0), (2.4, 8.0, 1.2), 23.5, -10),
+    (84,  (1.6, 2.0, 8.3), (2.4, 7.8, 2.0), 27, -6.5),
+    (126, (2.4, 3.6, 9.0), (2.4, 7.6, 2.4), 26.0, -10),
 ]
+CAMS = C.smooth_keys(CAMS, 126, sigma=4.0)          # gaussian-smoothed, one key per frame (QA section L)
 sh = C.configure(SHOT, CAMS, state=dict(diagram=dict(red=1.0, blue=0, green=0, yellow=0, bend=45.0, squeeze=0.0, hot=None, ruler=None)))
 
 def green_bend_frac(): return H.green_bend_frac()
@@ -62,7 +63,7 @@ def arm3d(name, W, side=1.0, hand='fist', tool=None, far=6.2, lift=1.3, elbow_ou
 
 def set_square_3d(k):
     if not (56 <= k < 70): return
-    drop = C.ez(C.fl(k, 54, 60)) ; z = 0.09 + 0.7 * (1 - drop)
+    z = 0.015                                                    # lands flat on the paper (clack) at k56
     sq = B.Part('set_square3d', ink=True)
     pts = [H.board_pt(-0.1, -0.1, z), H.board_pt(1.3, -0.1, z), H.board_pt(-0.1, 1.3, z)]
     sq.mb.pid += 1; sq.mb.face(pts, B.STATE['C']('#ffb347', 1.5, 1.4, smix=0.2)); sq.done(tuple(H.board_pt(0.4, 0.4, z)), px=2.5)
@@ -71,7 +72,7 @@ def circuit_on_ledge(k):
     """the circuit diagram sheet lies beside the new map on the board's lower-left (so 'circuit + map side by side' reads from above)"""
     if k < 4: return
     p = B.Part('circuit_beside', ink=True)
-    S_ = B.STATE; z = 0.14
+    S_ = B.STATE; z = 0.012
     pts = [H.board_pt(-2.95, -1.85, z), H.board_pt(-2.95 + 1.5, -1.85, z), H.board_pt(-2.95 + 1.5, -1.85 + 1.25, z), H.board_pt(-2.95, -1.85 + 1.25, z)]
     # drawn flat on the board's frame/paper edge region: use a pinned look at the left margin of the board
     p.mb.pid += 1; p.mb.face([V(q) + V((0, 0, 0)) for q in pts], S_['TX']('circuit0', 1.1, 1.0, glow='circuit0', glow_k=0.35), [(0, 0), (1, 0), (1, 1), (0, 1)]); p.done(tuple(pts[0]), px=2)
@@ -105,7 +106,7 @@ def actors(g):
         if k < 4: C.place_ray('beck_rule_line', 'pen_r', tip, cam, 4.9, pose=dict(board=0, head_roll=-4 + 2 * math.sin(k * 0.4), lean=12 + 2 * math.sin(k * 0.3)))
         elif k < 14: B.cast_card('beck_hold_circuit', (-0.9 + 0.5 * C.ez(C.fl(k, 4, 14)), 4.9, 0.0), face_to=cam, rim='#8fb0ff', pose=dict(head_roll=-3 + 2 * math.sin(k * 0.45)), tilt=8 + 12 * C.ez(C.fl(k, 4, 14)))
         else:
-            u = C.ez(C.fl(k, 14, 30)); x = -0.4 - 2.0 * u; y = 4.9 - 2.6 * u
+            u = C.ez(C.fl(k, 14, 30)); x = -0.4 - 2.6 * u; y = 4.9 - 0.9 * u
             p = cast22.walk('beck', ((k - 14) / 16.0) * 1.3, yaw=-0.5); p['prop_r'] = dict(type='circuit', angle=-6)
             fa = 1.0 - C.ez(C.fl(k, 21, 26))
             ob = B.cast_card(('beck', p), (x, y, 0.0), face_to=cam, rim='#8fb0ff', tilt=20, shadow=fa > 0.5)                       # he leaves: dissolves as the arms come in (never cut by the frame edge)
@@ -120,11 +121,11 @@ def actors(g):
         set_square_3d(k)
         gp = H.hot_tip('green', min(1.0, H.DIAG['green']))
         arm_ = arm3d('arm_r', gp, 1.0, 'fist', ('pen', tuple(gp), None))
-        sqhand = H.board_pt(0.15, 0.1 + 0.7 * (1 - C.ez(C.fl(k, 54, 60))), 0.35 if k < 60 else 0.2)
+        sqhand = H.board_pt(0.15, 0.1, 0.1)
         arm3d('arm_l', sqhand, -1.0, 'fist')
     else:                                                      # yellow drawn, then squeezed by his open hand (thumb push)
         top = H.line_pts('yellow', 45.0, H.DIAG['squeeze'])
-        w = H.board_pt(top[1][0], top[1][1], 0.2) if k >= 88 else H.hot_tip('yellow', max(0.02, H.DIAG['yellow']))
+        w = H.board_pt(top[1][0], top[1][1], 0.1) if k >= 88 else H.hot_tip('yellow', max(0.02, H.DIAG['yellow']))
         arm3d('arm_r', w, 1.0, 'open' if k >= 88 else 'fist', None if k >= 88 else ('pen', tuple(w), None))
         if k < 88:
             arm3d('arm_l', H.board_pt(1.2, -1.6, 0.16), -1.0, 'fist')
@@ -137,6 +138,8 @@ def dim_bulbs():
 
 if __name__ == '__main__':
     mode = sys.argv[1] if len(sys.argv) > 1 else 'draft'
+    if mode == 'ground':
+        C.ground(SHOT, FIRST, LAST, actors, os.path.join(C.HERE, 'GROUND.md'), pre=dim_bulbs); sys.exit(0)
     only = None
     if len(sys.argv) > 2:
         if ',' in sys.argv[2]: only = [int(x) for x in sys.argv[2].split(',')]
