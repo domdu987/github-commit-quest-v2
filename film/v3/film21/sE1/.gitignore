@@ -1,3 +1,6 @@
 work/
 raw/
 *.log
+logA.txt
+logB.txt
+raw_draft/
