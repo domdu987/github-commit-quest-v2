@@ -12,3 +12,7 @@ Known: the 3D column ahead of the cast pair is rigid (marches, hoof bob only); t
 3. End framing: rail + sand below the knights reduced (lower end position, tilt up).
 4. Horizon blades: the set now renders the smoke as soft puffs (no workaround needed).
 Numbers (redo): saturation 0.684, luma 120.4 (colour is normalised at the conform per the director), in-shot motion median 15.08 p90 27.79, qa_auto PASS.
+
+## Re-render on set bb7aa85 (tents no longer violet-blue in shade) + QA §K
+Same path, cast, staging and poses as the previous delivery; only the set changed (bb7aa85) and the cast/set colour updates already in. Numbers: saturation 0.683, luma 120.5 (colour normalised at the conform), in-shot motion median 15.05 p90 27.48; film21/rhythm.py median 16.56 p90 32.88; qa_auto PASS.
+§K: GROUND.md = PASS (cast feet points and 14 3D horse hooves within 2 cm of the deck, 5-ray neighbourhood; the stock bbox check gives false FAILs on merged per-material batches and on plank gaps, see the method note in GROUND.md); 1 fps sheet (sheet1fps.jpg) checked: knights and column stand on the deck with contact shadows, nothing floats, no detached shadows, nothing cut weirdly.
