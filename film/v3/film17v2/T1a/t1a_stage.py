@@ -117,6 +117,8 @@ CLIP = {}   # camera grazes a roof-block wall at 0.14 m in g59-61: clip it
 def fix_whiteouts(g, cam):
     import bmesh
     cam.data.clip_start = CLIP.get(g, 0.05)
+    pu = bpy.data.objects.get('ext_puddle')
+    if pu is not None: pu.hide_render = True            # director: puddles off (match T1b)
     for nm, (a, b) in (('measure_beam_fx', (76, 171)),):   # director: beam fx off for all interior frames; window glow off on g60-61 only
         o_ = bpy.data.objects.get(nm)
         if o_ is not None: o_.hide_render = a <= g <= b
