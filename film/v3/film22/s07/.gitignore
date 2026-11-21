@@ -1,0 +1,6 @@
+frames/
+draft/
+actors/
+*.log
+raw/
+__pycache__/

@@ -1,0 +1,10 @@
+{
+ "g0": 823,
+ "g1": 938,
+ "first_g": 815,
+ "n_frames": 132,
+ "transition_in": {
+  "type": "travel",
+  "frames": 0
+ }
+}
