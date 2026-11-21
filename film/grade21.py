@@ -1,7 +1,7 @@
 """Film 21 final grade = the client's COLOUR_SPEC v1.1 grade (film/grade_v11.py, copied unchanged from the skill at 2596dd8).
 Only the film clock is ours: TAKES (segment start g), JOINS (the conform's dissolves) and SHOT (per-segment gain / gamma / sat, the v1.1
 grade's own stage-1 correction). SHOT is solved per segment toward the spec's centre (brightness V 0.54, saturation 0.43) on sampled
-frames, then clamped (gain 0.70-1.15, gamma 0.85-1.25, sat 0.70-1.25). Hand overrides: film/film21/grade21_shots.json.
+frames, then clamped (gain 0.70-1.15, gamma 0.85-1.25, sat 0.55-1.25). Hand overrides: film/film21/grade21_shots.json.
 usage (from conform_full.py, env GRADE21=1):  P = grade21.setup(takes, N) ; im = grade21.grade(im_uint8, g)
 """
 import json, os, sys, numpy as np
@@ -49,7 +49,7 @@ def setup(takes, N):
                 p["gain"] = float(np.clip(p["gain"] * TV / v, 0.70, 1.15)); p["gamma"] = 1.0
             else:
                 p["gamma"] = float(np.clip(p["gamma"] * np.log(TV) / np.log(max(v, 0.05)), 0.85, 1.25))
-            p["sat"] = float(np.clip(p["sat"] * TS / max(s, 1e-3), 0.70, 1.25))
+            p["sat"] = float(np.clip(p["sat"] * TS / max(s, 1e-3), 0.55, 1.25))
         p.update(ovr.get(t["name"], {}))
         G.SHOT[t["name"]] = p
     return {k: dict(v) for k, v in G.SHOT.items()}
