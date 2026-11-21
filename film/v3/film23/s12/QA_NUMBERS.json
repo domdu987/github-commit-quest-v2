@@ -1,72 +1,72 @@
 {
- "take_mb": 52.9,
+ "take_mb": 44.9,
  "qa_auto_rc": 0,
- "qa_auto_tail": "# QA_AUTO PASS  (_tmp_S12.mkv, 106 frames, 30.00 fps, g 1284-1389)\n\n## Notes\n- magenta share 0.0 %\n\nPhone sheet: phone_sheet.jpg (cyan line = caption band y 880). Judge legibility on it.\n",
- "qa_jitter": "overall median jitter px 0.41",
- "fdiff_median": 5.83,
- "fdiff_p90": 15.14,
- "fdiff_min": 4.15,
+ "qa_auto_tail": "# QA_AUTO PASS  (take.mkv, 106 frames, 30.00 fps, g 1284-1389)\n\n## Notes\n- magenta share 0.0 %\n\nPhone sheet: phone_sheet.jpg (cyan line = caption band y 880). Judge legibility on it.\n",
+ "qa_jitter": "overall median jitter px 0.29",
+ "fdiff_median": 4.87,
+ "fdiff_p90": 7.75,
+ "fdiff_min": 3.31,
  "shade_hue": {
   "first": {
    "g": 1284,
-   "hue": 243.1,
-   "shaded_frac": 0.042
+   "hue": 230.9,
+   "shaded_frac": 0.047
   },
   "mid": {
    "g": 1326,
-   "hue": 259.4,
-   "shaded_frac": 0.038
+   "hue": 254.1,
+   "shaded_frac": 0.037
   },
   "last": {
    "g": 1389,
-   "hue": 251.8,
-   "shaded_frac": 0.034
+   "hue": 259.2,
+   "shaded_frac": 0.08
   }
  },
  "heads": {
   "cya": {
-   "ymax": 789.0,
-   "ymin": 661.7,
-   "xmin": 146.5,
-   "xmax": 684.5,
-   "wmax": 152.4
+   "ymax": 796.3,
+   "ymin": 726.7,
+   "xmin": 89.5,
+   "xmax": 284.4,
+   "wmax": 154.7
   },
   "cyb": {
-   "ymax": 785.9,
-   "ymin": 710.5,
-   "xmin": 137.9,
-   "xmax": 271.0,
-   "wmax": 120.1
+   "ymax": 781.6,
+   "ymin": 735.9,
+   "xmin": 212.9,
+   "xmax": 541.7,
+   "wmax": 138.8
   },
   "lf0": {
-   "ymax": 2308.2,
-   "ymin": -9725.9,
-   "xmin": -48830.5,
-   "xmax": 9264.2,
-   "wmax": 3058.1
+   "ymax": 766.0,
+   "ymin": 678.6,
+   "xmin": -322.6,
+   "xmax": 283.6,
+   "wmax": 79.4
   },
   "lf1": {
-   "ymax": 12425.9,
-   "ymin": -2849.7,
-   "xmin": -11461.9,
-   "xmax": 42350.8,
-   "wmax": 3963.9
+   "ymax": 804.3,
+   "ymin": 713.7,
+   "xmin": -28.1,
+   "xmax": 299.7,
+   "wmax": 101.3
   },
   "lf2": {
-   "ymax": 35651.0,
-   "ymin": -1071.3,
-   "xmin": -6466.5,
-   "xmax": 160525.9,
-   "wmax": 9918.4
+   "ymax": 724.0,
+   "ymin": 670.8,
+   "xmin": -52.9,
+   "xmax": 468.7,
+   "wmax": 59.9
   },
   "lf3": {
-   "ymax": 6081.8,
-   "ymin": -3611.9,
-   "xmin": -11092.5,
-   "xmax": 16625.8,
-   "wmax": 1584.3
+   "ymax": 756.8,
+   "ymin": 701.3,
+   "xmin": 208.0,
+   "xmax": 531.9,
+   "wmax": 80.5
   }
  },
- "s_per_frame_wall_mean": 12.5,
- "cpu_s_per_frame_mean": 23.3
+ "s_per_frame_wall_mean": 12.7,
+ "cpu_s_per_frame_mean": 25.6
 }

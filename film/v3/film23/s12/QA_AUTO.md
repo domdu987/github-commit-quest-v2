@@ -1,4 +1,4 @@
-# QA_AUTO PASS  (_tmp_S12.mkv, 106 frames, 30.00 fps, g 1284-1389)
+# QA_AUTO PASS  (take.mkv, 106 frames, 30.00 fps, g 1284-1389)
 
 ## Notes
 - magenta share 0.0 %

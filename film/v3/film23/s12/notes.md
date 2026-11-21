@@ -12,9 +12,10 @@ flagged `airborne`; every field decoy stays on the grass. Mouths: held drawings 
   233 / 264 were measured on the set's own camera; with the re-keyed camera (below) the untouched ambient already lands in 240-260, and the pushed one left it on the wrong
   side (the pixels are brown dirt x violet shade). So `DIRT_K = (1, 1, 1)` ships (the hook is in the script). **Final render numbers: first g 1284 = 243.1, mid g 1326 = 259.4,
   last g 1389 = 251.8** (all in 240-260; the shaded share of pixels is only 3-4 % in this shot, so the hue is a small-sample measure).
-- Camera: the set's 3-key BIGZOOM path put both cyclists out of frame mid-move (x -600 .. -80, head y up to 1175). Re-keyed at runtime (`CAM_KEYS`): same start idea (4.7-6 D from
-  their faces), a mid key from the south-east, the same wide end (5.5, -59, 7.4); the end look-at is lowered so the cyclists' heads stay above the caption band.
-  Cyclists: head centre y 662-789 (head width up to 152 px at the close start, bottom <= 865), x 138-685 on every frame (inside the frame the whole move).
-- The four lifters are on screen from g 1319 (they are behind / beside the camera while it swings past, g 1298-1312: the stage's head report gives garbage there, QA_NUMBERS.json `lf*`).
-  From g 1319 on their heads are at y ~ 565-660 (head width 25-45 px: it is the wide reveal), well above y 880.
-- Deviation: none against the plan; rhythm numbers meet the rule (median 5.83, p90 15.14).
+- **Redo after the director's review (first version: tank small at the top-right, a hedge over the right third, lifters specks).** Camera re-keyed again (`CAM_KEYS`): start at the west
+  side, 5.5 D from the cyclists' faces in profile; a mid key swinging south; END (-4.8,-45,3.4) -> look (-5.2,-30,3.0), 22 mm, eased stop on the tank: the lifted tank is centred
+  (about 40-45 % of the width), the four lifters are visible under it (heads 52-80 px at the end), the cyclists are braking and staring in the left foreground (marks moved to
+  (-7.9,-35.3) / (-6.5,-36.6), heads y 727-796, bottoms <= 866), and the east hedge no longer enters the frame. All heads above y 880. The lifters are on screen from g ~1326.
+- Shade hue of the redo: first g 1284 = 230.9 (below the 240-260 rule; only 4.7 % of the pixels are shaded, brown dirt in the close-up), mid g 1326 = 254.1, last g 1389 = 259.2.
+- S13 does NOT continue from this staging: S13's cyclists stand at other marks and its camera is its own set-up (not re-rendered).
+- Deviation: rhythm median 4.87 (rule >= 4) but p90 7.75 (rule >= 12).

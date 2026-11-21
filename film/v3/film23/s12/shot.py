@@ -15,9 +15,10 @@ DIRT_K = (1.0, 1.0, 1.0)          # per-channel factor on the ground / dirt shad
 STOP_I = 24                         # frame (shot-local) the cyclists have come to rest
 V0 = 4.0                            # D/s riding speed before the brake
 LIFT_I = (6, 44)
-CAM_KEYS = [(0.0, dict(loc=(-3.4, -41.8, 3.3), look_at=(-5.2, -47.4, 3.0), lens=24.0)),
-            (0.5, dict(loc=(1.4, -54.0, 5.2), look_at=(-6.0, -42.6, 2.5), lens=23.0)),
-            (1.0, dict(loc=(5.5, -59.0, 7.4), look_at=(-6.0, -38.0, 2.1), lens=22.0))]                    # the lift (out of frame until the camera has pulled back)
+CAM_KEYS = [(0.0, dict(loc=(-12.5, -40.0, 3.0), look_at=(-7.6, -37.4, 3.0), lens=24.0)),
+            (0.5, dict(loc=(-10.0, -46.0, 3.8), look_at=(-6.6, -36.0, 3.3), lens=23.0)),
+            (1.0, dict(loc=(-4.8, -45.0, 3.4), look_at=(-5.2, -30.0, 3.0), lens=22.0))]
+MARK_A, MARK_B = (-7.9, -35.3), (-6.5, -36.6)      # director's redo: the cyclists stop left foreground, the lift in the centre
 
 
 def tint_dirt(k=DIRT_K):
@@ -62,7 +63,8 @@ class T(C.Take):
         C.Take.__init__(self, quality, work=os.path.join(HERE, "work"))
         m = self.marks
         tint_dirt()
-        self.pa, self.pb = m["cyclist_a"][0][:3], m["cyclist_b"][0][:3]
+        o = self.origin
+        self.pa, self.pb = (MARK_A[0] + o.x, MARK_A[1] + o.y, 0.0), (MARK_B[0] + o.x, MARK_B[1] + o.y, 0.0)
         W = cast23.CANVAS23_WIDE
         self.a = self.add("cya", "fr_beret", W["fr_beret"])
         self.b = self.add("cyb", "fr_cap", W["fr_cap"])
@@ -110,7 +112,7 @@ class T(C.Take):
             GH.set_lift(self.h_lift(i), frame=f)
             for k, (cy, pm) in enumerate(((self.a, self.pa), (self.b, self.pb))):
                 d = self.ride_d(i)
-                C.place(cy, f, (pm[0] + 0.55 * d, pm[1] - d, C.gz(pm[0] + 0.55 * d, pm[1] - d)))              # they come up the lane (+y) and stop on the mark
+                C.place(cy, f, (pm[0], pm[1] - d, C.gz(pm[0], pm[1] - d)))              # they come up the lane (+y) and stop on the mark
             for k, a in enumerate(self.L):
                 C.place(a, f, self.lm[k][:3])
         for g in gs:

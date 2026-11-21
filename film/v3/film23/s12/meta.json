@@ -23,5 +23,5 @@
  "samples": 12,
  "location": "LANE",
  "light": "DAY",
- "split": true
+ "split": false
 }
