@@ -118,3 +118,195 @@ Recommended (non-blocking polish, in priority order):
 3. Make the shared look read: turn the heads ~15-20 deg toward each other (or slide the pupils sideways) on g 173-179, and keep the captain's brows raised (not half-lidded) through the shrug.
 4. Break up the flat sail on the left at g 118-150 with seams, reef points or a stripe, or warm or whiten all the sails (R5 style).
 5. Sharpen the foreground deck texture, or lower the empty-deck share.
+
+## Round 12 (director QA-art): PASS, 7.4 (must-fix closed; no regressions)
+
+Take: take.mkv.partaa + partab joined to /tmp/s02a12.mkv (first_g 48, 152 frames, 720x1280, 30 fps). All 152 frames extracted to /tmp/qa19_r12art/s02/gNNN.png (named by g, so this covers 3 fps and every frame g 150-199). Sheets: sheet_3fps.jpg (every 10th frame), beat.jpg (every 2nd frame g 150-198), beat_phone.jpg (360x640 tiles g 166-198), crop_beat.jpg (full-res g 172-199), faces.jpg (full-res heads g 168-196), hands.jpg (every frame g 178-191). I recomputed the frame-diff myself (90x160 grey); it matches framediff.json.
+
+| Check | Status |
+|---|---|
+| **Props stay in hand (round-11 must-fix)** | **Fixed.** I checked every frame from g 178 to g 199. The quadrant stays in the astronomer's hand: it is raised for the head-scratch until about g 181, then lowered over g 182-187 to hip height, where it sits under the chart. The chart stays at the captain's hand, low and dark band down, through g 199. Nothing vanishes or jumps in one frame. At g 185 the quadrant is briefly hidden behind the chart; this is plain occlusion, with no pop. Minor: from g 186 the chart, the quadrant and both outstretched hands meet in the gap between the characters, so that area reads a little cluttered and the chart looks almost shared. This is acceptable. |
+| Landing soft? | **Yes, softer than in round 11.** The frame-diff falls monotonically: 10.4 (g 158), 8.7 (g 167-170), 7.8 (g 171), 6.4 (g 173), 5.5 (g 174), 3.7 (g 175), then a floor of 2.3 at g 176. That is an ease-out over about 8 frames, where round 11 had a 4-frame touchdown, and there is no second surge in camera speed. The rise to about 6 from g 182 to g 187 comes from the shrug action, not the camera. The slow orbit then holds steady at about 4.4 and never parks. On a phone the crane settles onto the quarterdeck instead of thudding. The 8-10 plateau over g 139-169 is the acting plus parallax, as the team says; it looks fine. |
+| Puzzled beat: funnier? | **Slightly.** It is still carried by the captain's round-eyed, open-mouthed shock (g 158-170), which reads at phone size. (a) **Shared look, g 173-180:** the captain's pupils and head slide toward the astronomer, and the astronomer, after a squeezed-eye scratch at g 176, glances back left. You can now see it at full size, but at 360x640 it is subtle, a sideways glance rather than a beat. (b) **Brows:** the captain has brow lines, but his eyelids stay half-lidded and his mouth is wavy, so the face reads "unimpressed / queasy" more than "brows-up puzzled". This is better than round 11, but not a clear "?!" face. (c) **Shrug, g 184-199:** the astronomer is a clean, symmetric arms-out shrug. The captain now has both arms off his body, but his chart arm sits horizontal toward the astronomer while the other arm is low, so it still reads partly as offering or pointing. I cannot make out palms on either character at phone size, because the hands are small dark gloves. There is no shoulder-up squash. **Net: the beat reads clearly as "neither of us knows", gently funny rather than a big laugh.** |
+| Regressions | **None found.** Compared with round 11: the opening is the same (lone ship at about 10 %, no slab), the wake, the stern pass, colour and grounding are unchanged, contact shadows are present on every tile, nobody is cut, faces are about 13-15 % of the frame height, and nothing passes through a face (G2/G3 OK). qa_stats: saturation 0.635, luma 93.8 (G1 OK). |
+| Still open (polish, unchanged) | The plain grey-lilac sail face on the left, g 118-150, has no seams (the team says this was not done). The soft, smeared plank texture covers the bottom ~30 % of the frame on the landing. |
+
+| Criterion | Score |
+|---|---|
+| Set | 8 |
+| Light & colour | 8 |
+| Composition / phone | 7 |
+| Acting | 7 |
+| Key moment (BIGZOOM + "where are we?" beat) | 7.5 |
+| Match to refs (R5 crane over the ship onto the deck) | 7.5 |
+| **Overall** | **7.4 - PASS** |
+
+Non-blocking polish if time allows (none is needed for FINAL):
+1. Captain's face from g 172: open his eyes fully under raised brows (the round shock eyes with a closed, flat mouth). This is the cheapest way to sell "puzzled".
+2. Captain's shrug: drop the chart arm to match the other one (both forearms up and out at the same angle) and add a 3-4 frame shoulder lift.
+3. Shared look: increase the head yaw to about 20 deg on g 174-180 so it reads at 360x640.
+4. Seams or a stripe on the left sail (g 118-150), and a sharper plank texture in the foreground.
+
+## Round 13 (director QA-art): PASS, 7.3, with two must-fix camera items (a regression from round 12)
+
+Take: take.mkv.partaa + partab joined to /tmp/s02a13.mkv (first_g 48, 152 frames, 720x1280, 30 fps). All frames are extracted to /tmp/qa19_r13art/s02/gNNN.png. Sheets:
+- sheet_3fps.jpg (every 10th frame)
+- descent.jpg (g 148-178)
+- beat_phone.jpg (360x640, g 166-198)
+- body.jpg (every frame g 178-199)
+- faces.jpg
+- land.jpg (g 174-178 with a 40-px grid)
+
+My own frame-diff (90x160 grey) for in-shot g 58-190: median 8.12, p90 14.28, max 16.20. I also measured the background shift per frame by phase correlation on the top 300 px.
+
+| Check | Status |
+|---|---|
+| **Landing: regression** | **Two problems that were not there in round 12.** **(1) A second speed hump.** The frame-diff falls from the swoop peak (15.0 at g 116) to 6.0 at g 141, then rises again to **16.2 at g 156**, the largest value in the take, before easing out. In round 12, g 150-160 ran at 9.5-10.4. The top-down to eye-level drop is now squeezed into about g 148-160 and reads on the phone as a second dive, the "surges" problem from round 10. The ease-out after it (g 156-175, about 20 frames) is soft. **(2) A one-frame hitch at the touchdown.** The background shift goes (3,-6) at g 173, (2,-4) at g 174, **(0,0) at g 175**, **(2,-4) at g 176**, then (0,0) from g 177. So the camera stops, moves once more and stops again; you can see it in the feet and rigging in land.jpg, and the diff jumps to 9.3 at g 176 (full-res), between 5.9 and 3.8. After that the drift starts at g 180 at 1-3 px/frame **in the opposite x direction**. That reversal is slow enough to pass. |
+| Props stay in hand | **Yes.** I checked every frame g 178-199. The quadrant stays in the astronomer's hand: raised for the scratch, lowered over g 182-187, held at hip. The chart stays in the captain's hand at chest height through g 199. Nothing pops. |
+| Puzzled beat on phone | **Clearly better.** From g 174 the captain has wide round eyes and a flat, open mouth, a dumbfounded "huh?". It reads instantly at 360x640, and it is the best face this beat has had. g 172 is a blink. Shared look: the captain's pupils and head go toward the astronomer at g 176-188, and the astronomer looks back. It reads on the phone, though gently. Shrug, g 183-199: the astronomer is symmetric with arms out. The captain's free arm now lifts out with an open hand, but his chart arm stays horizontal toward the astronomer, so his shrug is still a little lopsided; the shoulder lift is barely visible. The net is a readable, mildly funny "neither of us knows". |
+| Other regressions | None. The opening, wake, stern pass, colour (sat 0.639, luma 94.1: G1 OK), contact shadows, framing and face size (13-15 %) are all unchanged (G2/G3 OK). The flat sail g 118-150 and the soft foreground planks are still open polish. |
+
+| Criterion | Score |
+|---|---|
+| Set | 8 |
+| Light & colour | 8 |
+| Composition / phone | 7 |
+| Acting | 7.5 |
+| Key moment (BIGZOOM + beat) | 7 |
+| Match to refs | 7.5 |
+| **Overall** | **7.3 - PASS (must-fix 1-2 before FINAL)** |
+
+Must-fix (cheap; a frame check of g 140-190 is enough to confirm it):
+1. **Restore the round-12 camera curve for g 140-176.** Round 12 had one hump, a diff of about 8-10 through the descent and a monotone settle, and none of its acting depended on this change. Keep all the round-13 acting. No in-shot diff should come back above about 11 after the first peak.
+2. **Remove the g 175 stall.** The camera's last moves must decrease frame by frame (for example 4, 3, 2, 1, 0 px) with no zero frame followed by a non-zero one. Start the hold drift in the same x direction as the landing, or start it from 0 with a smooth ease-in.
+
+Optional: lower the captain's chart arm so that both forearms match in the shrug.
+
+## Round 14 (director QA-art): PASS, 7.4. The touchdown is fixed; the late re-acceleration is only partly fixed (must-fix 1 stays open)
+
+Take: take.mkv.partaa + partab joined to /tmp/s02a14.mkv (first_g 48, 152 frames). All frames are extracted to /tmp/qa19_r14art/s02/gNNN.png. Sheets:
+- sheet_3fps.jpg
+- descent.jpg (every 2nd frame, g 130-182)
+- beat_phone.jpg (360x640, g 170-198)
+- spike115.jpg (g 112-116)
+
+Measurements:
+- Whole-frame diff (90x160 grey), in-shot: median 8.47, p90 14.21, max 18.39 (g 115).
+- To test the team's claim that "the hump is the gestures", I also measured a **deck-only band**: the bottom 19 % of the frame, which contains no characters. I measured it for rounds 12, 13 and 14.
+- I measured the background shift per frame by phase correlation.
+
+| Check | Status |
+|---|---|
+| Touchdown hitch (g 175-176) | **Fixed.** The background shift per frame falls monotonically: (3,-7) g 170-175, (3,-6) g 176, (2,-5) g 177, (2,-4) g 178-179, (2,-3) g 180, (1,-1) g 181, (1,0) from g 182. There is no zero frame followed by a move. The deck band falls smoothly from 7.6 at g 170 to 0.5 at g 180. On a phone the landing is the softest so far. |
+| Opposite drift | **Fixed.** The hold drift is +1 px/frame in x, the same direction as the landing, and it eases in from the landing. It reads as a living hold, not a park. |
+| Second dive (around g 150) | **Smaller, not gone, and it is the camera, not the gestures.** The deck-only band (no characters in it) dips to 6.5 at g 148, then climbs to **16.4 at g 153** before the long settle. For comparison, round 13 went from 6.4 to 18.7 at g 157, and round 12 from 5.7 to 12.2, ramping over about 12 frames. The descent sheet shows why: from g 136 to g 148 the camera hovers almost top-down over the quarterdeck, then from g 148 to g 158 it pitches down to eye level, with the horizon and sea popping up behind the rail. On a phone it reads as "hover, then a step down, then a soft settle". The final settle is lovely, but the move is not yet one continuous swoop. So the team's statement that background speed "falls steadily after g 133" does not match the frames. |
+| g 115 whole-frame diff spike (18.4) | Not a defect. At g 112-116 the ship's position steps evenly. The spike comes from the spanker sail sweeping across the centre plus the foam texture; there is no visible jump. |
+| Round-13 acting | **Intact.** The captain has his wide-eyed dumbfounded face from g 174; the shared look is at g 176-188; there is an arms-out shrug from g 184; the astronomer's head-scratch with the quadrant is there. Props stay in hand through g 199 with no pops (checked every 2nd frame on the phone sheet and g 178-199). The captain's chart arm is still level, so his shrug is a little lopsided (optional polish, as before). |
+| Regressions | None. The opening, wake, stern pass, colour (qa_stats sat 0.635+, luma ~94: G1 OK), grounding and framing are unchanged (G2/G3 OK). The flat sail and soft planks are still open polish. |
+
+| Criterion | Score |
+|---|---|
+| Set | 8 |
+| Light & colour | 8 |
+| Composition / phone | 7 |
+| Acting | 7.5 |
+| Key moment (BIGZOOM + beat) | 7.25 |
+| Match to refs | 7.5 |
+| **Overall** | **7.4 - PASS** |
+
+Status of the must-fixes:
+- **Must-fix 2 (stall / drift): closed.**
+- **Must-fix 1 (one swoop): still open, but softened.**
+
+How to fix 1: start pitching the camera down from top-down to eye level earlier, around g 132-136, and spread it to about g 170, so that it overlaps the end of the over-the-stern travel instead of starting after a hover. Target: the deck-only band, once it has passed its first peak, never rises again by more than about 20 % (for example, no climb from 6.5 to 16). Keep everything from g 160 onward exactly as it is now (the settle, the drift and the acting). A frame check of g 130-170 is enough to confirm the fix.
+
+## Round 15 (director QA-art): PASS, 7.5. Must-fix 1 is downgraded to polish: the strip target is not met, but on a phone the drop to eye level now reads as a gentle second push
+
+Take: take.mkv.partaa + partab joined to /tmp/s02a15.mkv (first_g 48, 152 frames). All frames are extracted to /tmp/qa19_r15art/s02/gNNN.png. Sheets:
+- sheet_3fps.jpg
+- descent.jpg (every 3rd frame, g 110-182)
+- beat_phone.jpg
+- j127.jpg (g 125-129)
+
+Measurements:
+- Whole-frame diff, in-shot g 58-190: median 8.97, p90 14.08, max 15.40 (g 114).
+- The deck-only strip (bottom 19 %, no characters) for g 110-182, as asked.
+- As a cross-check: the median optical-flow speed of the background, excluding the characters' band (Farneback at 180x320, scaled to full-res px/frame), for rounds 12, 14 and 15. The deck strip turned out to be content-biased: the bare plank texture at g 137-145 under-reads motion, and the wheel shadow entering at g 146 over-reads it. The optical flow is the fairer speed measure.
+
+| Check | Status |
+|---|---|
+| Deck strip climb-back after the first peak | **Still more than 20 %.** The peak is 29.9 at g 131 (the team's single peak is confirmed). The strip falls to **5.9 at g 145**, then climbs to **13.0 at g 151**, a ratio of 2.2x, before a smooth, monotone settle to 0.4 at g 180. Round 14 was 6.5 to 16.4 (2.5x). The strict target is not met. |
+| Optical-flow background speed (px/frame) | **Round 15:** about 13 at g 131-132, a trough of **6-7 at g 134-137**, a ramp to **12-13 over g 142-149**, then a steady fall: 11 (g 151), 9 (g 156), 7 (g 161), 5 (g 165), 4 (g 168-171), 3 (g 172-177), 2 (g 178-180), 1 (g 181 on). **Round 14:** trough 5, then a sharp peak of 16 at g 151. **Round 12** (passed): trough 7, then a plateau of 12-13 at g 142-148. Round 15 is now the same shape as round 12, with no sharp peak. |
+| Phone read: one swoop? | **Close.** It is no longer "hover, then step". At g 134-140 the camera slows over the top of the quarterdeck while the characters keep growing; at g 142-158 it rolls forward and tilts down to eye level at an even speed; then the long, soft settle follows. It reads as one move with a breath in it, a gentle second push rather than a dive. The g 126-127 flow blip (17-21) is foam-texture noise; the stern steps evenly in j127.jpg, with no visible jerk. |
+| Landing, drift, acting (g 160 onward) | **Unchanged and intact.** The whole-frame diff for g 160-199 is identical to round 14, value for value. The landing eases monotonically to zero; the drift is +1 px/frame in the same direction; the dumbfounded captain, the shared look, the shrug and the head-scratch are all there; props stay in hand through g 199. |
+| Regressions | None. The opening, wake, stern pass, colour (sat 0.638, luma 94.4: G1 OK), grounding and framing are unchanged (G2/G3 OK). |
+
+| Criterion | Score |
+|---|---|
+| Set | 8 |
+| Light & colour | 8 |
+| Composition / phone | 7 |
+| Acting | 7.5 |
+| Key moment (BIGZOOM + beat) | 7.5 |
+| Match to refs | 7.5 |
+| **Overall** | **7.5 - PASS** |
+
+Status of the must-fixes:
+- **Must-fix 1 (one swoop): downgraded to optional polish.** The literal 20 % strip target is still missed (2.2x). But the true background speed now ramps gently and has the same shape as round 12, which passed, and it no longer reads as a step on a phone. I do not think another re-time pays for itself.
+- If the team wants it perfect: start the tilt-down at about g 128, so that the speed trough at g 134-137 stays at about 10 instead of dipping to 6.
+- **Must-fix 2: closed in round 14.**
+
+Nothing blocks conform. The open polish is unchanged: the captain's level chart arm in the shrug, seams on the left sail, and the soft foreground planks.
+
+## Round 16 (director QA-art): FIX. The g 127 catch is fixed, but the "settle, then second tilt-up" (§H.1) is still there
+
+**Correction to my round 15 note.** I called the g 127 flow blip "foam-texture noise". That was wrong. Re-running my own sea-masked feature tracker on the round-15 frames reproduces the §E reviewer's finding:
+- median rigid speed: 15.1 → 12.8 → 6.4 px/frame at g 126 → 127 → 128;
+- median dx: +8.2 → +4.8 → -0.8;
+- similarity-fit rotation: +0.29° → -0.32° → -0.86°.
+
+That is a real two-frame catch-and-swing-back on the hull. My downgrade of must-fix 1 in round 15 was also too generous: the second tilt-up was real, and the deck-strip and optical-flow numbers I leaned on under-read the rotation in the top band. The QA-tech FAIL and the §E uphold were right.
+
+**Round 16 method.** Take: take.mkv.partaa + partab joined to /tmp/s02a16.mkv (152 frames, first_g 48). All frames are extracted to /tmp/qa19_r16art/s02/gNNN.png. I viewed every frame g 115-165 (f115_140.jpg and f140_165.jpg, 150 px wide tiles, i.e. smaller than phone size). I tracked them with a sea-masked rigid-feature tracker: Shi-Tomasi corners outside teal water and foam, pyramidal LK with a forward/backward check, and a RANSAC similarity fit per frame. The script is /tmp/claude-0/qa16/track.py. It reports:
+- median speed and dx/dy;
+- rotation and scale;
+- the median speed of the top band (y < 35 %);
+- the median speed of the rail strips (x < 150 or x > 570, y 35-75 %).
+
+**Rigid-feature table, round 16** (px/frame at 720 wide):
+
+| g | 116 | 120 | 124 | 126 | 127 | 128 | 130 | 132 | 133 | 135 | 137 | 140 | 143 | 146 | 149 | 152 | 155 | 158 | 160 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| median speed | 12.2 | 10.0 | 10.4 | 8.4 | 7.8 | 7.0 | 5.2 | 4.4 | **3.8** | 4.0 | 4.7 | 5.4 | 5.8 | 6.0 | 7.2 | **7.3** | 6.6 | 6.6 | 7.0 |
+| median dx | 4.4 | 2.0 | 3.3 | 3.7 | 3.3 | 3.1 | 2.3 | 1.4 | 0.8 | -0.3 | -0.8 | -1.5 | -2.5 | -2.3 | -2.6 | -2.9 | -2.3 | -2.2 | -1.6 |
+| median dy | 4.6 | 5.9 | 2.9 | -0.1 | -1.0 | -1.4 | -1.8 | -1.3 | -0.9 | -0.7 | -1.4 | -2.6 | -3.4 | -2.9 | -1.8 | -0.3 | 1.1 | 4.4 | 6.2 |
+| top band | 14.1 | 10.3 | 12.8 | 14.1 | 10.6 | 7.5 | 4.8 | 2.1 | **1.6** | 2.5 | 3.3 | 5.3 | 7.1 | 8.7 | 9.6 | 11.7 | 14.2 | 16.3 | **16.8** |
+
+| Check | Status |
+|---|---|
+| 1. Hull catch or swing-back, g 115-165 | **Fixed.** The rotation runs +0.26° (g 115-121), +0.11° (g 126), -0.05° (g 127), -0.20° (g 129), -0.38° (g 133), -0.58° (g 136-137), then about -0.2° to 0°. That is a smooth zero crossing over about 6 frames. dx eases from +3.7 through 0 at g 134-135 to -2.5 over about 12 frames, with no reversal inside 2 frames and no speed spike at g 127. The upstream re-time (g 97-109, which differs from round 15) is also smooth: the dy zero crossing is spread over g 111-114. Frame by frame on the sheets, the stern swings and slides continuously through g 115-131 with no visible catch. |
+| 2. One move on a phone? | **No: it is still "swoop, settle, then a second tilt-up".** g 131-139 is a near-hold. The tiles barely change, with the top band at 1.6-3.3 px/frame and the median at 3.8-4.7. From g 140 the camera tips up: the rail, sea and horizon slide in from the top (horizon at about g 150, sky at about g 158), and the top band climbs **1.6 → 16.8 px/frame (10x)** and the median **3.8 → 7.3 (+92 %)** by g 152-160. The image vertical motion also reverses twice (dy + → − at g 126, then − → + at g 153). The team's "tilt-up starts around g 127" is not visible in the frames: the top band is still decelerating until g 133. Compared with round 15 (median trough 4.3, top-band trough 3.1), the trough is now even deeper. The ease-out cannot start from the g 160 speed (about 7 median, about 17 top band) after dropping to 3.8 / 1.6, so §H.1 ("one continuous move with ease") is still broken. |
+| 3. Regressions | **None.** g 48-96 are bit-identical to round 15. g 159-199 differ only by render noise (mean absolute difference about 0.6/255; g 158 is 3.6, the warp seam), so the landing, drift, acting, props and the s04 dissolve handle are unchanged. Colour: sat 0.634, luma 94.1 (G1 OK). Grounding and framing are unchanged. |
+
+| Criterion | Score |
+|---|---|
+| Set | 8 |
+| Light & colour | 8 |
+| Composition / phone | 7 |
+| Acting | 7.5 |
+| Key moment (BIGZOOM + beat) | 6 |
+| Match to refs (R5 continuous crane) | 7 |
+| **Overall** | **7.25 on average, but the verdict is FIX: a blocking §H.1 defect is confirmed (upheld by §E)** |
+
+**Must-fix (camera only, g 127-159; g ≥ 160 untouched).** The landing begins at g 160 with the camera already tilting up fast (top band about 17 px/frame, about 1.4°/frame of pitch). Because g 160 onward is frozen, the only monotone solution is to **have the tilt-up already running at about that rate from about g 128 onward**, instead of letting it decay to nearly nothing at g 133 and re-accelerating.
+
+Concretely: the pitch rate should cross zero at g 120-127 (it does now), rise to about 1.0°/frame by g 130 and about 1.3-1.4°/frame by g 135, and then hold or fall gently into g 160. Translation keeps falling monotonically, as it does now.
+
+Acceptance on the sea-masked tracker, g 128-160:
+- the top-band speed never drops below about 10 px/frame;
+- the median rigid speed never drops below about 6;
+- neither rises more than 20 % after a local minimum.
+
+If that pushes the horizon into frame too early, it is acceptable to let the g 160-176 tilt ease out a bit more slowly. Unfreezing the start of the landing is better than keeping a dead hold.
+
+Not blocking: the captain's level chart arm in the shrug, the left-sail seams, the soft foreground planks.
