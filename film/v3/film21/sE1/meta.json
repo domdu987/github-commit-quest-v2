@@ -1,0 +1,26 @@
+{
+ "segment": "E1",
+ "g0": 793,
+ "g1": 885,
+ "first_g": 790,
+ "n_frames": 96,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "D2->E1 is a HARD CUT (film-13 workflow); g790-792 are kept as spare lead-in frames"
+ },
+ "transition_out": "cut at g885",
+ "world": [
+  "camp_bank",
+  "hill_eye"
+ ],
+ "samples": 32,
+ "cam_in": {
+  "loc": "camp_bank preset camera (P_BANK) exactly at g793",
+  "lens": 26
+ },
+ "cam_out": {
+  "loc": "hill_eye preset camera + (0.35,-0.35,-0.05) m slide",
+  "lens": 22
+ }
+}
