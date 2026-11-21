@@ -177,3 +177,6 @@ for g in range(0, 96):
 
 ## 17. Scots far-wide line in saltire blue (director, 2026-11-20 22:10)
 `K.scots_wide_line` figures are now saltire blue with a few white, with no ochre, thatch or brown: QA-art A1 found the ochre read as gold "confetti" close to the English gold. Pass `banners=5` (or more) for the hook. A1 and A2 must use the SAME call (same `n`, `banners`, `toward`) so P_A matches across the D6.
+
+## 18. Warm tent shade (director, 2026-11-21 00:45)
+`t_white` and `t_cream` (ridge tents, pavilion panels, cream canvas) now take a warm-neutral shade (`sm` warm, low `mix`). Before this, their shaded faces went saturated violet-blue under the MORNING shade tint plus VIVID, so the English camp read as blue (QA-tech sB1 v3). Every camp segment rendered after this commit shows cream/grey shaded canvas. Test: `styleboard`-style draft camp_wide, tents cream in shade.
