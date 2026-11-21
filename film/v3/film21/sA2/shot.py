@@ -113,7 +113,7 @@ class Seg(object):
     def __init__(self):
         t0 = time.time()
         self.A = K.build_world(["valley_wide", "hill_over"], fg=False, shafts=True, scots_wide=False)
-        K.scots_wide_line(toward=(-60.0, -260.0), banners=5)
+        K.scots_wide_line(n=26, banners=5, toward=tuple(K.POSES["P_HOOK"][0][:2]))
         print('hidden near the ledge (huge saltire cloth behind the Scots):', K.hide_near_banners([(float(W[0]), float(W[1]), 45.0)], 32.0, smoke=False), flush=True)       # same call as team 1 (A1): P_A matches across the D6
         self.scene = bpy.context.scene; self.cam = self.scene.camera; self.cam.data.dof.use_dof = False
         self.scene.frame_start, self.scene.frame_end = 1, 2000
