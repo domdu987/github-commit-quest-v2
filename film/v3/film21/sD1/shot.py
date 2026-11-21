@@ -36,7 +36,9 @@ def cam_fn(world):
         l2 = (lerp(l1[0], -12.75, u2), lerp(l1[1], -26.3, u2), lerp(l1[2], tz + 1.62, u2))
         # 3) slow lateral drift and a push during the laugh
         dr = (g - G_SIGN - 24) / float(G1 - G_SIGN - 24) if g > G_SIGN + 24 else 0.0
-        c2 = (c2[0] + 0.45 * dr, c2[1] + 0.5 * ez(max(0.0, (g - (G_LAUGH - 8)) / 24.0)), c2[2])
+        c2 = (c2[0] + 0.25 * dr, c2[1] + 0.5 * ez(max(0.0, (g - (G_LAUGH - 8)) / 24.0)), c2[2])
+        lk = ez(max(0.0, min(1.0, (g - (G_LAUGH - 8)) / 20.0)))              # during the laugh ease the aim onto his head so it stays inside the frame
+        l2 = (lerp(l2[0], -13.05, lk), l2[1], l2[2])
         loc, look = (c1, l1) if g <= G_SIGN - 10 else (c2, l2)
         if g > G_SIGN:
             pass
