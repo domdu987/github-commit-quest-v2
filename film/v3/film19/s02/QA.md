@@ -36,3 +36,10 @@ Delivered 152 f, 21.75 s/frame; frame-diff median 10.49 / p90 20.76; qa_stats sa
 sim.py ship-only mag_med: g126 19.1, 130 12.9, 134 11.4, 138 11.8, 142 11.2, 146 10.2, 150 10.8, 154 9.9, 158 8.7, 159 7.9, 160 7.9, 161 7.1, 162 6.9, 164 5.7. Every frame g128-160 >= 7.9; eases down into the landing, no climb-back (local bumps +7 % at g147-149).
 reg.py top band (y<35 %): g130 11.6, g133-138 9.5-10.0, g139 11.2, g142 14.8, g143-157 19-22.6, g160 18.0. (g133-138 sit at 9.5-9.8, just under 10.)
 Ground check (QA_TEAM section K): GROUND.md, 0 FAIL.
+
+## Round 19
+- g88: the full-size raw g88 (rounds 16-18) was a bad frame (dark-pixel mass 6419 between 7578 and 7018). A fresh render of g87-89 and the draft are monotone and consistent. g64-199 re-rendered; g85-91 dark mass 5107, 5639, 6219, 6897, 7576, 8444, 9264 (monotone). No size step above 12 % per frame, no sign-flip of the translation except g64 (join) and g149 (small).
+- Tilt-down: round-17 depth (min pitch -69.2 at g114), spread over g64-108 (was g90-108) so the descent peaks lower. Whole-frame motion (sea masked): g84-102 14-18 px/f, peak 18.6 (g93); was 42 at g100.
+- Tilt-up: round-18 rates 130-150 (1.35 -> 1.85), tail (156, 1.5), (160, 1.05). The surplus pitch (11.4 deg at g160) is paid by a cosine brake over g160-165 (4.7 frames), pitch held -4 deg to g176, then the landing aim.
+- NOT met: dip of whole-frame motion to 7.3-8.7 px/f at g106-113 (pitch turnaround, approach speed alone; target about 10); ship-only 6.6 / 5.7 at g159-160 (target >= 7), then a bump to 10-14 at g164-168; composition g104-113 (masts cut by the top edge, foam about 55 %) needs a pull-back, not an aim change.
+- frame-diff median 10.91 / p90 19.20; qa_stats sat 0.643, luma 93.6, motion median 11.47 / p90 21.42. qa_auto blur flag only (waived). GROUND.md 0 FAIL.
