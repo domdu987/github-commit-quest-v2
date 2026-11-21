@@ -22,3 +22,10 @@ Delivered: `take.mkv` (parts `take.mkv.partaa/ab`, 62 MB total: `cat take.mkv.pa
 - CU framing shifted right (head x about 330) so the hat and the pointing arm stay off the left edge at g 764-776.
 - Frames g 793-796 still end at P_BANK (g793 exactly) and continue the pull-out (frame diff about 17 per frame, not frozen).
 - Numbers: sat 0.583, vivid 60.7 %, luma 104.7; rhythm median 11.09 / p90 30.67; qa_auto PASS.
+
+## Re-render v4 (film-13 workflow, set bb7aa85+, per-prop contact shadows)
+- Same fixes as v3 (no e1 soldier; waist-high spears), every free prop is one object with its own contact shadow decal (sacks, spear bundle, short spears, pegs, strongbox).
+- `qa_auto.py`: PASS (magenta 0 %). `rhythm.py` median 11.06 / p90 30.67.
+- GROUND.md: PASS, 0 FAIL, 28 SUNK warnings (pegs, sacks and short spears planted 25-46 cm into sloped sand; nothing floats). `shot.py ground 10`.
+- `qa_jitter.py`: overall median jitter 0.41 px; the only flagged block is "4s shake 4.9 px" = the planned CU1 push (g 756-765, fast eased push, no handheld shake in the script); the whip g 642-647 is a planned pan. No camera shake is added.
+- `sheet1fps.jpg` (1 fps float hunter sheet): every card stands on the sand with its contact shadow, the strongbox and sacks sit on the ground with shadows, nothing hangs in the air.
