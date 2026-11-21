@@ -16,7 +16,7 @@ import cast21, bpy, numpy as np                          # noqa: E402,E401
 from c21 import K, actors, Vector, lerp, ez              # noqa: E402
 
 TMP = os.path.join(HERE, "work")
-G0, G1, GJ = 77, 159, 80
+G0, G1, GJ = 80, 159, 80       # v4: A1 -> A2 is a HARD CUT at g80, no handle frames
 G_PUSH = C.g_of(4.08)            # 125 "อะไรเลยสักอย่าง"
 PPD = 160
 VW = ((-60.0, -260.0, 230.0), (60.0, 60.0, 0.0), 22.0)       # P_HOOK: where A1 starts; A1 arrives at P_A from there
@@ -35,13 +35,6 @@ def wpos(k, d=0.0):
     return (float(p[0]), float(p[1]), gz(p))
 
 
-def end_cam():
-    e = W - U * 4.4 + R * 1.3
-    loc = (float(e[0]), float(e[1]), gz(e) + 3.4)
-    look = (float(W[0] + U[0] * 6), float(W[1] + U[1] * 6), gz(W) + 0.2)
-    return loc, look
-
-
 def push_cam():
     """x1.4 closer to the grass-chewer (offset -1.9 along R)"""
     (l0, k0) = end_cam()
@@ -51,35 +44,55 @@ def push_cam():
     return tuple(nl), tuple(nk)
 
 
-WP = [(100, (120.0, 104.0, 70.0), (160.0, 148.0, 40.0)), (110, (172.0, 150.0, 90.0), (150.0, 130.0, 30.0)), (117, (206.0, 172.0, 90.0), None)]
+G_SPL = 112          # the summit pass; from here the dive to the medium pose is an eased Hermite (arrives at g125 with a small forward velocity, never a stop)
+E_BACK, E_LAT, E_UP = 6.0, -0.5, 5.0
+WPS = [(96, (120.0, 104.0, 70.0), (160.0, 148.0, 40.0)), (106, (172.0, 150.0, 92.0), (150.0, 130.0, 30.0)), (G_SPL, (206.0, 172.0, 100.0), None)]
+
+
+def end_cam():
+    e = W - U * E_BACK + R * E_LAT
+    loc = (float(e[0]), float(e[1]), gz(e) + E_UP)
+    look = (float(W[0] + U[0] * 6), float(W[1] + U[1] * 6), gz(W) + 0.2)
+    return loc, look
 
 
 def keys():
     P_A = K.POSES["P_A"]
-    a = np.array(P_A[0]); b = np.array(VW[0]); back = a + (b - a) / np.linalg.norm(b - a) * 9.0
-    lb = np.array(P_A[1]) + (np.array(VW[1]) - np.array(P_A[1])) * 0.02
     el, ek = end_cam()
-    ks = [(77, tuple(back), tuple(lb), 22.0), (80, P_A[0], P_A[1], 22.0)]
-    for g, loc, look in WP:
+    ks = [(80, P_A[0], P_A[1], 22.0)]
+    for g, loc, look in WPS:
         ks.append((g, loc, look if look else (el[0] - 10, el[1] - 10, 34.0), 22.0))
-    ks.append((125, el, ek, 22.0))
+    ks.append((G_SPL + 16, el, ek, 22.0))
     return ks
 
 
+def _herm(p0, m0, p1, m1, t):
+    t2, t3 = t * t, t * t * t
+    return (2 * t3 - 3 * t2 + 1) * p0 + (t3 - 2 * t2 + t) * m0 + (-2 * t3 + 3 * t2) * p1 + (t3 - t2) * m1
+
+
 def cam_state(g):
-    if g <= 125:
-        r = K.cam_path(None, keys(), g)
+    if g <= G_SPL:
+        r = K.cam_path(None, keys(), min(g, G_SPL))
         return r["loc"], r["look"], r["lens"], r["vivid"]
-    # push 15 f x1.4 on the chewer, then a slow drift (never static)
-    el, ek = end_cam(); pl, pk = push_cam()
+    r0 = K.cam_path(None, keys(), G_SPL); r1 = K.cam_path(None, keys(), G_SPL - 1)
+    l0, k0 = np.array(r0["loc"]), np.array(r0["look"]); l0b, k0b = np.array(r1["loc"]), np.array(r1["look"])
+    el, ek = end_cam(); el = np.array(el); ek = np.array(ek); n = float(G_PUSH - G_SPL)
+    viv = K.STATE.get("vivid")
+    if g <= G_PUSH:
+        t = (g - G_SPL) / n
+        dirv = ek - el; dirv /= np.linalg.norm(dirv)
+        loc = _herm(l0, (l0 - l0b) * n, el, dirv * 0.012 * n, t)          # arrives creeping forward at ~0.36 m/s: the push takes over without a stop
+        look = _herm(k0, (k0 - k0b) * n, ek, np.zeros(3), t)
+        return tuple(loc), tuple(look), 22.0, viv
+    pl, pk = push_cam(); dirv = ek - el; dirv /= np.linalg.norm(dirv)
     u = min((g - G_PUSH) / 15.0, 1.0)
-    e = u * u * (3 - 2 * u) * 0.8 + 0.2 * u
-    loc = np.array(el) + (np.array(pl) - np.array(el)) * e
-    look = np.array(ek) + (np.array(pk) - np.array(ek)) * e
+    e = 0.012 * 15 * u / (0.8 * 15 * 0.1 + 1e-9) * 0.0 + (u * u * (3 - 2 * u)) * 0.85 + 0.15 * u                  # smoothstep + a linear part: starts with the drift velocity
+    loc = el + (np.array(pl) - el) * e; look = ek + (np.array(pk) - ek) * e
     t = max(g - (G_PUSH + 15), 0) / 30.0
     loc = loc + np.array([R[0], R[1], 0.0]) * 0.18 * t + np.array([U[0], U[1], 0.0]) * 0.22 * t
     look = look + np.array([R[0], R[1], 0.0]) * 0.10 * t
-    return tuple(loc), tuple(look), 22.0, K.STATE.get("vivid")
+    return tuple(loc), tuple(look), 22.0, viv
 
 
 # ---------------------------------------------------------------------------- cast
@@ -109,12 +122,40 @@ def pose_of(e, g):
     return K.with_rim(p)
 
 
+
+TRAVEL = 1.0
+
+
+def build_column():
+    """A1's column (team 1 sA1/shot.py): the whole bridge deck and both causeways full of knight PAIRS, crimson/white caparisons, one gold pennon per pair."""
+    rs = np.random.RandomState(5); B = K.Batch(88); B2 = K.Batch(87); S = 1.4
+    sc = bpy.context.scene; dg = bpy.context.evaluated_depsgraph_get()
+    from mathutils import Vector as V3
+
+    def support(x, y):
+        hit, loc, nrm, idx, ob, mtx = sc.ray_cast(dg, V3((x, y, 14.0)), V3((0, 0, -1)))
+        return float(loc.z) if hit else float(K.ground(x, y))
+    for i, y in enumerate(np.arange(-56.0, 66.0, 4.2)):
+        zs = []; deck = -30.0 <= y <= 34.0; Bc = B if deck else B2
+        if deck and any(abs(support(K.BRIDGE_X + s_, y + TRAVEL) - support(K.BRIDGE_X + s_, y)) > 0.02 for s_ in (-0.95, 0.95)): continue
+        for sx in (-0.95, 0.95):
+            x = K.BRIDGE_X + sx; z = support(x, y); zs.append(z)
+            m = (("t_red", "t_white"), ("t_red", "t_cream"))[(i + (sx > 0)) % 2]
+            K.horse(Bc, (x, y, z), 90.0, coat=["horse", "horse_dk", "horse"][rs.randint(0, 3)], trap=m[0], trim=m[1], tint=0.9 + 0.2 * rs.rand(), rider=(m[0],), scale=S)
+        xm, zm = K.BRIDGE_X, float(np.mean(zs))
+        Bc.rod("wood", (xm, y, zm + 3.2), (xm, y, zm + 6.2), 0.05, seg=4); Bc.box("gold", (xm + 0.0, y + 0.55, zm + 5.8), (0.05, 1.1, 0.7))
+    B2.finalize("troops_cws")
+    return B.finalize("troops_col")
+
+
+
 class Seg(object):
     def __init__(self):
         t0 = time.time()
-        self.A = K.build_world(["valley_wide", "hill_over"], fg=False, shafts=True, scots_wide=False)
-        K.scots_wide_line(n=26, banners=5, toward=tuple(K.POSES["P_HOOK"][0][:2]))
-        print('hidden near the ledge (huge saltire cloth behind the Scots):', K.hide_near_banners([(float(W[0]), float(W[1]), 45.0)], 32.0, smoke=False), flush=True)       # same call as team 1 (A1): P_A matches across the D6
+        self.A = K.build_world(["valley_wide", "hill_over"], fg=False, shafts=False, scots_wide=False)
+        K.scots_wide_line(n=26, banners=5, scale=2.2, toward=(120.0, -300.0))                 # A1's exact call
+        for o in [o for o in bpy.data.objects if o.name.startswith("troops_bridge")]: bpy.data.objects.remove(o, do_unlink=True)
+        self.knights = build_column()                                                          # A1's knight-pair column (same code, same start)
         self.scene = bpy.context.scene; self.cam = self.scene.camera; self.cam.data.dof.use_dof = False
         self.scene.frame_start, self.scene.frame_end = 1, 2000
         self.acts = {}
@@ -154,6 +195,9 @@ class Seg(object):
     def render_one(self, g, out, mode="final", samples=32):
         self.scene.frame_set(g + 1); bpy.context.view_layer.update()
         actors.sync_all(self.scene, self.cam)
+        for o in self.knights: o.location.y = TRAVEL * g / 83.0            # A1: the same function of g, so the walk continues across the cut
+        K.show_all_banners()
+        if g >= 112: K.hide_near_banners([(float(W[0]), float(W[1]), 45.0)], 32.0, smoke=False)     # only once the camera is past them: the cloth that would block the bridge view
         t = g / 30.0
         K.set_flutter(t); K.set_smoke(t); K.set_flow(t)
         if self.viv.get(g): K.STATE["vivid"] = self.viv[g]

@@ -4,7 +4,7 @@ import os, json, subprocess, shutil, sys
 from PIL import Image, ImageDraw
 HERE = os.path.dirname(os.path.abspath(__file__))
 SEG = os.path.basename(HERE)
-CFG = {"sA2": dict(first=77, g0=80, g1=159, trans=dict(type="dissolve", frames=6), cam_in="P_A", cam_out="end of the grass-chewer push (see shot.py)",
+CFG = {"sA2": dict(first=80, g0=80, g1=159, trans=dict(type="cut", frames=0), cam_in="P_A", cam_out="end of the grass-chewer push (see shot.py)",
                    cues=[(80, "whoosh: swoop begins from P_A"), (100, "wind and pine rustle as the camera dives past the branches"), (114, "light-shaft shimmer"),
                          (125, "quick whoosh push-in on the grass-chewer, tiny stalk-chew foley"), (145, "soft hill wind under the calm Scots")]),
        "sB2": dict(first=295, g0=298, g1=418, trans=dict(type="dissolve", frames=6), cam_in="P_CAMP", cam_out="P_HILL (hill_low raised 0.8 m)",
