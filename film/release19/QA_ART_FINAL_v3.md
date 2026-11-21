@@ -79,3 +79,38 @@ I measured luma and saturation myself for each 0.5 s tile (mean of 0.299R+0.587G
 5. Ship design: warm the sails (cream or striped) or add a red band on the hull, toward the oil reference.
 
 Once fix 1 is re-rendered and fixes 2-3 are applied in the conform, I expect this to SHIP: about 7.8, with the ending at about 7.5. A check of the new s24 king segment and the re-graded 1 fps sheet is enough to confirm.
+
+## Re-check (after the s24 re-render and the conform re-grade): SHIP, 7.8
+
+**Inputs.**
+- s24 take frames: /tmp/qa19_ov/s24/gNNNN.png. My phone-size strip of them is /tmp/claude-0/qa16/s24_king.jpg (g 1940, 1990, 2002, 2015, 2120, 2155).
+- The refreshed 2 fps film frames, /tmp/claude-0/final_v3/f2/hNNN.png. My strip of them is /tmp/claude-0/qa16/final_recheck.jpg (8.0-9.5 s and 62-71.5 s).
+- I re-measured luma for every 0.5 s tile of the whole film.
+
+| Check | Result |
+|---|---|
+| **The king reads as a KING at phone size (64.5-67.5 s)** | **Yes.** A gold crown on the white wig, a red robe with ermine lapels, a bold blue Garter sash and star, and two watches held up. He is central and well lit against the red drapes and the blue window, so he cannot be mistaken for an astronomer any more. |
+| No candle, foreground or frame edge cutting him | **Met.** The candelabra and the single tall candle stand to his left, clear of his body. The table candles and orrery are below his hands. His hands and watches are well inside both edges. The thin candle sliver at the left edge around g 1997-2007 is set dressing, touches no character, and is fine. |
+| The ending punchline lands | **Yes.** The crowned king times the watch on "พระราชา … เอง กับมือ … ทุกวัน สิบสัปดาห์". A whip goes to the astronomer, jaw dropped and sweating, on "ท้าไว้เป๊ะ". A whip returns to the old Harrison grinning over the gold bag with coins spilling, **with the crowned king smiling behind him** (g 2120-2155) on "ต้องควักเงินจ่ายให้ไอ้ช่างไม้". Now the picture carries the joke, not only the narration. The bag's drop and bounce is the intended GROUND exception. |
+| Grade at 8.7 s (s04 → s05) | **Continuous:** 100 → 100 (was 111-114 → 83-86). The storm deck matches. |
+| Grade at 64.4 s (s23 → s24) | 85 (the end of the dim corridor) → 109 (the lit table). It is a cut into a different, window-lit room, so the step is motivated, like the other location changes. Acceptable. Inside s23: 98-111 → 85 as Harrison walks into the dimmer corridor. Fine. |
+| Grade through the ending | The table sits at 106-109 (64.5-67.0 s); the whip to the library corner is at 77-83 (68.0-69.5 s); the payoff is at 79-84 (70.0-71.5 s). The ending is no longer the darkest part of the film: it now sits with the other hall shots (74-81) and slightly above them. The drop from the table to the library is crossed by a whip-pan, so it reads as a move to another corner, not a grade jump. |
+| Regressions | **None.** All other tiles match the first pass value for value (0-62 s unchanged apart from the storm lift at 6.5-11.5 s, which now sits at 100-104). Faces, captions, grounding and camera calm are unchanged. |
+
+| Criterion (film-13 QA-art) | First pass | Re-check |
+|---|---|---|
+| Set density / ornament | 8.5 | 8.5 |
+| Lighting & colour | 7.5 | 8 |
+| Composition / phone legibility | 7 | 7.5 |
+| Character acting | 8 | 8 |
+| Key moments (hook / reveal / false payoff / ending) | 7.25 (7.5 / 7.5 / 7.5 / 6.5) | 7.6 (7.5 / 7.5 / 7.5 / 8) |
+| Overall match to references | 7.5 | 7.5 |
+| **Overall** | **7.5, FIX-FIRST** | **7.8, SHIP** |
+
+**Verdict: SHIP.** QA-art passes film 19 v3 at the FINAL gate (§D.3).
+
+Open, non-blocking notes for the client report:
+- the telescope crosses the top of the left astronomer's wig at 14-15.5 s (s06);
+- the ship design (navy hull, lilac sails) is plainer than the oil reference;
+- the basket at the bottom-left edge at 56-58 s is cut by the frame;
+- the dissolves at 55.5, 58.5 and 62 s briefly ghost a large face over the next shot.
