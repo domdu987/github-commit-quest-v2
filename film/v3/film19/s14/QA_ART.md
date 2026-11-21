@@ -138,3 +138,32 @@ Acceptance:
 - ideally a slice of the H1's gearwork stays visible at the left, so "tiny beside giant" is still in the frame on the word.
 
 Keep the same ease and no overshoot. A re-check of these frames is enough; no full review is needed.
+
+## Round (whip re-frame check, film-13 rules, commit 34d14cb): SHIP, 7.67
+
+**Inputs.** Frames: /tmp/qa19_ov/s14/gNNNN.png. Only g 1074-1104 were re-rendered (whip zoom 1.95 → 1.5, pan 0.6 → 0.5, whip window g 1073-1094). I checked:
+- edges on the full-res frames: white extents of the dial, plus the face and the grey hair outline;
+- a rigid LK similarity fit on every frame g 1070-1104;
+- a phone-size strip, /tmp/claude-0/qa16/s14_fix.jpg (g 1073 / 1079 / 1085 / 1088 / 1091 / 1095 / 1100 / 1104).
+
+| Criterion (from my previous round) | Result |
+|---|---|
+| The whole H4 dial inside the frame with at least about 30 px margin from g 1085 | **Met.** On the strip the full dial, its crown and its red cloth sit in the left-centre of the frame through g 1104. The team's case bbox puts the left edge at 148 (g 1085), 68 (g 1090) and 53 (g 1095, end of the shot); the handle reaches 37 at g 1104. My white-pixel measure agrees (dial left edge about 75-120 px from g 1088 on). The 4 white pixels in column 0 at g 1085 belong to a window highlight, not the dial. |
+| Harrison inside x 700 | **Met.** Face right edge 652-671 and hair outline 658-688 over g 1085-1104 (at most 675 inside the shot). |
+| A slice of the H1 visible on the word | **Met.** At g 1085-1095 the H1's brass balls, its big wheel and its wooden frame and gearwork fill the left of the frame beside the small watch. "Tiny beside giant" is in the frame on "เท่าจานรอง". |
+| The whip lands on the word with a clean ease | **Met.** Rigid median: 1.9 px/f (g 1074) → 5.5 (g 1077) → 11.3 (g 1080) → **15.0 peak (g 1083)** → 11.6 (g 1085) → 6.8 (g 1088) → 2.7 (g 1091) → 1.9 px/f drift from g 1092. One hump, no overshoot, no recoil. The peak sits between the caption (g 1079) and the spoken word (g 1085), and the camera settles by g 1091. (Single-frame wobbles in the similarity fit at g 1080 and g 1090 are fit noise from Harrison's arm; the median speed is smooth through them.) |
+| Unchanged frames | g 1007-1073 are md5-identical (team), so the calm one-way push and the wide reveal read are as accepted. |
+
+| Criterion (film-13 QA-art) | Score |
+|---|---|
+| Set density / ornament | 8.5 |
+| Lighting & colour | 7.5 |
+| Composition / framing / phone | 7.5 |
+| Character acting | 7.5 |
+| Key moment (size reveal + whip on the word) | 7.5 |
+| Overall match to references | 7.5 |
+| **Overall** | **7.67, SHIP** |
+
+**Verdict: SHIP.** s14 passes QA-art at the TAKE gate (§C, a reveal key shot).
+
+Non-blocking polish carried from earlier rounds: separate the H1 from the back-wall gear rack, and lighten Harrison's open hand.
