@@ -176,12 +176,15 @@ def ground_fn(scene):
     return gz
 
 def hills(Bk, M, y0=470.0, z=-8.0):
-    hb = Bk('hills', hull=0.0, shadow=False); rr = _rnd(5)
+    hb = Bk('hills', hull=0.0, shadow=False); rr = _rnd(5); tb = Bk('treeline', hull=0.0, shadow=False)
     for i in range(30):
         x = -640 + 1280 * i / 29 + rr.uniform(-20, 20); y = y0 + rr.uniform(0, 70); rad = rr.uniform(70, 110)
-        lumpy(hb, V(x, y, 6 + rr.uniform(0, 16) - rad * 0.35), rad, M['hill'], 40 + i, seg=16, rings=7, rough=0.2, squash=0.5)
+        lumpy(hb, V(x, y, 6 + rr.uniform(0, 16) - rad * 0.35), rad, M['hill'], 40 + i, seg=28, rings=12, rough=0.07, squash=0.5)
+        for k in range(7):
+            a_ = rr.uniform(-0.7, 0.7); tx_ = x + rad * 0.8 * math.sin(a_); ty_ = y - rad * 0.55 * math.cos(a_)
+            lumpy(tb, V(tx_, ty_, 6 + (rr.uniform(0, 16) - rad * 0.35) + rad * 0.5 * math.cos(a_) * 0.5 + 2), rr.uniform(4, 8), M['leaf'], 300 + i * 7 + k, seg=7, rings=4, rough=0.2, squash=0.9)
     for i in range(10):
-        x = -700 + 1400 * i / 9; lumpy(hb, V(x, y0 + 120 + rr.uniform(0, 40), 14 + rr.uniform(0, 20) - 40), rr.uniform(100, 150), M['hill_f'], 80 + i, seg=16, rings=7, rough=0.15, squash=0.4)
+        x = -700 + 1400 * i / 9; lumpy(hb, V(x, y0 + 120 + rr.uniform(0, 40), 14 + rr.uniform(0, 20) - 40), rr.uniform(100, 150), M['hill_f'], 80 + i, seg=28, rings=12, rough=0.06, squash=0.4)
 
 def sun_disc(Bk, M):
     P = STATE['P']; az, el = P['sun_az'], P.get('sun_vis_el', P['sun_el']); d = V(math.cos(math.radians(el)) * math.cos(math.radians(az)), math.cos(math.radians(el)) * math.sin(math.radians(az)), math.sin(math.radians(el)))
@@ -202,9 +205,9 @@ def soldiers(specs, cam_loc, gz, lean=0.0, tone='d', scale=1.0):
 # ============================================================================= materials extra (hills, sun)
 def extra_materials(M, P):
     pre = STATE['pre']; C = PR.mat_g_factory(P, STATE['tx'], pre)['C']
-    M['hill'] = C('#4cb870', 1.0, form=False); M['hill_f'] = C('#5a9ad8', 1.0, form=False)
+    M['hill'] = GH.mat_g(pre + 'hillt', art=STATE['tx']['leaf'], gain=1.15, form=False); M['hill_f'] = C('#5a9ad8', 1.0, form=False)
     M['sun_disc'] = mat_emit(pre + 'sun_disc', '#fff0c8', strength=4.0)
-    M['pebble'] = C('#a89a88', 1.0)
+    M['pebble'] = C('#a89a88', 1.0); M['puddle'] = mat_emit(pre + 'puddle', '#5aa0e8', strength=0.8); M['brown_h'] = C('#a0562a', 1.0)
     M['tuft'] = C('#3fb02e', 1.1, form=False); M['tuft2'] = C('#74cc3a', 1.1, form=False); M['fl_y'] = C('#ffd830', 1.2, form=False); M['fl_w'] = C('#fff8f0', 1.2, form=False); M['fl_r'] = C('#ff6a50', 1.1, form=False)
     M['star_w'] = GH.mat_g(pre + 'star_w', art=STATE['tx']['star'], gain=1.1, alpha=True, form=False)
     M['tent_glow'] = mat_emit(pre + 'tent_glow', '#ff9a3a', strength=1.5)
@@ -401,19 +404,43 @@ def build_morning(Bk, M):
                 if rr.random() < 0.6: poplar(Bk, M, V(q[0], q[1], gz(q[0], q[1])), h=rr.uniform(24, 30), seed=int(q[1] * 3) & 0xffff)
                 else: round_tree(Bk, M, V(q[0], q[1], gz(q[0], q[1])), r=rr.uniform(3.4, 4.8), seed=int(q[1] * 5) & 0xffff)
     # the stage, blocked in screen space: feet pixels -> ground points (gp)
-    tpos = gp(400, 790); tyaw = 244.0; tz0 = gz(*tpos)
-    tk = PR.tank_obj('tank_hero', (tpos[0], tpos[1], tz0), tyaw, M, inflate=0.66, sag=0.85, seed=5, lod=1.5, hull=0.07)
+    tpos = gp(380, 784); tyaw = 214.0; tz0 = gz(*tpos)
+    tk = PR.tank_obj('tank_hero', (tpos[0], tpos[1], tz0), tyaw, M, inflate=0.66, sag=0.9, seed=5, lod=1.6, hull=0.07)
     info = STATE['tank_info']; TF = BK.Frame((tpos[0], tpos[1], tz0), tyaw)
     tip = TF.p(*info['tip']); valve = TF.p(*info['valve'])
-    PR.blob(Bk, V(tpos[0], tpos[1], tz0), 6.2, 3.4, M, 0.06)
-    pumppos = gp(160, 816); PR.pump(Bk, M, (pumppos[0], pumppos[1], gz(*pumppos)), 5, valve, gz=gz)
-    ca = gp(632, 856); PR.crate(Bk, M, V(ca[0], ca[1], gz(*ca)), -8, size=(2.1, 1.3, 1.3), front='crate_a', open_=False, name='crateA', seed=1)
+    PR.blob(Bk, V(tpos[0], tpos[1], tz0), 6.4, 3.6, M, 0.07)
+    pumppos = gp(470, 842); PR.pump(Bk, M, (pumppos[0], pumppos[1], gz(*pumppos)), 5, valve, gz=gz)
+    ca = gp(118, 872); PR.crate(Bk, M, V(ca[0], ca[1], gz(*ca)), 12, size=(2.1, 1.3, 1.3), front='crate_a', open_=False, name='crateA', seed=1)
     PR.crate(Bk, M, V(ca[0] + 0.05, ca[1], gz(*ca) + 1.3), 6, size=(2.0, 1.25, 1.25), front='crate_b', open_=True, name='crateB', seed=2)
     C0 = V(*STATE['cam']['loc']); LA = V(*STATE['cam']['look_at']); fw = V(LA.x - C0.x, LA.y - C0.y, 0).normalized(); rt = V(fw.y, -fw.x, 0)
-    sgp = C0 + fw * 17.0 + rt * 0.3; PR.sign_post(Bk, M, V(sgp.x, sgp.y, gz(sgp.x, sgp.y)), 0, w=8.2, h=2.7, ph=6.6)
-    w2 = gp(900, 905); w3 = gp(700, 930); PR.stone_wall(Bk, M, V(w2[0], w2[1], 0), V(w3[0], w3[1], 0), h=0.85, w=0.95, seed=4, gz=gz)
-    w4 = gp(-330, 892); w5 = gp(104, 884); PR.stone_wall(Bk, M, V(w4[0], w4[1], 0), V(w5[0], w5[1], 0), h=0.85, w=0.95, seed=5, gz=gz)
-    bk_ = gp(-215, 1030); PR.bicycle(Bk, M, V(bk_[0], bk_[1], gz(*bk_)), 8, lean=14, s=0.85)
+    sgp = C0 + fw * 17.5 + rt * 0.3; PR.sign_post(Bk, M, V(sgp.x, sgp.y, gz(sgp.x, sgp.y)), 0, w=8.4, h=2.7, ph=6.8)
+    w2 = gp(1000, 905); w3 = gp(660, 918); PR.stone_wall(Bk, M, V(w2[0], w2[1], 0), V(w3[0], w3[1], 0), h=0.85, w=0.95, seed=4, gz=gz)
+    bk_ = gp(1130, 1060); PR.bicycle(Bk, M, V(bk_[0], bk_[1], gz(*bk_)), 8, lean=14, s=0.85)
+    # foreground fill: puddle, flat deflated sheet, coiled hose, toolbox, straw, chickens
+    fb = Bk('fg', hull=0.0, shadow=False); fs = Bk('fg_s', hull=0.0); fr = Bk('fg_r', hull=0.0, smooth_=True); rr3 = _rnd(41)
+    pc_ = gp(300, 1060); pz = gz(*pc_) + 0.04
+    for i in range(24):
+        a0, a1 = 2 * math.pi * i / 24, 2 * math.pi * (i + 1) / 24
+        fb.face([V(pc_[0], pc_[1], pz), V(pc_[0] + 1.9 * math.cos(a0), pc_[1] + 1.0 * math.sin(a0), pz), V(pc_[0] + 1.9 * math.cos(a1), pc_[1] + 1.0 * math.sin(a1), pz)], M['puddle'], [(0.5, 0.5), (0.5, 0.5), (0.5, 0.5)])
+    sh_ = gp(210, 1000); PR.puffball(fr, V(sh_[0], sh_[1], gz(*sh_) + 0.1), (2.6, 1.6, 0.16), M['rubber'], e=(0.7, 0.8), seg=20, rings=6, lat=(0, math.pi / 2), deflate=1.0, seed=3, noise=0.5)
+    PR.puffball(fr, V(sh_[0], sh_[1], gz(*sh_) + 0.2), (0.7, 0.7, 0.14), M['rubber_white'], e=(0.7, 0.7), seg=10, rings=3, lat=(0, math.pi / 2))
+    hc_ = gp(560, 1040); hz_ = gz(*hc_)
+    pts = [V(hc_[0] + (0.5 - 0.03 * k) * math.cos(k * 0.5), hc_[1] + (0.35 - 0.02 * k) * math.sin(k * 0.5), hz_ + 0.1 + 0.02 * k) for k in range(36)]
+    PR.tube(fs, pts, [0.09] * 36, M['rubber_black'], seg=6, uvk=0.2)
+    tx_, ty_ = gp(440, 1110); obox(fs, V(tx_, ty_, gz(tx_, ty_) + 0.22), V(1, 0, 0), V(0, 1, 0), V(0, 0, 1), 0.7, 0.28, 0.22, M['red']); rod(fs, V(tx_ - 0.4, ty_, gz(tx_, ty_) + 0.46), V(tx_ + 0.4, ty_, gz(tx_, ty_) + 0.46), 0.05, M['metal'], seg=4)
+    sx_, sy_ = gp(130, 930)
+    for i in range(70):
+        ax_ = rr3.uniform(0, 3.14); x_, y_ = sx_ + rr3.uniform(-1.6, 1.8), sy_ + rr3.uniform(-0.9, 0.9); z_ = gz(x_, y_) + 0.04
+        rod(fb, V(x_, y_, z_), V(x_ + 0.5 * math.cos(ax_), y_ + 0.5 * math.sin(ax_), z_ + 0.03), 0.018, M['hay'], seg=3)
+    for (cx_, cy_, ck_) in ((gp(330, 1150), 0.0), (gp(400, 1200), 2.0), (gp(215, 1180), 4.0)) if False else ():
+        pass
+    for k_, (px_, py_) in enumerate((gp(300, 1020), gp(392, 1046), gp(200, 1070))):
+        s_ = 0.62; F_ = BK.Frame((px_, py_, gz(px_, py_)), 40 + k_ * 70); cz = 0.55 * s_
+        P_ = lambda x, y, z: F_.p(x * s_, y * s_, z * s_)
+        PR.puffball(fr, P_(0, 0, 0.55), (0.42 * s_, 0.28 * s_, 0.3 * s_), M['white_p'], e=(0.9, 0.9), seg=10, rings=5); PR.puffball(fr, P_(0.38, 0, 0.85), (0.15 * s_, 0.13 * s_, 0.17 * s_), M['white_p'], e=(1, 1), seg=8, rings=4)
+        PR.puffball(fr, P_(0.36, 0, 1.05), (0.05 * s_, 0.04 * s_, 0.09 * s_), M['red'], e=(1, 1), seg=6, rings=3); fs.frustum(P_(0.5, 0, 0.85), P_(0.62, 0, 0.83), 0.04 * s_, 0.0, M['yellow'], seg=4)
+        PR.puffball(fr, P_(-0.42, 0, 0.7), (0.2 * s_, 0.06 * s_, 0.25 * s_), M['brown_h'], e=(1, 1), seg=6, rings=3)
+        for sy in (-1, 1): rod(fs, P_(0, sy * 0.1, 0.35), P_(0.05, sy * 0.1, 0.0), 0.025 * s_, M['yellow'], seg=3)
     # farmhouse behind (red roof), barn, orchard, poplar row, chimney smoke
     house(Bk, M, (-13.0, 33.0, 0), -4, L=17, Wd=9.5, wh=5.6, rise=4.4, gz=gz, wins=4, door=0.62, chimney=2, dormers=2, name='farm', ink=0.2, seed=2)
     house(Bk, M, (-36.0, 40.0, 0), 8, L=14, Wd=10, wh=6.0, rise=4.4, gz=gz, roof='roof_d', wall='barn', wins=0, name='barn', ink=0.2, seed=3, dormers=0, chimney=0)
@@ -431,12 +458,10 @@ def build_morning(Bk, M):
     tufts(Bk, M, (-14, 16, -13, 10), 1700, gz, seed=3, h=(0.15, 0.4), avoid=lambda x, y: near_lane(x, y, -3.0), flowers=0.2)
     tufts(Bk, M, (-14, 16, -13, 10), 500, gz, seed=4, h=(0.1, 0.25))
     lt = Bk('litter', hull=0.0); rr2 = _rnd(77)
-    for i in range(70):
-        x, y = gp(rr2.uniform(0, 720), rr2.uniform(900, 1270)); lumpy(lt, V(x, y, gz(x, y) + 0.02), rr2.uniform(0.03, 0.08), M['pebble'], i, seg=6, rings=4, rough=0.3, squash=0.6)
-    bx, by = gp(560, 930); rod(lt, V(bx, by, gz(bx, by)), V(bx, by, gz(bx, by) + 0.7), 0.3, M['metal'], seg=12, r1=0.4); rod(lt, V(bx, by, gz(bx, by) + 0.66), V(bx, by, gz(bx, by) + 0.72), 0.43, M['metal'], seg=12)
-    hx_, hy_ = gp(330, 960); lumpy(lt, V(hx_, hy_, gz(hx_, hy_) + 0.05), 0.3, M['olive_d'], 5, seg=10, rings=5, rough=0.05, squash=0.6)
+    for i in range(18):
+        x, y = gp(rr2.uniform(0, 720), rr2.uniform(1000, 1270)); lumpy(lt, V(x, y, gz(x, y) + 0.02), rr2.uniform(0.03, 0.08), M['pebble'], i, seg=6, rings=4, rough=0.3, squash=0.6)
     # soldiers (placeholder cards, olive, helmets): pump, barrel lift, valve, clipboard
-    pl = gp(228, 836); pu_ = gp(84, 794); pc = gp(612, 784); pp = gp(470, 840)
+    pl = gp(70, 800); pu_ = gp(560, 826); pc = gp(668, 800); pp = gp(214, 812)
     sp = [(pu_[0], pu_[1], 'pump', None, True), (pl[0], pl[1], 'lift', None, False), (pp[0], pp[1], 'point', None, False), (pc[0], pc[1], 'clip', None, True)]
     soldiers(sp, cam_loc, gz, lean=0.0, tone='d')
     STATE['marks'].update(tank=(tpos[0], tpos[1], tz0), tip=tuple(tip), valve=tuple(valve))

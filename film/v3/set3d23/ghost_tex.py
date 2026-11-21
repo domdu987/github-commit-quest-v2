@@ -12,7 +12,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEX = os.path.join(HERE, 'tex_ghost')
-TEX_V = 'g23.11'
+TEX_V = 'g23.12'
 JOBS = {}
 FONT_B = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 FONT_N = '/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf'
@@ -214,9 +214,9 @@ def paint_sky(p, out):
             xs = np.arange(x0, x1) % W; X = np.arange(x0, x1)[None, :].astype('float32'); Y = np.arange(y0, y1)[:, None].astype('float32'); cov = np.zeros((y1 - y0, x1 - x0), 'float32'); top = np.zeros_like(cov)
             for k in range(nd):
                 u = (k + 0.5) / nd - 0.5; cx = az0 * ppd + u * wd * ppd * 1.05 + rr.uniform(-0.05, 0.05) * wd * ppd; rd = hd * ppd * rr.uniform(0.7, 1.25) * (1.0 - 1.8 * u * u); cy = by - rd * rr.uniform(0.15, 0.5)
-                d = np.sqrt((X - cx) ** 2 + (Y - cy) ** 2); cov = np.maximum(cov, np.clip(rd - d + 0.5, 0, 1))
+                d = np.sqrt((X - cx) ** 2 + (Y - cy) ** 2); cov = np.maximum(cov, np.clip((rd - d) / (0.5 + 0.22 * rd) + 0.5, 0, 1))
                 top = np.maximum(top, np.clip(rd * 0.82 - np.sqrt((X - cx + rd * 0.12) ** 2 + (Y - cy + rd * 0.3) ** 2) + 0.5, 0, 1))
-            cov = cov * np.clip(by - Y + 0.5, 0, 1); bot = np.clip((Y - (by - hd * ppd * 0.42)) + 0.5, 0, 1)
+            cov = cov * np.clip((by - Y) / (0.25 * hd * ppd) + 0.5, 0, 1); bot = np.clip((Y - (by - hd * ppd * 0.9)) / (hd * ppd * 0.9), 0, 1) ** 1.3 * 0.75
             tcol = hexf(c_top)[None, None] * np.ones_like(cov)[..., None]
             if warm is not None: tcol = tcol + (np.exp(-(dd[y0:y1][:, xs] / wk) ** 2))[..., None] * hexf(warm) * 0.45
             col = hexf(c_body)[None, None] * (1 - top[..., None]) + tcol * top[..., None]; col = col * (1 - bot[..., None]) + hexf(c_bot)[None, None] * bot[..., None]
@@ -227,11 +227,11 @@ def paint_sky(p, out):
         warm = np.exp(-(dd / 50.0) ** 2) * np.exp(-np.clip(el, -2, 90)[:, None] / 3.2)
         img = img * (1 - warm[..., None] * 0.85) + warm[..., None] * 0.85 * hexf('#ffb865')
         img += (np.exp(-(dd / 1.6) ** 2) * 1.0)[..., None] * hexf('#fff4d0'); img += (np.exp(-(dd / 7.0) ** 2) * 0.35)[..., None] * hexf('#ffd890')
-        img = clouds(img, 70, 4, 32, '#fff0d0', '#f0dcd8', '#9aa4e0', (6, 18), (0.9, 2.2), 21, '#ffd890', 40.0)
+        img = clouds(img, 70, 4, 32, '#fff0d0', '#f0dcd8', '#c8cfe8', (6, 18), (0.9, 2.2), 21, '#ffd890', 40.0)
     elif mode == 'morning':
         img = grad([(-15, '#f6c880'), (0, '#ffd490'), (3, '#bcd8f4'), (8, '#78b4f0'), (25, '#3e88e4'), (90, '#2257c8')])
         img += (np.exp(-(dd / 2.0) ** 2) * 1.0)[..., None] * hexf('#fff4d0'); img += (np.exp(-(dd / 10.0) ** 2) * 0.3)[..., None] * hexf('#ffe0a0')
-        img = clouds(img, 44, 6, 40, '#fff6e0', '#f8e4d8', '#a8a4dc', (10, 26), (1.6, 3.4), 23, '#ffe4a8', 50.0)
+        img = clouds(img, 44, 6, 40, '#fff6e0', '#f8e4d8', '#d0d4ea', (10, 26), (1.6, 3.4), 23, '#ffe4a8', 50.0)
     else:   # night: deep blue gradient, soft moon glow, stars, a few cool clouds
         img = grad([(-15, '#1c2c66'), (0, '#2a4690'), (6, '#2c4aa0'), (20, '#1a3080'), (50, '#101e5c'), (90, '#0a1244')])
         img += (np.exp(-(dd / 14.0) ** 2) * 0.22)[..., None] * hexf('#6a8cf0'); img += (np.exp(-(dd / 4.0) ** 2) * 0.35)[..., None] * hexf('#a0c0ff')

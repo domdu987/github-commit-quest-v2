@@ -39,13 +39,14 @@ def setup_materials(P, tx, pre):
     M['crate_a'] = TX('crate_a', 1.1); M['crate_b'] = TX('crate_b', 1.1); M['crate_c'] = TX('crate_c', 1.1); M['crate_p'] = TX('crate_plain', 1.1); M['sign'] = TX('sign', 1.1)
     M['cow'] = TX('cow', 1.05); M['cow_b'] = TX('cow_b', 1.05); M['pink'] = C('#f0a0a0', 1.0)
     # rubber (smooth normal for the toon terminator, GGX sheen, warm rim on sun-facing edges)
-    rim = ((1.0, 0.8, 0.45), 0.9, 2.4) if not night else ((0.55, 0.72, 1.0), 1.4, 2.2)
-    spec = ((1.0, 0.98, 0.9), 0.16 if not night else 0.22, 0.45)
-    smr = 0.55 if not night else 1.15; STATE['smr'] = smr
-    M['rubber'] = mg(pre + 'rubber', art=tx['rubber'], gain=1.5, smooth_n=True, spec=spec, rim=rim, shade_mul=smr)
+    rim = ((1.0, 0.8, 0.45), 0.9, 2.4) if not night else ((0.5, 0.7, 1.0), 2.2, 1.6)
+    spec = ((1.0, 0.98, 0.9), 0.22 if not night else 0.22, 0.42)
+    smr = 0.55 if not night else 0.7; STATE['smr'] = smr
+    M['rubber'] = mg(pre + 'rubber', art=tx['rubber'], gain=1.5 if not night else 0.7, smooth_n=True, spec=spec, rim=rim, shade_mul=smr)
     M['rubber_d'] = mg(pre + 'rubber_d', art=tx['rubber_d'], gain=1.4, shade_mul=smr, smooth_n=True, spec=((1.0, 0.95, 0.85), 0.35, 0.34), rim=rim)
     M['rubber_l'] = mg(pre + 'rubber_l', art=tx['rubber_l'], gain=1.5, shade_mul=smr, smooth_n=True, spec=spec, rim=rim)
     STATE['star_args'] = (tx, spec, rim)
+    M['seam_ink'] = C('#1c2412', 1.0)
     M['rubber_white'] = mg(pre + 'rubber_white', art='#f2efe0', gain=1.1, smooth_n=True, spec=spec)
     M['rubber_black'] = mg(pre + 'rubber_black', art='#242622', gain=1.0, smooth_n=True, spec=((1, 1, 1), 0.3, 0.4))
     # light things
@@ -53,7 +54,7 @@ def setup_materials(P, tx, pre):
     M['halo'] = BK._mat_add(pre + 'halo', tx['glow'], (1.0, 0.62, 0.26), 0.75); M['halo_w'] = BK._mat_add(pre + 'halo_w', tx['glow'], (1.0, 0.72, 0.4), 0.8)
     M['halo_s'] = BK._mat_add(pre + 'halo_s', tx['glow'], (1.0, 0.8, 0.5), 1.0); M['pool'] = BK._mat_add(pre + 'pool', tx['pool'], (1.0, 0.42, 0.10), 0.7)
     M['sun_halo'] = BK._mat_add(pre + 'sun_halo', tx['glow'], (1.0, 0.8, 0.45), 0.5)
-    M['mist'] = BK._mat_add(pre + 'mist', tx['mist'], (0.8, 0.88, 1.0), 0.55); M['puff'] = mg(pre + 'puff', art=tx['puff'], gain=1.2, alpha=True, form=False, shade_mix=0.3)
+    M['mist'] = BK._mat_add(pre + 'mist', tx['mist'], (0.8, 0.88, 1.0), 0.55); M['puff'] = mg(pre + 'puff', art=tx['puff'], gain=1.1, alpha=True, form=False, shade_mix=0.1, shade_mul=2.2)
     M['blob'] = _mat_blob(pre + 'blob', tx['glow'])
     M['water'] = mg(pre + 'water', art=tx['water'], gain=1.0, form=False, glow=tx['water'], glow_k=0.14)
     M['glow_win'] = mat_emit(pre + 'glow_win', '#ffcf80', strength=2.6); M['screen'] = mat_emit(pre + 'screen', '#8affc0', strength=2.0)
@@ -149,8 +150,8 @@ def sausage(mb, p0, p1, r, mat, k=1.0, n=1, seg=8, sag=0.0, bulge=0.22):
         rad.append(r * k * (0.72 + 0.28 * math.sin(math.pi * sec) ** 0.7 + bulge * 0.0))
     tube(mb, pts, rad, mat, seg=seg)
 
-def seam(mb, p0, p1, M, r=0.055):
-    rod(mb, p0, p1, r, M['rubber_l'], seg=5)
+def seam(mb, p0, p1, M, r=0.07):
+    rod(mb, p0, p1, r, M['seam_ink'], seg=5)
 
 def inst(ob, name, loc, yaw=0.0, hull=0.0, scale=1.0):
     """Linked duplicate of a mesh object (shared mesh data) with its own ink hull modifier."""
@@ -212,11 +213,11 @@ def tank_mesh(M, inflate=1.0, sag=0.0, seed=1, lod=1.0, valve=True, wheels=True)
     # barrel: sausage sections, droops with sag (and with deflation); muzzle brake ring
     sg = max(sag, min(1.0, de * 1.4)); L_ = 4.9; r = 0.30 * (0.55 + 0.45 * f); p0 = V((X(2.2), 0, tz + Z(0.32))); drop = min(sg * 3.3, max(0.3, p0.z - 1.0))
     sausage(mb, p0, p0 + V((L_, 0, 0)), r, rb, n=6, seg=max(6, int(9 * lod)), sag=drop)
-    mz = p0 + V((L_, 0, -drop)); mb.info = dict(tip=tuple(mz), valve=(X(0.9), -W(1.62) - 0.6, Z(1.55)), top=tz + Z(1.3)); puffball(mb, mz, (0.34 * (0.5 + 0.5 * f) + 0.06, r * 1.35, r * 1.35), rl, e=(0.8, 0.8), seg=10, rings=5)
+    mz = p0 + V((L_, 0, -drop)); mb.info = dict(tip=tuple(mz), valve=(X(0.9), W(1.62) + 0.6, Z(1.55)), top=tz + Z(1.3)); puffball(mb, mz, (0.34 * (0.5 + 0.5 * f) + 0.06, r * 1.35, r * 1.35), rl, e=(0.8, 0.8), seg=10, rings=5)
     # inflation valve (small brass nozzle + white cap) at the rear left, with seam rods along the hull edges
     if valve:
-        vb = V((X(0.9), -W(1.62), Z(1.55))); rod(mb, vb, vb + V((0, -0.42, 0)), 0.15, M['brass'], seg=8); rod(mb, vb + V((0, -0.42, 0)), vb + V((0, -0.55, 0)), 0.2, M['white_p'], seg=8)
-        puffball(mb, vb + V((0, -0.12, 0)), (0.3, 0.3, 0.3), rl, e=(1, 1), seg=8, rings=4)
+        vb = V((X(0.9), W(1.62), Z(1.55))); rod(mb, vb, vb + V((0, 0.42, 0)), 0.17, M['brass'], seg=8); rod(mb, vb + V((0, 0.42, 0)), vb + V((0, 0.58, 0)), 0.24, M['white_p'], seg=8)
+        puffball(mb, vb + V((0, 0.12, 0)), (0.3, 0.3, 0.3), rl, e=(1, 1), seg=8, rings=4)
     if f > 0.45:
         for sy in (-1, 1):
             seam(mb, V((X(-4.4), W(1.55 * sy), Z(2.8))), V((X(3.0), W(1.55 * sy), Z(2.8))), M); seam(mb, V((X(-4.4), W(1.55 * sy), Z(0.72))), V((X(4.3), W(1.55 * sy), Z(0.72))), M)
@@ -256,11 +257,15 @@ def truck_mesh(M, inflate=1.0, rubber=True, horn=False, seed=3, lod=1.0):
             mb.oface([V(1.1, sy * 1.7 + sy * 0.12, Z(3.2)), V(2.5, sy * 1.7 + sy * 0.12, Z(3.2)), V(2.5, sy * 1.7 + sy * 0.12, Z(4.3)), V(1.1, sy * 1.7 + sy * 0.12, Z(4.3))], M['glass'], [(0, 0)] * 4, (0, sy, 0))
             puffball(mb, (5.3, sy * 1.0, Z(2.9)), (0.2, 0.28, 0.28), M['white_p'], e=(1, 1), seg=8, rings=4)
         mb.oface([V(2.99, -1.3, Z(3.3)), V(2.99, 1.3, Z(3.3)), V(2.99, 1.3, Z(4.4)), V(2.99, -1.3, Z(4.4))], M['glass'], [(0, 0)] * 4, (1, 0, 0)) if False else None
-    if horn:                                                                                                                                              # big round loudspeaker horn on a boom, facing back-right
-        base = V(-3.2, 0, Z(5.2)); rod(mb, V(-3.2, 0, Z(3.4)), base, 0.22, M['metal'], seg=8); rod(mb, base, base + V(-0.9, 0, 0.5), 0.2, M['metal'], seg=8)
-        hc = base + V(-1.3, 0, 0.8); ax = V(-0.85, 0, 0.35).normalized(); mb.frustum(hc, hc + ax * 2.6, 0.55, 1.9, M['olive'], seg=24, cap0=False, cap1=False)
-        mb.frustum(hc + ax * 2.55, hc + ax * 2.68, 1.9, 1.9, M['brass'], seg=24, cap0=False, cap1=False); mb.frustum(hc + ax * 2.6, hc + ax * 0.4, 1.8, 0.5, M['dark'], seg=24, cap0=False, cap1=False)
-        rod(mb, hc + ax * 0.2, hc - ax * 0.3, 0.7, M['metal'], seg=12)
+    if horn:                                                                                                                                              # deep flared metal bell on a boom, facing back-right
+        base = V(-3.2, 0, Z(5.0)); rod(mb, V(-3.2, 0, Z(3.4)), base, 0.25, M['metal'], seg=8); rod(mb, base, base + V(-0.7, 0, 0.5), 0.22, M['metal'], seg=8)
+        hc = base + V(-1.0, 0, 0.7); ax = V(-0.85, 0, 0.30).normalized(); L_ = 4.2; prev = None
+        for i in range(10):
+            t = i / 10.0; t2 = (i + 1) / 10.0; r0 = 0.45 + 2.3 * t ** 2.2; r1 = 0.45 + 2.3 * t2 ** 2.2
+            mb.frustum(hc + ax * (L_ * t), hc + ax * (L_ * t2), r0, r1, M['metal'], seg=28, cap0=False, cap1=False)
+        mb.frustum(hc + ax * L_, hc + ax * (L_ + 0.18), 2.75, 2.75, M['brass'], seg=28, cap0=False, cap1=False)
+        mb.frustum(hc + ax * (L_ - 0.1), hc + ax * 0.5, 2.5, 0.55, M['dark'], seg=28, cap0=False, cap1=False)
+        rod(mb, hc - ax * 0.2, hc + ax * 0.5, 0.7, M['metal'], seg=12)
     return mb
 
 def gun_mesh(M, inflate=1.0, seed=2):
