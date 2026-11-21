@@ -14,5 +14,9 @@ Fallback check: send_later 60 min, always re-armed.
 - [x] SET gate: QA-art PASS (SET_GATE.md, 27 team items); QA-tech FAIL r1 -> builders' SET-fix round -> QA-tech PASS r2 (QA_TECH.md); no overrides
 - [x] WORKER22.md drafted (5 teams)
 - [ ] Set + cast -> SET gate (QA-art + QA-tech)
-- [ ] shot_plan.md (≤12 hard cuts, 2 BIGZOOM), WORKER22.md, render teams (Sonnet, render22/teamK)
+- [x] shot_plan.md, WORKER22.md, TEAMS.md; render teams launched 23:59 UTC (see TEAMS.md)
 - [ ] TAKE gates, conform22, FINAL gate (4 reviewers + film 2 side-by-side + ref sheets), release22, queue WAIT
+- 2026-11-21 00:44 UTC check: all 5 teams running (team4 s03 81/144; team1 s01 rerender + s05; team2 s02/s15 camera previews; team3, team5 scripts pushed, renders in progress). conform22.py + SFX library ready.
+- 2026-11-21 01:20 UTC: producer relayed client rule QA_TEAM §K (nothing floats). Verified on claude/new-session-73ou27 a663493, merged; fallback ground_check22.py; WORKER22 §7; all teams messaged. Float hunter added to TAKE + FINAL gates.
+- 2026-11-21 01:25 UTC: producer relayed §L (no camera shake, qa_jitter ≤ 2 px/s); verified 17bbec1, merged, WORKER22 §8, teams told. Usage limit: no new teams; reuse finished teams for re-renders; archive on acceptance.
+- 2026-11-21 01:30 UTC: STOPPED. Producer relayed the client's full stop ("หยุดทุกอย่างเลย"). Director halted: no spawn, no messages, no renders, 60-min self-check cancelled. Render teams 1-5 were NOT messaged (producer said not to); their sessions may still be running. Resume only when the producer/client says continue.
