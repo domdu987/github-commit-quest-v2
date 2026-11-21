@@ -1,4 +1,5 @@
-"""usage: python3 conform_full.py <takes_root> <out_basename>  -> <out>_frames/f_%04d.png (N=1968), dissolves centred on each take's g0"""
+"""usage: python3 conform_full.py <takes_root> <out_basename>  -> <out>_frames/f_%04d.png (N=1968), dissolves centred on each take's g0
+COLOUR21=1: per-segment colour normalization (colour21.py), params written to <out>_colour.json"""
 import sys,os,json,glob,subprocess,numpy as np
 from PIL import Image
 root,out=sys.argv[1],sys.argv[2]; N=int(os.environ.get("N","1968"))
@@ -11,6 +12,10 @@ for d in sorted(glob.glob(root+"/s*/meta.json")):
     m["have"]={int(f[-8:-4]):f for f in glob.glob(fr+"/g_*.png")}; m["name"]=os.path.basename(td); T.append(m)
 T.sort(key=lambda m:m["g0"])
 os.makedirs(out+"_frames",exist_ok=True); missing=[]; blends=0
+CF=None
+if os.environ.get("COLOUR21"):
+    sys.path.insert(0,os.path.dirname(os.path.abspath(__file__))); import colour21
+    CP=colour21.solve(T); json.dump(CP,open(out+"_colour.json","w"),indent=1); CF=colour21.per_g(T,CP,N); print("colour",{k:v["result"] for k,v in CP.items()})
 for g in range(N):
     dst=f"{out}_frames/f_{g:04d}.png"
     if os.path.lexists(dst): os.remove(dst)
@@ -31,7 +36,10 @@ for g in range(N):
     if pair and g in pair[0]["have"] and g in pair[1]["have"]:
         A,B,p=pair; p=p*p*(3-2*p)
         a_=np.asarray(Image.open(A["have"][g]).convert("RGB"),float); b_=np.asarray(Image.open(B["have"][g]).convert("RGB"),float)
-        Image.fromarray(np.clip(a_*(1-p)+b_*p+0.5,0,255).astype(np.uint8)).save(dst); blends+=1; continue
+        im=np.clip(a_*(1-p)+b_*p+0.5,0,255).astype(np.uint8)
+        if CF and CF[g]: im=colour21.fix(im,CF[g])
+        Image.fromarray(im).save(dst); blends+=1; continue
     if src is None: missing.append(g); continue
-    os.symlink(os.path.abspath(src),dst)
+    if CF and CF[g]: Image.fromarray(colour21.fix(np.asarray(Image.open(src).convert("RGB")),CF[g])).save(dst)
+    else: os.symlink(os.path.abspath(src),dst)
 print("takes",[t["name"] for t in T],"blended",blends,"missing",len(missing),(missing[0],missing[-1]) if missing else "")
