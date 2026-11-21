@@ -66,7 +66,8 @@
   ],
   "dev": [
    "Pump crew positions changed as above; hoses are not tied to the tank valves (the sprite's own hose end lies on the ground).",
-   "Pump men re-placed twice: first moved near the lens (heads left the frame into the caption band at the crane end, y 1162), then re-placed from the LAST frame camera rays so heads stay above y 880 throughout."
+   "Pump men re-placed twice: first moved near the lens (heads left the frame into the caption band at the crane end, y 1162), then re-placed from the LAST frame camera rays so heads stay above y 880 throughout.",
+   "The crews are small on screen (heads 15-25 px) because the crane camera looks down from 18 D and moves past anything near the lens; they read as working figures among the lamps, not as close characters."
   ],
   "head_r": "14",
   "hue_note": " (night exterior: the director accepted shade hue 227-234 for RHINE in QA_ART_SET.md)",

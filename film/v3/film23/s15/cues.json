@@ -1,0 +1,23 @@
+{
+ "take": "s15",
+ "fps": 30,
+ "note": "time = film seconds (g / 30) on the ESTIMATED clock",
+ "cues": [
+  {
+   "time": 54.067,
+   "duration": 4.367,
+   "frame": 1622,
+   "end_frame": 1753,
+   "kind": "ambience",
+   "label": "night camp by the river: hand pumps wheezing, rubber hissing as the tanks fill, low murmur"
+  },
+  {
+   "time": 54.4,
+   "duration": 4.033,
+   "frame": 1632,
+   "end_frame": 1753,
+   "kind": "foley",
+   "label": "pump handles creaking in a steady stroke, air hissing into the rubber"
+  }
+ ]
+}
