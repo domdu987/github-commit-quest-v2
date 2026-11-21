@@ -99,7 +99,7 @@ def act_fn(A, bank_marks):
         out = {}
         for nm, cst, base, ph in CAST:
             p = dict(cast21.STORY21[base][1])
-            p, dy = cast21.laugh(p, g, phase=ph)
+            p, dy = cast21.laugh(p, g, phase=ph, amp=0.012)      # hop kept <= 2 cm: nothing may float (QA section K); squash + head bob carry the bounce
             if nm == "c1" or nm == "c2" or nm == "c3":       # big pointing arm across the river
                 p["arm_r"] = dict(p.get("arm_r") or {}, hand=(0.95, -0.05 + 0.05 * math.sin(g * 0.5)), bend=0.15, stretch=1.1, shape="point")
             if nm in ("e0", "c0"):
@@ -127,7 +127,7 @@ def post(g, path):
         C.speed_lines(path, strength=1.0 - 0.12 * (g - G_SNAP), seed=g)
 
 
-if __name__ == "__main__":
+def make_take():
     bpy.ops.wm.read_factory_settings(use_empty=True)
     K.PRESETS["hill_eye"]["fg_list"] = [("spear", 2.6, 12, (0.35, 0.2)), ("gorse", 2.4, 640, 0.55)]     # QA-tech: the pole must not cross the right-most Scot's face
     A = K.build_world(["camp_bank", "hill_eye"], over=dict(shaft_k=0.5))
@@ -152,5 +152,9 @@ if __name__ == "__main__":
     T.cam_fn, T.act_fn, T.g0, T.work, T.post_fn = cam_fn(A), act_fn(A, bank), G_FIRST, os.path.join(HERE, "work"), post
     T.cast = {n: c for n, c, _, _ in CAST}; T.cast.update({n: c for n, _, c, _ in SCOTS}); T.acts = {}; T.vivid = {}
     for nm, cst in T.cast.items():
-        a = C.actors.Actor(nm, cst); a.build(C.sprites.DEFAULT_CANVAS[cst], os.path.join(T.work, "sprites"), contact=True); a.head_flip = False; T.acts[nm] = a
-    T.main(sys.argv, (G_FIRST, G1))
+        a = C.actors.Actor(nm, cst); a.build(C.sprites.DEFAULT_CANVAS[cst], os.path.join(T.work, "sprites"), contact=True); a.head_flip = False; a.contact.name = 'contact_' + nm; T.acts[nm] = a
+    return T
+
+
+if __name__ == "__main__":
+    make_take().main(sys.argv, (G_FIRST, G1))
