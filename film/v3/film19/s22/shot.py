@@ -55,9 +55,11 @@ class _Sway(object):
 
 CAM_LOC0 = (0.0, -3.9, 2.4)
 CAM_LOOK0 = (0.25, 2.9, 2.45)
-_CAM = C.CamPath(CAM_LOC0, CAM_LOOK0, G_FIRST, G_LAST, push=0.08, slide_px=-12.0, rise_px=15.0, arc_deg_s=2.0, decay=0.1,
-                snaps=[dict(g=SNAP, k=1.7, peak=1.7, shift=(-0.6, -0.38)),
-                       dict(g=(G_SEAL - 1, G_SEAL + 3), k=1.0, peak=3.2, shift=(1.8, 0.0))])      # fast pan that clears Harrison from the left edge in 3 frames
+_CAM_LOC = tuple(Vector(CAM_LOOK0) + (Vector(CAM_LOC0) - Vector(CAM_LOOK0)) * 1.086 + Vector((0.702, 0.0, 0.0)))   # start further back and 0.7 D to the right: the
+_CAM_LOOK = tuple(Vector(CAM_LOOK0) + Vector((0.702, 0.0, 0.0)))                                                   # one-way slide then sweeps the room past the actors
+_CAM = C.CamPath(_CAM_LOC, _CAM_LOOK, G_FIRST, G_LAST, push=0.055, slide_px=-57.2, rise_px=35.0, arc_deg_s=6.14, decay=0.1,
+                snaps=[dict(g=SNAP, k=1.996, peak=1.7, shift=(0.075, -1.022)),
+                       dict(g=(G_SEAL - 1, G_SEAL + 3), k=1.0, peak=3.2, shift=(2.057, 0.0))])      # fast pan that clears Harrison from the left edge in 3 frames (re-fitted: the plain CamPath drifts more now that the sway is gone)
 CAM = _CAM                                      # client rule (no camera shake): the plain CamPath, the handheld _Sway removed
 
 
@@ -156,7 +158,7 @@ class Take(C.Take):
             self.key_cam(f, *CAM.at(g))
             for a, k in ((self.har, "har"), (self.mock, "mock")):
                 C.place(a, f, Vector(STAND[k]) + Vector((0, 0, FOOT_Z)))
-            self.key_set(f, candles=1.0)
+            self.key_set(f, candles=0.78 + 0.22 * (0.55 * math.sin(g * 1.7) + 0.3 * math.sin(g * 2.9 + 1.3) + 0.15 * math.sin(g * 0.9 + 0.4)))      # candle flicker (client: no camera shake, so the life comes from the lights)
             # money bag: appears at the start of the push, slides across the baize
             self.key_set(f, moneybag="half" if g >= G_BAG - 8 else "none")
             bx, by = bag_xy(g)

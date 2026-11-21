@@ -12,3 +12,10 @@
 ## Round 5 (director round 7: whip-pan)
 - The exit is now a steep, fast pan: a second snap g 1820-1824 (4 f, ease peak 3.2, shift 1.8 D) inside the push; Harrison is whole at g 1820, a ghosted smear at the left edge g 1821-1822 and gone from g 1823 (about 2 frames), astro19 stays whole in frame. The primary push lateral shift is -0.6 D so the sealed box ends left of centre (x about 180) and astro19 right (x about 480).
 - Cycles camera motion blur on the whip frames only (g 1818-1827, shutter 0.9, CENTER); no blur elsewhere. Frame-diff median 5.52 / p90 13.28 (deliver.py); qa_stats.py: saturation 0.659, brightness 72.1, in-shot motion median 6.47 / p90 13.87.
+
+## Last pass (client: camera shake)
+- The handheld `_Sway` (lateral ~2.6 Hz, vertical ~3.4 Hz) is REMOVED: the take uses the plain CamPath. JITTER.md (qa_jitter.py): no second above 2.0 px, overall median 0.22 px (before: 2.0-2.5 px in three seconds, median 2.36).
+- Frame-diff (the sway had carried it): the plain CamPath was re-fitted by a projection search so that the framing stays like the approved take (Harrison left / astro right until the seals; the fast pan that clears Harrison on 'ขัง' lands astro centred at the same size, heads y 440-700, Harrison fully off the left edge, astro never cut): the start is 7 % further back and 0.7 D to the right, then ONE eased one-way slide (-57 px/s) + orbit (6 deg/s) + crane + push 5.5 %/s sweep the room past the actors (no oscillation); the snap x2.0 and the whip pan (shift 2.06 D) re-fitted. In addition the candles flicker (set_candles level 0.56-1.0, a smooth quasi-random pattern) so the calm wide has life without any camera shake. Frame-diff in-shot: median 4.20, p90 14.53 (rule >= 4 / >= 10).
+- GROUND.md (ground_check.py): PASS (both cards stand on the carpet, gap 0.004 D; the 0.05 D foot lift of the approved take sits on the carpet top at z 0.037).
+- qa_auto: the same 'suspected blur on 8 frames g 1820-1827' as the approved take = the deliberate whip pan (Cycles motion blur).
+- Acting, timing and the shot are unchanged.
