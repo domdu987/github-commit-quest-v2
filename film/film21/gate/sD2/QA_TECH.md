@@ -1,42 +1,23 @@
-# QA-tech sD2 v2 (team4 047cf15)
+# film-13 QA: QA-tech sD2 v3 (team4 68b6ea5)
 
-Method: every 5th frame (31 in f6), full-size frames n0-8, 40, 116-135 (g758-777), 148-154, plus g667/687/692/712/747. 155 frames, 720x1280.
+Take: g642-796 (155 frames, 720x1280, 30 fps), cut in and cut out. Method: every 5th frame (f6, 31 frames), the 1 fps sheet, full-size ffmpeg frames for g645-705 (every 3rd frame for g646-672) and every frame for g784-796 (mouth). Checked against the QA_TEAM_film13 checklist and §B. §G-§L not applied. Colour and exposure are left to the grade. qa_auto PASS. Jitter is clean except the planned CU1 push (g756-765).
 
-## Verdict: FAIL (1 blocking, easy fix)
+## Verdict: PASS (0 blocking)
 
-## Fixed against the old list
-1. Edge cut Surrey (old 1): FIXED. No head or body crosses a frame edge at g754-786. Surrey is hidden behind Cressingham during the CU, then steps back out.
-2. Purse slap (old 2): FIXED. The right hand drops to the purse at g758-762, with a glint star and hopping coins, hand held on the belt. Reads with sound off.
-3. Red barrel (old 3): FIXED. Replaced by a grey strongbox, sacks, a spear bundle and pegs. His feet stay visible. Near ground is dressed, and the tilt-up cuts the bare sand.
-4. Surrey merged into the neck (old 4): FIXED. He is offset and readable g643+.
-5. Handles (old 5): FIXED. g793-796 continue to move (RMSE g793 vs g796 about 0.14).
-6. Point (QA-art): FIXED. The arm is raised up-left toward the crag, with saltires readable on the hill. The bridge shows as a thin span behind him from about g722 (still tiny, non-blocking).
-7. Floating pennants: none seen.
+## v2 blocking items
+1. Background soldier's head stacked on Cressingham's hat (g660-755): FIXED. The e1 soldier is gone. Only sky, crag and water sit behind the hat in every sampled frame.
+2. Foreground spear poles through Cressingham's face and Surrey's (g685-712): FIXED. The two near spears stop below his chin (tips about y 770 against a face centre about y 640 at g692-705) and cross only his coat. They are well clear of Surrey.
 
-## Beat table
-| g | caption / beat | picture | read at phone size |
-|---|---|---|---|
-| 642-647 | whip in | empty beach, spear pair, strongbox, soft/streaked | OK (whip) |
-| 648-690 | "ชาวนาบนเนินไม่กี่คน!" | Cressingham small (about 22 % of frame height) in the mid-ground, arm up pointing at the hill, mouth moving, Surrey tired behind. Tent and campfire. | OK but small |
-| 690-720 | "อ้อมไปเปลืองเงินหลวง" | waddle, tilt up, spear pole crosses his face g686-698 | pole is a nuisance |
-| 720-750 | "ข้ามสะพานนี่แหละ" | bridge enters behind him, saltires on the crag, point held | OK |
-| 750-756 | "เร็วดี" | stop, push begins | OK |
-| 756-765 | push, slap g758 | star glint, coins, jolt | strong |
-| 765-778 | "ประหยัดดี!" CU1 | face about 25 % of frame height (hat+face about 47 %), purse in shot | OK, under the 35 % face limit. Hat ruff and arm touch the left edge at g764-776. |
-| 778-793 | pull-out | hands on hips, smirk, Surrey steps out | OK |
-| 794-796 | handles | continue the pull-out | OK |
+## Checklist
+- Mouth: it moves inside the window only. It is open from the whip (g642+), still a small "o" at g791, and closed into a smirk from g792 to g796. PASS.
+- Heads below y 880: always above it (the CU1 head centre is about y 450). PASS.
+- Frozen, black or magenta frames, and pops: none (qa_auto). The whip at g642-647 is planned. PASS.
+- Blur/DOF: none. The only streak is on the whip frames. PASS.
+- Plan coverage (row D2): whip in, side-track with the point at the crag (saltires readable), bridge in frame by about g722, stop, CU1 push with the purse slap at g758 (glint and coins), "ประหยัดดี" CU, ease-out to P_BANK by g793, handles keep moving. PASS.
+- Feet and props: cards stand on the sand with shadows, and the purse stays on the belt. GROUND.md shows 0 FAIL. The 28 SUNK pegs and sacks look fine. PASS.
+- Thai text: none in the take.
 
-## Checks
-- Mouth: moves only inside g642-791 (open at g790, closed from g792, smirk). PASS.
-- Heads: Cressingham head centre y about 440-700, always under 880. PASS.
-- CU: only the one CU1, about 0.5 s of full push plus about 0.5 s hold. PASS.
-- Colour story: English red/gold only. Blue appears only as the Scots saltires on the crag, the dark spear tips and the purple shadow on the tent. No blue in the camp itself. PASS.
-- Bloodless: PASS. No money-counting gag is planned in the D2 row, so none is required.
-- End pose: g793 is a hands-on-hips smirk at P_BANK, Surrey at about 77 % of the width. The meta says it is exactly P_BANK. I have no E1 start frame to compare against.
-
-## Issues
-1. BLOCKING, g660-755: the background soldier (e1) stands at the water edge directly above Cressingham's hat, so his helmet and face sit on the hat as a stacked head. It reads as a second head on a stick and as floating. Fix: move him 1.5 m or more sideways, or hide him, so the hat has clear water behind it. The simplest option is to hide e1 until g756 or delete him from this take.
-2. Non-blocking, g684-700: a foreground spear bundle (two tall poles with tops cut at the frame top) passes over his face for about 0.5 s. It is acceptable as parallax. Better: shift the bundle 0.5 m left so the poles miss his head. The poles also have no visible base after g700, so they look slightly floating. Add a base, or accept it.
-3. Non-blocking, g643-700: Cressingham is only about 22 % of frame height and the bridge is not in frame until g720. Fix, if there is time: push the track in 10 % at the start.
-4. Non-blocking, g764-778: the hat ruff and pointing arm touch the left frame edge in CU1. Fix: slide the camera 40 px left.
-5. Non-blocking: the spear tips are dark blue (English camp). Recolour them to steel or gold.
+## Notes (non-blocking)
+1. g646-650: Surrey's face is half hidden behind Cressingham's hat ruff, and the tall spear rack stands at his shoulder. He is clear from g651. Optionally slide Surrey 0.2 m to the right for those frames.
+2. g762-777: the raised pointing hand is out of frame on the left (a CU crop; the head and hat are inside the frame).
+3. g759-763: the glint star is still about as wide as his torso. Shrink it if the shot is re-rendered for any reason.

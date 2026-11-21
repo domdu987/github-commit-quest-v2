@@ -18,3 +18,12 @@ Checked: all 69 frames (frame diff), every 5th frame at 360x640, full-size g1640
 
 ## Director ruling (film-13 workflow, 2026-11-21)
 ACCEPTED with notes: the table, the KING'S TREASURY sign and the scale read at phone size; the lid slam and the whip are on cue. The cloak on the stool and the shadow band are non-blocking notes.
+
+## Independent override review (Opus, film-13 QA §E)
+Reviewer: independent Opus, 2026-11-21. Looked at every 5th frame g1640-1705 at 360x640, and g1650/g1685/g1695 side by side at phone size.
+- Scale (item 2): at phone size the beam is level at g1650 and clearly tilted at g1680-1700, with one pan low. In the tipped frames the pole does not cover the beam. It reads on the cue "เร็วดี" (55.80 s = g1674, tipped by g1680). It is small (about 8-10 % of frame height), but the change of state is legible, so it is not blocking.
+- Lid slam: open at g1685, shut at g1695 (cue g1687), the move is clear, and the chest and the KING'S TREASURY sign are crisp at phone size.
+- Cloak (item 1): this is a plan-dressing detail. The red-cushioned chair still reads as "his seat, empty", which is the ending's point. The missing cloak does not hurt the joke, so it is not blocking.
+- Navy band (item 3): this is canopy shade on the ground at about y 490-540 of 640 on the phone frame, which sits inside the caption band (>= 440), so captions mostly cover it. It reads as shadow, not as a flat blue floor. Not blocking.
+- Non-blocking notes: the canopy takes about 40 % of the frame. A warm fill in the shade strip and a crimson cloth on the chair would help if the take is reopened.
+**Verdict: OVERRIDE AGREED (ship).**

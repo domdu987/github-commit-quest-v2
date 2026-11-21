@@ -1,31 +1,27 @@
-# QA-art sF (TAKE gate, v2)
+# film-13 QA, QA-art sF (team1 5bc3ce0, v4), FALSE PAYOFF key shot (§C)
 
-Take: `scratchpad/gate/sF/film/v3/film21/sF/take.mkv` (g 1044-1141, the FALSE PAYOFF in the English camp, a key shot under §C). Looked at contact.jpg, phone_sheet.jpg and every 5th frame from f6/ at full size. Compared with R3, R5 and R7, and with the neighbouring take sD2 (same camp_bank location).
-Narration: "ฝั่งอังกฤษ หัวเราะกันใหญ่ (g1044-1072) / เห็นไหม กลัวจนขยับไม่ได้! (g1093-1140)".
+Take: `gate/sF/film/v3/film21/sF/take.mkv`, g1044-1141. Looked at the 1 fps sheet, every 5th frame at full size, the 360x640 downscale, and 2x crops of the far bank at g1044, g1089 and g1114. Colour and exposure are left to the grade.
 
-## Verdict: REJECT (re-stage and re-render)
+## Verdict: FIX-FIRST
 
-The false payoff has to show the English camp roaring with laughter at the silent Scots across the river, then land on the smug face. In this take the camp has been taken out (tent, pot, fire and banners were hidden), and the Scots and the hill are not in any frame. Four small soldiers laugh on an empty yellow beach, and a red barrel parks in front of Cressingham as he starts to speak. The camera idea (track the laughers, then push into CU2) is fine. The staging, the set and the framing need to be done again.
+v4 fixes the craft problems: no edge cuts, no barrel, a dressed camp, a calm and always-moving push, and a clean, smug CU2. But the joke still has no visible target, and the laugh is small. The Scots on Abbey Craig are 3-4 px specks with flags at the foot of the hill, invisible at phone size. The bridge cannot be read (at most a sliver behind the racks on the right). In CU2 the crag has slid behind Cressingham's body. Without the Scots standing still in the shot, "กลัวจนขยับไม่ได้!" has no irony.
 
-## Issues
-1. **BLOCKING: empty set (g1044-1070, and the bottom 45 % of the frame throughout).** The lower half of the frame is bare lemon sand (§H.3 "no empty flat ground"). The far bank is a plain tree line and the background hills are procedural yellow-green. Nothing says "English camp": no pavilions, banners, campfire, smoke, supply carts or signs. It does not match sD2 at the same location (tent, pot and fire, strongbox, spear rack, crag, bridge).
-   Fix: keep the camp in the shot and move the camera path instead of hiding the dressing.
-   - Track BEHIND a row of crimson and gold pavilions, spear racks and the fire, so they pass in the foreground and midground (R3 style) and none of them parks.
-   - Add banners in crimson and gold, and the "ENGLISH CAMP" sign if the path passes it.
-   - Put grass, tufts and props on the sand (as in sD2) so the sand is under 25 % of the frame.
-2. **BLOCKING: the joke has no target. The hill, the Scots and the bridge are never in frame (g1044-1141).** They laugh and point at nothing. The plan's story beat is "they laugh at the motionless Scots", and the colour story (crimson against saltire blue) is missing: there is no blue in the frame except the sky and water.
-   Fix: turn the camera so it looks north-east across the river, as in sD2. Keep Abbey Craig, the saltire flags and the bridge in the upper third of the frame for the whole track and behind Cressingham in CU2. Their stillness behind his "กลัวจนขยับไม่ได้!" is the irony the whole film pays off later.
-3. **BLOCKING: the red barrel covers Cressingham as he enters and starts speaking (g1084-1104).** The barrel was removed from sD2 for exactly this. Here it fills about a third of the frame, red on red, and at g1089-1099 it hides half his body while his mouth starts moving (g1093). Fix: remove it, or put it on the far side of the path so it wipes past in no more than 6 frames before g1085. Have Cressingham fully in frame and clear by g1088.
-4. **BLOCKING: the laugh is undersold (g1044-1072).** "หัวเราะกันใหญ่" ("the whole camp roars") is played by 4 soldiers, 4-8 m away and about 10 % of the frame height. At g1074 the frame centre goes to tired Surrey with a flat face, during the laugh line. The big soldier at g1059-1064 is cut by the right frame edge. Fix:
-   - Use 8-12 laughers in two depths: a near group of 2-3 at medium size (30-40 % of the frame height) bouncing and slapping knees, with more behind them pointing across the river.
-   - Have some sit on barrels or crates (props in hand: mugs, a drum).
-   - Keep everyone fully inside the frame.
-   - Move Surrey to the edge and later, or have him trying not to laugh, so the laugh owns g1044-1072.
-5. **Non-blocking: flat noon light and no practicals (all frames).** The neighbouring sD2 has a low gold sun with long purple shadows and a campfire. This take is flat overhead light on yellow sand, so it looks like a different time of day. Fix: use the sD2 light rig (low sun from the right, warm against cool shade) and keep the fire and smoke in frame as the warm practical. The conform pulls the yellows back, but the design should match sD2 first.
-6. **Non-blocking: CU2 framing (g1119-1141).** The smug face, the half-lidded eyes and the hands at the belt read well, and the size (about 30 % of the frame height) is right. But it is dead centre, straight on and at eye level (§H.2). Fix:
-   - Push in slightly from low and a little off-axis (camera about 0.4 m lower, 10-15 deg to the side) so the crag and saltires sit over his shoulder.
-   - Add a 2-frame chin-lift or chuckle bounce on "เห็นไหม".
-   - Keep the soldier at the right edge either fully in frame or fully out.
-7. **Non-blocking: check the small black chips on the sand (g1044-1055).** They look like stray debris lying on the sand. Remove them if they are not intended props.
+## Scores
+Set density 6, lighting 7 (grade aside), composition 5, acting 6, key moment 4, match to refs 6.
 
-Same channel as the refs? No, not in this version. The refs always place the character inside a dense, lit, recognisable set, and this take is a figure on an empty beach.
+## Blocking
+**B1: the Scots and the bridge are not readable (g1044-1141).** Fix:
+- Turn or raise the camera so Abbey Craig with the Scots line, and the bridge, sit in the upper-middle third, clear of the racks, hut and banner on the right.
+- Make the Scots a readable row of figures on the hill, at least 20 px tall, with blue saltire flags, so they read on the 360x640 sheet.
+- In CU2 (g1110-1141), put Cressingham in the left or right third, off-axis, so the crag and the still Scots line stay visible over his shoulder until the cut.
+
+**B2: the laugh is undersold (g1044-1092).** For the first 35 frames the whole group is a strip about 15 % of the frame high, with heads about 4 %. Laughers are half hidden behind Cressingham, who is the centre and is not laughing. They face the lens, and the only pointing arms aim screen-right, not across at the hill. Fix:
+- Start closer (about 4-5 m instead of 7.2 m).
+- Bring 3-4 laughers forward to flank Cressingham at 25-35 % of the frame height.
+- Turn at least two of them three-quarters toward the hill, arms pointing up-screen at the crag, bouncing out of phase (knee slaps).
+- Keep them in frame and clear of his face into CU2.
+
+## Notes
+- The lower third is bare sand until about g1079, and the cook fire does not read. Add a visible fire with smoke between the racks, mid-ground left.
+- The octagonal sacks at the frame edges (g1044-1109) and the dark banner corner (g1094-1135) are distracting. Clean them up.
+- CU2 face size, smug lids and the chin-lift at g1093 are good. Keep them.

@@ -21,3 +21,10 @@ qa_auto PASS (1 soft frame g1310 = motion), motion median 14.3 / p90 27.8. Colou
 - Camera passed through the meadow tree canopy at g1308-1312: new path key at g1307 (22.5, 43, 8.0) keeps 8 m clear of the trees (checked with a nearest-vertex scan g1296-1338); the path of g1276-1332 changed slightly, so the whole range was re-rendered.
 - Black rectangles at the right edge (x 640-720) g1311-1314 / 1324-1328: they were the navy right-hand saltire banners (cloth edge entering the frame while the camera is at x 9). The two right banners are hidden g1306-1332 (they leave the frame at the right anyway); the left banners and the g1345 match to H2a are unchanged.
 - qa_auto PASS (one soft frame g1279 = motion), qa_jitter overall median 3.6 px (the 5 Hz ride shake in g1239-1275 is the only shake; it is in the plan for the charge and was left as delivered, say if it must go).
+
+## v6 (g1300-1348 re-rendered; g1239-1299 unchanged from v5), H1 -> H2a is now a HARD CUT
+- g1326/27 jump and g1327-1332 freeze: the H2a-camera blend is gone. ONE eased path from the g1297/1307/1316 keys to an end pose at g1348 (P_NECK + (0, 0.3, 0.15), still moving 0.5-1.5 m per frame equivalent, ~1 px/frame at the end). Frame-to-frame diff g1318-1348 is 13-24 on every frame (no jump, no zero-motion run; checked with a gray mean-abs diff).
+- Black slab at g1308-1311: the 3D back ranks were parked 3 m under the bank and showed through the sloping ground; they are now hidden (hide_render) until g1318 and then rise behind the card ranks.
+- Flank Scots wait 3 m farther from the lens (y slot - 3) and run in diagonally, so their faces stay clear of the caption band at g1305-1311.
+- No camera shake from g1300 (the planned ride shake g1239-1299 is unchanged and decays to nothing by ~g1300).
+- qa_auto PASS (soft frame g1279 = motion), qa_jitter median 3.2 px (ride only), GROUND.md re-run: FAIL 0, sheet1fps.jpg made.

@@ -73,13 +73,11 @@ def camera(g):
         loc, look = ride_cam(g)
     else:
         l0, k0 = ride_cam(G_RIDE_END); l1, k1 = ride_cam(G_RIDE_END + 1); vl0, vk0 = l1 - l0, k1 - k0
-        gb = min(g, 1345)
-        loc = herm_keys([(G_RIDE_END, l0, vl0), (1297, MID_LOC, None), (1307, TREE_LOC, None), (G_SLAM, WP_LOC, Vector((-0.05, 0.10, 0.02))), (1345, NECK_LOC, z3)], gb)
-        look = herm_keys([(G_RIDE_END, k0, vk0), (1297, MID_LOOK, None), (1307, TREE_LOOK, None), (G_SLAM, WP_LOOK, Vector((0.0, -0.05, 0.0))), (1345, NECK_LOOK, z3)], gb)
-        look = look - Vector((0, 0, 1.2 * math.sin(math.pi * min(1.0, max(0.0, (g - 1322) / 22.0)))))       # tilt down a little 1322-1344: front chins stay above y 880
-        w = sstep((g - 1326) / 12.0)                                  # from g1338 on: H2a's exact camera (same path and velocity: D6 handles)
-        if w > 0: hl, hk = h2a_cam(g); loc = loc * (1 - w) + hl * w; look = look * (1 - w) + hk * w
-    ts = (g - G0) / 30.0; amp = math.exp(-ts / 0.9) if g < G_SLAM else 0.0
+        END_LOC, END_LOOK = NECK_LOC + Vector((0.0, 0.3, 0.15)), NECK_LOOK                      # one eased path to the end (H1->H2a is a HARD CUT now): still gently moving at g1348
+        loc = herm_keys([(G_RIDE_END, l0, vl0), (1297, MID_LOC, None), (1307, TREE_LOC, None), (G_SLAM, WP_LOC, Vector((-0.05, 0.10, 0.02))), (1348, END_LOC, Vector((0.0, 0.03, 0.015)))], g)
+        look = herm_keys([(G_RIDE_END, k0, vk0), (1297, MID_LOOK, None), (1307, TREE_LOOK, None), (G_SLAM, WP_LOOK, Vector((0.0, -0.05, 0.0))), (1348, END_LOOK, Vector((0.0, -0.01, 0.0)))], g)
+        look = look - Vector((0, 0, 1.2 * math.sin(math.pi * min(1.0, max(0.0, (g - 1322) / 26.0)))))       # tilt down a little 1322-1348: front chins stay above y 880
+    ts = (g - G0) / 30.0; amp = math.exp(-ts / 0.9) if g < 1300 else 0.0       # no shake from g1300 on
     if amp > 0.01:                                            # 5 Hz shake decaying
         sh = 0.075 * amp * math.sin(2 * math.pi * 5.0 * ts); sv = 0.06 * amp * math.sin(2 * math.pi * 5.0 * ts + 1.1)
         loc = loc + Vector((0, 0, sv)) + RUN_LEFT * sh * 0.4; look = look + Vector((0, 0, 0.10 * amp * math.sin(2 * math.pi * 5.0 * ts + 2.0)))
@@ -191,7 +189,7 @@ def main(mode, gs, samples):
         rise = 1.0 - sstep((g - 1312) / 9.0)
         for o in ban: o.location.z = ban0[o.name] - 12.0 * rise; o.hide_render = (1306 <= g <= 1332 and bcx[o.name] > 5.0)    # right-hand banners (navy cloth) sit at the frame edge while the camera is near: hidden g1306-1332
         rise2 = 1.0 - sstep((g - 1318) / 8.0)
-        for o in bkb: o.location.z = bkb0[o.name] - 3.0 * rise2
+        for o in bkb: o.location.z = bkb0[o.name] - 3.0 * rise2; o.hide_render = g < 1318      # hidden until the slam: underground boxes showed as a black slab at the bank g1308-1311
         for o in [o for o in bpy.data.objects if o.name.startswith('dust_h1')]:
             me = o.data; bpy.data.objects.remove(o, do_unlink=True); bpy.data.meshes.remove(me)
         for i, c_ in enumerate(runners):
@@ -206,11 +204,11 @@ def main(mode, gs, samples):
             start = 1290 + (i % 4) + 2 * it['rank']
             if g < start:
                 pose = dict(cast21.STORY21[it['base'] + '_fold_spear'][1]); pose['blink'] = cast21.blink_at(g, 84, i * 9); pose['head_roll'] = sway(g, i, 2.0, 0.4)
-                C.put(nm, f, pose, xyz=(fx, sy, float(K.ground(fx, sy))), mirror=not left)
+                C.put(nm, f, pose, xyz=(fx, sy - 3.0, float(K.ground(fx, sy - 3.0))), mirror=not left)
             elif g < G_SLAM:
-                u = (g - start) / float(G_SLAM - start); x = fx + (tx - fx) * (u ** 1.7)
+                u = (g - start) / float(G_SLAM - start); x = fx + (tx - fx) * (u ** 1.7); yy = (sy - 3.0) + 3.0 * (u ** 1.7)
                 pose = cast21.run_spear(it['base'], g / 16.0 + i * 0.13, facing=dirn)
-                C.put(nm, f, pose, xyz=(x, sy, float(K.ground(x, sy))))
+                C.put(nm, f, pose, xyz=(x, yy, float(K.ground(x, yy))))
             else:
                 k = g - G_SLAM; x = tx + dirn * 0.45 * max(0.0, 1.0 - k / 4.0)
                 pose = dict(cast21.STORY21[it['base'] + '_spear_wall'][1]); pose['blink'] = cast21.blink_at(g, 80, i * 7)

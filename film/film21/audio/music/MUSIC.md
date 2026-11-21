@@ -45,3 +45,8 @@ The ear checks are left to the client. Nothing here was listened to. These are s
 - melodic clashes with the Thai narration
 - whether the 17 s texture change is audible under the voice
 - final -31 dB level against the narration
+
+## 2026-11-21: CLIENT'S OWN MUSIC replaces m1
+The client made "The Sneaky Jig" on Suno (74.0 s, 48 kHz stereo), pushed by the producer at 23b0159 (film/suno/film21_the_sneaky_jig.mp3).
+It is now audio/music.mp3; the old pick m1 is kept as music/m1_fal_previous.mp3. It is mixed the same way (music bed at -31 dB RMS under the
+narration, ducked under the voice, 0.3 s fade-in), trimmed at the film's hard cut (61.6 s) with the 0.6 s fade-out.

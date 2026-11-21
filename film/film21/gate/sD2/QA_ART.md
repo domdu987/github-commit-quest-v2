@@ -1,27 +1,18 @@
-# QA-art sD2 (TAKE gate, v2)
+# film-13 QA: QA-art sD2 v3 (team4 68b6ea5), the mocker
 
-Take: `scratchpad/gate/sD2/film/v3/film21/sD2/take.mkv` (g 642-796, the mocker Cressingham). Looked at contact.jpg, phone_sheet.jpg, every 5th frame from f6/ at full size (g652-742 and g752-792 in detail, g667-702 cropped). Compared with R3 (follow camera) and R5.
+Looked at: the 1 fps sheet, every 5th frame (f6) at full size, and full-size crops g645-705 and g784-796. Client taste rules from QA_TEAM_film13 apply. §G-§L are not applied, and colour and exposure are left to the final grade.
 
-## Verdict: FIX-FIRST
+## Verdict: SHIP
 
-This is a big step up. The slap, the point and the near-ground dressing were done, and the barrel is gone. The light is now lovely: low gold sun from the right, long purple shadows, the campfire practical under the pot, teal water and a blue sky. That gives warm against cool in every frame. Cressingham's acting reads with the sound off: the smug sneer, the waddle, the up-left point and the hands-on-hips smirk on the pull-out. Surrey is a good tired counterpoint. The whip-in, side track, CU1 punch and ease back to P_BANK are elegant and in the R3 manner. But the new foreground spear bundle cuts through his face on the key line.
+Both v2 blockers are gone. The hat is clean against the sky (no soldier stacked on it, g660-755). The foreground spears are short and cross only his coat (g685-712), so his face stays readable on "อ้อมไปเปลืองเงินหลวง". The shot plays in the client's preferred mode: a dense lit camp (tent, tripod fire, strongbox, sacks), a moving follow camera, a wide-to-medium framing, and one earned CU on the money line. Cressingham's sneer, the point at the crag and the slap-then-smirk all read with the sound off. Surrey's tired trudge is a good counterpoint. The point at the saltires on the crag and the bridge entering frame tell the "go straight across" idea.
 
-## Status of the v1 items
-1. Purse slap: **fixed**. The hand comes down on the purse at g758 with a glint and hopping coins. The CU face is about 33 % of the frame height and the purse stays in frame.
-2. Point target, bridge and Scots: **fixed**. The arm is raised up-left toward the crag, and the saltires are findable on the phone sheet as small white X marks. The bridge is in frame on the right from about g720.
-3. Red barrel over him: **fixed** (removed).
-4. Bare near ground: **fixed**, but the fix brought in blocking item 1. There are a strongbox, sacks, a spear rack, pegs and grass tufts, and the sand no longer dominates.
+Scores: set density 8, composition 8, acting 8, key moment (slap/CU) 8, match to references 8. Lighting and colour are left to the grade.
 
-## Issues
-1. **BLOCKING: spear poles pass through Cressingham's face and body (g ~685-712), and through Surrey (g ~702-712).** This happens on "อ้อมไปเปลืองเงินหลวง", the line that sets up the money gag. Two tall black poles in the foreground run the full height of the frame and slide across his face (g692 is worst: a pole through the middle of the face). §G.2 forbids poles through a face, and it breaks the phone read of his best expression.
-   Fix: move the spear rack about 1 m toward the camera and off his line, so it crosses only the empty sand left or right of him. Alternatively, time it to wipe across in no more than 4 frames while his face is clear. Or cut the poles to waist height (a short weapon rack) so nothing tall crosses the characters. Keep one pass of foreground parallax, not two (g672-682 and g685-722).
-2. **Non-blocking: the background soldier's head sits on top of Cressingham's hat (g662-700).** The helmeted e1 lines up exactly above his hat like a totem pole. Fix: slide e1 0.6-1 m sideways (toward the tent) so there is sky or water between the two heads.
-3. **Non-blocking: the sacks read as purple boulders (g642-690).** The dark, faceted, egg-shaped forms in the foreground read as rocks. Fix:
-   - Give them a burlap colour (light tan) with a tied neck and a sag.
-   - Or replace two of them with a crate stamped with a crown, which keeps the treasury motif.
-   - Paint a small gold crown or "KING'S" on the strongbox lid.
-4. **Non-blocking: the slap glint is too big (g759-763).** The 4-point star is as wide as his torso and covers the hand-on-purse contact, which is the very gag. Fix: shrink it about 50 % and move it to the top edge of the purse, so the hand stays readable on the impact frame.
-5. **Non-blocking: the Scots on the crag look like rows of orange balls (all frames).** Next to the saltires, the far Scots read as strings of orange dots and coloured blocks, not people. Fix: make their tunics blue/grey and drop the orange. It also helps the colour story: crimson here, blue there.
-6. **Non-blocking (conform):** the yellow sand and grass push the frame yellow and the cloud tops are peach. This is left to the conform yellow pull-back. Rim light: barely visible, but the outlines carry it, so it is not an issue here.
+## Blocking issues
+None.
 
-Same channel as R3? Yes, once item 1 is fixed.
+## Notes (non-blocking, for a future pass only)
+1. g646-650: Surrey's face is tangent to and half behind Cressingham's hat, beside the tall spear rack. Slide him 0.2 m right, or start the rack lower.
+2. g642-690: the sacks still read as purple boulders. Use a burlap tan with tied necks.
+3. g759-763: the glint star is torso-wide. Halve it and put it on the purse's top edge so the hand-on-purse stays the read.
+4. All frames: the far Scots read as orange dots. Blue/grey tunics would read better.
