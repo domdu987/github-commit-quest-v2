@@ -7,3 +7,8 @@ Known: sand in the loop still reads lemon (the director normalises colour at the
 
 ## Re-rendered on the current sets (set3d21 e07ceb1 + cast21 528bf9d: no blue in the English camp, soft smoke puffs, all-crimson English / all-blue Scots defaults)
 Same path, same content, same joins (P_NECK exact at g1345, new P_TOP exact at g1392, 3 handle frames each side). Numbers: saturation 0.615, luma 100.8, in-shot motion median 22.88 p90 25.33. qa_auto: FAIL only "suspected blur" on g1347, 1349-1352 = the fast crane (false positive, QA-art override). Colour is normalised at the conform.
+
+## Re-render on set bb7aa85 (tents no longer violet-blue in shade) + QA section K
+Same path, cast, staging and poses (exact P_NECK at g1345, exact P_TOP at g1392, 3 handle frames each side); only the set changed. Numbers: saturation 0.612, luma 101.0, in-shot motion median 23.04 p90 25.31; film21/rhythm.py median 26.55 p90 29.77; qa_auto now PASS (the earlier "blur" flags came from the old set; one soft frame g1351 = the fast crane, motion streak).
+Scots wall: front two ranks are blue cast cards (same staging team 9 rebuilt H1 on), back three ranks blue 3D bodies, 4 large saltire banners; no change was needed for the H1 -> H2a D6.
+§K: GROUND.md = PASS (12 English + 28 Scots cards at their feet points over 7 sampled frames, 40 crowd base points, 2 cm tolerance; method note inside: the stock bbox check false-FAILs merged batches and coplanar crowd bases); 1 fps sheet (sheet1fps.jpg) checked: everything stands on the ground with contact shadows, nothing floats.
