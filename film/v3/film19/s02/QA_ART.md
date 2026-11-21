@@ -310,3 +310,50 @@ Acceptance on the sea-masked tracker, g 128-160:
 If that pushes the horizon into frame too early, it is acceptable to let the g 160-176 tilt ease out a bit more slowly. Unfreezing the start of the landing is better than keeping a dead hold.
 
 Not blocking: the captain's level chart arm in the shrug, the left-sail seams, the soft foreground planks.
+
+## Round 17 (director QA-art): FAIL, narrowly. The hold is gone, but the descent still dips below the landing speed and re-accelerates at the g 157-160 seam
+
+**Inputs.** Frames from /tmp/qa19_ov/s02/gNNN.png (g 48-199). I verified them against the current take.mkv.part* (g 148 matches exactly; 152 frames). My sheets are in /tmp/claude-0/qa16/:
+- r17a.jpg (every frame g 100-135)
+- r17b.jpg (every frame g 136-171)
+- r17_102_117.jpg (gridded g 102-117)
+- r17_3fps.jpg
+
+Trackers: the same sea-masked LK tracker as round 16 (/tmp/claude-0/qa16/track.py: ship-only median, top band, rail). I added /tmp/claude-0/qa16/total.py: the mean speed of all rigid non-sea points, with the cast zone removed, as a "total image motion" measure.
+
+| g | 120 | 123 | 126 | 128 | 131 | 133 | 136 | 139 | 142 | 145 | 148 | 151 | 154 | 157 | 158 | 160 | 164 | 168 | 172 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| ship median | 18.2 | 19.8 | 17.1 | 13.8 | 9.5 | 7.9 | 7.7 | 6.0 | 5.6 | **4.9** | 5.5 | 5.6 | 5.8 | 6.0 | 7.0 | **6.8** | 5.1 | 4.9 | 3.3 |
+| top band | 15.8 | 17.0 | 13.6 | 9.7 | 7.6 | **7.0** | 8.1 | 9.4 | 11.2 | 12.5 | 13.5 | 14.3 | 15.8 | 16.3 | 16.6 | **16.8** | 14.9 | 12.5 | 9.1 |
+| total mean (no cast) | 15.1 | 16.6 | 20.5 | 19.6 | 16.2 | 13.3 | 11.9 | 11.2 | 11.4 | 11.4 | 10.6 | 10.9 | 10.1 | 10.0 | 11.0 | **12.1** | 9.8 | 7.9 | 6.1 |
+
+| Check | Status |
+|---|---|
+| g 100-127: the push over the stern | **Continuous.** On the frames, the ship grows every frame (similarity scale 1.03-1.07 per frame, g 96-127, falling smoothly). The vertical drift turns around smoothly over g 104-112: the stern holds at about the same height while the ship keeps growing, then slides down as the camera passes over it. There is no catch: rotation stays between +0.15° and +0.36° per frame through g 126, then crosses zero smoothly at g 127-129. The ship-median dip to 7 at g 109 is that drift reversal, not a stall; the zoom never pauses. |
+| g 128-160: hold or second move? | **Much better than round 16. There is no dead hold any more:** every tile g 136-157 differs visibly from its neighbours, and the trough is 4.9 (ship median) and 7.0 (top band), against 3.8 and 1.6 in round 16. **But the bar from §E / QA-tech is not met.** That bar is: ship-only speed never below about 7 between g 128 and g 160, and no rise of more than 20 % after a local minimum. Here the ship median sits at 4.9-6.0 for g 139-157, below the 6.8-7.0 that the frozen landing starts with, then **re-accelerates by about 40 %** into g 158-160. The top band climbs 7.0 → 16.8 (2.4x) over g 133-160. Total motion cruises at 10-11.7 for g 138-157, then steps 10.0 → 11.0 → 11.3 → 12.1 at **g 157-160: the warp seam into the frozen landing** (the same seam was in round 16, at g 158). On the phone sheets it reads as: the push slows into a cruise, the tilt-up gathers pace, and then a small extra shove just before the landing eases out. It is milder than round 16's "settle, then a second move", but **the slowest part of the descent still comes before the ease-out begins**, so this is not a single ease-out. |
+| Hook read (g 48-90) | Good. A lone ship (about 10 % of the frame) on a huge blue sea; the wake leads the eye; the horizon is crisp; no slab. |
+| Faces ≤ 35 % / nobody cut / nothing floating | OK. At the medium (g 160-199) the faces are about 13-15 % of the frame height; both characters are full figures with their feet in frame; contact shadows are on every tile; nothing goes through a face. Props stay in hand through g 199. |
+| Colour | Sat 0.645, luma 91.4 (my own measure, in-shot, max-min/max), so G1 is OK. Unchanged warm deck against blue sea and sky. |
+| Acting, landing, drift (g 160 onward) | Unchanged from round 16 (the dumbfounded captain, the shared look, the shrug; a monotone settle to zero at g 182; a same-direction drift). |
+
+| Criterion | Score |
+|---|---|
+| Set | 8 |
+| Light & colour | 8 |
+| Composition / phone | 7 |
+| Acting | 7.5 |
+| Key moment (BIGZOOM + beat) | 6.5 |
+| Match to refs (R5 continuous crane) | 7 |
+| **Overall** | **7.3 on average, but the verdict is FAIL: the §H.1 "one move with ease-out" bar (as upheld under §E) is still missed at g 139-160** |
+
+**Frames:** g 139-157 (the ship-speed lull below the landing's starting speed) and g 157-160 (the re-acceleration at the warp seam).
+
+**Root cause:** the camera for g ≥ 160 is frozen, and it starts with the ship moving at about 7 px/frame and the top band at about 17. So any lull before g 160 must climb back up to that speed.
+
+**Fix** (camera only, the acting untouched; choose one):
+- **A (preferred, simplest): unfreeze the camera timing for g 157-182.** Re-time it so that the landing eases out from the g 139-157 cruise speed: ship median from about 5.5 down to 0 by g 182, total mean from about 11 down to about 1.
+  - The acting is keyed to g, not to the camera, so it is unaffected. Keep the same end pose and the drift after g 182.
+  - Acceptance: ship median and total mean never increase by more than about 10 % frame to frame anywhere from the g 123-126 peak to g 182 (render noise allowed). Nothing at g 128-160 sits below the value at g 160.
+- **B: keep g ≥ 160 frozen and lift g 139-157 to at least 7 ship median and at least 12 total mean.** Move about 15 % of the travel and tilt out of the g 115-127 peak (which has headroom: 16-20) into g 136-157. Use the same acceptance as A.
+
+A frame check of g 125-182 with the same tracker is enough to confirm either fix. Everything else in the shot (opening, stern pass, beat, props, colour, framing) is ready.
