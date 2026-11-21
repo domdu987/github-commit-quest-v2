@@ -16,20 +16,25 @@ G0, G1 = 324, 450
 FIRST, LAST = 318, 455          # 9-frame dissolve in from s03 (4 + 2 handle frames) and a travel join into s05 (6 after)
 CAMS = [  # local frame, loc, look_at, lens   (room coordinates; map centre (-6.1, 13.7, 4.6); frame = 0.675 d wide x 1.2 d tall at lens 30)
     (0,   (-6.1, 10.3, 4.6), (-6.1, 14.0, 4.6), 30),
-    (8,   (-5.6, 9.2, 4.5), (-5.2, 14.0, 4.4), 30),
-    (18,  (-3.2, 6.6, 4.1), (-0.4, 13.5, 3.9), 30),
-    (34,  (-3.0, 5.6, 4.0), (-0.9, 12.5, 3.6), 30),
+    (12,  (-5.8, 9.0, 4.5), (-4.4, 14.0, 4.3), 30),
+    (26,  (-4.0, 7.4, 4.2), (-0.5, 13.5, 3.9), 30),
+    (40,  (-3.1, 5.9, 4.0), (-0.9, 12.5, 3.6), 30),
     (52,  (-2.6, 5.1, 3.95), (-1.2, 11.4, 3.3), 30),
-    (70,  (-2.2, 4.5, 3.9), (-1.6, 10.2, 3.0), 30),
+    (70,  (-2.4, 4.5, 3.9), (-2.0, 10.2, 3.0), 30),
+    (90,  (-2.6, 2.7, 4.1), (-1.6, 9.2, 2.8), 30),
     (100, (-2.9, 1.2, 4.2), (-0.4, 8.6, 2.5), 30),
     (125, (-2.6, -1.9, 4.6), (0.5, 8.0, 1.9), 30),
 ]
+CAMS = C.smooth_keys(CAMS, 125, sigma=5.0)          # gaussian-smoothed, one key per frame (QA section L)
 sh = C.configure(SHOT, CAMS, state=dict(diagram=dict(red=1.0, blue=0, green=0, yellow=0, hot=None, ruler=None)))
 sh = B.ALL_SHOTS[SHOT]
 
 def pre_scene():
     """runtime set changes (set modules are read-only): move the wastebasket out of the camera-to-Beck line (QA mandatory item 7)."""
     ob = bpy.data.objects.get('basket')
+    for n in ('trunk', 'rolls', 'key_lamp'):                    # their ink hull sits 6 cm below the floor: lift so the base touches (ground_check)
+        o = bpy.data.objects.get(n)
+        if o: o.location = (0.0, 0.0, 0.063 if n in ('trunk', 'key_lamp') else 0.013)
     if ob: ob.location = (-5.2, 2.6, 0.0)          # to (-8.6, 8.8): the far left corner by the rolls pot
     for n in ('table',):                           # shift the little table 1.2 D left so Beck at the cork board is not behind it
         o = bpy.data.objects.get(n)
@@ -85,10 +90,12 @@ def actors(g):
         pinned_sheet(True)
         tip = H.board_pt(-1.55, -1.45, 0.07)
         C.place_ray('beck_rule_line', 'pen_r', tip, cam, 4.9, pose=dict(board=0, head_roll=-4, lean=14 + 2 * math.sin(k * 0.4)))
-    if nt: nt.location = (-1.2 + (0.7 if k >= 94 else 0.0), -0.3 if k >= 94 else 0.0, 0)   # follows the table; pushed aside at k94
+    if nt: nt.location = (-1.2 - (0.5 if k >= 94 else 0.0), 0.25 if k >= 94 else 0.0, 0)   # follows the table; pushed aside at k94
 
 if __name__ == '__main__':
     mode = sys.argv[1] if len(sys.argv) > 1 else 'draft'
+    if mode == 'ground':
+        C.ground(SHOT, FIRST, LAST, actors, os.path.join(C.HERE, 'GROUND.md'), pre=pre_scene); sys.exit(0)
     only = None
     if len(sys.argv) > 2:
         if ',' in sys.argv[2]: only = [int(x) for x in sys.argv[2].split(',')]
