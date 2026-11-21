@@ -63,10 +63,8 @@ def walker_xy(i, g):
 
 
 def z_at(x, y):
-    zg = float(K.ground(x, y))
-    if y < 39.5:
-        zg = lerp(K.DECK_Z, zg, ez((y - 37.0) / 2.5))
-    return zg
+    """the deck ends at y 38.25 (its top is DECK_Z); the men step down onto the terrain there (no ramp: nothing hovers)."""
+    return float(K.DECK_Z) if y < 38.25 else float(K.ground(x, y))
 
 
 def mead_slots():
@@ -108,6 +106,13 @@ def pose_of(i, g):
     return K.with_rim(p)
 
 
+def _terrain_z(x, y):
+    """z of the terrain mesh under (x, y) if the first thing hit from above is the terrain (not a rock / tree), else None."""
+    sc = bpy.context.scene; dg = bpy.context.evaluated_depsgraph_get()
+    hit, loc, nrm, idx, ob, mtx = sc.ray_cast(dg, Vector((x, y, 300.0)), Vector((0, 0, -1)))
+    return float(loc.z) if hit and ob.name.startswith("terrain") else None
+
+
 def scot_slots(n=10):
     out = []; a0, a1 = 196.0, 240.0
     for k in range(n):
@@ -115,7 +120,11 @@ def scot_slots(n=10):
         for r_ in np.arange(30, 120, 1.0):
             x = K.HILL_C[0] + r_ * math.cos(a) * 1.05; y = K.HILL_C[1] + r_ * 0.9 * math.sin(a)
             if float(K.hill_h(np.array([x]), np.array([y]))[0][0]) < 26.0 + 1.5 * (k % 2): break
-        out.append((x, y))
+        for dr in (0, 1.5, -1.5, 3, -3, 4.5, -4.5, 6, -6, 8, -8):         # step off a rock onto bare terrain
+            xx = x + dr * math.cos(a + 1.57); yy = y + dr * math.sin(a + 1.57); z = _terrain_z(xx, yy)
+            if z is not None:
+                x, y = xx, yy; break
+        out.append((x, y, z if z is not None else float(K.ground(x, y))))
     return out
 
 
@@ -130,6 +139,14 @@ def scot_pose(k, g):
     return K.with_rim(p)
 
 
+GCMODE = bool(os.environ.get('GC'))
+
+
+def _sp(T, items):
+    if not GCMODE:
+        T.sprites_for(items)
+
+
 def run(quality, gs, samples, out):
     work = os.path.join(HERE, "work", "E2_" + quality)
     T = C.Take(['bridge_end_north', 'valley_loop'], work, quality, fg=['bridge_end_north'], over=dict(sun_k=SUN_K))
@@ -141,18 +158,18 @@ def run(quality, gs, samples, out):
             bpy.data.objects.remove(o, do_unlink=True)
     # the Scots wait on the hill: oversized saltire banners (set) + idle cast cards on the slope
     Bp = K.Batch(89); rs_ = np.random.RandomState(13)
-    for (x, y) in scot_slots(3):
-        K.banner(Bp, (x, y, float(K.ground(x, y))), 34.0, 215.0 + 90.0, 't_saltire', 't_white', 'saltire', rs_, size=(18.0, 11.0))
+    for (x, y, z) in scot_slots(3):
+        K.banner(Bp, (x, y, z), 34.0, 215.0 + 90.0, 't_saltire', 't_white', 'saltire', rs_, size=(18.0, 11.0))
     Bp.finalize('scots_wide_banners')
     # near-ground dressing for the opening (camp clutter): barrels, a stack of spears, gorse tufts, boulders
     Bd = K.Batch(66); rd = np.random.RandomState(5)
-    for (x, y) in [(4.6, 40.2), (5.4, 43.0), (3.9, 46.5), (-4.8, 47.5), (-5.6, 45.0)]:
+    for (x, y) in [(6.4, 40.2), (7.2, 43.0), (6.6, 46.5), (-6.0, 47.5), (-5.8, 45.0)]:
         K.barrel(Bd, (x, y, float(K.ground(x, y))), rs=rd)
-    for (x, y, sz) in [(-0.6, 38.6, 0.9), (2.6, 40.2, 0.8), (-2.2, 39.6, 1.0), (3.6, 43.5, 0.9), (-3.0, 47.0, 1.1), (4.8, 49.0, 1.0), (1.2, 52.0, 1.1), (-1.0, 36.4, 0.8), (-4.6, 41.8, 0.45), (-3.4, 44.2, 0.4), (-6.0, 44.6, 0.5)]:
+    for (x, y, sz) in [(-6.6, 38.6, 0.9), (6.5, 38.8, 0.8), (-5.8, 39.8, 1.0), (7.4, 49.0, 1.0), (-6.4, 52.0, 1.1), (6.8, 54.0, 1.1), (-6.2, 36.6, 0.8), (-6.0, 41.8, 0.45), (-5.6, 44.2, 0.4), (-6.8, 44.6, 0.5)]:
         K.gorse(Bd, (x, y, float(K.ground(x, y))), sz, rd)
-    for (x, y, sz) in [(-3.4, 41.0, 0.7), (4.2, 44.5, 0.8), (-5.0, 43.6, 0.35)]:
+    for (x, y, sz) in [(-5.6, 41.0, 0.7), (6.0, 44.5, 0.8), (-6.2, 43.6, 0.35)]:
         K.boulder(Bd, x, y, float(K.ground(x, y)), sz, rd)
-    for (x, y) in [(2.0, 38.9), (2.3, 39.2), (2.6, 38.8)]:
+    for (x, y) in [(6.0, 38.9), (6.3, 39.2), (6.6, 38.8)]:
         K.spear(Bd, (x, y, float(K.ground(x, y))), tilt=(0.25, -0.2), h=2.4)
     Bd.finalize('dress_e2')
     os.makedirs(out, exist_ok=True)
@@ -171,7 +188,7 @@ def run(quality, gs, samples, out):
             x, y = walker_xy(i, g)
             T.place(a, g, (x, y, z_at(x, y)), cast)
             T.pose(a, g, pose_of(i, g))
-        T.sprites_for([(a, 48 if i < 30 else 32, gs)])
+        _sp(T, [(a, 48 if i < 30 else 32, gs)])
     s0 = C.REAL_H["footman_a"] / C.PUPPET_H["footman_a"]
     for m, (a, cast) in enumerate(mact):
         x, y = mead_xy_ = slots[m]
@@ -179,14 +196,59 @@ def run(quality, gs, samples, out):
             pop = ez((g - mead_arrive(m)) / 6.0) if g >= mead_arrive(m) else 0.0
             a.place(C.bf(g), (x, y, float(K.ground(x, y))), scale=s0 * max(pop, 0.02))
             T.pose(a, g, mead_pose(m, g))
-        T.sprites_for([(a, 32, gs)])
+        _sp(T, [(a, 32, gs)])
     ss0 = C.REAL_H["scot_a"] / C.PUPPET_H["scot_a"] * SCOT_SCALE
     for k, a in enumerate(scots):
-        x, y = sslots[k]
+        x, y, zs = sslots[k]
         for g in gs:
-            a.place(C.bf(g), (x, y, float(K.ground(x, y))), scale=ss0)
+            a.place(C.bf(g), (x, y, zs), scale=ss0)
             T.pose(a, g, scot_pose(k, g))
-        T.sprites_for([(a, 48, gs)])
+        _sp(T, [(a, 48, gs)])
+
+    if GCMODE:                                            # ground check (QA_TEAM §K): every card must touch the ground in every sampled frame
+        sys.path.insert(0, os.path.join(HERE, "..", "..", "set3d21")); import ground_check21 as GC
+
+        def set_frame(g):
+            bpy.context.scene.frame_set(C.bf(g))
+            for m, (a, cast) in enumerate(mact):
+                hid = g < mead_arrive(m)
+                for ob in (a.card, a.proxy, a.contact):
+                    if ob is not None: ob.hide_render = hid
+        # cards carry transparent padding under the soles, so the check is made at each actor's FOOT point (the xyz it is placed at)
+        from mathutils import Vector
+        feet = {}
+        for i, (a, _c) in enumerate(acts): feet[a.name] = (a, lambda g, i=i: (lambda xy: (xy[0], xy[1], z_at(*xy)))(walker_xy(i, g)), None)
+        for m, (a, _c) in enumerate(mact): feet[a.name] = (a, lambda g, m=m: (slots[m][0], slots[m][1], float(K.ground(*slots[m]))), m)
+        for k, a in enumerate(scots): feet[a.name] = (a, lambda g, k=k: sslots[k], None)
+        rows = []; fail = 0; sunk = 0
+        for g in gs:
+            set_frame(g); bpy.context.view_layer.update()
+            sc = bpy.context.scene; dg = bpy.context.evaluated_depsgraph_get()
+            for nm, (a, fn, m) in feet.items():
+                if m is not None and g < mead_arrive(m) + 7: continue
+                x, y, z = fn(g); own = GC._own(a.card); org = Vector((x, y, z + 0.5)); gap = None
+                for dy in (0.0, 0.15, -0.15):                      # three rays: a plank seam must not read as a gap
+                    org = Vector((x, y + dy, z + 0.5))
+                    for _ in range(12):
+                        hit, loc, nrm, idx, ob, mtx = sc.ray_cast(dg, org, Vector((0, 0, -1)))
+                        if not hit: break
+                        if ob.name in own or ob.name.startswith(("contact", "shadow", "proxy")) or ob.hide_render:
+                            org = loc + Vector((0, 0, -1e-3)); continue
+                        gg = z - loc.z
+                        gap = gg if gap is None else min(gap, gg); break
+                if gap is None or gap > GC.TOL:
+                    fail += 1; rows.append((g, nm, "FAIL", "nothing below" if gap is None else "%.1f cm above" % (gap * 100)))
+                elif gap < -GC.SINK:
+                    sunk += 1; rows.append((g, nm, "SUNK", "%.1f cm below" % (-gap * 100)))
+        lines = ["# GROUND check (QA §K) - %s" % ("PASS" if fail == 0 else "FAIL"), "",
+                 "Foot-point ray cast (cards have transparent padding under the soles; each actor is placed AT its foot point). frames sampled: %d; actors: %d (%d walkers, %d meadow cards, %d Scots); FAIL %d; SUNK %d; tolerance 2 cm." % (len(gs), len(feet), len(acts), len(mact), len(scots), fail, sunk),
+                 "All cards have contact=True shadows. Barrels, gorse, boulders, spears and banner poles are placed with K.ground() at their base.", ""]
+        if rows:
+            lines += ["| g | item | result | gap |", "|---|---|---|---|"] + ["| %d | %s | %s | %s |" % r for r in rows]
+        open(os.path.join(HERE, "GROUND.md"), "w").write("\n".join(lines) + "\n")
+        rep = dict(fail=fail, sunk=sunk)
+        print("GC", rep.get("fail"), rep.get("sunk"), flush=True)
+        return
 
     def hook(g):
         K.cam_path(None, KEYS, g)

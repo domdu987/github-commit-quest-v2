@@ -87,3 +87,15 @@ PROJ/v3/cast21 (`import cast21` BEFORE `sprites`/`stage.sprites`). Read API.md.
 - Commit and push the take to your outcome branch as soon as it is final. Also push work in progress every ~30 min (the container can restart; `git add` your sNN folder, not frames). Do not open pull requests.
 - Work autonomously. Do not ask for confirmation: the set has passed QA-art (the client delegated approval to QA-art) and rendering is approved.
 - If a fix request arrives from the director, fix that take, re-run QA and push again.
+
+## Colour policy (director, 2026-11-20 19:00), replaces the per-take luma and saturation targets
+Overall brightness, saturation and any yellow cast are normalized ONCE for the whole film at the conform, with a fixed correction per segment eased across D6 joins. The target is about luma 100, sat about 0.55, with yellows pulled back.
+- Do NOT re-render, and do not add post-gamma passes, only to hit colour numbers.
+- Use the set's default VIVID grade, consistent within your segment.
+- TAKE gates judge CONTENT only.
+- The set palette itself (field and crag colours) is content: segments rendered before 08c9d4b that show the far valley are re-rendered.
+
+## QA_TEAM.md §K (client complaint 2026-11-21, "มุมกล้องของลอยอีกแล้ว"): BLOCKING, NOTHING FLOATS
+1. **Ground check before every final render**: `import ground_check21 as GC` (in PROJ/v3/set3d21) and run `GC.check(items, frames=range(first_g, last_g + 1, 10), set_frame=<your per-frame pose fn>, airborne={...}, out='GROUND.md')` on every character card and free prop (carts, barrels, stools, chests, tables, banner poles). It ray-casts down from each item's lowest point and fails on a gap over 2 cm or nothing below. Fix (snap to ground) until it passes, and commit GROUND.md with the take. List legitimately airborne items and frames (jumps, a thrown helmet, splashes) in `airborne`. Use the shared film/v3/tools/ground_check.py instead once it lands.
+2. **Contact shadows**: every character card (`contact=True`) and every free prop gets a soft contact shadow under its feet or base.
+3. At the TAKE gate the director adds an independent **float hunter** who sees only a 1 fps sheet (`python3 PROJ/film21/sheet1fps.py take.mkv <first_g> sheet1fps.jpg`). Any floating, ungrounded, detached-shadow or weirdly-cut item blocks the take. Check your own sheet before delivering.

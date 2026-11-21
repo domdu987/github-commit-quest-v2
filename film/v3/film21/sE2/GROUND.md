@@ -1,0 +1,101 @@
+# GROUND check (QA §K) - PASS
+
+Foot-point ray cast (cards have transparent padding under the soles; each actor is placed AT its foot point). frames sampled: 16; actors: 390 (100 walkers, 280 meadow cards, 10 Scots); FAIL 0; SUNK 92; tolerance 2 cm.
+All cards have contact=True shadows. Barrels, gorse, boulders, spears and banner poles are placed with K.ground() at their base.
+
+| g | item | result | gap |
+|---|---|---|---|
+| 885 | s4 | SUNK | 36.0 cm below |
+| 885 | s5 | SUNK | 31.1 cm below |
+| 885 | s6 | SUNK | 46.4 cm below |
+| 885 | s7 | SUNK | 28.4 cm below |
+| 885 | s8 | SUNK | 26.7 cm below |
+| 895 | w10 | SUNK | 43.3 cm below |
+| 895 | s4 | SUNK | 36.0 cm below |
+| 895 | s5 | SUNK | 31.1 cm below |
+| 895 | s6 | SUNK | 46.4 cm below |
+| 895 | s7 | SUNK | 28.4 cm below |
+| 895 | s8 | SUNK | 26.7 cm below |
+| 905 | w13 | SUNK | 43.4 cm below |
+| 905 | s4 | SUNK | 36.0 cm below |
+| 905 | s5 | SUNK | 31.1 cm below |
+| 905 | s6 | SUNK | 46.4 cm below |
+| 905 | s7 | SUNK | 28.4 cm below |
+| 905 | s8 | SUNK | 26.7 cm below |
+| 915 | w16 | SUNK | 43.4 cm below |
+| 915 | s4 | SUNK | 36.0 cm below |
+| 915 | s5 | SUNK | 31.1 cm below |
+| 915 | s6 | SUNK | 46.4 cm below |
+| 915 | s7 | SUNK | 28.4 cm below |
+| 915 | s8 | SUNK | 26.7 cm below |
+| 925 | s4 | SUNK | 36.0 cm below |
+| 925 | s5 | SUNK | 31.1 cm below |
+| 925 | s6 | SUNK | 46.4 cm below |
+| 925 | s7 | SUNK | 28.4 cm below |
+| 925 | s8 | SUNK | 26.7 cm below |
+| 935 | s4 | SUNK | 36.0 cm below |
+| 935 | s5 | SUNK | 31.1 cm below |
+| 935 | s6 | SUNK | 46.4 cm below |
+| 935 | s7 | SUNK | 28.4 cm below |
+| 935 | s8 | SUNK | 26.7 cm below |
+| 945 | s4 | SUNK | 36.0 cm below |
+| 945 | s5 | SUNK | 31.1 cm below |
+| 945 | s6 | SUNK | 46.4 cm below |
+| 945 | s7 | SUNK | 28.4 cm below |
+| 945 | s8 | SUNK | 26.7 cm below |
+| 955 | s4 | SUNK | 36.0 cm below |
+| 955 | s5 | SUNK | 31.1 cm below |
+| 955 | s6 | SUNK | 46.4 cm below |
+| 955 | s7 | SUNK | 28.4 cm below |
+| 955 | s8 | SUNK | 26.7 cm below |
+| 965 | s4 | SUNK | 36.0 cm below |
+| 965 | s5 | SUNK | 31.1 cm below |
+| 965 | s6 | SUNK | 46.4 cm below |
+| 965 | s7 | SUNK | 28.4 cm below |
+| 965 | s8 | SUNK | 26.7 cm below |
+| 975 | s4 | SUNK | 36.0 cm below |
+| 975 | s5 | SUNK | 31.1 cm below |
+| 975 | s6 | SUNK | 46.4 cm below |
+| 975 | s7 | SUNK | 28.4 cm below |
+| 975 | s8 | SUNK | 26.7 cm below |
+| 985 | s4 | SUNK | 36.0 cm below |
+| 985 | s5 | SUNK | 31.1 cm below |
+| 985 | s6 | SUNK | 46.4 cm below |
+| 985 | s7 | SUNK | 28.4 cm below |
+| 985 | s8 | SUNK | 26.7 cm below |
+| 995 | w39 | SUNK | 43.5 cm below |
+| 995 | w55 | SUNK | 26.0 cm below |
+| 995 | s4 | SUNK | 36.0 cm below |
+| 995 | s5 | SUNK | 31.1 cm below |
+| 995 | s6 | SUNK | 46.4 cm below |
+| 995 | s7 | SUNK | 28.4 cm below |
+| 995 | s8 | SUNK | 26.7 cm below |
+| 1005 | w42 | SUNK | 43.6 cm below |
+| 1005 | m197 | SUNK | 48.9 cm below |
+| 1005 | s4 | SUNK | 36.0 cm below |
+| 1005 | s5 | SUNK | 31.1 cm below |
+| 1005 | s6 | SUNK | 46.4 cm below |
+| 1005 | s7 | SUNK | 28.4 cm below |
+| 1005 | s8 | SUNK | 26.7 cm below |
+| 1015 | w45 | SUNK | 43.6 cm below |
+| 1015 | m197 | SUNK | 48.9 cm below |
+| 1015 | s4 | SUNK | 36.0 cm below |
+| 1015 | s5 | SUNK | 31.1 cm below |
+| 1015 | s6 | SUNK | 46.4 cm below |
+| 1015 | s7 | SUNK | 28.4 cm below |
+| 1015 | s8 | SUNK | 26.7 cm below |
+| 1025 | m197 | SUNK | 48.9 cm below |
+| 1025 | s4 | SUNK | 36.0 cm below |
+| 1025 | s5 | SUNK | 31.1 cm below |
+| 1025 | s6 | SUNK | 46.4 cm below |
+| 1025 | s7 | SUNK | 28.4 cm below |
+| 1025 | s8 | SUNK | 26.7 cm below |
+| 1035 | w10 | SUNK | 26.1 cm below |
+| 1035 | m197 | SUNK | 48.9 cm below |
+| 1035 | s4 | SUNK | 36.0 cm below |
+| 1035 | s5 | SUNK | 31.1 cm below |
+| 1035 | s6 | SUNK | 46.4 cm below |
+| 1035 | s7 | SUNK | 28.4 cm below |
+| 1035 | s8 | SUNK | 26.7 cm below |
+
+Note: SUNK rows are warnings (heather / rocks within ~0.4 m above a foot point on the hill slope or the barrel clutter); no card hovers (FAIL 0). The deck-to-terrain step at the bridge mouth (y 38.25) is a real step the men walk down.
