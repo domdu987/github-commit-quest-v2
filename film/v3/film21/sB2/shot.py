@@ -49,13 +49,13 @@ def K_g(x, y):
 
 CTR = np.array([137.0, 137.0]); TH = math.radians(224.0)
 U_R = np.array([math.cos(TH), math.sin(TH)]); T_R = np.array([-math.sin(TH), math.cos(TH)])
-G_SPLIT = 377
-G_ARR = 408          # the landing is reached at g408; the last 10 frames creep on up the slope
+G_SPLIT = 369
+G_ARR = 386          # v4: the landing is reached at g386, then a >1 s gentle drift to the cut (no stop, no shake)
 
 
 def end_landing():
     """LOW HERO landing: the camera 3.3 m (horizontal) below the lip of the shelf, 1.3 m above the slope, looking UP 36 deg at the Scots on the lip: sky behind them."""
-    rc = 17.1; p = CTR + U_R * rc
+    rc = 16.35; p = CTR + U_R * rc
     loc = (float(p[0]), float(p[1]), float(K.ground(p[0], p[1])) + 1.3)
     q = CTR + U_R * 13.3
     look = (float(q[0]), float(q[1]), float(K.ground(q[0], q[1])) + 1.9)
@@ -80,10 +80,10 @@ def cam_state(g):
     t = min((g - G_SPLIT) / n, 1.0)
     m_l0 = (l0 - l0b) * n; m_k0 = (k0 - k0b) * n                         # continue the old velocity (no bump)
     dirv = np.array(ek) - np.array(el); dirv /= np.linalg.norm(dirv)
-    m_l1 = dirv * 0.35 * n * 0.6; m_k1 = np.zeros(3)                      # still creeping up the slope at the cut
+    m_l1 = dirv * 0.02 * n; m_k1 = np.zeros(3)                      # still creeping up the slope at the cut
     loc = _herm(l0, m_l0, np.array(el), m_l1, t); look = _herm(k0, m_k0, np.array(ek), m_k1, t)
     if g > G_ARR:
-        u = (g - G_ARR) / float(G1 - G_ARR); loc = loc + dirv * 0.55 * u + np.array([T_R[0], T_R[1], 0.0]) * 0.35 * u; look = look + np.array([0, 0, 0.12 * u])
+        u = (g - G_ARR) / float(G1 - G_ARR); loc = loc + dirv * 0.30 * u + np.array([T_R[0], T_R[1], 0.0]) * 0.30 * u; look = look + np.array([T_R[0], T_R[1], 0.0]) * 0.10 * u
     gz = float(K.ground(loc[0], loc[1])) + 1.3
     if loc[2] < gz: loc[2] = gz
     viv = v0
@@ -131,7 +131,7 @@ class Seg(object):
         for ob in bpy.data.objects:                       # no fg spear shaft crossing the Scots' faces
             if ob.name.startswith(("fg_generic_steel", "fg_generic_wood")): ob.hide_render = True
         self.marks = {}
-        for mk, k, dr in (("s1", -1.3, 0.3), ("s2", -0.64, -0.1), ("w", 0.0, 0.2), ("horn", 0.64, -0.1), ("s3", 1.3, 0.3)):
+        for mk, k, dr in (("s1", -1.0, 0.8), ("s2", -0.7, 0.0), ("w", 0.0, 0.1), ("horn", 0.7, 0.0), ("s3", 1.0, 0.8)):
             p = CTR + U_R * (13.3 + dr) + T_R * k; self.marks[mk] = (float(p[0]), float(p[1]), float(K.ground(p[0], p[1])))
         for nm, cast, pname, mk, ph in STAND:
             self.acts[nm] = C.make_actor(nm, cast, os.path.join(TMP, "sprites"))
