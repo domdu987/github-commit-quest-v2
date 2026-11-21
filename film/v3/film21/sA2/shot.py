@@ -46,6 +46,7 @@ def push_cam():
 
 G_SPL = 112          # the summit pass; from here the dive to the medium pose is an eased Hermite (arrives at g125 with a small forward velocity, never a stop)
 E_BACK, E_LAT, E_UP = 6.0, -0.5, 5.0
+MID = (212.0, 162.0, 96.0)
 WPS = [(96, (120.0, 104.0, 70.0), (160.0, 148.0, 40.0)), (106, (172.0, 150.0, 92.0), (150.0, 130.0, 30.0)), (G_SPL, (206.0, 172.0, 100.0), None)]
 
 
@@ -62,7 +63,10 @@ def keys():
     ks = [(80, P_A[0], P_A[1], 22.0)]
     for g, loc, look in WPS:
         ks.append((g, loc, look if look else (el[0] - 10, el[1] - 10, 34.0), 22.0))
-    ks.append((G_SPL + 16, el, ek, 22.0))
+    dv = np.array(ek) - np.array(el); dv /= np.linalg.norm(dv)
+    ks.append((119, MID, (el[0] - 6, el[1] - 6, 36.0), 22.0))          # a high mid-waypoint: ray-cast clearance >= 3 m from every pine crown (g118 was inside one)
+    ks.append((G_PUSH, el, ek, 22.0))
+    ks.append((G_PUSH + 6, tuple(np.array(el) + dv * 1.2), ek, 22.0))   # a key past E: the camera arrives at g125 still moving (ease-out belongs to this last segment)
     return ks
 
 
@@ -72,19 +76,10 @@ def _herm(p0, m0, p1, m1, t):
 
 
 def cam_state(g):
-    if g <= G_SPL:
-        r = K.cam_path(None, keys(), min(g, G_SPL))
-        return r["loc"], r["look"], r["lens"], r["vivid"]
-    r0 = K.cam_path(None, keys(), G_SPL); r1 = K.cam_path(None, keys(), G_SPL - 1)
-    l0, k0 = np.array(r0["loc"]), np.array(r0["look"]); l0b, k0b = np.array(r1["loc"]), np.array(r1["look"])
-    el, ek = end_cam(); el = np.array(el); ek = np.array(ek); n = float(G_PUSH - G_SPL)
-    viv = K.STATE.get("vivid")
     if g <= G_PUSH:
-        t = (g - G_SPL) / n
-        dirv = ek - el; dirv /= np.linalg.norm(dirv)
-        loc = _herm(l0, (l0 - l0b) * n, el, dirv * 0.012 * n, t)          # arrives creeping forward at ~0.36 m/s: the push takes over without a stop
-        look = _herm(k0, (k0 - k0b) * n, ek, np.zeros(3), t)
-        return tuple(loc), tuple(look), 22.0, viv
+        r = K.cam_path(None, keys(), g)
+        return r["loc"], r["look"], r["lens"], r["vivid"]
+    viv = K.STATE.get("vivid"); el, ek = end_cam(); el = np.array(el); ek = np.array(ek)
     pl, pk = push_cam(); dirv = ek - el; dirv /= np.linalg.norm(dirv)
     u = min((g - G_PUSH) / 15.0, 1.0)
     e = 0.012 * 15 * u / (0.8 * 15 * 0.1 + 1e-9) * 0.0 + (u * u * (3 - 2 * u)) * 0.85 + 0.15 * u                  # smoothstep + a linear part: starts with the drift velocity

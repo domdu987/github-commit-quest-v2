@@ -1,0 +1,16 @@
+{
+ "take": "B1",
+ "g0": 159,
+ "g1": 298,
+ "first_g": 159,
+ "n_frames": 143,
+ "handle_in": 0,
+ "handle_out": 3,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "cam_out": "P_CAMP at g298, continuing NE",
+ "samples": 32,
+ "res": "720x1280"
+}

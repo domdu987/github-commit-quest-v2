@@ -1,0 +1,24 @@
+{
+ "cues": [
+  {
+   "g": 159,
+   "cue": "valley wind ambience, distant river"
+  },
+  {
+   "g": 195,
+   "cue": "whoosh, swoop down over river"
+  },
+  {
+   "g": 225,
+   "cue": "camp bustle rises, hooves, banners flutter, fire crackle"
+  },
+  {
+   "g": 270,
+   "cue": "sign pass, cloth flap"
+  },
+  {
+   "g": 235,
+   "cue": "horse parade hooves, harness jingle"
+  }
+ ]
+}
