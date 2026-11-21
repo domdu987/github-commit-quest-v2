@@ -22,12 +22,22 @@ def stand(g):
 def carry(g):
     return P.life(cast23.carry_pose("gi_designer", None), g, 8, sway=1.4)
 
-CFG = dict(shot="S02", g0=120, g1=252, h_in=8, h_out=0, trans_in=dict(type="dissolve", frames=11),
+O = (-700.0, -260.0, 0.0)
+def W(x, y): return (x + O[0], y + O[1], 0.0)
+
+def prebuild(SH):
+    """Director re-render brief: camera raised to 1.6 D on the WEST (sun) side of the tank row so the tanks are lit from the camera side and recede
+    diagonally; the foreground crate is re-placed from the new start camera."""
+    sh = SH.SHOTS["S02"]
+    sh["cam"] = SH.C((-34.0, -43.0, 1.6), (-28.0, -14.0, 1.4), 22)
+    sh["move"] = dict(zoom_rate=0.05, slide=40, sdist=10.0)
+
+CFG = dict(shot="S02", prebuild=prebuild, g0=120, g1=252, h_in=8, h_out=0, trans_in=dict(type="dissolve", frames=11),
   actors=[
-    dict(name="polisher", cast="gi_radio", at=("polisher", 0), off=(1.6, 3.0, 0), pose=polish, ppd=128, flip=True),
-    dict(name="saluter", cast="gi_pump", at=("saluter", 0), pose=salute, ppd=96),
-    dict(name="stand1", cast="gi_smile", at=("soldier", 0), pose=stand, ppd=96),
-    dict(name="carry1", cast="gi_designer", at=("soldier", 1), pose=carry, ppd=96),
+    dict(name="polisher", cast="gi_radio", at=lambda g: W(-30.6, -36.0), pose=polish, ppd=192, flip=False),
+    dict(name="saluter", cast="gi_pump", at=lambda g: W(-32.0, -30.0), pose=salute, ppd=160, flip=False),
+    dict(name="stand1", cast="gi_smile", at=lambda g: W(-30.5, -17.0), pose=stand, ppd=96),
+    dict(name="carry1", cast="gi_designer", at=lambda g: W(-31.5, -6.0), pose=carry, ppd=96),
   ])
 CUES = [{'time': 4.0, 'duration': 5.5, 'frame': 120, 'end_frame': 285, 'kind': 'ambience', 'label': 'morning lane, birds, a distant tractor, a light breeze in the poplars'}, {'time': 4.167, 'duration': 4.167, 'frame': 125, 'end_frame': 250, 'kind': 'prop', 'label': 'soft rubbing of a rag on rubber, rhythmic'}, {'time': 5.333, 'duration': 0.833, 'frame': 160, 'end_frame': 185, 'kind': 'prop', 'label': 'a boot snap and a salute'}]
 if __name__ == "__main__":

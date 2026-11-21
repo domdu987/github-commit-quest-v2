@@ -104,6 +104,7 @@ class Take(object):
         self.cfg = cfg; self.clk = Clock(cfg); self.shot = cfg["shot"]
         self.here = here; self.sprite_dir = sprite_dir
         t0 = time.time()
+        if cfg.get("prebuild"): cfg["prebuild"](SH)
         self.A = GH.build(self.shot, cards=False)
         self.sc = bpy.context.scene
         GH.quality(self.sc, quality)
