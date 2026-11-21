@@ -111,6 +111,21 @@ def _tex_bottle():
         d.polygon([(52, 560), (188, 560), (188, 618), (52, 618)], fill=(150, 196, 188, 255)); d.line([(50, 620), (190, 620)], fill=INKc, width=10)
         im.save(p)
     return p
+def _tex_fist():
+    p = os.path.join(TEXD, 'bottle_fist.png')
+    if not os.path.exists(p):
+        S = 256; im = Image.new('RGBA', (S, S), (0, 0, 0, 0)); d = ImageDraw.Draw(im); INKc = (26, 16, 32, 255); SK = (238, 188, 150, 255)
+        d.rounded_rectangle([40, 150, 216, 250], radius=34, fill=(40, 62, 130, 255), outline=INKc, width=8)                 # sleeve cuff
+        d.ellipse([34, 46, 222, 196], fill=SK, outline=INKc, width=9)                                                      # fist
+        for x in (84, 128, 172): d.line([x, 62, x, 118], fill=INKc, width=7)                                               # finger gaps
+        d.ellipse([20, 96, 80, 160], fill=SK, outline=INKc, width=8)                                                       # thumb
+        im.save(p)
+    return p
+def fist_prop(a, cam, ctr, D_size=0.34, back_off=-0.03):
+    o, ex, ey = head_frame(a, cam); n = (Vector(cam.location) - o).normalized(); D = ex.length
+    right = Vector(cam.matrix_world.to_3x3() @ Vector((1, 0, 0))).normalized(); up = Vector((0, 0, 1))
+    c = o + right * (ctr[0] * D) + (-up) * (ctr[1] * D) - n * back_off; hh = D_size * D / 2
+    _quad('t6b_fist', c, right, up, hh, hh, _img_mat('t6b_mfist', _tex_fist(), False, True)); return c
 def _img_mat(name, path, backface_clear, alpha):
     m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
     tx = nt.nodes.new('ShaderNodeTexImage'); tx.image = bpy.data.images.load(path, check_existing=True); tx.interpolation = 'Cubic'; tx.extension = 'CLIP'
@@ -166,7 +181,7 @@ def _gend_off(g):
     u = _ss((g - WALK0) / float(WALK1 - WALK0)); return GEND_END[0] * u, GEND_END[1] * u, u
 def _gend_hand(g):
     """the hand of the gendarme pulling the empty bottle from his cape (g1640-1656): belt -> raised beside the card (head-local units, negative x = frame-left)"""
-    u = _ss((g - 1640) / 16.0); hx, hy = [float(x) for x in os.environ.get('GHAND', '-0.85,-0.1').split(',')]; bob = 0.06 * math.sin(2 * math.pi * g / 29.0) * u; return (-0.30 + (hx + 0.30) * u, 0.95 + (hy - 0.95) * u + bob), u
+    u = _ss((g - 1640) / 16.0); hx, hy = [float(x) for x in os.environ.get('GHAND', '-0.55,0.10').split(',')]; bob = 0.06 * math.sin(2 * math.pi * g / 29.0) * u; return (-0.30 + (hx + 0.30) * u, 0.95 + (hy - 0.95) * u + bob), u
 INSP_T0, INSP_T = 1568, 1598                                   # the inspector stays at T6a's offset (hidden behind the camera/Dupont) until the sweep is over, then walks to his mark
 def _bert_hand(g):
     """Bertillon's card hand (head-local units): beside his face in 6c; in 6d it rises so the card sits ABOVE Dupont's head, next to the bottle"""
@@ -207,7 +222,8 @@ def stage_props(g, acts, cam):
     """call after stage_cast2: Bertillon's MARTIN card (+ bottle later)"""
     hide_hero_card(g)
     if 'gend_a' in acts and g >= 1646:
-        h, u = _gend_hand(g); bottle_prop(acts["gend_a"], cam, ctr=(h[0] - 0.02, h[1] - 0.32), h_D=1.5, back_off=-0.02)
+        h, u = _gend_hand(g); bottle_prop(acts["gend_a"], cam, ctr=(h[0] - 0.02, h[1] - 0.32), h_D=1.5, back_off=float(os.environ.get("BOFF", "-0.02")))
+        fx, fy = [float(v) for v in os.environ.get('FISTOFF', '0.04,-0.15').split(',')]; fist_prop(acts["gend_a"], cam, ctr=(h[0] - 0.02 + fx, h[1] - 0.32 + fy))
 
 def hide_hero_card(g):
     """from g1546 (right after T6a's P1) the lifted 3D hero card in the drawer box is gone: Bertillon holds the MARTIN card in his hand instead"""
