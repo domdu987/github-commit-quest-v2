@@ -23,3 +23,9 @@ No extra review layers (§G-§L multi-reviewer gates dropped). fal still exhaust
 - [x] Board r3 (Opus, partial) re-rendered: still 2 now hero tank; numbers sat 0.53-0.58, luma 95-107, shade hue 245/252/223(night). Look accepted as base; final look check at SET gate.
 - [x] Estimated timing audio/timing_EST.json (70.3 s); shot_plan.md v1 (19 shots, BIGZOOM S01+S12, takes render x1.25 length for retiming)
 - [ ] Full set (Opus builder, running) + cast23 (Opus builder, running) -> one QA-art SET check -> WORKER23.md -> 3 render teams
+- [x] Cast23 (Opus) committed; full set v1 committed; SET gate QA-art (QA_ART_SET.md): LANE PASS, CAMP PASS, FIELDS FIX (S01), RHINE FIX (S14-S18)
+- [x] Render teams launched 2026-11-21 04:13 UTC (Sonnet, source film23/main @2cdcb73):
+  team1 session_017iwyCtvhJgyg3a8pwiDW3V render23/team1 S02-S08
+  team2 session_017iwyCwdz3vZPczGX7PPrA4 render23/team2 S09 S10 S11 S12 S13 S19
+- [ ] Set builder fixing FIELDS + RHINE -> then team3 (S01 S14-S18)
+- [ ] fal top-up -> narration (gen.py, build_bk0.py --stt), music 2-3 takes -> retime conform -> release23
