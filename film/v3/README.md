@@ -96,3 +96,38 @@ python3 cues.py ../out/sfx_cues.json
 | `qa_report.py` | the tables of `out/QA.md` |
 
 Results: `out/QA.md`.
+
+## Ground check (`tools/ground_check.py`): nothing floats (QA_TEAM.md section K)
+
+Runs inside Blender (bpy + mathutils only). Samples frames, finds every character card (`*_card`) and prop, ray-casts straight
+down from its lowest visible point and fails (exit code 1) when the gap to the first surface is more than `--gap` (default 0.02
+unit) or nothing is below it. Writes `GROUND.md` (object, frame, gap, FAIL/OK); commit it with the take.
+
+```
+blender -b scene.blend --python film/v3/tools/ground_check.py -- --every 10 --gap 0.02 --out GROUND.md
+blender -b --python shot.py --python film/v3/tools/ground_check.py -- --every 10 --out GROUND.md   # shot script builds the scene
+blender -b --python film/v3/tools/ground_check.py -- --setup shot.py --fix --save fixed.blend       # snap failures down
+```
+
+- **Cards**: the bottom edge of the visible alpha of that frame's sprite (3 points on the lowest row); no readable sprite -> bounding box.
+- **Props**: `gc_role = "prop"`, or a name in `PROP_NAMES` (pole, flag, disc, pot, ox, cart, canopy, girder ...), or `--include REGEX` /
+  `--auto-props`. Ground, buildings, sky, cameras, lights, shadow blobs and hidden objects are skipped (`gc_role = "ground"` / `--ground REGEX`
+  to add more; tag set structure such as railway decks that way or the checker will "fix" it).
+- **Allowed to be off the ground** (birds, thrown things, flags on poles, smoke): custom property `obj["airborne"] = True` (inherited by
+  children; may be keyframed), or only on some frames `obj["airborne_frames"] = "20:34,60:70"`. Per-object tolerance: `obj["gc_gap"] = 0.1`.
+- **--fix**: moves a failing object straight down onto the hit surface. A static object gets its location changed; an object with animated
+  location (an Actor's `<name>_root`) keeps its keys and gets a keyed `delta_location` Z offset on every sampled frame. The report lists each change.
+  Re-run with a smaller `--every` afterwards: frames between samples interpolate the offset.
+- **Contact shadow**: `ground_check.add_contact_shadow(obj)` puts a soft dark blob on the ground under a card or prop (follows its XY, not Z or
+  rotation; `follow_ground=True, frames=range(...)` keys its height over steps). `add_contact_shadows()` does every card and prop of the scene.
+  Actor already has a decal (`build(..., contact=True)`); to make it the default, in `Actor.build` end:
+
+```python
+        if contact is None:                       # default: nobody stands on nothing (QA_TEAM section K-2)
+            contact = True                         # the existing <name>_contact decal ...
+        # ... or the checker-aware blob:  from tools import ground_check; ground_check.add_contact_shadow(card)
+```
+
+Limits: name rules (a false positive is a tag away); a card is a flat quad, so a figure whose drawn feet are not at the alpha bottom (a tail,
+a raised weapon) is judged by the alpha bottom; the ray goes straight down only (no slopes' normals); 0.3 unit of sinking is found, deeper
+reads as a big gap; `--fix` of a static object that is airborne on some frames moves it for all frames. Tests: `tools/GROUND_TEST.md`.
