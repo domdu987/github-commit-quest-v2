@@ -8,13 +8,14 @@
   "type": "cut",
   "frames": 0
  },
- "cam_in": "(-98.1,-16.8,2.9)->toward the camp_bank view, 7.2 m behind Cressingham, 26 mm",
- "cam_out": "1.8 m behind Cressingham, 1.15 m above ground, 0.4 m off-axis (CU2)",
+ "cam_in": "4.7 m behind Cressingham, 1.5 m above ground, 30 mm, camp_bank view",
+ "cam_out": "1.9 m behind him, 1.15 m above ground, look shifted left of him so he is right of centre (CU2)",
  "grade": "STATE['vivid']=(1.52,1.3,0.75) constant; no post pass",
  "samples": 32,
  "speech_window_g": [
   1093,
   1140
  ],
- "staging": "column of 8 laughing/pointing English in depth behind Cressingham, Surrey laughing behind him; camp props (racks, cart, sacks) on the sand; hill + river + bridge behind"
+ "staging": "4 big laughers beside him (two pointing at the crag, flipped), 4 more in depth, Surrey behind; K.scots_wide_line(n=26, banners=7, scale=3.6, toward=(-92,-13)) on the crag; camp props on the sand",
+ "lens": 30.0
 }
