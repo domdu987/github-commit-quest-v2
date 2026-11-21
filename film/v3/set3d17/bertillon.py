@@ -1,0 +1,1425 @@
+"""film 17 set kit, full set ("Bertillon", Paris police 1882-83). bpy 5.x, Cycles CPU. 1 unit = 1 m, Z up; a grown person = 1.7 units = 1 D.
+Four locations (measure, records, reveal, street), 14 camera presets (20 contact tiles with the light variants), 3 light presets, life hooks. See API.md.
+Series light model: one hard warm key (sun) + warm window / strip area fills and gas lamps + a flat blue-violet ambient injected as emission with
+per-surface shade_mul and a navy lift, matte materials only, drawn textures (bertillon_tex.py), inverted-hull ink on man-made props, no depth of field, no text."""
+import os, sys, math, random, contextlib, time, json
+import numpy as np
+import bpy, bmesh
+from PIL import Image, ImageDraw
+from mathutils import Vector
+
+HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
+import bertillon_tex as TX
+
+D = 1.7                                     # one character height in units
+HEIGHT = {'clerk': 1.78, 'prisoner': 1.68, 'inspector': 1.66, 'gendarme': 1.82, 'prefect': 1.74}
+STATE = {'P': None, 'ink_t': 0.012, 'lamps': [], 'glows': [], 'anim': {}, 'loc': None, 'preset': None}
+
+def hex_lin(h):
+    h = h.lstrip('#'); c = [int(h[i:i + 2], 16) / 255.0 for i in (0, 2, 4)]
+    return tuple(x / 12.92 if x <= 0.04045 else ((x + 0.055) / 1.055) ** 2.4 for x in c)
+
+# ---------------------------------------------------------------- light presets (the series model)
+# displayed = art * gain * KEY * vis * toon(cos)  +  ((1-m) art SHADE shade_mul + m lum(art) TINT mean(shade_mul) + LIFT) * (1 + N.form)
+LIGHTS = {
+    'DAY_INT': dict(key=(2.30, 1.65, 0.74), sun_dir=(0.78, 0.25, -0.56), sun_angle=0.8, sun=True, shade=(0.135, 0.12, 0.36), tint=(0.105, 0.092, 0.245), mix=0.85,
+                    lift=(0.002, 0.005, 0.021), form=(0.0, -0.05, 0.22), lamp_k=0.75, win_w=340, sky=('#4a78cd', '#92b7e7', '#92b7e7'), sky_k=1.0, ink='#2e1a26', world=(0.35, 0.5, 0.8),
+                    gain=1.0, glow=1.0),
+    'EVENING_INT': dict(key=(2.0, 1.3, 0.55), sun_dir=(0.85, 0.15, -0.28), sun_angle=1.2, sun=True, shade=(0.10, 0.11, 0.35), tint=(0.075, 0.085, 0.25), mix=0.80,
+                        lift=(0.005, 0.011, 0.032), form=(0.0, -0.05, 0.22), lamp_k=1.0, sky=('#40448f', '#d98a78', '#f6b97c'), sky_k=1.0, ink='#2a1626', world=(0.3, 0.25, 0.4),
+                        gain=0.82, glow=1.15),
+    'DUSK_EXT': dict(key=(2.0, 1.05, 0.50), sun_dir=(-0.55, -0.80, -0.30), sun_angle=1.0, sun=True, shade=(0.10, 0.11, 0.35), tint=(0.075, 0.085, 0.25), mix=0.80,
+                     lift=(0.005, 0.012, 0.034), form=(0.0, -0.05, 0.22), lamp_k=1.0, sky=('#5e5aa8', '#e8837f', '#ffd592'), sky_k=1.0, ink='#2a1626', world=(0.4, 0.3, 0.45),
+                     gain=0.9, glow=1.2),
+}
+SUN_STRENGTH = 3.94          # sun strength per unit of key colour (calibrated, see calibrate())
+LAMP_W = 1.0                # watts scale for point lights (calibrated)
+
+# ---------------------------------------------------------------- materials
+def _pal():
+    pl = {}
+    def add(k, col, tex=None, tile=1.0, tint=False, sm=(1, 1, 1), ink=False, gain=1.0, off=(0, 0, 0), mix=None, afl=0.12):
+        pl[k] = dict(col=col, tex=tex, tile=tile, tint=tint, sm=sm, ink=ink, gain=gain, off=off, mix=mix, afl=afl)
+    add('floor', '#9c6c34', TX.planks('floor', (0x9c, 0x6c, 0x34), n=6, seed=11), tile=1.5, sm=(0.8, 1.0, 1.15), afl=0.12)
+    add('floor_dk', '#5e3320', TX.planks('floor_dk', (0x5c, 0x32, 0x20), n=6, seed=12), tile=1.5, sm=(0.8, 1.0, 1.15), afl=0.03)
+    add('wall', '#c28a3a', TX.plaster('wall', (0xc2, 0x8a, 0x3a), seed=3), tile=2.5, mix=0.9, afl=0.20, sm=(0.7, 0.95, 1.15))
+    add('wall_ochre', '#b0803a', TX.plaster('wall_ochre', (0xb0, 0x80, 0x3a), seed=4), tile=2.5, mix=0.9, afl=0.12)
+    add('wall_dk', '#8e3a2a', TX.plaster('wall_dk', (0x8e, 0x3a, 0x2a), seed=5), tile=2.5, mix=0.9, afl=0.12)
+    add('wain', '#552018', TX.wain_panels('wain', (0x55, 0x20, 0x18)), tile=1.0, mix=0.85, afl=0.03)
+    add('ceiling', '#76502a', TX.boards('ceiling', (0x76, 0x50, 0x2a), seed=13), tile=1.5, mix=0.85, afl=0.03)
+    add('ceil_navy', '#34456f', TX.boards('ceil_navy', (0x34, 0x45, 0x6f), seed=19), tile=1.5, mix=0.85, afl=0.03, sm=(0.9, 1.0, 1.1))
+    add('beam', '#4a2c19', TX.boards('beam', (0x4a, 0x2c, 0x19), seed=14, n=3), tile=1.0, ink=True)
+    add('frieze', '#5a1c18', TX.frieze('frieze'), tile=1.0, mix=0.85, afl=0.12)
+    add('walnut', '#6e4026', TX.boards('walnut', (0x6e, 0x40, 0x26), seed=15), tile=1.0, tint=True, ink=True, sm=(0.8, 1.0, 1.12))
+    add('honey', '#b8782e', TX.boards('honey', (0xb8, 0x78, 0x2e), seed=16, n=3), tile=0.9, tint=True, ink=True, sm=(0.8, 1.0, 1.12))
+    add('drawer', '#bc8434', TX.boards('honey', (0xbc, 0x84, 0x34), seed=16, n=3), tile=0.9, tint=True, ink=False, sm=(0.8, 1.0, 1.12))
+    add('brass_nk', '#d29d38', tint=True, ink=False, mix=0.5)
+    add('box_ochre', '#e2b977', tint=True, ink=True, sm=(0.8, 1.0, 1.12))
+    add('oak', '#a8703c', TX.boards('oak', (0xa8, 0x70, 0x3c), seed=17, n=2), tile=0.8, tint=True, ink=True, sm=(0.8, 1.0, 1.12))
+    add('oxblood', '#7c1f2a', tint=True, ink=True, mix=0.8)
+    add('navy', '#26395e', tint=True, ink=True, sm=(0.9, 0.95, 1.2))
+    add('baize', '#2f5a44', tint=True, ink=True, mix=0.8)
+    add('leather', '#66371f', tint=True, ink=True)
+    add('cream', '#d8c493', tint=True, ink=False, mix=0.5)
+    add('brass', '#d29d38', tint=True, ink=True, mix=0.5)
+    add('steel', '#8a9ab6', tint=True, ink=True, mix=0.5)
+    add('iron', '#3b3f55', ink=True, mix=0.5)
+    add('cloth', '#2a2438', ink=True, mix=0.7)
+    add('ink', '#2a2236', mix=0.6)
+    add('glass', '#7fa6a8', mix=0.6)
+    add('dark', '#34232c', mix=0.6)
+    add('runner', '#2f3f66', TX.runner('runner'), tile=1.4, off=(0.5, 0, 0), sm=(0.9, 0.95, 1.2), mix=0.8)
+    add('stone', '#bf9560', TX.ashlar('stone', (0xbf, 0x95, 0x60)), tile=2.0, mix=0.8)
+    add('stone_dk', '#a97a4d', TX.ashlar('stone_dk', (0xa9, 0x7a, 0x4d), seed=21), tile=2.0, mix=0.8)
+    add('cobble', '#8a7468', TX.cobbles('cobble', (0x8c, 0x76, 0x6a)), tile=4.0, mix=0.8)
+    add('zinc', '#6d7c9c', TX.zinc('zinc', (0x6d, 0x7c, 0x9c)), tile=2.0, ink=True, mix=0.6)
+    add('terracotta', '#b0502f', ink=True, mix=0.8)
+    add('wagon', '#2d3350', tint=True, ink=True, sm=(0.9, 0.95, 1.2))
+    add('wagon_red', '#8a2a2e', ink=True)
+    add('flat_card', '#5a6480', mix=1.0)
+    add('smoke', '#8c86a8', mix=0.9)
+    add('cardedge', '#efe0b8', ink=True, mix=0.5)
+    return pl
+def _mk_tree(m):
+    m.use_nodes = True; nt = m.node_tree
+    for n in list(nt.nodes): nt.nodes.remove(n)
+    return nt
+_MATS = {}
+def get_mat(key):
+    if key in _MATS: return _MATS[key]
+    if key.startswith('glow'): m = _glow_mat(key)
+    elif key == 'ink_hull': m = _ink_mat()
+    elif key == 'sky': m = _sky_mat()
+    elif key == 'beam_fx': m = _beam_mat()
+    elif key == 'puddle': m = _puddle_mat()
+    elif key.startswith('card_'): m = _card_mat(key)
+    elif key.startswith('ph_'): m = _ph_mat(key)
+    else: m = _lit_mat(key, STATE['PAL'][key])
+    _MATS[key] = m; return m
+def _lit_mat(key, s):
+    P = STATE['P']; m = bpy.data.materials.new(key); nt = _mk_tree(m); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); dif = N('ShaderNodeBsdfDiffuse'); dif.inputs['Roughness'].default_value = 1.0
+    if s['tex']:
+        it = N('ShaderNodeTexImage'); it.image = bpy.data.images.load(s['tex'], check_existing=True); it.interpolation = 'Linear'
+        it.projection = 'BOX'; it.projection_blend = 0.2
+        tc = N('ShaderNodeTexCoord'); mp = N('ShaderNodeMapping'); k = 1.0 / s['tile']; mp.inputs['Scale'].default_value = (k, k, k); mp.inputs['Location'].default_value = s['off']
+        L(tc.outputs['Object'], mp.inputs[0]); L(mp.outputs[0], it.inputs[0]); art = it.outputs['Color']
+    else:
+        rgb = N('ShaderNodeRGB'); rgb.outputs[0].default_value = (*hex_lin(s['col']), 1); art = rgb.outputs[0]
+    if s['tint']:
+        at = N('ShaderNodeAttribute'); at.attribute_name = 'tint'; at.attribute_type = 'GEOMETRY'
+        mt = N('ShaderNodeMix'); mt.data_type = 'RGBA'; mt.blend_type = 'MULTIPLY'; mt.inputs[0].default_value = 1
+        L(art, mt.inputs[6]); L(at.outputs['Color'], mt.inputs[7]); art = mt.outputs[2]
+    geo = N('ShaderNodeNewGeometry'); bw = N('ShaderNodeRGBToBW'); L(art, bw.inputs[0])
+    dcol = art
+    if P['sun'] and P.get('toon'):     # toon key: faces square to the sun get the full key, grazing faces are lifted by 1/max(cos, 0.5)
+        kd = Vector(P['sun_dir']).normalized(); dot = N('ShaderNodeVectorMath'); dot.operation = 'DOT_PRODUCT'; dot.inputs[1].default_value = (-kd.x, -kd.y, -kd.z); L(geo.outputs['True Normal'], dot.inputs[0])
+        mx = N('ShaderNodeMath'); mx.operation = 'MAXIMUM'; mx.inputs[1].default_value = 0.5; L(dot.outputs['Value'], mx.inputs[0])
+        inv = N('ShaderNodeMath'); inv.operation = 'DIVIDE'; inv.inputs[0].default_value = 1.0; L(mx.outputs[0], inv.inputs[1])
+        gt = N('ShaderNodeMath'); gt.operation = 'GREATER_THAN'; gt.inputs[1].default_value = 0.02; L(dot.outputs['Value'], gt.inputs[0])
+        sm_ = N('ShaderNodeMath'); sm_.operation = 'SUBTRACT'; sm_.inputs[1].default_value = 1.0; L(inv.outputs[0], sm_.inputs[0])
+        fc = N('ShaderNodeMath'); fc.operation = 'MULTIPLY_ADD'; fc.inputs[2].default_value = s['gain']; L(sm_.outputs[0], fc.inputs[0]); L(gt.outputs[0], fc.inputs[1])
+        sc = N('ShaderNodeVectorMath'); sc.operation = 'SCALE'; L(art, sc.inputs[0]); L(fc.outputs[0], sc.inputs['Scale']); dcol = sc.outputs['Vector']
+    gk = N('ShaderNodeVectorMath'); gk.operation = 'SCALE'; gk.inputs['Scale'].default_value = P['gain']; L(dcol, gk.inputs[0]); L(gk.outputs['Vector'], dif.inputs['Color'])
+    mix = P['mix'] if s['mix'] is None else s['mix']; sm = s['sm']; smm = sum(sm) / 3.0
+    ms = N('ShaderNodeMix'); ms.data_type = 'RGBA'; ms.blend_type = 'MULTIPLY'; ms.inputs[0].default_value = 1.0; L(art, ms.inputs[6]); ms.inputs[7].default_value = (*[a * b for a, b in zip(P['shade'], sm)], 1)
+    sa = N('ShaderNodeVectorMath'); sa.operation = 'SCALE'; sa.inputs['Scale'].default_value = 1.0 - mix; L(ms.outputs[2], sa.inputs[0])
+    lm = N('ShaderNodeMath'); lm.operation = 'MULTIPLY_ADD'; lm.inputs[1].default_value = 1.0 - s['afl']; lm.inputs[2].default_value = s['afl']; L(bw.outputs[0], lm.inputs[0])
+    tb = N('ShaderNodeVectorMath'); tb.operation = 'SCALE'; L(lm.outputs[0], tb.inputs['Scale']); tb.inputs[0].default_value = tuple(x * mix * smm for x in P['tint'])
+    ab = N('ShaderNodeVectorMath'); ab.operation = 'ADD'; L(sa.outputs['Vector'], ab.inputs[0]); L(tb.outputs['Vector'], ab.inputs[1])
+    lf = N('ShaderNodeVectorMath'); lf.operation = 'ADD'; lf.inputs[1].default_value = tuple(P['lift']); L(ab.outputs['Vector'], lf.inputs[0]); amb = lf.outputs['Vector']
+    fd = N('ShaderNodeVectorMath'); fd.operation = 'DOT_PRODUCT'; fd.inputs[1].default_value = tuple(P['form']); L(geo.outputs['True Normal'], fd.inputs[0])
+    fa = N('ShaderNodeMath'); fa.operation = 'ADD'; fa.inputs[1].default_value = 1.0; L(fd.outputs['Value'], fa.inputs[0])
+    fs = N('ShaderNodeVectorMath'); fs.operation = 'SCALE'; L(amb, fs.inputs[0]); L(fa.outputs[0], fs.inputs['Scale']); amb = fs.outputs['Vector']
+    em = N('ShaderNodeEmission'); L(amb, em.inputs['Color']); em.inputs['Strength'].default_value = 1.0
+    ad = N('ShaderNodeAddShader'); L(dif.outputs['BSDF'], ad.inputs[0]); L(em.outputs['Emission'], ad.inputs[1]); L(ad.outputs['Shader'], out.inputs['Surface'])
+    gk.name = 'amb_gain'; ms.name = 'amb_shade'; tb.name = 'amb_tint'; lf.name = 'amb_lift'; fd.name = 'amb_form'          # named for prefecture17.set_light_mix (no effect on the render)
+    m['pal'] = dict(sm=list(sm), mix=float(mix), afl=float(s['afl']))
+    return m
+def _glow_mat(key):
+    """emitters: glow_gas (lamp glass), glow_frost (skylights), glow_win (lit windows), glow_green, glow_door. Strength node named 'strength'."""
+    P = STATE['P']
+    spec = {'glow_gas': ('#ffc46a', 14.0 * P['glow']), 'glow_frost': P.get('frost', ('#fff4e8', 3.0)), 'glow_win': ('#ffcf86', 5.0 * P['glow']), 'glow_green': ('#8ff0a8', 3.0),
+            'glow_door': ('#ffd9a0', 4.0), 'glow_dust': ('#fff0c8', 5.0)}[key]
+    m = bpy.data.materials.new(key); nt = _mk_tree(m); out = nt.nodes.new('ShaderNodeOutputMaterial'); e = nt.nodes.new('ShaderNodeEmission'); e.name = 'strength'
+    e.inputs[0].default_value = (*hex_lin(spec[0]), 1); e.inputs[1].default_value = spec[1]; nt.links.new(e.outputs[0], out.inputs[0])
+    if key in ('glow_gas', 'glow_win'): STATE['glows'].append((m, spec[1]))
+    return m
+def _ink_mat():
+    P = STATE['P']; m = bpy.data.materials.new('ink_hull'); nt = _mk_tree(m); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); geo = N('ShaderNodeNewGeometry'); lp = N('ShaderNodeLightPath'); emi = N('ShaderNodeEmission'); emi.inputs['Color'].default_value = (*hex_lin(P['ink']), 1)
+    tr = N('ShaderNodeBsdfTransparent'); mix = N('ShaderNodeMixShader'); notcam = N('ShaderNodeMath'); notcam.operation = 'SUBTRACT'; notcam.inputs[0].default_value = 1.0
+    fac = N('ShaderNodeMath'); fac.operation = 'MAXIMUM'; L(lp.outputs['Is Camera Ray'], notcam.inputs[1]); L(geo.outputs['Backfacing'], fac.inputs[0]); L(notcam.outputs[0], fac.inputs[1])
+    L(fac.outputs[0], mix.inputs['Fac']); L(emi.outputs['Emission'], mix.inputs[1]); L(tr.outputs['BSDF'], mix.inputs[2]); L(mix.outputs['Shader'], out.inputs['Surface'])
+    return m
+def _sky_mat():
+    """vertical gradient on world z (object coords of the dome at the origin): horizon colour at z 4, deep sky colour at z 95."""
+    P = STATE['P']; m = bpy.data.materials.new('sky'); nt = _mk_tree(m); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); tc = N('ShaderNodeTexCoord'); sp = N('ShaderNodeSeparateXYZ'); mr = N('ShaderNodeMapRange'); cr = N('ShaderNodeValToRGB'); e = N('ShaderNodeEmission')
+    L(tc.outputs['Object'], sp.inputs[0]); L(sp.outputs['Z'], mr.inputs[0]); mr.inputs[1].default_value = 4.0; mr.inputs[2].default_value = 260.0; mr.inputs[3].default_value = 0.0; mr.inputs[4].default_value = 1.0; mr.clamp = True
+    L(mr.outputs[0], cr.inputs[0]); top, mid, bot = P['sky']
+    cr.color_ramp.elements[0].position = 0.0; cr.color_ramp.elements[0].color = (*hex_lin(bot), 1); cr.color_ramp.elements[1].position = 1.0; cr.color_ramp.elements[1].color = (*hex_lin(top), 1)
+    el = cr.color_ramp.elements.new(0.28); el.color = (*hex_lin(mid), 1)
+    L(cr.outputs[0], e.inputs[0]); e.inputs[1].default_value = P['sky_k']; L(e.outputs[0], out.inputs[0]); return m
+def _beam_mat():
+    """light shaft: additive, camera rays only."""
+    m = bpy.data.materials.new('beam_fx'); nt = _mk_tree(m); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); lp = N('ShaderNodeLightPath'); e = N('ShaderNodeEmission'); tr = N('ShaderNodeBsdfTransparent'); ad = N('ShaderNodeAddShader')
+    e.inputs[0].default_value = (*hex_lin('#ffd890'), 1); e.inputs[1].default_value = 0.035 * STATE['P'].get('beam_k', 1.0); e.name = 'strength'
+    L(tr.outputs[0], ad.inputs[0]); L(e.outputs[0], ad.inputs[1]); mixs = N('ShaderNodeMixShader'); L(lp.outputs['Is Camera Ray'], mixs.inputs['Fac']); L(tr.outputs[0], mixs.inputs[1]); L(ad.outputs[0], mixs.inputs[2])
+    L(mixs.outputs[0], out.inputs[0]); return m
+def _puddle_mat():
+    P = STATE['P']; m = bpy.data.materials.new('puddle'); nt = _mk_tree(m); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); gl = N('ShaderNodeBsdfGlossy'); gl.inputs['Roughness'].default_value = 0.02; gl.inputs['Color'].default_value = (0.8, 0.82, 0.95, 1)
+    df = N('ShaderNodeBsdfDiffuse'); df.inputs['Color'].default_value = (*hex_lin('#3a3050'), 1); mx = N('ShaderNodeMixShader'); mx.inputs['Fac'].default_value = 0.8
+    L(df.outputs[0], mx.inputs[1]); L(gl.outputs[0], mx.inputs[2]); em = N('ShaderNodeEmission'); em.inputs[0].default_value = tuple(P['lift']) + (1,); em.inputs[1].default_value = 1.0
+    ad = N('ShaderNodeAddShader'); L(mx.outputs[0], ad.inputs[0]); L(em.outputs[0], ad.inputs[1]); L(ad.outputs[0], out.inputs[0]); return m
+PH_COL = {'clerk': '#2c2a3c', 'prisoner': '#6a5a52', 'gendarme': '#27365a', 'inspector': '#5a3a3a', 'prefect': '#3a3a52', 'seated': '#5a3a3a'}
+def _ph_mat(key):
+    hexc = '#fef7f6' if key == 'ph_head' else STATE['P']['ink'] if key == 'ph_ring' else PH_COL[key[8:]]
+    m = bpy.data.materials.new(key); nt = _mk_tree(m); e = nt.nodes.new('ShaderNodeEmission'); e.inputs[0].default_value = (*hex_lin(hexc), 1); o = nt.nodes.new('ShaderNodeOutputMaterial'); nt.links.new(e.outputs[0], o.inputs[0]); return m
+def _card_mat(key):
+    """image card (Bertillon card, notices, portraits): paper lit by the key + ambient shade; UV mapped."""
+    path = STATE['cardpaths'][key]; P = STATE['P']; m = bpy.data.materials.new(key); nt = _mk_tree(m); N = nt.nodes.new; L = nt.links.new
+    out = N('ShaderNodeOutputMaterial'); dif = N('ShaderNodeBsdfDiffuse'); em = N('ShaderNodeEmission'); ad = N('ShaderNodeAddShader'); it = N('ShaderNodeTexImage')
+    it.image = bpy.data.images.load(path, check_existing=True); it.interpolation = 'Linear'; tc = N('ShaderNodeTexCoord'); L(tc.outputs['UV'], it.inputs[0])
+    gk = N('ShaderNodeVectorMath'); gk.operation = 'SCALE'; gk.inputs['Scale'].default_value = P['gain']; L(it.outputs['Color'], gk.inputs[0]); L(gk.outputs[0], dif.inputs['Color'])
+    bw = N('ShaderNodeRGBToBW'); L(it.outputs['Color'], bw.inputs[0]); mu = N('ShaderNodeVectorMath'); mu.operation = 'SCALE'; L(bw.outputs[0], mu.inputs['Scale']); mu.inputs[0].default_value = tuple(x * 0.9 for x in P['tint'])
+    ms = N('ShaderNodeMix'); ms.data_type = 'RGBA'; ms.blend_type = 'MULTIPLY'; ms.inputs[0].default_value = 1.0; L(it.outputs['Color'], ms.inputs[6]); ms.inputs[7].default_value = (*P['shade'], 1)
+    sa = N('ShaderNodeVectorMath'); sa.operation = 'SCALE'; sa.inputs['Scale'].default_value = 0.4; L(ms.outputs[2], sa.inputs[0]); sb = N('ShaderNodeVectorMath'); sb.operation = 'SCALE'; sb.inputs['Scale'].default_value = 0.6
+    L(mu.outputs[0], sb.inputs[0]); ab = N('ShaderNodeVectorMath'); ab.operation = 'ADD'; L(sa.outputs[0], ab.inputs[0]); L(sb.outputs[0], ab.inputs[1])
+    lf = N('ShaderNodeVectorMath'); lf.operation = 'ADD'; lf.inputs[1].default_value = tuple(P['lift']); L(ab.outputs[0], lf.inputs[0]); L(lf.outputs[0], em.inputs[0])
+    L(dif.outputs[0], ad.inputs[0]); L(em.outputs[0], ad.inputs[1]); L(ad.outputs[0], out.inputs[0]); return m
+
+# ---------------------------------------------------------------- batched geometry
+def rotm(rx=0, ry=0, rz=0):
+    a, b, c = map(math.radians, (rx, ry, rz)); ca, sa, cb, sb, cc, sc = math.cos(a), math.sin(a), math.cos(b), math.sin(b), math.cos(c), math.sin(c)
+    Rx = np.array([[1, 0, 0], [0, ca, -sa], [0, sa, ca]]); Ry = np.array([[cb, 0, sb], [0, 1, 0], [-sb, 0, cb]]); Rz = np.array([[cc, -sc, 0], [sc, cc, 0], [0, 0, 1]])
+    return Rz @ Ry @ Rx
+def _m4(loc=(0, 0, 0), rot=(0, 0, 0), scale=1.0):
+    m = np.eye(4); m[:3, :3] = rotm(*rot) * scale; m[:3, 3] = loc; return m
+def euler_to_z(d):
+    """euler degrees that rotate local +z onto direction d."""
+    d = np.array(d, float); d /= np.linalg.norm(d); ay = math.degrees(math.acos(max(-1, min(1, d[2])))); az = math.degrees(math.atan2(d[1], d[0]))
+    Rm = rotm(0, ay, az); return (math.degrees(math.atan2(Rm[2, 1], Rm[2, 2])), math.degrees(-math.asin(max(-1, min(1, Rm[2, 0])))), math.degrees(math.atan2(Rm[1, 0], Rm[0, 0])))
+_CUBE_F = [(0, 1, 2, 3), (4, 7, 6, 5), (0, 4, 5, 1), (1, 5, 6, 2), (2, 6, 7, 3), (3, 7, 4, 0)]
+class Batch:
+    """accumulates boxes / cylinders / spheres / meshes per material; finalize() makes one Blender object per material (plus its ink hull)."""
+    def __init__(self, seed=5): self.d = {}; self.stack = [np.eye(4)]; self.rng = random.Random(seed)
+    @contextlib.contextmanager
+    def xf(self, loc=(0, 0, 0), rot=(0, 0, 0), scale=1.0):
+        self.stack.append(self.stack[-1] @ _m4(loc, rot, scale))
+        try: yield
+        finally: self.stack.pop()
+    def wpt(self, p): return tuple(self.stack[-1][:3, :3] @ np.array(p, float) + self.stack[-1][:3, 3])
+    def _put(self, mat, v, faces, smooth, tint):
+        v = np.asarray(v, float); v = (self.stack[-1][:3, :3] @ v.T).T + self.stack[-1][:3, 3]
+        Dd = self.d.setdefault(mat, dict(v=[], f=[], s=[], t=[], n=0))
+        Dd['f'] += [tuple(i + Dd['n'] for i in f) for f in faces]; Dd['s'] += [smooth] * len(faces); Dd['v'].append(v); Dd['n'] += len(v)
+        t = tint if isinstance(tint, (tuple, list)) else (tint, tint, tint); Dd['t'].append(np.tile(np.array([*t, 1.0]), (len(v), 1)))
+    def box(self, mat, c, s, rot=(0, 0, 0), tint=1.0):
+        h = np.array(s, float) / 2; u = np.array([[-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1], [-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1]], float) * h
+        self._put(mat, (rotm(*rot) @ u.T).T + np.array(c), _CUBE_F, False, tint)
+    def cyl(self, mat, c, r, h, axis='z', r2=None, seg=16, rot=(0, 0, 0), tint=1.0, smooth=True, caps=True):
+        r2 = r if r2 is None else r2; a = np.linspace(0, 2 * math.pi, seg, endpoint=False); R = {'z': (0, 0, 0), 'x': (0, 90, 0), 'y': (90, 0, 0)}[axis]
+        lo = np.stack([r * np.cos(a), r * np.sin(a), -h / 2 * np.ones(seg)], 1); hi = np.stack([r2 * np.cos(a), r2 * np.sin(a), h / 2 * np.ones(seg)], 1)
+        v = np.concatenate([lo, hi]); f = [(i, (i + 1) % seg, seg + (i + 1) % seg, seg + i) for i in range(seg)]; Rm = rotm(*rot) @ rotm(*R)
+        self._put(mat, (Rm @ v.T).T + np.array(c), f, smooth, tint)
+        if caps:
+            for z, rr, rev in ((-h / 2, r, True), (h / 2, r2, False)):
+                if rr <= 0: continue
+                cv = np.concatenate([np.stack([rr * np.cos(a), rr * np.sin(a), z * np.ones(seg)], 1), [[0, 0, z]]])
+                ff = [(i, (i + 1) % seg, seg) for i in range(seg)]
+                ff = [(b_, a_, c_) for a_, b_, c_ in ff] if rev else ff
+                self._put(mat, (Rm @ cv.T).T + np.array(c), [(f_[1], f_[0], f_[2]) if rev else f_ for f_ in ff] if False else ff, False, tint)
+    def sphere(self, mat, c, r, seg=18, rings=10, scale=(1, 1, 1), tint=1.0):
+        v = [(0, 0, -1)]
+        for j in range(1, rings):
+            p = -math.pi / 2 + math.pi * j / rings
+            for i in range(seg): a = 2 * math.pi * i / seg; v.append((math.cos(p) * math.cos(a), math.cos(p) * math.sin(a), math.sin(p)))
+        v.append((0, 0, 1)); f = []
+        for i in range(seg): f.append((0, 1 + (i + 1) % seg, 1 + i))
+        for j in range(rings - 2):
+            for i in range(seg): a = 1 + j * seg + i; b = 1 + j * seg + (i + 1) % seg; f.append((a, b, b + seg, a + seg))
+        top = len(v) - 1
+        for i in range(seg): f.append((top, 1 + (rings - 2) * seg + i, 1 + (rings - 2) * seg + (i + 1) % seg))
+        self._put(mat, np.array(v) * np.array(scale) * r + np.array(c), [tuple(x) for x in f], True, tint)
+    def mesh(self, mat, v, faces, smooth=True, tint=1.0): self._put(mat, v, faces, smooth, tint)
+    def quad(self, mat, p0, p1, p2, p3, tint=1.0): self._put(mat, [p0, p1, p2, p3], [(0, 1, 2, 3)], False, tint)
+    def prism_roof(self, mat, c, w, d, h, rot_z=0, ridge_frac=1.0, tint=1.0):
+        """gable roof: base w x d at z c[2], ridge along local x at height h (ridge_frac < 1 shortens the ridge: hip roof)."""
+        hw, hd = w / 2, d / 2; rl = hw * ridge_frac
+        v = [(-hw, -hd, 0), (hw, -hd, 0), (hw, hd, 0), (-hw, hd, 0), (-rl, 0, h), (rl, 0, h)]
+        f = [(0, 1, 5, 4), (2, 3, 4, 5), (3, 0, 4), (1, 2, 5), (3, 2, 1, 0)]
+        with self.xf(c, (0, 0, rot_z)): self._put(mat, v, f, False, tint)
+    def finalize(self, prefix='set', loc=(0, 0, 0), parent=None, bevel=0.0, ink=True, ink_t=None):
+        objs = []; coll = bpy.context.scene.collection
+        for key, Dd in self.d.items():
+            V = np.concatenate(Dd['v']); me = bpy.data.meshes.new('%s_%s' % (prefix, key)); me.from_pydata(V.tolist(), [], Dd['f']); me.update()
+            me.polygons.foreach_set('use_smooth', Dd['s'])
+            bm = bmesh.new(); bm.from_mesh(me); bmesh.ops.recalc_face_normals(bm, faces=bm.faces); bm.to_mesh(me); bm.free()
+            ca = me.color_attributes.new('tint', 'FLOAT_COLOR', 'POINT'); ca.data.foreach_set('color', np.concatenate(Dd['t']).ravel())
+            ob = bpy.data.objects.new('%s_%s' % (prefix, key), me); coll.objects.link(ob); ob.location = loc; ob.data.materials.append(get_mat(key))
+            if parent is not None: ob.parent = parent
+            if key.startswith('glow') or key in ('sky', 'beam_fx'): ob.visible_shadow = False; ob.visible_diffuse = False; ob.visible_glossy = False
+            if key == 'sky': ob.visible_diffuse = ob.visible_glossy = False
+            if key == 'beam_fx': ob.visible_diffuse = ob.visible_glossy = ob.visible_transmission = False
+            objs.append(ob)
+            it_ = STATE['ink_t'] if ink_t is None else ink_t
+            if ink and key in STATE['PAL'] and STATE['PAL'][key]['ink'] and it_ > 0: add_hull(ob, it_)
+        self.d = {}; return objs
+def add_hull(ob, t):
+    """inverted-hull ink outline on the SAME object: a solidify shell (flipped normals, outward) whose faces use the extra slot 'ink_hull';
+    the shell is transparent to every ray but the camera's and to front faces, so it only shows around the silhouette."""
+    ob.data.materials.append(get_mat('ink_hull'))
+    md = ob.modifiers.new('ink', 'SOLIDIFY'); md.thickness = t; md.offset = 1.0; md.use_flip_normals = True; md.use_rim = False; md.use_even_offset = True
+    md.material_offset = len(ob.data.materials) - 1
+    return ob
+
+# ---------------------------------------------------------------- scene, lights, camera
+def new_scene(light='DAY_INT', over=None):
+    bpy.ops.wm.read_factory_settings(use_empty=True); _MATS.clear(); STATE['lamps'] = []; STATE['glows'] = []; STATE['anim'] = {}; STATE['cardpaths'] = {}; STATE['chims'] = []; STATE['life'] = {}
+    for im in list(bpy.data.images): bpy.data.images.remove(im)
+    STATE['P'] = dict(LIGHTS[light], **(over or {})); STATE['light'] = light; STATE['PAL'] = _pal(); P = STATE['P']
+    sc = bpy.context.scene; sc.render.engine = 'CYCLES'; sc.cycles.device = 'CPU'
+    w = bpy.data.worlds.new('w'); sc.world = w; w.use_nodes = True; bg = w.node_tree.nodes['Background']; bg.inputs[0].default_value = (*[x * 0.5 for x in P['world']], 1); bg.inputs[1].default_value = 0.3
+    sc.view_settings.view_transform = 'Standard'; sc.view_settings.look = 'None'; sc.view_settings.exposure = 0.0; sc.render.film_transparent = False
+    sc.cycles.max_bounces = 6; sc.cycles.diffuse_bounces = 0; sc.cycles.glossy_bounces = 2; sc.cycles.transmission_bounces = 0; sc.cycles.transparent_max_bounces = 16
+    sc.cycles.sample_clamp_indirect = 8.0; sc.cycles.use_adaptive_sampling = True; sc.cycles.adaptive_threshold = 0.02
+    sc.render.fps = 30; return sc
+def sun(light=None, strength=None):
+    P = STATE['P']; k = np.array(P['key']); s = float(k.max()); d = bpy.data.lights.new('key', 'SUN'); d.energy = SUN_STRENGTH * s * (strength or 1.0) * P.get('sun_k', 1.0); d.color = tuple(k / s); d.angle = math.radians(P['sun_angle'])
+    ob = bpy.data.objects.new('key', d); bpy.context.scene.collection.objects.link(ob); ob.rotation_euler = Vector(P['sun_dir']).normalized().to_track_quat('-Z', 'Y').to_euler(); return ob
+def point(loc, color=(1.0, 0.87, 0.62), watts=100, radius=0.08, name='lamp', flicker=True):
+    P = STATE['P']; d = bpy.data.lights.new(name, 'POINT'); d.energy = watts * LAMP_W * P['lamp_k']; d.color = color; d.shadow_soft_size = radius
+    ob = bpy.data.objects.new(name, d); ob.location = loc; bpy.context.scene.collection.objects.link(ob)
+    if flicker: STATE['lamps'].append((ob, d.energy))
+    return ob
+def area(loc, target, size, watts, color=(1.0, 0.86, 0.6), name='win_key', long_axis=None):
+    """rectangular area light; size = (along local X, along local Y); long_axis = world direction of local X (default: whatever the tracker gives)."""
+    from mathutils import Matrix
+    d = bpy.data.lights.new(name, 'AREA'); d.energy = watts; d.color = color; d.shape = 'RECTANGLE'; d.size = size[0]; d.size_y = size[1]
+    ob = bpy.data.objects.new(name, d); ob.location = loc; bpy.context.scene.collection.objects.link(ob)
+    dirv = (Vector(target) - Vector(loc)).normalized()
+    if long_axis is None: ob.rotation_euler = dirv.to_track_quat('-Z', 'Y').to_euler()
+    else:
+        z = -dirv; xa = Vector(long_axis); x = (xa - xa.dot(z) * z).normalized(); y = z.cross(x); ob.rotation_euler = Matrix((x, y, z)).transposed().to_euler()
+    return ob
+def spot(loc, target, watts=300, angle=60, blend=0.5, color=(1.0, 0.72, 0.4), name='spot', radius=0.06):
+    P = STATE['P']; d = bpy.data.lights.new(name, 'SPOT'); d.energy = watts * LAMP_W * P['lamp_k']; d.color = color; d.spot_size = math.radians(angle); d.spot_blend = blend; d.shadow_soft_size = radius
+    ob = bpy.data.objects.new(name, d); ob.location = loc; bpy.context.scene.collection.objects.link(ob)
+    ob.rotation_euler = (Vector(target) - Vector(loc)).to_track_quat('-Z', 'Y').to_euler(); return ob
+def camera(loc, target, lens=22.0, roll=0.0):
+    c = bpy.data.cameras.new('cam'); c.lens = lens; c.sensor_width = 36; c.sensor_fit = 'AUTO'; c.dof.use_dof = False; c.clip_end = 400
+    ob = bpy.data.objects.new('cam', c); bpy.context.scene.collection.objects.link(ob); ob.location = loc
+    ob.rotation_euler = (Vector(target) - Vector(loc)).to_track_quat('-Z', 'Y').to_euler(); bpy.context.scene.camera = ob; return ob
+def sky_dome(radius=150.0):
+    b = Batch(); b.sphere('sky', (0, 0, 0), radius, seg=32, rings=16); return b.finalize('sky', ink=False)
+
+# ---------------------------------------------------------------- lamps (gas: glass globe + point light, pipes)
+def gas_bracket(B, loc, rot_z=0, watts=14, arm=0.3, lit=True):
+    """wall gas lamp: brass plate, arm, tap, shade ring, frosted globe + point light. loc = wall contact, local +x = out of the wall."""
+    with B.xf(loc, (0, 0, rot_z)):
+        B.box('brass', (0.03, 0, 0), (0.06, 0.12, 0.2)); B.cyl('brass', (arm / 2, 0, 0), 0.016, arm, axis='x', seg=8)
+        B.cyl('brass', (arm, 0, -0.04), 0.02, 0.1, seg=8); B.cyl('brass', (arm, 0, -0.1), 0.05, 0.04, r2=0.034, seg=12)
+        B.cyl('brass', (arm, 0, -0.14), 0.05, 0.03, r2=0.075, seg=12); B.sphere('glow_gas' if lit else 'glass', (arm, 0, -0.25), 0.09, scale=(1, 1, 1.2))
+        B.cyl('brass', (arm, 0, -0.38), 0.04, 0.03, r2=0.02, seg=10)
+        wp = B.wpt((arm, 0, -0.25))
+    if lit: point(wp, watts=watts, radius=0.09)
+def gas_pipe(B, p0, p1, r=0.017):
+    """iron gas pipe between two points + collars."""
+    p0 = np.array(p0, float); p1 = np.array(p1, float); v = p1 - p0; L = np.linalg.norm(v)
+    B.cyl('iron', tuple((p0 + p1) / 2), r, L, rot=euler_to_z(v), seg=8)
+    for t in np.arange(0.12, 1.0, 0.3): B.cyl('iron', tuple(p0 + v * t), r * 1.6, 0.03, rot=euler_to_z(v), seg=8)
+def gasolier(B, loc, drop=1.0, watts=200, arms=3, r=0.3):
+    """hanging gas chandelier: iron pipe from the ceiling, brass body, curved arms with frosted globes (each a point light)."""
+    x, y, z = loc; B.cyl('iron', (x, y, z - drop / 2), 0.016, drop, seg=8); B.cyl('brass', (x, y, z - 0.03), 0.07, 0.06, r2=0.04, seg=12); B.sphere('brass', (x, y, z - drop), 0.06)
+    B.cyl('brass', (x, y, z - drop - 0.06), 0.05, 0.1, r2=0.02, seg=10)
+    for k in range(arms):
+        a = k * 2 * math.pi / arms + math.pi / 6; ca, sa = math.cos(a), math.sin(a)
+        B.cyl('brass', (x + r * 0.5 * ca, y + r * 0.5 * sa, z - drop - 0.02), 0.011, r, axis='x', rot=(0, 0, math.degrees(a)), seg=6)
+        gx, gy, gz = x + r * ca, y + r * sa, z - drop + 0.02
+        B.cyl('brass', (gx, gy, gz - 0.02), 0.012, 0.06, seg=6); B.cyl('brass', (gx, gy, gz - 0.07), 0.04, 0.04, r2=0.065, seg=10)
+        B.sphere('glow_gas', (gx, gy, gz - 0.17), 0.075, scale=(1, 1, 1.15)); B.cyl('brass', (gx, gy, gz - 0.3), 0.03, 0.03, r2=0.015, seg=8)
+        point((gx, gy, gz - 0.17), watts=watts / arms, radius=0.1)
+def gas_stand(B, loc, h=1.9, watts=120):
+    """standing gas lamp (indoor gas standard): cast-iron foot, fluted post with brass collars, lantern with glass."""
+    x, y, z = loc
+    B.cyl('iron', (x, y, z + 0.06), 0.2, 0.12, r2=0.14, seg=18); B.cyl('iron', (x, y, z + 0.22), 0.1, 0.22, r2=0.06, seg=14)
+    B.cyl('iron', (x, y, z + h * 0.5), 0.045, h * 0.72, seg=12); B.cyl('brass', (x, y, z + h * 0.35), 0.07, 0.05, seg=14); B.cyl('brass', (x, y, z + h * 0.62), 0.065, 0.05, seg=14)
+    B.cyl('brass', (x, y, z + h - 0.28), 0.12, 0.06, r2=0.14, seg=16); B.sphere('glow_gas', (x, y, z + h - 0.12), 0.15, scale=(1, 1, 1.25))
+    for k in range(4): a = k * math.pi / 2 + math.pi / 4; B.cyl('brass', (x + 0.15 * math.cos(a), y + 0.15 * math.sin(a), z + h - 0.12), 0.009, 0.36, seg=6)
+    B.cyl('brass', (x, y, z + h + 0.1), 0.17, 0.05, r2=0.05, seg=16); B.sphere('brass', (x, y, z + h + 0.16), 0.045)
+    point((x, y, z + h - 0.12), watts=watts, radius=0.12)
+def street_lamp(B, loc, h=4.0, watts=900, rot=0):
+    """Paris gas street lamp: fluted cast-iron column, ladder bar, lantern with 4 glass faces, crown."""
+    x, y, z = loc
+    with B.xf((x, y, z), (0, 0, rot)):
+        B.cyl('iron', (0, 0, 0.14), 0.2, 0.28, r2=0.14, seg=14); B.cyl('iron', (0, 0, 0.5), 0.09, 0.5, r2=0.065, seg=12); B.cyl('iron', (0, 0, h * 0.5), 0.055, h - 0.8, seg=12)
+        for zz in (0.9, 2.2): B.cyl('iron', (0, 0, zz), 0.09, 0.07, seg=12)
+        B.box('iron', (0, 0, h - 0.62), (0.7, 0.04, 0.04)); B.cyl('brass', (0, 0, h - 0.5), 0.11, 0.08, r2=0.16, seg=12)
+        B.cyl('iron', (0, 0, h - 0.3), 0.19, 0.05, r2=0.19, seg=8); B.cyl('glow_gas', (0, 0, h - 0.06), 0.17, 0.42, r2=0.2, seg=8, smooth=False)
+        B.cyl('iron', (0, 0, h + 0.18), 0.21, 0.05, seg=8); B.cyl('iron', (0, 0, h + 0.3), 0.18, 0.2, r2=0.02, seg=8); B.sphere('brass', (0, 0, h + 0.44), 0.04)
+        wp = B.wpt((0, 0, h - 0.06))
+    point(wp, watts=watts, radius=0.2, name='street_lamp')
+
+# ---------------------------------------------------------------- furniture & instruments
+def table(B, c, size=(1.6, 0.8), h=0.85, mat='oak', rot=0, top='navy'):
+    """writing table: board top (+ cloth), apron, 4 turned legs, stretcher, a drawer front."""
+    with B.xf((c[0], c[1], 0), (0, 0, rot)):
+        B.box(mat, (0, 0, h - 0.03), (size[0], size[1], 0.06))
+        if top: B.box(top, (0, 0, h + 0.004), (size[0] - 0.14, size[1] - 0.14, 0.008))
+        B.box('walnut', (0, 0, h - 0.11), (size[0] - 0.12, size[1] - 0.12, 0.1)); B.box('brass', (0, -size[1] / 2 + 0.056, h - 0.11), (0.06, 0.008, 0.02))
+        for sx in (-1, 1):
+            for sy in (-1, 1):
+                px, py = sx * (size[0] / 2 - 0.08), sy * (size[1] / 2 - 0.08); B.box('walnut', (px, py, (h - 0.06) / 2), (0.06, 0.06, h - 0.06)); B.cyl('walnut', (px, py, 0.16), 0.042, 0.1, seg=10)
+        B.box('walnut', (0, 0, 0.2), (size[0] - 0.18, 0.035, 0.045))
+def stool(B, c, h=0.62, rot=0, mat='leather'):
+    with B.xf((c[0], c[1], 0), (0, 0, rot)):
+        B.cyl(mat, (0, 0, h), 0.2, 0.06, seg=16); B.cyl('walnut', (0, 0, h - 0.06), 0.18, 0.05, seg=16)
+        for k in range(3): a = k * 2 * math.pi / 3; B.cyl('walnut', (0.12 * math.cos(a), 0.12 * math.sin(a), h / 2 - 0.04), 0.022, h - 0.08, seg=8, rot=(8 * math.sin(a), -8 * math.cos(a), 0))
+def bench(B, c, length=3.0, rot=0, h=0.46):
+    """prisoners' bench: seat board, back rail, trestle ends and stretcher. local +y = the seat front."""
+    with B.xf((c[0], c[1], 0), (0, 0, rot)):
+        B.box('oak', (0, 0, h), (length, 0.42, 0.06)); B.box('oak', (0, -0.19, h + 0.32), (length, 0.04, 0.22)); B.box('oak', (0, -0.19, h + 0.62), (length, 0.04, 0.1))
+        for px in (-length / 2 + 0.12, 0, length / 2 - 0.12):
+            B.box('walnut', (px, 0, h / 2), (0.06, 0.36, h)); B.box('walnut', (px, -0.19, h + 0.2), (0.05, 0.05, 0.7))
+        B.box('walnut', (0, 0.05, 0.18), (length - 0.2, 0.04, 0.04)); B.cyl('iron', (-length / 2 + 0.2, 0.0, h + 0.04), 0.03, 0.03, seg=8)
+def measuring_chair(B, c, rot=0, head_z=1.32):
+    """oak measuring chair on a low dais: seat, high back, arms, tall rear post with ticks + adjustable head rest (brass clamp + screw), foot rail.
+    local +y = the sitter's front; head rest centre at z head_z."""
+    with B.xf((c[0], c[1], 0), (0, 0, rot)):
+        B.box('walnut', (0, 0.05, 0.05), (1.1, 1.1, 0.1)); B.box('oak', (0, 0, 0.48), (0.58, 0.52, 0.07)); B.box('leather', (0, 0, 0.53), (0.52, 0.46, 0.05))
+        for sx in (-1, 1):
+            for sy in (-1, 1): B.box('oak', (sx * 0.25, sy * 0.21, 0.26), (0.06, 0.06, 0.4)); B.cyl('walnut', (sx * 0.25, sy * 0.21, 0.18), 0.04, 0.08, seg=10)
+        B.box('oak', (0, -0.04, 0.2), (0.5, 0.04, 0.05)); B.box('oak', (0, 0.32, 0.2), (0.62, 0.1, 0.04))
+        B.box('oak', (0, -0.24, 0.98), (0.56, 0.05, 0.92)); B.box('oak', (0, -0.24, 1.46), (0.64, 0.06, 0.06))
+        for sx in (-1, 1): B.box('oak', (sx * 0.31, -0.02, 0.74), (0.05, 0.5, 0.05)); B.box('oak', (sx * 0.31, 0.22, 0.63), (0.05, 0.05, 0.22)); B.box('brass', (sx * 0.31, 0.24, 0.76), (0.07, 0.07, 0.03))
+        B.box('oak', (0, -0.32, 1.12), (0.12, 0.08, 2.0))
+        for z in np.arange(0.3, 2.0, 0.1): B.box('brass', (0, -0.275, z), (0.05 if round(z * 10) % 5 else 0.09, 0.006, 0.01))
+        B.box('brass', (0, -0.32, head_z), (0.2, 0.14, 0.07)); B.cyl('brass', (0.12, -0.32, head_z), 0.03, 0.06, axis='x', seg=10)
+        B.box('oak', (0, -0.15, head_z), (0.05, 0.32, 0.05)); B.box('leather', (0, 0.02, head_z + 0.04), (0.22, 0.05, 0.3)); B.box('brass', (0, 0.02, head_z + 0.2), (0.24, 0.06, 0.02))
+def toise(B, c, rot=0, z0=0.4, z1=2.3, slider=1.66):
+    """wall height gauge (toise): oak board with greeked brass tick strips (no numbers) and a sliding brass head-block. local +y = out of the wall."""
+    with B.xf((c[0], c[1], 0), (0, 0, rot)):
+        B.box('oak', (0, 0.02, (z0 + z1) / 2), (0.24, 0.04, z1 - z0 + 0.12)); B.box('walnut', (0.0, 0.045, (z0 + z1) / 2), (0.04, 0.02, z1 - z0 + 0.06))
+        for k, z in enumerate(np.arange(z0, z1, 0.05)):
+            big = k % 10 == 0; mid = k % 5 == 0; B.box('brass', (-0.06, 0.044, z), (0.08 if big else 0.055 if mid else 0.03, 0.008, 0.012))
+        B.box('brass', (0.0, 0.08, slider), (0.16, 0.08, 0.05)); B.box('walnut', (0.0, 0.24, slider), (0.14, 0.34, 0.025)); B.cyl('brass', (0.07, 0.08, slider), 0.02, 0.06, axis='y', seg=10)
+        for zz in (z1 + 0.09, z0 - 0.09): B.box('walnut', (0, 0.04, zz), (0.3, 0.06, 0.06))
+def arm_span_scale(B, c, rot=0, length=2.0, z=1.4):
+    """arm-span scale: a long oak rail along the wall with brass ticks (no numbers), centre pointer and two end stops. local +y = out of wall."""
+    with B.xf((c[0], c[1], z), (0, 0, rot)):
+        B.box('oak', (0, 0.025, 0), (length + 0.2, 0.05, 0.1)); B.box('walnut', (0, 0.055, 0.03), (length + 0.2, 0.012, 0.02))
+        for k, x in enumerate(np.arange(-length / 2, length / 2 + 1e-6, 0.05)): B.box('brass', (x, 0.056, -0.012), (0.01, 0.008, 0.07 if k % 10 == 0 else 0.045 if k % 5 == 0 else 0.028))
+        for s in (-1, 1): B.box('brass', (s * (length / 2 + 0.05), 0.07, 0), (0.05, 0.07, 0.16))
+        B.box('iron', (0, 0.07, 0.0), (0.022, 0.03, 0.2))
+def foot_board(B, c, rot=0):
+    """foot-measuring board: low oak plank with a heel stop and a sliding toe-block on a brass rule (greeked). local +y = toe direction."""
+    with B.xf((c[0], c[1], 0), (0, 0, rot)):
+        B.box('oak', (0, 0, 0.03), (0.34, 0.6, 0.06)); B.box('walnut', (0, -0.27, 0.11), (0.34, 0.05, 0.1)); B.box('brass', (0.14, 0.0, 0.066), (0.02, 0.5, 0.008))
+        for k in range(10): B.box('iron', (0.115, -0.22 + k * 0.05, 0.068), (0.03 if k % 5 else 0.05, 0.007, 0.006))
+        B.box('walnut', (0.0, 0.14, 0.11), (0.34, 0.05, 0.09)); B.cyl('brass', (0.2, 0.14, 0.1), 0.02, 0.04, axis='x', seg=8)
+def sliding_calipers(B, c, rot=0, length=0.5, open_=0.18, tilt=(0, 0, 0), scale=1.0):
+    """steel sliding (head) calipers: graduated beam, fixed jaw, sliding jaw, brass lock screw. beam along local x; jaws point to -y."""
+    with B.xf((c[0], c[1], c[2]), (tilt[0], tilt[1], rot), scale):
+        B.box('steel', (0, 0, 0.012), (length, 0.024, 0.024)); B.box('brass', (0, 0, 0.026), (length * 0.96, 0.008, 0.005))
+        for k in range(int(length / 0.025)): B.box('iron', (-length / 2 + 0.02 + k * 0.025, -0.012, 0.026), (0.004, 0.01, 0.008 if k % 4 else 0.016))
+        B.box('steel', (-length / 2 + 0.012, -0.045, 0.03), (0.024, 0.11, 0.07)); B.box('steel', (-length / 2 + 0.024, -0.11, 0.014), (0.034, 0.06, 0.034), rot=(0, 0, 25))
+        sx = -length / 2 + 0.02 + open_; B.box('steel', (sx, -0.02, 0.012), (0.045, 0.055, 0.05)); B.box('steel', (sx, -0.1, 0.03), (0.024, 0.12, 0.07)); B.box('steel', (sx - 0.006, -0.16, 0.014), (0.034, 0.06, 0.034), rot=(0, 0, -25))
+        B.cyl('brass', (sx, 0.018, 0.042), 0.016, 0.03, seg=10); B.cyl('brass', (sx, 0.018, 0.064), 0.02, 0.014, seg=10)
+def spreading_calipers(B, c, rot=0, span=0.28, leg=0.4, tilt=(0, 0, 0), scale=1.0):
+    """compass-style spreading calipers lying flat: pivot ring + two legs with curved tips (box segments), steel; opens toward local +y."""
+    with B.xf(c, (tilt[0], tilt[1], rot), scale):
+        B.cyl('brass', (0, 0, 0.02), 0.026, 0.018, seg=14); B.cyl('steel', (0, 0, 0.034), 0.013, 0.014, seg=10)
+        for s in (-1, 1):
+            a = math.atan2(span / 2, leg)
+            for j, (f0, f1) in enumerate(((0.0, 0.58), (0.58, 1.0))):
+                r_ = leg * 0.5 * (f0 + f1); ang = s * a * (1 if j == 0 else 0.4)
+                B.box('steel', (s * math.sin(ang) * r_, math.cos(ang) * r_ * 0.95, 0.013), (0.018, leg * (f1 - f0) * 1.05, 0.014), rot=(0, 0, -math.degrees(ang)))
+            B.sphere('steel', (s * span / 2 * 0.95, leg * 0.95, 0.015), 0.014)
+def ledger_stack(B, c, n=5, rot=0, w=0.34, d=0.24, mats=('oxblood', 'baize', 'leather', 'navy', 'oxblood')):
+    z = c[2]
+    with B.xf((c[0], c[1], 0), (0, 0, rot)):
+        for i in range(n):
+            t = 0.045 + 0.02 * (i % 3); m = mats[i % len(mats)]; jx = B.rng.uniform(-0.02, 0.02); jr = B.rng.uniform(-6, 6)
+            B.box(m, (jx, 0, z + t / 2), (w, d, t), rot=(0, 0, jr), tint=B.rng.uniform(0.85, 1.1)); B.box('cream', (jx, 0.0, z + t / 2), (w - 0.03, d + 0.008, t - 0.014), rot=(0, 0, jr))
+            B.box('brass', (jx - w / 2 + 0.01, 0, z + t / 2), (0.014, d * 0.95, t + 0.004), rot=(0, 0, jr)); z += t
+        B.box('brass', (0, 0, z + 0.004), (0.06, 0.04, 0.004))
+def open_ledger(B, c, rot=0, w=0.34, d=0.25):
+    with B.xf(c, (0, 0, rot)):
+        B.box('oxblood', (0, 0, 0.012), (w * 2 + 0.03, d + 0.02, 0.024)); B.box('cream', (-w / 2, 0, 0.04), (w - 0.01, d - 0.01, 0.036), rot=(0, 3, 0)); B.box('cream', (w / 2, 0, 0.04), (w - 0.01, d - 0.01, 0.036), rot=(0, -3, 0))
+        for k in range(7):
+            B.box('dark', (-w / 2, d / 2 - 0.03 - k * 0.03, 0.06), (w * 0.8 * (1 - 0.3 * (k % 3) / 3), 0.006, 0.002), rot=(0, 3, 0)); B.box('dark', (w / 2, d / 2 - 0.03 - k * 0.03, 0.06), (w * 0.7, 0.006, 0.002), rot=(0, -3, 0))
+def inkpot(B, c, quill=True, rot=0):
+    x, y, z = c; B.cyl('glass', (x, y, z + 0.03), 0.04, 0.06, seg=14); B.cyl('ink', (x, y, z + 0.032), 0.034, 0.058, seg=12); B.cyl('brass', (x, y, z + 0.07), 0.03, 0.02, seg=12)
+    if quill:
+        with B.xf((x, y, z + 0.09), (0, 0, rot)): B.cyl('cream', (0.1, 0, 0.13), 0.005, 0.3, rot=(0, 70, 0), seg=6); B.box('cream', (0.17, 0, 0.17), (0.16, 0.03, 0.003), rot=(0, 70, 0))
+def kepi(B, c, rot=0, tilt=(0, 0, 0)):
+    with B.xf(c, (tilt[0], tilt[1], rot)):
+        B.cyl('oxblood', (0, 0, 0.065), 0.09, 0.13, r2=0.105, seg=16); B.cyl('navy', (0, 0, 0.024), 0.093, 0.048, seg=16); B.cyl('oxblood', (0, 0, 0.134), 0.115, 0.014, seg=16)
+        B.box('leather', (0.1, 0, 0.012), (0.1, 0.16, 0.01), rot=(0, 10, 0)); B.cyl('brass', (0.098, 0, 0.07), 0.02, 0.01, axis='x', seg=8)
+def coat_rack(B, c, rot=0, h=1.95, kepis=3):
+    """standing coat rack: foot, post, four brass hooks with kepis, a hanging coat."""
+    with B.xf((c[0], c[1], 0), (0, 0, rot)):
+        B.cyl('walnut', (0, 0, 0.05), 0.26, 0.1, r2=0.18, seg=16); B.cyl('walnut', (0, 0, h / 2), 0.045, h, seg=10); B.sphere('brass', (0, 0, h + 0.04), 0.06)
+        for k in range(4):
+            a = k * 90 + 45; ca, sa = math.cos(math.radians(a)), math.sin(math.radians(a))
+            B.cyl('brass', (0.12 * ca, 0.12 * sa, h - 0.18), 0.014, 0.26, axis='x', rot=(0, 0, a), seg=6); B.sphere('brass', (0.25 * ca, 0.25 * sa, h - 0.18), 0.024)
+        for k in range(kepis):
+            a = k * 90 + 45 + (180 if k == 2 else 0); ca, sa = math.cos(math.radians(a)), math.sin(math.radians(a)); kepi(B, (0.25 * ca, 0.25 * sa, h - 0.27), rot=a + 90)
+        B.cyl('navy', (0.0, 0.22, h - 0.55), 0.15, 0.9, r2=0.22, seg=12, rot=(10, 0, 0))
+def stove(B, c, rot=0, pipe_to=3.6):
+    """coal stove: cast-iron drum on a plinth, door with mica glow, brass rail, coal scuttle, stove pipe with elbow to the ceiling. returns the smoke mouth (world)."""
+    with B.xf((c[0], c[1], 0), (0, 0, rot)):
+        B.box('iron', (0, 0, 0.12), (0.62, 0.52, 0.24)); B.cyl('iron', (0, 0, 0.6), 0.28, 0.72, seg=16); B.cyl('iron', (0, 0, 0.99), 0.31, 0.07, seg=16); B.cyl('iron', (0, 0, 1.06), 0.22, 0.07, seg=16)
+        B.box('brass', (0, 0.29, 0.5), (0.2, 0.025, 0.22)); B.box('glow_door', (0, 0.305, 0.5), (0.13, 0.01, 0.13)); B.cyl('brass', (0.17, 0.31, 0.52), 0.014, 0.05, axis='y', seg=8)
+        B.cyl('brass', (0, 0.0, 0.33), 0.33, 0.025, seg=16); B.cyl('iron', (0, 0, 1.45), 0.07, 0.74, seg=10)
+        B.cyl('iron', (0, 0, 2.0), 0.07, 0.5, seg=10); B.cyl('iron', (0, 0, 2.5), 0.075, 0.6, seg=10)
+        B.cyl('iron', (0, 0, 0.1), 0.0001, 0.0001, seg=3) if False else None
+        mouth = B.wpt((0, 0, pipe_to - 0.3))
+        B.cyl('iron', (0.28, 0.1, 0.18), 0.17, 0.24, r2=0.15, seg=12); B.box('iron', (0.28, 0.1, 0.32), (0.22, 0.02, 0.02))       # scuttle
+    point(B.wpt((0, 0.45, 0.5)), color=(1.0, 0.55, 0.25), watts=18, radius=0.06, name='stove_glow')
+    return mouth
+def wall_clock(B, c, rot=0, r=0.28):
+    """wall clock without numerals: round case, ring of dots, two hands. local +y = out of the wall. also a regulator case below (pendulum added separately)."""
+    with B.xf((c[0], c[1], c[2]), (0, 0, rot)):
+        B.cyl('walnut', (0, 0.04, 0), r + 0.05, 0.08, axis='y', seg=24); B.cyl('cream', (0, 0.09, 0), r, 0.02, axis='y', seg=24); B.cyl('brass', (0, 0.1, 0), r + 0.02, 0.012, r2=r + 0.02, axis='y', seg=24) if False else None
+        for k in range(12):
+            a = k * math.pi / 6; B.sphere('iron', (r * 0.82 * math.sin(a), 0.108, r * 0.82 * math.cos(a)), 0.016 if k % 3 else 0.026, seg=8, rings=5)
+        B.box('iron', (0.0, 0.112, r * 0.28), (0.022, 0.008, r * 0.62)); B.box('iron', (r * 0.2, 0.112, r * 0.12), (r * 0.5, 0.008, 0.02), rot=(0, -30, 0)); B.cyl('brass', (0, 0.115, 0), 0.026, 0.016, axis='y', seg=10)
+def pendulum_case(B, c, rot=0, h=0.9, w=0.2):
+    """slim case under the clock with a glazed slot (the pendulum itself is animated: see add_pendulum)."""
+    with B.xf((c[0], c[1], c[2]), (0, 0, rot)):
+        B.box('walnut', (0, 0.07, -h / 2), (w, 0.12, h)); B.box('dark', (0, 0.135, -h / 2), (w - 0.07, 0.01, h - 0.1)); B.box('brass', (0, 0.14, -h - 0.02), (w, 0.14, 0.04))
+def ledger_shelf(B, c, length=1.8, rot=0, n=2):
+    """wall shelf with leather ledgers standing in a row, brass shelf brackets."""
+    with B.xf((c[0], c[1], c[2]), (0, 0, rot)):
+        for r_ in range(n):
+            z = r_ * 0.42; B.box('oak', (0, 0.16, z), (length, 0.3, 0.04))
+            for sx in np.arange(-length / 2 + 0.05, length / 2 - 0.1, 0.5): B.box('iron', (sx, 0.04, z - 0.07), (0.03, 0.06, 0.12))
+            x = -length / 2 + 0.07
+            while x < length / 2 - 0.12:
+                w = B.rng.uniform(0.045, 0.085); hh = B.rng.uniform(0.24, 0.34); m = ['oxblood', 'baize', 'leather', 'navy', 'leather'][B.rng.randint(0, 4)]
+                B.box(m, (x + w / 2, 0.17, z + 0.02 + hh / 2), (w, 0.22, hh), tint=B.rng.uniform(0.85, 1.1)); B.box('brass', (x + w / 2, 0.285, z + 0.02 + hh * 0.7), (w - 0.012, 0.006, 0.025)); x += w + 0.008
+def frame_on_wall(B, name, c, size, rot=0, tilt=0.0):
+    """picture / notice frame: oak frame + a card plane (separate object with texture) placed by add_cards after finalize; c on the wall, local +y out."""
+    B.box('walnut', (c[0], c[1], c[2]), (size[0] + 0.08, 0.04, size[1] + 0.08), rot=(0, 0, rot))
+    B.box('cream', (c[0], c[1], c[2]), (size[0] + 0.01, 0.046, size[1] + 0.01), rot=(0, 0, rot), tint=0.9)
+    STATE.setdefault('wall_cards', []).append((name, c, size, rot))
+def crate(B, c, size=(0.5, 0.4, 0.35), rot=0, lid=True):
+    with B.xf((c[0], c[1], c[2]), (0, 0, rot)):
+        B.box('oak', (0, 0, size[2] / 2), size); 
+        for sx in (-1, 1): B.box('walnut', (sx * size[0] / 2, 0, size[2] / 2), (0.03, size[1] + 0.012, size[2] + 0.012))
+        B.box('walnut', (0, 0, size[2] / 2), (size[0] + 0.012, 0.03, size[2] + 0.012)); B.box('brass', (0, -size[1] / 2 - 0.01, size[2] * 0.7), (0.07, 0.01, 0.035))
+def bucket(B, c, r=0.15, h=0.3):
+    B.cyl('iron', (c[0], c[1], c[2] + h / 2), r, h, r2=r * 1.15, seg=14); B.cyl('dark', (c[0], c[1], c[2] + h + 0.004), r * 1.1, 0.01, seg=14)
+    B.cyl('iron', (c[0], c[1], c[2] + h * 0.5), r * 1.18, 0.02, seg=14) 
+def umbrella_stand(B, c):
+    x, y, z = c; B.cyl('walnut', (x, y, z + 0.3), 0.15, 0.6, r2=0.18, seg=14); B.cyl('brass', (x, y, z + 0.5), 0.17, 0.03, seg=14)
+    for k, (dx, dy, tl) in enumerate(((0.05, 0.02, 6), (-0.05, 0.04, -8), (0.0, -0.05, 3))): B.cyl('leather', (x + dx, y + dy, z + 0.85), 0.018, 0.9, seg=6, rot=(tl, -tl, 0)); B.sphere('brass', (x + dx * 1.5, y + dy * 1.2, z + 1.31), 0.03)
+def wastebin(B, c):
+    B.cyl('iron', (c[0], c[1], c[2] + 0.2), 0.14, 0.4, r2=0.17, seg=12); B.cyl('dark', (c[0], c[1], c[2] + 0.405), 0.15, 0.01, seg=12)
+    for k in range(3): B.box('cream', (c[0] + 0.02 * k, c[1] - 0.02 * k, c[2] + 0.43 + 0.02 * k), (0.12, 0.09, 0.01), rot=(10 * k, 5, 25 * k))
+def door(B, c, rot=0, w=1.1, h=2.25, ajar=0.0, glow=True):
+    """door in a wall opening: frame + leaf with panels + brass handle; ajar = swing in degrees; a lit corridor glow behind. local +y = into the room, c = floor centre of the opening."""
+    with B.xf((c[0], c[1], 0), (0, 0, rot)):
+        for sx in (-1, 1): B.box('walnut', (sx * (w / 2 + 0.07), 0, h / 2), (0.14, 0.3, h + 0.0))
+        B.box('walnut', (0, 0, h + 0.07), (w + 0.28, 0.3, 0.14)); B.box('walnut', (0, 0.0, h + 0.22), (w + 0.5, 0.34, 0.1))
+        if glow: B.box('glow_door', (0, -0.55, h / 2), (w, 0.02, h))
+        with B.xf((-w / 2, 0.02, 0), (0, 0, ajar)):
+            B.box('oak', (w / 2, 0, h / 2), (w - 0.02, 0.05, h - 0.02))
+            for pz in (0.62, 1.62):
+                for px in (0.3, 0.8):
+                    if px < w - 0.2: B.box('walnut', (px * w / 1.1, 0.03, pz), (0.3 * w / 1.1, 0.02, 0.62 if pz < 1 else 0.55))
+            B.cyl('brass', (w - 0.1, 0.05, 1.0), 0.03, 0.05, axis='y', seg=10); B.box('brass', (w - 0.1, 0.07, 1.0), (0.1, 0.02, 0.03))
+def barred_window(B, x, ya, yb, za, zb, bars=6, side=-1):
+    """window in the wall at x (side -1 = left wall facing +x): frame, mullion, iron bars, sill; the glass pane glows in 'glow' sky from the dome."""
+    xc = x - side * 0.0; yc = (ya + yb) / 2; wy = yb - ya
+    B.box('walnut', (x + 0.1, yc, za - 0.05), (0.34, wy + 0.24, 0.1)); B.box('walnut', (x + 0.06, yc, zb + 0.05), (0.2, wy + 0.2, 0.1))
+    for yy in (ya - 0.05, yb + 0.05): B.box('walnut', (x + 0.06, yy, (za + zb) / 2), (0.2, 0.1, zb - za))
+    B.box('walnut', (x + 0.05, yc, (za + zb) / 2), (0.06, 0.06, zb - za))
+    for i in range(bars): yy = ya + wy * (i + 0.5) / bars; B.cyl('iron', (x + 0.1, yy, (za + zb) / 2), 0.02, zb - za, seg=8)
+    for zz in (za + (zb - za) * 0.4, za + (zb - za) * 0.75): B.box('iron', (x + 0.1, yc, zz), (0.03, wy, 0.03))
+    B.box('walnut', (x + 0.02, yc, (za + zb) / 2), (0.04, 0.05, zb - za) ) if False else None
+
+# ---------------------------------------------------------------- outside Paris: mansard roofs and chimneys
+def mansard(B, c, w, d, h_wall, h_roof=2.2, rot=0, chimneys=2, seed=1, stone='stone', lit=0.0, dormers=True):
+    """Haussmann block: stone body (floors with windows), a two-pitch mansard roof in zinc, dormer windows, terracotta chimney stacks.
+    c = floor centre, local x along the front, +y = deep. windows are dark glass; `lit` is the share that glows warm."""
+    r = random.Random(seed)
+    with B.xf((c[0], c[1], c[2]), (0, 0, rot)):
+        B.box(stone, (0, 0, h_wall / 2), (w, d, h_wall))
+        B.box('stone_dk', (0, 0, h_wall + 0.1), (w + 0.3, d + 0.3, 0.2)); B.box('stone_dk', (0, 0, h_wall - 0.15), (w + 0.12, d + 0.12, 0.12))
+        nfl = max(2, int(h_wall / 3.0)); nw = max(2, int(w / 2.4))
+        for fl in range(nfl):
+            z = 1.6 + fl * 3.0
+            if z > h_wall - 0.8: break
+            for k in range(nw):
+                x = (k + 0.5) * w / nw - w / 2; on = r.random() < lit
+                B.box('glow_win' if on else 'dark', (x, -d / 2 - 0.01, z), (0.85, 0.04, 1.5)); B.box('stone_dk', (x, -d / 2 - 0.02, z + 0.84), (1.05, 0.06, 0.12)); B.box('stone_dk', (x, -d / 2 - 0.03, z - 0.82), (1.1, 0.12, 0.1))
+                if fl == 1 or fl == nfl - 1: B.box('iron', (x, -d / 2 - 0.2, z - 0.5), (1.2, 0.03, 0.9)); B.box('iron', (x, -d / 2 - 0.1, z - 0.96), (1.3, 0.22, 0.04))
+        hr = h_roof; B.box('zinc', (0, 0, h_wall + 0.2 + hr * 0.3), (w - 0.2, d - 0.2, hr * 0.6))
+        B.prism_roof('zinc', (0, 0, h_wall + 0.2 + hr * 0.6), w - 0.2, d - 0.2, hr * 0.4, ridge_frac=0.78)
+        if dormers:
+            for k in range(nw):
+                x = (k + 0.5) * w / nw - w / 2; on = r.random() < lit
+                B.box('stone_dk', (x, -d / 2 + 0.05, h_wall + 0.2 + hr * 0.3), (0.8, 0.5, 1.0)); B.box('glow_win' if on else 'dark', (x, -d / 2 - 0.2, h_wall + 0.2 + hr * 0.3), (0.5, 0.03, 0.7))
+                B.prism_roof('zinc', (x, -d / 2 + 0.1, h_wall + 0.2 + hr * 0.3 + 0.5), 0.9, 0.7, 0.3, rot_z=90)
+        for i in range(chimneys):
+            cx = r.uniform(-w * 0.35, w * 0.35); cy = r.uniform(-d * 0.15, d * 0.15); chim(B, (cx, cy, h_wall + 0.2 + hr * 0.95), r)
+def chim(B, p, r=None):
+    """chimney stack: terracotta shaft, stone cap, two pots."""
+    x, y, z = p; STATE.setdefault('chims', []).append(B.wpt((x, y, z + 2.2))); B.box('terracotta', (x, y, z + 0.8), (0.7, 0.5, 1.6)); B.box('stone_dk', (x, y, z + 1.65), (0.8, 0.6, 0.1))
+    for dx in (-0.15, 0.15): B.cyl('terracotta', (x + dx, y, z + 1.95), 0.1, 0.5, r2=0.085, seg=10)
+def paris_roofs(B0, x0, y0, y1, side=-1, depth=12.0, seed=2, count=6, base_z=-3.0):
+    """a row of mansard blocks outside a window (side -1: to the left, -x), at distance `depth` from x0 — seen through windows."""
+    B = getattr(B0, 'out', B0); r = random.Random(seed)
+    for i in range(count):
+        yy = y0 + (y1 - y0) * (i + 0.5) / count + r.uniform(-1, 1); w = r.uniform(7, 10); hw = r.uniform(11, 16) + base_z
+        mansard(B, (x0 + side * (depth + r.uniform(0, 5)), yy, base_z), w, r.uniform(6, 9), hw, h_roof=r.uniform(2.2, 3.0), rot=90 * (-side), chimneys=2, seed=seed + i, lit=0.0, dormers=False)
+
+# ---------------------------------------------------------------- card cabinets, drawers, ladder, desk props
+CELL = (0.30, 0.20)
+def cabinet_wall(B, origin, length, height, depth=0.55, rot_z=0, seed=9, reserve=(), bay=5, cornice=True, pilasters=True, dark_cells=True):
+    """wall of wooden card cabinets. local frame: x along the wall, y toward the aisle (front face at y = depth), z up.
+    plinth, carcass, cornice, pilaster every `bay` columns (1.5 m), rails, and drawers (front, brass label frame with a BLANK cream card, brass pull).
+    `reserve` = [(col, row)] cells left empty (an animated drawer goes there; a dark recess is drawn). returns {'cell': fn(col,row)->(x,z) local, 'face': depth}."""
+    r = random.Random(seed); cw, ch = CELL; nc = int(length / cw); nr = int((height - 0.2) / ch); z0 = 0.2
+    with B.xf(origin, (0, 0, rot_z)):
+        B.box('walnut', (length / 2, depth / 2 - 0.02, height / 2), (length, depth, height), tint=0.88)
+        B.box('walnut', (length / 2, depth / 2 + 0.05, 0.1), (length + 0.06, depth + 0.1, 0.2), tint=0.8)                       # plinth
+        if cornice:
+            B.box('walnut', (length / 2, depth / 2 + 0.06, height + 0.09), (length + 0.1, depth + 0.16, 0.18)); B.box('walnut', (length / 2, depth / 2 + 0.1, height + 0.2), (length + 0.14, depth + 0.26, 0.06), tint=0.9)
+            B.box('brass', (length / 2, depth + 0.1, height + 0.03), (length, 0.02, 0.03))
+        if pilasters:
+            for i in range(int(length / (cw * bay)) + 1):
+                px = i * cw * bay; B.box('walnut', (px, depth + 0.03, height / 2), (0.12, 0.08, height), tint=0.8); B.box('walnut', (px, depth + 0.07, height - 0.08), (0.16, 0.05, 0.12)); B.box('walnut', (px, depth + 0.07, 0.24), (0.16, 0.05, 0.1))
+        for rr in range(0, nr + 1, 7): B.box('walnut', (length / 2, depth + 0.012, z0 + rr * ch), (length, 0.04, 0.035), tint=0.8)
+        res = set(reserve)
+        for cc in range(nc):
+            for rr in range(nr):
+                x = (cc + 0.5) * cw; z = z0 + (rr + 0.5) * ch
+                if (cc % bay) == 0 and pilasters: pass
+                if (cc, rr) in res:
+                    if dark_cells: B.box('dark', (x, depth + 0.006, z), (cw - 0.012, 0.004, ch - 0.012))
+                    continue
+                t = r.uniform(0.82, 1.12); tint = (t, t * r.uniform(0.94, 1.0), t * r.uniform(0.9, 1.0))
+                B.box('drawer', (x, depth + 0.018, z), (cw - 0.022, 0.036, ch - 0.02), tint=tint)
+                B.box('brass_nk', (x, depth + 0.04, z + ch * 0.17), (0.12, 0.006, 0.05)); B.box('cream', (x, depth + 0.044, z + ch * 0.17), (0.1, 0.004, 0.036), tint=r.uniform(0.9, 1.05))
+                B.box('brass_nk', (x, depth + 0.05, z - ch * 0.22), (0.07, 0.016, 0.014))
+    return dict(face=depth, nc=nc, nr=nr, z0=z0, cell=lambda c, rw: ((c + 0.5) * cw, z0 + (rw + 0.5) * ch))
+
+def _cards_in_drawer(B, w, depth, h, n, r, tilt=-8, tabs=True, y0=None, y1=None):
+    """standing cards in a drawer body: local y runs out of the cabinet; cards stack from the back (-depth) to the front."""
+    y0 = -depth + 0.06 if y0 is None else y0; y1 = -0.06 if y1 is None else y1; gap = (y1 - y0) / max(n, 1); ch = h * 0.78
+    for i in range(n):
+        y = y0 + i * gap; t = r.uniform(0.9, 1.06)
+        B.box('cream', (0, y, -h / 2 + 0.02 + ch / 2), (w - 0.05, 0.004, ch), rot=(tilt + r.uniform(-1.5, 1.5), 0, 0), tint=(t, t * 0.97, t * 0.88))
+        if tabs and i % 4 == 0: B.box(['oxblood', 'baize', 'navy', 'oxblood'][(i // 4) % 4], (-w * 0.25 + (i // 4 % 3) * w * 0.22, y - 0.012, -h / 2 + 0.02 + ch + 0.012), (w * 0.2, 0.005, 0.026), rot=(tilt, 0, 0))
+def drawer_assembly(name, pos, rot_z, w=0.27, h=0.18, depth=0.5, travel=0.4, open_=0.0, cards=14, boxes=0, seed=3, front_mat='honey', tabs=True, cards_to=None):
+    """one animated card drawer. root empty at `pos` = centre of the CLOSED drawer front (the cabinet face), local +y out of the cabinet; a 'slide' empty
+    child carries the drawer and moves 0 .. travel along +y with set_drawer(name, open)."""
+    r = random.Random(seed); root = bpy.data.objects.new(name + '_root', None); bpy.context.scene.collection.objects.link(root); root.location = pos; root.rotation_euler = (0, 0, math.radians(rot_z))
+    slide = bpy.data.objects.new(name + '_slide', None); bpy.context.scene.collection.objects.link(slide); slide.parent = root; slide.location = (0, open_ * travel, 0)
+    B = Batch(seed); t = r.uniform(0.95, 1.05)
+    B.box(front_mat, (0, 0.018, 0), (w - 0.022, 0.036, h - 0.02), tint=t); B.box('brass', (0, 0.04, h * 0.17), (0.12 if w < 0.5 else 0.2, 0.006, 0.05)); B.box('cream', (0, 0.044, h * 0.17), (0.1 if w < 0.5 else 0.18, 0.004, 0.036))
+    B.box('brass', (0, 0.05, -h * 0.22), (0.07 if w < 0.5 else 0.14, 0.016, 0.014))
+    B.box('walnut', (-(w - 0.04) / 2, -depth / 2, 0), (0.012, depth, h - 0.03)); B.box('walnut', ((w - 0.04) / 2, -depth / 2, 0), (0.012, depth, h - 0.03))
+    B.box('walnut', (0, -depth / 2, -(h - 0.03) / 2 + 0.006), (w - 0.04, depth, 0.012)); B.box('walnut', (0, -depth, 0), (w - 0.04, 0.012, h - 0.03))
+    B.box('dark', (0, -depth / 2, -(h - 0.03) / 2 + 0.013), (w - 0.06, depth - 0.02, 0.004))
+    _cards_in_drawer(B, w - 0.02, depth, h - 0.03, cards, r, tabs=tabs, y1=cards_to)
+    objs = B.finalize(name, parent=slide, ink_t=STATE['ink_t'] * 0.8)
+    STATE['anim'][name] = dict(kind='drawer', root=root, slide=slide, travel=travel, objs=objs); return slide
+def card_box(name, pos, rot_z=0, w=0.3, d=0.2, h=0.17, lid=0.0, cards=9, seed=4, parent=None, mat='oak', lining='dark'):
+    """small wooden card box (hinged lid, brass clasp + blank label); `lid` 0..1 opens the lid (hinge at the back). animated: set_box_lid(name, o)."""
+    r = random.Random(seed); root = bpy.data.objects.new(name + '_root', None); bpy.context.scene.collection.objects.link(root); root.location = pos; root.rotation_euler = (0, 0, math.radians(rot_z))
+    if parent is not None: root.parent = parent
+    B = Batch(seed); B.box(mat, (0, 0, h / 2), (w, d, h))
+    B.box(lining, (0, 0, h - 0.004), (w - 0.03, d - 0.03, 0.01))
+    for i in range(cards):
+        y = -d / 2 + 0.03 + i * (d - 0.06) / cards; B.box('cream', (0, y, h * 0.35 + h * 0.22), (w - 0.04, 0.004, h * 0.8), rot=(-6, 0, 0), tint=r.uniform(0.92, 1.05))
+        if i % 3 == 0: B.box(['oxblood', 'baize', 'navy'][i // 3 % 3], (-w * 0.2 + (i // 3) * w * 0.15, y - 0.01, h * 0.35 + h * 0.62 + 0.01), (w * 0.14, 0.005, 0.022), rot=(-6, 0, 0))
+    B.box('brass', (0, d / 2 + 0.006, h * 0.55), (0.1, 0.008, 0.04)); B.box('cream', (0, d / 2 + 0.011, h * 0.55), (0.082, 0.004, 0.028))
+    objs = B.finalize(name, parent=root, ink_t=STATE['ink_t'] * 0.8)
+    hinge = bpy.data.objects.new(name + '_hinge', None); bpy.context.scene.collection.objects.link(hinge); hinge.parent = root; hinge.location = (0, -d / 2, h)
+    hinge.rotation_euler = (math.radians(-110 * lid), 0, 0)
+    L = Batch(seed); L.box(mat, (0, d / 2, 0.012), (w + 0.01, d + 0.01, 0.024)); L.box(lining, (0, d / 2, 0.028), (w - 0.04, d - 0.04, 0.012)); L.box('brass', (0, d + 0.006, -0.012), (0.06, 0.008, 0.04))
+    objs += L.finalize(name + '_lid', parent=hinge, ink_t=STATE['ink_t'] * 0.8)
+    STATE['anim'][name] = dict(kind='box', root=root, hinge=hinge, objs=objs); return root
+def rolling_ladder(B, base, top, width=0.46, rungs=14):
+    """library ladder leaning from a floor point to a rail point (world), with brass rail wheels on top and rubber feet."""
+    b = np.array(base, float); t = np.array(top, float); v = t - b; Ln = np.linalg.norm(v); d = v / Ln; ax = np.cross(d, [0, 0, 1]); ax /= np.linalg.norm(ax); az = math.degrees(math.atan2(ax[1], ax[0]))
+    for s in (-1, 1): B.box('honey', tuple((b + t) / 2 + ax * s * width / 2), (0.05, 0.035, Ln), rot=euler_to_z(d), tint=0.92)
+    for k in range(rungs):
+        p = b + d * (0.25 + k * (Ln - 0.45) / (rungs - 1)); B.cyl('walnut', tuple(p), 0.017, width, axis='x', rot=(0, 0, az), seg=8)
+    for s in (-1, 1):
+        B.cyl('brass', tuple(t + ax * s * width / 2 + np.array([0, 0, 0.0])), 0.05, 0.035, axis='x', rot=(0, 0, az), seg=12); B.box('iron', tuple(b + ax * s * width / 2 + np.array([0, 0, 0.02])), (0.06, 0.05, 0.04))
+def banker_lamp(B, c, rot=0, watts=60, color=(1.0, 0.8, 0.5)):
+    """brass banker's lamp with a deep green glass shade; green-gold glow + warm point light."""
+    x, y, z = c
+    with B.xf((x, y, z), (0, 0, rot)):
+        B.cyl('brass', (0, 0, 0.017), 0.095, 0.034, r2=0.07, seg=16); B.cyl('brass', (0, 0, 0.17), 0.017, 0.28, seg=10); B.sphere('brass', (0, 0, 0.31), 0.032)
+        B.cyl('brass', (0.05, 0, 0.34), 0.02, 0.06, seg=8); B.cyl('baize', (0.07, 0, 0.375), 0.1, 0.18, axis='y', seg=18); B.box('glow_green', (0.07, 0, 0.345), (0.2, 0.16, 0.012))
+        wp = B.wpt((0.07, 0.0, 0.32))
+    point(wp, color=color, watts=watts, radius=0.07, name='banker')
+def fan_cards_static(B, c, n=9, spread=70, r=0.12, rot=0, w=0.15, d=0.1):
+    with B.xf(c, (0, 0, rot)):
+        for i in range(n):
+            a = -spread / 2 + spread * i / (n - 1); B.box('cream', (r * 0.4 * math.cos(math.radians(a + 90)), r * 0.4 * math.sin(math.radians(a + 90)), 0.002 + 0.004 * i), (d, w, 0.003), rot=(0, 0, a), tint=B.rng.uniform(0.93, 1.04))
+def cards_fan_objects(name, pos, n=9, w=0.15, d=0.1, rot=0, spread=80):
+    """cards on a desk that can fan out: each card is its own object, pivot at the lower end; set_cards_fan(t) 0 = squared stack, 1 = fanned."""
+    root = bpy.data.objects.new(name + '_root', None); bpy.context.scene.collection.objects.link(root); root.location = pos; root.rotation_euler = (0, 0, math.radians(rot)); cards = []
+    r = random.Random(8)
+    for i in range(n):
+        piv = bpy.data.objects.new('%s_c%d' % (name, i), None); bpy.context.scene.collection.objects.link(piv); piv.parent = root; piv.location = (0, 0, 0.003 * i)
+        B = Batch(i); B.box('cream', (0, d / 2 - 0.01, 0.0015), (w, d, 0.003), tint=r.uniform(0.94, 1.04))
+        if i % 3 == 0: B.box(['oxblood', 'baize', 'navy'][i // 3 % 3], (w * 0.35, d - 0.012, 0.004), (w * 0.2, 0.018, 0.002))
+        B.finalize('%s_c%d' % (name, i), parent=piv, ink=False); cards.append(piv)
+    STATE['anim'][name] = dict(kind='fan', root=root, cards=cards, spread=spread, n=n); return root
+def police_wagon(B, c, rot=0):
+    """Black Maria prison van: dark navy boxy body on 4 wheels, red cornice line, 2 barred slit windows, rear door + step, driver's box with lantern, shafts (no horse)."""
+    with B.xf((c[0], c[1], 0), (0, 0, rot)):
+        B.box('wagon', (0, 0, 1.45), (1.75, 3.5, 1.7), tint=0.95); B.box('wagon', (0, 0, 2.38), (1.85, 3.6, 0.16)); B.prism_roof('wagon', (0, 0, 2.46), 1.85, 3.6, 0.3, rot_z=90, ridge_frac=1.0) if False else None
+        B.box('wagon_red', (0, 0, 2.5), (1.9, 3.65, 0.07)); B.box('wagon_red', (0, 0, 0.62), (1.82, 3.55, 0.07))
+        for sx in (-1, 1):
+            for yy in (-0.7, 0.9):
+                B.box('dark', (sx * 0.88, yy, 1.8), (0.02, 0.6, 0.28))
+                for k in range(4): B.cyl('iron', (sx * 0.895, yy - 0.22 + k * 0.145, 1.8), 0.012, 0.3, seg=6)
+        B.box('wagon', (0, -1.9, 1.45), (1.2, 0.2, 1.5)); B.box('dark', (0, -2.0, 1.5), (0.5, 0.02, 0.6)); B.box('brass', (0.4, -2.03, 1.3), (0.06, 0.03, 0.2))
+        B.box('iron', (0, -2.1, 0.55), (0.9, 0.3, 0.06)); B.box('iron', (0, 1.55, 2.58), (1.2, 0.8, 0.5)) if False else None
+        B.box('wagon', (0, 1.55, 2.0), (1.6, 0.9, 0.12)); B.box('leather', (0, 1.7, 2.12), (1.2, 0.4, 0.2)); B.box('wagon', (0, 1.95, 2.45), (1.5, 0.08, 0.8))       # driver's box + seat back
+        for sx in (-1, 1):
+            B.box('iron', (sx * 0.4, 2.7, 0.95), (0.06, 2.0, 0.06)); B.box('iron', (sx * 0.4, 3.7, 1.0), (0.1, 0.1, 0.1))                                            # shafts
+            for (yy, rr) in ((-1.15, 0.52), (1.1, 0.62)):
+                B.cyl('wagon_red', (sx * 0.98, yy, rr), rr, 0.1, axis='x', seg=24); B.cyl('iron', (sx * 0.98, yy, rr), rr * 0.9, 0.12, axis='x', seg=24) if False else None
+                B.cyl('brass', (sx * 1.04, yy, rr), 0.07, 0.08, axis='x', seg=10)
+                for k in range(8): a = k * 22.5; B.box('iron', (sx * 1.03, yy, rr), (0.04, 0.03, rr * 1.8), rot=(a, 0, 0))
+        B.cyl('iron', (0, -1.15, 0.52), 0.045, 2.0, axis='x', seg=8); B.cyl('iron', (0, 1.1, 0.62), 0.045, 2.0, axis='x', seg=8)
+        B.cyl('brass', (-0.9, 1.9, 2.25), 0.07, 0.25, seg=8); B.sphere('glow_gas', (-0.9, 1.9, 2.45), 0.1)                                                       # lantern
+        wp = B.wpt((-0.9, 1.9, 2.45))
+    point(wp, watts=60, radius=0.1, name='wagon_lamp')
+def puddles(B, items):
+    for (x, y, rx, ry, rot) in items:
+        seg = 20; a = np.linspace(0, 2 * math.pi, seg, endpoint=False); rr = 1 + 0.18 * np.sin(a * 3 + x) + 0.1 * np.sin(a * 5 + y)
+        v = [(0, 0, 0.006)] + [(rx * rr[i] * math.cos(a[i]), ry * rr[i] * math.sin(a[i]), 0.006) for i in range(seg)]
+        with B.xf((x, y, 0), (0, 0, rot)): B.mesh('puddle', v, [(0, 1 + i, 1 + (i + 1) % seg) for i in range(seg)], smooth=False)
+def light_shaft(B, corners, direction, z_end=0.0):
+    """additive light shaft: the opening's 4 corners (world, in order) projected along `direction` onto z = z_end; 4 side faces, camera rays only."""
+    d = np.array(direction, float); d /= np.linalg.norm(d); top = [np.array(c, float) for c in corners]
+    bot = [c + d * ((c[2] - z_end) / -d[2]) for c in top]
+    for i in range(4):
+        j = (i + 1) % 4; B.quad('beam_fx', tuple(top[i]), tuple(top[j]), tuple(bot[j]), tuple(bot[i]))
+    return bot
+def wall_box(B, mat, axis, pos, a0, a1, z0, z1, holes=(), out=-1, t=0.3, tint=1.0):
+    """a wall plane at `axis`=pos (axis 'x': spans y a0..a1; axis 'y': spans x a0..a1), thickness t toward `out` (+1/-1), z z0..z1, rectangular holes
+    [(h_a0, h_a1, h_z0, h_z1)] (non-overlapping). boxes only."""
+    cuts = sorted(set([a0, a1] + [h[0] for h in holes] + [h[1] for h in holes]))
+    for ca, cb in zip(cuts[:-1], cuts[1:]):
+        if cb - ca < 1e-6: continue
+        mid = (ca + cb) / 2; hs = [h for h in holes if h[0] <= mid <= h[1]]; spans = [(z0, z1)]
+        if hs: h = hs[0]; spans = [s for s in ((z0, h[2]), (h[3], z1)) if s[1] - s[0] > 1e-6]
+        for (za, zb) in spans:
+            c = (pos + out * t / 2, (ca + cb) / 2, (za + zb) / 2) if axis == 'x' else ((ca + cb) / 2, pos + out * t / 2, (za + zb) / 2)
+            sz = (t, cb - ca, zb - za) if axis == 'x' else (cb - ca, t, zb - za)
+            B.box(mat, c, sz, tint=tint)
+
+def card_plane(name, c, size, rot=(0, 0, 0), key='card_bertillon', parent=None, ink_t=0.0, thick=0.004):
+    """a flat textured card (UV 0..1) facing local +y, plus a thin cream slab behind it (+ink hull). returns the root empty."""
+    root = bpy.data.objects.new(name + '_root', None); bpy.context.scene.collection.objects.link(root); root.location = c; root.rotation_euler = [math.radians(a) for a in rot]
+    if parent is not None: root.parent = parent
+    w, h = size; me = bpy.data.meshes.new(name); me.from_pydata([(-w / 2, 0, -h / 2), (-w / 2, 0, h / 2), (w / 2, 0, h / 2), (w / 2, 0, -h / 2)], [], [(0, 1, 2, 3)]); me.update()
+    uv = me.uv_layers.new(name='UVMap'); 
+    for i, (u, v) in enumerate(((0, 0), (0, 1), (1, 1), (1, 0))): uv.data[i].uv = (u, v)
+    ob = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(ob); ob.parent = root; ob.location = (0, thick / 2 + 0.0005, 0); me.materials.append(get_mat(key))
+    B = Batch(); B.box('cardedge', (0, 0, 0), (w, thick, h)); objs = B.finalize(name + '_edge', parent=root, ink_t=ink_t if ink_t else STATE['ink_t'] * 0.6)
+    STATE['anim'][name] = dict(kind='card', root=root, objs=[ob] + objs); return root
+def need_card(key, kind='bertillon', name=None, seed=7):
+    STATE['cardpaths'][key] = TX.card(name or key, kind, seed)
+    return key
+
+def room_shell(B, x0, x1, y0, y1, h, wain=1.3, windows=(), doors=(), wall='wall', floor='floor', ceil='ceiling', beams=True, frieze=True, t=0.3):
+    """floor, ceiling, four walls (holes for windows / doors), dark panelled wainscot to `wain`, skirting + cap rail, frieze under the cornice, beams.
+    windows / doors: [(wall 'L'|'R'|'F'|'B', a0, a1, z0, z1)]  (L x0 wall, R x1 wall, F y0 wall, B y1 wall; a = along-wall coordinate)."""
+    W = x1 - x0; Dd = y1 - y0; cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+    Bc = getattr(B, 'ceil', B); B.box(floor, (cx, cy, -0.1), (W + 2 * t, Dd + 2 * t, 0.2)); Bc.box(ceil, (cx, cy, h + 0.1), (W + 2 * t, Dd + 2 * t, 0.2))
+    hol = {k: [(a0, a1, z0, z1) for (w_, a0, a1, z0, z1) in list(windows) + list(doors) if w_ == k] for k in 'LRFB'}
+    wall_box(B, wall, 'x', x0, y0, y1, 0, h, hol['L'], out=-1, t=t); wall_box(B, wall, 'x', x1, y0, y1, 0, h, hol['R'], out=+1, t=t)
+    wall_box(B, wall, 'y', y0, x0, x1, 0, h, hol['F'], out=-1, t=t); wall_box(B, wall, 'y', y1, x0, x1, 0, h, hol['B'], out=+1, t=t)
+    dh = {k: [(a0, a1, 0, z1) for (w_, a0, a1, z0, z1) in doors if w_ == k] for k in 'LRFB'}
+    # wainscot (proud of the wall by 0.04) with door gaps, cap rail, skirting
+    def strip(mat, axis, pos, a0, a1, z0, z1, thick, gaps, out):
+        cuts = sorted(set([a0, a1] + [g[0] for g in gaps] + [g[1] for g in gaps]))
+        for ca, cb in zip(cuts[:-1], cuts[1:]):
+            mid = (ca + cb) / 2
+            if any(g[0] <= mid <= g[1] for g in gaps) or cb - ca < 1e-6: continue
+            c = (pos - out * thick / 2, mid, (z0 + z1) / 2) if axis == 'x' else (mid, pos - out * thick / 2, (z0 + z1) / 2); sz = (thick, cb - ca, z1 - z0) if axis == 'x' else (cb - ca, thick, z1 - z0)
+            B.box(mat, c, sz)
+    for (axis, pos, a0, a1, out, k) in (('x', x0, y0, y1, -1, 'L'), ('x', x1, y0, y1, +1, 'R'), ('y', y0, x0, x1, -1, 'F'), ('y', y1, x0, x1, +1, 'B')):
+        g = [(a, b) for (a, b, _, _) in dh[k]]
+        strip('wain', axis, pos + (-out) * 0.0, a0, a1, 0.0, wain, 0.05, g, -out * -1 if False else -out)
+        strip('walnut', axis, pos - out * 0.0, a0, a1, wain, wain + 0.06, 0.09, g, -out); strip('walnut', axis, pos, a0, a1, 0.0, 0.16, 0.07, g, -out)
+        if frieze: strip('frieze', axis, pos, a0, a1, h - 0.62, h - 0.2, 0.02, [], -out)
+        strip('walnut', axis, pos, a0, a1, h - 0.2, h, 0.14, [], -out); strip('walnut', axis, pos, a0, a1, h - 0.65, h - 0.62, 0.05, [], -out)
+    if beams:
+        for xx in np.arange(x0 + 0.8, x1, 1.6): Bc.box('beam', (xx, cy, h - 0.12), (0.22, Dd, 0.24))
+        for yy in (y0 + Dd * 0.25, y0 + Dd * 0.75): Bc.box('beam', (cx, yy, h - 0.07), (W, 0.18, 0.14))
+
+# ================================================================ A. MEASURING ROOM
+MX0, MX1, MY0, MY1, MH = -3.2, 3.2, -4.2, 4.2, 4.2
+def build_measure(B):
+    A = {'marks': {}, 'objs': {}}
+    win = ('L', 0.0, 2.4, 1.95, 3.4); dor = ('R', -3.0, -1.85, 0, 2.25)
+    room_shell(B, MX0, MX1, MY0, MY1, MH, wain=1.3, windows=[win], doors=[dor], ceil='ceil_navy')
+    barred_window(B, MX0, 0.0, 2.4, 1.95, 3.4, bars=7)
+    paris_roofs(B, MX0 - 0.3, -3.0, 6.0, side=-1, depth=13.0, seed=2, count=6, base_z=-8.5)
+    door(B, (MX1 + 0.15, -2.425), rot=90, w=1.1, ajar=-35); A['door'] = (MX1, -2.425)
+    # floor dressing: navy rug under the chair / camera area, dais cloth
+    B.box('runner', (0.75, 1.5, 0.006), (1.4, 3.6, 0.012))
+    # the instruments
+    measuring_chair(B, (0.7, 2.4), rot=180, head_z=1.34)
+    toise(B, (1.7, MY1 - 0.03), rot=180, slider=1.66)
+    arm_span_scale(B, (-1.55, MY1 - 0.03), rot=180, length=2.0, z=1.42)
+    foot_board(B, (2.2, 3.3), rot=0)
+    # big steel calipers on show, mounted on a plaque on the left wall; and laid out on the small table beside the chair
+    with B.xf((MX0 + 0.05, 3.35, 2.15), (0, 0, 90)):
+        B.box('walnut', (0, 0.03, 0), (1.3, 0.05, 0.6)); B.box('baize', (0, 0.058, 0), (1.18, 0.012, 0.48))
+        sliding_calipers(B, (0, 0.075, -0.1), rot=0, length=0.95, open_=0.34, tilt=(90, 0, 0), scale=1.0)
+        spreading_calipers(B, (-0.2, 0.08, 0.2), rot=0, span=0.3, leg=0.36, tilt=(90, 0, 0), scale=0.9)
+        for sx in (-0.55, 0.55): B.cyl('brass', (sx, 0.08, 0.2), 0.02, 0.03, axis='y', seg=8)
+    table(B, (1.9, 1.55), size=(0.85, 0.55), h=0.8, rot=8, top='baize')
+    with B.xf((1.9, 1.55, 0), (0, 0, 8)):
+        sliding_calipers(B, (-0.02, -0.05, 0.808), rot=10, length=0.5, open_=0.2); spreading_calipers(B, (0.22, 0.12, 0.808), rot=-35, span=0.26, leg=0.3); inkpot(B, (-0.3, 0.15, 0.808), rot=25)
+    # camera on a tripod, aimed at the chair (lens toward +y), black cloth on the back
+    camera_tripod(B, (0.95, 0.55), rot=0)
+    # the clerk's table at the right wall
+    table(B, (2.7, 0.55), size=(1.5, 0.72), h=0.84, rot=90)
+    with B.xf((2.7, 0.55, 0), (0, 0, 90)):
+        ledger_stack(B, (-0.5, 0.1, 0.848), n=4, rot=15); open_ledger(B, (0.1, -0.05, 0.848), rot=-6); inkpot(B, (0.55, 0.2, 0.848), rot=20); inkpot(B, (0.47, 0.0, 0.848), quill=False)
+        banker_lamp(B, (-0.1, 0.22, 0.848), rot=-20, watts=40); sliding_calipers(B, (0.3, -0.2, 0.848), rot=-8, length=0.4, open_=0.12)
+    stool(B, (1.95, 0.55), h=0.64, rot=10)
+    # bench along the left wall for the waiting prisoners
+    bench(B, (-2.88, 1.2), length=2.6, rot=-90)
+    # right wall: coat rack with kepis, umbrella stand, frames; back wall: clock + pendulum case, ledger shelf; stove in the corner
+    coat_rack(B, (2.9, -0.75), rot=20, kepis=3); umbrella_stand(B, (2.9, -3.5, 0))
+    wall_clock(B, (0.2, MY1 - 0.04, 3.05), rot=180, r=0.28); pendulum_case(B, (0.2, MY1 - 0.04, 2.7), rot=180, h=1.1, w=0.22)
+    ledger_shelf(B, (-1.55, MY1 - 0.03, 2.2), length=2.1, rot=180, n=1); ledger_shelf(B, (1.3, MY1 - 0.03, 2.75), length=1.6, rot=180, n=1)
+    mouth = stove(B, (2.75, 3.4), rot=-90, pipe_to=MH - 0.1); A['smoke_src'] = (2.75, 3.4, 1.15)
+    for i, (nm, c, sz, rt, nrm) in enumerate((('n_a', (MX1 - 0.03, 1.9, 2.15), (0.5, 0.7), 90, 'R'), ('n_b', (MX1 - 0.03, 1.2, 2.3), (0.4, 0.55), 90, 'R'), ('n_c', (-0.9, MY1 - 0.03, 1.05), (0.5, 0.4), 180, 'B'))):
+        pass
+    for nm, c, sz, rt, ky in (('wc0', (MX1 - 0.04, 1.75, 2.15), (0.5, 0.68), -90, 'card_notice'), ('wc1', (MX1 - 0.04, 2.5, 2.2), (0.42, 0.56), -90, 'card_notice'), ('wc2', (0.45, MY1 - 0.04, 1.0), (0.5, 0.36), 180, 'card_portrait'),
+                              ('wc3', (-0.3, MY1 - 0.04, 1.05), (0.4, 0.5), 180, 'card_portrait2')):
+        B.box('walnut', (c[0], c[1], c[2]), ((sz[0] + 0.08, 0.04, sz[1] + 0.08) if abs(rt) == 180 else (0.04, sz[0] + 0.08, sz[1] + 0.08)))
+        STATE.setdefault('wall_cards', []).append((nm, c, sz, rt, ky))
+    # gas: gasoliers + brackets + a pipe run along the ceiling and down the walls
+    gasolier(B, (-0.35, 1.0, MH - 0.05), drop=1.45, watts=260); gasolier(B, (1.0, -1.4, MH - 0.05), drop=(0.6 if STATE.get('lamps_up') else 1.45), watts=200)
+    gas_bracket(B, (MX0 + 0.02, 3.35, 2.75), rot_z=0, watts=14); gas_bracket(B, (MX1 - 0.02, 2.3, 2.8), rot_z=180, watts=14); gas_bracket(B, (-2.6, MY1 - 0.02, 2.6), rot_z=-90, watts=14)
+    gas_pipe(B, (-0.35, 1.0, MH - 0.08), (-0.35, MY1 - 0.1, MH - 0.08)); gas_pipe(B, (-0.35, MY1 - 0.1, MH - 0.08), (-2.6, MY1 - 0.1, MH - 0.08)); gas_pipe(B, (-2.6, MY1 - 0.1, MH - 0.08), (-2.6, MY1 - 0.1, 2.55))
+    gas_pipe(B, (1.0, -1.4, MH - 0.08), (MX1 - 0.1, -1.4, MH - 0.08)); gas_pipe(B, (MX1 - 0.1, -1.4, MH - 0.08), (MX1 - 0.1, 2.3, MH - 0.08)); gas_pipe(B, (MX1 - 0.1, 2.3, MH - 0.08), (MX1 - 0.1, 2.3, 2.75))
+    # floor clutter
+    crate(B, (-2.5, -3.3, 0), size=(0.6, 0.45, 0.4), rot=12); crate(B, (-2.5, -3.3, 0.4), size=(0.5, 0.4, 0.3), rot=-8); crate(B, (-1.85, -3.55, 0), size=(0.45, 0.4, 0.35), rot=20)
+    bucket(B, (2.55, -3.45, 0)); wastebin(B, (-0.4, 3.5, 0)); stool(B, (-0.9, -0.6), h=0.55, rot=30); ledger_stack(B, (-0.9, -0.6, 0.58), n=4, rot=10)
+    # outside the window: nothing else; the sun shaft comes through it
+    P = STATE['P']; d = np.array(P['sun_dir']); d = d / np.linalg.norm(d)
+    cs = [(MX0 + 0.02, 0.0, 3.4), (MX0 + 0.02, 2.4, 3.4), (MX0 + 0.02, 2.4, 1.95), (MX0 + 0.02, 0.0, 1.95)]
+    A['shaft'] = light_shaft(B, cs, d)
+    # nested sun patch bounds for dust motes (centre, along-d length)
+    A['dust_box'] = dict(p0=np.array([MX0 + 0.1, 1.2, 2.7]), d=d, L=4.2, w=1.2)
+    A['lights'] = [area((MX0 + 0.12, 1.2, 2.68), (0.8, 2.2, 0.4), (2.2, 1.4), STATE['P']['win_w'], name='win_key')]
+    A['pendulum'] = dict(pivot=(0.2, MY1 - 0.04 - 0.14, 2.62), rot=180, L=0.85)
+    # stand points (feet, z = floor): name -> (x, y, z, facing deg, who)
+    M = A['marks']
+    M['chair'] = (0.7, 2.3, 0.5, 180, 'inspector')          # seated card (HEIGHT['seated'] 0.95): feet at z 0.5, just above the seat top (0.56 incl. cushion)
+    M['clerk'] = (1.45, 1.95, 0.0, 200, 'clerk'); M['clerk_toise'] = (1.7, 3.55, 0.0, 180, 'clerk'); M['prisoner_toise'] = (1.7, 3.1, 0.0, 180, 'prisoner')
+    for i, y in enumerate((0.15, 0.85, 1.55, 2.25)): M['bench%d' % i] = (-2.35, y, 0.0, 90, 'prisoner')
+    M['queue0'] = (-1.5, -1.0, 0.0, 90, 'prisoner'); M['queue1'] = (-0.2, -0.6, 0.0, 120, 'prisoner')
+    M['door_in'] = (2.45, -2.45, 0.0, 180, 'gendarme'); M['door_out'] = (3.0, -2.4, 0.0, 180, 'gendarme'); M['door_mid'] = (1.3, -1.5, 0.0, 200, 'prisoner')
+    M['door_x'] = (-0.4, -3.3, 0.0, 120, 'gendarme'); M['door_r'] = (-0.2, -1.6, 0.0, 120, 'prisoner')
+    M['table'] = (2.0, 0.55, 0.0, 180, 'clerk'); M['armspan'] = (-1.55, 3.45, 0.0, 180, 'prisoner'); M['tripod'] = (0.2, 0.35, 0.0, 20, 'clerk')
+    return A
+def camera_tripod(B, c, rot=0, h=1.45):
+    """period studio camera: wooden box + bellows + brass lens on a 3-leg tripod, black cloth draped over the back. lens toward local +y."""
+    x, y = c[0], c[1]
+    with B.xf((x, y, 0), (0, 0, rot)):
+        for k in range(3):
+            a = k * 120 + 90; ca, sa = math.cos(math.radians(a)), math.sin(math.radians(a))
+            top = np.array([0, 0, h - 0.05]); bot = np.array([0.5 * ca, 0.5 * sa, 0.0]); mid = (top + bot) / 2; v = top - bot; Ln = np.linalg.norm(v)
+            B.cyl('walnut', tuple(mid), 0.024, Ln, seg=8, rot=euler_to_z(v)); B.box('brass', tuple(bot + np.array([0, 0, 0.015])), (0.05, 0.05, 0.03))
+        B.cyl('brass', (0, 0, h - 0.04), 0.1, 0.06, seg=14); B.box('walnut', (0, 0, h), (0.3, 0.3, 0.04))
+        B.box('walnut', (0, -0.17, h + 0.22), (0.36, 0.26, 0.4)); B.box('iron', (0, -0.31, h + 0.22), (0.26, 0.1, 0.32)); B.box('cloth', (0, 0.0, h + 0.22), (0.28, 0.34, 0.28))
+        B.box('walnut', (0, 0.18, h + 0.22), (0.3, 0.04, 0.32)); B.cyl('brass', (0, 0.26, h + 0.22), 0.075, 0.14, axis='y', r2=0.06, seg=16); B.cyl('glass', (0, 0.335, h + 0.22), 0.055, 0.01, axis='y', seg=16); B.cyl('brass', (0, 0.35, h + 0.22), 0.08, 0.02, axis='y', seg=16)
+        rows, cols = 9, 14; V = []; F = []
+        for i in range(rows):
+            u = i / (rows - 1)
+            for j in range(cols):
+                a = math.pi * 2 * (j / (cols - 1)) - math.pi; z = h + 0.46 - 0.72 * u ** 1.3; rr = 0.18 + 0.2 * u ** 1.2 + 0.02 * math.sin(j * 2.4 + i)      # fix 1: a shorter drape, so the hem stays out of the low shots
+                V.append((-0.3 - 0.07 * u + rr * math.cos(a) * 0.35, rr * math.sin(a), z))
+        for i in range(rows - 1):
+            for j in range(cols - 1): F.append((i * cols + j, i * cols + j + 1, (i + 1) * cols + j + 1, (i + 1) * cols + j))
+        B.mesh('cloth', V, F, smooth=True)
+
+# ================================================================ presets, build, render
+HEIGHT['seated'] = 0.95
+BUILDERS = {'measure': build_measure}
+LOC_OVER = {}          # (location, light) -> overrides of the light preset
+PRESETS = {}
+def project(cam, p, w=720, h=1280):
+    from bpy_extras.object_utils import world_to_camera_view
+    v = world_to_camera_view(bpy.context.scene, cam, Vector(p)); return v.x * w, (1 - v.y) * h, v.z
+def _place_wall_cards():
+    for (nm, c, sz, rt, ky) in STATE.pop('wall_cards', []):
+        nrm = {'card_notice': 'notice', 'card_portrait': 'portrait', 'card_portrait2': 'portrait'}[ky]
+        off = Vector((0, 0.0, 0)); 
+        card_plane(nm, (c[0], c[1], c[2]), sz, rot=(0, 0, rt), key=ky, ink_t=0.0, thick=0.004)
+        ob = STATE['anim'][nm]['root']
+        d = Vector((math.sin(math.radians(rt)) * -1, math.cos(math.radians(rt)), 0)); ob.location = Vector(c) + d * 0.022
+def build(location=None, preset=None, light=None, ink=True, clear=True, fg=True):
+    pr = PRESETS.get(preset) if preset else None
+    if pr: location = location or pr['loc']; light = light or pr['light']
+    light = light or 'DAY_INT'; over = dict(LOC_OVER.get((location, light), {}))
+    if pr and pr.get('over'): over.update(pr['over'])
+    sc = new_scene(light, over); STATE['lamps_up'] = bool(pr and pr.get('lamps_up')); STATE['loc'] = location; STATE['preset'] = preset; P = STATE['P']
+    if pr:
+        dist = (Vector(pr['cam']) - Vector(pr['look'])).length; STATE['ink_t'] = float(np.clip(0.00384 * pr.get('sd', dist), 0.004, 0.018)) if ink else 0.0
+    else: STATE['ink_t'] = 0.012 if ink else 0.0
+    for k, kind in (('card_notice', 'notice'), ('card_portrait', 'portrait'), ('card_portrait2', 'portrait2'), ('card_bertillon', 'bertillon')):
+        STATE['cardpaths'][k] = TX.card(k, 'notice', 7) if kind == 'notice' else (TX.frame_art(k, 11 if kind == 'portrait' else 12) if kind.startswith('portrait') else TX.card(k, 'bertillon', 7))
+    B = Batch(); B.ceil = Batch(); B.out = Batch(); A = BUILDERS[location](B); A['location'] = location; A['light'] = light; A['preset'] = preset
+    B.finalize(location); STATE['ceil_objs'] = B.ceil.finalize(location + '_ceil')
+    for o in B.out.finalize(location + '_out'): o.visible_shadow = False
+    if pr and pr.get('cutaway'):
+        for o in STATE['ceil_objs']: o.visible_camera = False
+    _place_wall_cards(); sky_dome(); sun()
+    if hasattr(sys.modules[__name__], '_init_hooks'): _init_hooks(A)
+    if pr and fg and pr.get('fg'): pr['fg'](A)
+    if pr:
+        cam = camera(pr['cam'], pr['look'], pr.get('lens', 22.0)); A['cam'] = dict(loc=tuple(pr['cam']), look=tuple(pr['look']), lens=pr.get('lens', 22.0))
+        if 'state' in pr: apply_state(A, pr['state'])
+    return A
+def setup_render(sc, mode='final', samples=None):
+    r = sc.render; r.image_settings.file_format = 'PNG'; r.threads_mode = 'FIXED'; r.threads = 4
+    if mode == 'draft': r.resolution_x, r.resolution_y, r.resolution_percentage = 360, 640, 100; n = samples or 24
+    else: r.resolution_x, r.resolution_y, r.resolution_percentage = 720, 1280, 100; n = samples or 80
+    sc.cycles.samples = n; sc.cycles.use_denoising = True; sc.cycles.denoiser = 'OPENIMAGEDENOISE'; sc.cycles.preview_samples = 8
+    STATE['scale'] = r.resolution_x / 720.0
+def _gblur(a, rad):
+    """separable gaussian blur (numpy, FFT-free): a is HxW or HxWxC float."""
+    rad = max(float(rad), 0.3); k = int(rad * 3) + 1; x = np.arange(-k, k + 1); g = np.exp(-x * x / (2 * rad * rad)); g /= g.sum()
+    def conv(arr, axis):
+        p = np.pad(arr, [(k, k) if i == axis else (0, 0) for i in range(arr.ndim)], mode='edge'); out = np.zeros_like(arr, dtype=np.float32)
+        for i, w in enumerate(g): out += w * np.take(p, np.arange(i, i + arr.shape[axis]), axis=axis)
+        return out
+    return conv(conv(a.astype(np.float32), 0), 1)
+def grade(path, sat=1.05, bloom=0.5, scale=None):
+    """final grade: bloom halo (12-24 px at 720 wide) around the real emitters only (min channel >= 252: lamp cores / skylights; the near-white heads
+    are 246 and never bloom), then a saturation boost. Nothing else (no grain, no vignette)."""
+    scale = scale or STATE.get('scale', 1.0)
+    im = np.asarray(Image.open(path).convert('RGB'), dtype=np.float32) / 255
+    if bloom:
+        m = (im.min(-1) >= 252 / 255).astype(np.float32)
+        if m.sum() > 4:
+            from PIL import ImageFilter
+            ring = np.asarray(Image.fromarray((m * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(7 if scale < 1 else 13)), dtype=np.float32) / 255 - m
+            ringc = _gblur(im * ring[..., None], 6 * scale) / (_gblur(ring, 6 * scale)[..., None] + 1e-4); ringc = ringc / (ringc.max(-1, keepdims=True) + 1e-4)
+            core = _gblur(m, 7 * scale); wide = _gblur(m, 16 * scale); halo = (0.6 * core + 0.5 * wide)[..., None] * ringc
+            im = np.clip(im + bloom * halo, 0, 1)
+    mx = im.max(-1, keepdims=True); im = np.clip(mx - (mx - im) * sat, 0, 1)
+    Image.fromarray((im * 255 + 0.5).astype(np.uint8)).save(path)
+def render(path, mode='final', samples=None, do_grade=True):
+    sc = bpy.context.scene; setup_render(sc, mode, samples); sc.render.filepath = path; t = time.time(); c0 = time.process_time()
+    bpy.ops.render.render(write_still=True); dt = time.time() - t
+    if do_grade: grade(path)
+    return dt
+def stage_placeholders(A, cam=None, marks=None, only=None):
+    """flat stand-in cast cards at the stand points, turned to the camera: near-white head #fef7f6 with a plum ring, a coloured body."""
+    cam = cam or bpy.context.scene.camera; cl = cam.location; out = {}
+    for nm, (x, y, z, fz, who) in (marks or A['marks']).items():
+        if only and nm not in only: continue
+        key = 'seated' if nm == 'chair' else who; H = HEIGHT[key]; hd = H * 0.3; hc = H - hd * 0.52; bw = H * 0.36
+        B = Batch(); seg = 24; a = np.linspace(0, 2 * math.pi, seg, endpoint=False)
+        def disc(mat, cx, cz, rx, rz_, yy):
+            v = [(cx, yy, cz)] + [(cx + rx * math.cos(t), yy, cz + rz_ * math.sin(t)) for t in a]; B.mesh(mat, v, [(0, 1 + i, 1 + (i + 1) % seg) for i in range(seg)], smooth=False)
+        disc('ph_ring', 0, hc, hd * 0.5 * 1.06, hd * 0.5 * 1.06, 0.0); disc('ph_head', 0, hc, hd * 0.5, hd * 0.5, 0.003)
+        B.mesh('ph_body_' + key, [(-bw / 2, 0.001, 0), (bw / 2, 0.001, 0), (bw * 0.36, 0.001, H - hd * 1.0), (-bw * 0.36, 0.001, H - hd * 1.0)], [(0, 1, 2, 3)], smooth=False)
+        ob = B.finalize('ph_' + nm, loc=(x, y, z), ink=False)
+        for o in ob:
+            o.rotation_euler = (0, 0, math.atan2(-(cl.x - x), (cl.y - y)))
+            if o.name.endswith('ph_head') or o.name.endswith('ph_ring'): o.visible_shadow = False
+        out[nm] = ob
+    return out
+def head_ring_luma(A, img_path, cam=None, marks=None, only=None, W=720, Hh=1280):
+    """median luma (0-255) of the background ring around each placeholder head (upper 240 deg of an annulus 1.2-1.8 R) + the head centre / chin pixel."""
+    cam = cam or bpy.context.scene.camera; im = np.asarray(Image.open(img_path).convert('L').resize((W, Hh)), dtype=float); res = {}
+    yy, xx = np.mgrid[0:Hh, 0:W]
+    for nm, (x, y, z, fz, who) in (marks or A['marks']).items():
+        if only and nm not in only: continue
+        key = 'seated' if nm == 'chair' else who; Hh_ = HEIGHT[key]; hd = Hh_ * 0.3; hc = z + Hh_ - hd * 0.52
+        px, py, dz = project(cam, (x, y, hc), W, Hh)
+        if dz <= 0: continue
+        R = hd * 0.5 * 782.2 * (W / 720) / dz * (1280 / Hh if False else 1)
+        cx, cy = px, py; rr = np.hypot(xx - cx, yy - cy); ang = np.degrees(np.arctan2(-(yy - cy), xx - cx))
+        sel = (rr > 1.2 * R) & (rr < 1.8 * R) & (ang > -20) & (ang < 200)
+        if sel.sum() < 30: continue
+        chin = py + R
+        res[nm] = dict(luma=float(np.median(im[sel])), cx=px, cy=py, R=R, chin=chin, in_frame=bool(0 <= px < W and 0 <= py < Hh))
+    return res
+
+
+# ================================================================ B. RECORDS OFFICE
+RX = 1.25            # half aisle width (cabinet faces at x = +-1.25)
+RY0, RY1, RH = -4.0, 14.0, 6.8
+def cab_world(origin, rot_z, xl, yl, zl):
+    c, s = math.cos(math.radians(rot_z)), math.sin(math.radians(rot_z)); return (origin[0] + c * xl - s * yl, origin[1] + s * xl + c * yl, zl)
+def build_records(B):
+    A = {'marks': {}}; r = random.Random(4)
+    x0, x1 = -1.9, 1.9; CYa, CYb = -3.5, 13.5                                   # cabinet run along y
+    # the shell: floor, ceiling with skylight openings, side walls above the cabinets, end walls (end wall has a window with rooftops)
+    sk = [(1.2, 3.0), (5.0, 6.8), (8.8, 10.6)]
+    B.box('floor_dk', (0, (RY0 + RY1) / 2, -0.1), (3.8 + 0.6, RY1 - RY0 + 0.6, 0.2))
+    ys = [RY0 - 0.3] + [v for g in sk for v in g] + [RY1 + 0.3]
+    for i in range(0, len(ys), 2): B.ceil.box('ceiling', (0, (ys[i] + ys[i + 1]) / 2, RH + 0.1), (3.8 + 0.6, ys[i + 1] - ys[i], 0.2))
+    for (a, b) in sk:                                                              # side strips beside the skylight openings (opening x -1.0 .. 1.0)
+        for sx in (-1, 1): B.ceil.box('ceiling', (sx * 1.45, (a + b) / 2, RH + 0.1), (0.9, b - a, 0.2))
+        B.ceil.box('glow_frost', (0, (a + b) / 2, RH + 0.55), (2.0, b - a, 0.02))                  # frosted glazing (glows), above the ceiling
+        for k in range(3): B.ceil.box('beam', (-0.7 + k * 0.7, (a + b) / 2, RH + 0.5), (0.05, b - a, 0.06))
+        for k in range(4): B.ceil.box('beam', (0, a + (b - a) * (k + 0.5) / 4 if k else a + 0.02, RH + 0.5), (2.0, 0.05, 0.06))
+    for sx in (-1, 1):
+        B.box('wall_ochre', (sx * (x1 + 0.15), (RY0 + RY1) / 2, RH / 2), (0.3, RY1 - RY0 + 0.6, RH)); B.box('frieze', (sx * (x1 - 0.005), (RY0 + RY1) / 2, 5.55), (0.02, RY1 - RY0, 0.42))
+    # end wall at y = RY1 with a window (rooftops outside)
+    wy = RY1; wh = [(-0.95, 0.95, 1.7, 5.3)]
+    wall_box(B, 'wall_dk', 'y', wy, x0, x1, 0, RH, wh, out=+1, t=0.3)
+    B.box('wain', (0, wy - 0.025, 0.65), (3.8, 0.05, 1.3)); B.box('walnut', (0, wy - 0.04, 1.33), (3.8, 0.08, 0.06))
+    B.box('walnut', (0, wy - 0.07, 1.65), (2.3, 0.2, 0.1)); B.box('walnut', (0, wy - 0.05, 5.35), (2.3, 0.14, 0.1))
+    for sx in (-1, 1): B.box('walnut', (sx * 1.0, wy - 0.05, 3.5), (0.1, 0.14, 3.7))
+    B.box('walnut', (0, wy - 0.04, 3.5), (0.06, 0.06, 3.7))
+    for k in range(7): B.cyl('iron', (-0.85 + k * 0.283, wy - 0.06, 3.5), 0.02, 3.7, seg=8)
+    for zz in (2.7, 3.7, 4.6): B.box('iron', (0, wy - 0.06, zz), (1.9, 0.03, 0.03))
+    ob = getattr(B, 'out', B)
+    rr = random.Random(5)
+    for i in range(7):
+        xx = -9 + i * 3.0 + rr.uniform(-0.6, 0.6); w = rr.uniform(6, 9)
+        mansard(ob, (xx * 1.6, wy + 13.0 + rr.uniform(0, 8), -10.0), w, rr.uniform(6, 9), rr.uniform(12, 17), h_roof=rr.uniform(2.2, 3.0), rot=0, chimneys=2, seed=20 + i, dormers=False)
+    # card cabinets, both sides (local x along the run, y toward the aisle)
+    reserve_r = [(26, 8), (30, 11), (21, 13), (34, 6), (24, 16), (29, 4), (38, 12), (18, 9)]
+    reserve_l = [(14, 10), (20, 7), (27, 14), (32, 9), (36, 5), (9, 12)]
+    cabR = cabinet_wall(B, (x1 - 0.0, CYa, 0), 17.0, 4.4, depth=0.55, rot_z=90, seed=5, reserve=reserve_r)
+    cabL = cabinet_wall(B, (-x1, CYb, 0), 17.0, 4.4, depth=0.55, rot_z=-90, seed=4, reserve=reserve_l)
+    # (the carcass front plane is at local y = depth = 0.55 from the origin at x = +-1.9, i.e. world x = +-1.35; aisle face)
+    A['cab'] = dict(R=((x1, CYa, 0), 90, cabR), L=((-x1, CYb, 0), -90, cabL))
+    OP_R = [0.9, 0.35, 1.0, 0.6, 0.2, 0.8, 0.5, 0.3]; OP_L = [0.7, 1.0, 0.4, 0.85, 0.25, 0.6]
+    for i, (cc, rr) in enumerate(reserve_r): drawer_assembly('p%d' % i, cab_world((x1, CYa, 0), 90, (cc + 0.5) * 0.3, 0.55, 0.2 + (rr + 0.5) * 0.2), 90, w=0.278, h=0.18, depth=0.5, travel=0.42, open_=OP_R[i], cards=12, seed=i)
+    for i, (cc, rr) in enumerate(reserve_l): drawer_assembly('q%d' % i, cab_world((-x1, CYb, 0), -90, (cc + 0.5) * 0.3, 0.55, 0.2 + (rr + 0.5) * 0.2), -90, w=0.278, h=0.18, depth=0.5, travel=0.42, open_=OP_L[i], cards=12, seed=20 + i)
+    # upper wall zone above the cabinets is the ochre wall (already); gas brackets on the cabinet faces + a pipe along the cornice
+    for yy in (1.8, 6.4, 11.0):
+        gas_bracket(B, (-x1 + 0.55 + 0.0 + 0.0, yy, 3.5), rot_z=0, watts=16); gas_bracket(B, (x1 - 0.55, yy + 2.3, 3.5), rot_z=180, watts=16)
+    gas_pipe(B, (-1.3, 0.0, 4.75), (-1.3, 13.0, 4.75)); gas_pipe(B, (1.3, 0.0, 4.75), (1.3, 13.0, 4.75))
+    # navy runner with red border
+    B.box('runner', (0.0, 5.0, 0.008), (1.4, 18.0, 0.016))
+    # rolling ladder on the right run + rail
+    B.box('iron', (1.42, 6.0, 4.78), (0.06, 12.0, 0.05)); rolling_ladder(B, (0.75, 7.6, 0.0), (1.34, 7.6, 4.55), width=0.5, rungs=16)
+    # clerk's desk (left, foreground), stool, lamp, ledgers, calipers, ink; cards that fan out (animated)
+    table(B, (-0.8, 2.6), size=(1.7, 0.78), h=0.9, rot=90, mat='walnut', top='baize')
+    with B.xf((-0.8, 2.6, 0), (0, 0, 90)):
+        banker_lamp(B, (0.62, 0.2, 0.912), rot=180, watts=70); ledger_stack(B, (-0.62, 0.15, 0.912), n=5, rot=-10); open_ledger(B, (0.1, -0.25, 0.912), rot=4); inkpot(B, (0.3, 0.25, 0.912))
+        spreading_calipers(B, (-0.25, 0.22, 0.912), rot=160, span=0.22, leg=0.3)
+    stool(B, (-0.25, 2.5), h=0.68, rot=20)
+    A['fan'] = dict(pos=cab_world((-0.8, 2.6, 0), 90, -0.28, -0.12, 0.915), rot=90 + 10); cards_fan_objects('fan', A['fan']['pos'], n=9, w=0.2, d=0.15, rot=A['fan']['rot'] + 0, spread=75)
+    # second desk, boxes on the floor, a card truck
+    table(B, (0.9, 8.6), size=(1.3, 0.7), h=0.85, rot=-10, mat='walnut', top='baize')
+    with B.xf((0.9, 8.6, 0), (0, 0, -10)): ledger_stack(B, (0.2, 0, 0.862), n=5, rot=5); banker_lamp(B, (-0.45, 0.2, 0.862), rot=0, watts=60); fan_cards_static(B, (-0.1, -0.1, 0.862), n=6, spread=50, r=0.2)
+    for (bx, by, rt) in ((-0.85, 6.3, 8), (-0.9, 6.4, -4), (1.0, 3.6, 20), (-0.9, 10.2, 0)):
+        crate(B, (bx, by, 0), size=(0.46, 0.3, 0.22), rot=rt); crate(B, (bx, by, 0.22), size=(0.42, 0.28, 0.2), rot=rt + 6)
+    crate(B, (-0.88, 6.35, 0.42), size=(0.4, 0.28, 0.2), rot=-10)
+    # shaft, lights: skylights as the key (sun through them), the window glow
+    P = STATE['P']; d = np.array(P['sun_dir']); d = d / np.linalg.norm(d); A['shafts'] = []
+    for (a, b) in sk:
+        cs = [(-1.0, a, RH), (1.0, a, RH), (1.0, b, RH), (-1.0, b, RH)]; A['shafts'].append(light_shaft(B, cs, d))
+    A['dust_box'] = dict(p0=np.array([-0.2, 6.0, RH - 0.1]), d=d, L=6.0, w=1.6)
+    A['lights'] = [area((0, 6.0, RH + 0.3), (0, 6.0, 0.0), (16.0, 2.0), STATE['P']['win_w'] * 0.5, color=(0.95, 0.92, 1.0), name='skylights', long_axis=(0, 1, 0)),
+                   area((-1.0, 6.0, 3.2), (1.9, 6.0, 2.4), (17.0, 1.0), STATE['P'].get('strip_w', 140), color=(1.0, 0.9, 0.62), name='strip_L', long_axis=(0, 1, 0)),
+                   area((1.0, 6.0, 3.2), (-1.9, 6.0, 2.4), (17.0, 1.0), STATE['P'].get('strip_w', 140), color=(1.0, 0.9, 0.62), name='strip_R', long_axis=(0, 1, 0))]
+    M = A['marks']
+    M['desk_clerk'] = (-0.9, 3.4, 0, 200, 'clerk'); M['desk_stand'] = (0.3, 3.8, 0, 160, 'inspector'); M['aisle0'] = (0.2, 0.9, 0, 180, 'clerk'); M['aisle1'] = (-0.9, 5.4, 0, 200, 'prisoner'); M['aisle2'] = (0.5, 5.4, 0, 190, 'gendarme')
+    M['ladder_foot'] = (0.35, 7.3, 0, 180, 'clerk'); M['ladder_up'] = (1.0, 7.6, 1.8, 180, 'clerk'); M['aisle_far'] = (0.0, 9.5, 0, 180, 'prefect'); M['wall_look'] = (0.3, 3.0, 0, 180, 'clerk'); M['low_a'] = (0.45, 2.4, 0, 180, 'clerk')
+    return A
+BUILDERS['records'] = build_records
+LOC_OVER[('records', 'DAY_INT')] = dict(sun_dir=(0.42, 0.30, -0.85), win_w=100, strip_w=180, lamp_k=0.45, shade=(0.09, 0.115, 0.37), tint=(0.065, 0.088, 0.25))
+
+# ================================================================ C. REVEAL (inside the records office): big drawer -> box -> card
+def build_reveal(B):
+    A = {'marks': {}}
+    # a bay of the records office: cabinet wall at y = 0 (face), floor, side walls, ceiling, window glow; the work area is in front (y > 0)
+    B.box('floor_dk', (0, 2.0, -0.1), (8.0, 8.0, 0.2)); B.ceil.box('ceiling', (0, 2.0, 4.1), (8.0, 8.0, 0.2))
+    B.box('wall_ochre', (0, -0.8, 2.0), (8.0, 0.3, 4.0)); B.box('wall_ochre', (-3.2, 2.0, 2.0), (0.3, 8.0, 4.0)); B.box('wall_ochre', (3.2, 2.0, 2.0), (0.3, 8.0, 4.0)); B.box('wall_dk', (0, 6.0, 2.0), (8.0, 0.3, 4.0))
+    B.box('runner', (0.3, 2.6, 0.008), (1.4, 4.4, 0.016))
+    for xx in (-2.2, 0.2, 2.6): B.ceil.box('beam', (xx, 2.0, 3.95), (0.22, 8.0, 0.24))
+    # cabinet wall with the 3x3 cell block reserved for the big drawer
+    big_cols = (7, 8, 9); big_rows = (4, 5); res = [(c, r_) for c in big_cols for r_ in big_rows]
+    cab = cabinet_wall(B, (-2.4, -0.55, 0), 4.8, 3.2, depth=0.55, rot_z=0, seed=7, reserve=res)
+    A['cab'] = cab
+    cx = -2.4 + (8.5) * 0.3 + 0.15 - 0.15; cz = 0.2 + 5.5 * 0.2 + 0.0                      # centre of the 3x3 block
+    cx = -2.4 + (7 * 0.3 + 3 * 0.3 / 2); cz = 0.2 + (4 * 0.2 + 2 * 0.2 / 2)
+    A['big_front'] = (cx, 0.0, cz)
+    drawer_assembly('big', (cx, 0.0, cz), 0, w=0.9, h=0.4, depth=0.95, travel=0.78, open_=0.0, cards=34, seed=9, cards_to=-0.52)
+    # the smaller box in the big drawer + the hero card (the card is a child of the box root so it travels with the drawer)
+    slide = STATE['anim']['big']['slide']
+    Br = Batch(2); Br.box('leather', (-0.18, -0.2, -0.175 + 0.04), (0.38, 0.28, 0.08)); Br.box('navy', (-0.17, -0.2, -0.175 + 0.075), (0.36, 0.27, 0.014)); Br.finalize('riser', parent=slide, ink_t=STATE['ink_t'] * 0.8)   # a ledger block lifts the box flush with the drawer rim
+    card_box('box', (-0.18, -0.2, -0.175 + 0.08), rot_z=-4, w=0.34, d=0.24, h=0.28, lid=0.0, cards=10, seed=5, parent=slide, mat='box_ochre', lining='walnut')
+    card_box('box2', (0.1, -0.3, -0.175), rot_z=6, w=0.28, d=0.22, h=0.17, lid=0.0, cards=8, seed=6, parent=slide)
+    Bc = Batch(2); sliding_calipers(Bc, (0.34, -0.14, -0.178), rot=78, length=0.42, open_=0.13); Bc.finalize('dcal', parent=slide, ink_t=STATE['ink_t'] * 0.7)
+    need = STATE['cardpaths']; card_plane('hero', (0, 0, 0), (0.30, 0.20), rot=(0, 0, 0), key='card_bertillon', parent=STATE['anim']['box']['root'], ink_t=STATE['ink_t'] * 0.5)
+    STATE['hero_z0'] = 0.28 - 0.05; STATE['anim']['hero']['root'].location = (0.0, 0.0, STATE['hero_z0'])         # standing in the box, top just above the rim
+    # a lamp table with the calipers; calipers also hang on the cabinet face beside the drawer; a stool
+    table(B, (-1.35, 1.3), size=(0.7, 0.5), h=0.78, rot=15, top='baize')
+    with B.xf((-1.35, 1.3, 0), (0, 0, 15)):
+        sliding_calipers(B, (-0.05, 0.0, 0.788), rot=-12, length=0.5, open_=0.17); spreading_calipers(B, (0.2, 0.05, 0.788), rot=-60, span=0.25, leg=0.3); inkpot(B, (-0.25, 0.14, 0.788), rot=10)
+        banker_lamp(B, (0.18, -0.15, 0.788), rot=200, watts=60)
+    lampw = B.wpt((0.25, -0.15, 1.12)) if False else None
+    stool(B, (1.6, 1.4), h=0.62, rot=-10); ledger_stack(B, (1.6, 1.4, 0.65), n=4, rot=20, mats=('navy', 'baize', 'navy', 'oxblood'))
+    with B.xf((cx + 0.78, 0.0, 1.55), (0, 0, 0)):                                       # hanging calipers on pegs
+        B.box('walnut', (0, 0.03, 0), (0.62, 0.04, 0.5)); B.box('baize', (0, 0.055, 0), (0.54, 0.012, 0.42))
+        sliding_calipers(B, (0, 0.075, -0.05), rot=0, length=0.5, open_=0.18, tilt=(90, 0, 0)); spreading_calipers(B, (-0.12, 0.075, 0.15), rot=0, span=0.18, leg=0.2, tilt=(90, 0, 0))
+    gas_bracket(B, (-1.7, 0.02, 2.4), rot_z=90, watts=20, arm=0.3); gas_bracket(B, (1.9, 0.02, 2.5), rot_z=90, watts=20, arm=0.3)
+    kepi(B, (1.45, 1.4, 0.65), rot=60)
+    # lights: warm window key from the left (sun) + the lamp light on the card (spot) + strip fill
+    A['lights'] = [area((-3.0, 2.0, 2.6), (0.0, 1.0, 1.2), (1.6, 1.6), STATE['P']['win_w'] * 0.5, name='win_key'),
+                   point((-1.2, 1.15, 1.45), color=(1.0, 0.8, 0.5), watts=30, radius=0.06, name='card_lamp'),
+                   spot((0.2, 1.05, 1.95), (-0.03, 0.58, 1.25), watts=STATE['P'].get('box_spot', 160), angle=34, blend=0.7, color=(1.0, 0.78, 0.48), name='box_lamp', radius=0.05)]
+    A['hero_ref'] = (cx, 0.0 + 0.78 - 0.2, cz - 0.07)
+    M = A['marks']; M['clerk'] = (-0.95, 1.55, 0, 160, 'clerk'); M['inspector'] = (1.15, 1.35, 0, 200, 'inspector'); M['pair_l'] = (-0.2, 2.0, 0, 180, 'clerk'); M['pair_r'] = (0.9, 2.1, 0, 180, 'prisoner'); M['drawer_r'] = (-0.9, 0.9, 0, 160, 'clerk'); M['drawer_l'] = (0.9, 0.9, 0, 200, 'inspector')
+    A['dust_box'] = dict(p0=np.array([-2.9, 1.8, 2.5]), d=np.array([0.8, 0.1, -0.55]), L=3.5, w=1.0)
+    return A
+BUILDERS['reveal'] = build_reveal
+LOC_OVER[('reveal', 'DAY_INT')] = dict(sun_dir=(0.8, 0.15, -0.5), win_w=600)
+
+# ================================================================ D. PARIS STREET (dusk)
+def build_street(B):
+    A = {'marks': {}}; r = random.Random(11); L0, L1 = -14.0, 60.0
+    B.box('cobble', (0, (L0 + L1) / 2, -0.06), (8.0, L1 - L0, 0.12))                                       # carriageway
+    for sx in (-1, 1):
+        B.box('stone_dk', (sx * 5.0, (L0 + L1) / 2, 0.0), (2.0, L1 - L0, 0.28)); B.box('stone', (sx * 4.05, (L0 + L1) / 2, 0.0), (0.18, L1 - L0, 0.3))   # pavement + kerb
+    # left row of mansard blocks, facing +x; right row facing -x with the police station among them
+    y = L0 - 1.0; i = 0
+    while y < L1 - 6:
+        w = r.uniform(8, 11); hw = r.uniform(12.5, 15.5); mansard(B, (-6.0 - 5.0, y + w / 2, 0), w, 10.0, hw, h_roof=2.6, rot=90, chimneys=2, seed=30 + i, stone='stone' if i % 2 else 'stone_dk', lit=0.4)
+        shop(B, (-6.0, y + w / 2), w, rot=90, seed=i); y += w + 0.2; i += 1
+    y = L0 - 1.0; i = 0
+    while y < L1 - 6:
+        w = r.uniform(8, 11)
+        if 3.0 <= y + w / 2 <= 17.0 and not A.get('station'):
+            w = 14.0; y = 4.0; station(B, (6.0, y + w / 2), w, rot=-90); A['station'] = (6.0, y + w / 2); y += w + 0.2; i += 1; continue
+        hw = r.uniform(12.5, 15.5); mansard(B, (6.0 + 5.0, y + w / 2, 0), w, 10.0, hw, h_roof=2.6, rot=-90, chimneys=2, seed=50 + i, stone='stone_dk' if i % 2 else 'stone', lit=0.4)
+        shop(B, (6.0, y + w / 2), w, rot=-90, seed=i + 7); y += w + 0.2; i += 1
+    mansard(B, (0, L1 + 5.0, 0), 22.0, 10.0, 15.0, h_roof=2.6, rot=0, chimneys=3, seed=70, lit=0.4)           # closing block at the end of the street
+    for yy in (-2.0, 6.0, 14.0, 24.0, 36.0, 48.0):
+        street_lamp(B, (-4.3, yy, 0.0), h=4.2, rot=0); street_lamp(B, (4.3, yy + 3.0, 0.0), h=4.2, rot=0)
+    police_wagon(B, (3.0, 8.5), rot=0); A['wagon'] = (3.0, 8.5)
+    # barrels, a cart, bollards, a poster column
+    for (bx, by) in ((-4.6, 3.0), (-4.7, 3.5), (4.7, -3.0)): B.cyl('walnut', (bx, by, 0.55), 0.3, 0.8, seg=12); B.cyl('iron', (bx, by, 0.35), 0.31, 0.04, seg=12); B.cyl('iron', (bx, by, 0.75), 0.31, 0.04, seg=12)
+    B.cyl('baize', (-4.5, 9.0, 1.2), 0.45, 2.4, seg=14); B.cyl('iron', (-4.5, 9.0, 2.45), 0.5, 0.1, r2=0.3, seg=14); B.sphere('iron', (-4.5, 9.0, 2.6), 0.18)             # advertising column (blank)
+    puddles(B, [(-1.0, 2.0, 1.2, 0.8, 20), (1.2, 5.5, 1.6, 0.9, -10), (-0.2, 11.0, 1.4, 0.9, 5), (2.2, 14.0, 1.8, 1.0, 30), (-2.0, 17.0, 1.5, 0.8, 0), (0.0, 25.0, 2.0, 1.1, 10), (-1.8, 7.5, 0.9, 0.6, 40)])
+    M = A['marks']
+    M['wagon_door'] = (3.0, 6.3, 0, 180, 'gendarme'); M['wagon_step'] = (2.2, 6.0, 0, 200, 'prisoner'); M['steps_top'] = (5.5, 7.0, 0.7, 200, 'inspector'); M['steps_low'] = (4.9, 8.0, 0.3, 200, 'gendarme')
+    M['street_a'] = (-1.0, 3.0, 0, 20, 'clerk'); M['street_b'] = (0.4, 4.0, 0, 20, 'prisoner'); M['street_c'] = (-2.2, 5.0, 0, 20, 'gendarme'); M['wagon_side'] = (1.4, 9.5, 0, 90, 'gendarme')
+    A['smoke_src'] = (0, 0, 0); A['chimneys'] = []
+    A['lights'] = [area((-4.0, -8.0, 14.0), (0, 14.0, 0.5), (30.0, 12.0), STATE['P']['win_w'] * 1.0, color=(0.75, 0.78, 1.0), name='sky_fill', long_axis=(1, 0, 0))]
+    return A
+def shop(B, c, w, rot=0, seed=0):
+    """ground-floor shopfront: dark glass, brass frame, striped awning (no lettering), blank sign band; local +y is the street side after rot."""
+    r = random.Random(seed)
+    with B.xf((c[0], c[1], 0), (0, 0, rot - 90 + 180 if False else rot)):
+        pass
+    cx, cy = c; nx = -1 if rot == 90 else 1                    # street normal in x for the left row (-1 is toward -x?)
+    outn = 1 if rot == 90 else -1                                # facade faces +x for the left row, -x for the right row
+    for k in range(int(w // 3.4)):
+        yy = cy - w / 2 + 1.7 + k * 3.4; xf = cx + outn * 0.02
+        B.box('glow_win' if r.random() < 0.55 else 'dark', (xf, yy, 1.3), (0.06, 2.3, 2.1)); B.box('brass', (xf + outn * 0.01, yy, 2.45), (0.1, 2.5, 0.12)); B.box('brass', (xf + outn * 0.01, yy, 0.18), (0.1, 2.5, 0.14))
+        B.box('paint_blk' if False else 'cream', (xf + outn * 0.12, yy, 3.15), (0.08, 2.3, 0.6), tint=0.85)                 # blank sign band
+        col = ('oxblood', 'baize', 'navy')[k % 3]
+        B.box(col, (cx + outn * 0.55, yy, 2.75), (1.0, 2.5, 0.08), rot=(0, -18 * outn, 0)); B.box('cream', (cx + outn * 0.55, yy, 2.76), (0.9, 0.5, 0.082), rot=(0, -18 * outn, 0), tint=0.9)
+def station(B, c, w, rot=-90):
+    """police station facade (faces -x): stone body, arched door with steps and lanterns, a blank sign board over the door (no text), balconies, mansard roof."""
+    cx, cy = c; h = 13.5; d = 10.0
+    mansard(B, (cx + 5.0, cy, 0), w, d, h, h_roof=2.6, rot=-90, chimneys=3, seed=61, stone='stone', lit=0.5)
+    fx = cx - 0.04
+    B.box('stone_dk', (fx - 0.12, cy, 3.0), (0.3, 4.6, 6.0))                                      # portal block
+    B.box('dark', (fx - 0.3, cy, 1.5), (0.1, 1.9, 3.0)); B.box('glow_door', (fx - 0.34, cy, 1.4), (0.05, 1.5, 2.6)); B.box('walnut', (fx - 0.28, cy, 1.5), (0.14, 0.06, 3.0))   # double door with glow
+    B.box('stone', (fx - 0.15, cy, 3.35), (0.3, 2.6, 0.4)); B.box('stone_dk', (fx - 0.2, cy, 3.1), (0.1, 2.2, 0.1))
+    for k in range(4): B.box('stone', (fx - 0.55 - k * 0.38, cy, 0.14 * (4 - k)), (0.38, 3.6 + 0.3 * k, 0.28 * (4 - k)))                    # steps
+    B.box('cream', (fx - 0.45, cy, 4.7), (0.12, 3.4, 0.95), tint=0.88); B.box('walnut', (fx - 0.5, cy, 4.7), (0.06, 3.6, 1.1)); B.box('walnut', (fx - 0.43, cy, 5.3), (0.14, 3.7, 0.1))   # blank sign board
+    for sy in (-1, 1):
+        B.cyl('iron', (fx - 0.5, cy + sy * 1.7, 3.2), 0.03, 0.9, axis='x', seg=6); B.sphere('glow_gas', (fx - 1.0, cy + sy * 1.7, 3.25), 0.17, scale=(1, 1, 1.2)); B.cyl('iron', (fx - 1.0, cy + sy * 1.7, 3.5), 0.12, 0.1, r2=0.04, seg=8)
+        point((fx - 1.0, cy + sy * 1.7, 3.25), watts=120, radius=0.15, name='station_lantern')
+    B.box('iron', (fx - 0.5, cy, 6.6), (0.9, 2.6, 0.06)); B.box('iron', (fx - 0.95, cy, 7.1), (0.06, 2.6, 1.0))                                              # balcony over the door
+BUILDERS['street'] = build_street
+LOC_OVER[('street', 'DUSK_EXT')] = dict(sun_dir=(-0.62, 0.30, -0.26), win_w=260)
+LOC_OVER[('street', 'DAY_INT')] = dict(sun_dir=(-0.62, 0.30, -0.26), win_w=260)
+
+# ================================================================ life hooks (every setter takes frame=None -> set now, frame=N -> keyframe)
+try: bpy.context.preferences.edit.keyframe_new_interpolation_type = 'LINEAR'
+except Exception: pass
+def _fcs(idb):
+    ad = getattr(idb, 'animation_data', None)
+    if not ad or not ad.action: return []
+    act = ad.action
+    try: return list(act.fcurves)
+    except Exception: pass
+    out = []
+    try:
+        for ly in act.layers:
+            for st in ly.strips:
+                for cb in st.channelbags: out += list(cb.fcurves)
+    except Exception: pass
+    return out
+def _key(idb, path, frame, interp='LINEAR', index=-1):
+    idb.keyframe_insert(path, frame=frame, index=index) if index >= 0 else idb.keyframe_insert(path, frame=frame)
+    for fc in _fcs(idb):
+        if fc.data_path.endswith(path.split('.')[-1]) or fc.data_path == path:
+            for kp in fc.keyframe_points:
+                if int(round(kp.co.x)) == int(frame): kp.interpolation = interp
+def _fr(frame): return float(bpy.context.scene.frame_current if frame is None else frame)
+def _tsec(frame): return (_fr(frame) - 1.0) / 30.0
+def _set(ob, path, val, frame=None, interp='LINEAR'):
+    setattr(ob, path, val)
+    if frame is not None: _key(ob, path, frame, interp)
+def clear_keys():
+    """drop every hook key (objects and light / glow sockets); the poses stay where they are."""
+    for ob in bpy.data.objects:
+        if ob.animation_data: ob.animation_data_clear()
+    for l in bpy.data.lights:
+        if l.animation_data: l.animation_data_clear()
+    for m in bpy.data.materials:
+        if m.node_tree and m.node_tree.animation_data: m.node_tree.animation_data_clear()
+def _init_hooks(A):
+    L = STATE['life']; B = Batch(3); loc = STATE['loc']
+    if 'pendulum' in A:
+        pv = A['pendulum']; root = bpy.data.objects.new('pend_root', None); bpy.context.scene.collection.objects.link(root); root.location = pv['pivot']
+        B.box('iron', (0, 0, -pv['L'] / 2), (0.012, 0.01, pv['L'])); B.cyl('brass', (0, 0, -pv['L'] - 0.03), 0.075, 0.025, axis='y', seg=18); B.sphere('brass', (0, 0, 0.0), 0.016)
+        B.finalize('pend', parent=root, ink_t=STATE['ink_t'] * 0.5); L['pendulum'] = root; root.rotation_euler = (0, 0, 0)
+    srcs = [A['smoke_src']] if A.get('smoke_src') and loc == 'measure' else []
+    if loc == 'street': srcs = [c for c in STATE['chims'] if 0 < c[1] < 34 and abs(c[0]) > 4][:5]
+    L['smoke'] = []
+    for si, src in enumerate(srcs):
+        puffs = []
+        for i in range(8):
+            B = Batch(si * 11 + i); B.sphere('smoke', (0, 0, 0), 1.0, seg=14, rings=8); o = B.finalize('smoke%d_%d' % (si, i), ink=False)[0]; o.location = src; o.scale = (0.001,) * 3; o.visible_shadow = False; puffs.append(o)
+        L['smoke'].append(dict(src=np.array(src, float), puffs=puffs, wind=(0.35 if loc == 'measure' else 0.8, 0.0)))
+    if A.get('dust_box') is not None:
+        db = A['dust_box']; r = random.Random(7); L['dust'] = []; d = db['d'] / np.linalg.norm(db['d']); a = np.cross(d, [0, 0, 1.0]); a /= np.linalg.norm(a); b = np.cross(d, a)
+        for i in range(42):
+            B = Batch(i); B.sphere('glow_dust', (0, 0, 0), 1.0, seg=8, rings=5); o = B.finalize('dust%d' % i, ink=False)[0]; o.scale = (0.001,) * 3
+            L['dust'].append(dict(ob=o, s=r.uniform(0.15, 1.0), u=r.uniform(-0.5, 0.5), v=r.uniform(-0.5, 0.5), ph=r.uniform(0, 6.28), sz=r.uniform(0.006, 0.013)))
+        L['dust_geo'] = dict(p0=db['p0'], d=d, a=a, b=b, L=db['L'], w=db['w'])
+def set_flicker(level=1.0, frame=None, seed=0):
+    """gas-lamp flicker: every real gas light (and the glass globes) breathes by up to ~12 % x level. Key it every frame (frame = N) for a moving shot."""
+    t = _tsec(frame); r = random.Random(seed)
+    for i, (ob, base) in enumerate(STATE['lamps']):
+        ph = (i * 1.7 + seed); f = 1 + level * (0.055 * math.sin(2 * math.pi * 3.1 * t + ph) + 0.04 * math.sin(2 * math.pi * 7.7 * t + 2 * ph) + 0.025 * math.sin(2 * math.pi * 13.1 * t + 3 * ph))
+        ob.data.energy = base * f
+        if frame is not None: _key(ob.data, 'energy', frame)
+    f0 = 1 + level * (0.05 * math.sin(2 * math.pi * 3.1 * t) + 0.03 * math.sin(2 * math.pi * 7.7 * t))
+    for (m, base) in STATE['glows']:
+        sk = m.node_tree.nodes['strength'].inputs[1]; sk.default_value = base * f0
+        if frame is not None: sk.keyframe_insert('default_value', frame=frame)
+def set_smoke(level=1.0, frame=None, speed=1.0):
+    """stove smoke (measure) / chimney smoke (street): 8 soft puffs per source rising and drifting, growing, then shrinking away. level 0 hides it. CALL EVERY FRAME."""
+    t = _tsec(frame)
+    for sm in STATE['life'].get('smoke', []):
+        for i, o in enumerate(sm['puffs']):
+            p = (t * 0.22 * speed + i / len(sm['puffs'])) % 1.0; rad = (0.05 + 0.22 * p) * level * (1 - max(0, (p - 0.72) / 0.28)) * (1 if level > 0.01 else 0)
+            rad = max(rad, 0.0005); rise = (0.12 + 1.5 * p) * (0.6 + 0.6 * level) * (1.0 if STATE['loc'] == 'measure' else 2.2)
+            pos = sm['src'] + np.array([sm['wind'][0] * p * 0.8 + 0.05 * math.sin(6.28 * p * 2 + i), 0.05 * math.cos(i + p * 5), rise])
+            o.location = tuple(pos); o.scale = (rad,) * 3
+            if frame is not None: _key(o, 'location', frame, 'LINEAR'); _key(o, 'scale', frame, 'LINEAR')
+def set_dust(k=1.0, frame=None):
+    """dust motes drifting in the light shaft (42 tiny glowing flecks). k scales their size (0 hides them). CALL EVERY FRAME."""
+    g = STATE['life'].get('dust_geo'); t = _tsec(frame)
+    if g is None: return
+    for m in STATE['life']['dust']:
+        s = (m['s'] + t * 0.02) % 1.0; sh = 0.2 + 0.8 * s
+        pos = g['p0'] + g['d'] * (g['L'] * s) + g['a'] * (g['w'] * (m['u'] * (0.4 + s))) + g['b'] * (g['w'] * (m['v'] * (0.4 + s)) * 0.8)
+        pos = pos + np.array([0.06 * math.sin(t * 0.9 + m['ph']), 0.06 * math.cos(t * 0.7 + 2 * m['ph']), -0.05 * ((t * 0.12 + m['ph']) % 1.0)])
+        sz = m['sz'] * k * (0.75 + 0.25 * math.sin(t * 2.3 + m['ph'] * 3)) * (1 if k > 0.01 else 0); sz = max(sz, 0.0003)
+        o = m['ob']; o.location = tuple(pos); o.scale = (sz,) * 3
+        if frame is not None: _key(o, 'location', frame); _key(o, 'scale', frame)
+def set_pendulum(t=None, frame=None, amp=24.0, period=2.0):
+    """wall-clock pendulum (measure room): swings +-amp degrees with the given period (s). t in seconds (default: from the frame). CALL EVERY FRAME for motion."""
+    ob = STATE['life'].get('pendulum')
+    if ob is None: return
+    t = _tsec(frame) if t is None else t; ob.rotation_euler = (0, math.radians(amp * math.sin(2 * math.pi * t / period)), 0)
+    if frame is not None: _key(ob, 'rotation_euler', frame)
+def set_drawer(name, open=1.0, frame=None):
+    """pull a named card drawer out (0 closed .. 1 fully out). names: 'big' (reveal), 'p0'.. (records), see API.md."""
+    a = STATE['anim'][name]; a['slide'].location = (0, open * a['travel'], 0)
+    if frame is not None: _key(a['slide'], 'location', frame)
+def set_box_lid(name='box', open=1.0, frame=None):
+    """open the hinged lid of a card box ('box', 'box2' in the reveal): 0 shut .. 1 wide open."""
+    a = STATE['anim'][name]; a['hinge'].rotation_euler = (math.radians(-110 * open), 0, 0)
+    if frame is not None: _key(a['hinge'], 'rotation_euler', frame)
+def set_card_lift(t=1.0, frame=None):
+    """the hero Bertillon card rises out of the box: 0 standing in the box with its top just over the rim, 1 lifted 0.3 up, tilted to the lamp."""
+    a = STATE['anim']['hero']['root']; a.location = (0.0 + 0.03 * t, 0.02 + 0.14 * t, STATE.get('hero_z0', 0.15) + 0.34 * t); a.rotation_euler = (math.radians(22 * t), 0, math.radians(-9 * t))
+    if frame is not None: _key(a, 'location', frame); _key(a, 'rotation_euler', frame)
+def set_cards_fan(t=1.0, frame=None, name='fan'):
+    """desk cards: 0 a squared stack, 1 fanned out like a hand (records desk)."""
+    a = STATE['anim'].get(name)
+    if a is None: return
+    n = a['n']
+    for i, c in enumerate(a['cards']):
+        ang = -a['spread'] / 2 + a['spread'] * i / (n - 1) if n > 1 else 0; c.rotation_euler = (0, 0, math.radians(ang * t)); c.location = (0.012 * (i - n / 2) * t * 0, 0, 0.003 * i * (1.0 if t < 0.5 else 1.0))
+        if frame is not None: _key(c, 'rotation_euler', frame); _key(c, 'location', frame)
+def key_life(f0, f1, flicker=1.0, smoke=1.0, dust=1.0, pendulum=True, step=1):
+    """key every life hook on every frame f0..f1 (the rule: animated hooks are keyed every frame)."""
+    for f in range(int(f0), int(f1) + 1, step):
+        set_flicker(flicker, frame=f); set_smoke(smoke, frame=f); set_dust(dust, frame=f)
+        if pendulum: set_pendulum(frame=f)
+def apply_state(A, st):
+    """preset start state: dict with optional drawer {name: open}, lid {name: open}, lift t, fan t, life 0/1 (smoke, dust, pendulum on a static frame 1)."""
+    for k, v in st.get('drawer', {}).items():
+        if k in STATE['anim']: set_drawer(k, v)
+    for k, v in st.get('lid', {}).items():
+        if k in STATE['anim']: set_box_lid(k, v)
+    if 'lift' in st and 'hero' in STATE['anim']: set_card_lift(st['lift'])
+    if 'fan' in st: set_cards_fan(st['fan'])
+    if st.get('life', 1):
+        set_flicker(1.0); set_smoke(1.0); set_dust(1.0); set_pendulum(t=0.35)
+
+# ================================================================ foreground props (1-2 units from the lens) and presets
+def _fgB(): return Batch(17)
+def fg_measure_wide(A):
+    B = _fgB(); gas_stand(B, (-2.55, -2.9, 0), h=1.85, watts=70); stool(B, (0.1, -2.7), h=0.55, rot=20); ledger_stack(B, (0.1, -2.7, 0.58), n=5, rot=10)
+    B.box('runner', (-0.1, -1.55, 0.007), (0.9, 0.6, 0.014), rot=(0, 0, 14))                                  # a second small rug
+    crate(B, (1.05, -3.0, 0), size=(0.55, 0.42, 0.38), rot=-14); crate(B, (1.05, -3.0, 0.38), size=(0.46, 0.36, 0.3), rot=10); crate(B, (1.62, -3.35, 0), size=(0.42, 0.34, 0.3), rot=30)   # crate stack
+    bucket(B, (-0.85, -3.3, 0)); B.cyl('iron', (-0.85, -3.3, 0.33), 0.17, 0.06, r2=0.2, seg=12)                  # coal scuttle: bucket + flared rim
+    stool(B, (1.0, -1.75), h=0.5, rot=-25); kepi(B, (1.0, -1.75, 0.53), rot=40)                              # a stool with a kepi
+    B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
+def fg_measure_high(A):
+    B = _fgB(); gas_bracket(B, (3.18, -3.3, 3.0), rot_z=180, watts=20, lit=False); B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
+def fg_measure_door(A):
+    B = _fgB(); table(B, (-0.2, 1.2), size=(0.95, 0.55), h=0.82, rot=-20, top='baize')
+    with B.xf((-0.2, 1.2, 0), (0, 0, -20)): ledger_stack(B, (-0.25, 0, 0.83), n=4, rot=10); inkpot(B, (0.2, 0.1, 0.83), rot=30); sliding_calipers(B, (0.15, -0.1, 0.83), rot=5, length=0.4, open_=0.12)
+    B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
+def fg_measure_low(A):
+    B = _fgB(); ledger_stack(B, (-0.15, 1.65, 0.0), n=6, rot=12); crate(B, (0.95, 1.55, 0), size=(0.45, 0.35, 0.3), rot=25); B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
+def fg_records_aisle(A):
+    B = _fgB(); gas_bracket(B, (-1.36, -2.3, 3.4), rot_z=0, watts=24); crate(B, (0.55, -2.0, 0), size=(0.5, 0.32, 0.24), rot=14); crate(B, (0.55, -2.0, 0.24), size=(0.46, 0.3, 0.22), rot=-6); B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
+def fg_records_low(A):
+    B = _fgB(); crate(B, (0.3, -0.2, 0), size=(0.5, 0.35, 0.25), rot=18); crate(B, (0.3, -0.2, 0.25), size=(0.44, 0.3, 0.22), rot=-4); stool(B, (-0.5, -0.3), h=0.5); B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
+def fg_records_desk(A):
+    drawer_assembly('pn', (1.36 - 0.0, 1.0, 1.35), 90, w=0.278, h=0.18, depth=0.5, travel=0.42, open_=1.0, cards=12, seed=3)
+    B = _fgB(); crate(B, (1.0, 0.9, 0), size=(0.45, 0.3, 0.22), rot=10); B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
+def fg_records_ladder(A):
+    B = _fgB(); crate(B, (-0.6, 3.6, 0), size=(0.5, 0.33, 0.26), rot=-12); ledger_stack(B, (-0.6, 3.6, 0.26), n=4, rot=20); B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
+def fg_reveal(A):
+    B = _fgB(); stool(B, (0.65, 2.15), h=0.6, rot=10); ledger_stack(B, (0.65, 2.15, 0.63), n=5, rot=25, mats=('navy', 'baize', 'navy', 'oxblood')); kepi(B, (0.7, 2.18, 0.97 + 0.0), rot=40) if False else None; B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
+def fg_street_wide(A):
+    B = _fgB(); street_lamp(B, (-2.9, -4.4, 0), h=3.9, watts=700); B.cyl('walnut', (-3.5, -3.7, 0.55), 0.3, 0.8, seg=12); B.cyl('iron', (-3.5, -3.7, 0.35), 0.31, 0.04, seg=12); B.cyl('iron', (-3.5, -3.7, 0.75), 0.31, 0.04, seg=12)
+    B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
+def fg_street_wagon(A):
+    B = _fgB(); B.cyl('walnut', (1.3, 4.0, 0.55), 0.3, 0.8, seg=12); B.cyl('iron', (1.3, 4.0, 0.35), 0.31, 0.04, seg=12); B.cyl('iron', (1.3, 4.0, 0.75), 0.31, 0.04, seg=12); B.cyl('walnut', (1.85, 4.2, 0.55), 0.3, 0.8, seg=12)
+    B.finalize('fg', ink_t=STATE['ink_t'] * 0.7)
+_P = lambda **k: k
+PRESETS.update({
+    'measure_wide': _P(loc='measure', light='DAY_INT', cam=(-1.9, -3.9, 1.5), look=(0.8, 2.4, 1.35), fg=fg_measure_wide, stage=['bench0', 'queue0', 'chair', 'clerk', 'door_mid'], state={}, sd=5.0,
+                       desc='eye level wide: bench queue left, the chair + tripod centre, toise right'),
+    'measure_chair': _P(loc='measure', light='DAY_INT', cam=(2.0, 0.2, 1.5), look=(0.7, 2.4, 1.2), stage=['chair', 'clerk'], state={}, sd=3.0, desc='medium on the chair + calipers table; tripod as foreground'),
+    'measure_high': _P(loc='measure', light='DAY_INT', cam=(2.9, -3.8, 3.55), look=(-0.4, 1.9, 1.1), lamps_up=True, fg=fg_measure_high, stage=['bench0', 'bench2', 'queue0', 'chair', 'tripod'], state={}, sd=5.5, desc='high angle over the room (ceiling cut away), the bench queue'),
+    'measure_door': _P(loc='measure', light='DAY_INT', cam=(-1.7, 0.9, 1.5), look=(3.2, -2.9, 1.3), fg=fg_measure_door, stage=['door_out', 'door_r', 'door_x'], state={}, sd=4.5, desc='inside toward the door: entrances'),
+    'measure_low': _P(loc='measure', light='DAY_INT', cam=(0.3, 0.55, 0.5), look=(0.9, 2.4, 1.5), fg=fg_measure_low, stage=['chair', 'clerk'], state={}, sd=2.8, desc='low angle hero of the clerk at the chair'),
+    'records_aisle': _P(loc='records', light='DAY_INT', cam=(0.75, -3.2, 3.9), look=(-0.2, 6.5, 2.0), fg=fg_records_aisle, stage=['aisle1', 'aisle2', 'ladder_foot', 'aisle_far'], state={}, sd=6.0, desc='high off-centre down the aisle'),
+    'records_low': _P(loc='records', light='DAY_INT', cam=(0.1, -0.8, 0.55), look=(-0.9, 6.0, 3.2), fg=fg_records_low, stage=['low_a'], state={}, sd=4.0, desc='low angle up the cabinet wall'),
+    'records_desk': _P(loc='records', light='DAY_INT', cam=(0.9, 0.6, 1.5), look=(-0.8, 2.6, 1.4), fg=fg_records_desk, stage=['desk_clerk', 'desk_stand'], state={'fan': 1.0}, sd=2.8, desc='medium at the clerk desk: fanned cards, green lamp'),
+    'records_ladder': _P(loc='records', light='DAY_INT', cam=(-0.2, 4.8, 1.4), look=(1.1, 7.6, 3.2), fg=fg_records_ladder, stage=['ladder_up'], state={}, sd=3.5, desc='the rolling ladder on the right run'),
+    'drawer_big': _P(loc='reveal', light='DAY_INT', cam=(0.6, 2.6, 2.2), look=(0.1, 0.5, 1.15), fg=fg_reveal, stage=['drawer_r', 'drawer_l'], state={'drawer': {'big': 1.0}, 'lid': {'box': 0.0, 'box2': 0.0}, 'lift': 0.0}, sd=3.0, desc='a big drawer pulled out, many cards'),
+    'drawer_box': _P(over=dict(sun_k=0.5, win_w=200), loc='reveal', light='DAY_INT', cam=(0.09, 0.99, 1.68), look=(-0.03, 0.58, 1.2), fg=fg_reveal, stage=[], state={'drawer': {'big': 1.0}, 'lid': {'box': 1.0, 'box2': 0.0}, 'lift': 0.0}, sd=1.0, desc='a smaller box inside the drawer, fewer cards'),
+    'card_hero': _P(over=dict(sun_k=0.55, win_w=200), loc='reveal', light='DAY_INT', cam=(0.3, 1.5, 1.75), look=(0.0, 0.7, 1.3), fg=fg_reveal, stage=[], state={'drawer': {'big': 1.0}, 'lid': {'box': 1.0, 'box2': 0.0}, 'lift': 1.0}, sd=0.9, desc='one Bertillon card lifted in lamplight, calipers beside'),
+    'street_wide': _P(loc='street', light='DUSK_EXT', cam=(-1.6, -6.0, 1.9), look=(1.2, 12.0, 2.6), fg=fg_street_wide, stage=['street_a', 'street_b', 'street_c', 'wagon_door'], state={}, sd=6.0, desc='wide down the street: the wagon, the station, lamps'),
+    'street_wagon': _P(loc='street', light='DUSK_EXT', cam=(0.2, 2.5, 1.5), look=(3.2, 8.0, 1.6), fg=fg_street_wagon, stage=['wagon_step', 'wagon_door', 'steps_top'], state={}, sd=4.0, desc='medium on the police wagon and the station steps'),
+})
+# the cast on the stand points of every preset that has a stage list (story pose, options); the seated poses sit on the 3D chair / bench (seat17 is dropped)
+CAST_ON = {
+    'measure_wide': {'bench0': ('prisoner_sitting_a', {'seated': 'bench'}), 'queue0': ('prisoner_standing_b', {}), 'chair': ('inspector_seated_stiff', {'seated': 'chair'}), 'clerk': ('bertillon_measuring', {}), 'door_mid': ('gendarme_standing_b', {})},
+    'measure_chair': {'chair': ('inspector_seated_stiff', {'seated': 'chair'}), 'clerk': ('bertillon_measuring', {})},
+    'measure_high': {'bench0': ('prisoner_sitting_a', {'seated': 'bench'}), 'bench2': ('prisoner_sitting_c', {'seated': 'bench'}), 'queue0': ('prisoner_standing_b', {}), 'chair': ('inspector_seated_stiff', {'seated': 'chair'}), 'tripod': ('bertillon_writing', {})},
+    'measure_door': {'door_out': ('dupont_held', {}), 'door_r': ('gendarme_escort_a', {}), 'door_x': ('gendarme_escort_b', {'mirror': True})},
+    'measure_low': {'chair': ('inspector_seated_stiff', {'seated': 'chair'}), 'clerk': ('bertillon_measuring', {'dx': -0.3})},
+    'records_aisle': {'aisle1': ('bertillon_pointing', {}), 'aisle2': ('gendarme_standing_a', {}), 'ladder_foot': ('prefect_neutral', {}), 'aisle_far': ('inspector_shouting', {})},
+    'records_desk': {'desk_clerk': ('bertillon_writing', {}), 'desk_stand': ('prefect_stern', {})},
+    'records_ladder': {'ladder_up': ('bertillon_holding_card', {})},
+    'drawer_big': {'drawer_r': ('bertillon_holding_card', {}), 'drawer_l': ('inspector_arms_crossed', {})},
+}
+for _k, _v in CAST_ON.items(): PRESETS[_k]['cast'] = _v
+LIGHTS['EVENING_INT'].update(gain=0.5, shade=(0.07, 0.075, 0.26), tint=(0.05, 0.057, 0.18), lift=(0.003, 0.007, 0.024), win_w=40, lamp_k=1.4, sun_k=0.25, beam_k=0.25, frost=('#2f3270', 1.2), sky=('#12143a', '#26295a', '#3a3878'), world=(0.16, 0.16, 0.34))
+
+# ================================================================ real cast17 cards on the stand points (stage package: Actor cards, sprites through Chromium)
+V3 = os.path.normpath(os.path.join(HERE, '..'))
+CAST_H = {'bertillon': 1.78, 'inspector17': 1.66, 'prefect': 1.74, 'dupont': 1.68, 'gendarme_a': 1.82, 'gendarme_b': 1.82, 'prisoner_a': 1.68, 'prisoner_b': 1.68, 'prisoner_c': 1.68}
+CAST_HD = {'bertillon': 3.30, 'inspector17': 3.21, 'prefect': 3.34, 'dupont': 3.06, 'gendarme_a': 3.16, 'gendarme_b': 3.32, 'prisoner_a': 3.14, 'prisoner_b': 2.99, 'prisoner_c': 2.94}   # head top to soles in head D (cast17 API.md)
+RIM_FOR = {'bertillon': '#d9a27a', 'prefect': '#d9a27a', 'inspector17': '#d9a27a'}                    # QA SET gate: a warm rim on the black coats
+HEAD_Z = {'chair': 1.22, 'bench': 1.08}          # head-centre height (m) of a seated figure: on the measuring chair (head rest 1.34) / on the bench
+def cast_heads(acts, cam=None):
+    """screen position (720x1280) of each real cast card's head centre, radius (px) and chin: through the card's true 3D place (the card leans toward a low or high camera)."""
+    import actors
+    cam = cam or bpy.context.scene.camera; bpy.context.scene.frame_set(1); out = {}
+    for mk, a in acts.items():
+        w = actors.local_to_world(a, (0.0, 0.0), 1, camera=cam); px, py, dz = project(cam, tuple(w)); w2 = actors.local_to_world(a, (0.5, 0.0), 1, camera=cam); qx, qy, _ = project(cam, tuple(w2))
+        R = math.hypot(qx - px, qy - py); out[mk] = dict(cx=px, cy=py, R=R, chin=py + R)
+    return out
+def stage_cast(A, assign, cam=None, sprite_dir=None, px_per_D=None):
+    """put the REAL cast17 cards (stage Actor cards: unlit emission sprites, billboarded to the camera, shadow proxy + contact decal) on stand points.
+    assign = {mark: (story_pose_name, opts)}; opts: mirror (bool), seated ('chair' | 'bench': scale so the hip sits on that seat height, feet on the floor), rim (colour | None),
+    H (metres, overrides the height), dx/dy/dz (metres), expr (cast17 expression name). Returns {mark: Actor}."""
+    for p in (os.path.join(V3, 'cast17'), os.path.join(V3, 'stage')):
+        if p not in sys.path: sys.path.insert(0, p)
+    import cast17, actors, sprites
+    cam = cam or bpy.context.scene.camera; sprite_dir = sprite_dir or os.path.join(HERE, 'contact_work', 'sprites'); os.makedirs(sprite_dir, exist_ok=True); out = {}; cl = cam.location
+    bpy.context.view_layer.update()
+    for mk, (story, opts) in assign.items():
+        opts = dict(opts or {}); x, y, z, fz, who = A['marks'][mk]; cast, pose = cast17.STORY17[story]; pose = dict(pose)
+        if opts.get('expr'): pose = cast17.with_expr(pose, opts['expr'])
+        seated = opts.get('seated') or ('chair' if pose.get('seat17') == 'chair' else 'bench' if pose.get('seat17') == 'bench' else None)
+        pose['seat17'] = None                                      # the set has its own chair and bench
+        if opts.get('mirror'): pose['mirror'] = True
+        rim = opts.get('rim', RIM_FOR.get(cast))
+        if rim: pose['rim'] = rim; pose['rim_opacity'] = 0.55; pose['rim_w'] = 0.02
+        a = actors.Actor('c_' + mk, cast); a.build(sprites.DEFAULT_CANVAS[cast], sprite_dir, contact=True); a.head_flip = True
+        if seated:
+            fx, fy = sprites.feet_of(cast, pose); sc = opts.get('H', CAST_H[cast]) / CAST_HD[cast]; zz = HEAD_Z[seated] - sc * fy          # same head size as standing; the (hidden) feet float so that the head centre sits at the seat's head height
+        else:
+            sc = opts.get('H', CAST_H[cast]) / CAST_HD[cast]; zz = z
+        pos = (x + opts.get('dx', 0.0), y + opts.get('dy', 0.0), zz + opts.get('dz', 0.0))
+        a.place(1, pos, scale=sc); a.pose(1, pose, camera=cam); out[mk] = a
+    for mk, a in out.items():
+        d = math.hypot(a.root.location.x - cl.x, a.root.location.y - cl.y) if a.root.location else 5.0
+        ppd = px_per_D or 256
+        a.render_sprites(ppd)
+    return out
+
+# ================================================================ command line
+def build_for_cli(preset, light=None, placeholders=True):
+    A = build(preset=preset, light=light); pr = PRESETS[preset]
+    if pr.get('cast') and CAST_MODE[0] == 'real': A['actors'] = stage_cast(A, pr['cast'])
+    elif placeholders: stage_placeholders(A, only=pr.get('stage') or None) if pr.get('stage') else None
+    return A
+CAST_MODE = ['real']          # 'real' (cast17 cards) | 'ph' (placeholder discs); set by the CLI argument ph
+def cli_render(preset, light=None, out=None, mode='final', samples=None, placeholders=True):
+    """build + (cast / placeholders) + render + grade; writes <out>.json with times, head-ring luma and chin pixels. returns (seconds, stats)."""
+    t0 = time.time(); A = build_for_cli(preset, light, placeholders); tb = time.time() - t0; c0 = time.process_time()
+    dt = render(out, mode, samples); ring = {}
+    if placeholders and PRESETS[preset].get('stage'):
+        W, H = (720, 1280)
+        ring = head_ring_luma(A, out, only=PRESETS[preset]['stage'], W=Image.open(out).size[0], Hh=Image.open(out).size[1])
+        sc = Image.open(out).size[0] / 720.0
+        ring = {k: dict(v, chin720=v['chin'] / sc) for k, v in ring.items()}
+    info = dict(preset=preset, light=light or PRESETS[preset]['light'], build_s=round(tb, 2), render_s=round(dt, 2), mode=mode, samples=bpy.context.scene.cycles.samples, ring=ring, cast=('real' if (PRESETS[preset].get('cast') and CAST_MODE[0] == 'real') else 'placeholders'),
+                objects=len(bpy.data.objects), tris=int(sum(len(o.data.polygons) for o in bpy.data.objects if o.type == 'MESH')))
+    json.dump(info, open(out + '.json', 'w'), default=float); return dt, info
+if __name__ == '__main__':
+    a = sys.argv[1:]
+    if a and a[0] == 'render':
+        preset = a[1]; light = a[2] if len(a) > 2 and a[2] != '-' else None; out = a[3]; mode = a[4] if len(a) > 4 else 'final'; samples = int(a[5]) if len(a) > 5 and a[5].isdigit() else None
+        if 'ph' in a[5:]: CAST_MODE[0] = 'ph'
+        dt, info = cli_render(preset, light, out, mode, samples); print('%s %s %.1fs build %.1fs ring %s' % (preset, info['light'], dt, info['build_s'], {k: round(v['luma']) for k, v in info['ring'].items()}))
+    elif a and a[0] == 'list':
+        for k, v in PRESETS.items(): print('%-16s %-8s %-12s cam %s -> %s  %s' % (k, v['loc'], v['light'], v['cam'], v['look'], v.get('desc', '')))
+    else: print('usage: python3 bertillon.py render <preset> [light|-] <out.png> [final|draft] [samples] | list')

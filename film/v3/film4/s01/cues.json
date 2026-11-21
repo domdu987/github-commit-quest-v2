@@ -1,0 +1,138 @@
+{
+ "take": "s01",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film4/audio/narration_bankky.wav at +0.10 s, captions_bankky.json",
+ "cues": [
+  {
+   "time": 0.0,
+   "duration": 1.3,
+   "frame": 0,
+   "end_frame": 39,
+   "kind": "ambience",
+   "label": "inside the pagoda base: soft temple room tone, faint wind bells far above"
+  },
+  {
+   "time": 0.133,
+   "duration": 0.333,
+   "frame": 4,
+   "end_frame": 14,
+   "kind": "chain",
+   "label": "kenta pulls on the hanging iron chain: chain links clink and creak taut"
+  },
+  {
+   "time": 1.0,
+   "duration": 0.333,
+   "frame": 30,
+   "end_frame": 40,
+   "kind": "chain",
+   "label": "kenta pulls on the hanging iron chain: chain links clink and creak taut"
+  },
+  {
+   "time": 1.3,
+   "duration": 0.0,
+   "frame": 39,
+   "end_frame": 39,
+   "kind": "cut",
+   "label": "hard cut to the ECU of the floating pillar foot"
+  },
+  {
+   "time": 1.3,
+   "duration": 1.2,
+   "frame": 39,
+   "end_frame": 75,
+   "kind": "ambience",
+   "label": "oil-lamp flame flutter, a low wooden creak of the hanging pillar (it does not touch the stone)"
+  },
+  {
+   "time": 2.5,
+   "duration": 0.0,
+   "frame": 75,
+   "end_frame": 75,
+   "kind": "cut",
+   "label": "hard cut: up the pagoda past the roof corner"
+  },
+  {
+   "time": 2.5,
+   "duration": 1.2,
+   "frame": 75,
+   "end_frame": 111,
+   "kind": "ambience",
+   "label": "wind over the eaves, a wind bell on the corner rings softly"
+  },
+  {
+   "time": 3.7,
+   "duration": 0.0,
+   "frame": 111,
+   "end_frame": 111,
+   "kind": "cut",
+   "label": "hard cut: kenta in front of the opened base"
+  },
+  {
+   "time": 3.7,
+   "duration": 2.633,
+   "frame": 111,
+   "end_frame": 190,
+   "kind": "ambience",
+   "label": "courtyard ambience: light chatter of the townspeople, birds"
+  },
+  {
+   "time": 4.167,
+   "duration": 0.267,
+   "frame": 125,
+   "end_frame": 133,
+   "kind": "gesture",
+   "label": "kenta flings his arm out and points into the pagoda (cloth whip of the happi sleeve)"
+  },
+  {
+   "time": 4.533,
+   "duration": 0.3,
+   "frame": 136,
+   "end_frame": 145,
+   "kind": "gesture",
+   "label": "townspeople turn their heads to look at him (small cloth rustle)"
+  },
+  {
+   "time": 4.933,
+   "duration": 0.267,
+   "frame": 148,
+   "end_frame": 156,
+   "kind": "camera_snap",
+   "label": "snap punch-in on kenta (short whoosh in), middle g 152 on 'hai wing'",
+   "peak_frame": 152,
+   "peak_time": 5.067
+  },
+  {
+   "time": 5.467,
+   "duration": 0.333,
+   "frame": 164,
+   "end_frame": 174,
+   "kind": "gesture",
+   "label": "pointing jab toward the doorway on 'khao ma nai ni' (small accent)",
+   "peak_frame": 167
+  },
+  {
+   "time": 6.0,
+   "duration": 0.333,
+   "frame": 180,
+   "end_frame": 190,
+   "kind": "dissolve",
+   "label": "dissolve to the high establishing wide"
+  },
+  {
+   "time": 6.0,
+   "duration": 2.767,
+   "frame": 180,
+   "end_frame": 263,
+   "kind": "ambience",
+   "label": "high wide town ambience: wind, distant street voices, a temple bell far off"
+  },
+  {
+   "time": 6.833,
+   "duration": 0.0,
+   "frame": 205,
+   "end_frame": 205,
+   "kind": "accent",
+   "label": "'Yipun' (old Japan) lands: optional soft koto / shakuhachi phrase start"
+  }
+ ]
+}

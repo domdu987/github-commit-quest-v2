@@ -1,0 +1,19 @@
+{
+"r_beam": "ae39eb8d79f7fbb3ad83e332d0857ac4b5c52078",
+"r_blanket": "cfe972ec372b7527292cc6d9c4e56dcaaeaf7e8e",
+"r_boards": "f7feecd159e1c577c78741446dac6ae4f84396d1",
+"r_book": "b25db000fb82f82226e58af807d22706d14d00dc",
+"r_floor": "0de50e2a5852e530f1da1a9bbde34e257ea42e0a",
+"r_plaster": "f390ae3a7cf858114f95825b8abd18427347bc54",
+"r_sky_dawn": "6ebb7d645c1c4cea16cd8f6c84d65a6a42466808",
+"r_sky_night": "5f80281a50b0c53da8c9139bf65ec223cdeac828",
+"r_straw": "8daaec8e7993325028d0927b3b686968fdd04bcf",
+"v_brick": "352e0284303418ad4d592e6e2f85bc9244cd6086",
+"v_burlap": "9248b8dab144e39d08d9cdb6e2c5fad8161c03a6",
+"v_door": "184f2a86ceddad82b60c1361c428746fb32d4723",
+"v_floor": "640370e21971b28094aba8e49b0ca91986a956c9",
+"v_head": "ecc6817179efbe22c22a46afff1850d64e69ff28",
+"v_head_plain": "e2f2ff377e9360a55f6ae1bb84ee36e8a5584fe3",
+"v_staves": "862eb1d0f1edfefceb533a203a5158549b8f2c90",
+"v_stone": "8c8566ddf63c259dbefc07e8fe1c654c6c409952"
+}

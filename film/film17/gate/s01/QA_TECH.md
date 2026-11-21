@@ -1,0 +1,21 @@
+# QA-tech film17 s01 (shots 1-3) — VERDICT: FAIL
+Checked: 40 frames at 6 fps + cut neighbourhoods g45-51 / g90-96 + extra g122-134 and g138-149 pulled from take.mkv. Numbers (rhythm, qa_auto, magenta 0) accepted as given; they do not cover the issues below.
+OK: no black/frozen/magenta, no readable text, no mouth movement (all mouths closed), image sharp (no DOF/blur problem), cuts at g48/g93 clean hard cuts.
+
+Issues
+1. g0-47 (shot 1) PROP NOT ON THE EAR: calipers are a long rod resting across Bertillon's chest/shoulder, no hand grips it, the jaws never close on the prisoner's ear (tips end beside/below it, in front of the jacket). Hook beat "calipers closed on a seated prisoner's ear" is not readable. Fix: attach calipers to Bertillon's hand, scale jaws up (fg, 1-2 D), place both tips on the ear (one in front, one behind), animate closing.
+2. g0-47 (shot 1) dark vertical slab (chair headrest/post) drawn across the prisoner's forehead/hair, depth-sort error. Fix: put the headrest behind the head sprite.
+3. g35-47 (shot 1) prisoner's far ear clipped by the right frame edge and head crowds the edge as the push+slide runs; only one ear is shown. Fix: reduce slide or recentre so both ears / the measured ear stay in frame.
+4. g48-91 (shot 2) plan coverage FAIL: no queue on a bench (only one clipped person at the left edge, g48-70 and g75-91 at x<40), no gendarme at a door (a bowler-hat man stands mid-room, no door in frame), no "next prisoner sits", no gas-lamp foreground (a stool with book stack is fg instead). Fix: stage 3-4 prisoners on the bench inside the frame, gendarme at the door, next prisoner walking to the chair, gas lamp fg.
+5. g48-91 (shot 2) scale/composition: Bertillon and the sitter are ~100 px tall at the room's back wall, bottom ~45 % of the frame is empty floor; unreadable at phone size. The fg book-stool sits exactly in front of Bertillon so he looks as if he is standing on the book stack. Fix: lower/move the camera or move the action toward mid-ground, shift the stool.
+6. g75-91 (shot 2) gendarme coat reads brown vs olive at g48-70 (lighting/colour drift on the same sprite). Minor; verify the shade tint is constant.
+7. g93-125 (shot 3) PROP: the calipers are a flat grey bar crossing the temple/forehead in front of the face, not "tips on an ear"; the ear sits behind the bar and is mostly hidden; no hand holds it. Not a raking low insert (camera is eye-level, frontal). Fix: low raking camera, jaws touching the ear, hand visible.
+8. g93-125 (shot 3) head bottom/chin and jacket collar sit at y ~880-935 (g100 chin ~890, g120 ~935), inside the caption band 880-950. Fix: frame the ear/head higher or shift up 60-80 px.
+9. g126 -> g127 (shot 3) sitter swap is a hard POP: prisoner_a (dark hair, blue jacket) becomes a bowler-hat, moustached man in an olive coat in one frame. The "snap" g120-135 shows no visible camera motion (g120 vs g125 vs g127 essentially the same framing), so nothing hides the swap, and "snap to the next ear" is not seen. Fix: make the snap an actual camera/whip move (x1.6) with the swap at peak motion, or slide the new sitter in; ears must be a real pair.
+10. g127-149 (shot 3) the new sitter is the same bowler/moustache character as the shot-2 "gendarme" (continuity: gendarme on the wall vs prisoner in the chair; plan says prisoner_b). Fix: use prisoner_b or change shot 2 so it is clear he is the next prisoner from the bench.
+11. g138-149 (shot 3) a large white round shape (head/sprite) clipped in the top-left corner, growing larger (g141 to g149); reads as a stray floating head. Fix: remove or mask it.
+12. g128-149 (shot 3) calipers drift/rotate and shrink away from the ear; at g143-149 the tips hang beside the ear/ at hat level instead of gripping it, and the ear is a flat sprite pasted at the head edge. Fix: pin the tips to the ear anchor through the snap.
+13. Eye-lines: shot 1 prisoner looks sideways-down as briefed; Bertillon looks at the camera/prisoner not at the ear (g0-47). Minor: aim his eyes at the ear.
+Not found: floating feet in shot 1 (feet on chair rail, contact OK); shot 2 contact shadows not verifiable at this scale.
+
+Return to the render team; re-check after fixes 1,2,4,5,7,8,9,11 at minimum.
