@@ -447,3 +447,61 @@ Acceptance with the same trackers over g 140-190:
 - no one-frame drop of more than about 2 px/f at the end.
 
 A tracker run plus a look at r19_land.jpg-style tiles is enough to re-check it; it does not need a full review.
+
+## Round 20 (film-13 rules): SHIP. The landing catch-up is gone; g 150-182 is one smooth settle
+
+**Inputs.** Frames: /tmp/qa19_ov/s02/gNNN.png (round 20). I verified them against take.mkv.part*: g 160 matches exactly. Trackers (all sea-masked, with the cast zone x 150-570, y 380-900 masked out) are in /tmp/claude-0/qa16/:
+- track_nocast.py: rigid median speed, dx, dy, rotation and scale;
+- track_bands.py: vertical motion of the top band (y < 35 %, far rigging and sky) versus the near deck (y > 900);
+- total.py: mean rigid-point speed.
+
+The strip is /tmp/claude-0/qa16/r20_land.jpg: g 150-189, every 3rd frame, at 360x640 with a 40-px grid.
+
+**Measured, g 148-184 (px/f at 720 wide):**
+
+| g | 150 | 152 | 154 | 156 | 158 | 160 | 162 | 164 | 166 | 168 | 170 | 172 | 174 | 176 | 178 | 180 | 182 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| total (no sea / cast) | 15.6 | 12.1 | 9.2 | 7.1 | 6.9 | 6.7 | 7.1 | 6.6 | 6.0 | 5.9 | 5.5 | 5.0 | 4.1 | 4.3 | 2.8 | 1.8 | 2.0 |
+| rigid median | 13.7 | 10.5 | 7.3 | 5.5 | 5.7 | 5.4 | 6.3 | 6.7 | 5.8 | 4.6 | 4.7 | 4.5 | 3.6 | 3.0 | 2.1 | 1.5 | 1.3 |
+| top-band dy (far) | 27.2 | 17.7 | 13.8 | 13.9 | 10.1 | 9.1 | 7.8 | 5.8 | 4.7 | 3.3 | 2.3 | 1.6 | 0.8 | 0.2 | -0.4 | -0.1 | 0.1 |
+| near-deck dy | 13.1 | 9.1 | 4.7 | 0.4 | -1.7 | -4.6 | -5.8 | -6.6 | -7.0 | -7.0 | -6.6 | -5.8 | -4.9 | -3.8 | -2.6 | -1.3 | 0.0 |
+
+My round-19 criteria, checked honestly:
+
+| Criterion | Result |
+|---|---|
+| Vertical motion keeps one direction until it reaches 0 | **Met for the far content, not for the near deck.** The top band (rigging and sky, i.e. the camera's tilt) moves down from 27 to 0 in one direction, without overshoot (-0.4 at g 178-179 is below noise). The near deck crosses zero at g 156-157 and rises at up to 7 px/f before easing to 0 at g 182. That is parallax: the camera is still craning down while its tilt-up eases out, so the far and near planes move in opposite directions. The crossing is smooth (about 1-1.5 px/f change per frame, with the total speed flat at 6.7-7.1 through it). It is not round 19's settle, reverse and catch-up (-10 to -14 px/f, then a one-frame stop). I wrote this criterion to rule out that catch-up, and the catch-up is gone. |
+| No camera-driven speed rise above about 10 % | **Met.** The largest frame-to-frame rises in the cast-masked total are +6 % (g 161-162) and +3 % (g 158-159). There is +16 % at g 176, but it is 0.6 px/f in absolute terms and below the tracker's noise. The rigid median climbs from 5.4 to 6.7 over g 160-164 (+24 % over 4 frames, at most +8 % per frame); that is the near-deck parallax building, and it eases smoothly. The team's whole-frame +14 % / +17 % at g 157-158 / g 161-162 does not appear once the cast is masked, so it is the acting (the shock and ring-eye face), as they said. |
+| No one-frame drop above about 2 px/f | **Met at the end:** the last frames fall 4.3 → 2.8 → 2.2 → 1.8 → 1.4, and the drift starts at about 1.2. At the start of the ease (g 151-152) the drop is 2.0-2.5 px/f, from about 13-15 px/f (about 15 % per frame). That is a brisk but smooth slow-down out of the tilt-up, with no visible bump on the strip. |
+
+**On the phone strip (g 150-189):**
+- The tilt-up slows, the horizon settles, and the camera finishes lowering to eye level.
+- The characters drift up about 45 phone-px over g 159-182 as the deck rises, then hold.
+- No stop-start, no shove, no snap at g 176-177.
+- It reads as one camera move that settles calmly on the shock beat. That is the film-13 "calm but always moving" camera.
+- The ending framing is very close to round 19's rest pose: faces about 14 % of the frame, heads well above y 880, full figures, contact shadows, props in hand.
+
+**Rest of the shot (g < 150 unchanged from round 19, as accepted there):**
+- the g 88 pop is fixed;
+- the dive onto the stern is continuous (peak 24 px/f);
+- the masts cut at the top at g 104-113 are accepted;
+- the tilt-up at g 128-150 is one move.
+
+Colour: sat 0.650, luma 89.2 (in-shot, my measure). GROUND: 0 FAIL (the team's check). Frames are sharp, with no depth of field.
+
+| Criterion (film-13 QA-art) | Round 19 | Round 20 |
+|---|---|---|
+| Set density / ornament | 8 | 8 |
+| Lighting & colour | 8 | 8 |
+| Composition / phone | 7 | 7 |
+| Character acting | 7.5 | 7.5 |
+| Key moment (hook BIGZOOM) | 6.5 | 7.5 |
+| Match to references | 7 | 7 |
+| **Overall** | **7.33, FIX-FIRST** | **7.5, SHIP** |
+
+**Verdict: SHIP.** s02 passes QA-art at the TAKE gate (§C, key shot: the hook).
+
+Open, non-blocking polish if there is ever time:
+- warm the sails or hull toward the oil reference (cream or striped sails, a red hull band);
+- lower the captain's chart arm so the shrug is symmetric;
+- sharpen the soft foreground plank texture.
