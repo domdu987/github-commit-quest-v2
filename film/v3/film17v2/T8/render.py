@@ -6,7 +6,7 @@ The calipers are held by Bertillon's WHITE GLOVE hand (cast10 gloves10, added to
 (slide jaw travels g2018-2044, hold to g2052)."""
 import sys, os, math, glob
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.abspath(os.path.join(HERE, '..', '..', '..', '..'))
-sys.path.insert(0, os.path.join(ROOT, 'film/v3/set3d17')); sys.path.insert(0, os.path.join(ROOT, 'film/v3/cast17')); sys.path.insert(0, os.path.join(ROOT, 'film/v3/stage'))
+sys.path.insert(0, os.path.join(ROOT, 'film/v3/set3d17')); sys.path.insert(0, os.path.join(ROOT, 'film/v3/cast17')); sys.path.insert(0, os.path.join(ROOT, 'film/v3/stage')); sys.path.insert(0, os.path.join(ROOT, 'film/v3/tools'))
 import prefecture17 as P, bpy, cast17, puppet
 import actors
 TAKE = 'T8'
@@ -162,6 +162,74 @@ def _lookrot_smooth(loc, look, up_hint=(0, 1, 0)):
     if qy.dot(qz) < 0: qz.negate()
     return qy.slerp(qz, s)
 _orig_lookrot = P._lookrot; P._lookrot = _lookrot_smooth
+
+# ---------------------------------------------------------------- director float-hunter fix (client rule K): top-down cards must not lie on the floor
+LEAN_MAX = float(os.environ.get('LEAN_MAX', 35.0))
+_basis_orig = actors.Actor.basis
+def _basis_steep(self, camera):
+    """camera pitch steeper than 45 deg down: yaw the card to the camera (blend from the face-key yaw 40->50 deg) and lean it back, pivot at the feet,
+    by LEAN_MAX * smoothstep((pitch-45)/45) (35 deg at straight down). Above 45 deg the stock behaviour (yaw_fixed + max_slant) is untouched."""
+    from mathutils import Vector as V
+    f = camera.matrix_world.to_quaternion() @ V((0, 0, -1)); p = math.asin(max(-1.0, min(1.0, f.z))); pd = -math.degrees(p)
+    if pd < 40.0: return _basis_orig(self, camera)
+    fx = self.yaw_fixed; w = _ss((pd - 40.0) / 10.0)
+    r = camera.matrix_world.to_quaternion() @ V((1, 0, 0)); ang_cam = math.atan2(r.y, r.x)
+    if fx is not None:
+        a0 = math.radians(fx); d = (ang_cam - a0 + math.pi) % (2 * math.pi) - math.pi; ang = a0 + d * w
+    else: ang = ang_cam
+    rh = V((math.cos(ang), math.sin(ang), 0.0)); up = V((0, 0, 1)); h = up.cross(rh)
+    tau = -math.radians(LEAN_MAX) * _ss((pd - 45.0) / 45.0)
+    y = h * math.cos(tau) + up * math.sin(tau); z = up * math.cos(tau) - h * math.sin(tau)
+    return rh, y, z
+actors.Actor.basis = _basis_steep
+
+# ---------------------------------------------------------------- contact blobs (director, client rule K): a soft dark ellipse (alpha 0.5) 1 mm above the surface under every card and floor prop
+_build_orig = actors.Actor.build
+def _build_blob(self, *a, **k):
+    r = _build_orig(self, *a, **k)
+    if self.contact is not None: self.contact.location = (0.0, 0.0, 0.001 + 0.0002 * actors.REGISTRY.index(self))
+    return r
+actors.Actor.build = _build_blob
+BLOB_SKIP = ('dust', 'pend_', 'stv', 'glow', 'smoke', 'beam', 'sg_', 'cardedge', 'back_', 'c2_', 'cc_', 't8_')
+def add_prop_blobs():
+    """the room's furniture is batched into one mesh per material, so a blob per object is meaningless: split every measure_* mesh into loose pieces (connected faces),
+    keep the pieces that touch the floor (lowest z within 3 cm of the surface, taller than 5 cm, footprint under 3 m), merge the ones whose footprints overlap
+    (a chair's four legs, a desk and its drawers) and put ONE soft contact ellipse (alpha 0.5, 1 mm above the surface, no shadow / bounce) under each cluster."""
+    import ground_check as G
+    from mathutils import Vector as V
+    sc = bpy.context.scene; bpy.context.view_layer.update(); dg = bpy.context.evaluated_depsgraph_get(); pieces = []
+    for ob in list(sc.objects):
+        if ob.type != 'MESH' or ob.hide_render or not ob.name.startswith('measure_') or ob.name.startswith(BLOB_SKIP) or ob.name in ('measure_floor', 'measure_runner'): continue
+        me = ob.data; mw = ob.matrix_world; par = list(range(len(me.vertices)))
+        def f(a):
+            while par[a] != a: par[a] = par[par[a]]; a = par[a]
+            return a
+        for p in me.polygons:
+            vs = p.vertices; r0 = f(vs[0])
+            for v in vs[1:]:
+                r = f(v)
+                if r != r0: par[r] = r0
+        groups = {}
+        for v in me.vertices: groups.setdefault(f(v.index), []).append(mw @ v.co)
+        for pts in groups.values():
+            x0, x1 = min(p.x for p in pts), max(p.x for p in pts); y0, y1 = min(p.y for p in pts), max(p.y for p in pts); z0, z1 = min(p.z for p in pts), max(p.z for p in pts)
+            if z1 - z0 < 0.05 or max(x1 - x0, y1 - y0) > 3.0 or len(pts) < 4: continue
+            low = min(pts, key=lambda p: p.z); hz, _h = G.cast_down(sc, dg, ob, low)
+            if hz is None or low.z - hz > 0.03 or low.z - hz < -0.15: continue
+            pieces.append([x0, x1, y0, y1, hz, ob.name])
+    cl = []
+    for p in pieces:                                                                      # merge overlapping footprints (5 cm margin)
+        hit = [c for c in cl if p[0] < c[1] + 0.05 and p[1] > c[0] - 0.05 and p[2] < c[3] + 0.05 and p[3] > c[2] - 0.05 and abs(p[4] - c[4]) < 0.05]
+        for c in hit: cl.remove(c); p = [min(p[0], c[0]), max(p[1], c[1]), min(p[2], c[2]), max(p[3], c[3]), min(p[4], c[4]), p[5]]
+        cl.append(p)
+    mat = G._shadow_material((0.05, 0.045, 0.07), 0.5)
+    for k, (x0, x1, y0, y1, hz, nm) in enumerate(cl):
+        cx, cy = (x0 + x1) / 2, (y0 + y1) / 2; hw, hd = max((x1 - x0) * 1.15, 0.12) / 2, max((y1 - y0) * 1.15, 0.12) / 2
+        me = bpy.data.meshes.new('prop_blob%d' % k); me.from_pydata([(-hw, -hd, 0.0), (hw, -hd, 0.0), (hw, hd, 0.0), (-hw, hd, 0.0)], [], [(0, 1, 2, 3)]); uv = me.uv_layers.new(name='UVMap')
+        for i, c in enumerate(((0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0))): uv.data[i].uv = c
+        me.materials.append(mat); sh = bpy.data.objects.new('prop_blob%d_gcshadow' % k, me); sc.collection.objects.link(sh); sh.location = (cx, cy, hz + 0.001); sh['gc_role'] = 'shadow'
+        sh.visible_shadow = sh.visible_diffuse = sh.visible_glossy = sh.visible_transmission = False
+    print('prop contact blobs:', len(cl), 'from', len(pieces), 'floor pieces')
 def setup(still_g=None):
     A = P.world_build(TAKE); P.key_take(TAKE); P.setup_render2((720, 1280), samples=16, threads=2)
     for o in bpy.data.objects:
@@ -172,6 +240,7 @@ def setup(still_g=None):
         ob = bpy.data.objects.new('t8_ground', me); bpy.context.scene.collection.objects.link(ob); ob.location = (0, 0, P.FZ - 0.35)
         m = bpy.data.materials.new('t8_ground_m'); m.use_nodes = True; bs = m.node_tree.nodes['Principled BSDF']; c = os.environ.get('GCOL', '2b3562'); r, g_, b = [int(c[i:i + 2], 16) / 255.0 for i in (0, 2, 4)]
         bs.inputs['Base Color'].default_value = (r ** 2.2, g_ ** 2.2, b ** 2.2, 1); bs.inputs['Roughness'].default_value = 1.0; bs.inputs['Emission Color'].default_value = (r ** 2.2, g_ ** 2.2, b ** 2.2, 1); bs.inputs['Emission Strength'].default_value = 1.0; ob.data.materials.append(m)
+    add_prop_blobs()
     return A
 
 def do_frame(g, out, sprite_dir):
