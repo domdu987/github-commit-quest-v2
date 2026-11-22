@@ -1,0 +1,123 @@
+# GROUND.md -- ground check
+
+- scene: `Scene`   file: `(unsaved)`
+- frames sampled: 7 (1742, 1752, 1762, 1772, 1782, 1792, 1802)   tolerance: gap > 0.050 units FAILS   rays: straight down from the lowest contact point(s)
+- checked objects: 16   rows: 112   FAIL rows: 0   **result: PASS**
+- command: `python3 shot.py gcheck 1742 1806`
+
+## All rows
+
+| object | frame | gap | status | kind/how | lowest z | surface under it |
+|---|---|---|---|---|---|---|
+| ph_b0 | 1742 | -0.0690 | OK | prop/bbox | 15.931 | wall |
+| ph_b0 | 1752 | -0.0663 | OK | prop/bbox | 15.934 | wall |
+| ph_b0 | 1762 | -0.2983 | OK | prop/bbox | 15.940 | wall |
+| ph_b0 | 1772 | -0.0690 | OK | prop/bbox | 15.931 | wall |
+| ph_b0 | 1782 | -0.0663 | OK | prop/bbox | 15.934 | wall |
+| ph_b0 | 1792 | -0.2983 | OK | prop/bbox | 15.940 | wall |
+| ph_b0 | 1802 | -0.0690 | OK | prop/bbox | 15.931 | wall |
+| ph_b1 | 1742 | -0.2992 | OK | prop/bbox | 15.939 | wall |
+| ph_b1 | 1752 | -0.0692 | OK | prop/bbox | 15.931 | wall |
+| ph_b1 | 1762 | -0.2961 | OK | prop/bbox | 15.942 | wall |
+| ph_b1 | 1772 | -0.2992 | OK | prop/bbox | 15.939 | wall |
+| ph_b1 | 1782 | -0.0692 | OK | prop/bbox | 15.931 | wall |
+| ph_b1 | 1792 | -0.2961 | OK | prop/bbox | 15.942 | wall |
+| ph_b1 | 1802 | -0.2992 | OK | prop/bbox | 15.939 | wall |
+| ph_b2 | 1742 | -0.2989 | OK | prop/bbox | 15.939 | wall |
+| ph_b2 | 1752 | -0.0720 | OK | prop/bbox | 15.928 | wall |
+| ph_b2 | 1762 | -0.0640 | OK | prop/bbox | 15.936 | wall |
+| ph_b2 | 1772 | -0.2989 | OK | prop/bbox | 15.939 | wall |
+| ph_b2 | 1782 | -0.0720 | OK | prop/bbox | 15.928 | wall |
+| ph_b2 | 1792 | -0.0640 | OK | prop/bbox | 15.936 | wall |
+| ph_b2 | 1802 | -0.2989 | OK | prop/bbox | 15.939 | wall |
+| ph_b3 | 1742 | -0.2955 | OK | prop/bbox | 15.943 | wall |
+| ph_b3 | 1752 | -0.0635 | OK | prop/bbox | 15.937 | wall |
+| ph_b3 | 1762 | -0.0662 | OK | prop/bbox | 15.934 | wall |
+| ph_b3 | 1772 | -0.2955 | OK | prop/bbox | 15.943 | wall |
+| ph_b3 | 1782 | -0.0635 | OK | prop/bbox | 15.937 | wall |
+| ph_b3 | 1792 | -0.0662 | OK | prop/bbox | 15.934 | wall |
+| ph_b3 | 1802 | -0.2955 | OK | prop/bbox | 15.943 | wall |
+| ph_b4 | 1742 | -0.0621 | OK | prop/bbox | 15.938 | tower |
+| ph_b4 | 1752 | -0.0621 | OK | prop/bbox | 15.938 | tower |
+| ph_b4 | 1762 | -0.0751 | OK | prop/bbox | 15.925 | tower |
+| ph_b4 | 1772 | -0.0621 | OK | prop/bbox | 15.938 | tower |
+| ph_b4 | 1782 | -0.0621 | OK | prop/bbox | 15.938 | tower |
+| ph_b4 | 1792 | -0.0751 | OK | prop/bbox | 15.925 | tower |
+| ph_b4 | 1802 | -0.0621 | OK | prop/bbox | 15.938 | tower |
+| ph_b5 | 1742 | -0.0635 | OK | prop/bbox | 15.937 | wall |
+| ph_b5 | 1752 | -0.2955 | OK | prop/bbox | 15.943 | wall |
+| ph_b5 | 1762 | -0.0662 | OK | prop/bbox | 15.934 | wall |
+| ph_b5 | 1772 | -0.0635 | OK | prop/bbox | 15.937 | wall |
+| ph_b5 | 1782 | -0.2955 | OK | prop/bbox | 15.943 | wall |
+| ph_b5 | 1792 | -0.0662 | OK | prop/bbox | 15.934 | wall |
+| ph_b5 | 1802 | -0.0635 | OK | prop/bbox | 15.937 | wall |
+| ph_b6 | 1742 | -0.2890 | OK | prop/bbox | 15.949 | wall |
+| ph_b6 | 1752 | -0.2779 | OK | prop/bbox | 15.960 | wall |
+| ph_b6 | 1762 | -0.2810 | OK | prop/bbox | 15.957 | wall |
+| ph_b6 | 1772 | -0.2890 | OK | prop/bbox | 15.949 | wall |
+| ph_b6 | 1782 | -0.2779 | OK | prop/bbox | 15.960 | wall |
+| ph_b6 | 1792 | -0.2810 | OK | prop/bbox | 15.957 | wall |
+| ph_b6 | 1802 | -0.2890 | OK | prop/bbox | 15.949 | wall |
+| ph_b7 | 1742 | -0.2890 | OK | prop/bbox | 15.949 | wall |
+| ph_b7 | 1752 | -0.2810 | OK | prop/bbox | 15.957 | wall |
+| ph_b7 | 1762 | -0.2779 | OK | prop/bbox | 15.960 | wall |
+| ph_b7 | 1772 | -0.2890 | OK | prop/bbox | 15.949 | wall |
+| ph_b7 | 1782 | -0.2810 | OK | prop/bbox | 15.957 | wall |
+| ph_b7 | 1792 | -0.2779 | OK | prop/bbox | 15.960 | wall |
+| ph_b7 | 1802 | -0.2890 | OK | prop/bbox | 15.949 | wall |
+| ph_sh_b0 | 1742 | -0.1920 | OK | prop/bbox | 16.046 | wall |
+| ph_sh_b0 | 1752 | -0.1893 | OK | prop/bbox | 16.049 | wall |
+| ph_sh_b0 | 1762 | -0.1832 | OK | prop/bbox | 16.055 | wall |
+| ph_sh_b0 | 1772 | -0.1920 | OK | prop/bbox | 16.046 | wall |
+| ph_sh_b0 | 1782 | -0.1893 | OK | prop/bbox | 16.049 | wall |
+| ph_sh_b0 | 1792 | -0.1832 | OK | prop/bbox | 16.055 | wall |
+| ph_sh_b0 | 1802 | -0.1920 | OK | prop/bbox | 16.046 | wall |
+| ph_sh_b1 | 1742 | -0.1951 | OK | prop/bbox | 16.051 | wood |
+| ph_sh_b1 | 1752 | -0.1950 | OK | prop/bbox | 16.043 | wall |
+| ph_sh_b1 | 1762 | -0.1838 | OK | prop/bbox | 16.054 | wall |
+| ph_sh_b1 | 1772 | -0.1869 | OK | prop/bbox | 16.051 | wall |
+| ph_sh_b1 | 1782 | -0.1950 | OK | prop/bbox | 16.043 | wall |
+| ph_sh_b1 | 1792 | -0.1838 | OK | prop/bbox | 16.054 | wall |
+| ph_sh_b1 | 1802 | -0.1869 | OK | prop/bbox | 16.051 | wall |
+| ph_sh_b2 | 1742 | -0.1838 | OK | prop/bbox | 16.054 | wall |
+| ph_sh_b2 | 1752 | -0.1950 | OK | prop/bbox | 16.043 | wall |
+| ph_sh_b2 | 1762 | -0.1869 | OK | prop/bbox | 16.051 | wall |
+| ph_sh_b2 | 1772 | -0.1838 | OK | prop/bbox | 16.054 | wall |
+| ph_sh_b2 | 1782 | -0.1950 | OK | prop/bbox | 16.043 | wall |
+| ph_sh_b2 | 1792 | -0.1869 | OK | prop/bbox | 16.051 | wall |
+| ph_sh_b2 | 1802 | -0.1838 | OK | prop/bbox | 16.054 | wall |
+| ph_sh_b3 | 1742 | -0.1832 | OK | prop/bbox | 16.055 | wall |
+| ph_sh_b3 | 1752 | -0.1893 | OK | prop/bbox | 16.049 | wall |
+| ph_sh_b3 | 1762 | -0.1920 | OK | prop/bbox | 16.046 | wall |
+| ph_sh_b3 | 1772 | -0.1832 | OK | prop/bbox | 16.055 | wall |
+| ph_sh_b3 | 1782 | -0.1893 | OK | prop/bbox | 16.049 | wall |
+| ph_sh_b3 | 1792 | -0.1920 | OK | prop/bbox | 16.046 | wall |
+| ph_sh_b3 | 1802 | -0.1832 | OK | prop/bbox | 16.055 | wall |
+| ph_sh_b4 | 1742 | -0.1851 | OK | prop/bbox | 16.053 | wall |
+| ph_sh_b4 | 1752 | -0.1851 | OK | prop/bbox | 16.053 | wall |
+| ph_sh_b4 | 1762 | -0.1981 | OK | prop/bbox | 16.040 | wall |
+| ph_sh_b4 | 1772 | -0.1851 | OK | prop/bbox | 16.053 | wall |
+| ph_sh_b4 | 1782 | -0.1851 | OK | prop/bbox | 16.053 | wall |
+| ph_sh_b4 | 1792 | -0.1981 | OK | prop/bbox | 16.040 | wall |
+| ph_sh_b4 | 1802 | -0.1851 | OK | prop/bbox | 16.053 | wall |
+| ph_sh_b5 | 1742 | -0.1893 | OK | prop/bbox | 16.049 | wall |
+| ph_sh_b5 | 1752 | -0.1832 | OK | prop/bbox | 16.055 | wall |
+| ph_sh_b5 | 1762 | -0.1920 | OK | prop/bbox | 16.046 | wall |
+| ph_sh_b5 | 1772 | -0.1893 | OK | prop/bbox | 16.049 | wall |
+| ph_sh_b5 | 1782 | -0.1832 | OK | prop/bbox | 16.055 | wall |
+| ph_sh_b5 | 1792 | -0.1920 | OK | prop/bbox | 16.046 | wall |
+| ph_sh_b5 | 1802 | -0.1893 | OK | prop/bbox | 16.049 | wall |
+| ph_sh_b6 | 1742 | -0.1950 | OK | prop/bbox | 16.043 | wall |
+| ph_sh_b6 | 1752 | -0.1838 | OK | prop/bbox | 16.054 | wall |
+| ph_sh_b6 | 1762 | -0.1869 | OK | prop/bbox | 16.051 | wall |
+| ph_sh_b6 | 1772 | -0.1950 | OK | prop/bbox | 16.043 | wall |
+| ph_sh_b6 | 1782 | -0.1838 | OK | prop/bbox | 16.054 | wall |
+| ph_sh_b6 | 1792 | -0.1869 | OK | prop/bbox | 16.051 | wall |
+| ph_sh_b6 | 1802 | -0.1950 | OK | prop/bbox | 16.043 | wall |
+| ph_sh_b7 | 1742 | -0.1950 | OK | prop/bbox | 16.043 | wall |
+| ph_sh_b7 | 1752 | -0.1869 | OK | prop/bbox | 16.051 | wall |
+| ph_sh_b7 | 1762 | -0.1838 | OK | prop/bbox | 16.054 | wall |
+| ph_sh_b7 | 1772 | -0.1950 | OK | prop/bbox | 16.043 | wall |
+| ph_sh_b7 | 1782 | -0.1869 | OK | prop/bbox | 16.051 | wall |
+| ph_sh_b7 | 1792 | -0.1838 | OK | prop/bbox | 16.054 | wall |
+| ph_sh_b7 | 1802 | -0.1950 | OK | prop/bbox | 16.043 | wall |

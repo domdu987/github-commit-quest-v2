@@ -7,7 +7,7 @@ import c18 as C
 from c18 import J, S, R2, V, bpy
 SHOT = 's23'; G0, G1 = 1742, 1806; H_IN, H_OUT = 6, 6
 c = S.SHOTS[SHOT]['cam']; c['loc'] = (-26.0, 3.2, 19.2); c['look_at'] = (-9.0, 0.2, 17.0); c['lens'] = 22.0
-C.motion(SHOT, push=-0.12, slide=70, moves=[dict(t=0.10, pan=7, dur=4), dict(t=0.22, pan=-7, dur=4), dict(t=0.34, d=1.09, dur=4), dict(t=0.46, pan=7, dur=4), dict(t=0.58, pan=-7, dur=4), dict(t=0.70, d=0.93, dur=4), dict(t=0.82, pan=7, dur=4), dict(t=0.92, pan=-7, dur=4)])
+C.motion(SHOT, push=-0.12, slide=72, moves=[])                    # V2: ONE eased pull-back + truck, no pans / snaps
 
 def setup(ctx):
     J.set_holes(12)
@@ -18,11 +18,11 @@ def frame(g, t, camloc, ctx):
     allm = [('townsfolk', i, m) for i, m in enumerate(marks['townsfolk'])] + [('child', i, m) for i, m in enumerate(marks.get('child', []))]
     for n, (role, i, m) in enumerate(allm):
         base = {'townsfolk': ('old_man', 'woman')[i % 2], 'child': 'child'}[role] + '_beat'
-        ph = (g // 3 + n) % 2                                   # strike / lift every 3 frames, 6-frame period (5 Hz)
+        ph = (g // 6 + n) % 2                                   # V2: strike / lift every 6 frames, 12-frame period (2.5 Hz)
         ang = (-58, -18)[ph]; ring = (0.25, 1.0)[ph]
         meta = C.person(base, {'prop_r': {'type': 'mallet', 'angle': ang, 'scale': 1.3}, 'pot_ring': ring, 't': 0.3 + 0.4 * ph})
         hh = 2.0 if role == 'child' else 3.0
-        C.put_person(meta, m[:3], camloc, hh, 'b%d' % n, lift=0.06 * abs(math.sin((g + n * 2) * math.pi / 3.0)))
+        C.put_person(meta, m[:3], camloc, hh, 'b%d' % n, lift=0.015 * abs(math.sin((g + n * 2) * math.pi / 15.0)))
 
 if __name__ == '__main__':
     C.run(SHOT, G0 - H_IN, G1 + H_OUT, frame, setup, sys.argv[1:])

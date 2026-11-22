@@ -30,3 +30,9 @@ Reframed to the director's brief: camera on the herd axis at (30.2,-26,1.7) look
 
 ## Round 18 (gate 16 follow-up)
 Gate 16 judged the older lane layout (pot in the lead's path); the round-17 head-on reframe removed those pots, and no prop is in the oxen's run (props only y -24.5..-14.8, oxen culled at y -13). Rubble raised 75 -> 150 props at the lower edge. Frame-diff n=87: median 19.97, p90 25.21. Ground (shared ground_share.py, every 5th frame): max **0.306**, median 0.227 (0.30 target missed by 0.006). qa_auto: blur flag only on the whip-out. Not re-checked at 2x zoom frame by frame.
+
+## V2 fix (client: "camera shakes") - 2026-11-22, render team 5
+Base: round 17/18 take (9897eb4 + rubble). Changes: (1) camera = ONE eased push (5 %) + a slow truck (-12 px/s) and the planned whip-out only; the two punch-in snaps and the sway term (2.4 sin(21 t)) are removed; (2) gallop bounce cancelled 60 % (head-anchor phase variation) and dark double contact shadows under the hooves (same V2 patch as s20); (3) the oxen are culled at y < -11.5 (one stood over the bank edge at g1507); (4) `transparent_max_bounces = 64`; (5) crf 20.
+- ground_check (`python3 shot.py gcheck 1427 1514`, every 10th frame, 0.05 D): **exit 0 / PASS** - 223 objects, 1703 rows, 0 FAIL (GROUND.md). The dust puffs (`ph_pf*`) are airborne smoke and are skipped.
+- qa_jitter.py take.mkv: **no "shake" line**, overall median jitter 0.26 px (the whip-out is not flagged).
+- Frame-diff in-shot (n=87): median **5.98**, p90 10.53. qa_auto: blur flag only on g1508-1520 = the planned whip-out (director-accepted).

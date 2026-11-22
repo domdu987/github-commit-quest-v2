@@ -7,11 +7,11 @@ import c18 as C
 from c18 import J, S, R2, V, bpy
 SHOT = 's19'; G0, G1 = 1427, 1514; H_IN, H_OUT = 6, 6        # cut in, whip out
 c = S.SHOTS[SHOT]['cam']; c['loc'] = (30.2, -26.0, 1.7); c['look_at'] = (30.0, -2.0, 2.0); c['lens'] = 22.0
-C.motion(SHOT, push=0.0, slide=-30, moves=[dict(t=0.2, d=0.9, dur=8), dict(t=0.35, d=0.9, dur=8), dict(t=0.84, pan=-85, dur=7)])
+C.motion(SHOT, push=0.05, slide=-12, moves=[dict(t=0.84, pan=-85, dur=7)])                    # V2: one eased push + a slow truck, the planned whip-out only (no snaps)
 _p0 = S.pose_at
 def _tilt(sh, t):                                            # the whip lands on the herd: tilt down from the sky onto the field while the pan runs
     p = _p0(sh, t); k = min(1.0, max(0.0, (t - 0.82) / 0.10)); k = k * k * (3 - 2 * k)
-    la = list(p['look_at']); la[2] = la[2] + (3.0 - la[2]) * k; sw = 2.4 * math.sin(t * 21.0) * (1.0 - k)
+    la = list(p['look_at']); la[2] = la[2] + (3.0 - la[2]) * k; sw = 0.0                                                  # V2: no sway
     p['loc'] = (p['loc'][0] + sw, p['loc'][1] + 0.4 * sw, p['loc'][2]); la[0] += sw; p['look_at'] = tuple(la); return p
 S.pose_at = _tilt
 HIDE = tuple(os.environ.get('HIDE', 'furrows,streaks,streak,rainstreaks,tufts').split(','))
@@ -67,7 +67,7 @@ def frame(g, t, camloc, ctx):
     for j, (gs, hx, jit, sc) in enumerate(OX):
         if g < gs: continue
         y = 4.0 - V_OX * (g - gs) / 30.0
-        if y < -13.0: continue
+        if y < -11.5: continue
         pos = (hx + jit, y, 0.0); near = True
         ph = int((g - gs) * 12 / 30.0 + j) % 8
         C.put_ox(j, pos, -100, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='front_three_quarter', gait='gallop', theta=(6, 12, 9)[j % 3], reed=True, tfx=0.4, lean=60.0, face='rage')

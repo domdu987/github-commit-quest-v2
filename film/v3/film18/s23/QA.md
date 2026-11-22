@@ -16,3 +16,9 @@ PASS.
 ## Deviations
 - Camera pose is closer/lower than planned: the planned high pose put the 8 beaters at about 100 px, which did not read; the dark parapet merlon of the near wall frames the bottom left. The pull-out at the end makes the group small again (about 160 px) but still readable.
 - The set's walk is lit by one fire; no extra light added.
+
+## V2 fix (client: "camera shakes") - 2026-11-22, render team 5
+Base: s23 take 688a39e. Changes: the camera is ONE eased pull-back (push -0.12) + one truck (slide 72 px/s) - the eight +-7 deg pan snaps and the two distance snaps are removed; pot-beat cycle slowed from 5 Hz (3 frames) to 2.5 Hz (6 frames per half cycle) and the per-person hop reduced from 0.06 D to 0.015 D at 1.5 Hz; `transparent_max_bounces = 64`; crf 20; meta transition_in unchanged (dissolve 9).
+- ground_check (`python3 shot.py gcheck 1742 1806`, every 10th frame, 0.05 D): **exit 0 / PASS** - 16 objects, 112 rows, 0 FAIL (GROUND.md).
+- qa_jitter.py take.mkv: **no "shake" line**, overall median jitter 0.21 px.
+- Frame-diff in-shot (n=64): median **4.10**, p90 5.61 (median >= 4 met with the eased dolly + parallax). qa_auto PASS.

@@ -146,10 +146,25 @@ def run(shot, g0, g1, frame_cb, setup_cb=None, argv=None, lights=6, keep=None):
         frame_cb(g, t, camloc, ctx)
         lit_tails(camloc, lights)
         bpy.context.view_layer.update(); J.flicker(g)
+        if mode == 'gcheck':
+            import importlib.util
+            if 'GCMOD' not in globals():
+                sp = importlib.util.spec_from_file_location('ground_check', os.path.join(HERE, '..', '..', 'tools', 'ground_check.py')); GCMOD = importlib.util.module_from_spec(sp); sp.loader.exec_module(GCMOD); globals()['GCMOD'] = GCMOD; globals()['GCHECK'] = ([], {}, [])
+            if (g - a) % int(os.environ.get('GSTEP', '5')) == 0:
+                bpy.context.scene.frame_set(bpy.context.scene.frame_current)
+                rs, air = GCMOD.run_check(frame_list=[bpy.context.scene.frame_current], gap=0.05, include=os.environ.get('GCINC', r'(ph_|prop|pot|jar|bowl|reed|bundle)'), skip=os.environ.get('GCSKIP', r'(spk|flame|puff|pf\d|glow|pool|shadow|tfl|spark|hole)'))
+                for r in rs: r['frame'] = g
+                GCHECK[0].extend(rs); GCHECK[2].append(g)
+                for k_, v_ in air.items(): GCHECK[1].setdefault(k_, []).extend([g])
+            continue
         if mode == 'measure':
             m_ = measure_frame(cam, None); gp_, who_ = matte_gap(cam); REPORT.append((g, round(m_['mouth_max']), round(gp_))); WHO.append((g, who_)); continue
         w, c = T.render(path); tt.append(time.time() - t0)
         print('%s g%d  %.1f s (wall %.1f cpu %.1f)' % (shot, g, tt[-1], w, c), flush=True)
+    if mode == 'gcheck' and 'GCHECK' in globals():
+        rs, air, fl = GCHECK
+        GCMOD.write_report(os.path.join(HERE, 'GROUND.md'), rs, air, 'python3 shot.py gcheck %d %d' % (a, b), bpy.context.scene, 0.05, fl)
+        nf = len([r for r in rs if r['status'] == 'FAIL']); print('GROUND: rows %d FAIL %d' % (len(rs), nf)); sys.exit(1 if nf else 0)
     if REPORT:
         mm = max(REPORT, key=lambda r: r[1]); dm = min(REPORT, key=lambda r: r[2])
         print('WORST mouth y %d at g%d; min flame-to-face %d px at g%d' % (mm[1], mm[0], dm[2], dm[0]))
@@ -237,12 +252,25 @@ def put_ox(i, pos, travel, scale, camloc, phase=0, flame=-1, state='dragon', vie
     CURFACE[0] = face
     meta = CD.card('ox', state=state, view=view, gait=gait, phase=ph if gait != 'stand' else 0, flame=-1, reed=1 if (reed or flame >= 0) else 0, face=face)
     CURFACE[0] = None
-    ob = R2.put_card(meta, tuple(p), yaw, sc, mirror=mir, name='ox%d' % i, tint=tint, k=k, sw=2.7 * sc)
+    comp = 0.0
+    if gait == 'gallop' and float(os.environ.get('BOBCOMP', '0.6')) > 0:       # V2 jitter fix: cancel most of the gallop's body bounce (the head anchor's phase variation)
+        _hy = [anchor_of('head', state, view, gait, q_)[1] for q_ in range(8)]; comp = float(os.environ.get('BOBCOMP', '0.6')) * (_hy[ph] - sum(_hy) / 8.0) * sc
+    ob = R2.put_card(meta, (p.x, p.y, p.z + comp), yaw, sc, mirror=mir, name='ox%d' % i, tint=tint, k=k, sw=2.7 * sc)
+    for o_ in bpy.data.objects:
+        if o_.name == 'ph_sh_ox%d' % i: o_.location.z = p.z
+    if os.environ.get('HOOFSHADOW', '1') == '1':                      # V2 fix: dark contact shadow right under the hooves (centred on the card's feet, stacked twice)
+        ly_ = math.radians(yaw); rgt = V((math.cos(ly_), math.sin(ly_), 0.0)); cxm = (-1.0 if mir else 1.0) * (meta['x0'] + 0.5 * meta['w']) * sc
+        for q_ in range(2):
+            sm_ = R2._shadow_quad('chs_%d' % q_, 1.0, 0.5)
+            if not sm_.materials: sm_.materials.append(R2._card_mat(R2._shadow_png(), (1, 1, 1), 0.0, 'shadow'))
+            so_ = bpy.data.objects.new('ph_sh_hoof%d_%d' % (i, q_), sm_); STATE['SET'].objects.link(so_)
+            so_.location = (p.x + rgt.x * cxm, p.y + rgt.y * cxm, p.z + 0.002 * q_); so_.rotation_euler = (0, 0, ly_)
+            so_.scale = (0.46 * meta['w'] * sc, 0.46 * meta['w'] * sc * 0.45, 1.0); so_.visible_shadow = False; J.no_bounce(so_); so_['placeholder'] = 1
     record_ox(p, yaw, mir, sc, state, view, gait, ph, (tfx * sc if flame >= 0 else 0.0), None)
     if flame >= 0:
         ax, ay = tail_anchor(state, view, gait, ph); ly = math.radians(yaw)
         lx = (-1.0 if mir else 1.0) * ax * sc; lz = -ay * sc
-        right = V((math.cos(ly), math.sin(ly), 0.0)); tail = p + right * lx + V((0, 0, lz)); TAILS.append((tail, sc))
+        right = V((math.cos(ly), math.sin(ly), 0.0)); tail = p + right * lx + V((0, 0, lz + comp)); TAILS.append((tail, sc))
         back = 1.0 if lx > 0 else -1.0
         fm = flame_meta(flame % 3); fs = tfx * sc; bob = 1.0 + 0.1 * math.sin(i + flame)
         fo = R2.put_card(fm, (tail.x, tail.y, tail.z), yaw, fs * bob, name='tfl%d' % i, tint=(1, 1, 1), k=1.6, shadow=False)
@@ -256,7 +284,7 @@ def put_ox(i, pos, travel, scale, camloc, phase=0, flame=-1, state='dragon', vie
 
 def lit_tails(cam, nlights=5):
     M = STATE['M']
-    for (t, sc) in TAILS:
+    for (t, sc) in (TAILS if os.environ.get('NOPOOL', '0') != '1' else []):
         sm = R2._shadow_quad('cpool', 1.0, 1.0)
         if not sm.materials: sm.materials.append(M['pool_w'])
         ob = bpy.data.objects.new('ph_pool', sm); STATE['SET'].objects.link(ob); ob.location = (t.x, t.y, 0.06); ob.scale = (1.1 * sc, 1.1 * sc, 1.0); ob.visible_shadow = False; J.no_bounce(ob); ob['placeholder'] = 1
@@ -362,3 +390,5 @@ def matte_gap(cam, rad_d=0.95):
             d = max(0.0, float(dt[yi, xi]) - r)
             if d < worst: worst = d; who = (fk, j)
     return worst, who
+
+# GCHECK patched
