@@ -1,0 +1,1 @@
+PASSED v2 (2026-11-22 04:30 UTC, client fix: camera shake removed): ground_check PASS, qa_jitter: overall median jitter px 0.26, no shake seconds; director phone-strip check. qa_auto blur flag on the whip-out g1508-1520 = planned whip, accepted as in v1. take hash f2e62f5be202c9fc611070df890b42fa14424d7a

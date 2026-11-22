@@ -1,0 +1,1 @@
+PASSED v2 (2026-11-22 06:30 UTC, client fix: camera shake removed, figures planted): ground_check 0 FAIL, qa_jitter: overall median jitter px 0.31, no shake seconds; director phone-strip check. take hash a3313f86a2cd7f48620f873299501035093b1c2b

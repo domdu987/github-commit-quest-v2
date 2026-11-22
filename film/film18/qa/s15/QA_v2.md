@@ -1,0 +1,29 @@
+# QA s15 (film 18, render team 4)
+Range g 1136-1204, take.mkv frames 1130..1210 (81 frames), transition in: cut.
+Render: 720x1280, 12 samples, OIDN, 2 threads, 17.8 s/frame wall (two renders at once).
+
+## Frame diff (90x160 grey, in-shot frames only)
+median 8.23, p90 12.37, min 1.89, max 17.33, frames < 1: 0 (rule: median >= 4, p90 >= 12)
+
+## Max chin y per head (rule < 880)
+{"general": 780, "soldier0": 789, "crowd0": 739, "crowd1": 732, "crowd2": 734}
+
+## Notes
+- Rework after TAKE gate: lip-sync over the whole shot (overlay mouth below the moustache, 4 shapes); cup raised in the right hand as at the end of s14, tilting (2 drawings); left-hand carving mime from g 1155 (hand mostly hidden behind the raised arm in the drawing); lip-lick grin g 1180-1184 (no tongue drawing exists, a wide grin is used); 3 Hz bounce.
+- Medium-close on head, chest and cup, warm tint + rim; left soldier moved 1.8 D left; party cups hidden, two small brown-glazed jars in the bottom corners; ONE held punch-in, no pulses.
+- Round 4: the fg jars now use a toon-glazed material (dark outline ramp, warm centre) instead of flat tan.
+- Carving mime: a knife-hand sleeve + flat hand overlay slices across the chest from g 1155 (clearly visible).
+- Round 5: the knife-hand overlay is removed (QA-art: it looked broken); the cup, tilt, lip-sync and framing are unchanged.
+
+See QA_AUTO.md and phone_sheet.jpg.
+
+
+## V2 (client fixes: no camera shake / nothing floats)
+- Camera: NO sway / shake / pulses. One smooth eased dolly + an ORBIT truck (camera moves sideways, look-at stays on the general, so he never leaves the frame) with ONE/TWO held punch-ins eased over 10 frames. Bounce 0.02 D at 1.8 Hz (was 0.06 D at 3 Hz); the carving hand-saw is 2 Hz. Set tents are built 0.4 D into the ground (sunk, counted as planted).
+- take.mkv crf 21, first_g 1130, 81 frames; transition in: {'type': 'cut', 'frames': 0}.
+- frame diff (90x160 grey, in-shot): median 4.14 / p90 6.15 (rule: median >= 4).
+- ground_check (film/v3/tools/ground_check.py through film18/gc_run.py, every 6th frame): - checked objects: 23   rows: 299   FAIL rows: 0   **result: PASS**  (full table in GROUND.md; cards are checked by bounding box, so only a floating card base can fail; shadows are the cards' contact quads).
+- qa_jitter output:
+```
+overall median jitter px 0.35
+```
