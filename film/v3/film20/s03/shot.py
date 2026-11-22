@@ -222,6 +222,17 @@ def v2_fix_scene(T):
                 w.z = 0.0
                 v.co = mi @ w
         ob.data.update()
+    for nm_ in ("pn_timber", "pn_timberdk", "pn_metal"):          # batch hunter: the leaning shovel (blade hovered, shadow left behind): removed with its shadow
+        ob = bpy.data.objects.get(nm_)
+        if ob is None:
+            continue
+        mw = ob.matrix_world
+        bm = bmesh.new()
+        bm.from_mesh(ob.data)
+        dead = [v for v in bm.verts if 53.3 < (mw @ v.co).x < 55.8 and -167.2 < (mw @ v.co).y < -165.2 and (mw @ v.co).z < 6.0]
+        bmesh.ops.delete(bm, geom=dead, context="VERTS")
+        bm.to_mesh(ob.data)
+        bm.free()
     ob = bpy.data.objects.get("pnoink_timber")                    # float hunter: thin rod above the canopy roof (world x 70.6-70.8, y -149.3, z 7.5-11.3)
     if ob is not None:
         mw = ob.matrix_world
