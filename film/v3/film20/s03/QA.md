@@ -9,3 +9,7 @@ Timing, BIGZOOM (5 % -> 35 %), handles (8+8 dissolve) and first/last framing unc
 - ground_check PASS (GROUND.md). qa_auto PASS (QA_AUTO.md). 1 fps sheet: sheet_1fps.jpg.
 - qa_jitter per second (take-aligned): see GROUND.md for the film-aligned list. Take-aligned: 0s 2.2 (BIGZOOM whoosh, declared), 5s 1.8, 6s 1.3, 7s 5.5 (g380-411 tail, declared).
 - frame-diff median 9.64, p90 32.2.
+
+## Round 2 (float-hunter V2_FLOAT_T03_T11.md items 1-5, all frames re-rendered)
+- 1 lilac faceted shape g231-243: the pn/pm/pf_gravelp discs, hidden. 2 hanging tan posts g267-327: the 4 scaff_timber post tips at z 7.5 now reach the ground. 3 rod above the tent roof: removed (pnoink_timber verts). 4 oversized riveters cut at the waist g~405: rl_a / rl_d shrink away g388-396. 5 upper pair without deck: bigger, thicker plank decks.
+- qa_auto PASS (unsharp mask on g170-182, 376-379 for the blur check). ground_check PASS, qa_jitter in GROUND.md. frame-diff median 9.66 p90 32.83. sheet_1fps.jpg.

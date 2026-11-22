@@ -2,7 +2,7 @@
 
 - scene: `Scene`   file: `(unsaved)`
 - frames sampled: 25 (171, 181, 191, 201, 211, 221, 231, 241, 251, 261, 271, 281 ...)   tolerance: gap > 0.020 units FAILS   rays: straight down from the lowest contact point(s)
-- checked objects: 22   rows: 545   FAIL rows: 0   **result: PASS**
+- checked objects: 21   rows: 525   FAIL rows: 0   **result: PASS**
 - command: `blender -b ... --python ground_check.py -- --frame-list 171,181,191,201,211,221,231,241,251,261,271,281,291,301,311,321,331,341,351,361,371,381,391,401,411 --out /home/user/github-commit-quest-v2/film/v3/film20/s03/GROUND.md --auto-props --max-prop-size 40`
 
 ## All rows
@@ -209,26 +209,6 @@
 | pn_glasswine | 391 | -0.1399 | OK | prop/bbox | 1.834 | pn_brass |
 | pn_glasswine | 401 | -0.1399 | OK | prop/bbox | 1.834 | pn_brass |
 | pn_glasswine | 411 | -0.1399 | OK | prop/bbox | 1.834 | pn_brass |
-| pn_gravelp | 221 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
-| pn_gravelp | 231 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
-| pn_gravelp | 241 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
-| pn_gravelp | 251 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
-| pn_gravelp | 261 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
-| pn_gravelp | 271 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
-| pn_gravelp | 281 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
-| pn_gravelp | 291 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
-| pn_gravelp | 301 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
-| pn_gravelp | 311 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
-| pn_gravelp | 321 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
-| pn_gravelp | 331 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
-| pn_gravelp | 341 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
-| pn_gravelp | 351 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
-| pn_gravelp | 361 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
-| pn_gravelp | 371 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
-| pn_gravelp | 381 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
-| pn_gravelp | 391 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
-| pn_gravelp | 401 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
-| pn_gravelp | 411 | -0.1384 | OK | prop/bbox | -0.058 | pn_stonedk |
 | pn_lantern | 171 | -0.1736 | OK | prop/bbox | 1.800 | pn_brass |
 | pn_lantern | 181 | -0.1736 | OK | prop/bbox | 1.800 | pn_brass |
 | pn_lantern | 191 | -0.1736 | OK | prop/bbox | 1.800 | pn_brass |
@@ -326,9 +306,9 @@
 | rl_a_card | 361 | -0.2911 | OK | card/alpha | 10.460 | pn_dark |
 | rl_a_card | 371 | -0.2911 | OK | card/alpha | 10.460 | pn_dark |
 | rl_a_card | 381 | -0.2911 | OK | card/alpha | 10.460 | pn_dark |
-| rl_a_card | 391 | -0.2911 | OK | card/alpha | 10.460 | pn_dark |
-| rl_a_card | 401 | -0.2911 | OK | card/alpha | 10.460 | pn_dark |
-| rl_a_card | 411 | -0.2911 | OK | card/alpha | 10.460 | pn_dark |
+| rl_a_card | 391 | -0.2880 | OK | card/alpha | 10.464 | pn_dark |
+| rl_a_card | 401 | -0.0000 | OK | card/alpha | 10.490 | plankdeck_leg_a |
+| rl_a_card | 411 | -0.0000 | OK | card/alpha | 10.490 | plankdeck_leg_a |
 | rl_b_card | 171 | -0.0300 | OK | card/alpha | 17.980 | plankdeck_leg_b |
 | rl_b_card | 181 | -0.0300 | OK | card/alpha | 17.980 | plankdeck_leg_b |
 | rl_b_card | 191 | -0.0300 | OK | card/alpha | 17.980 | plankdeck_leg_b |
@@ -401,9 +381,9 @@
 | rl_d_card | 361 | -0.2600 | OK | card/alpha | 10.230 | plankdeck_leg_a |
 | rl_d_card | 371 | -0.2600 | OK | card/alpha | 10.230 | plankdeck_leg_a |
 | rl_d_card | 381 | -0.2600 | OK | card/alpha | 10.230 | plankdeck_leg_a |
-| rl_d_card | 391 | -0.2621 | OK | card/alpha | 10.230 | pn_metal |
-| rl_d_card | 401 | -0.2600 | OK | card/alpha | 10.230 | plankdeck_leg_a |
-| rl_d_card | 411 | -0.2600 | OK | card/alpha | 10.230 | plankdeck_leg_a |
+| rl_d_card | 391 | -0.2569 | OK | card/alpha | 10.234 | plankdeck_leg_a |
+| rl_d_card | 401 | -0.2923 | OK | card/alpha | 10.260 | pn_dark |
+| rl_d_card | 411 | -0.2923 | OK | card/alpha | 10.260 | pn_dark |
 | rl_e_card | 171 | -0.2600 | OK | card/alpha | 17.750 | plankdeck_leg_b |
 | rl_e_card | 181 | -0.2600 | OK | card/alpha | 17.750 | plankdeck_leg_b |
 | rl_e_card | 191 | -0.2600 | OK | card/alpha | 17.750 | plankdeck_leg_b |
@@ -555,15 +535,14 @@
 | tw0_stone | 401 | -0.1880 | OK | prop/bbox | 4.324 | tw0_stonedk |
 | tw0_stone | 411 | -0.1880 | OK | prop/bbox | 4.324 | tw0_stonedk |
 
-## v2 notes (render20/v2a, T03)
-- PASS above: 22 objects (canopy legs x4, riveter cards on plank decks, Eiffel + riveters on the ground, free props), 25 sampled frames.
+## v2 notes (render20/v2a, T03; float-hunter round)
+- PASS above: 21 checked objects (canopy legs, riveter cards on plank decks, Eiffel + riveters, free props), 25 sampled frames g171-411.
 - ROOT CAUSE of the old float: Eiffel's mark was snapped onto the beacon column (z 12.7 D); he now stands on the ground in front of the plan table.
-- Skipped (gc_role skip): the set's merged meshes pn_tablewood / pnoink_canvasw / pnoink_crimson (legs verified by the canopy_leg_* props), beacon + glow + light shaft (lights).
-- Hidden (hide_render): lying girders / crates that hovered 2-3 D above the dirt (pm_redlead, pm_crimson, pf_redlead, pf_crimson, pnoink_redleadlt, pm_dark).
+- Skipped (gc_role skip): merged set meshes pn_tablewood / pnoink_canvasw / pnoink_crimson (legs verified by canopy_leg_*), glow / shaft / light.
+- Hidden: lying girders / crates that hovered 2-3 D (pm_redlead, pm_crimson, pf_redlead, pf_crimson, pnoink_redleadlt, pm_dark); the lilac gravel discs (pn/pm/pf_gravelp, hunter item 1); the thin rod above the canopy (pnoink_timber verts, item 3).
+- Item 2: the 4 tapered scaffold posts (scaff_timber verts at world z 7.5) are extended down to the ground.
+- Item 4/5: the lowest riveter pair (rl_a, rl_d) shrinks away g388-396 (they filled the lower-left foreground cut at the waist); decks under the other pairs are 5.5 x 2.6 D x 0.5 thick.
 
-## qa_jitter (final take.mkv, per second, taken with film alignment g/30)
-{g150: 1.76, g180: 2.16, g210: 0.24, g240: 0.26, g270: 0.22, g300: 1.25, g330: 1.01, g360: 1.87, g390: 5.29 (g390-411 only)}
-- g180-209: BIGZOOM whoosh (planned fast move, declared; old take read 1.7 here).
-- g390-411: the last 22 frames of the crane (decelerating into the leg, riveters hammering 1-3 D from the lens). The camera is analytically smooth
-  (per-frame dx second difference <= 0.08 D, eased to 0 at g411) and the reading is phase-correlation switching between the near lattice and the riveter
-  sprites. Declared; the last 8 of these frames are dissolve handle.
+## qa_jitter (final take.mkv, film-aligned seconds g/30)
+{g150: 1.75, g180: 1.64, g210: 0.24, g240: 0.29, g270: 0.25, g300: 1.28, g330: 1.27, g360: 1.73, g390: 4.4 (g390-411 only)}
+- g390-411: the decelerating tail of the crane into the leg (camera analytically smooth, eased to 0 at g411; reading from near lattice / riveter parallax), accepted by the director as a planned fast move; last 8 frames are dissolve handle.
