@@ -1,3 +1,9 @@
+# >>> CLIENT DECISION 2026-11-22: "กลับไปใช้สกิลแบบเดิมเลยถ้ามันยากนัก"
+# Sections §G to §M below (added by the producer after film 13) are VOID. They made the films worse.
+# Follow film/skill_film13/ exactly as it was for films 1-13. Colour comes from film/COLOUR_SPEC.md, which uses the skill's own values.
+# film/DETAIL_SPEC.md is VOID as well.
+# Keep only the final checklist of the client's complaints (film/CLIENT_CHECKLIST.md). It is a check, not a production rule.
+
 # Picture-QA team (runs at 3 gates: SET before any render, each TAKE before conform, FINAL cut before delivery)
 PROJ = /tmp/claude-0/-home-user-github-commit-quest-v2/e8b79665-ba86-5bba-9861-f4e29c068ae7/scratchpad/proj
 References: PROJ/ref/a, PROJ/ref/b (frames), film/analysis/sheets/*.jpg (8 hit shorts, 1 fps), film/analysis/DIRECTOR_REVIEW.md.

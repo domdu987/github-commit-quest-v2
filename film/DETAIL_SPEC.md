@@ -1,3 +1,5 @@
+# VOID (client decision 2026-11-22: back to the original skill). Kept for reference only.
+
 # DETAIL SPEC: depth and detail (client 2026-11-22: "ทำภาพให้สวยให้มีมิติ ให้ละเอียดกว่านี้")
 Binding for every NEW film, from the set build onward. It works together with COLOUR_SPEC.md; where they overlap, COLOUR_SPEC wins on colours.
 The goal is to match the reference shorts (film/ref_shorts): the frame reads as deep space that is full of things.
