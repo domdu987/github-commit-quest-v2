@@ -22,6 +22,8 @@ for c in caps:
 open(out+".ass","w").write("\n".join(ass))
 # s24/s27 sill seam paint-out (QA r5 + §E review); detects the seam itself, no-op where there is none
 subprocess.run([sys.executable,P+"/film20/post/paintout_seam.py",tmp,"f_%04d.png",os.environ.get("PAINTOUT","1732:2045")],check=True)
+# v1.1 grade (film/COLOUR_SPEC.md section 5) on the conformed frames, before captions; GRADE=0 to skip
+if os.environ.get("GRADE","1")=="1": subprocess.run([sys.executable,P+"/film20/post/grade20.py",tmp,"f_%04d.png",str(N)],check=True)
 subprocess.run(["ffmpeg","-y","-v","error","-framerate","30","-i",f"{tmp}/f_%04d.png","-vf",f"ass={out}.ass:fontsdir={P}/fonts","-c:v","libx264","-pix_fmt","yuv420p","-crf","17","-movflags","+faststart",out+"_silent.mp4"],check=True)
 B9=P+"/film20/audio/sfx/"
 sfx=[]
