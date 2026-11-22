@@ -376,8 +376,8 @@
 | rl_d_card | 311 | -0.2600 | OK | card/alpha | 10.230 | plankdeck_leg_a |
 | rl_d_card | 321 | -0.2600 | OK | card/alpha | 10.230 | plankdeck_leg_a |
 | rl_d_card | 331 | -0.2600 | OK | card/alpha | 10.230 | plankdeck_leg_a |
-| rl_d_card | 341 | -0.2600 | OK | card/alpha | 10.230 | plankdeck_leg_a |
-| rl_d_card | 351 | -0.2600 | OK | card/alpha | 10.230 | plankdeck_leg_a |
+| rl_d_card | 341 | -0.2964 | OK | card/alpha | 10.230 | pn_metal |
+| rl_d_card | 351 | -0.2778 | OK | card/alpha | 10.230 | pn_metal |
 | rl_d_card | 361 | -0.2600 | OK | card/alpha | 10.230 | plankdeck_leg_a |
 | rl_d_card | 371 | -0.2600 | OK | card/alpha | 10.230 | plankdeck_leg_a |
 | rl_d_card | 381 | -0.2600 | OK | card/alpha | 10.230 | plankdeck_leg_a |
@@ -535,6 +535,8 @@
 | tw0_stone | 401 | -0.1880 | OK | prop/bbox | 4.324 | tw0_stonedk |
 | tw0_stone | 411 | -0.1880 | OK | prop/bbox | 4.324 | tw0_stonedk |
 
-## v2 notes round 4 (batch-3 hunter): g380-411 re-rendered
-- The upper riveter pair (leg_c: rl_c, rl_f) is removed entirely (no totem). ONE pair stays (leg_b: rl_b, rl_e) on a lighter timber plank deck (0.5 D thick, 5.5 x 2.6 D) with dark contact shadows on the planks; the lowest pair still steps off g388-396. ground_check PASS above.
-- qa_jitter film-aligned: {g150: 1.74, g180: 1.9, g210: 0.23, g240: 0.29, g270: 0.24, g300: 1.28, g330: 1.45, g360: 1.79, g390: 5.44 (declared tail g390-411)}
+## v2 notes round 5 (director: crane rebuilt, shake at 10-12 s), g282-411 re-rendered
+- The crane is now ONE path: position, aim and pitch all follow a single smootherstep over g282-411 (start of the travel moved from g314 to g282; Eiffel's beat at g268 and everything before g282 is unchanged), no separate snap tilt, no lift bump (the camera never reverses in y). Frames g170-281 are the previous graded frames, g282-411 re-rendered and graded with the same factors. ground_check PASS above.
+- qa_jitter, take-aligned 30-frame blocks (film seconds): {g270: 0.87, g300: 1.10, g330: 0.48, g360: 2.23, g390: 1.06}; earlier {g150: 1.75, g180: 1.87, g210: 0.23, g240: 0.29}.
+- g360-389 reads 2.23 (> 2.0): per-frame phase correlation shows dx jumping 5 -> 38 px at g374-380 when a near pillar of the leg scaffold becomes the dominant layer (parallax layer switch). The camera itself is one smootherstep.
+- LK optical flow (dominant-layer median, every 2 frames, 720 px wide): g326-356 smooth 22.8 -> 29.5 px/frame; g358 small step to 24.5; g376-384 bump to 49 (the same near pillar); g388 13 -> 32 (platform deck edge); g392-408 decelerates 25 -> 0.4. Peak 49 px/frame (target <= 25 not reachable: the leg face is near the end framing); largest neighbour ratio 2.5 at g374-378 and g386-388.
