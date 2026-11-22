@@ -25,3 +25,5 @@ Fallback check: send_later 60 min, always re-armed.
 ## RELEASED 2026-11-20 21:40 UTC
 release18/oxclerk_v1.mp4 + caption.txt on claude/new-session-73ou27 (8e60b0d); queue row 18 WAIT (client posts himself); POSTING_LOG updated.
 Gates: TAKE 25/25 (overrides s01 s17 s21 s25), FINAL audio PASS, blind PASS, QA-art PASS (after s06 s08 s16 s21 fixes). Reports in film18/qa/FINAL_*.md.
+
+- 2026-11-22 08:00 UTC: v3 CANCELLED by the client ("กลับไปใช้สกิลแบบเดิมเลยถ้ามันยากนัก"); no v3 renders kept; render teams 4 and 5 stopped and archived. Latest delivered: release18/oxclerk_v2.mp4.
