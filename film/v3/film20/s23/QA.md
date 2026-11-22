@@ -39,3 +39,7 @@ After TAKE_ART (F1-F3 callback), TAKE_B and QA_TEAM §G. Checked at 6 fps contac
 1. Certificate: one person holds it the whole time. The official holds it until the handover, then it is in Eiffel's RIGHT hand (arm out beside him, visible) until the hat flourish; it moves to his LEFT hand (arm out, visible) on the same closed-blink frame as the hat swap (g1706) and stays there. The old transfer at g1696 (where it vanished / sat flat on his chest) is removed.
 2. Bowler: the raised hat is on the end of his right arm (hand to the right of his head at brim height, arm visibly raised), no longer floating beside the head.
 Re-rendered the whole take (same camera, timing, handles). ground_check PASS (gc.py), qa_auto PASS, qa_jitter see above (no second above 2.0 px).
+
+## v2c (batch-3 float hunter: hand-held props read as floating, so none remain)
+- Certificate deleted from every frame. Hat raise dropped: Eiffel keeps the bowler ON, hands on hips, worried -> proud on the blink swap (g1706) with a happy nod. Official no longer steps back, so both heads keep the same scale (camera push softened to x1.3).
+- Whole take re-rendered. ground_check PASS, qa_jitter median 0.23 px (no second above 2.0), qa_auto PASS, qa_stats sat 0.522 luma 106.9.
