@@ -535,14 +535,6 @@
 | tw0_stone | 401 | -0.1880 | OK | prop/bbox | 4.324 | tw0_stonedk |
 | tw0_stone | 411 | -0.1880 | OK | prop/bbox | 4.324 | tw0_stonedk |
 
-## v2 notes (render20/v2a, T03; float-hunter round)
-- PASS above: 21 checked objects (canopy legs, riveter cards on plank decks, Eiffel + riveters, free props), 25 sampled frames g171-411.
-- ROOT CAUSE of the old float: Eiffel's mark was snapped onto the beacon column (z 12.7 D); he now stands on the ground in front of the plan table.
-- Skipped (gc_role skip): merged set meshes pn_tablewood / pnoink_canvasw / pnoink_crimson (legs verified by canopy_leg_*), glow / shaft / light.
-- Hidden: lying girders / crates that hovered 2-3 D (pm_redlead, pm_crimson, pf_redlead, pf_crimson, pnoink_redleadlt, pm_dark); the lilac gravel discs (pn/pm/pf_gravelp, hunter item 1); the thin rod above the canopy (pnoink_timber verts, item 3).
-- Item 2: the 4 tapered scaffold posts (scaff_timber verts at world z 7.5) are extended down to the ground.
-- Item 4/5: the lowest riveter pair (rl_a, rl_d) shrinks away g388-396 (they filled the lower-left foreground cut at the waist); decks under the other pairs are 5.5 x 2.6 D x 0.5 thick.
-
-## qa_jitter (final take.mkv, film-aligned seconds g/30)
-{g150: 1.75, g180: 1.64, g210: 0.24, g240: 0.29, g270: 0.25, g300: 1.28, g330: 1.27, g360: 1.73, g390: 4.4 (g390-411 only)}
-- g390-411: the decelerating tail of the crane into the leg (camera analytically smooth, eased to 0 at g411; reading from near lattice / riveter parallax), accepted by the director as a planned fast move; last 8 frames are dissolve handle.
+## v2 notes round 3 (batch hunter)
+- The leaning shovel at the lower left (g216-246: blade hovered, shadow left behind) is removed with its shadow (pn_timber / pn_timberdk / pn_metal vertices near world (54.4, -166.2)); g210-250 re-rendered, rest unchanged. ground_check PASS above.
+- qa_jitter (film-aligned): {g150: 1.76, g180: 1.93, g210: 0.21, g240: 0.26, g270: 0.24, g300: 1.26, g330: 1.42, g360: 1.82, g390: 4.4 (declared tail, g390-411 only)}
