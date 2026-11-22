@@ -481,7 +481,7 @@ class Take(C.Take):
                 if who in ("lady", "gent", "child"):
                     m[2] += bounce(g, {"lady": 0.0, "gent": 1.3, "child": 2.4}[who])
                 C.place(a, f, m)
-            cx = CO.W((walk_x(g) - 1.3, WALK_Y + 0.12, 1.42))
+            cx = CO.W((walk_x(g) - 1.3, WALK_Y - 0.22, 0.74))        # v2: on their shoulders, IN FRONT of both cards (was behind their heads at cap height)
             for ob, dz in self.girder:
                 ob.location = (cx[0], cx[1], cx[2] + (dz - 0.14) * CO.SC)
                 ob.keyframe_insert("location", frame=f)

@@ -15,3 +15,8 @@ Deviations: at g 604-640 he is a crouch standing in front of the banquette (no s
 - meta.json: g0/g1/first_g, handles 4/8, transitions unchanged.
 - qa_jitter: no second above 2.0 px (overall median 0.39). qa_auto PASS. qa_stats sat 0.575, luma 92.9; frame-diff median 6.48 / p90 11.46.
 - ground_check: PASS (GROUND.md).
+
+## v2b (director's float-hunter items)
+- The grey "floating slab" in the window was the pier of a near stub leg: the hillside site rises away from the window, so the front legs stood 13 m above the slope. Fixed: slope 0.20 and a brick foundation block under each front leg that runs from the slope up to the leg foot (visible reading: legs rest on masonry on the hill). No loose plate remains in any frame.
+- g604-640: he now starts 0.75 D in front of the banquette (was 0.30) with legs apart in the crouch (spread 0.22 -> 0.05), feet and contact shadow on the tiles; no overlap with the bench, legs no longer crossed/cut.
+- Re-checked: qa_jitter overall median 0.41 px, no second above 2.0; qa_auto PASS; qa_stats sat 0.575 luma 93.1; ground_check PASS (gc.py).
