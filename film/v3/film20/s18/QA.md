@@ -18,3 +18,7 @@ g 1210-1303 dusk, closer + low camera, wagon (moved 5 m toward the group) with h
 
 ## Known weak
 Ground is still ~35 % of the first frames (heads must stay above y 880); coils read as flat discs; no "T.S.F." sign; the soldier's key hand is small; 6 soft frames at the crossing.
+
+## v2 (render20/v2a): T18 tail g1361-1434 re-rendered, g1210-1360 are the old frames (decoded from the old take.mkv, same pixels)
+- The dive to the hut window is now ONE smootherstep over g1361-1424 (was ease-in to the wall at 4 px/frame^2, then a hard brake: the 46 s second); the push inside eases in from 0 (no kink). The camera crosses the wall ~g1413 instead of g1392; the spark taps (g1396+) are seen while it approaches the window. Hard cut at g1431 and handles unchanged.
+- qa_auto PASS; ground_check PASS (tail); qa_jitter in GROUND.md; sheet_1fps.jpg.
