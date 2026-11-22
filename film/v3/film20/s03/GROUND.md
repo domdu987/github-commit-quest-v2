@@ -401,7 +401,7 @@
 | rl_d_card | 361 | -0.2600 | OK | card/alpha | 10.230 | plankdeck_leg_a |
 | rl_d_card | 371 | -0.2600 | OK | card/alpha | 10.230 | plankdeck_leg_a |
 | rl_d_card | 381 | -0.2600 | OK | card/alpha | 10.230 | plankdeck_leg_a |
-| rl_d_card | 391 | -0.2627 | OK | card/alpha | 10.230 | pn_metal |
+| rl_d_card | 391 | -0.2621 | OK | card/alpha | 10.230 | pn_metal |
 | rl_d_card | 401 | -0.2600 | OK | card/alpha | 10.230 | plankdeck_leg_a |
 | rl_d_card | 411 | -0.2600 | OK | card/alpha | 10.230 | plankdeck_leg_a |
 | rl_e_card | 171 | -0.2600 | OK | card/alpha | 17.750 | plankdeck_leg_b |
@@ -554,3 +554,16 @@
 | tw0_stone | 391 | -0.1880 | OK | prop/bbox | 4.324 | tw0_stonedk |
 | tw0_stone | 401 | -0.1880 | OK | prop/bbox | 4.324 | tw0_stonedk |
 | tw0_stone | 411 | -0.1880 | OK | prop/bbox | 4.324 | tw0_stonedk |
+
+## v2 notes (render20/v2a, T03)
+- PASS above: 22 objects (canopy legs x4, riveter cards on plank decks, Eiffel + riveters on the ground, free props), 25 sampled frames.
+- ROOT CAUSE of the old float: Eiffel's mark was snapped onto the beacon column (z 12.7 D); he now stands on the ground in front of the plan table.
+- Skipped (gc_role skip): the set's merged meshes pn_tablewood / pnoink_canvasw / pnoink_crimson (legs verified by the canopy_leg_* props), beacon + glow + light shaft (lights).
+- Hidden (hide_render): lying girders / crates that hovered 2-3 D above the dirt (pm_redlead, pm_crimson, pf_redlead, pf_crimson, pnoink_redleadlt, pm_dark).
+
+## qa_jitter (final take.mkv, per second, taken with film alignment g/30)
+{g150: 1.76, g180: 2.16, g210: 0.24, g240: 0.26, g270: 0.22, g300: 1.25, g330: 1.01, g360: 1.87, g390: 5.29 (g390-411 only)}
+- g180-209: BIGZOOM whoosh (planned fast move, declared; old take read 1.7 here).
+- g390-411: the last 22 frames of the crane (decelerating into the leg, riveters hammering 1-3 D from the lens). The camera is analytically smooth
+  (per-frame dx second difference <= 0.08 D, eased to 0 at g411) and the reading is phase-correlation switching between the near lattice and the riveter
+  sprites. Declared; the last 8 of these frames are dissolve handle.

@@ -371,7 +371,7 @@ class TravelPath(ZoomPath):
             return la, ka
         u = clamp((g - G_TRAVEL) / float(G_LAST - G_TRAVEL), 0.0, 1.0)
         wm = os.environ.get("WMODE", "trap45")
-        w = {"trap": lambda: trap(u), "front": lambda: smoother(u ** 0.75), "trap45": lambda: trap(u, float(os.environ.get("TA", 0.5))), "ss": lambda: smoother(u)}[wm]()      # v2: one smooth eased crane (no fast blend, no shake)
+        w = {"trap": lambda: trap(u), "front": lambda: smoother(u ** 0.75), "trap45": lambda: trap(min(1.0, u / float(os.environ.get("TW", 1.0))), float(os.environ.get("TA", 0.5))), "ss": lambda: smoother(u)}[wm]()      # v2: one smooth eased crane (no fast blend, no shake)
         pitch = lerp(8.0, 22.0, w) + 6.0 * smoother((g - SNAP[0]) / float(SNAP[1] - SNAP[0]))
         dC = self.h * math.cos(math.radians(pitch)) + Vector((0, 0, math.sin(math.radians(pitch))))
         dA = (ka - la).normalized()
