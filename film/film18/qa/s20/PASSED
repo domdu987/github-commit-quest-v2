@@ -1,1 +1,1 @@
-PASSED TAKE gate round 17 (2026-11-20 16:30 UTC): QA-tech PASS, QA-art PASS (notes). Deviation for client report: flame wisp touches the right edge g1523-1547 (spec x<=700); horn tip clipped at left edge g1575+. take hash 21a303d8915b6f9841cea35bf5472e2df6439035
+PASSED v2 (2026-11-22 02:55 UTC, client fix): ground_check exit 0 (356 objects), qa_jitter median 2.18 px, only 0s 3.1 px = planned whip-in landing; director phone-strip check: ox shadow under hooves, bundles on ground. take hash 6312523ff56ed39142e0c73f6b3671f00845d4d4
