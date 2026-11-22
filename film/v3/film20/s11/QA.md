@@ -9,3 +9,6 @@ Changes: re-rendered the whole take, same g0/g1/first_g, handles 8/8 and transit
 - Frame-diff median 2.15 / p90 17.9 (below the old 4.0 target: intended, calm camera).
 
 qa_jitter (take.mkv): no second above 2.0 px; overall median jitter 0.32 px.
+
+## v2b (director's float-hunter item, g813-873)
+The carried beam was drawn behind both workers' heads at cap height. It is now carried at hip/hand height (z 0.74 D) and IN FRONT of both cards (y -0.22 D toward the camera), so it reads as held in their hands and covers no face. Re-rendered g805-880 only; the rest of the take is untouched (same camera, same frames). qa_auto PASS, qa_jitter overall median 0.32 px, no second above 2.0 px, frame-diff median 2.17 / p90 17.85.
