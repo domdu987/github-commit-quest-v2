@@ -195,6 +195,7 @@ def make_glow_and_fill(A):
 HIDE_SCATTER = ("pnoink_white", "pm_timber", "pm_timberdk", "pm_metal", "pf_coal", "pf_soot", "pf_rivet", "pf_metal", "pf_stonedk", "pm_coal", "pm_soot", "pm_rivet", "pm_metal", "pm_stonedk", "pn_coal", "pn_soot", "pn_rivet", "pn_stonedk")   # the small near-black scatter that reads as debris
 
 
+DECK = (74.0, -83.0)                                            # world D: where the one riveter pair stands
 V2_HIDE = ("pm_redlead", "pm_crimson", "pf_redlead", "pf_crimson", "pnoink_redleadlt", "pm_dark")      # v2: lying girders / crates / bits that hovered (z 2-3 above the dirt)
 
 
@@ -295,9 +296,15 @@ def v2_fix_scene(T):
         ob.visible_shadow = False
         ob["gc_role"] = "shadow"
     blob("canopy_gcshadow", 70.7, -149.3, 14.0, 11.0, 0.55)
-    mkb = T.A["marks"]["leg_b"]                                  # batch-3 hunter: ONE riveter pair stays (leg_b), on a clearly visible deck with contact shadows
-    for i_, dx_ in enumerate((0.8, 2.4)):
-        blob("rl_b_gcshadow_%d" % i_, mkb[0] + dx_, mkb[1], 3.4, 1.7, 0.85, z=mkb[2] + 0.03)
+    T.deck_z = C.ground_z(DECK[0], DECK[1], top=17.5)            # batch-5: ONE riveter pair on the front scaffold plank deck (scaff_plank, y -83), small in frame
+    print("DECK z", T.deck_z)
+    d_ = box("plankdeck_front", DECK[0] + 0.8, DECK[1], T.deck_z - 0.5, T.deck_z, 1.0, M["timber"])     # a clearly visible plank deck under the pair
+    for v in d_.data.vertices:
+        v.co.x = DECK[0] + 0.8 + (v.co.x - (DECK[0] + 0.8)) * 5.5
+        v.co.y = DECK[1] + (v.co.y - DECK[1]) * 2.6
+    d_["gc_role"] = "ground"
+    for i_, dx_ in enumerate((0.0, 1.6)):
+        blob("rl_b_gcshadow_%d" % i_, DECK[0] + dx_, DECK[1], 3.4, 1.7, 0.85, z=T.deck_z + 0.03)
     for nm in ("leg_a", "leg_b", "leg_c"):                       # scaffold platforms under the riveters (they stood on nothing)
         mk = T.A["marks"][nm]
         d = box("plankdeck_" + nm, mk[0] + 0.8, mk[1], mk[2] - 0.5, mk[2], 1.0, M["timber"] if nm == "leg_b" else M["plank"])
@@ -383,6 +390,8 @@ class ZoomPath(C.CamPath):
         return self.state(g)[3]
 
 
+PAN_TOTAL = float(os.environ.get('PAN', 12.0))
+TILT_TOTAL = float(os.environ.get('TILT', 16.0))      # deg of tilt-up after the landing
 LEG_FWD = -2.0                                 # m: the leg camera starts this much nearer the foot than the preset (smaller sacks)
 LIFT = float(os.environ.get('LIFTV', 0.0))                                    # D: the camera lifts over the yard / pier while it travels (clears the stone block)
 
@@ -407,14 +416,13 @@ class TravelPath(ZoomPath):
         if g <= G_TRAVEL:
             return la, ka
         u = clamp((g - G_TRAVEL) / float(G_LAST - G_TRAVEL), 0.0, 1.0)
-        wm = os.environ.get("WMODE", "ss")
-        w = {"trap": lambda: trap(u), "front": lambda: smoother(u ** 0.75), "trap45": lambda: trap(min(1.0, u / float(os.environ.get("TW", 1.0))), float(os.environ.get("TA", 0.5))), "ss": lambda: smoother(u)}[wm]()      # v2: one smooth eased crane (no fast blend, no shake)
-        pitch = lerp(8.0, 28.0, w)                                  # batch-4: one smootherstep for position, aim and pitch (no separate snap tilt)
-        dC = self.h * math.cos(math.radians(pitch)) + Vector((0, 0, math.sin(math.radians(pitch))))
-        dA = (ka - la).normalized()
-        loc = la.lerp(self.locC, w) + Vector((0, 0, LIFT * math.sin(math.pi * w)))
-        d = (dA * (1.0 - w) + dC * w).normalized()
-        return loc, loc + d * 20.0
+        # batch-5 (director): a slow tilt-up from the landing medium, camera FIXED (no translation, so the near canopy / pillars never sweep the lens:
+        # all layers move together), lens unchanged: ONE smootherstep of TILT_TOTAL deg over g282..411.
+        w = smoother(u)
+        v = Matrix.Rotation(math.radians(PAN_TOTAL * w), 3, "Z") @ (ka - la).normalized()      # pan left: the canopy leaves the frame, the scaffold deck comes to the centre
+        r = Vector((v.y, -v.x, 0.0)).normalized()
+        d = Matrix.Rotation(math.radians(TILT_TOTAL * w), 3, r) @ v
+        return la, la + d * 20.0
 
     def tilt(self, g):
         return 0.0
@@ -501,6 +509,8 @@ class Take(C.Take):
             a = C.make_actor(name, cast, os.path.join(WORK, "sprites"), contact=False, cam=self.cam)       # on a deck: no ground decal
             self.actors[name] = a
             mk3 = list(self.A["marks"][mark])
+            if name in ("rl_b", "rl_e"):
+                mk3 = [DECK[0], DECK[1], self.deck_z]
             if name in ("rl_d", "rl_e", "rl_f"):
                 mk3[0] += 1.6                                   # second worker on the same platform
             zz = C.ground_z(mk3[0], mk3[1], top=mk3[2] + 0.5)            # v2: stand ON the deck / beam under the mark (no hovering riveters)
@@ -515,7 +525,7 @@ class Take(C.Take):
             self.key_cam(f, *self.path.at(g))
             C.place(self.eif, f, mark)
             for a, cast, mk, mirror, sc in self.riv:
-                if a.name in ("rl_c", "rl_f"):                      # batch-3 hunter: the upper pair (leg_c) stacked into a totem: removed entirely
+                if a.name in ("rl_a", "rl_c", "rl_d", "rl_f"):                      # batch-3 hunter: the upper pair (leg_c) stacked into a totem: removed entirely
                     sc = 1e-3
                 if a.name in ("rl_a", "rl_d"):                      # float hunter g~405: the lowest platform pair fills the lower-left foreground cut at the waist: they step off (shrink away) before
                     sc = sc * max(1e-3, 1.0 - smoother((g - 388) / 8.0))
@@ -543,7 +553,7 @@ class Take(C.Take):
                     ob.hide_render = bool(hid)
                     ob.keyframe_insert("hide_render", frame=f)
             self.cam.data.lens = self.path.lens(p)
-            self.cam.data.shift_y = self.path.shift(p) + 0.10 * smoother((p - 0.55) / 0.45) * (1.0 - smoother((g - 312) / 60.0))      # v2: figure lower in the frame at the landing (less bare dirt)
+            self.cam.data.shift_y = self.path.shift(p) + 0.10 * smoother((p - 0.55) / 0.45)       # v2: figure lower in the frame at the landing (less bare dirt)
             self.cam.data.keyframe_insert("lens", frame=f)
             self.cam.data.keyframe_insert("shift_y", frame=f)
             fe = smoother((p - 0.7) / 0.3)
