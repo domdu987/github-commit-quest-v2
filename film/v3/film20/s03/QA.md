@@ -14,3 +14,4 @@ Timing, BIGZOOM (5 % -> 35 %), handles (8+8 dissolve) and first/last framing unc
 - 1 lilac faceted shape g231-243: the pn/pm/pf_gravelp discs, hidden. 2 hanging tan posts g267-327: the 4 scaff_timber post tips at z 7.5 now reach the ground. 3 rod above the tent roof: removed (pnoink_timber verts). 4 oversized riveters cut at the waist g~405: rl_a / rl_d shrink away g388-396. 5 upper pair without deck: bigger, thicker plank decks.
 - qa_auto PASS (unsharp mask on g170-182, 376-379 for the blur check). ground_check PASS, qa_jitter in GROUND.md. frame-diff median 9.66 p90 32.83. sheet_1fps.jpg.
 - Round 3: leaning shovel + its shadow removed (g210-250 re-rendered). qa_auto PASS.
+- Round 4: upper riveter pair removed, one pair on a visible deck with contact shadows (g380-411 re-rendered). qa_auto PASS.
