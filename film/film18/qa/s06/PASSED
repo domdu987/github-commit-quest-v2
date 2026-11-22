@@ -1,1 +1,1 @@
-PASSED FINAL-gate fix (2026-11-20 21:40 UTC): QA-tech PASS, QA-art PASS. take hash 285db3a922248d375e19f2a1649c42c8a62e1eb4
+PASSED v2 (2026-11-22 04:30 UTC, client fix: camera shake removed): ground_check PASS, qa_jitter: overall median jitter px 0.37, no shake seconds; director phone-strip check. take hash cdf588f141cfd83a78022ca5bfa711221a46f927
