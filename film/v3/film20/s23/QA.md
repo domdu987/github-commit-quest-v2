@@ -27,3 +27,10 @@ After TAKE_ART (F1-F3 callback), TAKE_B and QA_TEAM §G. Checked at 6 fps contac
 ## v7 (director re-request; set flag fix d1511f7 merged)
 - Re-rendered with the merged set: the preset flags are vertical blue-white-red tricolours now (my own pennant poles already were). All v6 fixes stand (raised bowler with rim visible, official in frame, document passes hand to hand on screen, wider with the tower behind).
 - `qa_stats2.py take.mkv`: sat 0.544, vivid 47.2 %, luma 97.6, warm 47.4 % / cool 25.3 %, motion med 6.43 **p90 12.25**, still 0 %. In-shot g 1657..1731: median 5.52, p90 11.61. Head width 140-262 px, chin <= 724. take.mkv 34.0 MB.
+
+## v2 fix (client rejection of rivet_v1)
+- The giant dark head card in the bottom-left foreground (`fgh`, a back-turned gent card) is removed completely (actor, placement, sprites). Nothing blocks the frame.
+- Camera made gentler: the x1.9 snap at "อีก 70 ปี" is now a longer x1.5 eased push (g1692-1722), the earlier x1.25 snap a x1.15 drift. Crowd idle bob 0.10 -> 0.015 D (cards no longer leave the ground).
+- Banner pole bottoms (were 1.2 D underground) now end at the ground; pennants and the hut lamp are tagged airborne. ground_check PASS (GROUND.md, 0 FAIL rows).
+- qa_jitter: no second above 2.0 px (overall median 0.21). qa_auto PASS. qa_stats sat 0.529, luma 108.6, frame-diff median 5.60 / p90 6.62.
+- Timing, 8/8 handles, both dissolves unchanged (meta.json).
