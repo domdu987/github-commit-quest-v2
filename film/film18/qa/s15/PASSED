@@ -1,1 +1,1 @@
-s15 PASS (TAKE gate 2026-11-20 04:55 UTC; QA-tech PASS + QA-art PASS) — take hash 8214deea2554656014adf09e79f2ca4fe4aa9437
+PASSED v2 (2026-11-22 03:30 UTC, client fix: no camera shake): ground_check PASS, qa_jitter: overall median jitter px 0.35, no shake seconds; director phone-strip check. take hash 69151b2e01e2e10bc9eaf9f43f47f0708422a8ad
