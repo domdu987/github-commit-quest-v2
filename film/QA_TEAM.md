@@ -171,3 +171,10 @@ Rules (blocking at the TAKE and FINAL gates):
 1. Camera moves are smooth: travel, dolly, crane and BIGZOOM with eased keys. No random pan or tilt keys and no LINEAR noise.
 2. `camrig.shake()` is allowed only for a motivated impact (explosion, crash, stampede hit). Use amp_deg ≤ 0.15, at most 0.6 s per use, and at most 2 uses per film.
 3. Every second of the final film must measure ≤ 2.0 px in qa_jitter.py, except the declared impact moments, which are listed in GROUND.md. Paste the qa_jitter output with the take.
+
+## §M NO CAMERA-STUCK PROPS, NO SLIDING FEET (client complaint on oxclerk_v2, 2026-11-22: "รั้ว ไห ลอยตามกล้อง ซ้ายๆ ไปมา คนขาไม่เดิน")
+1. Foreground props (fences, jars, spears, pots) must be fixed in the WORLD. Never parent them to the camera, and never animate them to follow it. When the camera moves, they must parallax: a near object moves across the frame faster than the background and leaves the frame, instead of staying glued in place while the background slides behind it.
+   Check: on the 6 fps strip, a foreground prop must not keep the same screen position while the background moves.
+2. Characters that change position must walk: legs swing and feet step (at least 2 steps per metre), or they stay planted. A body sliding with static legs is a FAIL.
+   Check: compare the card's world-XY movement per second with its leg-pose changes. If the card moves more than 0.2 m/s and the legs do not change, the take fails.
+3. Idle characters may sway or gesture, but their feet stay locked to one ground point.
