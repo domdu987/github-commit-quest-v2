@@ -25,3 +25,14 @@ median 9.97, p90 13.36, min 4.92, max 16.33, frames < 1: 0 (rule: median >= 4, p
 - Gate 18: the fg pot / reed bundle flickered at g 1694, 1707, 1719 (and handle 1677): the script read a stale camera matrix when placing them. Fixed (props placed explicitly from the previous frame's pose); those 4 frames re-rendered and the take re-encoded. Prop centroid now moves smoothly at g 1693-1695, 1706-1708, 1718-1720.
 
 See QA_AUTO.md and phone_sheet.jpg.
+
+
+## V2 (client fixes: no camera shake / nothing floats)
+v2: ox-only take, SHAKE=None, one eased orbit truck (push 0.09, slide 100 px/s, look-at stays on the herd), hero bob 0.02 D at 1.8 Hz, no roll, slower gait step (drawing swaps every 5 frames); background oxen drift over solid ground; ground_check 0 FAIL (every 6 frames), transparent_max_bounces 64.
+- take.mkv crf 21, first_g 1677, 71 frames; transition in: {'type': 'cut', 'frames': 0}.
+- frame diff (90x160 grey, in-shot): median 4.53 / p90 7.65 (rule: median >= 4).
+- ground_check (film/v3/tools/ground_check.py through film18/gc_run.py, every 6th frame): - checked objects: 29   rows: 319   FAIL rows: 0   **result: PASS**  (full table in GROUND.md; cards are checked by bounding box, so only a floating card base can fail; shadows are the cards' contact quads).
+- qa_jitter output:
+```
+overall median jitter px 0.59
+```

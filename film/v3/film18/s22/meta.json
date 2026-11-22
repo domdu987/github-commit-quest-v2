@@ -9,15 +9,15 @@
   "frames": 0
  },
  "framediff": {
-  "median": 9.97,
-  "p90": 13.36,
-  "min": 4.92,
-  "max": 16.33,
+  "median": 4.53,
+  "p90": 7.65,
+  "min": 2.5,
+  "max": 9.6,
   "n": 58,
   "frames_lt1": 0
  },
  "max_chin_y": {
-  "hero": 530
+  "hero": 527
  },
- "s_per_frame": 21.5
+ "s_per_frame": 30.9
 }

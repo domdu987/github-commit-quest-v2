@@ -14,10 +14,10 @@ NAME = 's22'
 G0, G1 = 1683, 1742
 H_IN, H_OUT = 6, 6
 G_GLINT = C.g_of(57.64)                                           # 1732
-MOVE = dict(push=0.09, slide=8)
+MOVE = dict(push=0.09, slide=100, orbit=True)
 CAMO = dict(loc=(-1.4, -51.5, 1.9), look_at=(0.75, -46.0, 1.3), lens=27.0)
-SHAKE = (0.8, 0.6, 0.4, 2.6)
-SNAPS = []                                                         # punch removed (director gate 12): steady push only
+SHAKE = None                                                      # v2: NO sway
+SNAPS = []                                                        # v2: steady eased dolly + orbit only
 OX = V((0.1, -46.0, 0.0))
 SCALE_OX = 0.7
 SOL_D, SOL_LAT = 8.0, 2.0
@@ -73,7 +73,7 @@ def make_driver(quality):
     at_b = C.Atlas('s22_bg3', gv, ppd=70); rnd = random.Random(22); bg = []
     for i in range(10):
         sc = rnd.uniform(0.95, 1.1) * 1.15
-        bg.append((C.Actor(at_b, 'bg%d' % i, scale=sc, tint=(1.0, 0.8, 0.65), k=0.75, sw=2.7 * sc, ref=0), V((rnd.uniform(-7, 8), rnd.uniform(-38.0, -29.0), 0.0)), rnd.random(),
+        bg.append((C.Actor(at_b, 'bg%d' % i, scale=sc, tint=(1.0, 0.8, 0.65), k=0.75, sw=2.7 * sc, ref=0), V((rnd.uniform(-7, 8), rnd.uniform(-35.5, -29.0), 0.0)), rnd.random(),
                    C.J.flame_card(parent=None, scale=0.9, name='bgfl%d' % i, light=False, lit=1.0)))
     sv = {0: C.person_variant('yan_soldier_a', dict(cast18.STORY18['soldier_freeze_a'][1]), 's')}
     at_s = C.Atlas('s22_sol', sv, ppd=170)
@@ -91,9 +91,9 @@ def make_driver(quality):
 
     def drive(g):
         pose = C.set_camera(NAME, g, move=MOVE, cam=CAMO, shake=SHAKE, snaps=SNAPS, focus=OX + V((1.6, 0, 1.6))); cam = V(pose['loc'])
-        t = (g - G0) / 30.0; ph = int(g / 2.5) % 8
-        bob = 0.05 * abs(math.sin(2 * math.pi * 2.5 * t))
-        hero.show(ph, OX, cam, mirror=True, lift=bob, roll=2.0 * math.sin(2 * math.pi * 1.7 * t))
+        t = (g - G0) / 30.0; ph = int(g / 5.0) % 8
+        bob = 0.02 * abs(math.sin(math.pi * 1.8 * t))
+        hero.show(ph, OX, cam, mirror=True, lift=bob, roll=0.0)
         d = cam - OX; yaw = math.atan2(d.x, -d.y); ur = V((math.cos(yaw), math.sin(yaw), 0))
         ax, ay = at_h.anchors[ph].get('tail_tip', (-1.2, -2.0)); tail = OX + ur * (-ax * SCALE_OX) + V((0, 0, -ay * SCALE_OX + bob))
         fl.location = tail; fl.scale = (1.1, 1.1, 1.1)
@@ -103,7 +103,7 @@ def make_driver(quality):
         zf = pose['lens'] / CAMO['lens']; sp = cam + fwd * SOL_D + rt * (SOL_LAT / zf); sp.z = 0.0
         sol.hide()                                              # round 14: the Yan soldier is removed entirely
         for i, (a, p, phs, f2) in enumerate(bg):
-            pp = p + V((0, -2.5 * t, 0)); pph = (int(g / 2.5 + phs * 8)) % 8; mir = (i % 2 == 0); a.show(pph, pp, cam, mirror=mir, lift=0.04 * math.sin(g * 0.8 + i))
+            pp = p + V((0, -1.2 * t, 0)); pph = (int(g / 2.5 + phs * 8)) % 8; mir = (i % 2 == 0); a.show(pph, pp, cam, mirror=mir, lift=0.04 * math.sin(g * 0.8 + i))
             dd = cam - pp; yw = math.atan2(dd.x, -dd.y); u2 = V((math.cos(yw), math.sin(yw), 0)); bx, by = at_b.anchors[pph].get('tail_tip', (-1.2, -2.0))
             f2.location = pp + u2 * ((-1.0 if mir else 1.0) * bx * a.sc) + V((0, 0, -by * a.sc)); f2.scale = (a.sc * 0.9,) * 3
         barrel.hide_render = True

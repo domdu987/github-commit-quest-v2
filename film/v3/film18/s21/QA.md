@@ -1,23 +1,28 @@
-# QA s21 (film 18, render team 4)
-Range g 1596-1682, take.mkv frames 1590..1688 (99 frames), transition in: cut.
-Render: 720x1280, 12 samples, OIDN, 2 threads, 28.7 s/frame wall (two renders at once).
+# QA s21 (film 18; moved from team 4 to team 3 by the director, rework of rounds 14/15 + FINAL-gate B4 fixes)
+Range g 1596-1682 (take.mkv g 1590-1688, 99 frames, 6 handle frames each side), transition in: cut. 720x1280, 12 samples, OIDN, 2 threads, 24.1 s/frame wall (two renders at once).
 
-## Frame diff (90x160 grey, in-shot frames only)
-median 6.99, p90 15.08, min 2.1, max 18.66, frames < 1: 0 (rule: median >= 4, p90 >= 12)
+## Frame diff (90x160 grey, in-shot frames)
+median **5.57**, p90 **13.29**, min 1.31, max 17.61, frames < 1: 0 (gate median >= 4, p90 >= 9/12). Motion = the set's eased 9 %/s push, slide 6 px/s, sway, and ONE held snap x1.5 at g 1644 (no pulses).
 
-## Max chin y per head (rule < 880)
-{"soldier_stand_a": 642, "soldier_cheer_cup_b": 641, "soldier_stand_c": 641, "soldier_freeze_a": 628, "soldier_freeze_b": 630, "soldier_freeze_c": 630}
+## Round-14/15 blockers
+1. **Ground before the snap** (director script `film18/qa/ground_share.py take.mkv 1590 1596 1683 10`): g1596 0.25, g1606 0.29, g1616 0.30, g1626 0.30, g1636 0.29, g1646 0.27, g1656 0.24, g1666 0.21, g1676 0.18: max **0.304** (<= 0.35 before the snap, <= 0.30 after). Done with: five dark, rim-lit foreground props (3 jars, a bowl, a bronze helmet: `J.prop_pot` / `J.prop_helmet`, toon-glazed dark) in the lower third 1.5-2 D from the lens, a darker flat floor (0.026/0.02/0.03 instead of 0.045/0.035/0.05) and the camera look-at lowered (z 2.4 -> 0.9). `J.dress_ground` not used (director note).
+2. **Hero mouth <= y 840 on rendered frames**: mouth interior lowest pixel 769 (g1676), 761 (g1679), 787 (g1681), 796 (g1682); with the outline about 815 at g1682 (margin > 20 px). Checked on the rendered PNGs (brown mouth mask) and on 1:1 crops with a y 840 line.
+3. **Soldiers' shock reads**: three silhouettes with arms thrown up and leaning back, frozen at the snap; the neon outline is now a thin warm fire-side rim (7 % of the figure width instead of 20 %, k 1.7) plus a thin moon-blue rim on the far side. The cup is a 2x larger bronze cup that leaves the right soldier's raised hand on "สัตว์ประหลาด" (g ~1644), is held up in front of him for a moment and falls toward the lens, landing at g ~1664 (visible on the 6 fps sheet at g1646 / g1658).
+4. Kept: ONE held snap x1.5 at g 1644 on the word, the rage faces, flame cards on the tail tips (wall of fire behind the herd from g 1645), moon-blue rim; deep night opening with blur on the dark frames accepted by the director.
 
+## Numbers
+- qa_auto PASS (QA_AUTO.md, phone_sheet.jpg). Max soldier chin y 630 (< 880).
+- Ground max 0.304.
 ## Notes
-- Round 4 rework: it now comes OUT OF THE DARK. Deep night (moon, city glow, lit gate dimmed, sky black, gate lintel faces removed). The herd is dark with tiny tail embers until g 1624, then the tail flames flare over ~22 frames (flame card on every tail tip, nearest 10 carry warm point lights, coats glow warm) so at the word g 1646 there are 8+ trailing flames against black.
-- Found and fixed a set bug: the flame-card material read its flicker props (fu / fk) from the card, the set writes them on the root, so every flame card rendered BLACK. c18 now copies them to the card each frame.
-- Charging face overlay (frown, angry brows) on every ox; two solid-black soldier silhouettes in 3/4 profile facing the herd (4-6 D... 6.8 and 7.6 D from the lens), they freeze at the snap; the third soldier is gone so nothing stands in front of the hero ox; a 3D toon-glazed bronze cup falls from the hand anchor on the word.
-- ONE x1.5 snap at g 1644 held to the end; push 9 %/s, slide 6 px/s, sway. Ground ~25 %.
-- QA_AUTO "blur" FAIL (36 frames, g 1590-1625) is the dark-to-fire design: the early frames are dark and soft by intent (no depth of field anywhere); not a defect.
-- Blades keep the cast's bronze colour; no new specular edge could be drawn without editing the cast.
-- Round 6: cast ox_figure(face='rage') on every ox (cast18 pulled from film18/main); flame cards leaning back (~40 deg, roll about the view axis); three soldier silhouettes (9, 9.8 and 13 D out) in a shock pose (arms up, leaning back), frozen at the snap; gate and wall lamps held at 35 % until g 1626 and brought up over 20 frames; camera tilted up a little (floor before the snap about 30 %); chins <= 862.
-- Round 8: tan watch posts and pale stakes at the gap removed (faces sunk); camera tilted down (look_at z 3.2) so the hero mouth sits ~y 900 at the end and soldier chins <= 704 (rule not fully met for the hero mouth); 3 star glints coded at g 1645-1652 (not verified in a frame). Soldiers still black silhouettes in the shock pose; jaw drop / lit rim / cup-fall rework not done. QA_AUTO blur FAIL = dark opening frames.
-- Director round 11/12: camera look_at z 1.7 (not tilted up: measured the opposite way); hero mouth y ~730 on the RENDERED g 1675 frame (rule 860; script projection 700 + ~125 px render offset); soldiers got a warm solid-colour rim copy (fire side). Found and fixed a helper bug: actors sharing a mesh shared the first actor's material (tints were ignored) in s21's c18.py.
-- NOT good: at the end of the take the hero ox covers most of the silhouettes (only a sliver of one soldier at the right edge in g 1675), so their shock does not read there; the cup fall is not visible in that frame; ground share not measured (deep night, bare floor ~35-40 % before the snap). Contact sheet is real (6 frames).
+- At g >= 1675 the hero ox covers the soldiers (the three stay 7-13 D from the lens, the hero charges across them): the shock reads at g 1646-1668.
 
-See QA_AUTO.md and phone_sheet.jpg.
+## FINAL-gate B4 fixes (round 16)
+- **See-through pots: fixed.** The row of foreground props no longer uses the toon-glaze emission material (its facing ramp read as a glowing x-ray). They now keep `J.prop_pot` / `J.prop_helmet`'s own opaque clay / bronze materials with outline and lathe detail, lit by two small point lights (warm fire side, cool moon side) that ride with the camera. `scene.cycles.transparent_max_bounces` is 64 (c18.begin).
+- **Cups: fixed.** The dropped / raised cup is now a small lit 3D bronze jue-style cup (bowl, rim ring, two posts, three legs, Principled bronze with a little emission and its own warm point light), 2x the old size, leaving the right soldier's raised hand on "สัตว์ประหลาด" (g ~1644), held up for a moment and falling toward the lens (g1646 held above his head, g1658 gold cup falling in front of the right soldier, lower right at g1668).
+- **Palette: fixed.** Sky = moon-blue (RGB 25,80,175 flat), blue-tinted dark ground, key (moon) light x0.8 instead of x0.3, warm fire kept (flames, tail lights, warm rims). In-shot HSV saturation mean 0.655 (director target >= 0.48), luma mean 58.9; the shot now sits next to s22's moonlit blue.
+- Kept: mouth at y <= 840 (mouth interior lowest pixel 769 at g1676, 796 at g1682), soldiers' shock with a thin warm fire-side rim, the held snap x1.5 at g1644, rage faces, tail-tip flames.
+
+## Final numbers (this render)
+- Frame diff median 6.04, p90 13.64, min 1.57, max 17.87 (n 86), frames < 1: 0.
+- Ground (`ground_share.py take.mkv 1590 1596 1683 10`): g1596 0.14, g1606 0.08, then 0.01-0.03: max **0.136** (<= 0.35 before the snap, <= 0.30 after; the blue floor is saturated so the metric no longer counts it as plain).
+- qa_auto PASS (QA_AUTO.md, phone_sheet.jpg); max soldier chin 630.
