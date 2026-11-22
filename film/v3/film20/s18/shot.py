@@ -151,11 +151,7 @@ def cam_at(g, path1):
         x = (g - DIVE[0] + 1) / float(END_DIVE - DIVE[0] + 1)
         xw = (G_CROSS - DIVE[0] + 1) / float(END_DIVE - DIVE[0] + 1)
         sw = pl["sw"]
-        if x <= xw:
-            sl = sw * (x / xw) ** 1.3                                    # ease-in only: no slowing down before the window (<= 4 frames across)
-        else:
-            y = (x - xw) / (1.0 - xw)
-            sl = sw + (1.0 - sw) * (1.0 - (1.0 - y) ** 2)                # brake inside
+        sl = x * x * x * (x * (x * 6 - 15) + 10)                           # v2: ONE smootherstep over the whole dive + settle: no speed spike at the window, no brake kink
         loc = pl["at"](sl)
         if sl <= sw:
             tgt = Vector(CO.W(POST_AIM)).lerp(Wc, ez(min(1.0, sl / sw)))
@@ -163,6 +159,7 @@ def cam_at(g, path1):
             tgt = Wc.lerp(Vector(CO.W(IN_AIM)), ez((sl - sw) / (1.0 - sw)))
         return loc, tgt
     t = (g - END_DIVE) / 30.0                                             # inside: push 9 %/s toward the soldier + a little slide
+    t = t - (1.0 - math.exp(-4.0 * t)) / 4.0                              # v2: velocity eases in from 0 (no kink at the end of the dive)
     aim = Vector(CO.W(IN_AIM))
     loc = Ii + (aim - Ii).normalized() * 0.09 * (aim - Ii).length * t + Vector((-0.05 * t * CO.SC, 0.0, 0.0))
     return loc, aim
