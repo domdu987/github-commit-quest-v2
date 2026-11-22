@@ -302,7 +302,7 @@ class Take(C.Take):
         for ob in C.bpy.data.objects:                      # ground_check: real airborne things (sparks, flags on poles)
             if ob.name.startswith(("spk_", "pnoink_flag")):
                 ob["airborne"] = True
-        self.post = self.make_post()
+        self.post = None                                   # QA_TEAM §M: no camera-parented props (the old fg_post_s11 was hidden on every frame anyway)
         self.make_fence_girders()
         self.girder = self.make_carried_girder()
         self.remove_bench()
@@ -329,17 +329,6 @@ class Take(C.Take):
         for who, cast in (("lady", "lady20"), ("gent", "gent20"), ("child", "child20"), ("eiffel", "eiffel"),
                           ("a", "riveter_tongs"), ("b", "riveter_hammer"), ("t", "riveter_tongs"), ("c", "riveter_hammer"), ("h", "riveter_forge")):
             self.actors[who] = C.make_actor(who, cast, sd, cam=self.cam, contact=(dict(width=1.5, depth=0.65, opacity=1.0) if who in ("a", "b") else cd))
-
-    def make_post(self):
-        C.bpy.ops.mesh.primitive_cube_add(size=1.0)       # camera-parented timber post at the lens's left edge (foreground), only in the fence part
-        ob = C.bpy.context.active_object
-        ob.name = "fg_post_s11"
-        ob.scale = (0.16, 2.6, 0.16)
-        ob.parent = self.cam
-        ob.location = (-0.8, -0.35, -1.7)
-        ob.rotation_euler = (0.0, 0.0, math.radians(4.0))
-        ob.data.materials.append(CO.STATE["M"]["timber"])
-        return ob
 
     def make_fence_girders(self):
         loc, look = self.rig.at(G_FIRST)
@@ -472,7 +461,7 @@ class Take(C.Take):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *self.rig.at(g))
-            C.key_vis(self.post, False, f)
+            if self.post is not None: C.key_vis(self.post, False, f)
             for who, a in self.actors.items():
                 m = list(self.marks[who]) if who in self.marks else None
                 if who in ("a", "b"):
