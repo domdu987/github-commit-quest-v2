@@ -8,3 +8,10 @@ Window: stub tower (four legs + first-platform girders) visible through the wind
 qa_stats: saturation 0.555, luma 98.2. qa_stats2: sat 0.555, vivid 53.4 %, luma 98.2, warm 49.2 % / cool 31.9 %, motion median 6.88 / p90 13.26, still 0 %. Own frame-diff: median 6.12 / p90 12.19. qa_auto: PASS (QA_AUTO.md).
 Light: set key (sun patch on the tiles), cool window fill, warm gas lamps / chandelier in frame.
 Deviations: at g 604-640 he is a crouch standing in front of the banquette (no seated puppet on that banquette), feet on the tiles with a contact decal; no light-shaft geometry; "artists nod" not shown (artists are not in this view).
+
+## v2 fix (client rejection of rivet_v1)
+- Window: the tower is now UNDER CONSTRUCTION and stands on visible ground: stub tower lifted onto a hillside site (visible above the sill) with fence, girder stack and two creeper cranes (shot.py `add_site`, SLOPE 0.30).
+- End framing: the push-in no longer fills the frame. Last keys (736, 3.5 D), (752, 3.15 D): head 156-246 px wide of 720, tallest head ~19 % of frame height (was ~30 %). Still a slow push; match-in from T06 (g600-604 keys) and the dissolve out unchanged.
+- meta.json: g0/g1/first_g, handles 4/8, transitions unchanged.
+- qa_jitter: no second above 2.0 px (overall median 0.39). qa_auto PASS. qa_stats sat 0.575, luma 92.9; frame-diff median 6.48 / p90 11.46.
+- ground_check: PASS (GROUND.md).
