@@ -57,8 +57,8 @@ def cam_path(A):
     subj = m["eiffel"] + Vector((0.8, 0.0, EIF_Z))
     c = Vector((subj.x - 0.3, subj.y - CAM_BACK, CAM_Z))
     return C.CamPath(c, subj, GF, G_LAST, push=-0.10, slide_px=-50.0, rise_px=0.0, arc_deg_s=12.0, tilt0=TILT0, tilt_deg_s=-2.0,
-                     decay=0.3, snaps=[dict(g=(G0 + 6, G0 + 14), k=1.25, peak=1.9, shift=(0.0, 0.0), tilt=0.0),
-                           dict(g=SNAP, k=1.9, peak=2.2, shift=(0.55, 0.0), tilt=-3.0)])
+                     decay=0.3, snaps=[dict(g=(G0 + 4, G0 + 30), k=1.15, peak=1.3, shift=(0.0, 0.0), tilt=0.0),
+                           dict(g=(G_HAT - 14, G_HAT + 16), k=1.5, peak=1.35, shift=(0.45, 0.0), tilt=-2.0)])
 
 
 def move_fg(A, cam_loc):
@@ -143,6 +143,9 @@ class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s23")
         self.path = cam_path(self.A)
+        for ob in C.bpy.data.objects:                       # ground_check: pennants on their poles and the hanging hut lamp are airborne by design
+            if ob.name.startswith(("flags_", "hut_lamp")):
+                ob["airborne"] = True
         self.extra = self.add_crowd()
         self.add_dressing()
         move_fg(self.A, self.path.loc0)
@@ -151,7 +154,6 @@ class Take(C.Take):
         self.M = {k: C.on_ground(v) for k, v in marks(self.A).items()}
         self.eif = self.actors["eif"] = C.make_actor("eif", "eiffel_old", os.path.join(WORK, "sprites"),
                                                      contact=dict(width=1.3, depth=0.55, opacity=0.8), cam=self.cam)
-        self.fgh = C.make_actor("fgh", "gent20", os.path.join(WORK, "sprites"), contact=False, shadow=None, cam=self.cam)
         self.off = self.actors["off"] = C.make_actor("off", "official", os.path.join(WORK, "sprites"),
                                                      contact=dict(width=1.3, depth=0.55, opacity=0.8), cam=self.cam)
 
@@ -182,7 +184,7 @@ class Take(C.Take):
         box("bn_trim_t", (cx, cy - 0.09, BANNER_Z + H_ / 2 - 0.06), (W_, 0.06, 0.12), gold)
         box("bn_trim_b", (cx, cy - 0.09, BANNER_Z - H_ / 2 + 0.06), (W_, 0.06, 0.12), gold)
         for sx in (-1, 1):
-            box("bn_pole%d" % sx, (cx + sx * (W_ / 2 + 0.1), cy, BANNER_Z / 2 - 0.5), (0.14, 0.14, BANNER_Z + 1.4), wood)
+            box("bn_pole%d" % sx, (cx + sx * (W_ / 2 + 0.1), cy, (BANNER_Z + 0.15) / 2), (0.14, 0.14, BANNER_Z + 0.25), wood)
         for txt, z, size in (("EXPOSITION UNIVERSELLE", BANNER_Z + 0.34, 0.50), ("1889", BANNER_Z - 0.50, 0.62)):
             cu = bpy.data.curves.new("bn_txt", "FONT")
             cu.body = txt
@@ -264,7 +266,6 @@ class Take(C.Take):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *self.path.at(g))
-            C.place(self.fgh, f, self.fg_pos(g))
             C.place(self.eif, f, self.M["eiffel"])
             C.place(self.off, f, self.off_pos(g))
             self.key_set(f, set_year=YEAR, set_crowd=3)
@@ -275,8 +276,7 @@ class Take(C.Take):
             self.scene.frame_set(f)
             self.eif.pose(f, eiffel_pose(g), camera=self.cam)
             self.off.pose(f, official_pose(g), camera=self.cam)
-            self.fgh.pose(f, dict(back=1, yaw=0.35, expr="neutral", arm_l="down", arm_r="down", lean=1.5 * math.sin(g * 0.2), t=g / 30.0), camera=self.cam)
-        self.sprites_for([(self.fgh, PPD), (self.eif, PPD), (self.off, PPD)], [bf(g) for g in gs])
+        self.sprites_for([(self.eif, PPD), (self.off, PPD)], [bf(g) for g in gs])
 
     def bob_crowd(self, gs):
         """the fair crowd cards are static placeholders: give each a small idle bob + sway (nobody frozen), keyed every frame."""
@@ -287,7 +287,7 @@ class Take(C.Take):
             f = bf(g)
             for i, (ob, loc0, rot0) in enumerate(self._card0):
                 ph = i * 1.9
-                ob.location = (loc0.x, loc0.y, loc0.z + 0.10 * abs(math.sin(g * 0.28 + ph)))
+                ob.location = (loc0.x, loc0.y, loc0.z + 0.015 * abs(math.sin(g * 0.28 + ph)))
                 ob.rotation_euler = (rot0.x, rot0.y, rot0.z + 0.05 * math.sin(g * 0.13 + ph))
                 ob.keyframe_insert("location", frame=f)
                 ob.keyframe_insert("rotation_euler", frame=f)
