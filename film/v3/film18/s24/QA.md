@@ -25,3 +25,14 @@ median 10.09, p90 15.3, min 3.51, max 17.13, frames < 1: 0 (rule: median >= 4, p
 - Gate 14: ground share (film18 ground_share.py) max 0.117 / median 0.089 (limit 0.30). Chariot scaled 0.25 (pole object NOT hidden); a new third soldier falls in open ground at x ~0.4 (g ~1817, sits 22 frames); dress_ground keeps that spot clear. Rendered g 1822/1840/1876 checked by eye: I can see the rout, the dressed ground and the blue rim, but I cannot confirm the new fall clearly at g 1840 (it sits among the crowd), so the director's blocker 1 may still stand.
 
 See QA_AUTO.md and phone_sheet.jpg.
+
+
+## V2 (client fixes: no camera shake / nothing floats)
+v2: SHAKE=None, one eased orbit-free truck (push 0.06, slide 90 px/s), one held x1.10 punch-in eased over 10 frames at g 1821; runners planted (no lift/hops); flying props and the chariot tagged airborne (airborne_frames 1814:1890); gaps filled with set ground; ground_check 0 FAIL (every 6 frames); transparent_max_bounces 64.
+- take.mkv crf 21, first_g 1801, 87 frames; transition in: {'type': 'cut', 'frames': 0}.
+- frame diff (90x160 grey, in-shot): median 6.0 / p90 6.95 (rule: median >= 4).
+- ground_check (film/v3/tools/ground_check.py through film18/gc_run.py, every 6th frame): - checked objects: 49   rows: 650   FAIL rows: 0   **result: PASS**  (full table in GROUND.md; cards are checked by bounding box, so only a floating card base can fail; shadows are the cards' contact quads).
+- qa_jitter output:
+```
+overall median jitter px 0.31
+```

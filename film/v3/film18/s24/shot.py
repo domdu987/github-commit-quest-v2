@@ -12,10 +12,10 @@ from c18 import cast18, V
 NAME = 's24'
 G0, G1 = 1807, 1882
 H_IN, H_OUT = 6, 6
-MOVE = dict(push=0.05, slide=40)
+MOVE = dict(push=0.06, slide=90)
 CAMO = dict(loc=(3.0, -105.0, 10.0), look_at=(-1.5, -72.0, 6.0), lens=22.0)
-SHAKE = (1.1, 0.8, 0.5, 2.6)
-SNAPS = [(G0 + 14, 1.14, 4, 9999), (G0 + 46, 1.12, 4, 9999)]      # HELD punch-ins only (ALL_TEAMS rule 1: no pulses)
+SHAKE = None                                                      # v2: NO sway
+SNAPS = [(G0 + 14, 1.10, 10, 9999)]                                 # v2: one held punch-in eased over 10 frames
 
 
 # ---- the rout cast: (start x, y), run direction (deg, world), speed D/s, fall frame (None = keeps running), cast
@@ -56,6 +56,7 @@ def make_driver(quality):
         for ch_ in [o] + list(o.children):
             if ch_.type == 'MESH':
                 ch_.data.materials.clear(); ch_.data.materials.append(C.glaze_mat(((0.10, 0.04, 0.02), (0.45, 0.2, 0.08), (0.78, 0.38, 0.15), (1.0, 0.62, 0.3)) if n_ % 2 == 0 else ((0.08, 0.05, 0.02), (0.4, 0.28, 0.08), (0.7, 0.5, 0.15), (1.0, 0.8, 0.35)), 'fl%d' % n_))     # terracotta pots, bronze helmets, warm-lit
+        o['airborne'] = True                                           # thrown pots / helmets are in the air by design (ground_check)
         items.append(o)
     FLY = [(-2.0, -80.0, 0.0, -9.0, -86.0, 6.0, 0.02), (5.0, -82.0, 0.0, 10.0, -90.0, 6.5, 0.14), (-9.0, -84.0, 0.0, -15.0, -92.0, 7.0, 0.26), (1.0, -78.0, 0.0, 4.0, -86.0, 5.5, 0.38), (-6.0, -78.0, 0.0, -11.0, -88.0, 6.0, 0.48), (3.0, -84.0, 0.0, 9.0, -94.0, 6.5, 0.58), (-4.0, -86.0, 0.0, -8.0, -94.0, 6.0, 0.68), (7.0, -80.0, 0.0, 13.0, -88.0, 6.5, 0.78)]
     cols = dict(pot=(0.30, 0.19, 0.07), helmet=(0.30, 0.30, 0.40), hay=(0.42, 0.30, 0.10), bowl=(0.34, 0.2, 0.08))
@@ -69,6 +70,7 @@ def make_driver(quality):
         if ch_.get('ob') is not None: ch_['ob'].hide_render = True
     chariot_root = C.J.prop_chariot((-4.0, -80.0, 0.0), rot=math.radians(200.0), tumble=0.0, scale=0.25)
     chariot = None
+    chariot_root['airborne_frames'] = '1814:1890'                   # the chariot stands on the ground until it starts to tip (g 1814); while it tumbles and its wheels roll off (set pose, not physics) it is marked dynamic for ground_check
     for k_ in range(2):
         sp_ = C.J.prop_reed_bundle((0, 0, 0.1), scale=2.2); sp_.rotation_euler = (0, 0, math.radians(20 + 70 * k_))
         q_ = C.ground_at(cam_obj, 0.3 + 0.4 * k_, 0.9 - 0.05 * k_)
@@ -111,11 +113,11 @@ def make_driver(quality):
             if fg_ is not None and g >= fg_:
                 kk = (g - fg_) / 30.0
                 if g < fg_ + SIT:
-                    hop = 0.7 * math.sin(math.pi * min(1.0, kk / 0.35)) if kk < 0.35 else 0.0
+                    hop = 0.0                                                  # v2: no hop (the soldier sits down on the ground)
                     fp = pos + d1 * (sp * 0.25 * min(1.0, kk / 0.3)); a.show(('fall', 0), fp, cam, mirror=d1.dot(rt) < 0, lift=hop, squash=(1.0, 1.0 - 0.03 * math.sin(kk * 12) * math.exp(-kk * 2))); clamp(a, ('fall', 0), fp, cam, d1.dot(rt) < 0, hop); continue
                 pos = pos + d1 * (sp * 0.25) + d2 * (sp * (g - fg_ - SIT) / 30.0); dirv = d2
             ph = int(g / 1.6 + i * 5) % 16
-            a.show(('run', ph), pos, cam, mirror=dirv.dot(rt) < 0, lift=0.12 * abs(math.sin(g * 0.9 + i))); clamp(a, ('run', ph), pos, cam, dirv.dot(rt) < 0, 0.12 * abs(math.sin(g * 0.9 + i)))
+            a.show(('run', ph), pos, cam, mirror=dirv.dot(rt) < 0, lift=0.0); clamp(a, ('run', ph), pos, cam, dirv.dot(rt) < 0, 0.0)
         for n_, (o, (x0, y0, z0, x1, y1, ap, dl)) in enumerate(zip(items, FLY)):
             p = C.clamp((u - dl) / 0.5); e = p
             o.location = (x0 + (x1 - x0) * e, y0 + (y1 - y0) * e, z0 + 0.4 + ap * math.sin(math.pi * e) * 1.0); o.rotation_euler = (g * 0.25 + n_, g * 0.17, g * 0.11); o.scale = (0.6, 0.6, 0.6)

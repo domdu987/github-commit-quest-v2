@@ -23,7 +23,7 @@ miss = [g for g in range(first, last + 1) if not os.path.exists(os.path.join(FR,
 assert not miss, 'missing frames %s' % miss[:10]
 mkv = os.path.join(HERE, 'take.mkv')
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', '30', '-start_number', str(first), '-i', os.path.join(FR, 'g_%04d.png'),
-                '-c:v', 'libx264rgb', '-crf', '6', '-preset', 'slow', mkv], check=True)
+                '-c:v', 'libx264rgb', '-crf', '21', '-preset', 'slow', mkv], check=True)
 # frame diff, in-shot frames only (g0..g1-1), 90x160 grey
 def grey(g):
     im = Image.open(os.path.join(FR, 'g_%04d.png' % g)).convert('L').resize((90, 160), Image.BILINEAR)
