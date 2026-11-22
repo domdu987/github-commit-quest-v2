@@ -1,31 +1,6 @@
-# QA T21 = s21 (shots 21+22 as ONE camera-travel take): g1431..1655, handles g1427-1430 (hard cut in) and g1656-1663 (8 f, dissolve 13 out into T23)
-Per QA_TEAM s I / WORKER20 s8. s22 folder deleted (merged here).
-- qa_auto PASS (QA_AUTO.md; soft-frame note g1566-1582 = the swoop landing; 'cut with no visible change at 1431' = cut against shot 20, handles are 3-D).
-- qa_stats : `take.mkv: 7.9s, shots=1 ... saturation 0.590, brightness 82.3, in-shot motion median 14.36 p90 28.91`
-- qa_stats2: `sat 0.578 vivid% 64.4 luma 82.3 contrast 37.2 detail 11.55 warm 21.1% cool 65.4% | motion med 14.36 p90 28.91 still% 0.0` (sat >= 0.50, vivid >= 45, luma >= 70: PASS)
-- QA-art r4 (TAKE4_ART): (1) rings now thin tori (1/3 of the old thickness), soft blue (hue ~200) mix of transparent + emission, opacity <= 0.36 and fading as they spread (age^1.3), none above 40 % opacity; (2) wire thinned per frame to ~2.5 px on screen (curve bevel keyed from the camera distance); the milky aura cone and halo tube are removed; on 'เสาอากาศยักษ์' a blue-white PULSE (window 40 m wide, node chain on the iron materials, strength 0.5) runs up the lattice from the foot to the summit g1528-1564 while the iron stays red elsewhere. Frames g1427-1575 re-rendered.
-- QA-art r3 add-on: rings/wire/halo are blue emission (strength cut so they stay blue-white, not flat white: the brightest cores still clip to white) and fade as they spread (strength x (1-age)^1.2); group landing ~15 % closer than the first r3 pass.
-- frame-diff (90x160 grey): median 13.94, p90 26.87. 237 frames, 10.99 s/frame wall, 21.18 cpu (2 procs x 2 threads, 720x1280, 8 spp). take.mkv 125 MB: take.mkv.part* (40 MB), take.mkv gitignored.
-## Take-gate r3 fixes (QA-tech TAKE3_B)
-1. Group phase g1577-1655: camera pushed in to a medium (CAM_BACK -5 D, tilt +9) with the five bunched tighter: heads Eiffel 89-110 px, officer 79-101 px, men 69-107 px (QA-art r3: 90-120 px), centre y ~700-725, nobody cut; the bare ground is now a lit COBBLED forecourt (brick texture, runtime plane under the group) with kegs at the sides: no flat slab.
-2. g1607-1630 the dropped crowbars land on the cobbles and the officer's salute reads at 80+ px heads.
-3. Ring edge-on slab g1526-1529: no ring is born after g1521 (RING_STOP), so no ring sits on the camera when it crosses the ring plane near g1529; the last rings die out by g1573.
-4. Glow g1530-1539: a blue-white aura cone over the upper lattice (rim over the red iron), a blue halo tube on the wire and a stronger wire; the lower iron stays red-orange.
-5. Wire, halo, aura leave at g1566 and the rings are gone by g1573: the group framing is clean (no white slashes).
-## The travel (one continuous camera, Hermite spline then c20.CamPath, no cut inside)
-| g | what |
-|---|---|
-| 1427-1469 | RISE from beside the hut roof / post along the antenna wire up the tower to the summit lamp ("หอยิ่งสูง สัญญาณยิ่งไปไกล" 1434-1467); the lit lattice and lamp necklaces fill the frame, city below |
-| 1468-1532 | at the summit the camera hovers 30-80 m above the ring plane looking down over lit Paris; the first ring is BORN at the lamp (flash) at g1468 and spreads over the city, a ring every 18 f (3 alive); the rings are not visible before the camera arrives |
-| 1530 | "เสาอากาศยักษ์": blue-white glow along the wire + lattice edges (iron stays red), ring flash |
-| 1532-1576 | SWOOP down the tower face and back along the avenue to the foot (lens shift 0 -> -0.03), landing on the group |
-| 1576-1655 | old Eiffel, officer and three demolition men: bars on shoulders; 1586 'ไร้ประโยชน์' they stop; 1607-1619 they DROP the bars (3-D bars tumble); 1625-1630 officer salutes old Eiffel; Eiffel worried -> proud on a blink; men cheer (bounce); wagon + scrap cart roll away; 1642 snap push on 'ขาดไม่ได้' |
-## Rule checks (WORKER20 s6-s8)
-- Tower in frame and reads as the Eiffel Tower on every frame (rise: lattice fills the frame; wide: full tower); motivated lights: lamp necklaces + hut window + summit flash + wire glow, warm vs deep blue in every frame.
-- Everyone acts in the group phase (sway, bars, drop, salute, cheer bounce); nobody floats (contact decals + proxy shadows, ground ray-cast); heads 45-84 px in the wide of five, centre y 560-720 (lowest bottom < 880); no face > 35 % of frame height.
-- Mouths: none animated (held expression mouths only). No DOF, no text (in-world signs optional: none added).
-- Wire: one thin pale wire for the whole take, own object (set's 4 fat wires hidden); rings: own thick tori (set's thin rings hidden); exposure +0.95; foreground kegs/crates at the sides of the group phase (kit20).
-## Known misses / deviations
-- The cobbled forecourt is a runtime plane (16 x 14 m) under the group; seen from the swoop it is a visible rectangle of cobbles.
-- 'Crowbar' = cast5 pickaxe prop; fallen bars are plain cylinders. Marks bunched at runtime so five fit at 15 D.
-- Hue not measured; the whole take is night (exception in the hue band).
+# QA s21 = T21 v2 (render20/v2a)
+Cut in at g1431 (4 handle frames), dissolve out (8 handle), g1427-1663, 237 frames, timing / events unchanged.
+- Camera: the travel (rise along the wire, summit, swoop, group) is the old knot path low-passed with a gaussian (sigma 8 f) plus a 7-frame lead over g1520-1550 so the hand-over to the group lands as before; the 0.07 D ~9 Hz handheld sway on the group is removed. (A C2 spline through the knots overshot into the cobbles; dropped.)
+- Contact shadows on the cobbles (see GROUND.md); ground_check PASS.
+- g1575 (52.5 s): the camera is still finishing the swoop, the group is in the lower third and arrives fully by ~g1585 (old take: g1575). Slightly later arrival, declared.
+- qa_auto PASS, qa_jitter all <= 1.7 (GROUND.md), frame-diff median 12.40 p90 21.12. sheet_1fps.jpg.

@@ -451,3 +451,11 @@
 | sg_static_glasswine | 1638 | -0.2256 | OK | prop/bbox | 1.730 | hut_brass |
 | sg_static_glasswine | 1648 | -0.2256 | OK | prop/bbox | 1.730 | hut_brass |
 | sg_static_glasswine | 1658 | -0.2256 | OK | prop/bbox | 1.730 | hut_brass |
+
+## v2 notes (render20/v2a, T21)
+- PASS above: 21 objects (5 cards on the cobbles, bars, kegs/crate), 24 sampled frames g1428-1658.
+- Skipped (gc_role skip): hut_* and wagon_* (the set's merged meshes, on the ground). Airborne: falling crowbars g1606-1628, the cheer hops from g1632, rings / flash / glow.
+- Contact shadows: the old per-card decals sat UNDER the cobble plane (z +0.012), so nobody had a shadow on the cobbles. Added a soft radial blob plane per person (cs_*), keyed under the feet every frame, shrinking with the cheer hop.
+
+## qa_jitter (final take.mkv, film-aligned seconds, hard-cut handle g1427-1430 excluded)
+{g1440: 1.28, g1470: 0.45, g1500: 0.47, g1530: 1.66, g1560: 1.56, g1590: 0.75, g1620: 0.97, g1650: 1.07}  -> every second <= 2.0, nothing declared.
