@@ -261,8 +261,8 @@ def v2_fix_scene(T):
         if ob is not None:
             ob["gc_role"] = "skip"
     # contact blobs: canopy (under the roof, soft) and pier foot ring
-    def blob(name, cx, cy, w, d, op):
-        bpy.ops.mesh.primitive_plane_add(size=1.0, location=(cx, cy, 0.06))
+    def blob(name, cx, cy, w, d, op, z=0.06):
+        bpy.ops.mesh.primitive_plane_add(size=1.0, location=(cx, cy, z))
         ob = bpy.context.active_object
         ob.name = name
         ob.scale = (w, d, 1.0)
@@ -280,10 +280,10 @@ def v2_fix_scene(T):
         mp = nd.new("ShaderNodeMapping")
         mp.inputs["Location"].default_value = (-0.5, -0.5, 0)
         cr = nd.new("ShaderNodeMapRange")
-        cr.inputs["From Min"].default_value = 0.0
-        cr.inputs["From Max"].default_value = 0.5
-        cr.inputs["To Min"].default_value = op
-        cr.inputs["To Max"].default_value = 0.0
+        cr.inputs["From Min"].default_value = 0.5
+        cr.inputs["From Max"].default_value = 0.8
+        cr.inputs["To Min"].default_value = 0.0
+        cr.inputs["To Max"].default_value = op
         cr.clamp = True
         mx = nd.new("ShaderNodeMixShader")
         o = nd.new("ShaderNodeOutputMaterial")
@@ -295,9 +295,12 @@ def v2_fix_scene(T):
         ob.visible_shadow = False
         ob["gc_role"] = "shadow"
     blob("canopy_gcshadow", 70.7, -149.3, 14.0, 11.0, 0.55)
+    mkb = T.A["marks"]["leg_b"]                                  # batch-3 hunter: ONE riveter pair stays (leg_b), on a clearly visible deck with contact shadows
+    for i_, dx_ in enumerate((0.8, 2.4)):
+        blob("rl_b_gcshadow_%d" % i_, mkb[0] + dx_, mkb[1], 3.4, 1.7, 0.85, z=mkb[2] + 0.03)
     for nm in ("leg_a", "leg_b", "leg_c"):                       # scaffold platforms under the riveters (they stood on nothing)
         mk = T.A["marks"][nm]
-        d = box("plankdeck_" + nm, mk[0] + 0.8, mk[1], mk[2] - 0.5, mk[2], 1.0, M["plank"])
+        d = box("plankdeck_" + nm, mk[0] + 0.8, mk[1], mk[2] - 0.5, mk[2], 1.0, M["timber"] if nm == "leg_b" else M["plank"])
         for v in d.data.vertices:
             v.co.x = mk[0] + 0.8 + (v.co.x - (mk[0] + 0.8)) * 5.5
             v.co.y = mk[1] + (v.co.y - mk[1]) * 2.6
@@ -512,6 +515,8 @@ class Take(C.Take):
             self.key_cam(f, *self.path.at(g))
             C.place(self.eif, f, mark)
             for a, cast, mk, mirror, sc in self.riv:
+                if a.name in ("rl_c", "rl_f"):                      # batch-3 hunter: the upper pair (leg_c) stacked into a totem: removed entirely
+                    sc = 1e-3
                 if a.name in ("rl_a", "rl_d"):                      # float hunter g~405: the lowest platform pair fills the lower-left foreground cut at the waist: they step off (shrink away) before
                     sc = sc * max(1e-3, 1.0 - smoother((g - 388) / 8.0))
                 C.place(a, f, mk, scale=sc)
