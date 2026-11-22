@@ -59,7 +59,7 @@ def cam_path(A):
     c = Vector((subj.x - 0.3, subj.y - CAM_BACK, CAM_Z))
     return C.CamPath(c, subj, GF, G_LAST, push=-0.10, slide_px=-50.0, rise_px=0.0, arc_deg_s=12.0, tilt0=TILT0, tilt_deg_s=-2.0,
                      decay=0.3, snaps=[dict(g=(G0 + 4, G0 + 30), k=1.15, peak=1.3, shift=(0.0, 0.0), tilt=0.0),
-                           dict(g=(G_HAT - 14, G_HAT + 16), k=1.5, peak=1.35, shift=(0.45, 0.0), tilt=-2.0)])
+                           dict(g=(G_HAT - 14, G_HAT + 16), k=1.3, peak=1.35, shift=(0.2, 0.0), tilt=-2.0)])
 
 
 def move_fg(A, cam_loc):
@@ -87,16 +87,9 @@ def idle(g, ph=0.0):
 
 
 def official_pose(g):
-    u = u_of(g, HAND[0], HAND[1])                                       # 0 doc held up, 1 arm stretched toward Eiffel
-    held = g < G_SWAP_DOC
-    p = dict(yaw=0.35, arm_r="hip", legs="wide")
-    if held:
-        p["arm_l"] = dict(hand=(lerp(-0.62, -1.1, u), lerp(0.72, 0.70, u)), bend=0.2, stretch=lerp(1.1, 1.3, u))
-        p["prop_l"] = "doc_seal"
-    else:
-        u2 = u_of(g, G_SWAP_DOC, G_SWAP_DOC + 10)
-        p["arm_l"] = dict(hand=(lerp(-1.1, -0.4, u2), lerp(0.70, 0.30, u2)), bend=0.2, stretch=lerp(1.3, 1.0, u2))
-    p["expr"] = "happy" if g > G_SWAP_DOC else "stern"
+    """v2c (float hunter: hand-held props read as floating): the certificate is deleted, both men keep their hands on their hips"""
+    p = dict(yaw=0.35, arm_r="hip", arm_l="hip", legs="wide")
+    p["expr"] = "happy" if g > G0 + 20 else "stern"
     p["pitch"] = -0.05
     p.update(idle(g, 1.3))
     p["blink"] = blink(g, [G0 + 30])
@@ -105,36 +98,15 @@ def official_pose(g):
 
 
 def eiffel_pose(g):
-    u = u_of(g, HAND[0], HAND[1])
-    p = dict(yaw=0.40)
+    """v2c: no certificate, no hat raise: he keeps the bowler ON, hands on hips, worried -> proud on 'อีก 70 ปี' (blink swap) with a happy nod"""
+    p = dict(yaw=0.40, arm_r="hip", arm_l="hip")
     bl, ex = C.blink_swap(g, G_HAT, "worried", "proud")
     p["expr"] = ex
-    if g < G_SWAP_DOC:                                      # reaching for the document
-        p["arm_r"] = dict(hand=(lerp(0.3, 1.0, u), lerp(0.2, 0.62, u)), bend=-0.2, stretch=lerp(1.0, 1.2, u))
-        p["arm_l"] = "hip"
-    elif g < G_XFER:                                        # document in the right hand
-        u2 = u_of(g, G_SWAP_DOC, G_SWAP_DOC + 12)
-        p["arm_r"] = dict(hand=(lerp(1.0, 0.70, u2), lerp(0.62, 0.70, u2)), bend=-0.2, stretch=lerp(1.2, 1.15, u2))
-        p["prop_r"] = "doc_seal"
-        p["arm_l"] = "hip"
-    else:                                                   # document moved to the left hand (swap on a blink)
-        p["arm_l"] = dict(hand=(-0.9, 0.55), bend=0.2, stretch=1.15)
-        p["prop_l"] = "doc_seal"
-        if g < G_HAT:
-            p["arm_r"] = "hip"
-    if g >= G_HAT:                                          # bowler off and held out high with a flourish (hat_off bare head)
-        uh = u_of(g, G_HAT, G_HAT + 8)
-        p["hat_off"] = 1
-        p["arm_r"] = dict(hand=(lerp(0.45, 1.0, uh), lerp(0.40, -0.18, uh)), bend=lerp(0.0, -0.4, uh), stretch=lerp(1.0, 1.3, uh))
-        p["prop_r"] = "bowler_held"
-        p["pitch"] = -0.1
-        p["head_roll"] = -4.0
-    else:
-        p["pitch"] = 0.15
+    nod = math.sin(math.pi * clamp((g - G_HAT) / 14.0)) if g >= G_HAT else 0.0
+    p["pitch"] = 0.15 - 0.30 * nod if g < G_HAT else -0.05 - 0.25 * nod
+    p["head_roll"] = -3.0 * nod
     p.update(idle(g, 0.4)); p["lean"] = 4.0 + 3.0 * math.sin(g * 0.23 + 0.4)
     p["blink"] = bl if g < G_HAT + 2 else blink(g, [G_HAT + 36])
-    if G_XFER - 1 <= g <= G_XFER + 1 and g < G_HAT - 1:
-        p["blink"] = blink(g, [G_XFER - 1])
     p["t"] = g / 30.0
     return p
 
@@ -254,7 +226,7 @@ class Take(C.Take):
         """the official steps back and aside after the handover (g 1684..1702) so the snap lands on Old Eiffel"""
         u = u_of(g, 1684, 1702)
         p = Vector(self.M["official"])
-        return (p.x - 0.1 * u, p.y + 1.6 * u, p.z)
+        return (p.x, p.y, p.z)                              # v2c: stays beside him (no step back: the two heads keep the same scale)
 
     def fg_pos(self, g):
         loc, look = self.path.at(g)
