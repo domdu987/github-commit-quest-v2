@@ -15,10 +15,11 @@ G0, G1 = 1596, 1683
 H_IN, H_OUT = 6, 6
 G_WORD = C.g_of(54.76)                                            # 1646
 G_FLARE = 1624                                                    # flames start to flare
-MOVE = dict(push=0.09, slide=6, moves=[])
-CAMO = dict(look_at=(0.0, -8.0, float(os.environ.get('CAMZ', '0.9'))))                             # tilted up a little: ground <= 25 %
-SHAKE = (0.9, 0.65, 0.4, 2.6)
-SNAPS = [(G_WORD - 2, 1.5, 4, 9999)]                              # ONE x1.5 snap on the word, held to the end
+MOVE = dict(push=0.17, slide=-30, orbit=True, moves=[])
+GC_AIRBORNE = r'tailfl|flame|g21_|cup18|cuplight|fgwarm|fgcool|star|pool21'          # flames, glints and the thrown cup are allowed off the ground
+CAMO = dict(loc=(3.0, -58.0, 2.2), look_at=(0.0, -8.0, float(os.environ.get('CAMZ', '0.9'))))                             # tilted up a little: ground <= 25 %
+SHAKE = None                                                      # v2: NO sway
+SNAPS = [(G_WORD - 2, 1.25, 8, 9999)]                              # v2: ONE x1.5 push eased over 8 frames, held to the end
 SPEED = 3.8
 FRONT_Y = -27.0
 
@@ -61,7 +62,7 @@ def make_driver(quality):
     sold = []
     for c in cfg:
         a1 = C.Atlas('s21b_' + c['st'], {0: sol(c['st'], c['base'])}, ppd=130); a2 = C.Atlas('s21c_' + c['fr'], {0: C.person_variant(c['base'], shock(c['fr'].replace('freeze', 'freeze')) if False else dict(shock(c['fr'])), 's')}, ppd=130)
-        sold.append((c, C.Actor(a1, 's_' + c['st'], height=3.2, shadow=False, rim=((1.0, 0.5, 0.15), 1 if c['lat'] < 0 else -1, 0.07, 1.7, True), rim2=((0.3, 0.5, 1.0), -1 if c['lat'] < 0 else 1, 0.06, 1.6), **BLK), C.Actor(a2, 's_' + c['fr'], height=3.2, shadow=False, rim=((1.0, 0.5, 0.15), 1 if c['lat'] < 0 else -1, 0.07, 1.7, True), rim2=((0.3, 0.5, 1.0), -1 if c['lat'] < 0 else 1, 0.06, 1.6), **BLK)))
+        sold.append((c, C.Actor(a1, 's_' + c['st'], height=3.2, shadow=True, sw=1.3, rim=((1.0, 0.5, 0.15), 1 if c['lat'] < 0 else -1, 0.07, 1.7, True), rim2=((0.3, 0.5, 1.0), -1 if c['lat'] < 0 else 1, 0.06, 1.6), **BLK), C.Actor(a2, 's_' + c['fr'], height=3.2, shadow=True, sw=1.3, rim=((1.0, 0.5, 0.15), 1 if c['lat'] < 0 else -1, 0.07, 1.7, True), rim2=((0.3, 0.5, 1.0), -1 if c['lat'] < 0 else 1, 0.06, 1.6), **BLK)))
     _v = sol('soldier_cheer_cup_b', 'yan_soldier_b'); CUPA = _v.anchors['cup_r']; FEET = _v.feet_y
     actors = {}
     for c, s1, s2 in sold: actors[c['st']] = s1; actors[c['fr']] = s2
@@ -86,7 +87,7 @@ def make_driver(quality):
         import time as _t; t0_ = _t.time(); mw_ = o_.matrix_world; kill_ = set()
         for f in o_.data.polygons:
             c_ = mw_ @ f.center
-            if 4.8 < abs(c_.x) < 11.0 and -43.5 < c_.y < -37.0: kill_.add(f.index)
+            if abs(c_.x) < 11.0 and -43.5 < c_.y < -37.0: kill_.add(f.index)
         print('s21 posts', nm_, len(kill_), len(o_.data.polygons), round(_t.time() - t0_, 1), flush=True)
         vs_ = set(v for i in kill_ for v in o_.data.polygons[i].vertices)
         for v in vs_: o_.data.vertices[v].co.z -= 60.0                       # sink the faces' vertices under the ground (bmesh.delete hangs on this mesh)
@@ -105,6 +106,15 @@ def make_driver(quality):
     if not sm.materials: sm.materials.append(C.R2._card_mat(C.R2._shadow_png(), (1, 1, 1), 0.0, 'shadow'))
     for k in range(2):
         d_ = ob.new('darkband%d' % k, sm) if False else C.bpy.data.objects.new('darkband%d' % k, sm); C.STATE['SET'].objects.link(d_); d_.location = (0.0, -21.0, 0.1 + 0.01 * k); d_.scale = (75.0, 17.0, 1.0); d_.visible_shadow = False; C.J.no_bounce(d_)
+    # v2: a solid plank deck under the whole herd run (the set has water / banks / a narrow bridge there): the oxen's soles rest on it (ground_check)
+    import bmesh as _bm
+    _me = C.bpy.data.meshes.new('deck21'); _b = _bm.new(); _vs = [_b.verts.new(p) for p in ((-70, -39.6, -0.54), (70, -39.6, -0.54), (70, 8, -0.54), (-70, 8, -0.54))]; _f = _b.faces.new(_vs)
+    _uv = _b.loops.layers.uv.new('UVMap')
+    for _l, _c in zip(_f.loops, ((0, 0), (14, 0), (14, 9), (0, 9))): _l[_uv].uv = _c
+    _b.to_mesh(_me); _b.free(); _br = C.STATE['objects'].get('bridge')
+    if _br is not None and _br.data.materials: _me.materials.append(_br.data.materials[0])
+    else: _me.materials.append(C.flat_mat((0.06, 0.04, 0.03), 'deck21'))
+    _dk = C.bpy.data.objects.new('deck21', _me); C.STATE['SET'].objects.link(_dk); C.J.no_bounce(_dk)
     global OXLIST, ATOX
     OXLIST = oxen; ATOX = at_ox
     cam_obj = ob['cam']
@@ -118,9 +128,14 @@ def make_driver(quality):
     wl2 = C.bpy.data.lights.new('fgcool', 'POINT'); wl2.color = (0.45, 0.6, 1.0); wl2.energy = 260.0; wl2.shadow_soft_size = 1.5; wl2.use_shadow = False
     wlo2 = C.bpy.data.objects.new('fgcool', wl2); C.STATE['LIGHTS'].objects.link(wlo2); wlo2.visible_camera = False
     stars = [C.star_obj('g21_%d' % k) for k in range(3)]
+    pools = []                                                         # warm lit ground patch under each silhouette (fire light on the earth) so the black cards stand ON something, plus their contact shadows
+    pm = C.R2._shadow_quad('cpool21', 1.0, 1.0)
+    if not pm.materials: pm.materials.append(C.STATE['M']['pool_w'])
+    for k_ in range(len(sold)):
+        po = C.bpy.data.objects.new('pool21_%d' % k_, pm); C.STATE['SET'].objects.link(po); po.visible_shadow = False; C.J.no_bounce(po); po.scale = (2.4, 2.4, 1.0); pools.append(po)
 
     def drive(g):
-        pose = C.set_camera(NAME, g, move=MOVE, cam=CAMO, shake=SHAKE, snaps=SNAPS); cam = V(pose['loc'])
+        pose = C.set_camera(NAME, min(g, G1 - 1), move=MOVE, cam=CAMO, shake=SHAKE, snaps=SNAPS); cam = V(pose['loc'])      # v2: the camera HOLDS on the last in-shot pose through the out handle (no zoom into the legs)
         t = (g - G0) / 30.0
         C.bpy.context.view_layer.update()
         for o_, (u_, v_) in zip(fgp, ((0.07, 0.95), (0.27, 0.975), (0.50, 0.99), (0.73, 0.97), (0.93, 0.95))):
@@ -149,6 +164,7 @@ def make_driver(quality):
             frozen = g >= G_WORD - 2
             for o in (s1, s2): o.hide()
             (s2 if frozen else s1).show(0, pos + rt * (0.025 * math.sin(g * 1.9 + k) if frozen else 0.0), cam, yaw_add=c['yaw'], mirror=False, squash=(1.0, 1.0))
+            pools[k].location = (pos.x, pos.y, 0.07)
         kk_ = g - (G_WORD - 1)
         near3 = [i for _, i in rows[:3]]
         for si, st in enumerate(stars):

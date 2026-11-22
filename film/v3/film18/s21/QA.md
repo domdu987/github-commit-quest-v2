@@ -26,3 +26,14 @@ median **5.57**, p90 **13.29**, min 1.31, max 17.61, frames < 1: 0 (gate median 
 - Frame diff median 6.04, p90 13.64, min 1.57, max 17.87 (n 86), frames < 1: 0.
 - Ground (`ground_share.py take.mkv 1590 1596 1683 10`): g1596 0.14, g1606 0.08, then 0.01-0.03: max **0.136** (<= 0.35 before the snap, <= 0.30 after; the blue floor is saturated so the metric no longer counts it as plain).
 - qa_auto PASS (QA_AUTO.md, phone_sheet.jpg); max soldier chin 630.
+
+
+## V2 (client fixes: no camera shake / nothing floats)
+v2 (client fixes): SHAKE=None; ONE smooth eased orbit dolly/truck (push 0.17, slide -30 px/s, look-at stays on the herd, start offset x +3 so the camera crosses the palisade gap at its centre) + one held x1.25 punch-in on the word eased over 8 frames; the camera holds its last pose through the out handle; solid plank deck (deck21, the bridge material) under the whole herd run, so the oxen's soles rest on a surface (the set had water / banks there: ground_check showed 819 FAIL before); silhouettes keep their contact shadows + warm pools; flying props / flames tagged airborne; ground_check 0 FAIL (every 6th frame); transparent_max_bounces 64; crf 21.
+- take.mkv crf 21, first_g 1590, 99 frames; transition in: {'type': 'cut', 'frames': 0}.
+- frame diff (90x160 grey, in-shot): median 4.96 / p90 20.0 (rule: median >= 4).
+- ground_check (film/v3/tools/ground_check.py through film18/gc_run.py, every 6th frame): - checked objects: 86   rows: 1328   FAIL rows: 0   **result: PASS**  (full table in GROUND.md; cards are checked by bounding box, so only a floating card base can fail; shadows are the cards' contact quads).
+- qa_jitter output:
+```
+overall median jitter px 0.4
+```

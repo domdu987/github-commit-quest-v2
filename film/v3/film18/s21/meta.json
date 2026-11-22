@@ -9,20 +9,20 @@
   "frames": 0
  },
  "framediff": {
-  "median": 6.04,
-  "p90": 13.64,
-  "min": 1.57,
-  "max": 17.87,
+  "median": 4.96,
+  "p90": 20.0,
+  "min": 0.97,
+  "max": 21.49,
   "n": 86,
-  "frames_lt1": 0
+  "frames_lt1": 1
  },
  "max_chin_y": {
-  "soldier_stand_a": 630,
-  "soldier_cheer_cup_b": 628,
-  "soldier_stand_c": 629,
-  "soldier_freeze_a": 605,
-  "soldier_freeze_b": 609,
-  "soldier_freeze_c": 611
+  "soldier_stand_a": 622,
+  "soldier_cheer_cup_b": 622,
+  "soldier_stand_c": 621,
+  "soldier_freeze_a": 589,
+  "soldier_freeze_b": 592,
+  "soldier_freeze_c": 598
  },
- "s_per_frame": 24.3
+ "s_per_frame": 26.5
 }
