@@ -31,7 +31,7 @@ CFG = {9:  dict(g=(604, 752), h_in=4, h_out=8, view="stub"),
        16: dict(g=(1093, 1220), h_in=4, h_out=11, view="full")}[SHOT]
 G0, G1 = CFG["g"]                                        # in-take frames G0..G1 inclusive
 GA, GZ = G0 - CFG["h_in"], G1 + CFG["h_out"]
-SLOPE = 0.30
+SLOPE = 0.20
 PRESET, VIEW = "cafe_low", CFG["view"]
 GS = list(range(GA, GZ + 1))
 
@@ -158,7 +158,7 @@ def pose_t09(g):
     """g 604..752 (+ handles): rise, cravat, chin up (to 668), fold arms + turn his back on the window (676-712), chin jerk on 'สักครั้ง'."""
     ur = u_of(g, 612, 634)
     uf = u_of(g, 664, 680)                               # arms: cravat hand -> folded
-    p = dict(legs=dict(crouch=lerp(_CROUCH, 0.0, ur), spread=0.05), t=g / 30.0)
+    p = dict(legs=dict(crouch=lerp(_CROUCH, 0.0, ur), spread=lerp(0.22, 0.05, ur)), t=g / 30.0)
     p["yaw"] = lerp(lerp(0.45, 0.25, ur), lerp(0.30, -0.60, u_of(g, 676, 712)), uf)
     tug = max(0.0, math.sin(math.pi * clamp((g - 640) / 8.0))) + max(0.0, math.sin(math.pi * clamp((g - 650) / 8.0)))
     if g < 636:
@@ -215,7 +215,7 @@ def feet_at(A, g):
     if SHOT == 9:                                         # steps forward off the banquette edge while rising
         s = Vector(A["marks"]["maupassant_seat"])
         u = u_of(g, 612, 640)
-        return (lerp(s.x, m.x, u), lerp(s.y - 0.30, m.y, u))
+        return (lerp(s.x, m.x, u), lerp(s.y - 0.75, m.y, u))      # starts well in front of the banquette (feet + shadow on the tiles)
     return (m.x, m.y)
 
 
@@ -243,7 +243,7 @@ class Take(C.Take):
         M = CO.STATE["M"]
         stub = I.STATE["win_objs"]["stub"]
         tx, ty = I.STUB_X, I.STUB_D
-        SL = SLOPE
+        SL = SLOPE                                                   # hillside rising away from the window: its face is lit and reads above the sill
 
         def gz(y):
             return SL * (y - 30.0)
@@ -255,9 +255,21 @@ class Take(C.Take):
             o.location.z += zb - z0 + 0.8                           # feet on the hillside (piers sink 0.8 m in)
         mb = CO.MB("stub_site", parent=CO.root())
         Z = lambda y, dz=0.0: gz(y) + dz
-        mb.quad(M["earth"], [(tx - 350, 30.0, 0.0), (tx + 350, 30.0, 0.0), (tx + 350, 420.0, gz(420.0)), (tx - 350, 420.0, gz(420.0))])
-        mb.quad(M["grass"], [(tx + 70, 30.0, 0.4), (tx + 350, 30.0, 0.4), (tx + 350, 420.0, gz(420.0) + 0.4), (tx + 70, 420.0, gz(420.0) + 0.4)])
-        mb.quad(M["grass"], [(tx - 350, 30.0, 0.4), (tx - 70, 30.0, 0.4), (tx - 70, 420.0, gz(420.0) + 0.4), (tx - 350, 420.0, gz(420.0) + 0.4)])
+        for (xa, xb, mt, dz) in ((-350, 350, "earth", 0.0), (70, 350, "grass", 0.4), (-350, -70, "grass", 0.4)):
+            mb.quad(M[mt], [(tx + xa, 30.0, dz), (tx + xb, 30.0, dz), (tx + xb, 700.0, gz(700.0) + dz), (tx + xa, 700.0, gz(700.0) + dz)])
+        # masonry foundation blocks under the four legs: the front legs stand on the lower slope, so each pier block runs from the slope up to the leg foot
+        stone = [o for o in stub if o.name.endswith("_stone")]
+        pts = [o.matrix_world @ v.co for o in stone for v in o.data.vertices]
+        for sx in (-1, 1):
+            for sy in (-1, 1):
+                q = [p / CO.SC for p in pts if (p.x / CO.SC - tx) * sx > 0 and (p.y / CO.SC - ty) * sy > 0]
+                if not q:
+                    continue
+                cx_, cy_ = sum(p.x for p in q) / len(q), sum(p.y for p in q) / len(q)
+                w_ = max(p.x for p in q) - min(p.x for p in q)
+                zs = gz(cy_)
+                if zb + 0.8 - zs > 0.5:
+                    mb.box(M["brick"], (cx_, cy_, (zs - 3.0 + zb + 0.8) / 2), (w_, w_, zb + 0.8 - zs + 3.0))
         fy = ty - 48.0
         for i in range(15):                                         # timber fence along the slope in front of the tower
             mb.box(M["timber"], (tx - 70 + i * 10.0, fy, Z(fy, 1.4)), (0.8, 0.8, 2.8))

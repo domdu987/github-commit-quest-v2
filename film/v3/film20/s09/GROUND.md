@@ -65,7 +65,3 @@
 | shell_i_lamp | 751 | +0.0094 | OK | prop/bbox | 5.264 | shell_gold |
 | shell_i_lamp | 757 | +0.0094 | OK | prop/bbox | 5.264 | shell_gold |
 | shell_i_lamp | 761 | +0.0094 | OK | prop/bbox | 5.264 | shell_gold |
-
-## Window view (v2): tower under construction on visible ground
-The cafe window sill hides every flat ground below eye level, so the stub tower now stands on a HILLSIDE site rising away from the window (slope 0.30, earth + grass, lit by the set sun): feet on the slope, timber fence, a red-lead girder stack on the grass and two creeper cranes on the legs (the crane hook carries a girder: airborne by design). Merged set/site meshes are ground-class and not ray-checked; the check covers Maupassant's card + contact shadow: PASS, 0 FAIL rows, every 6th frame.
-No planned fast moves: the camera is one slow Catmull-Rom travel.
