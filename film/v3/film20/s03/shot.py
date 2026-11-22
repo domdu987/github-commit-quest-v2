@@ -21,7 +21,7 @@ import puppet                                            # noqa: E402
 G0, G1 = C.g_bound(5.93), C.g_bound(13.47)     # 178, 404 (take = g 178..403)
 H_IN, H_OUT = 8, 8                             # dissolve 13 in and out: 8 handle frames each side (director)
 GF, G_LAST = G0 - H_IN, G1 + H_OUT - 1         # 170..411
-G_TRAVEL = int(os.environ.get('GT', 282))                                 # the camera leaves Eiffel (after the point has landed)
+G_TRAVEL = int(os.environ.get('GT', 314))                                 # the camera leaves Eiffel (after the point has landed)
 G_MOST = C.cap_g("สูงที่สุดในโลก")                # 346: snap up
 SNAP = (G_MOST - 2, G_MOST + 13)
 GS = list(range(GF, G_LAST + 1))
@@ -384,7 +384,7 @@ class ZoomPath(C.CamPath):
 
 
 LEG_FWD = -2.0                                 # m: the leg camera starts this much nearer the foot than the preset (smaller sacks)
-LIFT = float(os.environ.get('LIFTV', 0.0))                                    # D: the camera lifts over the yard / pier while it travels (clears the stone block)
+LIFT = float(os.environ.get('LIFTV', 60.0))                                    # D: the camera lifts over the yard / pier while it travels (clears the stone block)
 
 
 class TravelPath(ZoomPath):
@@ -407,9 +407,9 @@ class TravelPath(ZoomPath):
         if g <= G_TRAVEL:
             return la, ka
         u = clamp((g - G_TRAVEL) / float(G_LAST - G_TRAVEL), 0.0, 1.0)
-        wm = os.environ.get("WMODE", "ss")
+        wm = os.environ.get("WMODE", "trap45")
         w = {"trap": lambda: trap(u), "front": lambda: smoother(u ** 0.75), "trap45": lambda: trap(min(1.0, u / float(os.environ.get("TW", 1.0))), float(os.environ.get("TA", 0.5))), "ss": lambda: smoother(u)}[wm]()      # v2: one smooth eased crane (no fast blend, no shake)
-        pitch = lerp(8.0, 28.0, w)                                  # batch-4: one smootherstep for position, aim and pitch (no separate snap tilt)
+        pitch = lerp(8.0, 22.0, w) + 6.0 * smoother((g - SNAP[0]) / float(SNAP[1] - SNAP[0]))
         dC = self.h * math.cos(math.radians(pitch)) + Vector((0, 0, math.sin(math.radians(pitch))))
         dA = (ka - la).normalized()
         loc = la.lerp(self.locC, w) + Vector((0, 0, LIFT * math.sin(math.pi * w)))

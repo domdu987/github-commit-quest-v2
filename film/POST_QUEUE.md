@@ -24,7 +24,7 @@ Branch: `claude/new-session-73ou27`. Only rows with status `READY` may be posted
 | 17 | ไอ้ช่างวัดหู | ไอ้ช่างวัดหู | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release17/ear_v1.mp4 | WAIT (in production; client posts himself) |
 | 18 | ไอ้เสมียนวัว | ไอ้เสมียนวัว | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release18/oxclerk_v1.mp4 | WAIT (in production; client posts himself) |
 | 15 | ไอ้ปลาดิ้น | ไอ้ปลาดิ้น | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release15/fosbury_v1.mp4 | WAIT (client posts himself; music C approved 2026-11-20) |
-| 20 | ไอ้ช่างหมุด | ไอ้ช่างหมุด | https://github.com/domdu987/github-commit-quest-v2/raw/film20/main/film/release20/rivet_v1.mp4 | WAIT (client posts himself) |
+| 20 | ไอ้ช่างหมุด | ไอ้ช่างหมุด | https://github.com/domdu987/github-commit-quest-v2/raw/film20/main/film/release20/rivet_v2.mp4 | WAIT (client posts himself; v2 = client fix round 2026-11-22) |
 
 ## Captions
 (Each READY clip gets a heading here, `### <#> <Title>`, followed by the exact description text to paste.)

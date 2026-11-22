@@ -10,3 +10,4 @@
 | 11 | ไอ้หมอวัว (smallpox vaccine) | posted by owner 2026-11-19 | film11/main film/release11/cowdoc_v1.mp4 |
 | 15 | ไอ้ปลาดิ้น (Fosbury Flop) | approved 2026-11-20 (music C); client posts himself | film/release15/fosbury_v1.mp4 |
 | 20 | ไอ้ช่างหมุด (Eiffel Tower protest) | finished 2026-11-20, queue row WAIT; client posts himself | film20/main film/release20/rivet_v1.mp4 |
+| 20 | ไอ้ช่างหมุด v2 (fixes: floats, shake, close cameras) | finished 2026-11-22, queue row WAIT; client posts himself | film20/main film/release20/rivet_v2.mp4 |
