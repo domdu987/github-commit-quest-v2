@@ -87,6 +87,33 @@ def grade_filter():
         print(f"grade {shot}: sat {sat:.3f} luma {L:.1f} -> k {k:.2f} gamma {gm:.3f}")
     return ",".join(chain)
 
+def grade_v11(procs=4):
+    """COLOUR_SPEC v1.1 grade (film_mini.py grade == grade.py DEFAULT settings): S-curve, sat x1.18, hot bloom,
+    red/white protect, ceiling 0.985, vignette <= 5 %, no fog / grain / sharpen. frames -> <OUT>_graded/f_%04d.png"""
+    import multiprocessing as mp
+    os.makedirs(OUTF + "_graded", exist_ok=True)
+    todo = [g for g in range(N) if not os.path.exists(f"{OUTF}_graded/f_{g:04d}.png")]
+    with mp.Pool(procs) as pool:
+        for _ in pool.imap_unordered(_grade_one, todo, chunksize=8): pass
+    print("grade_v11:", len(todo), "frames")
+
+def _grade_one(g):
+    sys.path.insert(0, P + "/v3/film/out_v11")
+    import grade as G
+    from PIL import Image
+    if not getattr(G, "_f18", False):
+        sp = json.load(open(F18 + "/qa/shot_ranges.json"))
+        G.TAKES = [(s, a) for s, a, b in sp]
+        dz = []
+        for s, a, b in sp:
+            m = json.load(open(f"{TAKES}/{s}/meta.json")); ti = m.get("transition_in", {})
+            if ti.get("type") == "dissolve": n = ti["frames"]; dz.append((s, "d", a - n // 2, a - n // 2 + n))
+        G.JOINS, G.SHOT = dz, {}
+        G.FOG_G0, G.FOG_G1 = 10 ** 9, -1
+        G._f18 = True
+    im = G.grade_frame(Image.open(f"{OUTF}_frames/f_{g:04d}.png").convert("RGB"), g)
+    o = f"{OUTF}_graded/f_{g:04d}.png"; im.save(o + ".tmp.png"); os.replace(o + ".tmp.png", o)
+
 def music_bed(out):
     """music m1 with the audio-QA automation: -3.5 dB 40.0-43.6 s (0.5 s ramps), +1.5 dB 43.6-60, fade out to 70.4."""
     src = F18 + "/audio/music_pick.mp3"
@@ -98,14 +125,17 @@ def final(out):
     caps = json.load(open(F18 + "/script/captions.json"))
     ass = ["[Script Info]", "ScriptType: v4.00+", "PlayResX: 720", "PlayResY: 1280", "WrapStyle: 2", "", "[V4+ Styles]",
            "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
-           "Style: Pop,Kanit Black,88,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,0,0,0,0,100,100,0,0,1,5,0,5,30,30,0,1", "", "[Events]",
+           "Style: Pop,Kanit Black,88,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,0,0,0,0,100,100,0,0,1,4,1.5,5,30,30,0,1", "", "[Events]",
            "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"]
     ts = lambda t: f"{int(t//3600)}:{int(t%3600//60):02d}:{t%60:05.2f}"
     for c in caps:
         a = max(0, c["t"] + OFF); b = min((c["end"] if c.get("end") is not None else T - OFF) + OFF, T)
         if a < T: ass.append(f"Dialogue: 0,{ts(a)},{ts(b)},Pop,,0,0,0,,{{\\pos(360,900)}}{c['text']}")
     os.makedirs(os.path.dirname(out), exist_ok=True); open(out + ".ass", "w").write("\n".join(ass))
-    sh("ffmpeg", "-y", "-v", "error", "-framerate", "30", "-i", OUTF + "_frames/f_%04d.png", "-vf", ",".join(filter(None, [grade_filter() if os.environ.get("GRADE", "1") == "1" else "", f"ass={out}.ass:fontsdir={P}/fonts"])),
+    v11 = os.environ.get("GRADE", "v11") == "v11"
+    if v11: grade_v11()
+    src = OUTF + ("_graded" if v11 else "_frames") + "/f_%04d.png"
+    sh("ffmpeg", "-y", "-v", "error", "-framerate", "30", "-i", src, "-vf", ",".join(filter(None, [grade_filter() if os.environ.get("GRADE") == "1" else "", f"ass={out}.ass:fontsdir={P}/fonts"])),
        "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "17", "-movflags", "+faststart", out + "_silent.mp4")
     mb = SCR + "/conf18/music_bed.wav"; music_bed(mb)
     B = F18 + "/audio/sfx/"; sfx = []
