@@ -38,7 +38,7 @@ CRANE = (G_POINT, G_WIRE - 1)                               # 1304..1342
 WHIP = (G_WIRE, G_GROUND - 3)                               # 1343..1360
 DIVE = (WHIP[1] + 1, 1392)                                  # 1361..1394
 INSIDE = (1390, 1399) 
-END_DIVE = 1404                                             # the travel ends inside the hut (braking), then the push
+END_DIVE = int(os.environ.get('ED', 1404))                                             # the travel ends inside the hut (braking), then the push
 G_CROSS = 1392                                              # the camera is at the window plane                                      # through the window, settle
 G_GLASS = 1372                                              # the window glass panel is hidden from here
 

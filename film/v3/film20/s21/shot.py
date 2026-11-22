@@ -202,7 +202,12 @@ def cam_at(A, g, P, sigma=8.0):
                 l += r[0] * w; k_ += r[1] * w; sh += r[2] * w
             out[gg] = (l / tot, k_ / tot, sh / tot)
         _SM[key] = out
-    return _SM[key][min(max(g, G_FIRST), G_LAST)]
+    u = min(max((g - 1520) / 30.0, 0.0), 1.0)
+    lead = 7.0 * u * u * (3 - 2 * u)                  # the gaussian lags the swoop hand-over: lead it so the group is framed by ~g1575 as before
+    gf = min(max(g + lead, G_FIRST), G_LAST)
+    i0 = int(math.floor(gf)); i1 = min(i0 + 1, G_LAST); t = gf - i0
+    a_, b_ = _SM[key][i0], _SM[key][i1]
+    return a_[0].lerp(b_[0], t), a_[1].lerp(b_[1], t), a_[2] + (b_[2] - a_[2]) * t
 
 
 def move_fg(A):
