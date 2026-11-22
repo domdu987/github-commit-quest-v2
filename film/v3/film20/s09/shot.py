@@ -31,6 +31,7 @@ CFG = {9:  dict(g=(604, 752), h_in=4, h_out=8, view="stub"),
        16: dict(g=(1093, 1220), h_in=4, h_out=11, view="full")}[SHOT]
 G0, G1 = CFG["g"]                                        # in-take frames G0..G1 inclusive
 GA, GZ = G0 - CFG["h_in"], G1 + CFG["h_out"]
+SLOPE = 0.30
 PRESET, VIEW = "cafe_low", CFG["view"]
 GS = list(range(GA, GZ + 1))
 
@@ -100,7 +101,7 @@ KEYS = {
     9: [(600, 3.80, 15.0, 1.31, 1.97, 0.0), (604, 3.674, 14.3, 1.35, 2.0, 0.0), (622, 4.0, 8, 1.75, 2.35, 0.0), (636, 4.5, 2, 2.0, 2.6, 0.0),
         (660, 5.0, -10, 2.2, 2.6, 0.0),
         (682, 4.6, 10, 2.2, 2.6, 0.0), (703, 4.2, 46, 2.2, 2.55, 0.0), (722, 3.9, 8, 2.15, 2.55, 0.0), (727, 3.8, 10, 2.15, 2.55, 0.0),
-        (736, 2.2, 22, 2.15, 2.6, 0.0), (752, 2.0, 28, 2.15, 2.62, 0.0), (762, 1.85, 30, 2.15, 2.62, 0.0)],
+        (736, 3.5, 16, 2.15, 2.6, 0.0), (752, 3.15, 20, 2.15, 2.62, 0.0), (762, 3.05, 21, 2.15, 2.62, 0.0)],
     16: [(1089, 2.1, -4, 2.20, 2.65, 0.0), (1096, 2.5, -2, 2.10, 2.60, 0.0), (1110, 5.4, 6, 1.0, 2.6, 0.0),
          (1135, 5.8, 10, 1.05, 2.7, 0.0), (1165, 5.0, 4, 1.3, 2.65, 0.0), (1185, 4.0, 0, 1.85, 2.55, 0.0),
          (1195, 3.3, -3, 2.15, 2.60, 0.0), (1210, 2.1, -6, 2.20, 2.65, 0.0), (1222, 1.9, -7, 2.20, 2.65, 0.0),
@@ -225,11 +226,50 @@ class Take(C.Take):
         mk = self.A["marks"]["maupassant"]
         self.A["marks"]["maupassant"] = (mk[0], mk[1], C.ground_z(mk[0], mk[1], top=0.6))   # ray from 0.6 D: the CAFE ceiling is below 40
         _CROUCH = rise_crouch()
+        if SHOT == 9:
+            self.add_site()
         self.mark = self.A["marks"]["maupassant"]
         self.key_cam(bf(GA), *cam_at(GA, self.mark))
         self.scene.frame_set(bf(GA))
         self.mau = self.actors["mau"] = C.make_actor("mau", "maupassant", os.path.join(WORK, "sprites"), canvas=CANVAS,
                                                      contact=dict(width=1.3, depth=0.55, opacity=0.7), cam=self.cam)
+
+    def add_site(self):
+        """v2 fix: the tower seen through the window is UNDER CONSTRUCTION and stands on visible ground. The window sill hides every
+        flat ground below the eye, so the building site is a hillside that rises away from the cafe (it reads above the sill): the stub
+        tower is lifted onto it, with a timber fence, girder stacks on the grass and two creeper cranes on the legs."""
+        import int20 as I, kit20 as K
+        from mathutils import Matrix
+        M = CO.STATE["M"]
+        stub = I.STATE["win_objs"]["stub"]
+        tx, ty = I.STUB_X, I.STUB_D
+        SL = SLOPE
+
+        def gz(y):
+            return SL * (y - 30.0)
+        zb = gz(ty)
+        import bpy
+        bpy.context.view_layer.update()
+        z0 = min((o.matrix_world @ Vector(c)).z for o in stub for c in o.bound_box) / CO.SC        # the stub's foot (m)
+        for o in stub:
+            o.location.z += zb - z0 + 0.8                           # feet on the hillside (piers sink 0.8 m in)
+        mb = CO.MB("stub_site", parent=CO.root())
+        Z = lambda y, dz=0.0: gz(y) + dz
+        mb.quad(M["earth"], [(tx - 350, 30.0, 0.0), (tx + 350, 30.0, 0.0), (tx + 350, 420.0, gz(420.0)), (tx - 350, 420.0, gz(420.0))])
+        mb.quad(M["grass"], [(tx + 70, 30.0, 0.4), (tx + 350, 30.0, 0.4), (tx + 350, 420.0, gz(420.0) + 0.4), (tx + 70, 420.0, gz(420.0) + 0.4)])
+        mb.quad(M["grass"], [(tx - 350, 30.0, 0.4), (tx - 70, 30.0, 0.4), (tx - 70, 420.0, gz(420.0) + 0.4), (tx - 350, 420.0, gz(420.0) + 0.4)])
+        fy = ty - 48.0
+        for i in range(15):                                         # timber fence along the slope in front of the tower
+            mb.box(M["timber"], (tx - 70 + i * 10.0, fy, Z(fy, 1.4)), (0.8, 0.8, 2.8))
+        mb.box(M["timberdk"], (tx, fy, Z(fy, 2.2)), (140, 0.5, 0.5))
+        for j_ in range(5):                                         # red-lead girder stack on the ground, in front of the fence
+            gy = ty - 28.0 - 2.6 * j_
+            mb.box(M["redlead"], (tx - 38 + j_ * 3.0, gy, Z(gy, 0.35 + 0.0 * j_)), (14, 1.2, 0.6))
+        mb.push(Matrix.Translation((tx, ty, zb)))
+        K.creeper(mb, M, 40.0, 1, -1, 1.4, carry=True)
+        K.creeper(mb, M, 36.0, -1, -1, 1.2, carry=False, jib_dir=(1.0, 0.0))
+        mb.pop()
+        self.site_objs = mb.finish()
 
     def pose(self, gs):
         z = self.mark[2]
