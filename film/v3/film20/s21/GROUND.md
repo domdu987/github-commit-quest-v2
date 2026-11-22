@@ -2,14 +2,11 @@
 
 - scene: `Scene`   file: `(unsaved)`
 - frames sampled: 24 (1428, 1438, 1448, 1458, 1468, 1478, 1488, 1498, 1508, 1518, 1528, 1538 ...)   tolerance: gap > 0.020 units FAILS   rays: straight down from the lowest contact point(s)
-- checked objects: 21   rows: 432   FAIL rows: 0   **result: PASS**
+- checked objects: 18   rows: 423   FAIL rows: 0   **result: PASS**
 - command: `blender -b ... --python ground_check.py -- --frame-list 1428,1438,1448,1458,1468,1478,1488,1498,1508,1518,1528,1538,1548,1558,1568,1578,1588,1598,1608,1618,1628,1638,1648,1658 --out /home/user/github-commit-quest-v2/film/v3/film20/s21/GROUND.md --auto-props --max-prop-size 40`
 
 ## Skipped as airborne
 
-- `bar_0` on frames 1618, 1628
-- `bar_1` on frames 1618, 1628
-- `bar_2` on frames 1618, 1628
 - `demo_a_card` on frames 1638, 1648, 1658
 - `demo_b_card` on frames 1638, 1648, 1658
 - `demo_c_card` on frames 1638, 1648, 1658
@@ -77,10 +74,10 @@
 | antenna_white | 1498 | -0.1880 | OK | prop/bbox | 11.430 | antenna_timber |
 | antenna_white | 1508 | -0.1880 | OK | prop/bbox | 11.430 | antenna_timber |
 | antenna_white | 1518 | -0.1880 | OK | prop/bbox | 11.430 | antenna_timber |
-| antenna_white | 1528 | -0.2656 | OK | prop/bbox | 11.430 | sig_wire |
+| antenna_white | 1528 | -0.2161 | OK | prop/bbox | 11.430 | sig_wire |
 | antenna_white | 1538 | -0.1880 | OK | prop/bbox | 11.430 | antenna_timber |
 | antenna_white | 1548 | -0.1880 | OK | prop/bbox | 11.430 | antenna_timber |
-| antenna_white | 1558 | -0.1880 | OK | prop/bbox | 11.430 | antenna_timber |
+| antenna_white | 1558 | -0.2492 | OK | prop/bbox | 11.430 | sig_wire |
 | antenna_white | 1568 | -0.1880 | OK | prop/bbox | 11.430 | antenna_timber |
 | antenna_white | 1578 | -0.1880 | OK | prop/bbox | 11.430 | antenna_timber |
 | antenna_white | 1588 | -0.1880 | OK | prop/bbox | 11.430 | antenna_timber |
@@ -139,15 +136,6 @@
 | avenue_stone | 1638 | +0.0000 | OK | prop/bbox | 0.000 | ground |
 | avenue_stone | 1648 | +0.0000 | OK | prop/bbox | 0.000 | ground |
 | avenue_stone | 1658 | +0.0000 | OK | prop/bbox | 0.000 | ground |
-| bar_0 | 1638 | -0.0858 | OK | prop/bbox | 0.039 | cobbles |
-| bar_0 | 1648 | -0.0858 | OK | prop/bbox | 0.039 | cobbles |
-| bar_0 | 1658 | -0.0858 | OK | prop/bbox | 0.039 | cobbles |
-| bar_1 | 1638 | -0.0858 | OK | prop/bbox | 0.039 | cobbles |
-| bar_1 | 1648 | -0.0858 | OK | prop/bbox | 0.039 | cobbles |
-| bar_1 | 1658 | -0.0858 | OK | prop/bbox | 0.039 | cobbles |
-| bar_2 | 1638 | -0.0858 | OK | prop/bbox | 0.039 | cobbles |
-| bar_2 | 1648 | -0.0858 | OK | prop/bbox | 0.039 | cobbles |
-| bar_2 | 1658 | -0.0858 | OK | prop/bbox | 0.039 | cobbles |
 | demo_a_card | 1428 | -0.0198 | OK | card/alpha | 0.105 | cobbles |
 | demo_a_card | 1438 | -0.0198 | OK | card/alpha | 0.105 | cobbles |
 | demo_a_card | 1448 | -0.0198 | OK | card/alpha | 0.105 | cobbles |
@@ -452,10 +440,8 @@
 | sg_static_glasswine | 1648 | -0.2256 | OK | prop/bbox | 1.730 | hut_brass |
 | sg_static_glasswine | 1658 | -0.2256 | OK | prop/bbox | 1.730 | hut_brass |
 
-## v2 notes (render20/v2a, T21)
-- PASS above: 21 objects (5 cards on the cobbles, bars, kegs/crate), 24 sampled frames g1428-1658.
-- Skipped (gc_role skip): hut_* and wagon_* (the set's merged meshes, on the ground). Airborne: falling crowbars g1606-1628, the cheer hops from g1632, rings / flash / glow.
-- Contact shadows: the old per-card decals sat UNDER the cobble plane (z +0.012), so nobody had a shadow on the cobbles. Added a soft radial blob plane per person (cs_*), keyed under the feet every frame, shrinking with the cheer hop.
+## v2 notes round 2 (render20/v2a, T21, batch float hunter)
+- PASS above. Hidden / changed: sig_wire, sig_halo, sig_aura (never visible to the camera: the thin white wire and the pale band), the lattice glow sweep is off, ring radius 500 -> 240 m (concentric rings around the tower tip, several at once), crowbar "bars" removed (the pickaxes stay in the hands: hang down, raised in the cheer), horizon_haze cylinder + ground plane x8 (no hard backdrop edge under the sky), arrival from a wider framing (camera pulled back 50 % at g1545-1580, easing in by ~g1635).
 
-## qa_jitter (final take.mkv, film-aligned seconds, hard-cut handle g1427-1430 excluded)
-{g1440: 1.28, g1470: 0.45, g1500: 0.47, g1530: 1.66, g1560: 1.56, g1590: 0.75, g1620: 0.97, g1650: 1.07}  -> every second <= 2.0, nothing declared.
+## qa_jitter (final take.mkv, film-aligned, hard-cut handle excluded)
+{g1440: 0.97, g1470: 0.5, g1500: 0.42, g1530: 1.53, g1560: 1.43, g1590: 0.48, g1620: 1.03, g1650: 1.69} -> all <= 2.0
