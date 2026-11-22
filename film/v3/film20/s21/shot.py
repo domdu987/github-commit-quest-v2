@@ -98,10 +98,12 @@ def pose_of(who, g):
     else:
         p["arm_r"] = "down"
         p["arm_l"] = "down"
+        p["prop_r"] = dict(type="pickaxe", angle=-172 + 4 * sway)               # v2: the pickaxe stays in the hand (hangs down), no ghost rods
         p["expr"] = "shocked" if g < G_ARMY + 4 else "cheer"
         k = u_of(g, G_ARMY + 4, G_ARMY + 8)
         if g >= G_ARMY + 4:                                                   # hats-off cheer after the salute (hands up, held mouth)
             p["arm_r"] = A_(0.70, -0.60, shape="open", bend=-0.6, stretch=1.3, layer="top")
+            p["prop_r"] = dict(type="pickaxe", angle=-35 + 6 * sway)            # raised in the cheer
             p["arm_l"] = A_(-0.70, -0.55, shape="open", bend=-0.6, stretch=1.3, layer="top")
         p["lean"] = -2.0 + 1.0 * sway
         p["pitch"] = -0.05
@@ -181,6 +183,7 @@ def cam_raw(A, g, P):
 
 
 _SM = {}
+PULL = float(os.environ.get('PULL', 0.5))
 
 
 def cam_at(A, g, P, sigma=8.0):
@@ -189,7 +192,13 @@ def cam_at(A, g, P, sigma=8.0):
     key = id(A)
     if key not in _SM:
         lo, hi = G_FIRST - 40, G_LAST + 40
-        raw = [cam_raw(A, min(max(gg, G_FIRST), G_LAST), P) for gg in range(lo, hi + 1)]
+        def cr(gg):
+            l_, k_, s_ = cam_raw(A, min(max(gg, G_FIRST), G_LAST), P)
+            u_ = min(max((gg - 1545) / 20.0, 0.0), 1.0)
+            v_ = min(max((gg - 1580) / 55.0, 0.0), 1.0)
+            w_ = u_ * u_ * (3 - 2 * u_) * (1.0 - v_ * v_ * (3 - 2 * v_))
+            return k_ + (l_ - k_) * (1.0 + PULL * w_), k_, s_              # v2: arrive from a wider framing: the whole group in frame, then ease in
+        raw = [cr(gg) for gg in range(lo, hi + 1)]
         R = int(3 * sigma)
         wts = [math.exp(-0.5 * (k / sigma) ** 2) for k in range(-R, R + 1)]
         tot = sum(wts)
@@ -297,11 +306,57 @@ class Take(C.Take):
                 ob["airborne_frames"] = "%d:%d" % (G_ARMY + 4, G_LAST)
         self.build_fx()
         self.build_pulse()
+        self.horizon_haze()
+        for o_ in (self.wire, self.halo, self.aura):       # v2: never visible to the camera (stray wire / pale band = ghosts)
+            o_.visible_camera = False
+        for o_ in bpy.data.objects:
+            if "wire" in o_.name.lower() and not o_.name.startswith(("hut_", "wagon_")):
+                print("WIRE-OBJ", o_.name, o_.type, o_.hide_render)
+        gnd = bpy.data.objects.get("ground")                 # v2: the finite ground plane's far edge read as a hard backdrop edge under the purple sky (hunter): push it 8x further
+        if gnd is not None:
+            for v in gnd.data.vertices:
+                v.co.x *= 8.0
+                v.co.y *= 8.0
+            gnd.data.update()
         for ob in bpy.data.objects:
             if ob.name.startswith(("sig_", "ring", "halo", "aura", "pulse")):
                 ob["airborne"] = True                     # lights / rings / flash are airborne by nature (not objects standing on the ground)
         self.key_cam(bf(G_FIRST), *cam_at(A, G_FIRST, self.path)[:2])
         self.scene.frame_set(bf(G_FIRST))
+
+    def horizon_haze(self):
+        """v2 (hunter: hard backdrop edge): a big open cylinder around the city whose emission fades teal -> transparent with height, so the far ground melts into the night sky."""
+        SC = CO.SC
+        bpy.ops.mesh.primitive_cylinder_add(vertices=64, radius=4200.0, depth=900.0, end_fill_type="NOTHING", location=(0.0, 0.0, 450.0))
+        ob = bpy.context.object
+        ob.name = "horizon_haze"
+        m = bpy.data.materials.new("horizon_haze_m")
+        m.use_nodes = True
+        nd = m.node_tree.nodes
+        for n in list(nd):
+            nd.remove(n)
+        tc = nd.new("ShaderNodeTexCoord")
+        sp = nd.new("ShaderNodeSeparateXYZ")
+        mr = nd.new("ShaderNodeMapRange")
+        mr.inputs["From Min"].default_value = -450.0
+        mr.inputs["From Max"].default_value = 450.0
+        mr.inputs["To Min"].default_value = 1.0
+        mr.inputs["To Max"].default_value = 0.0
+        mr.clamp = True
+        em = nd.new("ShaderNodeEmission")
+        em.inputs["Color"].default_value = (0.010, 0.050, 0.065, 1.0)
+        em.inputs["Strength"].default_value = 1.0
+        tr = nd.new("ShaderNodeBsdfTransparent")
+        mx = nd.new("ShaderNodeMixShader")
+        o = nd.new("ShaderNodeOutputMaterial")
+        L = m.node_tree.links
+        L.new(tc.outputs["Object"], sp.inputs["Vector"]); L.new(sp.outputs["Z"], mr.inputs["Value"])
+        L.new(mr.outputs["Result"], mx.inputs[0]); L.new(tr.outputs[0], mx.inputs[1]); L.new(em.outputs[0], mx.inputs[2])
+        L.new(mx.outputs[0], o.inputs["Surface"])
+        ob.data.materials.append(m)
+        for a in ("visible_shadow", "visible_diffuse", "visible_glossy", "visible_transmission"):
+            setattr(ob, a, False)
+        ob["gc_role"] = "skip"
 
     def dress_fg(self):
         """lit foreground props at the SIDES in the lower third (kegs, a crate, a rope coil): they fill the ground slab and give the
@@ -384,7 +439,7 @@ class Take(C.Take):
         zc = lerp(-30.0, 340.0, u_of(g, G_ANT - 2, FX_OFF - 2, "sine"))
         for sub, mul in self.pulse_nodes:
             CO.keysock(sub.inputs[1], zc, f)
-            CO.keysock(mul.inputs[1], 0.5 * gl, f)
+            CO.keysock(mul.inputs[1], 0.0, f)          # v2: no pale band climbing the lattice
 
     def bar_pos(self, i, g):
         """(location, euler, visible) of bar i: appears in the hand at DROP[0], falls and tumbles to the ground at DROP[1]."""
@@ -400,7 +455,7 @@ class Take(C.Take):
         x = lerp(hand.x, floor.x, u)
         y = lerp(hand.y, floor.y, u)
         bounce = 0.35 * math.sin(math.pi * clamp((u - 0.9) / 0.1)) if u > 0.9 else 0.0
-        return Vector((x, y, z + bounce * 0.0)), (0.0, math.radians(lerp(20, 88, ez(u))), math.radians(lerp(0, 20 + 10 * i, u))), True
+        return Vector((x, y, z + bounce * 0.0)), (0.0, math.radians(lerp(20, 88, ez(u))), math.radians(lerp(0, 20 + 10 * i, u))), False      # v2: ghost rods on the cobbles: the tools stay in the hands
 
 
     def build_fx(self):
@@ -505,7 +560,7 @@ class Take(C.Take):
             age = (t % RING_P) / RING_P if t >= 0 else 0.0
             kmax = int((RING_STOP - RING_T0 - i * RING_P / N_RINGS) // RING_P)
             on = t >= 0 and age < 0.92 and int(t // RING_P) <= kmax
-            r = 6.0 + 500.0 * age ** 0.7
+            r = 6.0 + 240.0 * age ** 0.7
             ob.scale = (r * CO.SC,) * 3
             CO.key(ob, "scale", f, "LINEAR")
             CO.keysock(ob.active_material.node_tree.nodes["mix"].inputs[0], 0.36 * (1.0 - age) ** 1.3 * min(1.0, age / 0.06 + 0.4), f)
@@ -554,6 +609,8 @@ class Take(C.Take):
             S.signal_rings(-1.0, frame=f)
             S.wire_glow(0.0, frame=f)
             self.pulse(g, f)
+            for ob_ in (self.wire, self.halo, self.aura):      # v2: stray thin wire + pale band climbing the tower read as ghosts (hunter)
+                CO.setv(ob_, False, f)
             self.rings(g, f)
             for i, ob in enumerate(self.bars):
                 loc_, eul, vis = self.bar_pos(i, g)
