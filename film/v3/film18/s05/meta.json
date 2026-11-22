@@ -1,0 +1,20 @@
+{
+ "shot": "s05",
+ "g0": 384,
+ "g1": 459,
+ "first_g": 376,
+ "n_frames": 83,
+ "handle_before": 8,
+ "handle_after": 0,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 11
+ },
+ "frame_diff": {
+  "median": 4.53,
+  "p90": 7.55,
+  "min": 2.43,
+  "max": 9.71,
+  "n": 74
+ }
+}
