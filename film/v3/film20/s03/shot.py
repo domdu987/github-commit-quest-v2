@@ -21,7 +21,7 @@ import puppet                                            # noqa: E402
 G0, G1 = C.g_bound(5.93), C.g_bound(13.47)     # 178, 404 (take = g 178..403)
 H_IN, H_OUT = 8, 8                             # dissolve 13 in and out: 8 handle frames each side (director)
 GF, G_LAST = G0 - H_IN, G1 + H_OUT - 1         # 170..411
-G_TRAVEL = 312                                 # the camera leaves Eiffel (after the point has landed)
+G_TRAVEL = int(os.environ.get('GT', 314))                                 # the camera leaves Eiffel (after the point has landed)
 G_MOST = C.cap_g("สูงที่สุดในโลก")                # 346: snap up
 SNAP = (G_MOST - 2, G_MOST + 13)
 GS = list(range(GF, G_LAST + 1))
@@ -195,6 +195,92 @@ def make_glow_and_fill(A):
 HIDE_SCATTER = ("pnoink_white", "pm_timber", "pm_timberdk", "pm_metal", "pf_coal", "pf_soot", "pf_rivet", "pf_metal", "pf_stonedk", "pm_coal", "pm_soot", "pm_rivet", "pm_metal", "pm_stonedk", "pn_coal", "pn_soot", "pn_rivet", "pn_stonedk")   # the small near-black scatter that reads as debris
 
 
+V2_HIDE = ("pm_redlead", "pm_crimson", "pf_redlead", "pf_crimson", "pnoink_redleadlt", "pm_dark")      # v2: lying girders / crates / bits that hovered (z 2-3 above the dirt)
+
+
+def v2_fix_scene(T):
+    """v2 (client: nothing floats): hide the floating girder chunks, give the white canopy 4 thick legs to the ground, ground-darken the pier slab
+    with a contact blob, and tag everything for ground_check."""
+    import bpy, bmesh
+    from mathutils import Vector
+    for n in V2_HIDE:
+        ob = bpy.data.objects.get(n)
+        if ob is not None:
+            ob.hide_render = True
+    M = CO.STATE["M"]
+    def box(name, cx, cy, z0, z1, hw, mat):
+        me = bpy.data.meshes.new(name)
+        bm = bmesh.new()
+        bmesh.ops.create_cube(bm, size=1.0)
+        for v in bm.verts:
+            v.co = Vector((cx + v.co.x * 2 * hw, cy + v.co.y * 2 * hw, z0 + (v.co.z + 0.5) * (z1 - z0)))
+        bm.to_mesh(me); bm.free()
+        ob = bpy.data.objects.new(name, me)
+        bpy.context.scene.collection.objects.link(ob)
+        ob.data.materials.append(mat)
+        ob["gc_role"] = "prop"
+        return ob
+    for i, (x, y) in enumerate(((66.5, -152.7), (74.9, -152.7), (66.5, -145.9), (74.9, -145.9))):
+        box("canopy_leg_%d" % i, x, y, 0.0, 6.25, 0.28, M["timberdk"])
+    for n in ("pnoink_canvasw", "pnoink_crimson", "pn_tablewood", "beacon_beacon_g", "bz_glow", "bz_shaft", "bz_up", "bz_fill"):
+        ob = bpy.data.objects.get(n)
+        if ob is not None:
+            ob["gc_role"] = "skip"
+    # contact blobs: canopy (under the roof, soft) and pier foot ring
+    def blob(name, cx, cy, w, d, op):
+        bpy.ops.mesh.primitive_plane_add(size=1.0, location=(cx, cy, 0.06))
+        ob = bpy.context.active_object
+        ob.name = name
+        ob.scale = (w, d, 1.0)
+        m = bpy.data.materials.new(name + "_m")
+        m.use_nodes = True
+        nd = m.node_tree.nodes
+        for n in list(nd):
+            nd.remove(n)
+        tr = nd.new("ShaderNodeBsdfTransparent")
+        bk = nd.new("ShaderNodeBsdfDiffuse")
+        bk.inputs["Color"].default_value = (0.05, 0.04, 0.06, 1)
+        tc = nd.new("ShaderNodeTexCoord")
+        gr = nd.new("ShaderNodeTexGradient")
+        gr.gradient_type = "SPHERICAL"
+        mp = nd.new("ShaderNodeMapping")
+        mp.inputs["Location"].default_value = (-0.5, -0.5, 0)
+        cr = nd.new("ShaderNodeMapRange")
+        cr.inputs["From Min"].default_value = 0.0
+        cr.inputs["From Max"].default_value = 0.5
+        cr.inputs["To Min"].default_value = op
+        cr.inputs["To Max"].default_value = 0.0
+        cr.clamp = True
+        mx = nd.new("ShaderNodeMixShader")
+        o = nd.new("ShaderNodeOutputMaterial")
+        L = m.node_tree.links
+        L.new(tc.outputs["UV"], mp.inputs["Vector"]); L.new(mp.outputs["Vector"], gr.inputs["Vector"])
+        L.new(gr.outputs["Fac"], cr.inputs["Value"]); L.new(cr.outputs["Result"], mx.inputs[0])
+        L.new(tr.outputs[0], mx.inputs[1]); L.new(bk.outputs[0], mx.inputs[2]); L.new(mx.outputs[0], o.inputs["Surface"])
+        ob.data.materials.append(m)
+        ob.visible_shadow = False
+        ob["gc_role"] = "shadow"
+    blob("canopy_gcshadow", 70.7, -149.3, 14.0, 11.0, 0.55)
+    for nm in ("leg_a", "leg_b", "leg_c"):                       # scaffold platforms under the riveters (they stood on nothing)
+        mk = T.A["marks"][nm]
+        d = box("plankdeck_" + nm, mk[0] + 0.8, mk[1], mk[2] - 0.35, mk[2], 1.0, M["plank"])
+        for v in d.data.vertices:
+            v.co.x = mk[0] + 0.8 + (v.co.x - (mk[0] + 0.8)) * 3.6
+            v.co.y = mk[1] + (v.co.y - mk[1]) * 1.6
+        d["gc_role"] = "ground"
+
+
+def trap(u, a=0.32):
+    """eased trapezoid 0..1 (C1; accelerates over a, cruises, decelerates over a): peak speed 1/(1-a) x mean, lower than smoothstep's 1.5-1.9x"""
+    u = clamp(u, 0.0, 1.0)
+    k = 1.0 / (1.0 - a)
+    if u < a:
+        return k * u * u / (2.0 * a)
+    if u > 1.0 - a:
+        return 1.0 - k * (1.0 - u) ** 2 / (2.0 * a)
+    return k * (u - a / 2.0)
+
+
 def smoother(u):
     u = clamp(u, 0.0, 1.0)
     return u * u * u * (u * (u * 6 - 15) + 10)
@@ -261,7 +347,7 @@ class ZoomPath(C.CamPath):
 
 
 LEG_FWD = -2.0                                 # m: the leg camera starts this much nearer the foot than the preset (smaller sacks)
-LIFT = 24.0                                    # D: the camera lifts over the yard / pier while it travels (clears the stone block)
+LIFT = float(os.environ.get('LIFTV', 60.0))                                    # D: the camera lifts over the yard / pier while it travels (clears the stone block)
 
 
 class TravelPath(ZoomPath):
@@ -284,8 +370,9 @@ class TravelPath(ZoomPath):
         if g <= G_TRAVEL:
             return la, ka
         u = clamp((g - G_TRAVEL) / float(G_LAST - G_TRAVEL), 0.0, 1.0)
-        w = 0.06 * u + 0.94 * smoother(u ** 0.55)        # leaves Eiffel quickly (no half-body lingering at the frame edge)
-        pitch = lerp(8.0, 22.0, u) + 6.0 * C.snap_u(g, SNAP[0], SNAP[1], 1.7)
+        wm = os.environ.get("WMODE", "trap45")
+        w = {"trap": lambda: trap(u), "front": lambda: smoother(u ** 0.75), "trap45": lambda: trap(min(1.0, u / float(os.environ.get("TW", 1.0))), float(os.environ.get("TA", 0.5))), "ss": lambda: smoother(u)}[wm]()      # v2: one smooth eased crane (no fast blend, no shake)
+        pitch = lerp(8.0, 22.0, w) + 6.0 * smoother((g - SNAP[0]) / float(SNAP[1] - SNAP[0]))
         dC = self.h * math.cos(math.radians(pitch)) + Vector((0, 0, math.sin(math.radians(pitch))))
         dA = (ka - la).normalized()
         loc = la.lerp(self.locC, w) + Vector((0, 0, LIFT * math.sin(math.pi * w)))
@@ -344,12 +431,21 @@ def riv_pose(kind, g, k):
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, PRESET, light=LIGHT, quality=quality, name="cam_s03")
-        self.A["marks"][MARK] = C.on_ground(self.A["marks"][MARK])
+        bc = C.bpy.data.objects.get("beacon_beacon_g")                # v2: the beacon column (top z 13.3) was taken for ground: Eiffel stood 12.7 D in the air
+        if bc is not None:
+            bc.hide_viewport = True
+            C.bpy.context.view_layer.update()
+        mk0 = self.A["marks"][MARK]
+        mx, my = mk0[0] - 2.4, mk0[1] - 6.4                          # v2: in front of the plan table (camera side), not behind / inside it
+        self.A["marks"][MARK] = (mx, my, C.ground_z(mx, my, top=6.0))
+        if bc is not None:
+            bc.hide_viewport = False
         for ob in C.bpy.data.objects:                               # the preset's near-black FG slabs (anchored to the preset camera): camera-invisible
             if ob.name in ("fg_redlead_sh", "fg_dark_sh", "fg_metal_sh", "fg_timber_sh") or ob.name.startswith(("derricks_", "swinggirder")):
                 ob.visible_camera = False
             if ob.name in HIDE_SCATTER or ob.name.startswith("pnoink_flag"):
                 ob.hide_render = True                                  # removed entirely (no cast shadow blobs either)
+        v2_fix_scene(self)
         self.cam.data.clip_end = 6000.0
         self.smoke, self.gravel = C.bpy.data.objects.get("pnoink_smokep"), C.bpy.data.objects.get("pn_gravelp")
         make_glow_and_fill(self.A)
@@ -370,6 +466,9 @@ class Take(C.Take):
             mk3 = list(self.A["marks"][mark])
             if name in ("rl_d", "rl_e", "rl_f"):
                 mk3[0] += 1.6                                   # second worker on the same platform
+            zz = C.ground_z(mk3[0], mk3[1], top=mk3[2] + 0.5)            # v2: stand ON the deck / beam under the mark (no hovering riveters)
+            if name in ("rl_d", "rl_e", "rl_f"):
+                mk3[2] -= 0.23                                  # their poses carry the feet ~0.23 D higher in the card: sink onto the plank deck
             self.riv.append((a, cast, tuple(mk3), mirror, 2.4))                           # x2.4: reads on the platforms
 
     def pose(self, gs):
@@ -403,7 +502,7 @@ class Take(C.Take):
                     ob.hide_render = bool(hid)
                     ob.keyframe_insert("hide_render", frame=f)
             self.cam.data.lens = self.path.lens(p)
-            self.cam.data.shift_y = self.path.shift(p)
+            self.cam.data.shift_y = self.path.shift(p) + 0.10 * smoother((p - 0.55) / 0.45) * (1.0 - smoother((g - 312) / 60.0))      # v2: figure lower in the frame at the landing (less bare dirt)
             self.cam.data.keyframe_insert("lens", frame=f)
             self.cam.data.keyframe_insert("shift_y", frame=f)
             fe = smoother((p - 0.7) / 0.3)
