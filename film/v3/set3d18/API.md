@@ -15,7 +15,7 @@ The production set, grown from the style board (board/NOTES.md). Four locations,
 ```python
 import jimo as J
 A = J.build('jimo_in', 's01')            # location, preset, light=None;  preset = a shot 's01'..'s26' (location and light come from it) or the location name (default camera 'wide')
-cam = J.shot_camera('s01', 0.5)          # pose the scene camera at t of the move (builds the shot's foreground prop, parented to the camera)
+cam = J.shot_camera('s01', 0.5)          # pose the scene camera at t of the move (builds the shot's foreground prop, fixed in the WORLD at the shot start pose: v3)
 J.key_camera('s01')                      # or key the whole move, one LINEAR key per frame from the shot's first film frame (f0)
 J.apply_state('h6')                      # or the setters below
 J.T.render(path)                         # tower.render
@@ -52,7 +52,7 @@ Hue numbers are in `set_work/hue_rows.txt` (shade hue 240-260 rule, magenta shar
 - `animate(setter, f0, f1, v0, v1)` keys any setter over frames, eased: `J.animate(J.set_holes, 1205, 1309, 0, 12)`; for staggered pennants key the setter every frame (the default step 1 does).
 - `apply_state('h6,g0.3,pt1,ro0.5,pn0.5,qr0.5,fl1')`: the string form used by the CLI and the shot table.
 - Cameras: `shot_camera(name, t)`, `key_camera(name)`, `make_camera(setup)` (setup = {loc, look_at, lens}); every shot has `cams[name] = {loc, look_at, lens, start, mid, end, frames, f0, f1, fg}`.
-- Foreground props (1-2 D from the lens, 30 % scale, parented to the camera so they stay put through the move): lantern, wheel, spear_rack, jar, pick_baskets, reeds, counter, torch; built by `shot_camera`.
+- Foreground props (1-2 D from the lens, 30 % scale; v3: fixed in the WORLD at the shot start pose, so they parallax; J.unparent_from_camera(cam) re-parents any camera child to the world): lantern, wheel, spear_rack, jar, pick_baskets, reeds, counter, torch; built by `shot_camera`.
 
 ## Herd helper
 `jimo_shots.herd(n, a, b, width=6.0, seed=1)`: N marks `(x, y, 0, yaw_deg, scale)` along a lane / field from point a to point b (x, y) with lateral spread `width` D; rows staggered and jittered, about 3.6 D apart along and 3 D across; yaw = direction of travel (degrees from +x, ox cards in side view), scale 0.93-1.07; sorted far to near (paint order). `J.S.herd` is the same function. The shots use it: s01 (8 dressed oxen along the wall), s02 (34 in the lane), s06 (10 in front of the gates), s07 (120 in the yard + 90 far = 210 visible), s19 (40 + 30 Qi soldiers), s20 (36), s21 (60).
@@ -234,7 +234,7 @@ Camera poses are `loc -> look_at` (D) and lens (mm). `start` is the pose at t = 
 - Wall edge density >= 0.05 only on 2 of 14 wall tiles (s08, s12); the others have the wall as a thin foreshortened strip.
 - The sunset sky of DUSK (copied from the film-9 painter) is a smooth orange gradient with few clouds; yan_camp DUSK shots look into the sun glow (s09 / s10 / s11 are backlit).
 - jimo_out NIGHT fields (s19 / s20) read as a flat blue plane at night: low texture contrast; the far Yan camp is small silhouettes.
-- Foreground props are 30 % scale (a 3 D lantern would not fit at 1-2 D from the lens), parented to the camera; s17 reed bundles and s05 counter are chunky.
+- Foreground props are 30 % scale (a 3 D lantern would not fit at 1-2 D from the lens), world-fixed (v3); s17 reed bundles and s05 counter are chunky.
 - Placeholder cards in the contact sheet are the real cast18 drawings (card-yawed 30-45 deg off the camera axis), but still flat 2D cards: back views do not exist (silhouette tint is used in s21 / s22), the ox 3/4 is the cast's side-body with a turned head.
 - The wall material's `warm` weights are static (baked from the fixed lamps); the dynamic flame-card lights light the wall with the plain material (orange over blue, fine near the light, mauve at medium distance, which the hue guard pushes toward coral).
 - Camp geometry (palisade y -40, wall 40 D away) is closer than the open field of jimo_out (road to y -300, far camp at y -150..-215); the two locations do not share one world.

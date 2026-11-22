@@ -58,6 +58,10 @@ def whip(g0, direction=1, k=3):
 
 def frames():
     os.makedirs(os.path.dirname(OUTF), exist_ok=True)
+    tf = F18 + "/qa/transitions.json"   # director overrides of a take's transition_in, e.g. {"s12": {"type": "cut", "frames": 0}}
+    if os.path.exists(tf):
+        for shot, ti in json.load(open(tf)).items():
+            mp = f"{TAKES}/{shot}/meta.json"; m = json.load(open(mp)); m["transition_in"] = ti; json.dump(m, open(mp, "w"), indent=1); print("transition override", shot, ti)
     sh(sys.executable, P + "/conform_full.py", TAKES, OUTF, env=dict(os.environ, N=str(N)))
     # teams wrote g1 as their last frame: fill any frame no take covers from the outgoing take's handle
     for g in range(N):

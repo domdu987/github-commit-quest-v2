@@ -668,12 +668,12 @@ def debug_ox(show=True):
         ob = STATE['debug_ox_objs'] = [o for o in STATE['SET'].objects if o not in n0]
     for o in ob: _vis(o, show)
 
-# ----------------------------------------------------------------------------- foreground props (1-2 D from the lens, parented to the camera)
+# ----------------------------------------------------------------------------- foreground props (1-2 D from the lens at the shot start, fixed in the WORLD: v3)
 def _cam_frame(setup):
     loc = V(setup['loc']); f = (V(setup['look_at']) - loc).normalized(); r = f.cross(V((0, 0, 1))).normalized(); u = r.cross(f).normalized(); return loc, f, r, u
 
 def attach_fg(cam, setup, spec):
-    """Build the shot's foreground prop 1.5-2 D in front of the lens (lower corner `side`) and parent it to the camera, so it stays 1-2 D from the lens through the move."""
+    """Build the shot's foreground prop 1.5-2 D in front of the lens (lower corner `side`) fixed in the WORLD (v3 client fix: it parallaxes as the camera moves; it is NOT parented to the camera)."""
     if not spec: return []
     kind, side = spec; sg = 1 if side == 'right' else -1; loc, f, r, u = _cam_frame(setup); M = STATE['M']; n0 = set(STATE['SET'].objects); Bk2 = Banks()
     o = loc + f * 1.9 + r * (0.74 * sg) + u * (-0.40); FGK = dict(reeds=0.15, jar=0.12, lantern=0.2, torch=0.13, counter=0.22, pick_baskets=0.22).get(kind, 0.3)
@@ -715,8 +715,19 @@ def attach_fg(cam, setup, spec):
             ob.location = o + (V(ob.location) - o) * FGK; ob.scale = tuple(x * FGK for x in ob.scale)
             for fi in STATE['fires']:
                 if fi['ob'] is ob: fi['k'] = FGK
-        no_bounce(ob); ob.parent = cam; ob.matrix_parent_inverse = cam.matrix_world.inverted()
+        no_bounce(ob)                                                                          # v3 (client): WORLD-fixed, NOT parented to the camera -> natural parallax
     STATE.setdefault('fg_objs', []).extend(objs); return objs
+
+def unparent_from_camera(cam=None):
+    """v3 client fix (QA_TEAM M): every object parented to the camera is re-parented to the world at its CURRENT world pose
+    (call after the camera is posed at the shot's first frame). Returns the names moved. Use for any prop a take attached to the camera."""
+    cam = cam or bpy.context.scene.camera; moved = []
+    for ob in list(bpy.data.objects):
+        p = ob.parent
+        while p is not None and p is not cam: p = p.parent
+        if p is cam and ob.parent is cam:
+            mw = ob.matrix_world.copy(); ob.parent = None; ob.matrix_world = mw; moved.append(ob.name)
+    return moved
 
 # ----------------------------------------------------------------------------- placeholder cards at the marks (stills / contact sheet only; the render teams add the real puppets)
 def placeholders(name, t=0.5, herd_max=80):
