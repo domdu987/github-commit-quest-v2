@@ -543,8 +543,3 @@
 | tw0_stone | 992 | -0.1880 | OK | prop/bbox | 4.324 | tw0_stonedk |
 | tw0_stone | 998 | -0.1880 | OK | prop/bbox | 4.324 | tw0_stonedk |
 | tw0_stone | 1004 | -0.1880 | OK | prop/bbox | 4.324 | tw0_stonedk |
-
-## Declared fast moves (qa_jitter reads them as planned travel, every second still <= 2.0 px)
-- g797-813 (16 f) eased flight over the fence to the stack; g887-901 (14 f) eased flight up to the deck. Everything else is a slow eased drift.
-- Airborne tags: set sparks `spk_*`, pennant flags `pnoink_flag_*`, the held giant rivet, the toss rivet and the catch bucket.
-- ground_check run: `python3 gc.py 6` (cards + fg girders + props, every 6th frame): PASS, 0 FAIL rows. Laugh bounce reduced 0.10 -> 0.015 D (squash keeps the life).

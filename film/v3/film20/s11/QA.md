@@ -12,3 +12,8 @@ qa_jitter (take.mkv): no second above 2.0 px; overall median jitter 0.32 px.
 
 ## v2b (director's float-hunter item, g813-873)
 The carried beam was drawn behind both workers' heads at cap height. It is now carried at hip/hand height (z 0.74 D) and IN FRONT of both cards (y -0.22 D toward the camera), so it reads as held in their hands and covers no face. Re-rendered g805-880 only; the rest of the take is untouched (same camera, same frames). qa_auto PASS, qa_jitter overall median 0.32 px, no second above 2.0 px, frame-diff median 2.17 / p90 17.85.
+
+## v2c (batch-3 float hunter: hand-held props read as floating, so none remain)
+- Carried beam deleted (g813-901): the two workers just walk past the timber stack, with larger, fully opaque contact shadows (width 1.5 / depth 0.65 / opacity 1.0).
+- Catch bucket and the thrown rivet prop deleted (the orange slab at the deck worker's chest, g917-933). White hammer splashes kept.
+- Re-rendered g805-962 (beam/shadows) and g915-945 (toss). ground_check PASS (0 FAIL rows), qa_jitter median 0.33 px (no second above 2.0), qa_auto PASS, frame-diff median 2.15 / p90 17.84.

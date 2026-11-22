@@ -328,7 +328,7 @@ class Take(C.Take):
         cd = dict(width=1.2, depth=0.5, opacity=0.8)
         for who, cast in (("lady", "lady20"), ("gent", "gent20"), ("child", "child20"), ("eiffel", "eiffel"),
                           ("a", "riveter_tongs"), ("b", "riveter_hammer"), ("t", "riveter_tongs"), ("c", "riveter_hammer"), ("h", "riveter_forge")):
-            self.actors[who] = C.make_actor(who, cast, sd, cam=self.cam, contact=cd)
+            self.actors[who] = C.make_actor(who, cast, sd, cam=self.cam, contact=(dict(width=1.5, depth=0.65, opacity=1.0) if who in ("a", "b") else cd))
 
     def make_post(self):
         C.bpy.ops.mesh.primitive_cube_add(size=1.0)       # camera-parented timber post at the lens's left edge (foreground), only in the fence part
@@ -483,8 +483,7 @@ class Take(C.Take):
                 C.place(a, f, m)
             cx = CO.W((walk_x(g) - 1.3, WALK_Y - 0.22, 0.74))        # v2: on their shoulders, IN FRONT of both cards (was behind their heads at cap height)
             for ob, dz in self.girder:
-                ob.location = (cx[0], cx[1], cx[2] + (dz - 0.14) * CO.SC)
-                ob.keyframe_insert("location", frame=f)
+                C.key_vis(ob, False, f)                       # v2c: the carried beam is deleted (float hunter)
             S.set_stage(stage_of(g), frame=f)
             S.crane_swing(clamp((g - 830) / 80.0), frame=f)
             S.spark(frame=f, t0=G_HITS[0], period=9, strength=1.5)
@@ -536,7 +535,7 @@ class Take(C.Take):
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
-            vis = G_FLY2[1] - 6 <= g <= 962
+            vis = False                                     # v2c: the catch bucket is deleted (float hunter)
             hl, hr = anchor(cc, "c", "hand_l", f), anchor(cc, "c", "hand_r", f)
             mid = (hl + hr) * 0.5
             for ob, off in zip(self.bucket, (Vector((0, 0, 0.12)), Vector((0, 0, 0.42)))):
@@ -544,7 +543,7 @@ class Take(C.Take):
                 ob.location = mid + off
                 ob.keyframe_insert("location", frame=f)
             k = clamp((g - G_TOSS[0]) / float(G_TOSS[1] - G_TOSS[0]))
-            on = G_TOSS[0] <= g <= G_TOSS[1]
+            on = False                                      # v2c: the thrown rivet prop is deleted too (reads as an orange slab on the catcher's chest)
             C.key_vis(self.toss, on, f)
             if on:
                 self.scene.frame_set(f1)
