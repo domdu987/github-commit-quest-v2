@@ -440,8 +440,6 @@
 | sg_static_glasswine | 1648 | -0.2256 | OK | prop/bbox | 1.730 | hut_brass |
 | sg_static_glasswine | 1658 | -0.2256 | OK | prop/bbox | 1.730 | hut_brass |
 
-## v2 notes round 2 (render20/v2a, T21, batch float hunter)
-- PASS above. Hidden / changed: sig_wire, sig_halo, sig_aura (never visible to the camera: the thin white wire and the pale band), the lattice glow sweep is off, ring radius 500 -> 240 m (concentric rings around the tower tip, several at once), crowbar "bars" removed (the pickaxes stay in the hands: hang down, raised in the cheer), horizon_haze cylinder + ground plane x8 (no hard backdrop edge under the sky), arrival from a wider framing (camera pulled back 50 % at g1545-1580, easing in by ~g1635).
-
-## qa_jitter (final take.mkv, film-aligned, hard-cut handle excluded)
-{g1440: 0.97, g1470: 0.5, g1500: 0.42, g1530: 1.53, g1560: 1.43, g1590: 0.48, g1620: 1.03, g1650: 1.69} -> all <= 2.0
+## v2 notes round 3 (batch-3 hunter, g1570-1663 re-rendered)
+- Contact shadows made clearly visible: the blob material's opacity ramp was inverted (so the earlier blobs rendered invisible); fixed, plateau core, black, 3.0 x 1.5 D, offset 0.15 D / -0.35 D away from the hut lamp (hut is +y). Under every figure on the cobbles from the arrival on.
+- ground_check PASS above. qa_jitter film-aligned: see QA.md.
