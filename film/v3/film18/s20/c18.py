@@ -152,7 +152,7 @@ def run(shot, g0, g1, frame_cb, setup_cb=None, argv=None, lights=6, keep=None):
                 sp = importlib.util.spec_from_file_location('ground_check', os.path.join(HERE, '..', '..', 'tools', 'ground_check.py')); GCMOD = importlib.util.module_from_spec(sp); sp.loader.exec_module(GCMOD); globals()['GCMOD'] = GCMOD; globals()['GCHECK'] = ([], {}, [])
             if (g - a) % int(os.environ.get('GSTEP', '5')) == 0:
                 bpy.context.scene.frame_set(bpy.context.scene.frame_current)
-                rs, air = GCMOD.run_check(frame_list=[bpy.context.scene.frame_current], gap=0.05, include=os.environ.get('GCINC', r'(ph_|prop|pot|jar|bowl|reed|bundle)'), skip=os.environ.get('GCSKIP', r'(spk|flame|puff|glow|pool|shadow|tfl|spark|hole)'))
+                rs, air = GCMOD.run_check(frame_list=[bpy.context.scene.frame_current], gap=0.05, include=os.environ.get('GCINC', r'(ph_|prop|pot|jar|bowl|reed|bundle)'), skip=os.environ.get('GCSKIP', r'(spk|flame|puff|pf\d|glow|pool|shadow|tfl|spark|hole)'))
                 for r in rs: r['frame'] = g
                 GCHECK[0].extend(rs); GCHECK[2].append(g)
                 for k_, v_ in air.items(): GCHECK[1].setdefault(k_, []).extend([g])
