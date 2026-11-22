@@ -9,7 +9,7 @@ import c18 as C                                                         # noqa: 
 
 SHOT = "s11"; G0, G1 = 853, 944; H_IN, H_OUT = 0, 8                     # dissolve 11 into s12: half + 2 = 8 handle frames
 CAMLIN = 0.5
-PARAMS = (0.0, 0, 0.0, 0.8, 0.0, 0.1, 0.0, 0.6, 3.6)      # c18.make_mod: push, slide px/s, sway D, Hz, wobble D, dz, dz/t
+PARAMS = (0.0, 60, 0.0, 0.8, 0.0, 0.1, 0.0, 0.6, 3.6)      # c18.make_mod: push, slide px/s, sway D, Hz, wobble D, dz, dz/t
 POSES = ["soldier_mock_moo_a", "soldier_laugh_point_b", "soldier_mock_moo_c", "soldier_cheer_cup_a", "soldier_mock_moo_b", "soldier_laugh_point_c"]
 MARKS = [(3.4, -83.8, 0.0), (7.6, -83.4, 0.0), (1.6, -87.4, 0.0), (9.6, -87.4, 0.0), (5.4, -88.8, 0.0), (5.4, -91.4, 0.0)]   # two big mock-mooers in front of the fire
 BIG = 1.25                                                             # the two (three) mock-moo soldiers are drawn 22 % taller: big on a phone
@@ -32,6 +32,8 @@ def patches(T):
                            ("jar", -1.7, 1.9, 0.9, 4.6), ("basket", 0.3, 1.9, 0.9, 4.2), ("rope", 1.9, 1.9, 0.9, 4.8), ("jar", 3.2, 1.9, 0.8, 5.6), ("rope", -3.3, 1.9, 0.9, 5.2)], 0.5, CAMLIN, C.make_mod(T.sh["dur"], *PARAMS))
     # start-of-shot ground dressing (director round 6: bare ground 30-33 % at g853-880): extra lit period props 3-4 D from the lens placed for the START pose; the truck slides them away
     C.fg_world_props(T, [("jar", -1.3, 1.7, 0.8, 3.6), ("basket", 0.9, 1.7, 0.8, 3.4), ("rope", -0.1, 1.8, 0.75, 3.0), ("basket", -2.2, 1.8, 0.8, 4.0), ("jar", 2.0, 1.8, 0.7, 4.2)], 0.03, CAMLIN, C.make_mod(T.sh["dur"], *PARAMS))
+    for o_ in list(C.J.STATE["SET"].objects) + list(C.bpy.data.objects):
+        if o_.name.startswith("fgjar"): o_.hide_render = True      # v2: the camera-parented jar hovered in front of the lens; the world-space jars below replace it
     for nm in ("cloth", "shields"):
         if nm in C.J.STATE["objects"]:
             C.J.STATE["objects"][nm].hide_render = True
@@ -74,7 +76,7 @@ def stage_factory(T):
         marks = C.S.marks_for(SHOT)
         sol = MARKS; gen = marks["general"][0]
         card = C.pcard("general_laugh", mouth=STATIC_MOUTH, lean=-8 if ((g // 5) % 2 == 0) else -3, blink=0)
-        C.place(card, gen[:3], cam, C.J.HEIGHT["general"], g, "general", bounce_amp=0.06, ph=0.4, roll_deg=2.0 * C.sway(g, 0, 1.5))
+        C.place(card, gen[:3], cam, C.J.HEIGHT["general"], g, "general", bounce_amp=0.02, ph=0.4, roll_deg=0.0, sw_scale=1.8)
         for i, m in enumerate(sol):
             pose = POSES[i % len(POSES)]
             over = {}
@@ -82,7 +84,7 @@ def stage_factory(T):
                 over["mouth"] = STATIC_MOUTH
             over["lean"] = (-10 if ((g + 3 * i) // 4) % 2 else 2)
             card = C.pcard(pose, horns=("mock_moo" in pose), **over)
-            C.place(card, m[:3], cam, C.J.HEIGHT["soldier"] * (BIG if "mock_moo" in pose else 1.0), g, "sol%d" % i, bounce_amp=0.06, ph=0.9 * i, roll_deg=3.5 * C.sway(g, i, 1.5))
+            C.place(card, m[:3], cam, C.J.HEIGHT["soldier"] * (BIG if "mock_moo" in pose else 1.0), g, "sol%d" % i, bounce_amp=0.02, ph=0.9 * i, roll_deg=0.0, sw_scale=1.8)
     return stage
 
 

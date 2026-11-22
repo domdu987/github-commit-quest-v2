@@ -231,6 +231,7 @@ class Take(object):
         self.sc = bpy.context.scene
         J.MN.setup_render(self.sc, quality)
         self.sc.render.threads = int(os.environ.get("THREADS", "2"))
+        self.sc.cycles.transparent_max_bounces = 64            # v2: stacked alpha cards (client rule)
         if samples:
             self.sc.cycles.samples = samples
         self.sc.render.resolution_x, self.sc.render.resolution_y = (720, 1280) if quality == "final" else (360, 640)
@@ -409,6 +410,9 @@ def subject_x(T, shot, role="general"):
     return c.x * 720 if c.z > 0 else -9999
 
 
+FG_DOWN = 1.1                                         # v2: props sit lower in the frame (the soldiers' soles stay visible)
+
+
 def fg_world_props(T, specs, t=0.5, lin=0.5, mod=None):
     """static WORLD-space foreground props placed relative to the camera pose at shot time t (so a dolly / truck makes them slide across and grow slowly).
     specs: (kind, lateral D (+ right), down D, scale); kind = 'rope' | 'jar' | 'basket'.  Lit period props in the set's own materials, nothing parented to the camera."""
@@ -426,8 +430,11 @@ def fg_world_props(T, specs, t=0.5, lin=0.5, mod=None):
     for spec in specs:
         kind, lat, down, sc = spec[:4]
         dist = spec[4] if len(spec) > 4 else 2.8
-        o = loc + f * dist + r * lat + u * (-down)
-        base = V((o.x, o.y, max(0.0, o.z)))
+        o = loc + f * dist + r * lat + u * (-(down + FG_DOWN))
+        # v2: every prop stands ON the ground: the point o is projected along the lens ray down to z = 0 (same screen position) and the prop is scaled up with the distance
+        if loc.z > o.z + 0.05:
+            g0 = loc + (o - loc) * (loc.z / (loc.z - o.z)); sc = sc * (g0 - loc).length / max(0.5, (o - loc).length); o = g0
+        base = V((o.x, o.y, 0.0))
         if kind == "rope":
             for k in range(3):
                 c = base + V((0, 0, 0.05 + 0.08 * k))

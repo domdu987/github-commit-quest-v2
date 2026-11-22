@@ -20,6 +20,14 @@
   1280
  ],
  "samples": 12,
- "framediff_median": 4.64,
- "framediff_p90": 8.11
+ "framediff_median": 4.52,
+ "framediff_p90": 7.17,
+ "framediff": {
+  "median": 4.52,
+  "p90": 7.17,
+  "min": 2.95,
+  "max": 12.22,
+  "n": 90,
+  "frames_lt1": 0
+ }
 }

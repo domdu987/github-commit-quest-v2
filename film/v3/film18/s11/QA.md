@@ -17,3 +17,14 @@ Camera = the set's planned move (jimo_shots.pose_at) plus c18.make_mod: extra pu
 - mouths: none move. handle out g 944..951 (dissolve 11 into s12).
 - the background tent walls at the left thin out in g ~915-951 where their ridge poles were removed (warm dusk horizon behind): accepted to avoid unlit slabs.
 - checked by eye: contact.jpg + phone_sheet.jpg.
+
+
+## V2 (client fixes: no camera shake / nothing floats)
+v2 (client fixes): soldiers PLANTED, not floating: bounce 0.02 D (was 0.06), no roll, 1.8x wider contact shadows under every soldier, the camera-parented jar (hovered in front of the lens) hidden, all foreground props (jars / baskets / ropes) stand on the ground (projected along the lens ray to z = 0, sized for the distance) and sit lower in the frame (+1.1 D) so the soldiers' feet and shadows stay visible; camera: no sway / handheld noise (smooth eased pull-out / push-in + one slow truck 60 px/s). ground_check via s11/gc11.py (every 6th frame, stage built exactly like the render); transparent_max_bounces 64 (added in s11/c18.py Take); crf 21.
+- take.mkv crf 21, first_g 853, 99 frames; transition in: {'type': 'cut', 'frames': 0}.
+- frame diff (90x160 grey, in-shot): median 4.52 / p90 7.17 (rule: median >= 4).
+- ground_check (film/v3/tools/ground_check.py through film18/gc_run.py, every 6th frame): - checked objects: 25   rows: 425   FAIL rows: 0   **result: PASS**  (full table in GROUND.md; cards are checked by bounding box, so only a floating card base can fail; shadows are the cards' contact quads).
+- qa_jitter output:
+```
+overall median jitter px 1.11
+```
