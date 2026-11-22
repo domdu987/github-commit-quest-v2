@@ -43,11 +43,11 @@
  },
  "set": "v3/set3d20 SITE preset site_girders (stage hooks keyed every frame: 0 until g830, 1 until g969, 2 until g985, 3 after), DAY. Runtime: preset FG + near scatter props (pn_*) hidden; camera-parented timber post (g<819) and two red-lead girders on the ground at the fence as foreground; a runtime carried I-girder; set hooks crane_swing, spark (t0 921, period 9, strength 1.5), rivet_toss (g919-929, x3.2). One continuous take, no cuts.",
  "cast": "cast20 lady20 / gent20 / child20 laughing at the fence (3 Hz squash + 0.10 D bounce, hand at mouth / pointing), eiffel with the giant rivet raised (dome up, prop scale 1.8); riveter_tongs + riveter_hammer carrying a girder along the stack (cast20.cycle walk); at the rivet deck riveter_tongs throws the glowing rivet, riveter_hammer catches (cheers), riveter_forge hammers every 9 frames. All stand on the ground / plank surface (on_ground / ground_z).",
- "camera": "custom 22 mm, ONE take: A (g745-801) eye level 1 m pulling back 10 %/s, snap x1.4 on g778; punch-in snap onto Eiffel g802-810 (shake g802-803, speed lines g802-807 in deliver.py); rise over the fence and Catmull-Rom flight g817-848 (over the cart yard, past the leg) down to the stack truck g848-906 (snap on g856); flight g906-920 over the stack and under the first-platform arches up to the rivet deck; deck g920-943 (push, snap on the catch g929); three crane-up snaps g943-993 to site_rise_snap1/2/3 (stage jumps hidden in the snaps); hand-held jitter 0.07 D.",
+ "camera": "v2 fix (client: shake / too close / floating): custom 22 mm, ONE take, NO shake, NO hand-held noise, NO snaps. Slow eased Catmull-Rom drifts, lens pulled back 25-50 % wider than v1: fence g745-797 (pull back + 1.8 m crane up so the ground and the tower base read), eased flight 1 g797-813 over the fence to the stack (16 f), stack truck g813-887 (slow), eased flight 2 g887-901 up to the deck (14 f), deck g901-945, one smooth crane-up g945-1003 through the three tower stages. The two flights are the only fast moves (declared in GROUND.md).",
  "events": {
   "word_call": 778,
-  "punch_in": 802,
-  "stage1": 830,
+  "punch_in": null,
+  "stage1": 805,
   "word_steel": 856,
   "toss": [
    919,
@@ -66,20 +66,12 @@
    993,
    1002
   ],
-  "snap1": [
-   943,
-   958
-  ],
-  "snap2": [
-   962,
-   977
-  ],
-  "snap3": [
-   977,
-   993
-  ],
+  "snap1": null,
+  "snap2": null,
+  "snap3": null,
   "stage2": 969,
-  "stage3": 985
+  "stage3": 985,
+  "note": "v2: stage 1 pops in at g805 behind flight 1; stage 2/3 at g969/g985 as before (during the crane-up)"
  },
  "dof": "none",
  "text": "none",
@@ -91,8 +83,8 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 10.73,
- "s_per_frame_cpu_mean": 20.54,
+ "s_per_frame_wall_mean": 13.03,
+ "s_per_frame_cpu_mean": 21.5,
  "head_px": [
   0,
   0
@@ -103,8 +95,8 @@
  ],
  "head_bottom_max_y": 0,
  "framediff_in_shot": {
-  "median": 4.49,
-  "p90": 22.75
+  "median": 2.15,
+  "p90": 17.89
  },
  "narration": "film20/audio/narration.wav at +0.10 s; captions film20/script/captions.json"
 }

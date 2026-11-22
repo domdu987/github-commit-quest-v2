@@ -36,11 +36,14 @@ W1, W2, W3 = C.cap_g("ชั้นหนึ่ง"), C.cap_g("ชั้นสอ
 G_TOSS = (917, 933)                                # the glowing rivet flies
 G_CATCH = G_TOSS[1]
 G_HITS = [921 + 9 * i for i in range(10)]          # hammer blows
-G_STAGE1 = 830                                     # platform appears behind the fast flight
+G_STAGE1 = 805                                     # platform appears behind the fast flight
 SN = [(W1 - 5, W1 + 10), (W2 - 5, W2 + 10), (W3 - 4, W3 + 12)]                # crane-up snaps
 MID = [(a + b) // 2 for a, b in SN]                                            # 950 / 969 / 985
 G_FLY1 = (817, 848)
 G_FLY2 = (906, 920)
+G_WH1_0, G_WH1_1 = 797, 813                     # flight 1 (fence -> stack), 16 frames, split over two seconds
+G_WH2_0, G_WH2_1 = 887, 901                     # flight 2 (stack -> deck), 14 frames
+K_A, K_S, K_D, K_P = 1.25, 1.35, 1.45, 1.25
 LIGHT, PRESET = "DAY", "site_girders"
 PPD = 256
 RIV_ANGLE = 90.0
@@ -61,7 +64,7 @@ def W(p):
 def cam_a():
     return C.CamPath(W(CAM_A0), W(SUBJ_A), G_FIRST, G_NICK - 1, push=-0.10, slide_px=-70.0, rise_px=-35.0, arc_deg_s=-2.0,
                      tilt0=6.5, tilt_deg_s=0.0, decay=0.25,
-                     snaps=[dict(g=(G_CALL - 2, G_CALL + 14), k=1.4, peak=1.7, shift=(0.0, 0.0), tilt=1.5)])
+                     snaps=[])
 
 
 def cam_b():
@@ -71,7 +74,7 @@ def cam_b():
 
 def cam_s(g0):
     return C.CamPath(W(CAM_S0), W(SUBJ_S), g0, G_FLY2[0] + 4, push=0.02, slide_px=160.0, rise_px=-12.0, arc_deg_s=6.0, tilt0=-3.0, decay=0.2,
-                     snaps=[dict(g=(G_STEEL - 2, G_STEEL + 14), k=1.12, peak=2.0, shift=(0.0, 0.0), tilt=0.0)])
+                     snaps=[])
 
 
 def cam_d(A):
@@ -83,7 +86,7 @@ def cam_d(A):
     v.z = 0.0
     c = subj + v.normalized() * 6.5 + Vector((0.0, 0.0, 0.6))
     return C.CamPath(c, subj, G_FLY2[1], SN[0][0] + 6, push=0.07, slide_px=55.0, rise_px=15.0, arc_deg_s=3.0, tilt0=0.0, decay=0.2,
-                     snaps=[dict(g=(G_CATCH - 1, G_CATCH + 12), k=1.25, peak=1.7, shift=(0.0, -0.3), tilt=0.0)])
+                     snaps=[])
 
 
 def cr(p0, p1, p2, p3, t0, t1, t2, t3, t):
@@ -134,44 +137,61 @@ class Rig(object):
                    (917, W((-24.0, -46.0, 14.0)), W((-42.0, -62.0, 22.0))),
                    (G_FLY2[1], d1[0], d1[1]), (G_FLY2[1] + 2, d2[0], d2[1])]
 
+    def build(self):
+        """sections of SLOW eased drift (no snaps, no shake, no hand-held noise) joined by SHORT eased flights between the set locations
+        (declared fast moves in GROUND.md); the last section is one smooth crane-up. Framing wider than the first pass."""
+        wd = self.widen
+        self.W1 = (G_WH1_0, G_WH1_1)
+        self.W2 = (G_WH2_0, G_WH2_1)
+        a1, a2 = self.at(G_WH1_0 - 2), self.at(G_WH1_0)
+        s1, s2 = wd(*self.Sx.at(G_FLY1[1]), K_S), wd(*self.Sx.at(G_FLY1[1] + 2), K_S)
+        self.f1[0], self.f1[1] = (G_FLY1[0] - 2,) + tuple(a1), (G_FLY1[0],) + tuple(a2)
+        self.f1[-2], self.f1[-1] = (G_FLY1[1],) + tuple(s1), (G_FLY1[1] + 2,) + tuple(s2)
+        e1, e2 = wd(*self.Sx.at(G_FLY2[0] - 2), K_S), wd(*self.Sx.at(G_FLY2[0]), K_S)
+        d1, d2 = wd(*self.D.at(G_FLY2[1]), K_D), wd(*self.D.at(G_FLY2[1] + 1), K_D)
+        self.f2[0], self.f2[1] = (G_FLY2[0] - 2,) + tuple(e1), (G_FLY2[0],) + tuple(e2)
+        self.f2[-2], self.f2[-1] = (G_FLY2[1],) + tuple(d1), (G_FLY2[1] + 2,) + tuple(d2)
+
+    def widen(self, loc, look, k):
+        return look + (loc - look) * k, look
+
     def at(self, g):
-        if g < G_NICK:
-            loc, look = self.A.at(g)
-        elif g < G_FLY1[0]:
-            la, ka = self.A.at(g)
-            lb, kb = self.B.at(g)
-            u = C.snap_u(g, G_NICK, G_NICK + 8, 1.8)
-            loc, look = la.lerp(lb, u), ka.lerp(kb, u)
-            if G_SHAKE[0] <= g <= G_SHAKE[1]:
-                d = Vector((0.0, 0.0, 0.05 * (1 if g == G_SHAKE[0] else -1)))
-                loc, look = loc + d, look + d * 0.3
-        elif g < G_FLY1[1]:
-            loc, look = fly(self.f1, g)
-        elif g < G_FLY2[0]:
-            loc, look = self.Sx.at(g)
-        elif g < G_FLY2[1]:
-            loc, look = fly(self.f2, g)
-        elif g < SN[0][0]:
-            loc, look = self.D.at(g)
-        else:
-            loc, look = self.crane(g)
-        j = Vector((0.07 * math.sin(g * 1.9), 0.07 * math.cos(g * 1.3), 0.05 * math.sin(g * 2.3 + 1.0)))        # hand-held energy
-        return loc + j, look + j * 0.4
+        if not hasattr(self, "W1"):
+            self.build()
+        w1a, w1b = self.W1
+        w2a, w2b = self.W2
+        if g <= w1a:                                              # fence: slow pull back + gentle drift + a slow rise (ground and tower base in view)
+            loc, look = self.widen(*self.A.at(max(g, G_FIRST)), K_A)
+            u = clamp((g - G_FIRST) / float(w1a - G_FIRST))
+            return loc + Vector((0.0, 0.0, 1.8 * CO.SC * u * u * (3 - 2 * u))), look
+        if g <= w1b:                                              # flight 1: over the fence and the yard to the stack (old knots, compressed)
+            gg = G_FLY1[0] + (g - w1a) * (G_FLY1[1] - G_FLY1[0]) / float(w1b - w1a)
+            return fly(self.f1, gg)
+        if g <= w2a:                                              # stack truck, slowed down
+            gg = G_FLY1[1] + (g - w1b) * (G_FLY2[0] - G_FLY1[1]) / float(w2a - w1b)
+            return self.widen(*self.Sx.at(gg), K_S)
+        if g <= w2b:                                              # flight 2: under the first platform up to the rivet deck
+            gg = G_FLY2[0] + (g - w2a) * (G_FLY2[1] - G_FLY2[0]) / float(w2b - w2a)
+            return fly(self.f2, gg)
+        if g <= SN[0][0]:
+            return self.widen(*self.D.at(G_FLY2[1] + (g - w2b) * 0.5), K_D)
+        return self.crane(g)
 
     def crane(self, g):
-        loc, look = Vector(self.P[0][0]), Vector(self.P[0][1])
-        for n, (a, b) in enumerate(SN):
-            u = C.snap_u(g, a, b, 1.7)
-            if u > 0:
-                loc = self.P[n][0].lerp(self.P[n + 1][0], u)
-                look = self.P[n][1].lerp(self.P[n + 1][1], u)
-        t = (g - SN[0][0]) / 30.0
-        fwd = look - loc
-        fz = 1.0 + 0.055 * t + 0.14 * max(0.0, (g - 993) / 30.0)
-        loc = look - fwd / fz
-        right = Vector((fwd.y, -fwd.x, 0.0)).normalized()
-        sh = right * (0.9 * CO.SC * t * 4.0)
-        return loc + sh, look + sh
+        """one smooth rise: deck -> three crane-up positions -> final wide tower, Catmull-Rom with eased ends"""
+        d0 = self.widen(*self.D.at(G_FLY2[1] + (SN[0][0] - G_FLY2[1]) * 0.5), K_D)
+        pts = [(SN[0][0] - 12, d0[0], d0[1]), (SN[0][0], d0[0], d0[1])]
+        for (gm, n) in ((MID[0] + 4, 1), (MID[1] + 4, 2), (MID[2] + 6, 3)):
+            lo, lk = self.widen(self.P[n][0], self.P[n][1], K_P)
+            pts.append((gm, lo, lk))
+        pts.append((G_LAST, pts[-1][1], pts[-1][2]))
+        pts.append((G_LAST + 14, pts[-1][1], pts[-1][2]))
+        for i in range(1, len(pts) - 2):
+            if pts[i][0] <= g <= pts[i + 1][0]:
+                ts = [pts[i + j][0] for j in (-1, 0, 1, 2)]
+                return (cr(pts[i - 1][1], pts[i][1], pts[i + 1][1], pts[i + 2][1], *ts, g),
+                        cr(pts[i - 1][2], pts[i][2], pts[i + 1][2], pts[i + 2][2], *ts, g))
+        return pts[-2][1], pts[-2][2]
 
 
 def stage_of(g):
@@ -184,7 +204,7 @@ def walk_x(g):
     return -74.9 + 1.5 * (g - 818) / 30.0
 
 
-def bounce(g, ph=0.0, amp=0.10, hz=3.0):
+def bounce(g, ph=0.0, amp=0.015, hz=3.0):
     return amp * 0.5 * (1.0 + math.sin(2 * math.pi * hz * g / 30.0 + ph))
 
 
@@ -279,12 +299,17 @@ class Take(C.Take):
             if ob.name.startswith(("fg_", "pn_")):          # preset FG is anchored to the preset camera; the near scatter props would hide the cast
                 ob.hide_render = True
         self.rig = Rig(self.A)
+        for ob in C.bpy.data.objects:                      # ground_check: real airborne things (sparks, flags on poles)
+            if ob.name.startswith(("spk_", "pnoink_flag")):
+                ob["airborne"] = True
         self.post = self.make_post()
         self.make_fence_girders()
         self.girder = self.make_carried_girder()
         self.remove_bench()
         self.add_ground_detail()
         self.rivet3d, self.bucket, self.toss = self.make_rivet3d(), self.make_bucket(), self.make_toss()
+        for ob in list(self.rivet3d) + list(self.bucket) + [self.toss]:      # held / thrown props
+            ob["airborne"] = True
         mk = self.A["marks"]
         self.marks = {}
         for k, xy in (("lady", LADY), ("gent", GENT), ("child", CHILD), ("eiffel", EIF)):
@@ -447,7 +472,7 @@ class Take(C.Take):
         for g in gs:
             f = bf(g)
             self.key_cam(f, *self.rig.at(g))
-            C.key_vis(self.post, g < G_FLY1[0] + 2, f)
+            C.key_vis(self.post, False, f)
             for who, a in self.actors.items():
                 m = list(self.marks[who]) if who in self.marks else None
                 if who in ("a", "b"):
