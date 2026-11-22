@@ -12,11 +12,11 @@ NAME = 's14'
 G0, G1 = 1071, 1136                                               # shot range (the next shot starts at 1136)
 H_IN, H_OUT = 6, 6
 G_TALK = C.g_of(36.99)                                            # 1113: quote 2a starts
-MOVE = dict(push=0.11, slide=55)
+MOVE = dict(push=0.1, slide=160, orbit=True)
 CAMO = dict(loc=(-7.4, -102.4, 2.3), look_at=(-4.3, -96.2, 2.7), lens=26.0)            # eye-level medium, cut at the knees (QA-art)                                             # lateral slide (px/s), push comes from the shot table (9 %/s)
 GEN = V((-4.3, -96.2, 0.0))
-SHAKE = (1.0, 0.7, 0.5, 2.8)
-SNAPS = [(G0 + 22, 1.14, 3, 9999), (G_TALK - 1, 1.12, 3, 9999)]      # two HELD punch-ins (+14 %, +12 %), no return
+SHAKE = None                                                      # v2: NO sway / handheld noise
+SNAPS = [(G0 + 22, 1.12, 10, 9999), (G_TALK - 1, 1.12, 10, 9999)]      # v2: two HELD punch-ins, each eased over 10 frames
 
 
 BIG = {'flat': (0.22, 0.03), 'talk_a': (0.30, 0.14), 'talk_b': (0.36, 0.24), 'talk_o': (0.20, 0.22), 'laugh': (0.36, 0.20)}
@@ -91,13 +91,13 @@ def make_driver(quality):
         if pt is not None: jar.location = (pt.x, pt.y, 0.0); jar.scale = (0.5, 0.5, 0.5); jl.location = (pt.x - 1.2, pt.y - 0.8, 1.8)
         ph = g / 30.0 * 3.0 * 2 * math.pi                          # 3 Hz laugh
         p = gpose(g)
-        gen.show(pkey(p), GEN, cam, lift=0.06 * abs(math.sin(ph / 2.0)) , squash=(1.0 + 0.015 * math.sin(ph), 1.0 - 0.015 * math.sin(ph)))
+        gen.show(pkey(p), GEN, cam, lift=0.02 * abs(math.sin(g / 30.0 * 1.8 * math.pi)), squash=(1.0 + 0.008 * math.sin(g / 30.0 * 2 * math.pi * 1.8), 1.0 - 0.008 * math.sin(g / 30.0 * 2 * math.pi * 1.8)))
         right = V(cam) - V((0, 0, 0)); fwd = (V(pose['look_at']) - V(pose['loc'])); fwd.z = 0; fwd.normalize(); rt = V((fwd.y, -fwd.x, 0))
         for a, base, m, i in people:
             pos = V(m[:3]); side = (pos - GEN).dot(rt)
-            phi = i * 1.7; b = abs(math.sin(g / 30.0 * 3.0 * math.pi + phi))
-            lvl = 1 if math.sin(g / 30.0 * 2.5 * math.pi + phi) > 0 else 0
-            a.show(lvl, pos, cam, mirror=side > 0, lift=0.06 * b, squash=(1.0 + 0.012 * math.sin(2 * math.pi * 1.5 * g / 30.0 + phi), 1.0 - 0.012 * math.sin(2 * math.pi * 1.5 * g / 30.0 + phi)))
+            phi = i * 1.7; b = abs(math.sin(g / 30.0 * 1.8 * math.pi + phi))
+            lvl = 1 if math.sin(g / 30.0 * 1.6 * math.pi + phi) > 0 else 0
+            a.show(lvl, pos, cam, mirror=side > 0, lift=0.02 * b, squash=(1.0 + 0.008 * math.sin(2 * math.pi * 1.5 * g / 30.0 + phi), 1.0 - 0.008 * math.sin(2 * math.pi * 1.5 * g / 30.0 + phi)))
     return drive, actors
 
 

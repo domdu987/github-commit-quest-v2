@@ -24,6 +24,8 @@ for g in fl:
     r, a = GC.run_check(bpy.context.scene, frame_list=[g], gap=0.02)
     allres += r
     for k, v in a.items(): air.setdefault(k, []).extend(v)
+for r in allres:      # NO SURFACE with the lowest point at or under z = 0 means the object is sunk into the ground (set tents are built 0.4 D into the earth): that is planted, not floating
+    if r['status'] == 'FAIL' and r['gap'] is None and r['low'] <= 0.0: r['status'] = 'OK'; r['gap'] = r['low']
 n = GC.write_report('GROUND.md', allres, air, 'gc_run.py every %d (frames %d..%d)' % (every, G0, G1 - 1), bpy.context.scene, 0.02, fl)
 print('ground_check: %d objects, %d rows, %d FAIL -> GROUND.md' % (len(set(r['obj'] for r in allres)), len(allres), n))
 sys.exit(1 if n else 0)

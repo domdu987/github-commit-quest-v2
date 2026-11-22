@@ -9,23 +9,23 @@
   "frames": 0
  },
  "framediff": {
-  "median": 7.71,
-  "p90": 11.98,
-  "min": 1.25,
-  "max": 14.8,
+  "median": 4.26,
+  "p90": 6.51,
+  "min": 1.76,
+  "max": 7.23,
   "n": 64,
   "frames_lt1": 0
  },
  "max_chin_y": {
-  "general": 694,
-  "soldier0": 742,
-  "soldier1": 730,
-  "crowd0": 725,
-  "crowd1": 722,
-  "crowd2": 721,
-  "crowd3": 722,
-  "crowd4": 724,
-  "crowd5": 719
+  "general": 676,
+  "soldier0": 712,
+  "soldier1": 710,
+  "crowd0": 705,
+  "crowd1": 703,
+  "crowd2": 702,
+  "crowd3": 701,
+  "crowd4": 701,
+  "crowd5": 701
  },
- "s_per_frame": 22.7
+ "s_per_frame": 22.3
 }

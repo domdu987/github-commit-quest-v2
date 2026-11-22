@@ -246,7 +246,7 @@ def cam_pose(name, g, move=None, cam=None, ease=0.35):
     push = mv.get('push', 0.0); delta = max(-0.9 * d0, min(0.6 * d0, push * dur * d0)) * e
     hx, hy = S._norm((d[0], d[1], 0.0))[:2]; right = (hy, -hx, 0.0)
     shift = mv.get('slide', 0.0) * dur / 720.0 * 2 * d0 * math.tan(S.hfov_half(c['lens'])) * e
-    loc2 = S._add(S._add(loc, S._mul(u, delta)), S._mul(right, shift)); look2 = S._add(look, S._mul(right, shift))
+    loc2 = S._add(S._add(loc, S._mul(u, delta)), S._mul(right, shift)); look2 = look if mv.get('orbit') else S._add(look, S._mul(right, shift))      # orbit: the truck keeps the look-at on the subject
     for m in mv.get('moves', ()):
         k = _smooth01((t - m['t']) / max(1e-6, m['dur'] / max(1, fr)))
         if k <= 0: continue

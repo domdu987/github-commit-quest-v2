@@ -11,11 +11,11 @@ from c18 import cast18, V
 NAME = 's15'
 G0, G1 = 1136, 1205
 H_IN, H_OUT = 6, 6
-MOVE = dict(push=0.10, slide=45)
+MOVE = dict(push=0.1, slide=190, orbit=True)
 CAMO = dict(loc=(-6.3, -100.8, 2.7), look_at=(-4.3, -96.2, 3.0), lens=28.0)           # medium-close: head, chest, cup
 GEN = V((-4.3, -96.2, 0.0))
-SHAKE = (0.9, 0.65, 0.45, 2.8)
-SNAPS = [(G0 + 26, 1.14, 3, 9999)]                                   # ONE held punch-in on the carving
+SHAKE = None                                                      # v2: NO sway / handheld noise
+SNAPS = [(G0 + 26, 1.12, 10, 9999)]                                   # v2: ONE held punch-in eased over 10 frames
 
 
 BIG = {'flat': (0.22, 0.03), 'talk_a': (0.30, 0.14), 'talk_b': (0.36, 0.24), 'talk_o': (0.20, 0.22), 'lick': (0.44, 0.12)}
@@ -38,7 +38,7 @@ def gpose(g):
     u = (g - G0) / float(G1 - G0)
     p['cup_tilt'] = 22 if u < 0.5 else 48                                      # the cup tilts, wine spills
     if g >= G_CARVE - 4:
-        saw = 0.5 + 0.5 * math.sin(2 * math.pi * 2.6 * (g - G_CARVE) / 30.0); lvl = min(3, int(saw * 4))
+        saw = 0.5 + 0.5 * math.sin(2 * math.pi * 2.0 * (g - G_CARVE) / 30.0); lvl = min(3, int(saw * 4))
         p['arm_l'] = dict(hand=(-0.95 + 0.9 * lvl / 3.0, 0.30 + 0.10 * ((lvl % 2) * 2 - 1)), bend=0.3, stretch=1.15, shape='open', layer='front')     # knife-hand slicing across the chest
         p['carve'] = -1
     else: p['carve'] = -1
@@ -105,13 +105,13 @@ def make_driver(quality):
             o.scale = (0.45, 0.45, 0.45)
         ph = g / 30.0 * 3.0 * 2 * math.pi
         p = gpose(g)
-        gen.show(pkey(p), GEN, cam, lift=0.04 * abs(math.sin(ph / 2.0)), squash=(1.0 + 0.012 * math.sin(ph), 1.0 - 0.012 * math.sin(ph)))
+        gen.show(pkey(p), GEN, cam, lift=0.02 * abs(math.sin(g / 30.0 * 1.8 * math.pi)), squash=(1.0 + 0.008 * math.sin(g / 30.0 * 2 * math.pi * 1.8), 1.0 - 0.008 * math.sin(g / 30.0 * 2 * math.pi * 1.8)))
         fwd = (V(pose['look_at']) - V(pose['loc'])); fwd.z = 0; fwd.normalize(); rt = V((fwd.y, -fwd.x, 0))
         for a, m, i in people:
             pos = V(m[:3]); side = (pos - GEN).dot(rt); phi = i * 1.7
             if a.role.startswith('soldier'): pos = pos - rt * 1.8
-            b = abs(math.sin(g / 30.0 * 3.0 * math.pi + phi)); lvl = 1 if math.sin(g / 30.0 * 2.5 * math.pi + phi) > 0 else 0
-            a.show(lvl, pos, cam, mirror=side > 0, lift=0.06 * b, squash=(1.0 + 0.012 * math.sin(2 * math.pi * 1.5 * g / 30.0 + phi), 1.0 - 0.012 * math.sin(2 * math.pi * 1.5 * g / 30.0 + phi)))
+            b = abs(math.sin(g / 30.0 * 1.8 * math.pi + phi)); lvl = 1 if math.sin(g / 30.0 * 1.6 * math.pi + phi) > 0 else 0
+            a.show(lvl, pos, cam, mirror=side > 0, lift=0.02 * b, squash=(1.0 + 0.008 * math.sin(2 * math.pi * 1.5 * g / 30.0 + phi), 1.0 - 0.008 * math.sin(2 * math.pi * 1.5 * g / 30.0 + phi)))
     return drive, actors
 
 
