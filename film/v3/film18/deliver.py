@@ -12,7 +12,7 @@ df = np.array([np.abs(gr[g + 1] - gr[g]).mean() for g in range(G0, G1)])
 st = dict(median=round(float(np.median(df)), 2), p90=round(float(np.percentile(df, 90)), 2), min=round(float(df.min()), 2), max=round(float(df.max()), 2), n=len(df))
 print(shot, st)
 mkv = os.path.join(d, 'take.mkv')
-subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', '30', '-start_number', str(first), '-i', os.path.join(fr, 'g_%04d.png'), '-frames:v', str(last - first + 1), '-c:v', 'libx264rgb', '-crf', '6', '-preset', 'slow', mkv], check=True)
+subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', '30', '-start_number', str(first), '-i', os.path.join(fr, 'g_%04d.png'), '-frames:v', str(last - first + 1), '-c:v', 'libx264rgb', '-crf', '20', '-preset', 'slow', mkv], check=True)
 meta = dict(take=shot, film=18, shots=[int(shot[1:])], first_g=first, n_frames=last - first + 1, g0=G0, g1=G1, handle_in=HI, handle_out=HO,
             transition_in=json.loads(sys.argv[2]) if len(sys.argv) > 2 else dict(type='cut', frames=0), frame_diff=st)
 json.dump(meta, open(os.path.join(d, 'meta.json'), 'w'), indent=1)

@@ -6,6 +6,8 @@ import os, sys, math, random
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import c18 as C
 from c18 import J, S, R2, V, bpy
+from bpy_extras.object_utils import world_to_camera_view
+os.environ.setdefault('NOPOOL', '1')
 SHOT = 's20'; G0, G1 = 1515, 1595; H_IN, H_OUT = 6, 6
 V_OX = 16.2; V_CAM = 1.0 * V_OX; XC = 20.0; Y0 = -46.0; DUR = 81 / 30.0; LAT = 11.0; CZ = 4.0
 def pose(sh, t):
@@ -47,12 +49,12 @@ def setup(ctx):
     pr = random.Random(5)
     for n in range(170):                                                  # dressed field between the camera and the herd (world props, all on the ground)
         px_ = pr.uniform(14.0, 19.0); py_ = pr.uniform(-110, -40)
-        if pr.random() < 0.35: J.prop_reed_bundle((px_, py_, 0.2), (0, 0, pr.uniform(0, 6.28)), scale=pr.uniform(0.6, 0.9), n=40, cd=6.0)
+        if pr.random() < 0.35: (lambda sc_: J.prop_reed_bundle((px_, py_, 0.18 * sc_), (0, 0, pr.uniform(0, 6.28)), scale=sc_, n=40, cd=6.0))(pr.uniform(0.6, 0.9))
         else: J.prop_pot((px_, py_, 0.0), pr.uniform(0, 6.28), kind=pr.choice(('pot', 'jar', 'bowl')), scale=pr.uniform(0.6, 0.9), cd=6)
 
     for n in range(170):                                                 # round 15: small dark rubble in the mid-ground ground band (in front of the lead row, below every ox head)
         px_ = pr.uniform(10.6, 13.4); py_ = pr.uniform(-112, -40)
-        if pr.random() < 0.5: J.prop_reed_bundle((px_, py_, 0.2), (0, 0, pr.uniform(0, 6.28)), scale=pr.uniform(0.35, 0.55), n=30, cd=6.0)
+        if pr.random() < 0.5: (lambda sc_: J.prop_reed_bundle((px_, py_, 0.18 * sc_), (0, 0, pr.uniform(0, 6.28)), scale=sc_, n=30, cd=6.0))(pr.uniform(0.35, 0.55))
         else: J.prop_pot((px_, py_, 0.0), pr.uniform(0, 6.28), kind=pr.choice(('pot', 'jar', 'bowl')), scale=pr.uniform(0.3, 0.5), cd=6)
 
 def frame(g, t, camloc, ctx):
@@ -62,6 +64,9 @@ def frame(g, t, camloc, ctx):
     ycam = Y0 - V_OX * k
     for j, (dx, dy, sc) in enumerate(REL):
         pos = (XC + dx, ycam + dy, 0.0)
+        pc = world_to_camera_view(bpy.context.scene, bpy.data.objects['cam'], V(pos) + V((0, 0, 1.0)))
+        if pc.x < -0.45 or pc.x > 1.45 or pc.z < 0: continue
+        if g < G0 + 8 and j in (3, 4): continue                              # during the whip-in these two stand over the water channel (ground_check)                 # V2: oxen outside the frame are not placed (they would stand over the water channel)
         ph = int(k * 12 + j * 3) % 8
         C.put_ox(j, pos, -90, sc, camloc, phase=ph, flame=C.flame_for(g, j), state='dragon', view='three_quarter', gait='gallop', theta=30, reed=True, face='rage', tfx=1.2, lean=60.0)
 

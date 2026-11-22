@@ -1,0 +1,31 @@
+00:00.430  cycles           | WARNING CUEW initialization failed: Error opening the library
+dress_ground {'n': 1, 'kinds': {'tuft_grass': 1}}
+00:24.628  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s20/frames/g_1509.png'
+s20 g1509  17.8 s (wall 17.7 cpu 35.5)
+00:42.122  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s20/frames/g_1510.png'
+s20 g1510  17.5 s (wall 17.3 cpu 34.8)
+01:00.269  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s20/frames/g_1511.png'
+s20 g1511  18.1 s (wall 18.0 cpu 36.1)
+01:18.497  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s20/frames/g_1512.png'
+s20 g1512  18.2 s (wall 18.1 cpu 36.2)
+01:36.841  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s20/frames/g_1513.png'
+s20 g1513  18.3 s (wall 18.2 cpu 36.4)
+01:55.766  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s20/frames/g_1514.png'
+s20 g1514  18.9 s (wall 18.8 cpu 37.7)
+02:13.831  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s20/frames/g_1515.png'
+s20 g1515  18.1 s (wall 17.9 cpu 36.0)
+02:33.179  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s20/frames/g_1516.png'
+s20 g1516  19.4 s (wall 19.2 cpu 38.4)
+02:52.709  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s20/frames/g_1517.png'
+s20 g1517  19.5 s (wall 19.3 cpu 38.6)
+03:10.571  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s20/frames/g_1518.png'
+s20 g1518  17.9 s (wall 17.7 cpu 35.3)
+03:26.597  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s20/frames/g_1519.png'
+s20 g1519  16.0 s (wall 15.9 cpu 31.8)
+03:40.129  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s20/frames/g_1520.png'
+s20 g1520  13.5 s (wall 13.3 cpu 26.7)
+03:52.896  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s20/frames/g_1521.png'
+s20 g1521  12.8 s (wall 12.6 cpu 25.4)
+04:04.796  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film18/s20/frames/g_1522.png'
+s20 g1522  11.9 s (wall 11.8 cpu 23.5)
+mean s/frame 17.0 over 14 frames

@@ -30,3 +30,9 @@ Reframed: three-quarter view oxen, camera follows at 1.0 x herd speed, LAT 11, l
 
 ## Gate 16 follow-up
 Gate 16 blockers were on the older layout. Round 17 has one lead ox with its large flame (about 120-130 px), the ox ahead of the lead removed from the left edge (not visible in the phone sheet), and rows spaced 20 D so the tail/rope/bundle of the lead no longer reach another ox head in the phone-sheet frames. Not pixel-measured for 30 px on every frame.
+
+## V2 fix (client: "objects float / camera shakes") - 2026-11-22
+Base: round 17/18 take (commit 9897eb4). Changes: (1) the warm light pool under the flame tip (the detached "shadow" blob) is gone (NOPOOL); each ox gets a dark double contact shadow centred under its hooves; (2) the ground reed-bundle props sit at z = 0.18 x scale (they were hovering at z 0.2), the tail bundle is part of the ox card, tied to the tail rope; (3) off-frame oxen are not placed (two stood over the water channel at g1515-1522); (4) gallop body bounce is cancelled 60 % by lifting the card by the phase variation of the head anchor (jitter source: +-0.07 D head bob = ~11 px spikes); camera is the same single eased push, no sway; (5) `transparent_max_bounces = 64` (set3d18 jimo.py); (6) encoded crf 20.
+- ground_check (v3/tools/ground_check.py through `python3 shot.py gcheck 1515 1595`, every 10th frame, gap tolerance 0.05 D): **exit 0, PASS** - 356 objects, 3136 rows, 0 FAIL (GROUND.md).
+- qa_jitter.py take.mkv: `0s shake 3.1px` (the whip-in landing of the take's first second, the planned whip from s19) and nothing else; overall median jitter 2.18 px (g1530-1600 alone: 1.4 px). No other second above 2 px.
+- Frame-diff in-shot (n=80): median **5.56**, p90 7.21 (median >= 4). qa_auto PASS.
