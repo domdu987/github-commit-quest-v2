@@ -8,3 +8,5 @@ Cut in at g1431 (4 handle frames), dissolve out (8 handle), g1427-1663, 237 fram
 ## Round 2 (batch hunter items 1-6, all frames re-rendered)
 1+2 stray white / light-blue lines: sig_wire hidden, rings are now concentric around the tip (r max 240 m). 3 pale band: sig_aura, sig_halo and the lattice glow sweep off. 4 hard sky edge: horizon haze + 8x ground. 5 arrival: wider framing at g1575 (whole group in frame, officer included), ease-in to the old framing by ~g1635. 6 ghost rods: removed, pickaxes stay in the hands.
 qa_auto PASS, ground_check PASS, qa_jitter all <= 1.7. frame-diff median 11.67 p90 18.86.
+- qa_jitter (final) {1440: 0.97, 1470: 0.5, 1500: 0.42, 1530: 1.53, 1560: 1.49, 1590: 0.5, 1620: 1.11, 1650: 1.36}
+- Round 3: visible contact shadows under all five figures (g1570-1663 re-rendered). qa_auto PASS.

@@ -250,17 +250,17 @@ def make_blob(name, w, d, op):
         nd.remove(n)
     tr = nd.new("ShaderNodeBsdfTransparent")
     bk = nd.new("ShaderNodeBsdfDiffuse")
-    bk.inputs["Color"].default_value = (0.02, 0.02, 0.05, 1)
+    bk.inputs["Color"].default_value = (0.0, 0.0, 0.0, 1)
     tc = nd.new("ShaderNodeTexCoord")
     gr = nd.new("ShaderNodeTexGradient")
     gr.gradient_type = "SPHERICAL"
     mp = nd.new("ShaderNodeMapping")
     mp.inputs["Location"].default_value = (-0.5, -0.5, 0)
     cr = nd.new("ShaderNodeMapRange")
-    cr.inputs["From Min"].default_value = 0.0
-    cr.inputs["From Max"].default_value = 0.5
-    cr.inputs["To Min"].default_value = op
-    cr.inputs["To Max"].default_value = 0.0
+    cr.inputs["From Min"].default_value = 0.5
+    cr.inputs["From Max"].default_value = 0.8
+    cr.inputs["To Min"].default_value = 0.0
+    cr.inputs["To Max"].default_value = op
     cr.clamp = True
     mx = nd.new("ShaderNodeMixShader")
     o = nd.new("ShaderNodeOutputMaterial")
@@ -296,7 +296,7 @@ class Take(C.Take):
         self.wagon0 = [Vector(o.location) for o in self.wagon]
         self.dress_fg()
         self.cobbles()
-        self.blobs = {k: make_blob("cs_" + k, 1.7, 0.8, 0.8) for k in M}
+        self.blobs = {k: make_blob("cs_" + k, 3.0, 1.5, 1.0) for k in M}
         for ob in bpy.data.objects:                      # v2: ground_check tags (set meshes are merged per material; bars fall; cheer hops)
             if ob.name.startswith(("hut_", "wagon_", "sig_", "ring", "halo", "aura")):
                 ob["gc_role"] = "skip"
@@ -601,9 +601,9 @@ class Take(C.Take):
                 bz = 0.06 * abs(math.sin(g * 0.52 + hash(k) % 5)) if (k.startswith("demo") and g >= G_ARMY + 4) else 0.0
                 a.place(f, (float(mk[0]), float(mk[1]), float(mk[2]) + bz), scale=1.0, flip=(k == "officer"))
                 bl = self.blobs[k]
-                bl.location = (float(mk[0]), float(mk[1]), float(mk[2]) + 0.03)
+                bl.location = (float(mk[0]) + 0.15, float(mk[1]) - 0.35, float(mk[2]) + 0.03)      # batch-3: bigger, darker, offset away from the hut lamp (hut is +y)
                 bl.keyframe_insert("location", frame=f)
-                bl.scale = (1.7 * (1.0 - 5.0 * bz), 0.8 * (1.0 - 5.0 * bz), 1.0)
+                bl.scale = (3.0 * (1.0 - 5.0 * bz), 1.5 * (1.0 - 5.0 * bz), 1.0)
                 bl.keyframe_insert("scale", frame=f)
             self.key_set(f, set_year=1909)
             S.signal_rings(-1.0, frame=f)
