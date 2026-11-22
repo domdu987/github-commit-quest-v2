@@ -14,3 +14,14 @@ median 11.52, p90 15.37, min 2.44, max 16.36, frames < 1: 0 (rule: median >= 4, 
 - Two held punch-ins (+16 %, +12 %), no pulses. Mouths do not move.
 
 See QA_AUTO.md and phone_sheet.jpg.
+
+
+## V2 (client fixes: no camera shake / nothing floats)
+- Camera: NO shake, NO snaps pulsing; ONE eased dolly-in (push 18 %/s, eased) + a 30 px/s truck + one held punch-in eased over 10 frames; camera moved back/higher to start (7,-120,13.5). Crowd bounce 0.02 D at 1.8 Hz (was 0.10 D at 3 Hz).
+- take.mkv crf 21, first_g 994, 83 frames; transition in: {'type': 'dissolve', 'frames': 13}.
+- frame diff (90x160 grey, in-shot): median 4.4 / p90 6.73 (rule: median >= 4).
+- ground_check (film/v3/tools/ground_check.py through film18/gc_run.py, every 6th frame): - checked objects: 34   rows: 429   FAIL rows: 0   **result: PASS**  (full table in GROUND.md; cards are checked by bounding box, so only a floating card base can fail; shadows are the cards' contact quads).
+- qa_jitter output:
+```
+overall median jitter px 0.13
+```

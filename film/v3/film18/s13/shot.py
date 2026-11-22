@@ -11,11 +11,11 @@ from c18 import cast18, V
 NAME = 's13'
 G0, G1 = 1003, 1071
 H_IN, H_OUT = 9, 6                                                # dissolve in (13 frames: 7 + 2) and a cut out
-MOVE = dict(push=-0.06, slide=30)
-CAMO = dict(loc=(7.0, -113.0, 12.5), look_at=(-1.0, -84.0, 1.0), lens=22.0)                              # tilt down: sky was 50 % of the frame
+MOVE = dict(push=0.18, slide=30)
+CAMO = dict(loc=(7.0, -120.0, 13.5), look_at=(-1.0, -84.0, 1.0), lens=22.0)                              # tilt down: sky was 50 % of the frame
 GEN = V((-4.3, -96.2, 0.0))
-SHAKE = (1.3, 0.95, 0.6, 2.8)
-SNAPS = [(G0 + 16, 1.16, 4, 9999), (G0 + 44, 1.12, 4, 9999)]      # HELD punch-ins only (ALL_TEAMS rule 1: no pulses)
+SHAKE = None                                                      # v2: NO sway / handheld noise
+SNAPS = [(G0 + 22, 1.14, 10, 9999)]                               # v2: one eased (10 frames) held punch-in
 G_DROP = 1030                                                     # the sentry drops his spear
 
 
@@ -67,20 +67,20 @@ def make_driver(quality):
         C.bpy.context.view_layer.update(); pt = C.ground_at(cam_obj, 0.18, 0.9)
         if pt is not None: jar.location = (pt.x, pt.y, 0.0); jar.scale = (1.0, 1.0, 1.0); jl.location = (pt.x + 1.0, pt.y - 1.0, 2.2)
         fwd = (V(pose['look_at']) - V(pose['loc'])); fwd.z = 0; fwd.normalize(); rt = V((fwd.y, -fwd.x, 0))
-        gen.show(0, GEN, cam, lift=0.06 * abs(math.sin(g / 30.0 * 3.0 * math.pi)), squash=(1.0 + 0.015 * math.sin(2 * math.pi * 1.5 * g / 30.0), 1.0 - 0.015 * math.sin(2 * math.pi * 1.5 * g / 30.0)))
+        gen.show(0, GEN, cam, lift=0.02 * abs(math.sin(g / 30.0 * 1.8 * math.pi)), squash=(1.0 + 0.008 * math.sin(2 * math.pi * 1.5 * g / 30.0), 1.0 - 0.008 * math.sin(2 * math.pi * 1.5 * g / 30.0)))
         for a, m, i in crowd:
             pos = V(m[:3]); phi = i * 1.7
-            b_ = abs(math.sin(g / 30.0 * 3.0 * math.pi + phi)); lvl = 1 if math.sin(g / 30.0 * 2.5 * math.pi + phi) > 0 else 0
+            b_ = abs(math.sin(g / 30.0 * 1.8 * math.pi + phi)); lvl = 1 if math.sin(g / 30.0 * 1.6 * math.pi + phi) > 0 else 0
             dance = math.sin(g / 30.0 * 1.2 * math.pi + phi) > 0                         # dancers turn about every 0.8 s
             side = (pos - GEN).dot(rt)
-            a.show(lvl, pos + rt * (0.5 * math.sin(g / 30.0 * 1.6 * math.pi + phi)), cam, mirror=(side > 0) != (i % 3 == 0 and dance), lift=0.10 * b_, squash=(1.0 + 0.02 * math.sin(2 * math.pi * 1.5 * g / 30.0 + phi), 1.0 - 0.02 * math.sin(2 * math.pi * 1.5 * g / 30.0 + phi)))
+            a.show(lvl, pos + rt * (0.5 * math.sin(g / 30.0 * 1.6 * math.pi + phi)), cam, mirror=(side > 0) != (i % 3 == 0 and dance), lift=0.02 * b_, squash=(1.0 + 0.008 * math.sin(2 * math.pi * 1.5 * g / 30.0 + phi), 1.0 - 0.008 * math.sin(2 * math.pi * 1.5 * g / 30.0 + phi)))
         sp = V(sm[:3]); u = C.clamp((g - G_DROP) / 10.0)
         if g < G_DROP:
             sentry_a.show(0, sp, cam, mirror=False); sentry_b.hide()
             spear.location = (sp.x + 0.55, sp.y, 0.0); spear.rotation_euler = (0, 0, 0)
         else:
-            sentry_a.hide(); b_ = abs(math.sin(g / 30.0 * 3.0 * math.pi))
-            sentry_b.show(1 if math.sin(g / 30.0 * 2.5 * math.pi) > 0 else 0, sp, cam, lift=0.10 * b_)
+            sentry_a.hide(); b_ = abs(math.sin(g / 30.0 * 1.8 * math.pi))
+            sentry_b.show(1 if math.sin(g / 30.0 * 1.6 * math.pi) > 0 else 0, sp, cam, lift=0.02 * b_)
             fall = u * u
             spear.location = (sp.x + 0.55 + 0.9 * u, sp.y + 0.0, 0.0 + 0.0); spear.rotation_euler = (0, math.radians(84.0 * fall), 0)
             spear.location = (sp.x + 0.55 + 1.7 * fall, sp.y - 0.4 * fall, 0.25 * (1 - fall))

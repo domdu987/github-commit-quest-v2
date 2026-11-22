@@ -67,8 +67,8 @@ def person_variant(cast, pose, uid='p'):
     return Var(f['svg'], f['bbox'], f['feet_y'], height=f['feet_y'] - a['head_top'][1], anchors=a)
 
 
-def ox_variant(state='dragon', view='front_three_quarter', gait='gallop', phase=0, flame=-1, reed=None, uid='o', face=None):
-    f = cast18.ox_figure(state=state, view=view, gait=gait, phase=phase / 8.0 if gait == 'gallop' else phase, flame=flame, blades=True, reed=(True if reed else None), uid=uid, **({'face': face} if face else {}))
+def ox_variant(state='dragon', view='front_three_quarter', gait='gallop', phase=0, flame=-1, reed=None, uid='o'):
+    f = cast18.ox_figure(state=state, view=view, gait=gait, phase=phase / 8.0 if gait == 'gallop' else phase, flame=flame, blades=True, reed=(True if reed else None), uid=uid)
     return Var(f['svg'], (cast18.OX_CANVAS[0] - 1.4, cast18.OX_CANVAS[1] - 1.4, cast18.OX_CANVAS[2] + 1.0, cast18.OX_CANVAS[3]), 0.0, height=2.6, anchors=f['anchors'])           # the full ox canvas: the flame glow must not be clipped by a tight bbox
 
 
@@ -442,11 +442,3 @@ def angry_ox(var, brow=True):
             cx = mx + sx * 0.36; el += '<path d="M %.3f %.3f L %.3f %.3f" stroke="#3a2832" stroke-width="0.07" stroke-linecap="round"/>' % (cx - sx * 0.2, ey - 0.12 - 0.02, cx + sx * 0.18, ey + 0.0)
     el += '</g>'
     return Var(var.svg + el, var.bbox, var.feet_y, var.height, var.anchors)
-
-
-def lean_flame(root, deg):
-    """lean a set flame card by `deg` about the view axis (the card follows the camera orientation via Copy Rotation, then rolls)"""
-    card = [ch for ch in root.children if ch.type == 'MESH'][0]
-    for k in list(card.constraints): card.constraints.remove(k)
-    cr = card.constraints.new('COPY_ROTATION'); cr.target = bpy.data.objects.get('cam'); cr.mix_mode = 'AFTER'; cr.target_space = 'WORLD'; cr.owner_space = 'LOCAL'
-    card.rotation_mode = 'XYZ'; card.rotation_euler = (0.0, 0.0, math.radians(deg))
