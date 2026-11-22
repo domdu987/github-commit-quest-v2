@@ -162,7 +162,7 @@ def travel_knots():
     return loc, look
 
 
-def cam_at(A, g, P):
+def cam_raw(A, g, P):
     """(loc, look, shift_y) of the camera at film frame g: spline travel to g1566, then a blend into the group CamPath by G_ARR."""
     KL, KK = A["_knots"]
     if g >= G_ARR:
@@ -178,6 +178,36 @@ def cam_at(A, g, P):
         k = k0.lerp(pk, u)
     sh = SHIFT * ez((g - 1530) / 50.0) if g > 1530 else 0.0
     return l, k, sh
+
+
+_SM = {}
+
+
+def cam_at(A, g, P, sigma=8.0):
+    """v2: the raw travel (Hermite spline + blend into the group CamPath) low-passed with a gaussian (sigma 8 frames) on loc, look and lens shift:
+    removes every velocity kink / jitter of the knots and the hand-over, keeps the shape and the end framing."""
+    key = id(A)
+    if key not in _SM:
+        lo, hi = G_FIRST - 40, G_LAST + 40
+        raw = [cam_raw(A, min(max(gg, G_FIRST), G_LAST), P) for gg in range(lo, hi + 1)]
+        R = int(3 * sigma)
+        wts = [math.exp(-0.5 * (k / sigma) ** 2) for k in range(-R, R + 1)]
+        tot = sum(wts)
+        out = {}
+        for gg in range(G_FIRST, G_LAST + 1):
+            i = gg - lo
+            l = Vector((0, 0, 0)); k_ = Vector((0, 0, 0)); sh = 0.0
+            for j, w in zip(range(-R, R + 1), wts):
+                r = raw[min(max(i + j, 0), len(raw) - 1)]
+                l += r[0] * w; k_ += r[1] * w; sh += r[2] * w
+            out[gg] = (l / tot, k_ / tot, sh / tot)
+        _SM[key] = out
+    u = min(max((g - 1520) / 30.0, 0.0), 1.0)
+    lead = 7.0 * u * u * (3 - 2 * u)                  # the gaussian lags the swoop hand-over: lead it so the group is framed by ~g1575 as before
+    gf = min(max(g + lead, G_FIRST), G_LAST)
+    i0 = int(math.floor(gf)); i1 = min(i0 + 1, G_LAST); t = gf - i0
+    a_, b_ = _SM[key][i0], _SM[key][i1]
+    return a_[0].lerp(b_[0], t), a_[1].lerp(b_[1], t), a_[2] + (b_[2] - a_[2]) * t
 
 
 def move_fg(A):
@@ -196,6 +226,44 @@ def make_bars(mat):
         bars.append(ob)
     return bars
 
+
+
+def make_blob(name, w, d, op):
+    """v2: soft radial contact shadow plane (transparent -> dark); keyed on the ground under a standing card in pose()."""
+    bpy.ops.mesh.primitive_plane_add(size=1.0, location=(0, 0, 0.0))
+    ob = bpy.context.active_object
+    ob.name = name
+    ob.scale = (w, d, 1.0)
+    m = bpy.data.materials.new(name + "_m")
+    m.use_nodes = True
+    nd = m.node_tree.nodes
+    for n in list(nd):
+        nd.remove(n)
+    tr = nd.new("ShaderNodeBsdfTransparent")
+    bk = nd.new("ShaderNodeBsdfDiffuse")
+    bk.inputs["Color"].default_value = (0.02, 0.02, 0.05, 1)
+    tc = nd.new("ShaderNodeTexCoord")
+    gr = nd.new("ShaderNodeTexGradient")
+    gr.gradient_type = "SPHERICAL"
+    mp = nd.new("ShaderNodeMapping")
+    mp.inputs["Location"].default_value = (-0.5, -0.5, 0)
+    cr = nd.new("ShaderNodeMapRange")
+    cr.inputs["From Min"].default_value = 0.0
+    cr.inputs["From Max"].default_value = 0.5
+    cr.inputs["To Min"].default_value = op
+    cr.inputs["To Max"].default_value = 0.0
+    cr.clamp = True
+    mx = nd.new("ShaderNodeMixShader")
+    o = nd.new("ShaderNodeOutputMaterial")
+    L = m.node_tree.links
+    L.new(tc.outputs["UV"], mp.inputs["Vector"]); L.new(mp.outputs["Vector"], gr.inputs["Vector"])
+    L.new(gr.outputs["Fac"], cr.inputs["Value"]); L.new(cr.outputs["Result"], mx.inputs[0])
+    L.new(tr.outputs[0], mx.inputs[1]); L.new(bk.outputs[0], mx.inputs[2]); L.new(mx.outputs[0], o.inputs["Surface"])
+    ob.data.materials.append(m)
+    for a in ("visible_shadow", "visible_diffuse", "visible_glossy", "visible_transmission"):
+        setattr(ob, a, False)
+    ob["gc_role"] = "shadow"
+    return ob
 
 
 class Take(C.Take):
@@ -219,8 +287,19 @@ class Take(C.Take):
         self.wagon0 = [Vector(o.location) for o in self.wagon]
         self.dress_fg()
         self.cobbles()
+        self.blobs = {k: make_blob("cs_" + k, 1.7, 0.8, 0.8) for k in M}
+        for ob in bpy.data.objects:                      # v2: ground_check tags (set meshes are merged per material; bars fall; cheer hops)
+            if ob.name.startswith(("hut_", "wagon_", "sig_", "ring", "halo", "aura")):
+                ob["gc_role"] = "skip"
+            if ob.name.startswith("bar_"):
+                ob["airborne_frames"] = "%d:%d" % (G_DROP, G_DROP + 22)
+            if ob.name.startswith("demo_"):
+                ob["airborne_frames"] = "%d:%d" % (G_ARMY + 4, G_LAST)
         self.build_fx()
         self.build_pulse()
+        for ob in bpy.data.objects:
+            if ob.name.startswith(("sig_", "ring", "halo", "aura", "pulse")):
+                ob["airborne"] = True                     # lights / rings / flash are airborne by nature (not objects standing on the ground)
         self.key_cam(bf(G_FIRST), *cam_at(A, G_FIRST, self.path)[:2])
         self.scene.frame_set(bf(G_FIRST))
 
@@ -458,7 +537,7 @@ class Take(C.Take):
         for g in gs:
             f = bf(g)
             loc, look, sh = cam_at(self.A, g, self.path)
-            off = Vector((0.07 * math.sin(g * 1.9), 0.0, 0.07 * math.sin(g * 2.6 + 1.0))) if g >= G_ARR else Vector((0, 0, 0))
+            off = Vector((0, 0, 0))                          # v2: no handheld sway (was 0.07 D at ~9 Hz: the 52-54 s shake)
             self.key_cam(f, loc + off, look + off)
             self.cam.data.shift_y = sh
             self.cam.data.keyframe_insert("shift_y", frame=f)
@@ -466,6 +545,11 @@ class Take(C.Take):
                 mk = self.A["marks"][k]
                 bz = 0.06 * abs(math.sin(g * 0.52 + hash(k) % 5)) if (k.startswith("demo") and g >= G_ARMY + 4) else 0.0
                 a.place(f, (float(mk[0]), float(mk[1]), float(mk[2]) + bz), scale=1.0, flip=(k == "officer"))
+                bl = self.blobs[k]
+                bl.location = (float(mk[0]), float(mk[1]), float(mk[2]) + 0.03)
+                bl.keyframe_insert("location", frame=f)
+                bl.scale = (1.7 * (1.0 - 5.0 * bz), 0.8 * (1.0 - 5.0 * bz), 1.0)
+                bl.keyframe_insert("scale", frame=f)
             self.key_set(f, set_year=1909)
             S.signal_rings(-1.0, frame=f)
             S.wire_glow(0.0, frame=f)
