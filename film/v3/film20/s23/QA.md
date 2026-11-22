@@ -34,3 +34,8 @@ After TAKE_ART (F1-F3 callback), TAKE_B and QA_TEAM §G. Checked at 6 fps contac
 - Banner pole bottoms (were 1.2 D underground) now end at the ground; pennants and the hut lamp are tagged airborne. ground_check PASS (GROUND.md, 0 FAIL rows).
 - qa_jitter: no second above 2.0 px (overall median 0.21). qa_auto PASS. qa_stats sat 0.529, luma 108.6, frame-diff median 5.60 / p90 6.62.
 - Timing, 8/8 handles, both dissolves unchanged (meta.json).
+
+## v2b (director's float-hunter items)
+1. Certificate: one person holds it the whole time. The official holds it until the handover, then it is in Eiffel's RIGHT hand (arm out beside him, visible) until the hat flourish; it moves to his LEFT hand (arm out, visible) on the same closed-blink frame as the hat swap (g1706) and stays there. The old transfer at g1696 (where it vanished / sat flat on his chest) is removed.
+2. Bowler: the raised hat is on the end of his right arm (hand to the right of his head at brim height, arm visibly raised), no longer floating beside the head.
+Re-rendered the whole take (same camera, timing, handles). ground_check PASS (gc.py), qa_auto PASS, qa_jitter see above (no second above 2.0 px).

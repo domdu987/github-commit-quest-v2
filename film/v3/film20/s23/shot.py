@@ -31,7 +31,8 @@ G_HAT = C.cap_g("อีก 70 ปี")                    # 1706: the bowler com
 SNAP = (G_HAT - 3, G_HAT + 11)
 HAND = (G0 + 8, G0 + 28)                        # document handed over (official arm out, Eiffel reaches)
 G_SWAP_DOC = G0 + 20                            # doc prop moves official -> Eiffel (hands meet)
-G_XFER = G0 + 40                                # doc moves to the left hand behind a blink
+G_XFER = G_HAT                                  # v2: the certificate stays in his RIGHT hand until the hat flourish (swap to the left hand on the same closed blink frame as the hat)
+_old_xfer = G0 + 40                                # doc moves to the left hand behind a blink
 BLINKS = [G0 + 12, G_HAT - 1]
 LIGHT, PRESET = "DAY", "tower_fair"
 YEAR = 1910
@@ -113,18 +114,18 @@ def eiffel_pose(g):
         p["arm_l"] = "hip"
     elif g < G_XFER:                                        # document in the right hand
         u2 = u_of(g, G_SWAP_DOC, G_SWAP_DOC + 12)
-        p["arm_r"] = dict(hand=(lerp(1.0, 0.62, u2), lerp(0.62, 0.72, u2)), bend=-0.2, stretch=lerp(1.2, 1.1, u2))
+        p["arm_r"] = dict(hand=(lerp(1.0, 0.70, u2), lerp(0.62, 0.70, u2)), bend=-0.2, stretch=lerp(1.2, 1.15, u2))
         p["prop_r"] = "doc_seal"
         p["arm_l"] = "hip"
     else:                                                   # document moved to the left hand (swap on a blink)
-        p["arm_l"] = dict(hand=(-0.45, 0.75), bend=0.4)
+        p["arm_l"] = dict(hand=(-0.9, 0.55), bend=0.2, stretch=1.15)
         p["prop_l"] = "doc_seal"
         if g < G_HAT:
             p["arm_r"] = "hip"
     if g >= G_HAT:                                          # bowler off and held out high with a flourish (hat_off bare head)
         uh = u_of(g, G_HAT, G_HAT + 8)
         p["hat_off"] = 1
-        p["arm_r"] = dict(hand=(lerp(0.45, 0.58, uh), lerp(0.40, -0.45, uh)), bend=lerp(0.0, -0.5, uh), stretch=lerp(1.0, 1.25, uh))
+        p["arm_r"] = dict(hand=(lerp(0.45, 1.0, uh), lerp(0.40, -0.18, uh)), bend=lerp(0.0, -0.4, uh), stretch=lerp(1.0, 1.3, uh))
         p["prop_r"] = "bowler_held"
         p["pitch"] = -0.1
         p["head_roll"] = -4.0
