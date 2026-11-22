@@ -620,7 +620,7 @@ class Take(C.Take):
                 CO.setv(ob, vis, f)
             u = ez(clamp((g - ROLL[0]) / float(ROLL[1] - ROLL[0])), "sine")
             for ob, p0 in zip(self.wagon, self.wagon0):
-                ob.location = p0 + Vector((60.0 * u * u / CO.SC, 0, 0))
+                ob.location = p0                                  # batch-6 (§M): the wagon stays parked (no sliding horses / props)
                 ob.keyframe_insert("location", frame=f)
         for g in gs:
             f = bf(g)
