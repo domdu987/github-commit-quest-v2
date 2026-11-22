@@ -208,6 +208,29 @@ def v2_fix_scene(T):
         if ob is not None:
             ob.hide_render = True
     M = CO.STATE["M"]
+    for n in ("pn_gravelp", "pm_gravelp", "pf_gravelp"):          # float hunter: pale lilac faceted disc sliding out at g231-243
+        ob = bpy.data.objects.get(n)
+        if ob is not None:
+            ob.hide_render = True
+    ob = bpy.data.objects.get("scaff_timber")                     # float hunter: 4 tapered scaffold posts ended in mid-air at z 7.5 (world): stand them on the ground
+    if ob is not None:
+        mw = ob.matrix_world
+        mi = mw.inverted()
+        for v in ob.data.vertices:
+            w = mw @ v.co
+            if abs(w.z - 7.5) < 0.05 and 30 < w.x < 135 and -130 < w.y < -50:
+                w.z = 0.0
+                v.co = mi @ w
+        ob.data.update()
+    ob = bpy.data.objects.get("pnoink_timber")                    # float hunter: thin rod above the canopy roof (world x 70.6-70.8, y -149.3, z 7.5-11.3)
+    if ob is not None:
+        mw = ob.matrix_world
+        bm = bmesh.new()
+        bm.from_mesh(ob.data)
+        dead = [v for v in bm.verts if 70.0 < (mw @ v.co).x < 71.3 and -150.0 < (mw @ v.co).y < -148.6 and (mw @ v.co).z > 7.4]
+        bmesh.ops.delete(bm, geom=dead, context="VERTS")
+        bm.to_mesh(ob.data)
+        bm.free()
     def box(name, cx, cy, z0, z1, hw, mat):
         me = bpy.data.meshes.new(name)
         bm = bmesh.new()
@@ -263,10 +286,10 @@ def v2_fix_scene(T):
     blob("canopy_gcshadow", 70.7, -149.3, 14.0, 11.0, 0.55)
     for nm in ("leg_a", "leg_b", "leg_c"):                       # scaffold platforms under the riveters (they stood on nothing)
         mk = T.A["marks"][nm]
-        d = box("plankdeck_" + nm, mk[0] + 0.8, mk[1], mk[2] - 0.35, mk[2], 1.0, M["plank"])
+        d = box("plankdeck_" + nm, mk[0] + 0.8, mk[1], mk[2] - 0.5, mk[2], 1.0, M["plank"])
         for v in d.data.vertices:
-            v.co.x = mk[0] + 0.8 + (v.co.x - (mk[0] + 0.8)) * 3.6
-            v.co.y = mk[1] + (v.co.y - mk[1]) * 1.6
+            v.co.x = mk[0] + 0.8 + (v.co.x - (mk[0] + 0.8)) * 5.5
+            v.co.y = mk[1] + (v.co.y - mk[1]) * 2.6
         d["gc_role"] = "ground"
 
 
@@ -478,6 +501,8 @@ class Take(C.Take):
             self.key_cam(f, *self.path.at(g))
             C.place(self.eif, f, mark)
             for a, cast, mk, mirror, sc in self.riv:
+                if a.name in ("rl_a", "rl_d"):                      # float hunter g~405: the lowest platform pair fills the lower-left foreground cut at the waist: they step off (shrink away) before
+                    sc = sc * max(1e-3, 1.0 - smoother((g - 388) / 8.0))
                 C.place(a, f, mk, scale=sc)
             d_m = self.path.state(g)[0] / CO.SC                                  # camera distance in metres
             p = self.path.prog(g)[0]
@@ -497,7 +522,7 @@ class Take(C.Take):
             self.A["bz_up"].data.energy = 9000.0 * smoother((g - 322) / 40.0) + 18000.0 * smoother((g - 345) / 20.0)       # warm up-light into the deck undersides during the crane-up
             self.A["bz_up"].keyframe_insert("location", frame=f)
             self.A["bz_up"].data.keyframe_insert("energy", frame=f)
-            for ob, hid in ((self.smoke, g >= 340), (self.gravel, g <= 215)):          # source-less smoke puffs g 340+, the pale gravel disc g <= 215
+            for ob, hid in ((self.smoke, g >= 340), (self.gravel, True)):          # source-less smoke puffs g 340+, the pale gravel disc g <= 215
                 if ob is not None:
                     ob.hide_render = bool(hid)
                     ob.keyframe_insert("hide_render", frame=f)
@@ -508,7 +533,7 @@ class Take(C.Take):
             fe = smoother((p - 0.7) / 0.3)
             self.A["bz_fill"].data.energy = 4000.0 * fe
             self.A["bz_fill"].data.keyframe_insert("energy", frame=f)
-            self.key_set(f, set_beacon=bool(p < 0.22))
+            self.key_set(f, set_beacon=False)           # v2: the beacon column read as a thin rod above the canopy (float hunter)
         for g in gs:
             f = bf(g)
             self.scene.frame_set(f)
