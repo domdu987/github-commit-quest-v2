@@ -1,0 +1,20 @@
+sfx/rain_heavy_road.wav 2.2 0.35 loop
+sfx/sirens_city_far.wav 3.0 0.25 loop
+takes/R1.wav 0.4 1.0
+sfx/radio_static_cut.wav 0.0 0.9
+sfx/radio_static_cut.wav 4.3 1.0
+sfx/hydraulic_cutter.wav 5.2 0.7
+sfx/car_alarm_far.wav 7.5 0.18
+sfx/phone_vibrate.wav 9.0 0.45
+takes/N1.wav 11.0 1.0
+takes/K1.wav 15.2 1.0
+takes/N2.wav 18.8 0.95
+takes/K2.wav 22.6 1.0
+sfx/rain_on_hood.wav 25.0 0.8
+takes/C1.wav 27.2 1.0
+sfx/car_door_pry.wav 29.2 0.7
+sfx/heartbeat_low.wav 31.5 0.8
+sfx/heartbeat_low.wav 33.5 0.9
+sfx/zombie_lunge.wav 36.0 1.0
+sfx/man_scream_bite.wav 36.4 0.9
+sfx/hit_trailer.wav 38.4 1.0

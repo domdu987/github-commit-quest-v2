@@ -1,0 +1,50 @@
+{
+ "s06_916": {
+  "cpu_render": 31.42,
+  "cpu_render_total": 31.49,
+  "cpu_post": 3.28,
+  "wall_render": 16.48
+ },
+ "s24_916": {
+  "cpu_render": 36.17,
+  "cpu_render_total": 36.19,
+  "cpu_post": 2.88,
+  "wall_render": 9.97
+ },
+ "s13_916": {
+  "cpu_render": 33.63,
+  "cpu_render_total": 33.65,
+  "cpu_post": 4.54,
+  "wall_render": 16.37
+ },
+ "s09_916": {
+  "cpu_render": 27.06,
+  "cpu_render_total": 27.08,
+  "cpu_post": 3.21,
+  "wall_render": 14.33
+ },
+ "s18_916": {
+  "cpu_render": 16.44,
+  "cpu_render_total": 16.46,
+  "cpu_post": 3.53,
+  "wall_render": 8.97
+ },
+ "s20_916": {
+  "cpu_render": 26.41,
+  "cpu_render_total": 26.42,
+  "cpu_post": 3.42,
+  "wall_render": 12.31
+ },
+ "s06_169": {
+  "cpu_render": 30.48,
+  "cpu_render_total": 30.53,
+  "cpu_post": 3.57,
+  "wall_render": 8.28
+ },
+ "s24_169": {
+  "cpu_render": 33.51,
+  "cpu_render_total": 33.53,
+  "cpu_post": 2.88,
+  "wall_render": 9.62
+ }
+}

@@ -1,0 +1,5021 @@
+{
+ "episode": {
+  "fps": 24,
+  "size": "720x1280",
+  "hook_frames": [
+   0,
+   1280
+  ],
+  "new_frames": [
+   1280,
+   7655
+  ],
+  "running_time": "5:18.96"
+ },
+ "note": "EDITED by the script editor / line producer; the screenwriter's draft is shots_ep1_draft.json. Shot ids were renumbered; draft_id is on every shot.",
+ "classes": {
+  "A": "any shot in which a named character's face is read, and the two wound inserts; final tier at 100 % scale",
+  "B": "wides, crowds, driving, environment, prop and hand inserts with no face; final tier at 75 %",
+  "C1": "drawn 2D full frame or reuse of rendered frames; no Cycles render",
+  "C2": "re-uses the hook's jaw / gauge macro staging (S08, S09); final tier 75 %, 4 spp"
+ },
+ "totals": {
+  "shots": 137,
+  "frames_by_class": {
+   "A": 3577,
+   "C1": 491,
+   "B": 2192,
+   "C2": 115
+  },
+  "shots_by_class": {
+   "A": 78,
+   "C1": 12,
+   "B": 45,
+   "C2": 2
+  },
+  "frames_by_set": {
+   "X1": 1567,
+   "2D": 491,
+   "X1s": 723,
+   "X2c": 377,
+   "CAB": 860,
+   "X2": 403,
+   "UND": 868,
+   "RIV": 586,
+   "SITE": 500
+  },
+  "frames_by_scene": {
+   "02": 1734,
+   "03": 1652,
+   "04": 1175,
+   "05": 608,
+   "06": 1206
+  },
+  "mean_shot_s": 1.94,
+  "cpu_s_per_frame": {
+   "A": 68.2,
+   "B": 36.6,
+   "C2": 32.0,
+   "C1": 2.0
+  },
+  "cpu_hours": 91.3,
+  "wall_hours_4_cores": 24.7,
+  "cpu_hours_with_35pct_allowance": 123.3,
+  "wall_hours_with_35pct_allowance": 33.3
+ },
+ "scenes": [
+  {
+   "scene": "02",
+   "t0": 53.32,
+   "t1": 125.594,
+   "seconds": 72.27,
+   "shots": 37,
+   "frames": 1734,
+   "A": 1126,
+   "B": 441,
+   "C2": 0,
+   "C1": 167,
+   "cpu_h": 25.9,
+   "wall_h": 7.0,
+   "wall_h_allow": 9.4,
+   "cpu_h_allow": 35.0,
+   "draft_cpu_h": 4.5,
+   "draft_wall_h": 1.2,
+   "chars": 637,
+   "chars_billed": 679,
+   "sentences": 23,
+   "first_shot": "S25",
+   "last_shot": "S61",
+   "f0": 1280,
+   "f1": 3014,
+   "sets": [
+    "2D",
+    "X1"
+   ]
+  },
+  {
+   "scene": "03",
+   "t0": 125.594,
+   "t1": 194.422,
+   "seconds": 68.83,
+   "shots": 36,
+   "frames": 1652,
+   "A": 993,
+   "B": 609,
+   "C2": 50,
+   "C1": 0,
+   "cpu_h": 25.4,
+   "wall_h": 6.9,
+   "wall_h_allow": 9.3,
+   "cpu_h_allow": 34.4,
+   "draft_cpu_h": 4.7,
+   "draft_wall_h": 1.3,
+   "chars": 705,
+   "chars_billed": 755,
+   "sentences": 21,
+   "first_shot": "S62",
+   "last_shot": "S97",
+   "f0": 3014,
+   "f1": 4666,
+   "sets": [
+    "CAB",
+    "X1s",
+    "X2",
+    "X2c"
+   ]
+  },
+  {
+   "scene": "04",
+   "t0": 194.422,
+   "t1": 243.384,
+   "seconds": 48.96,
+   "shots": 23,
+   "frames": 1175,
+   "A": 633,
+   "B": 456,
+   "C2": 0,
+   "C1": 86,
+   "cpu_h": 16.7,
+   "wall_h": 4.5,
+   "wall_h_allow": 6.1,
+   "cpu_h_allow": 22.5,
+   "draft_cpu_h": 3.1,
+   "draft_wall_h": 0.8,
+   "chars": 498,
+   "chars_billed": 524,
+   "sentences": 16,
+   "first_shot": "S98",
+   "last_shot": "S120",
+   "f0": 4666,
+   "f1": 5841,
+   "sets": [
+    "2D",
+    "CAB",
+    "UND",
+    "X2",
+    "X2c"
+   ]
+  },
+  {
+   "scene": "05",
+   "t0": 243.384,
+   "t1": 268.71,
+   "seconds": 25.33,
+   "shots": 13,
+   "frames": 608,
+   "A": 363,
+   "B": 127,
+   "C2": 0,
+   "C1": 118,
+   "cpu_h": 8.2,
+   "wall_h": 2.2,
+   "wall_h_allow": 3.0,
+   "cpu_h_allow": 11.1,
+   "draft_cpu_h": 1.4,
+   "draft_wall_h": 0.4,
+   "chars": 246,
+   "chars_billed": 259,
+   "sentences": 8,
+   "first_shot": "S121",
+   "last_shot": "S133",
+   "f0": 5841,
+   "f1": 6449,
+   "sets": [
+    "2D",
+    "UND"
+   ]
+  },
+  {
+   "scene": "06",
+   "t0": 268.71,
+   "t1": 318.957,
+   "seconds": 50.25,
+   "shots": 28,
+   "frames": 1206,
+   "A": 462,
+   "B": 559,
+   "C2": 65,
+   "C1": 120,
+   "cpu_h": 15.1,
+   "wall_h": 4.1,
+   "wall_h_allow": 5.5,
+   "cpu_h_allow": 20.4,
+   "draft_cpu_h": 3.1,
+   "draft_wall_h": 0.8,
+   "chars": 441,
+   "chars_billed": 468,
+   "sentences": 17,
+   "first_shot": "S134",
+   "last_shot": "S161",
+   "f0": 6449,
+   "f1": 7655,
+   "sets": [
+    "2D",
+    "RIV",
+    "SITE"
+   ]
+  }
+ ],
+ "sets": {
+  "X1": {
+   "what": "v11 expressway, the hook's rescue zone as built (wreck, rescue truck, work lamp, jam, skyline). Dressing for SCENE 02: one hatchback's lamps on an alarm rhythm, a window-glass burst.",
+   "status": "exists + dressing",
+   "days": 0.25
+  },
+  "X1s": {
+   "what": "X1 plus the overturned sedan 40 D behind the truck, out of the hook cameras' view (to be checked against S03-S05, S24). `V.car` sedan rolled onto its side, shot from the roof and windscreen side only: no underside is built.",
+   "status": "dressing",
+   "days": 0.4
+  },
+  "X2": {
+   "what": "The same deck 150 D further on: a `truck6` box truck slewed across the three lanes (bevel pass, hazards), the stair gate and one lamp at the left barrier, a taxi with a smashed window against the rescue truck's left side, the rescue truck placed here with its lights on its root.",
+   "status": "dressing",
+   "days": 0.5
+  },
+  "X2c": {
+   "what": "The rescue truck's exterior as a hero: an opening crew door (`split_door`), see-through glass onto the cab shell, a light bar that can go dark, the body rocking on its root. It never drives in an exterior shot.",
+   "status": "new (from `V.rescue_truck`)",
+   "days": 0.75
+  },
+  "CAB": {
+   "what": "Rescue truck crew cab interior: two front seats, rear bench, console with the siren switch, streaked windows, roof raised so seated puppets keep full size; the equipment wall behind the bench (roll shutter, one code-drawn shelf texture, four real props). The shell and camera travel along the shoulder in two shots.",
+   "status": "new",
+   "days": 1.25
+  },
+  "UND": {
+   "what": "Service stair (barrier gap, gate, one flight-and-landing module instanced on a pier) and the street under the expressway reduced to what the dark shows: wet ground, puddles, rain curtains at the deck edges, one far sodium lamp, parked-car silhouettes. Piers and slab underside exist.",
+   "status": "new",
+   "days": 2.0
+  },
+  "RIV": {
+   "what": "Riverside hospital seen through its gate: lit facade (tower window textures), wall, sliding gate of bars with chain, booth light, plain lit cross, river plane with object index 1, a street stub with one lamp. People inside are silhouettes of the extras.",
+   "status": "new",
+   "days": 1.25
+  },
+  "SITE": {
+   "what": "Building site: corrugated hoarding with a bent panel, a bare concrete hall (floor, six columns, slab, puddles), the frame outside as a silhouette. Same file as RIV.",
+   "status": "new",
+   "days": 1.0
+  },
+  "2D": {
+   "what": "Drawn full frame in SVG and composited in the conform: the watch (four states), phone screens (map, lock, incoming, call, lost), black, end card.",
+   "status": "new drawings",
+   "days": 0.5
+  }
+ },
+ "cast": {
+  "kong_wet": {
+   "what": "exists; add the wristwatch, the crowbar on the pack and in two hands",
+   "days": 0.25
+  },
+  "driver": {
+   "what": "exists",
+   "days": 0
+  },
+  "extras": {
+   "what": "exists (10 roles); the green rider is taken out of the set",
+   "days": 0
+  },
+  "crew_bitten / crew_dying / crew_infected": {
+   "what": "new variants of `crew_wet`: wound on the side the hook's final S21-S24 show, three grey steps, the driver's eyes and jaws",
+   "days": 0.5
+  },
+  "infected(extras)": {
+   "what": "new transform (skin, eyes, torn cloth, claw hands) on the ten roles, plus a silhouette mode; at most twelve distinct figures in a frame",
+   "days": 0.5
+  },
+  "james_wet": {
+   "what": "new, from `crew` proportions and the rider outfit; helmet, no delivery box in EP.1",
+   "days": 0.5
+  },
+  "praew_wet": {
+   "what": "new: bun, coat layer, stethoscope, blue gloves; to be measured on the sheet first",
+   "days": 1.0
+  },
+  "tos_wet / tos_torn": {
+   "what": "new, from `driver` proportions; glasses, navy jacket; the tear and cut tied to the anatomical left forearm",
+   "days": 0.75
+  },
+  "guard": {
+   "what": "new minor: cap, pale blue shirt, torch",
+   "days": 0.25
+  }
+ },
+ "cycles": {
+  "survivor run": {
+   "what": "about 2.4 m/s, planted, for Kong, Praew, Tos, James",
+   "days": 0.4
+  },
+  "infected sprint": {
+   "what": "about 3.4 m/s, side-on, forward lean, phase offsets",
+   "days": 0.3
+  },
+  "roof run and jump down": {
+   "what": "James and the junior; planted on roof points from `F.top`",
+   "days": 0.4
+  },
+  "support walk": {
+   "what": "Kong walking the junior (two figures locked at the shoulder)",
+   "days": 0.2
+  },
+  "stairs down": {
+   "what": "walk with one tread of drop per step; wide shot only",
+   "days": 0.25
+  },
+  "slam loop": {
+   "what": "three drawings on twos, hands on steel or glass",
+   "days": 0.15
+  },
+  "crowd waist-up run": {
+   "what": "bob and arm swing for figures whose feet are hidden by cars",
+   "days": 0.1
+  },
+  "sleeve snag and clamp": {
+   "what": "Tos, left arm",
+   "days": 0.2
+  }
+ },
+ "id_map_draft_to_edited": {
+  "S25": "S25",
+  "S26": "S26",
+  "S27": "S27",
+  "S28": "S28",
+  "S29": "S29",
+  "S30": "S30",
+  "S31": "S31",
+  "S32": "S32",
+  "S33": "S33",
+  "S34": "S34",
+  "S35": "S35",
+  "S36": "S36",
+  "S37": "S37",
+  "S38": "S38",
+  "S39": "S39",
+  "S40": "S40",
+  "S41": "S41",
+  "S42": "S42",
+  "N1": "S43",
+  "S43": "S44",
+  "S44": "S45",
+  "S45": "S46",
+  "S46": "S47",
+  "S47": "S48",
+  "S48": "S49",
+  "S49": "S50",
+  "S50": "S51",
+  "S51": "S52",
+  "S52": "S53",
+  "S53": "S54",
+  "S54": "S55",
+  "S55": "S56",
+  "S56": "S57",
+  "S57": "S58",
+  "S58": "S59",
+  "S59": "S60",
+  "S60": "S61",
+  "S62": "S62",
+  "S63": "S63",
+  "S64": "S64",
+  "S65": "S65",
+  "S66": "S66",
+  "S68": "S67",
+  "S69": "S68",
+  "S70": "S69",
+  "S72": "S70",
+  "S73": "S71",
+  "S75": "S72",
+  "S76": "S73",
+  "S77": "S74",
+  "S78": "S75",
+  "S79": "S76",
+  "S80": "S77",
+  "S81": "S78",
+  "S82": "S79",
+  "S83": "S80",
+  "S84": "S81",
+  "S85": "S82",
+  "S86": "S83",
+  "S87": "S84",
+  "S88": "S85",
+  "S89": "S86",
+  "S90": "S87",
+  "S91": "S88",
+  "S92": "S89",
+  "S93": "S90",
+  "S94": "S91",
+  "S95": "S92",
+  "S96": "S93",
+  "S97": "S94",
+  "S98": "S95",
+  "S99": "S96",
+  "S100": "S97",
+  "S101": "S98",
+  "S102": "S99",
+  "S103": "S100",
+  "S104": "S101",
+  "S105": "S102",
+  "S106": "S103",
+  "S107": "S104",
+  "S108": "S105",
+  "S109": "S106",
+  "S110": "S107",
+  "S111": "S108",
+  "S112": "S109",
+  "S113": "S110",
+  "S114": "S111",
+  "S116": "S112",
+  "S117": "S113",
+  "S118": "S114",
+  "S119": "S115",
+  "S120": "S116",
+  "S122": "S117",
+  "S123": "S118",
+  "S124": "S119",
+  "S125": "S120",
+  "S126": "S121",
+  "S127": "S122",
+  "S128": "S123",
+  "S129": "S124",
+  "S130": "S125",
+  "S131": "S126",
+  "S132": "S127",
+  "S133": "S128",
+  "S135": "S129",
+  "S136": "S130",
+  "S137": "S131",
+  "S138": "S132",
+  "S139": "S133",
+  "S140": "S134",
+  "S141": "S135",
+  "S142": "S136",
+  "S143": "S137",
+  "S144": "S138",
+  "S145": "S139",
+  "S146": "S140",
+  "S147": "S141",
+  "S148": "S142",
+  "S149": "S143",
+  "S150": "S144",
+  "S151": "S145",
+  "S152": "S146",
+  "S153": "S147",
+  "S154": "S148",
+  "S155": "S149",
+  "S156": "S150",
+  "S157": "S151",
+  "S158": "S152",
+  "S159": "S153",
+  "S160": "S154",
+  "S161": "S155",
+  "S162": "S156",
+  "S163": "S157",
+  "S164": "S158",
+  "S165": "S159",
+  "S166": "S160",
+  "S167": "S161",
+  "S61": "S61(cut)",
+  "S67": "S67(cut)",
+  "S71": "S71(cut)",
+  "S74": "S74(cut)",
+  "S115": "S115(cut)",
+  "S121": "S121(cut)",
+  "S134": "S134(cut)"
+ },
+ "shots": [
+  {
+   "id": "S25",
+   "draft_id": "S25",
+   "scene": "02",
+   "t0": 53.32,
+   "t1": 54.256,
+   "f0": 1280,
+   "f1": 1302,
+   "frames": 22,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU",
+   "action": "Driver (infected) clamped on the junior's left shoulder at the neck, junior screaming with the round mouth; Kong's two black gloves and the orange cutter body drive in from screen right. Continues the hook's S23 attack loop, feet planted in the `lunge` stance.",
+   "camera": "handheld, hard shake 6 f then settling",
+   "lens": "50 mm",
+   "reads": "teeth in an orange collar, a face screaming",
+   "sound": "rain and beacons snap back from the title; scream; heartbeat pulse starts",
+   "narration": [
+    {
+     "id": "s17",
+     "captions": [
+      "เหลืออีก"
+     ]
+    }
+   ],
+   "cut_on": "(picture beat, no word)",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "kong_wet",
+    "crew variants",
+    "driver"
+   ]
+  },
+  {
+   "id": "S26",
+   "draft_id": "S26",
+   "scene": "02",
+   "t0": 54.256,
+   "t1": 55.69,
+   "f0": 1302,
+   "f1": 1337,
+   "frames": 35,
+   "cls": "C1",
+   "set": "2D",
+   "size": "INSERT",
+   "action": "Kong's wrist: black glove cuff, orange sleeve edge, a square rescue watch strapped over the cuff. Analogue face, nothing to read but one red second hand; a drop of the junior's blood sits on the 12 mark, where the hand stood at the bite. The hand is at the 2 (10 s gone, 50 to go round to the blood) and sweeps on; rain drops land and run on the glass; the wrist jolts with the shove.",
+   "camera": "2D: frame drifts 20 px with the arm, 2-frame shake",
+   "lens": "2D macro",
+   "reads": "a second hand leaving a blood spot",
+   "sound": "one dry watch tick per second over the pulse",
+   "narration": [
+    {
+     "id": "s17",
+     "captions": [
+      "50 วินาที"
+     ]
+    }
+   ],
+   "cut_on": "50 วินาที",
+   "edit": "edited: a count the eye can read in one second without digits: the hand has to come back round to the blood",
+   "assets": [
+    "2D",
+    "watch card"
+   ]
+  },
+  {
+   "id": "S27",
+   "draft_id": "S27",
+   "scene": "02",
+   "t0": 55.69,
+   "t1": 58.313,
+   "f0": 1337,
+   "f1": 1400,
+   "frames": 63,
+   "cls": "A",
+   "set": "X1",
+   "size": "M side",
+   "action": "Kong (right, feet wide, planted) rams the cutter body two-handed into the driver's chest; the driver is torn off the junior and flies screen left; the junior folds against the wreck door clutching his neck.",
+   "camera": "whip pan left with the driver, 10 f",
+   "lens": "28 mm",
+   "reads": "orange man shoving a grey-green man left",
+   "sound": "metal thud, tearing cloth",
+   "narration": [
+    {
+     "id": "s18",
+     "captions": [
+      "ก้องเอาเครื่องตัด",
+      "กระแทกมันกระเด็น"
+     ]
+    }
+   ],
+   "cut_on": "ก้องเอาเครื่องตัด",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "kong_wet",
+    "crew variants",
+    "driver"
+   ]
+  },
+  {
+   "id": "S28",
+   "draft_id": "S28",
+   "scene": "02",
+   "t0": 58.313,
+   "t1": 59.906,
+   "f0": 1400,
+   "f1": 1438,
+   "frames": 38,
+   "cls": "B",
+   "set": "X1",
+   "size": "W low",
+   "action": "Driver slams back-first into the flank of a white hatchback in the next lane; the car rocks on its springs; he slides down, already twisting to get up. Extras far behind run right.",
+   "camera": "locked, 4 f impact shake",
+   "lens": "24 mm",
+   "reads": "a body hitting a car, the car rocking",
+   "sound": "body on sheet metal; first chirp of the alarm on the last frames",
+   "narration": [
+    {
+     "id": "s18",
+     "captions": [
+      "ไปชนรถคันข้างๆ"
+     ]
+    }
+   ],
+   "cut_on": "ไปชนรถคันข้างๆ",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "driver",
+    "alarm lamps",
+    "survivor run"
+   ]
+  },
+  {
+   "id": "S29",
+   "draft_id": "S29",
+   "scene": "02",
+   "t0": 59.906,
+   "t1": 61.496,
+   "f0": 1438,
+   "f1": 1476,
+   "frames": 38,
+   "cls": "B",
+   "set": "X1",
+   "size": "M",
+   "action": "The hatchback: four hazard lamps and headlights flashing in alarm rhythm (0.4 s), amber pulsing on the wet road; the driver's head and shoulders rise as a dark shape in the foreground, turning toward the lights.",
+   "camera": "slow push 0.3 D",
+   "lens": "35 mm",
+   "reads": "amber lights flashing in the rain",
+   "sound": "two-tone car alarm, panned left",
+   "narration": [
+    {
+     "id": "s19",
+     "captions": [
+      "สัญญาณกันขโมย",
+      "ดังลั่น"
+     ]
+    }
+   ],
+   "cut_on": "สัญญาณกันขโมย",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "driver",
+    "alarm lamps"
+   ]
+  },
+  {
+   "id": "S30",
+   "draft_id": "S30",
+   "scene": "02",
+   "t0": 61.496,
+   "t1": 64.013,
+   "f0": 1476,
+   "f1": 1536,
+   "frames": 60,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU 3/4",
+   "action": "Driver's face: head snaps to the light, amber blink on grey-green skin, red pinpoint pupils; he forgets the two men and throws himself onto the bonnet (exits left, clawing).",
+   "camera": "locked, then 5 f whip left on his exit",
+   "lens": "66 mm",
+   "reads": "red pupils in an amber flash",
+   "sound": "snarl; hands slapping the bonnet",
+   "narration": [
+    {
+     "id": "s19",
+     "captions": [
+      "มันทิ้งเหยื่อ",
+      "หันไปหาเสียง"
+     ]
+    }
+   ],
+   "cut_on": "มันทิ้งเหยื่อ",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "driver",
+    "alarm lamps"
+   ]
+  },
+  {
+   "id": "S31",
+   "draft_id": "S31",
+   "scene": "02",
+   "t0": 64.013,
+   "t1": 66.948,
+   "f0": 1536,
+   "f1": 1607,
+   "frames": 71,
+   "cls": "A",
+   "set": "X1",
+   "size": "MW track",
+   "action": "Kong walks the junior to the truck: the junior's right arm over Kong's shoulders, Kong's left arm round his back, cutter carried by the D-handle in Kong's right hand. Both walk screen right on planted feet (junior's stride short and dragging); blood down the junior's collar.",
+   "camera": "tracking right with them, eye level",
+   "lens": "35 mm",
+   "reads": "two orange men, one carried, moving right",
+   "sound": "boots, one dragging; alarm now further off and filtered",
+   "narration": [
+    {
+     "id": "s20",
+     "captions": [
+      "ก้องพยุงน้อง",
+      "ไปหลบหลังรถกู้ภัย"
+     ]
+    }
+   ],
+   "cut_on": "ก้องพยุงน้อง",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "kong_wet",
+    "crew variants",
+    "support walk"
+   ]
+  },
+  {
+   "id": "S32",
+   "draft_id": "S32",
+   "scene": "02",
+   "t0": 66.948,
+   "t1": 69.227,
+   "f0": 1607,
+   "f1": 1661,
+   "frames": 54,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU",
+   "action": "Kong crouched (`crouch`), face to the junior who sits against the truck's rear wheel (seated). Kong shouts the line, `shouting` then `serious`; the junior's shoulder is a soft dark edge at frame left.",
+   "camera": "handheld, light",
+   "lens": "50 mm",
+   "reads": "Kong's face, close, talking to someone below the frame",
+   "sound": "dry voice; rain on truck metal",
+   "narration": [
+    {
+     "id": "s21",
+     "captions": [
+      "มองหน้าพี่ไว้!",
+      "ได้ยินไหม!"
+     ]
+    }
+   ],
+   "cut_on": "มองหน้าพี่ไว้!",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "kong_wet",
+    "crew variants"
+   ]
+  },
+  {
+   "id": "S33",
+   "draft_id": "S33",
+   "scene": "02",
+   "t0": 69.227,
+   "t1": 70.181,
+   "f0": 1661,
+   "f1": 1684,
+   "frames": 23,
+   "cls": "A",
+   "set": "X1",
+   "size": "MCU high",
+   "action": "Junior nods twice (head tilt on twos), `scared`, blink; skin still paper white; the bite is a torn ring on the left of the neck with blood running into the collar.",
+   "camera": "locked",
+   "lens": "66 mm",
+   "reads": "a frightened young face nodding, blood at the neck",
+   "sound": "breath",
+   "narration": [
+    {
+     "id": "s22",
+     "captions": [
+      "น้องพยักหน้า"
+     ]
+    }
+   ],
+   "cut_on": "น้องพยักหน้า",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "crew variants"
+   ]
+  },
+  {
+   "id": "S34",
+   "draft_id": "S34",
+   "scene": "02",
+   "t0": 70.181,
+   "t1": 71.417,
+   "f0": 1684,
+   "f1": 1714,
+   "frames": 30,
+   "cls": "A",
+   "set": "X1",
+   "size": "M two-shot",
+   "action": "Junior seated against the wheel, Kong crouched pressing a gauze pad from his hip pouch on the neck with both hands; the cutter stands on its battery beside Kong's knee, three green LEDs toward camera.",
+   "camera": "slow push 0.4 D",
+   "lens": "35 mm",
+   "reads": "two figures low against a big wheel, a hand on a neck",
+   "sound": "cloth press, breath",
+   "narration": [
+    {
+     "id": "s22",
+     "captions": [
+      "แต่เลือด",
+      "ไหลไม่หยุด"
+     ]
+    }
+   ],
+   "cut_on": "แต่เลือด",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "kong_wet",
+    "crew variants",
+    "gauze stain"
+   ]
+  },
+  {
+   "id": "S35",
+   "draft_id": "S35",
+   "scene": "02",
+   "t0": 71.417,
+   "t1": 73.5,
+   "f0": 1714,
+   "f1": 1764,
+   "frames": 50,
+   "cls": "B",
+   "set": "X1",
+   "size": "INSERT",
+   "action": "Black gloves on white gauze: red spreads through the pad from the centre outward (animated stain), runs between the fingers; rain thins it.",
+   "camera": "locked macro, breathing drift",
+   "lens": "85 mm",
+   "reads": "white turning red under black gloves",
+   "sound": "wet cloth",
+   "narration": [
+    {
+     "id": "s22",
+     "captions": [
+      "ไหลไม่หยุด"
+     ]
+    }
+   ],
+   "cut_on": "(picture beat, no word)",
+   "edit": "edited",
+   "assets": [
+    "X1",
+    "gauze stain"
+   ]
+  },
+  {
+   "id": "S36",
+   "draft_id": "S36",
+   "scene": "02",
+   "t0": 73.5,
+   "t1": 75.434,
+   "f0": 1764,
+   "f1": 1810,
+   "frames": 46,
+   "cls": "C1",
+   "set": "2D",
+   "size": "INSERT",
+   "action": "Watch, frontal. Analogue face, nothing to read but one red second hand; a drop of the junior's blood sits on the 12 mark, where the hand stood at the bite. The hand passes the 6, straight down: half way. A rain drop cuts through a new smear on the glass.",
+   "camera": "2D: locked, hand tremor 2 px",
+   "lens": "2D macro",
+   "reads": "the hand at the bottom, half way round",
+   "sound": "three dry ticks, the line after the first",
+   "narration": [
+    {
+     "id": "s23",
+     "captions": [
+      "30 วินาที"
+     ]
+    }
+   ],
+   "cut_on": "(picture beat, no word)",
+   "edit": "edited",
+   "assets": [
+    "2D",
+    "watch card"
+   ]
+  },
+  {
+   "id": "S37",
+   "draft_id": "S37",
+   "scene": "02",
+   "t0": 75.434,
+   "t1": 78.172,
+   "f0": 1810,
+   "f1": 1876,
+   "frames": 66,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU q",
+   "action": "Junior in 3/4: breathing stretch at 3 Hz, shoulders shaking, eyelids half down (`blink` 1), mouth open a little; his skin one step toward grey.",
+   "camera": "locked",
+   "lens": "66 mm",
+   "reads": "fast shallow breathing",
+   "sound": "short breaths, shivering cloth",
+   "narration": [
+    {
+     "id": "s24",
+     "captions": [
+      "ลมหายใจน้อง",
+      "สั้นลง",
+      "ถี่ขึ้น"
+     ]
+    }
+   ],
+   "cut_on": "ลมหายใจน้อง",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "crew variants"
+   ]
+  },
+  {
+   "id": "S38",
+   "draft_id": "S38",
+   "scene": "02",
+   "t0": 78.172,
+   "t1": 79.749,
+   "f0": 1876,
+   "f1": 1914,
+   "frames": 38,
+   "cls": "A",
+   "set": "X1",
+   "size": "ECU",
+   "action": "Junior's face front: lips form the line (`o` mouth, low level), jaw trembling, a rain drop from the fringe.",
+   "camera": "locked, 780 ppd",
+   "lens": "100 mm",
+   "reads": "pale lips speaking",
+   "sound": "whisper; pulse faster",
+   "narration": [
+    {
+     "id": "s25",
+     "captions": [
+      "พี่...",
+      "ผมหนาว..."
+     ]
+    }
+   ],
+   "cut_on": "พี่...",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "crew variants"
+   ]
+  },
+  {
+   "id": "S39",
+   "draft_id": "S39",
+   "scene": "02",
+   "t0": 79.749,
+   "t1": 82.934,
+   "f0": 1914,
+   "f1": 1990,
+   "frames": 76,
+   "cls": "A",
+   "set": "X1",
+   "size": "OTS",
+   "action": "Over the junior's dark crest of hair (left edge) onto Kong: he says the promise with `guilty` brows, eyes going to the wound and back. One beacon sweep crosses his face.",
+   "camera": "slow push 0.25 D",
+   "lens": "50 mm",
+   "reads": "Kong promising, eyes not steady",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s26",
+     "captions": [
+      "อดทนไว้",
+      "เดี๋ยวพี่พาไป",
+      "โรงพยาบาล"
+     ]
+    }
+   ],
+   "cut_on": "อดทนไว้",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "kong_wet",
+    "crew variants"
+   ]
+  },
+  {
+   "id": "S40",
+   "draft_id": "S40",
+   "scene": "02",
+   "t0": 82.934,
+   "t1": 85.901,
+   "f0": 1990,
+   "f1": 2062,
+   "frames": 72,
+   "cls": "B",
+   "set": "X1",
+   "size": "W",
+   "action": "From between two cars: the two small orange figures at the truck's rear wheel in a pool of beacon light, lanes of dead cars around them; far left the alarm car still flashing with the driver thrashing on its bonnet. Rain.",
+   "camera": "slow crane up 0.6 D",
+   "lens": "28 mm",
+   "reads": "two tiny figures alone in a huge jam",
+   "sound": "alarm far left, rain wide",
+   "narration": [
+    {
+     "id": "s27",
+     "captions": [
+      "สัญญาครั้งที่ 2",
+      "ของคืนนี้"
+     ]
+    }
+   ],
+   "cut_on": "สัญญาครั้งที่ 2",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "driver",
+    "alarm lamps"
+   ]
+  },
+  {
+   "id": "S41",
+   "draft_id": "S41",
+   "scene": "02",
+   "t0": 85.901,
+   "t1": 88.432,
+   "f0": 2062,
+   "f1": 2122,
+   "frames": 60,
+   "cls": "B",
+   "set": "X1",
+   "size": "INSERT",
+   "action": "The junior's gloved hand on his knee: the tremor (4 px, 8 Hz) decays to nothing over 1.6 s; the fingers open.",
+   "camera": "locked",
+   "lens": "85 mm",
+   "reads": "a shaking hand that stops",
+   "sound": "breathing stops; pulse stops",
+   "narration": [
+    {
+     "id": "s28",
+     "captions": [
+      "มือที่สั่น",
+      "ค่อยๆ",
+      "หยุดนิ่ง"
+     ]
+    }
+   ],
+   "cut_on": "มือที่สั่น",
+   "edit": "edited",
+   "assets": [
+    "X1",
+    "crew variants"
+   ]
+  },
+  {
+   "id": "S42",
+   "draft_id": "S42",
+   "scene": "02",
+   "t0": 88.432,
+   "t1": 90.94,
+   "f0": 2122,
+   "f1": 2183,
+   "frames": 61,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU",
+   "action": "Kong's two gloved fingers under the junior's jaw on the unhurt side, the junior's head tipped against the wheel, eyes shut (`blink` 2); Kong's face in the top of the frame searching his. On 'ไม่เต้นแล้ว' Kong's eyes widen.",
+   "camera": "locked, then 3 % creep",
+   "lens": "66 mm",
+   "reads": "fingers at a throat, closed eyes",
+   "sound": "rain only",
+   "narration": [
+    {
+     "id": "s29",
+     "captions": [
+      "ก้องจับชีพจร",
+      "ไม่เต้นแล้ว"
+     ]
+    }
+   ],
+   "cut_on": "ก้องจับชีพจร",
+   "edit": "edited",
+   "assets": [
+    "X1",
+    "kong_wet",
+    "crew variants"
+   ]
+  },
+  {
+   "id": "S43",
+   "draft_id": "N1",
+   "scene": "02",
+   "t0": 90.94,
+   "t1": 92.9,
+   "f0": 2183,
+   "f1": 2230,
+   "frames": 47,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU",
+   "action": "Kong's face alone: the hand comes away from the jaw (glove edge leaving frame left), `alarmed` falls to `guilty`, his eyes shut for four frames; rain runs off the fringe.",
+   "camera": "locked",
+   "lens": "66 mm",
+   "reads": "a man who thinks his friend has died",
+   "sound": "rain only",
+   "narration": [
+    {
+     "id": "s30",
+     "captions": [
+      "ก้องคิดว่า",
+      "เขาเสียน้องไปแล้ว"
+     ]
+    }
+   ],
+   "cut_on": "ก้องคิดว่า",
+   "edit": "new: carries the new sentence; replaces what would have been a 4.5 s hold on S42",
+   "assets": [
+    "X1",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S44",
+   "draft_id": "S43",
+   "scene": "02",
+   "t0": 92.9,
+   "t1": 94.895,
+   "f0": 2230,
+   "f1": 2277,
+   "frames": 47,
+   "cls": "C1",
+   "set": "2D",
+   "size": "INSERT",
+   "action": "Watch, extreme close on the hand tip climbing past the 10: 50, 51, 52; the blood spot at 12 is in the top of the frame, two marks ahead. The drop on the glass trembles at each tick.",
+   "camera": "2D: 4 % zoom in over the shot",
+   "lens": "2D macro",
+   "reads": "the hand climbing toward the blood spot",
+   "sound": "tick x3 alone, then the line",
+   "narration": [
+    {
+     "id": "s30",
+     "captions": [
+      "เขาเสียน้องไปแล้ว"
+     ]
+    },
+    {
+     "id": "s31",
+     "captions": [
+      "10 วินาที"
+     ]
+    }
+   ],
+   "cut_on": "(picture beat, no word)",
+   "edit": "edited",
+   "assets": [
+    "2D",
+    "watch card"
+   ]
+  },
+  {
+   "id": "S45",
+   "draft_id": "S44",
+   "scene": "02",
+   "t0": 94.895,
+   "t1": 96.465,
+   "f0": 2277,
+   "f1": 2315,
+   "frames": 38,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU",
+   "action": "Kong shakes the junior's shoulder and shouts (`shouting`); the junior's head rocks with the shake and falls back, no reaction.",
+   "camera": "handheld, follows the shake",
+   "lens": "50 mm",
+   "reads": "Kong shouting into a slack face",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s32",
+     "captions": [
+      "เฮ้ย!",
+      "ได้ยินพี่ไหม!"
+     ]
+    }
+   ],
+   "cut_on": "(picture beat, no word)",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "kong_wet",
+    "crew variants"
+   ]
+  },
+  {
+   "id": "S46",
+   "draft_id": "S45",
+   "scene": "02",
+   "t0": 96.465,
+   "t1": 99.3,
+   "f0": 2315,
+   "f1": 2383,
+   "frames": 68,
+   "cls": "A",
+   "set": "X1",
+   "size": "M profile low",
+   "action": "Profile two-shot under the truck's wheel arch: the junior slumped, chin down, hair dripping; Kong sits back on his heels, one hand going to the chest radio, looking away toward the lanes (left).",
+   "camera": "locked",
+   "lens": "35 mm",
+   "reads": "a still body, a man giving up on it",
+   "sound": "silence, rain",
+   "narration": [
+    {
+     "id": "s32",
+     "captions": [
+      "ได้ยินพี่ไหม!"
+     ]
+    }
+   ],
+   "cut_on": "(picture beat, no word)",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "kong_wet",
+    "crew variants"
+   ]
+  },
+  {
+   "id": "S47",
+   "draft_id": "S46",
+   "scene": "02",
+   "t0": 99.3,
+   "t1": 100.9,
+   "f0": 2383,
+   "f1": 2422,
+   "frames": 39,
+   "cls": "C1",
+   "set": "2D",
+   "size": "INSERT",
+   "action": "Watch, tighter still: the hand tip ticks 55, 56, 57 and touches the edge of the blood spot.",
+   "camera": "2D: locked",
+   "lens": "2D macro",
+   "reads": "the hand reaching the blood",
+   "sound": "tick, tick, tick",
+   "narration": [],
+   "cut_on": "(picture beat, no word)",
+   "edit": "edited",
+   "assets": [
+    "2D",
+    "watch card"
+   ]
+  },
+  {
+   "id": "S48",
+   "draft_id": "S47",
+   "scene": "02",
+   "t0": 100.9,
+   "t1": 102.522,
+   "f0": 2422,
+   "f1": 2461,
+   "frames": 39,
+   "cls": "A",
+   "set": "X1",
+   "size": "ECU",
+   "action": "ECU of the junior's eyes on the rendered puppet (not a separate 2D drawing), closed, wet lashes, rain and one beacon sweep on grey skin. On 'ลืมตา' (57.6 s after the bite) the lids snap open on one frame: white eyes, tiny red pupils that contract.",
+   "camera": "locked, 780 ppd; 3 % push; 1-frame pop on the open",
+   "lens": "100 mm",
+   "reads": "closed eyes, too close",
+   "sound": "sub-bass swell; all rain drops out for 6 f on the open",
+   "narration": [
+    {
+     "id": "s33",
+     "captions": [
+      "แล้วน้อง",
+      "ก็ลืมตา"
+     ]
+    }
+   ],
+   "cut_on": "แล้วน้อง",
+   "edit": "edited: the pay-off of the whole hook must sit in the same light and rain as the shots round it; 39 frames at 100 % cost 0.7 CPU h",
+   "assets": [
+    "X1",
+    "crew variants"
+   ]
+  },
+  {
+   "id": "S49",
+   "draft_id": "S48",
+   "scene": "02",
+   "t0": 102.522,
+   "t1": 105.069,
+   "f0": 2461,
+   "f1": 2522,
+   "frames": 61,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU",
+   "action": "Junior, infected: head lifts in a jerk on twos, red pupils find Kong, the mouth opens to fangs; Kong's shoulder at frame right goes rigid.",
+   "camera": "locked; 1 red frame on the cut",
+   "lens": "66 mm",
+   "reads": "the friend's face, wrong colour, red eyes",
+   "sound": "infected inhale",
+   "narration": [
+    {
+     "id": "s34",
+     "captions": [
+      "แต่ตาคู่นั้น",
+      "ไม่ใช่ตาคนแล้ว"
+     ]
+    }
+   ],
+   "cut_on": "แต่ตาคู่นั้น",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "kong_wet",
+    "crew variants"
+   ]
+  },
+  {
+   "id": "S50",
+   "draft_id": "S49",
+   "scene": "02",
+   "t0": 105.069,
+   "t1": 106.182,
+   "f0": 2522,
+   "f1": 2548,
+   "frames": 26,
+   "cls": "A",
+   "set": "X1",
+   "size": "M",
+   "action": "The junior launches from seated straight at Kong (`lunge`, lean 30); Kong goes back on one planted foot, snatching the cutter up.",
+   "camera": "hard cut; shake 8 f",
+   "lens": "28 mm low",
+   "reads": "orange lunging at orange",
+   "sound": "snarl",
+   "narration": [
+    {
+     "id": "s35",
+     "captions": [
+      "มันพุ่งใส่ก้อง"
+     ]
+    }
+   ],
+   "cut_on": "มันพุ่งใส่ก้อง",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "kong_wet",
+    "crew variants"
+   ]
+  },
+  {
+   "id": "S51",
+   "draft_id": "S50",
+   "scene": "02",
+   "t0": 106.182,
+   "t1": 107.851,
+   "f0": 2548,
+   "f1": 2588,
+   "frames": 40,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU",
+   "action": "The cutter held across as a bar in both gloves; the junior's teeth close on the steel arm, claw hands on Kong's forearms; Kong's strained face behind the tool.",
+   "camera": "handheld, pushes back with Kong",
+   "lens": "50 mm",
+   "reads": "teeth on steel, inches from Kong's face",
+   "sound": "teeth on metal",
+   "narration": [
+    {
+     "id": "s35",
+     "captions": [
+      "ก้องเอาเครื่องตัดขวาง"
+     ]
+    }
+   ],
+   "cut_on": "ก้องเอาเครื่องตัดขวาง",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "kong_wet",
+    "crew variants"
+   ]
+  },
+  {
+   "id": "S52",
+   "draft_id": "S51",
+   "scene": "02",
+   "t0": 107.851,
+   "t1": 109.415,
+   "f0": 2588,
+   "f1": 2626,
+   "frames": 38,
+   "cls": "A",
+   "set": "X1",
+   "size": "MW side",
+   "action": "Kong (right) straightens both arms; the junior is thrown back against the truck's side panel (left), bounces, drops to a crouch; Kong staggers two planted steps right, toward the truck's rear corner.",
+   "camera": "locked wide, impact shake 4 f",
+   "lens": "28 mm",
+   "reads": "a shove; the two fly apart",
+   "sound": "body on sheet metal",
+   "narration": [
+    {
+     "id": "s35",
+     "captions": [
+      "ผลักมันสุดแรง"
+     ]
+    }
+   ],
+   "cut_on": "ผลักมันสุดแรง",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "kong_wet",
+    "crew variants"
+   ]
+  },
+  {
+   "id": "S53",
+   "draft_id": "S52",
+   "scene": "02",
+   "t0": 109.415,
+   "t1": 110.607,
+   "f0": 2626,
+   "f1": 2655,
+   "frames": 29,
+   "cls": "A",
+   "set": "X1",
+   "size": "M",
+   "action": "From the far side of the truck: Kong backs round the rear corner toward camera and flattens his back against the tail door, cutter to his chest.",
+   "camera": "locked",
+   "lens": "35 mm",
+   "reads": "Kong coming round a corner to hide",
+   "sound": "Kong's breath",
+   "narration": [
+    {
+     "id": "s36",
+     "captions": [
+      "ก้องถอยหลบมุมรถ"
+     ]
+    }
+   ],
+   "cut_on": "ก้องถอยหลบมุมรถ",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S54",
+   "draft_id": "S53",
+   "scene": "02",
+   "t0": 110.607,
+   "t1": 112.459,
+   "f0": 2655,
+   "f1": 2699,
+   "frames": 44,
+   "cls": "A",
+   "set": "X1",
+   "size": "M split",
+   "action": "The truck's rear corner is a vertical edge in the middle of the frame. Left half: the junior, crouched, head turning left, right, left on twos, pupils scanning. Right half: Kong flat against the steel, glove over his own mouth. One beacon sweep lights both.",
+   "camera": "locked, symmetrical",
+   "lens": "35 mm",
+   "reads": "hunter and hidden, one sheet of steel apart",
+   "sound": "the snarl drops to short searching breaths",
+   "narration": [
+    {
+     "id": "s36",
+     "captions": [
+      "มันมองไม่เห็นเขา"
+     ]
+    }
+   ],
+   "cut_on": "มันมองไม่เห็นเขา",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "kong_wet",
+    "crew variants"
+   ]
+  },
+  {
+   "id": "S55",
+   "draft_id": "S54",
+   "scene": "02",
+   "t0": 112.459,
+   "t1": 114.605,
+   "f0": 2699,
+   "f1": 2751,
+   "frames": 52,
+   "cls": "B",
+   "set": "X1",
+   "size": "W low",
+   "action": "Low from the road: a rider in a green jacket and white helmet runs left to right over the roofs of the jam, two lanes behind the truck; in the foreground the junior's head snaps up toward the noise of his boots.",
+   "camera": "pan right with the rider",
+   "lens": "24 mm",
+   "reads": "a man running on car roofs",
+   "sound": "hollow roof bangs",
+   "narration": [
+    {
+     "id": "s37",
+     "captions": [
+      "บนหลังคารถ",
+      "ไรเดอร์เสื้อเขียว"
+     ]
+    }
+   ],
+   "cut_on": "บนหลังคารถ",
+   "edit": "edited",
+   "assets": [
+    "X1",
+    "crew variants",
+    "james_wet",
+    "roof run and jump down"
+   ]
+  },
+  {
+   "id": "S56",
+   "draft_id": "S55",
+   "scene": "02",
+   "t0": 114.605,
+   "t1": 115.798,
+   "f0": 2751,
+   "f1": 2779,
+   "frames": 28,
+   "cls": "A",
+   "set": "X1",
+   "size": "M track",
+   "action": "James on the roofs, run cycle with every footfall planted on a roof panel, one long step across a gap between cars; terrified face over his shoulder. No delivery box: it lies on the deck where the hook left it.",
+   "camera": "tracking right, car-roof height",
+   "lens": "50 mm",
+   "reads": "green jacket, running for his life",
+   "sound": "windscreen cracking under a boot",
+   "narration": [
+    {
+     "id": "s37",
+     "captions": [
+      "วิ่งหนีสุดชีวิต"
+     ]
+    }
+   ],
+   "cut_on": "วิ่งหนีสุดชีวิต",
+   "edit": "edited",
+   "assets": [
+    "X1",
+    "james_wet",
+    "roof run and jump down"
+   ]
+  },
+  {
+   "id": "S57",
+   "draft_id": "S56",
+   "scene": "02",
+   "t0": 115.798,
+   "t1": 117.49,
+   "f0": 2779,
+   "f1": 2820,
+   "frames": 41,
+   "cls": "B",
+   "set": "X1",
+   "size": "W",
+   "action": "The junior springs onto a bonnet, then a roof (crouch, lunge, crouch on twos) and goes after the rider, left to right. The rider drops out of sight behind the bus; the junior stops on a roof, head hunting (rule 7). The space behind the truck is empty.",
+   "camera": "locked",
+   "lens": "28 mm",
+   "reads": "the infected one jumps onto the cars",
+   "sound": "claws on metal, a far scream",
+   "narration": [
+    {
+     "id": "s37",
+     "captions": [
+      "มันกระโจนตามไป"
+     ]
+    }
+   ],
+   "cut_on": "มันกระโจนตามไป",
+   "edit": "edited",
+   "assets": [
+    "X1",
+    "crew variants",
+    "james_wet",
+    "roof run and jump down"
+   ]
+  },
+  {
+   "id": "S58",
+   "draft_id": "S57",
+   "scene": "02",
+   "t0": 117.49,
+   "t1": 118.54,
+   "f0": 2820,
+   "f1": 2845,
+   "frames": 25,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU",
+   "action": "Kong steps out from the corner; head turns left to right across the frame (`alarmed`), red then blue on his wet face. No words.",
+   "camera": "arc 15 degrees with the head turn",
+   "lens": "50 mm",
+   "reads": "Kong looking around, afraid",
+   "sound": "",
+   "narration": [],
+   "cut_on": "(picture beat, no word)",
+   "edit": "edited",
+   "assets": [
+    "X1",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S59",
+   "draft_id": "S58",
+   "scene": "02",
+   "t0": 118.54,
+   "t1": 120.528,
+   "f0": 2845,
+   "f1": 2893,
+   "frames": 48,
+   "cls": "B",
+   "set": "X1",
+   "size": "EW",
+   "action": "Big wide down the expressway: about twenty figures (the ten extras roles and back-lit repeats) running between the cars, left to right, seen from the waist up over the bonnets so no foot contact is drawn; doors open, an umbrella rolling; two faster figures vault bonnets side-on. Beacons, hazards, sodium, the skyline.",
+   "camera": "locked, high",
+   "lens": "24 mm",
+   "reads": "a whole road of people running",
+   "sound": "crowd screams left and right, horns",
+   "narration": [
+    {
+     "id": "s38",
+     "captions": [
+      "ทั้งทางด่วน",
+      "มีแต่คนวิ่งหนี"
+     ]
+    }
+   ],
+   "cut_on": "ทั้งทางด่วน",
+   "edit": "edited: capped crowd: the audit could not measure 40 figures (memory and CPU), and a run toward the lens needs a cycle that does not exist",
+   "assets": [
+    "X1",
+    "extras",
+    "crowd waist-up run"
+   ]
+  },
+  {
+   "id": "S60",
+   "draft_id": "S59",
+   "scene": "02",
+   "t0": 120.528,
+   "t1": 122.3,
+   "f0": 2893,
+   "f1": 2935,
+   "frames": 42,
+   "cls": "B",
+   "set": "X1",
+   "size": "MW",
+   "action": "Between two taxis: an infected woman in office clothes slams a running man against a car door and bites at his shoulder (both upright); behind them another goes over a bonnet on hands and feet. All heads under a tenth of the frame.",
+   "camera": "handheld, light",
+   "lens": "35 mm",
+   "reads": "a tackle; one of them going over a car",
+   "sound": "glass breaking right",
+   "narration": [
+    {
+     "id": "s38",
+     "captions": [
+      "กับพวกที่ไล่กัด"
+     ]
+    }
+   ],
+   "cut_on": "กับพวกที่ไล่กัด",
+   "edit": "edited",
+   "assets": [
+    "X1",
+    "infected(extras)",
+    "infected sprint"
+   ]
+  },
+  {
+   "id": "S61",
+   "draft_id": "S60",
+   "scene": "02",
+   "t0": 122.3,
+   "t1": 125.594,
+   "f0": 2935,
+   "f1": 3014,
+   "frames": 79,
+   "cls": "A",
+   "set": "X1",
+   "size": "M push",
+   "action": "Kong front, cutter hanging in his right hand, soaked, chest heaving; `alarmed` settles into `serious`.",
+   "camera": "slow push from 3.2 to 2.4 D",
+   "lens": "50 mm",
+   "reads": "Kong, still, understanding",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s39",
+     "captions": [
+      "นี่ไม่ใช่อุบัติเหตุ",
+      "อีกต่อไปแล้ว"
+     ]
+    }
+   ],
+   "cut_on": "นี่ไม่ใช่อุบัติเหตุ",
+   "edit": "kept",
+   "assets": [
+    "X1",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S62",
+   "draft_id": "S62",
+   "scene": "03",
+   "t0": 125.594,
+   "t1": 127.423,
+   "f0": 3014,
+   "f1": 3058,
+   "frames": 44,
+   "cls": "B",
+   "set": "X1s",
+   "size": "W",
+   "action": "Back at road level, 40 D behind the truck (toward the threat, screen left): a dark sedan on its left side across a lane, hazards ticking, steam; a small figure in a white coat working at its windscreen opening. Kong at the truck in the right foreground, turning to it.",
+   "camera": "locked",
+   "lens": "28 mm",
+   "reads": "a car on its side, someone at it",
+   "sound": "hazard relay ticking, dripping",
+   "narration": [
+    {
+     "id": "s40",
+     "captions": [
+      "ไม่ไกลกัน",
+      "รถเก๋งคันหนึ่ง"
+     ]
+    }
+   ],
+   "cut_on": "ไม่ไกลกัน",
+   "edit": "kept",
+   "assets": [
+    "X1s",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S63",
+   "draft_id": "S63",
+   "scene": "03",
+   "t0": 127.423,
+   "t1": 128.618,
+   "f0": 3058,
+   "f1": 3087,
+   "frames": 29,
+   "cls": "B",
+   "set": "X1s",
+   "size": "MW low",
+   "action": "The sedan on its left side, roof toward us (the underside is never seen and is not built): hazards ticking on the upper flank, steam, glass crumbs, a briefcase in a puddle. Praew braced at the empty windscreen frame hauling on a navy sleeve.",
+   "camera": "slow push 0.4 D",
+   "lens": "35 mm",
+   "reads": "an overturned car, a doctor pulling at it",
+   "sound": "strained effort, metal ticking",
+   "narration": [
+    {
+     "id": "s40",
+     "captions": [
+      "พลิกตะแคง"
+     ]
+    }
+   ],
+   "cut_on": "พลิกตะแคง",
+   "edit": "edited",
+   "assets": [
+    "X1s",
+    "praew_wet"
+   ]
+  },
+  {
+   "id": "S64",
+   "draft_id": "S64",
+   "scene": "03",
+   "t0": 128.618,
+   "t1": 130.287,
+   "f0": 3087,
+   "f1": 3127,
+   "frames": 40,
+   "cls": "A",
+   "set": "X1s",
+   "size": "MCU",
+   "action": "Praew: hair bun coming loose, white coat soaked over blue scrubs, stethoscope, blue gloves; `determined`, teeth set, pulling with her whole weight (lean -18, feet planted wide).",
+   "camera": "handheld",
+   "lens": "50 mm",
+   "reads": "white coat, blue gloves: a doctor",
+   "sound": "her breath",
+   "narration": [
+    {
+     "id": "s41",
+     "captions": [
+      "หมอแพรว",
+      "หมอห้องฉุกเฉิน"
+     ]
+    }
+   ],
+   "cut_on": "หมอแพรว",
+   "edit": "kept",
+   "assets": [
+    "X1s",
+    "praew_wet"
+   ]
+  },
+  {
+   "id": "S65",
+   "draft_id": "S65",
+   "scene": "03",
+   "t0": 130.287,
+   "t1": 132.675,
+   "f0": 3127,
+   "f1": 3184,
+   "frames": 57,
+   "cls": "A",
+   "set": "X1s",
+   "size": "M two-shot",
+   "action": "Through the windscreen frame: Tos lying on his side in the tipped cabin (card rolled 80 degrees), glasses crooked, navy suit; Praew has his right arm and shoulder out; he does not come further.",
+   "camera": "locked",
+   "lens": "35 mm",
+   "reads": "a man in a suit stuck in a wreck",
+   "sound": "Tos grunting",
+   "narration": [
+    {
+     "id": "s41",
+     "captions": [
+      "กำลังดึงคุณทศ",
+      "ออกจากซากรถ"
+     ]
+    }
+   ],
+   "cut_on": "กำลังดึงคุณทศ",
+   "edit": "kept",
+   "assets": [
+    "X1s",
+    "praew_wet",
+    "tos"
+   ]
+  },
+  {
+   "id": "S66",
+   "draft_id": "S66",
+   "scene": "03",
+   "t0": 132.675,
+   "t1": 135.401,
+   "f0": 3184,
+   "f1": 3250,
+   "frames": 66,
+   "cls": "A",
+   "set": "X1s",
+   "size": "CU",
+   "action": "Tos's face, sideways in frame: `angry`-afraid, glasses askew; the buckled door's edge lies across the bottom of the frame pressing him into the seat, and he shoves at it with his free hand; it does not give.",
+   "camera": "locked",
+   "lens": "66 mm",
+   "reads": "glasses, a face on its side",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s42",
+     "captions": [
+      "แต่ประตูที่ยุบ",
+      "อัดเขาติดเบาะ"
+     ]
+    }
+   ],
+   "cut_on": "แต่ประตูที่ยุบ",
+   "edit": "edited",
+   "assets": [
+    "X1s",
+    "tos"
+   ]
+  },
+  {
+   "id": "S67",
+   "draft_id": "S68",
+   "scene": "03",
+   "t0": 135.401,
+   "t1": 138.207,
+   "f0": 3250,
+   "f1": 3317,
+   "frames": 67,
+   "cls": "B",
+   "set": "X1s",
+   "size": "W long",
+   "action": "Long lens back down the lanes (screen left): infected running toward us between the cars, back-lit by headlights and hazards, seen from the waist up over the bonnets (twelve distinct figures, the rest silhouettes); two vault bonnets side-on in the middle distance; phases offset so no two are in step.",
+   "camera": "locked; the lens compresses them",
+   "lens": "135 mm",
+   "reads": "silhouettes running at us",
+   "sound": "many feet on a wet road, growing",
+   "narration": [
+    {
+     "id": "s43",
+     "captions": [
+      "ไกลออกไป",
+      "ฝูงของมัน",
+      "กำลังวิ่งมา"
+     ]
+    }
+   ],
+   "cut_on": "ไกลออกไป",
+   "edit": "edited",
+   "assets": [
+    "X1s",
+    "infected(extras)",
+    "extras",
+    "crowd waist-up run"
+   ]
+  },
+  {
+   "id": "S68",
+   "draft_id": "S69",
+   "scene": "03",
+   "t0": 138.207,
+   "t1": 140.695,
+   "f0": 3317,
+   "f1": 3377,
+   "frames": 60,
+   "cls": "A",
+   "set": "X1s",
+   "size": "CU",
+   "action": "Kong at the truck door, hand on the handle: eyes go left (the horde), right (the open shoulder ahead), then to the sedan. He does not move.",
+   "camera": "locked",
+   "lens": "66 mm",
+   "reads": "Kong frozen at an open door",
+   "sound": "everything dips",
+   "narration": [
+    {
+     "id": "s44",
+     "captions": [
+      "ก้องชะงัก",
+      "หนีตอนนี้",
+      "ยังทัน"
+     ]
+    }
+   ],
+   "cut_on": "ก้องชะงัก",
+   "edit": "kept",
+   "assets": [
+    "X1s",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S69",
+   "draft_id": "S70",
+   "scene": "03",
+   "t0": 140.695,
+   "t1": 143.083,
+   "f0": 3377,
+   "f1": 3434,
+   "frames": 57,
+   "cls": "A",
+   "set": "X1s",
+   "size": "MW track",
+   "action": "Kong runs right to left, toward the sedan and the horde, against a stream of extras fleeing left to right past him (run cycle, planted; the cutter in both hands).",
+   "camera": "tracking left with him",
+   "lens": "35 mm",
+   "reads": "one man running the wrong way",
+   "sound": "boots splashing",
+   "narration": [
+    {
+     "id": "s45",
+     "captions": [
+      "แต่เขา",
+      "วิ่งกลับเข้าไปช่วย"
+     ]
+    }
+   ],
+   "cut_on": "แต่เขา",
+   "edit": "kept",
+   "assets": [
+    "X1s",
+    "kong_wet",
+    "infected(extras)",
+    "extras",
+    "survivor run"
+   ]
+  },
+  {
+   "id": "S70",
+   "draft_id": "S72",
+   "scene": "03",
+   "t0": 143.083,
+   "t1": 145.15,
+   "f0": 3434,
+   "f1": 3484,
+   "frames": 50,
+   "cls": "C2",
+   "set": "X1s",
+   "size": "INSERT",
+   "action": "The hook's S08 jaw staging on new metal: the tips go into the gap between the buckled door frame and the seat and open; the frame bends away in three pushes (pump recoil each time).",
+   "camera": "locked macro",
+   "lens": "macro preset",
+   "reads": "steel jaws forcing steel apart",
+   "sound": "cordless pump whine, metal groaning",
+   "narration": [
+    {
+     "id": "s46",
+     "captions": [
+      "ก้องเอาเครื่องตัดง้างประตู"
+     ]
+    }
+   ],
+   "cut_on": "ก้องเอาเครื่องตัดง้างประตู",
+   "edit": "edited",
+   "assets": [
+    "X1s",
+    "hook macro S08/S09"
+   ]
+  },
+  {
+   "id": "S71",
+   "draft_id": "S73",
+   "scene": "03",
+   "t0": 145.15,
+   "t1": 146.842,
+   "f0": 3484,
+   "f1": 3524,
+   "frames": 40,
+   "cls": "A",
+   "set": "X1s",
+   "size": "M",
+   "action": "Tos slides out through the windscreen frame into Praew's and Kong's hands and stands (card roll back to upright over 8 f on the turn out), suit wet and dusty, both sleeves whole, glasses pushed straight.",
+   "camera": "locked",
+   "lens": "35 mm",
+   "reads": "the man in the suit is out, standing",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s46",
+     "captions": [
+      "คุณทศหลุดออกมา"
+     ]
+    }
+   ],
+   "cut_on": "คุณทศหลุดออกมา",
+   "edit": "edited",
+   "assets": [
+    "X1s",
+    "kong_wet",
+    "praew_wet",
+    "tos"
+   ]
+  },
+  {
+   "id": "S72",
+   "draft_id": "S75",
+   "scene": "03",
+   "t0": 146.842,
+   "t1": 148.378,
+   "f0": 3524,
+   "f1": 3561,
+   "frames": 37,
+   "cls": "A",
+   "set": "X1s",
+   "size": "M low",
+   "action": "Up at a car roof: James, visor up, waves one arm and shouts the line (`shouting`), then runs on.",
+   "camera": "locked, low",
+   "lens": "28 mm",
+   "reads": "the green rider on a roof, shouting",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s47",
+     "captions": [
+      "พี่!",
+      "รอผมด้วย!"
+     ]
+    }
+   ],
+   "cut_on": "พี่!",
+   "edit": "kept",
+   "assets": [
+    "X1s",
+    "james_wet",
+    "roof run and jump down"
+   ]
+  },
+  {
+   "id": "S73",
+   "draft_id": "S76",
+   "scene": "03",
+   "t0": 148.378,
+   "t1": 149.991,
+   "f0": 3561,
+   "f1": 3600,
+   "frames": 39,
+   "cls": "A",
+   "set": "X1s",
+   "size": "CU profile",
+   "action": "James mid-run in profile, looking back over his shoulder with `scared`; white helmet, green jacket, no box.",
+   "camera": "tracking right",
+   "lens": "66 mm",
+   "reads": "a young face, helmet, panic",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s48",
+     "captions": [
+      "เจมส์",
+      "ไรเดอร์ส่งอาหาร"
+     ]
+    }
+   ],
+   "cut_on": "เจมส์",
+   "edit": "edited",
+   "assets": [
+    "X1s",
+    "james_wet",
+    "survivor run"
+   ]
+  },
+  {
+   "id": "S74",
+   "draft_id": "S77",
+   "scene": "03",
+   "t0": 149.991,
+   "t1": 151.501,
+   "f0": 3600,
+   "f1": 3636,
+   "frames": 36,
+   "cls": "A",
+   "set": "X1s",
+   "size": "MW low",
+   "action": "James jumps from a bonnet to the road (anticipation crouch, air 5 f, landing crouch with a puddle burst, feet planted) and runs toward the group, left to right.",
+   "camera": "locked, low",
+   "lens": "24 mm",
+   "reads": "a jump down and a splash",
+   "sound": "landing splash",
+   "narration": [
+    {
+     "id": "s48",
+     "captions": [
+      "กระโดดลงจากหลังคารถ"
+     ]
+    }
+   ],
+   "cut_on": "กระโดดลงจากหลังคารถ",
+   "edit": "kept",
+   "assets": [
+    "X1s",
+    "james_wet",
+    "survivor run",
+    "roof run and jump down"
+   ]
+  },
+  {
+   "id": "S75",
+   "draft_id": "S78",
+   "scene": "03",
+   "t0": 151.501,
+   "t1": 154.336,
+   "f0": 3636,
+   "f1": 3704,
+   "frames": 68,
+   "cls": "A",
+   "set": "X1s",
+   "size": "M",
+   "action": "On the bus roof behind him: the junior, infected, drops into a crouch, drawn back by the shout (orange long sleeves, the crest of hair, the torn neck, grey-green skin, red pupils). Kong's head and shoulder are a dark shape at the right edge, turned to him.",
+   "camera": "locked; 3 % push on 'น้องของก้อง'",
+   "lens": "50 mm",
+   "reads": "an orange uniform with a grey face",
+   "sound": "snarl, close",
+   "narration": [
+    {
+     "id": "s48",
+     "captions": [
+      "แต่ที่ตามหลังมา",
+      "คือน้องของก้อง"
+     ]
+    }
+   ],
+   "cut_on": "แต่ที่ตามหลังมา",
+   "edit": "edited",
+   "assets": [
+    "X1s",
+    "kong_wet",
+    "crew variants",
+    "roof run and jump down"
+   ]
+  },
+  {
+   "id": "S76",
+   "draft_id": "S79",
+   "scene": "03",
+   "t0": 154.336,
+   "t1": 155.688,
+   "f0": 3704,
+   "f1": 3737,
+   "frames": 33,
+   "cls": "B",
+   "set": "X1s",
+   "size": "W side",
+   "action": "All four run left to right to the truck: James first, Praew with Tos's arm, Kong last and looking back; far behind, heads and shoulders of the horde above the car roofs, closing.",
+   "camera": "tracking right, wide",
+   "lens": "28 mm",
+   "reads": "four people running right, a crowd behind",
+   "sound": "feet, breath",
+   "narration": [
+    {
+     "id": "s49",
+     "captions": [
+      "ทุกคนขึ้นรถกู้ภัย"
+     ]
+    }
+   ],
+   "cut_on": "ทุกคนขึ้นรถกู้ภัย",
+   "edit": "edited",
+   "assets": [
+    "X1s",
+    "kong_wet",
+    "praew_wet",
+    "tos",
+    "james_wet",
+    "infected(extras)",
+    "survivor run",
+    "crowd waist-up run"
+   ]
+  },
+  {
+   "id": "S77",
+   "draft_id": "S80",
+   "scene": "03",
+   "t0": 155.688,
+   "t1": 158.384,
+   "f0": 3737,
+   "f1": 3801,
+   "frames": 64,
+   "cls": "A",
+   "set": "X2c",
+   "size": "M",
+   "action": "The truck's crew door from outside: Praew and Tos go up and in, James dives after them, Kong pulls the door; the junior hits it as it shuts and his palms spread on the glass.",
+   "camera": "locked",
+   "lens": "35 mm",
+   "reads": "a door closing on a lunging figure",
+   "sound": "door slam; body on the door",
+   "narration": [
+    {
+     "id": "s49",
+     "captions": [
+      "ประตูปิดทัน",
+      "แค่เสี้ยววินาที"
+     ]
+    }
+   ],
+   "cut_on": "ประตูปิดทัน",
+   "edit": "kept",
+   "assets": [
+    "X2c",
+    "kong_wet",
+    "crew variants",
+    "praew_wet",
+    "tos",
+    "james_wet",
+    "slam loop"
+   ]
+  },
+  {
+   "id": "S78",
+   "draft_id": "S81",
+   "scene": "03",
+   "t0": 158.384,
+   "t1": 159.577,
+   "f0": 3801,
+   "f1": 3830,
+   "frames": 29,
+   "cls": "A",
+   "set": "CAB",
+   "size": "CU",
+   "action": "From inside: the side window. The junior's face presses to the wet glass, red pupils, teeth, breath fogging; his fingers drag clear lines through the rain. Kong's profile is a dark edge at the right.",
+   "camera": "locked",
+   "lens": "50 mm",
+   "reads": "the friend's face against the glass",
+   "sound": "muffled snarl, nails on glass",
+   "narration": [
+    {
+     "id": "s50",
+     "captions": [
+      "หน้าที่แนบกระจก"
+     ]
+    }
+   ],
+   "cut_on": "หน้าที่แนบกระจก",
+   "edit": "kept",
+   "assets": [
+    "CAB",
+    "kong_wet",
+    "crew variants",
+    "slam loop"
+   ]
+  },
+  {
+   "id": "S79",
+   "draft_id": "S82",
+   "scene": "03",
+   "t0": 159.577,
+   "t1": 162.909,
+   "f0": 3830,
+   "f1": 3910,
+   "frames": 80,
+   "cls": "A",
+   "set": "CAB",
+   "size": "MCU",
+   "action": "Reverse: Kong's face through the streaked glass, `guilty`; the shadow of a clawing hand slides across it; he looks away, down, and reaches for the ignition.",
+   "camera": "locked, 2 % creep",
+   "lens": "66 mm",
+   "reads": "Kong unable to look",
+   "sound": "cabin quiet",
+   "narration": [
+    {
+     "id": "s50",
+     "captions": [
+      "คือคนที่เขาสัญญา",
+      "ว่าจะพาไปโรงพยาบาล"
+     ]
+    }
+   ],
+   "cut_on": "คือคนที่เขาสัญญา",
+   "edit": "kept",
+   "assets": [
+    "CAB",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S80",
+   "draft_id": "S83",
+   "scene": "03",
+   "t0": 162.909,
+   "t1": 165.456,
+   "f0": 3910,
+   "f1": 3971,
+   "frames": 61,
+   "cls": "B",
+   "set": "CAB",
+   "size": "POV side",
+   "action": "From the rear bench through the side window as the cab moves off: the junior's palms slide off the wet glass, he runs three steps beside the truck and falls behind; wrecks and the barrier slide past (the camera and cab shell travel along the shoulder; the truck's exterior and wheels are not seen).",
+   "camera": "locked to the cab; road shake",
+   "lens": "28 mm",
+   "reads": "the friend falling behind outside the window",
+   "sound": "diesel, tyres on water, a mirror scrape",
+   "narration": [
+    {
+     "id": "s51",
+     "captions": [
+      "ก้องออกรถ",
+      "แทรกไปตามช่องว่าง"
+     ]
+    }
+   ],
+   "cut_on": "ก้องออกรถ",
+   "edit": "edited: no exterior of a moving truck: nothing in the set moves today, and turning wheels plus lights that follow the body were a day of work for one 2.6 s shot",
+   "assets": [
+    "CAB",
+    "crew variants",
+    "infected sprint"
+   ]
+  },
+  {
+   "id": "S81",
+   "draft_id": "S84",
+   "scene": "03",
+   "t0": 165.456,
+   "t1": 167.285,
+   "f0": 3971,
+   "f1": 4015,
+   "frames": 44,
+   "cls": "B",
+   "set": "CAB",
+   "size": "POV",
+   "action": "Through the windscreen, wipers beating: the shoulder ahead, then in the headlights a lorry trailer lying across every lane.",
+   "camera": "locked to the cab; road shake",
+   "lens": "24 mm",
+   "reads": "wipers, headlights, something huge ahead",
+   "sound": "wipers; brakes",
+   "narration": [
+    {
+     "id": "s52",
+     "captions": [
+      "แต่ข้างหน้า",
+      "รถบรรทุกขวาง"
+     ]
+    }
+   ],
+   "cut_on": "แต่ข้างหน้า",
+   "edit": "kept",
+   "assets": [
+    "CAB"
+   ]
+  },
+  {
+   "id": "S82",
+   "draft_id": "S85",
+   "scene": "03",
+   "t0": 167.285,
+   "t1": 168.371,
+   "f0": 4015,
+   "f1": 4041,
+   "frames": 26,
+   "cls": "B",
+   "set": "X2",
+   "size": "W low",
+   "action": "Low, behind the rescue truck, which has just stopped (nose dips and settles over 6 f, brake lights flaring on the wet road): ahead in its headlights a six-wheel box truck slewed across all three lanes, cab against the left barrier. Beside the cab, at the barrier, a small steel gate under one dim lamp.",
+   "camera": "locked, low",
+   "lens": "35 mm",
+   "reads": "a wall of lorry across the road",
+   "sound": "brakes on wet road",
+   "narration": [
+    {
+     "id": "s52",
+     "captions": [
+      "เต็มถนน"
+     ]
+    }
+   ],
+   "cut_on": "เต็มถนน",
+   "edit": "edited",
+   "assets": [
+    "X2"
+   ]
+  },
+  {
+   "id": "S83",
+   "draft_id": "S86",
+   "scene": "03",
+   "t0": 168.371,
+   "t1": 170.279,
+   "f0": 4041,
+   "f1": 4087,
+   "frames": 46,
+   "cls": "A",
+   "set": "CAB",
+   "size": "CU",
+   "action": "Kong at the wheel (`wheel`), eyes hunting for a gap; his left hand leaves the wheel and goes up to the console without his looking at it.",
+   "camera": "locked to the cab",
+   "lens": "50 mm",
+   "reads": "Kong driving, a hand moving on its own",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s53",
+     "captions": [
+      "มือเขาไปเอง",
+      "ตามความเคยชิน"
+     ]
+    }
+   ],
+   "cut_on": "มือเขาไปเอง",
+   "edit": "kept",
+   "assets": [
+    "CAB",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S84",
+   "draft_id": "S87",
+   "scene": "03",
+   "t0": 170.279,
+   "t1": 171.772,
+   "f0": 4087,
+   "f1": 4123,
+   "frames": 36,
+   "cls": "B",
+   "set": "CAB",
+   "size": "INSERT",
+   "action": "The console: a gloved finger presses a red rocker switch with a hand-lettered label ไซเรน.",
+   "camera": "locked macro",
+   "lens": "85 mm",
+   "reads": "a finger on a red switch",
+   "sound": "click",
+   "narration": [
+    {
+     "id": "s53",
+     "captions": [
+      "เปิดไซเรนขอทาง"
+     ]
+    }
+   ],
+   "cut_on": "เปิดไซเรนขอทาง",
+   "edit": "kept",
+   "assets": [
+    "CAB"
+   ]
+  },
+  {
+   "id": "S85",
+   "draft_id": "S88",
+   "scene": "03",
+   "t0": 171.772,
+   "t1": 172.972,
+   "f0": 4123,
+   "f1": 4151,
+   "frames": 28,
+   "cls": "B",
+   "set": "X2",
+   "size": "M low",
+   "action": "The light bar and horn on the cab roof: beacons flashing, rain jumping off the horn mouth as the siren hits.",
+   "camera": "locked, low; 2 px vibration",
+   "lens": "35 mm",
+   "reads": "the siren horn, screaming",
+   "sound": "siren at full level for 1.2 s",
+   "narration": [],
+   "cut_on": "(picture beat, no word)",
+   "edit": "kept",
+   "assets": [
+    "X2"
+   ]
+  },
+  {
+   "id": "S86",
+   "draft_id": "S89",
+   "scene": "03",
+   "t0": 172.972,
+   "t1": 174.8,
+   "f0": 4151,
+   "f1": 4195,
+   "frames": 44,
+   "cls": "B",
+   "set": "X2",
+   "size": "EW high",
+   "action": "Wide back over the jam: every running infected figure stops, people keep fleeing past them. The stopped figures twitch on twos.",
+   "camera": "locked",
+   "lens": "35 mm",
+   "reads": "the fast ones all stop at once",
+   "sound": "siren ducked; the screams thin out",
+   "narration": [
+    {
+     "id": "s54",
+     "captions": [
+      "ทุกตัวบนทางด่วน",
+      "หยุดวิ่ง"
+     ]
+    }
+   ],
+   "cut_on": "ทุกตัวบนทางด่วน",
+   "edit": "kept",
+   "assets": [
+    "X2",
+    "infected(extras)",
+    "extras",
+    "crowd waist-up run"
+   ]
+  },
+  {
+   "id": "S87",
+   "draft_id": "S90",
+   "scene": "03",
+   "t0": 174.8,
+   "t1": 176.681,
+   "f0": 4195,
+   "f1": 4240,
+   "frames": 45,
+   "cls": "A",
+   "set": "X2",
+   "size": "M",
+   "action": "Three infected in a row at different depths (office man, auntie without her umbrella, a student): their heads turn to the lens one, two, three on twos; red pupils catch the beacon.",
+   "camera": "locked",
+   "lens": "66 mm",
+   "reads": "three heads turning to look at us",
+   "sound": "one breath of silence under the siren",
+   "narration": [
+    {
+     "id": "s54",
+     "captions": [
+      "แล้วหันมา",
+      "พร้อมกัน"
+     ]
+    }
+   ],
+   "cut_on": "แล้วหันมา",
+   "edit": "kept",
+   "assets": [
+    "X2",
+    "infected(extras)"
+   ]
+  },
+  {
+   "id": "S88",
+   "draft_id": "S91",
+   "scene": "03",
+   "t0": 176.681,
+   "t1": 178.217,
+   "f0": 4240,
+   "f1": 4277,
+   "frames": 37,
+   "cls": "A",
+   "set": "CAB",
+   "size": "CU",
+   "action": "Praew leans forward between the front seats from the rear bench and shouts the line (`shouting`).",
+   "camera": "handheld",
+   "lens": "50 mm",
+   "reads": "Praew shouting at the driver",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s55",
+     "captions": [
+      "ปิดเสียง!",
+      "เร็ว!"
+     ]
+    }
+   ],
+   "cut_on": "ปิดเสียง!",
+   "edit": "kept",
+   "assets": [
+    "CAB",
+    "praew_wet"
+   ]
+  },
+  {
+   "id": "S89",
+   "draft_id": "S92",
+   "scene": "03",
+   "t0": 178.217,
+   "t1": 179.171,
+   "f0": 4277,
+   "f1": 4300,
+   "frames": 23,
+   "cls": "B",
+   "set": "CAB",
+   "size": "INSERT",
+   "action": "The console again, from the side: Kong's palm slaps the switch off.",
+   "camera": "locked macro",
+   "lens": "85 mm",
+   "reads": "a hand killing the switch",
+   "sound": "siren winds down",
+   "narration": [
+    {
+     "id": "s56",
+     "captions": [
+      "ก้องปิดไซเรน"
+     ]
+    }
+   ],
+   "cut_on": "ก้องปิดไซเรน",
+   "edit": "edited: it is the S87 console setup, not a hook macro",
+   "assets": [
+    "CAB",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S90",
+   "draft_id": "S93",
+   "scene": "03",
+   "t0": 179.171,
+   "t1": 180.125,
+   "f0": 4300,
+   "f1": 4323,
+   "frames": 23,
+   "cls": "A",
+   "set": "X2c",
+   "size": "CU",
+   "action": "Kong through the windscreen from the bonnet, a wiper crossing his face: `alarmed`, eyes on the mirror.",
+   "camera": "locked to the cab",
+   "lens": "66 mm",
+   "reads": "Kong's face behind a wiper",
+   "sound": "0.4 s of silence",
+   "narration": [
+    {
+     "id": "s56",
+     "captions": [
+      "แต่สายไปแล้ว"
+     ]
+    }
+   ],
+   "cut_on": "แต่สายไปแล้ว",
+   "edit": "kept",
+   "assets": [
+    "X2c",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S91",
+   "draft_id": "S94",
+   "scene": "03",
+   "t0": 180.125,
+   "t1": 183.14,
+   "f0": 4323,
+   "f1": 4395,
+   "frames": 72,
+   "cls": "B",
+   "set": "X2",
+   "size": "W",
+   "action": "From the truck's roof looking back and left: the horde comes through four gaps between cars, converging on us, seen from the waist up over the bonnets; two cross a roof side-on.",
+   "camera": "locked",
+   "lens": "28 mm",
+   "reads": "they are all coming here",
+   "sound": "many feet, closing",
+   "narration": [
+    {
+     "id": "s56",
+     "captions": [
+      "ทั้งฝูงรู้แล้ว",
+      "ว่าเขาอยู่ตรงไหน"
+     ]
+    }
+   ],
+   "cut_on": "ทั้งฝูงรู้แล้ว",
+   "edit": "edited",
+   "assets": [
+    "X2",
+    "infected(extras)",
+    "roof run and jump down",
+    "crowd waist-up run"
+   ]
+  },
+  {
+   "id": "S92",
+   "draft_id": "S95",
+   "scene": "03",
+   "t0": 183.14,
+   "t1": 184.014,
+   "f0": 4395,
+   "f1": 4416,
+   "frames": 21,
+   "cls": "A",
+   "set": "CAB",
+   "size": "CU",
+   "action": "Kong: eyes to the switch, to the red and blue sweeping over the bonnet, back. He reaches up again and the sweeping light on his face stops: he has cut the beacons too.",
+   "camera": "locked",
+   "lens": "66 mm",
+   "reads": "Kong working it out",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s57",
+     "captions": [
+      "เสียง กับแสง"
+     ]
+    }
+   ],
+   "cut_on": "เสียง กับแสง",
+   "edit": "kept",
+   "assets": [
+    "CAB",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S93",
+   "draft_id": "S96",
+   "scene": "03",
+   "t0": 184.014,
+   "t1": 186.025,
+   "f0": 4416,
+   "f1": 4465,
+   "frames": 49,
+   "cls": "B",
+   "set": "X2",
+   "size": "M",
+   "action": "Outside: the light bar goes dark; a breath later the first two infected hit the truck's flank and it rocks on its springs.",
+   "camera": "locked, impact shake 4 f",
+   "lens": "35 mm",
+   "reads": "lights out, then the first impact",
+   "sound": "bodies on the truck",
+   "narration": [
+    {
+     "id": "s57",
+     "captions": [
+      "คือสิ่งที่เรียกมัน"
+     ]
+    }
+   ],
+   "cut_on": "คือสิ่งที่เรียกมัน",
+   "edit": "kept",
+   "assets": [
+    "X2",
+    "infected(extras)",
+    "slam loop"
+   ]
+  },
+  {
+   "id": "S94",
+   "draft_id": "S97",
+   "scene": "03",
+   "t0": 186.025,
+   "t1": 188.651,
+   "f0": 4465,
+   "f1": 4528,
+   "frames": 63,
+   "cls": "A",
+   "set": "CAB",
+   "size": "CU",
+   "action": "Tos on the rear bench, lunging forward, finger jabbing at the windscreen, shouting (`angry`); glasses flash white; both suit sleeves still whole.",
+   "camera": "handheld",
+   "lens": "50 mm",
+   "reads": "the man in the suit, furious",
+   "sound": "pounding all round",
+   "narration": [
+    {
+     "id": "s58",
+     "captions": [
+      "ขับไปสิ!",
+      "จะจอดให้มันกิน",
+      "หรือไง!"
+     ]
+    }
+   ],
+   "cut_on": "ขับไปสิ!",
+   "edit": "kept",
+   "assets": [
+    "CAB",
+    "tos"
+   ]
+  },
+  {
+   "id": "S95",
+   "draft_id": "S98",
+   "scene": "03",
+   "t0": 188.651,
+   "t1": 190.771,
+   "f0": 4528,
+   "f1": 4579,
+   "frames": 51,
+   "cls": "A",
+   "set": "X2c",
+   "size": "M two-shot",
+   "action": "Through the windscreen: Kong half-turned, shouting back, his hand thrown toward the lorry; James beside him flinches as two palms slap the side glass.",
+   "camera": "locked to the cab",
+   "lens": "35 mm",
+   "reads": "driver shouting back, hands on the glass",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s59",
+     "captions": [
+      "รถข้างหน้า",
+      "ขยับไม่ได้!"
+     ]
+    }
+   ],
+   "cut_on": "รถข้างหน้า",
+   "edit": "kept",
+   "assets": [
+    "X2c",
+    "kong_wet",
+    "james_wet",
+    "slam loop"
+   ]
+  },
+  {
+   "id": "S96",
+   "draft_id": "S99",
+   "scene": "03",
+   "t0": 190.771,
+   "t1": 192.202,
+   "f0": 4579,
+   "f1": 4613,
+   "frames": 34,
+   "cls": "A",
+   "set": "CAB",
+   "size": "CU",
+   "action": "James in the front passenger seat, helmet on, pointing past Kong to the left front, talking fast.",
+   "camera": "locked",
+   "lens": "50 mm",
+   "reads": "the rider pointing, urgent",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s60",
+     "captions": [
+      "พี่! ผมเคยผ่านแถวนี้"
+     ]
+    }
+   ],
+   "cut_on": "พี่! ผมเคยผ่านแถวนี้",
+   "edit": "kept",
+   "assets": [
+    "CAB",
+    "kong_wet",
+    "james_wet"
+   ]
+  },
+  {
+   "id": "S97",
+   "draft_id": "S100",
+   "scene": "03",
+   "t0": 192.202,
+   "t1": 194.422,
+   "f0": 4613,
+   "f1": 4666,
+   "frames": 53,
+   "cls": "B",
+   "set": "CAB",
+   "size": "POV",
+   "action": "Through the left of the windscreen: beside the lorry's cab the steel mesh gate, a stair landing and handrail going down outside the barrier, one caged lamp, a small green running-man sign drawn for this film. Twelve D away. An infected crosses the foreground.",
+   "camera": "slow push 0.5 D",
+   "lens": "50 mm",
+   "reads": "a gate and a stair in a pool of light",
+   "sound": "the pounding, muffled",
+   "narration": [
+    {
+     "id": "s60",
+     "captions": [
+      "มีทางลง",
+      "ข้างรถคันนั้น!"
+     ]
+    }
+   ],
+   "cut_on": "มีทางลง",
+   "edit": "kept",
+   "assets": [
+    "CAB",
+    "infected(extras)"
+   ]
+  },
+  {
+   "id": "S98",
+   "draft_id": "S101",
+   "scene": "04",
+   "t0": 194.422,
+   "t1": 195.853,
+   "f0": 4666,
+   "f1": 4700,
+   "frames": 34,
+   "cls": "B",
+   "set": "X2",
+   "size": "W",
+   "action": "Exterior: a dozen infected on the truck's right side and rear, beating on it in no rhythm; the truck rocks.",
+   "camera": "locked, high three-quarter",
+   "lens": "28 mm",
+   "reads": "the truck drowning in bodies",
+   "sound": "irregular body hits",
+   "narration": [
+    {
+     "id": "s61",
+     "captions": [
+      "ฝูงกระแทกรถ",
+      "ไม่หยุด"
+     ]
+    }
+   ],
+   "cut_on": "ฝูงกระแทกรถ",
+   "edit": "kept",
+   "assets": [
+    "X2",
+    "infected(extras)",
+    "slam loop"
+   ]
+  },
+  {
+   "id": "S99",
+   "draft_id": "S102",
+   "scene": "04",
+   "t0": 195.853,
+   "t1": 197.496,
+   "f0": 4700,
+   "f1": 4740,
+   "frames": 40,
+   "cls": "B",
+   "set": "CAB",
+   "size": "INSERT",
+   "action": "Side window from inside: a palm slams, a crack runs from the corner; second slam, it branches (`crack_window`).",
+   "camera": "locked",
+   "lens": "50 mm",
+   "reads": "glass cracking under a hand",
+   "sound": "crack ticks",
+   "narration": [
+    {
+     "id": "s61",
+     "captions": [
+      "กระจกเริ่มร้าว"
+     ]
+    }
+   ],
+   "cut_on": "กระจกเริ่มร้าว",
+   "edit": "kept",
+   "assets": [
+    "CAB",
+    "slam loop"
+   ]
+  },
+  {
+   "id": "S100",
+   "draft_id": "S103",
+   "scene": "04",
+   "t0": 197.496,
+   "t1": 199.721,
+   "f0": 4740,
+   "f1": 4793,
+   "frames": 53,
+   "cls": "A",
+   "set": "CAB",
+   "size": "M",
+   "action": "Kong twists out of the driver's seat to the equipment wall behind the rear bench and throws the roll shutter up; Praew and Tos duck aside.",
+   "camera": "handheld",
+   "lens": "28 mm",
+   "reads": "Kong opening a locker in a hurry",
+   "sound": "latch, shutter",
+   "narration": [
+    {
+     "id": "s62",
+     "captions": [
+      "ก้องเปิดตู้อุปกรณ์",
+      "ของเต็มตู้"
+     ]
+    }
+   ],
+   "cut_on": "ก้องเปิดตู้อุปกรณ์",
+   "edit": "kept",
+   "assets": [
+    "CAB",
+    "kong_wet",
+    "praew_wet",
+    "tos"
+   ]
+  },
+  {
+   "id": "S101",
+   "draft_id": "S104",
+   "scene": "04",
+   "t0": 199.721,
+   "t1": 202.0,
+   "f0": 4793,
+   "f1": 4848,
+   "frames": 55,
+   "cls": "B",
+   "set": "CAB",
+   "size": "INSERT pan",
+   "action": "Across the shelves: the big orange trauma bag, a defibrillator case, an oxygen cylinder, rope, a folded stretcher, helmets, an extinguisher, a battery charger with its slot empty (one code-drawn shelf-wall texture with shallow relief); standing proud of it as real props, the cutter case, the crowbar in its clips, a small red pouch and a box of road flares.",
+   "camera": "pan right 0.8 D",
+   "lens": "35 mm",
+   "reads": "a wall of rescue gear",
+   "sound": "the pounding behind",
+   "narration": [
+    {
+     "id": "s62",
+     "captions": [
+      "แต่แบกไปได้",
+      "แค่ 4 อย่าง"
+     ]
+    }
+   ],
+   "cut_on": "แต่แบกไปได้",
+   "edit": "edited",
+   "assets": [
+    "CAB"
+   ]
+  },
+  {
+   "id": "S102",
+   "draft_id": "S105",
+   "scene": "04",
+   "t0": 202.0,
+   "t1": 205.725,
+   "f0": 4848,
+   "f1": 4937,
+   "frames": 89,
+   "cls": "B",
+   "set": "CAB",
+   "size": "INSERT x4",
+   "action": "Four cuts on the four words, one glove each: (a) the cutter lifted by its D-handle, three LEDs steady; (b) the crowbar pulled from its clips; (c) the chest radio's volume knob turned down to zero, LED still on; (d) the small red first-aid pouch taken and pushed into Praew's blue gloves.",
+   "camera": "four locked setups on one shelf rig; 19 f, 10 f, 10 f, 45 f",
+   "lens": "50 mm",
+   "reads": "one object, one hand, each time",
+   "sound": "one grab per cut",
+   "narration": [
+    {
+     "id": "s63",
+     "captions": [
+      "เครื่องตัด",
+      "ชะแลง",
+      "วิทยุ",
+      "กระเป๋าพยาบาลใบเล็ก"
+     ]
+    }
+   ],
+   "cut_on": "เครื่องตัด",
+   "edit": "edited",
+   "assets": [
+    "CAB",
+    "praew_wet",
+    "crowbar"
+   ]
+  },
+  {
+   "id": "S103",
+   "draft_id": "S106",
+   "scene": "04",
+   "t0": 205.725,
+   "t1": 208.184,
+   "f0": 4937,
+   "f1": 4996,
+   "frames": 59,
+   "cls": "A",
+   "set": "CAB",
+   "size": "INSERT to CU",
+   "action": "Kong's hand stops on the big trauma bag; he looks at it, at the cracked window, and lets go (`serious`).",
+   "camera": "locked",
+   "lens": "66 mm",
+   "reads": "a hand leaving the big bag behind",
+   "sound": "one monitor beep",
+   "narration": [
+    {
+     "id": "s64",
+     "captions": [
+      "ที่เหลือ",
+      "ต้องทิ้งทั้งหมด"
+     ]
+    }
+   ],
+   "cut_on": "ที่เหลือ",
+   "edit": "kept",
+   "assets": [
+    "CAB",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S104",
+   "draft_id": "S107",
+   "scene": "04",
+   "t0": 208.184,
+   "t1": 209.694,
+   "f0": 4996,
+   "f1": 5033,
+   "frames": 37,
+   "cls": "A",
+   "set": "CAB",
+   "size": "CU",
+   "action": "Kong strikes a road flare from the box: it catches, hard red light on his face and on the three faces behind him.",
+   "camera": "locked; exposure rides down 0.4 stop on ignition",
+   "lens": "50 mm",
+   "reads": "a red flare lighting four faces",
+   "sound": "strike, hiss",
+   "narration": [
+    {
+     "id": "s65",
+     "captions": [
+      "ก้องจุดพลุไฟฉุกเฉิน"
+     ]
+    }
+   ],
+   "cut_on": "ก้องจุดพลุไฟฉุกเฉิน",
+   "edit": "kept",
+   "assets": [
+    "CAB",
+    "kong_wet",
+    "flare prop + light"
+   ]
+  },
+  {
+   "id": "S105",
+   "draft_id": "S108",
+   "scene": "04",
+   "t0": 209.694,
+   "t1": 211.575,
+   "f0": 5033,
+   "f1": 5078,
+   "frames": 45,
+   "cls": "B",
+   "set": "X2",
+   "size": "W",
+   "action": "Outside, median side: the driver's window drops a hand-width, the flare arcs out over the infected heads, tumbling, lands two lanes away (toward the camera) and skitters.",
+   "camera": "locked; the flare comes to the lens",
+   "lens": "24 mm",
+   "reads": "a red light flying over the horde",
+   "sound": "window, hiss passing, clatter",
+   "narration": [
+    {
+     "id": "s65",
+     "captions": [
+      "ขว้างไปอีกฝั่งถนน"
+     ]
+    }
+   ],
+   "cut_on": "ขว้างไปอีกฝั่งถนน",
+   "edit": "kept",
+   "assets": [
+    "X2",
+    "flare prop + light"
+   ]
+  },
+  {
+   "id": "S106",
+   "draft_id": "S109",
+   "scene": "04",
+   "t0": 211.575,
+   "t1": 214.063,
+   "f0": 5078,
+   "f1": 5138,
+   "frames": 60,
+   "cls": "B",
+   "set": "X2",
+   "size": "W low",
+   "action": "Road level, side-on to their run: the horde peels off the truck and crosses the frame after the skittering red light, long shadows sweeping between their legs (sprint cycle, planted, at most twelve figures); three stay hammering at the truck's rear.",
+   "camera": "locked, low",
+   "lens": "24 mm",
+   "reads": "the horde chasing a red light",
+   "sound": "the pounding moves away",
+   "narration": [
+    {
+     "id": "s66",
+     "captions": [
+      "เกือบทั้งฝูง",
+      "วิ่งตามแสงไป"
+     ]
+    }
+   ],
+   "cut_on": "เกือบทั้งฝูง",
+   "edit": "edited",
+   "assets": [
+    "X2",
+    "infected(extras)",
+    "flare prop + light",
+    "infected sprint",
+    "slam loop"
+   ]
+  },
+  {
+   "id": "S107",
+   "draft_id": "S110",
+   "scene": "04",
+   "t0": 214.063,
+   "t1": 216.451,
+   "f0": 5138,
+   "f1": 5195,
+   "frames": 57,
+   "cls": "A",
+   "set": "X2c",
+   "size": "M",
+   "action": "Barrier side of the truck: the crew door opens until it hits a taxi, a hand-span; Tos forces himself through the gap first, past Praew's reaching hand, along the taxi's smashed window.",
+   "camera": "locked",
+   "lens": "35 mm",
+   "reads": "the suit squeezing out first",
+   "sound": "glass crunch",
+   "narration": [
+    {
+     "id": "s67",
+     "captions": [
+      "คุณทศเบียดออกไป",
+      "เป็นคนแรก"
+     ]
+    }
+   ],
+   "cut_on": "คุณทศเบียดออกไป",
+   "edit": "kept",
+   "assets": [
+    "X2c",
+    "praew_wet",
+    "tos",
+    "sleeve snag and clamp"
+   ]
+  },
+  {
+   "id": "S108",
+   "draft_id": "S111",
+   "scene": "04",
+   "t0": 216.451,
+   "t1": 220.32,
+   "f0": 5195,
+   "f1": 5288,
+   "frames": 93,
+   "cls": "A",
+   "set": "X2c",
+   "size": "INSERT",
+   "action": "His left forearm: the navy jacket sleeve catches on a tooth of glass in the taxi's window frame and pulls tight; on 'ขาดเป็นทาง' it tears along the forearm, jacket and white shirt together; under it one straight cut opens and blood wells, thinned at once by the rain. A cut, plainly, not a bite.",
+   "camera": "locked macro; 2 f shake and a 6 % punch-in on the rip",
+   "lens": "85 mm",
+   "reads": "a sleeve hooked on broken glass",
+   "sound": "cloth straining, rip, sharp breath",
+   "narration": [
+    {
+     "id": "s68",
+     "captions": [
+      "แขนเสื้อเกี่ยวกระจก",
+      "ขาดเป็นทาง",
+      "เลือดซึมออกมา"
+     ]
+    }
+   ],
+   "cut_on": "แขนเสื้อเกี่ยวกระจก",
+   "edit": "kept",
+   "assets": [
+    "X2c",
+    "tos",
+    "sleeve snag and clamp"
+   ]
+  },
+  {
+   "id": "S109",
+   "draft_id": "S112",
+   "scene": "04",
+   "t0": 220.32,
+   "t1": 222.307,
+   "f0": 5288,
+   "f1": 5335,
+   "frames": 47,
+   "cls": "A",
+   "set": "X2c",
+   "size": "CU",
+   "action": "Tos looks at the arm (`alarmed`), over his shoulder at the others still inside, pulls the torn cuff down and clamps his right hand over it.",
+   "camera": "locked",
+   "lens": "66 mm",
+   "reads": "a man hiding his arm",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s69",
+     "captions": [
+      "เขารีบดึงแขนเสื้อ",
+      "ลงปิดแผล"
+     ]
+    }
+   ],
+   "cut_on": "เขารีบดึงแขนเสื้อ",
+   "edit": "kept",
+   "assets": [
+    "X2c",
+    "tos",
+    "sleeve snag and clamp"
+   ]
+  },
+  {
+   "id": "S110",
+   "draft_id": "S113",
+   "scene": "04",
+   "t0": 222.307,
+   "t1": 224.05,
+   "f0": 5335,
+   "f1": 5377,
+   "frames": 42,
+   "cls": "A",
+   "set": "X2c",
+   "size": "M",
+   "action": "Behind him Praew, James and Kong squeeze out one at a time (Kong last, cutter in hand, crowbar through his pack loops); Tos has already turned away, arms crossed, walking to the gate.",
+   "camera": "locked",
+   "lens": "35 mm",
+   "reads": "arms crossed, back turned",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s69",
+     "captions": [
+      "ไม่บอกใครสักคำ"
+     ]
+    }
+   ],
+   "cut_on": "ไม่บอกใครสักคำ",
+   "edit": "kept",
+   "assets": [
+    "X2c",
+    "kong_wet",
+    "praew_wet",
+    "tos",
+    "james_wet",
+    "crowbar"
+   ]
+  },
+  {
+   "id": "S111",
+   "draft_id": "S114",
+   "scene": "04",
+   "t0": 224.05,
+   "t1": 227.323,
+   "f0": 5377,
+   "f1": 5456,
+   "frames": 79,
+   "cls": "B",
+   "set": "UND",
+   "size": "W side",
+   "action": "The service stair, side-on from the next pier: the deck edge and the top two flights bolted to the pier, rain falling past. Four small figures go through the gate and down, left to right, planted on the treads, and out of the bottom of the frame; above them red flare glow and running silhouettes on the deck.",
+   "camera": "crane down with them 1.0 D",
+   "lens": "28 mm",
+   "reads": "four people going down a steel stair",
+   "sound": "treads ringing",
+   "narration": [
+    {
+     "id": "s70",
+     "captions": [
+      "ทุกคนวิ่งลง",
+      "บันไดเหล็ก",
+      "ข้างทางด่วน"
+     ]
+    }
+   ],
+   "cut_on": "ทุกคนวิ่งลง",
+   "edit": "edited: one flight module, instanced; the full six-flight tower is never in one frame",
+   "assets": [
+    "UND",
+    "extras",
+    "flare prop + light",
+    "stairs down"
+   ]
+  },
+  {
+   "id": "S112",
+   "draft_id": "S116",
+   "scene": "04",
+   "t0": 227.323,
+   "t1": 229.564,
+   "f0": 5456,
+   "f1": 5510,
+   "frames": 54,
+   "cls": "B",
+   "set": "UND",
+   "size": "EW",
+   "action": "Under the expressway: a street between giant piers, almost black; sheets of rain falling at both deck edges, drips in the middle, puddles holding one far sodium lamp. The four stop at the stair foot, very small.",
+   "camera": "locked",
+   "lens": "24 mm",
+   "reads": "a dark dry cave under the road",
+   "sound": "the road noise is overhead now; drips",
+   "narration": [
+    {
+     "id": "s71",
+     "captions": [
+      "ข้างล่างมืด",
+      "และเงียบ"
+     ]
+    }
+   ],
+   "cut_on": "ข้างล่างมืด",
+   "edit": "kept",
+   "assets": [
+    "UND"
+   ]
+  },
+  {
+   "id": "S113",
+   "draft_id": "S117",
+   "scene": "04",
+   "t0": 229.564,
+   "t1": 231.763,
+   "f0": 5510,
+   "f1": 5562,
+   "frames": 52,
+   "cls": "A",
+   "set": "UND",
+   "size": "MCU",
+   "action": "Praew opens the red pouch in both hands and looks in; whispers the line without looking up.",
+   "camera": "locked",
+   "lens": "50 mm",
+   "reads": "the doctor looking into a small bag",
+   "sound": "whisper",
+   "narration": [
+    {
+     "id": "s72",
+     "captions": [
+      "ของเหลือ",
+      "แค่นี้เองเหรอ"
+     ]
+    }
+   ],
+   "cut_on": "ของเหลือ",
+   "edit": "kept",
+   "assets": [
+    "UND",
+    "praew_wet"
+   ]
+  },
+  {
+   "id": "S114",
+   "draft_id": "S118",
+   "scene": "04",
+   "t0": 231.763,
+   "t1": 233.774,
+   "f0": 5562,
+   "f1": 5611,
+   "frames": 49,
+   "cls": "A",
+   "set": "UND",
+   "size": "CU",
+   "action": "Kong: wet, the cutter in his right hand, the crowbar's hook over his left shoulder; he whispers the line, eyes down (`tired`).",
+   "camera": "locked",
+   "lens": "66 mm",
+   "reads": "Kong, loaded with two tools",
+   "sound": "whisper",
+   "narration": [
+    {
+     "id": "s73",
+     "captions": [
+      "เอาออกมาได้",
+      "เท่านี้"
+     ]
+    }
+   ],
+   "cut_on": "เอาออกมาได้",
+   "edit": "kept",
+   "assets": [
+    "UND",
+    "kong_wet",
+    "crowbar"
+   ]
+  },
+  {
+   "id": "S115",
+   "draft_id": "S119",
+   "scene": "04",
+   "t0": 233.774,
+   "t1": 234.966,
+   "f0": 5611,
+   "f1": 5639,
+   "frames": 28,
+   "cls": "A",
+   "set": "UND",
+   "size": "OTS",
+   "action": "Over Kong's wet shoulder and the crowbar hook: Praew looks up at him and says the first half, level.",
+   "camera": "locked",
+   "lens": "66 mm",
+   "reads": "Praew's eyes coming up",
+   "sound": "whisper",
+   "narration": [
+    {
+     "id": "s74",
+     "captions": [
+      "ถ้ามีคนเจ็บหนัก"
+     ]
+    }
+   ],
+   "cut_on": "ถ้ามีคนเจ็บหนัก",
+   "edit": "kept",
+   "assets": [
+    "UND",
+    "kong_wet",
+    "praew_wet",
+    "crowbar"
+   ]
+  },
+  {
+   "id": "S116",
+   "draft_id": "S120",
+   "scene": "04",
+   "t0": 234.966,
+   "t1": 236.918,
+   "f0": 5639,
+   "f1": 5686,
+   "frames": 47,
+   "cls": "A",
+   "set": "UND",
+   "size": "INSERT",
+   "action": "Tos's crossed arms: his right hand clamped round the left forearm, the torn navy cuff dark and wet under his fingers.",
+   "camera": "slow push 3 %",
+   "lens": "85 mm",
+   "reads": "a hand gripping a torn sleeve",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s74",
+     "captions": [
+      "เราอาจช่วยไม่ได้"
+     ]
+    }
+   ],
+   "cut_on": "เราอาจช่วยไม่ได้",
+   "edit": "kept",
+   "assets": [
+    "UND",
+    "tos"
+   ]
+  },
+  {
+   "id": "S117",
+   "draft_id": "S122",
+   "scene": "04",
+   "t0": 236.918,
+   "t1": 238.587,
+   "f0": 5686,
+   "f1": 5726,
+   "frames": 40,
+   "cls": "A",
+   "set": "UND",
+   "size": "CU",
+   "action": "James, visor up, pointing ahead (right), whispering fast, almost cheerful.",
+   "camera": "locked",
+   "lens": "50 mm",
+   "reads": "the rider pointing the way",
+   "sound": "whisper",
+   "narration": [
+    {
+     "id": "s75",
+     "captions": [
+      "โรงพยาบาลอยู่ข้างหน้า"
+     ]
+    }
+   ],
+   "cut_on": "โรงพยาบาลอยู่ข้างหน้า",
+   "edit": "kept",
+   "assets": [
+    "UND",
+    "james_wet"
+   ]
+  },
+  {
+   "id": "S118",
+   "draft_id": "S123",
+   "scene": "04",
+   "t0": 238.587,
+   "t1": 240.46,
+   "f0": 5726,
+   "f1": 5771,
+   "frames": 45,
+   "cls": "C1",
+   "set": "2D",
+   "size": "INSERT",
+   "action": "James's phone: a delivery map drawn for this film (no brand): a blue dot under a grey road band, a route line growing to a building marked with a plain cross beside a blue river band, 'เดิน 9 นาที'; further along the river a small pier symbol.",
+   "camera": "2D: the route draws on over 1 s; thumb enters and dims the screen",
+   "lens": "2D",
+   "reads": "a map, a line to a cross by a river",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s75",
+     "captions": [
+      "ผมเคยไปส่งอาหาร"
+     ]
+    }
+   ],
+   "cut_on": "ผมเคยไปส่งอาหาร",
+   "edit": "kept",
+   "assets": [
+    "2D",
+    "phone screens"
+   ]
+  },
+  {
+   "id": "S119",
+   "draft_id": "S124",
+   "scene": "04",
+   "t0": 240.46,
+   "t1": 241.652,
+   "f0": 5771,
+   "f1": 5800,
+   "frames": 29,
+   "cls": "A",
+   "set": "UND",
+   "size": "M",
+   "action": "Kong, half turned from the others, takes his phone from the thigh pouch; the screen lights his face from below and he tilts it into his chest to hide the light.",
+   "camera": "locked",
+   "lens": "35 mm",
+   "reads": "Kong alone with his phone",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s76",
+     "captions": [
+      "ก้องมองโทรศัพท์"
+     ]
+    }
+   ],
+   "cut_on": "ก้องมองโทรศัพท์",
+   "edit": "kept",
+   "assets": [
+    "UND",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S120",
+   "draft_id": "S125",
+   "scene": "04",
+   "t0": 241.652,
+   "t1": 243.384,
+   "f0": 5800,
+   "f1": 5841,
+   "frames": 41,
+   "cls": "C1",
+   "set": "2D",
+   "size": "INSERT",
+   "action": "His lock screen: 22:54, the avatar wallpaper, no notification. Two rain drops land; his thumb wipes one off and drags the brightness down.",
+   "camera": "2D: hand drift 10 px",
+   "lens": "2D",
+   "reads": "an empty lock screen",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s76",
+     "captions": [
+      "ยังไม่มีสาย",
+      "จากลูก"
+     ]
+    }
+   ],
+   "cut_on": "ยังไม่มีสาย",
+   "edit": "kept",
+   "assets": [
+    "2D",
+    "phone screens"
+   ]
+  },
+  {
+   "id": "S121",
+   "draft_id": "S126",
+   "scene": "05",
+   "t0": 243.384,
+   "t1": 245.314,
+   "f0": 5841,
+   "f1": 5888,
+   "frames": 47,
+   "cls": "A",
+   "set": "UND",
+   "size": "CU",
+   "action": "Kong is putting the phone away when it buzzes in his glove: the light jumps back onto his face, his eyes go to it.",
+   "camera": "locked; 2 px buzz on the hand layer",
+   "lens": "66 mm",
+   "reads": "a face lit again, startled",
+   "sound": "phone buzz x2",
+   "narration": [
+    {
+     "id": "s77",
+     "captions": [
+      "แล้วโทรศัพท์ก็สั่น"
+     ]
+    }
+   ],
+   "cut_on": "(picture beat, no word)",
+   "edit": "kept",
+   "assets": [
+    "UND",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S122",
+   "draft_id": "S127",
+   "scene": "05",
+   "t0": 245.314,
+   "t1": 247.364,
+   "f0": 5888,
+   "f1": 5937,
+   "frames": 49,
+   "cls": "B",
+   "set": "UND",
+   "size": "W",
+   "action": "The dark street: one small bright rectangle on Kong's chest is the only light in the frame and throws his shadow up the pier; three heads turn to it; he cups his glove over it and it shrinks to a slit.",
+   "camera": "locked",
+   "lens": "28 mm",
+   "reads": "one light in total darkness",
+   "sound": "every breath stops",
+   "narration": [
+    {
+     "id": "s77",
+     "captions": [
+      "จอสว่างวาบ",
+      "กลางความมืด"
+     ]
+    }
+   ],
+   "cut_on": "จอสว่างวาบ",
+   "edit": "kept",
+   "assets": [
+    "UND",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S123",
+   "draft_id": "S128",
+   "scene": "05",
+   "t0": 247.364,
+   "t1": 248.084,
+   "f0": 5937,
+   "f1": 5954,
+   "frames": 17,
+   "cls": "C1",
+   "set": "2D",
+   "size": "INSERT",
+   "action": "The incoming call: avatar, น้ำเหนือ, ลูกสาว; the frame buzzes; his thumb swipes to answer and the call timer starts.",
+   "camera": "2D: 3 px vibration, then still",
+   "lens": "2D",
+   "reads": "her name, calling",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s78",
+     "captions": [
+      "พ่อ!"
+     ]
+    }
+   ],
+   "cut_on": "(picture beat, no word)",
+   "edit": "kept",
+   "assets": [
+    "2D",
+    "phone screens"
+   ]
+  },
+  {
+   "id": "S124",
+   "draft_id": "S129",
+   "scene": "05",
+   "t0": 248.084,
+   "t1": 249.459,
+   "f0": 5954,
+   "f1": 5987,
+   "frames": 33,
+   "cls": "A",
+   "set": "UND",
+   "size": "CU",
+   "action": "Kong, phone to his ear (`phone_ear`, elbow out), mouth shut, eyes wide: he listens. The captions carry her words.",
+   "camera": "locked",
+   "lens": "66 mm",
+   "reads": "Kong listening",
+   "sound": "her voice, phone band, crowd and engine behind",
+   "narration": [
+    {
+     "id": "s78",
+     "captions": [
+      "พ่ออยู่ไหน!"
+     ]
+    }
+   ],
+   "cut_on": "พ่ออยู่ไหน!",
+   "edit": "kept",
+   "assets": [
+    "UND",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S125",
+   "draft_id": "S130",
+   "scene": "05",
+   "t0": 249.459,
+   "t1": 252.971,
+   "f0": 5987,
+   "f1": 6071,
+   "frames": 84,
+   "cls": "A",
+   "set": "UND",
+   "size": "OTS",
+   "action": "Past Kong's ear and the glowing edge of the phone: Praew and James have stopped and watch him, hearing the small voice; Tos stands apart at the pier, arms crossed. Nobody moves but for breath and the drips.",
+   "camera": "locked; 2 % creep",
+   "lens": "50 mm",
+   "reads": "the others listening to a voice in a phone",
+   "sound": "her voice, phone band, an engine and a megaphone behind it",
+   "narration": [
+    {
+     "id": "s79",
+     "captions": [
+      "เขาพาหนู",
+      "ขึ้นรถอพยพ",
+      "บอกว่าจะไปท่าเรือ"
+     ]
+    }
+   ],
+   "cut_on": "เขาพาหนู",
+   "edit": "edited: the bus-window shot of Namnuea needs its own set and her full puppet for 3 s; the screenplay keeps her a voice in EP.1 (see PRODUCTION_PLAN, decision 6)",
+   "assets": [
+    "UND",
+    "kong_wet",
+    "praew_wet",
+    "tos",
+    "james_wet"
+   ]
+  },
+  {
+   "id": "S126",
+   "draft_id": "S131",
+   "scene": "05",
+   "t0": 252.971,
+   "t1": 255.638,
+   "f0": 6071,
+   "f1": 6135,
+   "frames": 64,
+   "cls": "C1",
+   "set": "2D",
+   "size": "INSERT",
+   "action": "Call screen: timer 00:11, 00:12; the signal bars fall 2, 1, 0; 'สัญญาณอ่อน' appears.",
+   "camera": "2D: hand tremor",
+   "lens": "2D",
+   "reads": "signal bars falling",
+   "sound": "her voice breaking up",
+   "narration": [
+    {
+     "id": "s80",
+     "captions": [
+      "ครั้งนี้",
+      "พ่ออย่าผิดสัญญานะ"
+     ]
+    }
+   ],
+   "cut_on": "ครั้งนี้",
+   "edit": "kept",
+   "assets": [
+    "2D",
+    "phone screens"
+   ]
+  },
+  {
+   "id": "S127",
+   "draft_id": "S132",
+   "scene": "05",
+   "t0": 255.638,
+   "t1": 257.148,
+   "f0": 6135,
+   "f1": 6172,
+   "frames": 37,
+   "cls": "A",
+   "set": "UND",
+   "size": "ECU",
+   "action": "Kong's mouth opens to answer ('พ่อ' formed, no sound comes).",
+   "camera": "locked, 780 ppd",
+   "lens": "100 mm",
+   "reads": "a mouth about to promise",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s81",
+     "captions": [
+      "ก้องยังไม่ทันรับปาก"
+     ]
+    }
+   ],
+   "cut_on": "ก้องยังไม่ทันรับปาก",
+   "edit": "kept",
+   "assets": [
+    "UND",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S128",
+   "draft_id": "S133",
+   "scene": "05",
+   "t0": 257.148,
+   "t1": 258.703,
+   "f0": 6172,
+   "f1": 6209,
+   "frames": 37,
+   "cls": "C1",
+   "set": "2D",
+   "size": "INSERT",
+   "action": "The screen: สายหลุด, ไม่มีสัญญาณ; then it dims to black with his reflection drawn in it.",
+   "camera": "2D: locked",
+   "lens": "2D",
+   "reads": "call lost",
+   "sound": "dead tone, one beat",
+   "narration": [
+    {
+     "id": "s81",
+     "captions": [
+      "สัญญาณก็ขาด"
+     ]
+    }
+   ],
+   "cut_on": "สัญญาณก็ขาด",
+   "edit": "kept",
+   "assets": [
+    "2D",
+    "phone screens"
+   ]
+  },
+  {
+   "id": "S129",
+   "draft_id": "S135",
+   "scene": "05",
+   "t0": 258.703,
+   "t1": 261.668,
+   "f0": 6209,
+   "f1": 6280,
+   "frames": 71,
+   "cls": "A",
+   "set": "UND",
+   "size": "MW",
+   "action": "Kong turns, the dark phone still in his left fist, and strides away right, alone (walk cycle, long step); Praew takes two quick steps after him and catches his pack strap.",
+   "camera": "locked wide",
+   "lens": "28 mm",
+   "reads": "Kong leaving the group",
+   "sound": "boots on gravel",
+   "narration": [
+    {
+     "id": "s82",
+     "captions": [
+      "ก้องหันหลัง",
+      "จะไปหาลูกเดี๋ยวนั้น"
+     ]
+    }
+   ],
+   "cut_on": "ก้องหันหลัง",
+   "edit": "kept",
+   "assets": [
+    "UND",
+    "kong_wet",
+    "praew_wet"
+   ]
+  },
+  {
+   "id": "S130",
+   "draft_id": "S136",
+   "scene": "05",
+   "t0": 261.668,
+   "t1": 263.337,
+   "f0": 6280,
+   "f1": 6320,
+   "frames": 40,
+   "cls": "A",
+   "set": "UND",
+   "size": "CU",
+   "action": "Praew, low and firm (`stern`), still holding the strap.",
+   "camera": "locked",
+   "lens": "66 mm",
+   "reads": "the doctor stopping him",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s83",
+     "captions": [
+      "ถ้าคุณไปคนเดียว",
+      "ตอนนี้"
+     ]
+    }
+   ],
+   "cut_on": "ถ้าคุณไปคนเดียว",
+   "edit": "kept",
+   "assets": [
+    "UND",
+    "praew_wet"
+   ]
+  },
+  {
+   "id": "S131",
+   "draft_id": "S137",
+   "scene": "05",
+   "t0": 263.337,
+   "t1": 265.468,
+   "f0": 6320,
+   "f1": 6371,
+   "frames": 51,
+   "cls": "A",
+   "set": "UND",
+   "size": "ECU",
+   "action": "Reverse, Kong's eyes only: wet, fixed past her on the dark; the last four words land on him and he stops pulling.",
+   "camera": "locked, 2 % creep",
+   "lens": "100 mm",
+   "reads": "Kong hearing it",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s83",
+     "captions": [
+      "คุณอาจไปไม่ถึงลูก"
+     ]
+    }
+   ],
+   "cut_on": "คุณอาจไปไม่ถึงลูก",
+   "edit": "kept",
+   "assets": [
+    "UND",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S132",
+   "draft_id": "S138",
+   "scene": "05",
+   "t0": 265.468,
+   "t1": 266.899,
+   "f0": 6371,
+   "f1": 6406,
+   "frames": 35,
+   "cls": "B",
+   "set": "UND",
+   "size": "INSERT",
+   "action": "His glove closing hard on the dark phone.",
+   "camera": "locked macro",
+   "lens": "85 mm",
+   "reads": "a fist round a phone",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s84",
+     "captions": [
+      "ก้องกำโทรศัพท์แน่น"
+     ]
+    }
+   ],
+   "cut_on": "ก้องกำโทรศัพท์แน่น",
+   "edit": "edited",
+   "assets": [
+    "UND"
+   ]
+  },
+  {
+   "id": "S133",
+   "draft_id": "S139",
+   "scene": "05",
+   "t0": 266.899,
+   "t1": 268.71,
+   "f0": 6406,
+   "f1": 6449,
+   "frames": 43,
+   "cls": "B",
+   "set": "UND",
+   "size": "EW",
+   "action": "Long view along the piers: four figures in single file keeping to the black side of the street, James leading, Kong last, walking right toward a pale glow at the far end.",
+   "camera": "slow track right",
+   "lens": "35 mm",
+   "reads": "four small figures walking toward a glow",
+   "sound": "drips, far sirens",
+   "narration": [
+    {
+     "id": "s84",
+     "captions": [
+      "แล้วเดินตามเจมส์ไป"
+     ]
+    }
+   ],
+   "cut_on": "แล้วเดินตามเจมส์ไป",
+   "edit": "kept",
+   "assets": [
+    "UND",
+    "kong_wet",
+    "james_wet"
+   ]
+  },
+  {
+   "id": "S134",
+   "draft_id": "S140",
+   "scene": "06",
+   "t0": 268.71,
+   "t1": 272.016,
+   "f0": 6449,
+   "f1": 6528,
+   "frames": 79,
+   "cls": "B",
+   "set": "RIV",
+   "size": "EW",
+   "action": "The riverside hospital: a six-storey block with lit windows and a plain lit cross drawn for this film, the river and its reflections to the right, a sodium-lit forecourt full of small seated silhouettes; in the foreground a tall steel sliding gate. Four figures arrive from the left.",
+   "camera": "slow crane up 0.5 D",
+   "lens": "28 mm",
+   "reads": "a lit building behind a big gate",
+   "sound": "river, a generator",
+   "narration": [
+    {
+     "id": "s85",
+     "captions": [
+      "โรงพยาบาลริมแม่น้ำ",
+      "ไฟยังสว่าง"
+     ]
+    }
+   ],
+   "cut_on": "(picture beat, no word)",
+   "edit": "edited",
+   "assets": [
+    "RIV",
+    "extras"
+   ]
+  },
+  {
+   "id": "S135",
+   "draft_id": "S141",
+   "scene": "06",
+   "t0": 272.016,
+   "t1": 274.235,
+   "f0": 6528,
+   "f1": 6582,
+   "frames": 54,
+   "cls": "B",
+   "set": "RIV",
+   "size": "INSERT low",
+   "action": "Kong's gloves grip two bars and shake; a chain and padlock rattle against the post.",
+   "camera": "locked",
+   "lens": "50 mm",
+   "reads": "hands on bars, a chain",
+   "sound": "chain rattle",
+   "narration": [
+    {
+     "id": "s86",
+     "captions": [
+      "แต่ประตูเหล็ก",
+      "ปิดสนิท"
+     ]
+    }
+   ],
+   "cut_on": "แต่ประตูเหล็ก",
+   "edit": "kept",
+   "assets": [
+    "RIV",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S136",
+   "draft_id": "S142",
+   "scene": "06",
+   "t0": 274.235,
+   "t1": 275.03,
+   "f0": 6582,
+   "f1": 6601,
+   "frames": 19,
+   "cls": "A",
+   "set": "RIV",
+   "size": "M",
+   "action": "Through the bars from outside: a hospital guard (cap, pale blue shirt, torch held but off) with one palm up, shouting; behind him nurses' silhouettes and families on the ground.",
+   "camera": "locked",
+   "lens": "50 mm",
+   "reads": "a guard behind bars saying no",
+   "sound": "voice behind steel",
+   "narration": [
+    {
+     "id": "s87",
+     "captions": [
+      "เปิดไม่ได้!"
+     ]
+    }
+   ],
+   "cut_on": "เปิดไม่ได้!",
+   "edit": "kept",
+   "assets": [
+    "RIV",
+    "guard",
+    "extras"
+   ]
+  },
+  {
+   "id": "S137",
+   "draft_id": "S143",
+   "scene": "06",
+   "t0": 275.03,
+   "t1": 277.489,
+   "f0": 6601,
+   "f1": 6660,
+   "frames": 59,
+   "cls": "A",
+   "set": "RIV",
+   "size": "M four-shot",
+   "action": "Reverse from inside, bars across the frame: Kong, Praew and James at the gate, Tos half a step behind them with his arms crossed. On 'โดนกัด' Tos's eyes drop to his arm and come back up.",
+   "camera": "locked",
+   "lens": "35 mm",
+   "reads": "four faces behind bars, one hanging back",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s87",
+     "captions": [
+      "ใครโดนกัดมาบ้าง",
+      "ก็ไม่รู้!"
+     ]
+    }
+   ],
+   "cut_on": "ใครโดนกัดมาบ้าง",
+   "edit": "kept",
+   "assets": [
+    "RIV",
+    "kong_wet",
+    "praew_wet",
+    "tos",
+    "james_wet"
+   ]
+  },
+  {
+   "id": "S138",
+   "draft_id": "S144",
+   "scene": "06",
+   "t0": 277.489,
+   "t1": 279.079,
+   "f0": 6660,
+   "f1": 6698,
+   "frames": 38,
+   "cls": "A",
+   "set": "RIV",
+   "size": "M",
+   "action": "Kong swings the cutter up two-handed and sets the jaws to the chain.",
+   "camera": "locked",
+   "lens": "35 mm",
+   "reads": "the cutter going to the chain",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s88",
+     "captions": [
+      "ก้องยกเครื่องตัดขึ้น"
+     ]
+    }
+   ],
+   "cut_on": "ก้องยกเครื่องตัดขึ้น",
+   "edit": "kept",
+   "assets": [
+    "RIV",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S139",
+   "draft_id": "S145",
+   "scene": "06",
+   "t0": 279.079,
+   "t1": 281.784,
+   "f0": 6698,
+   "f1": 6763,
+   "frames": 65,
+   "cls": "C2",
+   "set": "RIV",
+   "size": "INSERT",
+   "action": "The hook's jaw macro with the gauge in the same frame: steel tips round a chain link, three green LEDs steady.",
+   "camera": "locked macro",
+   "lens": "macro preset",
+   "reads": "jaws on a chain, three green lights",
+   "sound": "motor click, ready",
+   "narration": [
+    {
+     "id": "s88",
+     "captions": [
+      "แบตยังเต็ม 3 ขีด",
+      "ตัดโซ่ขาดแน่"
+     ]
+    }
+   ],
+   "cut_on": "แบตยังเต็ม 3 ขีด",
+   "edit": "edited",
+   "assets": [
+    "RIV",
+    "hook macro S08/S09"
+   ]
+  },
+  {
+   "id": "S140",
+   "draft_id": "S146",
+   "scene": "06",
+   "t0": 281.784,
+   "t1": 283.056,
+   "f0": 6763,
+   "f1": 6793,
+   "frames": 30,
+   "cls": "A",
+   "set": "RIV",
+   "size": "CU",
+   "action": "Kong's eyes leave the chain and go over his shoulder, to the street behind (left).",
+   "camera": "locked",
+   "lens": "66 mm",
+   "reads": "Kong looking back",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s89",
+     "captions": [
+      "แต่เสียงตัดเหล็ก"
+     ]
+    }
+   ],
+   "cut_on": "แต่เสียงตัดเหล็ก",
+   "edit": "kept",
+   "assets": [
+    "RIV",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S141",
+   "draft_id": "S147",
+   "scene": "06",
+   "t0": 283.056,
+   "t1": 285.285,
+   "f0": 6793,
+   "f1": 6847,
+   "frames": 54,
+   "cls": "B",
+   "set": "RIV",
+   "size": "W long",
+   "action": "Back down the riverside street: three figures wandering far off under a streetlamp, slow, not yet aware.",
+   "camera": "locked",
+   "lens": "135 mm",
+   "reads": "shapes under a far lamp",
+   "sound": "far, a single groan",
+   "narration": [
+    {
+     "id": "s89",
+     "captions": [
+      "จะเรียกพวกมัน",
+      "มาทั้งฝูง"
+     ]
+    }
+   ],
+   "cut_on": "จะเรียกพวกมัน",
+   "edit": "kept",
+   "assets": [
+    "RIV",
+    "infected(extras)"
+   ]
+  },
+  {
+   "id": "S142",
+   "draft_id": "S148",
+   "scene": "06",
+   "t0": 285.285,
+   "t1": 288.2,
+   "f0": 6847,
+   "f1": 6917,
+   "frames": 70,
+   "cls": "B",
+   "set": "RIV",
+   "size": "M",
+   "action": "Through the bars, wide: the guard has stepped back; behind him the seated silhouettes on the forecourt lift their heads to the cutter, one pulls a smaller shape close. Extras roles in silhouette against the lit entrance, heads under a tenth of the frame.",
+   "camera": "slow push 0.3 D",
+   "lens": "50 mm",
+   "reads": "frightened people behind the gate",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s90",
+     "captions": [
+      "และคนข้างใน",
+      "จะไม่เหลือประตูกั้น"
+     ]
+    }
+   ],
+   "cut_on": "และคนข้างใน",
+   "edit": "edited: no new nurse, child, old man and drip stand for one 2.6 s shot",
+   "assets": [
+    "RIV",
+    "guard",
+    "extras"
+   ]
+  },
+  {
+   "id": "S143",
+   "draft_id": "S149",
+   "scene": "06",
+   "t0": 288.2,
+   "t1": 289.675,
+   "f0": 6917,
+   "f1": 6952,
+   "frames": 35,
+   "cls": "B",
+   "set": "RIV",
+   "size": "INSERT",
+   "action": "The jaws come off the chain; the cutter goes down; the chain swings and settles.",
+   "camera": "locked",
+   "lens": "50 mm",
+   "reads": "the tool lowered",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s91",
+     "captions": [
+      "เขาลดมือลง"
+     ]
+    }
+   ],
+   "cut_on": "เขาลดมือลง",
+   "edit": "edited",
+   "assets": [
+    "RIV"
+   ]
+  },
+  {
+   "id": "S144",
+   "draft_id": "S150",
+   "scene": "06",
+   "t0": 289.675,
+   "t1": 291.741,
+   "f0": 6952,
+   "f1": 7002,
+   "frames": 50,
+   "cls": "B",
+   "set": "RIV",
+   "size": "W pan",
+   "action": "The next lot along the river: a bare concrete frame against the sky, a few scaffold tubes in silhouette, no light in it; a corrugated site hoarding with one panel bent open.",
+   "camera": "pan right 20 degrees from the gate to the frame",
+   "lens": "28 mm",
+   "reads": "a black unfinished building",
+   "sound": "tarpaulin flapping",
+   "narration": [
+    {
+     "id": "s92",
+     "captions": [
+      "ข้างๆ กัน",
+      "มีตึกสร้างไม่เสร็จ"
+     ]
+    }
+   ],
+   "cut_on": "ข้างๆ กัน",
+   "edit": "edited",
+   "assets": [
+    "RIV"
+   ]
+  },
+  {
+   "id": "S145",
+   "draft_id": "S151",
+   "scene": "06",
+   "t0": 291.741,
+   "t1": 293.128,
+   "f0": 7002,
+   "f1": 7035,
+   "frames": 33,
+   "cls": "B",
+   "set": "RIV",
+   "size": "MW",
+   "action": "On 'มืดสนิท': the four slip through the gap in the hoarding one at a time, left to right; Kong last, looking back.",
+   "camera": "locked",
+   "lens": "35 mm",
+   "reads": "figures vanishing into a fence",
+   "sound": "gravel",
+   "narration": [
+    {
+     "id": "s92",
+     "captions": [
+      "มืดสนิท"
+     ]
+    }
+   ],
+   "cut_on": "มืดสนิท",
+   "edit": "edited",
+   "assets": [
+    "RIV",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S146",
+   "draft_id": "S152",
+   "scene": "06",
+   "t0": 293.128,
+   "t1": 294.741,
+   "f0": 7035,
+   "f1": 7074,
+   "frames": 39,
+   "cls": "A",
+   "set": "SITE",
+   "size": "CU",
+   "action": "Inside, bare columns and puddles: Kong sets the cutter down against a column and bends forward getting his breath; his eyes go to the floor and stay there.",
+   "camera": "locked",
+   "lens": "50 mm",
+   "reads": "Kong noticing something below",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s93",
+     "captions": [
+      "แล้วก้องก็เห็น"
+     ]
+    }
+   ],
+   "cut_on": "(picture beat, no word)",
+   "edit": "kept",
+   "assets": [
+    "SITE",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S147",
+   "draft_id": "S153",
+   "scene": "06",
+   "t0": 294.741,
+   "t1": 295.854,
+   "f0": 7074,
+   "f1": 7100,
+   "frames": 26,
+   "cls": "B",
+   "set": "SITE",
+   "size": "INSERT",
+   "action": "Dusty concrete: a red drop lands and stars, a second beside it, a third.",
+   "camera": "locked macro",
+   "lens": "85 mm",
+   "reads": "blood dripping on concrete",
+   "sound": "single drops, very close",
+   "narration": [
+    {
+     "id": "s93",
+     "captions": [
+      "เลือดหยดลงพื้น"
+     ]
+    }
+   ],
+   "cut_on": "เลือดหยดลงพื้น",
+   "edit": "kept",
+   "assets": [
+    "SITE"
+   ]
+  },
+  {
+   "id": "S148",
+   "draft_id": "S154",
+   "scene": "06",
+   "t0": 295.854,
+   "t1": 297.855,
+   "f0": 7100,
+   "f1": 7149,
+   "frames": 49,
+   "cls": "A",
+   "set": "SITE",
+   "size": "INSERT tilt",
+   "action": "Up from the drops: Tos's elbow, the torn navy sleeve, blood running from under his clamping fingers.",
+   "camera": "tilt up 0.5 D",
+   "lens": "66 mm",
+   "reads": "blood under a man's hand",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s93",
+     "captions": [
+      "จากแขนเสื้อคุณทศ"
+     ]
+    }
+   ],
+   "cut_on": "จากแขนเสื้อคุณทศ",
+   "edit": "edited",
+   "assets": [
+    "SITE",
+    "tos"
+   ]
+  },
+  {
+   "id": "S149",
+   "draft_id": "S155",
+   "scene": "06",
+   "t0": 297.855,
+   "t1": 298.942,
+   "f0": 7149,
+   "f1": 7175,
+   "frames": 26,
+   "cls": "A",
+   "set": "SITE",
+   "size": "CU",
+   "action": "Praew steps in, eyes on the arm.",
+   "camera": "locked",
+   "lens": "66 mm",
+   "reads": "the doctor asking",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s94",
+     "captions": [
+      "แผลอะไร?"
+     ]
+    }
+   ],
+   "cut_on": "แผลอะไร?",
+   "edit": "kept",
+   "assets": [
+    "SITE",
+    "praew_wet"
+   ]
+  },
+  {
+   "id": "S150",
+   "draft_id": "S156",
+   "scene": "06",
+   "t0": 298.942,
+   "t1": 300.137,
+   "f0": 7175,
+   "f1": 7203,
+   "frames": 28,
+   "cls": "A",
+   "set": "SITE",
+   "size": "MCU",
+   "action": "From the waist up: Tos jerks back against a column, turning the arm away, shouting (`angry`).",
+   "camera": "handheld",
+   "lens": "50 mm",
+   "reads": "the man hiding the arm",
+   "sound": "echo",
+   "narration": [
+    {
+     "id": "s95",
+     "captions": [
+      "ไม่มีอะไร!"
+     ]
+    }
+   ],
+   "cut_on": "ไม่มีอะไร!",
+   "edit": "kept",
+   "assets": [
+    "SITE",
+    "tos"
+   ]
+  },
+  {
+   "id": "S151",
+   "draft_id": "S157",
+   "scene": "06",
+   "t0": 300.137,
+   "t1": 301.851,
+   "f0": 7203,
+   "f1": 7244,
+   "frames": 41,
+   "cls": "A",
+   "set": "SITE",
+   "size": "M",
+   "action": "Praew reaches for the arm with both blue gloves, Tos twists away; James backs off a step behind them.",
+   "camera": "handheld",
+   "lens": "35 mm",
+   "reads": "a struggle over an arm",
+   "sound": "echo",
+   "narration": [
+    {
+     "id": "s96",
+     "captions": [
+      "ขอดูเดี๋ยวนี้!"
+     ]
+    }
+   ],
+   "cut_on": "ขอดูเดี๋ยวนี้!",
+   "edit": "kept",
+   "assets": [
+    "SITE",
+    "praew_wet",
+    "tos",
+    "james_wet"
+   ]
+  },
+  {
+   "id": "S152",
+   "draft_id": "S158",
+   "scene": "06",
+   "t0": 301.851,
+   "t1": 302.725,
+   "f0": 7244,
+   "f1": 7265,
+   "frames": 21,
+   "cls": "A",
+   "set": "SITE",
+   "size": "CU",
+   "action": "Kong watches the arm.",
+   "camera": "locked",
+   "lens": "66 mm",
+   "reads": "Kong, cold",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s97",
+     "captions": [
+      "ก้องจำได้ดี"
+     ]
+    }
+   ],
+   "cut_on": "ก้องจำได้ดี",
+   "edit": "kept",
+   "assets": [
+    "SITE",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S153",
+   "draft_id": "S159",
+   "scene": "06",
+   "t0": 302.725,
+   "t1": 303.52,
+   "f0": 7265,
+   "f1": 7284,
+   "frames": 19,
+   "cls": "C1",
+   "set": "2D",
+   "size": "FLASH",
+   "action": "Seven frames of S48 again (the junior's eyes snapping open), tinted red, then eighteen of Kong's eye from S152's setup held under it at 30 %: a memory, cut on the word.",
+   "camera": "reuse of rendered frames",
+   "lens": "2D",
+   "reads": "the red eyes opening",
+   "sound": "pulse returns",
+   "narration": [
+    {
+     "id": "s97",
+     "captions": [
+      "น้องของเขา"
+     ]
+    }
+   ],
+   "cut_on": "น้องของเขา",
+   "edit": "edited: reuses rendered frames; nothing new is drawn",
+   "assets": [
+    "2D"
+   ]
+  },
+  {
+   "id": "S154",
+   "draft_id": "S160",
+   "scene": "06",
+   "t0": 303.52,
+   "t1": 305.819,
+   "f0": 7284,
+   "f1": 7340,
+   "frames": 56,
+   "cls": "B",
+   "set": "SITE",
+   "size": "INSERT",
+   "action": "Kong's glove tightens on the crowbar where it rests on his shoulder.",
+   "camera": "locked",
+   "lens": "85 mm",
+   "reads": "a fist on a steel bar",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s97",
+     "captions": [
+      "ใช้เวลาแค่ 60 วินาที"
+     ]
+    }
+   ],
+   "cut_on": "ใช้เวลาแค่ 60 วินาที",
+   "edit": "edited",
+   "assets": [
+    "SITE",
+    "kong_wet",
+    "crowbar"
+   ]
+  },
+  {
+   "id": "S155",
+   "draft_id": "S161",
+   "scene": "06",
+   "t0": 305.819,
+   "t1": 308.337,
+   "f0": 7340,
+   "f1": 7400,
+   "frames": 60,
+   "cls": "B",
+   "set": "SITE",
+   "size": "W",
+   "action": "The bare hall from the back: the three in a knot at a column, still pulling and shouting silently, Kong apart; behind them the bent hoarding panel and the street.",
+   "camera": "locked",
+   "lens": "24 mm",
+   "reads": "four people arguing in an empty hall",
+   "sound": "their echo dying; one far snarl",
+   "narration": [
+    {
+     "id": "s98",
+     "captions": [
+      "แต่เสียงเถียงกัน",
+      "ดังเกินไป"
+     ]
+    }
+   ],
+   "cut_on": "แต่เสียงเถียงกัน",
+   "edit": "kept",
+   "assets": [
+    "SITE",
+    "kong_wet"
+   ]
+  },
+  {
+   "id": "S156",
+   "draft_id": "S162",
+   "scene": "06",
+   "t0": 308.337,
+   "t1": 310.085,
+   "f0": 7400,
+   "f1": 7442,
+   "frames": 42,
+   "cls": "B",
+   "set": "SITE",
+   "size": "W long",
+   "action": "Out through the gap (screen left): darkness, then one running silhouette under the far lamp, then five.",
+   "camera": "locked",
+   "lens": "100 mm",
+   "reads": "runners coming out of the dark",
+   "sound": "feet on gravel, closing",
+   "narration": [
+    {
+     "id": "s99",
+     "captions": [
+      "ในความมืด",
+      "มีเสียงฝีเท้า"
+     ]
+    }
+   ],
+   "cut_on": "ในความมืด",
+   "edit": "kept",
+   "assets": [
+    "SITE",
+    "infected(extras)",
+    "infected sprint"
+   ]
+  },
+  {
+   "id": "S157",
+   "draft_id": "S163",
+   "scene": "06",
+   "t0": 310.085,
+   "t1": 311.61,
+   "f0": 7442,
+   "f1": 7479,
+   "frames": 37,
+   "cls": "A",
+   "set": "SITE",
+   "size": "CU",
+   "action": "James's head whips to the sound; his mouth shapes 'พี่'.",
+   "camera": "locked",
+   "lens": "66 mm",
+   "reads": "the rider hearing it",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s99",
+     "captions": [
+      "วิ่งเข้ามา"
+     ]
+    }
+   ],
+   "cut_on": "วิ่งเข้ามา",
+   "edit": "kept",
+   "assets": [
+    "SITE",
+    "james_wet"
+   ]
+  },
+  {
+   "id": "S158",
+   "draft_id": "S164",
+   "scene": "06",
+   "t0": 311.61,
+   "t1": 313.433,
+   "f0": 7479,
+   "f1": 7522,
+   "frames": 43,
+   "cls": "A",
+   "set": "SITE",
+   "size": "M low",
+   "action": "Kong brings the crowbar off his shoulder and raises it in both hands. He stands square to camera: Tos against the column on his right, the gap on his left.",
+   "camera": "locked, low",
+   "lens": "28 mm",
+   "reads": "Kong raising the bar",
+   "sound": "steel scrape, pulse",
+   "narration": [
+    {
+     "id": "s100",
+     "captions": [
+      "ก้องยกชะแลงขึ้น"
+     ]
+    }
+   ],
+   "cut_on": "ก้องยกชะแลงขึ้น",
+   "edit": "kept",
+   "assets": [
+    "SITE",
+    "kong_wet",
+    "tos",
+    "crowbar"
+   ]
+  },
+  {
+   "id": "S159",
+   "draft_id": "S165",
+   "scene": "06",
+   "t0": 313.433,
+   "t1": 314.757,
+   "f0": 7522,
+   "f1": 7554,
+   "frames": 32,
+   "cls": "A",
+   "set": "SITE",
+   "size": "ECU",
+   "action": "Kong's eyes: right, to Tos. Left, to the gap. Right again. The bar starts down.",
+   "camera": "locked, 780 ppd",
+   "lens": "100 mm",
+   "reads": "eyes choosing",
+   "sound": "",
+   "narration": [
+    {
+     "id": "s101",
+     "captions": [
+      "แต่เขาจะฟาด",
+      "ใคร"
+     ]
+    }
+   ],
+   "cut_on": "แต่เขาจะฟาด",
+   "edit": "kept",
+   "assets": [
+    "SITE",
+    "kong_wet",
+    "tos",
+    "crowbar"
+   ]
+  },
+  {
+   "id": "S160",
+   "draft_id": "S166",
+   "scene": "06",
+   "t0": 314.757,
+   "t1": 316.357,
+   "f0": 7554,
+   "f1": 7593,
+   "frames": 39,
+   "cls": "C1",
+   "set": "2D",
+   "size": "BLACK",
+   "action": "Black.",
+   "camera": "-",
+   "lens": "-",
+   "reads": "nothing",
+   "sound": "all sound cut; 1.0 s of silence; one watch tick",
+   "narration": [
+    {
+     "id": "s101",
+     "captions": [
+      "ใคร"
+     ]
+    }
+   ],
+   "cut_on": "(picture beat, no word)",
+   "edit": "kept",
+   "assets": [
+    "2D"
+   ]
+  },
+  {
+   "id": "S161",
+   "draft_id": "S167",
+   "scene": "06",
+   "t0": 316.357,
+   "t1": 318.957,
+   "f0": 7593,
+   "f1": 7655,
+   "frames": 62,
+   "cls": "C1",
+   "set": "2D",
+   "size": "END CARD",
+   "action": "Black, the title mark and 'เขตปิดตาย 09' in the hook's title style, 'จบตอนที่ 1' under it in Kanit.",
+   "camera": "2D: the mark eases in over 8 f",
+   "lens": "-",
+   "reads": "the series mark",
+   "sound": "low room tone",
+   "narration": [],
+   "cut_on": "(picture beat, no word)",
+   "edit": "kept",
+   "assets": [
+    "2D"
+   ]
+  }
+ ]
+}

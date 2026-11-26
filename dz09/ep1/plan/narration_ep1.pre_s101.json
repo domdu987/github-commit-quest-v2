@@ -1,0 +1,3715 @@
+{
+ "title": "DEAD ZONE 09 EP.1, narration after the hook title (EDITED; the screenwriter's draft is narration_ep1_draft.json)",
+ "voice": "Ohm (one narrator: third person + the short lines)",
+ "hook": {
+  "occupies": [
+   0.0,
+   53.32
+  ],
+  "bite_at": 43.795,
+  "script": "audio/narr_ohm/script.json (s01-s16)"
+ },
+ "rate": {
+  "source": "audio/narr_ohm/captions_timing.json",
+  "overall_chars_per_s": 11.04,
+  "mid_caption_chars_per_s": 12.58,
+  "sentence_tail_s": 0.38,
+  "char_definition": "Thai characters incl. vowel and tone marks, numbers spelled out, without spaces and punctuation",
+  "model": "caption = max(0.42, chars / 12.58) s; the last caption of a sentence + 0.38 s; then the pause written per sentence"
+ },
+ "episode": {
+  "first_new_word": 53.62,
+  "last_word_ends": 315.11,
+  "picture_ends": 318.96,
+  "running_time": "5:18.96",
+  "frames_total": 7655,
+  "frames_new": 6375
+ },
+ "count": {
+  "sentences": 85,
+  "captions": 211,
+  "emphasised_captions": 62,
+  "chars_spoken": 2527,
+  "chars_with_spaces_and_punctuation": 2685,
+  "hook_chars_spoken": 573,
+  "hook_chars_with_spaces": 609,
+  "draft_sentences": 89,
+  "draft_chars_spoken": 2685,
+  "draft_chars_with_spaces_and_punctuation": 2856,
+  "draft_running_time": "5:34.62"
+ },
+ "id_map_draft_to_edited": {
+  "s17": "s17",
+  "s18": "s18",
+  "s19": "s19",
+  "s20": "s20",
+  "s21": "s21",
+  "s22": "s22",
+  "s23": "s23",
+  "s24": "s24",
+  "s25": "s25",
+  "s26": "s26",
+  "s27": "s27",
+  "s28": "s28",
+  "s29": "s29",
+  "n1": "s30",
+  "s30": "s31",
+  "s31": "s32",
+  "s32": "s33",
+  "s33": "s34",
+  "s34": "s35",
+  "s35": "s36",
+  "s36": "s37",
+  "s37": "s38",
+  "s38": "s39",
+  "s40": "s40",
+  "s41": "s41",
+  "s42": "s42",
+  "s43": "s43",
+  "s44": "s44",
+  "s45": "s45",
+  "s46": "s46",
+  "s48": "s47",
+  "s49": "s48",
+  "s50": "s49",
+  "s51": "s50",
+  "s52": "s51",
+  "s53": "s52",
+  "s54": "s53",
+  "s55": "s54",
+  "s56": "s55",
+  "s57": "s56",
+  "s58": "s57",
+  "s59": "s58",
+  "s60": "s59",
+  "s61": "s60",
+  "s62": "s61",
+  "s63": "s62",
+  "s64": "s63",
+  "s65": "s64",
+  "s66": "s65",
+  "s67": "s66",
+  "s68": "s67",
+  "s69": "s68",
+  "s70": "s69",
+  "s71": "s70",
+  "s72": "s71",
+  "s73": "s72",
+  "s74": "s73",
+  "s75": "s74",
+  "s77": "s75",
+  "s78": "s76",
+  "s79": "s77",
+  "s80": "s78",
+  "s81": "s79",
+  "s82": "s80",
+  "s83": "s81",
+  "s85": "s82",
+  "s86": "s83",
+  "s87": "s84",
+  "s88": "s85",
+  "s89": "s86",
+  "s90": "s87",
+  "s91": "s88",
+  "s92": "s89",
+  "s93": "s90",
+  "s94": "s91",
+  "s95": "s92",
+  "s97": "s93",
+  "s98": "s94",
+  "s99": "s95",
+  "s100": "s96",
+  "s101": "s97",
+  "s102": "s98",
+  "s103": "s99",
+  "s104": "s100",
+  "s105": "s101",
+  "s39": "s39(cut)",
+  "s47": "s47(cut)",
+  "s76": "s76(cut)",
+  "s84": "s84(cut)",
+  "s96": "s96(cut)"
+ },
+ "emph_for_finish_py": [
+  [
+   "50 วินาที",
+   "50 วินาที",
+   "amber"
+  ],
+  [
+   "หันไปหาเสียง",
+   "เสียง",
+   "amber"
+  ],
+  [
+   "ไหลไม่หยุด",
+   "ไหลไม่หยุด",
+   "red"
+  ],
+  [
+   "30 วินาที",
+   "30 วินาที",
+   "amber"
+  ],
+  [
+   "ถี่ขึ้น",
+   "ถี่ขึ้น",
+   "red"
+  ],
+  [
+   "ผมหนาว...",
+   "หนาว",
+   "red"
+  ],
+  [
+   "โรงพยาบาล",
+   "โรงพยาบาล",
+   "amber"
+  ],
+  [
+   "สัญญาครั้งที่ 2",
+   "สัญญาครั้งที่ 2",
+   "amber"
+  ],
+  [
+   "หยุดนิ่ง",
+   "หยุดนิ่ง",
+   "red"
+  ],
+  [
+   "ไม่เต้นแล้ว",
+   "ไม่เต้นแล้ว",
+   "red"
+  ],
+  [
+   "เขาเสียน้องไปแล้ว",
+   "เสียน้องไปแล้ว",
+   "red"
+  ],
+  [
+   "10 วินาที",
+   "10 วินาที",
+   "amber"
+  ],
+  [
+   "ก็ลืมตา",
+   "ลืมตา",
+   "red"
+  ],
+  [
+   "ไม่ใช่ตาคนแล้ว",
+   "ไม่ใช่ตาคน",
+   "red"
+  ],
+  [
+   "มันมองไม่เห็นเขา",
+   "มองไม่เห็น",
+   "amber"
+  ],
+  [
+   "มันกระโจนตามไป",
+   "กระโจนตาม",
+   "red"
+  ],
+  [
+   "กับพวกที่ไล่กัด",
+   "ไล่กัด",
+   "red"
+  ],
+  [
+   "นี่ไม่ใช่อุบัติเหตุ",
+   "ไม่ใช่อุบัติเหตุ",
+   "red"
+  ],
+  [
+   "พลิกตะแคง",
+   "พลิกตะแคง",
+   "amber"
+  ],
+  [
+   "หมอแพรว",
+   "หมอแพรว",
+   "amber"
+  ],
+  [
+   "กำลังดึงคุณทศ",
+   "คุณทศ",
+   "amber"
+  ],
+  [
+   "อัดเขาติดเบาะ",
+   "ติดเบาะ",
+   "red"
+  ],
+  [
+   "ฝูงของมัน",
+   "ฝูงของมัน",
+   "red"
+  ],
+  [
+   "วิ่งกลับเข้าไปช่วย",
+   "กลับเข้าไปช่วย",
+   "amber"
+  ],
+  [
+   "เจมส์",
+   "เจมส์",
+   "amber"
+  ],
+  [
+   "คือน้องของก้อง",
+   "น้องของก้อง",
+   "red"
+  ],
+  [
+   "หน้าที่แนบกระจก",
+   "แนบกระจก",
+   "red"
+  ],
+  [
+   "รถบรรทุกขวาง",
+   "ขวาง",
+   "red"
+  ],
+  [
+   "เปิดไซเรนขอทาง",
+   "ไซเรน",
+   "red"
+  ],
+  [
+   "แล้วหันมา",
+   "หันมา",
+   "red"
+  ],
+  [
+   "แต่สายไปแล้ว",
+   "สายไปแล้ว",
+   "red"
+  ],
+  [
+   "เสียง กับแสง",
+   "เสียง กับแสง",
+   "amber"
+  ],
+  [
+   "มีทางลง",
+   "ทางลง",
+   "amber"
+  ],
+  [
+   "กระจกเริ่มร้าว",
+   "ร้าว",
+   "red"
+  ],
+  [
+   "แค่ 4 อย่าง",
+   "4 อย่าง",
+   "amber"
+  ],
+  [
+   "ต้องทิ้งทั้งหมด",
+   "ทิ้ง",
+   "red"
+  ],
+  [
+   "วิ่งตามแสงไป",
+   "ตามแสง",
+   "amber"
+  ],
+  [
+   "เป็นคนแรก",
+   "คนแรก",
+   "amber"
+  ],
+  [
+   "เลือดซึมออกมา",
+   "เลือด",
+   "red"
+  ],
+  [
+   "ไม่บอกใครสักคำ",
+   "ไม่บอกใคร",
+   "red"
+  ],
+  [
+   "ข้างล่างมืด",
+   "มืด",
+   "amber"
+  ],
+  [
+   "เราอาจช่วยไม่ได้",
+   "ช่วยไม่ได้",
+   "red"
+  ],
+  [
+   "โรงพยาบาลอยู่ข้างหน้า",
+   "โรงพยาบาล",
+   "amber"
+  ],
+  [
+   "ยังไม่มีสาย",
+   "ยังไม่มีสาย",
+   "red"
+  ],
+  [
+   "จอสว่างวาบ",
+   "สว่างวาบ",
+   "red"
+  ],
+  [
+   "บอกว่าจะไปท่าเรือ",
+   "ท่าเรือ",
+   "amber"
+  ],
+  [
+   "พ่ออย่าผิดสัญญานะ",
+   "อย่าผิดสัญญา",
+   "red"
+  ],
+  [
+   "สัญญาณก็ขาด",
+   "สัญญาณก็ขาด",
+   "red"
+  ],
+  [
+   "คุณอาจไปไม่ถึงลูก",
+   "ไปไม่ถึงลูก",
+   "red"
+  ],
+  [
+   "ไฟยังสว่าง",
+   "ไฟยังสว่าง",
+   "amber"
+  ],
+  [
+   "ปิดสนิท",
+   "ปิดสนิท",
+   "red"
+  ],
+  [
+   "ใครโดนกัดมาบ้าง",
+   "โดนกัด",
+   "red"
+  ],
+  [
+   "แบตยังเต็ม 3 ขีด",
+   "3 ขีด",
+   "amber"
+  ],
+  [
+   "มาทั้งฝูง",
+   "ทั้งฝูง",
+   "red"
+  ],
+  [
+   "จะไม่เหลือประตูกั้น",
+   "ไม่เหลือประตู",
+   "red"
+  ],
+  [
+   "มืดสนิท",
+   "มืดสนิท",
+   "amber"
+  ],
+  [
+   "เลือดหยดลงพื้น",
+   "เลือด",
+   "red"
+  ],
+  [
+   "ใช้เวลาแค่ 60 วินาที",
+   "60 วินาที",
+   "amber"
+  ],
+  [
+   "ดังเกินไป",
+   "ดังเกินไป",
+   "red"
+  ],
+  [
+   "มีเสียงฝีเท้า",
+   "เสียงฝีเท้า",
+   "red"
+  ],
+  [
+   "ก้องยกชะแลงขึ้น",
+   "ชะแลง",
+   "amber"
+  ],
+  [
+   "ใคร",
+   "ใคร",
+   "red"
+  ]
+ ],
+ "sentences": [
+  {
+   "id": "s17",
+   "draft_id": "s17",
+   "scene": "02",
+   "speaker": "narr",
+   "tts": "เหลืออีก ห้าสิบวินาที",
+   "text": "เหลืออีก 50 วินาที",
+   "start": 53.62,
+   "dur": 1.97,
+   "end": 55.59,
+   "voiced": 1.59,
+   "pause_before": 0.3,
+   "chars": 20,
+   "chars_billed": 21,
+   "captions": [
+    {
+     "text": "เหลืออีก",
+     "t0": 53.62,
+     "t1": 54.256
+    },
+    {
+     "text": "50 วินาที",
+     "t0": 54.256,
+     "t1": 55.59,
+     "emph": "50 วินาที",
+     "colour": "amber"
+    }
+   ],
+   "fx": "hard cut from title to picture; rain + beacons back at full level; low heartbeat pulse starts (one beat per second, under the voice) and runs to s32",
+   "optional_trim": false,
+   "beat": "countdown opens (pay-off of the hook's last line)",
+   "edit": "kept",
+   "shots": [
+    "S25",
+    "S26"
+   ]
+  },
+  {
+   "id": "s18",
+   "draft_id": "s18",
+   "scene": "02",
+   "speaker": "narr",
+   "tts": "ก้องเอาเครื่องตัด กระแทกมันกระเด็น ไปชนรถคันข้างๆ",
+   "text": "ก้องเอาเครื่องตัด กระแทกมันกระเด็น ไปชนรถคันข้างๆ",
+   "start": 55.69,
+   "dur": 4.116,
+   "end": 59.806,
+   "voiced": 3.736,
+   "pause_before": 0.1,
+   "chars": 47,
+   "chars_billed": 49,
+   "captions": [
+    {
+     "text": "ก้องเอาเครื่องตัด",
+     "t0": 55.69,
+     "t1": 57.041
+    },
+    {
+     "text": "กระแทกมันกระเด็น",
+     "t0": 57.041,
+     "t1": 58.313
+    },
+    {
+     "text": "ไปชนรถคันข้างๆ",
+     "t0": 58.313,
+     "t1": 59.806
+    }
+   ],
+   "fx": "metal thud on 'กระแทก'; body hits a car door on 'ชนรถ'",
+   "optional_trim": false,
+   "beat": "Kong rams the driver off with the tool body",
+   "edit": "kept",
+   "shots": [
+    "S27",
+    "S28"
+   ]
+  },
+  {
+   "id": "s19",
+   "draft_id": "s19",
+   "scene": "02",
+   "speaker": "narr",
+   "tts": "สัญญาณกันขโมย ดังลั่น มันทิ้งเหยื่อ หันไปหาเสียง",
+   "text": "สัญญาณกันขโมย ดังลั่น มันทิ้งเหยื่อ หันไปหาเสียง",
+   "start": 59.906,
+   "dur": 3.957,
+   "end": 63.863,
+   "voiced": 3.577,
+   "pause_before": 0.1,
+   "chars": 45,
+   "chars_billed": 48,
+   "captions": [
+    {
+     "text": "สัญญาณกันขโมย",
+     "t0": 59.906,
+     "t1": 60.939
+    },
+    {
+     "text": "ดังลั่น",
+     "t0": 60.939,
+     "t1": 61.496
+    },
+    {
+     "text": "มันทิ้งเหยื่อ",
+     "t0": 61.496,
+     "t1": 62.529
+    },
+    {
+     "text": "หันไปหาเสียง",
+     "t0": 62.529,
+     "t1": 63.863,
+     "emph": "เสียง",
+     "colour": "amber"
+    }
+   ],
+   "fx": "car alarm (two-tone, panned to the alarm car's side) from the first caption, hazards blink; infected snarl turning away",
+   "optional_trim": false,
+   "beat": "SETUP: they go for sound and flashing light",
+   "edit": "edited: 'ทันที' was filler; 'มันทิ้งเหยื่อ' states the strange thing the viewer must notice (it leaves a victim for a noise), which is the question the siren answers",
+   "shots": [
+    "S29",
+    "S30"
+   ]
+  },
+  {
+   "id": "s20",
+   "draft_id": "s20",
+   "scene": "02",
+   "speaker": "narr",
+   "tts": "ก้องพยุงน้อง ไปหลบหลังรถกู้ภัย",
+   "text": "ก้องพยุงน้อง ไปหลบหลังรถกู้ภัย",
+   "start": 64.013,
+   "dur": 2.685,
+   "end": 66.698,
+   "voiced": 2.305,
+   "pause_before": 0.15,
+   "chars": 29,
+   "chars_billed": 30,
+   "captions": [
+    {
+     "text": "ก้องพยุงน้อง",
+     "t0": 64.013,
+     "t1": 64.967
+    },
+    {
+     "text": "ไปหลบหลังรถกู้ภัย",
+     "t0": 64.967,
+     "t1": 66.698
+    }
+   ],
+   "fx": "two pairs of boots, one dragging; alarm now further off (distance + low-pass)",
+   "optional_trim": false,
+   "beat": "cover",
+   "edit": "kept",
+   "shots": [
+    "S31"
+   ]
+  },
+  {
+   "id": "s21",
+   "draft_id": "s21",
+   "scene": "02",
+   "speaker": "kong",
+   "tts": "มองหน้าพี่ไว้! ได้ยินไหม!",
+   "text": "มองหน้าพี่ไว้! ได้ยินไหม!",
+   "start": 66.948,
+   "dur": 2.129,
+   "end": 69.077,
+   "voiced": 1.749,
+   "pause_before": 0.25,
+   "chars": 22,
+   "chars_billed": 25,
+   "captions": [
+    {
+     "text": "มองหน้าพี่ไว้!",
+     "t0": 66.948,
+     "t1": 67.982
+    },
+    {
+     "text": "ได้ยินไหม!",
+     "t0": 67.982,
+     "t1": 69.077
+    }
+   ],
+   "fx": "dry, close; rain on truck metal",
+   "optional_trim": false,
+   "beat": "dialogue",
+   "edit": "kept",
+   "shots": [
+    "S32"
+   ]
+  },
+  {
+   "id": "s22",
+   "draft_id": "s22",
+   "scene": "02",
+   "speaker": "narr",
+   "tts": "น้องพยักหน้า แต่เลือด ไหลไม่หยุด",
+   "text": "น้องพยักหน้า แต่เลือด ไหลไม่หยุด",
+   "start": 69.227,
+   "dur": 2.765,
+   "end": 71.992,
+   "voiced": 2.385,
+   "pause_before": 0.15,
+   "chars": 30,
+   "chars_billed": 32,
+   "captions": [
+    {
+     "text": "น้องพยักหน้า",
+     "t0": 69.227,
+     "t1": 70.181
+    },
+    {
+     "text": "แต่เลือด",
+     "t0": 70.181,
+     "t1": 70.817
+    },
+    {
+     "text": "ไหลไม่หยุด",
+     "t0": 70.817,
+     "t1": 71.992,
+     "emph": "ไหลไม่หยุด",
+     "colour": "red"
+    }
+   ],
+   "fx": "wet cloth press; junior's breath",
+   "optional_trim": false,
+   "beat": "wound",
+   "edit": "kept",
+   "shots": [
+    "S33",
+    "S34",
+    "S35"
+   ]
+  },
+  {
+   "id": "s23",
+   "draft_id": "s23",
+   "scene": "02",
+   "speaker": "narr",
+   "tts": "สามสิบวินาที",
+   "text": "30 วินาที",
+   "start": 73.8,
+   "dur": 1.334,
+   "end": 75.134,
+   "voiced": 0.954,
+   "pause_before": 1.808,
+   "chars": 12,
+   "chars_billed": 12,
+   "captions": [
+    {
+     "text": "30 วินาที",
+     "t0": 73.8,
+     "t1": 75.134,
+     "emph": "30 วินาที",
+     "colour": "amber"
+    }
+   ],
+   "fx": "watch tick, close and dry (three ticks before the line)",
+   "optional_trim": false,
+   "beat": "countdown",
+   "edit": "kept",
+   "shots": [
+    "S36"
+   ]
+  },
+  {
+   "id": "s24",
+   "draft_id": "s24",
+   "scene": "02",
+   "speaker": "narr",
+   "tts": "ลมหายใจน้อง สั้นลง ถี่ขึ้น",
+   "text": "ลมหายใจน้อง สั้นลง ถี่ขึ้น",
+   "start": 75.434,
+   "dur": 2.288,
+   "end": 77.722,
+   "voiced": 1.908,
+   "pause_before": 0.3,
+   "chars": 24,
+   "chars_billed": 26,
+   "captions": [
+    {
+     "text": "ลมหายใจน้อง",
+     "t0": 75.434,
+     "t1": 76.308
+    },
+    {
+     "text": "สั้นลง",
+     "t0": 76.308,
+     "t1": 76.785
+    },
+    {
+     "text": "ถี่ขึ้น",
+     "t0": 76.785,
+     "t1": 77.722,
+     "emph": "ถี่ขึ้น",
+     "colour": "red"
+    }
+   ],
+   "fx": "fast shallow breathing, shivering",
+   "optional_trim": false,
+   "beat": "symptoms",
+   "edit": "kept",
+   "shots": [
+    "S37"
+   ]
+  },
+  {
+   "id": "s25",
+   "draft_id": "s25",
+   "scene": "02",
+   "speaker": "crew",
+   "tts": "พี่... ผมหนาว...",
+   "text": "พี่... ผมหนาว...",
+   "start": 78.172,
+   "dur": 1.277,
+   "end": 79.449,
+   "voiced": 0.897,
+   "pause_before": 0.45,
+   "chars": 9,
+   "chars_billed": 16,
+   "captions": [
+    {
+     "text": "พี่...",
+     "t0": 78.172,
+     "t1": 78.592
+    },
+    {
+     "text": "ผมหนาว...",
+     "t0": 78.592,
+     "t1": 79.449,
+     "emph": "หนาว",
+     "colour": "red"
+    }
+   ],
+   "fx": "voice low; heartbeat a little faster",
+   "optional_trim": false,
+   "beat": "dialogue",
+   "edit": "kept",
+   "shots": [
+    "S38"
+   ]
+  },
+  {
+   "id": "s26",
+   "draft_id": "s26",
+   "scene": "02",
+   "speaker": "kong",
+   "tts": "อดทนไว้ เดี๋ยวพี่พาไป โรงพยาบาล",
+   "text": "อดทนไว้ เดี๋ยวพี่พาไป โรงพยาบาล",
+   "start": 79.749,
+   "dur": 2.685,
+   "end": 82.434,
+   "voiced": 2.305,
+   "pause_before": 0.3,
+   "chars": 29,
+   "chars_billed": 31,
+   "captions": [
+    {
+     "text": "อดทนไว้",
+     "t0": 79.749,
+     "t1": 80.305
+    },
+    {
+     "text": "เดี๋ยวพี่พาไป",
+     "t0": 80.305,
+     "t1": 81.338
+    },
+    {
+     "text": "โรงพยาบาล",
+     "t0": 81.338,
+     "t1": 82.434,
+     "emph": "โรงพยาบาล",
+     "colour": "amber"
+    }
+   ],
+   "fx": "",
+   "optional_trim": false,
+   "beat": "promise no. 2 (SETUP for s49, s76(cut), s84)",
+   "edit": "kept",
+   "shots": [
+    "S39"
+   ]
+  },
+  {
+   "id": "s27",
+   "draft_id": "s27",
+   "scene": "02",
+   "speaker": "narr",
+   "tts": "สัญญาครั้งที่สอง ของคืนนี้",
+   "text": "สัญญาครั้งที่ 2 ของคืนนี้",
+   "start": 82.934,
+   "dur": 2.367,
+   "end": 85.301,
+   "voiced": 1.987,
+   "pause_before": 0.5,
+   "chars": 25,
+   "chars_billed": 26,
+   "captions": [
+    {
+     "text": "สัญญาครั้งที่ 2",
+     "t0": 82.934,
+     "t1": 84.206,
+     "emph": "สัญญาครั้งที่ 2",
+     "colour": "amber"
+    },
+    {
+     "text": "ของคืนนี้",
+     "t0": 84.206,
+     "t1": 85.301
+    }
+   ],
+   "fx": "",
+   "optional_trim": false,
+   "beat": "open loop: the promise count",
+   "edit": "edited: shorter; the count is kept as a motif but no longer does arithmetic in the middle of the countdown",
+   "shots": [
+    "S40"
+   ]
+  },
+  {
+   "id": "s28",
+   "draft_id": "s28",
+   "scene": "02",
+   "speaker": "narr",
+   "tts": "มือที่สั่น ค่อยๆ หยุดนิ่ง",
+   "text": "มือที่สั่น ค่อยๆ หยุดนิ่ง",
+   "start": 85.901,
+   "dur": 2.231,
+   "end": 88.132,
+   "voiced": 1.851,
+   "pause_before": 0.6,
+   "chars": 23,
+   "chars_billed": 25,
+   "captions": [
+    {
+     "text": "มือที่สั่น",
+     "t0": 85.901,
+     "t1": 86.696
+    },
+    {
+     "text": "ค่อยๆ",
+     "t0": 86.696,
+     "t1": 87.116
+    },
+    {
+     "text": "หยุดนิ่ง",
+     "t0": 87.116,
+     "t1": 88.132,
+     "emph": "หยุดนิ่ง",
+     "colour": "red"
+    }
+   ],
+   "fx": "breathing stops; heartbeat stops with it; only rain",
+   "optional_trim": false,
+   "beat": "he goes still",
+   "edit": "kept",
+   "shots": [
+    "S41"
+   ]
+  },
+  {
+   "id": "s29",
+   "draft_id": "s29",
+   "scene": "02",
+   "speaker": "narr",
+   "tts": "ก้องจับชีพจร ไม่เต้นแล้ว",
+   "text": "ก้องจับชีพจร ไม่เต้นแล้ว",
+   "start": 88.432,
+   "dur": 2.208,
+   "end": 90.64,
+   "voiced": 1.828,
+   "pause_before": 0.3,
+   "chars": 23,
+   "chars_billed": 24,
+   "captions": [
+    {
+     "text": "ก้องจับชีพจร",
+     "t0": 88.432,
+     "t1": 89.386
+    },
+    {
+     "text": "ไม่เต้นแล้ว",
+     "t0": 89.386,
+     "t1": 90.64,
+     "emph": "ไม่เต้นแล้ว",
+     "colour": "red"
+    }
+   ],
+   "fx": "rain only; glove on wet skin",
+   "optional_trim": false,
+   "beat": "he checks for a response",
+   "edit": "edited: 'ไม่มีอะไรเต้นเลย' is not how a rescuer says it; the neck is where the wound is, so the place is left to the picture",
+   "shots": [
+    "S42"
+   ]
+  },
+  {
+   "id": "s30",
+   "draft_id": "n1",
+   "scene": "02",
+   "speaker": "narr",
+   "tts": "ก้องคิดว่า เขาเสียน้องไปแล้ว",
+   "text": "ก้องคิดว่า เขาเสียน้องไปแล้ว",
+   "start": 90.94,
+   "dur": 2.526,
+   "end": 93.467,
+   "voiced": 2.146,
+   "pause_before": 0.3,
+   "chars": 27,
+   "chars_billed": 28,
+   "captions": [
+    {
+     "text": "ก้องคิดว่า",
+     "t0": 90.94,
+     "t1": 91.735
+    },
+    {
+     "text": "เขาเสียน้องไปแล้ว",
+     "t0": 91.735,
+     "t1": 93.467,
+     "emph": "เสียน้องไปแล้ว",
+     "colour": "red"
+    }
+   ],
+   "fx": "rain only; Kong's breath going out of him",
+   "optional_trim": false,
+   "beat": "REVERSAL SET-UP: Kong believes the worst is over; the audience has been told what comes next",
+   "edit": "new: new: the shortened s29 left 3 s of dead air before '10 วินาที'; this line uses it to put Kong one step behind the audience, which is the hook's own device ('ก้องยังไม่รู้เลยว่า')",
+   "shots": [
+    "S43",
+    "S44"
+   ]
+  },
+  {
+   "id": "s31",
+   "draft_id": "s30",
+   "scene": "02",
+   "speaker": "narr",
+   "tts": "สิบวินาที",
+   "text": "10 วินาที",
+   "start": 93.8,
+   "dur": 1.095,
+   "end": 94.895,
+   "voiced": 0.715,
+   "pause_before": 0.333,
+   "chars": 9,
+   "chars_billed": 9,
+   "captions": [
+    {
+     "text": "10 วินาที",
+     "t0": 93.8,
+     "t1": 94.895,
+     "emph": "10 วินาที",
+     "colour": "amber"
+    }
+   ],
+   "fx": "watch tick alone",
+   "optional_trim": false,
+   "beat": "countdown",
+   "edit": "kept",
+   "shots": [
+    "S44"
+   ]
+  },
+  {
+   "id": "s32",
+   "draft_id": "s31",
+   "scene": "02",
+   "speaker": "kong",
+   "tts": "เฮ้ย! ได้ยินพี่ไหม!",
+   "text": "เฮ้ย! ได้ยินพี่ไหม!",
+   "start": 95.245,
+   "dur": 1.754,
+   "end": 96.999,
+   "voiced": 1.374,
+   "pause_before": 0.35,
+   "chars": 16,
+   "chars_billed": 19,
+   "captions": [
+    {
+     "text": "เฮ้ย!",
+     "t0": 95.245,
+     "t1": 95.665
+    },
+    {
+     "text": "ได้ยินพี่ไหม!",
+     "t0": 95.665,
+     "t1": 96.999
+    }
+   ],
+   "fx": "",
+   "optional_trim": false,
+   "beat": "dialogue",
+   "edit": "kept",
+   "shots": [
+    "S45",
+    "S46"
+   ]
+  },
+  {
+   "id": "s33",
+   "draft_id": "s32",
+   "scene": "02",
+   "speaker": "narr",
+   "tts": "แล้วน้อง ก็ลืมตา",
+   "text": "แล้วน้อง ก็ลืมตา",
+   "start": 100.9,
+   "dur": 1.572,
+   "end": 102.472,
+   "voiced": 1.192,
+   "pause_before": 3.901,
+   "chars": 15,
+   "chars_billed": 16,
+   "captions": [
+    {
+     "text": "แล้วน้อง",
+     "t0": 100.9,
+     "t1": 101.536
+    },
+    {
+     "text": "ก็ลืมตา",
+     "t0": 101.536,
+     "t1": 102.472,
+     "emph": "ลืมตา",
+     "colour": "red"
+    }
+   ],
+   "fx": "three watch ticks in silence before the line; sub-bass swell into the next line",
+   "optional_trim": false,
+   "beat": "PAY-OFF of the 60-second rule: eyes open 57.6 s after the bite",
+   "edit": "kept",
+   "shots": [
+    "S48"
+   ]
+  },
+  {
+   "id": "s34",
+   "draft_id": "s33",
+   "scene": "02",
+   "speaker": "narr",
+   "tts": "แต่ตาคู่นั้น ไม่ใช่ตาคนแล้ว",
+   "text": "แต่ตาคู่นั้น ไม่ใช่ตาคนแล้ว",
+   "start": 102.522,
+   "dur": 2.447,
+   "end": 104.969,
+   "voiced": 2.067,
+   "pause_before": 0.05,
+   "chars": 26,
+   "chars_billed": 27,
+   "captions": [
+    {
+     "text": "แต่ตาคู่นั้น",
+     "t0": 102.522,
+     "t1": 103.476
+    },
+    {
+     "text": "ไม่ใช่ตาคนแล้ว",
+     "t0": 103.476,
+     "t1": 104.969,
+     "emph": "ไม่ใช่ตาคน",
+     "colour": "red"
+    }
+   ],
+   "fx": "red flash 1 frame on the cut; infected inhale",
+   "optional_trim": false,
+   "beat": "pay-off of 'จะไม่ใช่คนอีกต่อไป'",
+   "edit": "kept",
+   "shots": [
+    "S49"
+   ]
+  },
+  {
+   "id": "s35",
+   "draft_id": "s34",
+   "scene": "02",
+   "speaker": "narr",
+   "tts": "มันพุ่งใส่ก้อง ก้องเอาเครื่องตัดขวาง ผลักมันสุดแรง",
+   "text": "มันพุ่งใส่ก้อง ก้องเอาเครื่องตัดขวาง ผลักมันสุดแรง",
+   "start": 105.069,
+   "dur": 4.196,
+   "end": 109.265,
+   "voiced": 3.816,
+   "pause_before": 0.1,
+   "chars": 48,
+   "chars_billed": 50,
+   "captions": [
+    {
+     "text": "มันพุ่งใส่ก้อง",
+     "t0": 105.069,
+     "t1": 106.182
+    },
+    {
+     "text": "ก้องเอาเครื่องตัดขวาง",
+     "t0": 106.182,
+     "t1": 107.851
+    },
+    {
+     "text": "ผลักมันสุดแรง",
+     "t0": 107.851,
+     "t1": 109.265
+    }
+   ],
+   "fx": "snarl; teeth on metal; shove grunt; body against the truck panel",
+   "optional_trim": false,
+   "beat": "the attack",
+   "edit": "kept",
+   "shots": [
+    "S50",
+    "S51",
+    "S52"
+   ]
+  },
+  {
+   "id": "s36",
+   "draft_id": "s35",
+   "scene": "02",
+   "speaker": "narr",
+   "tts": "ก้องถอยหลบมุมรถ มันมองไม่เห็นเขา",
+   "text": "ก้องถอยหลบมุมรถ มันมองไม่เห็นเขา",
+   "start": 109.415,
+   "dur": 2.844,
+   "end": 112.259,
+   "voiced": 2.464,
+   "pause_before": 0.15,
+   "chars": 31,
+   "chars_billed": 32,
+   "captions": [
+    {
+     "text": "ก้องถอยหลบมุมรถ",
+     "t0": 109.415,
+     "t1": 110.607
+    },
+    {
+     "text": "มันมองไม่เห็นเขา",
+     "t0": 110.607,
+     "t1": 112.259,
+     "emph": "มองไม่เห็น",
+     "colour": "amber"
+    }
+   ],
+   "fx": "the snarl drops to short searching breaths; Kong's held breath",
+   "optional_trim": false,
+   "beat": "world rule 7 planted",
+   "edit": "kept",
+   "shots": [
+    "S53",
+    "S54"
+   ]
+  },
+  {
+   "id": "s37",
+   "draft_id": "s36",
+   "scene": "02",
+   "speaker": "narr",
+   "tts": "บนหลังคารถ ไรเดอร์เสื้อเขียว วิ่งหนีสุดชีวิต มันกระโจนตามไป",
+   "text": "บนหลังคารถ ไรเดอร์เสื้อเขียว วิ่งหนีสุดชีวิต มันกระโจนตามไป",
+   "start": 112.459,
+   "dur": 4.832,
+   "end": 117.29,
+   "voiced": 4.452,
+   "pause_before": 0.2,
+   "chars": 56,
+   "chars_billed": 59,
+   "captions": [
+    {
+     "text": "บนหลังคารถ",
+     "t0": 112.459,
+     "t1": 113.254
+    },
+    {
+     "text": "ไรเดอร์เสื้อเขียว",
+     "t0": 113.254,
+     "t1": 114.605
+    },
+    {
+     "text": "วิ่งหนีสุดชีวิต",
+     "t0": 114.605,
+     "t1": 115.798
+    },
+    {
+     "text": "มันกระโจนตามไป",
+     "t0": 115.798,
+     "t1": 117.29,
+     "emph": "กระโจนตาม",
+     "colour": "red"
+    }
+   ],
+   "fx": "boots on car roofs (hollow bangs), windscreen cracking, a far scream",
+   "optional_trim": false,
+   "beat": "SETUP: the rider (James) and who chases him",
+   "edit": "kept",
+   "shots": [
+    "S55",
+    "S56",
+    "S57"
+   ]
+  },
+  {
+   "id": "s38",
+   "draft_id": "s37",
+   "scene": "02",
+   "speaker": "narr",
+   "tts": "ทั้งทางด่วน มีแต่คนวิ่งหนี กับพวกที่ไล่กัด",
+   "text": "ทั้งทางด่วน มีแต่คนวิ่งหนี กับพวกที่ไล่กัด",
+   "start": 118.54,
+   "dur": 3.56,
+   "end": 122.1,
+   "voiced": 3.18,
+   "pause_before": 1.25,
+   "chars": 40,
+   "chars_billed": 42,
+   "captions": [
+    {
+     "text": "ทั้งทางด่วน",
+     "t0": 118.54,
+     "t1": 119.415
+    },
+    {
+     "text": "มีแต่คนวิ่งหนี",
+     "t0": 119.415,
+     "t1": 120.528
+    },
+    {
+     "text": "กับพวกที่ไล่กัด",
+     "t0": 120.528,
+     "t1": 122.1,
+     "emph": "ไล่กัด",
+     "colour": "red"
+    }
+   ],
+   "fx": "crowd screams from several directions, glass breaking left then right, horns",
+   "optional_trim": false,
+   "beat": "scale",
+   "edit": "edited: 'ก้องมองไปรอบตัว' described the picture; the look is now a silent shot before the line",
+   "shots": [
+    "S59",
+    "S60"
+   ]
+  },
+  {
+   "id": "s39",
+   "draft_id": "s38",
+   "scene": "02",
+   "speaker": "narr",
+   "tts": "นี่ไม่ใช่อุบัติเหตุ อีกต่อไปแล้ว",
+   "text": "นี่ไม่ใช่อุบัติเหตุ อีกต่อไปแล้ว",
+   "start": 122.3,
+   "dur": 2.844,
+   "end": 125.144,
+   "voiced": 2.464,
+   "pause_before": 0.2,
+   "chars": 31,
+   "chars_billed": 32,
+   "captions": [
+    {
+     "text": "นี่ไม่ใช่อุบัติเหตุ",
+     "t0": 122.3,
+     "t1": 123.81,
+     "emph": "ไม่ใช่อุบัติเหตุ",
+     "colour": "red"
+    },
+    {
+     "text": "อีกต่อไปแล้ว",
+     "t0": 123.81,
+     "t1": 125.144
+    }
+   ],
+   "fx": "",
+   "optional_trim": false,
+   "beat": "realisation",
+   "edit": "kept",
+   "shots": [
+    "S61"
+   ]
+  },
+  {
+   "id": "s40",
+   "draft_id": "s40",
+   "scene": "03",
+   "speaker": "narr",
+   "tts": "ไม่ไกลกัน รถเก๋งคันหนึ่ง พลิกตะแคง",
+   "text": "ไม่ไกลกัน รถเก๋งคันหนึ่ง พลิกตะแคง",
+   "start": 125.594,
+   "dur": 2.924,
+   "end": 128.518,
+   "voiced": 2.544,
+   "pause_before": 0.45,
+   "chars": 32,
+   "chars_billed": 34,
+   "captions": [
+    {
+     "text": "ไม่ไกลกัน",
+     "t0": 125.594,
+     "t1": 126.31
+    },
+    {
+     "text": "รถเก๋งคันหนึ่ง",
+     "t0": 126.31,
+     "t1": 127.423
+    },
+    {
+     "text": "พลิกตะแคง",
+     "t0": 127.423,
+     "t1": 128.518,
+     "emph": "พลิกตะแคง",
+     "colour": "amber"
+    }
+   ],
+   "fx": "hazard relay ticking, dripping, a woman's strained effort",
+   "optional_trim": false,
+   "beat": "new place",
+   "edit": "edited: shorter",
+   "shots": [
+    "S62",
+    "S63"
+   ]
+  },
+  {
+   "id": "s41",
+   "draft_id": "s41",
+   "scene": "03",
+   "speaker": "narr",
+   "tts": "หมอแพรว หมอห้องฉุกเฉิน กำลังดึงคุณทศ ออกจากซากรถ",
+   "text": "หมอแพรว หมอห้องฉุกเฉิน กำลังดึงคุณทศ ออกจากซากรถ",
+   "start": 128.618,
+   "dur": 3.957,
+   "end": 132.575,
+   "voiced": 3.577,
+   "pause_before": 0.1,
+   "chars": 45,
+   "chars_billed": 48,
+   "captions": [
+    {
+     "text": "หมอแพรว",
+     "t0": 128.618,
+     "t1": 129.174,
+     "emph": "หมอแพรว",
+     "colour": "amber"
+    },
+    {
+     "text": "หมอห้องฉุกเฉิน",
+     "t0": 129.174,
+     "t1": 130.287
+    },
+    {
+     "text": "กำลังดึงคุณทศ",
+     "t0": 130.287,
+     "t1": 131.321,
+     "emph": "คุณทศ",
+     "colour": "amber"
+    },
+    {
+     "text": "ออกจากซากรถ",
+     "t0": 131.321,
+     "t1": 132.575
+    }
+   ],
+   "fx": "",
+   "optional_trim": false,
+   "beat": "Praew introduced",
+   "edit": "edited: names Tos here, so the filler sentence 'เขาชื่อคุณทศ' can go; the suit is in the picture",
+   "shots": [
+    "S64",
+    "S65"
+   ]
+  },
+  {
+   "id": "s42",
+   "draft_id": "s42",
+   "scene": "03",
+   "speaker": "narr",
+   "tts": "แต่ประตูที่ยุบ อัดเขาติดเบาะ",
+   "text": "แต่ประตูที่ยุบ อัดเขาติดเบาะ",
+   "start": 132.675,
+   "dur": 2.526,
+   "end": 135.201,
+   "voiced": 2.146,
+   "pause_before": 0.1,
+   "chars": 27,
+   "chars_billed": 28,
+   "captions": [
+    {
+     "text": "แต่ประตูที่ยุบ",
+     "t0": 132.675,
+     "t1": 133.788
+    },
+    {
+     "text": "อัดเขาติดเบาะ",
+     "t0": 133.788,
+     "t1": 135.201,
+     "emph": "ติดเบาะ",
+     "colour": "red"
+    }
+   ],
+   "fx": "metal creak; Tos's grunts",
+   "optional_trim": false,
+   "beat": "Tos introduced",
+   "edit": "edited: but-therefore instead of an introduction",
+   "shots": [
+    "S66"
+   ]
+  },
+  {
+   "id": "s43",
+   "draft_id": "s43",
+   "scene": "03",
+   "speaker": "narr",
+   "tts": "ไกลออกไป ฝูงของมัน กำลังวิ่งมา",
+   "text": "ไกลออกไป ฝูงของมัน กำลังวิ่งมา",
+   "start": 135.401,
+   "dur": 2.606,
+   "end": 138.007,
+   "voiced": 2.226,
+   "pause_before": 0.2,
+   "chars": 28,
+   "chars_billed": 30,
+   "captions": [
+    {
+     "text": "ไกลออกไป",
+     "t0": 135.401,
+     "t1": 136.037
+    },
+    {
+     "text": "ฝูงของมัน",
+     "t0": 136.037,
+     "t1": 136.753,
+     "emph": "ฝูงของมัน",
+     "colour": "red"
+    },
+    {
+     "text": "กำลังวิ่งมา",
+     "t0": 136.753,
+     "t1": 138.007
+    }
+   ],
+   "fx": "many running feet on wet road, far, growing",
+   "optional_trim": false,
+   "beat": "deadline",
+   "edit": "kept",
+   "shots": [
+    "S67"
+   ]
+  },
+  {
+   "id": "s44",
+   "draft_id": "s44",
+   "scene": "03",
+   "speaker": "narr",
+   "tts": "ก้องชะงัก หนีตอนนี้ ยังทัน",
+   "text": "ก้องชะงัก หนีตอนนี้ ยังทัน",
+   "start": 138.207,
+   "dur": 2.288,
+   "end": 140.495,
+   "voiced": 1.908,
+   "pause_before": 0.2,
+   "chars": 24,
+   "chars_billed": 26,
+   "captions": [
+    {
+     "text": "ก้องชะงัก",
+     "t0": 138.207,
+     "t1": 138.923
+    },
+    {
+     "text": "หนีตอนนี้",
+     "t0": 138.923,
+     "t1": 139.638
+    },
+    {
+     "text": "ยังทัน",
+     "t0": 139.638,
+     "t1": 140.495
+    }
+   ],
+   "fx": "everything dips for half a second",
+   "optional_trim": false,
+   "beat": "the choice",
+   "edit": "kept",
+   "shots": [
+    "S68"
+   ]
+  },
+  {
+   "id": "s45",
+   "draft_id": "s45",
+   "scene": "03",
+   "speaker": "narr",
+   "tts": "แต่เขา วิ่งกลับเข้าไปช่วย",
+   "text": "แต่เขา วิ่งกลับเข้าไปช่วย",
+   "start": 140.695,
+   "dur": 2.288,
+   "end": 142.983,
+   "voiced": 1.908,
+   "pause_before": 0.2,
+   "chars": 24,
+   "chars_billed": 25,
+   "captions": [
+    {
+     "text": "แต่เขา",
+     "t0": 140.695,
+     "t1": 141.172
+    },
+    {
+     "text": "วิ่งกลับเข้าไปช่วย",
+     "t0": 141.172,
+     "t1": 142.983,
+     "emph": "กลับเข้าไปช่วย",
+     "colour": "amber"
+    }
+   ],
+   "fx": "boots splashing",
+   "optional_trim": false,
+   "beat": "Kong's value shown by action",
+   "edit": "kept",
+   "shots": [
+    "S69"
+   ]
+  },
+  {
+   "id": "s46",
+   "draft_id": "s46",
+   "scene": "03",
+   "speaker": "narr",
+   "tts": "ก้องเอาเครื่องตัดง้างประตู คุณทศหลุดออกมา",
+   "text": "ก้องเอาเครื่องตัดง้างประตู คุณทศหลุดออกมา",
+   "start": 143.083,
+   "dur": 3.56,
+   "end": 146.642,
+   "voiced": 3.18,
+   "pause_before": 0.1,
+   "chars": 40,
+   "chars_billed": 41,
+   "captions": [
+    {
+     "text": "ก้องเอาเครื่องตัดง้างประตู",
+     "t0": 143.083,
+     "t1": 145.15
+    },
+    {
+     "text": "คุณทศหลุดออกมา",
+     "t0": 145.15,
+     "t1": 146.642
+    }
+   ],
+   "fx": "cordless pump whine, metal groaning open; Tos's breath as he comes free",
+   "optional_trim": false,
+   "beat": "the tool is used; Tos is out (two draft sentences in one)",
+   "edit": "edited: the mechanics of the rescue are not the drama; the choice before it is",
+   "shots": [
+    "S70",
+    "S71"
+   ]
+  },
+  {
+   "id": "s47",
+   "draft_id": "s48",
+   "scene": "03",
+   "speaker": "james",
+   "tts": "พี่! รอผมด้วย!",
+   "text": "พี่! รอผมด้วย!",
+   "start": 146.842,
+   "dur": 1.436,
+   "end": 148.278,
+   "voiced": 1.056,
+   "pause_before": 0.2,
+   "chars": 11,
+   "chars_billed": 14,
+   "captions": [
+    {
+     "text": "พี่!",
+     "t0": 146.842,
+     "t1": 147.262
+    },
+    {
+     "text": "รอผมด้วย!",
+     "t0": 147.262,
+     "t1": 148.278
+    }
+   ],
+   "fx": "shout from above/behind, roof bangs",
+   "optional_trim": false,
+   "beat": "dialogue",
+   "edit": "kept",
+   "shots": [
+    "S72"
+   ]
+  },
+  {
+   "id": "s48",
+   "draft_id": "s49",
+   "scene": "03",
+   "speaker": "narr",
+   "tts": "เจมส์ ไรเดอร์ส่งอาหาร กระโดดลงจากหลังคารถ แต่ที่ตามหลังมา คือน้องของก้อง",
+   "text": "เจมส์ ไรเดอร์ส่งอาหาร กระโดดลงจากหลังคารถ แต่ที่ตามหลังมา คือน้องของก้อง",
+   "start": 148.378,
+   "dur": 5.808,
+   "end": 154.186,
+   "voiced": 5.428,
+   "pause_before": 0.1,
+   "chars": 68,
+   "chars_billed": 72,
+   "captions": [
+    {
+     "text": "เจมส์",
+     "t0": 148.378,
+     "t1": 148.798,
+     "emph": "เจมส์",
+     "colour": "amber"
+    },
+    {
+     "text": "ไรเดอร์ส่งอาหาร",
+     "t0": 148.798,
+     "t1": 149.991
+    },
+    {
+     "text": "กระโดดลงจากหลังคารถ",
+     "t0": 149.991,
+     "t1": 151.501
+    },
+    {
+     "text": "แต่ที่ตามหลังมา",
+     "t0": 151.501,
+     "t1": 152.693
+    },
+    {
+     "text": "คือน้องของก้อง",
+     "t0": 152.693,
+     "t1": 154.186,
+     "emph": "น้องของก้อง",
+     "colour": "red"
+    }
+   ],
+   "fx": "landing splash; snarl close behind",
+   "optional_trim": false,
+   "beat": "PAY-OFF of s37",
+   "edit": "edited: 'แต่' turns the line; James's name gets a colour as the other two principals' names do",
+   "shots": [
+    "S73",
+    "S74",
+    "S75"
+   ]
+  },
+  {
+   "id": "s49",
+   "draft_id": "s50",
+   "scene": "03",
+   "speaker": "narr",
+   "tts": "ทุกคนขึ้นรถกู้ภัย ประตูปิดทัน แค่เสี้ยววินาที",
+   "text": "ทุกคนขึ้นรถกู้ภัย ประตูปิดทัน แค่เสี้ยววินาที",
+   "start": 154.336,
+   "dur": 3.798,
+   "end": 158.134,
+   "voiced": 3.418,
+   "pause_before": 0.15,
+   "chars": 43,
+   "chars_billed": 45,
+   "captions": [
+    {
+     "text": "ทุกคนขึ้นรถกู้ภัย",
+     "t0": 154.336,
+     "t1": 155.688
+    },
+    {
+     "text": "ประตูปิดทัน",
+     "t0": 155.688,
+     "t1": 156.562
+    },
+    {
+     "text": "แค่เสี้ยววินาที",
+     "t0": 156.562,
+     "t1": 158.134
+    }
+   ],
+   "fx": "door slam, then a body hitting it",
+   "optional_trim": false,
+   "beat": "into the truck",
+   "edit": "kept",
+   "shots": [
+    "S76",
+    "S77"
+   ]
+  },
+  {
+   "id": "s50",
+   "draft_id": "s51",
+   "scene": "03",
+   "speaker": "narr",
+   "tts": "หน้าที่แนบกระจก คือคนที่เขาสัญญา ว่าจะพาไปโรงพยาบาล",
+   "text": "หน้าที่แนบกระจก คือคนที่เขาสัญญา ว่าจะพาไปโรงพยาบาล",
+   "start": 158.384,
+   "dur": 4.275,
+   "end": 162.659,
+   "voiced": 3.895,
+   "pause_before": 0.25,
+   "chars": 49,
+   "chars_billed": 51,
+   "captions": [
+    {
+     "text": "หน้าที่แนบกระจก",
+     "t0": 158.384,
+     "t1": 159.577,
+     "emph": "แนบกระจก",
+     "colour": "red"
+    },
+    {
+     "text": "คือคนที่เขาสัญญา",
+     "t0": 159.577,
+     "t1": 160.849
+    },
+    {
+     "text": "ว่าจะพาไปโรงพยาบาล",
+     "t0": 160.849,
+     "t1": 162.659
+    }
+   ],
+   "fx": "muffled snarl through glass, nails on glass; cabin is quiet",
+   "optional_trim": false,
+   "beat": "PAY-OFF of promise no. 2",
+   "edit": "kept",
+   "shots": [
+    "S78",
+    "S79"
+   ]
+  },
+  {
+   "id": "s51",
+   "draft_id": "s52",
+   "scene": "03",
+   "speaker": "narr",
+   "tts": "ก้องออกรถ แทรกไปตามช่องว่าง",
+   "text": "ก้องออกรถ แทรกไปตามช่องว่าง",
+   "start": 162.909,
+   "dur": 2.447,
+   "end": 165.356,
+   "voiced": 2.067,
+   "pause_before": 0.25,
+   "chars": 26,
+   "chars_billed": 27,
+   "captions": [
+    {
+     "text": "ก้องออกรถ",
+     "t0": 162.909,
+     "t1": 163.625
+    },
+    {
+     "text": "แทรกไปตามช่องว่าง",
+     "t0": 163.625,
+     "t1": 165.356
+    }
+   ],
+   "fx": "diesel start, tyres on wet road, mirrors scraping",
+   "optional_trim": false,
+   "beat": "drive",
+   "edit": "kept",
+   "shots": [
+    "S80"
+   ]
+  },
+  {
+   "id": "s52",
+   "draft_id": "s53",
+   "scene": "03",
+   "speaker": "narr",
+   "tts": "แต่ข้างหน้า รถบรรทุกขวาง เต็มถนน",
+   "text": "แต่ข้างหน้า รถบรรทุกขวาง เต็มถนน",
+   "start": 165.456,
+   "dur": 2.765,
+   "end": 168.221,
+   "voiced": 2.385,
+   "pause_before": 0.1,
+   "chars": 30,
+   "chars_billed": 32,
+   "captions": [
+    {
+     "text": "แต่ข้างหน้า",
+     "t0": 165.456,
+     "t1": 166.331
+    },
+    {
+     "text": "รถบรรทุกขวาง",
+     "t0": 166.331,
+     "t1": 167.285,
+     "emph": "ขวาง",
+     "colour": "red"
+    },
+    {
+     "text": "เต็มถนน",
+     "t0": 167.285,
+     "t1": 168.221
+    }
+   ],
+   "fx": "brakes; wipers",
+   "optional_trim": false,
+   "beat": "obstacle",
+   "edit": "kept",
+   "shots": [
+    "S81",
+    "S82"
+   ]
+  },
+  {
+   "id": "s53",
+   "draft_id": "s54",
+   "scene": "03",
+   "speaker": "narr",
+   "tts": "มือเขาไปเอง ตามความเคยชิน เปิดไซเรนขอทาง",
+   "text": "มือเขาไปเอง ตามความเคยชิน เปิดไซเรนขอทาง",
+   "start": 168.371,
+   "dur": 3.401,
+   "end": 171.772,
+   "voiced": 3.021,
+   "pause_before": 0.15,
+   "chars": 38,
+   "chars_billed": 40,
+   "captions": [
+    {
+     "text": "มือเขาไปเอง",
+     "t0": 168.371,
+     "t1": 169.245
+    },
+    {
+     "text": "ตามความเคยชิน",
+     "t0": 169.245,
+     "t1": 170.279
+    },
+    {
+     "text": "เปิดไซเรนขอทาง",
+     "t0": 170.279,
+     "t1": 171.772,
+     "emph": "ไซเรน",
+     "colour": "red"
+    }
+   ],
+   "fx": "switch click, then the siren at full level for 1.2 s (the only moment an effect is allowed to rival the voice: it sits in the gap after the line)",
+   "optional_trim": false,
+   "beat": "the mistake",
+   "edit": "kept",
+   "shots": [
+    "S83",
+    "S84"
+   ]
+  },
+  {
+   "id": "s54",
+   "draft_id": "s55",
+   "scene": "03",
+   "speaker": "narr",
+   "tts": "ทุกตัวบนทางด่วน หยุดวิ่ง แล้วหันมา พร้อมกัน",
+   "text": "ทุกตัวบนทางด่วน หยุดวิ่ง แล้วหันมา พร้อมกัน",
+   "start": 172.972,
+   "dur": 3.56,
+   "end": 176.531,
+   "voiced": 3.18,
+   "pause_before": 1.2,
+   "chars": 40,
+   "chars_billed": 43,
+   "captions": [
+    {
+     "text": "ทุกตัวบนทางด่วน",
+     "t0": 172.972,
+     "t1": 174.164
+    },
+    {
+     "text": "หยุดวิ่ง",
+     "t0": 174.164,
+     "t1": 174.8
+    },
+    {
+     "text": "แล้วหันมา",
+     "t0": 174.8,
+     "t1": 175.515,
+     "emph": "หันมา",
+     "colour": "red"
+    },
+    {
+     "text": "พร้อมกัน",
+     "t0": 175.515,
+     "t1": 176.531
+    }
+   ],
+   "fx": "siren ducks under the voice; all other screams stop",
+   "optional_trim": false,
+   "beat": "PAY-OFF of the car alarm (s19)",
+   "edit": "kept",
+   "shots": [
+    "S86",
+    "S87"
+   ]
+  },
+  {
+   "id": "s55",
+   "draft_id": "s56",
+   "scene": "03",
+   "speaker": "praew",
+   "tts": "ปิดเสียง! เร็ว!",
+   "text": "ปิดเสียง! เร็ว!",
+   "start": 176.681,
+   "dur": 1.436,
+   "end": 178.117,
+   "voiced": 1.056,
+   "pause_before": 0.15,
+   "chars": 12,
+   "chars_billed": 15,
+   "captions": [
+    {
+     "text": "ปิดเสียง!",
+     "t0": 176.681,
+     "t1": 177.317
+    },
+    {
+     "text": "เร็ว!",
+     "t0": 177.317,
+     "t1": 178.117
+    }
+   ],
+   "fx": "",
+   "optional_trim": false,
+   "beat": "dialogue",
+   "edit": "kept",
+   "shots": [
+    "S88"
+   ]
+  },
+  {
+   "id": "s56",
+   "draft_id": "s57",
+   "scene": "03",
+   "speaker": "narr",
+   "tts": "ก้องปิดไซเรน แต่สายไปแล้ว ทั้งฝูงรู้แล้ว ว่าเขาอยู่ตรงไหน",
+   "text": "ก้องปิดไซเรน แต่สายไปแล้ว ทั้งฝูงรู้แล้ว ว่าเขาอยู่ตรงไหน",
+   "start": 178.217,
+   "dur": 4.673,
+   "end": 182.89,
+   "voiced": 4.293,
+   "pause_before": 0.1,
+   "chars": 54,
+   "chars_billed": 57,
+   "captions": [
+    {
+     "text": "ก้องปิดไซเรน",
+     "t0": 178.217,
+     "t1": 179.171
+    },
+    {
+     "text": "แต่สายไปแล้ว",
+     "t0": 179.171,
+     "t1": 180.125,
+     "emph": "สายไปแล้ว",
+     "colour": "red"
+    },
+    {
+     "text": "ทั้งฝูงรู้แล้ว",
+     "t0": 180.125,
+     "t1": 181.238
+    },
+    {
+     "text": "ว่าเขาอยู่ตรงไหน",
+     "t0": 181.238,
+     "t1": 182.89
+    }
+   ],
+   "fx": "siren winds down; silence 0.4 s; then many feet running toward us",
+   "optional_trim": false,
+   "beat": "consequence",
+   "edit": "edited: 'ทั้งฝูง' is the screenplay's word and is stronger than 'พวกมัน'",
+   "shots": [
+    "S89",
+    "S90",
+    "S91"
+   ]
+  },
+  {
+   "id": "s57",
+   "draft_id": "s58",
+   "scene": "03",
+   "speaker": "narr",
+   "tts": "เสียง กับแสง คือสิ่งที่เรียกมัน",
+   "text": "เสียง กับแสง คือสิ่งที่เรียกมัน",
+   "start": 183.14,
+   "dur": 2.685,
+   "end": 185.825,
+   "voiced": 2.305,
+   "pause_before": 0.25,
+   "chars": 29,
+   "chars_billed": 31,
+   "captions": [
+    {
+     "text": "เสียง กับแสง",
+     "t0": 183.14,
+     "t1": 184.014,
+     "emph": "เสียง กับแสง",
+     "colour": "amber"
+    },
+    {
+     "text": "คือสิ่งที่เรียกมัน",
+     "t0": 184.014,
+     "t1": 185.825
+    }
+   ],
+   "fx": "first bodies hit the truck",
+   "optional_trim": false,
+   "beat": "the rule, learned (used in s66, s89)",
+   "edit": "kept",
+   "shots": [
+    "S92",
+    "S93"
+   ]
+  },
+  {
+   "id": "s58",
+   "draft_id": "s59",
+   "scene": "03",
+   "speaker": "tos",
+   "tts": "ขับไปสิ! จะจอดให้มันกิน หรือไง!",
+   "text": "ขับไปสิ! จะจอดให้มันกิน หรือไง!",
+   "start": 186.025,
+   "dur": 2.526,
+   "end": 188.551,
+   "voiced": 2.146,
+   "pause_before": 0.2,
+   "chars": 27,
+   "chars_billed": 31,
+   "captions": [
+    {
+     "text": "ขับไปสิ!",
+     "t0": 186.025,
+     "t1": 186.581
+    },
+    {
+     "text": "จะจอดให้มันกิน",
+     "t0": 186.581,
+     "t1": 187.694
+    },
+    {
+     "text": "หรือไง!",
+     "t0": 187.694,
+     "t1": 188.551
+    }
+   ],
+   "fx": "pounding all around",
+   "optional_trim": false,
+   "beat": "Tos's value shown",
+   "edit": "kept",
+   "shots": [
+    "S94"
+   ]
+  },
+  {
+   "id": "s59",
+   "draft_id": "s60",
+   "scene": "03",
+   "speaker": "kong",
+   "tts": "รถข้างหน้า ขยับไม่ได้!",
+   "text": "รถข้างหน้า ขยับไม่ได้!",
+   "start": 188.651,
+   "dur": 1.97,
+   "end": 190.621,
+   "voiced": 1.59,
+   "pause_before": 0.1,
+   "chars": 20,
+   "chars_billed": 22,
+   "captions": [
+    {
+     "text": "รถข้างหน้า",
+     "t0": 188.651,
+     "t1": 189.446
+    },
+    {
+     "text": "ขยับไม่ได้!",
+     "t0": 189.446,
+     "t1": 190.621
+    }
+   ],
+   "fx": "",
+   "optional_trim": false,
+   "beat": "dialogue",
+   "edit": "kept",
+   "shots": [
+    "S95"
+   ]
+  },
+  {
+   "id": "s60",
+   "draft_id": "s61",
+   "scene": "03",
+   "speaker": "james",
+   "tts": "พี่! ผมเคยผ่านแถวนี้ มีทางลง ข้างรถคันนั้น!",
+   "text": "พี่! ผมเคยผ่านแถวนี้ มีทางลง ข้างรถคันนั้น!",
+   "start": 190.771,
+   "dur": 3.401,
+   "end": 194.172,
+   "voiced": 3.021,
+   "pause_before": 0.15,
+   "chars": 38,
+   "chars_billed": 43,
+   "captions": [
+    {
+     "text": "พี่! ผมเคยผ่านแถวนี้",
+     "t0": 190.771,
+     "t1": 192.202
+    },
+    {
+     "text": "มีทางลง",
+     "t0": 192.202,
+     "t1": 192.758,
+     "emph": "ทางลง",
+     "colour": "amber"
+    },
+    {
+     "text": "ข้างรถคันนั้น!",
+     "t0": 192.758,
+     "t1": 194.172
+    }
+   ],
+   "fx": "",
+   "optional_trim": false,
+   "beat": "way out",
+   "edit": "kept",
+   "shots": [
+    "S96",
+    "S97"
+   ]
+  },
+  {
+   "id": "s61",
+   "draft_id": "s62",
+   "scene": "04",
+   "speaker": "narr",
+   "tts": "ฝูงกระแทกรถ ไม่หยุด กระจกเริ่มร้าว",
+   "text": "ฝูงกระแทกรถ ไม่หยุด กระจกเริ่มร้าว",
+   "start": 194.422,
+   "dur": 2.924,
+   "end": 197.346,
+   "voiced": 2.544,
+   "pause_before": 0.25,
+   "chars": 32,
+   "chars_billed": 34,
+   "captions": [
+    {
+     "text": "ฝูงกระแทกรถ",
+     "t0": 194.422,
+     "t1": 195.296
+    },
+    {
+     "text": "ไม่หยุด",
+     "t0": 195.296,
+     "t1": 195.853
+    },
+    {
+     "text": "กระจกเริ่มร้าว",
+     "t0": 195.853,
+     "t1": 197.346,
+     "emph": "ร้าว",
+     "colour": "red"
+    }
+   ],
+   "fx": "body hits in an irregular rhythm, glass crack ticks",
+   "optional_trim": false,
+   "beat": "pressure",
+   "edit": "kept",
+   "shots": [
+    "S98",
+    "S99"
+   ]
+  },
+  {
+   "id": "s62",
+   "draft_id": "s63",
+   "scene": "04",
+   "speaker": "narr",
+   "tts": "ก้องเปิดตู้อุปกรณ์ ของเต็มตู้ แต่แบกไปได้ แค่ สี่อย่าง",
+   "text": "ก้องเปิดตู้อุปกรณ์ ของเต็มตู้ แต่แบกไปได้ แค่ 4 อย่าง",
+   "start": 197.496,
+   "dur": 4.355,
+   "end": 201.85,
+   "voiced": 3.975,
+   "pause_before": 0.15,
+   "chars": 50,
+   "chars_billed": 54,
+   "captions": [
+    {
+     "text": "ก้องเปิดตู้อุปกรณ์",
+     "t0": 197.496,
+     "t1": 198.926
+    },
+    {
+     "text": "ของเต็มตู้",
+     "t0": 198.926,
+     "t1": 199.721
+    },
+    {
+     "text": "แต่แบกไปได้",
+     "t0": 199.721,
+     "t1": 200.596
+    },
+    {
+     "text": "แค่ 4 อย่าง",
+     "t0": 200.596,
+     "t1": 201.85,
+     "emph": "4 อย่าง",
+     "colour": "amber"
+    }
+   ],
+   "fx": "locker latch, roll-up shutter",
+   "optional_trim": false,
+   "beat": "the choice of things",
+   "edit": "kept",
+   "shots": [
+    "S100",
+    "S101"
+   ]
+  },
+  {
+   "id": "s63",
+   "draft_id": "s64",
+   "scene": "04",
+   "speaker": "narr",
+   "tts": "เครื่องตัด ชะแลง วิทยุ กระเป๋าพยาบาลใบเล็ก",
+   "text": "เครื่องตัด ชะแลง วิทยุ กระเป๋าพยาบาลใบเล็ก",
+   "start": 202.0,
+   "dur": 3.525,
+   "end": 205.525,
+   "voiced": 3.145,
+   "pause_before": 0.15,
+   "chars": 39,
+   "chars_billed": 42,
+   "captions": [
+    {
+     "text": "เครื่องตัด",
+     "t0": 202.0,
+     "t1": 202.795
+    },
+    {
+     "text": "ชะแลง",
+     "t0": 202.795,
+     "t1": 203.215
+    },
+    {
+     "text": "วิทยุ",
+     "t0": 203.215,
+     "t1": 203.635
+    },
+    {
+     "text": "กระเป๋าพยาบาลใบเล็ก",
+     "t0": 203.635,
+     "t1": 205.525
+    }
+   ],
+   "fx": "one grab sound per item, on the cut",
+   "optional_trim": false,
+   "beat": "the four things",
+   "edit": "kept",
+   "shots": [
+    "S102"
+   ]
+  },
+  {
+   "id": "s64",
+   "draft_id": "s65",
+   "scene": "04",
+   "speaker": "narr",
+   "tts": "ที่เหลือ ต้องทิ้งทั้งหมด",
+   "text": "ที่เหลือ ต้องทิ้งทั้งหมด",
+   "start": 205.725,
+   "dur": 2.208,
+   "end": 207.934,
+   "voiced": 1.828,
+   "pause_before": 0.2,
+   "chars": 23,
+   "chars_billed": 24,
+   "captions": [
+    {
+     "text": "ที่เหลือ",
+     "t0": 205.725,
+     "t1": 206.361
+    },
+    {
+     "text": "ต้องทิ้งทั้งหมด",
+     "t0": 206.361,
+     "t1": 207.934,
+     "emph": "ทิ้ง",
+     "colour": "red"
+    }
+   ],
+   "fx": "shutter left open; a monitor beeping once, abandoned",
+   "optional_trim": false,
+   "beat": "cost",
+   "edit": "kept",
+   "shots": [
+    "S103"
+   ]
+  },
+  {
+   "id": "s65",
+   "draft_id": "s66",
+   "scene": "04",
+   "speaker": "narr",
+   "tts": "ก้องจุดพลุไฟฉุกเฉิน ขว้างไปอีกฝั่งถนน",
+   "text": "ก้องจุดพลุไฟฉุกเฉิน ขว้างไปอีกฝั่งถนน",
+   "start": 208.184,
+   "dur": 3.242,
+   "end": 211.425,
+   "voiced": 2.862,
+   "pause_before": 0.25,
+   "chars": 36,
+   "chars_billed": 37,
+   "captions": [
+    {
+     "text": "ก้องจุดพลุไฟฉุกเฉิน",
+     "t0": 208.184,
+     "t1": 209.694
+    },
+    {
+     "text": "ขว้างไปอีกฝั่งถนน",
+     "t0": 209.694,
+     "t1": 211.425
+    }
+   ],
+   "fx": "flare strike and hiss, window crank, the flare skittering on the road",
+   "optional_trim": false,
+   "beat": "plan built on the rule",
+   "edit": "kept",
+   "shots": [
+    "S104",
+    "S105"
+   ]
+  },
+  {
+   "id": "s66",
+   "draft_id": "s67",
+   "scene": "04",
+   "speaker": "narr",
+   "tts": "เกือบทั้งฝูง วิ่งตามแสงไป",
+   "text": "เกือบทั้งฝูง วิ่งตามแสงไป",
+   "start": 211.575,
+   "dur": 2.288,
+   "end": 213.863,
+   "voiced": 1.908,
+   "pause_before": 0.15,
+   "chars": 24,
+   "chars_billed": 25,
+   "captions": [
+    {
+     "text": "เกือบทั้งฝูง",
+     "t0": 211.575,
+     "t1": 212.529
+    },
+    {
+     "text": "วิ่งตามแสงไป",
+     "t0": 212.529,
+     "t1": 213.863,
+     "emph": "ตามแสง",
+     "colour": "amber"
+    }
+   ],
+   "fx": "the pounding moves away to the left",
+   "optional_trim": false,
+   "beat": "PAY-OFF of s57",
+   "edit": "kept",
+   "shots": [
+    "S106"
+   ]
+  },
+  {
+   "id": "s67",
+   "draft_id": "s68",
+   "scene": "04",
+   "speaker": "narr",
+   "tts": "คุณทศเบียดออกไป เป็นคนแรก",
+   "text": "คุณทศเบียดออกไป เป็นคนแรก",
+   "start": 214.063,
+   "dur": 2.288,
+   "end": 216.351,
+   "voiced": 1.908,
+   "pause_before": 0.2,
+   "chars": 24,
+   "chars_billed": 25,
+   "captions": [
+    {
+     "text": "คุณทศเบียดออกไป",
+     "t0": 214.063,
+     "t1": 215.255
+    },
+    {
+     "text": "เป็นคนแรก",
+     "t0": 215.255,
+     "t1": 216.351,
+     "emph": "คนแรก",
+     "colour": "amber"
+    }
+   ],
+   "fx": "glass crunch, cloth",
+   "optional_trim": false,
+   "beat": "character",
+   "edit": "edited: the door opens a hand-span against a taxi: he squeezes, he does not climb",
+   "shots": [
+    "S107"
+   ]
+  },
+  {
+   "id": "s68",
+   "draft_id": "s69",
+   "scene": "04",
+   "speaker": "narr",
+   "tts": "แขนเสื้อเกี่ยวกระจก ขาดเป็นทาง เลือดซึมออกมา",
+   "text": "แขนเสื้อเกี่ยวกระจก ขาดเป็นทาง เลือดซึมออกมา",
+   "start": 216.451,
+   "dur": 3.719,
+   "end": 220.17,
+   "voiced": 3.339,
+   "pause_before": 0.1,
+   "chars": 42,
+   "chars_billed": 44,
+   "captions": [
+    {
+     "text": "แขนเสื้อเกี่ยวกระจก",
+     "t0": 216.451,
+     "t1": 217.961
+    },
+    {
+     "text": "ขาดเป็นทาง",
+     "t0": 217.961,
+     "t1": 218.756
+    },
+    {
+     "text": "เลือดซึมออกมา",
+     "t0": 218.756,
+     "t1": 220.17,
+     "emph": "เลือด",
+     "colour": "red"
+    }
+   ],
+   "fx": "cloth rip, sharp breath",
+   "optional_trim": false,
+   "beat": "SETUP: the wound (glass, shown clearly)",
+   "edit": "kept",
+   "shots": [
+    "S108"
+   ]
+  },
+  {
+   "id": "s69",
+   "draft_id": "s70",
+   "scene": "04",
+   "speaker": "narr",
+   "tts": "เขารีบดึงแขนเสื้อ ลงปิดแผล ไม่บอกใครสักคำ",
+   "text": "เขารีบดึงแขนเสื้อ ลงปิดแผล ไม่บอกใครสักคำ",
+   "start": 220.32,
+   "dur": 3.48,
+   "end": 223.8,
+   "voiced": 3.1,
+   "pause_before": 0.15,
+   "chars": 39,
+   "chars_billed": 41,
+   "captions": [
+    {
+     "text": "เขารีบดึงแขนเสื้อ",
+     "t0": 220.32,
+     "t1": 221.671
+    },
+    {
+     "text": "ลงปิดแผล",
+     "t0": 221.671,
+     "t1": 222.307
+    },
+    {
+     "text": "ไม่บอกใครสักคำ",
+     "t0": 222.307,
+     "t1": 223.8,
+     "emph": "ไม่บอกใคร",
+     "colour": "red"
+    }
+   ],
+   "fx": "",
+   "optional_trim": false,
+   "beat": "SETUP: the secret",
+   "edit": "kept",
+   "shots": [
+    "S109",
+    "S110"
+   ]
+  },
+  {
+   "id": "s70",
+   "draft_id": "s71",
+   "scene": "04",
+   "speaker": "narr",
+   "tts": "ทุกคนวิ่งลง บันไดเหล็ก ข้างทางด่วน",
+   "text": "ทุกคนวิ่งลง บันไดเหล็ก ข้างทางด่วน",
+   "start": 224.05,
+   "dur": 2.924,
+   "end": 226.973,
+   "voiced": 2.544,
+   "pause_before": 0.25,
+   "chars": 32,
+   "chars_billed": 34,
+   "captions": [
+    {
+     "text": "ทุกคนวิ่งลง",
+     "t0": 224.05,
+     "t1": 224.924
+    },
+    {
+     "text": "บันไดเหล็ก",
+     "t0": 224.924,
+     "t1": 225.719
+    },
+    {
+     "text": "ข้างทางด่วน",
+     "t0": 225.719,
+     "t1": 226.973
+    }
+   ],
+   "fx": "steel treads ringing under four pairs of feet, rain on steel",
+   "optional_trim": false,
+   "beat": "escape",
+   "edit": "kept",
+   "shots": [
+    "S111"
+   ]
+  },
+  {
+   "id": "s71",
+   "draft_id": "s72",
+   "scene": "04",
+   "speaker": "narr",
+   "tts": "ข้างล่างมืด และเงียบ",
+   "text": "ข้างล่างมืด และเงียบ",
+   "start": 227.323,
+   "dur": 1.89,
+   "end": 229.214,
+   "voiced": 1.51,
+   "pause_before": 0.35,
+   "chars": 19,
+   "chars_billed": 20,
+   "captions": [
+    {
+     "text": "ข้างล่างมืด",
+     "t0": 227.323,
+     "t1": 228.198,
+     "emph": "มืด",
+     "colour": "amber"
+    },
+    {
+     "text": "และเงียบ",
+     "t0": 228.198,
+     "t1": 229.214
+    }
+   ],
+   "fx": "the expressway noise is now overhead and muffled; drips",
+   "optional_trim": false,
+   "beat": "world rule 5",
+   "edit": "kept",
+   "shots": [
+    "S112"
+   ]
+  },
+  {
+   "id": "s72",
+   "draft_id": "s73",
+   "scene": "04",
+   "speaker": "praew",
+   "tts": "ของเหลือ แค่นี้เองเหรอ",
+   "text": "ของเหลือ แค่นี้เองเหรอ",
+   "start": 229.564,
+   "dur": 2.049,
+   "end": 231.613,
+   "voiced": 1.669,
+   "pause_before": 0.35,
+   "chars": 21,
+   "chars_billed": 22,
+   "captions": [
+    {
+     "text": "ของเหลือ",
+     "t0": 229.564,
+     "t1": 230.2
+    },
+    {
+     "text": "แค่นี้เองเหรอ",
+     "t0": 230.2,
+     "t1": 231.613
+    }
+   ],
+   "fx": "whispered",
+   "optional_trim": false,
+   "beat": "dialogue",
+   "edit": "kept",
+   "shots": [
+    "S113"
+   ]
+  },
+  {
+   "id": "s73",
+   "draft_id": "s74",
+   "scene": "04",
+   "speaker": "kong",
+   "tts": "เอาออกมาได้ เท่านี้",
+   "text": "เอาออกมาได้ เท่านี้",
+   "start": 231.763,
+   "dur": 1.811,
+   "end": 233.574,
+   "voiced": 1.431,
+   "pause_before": 0.15,
+   "chars": 18,
+   "chars_billed": 19,
+   "captions": [
+    {
+     "text": "เอาออกมาได้",
+     "t0": 231.763,
+     "t1": 232.637
+    },
+    {
+     "text": "เท่านี้",
+     "t0": 232.637,
+     "t1": 233.574
+    }
+   ],
+   "fx": "whispered",
+   "optional_trim": false,
+   "beat": "dialogue",
+   "edit": "kept",
+   "shots": [
+    "S114"
+   ]
+  },
+  {
+   "id": "s74",
+   "draft_id": "s75",
+   "scene": "04",
+   "speaker": "praew",
+   "tts": "ถ้ามีคนเจ็บหนัก เราอาจช่วยไม่ได้",
+   "text": "ถ้ามีคนเจ็บหนัก เราอาจช่วยไม่ได้",
+   "start": 233.774,
+   "dur": 2.844,
+   "end": 236.618,
+   "voiced": 2.464,
+   "pause_before": 0.2,
+   "chars": 31,
+   "chars_billed": 32,
+   "captions": [
+    {
+     "text": "ถ้ามีคนเจ็บหนัก",
+     "t0": 233.774,
+     "t1": 234.966
+    },
+    {
+     "text": "เราอาจช่วยไม่ได้",
+     "t0": 234.966,
+     "t1": 236.618,
+     "emph": "ช่วยไม่ได้",
+     "colour": "red"
+    }
+   ],
+   "fx": "whispered",
+   "optional_trim": false,
+   "beat": "irony: picture is Tos's arm",
+   "edit": "kept",
+   "shots": [
+    "S115",
+    "S116"
+   ]
+  },
+  {
+   "id": "s75",
+   "draft_id": "s77",
+   "scene": "04",
+   "speaker": "james",
+   "tts": "โรงพยาบาลอยู่ข้างหน้า ผมเคยไปส่งอาหาร",
+   "text": "โรงพยาบาลอยู่ข้างหน้า ผมเคยไปส่งอาหาร",
+   "start": 236.918,
+   "dur": 3.242,
+   "end": 240.16,
+   "voiced": 2.862,
+   "pause_before": 0.3,
+   "chars": 36,
+   "chars_billed": 37,
+   "captions": [
+    {
+     "text": "โรงพยาบาลอยู่ข้างหน้า",
+     "t0": 236.918,
+     "t1": 238.587,
+     "emph": "โรงพยาบาล",
+     "colour": "amber"
+    },
+    {
+     "text": "ผมเคยไปส่งอาหาร",
+     "t0": 238.587,
+     "t1": 240.16
+    }
+   ],
+   "fx": "",
+   "optional_trim": false,
+   "beat": "goal",
+   "edit": "kept",
+   "shots": [
+    "S117",
+    "S118"
+   ]
+  },
+  {
+   "id": "s76",
+   "draft_id": "s78",
+   "scene": "04",
+   "speaker": "narr",
+   "tts": "ก้องมองโทรศัพท์ ยังไม่มีสาย จากลูก",
+   "text": "ก้องมองโทรศัพท์ ยังไม่มีสาย จากลูก",
+   "start": 240.46,
+   "dur": 2.924,
+   "end": 243.384,
+   "voiced": 2.544,
+   "pause_before": 0.3,
+   "chars": 32,
+   "chars_billed": 34,
+   "captions": [
+    {
+     "text": "ก้องมองโทรศัพท์",
+     "t0": 240.46,
+     "t1": 241.652
+    },
+    {
+     "text": "ยังไม่มีสาย",
+     "t0": 241.652,
+     "t1": 242.527,
+     "emph": "ยังไม่มีสาย",
+     "colour": "red"
+    },
+    {
+     "text": "จากลูก",
+     "t0": 242.527,
+     "t1": 243.384
+    }
+   ],
+   "fx": "",
+   "optional_trim": false,
+   "beat": "open loop: the daughter",
+   "edit": "kept",
+   "shots": [
+    "S119",
+    "S120"
+   ]
+  },
+  {
+   "id": "s77",
+   "draft_id": "s79",
+   "scene": "05",
+   "speaker": "narr",
+   "tts": "แล้วโทรศัพท์ก็สั่น จอสว่างวาบ กลางความมืด",
+   "text": "แล้วโทรศัพท์ก็สั่น จอสว่างวาบ กลางความมืด",
+   "start": 243.884,
+   "dur": 3.48,
+   "end": 247.364,
+   "voiced": 3.1,
+   "pause_before": 0.5,
+   "chars": 39,
+   "chars_billed": 41,
+   "captions": [
+    {
+     "text": "แล้วโทรศัพท์ก็สั่น",
+     "t0": 243.884,
+     "t1": 245.314
+    },
+    {
+     "text": "จอสว่างวาบ",
+     "t0": 245.314,
+     "t1": 246.109,
+     "emph": "สว่างวาบ",
+     "colour": "red"
+    },
+    {
+     "text": "กลางความมืด",
+     "t0": 246.109,
+     "t1": 247.364
+    }
+   ],
+   "fx": "phone buzz on a hard surface x2; everybody's breath stops",
+   "optional_trim": false,
+   "beat": "PAY-OFF of the missed calls + light = danger",
+   "edit": "kept",
+   "shots": [
+    "S121",
+    "S122"
+   ]
+  },
+  {
+   "id": "s78",
+   "draft_id": "s80",
+   "scene": "05",
+   "speaker": "namnuea",
+   "tts": "พ่อ! พ่ออยู่ไหน!",
+   "text": "พ่อ! พ่ออยู่ไหน!",
+   "start": 247.664,
+   "dur": 1.595,
+   "end": 249.259,
+   "voiced": 1.215,
+   "pause_before": 0.3,
+   "chars": 13,
+   "chars_billed": 16,
+   "captions": [
+    {
+     "text": "พ่อ!",
+     "t0": 247.664,
+     "t1": 248.084
+    },
+    {
+     "text": "พ่ออยู่ไหน!",
+     "t0": 248.084,
+     "t1": 249.259
+    }
+   ],
+   "fx": "phone-band filter, crowd and engine behind her",
+   "optional_trim": false,
+   "beat": "dialogue",
+   "edit": "kept",
+   "shots": [
+    "S123",
+    "S124"
+   ]
+  },
+  {
+   "id": "s79",
+   "draft_id": "s81",
+   "scene": "05",
+   "speaker": "namnuea",
+   "tts": "เขาพาหนู ขึ้นรถอพยพ บอกว่าจะไปท่าเรือ",
+   "text": "เขาพาหนู ขึ้นรถอพยพ บอกว่าจะไปท่าเรือ",
+   "start": 249.459,
+   "dur": 3.162,
+   "end": 252.621,
+   "voiced": 2.782,
+   "pause_before": 0.2,
+   "chars": 35,
+   "chars_billed": 37,
+   "captions": [
+    {
+     "text": "เขาพาหนู",
+     "t0": 249.459,
+     "t1": 250.095
+    },
+    {
+     "text": "ขึ้นรถอพยพ",
+     "t0": 250.095,
+     "t1": 250.889
+    },
+    {
+     "text": "บอกว่าจะไปท่าเรือ",
+     "t0": 250.889,
+     "t1": 252.621,
+     "emph": "ท่าเรือ",
+     "colour": "amber"
+    }
+   ],
+   "fx": "",
+   "optional_trim": false,
+   "beat": "the series goal",
+   "edit": "kept",
+   "shots": [
+    "S125"
+   ]
+  },
+  {
+   "id": "s80",
+   "draft_id": "s82",
+   "scene": "05",
+   "speaker": "namnuea",
+   "tts": "ครั้งนี้ พ่ออย่าผิดสัญญานะ",
+   "text": "ครั้งนี้ พ่ออย่าผิดสัญญานะ",
+   "start": 252.971,
+   "dur": 2.367,
+   "end": 255.338,
+   "voiced": 1.987,
+   "pause_before": 0.35,
+   "chars": 25,
+   "chars_billed": 26,
+   "captions": [
+    {
+     "text": "ครั้งนี้",
+     "t0": 252.971,
+     "t1": 253.607
+    },
+    {
+     "text": "พ่ออย่าผิดสัญญานะ",
+     "t0": 253.607,
+     "t1": 255.338,
+     "emph": "อย่าผิดสัญญา",
+     "colour": "red"
+    }
+   ],
+   "fx": "signal breaking up on the last word",
+   "optional_trim": false,
+   "beat": "the promise asked for",
+   "edit": "kept",
+   "shots": [
+    "S126"
+   ]
+  },
+  {
+   "id": "s81",
+   "draft_id": "s83",
+   "scene": "05",
+   "speaker": "narr",
+   "tts": "ก้องยังไม่ทันรับปาก สัญญาณก็ขาด",
+   "text": "ก้องยังไม่ทันรับปาก สัญญาณก็ขาด",
+   "start": 255.638,
+   "dur": 2.765,
+   "end": 258.403,
+   "voiced": 2.385,
+   "pause_before": 0.3,
+   "chars": 30,
+   "chars_billed": 31,
+   "captions": [
+    {
+     "text": "ก้องยังไม่ทันรับปาก",
+     "t0": 255.638,
+     "t1": 257.148
+    },
+    {
+     "text": "สัญญาณก็ขาด",
+     "t0": 257.148,
+     "t1": 258.403,
+     "emph": "สัญญาณก็ขาด",
+     "colour": "red"
+    }
+   ],
+   "fx": "dead-line tone, one beat, then nothing",
+   "optional_trim": false,
+   "beat": "cut off before he can promise: PAY-OFF of the promise motif (s27)",
+   "edit": "edited: carries the meaning of the cut sentence s84 in two words ('รับปาก')",
+   "shots": [
+    "S127",
+    "S128"
+   ]
+  },
+  {
+   "id": "s82",
+   "draft_id": "s85",
+   "scene": "05",
+   "speaker": "narr",
+   "tts": "ก้องหันหลัง จะไปหาลูกเดี๋ยวนั้น",
+   "text": "ก้องหันหลัง จะไปหาลูกเดี๋ยวนั้น",
+   "start": 258.703,
+   "dur": 2.765,
+   "end": 261.468,
+   "voiced": 2.385,
+   "pause_before": 0.3,
+   "chars": 30,
+   "chars_billed": 31,
+   "captions": [
+    {
+     "text": "ก้องหันหลัง",
+     "t0": 258.703,
+     "t1": 259.577
+    },
+    {
+     "text": "จะไปหาลูกเดี๋ยวนั้น",
+     "t0": 259.577,
+     "t1": 261.468
+    }
+   ],
+   "fx": "boots turning on gravel",
+   "optional_trim": false,
+   "beat": "impulse",
+   "edit": "edited: says where he is going",
+   "shots": [
+    "S129"
+   ]
+  },
+  {
+   "id": "s83",
+   "draft_id": "s86",
+   "scene": "05",
+   "speaker": "praew",
+   "tts": "ถ้าคุณไปคนเดียว ตอนนี้ คุณอาจไปไม่ถึงลูก",
+   "text": "ถ้าคุณไปคนเดียว ตอนนี้ คุณอาจไปไม่ถึงลูก",
+   "start": 261.668,
+   "dur": 3.401,
+   "end": 265.068,
+   "voiced": 3.021,
+   "pause_before": 0.2,
+   "chars": 38,
+   "chars_billed": 40,
+   "captions": [
+    {
+     "text": "ถ้าคุณไปคนเดียว",
+     "t0": 261.668,
+     "t1": 262.86
+    },
+    {
+     "text": "ตอนนี้",
+     "t0": 262.86,
+     "t1": 263.337
+    },
+    {
+     "text": "คุณอาจไปไม่ถึงลูก",
+     "t0": 263.337,
+     "t1": 265.068,
+     "emph": "ไปไม่ถึงลูก",
+     "colour": "red"
+    }
+   ],
+   "fx": "",
+   "optional_trim": false,
+   "beat": "the argument",
+   "edit": "kept",
+   "shots": [
+    "S130",
+    "S131"
+   ]
+  },
+  {
+   "id": "s84",
+   "draft_id": "s87",
+   "scene": "05",
+   "speaker": "narr",
+   "tts": "ก้องกำโทรศัพท์แน่น แล้วเดินตามเจมส์ไป",
+   "text": "ก้องกำโทรศัพท์แน่น แล้วเดินตามเจมส์ไป",
+   "start": 265.468,
+   "dur": 3.242,
+   "end": 268.71,
+   "voiced": 2.862,
+   "pause_before": 0.4,
+   "chars": 36,
+   "chars_billed": 37,
+   "captions": [
+    {
+     "text": "ก้องกำโทรศัพท์แน่น",
+     "t0": 265.468,
+     "t1": 266.899
+    },
+    {
+     "text": "แล้วเดินตามเจมส์ไป",
+     "t0": 266.899,
+     "t1": 268.71
+    }
+   ],
+   "fx": "",
+   "optional_trim": false,
+   "beat": "decision",
+   "edit": "edited: the next sentence starts with 'โรงพยาบาล'; saying it twice in a row was a stumble",
+   "shots": [
+    "S132",
+    "S133"
+   ]
+  },
+  {
+   "id": "s85",
+   "draft_id": "s88",
+   "scene": "06",
+   "speaker": "narr",
+   "tts": "โรงพยาบาลริมแม่น้ำ ไฟยังสว่าง",
+   "text": "โรงพยาบาลริมแม่น้ำ ไฟยังสว่าง",
+   "start": 269.21,
+   "dur": 2.606,
+   "end": 271.816,
+   "voiced": 2.226,
+   "pause_before": 0.5,
+   "chars": 28,
+   "chars_billed": 29,
+   "captions": [
+    {
+     "text": "โรงพยาบาลริมแม่น้ำ",
+     "t0": 269.21,
+     "t1": 270.641
+    },
+    {
+     "text": "ไฟยังสว่าง",
+     "t0": 270.641,
+     "t1": 271.816,
+     "emph": "ไฟยังสว่าง",
+     "colour": "amber"
+    }
+   ],
+   "fx": "river wash, a generator hum, no rain noise on roofs for the first time",
+   "optional_trim": false,
+   "beat": "hope",
+   "edit": "kept",
+   "shots": [
+    "S134"
+   ]
+  },
+  {
+   "id": "s86",
+   "draft_id": "s89",
+   "scene": "06",
+   "speaker": "narr",
+   "tts": "แต่ประตูเหล็ก ปิดสนิท",
+   "text": "แต่ประตูเหล็ก ปิดสนิท",
+   "start": 272.016,
+   "dur": 1.97,
+   "end": 273.985,
+   "voiced": 1.59,
+   "pause_before": 0.2,
+   "chars": 20,
+   "chars_billed": 21,
+   "captions": [
+    {
+     "text": "แต่ประตูเหล็ก",
+     "t0": 272.016,
+     "t1": 273.049
+    },
+    {
+     "text": "ปิดสนิท",
+     "t0": 273.049,
+     "t1": 273.985,
+     "emph": "ปิดสนิท",
+     "colour": "red"
+    }
+   ],
+   "fx": "hands on steel bars, a chain rattling",
+   "optional_trim": false,
+   "beat": "but",
+   "edit": "kept",
+   "shots": [
+    "S135"
+   ]
+  },
+  {
+   "id": "s87",
+   "draft_id": "s90",
+   "scene": "06",
+   "speaker": "guard",
+   "tts": "เปิดไม่ได้! ใครโดนกัดมาบ้าง ก็ไม่รู้!",
+   "text": "เปิดไม่ได้! ใครโดนกัดมาบ้าง ก็ไม่รู้!",
+   "start": 274.235,
+   "dur": 3.003,
+   "end": 277.239,
+   "voiced": 2.623,
+   "pause_before": 0.25,
+   "chars": 33,
+   "chars_billed": 37,
+   "captions": [
+    {
+     "text": "เปิดไม่ได้!",
+     "t0": 274.235,
+     "t1": 275.03
+    },
+    {
+     "text": "ใครโดนกัดมาบ้าง",
+     "t0": 275.03,
+     "t1": 276.223,
+     "emph": "โดนกัด",
+     "colour": "red"
+    },
+    {
+     "text": "ก็ไม่รู้!",
+     "t0": 276.223,
+     "t1": 277.239
+    }
+   ],
+   "fx": "voice from inside, behind steel",
+   "optional_trim": false,
+   "beat": "refusal; SETUP for the wound reveal",
+   "edit": "edited: spoken word order; the line is invented (the screenplay gives the guard none) and stays short",
+   "shots": [
+    "S136",
+    "S137"
+   ]
+  },
+  {
+   "id": "s88",
+   "draft_id": "s91",
+   "scene": "06",
+   "speaker": "narr",
+   "tts": "ก้องยกเครื่องตัดขึ้น แบตยังเต็ม สามขีด ตัดโซ่ขาดแน่",
+   "text": "ก้องยกเครื่องตัดขึ้น แบตยังเต็ม 3 ขีด ตัดโซ่ขาดแน่",
+   "start": 277.489,
+   "dur": 4.196,
+   "end": 281.684,
+   "voiced": 3.816,
+   "pause_before": 0.25,
+   "chars": 48,
+   "chars_billed": 51,
+   "captions": [
+    {
+     "text": "ก้องยกเครื่องตัดขึ้น",
+     "t0": 277.489,
+     "t1": 279.079
+    },
+    {
+     "text": "แบตยังเต็ม 3 ขีด",
+     "t0": 279.079,
+     "t1": 280.35,
+     "emph": "3 ขีด",
+     "colour": "amber"
+    },
+    {
+     "text": "ตัดโซ่ขาดแน่",
+     "t0": 280.35,
+     "t1": 281.684
+    }
+   ],
+   "fx": "the cutter's motor clicks ready (no warning beep: the gauge is steady)",
+   "optional_trim": false,
+   "beat": "PAY-OFF of the hook's 'แบตเต็ม 3 ขีด': he has the power and still cannot use it",
+   "edit": "edited: keeps the bible's three bars and pays the hook's set-up here",
+   "shots": [
+    "S138",
+    "S139"
+   ]
+  },
+  {
+   "id": "s89",
+   "draft_id": "s92",
+   "scene": "06",
+   "speaker": "narr",
+   "tts": "แต่เสียงตัดเหล็ก จะเรียกพวกมัน มาทั้งฝูง",
+   "text": "แต่เสียงตัดเหล็ก จะเรียกพวกมัน มาทั้งฝูง",
+   "start": 281.784,
+   "dur": 3.401,
+   "end": 285.185,
+   "voiced": 3.021,
+   "pause_before": 0.1,
+   "chars": 38,
+   "chars_billed": 40,
+   "captions": [
+    {
+     "text": "แต่เสียงตัดเหล็ก",
+     "t0": 281.784,
+     "t1": 283.056
+    },
+    {
+     "text": "จะเรียกพวกมัน",
+     "t0": 283.056,
+     "t1": 284.09
+    },
+    {
+     "text": "มาทั้งฝูง",
+     "t0": 284.09,
+     "t1": 285.185,
+     "emph": "ทั้งฝูง",
+     "colour": "red"
+    }
+   ],
+   "fx": "",
+   "optional_trim": false,
+   "beat": "the rule applied (pay-off of s57)",
+   "edit": "kept",
+   "shots": [
+    "S140",
+    "S141"
+   ]
+  },
+  {
+   "id": "s90",
+   "draft_id": "s93",
+   "scene": "06",
+   "speaker": "narr",
+   "tts": "และคนข้างใน จะไม่เหลือประตูกั้น",
+   "text": "และคนข้างใน จะไม่เหลือประตูกั้น",
+   "start": 285.285,
+   "dur": 2.765,
+   "end": 288.05,
+   "voiced": 2.385,
+   "pause_before": 0.1,
+   "chars": 30,
+   "chars_billed": 31,
+   "captions": [
+    {
+     "text": "และคนข้างใน",
+     "t0": 285.285,
+     "t1": 286.159
+    },
+    {
+     "text": "จะไม่เหลือประตูกั้น",
+     "t0": 286.159,
+     "t1": 288.05,
+     "emph": "ไม่เหลือประตู",
+     "colour": "red"
+    }
+   ],
+   "fx": "",
+   "optional_trim": false,
+   "beat": "Kong's value",
+   "edit": "edited: no longer optional: without it Kong spares the chain only to save himself, and his value (other lives count) is not on screen",
+   "shots": [
+    "S142"
+   ]
+  },
+  {
+   "id": "s91",
+   "draft_id": "s94",
+   "scene": "06",
+   "speaker": "narr",
+   "tts": "เขาลดมือลง",
+   "text": "เขาลดมือลง",
+   "start": 288.2,
+   "dur": 1.175,
+   "end": 289.375,
+   "voiced": 0.795,
+   "pause_before": 0.15,
+   "chars": 10,
+   "chars_billed": 10,
+   "captions": [
+    {
+     "text": "เขาลดมือลง",
+     "t0": 288.2,
+     "t1": 289.375
+    }
+   ],
+   "fx": "",
+   "optional_trim": false,
+   "beat": "decision",
+   "edit": "kept",
+   "shots": [
+    "S143"
+   ]
+  },
+  {
+   "id": "s92",
+   "draft_id": "s95",
+   "scene": "06",
+   "speaker": "narr",
+   "tts": "ข้างๆ กัน มีตึกสร้างไม่เสร็จ มืดสนิท",
+   "text": "ข้างๆ กัน มีตึกสร้างไม่เสร็จ มืดสนิท",
+   "start": 289.675,
+   "dur": 3.003,
+   "end": 292.678,
+   "voiced": 2.623,
+   "pause_before": 0.3,
+   "chars": 33,
+   "chars_billed": 36,
+   "captions": [
+    {
+     "text": "ข้างๆ กัน",
+     "t0": 289.675,
+     "t1": 290.311
+    },
+    {
+     "text": "มีตึกสร้างไม่เสร็จ",
+     "t0": 290.311,
+     "t1": 291.741
+    },
+    {
+     "text": "มืดสนิท",
+     "t0": 291.741,
+     "t1": 292.678,
+     "emph": "มืดสนิท",
+     "colour": "amber"
+    }
+   ],
+   "fx": "tarpaulin flapping, dripping concrete",
+   "optional_trim": false,
+   "beat": "refuge by rule 5",
+   "edit": "retimed",
+   "shots": [
+    "S144",
+    "S145"
+   ]
+  },
+  {
+   "id": "s93",
+   "draft_id": "s97",
+   "scene": "06",
+   "speaker": "narr",
+   "tts": "แล้วก้องก็เห็น เลือดหยดลงพื้น จากแขนเสื้อคุณทศ",
+   "text": "แล้วก้องก็เห็น เลือดหยดลงพื้น จากแขนเสื้อคุณทศ",
+   "start": 293.628,
+   "dur": 3.878,
+   "end": 297.505,
+   "voiced": 3.498,
+   "pause_before": 0.95,
+   "chars": 44,
+   "chars_billed": 46,
+   "captions": [
+    {
+     "text": "แล้วก้องก็เห็น",
+     "t0": 293.628,
+     "t1": 294.741
+    },
+    {
+     "text": "เลือดหยดลงพื้น",
+     "t0": 294.741,
+     "t1": 295.854,
+     "emph": "เลือด",
+     "colour": "red"
+    },
+    {
+     "text": "จากแขนเสื้อคุณทศ",
+     "t0": 295.854,
+     "t1": 297.505
+    }
+   ],
+   "fx": "single drops on concrete, very close, in a quiet room",
+   "optional_trim": false,
+   "beat": "PAY-OFF of the hidden wound",
+   "edit": "edited: 'ทีละหยด' is in the picture and the sound",
+   "shots": [
+    "S146",
+    "S147",
+    "S148"
+   ]
+  },
+  {
+   "id": "s94",
+   "draft_id": "s98",
+   "scene": "06",
+   "speaker": "praew",
+   "tts": "แผลอะไร?",
+   "text": "แผลอะไร?",
+   "start": 297.855,
+   "dur": 0.936,
+   "end": 298.792,
+   "voiced": 0.556,
+   "pause_before": 0.35,
+   "chars": 7,
+   "chars_billed": 8,
+   "captions": [
+    {
+     "text": "แผลอะไร?",
+     "t0": 297.855,
+     "t1": 298.792
+    }
+   ],
+   "fx": "",
+   "optional_trim": false,
+   "beat": "dialogue",
+   "edit": "kept",
+   "shots": [
+    "S149"
+   ]
+  },
+  {
+   "id": "s95",
+   "draft_id": "s99",
+   "scene": "06",
+   "speaker": "tos",
+   "tts": "ไม่มีอะไร!",
+   "text": "ไม่มีอะไร!",
+   "start": 298.942,
+   "dur": 1.095,
+   "end": 300.037,
+   "voiced": 0.715,
+   "pause_before": 0.15,
+   "chars": 9,
+   "chars_billed": 10,
+   "captions": [
+    {
+     "text": "ไม่มีอะไร!",
+     "t0": 298.942,
+     "t1": 300.037
+    }
+   ],
+   "fx": "loud; it echoes in the bare concrete",
+   "optional_trim": false,
+   "beat": "dialogue",
+   "edit": "kept",
+   "shots": [
+    "S150"
+   ]
+  },
+  {
+   "id": "s96",
+   "draft_id": "s100",
+   "scene": "06",
+   "speaker": "praew",
+   "tts": "ขอดูเดี๋ยวนี้!",
+   "text": "ขอดูเดี๋ยวนี้!",
+   "start": 300.137,
+   "dur": 1.413,
+   "end": 301.551,
+   "voiced": 1.033,
+   "pause_before": 0.1,
+   "chars": 13,
+   "chars_billed": 14,
+   "captions": [
+    {
+     "text": "ขอดูเดี๋ยวนี้!",
+     "t0": 300.137,
+     "t1": 301.551
+    }
+   ],
+   "fx": "louder; echo",
+   "optional_trim": false,
+   "beat": "dialogue",
+   "edit": "kept",
+   "shots": [
+    "S151"
+   ]
+  },
+  {
+   "id": "s97",
+   "draft_id": "s101",
+   "scene": "06",
+   "speaker": "narr",
+   "tts": "ก้องจำได้ดี น้องของเขา ใช้เวลาแค่ หกสิบวินาที",
+   "text": "ก้องจำได้ดี น้องของเขา ใช้เวลาแค่ 60 วินาที",
+   "start": 301.851,
+   "dur": 3.719,
+   "end": 305.569,
+   "voiced": 3.339,
+   "pause_before": 0.3,
+   "chars": 42,
+   "chars_billed": 45,
+   "captions": [
+    {
+     "text": "ก้องจำได้ดี",
+     "t0": 301.851,
+     "t1": 302.725
+    },
+    {
+     "text": "น้องของเขา",
+     "t0": 302.725,
+     "t1": 303.52
+    },
+    {
+     "text": "ใช้เวลาแค่ 60 วินาที",
+     "t0": 303.52,
+     "t1": 305.569,
+     "emph": "60 วินาที",
+     "colour": "amber"
+    }
+   ],
+   "fx": "heartbeat pulse of scene 02 returns",
+   "optional_trim": false,
+   "beat": "PAY-OFF of the 60-second rule, stated as what Kong has seen, not as a clock running on Tos",
+   "edit": "edited: the draft ('ก้องรู้ดี ว่า 60 วินาที มันสั้นแค่ไหน') implied a 60-second clock on Tos, who has been with them for minutes; a bite would have turned him long ago. This wording is only what Kong knows and keeps the number",
+   "shots": [
+    "S152",
+    "S153",
+    "S154"
+   ]
+  },
+  {
+   "id": "s98",
+   "draft_id": "s102",
+   "scene": "06",
+   "speaker": "narr",
+   "tts": "แต่เสียงเถียงกัน ดังเกินไป",
+   "text": "แต่เสียงเถียงกัน ดังเกินไป",
+   "start": 305.819,
+   "dur": 2.367,
+   "end": 308.187,
+   "voiced": 1.987,
+   "pause_before": 0.25,
+   "chars": 25,
+   "chars_billed": 26,
+   "captions": [
+    {
+     "text": "แต่เสียงเถียงกัน",
+     "t0": 305.819,
+     "t1": 307.091
+    },
+    {
+     "text": "ดังเกินไป",
+     "t0": 307.091,
+     "t1": 308.187,
+     "emph": "ดังเกินไป",
+     "colour": "red"
+    }
+   ],
+   "fx": "the echo of the shouting dies; one far snarl answers",
+   "optional_trim": false,
+   "beat": "cause",
+   "edit": "kept",
+   "shots": [
+    "S155"
+   ]
+  },
+  {
+   "id": "s99",
+   "draft_id": "s103",
+   "scene": "06",
+   "speaker": "narr",
+   "tts": "ในความมืด มีเสียงฝีเท้า วิ่งเข้ามา",
+   "text": "ในความมืด มีเสียงฝีเท้า วิ่งเข้ามา",
+   "start": 308.337,
+   "dur": 2.924,
+   "end": 311.26,
+   "voiced": 2.544,
+   "pause_before": 0.15,
+   "chars": 32,
+   "chars_billed": 34,
+   "captions": [
+    {
+     "text": "ในความมืด",
+     "t0": 308.337,
+     "t1": 309.052
+    },
+    {
+     "text": "มีเสียงฝีเท้า",
+     "t0": 309.052,
+     "t1": 310.085,
+     "emph": "เสียงฝีเท้า",
+     "colour": "red"
+    },
+    {
+     "text": "วิ่งเข้ามา",
+     "t0": 310.085,
+     "t1": 311.26
+    }
+   ],
+   "fx": "running feet on gravel from behind, closing",
+   "optional_trim": false,
+   "beat": "effect",
+   "edit": "kept",
+   "shots": [
+    "S156",
+    "S157"
+   ]
+  },
+  {
+   "id": "s100",
+   "draft_id": "s104",
+   "scene": "06",
+   "speaker": "narr",
+   "tts": "ก้องยกชะแลงขึ้น",
+   "text": "ก้องยกชะแลงขึ้น",
+   "start": 311.61,
+   "dur": 1.572,
+   "end": 313.183,
+   "voiced": 1.192,
+   "pause_before": 0.35,
+   "chars": 15,
+   "chars_billed": 15,
+   "captions": [
+    {
+     "text": "ก้องยกชะแลงขึ้น",
+     "t0": 311.61,
+     "t1": 313.183,
+     "emph": "ชะแลง",
+     "colour": "amber"
+    }
+   ],
+   "fx": "steel bar scrape, heartbeat louder",
+   "optional_trim": false,
+   "beat": "the last action",
+   "edit": "kept",
+   "shots": [
+    "S158"
+   ]
+  },
+  {
+   "id": "s101",
+   "draft_id": "s105",
+   "scene": "06",
+   "speaker": "narr",
+   "tts": "แต่เขาจะฟาด ใคร",
+   "text": "แต่เขาจะฟาด ใคร",
+   "start": 313.433,
+   "dur": 1.674,
+   "end": 315.107,
+   "voiced": 1.294,
+   "pause_before": 0.25,
+   "chars": 14,
+   "chars_billed": 15,
+   "captions": [
+    {
+     "text": "แต่เขาจะฟาด",
+     "t0": 313.433,
+     "t1": 314.307
+    },
+    {
+     "text": "ใคร",
+     "t0": 314.307,
+     "t1": 315.107,
+     "emph": "ใคร",
+     "colour": "red"
+    }
+   ],
+   "fx": "all sound cuts to nothing on 'ใคร'; black; 1.0 s of silence; then one watch tick",
+   "optional_trim": false,
+   "beat": "CLIFFHANGER",
+   "edit": "kept",
+   "shots": [
+    "S159",
+    "S160"
+   ]
+  }
+ ]
+}

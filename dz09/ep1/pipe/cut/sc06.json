@@ -1,0 +1,925 @@
+{
+ "scene": "sc06",
+ "source": "plan",
+ "timing_file": "(plan estimate: plan)",
+ "narr0": 0.5,
+ "fps": 24,
+ "g_base": 60000,
+ "frames": 1206,
+ "seconds": 50.25,
+ "plan_frames": 1206,
+ "frames_by_class": {
+  "B": 559,
+  "A": 462,
+  "C2": 65,
+  "C1": 120
+ },
+ "final_cpu_h_estimate": 15.08,
+ "hard_cuts": [],
+ "fx": [],
+ "cues": {},
+ "mix": "",
+ "narration_wav": "",
+ "warnings": [],
+ "shots": [
+  {
+   "id": "S134",
+   "plan_id": "S134",
+   "f0": 0,
+   "f1": 79,
+   "frames": 79,
+   "plan_frames": 79,
+   "cls": "B",
+   "set": "RIV",
+   "size": "EW",
+   "cut_on": "(picture beat, no word)",
+   "how": "scene start",
+   "narration": [
+    {
+     "id": "s85",
+     "captions": [
+      "โรงพยาบาลริมแม่น้ำ",
+      "ไฟยังสว่าง"
+     ]
+    }
+   ],
+   "action": "The riverside hospital: a six-storey block with lit windows and a plain lit cross drawn for this film, the river and its reflections to the right, a sodium-lit forecourt full of small seated silhouettes; in the foreground a tall steel sliding gate. Four figures arrive from the left."
+  },
+  {
+   "id": "S135",
+   "plan_id": "S135",
+   "f0": 79,
+   "f1": 133,
+   "frames": 54,
+   "plan_frames": 54,
+   "cls": "B",
+   "set": "RIV",
+   "size": "INSERT low",
+   "cut_on": "แต่ประตูเหล็ก",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s86",
+     "captions": [
+      "แต่ประตูเหล็ก",
+      "ปิดสนิท"
+     ]
+    }
+   ],
+   "action": "Kong's gloves grip two bars and shake; a chain and padlock rattle against the post."
+  },
+  {
+   "id": "S136",
+   "plan_id": "S136",
+   "f0": 133,
+   "f1": 152,
+   "frames": 19,
+   "plan_frames": 19,
+   "cls": "A",
+   "set": "RIV",
+   "size": "M",
+   "cut_on": "เปิดไม่ได้!",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s87",
+     "captions": [
+      "เปิดไม่ได้!"
+     ]
+    }
+   ],
+   "action": "Through the bars from outside: a hospital guard (cap, pale blue shirt, torch held but off) with one palm up, shouting; behind him nurses' silhouettes and families on the ground."
+  },
+  {
+   "id": "S137",
+   "plan_id": "S137",
+   "f0": 152,
+   "f1": 211,
+   "frames": 59,
+   "plan_frames": 59,
+   "cls": "A",
+   "set": "RIV",
+   "size": "M four-shot",
+   "cut_on": "ใครโดนกัดมาบ้าง",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s87",
+     "captions": [
+      "ใครโดนกัดมาบ้าง",
+      "ก็ไม่รู้!"
+     ]
+    }
+   ],
+   "action": "Reverse from inside, bars across the frame: Kong, Praew and James at the gate, Tos half a step behind them with his arms crossed. On 'โดนกัด' Tos's eyes drop to his arm and come back up."
+  },
+  {
+   "id": "S138",
+   "plan_id": "S138",
+   "f0": 211,
+   "f1": 249,
+   "frames": 38,
+   "plan_frames": 38,
+   "cls": "A",
+   "set": "RIV",
+   "size": "M",
+   "cut_on": "ก้องยกเครื่องตัดขึ้น",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s88",
+     "captions": [
+      "ก้องยกเครื่องตัดขึ้น"
+     ]
+    }
+   ],
+   "action": "Kong swings the cutter up two-handed and sets the jaws to the chain."
+  },
+  {
+   "id": "S139",
+   "plan_id": "S139",
+   "f0": 249,
+   "f1": 314,
+   "frames": 65,
+   "plan_frames": 65,
+   "cls": "C2",
+   "set": "RIV",
+   "size": "INSERT",
+   "cut_on": "แบตยังเต็ม 3 ขีด",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s88",
+     "captions": [
+      "แบตยังเต็ม 3 ขีด",
+      "ตัดโซ่ขาดแน่"
+     ]
+    }
+   ],
+   "action": "The hook's jaw macro with the gauge in the same frame: steel tips round a chain link, three green LEDs steady."
+  },
+  {
+   "id": "S140",
+   "plan_id": "S140",
+   "f0": 314,
+   "f1": 344,
+   "frames": 30,
+   "plan_frames": 30,
+   "cls": "A",
+   "set": "RIV",
+   "size": "CU",
+   "cut_on": "แต่เสียงตัดเหล็ก",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s89",
+     "captions": [
+      "แต่เสียงตัดเหล็ก"
+     ]
+    }
+   ],
+   "action": "Kong's eyes leave the chain and go over his shoulder, to the street behind (left)."
+  },
+  {
+   "id": "S141",
+   "plan_id": "S141",
+   "f0": 344,
+   "f1": 398,
+   "frames": 54,
+   "plan_frames": 54,
+   "cls": "B",
+   "set": "RIV",
+   "size": "W long",
+   "cut_on": "จะเรียกพวกมัน",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s89",
+     "captions": [
+      "จะเรียกพวกมัน",
+      "มาทั้งฝูง"
+     ]
+    }
+   ],
+   "action": "Back down the riverside street: three figures wandering far off under a streetlamp, slow, not yet aware."
+  },
+  {
+   "id": "S142",
+   "plan_id": "S142",
+   "f0": 398,
+   "f1": 468,
+   "frames": 70,
+   "plan_frames": 70,
+   "cls": "B",
+   "set": "RIV",
+   "size": "M",
+   "cut_on": "และคนข้างใน",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s90",
+     "captions": [
+      "และคนข้างใน",
+      "จะไม่เหลือประตูกั้น"
+     ]
+    }
+   ],
+   "action": "Through the bars, wide: the guard has stepped back; behind him the seated silhouettes on the forecourt lift their heads to the cutter, one pulls a smaller shape close. Extras roles in silhouette against the lit entrance, heads under a tenth of the frame."
+  },
+  {
+   "id": "S143",
+   "plan_id": "S143",
+   "f0": 468,
+   "f1": 503,
+   "frames": 35,
+   "plan_frames": 35,
+   "cls": "B",
+   "set": "RIV",
+   "size": "INSERT",
+   "cut_on": "เขาลดมือลง",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s91",
+     "captions": [
+      "เขาลดมือลง"
+     ]
+    }
+   ],
+   "action": "The jaws come off the chain; the cutter goes down; the chain swings and settles."
+  },
+  {
+   "id": "S144",
+   "plan_id": "S144",
+   "f0": 503,
+   "f1": 553,
+   "frames": 50,
+   "plan_frames": 50,
+   "cls": "B",
+   "set": "RIV",
+   "size": "W pan",
+   "cut_on": "ข้างๆ กัน",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s92",
+     "captions": [
+      "ข้างๆ กัน",
+      "มีตึกสร้างไม่เสร็จ"
+     ]
+    }
+   ],
+   "action": "The next lot along the river: a bare concrete frame against the sky, a few scaffold tubes in silhouette, no light in it; a corrugated site hoarding with one panel bent open."
+  },
+  {
+   "id": "S145",
+   "plan_id": "S145",
+   "f0": 553,
+   "f1": 586,
+   "frames": 33,
+   "plan_frames": 33,
+   "cls": "B",
+   "set": "RIV",
+   "size": "MW",
+   "cut_on": "มืดสนิท",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s92",
+     "captions": [
+      "มืดสนิท"
+     ]
+    }
+   ],
+   "action": "On 'มืดสนิท': the four slip through the gap in the hoarding one at a time, left to right; Kong last, looking back."
+  },
+  {
+   "id": "S146",
+   "plan_id": "S146",
+   "f0": 586,
+   "f1": 625,
+   "frames": 39,
+   "plan_frames": 39,
+   "cls": "A",
+   "set": "SITE",
+   "size": "CU",
+   "cut_on": "(picture beat, no word)",
+   "how": "beat (46 % between S145 and S147)",
+   "narration": [
+    {
+     "id": "s93",
+     "captions": [
+      "แล้วก้องก็เห็น"
+     ]
+    }
+   ],
+   "action": "Inside, bare columns and puddles: Kong sets the cutter down against a column and bends forward getting his breath; his eyes go to the floor and stay there."
+  },
+  {
+   "id": "S147",
+   "plan_id": "S147",
+   "f0": 625,
+   "f1": 651,
+   "frames": 26,
+   "plan_frames": 26,
+   "cls": "B",
+   "set": "SITE",
+   "size": "INSERT",
+   "cut_on": "เลือดหยดลงพื้น",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s93",
+     "captions": [
+      "เลือดหยดลงพื้น"
+     ]
+    }
+   ],
+   "action": "Dusty concrete: a red drop lands and stars, a second beside it, a third."
+  },
+  {
+   "id": "S148",
+   "plan_id": "S148",
+   "f0": 651,
+   "f1": 700,
+   "frames": 49,
+   "plan_frames": 49,
+   "cls": "A",
+   "set": "SITE",
+   "size": "INSERT tilt",
+   "cut_on": "จากแขนเสื้อคุณทศ",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s93",
+     "captions": [
+      "จากแขนเสื้อคุณทศ"
+     ]
+    }
+   ],
+   "action": "Up from the drops: Tos's elbow, the torn navy sleeve, blood running from under his clamping fingers."
+  },
+  {
+   "id": "S149",
+   "plan_id": "S149",
+   "f0": 700,
+   "f1": 726,
+   "frames": 26,
+   "plan_frames": 26,
+   "cls": "A",
+   "set": "SITE",
+   "size": "CU",
+   "cut_on": "แผลอะไร?",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s94",
+     "captions": [
+      "แผลอะไร?"
+     ]
+    }
+   ],
+   "action": "Praew steps in, eyes on the arm."
+  },
+  {
+   "id": "S150",
+   "plan_id": "S150",
+   "f0": 726,
+   "f1": 754,
+   "frames": 28,
+   "plan_frames": 28,
+   "cls": "A",
+   "set": "SITE",
+   "size": "MCU",
+   "cut_on": "ไม่มีอะไร!",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s95",
+     "captions": [
+      "ไม่มีอะไร!"
+     ]
+    }
+   ],
+   "action": "From the waist up: Tos jerks back against a column, turning the arm away, shouting (`angry`)."
+  },
+  {
+   "id": "S151",
+   "plan_id": "S151",
+   "f0": 754,
+   "f1": 795,
+   "frames": 41,
+   "plan_frames": 41,
+   "cls": "A",
+   "set": "SITE",
+   "size": "M",
+   "cut_on": "ขอดูเดี๋ยวนี้!",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s96",
+     "captions": [
+      "ขอดูเดี๋ยวนี้!"
+     ]
+    }
+   ],
+   "action": "Praew reaches for the arm with both blue gloves, Tos twists away; James backs off a step behind them."
+  },
+  {
+   "id": "S152",
+   "plan_id": "S152",
+   "f0": 795,
+   "f1": 816,
+   "frames": 21,
+   "plan_frames": 21,
+   "cls": "A",
+   "set": "SITE",
+   "size": "CU",
+   "cut_on": "ก้องจำได้ดี",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s97",
+     "captions": [
+      "ก้องจำได้ดี"
+     ]
+    }
+   ],
+   "action": "Kong watches the arm."
+  },
+  {
+   "id": "S153",
+   "plan_id": "S153",
+   "f0": 816,
+   "f1": 835,
+   "frames": 19,
+   "plan_frames": 19,
+   "cls": "C1",
+   "set": "2D",
+   "size": "FLASH",
+   "cut_on": "น้องของเขา",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s97",
+     "captions": [
+      "น้องของเขา"
+     ]
+    }
+   ],
+   "action": "Seven frames of S48 again (the junior's eyes snapping open), tinted red, then eighteen of Kong's eye from S152's setup held under it at 30 %: a memory, cut on the word."
+  },
+  {
+   "id": "S154",
+   "plan_id": "S154",
+   "f0": 835,
+   "f1": 891,
+   "frames": 56,
+   "plan_frames": 56,
+   "cls": "B",
+   "set": "SITE",
+   "size": "INSERT",
+   "cut_on": "ใช้เวลาแค่ 60 วินาที",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s97",
+     "captions": [
+      "ใช้เวลาแค่ 60 วินาที"
+     ]
+    }
+   ],
+   "action": "Kong's glove tightens on the crowbar where it rests on his shoulder."
+  },
+  {
+   "id": "S155",
+   "plan_id": "S155",
+   "f0": 891,
+   "f1": 951,
+   "frames": 60,
+   "plan_frames": 60,
+   "cls": "B",
+   "set": "SITE",
+   "size": "W",
+   "cut_on": "แต่เสียงเถียงกัน",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s98",
+     "captions": [
+      "แต่เสียงเถียงกัน",
+      "ดังเกินไป"
+     ]
+    }
+   ],
+   "action": "The bare hall from the back: the three in a knot at a column, still pulling and shouting silently, Kong apart; behind them the bent hoarding panel and the street."
+  },
+  {
+   "id": "S156",
+   "plan_id": "S156",
+   "f0": 951,
+   "f1": 993,
+   "frames": 42,
+   "plan_frames": 42,
+   "cls": "B",
+   "set": "SITE",
+   "size": "W long",
+   "cut_on": "ในความมืด",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s99",
+     "captions": [
+      "ในความมืด",
+      "มีเสียงฝีเท้า"
+     ]
+    }
+   ],
+   "action": "Out through the gap (screen left): darkness, then one running silhouette under the far lamp, then five."
+  },
+  {
+   "id": "S157",
+   "plan_id": "S157",
+   "f0": 993,
+   "f1": 1030,
+   "frames": 37,
+   "plan_frames": 37,
+   "cls": "A",
+   "set": "SITE",
+   "size": "CU",
+   "cut_on": "วิ่งเข้ามา",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s99",
+     "captions": [
+      "วิ่งเข้ามา"
+     ]
+    }
+   ],
+   "action": "James's head whips to the sound; his mouth shapes 'พี่'."
+  },
+  {
+   "id": "S158",
+   "plan_id": "S158",
+   "f0": 1030,
+   "f1": 1073,
+   "frames": 43,
+   "plan_frames": 43,
+   "cls": "A",
+   "set": "SITE",
+   "size": "M low",
+   "cut_on": "ก้องยกชะแลงขึ้น",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s100",
+     "captions": [
+      "ก้องยกชะแลงขึ้น"
+     ]
+    }
+   ],
+   "action": "Kong brings the crowbar off his shoulder and raises it in both hands. He stands square to camera: Tos against the column on his right, the gap on his left."
+  },
+  {
+   "id": "S159",
+   "plan_id": "S159",
+   "f0": 1073,
+   "f1": 1105,
+   "frames": 32,
+   "plan_frames": 32,
+   "cls": "A",
+   "set": "SITE",
+   "size": "ECU",
+   "cut_on": "แต่เขาจะฟาด",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s101",
+     "captions": [
+      "แต่เขาจะฟาด",
+      "ใคร"
+     ]
+    }
+   ],
+   "action": "Kong's eyes: right, to Tos. Left, to the gap. Right again. The bar starts down."
+  },
+  {
+   "id": "S160",
+   "plan_id": "S160",
+   "f0": 1105,
+   "f1": 1144,
+   "frames": 39,
+   "plan_frames": 39,
+   "cls": "C1",
+   "set": "2D",
+   "size": "BLACK",
+   "cut_on": "(picture beat, no word)",
+   "how": "beat (24 % between S159 and end)",
+   "narration": [
+    {
+     "id": "s101",
+     "captions": [
+      "ใคร"
+     ]
+    }
+   ],
+   "action": "Black."
+  },
+  {
+   "id": "S161",
+   "plan_id": "S161",
+   "f0": 1144,
+   "f1": 1206,
+   "frames": 62,
+   "plan_frames": 62,
+   "cls": "C1",
+   "set": "2D",
+   "size": "END CARD",
+   "cut_on": "(picture beat, no word)",
+   "how": "beat (53 % between S159 and end)",
+   "narration": [],
+   "action": "Black, the title mark and 'เขตปิดตาย 09' in the hook's title style, 'จบตอนที่ 1' under it in Kanit."
+  }
+ ],
+ "captions": [
+  {
+   "id": "s85",
+   "text": "โรงพยาบาลริมแม่น้ำ",
+   "t0": 0.5,
+   "t1": 1.931,
+   "speaker": "narr"
+  },
+  {
+   "id": "s85",
+   "text": "ไฟยังสว่าง",
+   "t0": 1.931,
+   "t1": 3.106,
+   "speaker": "narr",
+   "emph": "ไฟยังสว่าง",
+   "colour": "amber"
+  },
+  {
+   "id": "s86",
+   "text": "แต่ประตูเหล็ก",
+   "t0": 3.306,
+   "t1": 4.339,
+   "speaker": "narr"
+  },
+  {
+   "id": "s86",
+   "text": "ปิดสนิท",
+   "t0": 4.339,
+   "t1": 5.275,
+   "speaker": "narr",
+   "emph": "ปิดสนิท",
+   "colour": "red"
+  },
+  {
+   "id": "s87",
+   "text": "เปิดไม่ได้!",
+   "t0": 5.525,
+   "t1": 6.32,
+   "speaker": "guard"
+  },
+  {
+   "id": "s87",
+   "text": "ใครโดนกัดมาบ้าง",
+   "t0": 6.32,
+   "t1": 7.513,
+   "speaker": "guard",
+   "emph": "โดนกัด",
+   "colour": "red"
+  },
+  {
+   "id": "s87",
+   "text": "ก็ไม่รู้!",
+   "t0": 7.513,
+   "t1": 8.529,
+   "speaker": "guard"
+  },
+  {
+   "id": "s88",
+   "text": "ก้องยกเครื่องตัดขึ้น",
+   "t0": 8.779,
+   "t1": 10.369,
+   "speaker": "narr"
+  },
+  {
+   "id": "s88",
+   "text": "แบตยังเต็ม 3 ขีด",
+   "t0": 10.369,
+   "t1": 11.64,
+   "speaker": "narr",
+   "emph": "3 ขีด",
+   "colour": "amber"
+  },
+  {
+   "id": "s88",
+   "text": "ตัดโซ่ขาดแน่",
+   "t0": 11.64,
+   "t1": 12.974,
+   "speaker": "narr"
+  },
+  {
+   "id": "s89",
+   "text": "แต่เสียงตัดเหล็ก",
+   "t0": 13.074,
+   "t1": 14.346,
+   "speaker": "narr"
+  },
+  {
+   "id": "s89",
+   "text": "จะเรียกพวกมัน",
+   "t0": 14.346,
+   "t1": 15.38,
+   "speaker": "narr"
+  },
+  {
+   "id": "s89",
+   "text": "มาทั้งฝูง",
+   "t0": 15.38,
+   "t1": 16.475,
+   "speaker": "narr",
+   "emph": "ทั้งฝูง",
+   "colour": "red"
+  },
+  {
+   "id": "s90",
+   "text": "และคนข้างใน",
+   "t0": 16.575,
+   "t1": 17.449,
+   "speaker": "narr"
+  },
+  {
+   "id": "s90",
+   "text": "จะไม่เหลือประตูกั้น",
+   "t0": 17.449,
+   "t1": 19.34,
+   "speaker": "narr",
+   "emph": "ไม่เหลือประตู",
+   "colour": "red"
+  },
+  {
+   "id": "s91",
+   "text": "เขาลดมือลง",
+   "t0": 19.49,
+   "t1": 20.665,
+   "speaker": "narr"
+  },
+  {
+   "id": "s92",
+   "text": "ข้างๆ กัน",
+   "t0": 20.965,
+   "t1": 21.601,
+   "speaker": "narr"
+  },
+  {
+   "id": "s92",
+   "text": "มีตึกสร้างไม่เสร็จ",
+   "t0": 21.601,
+   "t1": 23.031,
+   "speaker": "narr"
+  },
+  {
+   "id": "s92",
+   "text": "มืดสนิท",
+   "t0": 23.031,
+   "t1": 23.968,
+   "speaker": "narr",
+   "emph": "มืดสนิท",
+   "colour": "amber"
+  },
+  {
+   "id": "s93",
+   "text": "แล้วก้องก็เห็น",
+   "t0": 24.918,
+   "t1": 26.031,
+   "speaker": "narr"
+  },
+  {
+   "id": "s93",
+   "text": "เลือดหยดลงพื้น",
+   "t0": 26.031,
+   "t1": 27.144,
+   "speaker": "narr",
+   "emph": "เลือด",
+   "colour": "red"
+  },
+  {
+   "id": "s93",
+   "text": "จากแขนเสื้อคุณทศ",
+   "t0": 27.144,
+   "t1": 28.795,
+   "speaker": "narr"
+  },
+  {
+   "id": "s94",
+   "text": "แผลอะไร?",
+   "t0": 29.145,
+   "t1": 30.082,
+   "speaker": "praew"
+  },
+  {
+   "id": "s95",
+   "text": "ไม่มีอะไร!",
+   "t0": 30.232,
+   "t1": 31.327,
+   "speaker": "tos"
+  },
+  {
+   "id": "s96",
+   "text": "ขอดูเดี๋ยวนี้!",
+   "t0": 31.427,
+   "t1": 32.841,
+   "speaker": "praew"
+  },
+  {
+   "id": "s97",
+   "text": "ก้องจำได้ดี",
+   "t0": 33.141,
+   "t1": 34.015,
+   "speaker": "narr"
+  },
+  {
+   "id": "s97",
+   "text": "น้องของเขา",
+   "t0": 34.015,
+   "t1": 34.81,
+   "speaker": "narr"
+  },
+  {
+   "id": "s97",
+   "text": "ใช้เวลาแค่ 60 วินาที",
+   "t0": 34.81,
+   "t1": 36.859,
+   "speaker": "narr",
+   "emph": "60 วินาที",
+   "colour": "amber"
+  },
+  {
+   "id": "s98",
+   "text": "แต่เสียงเถียงกัน",
+   "t0": 37.109,
+   "t1": 38.381,
+   "speaker": "narr"
+  },
+  {
+   "id": "s98",
+   "text": "ดังเกินไป",
+   "t0": 38.381,
+   "t1": 39.477,
+   "speaker": "narr",
+   "emph": "ดังเกินไป",
+   "colour": "red"
+  },
+  {
+   "id": "s99",
+   "text": "ในความมืด",
+   "t0": 39.627,
+   "t1": 40.342,
+   "speaker": "narr"
+  },
+  {
+   "id": "s99",
+   "text": "มีเสียงฝีเท้า",
+   "t0": 40.342,
+   "t1": 41.375,
+   "speaker": "narr",
+   "emph": "เสียงฝีเท้า",
+   "colour": "red"
+  },
+  {
+   "id": "s99",
+   "text": "วิ่งเข้ามา",
+   "t0": 41.375,
+   "t1": 42.55,
+   "speaker": "narr"
+  },
+  {
+   "id": "s100",
+   "text": "ก้องยกชะแลงขึ้น",
+   "t0": 42.9,
+   "t1": 44.473,
+   "speaker": "narr",
+   "emph": "ชะแลง",
+   "colour": "amber"
+  },
+  {
+   "id": "s101",
+   "text": "แต่เขาจะฟาด",
+   "t0": 44.723,
+   "t1": 45.597,
+   "speaker": "narr"
+  },
+  {
+   "id": "s101",
+   "text": "ใคร",
+   "t0": 45.597,
+   "t1": 46.397,
+   "speaker": "narr",
+   "emph": "ใคร",
+   "colour": "red"
+  }
+ ]
+}

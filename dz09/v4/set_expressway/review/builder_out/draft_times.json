@@ -1,0 +1,82 @@
+{
+ "low_916": {
+  "cpu_render": 13.3,
+  "wall_render": 13.45,
+  "cpu_post": 0.65
+ },
+ "low_169": {
+  "cpu_render": 16.01,
+  "wall_render": 16.37,
+  "cpu_post": 0.57
+ },
+ "eye_916": {
+  "cpu_render": 16.04,
+  "wall_render": 16.09,
+  "cpu_post": 0.49
+ },
+ "eye_169": {
+  "cpu_render": 17.01,
+  "wall_render": 16.79,
+  "cpu_post": 0.5
+ },
+ "high_916": {
+  "cpu_render": 14.25,
+  "wall_render": 11.0,
+  "cpu_post": 0.61
+ },
+ "high_169": {
+  "cpu_render": 15.09,
+  "wall_render": 12.73,
+  "cpu_post": 0.5
+ },
+ "top_down_916": {
+  "cpu_render": 12.13,
+  "wall_render": 9.16,
+  "cpu_post": 0.47
+ },
+ "top_down_169": {
+  "cpu_render": 13.43,
+  "wall_render": 10.38,
+  "cpu_post": 0.56
+ },
+ "dutch_916": {
+  "cpu_render": 13.15,
+  "wall_render": 10.05,
+  "cpu_post": 0.52
+ },
+ "dutch_169": {
+  "cpu_render": 14.05,
+  "wall_render": 10.74,
+  "cpu_post": 0.53
+ },
+ "ots_916": {
+  "cpu_render": 14.76,
+  "wall_render": 11.45,
+  "cpu_post": 0.43
+ },
+ "ots_169": {
+  "cpu_render": 16.71,
+  "wall_render": 12.39,
+  "cpu_post": 0.58
+ },
+ "pov_windscreen_916": {
+  "cpu_render": 12.87,
+  "wall_render": 9.81,
+  "cpu_post": 0.49
+ },
+ "pov_windscreen_169": {
+  "cpu_render": 16.8,
+  "wall_render": 12.43,
+  "cpu_post": 0.57
+ },
+ "macro_cutter_916": {
+  "cpu_render": 16.94,
+  "wall_render": 12.62,
+  "cpu_post": 0.43
+ },
+ "macro_cutter_169": {
+  "cpu_render": 17.86,
+  "wall_render": 13.51,
+  "cpu_post": 0.47
+ }
+}

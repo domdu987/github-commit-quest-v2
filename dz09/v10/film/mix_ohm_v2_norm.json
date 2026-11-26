@@ -1,0 +1,9 @@
+{
+ "source": "/tmp/claude-0/-home-user-github-commit-quest-v2/94b8b382-ecfe-5ec4-8832-97f03dd08322/scratchpad/dz09/audio/narr_ohm/mix_ohm_v2.wav",
+ "gain_db": -0.4,
+ "source_lufs": -14.2,
+ "source_tp": -0.9,
+ "lufs": -14.6,
+ "true_peak": -1.0,
+ "codec": "aac 320k"
+}

@@ -1,0 +1,165 @@
+{
+ "scene": "sc99",
+ "source": "plan",
+ "timing_file": "(plan estimate: plan)",
+ "narr0": 0.1,
+ "fps": 24,
+ "g_base": 990000,
+ "frames": 60,
+ "seconds": 2.5,
+ "plan_frames": 60,
+ "frames_by_class": {
+  "B": 14,
+  "A": 32,
+  "C1": 14
+ },
+ "final_cpu_h_estimate": 0.76,
+ "hard_cuts": [],
+ "fx": [],
+ "cues": {},
+ "mix": "",
+ "narration_wav": "",
+ "warnings": [],
+ "shots": [
+  {
+   "id": "S901",
+   "plan_id": "S901",
+   "f0": 0,
+   "f1": 14,
+   "frames": 14,
+   "plan_frames": 14,
+   "cls": "B",
+   "set": "X1",
+   "size": "",
+   "cut_on": "(picture beat, no word)",
+   "how": "scene start",
+   "narration": [
+    {
+     "id": "s901",
+     "captions": [
+      "ฉากทดสอบ"
+     ]
+    }
+   ],
+   "action": "WIDE: the rescue zone, the hook's S02 crane position held"
+  },
+  {
+   "id": "S902",
+   "plan_id": "S902",
+   "f0": 14,
+   "f1": 30,
+   "frames": 16,
+   "plan_frames": 16,
+   "cls": "A",
+   "set": "X1",
+   "size": "",
+   "cut_on": "ฮัลโหล!",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s902",
+     "captions": [
+      "ฮัลโหล!",
+      "ได้ยินไหม"
+     ]
+    }
+   ],
+   "action": "MCU: Kong on the phone, HIS line: his mouth moves"
+  },
+  {
+   "id": "S903",
+   "plan_id": "S903",
+   "f0": 30,
+   "f1": 44,
+   "frames": 14,
+   "plan_frames": 14,
+   "cls": "C1",
+   "set": "2D",
+   "size": "",
+   "cut_on": "30 วินาที",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s903",
+     "captions": [
+      "30 วินาที"
+     ]
+    }
+   ],
+   "action": "INSERT drawn: the wrist watch, one red second hand"
+  },
+  {
+   "id": "S904",
+   "plan_id": "S904",
+   "f0": 44,
+   "f1": 60,
+   "frames": 16,
+   "plan_frames": 16,
+   "cls": "A",
+   "set": "X1",
+   "size": "",
+   "cut_on": "ภาพผ่านท่อ",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s904",
+     "captions": [
+      "ภาพผ่านท่อ",
+      "ครบแล้ว"
+     ]
+    }
+   ],
+   "action": "MS: Kong with the cutter, NARRATOR line: nobody's mouth moves"
+  }
+ ],
+ "captions": [
+  {
+   "id": "s901",
+   "text": "ฉากทดสอบ",
+   "t0": 0.1,
+   "t1": 0.55,
+   "speaker": "narr"
+  },
+  {
+   "id": "s902",
+   "text": "ฮัลโหล!",
+   "t0": 0.6,
+   "t1": 0.95,
+   "speaker": "kong",
+   "emph": "ฮัลโหล!",
+   "colour": "red"
+  },
+  {
+   "id": "s902",
+   "text": "ได้ยินไหม",
+   "t0": 0.95,
+   "t1": 1.2,
+   "speaker": "kong"
+  },
+  {
+   "id": "s903",
+   "text": "30 วินาที",
+   "t0": 1.25,
+   "t1": 1.8,
+   "speaker": "narr",
+   "emph": "30 วินาที",
+   "colour": "amber"
+  },
+  {
+   "id": "s904",
+   "text": "ภาพผ่านท่อ",
+   "t0": 1.85,
+   "t1": 2.15,
+   "speaker": "narr"
+  },
+  {
+   "id": "s904",
+   "text": "ครบแล้ว",
+   "t0": 2.15,
+   "t1": 2.4,
+   "speaker": "narr",
+   "emph": "ครบ",
+   "colour": "amber"
+  }
+ ]
+}

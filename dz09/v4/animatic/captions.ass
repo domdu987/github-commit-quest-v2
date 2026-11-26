@@ -1,0 +1,65 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 360
+PlayResY: 640
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cap,Kanit Black,27,&H00FFFFFF,&H00FFFFFF,&H00000000,&H90000000,0,0,0,0,100,100,0,0,1,2.6,1,5,16,16,0,222
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.30,0:00:00.92,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}ศูนย์ครับ
+Dialogue: 0,0:00:00.92,0:00:02.06,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}คนเจ็บไม่ตอบสนอง
+Dialogue: 0,0:00:02.06,0:00:02.50,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}เดี๋ยว!
+Dialogue: 0,0:00:02.50,0:00:03.39,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}เฮ้ย!
+Dialogue: 0,0:00:03.39,0:00:04.08,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}แล้ววิทยุ
+Dialogue: 0,0:00:04.08,0:00:05.74,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}ก็เงียบไป
+Dialogue: 0,0:00:05.74,0:00:06.43,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}คืนวันศุกร์
+Dialogue: 0,0:00:06.43,0:00:07.53,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}ฝนถล่มกรุงเทพฯ
+Dialogue: 0,0:00:07.53,0:00:08.33,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}บนทางด่วน
+Dialogue: 0,0:00:08.33,0:00:09.30,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}รถชนกันเป็นแพ
+Dialogue: 0,0:00:09.30,0:00:10.19,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}ยาวจนมองไม่เห็น
+Dialogue: 0,0:00:10.19,0:00:11.10,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}ปลายทาง
+Dialogue: 0,0:00:11.10,0:00:11.43,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}ก้อง
+Dialogue: 0,0:00:11.43,0:00:12.62,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}เจ้าหน้าที่กู้ภัย
+Dialogue: 0,0:00:12.62,0:00:13.42,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}ยืนข้างรถ
+Dialogue: 0,0:00:13.42,0:00:14.41,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}ที่ยับยู่ยี่
+Dialogue: 0,0:00:14.41,0:00:15.05,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}ในมือคือ
+Dialogue: 0,0:00:15.05,0:00:16.21,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}เครื่องตัดไร้สาย
+Dialogue: 0,0:00:16.21,0:00:17.55,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}แบตเต็ม 3 ขีด
+Dialogue: 0,0:00:17.55,0:00:19.05,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}โทรศัพท์สั่น
+Dialogue: 0,0:00:19.05,0:00:19.55,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}4 สาย
+Dialogue: 0,0:00:19.55,0:00:20.34,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}ที่ไม่ได้รับ
+Dialogue: 0,0:00:20.34,0:00:21.18,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}จากลูกสาว
+Dialogue: 0,0:00:21.18,0:00:22.17,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}น้ำเหนือ
+Dialogue: 0,0:00:22.17,0:00:22.61,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}พ่อ
+Dialogue: 0,0:00:22.61,0:00:23.36,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}วันนี้พ่อสัญญา
+Dialogue: 0,0:00:23.36,0:00:24.94,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}ว่าจะมารับหนูไง
+Dialogue: 0,0:00:24.94,0:00:26.24,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}พ่อมีเคสด่วนลูก
+Dialogue: 0,0:00:26.24,0:00:27.34,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}รออีกแป๊บเดียว
+Dialogue: 0,0:00:27.34,0:00:28.96,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}ทุกครั้งเลย...
+Dialogue: 0,0:00:28.96,0:00:29.27,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}เดี๋ยวพ่อ
+Dialogue: 0,0:00:29.27,0:00:30.35,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}โทรกลับนะ
+Dialogue: 0,0:00:30.35,0:00:31.65,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}ปลายสายเงียบไป
+Dialogue: 0,0:00:31.65,0:00:33.40,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}แล้วก็วางสาย
+Dialogue: 0,0:00:33.40,0:00:33.81,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}พี่ก้อง!
+Dialogue: 0,0:00:33.81,0:00:34.61,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}เปิดได้แล้วครับ!
+Dialogue: 0,0:00:34.61,0:00:35.12,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}ในรถ
+Dialogue: 0,0:00:35.12,0:00:36.09,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}คนขับนั่งนิ่ง
+Dialogue: 0,0:00:36.09,0:00:37.62,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}ไม่ขยับเลยสักนิด
+Dialogue: 0,0:00:37.62,0:00:38.31,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}น้องในทีม
+Dialogue: 0,0:00:38.31,0:00:39.06,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}ค่อยๆ ยื่นหน้า
+Dialogue: 0,0:00:39.06,0:00:40.28,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}เข้าไปใกล้
+Dialogue: 0,0:00:40.28,0:00:41.09,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}แล้วคนขับ
+Dialogue: 0,0:00:41.09,0:00:41.66,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}ก็ค่อยๆ
+Dialogue: 0,0:00:41.66,0:00:43.45,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}เงยหน้าขึ้น
+Dialogue: 0,0:00:43.45,0:00:43.77,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}มันพุ่ง
+Dialogue: 0,0:00:43.77,0:00:45.30,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}เข้ากัดทันที
+Dialogue: 0,0:00:45.30,0:00:46.43,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}ก้องยังไม่รู้เลยว่า
+Dialogue: 0,0:00:46.43,0:00:47.78,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}อีก 60 วินาที
+Dialogue: 0,0:00:47.78,0:00:48.61,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}เพื่อนของเขา
+Dialogue: 0,0:00:48.61,0:00:49.28,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}จะไม่ใช่คน
+Dialogue: 0,0:00:49.28,0:00:50.37,Cap,,0,0,0,,{\pos(180,450)\fscx85\fscy85\t(0,60,\fscx100\fscy100)}อีกต่อไป

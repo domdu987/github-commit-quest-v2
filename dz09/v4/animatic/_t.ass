@@ -1,0 +1,15 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 360
+PlayResY: 640
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cap,Kanit Black,27,&H00FFFFFF,&H00FFFFFF,&H00000000,&H90000000,0,0,0,0,100,100,0,0,1,2.6,1,5,16,16,0,222
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.00,Cap,,0,0,0,,{\pos(180,250)}ไม่ขยับเลยสักนิด
+Dialogue: 0,0:00:00.00,0:00:01.00,Cap,,0,0,0,,{\pos(180,350)}เดี๋ยวพ่อโทรกลับนะ
+Dialogue: 0,0:00:00.00,0:00:01.00,Cap,,0,0,0,,{\pos(180,450)}น้ำเหนือ  ค่อยๆ ยื่นหน้า

@@ -1,0 +1,28 @@
+[
+ {
+  "f0": 0,
+  "f1": 1224,
+  "t0": 0.0,
+  "dur": 40.8,
+  "zoom_pct_s": 7.72,
+  "zoom_total": 112.632,
+  "pan_x_pct_s": -0.14,
+  "pan_y_pct_s": -0.25,
+  "pan_x_tot": -41.4,
+  "pan_y_tot": 13.1,
+  "peak_speed": 18.7
+ },
+ {
+  "f0": 1225,
+  "f1": 1351,
+  "t0": 40.83,
+  "dur": 4.2,
+  "zoom_pct_s": 7.85,
+  "zoom_total": 1.151,
+  "pan_x_pct_s": 0.69,
+  "pan_y_pct_s": 0.19,
+  "pan_x_tot": 2.0,
+  "pan_y_tot": 0.1,
+  "peak_speed": 1.6
+ }
+]

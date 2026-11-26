@@ -1,0 +1,43 @@
+[
+ {
+  "preset": "eye",
+  "quality": "final",
+  "samples": 12,
+  "render_pct": 75,
+  "output": "720x1280",
+  "threads": 2,
+  "build_cpu_s": 5.0,
+  "build_wall_s": 5.2,
+  "render_cpu_s": 50.02,
+  "render_wall_s": 50.7,
+  "post_cpu_s": 3.84,
+  "frame_cpu_s": 53.9,
+  "load_avg": [
+   10.08935546875,
+   10.3134765625,
+   9.62158203125
+  ],
+  "png": "/tmp/claude-0/-home-user-github-commit-quest-v2/94b8b382-ecfe-5ec4-8832-97f03dd08322/scratchpad/dz09/v4/set_expressway/out/final/eye_916_final.png"
+ },
+ {
+  "preset": "eye",
+  "quality": "final8",
+  "haze_cards": false,
+  "samples": 8,
+  "render_pct": 75,
+  "output": "720x1280",
+  "threads": 2,
+  "build_cpu_s": 6.2,
+  "build_wall_s": 6.0,
+  "render_cpu_s": 32.94,
+  "render_wall_s": 18.15,
+  "post_cpu_s": 4.97,
+  "frame_cpu_s": 37.9,
+  "load_avg": [
+   5.89404296875,
+   8.25146484375,
+   8.984375
+  ],
+  "png": "/tmp/claude-0/-home-user-github-commit-quest-v2/94b8b382-ecfe-5ec4-8832-97f03dd08322/scratchpad/dz09/v4/set_expressway/out/final/eye_916_final8.png"
+ }
+]

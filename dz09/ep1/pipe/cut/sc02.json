@@ -1,0 +1,1276 @@
+{
+ "scene": "sc02",
+ "source": "plan",
+ "timing_file": "(plan estimate: plan)",
+ "narr0": 0.3,
+ "fps": 24,
+ "g_base": 20000,
+ "frames": 1734,
+ "seconds": 72.25,
+ "plan_frames": 1734,
+ "frames_by_class": {
+  "A": 1126,
+  "C1": 167,
+  "B": 441
+ },
+ "final_cpu_h_estimate": 25.91,
+ "hard_cuts": [],
+ "fx": [],
+ "cues": {},
+ "mix": "",
+ "narration_wav": "",
+ "warnings": [],
+ "shots": [
+  {
+   "id": "S025",
+   "plan_id": "S25",
+   "f0": 0,
+   "f1": 22,
+   "frames": 22,
+   "plan_frames": 22,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU",
+   "cut_on": "(picture beat, no word)",
+   "how": "scene start",
+   "narration": [
+    {
+     "id": "s17",
+     "captions": [
+      "เหลืออีก"
+     ]
+    }
+   ],
+   "action": "Driver (infected) clamped on the junior's left shoulder at the neck, junior screaming with the round mouth; Kong's two black gloves and the orange cutter body drive in from screen right. Continues the hook's S23 attack loop, feet planted in the `lunge` stance."
+  },
+  {
+   "id": "S026",
+   "plan_id": "S26",
+   "f0": 22,
+   "f1": 57,
+   "frames": 35,
+   "plan_frames": 35,
+   "cls": "C1",
+   "set": "2D",
+   "size": "INSERT",
+   "cut_on": "50 วินาที",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s17",
+     "captions": [
+      "50 วินาที"
+     ]
+    }
+   ],
+   "action": "Kong's wrist: black glove cuff, orange sleeve edge, a square rescue watch strapped over the cuff. Analogue face, nothing to read but one red second hand; a drop of the junior's blood sits on the 12 mark, where the hand stood at the bite. The hand is at the 2 (10 s gone, 50 to go round to the blood) and sweeps on; rain drops land and run on the glass; the wrist jolts with the shove."
+  },
+  {
+   "id": "S027",
+   "plan_id": "S27",
+   "f0": 57,
+   "f1": 120,
+   "frames": 63,
+   "plan_frames": 63,
+   "cls": "A",
+   "set": "X1",
+   "size": "M side",
+   "cut_on": "ก้องเอาเครื่องตัด",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s18",
+     "captions": [
+      "ก้องเอาเครื่องตัด",
+      "กระแทกมันกระเด็น"
+     ]
+    }
+   ],
+   "action": "Kong (right, feet wide, planted) rams the cutter body two-handed into the driver's chest; the driver is torn off the junior and flies screen left; the junior folds against the wreck door clutching his neck."
+  },
+  {
+   "id": "S028",
+   "plan_id": "S28",
+   "f0": 120,
+   "f1": 158,
+   "frames": 38,
+   "plan_frames": 38,
+   "cls": "B",
+   "set": "X1",
+   "size": "W low",
+   "cut_on": "ไปชนรถคันข้างๆ",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s18",
+     "captions": [
+      "ไปชนรถคันข้างๆ"
+     ]
+    }
+   ],
+   "action": "Driver slams back-first into the flank of a white hatchback in the next lane; the car rocks on its springs; he slides down, already twisting to get up. Extras far behind run right."
+  },
+  {
+   "id": "S029",
+   "plan_id": "S29",
+   "f0": 158,
+   "f1": 196,
+   "frames": 38,
+   "plan_frames": 38,
+   "cls": "B",
+   "set": "X1",
+   "size": "M",
+   "cut_on": "สัญญาณกันขโมย",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s19",
+     "captions": [
+      "สัญญาณกันขโมย",
+      "ดังลั่น"
+     ]
+    }
+   ],
+   "action": "The hatchback: four hazard lamps and headlights flashing in alarm rhythm (0.4 s), amber pulsing on the wet road; the driver's head and shoulders rise as a dark shape in the foreground, turning toward the lights."
+  },
+  {
+   "id": "S030",
+   "plan_id": "S30",
+   "f0": 196,
+   "f1": 256,
+   "frames": 60,
+   "plan_frames": 60,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU 3/4",
+   "cut_on": "มันทิ้งเหยื่อ",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s19",
+     "captions": [
+      "มันทิ้งเหยื่อ",
+      "หันไปหาเสียง"
+     ]
+    }
+   ],
+   "action": "Driver's face: head snaps to the light, amber blink on grey-green skin, red pinpoint pupils; he forgets the two men and throws himself onto the bonnet (exits left, clawing)."
+  },
+  {
+   "id": "S031",
+   "plan_id": "S31",
+   "f0": 256,
+   "f1": 327,
+   "frames": 71,
+   "plan_frames": 71,
+   "cls": "A",
+   "set": "X1",
+   "size": "MW track",
+   "cut_on": "ก้องพยุงน้อง",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s20",
+     "captions": [
+      "ก้องพยุงน้อง",
+      "ไปหลบหลังรถกู้ภัย"
+     ]
+    }
+   ],
+   "action": "Kong walks the junior to the truck: the junior's right arm over Kong's shoulders, Kong's left arm round his back, cutter carried by the D-handle in Kong's right hand. Both walk screen right on planted feet (junior's stride short and dragging); blood down the junior's collar."
+  },
+  {
+   "id": "S032",
+   "plan_id": "S32",
+   "f0": 327,
+   "f1": 381,
+   "frames": 54,
+   "plan_frames": 54,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU",
+   "cut_on": "มองหน้าพี่ไว้!",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s21",
+     "captions": [
+      "มองหน้าพี่ไว้!",
+      "ได้ยินไหม!"
+     ]
+    }
+   ],
+   "action": "Kong crouched (`crouch`), face to the junior who sits against the truck's rear wheel (seated). Kong shouts the line, `shouting` then `serious`; the junior's shoulder is a soft dark edge at frame left."
+  },
+  {
+   "id": "S033",
+   "plan_id": "S33",
+   "f0": 381,
+   "f1": 404,
+   "frames": 23,
+   "plan_frames": 23,
+   "cls": "A",
+   "set": "X1",
+   "size": "MCU high",
+   "cut_on": "น้องพยักหน้า",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s22",
+     "captions": [
+      "น้องพยักหน้า"
+     ]
+    }
+   ],
+   "action": "Junior nods twice (head tilt on twos), `scared`, blink; skin still paper white; the bite is a torn ring on the left of the neck with blood running into the collar."
+  },
+  {
+   "id": "S034",
+   "plan_id": "S34",
+   "f0": 404,
+   "f1": 434,
+   "frames": 30,
+   "plan_frames": 30,
+   "cls": "A",
+   "set": "X1",
+   "size": "M two-shot",
+   "cut_on": "แต่เลือด",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s22",
+     "captions": [
+      "แต่เลือด",
+      "ไหลไม่หยุด"
+     ]
+    }
+   ],
+   "action": "Junior seated against the wheel, Kong crouched pressing a gauze pad from his hip pouch on the neck with both hands; the cutter stands on its battery beside Kong's knee, three green LEDs toward camera."
+  },
+  {
+   "id": "S035",
+   "plan_id": "S35",
+   "f0": 434,
+   "f1": 484,
+   "frames": 50,
+   "plan_frames": 50,
+   "cls": "B",
+   "set": "X1",
+   "size": "INSERT",
+   "cut_on": "(picture beat, no word)",
+   "how": "beat (24 % between S34 and S37)",
+   "narration": [
+    {
+     "id": "s22",
+     "captions": [
+      "ไหลไม่หยุด"
+     ]
+    }
+   ],
+   "action": "Black gloves on white gauze: red spreads through the pad from the centre outward (animated stain), runs between the fingers; rain thins it."
+  },
+  {
+   "id": "S036",
+   "plan_id": "S36",
+   "f0": 484,
+   "f1": 530,
+   "frames": 46,
+   "plan_frames": 46,
+   "cls": "C1",
+   "set": "2D",
+   "size": "INSERT",
+   "cut_on": "(picture beat, no word)",
+   "how": "beat (63 % between S34 and S37)",
+   "narration": [
+    {
+     "id": "s23",
+     "captions": [
+      "30 วินาที"
+     ]
+    }
+   ],
+   "action": "Watch, frontal. Analogue face, nothing to read but one red second hand; a drop of the junior's blood sits on the 12 mark, where the hand stood at the bite. The hand passes the 6, straight down: half way. A rain drop cuts through a new smear on the glass."
+  },
+  {
+   "id": "S037",
+   "plan_id": "S37",
+   "f0": 530,
+   "f1": 596,
+   "frames": 66,
+   "plan_frames": 66,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU q",
+   "cut_on": "ลมหายใจน้อง",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s24",
+     "captions": [
+      "ลมหายใจน้อง",
+      "สั้นลง",
+      "ถี่ขึ้น"
+     ]
+    }
+   ],
+   "action": "Junior in 3/4: breathing stretch at 3 Hz, shoulders shaking, eyelids half down (`blink` 1), mouth open a little; his skin one step toward grey."
+  },
+  {
+   "id": "S038",
+   "plan_id": "S38",
+   "f0": 596,
+   "f1": 634,
+   "frames": 38,
+   "plan_frames": 38,
+   "cls": "A",
+   "set": "X1",
+   "size": "ECU",
+   "cut_on": "พี่...",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s25",
+     "captions": [
+      "พี่...",
+      "ผมหนาว..."
+     ]
+    }
+   ],
+   "action": "Junior's face front: lips form the line (`o` mouth, low level), jaw trembling, a rain drop from the fringe."
+  },
+  {
+   "id": "S039",
+   "plan_id": "S39",
+   "f0": 634,
+   "f1": 710,
+   "frames": 76,
+   "plan_frames": 76,
+   "cls": "A",
+   "set": "X1",
+   "size": "OTS",
+   "cut_on": "อดทนไว้",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s26",
+     "captions": [
+      "อดทนไว้",
+      "เดี๋ยวพี่พาไป",
+      "โรงพยาบาล"
+     ]
+    }
+   ],
+   "action": "Over the junior's dark crest of hair (left edge) onto Kong: he says the promise with `guilty` brows, eyes going to the wound and back. One beacon sweep crosses his face."
+  },
+  {
+   "id": "S040",
+   "plan_id": "S40",
+   "f0": 710,
+   "f1": 782,
+   "frames": 72,
+   "plan_frames": 72,
+   "cls": "B",
+   "set": "X1",
+   "size": "W",
+   "cut_on": "สัญญาครั้งที่ 2",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s27",
+     "captions": [
+      "สัญญาครั้งที่ 2",
+      "ของคืนนี้"
+     ]
+    }
+   ],
+   "action": "From between two cars: the two small orange figures at the truck's rear wheel in a pool of beacon light, lanes of dead cars around them; far left the alarm car still flashing with the driver thrashing on its bonnet. Rain."
+  },
+  {
+   "id": "S041",
+   "plan_id": "S41",
+   "f0": 782,
+   "f1": 842,
+   "frames": 60,
+   "plan_frames": 60,
+   "cls": "B",
+   "set": "X1",
+   "size": "INSERT",
+   "cut_on": "มือที่สั่น",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s28",
+     "captions": [
+      "มือที่สั่น",
+      "ค่อยๆ",
+      "หยุดนิ่ง"
+     ]
+    }
+   ],
+   "action": "The junior's gloved hand on his knee: the tremor (4 px, 8 Hz) decays to nothing over 1.6 s; the fingers open."
+  },
+  {
+   "id": "S042",
+   "plan_id": "S42",
+   "f0": 842,
+   "f1": 903,
+   "frames": 61,
+   "plan_frames": 61,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU",
+   "cut_on": "ก้องจับชีพจร",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s29",
+     "captions": [
+      "ก้องจับชีพจร",
+      "ไม่เต้นแล้ว"
+     ]
+    }
+   ],
+   "action": "Kong's two gloved fingers under the junior's jaw on the unhurt side, the junior's head tipped against the wheel, eyes shut (`blink` 2); Kong's face in the top of the frame searching his. On 'ไม่เต้นแล้ว' Kong's eyes widen."
+  },
+  {
+   "id": "S043",
+   "plan_id": "S43",
+   "f0": 903,
+   "f1": 950,
+   "frames": 47,
+   "plan_frames": 47,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU",
+   "cut_on": "ก้องคิดว่า",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s30",
+     "captions": [
+      "ก้องคิดว่า",
+      "เขาเสียน้องไปแล้ว"
+     ]
+    }
+   ],
+   "action": "Kong's face alone: the hand comes away from the jaw (glove edge leaving frame left), `alarmed` falls to `guilty`, his eyes shut for four frames; rain runs off the fringe."
+  },
+  {
+   "id": "S044",
+   "plan_id": "S44",
+   "f0": 950,
+   "f1": 997,
+   "frames": 47,
+   "plan_frames": 47,
+   "cls": "C1",
+   "set": "2D",
+   "size": "INSERT",
+   "cut_on": "(picture beat, no word)",
+   "how": "beat (20 % between S43 and S48)",
+   "narration": [
+    {
+     "id": "s30",
+     "captions": [
+      "เขาเสียน้องไปแล้ว"
+     ]
+    },
+    {
+     "id": "s31",
+     "captions": [
+      "10 วินาที"
+     ]
+    }
+   ],
+   "action": "Watch, extreme close on the hand tip climbing past the 10: 50, 51, 52; the blood spot at 12 is in the top of the frame, two marks ahead. The drop on the glass trembles at each tick."
+  },
+  {
+   "id": "S045",
+   "plan_id": "S45",
+   "f0": 997,
+   "f1": 1035,
+   "frames": 38,
+   "plan_frames": 38,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU",
+   "cut_on": "(picture beat, no word)",
+   "how": "beat (40 % between S43 and S48)",
+   "narration": [
+    {
+     "id": "s32",
+     "captions": [
+      "เฮ้ย!",
+      "ได้ยินพี่ไหม!"
+     ]
+    }
+   ],
+   "action": "Kong shakes the junior's shoulder and shouts (`shouting`); the junior's head rocks with the shake and falls back, no reaction."
+  },
+  {
+   "id": "S046",
+   "plan_id": "S46",
+   "f0": 1035,
+   "f1": 1103,
+   "frames": 68,
+   "plan_frames": 68,
+   "cls": "A",
+   "set": "X1",
+   "size": "M profile low",
+   "cut_on": "(picture beat, no word)",
+   "how": "beat (55 % between S43 and S48)",
+   "narration": [
+    {
+     "id": "s32",
+     "captions": [
+      "ได้ยินพี่ไหม!"
+     ]
+    }
+   ],
+   "action": "Profile two-shot under the truck's wheel arch: the junior slumped, chin down, hair dripping; Kong sits back on his heels, one hand going to the chest radio, looking away toward the lanes (left)."
+  },
+  {
+   "id": "S047",
+   "plan_id": "S47",
+   "f0": 1103,
+   "f1": 1142,
+   "frames": 39,
+   "plan_frames": 39,
+   "cls": "C1",
+   "set": "2D",
+   "size": "INSERT",
+   "cut_on": "(picture beat, no word)",
+   "how": "beat (84 % between S43 and S48)",
+   "narration": [],
+   "action": "Watch, tighter still: the hand tip ticks 55, 56, 57 and touches the edge of the blood spot."
+  },
+  {
+   "id": "S048",
+   "plan_id": "S48",
+   "f0": 1142,
+   "f1": 1181,
+   "frames": 39,
+   "plan_frames": 39,
+   "cls": "A",
+   "set": "X1",
+   "size": "ECU",
+   "cut_on": "แล้วน้อง",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s33",
+     "captions": [
+      "แล้วน้อง",
+      "ก็ลืมตา"
+     ]
+    }
+   ],
+   "action": "ECU of the junior's eyes on the rendered puppet (not a separate 2D drawing), closed, wet lashes, rain and one beacon sweep on grey skin. On 'ลืมตา' (57.6 s after the bite) the lids snap open on one frame: white eyes, tiny red pupils that contract."
+  },
+  {
+   "id": "S049",
+   "plan_id": "S49",
+   "f0": 1181,
+   "f1": 1242,
+   "frames": 61,
+   "plan_frames": 61,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU",
+   "cut_on": "แต่ตาคู่นั้น",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s34",
+     "captions": [
+      "แต่ตาคู่นั้น",
+      "ไม่ใช่ตาคนแล้ว"
+     ]
+    }
+   ],
+   "action": "Junior, infected: head lifts in a jerk on twos, red pupils find Kong, the mouth opens to fangs; Kong's shoulder at frame right goes rigid."
+  },
+  {
+   "id": "S050",
+   "plan_id": "S50",
+   "f0": 1242,
+   "f1": 1268,
+   "frames": 26,
+   "plan_frames": 26,
+   "cls": "A",
+   "set": "X1",
+   "size": "M",
+   "cut_on": "มันพุ่งใส่ก้อง",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s35",
+     "captions": [
+      "มันพุ่งใส่ก้อง"
+     ]
+    }
+   ],
+   "action": "The junior launches from seated straight at Kong (`lunge`, lean 30); Kong goes back on one planted foot, snatching the cutter up."
+  },
+  {
+   "id": "S051",
+   "plan_id": "S51",
+   "f0": 1268,
+   "f1": 1308,
+   "frames": 40,
+   "plan_frames": 40,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU",
+   "cut_on": "ก้องเอาเครื่องตัดขวาง",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s35",
+     "captions": [
+      "ก้องเอาเครื่องตัดขวาง"
+     ]
+    }
+   ],
+   "action": "The cutter held across as a bar in both gloves; the junior's teeth close on the steel arm, claw hands on Kong's forearms; Kong's strained face behind the tool."
+  },
+  {
+   "id": "S052",
+   "plan_id": "S52",
+   "f0": 1308,
+   "f1": 1346,
+   "frames": 38,
+   "plan_frames": 38,
+   "cls": "A",
+   "set": "X1",
+   "size": "MW side",
+   "cut_on": "ผลักมันสุดแรง",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s35",
+     "captions": [
+      "ผลักมันสุดแรง"
+     ]
+    }
+   ],
+   "action": "Kong (right) straightens both arms; the junior is thrown back against the truck's side panel (left), bounces, drops to a crouch; Kong staggers two planted steps right, toward the truck's rear corner."
+  },
+  {
+   "id": "S053",
+   "plan_id": "S53",
+   "f0": 1346,
+   "f1": 1375,
+   "frames": 29,
+   "plan_frames": 29,
+   "cls": "A",
+   "set": "X1",
+   "size": "M",
+   "cut_on": "ก้องถอยหลบมุมรถ",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s36",
+     "captions": [
+      "ก้องถอยหลบมุมรถ"
+     ]
+    }
+   ],
+   "action": "From the far side of the truck: Kong backs round the rear corner toward camera and flattens his back against the tail door, cutter to his chest."
+  },
+  {
+   "id": "S054",
+   "plan_id": "S54",
+   "f0": 1375,
+   "f1": 1419,
+   "frames": 44,
+   "plan_frames": 44,
+   "cls": "A",
+   "set": "X1",
+   "size": "M split",
+   "cut_on": "มันมองไม่เห็นเขา",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s36",
+     "captions": [
+      "มันมองไม่เห็นเขา"
+     ]
+    }
+   ],
+   "action": "The truck's rear corner is a vertical edge in the middle of the frame. Left half: the junior, crouched, head turning left, right, left on twos, pupils scanning. Right half: Kong flat against the steel, glove over his own mouth. One beacon sweep lights both."
+  },
+  {
+   "id": "S055",
+   "plan_id": "S55",
+   "f0": 1419,
+   "f1": 1471,
+   "frames": 52,
+   "plan_frames": 52,
+   "cls": "B",
+   "set": "X1",
+   "size": "W low",
+   "cut_on": "บนหลังคารถ",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s37",
+     "captions": [
+      "บนหลังคารถ",
+      "ไรเดอร์เสื้อเขียว"
+     ]
+    }
+   ],
+   "action": "Low from the road: a rider in a green jacket and white helmet runs left to right over the roofs of the jam, two lanes behind the truck; in the foreground the junior's head snaps up toward the noise of his boots."
+  },
+  {
+   "id": "S056",
+   "plan_id": "S56",
+   "f0": 1471,
+   "f1": 1499,
+   "frames": 28,
+   "plan_frames": 28,
+   "cls": "A",
+   "set": "X1",
+   "size": "M track",
+   "cut_on": "วิ่งหนีสุดชีวิต",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s37",
+     "captions": [
+      "วิ่งหนีสุดชีวิต"
+     ]
+    }
+   ],
+   "action": "James on the roofs, run cycle with every footfall planted on a roof panel, one long step across a gap between cars; terrified face over his shoulder. No delivery box: it lies on the deck where the hook left it."
+  },
+  {
+   "id": "S057",
+   "plan_id": "S57",
+   "f0": 1499,
+   "f1": 1540,
+   "frames": 41,
+   "plan_frames": 41,
+   "cls": "B",
+   "set": "X1",
+   "size": "W",
+   "cut_on": "มันกระโจนตามไป",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s37",
+     "captions": [
+      "มันกระโจนตามไป"
+     ]
+    }
+   ],
+   "action": "The junior springs onto a bonnet, then a roof (crouch, lunge, crouch on twos) and goes after the rider, left to right. The rider drops out of sight behind the bus; the junior stops on a roof, head hunting (rule 7). The space behind the truck is empty."
+  },
+  {
+   "id": "S058",
+   "plan_id": "S58",
+   "f0": 1540,
+   "f1": 1565,
+   "frames": 25,
+   "plan_frames": 25,
+   "cls": "A",
+   "set": "X1",
+   "size": "CU",
+   "cut_on": "(picture beat, no word)",
+   "how": "beat (62 % between S57 and S59)",
+   "narration": [],
+   "action": "Kong steps out from the corner; head turns left to right across the frame (`alarmed`), red then blue on his wet face. No words."
+  },
+  {
+   "id": "S059",
+   "plan_id": "S59",
+   "f0": 1565,
+   "f1": 1613,
+   "frames": 48,
+   "plan_frames": 48,
+   "cls": "B",
+   "set": "X1",
+   "size": "EW",
+   "cut_on": "ทั้งทางด่วน",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s38",
+     "captions": [
+      "ทั้งทางด่วน",
+      "มีแต่คนวิ่งหนี"
+     ]
+    }
+   ],
+   "action": "Big wide down the expressway: about twenty figures (the ten extras roles and back-lit repeats) running between the cars, left to right, seen from the waist up over the bonnets so no foot contact is drawn; doors open, an umbrella rolling; two faster figures vault bonnets side-on. Beacons, hazards, sodium, the skyline."
+  },
+  {
+   "id": "S060",
+   "plan_id": "S60",
+   "f0": 1613,
+   "f1": 1655,
+   "frames": 42,
+   "plan_frames": 42,
+   "cls": "B",
+   "set": "X1",
+   "size": "MW",
+   "cut_on": "กับพวกที่ไล่กัด",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s38",
+     "captions": [
+      "กับพวกที่ไล่กัด"
+     ]
+    }
+   ],
+   "action": "Between two taxis: an infected woman in office clothes slams a running man against a car door and bites at his shoulder (both upright); behind them another goes over a bonnet on hands and feet. All heads under a tenth of the frame."
+  },
+  {
+   "id": "S061",
+   "plan_id": "S61",
+   "f0": 1655,
+   "f1": 1734,
+   "frames": 79,
+   "plan_frames": 79,
+   "cls": "A",
+   "set": "X1",
+   "size": "M push",
+   "cut_on": "นี่ไม่ใช่อุบัติเหตุ",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s39",
+     "captions": [
+      "นี่ไม่ใช่อุบัติเหตุ",
+      "อีกต่อไปแล้ว"
+     ]
+    }
+   ],
+   "action": "Kong front, cutter hanging in his right hand, soaked, chest heaving; `alarmed` settles into `serious`."
+  }
+ ],
+ "captions": [
+  {
+   "id": "s17",
+   "text": "เหลืออีก",
+   "t0": 0.3,
+   "t1": 0.936,
+   "speaker": "narr"
+  },
+  {
+   "id": "s17",
+   "text": "50 วินาที",
+   "t0": 0.936,
+   "t1": 2.27,
+   "speaker": "narr",
+   "emph": "50 วินาที",
+   "colour": "amber"
+  },
+  {
+   "id": "s18",
+   "text": "ก้องเอาเครื่องตัด",
+   "t0": 2.37,
+   "t1": 3.721,
+   "speaker": "narr"
+  },
+  {
+   "id": "s18",
+   "text": "กระแทกมันกระเด็น",
+   "t0": 3.721,
+   "t1": 4.993,
+   "speaker": "narr"
+  },
+  {
+   "id": "s18",
+   "text": "ไปชนรถคันข้างๆ",
+   "t0": 4.993,
+   "t1": 6.486,
+   "speaker": "narr"
+  },
+  {
+   "id": "s19",
+   "text": "สัญญาณกันขโมย",
+   "t0": 6.586,
+   "t1": 7.619,
+   "speaker": "narr"
+  },
+  {
+   "id": "s19",
+   "text": "ดังลั่น",
+   "t0": 7.619,
+   "t1": 8.176,
+   "speaker": "narr"
+  },
+  {
+   "id": "s19",
+   "text": "มันทิ้งเหยื่อ",
+   "t0": 8.176,
+   "t1": 9.209,
+   "speaker": "narr"
+  },
+  {
+   "id": "s19",
+   "text": "หันไปหาเสียง",
+   "t0": 9.209,
+   "t1": 10.543,
+   "speaker": "narr",
+   "emph": "เสียง",
+   "colour": "amber"
+  },
+  {
+   "id": "s20",
+   "text": "ก้องพยุงน้อง",
+   "t0": 10.693,
+   "t1": 11.647,
+   "speaker": "narr"
+  },
+  {
+   "id": "s20",
+   "text": "ไปหลบหลังรถกู้ภัย",
+   "t0": 11.647,
+   "t1": 13.378,
+   "speaker": "narr"
+  },
+  {
+   "id": "s21",
+   "text": "มองหน้าพี่ไว้!",
+   "t0": 13.628,
+   "t1": 14.662,
+   "speaker": "kong"
+  },
+  {
+   "id": "s21",
+   "text": "ได้ยินไหม!",
+   "t0": 14.662,
+   "t1": 15.757,
+   "speaker": "kong"
+  },
+  {
+   "id": "s22",
+   "text": "น้องพยักหน้า",
+   "t0": 15.907,
+   "t1": 16.861,
+   "speaker": "narr"
+  },
+  {
+   "id": "s22",
+   "text": "แต่เลือด",
+   "t0": 16.861,
+   "t1": 17.497,
+   "speaker": "narr"
+  },
+  {
+   "id": "s22",
+   "text": "ไหลไม่หยุด",
+   "t0": 17.497,
+   "t1": 18.672,
+   "speaker": "narr",
+   "emph": "ไหลไม่หยุด",
+   "colour": "red"
+  },
+  {
+   "id": "s23",
+   "text": "30 วินาที",
+   "t0": 20.48,
+   "t1": 21.814,
+   "speaker": "narr",
+   "emph": "30 วินาที",
+   "colour": "amber"
+  },
+  {
+   "id": "s24",
+   "text": "ลมหายใจน้อง",
+   "t0": 22.114,
+   "t1": 22.988,
+   "speaker": "narr"
+  },
+  {
+   "id": "s24",
+   "text": "สั้นลง",
+   "t0": 22.988,
+   "t1": 23.465,
+   "speaker": "narr"
+  },
+  {
+   "id": "s24",
+   "text": "ถี่ขึ้น",
+   "t0": 23.465,
+   "t1": 24.402,
+   "speaker": "narr",
+   "emph": "ถี่ขึ้น",
+   "colour": "red"
+  },
+  {
+   "id": "s25",
+   "text": "พี่...",
+   "t0": 24.852,
+   "t1": 25.272,
+   "speaker": "crew"
+  },
+  {
+   "id": "s25",
+   "text": "ผมหนาว...",
+   "t0": 25.272,
+   "t1": 26.129,
+   "speaker": "crew",
+   "emph": "หนาว",
+   "colour": "red"
+  },
+  {
+   "id": "s26",
+   "text": "อดทนไว้",
+   "t0": 26.429,
+   "t1": 26.985,
+   "speaker": "kong"
+  },
+  {
+   "id": "s26",
+   "text": "เดี๋ยวพี่พาไป",
+   "t0": 26.985,
+   "t1": 28.018,
+   "speaker": "kong"
+  },
+  {
+   "id": "s26",
+   "text": "โรงพยาบาล",
+   "t0": 28.018,
+   "t1": 29.114,
+   "speaker": "kong",
+   "emph": "โรงพยาบาล",
+   "colour": "amber"
+  },
+  {
+   "id": "s27",
+   "text": "สัญญาครั้งที่ 2",
+   "t0": 29.614,
+   "t1": 30.886,
+   "speaker": "narr",
+   "emph": "สัญญาครั้งที่ 2",
+   "colour": "amber"
+  },
+  {
+   "id": "s27",
+   "text": "ของคืนนี้",
+   "t0": 30.886,
+   "t1": 31.981,
+   "speaker": "narr"
+  },
+  {
+   "id": "s28",
+   "text": "มือที่สั่น",
+   "t0": 32.581,
+   "t1": 33.376,
+   "speaker": "narr"
+  },
+  {
+   "id": "s28",
+   "text": "ค่อยๆ",
+   "t0": 33.376,
+   "t1": 33.796,
+   "speaker": "narr"
+  },
+  {
+   "id": "s28",
+   "text": "หยุดนิ่ง",
+   "t0": 33.796,
+   "t1": 34.812,
+   "speaker": "narr",
+   "emph": "หยุดนิ่ง",
+   "colour": "red"
+  },
+  {
+   "id": "s29",
+   "text": "ก้องจับชีพจร",
+   "t0": 35.112,
+   "t1": 36.066,
+   "speaker": "narr"
+  },
+  {
+   "id": "s29",
+   "text": "ไม่เต้นแล้ว",
+   "t0": 36.066,
+   "t1": 37.32,
+   "speaker": "narr",
+   "emph": "ไม่เต้นแล้ว",
+   "colour": "red"
+  },
+  {
+   "id": "s30",
+   "text": "ก้องคิดว่า",
+   "t0": 37.62,
+   "t1": 38.415,
+   "speaker": "narr"
+  },
+  {
+   "id": "s30",
+   "text": "เขาเสียน้องไปแล้ว",
+   "t0": 38.415,
+   "t1": 40.147,
+   "speaker": "narr",
+   "emph": "เสียน้องไปแล้ว",
+   "colour": "red"
+  },
+  {
+   "id": "s31",
+   "text": "10 วินาที",
+   "t0": 40.48,
+   "t1": 41.575,
+   "speaker": "narr",
+   "emph": "10 วินาที",
+   "colour": "amber"
+  },
+  {
+   "id": "s32",
+   "text": "เฮ้ย!",
+   "t0": 41.925,
+   "t1": 42.345,
+   "speaker": "kong"
+  },
+  {
+   "id": "s32",
+   "text": "ได้ยินพี่ไหม!",
+   "t0": 42.345,
+   "t1": 43.679,
+   "speaker": "kong"
+  },
+  {
+   "id": "s33",
+   "text": "แล้วน้อง",
+   "t0": 47.58,
+   "t1": 48.216,
+   "speaker": "narr"
+  },
+  {
+   "id": "s33",
+   "text": "ก็ลืมตา",
+   "t0": 48.216,
+   "t1": 49.152,
+   "speaker": "narr",
+   "emph": "ลืมตา",
+   "colour": "red"
+  },
+  {
+   "id": "s34",
+   "text": "แต่ตาคู่นั้น",
+   "t0": 49.202,
+   "t1": 50.156,
+   "speaker": "narr"
+  },
+  {
+   "id": "s34",
+   "text": "ไม่ใช่ตาคนแล้ว",
+   "t0": 50.156,
+   "t1": 51.649,
+   "speaker": "narr",
+   "emph": "ไม่ใช่ตาคน",
+   "colour": "red"
+  },
+  {
+   "id": "s35",
+   "text": "มันพุ่งใส่ก้อง",
+   "t0": 51.749,
+   "t1": 52.862,
+   "speaker": "narr"
+  },
+  {
+   "id": "s35",
+   "text": "ก้องเอาเครื่องตัดขวาง",
+   "t0": 52.862,
+   "t1": 54.531,
+   "speaker": "narr"
+  },
+  {
+   "id": "s35",
+   "text": "ผลักมันสุดแรง",
+   "t0": 54.531,
+   "t1": 55.945,
+   "speaker": "narr"
+  },
+  {
+   "id": "s36",
+   "text": "ก้องถอยหลบมุมรถ",
+   "t0": 56.095,
+   "t1": 57.287,
+   "speaker": "narr"
+  },
+  {
+   "id": "s36",
+   "text": "มันมองไม่เห็นเขา",
+   "t0": 57.287,
+   "t1": 58.939,
+   "speaker": "narr",
+   "emph": "มองไม่เห็น",
+   "colour": "amber"
+  },
+  {
+   "id": "s37",
+   "text": "บนหลังคารถ",
+   "t0": 59.139,
+   "t1": 59.934,
+   "speaker": "narr"
+  },
+  {
+   "id": "s37",
+   "text": "ไรเดอร์เสื้อเขียว",
+   "t0": 59.934,
+   "t1": 61.285,
+   "speaker": "narr"
+  },
+  {
+   "id": "s37",
+   "text": "วิ่งหนีสุดชีวิต",
+   "t0": 61.285,
+   "t1": 62.478,
+   "speaker": "narr"
+  },
+  {
+   "id": "s37",
+   "text": "มันกระโจนตามไป",
+   "t0": 62.478,
+   "t1": 63.97,
+   "speaker": "narr",
+   "emph": "กระโจนตาม",
+   "colour": "red"
+  },
+  {
+   "id": "s38",
+   "text": "ทั้งทางด่วน",
+   "t0": 65.22,
+   "t1": 66.095,
+   "speaker": "narr"
+  },
+  {
+   "id": "s38",
+   "text": "มีแต่คนวิ่งหนี",
+   "t0": 66.095,
+   "t1": 67.208,
+   "speaker": "narr"
+  },
+  {
+   "id": "s38",
+   "text": "กับพวกที่ไล่กัด",
+   "t0": 67.208,
+   "t1": 68.78,
+   "speaker": "narr",
+   "emph": "ไล่กัด",
+   "colour": "red"
+  },
+  {
+   "id": "s39",
+   "text": "นี่ไม่ใช่อุบัติเหตุ",
+   "t0": 68.98,
+   "t1": 70.49,
+   "speaker": "narr",
+   "emph": "ไม่ใช่อุบัติเหตุ",
+   "colour": "red"
+  },
+  {
+   "id": "s39",
+   "text": "อีกต่อไปแล้ว",
+   "t0": 70.49,
+   "t1": 71.824,
+   "speaker": "narr"
+  }
+ ]
+}

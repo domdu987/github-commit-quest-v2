@@ -1,0 +1,61 @@
+{
+ "s06_916": {
+  "exposure": 0.95,
+  "toe": 0.03,
+  "p95": 0.91,
+  "deep": 0.095,
+  "L_mean": 0.327,
+  "note": "hand-set: the backlight flare caps p95"
+ },
+ "s09_916": {
+  "exposure": 0.905,
+  "toe": 0.039,
+  "p95": 0.77,
+  "deep": 0.119,
+  "L_mean": 0.368
+ },
+ "s13_916": {
+  "exposure": 1.215,
+  "toe": 0.0179,
+  "p95": 0.781,
+  "deep": 0.122,
+  "L_mean": 0.319
+ },
+ "s18_916": {
+  "exposure": 0.9,
+  "toe": 0.03,
+  "p95": 0.53,
+  "deep": 0.128,
+  "L_mean": 0.25,
+  "note": "hand-set: darker bonnet"
+ },
+ "s20_916": {
+  "exposure": 0.54,
+  "toe": 0.0601,
+  "p95": 0.822,
+  "deep": 0.121,
+  "L_mean": 0.341
+ },
+ "s24_916": {
+  "exposure": 0.813,
+  "toe": 0.0062,
+  "p95": 0.781,
+  "deep": 0.153,
+  "L_mean": 0.259
+ },
+ "s06_169": {
+  "exposure": 0.95,
+  "toe": 0.012,
+  "p95": 0.855,
+  "deep": 0.112,
+  "L_mean": 0.319,
+  "note": "hand-set: the backlight flare caps p95"
+ },
+ "s24_169": {
+  "exposure": 0.866,
+  "toe": 0.0062,
+  "p95": 0.79,
+  "deep": 0.169,
+  "L_mean": 0.249
+ }
+}

@@ -1,0 +1,462 @@
+{
+ "scene": "sc05",
+ "source": "plan",
+ "timing_file": "(plan estimate: plan)",
+ "narr0": 0.5,
+ "fps": 24,
+ "g_base": 50000,
+ "frames": 608,
+ "seconds": 25.333,
+ "plan_frames": 608,
+ "frames_by_class": {
+  "A": 363,
+  "B": 127,
+  "C1": 118
+ },
+ "final_cpu_h_estimate": 8.23,
+ "hard_cuts": [],
+ "fx": [],
+ "cues": {},
+ "mix": "",
+ "narration_wav": "",
+ "warnings": [],
+ "shots": [
+  {
+   "id": "S121",
+   "plan_id": "S121",
+   "f0": 0,
+   "f1": 47,
+   "frames": 47,
+   "plan_frames": 47,
+   "cls": "A",
+   "set": "UND",
+   "size": "CU",
+   "cut_on": "(picture beat, no word)",
+   "how": "scene start",
+   "narration": [
+    {
+     "id": "s77",
+     "captions": [
+      "แล้วโทรศัพท์ก็สั่น"
+     ]
+    }
+   ],
+   "action": "Kong is putting the phone away when it buzzes in his glove: the light jumps back onto his face, his eyes go to it."
+  },
+  {
+   "id": "S122",
+   "plan_id": "S122",
+   "f0": 47,
+   "f1": 96,
+   "frames": 49,
+   "plan_frames": 49,
+   "cls": "B",
+   "set": "UND",
+   "size": "W",
+   "cut_on": "จอสว่างวาบ",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s77",
+     "captions": [
+      "จอสว่างวาบ",
+      "กลางความมืด"
+     ]
+    }
+   ],
+   "action": "The dark street: one small bright rectangle on Kong's chest is the only light in the frame and throws his shadow up the pier; three heads turn to it; he cups his glove over it and it shrinks to a slit."
+  },
+  {
+   "id": "S123",
+   "plan_id": "S123",
+   "f0": 96,
+   "f1": 113,
+   "frames": 17,
+   "plan_frames": 17,
+   "cls": "C1",
+   "set": "2D",
+   "size": "INSERT",
+   "cut_on": "(picture beat, no word)",
+   "how": "beat (74 % between S122 and S124)",
+   "narration": [
+    {
+     "id": "s78",
+     "captions": [
+      "พ่อ!"
+     ]
+    }
+   ],
+   "action": "The incoming call: avatar, น้ำเหนือ, ลูกสาว; the frame buzzes; his thumb swipes to answer and the call timer starts."
+  },
+  {
+   "id": "S124",
+   "plan_id": "S124",
+   "f0": 113,
+   "f1": 146,
+   "frames": 33,
+   "plan_frames": 33,
+   "cls": "A",
+   "set": "UND",
+   "size": "CU",
+   "cut_on": "พ่ออยู่ไหน!",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s78",
+     "captions": [
+      "พ่ออยู่ไหน!"
+     ]
+    }
+   ],
+   "action": "Kong, phone to his ear (`phone_ear`, elbow out), mouth shut, eyes wide: he listens. The captions carry her words."
+  },
+  {
+   "id": "S125",
+   "plan_id": "S125",
+   "f0": 146,
+   "f1": 230,
+   "frames": 84,
+   "plan_frames": 84,
+   "cls": "A",
+   "set": "UND",
+   "size": "OTS",
+   "cut_on": "เขาพาหนู",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s79",
+     "captions": [
+      "เขาพาหนู",
+      "ขึ้นรถอพยพ",
+      "บอกว่าจะไปท่าเรือ"
+     ]
+    }
+   ],
+   "action": "Past Kong's ear and the glowing edge of the phone: Praew and James have stopped and watch him, hearing the small voice; Tos stands apart at the pier, arms crossed. Nobody moves but for breath and the drips."
+  },
+  {
+   "id": "S126",
+   "plan_id": "S126",
+   "f0": 230,
+   "f1": 294,
+   "frames": 64,
+   "plan_frames": 64,
+   "cls": "C1",
+   "set": "2D",
+   "size": "INSERT",
+   "cut_on": "ครั้งนี้",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s80",
+     "captions": [
+      "ครั้งนี้",
+      "พ่ออย่าผิดสัญญานะ"
+     ]
+    }
+   ],
+   "action": "Call screen: timer 00:11, 00:12; the signal bars fall 2, 1, 0; 'สัญญาณอ่อน' appears."
+  },
+  {
+   "id": "S127",
+   "plan_id": "S127",
+   "f0": 294,
+   "f1": 331,
+   "frames": 37,
+   "plan_frames": 37,
+   "cls": "A",
+   "set": "UND",
+   "size": "ECU",
+   "cut_on": "ก้องยังไม่ทันรับปาก",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s81",
+     "captions": [
+      "ก้องยังไม่ทันรับปาก"
+     ]
+    }
+   ],
+   "action": "Kong's mouth opens to answer ('พ่อ' formed, no sound comes)."
+  },
+  {
+   "id": "S128",
+   "plan_id": "S128",
+   "f0": 331,
+   "f1": 368,
+   "frames": 37,
+   "plan_frames": 37,
+   "cls": "C1",
+   "set": "2D",
+   "size": "INSERT",
+   "cut_on": "สัญญาณก็ขาด",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s81",
+     "captions": [
+      "สัญญาณก็ขาด"
+     ]
+    }
+   ],
+   "action": "The screen: สายหลุด, ไม่มีสัญญาณ; then it dims to black with his reflection drawn in it."
+  },
+  {
+   "id": "S129",
+   "plan_id": "S129",
+   "f0": 368,
+   "f1": 439,
+   "frames": 71,
+   "plan_frames": 71,
+   "cls": "A",
+   "set": "UND",
+   "size": "MW",
+   "cut_on": "ก้องหันหลัง",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s82",
+     "captions": [
+      "ก้องหันหลัง",
+      "จะไปหาลูกเดี๋ยวนั้น"
+     ]
+    }
+   ],
+   "action": "Kong turns, the dark phone still in his left fist, and strides away right, alone (walk cycle, long step); Praew takes two quick steps after him and catches his pack strap."
+  },
+  {
+   "id": "S130",
+   "plan_id": "S130",
+   "f0": 439,
+   "f1": 479,
+   "frames": 40,
+   "plan_frames": 40,
+   "cls": "A",
+   "set": "UND",
+   "size": "CU",
+   "cut_on": "ถ้าคุณไปคนเดียว",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s83",
+     "captions": [
+      "ถ้าคุณไปคนเดียว",
+      "ตอนนี้"
+     ]
+    }
+   ],
+   "action": "Praew, low and firm (`stern`), still holding the strap."
+  },
+  {
+   "id": "S131",
+   "plan_id": "S131",
+   "f0": 479,
+   "f1": 530,
+   "frames": 51,
+   "plan_frames": 51,
+   "cls": "A",
+   "set": "UND",
+   "size": "ECU",
+   "cut_on": "คุณอาจไปไม่ถึงลูก",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s83",
+     "captions": [
+      "คุณอาจไปไม่ถึงลูก"
+     ]
+    }
+   ],
+   "action": "Reverse, Kong's eyes only: wet, fixed past her on the dark; the last four words land on him and he stops pulling."
+  },
+  {
+   "id": "S132",
+   "plan_id": "S132",
+   "f0": 530,
+   "f1": 565,
+   "frames": 35,
+   "plan_frames": 35,
+   "cls": "B",
+   "set": "UND",
+   "size": "INSERT",
+   "cut_on": "ก้องกำโทรศัพท์แน่น",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s84",
+     "captions": [
+      "ก้องกำโทรศัพท์แน่น"
+     ]
+    }
+   ],
+   "action": "His glove closing hard on the dark phone."
+  },
+  {
+   "id": "S133",
+   "plan_id": "S133",
+   "f0": 565,
+   "f1": 608,
+   "frames": 43,
+   "plan_frames": 43,
+   "cls": "B",
+   "set": "UND",
+   "size": "EW",
+   "cut_on": "แล้วเดินตามเจมส์ไป",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s84",
+     "captions": [
+      "แล้วเดินตามเจมส์ไป"
+     ]
+    }
+   ],
+   "action": "Long view along the piers: four figures in single file keeping to the black side of the street, James leading, Kong last, walking right toward a pale glow at the far end."
+  }
+ ],
+ "captions": [
+  {
+   "id": "s77",
+   "text": "แล้วโทรศัพท์ก็สั่น",
+   "t0": 0.5,
+   "t1": 1.93,
+   "speaker": "narr"
+  },
+  {
+   "id": "s77",
+   "text": "จอสว่างวาบ",
+   "t0": 1.93,
+   "t1": 2.725,
+   "speaker": "narr",
+   "emph": "สว่างวาบ",
+   "colour": "red"
+  },
+  {
+   "id": "s77",
+   "text": "กลางความมืด",
+   "t0": 2.725,
+   "t1": 3.98,
+   "speaker": "narr"
+  },
+  {
+   "id": "s78",
+   "text": "พ่อ!",
+   "t0": 4.28,
+   "t1": 4.7,
+   "speaker": "namnuea"
+  },
+  {
+   "id": "s78",
+   "text": "พ่ออยู่ไหน!",
+   "t0": 4.7,
+   "t1": 5.875,
+   "speaker": "namnuea"
+  },
+  {
+   "id": "s79",
+   "text": "เขาพาหนู",
+   "t0": 6.075,
+   "t1": 6.711,
+   "speaker": "namnuea"
+  },
+  {
+   "id": "s79",
+   "text": "ขึ้นรถอพยพ",
+   "t0": 6.711,
+   "t1": 7.505,
+   "speaker": "namnuea"
+  },
+  {
+   "id": "s79",
+   "text": "บอกว่าจะไปท่าเรือ",
+   "t0": 7.505,
+   "t1": 9.237,
+   "speaker": "namnuea",
+   "emph": "ท่าเรือ",
+   "colour": "amber"
+  },
+  {
+   "id": "s80",
+   "text": "ครั้งนี้",
+   "t0": 9.587,
+   "t1": 10.223,
+   "speaker": "namnuea"
+  },
+  {
+   "id": "s80",
+   "text": "พ่ออย่าผิดสัญญานะ",
+   "t0": 10.223,
+   "t1": 11.954,
+   "speaker": "namnuea",
+   "emph": "อย่าผิดสัญญา",
+   "colour": "red"
+  },
+  {
+   "id": "s81",
+   "text": "ก้องยังไม่ทันรับปาก",
+   "t0": 12.254,
+   "t1": 13.764,
+   "speaker": "narr"
+  },
+  {
+   "id": "s81",
+   "text": "สัญญาณก็ขาด",
+   "t0": 13.764,
+   "t1": 15.019,
+   "speaker": "narr",
+   "emph": "สัญญาณก็ขาด",
+   "colour": "red"
+  },
+  {
+   "id": "s82",
+   "text": "ก้องหันหลัง",
+   "t0": 15.319,
+   "t1": 16.193,
+   "speaker": "narr"
+  },
+  {
+   "id": "s82",
+   "text": "จะไปหาลูกเดี๋ยวนั้น",
+   "t0": 16.193,
+   "t1": 18.084,
+   "speaker": "narr"
+  },
+  {
+   "id": "s83",
+   "text": "ถ้าคุณไปคนเดียว",
+   "t0": 18.284,
+   "t1": 19.476,
+   "speaker": "praew"
+  },
+  {
+   "id": "s83",
+   "text": "ตอนนี้",
+   "t0": 19.476,
+   "t1": 19.953,
+   "speaker": "praew"
+  },
+  {
+   "id": "s83",
+   "text": "คุณอาจไปไม่ถึงลูก",
+   "t0": 19.953,
+   "t1": 21.684,
+   "speaker": "praew",
+   "emph": "ไปไม่ถึงลูก",
+   "colour": "red"
+  },
+  {
+   "id": "s84",
+   "text": "ก้องกำโทรศัพท์แน่น",
+   "t0": 22.084,
+   "t1": 23.515,
+   "speaker": "narr"
+  },
+  {
+   "id": "s84",
+   "text": "แล้วเดินตามเจมส์ไป",
+   "t0": 23.515,
+   "t1": 25.326,
+   "speaker": "narr"
+  }
+ ]
+}
