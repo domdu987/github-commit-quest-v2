@@ -24,9 +24,12 @@ RANGES = {SHOT: (G0 - H, G1 + H)}
 PRESET = "reveal_top"
 TAKE = "s13"
 CAM_G0, CAM_G1 = G0, G1                                  # the camera move spans the take proper
-LOC0, LOC1 = (-22.0, -228.0, 150.0), (-22.0, -205.0, 178.0)
-LOOK0, LOOK1 = (-22.0, 8.0, -5.0), (-22.0, 6.0, -5.0)
-LENS = 24.0
+# the U: centre U_C (15, 0), front arc R 78 (+x side), arms 150 long back along both flanks (y = +-78), open toward -x.
+# Portrait frame: the camera looks along +x from behind the opening, so the U's long axis is the screen's vertical.
+LOC0, LOC1 = (-54.0, 0.0, 150.0), (-40.0, 0.0, 190.0)
+LOOK0, LOOK1 = (-12.0, 0.0, 0.0), (-10.0, 0.0, 0.0)
+LENS = 18.0
+SMOKE_K = 2.6                                            # runtime scale of the cannon smoke puffs and flashes (readable from the air)
 
 
 # ---- film-wide hook schedules (identical in s14, so that the damage thresholds / hit frames agree)
@@ -67,6 +70,10 @@ class Take(C.Take):
             self.key_set(f, spikes=3, ports=clamp((g - 1492) / 10.0), dragon_smoke=0.0)
             J.set_korean_turn(turn_k(g), frame=f)
             J.set_cannon_smoke(smoke_l(g), frame=f)
+            for G_ in J.S["guns"]:                       # bigger puffs + flashes for the aerial (runtime scale, joseon untouched)
+                for o in list(G_["puffs"]) + [G_["flash"]]:
+                    o.scale = tuple(v * SMOKE_K for v in o.scale)
+                    J.key_attr(o, "scale", f, "LINEAR")
             J.set_damage(dmg_d(g), frame=f)
 
     def hit_g(self, thr):
