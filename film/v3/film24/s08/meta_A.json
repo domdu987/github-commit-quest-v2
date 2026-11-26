@@ -1,0 +1,49 @@
+{
+ "take": "s08",
+ "film": 24,
+ "shots": [
+  8,
+  9
+ ],
+ "g0": 734,
+ "g1": 919,
+ "first_g": 728,
+ "n_frames": 197,
+ "handle_in": 6,
+ "handle_out": 7,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "shot_ranges": {
+  "8": [
+   728,
+   860
+  ],
+  "9": [
+   861,
+   924
+  ]
+ },
+ "cuts_in_take": [
+  861
+ ],
+ "note": "8a macro_spikes (internal id 8) + 8b roof_top (internal id 9)",
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "render_resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "s_per_frame_wall_mean": 15.2,
+ "s_per_frame_cpu_mean": 29.9,
+ "look": "A"
+}
