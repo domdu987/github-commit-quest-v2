@@ -598,11 +598,16 @@ def water_mat(name, calm=False):
         deep, mid, shl = ('#053a52', '#0b5a6e', '#22888a') if not calm else ('#0c3f4a', '#165a62', '#26746e')
         col = b.mix(b.rng(patch, 0.35, 0.65), hexl(deep), hexl(mid))
         crest = b.rng(z.outputs['Z'], 0.12 if not calm else 9, 0.45, 0, 1); col = b.mix(b.math('MULTIPLY', crest, b.rng(b.noise(0.5, 1.0, 0.5, c), 0.35, 0.7), clamp=True), col, hexl(shl))
-        if not calm: col = b.mix(b.rng(z.outputs['Z'], 0.0, -0.42, 0.0, 0.85), col, hexl('#021d33'))
+        if not calm:
+            bignz = b.rng(b.noise(0.011, 2.0, 0.5, c), 0.3, 0.7, 0.45, 1.0); col = b.mix(b.math('MULTIPLY', b.rng(z.outputs['Z'], 0.0, -0.42, 0.0, 0.85), bignz), col, hexl('#021d33'))
+            col = b.mix(b.rng(b.noise(0.0035, 2.0, 0.5, c), 0.35, 0.65, 0.0, 0.35), col, hexl('#0d6c74'))
         if not calm:
             sp = b.rng(b.noise(0.6, 0.0, 0.5, c), 0.68, 0.76); wc = b.math('MULTIPLY', b.rng(z.outputs['Z'], 0.34, 0.50), sp, clamp=True); col = b.mix(wc, col, (0.93, 0.97, 0.96, 1))
         n1 = b.noise(1.3 if not calm else 0.9, 2.0, 0.5, c); n2 = b.noise(5.0, 1.0, 0.5, c); h = b.math('ADD', n1, b.math('MULTIPLY', n2, 0.35))
-        nrm = b.bump(h, 0.42 if not calm else 0.06, 0.08)
+        st = 0.42 if not calm else 0.06
+        if not calm:
+            cd = b.n('ShaderNodeCameraData'); st = b.rng(cd.outputs['View Distance'], 70.0, 230.0, 0.42, 0.16, smooth=True)
+        nrm = b.bump(h, st, 0.08)
         b.princ(col, 0.05 if not calm else 0.03, 0.0, nrm, IOR=1.333)
     return mat('J_' + name, f)
 
@@ -723,7 +728,7 @@ def swell_group():
         s_ = N('ShaderNodeMath'); s_.operation = 'SINE'; L(m3.outputs[0], s_.inputs[0]); a_ = N('ShaderNodeMath'); a_.operation = 'MULTIPLY'; a_.inputs[1].default_value = A; L(s_.outputs[0], a_.inputs[0]); return a_
     def add(a, b): ad = N('ShaderNodeMath'); ad.operation = 'ADD'; L(a.outputs[0], ad.inputs[0]); L(b.outputs[0], ad.inputs[1]); return ad
     tot = None
-    for w in SWELL + CHOP: tot = wave(*w) if tot is None else add(tot, wave(*w))
+    for w in SWELL: tot = wave(*w) if tot is None else add(tot, wave(*w))      # long swell only: the short chop aliased against the 2.4 D mesh cells (grid of blobs from far above); fine chop is the bump
     cb = N('ShaderNodeCombineXYZ'); L(tot.outputs[0], cb.inputs['Z']); setp = N('GeometryNodeSetPosition'); L(gi.outputs[0], setp.inputs['Geometry']); L(cb.outputs[0], setp.inputs['Offset'])
     sm = N('GeometryNodeSetShadeSmooth'); L(setp.outputs[0], sm.inputs['Geometry']); L(sm.outputs[0], go.inputs[0]); return ng
 
