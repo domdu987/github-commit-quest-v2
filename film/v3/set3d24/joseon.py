@@ -59,7 +59,7 @@ class NB:
         if mapscale: mp = s.n('ShaderNodeMapping'); mp.inputs['Scale'].default_value = mapscale; s.l(v, mp.inputs['Vector']); v = mp.outputs[0]
         s.l(v, n.inputs['Vector']); return n.outputs['Fac']
     def bump(s, h, strength, dist=0.1):
-        b = s.n('ShaderNodeBump'); b.inputs['Strength'].default_value = strength; b.inputs['Distance'].default_value = dist; s.l(h, b.inputs['Height']); return b.outputs['Normal']
+        b = s.n('ShaderNodeBump'); s.put(b.inputs['Strength'], strength); b.inputs['Distance'].default_value = dist; s.l(h, b.inputs['Height']); return b.outputs['Normal']
     def princ(s, col, rough=0.6, metal=0.0, normal=None, **kw):
         p = s.n('ShaderNodeBsdfPrincipled'); s.put(p.inputs['Base Color'], col if isinstance(col, bpy.types.NodeSocket) else (*col, 1.0)); s.put(p.inputs['Roughness'], rough)
         p.inputs['Metallic'].default_value = metal
