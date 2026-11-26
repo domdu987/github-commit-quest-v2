@@ -368,13 +368,13 @@ def oar_set(sh, xs, ys, zp, length_out=6.4, length_in=1.4, dip=True, tilt_deg=No
     for i, (x, yh) in enumerate(zip(xs, ys)):
         for sg in (1, -1):
             mb = MB(); rod(mb, (0, -length_in, 0), (0, length_out - 1.0, 0), 0.085, M_['wood_l'], seg=6, r1=0.07)
-            beam(mb, (0, length_out - 1.3, 0), (0, length_out + 0.1, 0), 0.5, 0.05, M_['wood_l'])
+            beam(mb, (0, length_out - 1.3, 0), (0, length_out + 0.1, 0), 0.07, 0.8, M_['wood_l'])
             o = mk(mb, 'oar_%s_%d_%s' % (sh['name'], i, 'p' if sg > 0 else 's'), sh['ride']); o.location = (x, sg * yh, zp)
-            a = math.asin(max(-0.9, min(0.9, (zp + 0.12) / (length_out - 0.5)))) if dip else math.radians(tilt_deg if tilt_deg is not None else 35)
+            a = math.asin(max(-0.9, min(0.9, (zp + 0.36) / (length_out - 0.5)))) if dip else math.radians(tilt_deg if tilt_deg is not None else 35)
             o.rotation_mode = 'XYZ'; o.rotation_euler = (-a if dip else a, 0, 0 if sg > 0 else math.pi)
             if stow:                                       # stowed: lashed along the hull side, blade aft, a little apart so they do not overlap
                 o.location = (x, sg * (yh + 0.16 + 0.17 * (i % 3)), zp - 0.12 + 0.2 * ((i + 1) % 3)); o.rotation_euler = (math.radians(-2), 0, math.pi / 2 if True else 0)
-            elif stroke: drive(o, 'rotation_euler', 2, '%.4f+0.2*sin(frame*0.33+%.3f)' % (0 if sg > 0 else math.pi, i * 0.5 + (0 if sg > 0 else 0.7) + r.uniform(0, 0.4)), {})
+            elif stroke and not (sh['name'] == 'turtle' and i == 5 and sg > 0): drive(o, 'rotation_euler', 2, '%.4f+0.2*sin(frame*0.33+%.3f)' % (0 if sg > 0 else math.pi, i * 0.5 + (0 if sg > 0 else 0.7) + r.uniform(0, 0.4)), {})
             sh['oars'].append(o)
 
 # ============================================================================= THE TURTLE SHIP (hero prop)
@@ -476,7 +476,7 @@ def build_turtle(name='turtle', loc=(0, 0, 0), yaw=0.0, sea=False, sail=False, o
             quad_grid(mb, lambda i, j: Vector((mx - 0.25 - 0.9 * math.sin(math.pi * j / 6) * math.sin(math.pi * i / 8) , -sw / 2 + sw * j / 6, zb + H_ * 0.82 - shh * i / 8)), 8, 6, M_['sail_k'], uvs=lambda i, j: (j / 6 * 1.4, i / 8 * 1.2), orient=lambda c: Vector((-1, 0, 0)))
             s_ = mk(mb, name + '_sail', ride, smooth=True)
     flag_obj(sh, 'flag_red', (-17.0, 0, 2.6), 4.2, 2.6, 0.25, name=name + '_stern', ph=1.5)
-    if sea: wake_foam(sh, True, True); oar_rings(sh, ox, oy)
+    if sea: wake_foam(sh, True, True); oar_rings(sh, ox, oy); build_splash(sh, ox, oy)
     return sh
 
 def dragon(sh):
@@ -511,9 +511,43 @@ def oar_rings(sh, ox, oy, length_out=6.4):
         for sg in (1, -1):
             c = Vector((x - 0.2, sg * (yh + length_out - 0.6), 0.0)); mb = MB(); rr = 1.25
             mb.oface([c + Vector((-rr, -rr, 0)), c + Vector((rr, -rr, 0)), c + Vector((rr, rr, 0)), c + Vector((-rr, rr, 0))], M_['ring_f'], [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((0, 0, 1)))
-            if i % 2 == 1:
-                for k in range(5): lump(mb, c + Vector((0.15 * k - 0.3, sg * 0.1 * k, 0.15 + 0.1 * (k % 2))), 0.16 + 0.05 * (k % 3), M_['spray'], 700 + i * 7 + k, seg=6, rings=4, rough=0.3, squash=0.8)
             o = mk(mb, 'ring_%s_%d_%d' % (sh['name'], i, sg), sh['root'], shadow=False); drive(o, 'location', 2, '0.2+' + swell_expr('x', 'y', 1.0), dict(x=(sh['root'], 'location[0]'), y=(sh['root'], 'location[1]')))
+
+
+def build_splash(sh, ox, oy, length_out=6.4):
+    """Hero oar splash (starboard oar 5 of the turtle ship, sea): 18 small droplets on ballistic arcs + two foam rings that grow and fade. Driven by set_oar_splash(t)."""
+    M_ = S['M']; i = 5; c = Vector((ox[i], oy[i] + length_out - 0.75, 0.0)); r = rnd(77); S['splash'] = dict(c=c, drops=[], rings=[], root=sh['root'])
+    for k in range(2):
+        def f(b, k=k):
+            t = b.img('foam_ring', 1.0, 'FLAT', vec=b.n('ShaderNodeUVMap').outputs[0], ext='EXTEND'); op = b.n('ShaderNodeValue'); op.name = 'op'; op.outputs[0].default_value = 1.0
+            m = b.math('MULTIPLY', t.outputs['Alpha'], op.outputs[0]); d = b.n('ShaderNodeBsdfDiffuse'); d.inputs['Color'].default_value = (0.9, 0.95, 0.95, 1); em = b.n('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.85, 0.92, 0.92, 1); em.inputs['Strength'].default_value = 0.35
+            ad = b.n('ShaderNodeAddShader'); b.l(d.outputs[0], ad.inputs[0]); b.l(em.outputs[0], ad.inputs[1]); tr = b.n('ShaderNodeBsdfTransparent'); mx = b.n('ShaderNodeMixShader'); b.l(m, mx.inputs[0]); b.l(tr.outputs[0], mx.inputs[1]); b.l(ad.outputs[0], mx.inputs[2]); b.l(mx.outputs[0], b.out.inputs['Surface'])
+        mt = mat('J_splash_ring%d' % k, f); mb = MB(); rr = 1.0
+        mb.oface([Vector((-rr, -rr, 0)), Vector((rr, -rr, 0)), Vector((rr, rr, 0)), Vector((-rr, rr, 0))], mt, [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((0, 0, 1)))
+        o = mk(mb, 'splash_ring_%d' % k, sh['root'], shadow=False); o.location = (c.x, c.y, 0.2); o.hide_render = True
+        drive(o, 'location', 2, '0.22+' + swell_expr('x', 'y', 1.0), dict(x=(sh['root'], 'location[0]'), y=(sh['root'], 'location[1]'))); S['splash']['rings'].append(dict(ob=o, mat=mt, delay=0.0 if k == 0 else 0.28))
+    for k in range(18):
+        mb = MB(); lump(mb, (0, 0, 0), 1.0, M_['spray'], 3000 + k, seg=8, rings=5, rough=0.05); o = mk(mb, 'drop_%d' % k, sh['root'], shadow=False); smooth_round(o, 1); o.hide_render = True
+        a = r.uniform(0, 6.283); sp = r.uniform(0.35, 1.0); S['splash']['drops'].append(dict(ob=o, v=Vector((math.cos(a) * sp, math.sin(a) * sp, r.uniform(2.2, 3.7))), r=r.uniform(0.05, 0.12)))
+
+def set_oar_splash(t, frame=None):
+    """Splash at the dipping blade of the hero oar (macro_oar): t 0 = nothing .. 0..1 = the splash growing and fading (map t = (frame - f0) / 15 for a 15-frame splash). Droplets fly on arcs and shrink, two foam rings
+    expand and fade. Frame-keyable (keys linear, visibility constant). Needs the sea location."""
+    K = S.get('splash')
+    if not K: return
+    t = float(t); c = K['c']; vis = 0.0 < t < 1.0
+    for d in K['drops']:
+        u = max(0.0, min(1.0, t)); p = Vector((c.x + d['v'].x * u * 3.0, c.y + d['v'].y * u * 3.0, 0.2 + d['v'].z * u * 1.15 - 4.6 * u * u)); sc = d['r'] * (1.0 - u) ** 0.4
+        d['ob'].location = p; d['ob'].scale = (sc, sc, sc); show(d['ob'], vis and p.z > 0.0, frame)
+        if frame is not None: key_attr(d['ob'], 'location', frame, 'LINEAR'); key_attr(d['ob'], 'scale', frame, 'LINEAR')
+    for rg in K['rings']:
+        u = max(0.0, min(1.0, (t - rg['delay']) / (1.0 - rg['delay']))); sc = 0.45 + 1.5 * u; rg['ob'].scale = (sc, sc, 1.0); op = (1.0 - u) ** 1.1 if 0.0 < u < 1.0 else 0.0
+        nd = rg['mat'].node_tree.nodes['op']; nd.outputs[0].default_value = op; show(rg['ob'], op > 0.001, frame)
+        if frame is not None:
+            key_attr(rg['ob'], 'scale', frame, 'LINEAR'); nd.outputs[0].keyframe_insert('default_value', frame=frame)
+            for fc in T._fcurves(rg['mat'].node_tree):
+                for kp in fc.keyframe_points: kp.interpolation = 'LINEAR'
+    S['splash_t'] = t
 
 # ============================================================================= materials
 def make_materials():
@@ -858,6 +892,13 @@ def build_atakebune(name, loc, yaw, scale=1.0, sea=True, seed=1, flagship=False,
         taiko(mb, (wx1 - 2.0, -3.0, zt + 0.04), M_); weapon_rack(mb, (wx1 - 1.5, 3.2, zt + 0.04), M_, 6)
         beam(mb, (wx1 - 6.8, -1.5, zt + 0.5), (wx1 - 6.8, 1.5, zt + 0.5), 0.5, 0.5, M_['wood_l']) if False else None
     mk(mb, name + '_upper', ride)
+    if name == 'j_board':                                                              # boarding ladder hooked over the rail, hanging out toward the turtle ship
+        xl = sh['deck_x'][0] + 10.0; mb = MB(); yr = wb(xl); zr = zt + 0.95
+        for sgx in (-0.38, 0.38):
+            rod(mb, (xl + sgx, yr - 0.15, zr + 0.25), (xl + sgx, yr + 0.15, zr), 0.06, M_['wood_l'], seg=5); rod(mb, (xl + sgx, yr + 0.15, zr), (xl + sgx, yr + 1.5, zr - 4.2), 0.06, M_['wood_l'], seg=5)
+        for k in range(1, 9):
+            t = k / 9.0; p = Vector((xl, yr + 0.15 + 1.35 * t, zr - 4.2 * t)); rod(mb, p + Vector((-0.4, 0, 0)), p + Vector((0.4, 0, 0)), 0.045, M_['wood_d'], seg=5)
+        mk(mb, name + '_ladder', ride)
     # banners (white nobori on poles at the deck corners) and the wake
     bpos = [(wx1 - 0.3, -wb(wx1) + 0.5), (wx1 - 0.3, wb(wx1) - 0.5), (tx0 + 0.1, -wb(tx0) + 0.5), (tx0 + 0.1, wb(tx0) - 0.5), (wx1 - 5.0, -wb(wx1 - 5.0) + 0.4), (wx1 - 5.0, wb(wx1 - 5.0) - 0.4)][:banners]
     for bi, (bx_, by_) in enumerate(bpos): flag_obj(sh, 'flag_white_r' if (bi + seed) % 2 else 'flag_white_k', (bx_, by_, zt), 6.0 + r.uniform(0, 1.4), 1.0, name='%s_nobori%d' % (name, bi), vertical=True, ph=bi + seed)
@@ -1260,7 +1301,7 @@ def _sea_marks():
     jn = shs['j_near']; z = jn['deck_z']; xb2 = jn['deck_x'][1]
     for nm, lp in (('soldier_chase_a', (xb2 - 0.6, 0.0, z)), ('soldier_chase_b', (xb2 - 1.9, 2.4, z)), ('soldier_chase_c', (xb2 - 1.9, -2.4, z))): par[nm] = ('j_near', lp)
     jb = shs['j_board']; z = jb['deck_z']; xb3 = jb['deck_x'][1]
-    for nm, lp in (('soldier_board_a', (jb['deck_x'][0] + 5.0, 3.1, z)), ('soldier_board_b', (jb['deck_x'][0] + 7.0, 3.3, z)), ('soldier_board_c', (jb['deck_x'][0] + 9.2, 3.1, z))): par[nm] = ('j_board', lp)
+    for nm, lp in (('soldier_board_a', (jb['deck_x'][0] + 5.4, 3.55, z)), ('soldier_board_b', (jb['deck_x'][0] + 7.4, 3.75, z)), ('soldier_board_c', (jb['deck_x'][0] + 3.6, 3.4, z))): par[nm] = ('j_board', lp)
     for nm, (sn, lp) in par.items(): mk_[nm] = tuple(round(c, 3) for c in L2W(sn, lp))
     sp = S['shore_pt']; mk_['commander_plank'] = (S['plank'].location.x, S['plank'].location.y, 0.08 + 0.11); mk_['commander_sand'] = tuple(round(c, 3) for c in (sp.x - 0.5, sp.y + 4.5, S['islands']['beach']['h'](sp.x - 0.5, sp.y + 4.5)))
     mk_['commander_crawl_a'] = tuple(round(c, 3) for c in (sp.x + 1.0, sp.y + 7.5, S['islands']['beach']['h'](sp.x + 1.0, sp.y + 7.5)))
@@ -1415,6 +1456,8 @@ def clear_keys():
     for idb in list(bpy.data.objects) + list(bpy.data.lights):
         ad = idb.animation_data
         if ad and ad.action: ad.action = None
+    for m in bpy.data.materials:
+        if m.node_tree and m.node_tree.animation_data: m.node_tree.animation_data_clear()
     S['fk'] = dict(s=[], k=[], d=[], sp=[])
 
 def sea_state(): return dict(s=S['vals']['s'], k=S['vals']['k'], d=S['vals']['d'], sp=S['vals']['sp'])
@@ -1430,7 +1473,7 @@ def yard_cams():
         bow=dict(loc=(5.6, 37.0, 4.8), look_at=(3.8, 15.0, 4.4), lens=24),
         yard_wide=dict(loc=(16.0, 24.5, 7.6), look_at=(-3.0, -10.0, 5.0), lens=21),
         roof_top=dict(loc=(-9.5, -29.0, 15.0), look_at=(0.8, -4.0, 5.2), lens=24),
-        macro_spikes=dict(loc=tuple(yw((5.5, -9.2, 4.3))), look_at=tuple(yw((-0.5, -3.4, roof_z(-0.5, -3.4) + 0.5))), lens=60, fstop=2.8),
+        macro_spikes=dict(loc=tuple(yw((-1.2, -9.4, 4.4))), look_at=tuple(yw((-6.6, -3.6, roof_z(-6.6, -3.6) + 0.5))), lens=60, fstop=2.8),
         macro_dragon=dict(loc=(-5.2, 25.4, 4.4), look_at=tuple(yw((20.4, 0, 3.15))), lens=55, fstop=2.8))
 
 def sea_cams():
@@ -1446,11 +1489,12 @@ def sea_cams():
         hansan_high=dict(loc=(60.0, -330.0, 150.0), look_at=(50.0, 0.0, 0.0), lens=22),
         flag_bow=dict(loc=W((xb + 7.0, -5.8, z + 2.6)), look_at=W((xb - 2.5, 0.8, z + 3.2)), lens=24),
         chase=dict(loc=tuple(L2W('j_near', (xn + 14.0, -11.0, 4.2))), look_at=tuple(L2W('j_near', (xn - 1.5, 0.0, 6.6))), lens=24),
-        board=dict(loc=tuple(L2W('j_board', (jb['deck_x'][0] + 1.0, 3.0, jb['deck_z'] + 1.6))), look_at=tuple(L2W('turtle', (1.5, 0.0, 4.6))), lens=24),
+        board=dict(loc=tuple(L2W('turtle', (jb['deck_x'][0] + 7.0 - 1.5, 1.6, 6.7))), look_at=tuple(L2W('j_board', (jb['deck_x'][0] + 6.4, 4.4, jb['deck_z'] + 1.4))), lens=28),
+        board_end=dict(loc=tuple(L2W('turtle', (jb['deck_x'][0] + 6.0, 0.4, 5.6))), look_at=tuple(L2W('turtle', (jb['deck_x'][0] + 6.8, -3.2, 4.2))), lens=28),
         reveal_top=dict(loc=(-22.0, -250.0, 185.0), look_at=(-22.0, 2.0, -5.0), lens=22),
         aftermath=dict(loc=(150.0, -16.0, 6.5), look_at=(55.0, 0.0, 7.0), lens=24),
         shore=dict(loc=(sp.x + 14.0, sp.y - 34.0, 7.5), look_at=(sp.x + 2.0, sp.y + 3.0, 2.0), lens=24),
-        macro_oar=dict(loc=(SOLO_AT[0] + 5.2, SOLO_AT[1] + 15.0, 0.75), look_at=(SOLO_AT[0] + 1.05, SOLO_AT[1] + 10.4, 0.05), lens=55, fstop=2.8))
+        macro_oar=dict(loc=(SOLO_AT[0] + 1.25 + 4.6, SOLO_AT[1] + 10.3 + 4.0, 0.7), look_at=(SOLO_AT[0] + 1.25, SOLO_AT[1] + 10.3, 0.05), lens=55, fstop=2.8))
 
 PRESETS = dict(
     roof_low=dict(loc='yard', cam='roof_low', state='sp2'), bow=dict(loc='yard', cam='bow', state='sp3,ds1'), yard_wide=dict(loc='yard', cam='yard_wide', state='sp3'), roof_top=dict(loc='yard', cam='roof_top', state='sp1'),
@@ -1458,7 +1502,7 @@ PRESETS = dict(
     fleet_wide=dict(loc='sea', cam='fleet_wide', state=''), flag_deck=dict(loc='sea', cam='flag_deck', state=''), flag_deck_b=dict(loc='sea', cam='flag_deck_b', state=''), flag_deck_crew=dict(loc='sea', cam='flag_deck_crew', state=''),
     hansan_high=dict(loc='sea', cam='hansan_high', state=''), flag_bow=dict(loc='sea', cam='flag_bow', state=''), chase=dict(loc='sea', cam='chase', state='s0'),
     board=dict(loc='sea', cam='board', state='sp3,special:board'), reveal_top=dict(loc='sea', cam='reveal_top', state='k1,cs1,dm0.35,sp3,pt1,ds1'),
-    aftermath=dict(loc='sea', cam='aftermath', state='k1,dm1,cs0.35,sp3,pt1'), shore=dict(loc='sea', cam='shore', state=''), macro_oar=dict(loc='sea', cam='macro_oar', state='special:solo'))
+    aftermath=dict(loc='sea', cam='aftermath', state='k1,dm1,cs0.35,sp3,pt1'), shore=dict(loc='sea', cam='shore', state=''), macro_oar=dict(loc='sea', cam='macro_oar', state='special:solo,os0.4'))
 LOC_PRESETS = dict(yard=[k for k, v in PRESETS.items() if v['loc'] == 'yard'], sea=[k for k, v in PRESETS.items() if v['loc'] == 'sea'])
 CAM_NOTES = dict(
     roof_low='yard: low 3/4 from the east quay at the stern quarter: the turtle ship on its cradles, roof edge workers, Yi in the foreground on the quay (push in)',
@@ -1531,6 +1575,7 @@ def apply_state(state):
     sc = bpy.context.scene; f0 = 40; sc.frame_set(f0)
     for tok in [t for t in (state or '').split(',') if t]:
         if tok.startswith('special:'): set_special(tok[8:])
+        elif tok.startswith('os'): set_oar_splash(float(tok[2:]))
         elif tok.startswith('sp'): set_spikes(float(tok[2:]))
         elif tok.startswith('pt'): set_ports(float(tok[2:]))
         elif tok.startswith('ds'): set_dragon_smoke(float(tok[2:]))
