@@ -1,0 +1,39 @@
+{
+ "take": "s13",
+ "fps": 30,
+ "cues": [
+  {
+   "time": 47.1,
+   "duration": 6.467,
+   "frame": 1413,
+   "end_frame": 1607,
+   "kind": "ambience",
+   "label": "open sea, wind, far oars and drums"
+  },
+  {
+   "time": 48.0,
+   "duration": 2.0,
+   "frame": 1440,
+   "end_frame": 1500,
+   "kind": "accent",
+   "label": "the Korean ships turn: oars splash, creaking hulls, a drum roll"
+  },
+  {
+   "time": 50.0,
+   "duration": 2.3,
+   "frame": 1500,
+   "end_frame": 1570,
+   "kind": "foley",
+   "label": "cannon booms from every side, building (many overlapping dull booms), smoke puffs",
+   "peak_frame": 1563
+  },
+  {
+   "time": 51.5,
+   "duration": 2.1,
+   "frame": 1545,
+   "end_frame": 1607,
+   "kind": "foley",
+   "label": "timber cracks and splintering as Japanese ships are hit one after another (no screams)"
+  }
+ ]
+}
