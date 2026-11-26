@@ -224,5 +224,6 @@ if __name__ == "__main__":
                     print("shot %d g %d  %.1f s wall %.1f cpu" % (shot, g, st["wall"], st["cpu"]), flush=True)
     elif cmd == "final":
         scale = float(sys.argv[4]) if len(sys.argv) > 4 else C.RES_PCT
-        samples = int(sys.argv[5]) if len(sys.argv) > 5 else C.SAMPLES
-        C.final_loop(lambda shot: Take(shot), shots, sys.argv[3], RANGES, HERE, scale=scale, samples=samples)
+        for shot in shots:                     # samples: the preset's own count (joseon PRESETS 'samples', 24 by default; macro_dragon 16)
+            samples = int(sys.argv[5]) if len(sys.argv) > 5 else C.preset_samples(PRESET[shot])
+            C.final_loop(lambda s_: Take(s_), [shot], sys.argv[3], RANGES, HERE, scale=scale, samples=samples)

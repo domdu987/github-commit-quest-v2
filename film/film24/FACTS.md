@@ -11,6 +11,7 @@ Series: one amazing war weapon per country, film 1 (Korea).
 - Japanese naval tactics relied on grappling and boarding, then fighting hand to hand with swords. Korean ships fought with cannon at range.
 - First combat use: Battle of Sacheon, 1592.
 - Battle of Hansan Island, 1592 (usually dated 14 August): a few Korean ships pretended to flee from the narrow Gyeonnaeryang strait. The Japanese commander Wakisaka Yasuharu followed with his whole fleet (about 73 ships) into open water. Yi then turned his fleet into the "crane wing" (U-shaped, 학익진) formation, surrounded them and fired from all sides. Sources disagree on numbers; at least 47 ships were destroyed and 12 captured, i.e. more than half. Wakisaka escaped.
+- Korean losses at Hansan: no ships lost (some dozens of men killed or wounded). The film tally "47 : 0" counts ships destroyed (at least 47 Japanese, 0 Korean); the 12 captured Japanese ships are not in the tally.
 - Japanese survivors were stranded on Hansan Island for days (Korean accounts mention living on seaweed). Wakisaka himself escaped by boat.
 
 ## Dramatised / invented (must be marked in the caption)

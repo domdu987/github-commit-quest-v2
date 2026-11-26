@@ -105,6 +105,12 @@ Render 6 handle frames on each side of every take, except before g 0 and after g
   - Hard cut inside the take to the sand: crawl_a/crawl_b alternating about every 8 frames, moving forward 0.45 D per half step.
   - wet24 1. The take ends exactly at g 1949; there is no out-handle.
 
+## Overlays and detail (client, second reference R10)
+- Motion-graphic overlays (red ✗ marks and a "47 : 0" tally) are composited by the director in conform, NOT in Blender. Keep the top third of shots 13 and 14 free of key action from g 1560 on.
+- s13 and s14 must also write `overlay.json` in the take folder, a list per frame of every Japanese ship that set_damage has hit: {"g":…, "ships":[{"name":…, "hit_g":…, "x":…, "y":…}]}. x and y are the screen px of the ship's deck centre at 720x1280; use bpy_extras.object_utils.world_to_camera_view on the ship root. The ✗ marks pop onto those points.
+- Prop detail: where the camera is close to a prop or a deck (flag_deck*, board, chase, roof shots), add cheap surface detail from your shot.py if it is missing: plank seams, nail heads, rope wraps, iron rivets. Do not add heavy geometry.
+- The 3 macro inserts must be crisp at the focus plane and detailed. Check the focus distance on the subject.
+
 ## QA (before delivering every take)
 1. Run `python3 PROJ/qa_auto.py take.mkv --first_g <first_g> --cuts <in-take cut g's>`. Fix every FAIL, then add QA_AUTO.md and phone_sheet.jpg to the take folder.
 2. Run `python3 PROJ/qa_jitter.py` on every take with a camera move, a walk or a crawl. It must report no shake and no slide.

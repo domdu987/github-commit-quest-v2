@@ -9,7 +9,8 @@ This is film8/common.py adapted to cast24 + the film-24 set (v3/set3d24/joseon.p
 C.J is the set module.  Worked example: s01/shot.py (shots 1 + 2, yard roof_low + macro_dragon).
 
 GOTCHAS (found on s01; read before building a shot):
-  * R9 RENDER = J.setup_render(scene, 'final') (24 adaptive samples, threshold 0.05, OIDN, AgX Medium High Contrast, exposure
+  * R9 RENDER = J.setup_render(scene, 'final') (24 adaptive samples -- or the preset's own count: C.preset_samples(preset),
+    macro_dragon 16 --, threshold 0.05, OIDN, AgX Medium High Contrast, exposure
     0.55, GI 2/2) at 75 % = 540x960, THEN J.post(raw, out) (Lanczos to 720x1280 + bloom / sat / S / vignette).  Take.render()
     does both; never deliver the raw 540x960 frame and never use stage render.setup() (Standard view, no GI: wrong look).
     Drafts: Take.render(scale=0.4, samples=10) -- the post still upscales to 720x1280.
@@ -89,6 +90,11 @@ TIMING = os.path.join(PROJ, "film24", "audio", "timing.json")
 N_FILM = 1950
 RES_PCT = 0.75                                           # R9: render 540x960, post() upscales to 720x1280
 SAMPLES = 24
+
+
+def preset_samples(preset):
+    """the R9 sample count of a preset: joseon PRESETS[preset]['samples'] (macro_dragon 16, macro_oar 12), else 24."""
+    return int(J.PRESETS[preset].get("samples", SAMPLES))
 
 
 # ----------------------------------------------------------------------------- clock

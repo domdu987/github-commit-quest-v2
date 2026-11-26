@@ -38,3 +38,8 @@ Facts vs inventions: PROJ/film24/FACTS.md.
 
 ## Look (client 2026-11-26: R9 reference, film/ref_shorts/R9_sheet.jpg; recipe branch qtest/r9 film/qtest/NOTES.md)
 Cycles GI, one soft warm sun key from camera-left, gradient sky fill, thin volumetric haze so distant ships/islands fade, bloom on hot spots only (post.py). Render 24 spp adaptive, OIDN, 75 % (540x960) then upscale to 720x1280. Flat unlit 2D puppet cards that cast shadows. Previously: blue-violet shade (hue 240-260), colour bands of COLOUR_SPEC (exteriors may fall outside; say why in QA.md). Rich, dense, period-correct sets, smooth layered water with foam and wakes (as film 10's sea).
+
+## Overlays (client 2026-11-26, second reference R10: motion graphics as at R10 0:26 and 0:48-0:51)
+- Shot 13, g about 1575-1607 ("ยิงปืนใหญ่ ใส่จากทุกด้าน"): small red ✗ marks pop on the Japanese ships as each is hit (positions from s13/overlay.json).
+- Shot 14, g 1718-1767 ("วันนั้น เรือญี่ปุ่น แตกไปกว่าครึ่ง"): a top-third tally pops in, a red Japanese-ship icon reading "47 ✗" and a green Korean-ship icon reading "0 ✗", as R10's "10 : 1". This is fact: at least 47 Japanese ships were destroyed at Hansan and no Korean ship was lost. Also ✗ marks on the listing ships.
+- Composited in conform (PIL), kept above y 860 and clear of heads. Hard pop with a 4-frame scale overshoot, no dissolves.
