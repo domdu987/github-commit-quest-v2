@@ -56,6 +56,9 @@ def pose_cmd5(g):
     p["lean"] = p.get("lean", 0) + 1.2 * math.sin(g * 0.55)          # laughing shake (feet planted)
     p["head_roll"] = 2.0 * math.sin(g * 0.45 + 0.6)
     p["pitch"] = -0.32 + 0.08 * math.sin(g * 0.5)             # head thrown back
+    if g >= Q0:                                                        # quote "เรือมีกระดองเหรอ!" starts at 16.1 s: talk_mouth alternating with the laugh shape
+        if ((g - Q0) // 3) % 2 == 0:
+            p["mouth"] = cast24.talk_mouth(g, 1.0)
     p["blink"] = blink(g, [])
     p["t"] = g / 30.0
     return p
