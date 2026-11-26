@@ -25,6 +25,8 @@ for mp in sorted(glob.glob(P + "/v3/film24/s*/meta.json")):
             continue
         os.makedirs(fr, exist_ok=True)
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", mk, "-start_number", str(m["first_g"]), fr + "/g_%04d.png"], check=True)
+        if glob.glob(mk + ".part*"):
+            os.remove(mk)                     # rebuilt from the committed parts: do not leave an untracked copy
     m["have"] = {int(f[-8:-4]): f for f in glob.glob(fr + "/g_*.png")}; m["name"] = os.path.basename(td); m["dir"] = td
     takes.append(m)
 takes.sort(key=lambda m: m["g0"])
