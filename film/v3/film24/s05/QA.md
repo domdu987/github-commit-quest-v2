@@ -14,3 +14,7 @@ Delivered: take.mkv.partaa/ab (libx264rgb crf 6, 58 MB split; `cat take.mkv.part
 
 Render: R9, 24 samples, 540x960 + post; 49.4 s wall / 94.9 s CPU per frame (two processes, 2 threads each).
 Deviations: the quote starts inside shot 5 (g 486), handled as above. Pose swap in shot 6 is a hard pose change (puppet style). Commander feet sit low in frame (y ~1100) because the deck camera is close.
+
+## Revision (director QA): shot 6 re-rendered g 513-649
+- Camera now aims at the commander: head centre x 0.45-0.49 W (g 513/547/581/615/649), kabuto, arm and drum fully in frame, nothing clipped by the left edge. Shot 5 unchanged (accepted).
+- qa_auto PASS, jitter median 0.27 px, heads bottom max 830 (<880), 45.4 s wall / 87.3 s CPU per frame.
