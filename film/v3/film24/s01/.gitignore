@@ -2,3 +2,7 @@ frames/
 raw/
 work/
 __pycache__/
+raw_B/
+frames_B/
+frames_A/
+*.log
