@@ -47,8 +47,8 @@ for i in range(0, len(allg), 32):
 for c in cfg.get("cuts", []):
     sheet(list(range(c - 3, c + 4)), os.path.join(WORK, "cut_%d.jpg" % c), w=240, cols=7)
 with open(os.path.join(WORK, "qa.txt"), "w") as fo:
-    for n in sorted({n for r in rows for n in r["heads"]}):
-        hs = [r["heads"][n] for r in rows if n in r["heads"]]
+    for n in sorted({n for r in rows for n in r.get("heads",{})}):
+        hs = [r["heads"][n] for r in rows if n in r.get("heads",{})]
         fo.write("%-4s head w %.0f..%.0f px, centre y %.0f..%.0f, bottom max %.0f (band 880)\n" % (
             n, min(h["w"] for h in hs), max(h["w"] for h in hs), min(h["y"] for h in hs), max(h["y"] for h in hs), max(h["bottom"] for h in hs)))
     fo.write("render wall %.1f s / cpu %.1f s per frame\n" % (wall, cpu))

@@ -1,0 +1,41 @@
+{
+ "take": "s03",
+ "film": 24,
+ "shots": [
+  3
+ ],
+ "g0": 151,
+ "g1": 287,
+ "first_g": 145,
+ "n_frames": 149,
+ "handle_in": 6,
+ "handle_out": 7,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "shot_ranges": {
+  "3": [
+   145,
+   293
+  ]
+ },
+ "cuts_in_take": [],
+ "note": "shot 3 sea fleet_wide",
+ "samples": 24,
+ "resolution": [
+  720,
+  1280
+ ],
+ "render_resolution": [
+  540,
+  960
+ ],
+ "fps": 30,
+ "s_per_frame_wall_mean": 33.8,
+ "s_per_frame_cpu_mean": 64.8
+}
