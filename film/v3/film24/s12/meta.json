@@ -1,0 +1,67 @@
+{
+ "take": "s12",
+ "film": 24,
+ "shots": [
+  12
+ ],
+ "g0": 1257,
+ "g1": 1412,
+ "first_g": 1251,
+ "n_frames": 168,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "in_take_cuts": [],
+ "shot_ranges": {
+  "12": [
+   1251,
+   1418
+  ]
+ },
+ "setups": {
+  "12": {
+   "preset": "board",
+   "camera": "preset board camera over the turtle roof, pushed 30 % toward cams['board_end'] (look point 14 %) i.e. down toward the spikes; follows the fleet (x += 3 D/s); DOF off",
+   "state": "special 'board', set_spikes 3, set_ports 0, set_fleet_chase keyed every frame"
+  }
+ },
+ "events": {
+  "step_back_start": 1389,
+  "step_back_end": 1413,
+  "gulp_cue": 1300
+ },
+ "set": "v3/set3d24/joseon.py sea; runtime dressing from common.py / shot.py only",
+ "cast": "ashi_c24 peer_worried then reverse walk cycle (real steps back 0.8 D, from g 1389 '\u0e21\u0e35\u0e41\u0e15\u0e48\u0e40\u0e2b\u0e25\u0e47\u0e01\u0e41\u0e2b\u0e25\u0e21'); ashi_d24_ladder_front + ashi_b24_ladder_back planted with the ladder; all Child-Of the j_board ride on the deck",
+ "mouths": "no quote: fixed expression mouths",
+ "dof": "off",
+ "render": "R9: Cycles CPU, 24 adaptive samples (macro_oar 12), OIDN, AgX MHC, exposure 0.55, 540x960 then J.post -> 720x1280",
+ "samples": [
+  24
+ ],
+ "resolution": [
+  720,
+  1280
+ ],
+ "render_resolution": [
+  540,
+  960
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 35.2,
+ "s_per_frame_cpu_mean": 68.0,
+ "s_per_frame_by_shot": {
+  "12": {
+   "wall": 35.2,
+   "cpu": 68.0
+  }
+ },
+ "narration": "film24/audio/narration.wav at +0.10 s; captions film24/script/captions.json"
+}
