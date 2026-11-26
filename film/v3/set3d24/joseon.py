@@ -526,9 +526,9 @@ def build_splash(sh, ox, oy, length_out=6.4):
         mb.oface([Vector((-rr, -rr, 0)), Vector((rr, -rr, 0)), Vector((rr, rr, 0)), Vector((-rr, rr, 0))], mt, [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((0, 0, 1)))
         o = mk(mb, 'splash_ring_%d' % k, sh['root'], shadow=False); o.location = (c.x, c.y, 0.2); o.hide_render = True
         drive(o, 'location', 2, '0.22+' + swell_expr('x', 'y', 1.0), dict(x=(sh['root'], 'location[0]'), y=(sh['root'], 'location[1]'))); S['splash']['rings'].append(dict(ob=o, mat=mt, delay=0.0 if k == 0 else 0.28))
-    for k in range(18):
-        mb = MB(); lump(mb, (0, 0, 0), 1.0, M_['spray'], 3000 + k, seg=8, rings=5, rough=0.05); o = mk(mb, 'drop_%d' % k, sh['root'], shadow=False); smooth_round(o, 1); o.hide_render = True
-        a = r.uniform(0, 6.283); sp = r.uniform(0.35, 1.0); S['splash']['drops'].append(dict(ob=o, v=Vector((math.cos(a) * sp, math.sin(a) * sp, r.uniform(2.2, 3.7))), r=r.uniform(0.05, 0.12)))
+    for k in range(46):
+        mb = MB(); lump(mb, (0, 0, 0), 1.0, M_['drop'], 3000 + k, seg=8, rings=5, rough=0.05); o = mk(mb, 'drop_%d' % k, sh['root'], shadow=False); smooth_round(o, 1); o.hide_render = True
+        a = r.uniform(0, 6.283); sp = r.uniform(0.15, 1.0); S['splash']['drops'].append(dict(ob=o, v=Vector((math.cos(a) * sp, math.sin(a) * sp, r.uniform(2.2, 3.7))), r=r.uniform(0.022, 0.06)))
 
 def set_oar_splash(t, frame=None):
     """Splash at the dipping blade of the hero oar (macro_oar): t 0 = nothing .. 0..1 = the splash growing and fading (map t = (frame - f0) / 15 for a 15-frame splash). Droplets fly on arcs and shrink, two foam rings
@@ -570,7 +570,7 @@ def make_materials():
     M_['stone'] = imgmat('stone', 'stone', 0.12, rough=0.92, bumpk=0.7); M_['stone_d'] = imgmat('stone_d', 'stone_d', 0.12, rough=0.92, bumpk=0.7)
     M_['dancheong'] = imgmat('dancheong', 'dancheong', 0.45, rough=0.55, bumpk=0.1)
     M_['plaster'] = flat('plaster', '#d9ceb4', 0.9); M_['basket'] = imgmat('basket', 'matting_d', 0.5, rough=0.95, bumpk=0.5)
-    M_['earth'] = flat('earth', '#8a7456', 0.95); M_['spray'] = flat('spray', '#f3f7f6', 0.9)
+    M_['drop'] = flat('drop', '#eef6f6', 0.25, 0.0, **{'Emission Color': (0.9, 0.95, 0.97, 1.0), 'Emission Strength': 0.9}); M_['earth'] = flat('earth', '#8a7456', 0.95); M_['spray'] = flat('spray', '#f3f7f6', 0.9)
     M_['smoke_g'] = smoke_mat('g', '#a8a499'); M_['smoke_d'] = smoke_mat('d', '#74716f'); M_['smoke_y'] = smoke_mat('y', '#b6ab80')
     M_['flash'] = emit('flash', '#ffcf6a', 40.0); M_['green_p'] = flat('green_p', '#2f6a4a', 0.5); M_['blue_p'] = flat('blue_p', '#2a56a8', 0.5)
     for nm, k in (('wake', 'foam_wake'), ('bow', 'foam_bow'), ('ring', 'foam_ring'), ('surf', 'foam_surf')):
@@ -893,7 +893,7 @@ def build_atakebune(name, loc, yaw, scale=1.0, sea=True, seed=1, flagship=False,
         beam(mb, (wx1 - 6.8, -1.5, zt + 0.5), (wx1 - 6.8, 1.5, zt + 0.5), 0.5, 0.5, M_['wood_l']) if False else None
     mk(mb, name + '_upper', ride)
     if name == 'j_board':                                                              # boarding ladder hooked over the rail, hanging out toward the turtle ship
-        xl = sh['deck_x'][0] + 10.0; mb = MB(); yr = wb(xl); zr = zt + 0.95
+        xl = sh['deck_x'][0] + 6.4; mb = MB(); yr = wb(xl); zr = zt + 0.95
         for sgx in (-0.38, 0.38):
             rod(mb, (xl + sgx, yr - 0.15, zr + 0.25), (xl + sgx, yr + 0.15, zr), 0.06, M_['wood_l'], seg=5); rod(mb, (xl + sgx, yr + 0.15, zr), (xl + sgx, yr + 1.5, zr - 4.2), 0.06, M_['wood_l'], seg=5)
         for k in range(1, 9):
@@ -1473,7 +1473,7 @@ def yard_cams():
         bow=dict(loc=(5.6, 37.0, 4.8), look_at=(3.8, 15.0, 4.4), lens=24),
         yard_wide=dict(loc=(16.0, 24.5, 7.6), look_at=(-3.0, -10.0, 5.0), lens=21),
         roof_top=dict(loc=(-9.5, -29.0, 15.0), look_at=(0.8, -4.0, 5.2), lens=24),
-        macro_spikes=dict(loc=tuple(yw((-1.2, -9.4, 4.4))), look_at=tuple(yw((-6.6, -3.6, roof_z(-6.6, -3.6) + 0.5))), lens=60, fstop=2.8),
+        macro_spikes=dict(loc=tuple(yw((14.8, -9.0, 4.4))), look_at=tuple(yw((10.4, -3.4, roof_z(10.4, -3.4) + 0.5))), lens=60, fstop=2.8),
         macro_dragon=dict(loc=(-5.2, 25.4, 4.4), look_at=tuple(yw((20.4, 0, 3.15))), lens=55, fstop=2.8))
 
 def sea_cams():
@@ -1489,12 +1489,12 @@ def sea_cams():
         hansan_high=dict(loc=(60.0, -330.0, 150.0), look_at=(50.0, 0.0, 0.0), lens=22),
         flag_bow=dict(loc=W((xb + 7.0, -5.8, z + 2.6)), look_at=W((xb - 2.5, 0.8, z + 3.2)), lens=24),
         chase=dict(loc=tuple(L2W('j_near', (xn + 14.0, -11.0, 4.2))), look_at=tuple(L2W('j_near', (xn - 1.5, 0.0, 6.6))), lens=24),
-        board=dict(loc=tuple(L2W('turtle', (jb['deck_x'][0] + 7.0 - 1.5, 1.6, 6.7))), look_at=tuple(L2W('j_board', (jb['deck_x'][0] + 6.4, 4.4, jb['deck_z'] + 1.4))), lens=28),
+        board=dict(loc=tuple(L2W('turtle', (jb['deck_x'][0] + 7.0 - 1.5, 0.8, 8.3))), look_at=tuple(L2W('j_board', (jb['deck_x'][0] + 6.0, 4.4, jb['deck_z'] + 0.3))), lens=26),
         board_end=dict(loc=tuple(L2W('turtle', (jb['deck_x'][0] + 6.0, 0.4, 5.6))), look_at=tuple(L2W('turtle', (jb['deck_x'][0] + 6.8, -3.2, 4.2))), lens=28),
         reveal_top=dict(loc=(-22.0, -250.0, 185.0), look_at=(-22.0, 2.0, -5.0), lens=22),
         aftermath=dict(loc=(150.0, -16.0, 6.5), look_at=(55.0, 0.0, 7.0), lens=24),
         shore=dict(loc=(sp.x + 14.0, sp.y - 34.0, 7.5), look_at=(sp.x + 2.0, sp.y + 3.0, 2.0), lens=24),
-        macro_oar=dict(loc=(SOLO_AT[0] + 1.25 + 4.6, SOLO_AT[1] + 10.3 + 4.0, 0.7), look_at=(SOLO_AT[0] + 1.25, SOLO_AT[1] + 10.3, 0.05), lens=55, fstop=2.8))
+        macro_oar=dict(loc=(SOLO_AT[0] + 1.25 + 3.2, SOLO_AT[1] + 10.3 + 3.4, 0.5), look_at=(SOLO_AT[0] + 1.25, SOLO_AT[1] + 10.3 - 0.2, 0.0), lens=55, fstop=2.8))
 
 PRESETS = dict(
     roof_low=dict(loc='yard', cam='roof_low', state='sp2'), bow=dict(loc='yard', cam='bow', state='sp3,ds1'), yard_wide=dict(loc='yard', cam='yard_wide', state='sp3'), roof_top=dict(loc='yard', cam='roof_top', state='sp1'),
