@@ -1,0 +1,47 @@
+{
+ "take": "s12",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film24/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 41.7,
+   "duration": 5.567,
+   "frame": 1251,
+   "end_frame": 1418,
+   "kind": "ambience",
+   "label": "sea, creaking hulls, wind, ropes; the two ships alongside"
+  },
+  {
+   "time": 42.333,
+   "duration": 0.167,
+   "frame": 1270,
+   "end_frame": 1275,
+   "kind": "foley",
+   "label": "ladder clatter against the rail (the ladder is brought up)"
+  },
+  {
+   "time": 44.0,
+   "duration": 0.333,
+   "frame": 1320,
+   "end_frame": 1330,
+   "kind": "foley",
+   "label": "gulp: the soldiers swallow nervously at the spikes"
+  },
+  {
+   "time": 46.3,
+   "duration": 0.8,
+   "frame": 1389,
+   "end_frame": 1413,
+   "kind": "foley",
+   "label": "shuffling backwards steps on wooden deck"
+  },
+  {
+   "time": 47.1,
+   "duration": 0.0,
+   "frame": 1413,
+   "end_frame": 1413,
+   "kind": "cut",
+   "label": "hard cut to shot 13"
+  }
+ ]
+}

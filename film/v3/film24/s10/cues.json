@@ -1,0 +1,47 @@
+{
+ "take": "s10",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film24/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 33.2,
+   "duration": 4.067,
+   "frame": 996,
+   "end_frame": 1118,
+   "kind": "ambience",
+   "label": "open sea, hull creak, war drums far, rowing and wind"
+  },
+  {
+   "time": 34.9,
+   "duration": 0.633,
+   "frame": 1047,
+   "end_frame": 1066,
+   "kind": "voice",
+   "label": "commander shouts '\u0e40\u0e2b\u0e47\u0e19\u0e44\u0e2b\u0e21' (lip-sync)"
+  },
+  {
+   "time": 35.533,
+   "duration": 0.767,
+   "frame": 1066,
+   "end_frame": 1089,
+   "kind": "voice",
+   "label": "'\u0e40\u0e15\u0e48\u0e32\u0e01\u0e25\u0e31\u0e27\u0e41\u0e25\u0e49\u0e27!'"
+  },
+  {
+   "time": 36.2,
+   "duration": 0.833,
+   "frame": 1086,
+   "end_frame": 1111,
+   "kind": "voice",
+   "label": "'\u0e15\u0e32\u0e21\u0e44\u0e1b\u0e43\u0e2b\u0e49\u0e2b\u0e21\u0e14!' ends the shot"
+  },
+  {
+   "time": 37.1,
+   "duration": 0.0,
+   "frame": 1113,
+   "end_frame": 1113,
+   "kind": "cut",
+   "label": "hard cut to shot 11 (chase)"
+  }
+ ]
+}

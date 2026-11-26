@@ -1,0 +1,49 @@
+{
+ "take": "s14",
+ "film": 24,
+ "shots": [
+  14
+ ],
+ "g0": 1607,
+ "g1": 1767,
+ "g1_exclusive": true,
+ "first_g": 1601,
+ "n_frames": 172,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "preset": "aftermath",
+ "samples": 24,
+ "resolution": [
+  720,
+  1280
+ ],
+ "render_resolution": [
+  540,
+  960
+ ],
+ "fps": 30,
+ "overlay": "overlay.json (g 1601..1772)",
+ "events": {
+  "damage_0.35_to_1": [
+   1607,
+   1766
+  ],
+  "cannon_smoke_1_to_0.35": [
+   1600,
+   1670
+  ],
+  "korean_turn": 1,
+  "spikes": 3,
+  "ports": 1
+ },
+ "camera": "custom: (150,-16,6.5) -> (122,-12,7), look (55,0,7) -> (50,0,7.5), 24 mm, 0.35 sine + 0.65 linear; DOF off",
+ "split": "take.mkv.partaa + take.mkv.partab (cat together)"
+}

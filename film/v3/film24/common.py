@@ -88,12 +88,15 @@ NARRATION = os.path.join(PROJ, "film24", "audio", "narration.wav")
 CAPTIONS = os.path.join(PROJ, "film24", "script", "captions.json")
 TIMING = os.path.join(PROJ, "film24", "audio", "timing.json")
 N_FILM = 1950
-RES_PCT = 0.75                                           # R9: render 540x960, post() upscales to 720x1280
-SAMPLES = 24
+LOOK_A = os.environ.get("JOSEON_LOOK", "").strip().upper() == "A"   # LOOK A (films 1-13): full 720x1280, A samples, no post(), no DOF, no haze
+RES_PCT = 1.0 if LOOK_A else 0.75                        # B (R9): render 540x960, post() upscales to 720x1280; A: full resolution
+SAMPLES = int(getattr(J, "A_SAMPLES", 10)) if LOOK_A else 24
 
 
 def preset_samples(preset):
-    """the R9 sample count of a preset: joseon PRESETS[preset]['samples'] (macro_dragon 16, macro_oar 12), else 24."""
+    """the R9 sample count of a preset: joseon PRESETS[preset]['samples'] (macro_dragon 16, macro_oar 12), else 24.  LOOK A: always the A count (10)."""
+    if LOOK_A:
+        return SAMPLES
     return int(J.PRESETS[preset].get("samples", SAMPLES))
 
 
@@ -226,7 +229,7 @@ class Take(object):
         scene.frame_start, scene.frame_end = 1, 9000
         pc = self.A["cam"]
         self.cam = J.make_camera(dict(pc), name=name)       # DOF on only when the preset has fstop
-        self.fstop = pc.get("fstop")
+        self.fstop = None if J.LOOK == "A" else pc.get("fstop")   # look A: no DOF anywhere (macros are sharp)
         self.focus = None
         if self.fstop:
             self.focus = bpy.data.objects.new(name + "_focus", None)   # world-fixed focus point (never parented to the cam)
@@ -283,12 +286,14 @@ class Take(object):
                     print("take: WARNING sprite of %s clipped on frame %d" % (a.name, f), flush=True)
 
     def render(self, frames, out_dir, scale=RES_PCT, samples=SAMPLES, threads=2):
-        """R9: Cycles at `scale` (0.75 = 540x960) then J.post -> 720x1280 at <out_dir>/f_%04d.png (same path)."""
+        """B (R9): Cycles at `scale` (0.75 = 540x960) then J.post -> 720x1280 at <out_dir>/f_%04d.png (same path).  LOOK A (env JOSEON_LOOK=A): scale 1.0, no post, no DOF."""
         self.scene.camera = self.cam
         self.dof_from_preset()
         self.scene.cycles.samples = samples
         stats = render.render_frames(list(frames), out_dir, scale=scale, threads=threads, scene=self.scene, camera=self.cam,
                                      verbose=False)
+        if J.LOOK == "A":                                   # look A: the frame is final size already; the v1.1 grade runs in conform
+            return stats
         for st in stats:
             t0 = time.time()
             J.post(st["path"], st["path"])
