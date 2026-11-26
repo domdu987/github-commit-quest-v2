@@ -1,0 +1,31 @@
+{
+ "take": "s11",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film24/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 36.9,
+   "duration": 5.167,
+   "frame": 1107,
+   "end_frame": 1262,
+   "kind": "ambience",
+   "label": "war drums (taiko) driving, sea rush, many oars, shouts of the charging crews far"
+  },
+  {
+   "time": 37.1,
+   "duration": 0.0,
+   "frame": 1113,
+   "end_frame": 1113,
+   "kind": "cut",
+   "label": "hard cut from shot 10"
+  },
+  {
+   "time": 41.9,
+   "duration": 0.0,
+   "frame": 1257,
+   "end_frame": 1257,
+   "kind": "cut",
+   "label": "hard cut to shot 12"
+  }
+ ]
+}
