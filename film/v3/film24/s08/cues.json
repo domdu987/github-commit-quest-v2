@@ -1,0 +1,7 @@
+{"take":"s08","fps":30,"cues":[
+{"frame":734,"time":24.47,"kind":"ambience","label":"macro turtle-shell, wind in rigging, creak"},
+{"frame":795,"time":26.5,"kind":"accent","label":"first spike set - metal clink"},
+{"frame":831,"time":27.7,"kind":"accent","label":"second spike set - clink"},
+{"frame":852,"time":28.4,"kind":"accent","label":"third spike set - clink"},
+{"frame":861,"time":28.7,"kind":"cut","label":"hard cut to roof_top wide, hammer taps"},
+{"frame":891,"time":29.7,"kind":"accent","label":"gun ports open - wooden thunk"}]}
