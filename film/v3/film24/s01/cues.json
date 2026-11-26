@@ -1,0 +1,112 @@
+{
+ "take": "s01",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film24/audio/narration.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 0.0,
+   "duration": 2.6,
+   "frame": 0,
+   "end_frame": 78,
+   "kind": "ambience",
+   "label": "Joseon naval yard, Yeosu 1592, daytime: gulls far off, water lapping at the slipway, distant carpentry (saws, mallets) and workers' voices"
+  },
+  {
+   "time": 0.033,
+   "duration": 0.0,
+   "frame": 1,
+   "end_frame": 1,
+   "kind": "foley",
+   "label": "hammer clink: iron hammer on an iron spike on the roof (bright metallic 'tink', small ring)",
+   "peak_frame": 1
+  },
+  {
+   "time": 0.433,
+   "duration": 0.0,
+   "frame": 13,
+   "end_frame": 13,
+   "kind": "foley",
+   "label": "hammer clink: iron hammer on an iron spike on the roof (bright metallic 'tink', small ring)",
+   "peak_frame": 13
+  },
+  {
+   "time": 0.833,
+   "duration": 0.0,
+   "frame": 25,
+   "end_frame": 25,
+   "kind": "foley",
+   "label": "hammer clink: iron hammer on an iron spike on the roof (bright metallic 'tink', small ring)",
+   "peak_frame": 25
+  },
+  {
+   "time": 1.233,
+   "duration": 0.0,
+   "frame": 37,
+   "end_frame": 37,
+   "kind": "foley",
+   "label": "hammer clink: iron hammer on an iron spike on the roof (bright metallic 'tink', small ring)",
+   "peak_frame": 37
+  },
+  {
+   "time": 1.633,
+   "duration": 0.0,
+   "frame": 49,
+   "end_frame": 49,
+   "kind": "foley",
+   "label": "hammer clink: iron hammer on an iron spike on the roof (bright metallic 'tink', small ring)",
+   "peak_frame": 49
+  },
+  {
+   "time": 2.033,
+   "duration": 0.0,
+   "frame": 61,
+   "end_frame": 61,
+   "kind": "foley",
+   "label": "hammer clink: iron hammer on an iron spike on the roof (bright metallic 'tink', small ring)",
+   "peak_frame": 61
+  },
+  {
+   "time": 2.433,
+   "duration": 0.0,
+   "frame": 73,
+   "end_frame": 73,
+   "kind": "foley",
+   "label": "hammer clink: iron hammer on an iron spike on the roof (bright metallic 'tink', small ring)",
+   "peak_frame": 73
+  },
+  {
+   "time": 2.6,
+   "duration": 0.0,
+   "frame": 78,
+   "end_frame": 78,
+   "kind": "cut",
+   "label": "HARD CUT to the dragon head macro: yard ambience continues, a little quieter (closer, bokeh)"
+  },
+  {
+   "time": 2.833,
+   "duration": 2.4,
+   "frame": 85,
+   "end_frame": 157,
+   "kind": "foley",
+   "label": "smoke hiss: a soft steam / smoke 'pfff' from the dragon mouth, puffs leaving one by one",
+   "peak_frame": 87
+  },
+  {
+   "time": 3.633,
+   "duration": 0.333,
+   "frame": 109,
+   "end_frame": 119,
+   "kind": "accent",
+   "label": "the smoke swells on '\u0e1e\u0e48\u0e19\u0e04\u0e27\u0e31\u0e19': a bigger whoosh-hiss",
+   "peak_frame": 115
+  },
+  {
+   "time": 5.033,
+   "duration": 0.0,
+   "frame": 151,
+   "end_frame": 151,
+   "kind": "cut",
+   "label": "plan: hard cut to shot 3, the Japanese fleet at sea (sea + drums far)"
+  }
+ ]
+}
