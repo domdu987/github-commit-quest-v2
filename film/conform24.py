@@ -102,13 +102,14 @@ for g in range(N):
     if os.path.lexists(dst): os.remove(dst)
     if src[g] is None:
         Image.new("RGB", (720, 1280)).save(dst); continue
-    ships = [sh for sh in OV.get(g, []) if g >= X_FROM and sh.get("hit_g", 1e9) <= g and 0 < sh["x"] < 720 and 60 < sh["y"] < 860]
-    if not ships and g < TALLY_G and VER != "A":
+    in_ov = src[g] is not None and ("/s13/" in src[g] or "/s14/" in src[g])   # overlays only on the reveal / aftermath takes
+    ships = [sh for sh in (OV.get(g, []) if in_ov else []) if g >= X_FROM and sh.get("hit_g", 1e9) <= g and 0 < sh["x"] < 720 and 60 < sh["y"] < 860]
+    if not ships and not (TALLY_G <= g < 1767) and VER != "A":
         os.symlink(src[g], dst); continue
     im = (graded(src[g], g) if VER == "A" else Image.open(src[g])).convert("RGBA"); d = ImageDraw.Draw(im, "RGBA")
     for sh in ships[:24]:
         draw_x(d, sh["x"], sh["y"] - 14, 0.75 * pop(g - max(sh["hit_g"], X_FROM)))
-    if TALLY_G <= g < 1767 + 1 or (g >= TALLY_G and src[g] and "s14" in src[g]):
+    if TALLY_G <= g < 1767 and "/s14/" in src[g]:
         tally(im, g, TALLY_G)
     im.convert("RGB").save(dst)
 if os.environ.get("ONLY_FRAMES"):
