@@ -16,6 +16,8 @@ reveal_top|sea reveal_top (k1 smoke dm)
 aftermath|sea aftermath (k1 dm1)
 shore|sea shore (plank, sand)
 macro_oar|MACRO oar splash
+macro_oar_special=solo_os0.12|state oar splash t 0.12
+macro_oar_special=solo_os0.8|state oar splash t 0.8
 roof_top_sp0|state set_spikes 0
 roof_top_sp1|state set_spikes 1
 roof_top_sp2|state set_spikes 2

@@ -268,7 +268,7 @@ def setup_render(sc, quality='final'):
     """Cycles CPU, path tracing with GI, 24 samples adaptive + OIDN, 75 % resolution (540x960) upscaled to 720x1280 by post(); preview 40 %."""
     r = sc.render; r.engine = 'CYCLES'; r.resolution_x, r.resolution_y = 720, 1280; r.resolution_percentage = 75 if quality == 'final' else 40
     r.image_settings.file_format = 'PNG'; r.use_motion_blur = False; r.fps = FPS
-    cy = sc.cycles; cy.device = 'CPU'; cy.samples = 24 if quality == 'final' else 10; cy.use_adaptive_sampling = True; cy.adaptive_threshold = 0.05; cy.adaptive_min_samples = 6
+    cy = sc.cycles; cy.device = 'CPU'; cy.samples = int(S.get('samples', 24)) if quality == 'final' else 10; cy.use_adaptive_sampling = True; cy.adaptive_threshold = 0.05; cy.adaptive_min_samples = 6
     cy.use_denoising = True; cy.denoiser = 'OPENIMAGEDENOISE'; cy.max_bounces = 4; cy.diffuse_bounces = 2; cy.glossy_bounces = 2; cy.transmission_bounces = 1
     cy.volume_bounces = 0; cy.transparent_max_bounces = 6; cy.caustics_reflective = False; cy.caustics_refractive = False; cy.blur_glossy = 1.0; cy.volume_step_rate = 3.0
     cy.use_light_tree = True; r.threads_mode = 'FIXED'; r.threads = 2; r.use_persistent_data = True
@@ -295,7 +295,7 @@ def make_camera(setup, name='cam', scene=None):
     scene.camera = ob; return ob
 
 # ============================================================================= swell (shared by the ocean mesh and the ship / plank drivers)
-SWELL = [(0.20, 34.0, 20.0, 0.9), (0.12, 21.0, 75.0, 1.2), (0.07, 13.0, -35.0, 1.6)]       # A, wavelength, direction deg, angular speed
+SWELL = [(0.34, 34.0, 20.0, 0.9), (0.20, 21.0, 75.0, 1.2), (0.11, 13.0, -35.0, 1.6)]       # A, wavelength, direction deg, angular speed
 CHOP = [(0.03, 7.3, 52.0, 2.2), (0.02, 4.9, -67.0, 2.8)]
 def swell_z(x, y, t):
     z = 0.0
@@ -312,6 +312,12 @@ def drive(ob, path, idx, expr, vars_):
     for nm, (idb, dp) in vars_.items():
         v = d.variables.new(); v.name = nm; v.type = 'SINGLE_PROP'; v.targets[0].id = idb; v.targets[0].data_path = dp
 
+def drive_at(ob, root, c, base=0.0, amp=1.0):
+    """Swell-driven height for an object that sits at root-local point c (flat foam / splash on the surface): the swell is evaluated at the WORLD x, y of an empty at c (child of the root)."""
+    an = empty('an_' + ob.name, root, tuple(c)); fc = ob.driver_add('location', 2); d = fc.driver; d.type = 'SCRIPTED'; sc_ = root.scale[0]; d.expression = '%.3f+%s' % (base / sc_, swell_expr('x', 'y', amp / sc_))
+    for nm, tt in (('x', 'LOC_X'), ('y', 'LOC_Y')):
+        v = d.variables.new(); v.name = nm; v.type = 'TRANSFORMS'; t = v.targets[0]; t.id = an; t.transform_type = tt; t.transform_space = 'WORLD_SPACE'
+
 def ride_swell(ob, root, base_z=0.0, amp=1.0, roll=0.0, pitch=0.0, seed=0, extra=''):
     """Heave of `ob` (child of root) from the SAME swell as the ocean mesh at the root's x, y (ships sit in the water at every frame)."""
     drive(ob, 'location', 2, '%.3f+%s%s' % (base_z, swell_expr('x', 'y', amp), extra), dict(x=(root, 'location[0]'), y=(root, 'location[1]')))
@@ -323,7 +329,7 @@ def ride_swell(ob, root, base_z=0.0, amp=1.0, roll=0.0, pitch=0.0, seed=0, extra
 def new_ship(name, kind, L, B, loc, yaw_deg, scale=1.0, sea=True, hscale=1.0):
     root = empty('ship_' + name, None, tuple(loc), (0, 0, math.radians(yaw_deg))); root.rotation_mode = 'XYZ'; root.scale = (scale,) * 3
     ride = empty('ride_' + name, root); sh = dict(name=name, kind=kind, L=L, B=B, root=root, ride=ride, base=Vector(loc), yaw=yaw_deg, scale=scale, guns=[], oars=[], masts=[], parts=[], sea=sea)
-    if sea: ride_swell(ride, root, 0.0, 1.0, roll=0.014, pitch=0.007, seed=sum(ord(c) for c in name) % 97)
+    if sea: ride_swell(ride, root, 0.0, 1.0 / scale, roll=0.014, pitch=0.007, seed=sum(ord(c) for c in name) % 97)
     S['ships'][name] = sh; return sh
 
 def wake_foam(sh, big=True, bowspray=True):
@@ -337,7 +343,7 @@ def wake_foam(sh, big=True, bowspray=True):
     s0 = Vector((-L / 2 + 0.8, 0, z)); s1 = Vector((-L / 2 - 2.4 * L, 0, z))
     fb.oface([s0 + Vector((0, -B * 0.42, 0)), s1 + Vector((0, -B * 1.4, 0)), s1 + Vector((0, B * 1.4, 0)), s0 + Vector((0, B * 0.42, 0))], mw_, [(0, 0), (1, 0), (1, 1), (0, 1)], n)
     o = mk(fb, 'foam_' + sh['name'], sh['root'], shadow=False); o.visible_glossy = False
-    drive(o, 'location', 2, '0.17+' + swell_expr('x', 'y', 1.0), dict(x=(sh['root'], 'location[0]'), y=(sh['root'], 'location[1]')))
+    drive(o, 'location', 2, '%.3f+' % (0.17 / sh['scale']) + swell_expr('x', 'y', 1.0 / sh['scale']), dict(x=(sh['root'], 'location[0]'), y=(sh['root'], 'location[1]')))
     sh['foam'] = o
     if False and bowspray:
         mb = MB()
@@ -509,10 +515,9 @@ def oar_rings(sh, ox, oy, length_out=6.4):
     M_ = S['M']; mbs = {}
     for i, (x, yh) in enumerate(zip(ox, oy)):
         for sg in (1, -1):
-            c = Vector((x - 0.2, sg * (yh + length_out - 0.6), 0.0)); mb = MB(); rr = 1.25
-            mb.oface([c + Vector((-rr, -rr, 0)), c + Vector((rr, -rr, 0)), c + Vector((rr, rr, 0)), c + Vector((-rr, rr, 0))], M_['ring_f'], [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((0, 0, 1)))
-            o = mk(mb, 'ring_%s_%d_%d' % (sh['name'], i, sg), sh['root'], shadow=False); drive(o, 'location', 2, '0.2+' + swell_expr('x', 'y', 1.0), dict(x=(sh['root'], 'location[0]'), y=(sh['root'], 'location[1]')))
-
+            c = Vector((x - 0.2, sg * (yh + length_out - 0.6), 0.0)); mb = MB(); rr = 0.8
+            mb.oface([Vector((-rr, -rr, 0)), Vector((rr, -rr, 0)), Vector((rr, rr, 0)), Vector((-rr, rr, 0))], M_['ring_f'], [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((0, 0, 1)))
+            o = mk(mb, 'ring_%s_%d_%d' % (sh['name'], i, sg), sh['root'], shadow=False); o.location = (c.x, c.y, 0.2); drive_at(o, sh['root'], c, 0.2)
 
 def build_splash(sh, ox, oy, length_out=6.4):
     """Hero oar splash (starboard oar 5 of the turtle ship, sea): 18 small droplets on ballistic arcs + two foam rings that grow and fade. Driven by set_oar_splash(t)."""
@@ -525,10 +530,10 @@ def build_splash(sh, ox, oy, length_out=6.4):
         mt = mat('J_splash_ring%d' % k, f); mb = MB(); rr = 1.0
         mb.oface([Vector((-rr, -rr, 0)), Vector((rr, -rr, 0)), Vector((rr, rr, 0)), Vector((-rr, rr, 0))], mt, [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((0, 0, 1)))
         o = mk(mb, 'splash_ring_%d' % k, sh['root'], shadow=False); o.location = (c.x, c.y, 0.2); o.hide_render = True
-        drive(o, 'location', 2, '0.22+' + swell_expr('x', 'y', 1.0), dict(x=(sh['root'], 'location[0]'), y=(sh['root'], 'location[1]'))); S['splash']['rings'].append(dict(ob=o, mat=mt, delay=0.0 if k == 0 else 0.28))
-    for k in range(46):
+        drive_at(o, sh['root'], c, 0.26); S['splash']['rings'].append(dict(ob=o, mat=mt, delay=0.0 if k == 0 else 0.28))
+    for k in range(70):
         mb = MB(); lump(mb, (0, 0, 0), 1.0, M_['drop'], 3000 + k, seg=8, rings=5, rough=0.05); o = mk(mb, 'drop_%d' % k, sh['root'], shadow=False); smooth_round(o, 1); o.hide_render = True
-        a = r.uniform(0, 6.283); sp = r.uniform(0.15, 1.0); S['splash']['drops'].append(dict(ob=o, v=Vector((math.cos(a) * sp, math.sin(a) * sp, r.uniform(2.2, 3.7))), r=r.uniform(0.022, 0.06)))
+        a = r.uniform(0, 6.283); sp = r.uniform(0.15, 1.0); S['splash']['drops'].append(dict(ob=o, v=Vector((math.cos(a) * sp, math.sin(a) * sp, r.uniform(2.2, 3.7))), r=r.uniform(0.014, 0.042)))
 
 def set_oar_splash(t, frame=None):
     """Splash at the dipping blade of the hero oar (macro_oar): t 0 = nothing .. 0..1 = the splash growing and fading (map t = (frame - f0) / 15 for a 15-frame splash). Droplets fly on arcs and shrink, two foam rings
@@ -541,7 +546,7 @@ def set_oar_splash(t, frame=None):
         d['ob'].location = p; d['ob'].scale = (sc, sc, sc); show(d['ob'], vis and p.z > 0.0, frame)
         if frame is not None: key_attr(d['ob'], 'location', frame, 'LINEAR'); key_attr(d['ob'], 'scale', frame, 'LINEAR')
     for rg in K['rings']:
-        u = max(0.0, min(1.0, (t - rg['delay']) / (1.0 - rg['delay']))); sc = 0.45 + 1.5 * u; rg['ob'].scale = (sc, sc, 1.0); op = (1.0 - u) ** 1.1 if 0.0 < u < 1.0 else 0.0
+        u = max(0.0, min(1.0, (t - rg['delay']) / (1.0 - rg['delay']))); sc = 0.3 + 1.05 * u; rg['ob'].scale = (sc, sc, 1.0); op = (1.0 - u) ** 1.1 if 0.0 < u < 1.0 else 0.0
         nd = rg['mat'].node_tree.nodes['op']; nd.outputs[0].default_value = op; show(rg['ob'], op > 0.001, frame)
         if frame is not None:
             key_attr(rg['ob'], 'scale', frame, 'LINEAR'); nd.outputs[0].keyframe_insert('default_value', frame=frame)
@@ -553,6 +558,9 @@ def set_oar_splash(t, frame=None):
 def make_materials():
     tx = S['tx']; M_ = {}
     M_['hull'] = wood('hull', '#976c4d', '#6a4630', 1.1, 'Z', 0.7, waterline=True)
+    M_['hull_a'] = wood('hull_a', '#8c5e40', '#5a3828', 1.0, 'Z', 0.7, waterline=True); M_['wall_w'] = wood('wall_w', '#6e4932', '#46301f', 1.3, 'Z', 0.75)
+    M_['hull_k'] = wood('hull_k', '#9c5a3a', '#6c3826', 1.1, 'Z', 0.68, waterline=True); M_['hull_k2'] = wood('hull_k2', '#8a4c34', '#5e3022', 1.1, 'Z', 0.68, waterline=True); M_['plank_k'] = wood('plank_k', '#a35e3e', '#6c3826', 1.4, 'Z', 0.72)
+    M_['sail_c'] = imgmat('sail_c', 'flag_sail', 1.0, rough=0.9, bumpk=0.3, uv=True)
     M_['hull_dk'] = wood('hull_dk', '#7c563c', '#553726', 1.1, 'Z', 0.7, waterline=True)
     M_['hexroof'] = imgmat('hex', 'hex', 1.0, rough=0.62, bumpk=0.9, uv=True)
     M_['walk'] = wood('walk', '#c8a46c', '#8d6a40', 1.8, 'Y', 0.65)
@@ -572,7 +580,7 @@ def make_materials():
     M_['plaster'] = flat('plaster', '#d9ceb4', 0.9); M_['basket'] = imgmat('basket', 'matting_d', 0.5, rough=0.95, bumpk=0.5)
     M_['drop'] = flat('drop', '#eef6f6', 0.25, 0.0, **{'Emission Color': (0.9, 0.95, 0.97, 1.0), 'Emission Strength': 0.9}); M_['earth'] = flat('earth', '#8a7456', 0.95); M_['spray'] = flat('spray', '#f3f7f6', 0.9)
     M_['smoke_g'] = smoke_mat('g', '#a8a499'); M_['smoke_d'] = smoke_mat('d', '#74716f'); M_['smoke_y'] = smoke_mat('y', '#b6ab80')
-    M_['flash'] = emit('flash', '#ffcf6a', 40.0); M_['green_p'] = flat('green_p', '#2f6a4a', 0.5); M_['blue_p'] = flat('blue_p', '#2a56a8', 0.5)
+    M_['flash'] = emit('flash', '#ffcf6a', 40.0); M_['green_p'] = flat('green_p', '#2a7a58', 0.5); M_['blue_p'] = flat('blue_p', '#2a56a8', 0.5)
     for nm, k in (('wake', 'foam_wake'), ('bow', 'foam_bow'), ('ring', 'foam_ring'), ('surf', 'foam_surf')):
         def f(b, k=k):
             t = b.img(k, 1.0, 'FLAT', vec=b.n('ShaderNodeUVMap').outputs[0], ext='EXTEND'); d = b.n('ShaderNodeBsdfDiffuse'); d.inputs['Color'].default_value = (0.9, 0.95, 0.95, 1)
@@ -580,20 +588,21 @@ def make_materials():
             tr = b.n('ShaderNodeBsdfTransparent'); mx = b.n('ShaderNodeMixShader'); b.l(t.outputs['Alpha'], mx.inputs[0]); b.l(tr.outputs[0], mx.inputs[1]); b.l(ad.outputs[0], mx.inputs[2]); b.l(mx.outputs[0], b.out.inputs['Surface'])
         M_['foam_' + nm if nm in ('wake', 'bow') else nm + '_f'] = mat('J_foam_' + nm, f)
     M_['foam_wake'] = M_['foam_wake']; M_['foam_bow'] = M_['foam_bow']
-    for k in ('red', 'black', 'white_r', 'white_k', 'tri_red', 'tri_black', 'tri_blue', 'tri_yellow'): flagmat('flag_' + k)
+    for k in ('red', 'black', 'white_r', 'white_k', 'tri_red', 'tri_black', 'tri_blue', 'tri_yellow', 'nob_circle', 'nob_diamond', 'nob_rcircle'): flagmat('flag_' + k)
     S['M'] = M_; return M_
 
 def water_mat(name, calm=False):
     def f(b):
         c = b.coord(); gp = b.n('ShaderNodeNewGeometry'); z = b.n('ShaderNodeSeparateXYZ'); b.l(gp.outputs['Position'], z.inputs[0])
         patch = b.noise(0.035 if not calm else 0.06, 2.0, 0.5, c, None)
-        deep, mid, shl = ('#0a4e78', '#0f7488', '#2a9e98') if not calm else ('#0f5058', '#1b6f70', '#2c8c82')
+        deep, mid, shl = ('#053a52', '#0b5a6e', '#22888a') if not calm else ('#0c3f4a', '#165a62', '#26746e')
         col = b.mix(b.rng(patch, 0.35, 0.65), hexl(deep), hexl(mid))
-        crest = b.rng(z.outputs['Z'], 0.05 if not calm else 9, 0.30, 0, 1); col = b.mix(b.math('MULTIPLY', crest, b.rng(b.noise(0.5, 1.0, 0.5, c), 0.4, 0.7), clamp=True), col, hexl(shl))
+        crest = b.rng(z.outputs['Z'], 0.12 if not calm else 9, 0.45, 0, 1); col = b.mix(b.math('MULTIPLY', crest, b.rng(b.noise(0.5, 1.0, 0.5, c), 0.35, 0.7), clamp=True), col, hexl(shl))
+        if not calm: col = b.mix(b.rng(z.outputs['Z'], 0.0, -0.42, 0.0, 0.85), col, hexl('#021d33'))
         if not calm:
-            sp = b.rng(b.noise(0.6, 0.0, 0.5, c), 0.68, 0.76); wc = b.math('MULTIPLY', b.rng(z.outputs['Z'], 0.22, 0.34), sp, clamp=True); col = b.mix(wc, col, (0.93, 0.97, 0.96, 1))
+            sp = b.rng(b.noise(0.6, 0.0, 0.5, c), 0.68, 0.76); wc = b.math('MULTIPLY', b.rng(z.outputs['Z'], 0.34, 0.50), sp, clamp=True); col = b.mix(wc, col, (0.93, 0.97, 0.96, 1))
         n1 = b.noise(1.3 if not calm else 0.9, 2.0, 0.5, c); n2 = b.noise(5.0, 1.0, 0.5, c); h = b.math('ADD', n1, b.math('MULTIPLY', n2, 0.35))
-        nrm = b.bump(h, 0.32 if not calm else 0.06, 0.08)
+        nrm = b.bump(h, 0.42 if not calm else 0.06, 0.08)
         b.princ(col, 0.05 if not calm else 0.03, 0.0, nrm, IOR=1.333)
     return mat('J_' + name, f)
 
@@ -798,38 +807,40 @@ def p_zd(x): return 2.9 + 1.3 * (abs(x) / (PL / 2)) ** 3.0
 
 def build_panokseon(name, loc, yaw, scale=1.0, sea=True, seed=1, sail_up=True, flag='flag_tri_red', hullc=0, oar_tilt=30):
     M_ = S['M']; r = rnd(seed); sh = new_ship(name, 'panok', PL, 9.0, loc, yaw, scale, sea=sea); sh['seed'] = seed; ride = sh['ride']
-    hm = M_['hull'] if hullc == 0 else M_['hull_dk']
+    hm = M_['hull_k'] if hullc == 0 else M_['hull_k2']
     loft(sh, name, PL, p_b, p_zd, [(0.0, -1.3), (0.5, -1.25), (0.88, -0.7), (1.0, 0.1), (1.0, 1.5), (1.04, ('d', 0.0))], hm, 28, M_['deck'])
     mb = MB(); X0, X1 = -11.5, 9.5; zc0, zc1 = 2.95, 4.75; zroof = zc1
     for sg in (-1, 1):                                                          # casemate walls: side planks with gun ports
         pts = [(X0 + (X1 - X0) * i / 24) for i in range(25)]
         for i in range(24):
             xa, xb = pts[i], pts[i + 1]; ya, yb = sg * (p_b(xa) * 1.0 + 0.0), sg * (p_b(xb) * 1.0)
-            mb.oface([Vector((xa, ya, zc0)), Vector((xb, yb, zc0)), Vector((xb, yb, zc1)), Vector((xa, ya, zc1))], M_['plank'], [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((0, sg, 0)))
+            mb.oface([Vector((xa, ya, zc0)), Vector((xb, yb, zc0)), Vector((xb, yb, zc1)), Vector((xa, ya, zc1))], M_['plank_k'], [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((0, sg, 0)))
         for gi in range(5):
             gx = -8.0 + 4.0 * gi; b = p_b(gx) + 0.02
             mb.oface([Vector((gx - 0.55, sg * b, 3.45)), Vector((gx + 0.55, sg * b, 3.45)), Vector((gx + 0.55, sg * b, 4.3)), Vector((gx - 0.55, sg * b, 4.3))], M_['port_dark'], [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((0, sg, 0)))
             for (dx, dz, w_, h_) in ((-0.6, 3.87, 0.1, 0.95), (0.6, 3.87, 0.1, 0.95), (0, 4.33, 1.3, 0.1), (0, 3.42, 1.3, 0.1)): cbox(mb, (gx + dx, sg * (b + 0.04), dz), w_ / 2 + 0.02, 0.06, h_ / 2, M_['red_d'])
             sh['guns'].append(dict(local=Vector((gx, sg * (b + 0.7), 3.9)), dir=Vector((0, sg, 0.1)).normalized(), name='%s_g%d%s' % (name, gi, 'p' if sg > 0 else 's')))
-    for (xe, sg_) in ((X0, -1), (X1, 1)): mb.oface([Vector((xe, -p_b(xe), zc0)), Vector((xe, p_b(xe), zc0)), Vector((xe, p_b(xe), zc1)), Vector((xe, -p_b(xe), zc1))], M_['plank'], [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((sg_, 0, 0)))
+    for (xe, sg_) in ((X0, -1), (X1, 1)): mb.oface([Vector((xe, -p_b(xe), zc0)), Vector((xe, p_b(xe), zc0)), Vector((xe, p_b(xe), zc1)), Vector((xe, -p_b(xe), zc1))], M_['plank_k'], [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((sg_, 0, 0)))
+    for sg in (-1, 1):
+        for i in range(24):
+            xa, xb = X0 + (X1 - X0) * i / 24, X0 + (X1 - X0) * (i + 1) / 24; beam(mb, (xa, sg * (p_b(xa) + 0.12), zc1 + 0.12), (xb, sg * (p_b(xb) + 0.12), zc1 + 0.12), 0.34, 0.34, M_['dancheong'])
     mk(mb, name + '_case', ride)
     mb = MB(); quad_grid(mb, lambda i, j: Vector((X0 - 0.3 + (X1 - X0 + 0.6) * i / 10, (-1 + 2 * j / 4) * (p_b(X0 - 0.3 + (X1 - X0 + 0.6) * i / 10) + 0.18), zroof + 0.05)), 10, 4, M_['deck'], orient=lambda c: Vector((0, 0, 1)))   # flat top deck
-    for sg in (-1, 1): railing(mb, (X0, sg * (p_b(X0) + 0.1), zroof), (X1, sg * (p_b(X1) + 0.1), zroof), 1.0, M_['wood_d'], M_['red_d'], 1.6)
-    railing(mb, (X0, -p_b(X0) - 0.1, zroof), (X0, p_b(X0) + 0.1, zroof), 1.0, M_['wood_d'], M_['red_d'], 1.6); railing(mb, (X1, -p_b(X1) - 0.1, zroof), (X1, p_b(X1) + 0.1, zroof), 1.0, M_['wood_d'], M_['red_d'], 1.6)
+    for sg in (-1, 1): railing(mb, (X0, sg * (p_b(X0) + 0.1), zroof), (X1, sg * (p_b(X1) + 0.1), zroof), 1.0, M_['green_p'], M_['red_d'], 1.6)
+    railing(mb, (X0, -p_b(X0) - 0.1, zroof), (X0, p_b(X0) + 0.1, zroof), 1.0, M_['green_p'], M_['red_d'], 1.6); railing(mb, (X1, -p_b(X1) - 0.1, zroof), (X1, p_b(X1) + 0.1, zroof), 1.0, M_['green_p'], M_['red_d'], 1.6)
     mk(mb, name + '_top', ride)
     for sg in (-1, 1):                                                          # bulwark on the bow deck + stern platform
         mb = MB(); xs = [X1 + 0.2 + i * (PL / 2 - X1 - 0.5) / 6 for i in range(7)]
         for i in range(6):
-            a, b = xs[i], xs[i + 1]; mb.oface([Vector((a, sg * p_b(a) * 1.02, p_zd(a))), Vector((b, sg * p_b(b) * 1.02, p_zd(b))), Vector((b, sg * p_b(b) * 1.02, p_zd(b) + 0.9)), Vector((a, sg * p_b(a) * 1.02, p_zd(a) + 0.9))], M_['red_d'], [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((0, sg, 0)))
+            a, b = xs[i], xs[i + 1]; mb.oface([Vector((a, sg * p_b(a) * 1.02, p_zd(a))), Vector((b, sg * p_b(b) * 1.02, p_zd(b))), Vector((b, sg * p_b(b) * 1.02, p_zd(b) + 0.9)), Vector((a, sg * p_b(a) * 1.02, p_zd(a) + 0.9))], M_['green_p'], [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((0, sg, 0)))
         mk(mb, '%s_bul%d' % (name, sg), ride)
-    # deck house (two storeys feel: plaster walls + tiled roof) on the top deck
-    mb = MB(); hx_, hy_ = 3.6, 2.5; cxh = -1.0; zb = zroof + 0.05
-    beams = [(cxh - hx_, -hy_), (cxh + hx_, -hy_), (cxh - hx_, hy_), (cxh + hx_, hy_)]
-    for (px, py) in beams: rod(mb, (px, py, zb), (px, py, zb + 2.6), 0.16, M_['red'], seg=6)
-    for sg in (-1, 1):
-        mb.oface([Vector((cxh - hx_, sg * hy_, zb)), Vector((cxh + hx_, sg * hy_, zb)), Vector((cxh + hx_, sg * hy_, zb + 2.6)), Vector((cxh - hx_, sg * hy_, zb + 2.6))], M_['plaster'], [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((0, sg, 0)))
-        for k in range(3): cbox(mb, (cxh - 2.2 + 2.2 * k, sg * (hy_ + 0.03), zb + 1.5), 0.6, 0.05, 0.55, M_['wood_d']); cbox(mb, (cxh - 2.2 + 2.2 * k, sg * (hy_ + 0.06), zb + 1.5), 0.5, 0.03, 0.45, M_['port_dark'])
-        mb.oface([Vector((cxh + sg * hx_, -hy_, zb)), Vector((cxh + sg * hx_, hy_, zb)), Vector((cxh + sg * hx_, hy_, zb + 2.6)), Vector((cxh + sg * hx_, -hy_, zb + 2.6))], M_['plaster'], [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((sg, 0, 0)))
+    # deck pavilion (hip-roofed): red pillars, green + red dancheong beams, railing, tiled roof
+    mb = MB(); hx_, hy_ = 3.8, 2.6; cxh = -1.0; zb = zroof + 0.05
+    for px in (-hx_, 0.0, hx_):
+        for py in (-hy_, hy_): rod(mb, (cxh + px, py, zb), (cxh + px, py, zb + 2.7), 0.17, M_['red'], seg=6); cbox(mb, (cxh + px, py, zb + 2.78), 0.3, 0.3, 0.1, M_['green_p'])
+    for py in (-hy_, hy_): beam(mb, (cxh - hx_ - 0.3, py, zb + 2.55), (cxh + hx_ + 0.3, py, zb + 2.55), 0.5, 0.45, M_['dancheong']); railing(mb, (cxh - hx_, py, zb), (cxh + hx_, py, zb), 0.85, M_['red'], M_['wood_d'], 2.0)
+    for px in (-hx_, hx_): beam(mb, (cxh + px, -hy_ - 0.3, zb + 2.55), (cxh + px, hy_ + 0.3, zb + 2.55), 0.5, 0.45, M_['dancheong']); railing(mb, (cxh + px, -hy_, zb), (cxh + px, hy_, zb), 0.85, M_['red'], M_['wood_d'], 2.0)
+    cbox(mb, (cxh, 0, zb + 0.02), hx_, hy_, 0.04, M_['deck'])
     hip_roof(mb, cxh, 0, zb + 2.6, hx_, hy_, 1.9, M_['tile'], M_['tile_d'], 0.4, 0.8, 12, 8); mk(mb, name + '_house', ride, smooth=False)
     sh['house_top'] = (cxh, 0, zb + 2.6 + 1.9)
     # oars
@@ -854,43 +865,50 @@ def a_b(L, Bh):
     return lambda x: Bh * math.sqrt(max(0.0, 1 - (abs(x) / (L / 2)) ** (2.5 if x > 0 else 3.4)))
 
 def build_atakebune(name, loc, yaw, scale=1.0, sea=True, seed=1, flagship=False, sail=False, towerh=1.0, banners=4, band='#a8201f', hull_hex='#1b181a', roof_dark=False, oar_tilt=28):
+    """Atakebune: brown plank hull, tall boxy wooden fighting wall with a few black / red lacquer panels, castle (yagura) of dark wood with small plaster panels, curved tiled roofs, gold ridge ends, mon nobori."""
     M_ = S['M']; r = rnd(seed); L = 26.0 + r.uniform(-2.5, 3.0); Bh = 5.0 + r.uniform(-0.4, 0.6); sh = new_ship(name, 'atake', L, 2 * Bh, loc, yaw, scale, sea=sea); ride = sh['ride']; sh['seed'] = seed
-    bf = a_b(L, Bh); black = M_['black_l']; red = M_['red_l'] if band == '#a8201f' else flat('band_' + band[1:], band, 0.3)
-    loft(sh, name, L, bf, lambda x: 2.4, [(0.0, -1.2), (0.55, -1.15), (0.9, -0.5), (1.0, 0.1), (1.0, 1.0), (1.02, 2.4)], black, 26, M_['deck'])
+    bf = a_b(L, Bh); lac = M_['black_l'] if seed % 3 else M_['red_l']; wallm = M_['wall_w']
+    loft(sh, name, L, bf, lambda x: 2.4, [(0.0, -1.2), (0.55, -1.15), (0.9, -0.5), (1.0, 0.1), (1.0, 1.0), (1.02, 2.4)], M_['hull_a'] if seed % 2 else M_['hull_dk'], 26, M_['deck'])
     mb = MB(); z0, z1 = 2.4, 5.4; zt = z1; ins = 0.55; wx0, wx1 = -L / 2 + 1.8, L / 2 - 2.2
     def wb(x): return bf(x) - ins
-    for sg in (-1, 1):                                                              # tall fighting wall: black lacquer + a red band + white loopholes
+    UV = [(0, 0), (1, 0), (1, 1), (0, 1)]
+    for sg in (-1, 1):                                                              # fighting wall: brown planks, lacquer panels now and then, loopholes
         xs = [wx0 + (wx1 - wx0) * i / 14 for i in range(15)]
         for i in range(14):
             a, b = xs[i], xs[i + 1]; ya, yb = sg * wb(a), sg * wb(b); n = Vector((0, sg, 0))
-            mb.oface([Vector((a, ya, z0)), Vector((b, yb, z0)), Vector((b, yb, z0 + 0.5)), Vector((a, ya, z0 + 0.5))], red, [(0, 0), (1, 0), (1, 1), (0, 1)], n)
-            mb.oface([Vector((a, ya, z0 + 0.5)), Vector((b, yb, z0 + 0.5)), Vector((b, yb, z1)), Vector((a, ya, z1))], black, [(0, 0), (1, 0), (1, 1), (0, 1)], n)
-            mb.oface([Vector((a, ya, z1 - 0.35)), Vector((b, yb, z1 - 0.35)), Vector((b, yb, z1)), Vector((a, ya, z1))], red, [(0, 0), (1, 0), (1, 1), (0, 1)], n)
-            xm = (a + b) / 2; ym = sg * (wb(xm) + 0.02); cbox(mb, (xm, ym, z0 + 1.85), 0.26, 0.03, 0.24, M_['port_dark'])
+            mb.oface([Vector((a, ya, z0)), Vector((b, yb, z0)), Vector((b, yb, z1)), Vector((a, ya, z1))], wallm, UV, n)
+            if i % 3 == 1:
+                ya2, yb2 = sg * (wb(a) + 0.03), sg * (wb(b) + 0.03); mb.oface([Vector((a + 0.12, ya2, z0 + 0.5)), Vector((b - 0.12, yb2, z0 + 0.5)), Vector((b - 0.12, yb2, z1 - 0.45)), Vector((a + 0.12, ya2, z1 - 0.45))], lac, UV, n)
+            xm = (a + b) / 2; ym = sg * (wb(xm) + 0.04); cbox(mb, (xm, ym, z0 + 1.85), 0.24, 0.03, 0.22, M_['port_dark'])
+        beam(mb, Vector((wx0, sg * wb(wx0), z1 - 0.1)), Vector((wx1, sg * wb(wx1), z1 - 0.1)), 0.22, 0.28, M_['wood_d'])
     for sx_ in (wx0, wx1):
-        sgx = -1 if sx_ == wx0 else 1; yy_ = wb(sx_)
-        mb.oface([Vector((sx_, -yy_, z0)), Vector((sx_, yy_, z0)), Vector((sx_, yy_, z1)), Vector((sx_, -yy_, z1))], black, [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((sgx, 0, 0)))
+        sgx = -1 if sx_ == wx0 else 1; yy_ = wb(sx_); mb.oface([Vector((sx_, -yy_, z0)), Vector((sx_, yy_, z0)), Vector((sx_, yy_, z1)), Vector((sx_, -yy_, z1))], wallm, UV, Vector((sgx, 0, 0)))
     mk(mb, name + '_wall', ride)
     mb = MB(); quad_grid(mb, lambda i, j: Vector((wx0 + (wx1 - wx0) * i / 8, (-1 + 2 * j / 4) * wb(wx0 + (wx1 - wx0) * i / 8), zt + 0.04)), 8, 4, M_['deck'], orient=lambda c: Vector((0, 0, 1)))   # upper deck
     for sg in (-1, 1): railing(mb, (wx0, sg * wb(wx0), zt), (wx1, sg * wb(wx1), zt), 0.95, M_['wood_d'], M_['wood_d'], 1.5)
     railing(mb, (wx1, -wb(wx1), zt), (wx1, wb(wx1), zt), 0.95, M_['wood_d'], M_['wood_d'], 1.5)
-    # castle tower on the aft deck
-    tx0 = wx0 + 0.6; tw = 6.4; td = 2 * (wb(tx0 + 3)) * 0.78; tz0 = zt; tz1 = zt + 3.0 * towerh; tcx = tx0 + tw / 2
-    obox(mb, (tcx, 0, (tz0 + tz1) / 2), (1, 0, 0), (0, 1, 0), (0, 0, 1), tw / 2, td / 2, (tz1 - tz0) / 2, black); cbox(mb, (tcx, 0, tz0 + 0.3), tw / 2 + 0.05, td / 2 + 0.05, 0.3, red)
+    # castle (yagura): two boxy dark-wood storeys, a tiled skirt roof, a tiled hip roof, gold ridge ends
+    tx0 = wx0 + 0.6; tw = 6.4; td = 2 * (wb(tx0 + 3)) * 0.78; tz0 = zt; tz1 = zt + 3.2 * towerh; tcx = tx0 + tw / 2; tdk = M_['tile_d'] if roof_dark else M_['tile']
+    cbox(mb, (tcx, 0, (tz0 + tz1) / 2), tw / 2, td / 2, (tz1 - tz0) / 2, wallm)
+    for px in (-tw / 2, tw / 2):
+        for py in (-td / 2, td / 2): rod(mb, (tcx + px, py, tz0), (tcx + px, py, tz1), 0.15, M_['wood_d'], seg=5)
     for sg in (-1, 1):
-        for k in range(3): cbox(mb, (tcx - 2.0 + 2.0 * k, sg * (td / 2 + 0.03), (tz0 + tz1) / 2 + 0.2), 0.45, 0.04, 0.4, M_['port_dark'])
+        for k in range(3):
+            xk = tcx - 2.0 + 2.0 * k; cbox(mb, (xk, sg * (td / 2 + 0.03), (tz0 + tz1) / 2 + 0.3), 0.42, 0.04, 0.38, M_['port_dark'])
+            if (k + seed) % 2 == 0: cbox(mb, (xk, sg * (td / 2 + 0.03), tz0 + 0.75), 0.5, 0.03, 0.22, M_['plaster'])          # small plaster panel under the window
     cbox(mb, (tcx + tw / 2 + 0.03, 0, (tz0 + tz1) / 2), 0.04, 0.9, 1.1, M_['port_dark'])
-    z2 = tz1 + 2.2 * towerh; tw2, td2 = tw * 0.72, td * 0.72
-    cbox(mb, (tcx, 0, (tz1 + z2) / 2), tw2 / 2, td2 / 2, (z2 - tz1) / 2, M_['plaster']); cbox(mb, (tcx, 0, tz1 + 0.14), tw / 2 + 0.2, td / 2 + 0.2, 0.14, red)
+    hip_roof(mb, tcx, 0, tz1, tw / 2 + 0.1, td / 2 + 0.05, 1.0, tdk, M_['tile_d'], 0.45, 0.8, 12, 8)
+    zb2 = tz1 + 0.75; z2 = zb2 + 1.9 * towerh; tw2, td2 = tw * 0.66, td * 0.68
+    cbox(mb, (tcx, 0, (zb2 + z2) / 2), tw2 / 2, td2 / 2, (z2 - zb2) / 2, wallm)
+    for px in (-tw2 / 2, tw2 / 2):
+        for py in (-td2 / 2, td2 / 2): rod(mb, (tcx + px, py, zb2), (tcx + px, py, z2), 0.13, M_['wood_d'], seg=5)
     for sg in (-1, 1):
-        for k in range(3): cbox(mb, (tcx - 1.5 + 1.5 * k, sg * (td2 / 2 + 0.03), (tz1 + z2) / 2), 0.38, 0.04, 0.4, M_['port_dark'])
-    cbox(mb, (tcx + tw2 / 2 + 0.03, 0, (tz1 + z2) / 2), 0.04, 0.75, 0.45, M_['port_dark'])
-    rl = hip_roof(mb, tcx, 0, z2, tw2 / 2, td2 / 2, 1.8, M_['tile_d'] if roof_dark else M_['tile'], M_['tile_d'], 0.5, 0.7, 12, 8)
-    cone(mb, (tcx + rl, 0, z2 + 1.9), (tcx + rl + 0.45, 0, z2 + 2.5), 0.2, M_['gold'], 5); cone(mb, (tcx - rl, 0, z2 + 1.9), (tcx - rl - 0.45, 0, z2 + 2.5), 0.2, M_['gold'], 5)
+        for k in range(2): cbox(mb, (tcx - 0.9 + 1.8 * k, sg * (td2 / 2 + 0.03), (zb2 + z2) / 2), 0.4, 0.04, 0.4, M_['port_dark'])
+    cbox(mb, (tcx + tw2 / 2 + 0.03, 0, (zb2 + z2) / 2), 0.04, 0.7, 0.45, M_['port_dark'])
+    rl = hip_roof(mb, tcx, 0, z2, tw2 / 2, td2 / 2, 1.9, tdk, M_['tile_d'], 0.65, 0.8, 12, 8)
+    for sx in (-1, 1): cone(mb, (tcx + sx * (rl + 0.1), 0, z2 + 1.95), (tcx + sx * (rl + 0.55), 0, z2 + 2.75), 0.22, M_['gold'], 5)
     sh['tower_top'] = Vector((tcx, 0, z2 + 1.9)); sh['deck_z'] = zt + 0.04; sh['deck_x'] = (tx0 + tw + 0.5, wx1 - 0.5)
-    if flagship:                                                                        # stage props: drum, weapon rack, camp stool
-        taiko(mb, (wx1 - 2.0, -3.0, zt + 0.04), M_); weapon_rack(mb, (wx1 - 1.5, 3.2, zt + 0.04), M_, 6)
-        beam(mb, (wx1 - 6.8, -1.5, zt + 0.5), (wx1 - 6.8, 1.5, zt + 0.5), 0.5, 0.5, M_['wood_l']) if False else None
+    if flagship: taiko(mb, (wx1 - 2.0, -3.0, zt + 0.04), M_); weapon_rack(mb, (wx1 - 1.5, 3.2, zt + 0.04), M_, 6)
     mk(mb, name + '_upper', ride)
     if name == 'j_board':                                                              # boarding ladder hooked over the rail, hanging out toward the turtle ship
         xl = sh['deck_x'][0] + 6.4; mb = MB(); yr = wb(xl); zr = zt + 0.95
@@ -899,40 +917,41 @@ def build_atakebune(name, loc, yaw, scale=1.0, sea=True, seed=1, flagship=False,
         for k in range(1, 9):
             t = k / 9.0; p = Vector((xl, yr + 0.15 + 1.35 * t, zr - 4.2 * t)); rod(mb, p + Vector((-0.4, 0, 0)), p + Vector((0.4, 0, 0)), 0.045, M_['wood_d'], seg=5)
         mk(mb, name + '_ladder', ride)
-    # banners (white nobori on poles at the deck corners) and the wake
     bpos = [(wx1 - 0.3, -wb(wx1) + 0.5), (wx1 - 0.3, wb(wx1) - 0.5), (tx0 + 0.1, -wb(tx0) + 0.5), (tx0 + 0.1, wb(tx0) - 0.5), (wx1 - 5.0, -wb(wx1 - 5.0) + 0.4), (wx1 - 5.0, wb(wx1 - 5.0) - 0.4)][:banners]
-    for bi, (bx_, by_) in enumerate(bpos): flag_obj(sh, 'flag_white_r' if (bi + seed) % 2 else 'flag_white_k', (bx_, by_, zt), 6.0 + r.uniform(0, 1.4), 1.0, name='%s_nobori%d' % (name, bi), vertical=True, ph=bi + seed)
-    flag_obj(sh, 'flag_tri_black', (tcx, 0, z2 + 2.5), 1.6, 2.2, 0.15, name=name + '_topflag', ph=seed)
+    mons = ['flag_nob_circle', 'flag_nob_diamond', 'flag_nob_rcircle']
+    for bi, (bx_, by_) in enumerate(bpos): flag_obj(sh, 'flag_nob_circle' if flagship else mons[(bi + seed) % 3], (bx_, by_, zt), 6.0 + r.uniform(0, 1.4), 1.0, name='%s_nobori%d' % (name, bi), vertical=True, ph=bi + seed)
+    flag_obj(sh, 'flag_tri_black', (tcx, 0, z2 + 2.75), 1.6, 2.2, 0.15, name=name + '_topflag', ph=seed)
     mx = L / 2 - 4.0
     if not flagship: mb = MB(); rod(mb, (mx, 0, zt), (mx, 0, zt + 10.0), 0.22, M_['wood_l'], seg=8, r1=0.14); beam(mb, (mx, -3.6, zt + 8.8), (mx, 3.6, zt + 8.8), 0.14, 0.14, M_['wood_l']); mk(mb, name + '_mast', ride); sh['masts'].append((mx, zt, 10.0))
     if sail and not flagship:
-        mb = MB(); sail_cloth(mb, (mx - 0.3, 0, zt + 8.7), 7.2, 6.8, 1.0, M_['cloth_w'], 8, 8); mk(mb, name + '_sail', ride, smooth=True)
+        mb = MB(); sail_cloth(mb, (mx - 0.3, 0, zt + 8.7), 7.2, 6.8, 1.0, M_['sail_c'], 8, 8); mk(mb, name + '_sail', ride, smooth=True)
     ox = [-5.0 + 2.5 * i for i in range(7)]; oar_set(sh, ox, [bf(x) + 0.05 for x in ox], 1.3, length_out=6.2, dip=sea, stroke=sea, tilt_deg=oar_tilt, stow=not sea)
     if sea: wake_foam(sh, True, True)
     return sh
 
-def build_sekibune(name, loc, yaw, scale=1.0, sea=True, seed=1, sail=False, shield=0, banner='flag_white_r', oar_tilt=25):
+def build_sekibune(name, loc, yaw, scale=1.0, sea=True, seed=1, sail=False, shield=0, banner='flag_nob_circle', oar_tilt=25):
+    """Sekibune: slender brown plank hull, shield boards (tate) of planks and lacquer, a small dark-wood cabin with a tiled roof, mon nobori, optional square cloth sail."""
     M_ = S['M']; r = rnd(seed); L = 15.0 + r.uniform(-1.5, 2.0); Bh = 1.9 + r.uniform(-0.15, 0.25); sh = new_ship(name, 'seki', L, 2 * Bh, loc, yaw, scale, sea=sea); ride = sh['ride']; sh['seed'] = seed
-    bf = lambda x: Bh * math.sqrt(max(0.0, 1 - (abs(x) / (L / 2)) ** 2.6)) ** 1.0
-    zd = lambda x: 1.5 + 0.7 * (abs(x) / (L / 2)) ** 3
-    hm = M_['hull_dk'] if seed % 2 else M_['hull']
-    loft(sh, name, L, bf, zd, [(0.0, -0.9), (0.5, -0.85), (0.9, -0.3), (1.0, 0.1), (1.0, ('d', -0.2)), (1.04, ('d', 0.0))], hm, 20, M_['deck'])
-    mb = MB(); pan = [M_['black_l'], M_['white_p'], M_['red_l']][shield % 3]; pan2 = M_['black_l'] if shield % 3 else M_['white_p']
-    for sg in (-1, 1):                                                              # shield boards (tate) along the gunwale
+    bf = lambda x: Bh * math.sqrt(max(0.0, 1 - (abs(x) / (L / 2)) ** 2.6)); zd = lambda x: 1.5 + 0.7 * (abs(x) / (L / 2)) ** 3
+    loft(sh, name, L, bf, zd, [(0.0, -0.9), (0.5, -0.85), (0.9, -0.3), (1.0, 0.1), (1.0, ('d', -0.2)), (1.04, ('d', 0.0))], M_['hull_a'] if seed % 2 else M_['hull_dk'], 20, M_['deck'])
+    mb = MB(); lacs = [M_['black_l'], M_['red_l'], M_['plank']][shield % 3]
+    for sg in (-1, 1):
         n = 9
         for i in range(n):
             a, b = -L / 2 + 2.2 + (L - 4.4) * i / n, -L / 2 + 2.2 + (L - 4.4) * (i + 0.9) / n; ya, yb = sg * (bf(a) * 1.0), sg * (bf(b) * 1.0)
-            mb.oface([Vector((a, ya, zd(a))), Vector((b, yb, zd(b))), Vector((b, yb, zd(b) + 1.2)), Vector((a, ya, zd(a) + 1.2))], pan if i % 2 == 0 else pan2, [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((0, sg, 0)))
-    cx_ = L / 2 - 4.2; cbox(mb, (cx_, 0, zd(cx_) + 1.0), 2.0, Bh * 0.78, 1.0, M_['black_l']); cbox(mb, (cx_, 0, zd(cx_) + 2.05), 2.2, Bh * 0.85, 0.08, M_['red_l']); cbox(mb, (cx_ + 2.02, 0, zd(cx_) + 1.0), 0.03, 0.5, 0.35, M_['port_dark'])
+            mb.oface([Vector((a, ya, zd(a))), Vector((b, yb, zd(b))), Vector((b, yb, zd(b) + 1.2)), Vector((a, ya, zd(a) + 1.2))], lacs if i % 3 == 1 else M_['wall_w'], [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((0, sg, 0)))
+    cx_ = L / 2 - 4.2; cbox(mb, (cx_, 0, zd(cx_) + 1.0), 2.0, Bh * 0.78, 1.0, M_['wall_w']); cbox(mb, (cx_ + 2.02, 0, zd(cx_) + 1.0), 0.03, 0.5, 0.35, M_['port_dark'])
+    hip_roof(mb, cx_, 0, zd(cx_) + 2.0, 2.0, Bh * 0.78, 0.9, M_['tile_d'], M_['tile_d'], 0.3, 0.5, 8, 6)
     mk(mb, name + '_fit', ride)
     ox = [-4.8 + 2.0 * i for i in range(6)]; oar_set(sh, ox, [bf(x) + 0.04 for x in ox], 1.2, length_out=5.2, dip=sea, stroke=sea, tilt_deg=oar_tilt, stow=not sea)
     flag_obj(sh, banner, (-L / 2 + 1.4, 0, zd(-L / 2 + 1.4)), 5.0 + r.uniform(0, 1.2), 0.9, name=name + '_nobori', vertical=True, ph=seed)
     if sail:
         mx = 1.0; mb = MB(); rod(mb, (mx, 0, zd(mx)), (mx, 0, zd(mx) + 7.5), 0.16, M_['wood_l'], seg=6, r1=0.1); beam(mb, (mx, -2.6, zd(mx) + 6.8), (mx, 2.6, zd(mx) + 6.8), 0.1, 0.1, M_['wood_l']); mk(mb, name + '_mast', ride)
-        mb = MB(); sail_cloth(mb, (mx - 0.2, 0, zd(mx) + 6.7), 5.0, 4.6, 0.8, M_['cloth_w'], 6, 6); mk(mb, name + '_sail', ride, smooth=True)
+        mb = MB(); sail_cloth(mb, (mx - 0.2, 0, zd(mx) + 6.7), 5.0, 4.6, 0.8, M_['sail_c'], 6, 6); mk(mb, name + '_sail', ride, smooth=True)
     flag_obj(sh, 'flag_tri_black' if seed % 3 else 'flag_tri_yellow', (L / 2 - 0.7, 0, zd(L / 2 - 0.7)), 2.2, 1.4, 0.1, name=name + '_bow', ph=seed)
-    if sea: wake_foam(sh, False, sh['L'] > 15.0 and seed % 2 == 0)
+    if sea: wake_foam(sh, False, False)
     return sh
+
 
 # ============================================================================= YARD (Joseon naval yard, Yeosu): constants and ship-to-world map
 Z_LAND = 2.2; Z_Q = 2.25; Y_SH = -3.5; THETA = math.radians(7.0); WY0 = -1.5; WZ0 = 2.56; CELL = 3.5
@@ -1249,10 +1268,10 @@ def build_sea(preset):
     slots = fleet_slots(rs); S['jap'] = []
     seeds = rnd(77)
     for i, nm in enumerate(JAP_ATAKE):
-        x, y = slots[nm]; sh = build_atakebune(nm, (x, y, 0.0), 0.0 + rs.uniform(-3, 3), scale=rs.uniform(0.92, 1.1) if i else 1.08, sea=True, seed=10 + i, flagship=(nm == 'jflag'), sail=(i % 3 == 1), towerh=rs.uniform(0.85, 1.25) if i else 1.15,
+        x, y = slots[nm]; sh = build_atakebune(nm, (x, y, 0.0), 0.0 + rs.uniform(-3, 3), scale=rs.uniform(0.92, 1.1) if i else 1.08, sea=True, seed=10 + i, flagship=(nm == 'jflag'), sail=(i % 2 == 1), towerh=rs.uniform(0.85, 1.25) if i else 1.15,
                                             banners=4 if i == 0 else rs.choice([2, 3, 4, 6]), band=['#a8201f', '#a8201f', '#7a1a1a', '#b03a1c'][i % 4], roof_dark=(i % 2 == 1)); S['jap'].append(sh)
     for i in range(1, 19):
-        nm = 's%02d' % i; x, y = slots[nm]; sh = build_sekibune(nm, (x, y, 0.0), rs.uniform(-6, 6), scale=rs.uniform(0.9, 1.12), sea=True, seed=40 + i, sail=(i % 3 == 0), shield=i, banner='flag_white_r' if i % 2 else 'flag_white_k'); S['jap'].append(sh)
+        nm = 's%02d' % i; x, y = slots[nm]; sh = build_sekibune(nm, (x, y, 0.0), rs.uniform(-6, 6), scale=rs.uniform(0.9, 1.12), sea=True, seed=40 + i, sail=(i % 2 == 0), shield=i, banner=['flag_nob_circle', 'flag_nob_diamond', 'flag_nob_rcircle'][i % 3]); S['jap'].append(sh)
     # Korean ships: fleeing line ahead of the Japanese (k = 0) and the U slots (k = 1)
     flee = [(120.0, 8.0), (150.0, -32.0), (172.0, 40.0), (200.0, -6.0), (96.0, -58.0), (136.0, 68.0), (226.0, 30.0), (214.0, -50.0)]; us = u_slots(8)
     sh = build_turtle('turtle', (flee[0][0], flee[0][1], 0.0), 0.0, sea=True, sail=False); sh['p0'] = (flee[0][0], flee[0][1], 0.0); sh['p1'] = (us[0][0], us[0][1], 180.0); S['kor'] = [sh]; S['turtle'] = sh
@@ -1283,16 +1302,16 @@ def beach_extras():
     S['shore_a'] = -math.pi / 2
 
 def build_plank():
-    """A wooden plank near the beach that rides the swell (driven by the same waves as the ocean mesh) for the commander card."""
+    """A wooden plank half-beached at the surf line: it lies on the wet sand in very shallow water (resting on the terrain, tilted with the slope), surf foam washing round it (foam ring driven by the swell)."""
     M_ = S['M']; mb = MB(); cbox(mb, (0, 0, 0), 2.7, 0.62, 0.11, M_['plank']); cbox(mb, (0.2, 0, 0.0), 0.08, 0.64, 0.115, M_['wood_d']); cbox(mb, (-1.3, 0, 0.0), 0.08, 0.64, 0.115, M_['wood_d'])
-    isl = S['islands']['beach']; cx, cy = isl['c']; r = S['shore_r'] if 'shore_r' in S else {}
-    h = isl['h']; a = -math.pi / 2; rr = isl['R'] * 1.5
+    isl = S['islands']['beach']; cx, cy = isl['c']; h = isl['h']; a = -math.pi / 2; rr = isl['R'] * 1.5
     while rr > 0 and h(cx + rr * math.cos(a), cy + rr * math.sin(a)) < 0.04: rr -= 0.3
     S['shore_pt'] = Vector((cx + rr * math.cos(a), cy + rr * math.sin(a), 0.0))
-    pos = S['shore_pt'] + Vector((6.0, -9.0, 0.0)); o = mk(mb, 'plank', shadow=True); o.location = (pos.x, pos.y, 0.08); o.rotation_euler = (0, 0, math.radians(18)); S['plank'] = o
-    drive(o, 'location', 2, '0.1+' + swell_expr('(%f)' % pos.x, '(%f)' % pos.y, 1.0), {}); drive(o, 'rotation_euler', 0, '0.05*sin(frame*0.12)', {}); drive(o, 'rotation_euler', 1, '0.04*sin(frame*0.1+1.0)', {})
-    mb2 = MB(); rr2 = 1.7; mb2.oface([Vector((-rr2 * 2, -rr2, 0)), Vector((rr2 * 2, -rr2, 0)), Vector((rr2 * 2, rr2, 0)), Vector((-rr2 * 2, rr2, 0))], M_['ring_f'], [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((0, 0, 1)))
-    ro = mk(mb2, 'plank_ring', o, shadow=False); ro.location = (0, 0, 0.02)
+    px, py = cx + (rr + 0.7) * math.cos(a) + 1.0, cy + (rr + 0.7) * math.sin(a); z0 = h(px, py)
+    sl = (h(px, py - 1.0) - h(px, py + 1.0)) / 2.0                       # terrain slope along y (toward the sea it falls)
+    o = mk(mb, 'plank', shadow=True); o.location = (px, py, z0 + 0.12); o.rotation_euler = (math.atan(sl) * -1.0, 0, math.radians(8)); S['plank'] = o; S['plank_z'] = z0 + 0.12 + 0.11
+    mb2 = MB(); mb2.oface([Vector((-4.6, -2.4, 0)), Vector((4.6, -2.4, 0)), Vector((4.6, 2.4, 0)), Vector((-4.6, 2.4, 0))], M_['ring_f'], [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((0, 0, 1)))
+    ro = mk(mb2, 'plank_ring', shadow=False); ro.location = (px, py, 0.12); drive(ro, 'location', 2, '0.14+' + swell_expr('(%f)' % px, '(%f)' % py, 0.8), {})
 
 def _sea_marks():
     mk_ = S['marks']; par = S['parented'] = {}; shs = S['ships']
@@ -1303,7 +1322,7 @@ def _sea_marks():
     jb = shs['j_board']; z = jb['deck_z']; xb3 = jb['deck_x'][1]
     for nm, lp in (('soldier_board_a', (jb['deck_x'][0] + 5.4, 3.55, z)), ('soldier_board_b', (jb['deck_x'][0] + 7.4, 3.75, z)), ('soldier_board_c', (jb['deck_x'][0] + 3.6, 3.4, z))): par[nm] = ('j_board', lp)
     for nm, (sn, lp) in par.items(): mk_[nm] = tuple(round(c, 3) for c in L2W(sn, lp))
-    sp = S['shore_pt']; mk_['commander_plank'] = (S['plank'].location.x, S['plank'].location.y, 0.08 + 0.11); mk_['commander_sand'] = tuple(round(c, 3) for c in (sp.x - 0.5, sp.y + 4.5, S['islands']['beach']['h'](sp.x - 0.5, sp.y + 4.5)))
+    sp = S['shore_pt']; mk_['commander_plank'] = (S['plank'].location.x, S['plank'].location.y, S['plank_z']); mk_['commander_sand'] = tuple(round(c, 3) for c in (sp.x - 0.5, sp.y + 4.5, S['islands']['beach']['h'](sp.x - 0.5, sp.y + 4.5)))
     mk_['commander_crawl_a'] = tuple(round(c, 3) for c in (sp.x + 1.0, sp.y + 7.5, S['islands']['beach']['h'](sp.x + 1.0, sp.y + 7.5)))
     for k in ('turtle',): par['turtle_deck'] = ('turtle', (0.0, 0.0, roof_z(0, 0) + 0.1))
 
@@ -1494,7 +1513,7 @@ def sea_cams():
         reveal_top=dict(loc=(-22.0, -250.0, 185.0), look_at=(-22.0, 2.0, -5.0), lens=22),
         aftermath=dict(loc=(150.0, -16.0, 6.5), look_at=(55.0, 0.0, 7.0), lens=24),
         shore=dict(loc=(sp.x + 14.0, sp.y - 34.0, 7.5), look_at=(sp.x + 2.0, sp.y + 3.0, 2.0), lens=24),
-        macro_oar=dict(loc=(SOLO_AT[0] + 1.25 + 3.2, SOLO_AT[1] + 10.3 + 3.4, 0.5), look_at=(SOLO_AT[0] + 1.25, SOLO_AT[1] + 10.3 - 0.2, 0.0), lens=55, fstop=2.8))
+        macro_oar=dict(loc=(SOLO_AT[0] + 1.25 + 3.4, SOLO_AT[1] + 10.3 + 3.0, 1.3), look_at=(SOLO_AT[0] + 1.05, SOLO_AT[1] + 10.3 - 1.0, -0.35), lens=40, fstop=2.8))
 
 PRESETS = dict(
     roof_low=dict(loc='yard', cam='roof_low', state='sp2'), bow=dict(loc='yard', cam='bow', state='sp3,ds1'), yard_wide=dict(loc='yard', cam='yard_wide', state='sp3'), roof_top=dict(loc='yard', cam='roof_top', state='sp1'),
@@ -1502,7 +1521,7 @@ PRESETS = dict(
     fleet_wide=dict(loc='sea', cam='fleet_wide', state=''), flag_deck=dict(loc='sea', cam='flag_deck', state=''), flag_deck_b=dict(loc='sea', cam='flag_deck_b', state=''), flag_deck_crew=dict(loc='sea', cam='flag_deck_crew', state=''),
     hansan_high=dict(loc='sea', cam='hansan_high', state=''), flag_bow=dict(loc='sea', cam='flag_bow', state=''), chase=dict(loc='sea', cam='chase', state='s0'),
     board=dict(loc='sea', cam='board', state='sp3,special:board'), reveal_top=dict(loc='sea', cam='reveal_top', state='k1,cs1,dm0.35,sp3,pt1,ds1'),
-    aftermath=dict(loc='sea', cam='aftermath', state='k1,dm1,cs0.35,sp3,pt1'), shore=dict(loc='sea', cam='shore', state=''), macro_oar=dict(loc='sea', cam='macro_oar', state='special:solo,os0.4'))
+    aftermath=dict(loc='sea', cam='aftermath', state='k1,dm1,cs0.35,sp3,pt1'), shore=dict(loc='sea', cam='shore', state=''), macro_oar=dict(loc='sea', cam='macro_oar', state='special:solo,os0.4', samples=14))
 LOC_PRESETS = dict(yard=[k for k, v in PRESETS.items() if v['loc'] == 'yard'], sea=[k for k, v in PRESETS.items() if v['loc'] == 'sea'])
 CAM_NOTES = dict(
     roof_low='yard: low 3/4 from the east quay at the stern quarter: the turtle ship on its cradles, roof edge workers, Yi in the foreground on the quay (push in)',
@@ -1525,7 +1544,7 @@ STAGING = dict(
     fleet_wide=[], flag_deck=[('commander', 'commander_deck'), ('soldier', 'soldier_deck_a'), ('soldier_b', 'soldier_deck_b')], flag_deck_b=[('commander', 'commander_deck')],
     flag_deck_crew=[('soldier', 'soldier_deck_a'), ('soldier_b', 'soldier_deck_b'), ('soldier', 'soldier_deck_c'), ('soldier_b', 'soldier_deck_d')], hansan_high=[], flag_bow=[('commander', 'commander_bow')],
     chase=[('soldier', 'soldier_chase_a'), ('soldier_b', 'soldier_chase_b'), ('soldier', 'soldier_chase_c')], board=[('soldier', 'soldier_board_a'), ('soldier_b', 'soldier_board_b'), ('soldier', 'soldier_board_c')],
-    reveal_top=[], aftermath=[], shore=[('commander', 'commander_plank'), ('commander', 'commander_sand')], macro_oar=[])
+    reveal_top=[], aftermath=[], shore=[('commander', 'commander_sand')], macro_oar=[])
 def _staging(cam): return [(role, tuple(S['marks'][mk_])) for role, mk_ in STAGING.get(cam, []) if mk_ in S['marks']]
 
 def stage_placeholders(A, cam_name, cam_loc):
@@ -1564,7 +1583,7 @@ def build(location=None, preset=None, light=None):
     make_haze(0.0007 if loc == 'yard' else 0.0009, (0, 0, 60), (1500, 1500, 260))
     if loc == 'yard': build_yard(preset)
     else: build_sea(preset)
-    S['exposure'] = 0.55; setup_render(sc, 'final'); apply_state(PRESETS[preset].get('state', ''))
+    S['exposure'] = 0.55; S['samples'] = PRESETS[preset].get('samples', 24); setup_render(sc, 'final'); apply_state(PRESETS[preset].get('state', ''))
     if loc == 'yard': _yard_marks(); S['cams'] = yard_cams()
     else: _sea_marks(); S['cams'] = sea_cams()
     cam = S['cams'][PRESETS[preset]['cam']]; elev = 15.0 if loc == 'sea' else 17.0; az, el = sun_for_camera(cam, elev); set_sun(az, el); S['sun_elev'] = el
@@ -1574,7 +1593,7 @@ def apply_state(state):
     """CLI / preset state tokens (comma separated): sp<k> spikes rows, pt<k> ports, ds<level> dragon smoke, s<sec> fleet chase, k<turn> korean turn, cs<level> cannon smoke, dm<k> damage, special:board|solo."""
     sc = bpy.context.scene; f0 = 40; sc.frame_set(f0)
     for tok in [t for t in (state or '').split(',') if t]:
-        if tok.startswith('special:'): set_special(tok[8:])
+        if tok.startswith('special'): set_special(tok[8:])
         elif tok.startswith('os'): set_oar_splash(float(tok[2:]))
         elif tok.startswith('sp'): set_spikes(float(tok[2:]))
         elif tok.startswith('pt'): set_ports(float(tok[2:]))

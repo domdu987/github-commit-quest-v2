@@ -7,7 +7,7 @@ for p in (os.path.join(PROJ, 'v3', 'set3d9'), os.path.join(PROJ, 'v3', 'set3d8')
     if p not in sys.path: sys.path.insert(0, p)
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
-TEX = os.path.join(HERE, 'tex_joseon'); TEX_V = 'j24.3'
+TEX = os.path.join(HERE, 'tex_joseon'); TEX_V = 'j24.4'
 
 def hexc(h):
     h = h.lstrip('#'); return np.array([int(h[i:i + 2], 16) for i in (0, 2, 4)], 'float32') / 255
@@ -84,15 +84,23 @@ def dancheong(p, out):
     im.save(out)
 
 def flag(p, out):
-    """Plain flags / banners, no text, no crest. kind: red | black | white_r (white nobori with red bands) | white_k | tri_red (alpha triangle) | tri_black | tri_blue."""
-    k = p['kind']; W, H = (96, 320) if k.startswith('white') else (256, 160); alpha = None
-    cols = dict(red='#c4202a', black='#1c1a1c', white_r='#f4f0e4', white_k='#f4f0e4', tri_red='#c4202a', tri_black='#201e22', tri_blue='#2850a0', tri_yellow='#e0b030')
+    """Plain flags / banners, no text. kind: red | black | white_r | white_k | tri_* | nob_circle / nob_diamond / nob_rcircle (cream nobori with a plain mon shape) | sail (cloth seams)."""
+    k = p['kind']; W, H = (96, 320) if (k.startswith('white') or k.startswith('nob')) else (256, 160) if k != 'sail' else (256, 256)
+    cols = dict(red='#c4202a', black='#1c1a1c', white_r='#f4f0e4', white_k='#f4f0e4', tri_red='#c4202a', tri_black='#201e22', tri_blue='#2850a0', tri_yellow='#e0b030', nob_circle='#efe6d0', nob_diamond='#efe6d0', nob_rcircle='#efe6d0', sail='#ebe2cc')
     im = Image.new('RGBA', (W, H), cols[k] + 'ff'); d = ImageDraw.Draw(im)
     if k == 'white_r': d.rectangle([0, 0, W, 26], fill='#c4202a'); d.rectangle([0, H - 40, W, H - 14], fill='#c4202a'); d.rectangle([0, 0, 6, H], fill='#2a2a2e')
     if k == 'white_k': d.rectangle([0, 0, W, 20], fill='#1c1a1c'); d.rectangle([0, H - 20, W, H], fill='#1c1a1c'); d.rectangle([W - 8, 0, W, H], fill='#c4202a')
+    if k.startswith('nob'):
+        d.rectangle([0, 0, 7, H], fill='#2a2420'); d.rectangle([W - 5, 0, W, H], fill='#2a2420'); cx, cy = W // 2, 118
+        if k == 'nob_circle': d.ellipse([cx - 30, cy - 30, cx + 30, cy + 30], fill='#1c1a1c')
+        elif k == 'nob_rcircle': d.ellipse([cx - 28, cy - 28, cx + 28, cy + 28], fill='#b4222a')
+        else: d.polygon([(cx, cy - 36), (cx + 30, cy), (cx, cy + 36), (cx - 30, cy)], fill='#b4222a')
     if k.startswith('tri'):
         im = Image.new('RGBA', (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im); d.polygon([(0, 0), (W, H // 2), (0, H)], fill=cols[k]); d.rectangle([0, 0, 8, H], fill='#e8dcc0')
     if k in ('red', 'black'): d.rectangle([0, 0, 10, H], fill='#e8dcc0'); d.rectangle([0, H - 12, W, H], fill='#e8dcc0' if k == 'black' else '#f0c040')
+    if k == 'sail':
+        for x in range(0, W, 32): d.line([(x, 0), (x, H)], fill='#b9ad90', width=2)
+        for y in (0, H // 3, 2 * H // 3): d.line([(0, y), (W, y)], fill='#a69a7e', width=3)
     im.save(out)
 
 def foam(p, out):
@@ -114,7 +122,7 @@ def all_jobs():
     J['stone'] = (dict(seed=9, col='#a49e90'), stone); J['stone_d'] = (dict(seed=10, col='#7c7a72', ch=40), stone)
     J['matting'] = (dict(seed=11, col='#cdb27c', bat='#6e5230'), matting); J['matting_d'] = (dict(seed=12, col='#b8996a', bat='#5a4228'), matting)
     J['dancheong'] = (dict(), dancheong)
-    for k in ('red', 'black', 'white_r', 'white_k', 'tri_red', 'tri_black', 'tri_blue', 'tri_yellow'): J['flag_' + k] = (dict(kind=k), flag)
+    for k in ('red', 'black', 'white_r', 'white_k', 'tri_red', 'tri_black', 'tri_blue', 'tri_yellow', 'nob_circle', 'nob_diamond', 'nob_rcircle', 'sail'): J['flag_' + k] = (dict(kind=k), flag)
     J['foam_wake'] = (dict(kind='wake', w=1024, h=256, seed=41, cx=24, cy=6), foam); J['foam_bow'] = (dict(kind='bow', w=512, h=128, seed=43, cx=16, cy=4), foam)
     J['foam_ring'] = (dict(kind='ring', w=256, h=256, seed=47), foam); J['foam_surf'] = (dict(kind='surf', w=1024, h=128, seed=49), foam)
     return J

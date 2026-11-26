@@ -96,12 +96,13 @@ else:
     J.clear_keys(); J.set_cannon_smoke(0.5); half = sum(1 for G in S['guns'] if not G['puffs'][0].hide_render); check('set_cannon_smoke(0.5): about half the guns fire', abs(half - ng / 2) < ng * 0.12, half)
     J.set_cannon_smoke(0.0); r = J.ship_root('jflag'); check('ship_root(name) = the ride empty (parent deck cards to it)', r.name == 'ride_jflag' and r.parent.name == 'ship_jflag')
     # sea heave + plank ride the same swell as the ocean mesh
-    pl = S['plank']; at(1); z1 = pl.matrix_world.translation.z; at(23); z2 = pl.matrix_world.translation.z; p = pl.location
-    check('plank rides the swell (frame-driven)', abs(z1 - z2) > 0.02 and abs(z2 - (J.swell_z(p.x, p.y, 23 / 30) + 0.1)) < 0.03, (round(z1, 3), round(z2, 3)))
+    pl = S['plank']; p = pl.location; hb = S['islands']['beach']['h'](p.x, p.y); at(1); zr1 = bpy.data.objects['plank_ring'].matrix_world.translation.z; at(23); zr2 = bpy.data.objects['plank_ring'].matrix_world.translation.z
+    check('plank is half-beached: resting on the sand (z - terrain 0.05..0.3) in very shallow water (terrain -0.4..0.3)', -0.4 < hb < 0.3 and 0.05 < p.z - hb < 0.3, (round(hb, 3), round(p.z, 3)))
+    check('surf foam ring round the plank rides the swell (frame-driven)', abs(zr1 - zr2) > 0.02 and abs(zr2 - (J.swell_z(p.x, p.y, 23 / 30) * 0.8 + 0.14)) < 0.03, (round(zr1, 3), round(zr2, 3)))
     oc = bpy.data.objects['ocean']
     def zs():
         dg = bpy.context.evaluated_depsgraph_get(); me = oc.evaluated_get(dg).to_mesh(); r_ = [me.vertices[i].co.z for i in (5000, 12000, 20000)]; oc.evaluated_get(dg).to_mesh_clear(); return r_
-    at(1); a_ = zs(); at(15); b_ = zs(); check('ocean swell animates with the frame (geometry nodes), gentle', max(abs(x - y) for x, y in zip(a_, b_)) > 0.02 and max(abs(x) for x in a_ + b_) < 0.6)
+    at(1); a_ = zs(); at(15); b_ = zs(); check('ocean swell animates with the frame (geometry nodes), gentle', max(abs(x - y) for x, y in zip(a_, b_)) > 0.02 and max(abs(x) for x in a_ + b_) < 0.9)
     sh = ships['jflag']; at(1); h1 = sh['ride'].matrix_world.translation.z; at(20); h2 = sh['ride'].matrix_world.translation.z
     check('ships heave with the swell (drivers at the root x, y)', abs(h1 - h2) > 0.02 and abs(h2 - J.swell_z(sh['root'].location.x, sh['root'].location.y, 20 / 30)) < 0.03, (round(h1, 3), round(h2, 3)))
     check('foam rides on the surface (driver): every Japanese ship has wake foam', all(s.get('foam') is not None for s in jap + kor))
@@ -112,9 +113,16 @@ else:
         w = S['ships'][sn]['ride'].matrix_world @ Vector(lp); h, loc, on = ray_down(w, 1.5)
         if not (h and abs(loc.z - w.z) < 0.08): bad_.append((nm, on, round(loc.z - w.z, 2) if h else None))
     check('deck anchors (ship-local, riding the ship) stand on their decks (%d)' % len(S['parented']), not bad_, bad_[:4])
-    mk_ = S['marks']; check('shore anchors: plank on the water, sand above the surf', abs(mk_['commander_plank'][2] - 0.19) < 0.3 and mk_['commander_sand'][2] > 0.2 and mk_['commander_sand'][1] > S['shore_pt'].y, (mk_['commander_plank'], mk_['commander_sand']))
+    mk_ = S['marks']; check('shore anchors: plank top just above the sand / water, sand above the surf', -0.3 < mk_['commander_plank'][2] < 0.6 and mk_['commander_sand'][2] > 0.2 and mk_['commander_sand'][1] > S['shore_pt'].y, (mk_['commander_plank'], mk_['commander_sand']))
     for nm in J.LOC_PRESETS['sea']: check('preset ' + nm, nm in A['cams'])
-    cam = J.make_camera(A['cams']['macro_oar']); check('macro_oar DOF f/2.8 55 mm', cam.data.dof.use_dof and cam.data.lens == 55)
+    cam = J.make_camera(A['cams']['macro_oar']); check('macro_oar DOF f/2.8 40 mm', cam.data.dof.use_dof and cam.data.lens == 40 and abs(cam.data.dof.aperture_fstop - 2.8) < 1e-6)
+    J.clear_keys(); J.set_oar_splash(0.0); K = S['splash']; check('set_oar_splash(0): nothing visible', all(d['ob'].hide_render for d in K['drops']) and all(r['ob'].hide_render for r in K['rings']))
+    J.set_oar_splash(0.3); n3 = sum(1 for d in K['drops'] if not d['ob'].hide_render); J.set_oar_splash(0.9); n9 = sum(1 for d in K['drops'] if not d['ob'].hide_render)
+    check('set_oar_splash: %d droplets at t 0.3, fewer / smaller at 0.9 (%d); two foam rings grow and fade' % (n3, n9), n3 >= 40 and n9 < n3 and K['rings'][0]['ob'].scale[0] > 0.3)
+    J.set_oar_splash(0.3); s3 = K['rings'][0]['ob'].scale[0]; J.set_oar_splash(0.8); check('foam ring grows with t', K['rings'][0]['ob'].scale[0] > s3)
+    J.clear_keys(); [J.set_oar_splash((f - 1) / 15.0, frame=f) for f in range(1, 17)]; at(8); n8 = sum(1 for d in K['drops'] if not d['ob'].hide_render); at(1); n1_ = sum(1 for d in K['drops'] if not d['ob'].hide_render)
+    check('set_oar_splash keyed over 15 frames (frame 1 empty, frame 8 spraying)', n1_ == 0 and n8 >= 30, (n1_, n8)); J.clear_keys(); J.set_oar_splash(0.0)
+    jb_ = ships['j_board']; check('boarding ladder hooks over the rail of j_board; deck wide enough for the crew spots', bpy.data.objects.get('j_board_ladder') is not None and ships['jflag']['deck_x'][1] - ships['jflag']['deck_x'][0] > 12.0, ships['jflag']['deck_x'])
     J.set_special('board'); t = ships['turtle']['root'].location; jb = ships['j_board']['root'].location; check("set_special('board'): j_board alongside the turtle ship (10.3 D)", abs((t - jb).length - 10.9) < 1.0, round((t - jb).length, 2))
     J.set_special('solo'); check("set_special('solo'): the turtle ship alone", abs(ships['turtle']['root'].location.x - J.SOLO_AT[0]) < 1e-6)
     J.set_special(''); J.clear_keys()
