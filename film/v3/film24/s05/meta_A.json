@@ -1,0 +1,49 @@
+{
+ "take": "s05",
+ "film": 24,
+ "shots": [
+  5,
+  6
+ ],
+ "g0": 431,
+ "g1": 644,
+ "first_g": 425,
+ "n_frames": 225,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "shot_ranges": {
+  "5": [
+   425,
+   512
+  ],
+  "6": [
+   513,
+   649
+  ]
+ },
+ "cuts_in_take": [
+  513
+ ],
+ "note": "shots 5+6 flagship jflag; lip-sync g 486..645 (16.1-21.4 s) only in shot 6",
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "render_resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "s_per_frame_wall_mean": 15.8,
+ "s_per_frame_cpu_mean": 30.7,
+ "look": "A"
+}
