@@ -1,0 +1,86 @@
+{
+ "take": "s09",
+ "film": 24,
+ "shots": [
+  "9a",
+  "9"
+ ],
+ "g0": 919,
+ "g1": 1002,
+ "first_g": 913,
+ "n_frames": 95,
+ "handle_in": 6,
+ "handle_out": 5,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "in_take_cuts": [
+  954
+ ],
+ "shot_ranges": {
+  "9": [
+   913,
+   953
+  ],
+  "19": [
+   954,
+   1007
+  ]
+ },
+ "setups": {
+  "9": {
+   "preset": "macro_oar",
+   "camera": "preset macro_oar 40 mm f/2.8 at water level, focus empty (world-fixed) at the preset look_at, one slow lateral slide 1.1 D; special 'solo'; set_oar_splash repeating every 24 frames (first dip g 922), 12 samples",
+   "state": "special solo, set_oar_splash keyed every frame"
+  },
+  "19": {
+   "preset": "hansan_high",
+   "camera": "preset hansan_high camera, pushed 8 % along its view line; DOF off",
+   "state": "Korean ships flee ahead (set_korean_turn 0), set_fleet_chase s=(g-954)/30 keyed every frame, set_special ''"
+  }
+ },
+ "events": {
+  "hard_cut": 954,
+  "splash_dips": [
+   922,
+   946
+  ]
+ },
+ "set": "v3/set3d24/joseon.py sea; runtime dressing from common.py / shot.py only",
+ "cast": "no people",
+ "mouths": "no characters",
+ "dof": "shot 9a: preset f/2.8 on the oar blade; shot 9: off",
+ "render": "R9: Cycles CPU, 24 adaptive samples (macro_oar 12), OIDN, AgX MHC, exposure 0.55, 540x960 then J.post -> 720x1280",
+ "samples": [
+  12,
+  24
+ ],
+ "resolution": [
+  720,
+  1280
+ ],
+ "render_resolution": [
+  540,
+  960
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 28.7,
+ "s_per_frame_cpu_mean": 54.2,
+ "s_per_frame_by_shot": {
+  "9": {
+   "wall": 34.0,
+   "cpu": 64.5
+  },
+  "19": {
+   "wall": 24.7,
+   "cpu": 46.4
+  }
+ },
+ "narration": "film24/audio/narration.wav at +0.10 s; captions film24/script/captions.json"
+}

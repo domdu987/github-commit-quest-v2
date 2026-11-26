@@ -1,0 +1,55 @@
+{
+ "take": "s09",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film24/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 30.733,
+   "duration": 0.5,
+   "frame": 922,
+   "end_frame": 937,
+   "kind": "foley",
+   "label": "oar splash: blade digs into the sea, spray and foam"
+  },
+  {
+   "time": 31.533,
+   "duration": 0.5,
+   "frame": 946,
+   "end_frame": 961,
+   "kind": "foley",
+   "label": "oar splash: blade digs into the sea, spray and foam"
+  },
+  {
+   "time": 30.433,
+   "duration": 1.333,
+   "frame": 913,
+   "end_frame": 953,
+   "kind": "ambience",
+   "label": "water slapping, oar creak, ship hull close"
+  },
+  {
+   "time": 31.8,
+   "duration": 0.0,
+   "frame": 954,
+   "end_frame": 954,
+   "kind": "cut",
+   "label": "HARD CUT to the high wide: sea wind, distant oars and sails"
+  },
+  {
+   "time": 31.8,
+   "duration": 1.767,
+   "frame": 954,
+   "end_frame": 1007,
+   "kind": "ambience",
+   "label": "oars and sails far below, wind"
+  },
+  {
+   "time": 33.4,
+   "duration": 0.0,
+   "frame": 1002,
+   "end_frame": 1002,
+   "kind": "cut",
+   "label": "hard cut to shot 10 (flag_bow)"
+  }
+ ]
+}

@@ -1,0 +1,30 @@
+{
+ "take": "s14",
+ "fps": 30,
+ "cues": [
+  {
+   "time": 53.567,
+   "duration": 5.333,
+   "frame": 1607,
+   "end_frame": 1767,
+   "kind": "ambience",
+   "label": "calm sea after the battle, drifting smoke, creaking timbers, distant drums fading"
+  },
+  {
+   "time": 55.0,
+   "duration": 3.0,
+   "frame": 1650,
+   "end_frame": 1740,
+   "kind": "foley",
+   "label": "ship hull creaks and groans, oars dipping; the turtle ship passes (heavy wake)"
+  },
+  {
+   "time": 58.1,
+   "duration": 0.8,
+   "frame": 1743,
+   "end_frame": 1767,
+   "kind": "accent",
+   "label": "timber cracks as the Japanese fleet breaks up ('\u0e41\u0e15\u0e01\u0e44\u0e1b\u0e01\u0e27\u0e48\u0e32\u0e04\u0e23\u0e36\u0e48\u0e07')"
+  }
+ ]
+}
