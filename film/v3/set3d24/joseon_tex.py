@@ -7,7 +7,7 @@ for p in (os.path.join(PROJ, 'v3', 'set3d9'), os.path.join(PROJ, 'v3', 'set3d8')
     if p not in sys.path: sys.path.insert(0, p)
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
-TEX = os.path.join(HERE, 'tex_joseon'); TEX_V = 'j24.5'
+TEX = os.path.join(HERE, 'tex_joseon'); TEX_V = 'j24.6'
 
 def hexc(h):
     h = h.lstrip('#'); return np.array([int(h[i:i + 2], 16) for i in (0, 2, 4)], 'float32') / 255
@@ -110,8 +110,8 @@ def foam(p, out):
     W, H = p['w'], p['h']; rs = np.random.RandomState(p['seed']); yy, xx = np.mgrid[0:H, 0:W].astype('float32'); u = xx / W; v = yy / H
     n = fbm(rs, H, W, 24, 6, 4)
     if p['kind'] == 'ring':
-        r = np.sqrt(((u - 0.5) * 2) ** 2 + ((v - 0.5) * 2) ** 2); a = np.clip(((1 - np.abs(r - 0.62) / 0.34) * 1.2 + n * 0.8 - 0.8) * 7, 0, 1) * np.clip((1 - r) * 8, 0, 1)
-        a = np.maximum(a, np.clip((n - 0.52) * 5, 0, 1) * np.clip((0.7 - r) * 4, 0, 1) * 0.55)       # thin foam and bubbles fill the centre (no donut hole)
+        r = np.sqrt(((u - 0.5) * 2) ** 2 + ((v - 0.5) * 2) ** 2); n2 = fbm(rs, H, W, 9, 9, 4); edge = 0.72 + 0.5 * (n2 - 0.5)
+        a = np.clip((edge - r) * 5, 0, 1) * (0.3 + 0.45 * np.clip((n - 0.3) * 2.4, 0, 1)); a = np.maximum(a, np.clip((n - 0.56) * 6, 0, 1) * np.clip((0.95 - r) * 4, 0, 1) * 0.6) * np.clip((1 - r) * 5, 0, 1)      # soft partly transparent foam patch, irregular edge
     else:
         a = np.clip((0.5 + 0.5 * np.sin((v * 5 + n * 2.2) * 2 * math.pi) - 0.62) * 9, 0, 1) * np.clip(n * 1.6 - 0.25, 0, 1)
     save(np.ones((H, W, 3), 'float32') * (0.93 + 0.07 * n[..., None]), out, a)

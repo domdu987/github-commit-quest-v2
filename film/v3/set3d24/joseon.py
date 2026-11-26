@@ -126,9 +126,17 @@ def flagmat(key):
     return mat('J_f_' + key, f)
 
 def smoke_mat(name, hexcol, k=1.0):
-    """Cartoon smoke billow: matte, slightly translucent-looking soft white-grey with a warm lit side (principled, rough 1)."""
-    def f(b): b.princ(hexl(hexcol), 1.0, 0.0, None, **{'Subsurface Weight': 0.15})
+    """Soft cartoon smoke: matte, partly transparent, edges fade out with the facing ratio (Layer Weight), a little self light so it never turns muddy. Overlapping lumps merge into one billow."""
+    def f(b):
+        lw = b.n('ShaderNodeLayerWeight'); lw.inputs['Blend'].default_value = 0.5; a = b.math('MULTIPLY', b.math('POWER', b.math('SUBTRACT', 1.0, lw.outputs['Facing']), 1.4), 0.62, clamp=True)
+        b.princ(hexl(hexcol), 1.0, 0.0, None, Alpha=a, **{'Emission Color': (*hexl(hexcol), 1.0), 'Emission Strength': 0.22})
     return mat('J_s_' + name, f)
+
+def cluster(mb, r, m, seed, n=4, spread=0.55):
+    """A billow = n overlapping lumps (merged soft puff)."""
+    rs = rnd(seed)
+    for k in range(n):
+        o = Vector((rs.uniform(-1, 1), rs.uniform(-1, 1), rs.uniform(-0.6, 0.8))) * r * spread; lump(mb, o, r * rs.uniform(0.55, 0.85), m, seed * 7 + k, seg=8, rings=5, rough=0.18)
 
 def tx_sync(): S['tx'] = JX.ensure(verbose=False)
 
@@ -295,7 +303,7 @@ def make_camera(setup, name='cam', scene=None):
     scene.camera = ob; return ob
 
 # ============================================================================= swell (shared by the ocean mesh and the ship / plank drivers)
-SWELL = [(0.34, 34.0, 20.0, 0.9), (0.20, 21.0, 75.0, 1.2), (0.11, 13.0, -35.0, 1.6)]       # A, wavelength, direction deg, angular speed
+SWELL = [(0.30, 41.0, 20.0, 0.85), (0.17, 27.0, 75.0, 1.1), (0.11, 17.3, -35.0, 1.5), (0.07, 11.7, 128.0, 1.8), (0.05, 9.9, -95.0, 2.1)]       # A, wavelength, direction deg, angular speed
 CHOP = [(0.03, 7.3, 52.0, 2.2), (0.02, 4.9, -67.0, 2.8)]
 def swell_z(x, y, t):
     z = 0.0
@@ -304,7 +312,15 @@ def swell_z(x, y, t):
 def swell_expr(xs='x', ys='y', amp=1.0):
     parts = []
     for A, lam, ang, spd in SWELL:
-        k = 2 * math.pi / lam; parts.append('%.4f*sin(%.5f*%s+%.5f*%s-%.4f*frame/%d)' % (A * amp, k * math.cos(math.radians(ang)), xs, k * math.sin(math.radians(ang)), ys, spd, FPS))
+        k = 2 * math.pi / lam; parts.append('%.3f*sin(%.5f*%s+%.5f*%s-%.5f*frame)' % (A * amp, k * math.cos(math.radians(ang)), xs, k * math.sin(math.radians(ang)), ys, spd / FPS))
+    e = '+'.join(parts); assert len(e) < 235, len(e)
+    return e
+
+def swell_expr_at(x0, y0, amp=1.0):
+    """The swell at a fixed world point (x0, y0): a function of the frame only (short driver expression)."""
+    parts = []
+    for A, lam, ang, spd in SWELL:
+        k = 2 * math.pi / lam; parts.append('%.3f*sin(%.4f-%.5f*frame)' % (A * amp, k * (x0 * math.cos(math.radians(ang)) + y0 * math.sin(math.radians(ang))), spd / FPS))
     return '+'.join(parts)
 
 def drive(ob, path, idx, expr, vars_):
@@ -531,9 +547,9 @@ def build_splash(sh, ox, oy, length_out=6.4):
         mb.oface([Vector((-rr, -rr, 0)), Vector((rr, -rr, 0)), Vector((rr, rr, 0)), Vector((-rr, rr, 0))], mt, [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((0, 0, 1)))
         o = mk(mb, 'splash_ring_%d' % k, sh['root'], shadow=False); o.location = (c.x, c.y, 0.2); o.hide_render = True
         drive_at(o, sh['root'], c, 0.26); S['splash']['rings'].append(dict(ob=o, mat=mt, delay=0.0 if k == 0 else 0.28))
-    for k in range(70):
-        mb = MB(); lump(mb, (0, 0, 0), 1.0, M_['drop'], 3000 + k, seg=8, rings=5, rough=0.05); o = mk(mb, 'drop_%d' % k, sh['root'], shadow=False); smooth_round(o, 1); o.hide_render = True
-        a = r.uniform(0, 6.283); sp = r.uniform(0.15, 1.0); S['splash']['drops'].append(dict(ob=o, v=Vector((math.cos(a) * sp, math.sin(a) * sp, r.uniform(2.2, 3.7))), r=r.uniform(0.014, 0.042)))
+    for k in range(46):
+        mb = MB(); ell(mb, (0, 0, 0), 3.4, 1.0, 1.0, M_['drop'], 8, 5); o = mk(mb, 'drop_%d' % k, sh['root'], shadow=False, smooth=True); o.hide_render = True
+        a = r.uniform(0, 6.283); sp = r.uniform(0.15, 1.0); S['splash']['drops'].append(dict(ob=o, v=Vector((math.cos(a) * sp, math.sin(a) * sp, r.uniform(2.2, 3.7))), r=r.uniform(0.012, 0.03)))
 
 def set_oar_splash(t, frame=None):
     """Splash at the dipping blade of the hero oar (macro_oar): t 0 = nothing .. 0..1 = the splash growing and fading (map t = (frame - f0) / 15 for a 15-frame splash). Droplets fly on arcs and shrink, two foam rings
@@ -543,8 +559,9 @@ def set_oar_splash(t, frame=None):
     t = float(t); c = K['c']; vis = 0.0 < t < 1.0
     for d in K['drops']:
         u = max(0.0, min(1.0, t)); p = Vector((c.x + d['v'].x * u * 3.0, c.y + d['v'].y * u * 3.0, 0.2 + d['v'].z * u * 1.15 - 4.6 * u * u)); sc = d['r'] * (1.0 - u) ** 0.4
+        vel = Vector((d['v'].x * 3.0, d['v'].y * 3.0, d['v'].z * 1.15 - 9.2 * u)); d['ob'].rotation_euler = vel.to_track_quat('X', 'Z').to_euler()          # streak along the arc
         d['ob'].location = p; d['ob'].scale = (sc, sc, sc); show(d['ob'], vis and p.z > 0.0, frame)
-        if frame is not None: key_attr(d['ob'], 'location', frame, 'LINEAR'); key_attr(d['ob'], 'scale', frame, 'LINEAR')
+        if frame is not None: key_attr(d['ob'], 'location', frame, 'LINEAR'); key_attr(d['ob'], 'scale', frame, 'LINEAR'); key_attr(d['ob'], 'rotation_euler', frame, 'LINEAR')
     for rg in K['rings']:
         u = max(0.0, min(1.0, (t - rg['delay']) / (1.0 - rg['delay']))); sc = 0.3 + 1.05 * u; rg['ob'].scale = (sc, sc, 1.0); op = (1.0 - u) ** 1.1 if 0.0 < u < 1.0 else 0.0
         nd = rg['mat'].node_tree.nodes['op']; nd.outputs[0].default_value = op; show(rg['ob'], op > 0.001, frame)
@@ -579,7 +596,7 @@ def make_materials():
     M_['dancheong'] = imgmat('dancheong', 'dancheong', 0.45, rough=0.55, bumpk=0.1)
     M_['plaster'] = flat('plaster', '#d9ceb4', 0.9); M_['basket'] = imgmat('basket', 'matting_d', 0.5, rough=0.95, bumpk=0.5)
     M_['drop'] = flat('drop', '#eef6f6', 0.25, 0.0, **{'Emission Color': (0.9, 0.95, 0.97, 1.0), 'Emission Strength': 0.9}); M_['earth'] = flat('earth', '#8a7456', 0.95); M_['spray'] = flat('spray', '#f3f7f6', 0.9)
-    M_['smoke_g'] = smoke_mat('g', '#a8a499'); M_['smoke_d'] = smoke_mat('d', '#74716f'); M_['smoke_y'] = smoke_mat('y', '#b6ab80')
+    M_['smoke_g'] = smoke_mat('g', '#cfccc3'); M_['smoke_d'] = smoke_mat('d', '#6f6c6b'); M_['smoke_y'] = smoke_mat('y', '#b9ad7a')
     M_['flash'] = emit('flash', '#ffcf6a', 40.0); M_['green_p'] = flat('green_p', '#2a7a58', 0.5); M_['blue_p'] = flat('blue_p', '#2a56a8', 0.5)
     for nm, k in (('wake', 'foam_wake'), ('bow', 'foam_bow'), ('ring', 'foam_ring'), ('surf', 'foam_surf')):
         def f(b, k=k):
@@ -599,10 +616,10 @@ def water_mat(name, calm=False):
         col = b.mix(b.rng(patch, 0.35, 0.65), hexl(deep), hexl(mid))
         crest = b.rng(z.outputs['Z'], 0.12 if not calm else 9, 0.45, 0, 1); col = b.mix(b.math('MULTIPLY', crest, b.rng(b.noise(0.5, 1.0, 0.5, c), 0.35, 0.7), clamp=True), col, hexl(shl))
         if not calm:
-            bignz = b.rng(b.noise(0.011, 2.0, 0.5, c), 0.3, 0.7, 0.45, 1.0); col = b.mix(b.math('MULTIPLY', b.rng(z.outputs['Z'], 0.0, -0.42, 0.0, 0.85), bignz), col, hexl('#021d33'))
+            bignz = b.rng(b.noise(0.011, 2.0, 0.5, c), 0.3, 0.7, 0.45, 1.0); far = b.rng(b.n('ShaderNodeCameraData').outputs['View Distance'], 80.0, 260.0, 1.0, 0.3, smooth=True); col = b.mix(b.math('MULTIPLY', b.math('MULTIPLY', b.rng(z.outputs['Z'], 0.0, -0.42, 0.0, 0.85), bignz), far), col, hexl('#021d33'))
             col = b.mix(b.rng(b.noise(0.0035, 2.0, 0.5, c), 0.35, 0.65, 0.0, 0.35), col, hexl('#0d6c74'))
         if not calm:
-            sp = b.rng(b.noise(0.6, 0.0, 0.5, c), 0.68, 0.76); wc = b.math('MULTIPLY', b.rng(z.outputs['Z'], 0.34, 0.50), sp, clamp=True); col = b.mix(wc, col, (0.93, 0.97, 0.96, 1))
+            sp = b.rng(b.noise(0.6, 0.0, 0.5, c), 0.68, 0.76); wc = b.math('MULTIPLY', b.math('MULTIPLY', b.rng(z.outputs['Z'], 0.34, 0.50), sp), b.rng(b.noise(0.018, 2.0, 0.5, c), 0.42, 0.6), clamp=True); col = b.mix(wc, col, (0.93, 0.97, 0.96, 1))
         n1 = b.noise(1.3 if not calm else 0.9, 2.0, 0.5, c); n2 = b.noise(5.0, 1.0, 0.5, c); h = b.math('ADD', n1, b.math('MULTIPLY', n2, 0.35))
         st = 0.42 if not calm else 0.06
         if not calm:
@@ -1303,7 +1320,7 @@ def beach_extras():
                 r = shore(a); q.append(Vector((cx + (r + d0) * math.cos(a), cy + (r + d0) * math.sin(a), 0.0)) - mid); q.append(Vector((cx + (r + d1) * math.cos(a), cy + (r + d1) * math.sin(a), 0.0)) - mid)
             mb.oface([q[0], q[2], q[3], q[1]], M_['surf_f'], [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((0, 0, 1)))
         o = mk(mb, 'surf_%d' % i, shadow=False); o.location = (mid.x, mid.y, 0.12)
-        drive(o, 'location', 2, '0.12+' + swell_expr('(%f)' % mid.x, '(%f)' % mid.y, 0.8), {})
+        drive(o, 'location', 2, '0.12+' + swell_expr_at(mid.x, mid.y, 0.8), {})
     S['shore_a'] = -math.pi / 2
 
 def build_plank():
@@ -1316,7 +1333,7 @@ def build_plank():
     sl = (h(px, py - 1.0) - h(px, py + 1.0)) / 2.0                       # terrain slope along y (toward the sea it falls)
     o = mk(mb, 'plank', shadow=True); o.location = (px, py, z0 + 0.12); o.rotation_euler = (math.atan(sl) * -1.0, 0, math.radians(8)); S['plank'] = o; S['plank_z'] = z0 + 0.12 + 0.11
     mb2 = MB(); mb2.oface([Vector((-4.6, -2.4, 0)), Vector((4.6, -2.4, 0)), Vector((4.6, 2.4, 0)), Vector((-4.6, 2.4, 0))], M_['ring_f'], [(0, 0), (1, 0), (1, 1), (0, 1)], Vector((0, 0, 1)))
-    ro = mk(mb2, 'plank_ring', shadow=False); ro.location = (px, py, 0.12); drive(ro, 'location', 2, '0.14+' + swell_expr('(%f)' % px, '(%f)' % py, 0.8), {})
+    ro = mk(mb2, 'plank_ring', shadow=False); ro.location = (px, py, 0.12); drive(ro, 'location', 2, '0.14+' + swell_expr_at(px, py, 0.8), {})
 
 def _sea_marks():
     mk_ = S['marks']; par = S['parented'] = {}; shs = S['ships']
@@ -1345,8 +1362,10 @@ def build_damage_kit():
         rod(mb, p0, p1, 0.2, M_['wood_l'], seg=6, r1=0.16)
         stump = mk(mb, '%s_stump' % sh['name'], ride); stump.hide_render = True
         mbs = MB(); ph = rs.uniform(0, 6); cx_ = mx - 1.5
-        for k, (zz, rr_) in enumerate(((zb + 3.0, 1.1), (zb + 5.8, 1.6), (zb + 9.0, 2.1), (zb + 12.4, 2.5), (zb + 16.0, 2.7))): lump(mbs, (cx_ - 1.4 * k + 0.6 * math.sin(ph + k), 0.5 * math.sin(ph + 2 * k), zz), rr_, M_['smoke_d'], 300 + i * 9 + k, seg=10, rings=6, rough=0.18)
-        smk = mk(mbs, '%s_dsmoke' % sh['name'], ride, shadow=True); smooth_round(smk, 1); smk.hide_render = True
+        for k in range(10):
+            zz = zb + 2.5 + 1.55 * k; rr_ = 0.9 + 0.2 * k; cluster(mbs, rr_, M_['smoke_d'], 300 + i * 11 + k, 3, 0.55) if False else lump(mbs, (cx_ - 0.9 * k + 0.7 * math.sin(ph + 0.7 * k), 0.55 * math.sin(ph + 1.3 * k), zz), rr_, M_['smoke_d'], 300 + i * 11 + k, seg=9, rings=5, rough=0.2)
+            lump(mbs, (cx_ - 0.9 * k + 0.7 * math.sin(ph + 0.7 * k) + 0.5, 0.55 * math.sin(ph + 1.3 * k) + 0.45, zz - 0.5), rr_ * 0.75, M_['smoke_d'], 800 + i * 11 + k, seg=9, rings=5, rough=0.2)
+        smk = mk(mbs, '%s_dsmoke' % sh['name'], ride, shadow=False); smooth_round(smk, 1); smk.hide_render = True
         hide = [o for o in (bpy.data.objects.get(sh['name'] + '_mast'), bpy.data.objects.get(sh['name'] + '_sail')) if o]
         S['dmg'].append(dict(sh=sh, thr=thr, deg=(3.0 + 5.5 * rs.random()) * (1 if i % 2 else -1), stump=stump, smoke=smk, hide=hide))
 
@@ -1357,7 +1376,7 @@ def build_cannon_kit():
         for gi, g in enumerate(sh['guns']):
             puffs = []
             for k in range(2):
-                mb = MB(); lump(mb, (0, 0, 0), 1.0, M_['smoke_g'] if (gi + k) % 3 else M_['smoke_y'], 900 + gi * 3 + k, seg=9, rings=6, rough=0.2); o = mk(mb, 'puff_%s_%d_%d' % (sh['name'], gi, k), sh['ride'], shadow=True); smooth_round(o, 1); o.hide_render = True; puffs.append(o)
+                mb = MB(); cluster(mb, 1.0, M_['smoke_g'], 900 + gi * 3 + k, 4, 0.6); o = mk(mb, 'puff_%s_%d_%d' % (sh['name'], gi, k), sh['ride'], shadow=False); smooth_round(o, 1); o.hide_render = True; puffs.append(o)
             mb = MB(); lump(mb, (0, 0, 0), 0.7, M_['flash'], 1200 + gi, seg=7, rings=5, rough=0.35); fl = mk(mb, 'flash_%s_%d' % (sh['name'], gi), sh['ride'], shadow=False); fl.hide_render = True
             S['guns'].append(dict(sh=sh, g=g, puffs=puffs, flash=fl, off=rs.uniform(0, 1), per=rs.uniform(1.15, 1.7), size=rs.uniform(0.9, 1.25)))
 
@@ -1394,7 +1413,7 @@ def set_dragon_smoke(level, frame=None, speed=1.0):
     if 'dsmoke' not in sh:
         M_ = S['M']; sh['dsmoke'] = []; r = rnd(31)
         for k in range(10):
-            mb = MB(); lump(mb, (0, 0, 0), 1.0, M_['smoke_y'] if k % 2 else M_['smoke_g'], 1500 + k, seg=10, rings=6, rough=0.2); o = mk(mb, 'dsmoke_%d' % k, sh['ride'], shadow=True); smooth_round(o, 1); o.hide_render = True
+            mb = MB(); cluster(mb, 1.0, M_['smoke_y'], 1500 + k, 5, 0.65); o = mk(mb, 'dsmoke_%d' % k, sh['ride'], shadow=False); smooth_round(o, 1); o.hide_render = True
             sh['dsmoke'].append(dict(ob=o, ph=k / 10 + r.uniform(0, 0.03), size=0.62 + 0.25 * r.random(), drift=Vector((5.0 + r.uniform(-1, 1), r.uniform(-1.4, 1.4), 0.0)), H=4.6 + r.uniform(0, 1.4)))
     m = sh['mouth']
     for b in sh['dsmoke']:
@@ -1522,11 +1541,11 @@ def sea_cams():
 
 PRESETS = dict(
     roof_low=dict(loc='yard', cam='roof_low', state='sp2'), bow=dict(loc='yard', cam='bow', state='sp3,ds1'), yard_wide=dict(loc='yard', cam='yard_wide', state='sp3'), roof_top=dict(loc='yard', cam='roof_top', state='sp1'),
-    macro_spikes=dict(loc='yard', cam='macro_spikes', state='sp2'), macro_dragon=dict(loc='yard', cam='macro_dragon', state='sp3,ds1'),
+    macro_spikes=dict(loc='yard', cam='macro_spikes', state='sp2'), macro_dragon=dict(loc='yard', cam='macro_dragon', state='sp3,ds1', samples=16),
     fleet_wide=dict(loc='sea', cam='fleet_wide', state=''), flag_deck=dict(loc='sea', cam='flag_deck', state=''), flag_deck_b=dict(loc='sea', cam='flag_deck_b', state=''), flag_deck_crew=dict(loc='sea', cam='flag_deck_crew', state=''),
     hansan_high=dict(loc='sea', cam='hansan_high', state=''), flag_bow=dict(loc='sea', cam='flag_bow', state=''), chase=dict(loc='sea', cam='chase', state='s0'),
     board=dict(loc='sea', cam='board', state='sp3,special:board'), reveal_top=dict(loc='sea', cam='reveal_top', state='k1,cs1,dm0.35,sp3,pt1,ds1'),
-    aftermath=dict(loc='sea', cam='aftermath', state='k1,dm1,cs0.35,sp3,pt1'), shore=dict(loc='sea', cam='shore', state=''), macro_oar=dict(loc='sea', cam='macro_oar', state='special:solo,os0.4', samples=14))
+    aftermath=dict(loc='sea', cam='aftermath', state='k1,dm1,cs0.35,sp3,pt1'), shore=dict(loc='sea', cam='shore', state=''), macro_oar=dict(loc='sea', cam='macro_oar', state='special:solo,os0.4', samples=12))
 LOC_PRESETS = dict(yard=[k for k, v in PRESETS.items() if v['loc'] == 'yard'], sea=[k for k, v in PRESETS.items() if v['loc'] == 'sea'])
 CAM_NOTES = dict(
     roof_low='yard: low 3/4 from the east quay at the stern quarter: the turtle ship on its cradles, roof edge workers, Yi in the foreground on the quay (push in)',

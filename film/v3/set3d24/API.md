@@ -129,3 +129,10 @@ Planted soldier cards, nearest to the `flag_deck_crew` camera first (camera at s
 | 3 | `soldier_deck_a` (soldier) | (2.62, 2.2, 5.44) | 8.6 | 99 | 674 | 859 |
 | 4 | `soldier_deck_b` (soldier_b) | (2.22, -2.0, 5.44) | 9.0 | 94 | 652 | 846 |
 (the `commander_deck` stand is (5.9, 0, 5.44), 5.9 D ahead of the tower front.) Farther cards have smaller heads and higher feet, as in true perspective; every chin is above y 880.
+
+## Round 3 notes (API unchanged)
+- Water tiling fixed: the ocean mesh carries 5 incommensurate long swells (41 / 27 / 17.3 / 11.7 / 9.9 D, total amplitude 0.7 D) and no short chop (it aliased against the 2.4 D cells as a grid of blobs from high cameras); fine chop is bump only, fading with view distance;
+  trough darkness and whitecaps are modulated by large-scale noise and fade out beyond 80-260 D. Ships, foam, plank and rings use the same 5 waves (compact driver expressions < 255 chars; `swell_expr_at` for fixed points, `drive_at` for root-local points).
+- Oar splash: ~46 droplet STREAKS (elongated, oriented along their arcs) + two soft partly transparent irregular foam patches that grow and fade (no ring); the oar foam patches at the other blades use the same soft texture.
+- Smoke (cannon grey-white, dragon grey-yellow, damage dark grey): each puff / column is a cluster of overlapping lumps with a soft facing-ratio alpha edge (partly transparent, no shadow), so they merge into billows. Same hooks, same per-frame call rule.
+- Cost under the other worker's load (4-5): smoke-heavy frames reveal_top 106-124 CPU s, fleet_wide_dm1 106, macro_dragon 114 (16 samples), macro_oar 126-128 (12 samples): about 27-32 s on 4 free cores.
