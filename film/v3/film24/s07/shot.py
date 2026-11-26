@@ -65,8 +65,8 @@ class Take(C.Take):
         la, lb = P["soldier_deck_a"]["local"], P["soldier_deck_b"]["local"]
         pos = dict(a=tuple(la), b=tuple(lb),                                   # the two on-screen anchors of the preset camera
                    c=((la[0] + lb[0]) / 2 - 2.6, (la[1] + lb[1]) / 2 + 0.2, la[2]),   # back row, between them
-                   d=(la[0] - 1.8, la[1] + 2.0, la[2]))                       # back row, right
-        for k in "abcd":
+                   d=(la[0] - 4.2, la[1] - 2.1, la[2]))                       # back row, right
+        for k in "abc":
             a = self.actors[k] = C.make_actor(k, MEM[k], sd, contact=False)
             self.ship = P["soldier_deck_a"]["ship"]
             C.parent_to_ship(a, self.ship)
