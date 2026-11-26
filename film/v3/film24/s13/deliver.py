@@ -13,10 +13,10 @@ for i, g in enumerate(gs):
 c.save(os.path.join(HERE, "contact.jpg"), quality=88)
 rows = [json.load(open(f)) for f in sorted(glob.glob(os.path.join(HERE, "raw/s13/g_*.json")))]
 meta = {"take": "s13", "film": 24, "shots": [13], "g0": G0, "g1": G1, "g1_exclusive": True, "first_g": F0, "n_frames": 1612 - F0 + 1, "handle_in": 6, "handle_out": 6,
-        "transition_in": {"type": "cut", "frames": 0}, "transition_out": {"type": "cut", "frames": 0}, "preset": "reveal_top", "samples": 24,
+        "transition_in": {"type": "cut", "frames": 0}, "transition_out": {"type": "cut", "frames": 0}, "preset": "custom_top", "samples": 24,
         "resolution": [720, 1280], "render_resolution": [540, 960], "fps": 30, "overlay": "overlay.json (g 1407..1612)",
         "events": {"korean_turn_0_to_1": [1440, 1500], "ports_open": [1492, 1502], "cannon_smoke_0_to_1": [1500, 1570], "damage_0_to_0.35": [1545, 1607]},
-        "camera": "custom: (-22,-228,150) -> (-22,-205,178), look (-22,8,-5) -> (-22,6,-5), 24 mm, 0.35 sine + 0.65 linear; DOF off",
+        "camera": "custom top-down: (-54,0,150) -> (-40,0,190), look (-12,0,0) -> (-10,0,0), 18 mm; wide U; cannon smoke scaled 2.6x at runtime; DOF off",
         "s_per_frame_wall_mean": round(st.mean(r.get("wall", 0) for r in rows), 1) if rows and "wall" in rows[0] else None,
         "split": "take.mkv.partaa + take.mkv.partab (cat together)"}
 json.dump(meta, open(os.path.join(HERE, "meta.json"), "w"), indent=1)

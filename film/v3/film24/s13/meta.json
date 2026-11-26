@@ -19,7 +19,7 @@
   "type": "cut",
   "frames": 0
  },
- "preset": "reveal_top",
+ "preset": "custom_top",
  "samples": 24,
  "resolution": [
   720,
@@ -49,7 +49,7 @@
    1607
   ]
  },
- "camera": "custom: (-22,-228,150) -> (-22,-205,178), look (-22,8,-5) -> (-22,6,-5), 24 mm, 0.35 sine + 0.65 linear; DOF off",
- "s_per_frame_wall_mean": 41.7,
+ "camera": "custom top-down: (-54,0,150) -> (-40,0,190), look (-12,0,0) -> (-10,0,0), 18 mm; wide U; cannon smoke scaled 2.6x at runtime; DOF off",
+ "s_per_frame_wall_mean": 48.4,
  "split": "take.mkv.partaa + take.mkv.partab (cat together)"
 }
