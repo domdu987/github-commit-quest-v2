@@ -1,0 +1,120 @@
+{
+ "take": "s15",
+ "fps": 30,
+ "cues": [
+  {
+   "time": 58.9,
+   "duration": 3.333,
+   "frame": 1767,
+   "end_frame": 1867,
+   "kind": "ambience",
+   "label": "surf and gentle swell, gulls, the wet commander gasping and clinging to the plank (splash)"
+  },
+  {
+   "time": 62.233,
+   "duration": 0.0,
+   "frame": 1867,
+   "end_frame": 1867,
+   "kind": "cut",
+   "label": "HARD CUT inside the take to the sand: wet sand, crawling hands and knees, splash and sand scuffs on each limb step"
+  },
+  {
+   "time": 64.967,
+   "duration": 0.0,
+   "frame": 1949,
+   "end_frame": 1949,
+   "kind": "cut",
+   "label": "film ends: hard cut on the last word"
+  },
+  {
+   "time": 62.367,
+   "duration": 0.0,
+   "frame": 1871,
+   "end_frame": 1871,
+   "kind": "foley",
+   "label": "crawl step: wet sand squelch / hand slap",
+   "peak_frame": 1871
+  },
+  {
+   "time": 62.633,
+   "duration": 0.0,
+   "frame": 1879,
+   "end_frame": 1879,
+   "kind": "foley",
+   "label": "crawl step: wet sand squelch / hand slap",
+   "peak_frame": 1879
+  },
+  {
+   "time": 62.9,
+   "duration": 0.0,
+   "frame": 1887,
+   "end_frame": 1887,
+   "kind": "foley",
+   "label": "crawl step: wet sand squelch / hand slap",
+   "peak_frame": 1887
+  },
+  {
+   "time": 63.167,
+   "duration": 0.0,
+   "frame": 1895,
+   "end_frame": 1895,
+   "kind": "foley",
+   "label": "crawl step: wet sand squelch / hand slap",
+   "peak_frame": 1895
+  },
+  {
+   "time": 63.433,
+   "duration": 0.0,
+   "frame": 1903,
+   "end_frame": 1903,
+   "kind": "foley",
+   "label": "crawl step: wet sand squelch / hand slap",
+   "peak_frame": 1903
+  },
+  {
+   "time": 63.7,
+   "duration": 0.0,
+   "frame": 1911,
+   "end_frame": 1911,
+   "kind": "foley",
+   "label": "crawl step: wet sand squelch / hand slap",
+   "peak_frame": 1911
+  },
+  {
+   "time": 63.967,
+   "duration": 0.0,
+   "frame": 1919,
+   "end_frame": 1919,
+   "kind": "foley",
+   "label": "crawl step: wet sand squelch / hand slap",
+   "peak_frame": 1919
+  },
+  {
+   "time": 64.233,
+   "duration": 0.0,
+   "frame": 1927,
+   "end_frame": 1927,
+   "kind": "foley",
+   "label": "crawl step: wet sand squelch / hand slap",
+   "peak_frame": 1927
+  },
+  {
+   "time": 64.5,
+   "duration": 0.0,
+   "frame": 1935,
+   "end_frame": 1935,
+   "kind": "foley",
+   "label": "crawl step: wet sand squelch / hand slap",
+   "peak_frame": 1935
+  },
+  {
+   "time": 64.767,
+   "duration": 0.0,
+   "frame": 1943,
+   "end_frame": 1943,
+   "kind": "foley",
+   "label": "crawl step: wet sand squelch / hand slap",
+   "peak_frame": 1943
+  }
+ ]
+}

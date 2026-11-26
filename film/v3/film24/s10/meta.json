@@ -5,7 +5,7 @@
   10
  ],
  "g0": 1002,
- "g1": 1112,
+ "g1": 1113,
  "first_g": 996,
  "n_frames": 123,
  "handle_in": 6,
@@ -65,5 +65,6 @@
    "cpu": 54.1
   }
  },
- "narration": "film24/audio/narration.wav at +0.10 s; captions film24/script/captions.json"
+ "narration": "film24/audio/narration.wav at +0.10 s; captions film24/script/captions.json",
+ "g1_note": "director: g1 is exclusive (next shot start)"
 }
