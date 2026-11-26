@@ -20,7 +20,7 @@ Everything in `v2/puppet/API.md` and `v3/cast10/API.md` still applies (pose keys
 | key | height | build / look |
 |---|---|---|
 | `yi24` | 3.30 (3.58) | slim, tall, calm. Maroon quilted coat-armour with brass studs, blue lining at collar / cuffs / front opening, dark belt with brass plate, knee-length skirt. Black wide-brim hat with brass-bead band, red plume and chin cord. Neat thin moustache, small goatee |
-| `jp_cmd24` | 3.13 (3.96) | stout, big belly. Black lacquer plate armour with red lacing, red cord belt, big sode shoulder guards, hip plates. Kabuto with a tall gold crescent. Huge bushy black moustache, thick angry brows, double chin |
+| `jp_cmd24` | 3.13 (3.96) | stout, big belly. Black lacquer plate armour with red lacing, red cord belt, big sode shoulder guards, hip plates. Kabuto with a tall gold crescent. Kabuto sits high (brim above the brows); a small thin handlebar moustache above the mouth (mouth fully visible), thick angry brows, double chin |
 | `ashi_a24` | 3.26 (3.64) | tall slim, blue kimono, dark-brown cone hat, thin black moustache |
 | `ashi_b24` | 2.71 (2.98) | short and round, brown kimono, red-brown wide cone with a crest, grey stubble |
 | `ashi_c24` | 2.96 (3.30) | medium, grey kimono, pale grey cone with a red crest, young clean face, round brows |
@@ -36,6 +36,7 @@ All ashigaru wear a riveted chest plate (do) with a short plate skirt over the k
 
 | key | effect |
 |---|---|
+| `sode24` 0..1 | scales the jp_cmd24 shoulder guards (0 in the lying / crawl poses so the face is clear) |
 | `wet24` 0..1 | wet look: kabuto locks + drips + seaweed on the crescent (jp_cmd24); plastered fringe + drips (jp_cmd24 only) |
 | `hat_rot24` deg, `hat_dx24` D | kabuto askew (rotate / shift) |
 | `ground24` y (head frame) | sets `feet_y`, `anchors["feet"]` and `anchors["ground"]` to this line (kneel / crawl) |
@@ -80,7 +81,7 @@ Lip-sync: only the three jp_cmd24 poses have `STORY24_META[name]["lipsync"] = Tr
 
 ## Canvases (feet-relative, D)
 
-`CANVAS24[member]` (registered in `cast_ext.CANVAS`): yi24 (-1.8125, -4.75, 1.8125, 0.125); jp_cmd24 (-2.25, -4.9375, 2.25, 0.125); ashi_a (-1.8125, -4.75, ..); ashi_b (-1.875, -4.125); ashi_c (-1.875, -4.375); ashi_d (-1.8125, -5.0625); kor_a (-1.8125, -4.5); kor_b (-1.875, -4.1875); kor_c (-1.8125, -4.1875); kor_d (-1.875, -4.6875). `CANVAS24_POSES[pose_name]` for the poses that exceed them: `jp_cmd24_plank_cling`, `jp_cmd24_crawl_a/_b`, the four `kor_*_kneel_hammer` (bottom 0.1875 below the ground line), the four `kor_*_row_oar` (+-3 wide), `ashi_d24_ladder_front`, `ashi_b24_ladder_back`. `python3 test_cast24.py canvas` checks all of them, mirrored too, plus head_flip (57 poses, 0 problems).
+`CANVAS24[member]` (registered in `cast_ext.CANVAS`): yi24 (-1.8125, -4.75, 1.8125, 0.125); jp_cmd24 (-2.25, -5.125, 2.25, 0.125); ashi_a (-1.8125, -4.75, ..); ashi_b (-1.875, -4.125); ashi_c (-1.875, -4.375); ashi_d (-1.8125, -5.0625); kor_a (-1.8125, -4.5); kor_b (-1.875, -4.1875); kor_c (-1.8125, -4.1875); kor_d (-1.875, -4.6875). `CANVAS24_POSES[pose_name]` for the poses that exceed them: `jp_cmd24_plank_cling`, `jp_cmd24_crawl_a/_b`, the four `kor_*_kneel_hammer` (bottom 0.1875 below the ground line), the four `kor_*_row_oar` (+-3 wide), `ashi_d24_ladder_front`, `ashi_b24_ladder_back`. `python3 test_cast24.py canvas` checks all of them, mirrored too, plus head_flip (57 poses, 0 problems).
 
 ## Files and QA
 

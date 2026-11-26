@@ -39,7 +39,7 @@ _X, _ln, _circ = CE._X, CE._ln, CE._circ
 _f = C6._f
 _lin = C9._lin
 _O24 = {}
-_POSE24 = {"wet": 0.0, "hat_rot": 0.0, "hat_dx": 0.0, "ground": None, "plank": 0.0, "spikes": 5}
+_POSE24 = {"sode": 1.0, "wet": 0.0, "hat_rot": 0.0, "hat_dx": 0.0, "ground": None, "plank": 0.0, "spikes": 5}
 
 cycle, talk_mouth, blink_at, NOD = C6.cycle, C6.talk_mouth, C6.blink_at, C6.NOD
 CYCLE_MODES = C6.CYCLE_MODES
@@ -118,15 +118,15 @@ def _hat_kabuto24(k, C, yaw):
     rot = C["hat_tilt"] + _POSE24["hat_rot"]
     o = ['<g transform="rotate(%.3f)">' % rot]
     g = CE._gradient(k, "kb", dict(light=LACQ["light"], base=LACQ["base"], dark=LACQ["dark"]), x0=-0.6, x1=0.6, mid=0.30)
-    yb = -0.20
+    yb = -0.36
     # neck guard (shikoro) flaring tiers
-    for i, (w, y0, y1) in enumerate(((0.74, -0.24, -0.04), (0.70, -0.20, 0.02))):
+    for i, (w, y0, y1) in enumerate(((0.74, -0.40, -0.18), (0.70, -0.36, -0.14))):
         d = "M%.4f,%.4f L%.4f,%.4f Q%.4f,%.4f %.4f,%.4f L%.4f,%.4f Z" % (dx - 0.47, y0, dx - w, y1 - 0.02, dx, y1 + 0.02 - 0.0, dx + w, y1 - 0.02, dx + 0.47, y0)
         if i == 0:
             o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.024" stroke-linejoin="round"/>' % (d, g, k.ink))
     for sx in (-1, 1):
-        o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="0.020" stroke-linecap="round"/>' % (dx + sx * 0.52, -0.16, dx + sx * 0.66, -0.01, k.c(col["lace"])))
-        o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="0.020" stroke-linecap="round"/>' % (dx + sx * 0.60, -0.20, dx + sx * 0.69, -0.04, k.c(col["lace"])))
+        o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="0.020" stroke-linecap="round"/>' % (dx + sx * 0.52, -0.32, dx + sx * 0.66, -0.17, k.c(col["lace"])))
+        o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="0.020" stroke-linecap="round"/>' % (dx + sx * 0.60, -0.36, dx + sx * 0.69, -0.20, k.c(col["lace"])))
     # bowl
     bowl = [(dx - 0.48, yb), (dx - 0.46, yb - 0.26), (dx - 0.28, yb - 0.46), (dx, yb - 0.52), (dx + 0.28, yb - 0.46), (dx + 0.46, yb - 0.26), (dx + 0.48, yb)]
     o.append('<path d="%s Z" fill="%s" stroke="%s" stroke-width="0.026" stroke-linejoin="round"/>' % (P._smooth_open(bowl), g, k.ink))
@@ -162,15 +162,15 @@ def _hat_kabuto24(k, C, yaw):
             for j, (x, ln) in enumerate(((0.40, 0.22), (0.30, 0.30))):
                 o.append('<path d="M%.4f,%.4f q%.4f,%.4f %.4f,%.4f" fill="none" stroke="%s" stroke-width="0.034" stroke-linecap="round"/>'
                          % (dx + sx * x, yb + 0.10, sx * 0.02, ln * 0.5, sx * 0.01, ln * w, k.ink))
-        o.append(_drop(k, dx - 0.30, yb + 0.30 + 0.0, 1.0))
-        o.append(_drop(k, dx + 0.42, 0.06, 0.9))
+        o.append(_drop(k, dx - 0.55, yb + 0.30, 1.0))
+        o.append(_drop(k, dx + 0.60, -0.02, 0.9))
         # seaweed on the crescent
         o.append('<path d="M%.4f,%.4f q0.05,0.10 -0.03,0.18 q-0.07,0.08 0.00,0.16 q0.06,0.06 0.01,0.12" fill="none" stroke="%s" stroke-width="0.034" stroke-linecap="round"/>'
                  % (dx - 0.50, yb - 1.02, k.ink))
         o.append('<path d="M%.4f,%.4f q0.05,0.10 -0.03,0.18 q-0.07,0.08 0.00,0.16 q0.06,0.06 0.01,0.12" fill="none" stroke="%s" stroke-width="0.018" stroke-linecap="round"/>'
                  % (dx - 0.50, yb - 1.02, k.c("#4a8a3a")))
     o.append('</g>')
-    C4._ext_hat(k, C, ((dx - 0.70, 0.0), (dx + 0.70, 0.0), (dx - 0.60, yb - 1.12), (dx + 0.60, yb - 1.12), (dx, yb - 0.55)))
+    C4._ext_hat(k, C, ((dx - 0.70, -0.16), (dx + 0.70, -0.16), (dx - 0.60, yb - 1.12), (dx + 0.60, yb - 1.12), (dx, yb - 0.55)))
     return "".join(o), (dx, yb - 1.12)
 
 
@@ -498,6 +498,18 @@ def _face(k, C, P_, white):
 
 def _moustache(k, mx, my, s=1.0):
     C = CE._CUR[0]
+    if C and C.get("moustache_style") == "handlebar24":
+        col = C["colors"].get("moustache", "#16121a")
+        s = s * C.get("tache_scale", 1.0)
+
+        def H(x, y):
+            return (mx + x * s, my + y * s)
+        pts = [H(0.0, -0.075), H(-0.10, -0.095), H(-0.21, -0.070), H(-0.30, -0.080), H(-0.37, -0.150), H(-0.33, -0.170), H(-0.30, -0.115),
+               H(-0.21, -0.025), H(-0.10, -0.030), H(0.0, -0.040), H(0.10, -0.030), H(0.21, -0.025), H(0.30, -0.115), H(0.33, -0.170),
+               H(0.37, -0.150), H(0.30, -0.080), H(0.21, -0.070), H(0.10, -0.095)]
+        k.ext.append(H(-0.37, -0.17) + (0.03,))
+        k.ext.append(H(0.37, -0.17) + (0.03,))
+        return '<path d="%s" fill="%s" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (P._smooth_closed(pts), k.c(col), k.ink)
     if not C or C.get("moustache_style") != "neat24":
         return _O24["_moustache"](k, mx, my, s)
     col = C["colors"].get("moustache", "#1e1a1e")
@@ -517,7 +529,9 @@ def _moustache(k, mx, my, s=1.0):
 # ============================================================================= arms: sode (samurai shoulder guards)
 def _sode(k, S, E, C):
     ang = math.degrees(math.atan2(E[1] - S[1], E[0] - S[0]))
-    sz = C.get("sode24", 1.0)
+    sz = C.get("sode24", 1.0) * _POSE24["sode"]
+    if sz < 0.05:
+        return ""
     col = C["colors"]
     o = ['<g transform="translate(%.4f %.4f) rotate(%.3f) scale(%.4f)">' % (S[0], S[1], ang, sz)]
     for i, x in enumerate((0.20, 0.12, 0.04)):
@@ -666,6 +680,7 @@ def _prop(k, kind, H, ang, sc=1.0):
 def _norm(C, pose):
     g = pose.get if isinstance(pose, dict) else (lambda key, d=None: d)
     _POSE24["wet"] = _f(g("wet24"), 0.0, 0.0, 1.0)
+    _POSE24["sode"] = _f(g("sode24"), 1.0, 0.0, 1.0)
     _POSE24["hat_rot"] = _f(g("hat_rot24"), 0.0, -90.0, 90.0)
     _POSE24["hat_dx"] = _f(g("hat_dx24"), 0.0, -0.5, 0.5)
     _POSE24["spikes"] = int(_f(g("spike_n24"), 5.0, 2.0, 8.0))
@@ -760,7 +775,7 @@ NEW_CAST24 = {
         build="stout", seed=91.3,
         torso_w=1.42, torso_h=1.20, profile=C2.PROFILE_ROUND, shift_pow=1.25,
         shoulder=(0.46, 0.44), arm=0.80, hip_x=0.20, leg=1.06, stance=0.07, wide=0.32, limb_w=0.072,
-        eye_y=0.000, brow="stroke", brow_th=0.095, mouth="frown", moustache=True, moustache_style="bushy", tache_scale=1.55, smirk_side=1, cheeks="#ee7a68",
+        eye_y=0.000, brow="stroke", brow_th=0.075, mouth="frown", moustache=True, moustache_style="handlebar24", tache_scale=1.0, smirk_side=1, cheeks="#ee7a68",
         chins=True,
         hat="newsboy", hat_style="kabuto24", hat_tilt=0.0, ear_pencil=False,
         hat_colors=dict(lace="#c4283a"),
@@ -921,7 +936,7 @@ def _story():
     M["jp_cmd24_shout_forward"] = dict(lipsync=True, note="shouting 'Follow them, all of you!', arm out forward with the war fan (gunbai24, anchor gunbai_r = the fan's far edge), "
                                                           "other hand on hip; LIP-SYNC with talk_mouth(). Animate the fan angle -25 <-> -40 for emphasis")
     # lying on the plank
-    base = dict(yaw=0.70, lean=72, head_roll=-12, expr="worried", mouth="smirk", wet24=1.0, hat_rot24=14, hat_dx24=0.05, fx=["sweat", "blush"], t=0.3)
+    base = dict(yaw=0.70, lean=72, head_roll=-12, expr="worried", mouth="smirk", wet24=1.0, hat_rot24=14, hat_dx24=0.05, fx=["sweat", "blush"], t=0.3, sode24=0.0)
     a = _anch(J, base)
     sr, sl = a["shoulder_r"], a["shoulder_l"]
     hx, hy = a["hip"]
@@ -934,8 +949,8 @@ def _story():
     M["jp_cmd24_plank_cling"] = dict(note="lying on his belly along a floating plank, arms around it, wet hair + seaweed on the kabuto, kabuto askew, sheepish. pose key plank24=1 draws the "
                                           "plank (plank_w24 length 5.0 D, plank_top24, plank_dx24). Ground anchor = the plank's UNDERSIDE (the waterline): anchors['ground'] / "
                                           "feet_y. Plank top = anchors['plank_top']. Canvas CANVAS24_POSES")
-    S["jp_cmd24_crawl_a"] = (J, crawl_pose(J, dict(yaw=0.70, lean=70, head_roll=-8, expr="worried", mouth="smirk", wet24=1.0, hat_rot24=14, hat_dx24=0.05, fx=["blush"]), "l"))
-    S["jp_cmd24_crawl_b"] = (J, crawl_pose(J, dict(yaw=0.70, lean=70, head_roll=-8, expr="worried", mouth="smirk", wet24=1.0, hat_rot24=14, hat_dx24=0.05, fx=["blush"]), "r"))
+    S["jp_cmd24_crawl_a"] = (J, crawl_pose(J, dict(yaw=0.70, lean=70, head_roll=-8, expr="worried", mouth="smirk", wet24=1.0, hat_rot24=14, hat_dx24=0.05, fx=["blush"], sode24=0.0), "l"))
+    S["jp_cmd24_crawl_b"] = (J, crawl_pose(J, dict(yaw=0.70, lean=70, head_roll=-8, expr="worried", mouth="smirk", wet24=1.0, hat_rot24=14, hat_dx24=0.05, fx=["blush"], sode24=0.0), "r"))
     M["jp_cmd24_crawl_a"] = dict(note="crawl frame A (head to screen-right): LEFT hand + RIGHT knee forward. Alternate A/B while moving forward (hands and knees on the ground line anchors['ground'])")
     M["jp_cmd24_crawl_b"] = dict(note="crawl frame B: RIGHT hand + LEFT knee forward (the opposite of A)")
     S["jp_cmd24_walk"] = (J, cycle(J, 0.30, "walk", base=dict(expr="smug", pitch=-0.3)))
@@ -1016,7 +1031,7 @@ STORY24, STORY24_META = {}, {}
 WIDE24 = ("row_oar", "ladder")      # poses whose props reach far: own canvas in CANVAS24_POSES
 CANVAS24 = {
     'yi24': (-1.8125, -4.75, 1.8125, 0.125),
-    'jp_cmd24': (-2.25, -4.9375, 2.25, 0.125),
+    'jp_cmd24': (-2.25, -5.125, 2.25, 0.125),
     'ashi_a24': (-1.8125, -4.75, 1.8125, 0.125),
     'ashi_b24': (-1.875, -4.125, 1.875, 0.125),
     'ashi_c24': (-1.875, -4.375, 1.875, 0.125),
@@ -1029,9 +1044,9 @@ CANVAS24 = {
 # per-pose canvases (feet-relative, D): kneel / crawl / plank / long props. For kneel, crawl and the plank, feet = the GROUND anchor (knees and hands
 # on it; the plank's underside), so the canvas bottom is just below it.
 CANVAS24_POSES = {
-    'jp_cmd24_plank_cling': (-2.5, -3.1875, 2.5, 0.6875),
-    'jp_cmd24_crawl_a': (-2.8125, -2.875, 2.8125, 0.9375),
-    'jp_cmd24_crawl_b': (-2.8125, -2.875, 2.8125, 0.9375),
+    'jp_cmd24_plank_cling': (-2.5, -3.3125, 2.5, 0.6875),
+    'jp_cmd24_crawl_a': (-2.75, -3.0625, 2.75, 0.9375),
+    'jp_cmd24_crawl_b': (-2.75, -3.0625, 2.75, 0.9375),
     'ashi_d24_ladder_front': (-2.6875, -4.375, 2.6875, 0.125),
     'ashi_b24_ladder_back': (-1.0, -3.375, 1.0, 0.125),
     'kor_a24_kneel_hammer': (-2.4375, -3.5, 2.4375, 0.1875),

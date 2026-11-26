@@ -95,6 +95,9 @@ def sec_heights(D=100):
 def sec_poses(D=62, cols=9):
     names = list(cast24.STORY24)
     wide = {"jp_cmd24_plank_cling": 2, "jp_cmd24_crawl_a": 2, "jp_cmd24_crawl_b": 2}
+    for n in names:
+        if "kneel" in n or "row_oar" in n or "ladder_front" in n:
+            wide[n] = 1.5
     cw, ch = int(3.0 * D), int(6.0 * D)
     # lay out with variable widths
     x = y = 0
@@ -114,7 +117,7 @@ def sec_poses(D=62, cols=9):
         ground = y0 + ch - int(0.95 * D)
         o.append('<rect x="%d" y="%d" width="%d" height="%d" fill="%s"/>' % (x0, ground - int(0.04 * D), w, int(0.2 * D), GROUND))
         o.append('<svg x="%d" y="%d" width="%d" height="%d" viewBox="%d %d %d %d">' % (x0, y0, w, ch - int(0.6 * D), x0, y0, w, ch - int(0.6 * D)))
-        gx = x0 + w * (0.42 if w > cw else 0.46)
+        gx = x0 + w * (0.40 if w > cw else 0.46)
         g, f = _fig(cast, dict(pose, t=0.3), "p%d" % i, D, gx, ground, shadow=0.0 if (pose.get("plank24") or pose.get("ground24") is not None) else 0.9)
         o.append(g + "</svg>")
         meta = cast24.STORY24_META.get(n, {})
