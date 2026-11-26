@@ -1,0 +1,42 @@
+{
+ "take": "s04",
+ "film": 24,
+ "shots": [
+  4
+ ],
+ "g0": 288,
+ "g1": 431,
+ "first_g": 282,
+ "n_frames": 155,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "shot_ranges": {
+  "4": [
+   282,
+   436
+  ]
+ },
+ "cuts_in_take": [],
+ "note": "shot 4 yard_wide, hard cut in at 288 / out at 431",
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "render_resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "s_per_frame_wall_mean": 16.5,
+ "s_per_frame_cpu_mean": 32.0,
+ "look": "A"
+}
