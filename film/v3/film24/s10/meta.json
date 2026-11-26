@@ -1,0 +1,69 @@
+{
+ "take": "s10",
+ "film": 24,
+ "shots": [
+  10
+ ],
+ "g0": 1002,
+ "g1": 1112,
+ "first_g": 996,
+ "n_frames": 123,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "in_take_cuts": [],
+ "shot_ranges": {
+  "10": [
+   996,
+   1118
+  ]
+ },
+ "setups": {
+  "10": {
+   "preset": "flag_bow",
+   "camera": "preset flag_bow camera, pushed 9 % along its view line (0.35 sine + 0.65 linear), travelling with the fleet (x += 3 D/s); DOF off",
+   "state": "set_spikes 3, set_ports 0, set_korean_turn 0, set_fleet_chase s=(g-996)/30 keyed every frame"
+  }
+ },
+ "events": {
+  "lipsync": [
+   1047,
+   1111
+  ],
+  "quote": "\u0e40\u0e2b\u0e47\u0e19\u0e44\u0e2b\u0e21 \u0e40\u0e15\u0e48\u0e32\u0e01\u0e25\u0e31\u0e27\u0e41\u0e25\u0e49\u0e27! \u0e15\u0e32\u0e21\u0e44\u0e1b\u0e43\u0e2b\u0e49\u0e2b\u0e21\u0e14! 34.81-37.06 s"
+ },
+ "set": "v3/set3d24/joseon.py sea; runtime dressing from common.py / shot.py only",
+ "cast": "jp_cmd24_shout_forward (gunbai) at commander_bow, parented to the jflag ride, planted; slight sway",
+ "mouths": "jp_cmd24 talk_mouth g 1047..1111 only; flat elsewhere",
+ "dof": "off",
+ "render": "R9: Cycles CPU, 24 adaptive samples (macro_oar 12), OIDN, AgX MHC, exposure 0.55, 540x960 then J.post -> 720x1280",
+ "samples": [
+  24
+ ],
+ "resolution": [
+  720,
+  1280
+ ],
+ "render_resolution": [
+  540,
+  960
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 29.7,
+ "s_per_frame_cpu_mean": 54.1,
+ "s_per_frame_by_shot": {
+  "10": {
+   "wall": 29.7,
+   "cpu": 54.1
+  }
+ },
+ "narration": "film24/audio/narration.wav at +0.10 s; captions film24/script/captions.json"
+}
