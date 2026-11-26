@@ -1,0 +1,28 @@
+roof_low|yard roof_low (spikes 2)
+bow|yard bow (dragon smoke)
+yard_wide|yard yard_wide
+roof_top|yard roof_top (spikes 1)
+macro_spikes|MACRO spikes 60mm f2.8
+macro_dragon|MACRO dragon 55mm f2.8
+fleet_wide|sea fleet_wide
+flag_deck|sea flag_deck
+flag_deck_b|sea flag_deck_b
+flag_deck_crew|sea flag_deck_crew
+hansan_high|sea hansan_high (k0)
+flag_bow|sea flag_bow
+chase|sea chase
+board|sea board
+reveal_top|sea reveal_top (k1 smoke dm)
+aftermath|sea aftermath (k1 dm1)
+shore|sea shore (plank, sand)
+macro_oar|MACRO oar splash
+roof_top_sp0|state set_spikes 0
+roof_top_sp1|state set_spikes 1
+roof_top_sp2|state set_spikes 2
+roof_top_sp3|state set_spikes 3
+roof_low_sp3_pt1|state ports open (pt1)
+hansan_high_k0|state korean_turn 0
+hansan_high_k1|state korean_turn 1
+reveal_top_k1_cs1|state cannon smoke 1
+fleet_wide_dm1|state damage 1
+bow_sp3_ds1.5|state dragon smoke 1.5
