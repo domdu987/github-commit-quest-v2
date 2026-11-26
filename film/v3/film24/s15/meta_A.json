@@ -1,0 +1,67 @@
+{
+ "take": "s15",
+ "film": 24,
+ "shots": [
+  15
+ ],
+ "g0": 1767,
+ "g1": 1950,
+ "first_g": 1761,
+ "n_frames": 189,
+ "handle_in": 6,
+ "handle_out": 0,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "none",
+  "note": "film ends on g 1949 (hard cut on the last word)"
+ },
+ "transitions": [
+  {
+   "at": 1767,
+   "type": "cut"
+  },
+  {
+   "at": 1867,
+   "type": "cut",
+   "note": "inside the take: water/plank -> sand/crawl"
+  }
+ ],
+ "shot_ranges": {
+  "15": [
+   1767,
+   1949
+  ]
+ },
+ "preset": "shore",
+ "samples": 8,
+ "resolution": [
+  720,
+  1280
+ ],
+ "render_resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "events": {
+  "plank_phase": [
+   1767,
+   1866
+  ],
+  "sand_cut": 1867,
+  "crawl_step_frames": 8,
+  "crawl_half_step_D": 0.45
+ },
+ "cast": "jp_cmd24_plank_cling (wet24 1, rides J.swell_z), jp_cmd24_crawl_a/crawl_b alternating every 8 frames (wet24 1)",
+ "mouths": "held (no quote)",
+ "dof": "off",
+ "s_per_frame_wall_mean": 16.5,
+ "s_per_frame_cpu_mean": 69.4,
+ "split": "none",
+ "g1_note": "director: g1 is exclusive (next shot start)",
+ "look": "A",
+ "encode": "libx264rgb crf 12"
+}
