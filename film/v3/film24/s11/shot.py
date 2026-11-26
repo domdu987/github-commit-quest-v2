@@ -13,6 +13,7 @@ J, actors, cast24 = C.J, C.actors, C.cast24
 lerp, clamp, blink, ez, bf = C.lerp, C.clamp, C.blink, C.ez, C.bf
 TMP = os.path.join(HERE, "work")
 
+
 SHOT = 11
 G0, G1 = C.g_bound(37.09), C.g_bound(41.91) - 1          # 1113..1256
 H = 6
@@ -63,6 +64,10 @@ class Take(C.Take):
         xn = J._fl("j_near")["deck_x"][1]
         self.A["loc2"] = tuple(J.L2W("j_near", (xn + CAMX, -CAMY, CAMZ)))
         self.A["look2"] = tuple(J.L2W("j_near", (xn - 1.8, 0.4, J._fl("j_near")["deck_z"] + 1.6)))
+        for nm in ("j_near_sail", "j_near_yard", "j_near_boom"):     # the square sail hid two of the three soldiers' upper bodies
+            ob = C.bpy.data.objects.get(nm)
+            if ob is not None:
+                ob.hide_render = True
         self.lp = {}
         for k in "abc":
             a = self.actors[k] = C.make_actor(k, MEM[k], sd, contact=False)
@@ -79,6 +84,12 @@ class Take(C.Take):
             self.key_set(f, spikes=3, ports=0, dragon_smoke=0.0, fleet_chase=chase_s(g), korean_turn=0.0, damage=0.0, cannon_smoke=0.0)
             for k in self.lp:
                 C.place_on_ship(self.actors[k], f, self.lp[k])
+        for nm in ("j_near_sail",):                      # set_damage keys the sail's visibility every frame: drop those keys, keep it hidden
+            ob = C.bpy.data.objects.get(nm)
+            if ob is not None:
+                ob.animation_data_clear()
+                ob.hide_render = True
+                ob.hide_viewport = True
         for g in gs:
             f = bf(shot, g)
             self.scene.frame_set(f)
