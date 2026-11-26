@@ -5,15 +5,20 @@ import sys, os, json, glob, math, subprocess
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 P = os.path.dirname(os.path.abspath(__file__)); out = sys.argv[1]; N = 1950; FPS = 30; OFF = 0.10; T = N / FPS
+VER = os.environ.get("VERSION", "B")   # B = R9 look (take.mkv); A = films 1-13 look (take_A.mkv, graded here with the v1.1 grade)
+SUF = "_A" if VER == "A" else ""
 FR = out + "_frames"; os.makedirs(FR, exist_ok=True)
 FONT = P + "/fonts/Kanit_900Black.ttf"
 
 # ---------------------------------------------------------------- 1. frames from takes (hard cuts at each take's g0)
 takes = []
 for mp in sorted(glob.glob(P + "/v3/film24/s*/meta.json")):
-    m = json.load(open(mp)); td = os.path.dirname(mp); fr = td + "/frames"
+    td = os.path.dirname(mp)
+    if os.path.exists(td + "/meta%s.json" % SUF): mp = td + "/meta%s.json" % SUF
+    elif VER == "A": continue
+    m = json.load(open(mp)); fr = td + "/frames" + SUF
     if not glob.glob(fr + "/g_*.png"):
-        mk = td + "/take.mkv"
+        mk = td + "/take%s.mkv" % SUF
         if not os.path.exists(mk) and glob.glob(mk + ".part*"):
             subprocess.run("cat %s.part* > %s" % (mk, mk), shell=True, check=True)
         if not os.path.exists(mk):
@@ -76,6 +81,14 @@ def tally(im, g, g_in):
         d.text((420, 250), "0", font=f, fill=(255, 255, 255, 255), anchor="lm", stroke_width=5, stroke_fill=(0, 0, 0, 255))
         draw_check(d, 555, 224, 1.3 * s2)
 
+def graded(path, g):
+    """v1.1 grade (COLOUR_SPEC section 5, film_mini.py grade) for Look A frames."""
+    sys.path.insert(0, P + "/skill/reference-style-shorts/pipeline/v3/film/out_v11")
+    import grade as G
+    if not getattr(G, "_f24", False):
+        G.TAKES, G.JOINS, G.SHOT = [("f24", 0)], [], {}; G.FOG_G0, G.FOG_G1 = 10 ** 9, -1; G._f24 = True
+    return G.grade_frame(Image.open(path).convert("RGB"), g)
+
 OV = {}
 for t in takes:
     oj = t["dir"] + "/overlay.json"
@@ -90,9 +103,9 @@ for g in range(N):
     if src[g] is None:
         Image.new("RGB", (720, 1280)).save(dst); continue
     ships = [sh for sh in OV.get(g, []) if g >= X_FROM and sh.get("hit_g", 1e9) <= g and 0 < sh["x"] < 720 and 60 < sh["y"] < 860]
-    if not ships and g < TALLY_G:
+    if not ships and g < TALLY_G and VER != "A":
         os.symlink(src[g], dst); continue
-    im = Image.open(src[g]).convert("RGBA"); d = ImageDraw.Draw(im, "RGBA")
+    im = (graded(src[g], g) if VER == "A" else Image.open(src[g])).convert("RGBA"); d = ImageDraw.Draw(im, "RGBA")
     for sh in ships[:24]:
         draw_x(d, sh["x"], sh["y"] - 14, 0.75 * pop(g - max(sh["hit_g"], X_FROM)))
     if TALLY_G <= g < 1767 + 1 or (g >= TALLY_G and src[g] and "s14" in src[g]):
