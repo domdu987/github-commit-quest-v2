@@ -1,0 +1,103 @@
+{
+ "take": "s01",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film8/audio/narration.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 0.0,
+   "duration": 6.133,
+   "frame": 0,
+   "end_frame": 184,
+   "kind": "ambience",
+   "label": "desert night, Persia c. 1600: deep quiet, a soft cold wind over sand, crickets far off, the faint crackle of the distant camp fire; a slow airy pad under the stars"
+  },
+  {
+   "time": 0.0,
+   "duration": 0.267,
+   "frame": 0,
+   "end_frame": 8,
+   "kind": "prop",
+   "label": "wooden bucket tips, its rope bail creaks, water sloshes inside",
+   "peak_frame": 4
+  },
+  {
+   "time": 0.1,
+   "duration": 2.1,
+   "frame": 3,
+   "end_frame": 66,
+   "kind": "foley",
+   "label": "steady water stream pouring and splashing into the shallow channel (gentle trickle-splash, stereo centre-left)",
+   "peak_frame": 10
+  },
+  {
+   "time": 1.6,
+   "duration": 0.6,
+   "frame": 48,
+   "end_frame": 66,
+   "kind": "foley",
+   "label": "the bucket runs dry: the stream thins to a few drips",
+   "peak_frame": 62
+  },
+  {
+   "time": 2.067,
+   "duration": 0.4,
+   "frame": 62,
+   "end_frame": 74,
+   "kind": "foley",
+   "label": "last drips plop into the channel; farid straightens with a small satisfied breath",
+   "peak_frame": 66
+  },
+  {
+   "time": 2.5,
+   "duration": 0.0,
+   "frame": 75,
+   "end_frame": 75,
+   "kind": "cut",
+   "label": "cut to the medium: ambience continues unchanged (same place, same night)"
+  },
+  {
+   "time": 2.567,
+   "duration": 1.167,
+   "frame": 77,
+   "end_frame": 112,
+   "kind": "accent",
+   "label": "farid looks up at the Milky Way: a soft sparkling chime / twinkle shimmer",
+   "peak_frame": 84
+  },
+  {
+   "time": 3.767,
+   "duration": 0.4,
+   "frame": 113,
+   "end_frame": 125,
+   "kind": "accent",
+   "label": "eyes come down to us: a light 'hm' pizzicato",
+   "peak_frame": 121
+  },
+  {
+   "time": 4.6,
+   "duration": 0.333,
+   "frame": 138,
+   "end_frame": 148,
+   "kind": "accent",
+   "label": "finger goes up: a bright 'ting!' idea sting (ice-crystal tone)",
+   "peak_frame": 146
+  },
+  {
+   "time": 5.333,
+   "duration": 0.267,
+   "frame": 160,
+   "end_frame": 168,
+   "kind": "accent",
+   "label": "smug head tilt on '\u0e19\u0e49\u0e33\u0e41\u0e02\u0e47\u0e07': a tiny cold frosty shimmer",
+   "peak_frame": 164
+  },
+  {
+   "time": 5.933,
+   "duration": 0.0,
+   "frame": 178,
+   "end_frame": 178,
+   "kind": "cut",
+   "label": "plan: cut to shot 3, the bazaar at blazing noon (bazaar_wide crane down)"
+  }
+ ]
+}

@@ -1,0 +1,26 @@
+{
+ "take": "s17",
+ "shots": [
+  17
+ ],
+ "g0": 1086,
+ "g1": 1123,
+ "handle_in": 9,
+ "handle_out": 0,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 14,
+  "note": "change of place: from the beach (s16, grey drizzle) into the grey office"
+ },
+ "set": "office",
+ "light": "office_grey",
+ "samples": 12,
+ "frames_dir": "frames",
+ "first_rendered": 1077,
+ "last_rendered": 1122,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30
+}

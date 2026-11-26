@@ -1,0 +1,61 @@
+{
+ "fps": 30,
+ "time_base": "film seconds (narration clock + 0.100); frame g starts at g / 30",
+ "take": "s17",
+ "events": [
+  {
+   "time": 36.2,
+   "duration": 3.5,
+   "frame": 1086,
+   "end_frame": 1191,
+   "kind": "bed",
+   "label": "rain on the office window (bed), drizzle running down the panes",
+   "clock": 36.1
+  },
+  {
+   "time": 36.3,
+   "duration": 1.2,
+   "frame": 1089,
+   "end_frame": 1125,
+   "kind": "whistle",
+   "label": "jaunty whistled tune (the theme, non-verbal): the chief strolls in, held whistle mouth, three note glyphs",
+   "clock": 36.2
+  },
+  {
+   "time": 36.52,
+   "duration": 0.08,
+   "frame": 1096,
+   "end_frame": 1098,
+   "kind": "heel",
+   "label": "heel click on wood (contact of the walk cycle)",
+   "clock": 36.42
+  },
+  {
+   "time": 37.2,
+   "duration": 0.08,
+   "frame": 1116,
+   "end_frame": 1118,
+   "kind": "heel",
+   "label": "heel click on wood (he plants on boss_mark)",
+   "clock": 37.1
+  },
+  {
+   "time": 37.4,
+   "duration": 0.08,
+   "frame": 1122,
+   "end_frame": 1124,
+   "kind": "heel",
+   "label": "soft heel settle",
+   "clock": 37.3
+  },
+  {
+   "time": 37.1,
+   "duration": 0.6,
+   "frame": 1113,
+   "end_frame": 1131,
+   "kind": "thunder",
+   "label": "very distant thunder",
+   "clock": 37.0
+  }
+ ]
+}

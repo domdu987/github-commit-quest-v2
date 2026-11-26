@@ -1,0 +1,16 @@
+__pycache__/
+v3/film2/*/raw/
+v3/film2/*/frames/
+v3/film2/*/plate/
+v3/film2/*/matte/
+v3/film2/*/work/
+v3/tmp/
+deliver/
+*_work/*
+!small_work/*.py
+*.tmp.wav
+v3/film*/*/raw/
+v3/film*/*/frames/
+v3/film*/*/work/
+v3/set3d*/*_work/*
+!v3/set3d*/*_work/*.py

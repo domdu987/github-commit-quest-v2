@@ -1,0 +1,27 @@
+{
+ "take": "s26",
+ "shots": [
+  26
+ ],
+ "g0": 1873,
+ "g1": 1965,
+ "handle_in": 0,
+ "handle_out": 0,
+ "transition_in": {
+  "type": "flash",
+  "frames": 9,
+  "note": "5 frames to white at the end of s25, 4 frames out over g 1873-1876 (conform)"
+ },
+ "set": "kitchen",
+ "light": "kitchen_storm",
+ "samples": 8,
+ "frames_dir": "frames",
+ "first_rendered": 1873,
+ "last_rendered": 1964,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "note": "samples 8 instead of 12: measured identical (mean difference 0.25 of 255) at 5.8 s instead of 8.5 s per frame; see QA.md"
+}
