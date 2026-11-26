@@ -43,7 +43,10 @@ def cam_of(shot, g, T):
     d = look0 - loc0
     side = Vector((-d.y, d.x, 0.0)).normalized()          # screen-left of the view (right-hand normal flipped below)
     s = -SLIDE6 * u
-    return loc0 + side * s, look0 + side * s * 0.6, pc["lens"]
+    tgt = Vector(T.cmd_head)                               # aim at the commander (director QA: head centre stays 0.35-0.55 W)
+    look = look0.lerp(tgt, 1.0)
+    look.z = look0.z + 0.0
+    return loc0 + side * s, look, pc["lens"]
 
 
 # ----------------------------------------------------------------------------- poses
@@ -94,6 +97,7 @@ class Take(C.Take):
         self.cmd = self.actors["cmd"] = C.make_actor("cmd", "jp_cmd24", sd)
         self.lp = {k: tuple(self.A["parented"][v]["local"]) for k, v in dict(cmd="commander_deck", a="soldier_deck_a", b="soldier_deck_b").items()}
         C.parent_to_ship(self.cmd, "jflag")
+        self.cmd_head = tuple(ship_pt(self.lp["cmd"]))      # nominal commander deck point (look-at target, x/y only used)
         if shot == 5:
             self.a = self.actors["a"] = C.make_actor("a", "ashi_a24", sd)
             self.b = self.actors["b"] = C.make_actor("b", "ashi_b24", sd)
