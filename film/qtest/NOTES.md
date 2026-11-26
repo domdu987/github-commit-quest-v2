@@ -46,7 +46,14 @@ The shots are joined with hard cuts. The camera does not shake. The only object 
 ## Render time (this container: 4 CPU cores, no GPU)
 Each frame was rendered at 540x960 (75 %) with 24 samples, adaptive sampling and OpenImageDenoise, then upscaled with Lanczos to 720x1280 in post. Measured times:
 
-RENDER_TIMES
+| Shot | Frames | Avg s/frame | Total |
+|---|---|---|---|
+| a (macro, thin haze) | 90 | 40.4 | 61 min |
+| b (forest walk, dense haze) | 120 | 38.4 | 77 min |
+| c (valley POV, thin haze) | 90 | 25.8 | 39 min |
+| **All** | **300** | **35.2** | **2 h 56 min** |
+
+The scene build (terrain, about 4,000 pine instances and the character keys) takes about 1 min per shot before the first frame. The post step (`post.py`) adds about 1 s per frame.
 
 For reference, one shot-b frame at full 720x1280 with 64 samples took **154 s**. The haze volume is about half of that cost. At that setting the 300 frames would have taken about 13 h on this machine, so I used the reduced setting above. The brief's 64-128 samples at native resolution fit easily on a GPU: a single modern RTX-class card is typically 20-40x faster than these 4 cores, which puts a frame at about 5-8 s.
 
