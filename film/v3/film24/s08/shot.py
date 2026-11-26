@@ -92,7 +92,8 @@ class Take(C.Take):
             f = bf(shot, g); self.scene.frame_set(f)
             loc, look, lens = cam_of(shot, g, self); self.key_cam(f, loc, look, lens=lens)
             if shot == 8:
-                self.focus.location = look; self.focus.keyframe_insert("location", frame=f)
+                if self.focus is not None:                      # Look A has no DOF (no focus empty)
+                    self.focus.location = look; self.focus.keyframe_insert("location", frame=f)
                 self.key_set(f, spikes=spikes_at(g), ports=0, dragon_smoke=0.0)
             else:
                 self.key_set(f, spikes=3, ports=ports_at(g), dragon_smoke=0.0)
