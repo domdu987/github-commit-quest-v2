@@ -24,7 +24,7 @@ WORK = os.path.join(HERE, 'joseon_work')
 S = {}                                                      # scene state (reset by build)
 FPS = 30
 LOOK = 'B'                                                  # 'B' = R9 path-traced look (default, the one in production); 'A' = original look of films 1-13 (set_look('A') / env JOSEON_LOOK=A in build())
-KEY_A = (2.30, 1.65, 0.74); SHADE_A = (0.20, 0.27, 0.54); A_SAMPLES = 10; A_ELEV = 27.0
+KEY_A = (2.30, 1.65, 0.74); SHADE_A = (0.20, 0.27, 0.54); A_SAMPLES = 8; A_ELEV = 27.0
 CHASE_V = 3.0                                               # Japanese fleet speed, D / s (hook set_fleet_chase(s) moves them +x by CHASE_V * s)
 def rnd(seed): return random.Random(seed)
 def V(*a): return Vector(a)
