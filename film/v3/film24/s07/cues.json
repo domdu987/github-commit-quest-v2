@@ -1,0 +1,39 @@
+{
+ "take": "s07",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film24/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 21.267,
+   "duration": 3.367,
+   "frame": 638,
+   "end_frame": 739,
+   "kind": "ambience",
+   "label": "flagship deck at sea: wind, creaking, drums far"
+  },
+  {
+   "time": 21.467,
+   "duration": 3.0,
+   "frame": 644,
+   "end_frame": 734,
+   "kind": "crowd",
+   "label": "crowd laugh: three soldiers roaring, jeering"
+  },
+  {
+   "time": 21.467,
+   "duration": 0.0,
+   "frame": 644,
+   "end_frame": 644,
+   "kind": "cut",
+   "label": "hard cut from shot 6"
+  },
+  {
+   "time": 24.467,
+   "duration": 0.0,
+   "frame": 734,
+   "end_frame": 734,
+   "kind": "cut",
+   "label": "hard cut to shot 8a (yard macro)"
+  }
+ ]
+}
