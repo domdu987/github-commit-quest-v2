@@ -5,11 +5,13 @@ HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 which = sys.argv[1] if len(sys.argv) > 1 else 'both'
 if which == 'both':
     bad = 0; tot = 0
-    for w in ('yard', 'sea'):
-        r = subprocess.run([sys.executable, os.path.abspath(__file__), w], capture_output=True, text=True); out = r.stdout
-        print(out, end=''); tot += out.count('\nok ') + out.startswith('ok '); bad += out.count('FAIL ')
-        if r.returncode != 0: print(r.stderr[-1500:]); bad += 1
-    print('ALL OK' if bad == 0 else 'FAILED (%d)' % bad, '(%d checks, 2 processes)' % tot); sys.exit(0 if bad == 0 else 1)
+    for look in ('B', 'A'):                                  # both looks: B = R9 (default), A = original look of films 1-13 (JOSEON_LOOK=A)
+        for w in ('yard', 'sea'):
+            env = dict(os.environ, JOSEON_LOOK=look); print('--- look %s, %s' % (look, w), flush=True)
+            r = subprocess.run([sys.executable, os.path.abspath(__file__), w], capture_output=True, text=True, env=env); out = r.stdout
+            print(out, end=''); tot += out.count('\nok ') + out.startswith('ok '); bad += out.count('FAIL ')
+            if r.returncode != 0: print(r.stderr[-1500:]); bad += 1
+    print('ALL OK' if bad == 0 else 'FAILED (%d)' % bad, '(%d checks, 4 processes: yard + sea in looks B and A)' % tot); sys.exit(0 if bad == 0 else 1)
 import bpy
 from mathutils import Vector
 import joseon as J
@@ -54,8 +56,8 @@ if which == 'yard':
     t = sh['hull']; zs = [(t.matrix_world @ Vector(c)).z for c in t.bound_box]; check('turtle ship: bow keel in the water, stern on the cradles', min(zs) < -0.2 and max(zs) > 3.5, (round(min(zs), 2), round(max(zs), 2)))
     check('moored ships: oars stowed along the hull (no stroke drivers)', not J.S['ships']['pk1']['oars'][0].animation_data)
     for nm in ('roof_low', 'bow', 'yard_wide', 'roof_top', 'macro_spikes', 'macro_dragon'): check('preset ' + nm, nm in A['cams'] and nm in J.PRESETS)
-    check('macro presets use DOF', A['cams']['macro_spikes'].get('fstop') and A['cams']['macro_dragon'].get('fstop'))
-    cam = J.make_camera(A['cams']['macro_spikes']); check('macro_spikes camera DOF on, f/2.8, 60 mm', cam.data.dof.use_dof and abs(cam.data.dof.aperture_fstop - 2.8) < 1e-6 and cam.data.lens == 60)
+    check('macro presets carry fstop (used by look B only)', A['cams']['macro_spikes'].get('fstop') and A['cams']['macro_dragon'].get('fstop'))
+    cam = J.make_camera(A['cams']['macro_spikes']); check('macro_spikes camera: 60 mm, DOF %s' % ('OFF (look A)' if J.LOOK == 'A' else 'on f/2.8'), cam.data.lens == 60 and (not cam.data.dof.use_dof if J.LOOK == 'A' else (cam.data.dof.use_dof and abs(cam.data.dof.aperture_fstop - 2.8) < 1e-6)))
     cam = J.make_camera(A['cams']['yard_wide']); check('wide presets: no DOF', not cam.data.dof.use_dof and cam.parent is None)
     check('ship_root parents cards to the ride empty', J.ship_root('turtle').name == 'ride_turtle')
 else:
@@ -115,7 +117,7 @@ else:
     check('deck anchors (ship-local, riding the ship) stand on their decks (%d)' % len(S['parented']), not bad_, bad_[:4])
     mk_ = S['marks']; check('shore anchors: plank top just above the sand / water, sand above the surf', -0.3 < mk_['commander_plank'][2] < 0.6 and mk_['commander_sand'][2] > 0.2 and mk_['commander_sand'][1] > S['shore_pt'].y, (mk_['commander_plank'], mk_['commander_sand']))
     for nm in J.LOC_PRESETS['sea']: check('preset ' + nm, nm in A['cams'])
-    cam = J.make_camera(A['cams']['macro_oar']); check('macro_oar DOF f/2.8 40 mm', cam.data.dof.use_dof and cam.data.lens == 40 and abs(cam.data.dof.aperture_fstop - 2.8) < 1e-6)
+    cam = J.make_camera(A['cams']['macro_oar']); check('macro_oar 40 mm, DOF %s' % ('OFF (look A)' if J.LOOK == 'A' else 'f/2.8'), cam.data.lens == 40 and (not cam.data.dof.use_dof if J.LOOK == 'A' else (cam.data.dof.use_dof and abs(cam.data.dof.aperture_fstop - 2.8) < 1e-6)))
     J.clear_keys(); J.set_oar_splash(0.0); K = S['splash']; check('set_oar_splash(0): nothing visible', all(d['ob'].hide_render for d in K['drops']) and all(r['ob'].hide_render for r in K['rings']))
     J.set_oar_splash(0.3); n3 = sum(1 for d in K['drops'] if not d['ob'].hide_render); J.set_oar_splash(0.9); n9 = sum(1 for d in K['drops'] if not d['ob'].hide_render)
     check('set_oar_splash: %d droplets at t 0.3, fewer / smaller at 0.9 (%d); two foam rings grow and fade' % (n3, n9), n3 >= 25 and n9 < n3 and K['rings'][0]['ob'].scale[0] > 0.3)
@@ -126,4 +128,22 @@ else:
     J.set_special('board'); t = ships['turtle']['root'].location; jb = ships['j_board']['root'].location; check("set_special('board'): j_board alongside the turtle ship (10.3 D)", abs((t - jb).length - 10.9) < 1.0, round((t - jb).length, 2))
     J.set_special('solo'); check("set_special('solo'): the turtle ship alone", abs(ships['turtle']['root'].location.x - J.SOLO_AT[0]) < 1e-6)
     J.set_special(''); J.clear_keys()
+# ---------------------------------------------------------------- the look switch
+sc_ = bpy.context.scene; haze = bpy.data.objects.get('haze')
+if J.LOOK == 'A':
+    sun = J.S['sun'].data; k = max(J.KEY_A); lin = [c * sun.energy / math.pi for c in sun.color]
+    check('look A: ONE sun key = (2.30, 1.65, 0.74), 0.45 deg softness', all(abs(a - b) < 0.01 for a, b in zip(lin, J.KEY_A)) and abs(math.degrees(sun.angle) - 0.45) < 1e-3 and sum(1 for o in bpy.data.objects if o.type == 'LIGHT') == 1, [round(c, 3) for c in lin])
+    check('look A: no haze volume (object hidden from render)', haze is not None and haze.hide_render)
+    nodes = [n for m in bpy.data.materials if m.name.startswith('J_') and m.node_tree for n in m.node_tree.nodes]
+    check('look A: every set material is Diffuse + SHADE emission (no Principled BSDF left, %d shade emissions)' % sum(1 for n in nodes if n.name.startswith('A_shade')), not any(n.type == 'BSDF_PRINCIPLED' for n in nodes) and sum(1 for n in nodes if n.name.startswith('A_shade')) > 40)
+    sh_ = [n for n in nodes if n.name.startswith('A_shade')][0]; mix_ = sh_.inputs['Color'].links[0].from_node; check('look A: emission = base x SHADE (0.20, 0.27, 0.54)', all(abs(a - b) < 1e-4 for a, b in zip(mix_.inputs[7].default_value[:3], J.SHADE_A)), tuple(round(v, 3) for v in mix_.inputs[7].default_value[:3]))
+    bg = [n for n in sc_.world.node_tree.nodes if n.type == 'BACKGROUND'][0]; check('look A: the sky is visible to the camera only (Background strength = Is Camera Ray x k)', bg.inputs['Strength'].is_linked and bg.inputs['Strength'].links[0].from_node.type == 'MATH')
+    cy_ = sc_.cycles; check('look A: 8 samples, OIDN, full 720x1280, no motion blur, direct light only', cy_.samples == 8 and cy_.use_denoising and cy_.denoiser == 'OPENIMAGEDENOISE' and sc_.render.resolution_percentage == 100 and not sc_.render.use_motion_blur and cy_.diffuse_bounces == 0 and sc_.view_settings.view_transform == 'Standard', (cy_.samples, cy_.diffuse_bounces))
+    check('look A: J.post is skipped by render_still (LOOK == A)', J.LOOK == 'A' and hasattr(J, 'set_look'))
+    check('look A: every camera has DOF off', all(not c.data.dof.use_dof for c in bpy.data.objects if c.type == 'CAMERA'))
+    try: J.set_look('B'); check('set_look(B) after A raises (rebuild instead)', False)
+    except RuntimeError: check('set_look(B) after A raises (rebuild instead)', True)
+else:
+    check('look B (default): LOOK == B, haze visible, 24 samples at 75 %', J.LOOK == 'B' and haze is not None and not haze.hide_render and sc_.render.resolution_percentage == 75 and sc_.cycles.samples in (24, 16, 12) and sc_.view_settings.view_transform == 'AgX')
+    J.set_look('B'); check("set_look('B') on B is a no-op", J.LOOK == 'B')
 print('ALL OK' if not bad else 'FAILED: %s' % bad, '(%d checks)' % (len(ok) + len(bad)))

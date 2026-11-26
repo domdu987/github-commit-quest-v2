@@ -23,6 +23,8 @@ MB = T.MB; hexl = T.hex_lin
 WORK = os.path.join(HERE, 'joseon_work')
 S = {}                                                      # scene state (reset by build)
 FPS = 30
+LOOK = 'B'                                                  # 'B' = R9 path-traced look (default, the one in production); 'A' = original look of films 1-13 (set_look('A') / env JOSEON_LOOK=A in build())
+KEY_A = (2.30, 1.65, 0.74); SHADE_A = (0.20, 0.27, 0.54); A_SAMPLES = 8; A_ELEV = 27.0
 CHASE_V = 3.0                                               # Japanese fleet speed, D / s (hook set_fleet_chase(s) moves them +x by CHASE_V * s)
 def rnd(seed): return random.Random(seed)
 def V(*a): return Vector(a)
@@ -257,6 +259,7 @@ def set_sun(az_deg, elev, energy=None):
     """Sun by azimuth (direction TO the sun, degrees from +x CCW) and elevation. Warm key (1.0, 0.66, 0.40), 1.5 deg disc."""
     sun = S['sun']; e = math.radians(elev); a = math.radians(az_deg); to_sun = Vector((math.cos(a) * math.cos(e), math.sin(a) * math.cos(e), math.sin(e)))
     sun.rotation_euler = (-to_sun).to_track_quat('-Z', 'Y').to_euler(); S['to_sun'] = to_sun; S['sun_glow'].inputs[1].default_value = to_sun
+    for nd in S.get('sun_vec_nodes', []): nd.inputs[1].default_value = tuple(to_sun)
     if energy: sun.data.energy = energy
 
 def sun_for_camera(setup, elev=16.0, left=1.0, behind=0.38):
@@ -273,6 +276,10 @@ def make_haze(density, center, size):
     ob.visible_shadow = False; ob.visible_glossy = True; return ob
 
 def setup_render(sc, quality='final'):
+    if LOOK == 'A': return setup_render_A(sc, quality)
+    return setup_render_B(sc, quality)
+
+def setup_render_B(sc, quality='final'):
     """Cycles CPU, path tracing with GI, 24 samples adaptive + OIDN, 75 % resolution (540x960) upscaled to 720x1280 by post(); preview 40 %."""
     r = sc.render; r.engine = 'CYCLES'; r.resolution_x, r.resolution_y = 720, 1280; r.resolution_percentage = 75 if quality == 'final' else 40
     r.image_settings.file_format = 'PNG'; r.use_motion_blur = False; r.fps = FPS
@@ -296,7 +303,7 @@ def make_camera(setup, name='cam', scene=None):
         right = fwd.cross(Vector(setup['up'])).normalized(); up = right.cross(fwd); ob.rotation_euler = Matrix((right, up, -fwd)).transposed().to_euler()
     else: ob.rotation_euler = fwd.to_track_quat('-Z', 'Y').to_euler()
     if setup.get('roll'): ob.rotation_euler.rotate_axis('Z', math.radians(setup['roll']))
-    if setup.get('fstop'):
+    if setup.get('fstop') and LOOK != 'A':
         cd.dof.use_dof = True; cd.dof.aperture_fstop = setup['fstop']; fp = setup.get('focus', setup['look_at'])
         cd.dof.focus_distance = float(fp) if isinstance(fp, (int, float)) else (Vector(fp) - Vector(setup['loc'])).length; cd.dof.aperture_blades = 7
     else: cd.dof.use_dof = False
@@ -1596,6 +1603,8 @@ def anchors():
 # ============================================================================= build()
 def build(location=None, preset=None, light=None):
     """Build a location for a preset (LOC_PRESETS) into a fresh scene: path-traced light, world, haze, render settings, the set and the preset's state. Returns anchors()."""
+    global LOOK
+    LOOK = 'B'
     preset = preset or ('roof_low' if location in (None, 'yard') else 'fleet_wide'); assert preset in PRESETS, preset; loc = PRESETS[preset]['loc']
     bpy.ops.wm.read_factory_settings(use_empty=True); sc = bpy.context.scene
     for h in (bpy.app.handlers.render_pre, bpy.app.handlers.frame_change_post):
@@ -1611,6 +1620,7 @@ def build(location=None, preset=None, light=None):
     if loc == 'yard': _yard_marks(); S['cams'] = yard_cams()
     else: _sea_marks(); S['cams'] = sea_cams()
     cam = S['cams'][PRESETS[preset]['cam']]; elev = 15.0 if loc == 'sea' else 17.0; az, el = sun_for_camera(cam, elev); set_sun(az, el); S['sun_elev'] = el
+    if os.environ.get('JOSEON_LOOK', 'B').strip().upper() == 'A': set_look('A')
     return anchors()
 
 def apply_state(state):
@@ -1643,12 +1653,108 @@ def post(src, dst, W=720, H=1280):
     Image.fromarray((a * 255 + 0.5).astype(np.uint8)).save(dst)
 
 def render_still(path, quality='final'):
-    sc = bpy.context.scene; setup_render(sc, quality); raw = path[:-4] + '_raw.png'; w, c = T.render(raw); post(raw, path); os.remove(raw); return w, c
+    sc = bpy.context.scene; setup_render(sc, quality)
+    if LOOK == 'A': return T.render(path)                       # look A: full 720x1280, NO post (the v1.1 grade runs in conform)
+    raw = path[:-4] + '_raw.png'; w, c = T.render(raw); post(raw, path); os.remove(raw); return w, c
+
+# ============================================================================= LOOK A: the original look of films 1-13 (flat lit, saturated, blue-violet shade), a runtime switch
+def setup_render_A(sc, quality='final'):
+    """Look A render: full 720x1280 (no 75 % upscale), 10 adaptive samples + OIDN, direct light only (diffuse bounces 0, one glossy bounce for the sun glints), Standard view (the v1.1 grade
+    runs later in conform), no DOF, no motion blur, no volume."""
+    r = sc.render; r.engine = 'CYCLES'; r.resolution_x, r.resolution_y = 720, 1280; r.resolution_percentage = 100 if quality == 'final' else 40
+    r.image_settings.file_format = 'PNG'; r.use_motion_blur = False; r.fps = FPS
+    cy = sc.cycles; cy.device = 'CPU'; cy.samples = A_SAMPLES if quality == 'final' else 6; cy.use_adaptive_sampling = True; cy.adaptive_threshold = 0.05; cy.adaptive_min_samples = 4
+    cy.use_denoising = True; cy.denoiser = 'OPENIMAGEDENOISE'; cy.max_bounces = 2; cy.diffuse_bounces = 0; cy.glossy_bounces = 1; cy.transmission_bounces = 0
+    cy.volume_bounces = 0; cy.transparent_max_bounces = 8; cy.caustics_reflective = False; cy.caustics_refractive = False; cy.blur_glossy = 1.0
+    cy.use_light_tree = False; r.threads_mode = 'FIXED'; r.threads = 2; r.use_persistent_data = True
+    sc.view_settings.view_transform = 'Standard'
+    try: sc.view_settings.look = 'None'
+    except TypeError: pass
+    sc.view_settings.exposure = 0.0; sc.view_settings.gamma = 1.0
+    if sc.camera is not None: sc.camera.data.dof.use_dof = False
+
+def _shade_col(b, base, mul=1.0):
+    """emission colour = base x SHADE x shade_mul (blue-violet shade tinted by the surface)."""
+    return b.mul(base, (SHADE_A[0] * mul, SHADE_A[1] * mul, SHADE_A[2] * mul, 1.0))
+
+def _src(b, sock):
+    """(value or socket) of an input socket for reuse."""
+    if sock.is_linked: return sock.links[0].from_socket
+    v = sock.default_value
+    return tuple(v) if hasattr(v, '__len__') else v
+
+def _convert_mat_A(m, shade_mul=1.0):
+    """Principled -> Diffuse (lit by the one key) + Emission(base x SHADE) [+ a little glossy for metals / the sea glitter]; plain Diffuse BSDFs (flags, foam) get the shade emission added;
+    alpha stays a Transparent mix; emissive extras (muzzle flash, droplets) are kept."""
+    if m.node_tree is None or m.get('lookA'): return
+    b = NB.__new__(NB); b.m = m; b.nt = m.node_tree; b.out = [n for n in b.nt.nodes if n.type == 'OUTPUT_MATERIAL'][0]; nt = b.nt
+    water = m.name in ('J_sea', 'J_yard_water')
+    for p in [n for n in nt.nodes if n.type == 'BSDF_PRINCIPLED']:
+        outs = [l.to_socket for l in p.outputs[0].links]
+        base = _src(b, p.inputs['Base Color']); base = (base[0], base[1], base[2], 1.0) if isinstance(base, tuple) else base
+        d = nt.nodes.new('ShaderNodeBsdfDiffuse'); d.name = 'A_diff'; b.put(d.inputs['Color'], base)
+        if p.inputs['Normal'].is_linked: nt.links.new(p.inputs['Normal'].links[0].from_socket, d.inputs['Normal'])
+        emi = nt.nodes.new('ShaderNodeEmission'); emi.name = 'A_shade'; nt.links.new(_shade_col(b, base, shade_mul), emi.inputs['Color'])
+        ad = nt.nodes.new('ShaderNodeAddShader'); nt.links.new(d.outputs[0], ad.inputs[0]); nt.links.new(emi.outputs[0], ad.inputs[1]); res = ad.outputs[0]
+        met = p.inputs['Metallic'].default_value; rough = p.inputs['Roughness'].default_value
+        if met > 0.5 or water:                                                   # sharp sun glints on iron / gold / the sea
+            gl = nt.nodes.new('ShaderNodeBsdfGlossy'); gl.distribution = 'GGX'; gl.inputs['Roughness'].default_value = 0.12 if water else max(0.25, rough); b.put(gl.inputs['Color'], (1.0, 0.82, 0.55, 1.0) if water else base)
+            if p.inputs['Normal'].is_linked: nt.links.new(p.inputs['Normal'].links[0].from_socket, gl.inputs['Normal'])
+            mx = nt.nodes.new('ShaderNodeMixShader'); mx.inputs[0].default_value = 0.16 if water else 0.45; nt.links.new(res, mx.inputs[1]); nt.links.new(gl.outputs[0], mx.inputs[2]); res = mx.outputs[0]
+        if water:                                                                # crisp cel warm band on the swell faces turned to the sun (film-10 sea)
+            g = nt.nodes.new('ShaderNodeNewGeometry'); dp = nt.nodes.new('ShaderNodeVectorMath'); dp.operation = 'DOT_PRODUCT'; dp.inputs[1].default_value = tuple(S.get('to_sun', Vector((0, 0, 1)))); nt.links.new(g.outputs['Normal'], dp.inputs[0])
+            S.setdefault('sun_vec_nodes', []).append(dp); se = math.sin(math.radians(A_ELEV))
+            sm = nt.nodes.new('ShaderNodeMapRange'); sm.interpolation_type = 'SMOOTHSTEP'; sm.inputs['From Min'].default_value = se + 0.05; sm.inputs['From Max'].default_value = se + 0.075; nt.links.new(dp.outputs['Value'], sm.inputs['Value'])
+            km = nt.nodes.new('ShaderNodeMath'); km.operation = 'MULTIPLY'; km.inputs[1].default_value = 0.35; nt.links.new(sm.outputs['Result'], km.inputs[0])
+            ew = nt.nodes.new('ShaderNodeEmission'); ew.inputs['Color'].default_value = (1.0, 0.72, 0.42, 1.0); nt.links.new(km.outputs[0], ew.inputs['Strength'])
+            a2 = nt.nodes.new('ShaderNodeAddShader'); nt.links.new(res, a2.inputs[0]); nt.links.new(ew.outputs[0], a2.inputs[1]); res = a2.outputs[0]
+        es = p.inputs['Emission Strength'].default_value
+        if es > 0.5:                                                             # self-lit extras (droplets, flash): keep the glow
+            ex = nt.nodes.new('ShaderNodeEmission'); ex.inputs['Color'].default_value = p.inputs['Emission Color'].default_value; ex.inputs['Strength'].default_value = es
+            a3 = nt.nodes.new('ShaderNodeAddShader'); nt.links.new(res, a3.inputs[0]); nt.links.new(ex.outputs[0], a3.inputs[1]); res = a3.outputs[0]
+        al = p.inputs['Alpha']
+        if al.is_linked or al.default_value < 0.999:
+            tr = nt.nodes.new('ShaderNodeBsdfTransparent'); mx = nt.nodes.new('ShaderNodeMixShader'); b.put(mx.inputs[0], _src(b, al)); nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(res, mx.inputs[2]); res = mx.outputs[0]
+        for to in outs: nt.links.new(res, to)
+        nt.nodes.remove(p)
+    for d in [n for n in nt.nodes if n.type == 'BSDF_DIFFUSE' and not n.name.startswith('A_')]:     # flags, foam: plain diffuse gets the shade emission
+        outs = [l.to_socket for l in d.outputs[0].links]; base = _src(b, d.inputs['Color']); base = (base[0], base[1], base[2], 1.0) if isinstance(base, tuple) else base
+        emi = nt.nodes.new('ShaderNodeEmission'); emi.name = 'A_shade'; nt.links.new(_shade_col(b, base, shade_mul), emi.inputs['Color'])
+        ad = nt.nodes.new('ShaderNodeAddShader'); nt.links.new(d.outputs[0], ad.inputs[0]); nt.links.new(emi.outputs[0], ad.inputs[1])
+        for to in outs: nt.links.new(ad.outputs[0], to)
+    m['lookA'] = 1
+
+def set_look(look='A'):
+    """Switch the scene to LOOK A (the original look of films 1-13: COLOUR_SPEC section 4): ONE sun KEY (2.30, 1.65, 0.74) from the camera's left, 0.45 deg softness; SHADE emission (0.20, 0.27, 0.54) x base colour on every set
+    material (blue-violet shadows); the sky lights nothing (visible to the camera only); no haze volume; no DOF; direct light only; geometry, swell, foam, smoke, cards unchanged. Call it right after build()
+    (build() calls it itself when env JOSEON_LOOK=A). 'B' is the default look; going back needs a fresh build()."""
+    global LOOK
+    look = (look or 'B').upper()
+    if look == LOOK: return LOOK
+    if look != 'A': raise RuntimeError("set_look('B'): B is the default, call build() again")
+    sc = bpy.context.scene; LOOK = 'A'
+    # light: one hard key, white diffuse facing it = KEY (energy pi x max), colour = KEY / max
+    k = max(KEY_A); sun = S['sun']; sun.data.color = tuple(x / k for x in KEY_A); sun.data.energy = math.pi * k; sun.data.angle = math.radians(0.45)
+    # world: the sky stays for the camera, lights nothing
+    w = sc.world; nt = w.node_tree; bg = [n for n in nt.nodes if n.type == 'BACKGROUND'][0]; lp = nt.nodes.new('ShaderNodeLightPath'); mul = nt.nodes.new('ShaderNodeMath'); mul.operation = 'MULTIPLY'
+    mul.inputs[1].default_value = bg.inputs['Strength'].default_value; nt.links.new(lp.outputs['Is Camera Ray'], mul.inputs[0]); nt.links.new(mul.outputs[0], bg.inputs['Strength'])
+    ho = bpy.data.objects.get('haze')
+    if ho is not None: ho.hide_render = True; ho.hide_viewport = True
+    for m in list(bpy.data.materials):
+        if m.name.startswith('J_') and m.node_tree is not None: _convert_mat_A(m)
+    S['sun_elev'] = A_ELEV; setup_render_A(sc, 'final')
+    cam = sc.camera
+    if cam is not None:
+        cam.data.dof.use_dof = False; az, _ = sun_for_camera(dict(loc=tuple(cam.location), look_at=tuple(cam.location + cam.matrix_world.to_quaternion() @ Vector((0, 0, -10)))), A_ELEV); set_sun(az, A_ELEV)
+    else:
+        pc = S['cams'][PRESETS[S['preset']]['cam']]; az, _ = sun_for_camera(pc, A_ELEV); set_sun(az, A_ELEV)
+    return LOOK
+
 
 def _load(): return ' '.join('%.2f' % v for v in os.getloadavg())
 def cli_render(specs=None, quality='final', outdir=None, actors=True):
     """spec = preset[:state[:cam]] ; state tokens in apply_state."""
-    outdir = outdir or os.path.join(WORK, 'final' if quality == 'final' else 'stills'); os.makedirs(outdir, exist_ok=True); res = {}
+    outdir = outdir or os.path.join(WORK, ('final' if quality == 'final' else 'stills') + ('_A' if os.environ.get('JOSEON_LOOK', 'B').strip().upper() == 'A' else '')); os.makedirs(outdir, exist_ok=True); res = {}
     for spec in (specs or list(PRESETS)):
         parts = spec.split(':'); pr = parts[0]; st = parts[1] if len(parts) > 1 and parts[1] else PRESETS[pr].get('state', ''); keep = PRESETS[pr]['state']
         if len(parts) > 1 and parts[1]: PRESETS[pr]['state'] = st

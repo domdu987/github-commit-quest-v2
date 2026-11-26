@@ -5,7 +5,7 @@
   15
  ],
  "g0": 1767,
- "g1": 1949,
+ "g1": 1950,
  "first_g": 1761,
  "n_frames": 189,
  "handle_in": 6,
@@ -60,5 +60,6 @@
  "dof": "off",
  "s_per_frame_wall_mean": 36.4,
  "s_per_frame_cpu_mean": 69.4,
- "split": "take.mkv.partaa + take.mkv.partab (cat them back together)"
+ "split": "take.mkv.partaa + take.mkv.partab (cat them back together)",
+ "g1_note": "director: g1 is exclusive (next shot start)"
 }

@@ -135,3 +135,12 @@ Render 6 handle frames on each side of every take, except before g 0 and after g
 - **Processes:** at most 2 render processes with 2 threads each.
 - **Network:** no network calls except git and pip, and no paid APIs.
 - Finish with a short report: the takes delivered, frame ranges, s/frame, and anything that differs from the plan.
+
+## Second pass: Look A (client wants two versions; do this AFTER all your B takes are delivered)
+- Pull film24/main into your branch first (`git fetch origin film24/main && git merge --no-edit FETCH_HEAD`). It brings the Look A switch in joseon.py and common.py.
+- For each of your takes, in the same take folder:
+  1. Move the B frames aside: `mv raw raw_B; mv frames frames_B`. Keep take.mkv and meta.json untouched.
+  2. Re-render the same frames with `JOSEON_LOOK=A python3 shot.py final ...`. Same shot.py, no edits: it means no haze, no DOF, 8 samples, full 720x1280, and no post(). Expect about 10 s per frame on 4 cores.
+  3. Deliver as `take_A.mkv` (same ffmpeg line but `-crf 12` to save repo space, `-i frames_A/g_%04d.png` after `mv frames frames_A`), plus `meta_A.json` (same g0/g1/first_g/n_frames), `contact_A.jpg` and `QA_A.md`. Run qa_auto on take_A.mkv.
+  4. Do NOT grade Look A frames: the director applies the v1.1 grade in conform.
+- Push them to your branch. If time runs short, B always comes first.
