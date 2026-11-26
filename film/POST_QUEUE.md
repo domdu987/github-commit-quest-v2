@@ -29,6 +29,7 @@ Branch: `claude/new-session-73ou27`. Only rows with status `READY` may be posted
 | 22 | ไอ้ช่างวงจร | ไอ้ช่างวงจร | https://github.com/domdu987/github-commit-quest-v2/raw/film22/main/film/release22/circuit_v1.mp4 | WAIT (client posts himself) |
 | 21 | ไอ้ชาวนาบนเนิน | ไอ้ชาวนาบนเนิน | https://github.com/domdu987/github-commit-quest-v2/raw/film21/main/film/release21/farmers_v1.mp4 | WAIT (client posts himself) |
 | 20 | ไอ้ช่างหมุด | ไอ้ช่างหมุด | https://github.com/domdu987/github-commit-quest-v2/raw/film20/main/film/release20/rivet_v2.mp4 | WAIT (v2 fix; client posts himself) |
+| 24 | ไอ้เรือเต่า | ไอ้เรือเต่า | film24/main: film/release24/turtle_A.mp4 or turtle_B.mp4 (client picks) | WAIT (client posts himself) |
 
 ## Captions
 (Each READY clip gets a heading here, `### <#> <Title>`, followed by the exact description text to paste.)
