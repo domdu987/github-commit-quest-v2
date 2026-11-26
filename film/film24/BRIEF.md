@@ -30,11 +30,11 @@ Facts vs inventions: PROJ/film24/FACTS.md.
 - No identical duplicate characters in one frame: vary face, colour, pose, size.
 - Near figures bigger than far ones (true perspective).
 - Every person has a contact shadow.
-- Sharp. No DOF. No face filling the frame for more than ~1 s.
+- Characters sharp. DOF allowed (client 2026-11-26) for the 3 macro inserts and mild background softness; out-of-focus foreground must be world-fixed. No face filling the frame for more than ~1 s.
 - Hard cuts only. No dissolves / ghost double exposure.
 - Comic and bloodless: no gore, no bodies, no injury; ships broken = smoke, splintered mast, listing. Fire shown only as smoke puffs/cannon flashes.
 - Captions sit at y 900: keep whole heads above y 880.
 - Mouths move only inside the two quote windows (16.1-21.4 and 34.8-37.0), commander only.
 
-## Look
-Flat unlit 2D puppet cards in a lit 3D world, one hard key light from camera-left, blue-violet shade (hue 240-260), colour bands of COLOUR_SPEC (exteriors may fall outside; say why in QA.md). Rich, dense, period-correct sets, smooth layered water with foam and wakes (as film 10's sea).
+## Look (client 2026-11-26: R9 reference, film/ref_shorts/R9_sheet.jpg; recipe branch qtest/r9 film/qtest/NOTES.md)
+Cycles GI, one soft warm sun key from camera-left, gradient sky fill, thin volumetric haze so distant ships/islands fade, bloom on hot spots only (post.py). Render 24 spp adaptive, OIDN, 75 % (540x960) then upscale to 720x1280. Flat unlit 2D puppet cards that cast shadows. Previously: blue-violet shade (hue 240-260), colour bands of COLOUR_SPEC (exteriors may fall outside; say why in QA.md). Rich, dense, period-correct sets, smooth layered water with foam and wakes (as film 10's sea).
