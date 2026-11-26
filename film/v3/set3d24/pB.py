@@ -96,7 +96,7 @@ def ride_swell(ob, root, base_z=0.0, amp=1.0, roll=0.0, pitch=0.0, seed=0, extra
 def new_ship(name, kind, L, B, loc, yaw_deg, scale=1.0, sea=True, hscale=1.0):
     root = empty('ship_' + name, None, tuple(loc), (0, 0, math.radians(yaw_deg))); root.rotation_mode = 'XYZ'; root.scale = (scale,) * 3
     ride = empty('ride_' + name, root); sh = dict(name=name, kind=kind, L=L, B=B, root=root, ride=ride, base=Vector(loc), yaw=yaw_deg, scale=scale, guns=[], oars=[], masts=[], parts=[], sea=sea)
-    if sea: ride_swell(ride, root, 0.0, 1.0, roll=0.014, pitch=0.007, seed=hash(name) % 97)
+    if sea: ride_swell(ride, root, 0.0, 1.0, roll=0.014, pitch=0.007, seed=sum(ord(c) for c in name) % 97)
     S['ships'][name] = sh; return sh
 
 def wake_foam(sh, big=True, bowspray=True):
@@ -137,7 +137,7 @@ def flag_obj(sh, key, base, h, w, wave=0.0, pole=True, parent=None, name='flag',
 
 def oar_set(sh, xs, ys, zp, length_out=6.4, length_in=1.4, dip=True, tilt_deg=None, stroke=True, blade=True):
     """Oars through the hull side: pivot (x, +-y, zp); tilted so the blade dips into the water (dip) or raised (rest). Stroke = driver on the yaw."""
-    M_ = S['M']; r = rnd(len(sh['name']) * 7)
+    M_ = S['M']; r = rnd(sum(ord(c) for c in sh['name']))
     for i, (x, yh) in enumerate(zip(xs, ys)):
         for sg in (1, -1):
             mb = MB(); rod(mb, (0, -length_in, 0), (0, length_out - 1.0, 0), 0.085, M_['wood_l'], seg=6, r1=0.07)
@@ -187,16 +187,14 @@ def build_turtle(name='turtle', loc=(0, 0, 0), yaw=0.0, sea=False, sail=False, o
     mk(mb, name + '_eave', ride)
     # --- cross-shaped walkway on the ridge
     mb = MB(); wy = 0.62
-    def strip(f, n_, hw, lo, hi, along_x):
-        for sgn in (-1, 1):
-            quad_grid(mb, lambda i, j: f(lo + (hi - lo) * i / n_, sgn * hw * j) + Vector((0, 0, 0.1)) if True else None, n_, 1, M_['walk'], orient=lambda c: Vector((0, 0, 1)))
+    def strip(f, n_, hw, lo, hi):
+        quad_grid(mb, lambda i, j: f(lo + (hi - lo) * i / n_, -hw + 2 * hw * j) + Vector((0, 0, 0.1)), n_, 1, M_['walk'], orient=lambda c: Vector((0, 0, 1)))
     P_ = lambda t, d: Vector((t, d, roof_z(t, d)))                            # along the ridge
-    strip(lambda t, d: P_(t, d), 30, wy, -10.5, 10.5, True)
-    strip(lambda t, d: Vector((d, t, roof_z(d, t))), 14, wy, -3.3, 3.3, False)
-    for sgn in (-1, 1):                                                         # low side rails of the walkway (cross + long)
+    strip(lambda t, d: P_(t, d), 30, wy, -10.5, 10.5)
+    strip(lambda t, d: Vector((d, t, roof_z(d, t))), 14, wy, -3.3, 3.3)
+    for sgn in (-1, 1):                                                         # low side rails of the long walkway
         for t0 in range(-10, 10):
-            a = P_(t0 + 0.0, sgn * wy) + Vector((0, 0, 0.1)); b = P_(t0 + 1.0, sgn * wy) + Vector((0, 0, 0.1))
-            if abs(t0) >= 1 and abs(t0 + 1) >= 1 or True: beam(mb, a + Vector((0, 0, 0.14)), b + Vector((0, 0, 0.14)), 0.07, 0.2, M_['wood_d'])
+            a = P_(t0, sgn * wy) + Vector((0, 0, 0.24)); b = P_(t0 + 1.0, sgn * wy) + Vector((0, 0, 0.24)); beam(mb, a, b, 0.07, 0.2, M_['wood_d'])
     mk(mb, name + '_walk', ride, smooth=False)
     # --- iron spikes in 3 stages (ridge -> eave); each stage is one object popped in by set_spikes
     sh['spikes'] = []
@@ -222,7 +220,7 @@ def build_turtle(name='turtle', loc=(0, 0, 0), yaw=0.0, sea=False, sail=False, o
                 cbox(mbs, (x + dx, cy_ + sg * 0.03, dz), w_ / 2 + 0.02, 0.07, h_ / 2, M_['red_d'])
             mbl = MB(); mbl.box((-0.56, 0.0, -0.9), (0.56, 0.07, 0.0), M_['red']); cbox(mbl, (0, 0.075, -0.45), 0.13, 0.02, 0.13, M_['gold'])
             lid = mk(mbl, '%s_lid_%d_%s' % (name, i, 'p' if sg > 0 else 's'), ride); lid.location = (x, cy_ + sg * 0.05, 2.2); lid.rotation_mode = 'XYZ'
-            if sg < 0: lid.rotation_euler = (0, 0, math.pi); lid.location = (x, cy_ - sg * 0.0 + sg * 0.05, 2.2)
+            if sg < 0: lid.rotation_euler = (0, 0, math.pi)
             sh['lids'].append((lid, sg))
             mbm = MB(); rod(mbm, (0, -1.1, 0), (0, 0.55, 0), 0.3, M_['cannon'], seg=10); rod(mbm, (0, 0.5, 0), (0, 0.75, 0), 0.37, M_['cannon'], seg=10); rod(mbm, (0, -0.2, 0), (0, 0.2, 0), 0.36, M_['cannon'], seg=10)
             mz = mk(mbm, '%s_muzzle_%d_%s' % (name, i, 'p' if sg > 0 else 's'), ride); mz.location = (x, cy_, 1.75)
