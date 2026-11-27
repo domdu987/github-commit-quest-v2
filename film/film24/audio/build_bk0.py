@@ -1,7 +1,7 @@
 import json,subprocess,os,re,difflib,numpy as np,sys,concurrent.futures as cf
 sys.path.insert(0,'../audio/fal'); import tl
 from pythainlp.tokenize import word_tokenize
-SR=48000; GAP=0.06; TARGET=float(os.environ.get("TGT","0")) or None
+SR=48000; GAP=0.06; EXTRA={int(k):float(v) for k,v in (e.split(":") for e in os.environ.get("EXTRA","4:1.2").split(",") if e)}; TARGET=float(os.environ.get("TGT","0")) or None
 L=[l.rstrip('\n').split('|') for l in open('script/script_th.txt')]
 norm=lambda s: re.sub(r"[\s\.,!?\"“”ๆ]","",s)
 def stt(i):
@@ -21,9 +21,9 @@ parts=[]
 for i in range(len(L)):
     x=trim(load(f'audio/bk0/s{i:02d}.wav')); x,_,_,_=tl.tighten(x,SR,[],[],max_gap=0.10,keep=0.06)
     parts.append(x/np.sqrt((x**2).mean()+1e-12)*0.13)
-raw=sum(len(p)/SR for p in parts)+GAP*(len(parts)-1); tempo=raw/TARGET if TARGET else 1.134
+raw=sum(len(p)/SR for p in parts)+GAP*(len(parts)-1)+sum(EXTRA.values())*1.134; tempo=raw/TARGET if TARGET else 1.134
 z=[];start=[];t=0
-for p in parts: start.append(t/tempo); z+=[p,np.zeros(int(GAP*SR))]; t+=len(p)/SR+GAP
+for j,p in enumerate(parts): g=GAP+EXTRA.get(j,0)*tempo; start.append(t/tempo); z+=[p,np.zeros(int(g*SR))]; t+=len(p)/SR+g
 z=np.concatenate(z[:-1])
 subprocess.run(["ffmpeg","-v","error","-y","-f","f64le","-ar",str(SR),"-ac","1","-i","-","-af",f"atempo={tempo:.4f}","audio/narration.wav"],input=z.tobytes(),check=True)
 ends=[start[i]+len(parts[i])/SR/tempo for i in range(len(parts))]

@@ -35,3 +35,26 @@ Tone: comic and bloodless. Fire and fireballs ARE allowed now (client), but no p
 1. Kit (film/v3/kit/ + README), relit set3d24 (`J.set_look('C')`, env JOSEON_LOOK=C), the new hero and explosion set-ups and hooks.
 2. board_C.jpg: 8-10 look frames at low samples, with real cast24 cards where people are seen. Producer go-ahead before any full render.
 3. Re-render all takes in look C (3 teams), conform24 VERSION=C, then release film/release24/turtle_C.mp4.
+
+## UPDATE 2026-11-27 (client on board_C): build-up sequence + new timing
+The client asked for a step-by-step "what's on the ship" build-up. The "count" beat is rewritten (Bankky, original settings, STT 1.0), with a 1.2 s hero-pose pause after it:
+"แต่อีซุนชิน ยังสร้างต่อ ทีละชั้น ตัวเรือ ไม้สนหนาๆ พายเรียง สองข้าง ปืนใหญ่ เรียงรอบลำ หลังคา กระดองเต่า เหล็กแหลม เต็มหลัง แล้วปิดท้ายด้วย หัวมังกร พ่นควัน"
+- The film is now **70.1 s, N = 2104 frames**. Everything up to g 733 is unchanged. Shots 8a/8b (old g 734-918) are REPLACED by the build-up (g 734-1072). Every later shot, caption, SFX cue and overlay shifts by **+154 frames (+5.13 s)**: old g X ≥ 919 becomes X+154.
+- Old narration, timing and captions are kept in audio/bk0_v1/ (used by turtle_A / turtle_B).
+
+### Build-up (location `build_dock`, J.set_build(stage,k), slow low orbit build_cam(u), one take s08C, g 734-1072)
+| stage | g | narration cue | action | callout label (conform overlay, Kanit) |
+|---|---|---|---|---|
+| 0 intro | 734-780 | แต่อีซุนชิน ยังสร้างต่อ | Empty dry dock at dusk, keel blocks, lanterns, god rays; camera starts orbit | — |
+| 1 hull | 781-829 | ทีละชั้น ตัวเรือ ไม้สนหนาๆ | Keel + ribs slam in, then planks layer on in sweeping waves (thud hits) | ตัวเรือไม้สนหนา |
+| 2 oars | 830-861 | พายเรียง สองข้าง | Oars slide out in rhythm, both sides | พาย ข้างละ 8-10 |
+| 3 guns | 862-897 | ปืนใหญ่ เรียงรอบลำ | Cannons slide out port by port, muzzle glints, counter ticks to 11 | ช่องปืน ราวข้างละ 11 · ชอนจา จีจา ฮยอนจา |
+| 4 roof | 898-931 | หลังคา กระดองเต่า | Hex shell plates drop and lock | หลังคาคลุมทั้งลำ |
+| 5 spikes | 932-970 | เหล็กแหลม เต็มหลัง | Spikes pop up row by row, sparkles | เหล็กแหลม กันปีนขึ้นเรือ |
+| 6 dragon | 971-1037 | แล้วปิดท้ายด้วย หัวมังกร พ่นควัน | Dragon head bolts on at ~1006, eyes glint, smoke at ~1023 | หัวมังกร พ่นควันบังตา |
+| 7 hero | 1038-1072 | (1.2 s pause, music hit) | Complete ship, sun behind, rim on spikes; camera settles slowly (never static > 6 frames) | ไอ้เรือเต่า (title-style) |
+- SFX: one punchy hit per stage start (wood slam, oar clack, cannon clunk, plate clank, metal shing, dragon roar/hiss), on top of the yard bed.
+- Labels: top 25 % and one side band free; set exports build_anchor(stage) screen points for leader lines. Labels pop on at stage start and stay until the next stage.
+
+### New g for the version C shots (old + 154 where after 918)
+13a 1567-1680 · 13b 1681-1713 · 13c 1714-1760 · 14 1761-1920 (tally 1872-1920) · 15 1921-2103.

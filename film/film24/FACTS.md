@@ -14,6 +14,18 @@ Series: one amazing war weapon per country, film 1 (Korea).
 - Korean losses at Hansan: no ships lost (some dozens of men killed or wounded). The film tally "47 : 0" counts ships destroyed (at least 47 Japanese, 0 Korean); the 12 captured Japanese ships are not in the tally.
 - Japanese survivors were stranded on Hansan Island for days (Korean accounts mention living on seaweed). Wakisaka himself escaped by boat.
 
+## Ship build-up facts (version C build-up sequence, checked 2026-11-27)
+Sources disagree, and the only detailed description (Yi Chungmugong Jeonseo) is from 1795, about 200 years after 1592 and of a later ship. Labels use only the safe or rounded figures marked ✓; ~ means approximate and varies by source.
+- ✓ Hull: thick pine (Korean red pine) planks, built on a panokseon-type hull; oak pegs. (One account lists other woods too; pine is the consistent one.)
+- ~ Oars: 8-10 per side in most accounts (one gives 20 in total). Label: "พาย ข้างละ 8-10".
+- ~ Gun ports: about 11 per side in secondary sources, often with one more in the dragon's mouth. Total guns estimated at about 24-36, depending on the version. Label: "ช่องปืน ราวข้างละ 11"; no exact total on screen.
+- ✓ Gun types: chongtong cannons named cheonja (ชอนจา), jija (จีจา), hyeonja (ฮยอนจา), hwangja (ฮวังจา).
+- ✓ Roof covering the whole deck, with iron spikes so nobody can board (Yi's 1592 report).
+- ✓ Dragon head at the bow; later accounts say it gave off smoke (a screen). Shown as a design feature.
+- ~ Size: about 30-37 m long, crew about 130-150 (uncertain, later versions). Not on screen except "ยาวกว่า 30 เมตร" only if needed.
+- Dramatised: the build-up order (hull, oars, guns, roof, spikes, dragon head) is an explainer simplification, not the historical build order.
+- Sources: https://en.wikipedia.org/wiki/Turtle_ship · https://www.education.maritime-museum.org/training/north-gallery-2/asian-history/admiral-yi-sun-shin-and-the-korean-turtle-boat/ · https://www.researchgate.net/publication/285612616_Lord_Admiral_Yi_Sun_Shin_and_the_Geobukseon · https://www.ancient-origins.net/node/17360 · https://www.military-history.org/feature/wmd-the-turtle-ship.htm
+
 ## Dramatised / invented (must be marked in the caption)
 - The mocking Japanese commander and both his quotes ("เรือมีกระดองเหรอ ... ข้าจะคลานกลับบ้านเอง", "เห็นมั้ย เต่ากลัวแล้ว") are invented. He is a composite cartoon, not Wakisaka; he did not see the ship being built.
 - The nickname "ไอ้เรือเต่า" said by Japanese soldiers is invented (the Japanese reportedly called them "mekura-bune", blind ships).
