@@ -76,6 +76,108 @@ def ksoft(name, hexcol, opacity=0.62, emit_k=0.0, emit_col=None):
 def kline(name, hexcol):
     return kmat(name, hexcol, 0.9)
 
+# ----------------------------------------------------------------------------- volumes (smoke columns, fireballs, spray): no balls, no facets
+_FLOW = [None]
+def flow():
+    """one world empty whose location drives (frame) the noise of every kit volume: smoke rises and drifts with the wind, flames lick up.  Drivers survive clear_keys()."""
+    e = _FLOW[0]
+    if e is not None and e.name in bpy.data.objects: return e
+    e = bpy.data.objects.new('K_flow', None); _coll().objects.link(e)
+    for i, ex in enumerate(('frame*0.010', 'frame*0.004', 'frame*0.040')):
+        d = e.driver_add('location', i).driver; d.type = 'SCRIPTED'; d.expression = ex
+    _FLOW[0] = e; return e
+
+class _VB:
+    def __init__(s, m): s.nt, s.out = _tree(m)
+    def n(s, kind, **kw):
+        n = s.nt.nodes.new(kind)
+        for k, v in kw.items(): setattr(n, k, v)
+        return n
+    def L(s, a, b): s.nt.links.new(a, b)
+    def put(s, sock, v):
+        if isinstance(v, (int, float)): sock.default_value = v
+        else: s.L(v, sock)
+    def m(s, op, a, b=None, clamp=False):
+        n = s.n('ShaderNodeMath', operation=op, use_clamp=clamp); s.put(n.inputs[0], a)
+        if b is not None: s.put(n.inputs[1], b)
+        return n.outputs[0]
+    def ss(s, x, e0, e1):
+        n = s.n('ShaderNodeMapRange', interpolation_type='SMOOTHSTEP', clamp=True); s.put(n.inputs['Value'], x); n.inputs['From Min'].default_value = e0; n.inputs['From Max'].default_value = e1
+        n.inputs['To Min'].default_value = 0.0; n.inputs['To Max'].default_value = 1.0; return n.outputs['Result']
+    def noise(s, scale, detail=5.0, rough=0.6, dist=0.8, offset=(0.0, 0.0, 0.0)):
+        tc = s.n('ShaderNodeTexCoord'); tc.object = flow(); v = tc.outputs['Object']
+        if any(offset): ad = s.n('ShaderNodeVectorMath', operation='ADD'); s.L(v, ad.inputs[0]); ad.inputs[1].default_value = offset; v = ad.outputs[0]
+        nz = s.n('ShaderNodeTexNoise'); s.L(v, nz.inputs['Vector']); nz.inputs['Scale'].default_value = scale; nz.inputs['Detail'].default_value = detail
+        nz.inputs['Roughness'].default_value = rough; nz.inputs['Distortion'].default_value = dist; return nz.outputs['Fac']
+    def local(s):
+        tc = s.n('ShaderNodeTexCoord'); sp = s.n('ShaderNodeSeparateXYZ'); s.L(tc.outputs['Object'], sp.inputs[0]); return sp.outputs['X'], sp.outputs['Y'], sp.outputs['Z'], tc.outputs['Object']
+    def level(s):
+        oi = s.n('ShaderNodeObjectInfo'); sp = s.n('ShaderNodeSeparateColor'); s.L(oi.outputs['Color'], sp.inputs[0]); return sp.outputs[0]
+
+def vsmoke_mat(name, H, r0, a=0.35, b=1.6, wind=(0.0, 0.0), base='#3a312b', top='#8e8984', dens=1.0, nscale=0.45, seed=0.0, aniso=0.25, lo=0.42, hi=0.72):
+    """a smoke (or spray) plume volume in a box domain (local z 0..H): radius r0 * (a + b u) (u = z / H), axis bent by `wind` * u^1.5 (local D), wispy noise
+    (flow-driven, so it rises), density fades in at the base and out at the top, colour base -> top.  Object colour R = level (0..1) scales the density."""
+    nm = 'K_v_' + name
+    if nm in bpy.data.materials: return bpy.data.materials[nm]
+    m = bpy.data.materials.new(nm); V = _VB(m); x, y, z, _ = V.local()
+    u = V.m('DIVIDE', z, H, True); w = V.m('POWER', u, 1.5)
+    qx = V.m('SUBTRACT', x, V.m('MULTIPLY', w, wind[0])); qy = V.m('SUBTRACT', y, V.m('MULTIPLY', w, wind[1]))
+    r = V.m('SQRT', V.m('ADD', V.m('MULTIPLY', qx, qx), V.m('MULTIPLY', qy, qy)))
+    rad = V.m('MULTIPLY', V.m('ADD', V.m('MULTIPLY', u, b), a), r0)
+    ratio = V.m('DIVIDE', r, V.m('MAXIMUM', rad, 0.05))
+    radial = V.m('SUBTRACT', 1.0, V.ss(ratio, 0.2, 1.0))
+    vert = V.m('MULTIPLY', V.ss(u, 0.0, 0.05), V.m('SUBTRACT', 1.0, V.ss(u, 0.6, 1.0)))
+    nz = V.ss(V.noise(nscale, offset=(seed, seed * 0.7, seed * 1.3)), lo, hi)
+    nz = V.m('ADD', V.m('MULTIPLY', nz, 0.8), 0.2)
+    d = V.m('MULTIPLY', V.m('MULTIPLY', radial, vert), nz); d = V.m('MULTIPLY', d, V.m('SUBTRACT', 1.3, u)); d = V.m('MULTIPLY', V.m('MULTIPLY', d, dens), V.level())
+    mix = V.n('ShaderNodeMix', data_type='RGBA'); V.L(u, mix.inputs[0]); mix.inputs[6].default_value = (*hexl(base), 1); mix.inputs[7].default_value = (*hexl(top), 1)
+    pv = V.n('ShaderNodeVolumePrincipled'); V.L(mix.outputs[2], pv.inputs['Color']); V.L(d, pv.inputs['Density']); pv.inputs['Anisotropy'].default_value = aniso
+    V.L(pv.outputs[0], V.out.inputs['Volume']); return m
+
+def vblob_mat(name, col='#d6d1ca', dens=1.4, nscale=0.9, edge=True, aniso=0.2):
+    """a soft puff / smoke ring volume in a +-1 domain (box or torus): radial falloff (edge=True) x flow noise; object colour R = level."""
+    nm = 'K_b_' + name
+    if nm in bpy.data.materials: return bpy.data.materials[nm]
+    m = bpy.data.materials.new(nm); V = _VB(m); x, y, z, P = V.local()
+    nz = V.ss(V.noise(nscale, 4.0, 0.55, 0.6), 0.35, 0.7)
+    if edge:
+        ln = V.n('ShaderNodeVectorMath', operation='LENGTH'); V.L(P, ln.inputs[0]); rr = V.m('ADD', ln.outputs['Value'], V.m('MULTIPLY', V.m('SUBTRACT', nz, 0.5), 0.5))
+        nz = V.m('MULTIPLY', nz, V.m('SUBTRACT', 1.0, V.ss(rr, 0.35, 1.0)))
+    d = V.m('MULTIPLY', V.m('MULTIPLY', nz, dens), V.level())
+    pv = V.n('ShaderNodeVolumePrincipled'); pv.inputs['Color'].default_value = (*hexl(col), 1); V.L(d, pv.inputs['Density']); pv.inputs['Anisotropy'].default_value = aniso
+    V.L(pv.outputs[0], V.out.inputs['Volume']); return m
+
+def vfire_mat(name='fireball', smoke='#3a312b', dens=1.6, glow=40.0, nscale=1.1):
+    """an emissive fireball / flame volume in a +-1 box domain: noise-displaced radius rn; blackbody core (white-yellow -> orange, temperature 1200..6200 K by the
+    core x heat), dark smoke shell outside it.  Object colour R = heat (1 = fresh, 0 = burnt out: only the smoke shell)."""
+    nm = 'K_f_' + name
+    if nm in bpy.data.materials: return bpy.data.materials[nm]
+    m = bpy.data.materials.new(nm); V = _VB(m); x, y, z, P = V.local()
+    ln = V.n('ShaderNodeVectorMath', operation='LENGTH'); V.L(P, ln.inputs[0]); nz = V.noise(nscale, 5.0, 0.6, 1.0)
+    rn = V.m('ADD', ln.outputs['Value'], V.m('MULTIPLY', V.m('SUBTRACT', nz, 0.5), 0.9)); heat = V.level()
+    core = V.m('SUBTRACT', 1.0, V.ss(rn, 0.05, 0.78)); body = V.m('SUBTRACT', 1.0, V.ss(rn, 0.62, 1.0))
+    hc = V.m('MULTIPLY', core, heat)
+    pv = V.n('ShaderNodeVolumePrincipled'); pv.inputs['Color'].default_value = (*hexl(smoke), 1); pv.inputs['Absorption Color'].default_value = (*hexl('#1a1512'), 1)
+    V.L(V.m('MULTIPLY', body, dens), pv.inputs['Density']); V.L(V.m('MULTIPLY', V.m('POWER', hc, 1.3), glow), pv.inputs['Blackbody Intensity'])
+    V.L(V.m('ADD', V.m('MULTIPLY', hc, 5000.0), 1200.0), pv.inputs['Temperature']); pv.inputs['Anisotropy'].default_value = 0.1
+    V.L(pv.outputs[0], V.out.inputs['Volume']); return m
+
+def vdomain(name, lo, hi, mat, parent=None, loc=None, shadow=True):
+    """a box volume domain from local corner lo to hi (invisible surface, volume only)."""
+    lo, hi = Vector(lo), Vector(hi); mb = MB(); mb.box((lo + hi) / 2, (hi.x - lo.x) / 2, (hi.y - lo.y) / 2, (hi.z - lo.z) / 2, mat)
+    o = obj(mb, name, parent, loc=loc, shadow=shadow); o.data.flip_normals(); o.color = (1.0, 1.0, 1.0, 1.0); return o   # MB boxes face inward: volumes need outward normals
+
+def smoke_column(base, H=20.0, r0=1.0, wind=(6.0, 2.0), parent=None, name='k_smoke', a=0.4, b=2.2, base_col='#352d27', top_col='#8a857f', dens=2.6, nscale=0.35, seed=0.0):
+    """a rising smoke column from `base` (world or parent-local), bent by `wind` (D at the top): dark grey-brown at the base, lighter and wispy above;
+    the sun lights its sun side warm, the sky its shadow side lavender.  set_level(ob, level, frame) shows / thickens it."""
+    R = r0 * max(a, a + b) * 1.08; mat = vsmoke_mat(name, H, r0, a, b, wind, base_col, top_col, dens, nscale, seed)
+    lo = (min(0.0, wind[0]) - R, min(0.0, wind[1]) - R, 0.0); hi = (max(0.0, wind[0]) + R, max(0.0, wind[1]) + R, H)
+    return vdomain(name, lo, hi, mat, parent, loc=base, shadow=True)
+
+def set_level(ob, level, frame=None):
+    """volume level (object colour R): 0 hides it."""
+    ob.color = (max(0.0, level), 1.0, 1.0, 1.0); _show(ob, level > 0.001, frame); _key(ob, 'color', frame)
+
 # ----------------------------------------------------------------------------- mesh builder
 class MB:
     def __init__(s): s.v = []; s.f = []; s.m = []; s.mats = []
@@ -345,13 +447,11 @@ def muzzle_rig(pos, dirv, parent=None, name='k_muzzle', scale=1.0, seed=11):
         a = rs.uniform(0, 6.28); e = rs.uniform(-0.6, 0.6); d2 = (dirv + Vector((math.cos(a) * 0.5, math.sin(a) * 0.5, e * 0.5))).normalized(); mb.cyl((0, 0, 0), d2 * rs.uniform(0.9, 1.6) * scale, 0.22 * scale, 0.0, fl, 5)
     mb.lump((0, 0, 0), 0.45 * scale, fl, seed, 8, 5, 0.3)
     flash = obj(mb, name + '_flash', parent, loc=pos, shadow=False); flash.hide_render = True
-    mb = MB(); ring_m = ksoft('smokering', '#cfcac0', 0.7); mb.torus((0, 0, 0), 0.6, 0.28, ring_m, 16, 7)
-    ring = obj(mb, name + '_ring', parent, loc=pos, shadow=False, smooth=True); ring.rotation_mode = 'QUATERNION'; ring.rotation_quaternion = dirv.to_track_quat('Z', 'Y'); ring.hide_render = True
-    mb = MB(); pm = ksoft('puff', '#c4bfb4', 0.62)
-    for k in range(5): mb.lump(Vector((rs.uniform(-0.5, 0.5), rs.uniform(-0.5, 0.5), rs.uniform(-0.4, 0.5))), rs.uniform(0.55, 0.85), pm, seed * 7 + k, 8, 5, 0.18)
-    puff = obj(mb, name + '_puff', parent, loc=pos, shadow=False, smooth=True, sub=1); puff.hide_render = True
+    mb = MB(); ring_m = vblob_mat('ring', '#dcd8d0', 1.1, 1.6, False, 0.55); mb.torus((0, 0, 0), 0.6, 0.3, ring_m, 20, 8)
+    ring = obj(mb, name + '_ring', parent, loc=pos, shadow=False, smooth=True); ring.color = (1, 1, 1, 1); ring.rotation_mode = 'QUATERNION'; ring.rotation_quaternion = dirv.to_track_quat('Z', 'Y'); ring.hide_render = True
+    puff = vdomain(name + '_puff', (-1.6, -1, -1), (1.6, 1, 1), vblob_mat('puff', '#dedad3', 3.2, 0.8, True, 0.6), parent, loc=pos, shadow=True); puff.hide_render = True   # soft volume, stretched
     L = _light(name + '_L', 'POINT', (1.0, 0.7, 0.35), 0.0, pos + dirv * 0.8, 0.3, parent)
-    return dict(pos=pos, dir=dirv, flash=flash, ring=ring, puff=puff, light=L, scale=scale, power=4000.0 * scale * scale)
+    return dict(pos=pos, dir=dirv, flash=flash, ring=ring, puff=puff, light=L, scale=scale, power=1000.0 * scale * scale, trail=Vector((0, 0, 0)))
 
 def fire_muzzle(rig, t, frame=None):
     """t = seconds since the shot (< 0: idle).  Flash + light for ~0.1 s, smoke ring flying out and growing over ~1.5 s, recoil puff swelling and drifting up."""
@@ -362,7 +462,8 @@ def fire_muzzle(rig, t, frame=None):
     u = max(0.0, min(1.0, t / 1.6)); rv = 0.02 < t < 1.6
     rig['ring'].location = p + d * (0.6 + 7.0 * s * (1 - (1 - u) ** 2)) + Vector((0, 0, 1.2 * u * s)); k = s * (0.6 + 2.6 * u); rig['ring'].scale = (k, k, k * (1 - 0.4 * u)); _show(rig['ring'], rv, frame)
     _key(rig['ring'], 'location', frame); _key(rig['ring'], 'scale', frame)
-    v = max(0.0, min(1.0, t / 2.5)); pv = 0.0 <= t < 2.5; rig['puff'].location = p + d * (0.6 + 2.5 * s * v) + Vector((0, 0, 2.2 * s * v)); k = s * (0.35 + 1.4 * math.sqrt(v)) * (1.0 if v < 0.8 else (1 - v) / 0.2 * 0.6 + 0.4)
+    v = max(0.0, min(1.0, t / 4.0)); pv = 0.0 <= t < 4.0; rig['puff'].location = p + d * (0.6 + 2.5 * s * v) + Vector((0, 0, 4.5 * s * v)) + rig.get('trail', Vector()) * v; k = s * (0.6 + 2.4 * math.sqrt(v)) * (1.0 if v < 0.8 else (1 - v) / 0.2 * 0.6 + 0.4)
+    rig['puff'].color = (max(0.0, 1.0 - 0.6 * v), 1, 1, 1); _key(rig['puff'], 'color', frame)
     rig['puff'].scale = (k, k, k); _show(rig['puff'], pv, frame); _key(rig['puff'], 'location', frame); _key(rig['puff'], 'scale', frame)
 
 # ============================================================================= explosion kit
@@ -370,15 +471,14 @@ def explosion_rig(pos, water_z=0.0, ground=None, scale=1.0, seed=12, n_debris=22
     """Builds a hidden explosion at world pos: 3 fireball layers + a fire light, debris planks and splinters (ballistic, they land / splash), a water column, a
     shockwave ring on the water, embers, a smoke column.  ground(x, y) -> z of a solid floor (debris lands) else they splash at water_z.  set_explosion(ex, t)."""
     rs = rnd(seed); pos = Vector(pos); s = scale; ex = dict(pos=pos, water_z=water_z, ground=ground, scale=s, debris=[], embers=[], fire=[], smoke=[])
-    for k, (col, ek, r) in enumerate((('#ffc04a', 4.0, 1.0), ('#ff7a18', 2.0, 1.3), ('#d84a12', 0.9, 1.6))):
-        mb = MB(); m = ksoft('fire%d' % k, col, 0.85, emit_k=ek, emit_col=col)
-        for j in range(6): mb.lump(Vector((rs.uniform(-0.6, 0.6), rs.uniform(-0.6, 0.6), rs.uniform(-0.3, 0.8))) * r, r * rs.uniform(0.6, 0.9), m, seed * 3 + k * 10 + j, 8, 5, 0.25)
-        o = obj(mb, '%s_fire%d' % (name, k), parent, loc=pos, shadow=False, smooth=True, sub=1); o.hide_render = True; ex['fire'].append(o)
+    fm = vfire_mat()                                         # 3 overlapping emissive volume lobes: blackbody core (white-yellow -> orange), dark smoke shell
+    for k, (off, r) in enumerate((((0, 0, 0), 1.0), ((0.7, 0.35, 0.55), 0.75), ((-0.6, -0.3, 0.95), 0.65))):
+        o = vdomain('%s_fire%d' % (name, k), (-1, -1, -1), (1, 1, 1), fm, parent, loc=pos, shadow=False); o.hide_render = True; o['off'] = off; o['r'] = r; ex['fire'].append(o)
     ex['light'] = _light(name + '_L', 'POINT', (1.0, 0.55, 0.22), 0.0, pos + Vector((0, 0, 1.5 * s)), 1.0, parent); ex['power'] = 25000.0 * s * s
     wood = kmat('debris', '#7a5434', 0.8, var=0.2); dark = kmat('debris_c', '#2d221b', 0.9)
     for i in range(n_debris):
-        mb = MB(); plank = i % 3 != 2; L_ = rs.uniform(0.8, 2.2) if plank else rs.uniform(0.3, 0.7)
-        mb.box((0, 0, 0), L_ / 2, (0.18 if plank else 0.05), (0.05 if plank else 0.04), wood if i % 4 else dark)
+        mb = MB(); plank = i % 3 != 2; L_ = rs.uniform(1.2, 2.8) if plank else rs.uniform(0.4, 0.9)
+        mb.box((0, 0, 0), L_ / 2, (0.24 if plank else 0.06), (0.06 if plank else 0.05), wood if i % 4 else dark)
         o = obj(mb, '%s_deb%d' % (name, i), parent, loc=pos, shadow=True); o.hide_render = True
         a = rs.uniform(0, 6.28); up = rs.uniform(0.55, 1.0); sp = rs.uniform(7, 16) * s
         v = Vector((math.cos(a) * math.sqrt(1 - up * up) + 0.3 * math.cos(a), math.sin(a) * math.sqrt(1 - up * up), up)).normalized() * sp
@@ -388,19 +488,19 @@ def explosion_rig(pos, water_z=0.0, ground=None, scale=1.0, seed=12, n_debris=22
         mb = MB(); mb.torus((0, 0, 0), 0.5, 0.12, spm, 12, 5); [mb.lump((math.cos(k) * 0.4, math.sin(k) * 0.4, 0.2), 0.12, spm, k, 6, 4, 0.2) for k in range(4)]
         o = obj(mb, d['ob'].name + '_spl', parent, shadow=False, smooth=True); o.hide_render = True; d['splash'] = o
     if column:
-        mb = MB(); wc = ksoft('watercol', '#e8efee', 0.8)
-        for k in range(9): mb.lump(Vector((rs.uniform(-0.6, 0.6), rs.uniform(-0.6, 0.6), 0.6 * k)), 0.9 - 0.06 * k, wc, seed * 5 + k, 8, 5, 0.25, 1.2)
-        ex['column'] = obj(mb, name + '_col', parent, loc=(pos.x, pos.y, water_z), shadow=True, smooth=True, sub=1); ex['column'].hide_render = True
-        mb = MB(); rm = ksoft('shock', '#f4f8f8', 0.35); mb.torus((0, 0, 0), 1.0, 0.09, rm, 32, 4)
+        ex['column'] = smoke_column((pos.x, pos.y, water_z), 4.0, 0.9, (0.0, 0.0), parent, name + '_col', 1.0, -0.35, '#e4eaec', '#f7f9f9', 5.0, 1.1, seed * 0.13)   # white spray volume
+        ex['column'].hide_render = True; spm2 = kmat('spray', '#f2f6f6', 0.35); ex['drops'] = []
+        for j in range(26):                                  # spray droplets thrown out of the column
+            mb = MB(); mb.lump((0, 0, 0), rs.uniform(0.08, 0.18), spm2, 700 + j, 6, 4, 0.2); o = obj(mb, '%s_drop%d' % (name, j), parent, loc=(pos.x, pos.y, water_z), shadow=False, smooth=True); o.hide_render = True
+            a = rs.uniform(0, 6.28); ex['drops'].append(dict(ob=o, v=Vector((math.cos(a) * rs.uniform(1.5, 4.5), math.sin(a) * rs.uniform(1.5, 4.5), rs.uniform(9, 15))) * s, t0=rs.uniform(0.05, 0.3)))
+        mb = MB(); rm = ksoft('shock', '#f4f8f8', 0.4); mb.torus((0, 0, 0), 1.0, 0.08, rm, 40, 4)
         ex['shock'] = obj(mb, name + '_shock', parent, loc=(pos.x, pos.y, water_z + 0.15), shadow=False, smooth=True); ex['shock'].hide_render = True
     em = kglow('ember', '#ffb24a', 18.0)
     for i in range(36):
         mb = MB(); mb.lump((0, 0, 0), 0.06, em, i, 5, 3, 0.0); o = obj(mb, '%s_emb%d' % (name, i), parent, loc=pos, shadow=False); o.hide_render = True
         ex['embers'].append(dict(ob=o, v=Vector((rs.uniform(-3, 3), rs.uniform(-3, 3), rs.uniform(4, 9))) * s, ph=rs.uniform(0, 6.28)))
-    sm = ksoft('exsmoke', '#55504b', 0.6)
-    for k in range(6):
-        mb = MB(); [mb.lump(Vector((rs.uniform(-0.7, 0.7), rs.uniform(-0.7, 0.7), rs.uniform(-0.5, 0.5))), rs.uniform(0.7, 1.0), sm, seed * 9 + k * 7 + j, 8, 5, 0.2) for j in range(4)]
-        o = obj(mb, '%s_smk%d' % (name, k), parent, loc=pos, shadow=False, smooth=True, sub=1); o.hide_render = True; ex['smoke'].append(dict(ob=o, h=2.5 + 2.2 * k, dr=Vector((rs.uniform(-1.5, 0.5), rs.uniform(-1, 1), 0)), k=k))
+    if n_debris or column is False:                          # the smoke column the fireball rolls up into (volume, wind-bent)
+        o = smoke_column(pos, 16.0 * s, 1.0 * s, (-6.0 * s, 2.0 * s), parent, name + '_smk', 0.6, 2.0, seed=seed * 0.21); o.hide_render = True; ex['smoke'].append(dict(ob=o, k=0))
     return ex
 
 def _floor(ex, x, y):
@@ -415,9 +515,10 @@ def set_explosion(ex, t, frame=None):
     smoke column builds from 0.4 s and stays."""
     p, s = ex['pos'], ex['scale']; on = t >= 0
     for k, o in enumerate(ex['fire']):
-        u = max(0.0, t); g = min(1.0, u / 0.25); r = s * (0.4 + 1.7 * g) * (1 + 0.35 * max(0.0, u - 0.25)) * (1.0 + 0.25 * k); vis = on and u < 1.3 - 0.25 * k
-        o.scale = (r, r, r * (1 + 0.6 * max(0.0, u - 0.25))); o.location = p + Vector((0, 0, s * (1.2 * g + 3.0 * max(0.0, u - 0.25))))
-        _show(o, vis, frame); _key(o, 'scale', frame); _key(o, 'location', frame)
+        u = max(0.0, t); g = min(1.0, u / 0.25); r = s * (0.5 + 2.0 * g) * (1 + 0.3 * max(0.0, u - 0.25)) * o.get('r', 1.0); vis = on and u < 2.0 - 0.2 * k
+        o.scale = (r, r, r * (1 + 0.4 * max(0.0, u - 0.25))); o.location = p + Vector(o.get('off', (0, 0, 0))) * s * (0.6 + 0.8 * g) + Vector((0, 0, s * (1.0 * g + 2.4 * max(0.0, u - 0.25))))
+        o.color = (math.exp(-max(0.0, u - 0.15) / 0.8), 1, 1, 1)
+        _show(o, vis, frame); _key(o, 'scale', frame); _key(o, 'location', frame); _key(o, 'color', frame)
     ex['light'].data.energy = ex['power'] * (min(1.0, max(0.0, t) / 0.06) * math.exp(-max(0.0, t - 0.06) / 0.35)) if on else 0.0
     if frame is not None: ex['light'].data.keyframe_insert('energy', frame=frame)
     for d in ex['debris']:
@@ -434,13 +535,16 @@ def set_explosion(ex, t, frame=None):
     if 'column' in ex:
         c = ex['column']; u = max(0.0, t); h = s * (1.6 * min(1.0, u / 0.5) if u < 0.5 else 1.6 * max(0.0, 1 - (u - 0.5) / 1.1)); vis = on and u < 1.6
         c.scale = (s * (1 + 0.6 * u), s * (1 + 0.6 * u), max(0.05, h * 1.6)); _show(c, vis, frame); _key(c, 'scale', frame)
-        sh = ex['shock']; k = s * (1.0 + 14.0 * min(1.0, u / 0.8)); sh.scale = (k, k, 1.0); _show(sh, on and u < 0.8, frame); _key(sh, 'scale', frame)
+        sh = ex['shock']; k = s * (1.0 + 9.0 * min(1.0, u / 0.9)); sh.scale = (k, k, 0.4); _show(sh, on and u < 0.9, frame); _key(sh, 'scale', frame)
+        for d in ex.get('drops', []):
+            tt = u - d['t0']; pp = Vector((p.x, p.y, ex['water_z'])) + d['v'] * max(0.0, tt) + Vector((0, 0, -0.5 * G * max(0.0, tt) ** 2)); d['ob'].location = pp
+            _show(d['ob'], on and tt > 0 and pp.z > ex['water_z'] - 0.1, frame); _key(d['ob'], 'location', frame)
     for e in ex['embers']:
         tt = max(0.0, t); pp = p + e['v'] * (1 - math.exp(-tt / 1.2)) * 1.4 + Vector((0.6 * math.sin(tt * 3 + e['ph']), 0.6 * math.cos(tt * 2.3 + e['ph']), 0)); e['ob'].location = pp
         _show(e['ob'], on and tt < 3.5, frame); _key(e['ob'], 'location', frame)
     for sm in ex['smoke']:
-        u = max(0.0, t - 0.3 - 0.12 * sm['k']); g = min(1.0, u / 1.2); o = sm['ob']; o.location = p + Vector((0, 0, s * sm['h'] * (0.5 + 0.5 * g))) + sm['dr'] * s * u * 0.3
-        k = s * (0.5 + 1.6 * g) * (1 + 0.15 * sm['k']); o.scale = (k, k, k); _show(o, on and u > 0, frame); _key(o, 'location', frame); _key(o, 'scale', frame)
+        u = max(0.0, t - 0.25); g = min(1.0, u / 1.5); o = sm['ob']; o.scale = (0.5 + 0.5 * g, 0.5 + 0.5 * g, 0.15 + 0.85 * g); _key(o, 'scale', frame)
+        o.color = (min(1.0, 1.5 * g), 1, 1, 1); _show(o, on and u > 0, frame); _key(o, 'color', frame)
 
 def splash_rig(pos, water_z=0.0, scale=1.0, seed=13, name='k_splash', parent=None):
     """a person-size splash (comic jump into the sea): a small column + a ring + droplets.  set_splash(rig, t)."""
@@ -451,20 +555,26 @@ def set_splash(rig, t, frame=None):
     for o in rig['fire']: _show(o, False, frame)
     rig['light'].data.energy = 0.0
     c = rig['column']; h = s * (1.6 * min(1.0, u / 0.3) if u < 0.3 else 1.6 * max(0.0, 1 - (u - 0.3) / 0.7)); c.scale = (s * (1 + u), s * (1 + u), max(0.05, h * 1.6)); _show(c, on and u < 1.0, frame); _key(c, 'scale', frame)
-    sh = rig['shock']; k = s * (1.0 + 8.0 * min(1.0, u / 0.9)); sh.scale = (k, k, 1.0); _show(sh, on and u < 0.9, frame); _key(sh, 'scale', frame)
+    sh = rig['shock']; k = s * (1.0 + 8.0 * min(1.0, u / 0.9)); sh.scale = (k, k, 0.4); _show(sh, on and u < 0.9, frame); _key(sh, 'scale', frame)
+    p = rig['pos']
+    for d in rig.get('drops', []):
+        tt = u - d['t0'] * 0.5; pp = Vector((p.x, p.y, rig['water_z'])) + d['v'] * 0.6 * max(0.0, tt) + Vector((0, 0, -0.5 * G * max(0.0, tt) ** 2)); d['ob'].location = pp
+        _show(d['ob'], on and tt > 0 and pp.z > rig['water_z'] - 0.1, frame); _key(d['ob'], 'location', frame)
     for e in rig['embers']: _show(e['ob'], False, frame)
     for sm in rig['smoke']: _show(sm['ob'], False, frame)
 
 # ============================================================================= fire on rigging and sails
-def fire_patch(points, size=1.0, seed=14, name='k_fire', parent=None, light=True):
+def fire_patch(points, size=1.0, seed=14, name='k_fire', parent=None, light=True, smoke_h=16.0, smoke_r=0.7):
     """flame tongues at the given points (on a sail, a yard, rigging) + embers + one warm light; set_fire(fr, level)."""
     rs = rnd(seed); fr = dict(fl=[], embers=[], light=None, pts=[Vector(p) for p in points], size=size)
-    fm = [kglow('flame', '#ffb04a', 8.0), kglow('flame2', '#ff6a1e', 6.0)]
-    for i, p in enumerate(fr['pts']):
-        mb = MB()
-        for k in range(4): mb.cyl(Vector((rs.uniform(-0.3, 0.3), rs.uniform(-0.3, 0.3), 0)) * size, Vector((rs.uniform(-0.3, 0.3), rs.uniform(-0.3, 0.3), rs.uniform(1.0, 2.0))) * size, 0.35 * size, 0.0, fm[k % 2], 6, cap=False)
-        o = obj(mb, '%s_%d' % (name, i), parent, loc=p, shadow=False); o.hide_render = True; fr['fl'].append(o)
-        fc = o.driver_add('scale', 2); fc.driver.type = 'SCRIPTED'; fc.driver.expression = '1+0.25*sin(frame*1.3+%d)+0.12*sin(frame*3.1+%d)' % (i, i * 2)
+    fm = vfire_mat('flame', dens=1.2, glow=30.0, nscale=1.6)
+    for i, p in enumerate(fr['pts']):                   # an emissive flame volume per point (blackbody core, dark smoky tip), licking up with the flow noise
+        o = vdomain('%s_%d' % (name, i), (-1, -1, -1), (1, 1, 1), fm, parent, loc=Vector(p) + Vector((0, 0, 1.1 * size)), shadow=False); o.hide_render = True; o['s'] = 0.85 * size
+        o.color = (0.85, 1.0, 1.0, 1.0); fr['fl'].append(o)
+        fc = o.driver_add('scale', 2); fc.driver.type = 'SCRIPTED'; fc.driver.expression = '%.3f*(1+0.18*sin(frame*1.3+%d)+0.1*sin(frame*3.1+%d))' % (1.9 * size, i, i * 2)
+    top = max(fr['pts'], key=lambda q: q.z) if fr['pts'] else Vector()
+    fr['smoke'] = smoke_column(top + Vector((0, 0, 1.6 * size)), smoke_h * size, smoke_r * size, (-0.4 * smoke_h * size, 0.12 * smoke_h * size), parent, name + '_smk', 0.5, 2.4, seed=seed * 0.37) if smoke_h else None
+    if fr['smoke'] is not None: fr['smoke'].hide_render = True
     em = kglow('ember', '#ffb24a', 18.0)
     for j in range(18):
         mb = MB(); mb.lump((0, 0, 0), 0.05 * size, em, j, 5, 3, 0.0); o = obj(mb, '%s_emb%d' % (name, j), parent, loc=fr['pts'][j % len(fr['pts'])], shadow=False); o.hide_render = True
@@ -478,7 +588,8 @@ def set_fire(fr, level, frame=None):
     """level 0 = out .. 1 = burning (flames + flickering light + rising embers; embers cycle with the frame: call every frame)."""
     f = frame if frame is not None else bpy.context.scene.frame_current; on = level > 0.01
     for o in fr['fl']:
-        k = max(0.01, level); o.scale[0] = o.scale[1] = k; _show(o, on, frame); _key(o, 'scale', frame)
+        k = max(0.01, level) * o.get('s', 1.0); o.scale[0] = o.scale[1] = k; _show(o, on, frame); _key(o, 'scale', frame)
+    if fr.get('smoke') is not None: set_level(fr['smoke'], min(1.0, level), frame)
     for e in fr['embers']:
         u = (e['ph'] + f / 60.0) % 1.0; e['ob'].location = e['base'] + Vector((0, 0, 6.0 * fr['size'] * u)) + e['dr'] * u * fr['size']; _show(e['ob'], on and u < 0.9, frame); _key(e['ob'], 'location', frame)
     if fr['light'] is not None:

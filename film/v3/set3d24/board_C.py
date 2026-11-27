@@ -59,7 +59,7 @@ def tile(name, samples):
         A = Tk.A
         jobs = []
         if name == 'hero_yard':
-            Tk.key_set(F, spikes=3, ports=0, dragon_smoke=0.45)
+            Tk.key_set(F, spikes=3, ports=0, dragon_smoke=0.9)
             yi = Tk.actors['yi'] = C.make_actor('yi', 'yi24', sd)
             C.place(yi, F, A['marks']['yi_hero'])
             _, p = C.story('yi24_stand_arms_behind')
@@ -72,13 +72,13 @@ def tile(name, samples):
             Tk.key_set(F, spikes=3, ports=1, dragon_smoke=0.8)
         elif name == 'cannon_close':
             Tk.key_set(F, spikes=3, ports=1, dragon_smoke=0.0)
-            J.set_broadside(0.62, F)
+            J.set_broadside(1.15, F)
         elif name == 'hit_close':
-            t = 0.35
+            t = 0.42
             J.set_hit_explosion(t, F)
             for i, (cast, st_) in enumerate((('ashi_a24', 'ashi_a24_step_back'), ('ashi_b24', 'ashi_b24_peer_worried'))):
                 a_ = Tk.actors['ashi%d' % i] = C.make_actor('ashi%d' % i, cast, sd, contact=False)
-                tj = 0.30 + 0.12 * i
+                tj = 0.40 if i == 0 else 0.0                  # one in the air on the arc, one still at the rail about to jump
                 C.place(a_, F, tuple(J.jump_arc(i, tj)))
                 J.set_jump_splash(i, tj, F)
                 _, p = C.story(st_)

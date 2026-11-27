@@ -1256,7 +1256,7 @@ def build_yard(preset):
 def _yard_marks():
     """Stand points (world, feet). Roof workers kneel ON the roof edge (parent: ship root 'turtle', local coordinates in S['parented'])."""
     mk_ = S['marks']; par = S['parented'] = {}
-    mk_['yi_quay'] = (9.5, 1.2, Z_Q); mk_['yi_bow'] = (8.6, 18.5, Z_Q); mk_['yi_front'] = (8.6, -2.3, Z_Q); mk_['yi_hero'] = (8.3, 17.2, Z_Q)
+    mk_['yi_quay'] = (9.5, 1.2, Z_Q); mk_['yi_bow'] = (8.6, 18.5, Z_Q); mk_['yi_front'] = (8.6, -2.3, Z_Q); mk_['yi_hero'] = (-8.0, 5.4, Z_Q)
     mk_['worker_quay_a'] = (9.4, -11.0, Z_Q); mk_['worker_quay_b'] = (9.3, -4.6, Z_Q); mk_['worker_quay_c'] = (13.5, 10.8, Z_Q); mk_['worker_land_a'] = (-18.0, -11.0, Z_LAND)
     for i, x in enumerate((-8.0, -3.0, 2.5, 7.5)):
         for sg, tag in ((-1, 'p'), (1, 's')):                                    # roof edge: v = 0.84 of the half width (inside the eave lip)
@@ -1356,7 +1356,7 @@ def _sea_marks():
     for nm, lp in (('soldier_chase_a', (xb2 - 0.6, 0.0, z)), ('soldier_chase_b', (xb2 - 1.9, 2.4, z)), ('soldier_chase_c', (xb2 - 1.9, -2.4, z))): par[nm] = ('j_near', lp)
     jb = shs['j_board']; z = jb['deck_z']; xb3 = jb['deck_x'][1]
     for nm, lp in (('soldier_board_a', (jb['deck_x'][0] + 5.4, 3.55, z)), ('soldier_board_b', (jb['deck_x'][0] + 7.4, 3.75, z)), ('soldier_board_c', (jb['deck_x'][0] + 3.6, 3.4, z))): par[nm] = ('j_board', lp)
-    for nm, lp in (('ashi_jump_a', (jb['deck_x'][0] + 9.0, 3.4, z)), ('ashi_jump_b', (jb['deck_x'][0] + 11.2, 3.4, z))): par[nm] = ('j_board', lp)
+    for nm, lp in (('ashi_jump_a', (jb['deck_x'][0] + 9.0, 3.4, z + 1.0)), ('ashi_jump_b', (jb['deck_x'][0] + 11.2, 3.4, z + 1.0))): par[nm] = ('j_board', lp)
     for nm, (sn, lp) in par.items(): mk_[nm] = tuple(round(c, 3) for c in L2W(sn, lp))
     sp = S['shore_pt']; mk_['commander_plank'] = (S['plank'].location.x, S['plank'].location.y, S['plank_z']); mk_['commander_sand'] = tuple(round(c, 3) for c in (sp.x - 0.5, sp.y + 4.5, S['islands']['beach']['h'](sp.x - 0.5, sp.y + 4.5)))
     mk_['commander_crawl_a'] = tuple(round(c, 3) for c in (sp.x + 1.0, sp.y + 7.5, S['islands']['beach']['h'](sp.x + 1.0, sp.y + 7.5)))
@@ -1429,7 +1429,8 @@ def set_dragon_smoke(level, frame=None, speed=1.0):
         for k in range(10):
             mb = MB(); cluster(mb, 1.0, M_['smoke_y'], 1500 + k, 5, 0.65); o = mk(mb, 'dsmoke_%d' % k, sh['ride'], shadow=False); smooth_round(o, 1); o.hide_render = True
             sh['dsmoke'].append(dict(ob=o, ph=k / 10 + r.uniform(0, 0.03), size=0.62 + 0.25 * r.random(), drift=Vector((5.0 + r.uniform(-1, 1), r.uniform(-1.4, 1.4), 0.0)), H=4.6 + r.uniform(0, 1.4)))
-    m = sh['mouth']
+    m = sh['mouth']; S['ds_level'] = level
+    if LOOK == 'C': K.set_level(dragon_plume(sh), min(1.3, level), frame)
     for b in sh['dsmoke']:
         ph = (b['ph'] + 0.012 * speed * f) % 1.0; _billow(b['ob'], m + Vector((0.4, 0, 0)), b['drift'], b['H'], b['size'] * (0.7 + 0.5 * min(1.5, level)), ph, level > 0.001, frame)
 
@@ -1538,7 +1539,7 @@ def yard_cams():
         roof_top=dict(loc=(-9.5, -29.0, 15.0), look_at=(0.8, -4.0, 5.2), lens=24),
         macro_spikes=dict(loc=tuple(yw((14.8, -9.0, 4.4))), look_at=tuple(yw((10.4, -3.4, roof_z(10.4, -3.4) + 0.5))), lens=60, fstop=2.8),
         macro_dragon=dict(loc=(-5.2, 25.4, 4.4), look_at=tuple(yw((20.4, 0, 3.15))), lens=55, fstop=2.8),
-        hero_yard=dict(loc=(7.6, 35.0, 2.4), look_at=(1.8, 12.0, 5.9), lens=28))
+        hero_yard=dict(loc=(4.5, 35.0, 1.0), look_at=(-1.5, 8.0, 8.0), lens=40))
 
 def sea_cams():
     fl = _fl('jflag'); z = fl['deck_z']; xa, xb = fl['deck_x']; xc = xb - 5.0
@@ -1561,7 +1562,7 @@ def sea_cams():
         macro_oar=dict(loc=(SOLO_AT[0] + 1.25 + 3.4, SOLO_AT[1] + 10.3 + 3.0, 1.3), look_at=(SOLO_AT[0] + 1.05, SOLO_AT[1] + 10.3 - 1.0, -0.35), lens=40, fstop=2.8),
         cannon_close=dict(loc=(SOLO_AT[0] + 13.5, SOLO_AT[1] - 9.5, 1.6), look_at=(SOLO_AT[0] - 5.0, SOLO_AT[1] - 3.6, 2.6), lens=24),
         hit_close=dict(loc=(HIT_AT[0] + 6.0, HIT_AT[1] - 27.0, 2.4), look_at=(HIT_AT[0] + 1.0, HIT_AT[1], 6.4), lens=26),
-        hero_orbit=orbit_cam(0.5))
+        hero_orbit=dict(orbit_cam(0.5, r=18.0, look=(1.5, 3.0, 2.4)), lens=20))
 
 PRESETS = dict(
     roof_low=dict(loc='yard', cam='roof_low', state='sp2'), bow=dict(loc='yard', cam='bow', state='sp3,ds1'), yard_wide=dict(loc='yard', cam='yard_wide', state='sp3'), roof_top=dict(loc='yard', cam='roof_top', state='sp1'),
@@ -1570,7 +1571,7 @@ PRESETS = dict(
     hansan_high=dict(loc='sea', cam='hansan_high', state=''), flag_bow=dict(loc='sea', cam='flag_bow', state=''), chase=dict(loc='sea', cam='chase', state='s0'),
     board=dict(loc='sea', cam='board', state='sp3,special:board'), reveal_top=dict(loc='sea', cam='reveal_top', state='k1,cs1,dm0.35,sp3,pt1,ds1'),
     aftermath=dict(loc='sea', cam='aftermath', state='k1,dm1,cs0.35,sp3,pt1'), shore=dict(loc='sea', cam='shore', state=''), macro_oar=dict(loc='sea', cam='macro_oar', state='special:solo,os0.4', samples=12),
-    hero_yard=dict(loc='yard', cam='hero_yard', state='sp3,ds0.45'), cannon_close=dict(loc='sea', cam='cannon_close', state='special:solo,sp3,pt1'),
+    hero_yard=dict(loc='yard', cam='hero_yard', state='sp3,ds0.8'), cannon_close=dict(loc='sea', cam='cannon_close', state='special:solo,sp3,pt1'),
     hit_close=dict(loc='sea', cam='hit_close', state='special:hit'), hero_orbit=dict(loc='sea', cam='hero_orbit', state='k1,dm1,cs0.3,sp3,pt1,ds0.8'))
 LOC_PRESETS = dict(yard=[k for k, v in PRESETS.items() if v['loc'] == 'yard'], sea=[k for k, v in PRESETS.items() if v['loc'] == 'sea'])
 CAM_NOTES = dict(
@@ -1786,13 +1787,15 @@ def set_look(look='A'):
 C_SKY = [(0.0, '#ffc08e'), (0.09, '#f6ae96'), (0.2, '#d6a3c4'), (0.38, '#a19dd4'), (0.7, '#7c84c2')]   # pastel peach horizon -> lavender -> soft blue
 C_SUN_RGB = (1.0, 0.60, 0.33); C_SUN_W = 10.0; C_SKY_K = 0.62
 C_ELEV = dict(yard=12.0, sea=8.0)
-C_SUN = dict(hero_yard=(32.0, 12.0), hero_orbit=(14.0, 7.0), cannon_close=(50.0, 8.0), hit_close=(28.0, 8.0), roof_low=(40.0, 12.0), bow=(35.0, 12.0), yard_wide=(30.0, 12.0),
+C_SUN = dict(hero_yard=(0.0, 12.0), hero_orbit=(8.0, 7.0), cannon_close=(-35.0, 8.0), hit_close=(28.0, 8.0), roof_low=(40.0, 12.0), bow=(35.0, 12.0), yard_wide=(30.0, 12.0),
              roof_top=(30.0, 12.0), flag_deck=(30.0, 8.0), flag_deck_b=(30.0, 8.0), flag_deck_crew=(25.0, 8.0), flag_bow=(25.0, 8.0), reveal_top=(10.0, 9.0), hansan_high=(10.0, 9.0),
              shore=(-35.0, 11.0), aftermath=(10.0, 7.0), chase=(35.0, 8.0), board=(30.0, 9.0), fleet_wide=(35.0, 8.0))   # (degrees off straight-behind toward the camera's left (negative: right), elevation)
 C_WATER = ('#36416e', '#4b5a8c', '#8a82ac', '#1f2648', '#525684')      # deep blue-lavender, mid, crest, trough, large patches
 C_WATER_CALM = ('#2c3659', '#3e4a76', '#6d6c98', '#1a2040', '#4a4f7e')
 C_SAMPLES = 24
-C_EXPO = dict(reveal_top=0.55, hansan_high=0.45, fleet_wide=0.3)      # per-preset exposure (aerials over dark water)
+C_BURN = dict(hero_orbit=('s03', 's04', 's07'))                      # preset: Japanese ships set burning and listing in frame (shot 14's background)
+C_HAZE = dict(hero_yard=((0.0, 2.0), 26.0, 0.16))                     # preset: (subject centre, distance toward the sun, density) of a haze block behind the subject
+C_EXPO = dict(reveal_top=0.55, hansan_high=0.45, fleet_wide=0.3, cannon_close=-0.45)      # per-preset exposure (aerials over dark water)
 
 def sun_back_for_camera(setup, elev=None, side=None):
     """Look C key: behind the subject (side 0) or 3/4 behind it (side ~30-50 deg toward the camera's left), low (6-12 deg)."""
@@ -1804,7 +1807,7 @@ def sun_back_for_camera(setup, elev=None, side=None):
 def setup_render_C(sc, quality='final'):
     """Look C render: the B path tracer (GI 2/2, OIDN, 75 % + post) with the haze volume sampled for god rays, AgX medium-high contrast, exposure 0.35."""
     setup_render_B(sc, quality); cy = sc.cycles
-    cy.samples = int(S.get('samples_C', C_SAMPLES)) if quality == 'final' else 10; cy.volume_step_rate = 2.0; cy.volume_max_steps = 256; cy.transparent_max_bounces = 10
+    cy.samples = int(S.get('samples_C', C_SAMPLES)) if quality == 'final' else 10; cy.volume_step_rate = 1.5; cy.volume_max_steps = 256; cy.volume_biased = True   # ray-marched volumes: no per-object majorant octree build (that cost ~17 CPU s per smoke volume at sync); cy.transparent_max_bounces = 10
     sc.view_settings.exposure = float(S.get('exposure_C', C_EXPO.get(S.get('preset', ''), 0.15)))
 
 def post_C(src, dst, W=720, H=1280):
@@ -1835,6 +1838,10 @@ def _gobos_for(cam, dist=20.0, ground=0.0):
     g1 = K.gobo_rigging(c, yaw, 1.0, seed=71, masts=2, name='gobo_rig_a'); g2 = K.gobo_rigging(c + h * 10 + Vector((-h.y, h.x, 0)) * 8, yaw + 12, 1.1, seed=72, masts=2, name='gobo_rig_b')
     S['gobos'] = [g1, g2]
     if S['loc'] == 'yard': S['gobos'].append(K.gobo_canopy(c + Vector((-h.y, h.x, 0)) * -14 + Vector((0, 0, ground + 9)), 6, 6.0, 73, 'gobo_trees'))
+    if S.get('preset') == 'hero_yard':                                       # the money shot: big crowns + a third rig behind the ship, so the shafts read round its silhouette
+        lf = Vector((-h.y, h.x, 0))
+        for i, sg in enumerate((-1, 1)): S['gobos'].append(K.gobo_canopy(c + h * 12 + lf * (sg * 9.0) + Vector((0, 0, ground + 11)), 7, 7.0, 74 + i, 'gobo_trees_h%d' % i))
+        S['gobos'].append(K.gobo_rigging(c + h * 6 - lf * 3, yaw - 8, 1.2, seed=76, masts=3, name='gobo_rig_h'))
 
 def dress_yard_C():
     """R10 lived-in yard: individual wharf planks, cobbles + mud + puddles + grass in the cracks round the slip, crates / barrels / nets / ropes, braziers and lanterns (warm pools)."""
@@ -1848,7 +1855,7 @@ def dress_yard_C():
     for i, (x, y, z, ly) in enumerate(((16.2, 6.4, zq, False), (-10.6, -8.6, Z_LAND, False), (8.1, -15.4, zq, True), (15.8, -2.2, zq, True))): K.barrel((x, y, z), 0.5, 1.25, ly, 30 * i, name='k_barrel%d' % i)
     K.net_pile((15.2, 15.6, zq), 0.9, 40); K.rope_coil((16.0, -9.8, zq), 0.75, 2, 'k_rope_a'); K.rope_coil((-13.0, -2.6, zq), 0.85, 3, 'k_rope_b')
     K.net_hang((-23.0, -5.0, Z_LAND + 2.6), (-15.0, -5.0, Z_LAND + 2.6), 1.5)
-    S['practicals'] = [K.brazier((13.6, -6.2, zq), 300, 'k_brazier_a', None, 1), K.brazier((-12.0, -6.4, Z_LAND + 0.1), 300, 'k_brazier_b', None, 2), K.brazier((9.6, 10.4, zq), 170, 'k_brazier_c', None, 3)]
+    S['practicals'] = [K.brazier((13.6, -6.2, zq), 300, 'k_brazier_a', None, 1), K.brazier((-24.0, -8.0, Z_LAND + 0.1), 300, 'k_brazier_b', None, 2), K.brazier((15.0, 4.0, zq), 170, 'k_brazier_c', None, 3)]
     for i, (x, y, z) in enumerate(((16.0, 0.5, zq), (16.0, 11.5, zq), (16.0, -11.5, zq), (-16.6, 1.0, zq), (-8.8, -14.0, Z_LAND))): S['practicals'].append(K.lantern((x, y, z), 2.7, 80, (1.0, 0.62, 0.3), True, 'k_lantern%d' % i, None, i + 4))
 
 def _deck_props(sh, seed, avoid_y=None):
@@ -1866,13 +1873,15 @@ def _deck_props(sh, seed, avoid_y=None):
     S.setdefault('practicals', []).append(K.lantern((x0 + 0.25, -1.6, z + 2.4), 0, 60, (1.0, 0.62, 0.3), False, 'k_%s_lantern' % n, ride, seed))
 
 def dress_sea_C():
+    for D_ in S['dmg']:
+        if D_['sh']['name'] in C_BURN.get(S['preset'], ()): D_['thr'] = 0.02; D_['deg'] = 9.0 if D_['deg'] > 0 else -9.0
     """decks lived-in (jflag, j_near, j_board), fires on the damaged ships (shown by set_damage), flash lights at the Korean guns, the turtle's oars in rhythm."""
     for nm, sd, ay in (('jflag', 51, None), ('j_near', 52, None), ('j_board', 53, 3.5)): _deck_props(S['ships'][nm], sd, ay)
     K.use(S['coll'])
     for i, D_ in enumerate(S['dmg']):
         sh = D_['sh']; mx = sh['masts'][0][0] if sh['masts'] else sh['L'] * 0.12; zb = sh['masts'][0][1] if sh['masts'] else sh.get('deck_z', 2.4)
         pts = [(mx - 1.0, 0.6, zb + 0.2), (mx + 1.8, -0.8, zb + 0.1)] + ([(mx, 0.0, zb + 6.0)] if sh['masts'] else [])
-        D_['fires'] = [K.fire_patch(pts, 1.0 if sh['kind'] == 'atake' else 0.7, 400 + i, 'k_fire_%s' % sh['name'], sh['ride'], light=(i % 2 == 0))]
+        D_['fires'] = [K.fire_patch(pts, 1.0 if sh['kind'] == 'atake' else 0.7, 400 + i, 'k_fire_%s' % sh['name'], sh['ride'], light=(i % 2 == 0), smoke_h=42.0, smoke_r=1.7)]
         for fr in D_['fires']: K.set_fire(fr, 0.0)
     for G in S['guns']: G['L'] = K._light('flashL_%s' % G['flash'].name, 'POINT', (1.0, 0.7, 0.35), 0.0, G['g']['local'] + G['g']['dir'] * 0.9, 0.4, G['sh']['ride'])
     t = S['ships'].get('turtle')
@@ -1881,7 +1890,94 @@ def dress_sea_C():
             if o.animation_data and o.animation_data.drivers:
                 sg = 0.0 if o.name.endswith('_p') else math.pi
                 for fc in o.animation_data.drivers:
-                    if fc.data_path == 'rotation_euler' and fc.array_index == 2: fc.driver.expression = '%.4f+0.22*sin(frame*0.30)' % sg
+                    if fc.data_path == 'rotation_euler' and fc.array_index == 2: fc.driver.expression = '%.4f+0.08*sin(frame*0.30)' % sg
+        rm = K.ksoft('oarfoam', '#f4f6f5', 0.5)                             # the blade bites the water: a soft foam ring on the surface (the old flat ring cards read as floating slabs)
+        for o in [o for o in bpy.data.objects if o.name.startswith('ring_turtle_')]: o.hide_render = True
+        for o in t['oars']: o.rotation_euler[0] -= 0.13                     # dip deeper: the blades stay under the swell troughs
+        bpy.context.view_layer.update(); rinv = t['root'].matrix_world.inverted()
+        for o in t['oars']:                                                    # a foam ring where each shaft enters the water (z 0)
+            mw = o.matrix_world; a_, b_ = mw @ Vector((0, 0, 0)), mw @ Vector((0, 6.4, 0))
+            if (a_.z > 0) == (b_.z > 0): continue
+            w_ = a_ + (b_ - a_) * (a_.z / (a_.z - b_.z)); lp = rinv @ w_
+            mb = K.MB(); mb.torus((0, 0, 0), 0.42, 0.12, rm, 18, 5); r_ = K.obj(mb, 'k_oarfoam_' + o.name, t['root'], loc=(lp.x, lp.y, 0.04), shadow=False, smooth=True); r_.scale = (1, 1, 0.3)
+
+# ============================================================================= look C: the sculpted dragon head (smooth, subdivided), shared by every look-C shot
+def _curve_tube(mb, pts, r0, r1, mat, seg=10):
+    """a tapered tube through pts (horns, tongue, whiskers)."""
+    n = len(pts) - 1
+    for k in range(n): mb.cyl(pts[k], pts[k + 1], r0 + (r1 - r0) * k / n, r0 + (r1 - r0) * (k + 1) / n, mat, seg, cap=(k == n - 1))
+
+def dragon_C(sh):
+    """Replace the boxy carved head (look C only): sculpted snout with flared nostrils, open jaw, a ring of teeth, curled tongue, swept-back horns, brows, eyes
+    with a glint, a flame mane, whiskers.  Smooth subdivided parts (teeth / glints unsubdivided).  Same mouth point (sh['mouth']) for the smoke and the mouth cannon."""
+    if sh.get('dragonC'): return sh['dragonC']
+    K.use(S['coll']); M_ = S['M']; ride = sh['ride']; R, Gd, Tl = M_['dragon_red'], M_['gold'], M_['teal']
+    mb = K.MB()
+    mb.cyl((15.3, 0, 2.35), (17.5, 0, 3.55), 1.2, 1.0, Tl, 16)                                      # neck
+    mb.lump((18.55, 0, 3.95), 1.12, R, 501, 18, 11, 0.03, 0.86, 1.22)                              # skull
+    mb.lump((20.15, 0, 3.72), 0.66, R, 502, 18, 10, 0.03, 0.62, 2.0)                               # upper snout, long
+    mb.lump((21.35, 0, 3.72), 0.5, R, 503, 16, 9, 0.02, 0.72, 1.05)                                # snout bulb
+    for sg in (-1, 1):
+        mb.lump((21.55, sg * 0.32, 3.98), 0.24, R, 504, 12, 7, 0.0, 0.8, 1.2)                      # flared nostril rims
+        mb.lump((19.05, sg * 0.62, 4.62), 0.3, Gd, 505, 12, 7, 0.0, 0.55, 1.9)                     # brow ridges
+        mb.lump((17.45, sg * 1.18, 3.45), 0.5, Tl, 506, 12, 7, 0.05, 1.1, 0.5)                     # cheek fins
+    mb.lump((20.05, 0, 2.72), 0.52, R, 507, 16, 9, 0.02, 0.42, 1.95)                               # lower jaw (dropped open)
+    body = K.obj(mb, sh['name'] + '_dragonC', ride, smooth=True, sub=2)
+    mb = K.MB(); mm = M_['mouth']
+    mb.lump((20.25, 0, 3.12), 0.48, mm, 508, 14, 8, 0.0, 0.55, 1.75)                               # mouth cavity
+    tg = [Vector((19.6, 0, 2.95)), Vector((20.3, 0, 2.97)), Vector((20.9, 0, 3.05)), Vector((21.35, 0, 3.25)), Vector((21.5, 0, 3.5)), Vector((21.35, 0, 3.65))]
+    _curve_tube(mb, tg, 0.2, 0.08, M_['tongue'], 10)                                                # curled tongue
+    for sg in (-1, 1):                                                                              # swept-back horns (two each side? one each: 2 horns)
+        hp = [Vector((18.5, sg * 0.55, 4.75)), Vector((17.9, sg * 0.8, 5.45)), Vector((17.0, sg * 1.05, 5.95)), Vector((15.9, sg * 1.2, 6.15)), Vector((15.0, sg * 1.25, 6.0))]
+        _curve_tube(mb, hp, 0.26, 0.03, Gd, 10)
+        wh = [Vector((21.2, sg * 0.45, 3.55)), Vector((21.0, sg * 1.1, 3.3)), Vector((20.4, sg * 1.6, 3.0)), Vector((19.6, sg * 1.8, 2.9))]
+        _curve_tube(mb, wh, 0.06, 0.015, Gd, 6)                                                    # whiskers
+        mb.lump((19.15, sg * 0.86, 4.22), 0.3, M_['eye_w'], 509, 14, 8, 0.0, 1.0, 0.9)              # eyes
+        mb.lump((19.36, sg * 1.0, 4.25), 0.15, M_['eye_k'], 510, 12, 7, 0.0, 1.0, 0.7)              # pupils
+    for k in range(7):                                                                              # flame mane along the neck
+        xx = 18.0 - 0.5 * k; mb.cyl((xx, 0, 4.7 - 0.12 * k), (xx - 1.0, 0, 5.6 - 0.1 * k), 0.32 - 0.025 * k, 0.0, R if k % 2 == 0 else Gd, 8)
+    parts = K.obj(mb, sh['name'] + '_dragonC_parts', ride, smooth=True, sub=1)
+    mb = K.MB(); tm = M_['tooth']                                                                   # a ring of teeth round the jaws (fangs at the corners)
+    for i in range(9):
+        u = i / 8.0; x = 19.45 + 1.95 * u
+        for sg in (-1, 1):
+            w = 0.42 * (1 - 0.55 * u ** 2); big = i in (0, 8)
+            mb.cyl((x, sg * w, 3.3), (x + 0.02, sg * w * 0.92, 2.95 - (0.12 if big else 0.0)), 0.09 if not big else 0.13, 0.0, tm, 6)      # upper
+            mb.cyl((x - 0.05, sg * w * 0.95, 2.88), (x - 0.03, sg * w * 0.9, 3.15 + (0.1 if big else 0.0)), 0.075 if not big else 0.11, 0.0, tm, 6)   # lower
+    teeth = K.obj(mb, sh['name'] + '_dragonC_teeth', ride, smooth=False)
+    mb = K.MB(); gl = K.kglow('eyeglint', '#ffffff', 40.0)
+    for sg in (-1, 1): mb.lump((19.46, sg * 1.09, 4.33), 0.045, gl, 511, 6, 4, 0.0)
+    glint = K.obj(mb, sh['name'] + '_dragonC_glint', ride, shadow=False)
+    if sh.get('dragon') is not None: sh['dragon'].hide_render = True; sh['dragon'].hide_viewport = True
+    sh['dragonC'] = [body, parts, teeth, glint]; return sh['dragonC']
+
+def _cam_off(o):
+    """take a cartoon smoke ball out of the picture (look C: it is replaced by a volume)."""
+    for a in ('visible_camera', 'visible_shadow', 'visible_diffuse', 'visible_glossy', 'visible_transmission', 'visible_volume_scatter'): setattr(o, a, False)
+
+def _to_vblob(o, mat, ext=1.25):
+    """swap a smoke-ball mesh for a +-ext box volume domain (same object, so its hook keys still move / scale / show it)."""
+    mb = K.MB(); mb.box((0, 0, 0), ext * 1.3, ext, ext, mat); me = bpy.data.meshes.new(o.name + '_vb'); me.from_pydata(mb.v, [], mb.f); me.flip_normals(); me.materials.append(mat)
+    for md in list(o.modifiers): o.modifiers.remove(md)
+    o.data = me; o.color = (1, 1, 1, 1); o.visible_shadow = True
+
+def dragon_plume(sh):
+    """look C dragon smoke: one wind-bent volume column from the mouth (dark grey-brown at the mouth, lighter and wispy above), level by set_dragon_smoke."""
+    if sh.get('dplume') is None:
+        K.use(S['coll']); m = sh['mouth']; wind = (1.5, 6.5) if not sh.get('sea') else (-6.0, 3.0)
+        sh['dplume'] = K.smoke_column(m + Vector((0.5, 0, 0.1)), 10.0, 0.6, wind, sh['ride'], 'dplume_' + sh['name'], 0.5, 3.2, '#4a4037', '#a29b92', 4.0, 0.5, 3.0)
+        sh['dplume'].hide_render = True
+    return sh['dplume']
+
+def _c_smoke():
+    """look C: no smoke balls anywhere.  Dragon smoke -> a volume plume; damage smoke -> the fire patches' volume columns; Korean gun puffs -> soft volume puffs."""
+    t = S.get('turtle')
+    if t is not None: dragon_plume(t); set_dragon_smoke(S.get('ds_level', 0.0))
+    for b in (t or {}).get('dsmoke', []): _cam_off(b['ob'])
+    for D_ in S['dmg']: _cam_off(D_['smoke'])
+    gm = K.vblob_mat('gunpuff', '#d3cec6', 1.3, 0.8)
+    for G in S['guns']:
+        for o in G['puffs']: _to_vblob(o, gm)
 
 def set_look_C():
     """LOOK C (LIGHT_SPEC.md): pastel peach-to-lavender sky, one low warm sun (6-12 deg) behind / 3/4 behind the subject per preset, haze volume with god rays, off-screen gobos,
@@ -1905,7 +2001,11 @@ def set_look_C():
     _mr.inputs['From Min'].default_value = -200.0; _mr.inputs['From Max'].default_value = 320.0; _mr.inputs['To Min'].default_value = 1.0; _mr.inputs['To Max'].default_value = 0.0; _pw.inputs[1].default_value = 2.5
     _mu = _hnt.nodes.new('ShaderNodeMath'); _mu.operation = 'MULTIPLY'
     _hnt.links.new(_tc.outputs['Object'], _sp.inputs[0]); _hnt.links.new(_sp.outputs['Z'], _mr.inputs['Value']); _hnt.links.new(_mr.outputs['Result'], _pw.inputs[0]); _hnt.links.new(_pw.outputs[0], _mu.inputs[0])
-    _mu.inputs[1].default_value = 0.006 if S['loc'] == 'yard' else 0.0028; _hnt.links.new(_mu.outputs[0], hz.inputs['Density'])
+    _mu.inputs[1].default_value = C_HAZE.get(S['preset'], (None, None, 0.006 if S['loc'] == 'yard' else 0.0028))[2]
+    if S['preset'] in C_HAZE and hzo is not None:                            # a haze block only BEHIND the subject (toward the sun): shafts round its silhouette, clean sky above
+        _az, _el = sun_back_for_camera(S['cams'][PRESETS[S['preset']]['cam']]); _h = Vector((math.cos(math.radians(_az)), math.sin(math.radians(_az)), 0)); _c = Vector((*C_HAZE[S['preset']][0], 0.0)) + _h * C_HAZE[S['preset']][1]
+        hzo.location = (_c.x, _c.y, 0.0); hzo.scale = (0.022, 0.022, 0.07)
+    _hnt.links.new(_mu.outputs[0], hz.inputs['Density'])
     hz.inputs['Anisotropy'].default_value = 0.6; hz.inputs['Color'].default_value = (*hexl('#eee4e4'), 1)
     oc = S.get('ocean')
     if oc is not None:
@@ -1915,6 +2015,12 @@ def set_look_C():
         if far is not None: far.data.materials[0] = wm
     if S['loc'] == 'yard': dress_yard_C()
     else: dress_sea_C(); _place(None)
+    if S.get('turtle') is not None: dragon_C(S['turtle'])
+    _c_smoke()
+    if S['preset'] in ('cannon_close', 'hit_close'):                       # the close presets: the hull-side foam strip read as a white line / a gap at the waterline
+        for nm in ('turtle', 'j_board'):
+            fo = S['ships'][nm].get('foam') if nm in S['ships'] else None
+            if fo is not None: fo.hide_render = True
     pc = S['cams'][PRESETS[S['preset']]['cam']]; az, el = sun_back_for_camera(pc); set_sun(az, el); S['sun_elev'] = el
     _gobos_for(pc, 22.0 if S['loc'] == 'yard' else 18.0, Z_LAND if S['loc'] == 'yard' else 0.0)
     S['samples_C'] = min(C_SAMPLES, PRESETS[S['preset']].get('samples', C_SAMPLES)); setup_render_C(sc, 'final')
@@ -1925,7 +2031,7 @@ def _broadside_rigs():
     if S.get('broadside'): return S['broadside']
     K.use(S['coll']); t = S['turtle']; rigs = []
     for G_ in sorted([g for g in t['guns'] if g['local'].y < 0], key=lambda g: g['local'].x):
-        p = G_['local'] + G_['dir'] * 0.35; rigs.append(K.muzzle_rig(p, G_['dir'], t['ride'], 'bs_%s' % G_['name'], 1.0, 600 + len(rigs)))
+        p = G_['local'] + G_['dir'] * 0.35; rigs.append(K.muzzle_rig(p, G_['dir'], t['ride'], 'bs_%s' % G_['name'], 1.0, 600 + len(rigs))); rigs[-1]['trail'] = Vector((-7.0, 0.0, 0.0))   # smoke drifts back along the hull
     S['broadside'] = rigs; return rigs
 
 def set_broadside(t, frame=None, gap=0.28):
@@ -1937,34 +2043,40 @@ def _hit_rigs():
     if S.get('hit'): return S['hit']
     K.use(S['coll']); jb = S['ships']['j_board']; ride = jb['ride']; x0, x1 = jb['deck_x']; z = jb['deck_z']; root = jb['root']
     W_ = lambda lp: L2W('j_board', lp)
-    main = K.explosion_rig(W_((x0 + 4.0, -4.4, z - 0.6)), 0.0, None, 0.8, 81, 26, None, 'hit_main')
-    col_a = K.explosion_rig(W_((x0 - 4.0, 8.5, 0.0)), 0.0, None, 1.3, 82, 0, None, 'hit_col_a'); col_b = K.explosion_rig(W_((x1 + 5.0, -5.0, 0.0)), 0.0, None, 1.0, 83, 0, None, 'hit_col_b')
-    mx = x1 - 0.5; tt = jb.get('tower_top', Vector((x0 - 3, 0, z + 6)))
-    fire = K.fire_patch([(x0 + 3.0, -2.5, z), (x0 + 5.5, -1.0, z), (tt.x, 0.0, tt.z - 1.5), (tt.x + 2.0, 1.4, tt.z - 3.2)], 1.1, 84, 'hit_fire', ride)
+    main = K.explosion_rig(W_((x0 + 4.0, -3.6, z + 1.2)), 0.0, None, 1.25, 81, 30, None, 'hit_main')
+    cols = [K.explosion_rig(W_(lp), 0.0, None, sc_, sd_, 0, None, nm_) for lp, sc_, sd_, nm_ in (((x0 + 2.0, 8.5, 0.0), 1.9, 82, 'hit_col_a'), ((x1 - 5.0, -9.0, 0.0), 1.2, 83, 'hit_col_b'), ((x0 + 1.5, -9.5, 0.0), 1.0, 86, 'hit_col_c'))]
+    for c_ in cols:                                       # near misses: white water only (no fireball, no flash)
+        for o in c_['fire'] + [e['ob'] for e in c_['embers']]: o.hide_render = True
+        c_['fire'] = []; c_['embers'] = []; c_['power'] = 0.0
+    tt = jb.get('tower_top', Vector((x0 - 3, 0, z + 6))); pts = [(x0 + 3.0, -2.5, z), (x0 + 5.5, -1.0, z), (tt.x, 0.0, tt.z - 1.5)]
+    if jb['masts']:                                       # the sail / yard / rigging alight
+        mx, zb, Hm = jb['masts'][0]; pts += [(mx, 0.0, zb + Hm * 0.55), (mx + 0.2, -2.2, zb + Hm * 0.78), (mx - 0.2, 1.8, zb + Hm * 0.86)]
+    fire = K.fire_patch(pts, 1.1, 84, 'hit_fire', ride)
     K.set_fire(fire, 0.0)
-    xs = [x0 + 9.0, x0 + 11.2]; S['jump0'] = [L2W('j_board', (x, 3.4, z)) for x in xs]
-    S['jump_splash'] = [K.splash_rig(p + Vector((0, 6.6, 0)), 0.0, 1.0, 85 + i, 'jump_spl%d' % i) for i, p in enumerate(S['jump0'])]
-    for r_ in [main, col_a, col_b] + S['jump_splash']: K.set_explosion(r_, -1.0) if r_ is not None else None
-    S['hit'] = dict(main=main, cols=[col_a, col_b], fire=fire); return S['hit']
+    xs = [x0 + 9.0, x0 + 11.2]; S['jump0'] = [L2W('j_board', (x, 3.4, z + 1.0)) for x in xs]   # standing ON the far rail
+    S['jump_splash'] = [K.splash_rig(Vector((p.x + 3.5, p.y + 6.6, 0.0)), 0.0, 1.0, 85 + i, 'jump_spl%d' % i) for i, p in enumerate(S['jump0'])]
+    for r_ in [main] + S['jump_splash']: K.set_explosion(r_, -1.0)
+    for c_ in cols: K.set_explosion(c_, -1.0)
+    S['hit'] = dict(main=main, cols=cols, fire=fire); return S['hit']
 
 def set_hit_explosion(t, frame=None):
-    """hit_close: the atakebune j_board (at HIT_AT, state special:hit) takes the hits: fireball + debris planks / splinters (they splash), 2 water columns, the shockwave ring, the
+    """hit_close: the atakebune j_board (at HIT_AT, state special:hit) takes the hits: emissive volume fireball + debris planks / splinters (they splash), 3 white water columns with spray, the shockwave ring, the
     deck / tower / rigging catch fire (embers).  t = seconds since the first hit (< 0: idle).  Call every frame."""
-    H_ = _hit_rigs(); K.set_explosion(H_['main'], t, frame); K.set_explosion(H_['cols'][0], t - 0.18, frame); K.set_explosion(H_['cols'][1], t - 0.42, frame)
+    H_ = _hit_rigs(); K.set_explosion(H_['main'], t, frame); [K.set_explosion(c_, t - dt, frame) for c_, dt in zip(H_['cols'], (0.0, 0.14, 0.04))]
     K.set_fire(H_['fire'], max(0.0, min(1.0, (t - 0.15) / 0.5)), frame)
 
 def jump_arc(i, t):
-    """world feet point of ashigaru i (0, 1) leaping off j_board's far rail into the sea: a comic arc (up 3 D, out 6.6 D), in the water at t ~ 0.95 s."""
-    _hit_rigs(); p0 = S['jump0'][i]; T_ = 0.95; u = max(0.0, min(1.0, t / T_)); z = p0.z + 3.0 * math.sin(math.pi * min(1.0, u * 1.25)) - (p0.z + 0.3) * u ** 2.2
-    return Vector((p0.x + 0.4 * u, p0.y + 6.6 * u, max(-0.6, z)))
+    """world feet point of ashigaru i (0, 1) leaping off j_board's far rail into the sea: a comic arc (up 4 D, out 6.6 D and 3.5 D toward the bow), in the water at t ~ 0.95 s."""
+    _hit_rigs(); p0 = S['jump0'][i]; T_ = 0.95; u = max(0.0, min(1.0, t / T_)); z = p0.z + 4.0 * math.sin(math.pi * min(1.0, u * 1.25)) - (p0.z + 0.3) * u ** 2.2
+    return Vector((p0.x + 3.5 * u, p0.y + 6.6 * u, max(-0.6, z)))
 
 def set_jump_splash(i, t, frame=None):
     """the splash where ashigaru i lands (t = seconds since the jump; the splash starts at 0.95 s)."""
     _hit_rigs(); K.set_splash(S['jump_splash'][i], t - 0.95, frame)
 
-def orbit_cam(u, r=11.0, h=3.4, a0=100.0, a1=150.0):
+def orbit_cam(u, r=16.0, h=4.0, a0=100.0, a1=150.0, look=(1.5, 0.0, 2.4)):
     """hero_orbit camera at u (0..1): a slow arc behind / beside the dragon head of the turtle ship (ship-local, so it follows the moving ship), looking past the head at the fleet."""
-    a = math.radians(a0 + (a1 - a0) * u); head = Vector((20.4, 0.0, 3.15)); loc = head + Vector((r * math.cos(a), r * math.sin(a), h)); look = head + Vector((1.5, 0.0, 2.4))
+    a = math.radians(a0 + (a1 - a0) * u); head = Vector((20.4, 0.0, 3.15)); loc = head + Vector((r * math.cos(a), r * math.sin(a), h)); look = head + Vector(look)
     return dict(loc=tuple(L2W('turtle', loc)), look_at=tuple(L2W('turtle', look)), lens=24)
 
 def _load(): return ' '.join('%.2f' % v for v in os.getloadavg())
