@@ -87,6 +87,20 @@ def tally(im, g, g_in):
         d.text((420, 250), "0", font=f, fill=(255, 255, 255, 255), anchor="lm", stroke_width=5, stroke_fill=(0, 0, 0, 255))
         draw_check(d, 555, 224, 1.3 * s2)
 
+def tally_plain(im, g, g_in):
+    """version C (client): plain white numbers "47 : 0" only, same position, light shadow; no panel, no icons."""
+    u = g - g_in
+    if u < 0: return
+    from PIL import ImageFilter
+    f = ImageFont.truetype(FONT, 96); s1 = pop(u)
+    if s1 <= 0: return
+    n = min(47, int(round(47 * min(1.0, u / 10.0))))
+    txt = "%d : 0" % n
+    sh = Image.new("RGBA", im.size, (0, 0, 0, 0)); ds = ImageDraw.Draw(sh)
+    ds.text((363, 249), txt.strip(), font=f, fill=(0, 0, 0, 150), anchor="mm")
+    sh = sh.filter(ImageFilter.GaussianBlur(5)); im.alpha_composite(sh)
+    ImageDraw.Draw(im).text((360, 243), txt.strip(), font=f, fill=(255, 255, 255, 255), anchor="mm")
+
 def graded(path, g):
     """v1.1 grade (COLOUR_SPEC section 5, film_mini.py grade) for Look A frames."""
     sys.path.insert(0, P + "/skill/reference-style-shorts/pipeline/v3/film/out_v11")
@@ -143,7 +157,7 @@ for g in range(N):
     if src[g] is None:
         Image.new("RGB", (720, 1280)).save(dst); continue
     in_ov = src[g] is not None and ("/s13/" in src[g] or "/s14/" in src[g])   # overlays only on the reveal / aftermath takes
-    ships = [sh for sh in (OV.get(g, []) if in_ov else []) if g >= X_FROM and sh.get("hit_g", 1e9) <= g and 0 < sh["x"] < 720 and 60 < sh["y"] < 860]
+    ships = [sh for sh in (OV.get(g, []) if (in_ov and VER != "C") else []) if g >= X_FROM and sh.get("hit_g", 1e9) <= g and 0 < sh["x"] < 720 and 60 < sh["y"] < 860]
     co = CALLOUTS and VER == "C" and g in BA and src[g] is not None and "/s08C/" in src[g]
     if not ships and not co and not (TALLY_G <= g < TALLY_END) and VER != "A":
         os.symlink(src[g], dst); continue
@@ -152,7 +166,7 @@ for g in range(N):
         big = 2.2 if (VER == "C" and "/s13/" in src[g]) else 0.75     # C: one big X on the close-hit ship (13c)
         draw_x(d, sh["x"], sh["y"] - 14 - (40 if big > 1 else 0), big * pop(g - max(sh["hit_g"], X_FROM)))
     if TALLY_G <= g < TALLY_END and "/s14/" in src[g]:
-        tally(im, g, TALLY_G)
+        (tally_plain if VER == "C" else tally)(im, g, TALLY_G)
     if co:
         callout(im, g)
     im.convert("RGB").save(dst)
