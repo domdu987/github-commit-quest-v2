@@ -15,6 +15,9 @@ import common as C                                       # noqa: E402
 from mathutils import Vector                             # noqa: E402
 
 J, actors, cast24 = C.J, C.actors, C.cast24
+if J.LOOK == "C":                                        # look C: warm sun-side rim on the backlit cards (A / B unchanged)
+    _story0 = C.story
+    C.story = lambda n: (lambda cp: (cp[0], J.card_rim(cp[1])))(_story0(n))
 lerp, clamp, blink, ez, bf = C.lerp, C.clamp, C.blink, C.ez, C.bf
 TMP = os.path.join(HERE, "work")
 SHOT = 15

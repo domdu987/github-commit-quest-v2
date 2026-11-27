@@ -1,6 +1,7 @@
-frames/
-raw/
-work/
 *.log
+frames/
 frames_C/
+raw/
 raw_C/
+work/
+work_C/
