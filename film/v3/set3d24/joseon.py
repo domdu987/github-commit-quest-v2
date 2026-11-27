@@ -1787,7 +1787,7 @@ def set_look(look='A'):
 
 # ============================================================================= LOOK C: low sun, backlight + rim, practical pools, gobos, haze with god rays (LIGHT_SPEC.md, R9/R10)
 C_SKY = [(0.0, '#ffc08e'), (0.09, '#f6ae96'), (0.2, '#d6a3c4'), (0.38, '#a19dd4'), (0.7, '#7c84c2')]   # pastel peach horizon -> lavender -> soft blue
-C_SUN_RGB = (1.0, 0.60, 0.33); C_SUN_W = 10.0; C_SKY_K = 0.62
+C_SUN_RGB = (1.0, 0.60, 0.33); C_SUN_W = 12.5; C_SKY_K = 0.62
 C_ELEV = dict(yard=12.0, sea=8.0)
 C_SUN = dict(hero_yard=(0.0, 12.0), build_dock=(4.0, 11.0), hero_orbit=(8.0, 7.0), cannon_close=(-35.0, 8.0), hit_close=(28.0, 8.0), roof_low=(40.0, 12.0), bow=(35.0, 12.0), yard_wide=(30.0, 12.0),
              roof_top=(30.0, 12.0), flag_deck=(30.0, 8.0), flag_deck_b=(30.0, 8.0), flag_deck_crew=(25.0, 8.0), flag_bow=(25.0, 8.0), reveal_top=(10.0, 9.0), hansan_high=(10.0, 9.0),
@@ -1796,8 +1796,8 @@ C_WATER = ('#36416e', '#4b5a8c', '#8a82ac', '#1f2648', '#525684')      # deep bl
 C_WATER_CALM = ('#2c3659', '#3e4a76', '#6d6c98', '#1a2040', '#4a4f7e')
 C_SAMPLES = 24
 C_BURN = dict(hero_orbit=('s03', 's04', 's07'))                      # preset: Japanese ships set burning and listing in frame (shot 14's background)
-C_HAZE = dict(hero_yard=((0.0, 2.0), 26.0, 0.16), build_dock=((0.0, 2.0), 26.0, 0.16))                     # preset: (subject centre, distance toward the sun, density) of a haze block behind the subject
-C_EXPO = dict(build_dock=-0.15, reveal_top=0.55, hansan_high=0.45, fleet_wide=0.3, cannon_close=-0.45)      # per-preset exposure (aerials over dark water)
+C_HAZE = dict(hero_yard=((0.0, 2.0), 26.0, 0.16), build_dock=((0.0, 2.0), 26.0, 0.06))                     # preset: (subject centre, distance toward the sun, density) of a haze block behind the subject
+C_EXPO = dict(build_dock=-0.15, reveal_top=0.55, hansan_high=0.45, fleet_wide=0.3, cannon_close=-0.75)      # per-preset exposure (aerials over dark water)
 
 def sun_back_for_camera(setup, elev=None, side=None):
     """Look C key: behind the subject (side 0) or 3/4 behind it (side ~30-50 deg toward the camera's left), low (6-12 deg)."""
@@ -1825,7 +1825,7 @@ def post_C(src, dst, W=720, H=1280):
     g = a.mean(2, keepdims=True); a = g + (a - g) * 0.84
     l2 = (a @ np.array([0.2126, 0.7152, 0.0722]))[..., None]; sh = np.clip(1 - l2 / 0.45, 0, 1); hl = np.clip((l2 - 0.5) / 0.4, 0, 1)
     a = a + sh * np.array([-0.004, 0.006, 0.032]) * 1.0 + hl * np.array([0.030, 0.012, -0.020])
-    wm = np.clip((l2 - 0.25) / 0.5, 0, 1); a = a * (1 + wm * np.array([0.096, 0.0, -0.128]))          # mids / highs toward amber (the warm half of the two-tone)
+    wm = np.clip((l2 - 0.25) / 0.5, 0, 1); a = a * (1 + wm * np.array([0.13, 0.02, -0.15]))          # mids / highs toward amber (the warm half of the two-tone)
     a = a + 0.05 * (a - a ** 2) * (2 * a - 1) * -1; a = np.clip(a * vig, 0, 0.985)
     Image.fromarray((a * 255 + 0.5).astype(np.uint8)).save(dst)
 
@@ -1885,6 +1885,12 @@ def dress_sea_C():
         pts = [(mx - 1.0, 0.6, zb + 0.2), (mx + 1.8, -0.8, zb + 0.1)] + ([(mx, 0.0, zb + 6.0)] if sh['masts'] else [])
         D_['fires'] = [K.fire_patch(pts, 1.0 if sh['kind'] == 'atake' else 0.7, 400 + i, 'k_fire_%s' % sh['name'], sh['ride'], light=(i % 2 == 0), smoke_h=42.0, smoke_r=1.7)]
         for fr in D_['fires']: K.set_fire(fr, 0.0)
+    for D_ in S['dmg']:                                                     # the C_BURN ships: big flames + a strong fire light glowing on the water (they read on a phone)
+        sh = D_['sh']
+        if sh['name'] in C_BURN.get(S['preset'], ()):
+            z = sh.get('deck_z', 2.4); x0 = sh.get('deck_x', (-sh['L'] * 0.3, sh['L'] * 0.3))[0]
+            fr = K.fire_patch([(x0 + 1.0, -1.2, z), (x0 + 3.5, 1.0, z), (x0 + 6.0, -0.5, z), (x0 + 2.0, 0.2, z + 4.0)], 2.2, 450, 'k_bigfire_%s' % sh['name'], sh['ride'], light=True, smoke_h=0)
+            fr['power'] *= 5.0; K.set_fire(fr, 0.0); D_['fires'].append(fr)
     for G in S['guns']: G['L'] = K._light('flashL_%s' % G['flash'].name, 'POINT', (1.0, 0.7, 0.35), 0.0, G['g']['local'] + G['g']['dir'] * 0.9, 0.4, G['sh']['ride'])
     t = S['ships'].get('turtle')
     if t:                                                                      # oars in rhythm: one phase per side
@@ -2174,11 +2180,11 @@ def build_cam(u):
     """build_dock camera at u (0..1 over g 734-1126): one continuous slow eased orbit, low over the harbour, round the bow 3/4 (east side); it tightens on the bow for
     6a-6c (u 0.60-0.89) and eases back a little for the hero pose.  Keeps the ship low-left: the top 25 % and the right band are free for the callouts."""
     u = max(0.0, min(1.0, u)); e = _ez(u); tight = _ez((u - 0.56) / 0.1) - 0.55 * _ez((u - 0.88) / 0.1)
-    a = math.radians(6.0 + 15.0 * e); R = 29.0 - 12.0 * tight                # (east of x 13 a moored panokseon blocks the view)
+    a = math.radians(30.0 + 6.0 * e - 14.0 * tight); R = 24.0 - 7.0 * tight                # (east of x 13 a moored panokseon blocks the view)
     tgt = Vector((0.0, 2.0, 4.6)).lerp(Vector(tuple(yw((18.5, 0, 2.6)))), tight)
-    loc = tgt + Vector((R * math.sin(a), R * math.cos(a), 0)); loc.z = 1.6 + 0.6 * tight
-    look = tgt + Vector((-4.0 + 5.0 * tight - 2.2 * _ez((u - 0.88) / 0.1), 1.0, 2.4 - 0.8 * tight))
-    return dict(loc=tuple(loc), look_at=tuple(look), lens=26.0 + 6.0 * tight)
+    loc = tgt + Vector((-R * math.sin(a), R * math.cos(a), 0)); loc.z = 1.6 + 0.6 * tight      # west side: the east wharf hides the hull from low
+    look = tgt + Vector((0.5 - 1.5 * tight + 2.2 * _ez((u - 0.88) / 0.1), 1.0, 2.4 - 0.8 * tight))
+    return dict(loc=tuple(loc), look_at=tuple(look), lens=21.0 + 11.0 * tight)
 
 def build_anchor(stage, scene=None):
     """screen point (px at 720x1280) of the stage's part on the current frame / camera, for the conform leader lines.  None if behind the camera."""
@@ -2255,6 +2261,10 @@ def set_look_C():
     else: dress_sea_C(); _place(None)
     if S.get('turtle') is not None: dragon_C(S['turtle'])
     _c_smoke()
+    if S['preset'] == 'build_dock':                                          # warm amber key on the camera side (the backlit hull, oars, guns, spikes read as they land)
+        kl = bpy.data.lights.new('build_key', 'AREA'); kl.shape = 'DISK'; kl.size = 9.0; kl.energy = 9000.0; kl.color = (1.0, 0.68, 0.38)
+        ko = bpy.data.objects.new('build_key', kl); S['coll'].objects.link(ko); ko.location = (-14.0, 30.0, 11.0)
+        ko.rotation_euler = (Vector((0.0, 4.0, 3.5)) - Vector(ko.location)).to_track_quat('-Z', 'Y').to_euler(); ko.visible_glossy = True
     if S['preset'] in ('cannon_close', 'hit_close'):                       # the close presets: the hull-side foam strip read as a white line / a gap at the waterline
         for nm in ('turtle', 'j_board'):
             fo = S['ships'][nm].get('foam') if nm in S['ships'] else None
