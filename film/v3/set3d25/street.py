@@ -62,7 +62,7 @@ def street_scene(P):
     pts = L.scatter_rect(-9, -40, 9, 100, 500, 3); L.dress(lambda x, y: 0.0, pts, L.scatter_rect(-9, -40, 9, 100, 60, 4), L.scatter_rect(-9, -40, 9, 100, 30, 5), L.scatter_rect(-8, -40, 8, 100, 120, 6), 7, 'st', 6, (0.2, 0.5))
 
 def build(preset, samples=None, quality=None):
-    P = PRESETS[preset]; t0 = time.time(); F.begin('street', preset); S.update(flat=True, trenches=[], craters=[], corridors=[], mud_zones=[]); street_scene(P)
+    P = PRESETS[preset]; t0 = time.time(); F.begin('street', preset, P); S.update(flat=True, trenches=[], craters=[], corridors=[], mud_zones=[]); street_scene(P)
     H = TK.build_tank('mk1', mud=0.9); S['tank'] = H; S['tanks_h'] = [H]; tk = P['tank']; TK.pose_on_ground(H, tk[0], tk[1], 90.0); TK.set_drive(H, tk[1] * 0.37)
     cam = P['cam']; S['cam_loc'] = cam['loc']; S['cards'] = []
     for (k, xy, ht) in P.get('cards', []): L.cards([(k, xy, ht)], lambda x, y: 0.0, cam['loc'])

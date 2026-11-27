@@ -38,7 +38,7 @@ def set_plane(H, t, frame=None, p0=(-50.0, 70.0, 32.0), p1=(60.0, 62.0, 36.0), d
         for o, ps in ((H['root'], 'location'), (H['root'], 'rotation_euler'), (H['prop'], 'rotation_euler')): o.keyframe_insert(ps, frame=frame)
 
 def build(preset, samples=None, quality=None):
-    P = PRESETS[preset]; t0 = time.time(); F.begin('sky', preset); S.update(flat=True, trenches=[], craters=[], corridors=[], mud_zones=[]); ST.street_scene(P)
+    P = PRESETS[preset]; t0 = time.time(); F.begin('sky', preset, P); S.update(flat=True, trenches=[], craters=[], corridors=[], mud_zones=[]); ST.street_scene(P)
     H = build_plane(); set_plane(H, P.get('t', 0.9))
     cam = P['cam']; S['cam_loc'] = cam['loc']; S['cards'] = []; F.finish(cam, P, samples, quality, sun=P.get('sun')); S['build_s'] = time.time() - t0; return F.anchors()
 

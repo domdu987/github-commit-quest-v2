@@ -156,8 +156,8 @@ def interior_props():
 
 def build(preset, samples=None, quality=None):
     P = PRESETS[preset]; t0 = __import__('time').time()
-    F.begin('factory', preset); S.update(flat=True, trenches=[], craters=[], corridors=[], mud_zones=[]); S.update(P.get('world', {})); M = S['M']
-    quad('yard', -140, -120, 140, 0.0, 0.0, M['cobble'], 1.0); quad('floor', -26, 0, 26, 52, 0.01, M['concrete'], 1.0); quad('beyond', -600, -600, 600, 600, -0.05, M['dirt'], 1.0)
+    F.begin('factory', preset, P); S.update(flat=True, trenches=[], craters=[], corridors=[], mud_zones=[]); S.update(P.get('world', {})); M = S['M']
+    quad('yard', -140, -120, 140, 0.0, 0.0, M['cobble'], 1.0); quad('floor', -26, 0, 26, 52, 0.01, M['floorw'], 1.0); quad('beyond', -600, -600, 600, 600, -0.05, M['dirt'], 1.0)
     brick_shed(); yard_props(); interior_props()
     for (x, y) in ((0, -3), (-12, -2), (12, -2)): pass
     mg = MB(); r = rnd(2)                                     # weeds in the cobble joints + patches of grass by the walls (colour variety)

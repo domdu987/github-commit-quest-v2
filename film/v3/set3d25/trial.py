@@ -18,8 +18,8 @@ def staff_car(mb, x, y, yaw, col='p_green'):
 
 def build(preset, samples=None, quality=None):
     P = PRESETS[preset]; t0 = time.time(); M = None
-    F.begin('trial', preset); M = S['M']; F.default_world(); S['trenches'] = [dict(name='test', poly=[(0.0, -16.0), (0.0, 16.0)], depth=4.0, hf=2.0, hw=3.0, mw=1.0, me=0.7, sb_layers=(2, 0), taper=1.0)]; S['trench'] = S['trenches'][0]['poly']
-    S.update(craters=[], mud_zones=[], corridors=[], all_green=True, far0=40, far1=110, green_k=1.0); S.update(P.get('world', {}))
+    F.begin('trial', preset, P); M = S['M']; F.default_world(); S['trenches'] = [dict(name='test', poly=[(0.0, -16.0), (0.0, 16.0)], depth=4.0, hf=2.0, hw=3.0, mw=1.0, me=0.7, sb_layers=(2, 0), taper=1.0)]; S['trench'] = S['trenches'][0]['poly']
+    S.update(craters=[], mud_zones=[], corridors=[], all_green=True, no_bricks=True, far0=40, far1=110, green_k=1.0); S.update(P.get('world', {}))
     tk = P.get('tank', dict(front=(-16.0, -2.0), yaw=15.0)); F.add_corridor(tk['front'], tk['yaw'], -15, 7, 4.8, 6.6)
     S['in_tank'] = F.corridor_pred(); S['in_tank_wide'] = F.corridor_pred(1)
     F.build_ground(); F.build_trench(S['trenches'][0], 'T'); F.build_sandbags()
@@ -33,15 +33,15 @@ def build(preset, samples=None, quality=None):
     for (a, b) in ((( -60, 50), (60, 50)), ((-60, -50), (60, -50))): L.hedge(mb, (a[0], a[1], 0), (b[0], b[1], 0), 2.6, 1.8, 3, gh)
     mkobj(mb, 'tents'); mkobj(mf, 'flags_cars')
     pts = L.scatter_rect(-50, -50, 50, 50, 2600, 3, lambda x, y: abs(x) < 3.6 and abs(y) < 17); fl = L.scatter_rect(-50, -50, 50, 50, 260, 4); L.dress(gh, pts, L.scatter_rect(-50, -50, 50, 50, 120, 6), fl, None, 7, 'lawn', 6, (0.3, 0.8))
-    F.dress_front(P['cam']['loc'], P['cam']['look_at'][:2], 1.0, 21)
+    F.dress_front(P['cam']['loc'], P['cam']['look_at'][:2], P.get('dress_n', 1.6), 21)
     H = TK.build_tank('mk1', mud=0.0); S['tank'] = H; S['tanks_h'] = [H]; TK.pose_on_ground(H, tk['front'][0], tk['front'][1], tk['yaw'])
     cam = P['cam']; S['cam_loc'] = cam['loc']; S['cards'] = []
     for (k, xy, ht) in P.get('cards', []): L.cards([(k, xy, ht)], gh, cam['loc'])
     F.finish(cam, P, samples, quality); S['build_s'] = time.time() - t0; return F.anchors()
 
 PRESETS = dict(
-    trial_wide=dict(cam=dict(loc=(-2.0, -40.0, 3.4), look_at=(-18.0, -4.0, 4.2), lens=24), cards=[('a', (-26, -12), 3.2), ('b', (-30, -8), 3.2), ('a', (-34, -16), 3.2)], note='shot 9'),
+    trial_wide=dict(dress_n=2.4, cam=dict(loc=(-2.0, -40.0, 3.4), look_at=(-18.0, -4.0, 4.2), lens=24), cards=[('a', (-26, -12), 3.2), ('b', (-30, -8), 3.2), ('a', (-34, -16), 3.2)], note='shot 9'),
     trial_general=dict(cam=dict(loc=(-9.0, -18.0, 2.6), look_at=(-14.0, -4.0, 3.2), lens=30), cards=[('a', (-12, -10), 3.4), ('b', (-17, -9), 3.2)], note='shots 10, 12'),
     trial_trench=dict(cam=dict(loc=(-6.0, -30.0, 3.0), look_at=(-2.0, -2.0, 2.4), lens=22), cards=[('a', (-9, -12), 3.2)], note='shot 11'),
-    trial_camp=dict(cam=dict(loc=(-22.0, 4.0, 2.4), look_at=(-36.0, -17.0, 3.0), lens=26), cards=[('a', (-31, -12), 3.2), ('b', (-33, -9), 3.2), ('a', (-28, -9), 3.2)], note='shot 13'),
+    trial_camp=dict(cam=dict(loc=(-16.0, -32.0, 2.6), look_at=(-36.0, -15.0, 3.0), lens=24), cards=[('a', (-31, -12), 3.2), ('b', (-33, -9), 3.2), ('a', (-28, -9), 3.2)], note='shot 13'),
 )

@@ -834,17 +834,17 @@ def _cross(name, u, cam, **kw):
 PRESETS = dict(
     cross_nose=_cross('cross_nose', 0.24, dict(loc=(6.0, -17.0, 1.0), look_at=(-2.0, 4.5, 3.6), lens=21), cards=[('a', (-8, -6), 3.2)], note='shot 24: side-on low, the nose lifting over the trench gap'),
     cross_hero=_cross('cross_hero', 0.40, dict(loc=(4.0, -16.0, 1.6), look_at=(0.5, 4.5, 3.4), lens=22), cards=[('a', (-9, -5), 3.2), ('b', (10, -4), 3.2)], note='shot 25: SIDE-ON, nose lifted, front track gripping the far lip, rear on the near parapet'),
-    cross_pull=_cross('cross_pull', 0.60, dict(loc=(8.0, -16.0, 1.6), look_at=(5.0, 4.5, 3.0), lens=22), cards=[('a', (-6, -6), 3.2)], note='shot 26: pulling across, rear tracks leaving the near lip'),
-    cross_wire=_cross('cross_wire', 0.12, dict(loc=(-6.0, -5.0, 0.55), look_at=(-9.5, 1.5, 0.8), lens=26), dress_n=1.6, lane_ok=True, world=dict(crates=[]), note='shot 27: low insert, barbed wire squashed flat under the track'),
-    cross_hull=_cross('cross_hull', 0.50, dict(loc=(9.0, -5.5, 3.2), look_at=(5.0, 4.5, 3.2), lens=26), sparks=0.30, note='shot 28: hull side, bullet pings (sparks)'),
-    cross_flee=_cross('cross_flee', 0.62, dict(loc=(-27.0, 1.0, 3.8), look_at=(8.0, 6.0, 3.0), lens=22), cards=[('b', (14, 3), 3.2), ('a', (19, 8), 3.2), ('b', (24, 0), 3.2), ('a', (17, 12), 3.2)], note='shot 29: wide behind the tank, Germans (stand-ins) running'),
-    cross_bucket=_cross('cross_bucket', 0.50, dict(loc=(-10.0, -10.0, 1.0), look_at=(0.0, 6.0, 3.4), lens=24), extras=[('bucket', -6.5, -3.5)], note='shot 30: plain water bucket by the trench vs the tank over it'),
-    front_aerial=dict(loc='front', cam=dict(loc=(-62.0, -22.0, 34.0), look_at=(-6.0, 6.0, 2.0), lens=24), cards=[('a', (-28, -6), 3.6), ('b', (-33, 8), 3.6), ('a', (-1, 4), 3.6), ('b', (6, 18), 3.6)], dress_n=0.5, note='shot 5: high wide over the two zig-zag lines'),
-    front_parapet=dict(loc='front', cam=dict(loc=(-33.0, -0.5, 2.6), look_at=(-4.0, 5.0, 1.4), lens=28), extras=[('mg', -5.2, 5.0, math.pi, True)], cards=[('a', (-30.5, -3.0), 3.0)], note='shot 6: behind the British parapet, German MG nest across the wire'),
-    front_column=dict(loc='front', cam=dict(loc=(8.0, -80.0, 6.5), look_at=(-20.0, -56.0, 3.0), lens=24), tanks=[dict(front=(-20.0, -20.0), yaw=90.0), dict(front=(-20.0, -46.0), yaw=90.0), dict(front=(-20.0, -72.0), yaw=90.0), dict(front=(-20.0, -98.0), yaw=90.0, smoke=1.0)], note='shot 20: column crawling to the start line'),
-    front_halt=dict(loc='front', cam=dict(loc=(-2.0, -58.0, 3.4), look_at=(-18.0, -40.0, 2.6), lens=24), tanks=[dict(front=(-22.0, -33.0), yaw=90.0, nocorr=True), dict(front=(-8.0, -60.0), yaw=95.0, smoke=1.0)], note='shot 21: one smoking, one nose-down in a crater'),
-    front_stuck=dict(loc='front', cam=dict(loc=(6.0, -52.0, 1.2), look_at=(-4.0, -40.0, 2.4), lens=24), tanks=[dict(front=(-4.0, -42.0), yaw=90.0, state='stuck')], extras=[('mud', -4.0, -42.0, math.pi / 2)], cards=[('a', (2.0, -45.0), 3.2), ('b', (-9.0, -47.0), 3.2)], note='shot 22: sunk to the sponsons in mud'),
-    front_op=dict(loc='front', cam=dict(loc=(-38.0, -14.0, 3.8), look_at=(-26.0, -8.0, 2.8), lens=28), extras=[('op', -28.0, -8.0, 0.0)], tanks=[dict(front=(-6.0, -16.0), yaw=90.0, smoke=1.0)], cards=[('a', (-30.5, -9.0), 3.4)], note='shot 23: observation post'),
+    cross_pull=_cross('cross_pull', 0.60, dict(loc=(9.5, -15.0, 1.6), look_at=(5.0, 4.5, 2.2), lens=22), dress_n=2.6, cards=[('a', (-6, -6), 3.2)], note='shot 26: pulling across, rear tracks leaving the near lip'),
+    cross_wire=_cross('cross_wire', 0.12, dict(loc=(-5.0, -8.0, 0.8), look_at=(-9.5, 2.0, 1.2), lens=22), dress_n=0.15, near=False, fill=1200.0, tune=dict(cloud_k=0.8, green_k=0.2), lane_ok=True, world=dict(crates=[]), note='shot 27: low insert, barbed wire squashed flat under the track'),
+    cross_hull=_cross('cross_hull', 0.50, dict(loc=(11.0, -7.0, 3.2), look_at=(5.0, 4.5, 3.0), lens=24), sparks=0.30, fill=1200.0, dress_n=0.4, near=False, tune=dict(cloud_k=0.8), note='shot 28: hull side, bullet pings (sparks)'),
+    cross_flee=_cross('cross_flee', 0.62, dict(loc=(-24.0, -2.0, 3.0), look_at=(6.0, 5.0, 3.4), lens=20), dress_n=2.0, tune=dict(cloud_k=0.9), cards=[('b', (14, 3), 3.2), ('a', (19, 8), 3.2), ('b', (24, 0), 3.2), ('a', (17, 12), 3.2)], note='shot 29: wide behind the tank, Germans (stand-ins) running'),
+    cross_bucket=_cross('cross_bucket', 0.50, dict(loc=(-3.0, -14.0, 1.2), look_at=(0.5, 6.0, 1.4), lens=24), extras=[('bucket', -5.2, -5.5)], near=False, dress_n=1.2, tune=dict(cloud_k=0.95), note='shot 30: plain water bucket by the trench vs the tank over it'),
+    front_aerial=dict(loc='front', tune=dict(haze=0.0, cloud_k=0.8, green_k=0.2), dress_n=1.5, cam=dict(loc=(-62.0, -22.0, 34.0), look_at=(-6.0, 6.0, 2.0), lens=24), cards=[('a', (-28, -6), 3.6), ('b', (-33, 8), 3.6), ('a', (-1, 4), 3.6), ('b', (6, 18), 3.6)], note='shot 5: high wide over the two zig-zag lines'),
+    front_parapet=dict(loc='front', fill=600.0, tune=dict(cloud_k=0.8), cam=dict(loc=(-33.0, -0.5, 2.6), look_at=(-4.0, 5.0, 1.4), lens=28), extras=[('mg', -5.2, 5.0, math.pi, True)], cards=[('a', (-30.5, -3.0), 3.0)], note='shot 6: behind the British parapet, German MG nest across the wire'),
+    front_column=dict(loc='front', tune=dict(cloud_k=1.15), dress_n=2.5, cam=dict(loc=(8.0, -58.0, 4.5), look_at=(-20.0, -74.0, 3.2), lens=24), tanks=[dict(front=(-20.0, -34.0), yaw=90.0), dict(front=(-20.0, -56.0), yaw=90.0), dict(front=(-20.0, -78.0), yaw=90.0), dict(front=(-20.0, -100.0), yaw=90.0, smoke=1.0)], note='shot 20: column crawling to the start line'),
+    front_halt=dict(loc='front', tune=dict(cloud_k=0.85, green_k=2.2), dress_n=4.0, cam=dict(loc=(-3.0, -48.0, 2.6), look_at=(-20.0, -34.0, 1.6), lens=22), tanks=[dict(front=(-22.0, -33.0), yaw=90.0, nocorr=True), dict(front=(-8.0, -22.0), yaw=95.0, smoke=1.0)], note='shot 21: one smoking, one nose-down in a crater'),
+    front_stuck=dict(loc='front', tune=dict(cloud_k=0.85), cam=dict(loc=(6.0, -52.0, 1.2), look_at=(-4.0, -40.0, 2.4), lens=24), tanks=[dict(front=(-4.0, -42.0), yaw=90.0, state='stuck')], extras=[('mud', -4.0, -42.0, math.pi / 2)], cards=[('a', (2.0, -45.0), 3.2), ('b', (-9.0, -47.0), 3.2)], note='shot 22: sunk to the sponsons in mud'),
+    front_op=dict(loc='front', tune=dict(cloud_k=0.65), fill=5000.0, cam=dict(loc=(-45.0, -17.0, 6.5), look_at=(-26.0, -8.0, 2.4), lens=28), extras=[('op', -28.0, -8.0, 0.0)], tanks=[dict(front=(-6.0, -16.0), yaw=90.0, smoke=1.0)], cards=[('a', (-30.5, -9.0), 3.4)], note='shot 23: observation post'),
 )
 
 def default_world():
@@ -951,6 +951,7 @@ def far_ring():
         L.oak(mt, ml, x, y, gh(x, y), r.uniform(7, 13), k, M['fol_a'] if k % 2 else M['fol_b'])
     mkobj(mt, 'far_trunks'); mkobj(ml, 'far_leaves', smooth=True)
 
+P_NEAR = [True]
 def dress_front(cam, focus, n=1.0, seed=11, lane_ok=False):
     """texture + colour in the near foreground (producer fix 1 + 3): grass tufts and weeds along every trench lip and crater rim, scattered tufts, poppies, red brick bats,
     broken duckboards, spilled sandbags, wire stakes; everything within ~34 D of the camera"""
@@ -984,7 +985,8 @@ def dress_front(cam, focus, n=1.0, seed=11, lane_ok=False):
     for (x, y) in L.scatter_disc(mid[0], mid[1], rad, int(20 * n), seed + 32, nok): f.append((x, y))
     for (x, y) in L.scatter_disc(mid[0], mid[1], rad, int(110 * n), seed + 33, nok): bk.append((x, y))
     lx, ly = fx - cx, fy - cy; ln = max(1e-6, math.hypot(lx, ly)); nx_, ny_ = cx + lx / ln * 7.0, cy + ly / ln * 7.0                 # dense carpet in the nearest 14 D (bottom third of the frame)
-    L.dress(gh, L.scatter_disc(nx_, ny_, 7.5, int(380 * n), seed + 50, nok), None, L.scatter_disc(nx_, ny_, 7.5, int(22 * n), seed + 52, nok), L.scatter_disc(nx_, ny_, 7.5, int(90 * n), seed + 53, nok), seed + 9, 'near', 6, (0.16, 0.42))
+    if P_NEAR[0]: L.dress(gh, L.scatter_disc(nx_, ny_, 7.5, int(380 * n), seed + 50, nok), None, L.scatter_disc(nx_, ny_, 7.5, int(22 * n), seed + 52, nok), None if S.get('no_bricks') else L.scatter_disc(nx_, ny_, 7.5, int(90 * n), seed + 53, nok), seed + 9, 'near', 6, (0.16, 0.42))
+    if S.get('no_bricks'): bk = []
     L.dress(gh, g, w, f, bk, seed, 'dress', 7, (0.3, 0.8))
     mb = MB(); rr = rnd(seed + 40)                                                  # broken duckboard panels, planks, iron stakes in the foreground
     for (x, y) in L.scatter_disc(mid[0], mid[1], rad * 0.8, int(10 * n), seed + 41, nok):
@@ -1003,7 +1005,7 @@ def build(preset, samples=None, quality=None):
     """Build the Front for a preset into a fresh scene: ground, trenches, wire, sandbags, village, far ring, extras, dressing, tanks, cards, sun, sky, haze, render settings."""
     import tank25 as TK, lib25 as L
     assert preset in PRESETS, preset; P = PRESETS[preset]; t0 = time.time()
-    begin('front', preset); default_world(); S.update(P.get('world', {}))
+    begin('front', preset, P); default_world(); S.update(P.get('world', {}))
     if 'trench0' in P: S['trenches'][0].update(P['trench0']); S['trench'] = S['trenches'][0]['poly']
     cam = P['cam']; S['cam_loc'] = cam['loc']
     cr = P.get('cross')
@@ -1019,7 +1021,7 @@ def build(preset, samples=None, quality=None):
         elif k == 'bucket': bucket_at(ex[1], ex[2])
         elif k == 'mud': mud_heaps(ex[1], ex[2], ex[3])
         elif k == 'tufts': L.dress(gh, ex[1], None, None, None, 5)
-    dress_front(cam['loc'], P.get('focus', cam['look_at'][:2]), P.get('dress_n', 1.0), lane_ok=P.get('lane_ok', False))
+    P_NEAR[0] = P.get('near', True); dress_front(cam['loc'], P.get('focus', cam['look_at'][:2]), P.get('dress_n', 1.0), lane_ok=P.get('lane_ok', False))
     S['tank_h'] = {}; S['tanks_h'] = []
     for i, tk in enumerate(P.get('tanks', [])):
         H = front_pose_tank(tk, i); S['tanks_h'].append(H); st = tk.get('state', 'normal'); x, y = tk['front']
@@ -1048,8 +1050,8 @@ def anchors():
     return dict(preset=S['preset'], cam=dict(S['cam']), sun_elev=S['sun_elev'], key_dir=tuple(-S['to_sun']), build_s=S.get('build_s'))
 
 # ============================================================================= scene prologue / epilogue shared by every location
-def begin(loc, preset):
-    bpy.ops.wm.read_factory_settings(use_empty=True); sc = bpy.context.scene; S.clear(); S.update(coll=sc.collection, trench_objs=[], preset=preset, loc=loc); S.update(OVR); J.S.clear(); J.S['coll'] = sc.collection
+def begin(loc, preset, P=None):
+    bpy.ops.wm.read_factory_settings(use_empty=True); sc = bpy.context.scene; S.clear(); S.update(coll=sc.collection, trench_objs=[], preset=preset, loc=loc); S.update(OVR); S.update((P or {}).get('tune', {})); J.S.clear(); J.S['coll'] = sc.collection
     setup_world(sc, S.get('sky_k', 1.0), S.get('cloud_k', 1.0)); S['M'] = None; make_materials()
     import lib25; lib25.more_materials(); S['decal_mat'] = decal_material()
     M = S['M']; M['mud_lump'] = flat('mud_lump', '#4a3622', 0.55)

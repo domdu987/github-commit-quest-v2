@@ -44,3 +44,23 @@ fac_tracks.png                         luma 0.576 p1 0.043 p99 0.968 lc 0.0492 s
 render 143.7 s wall, 569.3 s cpu
 fac_sponsons.png                       luma 0.593 p1 0.067 p99 1.000 lc 0.0626 sat 0.303  MISS
 render 142.0 s wall, 563.6 s cpu
+fac_crate.png                          luma 0.487 p1 0.000 p99 1.000 lc 0.0383 sat 0.351  MISS
+render 137.3 s wall, 540.4 s cpu
+fac_crate_open.png                     luma 0.428 p1 0.060 p99 0.991 lc 0.0322 sat 0.411  MISS
+render 141.9 s wall, 562.3 s cpu
+trial_wide.png                         luma 0.536 p1 0.106 p99 0.911 lc 0.0345 sat 0.336  MISS
+render 72.6 s wall, 287.9 s cpu
+trial_general.png                      luma 0.509 p1 0.041 p99 0.907 lc 0.0388 sat 0.329  PASS
+render 76.6 s wall, 303.3 s cpu
+trial_trench.png                       luma 0.522 p1 0.094 p99 0.931 lc 0.0406 sat 0.356  MISS
+render 74.0 s wall, 293.6 s cpu
+trial_camp.png                         luma 0.395 p1 0.014 p99 0.907 lc 0.0223 sat 0.279  MISS
+render 81.7 s wall, 324.1 s cpu
+street_wide.png                        luma 0.511 p1 0.065 p99 0.914 lc 0.0410 sat 0.333  PASS
+render 72.2 s wall, 286.1 s cpu
+street_low.png                         luma 0.500 p1 0.045 p99 0.919 lc 0.0468 sat 0.330  PASS
+render 73.3 s wall, 290.6 s cpu
+dock_crate.png                         luma 0.647 p1 0.065 p99 0.928 lc 0.0248 sat 0.161  MISS
+render 55.8 s wall, 221.1 s cpu
+sky_plane.png                          luma 0.565 p1 0.072 p99 0.922 lc 0.0334 sat 0.378  MISS
+render 65.9 s wall, 260.3 s cpu

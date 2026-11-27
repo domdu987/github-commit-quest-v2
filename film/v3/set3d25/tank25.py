@@ -64,10 +64,10 @@ def tank_mats(mud=1.0, tag=''):
     d = dict(hull=F.fmat(nm('thull'), hullm), track=F.fmat(nm('ttrack'), trackm))
     d['frame'] = F.flat('t_frame', '#8a3c2c', 0.6, 0.3); d['frame2'] = F.flat('t_frame2', '#4a5058', 0.45, 0.7); d['engine'] = F.flat('t_engine', '#3d5a6a', 0.5, 0.55)
     d['brass'] = F.flat('t_brass', '#b08a3a', 0.35, 0.8)
-    def paint(b): b.princ(hexl('#efe8d4'), 0.8, 0.0, None)
+    def paint(b): b.princ(hexl('#cfc6aa'), 0.85, 0.0, None)
     d['paint'] = F.fmat('t_paint', paint); d['paint_d'] = F.flat('t_paint_d', '#3a3a3a', 0.85)
     def spark(b):
-        e = b.n('ShaderNodeEmission'); e.inputs['Color'].default_value = (1.0, 0.82, 0.45, 1); e.inputs['Strength'].default_value = 60.0; b.l(e.outputs[0], b.out.inputs['Surface'])
+        e = b.n('ShaderNodeEmission'); e.inputs['Color'].default_value = (1.0, 0.82, 0.45, 1); e.inputs['Strength'].default_value = 6.0; b.l(e.outputs[0], b.out.inputs['Surface'])
     d['spark'] = F.fmat('t_spark', spark)
     S[key] = d; return d
 
