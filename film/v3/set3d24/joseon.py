@@ -1797,7 +1797,7 @@ C_WATER_CALM = ('#2c3659', '#3e4a76', '#6d6c98', '#1a2040', '#4a4f7e')
 C_SAMPLES = 24
 C_BURN = dict(hero_orbit=('s03', 's04', 's07'))                      # preset: Japanese ships set burning and listing in frame (shot 14's background)
 C_HAZE = dict(hero_yard=((0.0, 2.0), 26.0, 0.16), build_dock=((0.0, 2.0), 26.0, 0.06))                     # preset: (subject centre, distance toward the sun, density) of a haze block behind the subject
-C_EXPO = dict(build_dock=-0.15, reveal_top=0.55, hansan_high=0.45, fleet_wide=0.3, cannon_close=-0.75)      # per-preset exposure (aerials over dark water)
+C_EXPO = dict(build_dock=-0.55, reveal_top=0.55, hansan_high=0.45, fleet_wide=0.3, cannon_close=-1.1)      # per-preset exposure (aerials over dark water)
 
 def sun_back_for_camera(setup, elev=None, side=None):
     """Look C key: behind the subject (side 0) or 3/4 behind it (side ~30-50 deg toward the camera's left), low (6-12 deg)."""
