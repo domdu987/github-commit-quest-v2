@@ -70,8 +70,8 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 42.1,
- "s_per_frame_cpu_mean": 80.3,
+ "s_per_frame_wall_mean": 41.0,
+ "s_per_frame_cpu_mean": 78.0,
  "s_per_frame_by_shot": {
   "9": {
    "wall": 34.0,
