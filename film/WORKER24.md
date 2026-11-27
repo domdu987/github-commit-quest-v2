@@ -144,3 +144,52 @@ Render 6 handle frames on each side of every take, except before g 0 and after g
   3. Deliver as `take_A.mkv` (same ffmpeg line but `-crf 12` to save repo space, `-i frames_A/g_%04d.png` after `mv frames frames_A`), plus `meta_A.json` (same g0/g1/first_g/n_frames), `contact_A.jpg` and `QA_A.md`. Run qa_auto on take_A.mkv.
   4. Do NOT grade Look A frames: the director applies the v1.1 grade in conform.
 - Push them to your branch. If time runs short, B always comes first.
+
+---
+# VERSION C (turtle_C): client-approved board_C2, full render. Read this section first; it overrides the sections above where they differ.
+Read: PROJ/LIGHT_SPEC.md, PROJ/film24/shot_plan_C.md (incl. UPDATE and UPDATE 2), PROJ/v3/set3d24/API.md sections "Look C" and "Look C, round 2", PROJ/v3/set3d24/board_C2.jpg, PROJ/v3/kit/README.md.
+
+## Wait for the set
+- Prepare and test now (shot.py, drafts at 12 samples).
+- Start FINAL renders only after `git fetch origin film24/main && git merge --no-edit FETCH_HEAD` brings `PROJ/v3/set3d24/C_READY` (the set builder's production fixes). Re-check your draft once after that merge.
+
+## Look C
+- Env `JOSEON_LOOK=C` on every render (or `J.set_look('C')` before build). Same Take/final_loop as before: 24 samples at 540x960 + `J.post()` (it applies the C grade) → 720x1280.
+- Cards: use `J.card_rim()` on the sun side when backlit. Contact shadows as before.
+- Fire, fireballs and burning ships ARE allowed now. Still bloodless: no injury, no bodies. Sailors jump into the sea comically.
+- Every client hard rule above still applies.
+
+## Timing (the film is now 71.9 s, N = 2158)
+- Takes s01-s07 keep their g. s08 is replaced by the build-up s08C (g 734-1126).
+- Takes from s09 on keep their OLD shot.py timing: render the same old g range exactly as before, because all their narration moved together. Deliver `meta_C.json` with every g **+208** (g0, g1, first_g), so conform places them correctly.
+- g1 is EXCLUSIVE (= the next take's g0).
+
+## Takes and changes
+| team | take | old g (render) | new g (meta_C) | shot | what to do |
+|---|---|---|---|---|---|
+| 1 | s01 | 0-150 | same | 1, 2 | relight only (same shot.py, look C) |
+| 1 | s03 | 151-287 | same | 3 | relight only |
+| 1 | s05 | 431-643 | same | 5, 6 | relight only (rigging shadows, rim on jp_cmd24) |
+| 1 | s07 | 644-733 | same | 7 | relight only |
+| 1 | s11 | 1113-1256 | 1321-1464 | 11 | relight only, +208 in meta |
+| 1 | s12 | 1257-1412 | 1465-1620 | 12 | relight only, +208 in meta |
+| 2 | s04 | 288-430 | same | 4 | **NEW HERO 1**: preset `hero_yard`; slow eased low push-in, the ship looming; Yi (yi24 stand_arms_behind, then nod at his old cue) at anchor `yi_hero`, rim + contact shadow; dragon smoke every frame |
+| 2 | s08C | — | 734-1126 | build-up | **NEW**: location/preset `build_dock`; `J.set_build_g(g, frame)` every frame; camera `J.build_cam((g-734)/392)`; schedule from `J.build_schedule()`. Also write `build_anchors.json`: per frame {"g", "stage", "x", "y"} from `J.build_anchor(stage)` (px at 720x1280) |
+| 2 | s09 | 919-1001 | 1127-1209 | 9a, 9 | relight only, +208 |
+| 2 | s10 | 1002-1112 | 1210-1320 | 10 | relight only, +208 |
+| 3 | s13 | 1413-1606 | 1621-1814 | 13a, 13b, 13c | **SPLIT into 3 shots with hard cuts at old g 1527 and 1560**. 13a 1413-1526: keep the accepted aerial U move, relit. 13b 1527-1559: preset `cannon_close`, `set_broadside` firing 3-4 ports in sequence, a slow slide. 13c 1560-1606: preset `hit_close`, `set_hit_explosion` peaking at old g ~1567, ashigaru A jumps with `jump_arc` + `set_jump_splash` (one in the air, one at the rail who then jumps), slow push |
+| 3 | s14 | 1607-1766 | 1815-1974 | 14 | **NEW HERO 2**: preset `hero_orbit`, `J.orbit_cam(u)` slow eased; burning fleet behind; top third calm for the tally (old g 1718-1766) |
+| 3 | s15 | 1767-1949 | 1975-2157 | 15 | relight only, +208; ends exactly at the last frame |
+
+- In-take cuts for qa_auto: s13 at 1527 and 1560 (old g). The old in-take cuts of the other takes are unchanged.
+
+## Overlays
+- s13 writes `overlay_C.json` for **13c only**: the hit ship's deck point once the explosion peaks (hit_g ≈ old 1567). There is no ✗ in 13a or 13b.
+- s14 writes `overlay_C.json` with every visible burning ship.
+- Same format as before ({"g", "ships":[{"name", "hit_g", "x", "y"}]}), with g in OLD numbering; conform adds 208.
+
+## Delivery (in each take folder; old A/B files stay untouched)
+- Files: `take_C.mkv` (`-crf 12`, from frames_C/), `meta_C.json`, `contact_C.jpg`, `QA_C.md`, `QA_AUTO_C.md`, plus overlay_C.json or build_anchors.json where listed.
+- Keep raw/frames out of git: rename frames to frames_C before encoding (frames_C/ and raw_C/ are already ignored or need adding to .gitignore). Split anything over 45 MB as `take_C.mkv.part*`.
+- Make your shot.py C changes as `shot_C.py` when the shot changed (s04, s08C, s13, s14). Relight-only takes reuse shot.py with JOSEON_LOOK=C.
+- Push to your branch render24/cK (K = team) as each take is final. Report: takes, s/frame, deviations.
