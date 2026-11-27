@@ -70,3 +70,9 @@ The narration line ending changes to "...แล้วปิดท้ายด้
 | 6c mouth gun | 1041-1083 | ที่ยิงปืนใหญ่ ออกทางปากได้ | Cannon muzzle slides into the mouth; big flash and smoke ring from the mouth at ~1052 | หัวมังกร ยิงปืนใหญ่ออกจากปากได้ |
 | 7 hero | 1084-1126 | (1.5 s pause, hit) | Full ship, sun behind, a curl of smoke drifting from the mouth, backlit | ไอ้เรือเต่า · small note "บางบันทึกเล่าว่า พ่นควันบังตา" |
 - New g for the C shots: 13a 1621-1734 · 13b 1735-1767 · 13c 1768-1814 · 14 1815-1974 (tally 1926-1974) · 15 1975-2157.
+
+## UPDATE 3 (client: each part LOCKS on the narration word that names it; no callouts)
+Word onsets from STT on the final narration, in video g (+0.1 s). Each part's lock or impact frame sits 0-2 frames before:
+ribs 795 (ตัวเรือ) · planks 807 (ไม้) · oars 836 (พาย) · first cannon 869 (ปืน), the rest by ~885 · roof 912 (หลังคา) · spikes 949 (เหล็กแหลม) · gwimyeon 980 (แล้วปิดท้ายด้วย) · dragon head 1009 (หัวมังกร) · mouth-gun flash 1043 (ยิงปืน) · hero settle 1075-1126.
+Conform: callouts off (CALLOUTS=0). There is one SFX hit per lock frame.
+Also: the keel rests on keel blocks with contact shadows, the ribs rise from it, and the gunwale posts stay hidden until the roof lands.

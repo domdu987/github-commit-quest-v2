@@ -200,10 +200,10 @@ BEDS = [("yard_ambience", 0, 5.02), ("sea_fleet", 5.02, 9.6), ("yard_ambience", 
 if VER == "C":
     D = SH / 30.0
     CUES = [c for c in CUES if c[1] < 24.45] + [(f, t + D, db, ln) for f, t, db, ln in CUES if t >= 30.64 and not (50.0 < t < 53.0)]
-    CUES += [  # build-up: one punchy hit per stage (g / 30)
-        ("build_slam", 781 / 30, -13, 0.9), ("build_planks", 800 / 30, -18, 1.2), ("build_oars", 830 / 30, -14, 1.0),
-        ("build_cannon", 862 / 30, -15, 1.2), ("build_plates", 898 / 30, -15, 1.1), ("build_spikes", 932 / 30, -15, 1.2),
-        ("build_slam", 971 / 30, -15, 0.9), ("build_dragon", 1001 / 30, -14, 1.8), ("cannon_boom", 1052 / 30, -12, 1.6),
+    CUES += [  # build-up: one hit on each part's LOCK frame = the onset of the narration word naming it (STT, video g; client)
+        ("build_slam", 795 / 30, -13, 0.9), ("build_planks", 806 / 30, -18, 1.2), ("build_oars", 835 / 30, -14, 1.0),
+        ("build_cannon", 868 / 30, -15, 1.2), ("build_plates", 911 / 30, -15, 1.1), ("build_spikes", 948 / 30, -15, 1.2),
+        ("build_slam", 979 / 30, -15, 0.9), ("build_dragon", 1008 / 30, -14, 1.8), ("cannon_boom", 1042 / 30, -12, 1.6),
         ("build_hit", 1084 / 30, -12, 1.8),
         # 13b broadside (old 50.95.. +D), 13c the hit + jumpers
         *[("cannon_boom", t + D, -13, 1.4) for t in (50.98, 51.28, 51.58, 51.88)],
