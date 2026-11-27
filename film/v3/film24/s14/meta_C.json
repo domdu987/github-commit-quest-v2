@@ -1,0 +1,27 @@
+{
+ "take": "s14",
+ "version": "C",
+ "film": 24,
+ "g0": 1815,
+ "g1": 1975,
+ "g1_exclusive": true,
+ "first_g": 1809,
+ "n_frames": 172,
+ "render_g": {
+  "g0": 1607,
+  "g1": 1767,
+  "first_g": 1601,
+  "offset": 208
+ },
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "resolution": [
+  720,
+  1280
+ ],
+ "samples": 24,
+ "s_per_frame_wall_mean": 93.9,
+ "overlay": "overlay_C.json (old g numbering)"
+}

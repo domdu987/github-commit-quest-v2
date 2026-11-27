@@ -109,8 +109,26 @@ if __name__ == "__main__":
                 os.replace(st["path"], os.path.join(out, "%s_g_%04d.png" % (TAKE, g)))
                 print("g %d %.1f s wall" % (g, st["wall"]), flush=True)
     elif cmd == "overlay":
-        Tk = Take(); gs = list(range(G0 - H, G1 + H + 1)); Tk.pose(SHOT, gs)
-        rows = [Tk.overlay_row(SHOT, g) for g in gs]
+        # cheap: one frame_set (ships are static apart from a small heave), then the camera matrix is set directly per frame
+        from mathutils import Matrix
+        Tk = Take(); gs = list(range(G0 - H, G1 + H + 1))
+        J.set_korean_turn(1.0, frame=bf(SHOT, G0)); J.set_damage(1.0, frame=bf(SHOT, G0))
+        Tk.scene.frame_set(bf(SHOT, G0)); Tk.scene.camera = Tk.cam; Tk.cam.data.lens = 20.0
+        pts = []
+        for D in J.S["dmg"]:
+            if 1.0 > D["thr"]:
+                nm = D["sh"]["name"]
+                pts.append((nm, J.ship_root(nm).matrix_world @ Vector((0.0, 0.0, D["sh"].get("deck_z", 2.4)))))
+        rows = []
+        for g in gs:
+            loc, look, lens = cam_of(g)
+            Tk.cam.matrix_world = Matrix.LocRotScale(loc, (look - loc).to_track_quat("-Z", "Y"), None)
+            ships = []
+            for nm, p in pts:
+                co = world_to_camera_view(Tk.scene, Tk.cam, p)
+                if 0.0 <= co.x <= 1.0 and 0.0 <= co.y <= 1.0 and co.z > 0:
+                    ships.append(dict(name=nm, hit_g=G0, x=round(co.x * 720.0, 1), y=round((1.0 - co.y) * 1280.0, 1)))
+            rows.append(dict(g=g, ships=ships))
         json.dump(rows, open(os.path.join(HERE, "overlay_C.json"), "w"))
         print("overlay_C.json: %d frames, max %d ships" % (len(rows), max(len(r["ships"]) for r in rows)))
     elif cmd == "final":
