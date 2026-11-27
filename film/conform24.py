@@ -105,6 +105,7 @@ X_FROM = 1768 if VER == "C" else int(round((51.97 + OFF) * 30))   # C: X marks o
 TALLY_G = int(round((57.15 + OFF) * 30)) + SH   # "เรือญี่ปุ่น แตกไปกว่าครึ่ง"
 TALLY_END = 1767 + SH
 
+CALLOUTS = os.environ.get("CALLOUTS", "0") == "1"   # client 2026-11-27: no text, no pointer lines in the build-up (kept as an option, off)
 # version C build-up callouts (R10 style): label pill in the top band + leader line + dot on the part (s08C/build_anchors.json)
 LABELS = {"1": "ตัวเรือไม้สนหนา", "2": "พาย ข้างละ 8-10", "3": "ช่องปืน ราวข้างละ 11", "4": "หลังคาคลุมทั้งลำ",
           "5": "เหล็กแหลม กันปีนขึ้นเรือ", "6a": "หน้าผีบนหัวเรือ ขู่ข้าศึก", "6b": "หัวมังกร", "6c": "ยิงปืนใหญ่ออกจากปากได้", "7": "ไอ้เรือเต่า"}
@@ -143,7 +144,7 @@ for g in range(N):
         Image.new("RGB", (720, 1280)).save(dst); continue
     in_ov = src[g] is not None and ("/s13/" in src[g] or "/s14/" in src[g])   # overlays only on the reveal / aftermath takes
     ships = [sh for sh in (OV.get(g, []) if in_ov else []) if g >= X_FROM and sh.get("hit_g", 1e9) <= g and 0 < sh["x"] < 720 and 60 < sh["y"] < 860]
-    co = VER == "C" and g in BA and src[g] is not None and "/s08C/" in src[g]
+    co = CALLOUTS and VER == "C" and g in BA and src[g] is not None and "/s08C/" in src[g]
     if not ships and not co and not (TALLY_G <= g < TALLY_END) and VER != "A":
         os.symlink(src[g], dst); continue
     im = (graded(src[g], g) if VER == "A" else Image.open(src[g])).convert("RGBA"); d = ImageDraw.Draw(im, "RGBA")
