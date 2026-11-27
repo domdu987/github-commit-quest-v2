@@ -18,17 +18,31 @@ def bfr(g):
     return C.bf(SHOT, g)
 
 
+def cam_at(g):
+    """J.build_cam, tightened a little on stages 2 (oars) and 3 (guns) so they read on the phone: loc moves up to 18 % toward the look point, smooth in/out."""
+    c = dict(J.build_cam((g - G0) / float(G1 - G0)))
+    w = C.ez((g - 815) / 15.0) * (1.0 - C.ez((g - 888) / 15.0))
+    from mathutils import Vector
+    loc, look = Vector(c["loc"]), Vector(c["look_at"])
+    c["loc"] = tuple(loc + (look - loc) * (0.18 * w))
+    return c
+
+
 class Take(C.Take):
     def __init__(self, shot=8):
         C.Take.__init__(self, "build_dock", name="cam_s08C")
         if J.LOOK != "C":
             J.set_look("C")
+        import bpy
+        for o in bpy.data.objects:                       # director note: the rigging gobos cast a thin dark vertical shaft through the haze above the ship
+            if o.name.startswith("gobo_rig"):
+                o.visible_shadow = False
 
     def pose(self, shot, gs):
         self.stage = {}
         for g in gs:
             f = bfr(g); self.scene.frame_set(f)
-            c = J.build_cam((g - G0) / float(G1 - G0 - 0))
+            c = cam_at(g)
             self.key_cam(f, c["loc"], c["look_at"], lens=c["lens"])
             self.key_set(f, spikes=None, ports=None, dragon_smoke=0.0)
             self.stage[g] = J.set_build_g(g, f)[0]
@@ -39,7 +53,7 @@ class Take(C.Take):
         return dict(g=g, stage=J.build_at(g)[0], x=None if a is None else a[0], y=None if a is None else a[1])
 
     def report(self, shot, g):
-        f = bfr(g); self.scene.frame_set(f); c = J.build_cam((g - G0) / float(G1 - G0))
+        f = bfr(g); self.scene.frame_set(f); c = cam_at(g)
         return dict(shot=8, g=g, cam=[round(v, 3) for v in c["loc"]], lens=c["lens"], stage=J.build_at(g)[0], anchor=self.anchor(g))
 
     def render(self, shot, gs, out_dir, scale=C.RES_PCT, samples=C.SAMPLES, threads=2):
