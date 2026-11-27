@@ -149,7 +149,8 @@ for g in range(N):
         os.symlink(src[g], dst); continue
     im = (graded(src[g], g) if VER == "A" else Image.open(src[g])).convert("RGBA"); d = ImageDraw.Draw(im, "RGBA")
     for sh in ships[:24]:
-        draw_x(d, sh["x"], sh["y"] - 14, 0.75 * pop(g - max(sh["hit_g"], X_FROM)))
+        big = 2.2 if (VER == "C" and "/s13/" in src[g]) else 0.75     # C: one big X on the close-hit ship (13c)
+        draw_x(d, sh["x"], sh["y"] - 14 - (40 if big > 1 else 0), big * pop(g - max(sh["hit_g"], X_FROM)))
     if TALLY_G <= g < TALLY_END and "/s14/" in src[g]:
         tally(im, g, TALLY_G)
     if co:
