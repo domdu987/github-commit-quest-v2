@@ -1,0 +1,71 @@
+{
+ "take": "s11",
+ "film": 24,
+ "shots": [
+  11
+ ],
+ "g0": 1321,
+ "g1": 1465,
+ "first_g": 1315,
+ "n_frames": 156,
+ "handle_in": 6,
+ "handle_out": 5,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "in_take_cuts": [],
+ "shot_ranges": {
+  "11": [
+   1107,
+   1262
+  ]
+ },
+ "setups": {
+  "11": {
+   "preset": "chase",
+   "camera": "own camera on j_near's bow deck (ship-local x_bow+6, 5.2 off, 10 high), travelling with the ship (x += 3 D/s) plus one slow lateral slide 1.6 D; DOF off",
+   "state": "set_spikes 3, set_ports 0, set_korean_turn 0, set_fleet_chase keyed every frame"
+  }
+ },
+ "events": {
+  "sword_waves": "every ~6 frames, planted"
+ },
+ "set": "v3/set3d24/joseon.py sea; runtime dressing from common.py / shot.py only",
+ "cast": "ashi_a24, ashi_c24 (mirrored), ashi_d24: sword_raise on j_near's bow deck (soldier_chase_a..c), Child-Of the j_near ride, planted, katana waves, sway",
+ "mouths": "no quote: fixed expression mouths (clench)",
+ "dof": "off",
+ "render": "R9: Cycles CPU, 24 adaptive samples (macro_oar 12), OIDN, AgX MHC, exposure 0.55, 540x960 then J.post -> 720x1280",
+ "samples": [
+  24
+ ],
+ "resolution": [
+  720,
+  1280
+ ],
+ "render_resolution": [
+  540,
+  960
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 37.7,
+ "s_per_frame_cpu_mean": 72.8,
+ "s_per_frame_by_shot": {
+  "11": {
+   "wall": 37.7,
+   "cpu": 72.8
+  }
+ },
+ "narration": "film24/audio/narration.wav at +0.10 s; captions film24/script/captions.json",
+ "look": "C",
+ "old_g": {
+  "g0": 1113,
+  "g1": 1257,
+  "first_g": 1107
+ }
+}
