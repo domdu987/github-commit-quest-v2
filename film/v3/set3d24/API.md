@@ -152,3 +152,94 @@ Same set, cameras, hooks, cards and animation; ONLY the render setup changes. B 
 - Cost (2 threads, light load): **33-52 CPU s per frame, mean 39** (wall 17-26 s) = about 8-13 s on 4 free cores (mean ~10 s). Heaviest: macro_oar 51 (droplets, foam, glossy water), reveal_top 46. About 17 CPU s of it is fixed (scene sync, OIDN at 720x1280); each sample costs ~2.3 CPU s.
 - Hue (graded, `joseon_hue.py`, `joseon_work/hue_rows_A.txt`): the frame-wide shade-hue metric reads 170-199 because it is dominated by the teal sea; shadows on wood, stone and sails are blue-violet (base x SHADE). Colour shares: yard red 9 %, orange 30 %, blue 43 %; sea orange 14 %, cyan 38 %, blue 42 %, saturation 0.49-0.58 (exteriors, daytime sea).
 - Limits: A cannot be switched back to B inside a scene; the sea reads teal (not the violet sea of film 10); A samples are low, so the sun softness and OIDN carry the noise; `t_anim.py` now runs yard + sea in both looks (ALL OK, 188 checks).
+
+## Look C (LIGHT_SPEC.md: low sun, backlight and rim, practical pools, gobos, haze with god rays), film 24 version C
+Same set, hooks, anchors and cards as B, plus lighting, dressing and the C grade. A and B are unchanged and pixel-identical
+(regression on flag_deck B and roof_low A: max abs diff 0). `J.LOOK` can now be `'A'`, `'B'` or `'C'`.
+
+**Select C.** Call `J.set_look('C')` right after `build()`, or set env `JOSEON_LOOK=C` (`build()` reads it, so teams' shot.py and common.py need no edit).
+`set_look` from A or C raises; call `build()` again to switch.
+The CLI `JOSEON_LOOK=C python3 joseon.py final <preset>` writes to `joseon_work/final_C/`.
+
+**Sun.** One warm sun (1.0, 0.60, 0.33), energy 10, 0.9 deg disc.
+- `sun_for_camera` / `Take.aim_sun` call `sun_back_for_camera(setup)`. It puts the sun behind the subject, or 3/4 behind it, per preset.
+- `J.C_SUN[preset] = (degrees off straight-behind toward the camera's left (negative = right), elevation)`.
+- The yard uses 12 deg, because at 9 deg the hills behind the slipway block the sun. The sea uses 7-9 deg (shore 11). `J.C_ELEV` holds the defaults.
+
+**Sky and haze.**
+- Pastel sky ramp `J.C_SKY`: peach `#ffc08e` at the horizon, then salmon, mauve and lavender, up to blue-lavender `#7c84c2`. A tight warm sun glow sits around the sun.
+- The haze is a local layer centred on the preset's subject (±180 D, height falloff, anisotropy 0.6). It shows the shafts through the gobos, rigging and smoke and leaves the upper sky clean.
+
+**Water.** `water_mat(pal=J.C_WATER)` gives deep blue-lavender with lavender crests, so the water is never flat cyan. The sunlit glitter path reads amber.
+The yard's harbour uses `C_WATER_CALM`.
+
+**Gobos.** Two `K.gobo_rigging` and, in the yard, one `K.gobo_canopy`. They stand about 20 D from the subject toward the sun, off screen and invisible to the camera, and cast long patterned shadows.
+
+**Yard dressing (`dress_yard_C`, R10 lived-in).**
+- Individual planks on both wharves. Cobbles, mud, puddles and grass in the cracks around the slip.
+- Crates, barrels, nets, rope coils and a hanging net.
+- 3 braziers and 5 lanterns (warm pools). All of it is grounded, and `t_anim` checks the floor under every prop.
+- The props keep clear of the yard anchors (`yi_quay`, `yi_bow`, `yi_front`, `yi_hero`, `worker_quay_*`).
+
+**Sea dressing (`dress_sea_C`).**
+- Crates, barrels, rope and a deck lantern on jflag, j_near and j_board, parented to the ride. Props within 5.5 D of any sea camera, and the j_board crew rail, are skipped.
+- A fire patch (flames, embers, light) on every damaged ship, shown by `set_damage` with the smoke.
+- A warm flash light on every Korean gun, keyed by `set_cannon_smoke`.
+- The turtle ship's oars stroke in rhythm, one phase per side.
+
+**Render and grade.** `setup_render_C`: the B path tracer (24 adaptive samples, OIDN, 75 %, AgX Medium High Contrast), volume step rate 2, exposure 0.15
+(`J.C_EXPO`: reveal_top 0.55, hansan_high 0.45, fleet_wide 0.3). `post()` dispatches to `post_C`, which does this:
+- upscales the frame;
+- adds a warm bloom on the practicals, flashes and sun (threshold 0.72);
+- multiplies saturation by 0.84;
+- split-tones: shadows toward blue-lavender, mids and highs toward amber;
+- adds a mild S curve and a 7 % vignette.
+
+**Card rim.** `J.card_rim(pose, color='#ffc68a', width=0.022, opacity=0.85)` returns a copy of a puppet pose with the `rim` keys set
+(a halo behind the limbs; v2/puppet API: rim_w 0.004-0.05, rim_opacity 0-1). Use it on every backlit card. For example:
+`board_C.py` wraps `common.story` with `lambda n: (c, J.card_rim(p))`.
+
+**New presets (all looks; tuned for C).**
+
+| preset | loc | state | camera |
+|---|---|---|---|
+| `hero_yard` (shot 4) | yard | sp3, ds0.45 | low over the harbour in front of the bow (7.6, 35, 2.4) → (1.8, 12, 5.9), 28 mm. The ship is backlit on the slipway and Yi stands at its foot (anchor `yi_hero` (8.3, 17.2, Z_Q)). For a push-in, key the loc toward the look point. |
+| `cannon_close` (13b) | sea | special:solo, sp3, pt1 | close along the turtle ship's starboard gun-port side, low, world-fixed (slide it slowly) |
+| `hit_close` (13c) | sea | special:hit (j_board at `J.HIT_AT` = (215, -185)) | low on j_board's near side. Anchors `ashi_jump_a/b` on the far rail (ship-local in `A['parented']`). |
+| `hero_orbit` (14) | sea | k1, dm1, cs0.3, sp3, pt1, ds0.8 | `J.orbit_cam(u)`: a ship-local arc (r 11 D, 100-150 deg, +3.4 D) round the dragon head of the moving turtle ship, with the burning fleet behind. Call it per frame and key the loc and look. |
+
+**New hooks (call on every rendered frame with `frame=f`).**
+- `set_broadside(t, frame, gap=0.28)`: the turtle ship's starboard guns fire stern → bow, `gap` s apart. Each shot gives a flash, a flash light on the hull, a smoke ring and a recoil puff.
+  `t` is seconds since the first shot. Open the ports first with `set_ports(1)`.
+- `set_hit_explosion(t, frame)` hits j_board (special 'hit'). The parts:
+  - a fireball on the camera side, with debris planks and splinters that splash;
+  - 2 water columns (far side, bow) and the shockwave ring;
+  - fire on the deck and tower (embers) from 0.15 s.
+- `jump_arc(i, t)` gives the world feet point of ashigaru i (0, 1) leaping off the far rail: up 3 D, out 6.6 D, in the water at about 0.95 s. `set_jump_splash(i, t, frame)` makes the splash where he lands.
+  Place the two cards with `C.place(actor, f, J.jump_arc(i, t))`.
+- `orbit_cam(u)` (see hero_orbit) and `card_rim(pose)` (see above).
+
+**Board and metrics.**
+- `python3 board_C.py all 12` renders 9 tiles, one process at a time, with the real cast24 cards: s01, s05, s07, s13 and s15 takes, plus the hero presets.
+  It writes `board_C.jpg` and `board_C_small.jpg`.
+- `look_metrics.py` measures the LIGHT_SPEC metrics: mean saturation, warm (hue 10-55) and cool (195-300) shares of the chromatic pixels, and the shadow share (luma < 0.22).
+
+| tile | sat | warm % | cool % | shadow % |
+|---|---|---|---|---|
+| hero_yard | 0.27 | 34 | 34 | 25 |
+| hero_orbit | 0.33 | 39 | 35 | 30 |
+| roof_low | 0.33 | 36 | 30 | 30 |
+| flag_deck | 0.34 | 28 | 37 | 43 |
+| cannon_close | 0.29 | 28 | 48 | 23 |
+| hit_close | 0.36 | 17 | 51 | 44 |
+| shore | 0.32 | 17 | 56 | 48 |
+| reveal_top | 0.41 | 10 | 85 | 36 |
+
+**Cost.** At 24 samples (production): hero_orbit 90 CPU s and hit_close 119 CPU s per frame, which is **22-30 s on 4 cores** (target 60). At 12 samples (the board), all tiles cost 50-75 CPU s.
+
+**Limits.**
+- The aerial (reveal_top) and the far-sea tiles are still cool-dominant. The water fills the frame and has no sun path from straight above.
+- The fireball is faceted soft-alpha lumps, which read cartoon-like and pinkish under AgX.
+- Distant haze between hill shadows can show a soft-edged shaft.
+- In looks A and B the hero hooks work, but their kit materials are not converted to the A shading.
+- `t_anim.py` runs yard + sea in looks B, A and C (ALL OK, 312 checks).

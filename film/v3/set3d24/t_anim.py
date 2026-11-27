@@ -5,13 +5,13 @@ HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 which = sys.argv[1] if len(sys.argv) > 1 else 'both'
 if which == 'both':
     bad = 0; tot = 0
-    for look in ('B', 'A'):                                  # both looks: B = R9 (default), A = original look of films 1-13 (JOSEON_LOOK=A)
+    for look in ('B', 'A', 'C'):                             # all looks: B = R9 (default), A = original look of films 1-13, C = LIGHT_SPEC low sun / backlight (JOSEON_LOOK=A|C)
         for w in ('yard', 'sea'):
             env = dict(os.environ, JOSEON_LOOK=look); print('--- look %s, %s' % (look, w), flush=True)
             r = subprocess.run([sys.executable, os.path.abspath(__file__), w], capture_output=True, text=True, env=env); out = r.stdout
             print(out, end=''); tot += out.count('\nok ') + out.startswith('ok '); bad += out.count('FAIL ')
             if r.returncode != 0: print(r.stderr[-1500:]); bad += 1
-    print('ALL OK' if bad == 0 else 'FAILED (%d)' % bad, '(%d checks, 4 processes: yard + sea in looks B and A)' % tot); sys.exit(0 if bad == 0 else 1)
+    print('ALL OK' if bad == 0 else 'FAILED (%d)' % bad, '(%d checks, 6 processes: yard + sea in looks B, A and C)' % tot); sys.exit(0 if bad == 0 else 1)
 import bpy
 from mathutils import Vector
 import joseon as J
@@ -128,11 +128,24 @@ else:
     J.set_special('board'); t = ships['turtle']['root'].location; jb = ships['j_board']['root'].location; check("set_special('board'): j_board alongside the turtle ship (10.3 D)", abs((t - jb).length - 10.9) < 1.0, round((t - jb).length, 2))
     J.set_special('solo'); check("set_special('solo'): the turtle ship alone", abs(ships['turtle']['root'].location.x - J.SOLO_AT[0]) < 1e-6)
     J.set_special(''); J.clear_keys()
+    # ---- film-24 C hero hooks (every look): broadside, hit explosion, comic jump, orbit camera
+    J.set_special('solo'); rigs = J._broadside_rigs(); [J.set_broadside((f - 1) / 30.0, frame=f) for f in range(1, 61)]
+    at(2); f0 = [not r['flash'].hide_render for r in rigs]; at(1 + int(0.28 * 30) + 1); f1 = [not r['flash'].hide_render for r in rigs]; at(40); rv = [not r['ring'].hide_render for r in rigs]
+    check('set_broadside: %d port guns fire in sequence (flash 1 then 2, rings flying)' % len(rigs), len(rigs) >= 4 and f0[0] and not f0[1] and f1[1] and not f1[0] and rv[0], (f0[:3], f1[:3]))
+    J.clear_keys(); J.set_special('hit'); H = J._hit_rigs(); [J.set_hit_explosion((f - 1) / 30.0, frame=f) for f in range(1, 91)]
+    at(4); fb = sum(not o.hide_render for o in H['main']['fire']); at(80); deb = [d['ob'] for d in H['main']['debris']]; zs = [o.matrix_world.translation.z for o in deb if not o.hide_render]
+    check('set_hit_explosion: fireball at 0.1 s, debris come down to the water (none left in the air at 2.6 s)', fb == 3 and all(z < 1.0 for z in zs), (fb, round(max(zs) if zs else -1, 2)))
+    p0 = J.jump_arc(0, 0.0); pm = J.jump_arc(0, 0.4); p1 = J.jump_arc(0, 1.2); jb = ships['j_board']['root'].location
+    check('jump_arc: from the far rail, up over it, into the sea beyond', abs(p0.z - J.S['jump0'][0].z) < 1e-6 and pm.z > p0.z + 1.5 and p1.z < 0.0 and p1.y > jb.y + 5.0, (round(pm.z, 2), round(p1.z, 2)))
+    oc = J.orbit_cam(0.0); oc1 = J.orbit_cam(1.0); hd = J.L2W('turtle', (20.4, 0, 3.15)); d0 = (Vector(oc['loc']) - hd).length; d1 = (Vector(oc1['loc']) - hd).length
+    check('orbit_cam: an arc at a constant distance round the dragon head', abs(d0 - d1) < 1e-3 and (Vector(oc['loc']) - Vector(oc1['loc'])).length > 5.0, round(d0, 2))
+    pz = dict(arms=1); pr = J.card_rim(pz); check('card_rim: warm rim keys on a copy of the pose', pr is not pz and pr['rim'].startswith('#') and 0.004 <= pr['rim_w'] <= 0.05 and 0 <= pr['rim_opacity'] <= 1 and 'rim' not in pz)
+    J.set_special(''); J.clear_keys()
 # ---------------------------------------------------------------- the look switch
 sc_ = bpy.context.scene; haze = bpy.data.objects.get('haze')
 if J.LOOK == 'A':
     sun = J.S['sun'].data; k = max(J.KEY_A); lin = [c * sun.energy / math.pi for c in sun.color]
-    check('look A: ONE sun key = (2.30, 1.65, 0.74), 0.45 deg softness', all(abs(a - b) < 0.01 for a, b in zip(lin, J.KEY_A)) and abs(math.degrees(sun.angle) - 0.45) < 1e-3 and sum(1 for o in bpy.data.objects if o.type == 'LIGHT') == 1, [round(c, 3) for c in lin])
+    check('look A: ONE sun key = (2.30, 1.65, 0.74), 0.45 deg softness (+ only the film-24 hero rigs\' flash lights, dark when idle)', all(abs(a - b) < 0.01 for a, b in zip(lin, J.KEY_A)) and abs(math.degrees(sun.angle) - 0.45) < 1e-3 and sum(1 for o in bpy.data.objects if o.type == 'LIGHT' and not o.name.endswith('_L')) == 1, [round(c, 3) for c in lin])
     check('look A: no haze volume (object hidden from render)', haze is not None and haze.hide_render)
     nodes = [n for m in bpy.data.materials if m.name.startswith('J_') and m.node_tree for n in m.node_tree.nodes]
     check('look A: every set material is Diffuse + SHADE emission (no Principled BSDF left, %d shade emissions)' % sum(1 for n in nodes if n.name.startswith('A_shade')), not any(n.type == 'BSDF_PRINCIPLED' for n in nodes) and sum(1 for n in nodes if n.name.startswith('A_shade')) > 40)
@@ -143,6 +156,26 @@ if J.LOOK == 'A':
     check('look A: every camera has DOF off', all(not c.data.dof.use_dof for c in bpy.data.objects if c.type == 'CAMERA'))
     try: J.set_look('B'); check('set_look(B) after A raises (rebuild instead)', False)
     except RuntimeError: check('set_look(B) after A raises (rebuild instead)', True)
+elif J.LOOK == 'C':
+    sun = J.S['sun'].data; el = math.degrees(math.asin(J.S['to_sun'].z)); cam_ = A['cam']; f_ = Vector(cam_['look_at']) - Vector(cam_['loc']); f_.z = 0; ts = Vector((J.S['to_sun'].x, J.S['to_sun'].y, 0))
+    check('look C: one low warm sun (5-12 deg), behind / 3/4 behind the subject (sun-camera angle < 90 deg)', 5.0 <= el <= 12.0 and sun.color[2] < 0.5 and f_.normalized().dot(ts.normalized()) > 0.0, (round(el, 1), round(f_.normalized().dot(ts.normalized()), 2)))
+    ramp = [n for n in sc_.world.node_tree.nodes if n.type == 'VALTORGB'][0].color_ramp; c0, c4 = ramp.elements[0].color, ramp.elements[-1].color
+    check('look C: pastel sky, peach horizon -> lavender-blue zenith', c0[0] > c0[2] and c4[2] > c4[0] and len(ramp.elements) == 5)
+    check('look C: haze volume visible, height falloff, anisotropy > 0.5', haze is not None and not haze.hide_render and J.S['haze_node'].inputs['Density'].is_linked and J.S['haze_node'].inputs['Anisotropy'].default_value > 0.5)
+    gb = [o for o in bpy.data.objects if o.name.startswith('gobo')]; check('look C: off-screen gobos cast shadows, invisible to the camera (%d)' % len(gb), len(gb) >= 2 and all(not o.visible_camera and o.visible_shadow for o in gb))
+    pl = J.S.get('practicals', []); lights = [o for o in bpy.data.objects if o.type == 'LIGHT' and o.data.type == 'POINT']
+    check('look C: practical light pools (%d practicals, %d point lights)' % (len(pl), len(lights)), len(pl) >= (8 if J.S['loc'] == 'yard' else 3) and len(lights) >= len(pl))
+    kp = [o for o in bpy.data.objects if o.name.startswith('k_') and o.type == 'MESH' and o.visible_camera]; at(40)
+    fl = [o for o in kp if o.parent is None and o.name.startswith(('k_crate', 'k_barrel', 'k_rope', 'k_brazier', 'k_lantern'))]
+    def grounded(o):                                       # the floor under the prop's bounding-box centre (the prop hidden) is within 0.12 D of its lowest point
+        ws = [o.matrix_world @ Vector(c) for c in o.bound_box]; mn = min(w.z for w in ws); cx = sum(w.x for w in ws) / 8; cy = sum(w.y for w in ws) / 8
+        o.hide_viewport = True; bpy.context.view_layer.update(); h = ray_down((cx, cy, mn), 1.5); o.hide_viewport = False; bpy.context.view_layer.update()
+        return h[0] and abs(h[1].z - mn) < 0.12
+    check('look C: yard props stand on the ground (nothing floats: %d checked)' % len(fl), all(grounded(o) for o in fl) if J.S['loc'] == 'yard' else True, [o.name for o in fl if not grounded(o)][:5])
+    check('look C: 24 samples at 75 %%, AgX, post = post_C', sc_.render.resolution_percentage == 75 and sc_.view_settings.view_transform == 'AgX' and J.post.__code__.co_names.count('post_C') == 1)
+    if J.S['loc'] == 'sea': check('look C: fires on the damaged ships, flash lights on the Korean guns', all(D_.get('fires') for D_ in J.S['dmg']) and all('L' in G_ for G_ in J.S['guns']))
+    try: J.set_look('A'); check('set_look(A) after C raises (rebuild instead)', False)
+    except RuntimeError: check('set_look(A) after C raises (rebuild instead)', True)
 else:
     check('look B (default): LOOK == B, haze visible, 24 samples at 75 %', J.LOOK == 'B' and haze is not None and not haze.hide_render and sc_.render.resolution_percentage == 75 and sc_.cycles.samples in (24, 16, 12) and sc_.view_settings.view_transform == 'AgX')
     J.set_look('B'); check("set_look('B') on B is a no-op", J.LOOK == 'B')
