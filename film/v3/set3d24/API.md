@@ -326,3 +326,15 @@ A and B are untouched; everything below applies only in look C, except the build
   - East of x 13 a moored panokseon blocks the view, so the orbit stays west of it.
 - `J.build_anchor(stage)` returns the screen px (720x1280) of the stage's part for the current frame and camera, for the leader lines.
 - The sun for build_dock is world-fixed, behind the ship for the final camera. There is a haze block behind the ship and the same gobos as hero_yard. Exposure is -0.15 (dusk).
+
+## Look C, production round (board_C3; C_READY)
+- **Build-up:**
+  - A warm amber key lights the side of the ship that faces the camera: a 9 kW disc area light, 9 D across, at (-14, 30, 11).
+  - `build_cam` now orbits on the WEST side, because from low the east wharf hides the hull. It runs 30-36° off the bow axis at R 24 with a 21 mm lens, and tightens to R 17 and 32 mm on the bow for 6a-6c.
+  - The haze block is thinner (0.06) and the exposure is -0.55.
+  - The ship sits left and low; the top 25 % is free.
+  - `build_anchor` is unchanged: it projects through the current camera.
+- **hero_orbit:** each `C_BURN` ship gets a second, larger fire (size 2.2, 4 flame volumes) with a fire light 5 times stronger, so it glows on the water.
+- **cannon_close:** exposure -1.1, which darkens the hull side and the near water; the flash stays the warm pop.
+- **Global look C:** the sun is 12.5 W (was 10), and the C grade pushes mids and highs further toward amber.
+- **Checks:** A and B are pixel-identical (both rendered in this container; diff 0). `t_anim` prints ALL OK (339 checks).

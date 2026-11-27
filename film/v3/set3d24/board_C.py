@@ -30,7 +30,7 @@ TILES2 = [
     ('hero_yard', '4  hero_yard', 'custom', None), ('hero_orbit', '14  hero_orbit', 'custom', None), ('cannon_close', '13b  cannon_close', 'custom', None),
     ('hit_close', '13c  hit_close', 'custom', None), ('dragon_close', 'dragon head + gwimyeon', 'custom', None),
 ]
-if BOARD == 'board_C2': TILES = TILES2
+if BOARD in ('board_C2', 'board_C3'): TILES = TILES2
 
 
 def _rim_story(C, J):
