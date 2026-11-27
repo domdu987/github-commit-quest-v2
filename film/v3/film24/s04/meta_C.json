@@ -1,0 +1,46 @@
+{
+ "take": "s04",
+ "film": 24,
+ "shots": [
+  4
+ ],
+ "g0": 288,
+ "g1": 431,
+ "first_g": 282,
+ "n_frames": 155,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "shot_ranges": {
+  "4": [
+   282,
+   436
+  ]
+ },
+ "cuts_in_take": [],
+ "note": "look C (JOSEON_LOOK=C): frames are numbered by their OLD g in frames_C; conform places them at first_g (+208)",
+ "samples": [
+  24
+ ],
+ "resolution": [
+  720,
+  1280
+ ],
+ "render_resolution": [
+  540,
+  960
+ ],
+ "fps": 30,
+ "s_per_frame_wall_mean": 83.7,
+ "s_per_frame_cpu_mean": 100.7,
+ "look": "C",
+ "render_g_first": 282,
+ "g_offset": 208
+}
