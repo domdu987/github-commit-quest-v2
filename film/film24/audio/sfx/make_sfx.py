@@ -19,6 +19,14 @@ LIB = [
  ("wood_creak", "large wooden ship hull creaking and groaning slowly, listing, water lapping, no music", 3.0),
  ("splash_small", "a man splashing in the sea water, clumsy small splashes, no music", 1.4),
  ("sand_crawl", "hands and knees crawling slowly on wet sand, soft scuffs, close, no music", 2.0),
+ ("build_slam", "heavy timber beams slamming into place with a deep wooden thud and short rumble, cinematic impact hit, no music", 0.9),
+ ("build_planks", "a fast sweeping run of wooden planks clacking into place one after another, cinematic, no music", 1.2),
+ ("build_oars", "wooden oars sliding out through ports in rhythm, quick clack clack clack, no music", 1.0),
+ ("build_cannon", "heavy iron cannons rolling forward on wooden carriages and locking with a metallic clunk, one after another, no music", 1.2),
+ ("build_plates", "heavy armour plates dropping onto a wooden roof and locking with metallic clanks, cinematic, no music", 1.1),
+ ("build_spikes", "rows of iron spikes shooting up with sharp metallic shing sounds, cinematic sparkle, no music", 1.2),
+ ("build_dragon", "a heavy carved dragon head bolted onto a ship with a deep clank, followed by a low growling smoke exhale hiss, cinematic, no music", 1.8),
+ ("build_hit", "big cinematic trailer impact boom with a short shimmering tail, heroic reveal, no music", 1.8),
  ("whoosh", "short soft air whoosh, quick swish, clean, no music", 0.6),
 ]
 def gen(name, text, dur):

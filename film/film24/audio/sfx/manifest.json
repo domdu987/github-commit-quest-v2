@@ -178,5 +178,85 @@
   "rms_db": -15.0526488709962,
   "onset": 0.01425,
   "centroid_hz": 2050.151562020168
+ },
+ "build_slam": {
+  "name": "build_slam",
+  "prompt": "heavy timber beams slamming into place with a deep wooden thud and short rumble, cinematic impact hit, no music",
+  "asked": 0.9,
+  "duration": 0.88,
+  "peak": 0.636993408203125,
+  "rms_db": -17.960557075943267,
+  "onset": 0.001375,
+  "centroid_hz": 290.2266567693047
+ },
+ "build_planks": {
+  "name": "build_planks",
+  "prompt": "a fast sweeping run of wooden planks clacking into place one after another, cinematic, no music",
+  "asked": 1.2,
+  "duration": 1.2,
+  "peak": 0.953460693359375,
+  "rms_db": -22.780529130408894,
+  "onset": 0.25954166666666667,
+  "centroid_hz": 2115.534334036278
+ },
+ "build_oars": {
+  "name": "build_oars",
+  "prompt": "wooden oars sliding out through ports in rhythm, quick clack clack clack, no music",
+  "asked": 1.0,
+  "duration": 1.0,
+  "peak": 0.1913299560546875,
+  "rms_db": -34.59352013687951,
+  "onset": 0.023333333333333334,
+  "centroid_hz": 878.7122906908872
+ },
+ "build_cannon": {
+  "name": "build_cannon",
+  "prompt": "heavy iron cannons rolling forward on wooden carriages and locking with a metallic clunk, one after another, no music",
+  "asked": 1.2,
+  "duration": 1.2,
+  "peak": 0.9692230224609375,
+  "rms_db": -20.28533519425002,
+  "onset": 0.0008541666666666667,
+  "centroid_hz": 2398.1076500113113
+ },
+ "build_plates": {
+  "name": "build_plates",
+  "prompt": "heavy armour plates dropping onto a wooden roof and locking with metallic clanks, cinematic, no music",
+  "asked": 1.1,
+  "duration": 1.08,
+  "peak": 1.0,
+  "rms_db": -16.479313222046258,
+  "onset": 0.014416666666666666,
+  "centroid_hz": 4470.024984386057
+ },
+ "build_spikes": {
+  "name": "build_spikes",
+  "prompt": "rows of iron spikes shooting up with sharp metallic shing sounds, cinematic sparkle, no music",
+  "asked": 1.2,
+  "duration": 1.2,
+  "peak": 1.0,
+  "rms_db": -13.025967485848259,
+  "onset": 0.0015208333333333332,
+  "centroid_hz": 4843.892597288985
+ },
+ "build_dragon": {
+  "name": "build_dragon",
+  "prompt": "a heavy carved dragon head bolted onto a ship with a deep clank, followed by a low growling smoke exhale hiss, cinematic, no music",
+  "asked": 1.8,
+  "duration": 1.76,
+  "peak": 0.9805450439453125,
+  "rms_db": -9.51894741539072,
+  "onset": 0.014104166666666666,
+  "centroid_hz": 2171.6209288170126
+ },
+ "build_hit": {
+  "name": "build_hit",
+  "prompt": "big cinematic trailer impact boom with a short shimmering tail, heroic reveal, no music",
+  "asked": 1.8,
+  "duration": 1.76,
+  "peak": 0.94891357421875,
+  "rms_db": -12.822850137058504,
+  "onset": 0.0,
+  "centroid_hz": 1781.117741490792
  }
 }
