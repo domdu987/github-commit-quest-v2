@@ -5,7 +5,7 @@ import os, sys, json, shutil, subprocess, glob
 from PIL import Image, ImageDraw
 HERE = os.path.abspath(sys.argv[1]); take = os.path.basename(HERE)
 if take == "s08C":
-    meta = dict(take="s08C", film=24, shots=["build-up"], g0=734, g1=1126, first_g=728, n_frames=410, handle_in=6, handle_out=6, shot_ranges={"8": [728, 1131]}, in_take_cuts=[])
+    meta = dict(take="s08C", film=24, shots=["build-up"], g0=734, g1=1126, first_g=728, n_frames=404, handle_in=6, handle_out=6, shot_ranges={"8": [728, 1131]}, in_take_cuts=[])
     OFF = 0
 else:
     meta = json.load(open(os.path.join(HERE, "meta.json"))); OFF = 208

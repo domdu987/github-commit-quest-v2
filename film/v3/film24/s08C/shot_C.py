@@ -3,7 +3,7 @@
 + 6 handle frames each side (728..1131).  No cast.  J.set_build_g(g, f) every frame, camera J.build_cam((g-734)/392), build_anchors.json.
 Blender frame = 7000 + g + 1.    JOSEON_LOOK=C python3 shot_C.py probe a:b[:s] | stills a:b[:s] <out> [scale] [samples] | final a:b [scale] [samples] | anchors
 """
-import os, sys, json
+import os, sys, json, math
 os.environ.setdefault("JOSEON_LOOK", "C")
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(HERE))
@@ -19,12 +19,16 @@ def bfr(g):
 
 
 def cam_at(g):
-    """J.build_cam, tightened a little on stages 2 (oars) and 3 (guns) so they read on the phone: loc moves up to 18 % toward the look point, smooth in/out."""
-    c = dict(J.build_cam((g - G0) / float(G1 - G0)))
-    w = C.ez((g - 815) / 15.0) * (1.0 - C.ez((g - 888) / 15.0))
+    """J.build_cam, tightened a little on stages 2 (oars) and 3 (guns); plus an intro slide (g < 806, decaying to 0) so the slow-easing start of the orbit is never static;
+    the in-handle (g < 734) is the same slide continued."""
     from mathutils import Vector
+    c = dict(J.build_cam(max(0.0, (g - G0) / float(G1 - G0))))
+    w = C.ez((g - 815) / 15.0) * (1.0 - C.ez((g - 888) / 15.0))
     loc, look = Vector(c["loc"]), Vector(c["look_at"])
-    c["loc"] = tuple(loc + (look - loc) * (0.18 * w))
+    loc = loc + (look - loc) * (0.18 * w)
+    r = (look - loc).cross(Vector((0, 0, 1))); r.z = 0; r.normalize()
+    slide = 2.4 * (1.0 - math.sin(math.pi / 2 * min(1.0, (g - 728) / 78.0))) if g < 806 else 0.0         # D, toward the camera's left at the start, ending at the nominal camera
+    c["loc"] = tuple(loc - r * slide); c["look_at"] = tuple(look - r * slide)
     return c
 
 

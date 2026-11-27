@@ -1,0 +1,37 @@
+{
+ "take": "s08C",
+ "film": 24,
+ "shots": [
+  "build-up"
+ ],
+ "g0": 734,
+ "g1": 1126,
+ "first_g": 728,
+ "n_frames": 404,
+ "handle_in": 6,
+ "handle_out": 6,
+ "shot_ranges": {
+  "8": [
+   728,
+   1131
+  ]
+ },
+ "in_take_cuts": [],
+ "look": "C",
+ "render_g_first": 728,
+ "g_offset": 0,
+ "note": "look C (JOSEON_LOOK=C): frames are numbered by their OLD g in frames_C; conform places them at first_g (+0)",
+ "samples": [
+  24
+ ],
+ "resolution": [
+  720,
+  1280
+ ],
+ "render_resolution": [
+  540,
+  960
+ ],
+ "s_per_frame_wall_mean": 51.3,
+ "s_per_frame_cpu_mean": 98.5
+}
