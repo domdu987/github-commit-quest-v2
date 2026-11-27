@@ -58,3 +58,15 @@ The client asked for a step-by-step "what's on the ship" build-up. The "count" b
 
 ### New g for the version C shots (old + 154 where after 918)
 13a 1567-1680 · 13b 1681-1713 · 13c 1714-1760 · 14 1761-1920 (tally 1872-1920) · 15 1921-2103.
+
+## UPDATE 2 (producer/client: the dragon head is historically right and gets its own beat; gwimyeon added)
+The narration line ending changes to "...แล้วปิดท้ายด้วย หัวมังกร ที่ยิงปืนใหญ่ ออกทางปากได้" (Bankky original settings, STT 1.0), with a 1.5 s hero pause. The previous take is in audio/bk0_v1/s04_smoke.*.
+- The film is now **71.9 s, N = 2158**. The build-up is g 734-1126 (13.1 s). Every shot after it shifts by **+208 frames (+6.93 s)** against the 65 s cut, replacing the +154 above.
+- Build stages 0-5 keep the g ranges in the table above. The new ending:
+| stage | g | cue | action | label |
+|---|---|---|---|---|
+| 6a gwimyeon | 971-1000 | แล้วปิดท้ายด้วย | Carved demon-face bow plate swings onto the bow and locks | หน้าผีบนหัวเรือ ขู่ข้าศึก |
+| 6b dragon | 1001-1040 | หัวมังกร | Close orbit: the dragon head bolts on above the gwimyeon, the eyes glint and the jaw opens | หัวมังกร |
+| 6c mouth gun | 1041-1083 | ที่ยิงปืนใหญ่ ออกทางปากได้ | Cannon muzzle slides into the mouth; big flash and smoke ring from the mouth at ~1052 | หัวมังกร ยิงปืนใหญ่ออกจากปากได้ |
+| 7 hero | 1084-1126 | (1.5 s pause, hit) | Full ship, sun behind, a curl of smoke drifting from the mouth, backlit | ไอ้เรือเต่า · small note "บางบันทึกเล่าว่า พ่นควันบังตา" |
+- New g for the C shots: 13a 1621-1734 · 13b 1735-1767 · 13c 1768-1814 · 14 1815-1974 (tally 1926-1974) · 15 1975-2157.

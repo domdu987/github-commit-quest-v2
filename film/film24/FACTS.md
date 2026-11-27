@@ -21,7 +21,9 @@ Sources disagree, and the only detailed description (Yi Chungmugong Jeonseo) is 
 - ~ Gun ports: about 11 per side in secondary sources, often with one more in the dragon's mouth. Total guns estimated at about 24-36, depending on the version. Label: "ช่องปืน ราวข้างละ 11"; no exact total on screen.
 - ✓ Gun types: chongtong cannons named cheonja (ชอนจา), jija (จีจา), hyeonja (ฮยอนจา), hwangja (ฮวังจา).
 - ✓ Roof covering the whole deck, with iron spikes so nobody can board (Yi's 1592 report).
-- ✓ Dragon head at the bow; later accounts say it gave off smoke (a screen). Shown as a design feature.
+- ✓ Dragon head (용두) at the bow, and cannon fired THROUGH ITS MOUTH: primary source, Yi Sun-sin's 1592 battle report (Dangpo report, usually quoted "前設龍頭 口放大砲 背植鐵尖": dragon head in front, big gun fired from its mouth, iron spikes planted on the back). Label: "หัวมังกร ยิงปืนใหญ่ออกจากปากได้".
+- ~ Sulphur smoke from the dragon's mouth as a smoke screen: later or popular accounts, not in Yi's report. Shown only as a playful visual, labelled "บางบันทึกเล่าว่า พ่นควันบังตา". The hook line's "พ่นควัน" is covered by the caption note.
+- ✓ Gwimyeon (귀면, a goblin or demon face) carved on the bow plate below the dragon head, as in the 1795 Yi Chungmugong Jeonseo drawings (the Tongjeyeong and Jeolla jwasuyeong turtle ships). That is a later ship; whether the 1592 ship had it is not documented. Label: "หน้าผีบนหัวเรือ ขู่ข้าศึก".
 - ~ Size: about 30-37 m long, crew about 130-150 (uncertain, later versions). Not on screen except "ยาวกว่า 30 เมตร" only if needed.
 - Dramatised: the build-up order (hull, oars, guns, roof, spikes, dragon head) is an explainer simplification, not the historical build order.
 - Sources: https://en.wikipedia.org/wiki/Turtle_ship · https://www.education.maritime-museum.org/training/north-gallery-2/asian-history/admiral-yi-sun-shin-and-the-korean-turtle-boat/ · https://www.researchgate.net/publication/285612616_Lord_Admiral_Yi_Sun_Shin_and_the_Geobukseon · https://www.ancient-origins.net/node/17360 · https://www.military-history.org/feature/wmd-the-turtle-ship.htm
