@@ -121,7 +121,7 @@ def callout(im, g):
     u = g - BSTART[st]; s = pop(u)
     if s <= 0: return
     d = ImageDraw.Draw(im, "RGBA"); big = st == "7"
-    f = ImageFont.truetype(FONT, 76 if big else 50); fs = ImageFont.truetype(FONT, 30)
+    f = ImageFont.truetype(FONT, 76 if big else 50); fs = ImageFont.truetype(FONT, 36)
     txt = LABELS[st]; bx, by = 360, 170
     w = d.textlength(txt, font=f); h = 92 if big else 66
     sc = s
