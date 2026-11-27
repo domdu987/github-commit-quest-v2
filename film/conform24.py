@@ -159,14 +159,14 @@ for g in range(N):
     in_ov = src[g] is not None and ("/s13/" in src[g] or "/s14/" in src[g])   # overlays only on the reveal / aftermath takes
     ships = [sh for sh in (OV.get(g, []) if (in_ov and VER != "C") else []) if g >= X_FROM and sh.get("hit_g", 1e9) <= g and 0 < sh["x"] < 720 and 60 < sh["y"] < 860]
     co = CALLOUTS and VER == "C" and g in BA and src[g] is not None and "/s08C/" in src[g]
-    if not ships and not co and not (TALLY_G <= g < TALLY_END) and VER != "A":
+    if not ships and not co and not (TALLY_G <= g < TALLY_END and VER != "C") and VER != "A":
         os.symlink(src[g], dst); continue
     im = (graded(src[g], g) if VER == "A" else Image.open(src[g])).convert("RGBA"); d = ImageDraw.Draw(im, "RGBA")
     for sh in ships[:24]:
         big = 2.2 if (VER == "C" and "/s13/" in src[g]) else 0.75     # C: one big X on the close-hit ship (13c)
         draw_x(d, sh["x"], sh["y"] - 14 - (40 if big > 1 else 0), big * pop(g - max(sh["hit_g"], X_FROM)))
-    if TALLY_G <= g < TALLY_END and "/s14/" in src[g]:
-        (tally_plain if VER == "C" else tally)(im, g, TALLY_G)
+    if TALLY_G <= g < TALLY_END and "/s14/" in src[g] and VER != "C":   # C (client "ทั้งหมด"): no tally at all
+        tally(im, g, TALLY_G)
     if co:
         callout(im, g)
     im.convert("RGB").save(dst)
