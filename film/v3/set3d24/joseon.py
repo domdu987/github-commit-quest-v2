@@ -1902,6 +1902,13 @@ def dress_sea_C():
             mb = K.MB(); mb.torus((0, 0, 0), 0.42, 0.12, rm, 18, 5); r_ = K.obj(mb, 'k_oarfoam_' + o.name, t['root'], loc=(lp.x, lp.y, 0.04), shadow=False, smooth=True); r_.scale = (1, 1, 0.3)
 
 # ============================================================================= look C: the sculpted dragon head (smooth, subdivided), shared by every look-C shot
+def _weld(o, dist=1e-4):
+    """merge the per-face vertices of an MB mesh so subdivision rounds the whole surface (not every quad on its own)."""
+    import bmesh
+    bm = bmesh.new(); bm.from_mesh(o.data); bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=dist); bmesh.ops.recalc_face_normals(bm, faces=bm.faces); bm.to_mesh(o.data); bm.free(); o.data.update()
+    for p_ in o.data.polygons: p_.use_smooth = True
+    return o
+
 def _curve_tube(mb, pts, r0, r1, mat, seg=10):
     """a tapered tube through pts (horns, tongue, whiskers)."""
     n = len(pts) - 1
@@ -1922,7 +1929,7 @@ def dragon_C(sh):
         mb.lump((19.05, sg * 0.62, 4.62), 0.3, Gd, 505, 12, 7, 0.0, 0.55, 1.9)                     # brow ridges
         mb.lump((17.45, sg * 1.18, 3.45), 0.5, Tl, 506, 12, 7, 0.05, 1.1, 0.5)                     # cheek fins
     mb.lump((20.05, 0, 2.72), 0.52, R, 507, 16, 9, 0.02, 0.42, 1.95)                               # lower jaw (dropped open)
-    body = K.obj(mb, sh['name'] + '_dragonC', ride, smooth=True, sub=2)
+    body = _weld(K.obj(mb, sh['name'] + '_dragonC', ride, smooth=True, sub=2))
     mb = K.MB(); mm = M_['mouth']
     mb.lump((20.25, 0, 3.12), 0.48, mm, 508, 14, 8, 0.0, 0.55, 1.75)                               # mouth cavity
     tg = [Vector((19.6, 0, 2.95)), Vector((20.3, 0, 2.97)), Vector((20.9, 0, 3.05)), Vector((21.35, 0, 3.25)), Vector((21.5, 0, 3.5)), Vector((21.35, 0, 3.65))]
@@ -1936,14 +1943,14 @@ def dragon_C(sh):
         mb.lump((19.36, sg * 1.0, 4.25), 0.15, M_['eye_k'], 510, 12, 7, 0.0, 1.0, 0.7)              # pupils
     for k in range(7):                                                                              # flame mane along the neck
         xx = 18.0 - 0.5 * k; mb.cyl((xx, 0, 4.7 - 0.12 * k), (xx - 1.0, 0, 5.6 - 0.1 * k), 0.32 - 0.025 * k, 0.0, R if k % 2 == 0 else Gd, 8)
-    parts = K.obj(mb, sh['name'] + '_dragonC_parts', ride, smooth=True, sub=1)
+    parts = _weld(K.obj(mb, sh['name'] + '_dragonC_parts', ride, smooth=True, sub=1))
     mb = K.MB(); tm = M_['tooth']                                                                   # a ring of teeth round the jaws (fangs at the corners)
     for i in range(9):
         u = i / 8.0; x = 19.45 + 1.95 * u
         for sg in (-1, 1):
             w = 0.42 * (1 - 0.55 * u ** 2); big = i in (0, 8)
-            mb.cyl((x, sg * w, 3.3), (x + 0.02, sg * w * 0.92, 2.95 - (0.12 if big else 0.0)), 0.09 if not big else 0.13, 0.0, tm, 6)      # upper
-            mb.cyl((x - 0.05, sg * w * 0.95, 2.88), (x - 0.03, sg * w * 0.9, 3.15 + (0.1 if big else 0.0)), 0.075 if not big else 0.11, 0.0, tm, 6)   # lower
+            mb.cyl((x, sg * w, 3.3), (x + 0.02, sg * w * 0.92, 2.95 - (0.12 if big else 0.0)), 0.065 if not big else 0.1, 0.0, tm, 6)      # upper
+            mb.cyl((x - 0.05, sg * w * 0.95, 2.88), (x - 0.03, sg * w * 0.9, 3.15 + (0.1 if big else 0.0)), 0.055 if not big else 0.09, 0.0, tm, 6)   # lower
     teeth = K.obj(mb, sh['name'] + '_dragonC_teeth', ride, smooth=False)
     mb = K.MB(); gl = K.kglow('eyeglint', '#ffffff', 40.0)
     for sg in (-1, 1): mb.lump((19.46, sg * 1.09, 4.33), 0.045, gl, 511, 6, 4, 0.0)

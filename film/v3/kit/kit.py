@@ -440,23 +440,20 @@ def cannon(c, yaw=0.0, pitch=6.0, name='k_cannon', parent=None):
     o = obj(mb, name, parent, smooth=False); return dict(ob=o, muzzle=b1 + d * 0.12, dir=d, parent=parent)
 
 def muzzle_rig(pos, dirv, parent=None, name='k_muzzle', scale=1.0, seed=11):
-    """flash (emission star) + flash point light + smoke ring (torus) + recoil puff (soft cluster).  Animate with fire_muzzle(rig, t)."""
+    """flash (emissive blackbody volume) + flash point light (hull + water) + smoke ring (torus) + recoil puff (soft cluster).  Animate with fire_muzzle(rig, t)."""
     pos = Vector(pos); dirv = Vector(dirv).normalized(); rs = rnd(seed)
-    mb = MB(); fl = kglow('flash', '#ffd07a', 30.0)
-    for k in range(7):
-        a = rs.uniform(0, 6.28); e = rs.uniform(-0.6, 0.6); d2 = (dirv + Vector((math.cos(a) * 0.5, math.sin(a) * 0.5, e * 0.5))).normalized(); mb.cyl((0, 0, 0), d2 * rs.uniform(0.9, 1.6) * scale, 0.22 * scale, 0.0, fl, 5)
-    mb.lump((0, 0, 0), 0.45 * scale, fl, seed, 8, 5, 0.3)
-    flash = obj(mb, name + '_flash', parent, loc=pos, shadow=False); flash.hide_render = True
+    flash = vdomain(name + '_flash', (-1, -1, -1), (1, 1, 1), vfire_mat('flash', '#3a312b', 0.9, 90.0, 1.4), parent, loc=pos + dirv * 0.9 * scale, shadow=False)   # soft blackbody flash volume (no star facets)
+    flash.hide_render = True; flash['s'] = 1.25 * scale
     mb = MB(); ring_m = vblob_mat('ring', '#dcd8d0', 1.1, 1.6, False, 0.55); mb.torus((0, 0, 0), 0.6, 0.3, ring_m, 20, 8)
     ring = obj(mb, name + '_ring', parent, loc=pos, shadow=False, smooth=True); ring.color = (1, 1, 1, 1); ring.rotation_mode = 'QUATERNION'; ring.rotation_quaternion = dirv.to_track_quat('Z', 'Y'); ring.hide_render = True
     puff = vdomain(name + '_puff', (-1.6, -1, -1), (1.6, 1, 1), vblob_mat('puff', '#dedad3', 3.2, 0.8, True, 0.6), parent, loc=pos, shadow=True); puff.hide_render = True   # soft volume, stretched
     L = _light(name + '_L', 'POINT', (1.0, 0.7, 0.35), 0.0, pos + dirv * 0.8, 0.3, parent)
-    return dict(pos=pos, dir=dirv, flash=flash, ring=ring, puff=puff, light=L, scale=scale, power=1000.0 * scale * scale, trail=Vector((0, 0, 0)))
+    return dict(pos=pos, dir=dirv, flash=flash, ring=ring, puff=puff, light=L, scale=scale, power=3500.0 * scale * scale, trail=Vector((0, 0, 0)))
 
 def fire_muzzle(rig, t, frame=None):
     """t = seconds since the shot (< 0: idle).  Flash + light for ~0.1 s, smoke ring flying out and growing over ~1.5 s, recoil puff swelling and drifting up."""
     p, d, s = rig['pos'], rig['dir'], rig['scale']
-    fv = 0.0 <= t < 0.1; rig['flash'].scale = (1.0 + 4 * max(0, t),) * 3; _show(rig['flash'], fv, frame); _key(rig['flash'], 'scale', frame)
+    fv = 0.0 <= t < 0.12; k_ = rig['flash'].get('s', 1.0) * (1.0 + 3.0 * max(0, t)); rig['flash'].scale = (k_, k_, k_ * 0.8); rig['flash'].color = (max(0.0, 1.0 - 4.0 * max(0.0, t)), 1, 1, 1); _key(rig['flash'], 'color', frame); _show(rig['flash'], fv, frame); _key(rig['flash'], 'scale', frame)
     rig['light'].data.energy = rig['power'] * math.exp(-max(0.0, t) / 0.05) if t >= 0 and t < 0.25 else 0.0
     if frame is not None: rig['light'].data.keyframe_insert('energy', frame=frame)
     u = max(0.0, min(1.0, t / 1.6)); rv = 0.02 < t < 1.6
