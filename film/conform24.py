@@ -4,18 +4,22 @@ Takes: v3/film24/s*/meta.json (+ take.mkv or take.mkv.part*). Missing frames bec
 import sys, os, json, glob, math, subprocess
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
-P = os.path.dirname(os.path.abspath(__file__)); out = sys.argv[1]; N = 1950; FPS = 30; OFF = 0.10; T = N / FPS
-VER = os.environ.get("VERSION", "B")   # B = R9 look (take.mkv); A = films 1-13 look (take_A.mkv, graded here with the v1.1 grade)
-SUF = "_A" if VER == "A" else ""
+P = os.path.dirname(os.path.abspath(__file__)); out = sys.argv[1]; FPS = 30; OFF = 0.10
+VER = os.environ.get("VERSION", "B")   # B = R9 look (take.mkv); A = films 1-13 look (take_A.mkv, graded here with the v1.1 grade); C = LIGHT_SPEC look + build-up (take_C.mkv, 71.9 s)
+SUF = {"A": "_A", "C": "_C"}.get(VER, "")
+N = 2158 if VER == "C" else 1950; T = N / FPS
+SH = 208 if VER == "C" else 0          # version C: everything after the build-up (old g >= 919) is 208 frames later
+AUD = P + "/film24/audio/" + ("" if VER == "C" else "bk0_v1/")      # A/B keep the 65 s narration + captions
+SCR = P + "/film24/" + ("script/" if VER == "C" else "audio/bk0_v1/")
 FR = out + "_frames"; os.makedirs(FR, exist_ok=True)
 FONT = P + "/fonts/Kanit_900Black.ttf"
 
 # ---------------------------------------------------------------- 1. frames from takes (hard cuts at each take's g0)
 takes = []
-for mp in sorted(glob.glob(P + "/v3/film24/s*/meta.json")):
+for mp in sorted(glob.glob(P + "/v3/film24/s*/meta.json") + glob.glob(P + "/v3/film24/s08C/meta_C.json")):
     td = os.path.dirname(mp)
     if os.path.exists(td + "/meta%s.json" % SUF): mp = td + "/meta%s.json" % SUF
-    elif VER == "A": continue
+    elif VER in ("A", "C"): continue
     m = json.load(open(mp)); fr = td + "/frames" + SUF
     if not glob.glob(fr + "/g_*.png"):
         mk = td + "/take%s.mkv" % SUF
@@ -93,12 +97,45 @@ def graded(path, g):
 
 OV = {}
 for t in takes:
-    oj = t["dir"] + "/overlay.json"
+    oj = t["dir"] + "/overlay%s.json" % ("_C" if VER == "C" else "")
     if os.path.exists(oj):
-        for e in json.load(open(oj)):
-            OV[int(e["g"])] = e["ships"]
-X_FROM = int(round((51.97 + OFF) * 30))      # "ยิงปืนใหญ่ ใส่จากทุกด้าน": X marks start popping on hit ships
-TALLY_G = int(round((57.15 + OFF) * 30))     # "เรือญี่ปุ่น แตกไปกว่าครึ่ง"
+        for e in json.load(open(oj)):        # version C: overlay_C.json is in OLD g numbering -> +208
+            OV[int(e["g"]) + SH] = [dict(sh, hit_g=sh.get("hit_g", 1e9) + SH) for sh in e["ships"]]
+X_FROM = 1768 if VER == "C" else int(round((51.97 + OFF) * 30))   # C: X marks only from the close hit 13c on; A/B: "ยิงปืนใหญ่ ใส่จากทุกด้าน"
+TALLY_G = int(round((57.15 + OFF) * 30)) + SH   # "เรือญี่ปุ่น แตกไปกว่าครึ่ง"
+TALLY_END = 1767 + SH
+
+# version C build-up callouts (R10 style): label pill in the top band + leader line + dot on the part (s08C/build_anchors.json)
+LABELS = {"1": "ตัวเรือไม้สนหนา", "2": "พาย ข้างละ 8-10", "3": "ช่องปืน ราวข้างละ 11", "4": "หลังคาคลุมทั้งลำ",
+          "5": "เหล็กแหลม กันปีนขึ้นเรือ", "6a": "หน้าผีบนหัวเรือ ขู่ข้าศึก", "6b": "หัวมังกร", "6c": "ยิงปืนใหญ่ออกจากปากได้", "7": "ไอ้เรือเต่า"}
+SUB = {"3": "ชอนจา · จีจา · ฮยอนจา", "7": "บางบันทึกเล่าว่า พ่นควันบังตา"}
+BA, BSTART = {}, {}
+for t in takes:
+    bj = t["dir"] + "/build_anchors.json"
+    if VER == "C" and os.path.exists(bj):
+        for e in json.load(open(bj)):
+            st = str(e["stage"]); BA[int(e["g"])] = (st, e.get("x"), e.get("y")); BSTART.setdefault(st, int(e["g"]))
+def callout(im, g):
+    st, x, y = BA[g]
+    if st not in LABELS: return
+    u = g - BSTART[st]; s = pop(u)
+    if s <= 0: return
+    d = ImageDraw.Draw(im, "RGBA"); big = st == "7"
+    f = ImageFont.truetype(FONT, 76 if big else 50); fs = ImageFont.truetype(FONT, 30)
+    txt = LABELS[st]; bx, by = 360, 170
+    w = d.textlength(txt, font=f); h = 92 if big else 66
+    sc = s
+    box = [bx - w / 2 * sc - 24, by - h / 2 * sc, bx + w / 2 * sc + 24, by + h / 2 * sc]
+    if x is not None and y is not None and not big and 0 < x < 720 and 0 < y < 1280 and u >= 2:
+        a = min(1.0, (u - 2) / 4.0); ex, ey = bx + (x - bx) * a, box[3] + (y - box[3]) * a
+        d.line([(bx, box[3]), (ex, ey)], fill=(255, 255, 255, 235), width=4)
+        if a >= 1: d.ellipse([x - 9, y - 9, x + 9, y + 9], fill=(255, 196, 60, 255), outline=(255, 255, 255, 255), width=3)
+    d.rounded_rectangle(box, radius=int(h / 2 * sc), fill=(20, 16, 12, 185), outline=(255, 196, 60, 255), width=3)
+    if sc > 0.6:
+        ff = ImageFont.truetype(FONT, max(10, int((76 if big else 50) * sc)))
+        d.text((bx, by), txt, font=ff, fill=(255, 255, 255, 255), anchor="mm")
+    if st in SUB and u >= 6:
+        d.text((bx, box[3] + 30), SUB[st], font=fs, fill=(255, 255, 255, 235), anchor="mm", stroke_width=3, stroke_fill=(0, 0, 0, 200))
 for g in range(N):
     dst = "%s/f_%04d.png" % (FR, g)
     if os.path.lexists(dst): os.remove(dst)
@@ -106,19 +143,22 @@ for g in range(N):
         Image.new("RGB", (720, 1280)).save(dst); continue
     in_ov = src[g] is not None and ("/s13/" in src[g] or "/s14/" in src[g])   # overlays only on the reveal / aftermath takes
     ships = [sh for sh in (OV.get(g, []) if in_ov else []) if g >= X_FROM and sh.get("hit_g", 1e9) <= g and 0 < sh["x"] < 720 and 60 < sh["y"] < 860]
-    if not ships and not (TALLY_G <= g < 1767) and VER != "A":
+    co = VER == "C" and g in BA and src[g] is not None and "/s08C/" in src[g]
+    if not ships and not co and not (TALLY_G <= g < TALLY_END) and VER != "A":
         os.symlink(src[g], dst); continue
     im = (graded(src[g], g) if VER == "A" else Image.open(src[g])).convert("RGBA"); d = ImageDraw.Draw(im, "RGBA")
     for sh in ships[:24]:
         draw_x(d, sh["x"], sh["y"] - 14, 0.75 * pop(g - max(sh["hit_g"], X_FROM)))
-    if TALLY_G <= g < 1767 and "/s14/" in src[g]:
+    if TALLY_G <= g < TALLY_END and "/s14/" in src[g]:
         tally(im, g, TALLY_G)
+    if co:
+        callout(im, g)
     im.convert("RGB").save(dst)
 if os.environ.get("ONLY_FRAMES"):
     sys.exit(0)
 
 # ---------------------------------------------------------------- 3. captions (Kanit Black 88 at y 900)
-caps = json.load(open(P + "/film24/script/captions.json"))
+caps = json.load(open(SCR + "captions.json"))
 ass = ["[Script Info]", "ScriptType: v4.00+", "PlayResX: 720", "PlayResY: 1280", "WrapStyle: 2", "", "[V4+ Styles]",
        "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
        "Style: Pop,Kanit Black,88,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,0,0,0,0,100,100,0,0,1,5,0,5,30,30,0,1", "", "[Events]",
@@ -154,15 +194,29 @@ CUES = [
     ("whoosh", 57.25, -24, 0.5),                                                  # tally pop
     ("splash_small", 59.0, -20, 1.4), ("sand_crawl", 62.2, -18, 2.0),             # shot 15
 ]
-for f, t, db, ln in CUES:
-    add(f, t, db, ln)
 BEDS = [("yard_ambience", 0, 5.02), ("sea_fleet", 5.02, 9.6), ("yard_ambience", 9.6, 14.37), ("sea_fleet", 14.37, 24.45),
         ("yard_ambience", 24.45, 30.64), ("sea_fleet", 30.64, 64.9)]
+if VER == "C":
+    D = SH / 30.0
+    CUES = [c for c in CUES if c[1] < 24.45] + [(f, t + D, db, ln) for f, t, db, ln in CUES if t >= 30.64 and not (50.0 < t < 53.0)]
+    CUES += [  # build-up: one punchy hit per stage (g / 30)
+        ("build_slam", 781 / 30, -13, 0.9), ("build_planks", 800 / 30, -18, 1.2), ("build_oars", 830 / 30, -14, 1.0),
+        ("build_cannon", 862 / 30, -15, 1.2), ("build_plates", 898 / 30, -15, 1.1), ("build_spikes", 932 / 30, -15, 1.2),
+        ("build_slam", 971 / 30, -15, 0.9), ("build_dragon", 1001 / 30, -14, 1.8), ("cannon_boom", 1052 / 30, -12, 1.6),
+        ("build_hit", 1084 / 30, -12, 1.8),
+        # 13b broadside (old 50.95.. +D), 13c the hit + jumpers
+        *[("cannon_boom", t + D, -13, 1.4) for t in (50.98, 51.28, 51.58, 51.88)],
+        ("explosion_big", 1767 / 30, -10, 2.2), ("debris_rain", 1770 / 30, -20, 1.6), ("splash_small", 1795 / 30, -18, 1.2),
+        ("cannon_volley", 52.6 + D, -18, 3.5)]
+    BEDS = [(n, a_ if a_ < 24.45 else a_ + (D if a_ >= 30.64 else 0), b_ if b_ < 24.45 else b_ + D) for n, a_, b_ in BEDS]
+    BEDS = [b for b in BEDS if b[0] != "yard_ambience" or b[1] != 24.45] + [("yard_ambience", 24.45, 37.57)]
+for f, t, db, ln in CUES:
+    add(f, t, db, ln)
 for n, a_, b_ in BEDS:
     t = a_
     while t < b_ - 0.5:
         sfx.append({"file": SF + n + ".mp3", "at": t, "rms_db": -40, "len": min(5.0, b_ - t), "align": "start", "fade_in": 0.2, "fade_out": 0.4}); t += 4.8
-V = P + "/film24/audio/narration.wav"
+V = AUD + ("narration.wav" if VER == "C" else "narration_65s.wav")
 _v = np.frombuffer(subprocess.run(["ffmpeg", "-v", "error", "-i", V, "-ac", "1", "-ar", "8000", "-f", "f32le", "-"], capture_output=True).stdout, np.float32)
 _env = np.sqrt(np.convolve(_v ** 2, np.ones(800) / 800, "same"))[::80]
 def talk(a, ln):

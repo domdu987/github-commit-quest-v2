@@ -27,6 +27,8 @@ LIB = [
  ("build_spikes", "rows of iron spikes shooting up with sharp metallic shing sounds, cinematic sparkle, no music", 1.2),
  ("build_dragon", "a heavy carved dragon head bolted onto a ship with a deep clank, followed by a low growling smoke exhale hiss, cinematic, no music", 1.8),
  ("build_hit", "big cinematic trailer impact boom with a short shimmering tail, heroic reveal, no music", 1.8),
+ ("explosion_big", "a big wooden warship exploding, deep fiery boom with crackling wood splintering and a water splash, cinematic, no music", 2.2),
+ ("debris_rain", "wooden splinters and planks raining down onto water and a wooden deck, splashes and clatter, no music", 1.6),
  ("whoosh", "short soft air whoosh, quick swish, clean, no music", 0.6),
 ]
 def gen(name, text, dur):

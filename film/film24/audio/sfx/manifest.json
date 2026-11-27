@@ -258,5 +258,25 @@
   "rms_db": -12.822850137058504,
   "onset": 0.0,
   "centroid_hz": 1781.117741490792
+ },
+ "explosion_big": {
+  "name": "explosion_big",
+  "prompt": "a big wooden warship exploding, deep fiery boom with crackling wood splintering and a water splash, cinematic, no music",
+  "asked": 2.2,
+  "duration": 2.2,
+  "peak": 0.9889068603515625,
+  "rms_db": -13.213109244916215,
+  "onset": 0.0018333333333333333,
+  "centroid_hz": 1549.3365802774354
+ },
+ "debris_rain": {
+  "name": "debris_rain",
+  "prompt": "wooden splinters and planks raining down onto water and a wooden deck, splashes and clatter, no music",
+  "asked": 1.6,
+  "duration": 1.6,
+  "peak": 0.992584228515625,
+  "rms_db": -23.869374699347862,
+  "onset": 0.5247708333333333,
+  "centroid_hz": 2233.586434296215
  }
 }
