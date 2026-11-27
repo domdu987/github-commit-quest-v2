@@ -8,7 +8,8 @@
 Every card gets the look C warm rim (J.card_rim via common.story).  Env JOSEON_LOOK=C is set here."""
 import os, sys, json, time, math, subprocess, importlib.util
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, 'joseon_work', 'board_C')
+BOARD = os.environ.get('BOARD', 'board_C')                 # board_C (round 1, kept) | board_C2 (fix round 2 + the build-up)
+OUT = os.path.join(HERE, 'joseon_work', BOARD)
 F24 = os.path.join(os.path.dirname(HERE), 'film24')
 # name: (label, kind, arg)
 TILES = [
@@ -23,6 +24,13 @@ TILES = [
     ('shore', '15  shore (s15 cast)', 'take', ('s15', 15)),
 ]
 F = 40
+TILES2 = [
+    ('build_1', 'build 1 hull (g 805)', 'build', 805), ('build_3', 'build 3 guns (g 880)', 'build', 880), ('build_5', 'build 5 spikes (g 951)', 'build', 951),
+    ('build_6c', 'build 6c mouth gun fires (g 1052)', 'build', 1052), ('build_7', 'build 7 hero (g 1105)', 'build', 1105),
+    ('hero_yard', '4  hero_yard', 'custom', None), ('hero_orbit', '14  hero_orbit', 'custom', None), ('cannon_close', '13b  cannon_close', 'custom', None),
+    ('hit_close', '13c  hit_close', 'custom', None), ('dragon_close', 'dragon head + gwimyeon', 'custom', None),
+]
+if BOARD == 'board_C2': TILES = TILES2
 
 
 def _rim_story(C, J):
@@ -42,7 +50,10 @@ def tile(name, samples):
     label, kind, arg = [(l, k, a) for n, l, k, a in TILES if n == name][0]
     os.makedirs(OUT, exist_ok=True)
     t0 = time.time()
-    if kind == 'take':
+    if kind == 'build':
+        g = arg; Tk = C.Take('build_dock'); st_, k_ = J.set_build_g(g, F); cs = J.build_cam((g - 734) / 392.0); Tk.key_cam(F, cs['loc'], cs['look_at'], cs['lens'])
+        Tk.scene.frame_set(F); rep = dict(stage=st_, k=round(k_, 2), anchor=J.build_anchor(st_)); st = C.Take.render(Tk, [F], OUT, scale=C.RES_PCT, samples=samples)[0]
+    elif kind == 'take':
         mod, shot = arg
         spec = importlib.util.spec_from_file_location('shot_' + mod, os.path.join(F24, mod, 'shot.py'))
         M = importlib.util.module_from_spec(spec)
@@ -54,7 +65,7 @@ def tile(name, samples):
         rep = Tk.report(shot, g)
         st = Tk.render(shot, [g], OUT, scale=C.RES_PCT, samples=samples)[0]
     else:
-        Tk = C.Take(name)
+        Tk = C.Take('hero_yard' if name == 'dragon_close' else name)
         sd = os.path.join(OUT, 'sprites_' + name)
         A = Tk.A
         jobs = []
@@ -68,6 +79,9 @@ def tile(name, samples):
             Tk.scene.frame_set(F)
             yi.pose(F, p, camera=Tk.cam)
             jobs.append((yi, 128))
+        elif name == 'dragon_close':
+            Tk.key_set(F, spikes=3, ports=0, dragon_smoke=0.5); sh = J.S['turtle']; J.set_build('7', 1.0, F)
+            cs = dict(loc=tuple(J.yw((27.0, -6.8, 3.0))), look_at=tuple(J.yw((18.9, 0, 2.95))), lens=38); Tk.key_cam(F, cs['loc'], cs['look_at'], cs['lens'])
         elif name == 'hero_orbit':
             Tk.key_set(F, spikes=3, ports=1, dragon_smoke=0.8)
         elif name == 'cannon_close':
@@ -121,8 +135,8 @@ def sheet():
         d.text((x + 14, y + H + 10), [l for n_, l, *_ in TILES if n_ == n][0], fill=(240, 236, 228), font=fnt)
         d.text((x + 14, y + H + 50), 'sat %.2f  warm %d%%  cool %d%%  other %d%%  shadow %d%%' % (m['sat'], 100 * m['warm'], 100 * m['cool'], 100 * m['other'], 100 * m['shadow']), fill=(200, 196, 210), font=fs)
         d.text((x + 14, y + H + 80), '%d samples  %.0f s cpu (%.0f s on 4 cores)' % (info['samples'], info['cpu'], info['cpu'] / 4.0), fill=(170, 170, 185), font=fs)
-    im.save(os.path.join(HERE, 'board_C.jpg'), quality=88)
-    im.resize((im.width // 3, im.height // 3)).save(os.path.join(HERE, 'board_C_small.jpg'), quality=85)
+    im.save(os.path.join(HERE, BOARD + '.jpg'), quality=88)
+    im.resize((im.width // 3, im.height // 3)).save(os.path.join(HERE, BOARD + '_small.jpg'), quality=85)
     print('sheet: %d tiles' % len(names))
 
 

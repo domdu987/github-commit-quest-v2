@@ -60,6 +60,23 @@ if which == 'yard':
     cam = J.make_camera(A['cams']['macro_spikes']); check('macro_spikes camera: 60 mm, DOF %s' % ('OFF (look A)' if J.LOOK == 'A' else 'on f/2.8'), cam.data.lens == 60 and (not cam.data.dof.use_dof if J.LOOK == 'A' else (cam.data.dof.use_dof and abs(cam.data.dof.aperture_fstop - 2.8) < 1e-6)))
     cam = J.make_camera(A['cams']['yard_wide']); check('wide presets: no DOF', not cam.data.dof.use_dof and cam.parent is None)
     check('ship_root parents cards to the ride empty', J.ship_root('turtle').name == 'ride_turtle')
+    # ---- the build-up set piece (build_dock; every look): schedule, staged visibility, seated parts, anchors, the mouth gun
+    sch = J.build_schedule(); check('build_schedule: 10 stages, g 734-1126 contiguous (UPDATE 2)', [x[0] for x in sch] == ['0', '1', '2', '3', '4', '5', '6a', '6b', '6c', '7'] and sch[0][1] == 734 and sch[-1][2] == 1126 and all(sch[i][2] + 1 == sch[i + 1][1] for i in range(len(sch) - 1)))
+    sh = J.S['turtle']; J.set_build('0', 0.5); B = J.S['build']
+    check('set_build 0: empty dock (no keel, hull, roof, spikes, head)', B['keel'].hide_render and sh['hull'].hide_render and sh['roof'].hide_render and all(o.hide_render for o in sh['spikes']) and all(o.hide_render for o in sh['dragonC'][:4]))
+    J.set_build('3', 0.5); vis_g = sum(not m.hide_render for m, _ in B['guns'])
+    check('set_build 3 mid: hull + oars done, guns coming out (%d of %d), roof still off' % (vis_g, len(B['guns'])), not sh['hull'].hide_render and abs(sh['hull'].color[0] - 1) < 1e-6 and all(not o.hide_render for o in sh['oars']) and 0 < vis_g < len(B['guns']) and sh['roof'].hide_render)
+    check('11 gun ports a side (6 built + 5 build ports)', len(B['guns']) == 22)
+    J.set_build('7', 1.0); bpy.context.view_layer.update()
+    seated = all((Vector(o.location) - B['base'][o.name][0]).length < 1e-3 for o in [B['keel']] + B['ribs'] + sh['spikes'] + [sh['roof'], sh['gwim']] + sh['dragonC'][:4] + [m for m, _ in B['guns']])
+    check('set_build 7: every part seated on its support (no offsets left), all shown', seated and not sh['roof'].hide_render and not sh['gwim'].hide_render and all(not o.hide_render for o in sh['spikes']))
+    J.set_build('4', 0.2); dz = sh['roof'].location.z - B['base'][sh['roof'].name][0].z; J.set_build('4', 0.8); dz2 = abs(sh['roof'].location.z - B['base'][sh['roof'].name][0].z)
+    check('set_build 4: the roof drops from above and lands (%.2f D up at k 0.2, %.3f at k 0.8)' % (dz, dz2), dz > 1.0 and dz2 < 0.35)
+    J.set_mouth_gun(0.1); x1 = B['mouthgun'].location.x; J.set_mouth_gun(0.25); x2 = B['mouthgun'].location.x; J.set_mouth_gun(0.27); fl = not B['mouthrig']['flash'].hide_render
+    check('set_mouth_gun: the muzzle slides into the mouth bore, then the flash fires', x2 > x1 and abs(x2 - 20.3) < 0.05 and fl, (round(x1, 2), round(x2, 2)))
+    cam = J.make_camera(J.build_cam(0.5)); bpy.context.scene.camera = cam; an = J.build_anchor('5')
+    check('build_anchor: screen px inside 720x1280', an is not None and 0 <= an[0] <= 720 and 0 <= an[1] <= 1280, an)
+    check('build_at(g): 1052 -> 6c', J.build_at(1052)[0] == '6c')
 else:
     A = J.build('sea', 'fleet_wide'); J.clear_keys(); J.make_camera(A['cam']); S = J.S; ships = S['ships']
     jap = S['jap']; kor = S['kor']

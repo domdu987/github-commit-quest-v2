@@ -84,3 +84,18 @@ The other calls:
 
 Everything is plain mesh with Principled or emission, plus soft alpha for smoke. There are no simulations and no volumes. In the look C board, 12 samples at
 75 % cost 50-75 CPU s per frame and 24 samples cost 90-120 CPU s per frame (22-30 s on 4 cores).
+
+## Volumes (look C, round 2): smoke columns, fire, flashes and spray, with no balls or facets
+
+| call | what |
+|---|---|
+| `smoke_column(base, H, r0, wind, parent, name, a, b, base_col, top_col, dens, nscale, seed)` | a wind-bent plume volume. Radius is `r0*(a+b*u)`, density fades in at the base and out at the top, and the noise rises with the shared `flow()` empty. Use dark colours for smoke and white for a water column or spray. |
+| `set_level(ob, level, frame)` | shows and thickens a volume (object colour R). |
+| `vfire_mat()` / `vdomain(name, lo, hi, mat)` | an emissive blackbody fireball, flame or flash in a ±1 box. Object colour R is the heat (1 is fresh, 0 leaves only the smoke shell). |
+| `vblob_mat(name, col, dens, nscale, edge)` | a soft puff (box domain) or a smoke ring (torus). |
+
+- **Explosion rig:** 3 fireball lobes, a spray column with droplets, and a smoke column.
+- **Muzzle rig:** a volume flash and a 3500 W light, a volume ring, and a puff. Set `rig['trail']` to drift the smoke back along a hull.
+- **Fire patch:** volume flames with a smoke column (`smoke_h`, `smoke_r`).
+- **Ray marching:** render the volumes with `scene.cycles.volume_biased = True`. The default unbiased majorant build costs about 17 CPU s per volume object.
+- **Cost:** volume domains from `MB` boxes need outward normals (`vdomain` flips them).

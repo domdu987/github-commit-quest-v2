@@ -1356,7 +1356,7 @@ def _sea_marks():
     for nm, lp in (('soldier_chase_a', (xb2 - 0.6, 0.0, z)), ('soldier_chase_b', (xb2 - 1.9, 2.4, z)), ('soldier_chase_c', (xb2 - 1.9, -2.4, z))): par[nm] = ('j_near', lp)
     jb = shs['j_board']; z = jb['deck_z']; xb3 = jb['deck_x'][1]
     for nm, lp in (('soldier_board_a', (jb['deck_x'][0] + 5.4, 3.55, z)), ('soldier_board_b', (jb['deck_x'][0] + 7.4, 3.75, z)), ('soldier_board_c', (jb['deck_x'][0] + 3.6, 3.4, z))): par[nm] = ('j_board', lp)
-    for nm, lp in (('ashi_jump_a', (jb['deck_x'][0] + 9.0, 3.4, z + 1.0)), ('ashi_jump_b', (jb['deck_x'][0] + 11.2, 3.4, z + 1.0))): par[nm] = ('j_board', lp)
+    for nm, lp in (('ashi_jump_a', (jb['deck_x'][0] + 9.0, 3.4, z)), ('ashi_jump_b', (jb['deck_x'][0] + 11.2, 3.4, z))): par[nm] = ('j_board', lp)
     for nm, (sn, lp) in par.items(): mk_[nm] = tuple(round(c, 3) for c in L2W(sn, lp))
     sp = S['shore_pt']; mk_['commander_plank'] = (S['plank'].location.x, S['plank'].location.y, S['plank_z']); mk_['commander_sand'] = tuple(round(c, 3) for c in (sp.x - 0.5, sp.y + 4.5, S['islands']['beach']['h'](sp.x - 0.5, sp.y + 4.5)))
     mk_['commander_crawl_a'] = tuple(round(c, 3) for c in (sp.x + 1.0, sp.y + 7.5, S['islands']['beach']['h'](sp.x + 1.0, sp.y + 7.5)))
@@ -1539,7 +1539,8 @@ def yard_cams():
         roof_top=dict(loc=(-9.5, -29.0, 15.0), look_at=(0.8, -4.0, 5.2), lens=24),
         macro_spikes=dict(loc=tuple(yw((14.8, -9.0, 4.4))), look_at=tuple(yw((10.4, -3.4, roof_z(10.4, -3.4) + 0.5))), lens=60, fstop=2.8),
         macro_dragon=dict(loc=(-5.2, 25.4, 4.4), look_at=tuple(yw((20.4, 0, 3.15))), lens=55, fstop=2.8),
-        hero_yard=dict(loc=(4.5, 35.0, 1.0), look_at=(-1.5, 8.0, 8.0), lens=40))
+        hero_yard=dict(loc=(4.5, 35.0, 1.0), look_at=(-1.5, 8.0, 8.0), lens=40),
+        build_dock=build_cam(1.0))
 
 def sea_cams():
     fl = _fl('jflag'); z = fl['deck_z']; xa, xb = fl['deck_x']; xc = xb - 5.0
@@ -1571,10 +1572,11 @@ PRESETS = dict(
     hansan_high=dict(loc='sea', cam='hansan_high', state=''), flag_bow=dict(loc='sea', cam='flag_bow', state=''), chase=dict(loc='sea', cam='chase', state='s0'),
     board=dict(loc='sea', cam='board', state='sp3,special:board'), reveal_top=dict(loc='sea', cam='reveal_top', state='k1,cs1,dm0.35,sp3,pt1,ds1'),
     aftermath=dict(loc='sea', cam='aftermath', state='k1,dm1,cs0.35,sp3,pt1'), shore=dict(loc='sea', cam='shore', state=''), macro_oar=dict(loc='sea', cam='macro_oar', state='special:solo,os0.4', samples=12),
-    hero_yard=dict(loc='yard', cam='hero_yard', state='sp3,ds0.8'), cannon_close=dict(loc='sea', cam='cannon_close', state='special:solo,sp3,pt1'),
+    hero_yard=dict(loc='yard', cam='hero_yard', state='sp3,ds0.8'), build_dock=dict(loc='yard', cam='build_dock', state='sp3'), cannon_close=dict(loc='sea', cam='cannon_close', state='special:solo,sp3,pt1'),
     hit_close=dict(loc='sea', cam='hit_close', state='special:hit'), hero_orbit=dict(loc='sea', cam='hero_orbit', state='k1,dm1,cs0.3,sp3,pt1,ds0.8'))
 LOC_PRESETS = dict(yard=[k for k, v in PRESETS.items() if v['loc'] == 'yard'], sea=[k for k, v in PRESETS.items() if v['loc'] == 'sea'])
 CAM_NOTES = dict(
+    build_dock='yard build-up (s08C, g 734-1126): build_cam(u) slow low orbit round the bow 3/4, tightening on the bow for 6a-6c; set_build(stage, k) / set_build_g(g); build_anchor(stage).',
     hero_yard='yard (shot 4): low on the east wharf at the bow quarter looking up the slipway, push in; the ship is backlit (sun 3/4 behind), god rays through the rigging gobos, Yi small at its foot (yi_hero).',
     cannon_close='sea (13b, special:solo): low close along the gun-port side of the turtle ship, world-fixed (slide it slowly); set_ports(1) + set_broadside(t) per frame.',
     hit_close='sea (13c, special:hit): low close on j_board at HIT_AT; set_hit_explosion(t) per frame; ashi_jump_a/b on the far rail jump with jump_arc(i, t) + set_jump_splash(i, t).',
@@ -1600,7 +1602,7 @@ STAGING = dict(
     flag_deck_crew=[('soldier', 'soldier_deck_a'), ('soldier_b', 'soldier_deck_b'), ('soldier', 'soldier_deck_c'), ('soldier_b', 'soldier_deck_d')], hansan_high=[], flag_bow=[('commander', 'commander_bow')],
     chase=[('soldier', 'soldier_chase_a'), ('soldier_b', 'soldier_chase_b'), ('soldier', 'soldier_chase_c')], board=[('soldier', 'soldier_board_a'), ('soldier_b', 'soldier_board_b'), ('soldier', 'soldier_board_c')],
     reveal_top=[], aftermath=[], shore=[('commander', 'commander_sand')], macro_oar=[],
-    hero_yard=[('yi', 'yi_hero')], cannon_close=[], hit_close=[('soldier', 'ashi_jump_a'), ('soldier_b', 'ashi_jump_b')], hero_orbit=[])
+    hero_yard=[('yi', 'yi_hero')], build_dock=[], cannon_close=[], hit_close=[('soldier', 'ashi_jump_a'), ('soldier_b', 'ashi_jump_b')], hero_orbit=[])
 def _staging(cam): return [(role, tuple(S['marks'][mk_])) for role, mk_ in STAGING.get(cam, []) if mk_ in S['marks']]
 
 def stage_placeholders(A, cam_name, cam_loc):
@@ -1787,15 +1789,15 @@ def set_look(look='A'):
 C_SKY = [(0.0, '#ffc08e'), (0.09, '#f6ae96'), (0.2, '#d6a3c4'), (0.38, '#a19dd4'), (0.7, '#7c84c2')]   # pastel peach horizon -> lavender -> soft blue
 C_SUN_RGB = (1.0, 0.60, 0.33); C_SUN_W = 10.0; C_SKY_K = 0.62
 C_ELEV = dict(yard=12.0, sea=8.0)
-C_SUN = dict(hero_yard=(0.0, 12.0), hero_orbit=(8.0, 7.0), cannon_close=(-35.0, 8.0), hit_close=(28.0, 8.0), roof_low=(40.0, 12.0), bow=(35.0, 12.0), yard_wide=(30.0, 12.0),
+C_SUN = dict(hero_yard=(0.0, 12.0), build_dock=(4.0, 11.0), hero_orbit=(8.0, 7.0), cannon_close=(-35.0, 8.0), hit_close=(28.0, 8.0), roof_low=(40.0, 12.0), bow=(35.0, 12.0), yard_wide=(30.0, 12.0),
              roof_top=(30.0, 12.0), flag_deck=(30.0, 8.0), flag_deck_b=(30.0, 8.0), flag_deck_crew=(25.0, 8.0), flag_bow=(25.0, 8.0), reveal_top=(10.0, 9.0), hansan_high=(10.0, 9.0),
              shore=(-35.0, 11.0), aftermath=(10.0, 7.0), chase=(35.0, 8.0), board=(30.0, 9.0), fleet_wide=(35.0, 8.0))   # (degrees off straight-behind toward the camera's left (negative: right), elevation)
 C_WATER = ('#36416e', '#4b5a8c', '#8a82ac', '#1f2648', '#525684')      # deep blue-lavender, mid, crest, trough, large patches
 C_WATER_CALM = ('#2c3659', '#3e4a76', '#6d6c98', '#1a2040', '#4a4f7e')
 C_SAMPLES = 24
 C_BURN = dict(hero_orbit=('s03', 's04', 's07'))                      # preset: Japanese ships set burning and listing in frame (shot 14's background)
-C_HAZE = dict(hero_yard=((0.0, 2.0), 26.0, 0.16))                     # preset: (subject centre, distance toward the sun, density) of a haze block behind the subject
-C_EXPO = dict(reveal_top=0.55, hansan_high=0.45, fleet_wide=0.3, cannon_close=-0.45)      # per-preset exposure (aerials over dark water)
+C_HAZE = dict(hero_yard=((0.0, 2.0), 26.0, 0.16), build_dock=((0.0, 2.0), 26.0, 0.16))                     # preset: (subject centre, distance toward the sun, density) of a haze block behind the subject
+C_EXPO = dict(build_dock=-0.15, reveal_top=0.55, hansan_high=0.45, fleet_wide=0.3, cannon_close=-0.45)      # per-preset exposure (aerials over dark water)
 
 def sun_back_for_camera(setup, elev=None, side=None):
     """Look C key: behind the subject (side 0) or 3/4 behind it (side ~30-50 deg toward the camera's left), low (6-12 deg)."""
@@ -1838,7 +1840,7 @@ def _gobos_for(cam, dist=20.0, ground=0.0):
     g1 = K.gobo_rigging(c, yaw, 1.0, seed=71, masts=2, name='gobo_rig_a'); g2 = K.gobo_rigging(c + h * 10 + Vector((-h.y, h.x, 0)) * 8, yaw + 12, 1.1, seed=72, masts=2, name='gobo_rig_b')
     S['gobos'] = [g1, g2]
     if S['loc'] == 'yard': S['gobos'].append(K.gobo_canopy(c + Vector((-h.y, h.x, 0)) * -14 + Vector((0, 0, ground + 9)), 6, 6.0, 73, 'gobo_trees'))
-    if S.get('preset') == 'hero_yard':                                       # the money shot: big crowns + a third rig behind the ship, so the shafts read round its silhouette
+    if S.get('preset') in ('hero_yard', 'build_dock'):                                       # the money shot: big crowns + a third rig behind the ship, so the shafts read round its silhouette
         lf = Vector((-h.y, h.x, 0))
         for i, sg in enumerate((-1, 1)): S['gobos'].append(K.gobo_canopy(c + h * 12 + lf * (sg * 9.0) + Vector((0, 0, ground + 11)), 7, 7.0, 74 + i, 'gobo_trees_h%d' % i))
         S['gobos'].append(K.gobo_rigging(c + h * 6 - lf * 3, yaw - 8, 1.2, seed=76, masts=3, name='gobo_rig_h'))
@@ -1915,48 +1917,277 @@ def _curve_tube(mb, pts, r0, r1, mat, seg=10):
     for k in range(n): mb.cyl(pts[k], pts[k + 1], r0 + (r1 - r0) * k / n, r0 + (r1 - r0) * (k + 1) / n, mat, seg, cap=(k == n - 1))
 
 def dragon_C(sh):
-    """Replace the boxy carved head (look C only): sculpted snout with flared nostrils, open jaw, a ring of teeth, curled tongue, swept-back horns, brows, eyes
-    with a glint, a flame mane, whiskers.  Smooth subdivided parts (teeth / glints unsubdivided).  Same mouth point (sh['mouth']) for the smoke and the mouth cannon."""
+    """Replace the boxy carved head (look C only): sculpted snout with flared nostrils, swept-back horns, brows, scale relief along the neck, eyes with a glint,
+    a flame mane, whiskers; a separate hinged lower jaw (lower teeth, curled tongue) and a dark gun bore in the mouth for the mouth cannon (set_mouth_gun).
+    Below it the gwimyeon (carved demon-face bow plate, 1795 Jeonseo drawings).  Smooth subdivided parts.  Mouth point sh['mouth'] unchanged."""
     if sh.get('dragonC'): return sh['dragonC']
     K.use(S['coll']); M_ = S['M']; ride = sh['ride']; R, Gd, Tl = M_['dragon_red'], M_['gold'], M_['teal']
     mb = K.MB()
     mb.cyl((15.3, 0, 2.35), (17.5, 0, 3.55), 1.2, 1.0, Tl, 16)                                      # neck
     mb.lump((18.55, 0, 3.95), 1.12, R, 501, 18, 11, 0.03, 0.86, 1.22)                              # skull
-    mb.lump((20.15, 0, 3.72), 0.66, R, 502, 18, 10, 0.03, 0.62, 2.0)                               # upper snout, long
-    mb.lump((21.35, 0, 3.72), 0.5, R, 503, 16, 9, 0.02, 0.72, 1.05)                                # snout bulb
+    mb.lump((20.15, 0, 3.78), 0.66, R, 502, 18, 10, 0.03, 0.58, 2.0)                               # upper snout, long
+    mb.lump((21.35, 0, 3.8), 0.5, R, 503, 16, 9, 0.02, 0.66, 1.05)                                 # snout bulb
     for sg in (-1, 1):
-        mb.lump((21.55, sg * 0.32, 3.98), 0.24, R, 504, 12, 7, 0.0, 0.8, 1.2)                      # flared nostril rims
+        mb.lump((21.55, sg * 0.32, 4.04), 0.24, R, 504, 12, 7, 0.0, 0.8, 1.2)                      # flared nostril rims
         mb.lump((19.05, sg * 0.62, 4.62), 0.3, Gd, 505, 12, 7, 0.0, 0.55, 1.9)                     # brow ridges
         mb.lump((17.45, sg * 1.18, 3.45), 0.5, Tl, 506, 12, 7, 0.05, 1.1, 0.5)                     # cheek fins
-    mb.lump((20.05, 0, 2.72), 0.52, R, 507, 16, 9, 0.02, 0.42, 1.95)                               # lower jaw (dropped open)
     body = _weld(K.obj(mb, sh['name'] + '_dragonC', ride, smooth=True, sub=2))
-    mb = K.MB(); mm = M_['mouth']
-    mb.lump((20.25, 0, 3.12), 0.48, mm, 508, 14, 8, 0.0, 0.55, 1.75)                               # mouth cavity
-    tg = [Vector((19.6, 0, 2.95)), Vector((20.3, 0, 2.97)), Vector((20.9, 0, 3.05)), Vector((21.35, 0, 3.25)), Vector((21.5, 0, 3.5)), Vector((21.35, 0, 3.65))]
-    _curve_tube(mb, tg, 0.2, 0.08, M_['tongue'], 10)                                                # curled tongue
-    for sg in (-1, 1):                                                                              # swept-back horns (two each side? one each: 2 horns)
+    mb = K.MB(); sc_ = K.kmat('dscale', '#8a1c22', 0.4)                                            # scale relief along the neck (rows of small plates)
+    for r_ in range(5):
+        for i in range(9):
+            a = math.radians(-70 + 17.5 * i + (8 if r_ % 2 else 0)); x = 15.6 + 0.42 * r_; rr = 1.18 - 0.04 * r_; z0 = 2.45 + 0.25 * r_
+            mb.lump((x, rr * math.sin(a), z0 + rr * math.cos(a)), 0.2, sc_, 520 + r_ * 10 + i, 8, 5, 0.0, 0.35, 1.0)
+    for sg in (-1, 1):
         hp = [Vector((18.5, sg * 0.55, 4.75)), Vector((17.9, sg * 0.8, 5.45)), Vector((17.0, sg * 1.05, 5.95)), Vector((15.9, sg * 1.2, 6.15)), Vector((15.0, sg * 1.25, 6.0))]
-        _curve_tube(mb, hp, 0.26, 0.03, Gd, 10)
-        wh = [Vector((21.2, sg * 0.45, 3.55)), Vector((21.0, sg * 1.1, 3.3)), Vector((20.4, sg * 1.6, 3.0)), Vector((19.6, sg * 1.8, 2.9))]
+        _curve_tube(mb, hp, 0.26, 0.03, Gd, 10)                                                     # swept-back horns
+        wh = [Vector((21.2, sg * 0.45, 3.6)), Vector((21.0, sg * 1.1, 3.35)), Vector((20.4, sg * 1.6, 3.05)), Vector((19.6, sg * 1.8, 2.95))]
         _curve_tube(mb, wh, 0.06, 0.015, Gd, 6)                                                    # whiskers
         mb.lump((19.15, sg * 0.86, 4.22), 0.3, M_['eye_w'], 509, 14, 8, 0.0, 1.0, 0.9)              # eyes
         mb.lump((19.36, sg * 1.0, 4.25), 0.15, M_['eye_k'], 510, 12, 7, 0.0, 1.0, 0.7)              # pupils
     for k in range(7):                                                                              # flame mane along the neck
         xx = 18.0 - 0.5 * k; mb.cyl((xx, 0, 4.7 - 0.12 * k), (xx - 1.0, 0, 5.6 - 0.1 * k), 0.32 - 0.025 * k, 0.0, R if k % 2 == 0 else Gd, 8)
+    mb.lump((20.25, 0, 3.32), 0.44, M_['mouth'], 508, 14, 8, 0.0, 0.5, 1.7)                       # palate / mouth cavity
+    mb.cyl((19.4, 0, 3.15), (21.05, 0, 3.15), 0.3, 0.3, K.kmat('bore', '#0d0b0a', 0.9), 14)        # the gun bore
     parts = _weld(K.obj(mb, sh['name'] + '_dragonC_parts', ride, smooth=True, sub=1))
-    mb = K.MB(); tm = M_['tooth']                                                                   # a ring of teeth round the jaws (fangs at the corners)
-    for i in range(9):
+    mb = K.MB(); tm = M_['tooth']
+    for i in range(9):                                                                              # upper row (fangs at the corners)
         u = i / 8.0; x = 19.45 + 1.95 * u
         for sg in (-1, 1):
             w = 0.42 * (1 - 0.55 * u ** 2); big = i in (0, 8)
-            mb.cyl((x, sg * w, 3.3), (x + 0.02, sg * w * 0.92, 2.95 - (0.12 if big else 0.0)), 0.065 if not big else 0.1, 0.0, tm, 6)      # upper
-            mb.cyl((x - 0.05, sg * w * 0.95, 2.88), (x - 0.03, sg * w * 0.9, 3.15 + (0.1 if big else 0.0)), 0.055 if not big else 0.09, 0.0, tm, 6)   # lower
+            mb.cyl((x, sg * w, 3.42), (x + 0.02, sg * w * 0.92, 3.08 - (0.14 if big else 0.0)), 0.065 if not big else 0.1, 0.0, tm, 6)
     teeth = K.obj(mb, sh['name'] + '_dragonC_teeth', ride, smooth=False)
+    J0 = Vector((19.0, 0, 3.05)); mb = K.MB()                                                       # hinged lower jaw: mesh relative to the hinge J0
+    mb.lump(Vector((20.05, 0, 2.78)) - J0, 0.52, R, 507, 16, 9, 0.02, 0.42, 1.95)
+    tg = [Vector(p_) - J0 for p_ in ((19.6, 0, 2.98), (20.3, 0, 3.0), (20.9, 0, 3.06), (21.3, 0, 3.22), (21.42, 0, 3.42), (21.25, 0, 3.52))]
+    _curve_tube(mb, tg, 0.19, 0.07, M_['tongue'], 10)                                               # curled tongue
+    jaw = _weld(K.obj(mb, sh['name'] + '_dragonC_jaw', ride, loc=J0, smooth=True, sub=2)); jaw.rotation_mode = 'XYZ'
+    mb = K.MB()
+    for i in range(8):
+        u = i / 7.0; x = 19.5 + 1.8 * u
+        for sg in (-1, 1):
+            w = 0.38 * (1 - 0.5 * u ** 2); big = i in (0, 7)
+            mb.cyl(Vector((x, sg * w, 2.92)) - J0, Vector((x + 0.02, sg * w * 0.9, 3.2 + (0.1 if big else 0.0))) - J0, 0.055 if not big else 0.09, 0.0, tm, 6)
+    K.obj(mb, sh['name'] + '_dragonC_lteeth', jaw, smooth=False)
     mb = K.MB(); gl = K.kglow('eyeglint', '#ffffff', 40.0)
     for sg in (-1, 1): mb.lump((19.46, sg * 1.09, 4.33), 0.045, gl, 511, 6, 4, 0.0)
     glint = K.obj(mb, sh['name'] + '_dragonC_glint', ride, shadow=False)
     if sh.get('dragon') is not None: sh['dragon'].hide_render = True; sh['dragon'].hide_viewport = True
-    sh['dragonC'] = [body, parts, teeth, glint]; return sh['dragonC']
+    sh['dragonC'] = [body, parts, teeth, glint, jaw]; sh['jaw'] = jaw; gwimyeon(sh); return sh['dragonC']
+
+def gwimyeon(sh):
+    """귀면: the carved demon-face plate on the bow below the dragon head (1795 Jeonseo drawings): a shallow relief, painted red with green brows, white bulging
+    eyes and fangs, dark outline.  One object, hinged at its port edge (set_build 6a swings it on)."""
+    if sh.get('gwim'): return sh['gwim']
+    M_ = S['M']; ride = sh['ride']; c = Vector((17.55, 0.0, 1.35)); H0 = Vector((17.35, -1.0, 1.35))      # plate centre on the stem; hinge at the port edge
+    red, grn, wht, blk = K.kmat('gw_red', '#a8282a', 0.5), K.kmat('gw_green', '#2f7d5a', 0.5), K.kmat('gw_white', '#efe8d8', 0.4), K.kmat('gw_dark', '#1c1414', 0.7)
+    P = lambda x, y, z: Vector((x, y, z)) + c - H0
+    mb = K.MB(); mb.lump(P(0, 0, 0), 0.95, red, 601, 18, 10, 0.02, 0.95, 0.22)                    # the plate (shallow dome facing +x)
+    mb.lump(P(-0.07, 0, 0), 1.03, blk, 608, 18, 10, 0.02, 0.97, 0.2)                             # dark carved outline behind the plate
+    for sg in (-1, 1):
+        mb.lump(P(0.2, sg * 0.36, 0.3), 0.26, grn, 602, 12, 7, 0.0, 0.45, 0.5)                    # flared brows
+        mb.lump(P(0.22, sg * 0.32, 0.08), 0.2, wht, 603, 12, 8, 0.0, 1.0, 0.7)                    # bulging eyes
+        mb.lump(P(0.36, sg * 0.32, 0.08), 0.09, blk, 604, 10, 6, 0.0, 1.0, 0.7)
+        mb.cyl(P(0.22, sg * 0.3, -0.42), P(0.27, sg * 0.28, -0.72), 0.08, 0.0, wht, 6)              # fangs
+        mb.lump(P(0.12, sg * 0.66, 0.55), 0.18, grn, 605, 10, 6, 0.0, 1.4, 0.6)                    # horn knobs
+    mb.lump(P(0.28, 0, -0.12), 0.17, red, 606, 12, 7, 0.0, 0.8, 0.8)                              # nose
+    mb.lump(P(0.16, 0, -0.46), 0.3, blk, 607, 14, 7, 0.0, 0.35, 0.5)                              # mouth
+    o = K.obj(mb, sh['name'] + '_gwimyeon', ride, loc=H0, smooth=True); o.rotation_mode = 'XYZ'
+    sh['gwim'] = o; return o
+
+# ============================================================================= the BUILD-UP set piece (location yard, preset build_dock; shot_plan_C UPDATE / UPDATE 2)
+BUILD_G = [('0', 734, 780), ('1', 781, 829), ('2', 830, 861), ('3', 862, 897), ('4', 898, 931), ('5', 932, 970), ('6a', 971, 1000), ('6b', 1001, 1040), ('6c', 1041, 1083), ('7', 1084, 1126)]
+BUILD_ORDER = [b[0] for b in BUILD_G]
+BUILD_EXTRA_X = (-8.0, -4.0, 0.0, 4.0, 8.0)        # 5 more gun ports per side between the 6 built ones: 11 per side
+
+def build_schedule():
+    """the build-up timing (film g, 30 fps), shot_plan_C UPDATE 2: [(stage, g0, g1)].  Stage keys: '0' intro, '1' hull, '2' oars, '3' guns, '4' roof, '5' spikes,
+    '6a' gwimyeon, '6b' dragon head, '6c' mouth gun, '7' hero."""
+    return list(BUILD_G)
+
+def build_at(g):
+    """(stage, k) at film frame g (k 0..1 inside the stage)."""
+    for st, g0, g1 in BUILD_G:
+        if g <= g1: return st, max(0.0, min(1.0, (g - g0) / float(max(1, g1 - g0))))
+    return '7', 1.0
+
+def _ez(u): u = max(0.0, min(1.0, u)); return u * u * (3 - 2 * u)
+def _slam(u):
+    """0..1 travel with a fast accelerating slam-in at u = 0.7 and a small settle (fraction of the travel left, so 0 = seated)."""
+    u = max(0.0, min(1.0, u))
+    if u < 0.7: return 1.0 - (u / 0.7) ** 2
+    v = (u - 0.7) / 0.3; return -0.06 * math.sin(math.pi * v) * (1 - v)
+
+def _win(k, i, n, span=0.55):
+    """part i of n inside a stage: its own window of the stage progress (staggered), returned as 0..1."""
+    a = (1.0 - span) * (i / max(1, n - 1)) if n > 1 else 0.0; return max(0.0, min(1.0, (k - a) / span))
+
+def _build_rig():
+    """collect / make the build parts of the yard turtle ship (built lazily on the first set_build)."""
+    if S.get('build'): return S['build']
+    sh = S['turtle']; ride = sh['ride']; M_ = S['M']; K.use(S['coll'])
+    if LOOK == 'C': dragon_C(sh)
+    else: dragon_C(sh)
+    B = dict(base={}, hull=[], roof=[], keel=None, ribs=[], guns=[], dust={}, glints=[])
+    mb = K.MB(); mb.beam((-16.0, 0, 0.18), (17.2, 0, 0.18), 0.7, 0.55, M_['wood_d']); B['keel'] = K.obj(mb, 'build_keel', ride)
+    prof = [(0.0, 0.0), (0.42, -1.5), (0.8, -1.05), (0.965, -0.4), (1.0, 0.0), (1.012, 1.0), (1.005, 2.0), (0.99, 2.4)]
+    for i, x in enumerate([-14.0 + 2.0 * k for k in range(15)]):
+        b = t_b(x) * 0.97; mb = K.MB(); pts = [Vector((x, -f * b, z + 1.45)) for f, z in reversed(prof)] + [Vector((x, f * b, z + 1.45)) for f, z in prof[1:]]
+        for a_, b_ in zip(pts[:-1], pts[1:]): mb.beam(a_, b_, 0.22, 0.26, M_['wood_d'])
+        B['ribs'].append(K.obj(mb, 'build_rib_%02d' % i, ride))
+    for o in [o for o in bpy.data.objects if o.parent == ride]:
+        nm = o.name
+        if o.type != 'MESH' or any(t_ in nm for t_ in ('puff', 'flash', 'dsmoke', 'splash', 'drop', 'ring_')): continue
+        if nm.startswith(('build_', 'k_', 'bs_', 'mg_', 'dplume')) or o in sh['oars'] or o in sh['spikes'] or o in sh['muzzles'] or nm.startswith(sh['name'] + '_dragon') or o is sh.get('gwim'): continue
+        if nm.endswith(('_hull', '_eave', '_ports', '_tail')) or '_lid_' in nm: B['hull'].append(o)
+        else: B['roof'].append(o)
+    B['jaw_lteeth'] = bpy.data.objects.get(sh['name'] + '_dragonC_lteeth')
+    hull = sh['hull']; m0 = hull.data.materials[0]; m = m0.copy(); m.name = 'J_hull_build'; hull.data.materials[0] = m; nt = m.node_tree   # planks sweep on in waves
+    out = [n for n in nt.nodes if n.type == 'OUTPUT_MATERIAL'][0]; src = out.inputs['Surface'].links[0].from_socket
+    tc = nt.nodes.new('ShaderNodeTexCoord'); sp_ = nt.nodes.new('ShaderNodeSeparateXYZ'); nt.links.new(tc.outputs['Object'], sp_.inputs[0])
+    def mth(op, a_, b_):
+        n_ = nt.nodes.new('ShaderNodeMath'); n_.operation = op
+        for ii, v_ in enumerate((a_, b_)):
+            if isinstance(v_, (int, float)): n_.inputs[ii].default_value = v_
+            else: nt.links.new(v_, n_.inputs[ii])
+        return n_.outputs[0]
+    row = mth('FLOOR', mth('DIVIDE', mth('ADD', sp_.outputs['Z'], 1.6), 0.42), 0.0); T_ = mth('ADD', mth('MULTIPLY', row, 0.085), mth('MULTIPLY', mth('DIVIDE', mth('ADD', sp_.outputs['X'], 17.0), 34.0), 0.15))
+    oi = nt.nodes.new('ShaderNodeObjectInfo'); scol = nt.nodes.new('ShaderNodeSeparateColor'); nt.links.new(oi.outputs['Color'], scol.inputs[0])
+    vis_ = mth('GREATER_THAN', mth('MULTIPLY', scol.outputs[0], 1.02), T_); tr = nt.nodes.new('ShaderNodeBsdfTransparent'); mx = nt.nodes.new('ShaderNodeMixShader')
+    nt.links.new(vis_, mx.inputs[0]); nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(src, mx.inputs[2]); nt.links.new(mx.outputs[0], out.inputs['Surface']); hull.color = (1, 1, 1, 1)
+    for o in sh['oars']:                                                      # deployed oar pose (the yard ship has them stowed)
+        i = int(o.name.split('_')[-2]); sg = 1 if o.name.endswith('_p') else -1; x = -11.5 + 2.55 * i
+        o.location = (x, sg * (t_b(x) + 0.04), 1.0); o.rotation_mode = 'XYZ'; o.rotation_euler = (math.radians(12), 0, 0 if sg > 0 else math.pi)
+    for gi, x in enumerate(BUILD_EXTRA_X):                                    # the extra ports (frame + barrel), hidden until stage 3
+        for sg in (-1, 1):
+            b = t_b(x) * 1.004; cy_ = sg * b; mb = K.MB(); dk = M_['port_dark']; rd = M_['red_d']
+            mb.box((x, cy_ + sg * 0.02, 1.75), 0.5, 0.02, 0.42, dk)
+            for (dx, dz, w_, h_) in ((-0.56, 1.75, 0.08, 0.95), (0.56, 1.75, 0.08, 0.95), (0, 2.2, 1.2, 0.09), (0, 1.3, 1.2, 0.09)): mb.box((x + dx, cy_ + sg * 0.05, dz), w_ / 2 + 0.02, 0.06, h_ / 2, rd)
+            fr_ = K.obj(mb, 'build_port_%d%s' % (gi, 'p' if sg > 0 else 's'), ride); B['hull'].append(fr_)
+            mz = bpy.data.objects.new('build_gun_%d%s' % (gi, 'p' if sg > 0 else 's'), sh['muzzles'][0].data); S['coll'].objects.link(mz); mz.parent = ride
+            mz.location = (x, cy_, 1.75); mz.rotation_mode = 'XYZ'; mz.rotation_euler = (0, 0, 0 if sg > 0 else math.pi); B['guns'].append((mz, sg))
+    for mz in sh['muzzles']: B['guns'].append((mz, 1 if mz.name.endswith('_p') else -1))
+    B['guns'].sort(key=lambda g_: (g_[0].location.x, g_[1]))
+    gl = K.kglow('glint', '#fff4d8', 60.0)
+    for mz, sg in B['guns']:                                                  # muzzle glint (a tiny star at the muzzle when it seats)
+        mb = K.MB(); mb.lump((0, 0, 0), 0.16, gl, 700, 6, 4, 0.0); g_ = K.obj(mb, 'build_glint_' + mz.name, ride, loc=Vector(mz.location) + Vector((0, sg * 0.85, 0.05)), shadow=False); g_.hide_render = True; B['glints'].append(g_)
+    B['sparkles'] = []
+    for gi, sp in enumerate(sh['spikes']):                                    # spike-tip sparkles per row group
+        tips = [v.co for v in sp.data.vertices if v.co.z - roof_z(v.co.x, v.co.y) > 0.62]; rs = rnd(80 + gi); rs.shuffle(tips); mb = K.MB()
+        for t_ in tips[:14]: mb.lump(t_ + Vector((0, 0, 0.05)), 0.07, gl, 710 + gi, 6, 4, 0.0)
+        o = K.obj(mb, 'build_sparkle_%d' % gi, ride, shadow=False); o.hide_render = True; B['sparkles'].append(o)
+    mg = bpy.data.objects.new('build_mouthgun', sh['muzzles'][0].data); S['coll'].objects.link(mg); mg.parent = ride; mg.rotation_mode = 'XYZ'; mg.rotation_euler = (0, 0, -math.pi / 2)   # barrel axis +x
+    B['mouthgun'] = mg; B['mouthrig'] = K.muzzle_rig(sh['mouth'] + Vector((0.95, 0, 0)), Vector((1, 0, 0.08)), ride, 'mg_mouth', 1.3, 640)
+    for o in B['hull'] + B['roof'] + sh['oars'] + sh['spikes'] + [g_[0] for g_ in B['guns']] + sh['dragonC'] + [sh['gwim'], mg, B['keel']] + B['ribs']:
+        B['base'][o.name] = (Vector(o.location), Vector(o.rotation_euler) if o.rotation_mode == 'XYZ' else None)
+    S['build'] = B; return B
+
+def _bk(o, frame, loc=None, rot=None, vis=None, color=None):
+    if loc is not None: o.location = loc; key_attr(o, 'location', frame) if frame is not None else None
+    if rot is not None: o.rotation_euler = rot; key_attr(o, 'rotation_euler', frame) if frame is not None else None
+    if color is not None: o.color = color; key_attr(o, 'color', frame) if frame is not None else None
+    if vis is not None: show(o, vis, frame)
+
+def _dust(B, name, lp, t, frame, size=1.0):
+    """a small dust / spark puff where a part lands: t = seconds since landing (< 0 or > 0.8: hidden)."""
+    if name not in B['dust']:
+        B['dust'][name] = K.vdomain('build_dust_' + name, (-1, -1, -0.6), (1, 1, 1), K.vblob_mat('dust', '#b9a68c', 2.2, 1.6, True, 0.3), S['turtle']['ride'], loc=lp)
+    o = B['dust'][name]; on = 0.0 <= t <= 0.8; u = max(0.0, min(1.0, t / 0.8)); k = size * (0.4 + 1.3 * u)
+    o.location = Vector(lp) + Vector((0, 0, 0.5 * u)); o.scale = (k, k, k * 0.7); o.color = (max(0.0, 1.0 - u), 1, 1, 1)
+    if frame is not None: key_attr(o, 'location', frame); key_attr(o, 'scale', frame); key_attr(o, 'color', frame)
+    show(o, on, frame)
+
+def _stage_ix(stage): return BUILD_ORDER.index(str(stage))
+
+def set_build(stage, k=1.0, frame=None, fps=30.0):
+    """the build-up hook.  stage: '0'..'7' (or 0..7; '6a' gwimyeon, '6b' dragon head, '6c' mouth gun; 6 = '6b'), k 0..1 inside the stage.  Everything before the stage
+    is complete, everything after it hidden; parts move on short eased slam-in paths and seat on their supports (dust / spark puffs on landing).  Call it every frame
+    with frame= (or use set_build_g(g, frame)).  Stage lengths are 1-1.5 s: each part's move reads within ~20 frames."""
+    st = {6: '6b', '6': '6b'}.get(stage, str(stage)); si = _stage_ix(st); B = _build_rig(); sh = S['turtle']; base = B['base']; k = max(0.0, min(1.0, float(k)))
+    dur = (BUILD_G[si][2] - BUILD_G[si][1]) / fps
+    def phase(name): j = _stage_ix(name); return 1.0 if si > j else (k if si == j else 0.0)
+    def loc0(o): return Vector(base[o.name][0])
+    # 1: keel + ribs slam in, then the hull planks sweep on in waves (material reveal on the hull)
+    p1 = phase('1'); u = _win(p1, 0, 1, 0.22); off = _slam(u)
+    _bk(B['keel'], frame, loc=loc0(B['keel']) + Vector((0, 0, 6.0 * off)), vis=p1 > 0.0)
+    if p1 > 0 and si == 1: _dust(B, 'keel', Vector((2.0, 0, 0.4)), (u - 0.7) * 0.22 * dur, frame, 2.0)
+    for i, r_ in enumerate(B['ribs']):
+        u = _win(p1, i, len(B['ribs']), 0.18) if p1 < 1 else 1.0; u = max(0.0, min(1.0, (p1 - 0.12 - 0.02 * i) / 0.16)) if p1 < 1 else 1.0
+        _bk(r_, frame, loc=loc0(r_) + Vector((0, 0, 5.0 * _slam(u))), vis=p1 > 0.12 + 0.02 * i)
+    wave = max(0.0, min(1.0, (p1 - 0.45) / 0.55))
+    for o in B['hull']:
+        hull = o.name.endswith('_hull'); _bk(o, frame, color=(wave, 1, 1, 1) if hull else None, vis=(wave > 0.0) if hull else (p1 >= 1.0 or (si == 1 and wave > 0.92)))
+        if not hull and o.name.startswith('build_port'): show(o, si >= 3 or (si == 3), frame)
+    # 2: oars slide out of the hull, both sides in the same rhythm
+    p2 = phase('2'); n = len(sh['oars']) // 2
+    for o in sh['oars']:
+        i = int(o.name.split('_')[-2]); u = _win(p2, i, n, 0.45); lo, ro = base[o.name]
+        ax = Matrix.Rotation(ro.z, 3, 'Z') @ Matrix.Rotation(ro.x, 3, 'X') @ Vector((0, 1, 0))
+        _bk(o, frame, loc=lo - ax * 5.5 * (1.0 - _ez(u)), vis=p2 > 0.0 and u > 0.0)
+    # 3: lids open, cannons slide out port by port (11 a side), a glint as each seats
+    p3 = phase('3'); set_ports(min(1.0, p3 * 4.0) if p3 > 0 else 0.0, frame); ng = len(B['guns']) // 2
+    for j, ((mz, sg), gl) in enumerate(zip(B['guns'], B['glints'])):
+        i = j // 2; u = _win(p3, i, ng, 0.35); lo = loc0(mz); _bk(mz, frame, loc=lo - Vector((0, sg * 1.3 * (1.0 - _ez(u)), 0)), vis=p3 > 0.0 and u > 0.0)
+        show(gl, si == 3 and 0.85 < u < 1.0 + 0.0 and p3 < 1.0, frame)
+    # 4: the shell roof (+ walkway, masts, flags) drops and locks; dust along the eaves
+    p4 = phase('4'); u = _win(p4, 0, 1, 0.6); off = _slam(u)
+    for o in B['roof']: _bk(o, frame, loc=loc0(o) + Vector((0, 0, 4.5 * off)), vis=p4 > 0.0)
+    if si == 4:
+        for i, x in enumerate((-10.0, -2.0, 6.0)):
+            for sg in (-1, 1): _dust(B, 'eave%d%d' % (i, sg), Vector((x, sg * t_ye(x), Z_EAVE)), (u - 0.7) * 0.6 * dur, frame, 1.2)
+    # 5: spikes pop up row by row (3 groups), sparkles
+    p5 = phase('5')
+    for gi, (sp, spk) in enumerate(zip(sh['spikes'], B['sparkles'])):
+        u = _win(p5, gi, 3, 0.4); pop = 1.0 - _slam(u) if u > 0 else 0.0
+        _bk(sp, frame, loc=loc0(sp) + Vector((0, 0, -0.95 * (1.0 - min(1.06, pop)))), vis=p5 > 0.0 and u > 0.0)
+        show(spk, si == 5 and 0.7 < u < 1.0, frame)
+    # 6a: the gwimyeon swings on (hinge at its port edge) and locks
+    p6a = phase('6a'); u = _win(p6a, 0, 1, 0.75); g_ = sh['gwim']; a = math.radians(105.0) * _slam(u)
+    _bk(g_, frame, rot=(0, 0, -a), vis=p6a > 0.0)
+    if si == _stage_ix('6a'): _dust(B, 'gwim', Vector((17.7, 0, 1.4)), (u - 0.7) * 0.75 * dur, frame, 0.8)
+    # 6b: the dragon head bolts on above it, eyes glint, the jaw opens
+    p6b = phase('6b'); u = _win(p6b, 0, 1, 0.4); off = _slam(u)
+    for o in sh['dragonC']:
+        if o is sh['jaw']: continue
+        _bk(o, frame, loc=loc0(o) + Vector((3.5 * off, 0, 2.0 * off)), vis=p6b > 0.0)
+    jo = max(0.0, min(1.0, (p6b - 0.6) / 0.3)); _bk(sh['jaw'], frame, loc=loc0(sh['jaw']) + Vector((3.5 * off, 0, 2.0 * off)), rot=(0, -math.radians(14) * (1 - _ez(jo)) if p6b < 1 else 0.0, 0), vis=p6b > 0.0)
+    if B['jaw_lteeth'] is not None: show(B['jaw_lteeth'], p6b > 0.0, frame)
+    K._setv(bpy.data.materials['K_e_eyeglint'], 'k', 40.0 * (1.0 + 6.0 * max(0.0, 1 - abs(p6b - 0.5) / 0.12) if si == _stage_ix('6b') else 1.0), frame)
+    if si == _stage_ix('6b'): _dust(B, 'head', Vector((18.0, 0, 2.6)), (u - 0.7) * 0.4 * dur, frame, 1.0)
+    # 6c: the muzzle slides into the mouth bore, then flash + smoke ring out of the mouth
+    p6c = phase('6c'); set_mouth_gun(p6c if si <= _stage_ix('6c') else 1.0, frame, dur if si == _stage_ix('6c') else 1.4, fire=(si == _stage_ix('6c')))
+    # 7 / smoke: a curl from the mouth in 6c-7
+    if LOOK == 'C': K.set_level(dragon_plume(sh), (0.0 if si < _stage_ix('6c') else (0.35 * k if si == _stage_ix('6c') else 0.55)), frame)
+    S['build_stage'] = (st, k)
+
+def set_mouth_gun(k, frame=None, dur=1.4, fire=True):
+    """the dragon-mouth cannon (UPDATE 2): k 0..0.22 the muzzle slides into the mouth bore and seats; at k 0.26 a big flash, flash light, smoke ring and puff leave the mouth
+    (dur = the stage length in s, so the shot lands at ~g 1052 of 1041-1083)."""
+    B = _build_rig(); sh = S['turtle']; mg = B['mouthgun']; k = max(0.0, min(1.0, k)); u = _ez(k / 0.22)
+    _bk(mg, frame, loc=Vector((18.9 + 1.4 * u, 0, sh['mouth'].z)), vis=k > 0.0)
+    if fire: K.fire_muzzle(B['mouthrig'], (k - 0.26) * dur, frame)
+    else: K.fire_muzzle(B['mouthrig'], -1.0, frame)
+
+def set_build_g(g, frame=None):
+    st, k = build_at(g); set_build(st, k, frame); return st, k
+
+def build_cam(u):
+    """build_dock camera at u (0..1 over g 734-1126): one continuous slow eased orbit, low over the harbour, round the bow 3/4 (east side); it tightens on the bow for
+    6a-6c (u 0.60-0.89) and eases back a little for the hero pose.  Keeps the ship low-left: the top 25 % and the right band are free for the callouts."""
+    u = max(0.0, min(1.0, u)); e = _ez(u); tight = _ez((u - 0.56) / 0.1) - 0.55 * _ez((u - 0.88) / 0.1)
+    a = math.radians(6.0 + 15.0 * e); R = 29.0 - 12.0 * tight                # (east of x 13 a moored panokseon blocks the view)
+    tgt = Vector((0.0, 2.0, 4.6)).lerp(Vector(tuple(yw((18.5, 0, 2.6)))), tight)
+    loc = tgt + Vector((R * math.sin(a), R * math.cos(a), 0)); loc.z = 1.6 + 0.6 * tight
+    look = tgt + Vector((-4.0 + 5.0 * tight - 2.2 * _ez((u - 0.88) / 0.1), 1.0, 2.4 - 0.8 * tight))
+    return dict(loc=tuple(loc), look_at=tuple(look), lens=26.0 + 6.0 * tight)
+
+def build_anchor(stage, scene=None):
+    """screen point (px at 720x1280) of the stage's part on the current frame / camera, for the conform leader lines.  None if behind the camera."""
+    from bpy_extras.object_utils import world_to_camera_view
+    sc = scene or bpy.context.scene; bpy.context.view_layer.update(); st = {6: '6b', '6': '6b'}.get(stage, str(stage))
+    lp = {'0': (0, 0, 0.5), '1': (2.0, -4.0, 1.2), '2': (0.0, -9.0, -0.3), '3': (2.0, -4.7, 1.75), '4': (2.0, 0.0, 6.4), '5': (-2.0, 2.5, 7.0), '6a': (17.7, 0, 1.35),
+          '6b': (19.2, 0, 4.2), '6c': (21.0, 0, 3.15), '7': (5.0, 0, 5.0)}[st]
+    w = S['turtle']['ride'].matrix_world @ Vector(lp); p = world_to_camera_view(sc, sc.camera, w)
+    return None if p.z <= 0 else (round(p.x * 720), round((1 - p.y) * 1280))
 
 def _cam_off(o):
     """take a cartoon smoke ball out of the picture (look C: it is replaced by a volume)."""
@@ -2060,7 +2291,7 @@ def _hit_rigs():
         mx, zb, Hm = jb['masts'][0]; pts += [(mx, 0.0, zb + Hm * 0.55), (mx + 0.2, -2.2, zb + Hm * 0.78), (mx - 0.2, 1.8, zb + Hm * 0.86)]
     fire = K.fire_patch(pts, 1.1, 84, 'hit_fire', ride)
     K.set_fire(fire, 0.0)
-    xs = [x0 + 9.0, x0 + 11.2]; S['jump0'] = [L2W('j_board', (x, 3.4, z + 1.0)) for x in xs]   # standing ON the far rail
+    xs = [x0 + 9.0, x0 + 11.2]; S['jump0'] = [L2W('j_board', (x, 3.4, z)) for x in xs]   # on the deck at the far rail (the arc clears the rail)
     S['jump_splash'] = [K.splash_rig(Vector((p.x + 3.5, p.y + 6.6, 0.0)), 0.0, 1.0, 85 + i, 'jump_spl%d' % i) for i, p in enumerate(S['jump0'])]
     for r_ in [main] + S['jump_splash']: K.set_explosion(r_, -1.0)
     for c_ in cols: K.set_explosion(c_, -1.0)

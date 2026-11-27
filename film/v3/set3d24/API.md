@@ -243,3 +243,86 @@ The yard's harbour uses `C_WATER_CALM`.
 - Distant haze between hill shadows can show a soft-edged shaft.
 - In looks A and B the hero hooks work, but their kit materials are not converted to the A shading.
 - `t_anim.py` runs yard + sea in looks B, A and C (ALL OK, 312 checks).
+
+## Look C, round 2 (board_C2): volumetric smoke and fire, the sculpted dragon head and gwimyeon, the build-up set piece
+board_C.jpg stays the round-1 board. `BOARD=board_C2 python3 board_C.py all 12` renders round 2: 5 build tiles, the 4 hero/explosion tiles and a dragon + gwimyeon close-up.
+A and B are untouched; everything below applies only in look C, except the build hooks, which work in every look.
+
+**Smoke and fire volumes (v3/kit).** There are no smoke balls left in look C.
+- `K.smoke_column(base, H, r0, wind, ...)`: a wind-bent plume volume, dark grey-brown at the base and lighter and wispier above. The sun warms its sun side and the sky turns its shadow side lavender. Show it and set its strength with `K.set_level(ob, level, frame)`.
+- `K.vfire_mat()`: an emissive blackbody volume, white-yellow core to orange to a dark smoke shell. It is used by the fireball, the flames and the muzzle flash.
+- `K.vblob_mat()`: soft puffs and smoke rings.
+- Where these replace the old smoke balls:
+  - The dragon smoke is one plume from the mouth (`dragon_plume`, level from `set_dragon_smoke`).
+  - The damage smoke is a 42 D column over every burning ship (the fire patches).
+  - The Korean gun puffs are soft volumes.
+  - The explosion smoke is a column.
+- The renderer uses ray-marched volumes (`volume_biased`). The default majorant-octree build cost about 17 CPU s per smoke volume at scene sync.
+
+**Explosion and hit (13c).**
+- The fireball is 3 overlapping blackbody volume lobes, plus 30 flying planks and splinters that splash.
+- There are 3 white spray columns with flying droplets, and shockwave rings on the water.
+- The mast, yard and sail burn (volume flames, embers, a smoke column).
+- One ashigaru stands on the deck at the far rail, ready to jump. The other is in the air on a comic arc toward the bow, out over the water. `jump_arc` is now up 4 D, out 6.6 D and 3.5 D toward the bow, and the arc clears the rail.
+- The hull-side foam strip is hidden in cannon_close and hit_close, because it read as a white line, as if the ship floated above the water.
+
+**Broadside (13b).**
+- Each muzzle flash is now a blackbody volume with a 3500 W warm flash light, which lights the hull and the water.
+- Each shot leaves a volume smoke ring and a recoil puff that trails back along the hull and rises (`rig['trail']`).
+- The oars dip deeper and stroke in a small rhythm, with a soft foam ring where each shaft enters the water.
+- The sun stands behind the ship, so the camera side of the hull is in shadow.
+
+**Hero framing.**
+- `hero_yard` is low over the harbour off the bow, (4.5, 35, 1.0) → (-1.5, 8, 8), 40 mm. Mast to keel fills about 61 % of the frame height.
+- The sun stands straight behind the ship's upper silhouette. A haze block sits only behind the ship (`J.C_HAZE`), and big gobo crowns and rigging cast the shafts.
+- Yi stands on the west quay (`yi_hero` (-8.0, 5.4)), with no flame next to him.
+- `hero_orbit` = `orbit_cam(0.5, r=18, look=(1.5, 3, 2.4))`, 20 mm. The dragon head sits about 1/3 from the right edge.
+- `J.C_BURN['hero_orbit']` sets 3 background Japanese ships burning and listing, and their smoke columns pass in front of the sun.
+
+**Dragon head and gwimyeon (`dragon_C`, `gwimyeon`).** Every look-C shot uses them.
+- The old boxy head is hidden. The new head has:
+  - a smooth subdivided skull and a long snout with flared nostrils;
+  - two swept-back gold horns, brows, cheek fins, whiskers and a flame mane;
+  - a scale relief along the neck;
+  - eyes with an emissive glint;
+  - a hinged lower jaw (`sh['jaw']`) with a lower tooth row and a curled tongue, and an upper tooth row with corner fangs;
+  - a dark gun bore in the mouth.
+- The gwimyeon (귀면) is a carved demon-face plate on the stem below the head: a red shallow relief with green brows and horn knobs, white bulging eyes and fangs, a dark mouth and a dark carved outline. It is hinged at its port edge.
+- `set_mouth_gun(k, frame)`:
+  - from k 0 to 0.22 the muzzle slides into the bore and seats;
+  - at k 0.26 a big flash, flash light, smoke ring and puff leave the mouth (in the build that is about g 1052).
+
+**Build-up (`build_dock`, yard slipway at dusk; shot s08C, g 734-1126).**
+- `J.build_schedule()` returns `[(stage, g0, g1)]`:
+
+  | stage | g |
+  |---|---|
+  | 0 intro | 734-780 |
+  | 1 hull | 781-829 |
+  | 2 oars | 830-861 |
+  | 3 guns | 862-897 |
+  | 4 roof | 898-931 |
+  | 5 spikes | 932-970 |
+  | 6a gwimyeon | 971-1000 |
+  | 6b dragon | 1001-1040 |
+  | 6c mouth gun | 1041-1083 |
+  | 7 hero | 1084-1126 |
+
+  `J.build_at(g)` returns `(stage, k)`. `J.set_build_g(g, frame)` does both.
+- `J.set_build(stage, k, frame)`: stage is `'0'`-`'7'`, `'6a'`, `'6b'` or `'6c'` (6 = 6b), and k is 0-1 within the stage. Everything before the stage is complete and everything after it is hidden. Call it on every frame.
+- Parts slam in on fast eased paths (they land at 70 % of their window, then settle slightly) and seat on their supports, with a dust puff on landing:
+  1. The keel drops; 15 ribs drop in a fast sequence; then the hull planks sweep on in waves, row by row, bow to stern (a hull material reveal).
+  2. The oars slide out of the hull, both sides in the same rhythm.
+  3. The lids open and the cannons slide out port by port, 11 a side (6 built ports plus 5 `build_port_*`), each with a glint as it seats.
+  4. The shell roof drops and locks, together with the walkway, masts and flags; dust puffs along the eaves.
+  5. The spikes pop up row by row (3 groups), with sparkles on their tips.
+  - 6a. The gwimyeon swings on from its hinge and locks.
+  - 6b. The dragon head bolts on above it, the eyes glint (`K_e_eyeglint` strength pulse) and the jaw opens.
+  - 6c. The mouth gun seats, then fires.
+  7. The complete ship, backlit, with a smoke curl from the mouth.
+- `J.build_cam(u)` (u = (g - 734) / 392): one continuous slow eased orbit, low over the harbour, round the bow 3/4 from the east (6° to 21° off the bow axis).
+  - It tightens on the bow for 6a-6c and eases back for the hero.
+  - It keeps the ship low and left, so the top 25 % and the right band stay free for the callouts.
+  - East of x 13 a moored panokseon blocks the view, so the orbit stays west of it.
+- `J.build_anchor(stage)` returns the screen px (720x1280) of the stage's part for the current frame and camera, for the leader lines.
+- The sun for build_dock is world-fixed, behind the ship for the final camera. There is a haze block behind the ship and the same gobos as hero_yard. Exposure is -0.15 (dusk).
