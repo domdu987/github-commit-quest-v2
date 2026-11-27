@@ -5,15 +5,15 @@
   "build-up"
  ],
  "g0": 734,
- "g1": 1126,
+ "g1": 1127,
  "first_g": 728,
- "n_frames": 404,
+ "n_frames": 405,
  "handle_in": 6,
  "handle_out": 6,
  "shot_ranges": {
   "8": [
    728,
-   1131
+   1132
   ]
  },
  "in_take_cuts": [],
@@ -32,6 +32,6 @@
   540,
   960
  ],
- "s_per_frame_wall_mean": 51.3,
- "s_per_frame_cpu_mean": 98.5
+ "s_per_frame_wall_mean": 54.4,
+ "s_per_frame_cpu_mean": 104.9
 }
