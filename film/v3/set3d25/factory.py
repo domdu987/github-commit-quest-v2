@@ -170,8 +170,8 @@ def build(preset, samples=None, quality=None):
         TK.apply_pose(S['tank'], (cr['x'] + 8, cr['y'], 1.3), 0.0, 0.0, 0.0, 0.0)
     hb = gantry(cy=P.get('crane_y', 22.0), cx=P.get('crane_x', -6.0), hook_z=P.get('hook_z', 8.0))
     weighbridge(P.get('wb', (14, 12))[0], P.get('wb', (14, 12))[1], P.get('dial', -40.0))
-    for (x, y) in ((-14, 14), (0, 14), (14, 14), (-14, 34), (0, 34), (14, 34), (-8, 24), (8, 24)): lamp(x, y, 11.6, P.get('lamp_w', 900.0))
-    area_fill(0, 26, 12.5, 40, 40, P.get('fill', 4500.0))
+    for (x, y) in ((-14, 14), (0, 14), (14, 14), (-14, 34), (0, 34), (14, 34), (-8, 24), (8, 24)): lamp(x, y, 11.6, P.get('lamp_w', 1800.0))
+    area_fill(0, 26, 12.5, 40, 40, P.get('fill', 9000.0))
     mb = MB(); TM = TK.tank_mats(0.0, 'a')
     for (x, y, sz, yw) in P.get('small_crates', []):
         L.crate_box(mb, (x, y, 0), sz, sz * 0.8, sz * 0.7, 0.0); TK.tank_silhouette(mb, (x, y, sz * 0.35), (1, 0, 0), (0, -1, 0), (0, 0, 1), sz * 0.3, TM['paint'], TM['paint_d'], lift=sz * 0.4 + 0.02)

@@ -828,9 +828,23 @@ CAMS = dict(
 
 _TP = [(0.0, -3.0), (0.0, 14.0), (7.0, 21.0), (31.0, 21.0)]
 _CR = dict(x0=0.0, y=4.5, s_a=-5.0, s_b=27.0, mud=1.0)
+_CT = dict(poly=_TP, mw=0.8, me=1.9, sb_layers=(2, 2))
+def _cross(name, u, cam, **kw):
+    d = dict(loc='front', cam=cam, cross=dict(_CR, u=u), trench0=_CT); d.update(kw); return d
 PRESETS = dict(
-    cross_hero=dict(loc='front', cam=dict(loc=(5.0, -18.0, 1.7), look_at=(0.5, 4.5, 3.4), lens=21), cross=dict(_CR, u=0.42), trench0=dict(poly=_TP, mw=0.8, me=1.9, sb_layers=(2, 2)),
-                    cards=[('a', (-4.0, -4.0), 3.2), ('b', (9.0, -2.0), 3.2)], note='shot 25: SIDE-ON, nose lifted over the trench gap, front track gripping the far lip, rear on the near parapet'),
+    cross_nose=_cross('cross_nose', 0.24, dict(loc=(6.0, -17.0, 1.0), look_at=(-2.0, 4.5, 3.6), lens=21), cards=[('a', (-8, -6), 3.2)], note='shot 24: side-on low, the nose lifting over the trench gap'),
+    cross_hero=_cross('cross_hero', 0.40, dict(loc=(4.0, -16.0, 1.6), look_at=(0.5, 4.5, 3.4), lens=22), cards=[('a', (-9, -5), 3.2), ('b', (10, -4), 3.2)], note='shot 25: SIDE-ON, nose lifted, front track gripping the far lip, rear on the near parapet'),
+    cross_pull=_cross('cross_pull', 0.60, dict(loc=(8.0, -16.0, 1.6), look_at=(5.0, 4.5, 3.0), lens=22), cards=[('a', (-6, -6), 3.2)], note='shot 26: pulling across, rear tracks leaving the near lip'),
+    cross_wire=_cross('cross_wire', 0.12, dict(loc=(-6.0, -5.0, 0.55), look_at=(-9.5, 1.5, 0.8), lens=26), dress_n=1.6, lane_ok=True, world=dict(crates=[]), note='shot 27: low insert, barbed wire squashed flat under the track'),
+    cross_hull=_cross('cross_hull', 0.50, dict(loc=(9.0, -5.5, 3.2), look_at=(5.0, 4.5, 3.2), lens=26), sparks=0.30, note='shot 28: hull side, bullet pings (sparks)'),
+    cross_flee=_cross('cross_flee', 0.62, dict(loc=(-27.0, 1.0, 3.8), look_at=(8.0, 6.0, 3.0), lens=22), cards=[('b', (14, 3), 3.2), ('a', (19, 8), 3.2), ('b', (24, 0), 3.2), ('a', (17, 12), 3.2)], note='shot 29: wide behind the tank, Germans (stand-ins) running'),
+    cross_bucket=_cross('cross_bucket', 0.50, dict(loc=(-10.0, -10.0, 1.0), look_at=(0.0, 6.0, 3.4), lens=24), extras=[('bucket', -6.5, -3.5)], note='shot 30: plain water bucket by the trench vs the tank over it'),
+    front_aerial=dict(loc='front', cam=dict(loc=(-62.0, -22.0, 34.0), look_at=(-6.0, 6.0, 2.0), lens=24), cards=[('a', (-28, -6), 3.6), ('b', (-33, 8), 3.6), ('a', (-1, 4), 3.6), ('b', (6, 18), 3.6)], dress_n=0.5, note='shot 5: high wide over the two zig-zag lines'),
+    front_parapet=dict(loc='front', cam=dict(loc=(-33.0, -0.5, 2.6), look_at=(-4.0, 5.0, 1.4), lens=28), extras=[('mg', -5.2, 5.0, math.pi, True)], cards=[('a', (-30.5, -3.0), 3.0)], note='shot 6: behind the British parapet, German MG nest across the wire'),
+    front_column=dict(loc='front', cam=dict(loc=(8.0, -80.0, 6.5), look_at=(-20.0, -56.0, 3.0), lens=24), tanks=[dict(front=(-20.0, -20.0), yaw=90.0), dict(front=(-20.0, -46.0), yaw=90.0), dict(front=(-20.0, -72.0), yaw=90.0), dict(front=(-20.0, -98.0), yaw=90.0, smoke=1.0)], note='shot 20: column crawling to the start line'),
+    front_halt=dict(loc='front', cam=dict(loc=(-2.0, -58.0, 3.4), look_at=(-18.0, -40.0, 2.6), lens=24), tanks=[dict(front=(-22.0, -33.0), yaw=90.0, nocorr=True), dict(front=(-8.0, -60.0), yaw=95.0, smoke=1.0)], note='shot 21: one smoking, one nose-down in a crater'),
+    front_stuck=dict(loc='front', cam=dict(loc=(6.0, -52.0, 1.2), look_at=(-4.0, -40.0, 2.4), lens=24), tanks=[dict(front=(-4.0, -42.0), yaw=90.0, state='stuck')], extras=[('mud', -4.0, -42.0, math.pi / 2)], cards=[('a', (2.0, -45.0), 3.2), ('b', (-9.0, -47.0), 3.2)], note='shot 22: sunk to the sponsons in mud'),
+    front_op=dict(loc='front', cam=dict(loc=(-38.0, -14.0, 3.8), look_at=(-26.0, -8.0, 2.8), lens=28), extras=[('op', -28.0, -8.0, 0.0)], tanks=[dict(front=(-6.0, -16.0), yaw=90.0, smoke=1.0)], cards=[('a', (-30.5, -9.0), 3.4)], note='shot 23: observation post'),
 )
 
 def default_world():
@@ -948,11 +962,11 @@ def dress_front(cam, focus, n=1.0, seed=11, lane_ok=False):
         for (a, b, r) in wetc:
             if math.hypot(x - a, y - b) < r: return False
         return lane_ok or not crushed(x, y)
-    g = []; w = []; f = []; bk = []
+    g = []; w = []; f = []; bk = []; nok = lambda x, y: not ok(x, y)
     for tr in S['trenches']:
         pts = L.scatter_poly_edge(tr['poly'], 0, int(900 * n), seed, 0.1)
         for sg in (1, -1):
-            for (x, y) in L.scatter_poly_edge(tr['poly'], sg * (tr['hw'] + 0.35), int(520 * n), seed + sg, 0.9):
+            for (x, y) in L.scatter_poly_edge(tr['poly'], sg * (tr['hw'] + 0.35), int(260 * n), seed + sg, 0.9):
                 if ok(x, y): g.append((x, y))
             for (x, y) in L.scatter_poly_edge(tr['poly'], sg * (tr['hw'] + 1.4), int(120 * n), seed + 5 + sg, 1.0):
                 if ok(x, y): w.append((x, y))
@@ -965,13 +979,15 @@ def dress_front(cam, focus, n=1.0, seed=11, lane_ok=False):
         for (x, y) in L.scatter_disc(cx_, cy_, r * 1.5, int(14 * n), seed + 3 + int(cy_)):
             if math.hypot(x - cx_, y - cy_) > r * 0.9 and ok(x, y): w.append((x, y))
     fx, fy = focus; mid = ((cx + fx) / 2, (cy + fy) / 2); rad = min(34.0, math.hypot(fx - cx, fy - cy) * 0.7 + 8)
-    for (x, y) in L.scatter_disc(mid[0], mid[1], rad, int(900 * n), seed + 30, ok): g.append((x, y))
-    for (x, y) in L.scatter_disc(mid[0], mid[1], rad, int(60 * n), seed + 31, ok): w.append((x, y))
-    for (x, y) in L.scatter_disc(mid[0], mid[1], rad, int(70 * n), seed + 32, ok): f.append((x, y))
-    for (x, y) in L.scatter_disc(mid[0], mid[1], rad, int(110 * n), seed + 33, ok): bk.append((x, y))
-    L.dress(gh, g, w, f, bk, seed, 'dress', 7, (0.45, 1.0))
+    for (x, y) in L.scatter_disc(mid[0], mid[1], rad, int(260 * n), seed + 30, nok): g.append((x, y))
+    for (x, y) in L.scatter_disc(mid[0], mid[1], rad, int(60 * n), seed + 31, nok): w.append((x, y))
+    for (x, y) in L.scatter_disc(mid[0], mid[1], rad, int(20 * n), seed + 32, nok): f.append((x, y))
+    for (x, y) in L.scatter_disc(mid[0], mid[1], rad, int(110 * n), seed + 33, nok): bk.append((x, y))
+    lx, ly = fx - cx, fy - cy; ln = max(1e-6, math.hypot(lx, ly)); nx_, ny_ = cx + lx / ln * 7.0, cy + ly / ln * 7.0                 # dense carpet in the nearest 14 D (bottom third of the frame)
+    L.dress(gh, L.scatter_disc(nx_, ny_, 7.5, int(380 * n), seed + 50, nok), None, L.scatter_disc(nx_, ny_, 7.5, int(22 * n), seed + 52, nok), L.scatter_disc(nx_, ny_, 7.5, int(90 * n), seed + 53, nok), seed + 9, 'near', 6, (0.16, 0.42))
+    L.dress(gh, g, w, f, bk, seed, 'dress', 7, (0.3, 0.8))
     mb = MB(); rr = rnd(seed + 40)                                                  # broken duckboard panels, planks, iron stakes in the foreground
-    for (x, y) in L.scatter_disc(mid[0], mid[1], rad * 0.8, int(10 * n), seed + 41, ok):
+    for (x, y) in L.scatter_disc(mid[0], mid[1], rad * 0.8, int(10 * n), seed + 41, nok):
         ang = rr.uniform(0, 3.14); z = gh(x, y); X, Y, Z = rot_axes(ang, rr.uniform(-0.1, 0.1), rr.uniform(-0.1, 0.1))
         for k in range(5): obox(mb, Vector((x, y, z + 0.12)) + Y * (k * 0.34 - 0.7) + X * rr.uniform(-0.05, 0.05), X, Y, Z, rr.uniform(1.2, 1.8) / 2, 0.15, 0.04, S['M']['duck'])
         for dy in (-0.55, 0.55): obox(mb, Vector((x, y, z + 0.08)) + Y * dy, X, Y, Z, 1.0, 0.07, 0.07, S['M']['beam'])
@@ -992,7 +1008,8 @@ def build(preset, samples=None, quality=None):
     cam = P['cam']; S['cam_loc'] = cam['loc']
     cr = P.get('cross')
     if cr: add_corridor((cr['x0'], cr['y']), 0.0, -40, 50, 4.8, 6.8)
-    for tk in P.get('tanks', []): add_corridor((tk['front'][0], tk['front'][1]), tk['yaw'], -15, 7, 3.2 + 1.5, 6.4)
+    for tk in P.get('tanks', []):
+        if not tk.get('nocorr'): add_corridor((tk['front'][0], tk['front'][1]), tk['yaw'], -15, 7, 4.7, 6.4)
     S['in_tank'] = corridor_pred(); S['in_tank_wide'] = corridor_pred(1.2)
     build_ground(); [build_trench(tr, str(i)) for i, tr in enumerate(S['trenches']) if tr.get('build', True)]; build_sandbags(); build_wire(); build_village(); far_ring(); build_water(); build_debris()
     for ex in P.get('extras', []):
@@ -1008,6 +1025,7 @@ def build(preset, samples=None, quality=None):
         H = front_pose_tank(tk, i); S['tanks_h'].append(H); st = tk.get('state', 'normal'); x, y = tk['front']
         if 'build' in tk: TK.set_build(H, tk['build'])
         TK.pose_on_ground(H, x, y, tk['yaw'])
+        if tk.get('nocorr') : pass
         if st == 'stuck': H.base.update(pos=tuple(H.root.location), yaw=tk['yaw'], pitch=0.0, roll=0.0); TK.set_state(H, 'stuck', 1.0)
         if tk.get('smoke'): TK.set_state(H, 'smoking', tk['smoke'])
         if tk.get('stencil') is False: TK.set_stencil(H, False)
@@ -1015,7 +1033,7 @@ def build(preset, samples=None, quality=None):
         H = TK.build_tank('mk1', mud=cr.get('mud', 1.0)); S['tank'] = H; S['tanks_h'].append(H)
         TK.setup_crossing(H, (cr['x0'], cr['y']), 0.0, cr['s_a'], cr['s_b'])
         TK.set_crossing(H, S.get('cu', cr['u'])); print('crossing table', [(round(u, 2), round(TK.crossing_pose(H, u)['s'], 1), round(TK.crossing_pose(H, u)['pos'][2], 2), round(TK.crossing_pose(H, u)['pitch'], 1)) for u in np.linspace(0, 1, 11)]); H.base = dict(pos=tuple(H.root.location), yaw=0.0, pitch=0.0, roll=0.0)
-        if 'sparks' in cr: TK.set_sparks(H, cr['sparks'])
+        if P.get('sparks') is not None: TK.set_sparks(H, P['sparks'])
         if cr.get('stencil') is False: TK.set_stencil(H, False)
         if cr.get('smoke'): TK.set_state(H, 'smoking', 1.0)
     S['cards'] = []
@@ -1046,6 +1064,9 @@ def finish(cam, P, samples=None, quality=None, sun=None, haze=None):
     sun = sun or P.get('sun'); az, el = (sun if sun else sun_for_camera(cam, S.get('sun_elev', 28.0), S.get('sun_left', 1.0), S.get('sun_front', 0.45)))
     set_sun(az, el); S['sun_elev'] = el
     make_haze(S.get('haze', 0.0006) if haze is None else haze); make_camera(cam)
+    if P.get('fill'):                                                                  # hidden soft bounce card beside the camera for close-ups (practical fill, invisible to the camera)
+        fd = bpy.data.lights.new('bounce', 'AREA'); fd.shape = 'DISK'; fd.size = 14.0; fd.energy = P['fill']; fd.color = (1.0, 0.93, 0.82); fo = bpy.data.objects.new('bounce', fd); sc.collection.objects.link(fo)
+        loc = Vector(cam['loc']); tgt = Vector(cam['look_at']); fo.location = loc + (tgt - loc).normalized() * 3.0 + Vector((0, 0, 3.0)); fo.rotation_euler = (tgt - fo.location).to_track_quat('-Z', 'Y').to_euler()
     S['exposure'] = S.get('exposure', -0.25); S['samples'] = samples or P.get('samples', 64); setup_render(sc, 'final')
 
 # ============================================================================= render + post

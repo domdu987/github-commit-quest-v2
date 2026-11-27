@@ -23,7 +23,7 @@ def more_materials():
     M['concrete'] = pbr('concrete', 'concrete', 5.0, '#efe6d6', 1.0, 1.1, None, 0.5, 0.05, extra=wob((0.8, 0.78, 0.74), (1.15, 1.12, 1.05), 0.3))
     M['gravel'] = pbr('gravel', 'gravel', 3.0, '#f0d8b8', 1.0, 0.85, None, 1.2, 0.05)
     M['dirt'] = pbr('dirt', 'dirt', 4.0, '#e0c890', 1.1, 0.9, None, 0.9, 0.06)
-    M['brick_r'] = pbr('brick_r', 'brick2', 2.2, '#ffe0cc', 1.35, 1.45, None, 1.0, 0.06)
+    M['brick_r'] = pbr('brick_r', 'brick2', 2.2, '#ffe8d8', 0.85, 1.35, None, 1.0, 0.06)
     M['brick_o'] = pbr('brick_o', 'brick', 2.2, '#ffd8b8', 1.5, 1.2, None, 1.0, 0.06)
     M['brick_w'] = pbr('brick_w', 'brick', 2.2, '#fff6ea', 0.25, 1.6, None, 0.9, 0.06)
     M['brick_y'] = pbr('brick_y', 'brick', 2.2, '#f4e0a0', 0.9, 1.35, None, 1.0, 0.06)
@@ -44,6 +44,12 @@ def more_materials():
         return fmat(name, f)
     M['canvas_g'] = canvas_c('#7f9456', 'canvas_g'); M['canvas_r'] = canvas_c('#b8483a', 'canvas_r'); M['canvas_b'] = canvas_c('#4a7ab0', 'canvas_b')
     for k, hx in dict(red='#b03a2a', green='#2f6a46', blue='#2f62a0', cream='#e6d8b0', yellow='#d8a82a', black='#242220', grey='#7a8088', orange='#c8642a', white='#f0ece0').items(): M['p_' + k] = flat('p_' + k, hx, 0.55)
+    def flagm(hx, name):
+        def f(b):
+            d = b.n('ShaderNodeBsdfDiffuse'); d.inputs['Color'].default_value = (*hexl(hx), 1); tr = b.n('ShaderNodeBsdfTranslucent'); tr.inputs['Color'].default_value = (*hexl(hx), 1)
+            mx = b.n('ShaderNodeMixShader'); mx.inputs[0].default_value = 0.5; b.l(d.outputs[0], mx.inputs[1]); b.l(tr.outputs[0], mx.inputs[2]); b.l(mx.outputs[0], b.out.inputs['Surface'])
+        return fmat(name, f)
+    for k, hx in dict(red='#d03a2a', blue='#2f62c0', yellow='#e8b82a', white='#f4f0e4').items(): M['p_' + k + '_f'] = flagm(hx, 'flag_' + k)
     M['coal'] = flat('coal', '#161412', 0.28, 0.1)
     M['galv'] = flat('galv', '#a8b2b6', 0.4, 0.85); M['water_t'] = flat('water_t', '#8fb4c8', 0.35, 0.1)
     def steelp(b):
@@ -61,12 +67,12 @@ def more_materials():
     M['trunk2'] = pbr('trunk2', 'wood', 1.4, '#8a6a48', 0.8, 0.7, 0.8, 1.2, 0.06)
     def blade(b):
         tip = b.n('ShaderNodeAttribute'); tip.attribute_name = 'tip'; tip.attribute_type = 'GEOMETRY'; tone = b.n('ShaderNodeAttribute'); tone.attribute_name = 'tone'; tone.attribute_type = 'GEOMETRY'
-        g1 = b.mix(b.rng(tip.outputs['Fac'], 0.0, 1.0), (0.05, 0.16, 0.03), (0.30, 0.52, 0.10)); g2 = b.mix(b.rng(tip.outputs['Fac'], 0.0, 1.0), (0.22, 0.17, 0.06), (0.62, 0.50, 0.20))
-        g3 = b.mix(b.rng(tip.outputs['Fac'], 0.0, 1.0), (0.04, 0.12, 0.04), (0.16, 0.36, 0.08)); col = b.mix(b.rng(tone.outputs['Fac'], 0.55, 0.85), g1, g2); col = b.mix(b.rng(tone.outputs['Fac'], 0.0, 0.25), g3, col)
+        g1 = b.mix(b.rng(tip.outputs['Fac'], 0.0, 1.0), (0.07, 0.15, 0.04), (0.33, 0.46, 0.16)); g2 = b.mix(b.rng(tip.outputs['Fac'], 0.0, 1.0), (0.22, 0.18, 0.08), (0.58, 0.50, 0.26))
+        g3 = b.mix(b.rng(tip.outputs['Fac'], 0.0, 1.0), (0.05, 0.12, 0.05), (0.19, 0.32, 0.12)); col = b.mix(b.rng(tone.outputs['Fac'], 0.55, 0.85), g1, g2); col = b.mix(b.rng(tone.outputs['Fac'], 0.0, 0.25), g3, col)
         p = b.princ(col, 0.7, 0.0, None)
     M['blade'] = fmat('blade', blade)
     M['poppy'] = flat('poppy', '#d42818', 0.6); M['poppy_c'] = flat('poppy_c', '#161210', 0.7); M['daisy'] = flat('daisy', '#f4f0e0', 0.7); M['butter'] = flat('butter', '#f0c820', 0.6)
-    M['brickbat'] = pbr('brickbat', 'brick2', 0.9, '#ffd0b4', 1.4, 1.1, None, 1.3, 0.05)
+    M['brickbat'] = pbr('brickbat', 'brick2', 0.9, '#ffd8c0', 1.05, 1.15, None, 1.3, 0.05)
     M['bag_g'] = flat('bag_g', '#8a8460', 0.95)
     def glow(b):
         e = b.n('ShaderNodeEmission'); e.inputs['Color'].default_value = (1.0, 0.82, 0.5, 1); e.inputs['Strength'].default_value = 12.0; b.l(e.outputs[0], b.out.inputs['Surface'])
@@ -76,7 +82,7 @@ def more_materials():
     M['dialf'] = fmat('dialf', dial); M['brass'] = flat('brass', '#b8903a', 0.3, 0.9); M['needle'] = flat('needle', '#a82a20', 0.4, 0.2)
     M['road'] = pbr('road', 'dirt', 3.0, '#d0b890', 0.8, 0.95, None, 1.0, 0.06)
     M['slate'] = flat('slate', '#5a6068', 0.6, 0.1); M['hull_clean'] = M['steel_l']
-    M['sky_tin'] = M['tin']; M['frame'] = flat('frame', '#8a3c2c', 0.6, 0.3); M['frame2'] = flat('frame2', '#4a5058', 0.45, 0.7)
+    M['sky_tin'] = M['tin']; M['frame'] = flat('frame', '#7a6058', 0.6, 0.3); M['frame2'] = flat('frame2', '#4a5058', 0.45, 0.7)
     return M
 
 # ============================================================================= scatter helpers
@@ -130,7 +136,7 @@ def poppies(name, pts, zf, seed=3, cols=('poppy',)):
         mb.frustum(top + Vector((0, 0, 0.09)), top + Vector((0, 0, 0.1)), 0.045, 0.0, M['poppy_c'] if c == 'poppy' else M['butter'], seg=6, cap1=False)
     return mkobj(mb, name, shadow=False)
 
-def bricks(name, pts, zf, seed=4, size=(0.42, 0.2, 0.13), rubble_mat=None):
+def bricks(name, pts, zf, seed=4, size=(0.34, 0.17, 0.11), rubble_mat=None):
     """loose brick bats (red, boxes with random yaw / tilt, some half bricks and some stacked) sitting ON the ground"""
     mb = MB(); rr = rnd(seed); m = rubble_mat or S['M']['brickbat']
     for (x, y) in pts:
@@ -271,8 +277,7 @@ def tent(mb, c, w=10.0, d=6.0, wall=2.2, ridge=4.2, yaw=0.0, mat=None, mat2=None
 
 def flagpole(mb, c, h, col='p_red', w=1.6, ht=0.9):
     M = S['M']; c = Vector(c); rod(mb, c, c + Vector((0, 0, h)), 0.05, M['beam'], 6); mb.pid += 1
-    mb.oface([c + Vector((0, 0, h - ht)), c + Vector((w, 0.0, h - ht - 0.1)), c + Vector((w, 0.0, h - 0.1)), c + Vector((0, 0, h))], M[col], [(0, 0)] * 4, (0, -1, 0)); mb.pid += 1
-    mb.oface([c + Vector((0, 0, h - ht)), c + Vector((w, 0.0, h - ht - 0.1)), c + Vector((w, 0.0, h - 0.1)), c + Vector((0, 0, h))][::-1], M[col], [(0, 0)] * 4, (0, 1, 0))
+    mb.oface([c + Vector((0, 0, h - ht)), c + Vector((w, 0.0, h - ht - 0.1)), c + Vector((w, 0.0, h - 0.1)), c + Vector((0, 0, h))], M[col + '_f'], [(0, 0)] * 4, (0, -1, 0))
 
 def oak(mb_t, mb_l, x, y, z, h=9.0, seed=1, mat_l=None, spread=1.0):
     """broad tree: tapered trunk, 2-3 limbs and 7-10 lumpy foliage clusters (leaf material has colour + bump variation)"""

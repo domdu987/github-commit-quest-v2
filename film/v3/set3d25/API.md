@@ -51,3 +51,32 @@ see `film25/gate/test_cross_hero_log.json` and the report. ~91 s wall / 360 CPU 
 - Revetment planes follow the batter wall approximately (0.1 D offset): at bay corners the planks overlap, not mitred. Wire is a modelled strand per span (no simulation).
 - Ground is a single heightfield: no overhangs; the tank's right track front hangs over the trench by design (22 deg skew; the front end of the right track only just reaches the lip), the rest of both tracks rests on pressed earth.
 - One location per process (build() resets the scene). Haze is a box volume of +-1500 D: keep cameras inside.
+
+# ===== EXTENSION FOR THE FULL FILM (v2 of this set: 33 presets, 6 locations, tank hooks) =====
+Entry point: `set25.py` (all locations). `python3 set25.py list` | `python3 set25.py render <preset> out.png [--draft 0.4] [--samples 64] [--set cu=0.4 exposure=-0.3]`; in Python `import set25 as W; W.build('fac_wide'); W.render_still(path)` (one location per process).
+`run_finals.sh [preset ...]` renders finals/<preset>.png + metrics. Modules: `front.py` (Front + shared begin/finish/render/post), `tank25.py` (Mark I + hooks), `lib25.py` (materials, props, grass/poppies/bricks dressing), `factory.py`, `trial.py`, `street.py`, `dock.py`, `sky.py`.
+New CC0 textures in tex/: grass, cobble, gravel, concrete, dirt (ambientCG Grass001, PavingStones070, Gravel023, Concrete034, Ground037). No text anywhere; the water-tank stencil is a plain silhouette.
+
+## Light recipe (identical for every location, `front.finish`)
+Warm key sun 5.0 W (1.0,0.82,0.58), 28 deg from the camera's left / front (factory, street, dock, sky pass an explicit `sun=(azimuth_deg, elev)` that lights the doors / the street axis), the pastel sky + cumulus world, thin far haze 0.0006, Standard view -0.25 EV, Cycles 64 adaptive samples + OIDN, `post()` unsharp r1.1 55 % + clarity r5 40 %. Factory interior adds practical work lamps (8 shaded point lights) and one hidden soft area fill ("practical lights", LIGHT_SPEC 7).
+
+## Producer fixes (FRONT)
+1. Source contrast: `dress_front()` adds grass tufts (one triangle per blade, tip/tone attributes), weeds, poppies / daisies / buttercups, red brick bats, broken duckboards, spilled sandbags, iron stakes along every trench lip and crater rim, scattered over the ground and as a dense low carpet in the nearest 14 D of the camera; crates / sandbags (burlap bump) / wire pickets / planks stay.
+2. Crossing is staged SIDE-ON: trench dead-ends south of the crossing (`_TP`), near parapet 0.8 D, far parados 1.9 D; `TK.setup_crossing` solves the rest pose of the rhomboid track outline (+ tail wheels) on the ground profile (min centre-of-mass height, no nose dips, smoothed pitch, contact-exact height): nose lifts over the gap (pitch up to ~27 deg), the front horn grips the far lip, the rear stays on the near mound, then it tips level. Corridors (`add_corridor`) flatten the lane across the tracks so the tracks sit level on earth, never as a plank bridge; wire and sandbags in the lane are crushed flat.
+3. Colour: green (ground shader `green` attribute: lawn texture at lips, crater rims, patches), tufts and weeds, red brick, poppies, poplars / orchards on the whole horizon ring (`far_ring`), green-gold fields beyond 70 D, blue sky.
+
+## Tank hooks (`tank25.py`; `H = front.build_tank(name, mud=1.0)` or `TK.build_tank(...)` returns TankH: dict + attributes, `H.root` = root empty)
+| call | what |
+|---|---|
+| `TK.set_build(H, {'chassis':1,'plates':.5,'rivets':.3,'tracks':0,'sponsons':0,'guns':0}, frame=None)` | build stages, level 0 (hidden) .. 1 (locked). chassis = bare girder frame + engine + tail; plates drop from above with a swing; rivets punch in chunk by chunk along the hull; tracks drop round the hull; sponsons slide in sideways; guns slide in along the barrel. With `frame=` it keys location / rotation / visibility |
+| `TK.set_drive(H, dist, frame=None)` | 2x52 individual track links (objects sharing a mesh) scroll round the loop with distance travelled; tail wheels roll |
+| `TK.setup_crossing(H, (x0,y0), yaw, s_a, s_b)` + `TK.set_crossing(H, u, frame=None)` | u 0..1: approach, nose lift, grip, pull across, level on the far side; also drives the tracks. `TK.crossing_pose(H,u)` returns the pose |
+| `TK.pose_on_ground(H, x, y, yaw)` | rest the tank on the world heightfield (tilted in a crater, standing on a lane) |
+| `TK.set_state(H, 'stuck'|'smoking'|'tilted'|'normal', level, frame)` | stuck = root sunk 1.15 D (+ the preset's `('mud', x, y, yaw)` heaps), smoking = kit volume smoke column from the engine, normal resets; 'tilted' = `pose_on_ground` in a crater (preset `front_halt`) |
+| `TK.set_stencil(H, on, frame)` | plain water-tank silhouette decal on both hull sides |
+| `TK.set_sparks(H, t_sec, frame)` | bullet pings: 16 emissive stars staggered 0.045 s, each 0.16 s, bloodless; t < 0 hides |
+| `TK.tank_silhouette(mb, centre, X, normal, Z, scale, mat, mat_dark)` | the same silhouette for crates / walls |
+Other hooks: `factory.set_dial(deg, frame)` (weighbridge needle, no digits), `factory.shipping_crate(...)` + `factory.set_crate(C, open 0..1, frame)` (lid swings up, front wall falls), `sky.build_plane()` + `sky.set_plane(H, t, frame)` (biplane on its own empty flies a straight path, prop spins).
+
+## Locations and presets (see METRICS.md for the table with measured values)
+FACTORY (factory.py): brick shed 52 x 52 x 14 D, arched windows, sliding doors open, tin roof with skylights, cobbled yard, gantry crane (rails, bridge, trolley, chain, hook), trestles, weighbridge + dial, benches, tool racks, coal, 2 chimneys, steel plate stacks, rivet buckets, water barrels / tanks, shipping crate. TRIAL (trial.py): lawn park, test trench, oaks, marquee tents, flags (plain colours), staff cars. FRONT (front.py): see above + `mg_nest`, `op_post`, `bucket_at`, `mud_heaps`. STREET (street.py): 14 brick houses per side (shop fronts, awnings, damaged roofs), cobbles, church with tower + spire, trees, rubble. DOCK (dock.py): quay, cargo ship, crate on deck, crane, gulls, French coast. SKY (sky.py): biplane over the street rooftops.
