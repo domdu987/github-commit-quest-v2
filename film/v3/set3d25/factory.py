@@ -29,10 +29,10 @@ def brick_shed(W=26.0, Dp=52.0, Hw=14.0):
     door = (0.5 - 10.0 / (2 * W), 0.5 + 10.0 / (2 * W))
     # front wall y=0 (two arched windows each side of the door), side walls with 5 arched windows, back wall
     fw = [(0.06, 0.13, 3.5, 9.5), (0.2, 0.27, 3.5, 9.5), (0.73, 0.8, 3.5, 9.5), (0.87, 0.94, 3.5, 9.5), (door[0], door[1], 0.0, 11.0)]
-    F.brick_wall(mb, -W, 0, W, 0, 0.0, H, 1.2, fw, M['brick_r'])
+    F.brick_wall(mb, -W, 0, W, 0, 0.0, H, 1.2, fw, M['brick_y'])
     sw = [(0.07 + 0.19 * k, 0.07 + 0.19 * k + 0.09, 3.5, 9.5) for k in range(5)]
-    F.brick_wall(mb, W, 0, W, Dp, 0.0, H, 1.2, sw, M['brick_r']); F.brick_wall(mb, -W, Dp, -W, 0, 0.0, H, 1.2, sw, M['brick_r'])
-    F.brick_wall(mb, W, Dp, -W, Dp, 0.0, H, 1.2, [(0.3, 0.38, 3.5, 9.5), (0.62, 0.7, 3.5, 9.5)], M['brick_r'])
+    F.brick_wall(mb, W, 0, W, Dp, 0.0, H, 1.2, sw, M['brick_y']); F.brick_wall(mb, -W, Dp, -W, 0, 0.0, H, 1.2, sw, M['brick_y'])
+    F.brick_wall(mb, W, Dp, -W, Dp, 0.0, H, 1.2, [(0.3, 0.38, 3.5, 9.5), (0.62, 0.7, 3.5, 9.5)], M['brick_y'])
     X, Y, Z = (1, 0, 0), (0, -1, 0), (0, 0, 1)
     for (s0, s1) in ((0.06, 0.13), (0.2, 0.27), (0.73, 0.8), (0.87, 0.94)):
         xm = -W + (s0 + s1) / 2 * 2 * W; w = (s1 - s0) * 2 * W; L.arch_ring(mr, (xm, -0.7, 9.5), X, Y, Z, w, 9.5, M['brick_w'], 0.35, 0.15); obox(mr, (xm, -0.65, 3.35), X, Y, Z, w / 2 + 0.3, 0.2, 0.14, M['brick_w'])
@@ -157,7 +157,7 @@ def interior_props():
 def build(preset, samples=None, quality=None):
     P = PRESETS[preset]; t0 = __import__('time').time()
     F.begin('factory', preset, P); S.update(flat=True, trenches=[], craters=[], corridors=[], mud_zones=[]); S.update(P.get('world', {})); M = S['M']
-    quad('yard', -140, -120, 140, 0.0, 0.0, M['cobble'], 1.0); quad('floor', -26, 0, 26, 52, 0.01, M['floorw'], 1.0); quad('beyond', -600, -600, 600, 600, -0.05, M['dirt'], 1.0)
+    quad('yard', -140, -120, 140, 0.0, 0.0, M['cobble'], 1.0); quad('floor', -26, 0, 26, 52, 0.01, M['cobble'], 1.0); quad('beyond', -600, -600, 600, 600, -0.05, M['dirt'], 1.0)
     brick_shed(); yard_props(); interior_props()
     for (x, y) in ((0, -3), (-12, -2), (12, -2)): pass
     mg = MB(); r = rnd(2)                                     # weeds in the cobble joints + patches of grass by the walls (colour variety)
@@ -170,7 +170,7 @@ def build(preset, samples=None, quality=None):
         TK.apply_pose(S['tank'], (cr['x'] + 8, cr['y'], 1.3), 0.0, 0.0, 0.0, 0.0)
     hb = gantry(cy=P.get('crane_y', 22.0), cx=P.get('crane_x', -6.0), hook_z=P.get('hook_z', 8.0))
     weighbridge(P.get('wb', (14, 12))[0], P.get('wb', (14, 12))[1], P.get('dial', -40.0))
-    for (x, y) in ((-14, 14), (0, 14), (14, 14), (-14, 34), (0, 34), (14, 34), (-8, 24), (8, 24)): lamp(x, y, 11.6, P.get('lamp_w', 1800.0))
+    for (x, y) in ((-14, 14), (0, 14), (14, 14), (-14, 34), (0, 34), (14, 34), (-8, 24), (8, 24)): lamp(x, y, 11.6, P.get('lamp_w', 2500.0))
     area_fill(0, 26, 12.5, 40, 40, P.get('fill', 9000.0))
     mb = MB(); TM = TK.tank_mats(0.0, 'a')
     for (x, y, sz, yw) in P.get('small_crates', []):

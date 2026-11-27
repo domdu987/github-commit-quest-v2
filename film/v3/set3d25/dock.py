@@ -23,11 +23,11 @@ def build(preset, samples=None, quality=None):
         c = b.coord(); n = b.noise(0.5, 4.0, 0.55, c, None); n2 = b.noise(2.0, 3.0, 0.5, c, None); col = b.mix(b.rng(n, 0.3, 0.7), (0.05, 0.28, 0.42), (0.10, 0.45, 0.58)); b.princ(col, 0.12, 0.0, b.bump(b.math('ADD', n, n2), 0.5, 0.06))
     M['sea'] = F.fmat('sea', sea)
     mb = MB(); mb.pid += 1; mb.oface([(-900, -900, -1.3), (900, -900, -1.3), (900, 40, -1.3), (-900, 40, -1.3)], M['sea'], [(0, 0)] * 4, (0, 0, 1)); mkobj(mb, 'sea')
-    mb = MB(); mb.pid += 1; mb.oface([(-120, 0, 0.0), (120, 0, 0.0), (120, 60, 0.0), (-120, 60, 0.0)], M['concrete'], [(0, 0)] * 4, (0, 0, 1)); obox(mb, (0, 0.2, -0.65), (1, 0, 0), (0, 1, 0), (0, 0, 1), 120, 0.6, 0.65, M['cobble'])
+    mb = MB(); mb.pid += 1; mb.oface([(-120, 0, 0.0), (120, 0, 0.0), (120, 60, 0.0), (-120, 60, 0.0)], M['cobble_r'], [(0, 0)] * 4, (0, 0, 1)); obox(mb, (0, 0.2, -0.65), (1, 0, 0), (0, 1, 0), (0, 0, 1), 120, 0.6, 0.65, M['cobble'])
     mkobj(mb, 'quay'); mb = MB(); mb.pid += 1; mb.oface([(-600, 60, -0.05), (600, 60, -0.05), (600, 600, -0.05), (-600, 600, -0.05)], M['lawn'], [(0, 0)] * 4, (0, 0, 1)); mkobj(mb, 'land')
     # ship alongside (bow to +x): hull as a loft of boxes + wedge, deck, superstructure, funnel, masts
     mh = MB(); mw = MB(); zd = 3.2; L_ = 70.0; B = 16.0; y0 = -10.0
-    obox(mh, (0, y0, 0.9), (1, 0, 0), (0, 1, 0), (0, 0, 1), L_ / 2, B / 2, 2.1, M['p_grey']); obox(mh, (0, y0, 0.2 - 1.3 + 2.4), (1, 0, 0), (0, 1, 0), (0, 0, 1), L_ / 2 + 0.1, B / 2 + 0.1, 0.25, M['p_red'])
+    obox(mh, (0, y0, 0.9), (1, 0, 0), (0, 1, 0), (0, 0, 1), L_ / 2, B / 2, 2.1, M['p_red']); obox(mh, (0, y0, 0.2 - 1.3 + 2.4), (1, 0, 0), (0, 1, 0), (0, 0, 1), L_ / 2 + 0.1, B / 2 + 0.1, 0.25, M['p_red'])
     for sg in (-1, 1): mh.pid += 1; mh.oface([(L_ / 2, y0 + sg * B / 2, -1.2), (L_ / 2 + 8, y0, 1.6), (L_ / 2 + 8, y0, zd - 0.1), (L_ / 2, y0 + sg * B / 2, zd - 0.1)], M['p_black'], [(0, 0)] * 4, (1, sg * 0.5, 0)); mh.pid += 1; mh.oface([(L_ / 2, y0 + sg * B / 2, zd - 0.1), (L_ / 2 + 8, y0, zd - 0.1), (L_ / 2, y0, zd - 0.1)], M['floorw'], [(0, 0)] * 3, (0, 0, 1))
     obox(mw, (0, y0, zd - 0.05), (1, 0, 0), (0, 1, 0), (0, 0, 1), L_ / 2, B / 2 - 0.2, 0.1, M['floorw'])
     for k in range(9): obox(mw, (-L_ / 2 + 4 + k * 8, y0 + B / 2 - 0.1, zd + 0.5), (1, 0, 0), (0, 1, 0), (0, 0, 1), 0.08, 0.08, 0.5, M['steel']); obox(mw, (-L_ / 2 + 4 + k * 8, y0 - B / 2 + 0.1, zd + 0.5), (1, 0, 0), (0, 1, 0), (0, 0, 1), 0.08, 0.08, 0.5, M['steel'])
@@ -47,7 +47,11 @@ def build(preset, samples=None, quality=None):
     for sx in (-1, 1):
         for sy in (-1, 1): L.chain(mc, hb, (-6 + sx * 10.0, y0 + sy * 3.8, zd + 8.2 + P.get('crate_lift', 0.0)), 0.3, 0.05, M['steel'])
     for k in range(5): L.bollard(mc, (-40 + k * 20, 3.0)) if hasattr(L, 'bollard') else obox(mc, (-40 + k * 20, 3.0, 0.5), (1, 0, 0), (0, 1, 0), (0, 0, 1), 0.4, 0.4, 0.5, M['p_black'])
-    mkobj(mc, 'dock_crane')
+    mkobj(mc, 'dock_crane'); mq = MB(); mqb = MB()
+    for k in range(22): L.crate_box(mq, (r.uniform(8, 52), r.uniform(7, 40), 0), r.uniform(1.6, 3.2), r.uniform(1.4, 2.6), r.uniform(1.4, 2.8), r.uniform(0, 3.1))
+    for k in range(16): L.barrel3d(mqb, (r.uniform(8, 52), r.uniform(6, 40), 0), 0.62, 1.6, r.random() < 0.3, r.uniform(0, 3), M['rust'] if k % 2 else M['p_blue'])
+    for k in range(9): L.bag_pile(mq, (r.uniform(8, 50), r.uniform(8, 38)), 10, k, lambda x, y: 0.0, 1.5)
+    mkobj(mq, 'quay_cargo', smooth=False); mkobj(mqb, 'quay_barrels', smooth=True)
     mg = MB()
     for k in range(P.get('gulls', 9)): gull(mg, (r.uniform(-25, 25), r.uniform(-30, 5), r.uniform(10, 26)), r.uniform(0, 6.28), r.uniform(0.8, 1.6), k)
     mkobj(mg, 'gulls', shadow=False)
@@ -60,5 +64,5 @@ def build(preset, samples=None, quality=None):
     F.finish(cam, P, samples, quality, sun=P.get('sun')); S['build_s'] = time.time() - t0; return F.anchors()
 
 PRESETS = dict(
-    dock_crate=dict(cam=dict(loc=(34.0, 34.0, 13.0), look_at=(-8.0, -14.0, 5.0), lens=22), crate_lift=0.0, cards=[('a', (-18, 12), 3.2)], sun=(-150.0, 30.0), note='shot 19: crate on the cargo ship deck under the dock crane, gulls, the French coast'),
+    dock_crate=dict(cam=dict(loc=(34.0, 34.0, 13.0), look_at=(-8.0, -14.0, 5.0), lens=22), crate_lift=0.0, tune=dict(cloud_k=1.3), cards=[('a', (28, 22), 3.2), ('b', (36, 14), 3.2)], note='shot 19: crate on the cargo ship deck under the dock crane, gulls, the French coast'),
 )

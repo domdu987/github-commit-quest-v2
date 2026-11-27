@@ -17,16 +17,16 @@ def more_materials():
         def f(b, col):
             n = b.noise(sc, 3.0, 0.6, None, None); return b.mul(col, b.mix(b.rng(n, 0.3, 0.7), lo, hi))
         return f
-    M['lawn'] = pbr('lawn', 'grass', 2.4, '#ecf0b8', 0.95, 1.12, None, 0.9, 0.06, extra=wob((0.78, 0.9, 0.55), (1.25, 1.2, 0.8), 0.18))
+    M['lawn'] = pbr('lawn', 'grass', 2.4, '#e8ecb4', 0.8, 0.95, None, 0.9, 0.06, extra=wob((0.78, 0.9, 0.55), (1.25, 1.2, 0.8), 0.18))
     M['cobble'] = pbr('cobble', 'cobble', 3.2, '#f6e4d0', 1.0, 1.15, None, 1.5, 0.10)
-    M['cobble_r'] = pbr('cobble_r', 'cobble', 3.0, '#e8d8c4', 0.8, 1.05, None, 1.5, 0.10, extra=wob((0.7, 0.62, 0.55), (1.2, 1.1, 1.0), 0.25))
+    M['cobble_r'] = pbr('cobble_r', 'cobble', 3.0, '#ecd8c0', 1.0, 1.05, None, 1.5, 0.10, extra=wob((0.7, 0.62, 0.55), (1.2, 1.1, 1.0), 0.25))
     M['concrete'] = pbr('concrete', 'concrete', 5.0, '#efe6d6', 1.0, 1.1, None, 0.5, 0.05, extra=wob((0.8, 0.78, 0.74), (1.15, 1.12, 1.05), 0.3))
     M['gravel'] = pbr('gravel', 'gravel', 3.0, '#f0d8b8', 1.0, 0.85, None, 1.2, 0.05)
     M['dirt'] = pbr('dirt', 'dirt', 4.0, '#e0c890', 1.1, 0.9, None, 0.9, 0.06)
     M['brick_r'] = pbr('brick_r', 'brick2', 2.2, '#ffe8d8', 0.85, 1.35, None, 1.0, 0.06)
-    M['brick_o'] = pbr('brick_o', 'brick', 2.2, '#ffe0c8', 0.95, 1.25, None, 1.0, 0.06)
+    M['brick_o'] = pbr('brick_o', 'brick', 2.2, '#ffe0c8', 1.25, 1.25, None, 1.0, 0.06)
     M['brick_w'] = pbr('brick_w', 'brick', 2.2, '#fff6ea', 0.25, 1.6, None, 0.9, 0.06)
-    M['brick_y'] = pbr('brick_y', 'brick', 2.2, '#f4e0a0', 0.9, 1.35, None, 1.0, 0.06)
+    M['brick_y'] = pbr('brick_y', 'brick', 2.2, '#f4e0a0', 0.9, 1.05, None, 1.0, 0.06)
     M['floorw'] = wood_seam('floorw', '#d0a672', 1.6, 1.0, 'Y', 0.9)
     def tin(b):
         c = b.coord(); w = b.n('ShaderNodeTexWave', wave_type='BANDS', bands_direction='X', wave_profile='SIN'); w.inputs['Scale'].default_value = 3.0; w.inputs['Distortion'].default_value = 0.0; b.l(c, w.inputs['Vector'])
@@ -82,7 +82,7 @@ def more_materials():
     M['dialf'] = fmat('dialf', dial); M['brass'] = flat('brass', '#b8903a', 0.3, 0.9); M['needle'] = flat('needle', '#a82a20', 0.4, 0.2)
     M['road'] = pbr('road', 'dirt', 3.0, '#d0b890', 0.8, 0.95, None, 1.0, 0.06)
     M['slate'] = flat('slate', '#5a6068', 0.6, 0.1); M['hull_clean'] = M['steel_l']
-    M['sky_tin'] = M['tin']; M['frame'] = flat('frame', '#7a6058', 0.6, 0.3); M['frame2'] = flat('frame2', '#4a5058', 0.45, 0.7)
+    M['sky_tin'] = M['tin']; M['frame'] = flat('frame', '#5f7388', 0.6, 0.3); M['frame2'] = flat('frame2', '#4a5058', 0.45, 0.7)
     return M
 
 # ============================================================================= scatter helpers

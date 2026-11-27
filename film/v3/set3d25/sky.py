@@ -43,5 +43,5 @@ def build(preset, samples=None, quality=None):
     cam = P['cam']; S['cam_loc'] = cam['loc']; S['cards'] = []; F.finish(cam, P, samples, quality, sun=P.get('sun')); S['build_s'] = time.time() - t0; return F.anchors()
 
 PRESETS = dict(
-    sky_plane=dict(cam=dict(loc=(6.0, 10.0, 2.0), look_at=(2.0, 66.0, 25.0), lens=26), t=0.9, green=True, sun=(-110.0, 34.0), note='shot 32: RFC biplane over Flers rooftops (plane on its own empty, flies along a path)'),
+    sky_plane=dict(cam=dict(loc=(6.0, 10.0, 2.0), look_at=(2.0, 66.0, 25.0), lens=26), t=0.9, green=False, sun=(-110.0, 34.0), note='shot 32: RFC biplane over Flers rooftops (plane on its own empty, flies along a path)'),
 )
