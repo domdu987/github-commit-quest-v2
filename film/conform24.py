@@ -105,6 +105,7 @@ X_FROM = 1768 if VER == "C" else int(round((51.97 + OFF) * 30))   # C: X marks o
 TALLY_G = int(round((57.15 + OFF) * 30)) + SH   # "เรือญี่ปุ่น แตกไปกว่าครึ่ง"
 TALLY_END = 1767 + SH
 
+CALLOUTS = os.environ.get("CALLOUTS", "0") == "1"   # client 2026-11-27: no text, no pointer lines in the build-up (kept as an option, off)
 # version C build-up callouts (R10 style): label pill in the top band + leader line + dot on the part (s08C/build_anchors.json)
 LABELS = {"1": "ตัวเรือไม้สนหนา", "2": "พาย ข้างละ 8-10", "3": "ช่องปืน ราวข้างละ 11", "4": "หลังคาคลุมทั้งลำ",
           "5": "เหล็กแหลม กันปีนขึ้นเรือ", "6a": "หน้าผีบนหัวเรือ ขู่ข้าศึก", "6b": "หัวมังกร", "6c": "ยิงปืนใหญ่ออกจากปากได้", "7": "ไอ้เรือเต่า"}
@@ -121,7 +122,7 @@ def callout(im, g):
     u = g - BSTART[st]; s = pop(u)
     if s <= 0: return
     d = ImageDraw.Draw(im, "RGBA"); big = st == "7"
-    f = ImageFont.truetype(FONT, 76 if big else 50); fs = ImageFont.truetype(FONT, 30)
+    f = ImageFont.truetype(FONT, 76 if big else 50); fs = ImageFont.truetype(FONT, 36)
     txt = LABELS[st]; bx, by = 360, 170
     w = d.textlength(txt, font=f); h = 92 if big else 66
     sc = s
@@ -143,12 +144,13 @@ for g in range(N):
         Image.new("RGB", (720, 1280)).save(dst); continue
     in_ov = src[g] is not None and ("/s13/" in src[g] or "/s14/" in src[g])   # overlays only on the reveal / aftermath takes
     ships = [sh for sh in (OV.get(g, []) if in_ov else []) if g >= X_FROM and sh.get("hit_g", 1e9) <= g and 0 < sh["x"] < 720 and 60 < sh["y"] < 860]
-    co = VER == "C" and g in BA and src[g] is not None and "/s08C/" in src[g]
+    co = CALLOUTS and VER == "C" and g in BA and src[g] is not None and "/s08C/" in src[g]
     if not ships and not co and not (TALLY_G <= g < TALLY_END) and VER != "A":
         os.symlink(src[g], dst); continue
     im = (graded(src[g], g) if VER == "A" else Image.open(src[g])).convert("RGBA"); d = ImageDraw.Draw(im, "RGBA")
     for sh in ships[:24]:
-        draw_x(d, sh["x"], sh["y"] - 14, 0.75 * pop(g - max(sh["hit_g"], X_FROM)))
+        big = 2.2 if (VER == "C" and "/s13/" in src[g]) else 0.75     # C: one big X on the close-hit ship (13c)
+        draw_x(d, sh["x"], sh["y"] - 14 - (40 if big > 1 else 0), big * pop(g - max(sh["hit_g"], X_FROM)))
     if TALLY_G <= g < TALLY_END and "/s14/" in src[g]:
         tally(im, g, TALLY_G)
     if co:
@@ -199,10 +201,10 @@ BEDS = [("yard_ambience", 0, 5.02), ("sea_fleet", 5.02, 9.6), ("yard_ambience", 
 if VER == "C":
     D = SH / 30.0
     CUES = [c for c in CUES if c[1] < 24.45] + [(f, t + D, db, ln) for f, t, db, ln in CUES if t >= 30.64 and not (50.0 < t < 53.0)]
-    CUES += [  # build-up: one punchy hit per stage (g / 30)
-        ("build_slam", 781 / 30, -13, 0.9), ("build_planks", 800 / 30, -18, 1.2), ("build_oars", 830 / 30, -14, 1.0),
-        ("build_cannon", 862 / 30, -15, 1.2), ("build_plates", 898 / 30, -15, 1.1), ("build_spikes", 932 / 30, -15, 1.2),
-        ("build_slam", 971 / 30, -15, 0.9), ("build_dragon", 1001 / 30, -14, 1.8), ("cannon_boom", 1052 / 30, -12, 1.6),
+    CUES += [  # build-up: one hit on each part's LOCK frame = the onset of the narration word naming it (STT, video g; client)
+        ("build_slam", 795 / 30, -13, 0.9), ("build_planks", 806 / 30, -18, 1.2), ("build_oars", 835 / 30, -14, 1.0),
+        ("build_cannon", 868 / 30, -15, 1.2), ("build_plates", 911 / 30, -15, 1.1), ("build_spikes", 948 / 30, -15, 1.2),
+        ("build_slam", 979 / 30, -15, 0.9), ("build_dragon", 1008 / 30, -14, 1.8), ("cannon_boom", 1042 / 30, -12, 1.6),
         ("build_hit", 1084 / 30, -12, 1.8),
         # 13b broadside (old 50.95.. +D), 13c the hit + jumpers
         *[("cannon_boom", t + D, -13, 1.4) for t in (50.98, 51.28, 51.58, 51.88)],

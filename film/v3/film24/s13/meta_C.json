@@ -1,0 +1,40 @@
+{
+ "take": "s13",
+ "version": "C",
+ "film": 24,
+ "g0": 1621,
+ "g1": 1815,
+ "g1_exclusive": true,
+ "first_g": 1615,
+ "n_frames": 206,
+ "render_g": {
+  "g0": 1413,
+  "g1": 1607,
+  "first_g": 1407,
+  "offset": 208
+ },
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "resolution": [
+  720,
+  1280
+ ],
+ "samples": 24,
+ "s_per_frame_wall_mean": 62.5,
+ "in_take_cuts_render_g": [
+  1527,
+  1560
+ ],
+ "in_take_cuts_meta_g": [
+  1735,
+  1768
+ ],
+ "shots": [
+  "13a",
+  "13b",
+  "13c"
+ ],
+ "overlay": "overlay_C.json (13c, old g numbering)"
+}

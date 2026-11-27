@@ -1,0 +1,33 @@
+{
+ "take": "s15",
+ "version": "C",
+ "film": 24,
+ "g0": 1975,
+ "g1": 2158,
+ "g1_exclusive": true,
+ "first_g": 1969,
+ "n_frames": 189,
+ "render_g": {
+  "g0": 1767,
+  "g1": 1950,
+  "first_g": 1761,
+  "offset": 208
+ },
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "resolution": [
+  720,
+  1280
+ ],
+ "samples": 24,
+ "s_per_frame_wall_mean": 39.7,
+ "in_take_cuts_render_g": [
+  1867
+ ],
+ "in_take_cuts_meta_g": [
+  2075
+ ],
+ "no_out_handle": true
+}

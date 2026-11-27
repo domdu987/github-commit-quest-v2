@@ -4,3 +4,4 @@ work/
 __pycache__/
 frames_C/
 raw_C/
+*.log
