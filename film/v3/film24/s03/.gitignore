@@ -3,3 +3,5 @@ raw/
 work/
 *.log
 *.log
+frames_C/
+raw_C/
