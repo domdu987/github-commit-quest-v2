@@ -49,7 +49,7 @@ def brick_shed(W=26.0, Dp=52.0, Hw=14.0):
         obox(mw, ((a + b) / 2, -1.68, 5.6), X, Y, Z, (b - a) / 2, 0.06, 0.1, M['beam']); obox(mw, ((a + b) / 2, -1.68, 1.4), X, Y, Z, (b - a) / 2, 0.06, 0.1, M['beam'])
     beam(mw, (-24, -1.8, 11.6), (24, -1.8, 11.6), 0.3, 0.3, M['steel'])
     # roof with skylight gaps
-    holes = [(s, u0, u1, 0.1, 0.9) for s in (1, -1) for (u0, u1) in ((0.12, 0.22), (0.34, 0.44), (0.56, 0.66), (0.78, 0.88))]
+    holes = [(s, u0, u1, 0.1, 0.9) for s in (1, -1) for (u0, u1) in ((0.12, 0.22), (0.56, 0.66))]
     F.gable_roof(mt, (0, Dp / 2), Dp + 1.6, 2 * W + 2.2, Hw - 0.4, 7.0, math.pi / 2, holes, M['tin'], 3)
     # trusses + purlins inside
     for k in range(8):
@@ -187,9 +187,9 @@ PRESETS = dict(
     fac_wide=dict(cam=dict(loc=(2.0, -40.0, 4.5), look_at=(-2.0, 12.0, 5.5), lens=24), cards=[('a', (-9, -22), 3.2), ('b', (8, -16), 3.2), ('a', (-2, -9), 3.2)], note='shot 1'),
     fac_weigh=dict(cam=dict(loc=(2.0, 3.0, 1.0), look_at=(8.0, 20.0, 6.5), lens=20), stages=_st(plates=1, rivets=1), tank=dict(pos=(10, 12), yaw=0.0, z=7.0), wb=(10, 12), crane_x=4.0, crane_y=12.0, hook_z=9.0, dial=-60.0, note='shot 2'),
     fac_foreman=dict(cam=dict(loc=(-3.0, 8.0, 2.6), look_at=(-4.0, 22.0, 4.6), lens=26), stages=FULL, cards=[('a', (-9, 14), 3.2), ('b', (-3, 12), 3.2), ('a', (3, 14), 3.2)], note='shots 3'),
-    fac_stencil=dict(cam=dict(loc=(-9.0, 13.0, 4.8), look_at=(-12.5, 20.0, 4.9), lens=26), stages=FULL, cards=[('b', (-8, 16), 3.2)], note='shot 4'),
+    fac_stencil=dict(fill=14000.0, cam=dict(loc=(-9.0, 13.0, 4.8), look_at=(-12.5, 20.0, 4.9), lens=26), stages=FULL, cards=[('b', (-8, 16), 3.2)], note='shot 4'),
     fac_side=dict(cam=dict(loc=(-4.0, 5.0, 4.6), look_at=(-4.0, 22.0, 4.8), lens=24), stages=FULL, cards=[('a', (-12, 14), 3.2), ('b', (4, 15), 3.2)], note='shot 7: side-on, work lamps'),
-    fac_bench=dict(cam=dict(loc=(-10.0, 4.0, 3.0), look_at=(-18.0, 12.0, 3.2), lens=28), stages=FULL, small_crates=[(-13, 8, 2.6, 0.5), (-16, 6, 2.2, 0.3)], cards=[('a', (-16, 10), 3.2), ('b', (-13, 12), 3.2)], note='shot 8'),
+    fac_bench=dict(fill=14000.0, cam=dict(loc=(-10.0, 4.0, 3.0), look_at=(-18.0, 12.0, 3.2), lens=28), stages=FULL, small_crates=[(-13, 8, 2.6, 0.5), (-16, 6, 2.2, 0.3)], cards=[('a', (-16, 10), 3.2), ('b', (-13, 12), 3.2)], note='shot 8'),
     fac_chassis=dict(cam=dict(loc=(-9.0, 9.0, 3.4), look_at=(-6.0, 22.0, 4.2), lens=26), stages=_st(), cards=[('a', (-4, 14), 3.2)], note='shot 14'),
     fac_plates=dict(cam=dict(loc=(2.0, 11.0, 6.0), look_at=(-6.0, 22.0, 5.8), lens=26), stages=_st(plates=0.55, rivets=0.0), crane_x=-6.0, crane_y=22.0, hook_z=11.0, cards=[('a', (-14, 15), 3.2)], note='shots 15'),
     fac_tracks=dict(cam=dict(loc=(-4.0, 7.0, 4.0), look_at=(-4.0, 22.0, 5.0), lens=24), stages=_st(plates=1, rivets=1, tracks=0.5), cards=[('b', (8, 13), 3.2)], note='shot 16'),
@@ -197,3 +197,5 @@ PRESETS = dict(
     fac_crate=dict(cam=dict(loc=(0.0, 4.0, 4.0), look_at=(0.0, 22.0, 5.5), lens=24), tank_on=False, crate=dict(x=0, y=22, open=0.0), cards=[('a', (-10, 13), 3.2), ('b', (9, 12), 3.2)], note='shot 18'),
     fac_crate_open=dict(cam=dict(loc=(0.0, 6.0, 4.5), look_at=(0.0, 22.0, 6.0), lens=24), tank_on=True, tank_in_crate=True, tank=dict(pos=(0, 22), yaw=0.0, z=1.3), stages=FULL, crate=dict(x=0, y=22, open=0.8), trestles_off=True, note='shot 31'),
 )
+
+for _p in PRESETS.values(): _p.setdefault('tune', dict(cloud_k=0.75))

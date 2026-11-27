@@ -75,7 +75,7 @@ def more_materials():
     M['brickbat'] = pbr('brickbat', 'brick2', 0.9, '#ffd8c0', 1.05, 1.15, None, 1.3, 0.05)
     M['bag_g'] = flat('bag_g', '#8a8460', 0.95)
     def glow(b):
-        e = b.n('ShaderNodeEmission'); e.inputs['Color'].default_value = (1.0, 0.82, 0.5, 1); e.inputs['Strength'].default_value = 12.0; b.l(e.outputs[0], b.out.inputs['Surface'])
+        e = b.n('ShaderNodeEmission'); e.inputs['Color'].default_value = (1.0, 0.82, 0.5, 1); e.inputs['Strength'].default_value = 4.0; b.l(e.outputs[0], b.out.inputs['Surface'])
     M['glow'] = fmat('glow', glow)
     def dial(b):
         b.princ(hexl('#f4eedc'), 0.5, 0.0, None)

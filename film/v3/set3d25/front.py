@@ -101,7 +101,7 @@ def make_materials():
     M['plaster'] = flat('plaster', '#e0d2b4', 0.9)
     M['rev'] = wood_seam('rev', '#e6bf88', 2.4, 1.0, 'X', 1.4, mud=3.6, vertical=True); M['rev_d'] = wood_seam('rev_d', '#c49a68', 2.4, 1.0, 'X', 1.4, mud=3.6, vertical=True)
     M['post'] = wood_seam('post', '#b98b58', 2.0, 0.0, 'X', 0.7); M['duck'] = wood_seam('duck', '#d2aa76', 1.6, 0.0, 'X', 0.8)
-    M['crate'] = wood_seam('crate', '#caa070', 1.6, 1.2, 'X', 0.9)
+    M['crate'] = wood_seam('crate', '#bfa684', 1.6, 1.2, 'X', 0.9)
     M['beam'] = pbr('beam', 'wood', 1.8, '#b08850', 1.0, 0.85, 0.75, 0.6)
     def wattle(b):
         c = b.coord(); w1 = b.n('ShaderNodeTexWave', wave_type='BANDS', bands_direction='Z', wave_profile='SIN'); w1.inputs['Scale'].default_value = 5.5; w1.inputs['Distortion'].default_value = 2.0; b.l(c, w1.inputs['Vector'])
@@ -186,7 +186,7 @@ def ground_mat():
         mc, mh = tex('mud', 3.0, '#a07650', 1.1, 1.2)
         wetm = b.rng(wet, 0.25, 0.75, 0.0, 1.0)
         col = b.mix(wetm, dry, mc)
-        gr = b.n('ShaderNodeAttribute'); gr.attribute_name = 'green'; gr.attribute_type = 'GEOMETRY'; gcol, gh_ = tex('grass', 2.4, '#d8e08a', 0.9, 0.85); gv = b.noise(0.6, 3.0, 0.6, c, None)
+        gr = b.n('ShaderNodeAttribute'); gr.attribute_name = 'green'; gr.attribute_type = 'GEOMETRY'; gcol, gh_ = tex('grass', 2.4, '#d8e08a', 0.9, S.get('grass_val', 0.85)); gv = b.noise(0.6, 3.0, 0.6, c, None)
         gcol = b.mul(gcol, b.mix(b.rng(gv, 0.3, 0.7), (0.85, 0.9, 0.6), (1.35, 1.25, 0.8)))
         col = b.mix(b.rng(gr.outputs['Fac'], 0.25, 0.7), col, gcol)
         # distant fields: green-gold stripes fading in with the 'far' attribute
@@ -834,13 +834,13 @@ def _cross(name, u, cam, **kw):
 PRESETS = dict(
     cross_nose=_cross('cross_nose', 0.24, dict(loc=(6.0, -17.0, 1.0), look_at=(-2.0, 4.5, 3.6), lens=21), cards=[('a', (-8, -6), 3.2)], note='shot 24: side-on low, the nose lifting over the trench gap'),
     cross_hero=_cross('cross_hero', 0.40, dict(loc=(4.0, -16.0, 1.6), look_at=(0.5, 4.5, 3.4), lens=22), cards=[('a', (-9, -5), 3.2), ('b', (10, -4), 3.2)], note='shot 25: SIDE-ON, nose lifted, front track gripping the far lip, rear on the near parapet'),
-    cross_pull=_cross('cross_pull', 0.60, dict(loc=(7.5, -11.0, 1.3), look_at=(4.5, 4.5, 2.6), lens=24), dress_n=2.6, cards=[('a', (-6, -6), 3.2)], note='shot 26: pulling across, rear tracks leaving the near lip'),
-    cross_wire=_cross('cross_wire', 0.12, dict(loc=(-5.0, -8.0, 0.8), look_at=(-9.5, 2.0, 1.2), lens=22), dress_n=0.15, near=False, sun=(205.0, 30.0), fill=1200.0, tune=dict(cloud_k=0.8, green_k=0.2), lane_ok=True, world=dict(crates=[]), note='shot 27: low insert, barbed wire squashed flat under the track'),
-    cross_hull=_cross('cross_hull', 0.50, dict(loc=(11.0, -7.0, 3.2), look_at=(5.0, 4.5, 3.0), lens=24), sparks=0.30, sun=(205.0, 30.0), fill=1200.0, dress_n=0.4, near=False, tune=dict(cloud_k=0.8), note='shot 28: hull side, bullet pings (sparks)'),
+    cross_pull=_cross('cross_pull', 0.60, fill=500.0, dict(loc=(7.5, -11.0, 1.3), look_at=(4.5, 4.5, 2.6), lens=24), dress_n=2.6, cards=[('a', (-6, -6), 3.2)], note='shot 26: pulling across, rear tracks leaving the near lip'),
+    cross_wire=_cross('cross_wire', 0.12, dict(loc=(-5.0, -8.0, 0.8), look_at=(-9.5, 2.0, 1.2), lens=22), dress_n=0.3, near=False, sun=(205.0, 30.0), fill=1200.0, tune=dict(cloud_k=0.8, green_k=0.2), lane_ok=True, world=dict(crates=[]), note='shot 27: low insert, barbed wire squashed flat under the track'),
+    cross_hull=_cross('cross_hull', 0.50, dict(loc=(11.0, -7.0, 3.2), look_at=(5.0, 4.5, 3.0), lens=24), sparks=0.30, sun=(205.0, 30.0), fill=2200.0, dress_n=0.4, near=False, tune=dict(cloud_k=0.8), note='shot 28: hull side, bullet pings (sparks)'),
     cross_flee=_cross('cross_flee', 0.62, dict(loc=(-24.0, -2.0, 3.0), look_at=(6.0, 5.0, 3.4), lens=20), dress_n=2.0, tune=dict(cloud_k=0.9), cards=[('b', (14, 3), 3.2), ('a', (19, 8), 3.2), ('b', (24, 0), 3.2), ('a', (17, 12), 3.2)], note='shot 29: wide behind the tank, Germans (stand-ins) running'),
     cross_bucket=_cross('cross_bucket', 0.50, dict(loc=(-3.0, -14.0, 1.2), look_at=(0.5, 6.0, 1.4), lens=24), extras=[('bucket', -5.2, -5.5)], near=False, dress_n=1.2, tune=dict(cloud_k=0.95), note='shot 30: plain water bucket by the trench vs the tank over it'),
     front_aerial=dict(loc='front', tune=dict(haze=0.0, cloud_k=0.8, green_k=0.2), dress_n=1.5, cam=dict(loc=(-62.0, -22.0, 34.0), look_at=(-6.0, 6.0, 2.0), lens=24), cards=[('a', (-28, -6), 3.6), ('b', (-33, 8), 3.6), ('a', (-1, 4), 3.6), ('b', (6, 18), 3.6)], note='shot 5: high wide over the two zig-zag lines'),
-    front_parapet=dict(loc='front', fill=300.0, tune=dict(cloud_k=0.95), cam=dict(loc=(-33.0, -0.5, 2.6), look_at=(-4.0, 5.0, 1.4), lens=28), extras=[('mg', -5.2, 5.0, math.pi, True)], cards=[('a', (-30.5, -3.0), 3.0)], note='shot 6: behind the British parapet, German MG nest across the wire'),
+    front_parapet=dict(loc='front', tune=dict(cloud_k=0.95), cam=dict(loc=(-33.0, -0.5, 2.6), look_at=(-4.0, 5.0, 1.4), lens=28), extras=[('mg', -5.2, 5.0, math.pi, True)], cards=[('a', (-30.5, -3.0), 3.0)], note='shot 6: behind the British parapet, German MG nest across the wire'),
     front_column=dict(loc='front', tune=dict(cloud_k=1.15), dress_n=2.5, cam=dict(loc=(8.0, -58.0, 4.5), look_at=(-20.0, -74.0, 3.2), lens=24), tanks=[dict(front=(-20.0, -34.0), yaw=90.0), dict(front=(-20.0, -56.0), yaw=90.0), dict(front=(-20.0, -78.0), yaw=90.0), dict(front=(-20.0, -100.0), yaw=90.0, smoke=1.0)], note='shot 20: column crawling to the start line'),
     front_halt=dict(loc='front', tune=dict(cloud_k=0.85, green_k=2.2), dress_n=4.0, cam=dict(loc=(-3.0, -48.0, 2.6), look_at=(-20.0, -34.0, 1.6), lens=22), tanks=[dict(front=(-22.0, -33.0), yaw=90.0, nocorr=True), dict(front=(-8.0, -22.0), yaw=95.0, smoke=1.0)], note='shot 21: one smoking, one nose-down in a crater'),
     front_stuck=dict(loc='front', tune=dict(cloud_k=0.85), cam=dict(loc=(6.0, -52.0, 1.2), look_at=(-4.0, -40.0, 2.4), lens=24), tanks=[dict(front=(-4.0, -42.0), yaw=90.0, state='stuck')], extras=[('mud', -4.0, -42.0, math.pi / 2)], cards=[('a', (2.0, -45.0), 3.2), ('b', (-9.0, -47.0), 3.2)], note='shot 22: sunk to the sponsons in mud'),
