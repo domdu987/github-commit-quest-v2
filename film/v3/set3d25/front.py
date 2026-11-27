@@ -11,6 +11,7 @@ import os, sys, math, json, time, random, hashlib, subprocess, copy
 import numpy as np
 import bpy
 from mathutils import Vector, Matrix, Euler
+if __name__ == '__main__': sys.modules['front'] = sys.modules['__main__']          # lib25 / tank25 do `import front`
 
 HERE = os.path.dirname(os.path.abspath(__file__)); PROJ = os.path.dirname(os.path.dirname(HERE))
 for p in (os.path.join(PROJ, 'v3', 'set3d24'), os.path.join(PROJ, 'v3', 'kit')):
@@ -185,12 +186,15 @@ def ground_mat():
         mc, mh = tex('mud', 3.0, '#a07650', 1.1, 1.2)
         wetm = b.rng(wet, 0.25, 0.75, 0.0, 1.0)
         col = b.mix(wetm, dry, mc)
+        gr = b.n('ShaderNodeAttribute'); gr.attribute_name = 'green'; gr.attribute_type = 'GEOMETRY'; gcol, gh_ = tex('grass', 2.4, '#d8e08a', 1.15, 1.05); gv = b.noise(0.6, 3.0, 0.6, c, None)
+        gcol = b.mul(gcol, b.mix(b.rng(gv, 0.3, 0.7), (0.85, 0.9, 0.6), (1.35, 1.25, 0.8)))
+        col = b.mix(b.rng(gr.outputs['Fac'], 0.25, 0.7), col, gcol)
         # distant fields: green-gold stripes fading in with the 'far' attribute
         st = b.n('ShaderNodeTexWave', wave_type='BANDS', bands_direction='X', wave_profile='SAW'); st.inputs['Scale'].default_value = 0.035; st.inputs['Distortion'].default_value = 3.0; b.l(c, st.inputs['Vector'])
         fn = b.noise(0.02, 2.0, 0.5, c, None); fld = b.mix(b.rng(fn, 0.35, 0.65), b.mix(b.rng(st.outputs['Fac'], 0.4, 0.6), (0.55, 0.62, 0.22), (0.80, 0.68, 0.28)), (0.40, 0.55, 0.22))
         col = b.mix(fa, col, fld)
         hgt = b.math('ADD', b.math('MULTIPLY', ch, 0.6), b.math('MULTIPLY', ch2, 0.4)); hgt = b.mix(wetm, hgt, mh)
-        rough = b.rng(wetm, 0.0, 1.0, 0.92, 0.38)
+        rough = b.rng(wetm, 0.0, 1.0, 0.92, 0.38); hgt = b.mix(b.rng(gr.outputs['Fac'], 0.25, 0.7), hgt, gh_) if False else hgt
         b.princ(col, rough, 0.0, b.bump(hgt, 0.7, 0.1))
     return fmat('ground', f)
 
@@ -222,20 +226,37 @@ def terrain_noise(X, Y):
     for k, a, b, ph, w in _NZ: h += w * np.sin(X * k * math.cos(a) + Y * k * math.sin(a) + ph) * np.sin(X * k * 0.7 * math.cos(b) - Y * k * 0.7 * math.sin(b) + ph * 1.7)
     return h
 
-def ground_h0(X, Y):
-    """ground height before the tank crushes it: churned noise, craters, parapet (west / British side) and parados (east) mounds, trench with a batter wall that climbs to the local lip height"""
-    P = S['trench']; D = S['trench_d']; HF, HW = S['trench_hf'], S['trench_hw']; d, side, al = poly_dist(X, Y, P)
+def ground_h0_raw(X, Y):
+    """ground height before corridors / the tank: churned noise, craters, parapet / parados mounds, trenches (S['trenches']) with a batter wall that climbs to the local lip height"""
     far = sstep(18, 60, np.hypot(X * 0.4, Y - 5))
     h = terrain_noise(X, Y) * (0.14 + 0.1 * (1 - far)) + 0.05 * np.sin(X * 1.9 + Y * 1.3) * np.sin(Y * 2.1 - X * 0.7)
-    de = np.maximum(d, HW)
-    h += np.where(side > 0, 1.55, 0.5) * np.exp(-((de - 4.9) / 2.0) ** 2) * (1 - 0.25 * np.sin(al * 0.37) ** 2)
+    tr_d = []
+    for tr in S['trenches']:
+        d, side, al = poly_dist(X, Y, tr['poly']); de = np.maximum(d, tr['hw'])
+        h += np.where(side > 0, tr['mw'], tr['me']) * np.exp(-((de - 4.9) / 2.0) ** 2) * (1 - 0.25 * np.sin(al * 0.37) ** 2) * sstep(0.5, tr.get('taper', 7.0), al); tr_d.append(d)
     for (cx, cy, r, dep, wat) in S['craters']:
         rr = np.hypot(X - cx, Y - cy) / r; bowl = -dep * np.clip(1 - rr * rr, 0, 1) ** 0.8; rim = 0.22 * dep * np.exp(-((rr - 1.12) / 0.28) ** 2)
         h += bowl + rim
-    t = np.clip((d - HF) / (HW - HF), 0, 1); wall = -D + (h + D) * t + terrain_noise(X * 2.3, Y * 2.3) * 0.05 * (1 - t)
-    return np.where(d < HW, wall, h)
+    for tr, d in zip(S['trenches'], tr_d):
+        D, HF, HW = tr['depth'], tr['hf'], tr['hw']; t = np.clip((d - HF) / (HW - HF), 0, 1); wall = -D + (h + D) * t + terrain_noise(X * 2.3, Y * 2.3) * 0.05 * (1 - t)
+        h = np.where(d < HW, wall, h)
+    return h
+
+def corridor_sv(c, X, Y):
+    hx, hy = c['h']; dx, dy = X - c['o'][0], Y - c['o'][1]; return dx * hx + dy * hy, -dx * hy + dy * hx
+
+def ground_h0(X, Y):
+    """raw ground, then every corridor (a tank's lane: the ground across the lane equals the centre-line profile, so the tracks sit on it level, no noise under them)"""
+    h = ground_h0_raw(X, Y)
+    for c in S.get('corridors', []):
+        s, v = corridor_sv(c, X, Y); w = (1 - sstep(c['flat'], c['blend'], np.abs(v))) * sstep(c['s0'] - 3, c['s0'], s) * (1 - sstep(c['s1'], c['s1'] + 3, s))
+        if not np.any(w > 0): continue
+        sc = np.clip(s, c['s0'] - 3, c['s1'] + 3); cx, cy = c['o'][0] + c['h'][0] * sc, c['o'][1] + c['h'][1] * sc; hc = ground_h0_raw(cx, cy) + c.get('dz', 0.0)
+        h = h * (1 - w) + hc * w
+    return h
 
 def ground_h(X, Y):
+    if S.get('flat'): return np.zeros_like(np.asarray(X, float)) + S.get('flat_z', 0.0)
     h = ground_h0(X, Y)
     tk = S.get('tank_crush')
     if tk is not None:
@@ -247,19 +268,23 @@ def gh(x, y): return float(ground_h(np.array([x], float), np.array([y], float))[
 def build_ground():
     xs = axis(-30, 32, 0.42, -230, 230, 1.09); ys = axis(-36, 26, 0.42, -150, 520, 1.09)
     X, Y = np.meshgrid(xs, ys); Z = ground_h(X, Y); ny, nx = X.shape
-    wet = np.zeros_like(Z); d, side, al = poly_dist(X, Y, S['trench'])
-    wet += np.where(d < S['trench_hw'], 1.0, 0.0) * sstep(S['trench_hw'], S['trench_hf'] + 0.5, d) * 0 + np.where(d < S['trench_hf'] + 0.6, 1.0, 0.0)
+    wet = np.zeros_like(Z); grn = np.zeros_like(Z)
+    for tr in S['trenches']:
+        d, side, al = poly_dist(X, Y, tr['poly']); wet += np.where(d < tr['hf'] + 0.6, 1.0, 0.0); grn += np.exp(-((d - tr['hw'] - 0.9) / 1.3) ** 2) * 0.85 * (d > tr['hw'] - 0.3)
     for (cx, cy, r, dep, wat) in S['craters']:
-        rr = np.hypot(X - cx, Y - cy) / r; wet += (1 - sstep(0.15, 0.95, rr)) * (0.5 + 0.5 * wat)
+        rr = np.hypot(X - cx, Y - cy) / r; wet += (1 - sstep(0.15, 0.95, rr)) * (0.5 + 0.5 * wat); grn += np.exp(-((rr - 1.25) / 0.35) ** 2) * 0.9
     nz = terrain_noise(X * 1.7 + 11, Y * 1.7 - 3); wet += np.clip((nz - 1.0) * 0.8, 0, 0.7) * (1 - sstep(25, 60, np.hypot(X, Y - 5)))
     for (cx, cy, rx, ry, ang) in S.get('mud_zones', []):
         c, s = math.cos(ang), math.sin(ang); u = ((X - cx) * c + (Y - cy) * s) / rx; v = (-(X - cx) * s + (Y - cy) * c) / ry; wet += np.exp(-(u * u + v * v) * 2.0) * 0.9
     tkc = S.get('tank_wet')
     if tkc is not None: wet += tkc(X, Y)
-    wet = np.clip(wet, 0, 1); far = sstep(55, 140, Y) * (1 - 0.0 * X)
+    wet = np.clip(wet, 0, 1); far = sstep(S.get('far0', 55), S.get('far1', 140), np.hypot(X * 0.9, Y - 8))
+    gn = terrain_noise(X * 0.35 + 3, Y * 0.35 - 7); grn += np.clip((gn - 0.15) * S.get('green_k', 0.9), 0, 0.9) * (1 - sstep(0, 1, wet)); grn = np.clip(grn * (1 - wet), 0, 1)
+    if S.get('all_green'): grn = np.clip(np.ones_like(Z) * (1 - wet) * (1 - sstep(0, 1, np.zeros_like(Z))), 0, 1)
+    tkg = S.get('tank_green')
     verts = np.stack([X, Y, Z], -1).reshape(-1, 3); idx = np.arange(nx * ny).reshape(ny, nx); f = np.stack([idx[:-1, :-1], idx[:-1, 1:], idx[1:, 1:], idx[1:, :-1]], -1).reshape(-1, 4)
     me = bpy.data.meshes.new('ground'); me.from_pydata(verts.tolist(), [], f.tolist()); me.update()
-    for nm, arr in (('wet', wet), ('far', far)):
+    for nm, arr in (('wet', wet), ('far', far), ('green', grn)):
         at = me.attributes.new(nm, 'FLOAT', 'POINT'); at.data.foreach_set('value', arr.reshape(-1).astype(np.float32))
     me.polygons.foreach_set('use_smooth', [True] * len(me.polygons)); me.materials.append(S['M']['ground'])
     ob = bpy.data.objects.new('ground', me); S['coll'].objects.link(ob); S['ground_ob'] = ob; return ob
@@ -296,13 +321,13 @@ def rot_axes(yaw=0.0, pitch=0.0, roll=0.0):
     M = Euler((roll, pitch, yaw), 'XYZ').to_matrix(); return M.col[0].copy(), M.col[1].copy(), M.col[2].copy()
 
 # ============================================================================= the German trench
-def trench_segments():
-    P = S['trench']; return list(zip(P[:-1], P[1:]))
+def trench_segments(tr=None):
+    P = (tr or S['trenches'][0])['poly']; return list(zip(P[:-1], P[1:]))
 
-def build_trench():
+def build_trench(tr=None, tag=''):
     """Zig-zag trench: per straight bay a revetment panel on each wall (vertical planks or wattle) that climbs to the local lip, posts and wales, duckboards on rails."""
-    M = S['M']; D = S['trench_d']; HF, HW = S['trench_hf'], S['trench_hw']
-    for i, ((ax, ay), (bx, by)) in enumerate(trench_segments()):
+    tr = tr or S['trenches'][0]; M = S['M']; D = tr['depth']; HF, HW = tr['hf'], tr['hw']
+    for i, ((ax, ay), (bx, by)) in enumerate(trench_segments(tr)):
         dx, dy = bx - ax, by - ay; L = math.hypot(dx, dy); yaw = math.atan2(dy, dx); ex, ey = dx / L, dy / L; nx_, ny_ = -ey, ex
         ext = 2.4; wmat = M['rev'] if i % 3 != 1 else M['wattle']; wmat2 = M['rev_d'] if i % 3 != 2 else M['wattle']
         for sd, sg in (('L', 1), ('R', -1)):
@@ -324,12 +349,12 @@ def build_trench():
             for zz in (-1.0, -2.6, -3.9):                            # wales across the planks
                 inw = sg * (yb + (yt - yb) * (zz - zb) / (tm - zb)) - sg * 0.2
                 poly_face(mb, [(ts[0], inw, zz - 0.12), (ts[-1], inw, zz - 0.12), (ts[-1], inw, zz + 0.12), (ts[0], inw, zz + 0.12)], M['beam'], (0, -sg, 0))
-            mkobj(mb, 'rev_%d%s' % (i, sd), loc=(ax, ay, 0), rot=(0, 0, yaw))
+            mkobj(mb, 'rev%s_%d%s' % (tag, i, sd), loc=(ax, ay, 0), rot=(0, 0, yaw))
         mb = MB(); zf = -D + 0.18                                    # duckboards: two rails + slats along the bay
         for rr in (-1.25, 1.25): mb.box((0.0, rr - 0.10, zf - 0.02), (L, rr + 0.10, zf + 0.10), M['beam'])
         for k in range(int(L / 0.52)):
             u = 0.15 + k * 0.52; mb.box((u, -1.6, zf + 0.10), (u + 0.40, 1.6, zf + 0.17), M['duck'])
-        mkobj(mb, 'duck_%d' % i, loc=(ax, ay, 0), rot=(0, 0, yaw))
+        mkobj(mb, 'duck%s_%d' % (tag, i), loc=(ax, ay, 0), rot=(0, 0, yaw))
 
 def sandbag_row(mb, p0, p1, z_of, layers=3, size=(0.95, 0.5, 0.32), seed=1, skip=None, lean=0.0):
     r = rnd(seed); p0, p1 = Vector(p0), Vector(p1); dvec = p1 - p0; L = dvec.length; e = dvec / L; nrm = Vector((-e.y, e.x, 0)); n = int(L / (size[0] * 0.92)); yaw = math.atan2(e.y, e.x)
@@ -344,21 +369,23 @@ def sandbag_row(mb, p0, p1, z_of, layers=3, size=(0.95, 0.5, 0.32), seed=1, skip
             ell(mb, (c.x, c.y, z), size[0] * 0.5 * r.uniform(0.93, 1.05), size[1] * 0.5 * r.uniform(0.92, 1.08), size[2] * 0.5 * r.uniform(0.95, 1.1), S['M']['sandbag'], 10, 6, (X, Y, Z))
 
 def build_sandbags():
-    M = S['M']; mb = MB(); HW = S['trench_hw']; P = S['trench']; crushed = S.get('in_tank', lambda x, y: False)
-    # parapet: west lip of the German trench, 3 courses; a gap where the tank came over
-    for (a, b) in zip(P[:-1], P[1:]):
-        a, b = Vector((a[0], a[1], 0)), Vector((b[0], b[1], 0)); e = (b - a).normalized(); nrm = Vector((-e.y, e.x, 0)); off = nrm * (HW + 0.55)
-        sandbag_row(mb, a + off - e * 0.6, b + off + e * 0.6, lambda x, y: gh(x, y), 3, seed=int(a.y * 7) + 3, skip=lambda x, y: crushed(x, y))
-    for (a, b) in zip(P[:-1], P[1:]):                                # parados: lower, 2 courses on the east lip
-        a, b = Vector((a[0], a[1], 0)), Vector((b[0], b[1], 0)); e = (b - a).normalized(); nrm = Vector((e.y, -e.x, 0)); off = nrm * (HW + 0.7)
-        sandbag_row(mb, a + off, b + off, lambda x, y: gh(x, y), 2, seed=int(a.y * 5) + 9, skip=lambda x, y: crushed(x, y) or y < S.get('parados_y0', -9.0))
-    # spilled bags: tumbled in and around the crushed zone and rolling down the wall
-    r = rnd(77); cx, cy = S['tank_front'][0], S['tank_front'][1]
-    for i in range(46):
-        a = r.uniform(0, 6.28); rr = r.uniform(1.0, 7.5); x, y = cx - S['tank_h'][0] * 3.0 + math.cos(a) * rr, cy - S['tank_h'][1] * 3.0 + math.sin(a) * rr
-        if crushed(x, y): continue
-        z = gh(x, y); X, Y, Z = rot_axes(r.uniform(0, 6.28), r.uniform(-0.5, 0.5), r.uniform(-0.6, 0.6))
-        ell(mb, (x, y, max(z, -S['trench_d'] + 0.3) + 0.22), 0.47, 0.26, 0.19, M['sandbag'], 10, 6, (X, Y, Z))
+    M = S['M']; mb = MB(); crushed = S.get('in_tank', lambda x, y: False)
+    for ti, tr in enumerate(S['trenches']):
+        if not tr.get('sandbags', True): continue
+        HW = tr['hw']; P = tr['poly']; lw, le = tr.get('sb_layers', (3, 2))
+        for (a, b) in zip(P[:-1], P[1:]):
+            a, b = Vector((a[0], a[1], 0)), Vector((b[0], b[1], 0)); e = (b - a).normalized(); nrm = Vector((-e.y, e.x, 0)); off = nrm * (HW + 0.55)
+            if lw: sandbag_row(mb, a + off - e * 0.6, b + off + e * 0.6, lambda x, y: gh(x, y), lw, seed=int(a.y * 7) + 3 + ti, skip=lambda x, y: crushed(x, y))
+        for (a, b) in zip(P[:-1], P[1:]):
+            a, b = Vector((a[0], a[1], 0)), Vector((b[0], b[1], 0)); e = (b - a).normalized(); nrm = Vector((e.y, -e.x, 0)); off = nrm * (HW + 0.7)
+            if le: sandbag_row(mb, a + off, b + off, lambda x, y: gh(x, y), le, seed=int(a.y * 5) + 9 + ti, skip=lambda x, y: crushed(x, y) or y < S.get('parados_y0', -9.0))
+    r = rnd(77)
+    for (cx, cy, rad, n) in S.get('spill', []):
+        for i in range(n):
+            a = r.uniform(0, 6.28); rr = r.uniform(0.6, rad); x, y = cx + math.cos(a) * rr, cy + math.sin(a) * rr
+            if crushed(x, y): continue
+            z = gh(x, y); X, Y, Z = rot_axes(r.uniform(0, 6.28), r.uniform(-0.5, 0.5), r.uniform(-0.6, 0.6))
+            ell(mb, (x, y, max(z, -S['trenches'][0]['depth'] + 0.3) + 0.22), 0.47, 0.26, 0.19, M['sandbag'], 10, 6, (X, Y, Z))
     mkobj(mb, 'sandbags', smooth=True)
 
 # ============================================================================= barbed wire
@@ -393,7 +420,7 @@ def coil(mb, c, axis_dir, length, R, turns, seed, squash=1.0):
 
 def build_wire():
     """Entanglement belt on pickets west of the trench (British approach), crushed flat in the lane the tank came through."""
-    M = S['M']; mb = MB(); mp = MB(); r = rnd(31); P = S['trench']; crushed = S.get('in_tank_wide', lambda x, y: False)
+    M = S['M']; mb = MB(); mp = MB(); r = rnd(31); crushed = S.get('in_tank_wide', lambda x, y: False)
     belts = S['wire_belts']
     for (x0, y0, x1, y1, rows) in belts:
         n = max(2, int(math.hypot(x1 - x0, y1 - y0) / 2.6))
@@ -420,7 +447,7 @@ def build_wire():
                 strand(mb, (xa, ya, za + 0.5), (xb, yb, zb + 1.6), 0.05, r.randint(0, 99999), 0.03, 0.6)
                 strand(mb, (xa, ya, za + 1.6), (xb, yb, zb + 0.5), 0.05, r.randint(0, 99999), 0.03, 0.6)
     for (cx, cy, ln, R, tn) in S.get('wire_coils', []):
-        coil(mb, (cx, cy, gh(cx, cy) + 0.25), (math.cos(0.7), math.sin(0.7), 0), ln, R, tn, int(cx * 13 + cy), 0.35)
+        coil(mb, (cx, cy, gh(cx, cy) + 0.25), (math.cos(0.7), math.sin(0.7), 0), ln, R, tn, int(cx * 13 + cy), 0.12 if crushed(cx, cy) else 0.35)
     mkobj(mp, 'pickets'); mkobj(mb, 'wire')
 
 # ============================================================================= village of Flers (ruins), stumps, poplars
@@ -627,118 +654,9 @@ def point_in_poly(poly, x, z):
         if (z1 > z) != (z2 > z) and x < (x2 - x1) * (z - z1) / (z2 - z1) + x1: c = not c
     return c
 
-def build_tank(name='tank', pos=(0, 0, 0), yaw=0.0, pitch=0.0, roll=0.0, camo=True, roof_mesh=False, tail=True, tail_angle=0.0):
-    """Mark I MALE tank (British, 1916): rhomboid hull of riveted plates with the track running round the outline (plates + grousers), two sponsons (trapezoid bays) each with a short
-    6-pounder + gun shield, driver's cab with vision slits on the roof, exhaust + silencer, optional anti-grenade mesh and the twin-wheel steering tail (hinged, `tail_angle`).
-    Local frame: origin = the front end of the straight bottom run (the point that rests on the ground first), x forward, y left, z up. 15 D long, 4.9 D tall, 8.4 D wide over the sponsons.
-    pos = world position of that origin, yaw (deg, 0 = +x, CCW from above), pitch (deg, + = nose UP; negative = nose down), roll (deg).  Returns the root empty (`.tail` attribute names the hinge empty via root['tail'])."""
-    M = S['M']; root = empty(name, loc=pos); root.rotation_mode = 'XYZ'
-    root.rotation_euler = (math.radians(roll), -math.radians(pitch), math.radians(yaw)); S.setdefault('tanks', {})[name] = root
-    out = TANK_OUT; track_path = round_poly([(x, z) for x, z in out], [1.6, 1.3, 1.3, 1.5], 8)
-    # ---- tracks: plates + grousers, both sides
-    for sd, sg in (('L', 1), ('R', -1)):
-        mb = MB(); res = resample(track_path, 0.60); cen = Vector((sum(p[0] for p in out) / 4, 0, sum(p[1] for p in out) / 4)); y0, y1 = TRACK_Y
-        for (p, tan) in res:
-            X = Vector((tan.x, 0, tan.y)); Z = Vector((tan.y, 0, -tan.x)); pc = Vector((p.x, 0, p.y))                  # Z = outward? check against the centre
-            if (pc - cen).dot(Z) < 0: Z = -Z
-            Y = Vector((0, 1, 0)); c = Vector((p.x, sg * (y0 + y1) / 2, p.y)) + Z * 0.0
-            obox(mb, c - Z * 0.07, X, Y, Z, 0.275, (y1 - y0) / 2, 0.07, M['track'])
-            obox(mb, c + Z * 0.05, X, Y, Z, 0.11, (y1 - y0) / 2 - 0.04, 0.07, M['track'])                           # grouser rib
-        for k in range(0, len(res), 2):                                                                             # a rivet / bolt pair on every other plate edge
-            p, tan = res[k]; pc = Vector((p.x, 0, p.y)); Z = Vector((tan.y, 0, -tan.x))
-            if (pc - cen).dot(Z) < 0: Z = -Z
-            for yy in (y0 + 0.2, y1 - 0.2): q = Vector((p.x, sg * yy, p.y)) + Z * 0.0; mb.frustum(q + Z * 0.0, q + Z * 0.15, 0.06, 0.04, M['rivet'], seg=5, cap0=False)
-        mkobj(mb, '%s_track%s' % (name, sd), parent=root)
-    # ---- hull
-    ins = inset_poly(out, 0.62); mb = MB(); mbr = MB(); H0 = TRACK_Y[0] - 0.05; hh = HULL_HW
-    for sg in (1, -1):
-        poly = [(x, sg * hh, z) for x, z in ins]; nrm = (0, sg, 0); poly_face(mb, poly, M['hull'], nrm)
-        # rivets on the side plates (inside the polygon inset a little)
-        small = inset_poly(ins, 0.3); sgn_ = sg
-        rivet_rows(mbr, lambda u, v: (u, sg * (hh + 0.0), v), nrm, lambda u, v: point_in_poly(small, u, v), -10, 4, -0.5, 5.0)
-        edge_rivets(mbr, [(x, sg * hh, z) for x, z in small], nrm)
-    n_ = len(ins)
-    for i in range(n_):                                              # slabs between the sides: bottom, front slope, top, rear slope (outward normals)
-        a, b = ins[i], ins[(i + 1) % n_]; e = Vector((b[0] - a[0], b[1] - a[1])); nn = Vector((e.y, -e.x)).normalized()                              # CCW polygon: outward normal = right of the edge
-        q = [(a[0], -hh, a[1]), (b[0], -hh, b[1]), (b[0], hh, b[1]), (a[0], hh, a[1])]; poly_face(mb, q, M['hull'], (nn.x, 0, nn.y))
-        nrm3 = (nn.x, 0, nn.y); Lp = e.length; ed = e.normalized()
-        def to3(u, v, a=a, ed=ed, nrm3=nrm3): return (a[0] + ed.x * u, v, a[1] + ed.y * u)
-        # seams: rows across (every PLATE_W along the edge) + a long seam down the middle; rivets in two rows each
-        for k in range(1, int(Lp / 2.6) + 1):
-            u = k * 2.6 - 0.6
-            if u > Lp - 0.3: break
-            for sg_ in (-1, 1):
-                for j in range(-int(hh / 0.44), int(hh / 0.44) + 1): mbr.frustum(Vector(to3(u + sg_ * 0.17, j * 0.44 + 0.22)), Vector(to3(u + sg_ * 0.17, j * 0.44 + 0.22)) + Vector(nrm3) * 0.075, 0.095, 0.058, M['rivet'], seg=6)
-        for sg_ in (-1, 1):
-            for k in range(1, int(Lp / 0.44)): mbr.frustum(Vector(to3(k * 0.44, sg_ * 0.17)), Vector(to3(k * 0.44, sg_ * 0.17)) + Vector(nrm3) * 0.075, 0.095, 0.058, M['rivet'], seg=6)
-    for sg in (1, -1):                                               # end caps already (sides); done
-        pass
-    mkobj(mb, name + '_hull', parent=root); mkobj(mbr, name + '_rivets', parent=root)
-    # ---- sponsons
-    for sd, sg in (('L', 1), ('R', -1)):
-        mb = MB(); mbr = MB(); mg = MB(); xc = -1.4; zlo, zhi = 0.95, 3.3; yi, yo = hh - 0.05, 4.25; wi, wo = 2.65, 1.45
-        P = lambda x, y, z: (xc + x, sg * y, z)
-        quads = [((-wi, yi, zlo), (wi, yi, zlo), (wo, yo, zlo), (-wo, yo, zlo)), ((-wi, yi, zhi), (wi, yi, zhi - 0.0), (wo, yo, zhi - 0.0), (-wo, yo, zhi))]
-        v = {}
-        for nm, (x, y, z) in dict(a=(-wi, yi, zlo), b=(wi, yi, zlo), c=(wo, yo, zlo), d=(-wo, yo, zlo), e=(-wi, yi, zhi), f=(wi, yi, zhi), g=(wo, yo, zhi - 0.25), h=(-wo, yo, zhi - 0.25)).items(): v[nm] = P(x, y, z)
-        faces = [('d', 'c', 'g', 'h'), ('a', 'd', 'h', 'e'), ('b', 'f', 'g', 'c'), ('e', 'h', 'g', 'f'), ('a', 'b', 'c', 'd')]
-        cen = Vector((xc, sg * (yi + yo) / 2, (zlo + zhi) / 2))
-        for fcs in faces:
-            pts = [v[k] for k in fcs]; c_ = sum((Vector(p) for p in pts), Vector()) / 4; nn = (Vector(pts[1]) - Vector(pts[0])).cross(Vector(pts[3]) - Vector(pts[0])).normalized()
-            if nn.dot(c_ - cen) < 0: nn = -nn
-            poly_face(mb, pts, M['hull'], tuple(nn)); edge_rivets(mbr, pts, tuple(nn), 0.42)
-            if fcs == ('d', 'c', 'g', 'h'): front_n = nn; front_pts = pts
-        # gun port: shield plate + mantlet + barrel
-        gc = Vector(P(0.0, yo, 2.05)); fn = Vector(front_n); X_ = Vector((1, 0, 0)); Z_ = Vector((0, 0, 1)); Y_ = fn
-        obox(mg, gc + fn * 0.1, X_, Y_, Z_, 0.78, 0.1, 0.78, M['steel_l']); mg.pid += 1
-        for k in range(8):
-            a_ = k * math.pi / 4; q = gc + fn * 0.22 + X_ * math.cos(a_) * 0.64 + Z_ * math.sin(a_) * 0.64; mg.frustum(q, q + fn * 0.08, 0.075, 0.05, M['rivet'], seg=6)
-        mg.sphere(gc + fn * 0.28, 0.47, M['gun'], 12, 8)
-        d = (fn + Vector((0.28, 0, -0.04))).normalized() if sg > 0 else (fn + Vector((0.28, 0, -0.04))).normalized()
-        d = Vector((0.30, sg * 1.0, -0.03)).normalized()
-        b0 = gc + fn * 0.6; b1 = b0 + d * 2.3; rod(mg, b0, b1, 0.24, M['gun'], 10, 0.18); rod(mg, b1 - d * 0.5, b1 + d * 0.12, 0.27, M['gun'], 10, 0.27); rod(mg, b0 + d * 0.1, b0 + d * 0.55, 0.32, M['gun'], 10, 0.26)
-        mkobj(mb, '%s_sponson%s' % (name, sd), parent=root); mkobj(mbr, '%s_spriv%s' % (name, sd), parent=root); mkobj(mg, '%s_gun%s' % (name, sd), parent=root, smooth=True)
-    # ---- cab (driver's box) with vision slits, roof hatch, exhaust + silencer, optional mesh
-    mb = MB(); mbr = MB(); ms = MB(); zt = 3.9
-    cx0, cx1, cy = 0.2, 3.0, 1.15; zc = zt + 0.75
-    lo, hi = (cx0, -cy, zt - 0.1), (cx1, cy, zc)
-    mb.box(lo, hi, M['hull']); mb.pid += 1
-    for (x0_, y0_, x1_, y1_) in ((cx1 - 0.02, -0.9, cx1 + 0.03, -0.35), (cx1 - 0.02, 0.35, cx1 + 0.03, 0.9)): ms.box((x0_, y0_, zc - 0.62), (x1_, y1_, zc - 0.4), M['slit'])
-    for sg in (1, -1): ms.box((1.4, sg * cy - 0.02, zc - 0.62), (2.2, sg * cy + 0.03 if False else sg * cy + sg * 0.03, zc - 0.4), M['slit'])
-    mb.box((cx0 - 0.15, -cy - 0.12, zc), (cx1 + 0.15, cy + 0.12, zc + 0.14), M['hull'])
-    for xr in (cx0, cx1 + 0.0):
-        for k in range(-5, 6): mbr.frustum(Vector((xr + (-0.1 if xr == cx0 else 0.1), k * 0.22, zc + 0.14)), Vector((xr + (-0.1 if xr == cx0 else 0.1), k * 0.22, zc + 0.205)), 0.07, 0.045, M['rivet'], seg=6)
-    for sg in (1, -1):
-        for k in range(1, 12): mbr.frustum(Vector((cx0 + k * 0.24, sg * (cy + 0.0), zc - 0.28)), Vector((cx0 + k * 0.24, sg * (cy + 0.075), zc - 0.28)), 0.07, 0.045, M['rivet'], seg=6)
-    mb.box((-1.6, -0.55, zt), (-0.4, 0.55, zt + 0.35), M['hull'])                                                # roof hatch
-    # exhaust pipe + silencer on the roof, left of centre
-    rod(ms, (-2.0, -0.85, zt + 0.52), (-6.3, -0.85, zt + 0.52), 0.2, M['steel'], 10); rod(ms, (-4.7, -0.85, zt + 0.52), (-6.9, -0.85, zt + 0.52), 0.46, M['steel'], 12)
-    for xk in (-2.6, -5.5): rod(ms, (xk, -0.85, zt), (xk, -0.85, zt + 0.5), 0.07, M['rivet'], 5)
-    if roof_mesh:                                                    # anti-grenade wire mesh frame over the roof
-        for k in range(0, 14):
-            x = -6.0 + k * 0.7; rod(ms, (x, -1.7, zt + 0.7), (x, 1.7, zt + 0.7), 0.025, M['wire'], 4)
-        for k in range(0, 8):
-            y = -1.75 + k * 0.5; rod(ms, (-6.0, y, zt + 0.7), (3.4, y, zt + 0.7), 0.025, M['wire'], 4)
-        for (x, y) in ((-6, -1.7), (-6, 1.7), (3.2, -1.7), (3.2, 1.7)): rod(ms, (x, y, zt), (x, y, zt + 0.72), 0.05, M['steel'], 5)
-    mkobj(mb, name + '_cab', parent=root); mkobj(mbr, name + '_cabriv', parent=root); mkobj(ms, name + '_roof', parent=root, smooth=True)
-    # ---- steering tail: hinge at the hull's rear, A-frame + axle + twin spoked wheels
-    if tail:
-        hinge = empty(name + '_tail', parent=root, loc=(-10.3, 0, 2.6)); hinge.rotation_euler = (0, -math.radians(tail_angle), 0); root['tail'] = hinge.name; S['tank_tail'] = hinge
-        mb = MB(); mw = MB(); R = 1.95; ax = (-7.4, 0.0, -2.6 + R)
-        for sg in (1, -1):
-            beam(mb, (0.0, sg * 1.05, 0.0), (ax[0], sg * 1.45, ax[2]), 0.3, 0.3, M['beam']); beam(mb, (0.0, sg * 1.05, -0.9), (ax[0] + 0.3, sg * 1.45, ax[2] - 0.2), 0.22, 0.22, M['beam'])
-        beam(mb, (ax[0] + 0.1, -1.5, ax[2]), (ax[0] + 0.1, 1.5, ax[2]), 0.32, 0.32, M['beam']); beam(mb, (-3.8, -1.2, 0.2), (-3.8, 1.2, 0.2), 0.22, 0.22, M['beam'])
-        rod(mb, (ax[0], -2.9, ax[2]), (ax[0], 2.9, ax[2]), 0.14, M['steel'], 8)
-        for sg in (1, -1):
-            yc = sg * 2.25; mw.frustum((ax[0], yc - 0.28, ax[2]), (ax[0], yc + 0.28, ax[2]), R, R, M['tirem'], seg=40, cap0=False, cap1=False)
-            for ys in (-0.28, 0.28): mw.frustum((ax[0], yc + ys, ax[2]), (ax[0], yc + ys + 0.06, ax[2]), R, R - 0.28, M['steel'], seg=40)
-            mw.frustum((ax[0], yc - 0.12, ax[2]), (ax[0], yc + 0.12, ax[2]), R - 0.35, R - 0.35, M['wheel'], seg=40, cap0=False, cap1=False)
-            rod(mw, (ax[0], yc - 0.35, ax[2]), (ax[0], yc + 0.35, ax[2]), 0.42, M['steel'], 12)
-            for k in range(14):
-                a_ = k * 2 * math.pi / 14; rod(mw, (ax[0] + math.cos(a_) * 0.4, yc, ax[2] + math.sin(a_) * 0.4), (ax[0] + math.cos(a_) * (R - 0.3), yc, ax[2] + math.sin(a_) * (R - 0.3)), 0.075, M['wheel'], 6)
-        mkobj(mb, name + '_tailframe', parent=hinge); mkobj(mw, name + '_tailwheels', parent=hinge, smooth=False)
-        S['tail_axle'] = (ax, R)
-    return root
+def build_tank(*a, **k):
+    """Mark I with hooks: see tank25.py (returns TankH: dict + attributes, .root is the root empty)"""
+    import tank25; return tank25.build_tank(*a, **k)
 
 def tank_world(root, p):
     return root.matrix_world @ Vector(p)
@@ -901,35 +819,35 @@ def make_camera(setup, name='cam'):
     if setup.get('roll'): ob.rotation_euler.rotate_axis('Z', math.radians(setup['roll']))
     sc.camera = ob; return ob
 
-# ============================================================================= presets
-PRESETS = dict(
-    cross_hero=dict(loc='front', cam='cross_hero', tank=dict(front=(4.4, 1.6), yaw=-22.0), pix=1, cards=[('tommy_a', (500, 930), 'cam'), ('tommy_b', (640, 880), 'cam')], samples=64,
-                    note='gate frame: low 3/4 front, Mark I nosing over the German trench, Flers ruins behind'),
-)
+# ============================================================================= presets (FRONT location; other locations: factory.py trial.py street.py dock.py sky.py, entry point set25.py)
 CAMS = dict(
-    cross_hero=dict(loc=(7.2, -12.4, 2.5), look_at=(2.2, 2.0, 2.7), lens=21),
-    tank=dict(loc=(7.0, -9.0, 3.0), look_at=(-1.0, 3.0, 2.8), lens=30),
-    flat=dict(loc=(-6.0, -34.0, 1.6), look_at=(-1.0, 3.0, 1.8), lens=36),
-    flat2=dict(loc=(30.0, 2.0, 1.6), look_at=(-1.0, 3.0, 1.8), lens=34),
     plan=dict(loc=(0.0, 4.0, 70.0), look_at=(0.0, 4.0, 0.0), lens=40, up=(0, 1, 0)),
     side=dict(loc=(-26.0, -28.0, 8.0), look_at=(-2.0, 3.0, 2.5), lens=30),
     back=dict(loc=(12.0, 24.0, 6.0), look_at=(-1.0, 2.0, 2.5), lens=30),
 )
-LOC_PRESETS = dict(front=['cross_hero'])
+
+_TP = [(0.0, -3.0), (0.0, 14.0), (7.0, 21.0), (31.0, 21.0)]
+_CR = dict(x0=0.0, y=4.5, s_a=-5.0, s_b=27.0, mud=1.0)
+PRESETS = dict(
+    cross_hero=dict(loc='front', cam=dict(loc=(5.0, -18.0, 1.7), look_at=(0.5, 4.5, 3.4), lens=21), cross=dict(_CR, u=0.42), trench0=dict(poly=_TP, mw=0.8, me=1.9, sb_layers=(2, 2)),
+                    cards=[('a', (-4.0, -4.0), 3.2), ('b', (9.0, -2.0), 3.2)], note='shot 25: SIDE-ON, nose lifted over the trench gap, front track gripping the far lip, rear on the near parapet'),
+)
 
 def default_world():
-    """the Front: layout constants shared by every preset of the location (trench line, craters, village, wire belts)"""
-    S['trench'] = [(11.0, -38.0), (11.0, -26.0), (2.0, -14.0), (0.0, -6.0), (0.0, 14.0), (7.0, 21.0), (31.0, 21.0)]
-    S['trench_d'] = 4.7; S['trench_hf'] = 2.2; S['trench_hw'] = 3.3
-    S['craters'] = [(-15.0, -9.0, 4.4, 1.5, 1.0), (13.0, -4.0, 3.6, 1.1, 0.9), (8.6, -13.0, 2.6, 0.7, 0.7), (9.0, -26.0, 5.0, 1.8, 1.0), (-20.0, 17.0, 5.0, 1.6, 0.4), (22.0, 8.0, 3.0, 0.9, 0.3), (-9.0, -31.0, 3.5, 1.2, 0.5), (18.0, 30.0, 6.0, 1.8, 0.8)]
-    S['mud_zones'] = [(-9.0, -6.0, 6.0, 3.0, 0.4), (12.0, -4.0, 7.0, 4.0, -0.3), (3.0, -18.0, 6.0, 3.0, 0.2)]
-    S['wire_belts'] = [(-9.0, -14.0, -11.5, 22.0, 3), (-12.5, -14.0, -15.0, 22.0, 2), (9.0, -1.0, 10.0, 16.0, 2)]
+    """the Front: layout constants shared by every preset of the location (trench lines, craters, village, wire belts)"""
+    S['trenches'] = [dict(name='german', poly=[(11.0, -38.0), (11.0, -26.0), (2.0, -14.0), (0.0, -6.0), (0.0, 14.0), (7.0, 21.0), (31.0, 21.0)], depth=4.7, hf=2.2, hw=3.3, mw=1.55, me=0.5, sb_layers=(3, 2)),
+                     dict(name='british', poly=[(-31.0, -60.0), (-31.0, -30.0), (-35.0, -16.0), (-33.0, 0.0), (-30.0, 14.0), (-34.0, 26.0), (-33.0, 60.0)], depth=4.3, hf=2.0, hw=3.1, mw=0.5, me=1.2, sb_layers=(1, 3))]
+    S['trench'] = S['trenches'][0]['poly']
+    S['craters'] = [(-15.0, -9.0, 4.4, 1.5, 1.0), (13.0, -4.0, 3.6, 1.1, 0.9), (8.6, -13.0, 2.6, 0.7, 0.7), (9.0, -26.0, 5.0, 1.8, 1.0), (-20.0, 17.0, 5.0, 1.6, 0.4), (22.0, 8.0, 3.0, 0.9, 0.3), (-9.0, -31.0, 3.5, 1.2, 0.5), (18.0, 30.0, 6.0, 1.8, 0.8),
+                    (-22.0, -34.0, 7.5, 2.6, 0.9), (-14.0, 33.0, 4.0, 1.2, 0.6), (-12.0, -48.0, 5.0, 1.8, 1.0), (4.0, -46.0, 4.0, 1.3, 0.6)]
+    S['mud_zones'] = [(-9.0, -6.0, 6.0, 3.0, 0.4), (12.0, -4.0, 7.0, 4.0, -0.3), (3.0, -18.0, 6.0, 3.0, 0.2), (-18.0, -40.0, 14.0, 6.0, 0.3), (-4.0, -42.0, 10.0, 5.0, -0.2)]
+    S['wire_belts'] = [(-9.0, -14.0, -11.5, 22.0, 3), (-12.5, -14.0, -15.0, 22.0, 2), (9.0, -1.0, 10.0, 16.0, 2), (-22.0, -20.0, -23.0, 12.0, 2)]
     S['wire_coils'] = [(2.6, 0.2, 3.2, 0.62, 6), (4.8, -1.6, 3.0, 0.6, 6), (5.2, 2.4, 3.4, 0.6, 6), (1.8, 3.4, 3.0, 0.55, 6), (-4.2, 9.0, 4.5, 0.55, 8), (-8.0, 2.0, 3.5, 0.5, 6), (-2.0, 12.0, 3.0, 0.45, 6), (6.0, 2.0, 4.0, 0.55, 7), (7.5, -1.5, 3.2, 0.5, 6), (5.5, 4.5, 3.0, 0.5, 6), (-6.5, 5.5, 4.0, 0.5, 7)]
-    S['houses'] = [('farm', -4.0, 40.0, 22.0, 12.0, 0.10, 5), ('barn', 26.0, 46.0, 16.0, 9.0, -0.15, 8)]
-    S['towers'] = [(-24.0, 48.0, 7.2, 26.0, 0.15)]
-    S['walls'] = [(-20.0, 34.0, -9.0, 35.0, 6.5), (10.0, 36.0, 20.0, 38.0, 5.5), (-46.0, 40.0, -34.0, 44.0, 6.0), (36.0, 52.0, 56.0, 55.0, 6.0)]
-    S['rubble'] = [(-14.0, 38.0, 5.0), (8.0, 36.0, 4.0), (-30.0, 46.0, 4.5), (22.0, 40.0, 4.0), (-3.0, 30.0, 3.0)]
-    S['stumps'] = [(-12.0, 30.0, 6.0, 0.7), (8.0, 36.0, 5.0, 0.6), (26.0, 24.0, 7.0, 0.8), (-28.0, 28.0, 4.5, 0.6), (40.0, 42.0, 6.0, 0.7), (-6.0, 27.0, 3.5, 0.5)]
+    S['houses'] = [('farm', -4.0, 40.0, 22.0, 12.0, 0.10, 5), ('barn', 26.0, 46.0, 16.0, 9.0, -0.15, 8), ('farm2', 56.0, 4.0, 20.0, 11.0, 1.5, 11), ('barn2', 62.0, -22.0, 14.0, 9.0, 1.7, 14)]
+    S['towers'] = [(-24.0, 48.0, 7.2, 26.0, 0.15), (74.0, 18.0, 7.0, 24.0, 0.3)]
+    S['walls'] = [(-20.0, 34.0, -9.0, 35.0, 6.5), (10.0, 36.0, 20.0, 38.0, 5.5), (-46.0, 40.0, -34.0, 44.0, 6.0), (36.0, 52.0, 56.0, 55.0, 6.0), (44.0, -14.0, 44.5, -2.0, 6.0), (48.0, 20.0, 49.0, 32.0, 5.0)]
+    S['rubble'] = [(-14.0, 38.0, 5.0), (8.0, 36.0, 4.0), (-30.0, 46.0, 4.5), (22.0, 40.0, 4.0), (-3.0, 30.0, 3.0), (46.0, -6.0, 4.0), (50.0, 26.0, 4.0)]
+    S['stumps'] = [(-12.0, 30.0, 6.0, 0.7), (8.0, 36.0, 5.0, 0.6), (26.0, 24.0, 7.0, 0.8), (-28.0, 28.0, 4.5, 0.6), (40.0, 42.0, 6.0, 0.7), (-6.0, 27.0, 3.5, 0.5), (36.0, -10.0, 6.0, 0.7), (38.0, 8.0, 4.0, 0.6)]
     S['n_poplar'] = 38
     S['crates'] = [(9.4, -9.2, 1.7, 0.3, 0.0), (11.2, -9.9, 1.5, -0.2, 0.0), (10.0, -9.4, 1.3, 0.8, 0.0), (5.6, 6.5, 1.6, 0.5, 0.15), (-2.5, 15.0, 1.5, 0.2, 0.0), (-7.5, -4.5, 1.6, -0.3, 0.1)]
     S['barrels'] = [(12.4, -7.5, 0.62, 1.6, False, 0.0), (13.5, -8.6, 0.62, 1.6, True, 0.6), (-8.5, 9.5, 0.62, 1.6, True, 2.0)]
@@ -937,67 +855,198 @@ def default_world():
     S['planks'] = [(8.8, -2.6, 0.4), (-4.0, -2.0, 2.3), (-5.5, 11.0, 0.9), (7.0, 9.0, 1.9)]
     S['stakes'] = [(7.8, -4.4, 0.8), (8.6, -3.4, 2.5), (2.4, -8.2, 4.0), (-6.5, 6.8, 5.0)]
     S['puddles'] = [(6.0, -3.2, 1.6, 0.9, 0.4), (2.5, -9.8, 1.2, 0.7, -0.3), (-5.2, 6.5, 1.6, 1.0, 0.2)]
+    S['spill'] = []; S['corridors'] = []; S['far0'] = 70; S['far1'] = 150
 
-def tank_pose(front_xy, yaw_deg):
-    """pose of the tank whose bottom-run front end rests on (front_xy) and whose rear bottom end rests on the ground behind: returns (pos, pitch_deg)"""
-    h = (math.cos(math.radians(yaw_deg)), math.sin(math.radians(yaw_deg))); zf = gh(front_xy[0], front_xy[1]); Lb = 9.6
-    rx, ry = front_xy[0] - h[0] * Lb, front_xy[1] - h[1] * Lb; zr = gh(rx, ry)
-    # highest ground under the run limits the pitch too (the belly must clear the mound): take the steepest nose-down line that touches every sampled point
-    best = None
-    for k in range(0, 25):
-        s = k / 24 * Lb; zg = gh(front_xy[0] - h[0] * s, front_xy[1] - h[1] * s)
-        slope = (zg - zf) / max(s, 1e-6) if s > 0.5 else -9
-        best = slope if best is None else max(best, slope)
-    pitch = -math.degrees(math.atan(best)) if False else math.degrees(math.atan(-best))   # nose-down is negative pitch: line z = zf + slope * s going back; slope > 0 means the rear is higher -> nose down
-    return (front_xy[0], front_xy[1], zf), pitch
+def corridor_pred(wide=0.0):
+    cs = S.get('corridors', [])
+    def f(x, y):
+        for c in cs:
+            s, v = corridor_sv(c, np.array([x]), np.array([y]))
+            if c['s0'] - 2 - wide < s[0] < c['s1'] + 2 and abs(v[0]) < c['flat'] + 0.5 + wide: return True
+        return False
+    return f
 
-def make_tank_crush(front_xy, yaw_deg, zf, pitch_deg):
-    h = np.array([math.cos(math.radians(yaw_deg)), math.sin(math.radians(yaw_deg))]); nrm = np.array([-h[1], h[0]]); tp = math.tan(math.radians(-pitch_deg))
-    def local(X, Y):
-        dx, dy = X - front_xy[0], Y - front_xy[1]; return dx * h[0] + dy * h[1], dx * nrm[0] + dy * nrm[1]
-    def crush(X, Y, h0):
-        xl, yl = local(X, Y); line = zf + tp * (-xl)                       # world z of the bottom-run line at local x (x < 0 behind the front end)
-        inrun = (xl < 0.6) & (xl > -10.3); ay = np.abs(yl)
-        track = inrun & (ay > 1.85) & (ay < 3.35); belly = inrun & (ay <= 1.85); spon = inrun & (ay >= 3.35) & (ay < 4.5)
-        out = np.full(X.shape, 1e9)
-        dd = poly_dist(X, Y, S['trench'])[0]; solid = dd >= S['trench_hw'] - 0.05                      # earth pressed (or heaped) to the track line wherever the track really rests on ground
-        out = np.where(track, np.where(solid & (np.abs(h0 - line) < 1.6), line, np.minimum(h0, line)), out); out = np.where(belly, np.minimum(h0, line + 0.45), out); out = np.where(spon, np.minimum(h0, line + 0.8), out)
-        return out
-    def wet(X, Y):
-        xl, yl = local(X, Y); ay = np.abs(yl); return ((xl < 4) & (xl > -14) & (ay > 1.5) & (ay < 4.0)) * 0.55 * sstep(-14, -6, xl)
-    def inside(x, y):
-        xl, yl = local(np.array([x]), np.array([y])); return bool((xl[0] < 5.0) and (xl[0] > -13) and abs(yl[0]) < 4.6)
-    def inside_wide(x, y):
-        xl, yl = local(np.array([x]), np.array([y])); return bool((xl[0] < 5.0) and (xl[0] > -20) and abs(yl[0]) < 5.2)
-    return crush, wet, inside, inside_wide
+def add_corridor(o, yaw_deg, s0, s1, flat=4.8, blend=6.8, dz=0.0):
+    S['corridors'].append(dict(o=o, h=(math.cos(math.radians(yaw_deg)), math.sin(math.radians(yaw_deg))), s0=s0, s1=s1, flat=flat, blend=blend, dz=dz))
 
-def build(preset='cross_hero', samples=None):
-    """Build the Front for a preset into a fresh scene: ground + trench + wire + sandbags + village + far fields, the Mark I and the cards, sun, sky, haze, render settings."""
+# --------------------------------------------------------------------------- extras: MG nest, OP, bucket, dressing
+def mg_nest(x, y, yaw, flash=False):
+    """German machine-gun nest on the lip: horseshoe of sandbags (3 courses, open to the front), a Maxim on a tripod with a shield and a belt box; yaw = firing direction (rad)"""
+    import lib25 as L
+    M = S['M']; mb = MB(); mg = MB(); e = Vector((math.cos(yaw), math.sin(yaw), 0)); nrm = Vector((-e.y, e.x, 0)); c = Vector((x, y, gh(x, y)))
+    for (a, b) in ((-1.9, 1.9),):
+        p0 = c + e * 1.7 - nrm * 1.9; p1 = c + e * 1.7 - nrm * 0.6; sandbag_row(mb, p0, p1, gh, 3, seed=5)
+        p0 = c + e * 1.7 + nrm * 0.6; p1 = c + e * 1.7 + nrm * 1.9; sandbag_row(mb, p0, p1, gh, 3, seed=6)
+        p0 = c + e * 1.7 - nrm * 1.9; p1 = c - e * 1.4 - nrm * 1.9; sandbag_row(mb, p0, p1, gh, 3, seed=7)
+        p0 = c + e * 1.7 + nrm * 1.9; p1 = c - e * 1.4 + nrm * 1.9; sandbag_row(mb, p0, p1, gh, 3, seed=8)
+    z0 = c.z + 0.55; X, Y, Z = rot_axes(yaw)
+    for sg in (-1, 1): rod(mg, c + e * 0.6 + nrm * sg * 0.55 + Vector((0, 0, 0.05)), c + e * 0.9 + Vector((0, 0, z0 + 0.45)), 0.04, M['steel'], 5)
+    rod(mg, c + e * 0.15 + Vector((0, 0, z0 + 0.5)), c + e * 1.0 + Vector((0, 0, z0 + 0.52)), 0.17, M['steel'], 10); rod(mg, c + e * 1.0 + Vector((0, 0, z0 + 0.52)), c + e * 1.9 + Vector((0, 0, z0 + 0.52)), 0.09, M['gun'], 8)
+    rod(mg, c + e * 1.8 + Vector((0, 0, z0 + 0.52)), c + e * 2.1 + Vector((0, 0, z0 + 0.52)), 0.13, M['gun'], 8); obox(mg, c + e * 0.1 + Vector((0, 0, z0 + 0.52)), X, Y, Z, 0.35, 0.22, 0.24, M['steel'])
+    obox(mg, c + e * 1.35 + Vector((0, 0, z0 + 0.8)), X, Y, Z, 0.04, 0.5, 0.35, M['steel_l'])
+    obox(mg, c - e * 0.2 + nrm * 0.45 + Vector((0, 0, z0 + 0.3)), X, Y, Z, 0.28, 0.15, 0.2, M['rivet'])
+    mkobj(mb, 'mg_bags', smooth=True); mkobj(mg, 'mg_gun', smooth=True)
+    if flash:
+        mf = MB(); m = S['M']['glow']; mu = c + e * 2.15 + Vector((0, 0, z0 + 0.52)); X, Y, Z = rot_axes(yaw)
+        for k in range(4):
+            a = k * math.pi / 4; d1 = Y * math.cos(a) + Z * math.sin(a); mf.pid += 1; mf.oface([mu + d1 * 0.1 - X * 0.02, mu + d1 * 0.75 + X * 0.1, mu - d1 * 0.1 - X * 0.02], m, [(0, 0)] * 3, X)
+            mf.pid += 1; mf.oface([mu - d1 * 0.1, mu - d1 * 0.75 + X * 0.1, mu + d1 * 0.1], m, [(0, 0)] * 3, X)
+        mkobj(mf, 'mg_flash', shadow=False); L.smoke_puffs('mg_puff', (mu.x + e.x * 0.5, mu.y + e.y * 0.5, mu.z + 0.2), 4, 0.28, 0.5, 3, '#f4f0e8')
+    return c
+
+def op_post(x, y, yaw):
+    """British observation post: three-sided sandbag chamber with a slit facing yaw, a plank roof, a periscope and a ledge for field glasses"""
+    import lib25 as L
+    M = S['M']; mb = MB(); mw = MB(); e = Vector((math.cos(yaw), math.sin(yaw), 0)); nrm = Vector((-e.y, e.x, 0)); c = Vector((x, y, gh(x, y))); X, Y, Z = rot_axes(yaw)
+    def row(p0, p1, layers, skipz=()): sandbag_row(mb, p0, p1, gh, layers, seed=int(abs(p0.x * 3 + p0.y)) + 2)
+    W = 3.4; Dp = 2.6
+    row(c + e * Dp - nrm * W, c + e * Dp - nrm * 0.9, 5); row(c + e * Dp + nrm * 0.9, c + e * Dp + nrm * W, 5); row(c + e * Dp - nrm * 0.9, c + e * Dp + nrm * 0.9, 2)       # front wall with a viewing slit above 2 courses
+    row(c + e * Dp - nrm * W, c - e * 2.2 - nrm * W, 5); row(c + e * Dp + nrm * W, c - e * 2.2 + nrm * W, 5)
+    for k in range(6): beam(mw, c + e * (-2.6 + k * 1.1) - nrm * (W + 0.3) + Vector((0, 0, 3.0)), c + e * (-2.6 + k * 1.1) + nrm * (W + 0.3) + Vector((0, 0, 3.0)), 0.5, 0.18, M['crate'])
+    obox(mw, c + e * (Dp - 0.5) + Vector((0, 0, 1.75)), X, Y, Z, 0.5, 2.8, 0.06, M['crate'])                   # ledge
+    obox(mw, c + e * (Dp - 0.2) - nrm * 0.0 + Vector((0, 0, 1.95)), X, Y, Z, 0.35, 0.22, 0.1, M['galv'])                                          # field glasses
+    obox(mw, c + e * (Dp - 0.2) + nrm * 0.3 + Vector((0, 0, 1.95)), X, Y, Z, 0.35, 0.22, 0.1, M['galv'])
+    for k in range(7): obox(mw, c - e * 2.4 + nrm * (-W + 0.2 + k * 1.0) + Vector((0, 0, 3.3)), X, Y, Z, 1.8, 0.22, 0.2, M['crate'])
+    pp = c - nrm * 2.0 + e * 1.0; rod(mw, pp + Vector((0, 0, 0)), pp + Vector((0, 0, 4.6)), 0.16, M['steel'], 8); obox(mw, pp + Vector((0, 0, 4.6)) + e * 0.12, X, Y, Z, 0.3, 0.22, 0.32, M['steel_l'])
+    obox(mw, pp + Vector((0, 0, 4.6)) - e * 0.1 + Vector((0, 0, 0)), X, Y, Z, 0.05, 0.18, 0.28, M['galv'])
+    mkobj(mb, 'op_bags', smooth=True); mkobj(mw, 'op_wood')
+    return c
+
+def bucket_at(x, y):
+    import lib25 as L
+    mb = MB(); L.bucket3d(mb, (x, y, gh(x, y)), 0.5, 0.75, True); return mkobj(mb, 'bucket_%d' % int(x * 7), smooth=True)
+
+def mud_heaps(x, y, yaw, n=26, seed=3):
+    """lumps of churned mud banked against both sides of a sunk tank (the ground mesh covers its lower hull)"""
+    mb = MB(); rr = rnd(seed); e = (math.cos(yaw), math.sin(yaw)); nn = (-e[1], e[0]); m = S['M']['mud_lump']
+    for i in range(n):
+        u = rr.uniform(-13, 2.5); v = rr.choice((-1, 1)) * rr.uniform(3.4, 5.4); px, py = x + e[0] * u + nn[0] * v, y + e[1] * u + nn[1] * v
+        J.lump(mb, (px, py, gh(px, py) + 0.2), rr.uniform(0.5, 1.1), m, rr.randint(0, 99999), 8, 5, 0.3, 0.6)
+    return mkobj(mb, 'mud_heaps', smooth=True)
+
+def far_ring():
+    """poplar avenues, orchards and hedgerows on the horizon all round (green field beyond, blue sky above)"""
+    import lib25 as L
+    M = S['M']; mt = MB(); ml = MB(); r = rnd(23)
+    for k in range(70):
+        a = k / 70 * 2 * math.pi + r.uniform(-0.03, 0.03); d = r.uniform(190, 240); x, y = 5 + math.cos(a) * d, 10 + math.sin(a) * d
+        L.poplar(mt, ml, x, y, gh(x, y), r.uniform(18, 28), k)
+    for k in range(110):
+        a = r.uniform(0, 6.283); d = r.uniform(85, 170); x, y = 5 + math.cos(a) * d, 10 + math.sin(a) * d
+        if abs(x) < 40 and abs(y - 5) < 40: continue
+        L.oak(mt, ml, x, y, gh(x, y), r.uniform(7, 13), k, M['fol_a'] if k % 2 else M['fol_b'])
+    mkobj(mt, 'far_trunks'); mkobj(ml, 'far_leaves', smooth=True)
+
+def dress_front(cam, focus, n=1.0, seed=11, lane_ok=False):
+    """texture + colour in the near foreground (producer fix 1 + 3): grass tufts and weeds along every trench lip and crater rim, scattered tufts, poppies, red brick bats,
+    broken duckboards, spilled sandbags, wire stakes; everything within ~34 D of the camera"""
+    import lib25 as L
+    cx, cy = cam[0], cam[1]; near = lambda x, y: math.hypot(x - cx, y - cy) < 34
+    crushed = corridor_pred(); wetc = [(c[0], c[1], c[2] * 0.75) for c in S['craters']]
+    def ok(x, y):
+        if not near(x, y): return False
+        for (a, b, r) in wetc:
+            if math.hypot(x - a, y - b) < r: return False
+        return lane_ok or not crushed(x, y)
+    g = []; w = []; f = []; bk = []
+    for tr in S['trenches']:
+        pts = L.scatter_poly_edge(tr['poly'], 0, int(900 * n), seed, 0.1)
+        for sg in (1, -1):
+            for (x, y) in L.scatter_poly_edge(tr['poly'], sg * (tr['hw'] + 0.35), int(520 * n), seed + sg, 0.9):
+                if ok(x, y): g.append((x, y))
+            for (x, y) in L.scatter_poly_edge(tr['poly'], sg * (tr['hw'] + 1.4), int(120 * n), seed + 5 + sg, 1.0):
+                if ok(x, y): w.append((x, y))
+            for (x, y) in L.scatter_poly_edge(tr['poly'], sg * (tr['hw'] + 0.9), int(90 * n), seed + 8 + sg, 1.5):
+                if ok(x, y): bk.append((x, y)); 
+    for (cx_, cy_, r, dep, wat) in S['craters']:
+        for (x, y) in L.scatter_disc(cx_, cy_, r * 1.45, int(90 * n), seed + int(cx_)):
+            d = math.hypot(x - cx_, y - cy_)
+            if d > r * 0.95 and ok(x, y): g.append((x, y))
+        for (x, y) in L.scatter_disc(cx_, cy_, r * 1.5, int(14 * n), seed + 3 + int(cy_)):
+            if math.hypot(x - cx_, y - cy_) > r * 0.9 and ok(x, y): w.append((x, y))
+    fx, fy = focus; mid = ((cx + fx) / 2, (cy + fy) / 2); rad = min(34.0, math.hypot(fx - cx, fy - cy) * 0.7 + 8)
+    for (x, y) in L.scatter_disc(mid[0], mid[1], rad, int(900 * n), seed + 30, ok): g.append((x, y))
+    for (x, y) in L.scatter_disc(mid[0], mid[1], rad, int(60 * n), seed + 31, ok): w.append((x, y))
+    for (x, y) in L.scatter_disc(mid[0], mid[1], rad, int(70 * n), seed + 32, ok): f.append((x, y))
+    for (x, y) in L.scatter_disc(mid[0], mid[1], rad, int(110 * n), seed + 33, ok): bk.append((x, y))
+    L.dress(gh, g, w, f, bk, seed, 'dress', 7, (0.45, 1.0))
+    mb = MB(); rr = rnd(seed + 40)                                                  # broken duckboard panels, planks, iron stakes in the foreground
+    for (x, y) in L.scatter_disc(mid[0], mid[1], rad * 0.8, int(10 * n), seed + 41, ok):
+        ang = rr.uniform(0, 3.14); z = gh(x, y); X, Y, Z = rot_axes(ang, rr.uniform(-0.1, 0.1), rr.uniform(-0.1, 0.1))
+        for k in range(5): obox(mb, Vector((x, y, z + 0.12)) + Y * (k * 0.34 - 0.7) + X * rr.uniform(-0.05, 0.05), X, Y, Z, rr.uniform(1.2, 1.8) / 2, 0.15, 0.04, S['M']['duck'])
+        for dy in (-0.55, 0.55): obox(mb, Vector((x, y, z + 0.08)) + Y * dy, X, Y, Z, 1.0, 0.07, 0.07, S['M']['beam'])
+    mkobj(mb, 'duck_scrap')
+
+def front_pose_tank(spec, idx):
+    import tank25 as TK
+    name = spec.get('name', 'tank%d' % idx); mud = spec.get('mud', 1.0)
+    H = TK.build_tank(name, mud=mud, tail_angle=0.0)
+    return H
+
+def build(preset, samples=None, quality=None):
+    """Build the Front for a preset into a fresh scene: ground, trenches, wire, sandbags, village, far ring, extras, dressing, tanks, cards, sun, sky, haze, render settings."""
+    import tank25 as TK, lib25 as L
     assert preset in PRESETS, preset; P = PRESETS[preset]; t0 = time.time()
-    bpy.ops.wm.read_factory_settings(use_empty=True); sc = bpy.context.scene; S.clear(); S.update(coll=sc.collection, trench_objs=[], preset=preset); S.update(OVR); J.S.clear(); J.S['coll'] = sc.collection
-    default_world(); setup_world(sc, S.get('sky_k', 1.0)); S['M'] = None; make_materials(); S['decal_mat'] = decal_material()
-    # the tank pose first (the ground is crushed under its tracks)
-    tk = P['tank']; S['tank_front'] = tk['front']; S['tank_yaw'] = tk['yaw']; S['tank_h'] = (math.cos(math.radians(tk['yaw'])), math.sin(math.radians(tk['yaw'])))
-    pos, pitch = tank_pose(tk['front'], tk['yaw']); S['tank_pos'] = pos; S['tank_pitch'] = pitch
-    crush, wet, inside, inside_wide = make_tank_crush(tk['front'], tk['yaw'], pos[2], pitch); S['tank_crush'] = crush; S['tank_wet'] = wet; S['in_tank'] = inside; S['in_tank_wide'] = inside_wide
-    build_ground(); build_trench(); build_sandbags(); build_wire(); build_village(); build_far(); build_water(); build_debris()
-    root = build_tank('mark1', pos, tk['yaw'], pitch, tail_angle=0.0); solve_tail(root); S['tank'] = root
-    # light
-    cam = CAMS[S.get('cam', P['cam'])]; sun = bpy.data.lights.new('key_sun', 'SUN'); sun.color = S.get('sun_col', (1.0, 0.82, 0.58)); sun.energy = S.get('sun_e', 5.0); sun.angle = math.radians(1.6)
-    so = bpy.data.objects.new('key_sun', sun); sc.collection.objects.link(so); S['sun'] = so; az, el = sun_for_camera(cam, S.get('sun_elev', 28.0), S.get('sun_left', 1.0), S.get('sun_front', 0.45)); set_sun(az, el); S['sun_elev'] = el
-    make_haze(S.get('haze', 0.0006))
-    make_camera(cam)
+    begin('front', preset); default_world(); S.update(P.get('world', {}))
+    if 'trench0' in P: S['trenches'][0].update(P['trench0']); S['trench'] = S['trenches'][0]['poly']
+    cam = P['cam']; S['cam_loc'] = cam['loc']
+    cr = P.get('cross')
+    if cr: add_corridor((cr['x0'], cr['y']), 0.0, -40, 50, 4.8, 6.8)
+    for tk in P.get('tanks', []): add_corridor((tk['front'][0], tk['front'][1]), tk['yaw'], -15, 7, 3.2 + 1.5, 6.4)
+    S['in_tank'] = corridor_pred(); S['in_tank_wide'] = corridor_pred(1.2)
+    build_ground(); [build_trench(tr, str(i)) for i, tr in enumerate(S['trenches']) if tr.get('build', True)]; build_sandbags(); build_wire(); build_village(); far_ring(); build_water(); build_debris()
+    for ex in P.get('extras', []):
+        k = ex[0]
+        if k == 'mg': mg_nest(ex[1], ex[2], ex[3], flash=ex[4] if len(ex) > 4 else False)
+        elif k == 'op': op_post(ex[1], ex[2], ex[3])
+        elif k == 'bucket': bucket_at(ex[1], ex[2])
+        elif k == 'mud': mud_heaps(ex[1], ex[2], ex[3])
+        elif k == 'tufts': L.dress(gh, ex[1], None, None, None, 5)
+    dress_front(cam['loc'], P.get('focus', cam['look_at'][:2]), P.get('dress_n', 1.0), lane_ok=P.get('lane_ok', False))
+    S['tank_h'] = {}; S['tanks_h'] = []
+    for i, tk in enumerate(P.get('tanks', [])):
+        H = front_pose_tank(tk, i); S['tanks_h'].append(H); st = tk.get('state', 'normal'); x, y = tk['front']
+        if 'build' in tk: TK.set_build(H, tk['build'])
+        TK.pose_on_ground(H, x, y, tk['yaw'])
+        if st == 'stuck': H.base.update(pos=tuple(H.root.location), yaw=tk['yaw'], pitch=0.0, roll=0.0); TK.set_state(H, 'stuck', 1.0)
+        if tk.get('smoke'): TK.set_state(H, 'smoking', tk['smoke'])
+        if tk.get('stencil') is False: TK.set_stencil(H, False)
+    if cr:
+        H = TK.build_tank('mk1', mud=cr.get('mud', 1.0)); S['tank'] = H; S['tanks_h'].append(H)
+        TK.setup_crossing(H, (cr['x0'], cr['y']), 0.0, cr['s_a'], cr['s_b'])
+        TK.set_crossing(H, S.get('cu', cr['u'])); print('crossing table', [(round(u, 2), round(TK.crossing_pose(H, u)['s'], 1), round(TK.crossing_pose(H, u)['pos'][2], 2), round(TK.crossing_pose(H, u)['pitch'], 1)) for u in np.linspace(0, 1, 11)]); H.base = dict(pos=tuple(H.root.location), yaw=0.0, pitch=0.0, roll=0.0)
+        if 'sparks' in cr: TK.set_sparks(H, cr['sparks'])
+        if cr.get('stencil') is False: TK.set_stencil(H, False)
+        if cr.get('smoke'): TK.set_state(H, 'smoking', 1.0)
     S['cards'] = []
-    for (nm, xy, face) in P.get('cards', []):
-        if xy[0] > 0 and xy[0] < 720 and xy[1] > 100 and 'pix' in P: xy = world_at_pixel(xy[0], xy[1])
-        S['cards'].append(tommy_card(nm, (xy[0], xy[1], gh(xy[0], xy[1])), cam['loc'], 3.2, 0.25 if nm.endswith('a') else -0.2, 'determined' if nm.endswith('a') else 'worried', tilt=2.0))
-    S['exposure'] = S.get('exposure', -0.25); S['samples'] = samples or P.get('samples', 64); setup_render(sc, 'final')
+    for (k, xy, ht) in P.get('cards', []):
+        if 'pix' in P and xy[0] > 100 and xy[1] > 100: xy = world_at_pixel(xy[0], xy[1])
+        L.cards([(k, xy, ht)], gh, cam['loc'])
+    finish(cam, P, samples, quality)
     S['build_s'] = time.time() - t0
     return anchors()
 
 def anchors():
-    return dict(preset=S['preset'], cam=dict(CAMS[PRESETS[S['preset']]['cam']]), tank_pos=tuple(S['tank_pos']), tank_pitch=S['tank_pitch'], tank_yaw=S['tank_yaw'], trench=list(S['trench']), sun_elev=S['sun_elev'], key_dir=tuple(-S['to_sun']),
-                build_s=S.get('build_s'))
+    return dict(preset=S['preset'], cam=dict(S['cam']), sun_elev=S['sun_elev'], key_dir=tuple(-S['to_sun']), build_s=S.get('build_s'))
+
+# ============================================================================= scene prologue / epilogue shared by every location
+def begin(loc, preset):
+    bpy.ops.wm.read_factory_settings(use_empty=True); sc = bpy.context.scene; S.clear(); S.update(coll=sc.collection, trench_objs=[], preset=preset, loc=loc); S.update(OVR); J.S.clear(); J.S['coll'] = sc.collection
+    setup_world(sc, S.get('sky_k', 1.0), S.get('cloud_k', 1.0)); S['M'] = None; make_materials()
+    import lib25; lib25.more_materials(); S['decal_mat'] = decal_material()
+    M = S['M']; M['mud_lump'] = flat('mud_lump', '#4a3622', 0.55)
+    import kit as K; K.use(sc.collection)
+    return sc
+
+def finish(cam, P, samples=None, quality=None, sun=None, haze=None):
+    """light recipe (identical for every location): warm key sun 5.0 at 28 deg from the camera's left/front, bright pastel sky, thin far haze, Standard view -0.25 EV, 64 samples + OIDN"""
+    sc = bpy.context.scene; S['cam'] = cam
+    sun_d = bpy.data.lights.new('key_sun', 'SUN'); sun_d.color = S.get('sun_col', (1.0, 0.82, 0.58)); sun_d.energy = S.get('sun_e', 5.0); sun_d.angle = math.radians(1.6)
+    so = bpy.data.objects.new('key_sun', sun_d); sc.collection.objects.link(so); S['sun'] = so
+    sun = sun or P.get('sun'); az, el = (sun if sun else sun_for_camera(cam, S.get('sun_elev', 28.0), S.get('sun_left', 1.0), S.get('sun_front', 0.45)))
+    set_sun(az, el); S['sun_elev'] = el
+    make_haze(S.get('haze', 0.0006) if haze is None else haze); make_camera(cam)
+    S['exposure'] = S.get('exposure', -0.25); S['samples'] = samples or P.get('samples', 64); setup_render(sc, 'final')
 
 # ============================================================================= render + post
 def post(src, dst, W=720, H=1280, sharp=0.55, radius=1.1):
@@ -1020,16 +1069,16 @@ def render_settings():
 def card_report():
     from bpy_extras.object_utils import world_to_camera_view
     sc = bpy.context.scene; cam = sc.camera; out = []
-    for o in S['cards']:
+    for o in S.get('cards', []):
         top = o.matrix_world @ Vector((0, 0, 3.2)); bot = o.matrix_world @ Vector((0, 0, 0)); a = world_to_camera_view(sc, cam, top); b = world_to_camera_view(sc, cam, bot)
         out.append((o.name, round((1 - a.y) * 1280), round((1 - b.y) * 1280), round(b.x * 720)))
     return out
 
 def proj_report():
     from bpy_extras.object_utils import world_to_camera_view
-    sc = bpy.context.scene; cam = sc.camera; r = S['tank']; out = {}
-    pts = dict(nose=r.matrix_world @ Vector((4, 0, 3.9)), front=r.matrix_world @ Vector((0, 0, 0)), rear=r.matrix_world @ Vector((-11, 0, 3)), cab=r.matrix_world @ Vector((1.6, 0, 5)), wheel=S['tank_tail'].matrix_world @ Vector((-7.4, 0, -0.6)),
-               tower=Vector((S['towers'][0][0], S['towers'][0][1], 20)), trench=Vector((0, -6, 0)))
+    sc = bpy.context.scene; cam = sc.camera; out = {}; pts = {}
+    for i, H in enumerate(S.get('tanks_h', [])):
+        r = H.root; pts['tank%d_nose' % i] = r.matrix_world @ Vector((4, 0, 3.9)); pts['tank%d_front' % i] = r.matrix_world @ Vector((0, 0, 0)); pts['tank%d_rear' % i] = r.matrix_world @ Vector((-11, 0, 3))
     for k, p in pts.items(): v = world_to_camera_view(sc, cam, p); out[k] = (round(v.x * 720), round((1 - v.y) * 1280))
     return out
 
