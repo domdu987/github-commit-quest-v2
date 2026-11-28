@@ -6,3 +6,7 @@ fac_doors.png                          luma 0.498 p1 0.052 p99 0.928 lc 0.0518 s
 render 108.0 s wall, 426.8 s cpu
 fac_close_hull.png                     luma 0.525 p1 0.039 p99 0.927 lc 0.0535 sat 0.491 chroma 28.7 a +1.2 b +4.5 p98 0.79 blue 0.53 warm 0.38 neut 0.04 M 93  MISS
 render 161.3 s wall, 637.6 s cpu
+fac_close_rivet.png                    luma 0.529 p1 0.044 p99 0.884 lc 0.0303 sat 0.483 chroma 31.2 a +4.7 b +11.7 p98 1.00 blue 0.17 warm 0.69 neut 0.03 M 105  MISS
+render 166.6 s wall, 657.2 s cpu
+fac_close_engineer.png                 luma 0.582 p1 0.040 p99 0.928 lc 0.0637 sat 0.493 chroma 30.0 a +1.5 b +6.8 p98 0.59 blue 0.44 warm 0.51 neut 0.00 M 95  MISS
+render 182.9 s wall, 721.9 s cpu
