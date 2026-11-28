@@ -17,6 +17,7 @@ FIRST, LAST = G0 - 6, G1 - 1 + 6
 PRESET = "t2_lip"
 GRIP = {}
 CLODS = []
+ORIG = []
 
 
 def grip_point(Tk, u):
@@ -42,9 +43,9 @@ def build_track(Tk, gs):
 def cam_of(g):
     p = GRIP[g]; k = min(max((g - G0) / float(G1 - 1 - G0), 0.0), 1.0)
     push = 1.0 + 0.12 * T.smooth(k)
-    loc = (p.x - 1.0, p.y - 8.0 / push, p.z + 0.9)
-    look = (p.x + 0.3, p.y, p.z + 0.7)
-    return loc, look, 32.0, (2.6, 8.0 / push)
+    loc = (p.x - 2.0, p.y - 14.0 / push, p.z + 1.1)
+    look = (p.x + 0.8, p.y, p.z + 0.4)
+    return loc, look, 30.0, (3.2, 14.0 / push)
 
 
 def hooks(g, Tk):
@@ -56,7 +57,8 @@ def hooks(g, Tk):
             ob.hide_render = True; continue
         ob.hide_render = False
         z = -0.5 * 18.5 * t * t                         # D / s^2
-        ob.location = (ox + 0.6 * t, 0.0, z + 0.0)
+        o = ORIG[i]
+        ob.location = (o[0] + 0.6 * t, o[1], o[2] + z)
         ob.rotation_euler = (3.0 * t * (i + 1), 2.0 * t, 0.0)
 
 
@@ -78,7 +80,8 @@ if __name__ == "__main__":
     # place each clod group at the (smoothed) grip point of its start frame: parent-free, so move the object origin there
     for i, (ob, t0, ox) in enumerate(CLODS):
         p = GRIP[min(max(t0, FIRST), LAST)]
-        ob.location = (p.x, p.y, p.z + 0.2)
+        base = F.gh(0.0, 0.0) + 0.15
+        ORIG.append((p.x + 0.4, p.y - 2.2, p.z + 0.6 - base)); ob.location = ORIG[-1]
     if cmd == "probe":
         Tk.pose(gs)
         for g in gs:
