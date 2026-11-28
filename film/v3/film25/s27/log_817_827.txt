@@ -53,3 +53,28 @@ g 824  103.8 s beauty  121.0 s total
 18:08.093  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0825.png'
 18:26.788  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0825.png'
 g 825  105.9 s beauty  124.5 s total
+20:16.123  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0826.png'
+20:31.865  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0826.png'
+g 826  109.4 s beauty  125.1 s total
+22:13.783  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0827.png'
+22:33.128  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0827.png'
+g 827  102.0 s beauty  121.3 s total
+00:04.950  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: hid set cards ['tommy_c25_ladle_tap', 'tommy_c25_ladle_tap_decal']
+take: built camp_close_tank in 4.7 s
+/home/user/github-commit-quest-v2/film/v3/film25/s21/../s27/shot.py:45: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  mat = bpy.data.materials.new("water"); mat.use_nodes = True
+cup-vs-spout residual g817 [-20.27, 56.46, 0.17]
+cup-vs-spout residual g827 [-20.49, 56.74, 0.17]
+01:33.744  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0817.png'
+01:47.032  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0817.png'
+g 817  88.5 s beauty  101.7 s total
+03:33.073  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0818.png'
+03:50.895  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0818.png'
+g 818  106.1 s beauty  123.9 s total
+05:35.711  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0819.png'
+05:53.506  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0819.png'
+g 819  104.9 s beauty  122.6 s total
+07:41.774  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0820.png'
+07:58.995  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0820.png'
+g 820  108.3 s beauty  125.5 s total

@@ -21,7 +21,7 @@ class Take(D.Rig):
     def __init__(self, work):
         D.Rig.__init__(self, PRESET, work, fstop=2.0, sun_e=15.0, sky_k=1.3, sun_col=(1.0, 0.95, 0.88), ev=1.0)
         self.H = F.S["tank"]
-        TK.set_stencil(self.H, 0); D.flatten_hull(self.H)
+        TK.set_stencil(self.H, 0); D.flatten_hull(self.H, (0.10, 0.36, 0.40))
         bpy.context.view_layer.update()
         self.mw = self.H.root.matrix_world
         m = F.S["mark"]; ml = self.mw.inverted() @ Vector(m["pos"]); self.sg = -1.0 if ml.y < 0 else 1.0
