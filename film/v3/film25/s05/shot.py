@@ -8,7 +8,7 @@ C = R.C; from mathutils import Vector
 PRESET = "fac_close_engineer"; HAZE = 0.0006; ROWS = (5, 84, 125)
 PRE = dict(cast=[], backdrop=None)
 ACTORS = dict(eng="engineer25", wa="worker_a25", wb="worker_b25", wc="worker_c25")
-PLATE = [((-4.5, 49, 0.0), -90.0, 9.0, 12.0, (0.04, 0.16, 0.48)), ((4.5, 49, 0.0), -90.0, 9.0, 12.0, (0.55, 0.09, 0.05))]
+PLATE = [((-3.5, 49, 0.0), -90.0, 9.0, 12.0, (0.04, 0.16, 0.48)), ((5.5, 49, 0.0), -90.0, 9.0, 12.0, (0.55, 0.09, 0.05))]
 MK = (0.0, 46.5)
 
 

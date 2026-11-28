@@ -33,7 +33,7 @@ def lvl(g):
 def build(rig):
     import factory as FA
     RIG[0] = rig
-    rig.set_look(True); rig.open_shell(floor_col=(0.30, 0.16, 0.05))
+    rig.set_look(True); rig.open_shell(floor_col=(0.34, 0.10, 0.05))
     rig.wc = rig.actor("wc", "worker_c25")
     rig.H = F.S["tank"]; rig.FA = FA
     rig.backdrop((-8.0, 30.0, 0.0), -90.0, w=44.0, h=18.0, col=(0.05, 0.16, 0.42), name="blue_plate")

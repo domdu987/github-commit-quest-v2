@@ -349,14 +349,14 @@ def run(shot, cmd, gs, out_root=None, scale=None, samples=None, sh_samples=None)
         geos = {g: rig.card_geo(g) for g in samp}
         best = None; P.ITERS_ = 7
         tmp = os.path.join(TAKE, "work", "ag"); os.makedirs(tmp, exist_ok=True)
-        for vib, wbb, wba in itertools.product((1.0, 1.3, 1.6, 1.9), (0.0, 3.0), (1.0,)):
+        for vib, (wba, wbb) in itertools.product((1.0, 1.4, 1.8, 2.2), ((2.0, 4.5), (0.0, 1.0), (-1.5, -1.0))):
             P.VIB = vib; P.WB_T = (wba, wbb); ds = []
             for g in samp:
                 shp = os.path.join(out_root, "shade", "f_%04d.png" % g)
                 composite(g, os.path.join(out_root, "raw", "f_%04d.png" % g), shp if (geos[g] and os.path.exists(shp)) else None, geos[g], os.path.join(tmp, "s.png"))
                 ds.append(ns["m"](Image.open(os.path.join(tmp, "s.png"))))
             d = {k: float(np.mean([x[k] for x in ds])) for k in ds[0]}
-            cost = abs(d["sat"] - 0.45) * 6 + max(0, abs(d["a_mean"]) - 4) + max(0, abs(d["b_mean"]) - 4) + 8 * max(0, 0.47 - d["luma"]) * (d["luma"] < 0.47)
+            cost = abs(d["sat"] - 0.45) * 10 + 30 * max(0, abs(d["a_mean"]) - 5.0) + 30 * max(0, abs(d["b_mean"]) - 5.0) + 60 * max(0, 0.47 - d["luma"])
             if best is None or cost < best[0]: best = (cost, vib, wbb, wba, d)
         print("AUTOGRADE", best[1:4], {k: round(v, 3) for k, v in best[4].items() if k in ("sat", "a_mean", "b_mean", "luma")}, flush=True)
         os.environ["VIB"], os.environ["WBB"], os.environ["WBA"] = str(best[1]), str(best[2]), str(best[3])
