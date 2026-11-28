@@ -2,3 +2,4 @@
 - row 6: g 125-153 (29 fr) | 96 s/frame | take.mkv (1 fr)                        luma 0.500 p1 0.103 p99 0.974 lc 0.0483 sat 0.447 chroma 25.4 a +1.9 b +4.6 p98 0.74 blue 0.34 warm 0.53 neut 0.12 M 98  PASS  (guides off: p1,p99,chroma,sat_p98)
 - speed test: old (0.75 scale, 16 spp thr 0.03, shade 6 spp @0.5) 85.6 s vs new (0.6, 12 spp thr 0.05, shade 5 spp @0.35) 47.4 s on one s06-composition frame; 100% crops (puppet face/outline, hull shadow, contact shadow) show no visible loss: no denoise smear, shadow terminator and outlines identical -> switched. See speedtest_T1.jpg (left old, right new).
 - row 14: g 353-395 (43 fr) | 84 s/frame | take.mkv (1 fr)                        luma 0.501 p1 0.152 p99 0.807 lc 0.0241 sat 0.459 chroma 33.6 a +1.7 b +4.2 p98 0.64 blue 0.32 warm 0.48 neut 0.01 M 81  PASS  (guides off: p1,p99,lc,sat_p98)
+- 16:54 container restarted (3rd time); queues relaunched; s29/s34 resuming (9/7 frames), then s33, s31, s06 redo, s14 redo
