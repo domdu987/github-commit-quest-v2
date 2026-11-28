@@ -1,7 +1,7 @@
 # Film 25 "ไอ้ถังน้ำ": shot plan v2 (R11 lessons; replaces v1). 69.75 s, 30 fps, N = 2093, g = round(t*30), g1 exclusive
 ## Rules
 - **Cuts and framing**
-  - HARD CUTS ONLY, with a NEW composition every 0.5-2 s. Never reuse a setup back to back.
+  - HARD CUTS ONLY, with a NEW composition every 0.7-2 s (hero shots up to 3 s). Never reuse a setup back to back.
   - CLOSE framing (waist-up, faces big and readable) for every dialogue and reaction beat. WIDE only where marked W: the establishing shots and the big hero moments.
 - **Gags and nouns:** one literal VISUAL GAG per phrase where marked GAG. Every spoken noun is on screen.
 - **Process:** the build-up shows a worker's action that lands on its spoken word.
@@ -15,15 +15,12 @@ Framing key: W = wide, M = medium (knees-up), C = close (waist-up), I = insert (
 
 | # | t (s) | g | loc | frm | picture (literal / GAG) |
 |---|---|---|---|---|---|
-| 1 | 0.00-0.55 | 0-16 | FAC | W | "โรงงานนี้": the brick works yard, smoke stacks, doors open, workers walking in |
-| 2 | 0.55-1.45 | 16-44 | FAC | C | "สร้างรถเหล็ก": worker_a25 waist-up hammering a rivet into a giant steel plate, sparks |
-| 3 | 1.45-2.10 | 44-63 | FAC | M | "หนัก 28 ตัน": the hull lands on the weighbridge, hanging on CHAINS from the crane |
-| 4 | 2.10-2.79 | 63-84 | FAC | I | the weighbridge dial needle swings hard to the far end and wobbles (no digits); worker_b25's shocked face at the frame edge |
+| 1+2 | 0.00-1.45 | 0-44 | FAC | W→C | "โรงงานนี้ สร้างรถเหล็ก": the brick works yard, doors open; one slow push in through the doors to worker_a25 hammering a rivet into a giant steel plate, sparks |
+| 3+4 | 1.45-2.79 | 44-84 | FAC | M | "หนัก 28 ตัน": the hull lands on the weighbridge, hanging on CHAINS from the crane; the dial needle (no digits) swings hard to the far end and wobbles; worker_b25 at the frame edge, shocked |
 | 5 | 2.79-4.15 | 84-125 | FAC | C | "แต่บอกคนงานทุกคนว่า": engineer25 waist-up, finger to lips; three workers lean in close (two-shot) |
 | 6 | 4.15-5.12 | 125-154 | FAC | M | GAG "กำลังทำ ถังน้ำ": worker_c25 solemnly pours a WATERING CAN into the tank's hatch; worker_b25 nods seriously |
 | 7 | 5.12-6.36 | 154-191 | FRONT | W | "คืออย่างนี้นะ ปี 1915": front_aerial, two zig-zag trench lines facing each other |
-| 8 | 6.36-6.97 | 191-209 | FRONT | C | "สงครามโลก": tommy_a25 + tommy_d25 waist-up in the British trench, peeking |
-| 9 | 6.97-7.73 | 209-232 | FRONT | C | "ทั้งสองฝ่าย": german_a25 + german_c25 waist-up in the German trench, peeking the other way (mirror composition) |
+| 8+9 | 6.36-7.73 | 191-232 | FRONT | M | "สงครามโลก ทั้งสองฝ่าย": low across no-man's-land: tommy_a25 peeks over the British sandbags in the foreground (left); across the wire german_a25 peeks back from the German trench (right) |
 | 10 | 7.73-8.65 | 232-260 | FRONT | C | "ขุดสนามเพลาะ": tommy_d25 digging furiously with a SHOVEL, dirt flying |
 | 11 | 8.65-9.49 | 260-285 | FRONT | M | "ใครปีนออกไป": tommy_c25 pokes his helmet up on a stick over the sandbags |
 | 12 | 9.49-10.52 | 285-316 | FRONT | M | "เจอปืนกลทันที": German MG nest puffs; the helmet pings and spins on the stick (comic, bloodless) |
@@ -43,10 +40,8 @@ Framing key: W = wide, M = medium (knees-up), C = close (waist-up), I = insert (
 | 26 | 26.16-27.23 | 785-817 | TRIAL | C | "เลยเรียกมันว่า": tommy_c25 taps the hull with a LADLE like a bucket, grinning |
 | 27 | 27.23-27.93 | 817-838 | TRIAL | C | GAG "ไอ้ถังน้ำ": tommy_b25 holds his tin cup under the tank's tap, waiting, deadpan |
 | 28 | 27.93-29.40 | 838-882 | FAC | C | "แต่วิศวกร ยังสร้างต่อ": engineer25 rolls up his sleeves and grabs a spanner, determined, the bare chassis behind |
-| 29 | 29.40-30.08 | 882-902 | FAC | M | PROCESS "แผ่นเหล็ก": worker_c25 guides a steel PLATE on chains; it locks onto the hull on the word |
-| 30 | 30.08-30.59 | 902-918 | FAC | C | PROCESS "หมุดย้ำ": worker_a25 hammer strikes; a row of rivets pops in on each strike |
-| 31 | 30.59-31.12 | 918-933 | FAC | M | PROCESS "ตีนตะขาบ": the track loop on chains drops round the hull |
-| 32 | 31.12-31.99 | 933-960 | FAC | M | PROCESS "วนรอบทั้งคัน": side-on, the links run all the way round the rhomboid (set_drive) |
+| 29+30 | 29.40-30.59 | 882-918 | FAC | M | PROCESS "แผ่นเหล็ก" then "หมุดย้ำ": worker_c25 guides a steel PLATE on chains, which locks on the word; worker_a25's hammer strikes and a row of rivets pops in on each strike |
+| 31+32 | 30.59-31.99 | 918-960 | FAC | M | PROCESS "ตีนตะขาบ วนรอบทั้งคัน": side-on, the track loop on chains drops round the hull, then the links run all the way round the rhomboid (set_drive) |
 | 33 | 31.99-32.74 | 960-982 | FAC | M | PROCESS "ป้อมสองข้าง": worker_b25 with a spanner as the sponson bolts on |
 | 34 | 32.74-33.85 | 982-1016 | FAC | C | PROCESS "ปืนใหญ่ 6 ปอนด์": worker_c25 pushes the gun barrel into the sponson; it clunks home |
 | 35 | 33.85-34.75 | 1016-1043 | FAC | M | "แล้วตอกลังไม้": two workers hammer the giant crate planks round the tank |
@@ -61,32 +56,25 @@ Framing key: W = wide, M = medium (knees-up), C = close (waist-up), I = insert (
 | 44 | 44.37-45.60 | 1331-1368 | FRONT OP | C | "เห็นไหม ไอ้ถังน้ำ": general25 glasses_laugh, lip-sync, pointing |
 | 45 | 45.60-46.52 | 1368-1396 | FRONT | I | GAG "รั่วหมดแล้ว!": the stuck tank's radiator puffs steam like a leaky kettle, a dribble of water (no damage) |
 | 46 | 46.52-47.45 | 1396-1424 | FRONT | W | "แต่คันที่ไปถึง": the hero tank rolls out of the smoke, low |
-| 47 | 47.45-48.22 | 1424-1447 | FRONT | W | HERO "ยกหัวขึ้น": side-on, the nose lifts over the trench (cross_nose); the tank fills 50-60 % of the frame width |
-| 48 | 48.22-48.77 | 1447-1463 | FRONT | I | "ตีนตะขาบ": close on the track links clanking round the front idler |
-| 49 | 48.77-49.77 | 1463-1493 | FRONT | W | HERO "ทรงขนมเปียกปูน": the full rhomboid silhouette side-on against the sky (cross_hero) |
+| 47-49 | 47.45-49.77 | 1424-1493 | FRONT | W | HERO "ยกหัวขึ้น ตีนตะขาบ ทรงขนมเปียกปูน" (2.3 s, breathes): side-on low, the tank fills 50-60 % of the frame width; the nose lifts over the trench against the sky, links clanking round the front idler; a slow eased slide reveals the full rhomboid silhouette |
 | 50 | 49.77-50.87 | 1493-1526 | FRONT | I | "เกาะขอบฝั่งโน้น": the front track grips the far lip, earth crumbles |
 | 51 | 50.87-51.95 | 1526-1558 | FRONT | M | "ดึงทั้งคัน ข้ามไป": it pulls across, the rear leaves the near lip (cross_pull) |
 | 52 | 51.95-53.08 | 1558-1592 | FRONT | I | "ลวดหนาม โดนทับแบน": barbed wire squashed flat under the track (cross_wire) |
-| 53 | 53.08-53.51 | 1592-1605 | FRONT | C | "กระสุน": german_c25 at the MG, firing, determined |
-| 54 | 53.51-54.55 | 1605-1636 | FRONT | M | "เด้งออกจากเหล็ก": sparks ping off the riveted plates; no holes (cross_hull) |
+| 53+54 | 53.08-54.55 | 1592-1636 | FRONT | M | "กระสุน เด้งออกจากเหล็ก": the German MG puffs in the background; sparks ping off the riveted plates in the foreground, with no holes |
 | 55 | 54.55-55.29 | 1636-1659 | FRONT | C | "ทหารเยอรมัน": german_b25 waist-up, glasses slide down his nose, jaw drops |
 | 56 | 55.29-56.27 | 1659-1688 | FRONT | W | "วิ่งหนีกันลั่น": three different Germans run away comically, helmets bouncing (cross_flee) |
 | 57 | 56.27-57.47 | 1688-1724 | FRONT | I | "มันไม่ได้มีไว้ใส่น้ำ": a plain water bucket by the trench, a drip |
 | 58 | 57.47-58.19 | 1724-1746 | FAC | C | EXPLAINER "มันมีไว้ข้าม": engineer25 holds a CHALK BOARD with a chalk drawing (a rhomboid over a trench, no letters) and taps it |
 | 59 | 58.19-59.27 | 1746-1778 | FRONT | W | "ที่ที่คนข้ามไม่ได้": the tank across the trench; Tommies walk over behind it |
-| 60 | 59.27-60.03 | 1778-1801 | FAC | I | "ส่วนชื่อหลอก": the stencilled crate, close |
-| 61 | 60.03-60.42 | 1801-1813 | FAC | M | "แท็งก์": the crate lid falls open, the tank inside |
+| 60+61 | 59.27-60.42 | 1778-1813 | FAC | M | "ส่วนชื่อหลอก แท็งก์": the stencilled crate, close; the lid falls open on "แท็งก์" with the tank inside |
 | 62 | 60.42-61.42 | 1813-1843 | DOCK | M | "ที่แปลว่าถังน้ำ": a real WATER TANK (riveted cylinder on legs, tap) side by side with the Mark I; a worker looks from one to the other |
 | 63 | 61.42-62.66 | 1843-1880 | FAC | C | "ก็ติดมาจนทุกวันนี้": engineer25 waist-up, small proud smile, pats the hull |
-| 64 | 62.66-63.89 | 1880-1917 | SKY | W | "วันนั้น นักบินอังกฤษ": the RFC biplane flies over the Somme fields (sky_plane, big in frame) |
-| 65 | 63.89-64.40 | 1917-1932 | SKY | C | "รายงานว่า": pilot25 leans out of the cockpit, goggles up, eyes wide, looking down |
+| 64+65 | 62.66-64.40 | 1880-1932 | SKY | W→C | "วันนั้น นักบินอังกฤษ รายงานว่า": the RFC biplane flies over the Somme fields (big in frame); the camera eases in as pilot25 leans out, goggles up, eyes wide |
 | 66 | 64.40-65.36 | 1932-1961 | STREET | W | "มีแท็งก์คันหนึ่ง": high, the pilot's view: one tank on the brick high street of Flers |
 | 67 | 65.36-66.96 | 1961-2009 | STREET | W | "เดินไปตามถนน กลางเมืองแฟลร์": street level, the tank rolls up the street, brick houses |
-| 68 | 66.96-68.25 | 2009-2048 | STREET | M | "และคนที่ เดินตามก้นมัน": low behind the tail; Tommies march behind cheering (varied) |
-| 69 | 68.25-68.89 | 2048-2067 | STREET | M | "ใกล้ที่สุด": push past the cheering Tommies toward the tank's backside |
-| 70 | 68.89-69.75 | 2067-2093 | STREET | C | "ก็คือท่านนายพล": general25 waist-up, marching knees-up right behind the tank's backside, waving his little flag, cheering, sheepish. Hard end at g 2092 |
+| 68-70 | 66.96-69.75 | 2009-2093 | STREET | M→C | FINAL CALLBACK (2.8 s, breathes) "และคนที่ เดินตามก้นมัน ใกล้ที่สุด ก็คือท่านนายพล": low behind the tail, Tommies march behind cheering (varied); a slow push past them ends waist-up on general25, marching knees-up right behind the tank's backside, waving his little flag, cheering, sheepish. Hard end at g 2092 |
 
-70 shots in 69.75 s (mean 1.0 s). W 19, M 24, C 19, I 8 (one shot, 14, counted as I/C).
+58 shots in 69.75 s (mean 1.20 s, none shorter than 0.70 s). Producer: merge phrases under 0.8 s; let the hero crossing (47-49) and the final callback (68-70) breathe.
 
 ## New props / set items needed
 - **Cast props:**
