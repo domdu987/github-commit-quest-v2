@@ -1,7 +1,7 @@
-take.mkv (2 fr)                        luma 0.465 p1 0.091 p99 0.843 lc 0.0226 sat 0.471 chroma 33.7 a +0.7 b +1.1 p98 0.97 blue 0.32 warm 0.28 neut 0.03 M 75  PASS  (guides off: p1,p99,lc,warm_frac)
+take.mkv (2 fr)                        luma 0.482 p1 0.098 p99 0.843 lc 0.0229 sat 0.425 chroma 30.2 a -0.7 b +2.2 p98 0.96 blue 0.32 warm 0.28 neut 0.04 M 66  PASS  (guides off: p1,p99,lc,warm_frac)
 
 --- jitter ---
-overall median jitter px 1.09
+overall median jitter px 1.02
 
 --- qa_auto ---
 # QA_AUTO PASS  (take.mkv, 52 frames, 30.00 fps, g 1880-1931)
