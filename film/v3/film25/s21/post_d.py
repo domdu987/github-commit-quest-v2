@@ -60,7 +60,7 @@ def shade_layer(SH, sc, al, head, hr):
     return np.clip(np.where(face[..., None], fs, s), 0, 1)
 
 
-def compose(g, wd, out_dir, edge=0.18, wb=None, gamma=None, vib=2.0, gclip=(0.55, 1.9), sat=1.0):
+def compose(g, wd, out_dir, edge=0.18, wb=None, gamma=None, vib=2.0, gclip=(0.55, 1.9), sat=1.0, skyclamp=True):
     md = json.load(open(os.path.join(wd, "meta", "g_%04d.json" % g)))
     raw = Image.open(os.path.join(wd, "beauty", "f_%04d.png" % g)).convert("RGB")
     if raw.size != (720, 1280):
@@ -126,6 +126,10 @@ def compose(g, wd, out_dir, edge=0.18, wb=None, gamma=None, vib=2.0, gclip=(0.55
     b = P.vibrance(tone(e, gains), vib)
     if sat != 1.0:
         hh, ss, vv = P.rgb2hsv(b); b = P.hsv2rgb(hh, np.clip(ss * sat, 0, 1), vv)
+    if skyclamp:                                   # blues must not drift to magenta: hues 215-330 deg are pulled back to 215 (background only; puppets are composited afterwards)
+        hh, ss, vv = P.rgb2hsv(b); hd = hh * 60.0
+        m_ = (hd > 215.0) & (hd < 330.0) & (ss > 0.05)
+        hd = np.where(m_, 215.0, hd); b = P.hsv2rgb(hd / 60.0, ss, vv)
     yy = np.linspace(0, 1, 1280, dtype=np.float32)[:, None, None]
     b = b * (1 - edge * np.clip((yy - 0.86) / 0.14, 0, 1) ** 1.5)
     out = comp(b)
