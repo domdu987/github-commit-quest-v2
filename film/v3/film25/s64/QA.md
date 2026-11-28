@@ -17,6 +17,6 @@ overall median jitter px 1.14
 ## Framing numbers (from the per-frame meta)
 - highest head top y 453 px (rule: heads above y 880 means head bottoms; head tops far above), lowest feet y 1216 px (feet are below the frame edge when > 1280 or above y 860 when in frame).
 ## Notes
-- One build (sky_close_cockpit): the RFC biplane (scale 2.2, 60 D up) over the green Somme field, pilot25 lean_look in the cockpit seat (cockpit-crop canvas), lean 24 -> 40, head roll, blink g 1913. W -> C in one move; DOF f/2.8. Cloud puff sprites hidden (lilac blobs): the sky is the set's own cumulus world shader. Deviation: single build from the close-cockpit preset instead of the wider sky_plane preset; pale sky graded with vibrance 2.0 + HSV saturation x1.3, gamma 0.88.
+- One build (sky_close_cockpit): the RFC biplane (scale 2.2, 60 D up) over the green Somme field, pilot25 lean_look in the cockpit seat (cockpit-crop canvas), lean 24 -> 40, head roll, blink g 1913. W -> C in one move; DOF f/2.8. Cloud puff sprites hidden (lilac blobs): the sky is the set's own cumulus world shader. Deviation: single build from the close-cockpit preset instead of the wider sky_plane preset; pale sky graded with vibrance 2.0 + HSV saturation x1.12, gamma 0.84.
 ## Files
 shot.py, d25.py / c25.py / post_d.py / finish.py (in ../s21), meta.json, contact.jpg, QA_AUTO.md, phone_sheet.jpg, take.mkv (frames, raw and work stay out of git).
