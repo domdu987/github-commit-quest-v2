@@ -1,0 +1,4 @@
+00:00.644  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: hid set cards ['pilot25_lean_look', 'pilot25_lean_look_decal']
+take: built sky_close_cockpit in 0.4 s
+01:05.457  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s64/work/beauty/f_1880.png'
