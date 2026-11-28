@@ -11,3 +11,45 @@ g 817  97.2 s beauty  113.7 s total
 03:38.231  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0818.png'
 04:02.161  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0818.png'
 g 818  93.9 s beauty  117.8 s total
+00:04.568  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: hid set cards ['tommy_c25_ladle_tap', 'tommy_c25_ladle_tap_decal']
+take: built camp_close_tank in 4.3 s
+/home/user/github-commit-quest-v2/film/v3/film25/s21/../s27/shot.py:45: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  mat = bpy.data.materials.new("water"); mat.use_nodes = True
+cup-vs-spout residual g817 [-20.27, 56.46, 0.17]
+cup-vs-spout residual g827 [-20.49, 56.74, 0.17]
+01:35.091  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0817.png'
+00:06.678  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: hid set cards ['tommy_c25_ladle_tap', 'tommy_c25_ladle_tap_decal']
+take: built camp_close_tank in 6.1 s
+/home/user/github-commit-quest-v2/film/v3/film25/s21/../s27/shot.py:45: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  mat = bpy.data.materials.new("water"); mat.use_nodes = True
+cup-vs-spout residual g817 [-20.27, 56.46, 0.17]
+cup-vs-spout residual g827 [-20.49, 56.74, 0.17]
+01:49.512  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0817.png'
+02:05.481  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0817.png'
+g 817  102.0 s beauty  117.9 s total
+03:52.049  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0818.png'
+04:09.005  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0818.png'
+g 818  106.6 s beauty  123.5 s total
+05:53.905  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0819.png'
+06:11.038  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0819.png'
+g 819  105.0 s beauty  122.0 s total
+07:51.112  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0820.png'
+08:08.051  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0820.png'
+g 820  100.1 s beauty  117.0 s total
+09:59.300  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0821.png'
+10:15.176  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0821.png'
+g 821  111.3 s beauty  127.1 s total
+12:01.519  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0822.png'
+12:18.485  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0822.png'
+g 822  106.4 s beauty  123.3 s total
+14:04.349  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0823.png'
+14:21.248  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0823.png'
+g 823  105.9 s beauty  122.8 s total
+16:04.988  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0824.png'
+16:22.254  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0824.png'
+g 824  103.8 s beauty  121.0 s total
+18:08.093  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0825.png'
+18:26.788  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0825.png'
+g 825  105.9 s beauty  124.5 s total

@@ -111,14 +111,14 @@ def add_wall(name, centre, face_deg, width, height, mat, thick=0.3, z0=None, yaw
 class Rig(C.Take):
     """one location build + any number of cards; every per-frame value is computed by the shot and set through key_frame()."""
 
-    def __init__(self, preset, work, haze=0.0006, sun_left=30.0, sun_el=22.0, fstop=None, sun_e=SUN_E, sky_k=SKY_K, sun_disc=SUN_DISC, sun_col=(1.0, 0.9, 0.74)):
+    def __init__(self, preset, work, haze=0.0006, sun_left=30.0, sun_el=22.0, fstop=None, sun_e=SUN_E, sky_k=SKY_K, sun_disc=SUN_DISC, sun_col=(1.0, 0.9, 0.74), ev=0.0):
         C.F.OVR.update(haze=haze)
         C.Take.__init__(self, preset)
         self.work = work
         os.makedirs(work, exist_ok=True)
         self.spr_dir = os.environ.get("SPRITES", os.path.join(work, "sprites"))
         os.makedirs(self.spr_dir, exist_ok=True)
-        self.sun_left, self.sun_el, self.fstop = sun_left, sun_el, fstop
+        self.sun_left, self.sun_el, self.fstop, self.ev = sun_left, sun_el, fstop, ev
         F.S["sun"].data.angle = math.radians(sun_disc)
         F.S["sun"].data.energy = sun_e
         F.S["sun"].data.color = sun_col
@@ -206,6 +206,7 @@ class Rig(C.Take):
         """beauty + shading raw into out_dir/beauty/f_%04d.png, out_dir/shade/f_%04d.png, meta json out_dir/meta/g_%04d.json"""
         t0 = time.time()
         F.setup_render(self.scene, "final"); self.scene.cycles.samples = samples; self.scene.cycles.adaptive_threshold = thr
+        self.scene.view_settings.exposure += self.ev
         st = render.render_frames([g], os.path.join(out_dir, "beauty"), scale=scale, threads=2, scene=self.scene, camera=self.cam, on_frame=self.on_frame, verbose=False)[0]
         t1 = time.time()
         md = self.meta(g)
@@ -332,3 +333,16 @@ def cli(make, G0, G1, argv=None, work=None):
             md = Tk.render_frame(g, work + "_draft", scale=sc, samples=12, thr=0.05, sh_scale=0.3, sh_samples=6); print(g, md["wall_total"], flush=True)
     else:
         run_final(Tk, gs, work, shade=getattr(Tk, "SHADE", True), scale=getattr(Tk, "SCALE", SCALE), samples=getattr(Tk, "SAMPLES", SAMPLES))
+
+
+def flatten_hull(H, color=(0.34, 0.38, 0.31)):
+    """runtime dressing: the camo hull becomes ONE calm grey-olive riveted plate (diffuse, rough: no sky sheen), rivets / tap / hatch keep their own materials"""
+    new = plate_material("hull_calm", color, seam=0.38, scale=(2.6, 2.0))
+    n = 0
+    for ob in bpy.data.objects:
+        if ob.type != "MESH":
+            continue
+        for s in ob.material_slots:
+            if s.material is not None and s.material == H.mats.get("hull"):
+                s.material = new; n += 1
+    return n

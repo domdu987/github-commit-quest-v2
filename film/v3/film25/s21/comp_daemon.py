@@ -13,7 +13,7 @@ while True:
             if not os.path.exists(out) and os.path.exists(os.path.join(td, "work", "beauty", "f_%04d.png" % g)):
                 try:
                     kw = {}
-                    if os.path.basename(td) == "s23": kw = dict(gamma=0.92)
+                    if os.path.basename(td) in ("s23", "s18", "s25"): kw = dict(gamma=0.9, wb=(-1.0, 5.0), vib=2.16)
                     PD.compose(g, os.path.join(td, "work"), os.path.join(td, "frames"), **kw); did = True
                 except Exception as e:
                     print("compose fail", td, g, e, flush=True)

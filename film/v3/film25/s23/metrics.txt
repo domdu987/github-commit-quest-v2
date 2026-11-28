@@ -1,0 +1,12 @@
+take.mkv (1 fr)                        luma 0.497 p1 0.097 p99 0.846 lc 0.0255 sat 0.404 chroma 34.4 a +5.6 b -3.7 p98 0.88 blue 0.36 warm 0.26 neut 0.02 M 78  PASS  (guides off: p1,p99,lc,warm_frac)
+
+--- jitter ---
+overall median jitter px 0.79
+
+--- qa_auto ---
+# QA_AUTO PASS  (take.mkv, 36 frames, 30.00 fps, g 676-711)
+
+## Notes
+- magenta share 0.0 %
+
+Phone sheet: phone_sheet.jpg (cyan line = caption band y 880). Judge legibility on it.
