@@ -95,7 +95,8 @@ def _truck_parts(A):
         side_crouch=tuple(M @ Vector((w0 + 0.75, yr + 0.9, 0.0))),   # the junior thrown back against the side panel
         corner=tuple(M @ Vector((xw, yr, 0.0))),                     # the vertical edge of S54 (z 1.85 .. 3.35 is canopy)
         corner_top=tuple(M @ Vector((xw, yr, cz + 0.75))),
-        tail_hide=tuple(M @ Vector((0.35, -a - 0.62, 0.0))),         # Kong flat against the tail door
+        tail_hide=tuple(M @ Vector((xw - 0.15, yr - 0.58, 0.0))),    # Kong in the nook between the water barrier and the rear corner
+        #   (was M @ (0.35, -a - 0.62, 0): inside waterbarrier_2; moved 11-28 to the nook S053/S054 use, corner frame o -0.15, n -0.58)
         tail_door=tuple(M @ Vector((0.0, yr, cz))),
         out_side=tuple((M.to_3x3() @ Vector((1, 0, 0))).normalized()),      # out of the lane-side panel
         out_tail=tuple((M.to_3x3() @ Vector((0, -1, 0))).normalized()),     # out of the tail door

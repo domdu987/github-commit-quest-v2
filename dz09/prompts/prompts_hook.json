@@ -1,0 +1,313 @@
+{
+ "style": "Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+ "cast": [
+  {
+   "key": "kong",
+   "name": "ก้อง",
+   "sub": "พระเอก เจ้าหน้าที่กู้ภัย 38 ปี (ชีต kong)",
+   "prompt": "Kong, a 38-year-old Thai rescue worker: orange rescue jacket and cargo trousers with yellow-and-silver reflective bands, a blue star-of-life patch on the left upper arm, black T-shirt, black shoulder harness straps, black utility belt with pouches, black gloves, dark muddy boots, spiky messy black hair, two small red scratch scars on his right cheek, short stubble. Full-body character reference, front view, standing in a neutral pose, plain light cream background, soft studio light. Cinematic 3D blocky toy-figure style: cube-shaped head with softly rounded edges, flat printed cartoon face with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy body, rounded fist hands, realistic fabric textures. Vertical 9:16. No text, no logos."
+  },
+  {
+   "key": "junior",
+   "name": "น้องลูกทีมกู้ภัย",
+   "sub": "ยังเป็นคน ก่อนโดนกัด (ออกแบบจากชีตซอมบี้กู้ภัย)",
+   "prompt": "a young Thai rescue team member about 22 years old: white rescue helmet with a red cross and a small headlamp, orange rescue suit with yellow-and-silver reflective bands, black harness, a radio clipped on the chest, red rescue backpack, black gloves, boots, clean-shaven young face. Full-body character reference, front view, standing in a neutral pose, plain light cream background, soft studio light. Cinematic 3D blocky toy-figure style: cube-shaped head with softly rounded edges, flat printed cartoon face with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy body, rounded fist hands, realistic fabric textures. Vertical 9:16. No text, no logos."
+  },
+  {
+   "key": "driver",
+   "name": "คนขับ (ซอมบี้ออฟฟิศ)",
+   "sub": "ตอนกลายร่างแล้ว (ชีต z_office)",
+   "prompt": "an infected office worker: white shirt with rolled sleeves, torn and stained dark red, loose dark red necktie, ID card on a lanyard, black slacks, wet messy black hair, pale grey-green skin, glowing white eyes with no pupils, mouth open showing uneven yellow teeth. Full-body character reference, front view, standing in a neutral pose, plain light cream background, soft studio light. Cinematic 3D blocky toy-figure style: cube-shaped head with softly rounded edges, flat printed cartoon face with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy body, rounded fist hands, realistic fabric textures. Vertical 9:16. No text, no logos."
+  },
+  {
+   "key": "namnuea",
+   "name": "น้ำเหนือ",
+   "sub": "ลูกสาวก้อง 14 ปี ใช้เป็นรูปในโทรศัพท์",
+   "prompt": "Namnuea, a 14-year-old Thai schoolgirl, Kong's daughter: long dark brown hair in a ponytail with a pink scrunchie, maroon jacket over a white school shirt with a navy bow, navy pleated skirt, olive backpack. Full-body character reference, front view, standing in a neutral pose, plain light cream background, soft studio light. Cinematic 3D blocky toy-figure style: cube-shaped head with softly rounded edges, flat printed cartoon face with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy body, rounded fist hands, realistic fabric textures. Vertical 9:16. No text, no logos."
+  },
+  {
+   "key": "praew",
+   "name": "หมอแพรว",
+   "sub": "ใช้ตั้งแต่ซีน 03",
+   "prompt": "Dr. Praew, a 29-year-old Thai ER doctor: long brown hair in a ponytail, white doctor's coat over teal scrubs, stethoscope around the neck, blue medical gloves, hospital ID card, red emergency medical bag. Full-body character reference, front view, standing in a neutral pose, plain light cream background, soft studio light. Cinematic 3D blocky toy-figure style: cube-shaped head with softly rounded edges, flat printed cartoon face with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy body, rounded fist hands, realistic fabric textures. Vertical 9:16. No text, no logos."
+  },
+  {
+   "key": "james",
+   "name": "เจมส์",
+   "sub": "ใช้ตั้งแต่ซีน 02",
+   "prompt": "James, a 20-year-old Thai food delivery rider: black cap, round black glasses, white plaster on the cheek, green rider jacket with grey reflective stripes over a black hoodie, black cargo pants, sneakers, green delivery bag on his back. Full-body character reference, front view, standing in a neutral pose, plain light cream background, soft studio light. Cinematic 3D blocky toy-figure style: cube-shaped head with softly rounded edges, flat printed cartoon face with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy body, rounded fist hands, realistic fabric textures. Vertical 9:16. No text, no logos."
+  },
+  {
+   "key": "tos",
+   "name": "คุณทศ",
+   "sub": "ใช้ตั้งแต่ซีน 03",
+   "prompt": "Khun Tos, a 45-year-old Thai businessman: swept-back dark brown hair, white shirt with rolled sleeves, dark pinstripe slacks, brown leather belt, gold wristwatch, brown leather shoulder bag, black dress shoes, stern face. Full-body character reference, front view, standing in a neutral pose, plain light cream background, soft studio light. Cinematic 3D blocky toy-figure style: cube-shaped head with softly rounded edges, flat printed cartoon face with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy body, rounded fist hands, realistic fabric textures. Vertical 9:16. No text, no logos."
+  }
+ ],
+ "shots": [
+  {
+   "id": "S01",
+   "t0": 0.0,
+   "t1": 3.38,
+   "dur": 3.38,
+   "line": "เสียงวิทยุ: ศูนย์ครับ คนเจ็บไม่ตอบสนอง… เดี๋ยว! เฮ้ย!",
+   "th": "มือถือวิทยุกู้ภัยไฟแดงกะพริบ ก้องทำงานเบลออยู่ข้างหลัง",
+   "img": "Extreme close-up of a black rescue radio handset held up in a gloved hand, a small red transmit light glowing on top, raindrops on its grille. Behind it, out of focus, Kong, a 38-year-old Thai rescue worker: orange rescue jacket and cargo trousers with yellow-and-silver reflective bands, a blue star-of-life patch on the left upper arm, black T-shirt, black shoulder harness straps, black utility belt with pouches, black gloves, dark muddy boots, spiky messy black hair, two small red scratch scars on his right cheek, short stubble works at the door of a crumpled white sedan with a cracked windscreen. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "The gloved hand trembles slightly, the red light flickers with a voice, then the hand jolts and the light goes dark. Slow push-in on the radio. Light rain falling. Natural movement, no text.",
+   "note": ""
+  },
+  {
+   "id": "S02",
+   "t0": 3.38,
+   "t1": 5.75,
+   "dur": 2.37,
+   "line": "แล้ววิทยุ ก็เงียบไป",
+   "th": "ไฟฉุกเฉินแดงสะท้อนแอ่งน้ำ กล้องยกขึ้นเห็นรถชนกันเป็นแพ",
+   "img": "Low view of a red emergency beacon reflecting in a puddle on the wet expressway, crashed cars beyond. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "The camera rises and pulls back from the puddle to reveal the pile-up of crashed cars and the endless traffic jam. Beacons flash red, light rain falls.",
+   "note": ""
+  },
+  {
+   "id": "S03",
+   "t0": 5.75,
+   "t1": 7.54,
+   "dur": 1.79,
+   "line": "คืนวันศุกร์ ฝนถล่มกรุงเทพฯ",
+   "th": "มุมสูงกว้าง ทางด่วนกรุงเทพฯ กลางคืน ฝนตก รถติดทุกเลน",
+   "img": "High wide view over the elevated Bangkok expressway at night in the rain, stopped traffic in every lane, city towers glowing in the haze. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "Slow push forward with a gentle pan. Rain drifts, headlights and tail lights glitter.",
+   "note": ""
+  },
+  {
+   "id": "S04",
+   "t0": 7.54,
+   "t1": 9.29,
+   "dur": 1.75,
+   "line": "บนทางด่วน รถชนกันเป็นแพ",
+   "th": "กล้องต่ำเลื่อนไปตามช่องระหว่างแถวรถ คนติดอยู่ยืนข้างรถ",
+   "img": "Low camera between two rows of stopped cars on the wet expressway, stranded drivers standing in the rain beside their cars looking ahead, a crash with flashing red lights at the end of the lane. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "The camera glides forward between the rows of cars past the stranded people and slows as it nears the crash. The people shift and look around.",
+   "note": ""
+  },
+  {
+   "id": "S05",
+   "t0": 9.29,
+   "t1": 11.08,
+   "dur": 1.79,
+   "line": "ยาวจนมองไม่เห็น ปลายทาง",
+   "th": "เลนส์ยาว แถวรถซ้อนกันยาวสุดสายตา",
+   "img": "Long telephoto view down the expressway: rows of stopped cars stacked to the horizon, a wall of red tail lights and headlights in the rain. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "Very slow rise of the camera. The lights shimmer through falling rain.",
+   "note": ""
+  },
+  {
+   "id": "S06",
+   "t0": 11.08,
+   "t1": 12.62,
+   "dur": 1.54,
+   "line": "ก้อง เจ้าหน้าที่กู้ภัย",
+   "th": "เปิดตัวก้อง มุมต่ำ ถือเครื่องตัด ล้อรถอยู่หน้ากล้อง",
+   "img": "Low-angle hero shot of Kong, a 38-year-old Thai rescue worker: orange rescue jacket and cargo trousers with yellow-and-silver reflective bands, a blue star-of-life patch on the left upper arm, black T-shirt, black shoulder harness straps, black utility belt with pouches, black gloves, dark muddy boots, spiky messy black hair, two small red scratch scars on his right cheek, short stubble holding a cordless rescue cutter with a red-and-black body, silver jaws and a battery gauge with three green bars in both hands, a car wheel in the dark foreground, red beacons behind him. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "Slow sideways track. Kong shifts his grip on the heavy cutter and lifts his eyes toward the wreck. Rain drips off his jacket. Natural weight.",
+   "note": ""
+  },
+  {
+   "id": "S07",
+   "t0": 12.62,
+   "t1": 14.42,
+   "dur": 1.8,
+   "line": "ยืนข้างรถ ที่ยับยู่ยี่",
+   "th": "ก้องวางปากเครื่องตัดที่ขอบประตู น้องลูกทีมจับประตู คนขับฟุบอยู่ข้างใน",
+   "img": "Ground-level shot past a fallen motorbike in the foreground: Kong, a 38-year-old Thai rescue worker: orange rescue jacket and cargo trousers with yellow-and-silver reflective bands, a blue star-of-life patch on the left upper arm, black T-shirt, black shoulder harness straps, black utility belt with pouches, black gloves, dark muddy boots, spiky messy black hair, two small red scratch scars on his right cheek, short stubble sets the jaws of a cordless rescue cutter with a red-and-black body, silver jaws and a battery gauge with three green bars on the door seam of a crumpled white sedan with a cracked windscreen; a young Thai rescue team member about 22 years old: white rescue helmet with a red cross and a small headlamp, orange rescue suit with yellow-and-silver reflective bands, black harness, a radio clipped on the chest, red rescue backpack, black gloves, boots, clean-shaven young face holds the door steady; inside the car, a motionless office worker slumped over the steering wheel, head hanging down so the face is hidden, white shirt, dark red necktie, ID card on a lanyard, wet messy black hair, pale grey hands. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "Slow push-in toward the car. Kong places the jaws carefully; the young rescuer braces the door. Light rain.",
+   "note": ""
+  },
+  {
+   "id": "S08",
+   "t0": 14.42,
+   "t1": 16.21,
+   "dur": 1.79,
+   "line": "ในมือคือ เครื่องตัดไร้สาย",
+   "th": "มาโครปากเครื่องตัดกัดขอบประตู ประกายไฟ",
+   "img": "Macro close-up of the silver jaws of a cordless rescue cutter with a red-and-black body, silver jaws and a battery gauge with three green bars biting into the bent door seam of the white sedan, Kong blurred behind. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "The jaws squeeze, the metal bends, bright sparks fly, the tool recoils slightly. Raindrops on the metal.",
+   "note": ""
+  },
+  {
+   "id": "S09",
+   "t0": 16.21,
+   "t1": 17.54,
+   "dur": 1.33,
+   "line": "แบตเต็ม 3 ขีด",
+   "th": "มาโครหน้าปัดแบต 3 ขีดเขียวติดทีละขีด",
+   "img": "Macro close-up of the battery gauge on a cordless rescue cutter with a red-and-black body, silver jaws and a battery gauge with three green bars: three green bars, a wet black glove on the handle. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "The three green bars light up one after another, then hold steady. Raindrops slide over the panel.",
+   "note": "ถ้าขีดไม่ครบ 3 ขีดหรือมีตัวหนังสือเพี้ยน ผมแก้ทับให้ได้"
+  },
+  {
+   "id": "S10",
+   "t0": 17.54,
+   "t1": 19.04,
+   "dur": 1.5,
+   "line": "โทรศัพท์สั่น",
+   "th": "โทรศัพท์สั่นในกระเป๋าเสื้อ ก้องหยุด ก้มดู หยิบออกมา",
+   "img": "Medium close-up of Kong, a 38-year-old Thai rescue worker: orange rescue jacket and cargo trousers with yellow-and-silver reflective bands, a blue star-of-life patch on the left upper arm, black T-shirt, black shoulder harness straps, black utility belt with pouches, black gloves, dark muddy boots, spiky messy black hair, two small red scratch scars on his right cheek, short stubble at work, a phone glowing in his chest pocket. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "The phone vibrates; Kong stops, looks down at his chest and pulls the phone out with his gloved hand. Natural movement.",
+   "note": ""
+  },
+  {
+   "id": "S11",
+   "t0": 19.04,
+   "t1": 22.17,
+   "dur": 3.13,
+   "line": "4 สาย ที่ไม่ได้รับ จากลูกสาว น้ำเหนือ",
+   "th": "มุมมองก้อง โทรศัพท์ในมือ หน้าจอสายที่ไม่ได้รับ",
+   "img": "Point-of-view close-up: a smartphone held in a black-gloved hand over the wet road at night, the screen glowing plain and empty, raindrops on the glass. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "The phone buzzes once in the hand; the camera slowly pushes in toward the screen; raindrops land on the glass.",
+   "note": "ให้หน้าจอว่างไว้ ผมใส่หน้าจอภาษาไทย \"4 สายที่ไม่ได้รับ\" กับรูปน้ำเหนือเอง"
+  },
+  {
+   "id": "S12",
+   "t0": 22.17,
+   "t1": 24.96,
+   "dur": 2.79,
+   "line": "น้ำเหนือ: พ่อ วันนี้พ่อสัญญา ว่าจะมารับหนูไง",
+   "th": "มุมสูงมองลงที่ก้องถือโทรศัพท์ ดูตัวเล็ก ตาหลุบลง",
+   "img": "High three-quarter close-up looking down on Kong, a 38-year-old Thai rescue worker: orange rescue jacket and cargo trousers with yellow-and-silver reflective bands, a blue star-of-life patch on the left upper arm, black T-shirt, black shoulder harness straps, black utility belt with pouches, black gloves, dark muddy boots, spiky messy black hair, two small red scratch scars on his right cheek, short stubble holding a phone to his ear in the rain, making him look small. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "Kong listens; his eyes drop to the ground and his shoulders sink a little. Rain runs down his face.",
+   "note": ""
+  },
+  {
+   "id": "S13",
+   "t0": 24.96,
+   "t1": 27.33,
+   "dur": 2.37,
+   "line": "ก้อง: พ่อมีเคสด่วนลูก รออีกแป๊บเดียว",
+   "th": "ก้องพูดโทรศัพท์ หันมองรถ ยกมือปลอบเบา ๆ",
+   "img": "Eye-level medium close-up of Kong, a 38-year-old Thai rescue worker: orange rescue jacket and cargo trousers with yellow-and-silver reflective bands, a blue star-of-life patch on the left upper arm, black T-shirt, black shoulder harness straps, black utility belt with pouches, black gloves, dark muddy boots, spiky messy black hair, two small red scratch scars on his right cheek, short stubble talking on the phone, the rescue scene with flashing beacons in depth behind him. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "Kong talks into the phone, glances back at the wrecked car and makes a small calming gesture with his free hand. Natural lip movement.",
+   "note": ""
+  },
+  {
+   "id": "S14",
+   "t0": 27.33,
+   "t1": 28.96,
+   "dur": 1.63,
+   "line": "น้ำเหนือ: ทุกครั้งเลย…",
+   "th": "มุมสูงกว้าง ก้องตัวเล็กในสายฝน ไหล่ตก",
+   "img": "High wide shot: Kong, a 38-year-old Thai rescue worker: orange rescue jacket and cargo trousers with yellow-and-silver reflective bands, a blue star-of-life patch on the left upper arm, black T-shirt, black shoulder harness straps, black utility belt with pouches, black gloves, dark muddy boots, spiky messy black hair, two small red scratch scars on his right cheek, short stubble stands small and alone in the rain beside the wreck, phone at his ear. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "Kong's head, shoulders and knees sag slightly as he listens. Rain falls steadily, beacons pulse.",
+   "note": ""
+  },
+  {
+   "id": "S15",
+   "t0": 28.96,
+   "t1": 30.33,
+   "dur": 1.37,
+   "line": "ก้อง: เดี๋ยวพ่อ โทรกลับนะ",
+   "th": "มุมต่ำใต้คาง ก้องพูดเบา ๆ เงยหน้าไม่ขึ้น",
+   "img": "Low close-up from below the chin of Kong, a 38-year-old Thai rescue worker: orange rescue jacket and cargo trousers with yellow-and-silver reflective bands, a blue star-of-life patch on the left upper arm, black T-shirt, black shoulder harness straps, black utility belt with pouches, black gloves, dark muddy boots, spiky messy black hair, two small red scratch scars on his right cheek, short stubble speaking into the phone, eyes looking down. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "Slow sideways track. Kong speaks softly and cannot look up. Rain drips from his hair.",
+   "note": ""
+  },
+  {
+   "id": "S16",
+   "t0": 30.33,
+   "t1": 33.42,
+   "dur": 3.09,
+   "line": "ปลายสายเงียบไป แล้วก็วางสาย",
+   "th": "จอโทรศัพท์ดับ มือเก็บโทรศัพท์ โฟกัสไปที่รถ น้องงัดประตู",
+   "img": "Point-of-view: a phone with a dark screen in a black glove in the foreground; beyond it a crumpled white sedan with a cracked windscreen, where a young Thai rescue team member about 22 years old: white rescue helmet with a red cross and a small headlamp, orange rescue suit with yellow-and-silver reflective bands, black harness, a radio clipped on the chest, red rescue backpack, black gloves, boots, clean-shaven young face levers the driver door open with a pry bar. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "The phone screen goes dark, the hand lowers it toward a pocket, and the focus shifts to the car where the young rescuer pries the door open.",
+   "note": "หน้าจอให้ดับหรือว่างไว้ ผมใส่ข้อความ \"วางสายแล้ว\" เอง"
+  },
+  {
+   "id": "S17",
+   "t0": 33.42,
+   "t1": 34.62,
+   "dur": 1.2,
+   "line": "น้อง: พี่ก้อง! เปิดได้แล้วครับ!",
+   "th": "ข้ามไหล่ก้อง น้องยืนที่ประตูรถ โบกมือตะโกนเรียก",
+   "img": "Over the shoulder of Kong in the dark foreground: a young Thai rescue team member about 22 years old: white rescue helmet with a red cross and a small headlamp, orange rescue suit with yellow-and-silver reflective bands, black harness, a radio clipped on the chest, red rescue backpack, black gloves, boots, clean-shaven young face stands at the opened driver door of a crumpled white sedan with a cracked windscreen, waving and shouting toward him. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "The young rescuer waves his arm and shouts; in the foreground Kong slides the phone into his pocket. Slight push-in.",
+   "note": ""
+  },
+  {
+   "id": "S18",
+   "t0": 34.62,
+   "t1": 37.62,
+   "dur": 3.0,
+   "line": "ในรถ คนขับนั่งนิ่ง ไม่ขยับเลยสักนิด",
+   "th": "ผ่านกระจกหน้าร้าว คนขับนิ่งสนิท",
+   "img": "Frontal view through the cracked windscreen of the white sedan: a motionless office worker slumped over the steering wheel, head hanging down so the face is hidden, white shirt, dark red necktie, ID card on a lanyard, wet messy black hair, pale grey hands, sitting completely motionless, raindrops on the glass. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "Very slow creeping push toward the windscreen. The driver does not move at all; only the rain moves.",
+   "note": ""
+  },
+  {
+   "id": "S19",
+   "t0": 37.62,
+   "t1": 40.29,
+   "dur": 2.67,
+   "line": "น้องในทีม ค่อยๆ ยื่นหน้า เข้าไปใกล้",
+   "th": "น้องเดินไปที่ประตูรถ ค่อย ๆ ยื่นหน้าเข้าไป",
+   "img": "Low side view: a young Thai rescue team member about 22 years old: white rescue helmet with a red cross and a small headlamp, orange rescue suit with yellow-and-silver reflective bands, black harness, a radio clipped on the chest, red rescue backpack, black gloves, boots, clean-shaven young face walks to the open driver door of a crumpled white sedan with a cracked windscreen and starts to lean in toward the still driver. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "Slow sideways track. The young rescuer walks with natural steps, stops at the door and slowly leans his head in; his headlamp lights the cabin.",
+   "note": ""
+  },
+  {
+   "id": "S20",
+   "t0": 40.29,
+   "t1": 43.46,
+   "dur": 3.17,
+   "line": "แล้วคนขับ ก็ค่อยๆ เงยหน้าขึ้น",
+   "th": "ข้ามไหล่ก้องเข้าไปในรถ คนขับค่อย ๆ เงยหน้า ตาขาวเรืองแสง",
+   "img": "Over the shoulder of Kong into the car cabin through the open door: the driver sits slumped with his head down, the young rescuer's headlamp lighting him. The driver is an infected office worker: white shirt with rolled sleeves, torn and stained dark red, loose dark red necktie, ID card on a lanyard, black slacks, wet messy black hair, pale grey-green skin, glowing white eyes with no pupils, mouth open showing uneven yellow teeth. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "Everything is still, then the driver slowly lifts his head, neck first, with a small twitch, and his eyes open glowing white. The camera tilts slightly.",
+   "note": ""
+  },
+  {
+   "id": "S21",
+   "t0": 43.46,
+   "t1": 45.29,
+   "dur": 1.83,
+   "line": "มันพุ่ง เข้ากัดทันที",
+   "th": "มุมเอียงต่ำ ซอมบี้พุ่งออกจากรถใส่น้อง กล้องสั่นแรง",
+   "img": "Low Dutch angle: an infected office worker: white shirt with rolled sleeves, torn and stained dark red, loose dark red necktie, ID card on a lanyard, black slacks, wet messy black hair, pale grey-green skin, glowing white eyes with no pupils, mouth open showing uneven yellow teeth, lunging out of the car door at a young Thai rescue team member about 22 years old: white rescue helmet with a red cross and a small headlamp, orange rescue suit with yellow-and-silver reflective bands, black harness, a radio clipped on the chest, red rescue backpack, black gloves, boots, clean-shaven young face and grabbing him by the shoulder; the young rescuer screams. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "Sudden explosive lunge, violent handheld camera shake, the young rescuer recoils and struggles. Fast and chaotic, rain splashing.",
+   "note": "ถ้าถูกปฏิเสธ ลองเปลี่ยนเป็น: the infected man leaps out of the car and grabs the young rescuer"
+  },
+  {
+   "id": "S22",
+   "t0": 45.29,
+   "t1": 46.42,
+   "dur": 1.13,
+   "line": "ก้องยังไม่รู้เลยว่า",
+   "th": "ก้องเก็บโทรศัพท์ เสียงกรีดร้องดัง เริ่มหันไปมอง",
+   "img": "Side shot of Kong, a 38-year-old Thai rescue worker: orange rescue jacket and cargo trousers with yellow-and-silver reflective bands, a blue star-of-life patch on the left upper arm, black T-shirt, black shoulder harness straps, black utility belt with pouches, black gloves, dark muddy boots, spiky messy black hair, two small red scratch scars on his right cheek, short stubble pocketing his phone in the foreground, a struggle blurred in the background beside the car. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "Kong pockets the phone; a scream reaches him and his head starts to turn toward the car. The camera tracks sideways.",
+   "note": ""
+  },
+  {
+   "id": "S23",
+   "t0": 46.42,
+   "t1": 47.79,
+   "dur": 1.37,
+   "line": "อีก 60 วินาที",
+   "th": "ใกล้หน้าน้องมุมเอียง ตกใจ มือกดไหล่ที่โดน",
+   "img": "Low Dutch close-up of a young Thai rescue team member about 22 years old: white rescue helmet with a red cross and a small headlamp, orange rescue suit with yellow-and-silver reflective bands, black harness, a radio clipped on the chest, red rescue backpack, black gloves, boots, clean-shaven young face, terrified, pressing his hand to his shoulder where a dark stain spreads on the orange suit, rain on his face. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "Shaky handheld camera. The young rescuer breathes fast in shock, eyes wide, hand pressing his shoulder.",
+   "note": "ถ้าถูกปฏิเสธ ตัดคำว่า dark stain ออก"
+  },
+  {
+   "id": "S24",
+   "t0": 47.79,
+   "t1": 53.33,
+   "dur": 5.54,
+   "line": "เพื่อนของเขา จะไม่ใช่คน อีกต่อไป + ชื่อเรื่อง",
+   "th": "กล้องยกสูงจากเหตุการณ์ ก้องหันเดินเข้าไป เห็นรถติดสุดสายตา",
+   "img": "Crane shot rising above the scene: a struggle beside the white sedan below, Kong, a 38-year-old Thai rescue worker: orange rescue jacket and cargo trousers with yellow-and-silver reflective bands, a blue star-of-life patch on the left upper arm, black T-shirt, black shoulder harness straps, black utility belt with pouches, black gloves, dark muddy boots, spiky messy black hair, two small red scratch scars on his right cheek, short stubble turning toward it, the endless gridlock of cars and red lights stretching away in the rain. Cinematic 3D animated film still, vertical 9:16. Blocky toy-figure characters: cube-shaped heads with softly rounded edges, flat printed cartoon faces with thick dark angled eyebrows and black oval eyes, chunky glossy clumped hair, boxy bodies, rounded fist hands; realistic fabric, dirt and rain-wet textures. Night on an elevated Bangkok expressway in light rain, huge traffic jam and car pile-up, red emergency beacons reflecting on wet asphalt, cold white street lights, deep blue shadows, shallow depth of field, moody film lighting. No text, no letters, no logos, no watermark.",
+   "mot": "The camera rises up and back slowly with a gentle roll; Kong turns and takes a step toward the struggle; the gridlock spreads out below. Keep rising.",
+   "note": "ชื่อเรื่อง \"เขตปิดตาย 09\" ผมใส่เอง"
+  }
+ ]
+}

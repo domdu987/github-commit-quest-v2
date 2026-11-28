@@ -62,7 +62,7 @@ class Rig:
         q = (look - loc).to_track_quat("-Z", "Y") @ Quaternion((0, 0, 1), math.radians(roll))
         cam.rotation_mode = "XYZ"; cam.location = loc; cam.rotation_euler = q.to_euler()
         cam.data.lens = lens; cam.data.clip_start = clip
-        cam["preset"] = "look"; cam["aspect"] = "9:16"
+        cam["preset"] = "look"; cam["aspect"] = "9:16" if self.H >= self.W else "16:9"
         cam["focus"] = tuple(focus if focus is not None else look); cam["coc_k"] = float(k); cam["coc_max"] = float(kmax); cam["dof_k"] = 1.0
         bpy.context.view_layer.update()
         K.retarget(cam)

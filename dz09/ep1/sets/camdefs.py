@@ -77,31 +77,35 @@ def x1_s57(rig, R, u):
 # =============================================================================================================== X1S
 def x1s_s62(rig, R, u):
     """S62 W 28 mm, locked: road level on the shoulder behind the truck, looking back; the sedan on its side, a small
-    figure at its windscreen frame; Kong in the right foreground, turning."""
+    figure at its windscreen frame; Kong in the right foreground, turning.  (v2: the car lies on its left side, belly and
+    wheels to the lanes; the camera sits 2.5 D further into the lane so the underside and the tyres in the air read)"""
     A = R["anchors"]; pm = Vector(A["praew_mark"]); ws = Vector(A["windscreen"])
     stand(rig, rig.crew, pm, ws, view="back", legs="wide", lean=-14, arm_n=dict(hand=(0.55, 0.40), elbow=None, hand_shape="grip"), arm_f=dict(hand=(0.50, 0.48), elbow=None, hand_shape="grip"))
-    kp = Vector((-18.3, 5.6, 0))
+    kp = Vector((-20.0, 7.2, 0))
     stand(rig, rig.kong, kp, pm, view="q", expr="alarmed")
-    loc = Vector((-19.9, 10.6, 1.25))
-    return dict(loc=loc, look=Vector((-19.6, -5.0, 1.75)), lens=28, focus=pm + Z(1.5), k=3.0, post={"exposure": 1.6}, shadow_at=pm + Z(1))
+    loc = Vector((-18.2, 11.5, 1.5))                              # on the shoulder, clear of l3_e's flank
+    return dict(loc=loc, look=Vector((-20.2, -3.0, 1.6)), lens=28, focus=pm + Z(1.5), k=3.0, post={"exposure": 1.6}, shadow_at=pm + Z(1))
 
 
 def x1s_s63(rig, R, u):
-    """S63 MW low 35 mm, slow push 0.4 D: roof toward us, hazards on the upper flank, steam, glass, the briefcase."""
-    A = R["anchors"]; pm = Vector(A["praew_mark"]); km = Vector(A["kong_mark"]); ws = Vector(A["windscreen"]); rm = Vector(A["roof_mid"])
+    """S63 MW low 35 mm, slow push 0.4 D: the car on its side from the shoulder north of the nose: the underside and the
+    front tyres at the left, the stacked headlamps, steam, glass, the briefcase in a puddle, and Praew braced at the empty
+    windscreen frame at the right.  (v2 orientation)"""
+    A = R["anchors"]; pm = Vector(A["praew_mark"]); km = Vector(A["kong_mark"]); ws = Vector(A["windscreen"]); nz = Vector(A["nose"])
     stand(rig, rig.crew, pm, ws, view="q", legs="wide", lean=-16, arm_n=dict(hand=(0.55, 0.40), elbow=None, hand_shape="grip"), arm_f=dict(hand=(0.50, 0.48), elbow=None, hand_shape="grip"))
-    stand(rig, rig.kong, km + Vector((0.3, -1.2, 0)), ws, view="q", expr="serious", legs="wide", arm_n="hold_cutter", prop_n=dict(type="cutter", bars=3, wet=True))
-    loc = Vector((rm.x + 5.2 - 0.3 * u, ws.y + 7.4 - 0.25 * u, 1.0))
-    return dict(loc=loc, look=Vector((rm.x - 0.5, ws.y + 0.4, 1.05)), lens=35, focus=pm + Z(1.4), k=4.0, post={"exposure": 1.6}, shadow_at=pm + Z(1))
+    rig.kong.hide()
+    loc = Vector((nz.x + 2.1 - 0.12 * u, nz.y + 3.75 - 0.38 * u, 1.15))
+    return dict(loc=loc, look=Vector((ws.x + 0.5, ws.y + 0.75, 1.3)), lens=35, focus=pm + Z(1.4), k=4.0, post={"exposure": 1.6}, shadow_at=pm + Z(1))
 
 
 def x1s_s65(rig, R, u):
-    """S65 M two-shot 35 mm, locked: into the tipped cabin through the empty windscreen frame."""
+    """S65 M two-shot 35 mm, locked: into the tipped cabin through the empty windscreen frame, from the shoulder north of
+    the nose, close to the barrier; Praew at the frame on the left.  (v2 orientation)"""
     A = R["anchors"]; pm = Vector(A["praew_mark"]); ws = Vector(A["windscreen"])
     rig.kong.hide()
-    stand(rig, rig.crew, pm + Vector((0.5, -0.3, 0)), ws, view="q", legs="wide", lean=-12, arm_n=dict(hand=(0.6, 0.45), elbow=None, hand_shape="grip"), arm_f="down")
-    loc = ws + Vector((3.3, 3.9, 0.35))
-    return dict(loc=loc, look=ws + Vector((0.0, 0.2, 0.0)), lens=35, focus=ws, k=5.0, post={"exposure": 1.7}, shadow_at=pm + Z(1))
+    stand(rig, rig.crew, pm + Vector((0.75, -0.35, 0)), ws, view="q", legs="wide", lean=-12, arm_n=dict(hand=(0.6, 0.45), elbow=None, hand_shape="grip"), arm_f="down")
+    loc = ws + Vector((-1.0, 4.3, 0.55))
+    return dict(loc=loc, look=ws + Vector((0.15, 0.0, 0.0)), lens=35, focus=ws, k=5.0, post={"exposure": 1.7}, shadow_at=pm + Z(1))
 
 
 # ================================================================================================================ X2
@@ -184,6 +188,7 @@ def cab_s81(rig, R, u):
     import cab
     A = R["anchors"]; F = cab.F
     cab.wipers(0.2 + u * 0.9); cab.mirror(None); cab.fog(0)
+    cab.switch("beacon", True); cab.switch("radio", True)        # (v2) the light bar has been on since the hook: its sweep comes in through the glass
     _seated(rig, rig.kong, "drv", view="back", arm_r="wheel", arm_l="wheel")
     _seated(rig, rig.crew, "pas", view="back")
     loc = _cabW((0.05, -0.75, F + 2.42))
@@ -195,10 +200,11 @@ def cab_s84(rig, R, u):
     import cab
     A = R["anchors"]; F = cab.F
     hide_all(rig)
-    cab.switch("siren", True); cab.switch("beacon", True); cab.wipers(None)
+    cab.switch("siren", True); cab.switch("beacon", True); cab.switch("radio", True); cab.wipers(None)
     sw = Vector(A["switch_siren"])
-    loc = sw + Vector(A["right"]) * 0.40 - Vector(A["fwd"]) * 1.0 + Z(0.60)
-    return dict(loc=loc, look=sw + Vector(A["right"]) * 0.12 + Z(-0.07), lens=70, focus=sw, k=9.0, clip=0.02, post={"exposure": 1.9, "rain": False, "sparkle": 0.0})
+    loc = sw + Vector(A["right"]) * 0.40 - Vector(A["fwd"]) * 1.0 + Z(0.56)
+    # (v2) framed 0.08 lower: the tape labels sit mid-frame and the lit radio display fills the bottom instead of the dark stack
+    return dict(loc=loc, look=sw + Vector(A["right"]) * 0.12 + Z(-0.15), lens=70, focus=sw + Z(-0.08), k=9.0, clip=0.02, post={"exposure": 1.9, "rain": False, "sparkle": 0.0})
 
 
 def cab_s88(rig, R, u):
@@ -263,12 +269,12 @@ def gear_s100(rig, R, u):
 
 # ====================================================================================================== STAIR / UND
 DARK_FLAT = {"GLOW": 0.07, "AMB": 0.30}        # v8 puppets in a dark set: the default white halo (GLOW 0.20) outlines them like stickers
-UND_POST = {"exposure": 1.6, "RAIN": 0.0, "SPLASH": 0.0, "sparkle": 0.0, "flat": DARK_FLAT}
+UND_POST = {"exposure": 2.05, "RAIN": 0.0, "SPLASH": 0.0, "sparkle": 0.0, "flat": DARK_FLAT}
 
 
 def stair_s111(rig, R, u):
     """S111 W side 28 mm, crane down 1.0 D with them: the deck edge and the top two flights from the street side, rain
-    falling past, the gate lamp; figures on the treads."""
+    falling past, the gate lamp; figures on the treads.  (v2: 6.2 D from Kong instead of 15: a standing figure >= 35 %)"""
     import stair
     T = stair._S["T"]; A = T["anchors"]
     p0 = Vector(stair.tread(0, 5)); p1 = Vector(stair.tread(1, 3))
@@ -276,8 +282,8 @@ def stair_s111(rig, R, u):
     rig.kong.set(loc=tuple(p0), face=face_to(p0, p0 + Vector((0, -1, 0))), view="side", s=-1, expr="serious", legs="step", arm_n="down", arm_f="down")
     rig.crew.set(loc=tuple(p1), face=face_to(p1, p1 + Vector((0, 1, 0))), view="side", s=1, expr="scared", legs="step", arm_n="down", arm_f="down")
     cy = (A["s_a"] + A["s_b"]) / 2
-    loc = Vector((-39.5, cy + 0.6, -2.6 - 1.0 * u))
-    return dict(loc=loc, look=Vector((A["x_out"], cy, -2.9 - 1.0 * u)), lens=28, focus=p0 + Z(1.5), k=2.5, post={"exposure": 1.9, "RAIN": 0.2, "SPLASH": 0.0, "flat": DARK_FLAT}, shadow_at=p0 + Z(1.5))
+    loc = Vector((p0.x - 6.2, cy + 0.5, -1.0 - 1.0 * u))
+    return dict(loc=loc, look=Vector((A["x_in"] + 0.6, cy, -1.9 - 1.0 * u)), lens=28, focus=p0 + Z(1.5), k=2.5, post={"exposure": 2.05, "RAIN": 0.2, "SPLASH": 0.0, "flat": DARK_FLAT}, shadow_at=p0 + Z(1.5), frame=4)
 
 
 def stair_low(rig, R, u):
@@ -289,45 +295,48 @@ def stair_low(rig, R, u):
     rig.kong.set(loc=tuple(p0), face=face_to(p0, p0 + Vector((0, -1, 0))), view="side", s=1, legs="step")
     rig.crew.set(loc=tuple(p1), face=face_to(p1, p1 + Vector((0, 1, 0))), view="side", s=-1, legs="step")
     cy = (A["s_a"] + A["s_b"]) / 2
-    loc = Vector((-9.0, cy - 3.0, -27.6))
-    return dict(loc=loc, look=Vector((A["x_in"] - 1.7, cy, -25.5)), lens=35, focus=p0 + Z(1.5), k=2.5, post=dict(UND_POST), shadow_at=p0 + Z(1.5))
+    loc = Vector((p0.x + 7.0, cy - 2.9, -26.6))
+    return dict(loc=loc, look=Vector((A["x_in"] - 1.7, cy + 0.4, -26.4)), lens=35, focus=p0 + Z(1.5), k=2.5, post=dict(UND_POST), shadow_at=p0 + Z(1.5))
 
 
 def und_s112(rig, R, u):
-    """S112 EW 24 mm, locked: the street between the piers, almost black; rain sheets at both deck edges, drips along the
-    joint, puddles holding the one far sodium lamp; the group very small at the stair foot."""
+    """S112 W 24 mm (plan: EW), locked: from under the deck, looking out at the stair foot: the four stop there, the
+    tower climbs into the dark behind them with its cage lamps and the beacon spill from above, the rain sheet at the
+    deck edge between, the lit shop sign and the street lamp beyond.  (v2: 5.2 D from Kong instead of 46)"""
     import under
-    A = under._S["U"]["anchors"]; g = Vector(A["group_mark"])
-    stand(rig, rig.kong, g, g + Vector((0, 10, 0)), view="q")
-    stand(rig, rig.crew, g + Vector((1.6, -1.0, 0)), g + Vector((0, 10, 0)), view="q")
-    under.fill(0.0); under.bounce(under.BOUNCE_W, (g.x + 2.4, g.y - 2.5, A["ground_z"] + 5.5))
-    loc = Vector((-11.5, g.y - 46.0, A["ground_z"] + 2.0))
-    return dict(loc=loc, look=Vector((-13.5, g.y + 40.0, A["ground_z"] + 6.5)), lens=24, focus=g + Z(1.5), k=1.5, post=dict(UND_POST), shadow_at=g + Z(1.5))
+    A = under._S["U"]["anchors"]; g = Vector(A["group_mark"]); z = A["ground_z"]
+    stand(rig, rig.kong, g, g + Vector((6.0, 0.6, 0)), view="q")
+    stand(rig, rig.crew, g + Vector((1.6, -1.0, 0)), g + Vector((6.0, 0.6, 0)), view="q")
+    under.fill(0.0); under.bounce(under.BOUNCE_W, (g.x + 3.4, g.y + 1.5, z + 5.5))
+    loc = Vector((g.x + 5.5, g.y + 0.75, z + 1.75))
+    # frame 10: the blue half of the light bar's beat is on, so the still shows the spill (frame 4 shows the red)
+    return dict(loc=loc, look=Vector((g.x - 5.3, g.y - 2.6, z + 3.2)), lens=24, focus=g + Z(1.5), k=1.5, post=dict(UND_POST), shadow_at=g + Z(1.5), frame=10)
 
 
 def und_s122(rig, R, u):
     """S122 W 28 mm, locked: the dark street; one small bright rectangle (the phone) is the only light near them and
-    throws a shadow up the pier.  The phone is a stand-in point light here (und_fill at chest height)."""
+    throws a shadow up the pier.  The phone is a stand-in point light here (und_fill at chest height).
+    (v2: Kong turned to face away from the pier so the phone throws him onto it; 6.2 D instead of 12.4)"""
     import under
-    A = under._S["U"]["anchors"]; g = Vector(A["group_mark"]); pf = Vector(A["pier_face_200"])
-    kp = Vector((-7.0, 204.5, A["ground_z"]))
-    stand(rig, rig.kong, kp, kp + Vector((0, -5, 0)), view="q", arm_n="phone_look")
-    stand(rig, rig.crew, kp + Vector((-3.2, 2.6, 0)), kp, view="q")
-    under.fill(22.0, tuple(kp + Vector((0.25, -0.45, 1.75)))); under.bounce(110.0, tuple(kp + Vector((-4.0, -3.0, 5.5))))
-    loc = Vector((-13.5, 194.0, A["ground_z"] + 1.7))
-    return dict(loc=loc, look=kp + Vector((1.2, 0, 2.4)), lens=28, focus=kp + Z(1.5), k=2.5, post=dict(UND_POST), shadow_at=kp + Z(1.5))
+    A = under._S["U"]["anchors"]; z = A["ground_z"]
+    kp = Vector((-6.6, 202.5, z))
+    stand(rig, rig.kong, kp, kp + Vector((-5, -0.6, 0)), view="q", arm_n="phone_look")
+    stand(rig, rig.crew, kp + Vector((-3.4, 2.8, 0)), kp, view="q")
+    under.fill(22.0, tuple(kp + Vector((-0.45, -0.15, 1.75)))); under.bounce(110.0, tuple(kp + Vector((-4.0, -3.0, 5.5))))
+    loc = Vector((-11.6, 198.8, z + 1.7))
+    return dict(loc=loc, look=kp + Vector((1.4, 0.4, 2.2)), lens=28, focus=kp + Z(1.5), k=2.5, post=dict(UND_POST), shadow_at=kp + Z(1.5))
 
 
 def und_s133(rig, R, u):
     """S133 EW 35 mm, slow track right: along the piers; figures in single file on the black side, walking toward the
-    pale glow at the far end."""
+    pale glow at the far end.  (v2: 7.5 D behind the last of them instead of 24)"""
     import under
     A = under._S["U"]["anchors"]; z = A["ground_z"]
     p = Vector((-13.4, 236.0, z))
     under.fill(0.0); under.bounce(under.BOUNCE_W, (p.x - 3.0, p.y - 2.5, z + 5.5))
     stand(rig, rig.kong, p, p + Vector((0, 10, 0)), view="back", legs="step")
     stand(rig, rig.crew, p + Vector((0.3, 3.4, 0)), p + Vector((0, 10, 0)), view="back", legs="step")
-    loc = Vector((-17.5 + 1.0 * u, 212.0, z + 1.9))
+    loc = Vector((-14.8 + 1.0 * u, 228.6, z + 1.9))
     return dict(loc=loc, look=Vector((-12.0, 300.0, z + 4.2)), lens=35, focus=p + Z(1.5), k=2.0, post=dict(UND_POST), shadow_at=p + Z(1.5))
 
 
@@ -339,4 +348,29 @@ CAMS = {
     "X2": [dict(name="S82", cls="B", cost=True, fn=x2_s82), dict(name="S97", cls="B", fn=x2_s97), dict(name="S98", cls="B", fn=x2_s98), dict(name="S107", cls="A", fn=x2_s107)],
     "X1": [dict(name="S34", cls="A", cost=True, fn=x1_s34), dict(name="S54", cls="A", fn=x1_s54), dict(name="S29", cls="B", fn=x1_s29), dict(name="S57", cls="B", fn=x1_s57)],
     "X1S": [dict(name="S62", cls="B", fn=x1s_s62), dict(name="S63", cls="B", cost=True, fn=x1s_s63), dict(name="S65", cls="A", fn=x1s_s65)],
+}
+
+
+# ------------------------------------------------------------------------------------------- diagnostics (not shots)
+def _diag(loc, look, lens=24):
+    def fn(rig, R, u):
+        hide_all(rig)
+        return dict(loc=Vector(loc), look=Vector(look), lens=lens, k=1.0, post=dict(UND_POST))
+    return fn
+
+
+def _diag2(loc, look, lens=24):
+    def fn(rig, R, u):
+        hide_all(rig)
+        return dict(loc=Vector(loc), look=Vector(look), lens=lens, k=1.0, post={"exposure": 1.6})
+    return fn
+
+
+DIAG = {
+    "X1S": [dict(name="D_LANE", fn=_diag2((-11.5, -2.0, 3.0), (-20.0, -5.4, 1.2), 28)),
+            dict(name="D_NE", fn=_diag2((-15.5, 4.5, 4.5), (-20.3, -4.5, 1.0), 28)),
+            dict(name="D_UP", fn=_diag2((-16.0, -5.0, 14.0), (-20.2, -5.2, 0.0), 28))],
+    "UND": [dict(name="D_TOP", fn=_diag((-6.0, 230.0, -8.0), (-24.0, 205.0, -30.0), 24)),
+            dict(name="D_N", fn=_diag((-14.0, 236.0, -27.0), (-22.0, 200.0, -24.0), 24)),
+            dict(name="D_PIER", fn=_diag((-15.0, 232.0, -27.5), (-2.0, 252.0, -22.0), 24))],
 }

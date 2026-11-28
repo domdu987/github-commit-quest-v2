@@ -1,0 +1,8 @@
+{
+ "note": "scene 02 conform cfg (cut_timed.py / finish_ep.py). fx: the plan's one red frame on the cut into S049 (scene frame 1194). S050 starts on a hard cut (all cuts are straight cuts since the 11-28 decision anyway). The 6-frame rain drop-out on the eye-open (S048) is in the mix, not here.",
+ "hard_cuts": ["S050"],
+ "fx": [{"type": "flash", "t": 49.75, "frames": 1, "colour": [176, 6, 10], "mix": 0.62, "why": "S049 plan: 1 red frame on the cut"}],
+ "cues": {"eyes_open": {"word": "ก็ลืมตา", "sid": "s33", "dt": 0.2}, "bite_film": 43.795},
+ "mix": "ep1/audio/sc02/mix_sc02.wav",
+ "narration_wav": "ep1/audio/narr_ep1.wav"
+}

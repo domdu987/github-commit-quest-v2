@@ -37,6 +37,10 @@ _S = {}
 # --------------------------------------------------------------------------------------------------------- textures
 ROCKER_OFF, ROCKER_ON = 0.22, 0.65
 AMBIENT_W, CONSOLE_W = 48.0, 22.0      # checker: 9 / 9 W left faces and switches unreadable on a phone
+# (v2) the director found S81 / S84 nearly black: brighter instrument and radio glow, back-lit tape labels, and the
+# light bar's red / blue sweeping in through the windscreen whenever the beacon rocker is on
+DASH_W, CLUSTER_EMIT, RADIO_EMIT, RADIO_W, LABEL_EMIT, CONSOLE_W2 = 95.0, 3.4, 3.2, 14.0, 0.15, 30.0
+SWEEP_W, SWEEP_PERIOD, SWEEP_DEG = 650.0, 12, 38.0
 
 
 def _cluster_tex():
@@ -89,7 +93,11 @@ def _radio_tex():
         for k in range(4):
             d.ellipse((W * 0.70 + (k % 2) * 60, H * 0.20 + (k // 2) * 70, W * 0.70 + (k % 2) * 60 + 40, H * 0.20 + (k // 2) * 70 + 40), fill=(60, 64, 70, 255))
         d.ellipse((W * 0.10, H * 0.72, W * 0.10 + 22, H * 0.72 + 22), fill=(255, 60, 40, 255))
-    return K.draw_tex("cab_radio", (512, 256), fn)
+        f = K.font(40)                                            # (v2) a channel line in plain Thai on the display strip
+        d.rectangle((W * 0.08, H * 0.64, W * 0.62, H * 0.90), fill=(30, 110, 60, 255))
+        bb = d.textbbox((0, 0), "ช่อง 3", font=f)
+        d.text((W * 0.35 - (bb[0] + bb[2]) / 2, H * 0.77 - (bb[1] + bb[3]) / 2), "ช่อง 3", font=f, fill=(190, 255, 205, 255))
+    return K.draw_tex("cab_radio2", (512, 256), fn)
 
 
 def _horde_tex(k):
@@ -183,6 +191,39 @@ def _crack_tex(level):
     return K.draw_tex("cab_crack_%d" % level, (512, 512), fn)
 
 
+# -------------------------------------------------------------------------------------------------------- v2 sweep
+def _sweep_lights(root, c):
+    """(v2) the light bar's red and blue seen from inside: two narrow spots just outside the windscreen, above the
+    bonnet, aimed back into the cab, each on a pivot whose yaw is keyed so the beam sweeps across the dash, the head
+    lining and the seats (one sweep a beacon period, red and blue half a period apart; a pure function of the frame)."""
+    out = {}
+    for colr, col, x, ph in (("red", (1.0, 0.07, 0.05), 0.75, 0), ("blue", (0.15, 0.28, 1.0), -0.75, SWEEP_PERIOD // 2)):
+        # just above the bonnet in front of the glass, aimed back and up: the beam crosses the occupants' heads and
+        # shoulders, the wheel rim and the front of the head lining, which is what a forward POV sees of it
+        pv = K.empty("cab_sweep_pivot_" + colr, (x, Y1 + 0.85, F + 1.95), root, c)
+        L = K.spot("cab_sweep_" + colr, (0, 0, 0), (0, 0, -1), SWEEP_W, col, 36.0, 0.6, 0.05, parent=pv)
+        L.location = (0, 0, 0)
+        L.rotation_euler = Vector((-x * 0.9, -2.7, 1.25)).to_track_quat("-Z", "Y").to_euler()
+        n = SWEEP_PERIOD
+        keys = []
+        for f in range(1, n + 2):
+            t = ((f - 1 + ph) % n) / n
+            keys.append((f, math.radians(SWEEP_DEG) * math.sin(2 * math.pi * t)))
+        kit.key_series(pv, "rotation_euler", pv, keys, "LINEAR", index=2)
+        L.visible_glossy = True
+        L.hide_render = True
+        out["cab_sweep_" + colr] = L
+    return out
+
+
+def sweep(on=True, gain=1.0):
+    """(v2) the beacons' red / blue sweeping in through the windscreen (cab.switch("beacon") sets it too)."""
+    for colr in ("red", "blue"):
+        L = _S["R"]["lights"].get("cab_sweep_" + colr)
+        if L is None: continue
+        L.hide_render = not on; L.data.energy = SWEEP_W * gain * (1.0 if colr == "red" else 1.25)
+
+
 # -------------------------------------------------------------------------------------------------------------- build
 def _seat(name, x, y, root, c, bench=False, w=1.15):
     sm = K.simple("cab_seat", "#2a2c33", 0.9); sm2 = K.simple("cab_seat_side", "#c8581b", 0.8)
@@ -253,7 +294,7 @@ def build(A, at="x2", with_gear=True):
     add(K.box("cab_firewall", (2 * HW + 0.3, 0.1, DT - F + 0.3), (0, Y1 + 0.30, (F + DT) / 2), dark, root, c=c))
     xd = SEATS["drv"][0]
     add(K.box("cab_binnacle", (1.15, 0.42, 0.34), (xd, 1.70, DT + 0.12), dark, root, bevel=0.07, c=c))
-    cm = K.image_mat("cab_cluster", _cluster_tex(), rough=0.3, emit_strength=2.2)
+    cm = K.image_mat("cab_cluster", _cluster_tex(), rough=0.3, emit_strength=CLUSTER_EMIT)
     q = K.quad("cab_cluster", 0.95, 0.42, (xd, 1.485, DT + 0.10), "-Y", cm, root, c=c); q.rotation_euler = (math.radians(-12), 0, 0); add(q)
     # steering column and wheel (rim, three spokes, boss)
     col_a = Vector((xd, 1.55, DT - 0.15)); col_b = Vector((xd, 0.98, DT + 0.22))
@@ -284,11 +325,11 @@ def build(A, at="x2", with_gear=True):
         led = K.emit("cab_led_" + nm, col, 0.05)
         add(K.box("cab_led_" + nm, (0.05, 0.012, 0.035), (0, -0.028, 0.05), led, piv, c=c))
         add(K.box("cab_swbezel_" + nm, (0.17, 0.02, 0.24), (x, -0.012, 0.34), pl, stack, c=c))
-        lm = K.image_mat("label_" + nm, _label_tex(nm + "b", txt, size=(384, 96), fs=46, tilt=random.Random(nm).uniform(-3, 3)), rough=0.8, emit_strength=0.12, alpha=True)
+        lm = K.image_mat("label_" + nm, _label_tex(nm + "b", txt, size=(384, 96), fs=46, tilt=random.Random(nm).uniform(-3, 3)), rough=0.8, emit_strength=LABEL_EMIT, alpha=True)
         ql = K.quad("cab_label_" + nm, 0.19, 0.071, (x, -0.022, 0.165), "-Y", lm, stack, c=c); add(ql)
         Lg = K.point("cab_glow_" + nm, (x, -0.16, 0.36), 0.0, col, 0.03, parent=stack, glossy=False); Lg.hide_render = True
         switches[nm] = dict(pivot=piv, led=led, light=Lg, on=False, body=body_m)
-    rm = K.image_mat("cab_radio", _radio_tex(), rough=0.3, emit_strength=1.4)
+    rm = K.image_mat("cab_radio2", _radio_tex(), rough=0.3, emit_strength=RADIO_EMIT)
     add(K.box("cab_radio_body", (0.80, 0.06, 0.34), (0, -0.01, -0.14), pl, stack, bevel=0.01, c=c))
     add(K.quad("cab_radio_face", 0.74, 0.30, (0, -0.045, -0.14), "-Y", rm, stack, c=c))
     add(K.box("cab_mic", (0.14, 0.09, 0.22), (0.52, -0.03, -0.10), pl, stack, bevel=0.03, c=c))
@@ -354,13 +395,14 @@ def build(A, at="x2", with_gear=True):
     _seat("cab_bench", 0.0, SEATS["rr"][1], root, c, bench=True)
     # practicals: instrument glow (teal), a warm dome lamp (off), a faint cool spill that stands for the wet glass glow
     lights = {}
-    lights["cab_dash"] = K.point("cab_dash", (xd, 1.25, DT + 0.12), 40.0, (0.45, 1.0, 0.86), 0.12, parent=root, glossy=False)
+    lights["cab_dash"] = K.point("cab_dash", (xd, 1.25, DT + 0.12), DASH_W, (0.45, 1.0, 0.86), 0.12, parent=root, glossy=False)
     lights["cab_dome"] = K.point("cab_dome", (0, -0.2, ZR - 0.14), 0.0, (1.0, 0.82, 0.58), 0.14, parent=root, glossy=False)
     lights["cab_dome"].hide_render = True
     add(K.box("cab_dome_lens", (0.34, 0.22, 0.05), (0, -0.2, ZR - 0.03), K.emit("cab_dome_lens", (1.0, 0.82, 0.58), 0.03), root, bevel=0.015, c=c))
     lights["cab_ambient"] = K.point("cab_ambient", (0, 0.4, ZR - 0.5), AMBIENT_W, (0.50, 0.62, 1.0), 0.6, parent=root, glossy=False)   # the wet glass's own glow: no fixture
-    lights["cab_console"] = K.point("cab_console", (0.22, 1.05, DT + 0.30), CONSOLE_W, (0.45, 1.0, 0.86), 0.05, parent=root, glossy=False)        # the cluster's spill on the switch panel
-    lights["cab_radio"] = K.point("cab_radio_glow", (0.0, 1.3, DT - 0.55), 3.0, (0.3, 1.0, 0.5), 0.08, parent=root, glossy=False)
+    lights["cab_console"] = K.point("cab_console", (0.22, 1.05, DT + 0.30), CONSOLE_W2, (0.45, 1.0, 0.86), 0.05, parent=root, glossy=False)        # the cluster's spill on the switch panel
+    lights["cab_radio"] = K.point("cab_radio_glow", (0.0, 0.95, DT - 0.78), RADIO_W, (0.3, 1.0, 0.5), 0.10, parent=root, glossy=False)
+    lights.update(_sweep_lights(root, c))
     for o in P:
         if o.type == "MESH" and o.pass_index == 0: o.pass_index = 4
     R = dict(root=root, parts=P, wins=wins, wipers=wip, switches=switches, mirrors=mirrors, horde=horde, road_m=road_m, fog=fq, cracks=cq, lights=lights,
@@ -435,6 +477,7 @@ def switch(name, on=True):
     K.set_emit(sw["body"], (ROCKER_ON if on else ROCKER_OFF) * (1.0 if name in ("siren", "beacon") else 0.45))
     sw["light"].data.energy = 5.0 if on else 0.0; sw["light"].hide_render = not on
     sw["on"] = on
+    if name == "beacon": sweep(on)
 
 
 def wipers(t=None, period=0.9, sweep_deg=96.0):
@@ -475,13 +518,13 @@ def dome(on=True, energy=38.0):
     K.set_emit("cab_dome_lens", 6.0 if on else 0.03)
 
 
-def ambient(watts=AMBIENT_W, console=CONSOLE_W):
+def ambient(watts=AMBIENT_W, console=CONSOLE_W2):
     """the cab's base light: the cool glow of the wet glass (no fixture) and the cluster's spill on the switch panel."""
     L = _S["R"]["lights"]; L["cab_ambient"].data.energy = watts; L["cab_console"].data.energy = console
 
 
 def dash(gain=1.0):
-    _S["R"]["lights"]["cab_dash"].data.energy = 40.0 * gain
+    _S["R"]["lights"]["cab_dash"].data.energy = DASH_W * gain
 
 
 def clear_shoulder(s0, s1):

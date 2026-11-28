@@ -41,9 +41,26 @@ def build_set(rig, key):
     raise SystemExit("unknown set " + key)
 
 
-def cams_for(key):
+def cams_for(key, diag=False):
     import camdefs
-    return camdefs.CAMS[key]
+    return camdefs.CAMS[key] + (getattr(camdefs, "DIAG", {}).get(key, []) if diag else [])
+
+
+def fig_heights(rig):
+    """(v2) height of each visible test puppet as a fraction of the frame height (soles to soles + its height), and
+    whether its soles-to-head segment is inside the frame: the director's floor is 35 % in W and 60 % in M shots."""
+    import bpy
+    from mathutils import Vector
+    from bpy_extras.object_utils import world_to_camera_view as w2c
+    sc = bpy.context.scene; out = {}
+    for a in rig.acts:
+        if not a.visible: continue
+        b = Vector(a.loc); t = b + Vector((0, 0, a.a.height))
+        pb = w2c(sc, rig.cam, b); pt = w2c(sc, rig.cam, t)
+        if pb.z <= 0 or pt.z <= 0: continue
+        inside = 0.0 <= (pb.x + pt.x) / 2 <= 1.0
+        out[a.name] = dict(h=round(abs(pt.y - pb.y), 3), x=round((pb.x + pt.x) / 2, 2), in_frame=inside, depth=round(pb.z, 2))
+    return out
 
 
 def stage_cam(rig, R, cd, frame=7, u=0.5):
@@ -60,10 +77,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("mode"); ap.add_argument("set", nargs="?", default="")
     ap.add_argument("--cam", default=""); ap.add_argument("--tier", default="draft"); ap.add_argument("--size", default="")
-    ap.add_argument("--frames", type=int, default=24); ap.add_argument("--tag", default=""); ap.add_argument("--frame", type=int, default=7); ap.add_argument("--steady", type=int, default=4)
+    ap.add_argument("--frames", type=int, default=24); ap.add_argument("--tag", default=""); ap.add_argument("--frame", type=int, default=7); ap.add_argument("--steady", type=int, default=4); ap.add_argument("--camdefs", default="")
     a = ap.parse_args()
     if a.mode == "sheet":
         import sheet; sheet.make(); return
+    if a.mode == "sheet2":
+        import sheet; sheet.make_v2(); sheet.make_169(); return
     if a.mode == "table":
         import sheet; sheet.table(); return
     import rig as RG
@@ -81,15 +100,32 @@ def main():
     print("set %s built: %.1f CPU s" % (key, RG.cpu() - c0), flush=True)
     for kk in ("anchors", "roof_route", "roof_route_l1", "hidden_rows", "info"):
         if isinstance(R, dict) and kk in R: print("REG", kk, json.dumps(R[kk], default=lambda o: [round(x, 3) for x in o] if hasattr(o, "__iter__") else str(o)), flush=True)
-    cams = cams_for(key)
+    cams = cams_for(key, diag=bool(a.cam))
+    if a.mode == "measure":                     # (v2) figure heights only, no render; --camdefs DIR measures another camdefs.py
+        if a.camdefs:
+            import importlib.util
+            spec = importlib.util.spec_from_file_location("camdefs_alt", os.path.join(a.camdefs, "camdefs.py"))
+            m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m); cams = m.CAMS[key]
+        out = {}
+        for cd in cams:
+            if a.cam and cd["name"] not in a.cam.split(","): continue
+            stage_cam(rig, R, cd, a.frame)
+            out[cd["name"]] = fig_heights(rig)
+            print("MEASURE %s %s %s" % (key, cd["name"], json.dumps(out[cd["name"]])), flush=True)
+        json.dump(out, open(os.path.join(OUT, "measure_%s_%s.json" % (key, a.tag or "cur")), "w"), indent=1)
+        return
     if a.mode == "still":
         d = os.path.join(OUT, "stills" + ("_" + a.tag if a.tag else "")); os.makedirs(d, exist_ok=True)
         for cd in cams:
             if a.cam and cd["name"] not in a.cam.split(","): continue
             if tier != "draft": rig.set_pct(100 if cd.get("cls", "B") == "A" else 75)
             post, dd = stage_cam(rig, R, cd, a.frame)
+            fh = fig_heights(rig)
             r = rig.render(os.path.join(d, "%s_%s_%s" % (key, cd["name"], tier)), frame=dd.get("frame", a.frame), post=post)
             print("STILL %s %s cpu %.1f wall %.1f" % (key, cd["name"], r["cpu"], r["wall"]), flush=True)
+            print("FIGS %s %s %s" % (key, cd["name"], json.dumps(fh)), flush=True)
+            rec = dict(set=key, cam=cd["name"], size="%dx%d" % (W, H), frame=dd.get("frame", a.frame), cpu=r["cpu"], wall=r["wall"], figs=fh, build_cpu=round(rig.build_cpu, 1))
+            json.dump(rec, open(os.path.join(d, "%s_%s_%s.json" % (key, cd["name"], tier)), "w"), indent=1)
     elif a.mode in ("cost", "final"):
         cd = [c for c in cams if c.get("cost")][0]
         if a.mode == "final":

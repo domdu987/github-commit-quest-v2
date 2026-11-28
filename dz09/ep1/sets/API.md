@@ -19,6 +19,7 @@ Units as in the rest of the project: 1 BU = 1 D = 0.6 m, Z up, deck top z = 0, p
 | `rig.py`, `camdefs.py`, `tests.py`, `sheet.py`, `queue.sh` | Proof stage (deck + two v8 puppets through v10's `Act`), the planned camera positions, the stills / cost / final runs, the sheet and the cost table |
 | `hook_cams.py`, `check_hook.py`, `hookcheck.py` | The hook's 72 cameras dumped without rendering (`out/hook_cams.json`), a frustum test, and the built-set visibility check (`out/hook_check.md`) |
 | Proofs | `sets_sheet.png`, `sets_final_sheet.png`, `cost_table.md`, `out/stills/`, `out/final/`, `out/cost/` |
+| v2 proofs | `sets_sheet_v2.png` (before / after of every changed camera), `sets_169_check.png` (every planned camera of every set at 16:9), `out/stills_v2/`, `out/stills_w169/`, `out/stills_diag/`, `out/measure_*.json`, `out/lum_v2.json`, `out/v1_cost/` (the v1 cost records), `queue3.sh`, `queue4.sh`; v1 sources in `_v1_src/` |
 
 ## How a shot gets a set
 
@@ -36,7 +37,7 @@ import beauty as B; A = B.build(); R = sets.dress(A, "X1s"); core.retarget(camer
 - Post levels are the standing ones (RAIN 0.2, SPLASH 0.25, HAZE 0.3, TILT 0, DOF 0.25, BLOOM 0.55).
 - **Per-location post options: `sets.post(key, **more)`** (also `F.sets_post` after `register()`); a shot's `frame()` should return them merged with its own.
   - `CAB`: `{"sparkle": 0}`. `post9.sparkle` scatters wet-road glints over every pixel of object index 1 and 4; all dressing here is index 4, so without this the seats, head lining and equipment wall are sprinkled with white specks (they were, in the first proofs). Add `"rain": False` for inserts that do not look out.
-  - `UND`: `{"sparkle": 0, "RAIN": 0, "SPLASH": 0, "flat": {"GLOW": 0.07, "AMB": 0.30}}`. The rain there is geometry; `flat` goes to `stage8.tune_flat` through `Stage._stage` and takes the white halo off the v8 puppets, which in a dark set outlines them like stickers. Use the same `flat` on the stair.
+  - `UND`: `{"sparkle": 0, "RAIN": 0, "SPLASH": 0, "flat": {"GLOW": 0.07, "AMB": 0.30}}`; v2 proofs use `"exposure": 2.05` there (and on the stair). The rain there is geometry; `flat` goes to `stage8.tune_flat` through `Stage._stage` and takes the white halo off the v8 puppets, which in a dark set outlines them like stickers. Use the same `flat` on the stair.
 
 ## 1. X1: SCENE 02 dressing (`x1.py`)
 
@@ -61,20 +62,31 @@ Things to know:
 - **There is no white hatchback next to the wreck.** The lane beside the hero car's driver door is empty for 20 D (it is where Kong takes the call). The default alarm car is the taxi `l1_b` (lane 1, 13 D ahead of Kong's mark, 32 D from the truck's wheel). `l3_a` is a green hatchback, but it stands 9 D from where the junior sits, which contradicts S40's "far left". S28-S30 have to be staged on one of the two.
 - **The roofs do not form a run.** The best chain is l3_a, hero car, car_ahead, l3_c, l2_c, l3_d, a shoulder car, bus; its jumps are 3.8, 2.8, 6.5, 3.3, 5.4, 4.8, 5.0 D (2.3 to 3.9 m). No cars were added to close the gaps, because every gap is inside hook frames. S56's "one long step" is three or four leaps.
 
-## 2. X1s: the overturned sedan (`sedan.py`)
+## 2. X1s: the overturned sedan (`sedan.py`)  -- rebuilt in v2
 
-`R = sedan.build(A)`; `sedan.show(False)`. Body colour `#6a1c20`. The upper door is dented inward by `sedan._dent_in` (`V.dent` / `crumple_door` push a left door outward: it stood up from the flank as a red tent in the first proofs).
+`R = sedan.build(A)`; `sedan.show(False)`. Body colour `#7a1e22` (v1 `#6a1c20`).
 
-A dark red sedan on its **right** (driver's) side on the hard shoulder, s -10.9 .. -3.2, nose toward the truck, roof toward the lanes, belly 0.1 D from the barrier. Crumpled nose, dented upper door ajar, crushed roof, empty windscreen frame with glass teeth, cracked rear and upper side glass, airbag, interior with seats and wheel, hazards on the upper flank, one headlamp still burning at the road, steam, glass crumbs, a briefcase in a puddle, papers, shoe, hub cap, mirror, the snapped antenna, an oil pool.
+**v2 (director: "the car reads as a red blob").** v1 lay on its right side with the roof toward the lanes, so every camera saw one flat red roof panel. The car now lies on its **LEFT** side, as the plan says: **belly and wheels toward the lanes (+X)**, roof toward the barrier (0.85 D gap), nose toward the truck (+s), the driver's (right) flank up. Root (tyre plane) x -18.89, s -5.2; the car occupies s -9.1 .. -1.3, x -21.4 .. -18.8 (`core.world_box`).
 
-- **Deviation from the plan** ("on its left side", "40 D behind the truck"): with the roof toward the lanes, left-side-down turns the windscreen opening away from the truck, the moon key and the beacons. On the right side Tos, the driver of a right-hand-drive car, is on the low side, where the plan pins him. It lies 24 D behind the truck's tail, not 40, because that is the only strip no hook camera frames.
-- Only the roof, the nose and the upper flank are built to be seen. No underside.
+| Read cue | What is built |
+|---|---|
+| Wheels | Four wheels with their own mesh copy and a wet tyre material (`ep1_x1s_tyre`, coat 0.6); the front pair on full lock (`tilt` 0.55) so they stand out of the outline; two are in the air |
+| Underside | `_underside()`: floor pan, sills, rails, tunnel, heat shield, subframe and cross-member, sump, gearbox, two drive shafts, lower arms, under-tray, exhaust down-pipe / catalyst / resonator / silencer / tail pipe, fuel tank, rear beam, trailing arms, coil springs, spare-wheel well, brake line (grime, rust and exhaust-steel materials) |
+| Nose | Both headlamps burn (`x1s_head_on`, 3.2) and now stand one over the other; the number plate reads vertical; grille slats vertical; bumper half off |
+| Lamps | Tail lamps on (`tail` material + `x1s_tail_lamps` 90 W red), hazards on the upper flank (20-frame cycle), the lower headlamp's beam runs along the shoulder toward the truck (`x1s_headlight` 900 W + rain cone) |
+| Rim / separation | `x1s_rim`: 14 kW sodium-orange spot from 14 D behind, 7.5 D up (the mast toward the horde); `x1s_rim_lane`: 6 kW cold edge from the lane side behind; `x1s_belly_fill` 1.1 kW cold point on the lane side (the belly faces away from the moon); `x1s_tail_glow` (l3_e's tail lamps) kept |
+| Damage | Crushed roof, buckled driver's door (upper) dented inward and ajar 5 deg, empty windscreen with teeth, cracked rear and upper side glass, airbag; the lower mirror is ground off and lies on the road; antenna snapped |
+| Debris | Glass at the opening and on the lane side, the briefcase in a puddle in front of the nose, papers, shoe, hub cap, antenna, mirror, oil under the engine; steam from the engine bay on the belly side (v1's hung in front of the opening) |
 
-Anchors: `root`, `nose`, `windscreen` (centre of the opening; it opens toward +X and +s), `out_roof`, `out_nose`, `roof_mid`, `praew_mark`, `kong_mark`, `tos_inside` (card centre in the tipped cabin), `tos_out`, `door_gap` (buckled frame at the A pillar: the cutter tips), `upper_flank`, `briefcase`, `approach_from`.
+The **windscreen opening faces the barrier and the truck at 45 deg** (`out_windscreen`), and the moon (`MOON_DIR` comes from -X +Y). Praew works it from the strip between the bonnet and the barrier (`praew_mark`, 0.8 D from the barrier). **Tos (right-hand drive) is now on the UPPER side**, hanging in his belt under the buckled driver's door: `tos_inside` is on the upper half of the cabin; the door edge in S66 presses down on him. This changes the plan's "low side" note.
 
-Lights: `x1s_roof_fill` (700 W cold point 7 D out on the lane side, no fixture: the roof faces the lanes and no practical reached it), `x1s_headlight` (650 W spot, tipped at the road in front of the nose), `x1s_dome` (130 W warm, in the cabin), `x1s_hazard` (amber, 20-frame cycle), `x1s_tail_glow` (red, 280 W, at the tail lamps of the jam car `l3_e`: rims the bonnet; at the first 650 W it turned the orange jackets red).
+Anchors: `root`, `nose`, `windscreen`, `out_roof`, `out_nose`, `out_belly`, `out_windscreen`, `roof_mid`, `belly_mid`, `wheels` (four world points), `praew_mark`, `kong_mark` (in front of the nose, lane side), `tos_inside`, `tos_out`, `door_gap` (the A-pillar gap of the upper door: z 2.8, chest height for Kong), `upper_flank`, `briefcase`, `approach_from`.
 
-Camera-safe: from the lanes and from the shoulder north of the nose, looking -X to -X-Y (roof and windscreen opening). Not from the barrier side, not from above the barrier line, not from the south end (the boot is plain).
+Lights: `x1s_headlight`, `x1s_dome` (220 W warm, cabin), `x1s_hazard`, `x1s_tail_lamps`, `x1s_tail_glow`, `x1s_belly_fill`, `x1s_rim`, `x1s_rim_lane`.
+
+Camera-safe: from the shoulder north of the nose (S62, S63, S65) and from the lanes abeam (the underside, see the D_LANE diagnostic). From the shoulder the belly is always seen at a grazing angle (the hook-free strip is only x < -18.5 .. -17.5 wide); the underside reads squarely only from lane 3 / lane 2. Not from above the barrier line, not from the south end.
+
+Hook check after the rebuild (`out/hook_check.md`, 72 hook cameras, 4 % margin, ray-cast): sedan (75 objects), its debris (48) and its steam card are in **no** hook frame.
 
 ## 3. X2: zone 2 (`x2.py`)
 
@@ -133,6 +145,16 @@ Things to know:
 - The mirrors show a drawn plate, not a reflection.
 - The moving shots were not rendered. `cab.drive` moves truck, cab and lights; the hook's taxi `sh_a` stands on the shoulder at s 54 with a door open, so a drive along the shoulder has to start beyond it or swing round it.
 
+### v2 (director: S84 and S81 nearly black)
+
+| Change | Value |
+|---|---|
+| Instrument glow | `cab_dash` 40 -> 95 W (`DASH_W`), cluster emission 2.2 -> 3.4 (`CLUSTER_EMIT`), `cab_console` 22 -> 30 W (`CONSOLE_W2`) |
+| Radio | face emission 1.4 -> 3.2 (`cab_radio2` texture: the level bars plus a plain Thai channel line `ช่อง 3`), `cab_radio_glow` 3 -> 14 W, moved below the face so it does not wash the tape labels |
+| Tape labels | back-light 0.12 -> 0.15 (`LABEL_EMIT`); glyphs checked at full size: `ไซเรน`, `ไฟวับวาบ`, `สปอตไลต์`, `วิทยุ` (tone marks and upper vowels inside the tape) |
+| Beacon sweep | `cab_sweep_red` / `cab_sweep_blue`: 650 W, 36 deg spots just above the bonnet in front of the glass, aimed back and up; each on a pivot whose yaw is keyed +-38 deg over the 12-frame beacon period (red and blue half a period apart; pure function of the frame). They light the occupants' heads and shoulders, the wheel rim, the head lining and the shutter. **`cab.switch("beacon", True)` turns them on** (also `cab.sweep(on, gain)`); off at build |
+| Camera | S81 now switches `beacon` and `radio` on; S84 is framed 0.08 lower so the labels sit mid-frame and the lit radio display fills the bottom |
+
 ## 5. The equipment wall (`gear.py`, built by `cab.build`)
 
 Behind the rear bench: a locker 3.3 wide, 1.8 high, 1 deep, roll shutter, two strip lamps.
@@ -174,6 +196,8 @@ Anchors (`REG["stair"]["anchors"]`): `gate_landing`, `foot`, `foot_exit`, `lamp_
 
 Camera-safe: along X, from the street side (x about -40) or from the next pier under the deck, so that the upright cards stand in the plane of the flights. Two or three flights per frame; it was not designed to be seen whole and the lower eight flights have no light of their own.
 
+v2: when `under.build` runs (sets STAIR / UND only; X2 is unchanged), the cages on landings 2, 4, 8, 10 burn at 900 W (landing 6's is dead, landing 0 keeps 420 W) and a further cage `stair_lamp_foot` stands on the street-side column at the foot, 4.4 D up, facing the street (900 W). The beacon spill from the deck lights the outer face and the foot (see 7).
+
 ## 7. UND: the street under the expressway (`under.py`)
 
 `U = under.build(A)` after `x2.build`; `under.far_lamp(gain)`, `under.glow(gain)`, `under.sky(strength)`, `under.bounce(watts, loc)`, `under.fill(watts, loc)`, `under.deck_top(False)`, `under.frame(g)` (only if drivers are disabled).
@@ -186,6 +210,28 @@ Lights: `und_far_sodium` (8 kW, with a rain cone), `und_glow_wash` (4.5 kW cool,
 
 Camera-safe: along the street in either direction between x -22 and -6, and across toward the stair side. The shophouses are blocks: keep them beyond 15 D and dark. Do not look up at the slab from close: the underside is the hook build's plain concrete with two trays.
 
+### v2 (director: far too dark, figures tiny)
+
+`under._practicals_v2()` (built by `under.build`), all practicals with a source the story allows; levels in `under.py` constants:
+
+| Practical | Where | Light |
+|---|---|---|
+| Sodium street lamps `und_street_<s>_<w/e>` | kerb side, s 190, 211 (beside the stair), 242; far side s 222, 262 (plus v1's s 266) | 18 kW spots, 120 deg, rain cones (`STREET_W`) |
+| Pier lamps `und_pier_<s>_<w/e>` | bulkheads on the pier faces 8 D up: 150 (both), 250 (both), 300 (w); **pier 200's is dead** (S122 stays dark at Kong's pier) | 5 kW mercury-green-white down (`PIER_W`) + 5 kW up-wash onto the slab (`PIER_UP_W`): the lit soffit is what the wet street mirrors |
+| Shop lightboxes `und_sign_soup` / `und_sign_pharm` | projecting from the shop fronts at s 203.5 (behind the stair from S112) and s 232; code-drawn, plain Thai nouns `ข้าวต้ม / โต้รุ่ง` and `ขายยา` with a cross; no names | emission 2.4 + 380 W glow each |
+| Beacon spill `und_strobe_<red/blue>_<out/in>` | no fixture: the light bar on the deck above the gate; "out" beyond the tower's outer rail, "in" past the tower's ends and the slab edge down to the stair foot | 24 kW (in x0.75), keyed exactly like the hook's `beacon_red_0` (12 frames; red peaks frames 3-6, blue 9-12). `under.strobes(on)` |
+| Stair cages | see 6 | |
+| Soffit | the slab underside is now concrete that takes light (+ the old faint glow 0.20) | `under.soffit(k)` |
+| Base levels | side sky 0.8 -> 2.0 W/m2, glow wash 4.5 -> 6 kW, edge sky 1.8 -> 2.4 kW, bounce 400 -> 600 W | |
+| Puddles | three more at the stair foot | |
+
+Setters: `under.lamps(gain)` (street + pier, down and up), `under.strobes(on)`, `under.signs(on)`, plus v1's `far_lamp`, `glow`, `sky`, `soffit`, `bounce`, `fill`.
+New anchors: `street_lamps`, `pier_lamps`, `signs`.
+
+**16:9 extension (far side):** the far side of the street was open ground to the skyline; a wide S122 / S133 showed a wet plain. Added `_far_side()`: kerb (x 31.9), footpath (x 32-41), a row of shophouse fronts at x 45.4 (s 123-345, 11-21 D tall) with shutters, awnings and three lit windows, three telephone poles with wires; the ground plane now runs to x +58.
+
+Post: `UND_POST` exposure 1.6 -> 2.05 (S111 too). Stills that should show the beacon spill use frame 4 (red) or 10 (blue) (`frame` in the camdef).
+
 ## Proof runs
 
 ```
@@ -194,31 +240,66 @@ python3 tests.py cost  CAB                                                      
 python3 tests.py final UND                                                      # 720x1280 final tier at 75 % and 100 % -> out/final/
 python3 tests.py hookcheck                                                      # out/hook_check.md
 python3 tests.py sheet ; python3 tests.py table
+python3 tests.py still UND --tag v2                                             # (v2) out/stills_v2/ + one JSON per still: CPU and figure heights
+python3 tests.py still UND --size 640x360 --tag w169                            # (v2) the 16:9 check from the same camera positions (36 mm on the long side)
+python3 tests.py still X1S --cam D_LANE,D_NE,D_UP --tag diag                    # (v2) diagnostic views (camdefs.DIAG), not shots
+python3 tests.py measure UND [--camdefs _v1_src] --tag v1                       # (v2) figure heights only, no render
+python3 tests.py sheet2                                                         # (v2) sets_sheet_v2.png and sets_169_check.png
 ```
 
 ## Hook check (`out/hook_check.md`, built set, 72 hook cameras, 4 % frame margin, ray-cast occlusion)
 
+Re-run after the v2 sedan (2026-11-28):
+
 | Added by EP.1 | Hook shots whose frame holds any of it | Not hidden by the set in |
 |---|---|---|
-| Overturned sedan, its debris, its steam card | none | none |
+| Overturned sedan (75 objects with the underside), its debris (48), its steam card | none | none |
 | Truck hardware (54 small parts) | S04, S05, S08, S09 | S04 at 26 D, S05 at 49 D (the tail and lane side; the largest single part, the step bumper, is about 100 x 5 px in S05) |
 | Alarm lamps on `l1_b` | 11 shots | S03, S24 (they are hidden unless `x1.alarm(True)`) |
 
-The table was measured while two puddle decals still lay at the truck (S02 passed 6 D from one); they were removed afterwards and the check was not run again. The hook cameras were dumped from `shot.frame()` only (no `late()`), at three frames per shot.
+The hook cameras were dumped from `shot.frame()` only (no `late()`), at three frames per shot. UND / STAIR / CAB are not in the hook at all.
+
+## v2 camera changes (`camdefs.py`; director: a standing figure >= 35 % of the frame height in W shots, >= 60 % in M)
+
+Measured by `tests.py measure` (soles to head as a fraction of the 9:16 frame height):
+
+| Camera | v1 | v2 | Change |
+|---|---|---|---|
+| S111 W side 28 mm | Kong 15 %, crew 16 % (15 D) | Kong 38 %, crew 46 % | 6.2 D from Kong; frame 4 (red beat) |
+| LOW (not planned) 35 mm | 17 % / 16 % | Kong 36 %, crew 29 % (on the lower flight) | 7.0 D |
+| S112 (plan EW) 24 mm | 4 % / 4 % (46 D) | Kong 36 %, crew 46 % | looks out from under the deck at the stair foot; frame 10 (blue beat). The plan's "very small" is overruled by the 35 % floor |
+| S122 W 28 mm | Kong 18 % | Kong 36 % | 6.1 D; Kong turned away from the pier, phone light on his -X side |
+| S133 (plan EW) 35 mm | Kong 12 %, crew 10 % | last figure 38 %, next 25 % | 7.4 D behind the last of them |
+| S62 / S63 / S65 | | crew 16 % (far, W) / 50 % / 99 % | re-aimed for the v2 sedan; S62 Kong 49 % in the right foreground |
+| S81, S84 | | | S81: beacon + radio rockers on; S84: framed 0.08 lower |
+
+No M shots are in STAIR / UND. CAB / GEAR (seated, close) were not measured against the floor.
+
+## 16:9 check (`sets_169_check.png`)
+
+Every planned camera of every set, at its planned position, at 640x360 with the same lens (36 mm on the long side: a 16:9 frame is wider and shorter than the 9:16 one). Checked for empty or unfinished space at the sides:
+
+| Set | Result |
+|---|---|
+| X1 (S34, S54, S29, S57) | holds: the hook's deck and jam fill both sides |
+| X1s (S62, S63, S65) | holds at the sides; in S63 the left third looks down empty lanes south of the sedan (the hook's deck; dressing there would enter hook frames, not added) |
+| X2 (S82, S97, S98, S107) | holds |
+| CAB (S78, S81, S84, S88), GEAR (S100, S101, S102, WALL) | holds: the cab is a closed box; S84 shows a third rocker and its label (`สปอตไลต์`) at the right edge |
+| STAIR (S111, LOW) | holds: the tower is wider than the frame |
+| UND (S112, S122, S133) | **extended**: the far side of the street was open ground; added the far kerb, footpath, shophouse row, lit windows, poles and wires, ground to x +58 (see 7) |
+
+Not rendered at 16:9 final. The 16:9 frames crop the figures vertically (they need their own framing through `F.pick`), which was not addressed.
 
 ## Known gaps and weak points
 
 - **X2c is not built** (opening crew door, see-through pickup cab, rocking body).
-- Nothing was rendered through `ep1/pipe/run_ep.py`. `sets.register()` + `stage_ep.build("CAB")` + every setter were run once without rendering (`smoke_register.py`: stage built in 92 s on the loaded machine).
-- No moving shot was rendered: the cab drive, the wipers in motion, the alarm rhythm, the glass burst, the shutter opening and the falling rain cards were each checked on single frames or not at all (burst: never rendered).
-- Cab: glass has beads but no running water and no wiper fan; mirrors are a drawn plate; S78's face behind the beaded, fogged glass is grey and speckled at draft size (see the final-tier `out/stills/CAB_S78_final.png`).
+- Nothing was rendered through `ep1/pipe/run_ep.py`. No moving shot was rendered (cab drive, wipers in motion, alarm rhythm, glass burst, shutter, falling rain cards, the v2 beacon sweep and spill were checked on single frames only).
+- v2 sedan: the underside reads squarely only from the lanes (diagnostic D_LANE / D_NE); from the planned shoulder cameras it is seen at a grazing angle, so S62 / S63 read "on its side" mainly through the vertical number plate, the stacked headlamps, the steered front tyre and the rim light. **S65 is still weak**: Praew fills the left half and the cabin through the opening is a dark mass with warm glints, not a readable windscreen frame (no Tos card was placed). The S62 foreground has an out-of-focus orange hook prop at the bottom and the headlight beam on the road is very bright. Tos's side (now upper) changes the plan's note.
+- v2 UND / STAIR: brighter (mean luminance 0.07-0.10 -> 0.12-0.15, near-black pixels 30-58 % -> 9-22 %) but still darker than the hook's deck shots (about 0.2-0.3). The beacon spill is weak in S112 at frame 10; it reads mostly on the tower's top in S111. In S111 Kong's head is near the top edge. The pier lamps are small in frame; the street-lamp pools hardly read at grazing angles (the wet asphalt is mostly a mirror). The far-side shophouses hide part of the skyline in S122.
+- Cab: glass has beads but no running water and no wiper fan; mirrors are a drawn plate; S78's face behind the beaded, fogged glass is grey and speckled at draft size. The sweep lights are a cheat (spots just outside the windscreen, not the roof bar).
 - Equipment wall: at 30 px the defibrillator's bolt still reads as a notch in the heart; from the front of the cab the seat backs and the actors cover most of the wall (S100).
-- X1: the wheel side has no practical of its own (the S34 proof uses the tripod work lamp at 2.8 kW). In the S29 proof a white out-of-focus foreground edge crosses the lower left; in S54 a hook prop (the orange case) covers the crouching figure's body: both are camera positions to move in the shots.
-- X1s: the debris on the deck barely reads in the proofs; figures beside it are dark from the waist down.
-- X2: in the S82 proof the camera had to move into the lane gap, so the rescue truck itself is out of frame and the two puppets at the gate are hidden.
-- Stair: its own lamp is only at the top (the side sky now lights the flights); a figure on an outer-lane flight is seen through the inner one.
-- UND: the far sodium lamp is hidden by the hook set's trees from the S112 position (it shows in S133); the shophouses are blocks; the phone light in S122 is a stand-in point light; the two puppets at the stair foot are still not findable in the S112 still (46 D away, behind the stair's steel).
-- Costs: one camera per set, steady final measured on 3 consecutive frames (not the plan's 24): X1 84.3 CPU s at 100 % (+24 % on the plan's class cost), X1s 43.8 at 75 % (+20 %), X2 39.0 (+7 %), UND 40.2 (+10 %), CAB 41.7 at 100 % (-39 %), equipment wall 39.0 (-43 %), stair 27.9 at 75 % (-24 %). See `cost_table.md`.
+- X1: the wheel side has no practical of its own (the S34 proof uses the tripod work lamp at 2.8 kW). In the S29 proof a white out-of-focus foreground edge crosses the lower left; in S54 a hook prop (the orange case) covers the crouching figure's body.
+- Costs: see `cost_table.md` (v2 section).
 
 ## Checker's pass (2026-11-26)
 

@@ -86,7 +86,8 @@ def icons_over(im, g):
     return Image.fromarray(icons().over(rgb, g, "916" if H > W else "169"))
 
 
-TITLE_FS, TITLE_TEXT_Y, TITLE_DIM = 124, 612, 0.45         # title text size / centre y (of 1280); how far the picture sinks to navy under it (v2 0.62)
+SHOW_TITLE = False                                         # user 2026-11-28: "เอาคำนี้ออกด้วย" - no title text at the end of the hook (and no logo)
+TITLE_FS, TITLE_TEXT_Y, TITLE_DIM = 124, 612, (0.45 if SHOW_TITLE else 0.0)         # title text size / centre y (of 1280); how far the picture sinks to navy under it (v2 0.62)
 
 # ------------------------------------------------------------------------------------------------ captions, mix
 # key words in the captions are coloured (user: "does the caption emphasise words?"): amber = the fact to remember,
@@ -120,7 +121,7 @@ def ass_path():
              % ("0:00:50.72", "0:00:53.32", TITLE_TEXT_Y, TITLE_FS, int(TITLE_FS * 0.62))]
     ts = lambda t: "%d:%02d:%05.2f" % (t // 3600, (t % 3600) // 60, t % 60)
     lines = ["Dialogue: 0,%s,%s,Cap,,0,0,0,,{\\pos(360,900)}%s" % (ts(c["t0"] + C.NARR0), ts(c["t1"] + C.NARR0), emph(c["text"])) for c in C.CAPS]
-    txt = "\n".join(head + lines + title) + "\n"
+    txt = "\n".join(head + lines + (title if SHOW_TITLE else [])) + "\n"
     if not os.path.exists(p) or open(p, encoding="utf-8").read() != txt:
         open(p, "w", encoding="utf-8").write(txt)
     return p

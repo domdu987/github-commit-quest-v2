@@ -1,0 +1,118 @@
+<title>DZ09 พรอมต์ meta.ai</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@600;800&family=IBM+Plex+Sans+Thai:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column like a shooting script; sticky shot strip; every prompt has its own copy button */
+:root{
+  --bg:#0d1220; --panel:#151c2e; --panel2:#1b2439; --line:#2a3550; --fg:#e9edf7; --muted:#9aa5c0;
+  --rescue:#ff7a1a; --beacon:#ff4d4d; --code:#0a0f1b; --codefg:#d7def0;
+  --f-disp:"Kanit","IBM Plex Sans Thai",system-ui,sans-serif; --f-body:"IBM Plex Sans Thai",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]){
+  --bg:#f3f4f8; --panel:#ffffff; --panel2:#f6f7fb; --line:#d9deea; --fg:#141a2a; --muted:#5a6580;
+  --rescue:#d9580a; --beacon:#c62828; --code:#eef1f7; --codefg:#1c2438; color-scheme:light } }
+:root[data-theme="light"]{ --bg:#f3f4f8; --panel:#ffffff; --panel2:#f6f7fb; --line:#d9deea; --fg:#141a2a; --muted:#5a6580;
+  --rescue:#d9580a; --beacon:#c62828; --code:#eef1f7; --codefg:#1c2438; color-scheme:light }
+:root[data-theme="dark"]{ --bg:#0d1220; --panel:#151c2e; --panel2:#1b2439; --line:#2a3550; --fg:#e9edf7; --muted:#9aa5c0;
+  --rescue:#ff7a1a; --beacon:#ff4d4d; --code:#0a0f1b; --codefg:#d7def0; color-scheme:dark }
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.65}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{font-family:var(--f-disp);text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(28px,7vw,40px);font-weight:800;letter-spacing:.01em}
+h1 b{color:var(--beacon)}
+h2{font-size:22px;font-weight:600;display:flex;gap:10px;align-items:baseline}
+h2 .k{font-size:13px;color:var(--rescue);letter-spacing:.12em}
+h3{font-size:19px;font-weight:600}
+.lede{color:var(--muted);margin:6px 0 0;max-width:62ch}
+.hero{display:flex;flex-direction:column;gap:6px;border-bottom:2px solid var(--rescue);padding-bottom:18px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;color:var(--rescue);text-transform:uppercase}
+ol.steps{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px;max-width:64ch}
+ol.steps li::marker{color:var(--rescue);font-weight:600}
+.rules{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.rule{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+.rule strong{display:block;font-family:var(--f-disp);font-weight:600;color:var(--fg)}
+.rule span{color:var(--muted);font-size:14px}
+section{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0;scroll-margin-top:64px}
+.card header{display:flex;flex-direction:column;gap:4px}
+.sub{margin:0;color:var(--muted);font-size:14px}
+.file{font-family:var(--f-mono);font-size:12px;color:var(--muted);align-self:flex-start;border:1px dashed var(--line);border-radius:6px;padding:2px 8px}
+.shot header{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:center}
+.shot header .line,.shot header .sub{grid-column:1/-1}
+.sid{font-family:var(--f-disp);font-weight:800;font-size:26px;color:var(--rescue);line-height:1}
+.meta{display:flex;gap:8px;flex-wrap:wrap;font-family:var(--f-mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.meta .len{color:var(--fg);background:var(--panel2);border-radius:999px;padding:1px 8px}
+.line{margin:0;font-family:var(--f-disp);font-weight:600;font-size:17px}
+.pr{background:var(--code);border:1px solid var(--line);border-radius:10px;overflow:hidden;min-width:0}
+.prh{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px 8px 12px;border-bottom:1px solid var(--line)}
+.lab{font-size:13px;color:var(--muted);font-weight:600}
+.pt{margin:0;padding:12px;font-family:var(--f-mono);font-size:13px;line-height:1.55;color:var(--codefg);white-space:pre-wrap;word-break:break-word;max-height:220px;overflow:auto}
+.cp{font-family:var(--f-body);font-weight:600;font-size:14px;color:#fff;background:var(--rescue);border:0;border-radius:8px;padding:7px 14px;cursor:pointer;min-height:36px}
+.cp:focus-visible,.strip a:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+.cp.ok{background:var(--panel2);color:var(--fg)}
+.note{margin:0;font-size:14px;color:var(--fg);border-left:3px solid var(--beacon);padding-left:10px}
+.strip{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:8px max(16px,env(safe-area-inset-left,0px));display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.strip a{flex:0 0 auto;font-family:var(--f-mono);font-size:13px;color:var(--fg);text-decoration:none;background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:4px 9px;font-variant-numeric:tabular-nums}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.foot{color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:16px}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style>
+<div class="wrap">
+  <div class="hero">
+    <span class="eyebrow">DEAD ZONE 09 · EP.1 · คลิปเปิดเรื่อง 53 วิ</span>
+    <h1>ชุดพรอมต์ <b>meta.ai</b></h1>
+    <p class="lede">ก๊อปไปวางใน meta.ai ทีละอัน ทำตัวละครก่อน แล้วทำทีละช็อต S01–S24 ตามเวลาในหนัง เสร็จแล้วส่งไฟล์กลับมา ผมจะตัดต่อ ใส่เสียงพากย์ Ohm เพลง Suno เอฟเฟกต์ ซับ และชื่อเรื่องให้เอง</p>
+  </div>
+
+  <section>
+    <h2><span class="k">วิธีทำ</span>ทำตามลำดับนี้</h2>
+    <ol class="steps">
+      <li>ตั้งสัดส่วนภาพเป็น <b>แนวตั้ง 9:16</b> ทุกครั้ง</li>
+      <li>ทำ <b>รูปตัวละครอ้างอิง</b> ก่อน (ส่วนตัวละครด้านล่าง) ถ้า meta.ai ให้แนบรูปได้ แนบชีตตัวละครของเพื่อนไปด้วย เลือกรูปที่เหมือนที่สุดแล้วเซฟไว้</li>
+      <li>แต่ละช็อต: วาง <b>พรอมต์ภาพนิ่ง</b> ก่อน ได้รูปที่ชอบแล้วค่อยกด Animate แล้ววาง <b>พรอมต์การขยับ</b> ถ้าแนบรูปตัวละครอ้างอิงได้ ให้แนบทุกครั้ง หน้าตาจะได้ไม่เพี้ยน</li>
+      <li>คลิปยาวกว่าเวลาในหนังได้ ผมตัดให้พอดีเอง ถ้าสั้นกว่าก็ส่งมา ผมยืดหรือใช้ภาพนิ่งช่วย</li>
+      <li>ตั้งชื่อไฟล์ตามเลขช็อต เช่น <b>S06.mp4</b> แล้วส่งมาในแชตทีละช็อตหรือทีละชุดก็ได้</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2><span class="k">ข้อควรรู้</span>ก่อนเริ่ม</h2>
+    <div class="rules">
+      <div class="rule"><strong>ไม่มีตัวหนังสือในภาพ</strong><span>AI เขียนภาษาไทยเพี้ยน ซับ หน้าจอโทรศัพท์ และชื่อเรื่อง ผมใส่เอง</span></div>
+      <div class="rule"><strong>ถ้าถูกปฏิเสธ</strong><span>ช็อตพุ่งกัดอาจโดนกรองความรุนแรง แต่ละช็อตมีคำสำรองเขียนไว้ให้</span></div>
+      <div class="rule"><strong>หน้าตาต้องเหมือนกันทุกช็อต</strong><span>ใช้คำบรรยายตัวละครชุดเดิมทุกครั้ง (ใส่ไว้ในพรอมต์แล้ว) อย่าแก้คำ</span></div>
+      <div class="rule"><strong>ปากไม่ตรงเสียงไทย</strong><span>ช็อตที่ตัวละครพูด ปากจะขยับไม่ตรงคำ ผมเลือกช่วงที่ดูดีที่สุดให้</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="k">ส่วน A</span>รูปตัวละครอ้างอิง</h2>
+    <p class="sub">คลิปเปิดเรื่องใช้ 4 ตัวแรก อีก 3 ตัวไว้ใช้ซีนต่อไป</p>
+    %%CAST%%
+  </section>
+
+  <section id="shots">
+    <h2><span class="k">ส่วน B</span>24 ช็อต คลิปเปิดเรื่อง</h2>
+    <nav class="strip" aria-label="ไปที่ช็อต">%%NAV%%</nav>
+    %%SHOTS%%
+  </section>
+
+  <p class="foot">เสียงพากย์ เพลง เอฟเฟกต์ และจังหวะตัดของคลิปนี้ทำเสร็จแล้ว ภาพจาก meta.ai จะถูกวางลงตามเวลาของแต่ละช็อตด้านบน</p>
+</div>
+<script>
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('.cp'); if (!b) return;
+  var el = document.getElementById(b.getAttribute('data-t')); if (!el) return;
+  var text = el.textContent;
+  function done(ok) { b.textContent = ok ? 'คัดลอกแล้ว' : 'เลือกข้อความแล้ว กดคัดลอกเอง'; b.classList.add('ok');
+    setTimeout(function () { b.textContent = 'คัดลอก'; b.classList.remove('ok'); }, 1800); }
+  function selectIt() { var r = document.createRange(); r.selectNodeContents(el); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); done(false); }
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(function(){ done(true); }, selectIt); }
+    else selectIt();
+  } catch (err) { selectIt(); }
+});
+</script>

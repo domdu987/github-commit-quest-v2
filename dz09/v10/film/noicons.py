@@ -7,11 +7,12 @@ import icons13 as _I
 
 T, LAYOUT, cue_table, close = _I.T, _I.LAYOUT, _I.cue_table, _I.close
 G_TITLE = int(round(_I.T.TITLE * 24))                      # 1217: first frame of the title hit
+SHOW_MARK = False                                          # user 2026-11-28: "เอาโลโก้ออก" - no biohazard mark either; the title text (captions) stays
 
 
 def overlay(g, W, H, aspect="916"):
-    return _I.overlay(g, W, H, aspect) if g >= G_TITLE else None
+    return _I.overlay(g, W, H, aspect) if (SHOW_MARK and g >= G_TITLE) else None
 
 
 def over(rgb, g, aspect=None):
-    return _I.over(rgb, g, aspect) if g >= G_TITLE else rgb
+    return _I.over(rgb, g, aspect) if (SHOW_MARK and g >= G_TITLE) else rgb

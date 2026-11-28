@@ -20,3 +20,16 @@ Machine: 4 cores shared with the hook final and other builders (load 8-11 while 
 | UND | S112 (B) | 10 | 11.6 | **10.9** | 38.6 / 72.0 | 39.9 / 67.5 | **40.2** at 75 % | +10 % |
 
 Per-frame detail is in `out/cost_<SET>.json` (24 records each) and `out/final_<SET>.json`; the frames themselves are in `out/cost/<SET>/` and `out/final/`.
+
+## v2 (brighten / clarify pass, 2026-11-28): draft cost of the changed sets
+
+24 consecutive draft frames (360x640, 2 spp, 1 thread) from the set's cost camera, as above, v1 records kept in `out/v1_cost/`. The machine was otherwise idle (two of these processes at a time). The cost cameras moved with the shots (S111 6.2 D from Kong, S112 now at the stair foot, S63 now on the sedan's nose), so the numbers compare the planned shots, not the same view. No final-tier run was made in v2 (the v1 steady finals above are for the v1 sets).
+
+| Set | Cost camera | v1 first | v1 mean of 23 | v2 first | v2 mean of 23 | change |
+|---|---|---|---|---|---|---|
+| STAIR | S111 | 8.6 | **8.2** | 10.2 | **9.8** | +20 % |
+| UND | S112 | 11.6 | **10.9** | 12.1 | **10.7** | -2 % |
+| X1S | S63 | 11.6 | **10.9** | 9.4 | **8.7** | -20 % |
+| CAB | S88 | 10.3 | **8.4** | 10.6 | **7.6** | -10 % |
+
+Single draft stills, every changed camera (CPU s, render + post): see the captions of `sets_sheet_v2.png` (STAIR 7.9 / 10.0 -> 8.5 / 9.5; UND 10.5 / 9.3 / 10.0 -> 9.3 / 9.9 / 10.3; X1S 8.5 / 9.9 / 10.5 -> 7.4 / 8.0 / 8.6; CAB 9.6 / 8.9 / 6.4 / 8.4 -> 8.1 / 7.6 / 5.7 / 7.8; GEAR 7.5 / 6.8 / 7.5 / 6.7 -> 5.9 / 6.2 / 6.2 / 5.5 for S101 / S102 / S100 / WALL, a lighter machine load rather than a real saving). The extra lights (UND +22, X1s +3, CAB +2) cost under 20 % at draft; a final-tier steady run is still to do.

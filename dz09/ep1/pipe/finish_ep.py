@@ -184,7 +184,34 @@ def ts(t):
     return "%d:%02d:%02d.%02d" % (cs // 360000, (cs // 6000) % 60, (cs // 100) % 60, cs % 100)
 
 
+EXT_ASS = None                                             # --ass: an EPISODE caption file (film clock), e.g. ep1/audio/captions_ep1.ass
+
+
+def parse_ts(x):
+    h, m, sec = x.split(":")
+    return int(h) * 3600 + int(m) * 60 + float(sec)
+
+
+def ext_lines(S, offset=0.0):
+    """the scene's captions taken verbatim from the episode caption file: events that start inside the scene's film window
+    (cut table `film_f0`), moved to the scene clock (+ offset), ends clipped to the scene's end."""
+    if "film_f0" not in S.d:
+        raise SystemExit("--ass needs the cut table's film_f0 (build the cut with cut_timed.py)")
+    a = S.d["film_f0"] / float(FPS); b = a + S.frames / float(FPS)
+    out = []
+    for l in open(EXT_ASS, encoding="utf-8"):
+        if not l.startswith("Dialogue:"): continue
+        f = l.rstrip("\n").split(",", 9)
+        t0, t1 = parse_ts(f[1]), parse_ts(f[2])
+        if not (a - 1e-3 <= t0 < b - 0.5 / FPS): continue     # (centisecond times: a caption of the next scene can read as starting a hair before b)
+        f[1] = ts(t0 - a + offset); f[2] = ts(min(t1, b) - a + offset)
+        out.append(",".join(f))
+    return out
+
+
 def ass_lines(S, offset=0.0):
+    if EXT_ASS:
+        return ext_lines(S, offset)
     return ["Dialogue: 0,%s,%s,Cap,,0,0,0,,{\\pos(360,900)}%s" % (ts(c["t0"] + offset), ts(min(c["t1"], S.frames / float(FPS)) + offset), emph(c)) for c in S.caps]
 
 
@@ -331,26 +358,31 @@ def master(hook, scenes, tier, W, H, out, base_size=None, name="comp", hook_tail
     return report
 
 
-def sheet(S, video_path, out, th=320, t_off=0.0):
-    """3 frames per shot (10 / 50 / 90 %) from a conformed clip, labelled with shot id, class and scene frame."""
+def sheet(S, video_path, out, th=320, t_off=0.0, us=(0.1, 0.5, 0.9)):
+    """frames per shot at `us` (default 10 / 50 / 90 %) from a conformed clip, labelled with shot id, class, size and
+    scene frame.  t_off = seconds of other material before the scene in the clip (a hook tail).  One frame per shot
+    (us = (0.5,)) is drawn twice as tall."""
+    if len(us) == 1: th = max(th, 640)
     cap = cv2.VideoCapture(video_path)
     ims = []
     for row in S.shots:
         n = row["f1"] - row["f0"]
-        for u in (0.1, 0.5, 0.9):
+        for u in us:
             k = row["f0"] + int(round(u * (n - 1)))
             cap.set(cv2.CAP_PROP_POS_FRAMES, k + int(round(t_off * FPS)))
             ok, f = cap.read()
             if not ok: continue
             im = Image.fromarray(cv2.cvtColor(f, cv2.COLOR_BGR2RGB))
             ims.append((row, k, im.resize((int(im.width * th / im.height), th), Image.LANCZOS)))
-    tw = ims[0][2].width; cols = min(len(ims), 12 if tw < th else 6); lab = 22
+    tw = ims[0][2].width; cols = min(len(ims), (12 if tw < th else 6) if len(us) > 1 else 8); lab = 22 if len(us) > 1 else 30
     rows_ = (len(ims) + cols - 1) // cols
     Sh = Image.new("RGB", (cols * (tw + 4), rows_ * (th + lab + 4)), (14, 14, 18)); d = ImageDraw.Draw(Sh)
-    f = ImageFont.truetype(E.C.WORKS, 13)
+    f = ImageFont.truetype(E.C.WORKS, 13 if len(us) > 1 else 19)
     for i, (row, k, im) in enumerate(ims):
         x = (i % cols) * (tw + 4); y = (i // cols) * (th + lab + 4)
-        Sh.paste(im, (x, y + lab)); d.text((x + 3, y + 3), "%s %s f%d" % (row["id"], row["cls"], k), font=f, fill=(232, 232, 236))
+        Sh.paste(im, (x, y + lab))
+        lbl = "%s %s f%d" % (row["id"], row["cls"], k) if len(us) > 1 else "%s %s %s f%d" % (row["id"], row["cls"], row.get("size", "")[:9], k)
+        d.text((x + 4, y + 4), lbl, font=f, fill=(232, 232, 236))
     Sh.save(out); print("wrote", out, Sh.size)
 
 
@@ -361,7 +393,12 @@ def main():
     ap.add_argument("--frames", default=""); ap.add_argument("--name", default="comp"); ap.add_argument("--worker", default="0/1")
     ap.add_argument("--out", default=""); ap.add_argument("--video", default=""); ap.add_argument("--sheet", default="")
     ap.add_argument("--hook", default=""); ap.add_argument("--hook-tail", type=float, default=0.0); ap.add_argument("--scene-mp4", action="append", default=[])
+    ap.add_argument("--ass", default="", help="episode caption file (film clock): the scene's captions are taken from it")
+    ap.add_argument("--sheet-u", default="0.1,0.5,0.9", help="where in each shot the sheet takes its frames")
+    ap.add_argument("--sheet-t-off", type=float, default=0.0, help="seconds of other material before the scene in --video (a hook tail)")
     a = ap.parse_args()
+    global EXT_ASS
+    EXT_ASS = os.path.abspath(a.ass) if a.ass else None
     W, H = [int(x) for x in a.size.lower().split("x")]
     bs = tuple(int(x) for x in a.base_size.lower().split("x")) if a.base_size else None
     if a.mode == "master":
@@ -378,7 +415,8 @@ def main():
     if a.mode == "ass": print(ass_path(S, os.path.dirname(dirs(S, a.tier, W, H, bs, a.name)[1])))
     if a.mode in ("comp", "scene"): comp(S, a.tier, W, H, fl, bs, a.name, tuple(int(x) for x in a.worker.split("/")))
     if a.mode in ("video", "scene"): video(S, a.tier, W, H, out, bs, a.name)
-    if a.mode == "sheet" or (a.mode == "scene" and a.sheet): sheet(S, a.video or out, os.path.abspath(a.sheet) if a.sheet else out[:-4] + "_sheet.png")
+    if a.mode == "sheet" or (a.mode == "scene" and a.sheet): sheet(S, a.video or out, os.path.abspath(a.sheet) if a.sheet else out[:-4] + "_sheet.png",
+                                                               t_off=a.sheet_t_off, us=tuple(float(x) for x in a.sheet_u.split(",")))
 
 
 if __name__ == "__main__":

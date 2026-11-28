@@ -179,3 +179,12 @@ The user: "every time the camera angle changes there is a quick zoom into the ch
   subject size by at most about 10 % over the whole shot, and by under 2 % in the first 6 frames.
 - No snap zooms or punch-ins except a single, motivated story beat the plan names (none planned in EP.1). Static and slow moves
   are the default, like live-action cinema. Shake only where the plan says handheld, and it settles without a push.
+
+## USER DECISION 2026-11-28: cast stays the 2.5D paper puppets
+A blocky 3D cast was tested (v16/block) and shelved by the user. Keep the puppets of ep1/cast and v8/cast. See spec/blocky_cast_decisions.md.
+
+## USER DECISION 2026-11-28: no logo
+The biohazard title mark is removed too ("เอาโลโก้ออก"): noicons.SHOW_MARK = False. The title is text only (เขตปิดตาย 09 / DEAD ZONE 09). No logos or icons anywhere in the film. Current approved hook: DZ09_EP1_hook_916_v3.mp4 (v2 with the mark removed; frames from 1217 on re-composited, all earlier frames identical to v2).
+
+## USER DECISION 2026-11-28: no title text either
+"เอาคำนี้ออกด้วย": the title text (เขตปิดตาย 09 / DEAD ZONE 09) is removed from the hook end (finish.SHOW_TITLE = False; the navy dim under it is off too). The hook ends on the rising crane shot with no text. Current approved hook: DZ09_EP1_hook_916_v4.mp4. The copied title line was removed from ep1/audio/captions_ep1.ass. For the EP.1 master join use --hook DZ09_EP1_hook_916_v4.mp4.

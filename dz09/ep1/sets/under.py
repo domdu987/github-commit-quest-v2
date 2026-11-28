@@ -23,9 +23,24 @@ S0, S1 = 120.0, 345.0
 _S = {}
 
 
-SOFFIT = 0.09                                              # emission strength of the soffit plane (under.soffit(k))
-SKY_SIDE = 0.8                                             # W/m2: the night sky coming in under the deck edge from the stair side
-GLOW_W, EDGE_SKY_W, BOUNCE_W = 4500.0, 1800.0, 400.0      # checker: 3000 / 900 / none left the street and the figures unreadable
+SOFFIT = 0.20                                              # emission strength of the soffit plane (under.soffit(k))
+SKY_SIDE = 2.0                                             # W/m2: the night sky coming in under the deck edge from the stair side
+GLOW_W, EDGE_SKY_W, BOUNCE_W = 6000.0, 2400.0, 600.0      # checker: 3000 / 900 / none left the street and the figures unreadable
+
+
+def _soffit_mat():
+    """(v2) the slab underside: dull concrete that takes the pier lamps' up-wash, plus the faint cold glow (SOFFIT) it
+    always had (not sampled as a light).  It used to be a pure emitter, which no lamp could light."""
+    m = bpy.data.materials.get("ep1_und_soffit")
+    if m: return m
+    mb = K.MB("ep1_und_soffit")
+    b = mb.principled((0.20, 0.205, 0.215, 1.0), 0.85, ambient=None)
+    b.inputs["Emission Color"].default_value = (0.10, 0.13, 0.20, 1.0); b.inputs["Emission Strength"].default_value = SOFFIT
+    b.name = "SOFFIT_BSDF"
+    m = mb.out(b)
+    try: m.cycles.emission_sampling = "NONE"
+    except Exception: pass
+    return m
 
 
 def _rain_tex():
@@ -75,7 +90,7 @@ def build(A, with_stair=True):
     # ---- ground: the deck's own wet asphalt shader (UV = o, s: its lane paint becomes the street's), index 1 so the
     # post draws wet streaks under every lamp
     road = B.m_asphalt9()
-    xa, xb = -64.0, 40.0
+    xa, xb = -64.0, 58.0                                  # (v2) to +58: the far side's footpath and shop fronts (16:9 check)
     v = [(xa, S0, ZG + 0.02), (xb, S0, ZG + 0.02), (xb, S1, ZG + 0.02), (xa, S1, ZG + 0.02)]
     g = kit.mesh_obj("und_ground", v, [(0, 1, 2, 3)], c, uvs=[[(xa * 0.5, S0), (xb * 0.5, S0), (xb * 0.5, S1), (xa * 0.5, S1)]], mat=road)
     g.pass_index = 1; add(g)
@@ -104,9 +119,7 @@ def build(A, with_stair=True):
     # (checker) the soffit: the wet ground is a mirror and the hook's slab underside is unlit, so the whole frame of S112
     # was black on black.  A plane just under the slab with a very weak cold emission (the street's bounce); it is seen
     # directly and in the wet ground, and is not sampled as a light.
-    sm = K.emit("und_soffit", (0.10, 0.13, 0.20), SOFFIT)
-    try: sm.cycles.emission_sampling = "NONE"
-    except Exception: pass
+    sm = _soffit_mat()
     sq = kit.mesh_obj("und_soffit", [(-23.8, S0, -2.46), (23.8, S0, -2.46), (23.8, S1, -2.46), (-23.8, S1, -2.46)], [(3, 2, 1, 0)], c, mat=sm)
     sq.pass_index = 4; sq.visible_shadow = False; add(sq)
     # ---- under the slab: two cable trays and a drain line along the deck (dark shapes against the far glow)
@@ -247,9 +260,201 @@ def build(A, with_stair=True):
         lights["und_bounce"].location = (f[0] + 7.0, f[1] + 0.5, ZG + 5.5)
         for i, (x, y) in enumerate(((T["anchors"]["x_in"], T["anchors"]["s_a"] + 1.76), (T["anchors"]["x_out"], T["anchors"]["s_a"] + 1.76))):
             add(K.puddle(f"und_stairpuddle_{i}", (x, y + 1.5, ZG + 0.03), 3.0, 2.4, 0.5 * i, c=c))
-    U = dict(parts=P, lights=lights, anchors=anchors, curtains=cur, rain_mat=rm, parked=parked)
+    # (v2) the director found STAIR / UND far too dark: motivated practicals that light the street, the stair and the
+    # figures while the frame stays a night street (street lamps, pier lamps, a lit sign, the beacon spill from above)
+    v2 = _practicals_v2(c, add, lights, T, rng)
+    _far_side(c, add, con, wall, sh_m, pole_m, rng)
+    anchors.update(v2["anchors"])
+    U = dict(parts=P, lights=lights, anchors=anchors, curtains=cur, rain_mat=rm, parked=parked, v2=v2)
     K.REG["und"] = U; _S["U"] = U
     return U
+
+
+# ------------------------------------------------------------------------------------------------ v2 practicals
+SODIUM = (1.0, 0.56, 0.24)
+MERCURY = (0.70, 0.92, 0.86)                      # the pier lamps: older mercury fittings, cold green-white beside the sodium
+STREET_W, PIER_W, PIER_UP_W, STROBE_W, SIGN_W, STAIR_LAMP_W, FOOT_LAMP_W = 18000.0, 5000.0, 5000.0, 24000.0, 380.0, 900.0, 900.0
+STREET_LAMPS = ((190.0, -1), (211.0, -1), (242.0, -1), (222.0, 1), (262.0, 1))     # (s, side): side -1 = the footpath / stair side
+PIER_LAMPS = ((150, -1, True), (200, -1, False), (250, -1, True), (250, 1, True), (300, -1, True), (150, 1, True))   # pier 200: a dead fitting
+STAIR_LIT = (0, 2, 4, 8, 10)                      # landing 6's cage is dead
+
+
+def _sign_tex(kind):
+    """two code-drawn shop lightboxes, plain Thai nouns in Kanit (no names, no brands): a rice-soup stall open all night
+    and a pharmacy cross."""
+    def fn(d, im):
+        from PIL import Image, ImageDraw
+        W, H = im.size
+        if kind == "soup":
+            d.rectangle((0, 0, W, H), fill=(246, 240, 226, 255))
+            d.rectangle((10, 10, W - 10, H - 10), outline=(200, 30, 26, 255), width=14)
+            for txt, cy, fs, col in (("ข้าวต้ม", 0.34, 150, (200, 26, 22)), ("โต้รุ่ง", 0.66, 132, (24, 24, 30))):
+                k = fs
+                while True:
+                    f = K.font(k); bb = d.textbbox((0, 0), txt, font=f)
+                    if bb[2] - bb[0] <= W - 70 or k <= 40: break
+                    k -= 4
+                d.text((W / 2 - (bb[0] + bb[2]) / 2, H * cy - (bb[1] + bb[3]) / 2), txt, font=f, fill=col + (255,))
+        else:
+            d.rectangle((0, 0, W, H), fill=(18, 120, 64, 255))
+            c0, r = (W / 2, H * 0.36), W * 0.26
+            d.rectangle((c0[0] - r, c0[1] - r * 0.34, c0[0] + r, c0[1] + r * 0.34), fill=(250, 252, 248, 255))
+            d.rectangle((c0[0] - r * 0.34, c0[1] - r, c0[0] + r * 0.34, c0[1] + r), fill=(250, 252, 248, 255))
+            txt = "ขายยา"; k = 140
+            while True:
+                f = K.font(k); bb = d.textbbox((0, 0), txt, font=f)
+                if bb[2] - bb[0] <= W - 60 or k <= 40: break
+                k -= 4
+            d.text((W / 2 - (bb[0] + bb[2]) / 2, H * 0.80 - (bb[1] + bb[3]) / 2), txt, font=f, fill=(250, 252, 248, 255))
+    return K.draw_tex("und_sign_" + kind, (512, 640), fn)
+
+
+def _street_lamp(name, s, side, c, pole_m, add, lights):
+    """a sodium street lamp on the kerb line outside the deck footprint, arm reaching toward the street."""
+    x0 = side * 32.3
+    add(K.cyl(name + "_post", 0.14, 13.0, (x0, s, ZG + 6.5), pole_m, c=c, segs=8))
+    add(K.tube(name + "_arm", [(x0, s, ZG + 12.8), (x0 - side * 1.2, s, ZG + 13.6), (x0 - side * 3.2, s, ZG + 13.5)], 0.08, pole_m, c=c))
+    hx = x0 - side * 3.3
+    add(K.box(name + "_head", (1.3, 0.5, 0.22), (hx, s, ZG + 13.5), pole_m, bevel=0.05, c=c))
+    add(K.box(name + "_bulb", (0.9, 0.34, 0.06), (hx, s, ZG + 13.36), K.emit("und_lamp_bulb", SODIUM, 40.0), c=c))
+    hp = Vector((hx, s, ZG + 13.3))
+    aim = (hx - side * 4.0, s, ZG)
+    L = K.spot(name, tuple(hp), aim, STREET_W, SODIUM, 120.0, 0.45, 0.12); L["kind"] = "sodium"
+    lights[name] = L
+    B.add_cone("cone_" + name, tuple(hp), (hx - side * 2.0, s, ZG), 13.0, 0.4, 9.0, [x * 0.05 for x in SODIUM])
+    return hp
+
+
+def _pier_lamp(name, s, side, lit, c, add, lights):
+    """a bulkhead fitting bolted to the pier face 8 D up, aimed down and out over the street."""
+    hm = K.simple("und_pierlamp_housing", "#3a3e44", 0.45, 0.6)
+    x = side * 2.62
+    add(K.box(name + "_bracket", (0.7, 0.18, 0.18), (side * 2.85, s, ZG + 8.3), hm, c=c))
+    add(K.box(name + "_head", (0.9, 1.2, 0.36), (side * 3.25, s, ZG + 8.1), hm, bevel=0.06, rot=(0, side * math.radians(18), 0), c=c))
+    lens = K.emit(name + "_lens", MERCURY, 22.0 if lit else 0.04)
+    add(K.box(name + "_lens", (0.66, 1.0, 0.04), (side * 3.32, s, ZG + 7.91), lens, rot=(0, side * math.radians(18), 0), c=c))
+    hp = Vector((side * 3.4, s, ZG + 7.8))
+    if lit:
+        L = K.spot(name, tuple(hp), (side * 9.5, s + 1.5, ZG), PIER_W, MERCURY, 125.0, 0.6, 0.18); L["kind"] = "pier_lamp"
+        lights[name] = L
+        # the fitting's open top throws a wash up the pier onto the slab underside: the lit soffit is what the wet
+        # street mirrors, so the ground reads as wet everywhere near a working lamp
+        Lu = K.spot(name + "_up", tuple(hp + Vector((side * 0.3, 0, 0.5))), (side * 9.0, s, -2.5), PIER_UP_W, MERCURY, 110.0, 0.8, 0.4)
+        Lu["kind"] = "pier_lamp_up"; lights[Lu.name] = Lu
+        B.add_cone("cone_" + name, tuple(hp), (side * 6.0, s + 1.0, ZG), 8.0, 0.3, 5.5, [x * 0.035 for x in MERCURY])
+    return hp
+
+
+def _strobe_keys(peak, phase):
+    """the light bar's 12-frame flash (2.5 Hz, the hook's beacons), as (frame, energy) keys over one cycle 1..13."""
+    lo = 0.0
+    if phase == 0:
+        return [(1, lo), (3, peak), (6, peak), (8, lo), (13, lo)]
+    return [(1, peak * 0.5), (2, lo), (7, lo), (9, peak), (12, peak), (13, peak * 0.5)]
+
+
+def _practicals_v2(c, add, lights, T, rng):
+    pole_m = K.simple("und_pole", "#2b2622", 0.8)
+    out = dict(street=[], pier=[], signs=[], strobes=[], anchors={})
+    for s, side in STREET_LAMPS:
+        out["street"].append(_street_lamp(f"und_street_{int(s)}_{'w' if side < 0 else 'e'}", s, side, c, pole_m, add, lights))
+    for s, side, lit in PIER_LAMPS:
+        out["pier"].append(_pier_lamp(f"und_pier_{s}_{'w' if side < 0 else 'e'}", s, side, lit, c, add, lights))
+    # two projecting lightboxes on the shophouse fronts (seen edge-on along the street: both faces carry the picture)
+    box_m = K.simple("und_signbox", "#2a2c30", 0.5, 0.4)
+    for kind, s, z, w, h, col in (("soup", 203.5, 6.6, 1.7, 2.2, (1.0, 0.86, 0.72)), ("pharm", 232.0, 6.0, 1.5, 1.9, (0.35, 1.0, 0.55))):
+        x = -39.75
+        add(K.box(f"und_sign_{kind}_box", (w + 0.08, 0.34, h + 0.08), (x, s, ZG + z), box_m, bevel=0.03, c=c))
+        sm = K.image_mat(f"und_sign_{kind}", _sign_tex(kind), rough=0.4, emit_strength=2.4)
+        for fy, fac in ((-1, "-Y"), (1, "+Y")):
+            q = K.quad(f"und_sign_{kind}_face", w, h, (x, s + fy * 0.175, ZG + z), fac, sm, c=c); add(q)
+        add(K.box(f"und_sign_{kind}_arm", (1.3, 0.08, 0.08), (-40.5, s, ZG + z + h / 2 + 0.1), pole_m, c=c))
+        L = K.point(f"und_sign_{kind}_glow", (x + 0.9, s, ZG + z - 0.4), SIGN_W, col, 0.9, glossy=False); lights[L.name] = L
+        out["signs"].append((kind, (x, s, ZG + z)))
+    # the beacon spill: the rescue truck's light bar is on the deck above the gate; its red and blue flashes come over
+    # the slab edge and fall down the stair and the kerb strip (no fixture in frame; keyed like the hook's beacons)
+    if T:
+        g = Vector(T["anchors"]["gate_landing"])
+        for colr, col, dy, phase in (("red", (1.0, 0.06, 0.04), -3.0, 0), ("blue", (0.12, 0.25, 1.0), 2.4, 1)):
+            for side, loc, aim, wgt in (("out", (-27.9, g.y + dy, 2.4), (-29.8, g.y + dy * 0.3, ZG), 1.0),           # beyond the slab edge and the tower's outer rail
+                                        ("in", (-24.2, (210.3 if dy > 0 else 199.6), 1.5), (-20.6, (211.2 if dy > 0 else 208.0), ZG), 0.75)):  # past the tower's ends and the slab edge, down onto the street at the stair foot
+                L = K.spot(f"und_strobe_{colr}_{side}", loc, aim, STROBE_W * wgt, col, 60.0, 0.7, 0.35)
+                L["kind"] = f"beacon_{colr}"
+                peak = STROBE_W * wgt * (1.0 if colr == "red" else 0.85)
+                kit.key_series(L.data, "energy", L.data, _strobe_keys(peak, phase), "LINEAR")
+                lights[L.name] = L; out["strobes"].append(L.name)
+        # every second landing has a caged lamp; all but landing 6 now burn (only the gate landing's did)
+        import stair
+        for k in sorted(T["lamps"]):
+            stair.lamp(k, k in STAIR_LIT, STAIR_LAMP_W if k else 420.0)
+        # one more cage at the foot, on the street-side column, facing the street: it lights whoever steps off the stair
+        fx = (T["anchors"]["x_in"] + 0.10, T["anchors"]["s_a"] + 1.76, ZG + 4.4)
+        root, Lf, gmf = stair._lamp_fixture("stair_lamp_foot", fx, c, True)
+        root.rotation_euler = (0, 0, -math.pi / 2); Lf.data.energy = FOOT_LAMP_W
+        lights["stair_lamp_foot_light"] = Lf
+        f = T["anchors"]["foot"]
+        for i, (dx, dy, w, l) in enumerate(((5.0, 3.5, 3.6, 2.8), (8.5, -1.0, 4.2, 3.0), (2.5, 7.5, 3.0, 4.2))):
+            add(K.puddle(f"und_v2_puddle_{i}", (f[0] + dx, f[1] + dy, ZG + 0.031), w, l, 0.4 * i, c=c))
+    out["anchors"] = dict(street_lamps=[tuple(p) for p in out["street"]], pier_lamps=[tuple(p) for p in out["pier"]],
+                          signs=[(k, p) for k, p in out["signs"]])
+    _S["v2"] = out
+    return out
+
+
+def _far_side(c, add, con, wall, sh_m, pole_m, rng):
+    """(v2, the 16:9 check) the far side of the street was open ground to the city: in a wide frame S122 and S133 showed a
+    wet plain under the skyline.  A kerb, a footpath and a row of shophouse fronts like the near side's, mostly dark,
+    three windows lit, shutters down, two telephone poles; the far-side street lamps (s 222, 262) stand on its kerb."""
+    rng = random.Random(91)
+    add(K.box("und_footpath_far", (9.0, S1 - S0, 0.30), (36.5, (S0 + S1) / 2, ZG + 0.15), con, c=c))
+    add(K.box("und_kerbline_far", (0.3, S1 - S0, 0.34), (31.9, (S0 + S1) / 2, ZG + 0.17), K.simple("kerb_paint", "#8a8778", 0.7), c=c))
+    s = S0 + 3.0; k = 0
+    while s < S1 - 6:
+        w = rng.uniform(7.5, 10.5); h = rng.choice((11.0, 14.5, 17.5, 21.0))
+        add(K.box(f"und_house_far_{k}", (9.0, w - 0.25, h), (45.4, s + w / 2, ZG + h / 2), wall, c=c))
+        q = K.box(f"und_shopshutter_far_{k}", (0.06, w - 1.3, 4.3), (40.87, s + w / 2, ZG + 2.45), sh_m, c=c); add(q)
+        me = q.data; uvl = me.uv_layers[0]
+        for p in me.polygons:
+            for li in p.loop_indices:
+                vv = me.vertices[me.loops[li].vertex_index].co
+                uvl.data[li].uv = (vv.y / 3.0, vv.z / 4.3 + 0.5)
+        add(K.box(f"und_awning_far_{k}", (2.6, w - 0.6, 0.10), (39.8, s + w / 2, ZG + 5.0), K.simple(f"awning_{k % 3}", ("#3a2222", "#1f3040", "#2c3324")[k % 3], 0.8), rot=(0, math.radians(10), 0), c=c))
+        if k in (3, 9, 15):
+            wm = K.emit(f"und_window_far_{k}", (1.0, 0.74, 0.44) if k != 9 else (0.75, 0.85, 1.0), 1.5)
+            add(K.box(f"und_window_far_{k}", (0.05, 1.5, 1.8), (40.88, s + w * 0.6, ZG + 8.2 + (k % 2) * 3.4), wm, c=c))
+        s += w; k += 1
+    for s_ in (190, 240, 290):
+        add(K.cyl("und_pole_far", 0.22, 17.0, (32.6, s_, ZG + 8.5), pole_m, c=c, segs=8))
+        add(K.box("und_pole_arm_far", (2.4, 0.14, 0.14), (32.6, s_, ZG + 15.6), pole_m, c=c))
+    for s_ in (190, 240):
+        pts = [(32.6, s_ + 50 * t, ZG + 15.7 - 1.7 * math.sin(math.pi * t)) for t in [i / 10 for i in range(11)]]
+        add(K.tube("und_wire_far", pts, 0.03, V.mat("plastic"), c=c, segs=4))
+
+
+def lamps(gain=1.0):
+    """(v2) the street and pier lamps together (1 = as built, 0 = off)."""
+    for nm, L in _S["U"]["lights"].items():
+        if L.get("kind") == "sodium" and nm.startswith("und_street_"): L.data.energy = STREET_W * gain; L.hide_render = gain <= 0
+        if L.get("kind") == "pier_lamp": L.data.energy = PIER_W * gain; L.hide_render = gain <= 0
+        if L.get("kind") == "pier_lamp_up": L.data.energy = PIER_UP_W * gain; L.hide_render = gain <= 0
+
+
+def strobes(on=True):
+    """(v2) the beacon spill from the deck (follows x2.beacons in the story: call both)."""
+    for nm in _S.get("v2", {}).get("strobes", []):
+        ob = bpy.data.objects.get(nm)
+        if ob: ob.hide_render = not on
+
+
+def signs(on=True):
+    for nm in ("und_sign_soup_glow", "und_sign_pharm_glow"):
+        ob = bpy.data.objects.get(nm)
+        if ob: ob.hide_render = not on
+    for kind in ("soup", "pharm"):
+        m = bpy.data.materials.get("ep1_und_sign_" + kind)
+        if m:
+            for nd in m.node_tree.nodes:
+                if nd.type == "BSDF_PRINCIPLED": nd.inputs["Emission Strength"].default_value = 2.4 if on else 0.05
 
 
 def frame(g):
@@ -271,7 +476,9 @@ def glow(gain=1.0):
 
 def soffit(strength=SOFFIT):
     """the slab underside's own faint glow; 0 = the plan's literal black."""
-    K.set_emit("und_soffit", strength)
+    m = bpy.data.materials.get("ep1_und_soffit")
+    nd = m.node_tree.nodes.get("SOFFIT_BSDF") if m else None
+    if nd: nd.inputs["Emission Strength"].default_value = strength
 
 
 def sky(strength=SKY_SIDE):

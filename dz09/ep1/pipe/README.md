@@ -161,3 +161,66 @@ The user: "every time the camera angle changes there is a quick zoom into the ch
   subject size by at most about 10 % over the whole shot, and by under 2 % in the first 6 frames.
 - No snap zooms or punch-ins except a single, motivated story beat the plan names (none planned in EP.1). Static and slow moves
   are the default, like live-action cinema. Shake only where the plan says handheld, and it settles without a push.
+
+## Scene 02 integration (2026-11-28)
+- **Production cut** `cut/sc02.json` is built by `cut_timed.py --scene 02` from `plan/shots_ep1_timed.json` + `audio/narr_ep1_timing.json`
+  (+ `cut/sc02.cfg.json`): the timed frames exactly (1776 frames, film 1280-3056), 55 captions, `narr0 = -53.3333` because
+  `narr_ep1.wav` starts at film time 0, and a new key `film_f0` (1280). The plan-estimate table is kept as `cut/sc02_plan.json`.
+  It equals the authors' private tables (`chk/a25`, `chk/sc02b`, `chk/sc02c`) frame for frame; `cut/mouth_sc02.json` was built by
+  `mouth.py --scene sc02` from the episode wav and equals theirs level for level. `cut.py` is not used for EP.1 any more: its
+  picture-beat rule differs from the timed one by a few frames on S35, S36, S44-S47, S58.
+- **cfg** `cut/sc02.cfg.json`: hard cut on S050 (moot: every cut is straight since the 11-28 decision), the plan's ONE red frame on
+  the cut into S049 (`fx` flash at scene 49.75 s), cue `eyes_open`, the scene mix `ep1/audio/sc02/mix_sc02.wav`.
+- **stage_ep**: `build()` now wraps the hook Stage's `begin()`: every actor gets back the card pitch it was BUILT with and loses its
+  walk lock before the hook's reset and the shot's `setup()` (the hook resets the seated driver only). `stage.Act.__init__` is
+  wrapped once per process to remember that pitch, also for actors a shot creates lazily.
+- **finish_ep**: `--ass <episode .ass>` takes a scene's captions verbatim from the episode caption file (events in the scene's film
+  window, moved to the scene clock); `--sheet-u 0.5` (one frame per shot, bigger cells) and `--sheet-t-off S` for the sheet.
+- Scene-02 draft conform with the hook's last 3 s: `finish_ep.py comp --scene sc02 --tier draft --size 720x1280 --base-size 360x640`,
+  then `finish_ep.py master --hook PROJ/v10/film/DZ09_EP1_hook_916_v1.mp4 --hook-tail 3 --scenes sc02 --tier draft --size 720x1280
+  --base-size 360x640 --ass PROJ/ep1/audio/captions_ep1.ass --out out/sc02_draft.mp4`.
+- Shot-module fixes made in integration are marked `integration 11-28` in the modules (see the scene-02 report).
+
+## USER DECISION 2026-11-28: cast stays the 2.5D paper puppets
+A blocky 3D cast was tested (v16/block) and shelved by the user. Keep the puppets of ep1/cast and v8/cast. See spec/blocky_cast_decisions.md.
+
+## USER NOTES ON THE FIRST SCENE 02 DRAFT (2026-11-28, sc02_draft.mp4 of 14:47) — must be fixed and checked
+- S054 "มันมองไม่เห็นเขา": the infected junior's face sinks into the rescue truck (his head card is behind / inside
+  the truck's side panel). His whole head and face must be in front of the truck body and fully visible; check every
+  frame of the shot, and every other shot where a puppet stands close to a vehicle, wall or barrier, for the same fault.
+Director's own notes on the same draft (fix too): S035 and S041 inserts do not read (an orange blob, a dark shape);
+S029 a black figure covers almost half the frame in the foreground; S027 the driver's legs look broken in the throw;
+S058 Kong's face is cut by the frame edge; S049 the turned junior grins with fangs and may read comic, he must read
+frightening (open snarl, white eyes, no smile). The countdown narration (s17-s30) runs at tempo 1.10: flag if it sounds rushed.
+
+## USER DECISION 2026-11-28: no logo
+The biohazard title mark is removed too ("เอาโลโก้ออก"): noicons.SHOW_MARK = False. The title is text only (เขตปิดตาย 09 / DEAD ZONE 09). No logos or icons anywhere in the film. Current approved hook: DZ09_EP1_hook_916_v3.mp4 (v2 with the mark removed; frames from 1217 on re-composited, all earlier frames identical to v2).
+
+## USER DECISION 2026-11-28: no title text either
+"เอาคำนี้ออกด้วย": the title text (เขตปิดตาย 09 / DEAD ZONE 09) is removed from the hook end (finish.SHOW_TITLE = False; the navy dim under it is off too). The hook ends on the rising crane shot with no text. Current approved hook: DZ09_EP1_hook_916_v4.mp4. The copied title line was removed from ep1/audio/captions_ep1.ass. For the EP.1 master join use --hook DZ09_EP1_hook_916_v4.mp4.
+
+## FIX PASS ON THE USER NOTES (2026-11-28, after the 14:47 draft) -- what changed, how it was checked
+Every change is marked `11-28 fix pass` in the module.  Originals of the edited modules: `scratchpad/wk/orig/` (session scratch, not durable).
+- **S054** (the sinking head): the half-done integration edit (`G.CROUCH + G.out * 0.45`) is the fix and is kept.  Checked by a ray-cast
+  of 65 head points / 37 face points from the camera on EVERY frame (36/36): 0 hidden by the truck (old marks: 34-48 % of the head inside
+  `rescue_truck_body` / `canopy`), and by looking at all 36 new draft frames and the final-tier gate still.  `out/s054_fix.png`.
+- **S049 / S050 / S051 / S055** (the turned junior grins): new `shots/sc02/sc02_faces.py` adds the expressions `z_snarl` / `z_snarl_o`
+  (white snapped eyes with veins and red pin pupils, brows hard down, an ARCH mouth: lip up, corners down, black inside, two jagged rows
+  of teeth, no tongue, creases).  Nothing existing is changed (draw8's `snarl` / `bite` are a D-shaped laugh with a pink tongue).
+- **S035**: 200 mm, pad higher in frame; PPD 1140 at the final tiers for ALL step actors (they were made in setup() after begin()
+  applied PPD, so four of the five steps rastered at 240 ppd); drafts keep 780.
+- **S041**: re-staged from the lane south of the junior (front drawing): black glove on the orange jacket hem and white band, not on
+  black trousers against the black tyre; cone_3 sunk for this shot (it stood in the lens line).
+- **S029**: camera 7.2 D back (was 3.75), driver at the tail's left corner: about a third of the frame high, not half the frame.
+- **S027**: the thrown driver: legs trail together, knees bent (was the scissored `step` legs crossing at the knee on a tipped card).
+- **S030**: the 5-frame whip now lands on Kong and the junior (it landed on the empty wreck door with both of them cut at the edge).
+- **S055**: camera z 2.80 (was 1.75): at the gate the rider's foot stood on the junior's crown.
+- **S057**: 21 mm aimed 1.6 D left: the junior ran along the left edge with his face off frame.
+- **S058**: 3.35 D (was 2.85) and the head higher: the hair touched both edges.
+Collision sweep: ray-cast heads / faces / hands of every visible puppet in every 3D shot, every 3rd-4th frame (light-cone volumes
+ignored; 36/36 frames for S054).  Remaining set hits are hands only, plus far crowd figures in S059 / S060 passing behind car bodies
+between the lanes (they are 20-50 px high, the plan's "waist up over the bonnets").
+Gate: 37 frames at final tier 720x1280 (`run_ep.py --frames ... --tag gate`, 4 processes) -> `out/sc02_gate_final.png`.
+Final-render estimate from the gate (scratchpad `wk/estimate.py`): A 24 shots / 1152 f, gate 49-107 CPU s (median 73), steady ~66;
+B 9 / 441 f, 33-98 (median 41), steady ~40; C1 4 / 183 f, 0.5-8 CPU s.  Scene 02 = 26-30 CPU h = 6.9-8.0 h wall on 4 workers.
+Draft 360x640 complete again: 1776 / 1776, every shot's sig matches its current module.
