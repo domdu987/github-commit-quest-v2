@@ -105,6 +105,7 @@ class Take(C.Take):
 # ----------------------------------------------------------------------------- post (puppet-free frames)
 GAMMA, VIB = 0.95, 1.25
 WB_T = (2.0, 4.5)
+SAT_T = 0.445
 W709 = np.array([0.2126, 0.7152, 0.0722], np.float32)
 to_lin = lambda x: np.where(x <= 0.04045, x / 12.92, ((x + 0.055) / 1.055) ** 2.4)
 to_srgb = lambda x: np.where(x <= 0.0031308, 12.92 * x, 1.055 * np.power(np.clip(x, 0, None), 1 / 2.4) - 0.055)
@@ -196,9 +197,23 @@ def post_take(frames, raw_dir, out_dir, cache=None):
     for g in frames:
         a = sharpen(os.path.join(raw_dir, "f_%04d.png" % g)); P.append(solve(a)); A[g] = a if len(frames) < 12 else None
     P = smooth_params(P)
+    def msat(img):
+        sm_ = img[::4, ::4]; mx_, mn_ = sm_.max(2), sm_.min(2); return float(np.where(mx_ > 0, (mx_ - mn_) / np.maximum(mx_, 1e-6), 0).mean())
+    idx = list(range(0, len(frames), max(1, len(frames) // 6)))
+    smp = [(sharpen(os.path.join(raw_dir, "f_%04d.png" % frames[i])), P[i]) for i in idx]
+    lo, hi = VIB, 5.0
+    if np.mean([msat(apply(a, p, VIB)) for a, p in smp]) < SAT_T:          # raise the vibrance just enough: take mean sat SAT_T (gate 0.40-0.50)
+        for _ in range(9):
+            mid = (lo + hi) / 2
+            if np.mean([msat(apply(a, p, mid)) for a, p in smp]) < SAT_T: lo = mid
+            else: hi = mid
+        vib = hi
+    else:
+        vib = VIB
+    print("post_take vibrance %.2f" % vib, flush=True)
     for g, p in zip(frames, P):
         a = A[g] if A[g] is not None else sharpen(os.path.join(raw_dir, "f_%04d.png" % g))
-        Image.fromarray((apply(a, p) * 255 + 0.5).astype(np.uint8)).save(os.path.join(out_dir, "g_%04d.png" % g))
+        Image.fromarray((apply(a, p, vib) * 255 + 0.5).astype(np.uint8)).save(os.path.join(out_dir, "g_%04d.png" % g))
     return P
 
 

@@ -1,0 +1,2 @@
+- s47 g 1424-1492: 81 fr, 58 s/frame wall (2 procs x 2 thr), take.mkv (3 fr)                        luma 0.501 p1 0.088 p99 0.857 lc 0.0339 sat 0.337 chroma 19.1 a +1.9 b +4.5 p98 0.80 blue 0.36 warm 0.54 neut 0.13 M 53  MISS  (guides off: p1,p99,lc,chroma,sat_p98,M) | qa_auto PASS
+- s47 g 1424-1492: 81 fr, 58 s/frame wall (2 procs x 2 thr), take.mkv (3 fr)                        luma 0.473 p1 0.077 p99 0.848 lc 0.0332 sat 0.438 chroma 24.8 a +3.2 b +5.8 p98 1.00 blue 0.38 warm 0.52 neut 0.08 M 69  PASS  (guides off: p99,lc,chroma) | qa_auto PASS
