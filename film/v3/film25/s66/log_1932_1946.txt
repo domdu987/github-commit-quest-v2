@@ -62,3 +62,9 @@ g 1944  43.9 s beauty  43.9 s total
 g 1945  43.3 s beauty  43.3 s total
 12:12.476  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s66/work/beauty/f_1946.png'
 g 1946  41.5 s beauty  41.5 s total
+00:01.370  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: built street_high in 1.1 s
+00:40.578  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s66/work/beauty/f_1932.png'
+g 1932  39.2 s beauty  39.2 s total
+01:21.241  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s66/work/beauty/f_1933.png'
+g 1933  40.7 s beauty  40.7 s total

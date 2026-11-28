@@ -93,3 +93,33 @@ take: built camp_close_tank in 3.7 s
   mat = bpy.data.materials.new("water"); mat.use_nodes = True
 cup-vs-spout residual g828 [-20.35, 56.94, 0.17]
 cup-vs-spout residual g837 [-19.34, 59.09, 0.17]
+01:29.231  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0828.png'
+01:40.617  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0828.png'
+g 828  79.4 s beauty  90.7 s total
+02:51.095  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0829.png'
+03:03.980  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0829.png'
+g 829  70.5 s beauty  83.4 s total
+04:15.047  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0830.png'
+04:28.544  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0830.png'
+g 830  71.1 s beauty  84.6 s total
+05:39.212  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0831.png'
+05:54.176  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0831.png'
+g 831  70.7 s beauty  85.6 s total
+07:09.309  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0832.png'
+07:24.512  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0832.png'
+g 832  75.2 s beauty  90.3 s total
+08:39.465  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0833.png'
+08:54.088  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0833.png'
+g 833  75.0 s beauty  89.6 s total
+10:07.093  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0834.png'
+10:22.372  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0834.png'
+g 834  73.1 s beauty  88.3 s total
+11:36.969  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0835.png'
+11:52.683  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0835.png'
+g 835  74.7 s beauty  90.3 s total
+13:08.618  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0836.png'
+13:23.680  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0836.png'
+g 836  76.0 s beauty  91.0 s total
+14:37.018  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0837.png'
+14:50.750  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0837.png'
+g 837  73.4 s beauty  87.1 s total

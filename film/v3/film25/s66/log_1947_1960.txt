@@ -58,3 +58,5 @@ g 1958  45.9 s beauty  45.9 s total
 g 1959  44.5 s beauty  44.5 s total
 11:36.047  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s66/work/beauty/f_1960.png'
 g 1960  43.2 s beauty  43.2 s total
+00:01.424  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: built street_high in 1.2 s

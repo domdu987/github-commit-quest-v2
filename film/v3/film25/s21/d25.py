@@ -348,7 +348,7 @@ def flatten_hull(H, color=(0.34, 0.38, 0.31)):
     return n
 
 
-def olive_steel(name="tail_olive", color=(0.20, 0.22, 0.15)):
+def olive_steel(name="tail_olive", color=(0.17, 0.22, 0.05)):
     mat = bpy.data.materials.new(name); mat.use_nodes = True
     bs = mat.node_tree.nodes["Principled BSDF"]; bs.inputs["Base Color"].default_value = (*color, 1); bs.inputs["Roughness"].default_value = 0.7; bs.inputs["Metallic"].default_value = 0.0
     return mat
