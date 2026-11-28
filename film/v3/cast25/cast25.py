@@ -181,8 +181,8 @@ def _hat_peakcap25(k, C, yaw):
     dx = -0.03 * yaw
     fx = dx + 0.12 * yaw
     tx = dx * 1.4 + 0.05
-    yb0, yb1 = -0.47, -0.27
-    ytop = -0.70
+    yb0, yb1 = -0.52, -0.20
+    ytop = -0.72
     cr = dict(light=col["crown_l"], base=col["crown"], dark=col["crown_d"])
     g = _gl(k, "pc", cr["light"], cr["base"], cr["dark"], -0.7, 0.7, 0.34)
     o = []
@@ -352,9 +352,13 @@ def _cos_staff25(k, C, m):
     for s in (-1, 1):
         lp = [X(s * 0.17, 0.35), X(s * 0.38, 0.39), X(s * 0.30, 0.50), X(s * 0.40, 0.56), X(s * 0.08, 0.78), X(s * 0.05, 0.60)]
         o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.018" stroke-linejoin="round"/>' % (_poly_d(lp), k.c(col["lapel"]), k.ink))
-        tab = [X(s * 0.30, 0.40), X(s * 0.41, 0.42), X(s * 0.36, 0.52), X(s * 0.25, 0.50)]
-        o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.012" stroke-linejoin="round"/>' % (_poly_d(tab), k.c(col["tab"]), k.ink))
-        o.append(_button(k, X(s * 0.335, 0.465), 0.016))
+        tab = [X(s * 0.27, 0.38), X(s * 0.45, 0.41), X(s * 0.39, 0.60), X(s * 0.21, 0.56)]
+        o.append('<path data-acc="1" d="%s" fill="%s" stroke="%s" stroke-width="0.012" stroke-linejoin="round"/>' % (_poly_d(tab), k.c(col["tab"]), k.ink))
+        o.append(_button(k, X(s * 0.33, 0.49), 0.018))
+    # scarlet sash: plain, from the screen-right shoulder diagonally to the screen-left hip, under the ribbons and the belt
+    sash = [X(0.06, 0.33), X(0.40, 0.38), X(-0.06, yB - 0.20), X(-0.40, yB - 0.20)]
+    o.append('<path data-acc="1" d="%s" fill="%s" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (_poly_d(sash), k.c("#e8231a"), k.ink))
+    o.append(_ln([X(0.22, 0.36), X(-0.23, yB - 0.22)], k.c("#ff6a58"), 0.012, ' opacity="0.55"'))
     o.append(_ln([X(0.05, 0.60), X(0.03, yB + 0.02)], k.ink, 0.014))
     for y in (0.84, 1.00, 1.16, 1.32):
         if y < yB - 0.24:
@@ -459,11 +463,11 @@ def _cos_tunic25(k, C, m):
     if "scarf" in kit:
         sc = k.c(col["scarf"])
         d = "M%.4f,%.4f Q%.4f,%.4f %.4f,%.4f" % (X(-0.28, 0.32) + X(0.0, 0.54) + X(0.28, 0.32))
-        ov.append('<path d="%s" fill="none" stroke="%s" stroke-width="0.158" stroke-linecap="round"/><path d="%s" fill="none" stroke="%s" stroke-width="0.124" stroke-linecap="round"/>' % (d, k.ink, d, sc))
+        ov.append('<path d="%s" fill="none" stroke="%s" stroke-width="0.158" stroke-linecap="round"/><path data-acc="1" d="%s" fill="none" stroke="%s" stroke-width="0.124" stroke-linecap="round"/>' % (d, k.ink, d, sc))
         for xx in (-0.15, -0.05, 0.06, 0.16):
             ov.append('<path d="M%.4f,%.4f l0.02,0.07" stroke="%s" stroke-width="0.010" opacity="0.6"/>' % (X(xx, 0.42)[0], 0.42 + 0.06 * (1 - abs(xx) * 3), k.c(col["scarf_d"])))
         kx, ky = X(0.10, 0.62)
-        ov.append('<path d="M%.4f,%.4f L%.4f,%.4f L%.4f,%.4f L%.4f,%.4f Z" fill="%s" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (kx - 0.05, ky - 0.10, kx + 0.07, ky - 0.08, kx + 0.12, ky + 0.20, kx - 0.02, ky + 0.22, sc, k.ink))
+        ov.append('<path data-acc="1" d="M%.4f,%.4f L%.4f,%.4f L%.4f,%.4f L%.4f,%.4f Z" fill="%s" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (kx - 0.05, ky - 0.10, kx + 0.07, ky - 0.08, kx + 0.12, ky + 0.20, kx - 0.02, ky + 0.22, sc, k.ink))
         ov.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="0.012" opacity="0.7"/>' % (kx - 0.01, ky + 0.0, kx + 0.05, ky + 0.19, k.c(col["scarf_d"])))
     return inside, "", "".join(ov)
 
@@ -483,7 +487,7 @@ def _cos_waist25(k, C, m):
     o.append(_circ(X(0.0, 0.43), 0.014, k.c(BRASS["base"]), k, 0.006))
     for s in (-1, 1):
         lp = [X(s * 0.19, 0.34), X(s * 0.40, 0.38), X(s * 0.36, 0.60), X(s * 0.14, 0.86), X(s * 0.04, 0.86)]
-        o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.018" stroke-linejoin="round"/>' % (_poly_d(lp), k.c(col["base"]), k.ink))
+        o.append('<path data-acc="1" d="%s" fill="%s" stroke="%s" stroke-width="0.018" stroke-linejoin="round"/>' % (_poly_d(lp), k.c(col["base"]), k.ink))
         o.append(_ln([X(s * 0.30, 0.50), X(s * 0.12, 0.82)], k.c(col["dark"]), 0.010, ' opacity="0.8"'))
     o.append(_ln([X(0.04, 0.86), X(0.02, yB + 0.02)], k.ink, 0.014))
     for y in (0.90, 1.04, 1.18):
@@ -1296,13 +1300,13 @@ NEW_CAST25 = {
         eye_y=0.000, brow="stroke", brow_th=0.088, mouth="frown", moustache=True, moustache_style="walrus25", tache_scale=1.0,
         smirk_side=1, cheeks="#f23a2e", chins=True, age_lines=True,
         hat="newsboy", hat_style="peakcap25", hat_tilt=-3.0, ear_pencil=False,
-        hat_colors=dict(crown="#8f813f", crown_l="#b3a35c", crown_d="#645a24", band="#ee2418", band_d="#a8120e"),
+        hat_colors=dict(crown="#8f813f", crown_l="#b3a35c", crown_d="#645a24", band="#e8231a", band_d="#a8120e"),
         hair=dict(color="#ecebee", front=0.06, grow=0.20),
         costume="staff25", coat_len=0.20, coat_flare=0.10,
         sleeve=dict(color="#8f813f", dark="#645a24", cuff="#6a5c28", len=0.84, w=0.215),
         shorts=dict(color="#8f813f", dark="#645a24", cuff="#8f813f", len=0.52, w=0.205),
         boots=dict(color="#7a4020", cuff="#9a5a30", h=0.42, toe=0.18),
-        colors=dict(base="#8f813f", dark="#645a24", lapel="#a09050", shirt="#b9a964", tie="#5a3a22", tab="#ee2418", pants="#8f813f",
+        colors=dict(base="#8f813f", dark="#645a24", lapel="#a09050", shirt="#b9a964", tie="#5a3a22", tab="#e8231a", pants="#8f813f",
                     moustache="#f6f4f0", moustache_l="#c4c0ca"),
     ),
     # THE QUIET HERO: slim, young, clean-shaven, a rust flat cap with a red pencil behind the ear, a teal waistcoat over a cream shirt with
@@ -1313,13 +1317,13 @@ NEW_CAST25 = {
         shoulder=(0.24, 0.50), arm=0.76, hip_x=0.15, leg=1.40, stance=0.07, wide=0.26, limb_w=0.054,
         eye_y=0.040, brow="dome", brow_th=0.040, mouth="dash", moustache=False, smirk_side=1, cheeks="#eca090",
         hat="newsboy", hat_style="flatcap25", cap_style="neat", hat_tilt=-6.0, ear_pencil=True,
-        hat_colors=dict(light="#ee8a40", base="#cc5a1a", dark="#8e3a0c", visor="#8a4210", band="#3a2014", check="#f4b070", seam="#5a2c0c"),
+        hat_colors=dict(light="#ffa040", base="#f26a0c", dark="#b04806", visor="#b04a0a", band="#3a2014", check="#ffc890", seam="#7a3004"),
         hair=dict(color="#7a5230", front=0.08, grow=0.22),
         costume="waist25",
         sleeve=dict(color="#d2c192", dark="#a8986a", cuff="#e6d8aa", len=0.50, roll=True, w=0.140),
         shorts=dict(color="#3a3430", dark="#241f1c", cuff="#3a3430", len=0.90, w=0.125),
         boots=dict(color="#4a3220", cuff="#4a3220", h=0.10, toe=0.15),
-        colors=dict(base="#08909c", dark="#065a64", shirt="#d2c192", pants="#3a3430", pencil="#d5392f"),
+        colors=dict(base="#00a6b4", dark="#006f7a", shirt="#d2c192", pants="#3a3430", pencil="#d5392f"),
     ),
     # Lincoln factory workers.  a: big black beard, stocky, bib overalls, baggy mustard cap;  b: short and round, bald with a ginger fringe,
     # ginger moustache, leather apron;  c: tall and lanky, boiler suit, tight slate-blue cap, big brows
@@ -1330,13 +1334,13 @@ NEW_CAST25 = {
         eye_y=0.010, brow="stroke", brow_th=0.078, mouth="dash", moustache=False, smirk_side=1, cheeks="#e48a74",
         bigbeard25=dict(color="#3a2418", dark="#1e1008", light="#7a5638"),
         hat="newsboy", hat_style="flatcap25", cap_style="baggy", hat_tilt=-5.0, ear_pencil=False,
-        hat_colors=dict(light="#f4c838", base="#dca412", dark="#a47404", visor="#9a6c08", band="#4a3014", check="#fbe07a", seam="#7a5006"),
+        hat_colors=dict(light="#ffdc3c", base="#f5b800", dark="#b88400", visor="#b07c00", band="#4a3014", check="#ffee90", seam="#8a6000"),
         hair=dict(color="#3a2418", front=0.06, grow=0.20),
         costume="work25", work_style="bib",
         sleeve=dict(color="#c4521c", dark="#823012", cuff="#dc6a34", len=0.50, roll=True, w=0.160),
-        shorts=dict(color="#2458d0", dark="#173c98", cuff="#2458d0", len=0.90, w=0.150),
+        shorts=dict(color="#0a50e0", dark="#0636a4", cuff="#0a50e0", len=0.90, w=0.150),
         boots=dict(color="#3a2a22", cuff="#3a2a22", h=0.11, toe=0.16),
-        colors=dict(base="#c4521c", dark="#823012", denim="#2458d0", denim_d="#173c98", stitch="#f4cc6a", pants="#2458d0"),
+        colors=dict(base="#c4521c", dark="#823012", denim="#0a50e0", denim_d="#0636a4", stitch="#ffd870", pants="#0a50e0"),
     ),
     "worker_b25": _m(
         build="regular", seed=25.32,
@@ -1380,7 +1384,7 @@ def _tommy(name, seed, build, tw, th, profile, leg, arm, lw, khaki, web, cover, 
            sleeve=dict(color=khaki, dark=P._shade(khaki, 0.65), cuff=P._shade(khaki, 0.80), len=0.84, w=0.150 + 0.06 * (tw - 0.62)),
            shorts=dict(color=khaki, dark=P._shade(khaki, 0.65), cuff=khaki, len=0.50, w=0.150),
            boots=dict(color="#3a2a22", cuff="#3a2a22", h=0.08, toe=0.16),
-           colors=dict(base=khaki, dark=P._shade(khaki, 0.68), web=web, web_d=P._shade(web, 0.76), scarf="#e41e1a", scarf_d="#900e0e", pants=khaki))
+           colors=dict(base=khaki, dark=P._shade(khaki, 0.68), web=web, web_d=P._shade(web, 0.76), scarf="#f01818", scarf_d="#a00808", pants=khaki))
     d.update(kw)
     return d
 
@@ -1836,6 +1840,7 @@ FABRIC25 = {"general25": "wool", "engineer25": "wool", "worker_a25": "denim", "w
             "tommy_a25": "wool", "tommy_b25": "wool", "tommy_c25": "wool", "tommy_d25": "wool",
             "german_a25": "wool", "german_b25": "wool", "german_c25": "wool", "pilot25": "leather"}
 _FIG_ORIG = [None]
+FABRIC_OP25 = {"worker_a25": 0.03, "engineer25": 0.05}   # members whose accent garments run into the legs: fabric overlay held low
 HATRIM25 = {"brodie25": (0.40, 0.34), "pickel25": (0.42, 0.30), "peakcap25": (0.44, 0.60), "flatcap25": (0.42, 0.44), "flyhelm25": (0.40, 0.36)}
 
 
@@ -1898,20 +1903,30 @@ def _finish(f, cast_name, pose):
     kind = FABRIC25.get(cast_name, "wool")
     boot_h = (C.get("boots") or {}).get("h", 0.1) + 0.07
     defs, op = _finish_defs(u, kind, hw, sg, hip[1], feet_y, boot_h)
+    op = FABRIC_OP25.get(cast_name, op)
     bx0, by0, bx1, by1 = f["bbox"]
     bx0, bx1 = min(bx0, bx1) / abs(sx) - 0.1, max(bx0, bx1) / abs(sx) + 0.1
     by0, by1 = by0 / sy - 0.1, by1 / sy + 0.1
     rect = 'x="%.3f" y="%.3f" width="%.3f" height="%.3f"' % (bx0, by0, bx1 - bx0, by1 - by0)
     mask = ('<mask id="%s_fm" maskUnits="userSpaceOnUse" %s style="mask-type:alpha"><use href="#%s_b25"/></mask>' % (u, rect, u))
+    # accent garments (marked data-acc in the costume code): a black stencil excludes them from the fabric and sheen overlay (shading stays)
+    acc = re.findall(r'<(?:path|rect)[^>]*data-acc="1"[^>]*/>', svg[i:j])
+    sten = ""
+    if acc:
+        st = "".join(acc)
+        st = re.sub(r'fill="(?!none)[^"]*"', 'fill="#000"', st)
+        st = re.sub(r'stroke="[^"]*"', 'stroke="#000"', st)
+        sten = '<mask id="%s_fa" maskUnits="userSpaceOnUse" %s><rect %s fill="#fff"/>%s</mask>' % (u, rect, rect, st)
     ov = ['<g mask="url(#%s_fm)">' % u,
           '<rect %s fill="url(#%s_fh)"/>' % (rect, u),
           '<rect %s fill="url(#%s_fv)"/>' % (rect, u),
+          '<g%s>' % (' mask="url(#%s_fa)"' % u if acc else ""),
           '<rect %s fill="url(#%s_fp)" opacity="%.3f"/>' % (rect, u, op)]
     # leather sheen on the boots (every member) and over the whole pilot coat
     ov.append('<rect x="%.3f" y="%.3f" width="%.3f" height="%.3f" fill="url(#%s_fs)" opacity="0.4"/>' % (bx0, feet_y - boot_h, bx1 - bx0, boot_h + 0.04, u))
     if kind == "leather":
         ov.append('<rect x="%.3f" y="%.3f" width="%.3f" height="%.3f" fill="url(#%s_fs)" opacity="0.22"/>' % (bx0, 0.4, bx1 - bx0, hip[1] + 0.2 - 0.4, u))
-    ov.append('</g>')
+    ov.append('</g></g>')
     # rim: a thin light line just inside the key-side edge of the shoulder, then of the head and hat
     rc = "#fff2d8"
     ro = 0.85 * rim
@@ -1931,7 +1946,7 @@ def _finish(f, cast_name, pose):
                 '<path d="M%.3f,-0.30 C%.3f,%.3f %.3f,%.3f -0.06,%.3f" fill="none" stroke="%s" stroke-width="0.014" stroke-linecap="round" opacity="%.3f"/></g>'
                 % (P.FC[0], P.FC[1], roll, -sg, rc, ro * 0.8, -xb, -xt, (yt - 0.30) * 0.5, -xt * 0.7, yt, yt + 0.005, rc, ro))
     k0 = i + len("</defs>")
-    new = (svg[:i] + defs + mask + svg[i:k0] + '<g id="%s_b25">' % u + svg[k0:j] + '</g>' + "".join(ov) + "".join(pieces) + svg[j:-4] + head + svg[-4:])
+    new = (svg[:i] + defs + mask + sten + svg[i:k0] + '<g id="%s_b25">' % u + svg[k0:j] + '</g>' + "".join(ov) + "".join(pieces) + svg[j:-4] + head + svg[-4:])
     out = dict(f)
     out["svg"] = new
     return out
