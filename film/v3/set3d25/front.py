@@ -846,15 +846,15 @@ PRESETS = dict(
     cross_bucket=_cross('cross_bucket', 0.50, dict(loc=(-3.0, -14.0, 1.2), look_at=(0.5, 6.0, 1.4), lens=24), extras=[('bucket', -5.2, -5.5)], near=False, dress_n=1.2, tune=dict(cloud_k=0.95), note='shot 30: plain water bucket by the trench vs the tank over it'),
     front_aerial=dict(loc='front', tune=dict(haze=0.0, cloud_k=0.8, green_k=0.2), dress_n=1.5, cam=dict(loc=(-62.0, -22.0, 34.0), look_at=(-6.0, 6.0, 2.0), lens=24), cards=[('a', (-28, -6), 3.6), ('b', (-33, 8), 3.6), ('a', (-1, 4), 3.6), ('b', (6, 18), 3.6)], note='shot 5: high wide over the two zig-zag lines'),
     front_parapet=dict(loc='front', tune=dict(cloud_k=0.95), cam=dict(loc=(-33.0, -0.5, 2.6), look_at=(-4.0, 5.0, 1.4), lens=28), extras=[('mg', -5.2, 5.0, math.pi, True)], cards=[('a', (-30.5, -3.0), 3.0)], note='shot 6: behind the British parapet, German MG nest across the wire'),
-    front_column=dict(loc='front', tune=dict(cloud_k=1.15), dress_n=2.5, cam=dict(loc=(8.0, -58.0, 4.5), look_at=(-20.0, -74.0, 3.2), lens=24), tanks=[dict(front=(-20.0, -34.0), yaw=90.0), dict(front=(-20.0, -56.0), yaw=90.0), dict(front=(-20.0, -78.0), yaw=90.0), dict(front=(-20.0, -100.0), yaw=90.0, smoke=1.0)], note='shot 20: column crawling to the start line'),
-    front_halt=dict(loc='front', tune=dict(cloud_k=0.85, green_k=2.2), dress_n=4.0, cam=dict(loc=(8.0, -36.0, 2.8), look_at=(-22.0, -36.0, 3.0), lens=22), tanks=[dict(front=(-22.0, -33.0), yaw=90.0, nocorr=True), dict(front=(-8.0, -22.0), yaw=95.0, smoke=1.0)], clamp=True, note='shot 21: one smoking, one nose-down in a crater'),
+    front_column=dict(loc='front', tune=dict(cloud_k=1.15), dress_n=2.5, cam=dict(loc=(8.0, -58.0, 4.5), look_at=(-20.0, -74.0, 1.8), lens=24), tanks=[dict(front=(-20.0, -34.0), yaw=90.0), dict(front=(-20.0, -56.0), yaw=90.0), dict(front=(-20.0, -78.0), yaw=90.0), dict(front=(-20.0, -100.0), yaw=90.0, smoke=1.0)], note='shot 20: column crawling to the start line'),
+    front_halt=dict(loc='front', tune=dict(cloud_k=0.85, green_k=2.2), dress_n=4.0, cam=dict(loc=(8.0, -36.0, 2.8), look_at=(-22.0, -36.0, 2.0), lens=22), tanks=[dict(front=(-22.0, -33.0), yaw=90.0, nocorr=True), dict(front=(-8.0, -22.0), yaw=95.0, smoke=1.0)], clamp=True, note='shot 21: one smoking, one nose-down in a crater'),
     front_stuck=dict(loc='front', dress_n=3.0, tune=dict(cloud_k=0.85, green_k=0.3), world=dict(rocks=[(5.0, -9.6, 3, 1.6), (3.0, -49.0, 22, 4.0), (6.0, -47.0, 16, 3.0), (0.0, -46.0, 14, 3.0), (8.0, -44.0, 12, 3.0)], spill=[(4.0, -48.0, 4.0, 14)]), cam=dict(loc=(6.0, -52.0, 1.4), look_at=(-4.0, -41.0, -0.6), lens=24), tanks=[dict(front=(-4.0, -42.0), yaw=90.0, state='stuck')], extras=[('mud', -4.0, -42.0, math.pi / 2)], cards=[('a', (2.0, -45.0), 3.2), ('b', (-9.0, -47.0), 3.2)], clamp=True, note='shot 22: sunk to the sponsons in mud'),
     front_op=dict(loc='front', tune=dict(cloud_k=0.85), fill=3000.0, cam=dict(loc=(-45.0, -17.0, 6.5), look_at=(-26.0, -8.0, 2.4), lens=28), extras=[('op', -28.0, -8.0, 0.0)], tanks=[dict(front=(-6.0, -16.0), yaw=90.0, smoke=1.0)], cards=[('a', (-30.5, -9.0), 2.6)], note='shot 23: observation post'),
-    front_close_britishtrench=dict(loc='front', mark=dict(pos=(-34.0, -8.0), face_deg=262.9, dist=4.2, lens=28, zc=1.9), cast=[dict(story='tommy_a25_peek')], extras=[('bags', -34.0, -4.5), ('pop', -34.0, -3.0)], dress_n=0.3, near=False, note='shots 8-9, 10-11: waist-up Tommy inside the British trench (mark)'),
-    front_close_germantrench=dict(loc='front', mark=dict(pos=(0.0, 6.0), face_deg=90.0, dist=4.2, lens=28, zc=1.9), cast=[dict(story='german_a25_peek', mirror=True)], extras=[('bags', 0.0, 2.0), ('pop', 0.0, 1.0)], dress_n=0.3, near=False, note='shots 8-9, 55: German trench mirror close (mark)'),
+    front_close_britishtrench=dict(loc='front', mark=dict(pos=(-34.0, -8.0), face_deg=262.9, dist=4.2, lens=28, zc=1.9, look_dz=-1.4), cast=[dict(story='tommy_a25_peek')], extras=[('bags', -34.0, -4.5), ('pop', -34.0, -3.0)], dress_n=0.3, near=False, note='shots 8-9, 10-11: waist-up Tommy inside the British trench (mark)'),
+    front_close_germantrench=dict(loc='front', mark=dict(pos=(0.0, 6.0), face_deg=90.0, dist=4.2, lens=28, zc=1.9, look_dz=-1.4), cast=[dict(story='german_a25_peek', mirror=True)], extras=[('bags', 0.0, 2.0), ('pop', 0.0, 1.0)], dress_n=0.3, near=False, note='shots 8-9, 55: German trench mirror close (mark)'),
     op_close_general=dict(loc='front', mark=dict(pos=(-30.2, -8.0), face_deg=0.0, dist=4.2, lens=28, zc=1.9), cast=[dict(story='general25_point_stick')], extras=[('op', -28.0, -8.0, 0.0)], dress_n=0.3, near=False, note='shots 43-44: general in the observation post (mark)'),
     cross_close_idler=_cross('cross_close_idler', 0.40, _cam_idler, clamp=True, dress_n=1.2, note='shots 47-49: track links round the front idler as the nose lifts against the sky'),
-    cross_close_lip=_cross('cross_close_lip', 0.40, dict(loc=(6.0, -1.4, 1.0), look_at=(5.0, 4.5, 3.4), lens=34), clamp=True, near=False, dress_n=0.4, extras=[('clods', 5.0, 4.5)], note='shot 50: the front track gripping the far lip, earth crumbling'),
+    cross_close_lip=_cross('cross_close_lip', 0.40, dict(loc=(6.0, -2.4, 1.2), look_at=(5.0, 4.5, 2.4), lens=34), clamp=True, dress_n=1.6, extras=[('clods', 5.0, 4.5)], note='shot 50: the front track gripping the far lip, earth crumbling'),
 )
 
 def default_world():
@@ -1149,7 +1149,7 @@ def _hsv2rgb(h, s, v):
     c = v * s; x = c * (1 - np.abs(h % 2 - 1)); m = v - c; hi = np.floor(h).astype(int) % 6; z = np.zeros_like(c)
     r = np.choose(hi, [c, x, z, z, x, c]); g = np.choose(hi, [x, c, c, x, z, z]); b = np.choose(hi, [z, z, x, c, c, x]); return np.stack([r + m, g + m, b + m], -1)
 
-def grade(im, p1_t=0.04, p99_t=0.928, mean_t=0.51, sat_t=0.475, knee=0.85, iters=3, wb=(1.5, 1.5), wb_k=0.9, p98_t=0.87, warm_t=0.43, chroma_t=30.0):
+def grade(im, p1_t=0.04, p99_t=0.928, mean_t=0.51, sat_t=0.495, knee=0.85, iters=3, wb=(1.5, 1.5), wb_k=0.9, p98_t=0.87, warm_t=0.43, chroma_t=30.0):
     """final tone + colour step (producer directives): (1) levels p1 -> 0.04, p99 -> 0.928 with a soft knee above 0.85, (2) luma gamma to mean 0.51 (0.75-1.35), (3) partial gray-world white balance:
     shift the mean Lab a*, b* toward `wb` at `wb_k` strength (lightness untouched), (4) saturation in HSV (value and hue untouched, so no channel clips): S -> S (1 + ap S) lifts the saturated accents (HSV S p98 >= 0.87),
     then a uniform scale reaches the mean S `sat_t`; near-white low-sat pixels (puppet faces, luma > 0.9) are masked from (3) and (4).  Repeated so the steps settle."""
@@ -1170,14 +1170,15 @@ def grade(im, p1_t=0.04, p99_t=0.928, mean_t=0.51, sat_t=0.475, knee=0.85, iters
                 if warm_frac(h, s, v, hd - mid * w) < warm_t: lo_ = mid
                 else: hi_ = mid
             hd = hd - hi_ * w; h = (hd % 360.0) / 60.0
+        vw = 0.35 + 1.3 * v                                                                # saturation budget goes to the luminous pixels (Lab chroma of dark saturated pixels is low)
         best = None
         for ap in (0.0, 0.3, 0.6, 1.0, 1.5, 2.3, 3.2):
             s1 = np.clip(s * (1 + ap * s), 0, 1); lo_, hi_ = 0.3, 4.0
             for _ in range(11):
-                mid = (lo_ + hi_) / 2; s2 = np.clip(s1 * (1 + (mid - 1) * (1 - pr)), 0, 1)
+                mid = (lo_ + hi_) / 2; s2 = np.clip(s1 * (1 + (mid - 1) * (1 - pr) * vw), 0, 1)
                 if s2.mean() * cal < sat_t: lo_ = mid
                 else: hi_ = mid
-            k = (lo_ + hi_) / 2; s2 = np.clip(s1 * (1 + (k - 1) * (1 - pr)), 0, 1); best = (h, s2, v)
+            k = (lo_ + hi_) / 2; s2 = np.clip(s1 * (1 + (k - 1) * (1 - pr) * vw), 0, 1); best = (h, s2, v)
             if np.percentile(s2, 98) >= p98_t: break
         return _hsv2rgb(*best)
     for it in range(iters):
@@ -1197,8 +1198,8 @@ def grade(im, p1_t=0.04, p99_t=0.928, mean_t=0.51, sat_t=0.475, knee=0.85, iters
     L = lum(a); lo, hi = np.percentile(L, 1), np.percentile(L, 99); a = np.clip((a - lo) / max(hi - lo, 1e-3) * (p99_t - p1_t) + p1_t, 0, 1)
     for _ in range(6):                                                                       # guard: mean HSV S (180x320, as the metric) must end <= 0.495
         sm_ = np.asarray(Image.fromarray((a * 255).astype(np.uint8)).resize((180, 320))).astype(np.float32) / 255; mx_, mn_ = sm_.max(2), sm_.min(2); ms = float(np.where(mx_ > 0, (mx_ - mn_) / np.maximum(mx_, 1e-6), 0).mean())
-        if ms <= 0.495: break
-        Lq = lum(a)[..., None]; a = np.clip(Lq + (a - Lq) * (0.485 / ms), 0, 1)
+        if ms <= 0.499: break
+        Lq = lum(a)[..., None]; a = np.clip(Lq + (a - Lq) * (0.492 / ms), 0, 1)
     return Image.fromarray((np.clip(a, 0, 1) * 255 + 0.5).astype(np.uint8))
 
 def post(src, dst, W=720, H=1280, sharp=0.55, radius=1.1):

@@ -56,7 +56,7 @@ def more_materials():
             seam = b.math('SUBTRACT', 1.0, b.rng(w.outputs['Fac'], 0.0, 0.07, 0.0, 1.0)); gr = b.noise(14.0, 3.0, 0.6, c, (1.0, 0.05, 1.0)); tone = b.mix(b.rng(gr, 0.3, 0.7), (0.82, 0.82, 0.82), (1.12, 1.12, 1.12))
             col = b.mix(seam, b.mul(tone, (*hexl(hx), 1)), (0.04, 0.04, 0.04)); b.princ(col, 0.7, 0.0, b.bump(b.math('ADD', gr, b.math('MULTIPLY', seam, 1.5)), 0.8, 0.04))
         return fmat(name, f)
-    for k, hx in dict(yellow='#f0a810', teal='#10a0a8', red='#d02818', blue='#1850d0').items(): M['plank_' + k] = paint_planks(hx, 'plank_' + k)
+    for k, hx in dict(yellow='#d88400', teal='#008088', red='#c01808', blue='#1040b8').items(): M['plank_' + k] = paint_planks(hx, 'plank_' + k)
     M['coal'] = flat('coal', '#161412', 0.28, 0.1)
     M['galv'] = flat('galv', '#a8b2b6', 0.4, 0.85); M['water_t'] = flat('water_t', '#8fb4c8', 0.35, 0.1)
     def steelp(b):
@@ -89,7 +89,7 @@ def more_materials():
     M['dialf'] = fmat('dialf', dial); M['brass'] = flat('brass', '#b8903a', 0.3, 0.9); M['needle'] = flat('needle', '#a82a20', 0.4, 0.2)
     M['road'] = pbr('road', 'dirt', 3.0, '#d0b890', 0.8, 0.95, None, 1.0, 0.06)
     M['slate'] = flat('slate', '#5a6068', 0.6, 0.1); M['hull_clean'] = M['steel_l']
-    M['sky_tin'] = M['tin']; M['frame'] = flat('frame', '#5f7388', 0.6, 0.3); M['frame2'] = flat('frame2', '#4a5058', 0.45, 0.7)
+    M['sky_tin'] = M['tin']; M['frame'] = flat('frame', '#9a3a2a', 0.6, 0.3); M['frame2'] = flat('frame2', '#4a5058', 0.45, 0.7)
     return M
 
 # ============================================================================= scatter helpers

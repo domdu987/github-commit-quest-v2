@@ -1,0 +1,53 @@
+{
+ "preset": "dock_crate",
+ "wall_s": 25.2,
+ "cpu_s": 49.1,
+ "build_s": 0.9,
+ "settings": {
+  "resolution": [
+   360,
+   640
+  ],
+  "samples": 32,
+  "adaptive_threshold": 0.012000000104308128,
+  "adaptive_min": 16,
+  "denoiser": "OPENIMAGEDENOISE",
+  "prefilter": "ACCURATE",
+  "passes": "RGB_ALBEDO_NORMAL",
+  "bounces": {
+   "total": 6,
+   "diffuse": 5,
+   "glossy": 3,
+   "transmission": 2
+  },
+  "view": "Standard",
+  "exposure": -0.25,
+  "threads": 4,
+  "sun": {
+   "energy": 5.0,
+   "elevation": 28.0,
+   "color": [
+    1.0,
+    0.7799999713897705,
+    0.5
+   ]
+  },
+  "haze": 0.0006,
+  "post": "unsharp r1.1 55% + clarity r5 40%"
+ },
+ "cards": [
+  [
+   "tommy_a",
+   1047,
+   1202,
+   182
+  ],
+  [
+   "tommy_b",
+   1022,
+   1169,
+   -373
+  ]
+ ],
+ "anchors": {}
+}

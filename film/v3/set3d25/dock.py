@@ -77,7 +77,7 @@ def build(preset, samples=None, quality=None):
     F.finish(cam, P, samples, quality, sun=P.get('sun')); S['build_s'] = time.time() - t0; return F.anchors()
 
 PRESETS = dict(
-    dock_crate=dict(cam=dict(loc=(34.0, 34.0, 13.0), look_at=(-8.0, -14.0, 2.5), lens=22), crate_lift=0.0, tune=dict(cloud_k=1.3), cards=[('a', (28, 22), 3.2), ('b', (36, 14), 3.2)], note='shot 19: crate on the cargo ship deck under the dock crane, gulls, the French coast'),
+    dock_crate=dict(cam=dict(loc=(34.0, 34.0, 13.0), look_at=(-8.0, -14.0, 0.5), lens=22), crate_lift=0.0, tune=dict(cloud_k=1.3), cards=[('a', (28, 22), 3.2), ('b', (36, 14), 3.2)], note='shot 19: crate on the cargo ship deck under the dock crane, gulls, the French coast'),
     dock_watertank=dict(cam=dict(loc=(-1.5, 44.0, 3.8), look_at=(-1.5, 20.0, 3.4), lens=22), watertank=dict(tank=(6.0, 20.0), yaw=0.0, wt=(-9.0, 21.0)), sun=None, note='shot 62: a real water tank on legs side by side with the Mark I, sea behind'),
-    dock_deck=dict(mode='deck', cam=dict(loc=(-14.0, -5.0, 4.6), look_at=(30.0, -12.0, 4.0), lens=28), crate_x=14.0, gulls=14, tune=dict(cloud_k=1.0), note='shot 38: the crate on the ship deck at sea, gulls, white cliffs and poplars ahead'),
+    dock_deck=dict(mode='deck', cam=dict(loc=(-14.0, -5.0, 4.4), look_at=(30.0, -12.0, 2.6), lens=28), crate_x=14.0, gulls=14, tune=dict(cloud_k=1.0), note='shot 38: the crate on the ship deck at sea, gulls, white cliffs and poplars ahead'),
 )
