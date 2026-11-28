@@ -36,6 +36,7 @@ def persp_coeffs(dst, src):
 
 
 GAMMA, VIB = 0.95, 1.25
+EXP_MAX = 2.8                                          # depth.py raises it (its sky fill is halved)
 WB_T = (2.0, 4.5)                                     # keep the warm key: mean a*, b* of the finished frame toward (+2, +4.5)
 W709 = np.array([0.2126, 0.7152, 0.0722], np.float32)
 to_lin = lambda x: np.where(x <= 0.04045, x / 12.92, ((x + 0.055) / 1.055) ** 2.4)
@@ -81,7 +82,7 @@ def vibrance(a, k=1.4):
     return hsv2rgb(h, s2, v)
 
 
-def frame(g, raw_dir, out_dir, corners, sprite_dir):
+def frame(g, raw_dir, out_dir, corners, sprite_dir, shade_fn=None):
     raw = Image.open(os.path.join(raw_dir, "f_%04d.png" % g)).convert("RGB")
     if raw.size != (720, 1280):
         raw = raw.resize((720, 1280), Image.LANCZOS)                                           # 75 % render -> 720x1280
@@ -109,6 +110,8 @@ def frame(g, raw_dir, out_dir, corners, sprite_dir):
     occ = Image.fromarray(occ).filter(ImageFilter.MinFilter(3)).filter(ImageFilter.MaxFilter(5)).filter(ImageFilter.GaussianBlur(0.8))   # opening: drop thin edge lines, keep grass blades
     occ = np.asarray(occ).astype(np.float32) / 255
     m = np.clip(al * (1 - occ), 0, 1)
+    if shade_fn is not None:                                                                    # depth.py: sprite colour x shading layer (linear light)
+        sc = np.clip(to_srgb(to_lin(sc) * shade_fn(sc, al)), 0, 1)
     # gentle grade of the background (puppet excluded), solved on the finished composite
     lum = lambda x: x @ W709
     comp = lambda bg: bg * (1 - m[..., None]) + sc * m[..., None]
@@ -121,7 +124,7 @@ def frame(g, raw_dir, out_dir, corners, sprite_dir):
         return np.power(np.clip(to_srgb(y), 1e-5, 1), gam)
     gains = np.ones(3, np.float32); e = 1.0
     for it in range(7):
-        lo, hi = 0.8, 2.8                                                                     # exposure to luma 0.50 of the composite
+        lo, hi = 0.8, EXP_MAX                                                                     # exposure to luma 0.50 of the composite
         for _ in range(16):
             e = (lo + hi) / 2
             if lum(vibrance(tone(e, gains)[::4, ::4], VIB) * (1 - m[::4, ::4, None]) + sc[::4, ::4] * m[::4, ::4, None]).mean() > 0.505: hi = e
