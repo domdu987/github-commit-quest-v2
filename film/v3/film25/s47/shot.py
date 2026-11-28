@@ -15,13 +15,13 @@ C, F = T.C, T.F
 G0, G1 = 1424, 1493
 FIRST, LAST = G0 - 6, G1 - 1 + 6
 PRESET = "t2_hero"
-LENS = 24.0
+LENS = 20.0
 TKH = [None]
 
 
 def cam_of(g):
     pk = C.out_cubic((g - G0) / 7.0) if g >= G0 else 0.0
-    loc, look, lens = L.cam(g, c0=(21.5, 5.5, 1.25), c1=(18.5, 3.5, 1.45), lens=LENS, g0=G0, g1=G1, Tk=TKH[0])
+    loc, look, lens = L.cam(g, c0=(16.5, 5.5, 1.2), c1=(14.0, 3.5, 1.35), lens=LENS, g0=G0, g1=G1, Tk=TKH[0])
     m = 1.15 - 0.15 * pk                                  # PUNCH: start 15 % further out, punch in over 7 frames
     loc = (look[0] + (loc[0] - look[0]) * m, look[1] + (loc[1] - look[1]) * m, loc[2])
     return loc, look, lens
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     Tk = T.Take(PRESET, cam_of, hooks)
     TKH[0] = Tk
     L.regime(Tk)
-    L.add_lip()
+    L.add_lip(x=10.5)
     if cmd == "probe":
         Tk.pose(gs)
         for g in gs:
