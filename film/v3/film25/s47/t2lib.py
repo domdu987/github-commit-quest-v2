@@ -223,7 +223,7 @@ def post_take(frames, raw_dir, out_dir, cache=None):
 
 
 # ----------------------------------------------------------------------------- loops
-SCALE, SAMPLES, THRESH = 0.75, 24, 0.02
+SCALE, SAMPLES, THRESH = 0.75, 20, 0.02
 
 
 def run(Tk, mode, gs, root, report=None, scale=None, samples=None):
