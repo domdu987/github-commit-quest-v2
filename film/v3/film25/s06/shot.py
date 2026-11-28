@@ -40,14 +40,14 @@ def build(rig):
     rig.wc = rig.actor("wc", "worker_c25")
     rig.wb = rig.actor("wb", "worker_b25")
     rig.mk = Vector((HATCH_X, 17.6, 0.0))
-    rig.backdrop((HATCH_X - 6.0, 26.0, 0.0), -90.0, w=40.0, h=16.0, col=(0.02, 0.26, 0.32), name="wall_plate")   # calm grey-olive plate behind the hull: hides the girders above it
+    rig.backdrop((HATCH_X - 6.0, 26.0, 0.0), -90.0, w=40.0, h=16.0, col=(0.20, 0.23, 0.17), name="wall_plate")   # calm grey-olive plate behind the hull: hides the girders above it
 
 
 def cam_of(g):
     u = C.calm((g - G_TAKE[0]) / float(G_TAKE[1] - G_TAKE[0]))
-    d = 4.0 * (1.0 + 0.10 * u)                                       # PULL 10 %
-    loc = Vector((HATCH_X + 0.0 + 0.1 * u, 17.0 - d, 2.1))
-    look = Vector((HATCH_X + 0.0 + 0.1 * u, HULL_Y, 2.5))
+    d = 5.3 * (1.0 + 0.06 * u)                                       # PULL 10 %
+    loc = Vector((HATCH_X - 0.2, 17.0 - d, 2.3))
+    look = Vector((HATCH_X - 0.2, HULL_Y, 2.6))
     return loc, look, 30.0
 
 
@@ -56,7 +56,7 @@ def state(g):
     pw = C.smooth((g - GATE_POUR) / 8.0)
     pc = story("worker_c25_pour_can"); pc["pour25"] = round(0.15 + 0.7 * pw, 3); pc["t"] = round((g * 0.09) % 1.0, 4)
     pc["light25"] = -1; pc["rim25"] = 0.6
-    pc["gaze"] = [0.9, 0.55]; pc["arm_r"]["hand"] = [0.66, round(0.42 - 0.34 * pw, 3)]; pc["yaw"] = round(0.5 + 0.12 * pw, 3)
+    pc["gaze"] = [0.9, 0.55]; pc["arm_r"]["hand"] = [0.66, round(0.42 - 0.62 * pw, 3)]; pc["yaw"] = round(0.5 + 0.12 * pw, 3)
     pc["blink"] = blink(g, [131, 150]); pc["head_roll"] = round(-3 + 2.5 * math.sin((g - 125) * 0.31), 2); pc["lean"] = round(1.5 * math.sin((g - 125) * 0.2), 2)
     sq = None
     pb = story("worker_b25_nod_serious")
@@ -66,9 +66,9 @@ def state(g):
     pb["yaw"] = 0.4
     pb["head_roll"] = round(5 + 3 * math.sin((g - 125) * 0.57), 2)
     pbm = dict(pb)
-    A = {"wc": dict(pos=(HATCH_X - 0.9, 16.5, 0.0), pose=pc, flip=False),
-         "wb": dict(pos=(HATCH_X + 1.0, 16.1, 0.0), pose=pbm, flip=True)}
-    fd = (loc - Vector((HATCH_X - 0.9, 16.5, 1.8))).length
+    A = {"wc": dict(pos=(HATCH_X - 1.1, 16.5, 0.0), pose=pc, flip=False),
+         "wb": dict(pos=(HATCH_X + 0.6, 16.3, 0.0), pose=pbm, flip=True)}
+    fd = (loc - Vector((HATCH_X - 1.1, 16.5, 1.8))).length
     return dict(cam=(loc, look, lens), dof=(2.4, fd), actors=A)
 
 

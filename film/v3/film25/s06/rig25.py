@@ -22,7 +22,7 @@ import post25 as P                                       # noqa: E402
 from mathutils import Vector                             # noqa: E402
 F, bpy, cast25 = C.F, C.bpy, C.cast25
 
-SCALE, SAMPLES, THRESH, SH_SAMPLES, SH_SCALE = 0.75, 16, 0.03, 6, 0.5
+SCALE, SAMPLES, THRESH, SH_SAMPLES, SH_SCALE = 0.6, 12, 0.05, 5, 0.35
 P.EXP_MAX = 4.5
 SUN_E, SKY_K = 8.0, 0.5
 NORMAL_R, NORMAL_STRENGTH = 0.9, 1.6
@@ -261,8 +261,10 @@ def composite(g, raw_path, shade_path, geo, out_path, bg_only=False):
     raw = Image.open(raw_path).convert("RGB")
     if raw.size != (720, 1280):
         raw = raw.resize((720, 1280), Image.LANCZOS)
-    sh_img = Image.open(shade_path).convert("RGB").resize((720, 1280), Image.LANCZOS)
-    SH = P.to_lin(np.asarray(sh_img).astype(np.float32) / 255)
+    SH = None
+    if shade_path:
+        sh_img = Image.open(shade_path).convert("RGB").resize((720, 1280), Image.LANCZOS)
+        SH = P.to_lin(np.asarray(sh_img).astype(np.float32) / 255)
     sharp = raw.filter(ImageFilter.UnsharpMask(radius=1.1, percent=55, threshold=2)).filter(ImageFilter.UnsharpMask(radius=5, percent=40, threshold=1))
     rawa = np.asarray(raw).astype(np.float32) / 255
     a = np.asarray(sharp).astype(np.float32) / 255
@@ -301,9 +303,9 @@ def composite(g, raw_path, shade_path, geo, out_path, bg_only=False):
         return np.power(np.clip(P.to_srgb(y), 1e-5, 1), gam)
     gains = np.ones(3, np.float32); e = 1.0
     ms = m[::4, ::4, None]; scs4 = sc[::4, ::4]
-    for it in range(7):
+    for it in range(4):
         lo, hi = 0.8, P.EXP_MAX
-        for _ in range(16):
+        for _ in range(11):
             e = (lo + hi) / 2
             if ((P.vibrance(tone(e, gains)[::4, ::4], P.VIB) * (1 - ms) + scs4 * ms) @ P.W709).mean() > 0.505: hi = e
             else: lo = e
@@ -354,7 +356,7 @@ def run(shot, cmd, gs, out_root=None, scale=None, samples=None, sh_samples=None)
         st = C.render.render_frames([g], raw_dir, scale=scale, threads=2, scene=rig.scene, camera=rig.cam, on_frame=rig.on_frame, verbose=False, check=False)[0]
         t1 = time.time()
         geo = rig.card_geo(g)
-        sh = rig.shading_pass(g, sh_dir, min(scale, SH_SCALE) if not draft else scale, sh_samples)
+        sh = rig.shading_pass(g, sh_dir, min(scale, SH_SCALE) if not draft else scale, sh_samples) if geo else dict(path=None)
         t2 = time.time()
         pr = composite(g, st["path"], sh["path"], geo, os.path.join(d_out, "g_%04d.png" % g))
         wall = time.time() - t0
