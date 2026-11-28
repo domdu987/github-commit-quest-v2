@@ -34,3 +34,5 @@ fac_stencil.png                        luma 0.510 p1 0.027 p99 0.914 lc 0.0564 s
 render 127.3 s wall, 506.5 s cpu
 fac_side.png                           luma 0.510 p1 0.031 p99 0.914 lc 0.0629 sat 0.478 chroma 29.1  PASS
 render 128.0 s wall, 507.6 s cpu
+fac_bench.png                          luma 0.587 p1 0.013 p99 0.894 lc 0.0677 sat 0.538 chroma 38.9  MISS
+render 123.7 s wall, 484.8 s cpu
