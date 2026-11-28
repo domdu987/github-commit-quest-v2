@@ -55,4 +55,4 @@ def late(F, g, t, u):
         F.fill("fill_b", tuple(hc + F.right * 1.0 - F.fwd * 0.2 + Z(0.5)), 14.0, (0.72, 0.82, 1.0), 0.5)
         b = DM0(F)
         F.lamp(F.P(b, 3.8, 2.6), F.P(b, -2.0, 0.4, 1.15), 2600.0, heads=[hc], head_z=2.6)
-        # review: no cast shadow on the driver here (F.shadows): Kong's card threw a hard vertical edge down the middle of the face
+        F.shadows(hc, [F.drv])

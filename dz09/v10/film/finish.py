@@ -50,7 +50,7 @@ def zoom_blur(a, amount, n=18):
     return acc / n
 
 
-JOIN = [0.04, 0.09, 0.15]                                   # last three frames out, mirrored for the first three in
+JOIN = [0.0, 0.0, 0.0]                                     # user 11-28: NO zoom push at cuts ("not like a film"); straight cuts only. Was [0.04, 0.09, 0.15].
 
 
 def join_amount(g):

@@ -30,7 +30,7 @@ import epcommon as E
 FPS = E.FPS
 AMBER_ASS, RED_ASS = "&H03B7FF&", "&H4F45F5&"               # the hook's finish.py values
 COL = {"amber": AMBER_ASS, "red": RED_ASS}
-JOIN = [0.04, 0.09, 0.15]                                   # the hook's blurred push: last three frames out, first three in
+JOIN = [0.0, 0.0, 0.0]                                     # user 11-28: NO zoom push at cuts ("not like a film"); straight cuts only. Was [0.04, 0.09, 0.15].
 ASS_HEAD = """[Script Info]
 ScriptType: v4.00+
 PlayResX: 720

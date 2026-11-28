@@ -7,10 +7,6 @@ SPP = {"final": 4}
 TC = Vector((0.62, -0.78, 0)).normalized()
 
 
-def setup(F):
-    F.hide_roots(["bike_a_box"])                           # review: the green delivery box lay over the top of the phone and covered the daughter's avatar for the first 2 s
-
-
 def rig(F, g, t, u):
     c0 = F.K + TC * 0.5 + Z(2.55)
     d = (TC * 0.55 + Z(-1.0)).normalized()

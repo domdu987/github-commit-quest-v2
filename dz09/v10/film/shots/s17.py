@@ -1,9 +1,6 @@
 """S17  crew: 'พี่ก้อง! เปิดได้แล้วครับ!'  -- E1 OTS push over Kong's shoulder: the crew member shouts and waves from the
 opened door, lip sync; Kong pockets the phone in the dark foreground."""
 from shots.base import *
-import draw8
-# review: "shouting" (squint eyes + wide smile-shaped mouth) read as a cheerful laugh; an urgent call keeps the eyes open and the brows up
-draw8.EXPR["calling"] = dict(eyes="oval", brows=(-10, 0.05), mouth=("open", 1.0))
 ID = "S17"
 PCT = {"final": 100, "final8": 100}          # a character is taller than a quarter of the frame: full render scale so the ink lines are 1:1
 SPP = {"final": 5}
@@ -30,7 +27,7 @@ def frame(F, g, t, u):
     m = C.mouth(g)
     wv = math.sin(tt * 2 * math.pi * 2.2)
     to_k = (F.PM - crew_loc(F)); to_k.z = 0
-    F.crew.set(loc=crew_loc(F), face=facing(to_k), view="front", expr="calling", mouth=("o", max(m, 0.5)) if m > 0 else ("o", 0.25), blink=0,
+    F.crew.set(loc=crew_loc(F), face=facing(to_k), view="front", expr="shouting", mouth=max(m, 0.5) if m > 0 else 0.25, blink=0,
                arm_r=dict(hand=(0.66 + 0.10 * wv, -0.72), elbow=None, hand_shape="open"), arm_l=dict(hand=(0.75, 0.30), elbow=None, hand_shape="point"),
                lean=0, legs="wide", head=(0, -3, 0, 0))
     F.crew.breath = 0.008 * math.sin(t * 6)

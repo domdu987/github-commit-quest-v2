@@ -152,3 +152,12 @@ Restore test: the backup archive unpacked to an empty folder rendered S902 k=8 a
 - The watch drawing in `s903.py` is a sketch to prove the C1 path, not the plan's watch card.
 - The dummy "recording" is hand-written timing; `cut.py` has not seen a real EP.1 recording. A simulated one (every caption 0.8-1.3x) rebuilt sc02 without error.
 - The stale purge trusts the recorded look-ups: a shot that reads timing some other way (a literal second) is not caught.
+
+## USER DECISION 2026-11-28: cut like a film (do not revert)
+The user: "every time the camera angle changes there is a quick zoom into the character; it is not like a film".
+- NO zoom push / radial blur across cuts. finish.py and ep1/pipe/finish_ep.py now have JOIN = [0, 0, 0]: every cut is a straight cut.
+- NO fast camera start. Do not open a shot with ease_out(...) on a camera push, dolly or lens change (it starts fast and settles,
+  which reads as a snap zoom right after the cut). Use smooth(...) (ease in and out) or a slow linear move; a push changes the
+  subject size by at most about 10 % over the whole shot, and by under 2 % in the first 6 frames.
+- No snap zooms or punch-ins except a single, motivated story beat the plan names (none planned in EP.1). Static and slow moves
+  are the default, like live-action cinema. Shake only where the plan says handheld, and it settles without a push.

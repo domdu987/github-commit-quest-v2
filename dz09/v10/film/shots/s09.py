@@ -22,7 +22,7 @@ def frame(F, g, t, u):
     F.cutter3d(True, jaw=0.0, bars=sum(1 for b in BARS if t >= b), arms=False)
     F.sparks_at(Vector(F.A["cutter_jaw"]), g, 0.0)
     to_cam = Vector(F.cam.location) - F.K; to_cam.z = 0; to_cam.normalize()
-    F.kong.set(loc=F.K - to_cam * 0.9, face=facing(to_cam), view="front", expr="serious", blink=C.blink("kong", t), arm_r="down", arm_l="down", legs="stand",
+    F.kong.set(loc=F.K - to_cam * 0.9, face=facing(to_cam), view="front", expr="determined", blink=C.blink("kong", t), arm_r="down", arm_l="down", legs="stand",
                head=(0, 8, 0, 0))
     driver_seated(F, t)
     return {"exposure": 1.2}

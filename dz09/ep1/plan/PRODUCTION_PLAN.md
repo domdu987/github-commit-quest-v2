@@ -64,7 +64,7 @@ Details and the full script are in `narration_ep1.md`. In short:
   - The junior no longer chases James over the roofs for 45 s without catching him. He loses him behind the bus and comes back to James's shout.
   - The crowbar cannot be both in Kong's hand in SCENE 02 and chosen from the truck in SCENE 04 (the screenplay has both). He shoves with the cutter he is holding.
 - **Five sentences were cut, nineteen reworded or tightened, one added** ('ก้องคิดว่า เขาเสียน้องไปแล้ว', which puts Kong one step behind the audience just before the eyes open). The episode lost 16 s.
-- **It ends on the cliffhanger:** 'ก้องยกชะแลงขึ้น / แต่เขาจะฟาด ใคร', black on 'ใคร', end card.
+- **It ends on the cliffhanger:** 'ก้องยกชะแลงขึ้น / แต่เขาจะหวด ใคร', black on 'ใคร', end card.
 
 ## 3. What the reconciliation with the audit did
 
@@ -195,7 +195,7 @@ Recording is negligible beside the render: the real cost of every added sentence
 
 | # | Decision | Recommendation |
 |---|---|---|
-| 1 | **Approve the narration text for the paid recording** (`narration_ep1.md`, "Text for the recording"). It includes four causes the screenplay does not have (a car alarm draws the infected driver off; James is the roof-runner and the turned junior follows him to the truck; a road flare gets them out of the surrounded truck; the guard's line 'เปิดไม่ได้! ใครโดนกัดมาบ้าง ก็ไม่รู้!') and the last line 'แต่เขาจะฟาด ใคร', whose force is that the audience has seen the glass cut Tos and Kong has not | Approve. Each invented cause supplies a "therefore" the screenplay leaves open and uses only the world rules |
+| 1 | **Approve the narration text for the paid recording** (`narration_ep1.md`, "Text for the recording"). It includes four causes the screenplay does not have (a car alarm draws the infected driver off; James is the roof-runner and the turned junior follows him to the truck; a road flare gets them out of the surrounded truck; the guard's line 'เปิดไม่ได้! ใครโดนกัดมาบ้าง ก็ไม่รู้!') and the last line 'แต่เขาจะหวด ใคร', whose force is that the audience has seen the glass cut Tos and Kong has not | Approve. Each invented cause supplies a "therefore" the screenplay leaves open and uses only the world rules |
 | 2 | **Length: 5:19 against the screenplay's 06:40** | Keep 5:19. Nothing in the screenplay's story is missing; what went is travel and repetition. Reaching 06:40 would add about 28 CPU h and about 40 more shots |
 | 3 | **Render budget on a temporary machine:** about 25 wall h of final (33 with the allowance) plus about 9 of drafts, over four unattended nights, with character shots at 100 % | Accept as planned. The one lever worth knowing: the 1,383 medium-shot frames at 75 % instead of 100 % would save 12.1 CPU h (3.3 wall h) at some loss of line crispness; not recommended, because crisp lines were your call |
 | 4 | **Where backups go.** Nothing may be pushed anywhere without your word | A source-and-audio archive (under 150 MB) delivered to you as a file each working day, and the scene clips as they are finished. If you also want it in git, say which repository and branch |

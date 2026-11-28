@@ -170,3 +170,12 @@ The cut is unchanged (`v4/animatic/timing.py`, sentence starts are identical in 
 - A = `DZ09_EP1_hook_916_v1.mp4`: finish.py as it stands (director changes above: no status icons, title mark only; coloured key words; `mix_ohm_v3.wav` with the Suno beds at -0.40 dB -> -14.7 LUFS / -1.1 dBTP encoded, `mix_ohm_v3_norm.m4a`).
 - B = `DZ09_EP1_hook_916_v1_ALT_v13strip_mixv2.mp4` (+ `final_sheet_ALT_v13strip.png`, `final_stills_ALT_v13strip.png`): the draft-v3 conform (flat v13 strip, plain captions `tmp/fin/captions_ohm_plain.ass`, `mix_ohm_v2_norm.m4a`: -14.6 LUFS / -1.0 dBTP).
 - Both: 1280 frames, 24 fps, H.264 High CRF 15 slow tune animation yuv420p, AAC 320k, faststart, narration at 0.300 s.
+
+## USER DECISION 2026-11-28: cut like a film (do not revert)
+The user: "every time the camera angle changes there is a quick zoom into the character; it is not like a film".
+- NO zoom push / radial blur across cuts. finish.py and ep1/pipe/finish_ep.py now have JOIN = [0, 0, 0]: every cut is a straight cut.
+- NO fast camera start. Do not open a shot with ease_out(...) on a camera push, dolly or lens change (it starts fast and settles,
+  which reads as a snap zoom right after the cut). Use smooth(...) (ease in and out) or a slow linear move; a push changes the
+  subject size by at most about 10 % over the whole shot, and by under 2 % in the first 6 frames.
+- No snap zooms or punch-ins except a single, motivated story beat the plan names (none planned in EP.1). Static and slow moves
+  are the default, like live-action cinema. Shake only where the plan says handheld, and it settles without a push.

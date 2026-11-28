@@ -5,7 +5,6 @@ ID = "S21"
 PCT = {"final": 100, "final8": 100}          # a character is taller than a quarter of the frame: full render scale so the ink lines are 1:1
 PPD = {"kong": 360, "crew": 360, "driver_out": 360}             # sprite pixels per D for this shot (default 240)
 T_L = LUNGE_T + 2.0 / 24
-PAN_R = 0.36                                             # review: extra pan to the right from the bite on (the junior's face was cut by the frame edge)
 
 
 def cam(F, g, t, u):
@@ -18,7 +17,7 @@ def cam(F, g, t, u):
     j = ease_out(ramp(t, T_L, T_L + 0.20), 2.0)
     loc = F.P(b, -3.0 + 0.25 * u, 0.95, 1.05)               # along the car's flank from behind the door: driver screen-left, junior screen-right
     back = smooth(ramp(t, BITE2_T, BITE2_T + 0.8)) * 0.45  # the pair staggers out from the door: the camera pans with them
-    look = F.P(b, -0.38, 1.02 + 0.30 * j + 1.0 * back + PAN_R * smooth(ramp(t, BITE2_T - 0.10, BITE2_T + 0.35)), 2.10)   # review: pan right with the bite so the junior's face is inside the frame
+    look = F.P(b, -0.38, 1.02 + 0.30 * j + 1.0 * back, 2.10)
     return F.camera(loc, look, F.pick(28, 24), roll=-10 - 2 * u, focus=look, k=6.0, kmax=20, shake=sh)
 
 
