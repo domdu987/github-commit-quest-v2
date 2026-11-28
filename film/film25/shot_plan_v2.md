@@ -104,3 +104,7 @@ Framing key: W = wide, M = medium (knees-up), C = close (waist-up), I = insert (
 | T1 | FACTORY + DOCK | 1-6, 13-17, 28-38, 58, 60-63 | 744 |
 | T2 | FRONT | 7-12, 39-42, 45-57, 59 | 716 |
 | T3 | TRIAL + FRONT OP + SKY + STREET | 18-27, 43-44, 64-70 | 633 |
+
+## PRE-RELEASE (director; client: "ทำให้ดี", quality over speed)
+Before delivery, the director builds a side-by-side 6 fps comparison strip of film 25 against R11 and R10 covering four beats: the build-up (29-36), the mock (19-24), the crossing (46-52) and the ending (68-70).
+Anything that looks stiffer, duller or more cluttered than the references gets fixed and re-rendered first. The strip ships with the release as film/release25/compare_R11_R10.jpg.
