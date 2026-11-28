@@ -1,0 +1,6 @@
+finals/*_raw.png
+__pycache__/
+*.out
+sweep/
+finals/*_mask.png
+sweep2/*.png

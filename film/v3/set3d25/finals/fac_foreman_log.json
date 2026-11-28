@@ -1,0 +1,72 @@
+{
+ "preset": "fac_foreman",
+ "wall_s": 120.1,
+ "cpu_s": 477.5,
+ "build_s": 0.6,
+ "settings": {
+  "resolution": [
+   720,
+   1280
+  ],
+  "samples": 64,
+  "adaptive_threshold": 0.012000000104308128,
+  "adaptive_min": 16,
+  "denoiser": "OPENIMAGEDENOISE",
+  "prefilter": "ACCURATE",
+  "passes": "RGB_ALBEDO_NORMAL",
+  "bounces": {
+   "total": 6,
+   "diffuse": 5,
+   "glossy": 3,
+   "transmission": 2
+  },
+  "view": "Standard",
+  "exposure": -0.25,
+  "threads": 4,
+  "sun": {
+   "energy": 5.0,
+   "elevation": 28.0,
+   "color": [
+    1.0,
+    0.7799999713897705,
+    0.5
+   ]
+  },
+  "haze": 0.0006,
+  "post": "unsharp r1.1 55% + clarity r5 40%"
+ },
+ "cards": [
+  [
+   "tommy_a",
+   686,
+   1178,
+   -499
+  ],
+  [
+   "tommy_b",
+   637,
+   1449,
+   434
+  ],
+  [
+   "tommy_a.001",
+   673,
+   1245,
+   1514
+  ]
+ ],
+ "anchors": {
+  "tank0_nose": [
+   489,
+   530
+  ],
+  "tank0_front": [
+   228,
+   785
+  ],
+  "tank0_rear": [
+   -428,
+   600
+  ]
+ }
+}

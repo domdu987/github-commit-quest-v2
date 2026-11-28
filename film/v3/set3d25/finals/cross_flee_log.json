@@ -1,0 +1,78 @@
+{
+ "preset": "cross_flee",
+ "wall_s": 76.5,
+ "cpu_s": 303.5,
+ "build_s": 13.1,
+ "settings": {
+  "resolution": [
+   720,
+   1280
+  ],
+  "samples": 64,
+  "adaptive_threshold": 0.012000000104308128,
+  "adaptive_min": 16,
+  "denoiser": "OPENIMAGEDENOISE",
+  "prefilter": "ACCURATE",
+  "passes": "RGB_ALBEDO_NORMAL",
+  "bounces": {
+   "total": 6,
+   "diffuse": 5,
+   "glossy": 3,
+   "transmission": 2
+  },
+  "view": "Standard",
+  "exposure": -0.25,
+  "threads": 4,
+  "sun": {
+   "energy": 5.0,
+   "elevation": 28.0,
+   "color": [
+    1.0,
+    0.7799999713897705,
+    0.5
+   ]
+  },
+  "haze": 0.0006,
+  "post": "unsharp r1.1 55% + clarity r5 40%"
+ },
+ "cards": [
+  [
+   "tommy_b",
+   607,
+   661,
+   425
+  ],
+  [
+   "tommy_a",
+   601,
+   649,
+   362
+  ],
+  [
+   "tommy_b.001",
+   598,
+   642,
+   487
+  ],
+  [
+   "tommy_a.001",
+   601,
+   650,
+   296
+  ]
+ ],
+ "anchors": {
+  "tank0_nose": [
+   416,
+   571
+  ],
+  "tank0_front": [
+   405,
+   640
+  ],
+  "tank0_rear": [
+   363,
+   621
+  ]
+ }
+}

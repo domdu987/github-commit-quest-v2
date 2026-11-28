@@ -1,0 +1,60 @@
+{
+ "preset": "fac_tracks",
+ "wall_s": 131.3,
+ "cpu_s": 521.8,
+ "build_s": 0.6,
+ "settings": {
+  "resolution": [
+   720,
+   1280
+  ],
+  "samples": 64,
+  "adaptive_threshold": 0.012000000104308128,
+  "adaptive_min": 16,
+  "denoiser": "OPENIMAGEDENOISE",
+  "prefilter": "ACCURATE",
+  "passes": "RGB_ALBEDO_NORMAL",
+  "bounces": {
+   "total": 6,
+   "diffuse": 5,
+   "glossy": 3,
+   "transmission": 2
+  },
+  "view": "Standard",
+  "exposure": -0.25,
+  "threads": 4,
+  "sun": {
+   "energy": 5.0,
+   "elevation": 28.0,
+   "color": [
+    1.0,
+    0.8199999928474426,
+    0.5799999833106995
+   ]
+  },
+  "haze": 0.0006,
+  "post": "unsharp r1.1 55% + clarity r5 40%"
+ },
+ "cards": [
+  [
+   "tommy_b",
+   931,
+   1460,
+   2268
+  ]
+ ],
+ "anchors": {
+  "tank0_nose": [
+   473,
+   646
+  ],
+  "tank0_front": [
+   243,
+   872
+  ],
+  "tank0_rear": [
+   -380,
+   696
+  ]
+ }
+}
