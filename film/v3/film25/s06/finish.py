@@ -19,7 +19,7 @@ subprocess.run(["ffmpeg", "-v", "error", "-y", "-framerate", "30", "-start_numbe
 meta = dict(g0=a.g0, g1=a.g1, first_g=a.first_g, n_frames=n, transition_in=dict(type="cut", frames=0))
 json.dump(meta, open(os.path.join(T, "meta.json"), "w"), indent=1)
 run = lambda *c: subprocess.run(list(c), capture_output=True, text=True)
-qa = run("python3", os.path.join(FILM, "qa_auto.py"), mkv, "--first_g", str(a.first_g), "--cuts", a.cuts or "none", "--out", T)
+qa = run("python3", os.path.join(FILM, "qa_auto.py"), mkv, "--first_g", str(a.first_g), "--cuts", a.cuts, "--out", T)
 jit = run("python3", os.path.join(FILM, "qa_jitter.py"), mkv)
 lm = run("python3", os.path.join(FILM, "film25", "tools", "light_metrics.py"), mkv)
 # contact sheet: every 5th frame (6 fps), 8 per row

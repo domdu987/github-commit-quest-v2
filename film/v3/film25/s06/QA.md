@@ -3,6 +3,6 @@
 - **s/frame:** 95.6 s wall (mean over 29 frames, 2 threads, 2 processes running)
 - **Camera move:** PULL 10 % (4.0 -> 4.4 D) + slight drift
 - **light_metrics:** `take.mkv (1 fr)                        luma 0.500 p1 0.103 p99 0.974 lc 0.0483 sat 0.447 chroma 25.4 a +1.9 b +4.6 p98 0.74 blue 0.34 warm 0.53 neut 0.12 M 98  PASS  (guides off: p1,p99,chroma,sat_p98)`
-- **qa_auto:** see QA_AUTO.md (FAILS: )
+- **qa_auto:** PASS (QA_AUTO.md, phone_sheet.jpg)
 - **qa_jitter:** overall median jitter px 0.63
 - 
