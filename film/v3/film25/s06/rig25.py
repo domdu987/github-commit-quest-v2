@@ -30,6 +30,7 @@ NORMAL_R, NORMAL_STRENGTH = 0.9, 1.6
 
 _vib0 = P.vibrance
 P.COOLK = 1.0
+GCLIP = (0.7, 1.45)
 
 
 def _vib(a, k=1.4):
@@ -329,7 +330,7 @@ def composite(g, raw_path, shade_path, geo, out_path, bg_only=False):
         bgv = P.vibrance(tone(e, gains)[::4, ::4], P.VIB)
         am, bm = P.lab_ab((bgv * (1 - ms) + scs4 * ms)[None])
         gains[2] *= np.exp(0.025 * (bm - P.WB_T[1])); gains[1] *= np.exp(0.02 * (am - P.WB_T[0]))
-        gains /= float(gains @ P.W709); gains = np.clip(gains, 0.7, 1.45)
+        gains /= float(gains @ P.W709); gains = np.clip(gains, GCLIP[0], GCLIP[1])
     b = P.vibrance(tone(e, gains), P.VIB)
     yy = np.linspace(0, 1, 1280, dtype=np.float32)[:, None, None]
     b = b * (1 - 0.18 * np.clip((yy - 0.86) / 0.14, 0, 1) ** 1.5)
@@ -379,7 +380,7 @@ def run(shot, cmd, gs, out_root=None, scale=None, samples=None, sh_samples=None)
         os.environ["VIB"], os.environ["WBB"], os.environ["WBA"], os.environ["COOLK"] = str(best[1]), str(best[2]), str(best[3]), str(best[5])
         cmd = "recomp"
     if cmd == "recomp":                                  # re-run only the composite / grade on stored raw + shading renders (env VIB = vibrance)
-        P.VIB = float(os.environ.get("VIB", P.VIB)); P.WB_T = (float(os.environ.get("WBA", 2.0)), float(os.environ.get("WBB", 4.5))); P.ITERS_ = 7; P.COOLK = float(os.environ.get("COOLK", 1.0)); P.COOLK = float(os.environ.get("COOLK", 1.0))
+        P.VIB = float(os.environ.get("VIB", P.VIB)); P.WB_T = (float(os.environ.get("WBA", 2.0)), float(os.environ.get("WBB", 4.5))); P.ITERS_ = 7; P.COOLK = float(os.environ.get("COOLK", 1.0)); globals()["GCLIP"] = (float(os.environ.get("GLO", 0.7)), float(os.environ.get("GHI", 1.45)))
         outd = os.environ.get("RECOMP_OUT", out_root)
         os.makedirs(outd, exist_ok=True)
         for g in gs:

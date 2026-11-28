@@ -24,7 +24,7 @@ def pre_extra():
 def build_extra(rig):
     import lib25 as L
     L.chain = _chain[0]
-    rig.crate = F.S.get("crate")
+    rig.crate = F.S.get("crate"); facb.paint_crate()
 
 
 def path(g):

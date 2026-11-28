@@ -19,6 +19,7 @@ def pre_extra():
 
 
 def build_extra(rig):
+    facb.paint_crate()
     fw = [o for o in bpy.data.objects if o.name == "crate_frontwall"]
     MASK[0] = facb.StencilMask(fw, axis=2); MASK[0].set(99.0, +1)             # the stencil is not painted yet (s36)
     # the plank wall behind the plate? the crate itself is the backdrop; hide the plate behind it (the crate hides it)

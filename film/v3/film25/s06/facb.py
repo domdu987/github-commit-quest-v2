@@ -53,3 +53,25 @@ class StencilMask(object):
         for th, ge in self.nodes:
             ge.operation = "GREATER_THAN" if sign > 0 else "LESS_THAN"
             th.outputs[0].default_value = float(thr)
+
+
+def paint_crate(col=(0.04, 0.30, 0.46)):
+    """repaint the shipping crate planks / beams a flat vivid marine blue (keeps bump); the stencil paint materials stay"""
+    done = set()
+    for ob in bpy.data.objects:
+        if not ob.name.startswith("crate_") or ob.type != "MESH":
+            continue
+        for i, slot in enumerate(ob.material_slots):
+            m = slot.material
+            if m is None or "paint" in m.name or not m.use_nodes:
+                continue
+            if m.name not in done:
+                m2 = m.copy(); done.add(m.name)
+            else:
+                m2 = m
+            bs = [n for n in m2.node_tree.nodes if n.type == "BSDF_PRINCIPLED"]
+            if bs:
+                for l in list(bs[0].inputs["Base Color"].links):
+                    m2.node_tree.links.remove(l)
+                bs[0].inputs["Base Color"].default_value = (*col, 1.0)
+            slot.material = m2

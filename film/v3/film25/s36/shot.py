@@ -22,6 +22,7 @@ def pre_extra():
 
 
 def build_extra(rig):
+    facb.paint_crate()
     fw = [o for o in bpy.data.objects if o.name == "crate_frontwall"]
     MASK[0] = facb.StencilMask(fw, axis=2)
 
