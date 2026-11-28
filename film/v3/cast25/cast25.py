@@ -884,7 +884,7 @@ def _toy_tank_body(k, swing):
     """a tin toy Mark I (rhomboid) hanging by a string from the hand (origin); the whole thing swings by `swing` degrees about the hand."""
     o = ['<g transform="rotate(%.3f)">' % swing]
     o.append('<path d="M0,0 L0,0.40" stroke="%s" stroke-width="0.026" stroke-linecap="round"/><path d="M0,0 L0,0.40" stroke="%s" stroke-width="0.011" stroke-linecap="round"/>' % (k.ink, k.c("#efe2b8")))
-    o.append('<g transform="translate(0 0.40) scale(0.86)">')
+    o.append('<g transform="translate(0 0.40) scale(1.10)">')
     # track loop = the rhomboid outline (front steeper than the tail), then the hull, sponson, cab, gun, tail wheel
     loop = "M-0.34,0.27 Q-0.40,0.27 -0.36,0.21 L-0.19,0.035 Q-0.16,0.0 -0.11,0.0 L0.16,-0.01 Q0.21,-0.01 0.24,0.035 L0.38,0.21 Q0.43,0.27 0.36,0.27 Z"
     o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.075" stroke-linejoin="round"/>' % (loop, k.c("#46522a"), k.ink))
@@ -927,23 +927,21 @@ def _chalkboard_body(k):
     # rubbed-out smudges (dust, no shapes that read as marks)
     o.append('<ellipse cx="-0.50" cy="0.40" rx="0.30" ry="0.10" fill="#ffffff" opacity="0.045"/><ellipse cx="-1.18" cy="-0.22" rx="0.26" ry="0.07" fill="#ffffff" opacity="0.04"/>')
     # ground lines either side of the trench, and the trench itself (a U between them)
-    o.append(_chalk(k, [(-1.47, 0.20), (-1.26, 0.195), (-1.06, 0.19)], 0.032, seed=1.0))
-    o.append(_chalk(k, [(-0.54, 0.19), (-0.34, 0.195), (-0.13, 0.20)], 0.032, seed=2.0))
-    o.append(_chalk(k, [(-1.06, 0.19), (-1.02, 0.40), (-0.98, 0.50), (-0.62, 0.50), (-0.58, 0.40), (-0.54, 0.19)], 0.026, seed=3.0))
-    # the tank: a side-on rhomboid (track loop outline, steeper nose), tilted nose-up across the gap
-    cx, cy, tl = -0.80, -0.02, -8.0
+    o.append(_chalk(k, [(-1.50, 0.22), (-1.30, 0.215), (-1.12, 0.21)], 0.032, seed=1.0))
+    o.append(_chalk(k, [(-0.48, 0.21), (-0.30, 0.215), (-0.10, 0.22)], 0.032, seed=2.0))
+    o.append(_chalk(k, [(-1.12, 0.21), (-1.09, 0.42), (-1.05, 0.52), (-0.55, 0.52), (-0.51, 0.42), (-0.48, 0.21)], 0.026, seed=3.0))
+    # the tank: a long low side-on rhomboid (track loop outline), nose up on the far lip, tail on the near lip
+    cx, cy, tl = -0.80, 0.0, -5.0
     ca, sa = math.cos(math.radians(tl)), math.sin(math.radians(tl))
 
     def T(p):
         dx, dy = p[0] - cx, p[1] - cy
         return (cx + dx * ca - dy * sa, cy + dx * sa + dy * ca)
-    loop = [(-1.30, 0.16), (-1.24, 0.12), (-1.04, -0.12), (-0.96, -0.16), (-0.62, -0.20), (-0.52, -0.17), (-0.34, 0.06), (-0.30, 0.13), (-0.34, 0.17), (-1.26, 0.17)]
-    o.append(_chalk(k, [T(p) for p in loop], 0.030, closed=True, wob=0.004, seed=4.0))
-    inner = [(-1.12, 0.09), (-0.99, -0.08), (-0.64, -0.12), (-0.50, 0.08)]
-    o.append(_chalk(k, [T(p) for p in inner], 0.018, seed=5.0))
-    o.append(_chalk(k, [T(p) for p in [(-0.90, 0.02), (-0.90, -0.05), (-0.72, -0.05), (-0.72, 0.02), (-0.90, 0.02)]], 0.018, seed=6.0))
-    o.append(_chalk(k, [T(p) for p in [(-0.72, -0.015), (-0.44, -0.03)]], 0.024, seed=7.0))
-    o.append(_chalk(k, [T(p) for p in [(-0.80, -0.05), (-0.82, -0.19), (-0.70, -0.19), (-0.69, -0.12)]], 0.018, seed=8.0))
+    loop = [(-1.38, 0.15), (-1.30, 0.07), (-1.12, -0.10), (-0.98, -0.14), (-0.62, -0.16), (-0.50, -0.12), (-0.26, 0.08), (-0.22, 0.15)]
+    o.append(_chalk(k, [T(p) for p in loop], 0.030, closed=True, wob=0.003, seed=4.0))
+    o.append(_chalk(k, [T(p) for p in [(-0.88, -0.14), (-0.86, -0.25), (-0.70, -0.25), (-0.68, -0.16)]], 0.022, seed=5.0))
+    o.append(_chalk(k, [T(p) for p in [(-0.98, -0.02), (-0.74, -0.02), (-0.74, 0.07), (-0.98, 0.07), (-0.98, -0.02)]], 0.018, seed=6.0))
+    o.append(_chalk(k, [T(p) for p in [(-0.74, 0.02), (-0.42, 0.0)]], 0.024, seed=7.0))
     # a lip with a stub of chalk resting on it
     o.append('<path d="M-1.45,0.585 L-1.18,0.585" stroke="#e8e6dc" stroke-width="0.030" stroke-linecap="round"/>')
     return "".join(o)
@@ -1222,7 +1220,7 @@ def _hung_prop(k, kind, H, sc, key, side, an, nm):
         for (x, y) in ((-0.52, 0.55), (0.46, 0.55), (0.0, 0.30), (0.0, 0.76)):
             qx, qy = _rot(x, y, sw)
             k.ext.append((H[0] + side * qx * sc, H[1] + qy * sc, 0.03))
-        qx, qy = _rot(0.0, 0.40 + 0.12, sw)
+        qx, qy = _rot(0.0, 0.40 + 0.15, sw)
         tip = (H[0] + side * qx * sc, H[1] + qy * sc)
     else:
         o = '<g transform="translate(%.4f %.4f) scale(%.4f %.4f)">%s</g>' % (H[0], H[1], sx, sc, _chalkboard_body(k))
