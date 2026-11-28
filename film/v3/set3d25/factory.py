@@ -15,13 +15,13 @@ def quad(name, x0, y0, x1, y1, z, mat, nz=1.0):
     mb = MB(); mb.pid += 1; mb.oface([(x0, y0, z), (x1, y0, z), (x1, y1, z), (x0, y1, z)], mat, [(0, 0)] * 4, (0, 0, nz)); return mkobj(mb, name)
 
 def lamp(x, y, z, power=900.0, col=(1.0, 0.8, 0.55)):
-    d = bpy.data.lights.new('lamp', 'POINT'); d.energy = power; d.color = col; d.shadow_soft_size = 0.8
+    d = bpy.data.lights.new('lamp', 'POINT'); d.energy = power; d.color = (1.0, 0.95, 0.88); d.shadow_soft_size = 0.8
     o = bpy.data.objects.new('lamp', d); S['coll'].objects.link(o); o.location = (x, y, z)
     mb = MB(); rod(mb, (x, y, z + 0.1), (x, y, z + 1.6), 0.03, S['M']['steel'], 4); mb.frustum((x, y, z - 0.05), (x, y, z + 0.35), 0.5, 0.15, S['M']['p_green'], seg=12, cap0=False); mb.sphere((x, y, z - 0.05), 0.16, S['M']['glow'], 8, 6)
     mkobj(mb, 'lampshade'); return o
 
 def area_fill(x, y, z, sx, sy, power):
-    d = bpy.data.lights.new('fill', 'AREA'); d.shape = 'RECTANGLE'; d.size = sx; d.size_y = sy; d.energy = power; d.color = (1.0, 0.9, 0.75)
+    d = bpy.data.lights.new('fill', 'AREA'); d.shape = 'RECTANGLE'; d.size = sx; d.size_y = sy; d.energy = power; d.color = (1.0, 0.97, 0.92)
     o = bpy.data.objects.new('fill', d); S['coll'].objects.link(o); o.location = (x, y, z); o.rotation_euler = (0, 0, 0); return o
 
 def brick_shed(W=26.0, Dp=52.0, Hw=14.0):
@@ -200,7 +200,7 @@ def set_model_tank(u, frame=None):
 def build(preset, samples=None, quality=None):
     P = PRESETS[preset]; t0 = __import__('time').time()
     F.begin('factory', preset, P); S.update(flat=True, trenches=[], craters=[], corridors=[], mud_zones=[]); S.update(P.get('world', {})); M = S['M']
-    quad('yard', -140, -120, 140, 0.0, 0.0, M['cobble'], 1.0); quad('floor', -26, 0, 26, 52, 0.01, M['cobble'], 1.0); quad('beyond', -600, -600, 600, 600, -0.05, M['dirt'], 1.0)
+    quad('yard', -140, -120, 140, 0.0, 0.0, M['cobble'], 1.0); quad('floor', -26, 0, 26, 52, 0.01, M['concrete'], 1.0); quad('beyond', -600, -600, 600, 600, -0.05, M['dirt'], 1.0)
     brick_shed(); yard_props(); interior_props()
     for (x, y) in ((0, -3), (-12, -2), (12, -2)): pass
     mg = MB(); r = rnd(2)                                     # weeds in the cobble joints + patches of grass by the walls (colour variety)
@@ -256,10 +256,10 @@ PRESETS = dict(
 
 PRESETS.update(
     fac_chart=dict(cam=dict(loc=(-15.0, 37.0, 7.6), look_at=(-18.0, 42.0, 2.0), lens=40), chart=dict(pos=(-18.0, 43.0), u=0.40), tank_on=False, note='shot 14: chart table 3/4 top-down insert, model Mark I over the model trench'),
-    fac_chart_face=dict(backdrop=[(-22.0, 50.6, 8.0, 9.0, 'plank_red'), (-14.0, 50.6, 8.0, 9.0, 'plank_teal')], mark=dict(pos=(-18.0, 48.6), face_deg=-90.0, dist=5.6, lens=48, zc=2.3), chart=dict(pos=(-18.0, 43.0), u=0.40), tank_on=False, note='shot 14/15: engineer behind the chart table (mark = card position)'),
+    fac_chart_face=dict(cast=[dict(story='engineer25_chart_hand')], backdrop=[(-22.0, 50.6, 8.0, 9.0, 'plank_red'), (-14.0, 50.6, 8.0, 9.0, 'plank_teal')], mark=dict(pos=(-18.0, 48.6), face_deg=-90.0, dist=4.8, lens=28, zc=1.9), chart=dict(pos=(-18.0, 43.0), u=0.40), tank_on=False, note='shot 14/15: engineer behind the chart table (mark = card position)'),
     fac_doors=dict(cam=dict(loc=(3.0, -27.0, 3.6), look_at=(0.0, 0.0, 6.2), lens=30), doors=1.0, note='shot 13: shed doors shut, from the yard'),
-    fac_close_hull=dict(fill=16000.0, mark=dict(pos=(-11.0, 17.0), face_deg=-90.0, dist=4.2, lens=40, zc=2.2), tank=dict(pos=(-6, 22), yaw=0.0, z=0.9), trestles_off=True, note='shots 6/16: close, riveted hull plate with the hatch and tap behind (mark)'),
-    fac_close_rivet=dict(cam=dict(loc=(-8.0, 15.2, 4.4), look_at=(-8.0, 20.0, 4.3), lens=50), stages=dict(chassis=1, plates=1, rivets=0.6, tracks=0, sponsons=0, guns=0), stencil=False, note='shot 29/30: close on the hull plate, rivet rows going in'),
-    fac_close_engineer=dict(backdrop=[(-3.6, 49.5, 7.2, 9.0, 'plank_teal'), (3.6, 49.5, 7.2, 9.0, 'plank_yellow')], mark=dict(pos=(0.0, 46.5), face_deg=-90.0, dist=4.2, lens=40, zc=2.2), note='shots 5/15/28/63: engineer close in front of the shed back wall (mark)'),
+    fac_close_hull=dict(cast=[dict(story='worker_a25_rivet')], fill=16000.0, mark=dict(pos=(-11.0, 17.0), face_deg=-90.0, dist=4.2, lens=28, zc=1.9), tank=dict(pos=(-6, 22), yaw=0.0, z=0.9), trestles_off=True, note='shots 6/16: close, riveted hull plate with the hatch and tap behind (mark)'),
+    fac_close_rivet=dict(cast=[dict(story='worker_a25_rivet')], mark=dict(pos=(-9.0, 17.0), face_deg=-90.0, dist=4.2, lens=28, zc=1.9), tank=dict(pos=(-6, 22), yaw=0.0, z=0.9), trestles_off=True, fill=16000.0, stages=dict(chassis=1, plates=1, rivets=0.6, tracks=0, sponsons=0, guns=0), stencil=False, note='shot 29/30: close on the hull plate, rivet rows going in'),
+    fac_close_engineer=dict(cast=[dict(story='engineer25_proud')], backdrop=[(-3.6, 49.5, 7.2, 9.0, 'plank_teal'), (3.6, 49.5, 7.2, 9.0, 'plank_yellow')], mark=dict(pos=(0.0, 46.5), face_deg=-90.0, dist=4.2, lens=28, zc=1.9), note='shots 5/15/28/63: engineer close in front of the shed back wall (mark)'),
 )
 for _p in PRESETS.values(): _p.setdefault('tune', dict(cloud_k=0.75))

@@ -66,13 +66,13 @@ def street_scene(P):
 def build(preset, samples=None, quality=None):
     P = PRESETS[preset]; t0 = time.time(); F.begin('street', preset, P); S.update(flat=True, trenches=[], craters=[], corridors=[], mud_zones=[]); street_scene(P)
     H = TK.build_tank('mk1', mud=0.9); S['tank'] = H; S['tanks_h'] = [H]; tk = P['tank']; TK.pose_on_ground(H, tk[0], tk[1], 90.0); TK.set_drive(H, tk[1] * 0.37)
-    cam = P['cam']; S['cam_loc'] = cam['loc']; S['cards'] = []
+    cam = F.close_cam(**P['mark']) if 'mark' in P else P['cam']; S['cam_loc'] = cam['loc']; S['cards'] = []
     for (k, xy, ht) in P.get('cards', []): L.cards([(k, xy, ht)], lambda x, y: 0.0, cam['loc'])
     F.finish(cam, P, samples, quality, sun=P.get('sun')); S['build_s'] = time.time() - t0; return F.anchors()
 
 PRESETS = dict(
     street_wide=dict(cam=dict(loc=(2.5, -22.0, 3.2), look_at=(-1.0, 40.0, 6.0), lens=22), tank=(0.0, 22.0), cards=[('a', (-4, -4), 3.2), ('b', (4, 0), 3.2), ('a', (-2, -12), 3.2)], sun=(-100.0, 30.0), note='shot 33'),
     street_low=dict(cam=dict(loc=(3.0, -12.0, 1.3), look_at=(0.0, 14.0, 3.6), lens=22), tank=(0.0, 26.0), cards=[('a', (-3, -3), 3.4), ('b', (3, -5), 3.2), ('a', (0, 0), 3.6)], sun=(-100.0, 30.0), note='shot 34'),
-    street_close_tail=dict(cam=dict(loc=(0.9, 16.5, 1.9), look_at=(0.0, 24.0, 1.1), lens=40), tank=(0.0, 40.0), sun=(-100.0, 30.0), note='shots 68-70: the tank rear and tail wheels at waist height, for the general marching behind'),
+    street_close_tail=dict(mark=dict(pos=(0.0, 19.0), face_deg=-90.0, dist=4.2, lens=28, zc=1.9), cast=[dict(story='general25_march_flag')], tank=(0.0, 40.0), sun=(-100.0, 30.0), note='shots 68-70: the tank rear and tail wheels at waist height, for the general marching behind'),
     street_high=dict(cam=dict(loc=(5.0, -8.0, 34.0), look_at=(0.0, 26.0, 0.0), lens=28), tank=(0.0, 24.0), sun=(-100.0, 30.0), dress_k=2.0, note='shot 66: the pilot looks down on the high street of Flers'),
 )

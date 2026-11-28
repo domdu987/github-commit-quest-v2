@@ -20,7 +20,7 @@ def gull(mb, c, yaw, s=1.0, ph=0.0):
 def build(preset, samples=None, quality=None):
     P = PRESETS[preset]; t0 = time.time(); F.begin('dock', preset, P); deck = P.get('mode') == 'deck'; S.update(flat=True, trenches=[], craters=[], corridors=[], mud_zones=[]); M = S['M']; r = rnd(8)
     def sea(b):
-        c = b.coord(); n = b.noise(0.5, 4.0, 0.55, c, None); n2 = b.noise(2.0, 3.0, 0.5, c, None); col = b.mix(b.rng(n, 0.3, 0.7), (0.05, 0.28, 0.42), (0.10, 0.45, 0.58)); b.princ(col, 0.12, 0.0, b.bump(b.math('ADD', n, n2), 0.5, 0.06))
+        c = b.coord(); n = b.noise(0.5, 4.0, 0.55, c, None); n2 = b.noise(2.0, 3.0, 0.5, c, None); col = b.mix(b.rng(n, 0.3, 0.7), (0.02, 0.16, 0.50), (0.05, 0.34, 0.68)); b.princ(col, 0.12, 0.0, b.bump(b.math('ADD', n, n2), 0.5, 0.06))
     M['sea'] = F.fmat('sea', sea)
     mb = MB(); mb.pid += 1; mb.oface([(-900, -900, -1.3), (900, -900, -1.3), (900, 40 if not deck else 900, -1.3), (-900, 40 if not deck else 900, -1.3)], M['sea'], [(0, 0)] * 4, (0, 0, 1)); mkobj(mb, 'sea')
     mb = MB(); mb.pid += 1; mb.oface([(-120, 0, 0.0), (120, 0, 0.0), (120, 60, 0.0), (-120, 60, 0.0)], M['cobble_r'], [(0, 0)] * 4, (0, 0, 1)); obox(mb, (0, 0.2, -0.65), (1, 0, 0), (0, 1, 0), (0, 0, 1), 120, 0.6, 0.65, M['cobble'])

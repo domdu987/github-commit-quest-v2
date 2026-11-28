@@ -49,6 +49,6 @@ PRESETS = dict(
     trial_general=dict(tune=dict(grass_val=0.7), cam=dict(loc=(-9.0, -18.0, 2.6), look_at=(-14.0, -4.0, 3.2), lens=30), cards=[('a', (-12, -10), 3.4), ('b', (-17, -9), 3.2)], note='shots 10, 12'),
     trial_trench=dict(tune=dict(grass_val=0.62), cam=dict(loc=(-6.0, -30.0, 3.0), look_at=(-2.0, -2.0, 2.4), lens=22), cards=[('a', (-9, -12), 3.2)], note='shot 11'),
     trial_camp=dict(dress_n=3.5, tune=dict(grass_val=0.62, cloud_k=0.85), cam=dict(loc=(-16.0, -32.0, 2.6), look_at=(-36.0, -15.0, 3.0), lens=24), cards=[('a', (-31, -12), 3.2), ('b', (-33, -9), 3.2), ('a', (-28, -9), 3.2)], note='shot 13'),
-    trial_close_general=dict(world=dict(clamp=True), mark_tank=dict(local=(-5.5, -6.8), dist=4.2, lens=40, zc=2.3), dress_n=1.4, note='shots 19-21, 24: waist-up general in front of the tank hull side (mark)'),
-    camp_close_tank=dict(world=dict(clamp=True), mark_tank=dict(local=(-7.2, -6.6), dist=4.2, lens=40, zc=2.3, rot=24.0), dress_n=1.4, note='shots 26-27: Tommies in front of the tank hull side (mark)'),
+    trial_close_general=dict(cast=[dict(story='general25_point_stick')], world=dict(clamp=True), mark_tank=dict(local=(-5.5, -6.8), dist=4.2, lens=28, zc=1.9), dress_n=1.4, note='shots 19-21, 24: waist-up general in front of the tank hull side (mark)'),
+    camp_close_tank=dict(cast=[dict(story='tommy_c25_ladle_tap')], world=dict(clamp=True), mark_tank=dict(local=(-7.2, -6.6), dist=4.2, lens=28, zc=1.9, rot=24.0), dress_n=1.4, note='shots 26-27: Tommies in front of the tank hull side (mark)'),
 )

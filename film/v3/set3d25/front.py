@@ -850,9 +850,9 @@ PRESETS = dict(
     front_halt=dict(loc='front', tune=dict(cloud_k=0.85, green_k=2.2), dress_n=4.0, cam=dict(loc=(8.0, -36.0, 2.8), look_at=(-22.0, -36.0, 3.0), lens=22), tanks=[dict(front=(-22.0, -33.0), yaw=90.0, nocorr=True), dict(front=(-8.0, -22.0), yaw=95.0, smoke=1.0)], clamp=True, note='shot 21: one smoking, one nose-down in a crater'),
     front_stuck=dict(loc='front', dress_n=3.0, tune=dict(cloud_k=0.85, green_k=0.3), world=dict(rocks=[(5.0, -9.6, 3, 1.6), (3.0, -49.0, 22, 4.0), (6.0, -47.0, 16, 3.0), (0.0, -46.0, 14, 3.0), (8.0, -44.0, 12, 3.0)], spill=[(4.0, -48.0, 4.0, 14)]), cam=dict(loc=(6.0, -52.0, 1.4), look_at=(-4.0, -41.0, -0.6), lens=24), tanks=[dict(front=(-4.0, -42.0), yaw=90.0, state='stuck')], extras=[('mud', -4.0, -42.0, math.pi / 2)], cards=[('a', (2.0, -45.0), 3.2), ('b', (-9.0, -47.0), 3.2)], clamp=True, note='shot 22: sunk to the sponsons in mud'),
     front_op=dict(loc='front', tune=dict(cloud_k=0.85), fill=3000.0, cam=dict(loc=(-45.0, -17.0, 6.5), look_at=(-26.0, -8.0, 2.4), lens=28), extras=[('op', -28.0, -8.0, 0.0)], tanks=[dict(front=(-6.0, -16.0), yaw=90.0, smoke=1.0)], cards=[('a', (-30.5, -9.0), 2.6)], note='shot 23: observation post'),
-    front_close_britishtrench=dict(loc='front', mark=dict(pos=(-34.0, -8.0), face_deg=262.9, dist=4.2, lens=40, zc=2.2, look_dz=-1.1), dress_n=0.3, near=False, note='shots 8-9, 10-11: waist-up Tommy inside the British trench (mark)'),
-    front_close_germantrench=dict(loc='front', mark=dict(pos=(0.0, 6.0), face_deg=90.0, dist=4.2, lens=40, zc=2.2, look_dz=-1.1), dress_n=0.3, near=False, note='shots 8-9, 55: German trench mirror close (mark)'),
-    op_close_general=dict(loc='front', mark=dict(pos=(-30.2, -8.0), face_deg=0.0, dist=4.2, lens=40, zc=2.2, look_dz=-0.6), extras=[('op', -28.0, -8.0, 0.0)], dress_n=0.3, near=False, note='shots 43-44: general in the observation post (mark)'),
+    front_close_britishtrench=dict(loc='front', mark=dict(pos=(-34.0, -8.0), face_deg=262.9, dist=4.2, lens=28, zc=1.9), cast=[dict(story='tommy_a25_peek')], extras=[('bags', -34.0, -4.5), ('pop', -34.0, -3.0)], dress_n=0.3, near=False, note='shots 8-9, 10-11: waist-up Tommy inside the British trench (mark)'),
+    front_close_germantrench=dict(loc='front', mark=dict(pos=(0.0, 6.0), face_deg=90.0, dist=4.2, lens=28, zc=1.9), cast=[dict(story='german_a25_peek', mirror=True)], extras=[('bags', 0.0, 2.0), ('pop', 0.0, 1.0)], dress_n=0.3, near=False, note='shots 8-9, 55: German trench mirror close (mark)'),
+    op_close_general=dict(loc='front', mark=dict(pos=(-30.2, -8.0), face_deg=0.0, dist=4.2, lens=28, zc=1.9), cast=[dict(story='general25_point_stick')], extras=[('op', -28.0, -8.0, 0.0)], dress_n=0.3, near=False, note='shots 43-44: general in the observation post (mark)'),
     cross_close_idler=_cross('cross_close_idler', 0.40, _cam_idler, clamp=True, dress_n=1.2, note='shots 47-49: track links round the front idler as the nose lifts against the sky'),
     cross_close_lip=_cross('cross_close_lip', 0.40, dict(loc=(6.0, -1.4, 1.0), look_at=(5.0, 4.5, 3.4), lens=34), clamp=True, near=False, dress_n=0.4, extras=[('clods', 5.0, 4.5)], note='shot 50: the front track gripping the far lip, earth crumbling'),
 )
@@ -1061,6 +1061,8 @@ def build(preset, samples=None, quality=None):
         elif k == 'mud': mud_heaps(ex[1], ex[2], ex[3])
         elif k == 'tufts': L.dress(gh, ex[1], None, None, None, 5)
         elif k == 'clods': clods(ex[1], ex[2])
+        elif k == 'bags': import lib25 as L_; mbb = MB(); L_.bag_pile(mbb, (ex[1], ex[2]), 26, 5, gh, 1.8); mkobj(mbb, 'warm_bags', smooth=True)
+        elif k == 'pop': import lib25 as L_; L_.poppies('close_poppies', L_.scatter_disc(ex[1], ex[2], 2.2, 40, 7), gh, 7, ('poppy',)) ; L_.dress(gh, L_.scatter_disc(ex[1], ex[2], 2.5, 60, 8), None, None, None, 4, 'cl')
     S['tank_h'] = {}; S['tanks_h'] = []
     for i, tk in enumerate(P.get('tanks', [])):
         H = front_pose_tank(tk, i); S['tanks_h'].append(H); st = tk.get('state', 'normal'); x, y = tk['front']
@@ -1092,7 +1094,7 @@ def build(preset, samples=None, quality=None):
     S['build_s'] = time.time() - t0
     return anchors()
 
-def close_cam(pos, face_deg, dist=4.2, lens=40, zc=2.2, ground=0.0, head=3.2, look_dz=0.0):
+def close_cam(pos, face_deg, dist=4.2, lens=28, zc=1.9, ground=0.0, head=3.2, look_dz=0.0):
     """waist-up close camera for a puppet card ~3.2 D tall standing at pos=(x, y) on `ground`, facing face_deg (the card faces the camera): the camera is `dist` D away on that side at the chest height zc, level.
     With 40 mm the head sits at ~0.30-0.45 of the frame height.  The mark (card position + facing) is stored for the cast shots (anchors()['mark']); close presets render with NO puppet."""
     a = math.radians(face_deg); cam = dict(loc=(pos[0] + math.cos(a) * dist, pos[1] + math.sin(a) * dist, ground + zc), look_at=(pos[0], pos[1], ground + zc + look_dz), lens=lens)
@@ -1117,6 +1119,9 @@ def finish(cam, P, samples=None, quality=None, sun=None, haze=None):
     so = bpy.data.objects.new('key_sun', sun_d); sc.collection.objects.link(so); S['sun'] = so
     sun = sun or P.get('sun'); az, el = (sun if sun else sun_for_camera(cam, S.get('sun_elev', 28.0), S.get('sun_left', 1.0), S.get('sun_front', 0.45)))
     set_sun(az, el); S['sun_elev'] = el
+    if P.get('cast') and S.get('mark'):                                                    # real cast25 puppet at the mark (framing reference; stays in the finals)
+        import lib25 as L_; mk = S['mark']; side = L_.light_side(cam, az)
+        for c in P['cast']: L_.cast_card(c['story'], mk['pos'][:2], mk['pos'][2], mk['face_deg'], side, c.get('mirror', False))
     make_haze(S.get('haze', 0.0006) if haze is None else haze); make_camera(cam)
     if P.get('fill'):                                                                  # hidden soft bounce card beside the camera for close-ups (practical fill, invisible to the camera)
         fd = bpy.data.lights.new('bounce', 'AREA'); fd.shape = 'DISK'; fd.size = 14.0; fd.energy = P['fill']; fd.color = (1.0, 0.93, 0.82); fo = bpy.data.objects.new('bounce', fd); sc.collection.objects.link(fo)

@@ -351,3 +351,36 @@ def water_tank_big(mb, c, r=2.0, h=3.8, yaw=0.0):
     for k in range(int(h / 0.45)): z = c.z + zb + 0.3 + k * 0.45; rod(mb, c + X * (r * 1.05) + Y * (-0.3) + Vector((0, 0, z - c.z)), c + X * (r * 1.05) + Y * 0.3 + Vector((0, 0, z - c.z)), 0.04, M['steel'], 5)
     for sy in (-0.3, 0.3): rod(mb, c + X * (r * 1.05) + Y * sy + Vector((0, 0, zb)), c + X * (r * 1.05) + Y * sy + Vector((0, 0, zb + h)), 0.045, M['steel'], 5)
     tp = c + X * (r * 1.0) + Vector((0, 0, zb + 0.5)); rod(mb, tp, tp + X * 0.7, 0.13, M['brass'], 10); rod(mb, tp + X * 0.7, tp + X * 0.7 - Vector((0, 0, 0.45)), 0.1, M['brass'], 10); rod(mb, tp + X * 0.3, tp + X * 0.3 + Vector((0, 0, 0.3)), 0.05, M['brass'], 6); obox(mb, tp + X * 0.3 + Vector((0, 0, 0.32)), X, Y, Z, 0.04, 0.22, 0.04, M['brass'])
+
+# ============================================================================= real cast25 puppets as cards (close-shot framing references; they stay in the finals PNG)
+def cast_card(story, pos, ground, face_deg, light=-1, mirror=False, name=None, ppd=256, k=1.0):
+    """place a cast25 STORY25 pose (e.g. 'engineer25_proud') as an upright emission card at pos=(x, y) on `ground`, turned to face the camera side `face_deg`; head D = 1 D = k units.
+    `light` -1 / +1 = key side for the finish (pose key light25, matched to the sun: see light_side), mirror flips the sprite (german trench mirror).  Contact decal under the feet."""
+    import hashlib, json, subprocess, copy
+    PROJ = F.PROJ; sys.path.insert(0, os.path.join(PROJ, 'v3', 'cast25')); sys.path.insert(0, os.path.join(PROJ, 'v2', 'puppet'))
+    import cast25, puppet
+    cast, pose = cast25.STORY25[story]; pose = copy.deepcopy(pose); pose['light25'] = light
+    f = puppet.figure(cast, pose, name or story); bx0, by0, bx1, by1 = f['bbox']; pad = 0.1; bx0 -= pad; by0 -= pad; bx1 += pad; by1 = max(by1, f['feet_y']) + pad; w, h = bx1 - bx0, by1 - by0; Wp, Hp = int(round(w * ppd)), int(round(h * ppd))
+    svg = f'<svg xmlns="http://www.w3.org/2000/svg" width="{Wp}" height="{Hp}" viewBox="{bx0:.4f} {by0:.4f} {w:.4f} {h:.4f}" style="display:block">{f["svg"]}</svg>'
+    ACT = F.ACT; os.makedirs(ACT, exist_ok=True); tag = story + '_%+d_' % light + hashlib.sha1(svg.encode()).hexdigest()[:10]; sp = os.path.join(ACT, tag + '.svg'); pp = os.path.join(ACT, tag + '.png')
+    if not os.path.exists(pp):
+        open(sp, 'w').write(svg); jp = os.path.join(ACT, tag + '_job.json'); json.dump([dict(src=sp, out=pp, w=Wp, h=Hp, transparent=True)], open(jp, 'w'))
+        r = subprocess.run(['node', os.path.join(PROJ, 'v3', 'set3d', 'raster.js'), jp], capture_output=True, env=dict(os.environ, NODE_PATH=os.environ.get('NODE_PATH', '/opt/node22/lib/node_modules')))
+        if r.returncode != 0: raise RuntimeError('card raster failed: ' + r.stderr.decode()[-500:])
+    fx = f['anchors']['feet'][0]; fy = f['feet_y']; xs = ((bx0 - fx) * k, (bx1 - fx) * k); zs = ((fy - by1) * k, (fy - by0) * k)
+    me = bpy.data.meshes.new(story); me.from_pydata([(xs[0], 0, zs[0]), (xs[1], 0, zs[0]), (xs[1], 0, zs[1]), (xs[0], 0, zs[1])], [], [(0, 1, 2, 3)]); me.update(); uvl = me.uv_layers.new(name='UVMap')
+    uvs = ((0, 0), (1, 0), (1, 1), (0, 1)); uvs = [(1 - u, v) for (u, v) in uvs] if mirror else uvs
+    for i, c_ in enumerate(uvs): uvl.data[i].uv = c_
+    m = T.mat_card(story + '_mat', pp); m.node_tree.nodes['Emission'].inputs['Strength'].default_value = 1.0; me.materials.append(m)
+    ob = bpy.data.objects.new(story, me); S['coll'].objects.link(ob); z0 = ground; ob.location = (pos[0], pos[1], z0); T.no_bounce(ob); a = math.radians(face_deg); ob.rotation_euler = (0, 0, math.radians(face_deg) + math.pi / 2)
+    dm = bpy.data.meshes.new(story + '_decal'); n = 24; vs = [(0, 0, 0)] + [(math.cos(t) * 1.1, math.sin(t) * 0.6, 0) for t in (2 * math.pi * i / n for i in range(n))]
+    dm.from_pydata(vs, [], [(0, 1 + i, 1 + (i + 1) % n) for i in range(n)]); dm.update(); uvl = dm.uv_layers.new(name='UVMap')
+    for i, p in enumerate(dm.polygons):
+        for li, vi in zip(p.loop_indices, p.vertices): uvl.data[li].uv = (0.5 + vs[vi][0] * 0.45, 0.5 + vs[vi][1] / 0.6 * 0.5)
+    dm.materials.append(S['decal_mat']); do = bpy.data.objects.new(story + '_decal', dm); S['coll'].objects.link(do); do.location = (pos[0], pos[1], z0 + 0.03); do.rotation_euler = ob.rotation_euler; do.visible_shadow = False; do.visible_glossy = False
+    S.setdefault('cards', []).append(ob); return ob
+
+def light_side(cam, az_deg):
+    """pose key light25 for a camera + sun azimuth: -1 key from screen-left, +1 from screen-right"""
+    f = Vector(cam['look_at']) - Vector(cam['loc']); f.z = 0; f.normalize(); right = f.cross(Vector((0, 0, 1))); sun = Vector((math.cos(math.radians(az_deg)), math.sin(math.radians(az_deg)), 0))
+    return 1 if sun.dot(right) > 0 else -1
