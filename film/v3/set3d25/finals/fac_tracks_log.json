@@ -1,7 +1,7 @@
 {
  "preset": "fac_tracks",
- "wall_s": 128.1,
- "cpu_s": 509.2,
+ "wall_s": 131.3,
+ "cpu_s": 521.8,
  "build_s": 0.6,
  "settings": {
   "resolution": [
@@ -38,23 +38,23 @@
  "cards": [
   [
    "tommy_b",
-   812,
-   1295,
-   2150
+   931,
+   1460,
+   2268
   ]
  ],
  "anchors": {
   "tank0_nose": [
    473,
-   567
+   646
   ],
   "tank0_front": [
-   245,
-   789
+   243,
+   872
   ],
   "tank0_rear": [
-   -377,
-   617
+   -380,
+   696
   ]
  }
 }

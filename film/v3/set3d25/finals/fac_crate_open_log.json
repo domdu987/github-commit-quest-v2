@@ -1,7 +1,7 @@
 {
  "preset": "fac_crate_open",
- "wall_s": 132.5,
- "cpu_s": 525.8,
+ "wall_s": 129.3,
+ "cpu_s": 513.0,
  "build_s": 0.5,
  "settings": {
   "resolution": [

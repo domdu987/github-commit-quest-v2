@@ -119,7 +119,7 @@ def tufts(name, pts, zf, seed=1, blades=7, h=(0.45, 1.0), w=0.075, lean=0.4, ton
     for (x, y) in pts:
         z = zf(x, y) - 0.03; hc = rr.uniform(*h); tc = rr.random() if tone is None else tone + rr.normal(0, 0.1); nb = blades; wl = w
         if clamp:                                                                        # producer fix: no blade taller than ~6 % of the frame at its distance; 3-5 blade clumps
-            cl = S['cam_loc']; dcam = math.sqrt((x - cl[0]) ** 2 + (y - cl[1]) ** 2 + (z - cl[2]) ** 2); hc = min(hc, max(0.12, 0.085 * dcam)); nb = int(rr.integers(3, 6)); wl = min(w, 0.09 * hc + 0.01)
+            cl = S['cam_loc']; dcam = math.sqrt((x - cl[0]) ** 2 + (y - cl[1]) ** 2 + (z - cl[2]) ** 2); hc = min(hc, max(0.12, 0.085 * dcam), 1.0); nb = int(rr.integers(3, 6)); wl = min(w, 0.09 * hc + 0.01)
         for b in range(nb):
             a = rr.uniform(0, 6.2832); rad = rr.uniform(0.0, 0.14); bx, by = x + math.cos(a) * rad, y + math.sin(a) * rad; hb = hc * rr.uniform(0.55, 1.15); ang = rr.uniform(0, 6.2832); lz = rr.uniform(0.05, lean)
             tx, ty = bx + math.cos(ang) * lz * hb, by + math.sin(ang) * lz * hb; wx, wy = -math.sin(ang), math.cos(ang); ww = wl * rr.uniform(0.7, 1.2)

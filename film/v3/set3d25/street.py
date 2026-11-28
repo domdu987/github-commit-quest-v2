@@ -71,6 +71,6 @@ def build(preset, samples=None, quality=None):
     F.finish(cam, P, samples, quality, sun=P.get('sun')); S['build_s'] = time.time() - t0; return F.anchors()
 
 PRESETS = dict(
-    street_wide=dict(cam=dict(loc=(2.5, -24.0, 3.2), look_at=(-1.0, 40.0, 6.0), lens=22), tank=(0.0, 6.0), cards=[('a', (-4, 2), 3.2), ('b', (4, 6), 3.2), ('a', (-2, -10), 3.2)], sun=(-100.0, 30.0), note='shot 33'),
-    street_low=dict(cam=dict(loc=(3.0, -17.0, 1.2), look_at=(0.0, 14.0, 4.0), lens=24), tank=(0.0, 10.0), cards=[('a', (-3, -9), 3.4), ('b', (3, -12), 3.2), ('a', (0, -6), 3.6)], sun=(-100.0, 30.0), note='shot 34'),
+    street_wide=dict(cam=dict(loc=(2.5, -22.0, 3.2), look_at=(-1.0, 40.0, 6.0), lens=22), tank=(0.0, 22.0), cards=[('a', (-4, -4), 3.2), ('b', (4, 0), 3.2), ('a', (-2, -12), 3.2)], sun=(-100.0, 30.0), note='shot 33'),
+    street_low=dict(cam=dict(loc=(3.0, -12.0, 1.3), look_at=(0.0, 14.0, 3.6), lens=22), tank=(0.0, 26.0), cards=[('a', (-3, -3), 3.4), ('b', (3, -5), 3.2), ('a', (0, 0), 3.6)], sun=(-100.0, 30.0), note='shot 34'),
 )

@@ -1,8 +1,8 @@
 {
  "preset": "fac_weigh",
- "wall_s": 123.4,
- "cpu_s": 490.7,
- "build_s": 0.5,
+ "wall_s": 127.4,
+ "cpu_s": 504.9,
+ "build_s": 0.6,
  "settings": {
   "resolution": [
    720,
@@ -38,16 +38,16 @@
  "cards": [],
  "anchors": {
   "tank0_nose": [
-   759,
-   361
+   768,
+   624
   ],
   "tank0_front": [
-   621,
-   498
+   601,
+   827
   ],
   "tank0_rear": [
-   -63,
-   173
+   -90,
+   609
   ]
  }
 }

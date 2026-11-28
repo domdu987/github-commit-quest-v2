@@ -1,8 +1,8 @@
 {
  "preset": "fac_crate",
- "wall_s": 120.9,
- "cpu_s": 479.6,
- "build_s": 0.5,
+ "wall_s": 123.9,
+ "cpu_s": 491.9,
+ "build_s": 0.4,
  "settings": {
   "resolution": [
    720,
@@ -38,15 +38,15 @@
  "cards": [
   [
    "tommy_a",
-   788,
-   1108,
-   -628
+   753,
+   932,
+   399
   ],
   [
    "tommy_b",
-   797,
-   1159,
-   1365
+   690,
+   780,
+   702
   ]
  ],
  "anchors": {}

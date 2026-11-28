@@ -1,8 +1,8 @@
 {
  "preset": "cross_pull",
- "wall_s": 83.8,
- "cpu_s": 332.8,
- "build_s": 9.1,
+ "wall_s": 89.7,
+ "cpu_s": 355.6,
+ "build_s": 14.6,
  "settings": {
   "resolution": [
    720,

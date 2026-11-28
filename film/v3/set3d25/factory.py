@@ -97,20 +97,20 @@ def shipping_crate(cx, cy, open_level=0.0, sx=26.0, sy=11.0, sz=10.0, yaw=0.0, s
     M = S['M']; TM = TK.tank_mats(0.0, 'a'); root = F.empty('crate_root', loc=(cx, cy, 0)); root.rotation_euler = (0, 0, yaw); C = dict(root=root)
     mbf = MB(); mbb = MB(); mbl = MB(); mbfr = MB(); X, Y, Z = (1, 0, 0), (0, 1, 0), (0, 0, 1); m = M['crate']
     obox(mbf, (0, 0, 0.4), X, Y, Z, sx / 2, sy / 2, 0.4, M['beam']); [obox(mbf, (0, 0, 0.9), X, Y, Z, sx / 2 - 0.3, 0.45, 0.1, m) for _ in (0,)]
-    for k in range(5): obox(mbf, (-sx / 2 + 1.5 + k * (sx - 3) / 4, 0, 0.9), X, Y, Z, 0.4, sy / 2 - 0.1, 0.1, M['post'])
+    for k in range(5): obox(mbf, (-sx / 2 + 1.5 + k * (sx - 3) / 4, 0, 0.9), X, Y, Z, 0.4, sy / 2 - 0.1, 0.1, M['crate'])
     for sg in (-1, 1):                                                                            # end walls
         obox(mbb, (sg * (sx / 2 - 0.2), 0, sz / 2 + 0.4), X, Y, Z, 0.2, sy / 2, sz / 2, m)
-        for k in range(4): obox(mbb, (sg * (sx / 2 + 0.05), -sy / 2 + 1.2 + k * (sy - 2.4) / 3, sz / 2 + 0.4), X, Y, Z, 0.1, 0.35, sz / 2, M['post'])
+        for k in range(4): obox(mbb, (sg * (sx / 2 + 0.05), -sy / 2 + 1.2 + k * (sy - 2.4) / 3, sz / 2 + 0.4), X, Y, Z, 0.1, 0.35, sz / 2, M['crate'])
     obox(mbb, (0, sy / 2 - 0.2, sz / 2 + 0.4), X, Y, Z, sx / 2, 0.2, sz / 2, m)                          # back wall
-    for k in range(7): obox(mbb, (-sx / 2 + 1.5 + k * (sx - 3) / 6, sy / 2 + 0.05, sz / 2 + 0.4), X, Y, Z, 0.35, 0.1, sz / 2, M['post'])
-    obox(mbb, (0, sy / 2 + 0.05, sz * 0.2 + 0.4), X, Y, Z, sx / 2, 0.1, 0.35, M['post']); obox(mbb, (0, sy / 2 + 0.05, sz * 0.8 + 0.4), X, Y, Z, sx / 2, 0.1, 0.35, M['post'])
+    for k in range(7): obox(mbb, (-sx / 2 + 1.5 + k * (sx - 3) / 6, sy / 2 + 0.05, sz / 2 + 0.4), X, Y, Z, 0.35, 0.1, sz / 2, M['crate'])
+    obox(mbb, (0, sy / 2 + 0.05, sz * 0.2 + 0.4), X, Y, Z, sx / 2, 0.1, 0.35, M['crate']); obox(mbb, (0, sy / 2 + 0.05, sz * 0.8 + 0.4), X, Y, Z, sx / 2, 0.1, 0.35, M['crate'])
     # front wall hinged at the floor edge (local origin at the hinge), lid hinged at the back top edge
     hf = F.empty('crate_front', parent=root, loc=(0, -sy / 2 + 0.2, 0.4)); obox(mbfr, (0, 0, sz / 2), X, Y, Z, sx / 2 - 0.4, 0.2, sz / 2, m)
-    for k in range(7): obox(mbfr, (-sx / 2 + 2 + k * (sx - 4) / 6, -0.28, sz / 2), X, Y, Z, 0.35, 0.1, sz / 2, M['post'])
-    for zz in (0.5, sz * 0.5, sz - 0.5): obox(mbfr, (0, -0.28, zz), X, Y, Z, sx / 2 - 0.4, 0.1, 0.35, M['post'])
+    for k in range(7): obox(mbfr, (-sx / 2 + 2 + k * (sx - 4) / 6, -0.28, sz / 2), X, Y, Z, 0.35, 0.1, sz / 2, M['crate'])
+    for zz in (0.5, sz * 0.5, sz - 0.5): obox(mbfr, (0, -0.28, zz), X, Y, Z, sx / 2 - 0.4, 0.1, 0.35, M['crate'])
     if stencil: TK.tank_silhouette(mbfr, (-3.0, -0.3, sz * 0.52), X, (0, -1, 0), Z, 3.3, TM['paint'], TM['paint_d'])
     hl = F.empty('crate_lid', parent=root, loc=(0, sy / 2, sz + 0.4)); obox(mbl, (0, -sy / 2, 0.15), X, Y, Z, sx / 2 + 0.3, sy / 2 + 0.3, 0.15, m)
-    for k in range(9): obox(mbl, (-sx / 2 + 1 + k * (sx - 2) / 8, -sy / 2, 0.4), X, Y, Z, 0.35, sy / 2 + 0.3, 0.12, M['post'])
+    for k in range(9): obox(mbl, (-sx / 2 + 1 + k * (sx - 2) / 8, -sy / 2, 0.4), X, Y, Z, 0.35, sy / 2 + 0.3, 0.12, M['crate'])
     if stencil: TK.tank_silhouette(mbl, (5.0, -sy / 2, 0.52), X, (0, 0, 1), (0, 1, 0), 3.0, TM['paint'], TM['paint_d'])
     C['parts'] = [mkobj(mbf, 'crate_floor', parent=root), mkobj(mbb, 'crate_walls', parent=root), mkobj(mbfr, 'crate_frontwall', parent=hf), mkobj(mbl, 'crate_lidmesh', parent=hl)]; C['front'] = hf; C['lid'] = hl; C['dims'] = (sx, sy, sz)
     set_crate(C, open_level); return C
@@ -195,7 +195,7 @@ PRESETS = dict(
     fac_foreman=dict(cam=dict(loc=(-3.0, 8.0, 2.6), look_at=(-4.0, 22.0, 4.6), lens=26), stages=FULL, cards=[('a', (-9, 14), 3.2), ('b', (-3, 12), 3.2), ('a', (3, 14), 3.2)], note='shots 3'),
     fac_stencil=dict(fill=14000.0, cam=dict(loc=(-9.0, 13.0, 4.8), look_at=(-12.5, 20.0, 4.9), lens=26), stages=FULL, cards=[('b', (-8, 16), 3.2)], note='shot 4'),
     fac_side=dict(cam=dict(loc=(-4.0, 5.0, 4.6), look_at=(-4.0, 22.0, 4.8), lens=24), stages=FULL, cards=[('a', (-12, 14), 3.2), ('b', (4, 15), 3.2)], note='shot 7: side-on, work lamps'),
-    fac_bench=dict(fill=14000.0, cam=dict(loc=(-10.0, 4.0, 3.0), look_at=(-18.0, 12.0, 3.2), lens=28), stages=FULL, small_crates=[(-13, 8, 2.6, 0.5), (-16, 6, 2.2, 0.3)], cards=[('a', (-16, 10), 3.2), ('b', (-13, 12), 3.2)], note='shot 8'),
+    fac_bench=dict(fill=14000.0, cam=dict(loc=(-8.0, 2.0, 3.0), look_at=(-26.0, 6.0, 3.0), lens=26), stages=FULL, small_crates=[(-13, 8, 2.6, 0.5), (-16, 6, 2.2, 0.3)], cards=[('a', (-16, 10), 3.2), ('b', (-13, 12), 3.2)], note='shot 8'),
     fac_chassis=dict(cam=dict(loc=(-9.0, 9.0, 3.4), look_at=(-6.0, 22.0, 4.2), lens=26), stages=_st(), cards=[('a', (-4, 14), 3.2)], note='shot 14'),
     fac_plates=dict(cam=dict(loc=(2.0, 11.0, 5.0), look_at=(-6.0, 22.0, 6.6), lens=26), stages=_st(plates=0.88, rivets=0.0), crane_x=-5.0, crane_y=22.0, hook_z=10.4, slings=dict(stage='plates', points=[(-5.5, 1.8, 4.25), (-5.5, -1.8, 4.25), (0.8, 1.8, 4.0), (0.8, -1.8, 4.0)]), cards=[('a', (-14, 15), 3.2)], note='shots 15'),
     fac_tracks=dict(cam=dict(loc=(-4.0, 7.0, 4.4), look_at=(-4.0, 22.0, 6.4), lens=24), stages=_st(plates=1, rivets=1, tracks=0.86), crane_x=-5.0, crane_y=22.0, hook_z=11.0, slings=dict(stage='tracks', points=[(-6.0, 2.6, 4.4), (-6.0, -2.6, 4.4), (0.0, 2.6, 4.2), (0.0, -2.6, 4.2)]), cards=[('b', (8, 13), 3.2)], note='shot 16'),

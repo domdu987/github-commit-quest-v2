@@ -1,8 +1,8 @@
 {
  "preset": "front_halt",
- "wall_s": 78.5,
- "cpu_s": 311.2,
- "build_s": 10.9,
+ "wall_s": 88.5,
+ "cpu_s": 351.0,
+ "build_s": 18.1,
  "settings": {
   "resolution": [
    720,
@@ -38,28 +38,28 @@
  "cards": [],
  "anchors": {
   "tank0_nose": [
-   456,
-   679
+   569,
+   719
   ],
   "tank0_front": [
-   344,
-   768
+   438,
+   783
   ],
   "tank0_rear": [
-   20,
-   554
+   190,
+   620
   ],
   "tank1_nose": [
-   1029,
-   582
+   1237,
+   623
   ],
   "tank1_front": [
-   1005,
-   711
+   1045,
+   792
   ],
   "tank1_rear": [
-   926,
-   523
+   537,
+   586
   ]
  }
 }

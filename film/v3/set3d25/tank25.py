@@ -218,8 +218,8 @@ def build_tank(name='tank', pos=(0, 0, 0), yaw=0.0, pitch=0.0, roll=0.0, camo=Tr
         hinge = F.empty(name + '_tail', parent=H.groups['chassis'], loc=(TAIL_HINGE[0], 0, TAIL_HINGE[1])); hinge.rotation_euler = (0, -math.radians(tail_angle), 0); root['tail'] = hinge.name; H.tail = hinge
         mb = MB(); R = TAIL_R; ax = (TAIL_AX[0], 0.0, TAIL_AX[1])
         for sg in (1, -1):
-            beam(mb, (0.0, sg * 1.05, 0.0), (ax[0], sg * 1.45, ax[2]), 0.3, 0.3, M['beam']); beam(mb, (0.0, sg * 1.05, -0.9), (ax[0] + 0.3, sg * 1.45, ax[2] - 0.2), 0.22, 0.22, M['beam'])
-        beam(mb, (ax[0] + 0.1, -1.5, ax[2]), (ax[0] + 0.1, 1.5, ax[2]), 0.32, 0.32, M['beam']); beam(mb, (-3.8, -1.2, 0.2), (-3.8, 1.2, 0.2), 0.22, 0.22, M['beam'])
+            beam(mb, (0.3, sg * 1.05, 0.0), (ax[0], sg * 1.45, ax[2]), 0.5, 0.45, M['frame2']); beam(mb, (0.3, sg * 1.05, -0.9), (ax[0] + 0.3, sg * 1.45, ax[2] - 0.2), 0.4, 0.34, M['frame2']); beam(mb, (0.3, sg * 1.05, 0.0), (0.3, sg * 1.05, -0.9), 0.5, 0.5, M['frame2'])
+        beam(mb, (ax[0] + 0.1, -1.5, ax[2]), (ax[0] + 0.1, 1.5, ax[2]), 0.45, 0.45, M['frame2']); beam(mb, (-3.8, -1.2, 0.2), (-3.8, 1.2, 0.2), 0.4, 0.4, M['frame2'])
         rod(mb, (ax[0], -2.9, ax[2]), (ax[0], 2.9, ax[2]), 0.14, M['steel'], 8); mkobj(mb, name + '_tailframe', parent=hinge)
         H.wheels = []
         for sg in (1, -1):
