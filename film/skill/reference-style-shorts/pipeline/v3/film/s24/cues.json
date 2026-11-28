@@ -1,0 +1,88 @@
+{
+ "fps": 30,
+ "time_base": "film seconds (narration clock + 0.100); frame g starts at g / 30",
+ "take": "s24",
+ "events": [
+  {
+   "time": 57.35,
+   "duration": 0.2,
+   "frame": 1720,
+   "end_frame": 1727,
+   "kind": "hit",
+   "label": "orchestra hit on the hard cut, then 6 frames of near silence",
+   "clock": 57.25
+  },
+  {
+   "time": 57.5,
+   "duration": 0.3,
+   "frame": 1725,
+   "end_frame": 1734,
+   "kind": "gasp",
+   "label": "two gasps (non-verbal): the shocked swap, focus lines (g1719-1723)",
+   "clock": 57.4
+  },
+  {
+   "time": 57.6,
+   "duration": 0.3,
+   "frame": 1728,
+   "end_frame": 1737,
+   "kind": "pop",
+   "label": "hat pop: the boater flies off (g1729 on)",
+   "clock": 57.5
+  },
+  {
+   "time": 57.7,
+   "duration": 0.6,
+   "frame": 1731,
+   "end_frame": 1749,
+   "kind": "whoosh",
+   "label": "crash whoosh out: the pull-out (g1730-1748); the roar swells to 59.6 (loudest sound of the film)",
+   "clock": 57.6
+  },
+  {
+   "time": 57.83,
+   "duration": 0.27,
+   "frame": 1735,
+   "end_frame": 1743,
+   "kind": "jump",
+   "label": "jump scare: squash, leap, hang, land",
+   "clock": 57.73
+  },
+  {
+   "time": 58.1,
+   "duration": 0.6,
+   "frame": 1743,
+   "end_frame": 1761,
+   "kind": "steps",
+   "label": "running steps on sand (they run out at screen right)",
+   "clock": 58.0
+  },
+  {
+   "time": 58.4,
+   "duration": 1.3,
+   "frame": 1752,
+   "end_frame": 1791,
+   "kind": "rumble",
+   "label": "ground rumble, timber creaks, wires whine (the shake starts, g1752)",
+   "clock": 58.3
+  },
+  {
+   "time": 58.9,
+   "duration": 0.6,
+   "frame": 1767,
+   "end_frame": 1785,
+   "kind": "shutters",
+   "label": "shutters bang x3, buoy bell",
+   "clock": 58.8
+  },
+  {
+   "time": 59.55,
+   "duration": 0.4,
+   "frame": 1786,
+   "end_frame": 1798,
+   "kind": "crash",
+   "label": "wave crash, white roar carried over the wipe",
+   "clock": 59.45
+  }
+ ]
+}

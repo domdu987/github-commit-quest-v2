@@ -1,0 +1,53 @@
+{
+ "provisional": false,
+ "note": "FINAL timing of the first film's opening, measured from its Thai narration (the first voice via fal.ai). Phrase times already include audio_offset. Example of the format shots/timing.py reads; for a new film write your own from the opening chunk of narration_timing.json.",
+ "audio": "__PROJ__/audio/th/hook.wav",
+ "audio_offset": 0.1,
+ "speech_end": 4.214,
+ "clip_seconds": 5.0,
+ "caption_style_prefix": "{\\fnKanit Black\\fs88}",
+ "phrases": [
+  {
+   "text": "เขาลากเส้น",
+   "beat": 1,
+   "t0": 0.1,
+   "t1": 0.531
+  },
+  {
+   "text": "บนแผนที่อากาศ",
+   "beat": 1,
+   "t0": 0.531,
+   "t1": 1.414
+  },
+  {
+   "text": "ชี้ตรงเข้า",
+   "beat": 2,
+   "t0": 1.414,
+   "t1": 1.982
+  },
+  {
+   "text": "นิวยอร์ก",
+   "beat": 2,
+   "t0": 1.982,
+   "t1": 2.517
+  },
+  {
+   "text": "แล้วหัวหน้า",
+   "beat": 3,
+   "t0": 2.517,
+   "t1": 3.132
+  },
+  {
+   "text": "ก็ลบทิ้ง",
+   "beat": 3,
+   "t0": 3.132,
+   "t1": 3.637
+  },
+  {
+   "text": "เฉยเลย",
+   "beat": 3,
+   "t0": 3.637,
+   "t1": 4.664
+  }
+ ]
+}

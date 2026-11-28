@@ -1,0 +1,198 @@
+{
+ "take": "s19",
+ "time": "film seconds (narration clock + 0.100)",
+ "cues": [
+  {
+   "t": 39.62,
+   "clock": 39.52,
+   "g": 1189,
+   "dur": 0.6,
+   "kind": "whoosh",
+   "label": "long crash whoosh with wind: the crash push into the map (g1188-1205); office sound ducks out, open-sea wind and swell bed in; music: low string ostinato"
+  },
+  {
+   "t": 40.3,
+   "clock": 40.2,
+   "g": 1209,
+   "dur": 0.8,
+   "kind": "whirr",
+   "label": "spinner whirr rising: the spinner turns faster (to one turn per 1.2 s by 41.0) and creeps to the foot of the line"
+  },
+  {
+   "t": 41.05,
+   "clock": 40.95,
+   "g": 1232,
+   "dur": 0.4,
+   "kind": "whoosh",
+   "label": "whoosh: snap pull-back and rise into the rake looking north (g1225-1238)"
+  },
+  {
+   "t": 41.1,
+   "clock": 41.0,
+   "g": 1233,
+   "dur": 0.08,
+   "kind": "thud",
+   "label": "low thud: east (Atlantic) terrace 1"
+  },
+  {
+   "t": 41.25,
+   "clock": 41.15,
+   "g": 1238,
+   "dur": 0.08,
+   "kind": "thud",
+   "label": "low thud: east terrace 2"
+  },
+  {
+   "t": 41.4,
+   "clock": 41.3,
+   "g": 1242,
+   "dur": 0.08,
+   "kind": "thud",
+   "label": "low thud: east terrace 3"
+  },
+  {
+   "t": 41.55,
+   "clock": 41.45,
+   "g": 1247,
+   "dur": 0.08,
+   "kind": "thud",
+   "label": "low thud: east terrace 4"
+  },
+  {
+   "t": 41.8,
+   "clock": 41.7,
+   "g": 1254,
+   "dur": 0.08,
+   "kind": "thud",
+   "label": "low thud: west (land) terrace 1"
+  },
+  {
+   "t": 41.93,
+   "clock": 41.83,
+   "g": 1258,
+   "dur": 0.08,
+   "kind": "thud",
+   "label": "low thud: west terrace 2"
+  },
+  {
+   "t": 42.05,
+   "clock": 41.95,
+   "g": 1262,
+   "dur": 0.08,
+   "kind": "thud",
+   "label": "low thud: west terrace 3"
+  },
+  {
+   "t": 42.18,
+   "clock": 42.08,
+   "g": 1265,
+   "dur": 0.08,
+   "kind": "thud",
+   "label": "low thud: west terrace 4"
+  },
+  {
+   "t": 42.4,
+   "clock": 42.3,
+   "g": 1272,
+   "dur": 0.7,
+   "kind": "creak",
+   "label": "rubber-squeeze creak and spinner squeak: both walls slide in and pinch the spinner tall and thin"
+  },
+  {
+   "t": 42.65,
+   "clock": 42.55,
+   "g": 1280,
+   "dur": 0.2,
+   "kind": "drip",
+   "label": "tiny sweat-drop plip on the spinner"
+  },
+  {
+   "t": 43.3,
+   "clock": 43.2,
+   "g": 1299,
+   "dur": 0.5,
+   "kind": "boom",
+   "label": "stone-wall boom with sub: the west wall locks (face vertical)"
+  },
+  {
+   "t": 43.34,
+   "clock": 43.24,
+   "g": 1300,
+   "dur": 0.35,
+   "kind": "whoosh",
+   "label": "whoosh down: snap into the corridor view"
+  },
+  {
+   "t": 43.7,
+   "clock": 43.6,
+   "g": 1311,
+   "dur": 0.5,
+   "kind": "boom",
+   "label": "stone-wall boom with sub: the east wall locks"
+  },
+  {
+   "t": 43.8,
+   "clock": 43.7,
+   "g": 1314,
+   "dur": 0.5,
+   "kind": "crumble",
+   "label": "chalk crumble: the white chalk curve breaks up where it runs into the east wall"
+  },
+  {
+   "t": 44.5,
+   "clock": 44.4,
+   "g": 1335,
+   "dur": 0.7,
+   "kind": "zip",
+   "label": "road unrolling zip and neon hum-on: the lane with white dashes unrolls north (g1335-1356)"
+  },
+  {
+   "t": 44.55,
+   "clock": 44.45,
+   "g": 1337,
+   "dur": 0.4,
+   "kind": "whoosh",
+   "label": "whoosh up: snap rise and tilt into the plan view"
+  },
+  {
+   "t": 45.25,
+   "clock": 45.15,
+   "g": 1358,
+   "dur": 0.3,
+   "kind": "ping",
+   "label": "compass ping: the compass N pops and pings"
+  },
+  {
+   "t": 45.95,
+   "clock": 45.85,
+   "g": 1378,
+   "dur": 0.4,
+   "kind": "whoosh",
+   "label": "whoosh: snap back down onto the spinner"
+  },
+  {
+   "t": 46.55,
+   "clock": 46.45,
+   "g": 1397,
+   "dur": 0.25,
+   "kind": "bonk",
+   "label": "bonk and sign pop: the spinner hits the east wall, no-right-turn pictogram pops"
+  },
+  {
+   "t": 46.95,
+   "clock": 46.85,
+   "g": 1408,
+   "dur": 0.25,
+   "kind": "bonk",
+   "label": "bonk and sign pop: the spinner hits the west wall, no-left-turn pictogram pops"
+  },
+  {
+   "t": 47.15,
+   "clock": 47.05,
+   "g": 1414,
+   "dur": 0.4,
+   "kind": "grumble",
+   "label": "spinner grumble: it shakes itself and faces north"
+  }
+ ]
+}
