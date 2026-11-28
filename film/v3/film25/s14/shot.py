@@ -13,11 +13,11 @@ ROW = (14, 353, 396)
 HANDLE = 6
 G_TAKE = (ROW[1] - HANDLE, ROW[2] - 1 + HANDLE)
 TC = (-18.0, 43.0); TOP = 1.9
-ENG = (-18.0, 47.2, 0.0)
+ENG = (-17.7, 47.0, 0.0)
 
 
 def u_model(g):
-    return 0.05 + 0.90 * C.calm((g - 352) / float(396 - 352))
+    return 0.22 + 0.66 * C.calm((g - 352) / float(396 - 352))
 
 
 def model_pos(g):
@@ -25,21 +25,25 @@ def model_pos(g):
     FA.set_model_tank(u_model(g))
     ob = F.S["chart"]["H"].root
     F.bpy.context.view_layer.update()
+    ob.location.y += 1.9
+    F.bpy.context.view_layer.update()
     return Vector(ob.matrix_world.translation)
 
 
 def build(rig):
     rig.set_look(True); rig.open_shell(floor_col=(0.30, 0.12, 0.07))
     rig.eng = rig.actor("eng", "engineer25")
-    rig.backdrop((TC[0], 51.0, 0.0), -90.0, w=16.0, h=12.0, col=(0.04, 0.14, 0.42), name="blue_plate")
+    rig.backdrop((TC[0], 51.0, 0.0), -90.0, w=16.0, h=12.0, col=(0.46, 0.41, 0.36), name="blue_plate")
+    for ob in F.bpy.data.objects:
+        if ob.name in ('gantry', 'chart_wood') and ob.name == 'gantry': ob.visible_shadow = False
 
 
 def cam_at(g, mp):
     """FOLLOW the model tank from the front-right above (3/4 top-down), then PULL / swoop to the engineer's face"""
     s = (g - G_TAKE[0]) / float(G_TAKE[1] - G_TAKE[0])
-    f_loc = mp + Vector((0.2 + 0.6 * s, -4.6 + 0.4 * s, 3.4 - 0.2 * s)); f_look = mp + Vector((0.0, 0.3, 0.1))
+    f_loc = mp + Vector((1.2 + 0.4 * s, -4.6 + 0.4 * s, 3.4 - 0.2 * s)); f_look = mp + Vector((1.1, 0.3, 0.1))
     w = C.smooth((g - 378) / 18.0)
-    c_loc = Vector((-18.3, 44.0, 3.0)); c_look = Vector((-18.0, 47.2, 2.25))
+    c_loc = Vector((-18.3, 44.0, 3.0)); c_look = Vector((-17.7, 47.0, 2.25))
     mid = (f_loc + c_loc) * 0.5 + Vector((1.5, -1.5, 2.0)) * math.sin(math.pi * w)           # a slight arc
     loc = R.lerp(f_loc, c_loc, w) + (mid - (f_loc + c_loc) * 0.5) * 0.9
     look = R.lerp(f_look, c_look, w)
@@ -64,7 +68,7 @@ def state(g):
     fd = R.dist(loc, look)
     A = {"eng": dict(pos=ENG, pose=p, flip=False, hands=hands)}
     import factory as FA
-    return dict(cam=(loc, look, lens), dof=(2.8, fd), actors=A, hook=lambda f: FA.set_model_tank(u_model(f)))
+    return dict(cam=(loc, look, lens), dof=(2.8, fd), actors=A, hook=lambda f: (FA.set_model_tank(u_model(f)), setattr(F.S['chart']['H'].root, 'location', F.S['chart']['H'].root.location + Vector((0, 1.9, 0)))))
 
 
 if __name__ == "__main__":
