@@ -17,6 +17,6 @@ overall median jitter px 0.17
 ## Framing numbers (from the per-frame meta)
 - highest head top y 0 px (rule: heads above y 880 means head bottoms; head tops far above), lowest feet y 0 px (feet are below the frame edge when > 1280 or above y 860 when in frame).
 ## Notes
-- Wide (W): no DOF, no backdrop, no characters; render at 70 % scale with 14 adaptive samples (small detail only). The tank rolls up the high street (pose_on_ground + set_drive every frame). Brick houses = red, sky blue.
+- Wide (W): no DOF, no backdrop, no characters; render at 70 % scale with 14 adaptive samples (small detail only). The tank rolls up the high street (pose_on_ground + set_drive every frame). Brick houses = red, sky blue. Graded with vibrance 1.8, wb a* +1 b* +4.5 (a gentler grade than the C takes).
 ## Files
 shot.py, d25.py / c25.py / post_d.py / finish.py (in ../s21), meta.json, contact.jpg, QA_AUTO.md, phone_sheet.jpg, take.mkv (frames, raw and work stay out of git).

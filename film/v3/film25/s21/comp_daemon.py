@@ -14,6 +14,7 @@ while True:
                 try:
                     kw = {}
                     if os.path.basename(td) in ("s27", "s26"): kw = dict(vib=2.05)
+                    if os.path.basename(td) in ("s66", "s67"): kw = dict(vib=1.8, wb=(1.0, 4.5))
                     if os.path.basename(td) in ("s23", "s18", "s25"): kw = dict(gamma=0.9, wb=(-1.0, 5.0), vib=2.16)
                     PD.compose(g, os.path.join(td, "work"), os.path.join(td, "frames"), **kw); did = True
                 except Exception as e:
