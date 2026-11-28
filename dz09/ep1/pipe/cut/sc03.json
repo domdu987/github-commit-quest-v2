@@ -1,0 +1,1287 @@
+{
+ "scene": "sc03",
+ "source": "plan",
+ "timing_file": "(plan estimate: plan)",
+ "narr0": 0.0,
+ "fps": 24,
+ "g_base": 30000,
+ "frames": 1652,
+ "seconds": 68.833,
+ "plan_frames": 1652,
+ "frames_by_class": {
+  "B": 609,
+  "A": 993,
+  "C2": 50
+ },
+ "final_cpu_h_estimate": 25.45,
+ "hard_cuts": [],
+ "fx": [],
+ "cues": {},
+ "mix": "",
+ "narration_wav": "",
+ "warnings": [],
+ "shots": [
+  {
+   "id": "S062",
+   "plan_id": "S62",
+   "f0": 0,
+   "f1": 44,
+   "frames": 44,
+   "plan_frames": 44,
+   "cls": "B",
+   "set": "X1s",
+   "size": "W",
+   "cut_on": "ไม่ไกลกัน",
+   "how": "scene start",
+   "narration": [
+    {
+     "id": "s40",
+     "captions": [
+      "ไม่ไกลกัน",
+      "รถเก๋งคันหนึ่ง"
+     ]
+    }
+   ],
+   "action": "Back at road level, 40 D behind the truck (toward the threat, screen left): a dark sedan on its left side across a lane, hazards ticking, steam; a small figure in a white coat working at its windscreen opening. Kong at the truck in the right foreground, turning to it."
+  },
+  {
+   "id": "S063",
+   "plan_id": "S63",
+   "f0": 44,
+   "f1": 73,
+   "frames": 29,
+   "plan_frames": 29,
+   "cls": "B",
+   "set": "X1s",
+   "size": "MW low",
+   "cut_on": "พลิกตะแคง",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s40",
+     "captions": [
+      "พลิกตะแคง"
+     ]
+    }
+   ],
+   "action": "The sedan on its left side, roof toward us (the underside is never seen and is not built): hazards ticking on the upper flank, steam, glass crumbs, a briefcase in a puddle. Praew braced at the empty windscreen frame hauling on a navy sleeve."
+  },
+  {
+   "id": "S064",
+   "plan_id": "S64",
+   "f0": 73,
+   "f1": 113,
+   "frames": 40,
+   "plan_frames": 40,
+   "cls": "A",
+   "set": "X1s",
+   "size": "MCU",
+   "cut_on": "หมอแพรว",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s41",
+     "captions": [
+      "หมอแพรว",
+      "หมอห้องฉุกเฉิน"
+     ]
+    }
+   ],
+   "action": "Praew: hair bun coming loose, white coat soaked over blue scrubs, stethoscope, blue gloves; `determined`, teeth set, pulling with her whole weight (lean -18, feet planted wide)."
+  },
+  {
+   "id": "S065",
+   "plan_id": "S65",
+   "f0": 113,
+   "f1": 170,
+   "frames": 57,
+   "plan_frames": 57,
+   "cls": "A",
+   "set": "X1s",
+   "size": "M two-shot",
+   "cut_on": "กำลังดึงคุณทศ",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s41",
+     "captions": [
+      "กำลังดึงคุณทศ",
+      "ออกจากซากรถ"
+     ]
+    }
+   ],
+   "action": "Through the windscreen frame: Tos lying on his side in the tipped cabin (card rolled 80 degrees), glasses crooked, navy suit; Praew has his right arm and shoulder out; he does not come further."
+  },
+  {
+   "id": "S066",
+   "plan_id": "S66",
+   "f0": 170,
+   "f1": 236,
+   "frames": 66,
+   "plan_frames": 66,
+   "cls": "A",
+   "set": "X1s",
+   "size": "CU",
+   "cut_on": "แต่ประตูที่ยุบ",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s42",
+     "captions": [
+      "แต่ประตูที่ยุบ",
+      "อัดเขาติดเบาะ"
+     ]
+    }
+   ],
+   "action": "Tos's face, sideways in frame: `angry`-afraid, glasses askew; the buckled door's edge lies across the bottom of the frame pressing him into the seat, and he shoves at it with his free hand; it does not give."
+  },
+  {
+   "id": "S067",
+   "plan_id": "S67",
+   "f0": 236,
+   "f1": 303,
+   "frames": 67,
+   "plan_frames": 67,
+   "cls": "B",
+   "set": "X1s",
+   "size": "W long",
+   "cut_on": "ไกลออกไป",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s43",
+     "captions": [
+      "ไกลออกไป",
+      "ฝูงของมัน",
+      "กำลังวิ่งมา"
+     ]
+    }
+   ],
+   "action": "Long lens back down the lanes (screen left): infected running toward us between the cars, back-lit by headlights and hazards, seen from the waist up over the bonnets (twelve distinct figures, the rest silhouettes); two vault bonnets side-on in the middle distance; phases offset so no two are in step."
+  },
+  {
+   "id": "S068",
+   "plan_id": "S68",
+   "f0": 303,
+   "f1": 363,
+   "frames": 60,
+   "plan_frames": 60,
+   "cls": "A",
+   "set": "X1s",
+   "size": "CU",
+   "cut_on": "ก้องชะงัก",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s44",
+     "captions": [
+      "ก้องชะงัก",
+      "หนีตอนนี้",
+      "ยังทัน"
+     ]
+    }
+   ],
+   "action": "Kong at the truck door, hand on the handle: eyes go left (the horde), right (the open shoulder ahead), then to the sedan. He does not move."
+  },
+  {
+   "id": "S069",
+   "plan_id": "S69",
+   "f0": 363,
+   "f1": 420,
+   "frames": 57,
+   "plan_frames": 57,
+   "cls": "A",
+   "set": "X1s",
+   "size": "MW track",
+   "cut_on": "แต่เขา",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s45",
+     "captions": [
+      "แต่เขา",
+      "วิ่งกลับเข้าไปช่วย"
+     ]
+    }
+   ],
+   "action": "Kong runs right to left, toward the sedan and the horde, against a stream of extras fleeing left to right past him (run cycle, planted; the cutter in both hands)."
+  },
+  {
+   "id": "S070",
+   "plan_id": "S70",
+   "f0": 420,
+   "f1": 470,
+   "frames": 50,
+   "plan_frames": 50,
+   "cls": "C2",
+   "set": "X1s",
+   "size": "INSERT",
+   "cut_on": "ก้องเอาเครื่องตัดง้างประตู",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s46",
+     "captions": [
+      "ก้องเอาเครื่องตัดง้างประตู"
+     ]
+    }
+   ],
+   "action": "The hook's S08 jaw staging on new metal: the tips go into the gap between the buckled door frame and the seat and open; the frame bends away in three pushes (pump recoil each time)."
+  },
+  {
+   "id": "S071",
+   "plan_id": "S71",
+   "f0": 470,
+   "f1": 510,
+   "frames": 40,
+   "plan_frames": 40,
+   "cls": "A",
+   "set": "X1s",
+   "size": "M",
+   "cut_on": "คุณทศหลุดออกมา",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s46",
+     "captions": [
+      "คุณทศหลุดออกมา"
+     ]
+    }
+   ],
+   "action": "Tos slides out through the windscreen frame into Praew's and Kong's hands and stands (card roll back to upright over 8 f on the turn out), suit wet and dusty, both sleeves whole, glasses pushed straight."
+  },
+  {
+   "id": "S072",
+   "plan_id": "S72",
+   "f0": 510,
+   "f1": 547,
+   "frames": 37,
+   "plan_frames": 37,
+   "cls": "A",
+   "set": "X1s",
+   "size": "M low",
+   "cut_on": "พี่!",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s47",
+     "captions": [
+      "พี่!",
+      "รอผมด้วย!"
+     ]
+    }
+   ],
+   "action": "Up at a car roof: James, visor up, waves one arm and shouts the line (`shouting`), then runs on."
+  },
+  {
+   "id": "S073",
+   "plan_id": "S73",
+   "f0": 547,
+   "f1": 586,
+   "frames": 39,
+   "plan_frames": 39,
+   "cls": "A",
+   "set": "X1s",
+   "size": "CU profile",
+   "cut_on": "เจมส์",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s48",
+     "captions": [
+      "เจมส์",
+      "ไรเดอร์ส่งอาหาร"
+     ]
+    }
+   ],
+   "action": "James mid-run in profile, looking back over his shoulder with `scared`; white helmet, green jacket, no box."
+  },
+  {
+   "id": "S074",
+   "plan_id": "S74",
+   "f0": 586,
+   "f1": 622,
+   "frames": 36,
+   "plan_frames": 36,
+   "cls": "A",
+   "set": "X1s",
+   "size": "MW low",
+   "cut_on": "กระโดดลงจากหลังคารถ",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s48",
+     "captions": [
+      "กระโดดลงจากหลังคารถ"
+     ]
+    }
+   ],
+   "action": "James jumps from a bonnet to the road (anticipation crouch, air 5 f, landing crouch with a puddle burst, feet planted) and runs toward the group, left to right."
+  },
+  {
+   "id": "S075",
+   "plan_id": "S75",
+   "f0": 622,
+   "f1": 690,
+   "frames": 68,
+   "plan_frames": 68,
+   "cls": "A",
+   "set": "X1s",
+   "size": "M",
+   "cut_on": "แต่ที่ตามหลังมา",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s48",
+     "captions": [
+      "แต่ที่ตามหลังมา",
+      "คือน้องของก้อง"
+     ]
+    }
+   ],
+   "action": "On the bus roof behind him: the junior, infected, drops into a crouch, drawn back by the shout (orange long sleeves, the crest of hair, the torn neck, grey-green skin, red pupils). Kong's head and shoulder are a dark shape at the right edge, turned to him."
+  },
+  {
+   "id": "S076",
+   "plan_id": "S76",
+   "f0": 690,
+   "f1": 723,
+   "frames": 33,
+   "plan_frames": 33,
+   "cls": "B",
+   "set": "X1s",
+   "size": "W side",
+   "cut_on": "ทุกคนขึ้นรถกู้ภัย",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s49",
+     "captions": [
+      "ทุกคนขึ้นรถกู้ภัย"
+     ]
+    }
+   ],
+   "action": "All four run left to right to the truck: James first, Praew with Tos's arm, Kong last and looking back; far behind, heads and shoulders of the horde above the car roofs, closing."
+  },
+  {
+   "id": "S077",
+   "plan_id": "S77",
+   "f0": 723,
+   "f1": 787,
+   "frames": 64,
+   "plan_frames": 64,
+   "cls": "A",
+   "set": "X2c",
+   "size": "M",
+   "cut_on": "ประตูปิดทัน",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s49",
+     "captions": [
+      "ประตูปิดทัน",
+      "แค่เสี้ยววินาที"
+     ]
+    }
+   ],
+   "action": "The truck's crew door from outside: Praew and Tos go up and in, James dives after them, Kong pulls the door; the junior hits it as it shuts and his palms spread on the glass."
+  },
+  {
+   "id": "S078",
+   "plan_id": "S78",
+   "f0": 787,
+   "f1": 816,
+   "frames": 29,
+   "plan_frames": 29,
+   "cls": "A",
+   "set": "CAB",
+   "size": "CU",
+   "cut_on": "หน้าที่แนบกระจก",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s50",
+     "captions": [
+      "หน้าที่แนบกระจก"
+     ]
+    }
+   ],
+   "action": "From inside: the side window. The junior's face presses to the wet glass, red pupils, teeth, breath fogging; his fingers drag clear lines through the rain. Kong's profile is a dark edge at the right."
+  },
+  {
+   "id": "S079",
+   "plan_id": "S79",
+   "f0": 816,
+   "f1": 896,
+   "frames": 80,
+   "plan_frames": 80,
+   "cls": "A",
+   "set": "CAB",
+   "size": "MCU",
+   "cut_on": "คือคนที่เขาสัญญา",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s50",
+     "captions": [
+      "คือคนที่เขาสัญญา",
+      "ว่าจะพาไปโรงพยาบาล"
+     ]
+    }
+   ],
+   "action": "Reverse: Kong's face through the streaked glass, `guilty`; the shadow of a clawing hand slides across it; he looks away, down, and reaches for the ignition."
+  },
+  {
+   "id": "S080",
+   "plan_id": "S80",
+   "f0": 896,
+   "f1": 957,
+   "frames": 61,
+   "plan_frames": 61,
+   "cls": "B",
+   "set": "CAB",
+   "size": "POV side",
+   "cut_on": "ก้องออกรถ",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s51",
+     "captions": [
+      "ก้องออกรถ",
+      "แทรกไปตามช่องว่าง"
+     ]
+    }
+   ],
+   "action": "From the rear bench through the side window as the cab moves off: the junior's palms slide off the wet glass, he runs three steps beside the truck and falls behind; wrecks and the barrier slide past (the camera and cab shell travel along the shoulder; the truck's exterior and wheels are not seen)."
+  },
+  {
+   "id": "S081",
+   "plan_id": "S81",
+   "f0": 957,
+   "f1": 1001,
+   "frames": 44,
+   "plan_frames": 44,
+   "cls": "B",
+   "set": "CAB",
+   "size": "POV",
+   "cut_on": "แต่ข้างหน้า",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s52",
+     "captions": [
+      "แต่ข้างหน้า",
+      "รถบรรทุกขวาง"
+     ]
+    }
+   ],
+   "action": "Through the windscreen, wipers beating: the shoulder ahead, then in the headlights a lorry trailer lying across every lane."
+  },
+  {
+   "id": "S082",
+   "plan_id": "S82",
+   "f0": 1001,
+   "f1": 1027,
+   "frames": 26,
+   "plan_frames": 26,
+   "cls": "B",
+   "set": "X2",
+   "size": "W low",
+   "cut_on": "เต็มถนน",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s52",
+     "captions": [
+      "เต็มถนน"
+     ]
+    }
+   ],
+   "action": "Low, behind the rescue truck, which has just stopped (nose dips and settles over 6 f, brake lights flaring on the wet road): ahead in its headlights a six-wheel box truck slewed across all three lanes, cab against the left barrier. Beside the cab, at the barrier, a small steel gate under one dim lamp."
+  },
+  {
+   "id": "S083",
+   "plan_id": "S83",
+   "f0": 1027,
+   "f1": 1073,
+   "frames": 46,
+   "plan_frames": 46,
+   "cls": "A",
+   "set": "CAB",
+   "size": "CU",
+   "cut_on": "มือเขาไปเอง",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s53",
+     "captions": [
+      "มือเขาไปเอง",
+      "ตามความเคยชิน"
+     ]
+    }
+   ],
+   "action": "Kong at the wheel (`wheel`), eyes hunting for a gap; his left hand leaves the wheel and goes up to the console without his looking at it."
+  },
+  {
+   "id": "S084",
+   "plan_id": "S84",
+   "f0": 1073,
+   "f1": 1109,
+   "frames": 36,
+   "plan_frames": 36,
+   "cls": "B",
+   "set": "CAB",
+   "size": "INSERT",
+   "cut_on": "เปิดไซเรนขอทาง",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s53",
+     "captions": [
+      "เปิดไซเรนขอทาง"
+     ]
+    }
+   ],
+   "action": "The console: a gloved finger presses a red rocker switch with a hand-lettered label ไซเรน."
+  },
+  {
+   "id": "S085",
+   "plan_id": "S85",
+   "f0": 1109,
+   "f1": 1137,
+   "frames": 28,
+   "plan_frames": 28,
+   "cls": "B",
+   "set": "X2",
+   "size": "M low",
+   "cut_on": "(picture beat, no word)",
+   "how": "beat (55 % between S84 and S86)",
+   "narration": [],
+   "action": "The light bar and horn on the cab roof: beacons flashing, rain jumping off the horn mouth as the siren hits."
+  },
+  {
+   "id": "S086",
+   "plan_id": "S86",
+   "f0": 1137,
+   "f1": 1181,
+   "frames": 44,
+   "plan_frames": 44,
+   "cls": "B",
+   "set": "X2",
+   "size": "EW high",
+   "cut_on": "ทุกตัวบนทางด่วน",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s54",
+     "captions": [
+      "ทุกตัวบนทางด่วน",
+      "หยุดวิ่ง"
+     ]
+    }
+   ],
+   "action": "Wide back over the jam: every running infected figure stops, people keep fleeing past them. The stopped figures twitch on twos."
+  },
+  {
+   "id": "S087",
+   "plan_id": "S87",
+   "f0": 1181,
+   "f1": 1226,
+   "frames": 45,
+   "plan_frames": 45,
+   "cls": "A",
+   "set": "X2",
+   "size": "M",
+   "cut_on": "แล้วหันมา",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s54",
+     "captions": [
+      "แล้วหันมา",
+      "พร้อมกัน"
+     ]
+    }
+   ],
+   "action": "Three infected in a row at different depths (office man, auntie without her umbrella, a student): their heads turn to the lens one, two, three on twos; red pupils catch the beacon."
+  },
+  {
+   "id": "S088",
+   "plan_id": "S88",
+   "f0": 1226,
+   "f1": 1263,
+   "frames": 37,
+   "plan_frames": 37,
+   "cls": "A",
+   "set": "CAB",
+   "size": "CU",
+   "cut_on": "ปิดเสียง!",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s55",
+     "captions": [
+      "ปิดเสียง!",
+      "เร็ว!"
+     ]
+    }
+   ],
+   "action": "Praew leans forward between the front seats from the rear bench and shouts the line (`shouting`)."
+  },
+  {
+   "id": "S089",
+   "plan_id": "S89",
+   "f0": 1263,
+   "f1": 1286,
+   "frames": 23,
+   "plan_frames": 23,
+   "cls": "B",
+   "set": "CAB",
+   "size": "INSERT",
+   "cut_on": "ก้องปิดไซเรน",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s56",
+     "captions": [
+      "ก้องปิดไซเรน"
+     ]
+    }
+   ],
+   "action": "The console again, from the side: Kong's palm slaps the switch off."
+  },
+  {
+   "id": "S090",
+   "plan_id": "S90",
+   "f0": 1286,
+   "f1": 1309,
+   "frames": 23,
+   "plan_frames": 23,
+   "cls": "A",
+   "set": "X2c",
+   "size": "CU",
+   "cut_on": "แต่สายไปแล้ว",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s56",
+     "captions": [
+      "แต่สายไปแล้ว"
+     ]
+    }
+   ],
+   "action": "Kong through the windscreen from the bonnet, a wiper crossing his face: `alarmed`, eyes on the mirror."
+  },
+  {
+   "id": "S091",
+   "plan_id": "S91",
+   "f0": 1309,
+   "f1": 1381,
+   "frames": 72,
+   "plan_frames": 72,
+   "cls": "B",
+   "set": "X2",
+   "size": "W",
+   "cut_on": "ทั้งฝูงรู้แล้ว",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s56",
+     "captions": [
+      "ทั้งฝูงรู้แล้ว",
+      "ว่าเขาอยู่ตรงไหน"
+     ]
+    }
+   ],
+   "action": "From the truck's roof looking back and left: the horde comes through four gaps between cars, converging on us, seen from the waist up over the bonnets; two cross a roof side-on."
+  },
+  {
+   "id": "S092",
+   "plan_id": "S92",
+   "f0": 1381,
+   "f1": 1402,
+   "frames": 21,
+   "plan_frames": 21,
+   "cls": "A",
+   "set": "CAB",
+   "size": "CU",
+   "cut_on": "เสียง กับแสง",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s57",
+     "captions": [
+      "เสียง กับแสง"
+     ]
+    }
+   ],
+   "action": "Kong: eyes to the switch, to the red and blue sweeping over the bonnet, back. He reaches up again and the sweeping light on his face stops: he has cut the beacons too."
+  },
+  {
+   "id": "S093",
+   "plan_id": "S93",
+   "f0": 1402,
+   "f1": 1451,
+   "frames": 49,
+   "plan_frames": 49,
+   "cls": "B",
+   "set": "X2",
+   "size": "M",
+   "cut_on": "คือสิ่งที่เรียกมัน",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s57",
+     "captions": [
+      "คือสิ่งที่เรียกมัน"
+     ]
+    }
+   ],
+   "action": "Outside: the light bar goes dark; a breath later the first two infected hit the truck's flank and it rocks on its springs."
+  },
+  {
+   "id": "S094",
+   "plan_id": "S94",
+   "f0": 1451,
+   "f1": 1514,
+   "frames": 63,
+   "plan_frames": 63,
+   "cls": "A",
+   "set": "CAB",
+   "size": "CU",
+   "cut_on": "ขับไปสิ!",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s58",
+     "captions": [
+      "ขับไปสิ!",
+      "จะจอดให้มันกิน",
+      "หรือไง!"
+     ]
+    }
+   ],
+   "action": "Tos on the rear bench, lunging forward, finger jabbing at the windscreen, shouting (`angry`); glasses flash white; both suit sleeves still whole."
+  },
+  {
+   "id": "S095",
+   "plan_id": "S95",
+   "f0": 1514,
+   "f1": 1565,
+   "frames": 51,
+   "plan_frames": 51,
+   "cls": "A",
+   "set": "X2c",
+   "size": "M two-shot",
+   "cut_on": "รถข้างหน้า",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s59",
+     "captions": [
+      "รถข้างหน้า",
+      "ขยับไม่ได้!"
+     ]
+    }
+   ],
+   "action": "Through the windscreen: Kong half-turned, shouting back, his hand thrown toward the lorry; James beside him flinches as two palms slap the side glass."
+  },
+  {
+   "id": "S096",
+   "plan_id": "S96",
+   "f0": 1565,
+   "f1": 1599,
+   "frames": 34,
+   "plan_frames": 34,
+   "cls": "A",
+   "set": "CAB",
+   "size": "CU",
+   "cut_on": "พี่! ผมเคยผ่านแถวนี้",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s60",
+     "captions": [
+      "พี่! ผมเคยผ่านแถวนี้"
+     ]
+    }
+   ],
+   "action": "James in the front passenger seat, helmet on, pointing past Kong to the left front, talking fast."
+  },
+  {
+   "id": "S097",
+   "plan_id": "S97",
+   "f0": 1599,
+   "f1": 1652,
+   "frames": 53,
+   "plan_frames": 53,
+   "cls": "B",
+   "set": "CAB",
+   "size": "POV",
+   "cut_on": "มีทางลง",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s60",
+     "captions": [
+      "มีทางลง",
+      "ข้างรถคันนั้น!"
+     ]
+    }
+   ],
+   "action": "Through the left of the windscreen: beside the lorry's cab the steel mesh gate, a stair landing and handrail going down outside the barrier, one caged lamp, a small green running-man sign drawn for this film. Twelve D away. An infected crosses the foreground."
+  }
+ ],
+ "captions": [
+  {
+   "id": "s40",
+   "text": "ไม่ไกลกัน",
+   "t0": 0.0,
+   "t1": 0.716,
+   "speaker": "narr"
+  },
+  {
+   "id": "s40",
+   "text": "รถเก๋งคันหนึ่ง",
+   "t0": 0.716,
+   "t1": 1.829,
+   "speaker": "narr"
+  },
+  {
+   "id": "s40",
+   "text": "พลิกตะแคง",
+   "t0": 1.829,
+   "t1": 2.924,
+   "speaker": "narr",
+   "emph": "พลิกตะแคง",
+   "colour": "amber"
+  },
+  {
+   "id": "s41",
+   "text": "หมอแพรว",
+   "t0": 3.024,
+   "t1": 3.58,
+   "speaker": "narr",
+   "emph": "หมอแพรว",
+   "colour": "amber"
+  },
+  {
+   "id": "s41",
+   "text": "หมอห้องฉุกเฉิน",
+   "t0": 3.58,
+   "t1": 4.693,
+   "speaker": "narr"
+  },
+  {
+   "id": "s41",
+   "text": "กำลังดึงคุณทศ",
+   "t0": 4.693,
+   "t1": 5.727,
+   "speaker": "narr",
+   "emph": "คุณทศ",
+   "colour": "amber"
+  },
+  {
+   "id": "s41",
+   "text": "ออกจากซากรถ",
+   "t0": 5.727,
+   "t1": 6.981,
+   "speaker": "narr"
+  },
+  {
+   "id": "s42",
+   "text": "แต่ประตูที่ยุบ",
+   "t0": 7.081,
+   "t1": 8.194,
+   "speaker": "narr"
+  },
+  {
+   "id": "s42",
+   "text": "อัดเขาติดเบาะ",
+   "t0": 8.194,
+   "t1": 9.607,
+   "speaker": "narr",
+   "emph": "ติดเบาะ",
+   "colour": "red"
+  },
+  {
+   "id": "s43",
+   "text": "ไกลออกไป",
+   "t0": 9.807,
+   "t1": 10.443,
+   "speaker": "narr"
+  },
+  {
+   "id": "s43",
+   "text": "ฝูงของมัน",
+   "t0": 10.443,
+   "t1": 11.159,
+   "speaker": "narr",
+   "emph": "ฝูงของมัน",
+   "colour": "red"
+  },
+  {
+   "id": "s43",
+   "text": "กำลังวิ่งมา",
+   "t0": 11.159,
+   "t1": 12.413,
+   "speaker": "narr"
+  },
+  {
+   "id": "s44",
+   "text": "ก้องชะงัก",
+   "t0": 12.613,
+   "t1": 13.329,
+   "speaker": "narr"
+  },
+  {
+   "id": "s44",
+   "text": "หนีตอนนี้",
+   "t0": 13.329,
+   "t1": 14.044,
+   "speaker": "narr"
+  },
+  {
+   "id": "s44",
+   "text": "ยังทัน",
+   "t0": 14.044,
+   "t1": 14.901,
+   "speaker": "narr"
+  },
+  {
+   "id": "s45",
+   "text": "แต่เขา",
+   "t0": 15.101,
+   "t1": 15.578,
+   "speaker": "narr"
+  },
+  {
+   "id": "s45",
+   "text": "วิ่งกลับเข้าไปช่วย",
+   "t0": 15.578,
+   "t1": 17.389,
+   "speaker": "narr",
+   "emph": "กลับเข้าไปช่วย",
+   "colour": "amber"
+  },
+  {
+   "id": "s46",
+   "text": "ก้องเอาเครื่องตัดง้างประตู",
+   "t0": 17.489,
+   "t1": 19.556,
+   "speaker": "narr"
+  },
+  {
+   "id": "s46",
+   "text": "คุณทศหลุดออกมา",
+   "t0": 19.556,
+   "t1": 21.048,
+   "speaker": "narr"
+  },
+  {
+   "id": "s47",
+   "text": "พี่!",
+   "t0": 21.248,
+   "t1": 21.668,
+   "speaker": "james"
+  },
+  {
+   "id": "s47",
+   "text": "รอผมด้วย!",
+   "t0": 21.668,
+   "t1": 22.684,
+   "speaker": "james"
+  },
+  {
+   "id": "s48",
+   "text": "เจมส์",
+   "t0": 22.784,
+   "t1": 23.204,
+   "speaker": "narr",
+   "emph": "เจมส์",
+   "colour": "amber"
+  },
+  {
+   "id": "s48",
+   "text": "ไรเดอร์ส่งอาหาร",
+   "t0": 23.204,
+   "t1": 24.397,
+   "speaker": "narr"
+  },
+  {
+   "id": "s48",
+   "text": "กระโดดลงจากหลังคารถ",
+   "t0": 24.397,
+   "t1": 25.907,
+   "speaker": "narr"
+  },
+  {
+   "id": "s48",
+   "text": "แต่ที่ตามหลังมา",
+   "t0": 25.907,
+   "t1": 27.099,
+   "speaker": "narr"
+  },
+  {
+   "id": "s48",
+   "text": "คือน้องของก้อง",
+   "t0": 27.099,
+   "t1": 28.592,
+   "speaker": "narr",
+   "emph": "น้องของก้อง",
+   "colour": "red"
+  },
+  {
+   "id": "s49",
+   "text": "ทุกคนขึ้นรถกู้ภัย",
+   "t0": 28.742,
+   "t1": 30.094,
+   "speaker": "narr"
+  },
+  {
+   "id": "s49",
+   "text": "ประตูปิดทัน",
+   "t0": 30.094,
+   "t1": 30.968,
+   "speaker": "narr"
+  },
+  {
+   "id": "s49",
+   "text": "แค่เสี้ยววินาที",
+   "t0": 30.968,
+   "t1": 32.54,
+   "speaker": "narr"
+  },
+  {
+   "id": "s50",
+   "text": "หน้าที่แนบกระจก",
+   "t0": 32.79,
+   "t1": 33.983,
+   "speaker": "narr",
+   "emph": "แนบกระจก",
+   "colour": "red"
+  },
+  {
+   "id": "s50",
+   "text": "คือคนที่เขาสัญญา",
+   "t0": 33.983,
+   "t1": 35.255,
+   "speaker": "narr"
+  },
+  {
+   "id": "s50",
+   "text": "ว่าจะพาไปโรงพยาบาล",
+   "t0": 35.255,
+   "t1": 37.065,
+   "speaker": "narr"
+  },
+  {
+   "id": "s51",
+   "text": "ก้องออกรถ",
+   "t0": 37.315,
+   "t1": 38.031,
+   "speaker": "narr"
+  },
+  {
+   "id": "s51",
+   "text": "แทรกไปตามช่องว่าง",
+   "t0": 38.031,
+   "t1": 39.762,
+   "speaker": "narr"
+  },
+  {
+   "id": "s52",
+   "text": "แต่ข้างหน้า",
+   "t0": 39.862,
+   "t1": 40.737,
+   "speaker": "narr"
+  },
+  {
+   "id": "s52",
+   "text": "รถบรรทุกขวาง",
+   "t0": 40.737,
+   "t1": 41.691,
+   "speaker": "narr",
+   "emph": "ขวาง",
+   "colour": "red"
+  },
+  {
+   "id": "s52",
+   "text": "เต็มถนน",
+   "t0": 41.691,
+   "t1": 42.627,
+   "speaker": "narr"
+  },
+  {
+   "id": "s53",
+   "text": "มือเขาไปเอง",
+   "t0": 42.777,
+   "t1": 43.651,
+   "speaker": "narr"
+  },
+  {
+   "id": "s53",
+   "text": "ตามความเคยชิน",
+   "t0": 43.651,
+   "t1": 44.685,
+   "speaker": "narr"
+  },
+  {
+   "id": "s53",
+   "text": "เปิดไซเรนขอทาง",
+   "t0": 44.685,
+   "t1": 46.178,
+   "speaker": "narr",
+   "emph": "ไซเรน",
+   "colour": "red"
+  },
+  {
+   "id": "s54",
+   "text": "ทุกตัวบนทางด่วน",
+   "t0": 47.378,
+   "t1": 48.57,
+   "speaker": "narr"
+  },
+  {
+   "id": "s54",
+   "text": "หยุดวิ่ง",
+   "t0": 48.57,
+   "t1": 49.206,
+   "speaker": "narr"
+  },
+  {
+   "id": "s54",
+   "text": "แล้วหันมา",
+   "t0": 49.206,
+   "t1": 49.921,
+   "speaker": "narr",
+   "emph": "หันมา",
+   "colour": "red"
+  },
+  {
+   "id": "s54",
+   "text": "พร้อมกัน",
+   "t0": 49.921,
+   "t1": 50.937,
+   "speaker": "narr"
+  },
+  {
+   "id": "s55",
+   "text": "ปิดเสียง!",
+   "t0": 51.087,
+   "t1": 51.723,
+   "speaker": "praew"
+  },
+  {
+   "id": "s55",
+   "text": "เร็ว!",
+   "t0": 51.723,
+   "t1": 52.523,
+   "speaker": "praew"
+  },
+  {
+   "id": "s56",
+   "text": "ก้องปิดไซเรน",
+   "t0": 52.623,
+   "t1": 53.577,
+   "speaker": "narr"
+  },
+  {
+   "id": "s56",
+   "text": "แต่สายไปแล้ว",
+   "t0": 53.577,
+   "t1": 54.531,
+   "speaker": "narr",
+   "emph": "สายไปแล้ว",
+   "colour": "red"
+  },
+  {
+   "id": "s56",
+   "text": "ทั้งฝูงรู้แล้ว",
+   "t0": 54.531,
+   "t1": 55.644,
+   "speaker": "narr"
+  },
+  {
+   "id": "s56",
+   "text": "ว่าเขาอยู่ตรงไหน",
+   "t0": 55.644,
+   "t1": 57.296,
+   "speaker": "narr"
+  },
+  {
+   "id": "s57",
+   "text": "เสียง กับแสง",
+   "t0": 57.546,
+   "t1": 58.42,
+   "speaker": "narr",
+   "emph": "เสียง กับแสง",
+   "colour": "amber"
+  },
+  {
+   "id": "s57",
+   "text": "คือสิ่งที่เรียกมัน",
+   "t0": 58.42,
+   "t1": 60.231,
+   "speaker": "narr"
+  },
+  {
+   "id": "s58",
+   "text": "ขับไปสิ!",
+   "t0": 60.431,
+   "t1": 60.987,
+   "speaker": "tos"
+  },
+  {
+   "id": "s58",
+   "text": "จะจอดให้มันกิน",
+   "t0": 60.987,
+   "t1": 62.1,
+   "speaker": "tos"
+  },
+  {
+   "id": "s58",
+   "text": "หรือไง!",
+   "t0": 62.1,
+   "t1": 62.957,
+   "speaker": "tos"
+  },
+  {
+   "id": "s59",
+   "text": "รถข้างหน้า",
+   "t0": 63.057,
+   "t1": 63.852,
+   "speaker": "kong"
+  },
+  {
+   "id": "s59",
+   "text": "ขยับไม่ได้!",
+   "t0": 63.852,
+   "t1": 65.027,
+   "speaker": "kong"
+  },
+  {
+   "id": "s60",
+   "text": "พี่! ผมเคยผ่านแถวนี้",
+   "t0": 65.177,
+   "t1": 66.608,
+   "speaker": "james"
+  },
+  {
+   "id": "s60",
+   "text": "มีทางลง",
+   "t0": 66.608,
+   "t1": 67.164,
+   "speaker": "james",
+   "emph": "ทางลง",
+   "colour": "amber"
+  },
+  {
+   "id": "s60",
+   "text": "ข้างรถคันนั้น!",
+   "t0": 67.164,
+   "t1": 68.578,
+   "speaker": "james"
+  }
+ ]
+}

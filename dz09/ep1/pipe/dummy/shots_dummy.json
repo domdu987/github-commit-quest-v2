@@ -1,0 +1,117 @@
+{
+ "episode": {
+  "fps": 24,
+  "size": "720x1280"
+ },
+ "note": "dummy scene 99 for the pipe proof",
+ "totals": {
+  "cpu_s_per_frame": {
+   "A": 68.2,
+   "B": 36.6,
+   "C2": 32.0,
+   "C1": 2.0
+  }
+ },
+ "scenes": [
+  {
+   "scene": "99",
+   "t0": 1000.0,
+   "t1": 1002.5,
+   "f0": 24000,
+   "f1": 24060,
+   "frames": 60
+  }
+ ],
+ "shots": [
+  {
+   "id": "S901",
+   "scene": "99",
+   "t0": 1000.0,
+   "t1": 1000.6,
+   "f0": 24000,
+   "f1": 24014,
+   "frames": 14,
+   "cls": "B",
+   "set": "X1",
+   "size": "",
+   "action": "WIDE: the rescue zone, the hook's S02 crane position held",
+   "cut_on": "(picture beat, no word)",
+   "narration": [
+    {
+     "id": "s901",
+     "captions": [
+      "ฉากทดสอบ"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "S902",
+   "scene": "99",
+   "t0": 1000.6,
+   "t1": 1001.25,
+   "f0": 24014,
+   "f1": 24030,
+   "frames": 16,
+   "cls": "A",
+   "set": "X1",
+   "size": "",
+   "action": "MCU: Kong on the phone, HIS line: his mouth moves",
+   "cut_on": "ฮัลโหล!",
+   "narration": [
+    {
+     "id": "s902",
+     "captions": [
+      "ฮัลโหล!",
+      "ได้ยินไหม"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "S903",
+   "scene": "99",
+   "t0": 1001.25,
+   "t1": 1001.85,
+   "f0": 24030,
+   "f1": 24044,
+   "frames": 14,
+   "cls": "C1",
+   "set": "2D",
+   "size": "",
+   "action": "INSERT drawn: the wrist watch, one red second hand",
+   "cut_on": "30 วินาที",
+   "narration": [
+    {
+     "id": "s903",
+     "captions": [
+      "30 วินาที"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "S904",
+   "scene": "99",
+   "t0": 1001.85,
+   "t1": 1002.5,
+   "f0": 24044,
+   "f1": 24060,
+   "frames": 16,
+   "cls": "A",
+   "set": "X1",
+   "size": "",
+   "action": "MS: Kong with the cutter, NARRATOR line: nobody's mouth moves",
+   "cut_on": "ภาพผ่านท่อ",
+   "narration": [
+    {
+     "id": "s904",
+     "captions": [
+      "ภาพผ่านท่อ",
+      "ครบแล้ว"
+     ]
+    }
+   ]
+  }
+ ]
+}

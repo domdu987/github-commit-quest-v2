@@ -1,0 +1,5 @@
+sc99 draft 360x640: 42 / 60 frames, 298 CPU s logged
+  S901 B    14/14   done    cpu/frame 10.45
+  S902 A    13/17   MISSING cpu/frame 11.57
+  S903 C1   15/15   done    cpu/frame 0.11
+  S904 A     0/14   MISSING cpu/frame None

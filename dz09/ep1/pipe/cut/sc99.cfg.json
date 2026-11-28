@@ -1,0 +1,8 @@
+{
+ "narr0": 0.10,
+ "mix": "ep1/pipe/dummy/mix_placeholder.wav",
+ "narration_wav": "ep1/pipe/dummy/narr_placeholder.wav",
+ "hard_cuts": ["S903"],
+ "cues": {"tick": {"word": "30 วินาที", "dt": 0.25}},
+ "fx": [{"type": "fade_out", "word": "ครบแล้ว", "end": true, "dt": -0.10, "frames": 4, "colour": [0, 0, 0]}]
+}

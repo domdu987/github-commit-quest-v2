@@ -1,0 +1,122 @@
+{
+ "rain_heavy_road": {
+  "name": "rain_heavy_road",
+  "prompt": "heavy tropical night rain pouring on asphalt and car roofs, dense steady downpour, no thunder, no music",
+  "asked": 10.0,
+  "duration": 10.0,
+  "peak": 0.7659759521484375,
+  "rms_db": -18.78068051421897,
+  "onset": 0.0505,
+  "centroid_hz": 3745.105661476069
+ },
+ "radio_static_cut": {
+  "name": "radio_static_cut",
+  "prompt": "handheld two-way radio static burst then abrupt cut to silence, squelch click",
+  "asked": 1.5,
+  "duration": 1.48,
+  "peak": 0.3623046875,
+  "rms_db": -30.35650876552971,
+  "onset": 0.38925,
+  "centroid_hz": 1941.7604872873503
+ },
+ "phone_vibrate": {
+  "name": "phone_vibrate",
+  "prompt": "smartphone vibrating in a jacket pocket, buzz buzz pattern, close",
+  "asked": 2.0,
+  "duration": 2.0,
+  "peak": 0.957672119140625,
+  "rms_db": -6.707771819179394,
+  "onset": 0.034708333333333334,
+  "centroid_hz": 3461.7156534597993
+ },
+ "sirens_city_far": {
+  "name": "sirens_city_far",
+  "prompt": "many distant emergency sirens wailing across a big city at night, far away, layered",
+  "asked": 8.0,
+  "duration": 8.0,
+  "peak": 0.5029449462890625,
+  "rms_db": -24.03439353802603,
+  "onset": 1.5697291666666666,
+  "centroid_hz": 1457.769685954464
+ },
+ "car_alarm_far": {
+  "name": "car_alarm_far",
+  "prompt": "a car alarm honking somewhere far down a jammed highway in the rain",
+  "asked": 4.0,
+  "duration": 4.0,
+  "peak": 0.9587249755859375,
+  "rms_db": -12.708105480639002,
+  "onset": 0.0008333333333333334,
+  "centroid_hz": 2955.043036862035
+ },
+ "hydraulic_cutter": {
+  "name": "hydraulic_cutter",
+  "prompt": "battery powered hydraulic rescue cutter whirring and crunching through a car door pillar, metal crunch",
+  "asked": 3.0,
+  "duration": 3.0,
+  "peak": 0.4647674560546875,
+  "rms_db": -19.831424673652524,
+  "onset": 2.0833333333333333e-05,
+  "centroid_hz": 4971.991759548201
+ },
+ "car_door_pry": {
+  "name": "car_door_pry",
+  "prompt": "crumpled car door being pried open with a creak and metal groan",
+  "asked": 2.0,
+  "duration": 2.0,
+  "peak": 0.603240966796875,
+  "rms_db": -23.133288328006728,
+  "onset": 0.011020833333333334,
+  "centroid_hz": 1517.8406261558405
+ },
+ "rain_on_hood": {
+  "name": "rain_on_hood",
+  "prompt": "rain drumming on a rain jacket hood, very close, muffled",
+  "asked": 6.0,
+  "duration": 6.0,
+  "peak": 0.3408203125,
+  "rms_db": -33.906136211473594,
+  "onset": 0.09685416666666667,
+  "centroid_hz": 3837.9159994761117
+ },
+ "zombie_lunge": {
+  "name": "zombie_lunge",
+  "prompt": "sudden violent lunge, wet guttural snarl and a body slamming against metal",
+  "asked": 1.5,
+  "duration": 1.48,
+  "peak": 0.999969482421875,
+  "rms_db": -17.300667142225727,
+  "onset": 0.027625,
+  "centroid_hz": 2573.5018994769553
+ },
+ "man_scream_bite": {
+  "name": "man_scream_bite",
+  "prompt": "a young man screaming in sudden pain, short, outdoors in rain",
+  "asked": 1.8,
+  "duration": 1.76,
+  "peak": 1.0,
+  "rms_db": -8.965150704124976,
+  "onset": 0.0025,
+  "centroid_hz": 3357.2762492413926
+ },
+ "heartbeat_low": {
+  "name": "heartbeat_low",
+  "prompt": "slow deep heartbeat thump, low, tense, two beats",
+  "asked": 2.0,
+  "duration": 2.0,
+  "peak": 0.9513092041015625,
+  "rms_db": -19.472532207137572,
+  "onset": 0.121,
+  "centroid_hz": 187.60025557635907
+ },
+ "hit_trailer": {
+  "name": "hit_trailer",
+  "prompt": "deep cinematic impact hit with a low boom tail for a title card, no music",
+  "asked": 3.0,
+  "duration": 3.0,
+  "peak": 0.900665283203125,
+  "rms_db": -18.495415385216035,
+  "onset": 0.004145833333333333,
+  "centroid_hz": 298.7610486819516
+ }
+}

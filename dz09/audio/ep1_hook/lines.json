@@ -1,0 +1,10 @@
+[
+ {"id":"R1","who":"radio","voice":"tKtPl8obOBs5uPMei6yN","text":"[urgent] ศูนย์ครับ คนเจ็บไม่ตอบสนอง... [panicked] เดี๋ยว! เฮ้ย!","speed":1.05},
+ {"id":"N1","who":"namnuea","voice":"gbZNaSxK771GgOTJIKRB","text":"[upset] พ่อ วันนี้พ่อสัญญาว่าจะมารับหนูไง","speed":1.0},
+ {"id":"K1","who":"kong","voice":"jucSqawHKM1rUNf78oZQ","text":"[tired] พ่อมีเคสด่วนลูก รออีกแป๊บเดียว","speed":1.0},
+ {"id":"N2","who":"namnuea","voice":"gbZNaSxK771GgOTJIKRB","text":"[disappointed, quietly] ทุกครั้งเลย...","speed":0.95},
+ {"id":"K2","who":"kong","voice":"jucSqawHKM1rUNf78oZQ","text":"[sighs] เดี๋ยวพ่อโทรกลับนะ","speed":1.0},
+ {"id":"C1","who":"crew","voice":"RwilAvCC3o05RLuACpAn","text":"[shouting] พี่ก้อง! เปิดได้แล้วครับ!","speed":1.05},
+ {"id":"K1b","who":"kong_alt","voice":"LILq5yR811xnLoaLrdK1","text":"[tired] พ่อมีเคสด่วนลูก รออีกแป๊บเดียว","speed":1.0},
+ {"id":"N1b","who":"namnuea_alt","voice":"tBiVUbaPjPf0J5lIPaQq","text":"[upset] พ่อ วันนี้พ่อสัญญาว่าจะมารับหนูไง","speed":1.0}
+]

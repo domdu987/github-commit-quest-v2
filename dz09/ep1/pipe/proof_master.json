@@ -1,0 +1,32 @@
+{
+ "parts": [
+  {
+   "part": "hook",
+   "file": "../../v10/film/draft_v3.mp4",
+   "seconds": 3.0
+  },
+  {
+   "part": "sc99",
+   "t0": 3.0,
+   "seconds": 2.5,
+   "frames": 60,
+   "source": "frames /tmp/claude-0/-home-user-github-commit-quest-v2/94b8b382-ecfe-5ec4-8832-97f03dd08322/scratchpad/dz09/ep1/pipe/out/draft_from360x640_720x1280/sc99/comp; audio mix ep1/pipe/dummy/mix_placeholder.wav at 9.20 dB"
+  }
+ ],
+ "out": "/tmp/claude-0/-home-user-github-commit-quest-v2/94b8b382-ecfe-5ec4-8832-97f03dd08322/scratchpad/dz09/ep1/pipe/proof_master.mp4",
+ "seconds": 5.5,
+ "audio": {
+  "gain_db": 1.2,
+  "joined_lufs": -15.2,
+  "joined_tp": -5.0,
+  "lufs": -14.0,
+  "true_peak": -3.8
+ },
+ "video": {
+  "frames": 132,
+  "size": "720x1280",
+  "fps": "24/1",
+  "seconds": 5.5,
+  "mb": 5.27
+ }
+}

@@ -1,0 +1,3 @@
+{"image_urls":["https://d2ol7oe51mr4n9.cloudfront.net/user_3EzOwEpTxQU0V5Ldyy9VCXrFDgc/be4189fd-3f77-47f1-a05e-23a36036b04b.png","https://d2ol7oe51mr4n9.cloudfront.net/user_3EzOwEpTxQU0V5Ldyy9VCXrFDgc/cce6d927-6596-42a9-8069-22dba88c7ace.png","https://d2ol7oe51mr4n9.cloudfront.net/user_3EzOwEpTxQU0V5Ldyy9VCXrFDgc/44dbf116-8a5d-4622-948c-e2a743f2af1f.png"],
+ "topology":"triangle","target_polycount":60000,"symmetry_mode":"auto","should_remesh":true,"should_texture":true,"enable_pbr":true,
+ "pose_mode":"a-pose","enable_rigging":true,"rigging_height_meters":1.8}

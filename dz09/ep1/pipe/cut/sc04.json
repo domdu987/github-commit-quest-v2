@@ -1,0 +1,860 @@
+{
+ "scene": "sc04",
+ "source": "plan",
+ "timing_file": "(plan estimate: plan)",
+ "narr0": 0.0,
+ "fps": 24,
+ "g_base": 40000,
+ "frames": 1175,
+ "seconds": 48.958,
+ "plan_frames": 1175,
+ "frames_by_class": {
+  "B": 456,
+  "A": 633,
+  "C1": 86
+ },
+ "final_cpu_h_estimate": 16.68,
+ "hard_cuts": [],
+ "fx": [],
+ "cues": {},
+ "mix": "",
+ "narration_wav": "",
+ "warnings": [],
+ "shots": [
+  {
+   "id": "S098",
+   "plan_id": "S98",
+   "f0": 0,
+   "f1": 34,
+   "frames": 34,
+   "plan_frames": 34,
+   "cls": "B",
+   "set": "X2",
+   "size": "W",
+   "cut_on": "ฝูงกระแทกรถ",
+   "how": "scene start",
+   "narration": [
+    {
+     "id": "s61",
+     "captions": [
+      "ฝูงกระแทกรถ",
+      "ไม่หยุด"
+     ]
+    }
+   ],
+   "action": "Exterior: a dozen infected on the truck's right side and rear, beating on it in no rhythm; the truck rocks."
+  },
+  {
+   "id": "S099",
+   "plan_id": "S99",
+   "f0": 34,
+   "f1": 74,
+   "frames": 40,
+   "plan_frames": 40,
+   "cls": "B",
+   "set": "CAB",
+   "size": "INSERT",
+   "cut_on": "กระจกเริ่มร้าว",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s61",
+     "captions": [
+      "กระจกเริ่มร้าว"
+     ]
+    }
+   ],
+   "action": "Side window from inside: a palm slams, a crack runs from the corner; second slam, it branches (`crack_window`)."
+  },
+  {
+   "id": "S100",
+   "plan_id": "S100",
+   "f0": 74,
+   "f1": 127,
+   "frames": 53,
+   "plan_frames": 53,
+   "cls": "A",
+   "set": "CAB",
+   "size": "M",
+   "cut_on": "ก้องเปิดตู้อุปกรณ์",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s62",
+     "captions": [
+      "ก้องเปิดตู้อุปกรณ์",
+      "ของเต็มตู้"
+     ]
+    }
+   ],
+   "action": "Kong twists out of the driver's seat to the equipment wall behind the rear bench and throws the roll shutter up; Praew and Tos duck aside."
+  },
+  {
+   "id": "S101",
+   "plan_id": "S101",
+   "f0": 127,
+   "f1": 182,
+   "frames": 55,
+   "plan_frames": 55,
+   "cls": "B",
+   "set": "CAB",
+   "size": "INSERT pan",
+   "cut_on": "แต่แบกไปได้",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s62",
+     "captions": [
+      "แต่แบกไปได้",
+      "แค่ 4 อย่าง"
+     ]
+    }
+   ],
+   "action": "Across the shelves: the big orange trauma bag, a defibrillator case, an oxygen cylinder, rope, a folded stretcher, helmets, an extinguisher, a battery charger with its slot empty (one code-drawn shelf-wall texture with shallow relief); standing proud of it as real props, the cutter case, the crowbar in its clips, a small red pouch and a box of road flares."
+  },
+  {
+   "id": "S102",
+   "plan_id": "S102",
+   "f0": 182,
+   "f1": 271,
+   "frames": 89,
+   "plan_frames": 89,
+   "cls": "B",
+   "set": "CAB",
+   "size": "INSERT x4",
+   "cut_on": "เครื่องตัด",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s63",
+     "captions": [
+      "เครื่องตัด",
+      "ชะแลง",
+      "วิทยุ",
+      "กระเป๋าพยาบาลใบเล็ก"
+     ]
+    }
+   ],
+   "action": "Four cuts on the four words, one glove each: (a) the cutter lifted by its D-handle, three LEDs steady; (b) the crowbar pulled from its clips; (c) the chest radio's volume knob turned down to zero, LED still on; (d) the small red first-aid pouch taken and pushed into Praew's blue gloves."
+  },
+  {
+   "id": "S103",
+   "plan_id": "S103",
+   "f0": 271,
+   "f1": 330,
+   "frames": 59,
+   "plan_frames": 59,
+   "cls": "A",
+   "set": "CAB",
+   "size": "INSERT to CU",
+   "cut_on": "ที่เหลือ",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s64",
+     "captions": [
+      "ที่เหลือ",
+      "ต้องทิ้งทั้งหมด"
+     ]
+    }
+   ],
+   "action": "Kong's hand stops on the big trauma bag; he looks at it, at the cracked window, and lets go (`serious`)."
+  },
+  {
+   "id": "S104",
+   "plan_id": "S104",
+   "f0": 330,
+   "f1": 367,
+   "frames": 37,
+   "plan_frames": 37,
+   "cls": "A",
+   "set": "CAB",
+   "size": "CU",
+   "cut_on": "ก้องจุดพลุไฟฉุกเฉิน",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s65",
+     "captions": [
+      "ก้องจุดพลุไฟฉุกเฉิน"
+     ]
+    }
+   ],
+   "action": "Kong strikes a road flare from the box: it catches, hard red light on his face and on the three faces behind him."
+  },
+  {
+   "id": "S105",
+   "plan_id": "S105",
+   "f0": 367,
+   "f1": 412,
+   "frames": 45,
+   "plan_frames": 45,
+   "cls": "B",
+   "set": "X2",
+   "size": "W",
+   "cut_on": "ขว้างไปอีกฝั่งถนน",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s65",
+     "captions": [
+      "ขว้างไปอีกฝั่งถนน"
+     ]
+    }
+   ],
+   "action": "Outside, median side: the driver's window drops a hand-width, the flare arcs out over the infected heads, tumbling, lands two lanes away (toward the camera) and skitters."
+  },
+  {
+   "id": "S106",
+   "plan_id": "S106",
+   "f0": 412,
+   "f1": 472,
+   "frames": 60,
+   "plan_frames": 60,
+   "cls": "B",
+   "set": "X2",
+   "size": "W low",
+   "cut_on": "เกือบทั้งฝูง",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s66",
+     "captions": [
+      "เกือบทั้งฝูง",
+      "วิ่งตามแสงไป"
+     ]
+    }
+   ],
+   "action": "Road level, side-on to their run: the horde peels off the truck and crosses the frame after the skittering red light, long shadows sweeping between their legs (sprint cycle, planted, at most twelve figures); three stay hammering at the truck's rear."
+  },
+  {
+   "id": "S107",
+   "plan_id": "S107",
+   "f0": 472,
+   "f1": 529,
+   "frames": 57,
+   "plan_frames": 57,
+   "cls": "A",
+   "set": "X2c",
+   "size": "M",
+   "cut_on": "คุณทศเบียดออกไป",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s67",
+     "captions": [
+      "คุณทศเบียดออกไป",
+      "เป็นคนแรก"
+     ]
+    }
+   ],
+   "action": "Barrier side of the truck: the crew door opens until it hits a taxi, a hand-span; Tos forces himself through the gap first, past Praew's reaching hand, along the taxi's smashed window."
+  },
+  {
+   "id": "S108",
+   "plan_id": "S108",
+   "f0": 529,
+   "f1": 622,
+   "frames": 93,
+   "plan_frames": 93,
+   "cls": "A",
+   "set": "X2c",
+   "size": "INSERT",
+   "cut_on": "แขนเสื้อเกี่ยวกระจก",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s68",
+     "captions": [
+      "แขนเสื้อเกี่ยวกระจก",
+      "ขาดเป็นทาง",
+      "เลือดซึมออกมา"
+     ]
+    }
+   ],
+   "action": "His left forearm: the navy jacket sleeve catches on a tooth of glass in the taxi's window frame and pulls tight; on 'ขาดเป็นทาง' it tears along the forearm, jacket and white shirt together; under it one straight cut opens and blood wells, thinned at once by the rain. A cut, plainly, not a bite."
+  },
+  {
+   "id": "S109",
+   "plan_id": "S109",
+   "f0": 622,
+   "f1": 669,
+   "frames": 47,
+   "plan_frames": 47,
+   "cls": "A",
+   "set": "X2c",
+   "size": "CU",
+   "cut_on": "เขารีบดึงแขนเสื้อ",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s69",
+     "captions": [
+      "เขารีบดึงแขนเสื้อ",
+      "ลงปิดแผล"
+     ]
+    }
+   ],
+   "action": "Tos looks at the arm (`alarmed`), over his shoulder at the others still inside, pulls the torn cuff down and clamps his right hand over it."
+  },
+  {
+   "id": "S110",
+   "plan_id": "S110",
+   "f0": 669,
+   "f1": 711,
+   "frames": 42,
+   "plan_frames": 42,
+   "cls": "A",
+   "set": "X2c",
+   "size": "M",
+   "cut_on": "ไม่บอกใครสักคำ",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s69",
+     "captions": [
+      "ไม่บอกใครสักคำ"
+     ]
+    }
+   ],
+   "action": "Behind him Praew, James and Kong squeeze out one at a time (Kong last, cutter in hand, crowbar through his pack loops); Tos has already turned away, arms crossed, walking to the gate."
+  },
+  {
+   "id": "S111",
+   "plan_id": "S111",
+   "f0": 711,
+   "f1": 790,
+   "frames": 79,
+   "plan_frames": 79,
+   "cls": "B",
+   "set": "UND",
+   "size": "W side",
+   "cut_on": "ทุกคนวิ่งลง",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s70",
+     "captions": [
+      "ทุกคนวิ่งลง",
+      "บันไดเหล็ก",
+      "ข้างทางด่วน"
+     ]
+    }
+   ],
+   "action": "The service stair, side-on from the next pier: the deck edge and the top two flights bolted to the pier, rain falling past. Four small figures go through the gate and down, left to right, planted on the treads, and out of the bottom of the frame; above them red flare glow and running silhouettes on the deck."
+  },
+  {
+   "id": "S112",
+   "plan_id": "S112",
+   "f0": 790,
+   "f1": 844,
+   "frames": 54,
+   "plan_frames": 54,
+   "cls": "B",
+   "set": "UND",
+   "size": "EW",
+   "cut_on": "ข้างล่างมืด",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s71",
+     "captions": [
+      "ข้างล่างมืด",
+      "และเงียบ"
+     ]
+    }
+   ],
+   "action": "Under the expressway: a street between giant piers, almost black; sheets of rain falling at both deck edges, drips in the middle, puddles holding one far sodium lamp. The four stop at the stair foot, very small."
+  },
+  {
+   "id": "S113",
+   "plan_id": "S113",
+   "f0": 844,
+   "f1": 896,
+   "frames": 52,
+   "plan_frames": 52,
+   "cls": "A",
+   "set": "UND",
+   "size": "MCU",
+   "cut_on": "ของเหลือ",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s72",
+     "captions": [
+      "ของเหลือ",
+      "แค่นี้เองเหรอ"
+     ]
+    }
+   ],
+   "action": "Praew opens the red pouch in both hands and looks in; whispers the line without looking up."
+  },
+  {
+   "id": "S114",
+   "plan_id": "S114",
+   "f0": 896,
+   "f1": 945,
+   "frames": 49,
+   "plan_frames": 49,
+   "cls": "A",
+   "set": "UND",
+   "size": "CU",
+   "cut_on": "เอาออกมาได้",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s73",
+     "captions": [
+      "เอาออกมาได้",
+      "เท่านี้"
+     ]
+    }
+   ],
+   "action": "Kong: wet, the cutter in his right hand, the crowbar's hook over his left shoulder; he whispers the line, eyes down (`tired`)."
+  },
+  {
+   "id": "S115",
+   "plan_id": "S115",
+   "f0": 945,
+   "f1": 973,
+   "frames": 28,
+   "plan_frames": 28,
+   "cls": "A",
+   "set": "UND",
+   "size": "OTS",
+   "cut_on": "ถ้ามีคนเจ็บหนัก",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s74",
+     "captions": [
+      "ถ้ามีคนเจ็บหนัก"
+     ]
+    }
+   ],
+   "action": "Over Kong's wet shoulder and the crowbar hook: Praew looks up at him and says the first half, level."
+  },
+  {
+   "id": "S116",
+   "plan_id": "S116",
+   "f0": 973,
+   "f1": 1020,
+   "frames": 47,
+   "plan_frames": 47,
+   "cls": "A",
+   "set": "UND",
+   "size": "INSERT",
+   "cut_on": "เราอาจช่วยไม่ได้",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s74",
+     "captions": [
+      "เราอาจช่วยไม่ได้"
+     ]
+    }
+   ],
+   "action": "Tos's crossed arms: his right hand clamped round the left forearm, the torn navy cuff dark and wet under his fingers."
+  },
+  {
+   "id": "S117",
+   "plan_id": "S117",
+   "f0": 1020,
+   "f1": 1060,
+   "frames": 40,
+   "plan_frames": 40,
+   "cls": "A",
+   "set": "UND",
+   "size": "CU",
+   "cut_on": "โรงพยาบาลอยู่ข้างหน้า",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s75",
+     "captions": [
+      "โรงพยาบาลอยู่ข้างหน้า"
+     ]
+    }
+   ],
+   "action": "James, visor up, pointing ahead (right), whispering fast, almost cheerful."
+  },
+  {
+   "id": "S118",
+   "plan_id": "S118",
+   "f0": 1060,
+   "f1": 1105,
+   "frames": 45,
+   "plan_frames": 45,
+   "cls": "C1",
+   "set": "2D",
+   "size": "INSERT",
+   "cut_on": "ผมเคยไปส่งอาหาร",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s75",
+     "captions": [
+      "ผมเคยไปส่งอาหาร"
+     ]
+    }
+   ],
+   "action": "James's phone: a delivery map drawn for this film (no brand): a blue dot under a grey road band, a route line growing to a building marked with a plain cross beside a blue river band, 'เดิน 9 นาที'; further along the river a small pier symbol."
+  },
+  {
+   "id": "S119",
+   "plan_id": "S119",
+   "f0": 1105,
+   "f1": 1134,
+   "frames": 29,
+   "plan_frames": 29,
+   "cls": "A",
+   "set": "UND",
+   "size": "M",
+   "cut_on": "ก้องมองโทรศัพท์",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s76",
+     "captions": [
+      "ก้องมองโทรศัพท์"
+     ]
+    }
+   ],
+   "action": "Kong, half turned from the others, takes his phone from the thigh pouch; the screen lights his face from below and he tilts it into his chest to hide the light."
+  },
+  {
+   "id": "S120",
+   "plan_id": "S120",
+   "f0": 1134,
+   "f1": 1175,
+   "frames": 41,
+   "plan_frames": 41,
+   "cls": "C1",
+   "set": "2D",
+   "size": "INSERT",
+   "cut_on": "ยังไม่มีสาย",
+   "how": "word",
+   "narration": [
+    {
+     "id": "s76",
+     "captions": [
+      "ยังไม่มีสาย",
+      "จากลูก"
+     ]
+    }
+   ],
+   "action": "His lock screen: 22:54, the avatar wallpaper, no notification. Two rain drops land; his thumb wipes one off and drags the brightness down."
+  }
+ ],
+ "captions": [
+  {
+   "id": "s61",
+   "text": "ฝูงกระแทกรถ",
+   "t0": 0.0,
+   "t1": 0.874,
+   "speaker": "narr"
+  },
+  {
+   "id": "s61",
+   "text": "ไม่หยุด",
+   "t0": 0.874,
+   "t1": 1.431,
+   "speaker": "narr"
+  },
+  {
+   "id": "s61",
+   "text": "กระจกเริ่มร้าว",
+   "t0": 1.431,
+   "t1": 2.924,
+   "speaker": "narr",
+   "emph": "ร้าว",
+   "colour": "red"
+  },
+  {
+   "id": "s62",
+   "text": "ก้องเปิดตู้อุปกรณ์",
+   "t0": 3.074,
+   "t1": 4.504,
+   "speaker": "narr"
+  },
+  {
+   "id": "s62",
+   "text": "ของเต็มตู้",
+   "t0": 4.504,
+   "t1": 5.299,
+   "speaker": "narr"
+  },
+  {
+   "id": "s62",
+   "text": "แต่แบกไปได้",
+   "t0": 5.299,
+   "t1": 6.174,
+   "speaker": "narr"
+  },
+  {
+   "id": "s62",
+   "text": "แค่ 4 อย่าง",
+   "t0": 6.174,
+   "t1": 7.428,
+   "speaker": "narr",
+   "emph": "4 อย่าง",
+   "colour": "amber"
+  },
+  {
+   "id": "s63",
+   "text": "เครื่องตัด",
+   "t0": 7.578,
+   "t1": 8.373,
+   "speaker": "narr"
+  },
+  {
+   "id": "s63",
+   "text": "ชะแลง",
+   "t0": 8.373,
+   "t1": 8.793,
+   "speaker": "narr"
+  },
+  {
+   "id": "s63",
+   "text": "วิทยุ",
+   "t0": 8.793,
+   "t1": 9.213,
+   "speaker": "narr"
+  },
+  {
+   "id": "s63",
+   "text": "กระเป๋าพยาบาลใบเล็ก",
+   "t0": 9.213,
+   "t1": 11.103,
+   "speaker": "narr"
+  },
+  {
+   "id": "s64",
+   "text": "ที่เหลือ",
+   "t0": 11.303,
+   "t1": 11.939,
+   "speaker": "narr"
+  },
+  {
+   "id": "s64",
+   "text": "ต้องทิ้งทั้งหมด",
+   "t0": 11.939,
+   "t1": 13.512,
+   "speaker": "narr",
+   "emph": "ทิ้ง",
+   "colour": "red"
+  },
+  {
+   "id": "s65",
+   "text": "ก้องจุดพลุไฟฉุกเฉิน",
+   "t0": 13.762,
+   "t1": 15.272,
+   "speaker": "narr"
+  },
+  {
+   "id": "s65",
+   "text": "ขว้างไปอีกฝั่งถนน",
+   "t0": 15.272,
+   "t1": 17.003,
+   "speaker": "narr"
+  },
+  {
+   "id": "s66",
+   "text": "เกือบทั้งฝูง",
+   "t0": 17.153,
+   "t1": 18.107,
+   "speaker": "narr"
+  },
+  {
+   "id": "s66",
+   "text": "วิ่งตามแสงไป",
+   "t0": 18.107,
+   "t1": 19.441,
+   "speaker": "narr",
+   "emph": "ตามแสง",
+   "colour": "amber"
+  },
+  {
+   "id": "s67",
+   "text": "คุณทศเบียดออกไป",
+   "t0": 19.641,
+   "t1": 20.833,
+   "speaker": "narr"
+  },
+  {
+   "id": "s67",
+   "text": "เป็นคนแรก",
+   "t0": 20.833,
+   "t1": 21.929,
+   "speaker": "narr",
+   "emph": "คนแรก",
+   "colour": "amber"
+  },
+  {
+   "id": "s68",
+   "text": "แขนเสื้อเกี่ยวกระจก",
+   "t0": 22.029,
+   "t1": 23.539,
+   "speaker": "narr"
+  },
+  {
+   "id": "s68",
+   "text": "ขาดเป็นทาง",
+   "t0": 23.539,
+   "t1": 24.334,
+   "speaker": "narr"
+  },
+  {
+   "id": "s68",
+   "text": "เลือดซึมออกมา",
+   "t0": 24.334,
+   "t1": 25.748,
+   "speaker": "narr",
+   "emph": "เลือด",
+   "colour": "red"
+  },
+  {
+   "id": "s69",
+   "text": "เขารีบดึงแขนเสื้อ",
+   "t0": 25.898,
+   "t1": 27.249,
+   "speaker": "narr"
+  },
+  {
+   "id": "s69",
+   "text": "ลงปิดแผล",
+   "t0": 27.249,
+   "t1": 27.885,
+   "speaker": "narr"
+  },
+  {
+   "id": "s69",
+   "text": "ไม่บอกใครสักคำ",
+   "t0": 27.885,
+   "t1": 29.378,
+   "speaker": "narr",
+   "emph": "ไม่บอกใคร",
+   "colour": "red"
+  },
+  {
+   "id": "s70",
+   "text": "ทุกคนวิ่งลง",
+   "t0": 29.628,
+   "t1": 30.502,
+   "speaker": "narr"
+  },
+  {
+   "id": "s70",
+   "text": "บันไดเหล็ก",
+   "t0": 30.502,
+   "t1": 31.297,
+   "speaker": "narr"
+  },
+  {
+   "id": "s70",
+   "text": "ข้างทางด่วน",
+   "t0": 31.297,
+   "t1": 32.551,
+   "speaker": "narr"
+  },
+  {
+   "id": "s71",
+   "text": "ข้างล่างมืด",
+   "t0": 32.901,
+   "t1": 33.776,
+   "speaker": "narr",
+   "emph": "มืด",
+   "colour": "amber"
+  },
+  {
+   "id": "s71",
+   "text": "และเงียบ",
+   "t0": 33.776,
+   "t1": 34.792,
+   "speaker": "narr"
+  },
+  {
+   "id": "s72",
+   "text": "ของเหลือ",
+   "t0": 35.142,
+   "t1": 35.778,
+   "speaker": "praew"
+  },
+  {
+   "id": "s72",
+   "text": "แค่นี้เองเหรอ",
+   "t0": 35.778,
+   "t1": 37.191,
+   "speaker": "praew"
+  },
+  {
+   "id": "s73",
+   "text": "เอาออกมาได้",
+   "t0": 37.341,
+   "t1": 38.215,
+   "speaker": "kong"
+  },
+  {
+   "id": "s73",
+   "text": "เท่านี้",
+   "t0": 38.215,
+   "t1": 39.152,
+   "speaker": "kong"
+  },
+  {
+   "id": "s74",
+   "text": "ถ้ามีคนเจ็บหนัก",
+   "t0": 39.352,
+   "t1": 40.544,
+   "speaker": "praew"
+  },
+  {
+   "id": "s74",
+   "text": "เราอาจช่วยไม่ได้",
+   "t0": 40.544,
+   "t1": 42.196,
+   "speaker": "praew",
+   "emph": "ช่วยไม่ได้",
+   "colour": "red"
+  },
+  {
+   "id": "s75",
+   "text": "โรงพยาบาลอยู่ข้างหน้า",
+   "t0": 42.496,
+   "t1": 44.165,
+   "speaker": "james",
+   "emph": "โรงพยาบาล",
+   "colour": "amber"
+  },
+  {
+   "id": "s75",
+   "text": "ผมเคยไปส่งอาหาร",
+   "t0": 44.165,
+   "t1": 45.738,
+   "speaker": "james"
+  },
+  {
+   "id": "s76",
+   "text": "ก้องมองโทรศัพท์",
+   "t0": 46.038,
+   "t1": 47.23,
+   "speaker": "narr"
+  },
+  {
+   "id": "s76",
+   "text": "ยังไม่มีสาย",
+   "t0": 47.23,
+   "t1": 48.105,
+   "speaker": "narr",
+   "emph": "ยังไม่มีสาย",
+   "colour": "red"
+  },
+  {
+   "id": "s76",
+   "text": "จากลูก",
+   "t0": 48.105,
+   "t1": 48.962,
+   "speaker": "narr"
+  }
+ ]
+}

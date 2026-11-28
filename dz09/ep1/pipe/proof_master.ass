@@ -1,0 +1,15 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 720
+PlayResY: 1280
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cap,Kanit Black,88,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,1,0,0,0,100,100,0,0,1,5,0,5,20,20,0,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:03.10,0:00:03.52,Cap,,0,0,0,,{\pos(360,900)}ฉากทดสอบ
+Dialogue: 0,0:00:03.60,0:00:03.98,Cap,,0,0,0,,{\pos(360,900)}{\fscx112\fscy112\t(0,125,\fscx100\fscy100)}{\c&H4F45F5&}ฮัลโหล!{\c&HFFFFFF&}
+Dialogue: 0,0:00:03.98,0:00:04.22,Cap,,0,0,0,,{\pos(360,900)}ได้ยินไหม
+Dialogue: 0,0:00:04.31,0:00:04.82,Cap,,0,0,0,,{\pos(360,900)}{\fscx112\fscy112\t(0,125,\fscx100\fscy100)}{\c&H03B7FF&}30 วินาที{\c&HFFFFFF&}
+Dialogue: 0,0:00:04.90,0:00:05.18,Cap,,0,0,0,,{\pos(360,900)}ภาพผ่านท่อ
+Dialogue: 0,0:00:05.18,0:00:05.40,Cap,,0,0,0,,{\pos(360,900)}{\fscx112\fscy112\t(0,125,\fscx100\fscy100)}{\c&H03B7FF&}ครบ{\c&HFFFFFF&}แล้ว
