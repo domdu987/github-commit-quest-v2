@@ -26,7 +26,7 @@ G_ALL = (522, 675)
 PPD = 384
 LEVEL = None
 SCALE, SAMPLES, THRESH = 0.75, 24, 0.02                  # director 28 Nov: film-24 final settings (24 adaptive, thr 0.02, OIDN, 75 %), post upscales to 720x1280
-HAZE = 0.0025                                            # aerial haze toward the far tree line (set default 0.0006)
+HAZE = 0.0006                                           # the set's thin far haze (a stronger box volume milks the whole sky: tried 0.0025, rejected)
 G22 = (-7.6, -31.6)                                      # row 22 mark: south of the tank nose: the test trench to his right, the tank behind
 
 

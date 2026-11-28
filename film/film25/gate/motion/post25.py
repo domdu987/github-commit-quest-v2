@@ -35,7 +35,7 @@ def persp_coeffs(dst, src):
     return np.linalg.solve(np.array(A, float), np.array(B, float)).tolist()
 
 
-GAMMA, VIB = 0.95, 1.3
+GAMMA, VIB = 0.95, 1.25
 WB_T = (2.0, 4.5)                                     # keep the warm key: mean a*, b* of the finished frame toward (+2, +4.5)
 W709 = np.array([0.2126, 0.7152, 0.0722], np.float32)
 to_lin = lambda x: np.where(x <= 0.04045, x / 12.92, ((x + 0.055) / 1.055) ** 2.4)
