@@ -1,0 +1,6 @@
+00:05.072  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: hid set cards ['general25_point_stick', 'general25_point_stick_decal']
+take: built trial_close_general in 4.8 s
+01:14.800  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s24/work/beauty/f_0712.png'
+01:29.318  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s24/work/shade/f_0712.png'
+g 712  56.9 s beauty  71.4 s total
