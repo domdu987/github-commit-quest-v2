@@ -3,3 +3,4 @@ Pipeline: film/v3/film25/s21/{d25,post_d,finish,qa_write}.py (Look A: beauty 24 
 | take | frames | s/frame (wall, 2 procs x 2 thr) | light_metrics |
 |---|---|---|---|
 | s21 (row 21) | g 602-625 | 99 s | take.mkv (1 fr)                        luma 0.499 p1 0.090 p99 0.972 lc 0.0478 sat 0.416 chroma 28.7 a +2.9 b +5.4 p98 0.90 blue 0.29 warm 0.55 neut 0.26 M 85  PASS  (guides off: p1,p99) |
+| s68 (rows 68-70) | g 2009-2092 (84) | 148 s | take.mkv (3 fr)                        luma 0.522 p1 0.103 p99 0.941 lc 0.0540 sat 0.410 chroma 26.9 a +2.1 b +4.8 p98 0.91 blue 0.37 warm 0.54 neut 0.13 M 84  PASS  (guides off: p1,chroma) |

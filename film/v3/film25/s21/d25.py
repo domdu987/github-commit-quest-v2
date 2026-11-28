@@ -19,8 +19,8 @@ F, bpy, actors, render = C.F, C.bpy, C.actors, C.render
 
 PPD = 384
 SUN_E, SKY_K, SUN_DISC = 8.0, 0.5, 0.5
-SCALE, SAMPLES, THRESH = 0.75, 24, 0.02
-SH_SCALE, SH_SAMPLES = 0.5, 10
+SCALE, SAMPLES, THRESH = 0.75, 20, 0.03
+SH_SCALE, SH_SAMPLES = 0.4, 8
 
 
 def normal_map(spr_path, out_path, R=0.9, ppd=PPD):

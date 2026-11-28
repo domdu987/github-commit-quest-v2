@@ -1,0 +1,129 @@
+00:01.615  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: hid set cards ['general25_march_flag', 'general25_march_flag_decal']
+take: built street_close_tail in 1.3 s
+03:16.655  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2009.png'
+03:55.791  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2009.png'
+g 2009  161.3 s beauty  200.4 s total
+06:45.573  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2010.png'
+07:28.744  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2010.png'
+g 2010  169.9 s beauty  213.0 s total
+09:24.956  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2011.png'
+10:17.031  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2011.png'
+g 2011  116.3 s beauty  168.3 s total
+12:11.237  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2012.png'
+12:43.073  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2012.png'
+g 2012  114.3 s beauty  146.0 s total
+15:18.813  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2013.png'
+15:53.979  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2013.png'
+g 2013  155.8 s beauty  190.9 s total
+18:09.919  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2014.png'
+18:41.654  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2014.png'
+g 2014  136.0 s beauty  167.7 s total
+20:26.772  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2015.png'
+20:57.865  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2015.png'
+g 2015  105.2 s beauty  136.2 s total
+22:56.325  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2016.png'
+23:24.442  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2016.png'
+g 2016  118.5 s beauty  146.6 s total
+25:03.470  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2017.png'
+25:27.367  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2017.png'
+g 2017  99.1 s beauty  122.9 s total
+27:05.480  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2018.png'
+27:30.217  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2018.png'
+g 2018  98.2 s beauty  122.8 s total
+29:21.724  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2019.png'
+29:53.469  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2019.png'
+g 2019  111.6 s beauty  143.3 s total
+31:50.821  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2020.png'
+32:18.255  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2020.png'
+g 2020  117.4 s beauty  144.8 s total
+34:16.019  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2021.png'
+34:43.404  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2021.png'
+g 2021  117.8 s beauty  145.1 s total
+36:41.360  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2022.png'
+37:07.714  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2022.png'
+g 2022  118.0 s beauty  144.3 s total
+38:51.666  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2023.png'
+39:16.386  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2023.png'
+g 2023  104.0 s beauty  128.7 s total
+41:02.349  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2024.png'
+41:28.588  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2024.png'
+g 2024  106.0 s beauty  132.2 s total
+43:15.458  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2025.png'
+43:40.813  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2025.png'
+g 2025  106.9 s beauty  132.2 s total
+45:26.029  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2026.png'
+45:54.539  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2026.png'
+g 2026  105.3 s beauty  133.7 s total
+47:53.027  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2027.png'
+48:24.030  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2027.png'
+g 2027  118.6 s beauty  149.5 s total
+50:16.458  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2028.png'
+50:44.294  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2028.png'
+g 2028  112.5 s beauty  140.3 s total
+52:37.366  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2029.png'
+53:08.057  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2029.png'
+g 2029  113.1 s beauty  143.8 s total
+54:57.426  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2030.png'
+55:23.456  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2030.png'
+g 2030  109.4 s beauty  135.4 s total
+57:12.458  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2031.png'
+57:39.279  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2031.png'
+g 2031  109.1 s beauty  135.8 s total
+59:30.581  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2032.png'
+59:57.370  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2032.png'
+g 2032  111.4 s beauty  138.1 s total
+01:01:53.789  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2033.png'
+01:02:20.807  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2033.png'
+g 2033  116.5 s beauty  143.4 s total
+01:04:13.359  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2034.png'
+01:04:43.244  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2034.png'
+g 2034  112.6 s beauty  142.4 s total
+01:06:39.179  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2035.png'
+01:07:05.679  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2035.png'
+g 2035  116.0 s beauty  142.4 s total
+01:08:58.951  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2036.png'
+01:09:28.309  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2036.png'
+g 2036  113.3 s beauty  142.6 s total
+01:11:31.437  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2037.png'
+01:12:01.103  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2037.png'
+g 2037  123.2 s beauty  152.8 s total
+01:14:12.983  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2038.png'
+01:14:42.865  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2038.png'
+g 2038  131.9 s beauty  161.8 s total
+01:16:54.094  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2039.png'
+01:17:24.216  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2039.png'
+g 2039  131.3 s beauty  161.4 s total
+01:19:34.869  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2040.png'
+01:20:05.299  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2040.png'
+g 2040  130.7 s beauty  161.1 s total
+01:21:57.492  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2041.png'
+01:22:26.615  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2041.png'
+g 2041  112.3 s beauty  141.3 s total
+01:24:27.942  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2042.png'
+01:24:54.166  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2042.png'
+g 2042  121.4 s beauty  147.6 s total
+01:27:04.679  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2043.png'
+01:27:31.460  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2043.png'
+g 2043  130.6 s beauty  157.3 s total
+01:29:44.627  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2044.png'
+01:30:14.872  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2044.png'
+g 2044  133.3 s beauty  163.4 s total
+01:32:27.109  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2045.png'
+01:32:56.424  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2045.png'
+g 2045  132.3 s beauty  161.6 s total
+01:35:00.383  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2046.png'
+01:35:27.857  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2046.png'
+g 2046  124.0 s beauty  151.4 s total
+01:37:33.019  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2047.png'
+01:37:59.690  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2047.png'
+g 2047  125.2 s beauty  151.8 s total
+01:40:06.018  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2048.png'
+01:40:34.882  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2048.png'
+g 2048  126.4 s beauty  155.2 s total
+01:42:26.381  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2049.png'
+01:42:54.961  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2049.png'
+g 2049  111.6 s beauty  140.1 s total
+01:44:53.914  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/beauty/f_2050.png'
+01:45:19.753  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s68/work/shade/f_2050.png'
+g 2050  119.0 s beauty  144.8 s total

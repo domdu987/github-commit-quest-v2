@@ -1,0 +1,13 @@
+00:05.000  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: hid set cards ['tommy_c25_ladle_tap', 'tommy_c25_ladle_tap_decal']
+take: built camp_close_tank in 4.7 s
+/home/user/github-commit-quest-v2/film/v3/film25/s21/../s27/shot.py:45: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  mat = bpy.data.materials.new("water"); mat.use_nodes = True
+cup-vs-spout residual g817 [-20.27, 56.46, 0.17]
+cup-vs-spout residual g827 [-20.49, 56.74, 0.17]
+01:47.832  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0817.png'
+02:04.400  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0817.png'
+g 817  97.2 s beauty  113.7 s total
+03:38.231  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/beauty/f_0818.png'
+04:02.161  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s27/work/shade/f_0818.png'
+g 818  93.9 s beauty  117.8 s total
