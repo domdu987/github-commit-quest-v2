@@ -33,9 +33,9 @@ def build_plane(name='plane'):
 
 def set_plane(H, t, frame=None, p0=(-50.0, 70.0, 32.0), p1=(60.0, 62.0, 36.0), dur=1.74):
     u = t / dur; p = Vector(p0).lerp(Vector(p1), u); d = Vector(p1) - Vector(p0); yaw = math.atan2(d.y, d.x)
-    H['root'].location = p; H['root'].rotation_euler = (math.radians(6.0 * math.sin(u * 4)), math.radians(-3.0), yaw); H['prop'].rotation_euler = (t * 90.0, 0, 0)
+    H['root'].scale = (1.9, 1.9, 1.9); H['root'].location = p; H['root'].rotation_euler = (math.radians(6.0 * math.sin(u * 4)), math.radians(-3.0), yaw); H['prop'].rotation_euler = (t * 90.0, 0, 0)
     if frame is not None:
-        for o, ps in ((H['root'], 'location'), (H['root'], 'rotation_euler'), (H['prop'], 'rotation_euler')): o.keyframe_insert(ps, frame=frame)
+        for o, ps in ((H['root'], 'location'), (H['root'], 'rotation_euler'), (H['root'], 'scale'), (H['prop'], 'rotation_euler')): o.keyframe_insert(ps, frame=frame)
 
 def build(preset, samples=None, quality=None):
     P = PRESETS[preset]; t0 = time.time(); F.begin('sky', preset, P); S.update(flat=True, trenches=[], craters=[], corridors=[], mud_zones=[]); ST.street_scene(P)

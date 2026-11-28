@@ -169,6 +169,12 @@ def build(preset, samples=None, quality=None):
     if P.get('tank_in_crate'):
         TK.apply_pose(S['tank'], (cr['x'] + 8, cr['y'], 1.3), 0.0, 0.0, 0.0, 0.0)
     hb = gantry(cy=P.get('crane_y', 22.0), cx=P.get('crane_x', -6.0), hook_z=P.get('hook_z', 8.0))
+    sl = P.get('slings')
+    if sl and S.get('tank'):                                                                # chain slings from the hook block to the hanging part (hull corners / track loop)
+        H = S['tank']; F.bpy.context.view_layer.update(); sub = H.parts[sl['stage']][0][0]; mbs = MB(); M_ = S['M']
+        for lp in sl['points']:
+            wp = H.root.matrix_world @ (sub.matrix_basis @ Vector(lp)); L.chain(mbs, hb + Vector((0, 0, -0.4)), wp, 0.3, 0.05, M_['steel']); obox(mbs, wp + Vector((0, 0, 0.12)), (1, 0, 0), (0, 1, 0), (0, 0, 1), 0.22, 0.22, 0.12, M_['p_yellow'])
+        mkobj(mbs, 'slings')
     weighbridge(P.get('wb', (14, 12))[0], P.get('wb', (14, 12))[1], P.get('dial', -40.0))
     for (x, y) in ((-14, 14), (0, 14), (14, 14), (-14, 34), (0, 34), (14, 34), (-8, 24), (8, 24)): lamp(x, y, 11.6, P.get('lamp_w', 2500.0))
     area_fill(0, 26, 12.5, 40, 40, P.get('fill', 9000.0))
@@ -185,16 +191,16 @@ FULL = dict(chassis=1, plates=1, rivets=1, tracks=1, sponsons=1, guns=1)
 def _st(**k): d = dict(chassis=1, plates=0, rivets=0, tracks=0, sponsons=0, guns=0); d.update(k); return d
 PRESETS = dict(
     fac_wide=dict(cam=dict(loc=(2.0, -40.0, 4.5), look_at=(-2.0, 12.0, 5.5), lens=24), cards=[('a', (-9, -22), 3.2), ('b', (8, -16), 3.2), ('a', (-2, -9), 3.2)], note='shot 1'),
-    fac_weigh=dict(cam=dict(loc=(2.0, 3.0, 1.0), look_at=(8.0, 20.0, 6.5), lens=20), stages=_st(plates=1, rivets=1), tank=dict(pos=(10, 12), yaw=0.0, z=7.0), wb=(10, 12), crane_x=4.0, crane_y=12.0, hook_z=9.0, dial=-60.0, note='shot 2'),
+    fac_weigh=dict(cam=dict(loc=(4.0, 1.0, 1.5), look_at=(6.0, 12.0, 6.0), lens=20), stages=_st(plates=1, rivets=1), tank=dict(pos=(10, 12), yaw=0.0, z=3.0), wb=(10, 12), crane_x=6.0, crane_y=12.0, hook_z=10.4, dial=-60.0, slings=dict(stage='plates', points=[(-5.5, 1.8, 4.25), (-5.5, -1.8, 4.25), (0.8, 1.8, 4.0), (0.8, -1.8, 4.0)]), note='shot 2'),
     fac_foreman=dict(cam=dict(loc=(-3.0, 8.0, 2.6), look_at=(-4.0, 22.0, 4.6), lens=26), stages=FULL, cards=[('a', (-9, 14), 3.2), ('b', (-3, 12), 3.2), ('a', (3, 14), 3.2)], note='shots 3'),
     fac_stencil=dict(fill=14000.0, cam=dict(loc=(-9.0, 13.0, 4.8), look_at=(-12.5, 20.0, 4.9), lens=26), stages=FULL, cards=[('b', (-8, 16), 3.2)], note='shot 4'),
     fac_side=dict(cam=dict(loc=(-4.0, 5.0, 4.6), look_at=(-4.0, 22.0, 4.8), lens=24), stages=FULL, cards=[('a', (-12, 14), 3.2), ('b', (4, 15), 3.2)], note='shot 7: side-on, work lamps'),
     fac_bench=dict(fill=14000.0, cam=dict(loc=(-10.0, 4.0, 3.0), look_at=(-18.0, 12.0, 3.2), lens=28), stages=FULL, small_crates=[(-13, 8, 2.6, 0.5), (-16, 6, 2.2, 0.3)], cards=[('a', (-16, 10), 3.2), ('b', (-13, 12), 3.2)], note='shot 8'),
     fac_chassis=dict(cam=dict(loc=(-9.0, 9.0, 3.4), look_at=(-6.0, 22.0, 4.2), lens=26), stages=_st(), cards=[('a', (-4, 14), 3.2)], note='shot 14'),
-    fac_plates=dict(cam=dict(loc=(2.0, 11.0, 6.0), look_at=(-6.0, 22.0, 5.8), lens=26), stages=_st(plates=0.55, rivets=0.0), crane_x=-6.0, crane_y=22.0, hook_z=11.0, cards=[('a', (-14, 15), 3.2)], note='shots 15'),
-    fac_tracks=dict(cam=dict(loc=(-4.0, 7.0, 4.0), look_at=(-4.0, 22.0, 5.0), lens=24), stages=_st(plates=1, rivets=1, tracks=0.5), cards=[('b', (8, 13), 3.2)], note='shot 16'),
+    fac_plates=dict(cam=dict(loc=(2.0, 11.0, 5.0), look_at=(-6.0, 22.0, 6.6), lens=26), stages=_st(plates=0.88, rivets=0.0), crane_x=-5.0, crane_y=22.0, hook_z=10.4, slings=dict(stage='plates', points=[(-5.5, 1.8, 4.25), (-5.5, -1.8, 4.25), (0.8, 1.8, 4.0), (0.8, -1.8, 4.0)]), cards=[('a', (-14, 15), 3.2)], note='shots 15'),
+    fac_tracks=dict(cam=dict(loc=(-4.0, 7.0, 4.4), look_at=(-4.0, 22.0, 6.4), lens=24), stages=_st(plates=1, rivets=1, tracks=0.86), crane_x=-5.0, crane_y=22.0, hook_z=11.0, slings=dict(stage='tracks', points=[(-6.0, 2.6, 4.4), (-6.0, -2.6, 4.4), (0.0, 2.6, 4.2), (0.0, -2.6, 4.2)]), cards=[('b', (8, 13), 3.2)], note='shot 16'),
     fac_sponsons=dict(cam=dict(loc=(14.0, 10.0, 4.4), look_at=(-4.0, 22.0, 4.6), lens=26), stages=_st(plates=1, rivets=1, tracks=1, sponsons=0.6, guns=0.0), cards=[('a', (7, 13), 3.2)], note='shot 17'),
-    fac_crate=dict(cam=dict(loc=(0.0, 4.0, 4.0), look_at=(0.0, 22.0, 5.5), lens=24), tank_on=False, crate=dict(x=0, y=22, open=0.0), cards=[('a', (-10, 13), 3.2), ('b', (9, 12), 3.2)], note='shot 18'),
+    fac_crate=dict(cam=dict(loc=(-23.0, 5.0, 5.5), look_at=(2.0, 22.0, 5.0), lens=24), tank_on=False, crate=dict(x=0, y=22, open=0.0), cards=[('a', (-10, 13), 3.2), ('b', (9, 12), 3.2)], note='shot 18'),
     fac_crate_open=dict(cam=dict(loc=(0.0, 6.0, 4.5), look_at=(0.0, 22.0, 6.0), lens=24), tank_on=True, tank_in_crate=True, tank=dict(pos=(0, 22), yaw=0.0, z=1.3), stages=FULL, crate=dict(x=0, y=22, open=0.8), trestles_off=True, note='shot 31'),
 )
 

@@ -115,12 +115,14 @@ def scatter_poly_edge(poly, off, n, seed, jitter=1.2, side=1):
 # ============================================================================= grass tufts, weeds, poppies, bricks
 def tufts(name, pts, zf, seed=1, blades=7, h=(0.45, 1.0), w=0.075, lean=0.4, tone=None, mat=None):
     """clumps of grass blades (one triangle each, tip attribute 0 at the foot -> 1 at the tip, tone attribute per clump: green .. straw .. dark weed) merged into ONE object"""
-    rr = np.random.default_rng(seed); V = []; Fc = []; tip = []; tn = []; k = 0
+    rr = np.random.default_rng(seed); V = []; Fc = []; tip = []; tn = []; k = 0; clamp = S.get('clamp') and S.get('cam_loc') is not None
     for (x, y) in pts:
-        z = zf(x, y) - 0.03; hc = rr.uniform(*h); tc = rr.random() if tone is None else tone + rr.normal(0, 0.1)
-        for b in range(blades):
+        z = zf(x, y) - 0.03; hc = rr.uniform(*h); tc = rr.random() if tone is None else tone + rr.normal(0, 0.1); nb = blades; wl = w
+        if clamp:                                                                        # producer fix: no blade taller than ~6 % of the frame at its distance; 3-5 blade clumps
+            cl = S['cam_loc']; dcam = math.sqrt((x - cl[0]) ** 2 + (y - cl[1]) ** 2 + (z - cl[2]) ** 2); hc = min(hc, max(0.12, 0.085 * dcam)); nb = int(rr.integers(3, 6)); wl = min(w, 0.09 * hc + 0.01)
+        for b in range(nb):
             a = rr.uniform(0, 6.2832); rad = rr.uniform(0.0, 0.14); bx, by = x + math.cos(a) * rad, y + math.sin(a) * rad; hb = hc * rr.uniform(0.55, 1.15); ang = rr.uniform(0, 6.2832); lz = rr.uniform(0.05, lean)
-            tx, ty = bx + math.cos(ang) * lz * hb, by + math.sin(ang) * lz * hb; wx, wy = -math.sin(ang), math.cos(ang); ww = w * rr.uniform(0.7, 1.2)
+            tx, ty = bx + math.cos(ang) * lz * hb, by + math.sin(ang) * lz * hb; wx, wy = -math.sin(ang), math.cos(ang); ww = wl * rr.uniform(0.7, 1.2)
             V += [(bx - wx * ww, by - wy * ww, z), (bx + wx * ww, by + wy * ww, z), (tx, ty, z + hb)]; Fc.append((k, k + 1, k + 2)); tip += [0.0, 0.0, 1.0]; tn += [float(np.clip(tc, 0, 1))] * 3; k += 3
     if not Fc: return None
     me = bpy.data.meshes.new(name); me.from_pydata(V, [], Fc); me.update()
