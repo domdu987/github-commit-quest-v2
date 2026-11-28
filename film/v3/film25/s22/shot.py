@@ -18,14 +18,16 @@ class Take(D.Rig):
         TK.set_stencil(F.S["tank"], 0)
         self.gen = self.actor("gen", "general25", contact=dict(width=1.6, depth=0.8, opacity=0.7))
         self.P = Vector((G22[0], G22[1], F.gh(*G22)))
+        a = math.radians(304.0)
+        self.wall = D.add_wall('wall', (self.P.x - math.cos(a) * 3.0, self.P.y - math.sin(a) * 3.0), 304.0, 13.0, 5.2, D.plate_material('wall_m', (0.36, 0.40, 0.33)), z0=self.P.z - 1.0)
 
     def cam_of(self, g):
         u = (g - G0) / float(G1 - 1 - G0); w = C.calm(u)
-        az, d, cz, lz = 304.0, 3.9 / (1.0 + 0.08 * w), 2.6, 2.1
+        az, d, cz, lz = 304.0, 3.2 / (1.0 + 0.08 * w), 2.2, 2.1
         A = math.radians(az)
         loc = Vector((self.P.x + math.cos(A) * d, self.P.y + math.sin(A) * d, self.P.z + cz))
         fwd = Vector((-math.cos(A), -math.sin(A), 0.0)); right = fwd.cross(Vector((0, 0, 1))).normalized()
-        la = math.radians(az + 180.0 - 11.0)
+        la = math.radians(az + 180.0 - 6.0)
         look = Vector((loc.x + 10 * math.cos(la), loc.y + 10 * math.sin(la), self.P.z + lz))
         side = -0.25 * w
         return (loc + right * side, look + right * side), 24.0

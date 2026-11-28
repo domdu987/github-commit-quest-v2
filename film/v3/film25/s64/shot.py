@@ -13,7 +13,10 @@ V = 0.10
 
 class Take(D.Rig):
     def __init__(self, work):
-        D.Rig.__init__(self, "sky_close_cockpit", work, fstop=2.8, sun_e=9.0, sky_k=1.3, sun_left=30.0, sun_el=38.0)
+        D.Rig.__init__(self, "sky_close_cockpit", work, fstop=2.8, sun_e=9.0, sky_k=0.7, sun_left=30.0, sun_el=38.0, ev=-0.4)
+        for o in bpy.data.objects:
+            if o.name.startswith('cloud'):
+                o.hide_render = True; o.hide_viewport = True
         self.root = [o for o in bpy.data.objects if o.parent is None and o.type == "EMPTY" and "plane" in o.name.lower()]
         self.pl = F.S.get("plane") or None
         # the plane's root = the empty carrying scale 2.2 at z = 60 (set by sky.build close)
@@ -33,9 +36,9 @@ class Take(D.Rig):
         w = C.calm(u); w2 = C.smooth(max(0.0, (u - 0.25) / 0.75))
         cp = self.seat(g)
         P = Vector((cp.x, cp.y, cp.z - 1.5))
-        d = 19.0 - 15.6 * w2
-        az = -90.0 + 18.0 * (1 - w2)
-        return D.orbit(P, az, d, 3.0 - 1.1 * w2, 1.5 + 0.4 * w2 + 1.5 * (1 - w2), side=0.0, lx=0.9 * w2), 28.0
+        d = 34.0 - 30.6 * w2
+        az = -90.0 + 32.0 * (1 - w2)
+        return D.orbit(P, az, d, 2.4 - 0.5 * w2, 1.5 + 0.4 * w2 + 1.0 * (1 - w2), side=0.0, lx=0.9 * w2), 28.0
 
     def pose_of(self, g):
         k = g - G0
