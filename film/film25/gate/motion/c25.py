@@ -122,11 +122,13 @@ class Take(object):
                 if r.get("clipped"):
                     print("take: WARNING sprite of %s clipped on frame %d" % (a.name, f), flush=True)
 
-    def render(self, frames, out_dir, scale=1.0, samples=None, threads=2, keep_raw=True):
+    def render(self, frames, out_dir, scale=1.0, samples=None, threads=2, keep_raw=True, threshold=None):
         """the set's final: Cycles at `scale` (1.0 = native 720x1280), then F.post (sharpen, clarity, grade) -> out_dir/g_%04d.png"""
         F.setup_render(self.scene, "final")
         if samples:
             self.scene.cycles.samples = int(samples)
+        if threshold:
+            self.scene.cycles.adaptive_threshold = float(threshold)
         raw_dir = os.path.join(out_dir, "raw")
         stats = render.render_frames(list(frames), raw_dir, scale=scale, threads=threads, scene=self.scene, camera=self.cam,
                                      on_frame=self.on_frame, verbose=False)

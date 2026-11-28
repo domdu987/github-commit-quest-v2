@@ -35,7 +35,8 @@ def persp_coeffs(dst, src):
     return np.linalg.solve(np.array(A, float), np.array(B, float)).tolist()
 
 
-GAMMA, VIB = 0.95, 1.5
+GAMMA, VIB = 0.95, 1.3
+WB_T = (2.0, 4.5)                                     # keep the warm key: mean a*, b* of the finished frame toward (+2, +4.5)
 W709 = np.array([0.2126, 0.7152, 0.0722], np.float32)
 to_lin = lambda x: np.where(x <= 0.04045, x / 12.92, ((x + 0.055) / 1.055) ** 2.4)
 to_srgb = lambda x: np.where(x <= 0.0031308, 12.92 * x, 1.055 * np.power(np.clip(x, 0, None), 1 / 2.4) - 0.055)
@@ -82,6 +83,8 @@ def vibrance(a, k=1.4):
 
 def frame(g, raw_dir, out_dir, corners, sprite_dir):
     raw = Image.open(os.path.join(raw_dir, "f_%04d.png" % g)).convert("RGB")
+    if raw.size != (720, 1280):
+        raw = raw.resize((720, 1280), Image.LANCZOS)                                           # 75 % render -> 720x1280
     sh = raw.filter(ImageFilter.UnsharpMask(radius=1.1, percent=55, threshold=2)).filter(ImageFilter.UnsharpMask(radius=5, percent=40, threshold=1))
     rawa = np.asarray(raw).astype(np.float32) / 255
     a = np.asarray(sh).astype(np.float32) / 255
@@ -125,9 +128,11 @@ def frame(g, raw_dir, out_dir, corners, sprite_dir):
             else: lo = e
         bgv = vibrance(tone(e, gains)[::4, ::4], VIB)
         am, bm = lab_ab(comp(bgv) if False else (bgv * (1 - m[::4, ::4, None]) + sc[::4, ::4] * m[::4, ::4, None])[None])
-        gains[2] *= np.exp(0.025 * (bm - 3.0)); gains[1] *= np.exp(0.02 * (am - 2.0))       # global white balance toward a* +2, b* +3
+        gains[2] *= np.exp(0.025 * (bm - WB_T[1])); gains[1] *= np.exp(0.02 * (am - WB_T[0]))       # global white balance toward a* +2, b* +3
         gains /= float(gains @ W709); gains = np.clip(gains, 0.7, 1.45)
     b = vibrance(tone(e, gains), VIB)
+    yy = np.linspace(0, 1, 1280, dtype=np.float32)[:, None, None]
+    b = b * (1 - 0.18 * np.clip((yy - 0.86) / 0.14, 0, 1) ** 1.5)                           # darker near-foreground edge (depth: fg / lit general / light bg)
     out = comp(b)
     st = dict(exposure=round(e, 3), gamma=GAMMA)
     Image.fromarray((np.clip(out, 0, 1) * 255 + 0.5).astype(np.uint8)).save(os.path.join(out_dir, "g_%04d.png" % g))

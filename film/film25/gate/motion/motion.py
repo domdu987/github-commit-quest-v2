@@ -25,6 +25,8 @@ ROWS = [(19, 522, 552), (20, 552, 602), (21, 602, 626), (22, 626, 676)]     # g0
 G_ALL = (522, 675)
 PPD = 384
 LEVEL = None
+SCALE, SAMPLES, THRESH = 0.75, 24, 0.02                  # director 28 Nov: film-24 final settings (24 adaptive, thr 0.02, OIDN, 75 %), post upscales to 720x1280
+HAZE = 0.0025                                            # aerial haze toward the far tree line (set default 0.0006)
 G22 = (-7.6, -31.6)                                      # row 22 mark: south of the tank nose: the test trench to his right, the tank behind
 
 
@@ -139,6 +141,7 @@ def pose_of(g):
     if r == 19:
         use_b, i = laugh_frame(g)
         p = story("general25_laugh_b" if use_b else "general25_laugh")
+        p.pop("mouth", None)                                                 # no lip-sync before g 552: the 'laughing' expression's own laugh mouth
         u = (g - 522) / 29.0
         p["yaw"] = round(0.25 - 0.2 * u + 0.05 * math.sin(i * 1.7), 3)           # the head rolls round as he laughs
         p["head_roll"] = p["head_roll"] + (4 if i % 3 == 0 else -2)
@@ -192,13 +195,14 @@ def pose_of(g):
         p["expr"] = "smug" if g < 657 else "smirk"
         p["blink"] = blink(g, [655])
     p["light25"] = -1                                                        # key sun from screen-left (front.finish rule)
-    p["rim25"] = 0.7
+    p["rim25"] = 0.6
     return p
 
 
 # ----------------------------------------------------------------------------- take
 class Take(C.Take):
     def __init__(self):
+        C.F.OVR.update(haze=HAZE)
         C.Take.__init__(self, PRESET)
         sd = os.environ.get("SPRITES", os.path.join(HERE, "work", "sprites"))
         os.makedirs(sd, exist_ok=True)
@@ -224,7 +228,7 @@ class Take(C.Take):
         self.scene.frame_set(g)
         loc, look, lens = cam_of(g)
         return dict(g=g, row=row_of(g)[0], cam=[round(c, 3) for c in loc], look=[round(c, 3) for c in look], lens=lens,
-                    heads=C.head_report(self, g), feet=C.feet_report(self, g), mouth=pose_of(g).get("mouth"))
+                    heads=C.head_report(self, g), feet=C.feet_report(self, g), mouth=pose_of(g).get("mouth", "laugh (expr)"))
 
 
 if __name__ == "__main__":
@@ -260,8 +264,8 @@ if __name__ == "__main__":
             js = os.path.join(out, "g_%04d.json" % g)
             if os.path.exists(js) and os.path.exists(js[:-5] + ".png"):
                 continue
-            st = Tk.render([g], out, scale=1.0, samples=None)[0]
+            st = Tk.render([g], out, scale=SCALE, samples=SAMPLES, threshold=THRESH)[0]
             rep = Tk.report(g)
-            rep.update(wall=round(st["wall"], 1), cpu=round(st["cpu"], 1), samples=Tk.scene.cycles.samples, scale=1.0)
+            rep.update(wall=round(st["wall"], 1), cpu=round(st["cpu"], 1), samples=Tk.scene.cycles.samples, threshold=THRESH, scale=SCALE)
             json.dump(rep, open(js + ".tmp", "w")); os.replace(js + ".tmp", js)
             print("g %d  %.1f s wall  %.1f s cpu" % (g, st["wall"], st["cpu"]), flush=True)

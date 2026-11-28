@@ -1122,7 +1122,12 @@ def finish(cam, P, samples=None, quality=None, sun=None, haze=None):
     if P.get('cast') and S.get('mark'):                                                    # real cast25 puppet at the mark (framing reference; stays in the finals)
         import lib25 as L_; mk = S['mark']; side = L_.light_side(cam, az)
         for c in P['cast']: L_.cast_card(c['story'], mk['pos'][:2], mk['pos'][2], mk['face_deg'], side, c.get('mirror', False))
-    make_haze(S.get('haze', 0.0006) if haze is None else haze); make_camera(cam)
+    make_haze((S.get('haze', 0.0003 if S.get('mark') else 0.0009)) if haze is None else haze); make_camera(cam)
+    rim = bpy.data.lights.new('rim_fill', 'SUN'); rim.color = (0.74, 0.87, 1.0); rim.energy = S.get('rim_e', 1.4); rim.angle = math.radians(25.0)                       # cool back fill / rim: from behind the subject toward the camera, no shadow
+    try: rim.use_shadow = False
+    except Exception: pass
+    ro = bpy.data.objects.new('rim_fill', rim); sc.collection.objects.link(ro); f_ = Vector(cam['look_at']) - Vector(cam['loc']); f_.z = 0; f_.normalize(); to_rim = Vector((f_.x * math.cos(math.radians(22)), f_.y * math.cos(math.radians(22)), math.sin(math.radians(22))))
+    ro.rotation_euler = (-to_rim).to_track_quat('-Z', 'Y').to_euler()
     if P.get('fill'):                                                                  # hidden soft bounce card beside the camera for close-ups (practical fill, invisible to the camera)
         fd = bpy.data.lights.new('bounce', 'AREA'); fd.shape = 'DISK'; fd.size = 14.0; fd.energy = P['fill']; fd.color = (1.0, 0.93, 0.82); fo = bpy.data.objects.new('bounce', fd); sc.collection.objects.link(fo)
         loc = Vector(cam['loc']); tgt = Vector(cam['look_at']); fo.location = loc + (tgt - loc).normalized() * 3.0 + Vector((0, 0, 3.0)); fo.rotation_euler = (tgt - fo.location).to_track_quat('-Z', 'Y').to_euler()
@@ -1149,7 +1154,7 @@ def _hsv2rgb(h, s, v):
     c = v * s; x = c * (1 - np.abs(h % 2 - 1)); m = v - c; hi = np.floor(h).astype(int) % 6; z = np.zeros_like(c)
     r = np.choose(hi, [c, x, z, z, x, c]); g = np.choose(hi, [x, c, c, x, z, z]); b = np.choose(hi, [z, z, x, c, c, x]); return np.stack([r + m, g + m, b + m], -1)
 
-def grade(im, mask=None, p1_t=0.035, p99_t=0.925, mean_t=0.51, knee=0.85, vib=1.4, wb=(1.5, 1.5), wb_k=0.6, wb_max=6.0):
+def grade(im, mask=None, p1_t=0.035, p99_t=0.925, mean_t=0.51, knee=0.85, vib=1.4, wb=(1.5, 1.5), wb_k=0.6, wb_max=6.0, depth_k=0.12):
     """gentle final grade (director, 28 Nov): (1) levels p1 -> 0.035, p99 -> 0.925 with a soft knee above 0.85, (2) luma gamma to mean 0.51 (clamped 0.8-1.3), (3) white-balance shift of the mean Lab a*, b* toward `wb`
     at 60 % strength, at most 6 Lab units, (4) vibrance ~1.4 weighted to mid-saturation pixels (S -> S (1 + (vib-1) 4 S (1-S)); hue, value untouched: no hue shifts, no clipping).  Statistics ignore the puppet cards;
     `mask` (0..1, the cards' alpha) composites the puppets back UNGRADED so faces and costume colours stay exactly as drawn."""
@@ -1171,14 +1176,19 @@ def grade(im, mask=None, p1_t=0.035, p99_t=0.925, mean_t=0.51, knee=0.85, vib=1.
     def msat(s2):
         sm_ = np.asarray(Image.fromarray((np.clip(_hsv2rgb(h[::2, ::2], s2[::2, ::2], v[::2, ::2]), 0, 1) * 255).astype(np.uint8)).resize((180, 320))).astype(np.float32) / 255; mx_, mn_ = sm_.max(2), sm_.min(2); return float(np.where(mx_ > 0, (mx_ - mn_) / np.maximum(mx_, 1e-6), 0).mean())
     vb = vib
-    if msat(vibr(vb)) < 0.435:                                                              # hard gate: mean sat >= 0.42 -> raise the vibrance just enough (max 3.2)
+    if msat(vibr(vb)) < 0.42:                                                               # gate: mean sat 0.40-0.50 (aim 0.40-0.48): raise the vibrance just enough (max 3.2)
         lo_, hi_ = vib, 3.2
         for _ in range(9):
             mid = (lo_ + hi_) / 2
-            if msat(vibr(mid)) < 0.435: lo_ = mid
+            if msat(vibr(mid)) < 0.42: lo_ = mid
             else: hi_ = mid
         vb = hi_
-    s = vibr(vb); a = np.clip(_hsv2rgb(h, s, v), 0, 1)
+    s = vibr(vb); m_ = msat(s)
+    if m_ > 0.47: s = s * float(np.clip(0.46 / m_, 0.6, 1.0))                               # already vivid enough: do not exceed R11
+    a = np.clip(_hsv2rgb(h, s, v), 0, 1)
+    ys = np.linspace(0, 1, a.shape[0], dtype=np.float32)[:, None, None]                    # depth: foreground (lower frame) a touch darker, distance (upper frame) a touch lighter and bluer (mild aerial perspective)
+    fg = 1 - depth_k * np.clip((ys - 0.62) / 0.38, 0, 1) ** 1.5; bg = depth_k * 0.55 * np.clip((0.55 - ys) / 0.55, 0, 1) ** 1.2
+    a = np.clip(a * fg * (1 - bg) + np.array([0.80, 0.88, 0.97], np.float32) * bg, 0, 1)
     if mask is not None: m = np.clip(mask, 0, 1)[..., None]; a = a * (1 - m) + src * m
     return Image.fromarray((np.clip(a, 0, 1) * 255 + 0.5).astype(np.uint8))
 
