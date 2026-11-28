@@ -5,3 +5,4 @@
 - 16:54 container restarted (3rd time); queues relaunched; s29/s34 resuming (9/7 frames), then s33, s31, s06 redo, s14 redo
 - row 34: g 982-1015 (34 fr) | 34 s/frame | take.mkv (1 fr)                        luma 0.500 p1 0.086 p99 0.974 lc 0.0429 sat 0.349 chroma 21.6 a +3.6 b +6.2 p98 0.70 blue 0.19 warm 0.67 neut 0.12 M 72  MISS  (guides off: p1,p99,chroma,sat_p98)
 - row 29+30: g 882-917 (36 fr) | 40 s/frame | take.mkv (1 fr)                        luma 0.500 p1 0.052 p99 0.974 lc 0.0481 sat 0.516 chroma 31.2 a +2.7 b +5.5 p98 0.97 blue 0.37 warm 0.50 neut 0.05 M 98  MISS  (guides off: p99)
+- row 29+30: g 882-917 (36 fr) | 40 s/frame | take.mkv (1 fr)                        luma 0.501 p1 0.048 p99 0.974 lc 0.0494 sat 0.463 chroma 26.9 a +2.2 b +4.8 p98 0.97 blue 0.37 warm 0.51 neut 0.05 M 83  PASS  (guides off: p99,chroma)
