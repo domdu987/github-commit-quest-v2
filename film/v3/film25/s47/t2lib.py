@@ -161,7 +161,7 @@ def solve(a, luma_t=float(os.environ.get("LUMA_T", 0.50)), wb_t=WB_T, vib=VIB, e
             else: lo = e
         bgv = vibrance(_tone(ls, e, gains), vib); am, bm = lab_ab(bgv[None])
         gains[2] *= np.exp(0.025 * (bm - wb_t[1])); gains[1] *= np.exp(0.02 * (am - wb_t[0]))
-        gains /= float(gains @ W709); gains = np.clip(gains, 0.7, 1.45)
+        gains /= float(gains @ W709); gains = np.clip(gains, 0.5, float(os.environ.get("WB_CLIP", 1.45)))
     return dict(e=float(e), gains=[float(x) for x in gains])
 
 
