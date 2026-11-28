@@ -12,7 +12,7 @@ Comparison image: film/ref_shorts/compare_R9_R10_vs_turtleC.jpg.
 ## Targets (measure every take; a take misses if any value is out of range)
 - Mean luma 0.48-0.55, p1 0.02-0.08, p99 0.90-0.95.
 - Local contrast 0.038 or more, measured at 90x160 like qa.
-- Saturation 0.28-0.34.
+- Saturation 0.45-0.50, Lab chroma >= 28 (client 2026-11-28: R2-R7 are more vivid than R9/R10).
 
 ## How to get there
 1. **Bright key, not dusk backlight.** Use a late-afternoon or golden-hour sun at 20-35°, strong and warm (about 3-5x the old KEY), coming from the side or 3/4 front so faces and props are lit. Backlit dusk only for 1-2 hero moments.
