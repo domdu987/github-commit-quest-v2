@@ -15,16 +15,16 @@ PRESET = "t2_wire"
 
 
 def u_of(g):
-    return T.lerp(0.02, 0.24, T.smooth(min(max((g - G0) / float(G1 - 1 - G0), 0.0), 1.0)))
+    return T.lerp(0.00, 0.12, T.smooth(min(max((g - G0) / float(G1 - 1 - G0), 0.0), 1.0)))
 
 
 def cam_of(g):
     k = min(max((g - G0) / float(G1 - 1 - G0), 0.0), 1.0)
     p = T.TK_.crossing_pose(F.S["tank"], u_of(g))["pos"]
-    tx = p[0] - 4.5                                            # the left-hand track, mid hull, rolling over the wire coils
-    loc = (tx - 1.5 + T.lerp(-2.0, 0.5, k), p[1] - 7.0, 1.0)
-    look = (tx + 0.8, p[1] - 2.8, 1.2)
-    return loc, look, 24.0, (3.0, 7.0)
+    tx = p[0] - 7.0                                            # the left-hand track, mid hull, rolling over the wire coils
+    loc = (tx + T.lerp(-2.5, 0.5, k), p[1] - 6.8, 1.0)
+    look = (tx + 1.8, p[1] - 2.7, 0.7)
+    return loc, look, 24.0, (3.0, 6.8)
 
 
 def hooks(g, Tk):
@@ -41,7 +41,8 @@ if __name__ == "__main__":
     T.TK_ = TK_
     cmd = sys.argv[1]
     gs = [g for g in C.parse(sys.argv[2]) if FIRST <= g <= LAST]
-    T.register(PRESET, "cross_wire", cards=[], dress_n=0.4, near=False, tune=dict(green_k=1.0, cloud_k=0.95))
+    T.register(PRESET, "cross_wire", cards=[], dress_n=0.15, near=False, tune=dict(green_k=1.0, cloud_k=0.95),
+               world=dict(F.PRESETS["cross_wire"].get("world", {}), crates=[], barrels=[], rocks=[], wire_coils=[(-7.0, 1.9, 3.2, 0.6, 6), (-4.5, 1.7, 3.0, 0.6, 6), (-2.0, 1.9, 3.2, 0.6, 6), (0.5, 1.7, 3.0, 0.55, 6), (-9.5, 1.8, 3.0, 0.6, 6)]))
     F.PRESETS[PRESET]["cam"] = dict(loc=(-6.0, -4.0, 1.0), look_at=(-5.0, 2.0, 1.2), lens=24.0)
     Tk = T.Take(PRESET, cam_of, hooks)
     if cmd == "probe":
