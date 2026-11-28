@@ -28,6 +28,23 @@ SUN_E, SKY_K = 8.0, 0.5
 NORMAL_R, NORMAL_STRENGTH = 0.9, 1.6
 
 
+_vib0 = P.vibrance
+P.COOLK = 1.0
+
+
+def _vib(a, k=1.4):
+    out = _vib0(a, k)
+    if P.COOLK > 1.0:                                  # extra saturation on cool hues only (blue / teal / green): lifts sat without raising the warm a*, b*
+        h, s, v = P.rgb2hsv(out)
+        cool = np.clip(1.0 - np.abs(h - 3.0) / 1.6, 0, 1)         # hue in 0..6 sectors; 3 = cyan
+        cool = np.maximum(cool, np.clip(1.0 - np.abs(h - 4.0) / 1.2, 0, 1))
+        s2 = np.clip(s * (1 + (P.COOLK - 1) * cool), 0, 1)
+        out = P.hsv2rgb(h, s2, v)
+    return out
+
+
+P.vibrance = _vib
+
 # ----------------------------------------------------------------------------- normal map (depth.py, unchanged maths)
 def normal_map(spr_path, out_path, R=NORMAL_R, ppd=384):
     import cv2
@@ -349,20 +366,20 @@ def run(shot, cmd, gs, out_root=None, scale=None, samples=None, sh_samples=None)
         geos = {g: rig.card_geo(g) for g in samp}
         best = None; P.ITERS_ = 7
         tmp = os.path.join(TAKE, "work", "ag"); os.makedirs(tmp, exist_ok=True)
-        for vib, (wba, wbb) in itertools.product((1.0, 1.4, 1.8, 2.2), ((2.0, 4.5), (0.0, 1.0), (-1.5, -1.0))):
-            P.VIB = vib; P.WB_T = (wba, wbb); ds = []
+        for vib, ck_, (wba, wbb) in itertools.product((1.0, 1.25), (1.0, 2.0, 3.0), ((2.0, 4.5), (0.0, 1.0))):
+            P.VIB = vib; P.COOLK = ck_; P.WB_T = (wba, wbb); ds = []
             for g in samp:
                 shp = os.path.join(out_root, "shade", "f_%04d.png" % g)
                 composite(g, os.path.join(out_root, "raw", "f_%04d.png" % g), shp if (geos[g] and os.path.exists(shp)) else None, geos[g], os.path.join(tmp, "s.png"))
                 ds.append(ns["m"](Image.open(os.path.join(tmp, "s.png"))))
             d = {k: float(np.mean([x[k] for x in ds])) for k in ds[0]}
             cost = abs(d["sat"] - 0.45) * 10 + 30 * max(0, abs(d["a_mean"]) - 5.0) + 30 * max(0, abs(d["b_mean"]) - 5.0) + 60 * max(0, 0.47 - d["luma"])
-            if best is None or cost < best[0]: best = (cost, vib, wbb, wba, d)
-        print("AUTOGRADE", best[1:4], {k: round(v, 3) for k, v in best[4].items() if k in ("sat", "a_mean", "b_mean", "luma")}, flush=True)
-        os.environ["VIB"], os.environ["WBB"], os.environ["WBA"] = str(best[1]), str(best[2]), str(best[3])
+            if best is None or cost < best[0]: best = (cost, vib, wbb, wba, d, ck_)
+        print("AUTOGRADE", best[1:4], "coolk", best[5], {k: round(v, 3) for k, v in best[4].items() if k in ("sat", "a_mean", "b_mean", "luma")}, flush=True)
+        os.environ["VIB"], os.environ["WBB"], os.environ["WBA"], os.environ["COOLK"] = str(best[1]), str(best[2]), str(best[3]), str(best[5])
         cmd = "recomp"
     if cmd == "recomp":                                  # re-run only the composite / grade on stored raw + shading renders (env VIB = vibrance)
-        P.VIB = float(os.environ.get("VIB", P.VIB)); P.WB_T = (float(os.environ.get("WBA", 2.0)), float(os.environ.get("WBB", 4.5))); P.ITERS_ = 7
+        P.VIB = float(os.environ.get("VIB", P.VIB)); P.WB_T = (float(os.environ.get("WBA", 2.0)), float(os.environ.get("WBB", 4.5))); P.ITERS_ = 7; P.COOLK = float(os.environ.get("COOLK", 1.0)); P.COOLK = float(os.environ.get("COOLK", 1.0))
         outd = os.environ.get("RECOMP_OUT", out_root)
         os.makedirs(outd, exist_ok=True)
         for g in gs:
