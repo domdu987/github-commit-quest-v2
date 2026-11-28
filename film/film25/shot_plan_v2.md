@@ -76,6 +76,43 @@ Framing key: W = wide, M = medium (knees-up), C = close (waist-up), I = insert (
 
 58 shots in 69.75 s (mean 1.20 s, none shorter than 0.70 s). Producer: merge phrases under 0.8 s; let the hero crossing (47-49) and the final callback (68-70) breathe.
 
+## Camera move per shot (producer spec, binding; measured on R11: static 2 %, median pan 1.1 % of width per frame, median push 0.37 % scale per frame)
+Key: PUSH/PULL = scale change across the shot. FOLLOW = pan or track with the subject at 20-35 % of frame width per second, leading it. ARC = slight orbit, ≤ 8°. PUNCH = quick push-in of 15-25 % over 6-8 frames on the accent word. WHIP = a fast smooth pan out over the last 4-6 frames into the next cut. Every move is an eased spline: no noise, no handheld shake.
+
+| row | move | row | move |
+|---|---|---|---|
+| 1+2 | PUSH through the doors, 40 % over 1.45 s | 34 | FOLLOW the barrel in, then PUNCH 15 % on the clunk |
+| 3+4 | FOLLOW the hull down (tilt), then PUSH 10 % onto the dial | 35 | FOLLOW the hammer, slide right |
+| 5 | PUSH 12 % + slight ARC | 36 | FOLLOW the brush stroke |
+| 6 | PULL 10 % to reveal the can and the nodding worker | 37 | FOLLOW the crate swing (pan) |
+| 7 | crane-down tilt + PUSH 10 % | 38 | slow ARC round the crate, 6° |
+| 8+9 | FOLLOW pan from the Tommy to the German, 30 %/s | 39 | slow PUSH 10 % into the haze |
+| 10 | PUSH 10 %, dirt flies toward the lens side | 40 | lateral FOLLOW along the column |
+| 11 | FOLLOW the helmet up (tilt) | 41 | PUSH 10 % onto the tilted tank |
+| 12 | PUNCH 20 % on the ping | 42 | PULL 10 % as the crew push |
+| 13 | PUSH 12 %, WHIP out at the end | 43 | PUSH 12 % |
+| 14 | top-down FOLLOW of the model tank, then PULL to the face | 44 | PUNCH 20 % on "ไอ้ถังน้ำ" (g 1347) |
+| 15 | PUSH 12 % + ARC | 45 | PUSH 15 % on the steam puff |
+| 16 | PULL 10 % | 46 | FOLLOW the tank out of the smoke, low |
+| 17 | FOLLOW the brush | 47-49 | HERO: lateral FOLLOW slide with the tank, leading; PUNCH 15 % on "ยกหัวขึ้น" (g 1424); ease to a hold-free drift for the rhomboid |
+| 18 | FOLLOW the general walking in | 50 | PUSH 12 % on the grip |
+| 19 | PUNCH 20 % on the laugh (g 522-530), then drift | 51 | FOLLOW the pull-across, 25 %/s |
+| 20 | PUSH 10 % | 52 | FOLLOW the track over the wire, low |
+| 21 | PUNCH 20 % on "ของเล่น" (g 602) | 53+54 | PUSH 10 % + slight ARC |
+| 22 | over-shoulder PUSH 8 % | 55 | PUNCH 15 % on the jaw drop |
+| 23 | FOLLOW the marching general (pan) | 56 | FOLLOW the runners, 30 %/s |
+| 24 | PUSH 12 % + ARC | 57 | PUSH 12 % onto the bucket |
+| 25 | lateral slide 25 %/s | 58 | PUSH 10 % onto the board |
+| 26 | PUSH 10 % | 59 | PULL 10 % (reveal the Tommies) |
+| 27 | DEADPAN: 0.4 s near-hold, then a slow PUSH 6 % | 60+61 | PUSH 10 %, PUNCH 15 % on the lid open (g 1801) |
+| 28 | PUSH 10 % | 62 | lateral slide from the water tank to the Mark I |
+| 29+30 | FOLLOW the plate in on the crane, then PUSH 8 % on the rivets | 63 | PULL 10 % + ARC |
+| 31+32 | FOLLOW the track drop, then a lateral slide along the loop | 64+65 | FOLLOW the plane, then PUSH 25 % to the pilot |
+| 33 | PUSH 10 % on the sponson | 66 | slow descending tilt + PUSH 8 % |
+| — | — | 67 | FOLLOW the tank up the street |
+| — | — | 68-70 | FINAL: PUSH 35 % past the Tommies onto the general, eased; no whip at the end |
+Accent punches: 12, 19, 21, 44, 47-49, 55, 60+61 (7 beats; 4-6 in the spec. Teams may drop the 60+61 punch).
+
 ## New props / set items needed
 - **Cast props:**
   - watering can

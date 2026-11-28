@@ -205,6 +205,15 @@ The g column of shot_plan_v2.md is authoritative (g1 exclusive). Render 6 handle
   - warm ≥ 40 % and blue ≤ 45 % of the coloured pixels
 - **Colour grade:** grade only through the set's post(). Faces stay #fef7f6 and nothing clips.
 
+## Camera moves (producer spec from R11 measurements; binding)
+- **Every shot moves deliberately.** No locked-off frames, except one deadpan beat of at most 0.5 s (row 27).
+- **Dialogue and reaction close-ups:** push in or pull out 8-15 % scale across the shot (about 0.3-0.5 % per frame), eased, sometimes with a slight arc.
+- **Action shots:** the camera FOLLOWS the action at 20-35 % of frame width per second, leading the subject.
+- **Accent beats:** a PUNCH-in of 15-25 % over 6-8 frames, or a smooth WHIP out into the next cut.
+- **Per-shot moves:** the table "Camera move per shot" in shot_plan_v2.md gives each row's move. Follow it.
+- **Smoothness:** smooth splines only. qa_jitter must pass: smooth intentional motion is fine, frame-to-frame wobble fails.
+- **Log it:** in each take's QA.md, record the move type and the measured amount (scale % and pan % of width per second).
+
 ## QA (before delivering every take)
 1. Run `python3 PROJ/qa_auto.py take.mkv --first_g <first_g> --cuts <in-take cut g's or none>`. Fix every FAIL, then add QA_AUTO.md and phone_sheet.jpg.
 2. Run `python3 PROJ/qa_jitter.py` on every take with a camera move, a walk or a tank move. It must report no shake and no slide.
