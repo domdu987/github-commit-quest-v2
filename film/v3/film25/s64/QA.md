@@ -8,15 +8,15 @@
 
 ## light_metrics
 ```
-take.mkv (2 fr)                        luma 0.452 p1 0.082 p99 0.839 lc 0.0232 sat 0.488 chroma 35.7 a +3.1 b -2.7 p98 1.00 blue 0.32 warm 0.27 neut 0.02 M 79  MISS  (guides off: p1,p99,lc,warm_frac)
+take.mkv (2 fr)                        luma 0.455 p1 0.086 p99 0.837 lc 0.0230 sat 0.505 chroma 36.3 a +1.3 b +0.4 p98 1.00 blue 0.31 warm 0.27 neut 0.02 M 80  MISS  (guides off: p1,p99,lc,warm_frac)
 ```
 ## qa_jitter
 ```
-overall median jitter px 1.09
+overall median jitter px 1.14
 ```
 ## Framing numbers (from the per-frame meta)
 - highest head top y 453 px (rule: heads above y 880 means head bottoms; head tops far above), lowest feet y 1216 px (feet are below the frame edge when > 1280 or above y 860 when in frame).
 ## Notes
-- One build (sky_close_cockpit): the RFC biplane (scale 2.2, 60 D up) over the green Somme field, pilot25 lean_look in the cockpit seat (cockpit-crop canvas), lean 24 -> 40, head roll, blink g 1913. W -> C in one move; DOF f/2.8. Cloud puff sprites hidden (they read as lilac blobs): the sky is the set's own cumulus-on-blue world shader. Deviation: single build from the close-cockpit preset instead of the wider sky_plane preset; pale sky graded with vibrance 2.0 + HSV saturation x1.2, gamma 0.92.
+- One build (sky_close_cockpit): the RFC biplane (scale 2.2, 60 D up) over the green Somme field, pilot25 lean_look in the cockpit seat (cockpit-crop canvas), lean 24 -> 40, head roll, blink g 1913. W -> C in one move; DOF f/2.8. Cloud puff sprites hidden (lilac blobs): the sky is the set's own cumulus world shader. Deviation: single build from the close-cockpit preset instead of the wider sky_plane preset; pale sky graded with vibrance 2.0 + HSV saturation x1.3, gamma 0.88.
 ## Files
 shot.py, d25.py / c25.py / post_d.py / finish.py (in ../s21), meta.json, contact.jpg, QA_AUTO.md, phone_sheet.jpg, take.mkv (frames, raw and work stay out of git).
