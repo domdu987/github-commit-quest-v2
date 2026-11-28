@@ -31,9 +31,9 @@ def cam_of(g):
     k = min(max((g - G0) / float(G1 - 1 - G0), 0.0), 1.0)
     push = 1.0 + 0.15 * T.smooth(k)                      # PUSH 15 % on the steam puff
     side = T.lerp(-0.8, 0.9, T.smooth(k))
-    tgt = TK.tank_point(H, (-9.0 + side, 0.0, 5.0))
-    loc = TK.tank_point(H, (-8.0 + side * 0.6, -13.5 / push, 3.9))
-    return tuple(loc), tuple(tgt), 38.0, (2.2, (Vector(loc) - Vector(tgt)).length)
+    tgt = TK.tank_point(H, (-8.0 + side, 0.0, 5.0))
+    loc = TK.tank_point(H, (-8.6 + side * 0.6, -16.0 / push, 2.6))
+    return tuple(loc), tuple(tgt), 32.0, (2.8, (Vector(loc) - Vector(tgt)).length)
 
 
 def hooks(g, Tk):
