@@ -17,9 +17,9 @@ Y_T = 4.5
 def cam_of(g):
     k = min(max((g - G0) / float(G1 - 1 - G0), 0.0), 1.0)
     cx = T.lerp(-12.5, -2.5, T.smooth(0.2 * k + 0.8 * k * k * (3 - 2 * k)))
-    d = T.lerp(21.0, 20.0, k)
-    az = math.radians(22.0)
-    loc = (cx - d * math.sin(az), Y_T - d * math.cos(az), 2.2)
+    d = T.lerp(16.5, 15.5, k)
+    az = math.radians(12.0)
+    loc = (cx - d * math.sin(az), Y_T - d * math.cos(az), 1.7)
     look = (cx + 1.5, Y_T, 2.0)
     return loc, look, 24.0
 
