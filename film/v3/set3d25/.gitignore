@@ -3,3 +3,4 @@ __pycache__/
 *.out
 sweep/
 finals/*_mask.png
+sweep2/*.png

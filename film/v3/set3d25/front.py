@@ -1165,7 +1165,7 @@ def _hsv2rgb(h, s, v):
     c = v * s; x = c * (1 - np.abs(h % 2 - 1)); m = v - c; hi = np.floor(h).astype(int) % 6; z = np.zeros_like(c)
     r = np.choose(hi, [c, x, z, z, x, c]); g = np.choose(hi, [x, c, c, x, z, z]); b = np.choose(hi, [z, z, x, c, c, x]); return np.stack([r + m, g + m, b + m], -1)
 
-def grade(im, mask=None, p1_t=0.035, p99_t=0.925, mean_t=0.51, knee=0.85, vib=1.4, wb=(1.5, 1.5), wb_k=0.6, wb_max=6.0, depth_k=0.12):
+def grade(im, mask=None, p1_t=0.035, p99_t=0.925, mean_t=0.54, knee=0.85, vib=1.4, wb=(1.5, 1.5), wb_k=0.95, wb_max=16.0, depth_k=0.12):
     """gentle final grade (director, 28 Nov): (1) levels p1 -> 0.035, p99 -> 0.925 with a soft knee above 0.85, (2) luma gamma to mean 0.51 (clamped 0.8-1.3), (3) white-balance shift of the mean Lab a*, b* toward `wb`
     at 60 % strength, at most 6 Lab units, (4) vibrance ~1.4 weighted to mid-saturation pixels (S -> S (1 + (vib-1) 4 S (1-S)); hue, value untouched: no hue shifts, no clipping).  Statistics ignore the puppet cards;
     `mask` (0..1, the cards' alpha) composites the puppets back UNGRADED so faces and costume colours stay exactly as drawn."""
@@ -1174,33 +1174,56 @@ def grade(im, mask=None, p1_t=0.035, p99_t=0.925, mean_t=0.51, knee=0.85, vib=1.
     def lum(x): return x @ W709
     L = lum(a)[keep]; lo, hi = np.percentile(L, 1), np.percentile(L, 99)
     a = (a - lo) / max(hi - lo, 1e-3) * (p99_t - p1_t) + p1_t; k = knee; a = np.where(a > k, k + (1 - k) * np.tanh((a - k) / (1 - k)), a); a = np.clip(a, 0, 1)
+    m3 = None if mask is None else np.clip(mask, 0, 1)[..., None]; Lsrc = lum(src)
+    def comp_mean(x):                                                                       # the metric sees the finished composite: puppets (ungraded) included
+        Lx = lum(x); return float(np.mean(Lx if m3 is None else Lx * (1 - m3[..., 0]) + Lsrc * m3[..., 0]))
     lo_, hi_ = 0.8, 1.3
     for _ in range(22):
         mid = (lo_ + hi_) / 2
-        if float(np.mean(lum(np.power(np.clip(a, 1e-4, 1), mid))[keep])) > mean_t: lo_ = mid
+        if comp_mean(np.power(np.clip(a, 1e-4, 1), mid)) > mean_t: lo_ = mid
         else: hi_ = mid
     a = np.power(np.clip(a, 1e-4, 1), (lo_ + hi_) / 2)
+    if abs(comp_mean(a) - mean_t) > 0.012:                                                  # still outside the luma gate: a linear-light exposure with a soft shoulder (post25 style), no clipping
+        lin0 = np.where(a <= 0.04045, a / 12.92, ((a + 0.055) / 1.055) ** 2.4); lo_, hi_ = 0.4, 2.2
+        def expo(k):
+            y = lin0 * k; Ly = np.maximum(y @ W709, 1e-6)[..., None]; kk = 0.7; L2 = np.where(Ly > kk, kk + (0.97 - kk) * np.tanh((Ly - kk) / (0.97 - kk)), Ly); y = y * (L2 / Ly)
+            y = y * np.minimum(1.0, 0.985 / np.maximum(y.max(-1, keepdims=True), 1e-6)); return np.clip(np.where(y <= 0.0031308, 12.92 * y, 1.055 * np.power(np.clip(y, 0, None), 1 / 2.4) - 0.055), 0, 1)
+        for _ in range(14):
+            mid = (lo_ + hi_) / 2
+            if comp_mean(expo(mid)) > mean_t: hi_ = mid
+            else: lo_ = mid
+        a = expo((lo_ + hi_) / 2)
     lab = _rgb2lab(a); sm = lab[::4, ::4][keep[::4, ::4]]; da = float(np.clip((wb[0] - sm[:, 1].mean()) * wb_k, -wb_max, wb_max)); db = float(np.clip((wb[1] - sm[:, 2].mean()) * wb_k, -wb_max, wb_max))
     lab = lab.copy(); lab[..., 1] += da; lab[..., 2] += db; a = _lab2rgb(lab)
     h, s, v = _rgb2hsv(a)
     def vibr(vb): return np.clip(s * (1 + (vb - 1) * (0.35 + 3.0 * s * (1 - s)) * (1 - s)), 0, 1)                    # mid-saturation pixels boosted most, neutrals a little, full colours not at all
-    def msat(s2):
-        sm_ = np.asarray(Image.fromarray((np.clip(_hsv2rgb(h[::2, ::2], s2[::2, ::2], v[::2, ::2]), 0, 1) * 255).astype(np.uint8)).resize((180, 320))).astype(np.float32) / 255; mx_, mn_ = sm_.max(2), sm_.min(2); return float(np.where(mx_ > 0, (mx_ - mn_) / np.maximum(mx_, 1e-6), 0).mean())
+    ys = np.linspace(0, 1, a.shape[0], dtype=np.float32)[:, None, None]                                              # depth: lower foreground a touch darker, distance (upper frame) a touch lighter + bluer
+    fg = 1 - depth_k * np.clip((ys - 0.62) / 0.38, 0, 1) ** 1.5; bgd = depth_k * 0.55 * np.clip((0.55 - ys) / 0.55, 0, 1) ** 1.2
+    def bgonly(s2):
+        o = np.clip(_hsv2rgb(h, s2, v), 0, 1); return np.clip(o * fg * (1 - bgd) + np.array([0.80, 0.88, 0.97], np.float32) * bgd, 0, 1)
+    def over(o): return o if mask is None else o * (1 - np.clip(mask, 0, 1)[..., None]) + src * np.clip(mask, 0, 1)[..., None]
+    def compose(s2): return over(bgonly(s2))
+    def msat(img):
+        sm_ = np.asarray(Image.fromarray((img[::2, ::2] * 255).astype(np.uint8)).resize((180, 320))).astype(np.float32) / 255; mx_, mn_ = sm_.max(2), sm_.min(2); return float(np.where(mx_ > 0, (mx_ - mn_) / np.maximum(mx_, 1e-6), 0).mean())
     vb = vib
-    if msat(vibr(vb)) < 0.42:                                                               # gate: mean sat 0.40-0.50 (aim 0.40-0.48): raise the vibrance just enough (max 3.2)
-        lo_, hi_ = vib, 3.2
+    if msat(compose(vibr(vb))) < 0.465:                                                     # the finished composite must reach mean sat 0.40-0.50 (aim ~0.44): raise the vibrance just enough
+        lo_, hi_ = vib, 7.0
         for _ in range(9):
             mid = (lo_ + hi_) / 2
-            if msat(vibr(mid)) < 0.42: lo_ = mid
+            if msat(compose(vibr(mid))) < 0.465: lo_ = mid
             else: hi_ = mid
         vb = hi_
-    s = vibr(vb); m_ = msat(s)
-    if m_ > 0.47: s = s * float(np.clip(0.46 / m_, 0.6, 1.0))                               # already vivid enough: do not exceed R11
-    a = np.clip(_hsv2rgb(h, s, v), 0, 1)
-    ys = np.linspace(0, 1, a.shape[0], dtype=np.float32)[:, None, None]                    # depth: foreground (lower frame) a touch darker, distance (upper frame) a touch lighter and bluer (mild aerial perspective)
-    fg = 1 - depth_k * np.clip((ys - 0.62) / 0.38, 0, 1) ** 1.5; bg = depth_k * 0.55 * np.clip((0.55 - ys) / 0.55, 0, 1) ** 1.2
-    a = np.clip(a * fg * (1 - bg) + np.array([0.80, 0.88, 0.97], np.float32) * bg, 0, 1)
-    if mask is not None: m = np.clip(mask, 0, 1)[..., None]; a = a * (1 - m) + src * m
+    s2 = vibr(vb); m_ = msat(compose(s2))
+    if m_ > 0.50: s2 = s2 * float(np.clip(0.49 / m_, 0.6, 1.0))                               # already vivid enough: do not exceed R11
+    o = bgonly(s2)
+    if abs(comp_mean(o) - 0.51) > 0.012:                                                    # final luma trim on the background only (gamma: 0 and 1 stay put, puppets untouched)
+        lo_, hi_ = 0.6, 1.7
+        for _ in range(16):
+            mid = (lo_ + hi_) / 2
+            if comp_mean(np.power(np.clip(o, 1e-4, 1), mid)) > 0.51: lo_ = mid
+            else: hi_ = mid
+        o = np.power(np.clip(o, 1e-4, 1), (lo_ + hi_) / 2)
+    a = over(o)
     return Image.fromarray((np.clip(a, 0, 1) * 255 + 0.5).astype(np.uint8))
 
 def post(src, dst, W=720, H=1280, sharp=0.55, radius=1.1):
