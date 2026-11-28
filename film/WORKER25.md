@@ -13,7 +13,7 @@ Work autonomously: the client has approved the look and the set. Do not ask for 
 ## COLOUR GATES, FINAL (producer, 28 Nov 05:21; overrides every colour target above)
 - **HARD gates, checked per finished take with the characters in** (`light_metrics.py take.mkv` prints PASS/MISS on these only):
   - luma 0.46-0.56
-  - mean saturation ≥ 0.42
+  - mean saturation 0.40-0.50 (client: match R11, never exceed; aim 0.40-0.48, colourfulness M about 55-70)
   - no colour cast: |mean a*| and |mean b*| ≤ 6
   - no clipped channels
   - puppet faces exactly #fef7f6
@@ -224,6 +224,18 @@ The g column of shot_plan_v2.md is authoritative (g1 exclusive). Render 6 handle
 - **Per-shot moves:** the table "Camera move per shot" in shot_plan_v2.md gives each row's move. Follow it.
 - **Smoothness:** smooth splines only. qa_jitter must pass: smooth intentional motion is fine, frame-to-frame wobble fails.
 - **Log it:** in each take's QA.md, record the move type and the measured amount (scale % and pan % of width per second).
+
+## Light, shadow and depth (client, 28 Nov 05:54: "vivid to match theirs, not over the top, show shadow, depth and light"; binding)
+- **Colour:** match R11, never exceed it. Mean sat 0.40-0.50 (aim 0.40-0.48) and colourfulness M about 55-70. Nothing neon, posterised or tinted.
+- **Light:**
+  - a clear directional sun key, with visible cast shadows of people on the ground and walls and of props on surfaces
+  - a contact shadow under every foot and prop
+  - form shading on the puppets (light25 matched to the sun side) and a rim (rim25 about 0.6)
+  - a warm key against a cool fill
+- **Depth:** separate foreground, midground and background in every shot.
+  - foreground: darker or detailed edges
+  - midground: the lit subject
+  - background: lighter, with mild aerial perspective at distance
 
 ## QA (before delivering every take)
 1. Run `python3 PROJ/qa_auto.py take.mkv --first_g <first_g> --cuts <in-take cut g's or none>`. Fix every FAIL, then add QA_AUTO.md and phone_sheet.jpg.

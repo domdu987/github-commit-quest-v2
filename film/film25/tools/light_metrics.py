@@ -5,7 +5,7 @@ local contrast = mean abs neighbour luma diff on a 90x160 grey area (box) resize
 saturation = mean HSV saturation (180x320), chroma = mean Lab C* (180x320); neutral WB: |mean a*| <= 4 and |mean b*| <= 4 (sRGB->Lab D65; R11 reads a +2.6, b +1.7, matching the producer), HSV sat p98 >= 0.85, of coloured px (S>0.15,V>0.15) blue/cyan (H 170-260) <= 45 % and warm (H <70 or >=330) >= 40 %; neut = share of S<0.12 (info only); M = Hasler-Susstrunk colourfulness (180x320) >= 65. Captions are not masked."""
 import sys, subprocess, tempfile, glob, os, numpy as np
 from PIL import Image
-T = dict(luma=(0.46, 0.56), sat=(0.42, 1.01), a_mean=(-6, 6), b_mean=(-6, 6))   # HARD gates (producer, 28 Nov 05:21), judged on finished takes with characters
+T = dict(luma=(0.46, 0.56), sat=(0.40, 0.50), a_mean=(-6, 6), b_mean=(-6, 6))   # HARD gates (producer, 28 Nov 05:21), judged on finished takes with characters
 G = dict(p1=(0.02, 0.08), p99=(0.90, 0.95), lc=(0.038, 9), chroma=(28, 999), sat_p98=(0.85, 1.01), blue_frac=(0, 0.45), warm_frac=(0.40, 1.01), M=(65, 999))   # guides only
 def hasler(s):
     R, G, B = (s[..., 0] * 255, s[..., 1] * 255, s[..., 2] * 255)
