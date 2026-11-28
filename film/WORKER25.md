@@ -4,7 +4,7 @@ Follow film/WORKER.md for section 1 (setup), section 4 (delivery) and section 5 
 Work autonomously: the client has approved the look and the set. Do not ask for confirmation.
 
 ## Inputs
-- **Shots:** PROJ/film25/shot_plan.md (34 shots, hard cuts only). The story is in PROJ/film25/script/script_th.txt; the facts are in PROJ/film25/FACTS.md.
+- **Shots:** PROJ/film25/shot_plan_v2.md (58 shot rows, hard cuts only; v1 is void). The story is in PROJ/film25/script/script_th.txt; the facts are in PROJ/film25/FACTS.md.
 - **Client checklist:** PROJ/CLIENT_CHECKLIST.md. Every rule applies to every frame.
 - **Narration:** PROJ/film25/audio/narration.wav (69.75 s), placed at **0.00 s**. The film clock is the narration clock.
 - **Captions:** PROJ/film25/script/captions.json, with t in film seconds. Sentence starts are in PROJ/film25/audio/timing.json.
@@ -91,74 +91,67 @@ PROJ/v3/cast25. Read API.md and look at contact.png.
 - **Tone:** comic and bloodless. No injury and no bodies. Bullets spark and ping off the steel; Germans run away comically.
 - **Literal nouns:** every spoken noun is shown on screen in its shot (see the shot_plan "picture" column).
 
-## Assignments (one take per shot, sNN = shot number; 6 handle frames each side except before g 0 and after g 2092)
-| team | branch | takes | frames |
-|---|---|---|---|
-| 1 FACTORY | render25/t1 | s01 s02 s03 s04 s07 s08 s14 s15 s16 s17 s18 s31 | 658 |
-| 2 FRONT | render25/t2 | s05 s06 s20 s21 s22 s24 s25 s26 s27 s28 s29 s30 | 710 |
-| 3 TRIAL, OP, DOCK, SKY, STREET | render25/t3 | s09 s10 s11 s12 s13 s19 s23 s32 s33 s34 | 724 |
+## Assignments (shot plan v2.1: PROJ/film25/shot_plan_v2.md, 58 shots; it is the ONLY shot list, and v1's shot_plan.md is void)
+One take per shot row. Name the take folder after the row's first shot number (row "29+30" → s29, "47-49" → s47).
+The g column of shot_plan_v2.md is authoritative (g1 exclusive). Render 6 handle frames each side, except before g 0 and after g 2092.
 
-Order inside each team: the hero shots first. Team 1: s15-s17, then s31. Team 2: s24-s26. Team 3: s10, s23, s34.
+| team | branch | locations | shot rows | frames |
+|---|---|---|---|---|
+| T1 | render25/t1 | FACTORY + DOCK | 1+2, 3+4, 5, 6, 13-17, 28, 29+30, 31+32, 33-38, 58, 60+61, 62, 63 | 744 |
+| T2 | render25/t2 | FRONT | 7, 8+9, 10-12, 39-42, 45, 46, 47-49, 50-52, 53+54, 55-57, 59 | 716 |
+| T3 | render25/t3 | TRIAL + FRONT OP + SKY + STREET | 18-27, 43, 44, 64+65, 66, 67, 68-70 | 633 |
 
-### Shot g ranges (g0-g1, g1 exclusive) and presets
-| shot | g | preset | shot | g | preset |
-|---|---|---|---|---|---|
-| 1 | 0-44 | fac_wide | 18 | 1016-1071 | fac_crate |
-| 2 | 44-84 | fac_weigh | 19 | 1071-1135 | dock_crate |
-| 3 | 84-139 | fac_foreman | 20 | 1135-1211 | front_column |
-| 4 | 139-154 | fac_stencil | 21 | 1211-1266 | front_halt |
-| 5 | 154-232 | front_aerial | 22 | 1266-1301 | front_stuck |
-| 6 | 232-316 | front_parapet | 23 | 1301-1396 | front_op |
-| 7 | 316-396 | fac_side | 24 | 1396-1447 | cross_nose |
-| 8 | 396-485 | fac_bench | 25 | 1447-1526 | cross_hero |
-| 9 | 485-552 | trial_wide | 26 | 1526-1558 | cross_pull |
-| 10 | 552-626 | trial_general | 27 | 1558-1592 | cross_wire |
-| 11 | 626-676 | trial_trench | 28 | 1592-1636 | cross_hull |
-| 12 | 676-760 | trial_general (new angle) | 29 | 1636-1688 | cross_flee |
-| 13 | 760-838 | trial_camp | 30 | 1688-1778 | cross_bucket |
-| 14 | 838-882 | fac_chassis | 31 | 1778-1880 | fac_crate_open |
-| 15 | 882-918 | fac_plates | 32 | 1880-1932 | sky_plane |
-| 16 | 918-960 | fac_tracks | 33 | 1932-2009 | street_wide |
-| 17 | 960-1016 | fac_sponsons | 34 | 2009-2093 | street_low (ends at the last frame) |
+**Order:** hero and gag shots first.
+- T1: 6, 14, 29-34, 58, 62
+- T2: 47-49, 50, 51, 45
+- T3: 21, 23, 27, 68-70
 
-### Word locks (g = round(t*30))
-- **s02 "หนัก 28 ตัน" 1.45 s:** the hull lands on the weighbridge on the chains; the needle swings to the far end at about g 62.
-- **s04 "ถังน้ำ" 4.63 s:** the brush finishes the silhouette stencil (set_stencil) by g 150.
-- **s15:**
-  - "แผ่นเหล็ก" 29.40: plates lock at g 882-895.
-  - "หมุดย้ำ" 30.08: rivets punch in chunk by chunk at g 902-918, and the riveter's hammer (worker_a25 + hammer25) strikes on each chunk.
-- **s16:**
-  - "ตีนตะขาบ" 30.59: the track loop drops round the hull at g 918-933.
-  - "วนรอบทั้งคัน" 31.12: set_drive scrolls the links round the loop until g 960.
-- **s17:**
-  - "ป้อมสองข้าง" 31.99: sponsons slide in at g 960-982.
-  - "ปืนใหญ่ 6 ปอนด์" 32.74: guns slide in at g 982-1000.
-- **s18 "พ่นสีว่า ถังน้ำ" 34.75-35.71:** the stencil goes on the crate (worker spray pose) at g 1043-1071.
-- **s24-s26 (one continuous crossing across 3 hard cuts):**
-  - Map set_crossing u from 0 at g 1396 to 1 at g 1558, eased, continuous across the cuts.
-  - "ยกหัวขึ้น" 47.45 (g 1424): the nose lifts.
-  - "เกาะขอบฝั่งโน้น" 49.77 (g 1493): the front track grips the far lip.
-  - "ดึงทั้งคัน ข้ามไป" 50.87-51.95: the tank pulls across.
-- **s27 "โดนทับแบน" 52.44 (g 1573):** the wire squashes flat under the track.
-- **s28 "เด้งออกจากเหล็ก" 53.51-54.55:** set_sparks pings over g 1605-1636, with no hole and no damage.
-- **s29 "วิ่งหนีกันลั่น" 55.29:** german_a/b/c25 run_away25, all different, real running steps.
-- **s30:**
-  - "ใส่น้ำ" 57.12: hold on the plain bucket (g 1714).
-  - "ข้าม" 57.47: the push reveals the tank across the trench behind it.
-- **s31 "แท็งก์" 60.03 (g 1801):** the crate lid falls open (set_crate) and the tank is inside.
-- **s32 "นักบินอังกฤษ" 63.05:** the plane flies (set_plane along its path) and pilot25 leans out looking down.
-- **s34:**
-  - The tank rolls up the street (set_drive), Tommies march behind cheering (cycle march, varied members), and general25 march_flag25 is closest behind its tail, cheering.
-  - The take ends exactly at g 2092 ("ก็คือท่านนายพล"). No out-handle.
+**Framing:** the `frm` column gives the framing.
+- **C (waist-up close):** the puppet card's waist sits at the frame bottom (crop the legs), with the head centre at 0.30-0.45 of the frame height.
+- **Feet and heads:** in C shots the feet are below the frame edge, so the caption-band rule is met. Heads always stay above y 880.
+- **Presets:** the set provides close presets (`*_close_*`, see API.md). Otherwise make your own camera near the named location preset, with no DOF and one slow eased move.
 
-### Producer staging notes (from the set reviews)
-- **Hero crossing s25:** the tank fills 50-60 % of the frame width, side-on, with sky behind the raised nose and the whole rhomboid visible. Near grass stays ankle-to-knee height of a puppet and clear of the tank silhouette.
-- **Tank tail wheels:** always attached visibly to the tank's rear, never a loose disc on screen.
-- **General's scenes:**
-  - s10: general25_point_stick, a quick push-in on "ของเล่น" (20.06).
-  - s12: march_flag25 mime with a bum-wiggle, plain flag.
-  - s23: field glasses, then glasses_laugh.
-  - Staff officers are tommy_*25 members, varied.
+**Props and poses:** the gags use new cast25 props and poses (see cast25/API.md):
+- props: watering_can25, shovel25, tin_cup25, toy_tank25, chalkboard25
+- poses: *_pour_can, *_dig_a/b, *_cup_wait, *_cup_drink, general25_toy_dangle, general25_finger_wag, engineer25_shush/peek/sleeves/chalkboard_tap/proud/chart_hand, german_b25_glasses_slip, worker_b25_shocked, *_peek, worker_a25_hammer_crate, worker_c25_push_barrel
+
+**Set hooks and presets:** factory.set_model_tank(u) with preset fac_chart; factory.set_doors(u) with fac_doors; dock_watertank; dock_deck; tank set_steam; the hull tap.
+
+**Mouths:**
+- general25 lip-sync only in 18.39-25.35 s (g 552-760) and 44.37-45.60 s (g 1331-1368).
+- Lip-sync poses: point_stick, toy_dangle, finger_wag, glasses_laugh.
+- Shot 23 (the imagined march) has no lip-sync: mouth open in a cheer.
+- Everywhere else, mouths hold.
+
+### Word locks (g = round(t*30); the word times are in captions.json)
+- **3+4 "28 ตัน":** the hull touches the scale at about g 55, and the needle swings over g 58-70.
+- **6:** the watering-can pour starts on "ถังน้ำ" (g 139).
+- **14:** the model tank climbs over the groove during "ลุยข้ามไปได้" (g 366-396).
+- **17:** the brush completes the stencil by g 480.
+- **29+30:** the plate locks at g 882-895; rivets pop at g 902-918, one row per hammer strike.
+- **31+32:** the tracks drop at g 918-933; set_drive scrolls them round at g 933-960.
+- **33:** the sponson bolts on by g 978.
+- **34:** the gun clunks home at about g 1005.
+- **36:** the stencil goes on by g 1068.
+- **39-59 crossing:** map set_crossing u continuously across rows 46, 47-49, 50 and 51:
+  - u 0 at g 1396
+  - nose lift from g 1424
+  - grip at g 1493 ("เกาะขอบฝั่งโน้น")
+  - u 1 at g 1558
+  - Rows 52-59 use u = 1 (across), or the pose that their picture needs.
+- **45:** set_steam puffs from g 1370.
+- **52:** the wire flattens at g 1573.
+- **53+54:** set_sparks over g 1605-1636.
+- **56:** run_away25 for three different Germans.
+- **60+61:** set_crate opens at g 1801.
+- **68-70:** the take ends exactly at g 2092. No out-handle.
+
+### Producer staging notes (still binding)
+- **Hero crossing 47-49:** the tank fills 50-60 % of the frame width, side-on, with the sky behind the raised nose and the whole rhomboid visible.
+- **Near grass:** ankle-to-knee height of a puppet, kept clear of the tank silhouette.
+- **Tail wheels:** always attached visibly to the tank's rear.
+- **Crane loads:** hang on visible chains.
+- **No text anywhere:** the chalk drawing and the chart table carry lines only, and every stencil is the silhouette.
 
 ## QA (before delivering every take)
 1. Run `python3 PROJ/qa_auto.py take.mkv --first_g <first_g> --cuts <in-take cut g's or none>`. Fix every FAIL, then add QA_AUTO.md and phone_sheet.jpg.
