@@ -844,7 +844,7 @@ PRESETS = dict(
     front_parapet=dict(loc='front', tune=dict(cloud_k=0.95), cam=dict(loc=(-33.0, -0.5, 2.6), look_at=(-4.0, 5.0, 1.4), lens=28), extras=[('mg', -5.2, 5.0, math.pi, True)], cards=[('a', (-30.5, -3.0), 3.0)], note='shot 6: behind the British parapet, German MG nest across the wire'),
     front_column=dict(loc='front', tune=dict(cloud_k=1.15), dress_n=2.5, cam=dict(loc=(8.0, -58.0, 4.5), look_at=(-20.0, -74.0, 3.2), lens=24), tanks=[dict(front=(-20.0, -34.0), yaw=90.0), dict(front=(-20.0, -56.0), yaw=90.0), dict(front=(-20.0, -78.0), yaw=90.0), dict(front=(-20.0, -100.0), yaw=90.0, smoke=1.0)], note='shot 20: column crawling to the start line'),
     front_halt=dict(loc='front', tune=dict(cloud_k=0.85, green_k=2.2), dress_n=4.0, cam=dict(loc=(8.0, -36.0, 2.8), look_at=(-22.0, -36.0, 3.0), lens=22), tanks=[dict(front=(-22.0, -33.0), yaw=90.0, nocorr=True), dict(front=(-8.0, -22.0), yaw=95.0, smoke=1.0)], clamp=True, note='shot 21: one smoking, one nose-down in a crater'),
-    front_stuck=dict(loc='front', tune=dict(cloud_k=0.85), world=dict(rocks=[(5.0, -9.6, 3, 1.6), (3.0, -49.0, 22, 4.0), (6.0, -47.0, 16, 3.0), (0.0, -46.0, 14, 3.0), (8.0, -44.0, 12, 3.0)], spill=[(4.0, -48.0, 4.0, 14)]), cam=dict(loc=(6.0, -52.0, 1.2), look_at=(-4.0, -40.0, 2.4), lens=24), tanks=[dict(front=(-4.0, -42.0), yaw=90.0, state='stuck')], extras=[('mud', -4.0, -42.0, math.pi / 2)], cards=[('a', (2.0, -45.0), 3.2), ('b', (-9.0, -47.0), 3.2)], clamp=True, note='shot 22: sunk to the sponsons in mud'),
+    front_stuck=dict(loc='front', dress_n=3.0, tune=dict(cloud_k=0.85, green_k=0.3), world=dict(rocks=[(5.0, -9.6, 3, 1.6), (3.0, -49.0, 22, 4.0), (6.0, -47.0, 16, 3.0), (0.0, -46.0, 14, 3.0), (8.0, -44.0, 12, 3.0)], spill=[(4.0, -48.0, 4.0, 14)]), cam=dict(loc=(6.0, -52.0, 1.4), look_at=(-4.0, -41.0, 1.2), lens=24), tanks=[dict(front=(-4.0, -42.0), yaw=90.0, state='stuck')], extras=[('mud', -4.0, -42.0, math.pi / 2)], cards=[('a', (2.0, -45.0), 3.2), ('b', (-9.0, -47.0), 3.2)], clamp=True, note='shot 22: sunk to the sponsons in mud'),
     front_op=dict(loc='front', tune=dict(cloud_k=0.85), fill=3000.0, cam=dict(loc=(-45.0, -17.0, 6.5), look_at=(-26.0, -8.0, 2.4), lens=28), extras=[('op', -28.0, -8.0, 0.0)], tanks=[dict(front=(-6.0, -16.0), yaw=90.0, smoke=1.0)], cards=[('a', (-30.5, -9.0), 2.6)], note='shot 23: observation post'),
 )
 
@@ -1096,7 +1096,7 @@ def finish(cam, P, samples=None, quality=None, sun=None, haze=None):
     S['exposure'] = S.get('exposure', -0.25); S['samples'] = samples or P.get('samples', 64); setup_render(sc, 'final')
 
 # ============================================================================= render + post
-def grade(im, p1_t=0.035, p99_t=0.925, mean_t=0.51, sat_t=0.48, knee=0.85, iters=2):
+def grade(im, p1_t=0.04, p99_t=0.928, mean_t=0.51, sat_t=0.495, knee=0.85, iters=5):
     """final tone step: (1) levels p1 -> 0.035 and p99 -> 0.925 with a soft knee above 0.85 (no clipping), (2) a gamma on the luma that pulls the mean to 0.51 (clamped 0.75-1.35),
     (3) VIBRANCE (client note 28 Nov: references sit at HSV saturation 0.44-0.64): low-saturation pixels are boosted more than saturated ones, scaled around their own luma (so luma is untouched),
     never clipping a channel, and masking near-white low-sat pixels (luma > 0.9: puppet faces stay #fef7f6) until the mean HSV saturation reaches `sat_t`."""
@@ -1129,8 +1129,10 @@ def grade(im, p1_t=0.035, p99_t=0.925, mean_t=0.51, sat_t=0.48, knee=0.85, iters
             else: hi_ = mid
         a = vib(a, (lo_ + hi_) / 2)
     sat = hsv_sat(a)
-    if sat > 0.50:                                                                  # already over-vivid (e.g. orange factory interiors): pull back to 0.49
-        L = lum(a)[..., None]; a = np.clip(L + (a - L) * float(np.clip(0.49 / sat, 0.6, 1.0)), 0, 1)
+    for _ in range(8):                                                              # already over-vivid (e.g. orange factory interiors): pull back to 0.49
+        if sat <= 0.50: break
+        L = lum(a)[..., None]; a = np.clip(L + (a - L) * float(np.clip(0.49 / sat, 0.3, 1.0)), 0, 1); sat = hsv_sat(a)
+    L = lum(a); lo, hi = np.percentile(L, 1), np.percentile(L, 99); a = np.clip((a - lo) / max(hi - lo, 1e-3) * (p99_t - p1_t) + p1_t, 0, 1)      # final trim so p1 / p99 land on target
     return Image.fromarray((np.clip(a, 0, 1) * 255 + 0.5).astype(np.uint8))
 
 def post(src, dst, W=720, H=1280, sharp=0.55, radius=1.1):
