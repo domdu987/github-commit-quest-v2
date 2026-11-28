@@ -1,3 +1,37 @@
+# CLIENT PICKED "LOOK A" (28 Nov 10:45) — THIS SECTION OVERRIDES EVERYTHING BELOW WHERE THEY DIFFER
+- **Approved look:** film/film25/gate/depth_still_vs_R11.jpg (still A).
+  - 2D cast25 cards with an INFLATED NORMAL-MAP shading pass.
+  - A near backdrop carries a crisp, dark cast shadow.
+  - Mild DOF on the far field in close and medium shots.
+  - IGNORE film/v3/cast3d25 (the 3D toon module): rejected, do not use.
+- **Per-frame pipeline: copy it from PROJ/film25/gate/motion/depth.py + depth_post.py** (built on motion.py, c25.py and post25.py, the earlier motion-test pipeline):
+  1. **Beauty render:** 24 adaptive samples, OIDN, 75 % scale. Sun disc 0.5° (crisp shadows), sun aimed so the character's shadow lands on the near backdrop. Mild DOF (about f/1.6-2.8, focus on the subject) on close and medium shots only; wides stay sharp.
+  2. **Shading pass:** the cards re-rendered as WHITE diffuse surfaces with the inflated normal map from each sprite (normal_map() in depth.py). The shading = the lit/white ratio. About 12 samples is enough; check it is noise-free after OIDN.
+  3. **Composite (depth_post.py):**
+     - background gentle grade (post25)
+     - sprite colour × shading
+     - face centre exactly #fef7f6, rim at most 15 % darker
+     - ink-line occlusion at limb overlaps and under the hat brims
+  - Cache normal maps per (member, pose, mirror); they're deterministic. Budget about 75 s per frame for both passes.
+- **NEAR BACKDROP:** in every C and M shot, put a near backdrop 0.5-1.5 m (1-3 D) behind the characters so their cast shadows land on it visibly.
+  - Use a calm grey-olive or steel-grey plate (NOT orange; b* ≤ 6), a sandbag wall, crate planks, tent canvas or a brick wall.
+  - Hide hull clutter such as stencils, track horns and gun barrels behind heads.
+- **Framing:** crop as tight as the cards allow. For the general (3.3 heads tall) that means the knees or shins with his head about 0.45-0.5 of the frame width; others are similar.
+- **Gap list from the motion test (binding):**
+  - 2-3 in-between poses (lerp_pose) on every big gesture
+  - plain backdrops behind close-ups
+  - a BIGGER, readable toy tank in row 21 (scale the prop about 1.6×)
+  - stronger pans on action shots (20-35 % of the frame width per second)
+- **Still binding:**
+  - Animation: NOT STIFF
+  - camera moves per shot
+  - gags and process beats
+  - light, shadow and depth
+  - COLOUR GATES, FINAL (sat 0.40-0.50 per finished take, |a*|,|b*| ≤ 6)
+  - no overlays or text
+  - client checklist
+- **Sets:** start your work with `git fetch origin film25/main && git merge --no-edit FETCH_HEAD`, then freeze a snapshot copy of film/v3/set3d25 and film/v3/cast25 into your scratchpad and render from it. Hide the set's framing-reference puppet cards at runtime (see motion.py).
+
 # Render-team worker brief, film 25 (ไอ้ถังน้ำ: Britain's first tank, Mark I, 1915-16, Flers 15 Sep 1916)
 
 Follow film/WORKER.md for section 1 (setup), section 4 (delivery) and section 5 (rules). The film-25 differences below take precedence.
