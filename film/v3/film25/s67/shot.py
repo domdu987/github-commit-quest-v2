@@ -10,7 +10,7 @@ from mathutils import Vector
 import tank25 as TK
 G0, G1 = 1961, 2009
 V = -0.11                                                 # the tank rolls toward the camera (-y): D per frame
-TY0 = 52.0                                                # tank front y at G0
+TY0 = 27.0                                                # tank front y at G0
 
 
 class Take(D.Rig):
@@ -26,9 +26,9 @@ class Take(D.Rig):
 
     def cam_of(self, g):
         u = (g - G0) / float(G1 - 1 - G0); w = C.calm(u)
-        cy = 14.0 + 0.085 * (g - G0)                         # the camera backs away slower than the tank closes (it follows, leading the street)
+        cy = 4.0 - 0.06 * (g - G0)                         # the camera backs away slower than the tank closes
         loc = Vector((3.2 - 3.0 * w, cy - 2.0, 1.35 + 0.3 * w))
-        look = Vector((-0.4 + 1.0 * w, self.ty(g) - 10.0, 2.6))
+        look = Vector((-0.4 + 1.0 * w, self.ty(g) - 10.0, 1.9))
         return (loc, look), 24.0
 
     def setup(self, gs):

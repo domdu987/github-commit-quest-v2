@@ -49,3 +49,8 @@ g 1982  41.3 s beauty  41.3 s total
 g 1983  42.5 s beauty  42.5 s total
 18:25.698  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s67/work/beauty/f_1984.png'
 g 1984  41.2 s beauty  41.2 s total
+00:02.107  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: hid set cards ['tommy_a', 'tommy_a.001', 'tommy_a_decal', 'tommy_a_decal.001', 'tommy_b', 'tommy_b_decal']
+take: built street_wide in 1.8 s
+00:47.509  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s67/work/beauty/f_1961.png'
+g 1961  45.4 s beauty  45.4 s total
