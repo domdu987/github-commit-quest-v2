@@ -21,6 +21,13 @@ def pre():
 
 def build(rig):
     rig.set_look(True)
+    import bpy
+    me = bpy.data.meshes.new("pav"); me.from_pydata([(-40, 8, 0.03), (40, 8, 0.03), (40, 60, 0.03), (-40, 60, 0.03)], [], [(0, 1, 2, 3)]); me.update()
+    m = bpy.data.materials.new("pavm"); m.use_nodes = True; b = m.node_tree.nodes["Principled BSDF"]
+    b.inputs["Base Color"].default_value = (0.42, 0.16, 0.08, 1); b.inputs["Roughness"].default_value = 0.9
+    nz = m.node_tree.nodes.new("ShaderNodeTexNoise"); nz.inputs["Scale"].default_value = 30.0; bm = m.node_tree.nodes.new("ShaderNodeBump"); bm.inputs["Strength"].default_value = 0.3
+    m.node_tree.links.new(nz.outputs["Fac"], bm.inputs["Height"]); m.node_tree.links.new(bm.outputs["Normal"], b.inputs["Normal"])
+    me.materials.append(m); ob = bpy.data.objects.new("pav", me); bpy.context.scene.collection.objects.link(ob)
     rig.wa = rig.actor("wa", "worker_a25")
 
 
