@@ -6,12 +6,12 @@
 
 ## light_metrics
 ```
-take.mkv (1 fr)                        luma 0.469 p1 0.056 p99 0.796 lc 0.0233 sat 0.414 chroma 23.2 a +3.3 b +2.0 p98 0.95 blue 0.47 warm 0.40 neut 0.02 M 57  PASS  (guides off: p99,lc,chroma,blue_frac,warm_frac,M)
+take.mkv (1 fr)                        luma 0.483 p1 0.054 p99 0.821 lc 0.0231 sat 0.409 chroma 22.2 a +4.2 b +2.9 p98 0.95 blue 0.47 warm 0.41 neut 0.02 M 59  PASS  (guides off: p99,lc,chroma,blue_frac,M)
 ```
 
 ## qa_jitter
 ```
-overall median jitter px 2.0
+overall median jitter px 2.07
 ```
 
 ## qa_auto

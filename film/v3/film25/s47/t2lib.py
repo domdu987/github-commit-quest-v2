@@ -168,6 +168,11 @@ def solve(a, luma_t=float(os.environ.get("LUMA_T", 0.50)), wb_t=WB_T, vib=VIB, e
 def apply(a, p, vib=VIB, edge=0.18):
     lin = to_lin(a); gains = np.array(p["gains"], np.float32)
     b = vibrance(_tone(lin, p["e"], gains), vib)
+    h, sa, v = rgb2hsv(b)                                                # sky stays neutral clear blue: hues 215-330 deg (lavender / purple drift) are pulled back to 212-218 deg
+    deg = h * 60.0
+    drift = (deg > 215.0) & (deg < 330.0) & (sa > 0.05)
+    deg = np.where(drift, 212.0 + 6.0 * np.clip((deg - 215.0) / 115.0, 0, 1) * 0.0 + np.minimum(deg - 215.0, 6.0) * 0.0 + 3.0, deg)
+    b = hsv2rgb(deg / 60.0, sa, v)
     yy = np.linspace(0, 1, 1280, dtype=np.float32)[:, None, None]
     b = b * (1 - edge * np.clip((yy - 0.86) / 0.14, 0, 1) ** 1.5)
     return np.clip(b, 0, 1)
