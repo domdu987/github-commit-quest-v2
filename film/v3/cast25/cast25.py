@@ -848,13 +848,13 @@ def _can_body(k):
     """galvanised watering can (upright, spout to +x): cylinder body, arched top handle gripped at the origin, rear loop handle, long
     spout rising to a round rose with holes.  No letters."""
     o = []
-    g = _lin(k, "wc", GALV["light"], GALV["base"], GALV["dark"], -0.23, 0, 0.23, 0)
+    g = _lin(k, "q25wc", GALV["light"], GALV["base"], GALV["dark"], -0.23, 0, 0.23, 0)
     # rear loop handle (behind the body)
     o.append('<path d="M-0.20,0.22 Q-0.46,0.20 -0.44,0.36 Q-0.42,0.50 -0.20,0.46" fill="none" stroke="%s" stroke-width="0.058" stroke-linecap="round"/>' % k.ink)
     o.append('<path d="M-0.20,0.22 Q-0.46,0.20 -0.44,0.36 Q-0.42,0.50 -0.20,0.46" fill="none" stroke="%s" stroke-width="0.030" stroke-linecap="round"/>' % k.c(GALV["base"]))
     # spout: a tapered tube from the low front of the body up to the rose
     sp = "M0.17,0.36 L0.58,0.02 L0.68,0.10 L0.20,0.52 Z"
-    o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.022" stroke-linejoin="round"/>' % (sp, _lin(k, "ws", GALV["light"], GALV["base"], GALV["dark"], 0.3, -0.1, 0.5, 0.5), k.ink))
+    o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.022" stroke-linejoin="round"/>' % (sp, _lin(k, "q25ws", GALV["light"], GALV["base"], GALV["dark"], 0.3, -0.1, 0.5, 0.5), k.ink))
     o.append('<path d="M0.24,0.38 L0.58,0.08" stroke="#ffffff" stroke-width="0.012" stroke-linecap="round" opacity="0.75"/>')
     o.append('<path d="M0.30,0.455 L0.40,0.37" stroke="%s" stroke-width="0.010" opacity="0.7"/>' % k.c(GALV["dark"]))
     # body
@@ -872,7 +872,7 @@ def _can_body(k):
     o.append('<g transform="translate(0.66 0.05) rotate(-42)"><path d="M-0.03,-0.050 L0.07,-0.115 Q0.115,0 0.07,0.115 L-0.03,0.050 Z" fill="%s" stroke="%s" stroke-width="0.020" stroke-linejoin="round"/>'
              '<ellipse cx="0.075" cy="0" rx="0.030" ry="0.108" fill="%s" stroke="%s" stroke-width="0.012"/>'
              '<circle cx="0.078" cy="-0.060" r="0.010" fill="%s"/><circle cx="0.078" cy="-0.020" r="0.010" fill="%s"/><circle cx="0.078" cy="0.020" r="0.010" fill="%s"/><circle cx="0.078" cy="0.060" r="0.010" fill="%s"/></g>'
-             % (_lin(k, "wr", GALV["light"], GALV["base"], GALV["dark"], 0, -0.1, 0, 0.1), k.ink, k.c(GALV["dark"]), k.ink, k.ink, k.ink, k.ink, k.ink))
+             % (_lin(k, "q25wr", GALV["light"], GALV["base"], GALV["dark"], 0, -0.1, 0, 0.1), k.ink, k.c(GALV["dark"]), k.ink, k.ink, k.ink, k.ink, k.ink))
     return "".join(o)
 
 
@@ -903,7 +903,7 @@ def _toy_tank_body(k, swing):
     o.append('<path d="%s" fill="none" stroke="%s" stroke-width="0.052" stroke-linejoin="round"/>' % (loop, k.c("#5c6c34")))
     o.append('<path d="%s" fill="none" stroke="%s" stroke-width="0.052" stroke-linejoin="round" stroke-dasharray="0.014 0.030"/>' % (loop, k.c("#9aae58")))
     hull = "M-0.24,0.20 L-0.12,0.06 L0.17,0.05 L0.30,0.20 Z"
-    o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (hull, _lin(k, "ty", "#a4b858", "#7a9238", "#566c24", 0, 0.05, 0, 0.20), k.ink))
+    o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (hull, _lin(k, "q25ty", "#a4b858", "#7a9238", "#566c24", 0, 0.05, 0, 0.20), k.ink))
     o.append('<path d="M-0.04,-0.005 L-0.03,-0.085 L0.10,-0.085 L0.12,-0.005 Z" fill="%s" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (k.c("#6c8430"), k.ink))
     o.append('<path d="M0.0,-0.060 L0.085,-0.060" stroke="%s" stroke-width="0.016" stroke-linecap="round"/>' % k.ink)
     o.append('<path d="M-0.10,0.085 L0.12,0.085 L0.12,0.185 L-0.10,0.185 Z" fill="%s" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (k.c("#8aa240"), k.ink))
@@ -930,11 +930,11 @@ def _chalkboard_body(k):
     lines only: two ground lines, the trench between them, and a side-on rhomboid tank straddling the gap.  No letters, no arrows."""
     x0, x1, y0, y1 = -1.60, 0.0, -0.46, 0.64
     o = []
-    fr = _lin(k, "cbf", WOOD["light"], WOOD["base"], WOOD["dark"], 0, y0, 0, y1)
+    fr = _lin(k, "q25cbf", WOOD["light"], WOOD["base"], WOOD["dark"], 0, y0, 0, y1)
     o.append('<rect x="%.4f" y="%.4f" width="%.4f" height="%.4f" rx="0.045" fill="%s" stroke="%s" stroke-width="0.022" stroke-linejoin="round"/>' % (x0, y0, x1 - x0, y1 - y0, fr, k.ink))
     fi = 0.075
     o.append('<rect x="%.4f" y="%.4f" width="%.4f" height="%.4f" rx="0.018" fill="%s" stroke="%s" stroke-width="0.014"/>' % (x0 + fi, y0 + fi, x1 - x0 - 2 * fi, y1 - y0 - 2 * fi,
-                                                                                                                         _lin(k, "cbs", "#2f4238", "#1e2e26", "#141e19", 0, y0, 0, y1), k.ink))
+                                                                                                                         _lin(k, "q25cbs", "#2f4238", "#1e2e26", "#141e19", 0, y0, 0, y1), k.ink))
     o.append('<path d="M%.4f,%.4f L%.4f,%.4f M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="0.010" opacity="0.8"/>' % (x0 + 0.03, y0 + 0.03, x1 - 0.03, y0 + 0.03, x0 + 0.03, y0 + 0.05, x0 + 0.03, y1 - 0.03, k.c(WOOD["light"])))
     # rubbed-out smudges (dust, no shapes that read as marks)
     o.append('<ellipse cx="-0.50" cy="0.40" rx="0.30" ry="0.10" fill="#ffffff" opacity="0.045"/><ellipse cx="-1.18" cy="-0.22" rx="0.26" ry="0.07" fill="#ffffff" opacity="0.04"/>')
@@ -1060,12 +1060,12 @@ def _prop_body(k, kind, ang=0.0):
     elif kind == "shovel25":
         # trench spade: wooden D-handle at the hand (origin), long ash shaft, steel socket and a broad rounded blade (face on);
         # pose key dirt25 0..1 heaps a clump of earth on the blade (the clump sits on the -y side = the 'up' side of the blade)
-        o.append('<path d="M0.10,-0.026 L1.10,-0.022 L1.10,0.022 L0.10,0.026 Z" fill="%s" stroke="%s" stroke-width="0.014" stroke-linejoin="round"/>' % (_wood_grad(k, "sw", -0.03, 0.03), k.ink))
+        o.append('<path d="M0.10,-0.026 L1.10,-0.022 L1.10,0.022 L0.10,0.026 Z" fill="%s" stroke="%s" stroke-width="0.014" stroke-linejoin="round"/>' % (_wood_grad(k, "q25sw", -0.03, 0.03), k.ink))
         o.append('<path d="M0.16,-0.010 L1.04,-0.008" stroke="%s" stroke-width="0.007" opacity="0.7"/>' % k.c(WOOD["light"]))
         o.append('<path d="M0.16,-0.040 L0.07,-0.145 Q-0.02,-0.175 -0.085,-0.125 L-0.085,0.125 Q-0.02,0.175 0.07,0.145 L0.16,0.040 Z M0.07,-0.085 L-0.03,-0.085 L-0.03,0.085 L0.07,0.085 Z" '
-                 'fill="%s" fill-rule="evenodd" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (_wood_grad(k, "sd", -0.15, 0.15), k.ink))
+                 'fill="%s" fill-rule="evenodd" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (_wood_grad(k, "q25sd", -0.15, 0.15), k.ink))
         o.append('<path d="M-0.065,-0.105 L-0.065,0.105" stroke="%s" stroke-width="0.008" opacity="0.7"/>' % k.c(WOOD["light"]))
-        gs = _lin(k, "sb", "#c4ccd4", "#8896a2", "#4e5a66", 0, -0.17, 0, 0.17)
+        gs = _lin(k, "q25sb", "#c4ccd4", "#8896a2", "#4e5a66", 0, -0.17, 0, 0.17)
         o.append('<path d="M1.06,-0.042 L1.20,-0.080 L1.20,0.080 L1.06,0.042 Z" fill="%s" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (k.c(STEEL["dark"]), k.ink))
         o.append('<path d="M1.18,-0.165 L1.56,-0.165 Q1.74,-0.115 1.78,0 Q1.74,0.115 1.56,0.165 L1.18,0.165 Z" fill="%s" stroke="%s" stroke-width="0.020" stroke-linejoin="round"/>' % (gs, k.ink))
         o.append('<path d="M1.24,-0.125 L1.58,-0.125 Q1.68,-0.100 1.71,-0.040" fill="none" stroke="#ffffff" stroke-width="0.014" stroke-linecap="round" opacity="0.75"/>')
@@ -1083,7 +1083,7 @@ def _prop_body(k, kind, ang=0.0):
                     o.append('<circle cx="%.4f" cy="%.4f" r="%.4f" fill="%s" stroke="%s" stroke-width="0.008" opacity="%.2f"/>' % (x, y * (0.6 + 0.4 * dd), r, k.c(EARTH["base"]), k.ink, min(1.0, (dd - 0.5) * 4)))
     elif kind == "tin_cup25":
         # enamel tin mug, mouth up (-y), the handle on the hand's side (origin = the handle), the body to +x
-        ge = _lin(k, "tc", "#ffffff", "#efe9d4", "#b9b39c", 0.08, 0, 0.40, 0)
+        ge = _lin(k, "q25tc", "#ffffff", "#efe9d4", "#b9b39c", 0.08, 0, 0.40, 0)
         o.append('<path d="M0.10,-0.080 Q-0.10,-0.100 -0.09,0.0 Q-0.10,0.105 0.11,0.085" fill="none" stroke="%s" stroke-width="0.058" stroke-linecap="round"/>' % k.ink)
         o.append('<path d="M0.10,-0.080 Q-0.10,-0.100 -0.09,0.0 Q-0.10,0.105 0.11,0.085" fill="none" stroke="%s" stroke-width="0.032" stroke-linecap="round"/>' % k.c("#efe9d4"))
         o.append('<path d="M0.08,-0.150 L0.40,-0.150 L0.375,0.150 Q0.24,0.185 0.105,0.150 Z" fill="%s" stroke="%s" stroke-width="0.020" stroke-linejoin="round"/>' % (ge, k.ink))
@@ -1101,7 +1101,7 @@ def _prop_body(k, kind, ang=0.0):
             a = math.pi * 2 * i / 12.0
             r = (0.30 if i % 2 == 0 else 0.12) * (0.5 + 0.5 * f)
             pts.append((1.30 + 0.9 * r * math.cos(a) + 0.12 * f, 0.0 + r * math.sin(a)))
-        o.append('<path d="%s" fill="#ffd83a" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (_poly_d(pts) + "Z", k.ink))
+        o.append('<path d="%s" fill="#ffd83a" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (_poly_d(pts), k.ink))
         o.append('<circle cx="%.4f" cy="0" r="%.4f" fill="#fff6c8"/>' % (1.30 + 0.12 * f, 0.07 * (0.5 + 0.5 * f)))
         for (dy, ln) in ((-0.20, 0.30), (0.0, 0.42), (0.20, 0.30)):
             o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="#ffffff" stroke-width="0.016" stroke-linecap="round" opacity="0.8"/>' % (1.60, dy * 1.2, 1.60 + ln * f, dy * 1.6))
@@ -1477,10 +1477,11 @@ CANVAS25_POSES = {
     "german_a25_mg_crouch": (-2.25, -4.8125, 2.25, 0.125),
     "german_b25_mg_crouch": (-2.25, -5.125, 2.25, 0.125),
     "german_c25_mg_crouch": (-2.25, -4.1875, 2.25, 0.125),
+    "german_c25_mg_fire": (-2.375, -4.1875, 2.375, 0.125),
 }
 SPECIAL25 = ("general25_march_flag", "engineer25_blueprint", "tommy_c25_ladle_tap", "pilot25_lean_look",
              "tommy_a25_helmet_on_stick", "tommy_b25_helmet_on_stick", "tommy_c25_helmet_on_stick", "tommy_d25_helmet_on_stick",
-             "german_a25_mg_crouch", "german_b25_mg_crouch", "german_c25_mg_crouch")   # poses with their own canvas in CANVAS25_POSES
+             "german_a25_mg_crouch", "german_b25_mg_crouch", "german_c25_mg_crouch", "german_c25_mg_fire")   # poses with their own canvas in CANVAS25_POSES
 STORY25, STORY25_META = {}, {}
 
 
@@ -1720,7 +1721,114 @@ def _story():
     _two_hands(S, "engineer25_blueprint", key="r", bend=0.2, layer="front", stretch=1.3, anchor="plan_far")
     for c in TM:
         _hand_on_stick(S, c + "_helmet_on_stick", dist=0.55)
+    _story_new(S, M, TM)
     return S, M
+
+
+def _hand_to(S, name, key, anchor, off=(0.0, 0.0), it=6):
+    """move the hand `key` so that its anchor (hand_r / prop_tip_r / ...) lands on the target given by `anchor` ((x, y) or an anchor name) + off."""
+    c, p = S[name]
+    for _ in range(it):
+        an = _anch(c, p)
+        tx, ty = anchor if isinstance(anchor, tuple) else an[anchor]
+        cx, cy = an["hand_" + key]
+        h = p["arm_" + key]["hand"]
+        p["arm_" + key]["hand"] = (h[0] + tx + off[0] - cx, h[1] + ty + off[1] - cy)
+
+
+def _story_new(S, M, TM):
+    """close-shot poses added for the film 25 shot plan v2 (waist-up crops of full-body cards)."""
+    W = "worker_a25", "worker_b25", "worker_c25"
+    # shot 6: the solemn watering can at the tank hatch
+    S["worker_c25_pour_can"] = ("worker_c25", dict(yaw=0.60, pitch=0.25, expr="determined", mouth="flat", gaze=(0.8, 0.5), head_roll=-3, pour25=0.85, t=0.3,
+                                                   arm_r=dict(hand=(0.62, 0.50), bend=-0.2, stretch=1.2, layer="front"), prop_r="watering_can25", arm_l="hip", legs="narrow"))
+    M["worker_c25_pour_can"] = dict(note="pours a WATERING CAN solemnly into the tank hatch (screen-right; mirror=True for left). pose key pour25 0..1 tilts the can, a thin stream falls from the rose "
+                                         "for pour25 > 0.5 (animate pour25 0.4 -> 0.85 over 8 frames, t = drop phase); anchor watering_can_r = the rose")
+    S["worker_b25_nod_serious"] = ("worker_b25", dict(yaw=0.40, pitch=0.45, expr="determined", blink=2, mouth="flat", head_roll=5, head_dy=0.04, arm_r="akimbo", arm_l="akimbo", legs="stand"))
+    M["worker_b25_nod_serious"] = dict(note="the grave nod: chin down, eyes shut, brows set, fists on the hips (animate pitch 0.1 -> 0.45 -> 0.1; blink 2 -> 0)")
+    # shot 10: digging furiously
+    sh = _feet_y("tommy_d25", dict(yaw=0.6, legs=dict(preset="step", stride=0.3, crouch=0.2)))
+    da = dict(yaw=0.65, pitch=0.2, expr="shouting", fx=["sweat"], lean=22, head_roll=-4, t=0.2,
+              arm_r=dict(hand=(0.40, 0.55), bend=-0.2, stretch=1.2, layer="front"), prop_r=dict(type="shovel25", angle=62),
+              arm_l=dict(hand=(0.66, 1.00), bend=-0.2, stretch=1.2, layer="front"), legs=dict(preset="step", stride=0.3, crouch=0.2))
+    S["tommy_d25_dig_a"] = ("tommy_d25", da)
+    S["tommy_d25_dig_b"] = ("tommy_d25", dict(da, lean=-6, pitch=-0.05, expr="angry", dirt25=1.0, arm_r=dict(hand=(0.30, 0.80), bend=-0.2, stretch=1.2, layer="front"),
+                                              prop_r=dict(type="shovel25", angle=-28), arm_l=dict(hand=(0.55, 0.85), bend=0.2, stretch=1.2, layer="front"),
+                                              legs=dict(preset="step", stride=0.3, crouch=0.1)))
+    M["tommy_d25_dig_a"] = dict(note="DIG frame A: spade driven down into the ground (screen-right; mirror=True for left), leaning in, shouting. Alternate with dig_b every 3 frames; blade tip = anchor shovel_r")
+    M["tommy_d25_dig_b"] = dict(note="DIG frame B: spade lifted with a heap of earth on the blade (pose key dirt25 1.0; crumbs fly above it); the dirt is thrown by the stage particles")
+    # shot 27: deadpan with the cup held out
+    S["tommy_b25_cup_wait"] = ("tommy_b25", dict(yaw=0.55, pitch=0.05, expr="unimpressed", mouth="flat", gaze=(0.9, 0.2), head_roll=2,
+                                                 arm_r=dict(hand=(0.86, 0.80), bend=0.1, stretch=1.2, layer="front"), prop_r=dict(type="tin_cup25", angle=0, scale=1.3), arm_l="down", legs="stand"))
+    M["tommy_b25_cup_wait"] = dict(note="GAG: deadpan, flat mouth, half-lid stare, tin cup held out (screen-right) under the tank's tap; anchor tin_cup_r = the cup mouth")
+    S["worker_a25_cup_drink"] = ("worker_a25", dict(yaw=0.35, pitch=-0.40, expr="happy", mouth="flat", blink=2, head_roll=-5,
+                                                    arm_r=dict(hand=(0.50, 0.30), bend=-0.7, stretch=1.0, layer="top"), prop_r=dict(type="tin_cup25", angle=-70, scale=1.3), arm_l="hip", legs="stand"))
+    M["worker_a25_cup_drink"] = dict(note="drinks from the tin cup under the hatch: head back, eyes shut in bliss, cup tipped at the mouth (the beard hides the mouth; the cup rim is the cue)")
+    # shot 21 and 24: the general, lip-sync
+    S["general25_toy_dangle"] = (G25 := "general25", dict(yaw=0.30, pitch=-0.35, expr="smug", mouth="talk_b", head_roll=6, t=0.2,
+                                                          arm_r=dict(hand=(0.62, 0.30), bend=-0.8, stretch=1.1, layer="front"), prop_r="toy_tank25", arm_l="akimbo", legs="wide"))
+    M["general25_toy_dangle"] = dict(lipsync=True, note="GAG 'a toy!': dangles a little tin toy tank by its string between finger and thumb and sneers. pose key t swings it (16 degrees: animate t 0..1 per 24 frames); "
+                                                        "LIP-SYNC mouth=talk_mouth(g) inside his quote; anchor toy_tank_r = the toy")
+    S["general25_finger_wag"] = (G25, dict(yaw=0.25, pitch=-0.30, expr="smug", mouth="talk_a", head_roll=-6,
+                                           arm_r=dict(hand=(0.55, 0.15), bend=-0.7, stretch=1.1, shape="point", layer="front"), arm_l="akimbo", legs="wide"))
+    M["general25_finger_wag"] = dict(lipsync=True, note="wags a scolding index finger beside his face: animate arm_r hand x 0.45 <-> 0.65 every 3 frames; LIP-SYNC mouth=talk_mouth(g) inside his quote (23.75-25.35 s)")
+    # engineer
+    E25 = "engineer25"
+    S["engineer25_shush"] = (E25, dict(yaw=0.30, pitch=0.0, expr="worried", mouth="flat", gaze=(0.9, 0.0), head_roll=3,
+                                       arm_r=dict(hand=(0.3, 0.3), bend=-0.7, stretch=1.0, shape="point", layer="top"), arm_l="down", legs="stand"))
+    _hand_to(S, "engineer25_shush", "r", "mouth", off=(0.05, 0.14))
+    M["engineer25_shush"] = dict(note="index finger across the lips (hush), eyes sliding sideways; mouth closed")
+    S["engineer25_peek"] = (E25, dict(yaw=1.0, pitch=-0.05, expr="worried", mouth="flat", gaze=(1.0, 0.0), lean=16, head_roll=4,
+                                      arm_r=dict(hand=(0.80, 0.55), bend=-0.2, stretch=1.2, shape="open", layer="front"), arm_l="down", legs="narrow"))
+    M["engineer25_peek"] = dict(note="peeks out sideways round the shed door (screen-right; mirror=True for left): head forward, wide eyes, an open hand on the door edge at (0.80, 0.55). Pair with a duck (lean 16 -> -6)")
+    S["engineer25_sleeves"] = (E25, dict(yaw=0.25, pitch=-0.05, expr="determined", mouth="flat", head_roll=-3,
+                                         arm_r=dict(hand=(0.55, 0.35), bend=-0.8, stretch=1.0, layer="front"), prop_r=dict(type="spanner25", angle=-70, scale=1.2),
+                                         arm_l=dict(hand=(0.4, 0.6), bend=0.2, stretch=1.0, layer="top"), legs="stand"))
+    c, p = S["engineer25_sleeves"]
+    an = _anch(c, p)
+    p["arm_l"]["hand"] = ((an["elbow_r"][0] + an["hand_r"][0]) / 2, (an["elbow_r"][1] + an["hand_r"][1]) / 2)
+    M["engineer25_sleeves"] = dict(note="rolls up his sleeve: the left hand tugs the right cuff, the right fist holds a big spanner up (anchor spanner_r = the jaws), set jaw")
+    S["engineer25_chalkboard_tap"] = (E25, dict(yaw=0.20, pitch=0.05, expr="determined", mouth="flat", gaze=(0.0, 0.7),
+                                                arm_l=dict(hand=(-0.62, 0.90), bend=0.3, stretch=1.2, layer="front"), prop_l="chalkboard25",
+                                                arm_r=dict(hand=(0.5, 0.9), bend=-0.3, stretch=1.3, shape="point", layer="top"), legs="narrow"))
+    _hand_to(S, "engineer25_chalkboard_tap", "r", "chalkboard_l", off=(0.52, 0.06))
+    M["engineer25_chalkboard_tap"] = dict(note="holds the chalk board (prop chalkboard25, 1.6 x 1.1 D, left hand on its edge; anchor chalkboard_l = the chalk tank) and taps the tank with a finger; "
+                                                "animate the tap by hand y +-0.05 every 3 frames. White chalk lines only: a rhomboid over a trench, two ground lines")
+    S["engineer25_proud"] = (E25, dict(yaw=0.40, pitch=-0.15, expr="happy", mouth="smile", head_roll=-3, gaze=(0.6, 0.0),
+                                       arm_r=dict(hand=(1.00, 0.55), bend=-0.2, stretch=1.3, shape="open", layer="front"), arm_l="hip", legs="stand"))
+    M["engineer25_proud"] = dict(note="small closed smile (mouth 'smile', he still never speaks), chin up, open hand patting the hull at screen-right (anchor hand_r = the contact point)")
+    S["engineer25_chart_hand"] = (E25, dict(yaw=0.55, pitch=0.45, expr="determined", mouth="flat", lean=20, gaze=(0.6, 0.9),
+                                            arm_r=dict(hand=(1.00, 1.30), bend=0.0, stretch=1.3, shape="ball", layer="front"), arm_l=dict(hand=(0.55, 1.10), bend=0.3, layer="front"), legs="narrow"))
+    M["engineer25_chart_hand"] = dict(note="leans over the chart table, right arm reaching forward and down (hand (1.00, 1.30)) as if sliding the model tank: animate hand x 0.7 -> 1.2 over 20 frames; "
+                                           "the table and model are set items")
+    # German with slipping glasses
+    S["german_b25_glasses_slip"] = ("german_b25", dict(yaw=0.20, pitch=0.05, expr="shocked", mouth=("open", 0.22, 0.20), glasses_dy25=1.0, fx=["sweat"], head_dy=0.02,
+                                                       arm_r="down", arm_l="down", squash=(0.98, 1.03), legs="stand"))
+    M["german_b25_glasses_slip"] = dict(note="jaw drops (big open mouth) and the round glasses slide down the nose (pose key glasses_dy25 0..1: animate 0 -> 1 over 8 frames)")
+    # machine gun firing
+    gc = "german_c25"
+    mg = dict(S[gc + "_mg_crouch"][1], expr="shouting", mouth="clench", fire25=1.0, lean=14, t=0.4)
+    S[gc + "_mg_fire"] = (gc, mg)
+    M[gc + "_mg_fire"] = dict(note="FIRING: as mg_crouch plus a muzzle flash and smoke puff (pose key fire25 0..1) and strain face; alternate fire25 1.0 / 0.5 and lean 14 / 12 every 2 frames")
+    # worker shocked
+    S["worker_b25_shocked"] = ("worker_b25", dict(yaw=0.20, pitch=-0.05, expr="shocked", fx=["sweat"], squash=(0.98, 1.03),
+                                                  arm_r=dict(hand=(0.55, 0.25), bend=-0.8, shape="open", layer="top"), arm_l=dict(hand=(-0.55, 0.25), bend=-0.8, shape="open", layer="top"), legs="stand"))
+    M["worker_b25_shocked"] = dict(note="eyes ringed, 'O' mouth, sweat, both open hands up at the cheeks")
+    # peeking over the parapet
+    for c, k, ex in (("tommy_a25", 0.62, "worried"), ("german_a25", 0.62, "worried")):
+        S[c + "_peek"] = (c, dict(yaw=0.80, pitch=-0.10, expr=ex, mouth="flat", gaze=(1.0, 0.0), lean=10, head_roll=3, head_dy=-0.04,
+                                  arm_r=dict(hand=(0.55, 1.05), bend=-0.2, stretch=1.2, shape="open", layer="front"), arm_l=dict(hand=(0.35, 1.10), bend=-0.2, stretch=1.2, shape="open", layer="front"),
+                                  legs=dict(preset="stand", crouch=0.45, spread=0.1)))
+        M[c + "_peek"] = dict(note="crouched, peeks over the parapet (facing screen-right; mirror=True for left / the German trench), eyes wide, both hands gripping the sandbags; the parapet covers everything below the chin")
+    # worker a nailing a crate
+    S["worker_a25_hammer_crate"] = ("worker_a25", dict(yaw=0.55, pitch=0.20, expr="determined", mouth="clench", lean=10, t=0.2,
+                                                      arm_r=dict(hand=(0.70, 0.15), bend=-0.7, stretch=1.2, layer="front"), prop_r=dict(type="hammer25", angle=-50, scale=1.3),
+                                                      arm_l=dict(hand=(0.60, 1.10), bend=0.2, layer="front"), legs=dict(preset="step", stride=0.3, crouch=0.1)))
+    M["worker_a25_hammer_crate"] = dict(note="nailing the crate planks: hammer up (angle -50), left hand steadying the plank low; animate angle -50 <-> 25 every 4 frames; anchor hammer_r = the face")
+    S["worker_c25_push_barrel"] = ("worker_c25", dict(yaw=0.70, pitch=0.10, expr="determined", mouth="clench", fx=["sweat"], lean=26, head_roll=-4, t=0.2,
+                                                     arm_r=dict(hand=(1.0, 1.0), bend=-0.1, stretch=1.3, layer="front"), arm_l=dict(hand=(0.9, 1.2), bend=-0.1, stretch=1.3, layer="front"),
+                                                     legs=dict(preset="step", stride=0.8, crouch=0.14)))
+    M["worker_c25_push_barrel"] = dict(note="shoulders into a barrel at screen-right (the barrel is a set item at hand height (1.0, 1.0)), strain face; animate lean +-3")
 
 
 def register():

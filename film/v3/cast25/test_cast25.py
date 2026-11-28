@@ -127,7 +127,7 @@ WIDE = {"general25_march_flag": 1.3, "general25_laugh": 1.0}
 
 
 def _pose_w(n, cw):
-    if "helmet_on_stick" in n or "mg_crouch" in n or n.endswith("_push") or "blueprint" in n or "ladle" in n or "march_flag" in n or "run_away" in n:
+    if "helmet_on_stick" in n or "mg_crouch" in n or "mg_fire" in n or n.endswith("_push") or "blueprint" in n or "ladle" in n or "march_flag" in n or "run_away" in n:
         return 1.45
     return 1.0
 
@@ -187,7 +187,7 @@ def sec_faces(D=70):
     return _svgdoc(W, H, "".join(o)), W, H
 
 
-PROPS = ("hammer25", "spanner25", "paint_brush25", "paint_pot25", "bucket25", "ladle25", "swagger25", "flag25", "helmet25", "helmet_stick25", "plan25", "mg25")
+PROPS = ("hammer25", "spanner25", "paint_brush25", "paint_pot25", "bucket25", "ladle25", "swagger25", "flag25", "helmet25", "helmet_stick25", "plan25", "mg25", "watering_can25", "shovel25", "tin_cup25", "toy_tank25", "chalkboard25")
 
 
 def sec_props(D=100):
@@ -200,15 +200,20 @@ def sec_props(D=100):
         x0, y0 = (i % cols) * cw, (i // cols) * ch
         o.append('<rect x="%d" y="%d" width="%d" height="%d" fill="%s"/>' % (x0, y0, cw, ch, BG2 if i % 2 else BG))
         k = P._Ctx("pr%d" % i, P.INK, None)
-        if n in cast25.UPRIGHT25:
+        cast25._norm(P.CAST["general25"], dict(pour25=1.0 if n == "watering_can25" else 0.0, dirt25=1.0 if n == "shovel25" else 0.0, t=0.2))
+        if n in cast25.UPRIGHT25 or n in cast25.HUNG25:
             body = cast25._upright_body(k, n)
+            if n == "watering_can25":
+                tl = cast25.CAN_TILT * 0.9
+                rx, ry = cast25._rot(cast25.CAN_ROSE[0] + 0.05, cast25.CAN_ROSE[1], tl)
+                body = '<g transform="rotate(%.2f)">%s</g>%s' % (tl, body, cast25._can_stream(k, rx, ry, 1.0, 0.2))
         else:
             cast25._POSE25["mg_drop"] = 0.52
             body = cast25._prop_body(k, n)
-        sc = {"helmet_stick25": 0.55, "plan25": 0.9, "mg25": 1.0, "flag25": 1.1, "ladle25": 1.2, "swagger25": 1.2}.get(n, 1.4)
-        ln = {"plan25": -0.5, "helmet_stick25": 2.0, "bucket25": 0.0, "paint_pot25": 0.0, "helmet25": 0.0}.get(n, cast25.NEW_TIP25[n])
+        sc = {"helmet_stick25": 0.55, "plan25": 0.9, "mg25": 1.0, "flag25": 1.1, "ladle25": 1.2, "swagger25": 1.2, "chalkboard25": 0.8, "shovel25": 0.9, "watering_can25": 0.7, "toy_tank25": 0.7}.get(n, 1.4)
+        ln = {"plan25": -0.5, "helmet_stick25": 2.0, "bucket25": 0.0, "paint_pot25": 0.0, "helmet25": 0.0, "watering_can25": 0.6, "toy_tank25": 0.0, "chalkboard25": -0.8}.get(n, cast25.NEW_TIP25[n])
         defs = "<defs>%s</defs>" % "".join(k.defs) if k.defs else ""
-        yy = y0 + ch * (0.30 if n in cast25.UPRIGHT25 or n == "flag25" else 0.42)
+        yy = y0 + ch * (0.30 if n in cast25.UPRIGHT25 or n == "flag25" else (0.16 if n in cast25.HUNG25 else 0.42))
         o.append('<svg x="%d" y="%d" width="%d" height="%d" viewBox="%d %d %d %d">%s<g transform="translate(%.1f %.1f) scale(%.2f)">%s</g></svg>'
                  % (x0, y0, cw, ch, x0, y0, cw, ch, defs, x0 + cw / 2 - (ln / 2) * D * sc, yy, D * sc, body))
         o.append(_under(x0 + cw / 2, y0 + ch - 8, n, 13))
@@ -360,7 +365,7 @@ def robust():
     rnd = random.Random(25)
     n = fail = 0
     garbage = (None, "x", float("nan"), float("inf"), -5, 1e9, [1, 2], {"a": 1}, True, "white")
-    keys = ("hat_off25", "hat_up25", "mg_gy25", "paint_col25", "plan_w25", "t", "squash", "mirror", "expr", "yaw", "lean")
+    keys = ("hat_off25", "hat_up25", "mg_gy25", "paint_col25", "plan_w25", "pour25", "dirt25", "fire25", "glasses_dy25", "t", "squash", "mirror", "expr", "yaw", "lean")
     t0 = time.time()
     for name in LINEUP:
         for i in range(250):
