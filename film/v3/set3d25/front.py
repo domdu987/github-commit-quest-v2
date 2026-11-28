@@ -1166,7 +1166,19 @@ def grade(im, mask=None, p1_t=0.035, p99_t=0.925, mean_t=0.51, knee=0.85, vib=1.
     a = np.power(np.clip(a, 1e-4, 1), (lo_ + hi_) / 2)
     lab = _rgb2lab(a); sm = lab[::4, ::4][keep[::4, ::4]]; da = float(np.clip((wb[0] - sm[:, 1].mean()) * wb_k, -wb_max, wb_max)); db = float(np.clip((wb[1] - sm[:, 2].mean()) * wb_k, -wb_max, wb_max))
     lab = lab.copy(); lab[..., 1] += da; lab[..., 2] += db; a = _lab2rgb(lab)
-    h, s, v = _rgb2hsv(a); s = np.clip(s * (1 + (vib - 1) * 4 * s * (1 - s)), 0, 1); a = np.clip(_hsv2rgb(h, s, v), 0, 1)
+    h, s, v = _rgb2hsv(a)
+    def vibr(vb): return np.clip(s * (1 + (vb - 1) * (0.35 + 3.0 * s * (1 - s)) * (1 - s)), 0, 1)                    # mid-saturation pixels boosted most, neutrals a little, full colours not at all
+    def msat(s2):
+        sm_ = np.asarray(Image.fromarray((np.clip(_hsv2rgb(h[::2, ::2], s2[::2, ::2], v[::2, ::2]), 0, 1) * 255).astype(np.uint8)).resize((180, 320))).astype(np.float32) / 255; mx_, mn_ = sm_.max(2), sm_.min(2); return float(np.where(mx_ > 0, (mx_ - mn_) / np.maximum(mx_, 1e-6), 0).mean())
+    vb = vib
+    if msat(vibr(vb)) < 0.435:                                                              # hard gate: mean sat >= 0.42 -> raise the vibrance just enough (max 3.2)
+        lo_, hi_ = vib, 3.2
+        for _ in range(9):
+            mid = (lo_ + hi_) / 2
+            if msat(vibr(mid)) < 0.435: lo_ = mid
+            else: hi_ = mid
+        vb = hi_
+    s = vibr(vb); a = np.clip(_hsv2rgb(h, s, v), 0, 1)
     if mask is not None: m = np.clip(mask, 0, 1)[..., None]; a = a * (1 - m) + src * m
     return Image.fromarray((np.clip(a, 0, 1) * 255 + 0.5).astype(np.uint8))
 

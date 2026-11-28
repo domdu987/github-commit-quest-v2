@@ -57,6 +57,7 @@ def more_materials():
             col = b.mix(seam, b.mul(tone, (*hexl(hx), 1)), (0.04, 0.04, 0.04)); b.princ(col, 0.7, 0.0, b.bump(b.math('ADD', gr, b.math('MULTIPLY', seam, 1.5)), 0.8, 0.04))
         return fmat(name, f)
     for k, hx in dict(yellow='#c88a20', teal='#2a8088', red='#a83020', blue='#2850a0').items(): M['plank_' + k] = paint_planks(hx, 'plank_' + k)
+    M['table_wood'] = wood_seam('table_wood', '#a09484', 1.6, 1.0, 'Y', 0.9)
     M['coal'] = flat('coal', '#161412', 0.28, 0.1)
     M['galv'] = flat('galv', '#a8b2b6', 0.4, 0.85); M['water_t'] = flat('water_t', '#8fb4c8', 0.35, 0.1)
     def steelp(b):

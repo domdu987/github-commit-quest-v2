@@ -56,14 +56,14 @@ def cam_of(g):
     P, f0 = mark()
     if r == 19:
         k = C.out_cubic((g - 522) / 7.0)                     # PUNCH 20 % in 7 frames
-        d = 5.1 / (1.0 + 0.20 * k)
+        d = 6.0 / (1.0 + 0.20 * k)
         w = C.calm((g - 529) / float(551 - 529))
         d = d / (1.0 + 0.04 * w)                             # then a slow drift in (+4 %) and to the side
-        az, cz, lz, lens, side, lx = f0 + 10.0, 2.30, 2.25, 40.0, 0.35 * w, 0.0
+        az, cz, lz, lens, side, lx = f0 + 10.0, 1.55, 2.45, 40.0, 0.35 * w, 0.0
     elif r == 20:
         w = C.calm(u)
-        d = 5.0 / (1.0 + 0.10 * w)                           # PUSH 10 %
-        az, cz, lz, lens, side, lx = f0 - 38.0, 2.35 + 0.1 * w, 2.25, 40.0, -0.25 * w, 0.32
+        d = 5.6 / (1.0 + 0.10 * w)                           # PUSH 10 %
+        az, cz, lz, lens, side, lx = f0 - 38.0, 1.75 + 0.1 * w, 2.4, 40.0, -0.25 * w, 0.32
     elif r == 21:
         k = C.out_cubic((g - 602) / 7.0)                     # PUNCH 20 % over g 602-609
         d = 5.0 / (1.0 + 0.20 * k)

@@ -20,7 +20,7 @@ import math, os, sys, json, time
 
 GATE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))     # film25/gate
 PROJ = os.path.dirname(os.path.dirname(GATE))                         # film/
-V3 = os.path.join(PROJ, "v3")
+V3 = os.path.join(os.environ.get("SETPROJ", PROJ), "v3")    # SETPROJ: a frozen snapshot of film/ (set3d25 + cast25 copied) so a long render sees one set
 for p in (os.path.join(V3, "cast25"), os.path.join(V3, "stage"), os.path.join(V3, "set3d25")):
     if p not in sys.path:
         sys.path.insert(0, p)
@@ -81,6 +81,13 @@ class Take(object):
         self.A = W.build(preset)
         self.scene = bpy.context.scene
         self.cam = self.scene.camera
+        hidden = []
+        for ob in bpy.data.objects:                       # the set's own framing-reference puppet / stand-in cards: not in our shot
+            base = ob.name[:-6] if ob.name.endswith("_decal") else ob.name
+            if base in cast25.STORY25 or base.startswith("tommy_"):
+                ob.hide_render = True; ob.hide_viewport = True; hidden.append(ob.name)
+        if verbose and hidden:
+            print("take: hid set cards", hidden, flush=True)
         self.scene.frame_start, self.scene.frame_end = 1, 9000
         self.actors = {}
         self.anch = {}

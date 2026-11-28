@@ -171,12 +171,12 @@ def build_chart(cfg):
     def baize(b):
         c = b.coord(); n = b.noise(55.0, 2.0, 0.6, c, None); n2 = b.noise(1.2, 2.0, 0.5, c, None); col = b.mul(b.mix(b.rng(n2, 0.3, 0.7), (0.8, 0.85, 0.8), (1.1, 1.1, 1.05)), (*F.hexl('#2b6b3c'), 1)); b.princ(col, 0.95, 0.0, b.bump(n, 0.6, 0.02))
     M['baize'] = F.fmat('baize', baize)
-    for sg in (-1, 1): obox(mb, (cx + sg * (7.0 + gw) / 2, cy, top - 0.12), X, Y, Z, (7.0 - gw) / 2, 3.5, 0.08, M['crate'])                           # wooden table top ...
+    for sg in (-1, 1): obox(mb, (cx + sg * (7.0 + gw) / 2, cy, top - 0.12), X, Y, Z, (7.0 - gw) / 2, 3.5, 0.08, M['table_wood'])                           # wooden table top ...
     for sg in (-1, 1): obox(mb, (cx + sg * (gw + 0.9 + (7.0 - gw - 1.8) / 2), cy, top - 0.03), X, Y, Z, (7.0 - gw - 1.8) / 2, 2.7, 0.04, M['baize'])      # ... with a dark-green baize inset
     obox(mb, (cx, cy, top - 0.1 - 0.3), X, Y, Z, gw, 3.5, 0.05, M['mud_lump'])
     for sg in (-1, 1):
         obox(mb, (cx + sg * (gw + 0.01), cy, top - 0.25), X, Y, Z, 0.03, 3.5, 0.15, M['crate']); obox(mg, (cx + sg * (gw + (0.3 if sg > 0 else 0.15)), cy, top + (0.1 if sg > 0 else 0.04)), X, Y, Z, (0.3 if sg > 0 else 0.15), 3.5, (0.1 if sg > 0 else 0.04), M['mud_lump'])
-    obox(mw, (cx, cy, top - 0.35), X, Y, Z, 7.2, 3.7, 0.16, M['crate'])
+    obox(mw, (cx, cy, top - 0.35), X, Y, Z, 7.2, 3.7, 0.16, M['table_wood'])
     for sx in (-1, 1):
         for sy in (-1, 1): obox(mw, (cx + sx * 6.6, cy + sy * 3.2, (top - 0.4) / 2), X, Y, Z, 0.22, 0.22, (top - 0.4) / 2, M['beam'])
     r = rnd(4); mb.frustum((cx - 5.5, cy - 2.4, top + 0.12), (cx - 3.8, cy - 2.1, top + 0.12), 0.12, 0.12, M['p_cream'], seg=10)                                      # rolled plan
@@ -220,8 +220,8 @@ def build(preset, samples=None, quality=None):
             wp = H.root.matrix_world @ (sub.matrix_basis @ Vector(lp)); L.chain(mbs, hb + Vector((0, 0, -0.4)), wp, 0.3, 0.05, M_['steel']); obox(mbs, wp + Vector((0, 0, 0.12)), (1, 0, 0), (0, 1, 0), (0, 0, 1), 0.22, 0.22, 0.12, M_['p_yellow'])
         mkobj(mbs, 'slings')
     weighbridge(P.get('wb', (14, 12))[0], P.get('wb', (14, 12))[1], P.get('dial', -40.0))
-    for (x, y) in ((-14, 14), (0, 14), (14, 14), (-14, 34), (0, 34), (14, 34), (-8, 24), (8, 24)): lamp(x, y, 11.6, P.get('lamp_w', 2500.0))
-    area_fill(0, 26, 12.5, 40, 40, P.get('fill', 9000.0))
+    for (x, y) in ((-14, 14), (0, 14), (14, 14), (-14, 34), (0, 34), (14, 34), (-8, 24), (8, 24)): lamp(x, y, 11.6, P.get('lamp_w', 1400.0))
+    area_fill(0, 26, 12.5, 40, 40, P.get('fill', 5000.0))
     mb = MB(); TM = TK.tank_mats(0.0, 'a')
     for (x, y, sz, yw) in P.get('small_crates', []):
         L.crate_box(mb, (x, y, 0), sz, sz * 0.8, sz * 0.7, 0.0); TK.tank_silhouette(mb, (x, y, sz * 0.35), (1, 0, 0), (0, -1, 0), (0, 0, 1), sz * 0.3, TM['paint'], TM['paint_d'], lift=sz * 0.4 + 0.02)
@@ -244,9 +244,9 @@ PRESETS = dict(
     fac_wide=dict(cam=dict(loc=(2.0, -40.0, 4.5), look_at=(-2.0, 12.0, 5.5), lens=24), cards=[('a', (-9, -22), 3.2), ('b', (8, -16), 3.2), ('a', (-2, -9), 3.2)], note='shot 1'),
     fac_weigh=dict(cam=dict(loc=(4.0, 1.0, 1.5), look_at=(6.0, 12.0, 6.0), lens=20), stages=_st(plates=1, rivets=1), tank=dict(pos=(10, 12), yaw=0.0, z=3.0), wb=(10, 12), crane_x=6.0, crane_y=12.0, hook_z=10.4, dial=-60.0, slings=dict(stage='plates', points=[(-5.5, 1.8, 4.25), (-5.5, -1.8, 4.25), (0.8, 1.8, 4.0), (0.8, -1.8, 4.0)]), note='shot 2'),
     fac_foreman=dict(cam=dict(loc=(-3.0, 8.0, 2.6), look_at=(-4.0, 22.0, 4.6), lens=26), stages=FULL, cards=[('a', (-9, 14), 3.2), ('b', (-3, 12), 3.2), ('a', (3, 14), 3.2)], note='shots 3'),
-    fac_stencil=dict(fill=14000.0, cam=dict(loc=(-9.0, 13.0, 4.8), look_at=(-12.5, 20.0, 4.9), lens=26), stages=FULL, cards=[('b', (-8, 16), 3.2)], note='shot 4'),
+    fac_stencil=dict(fill=5000.0, cam=dict(loc=(-9.0, 13.0, 4.8), look_at=(-12.5, 20.0, 4.9), lens=26), stages=FULL, cards=[('b', (-8, 16), 3.2)], note='shot 4'),
     fac_side=dict(cam=dict(loc=(-4.0, 5.0, 4.6), look_at=(-4.0, 22.0, 4.8), lens=24), stages=FULL, cards=[('a', (-12, 14), 3.2), ('b', (4, 15), 3.2)], note='shot 7: side-on, work lamps'),
-    fac_bench=dict(fill=14000.0, cam=dict(loc=(-8.0, 2.0, 2.6), look_at=(-26.0, 6.0, 1.6), lens=26), stages=FULL, small_crates=[(-13, 8, 2.6, 0.5), (-16, 6, 2.2, 0.3)], cards=[('a', (-16, 10), 3.2), ('b', (-13, 12), 3.2)], note='shot 8'),
+    fac_bench=dict(fill=5000.0, cam=dict(loc=(-8.0, 2.0, 2.6), look_at=(-26.0, 6.0, 1.6), lens=26), stages=FULL, small_crates=[(-13, 8, 2.6, 0.5), (-16, 6, 2.2, 0.3)], cards=[('a', (-16, 10), 3.2), ('b', (-13, 12), 3.2)], note='shot 8'),
     fac_chassis=dict(cam=dict(loc=(-9.0, 9.0, 3.4), look_at=(-6.0, 22.0, 4.2), lens=26), stages=_st(), cards=[('a', (-4, 14), 3.2)], note='shot 14'),
     fac_plates=dict(cam=dict(loc=(2.0, 11.0, 5.0), look_at=(-6.0, 22.0, 6.6), lens=26), stages=_st(plates=0.88, rivets=0.0), crane_x=-5.0, crane_y=22.0, hook_z=10.4, slings=dict(stage='plates', points=[(-5.5, 1.8, 4.25), (-5.5, -1.8, 4.25), (0.8, 1.8, 4.0), (0.8, -1.8, 4.0)]), cards=[('a', (-14, 15), 3.2)], note='shots 15'),
     fac_tracks=dict(cam=dict(loc=(-4.0, 7.0, 4.4), look_at=(-4.0, 22.0, 6.4), lens=24), stages=_st(plates=1, rivets=1, tracks=0.86), crane_x=-5.0, crane_y=22.0, hook_z=11.0, slings=dict(stage='tracks', points=[(-6.0, 2.6, 4.4), (-6.0, -2.6, 4.4), (0.0, 2.6, 4.2), (0.0, -2.6, 4.2)]), cards=[('b', (8, 13), 3.2)], note='shot 16'),
@@ -257,10 +257,10 @@ PRESETS = dict(
 
 PRESETS.update(
     fac_chart=dict(cam=dict(loc=(-15.0, 37.0, 7.6), look_at=(-18.0, 42.0, 2.0), lens=40), chart=dict(pos=(-18.0, 43.0), u=0.40), tank_on=False, note='shot 14: chart table 3/4 top-down insert, model Mark I over the model trench'),
-    fac_chart_face=dict(cast=[dict(story='engineer25_chart_hand')], backdrop=[(-22.0, 50.6, 8.0, 9.0, 'plank_red'), (-14.0, 50.6, 8.0, 9.0, 'plank_yellow')], mark=dict(pos=(-18.0, 48.6), face_deg=-90.0, dist=4.8, lens=28, zc=1.9), chart=dict(pos=(-18.0, 43.0), u=0.40), tank_on=False, note='shot 14/15: engineer behind the chart table (mark = card position)'),
+    fac_chart_face=dict(fill=2500.0, lamp_w=700.0, cast=[dict(story='engineer25_chart_hand')], backdrop=[(-22.0, 50.6, 8.0, 9.0, 'plank_red'), (-14.0, 50.6, 8.0, 9.0, 'plank_yellow')], mark=dict(pos=(-18.0, 48.6), face_deg=-90.0, dist=4.8, lens=28, zc=1.9), chart=dict(pos=(-18.0, 43.0), u=0.40), tank_on=False, note='shot 14/15: engineer behind the chart table (mark = card position)'),
     fac_doors=dict(cam=dict(loc=(3.0, -27.0, 3.6), look_at=(0.0, 0.0, 6.2), lens=30), doors=1.0, note='shot 13: shed doors shut, from the yard'),
-    fac_close_hull=dict(cast=[dict(story='worker_a25_rivet')], fill=16000.0, mark=dict(pos=(-11.0, 17.0), face_deg=-90.0, dist=4.2, lens=28, zc=1.9, look_dz=-0.7), tank=dict(pos=(-6, 22), yaw=0.0, z=0.9), trestles_off=True, note='shots 6/16: close, riveted hull plate with the hatch and tap behind (mark)'),
-    fac_close_rivet=dict(cast=[dict(story='worker_a25_rivet')], mark=dict(pos=(-9.0, 17.0), face_deg=-90.0, dist=4.2, lens=28, zc=1.9, look_dz=-0.7), tank=dict(pos=(-6, 22), yaw=0.0, z=0.9), trestles_off=True, fill=16000.0, stages=dict(chassis=1, plates=1, rivets=0.6, tracks=0, sponsons=0, guns=0), stencil=False, note='shot 29/30: close on the hull plate, rivet rows going in'),
-    fac_close_engineer=dict(cast=[dict(story='engineer25_proud')], backdrop=[(-3.6, 49.5, 7.2, 9.0, 'plank_teal'), (3.6, 49.5, 7.2, 9.0, 'plank_yellow')], fill=5000.0, mark=dict(pos=(0.0, 46.5), face_deg=-90.0, dist=4.2, lens=28, zc=1.9), note='shots 5/15/28/63: engineer close in front of the shed back wall (mark)'),
+    fac_close_hull=dict(cast=[dict(story='worker_a25_rivet')], fill=4000.0, mark=dict(pos=(-11.0, 17.0), face_deg=-90.0, dist=4.2, lens=28, zc=1.9, look_dz=-0.7), tank=dict(pos=(-6, 22), yaw=0.0, z=0.9), trestles_off=True, note='shots 6/16: close, riveted hull plate with the hatch and tap behind (mark)'),
+    fac_close_rivet=dict(cast=[dict(story='worker_a25_rivet')], mark=dict(pos=(-9.0, 17.0), face_deg=-90.0, dist=4.2, lens=28, zc=1.9, look_dz=-0.7), tank=dict(pos=(-6, 22), yaw=0.0, z=0.9), trestles_off=True, fill=4000.0, stages=dict(chassis=1, plates=1, rivets=0.6, tracks=0, sponsons=0, guns=0), stencil=False, note='shot 29/30: close on the hull plate, rivet rows going in'),
+    fac_close_engineer=dict(cast=[dict(story='engineer25_proud')], backdrop=[(-3.6, 49.5, 7.2, 9.0, 'plank_teal'), (3.6, 49.5, 7.2, 9.0, 'plank_red')], fill=1500.0, lamp_w=500.0, mark=dict(pos=(0.0, 46.5), face_deg=-90.0, dist=4.2, lens=28, zc=1.9), note='shots 5/15/28/63: engineer close in front of the shed back wall (mark)'),
 )
 for _p in PRESETS.values(): _p.setdefault('tune', dict(cloud_k=0.75))

@@ -1,0 +1,89 @@
+{
+ "preset": "front_column",
+ "wall_s": 36.1,
+ "cpu_s": 70.7,
+ "build_s": 10.2,
+ "settings": {
+  "resolution": [
+   360,
+   640
+  ],
+  "samples": 32,
+  "adaptive_threshold": 0.012000000104308128,
+  "adaptive_min": 16,
+  "denoiser": "OPENIMAGEDENOISE",
+  "prefilter": "ACCURATE",
+  "passes": "RGB_ALBEDO_NORMAL",
+  "bounces": {
+   "total": 6,
+   "diffuse": 5,
+   "glossy": 3,
+   "transmission": 2
+  },
+  "view": "Standard",
+  "exposure": -0.25,
+  "threads": 4,
+  "sun": {
+   "energy": 5.0,
+   "elevation": 28.0,
+   "color": [
+    1.0,
+    0.7799999713897705,
+    0.5
+   ]
+  },
+  "haze": 0.0006,
+  "post": "unsharp r1.1 55% + clarity r5 40%"
+ },
+ "cards": [],
+ "anchors": {
+  "tank0_nose": [
+   3634,
+   961
+  ],
+  "tank0_front": [
+   2651,
+   1025
+  ],
+  "tank0_rear": [
+   1709,
+   576
+  ],
+  "tank1_nose": [
+   1132,
+   597
+  ],
+  "tank1_front": [
+   925,
+   730
+  ],
+  "tank1_rear": [
+   544,
+   601
+  ],
+  "tank2_nose": [
+   362,
+   588
+  ],
+  "tank2_front": [
+   274,
+   682
+  ],
+  "tank2_rear": [
+   81,
+   598
+  ],
+  "tank3_nose": [
+   -17,
+   588
+  ],
+  "tank3_front": [
+   -64,
+   658
+  ],
+  "tank3_rear": [
+   -181,
+   591
+  ]
+ }
+}

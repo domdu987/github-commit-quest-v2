@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """assemble.py -- motion-test deliverables from the rendered frames.
     python3 assemble.py [frames_dir] [out_dir] [r11.mp4]
-frames_dir/g_%04d.png (g 522..675, post()-ed 720x1280) ->
+frames_dir/g_%04d.png (g 522..675, post25.py output 720x1280; default frames_post/) ->
   out_dir/motion_test.mp4     720x1280 30 fps, narration cut to the same range (17.40-22.53 s), captions burnt (Kanit Black 88, white,
                               5 px dark outline, centred at y 900: the channel's conform style)
   out_dir/motion_vs_R11.mp4   1080x960: ours (left) | R11 from its beat start 7.233 s (the admiral mock, right), each 540x960, our audio
@@ -14,7 +14,7 @@ PROJ = os.path.dirname(os.path.dirname(GATE))
 G0, G1 = 522, 676                                         # g1 exclusive
 FPS = 30
 R11_T0 = 7.233                                            # R11 cut into the admiral's "war or the circus?" beat (frame 217)
-FR = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, "frames")
+FR = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, "frames_post")
 OUT = sys.argv[2] if len(sys.argv) > 2 else GATE
 R11 = sys.argv[3] if len(sys.argv) > 3 else os.environ.get("R11", "")
 TMP = os.path.join(HERE, "work", "asm")
