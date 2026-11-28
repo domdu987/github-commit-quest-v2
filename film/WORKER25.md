@@ -10,6 +10,17 @@ Work autonomously: the client has approved the look and the set. Do not ask for 
 - **Captions:** PROJ/film25/script/captions.json, with t in film seconds. Sentence starts are in PROJ/film25/audio/timing.json.
 - **Frames:** 30 fps, 720x1280, N = 2093 (g 0..2092). Use g = round(t*30) for both shot bounds and in-shot events. g1 is EXCLUSIVE (= the next shot's g0).
 
+## COLOUR GATES, FINAL (producer, 28 Nov 05:21; overrides every colour target above)
+- **HARD gates, checked per finished take with the characters in** (`light_metrics.py take.mkv` prints PASS/MISS on these only):
+  - luma 0.46-0.56
+  - mean saturation ≥ 0.42
+  - no colour cast: |mean a*| and |mean b*| ≤ 6
+  - no clipped channels
+  - puppet faces exactly #fef7f6
+- **Everything else is a printed GUIDE:** lc, p1/p99, chroma, sat p98, hue shares and colourfulness M.
+- **Judge by eye against R11:** pure clean hues, nothing muddy, nothing tinted.
+- **Grade:** gentle, using the set's post() (vibrance about 1.3-1.5, no hue shifts). Puppets are composited ungraded, so do NOT pass puppet pixels through any extra grade of your own.
+
 ## Look (client-approved "vivid", 28 Nov)
 - Golden-hour key and a strong bounce, as provided by the set. Read PROJ/LIGHT_SPEC.md (v2) for the spirit.
 - **Colour targets** (`python3 PROJ/film25/tools/light_metrics.py take.mkv`; they override LIGHT_SPEC's saturation range):

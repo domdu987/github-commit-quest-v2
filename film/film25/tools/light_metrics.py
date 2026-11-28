@@ -5,7 +5,8 @@ local contrast = mean abs neighbour luma diff on a 90x160 grey area (box) resize
 saturation = mean HSV saturation (180x320), chroma = mean Lab C* (180x320); neutral WB: |mean a*| <= 4 and |mean b*| <= 4 (sRGB->Lab D65; R11 reads a +2.6, b +1.7, matching the producer), HSV sat p98 >= 0.85, of coloured px (S>0.15,V>0.15) blue/cyan (H 170-260) <= 45 % and warm (H <70 or >=330) >= 40 %; neut = share of S<0.12 (info only); M = Hasler-Susstrunk colourfulness (180x320) >= 65. Captions are not masked."""
 import sys, subprocess, tempfile, glob, os, numpy as np
 from PIL import Image
-T = dict(luma=(0.48, 0.55), p1=(0.02, 0.08), p99=(0.90, 0.95), lc=(0.038, 9), sat=(0.45, 0.50), chroma=(28, 999), a_mean=(-4, 4), b_mean=(-4, 4), sat_p98=(0.85, 1.01), blue_frac=(0, 0.45), warm_frac=(0.40, 1.01), M=(65, 999))  # film25 vivid target (producer, 28 Nov) overrides LIGHT_SPEC v2 sat 0.28-0.34
+T = dict(luma=(0.46, 0.56), sat=(0.42, 1.01), a_mean=(-6, 6), b_mean=(-6, 6))   # HARD gates (producer, 28 Nov 05:21), judged on finished takes with characters
+G = dict(p1=(0.02, 0.08), p99=(0.90, 0.95), lc=(0.038, 9), chroma=(28, 999), sat_p98=(0.85, 1.01), blue_frac=(0, 0.45), warm_frac=(0.40, 1.01), M=(65, 999))   # guides only
 def hasler(s):
     R, G, B = (s[..., 0] * 255, s[..., 1] * 255, s[..., 2] * 255)
     rg = R - G; yb = 0.5 * (R + G) - B
@@ -34,7 +35,8 @@ def m(im):
                 neutral=(S < 0.12).mean(), M=hasler(s))
 def fmt(name, d):
     ok = all(T[k][0] <= d[k] <= T[k][1] for k in T)
-    return f"{name:38s} luma {d['luma']:.3f} p1 {d['p1']:.3f} p99 {d['p99']:.3f} lc {d['lc']:.4f} sat {d['sat']:.3f} chroma {d['chroma']:.1f} a {d['a_mean']:+.1f} b {d['b_mean']:+.1f} p98 {d['sat_p98']:.2f} blue {d['blue_frac']:.2f} warm {d['warm_frac']:.2f} neut {d['neutral']:.2f} M {d['M']:.0f}  {'PASS' if ok else 'MISS'}"
+    guide = [k for k in G if not G[k][0] <= d[k] <= G[k][1]]
+    return f"{name:38s} luma {d['luma']:.3f} p1 {d['p1']:.3f} p99 {d['p99']:.3f} lc {d['lc']:.4f} sat {d['sat']:.3f} chroma {d['chroma']:.1f} a {d['a_mean']:+.1f} b {d['b_mean']:+.1f} p98 {d['sat_p98']:.2f} blue {d['blue_frac']:.2f} warm {d['warm_frac']:.2f} neut {d['neutral']:.2f} M {d['M']:.0f}  {'PASS' if ok else 'MISS'}" + (f"  (guides off: {','.join(guide)})" if guide else '')
 for p in sys.argv[1:]:
     if p.endswith(('.mp4', '.mkv', '.mov')):
         td = tempfile.mkdtemp(); subprocess.run(['ffmpeg', '-v', 'error', '-i', p, '-vf', 'fps=1', f'{td}/f%03d.png'], check=True)
