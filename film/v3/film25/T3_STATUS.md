@@ -14,4 +14,4 @@ Pipeline: film/v3/film25/s21/{d25,post_d,finish,qa_write}.py (Look A: beauty 24 
 | s26 (row 26) | g 785-816 | 84 s | take.mkv (1 fr) luma 0.495 p1 0.097 p99 0.974 lc 0.0547 sat 0.429 chroma 26.7 a +2.2 b +3.9 p98 0.95 blue 0.36 warm 0.45 neut 0.06 M 85 PASS (guides off: p1,p99,chroma) |
 | s66 (row 66) | g 1932-1960 (29) | ~60 s | take.mkv (1 fr)                        luma 0.495 p1 0.136 p99 0.860 lc 0.0472 sat 0.424 chroma 29.8 a +1.5 b +3.5 p98 0.95 blue 0.47 warm 0.33 neut 0.05 M 88  PASS  (guides off: p1,p99,blue_frac,warm_frac) |
 | s18 (row 18) | g 485-521 | 43 s | take.mkv (1 fr) luma 0.513 p1 0.123 p99 0.879 lc 0.0303 sat 0.456 chroma 36.1 a -0.9 b +1.1 p98 0.98 blue 0.41 warm 0.14 neut 0.08 M 80 PASS (guides off: p1,p99,lc,warm_frac) |
-| s67 (row 67) | g 1961-2008 | 40 s | take.mkv (2 fr) luma 0.600 p1 0.076 p99 0.850 lc 0.0447 sat 0.341 chroma 23.6 a +4.0 b +0.2 p98 0.99 blue 0.45 warm 0.49 neut 0.10 M 69 MISS (guides off: p99,chroma) |
+| s67 (row 67) | g 1961-2008 | 40 s | take.mkv (2 fr) luma 0.461 p1 0.049 p99 0.661 lc 0.0375 sat 0.411 chroma 26.2 a +7.4 b -4.2 p98 1.00 blue 0.42 warm 0.49 neut 0.04 M 72 MISS (guides off: p99,lc,chroma) |

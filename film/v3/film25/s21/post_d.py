@@ -113,7 +113,7 @@ def compose(g, wd, out_dir, edge=0.18, wb=None, gamma=None, vib=2.0, gclip=(0.55
     s4 = (slice(None, None, 4), slice(None, None, 4))
     gains = np.ones(3, np.float32); e = 1.0
     for it in range(7):
-        lo, hi = 0.8, P.EXP_MAX
+        lo, hi = 0.3, P.EXP_MAX
         for _ in range(16):
             e = (lo + hi) / 2
             bg4 = P.vibrance(tone(e, gains)[s4], vib)

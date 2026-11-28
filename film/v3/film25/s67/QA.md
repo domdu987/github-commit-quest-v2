@@ -8,15 +8,15 @@
 
 ## light_metrics
 ```
-take.mkv (2 fr)                        luma 0.600 p1 0.076 p99 0.850 lc 0.0447 sat 0.341 chroma 23.6 a +4.0 b +0.2 p98 0.99 blue 0.45 warm 0.49 neut 0.10 M 69  MISS  (guides off: p99,chroma)
+take.mkv (2 fr)                        luma 0.461 p1 0.049 p99 0.661 lc 0.0375 sat 0.411 chroma 26.2 a +7.4 b -4.2 p98 1.00 blue 0.42 warm 0.49 neut 0.04 M 72  MISS  (guides off: p99,lc,chroma)
 ```
 ## qa_jitter
 ```
-overall median jitter px 0.3
+overall median jitter px 0.25
 ```
 ## Framing numbers (from the per-frame meta)
 - highest head top y 0 px (rule: heads above y 880 means head bottoms; head tops far above), lowest feet y 0 px (feet are below the frame edge when > 1280 or above y 860 when in frame).
 ## Notes
-- Wide (W) street shot: the Mark I rolls toward the camera up the cobbled street of Flers (pose_on_ground yaw 270, set_drive every frame), brick houses both sides, church tower, blue sky. No DOF, no backdrop, 70 % scale / 14 samples. Graded vibrance 1.8, wb a* +1 b* +4.5. (First attempt had the tank out of sight; re-rendered.)
+- Wide (W) street shot: the Mark I rolls toward the camera up the cobbled street of Flers (pose_on_ground yaw 270, set_drive every frame), brick houses both sides, church tower, blue sky. No DOF, no backdrop, 70 % scale / 14 samples. Graded vibrance 2.25, wb a* +1 b* +4.5 (the bright washed sky needed it). First attempt had the tank out of sight; re-rendered.
 ## Files
 shot.py, d25.py / c25.py / post_d.py / finish.py (in ../s21), meta.json, contact.jpg, QA_AUTO.md, phone_sheet.jpg, take.mkv (frames, raw and work stay out of git).
