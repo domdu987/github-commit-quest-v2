@@ -29,3 +29,4 @@
 - row 34: g 982-1015 (34 fr) | 38 s/frame | take.mkv (1 fr)                        luma 0.494 p1 0.086 p99 0.974 lc 0.0429 sat 0.394 chroma 24.5 a +5.1 b +5.2 p98 1.00 blue 0.18 warm 0.64 neut 0.08 M 90  MISS  (guides off: p1,p99,chroma)
 - row 63: g 1843-1879 (37 fr) | 38 s/frame | take.mkv (1 fr)                        luma 0.499 p1 0.098 p99 0.974 lc 0.0433 sat 0.423 chroma 26.5 a +2.5 b +5.0 p98 1.00 blue 0.25 warm 0.59 neut 0.10 M 99  PASS  (guides off: p1,p99,chroma)
 - row 34: g 982-1015 (34 fr) | 38 s/frame | take.mkv (1 fr)                        luma 0.494 p1 0.086 p99 0.974 lc 0.0429 sat 0.394 chroma 24.5 a +5.1 b +5.2 p98 1.00 blue 0.18 warm 0.64 neut 0.08 M 90  MISS  (guides off: p1,p99,chroma)
+- row 1+2: g 0-43 (44 fr) | 49 s/frame | take.mkv (1 fr)                        luma 0.497 p1 0.138 p99 0.828 lc 0.0376 sat 0.379 chroma 22.5 a -0.7 b -1.7 p98 0.95 blue 0.49 warm 0.34 neut 0.13 M 74  MISS  (guides off: p1,p99,lc,chroma,blue_frac,warm_frac)
