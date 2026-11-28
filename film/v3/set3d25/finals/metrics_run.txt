@@ -36,3 +36,7 @@ fac_side.png                           luma 0.510 p1 0.031 p99 0.914 lc 0.0629 s
 render 128.0 s wall, 507.6 s cpu
 fac_bench.png                          luma 0.587 p1 0.013 p99 0.894 lc 0.0677 sat 0.538 chroma 38.9  MISS
 render 123.7 s wall, 484.8 s cpu
+fac_chassis.png                        luma 0.510 p1 0.033 p99 0.915 lc 0.0594 sat 0.478 chroma 31.3  PASS
+render 123.0 s wall, 484.5 s cpu
+fac_plates.png                         luma 0.510 p1 0.043 p99 0.922 lc 0.0505 sat 0.478 chroma 30.5  PASS
+render 129.3 s wall, 511.2 s cpu

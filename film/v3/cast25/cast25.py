@@ -43,18 +43,19 @@ _f = C6._f
 _lin = C9._lin
 _hash = C24._hash
 _O25 = {}
-_POSE25 = {"hat_off": 0.0, "hat_up": 0.0, "mg_gy": None, "paint": "white", "t": 0.0, "plan_dx": 1.25}
+_POSE25 = {"hat_off": 0.0, "hat_up": 0.0, "mg_gy": None, "paint": "white", "t": 0.0, "plan_dx": 1.25, "pour": 0.0, "dirt": 0.0, "swing": 0.0, "fire": 0.0, "glasses_dy": 0.0}
 
 cycle, talk_mouth, blink_at, NOD = C6.cycle, C6.talk_mouth, C6.blink_at, C6.NOD
 CYCLE_MODES = C6.CYCLE_MODES
 
 # ============================================================================= colours
-BRASS = dict(light="#fff0a8", base="#e2b442", dark="#a07818", deep="#6a4c0c")
+BRASS = dict(light="#fff6b0", base="#f6c21c", dark="#b8820a", deep="#6e4c06")
 STEEL = dict(light="#b4bcc4", base="#78828c", dark="#464e58", deep="#2a3038")
 GALV = dict(light="#eef2f4", base="#a9b4bc", dark="#66727c")
 WOOD = dict(light="#e0b47a", base="#b07a44", dark="#6e4a26")
 LEATHER = dict(light="#b8743c", base="#7a4624", dark="#4a2a14")
-PAINTS = {"white": "#f4f0e4", "black": "#1c1a20", "red": "#c8302a", "green": "#3a8a4a", "grey": "#8a8e96"}
+EARTH = dict(light="#b07c46", base="#7c5230", dark="#4c3018")
+PAINTS = {"white": "#f4f0e4", "black": "#1c1a20", "red": "#e02a22", "green": "#3a8a4a", "grey": "#8a8e96"}
 
 
 def _gl(k, name, light, base, dark, x0=-0.5, x1=0.5, mid=0.32):
@@ -826,6 +827,128 @@ def _helmet_side(k, cx, cy, up_deg, sc, col, cover=False):
     return "".join(o)
 
 
+CAN_ROSE = (0.66, 0.05)         # the rose of the watering can, can frame (hand at the origin, spout to +x), before the pour tilt
+CAN_TILT = 64.0                 # degrees of tilt at pour25 = 1
+BOARD_TANK = (-0.80, 0.10)      # the chalk tank on the board (board frame: hand at the origin, board to -x)
+
+
+def _can_body(k):
+    """galvanised watering can (upright, spout to +x): cylinder body, arched top handle gripped at the origin, rear loop handle, long
+    spout rising to a round rose with holes.  No letters."""
+    o = []
+    g = _lin(k, "wc", GALV["light"], GALV["base"], GALV["dark"], -0.23, 0, 0.23, 0)
+    # rear loop handle (behind the body)
+    o.append('<path d="M-0.20,0.22 Q-0.46,0.20 -0.44,0.36 Q-0.42,0.50 -0.20,0.46" fill="none" stroke="%s" stroke-width="0.058" stroke-linecap="round"/>' % k.ink)
+    o.append('<path d="M-0.20,0.22 Q-0.46,0.20 -0.44,0.36 Q-0.42,0.50 -0.20,0.46" fill="none" stroke="%s" stroke-width="0.030" stroke-linecap="round"/>' % k.c(GALV["base"]))
+    # spout: a tapered tube from the low front of the body up to the rose
+    sp = "M0.17,0.36 L0.58,0.02 L0.68,0.10 L0.20,0.52 Z"
+    o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.022" stroke-linejoin="round"/>' % (sp, _lin(k, "ws", GALV["light"], GALV["base"], GALV["dark"], 0.3, -0.1, 0.5, 0.5), k.ink))
+    o.append('<path d="M0.24,0.38 L0.58,0.08" stroke="#ffffff" stroke-width="0.012" stroke-linecap="round" opacity="0.75"/>')
+    o.append('<path d="M0.30,0.455 L0.40,0.37" stroke="%s" stroke-width="0.010" opacity="0.7"/>' % k.c(GALV["dark"]))
+    # body
+    o.append('<path d="M-0.225,0.17 L0.225,0.17 L0.205,0.55 Q0,0.58 -0.205,0.55 Z" fill="%s" stroke="%s" stroke-width="0.022" stroke-linejoin="round"/>' % (g, k.ink))
+    for y in (0.30, 0.43):
+        o.append('<path d="M%.4f,%.4f Q0,%.4f %.4f,%.4f" fill="none" stroke="%s" stroke-width="0.010" opacity="0.75"/>' % (-0.222 + (y - 0.17) * 0.05, y, y + 0.03, 0.222 - (y - 0.17) * 0.05, y, k.c(GALV["dark"])))
+    o.append('<ellipse cx="0" cy="0.17" rx="0.225" ry="0.048" fill="%s" stroke="%s" stroke-width="0.020"/>' % (k.c(GALV["dark"]), k.ink))
+    o.append('<ellipse cx="0" cy="0.178" rx="0.190" ry="0.030" fill="%s"/>' % k.c("#5a9acc"))
+    o.append('<path d="M-0.19,0.22 Q-0.21,0.38 -0.195,0.50" fill="none" stroke="#ffffff" stroke-width="0.012" stroke-linecap="round" opacity="0.55"/>')
+    # top handle: an arch over the body from the rear rim to the spout side, the hand grips its crown at the origin
+    arch = "M-0.20,0.17 Q-0.20,-0.07 0,-0.06 Q0.20,-0.07 0.26,0.20"
+    o.append('<path d="%s" fill="none" stroke="%s" stroke-width="0.034" stroke-linecap="round"/>' % (arch, k.ink))
+    o.append('<path d="%s" fill="none" stroke="%s" stroke-width="0.014" stroke-linecap="round"/>' % (arch, k.c(GALV["light"])))
+    # rose: a flared dish across the end of the spout, with holes
+    o.append('<g transform="translate(0.66 0.05) rotate(-42)"><path d="M-0.03,-0.050 L0.07,-0.115 Q0.115,0 0.07,0.115 L-0.03,0.050 Z" fill="%s" stroke="%s" stroke-width="0.020" stroke-linejoin="round"/>'
+             '<ellipse cx="0.075" cy="0" rx="0.030" ry="0.108" fill="%s" stroke="%s" stroke-width="0.012"/>'
+             '<circle cx="0.078" cy="-0.060" r="0.010" fill="%s"/><circle cx="0.078" cy="-0.020" r="0.010" fill="%s"/><circle cx="0.078" cy="0.020" r="0.010" fill="%s"/><circle cx="0.078" cy="0.060" r="0.010" fill="%s"/></g>'
+             % (_lin(k, "wr", GALV["light"], GALV["base"], GALV["dark"], 0, -0.1, 0, 0.1), k.ink, k.c(GALV["dark"]), k.ink, k.ink, k.ink, k.ink, k.ink))
+    return "".join(o)
+
+
+def _can_stream(k, x0, y0, L, t):
+    """a thin stream of water falling straight down (screen) from (x0, y0), length L, drops running down with t."""
+    if L < 0.02:
+        return ""
+    o = []
+    for i, dx in enumerate((-0.030, 0.0, 0.030)):
+        xs = x0 + dx * 0.6
+        xe = x0 + dx * 1.6 + 0.05 * (L / 1.0)
+        o.append('<path d="M%.4f,%.4f Q%.4f,%.4f %.4f,%.4f" fill="none" stroke="%s" stroke-width="0.020" stroke-linecap="round" stroke-dasharray="0.10 0.035" stroke-dashoffset="%.4f" opacity="0.95"/>'
+                 % (xs, y0, (xs + xe) / 2 + 0.01, y0 + L * 0.55, xe, y0 + L, k.c("#78c4ec"), -((t * 0.9 + i * 0.043) % 0.135)))
+    o.append('<path d="M%.4f,%.4f Q%.4f,%.4f %.4f,%.4f" fill="none" stroke="#ffffff" stroke-width="0.010" stroke-linecap="round" opacity="0.8"/>'
+             % (x0, y0, x0 + 0.03, y0 + L * 0.55, x0 + 0.05 * L + 0.01, y0 + L))
+    o.append('<ellipse cx="%.4f" cy="%.4f" rx="0.060" ry="0.016" fill="%s" opacity="0.8"/>' % (x0 + 0.05 * L + 0.01, y0 + L + 0.006, k.c("#78c4ec")))
+    return "".join(o)
+
+
+def _toy_tank_body(k, swing):
+    """a tin toy Mark I (rhomboid) hanging by a string from the hand (origin); the whole thing swings by `swing` degrees about the hand."""
+    o = ['<g transform="rotate(%.3f)">' % swing]
+    o.append('<path d="M0,0 L0,0.40" stroke="%s" stroke-width="0.026" stroke-linecap="round"/><path d="M0,0 L0,0.40" stroke="%s" stroke-width="0.011" stroke-linecap="round"/>' % (k.ink, k.c("#efe2b8")))
+    o.append('<g transform="translate(0 0.40) scale(0.86)">')
+    # track loop = the rhomboid outline (front steeper than the tail), then the hull, sponson, cab, gun, tail wheel
+    loop = "M-0.34,0.27 Q-0.40,0.27 -0.36,0.21 L-0.19,0.035 Q-0.16,0.0 -0.11,0.0 L0.16,-0.01 Q0.21,-0.01 0.24,0.035 L0.38,0.21 Q0.43,0.27 0.36,0.27 Z"
+    o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.075" stroke-linejoin="round"/>' % (loop, k.c("#46522a"), k.ink))
+    o.append('<path d="%s" fill="none" stroke="%s" stroke-width="0.052" stroke-linejoin="round"/>' % (loop, k.c("#5c6c34")))
+    o.append('<path d="%s" fill="none" stroke="%s" stroke-width="0.052" stroke-linejoin="round" stroke-dasharray="0.014 0.030"/>' % (loop, k.c("#9aae58")))
+    hull = "M-0.24,0.20 L-0.12,0.06 L0.17,0.05 L0.30,0.20 Z"
+    o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (hull, _lin(k, "ty", "#a4b858", "#7a9238", "#566c24", 0, 0.05, 0, 0.20), k.ink))
+    o.append('<path d="M-0.04,-0.005 L-0.03,-0.085 L0.10,-0.085 L0.12,-0.005 Z" fill="%s" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (k.c("#6c8430"), k.ink))
+    o.append('<path d="M0.0,-0.060 L0.085,-0.060" stroke="%s" stroke-width="0.016" stroke-linecap="round"/>' % k.ink)
+    o.append('<path d="M-0.10,0.085 L0.12,0.085 L0.12,0.185 L-0.10,0.185 Z" fill="%s" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (k.c("#8aa240"), k.ink))
+    o.append('<path d="M0.12,0.125 L0.30,0.125" stroke="%s" stroke-width="0.040" stroke-linecap="round"/><path d="M0.12,0.125 L0.30,0.125" stroke="%s" stroke-width="0.020" stroke-linecap="round"/>' % (k.ink, k.c("#6a7480")))
+    o.append('<path d="M-0.34,0.265 L-0.46,0.20" stroke="%s" stroke-width="0.034" stroke-linecap="round"/><circle cx="-0.47" cy="0.20" r="0.050" fill="%s" stroke="%s" stroke-width="0.016"/>' % (k.ink, k.c("#caa030"), k.ink))
+    o.append('<path d="M-0.18,0.06 L-0.04,0.045" stroke="#ffffff" stroke-width="0.010" stroke-linecap="round" opacity="0.6"/>')
+    o.append('</g></g>')
+    return "".join(o)
+
+
+def _chalk(k, pts, w=0.030, closed=False, wob=0.006, seed=0.0):
+    """a chalk stroke through pts: slightly wobbly, a second thin pass for the grain.  White lines only."""
+    q = []
+    for i, (x, y) in enumerate(pts):
+        q.append((x + wob * math.sin(i * 2.3 + seed), y + wob * math.cos(i * 1.7 + seed * 1.3)))
+    d = "M%.4f,%.4f" % q[0] + "".join("L%.4f,%.4f" % p for p in q[1:]) + ("Z" if closed else "")
+    d2 = "M%.4f,%.4f" % (q[0][0] + 0.004, q[0][1] - 0.004) + "".join("L%.4f,%.4f" % (p[0] - 0.004, p[1] + 0.004) for p in q[1:]) + ("Z" if closed else "")
+    return ('<path d="%s" fill="none" stroke="#f6f4ea" stroke-width="%.4f" stroke-linecap="round" stroke-linejoin="round" opacity="0.96"/>'
+            '<path d="%s" fill="none" stroke="#ffffff" stroke-width="%.4f" stroke-linecap="round" stroke-linejoin="round" opacity="0.45" stroke-dasharray="0.06 0.03"/>' % (d, w, d2, w * 0.45))
+
+
+def _chalkboard_body(k):
+    """a held slate: wooden frame 1.6 x 1.1 D, the hand (origin) grips the right edge, the board hangs to -x.  The drawing is white chalk
+    lines only: two ground lines, the trench between them, and a side-on rhomboid tank straddling the gap.  No letters, no arrows."""
+    x0, x1, y0, y1 = -1.60, 0.0, -0.46, 0.64
+    o = []
+    fr = _lin(k, "cbf", WOOD["light"], WOOD["base"], WOOD["dark"], 0, y0, 0, y1)
+    o.append('<rect x="%.4f" y="%.4f" width="%.4f" height="%.4f" rx="0.045" fill="%s" stroke="%s" stroke-width="0.022" stroke-linejoin="round"/>' % (x0, y0, x1 - x0, y1 - y0, fr, k.ink))
+    fi = 0.075
+    o.append('<rect x="%.4f" y="%.4f" width="%.4f" height="%.4f" rx="0.018" fill="%s" stroke="%s" stroke-width="0.014"/>' % (x0 + fi, y0 + fi, x1 - x0 - 2 * fi, y1 - y0 - 2 * fi,
+                                                                                                                         _lin(k, "cbs", "#2f4238", "#1e2e26", "#141e19", 0, y0, 0, y1), k.ink))
+    o.append('<path d="M%.4f,%.4f L%.4f,%.4f M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="0.010" opacity="0.8"/>' % (x0 + 0.03, y0 + 0.03, x1 - 0.03, y0 + 0.03, x0 + 0.03, y0 + 0.05, x0 + 0.03, y1 - 0.03, k.c(WOOD["light"])))
+    # rubbed-out smudges (dust, no shapes that read as marks)
+    o.append('<ellipse cx="-0.50" cy="0.40" rx="0.30" ry="0.10" fill="#ffffff" opacity="0.045"/><ellipse cx="-1.18" cy="-0.22" rx="0.26" ry="0.07" fill="#ffffff" opacity="0.04"/>')
+    # ground lines either side of the trench, and the trench itself (a U between them)
+    o.append(_chalk(k, [(-1.47, 0.20), (-1.26, 0.195), (-1.06, 0.19)], 0.032, seed=1.0))
+    o.append(_chalk(k, [(-0.54, 0.19), (-0.34, 0.195), (-0.13, 0.20)], 0.032, seed=2.0))
+    o.append(_chalk(k, [(-1.06, 0.19), (-1.02, 0.40), (-0.98, 0.50), (-0.62, 0.50), (-0.58, 0.40), (-0.54, 0.19)], 0.026, seed=3.0))
+    # the tank: a side-on rhomboid (track loop outline, steeper nose), tilted nose-up across the gap
+    cx, cy, tl = -0.80, -0.02, -8.0
+    ca, sa = math.cos(math.radians(tl)), math.sin(math.radians(tl))
+
+    def T(p):
+        dx, dy = p[0] - cx, p[1] - cy
+        return (cx + dx * ca - dy * sa, cy + dx * sa + dy * ca)
+    loop = [(-1.30, 0.16), (-1.24, 0.12), (-1.04, -0.12), (-0.96, -0.16), (-0.62, -0.20), (-0.52, -0.17), (-0.34, 0.06), (-0.30, 0.13), (-0.34, 0.17), (-1.26, 0.17)]
+    o.append(_chalk(k, [T(p) for p in loop], 0.030, closed=True, wob=0.004, seed=4.0))
+    inner = [(-1.12, 0.09), (-0.99, -0.08), (-0.64, -0.12), (-0.50, 0.08)]
+    o.append(_chalk(k, [T(p) for p in inner], 0.018, seed=5.0))
+    o.append(_chalk(k, [T(p) for p in [(-0.90, 0.02), (-0.90, -0.05), (-0.72, -0.05), (-0.72, 0.02), (-0.90, 0.02)]], 0.018, seed=6.0))
+    o.append(_chalk(k, [T(p) for p in [(-0.72, -0.015), (-0.44, -0.03)]], 0.024, seed=7.0))
+    o.append(_chalk(k, [T(p) for p in [(-0.80, -0.05), (-0.82, -0.19), (-0.70, -0.19), (-0.69, -0.12)]], 0.018, seed=8.0))
+    # a lip with a stub of chalk resting on it
+    o.append('<path d="M-1.45,0.585 L-1.18,0.585" stroke="#e8e6dc" stroke-width="0.030" stroke-linecap="round"/>')
+    return "".join(o)
+
+
 def _prop_body(k, kind, ang=0.0):
     o = []
     if kind == "hammer25":
@@ -879,10 +1002,10 @@ def _prop_body(k, kind, ang=0.0):
         notch = (0.60 + 0.03 * math.sin(ph - 4.2), L - 0.15)
         pts = top + [notch] + bot[::-1]
         fl = _poly_d(pts)
-        o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.018" stroke-linejoin="round"/>' % (fl, k.c("#d8402a"), k.ink))
+        o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.018" stroke-linejoin="round"/>' % (fl, k.c("#ee2a1e"), k.ink))
         for i in range(1, 8, 2):
             a, b = top[i], bot[i]
-            o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="0.010" opacity="0.6"/>' % (a[0], a[1], b[0], b[1], k.c("#8a2418")))
+            o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="0.010" opacity="0.6"/>' % (a[0], a[1], b[0], b[1], k.c("#9a1410")))
         o.append('<path d="M0.80,0.04 L0.44,0.04" stroke="#ffffff" stroke-width="0.012" stroke-linecap="round" opacity="0.4"/>')
     elif kind == "helmet_stick25":
         o.append('<path d="M-0.30,-0.020 L1.98,-0.016 L1.98,0.016 L-0.30,0.020 Q-0.33,0 -0.30,-0.020 Z" fill="%s" stroke="%s" stroke-width="0.014" stroke-linejoin="round"/>' % (_wood_grad(k, "ss", -0.02, 0.02), k.ink))
@@ -924,6 +1047,43 @@ def _prop_body(k, kind, ang=0.0):
                  % (drop - 0.03, drop - 0.03, k.ink, drop - 0.03, drop - 0.03, k.c(STEEL["base"])))
         o.append('<path d="M-0.10,%.4f L1.02,%.4f" stroke="%s" stroke-width="0.060" stroke-linecap="round"/><path d="M-0.10,%.4f L1.02,%.4f" stroke="%s" stroke-width="0.036" stroke-linecap="round"/>'
                  % (drop, drop, k.ink, drop, drop, k.c(STEEL["dark"])))
+    elif kind == "shovel25":
+        # trench spade: wooden D-handle at the hand (origin), long ash shaft, steel socket and a broad rounded blade (face on);
+        # pose key dirt25 0..1 heaps a clump of earth on the blade (the clump sits on the -y side = the 'up' side of the blade)
+        o.append('<path d="M0.10,-0.026 L1.10,-0.022 L1.10,0.022 L0.10,0.026 Z" fill="%s" stroke="%s" stroke-width="0.014" stroke-linejoin="round"/>' % (_wood_grad(k, "sw", -0.03, 0.03), k.ink))
+        o.append('<path d="M0.16,-0.010 L1.04,-0.008" stroke="%s" stroke-width="0.007" opacity="0.7"/>' % k.c(WOOD["light"]))
+        o.append('<path d="M0.16,-0.040 L0.07,-0.145 Q-0.02,-0.175 -0.085,-0.125 L-0.085,0.125 Q-0.02,0.175 0.07,0.145 L0.16,0.040 Z M0.07,-0.085 L-0.03,-0.085 L-0.03,0.085 L0.07,0.085 Z" '
+                 'fill="%s" fill-rule="evenodd" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (_wood_grad(k, "sd", -0.15, 0.15), k.ink))
+        o.append('<path d="M-0.065,-0.105 L-0.065,0.105" stroke="%s" stroke-width="0.008" opacity="0.7"/>' % k.c(WOOD["light"]))
+        gs = _lin(k, "sb", "#c4ccd4", "#8896a2", "#4e5a66", 0, -0.17, 0, 0.17)
+        o.append('<path d="M1.06,-0.042 L1.20,-0.080 L1.20,0.080 L1.06,0.042 Z" fill="%s" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (k.c(STEEL["dark"]), k.ink))
+        o.append('<path d="M1.18,-0.165 L1.56,-0.165 Q1.74,-0.115 1.78,0 Q1.74,0.115 1.56,0.165 L1.18,0.165 Z" fill="%s" stroke="%s" stroke-width="0.020" stroke-linejoin="round"/>' % (gs, k.ink))
+        o.append('<path d="M1.24,-0.125 L1.58,-0.125 Q1.68,-0.100 1.71,-0.040" fill="none" stroke="#ffffff" stroke-width="0.014" stroke-linecap="round" opacity="0.75"/>')
+        o.append('<path d="M1.22,0.0 L1.66,0.0" stroke="%s" stroke-width="0.010" opacity="0.6"/>' % k.c(STEEL["deep"]))
+        o.append(_circ((1.24, -0.10), 0.014, k.c(STEEL["deep"]), k, 0.005) + _circ((1.24, 0.10), 0.014, k.c(STEEL["deep"]), k, 0.005))
+        dd = _POSE25["dirt"]
+        if dd > 0.02:
+            lump = [(1.14, 0.04), (1.14, -0.06), (1.20, -0.14), (1.31, -0.28), (1.44, -0.35), (1.56, -0.30), (1.66, -0.19), (1.74, -0.07), (1.74, 0.04), (1.45, 0.06)]
+            pts = [(x, 0.04 + (y - 0.04) * (0.25 + 0.75 * dd)) if y < 0.04 else (x, y) for (x, y) in lump]
+            o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.020" stroke-linejoin="round"/>' % (P._smooth_closed(pts), k.c(EARTH["base"]), k.ink))
+            for (x, y, r, c) in ((1.30, -0.12, 0.034, "dark"), (1.50, -0.16, 0.040, "light"), (1.62, -0.07, 0.026, "dark"), (1.40, -0.04, 0.024, "light"), (1.24, -0.04, 0.020, "dark")):
+                o.append('<circle cx="%.4f" cy="%.4f" r="%.4f" fill="%s" opacity="0.85"/>' % (x, 0.04 + (y - 0.04) * (0.25 + 0.75 * dd), r * (0.6 + 0.4 * dd), k.c(EARTH[c])))
+            if dd > 0.5:
+                for (x, y, r) in ((1.38, -0.52, 0.030), (1.60, -0.58, 0.022), (1.50, -0.70, 0.016), (1.28, -0.62, 0.018)):
+                    o.append('<circle cx="%.4f" cy="%.4f" r="%.4f" fill="%s" stroke="%s" stroke-width="0.008" opacity="%.2f"/>' % (x, y * (0.6 + 0.4 * dd), r, k.c(EARTH["base"]), k.ink, min(1.0, (dd - 0.5) * 4)))
+    elif kind == "tin_cup25":
+        # enamel tin mug, mouth up (-y), the handle on the hand's side (origin = the handle), the body to +x
+        ge = _lin(k, "tc", "#ffffff", "#efe9d4", "#b9b39c", 0.08, 0, 0.40, 0)
+        o.append('<path d="M0.10,-0.080 Q-0.10,-0.100 -0.09,0.0 Q-0.10,0.105 0.11,0.085" fill="none" stroke="%s" stroke-width="0.058" stroke-linecap="round"/>' % k.ink)
+        o.append('<path d="M0.10,-0.080 Q-0.10,-0.100 -0.09,0.0 Q-0.10,0.105 0.11,0.085" fill="none" stroke="%s" stroke-width="0.032" stroke-linecap="round"/>' % k.c("#efe9d4"))
+        o.append('<path d="M0.08,-0.150 L0.40,-0.150 L0.375,0.150 Q0.24,0.185 0.105,0.150 Z" fill="%s" stroke="%s" stroke-width="0.020" stroke-linejoin="round"/>' % (ge, k.ink))
+        o.append('<path d="M0.081,-0.150 L0.399,-0.150 L0.396,-0.108 Q0.24,-0.082 0.084,-0.108 Z" fill="%s" opacity="0.95"/>' % k.c("#2a5cc8"))
+        o.append('<path d="M0.10,0.115 Q0.24,0.145 0.36,0.115" fill="none" stroke="%s" stroke-width="0.014" opacity="0.9"/>' % k.c("#2a5cc8"))
+        o.append('<ellipse cx="0.24" cy="-0.150" rx="0.160" ry="0.036" fill="%s" stroke="%s" stroke-width="0.016"/>' % (k.c("#6c3a1a"), k.ink))
+        o.append('<path d="M0.12,-0.152 Q0.24,-0.138 0.36,-0.152" fill="none" stroke="#ffffff" stroke-width="0.008" opacity="0.35"/>')
+        o.append('<path d="M0.115,-0.080 Q0.110,0.0 0.125,0.090" fill="none" stroke="#ffffff" stroke-width="0.016" stroke-linecap="round" opacity="0.8"/>')
+        for (x, y) in ((0.30, 0.060), (0.34, 0.010), (0.19, 0.095)):
+            o.append('<circle cx="%.3f" cy="%.3f" r="0.011" fill="%s"/>' % (x, y, k.c("#4a4a52")))
     return "".join(o)
 
 
@@ -958,12 +1118,21 @@ def _upright_body(k, kind):
     elif kind == "helmet25":
         # a Brodie held in the hand, dome up, grip under the brim
         o.append(_helmet_side(k, 0.0, 0.0, -90.0, 0.80, dict(light="#a2a45a", base="#7c8040", dark="#4e5228")))
+    elif kind == "watering_can25":
+        o.append(_can_body(k))
+    elif kind == "toy_tank25":
+        o.append(_toy_tank_body(k, _POSE25["swing"]))
+    elif kind == "chalkboard25":
+        o.append(_chalkboard_body(k))
     return "".join(o)
 
 
-NEW_PROPS25 = ("hammer25", "spanner25", "paint_brush25", "paint_pot25", "bucket25", "ladle25", "swagger25", "flag25", "helmet_stick25", "helmet25", "plan25", "mg25")
+NEW_PROPS25 = ("hammer25", "spanner25", "paint_brush25", "paint_pot25", "bucket25", "ladle25", "swagger25", "flag25", "helmet_stick25", "helmet25", "plan25", "mg25",
+               "watering_can25", "shovel25", "tin_cup25", "toy_tank25", "chalkboard25")
 NEW_TIP25 = {"hammer25": 0.66, "spanner25": 0.82, "paint_brush25": 0.66, "paint_pot25": 0.0, "bucket25": 0.0, "ladle25": 1.12, "swagger25": 0.99, "flag25": 0.88,
-             "helmet_stick25": 2.35, "helmet25": 0.0, "plan25": 0.0, "mg25": 1.14}
+             "helmet_stick25": 2.35, "helmet25": 0.0, "plan25": 0.0, "mg25": 1.14, "watering_can25": 0.0, "shovel25": 1.78, "tin_cup25": 0.24, "toy_tank25": 0.0, "chalkboard25": 0.0}
+TIP_XY25 = {"tin_cup25": (0.24, -0.15)}       # working point (hand frame) for the props whose tip is not on the prop axis
+HUNG25 = ("watering_can25", "toy_tank25", "chalkboard25")   # held at one point and always upright (screen), not along the arm; drawn flipped for the left hand
 UPRIGHT25 = ("bucket25", "paint_pot25", "helmet25")
 PROP_EXT25 = {"hammer25": ((-0.25, -0.03), (0.66, -0.09), (0.66, 0.09), (0.33, 0.09)),
               "spanner25": ((-0.16, -0.04), (0.84, -0.14), (0.84, 0.14), (0.60, 0.05)),
@@ -973,7 +1142,9 @@ PROP_EXT25 = {"hammer25": ((-0.25, -0.03), (0.66, -0.09), (0.66, 0.09), (0.33, 0
               "flag25": ((-0.22, 0.0), (0.92, 0.0), (0.92, 0.62), (0.38, 0.62), (0.40, 0.0)),
               "helmet_stick25": ((-0.34, 0.0), (2.40, 0.0), (2.0, -0.62), (2.0, 0.62)),
               "plan25": ((0.05, -0.05), (-1.4, -0.06), (-1.4, 0.95), (-0.1, 0.95)),
-              "mg25": ((-0.15, -0.10), (1.15, -0.09), (1.15, 0.52), (-0.12, 0.62))}
+              "mg25": ((-0.15, -0.10), (1.15, -0.09), (1.15, 0.52), (-0.12, 0.62)),
+              "shovel25": ((-0.10, -0.18), (1.80, -0.18), (1.80, 0.18), (-0.10, 0.18)),
+              "tin_cup25": ((-0.12, -0.17), (0.42, -0.17), (0.42, 0.19), (-0.12, 0.19))}
 
 
 def _prop(k, kind, H, ang, sc=1.0):
@@ -983,6 +1154,8 @@ def _prop(k, kind, H, ang, sc=1.0):
     an = C8._POSE8["an"]
     side = 1.0 if key == "r" else -1.0
     nm = kind[:-2]
+    if kind in HUNG25:
+        return _hung_prop(k, kind, H, sc, key, side, an, nm)
     if kind in UPRIGHT25:
         cx, cy = H[0], H[1]
         if kind == "helmet25":
@@ -1017,8 +1190,45 @@ def _prop(k, kind, H, ang, sc=1.0):
         gy = _POSE25["mg_gy"]
         if gy is not None:
             k.ext.append((H[0], gy, 0.04))
-    tx, ty = _rot(NEW_TIP25[kind] * sc, 0.0, ang)
+    if kind == "shovel25" and _POSE25["dirt"] > 0.02:
+        qx, qy = _rot(1.45 * sc, -(0.40 if _POSE25["dirt"] < 0.5 else 0.70) * sc, ang)
+        k.ext.append((H[0] + qx, H[1] + qy, 0.03))
+    tx, ty = _rot(TIP_XY25.get(kind, (NEW_TIP25[kind], 0.0))[0] * sc, TIP_XY25.get(kind, (0.0, 0.0))[1] * sc, ang)
     tip = (H[0] + tx, H[1] + ty)
+    an[nm + "_" + key] = tip
+    return o, tip
+
+
+def _hung_prop(k, kind, H, sc, key, side, an, nm):
+    """watering_can25 (tilted by pour25, stream at pour > 0.5), toy_tank25 (swings with t), chalkboard25: held at one point of the hand,
+    always upright on the screen; the body is drawn flipped for the left hand so the spout / board points the same way round the body."""
+    sx = side * sc
+    if kind == "watering_can25":
+        tilt = _POSE25["pour"] * CAN_TILT
+        o = '<g transform="translate(%.4f %.4f) scale(%.4f %.4f) rotate(%.3f)">%s</g>' % (H[0], H[1], sx, sc, tilt, _can_body(k))
+        for (x, y) in ((-0.46, 0.20), (0.70, 0.0), (0.22, 0.58), (-0.23, 0.58), (0.0, -0.08)):
+            qx, qy = _rot(x, y, tilt)
+            k.ext.append((H[0] + side * qx * sc, H[1] + qy * sc, 0.03))
+        rx, ry = _rot(CAN_ROSE[0] + 0.05, CAN_ROSE[1], tilt)
+        tip = (H[0] + side * rx * sc, H[1] + ry * sc)
+        pr = _POSE25["pour"]
+        if pr > 0.5:
+            L = 1.25 * sc * min(1.0, (pr - 0.5) / 0.2)
+            o += _can_stream(k, tip[0], tip[1], L, _POSE25["t"])
+            k.ext.append((tip[0] + 0.06 * L, tip[1] + L, 0.04))
+    elif kind == "toy_tank25":
+        sw = _POSE25["swing"]
+        o = '<g transform="translate(%.4f %.4f) scale(%.4f %.4f)">%s</g>' % (H[0], H[1], sx, sc, _toy_tank_body(k, sw))
+        for (x, y) in ((-0.52, 0.55), (0.46, 0.55), (0.0, 0.30), (0.0, 0.76)):
+            qx, qy = _rot(x, y, sw)
+            k.ext.append((H[0] + side * qx * sc, H[1] + qy * sc, 0.03))
+        qx, qy = _rot(0.0, 0.40 + 0.12, sw)
+        tip = (H[0] + side * qx * sc, H[1] + qy * sc)
+    else:
+        o = '<g transform="translate(%.4f %.4f) scale(%.4f %.4f)">%s</g>' % (H[0], H[1], sx, sc, _chalkboard_body(k))
+        for (x, y) in ((0.02, -0.48), (-1.62, -0.48), (-1.62, 0.66), (0.02, 0.66)):
+            k.ext.append((H[0] + side * x * sc, H[1] + y * sc, 0.03))
+        tip = (H[0] + side * BOARD_TANK[0] * sc, H[1] + BOARD_TANK[1] * sc)
     an[nm + "_" + key] = tip
     return o, tip
 
@@ -1034,6 +1244,11 @@ def _norm(C, pose):
     _POSE25["paint"] = pc if isinstance(pc, str) and pc in PAINTS else "white"
     _POSE25["t"] = _f(g("t"), 0.0, -1000.0, 1000.0)
     _POSE25["plan_dx"] = _f(g("plan_w25"), 1.25, 0.6, 2.0)
+    _POSE25["pour"] = _f(g("pour25"), 0.0, 0.0, 1.0)
+    _POSE25["dirt"] = _f(g("dirt25"), 0.0, 0.0, 1.0)
+    _POSE25["swing"] = 16.0 * math.sin(2.0 * math.pi * _POSE25["t"])
+    _POSE25["fire"] = _f(g("fire25"), 0.0, 0.0, 1.0)
+    _POSE25["glasses_dy"] = _f(g("glasses_dy25"), 0.0, 0.0, 1.0)
     return _O25["_norm"](C, pose)
 
 
@@ -1057,15 +1272,15 @@ NEW_CAST25 = {
         torso_w=1.52, torso_h=1.26, profile=C2.PROFILE_ROUND, shift_pow=1.25,
         shoulder=(0.46, 0.44), arm=0.80, hip_x=0.20, leg=1.14, stance=0.07, wide=0.32, limb_w=0.072,
         eye_y=0.000, brow="stroke", brow_th=0.088, mouth="frown", moustache=True, moustache_style="walrus25", tache_scale=1.0,
-        smirk_side=1, cheeks="#e24a3a", chins=True, age_lines=True,
+        smirk_side=1, cheeks="#f23a2e", chins=True, age_lines=True,
         hat="newsboy", hat_style="peakcap25", hat_tilt=-3.0, ear_pencil=False,
-        hat_colors=dict(crown="#8f813f", crown_l="#b3a35c", crown_d="#645a24", band="#c8282a", band_d="#8a1a1c"),
+        hat_colors=dict(crown="#8f813f", crown_l="#b3a35c", crown_d="#645a24", band="#ee2418", band_d="#a8120e"),
         hair=dict(color="#ecebee", front=0.06, grow=0.20),
         costume="staff25", coat_len=0.20, coat_flare=0.10,
         sleeve=dict(color="#8f813f", dark="#645a24", cuff="#6a5c28", len=0.84, w=0.215),
         shorts=dict(color="#8f813f", dark="#645a24", cuff="#8f813f", len=0.52, w=0.205),
         boots=dict(color="#7a4020", cuff="#9a5a30", h=0.42, toe=0.18),
-        colors=dict(base="#8f813f", dark="#645a24", lapel="#a09050", shirt="#b9a964", tie="#5a3a22", tab="#cc2a2a", pants="#8f813f",
+        colors=dict(base="#8f813f", dark="#645a24", lapel="#a09050", shirt="#b9a964", tie="#5a3a22", tab="#ee2418", pants="#8f813f",
                     moustache="#f6f4f0", moustache_l="#c4c0ca"),
     ),
     # THE QUIET HERO: slim, young, clean-shaven, a rust flat cap with a red pencil behind the ear, a teal waistcoat over a cream shirt with
@@ -1076,13 +1291,13 @@ NEW_CAST25 = {
         shoulder=(0.24, 0.50), arm=0.76, hip_x=0.15, leg=1.40, stance=0.07, wide=0.26, limb_w=0.054,
         eye_y=0.040, brow="dome", brow_th=0.040, mouth="dash", moustache=False, smirk_side=1, cheeks="#eca090",
         hat="newsboy", hat_style="flatcap25", cap_style="neat", hat_tilt=-6.0, ear_pencil=True,
-        hat_colors=dict(light="#b8683a", base="#8a4a28", dark="#5a2e18", visor="#6a3a20", band="#3a2014", check="#d8985a", seam="#4a2814"),
+        hat_colors=dict(light="#ee8a40", base="#cc5a1a", dark="#8e3a0c", visor="#8a4210", band="#3a2014", check="#f4b070", seam="#5a2c0c"),
         hair=dict(color="#7a5230", front=0.08, grow=0.22),
         costume="waist25",
         sleeve=dict(color="#d2c192", dark="#a8986a", cuff="#e6d8aa", len=0.50, roll=True, w=0.140),
         shorts=dict(color="#3a3430", dark="#241f1c", cuff="#3a3430", len=0.90, w=0.125),
         boots=dict(color="#4a3220", cuff="#4a3220", h=0.10, toe=0.15),
-        colors=dict(base="#276a72", dark="#17454c", shirt="#d2c192", pants="#3a3430", pencil="#d5392f"),
+        colors=dict(base="#08909c", dark="#065a64", shirt="#d2c192", pants="#3a3430", pencil="#d5392f"),
     ),
     # Lincoln factory workers.  a: big black beard, stocky, bib overalls, baggy mustard cap;  b: short and round, bald with a ginger fringe,
     # ginger moustache, leather apron;  c: tall and lanky, boiler suit, tight slate-blue cap, big brows
@@ -1093,13 +1308,13 @@ NEW_CAST25 = {
         eye_y=0.010, brow="stroke", brow_th=0.078, mouth="dash", moustache=False, smirk_side=1, cheeks="#e48a74",
         bigbeard25=dict(color="#3a2418", dark="#1e1008", light="#7a5638"),
         hat="newsboy", hat_style="flatcap25", cap_style="baggy", hat_tilt=-5.0, ear_pencil=False,
-        hat_colors=dict(light="#d09a58", base="#a8763a", dark="#76501f", visor="#7a5224", band="#4a3014", check="#e8c488", seam="#5a3a16"),
+        hat_colors=dict(light="#f4c838", base="#dca412", dark="#a47404", visor="#9a6c08", band="#4a3014", check="#fbe07a", seam="#7a5006"),
         hair=dict(color="#3a2418", front=0.06, grow=0.20),
         costume="work25", work_style="bib",
-        sleeve=dict(color="#b0532c", dark="#7a3418", cuff="#c8673a", len=0.50, roll=True, w=0.160),
-        shorts=dict(color="#2c4a7a", dark="#1c3256", cuff="#2c4a7a", len=0.90, w=0.150),
+        sleeve=dict(color="#c4521c", dark="#823012", cuff="#dc6a34", len=0.50, roll=True, w=0.160),
+        shorts=dict(color="#2458d0", dark="#173c98", cuff="#2458d0", len=0.90, w=0.150),
         boots=dict(color="#3a2a22", cuff="#3a2a22", h=0.11, toe=0.16),
-        colors=dict(base="#b0532c", dark="#7a3418", denim="#2c4a7a", denim_d="#1c3256", stitch="#e8c070", pants="#2c4a7a"),
+        colors=dict(base="#c4521c", dark="#823012", denim="#2458d0", denim_d="#173c98", stitch="#f4cc6a", pants="#2458d0"),
     ),
     "worker_b25": _m(
         build="regular", seed=25.32,
@@ -1107,13 +1322,13 @@ NEW_CAST25 = {
         shoulder=(0.34, 0.47), arm=0.68, hip_x=0.17, leg=0.94, stance=0.06, wide=0.27, limb_w=0.066,
         eye_y=0.010, brow="stroke", brow_th=0.066, mouth="smirk", moustache=True, moustache_style="bushy", tache_scale=0.85, smirk_side=-1, cheeks="#ee8a74",
         hat="newsboy", hat_style="bare7", hat_tilt=0.0, ear_pencil=False,
-        hair=dict(color="#c4682c", front=0.0, grow=0.24),
+        hair=dict(color="#d86a1c", front=0.0, grow=0.24),
         costume="work25", work_style="apron",
         sleeve=dict(color="#6a7a5a", dark="#465238", cuff="#8a9a76", len=0.50, roll=True, w=0.175),
         shorts=dict(color="#4a3a30", dark="#2e241e", cuff="#4a3a30", len=0.90, w=0.165),
         boots=dict(color="#4a3224", cuff="#4a3224", h=0.10, toe=0.16),
         colors=dict(base="#6a7a5a", dark="#465238", collar="#7e8e6c", strap="#5a3418", denim="#7a4a28", denim_d="#4e2e16", stitch="#e0b868", pants="#4a3a30",
-                    moustache="#c4682c", moustache_l="#e89a58"),
+                    moustache="#d86a1c", moustache_l="#f4a45a"),
     ),
     "worker_c25": _m(
         build="slim", seed=25.33,
@@ -1143,7 +1358,7 @@ def _tommy(name, seed, build, tw, th, profile, leg, arm, lw, khaki, web, cover, 
            sleeve=dict(color=khaki, dark=P._shade(khaki, 0.65), cuff=P._shade(khaki, 0.80), len=0.84, w=0.150 + 0.06 * (tw - 0.62)),
            shorts=dict(color=khaki, dark=P._shade(khaki, 0.65), cuff=khaki, len=0.50, w=0.150),
            boots=dict(color="#3a2a22", cuff="#3a2a22", h=0.08, toe=0.16),
-           colors=dict(base=khaki, dark=P._shade(khaki, 0.68), web=web, web_d=P._shade(web, 0.76), scarf="#b0402a", scarf_d="#6a2418", pants=khaki))
+           colors=dict(base=khaki, dark=P._shade(khaki, 0.68), web=web, web_d=P._shade(web, 0.76), scarf="#e41e1a", scarf_d="#900e0e", pants=khaki))
     d.update(kw)
     return d
 
@@ -1152,16 +1367,16 @@ NEW_CAST25.update({
     # Tommies: a medium, freckled, ginger, bottle on the hip;  b tall and thin, sandy khaki, big drooping Kitchener moustache, hessian cover;
     # c short and round, red muffler, tan helmet;  d broad, black bushy moustache and stubble, dark helmet worn crooked, entrenching tool
     "tommy_a25": _tommy("a", 25.41, "regular", 0.78, 1.00, CE.PROFILE_ATHLETE, 1.30, 0.74, 0.058, "#8a7d3c", "#b8a870",
-                        None, dict(light="#9c9e5a", base="#767a3c", dark="#4a4e24"), -4.0, ("bottle",), "#6c6a34",
-                        freckles=True, hair=dict(color="#c0602a", front=0.08, grow=0.22), eye_y=0.040),
+                        None, dict(light="#8cab4a", base="#5f8c2a", dark="#3a5c16"), -4.0, ("bottle",), "#6c6a34",
+                        freckles=True, hair=dict(color="#d4601e", front=0.08, grow=0.22), eye_y=0.040),
     "tommy_b25": _tommy("b", 25.42, "slim", 0.62, 1.04, CE.PROFILE_ATHLETE, 1.52, 0.78, 0.052, "#a08a54", "#c4b884",
            "hessian", dict(light="#bca276", base="#97805a", dark="#6a5638"), 3.0, ("pack",), "#84703c",
            moustache=True, moustache_style="kitchener25", tache_scale=1.0, hair=dict(color="#3a2a22", front=0.05, grow=0.18), brow_th=0.070, eye_y=0.020),
     "tommy_c25": _tommy("c", 25.43, "regular", 1.02, 0.90, CE.PROFILE_PEAR, 0.98, 0.70, 0.066, "#7a7a3c", "#b0a870",
-                        None, dict(light="#aaa664", base="#88884a", dark="#5a5a2c"), -7.0, ("scarf", "bottle"), "#5e6030",
+                        None, dict(light="#a2ac52", base="#7e9838", dark="#566e1e"), -7.0, ("scarf", "bottle"), "#5e6030",
                         hair=dict(color="#7a4a2a", front=0.06, grow=0.20), cheeks="#e8806a", eye_y=0.010, brow="dome", brow_th=0.044),
     "tommy_d25": _tommy("d", 25.44, "regular", 0.92, 1.04, CE.PROFILE_REGULAR, 1.28, 0.76, 0.062, "#8a6c3a", "#b8a068",
-                        None, dict(light="#6e8a58", base="#4e6a3a", dark="#2e4222"), 8.0, ("tool", "bottle"), "#6a5430",
+                        None, dict(light="#5e9644", base="#3a7a28", dark="#1e4c12"), 8.0, ("tool", "bottle"), "#6a5430",
                         moustache=True, moustache_style="bushy", tache_scale=1.05, stubble24="#2a2220",
                         hair=dict(color="#1e1a1e", front=0.05, grow=0.18), brow_th=0.080, eye_y=0.000, cheeks="#e0806a"),
 })
@@ -1178,7 +1393,7 @@ def _german(seed, build, tw, th, profile, leg, arm, lw, base, cover, patch, kit,
            sleeve=dict(color=base, dark=P._shade(base, 0.62), cuff=P._shade(base, 0.82), len=0.84, w=0.150 + 0.06 * (tw - 0.62)),
            shorts=dict(color=P._shade(base, 0.90), dark=P._shade(base, 0.60), cuff=P._shade(base, 0.90), len=0.90, w=0.125),
            boots=dict(color="#1e1a1c", cuff="#2c2628", h=0.26, toe=0.17),
-           colors=dict(base=base, dark=P._shade(base, 0.64), collar=P._shade(base, 1.10), pipe="#c8302a", roll="#8a8470", pants=P._shade(base, 0.90)))
+           colors=dict(base=base, dark=P._shade(base, 0.64), collar=P._shade(base, 1.10), pipe="#ee2a20", roll="#8a8470", pants=P._shade(base, 0.90)))
     d.update(kw)
     return d
 
@@ -1186,11 +1401,11 @@ def _german(seed, build, tw, th, profile, leg, arm, lw, base, cover, patch, kit,
 NEW_CAST25.update({
     # Germans: a slim, upturned Kaiser moustache, red patch;  b tall and lanky, round glasses, greatcoat roll, green patch;
     # c short and stout, double chin, black toothbrush moustache, plain pale cover
-    "german_a25": _german(25.51, "slim", 0.66, 1.00, CE.PROFILE_ATHLETE, 1.36, 0.76, 0.054, "#5a7a5c", dict(light="#aaa488", base="#8a8468", dark="#5e5a44"), "#c8302a",
+    "german_a25": _german(25.51, "slim", 0.66, 1.00, CE.PROFILE_ATHLETE, 1.36, 0.76, 0.054, "#527a72", dict(light="#aaa488", base="#8a8468", dark="#5e5a44"), "#ee2a20",
             ("bread",), 0.50, -3.0, moustache=True, moustache_style="kaiser25", tache_scale=1.0),
-    "german_b25": _german(25.52, "slim", 0.58, 1.06, CE.PROFILE_ATHLETE, 1.58, 0.80, 0.050, "#627a56", dict(light="#b4ae90", base="#9a9478", dark="#6e6a52"), "#3a8a4a",
+    "german_b25": _german(25.52, "slim", 0.58, 1.06, CE.PROFILE_ATHLETE, 1.58, 0.80, 0.050, "#587a74", dict(light="#b4ae90", base="#9a9478", dark="#6e6a52"), "#3a8a4a",
                           ("roll", "flask"), 0.46, 4.0, glasses=True, hair=dict(color="#c8a050", front=0.06, grow=0.20), brow_th=0.052, eye_y=0.040, cheeks="#f0a090"),
-    "german_c25": _german(25.53, "stout", 1.12, 0.94, C2.PROFILE_ROUND, 0.96, 0.70, 0.068, "#4e6e58", dict(light="#98947a", base="#78745c", dark="#504c3a"), None,
+    "german_c25": _german(25.53, "stout", 1.12, 0.94, C2.PROFILE_ROUND, 0.96, 0.70, 0.068, "#466e66", dict(light="#98947a", base="#78745c", dark="#504c3a"), None,
                           ("bread", "flask"), 0.56, 6.0, moustache=True, moustache_style="brush25", tache_scale=1.0, chins=True,
                           hair=dict(color="#2a2224", front=0.05, grow=0.18), brow_th=0.082, eye_y=0.000, cheeks="#e8806a"),
     # the RFC pilot: brown leather flying helmet with goggles pushed up, a pencil moustache, a leather flying coat with a fur collar and
@@ -1207,7 +1422,7 @@ NEW_CAST25.update({
         sleeve=dict(color="#7a4a28", dark="#4a2a14", cuff="#4a2a14", len=0.84, w=0.170),
         shorts=dict(color="#8a7a4c", dark="#5a4e2c", cuff="#8a7a4c", len=0.90, w=0.140),
         boots=dict(color="#4a2a14", cuff="#6a4020", h=0.24, toe=0.16),
-        colors=dict(base="#7a4a28", dark="#4a2a14", fur="#e6dcc0", fur_d="#b0a280", scarf="#ece4cc", scarf_d="#b8aa88", pants="#8a7a4c"),
+        colors=dict(base="#7a4a28", dark="#4a2a14", fur="#e6dcc0", fur_d="#b0a280", scarf="#fff8de", scarf_d="#d8c894", pants="#8a7a4c"),
     ),
 })
 
