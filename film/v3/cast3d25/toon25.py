@@ -22,6 +22,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 PROJ = os.path.dirname(os.path.dirname(HERE))
 CACHE = os.path.join(HERE, "decals")
 INK = "#3a2832"
+OUTLINE = 0.026                                          # inverted-hull thickness in D: reads as a 3-4 px line at a waist-up 720 px frame (0.012 read as 1-2 px)
 FACE = "#fef7f6"
 
 
@@ -47,7 +48,7 @@ def mat_toon(name, col, rough=0.5, sheen=0.25, img=None):
         if k in bs.inputs:
             bs.inputs[k].default_value = sheen; break
     if "Specular IOR Level" in bs.inputs:
-        bs.inputs["Specular IOR Level"].default_value = 0.25
+        bs.inputs["Specular IOR Level"].default_value = 0.2
     if img:
         ti = nt.nodes.new("ShaderNodeTexImage"); ti.image = bpy.data.images.load(img); ti.interpolation = "Cubic"
         L(ti.outputs["Color"], bs.inputs["Base Color"])
@@ -181,9 +182,9 @@ def paint_uniform(path, kind):
     from PIL import Image, ImageDraw
     W, H = 1024, 512
     if kind == "general":
-        base, dark = "#8f813f", "#645a24"
+        base, dark = "#8f8448", "#6a6230"
     else:
-        base, dark = "#8a7d3c", "#5e5529"
+        base, dark = "#8a7a4a", "#62563a"
     im = Image.new("RGB", (W, H), base); d = ImageDraw.Draw(im)
     fx = W // 2
     Y = lambda v: int((1 - v) * H)
@@ -206,9 +207,9 @@ def paint_uniform(path, kind):
             for c in range(6):
                 d.rectangle([x0 + c * 16, y0 + r * 14, x0 + c * 16 + 15, y0 + r * 14 + 12], fill=cols[(c + r * 2) % 6])
     else:
-        d.rectangle([0, Y(0.20), W, Y(0.11)], fill="#b8a870")                                     # webbing belt
-        d.line([(fx - 90, Y(1.0)), (fx - 60, Y(0.2))], fill="#b8a870", width=26)                 # braces
-        d.line([(fx + 90, Y(1.0)), (fx + 60, Y(0.2))], fill="#b8a870", width=26)
+        d.rectangle([0, Y(0.20), W, Y(0.11)], fill="#c8b888")                                     # webbing belt
+        d.line([(fx - 90, Y(1.0)), (fx - 60, Y(0.2))], fill="#c8b888", width=26)                 # braces
+        d.line([(fx + 90, Y(1.0)), (fx + 60, Y(0.2))], fill="#c8b888", width=26)
         d.rectangle([fx - 150, Y(0.20), fx - 92, Y(0.06)], fill="#8c8055"); d.rectangle([fx + 92, Y(0.20), fx + 150, Y(0.06)], fill="#8c8055")   # pouches
         for v in (0.82, 0.62, 0.42):
             d.ellipse([fx - 8, Y(v) - 8, fx + 8, Y(v) + 8], fill="#d0a830")
@@ -222,7 +223,7 @@ def face_decal(member, expr, mouth, px=512):
     clipped to the head disc.  Returns the PNG path (cached)."""
     sys.path.insert(0, os.path.join(PROJ, "v3", "cast25"))
     import cast25, puppet                                                     # noqa: F401
-    from PIL import Image
+    from PIL import Image, ImageFilter
     import numpy as np
     os.makedirs(CACHE, exist_ok=True)
     p = dict(yaw=0.0, pitch=0.0, expr=expr, arm_r="down", arm_l="down", legs="stand", hat_off25=1, finish25=0, rim25=0)
@@ -244,6 +245,15 @@ def face_decal(member, expr, mouth, px=512):
     skin = np.array([0xfe, 0xf7, 0xf6], np.float32) / 255
     dist = np.abs(a[..., :3] - skin).sum(-1)
     al = np.clip((dist - 0.06) / 0.18, 0, 1) * a[..., 3]
+    must = np.array([0xf6, 0xf4, 0xf0], np.float32) / 255; must_l = np.array([0xc4, 0xc0, 0xca], np.float32) / 255
+    mo = (np.abs(a[..., :3] - must).sum(-1) < 0.025) | (np.abs(a[..., :3] - must_l).sum(-1) < 0.05)
+    a = a.copy(); a[..., :3][mo] = np.where((np.abs(a[..., :3] - must).sum(-1) < 0.025)[mo][:, None], 1.0, 0.86)   # solid white moustache, light-grey strand side
+    al = np.where(mo & (a[..., 3] > 0.5), 1.0, al)
+    lum = a[..., :3] @ np.array([0.2126, 0.7152, 0.0722], np.float32); ink = ((lum < 0.35) & (al > 0.3)).astype(np.uint8) * 255
+    inkd = np.asarray(Image.fromarray(ink).filter(ImageFilter.MaxFilter(5))).astype(np.float32) / 255     # thicker, graphic ink strokes
+    nk = np.array([0x3a, 0x28, 0x32], np.float32) / 255
+    grow = (inkd > 0.5) & (ink == 0) & ~mo
+    a[..., :3][grow] = nk; al = np.where(grow, 1.0, al)
     yy, xx = np.mgrid[0:px, 0:px]; rr = np.hypot(xx - px / 2 + 0.5, yy - px / 2 + 0.5) / (px / 2)
     al *= np.clip((0.80 - rr) / 0.05, 0, 1)                                    # drop the head outline ring (the 3D outline draws it)
     o = np.dstack([a[..., :3], al]); Image.fromarray((o * 255 + 0.5).astype(np.uint8)).save(out)
@@ -266,6 +276,13 @@ class Char(object):
         m = self.head.data.materials[0]; ti = m.node_tree.nodes[m["decal_node"]]
         ti.image = bpy.data.images.load(img, check_existing=True)
 
+    def look_at(self, point, max_deg=50.0):
+        """turn the head (neck joint, yaw only) toward a world point, e.g. the camera: the face decal then never stretches"""
+        bpy.context.view_layer.update()
+        mw = self.root.matrix_world; p = mw.inverted() @ Vector(point)
+        yaw = math.degrees(math.atan2(p.x, -p.y)); yaw = max(-max_deg, min(max_deg, yaw))
+        self.neck.rotation_euler = Euler((0, 0, math.radians(yaw)), "XYZ"); bpy.context.view_layer.update()
+
     def set_pose(self, pose, **over):
         """pose: a preset name (POSES) or a dict {joint: (rx, ry, rz) degrees}; walk / march: set_pose('walk', phase=0..1)"""
         if isinstance(pose, str):
@@ -280,79 +297,83 @@ class Char(object):
         bpy.context.view_layer.update()
 
 
-def _build(name, kind):
+def _build(name, kind, stick_hand="r"):
+    """B2 build (producer notes 28 Nov): R11-class proportions -- a slim upright bean about as wide as the head (body height
+    about 1.3 x the head), flat-ish front; thin dark-ink stick limbs (0.12 x head width) with a short tunic cuff at the
+    shoulder, small dark mitts, small brown oval boots; roughness 0.6, sheen only on the cap brim; a 0.012 D outline on every
+    shape (about 4 px at a waist-up 720 px frame)."""
     C = Char(name)
     gen = kind == "general"
     root = empty(name + "_root"); C.root = root
-    col_base = "#8f813f" if gen else "#8a7d3c"
-    tex = paint_uniform(os.path.join(CACHE if os.makedirs(CACHE, exist_ok=True) is None else CACHE, "uniform_%s.png" % kind), kind)
-    m_body = mat_toon(name + "_body", None, 0.55, 0.3, img=tex)
-    m_cloth = mat_toon(name + "_cloth", col_base, 0.6, 0.3)
-    m_hand = mat_toon(name + "_hand", INK, 0.5, 0.1)
-    m_boot = mat_toon(name + "_boot", "#7a4524" if gen else "#4a3020", 0.35, 0.1)
-    m_putt = mat_toon(name + "_puttee", "#7d7038", 0.7, 0.2)
-    # --- proportions (D)
-    if gen:
-        hip_z, sh_z, head_z = 1.05, 2.30, 2.80
-        prof = [(0.85, 0.62), (1.0, 0.86), (1.3, 0.98), (1.6, 0.98), (1.9, 0.90), (2.15, 0.76), (2.32, 0.55), (2.40, 0.30)]
-        belly = lambda z, c: 1.0 + 0.22 * max(0.0, c) ** 1.5 * math.exp(-((z - 1.45) / 0.38) ** 2)
-        arm = (0.62, 0.55, 0.15, 0.14); leg = (0.50, 0.50, 0.19, 0.16); hip_x, sh_x = 0.38, 0.78
+    os.makedirs(CACHE, exist_ok=True)
+    col_base = "#8f8448" if gen else "#8a7a4a"
+    tex = paint_uniform(os.path.join(CACHE, "uniform_%s.png" % kind), kind)
+    m_body = mat_toon(name + "_body", None, 0.6, 0.0, img=tex)
+    m_cuff = mat_toon(name + "_cuff", col_base, 0.6, 0.0)
+    m_ink = mat_toon(name + "_ink", INK, 0.35, 0.0)                           # stick limbs, slightly glossy
+    m_mitt = mat_toon(name + "_mitt", "#2e2028", 0.45, 0.0)
+    m_boot = mat_toon(name + "_boot", "#6a4024", 0.45, 0.0)
+    ol = OUTLINE
+    if gen:                                                                   # the general: a little rounder, NOT a ball
+        prof = [(1.12, 0.05), (1.16, 0.30), (1.25, 0.45), (1.45, 0.54), (1.75, 0.555), (2.05, 0.53), (2.30, 0.48), (2.42, 0.36), (2.48, 0.10)]
+        belly = lambda z, c: 1.0 + 0.07 * max(0.0, c) ** 1.5 * math.exp(-((z - 1.55) / 0.30) ** 2)
+        head_z, sh_z, sh_x, hip_z, hip_x = 2.90, 2.22, 0.50, 1.22, 0.22
+        arm, leg = (0.50, 0.50), (0.62, 0.58)
     else:
-        hip_z, sh_z, head_z = 1.25, 2.38, 2.86
-        prof = [(1.10, 0.42), (1.25, 0.52), (1.6, 0.56), (1.95, 0.58), (2.2, 0.55), (2.38, 0.40), (2.45, 0.22)]
-        belly = lambda z, c: 1.0 + 0.04 * max(0.0, c) * math.exp(-((z - 1.7) / 0.4) ** 2)
-        arm = (0.62, 0.58, 0.12, 0.11); leg = (0.62, 0.62, 0.14, 0.12); hip_x, sh_x = 0.25, 0.56
-    ol = 0.018                                                                # outline thickness ~1.8 % of the head
-    body = _obj(name + "_torso", lathe(name + "_torso", prof, 48, belly), root, [m_body], ol)
-    # head + face decal
+        prof = [(1.30, 0.05), (1.34, 0.26), (1.45, 0.40), (1.70, 0.455), (2.05, 0.46), (2.35, 0.43), (2.52, 0.33), (2.58, 0.08)]
+        belly = lambda z, c: 1.0
+        head_z, sh_z, sh_x, hip_z, hip_x = 3.00, 2.32, 0.42, 1.40, 0.18
+        arm, leg = (0.52, 0.52), (0.72, 0.68)
+    LR = 0.06                                                                 # limb radius: 0.12 x head width
+    _obj(name + "_torso", lathe(name + "_torso", prof, 48, belly), root, [m_body], ol)
+    # head on its own joint (turn it toward the camera so the face decal never stretches)
+    hj = empty(name + "_neck", root, (0, 0, head_z)); C.neck = hj
     for mo in MOUTHS:
         expr = "laughing" if mo == "laugh" else ("smug" if gen else "determined")
         C.decals[mo] = face_decal("general25" if gen else "tommy_a25", expr, None if mo == "laugh" else mo)
     hm = mat_head(name + "_head", C.decals["flat"])
-    C.head = _obj(name + "_head", sphere(name + "_head", 0.5, (1.0, 0.92, 0.96)), root, [hm], ol)
-    C.head.location = (0, 0, head_z)
-    # hat
+    C.head = _obj(name + "_head", sphere(name + "_head", 0.5, (1.0, 0.92, 0.96)), hj, [hm], ol)
     if gen:
-        olive, band, blk = mat_toon(name + "_cap", "#8a7c3a", 0.6, 0.3), mat_toon(name + "_band", "#ee2418", 0.5, 0.2), mat_toon(name + "_peak", "#1e1a22", 0.25, 0.1)
-        cz = head_z + 0.18
-        _obj(name + "_crown", frustum(name + "_crown", cz + 0.14, cz + 0.30, 0.50, 0.68, yscale=0.92), root, [olive], ol)     # flat-topped crown, wider at the top
-        _obj(name + "_band", frustum(name + "_band", cz - 0.06, cz + 0.15, 0.50, 0.51), root, [band], ol)                       # broad scarlet band
-        pk = _obj(name + "_peak", sphere(name + "_peak", 0.5, (0.60, 0.62, 0.05), 32, 8), root, [blk], ol)
+        olive, band = mat_toon(name + "_cap", "#86803e", 0.6, 0.0), mat_toon(name + "_band", "#ee2418", 0.55, 0.0)
+        blk = mat_toon(name + "_peak", "#1e1a22", 0.3, 0.6)                    # the only sheen: the cap brim
+        cz = 0.18
+        _obj(name + "_crown", frustum(name + "_crown", cz + 0.14, cz + 0.30, 0.50, 0.66, yscale=0.92), hj, [olive], ol)
+        _obj(name + "_band", frustum(name + "_band", cz - 0.06, cz + 0.15, 0.50, 0.51), hj, [band], ol)
+        pk = _obj(name + "_peak", sphere(name + "_peak", 0.5, (0.60, 0.62, 0.06), 32, 8), hj, [blk], ol)
         pk.location = (0, -0.36, cz - 0.08); pk.rotation_euler = (math.radians(-18), 0, 0)
-        bt = _obj(name + "_button", sphere(name + "_button", 0.055), root, [mat_toon(name + "_brass", "#f6c21c", 0.3, 0.1)], 0.0)
+        bt = _obj(name + "_button", sphere(name + "_button", 0.055), hj, [mat_toon(name + "_brass", "#f6c21c", 0.4, 0.0)], 0.0)
         bt.location = (0, -0.50, cz + 0.05)
     else:
-        green = mat_toon(name + "_brodie", "#5f8c2a", 0.55, 0.2)
-        dome = _obj(name + "_dome", sphere(name + "_dome", 0.5, (0.98, 0.98, 0.55)), root, [green], ol); dome.location = (0, 0, head_z + 0.20)
-        brim = _obj(name + "_brim", frustum(name + "_brim", head_z + 0.12, head_z + 0.17, 0.80, 0.70), root, [green], ol)
-    # limbs on joint empties (shoulder -> elbow -> hand ; hip -> knee -> foot); rest pose hangs along -Z
-    def limb(side, base, up, lo, r0, r1, m_up, m_lo, end):
-        s = 1 if side == "r" else -1                                          # 'r' = the character's right = screen-left in a front view (-X)
-        j0 = empty("%s_%s_%s" % (name, base[0], side), root, (-s * base[1], 0.0, base[2]))
-        _obj(j0.name + "_m", capsule(j0.name + "_m", up, r0, r0 * 0.95), j0, [m_up], ol)
-        j1 = empty("%s_%s_%s" % (name, base[3], side), j0, (0, 0, -up))
-        _obj(j1.name + "_m", capsule(j1.name + "_m", lo, r0 * 0.95, r1), j1, [m_lo], ol)
-        C.joints[j0.name.split(name + "_")[1]] = j0; C.joints[j1.name.split(name + "_")[1]] = j1
-        return j1, s
+        green = mat_toon(name + "_brodie", "#556b2f", 0.6, 0.0); rim = mat_toon(name + "_brodie_rim", "#3c4e20", 0.5, 0.5)
+        dome = _obj(name + "_dome", sphere(name + "_dome", 0.5, (0.98, 0.98, 0.55)), hj, [green], ol); dome.location = (0, 0, 0.20)
+        _obj(name + "_brim", frustum(name + "_brim", 0.12, 0.17, 0.80, 0.72), hj, [rim], ol)
+    def limb(side, nm0, nm1, base, up, lo, cuff):
+        s = 1 if side == "r" else -1                                          # 'r' = the character's right = -X (screen-left in a front view)
+        j0 = empty("%s_%s_%s" % (name, nm0, side), root, (-s * base[0], 0.0, base[1]))
+        _obj(j0.name + "_m", capsule(j0.name + "_m", up, LR, LR), j0, [m_ink], ol)
+        if cuff:
+            _obj(j0.name + "_cuff", capsule(j0.name + "_cuff", 0.16, 0.12, 0.10), j0, [m_cuff], ol)
+        j1 = empty("%s_%s_%s" % (name, nm1, side), j0, (0, 0, -up))
+        _obj(j1.name + "_m", capsule(j1.name + "_m", lo, LR, LR), j1, [m_ink], ol)
+        C.joints[nm0 + "_" + side] = j0; C.joints[nm1 + "_" + side] = j1
+        return j1
     for side in ("r", "l"):
-        el, s = limb(side, ("shoulder", sh_x, sh_z, "elbow"), arm[0], arm[1], arm[2], arm[3], m_cloth, m_cloth, None)
-        hd = _obj("%s_hand_%s" % (name, side), sphere("%s_hand_%s" % (name, side), 0.15, (1, 0.9, 1.1)), el, [m_hand], ol); hd.location = (0, 0, -arm[1] - 0.08)
-        kn, s = limb(side, ("hip", hip_x, hip_z, "knee"), leg[0], leg[1], leg[2], leg[3], m_cloth, m_boot if gen else m_putt, None)
-        bt = _obj("%s_boot_%s" % (name, side), sphere("%s_boot_%s" % (name, side), 0.2, (0.95, 1.5, 0.75)), kn, [m_boot], ol)
-        bt.location = (0, -0.10, -leg[1] - 0.06)
+        el = limb(side, "shoulder", "elbow", (sh_x, sh_z), arm[0], arm[1], True)
+        hd = _obj("%s_hand_%s" % (name, side), sphere("%s_hand_%s" % (name, side), 0.10, (1, 0.85, 1.15)), el, [m_mitt], ol); hd.location = (0, 0, -arm[1] - 0.05)
+        kn = limb(side, "hip", "knee", (hip_x, hip_z), leg[0], leg[1], False)
+        bt = _obj("%s_boot_%s" % (name, side), sphere("%s_boot_%s" % (name, side), 0.13, (0.9, 1.5, 0.7)), kn, [m_boot], ol)
+        bt.location = (0, -0.09, -leg[1] - 0.02)
     if gen:                                                                   # swagger stick in the right hand
-        hr = bpy.data.objects[name + "_hand_r"]
-        st = _obj(name + "_stick", frustum(name + "_stick", -1.10, 0.10, 0.03, 0.04, 12), hr, [mat_toon(name + "_wood", "#6a3a1c", 0.3, 0.1)], 0.012)
-        st.location = (0, 0, 0)                                                # continues the forearm line (-Z of the hand)
-        kb = _obj(name + "_knob", sphere(name + "_knob", 0.07), st, [mat_toon(name + "_brass2", "#f6c21c", 0.3, 0.1)], 0.0); kb.location = (0, 0, -1.10)
-    # contact: everything stands with the boot soles on z = 0 of the root
+        hr = bpy.data.objects[name + "_hand_" + stick_hand]                   # 'l' = the screen-right hand in a front view
+        st = _obj(name + "_stick", frustum(name + "_stick", -1.05, 0.08, 0.026, 0.034, 12), hr, [mat_toon(name + "_wood", "#6a3a1c", 0.4, 0.0)], ol)
+        kb = _obj(name + "_knob", sphere(name + "_knob", 0.06), st, [mat_toon(name + "_brass2", "#f6c21c", 0.4, 0.0)], ol); kb.location = (0, 0, -1.05)
     C.kind = kind; C.feet_z = 0.0
     C.set_pose("stand")
     return C
 
 
-def build_general(name="gen"):
-    return _build(name, "general")
+def build_general(name="gen", stick_hand="r"):
+    return _build(name, "general", stick_hand)
 
 
 def build_tommy(name="tom"):
