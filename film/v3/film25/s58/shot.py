@@ -24,7 +24,8 @@ def pre():
 def build(rig):
     rig.set_look(True); rig.open_shell(floor_col=(0.30, 0.12, 0.07))
     rig.eng = rig.actor("eng", "engineer25")
-    rig.backdrop((0.0, 48.2, 0.0), -90.0, w=16.0, h=12.0, col=(0.04, 0.16, 0.48), name="blue_plate")
+    rig.backdrop((-4.5, 48.2, 0.0), -90.0, w=9.0, h=12.0, col=(0.04, 0.16, 0.48), name="plate0")
+    rig.backdrop((4.5, 48.2, 0.0), -90.0, w=9.0, h=12.0, col=(0.55, 0.09, 0.05), name="plate1")
 
 
 def cam_at(g):

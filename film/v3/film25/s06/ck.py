@@ -31,8 +31,9 @@ def main(M):
         for nm, mem in M.ACTORS.items():
             setattr(rig, nm, rig.actor(nm, mem))
         if getattr(M, "PLATE", None):
-            c, fd, w, h, col = M.PLATE
-            rig.backdrop(c, fd, w=w, h=h, col=col, name="blue_plate")
+            pl = M.PLATE if isinstance(M.PLATE, list) else [M.PLATE]
+            for i, (c, fd, w, h, col) in enumerate(pl):
+                rig.backdrop(c, fd, w=w, h=h, col=col, name="plate%d" % i)
         if getattr(M, "build_extra", None): M.build_extra(rig)
 
     def state(g):
