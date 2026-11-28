@@ -186,6 +186,7 @@ def build_chart(cfg):
     for k in range(7): obox(mw, (cx + 9.4, cy - 6.0 + k * 2.4, 2.2), X, Y, Z, 0.1, 1.15, 2.2, M['crate'])
     beam(mw, (cx - 8.8, cy - 6.8, 4.5), (cx + 10.0, cy - 6.8, 4.5), 0.25, 0.25, M['beam']); beam(mw, (cx + 9.4, cy - 6.8, 4.5), (cx + 9.4, cy + 8.0, 4.5), 0.25, 0.25, M['beam'])
     mkobj(mb, 'chart_table', smooth=False); mkobj(mw, 'chart_wood'); mkobj(mg, 'chart_mounds', smooth=True)
+    lamp(cx, cy, 6.8, 700.0)                                                              # office lamp over the table
     sc = 0.11; H = TK.build_tank('model', mud=0.0, stencil=False); S.setdefault('tanks_h', []).append(H); H.root.scale = (sc, sc, sc)
     gm = lambda s: np.where(np.abs(s) < 4.1, -4.0, np.where((s <= -4.1) & (s > -6.7), 0.8, np.where((s >= 4.1) & (s < 6.7), 1.9, 0.0)))
     TK.setup_crossing(H, (0, 0), 0.0, -24.0, 22.0, g=gm); S['chart'] = dict(H=H, sc=sc, o=(cx, cy), top=top); set_model_tank(cfg.get('u', 0.4))
@@ -256,7 +257,7 @@ PRESETS = dict(
 )
 
 PRESETS.update(
-    fac_chart=dict(cam=dict(loc=(-15.0, 37.0, 7.6), look_at=(-18.0, 42.0, 2.0), lens=40), chart=dict(pos=(-18.0, 43.0), u=0.40), tank_on=False, note='shot 14: chart table 3/4 top-down insert, model Mark I over the model trench'),
+    fac_chart=dict(cam=dict(loc=(-9.0, 33.0, 8.6), look_at=(-18.5, 42.5, 1.4), lens=26), chart=dict(pos=(-18.0, 43.0), u=0.40), tank_on=False, note='shot 14: chart table 3/4 top-down insert, model Mark I over the model trench'),
     fac_chart_face=dict(fill=2500.0, lamp_w=700.0, cast=[dict(story='engineer25_chart_hand')], backdrop=[(-22.0, 50.6, 8.0, 9.0, 'plank_red'), (-14.0, 50.6, 8.0, 9.0, 'plank_yellow')], mark=dict(pos=(-18.0, 48.6), face_deg=-90.0, dist=4.8, lens=28, zc=1.9), chart=dict(pos=(-18.0, 43.0), u=0.40), tank_on=False, note='shot 14/15: engineer behind the chart table (mark = card position)'),
     fac_doors=dict(cam=dict(loc=(3.0, -27.0, 3.6), look_at=(0.0, 0.0, 6.2), lens=30), doors=1.0, note='shot 13: shed doors shut, from the yard'),
     fac_close_hull=dict(cast=[dict(story='worker_a25_rivet')], fill=4000.0, mark=dict(pos=(-11.0, 17.0), face_deg=-90.0, dist=4.2, lens=28, zc=1.9, look_dz=-0.7), tank=dict(pos=(-6, 22), yaw=0.0, z=0.9), trestles_off=True, note='shots 6/16: close, riveted hull plate with the hatch and tap behind (mark)'),

@@ -859,8 +859,8 @@ PRESETS = dict(
     front_halt=dict(loc='front', tune=dict(cloud_k=0.85, green_k=2.2), dress_n=4.0, cam=dict(loc=(8.0, -36.0, 2.8), look_at=(-22.0, -36.0, 2.0), lens=22), tanks=[dict(front=(-22.0, -33.0), yaw=90.0, nocorr=True), dict(front=(-8.0, -22.0), yaw=95.0, smoke=1.0)], clamp=True, note='shot 21: one smoking, one nose-down in a crater'),
     front_stuck=dict(loc='front', dress_n=3.0, tune=dict(cloud_k=0.85, green_k=0.3), world=dict(rocks=[(5.0, -9.6, 3, 1.6), (3.0, -49.0, 22, 4.0), (6.0, -47.0, 16, 3.0), (0.0, -46.0, 14, 3.0), (8.0, -44.0, 12, 3.0)], spill=[(4.0, -48.0, 4.0, 14)]), cam=dict(loc=(6.0, -52.0, 1.4), look_at=(-4.0, -41.0, -0.6), lens=24), tanks=[dict(front=(-4.0, -42.0), yaw=90.0, state='stuck')], extras=[('mud', -4.0, -42.0, math.pi / 2)], cards=[('a', (2.0, -45.0), 3.2), ('b', (-9.0, -47.0), 3.2)], clamp=True, note='shot 22: sunk to the sponsons in mud'),
     front_op=dict(loc='front', tune=dict(cloud_k=0.85), fill=3000.0, cam=dict(loc=(-45.0, -17.0, 6.5), look_at=(-26.0, -8.0, 2.4), lens=28), extras=[('op', -28.0, -8.0, 0.0)], tanks=[dict(front=(-6.0, -16.0), yaw=90.0, smoke=1.0)], cards=[('a', (-30.5, -9.0), 2.6)], note='shot 23: observation post'),
-    front_close_britishtrench=dict(loc='front', mark=dict(pos=(-34.0, -8.0), face_deg=262.9, dist=4.2, lens=28, zc=1.9, look_dz=-1.4), cast=[dict(story='tommy_a25_peek')], extras=[('bags', -34.0, -4.5), ('pop', -34.0, -3.0)], dress_n=0.3, near=False, note='shots 8-9, 10-11: waist-up Tommy inside the British trench (mark)'),
-    front_close_germantrench=dict(loc='front', mark=dict(pos=(0.0, 6.0), face_deg=90.0, dist=4.2, lens=28, zc=1.9, look_dz=-1.4), cast=[dict(story='german_a25_peek', mirror=True)], extras=[('bags', 0.0, 2.0), ('pop', 0.0, 1.0)], dress_n=0.3, near=False, note='shots 8-9, 55: German trench mirror close (mark)'),
+    front_close_britishtrench=dict(loc='front', mark=dict(pos=(-34.0, -8.0), face_deg=262.9, dist=4.2, lens=28, zc=1.9, look_dz=-1.4), clamp=True, cast=[dict(story='tommy_a25_peek')], extras=[('bags', -34.0, -4.5), ('pop', -34.0, -3.0)], dress_n=0.3, near=False, note='shots 8-9, 10-11: waist-up Tommy inside the British trench (mark)'),
+    front_close_germantrench=dict(loc='front', mark=dict(pos=(0.0, 6.0), face_deg=90.0, dist=4.2, lens=28, zc=1.9, look_dz=-1.4), clamp=True, cast=[dict(story='german_a25_peek', mirror=True)], extras=[('bags', 0.0, 2.0), ('pop', 0.0, 1.0)], dress_n=0.3, near=False, note='shots 8-9, 55: German trench mirror close (mark)'),
     op_close_general=dict(loc='front', mark=dict(pos=(-30.2, -8.0), face_deg=0.0, dist=4.2, lens=28, zc=1.9), cast=[dict(story='general25_point_stick')], extras=[('op', -28.0, -8.0, 0.0)], dress_n=0.3, near=False, note='shots 43-44: general in the observation post (mark)'),
     cross_close_idler=_cross('cross_close_idler', 0.40, _cam_idler, clamp=True, dress_n=1.2, note='shots 47-49: track links round the front idler as the nose lifts against the sky'),
     cross_close_lip=_cross('cross_close_lip', 0.40, _cam_lip, clamp=True, dress_n=1.6, extras=[('clods', 5.0, 4.5)], note='shot 50: the front track gripping the far lip, earth crumbling'),
@@ -1003,6 +1003,8 @@ def dress_front(cam, focus, n=1.0, seed=11, lane_ok=False):
     crushed = corridor_pred(); wetc = [(c[0], c[1], c[2] * 0.75) for c in S['craters']]
     def ok(x, y):
         if not near(x, y): return False
+        for tr_ in S['trenches']:                                                         # never on a trench floor (duckboards stay clean)
+            if poly_dist(np.array([x]), np.array([y]), tr_['poly'])[0][0] < tr_['hw'] + 0.15: return False
         for (a, b, r) in wetc:
             if math.hypot(x - a, y - b) < r: return False
         if S.get('tank_boxes') and S.get('cam_dict'):
