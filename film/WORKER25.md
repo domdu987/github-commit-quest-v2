@@ -153,6 +153,29 @@ The g column of shot_plan_v2.md is authoritative (g1 exclusive). Render 6 handle
 - **Crane loads:** hang on visible chains.
 - **No text anywhere:** the chalk drawing and the chart table carry lines only, and every stencil is the silhouette.
 
+## Animation: NOT STIFF (client note, 28 Nov; binding for every shot)
+- **Show the action happening in shot, never only the finished result.**
+  - The plate swings in on the crane and lands with a small bounce.
+  - Rivets pop in one by one, each on a hammer strike.
+  - The track wraps round, links scrolling.
+  - The gun slides in and clunks.
+  - The brush moves and the stencil appears stroke by stroke (set_stencil fractional, keyed to the brush tip).
+  - The watering can tilts and the water streams.
+  - The model tank slides over the groove.
+- **Characters change pose or expression at least once per phrase.** Use:
+  - pose swaps (e.g. laugh/laugh_b, rivet/rivet_strike)
+  - head turns (yaw)
+  - blinks (blink_at)
+  - gaze shifts
+  - squash on landings and strikes (squash 0.92→1.05→1.0 over 4-6 frames)
+  - secondary motion: flag wave t, a hanging toy tank swing, medals jiggle via the laugh bounce
+  - Nobody holds one identical frame for more than about 12 frames unless the beat is a deliberate deadpan (shot 27).
+- **Camera:** a slow drift, pan or push-in on most shots, eased and smooth.
+  - Follow the action where it moves: pan with the plate, slide with the track.
+  - No shake; qa_jitter must pass.
+  - A static wide is allowed for at most 1 s.
+- **Close framing:** the camera stays close (waist-up or tighter) on characters, as in the C/M rows. Widen only where the plan says W.
+
 ## QA (before delivering every take)
 1. Run `python3 PROJ/qa_auto.py take.mkv --first_g <first_g> --cuts <in-take cut g's or none>`. Fix every FAIL, then add QA_AUTO.md and phone_sheet.jpg.
 2. Run `python3 PROJ/qa_jitter.py` on every take with a camera move, a walk or a tank move. It must report no shake and no slide.
