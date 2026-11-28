@@ -1,8 +1,8 @@
 {
  "preset": "dock_crate",
- "wall_s": 55.8,
- "cpu_s": 221.1,
- "build_s": 0.4,
+ "wall_s": 64.8,
+ "cpu_s": 256.4,
+ "build_s": 0.7,
  "settings": {
   "resolution": [
    720,
@@ -25,7 +25,7 @@
   "threads": 4,
   "sun": {
    "energy": 5.0,
-   "elevation": 30.0,
+   "elevation": 28.0,
    "color": [
     1.0,
     0.8199999928474426,
@@ -38,9 +38,15 @@
  "cards": [
   [
    "tommy_a",
-   752,
-   859,
-   244
+   1086,
+   1249,
+   177
+  ],
+  [
+   "tommy_b",
+   1060,
+   1214,
+   -393
   ]
  ],
  "anchors": {}

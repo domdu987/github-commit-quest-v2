@@ -1,8 +1,8 @@
 {
  "preset": "sky_plane",
- "wall_s": 65.9,
- "cpu_s": 260.3,
- "build_s": 0.7,
+ "wall_s": 65.6,
+ "cpu_s": 259.6,
+ "build_s": 0.8,
  "settings": {
   "resolution": [
    720,

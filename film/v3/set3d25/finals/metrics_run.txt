@@ -58,3 +58,9 @@ trial_camp.png                         luma 0.510 p1 0.031 p99 0.915 lc 0.0498 s
 render 73.9 s wall, 292.6 s cpu
 street_wide.png                        luma 0.510 p1 0.033 p99 0.919 lc 0.0449 sat 0.310  PASS
 render 71.7 s wall, 284.2 s cpu
+street_low.png                         luma 0.510 p1 0.034 p99 0.919 lc 0.0500 sat 0.309  PASS
+render 72.7 s wall, 286.6 s cpu
+dock_crate.png                         luma 0.510 p1 0.035 p99 0.919 lc 0.0410 sat 0.308  PASS
+render 64.8 s wall, 256.4 s cpu
+sky_plane.png                          luma 0.510 p1 0.032 p99 0.916 lc 0.0408 sat 0.309  PASS
+render 65.6 s wall, 259.6 s cpu

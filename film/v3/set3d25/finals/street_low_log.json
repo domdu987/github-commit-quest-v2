@@ -1,7 +1,7 @@
 {
  "preset": "street_low",
- "wall_s": 73.3,
- "cpu_s": 290.6,
+ "wall_s": 72.7,
+ "cpu_s": 286.6,
  "build_s": 0.8,
  "settings": {
   "resolution": [
