@@ -1,0 +1,10 @@
+{
+ "g0": 44,
+ "g1": 84,
+ "first_g": 44,
+ "n_frames": 40,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ }
+}
