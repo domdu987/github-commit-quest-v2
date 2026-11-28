@@ -373,7 +373,7 @@ def run(shot, cmd, gs, out_root=None, scale=None, samples=None, sh_samples=None)
                 composite(g, os.path.join(out_root, "raw", "f_%04d.png" % g), shp if (geos[g] and os.path.exists(shp)) else None, geos[g], os.path.join(tmp, "s.png"))
                 ds.append(ns["m"](Image.open(os.path.join(tmp, "s.png"))))
             d = {k: float(np.mean([x[k] for x in ds])) for k in ds[0]}
-            cost = abs(d["sat"] - 0.465) * 25 + 40 * max(0, abs(d["a_mean"]) - 5.6) + 40 * max(0, abs(d["b_mean"]) - 5.6) + 60 * max(0, 0.47 - d["luma"])
+            cost = abs(d["sat"] - 0.465) * 25 + 40 * max(0, abs(d["a_mean"]) - 5.9) + 40 * max(0, abs(d["b_mean"]) - 5.9) + 60 * max(0, 0.47 - d["luma"])
             if best is None or cost < best[0]: best = (cost, vib, wbb, wba, d, ck_)
         print("AUTOGRADE", best[1:4], "coolk", best[5], {k: round(v, 3) for k, v in best[4].items() if k in ("sat", "a_mean", "b_mean", "luma")}, flush=True)
         os.environ["VIB"], os.environ["WBB"], os.environ["WBA"], os.environ["COOLK"] = str(best[1]), str(best[2]), str(best[3]), str(best[5])
