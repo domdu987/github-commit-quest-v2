@@ -200,7 +200,7 @@ def pose_of(g):
 class Take(C.Take):
     def __init__(self):
         C.Take.__init__(self, PRESET)
-        sd = os.path.join(HERE, "work", "sprites")
+        sd = os.environ.get("SPRITES", os.path.join(HERE, "work", "sprites"))
         os.makedirs(sd, exist_ok=True)
         self.gen = self.make_actor("gen", "general25", sd, contact=dict(width=1.5, depth=0.7, opacity=0.55))
 
@@ -232,7 +232,18 @@ if __name__ == "__main__":
     gs = [g for g in C.parse(sys.argv[2]) if G_ALL[0] <= g <= G_ALL[1]]
     Tk = Take()
     Tk.pose(gs)
-    if cmd == "probe":
+    if cmd == "corners":                                  # screen corners of the card canvas per frame (for post25.py: exact puppet composite)
+        out = {}
+        cv = Tk.gen.canvas
+        for g in gs:
+            Tk.scene.frame_set(g)
+            fx, fy = Tk.gen.feet[g]
+            pts = [(cv[0], cv[1]), (cv[2], cv[1]), (cv[2], cv[3]), (cv[0], cv[3])]   # top-left, top-right, bottom-right, bottom-left (y down)
+            out[g] = dict(quad=[list(C.actors.local_to_screen(Tk.gen, Tk.cam, (fx + x, fy + y), g, (fx, fy))) for x, y in pts],
+                          canvas=list(cv), ppd=PPD)
+        json.dump(out, open(os.path.join(HERE, "work", "corners.json"), "w"))
+        print("corners", len(out))
+    elif cmd == "probe":
         for g in gs:
             print(json.dumps(Tk.report(g)), flush=True)
     elif cmd == "draft":

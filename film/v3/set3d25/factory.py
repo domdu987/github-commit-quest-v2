@@ -53,7 +53,7 @@ def brick_shed(W=26.0, Dp=52.0, Hw=14.0):
         ob = mkobj(md, 'door_mesh_%d' % sx, parent=e); S['doors'].append((e, sx))
     beam(mw, (-24, -1.8, 11.6), (24, -1.8, 11.6), 0.3, 0.3, M['steel'])
     # roof with skylight gaps
-    holes = [(s, u0, u1, 0.1, 0.9) for s in (1, -1) for (u0, u1) in ((0.12, 0.22), (0.56, 0.66))]
+    holes = [(s, u0, u1, 0.3, 0.7) for s in (1, -1) for (u0, u1) in ((0.58, 0.64),)] if not S.get('few_sky') else []
     F.gable_roof(mt, (0, Dp / 2), Dp + 1.6, 2 * W + 2.2, Hw - 0.4, 7.0, math.pi / 2, holes, M['tin'], 3)
     # trusses + purlins inside
     for k in range(8):
@@ -169,9 +169,10 @@ def build_chart(cfg):
     """CHART TABLE in an office corner (green baize, a trench groove with parapets cut across it, a small model Mark I, a rolled plan, pins).  Hook: set_model_tank(u).  The office corner = two low plank partitions."""
     M = S['M']; cx, cy = cfg['pos']; mb = MB(); mw = MB(); mg = MB(); X, Y, Z = (1, 0, 0), (0, 1, 0), (0, 0, 1); top = 1.9; gw = 0.45
     def baize(b):
-        c = b.coord(); n = b.noise(55.0, 2.0, 0.6, c, None); n2 = b.noise(1.2, 2.0, 0.5, c, None); col = b.mul(b.mix(b.rng(n2, 0.3, 0.7), (0.8, 0.85, 0.8), (1.1, 1.1, 1.05)), (*F.hexl('#2f8a4a'), 1)); b.princ(col, 0.95, 0.0, b.bump(n, 0.6, 0.02))
+        c = b.coord(); n = b.noise(55.0, 2.0, 0.6, c, None); n2 = b.noise(1.2, 2.0, 0.5, c, None); col = b.mul(b.mix(b.rng(n2, 0.3, 0.7), (0.8, 0.85, 0.8), (1.1, 1.1, 1.05)), (*F.hexl('#2b6b3c'), 1)); b.princ(col, 0.95, 0.0, b.bump(n, 0.6, 0.02))
     M['baize'] = F.fmat('baize', baize)
-    for sg in (-1, 1): obox(mb, (cx + sg * (7.0 + gw) / 2 + sg * 0.0, cy, top - 0.1), X, Y, Z, (7.0 - gw) / 2, 3.5, 0.1, M['baize'])
+    for sg in (-1, 1): obox(mb, (cx + sg * (7.0 + gw) / 2, cy, top - 0.12), X, Y, Z, (7.0 - gw) / 2, 3.5, 0.08, M['crate'])                           # wooden table top ...
+    for sg in (-1, 1): obox(mb, (cx + sg * (gw + 0.9 + (7.0 - gw - 1.8) / 2), cy, top - 0.03), X, Y, Z, (7.0 - gw - 1.8) / 2, 2.7, 0.04, M['baize'])      # ... with a dark-green baize inset
     obox(mb, (cx, cy, top - 0.1 - 0.3), X, Y, Z, gw, 3.5, 0.05, M['mud_lump'])
     for sg in (-1, 1):
         obox(mb, (cx + sg * (gw + 0.01), cy, top - 0.25), X, Y, Z, 0.03, 3.5, 0.15, M['crate']); obox(mg, (cx + sg * (gw + (0.3 if sg > 0 else 0.15)), cy, top + (0.1 if sg > 0 else 0.04)), X, Y, Z, (0.3 if sg > 0 else 0.15), 3.5, (0.1 if sg > 0 else 0.04), M['mud_lump'])
@@ -201,7 +202,7 @@ def build(preset, samples=None, quality=None):
     P = PRESETS[preset]; t0 = __import__('time').time()
     F.begin('factory', preset, P); S.update(flat=True, trenches=[], craters=[], corridors=[], mud_zones=[]); S.update(P.get('world', {})); M = S['M']
     quad('yard', -140, -120, 140, 0.0, 0.0, M['cobble'], 1.0); quad('floor', -26, 0, 26, 52, 0.01, M['concrete'], 1.0); quad('beyond', -600, -600, 600, 600, -0.05, M['dirt'], 1.0)
-    brick_shed(); yard_props(); interior_props()
+    S['few_sky'] = ('mark' in P) or bool(P.get('chart')); brick_shed(); yard_props(); interior_props()
     for (x, y) in ((0, -3), (-12, -2), (12, -2)): pass
     mg = MB(); r = rnd(2)                                     # weeds in the cobble joints + patches of grass by the walls (colour variety)
     pts = L.scatter_rect(-60, -50, 60, -2, 700, 3); L.dress(lambda x, y: 0.0, pts, [(x, y) for (x, y) in L.scatter_rect(-60, -40, 60, -1, 80, 4)], L.scatter_rect(-60, -40, 60, -1, 50, 5), None, 7, 'yard', 6, (0.2, 0.5))

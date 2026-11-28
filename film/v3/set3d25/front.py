@@ -1149,70 +1149,62 @@ def _hsv2rgb(h, s, v):
     c = v * s; x = c * (1 - np.abs(h % 2 - 1)); m = v - c; hi = np.floor(h).astype(int) % 6; z = np.zeros_like(c)
     r = np.choose(hi, [c, x, z, z, x, c]); g = np.choose(hi, [x, c, c, x, z, z]); b = np.choose(hi, [z, z, x, c, c, x]); return np.stack([r + m, g + m, b + m], -1)
 
-def grade(im, p1_t=0.04, p99_t=0.928, mean_t=0.51, sat_t=0.495, knee=0.85, iters=3, wb=(1.5, 1.5), wb_k=0.9, p98_t=0.87, warm_t=0.43, chroma_t=30.0):
-    """final tone + colour step (producer directives): (1) levels p1 -> 0.04, p99 -> 0.928 with a soft knee above 0.85, (2) luma gamma to mean 0.51 (0.75-1.35), (3) partial gray-world white balance:
-    shift the mean Lab a*, b* toward `wb` at `wb_k` strength (lightness untouched), (4) saturation in HSV (value and hue untouched, so no channel clips): S -> S (1 + ap S) lifts the saturated accents (HSV S p98 >= 0.87),
-    then a uniform scale reaches the mean S `sat_t`; near-white low-sat pixels (puppet faces, luma > 0.9) are masked from (3) and (4).  Repeated so the steps settle."""
-    a = np.asarray(im.convert('RGB')).astype(np.float32) / 255.0; W709 = np.array([0.2126, 0.7152, 0.0722], np.float32)
+def grade(im, mask=None, p1_t=0.035, p99_t=0.925, mean_t=0.51, knee=0.85, vib=1.4, wb=(1.5, 1.5), wb_k=0.6, wb_max=6.0):
+    """gentle final grade (director, 28 Nov): (1) levels p1 -> 0.035, p99 -> 0.925 with a soft knee above 0.85, (2) luma gamma to mean 0.51 (clamped 0.8-1.3), (3) white-balance shift of the mean Lab a*, b* toward `wb`
+    at 60 % strength, at most 6 Lab units, (4) vibrance ~1.4 weighted to mid-saturation pixels (S -> S (1 + (vib-1) 4 S (1-S)); hue, value untouched: no hue shifts, no clipping).  Statistics ignore the puppet cards;
+    `mask` (0..1, the cards' alpha) composites the puppets back UNGRADED so faces and costume colours stay exactly as drawn."""
+    src = np.asarray(im.convert('RGB')).astype(np.float32) / 255.0; a = src.copy(); W709 = np.array([0.2126, 0.7152, 0.0722], np.float32)
+    keep = np.ones(a.shape[:2], bool) if mask is None else (mask < 0.05)
     def lum(x): return x @ W709
-    def prot_of(x):
-        h, s, v = _rgb2hsv(x); return np.clip((v - 0.88) / 0.07, 0, 1) * (1 - np.clip(s / 0.2, 0, 1))
-    def warm_frac(h, s, v, hd):
-        col = (s > 0.15) & (v > 0.15); return float((col & ((hd < 70) | (hd >= 330))).sum()) / max(int(col.sum()), 1)
-    def sat_step(x):
-        h, s, v = _rgb2hsv(x); pr = prot_of(x); hd = h * 60.0
-        sm_ = np.asarray(Image.fromarray((np.clip(x, 0, 1) * 255).astype(np.uint8)).resize((180, 320))).astype(np.float32) / 255; mx_, mn_ = sm_.max(2), sm_.min(2); ms = float(np.where(mx_ > 0, (mx_ - mn_) / np.maximum(mx_, 1e-6), 0).mean())
-        cal = ms / max(float(s.mean()), 1e-4)                                              # full-res mean S -> the metric's 180x320 mean S
-        if warm_frac(h, s, v, hd) < warm_t:                                            # warm-up: slide the greens toward yellow just far enough that >= 42 % of the coloured pixels are warm (hue < 70 deg)
-            w = np.clip(1 - np.abs(hd - 105.0) / 70.0, 0, 1); lo_, hi_ = 0.0, 42.0
-            for _ in range(8):
-                mid = (lo_ + hi_) / 2
-                if warm_frac(h, s, v, hd - mid * w) < warm_t: lo_ = mid
-                else: hi_ = mid
-            hd = hd - hi_ * w; h = (hd % 360.0) / 60.0
-        vw = 0.35 + 1.3 * v                                                                # saturation budget goes to the luminous pixels (Lab chroma of dark saturated pixels is low)
-        best = None
-        for ap in (0.0, 0.3, 0.6, 1.0, 1.5, 2.3, 3.2):
-            s1 = np.clip(s * (1 + ap * s), 0, 1); lo_, hi_ = 0.3, 4.0
-            for _ in range(11):
-                mid = (lo_ + hi_) / 2; s2 = np.clip(s1 * (1 + (mid - 1) * (1 - pr) * vw), 0, 1)
-                if s2.mean() * cal < sat_t: lo_ = mid
-                else: hi_ = mid
-            k = (lo_ + hi_) / 2; s2 = np.clip(s1 * (1 + (k - 1) * (1 - pr) * vw), 0, 1); best = (h, s2, v)
-            if np.percentile(s2, 98) >= p98_t: break
-        return _hsv2rgb(*best)
-    for it in range(iters):
-        L = lum(a); lo, hi = np.percentile(L, 1), np.percentile(L, 99)
-        a = (a - lo) / max(hi - lo, 1e-3) * (p99_t - p1_t) + p1_t
-        k = knee; over = a > k; a = np.where(over, k + (1 - k) * np.tanh((a - k) / (1 - k)), a); a = np.clip(a, 0, 1)
-        mean = lambda g: float(np.mean(lum(np.power(np.clip(a, 1e-4, 1), g)))); lo_, hi_ = 0.6, 1.7
-        for _ in range(24):
-            mid = (lo_ + hi_) / 2
-            if mean(mid) > mean_t: lo_ = mid
-            else: hi_ = mid
-        a = np.power(np.clip(a, 1e-4, 1), float(np.clip((lo_ + hi_) / 2, 0.6, 1.7)))
-        if wb is not None:                                                                  # (3) white balance in Lab on the 180x320 statistics
-            lab = _rgb2lab(a); pr = prot_of(a); sm = lab[::4, ::4]; da = (wb[0] - float(sm[..., 1].mean())) * wb_k; db = (wb[1] - float(sm[..., 2].mean())) * wb_k; da = float(np.clip(da, -20, 20)); db = float(np.clip(db, -20, 20))
-            lab = lab.copy(); lab[..., 1] += da * (1 - pr); lab[..., 2] += db * (1 - pr); a = _lab2rgb(lab)
-        a = sat_step(a)
-    L = lum(a); lo, hi = np.percentile(L, 1), np.percentile(L, 99); a = np.clip((a - lo) / max(hi - lo, 1e-3) * (p99_t - p1_t) + p1_t, 0, 1)
-    for _ in range(6):                                                                       # guard: mean HSV S (180x320, as the metric) must end <= 0.495
-        sm_ = np.asarray(Image.fromarray((a * 255).astype(np.uint8)).resize((180, 320))).astype(np.float32) / 255; mx_, mn_ = sm_.max(2), sm_.min(2); ms = float(np.where(mx_ > 0, (mx_ - mn_) / np.maximum(mx_, 1e-6), 0).mean())
-        if ms <= 0.499: break
-        Lq = lum(a)[..., None]; a = np.clip(Lq + (a - Lq) * (0.492 / ms), 0, 1)
+    L = lum(a)[keep]; lo, hi = np.percentile(L, 1), np.percentile(L, 99)
+    a = (a - lo) / max(hi - lo, 1e-3) * (p99_t - p1_t) + p1_t; k = knee; a = np.where(a > k, k + (1 - k) * np.tanh((a - k) / (1 - k)), a); a = np.clip(a, 0, 1)
+    lo_, hi_ = 0.8, 1.3
+    for _ in range(22):
+        mid = (lo_ + hi_) / 2
+        if float(np.mean(lum(np.power(np.clip(a, 1e-4, 1), mid))[keep])) > mean_t: lo_ = mid
+        else: hi_ = mid
+    a = np.power(np.clip(a, 1e-4, 1), (lo_ + hi_) / 2)
+    lab = _rgb2lab(a); sm = lab[::4, ::4][keep[::4, ::4]]; da = float(np.clip((wb[0] - sm[:, 1].mean()) * wb_k, -wb_max, wb_max)); db = float(np.clip((wb[1] - sm[:, 2].mean()) * wb_k, -wb_max, wb_max))
+    lab = lab.copy(); lab[..., 1] += da; lab[..., 2] += db; a = _lab2rgb(lab)
+    h, s, v = _rgb2hsv(a); s = np.clip(s * (1 + (vib - 1) * 4 * s * (1 - s)), 0, 1); a = np.clip(_hsv2rgb(h, s, v), 0, 1)
+    if mask is not None: m = np.clip(mask, 0, 1)[..., None]; a = a * (1 - m) + src * m
     return Image.fromarray((np.clip(a, 0, 1) * 255 + 0.5).astype(np.uint8))
 
 def post(src, dst, W=720, H=1280, sharp=0.55, radius=1.1):
-    """mild unsharp mask (threshold 2) + clarity at native size, then the final grade() (levels / gamma / saturation, directive of the director)"""
+    """mild unsharp + clarity at native size, then the gentle grade(); the puppet cards (alpha mask from the `_mask.png` the render writes) are composited back ungraded"""
     from PIL import Image, ImageFilter
     im = Image.open(src).convert('RGB')
     if im.size != (W, H): im = im.resize((W, H), Image.LANCZOS)
+    mp = src[:-8] + '_mask.png' if src.endswith('_raw.png') else None; mask = None
+    if mp and os.path.exists(mp):
+        mi = Image.open(mp).convert('RGBA').split()[3]
+        if mi.size != (W, H): mi = mi.resize((W, H), Image.LANCZOS)
+        mask = np.asarray(mi).astype(np.float32) / 255.0
+        if mask.max() < 0.02: mask = None
+    raw_im = im
     im = im.filter(ImageFilter.UnsharpMask(radius=radius, percent=int(sharp * 100), threshold=2)); im = im.filter(ImageFilter.UnsharpMask(radius=5, percent=int(S.get('clarity', 40)), threshold=1))
-    if S.get('grade', 1): im = grade(im)
+    if mask is not None:                                                            # puppet pixels: exactly as rendered (no sharpen, no grade)
+        a0 = np.asarray(im).astype(np.float32); a1 = np.asarray(raw_im).astype(np.float32); m3 = mask[..., None]; im = Image.fromarray(np.clip(a0 * (1 - m3) + a1 * m3, 0, 255).astype(np.uint8))
+    if S.get('grade', 1): im = grade(im, mask)
     im.save(dst)
 
+def render_card_mask(path):
+    """alpha of the puppet cards only (everything else is a holdout), so post() can keep them out of the grade"""
+    sc = bpy.context.scene; cards = set(S.get('cards', []))
+    if not cards: return None
+    cy = sc.cycles; r = sc.render; saved = dict(ft=r.film_transparent, sm=cy.samples, ad=cy.use_adaptive_sampling, dn=cy.use_denoising, cm=r.image_settings.color_mode, bounces=cy.max_bounces)
+    hold = [(o, o.is_holdout) for o in sc.objects if o.type == 'MESH' and o not in cards]
+    for o, _ in hold: o.is_holdout = True
+    r.film_transparent = True; cy.samples = 6; cy.use_adaptive_sampling = False; cy.use_denoising = False; r.image_settings.color_mode = 'RGBA'; cy.max_bounces = 0
+    r.filepath = path; bpy.ops.render.render(write_still=True)
+    for o, h in hold: o.is_holdout = h
+    r.film_transparent = saved['ft']; cy.samples = saved['sm']; cy.use_adaptive_sampling = saved['ad']; cy.use_denoising = saved['dn']; r.image_settings.color_mode = saved['cm']; cy.max_bounces = saved['bounces']
+    return path
+
 def render_still(path, quality='final', samples=None, scale=None):
-    sc = bpy.context.scene; setup_render(sc, quality, samples, scale); raw = path[:-4] + '_raw.png'; w, c = T.render(raw); post(raw, path); return w, c
+    sc = bpy.context.scene; setup_render(sc, quality, samples, scale); raw = path[:-4] + '_raw.png'; mp_ = raw[:-8] + '_mask.png'
+    if os.path.exists(mp_): os.remove(mp_)
+    w, c = T.render(raw); render_card_mask(mp_); post(raw, path); return w, c
 
 def render_settings():
     sc = bpy.context.scene; cy = sc.cycles; r = sc.render
