@@ -7,6 +7,7 @@ Mild DOF (medium shot).
 """
 import math, os, sys, json
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, os.path.join(HERE, "..", "s47"))
+import layout as L
 import t2lib as T
 C, F = T.C, T.F
 G0, G1 = 1526, 1558
@@ -15,17 +16,12 @@ PRESET = "t2_pull"
 Y_T = 4.5
 
 
+TKH = [None]
+
+
 def cam_of(g):
-    k = min(max((g - G0) / float(G1 - 1 - G0), 0.0), 1.0)
-    cx = CX(g)
-    d = T.lerp(19.0, 17.5, k)
-    az = math.radians(20.0)
-    look = (cx, Y_T, 1.7)
-    loc = (cx - d * math.sin(az), Y_T - d * math.cos(az), 2.3)
-    return loc, look, 24.0, (2.8, d)
-
-
-CX = lambda g: 0.0
+    loc, look, lens = L.cam(g, c0=(23.0, 9.0, 1.4), c1=(25.0, 3.0, 1.6), lens=24.0, lead=7.0, lookz=2.4, g0=G0, g1=G1, Tk=TKH[0])
+    return loc, look, lens, (3.0, 20.0)
 
 
 def hooks(g, Tk):
@@ -40,12 +36,12 @@ def report(Tk, g):
 if __name__ == "__main__":
     cmd = sys.argv[1]
     gs = [g for g in C.parse(sys.argv[2]) if FIRST <= g <= LAST]
-    T.register(PRESET, "cross_pull", cards=[], cam=dict(loc=(9.0, -12.0, 2.3), look_at=(15.0, 4.5, 1.7), lens=24.0), dress_n=0.9, tune=dict(green_k=1.2, cloud_k=0.95),
-               world=dict(F.PRESETS["cross_pull"].get("world", {}), crates=[], barrels=[], rocks=[], wire_coils=[]))
+    L.preset(PRESET, base="cross_pull")
+    F.PRESETS[PRESET]["cam"] = dict(loc=(26.0, 6.0, 1.4), look_at=(10.0, 4.5, 2.0), lens=24.0)
     Tk = T.Take(PRESET, cam_of, hooks)
-    TKm = Tk.TK
-    _s = {g: TKm.crossing_pose(Tk.H, T.umap(g))["s"] for g in range(FIRST, LAST + 1)}
-    CX = lambda g: _s[g] - 5.5
+    TKH[0] = Tk
+    L.regime(Tk)
+    L.add_lip(x=19.0, y0=-6.0, y1=14.0)
     if cmd == "probe":
         Tk.pose(gs)
         for g in gs:

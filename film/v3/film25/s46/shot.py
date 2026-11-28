@@ -6,6 +6,7 @@ Wide and low: the hero tank rolls out of the smoke (a smoking wreck behind it) t
 """
 import math, os, sys, json
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, os.path.join(HERE, "..", "s47"))
+import layout as L
 import t2lib as T
 C, F = T.C, T.F
 G0, G1 = 1396, 1424
@@ -14,14 +15,11 @@ PRESET = "t2_out"
 Y_T = 4.5
 
 
+TKH = [None]
+
+
 def cam_of(g):
-    k = min(max((g - G0) / float(G1 - 1 - G0), 0.0), 1.0)
-    cx = T.lerp(-12.5, -2.5, T.smooth(0.2 * k + 0.8 * k * k * (3 - 2 * k)))
-    d = T.lerp(16.5, 15.5, k)
-    az = math.radians(12.0)
-    loc = (cx - d * math.sin(az), Y_T - d * math.cos(az), 1.7)
-    look = (cx + 1.5, Y_T, 2.0)
-    return loc, look, 24.0
+    return L.cam(g, c0=(17.5, 7.0, 1.2), c1=(16.0, 5.5, 1.3), lens=24.0, lead=2.0, lookz=2.4, g0=G0, g1=G1, Tk=TKH[0])
 
 
 def hooks(g, Tk):
@@ -36,11 +34,12 @@ def report(Tk, g):
 if __name__ == "__main__":
     cmd = sys.argv[1]
     gs = [g for g in C.parse(sys.argv[2]) if FIRST <= g <= LAST]
-    T.register(PRESET, "cross_hero", cards=[], cam=dict(loc=cam_of(1410)[0], look_at=cam_of(1410)[1], lens=24.0), dress_n=0.9, tune=dict(green_k=1.2, cloud_k=0.95),
-               tanks=[dict(front=(-17.0, 16.5), yaw=80.0, smoke=1.0, nocorr=True)],
-               world=dict(F.PRESETS['cross_hero']['world'], wire_belts=[(9.0, -1.0, 10.0, 16.0, 2)], wire_coils=[], crates=[], barrels=[]),
-               trench0=dict(poly=[(0.0, -45.0), (0.0, 14.0), (7.0, 21.0), (31.0, 21.0)], mw=0.8, me=1.9, sb_layers=(2, 2)))
+    L.preset(PRESET, tanks=[dict(front=(-12.0, 13.0), yaw=70.0, smoke=1.0, nocorr=True)])
+    F.PRESETS[PRESET]["cam"] = dict(loc=(22.0, 7.0, 1.3), look_at=(0.0, 4.5, 2.0), lens=24.0)
     Tk = T.Take(PRESET, cam_of, hooks)
+    TKH[0] = Tk
+    L.regime(Tk)
+    L.add_lip(x=15.0, y0=-2.0, y1=16.0)
     if cmd == "probe":
         Tk.pose(gs)
         for g in gs:

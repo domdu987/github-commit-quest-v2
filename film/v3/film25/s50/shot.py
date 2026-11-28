@@ -8,6 +8,7 @@ PUSH 12 % on the grip (the camera follows the grip point, a smoothed track).  In
 import math, os, sys, json
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, os.path.join(HERE, "..", "s47"))
 import numpy as np
+import layout as L
 import t2lib as T
 from mathutils import Vector
 C, F = T.C, T.F
@@ -25,7 +26,7 @@ def grip_point(Tk, u):
     TK = Tk.TK; H = Tk.H
     TK.set_crossing(H, u); bpy.context.view_layer.update(); best = None
     for (x, z) in TK.outline_pts(0.3):
-        p = H.root.matrix_world @ Vector((x, -2.6, z)); cl = p.z - F.gh(p.x, p.y)
+        p = H.root.matrix_world @ Vector((x, 2.6, z)); cl = p.z - F.gh(p.x, p.y)
         if p.x > 1.0 and (best is None or cl < best[0]): best = (cl, p)
     return best[1]
 
@@ -43,9 +44,10 @@ def build_track(Tk, gs):
 def cam_of(g):
     p = GRIP[g]; k = min(max((g - G0) / float(G1 - 1 - G0), 0.0), 1.0)
     push = 1.0 + 0.12 * T.smooth(k)
-    loc = (p.x - 2.0, p.y - 14.0 / push, p.z + 1.1)
-    look = (p.x + 0.8, p.y, p.z + 0.4)
-    return loc, look, 30.0, (3.2, 14.0 / push)
+    off = Vector((6.5, 2.6, 0.0)) / push                    # low camera on the east (near-lip) side, the grip in front of it
+    loc = (p.x + off.x, p.y + off.y, p.z + 0.85)
+    look = (p.x - 0.8, p.y - 0.2, p.z + 0.9)
+    return loc, look, 28.0, (3.2, off.length)
 
 
 def hooks(g, Tk):
@@ -70,9 +72,11 @@ def report(Tk, g):
 if __name__ == "__main__":
     cmd = sys.argv[1]
     gs = [g for g in C.parse(sys.argv[2]) if FIRST <= g <= LAST]
-    T.register(PRESET, "cross_close_lip", cards=[], dress_n=1.4, tune=dict(green_k=1.0, cloud_k=0.95))
-    F.PRESETS[PRESET]["cam"] = dict(loc=(0.0, -4.0, 2.0), look_at=(4.0, 4.5, 1.8), lens=32.0)   # build-time camera (dressing); the shot's own cam_of is keyed
+    L.preset(PRESET, base="cross_close_lip", extras=[], dress_n=0.5)
+    F.PRESETS[PRESET]["cam"] = dict(loc=(9.0, 3.0, 1.2), look_at=(4.0, 3.0, 1.2), lens=28.0)
     Tk = T.Take(PRESET, cam_of, hooks)
+    L.regime(Tk)
+    L.add_lip(x=11.0, y0=-6.0, y1=12.0)
     build_track(Tk, list(range(FIRST, LAST + 1)))
     for i, (t0, ox) in enumerate([(1497, -0.3), (1505, 0.3), (1513, 0.0)]):          # earth falling off the lip at the grip
         ob = F.clods(0.0, 0.0, n=9, seed=21 + i); CLODS.append((ob, t0, ox))
