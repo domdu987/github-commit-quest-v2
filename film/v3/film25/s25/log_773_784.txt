@@ -1,0 +1,3 @@
+00:06.385  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: hid set cards ['tommy_a', 'tommy_a.001', 'tommy_a_decal', 'tommy_a_decal.001', 'tommy_b', 'tommy_b_decal']
+take: built trial_camp in 6.1 s
