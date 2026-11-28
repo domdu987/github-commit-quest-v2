@@ -1166,7 +1166,7 @@ def grade(im, p1_t=0.04, p99_t=0.928, mean_t=0.51, sat_t=0.475, knee=0.85, iters
                 else: hi_ = mid
             hd = hd - hi_ * w; h = (hd % 360.0) / 60.0
         best = None
-        for ap in (0.0, 0.3, 0.6, 1.0, 1.5):
+        for ap in (0.0, 0.3, 0.6, 1.0, 1.5, 2.3, 3.2):
             s1 = np.clip(s * (1 + ap * s), 0, 1); lo_, hi_ = 0.3, 4.0
             for _ in range(11):
                 mid = (lo_ + hi_) / 2; s2 = np.clip(s1 * (1 + (mid - 1) * (1 - pr)), 0, 1)
@@ -1179,14 +1179,14 @@ def grade(im, p1_t=0.04, p99_t=0.928, mean_t=0.51, sat_t=0.475, knee=0.85, iters
         L = lum(a); lo, hi = np.percentile(L, 1), np.percentile(L, 99)
         a = (a - lo) / max(hi - lo, 1e-3) * (p99_t - p1_t) + p1_t
         k = knee; over = a > k; a = np.where(over, k + (1 - k) * np.tanh((a - k) / (1 - k)), a); a = np.clip(a, 0, 1)
-        mean = lambda g: float(np.mean(lum(np.power(np.clip(a, 1e-4, 1), g)))); lo_, hi_ = 0.75, 1.35
+        mean = lambda g: float(np.mean(lum(np.power(np.clip(a, 1e-4, 1), g)))); lo_, hi_ = 0.6, 1.7
         for _ in range(24):
             mid = (lo_ + hi_) / 2
             if mean(mid) > mean_t: lo_ = mid
             else: hi_ = mid
-        a = np.power(np.clip(a, 1e-4, 1), float(np.clip((lo_ + hi_) / 2, 0.75, 1.35)))
+        a = np.power(np.clip(a, 1e-4, 1), float(np.clip((lo_ + hi_) / 2, 0.6, 1.7)))
         if wb is not None:                                                                  # (3) white balance in Lab on the 180x320 statistics
-            lab = _rgb2lab(a); pr = prot_of(a); sm = lab[::4, ::4]; da = (wb[0] - float(sm[..., 1].mean())) * wb_k; db = (wb[1] - float(sm[..., 2].mean())) * wb_k; da = float(np.clip(da, -12, 12)); db = float(np.clip(db, -12, 12))
+            lab = _rgb2lab(a); pr = prot_of(a); sm = lab[::4, ::4]; da = (wb[0] - float(sm[..., 1].mean())) * wb_k; db = (wb[1] - float(sm[..., 2].mean())) * wb_k; da = float(np.clip(da, -20, 20)); db = float(np.clip(db, -20, 20))
             lab = lab.copy(); lab[..., 1] += da * (1 - pr); lab[..., 2] += db * (1 - pr); a = _lab2rgb(lab)
         a = sat_step(a)
     L = lum(a); lo, hi = np.percentile(L, 1), np.percentile(L, 99); a = np.clip((a - lo) / max(hi - lo, 1e-3) * (p99_t - p1_t) + p1_t, 0, 1)

@@ -1,8 +1,8 @@
 {
  "preset": "cross_nose",
- "wall_s": 75.4,
- "cpu_s": 299.0,
- "build_s": 13.3,
+ "wall_s": 165.8,
+ "cpu_s": 365.3,
+ "build_s": 15.3,
  "settings": {
   "resolution": [
    720,

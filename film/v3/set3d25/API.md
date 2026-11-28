@@ -83,3 +83,20 @@ FACTORY (factory.py): brick shed 52 x 52 x 14 D, arched windows, sliding doors o
 
 ## Final grade (director directive, `front.grade()`, last step of `post()`)
 After the sharpen / clarity steps: per image (1) levels p1 -> 0.035, p99 -> 0.925 with a tanh soft knee above 0.85, (2) luma gamma to mean 0.51 (clamped 0.75-1.35), (3) saturation toward 0.31 (factor clamped 0.7-1.3), iterated 3x. Switch off with `F.OVR['grade'] = 0`. Per-preset `tune=dict(cloud_k=, haze=, green_k=, grass_val=)` and `fill=` (hidden bounce light) are source-side dials. Tools: `run_finals.sh`, `tn.sh` (24-sample full-res tuning render), `regrade.py`, `contact.py`.
+
+# ===== SHOT PLAN V2 ADDITIONS (18 more presets, new hooks, colour pipeline) =====
+## New hooks
+| call | what |
+|---|---|
+| `factory.set_model_tank(u, frame=None)` | CHART TABLE (`build_chart`, preset `fac_chart`): a small model Mark I (root scale 0.11, full track / tail hooks) slides up to, over and across the groove cut into the green baize (u 0..1: nose lifts onto the far parapet, tips over, off the far side; links scroll) |
+| `factory.set_doors(u, frame=None)` | the shed's two sliding doors, 0 = open (parked either side), 1 = shut, eased (`fac_doors`) |
+| `tank25.set_steam(H, level, frame=None)` | radiator steam like a leaky kettle at the rear top (soft white puff, grows with level) + a water dribble down the hull; no damage |
+| hull tap + hatch | geometry on both hull sides (brass tap with a spout, drain, hinged hatch plate with handle and bolts) at local x = -5, part of the `plates` stage: the drink / watering-can gags |
+| `lib25.water_tank_big(mb, c, r, h)` | a REAL riveted water tank on four legs with a ladder, domed lid and a tap at the bottom (`dock_watertank`) |
+| `front.close_cam(pos, face_deg, dist, lens, zc, ground, look_dz)` | waist-up camera for a ~3.2 D puppet card: `dist` D from the mark, level at chest height; the mark (position, facing) is returned in `anchors()['mark']`. Close presets render NO puppet |
+| `P['cam']` may be a function of the scene state (`cross_close_idler`) | camera placed from the posed tank |
+| `front.grade()` | now also: partial gray-world white balance in Lab (a*, b* toward +1.5, clamped +-20), HSV saturation shaping (accents lifted: S p98 >= 0.87, mean S 0.475), warm-up of the greens until >= 43 % of coloured pixels are warm, luma gamma 0.6-1.7, never clips a channel (HSV value untouched), faces / near-white masked |
+
+## New presets (render with `set25.py render <name> out.png`)
+`fac_chart` (3/4 top-down on the chart table), `fac_chart_face` (engineer behind the table, mark), `fac_doors` (doors shut, from the yard), `fac_close_hull`, `fac_close_rivet`, `fac_close_engineer`, `trial_close_general`, `camp_close_tank` (tank hull side behind the mark), `dock_watertank`, `dock_deck` (crate on a ship's deck at sea, gulls, white cliffs + poplars ahead), `front_close_britishtrench`, `front_close_germantrench`, `op_close_general`, `cross_close_idler` (links round the front idler against the sky), `cross_close_lip` (track gripping the far lip, clods), `sky_close_cockpit`, `street_close_tail` (tank rear + tail wheels at waist height), `street_high` (pilot's view down the street).
+Clouds: every preset has its own cloud seed (offset, scale, aspect) and two noise scales (big and small structures), so no two shots show the same clouds and sizes / spacing vary.
