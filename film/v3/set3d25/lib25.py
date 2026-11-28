@@ -132,8 +132,8 @@ def tufts(name, pts, zf, seed=1, blades=7, h=(0.45, 1.0), w=0.075, lean=0.4, ton
 def poppies(name, pts, zf, seed=3, cols=('poppy',)):
     mb = MB(); rr = rnd(seed); M = S['M']
     for (x, y) in pts:
-        z = zf(x, y); h = rr.uniform(0.35, 0.8); c = rr.choice(cols)
-        if S.get('clamp') and S.get('cam_loc') is not None: cl = S['cam_loc']; h = min(h, max(0.15, 0.085 * math.sqrt((x - cl[0]) ** 2 + (y - cl[1]) ** 2 + (z - cl[2]) ** 2)), 0.9); lean = Vector((rr.uniform(-0.08, 0.08), rr.uniform(-0.08, 0.08), 0))
+        z = zf(x, y); h = rr.uniform(0.35, 0.8); c = rr.choice(cols); lean = Vector((rr.uniform(-0.08, 0.08), rr.uniform(-0.08, 0.08), 0))
+        if S.get('clamp') and S.get('cam_loc') is not None: cl = S['cam_loc']; h = min(h, max(0.15, 0.085 * math.sqrt((x - cl[0]) ** 2 + (y - cl[1]) ** 2 + (z - cl[2]) ** 2)), 0.9)
         rod(mb, (x, y, z - 0.02), Vector((x, y, z + h)) + lean, 0.012, M['blade'] if False else M['p_green'], 4)
         top = Vector((x, y, z + h)) + lean; mb.frustum(top, top + Vector((0, 0, 0.09)), 0.075, 0.11, M[c], seg=6)
         mb.frustum(top + Vector((0, 0, 0.09)), top + Vector((0, 0, 0.1)), 0.045, 0.0, M['poppy_c'] if c == 'poppy' else M['butter'], seg=6, cap1=False)
