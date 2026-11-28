@@ -3,3 +3,7 @@ work_draft/
 frames/
 raw/
 *.png
+*.log
+queue.txt
+done.txt
+__pycache__/

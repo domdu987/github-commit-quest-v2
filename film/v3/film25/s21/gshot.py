@@ -15,13 +15,18 @@ class GeneralClose(D.Rig):
     WALL_COL = (0.36, 0.40, 0.33)
     FSTOP = 2.0
     KW = {}
+    HIDE = ()
 
     def __init__(self, work):
         D.Rig.__init__(self, self.PRESET, work, fstop=self.FSTOP, **self.KW)
+        import bpy
+        for o in bpy.data.objects:
+            if o.name in self.HIDE:
+                o.hide_render = True; o.hide_viewport = True
         self.gen = self.actor("gen", "general25", contact=dict(width=1.6, depth=0.8, opacity=0.7))
         m = F.S["mark"]; self.P = Vector(m["pos"]); self.f0 = m["face_deg"]; self.P.z = F.gh(self.P.x, self.P.y)
         azc = self.f0 + self.WALL_AZ
-        self.wall = D.add_wall("wall", (self.P.x - math.cos(math.radians(azc)) * self.ND, self.P.y - math.sin(math.radians(azc)) * self.ND), azc, self.WALL_W, self.WALL_H, D.plate_material("wall_m", self.WALL_COL))
+        self.wall = D.add_wall("wall", (self.P.x - math.cos(math.radians(azc)) * self.ND, self.P.y - math.sin(math.radians(azc)) * self.ND), azc, self.WALL_W, self.WALL_H + 1.0, D.plate_material("wall_m", self.WALL_COL), z0=self.P.z - 1.0)
 
     def feet(self, g):
         return self.P

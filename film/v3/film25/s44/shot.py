@@ -11,6 +11,7 @@ G0, G1 = 1331, 1368
 
 class Take(GS.GeneralClose):
     PRESET = "op_close_general"
+    HIDE = ("op_wood",)
     G0, G1 = G0, G1
     WALL_AZ = 12.0
 
