@@ -1,0 +1,53 @@
+{
+ "preset": "fac_chart_face",
+ "wall_s": 166.8,
+ "cpu_s": 660.5,
+ "build_s": 0.9,
+ "settings": {
+  "resolution": [
+   720,
+   1280
+  ],
+  "samples": 64,
+  "adaptive_threshold": 0.012000000104308128,
+  "adaptive_min": 16,
+  "denoiser": "OPENIMAGEDENOISE",
+  "prefilter": "ACCURATE",
+  "passes": "RGB_ALBEDO_NORMAL",
+  "bounces": {
+   "total": 6,
+   "diffuse": 5,
+   "glossy": 3,
+   "transmission": 2
+  },
+  "view": "Standard",
+  "exposure": -0.25,
+  "threads": 4,
+  "sun": {
+   "energy": 5.0,
+   "elevation": 28.0,
+   "color": [
+    1.0,
+    0.7799999713897705,
+    0.5
+   ]
+  },
+  "haze": 0.0006,
+  "post": "unsharp r1.1 55% + clarity r5 40%"
+ },
+ "cards": [],
+ "anchors": {
+  "tank0_nose": [
+   -5209115400,
+   -2259218880
+  ],
+  "tank0_front": [
+   -14400658080,
+   6353839360
+  ],
+  "tank0_rear": [
+   -34680504960,
+   1604799040
+  ]
+ }
+}

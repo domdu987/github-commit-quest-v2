@@ -829,6 +829,8 @@ CAMS = dict(
     back=dict(loc=(12.0, 24.0, 6.0), look_at=(-1.0, 2.0, 2.5), lens=30),
 )
 
+def _cam_idler(S_):
+    n = S_['tank'].root.matrix_world @ Vector((3.0, -2.6, 3.4)); return dict(loc=(n.x + 0.6, n.y - 4.6, n.z - 0.7), look_at=(n.x, n.y, n.z + 0.1), lens=40)
 _TP = [(0.0, -3.0), (0.0, 14.0), (7.0, 21.0), (31.0, 21.0)]
 _CR = dict(x0=0.0, y=4.5, s_a=-5.0, s_b=27.0, mud=1.0)
 _CT = dict(poly=_TP, mw=0.8, me=1.9, sb_layers=(2, 2))
@@ -837,7 +839,7 @@ def _cross(name, u, cam, **kw):
 PRESETS = dict(
     cross_nose=_cross('cross_nose', 0.34, dict(loc=(0.5, -18.5, 1.0), look_at=(2.0, 4.5, 3.8), lens=21), dress_n=2.4, world=dict(rocks=[(5.0, -9.6, 3, 1.6), (8.8, -7.0, 4, 3.0), (3.0, -9.5, 5, 2.2), (-6.0, 8.0, 8, 4.0), (6.5, 5.0, 6, 3.0), (-3.5, -9.0, 5, 2.5), (3.0, -12.0, 16, 4.0), (7.0, -9.0, 12, 3.0), (-1.0, -11.0, 12, 3.5), (1.0, -7.0, 10, 3.0)]), tune=dict(green_k=0.3), cards=[('a', (-8, -6), 3.2)], clamp=True, note='shot 24: side-on low, the nose lifting over the trench gap'),
     cross_hero=_cross('cross_hero', 0.40, dict(loc=(4.0, -18.5, 1.0), look_at=(2.5, 4.5, 3.8), lens=21), dress_n=2.4, world=dict(rocks=[(5.0, -9.6, 3, 1.6), (8.8, -7.0, 4, 3.0), (3.0, -9.5, 5, 2.2), (-6.0, 8.0, 8, 4.0), (6.5, 5.0, 6, 3.0), (-3.5, -9.0, 5, 2.5), (3.0, -12.0, 16, 4.0), (7.0, -9.0, 12, 3.0), (-1.0, -11.0, 12, 3.5), (1.0, -7.0, 10, 3.0)]), tune=dict(green_k=0.3), cards=[('a', (-9, -5), 3.2), ('b', (10, -4), 3.2)], clamp=True, note='shot 25: SIDE-ON, nose lifted, front track gripping the far lip, rear on the near parapet'),
-    cross_pull=_cross('cross_pull', 0.60, dict(loc=(7.5, -11.0, 1.3), look_at=(4.5, 4.5, 2.6), lens=24), fill=500.0, dress_n=2.6, cards=[('a', (-6, -6), 3.2)], clamp=True, note='shot 26: pulling across, rear tracks leaving the near lip'),
+    cross_pull=_cross('cross_pull', 0.60, dict(loc=(7.5, -11.0, 1.3), look_at=(4.5, 4.5, 1.8), lens=24), fill=500.0, dress_n=2.6, cards=[('a', (-6, -6), 3.2)], clamp=True, note='shot 26: pulling across, rear tracks leaving the near lip'),
     cross_wire=_cross('cross_wire', 0.12, dict(loc=(-5.0, -8.0, 0.8), look_at=(-9.5, 2.0, 1.2), lens=22), dress_n=0.3, near=False, sun=(205.0, 30.0), fill=1200.0, tune=dict(cloud_k=0.8, green_k=0.2), lane_ok=True, world=dict(crates=[]), note='shot 27: low insert, barbed wire squashed flat under the track'),
     cross_hull=_cross('cross_hull', 0.50, dict(loc=(11.0, -7.0, 3.2), look_at=(5.0, 4.5, 3.0), lens=24), sparks=0.30, sun=(205.0, 30.0), fill=2200.0, dress_n=0.4, near=False, tune=dict(cloud_k=0.8), note='shot 28: hull side, bullet pings (sparks)'),
     cross_flee=_cross('cross_flee', 0.62, dict(loc=(-27.0, -3.0, 8.0), look_at=(6.0, 5.0, 2.6), lens=20), dress_n=2.0, tune=dict(cloud_k=0.9), cards=[('b', (14, 3), 3.2), ('a', (19, 8), 3.2), ('b', (24, 0), 3.2), ('a', (17, 12), 3.2)], clamp=True, note='shot 29: wide behind the tank, Germans (stand-ins) running'),
@@ -848,6 +850,11 @@ PRESETS = dict(
     front_halt=dict(loc='front', tune=dict(cloud_k=0.85, green_k=2.2), dress_n=4.0, cam=dict(loc=(8.0, -36.0, 2.8), look_at=(-22.0, -36.0, 3.0), lens=22), tanks=[dict(front=(-22.0, -33.0), yaw=90.0, nocorr=True), dict(front=(-8.0, -22.0), yaw=95.0, smoke=1.0)], clamp=True, note='shot 21: one smoking, one nose-down in a crater'),
     front_stuck=dict(loc='front', dress_n=3.0, tune=dict(cloud_k=0.85, green_k=0.3), world=dict(rocks=[(5.0, -9.6, 3, 1.6), (3.0, -49.0, 22, 4.0), (6.0, -47.0, 16, 3.0), (0.0, -46.0, 14, 3.0), (8.0, -44.0, 12, 3.0)], spill=[(4.0, -48.0, 4.0, 14)]), cam=dict(loc=(6.0, -52.0, 1.4), look_at=(-4.0, -41.0, -0.6), lens=24), tanks=[dict(front=(-4.0, -42.0), yaw=90.0, state='stuck')], extras=[('mud', -4.0, -42.0, math.pi / 2)], cards=[('a', (2.0, -45.0), 3.2), ('b', (-9.0, -47.0), 3.2)], clamp=True, note='shot 22: sunk to the sponsons in mud'),
     front_op=dict(loc='front', tune=dict(cloud_k=0.85), fill=3000.0, cam=dict(loc=(-45.0, -17.0, 6.5), look_at=(-26.0, -8.0, 2.4), lens=28), extras=[('op', -28.0, -8.0, 0.0)], tanks=[dict(front=(-6.0, -16.0), yaw=90.0, smoke=1.0)], cards=[('a', (-30.5, -9.0), 2.6)], note='shot 23: observation post'),
+    front_close_britishtrench=dict(loc='front', mark=dict(pos=(-34.0, -8.0), face_deg=262.9, dist=4.2, lens=40, zc=2.2, look_dz=-1.1), dress_n=0.3, near=False, note='shots 8-9, 10-11: waist-up Tommy inside the British trench (mark)'),
+    front_close_germantrench=dict(loc='front', mark=dict(pos=(0.0, 6.0), face_deg=90.0, dist=4.2, lens=40, zc=2.2, look_dz=-1.1), dress_n=0.3, near=False, note='shots 8-9, 55: German trench mirror close (mark)'),
+    op_close_general=dict(loc='front', mark=dict(pos=(-30.2, -8.0), face_deg=0.0, dist=4.2, lens=40, zc=2.2, look_dz=-0.6), extras=[('op', -28.0, -8.0, 0.0)], dress_n=0.3, near=False, note='shots 43-44: general in the observation post (mark)'),
+    cross_close_idler=_cross('cross_close_idler', 0.40, _cam_idler, clamp=True, dress_n=1.2, note='shots 47-49: track links round the front idler as the nose lifts against the sky'),
+    cross_close_lip=_cross('cross_close_lip', 0.40, dict(loc=(6.0, -1.4, 1.0), look_at=(5.0, 4.5, 3.4), lens=34), clamp=True, near=False, dress_n=0.4, extras=[('clods', 5.0, 4.5)], note='shot 50: the front track gripping the far lip, earth crumbling'),
 )
 
 def default_world():
@@ -932,6 +939,13 @@ def op_post(x, y, yaw):
 def bucket_at(x, y):
     import lib25 as L
     mb = MB(); L.bucket3d(mb, (x, y, gh(x, y)), 0.5, 0.75, True); return mkobj(mb, 'bucket_%d' % int(x * 7), smooth=True)
+
+def clods(x, y, n=18, seed=9):
+    """loose lumps of earth crumbling off a lip (insert shot): small mud lumps on and below the crest"""
+    mb = MB(); rr = rnd(seed); m = S['M']['mud_lump']
+    for i in range(n):
+        px, py = x + rr.uniform(-1.2, 1.2), y + rr.uniform(-1.6, 0.8); J.lump(mb, (px, py, gh(px, py) + rr.uniform(0.05, 0.3)), rr.uniform(0.08, 0.26), m, rr.randint(0, 9999), 7, 5, 0.3, 0.7)
+    return mkobj(mb, 'clods', smooth=True)
 
 def mud_heaps(x, y, yaw, n=26, seed=3):
     """lumps of churned mud banked against both sides of a sunk tank (the ground mesh covers its lower hull)"""
@@ -1032,7 +1046,7 @@ def build(preset, samples=None, quality=None):
     assert preset in PRESETS, preset; P = PRESETS[preset]; t0 = time.time()
     begin('front', preset, P); default_world(); S.update(P.get('world', {}))
     if 'trench0' in P: S['trenches'][0].update(P['trench0']); S['trench'] = S['trenches'][0]['poly']
-    cam = P['cam']; S['cam_loc'] = cam['loc']; S['cam_dict'] = cam
+    cam = P.get('cam') if isinstance(P.get('cam'), dict) else dict(loc=(0.0, -20.0, 3.0), look_at=(0.0, 0.0, 3.0), lens=24); S['cam_loc'] = cam['loc']; S['cam_dict'] = cam
     cr = P.get('cross')
     if cr: add_corridor((cr['x0'], cr['y']), 0.0, -40, 50, 4.8, 6.8)
     for tk in P.get('tanks', []):
@@ -1046,6 +1060,7 @@ def build(preset, samples=None, quality=None):
         elif k == 'bucket': bucket_at(ex[1], ex[2])
         elif k == 'mud': mud_heaps(ex[1], ex[2], ex[3])
         elif k == 'tufts': L.dress(gh, ex[1], None, None, None, 5)
+        elif k == 'clods': clods(ex[1], ex[2])
     S['tank_h'] = {}; S['tanks_h'] = []
     for i, tk in enumerate(P.get('tanks', [])):
         H = front_pose_tank(tk, i); S['tanks_h'].append(H); st = tk.get('state', 'normal'); x, y = tk['front']
@@ -1062,6 +1077,11 @@ def build(preset, samples=None, quality=None):
         if P.get('sparks') is not None: TK.set_sparks(H, P['sparks'])
         if cr.get('stencil') is False: TK.set_stencil(H, False)
         if cr.get('smoke'): TK.set_state(H, 'smoking', 1.0)
+    F_ = P.get('cam')
+    if callable(F_): cam = F_(S)
+    elif 'mark' in P:
+        mk = dict(P['mark']); pos = mk.pop('pos'); mk.setdefault('ground', gh(pos[0], pos[1])); cam = close_cam(pos, **mk)
+    S['cam_loc'] = cam['loc']; S['cam_dict'] = cam
     S['clamp'] = bool(P.get('clamp')); S['tank_boxes'] = tank_screen_boxes(cam) if S['clamp'] else []
     P_NEAR[0] = P.get('near', True); dress_front(cam['loc'], P.get('focus', cam['look_at'][:2]), P.get('dress_n', 1.0), lane_ok=P.get('lane_ok', False))
     S['cards'] = []
@@ -1072,10 +1092,10 @@ def build(preset, samples=None, quality=None):
     S['build_s'] = time.time() - t0
     return anchors()
 
-def close_cam(pos, face_deg, dist=4.2, lens=40, zc=2.2, ground=0.0, head=3.2):
+def close_cam(pos, face_deg, dist=4.2, lens=40, zc=2.2, ground=0.0, head=3.2, look_dz=0.0):
     """waist-up close camera for a puppet card ~3.2 D tall standing at pos=(x, y) on `ground`, facing face_deg (the card faces the camera): the camera is `dist` D away on that side at the chest height zc, level.
     With 40 mm the head sits at ~0.30-0.45 of the frame height.  The mark (card position + facing) is stored for the cast shots (anchors()['mark']); close presets render with NO puppet."""
-    a = math.radians(face_deg); cam = dict(loc=(pos[0] + math.cos(a) * dist, pos[1] + math.sin(a) * dist, ground + zc), look_at=(pos[0], pos[1], ground + zc), lens=lens)
+    a = math.radians(face_deg); cam = dict(loc=(pos[0] + math.cos(a) * dist, pos[1] + math.sin(a) * dist, ground + zc), look_at=(pos[0], pos[1], ground + zc + look_dz), lens=lens)
     S['mark'] = dict(pos=(pos[0], pos[1], ground), face_deg=face_deg, height=head, dist=dist, lens=lens); return cam
 
 def anchors():
@@ -1124,7 +1144,7 @@ def _hsv2rgb(h, s, v):
     c = v * s; x = c * (1 - np.abs(h % 2 - 1)); m = v - c; hi = np.floor(h).astype(int) % 6; z = np.zeros_like(c)
     r = np.choose(hi, [c, x, z, z, x, c]); g = np.choose(hi, [x, c, c, x, z, z]); b = np.choose(hi, [z, z, x, c, c, x]); return np.stack([r + m, g + m, b + m], -1)
 
-def grade(im, p1_t=0.04, p99_t=0.928, mean_t=0.51, sat_t=0.487, knee=0.85, iters=3, wb=(1.5, 1.5), wb_k=0.7, p98_t=0.87, warm_t=0.43, chroma_t=30.0):
+def grade(im, p1_t=0.04, p99_t=0.928, mean_t=0.51, sat_t=0.475, knee=0.85, iters=3, wb=(1.5, 1.5), wb_k=0.9, p98_t=0.87, warm_t=0.43, chroma_t=30.0):
     """final tone + colour step (producer directives): (1) levels p1 -> 0.04, p99 -> 0.928 with a soft knee above 0.85, (2) luma gamma to mean 0.51 (0.75-1.35), (3) partial gray-world white balance:
     shift the mean Lab a*, b* toward `wb` at `wb_k` strength (lightness untouched), (4) saturation in HSV (value and hue untouched, so no channel clips): S -> S (1 + ap S) lifts the saturated accents (HSV S p98 >= 0.87),
     then a uniform scale reaches the mean S `sat_t`; near-white low-sat pixels (puppet faces, luma > 0.9) are masked from (3) and (4).  Repeated so the steps settle."""
@@ -1166,10 +1186,14 @@ def grade(im, p1_t=0.04, p99_t=0.928, mean_t=0.51, sat_t=0.487, knee=0.85, iters
             else: hi_ = mid
         a = np.power(np.clip(a, 1e-4, 1), float(np.clip((lo_ + hi_) / 2, 0.75, 1.35)))
         if wb is not None:                                                                  # (3) white balance in Lab on the 180x320 statistics
-            lab = _rgb2lab(a); pr = prot_of(a); sm = lab[::4, ::4]; da = (wb[0] - float(sm[..., 1].mean())) * wb_k; db = (wb[1] - float(sm[..., 2].mean())) * wb_k
+            lab = _rgb2lab(a); pr = prot_of(a); sm = lab[::4, ::4]; da = (wb[0] - float(sm[..., 1].mean())) * wb_k; db = (wb[1] - float(sm[..., 2].mean())) * wb_k; da = float(np.clip(da, -12, 12)); db = float(np.clip(db, -12, 12))
             lab = lab.copy(); lab[..., 1] += da * (1 - pr); lab[..., 2] += db * (1 - pr); a = _lab2rgb(lab)
         a = sat_step(a)
     L = lum(a); lo, hi = np.percentile(L, 1), np.percentile(L, 99); a = np.clip((a - lo) / max(hi - lo, 1e-3) * (p99_t - p1_t) + p1_t, 0, 1)
+    for _ in range(6):                                                                       # guard: mean HSV S (180x320, as the metric) must end <= 0.495
+        sm_ = np.asarray(Image.fromarray((a * 255).astype(np.uint8)).resize((180, 320))).astype(np.float32) / 255; mx_, mn_ = sm_.max(2), sm_.min(2); ms = float(np.where(mx_ > 0, (mx_ - mn_) / np.maximum(mx_, 1e-6), 0).mean())
+        if ms <= 0.495: break
+        Lq = lum(a)[..., None]; a = np.clip(Lq + (a - Lq) * (0.485 / ms), 0, 1)
     return Image.fromarray((np.clip(a, 0, 1) * 255 + 0.5).astype(np.uint8))
 
 def post(src, dst, W=720, H=1280, sharp=0.55, radius=1.1):

@@ -33,9 +33,14 @@ def build(preset, samples=None, quality=None):
     for (a, b) in ((( -60, 50), (60, 50)), ((-60, -50), (60, -50))): L.hedge(mb, (a[0], a[1], 0), (b[0], b[1], 0), 2.6, 1.8, 3, gh)
     mkobj(mb, 'tents'); mkobj(mf, 'flags_cars')
     pts = L.scatter_rect(-50, -50, 50, 50, 2600, 3, lambda x, y: abs(x) < 3.6 and abs(y) < 17); fl = L.scatter_rect(-50, -50, 50, 50, 260, 4); L.dress(gh, pts, L.scatter_rect(-50, -50, 50, 50, 120, 6), fl, None, 7, 'lawn', 6, (0.3, 0.8))
-    F.dress_front(P['cam']['loc'], P['cam']['look_at'][:2], P.get('dress_n', 1.6), 21)
+    c0 = P.get('cam', dict(loc=(-17.0, -18.0, 2.2), look_at=(-19.0, -9.0, 2.2))); S['cam_loc'] = c0['loc']; F.dress_front(c0['loc'], c0['look_at'][:2], P.get('dress_n', 1.6), 21)
     H = TK.build_tank('mk1', mud=0.0); S['tank'] = H; S['tanks_h'] = [H]; TK.pose_on_ground(H, tk['front'][0], tk['front'][1], tk['yaw'])
-    cam = P['cam']; S['cam_loc'] = cam['loc']; S['cards'] = []
+    F.bpy.context.view_layer.update()
+    if 'mark_tank' in P:                                                                  # close shot in front of the tank's hull side: card mark = a point beside the hull, camera `dist` D from it
+        mt_ = P['mark_tank']; w = H.root.matrix_world @ Vector((mt_['local'][0], mt_['local'][1], 0.0)); fd = tk['yaw'] - 90.0 + mt_.get('rot', 0.0)
+        cam = F.close_cam((w.x, w.y), fd, mt_.get('dist', 4.2), mt_.get('lens', 40), mt_.get('zc', 2.2), gh(w.x, w.y))
+    else: cam = P['cam']
+    S['cam_loc'] = cam['loc']; S['cards'] = []
     for (k, xy, ht) in P.get('cards', []): L.cards([(k, xy, ht)], gh, cam['loc'])
     F.finish(cam, P, samples, quality); S['build_s'] = time.time() - t0; return F.anchors()
 
@@ -44,4 +49,6 @@ PRESETS = dict(
     trial_general=dict(tune=dict(grass_val=0.7), cam=dict(loc=(-9.0, -18.0, 2.6), look_at=(-14.0, -4.0, 3.2), lens=30), cards=[('a', (-12, -10), 3.4), ('b', (-17, -9), 3.2)], note='shots 10, 12'),
     trial_trench=dict(tune=dict(grass_val=0.62), cam=dict(loc=(-6.0, -30.0, 3.0), look_at=(-2.0, -2.0, 2.4), lens=22), cards=[('a', (-9, -12), 3.2)], note='shot 11'),
     trial_camp=dict(dress_n=3.5, tune=dict(grass_val=0.62, cloud_k=0.85), cam=dict(loc=(-16.0, -32.0, 2.6), look_at=(-36.0, -15.0, 3.0), lens=24), cards=[('a', (-31, -12), 3.2), ('b', (-33, -9), 3.2), ('a', (-28, -9), 3.2)], note='shot 13'),
+    trial_close_general=dict(world=dict(clamp=True), mark_tank=dict(local=(-5.5, -6.8), dist=4.2, lens=40, zc=2.3), dress_n=1.4, note='shots 19-21, 24: waist-up general in front of the tank hull side (mark)'),
+    camp_close_tank=dict(world=dict(clamp=True), mark_tank=dict(local=(-7.2, -6.6), dist=4.2, lens=40, zc=2.3, rot=24.0), dress_n=1.4, note='shots 26-27: Tommies in front of the tank hull side (mark)'),
 )

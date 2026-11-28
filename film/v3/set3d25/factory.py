@@ -29,10 +29,10 @@ def brick_shed(W=26.0, Dp=52.0, Hw=14.0):
     door = (0.5 - 10.0 / (2 * W), 0.5 + 10.0 / (2 * W))
     # front wall y=0 (two arched windows each side of the door), side walls with 5 arched windows, back wall
     fw = [(0.06, 0.13, 3.5, 9.5), (0.2, 0.27, 3.5, 9.5), (0.73, 0.8, 3.5, 9.5), (0.87, 0.94, 3.5, 9.5), (door[0], door[1], 0.0, 11.0)]
-    F.brick_wall(mb, -W, 0, W, 0, 0.0, H, 1.2, fw, M['brick_y'])
+    F.brick_wall(mb, -W, 0, W, 0, 0.0, H, 1.2, fw, M['brick_r'])
     sw = [(0.07 + 0.19 * k, 0.07 + 0.19 * k + 0.09, 3.5, 9.5) for k in range(5)]
-    F.brick_wall(mb, W, 0, W, Dp, 0.0, H, 1.2, sw, M['brick_y']); F.brick_wall(mb, -W, Dp, -W, 0, 0.0, H, 1.2, sw, M['brick_y'])
-    F.brick_wall(mb, W, Dp, -W, Dp, 0.0, H, 1.2, [(0.3, 0.38, 3.5, 9.5), (0.62, 0.7, 3.5, 9.5)], M['brick_y'])
+    F.brick_wall(mb, W, 0, W, Dp, 0.0, H, 1.2, sw, M['brick_w']); F.brick_wall(mb, -W, Dp, -W, 0, 0.0, H, 1.2, sw, M['brick_w'])
+    F.brick_wall(mb, W, Dp, -W, Dp, 0.0, H, 1.2, [(0.3, 0.38, 3.5, 9.5), (0.62, 0.7, 3.5, 9.5)], M['brick_w'])
     X, Y, Z = (1, 0, 0), (0, -1, 0), (0, 0, 1)
     for (s0, s1) in ((0.06, 0.13), (0.2, 0.27), (0.73, 0.8), (0.87, 0.94)):
         xm = -W + (s0 + s1) / 2 * 2 * W; w = (s1 - s0) * 2 * W; L.arch_ring(mr, (xm, -0.7, 9.5), X, Y, Z, w, 9.5, M['brick_w'], 0.35, 0.15); obox(mr, (xm, -0.65, 3.35), X, Y, Z, w / 2 + 0.3, 0.2, 0.14, M['brick_w'])
@@ -181,11 +181,11 @@ def build_chart(cfg):
     r = rnd(4); mb.frustum((cx - 5.5, cy - 2.4, top + 0.12), (cx - 3.8, cy - 2.1, top + 0.12), 0.12, 0.12, M['p_cream'], seg=10)                                      # rolled plan
     for k in range(6): c = (cx + r.uniform(-6, 6), cy + r.uniform(-3, 3)); mb.frustum((c[0], c[1], top), (c[0], c[1], top + 0.14), 0.025, 0.025, M['p_red'], seg=5)
     for (px, py, w, d) in ((-18 + 0.0, 36.0, 16.0, 0.0), ): pass
-    for k in range(8): obox(mw, (cx - 8.5 + k * 2.3 if False else cx - 8.2 + k * 2.4, cy - 6.8, 2.2), X, Y, Z, 1.15, 0.1, 2.2, M['crate'])                       # partition along the front of the office
+    for k in range(8): obox(mw, (cx - 8.2 + k * 2.4, cy - 6.8, 2.2), X, Y, Z, 1.15, 0.1, 2.2, M['plank_teal'])                       # partition along the front of the office
     for k in range(7): obox(mw, (cx + 9.4, cy - 6.0 + k * 2.4, 2.2), X, Y, Z, 0.1, 1.15, 2.2, M['crate'])
     beam(mw, (cx - 8.8, cy - 6.8, 4.5), (cx + 10.0, cy - 6.8, 4.5), 0.25, 0.25, M['beam']); beam(mw, (cx + 9.4, cy - 6.8, 4.5), (cx + 9.4, cy + 8.0, 4.5), 0.25, 0.25, M['beam'])
     mkobj(mb, 'chart_table', smooth=False); mkobj(mw, 'chart_wood'); mkobj(mg, 'chart_mounds', smooth=True)
-    sc = 0.11; H = TK.build_tank('model', mud=0.0, stencil=False); S['tanks_h'].append(H); H.root.scale = (sc, sc, sc)
+    sc = 0.11; H = TK.build_tank('model', mud=0.0, stencil=False); S.setdefault('tanks_h', []).append(H); H.root.scale = (sc, sc, sc)
     gm = lambda s: np.where(np.abs(s) < 4.1, -4.0, np.where((s <= -4.1) & (s > -6.7), 0.8, np.where((s >= 4.1) & (s < 6.7), 1.9, 0.0)))
     TK.setup_crossing(H, (0, 0), 0.0, -24.0, 22.0, g=gm); S['chart'] = dict(H=H, sc=sc, o=(cx, cy), top=top); set_model_tank(cfg.get('u', 0.4))
 
@@ -228,6 +228,10 @@ def build(preset, samples=None, quality=None):
     if P.get('doors') is not None: set_doors(P['doors'])
     if P.get('chart'): build_chart(P['chart'])
     if S.get('tank') and P.get('steam'): TK.set_steam(S['tank'], P['steam'])
+    if P.get('backdrop'):                                                                 # plain saturated board behind a close-up card (pure hue, no clutter)
+        bl = P['backdrop'] if isinstance(P['backdrop'], list) else [P['backdrop']]; mbd = MB()
+        for (bx, by, bw, bh, col) in bl: obox(mbd, (bx, by, bh / 2), (1, 0, 0), (0, 1, 0), (0, 0, 1), bw / 2, 0.15, bh / 2, M[col])
+        mkobj(mbd, 'backdrop')
     cam = F.close_cam(**P['mark']) if 'mark' in P else P['cam']; S['cam_loc'] = cam['loc']; S['cards'] = []
     for (k, xy, ht) in P.get('cards', []): L.cards([(k, xy, ht)], lambda x, y: 0.0, cam['loc'])
     F.finish(cam, P, samples, quality, sun=P.get('sun', (-72.0, 28.0)))
@@ -252,10 +256,10 @@ PRESETS = dict(
 
 PRESETS.update(
     fac_chart=dict(cam=dict(loc=(-15.0, 37.0, 7.6), look_at=(-18.0, 42.0, 2.0), lens=40), chart=dict(pos=(-18.0, 43.0), u=0.40), tank_on=False, note='shot 14: chart table 3/4 top-down insert, model Mark I over the model trench'),
-    fac_chart_face=dict(mark=dict(pos=(-18.0, 48.6), face_deg=-90.0, dist=5.6, lens=48, zc=2.3), chart=dict(pos=(-18.0, 43.0), u=0.40), tank_on=False, note='shot 14/15: engineer behind the chart table (mark = card position)'),
+    fac_chart_face=dict(backdrop=[(-22.0, 50.6, 8.0, 9.0, 'plank_red'), (-14.0, 50.6, 8.0, 9.0, 'plank_teal')], mark=dict(pos=(-18.0, 48.6), face_deg=-90.0, dist=5.6, lens=48, zc=2.3), chart=dict(pos=(-18.0, 43.0), u=0.40), tank_on=False, note='shot 14/15: engineer behind the chart table (mark = card position)'),
     fac_doors=dict(cam=dict(loc=(3.0, -27.0, 3.6), look_at=(0.0, 0.0, 6.2), lens=30), doors=1.0, note='shot 13: shed doors shut, from the yard'),
-    fac_close_hull=dict(mark=dict(pos=(-11.0, 17.0), face_deg=-90.0, dist=4.2, lens=40, zc=2.2), tank=dict(pos=(-6, 22), yaw=0.0, z=0.9), trestles_off=True, note='shots 6/16: close, riveted hull plate with the hatch and tap behind (mark)'),
+    fac_close_hull=dict(fill=16000.0, mark=dict(pos=(-11.0, 17.0), face_deg=-90.0, dist=4.2, lens=40, zc=2.2), tank=dict(pos=(-6, 22), yaw=0.0, z=0.9), trestles_off=True, note='shots 6/16: close, riveted hull plate with the hatch and tap behind (mark)'),
     fac_close_rivet=dict(cam=dict(loc=(-8.0, 15.2, 4.4), look_at=(-8.0, 20.0, 4.3), lens=50), stages=dict(chassis=1, plates=1, rivets=0.6, tracks=0, sponsons=0, guns=0), stencil=False, note='shot 29/30: close on the hull plate, rivet rows going in'),
-    fac_close_engineer=dict(mark=dict(pos=(0.0, 46.5), face_deg=-90.0, dist=4.2, lens=40, zc=2.2), note='shots 5/15/28/63: engineer close in front of the shed back wall (mark)'),
+    fac_close_engineer=dict(backdrop=[(-3.6, 49.5, 7.2, 9.0, 'plank_teal'), (3.6, 49.5, 7.2, 9.0, 'plank_yellow')], mark=dict(pos=(0.0, 46.5), face_deg=-90.0, dist=4.2, lens=40, zc=2.2), note='shots 5/15/28/63: engineer close in front of the shed back wall (mark)'),
 )
 for _p in PRESETS.values(): _p.setdefault('tune', dict(cloud_k=0.75))

@@ -73,4 +73,6 @@ def build(preset, samples=None, quality=None):
 PRESETS = dict(
     street_wide=dict(cam=dict(loc=(2.5, -22.0, 3.2), look_at=(-1.0, 40.0, 6.0), lens=22), tank=(0.0, 22.0), cards=[('a', (-4, -4), 3.2), ('b', (4, 0), 3.2), ('a', (-2, -12), 3.2)], sun=(-100.0, 30.0), note='shot 33'),
     street_low=dict(cam=dict(loc=(3.0, -12.0, 1.3), look_at=(0.0, 14.0, 3.6), lens=22), tank=(0.0, 26.0), cards=[('a', (-3, -3), 3.4), ('b', (3, -5), 3.2), ('a', (0, 0), 3.6)], sun=(-100.0, 30.0), note='shot 34'),
+    street_close_tail=dict(cam=dict(loc=(0.9, 16.5, 1.9), look_at=(0.0, 24.0, 1.1), lens=40), tank=(0.0, 40.0), sun=(-100.0, 30.0), note='shots 68-70: the tank rear and tail wheels at waist height, for the general marching behind'),
+    street_high=dict(cam=dict(loc=(5.0, -8.0, 34.0), look_at=(0.0, 26.0, 0.0), lens=28), tank=(0.0, 24.0), sun=(-100.0, 30.0), dress_k=2.0, note='shot 66: the pilot looks down on the high street of Flers'),
 )

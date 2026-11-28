@@ -1,42 +1,8 @@
-cross_nose.png                         luma 0.510 p1 0.031 p99 0.916 lc 0.0398 sat 0.478 chroma 31.2  PASS
-render 75.4 s wall, 299.0 s cpu
-cross_hero.png                         luma 0.510 p1 0.034 p99 0.918 lc 0.0392 sat 0.478 chroma 31.8  PASS
-render 75.5 s wall, 299.5 s cpu
-cross_pull.png                         luma 0.510 p1 0.040 p99 0.922 lc 0.0440 sat 0.478 chroma 32.8  PASS
-render 84.3 s wall, 334.6 s cpu
-cross_wire.png                         luma 0.510 p1 0.032 p99 0.916 lc 0.0417 sat 0.478 chroma 30.6  PASS
-render 87.3 s wall, 346.5 s cpu
-cross_hull.png                         luma 0.510 p1 0.045 p99 0.922 lc 0.0439 sat 0.478 chroma 30.4  PASS
-render 109.7 s wall, 436.3 s cpu
-cross_flee.png                         luma 0.510 p1 0.039 p99 0.920 lc 0.0381 sat 0.478 chroma 28.6  PASS
-render 76.5 s wall, 303.5 s cpu
-cross_bucket.png                       luma 0.510 p1 0.031 p99 0.916 lc 0.0404 sat 0.478 chroma 30.3  PASS
-render 79.0 s wall, 313.4 s cpu
-front_aerial.png                       luma 0.510 p1 0.034 p99 0.918 lc 0.0493 sat 0.478 chroma 29.2  PASS
-render 69.9 s wall, 277.3 s cpu
-front_parapet.png                      luma 0.510 p1 0.030 p99 0.915 lc 0.0453 sat 0.478 chroma 29.1  PASS
-render 85.4 s wall, 338.9 s cpu
-front_column.png                       luma 0.510 p1 0.031 p99 0.915 lc 0.0492 sat 0.478 chroma 31.6  PASS
-render 79.4 s wall, 315.1 s cpu
-front_halt.png                         luma 0.510 p1 0.037 p99 0.919 lc 0.0387 sat 0.478 chroma 30.9  PASS
-render 85.1 s wall, 337.6 s cpu
-front_stuck.png                        luma 0.510 p1 0.042 p99 0.924 lc 0.0274 sat 0.478 chroma 28.2  MISS
-render 76.0 s wall, 300.7 s cpu
-front_op.png                           luma 0.510 p1 0.037 p99 0.916 lc 0.0464 sat 0.478 chroma 30.4  PASS
-render 89.4 s wall, 354.5 s cpu
-fac_wide.png                           luma 0.510 p1 0.036 p99 0.918 lc 0.0514 sat 0.478 chroma 32.3  PASS
-render 80.8 s wall, 320.3 s cpu
-fac_weigh.png                          luma 0.510 p1 0.038 p99 0.920 lc 0.0508 sat 0.478 chroma 30.2  PASS
-render 121.7 s wall, 483.7 s cpu
-fac_foreman.png                        luma 0.510 p1 0.036 p99 0.918 lc 0.0592 sat 0.478 chroma 29.3  PASS
-render 120.1 s wall, 477.5 s cpu
-fac_stencil.png                        luma 0.510 p1 0.027 p99 0.914 lc 0.0564 sat 0.478 chroma 30.2  PASS
-render 127.3 s wall, 506.5 s cpu
-fac_side.png                           luma 0.510 p1 0.031 p99 0.914 lc 0.0629 sat 0.478 chroma 29.1  PASS
-render 128.0 s wall, 507.6 s cpu
-fac_bench.png                          luma 0.587 p1 0.013 p99 0.894 lc 0.0677 sat 0.538 chroma 38.9  MISS
-render 123.7 s wall, 484.8 s cpu
-fac_chassis.png                        luma 0.510 p1 0.033 p99 0.915 lc 0.0594 sat 0.478 chroma 31.3  PASS
-render 123.0 s wall, 484.5 s cpu
-fac_plates.png                         luma 0.510 p1 0.043 p99 0.922 lc 0.0505 sat 0.478 chroma 30.5  PASS
-render 129.3 s wall, 511.2 s cpu
+fac_chart.png                          luma 0.503 p1 0.048 p99 0.928 lc 0.0319 sat 0.488 chroma 43.4 a -0.9 b +8.9 p98 0.85 blue 0.01 warm 0.18 neut 0.02 M 87  MISS
+render 166.0 s wall, 656.7 s cpu
+fac_chart_face.png                     luma 0.527 p1 0.040 p99 0.875 lc 0.0338 sat 0.486 chroma 35.8 a +5.5 b +5.7 p98 0.67 blue 0.50 warm 0.50 neut 0.09 M 130  MISS
+render 166.8 s wall, 660.5 s cpu
+fac_doors.png                          luma 0.498 p1 0.052 p99 0.928 lc 0.0518 sat 0.485 chroma 35.8 a +6.2 b +4.7 p98 1.00 blue 0.24 warm 0.46 neut 0.10 M 106  MISS
+render 108.0 s wall, 426.8 s cpu
+fac_close_hull.png                     luma 0.525 p1 0.039 p99 0.927 lc 0.0535 sat 0.491 chroma 28.7 a +1.2 b +4.5 p98 0.79 blue 0.53 warm 0.38 neut 0.04 M 93  MISS
+render 161.3 s wall, 637.6 s cpu

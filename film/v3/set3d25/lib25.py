@@ -30,7 +30,7 @@ def more_materials():
     M['floorw'] = wood_seam('floorw', '#d0a672', 1.6, 1.0, 'Y', 0.9)
     def tin(b):
         c = b.coord(); w = b.n('ShaderNodeTexWave', wave_type='BANDS', bands_direction='X', wave_profile='SIN'); w.inputs['Scale'].default_value = 3.0; w.inputs['Distortion'].default_value = 0.0; b.l(c, w.inputs['Vector'])
-        n = b.noise(0.4, 3.0, 0.6, c, None); col = b.mix(b.rng(n, 0.3, 0.7), (0.52, 0.58, 0.62), (0.7, 0.62, 0.5))
+        n = b.noise(0.4, 3.0, 0.6, c, None); col = b.mix(b.rng(n, 0.3, 0.7), (0.55, 0.6, 0.64), (0.62, 0.6, 0.56))
         b.princ(col, 0.5, 0.55, b.bump(w.outputs['Fac'], 0.8, 0.05))
     M['tin'] = fmat('tin', tin)
     def canvas(b):
@@ -50,6 +50,13 @@ def more_materials():
             mx = b.n('ShaderNodeMixShader'); mx.inputs[0].default_value = 0.5; b.l(d.outputs[0], mx.inputs[1]); b.l(tr.outputs[0], mx.inputs[2]); b.l(mx.outputs[0], b.out.inputs['Surface'])
         return fmat(name, f)
     for k, hx in dict(red='#d03a2a', blue='#2f62c0', yellow='#e8b82a', white='#f4f0e4').items(): M['p_' + k + '_f'] = flagm(hx, 'flag_' + k)
+    def paint_planks(hx, name):
+        def f(b):
+            c = b.coord(); w = b.n('ShaderNodeTexWave', wave_type='BANDS', bands_direction='X', wave_profile='SAW'); w.inputs['Scale'].default_value = 1.6; w.inputs['Distortion'].default_value = 0.2; b.l(c, w.inputs['Vector'])
+            seam = b.math('SUBTRACT', 1.0, b.rng(w.outputs['Fac'], 0.0, 0.07, 0.0, 1.0)); gr = b.noise(14.0, 3.0, 0.6, c, (1.0, 0.05, 1.0)); tone = b.mix(b.rng(gr, 0.3, 0.7), (0.82, 0.82, 0.82), (1.12, 1.12, 1.12))
+            col = b.mix(seam, b.mul(tone, (*hexl(hx), 1)), (0.04, 0.04, 0.04)); b.princ(col, 0.7, 0.0, b.bump(b.math('ADD', gr, b.math('MULTIPLY', seam, 1.5)), 0.8, 0.04))
+        return fmat(name, f)
+    for k, hx in dict(yellow='#f0a810', teal='#10a0a8', red='#d02818', blue='#1850d0').items(): M['plank_' + k] = paint_planks(hx, 'plank_' + k)
     M['coal'] = flat('coal', '#161412', 0.28, 0.1)
     M['galv'] = flat('galv', '#a8b2b6', 0.4, 0.85); M['water_t'] = flat('water_t', '#8fb4c8', 0.35, 0.1)
     def steelp(b):
@@ -327,3 +334,20 @@ def cards(spec, zf, cam_loc):
     for (k, xy, ht) in spec:
         nm = 'tommy_' + k; out.append(F.tommy_card(nm, (xy[0], xy[1], zf(xy[0], xy[1])), cam_loc, ht, 0.25 if k == 'a' else -0.2, 'determined' if k == 'a' else 'worried', tilt=2.0))
     S.setdefault('cards', []).extend(out); return out
+
+def water_tank_big(mb, c, r=2.0, h=3.8, yaw=0.0):
+    """a REAL water tank: riveted steel cylinder (plate rings, seams with rivet rows), domed lid with a filler cap, a ladder, four steel legs on a plinth and a brass tap + spout at the bottom"""
+    M = S['M']; c = Vector(c); X, Y, Z = rot_axes(yaw); zb = 1.6; rings = 3; hh = h / rings; seg = 28
+    for dx in (-1, 1):
+        for dy in (-1, 1):
+            p = c + X * dx * r * 0.72 + Y * dy * r * 0.72; beam(mb, p, p + Vector((0, 0, zb + 0.1)), 0.32, 0.32, M['frame2']); obox(mb, p + Vector((0, 0, 0.1)), X, Y, Z, 0.45, 0.45, 0.1, M['concrete'])
+    for k in range(2): beam(mb, c + X * (-r * 0.72) + Y * (r * 0.72) + Vector((0, 0, 0.6 + k * 0.6)), c + X * (r * 0.72) + Y * (-r * 0.72) + Vector((0, 0, 0.6 + k * 0.6)), 0.14, 0.14, M['frame2'])
+    for k in range(rings):                                                                  # three plate rings, each slightly different in size so the seams read
+        z0 = c.z + zb + k * hh; mb.frustum((c.x, c.y, z0), (c.x, c.y, z0 + hh * 0.98), r * (1.0 + 0.012 * (k % 2)), r * (1.0 + 0.012 * (k % 2)), M['water_t'], seg=seg)
+        for j in range(seg * 2):                                                           # rivet rows on the seam above each ring
+            a = 2 * math.pi * j / (seg * 2); q = Vector((c.x + math.cos(a) * r * 1.012, c.y + math.sin(a) * r * 1.012, z0 + hh * 0.93)); mb.frustum(q, q + Vector((math.cos(a), math.sin(a), 0)) * 0.07, 0.055, 0.035, M['rivet'], seg=6)
+            q2 = q - Vector((0, 0, 0.12)); mb.frustum(q2, q2 + Vector((math.cos(a), math.sin(a), 0)) * 0.07, 0.055, 0.035, M['rivet'], seg=6)
+    zt = c.z + zb + h; mb.frustum((c.x, c.y, zt), (c.x, c.y, zt + 0.5), r * 1.02, r * 0.55, M['water_t'], seg=seg); mb.frustum((c.x, c.y, zt + 0.5), (c.x, c.y, zt + 0.8), 0.4, 0.4, M['galv'], seg=14)
+    for k in range(int(h / 0.45)): z = c.z + zb + 0.3 + k * 0.45; rod(mb, c + X * (r * 1.05) + Y * (-0.3) + Vector((0, 0, z - c.z)), c + X * (r * 1.05) + Y * 0.3 + Vector((0, 0, z - c.z)), 0.04, M['steel'], 5)
+    for sy in (-0.3, 0.3): rod(mb, c + X * (r * 1.05) + Y * sy + Vector((0, 0, zb)), c + X * (r * 1.05) + Y * sy + Vector((0, 0, zb + h)), 0.045, M['steel'], 5)
+    tp = c + X * (r * 1.0) + Vector((0, 0, zb + 0.5)); rod(mb, tp, tp + X * 0.7, 0.13, M['brass'], 10); rod(mb, tp + X * 0.7, tp + X * 0.7 - Vector((0, 0, 0.45)), 0.1, M['brass'], 10); rod(mb, tp + X * 0.3, tp + X * 0.3 + Vector((0, 0, 0.3)), 0.05, M['brass'], 6); obox(mb, tp + X * 0.3 + Vector((0, 0, 0.32)), X, Y, Z, 0.04, 0.22, 0.04, M['brass'])

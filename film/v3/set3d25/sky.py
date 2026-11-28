@@ -38,10 +38,20 @@ def set_plane(H, t, frame=None, p0=(-50.0, 70.0, 32.0), p1=(60.0, 62.0, 36.0), d
         for o, ps in ((H['root'], 'location'), (H['root'], 'rotation_euler'), (H['root'], 'scale'), (H['prop'], 'rotation_euler')): o.keyframe_insert(ps, frame=frame)
 
 def build(preset, samples=None, quality=None):
-    P = PRESETS[preset]; t0 = time.time(); F.begin('sky', preset, P); S.update(flat=True, trenches=[], craters=[], corridors=[], mud_zones=[]); ST.street_scene(P)
+    P = PRESETS[preset]; t0 = time.time(); F.begin('sky', preset, P); S.update(flat=True, trenches=[], craters=[], corridors=[], mud_zones=[])
+    if P.get('close'):                                                              # cockpit close: only sky, a green field far below and the plane; the card mark is the pilot's seat
+        M = S['M']; mb = MB(); mb.pid += 1; mb.oface([(-3000, -3000, 0.0), (3000, -3000, 0.0), (3000, 3000, 0.0), (-3000, 3000, 0.0)], M['lawn'], [(0, 0)] * 4, (0, 0, 1)); mkobj(mb, 'field')
+        H = build_plane(); H['root'].scale = (2.2, 2.2, 2.2); H['root'].location = (0, 0, 60.0); H['root'].rotation_euler = (0, 0, 0); H['prop'].rotation_euler = (0.7, 0, 0); F.bpy.context.view_layer.update()
+        import lib25 as L_
+        r_ = rnd(5)
+        for k in range(9): L_.smoke_puffs('cloud%d' % k, (r_.uniform(-60, 60), r_.uniform(30, 90), 52 + r_.uniform(-10, 25)), 5, r_.uniform(4, 9), 1.0, k, '#ffffff')
+        cp = H['root'].matrix_world @ Vector((-0.8, 0.0, 1.9)); cam = F.close_cam((cp.x, cp.y), -90.0, 4.2, 40, 1.5, cp.z - 1.5); S['cam_loc'] = cam['loc']; S['cards'] = []
+        F.finish(cam, P, samples, quality, sun=P.get('sun')); S['build_s'] = time.time() - t0; return F.anchors()
+    ST.street_scene(P)
     H = build_plane(); set_plane(H, P.get('t', 0.9))
     cam = P['cam']; S['cam_loc'] = cam['loc']; S['cards'] = []; F.finish(cam, P, samples, quality, sun=P.get('sun')); S['build_s'] = time.time() - t0; return F.anchors()
 
 PRESETS = dict(
-    sky_plane=dict(cam=dict(loc=(6.0, 10.0, 2.0), look_at=(2.0, 66.0, 25.0), lens=26), t=0.9, green=False, near_box=(-7, 6, 7, 32), sun=(-110.0, 34.0), note='shot 32: RFC biplane over Flers rooftops (plane on its own empty, flies along a path)'),
+    sky_plane=dict(cam=dict(loc=(6.0, 10.0, 2.0), look_at=(2.0, 66.0, 20.0), lens=26), t=0.9, green=False, near_box=(-7, 6, 7, 32), sun=(-110.0, 34.0), note='shot 32: RFC biplane over Flers rooftops (plane on its own empty, flies along a path)'),
+    sky_close_cockpit=dict(close=True, sun=(-100.0, 36.0), note='shots 64-65: cockpit close, plane against pure sky and a green field (mark = pilot seat)'),
 )
