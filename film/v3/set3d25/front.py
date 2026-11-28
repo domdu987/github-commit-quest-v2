@@ -1124,7 +1124,7 @@ def _hsv2rgb(h, s, v):
     c = v * s; x = c * (1 - np.abs(h % 2 - 1)); m = v - c; hi = np.floor(h).astype(int) % 6; z = np.zeros_like(c)
     r = np.choose(hi, [c, x, z, z, x, c]); g = np.choose(hi, [x, c, c, x, z, z]); b = np.choose(hi, [z, z, x, c, c, x]); return np.stack([r + m, g + m, b + m], -1)
 
-def grade(im, p1_t=0.04, p99_t=0.928, mean_t=0.51, sat_t=0.478, knee=0.85, iters=3, wb=(1.5, 1.5), wb_k=0.7, p98_t=0.87):
+def grade(im, p1_t=0.04, p99_t=0.928, mean_t=0.51, sat_t=0.487, knee=0.85, iters=3, wb=(1.5, 1.5), wb_k=0.7, p98_t=0.87, warm_t=0.43, chroma_t=30.0):
     """final tone + colour step (producer directives): (1) levels p1 -> 0.04, p99 -> 0.928 with a soft knee above 0.85, (2) luma gamma to mean 0.51 (0.75-1.35), (3) partial gray-world white balance:
     shift the mean Lab a*, b* toward `wb` at `wb_k` strength (lightness untouched), (4) saturation in HSV (value and hue untouched, so no channel clips): S -> S (1 + ap S) lifts the saturated accents (HSV S p98 >= 0.87),
     then a uniform scale reaches the mean S `sat_t`; near-white low-sat pixels (puppet faces, luma > 0.9) are masked from (3) and (4).  Repeated so the steps settle."""
@@ -1132,13 +1132,25 @@ def grade(im, p1_t=0.04, p99_t=0.928, mean_t=0.51, sat_t=0.478, knee=0.85, iters
     def lum(x): return x @ W709
     def prot_of(x):
         h, s, v = _rgb2hsv(x); return np.clip((v - 0.88) / 0.07, 0, 1) * (1 - np.clip(s / 0.2, 0, 1))
+    def warm_frac(h, s, v, hd):
+        col = (s > 0.15) & (v > 0.15); return float((col & ((hd < 70) | (hd >= 330))).sum()) / max(int(col.sum()), 1)
     def sat_step(x):
-        h, s, v = _rgb2hsv(x); pr = prot_of(x); best = None
-        for ap in (0.0, 0.25, 0.5, 0.8, 1.2):
+        h, s, v = _rgb2hsv(x); pr = prot_of(x); hd = h * 60.0
+        sm_ = np.asarray(Image.fromarray((np.clip(x, 0, 1) * 255).astype(np.uint8)).resize((180, 320))).astype(np.float32) / 255; mx_, mn_ = sm_.max(2), sm_.min(2); ms = float(np.where(mx_ > 0, (mx_ - mn_) / np.maximum(mx_, 1e-6), 0).mean())
+        cal = ms / max(float(s.mean()), 1e-4)                                              # full-res mean S -> the metric's 180x320 mean S
+        if warm_frac(h, s, v, hd) < warm_t:                                            # warm-up: slide the greens toward yellow just far enough that >= 42 % of the coloured pixels are warm (hue < 70 deg)
+            w = np.clip(1 - np.abs(hd - 105.0) / 70.0, 0, 1); lo_, hi_ = 0.0, 42.0
+            for _ in range(8):
+                mid = (lo_ + hi_) / 2
+                if warm_frac(h, s, v, hd - mid * w) < warm_t: lo_ = mid
+                else: hi_ = mid
+            hd = hd - hi_ * w; h = (hd % 360.0) / 60.0
+        best = None
+        for ap in (0.0, 0.3, 0.6, 1.0, 1.5):
             s1 = np.clip(s * (1 + ap * s), 0, 1); lo_, hi_ = 0.3, 4.0
             for _ in range(11):
-                mid = (lo_ + hi_) / 2; s2 = s1 * (1 + (mid - 1) * (1 - pr)); s2 = np.clip(s2, 0, 1)
-                if s2.mean() < sat_t: lo_ = mid
+                mid = (lo_ + hi_) / 2; s2 = np.clip(s1 * (1 + (mid - 1) * (1 - pr)), 0, 1)
+                if s2.mean() * cal < sat_t: lo_ = mid
                 else: hi_ = mid
             k = (lo_ + hi_) / 2; s2 = np.clip(s1 * (1 + (k - 1) * (1 - pr)), 0, 1); best = (h, s2, v)
             if np.percentile(s2, 98) >= p98_t: break
