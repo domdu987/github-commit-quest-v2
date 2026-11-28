@@ -1,8 +1,8 @@
 {
  "preset": "fac_sponsons",
- "wall_s": 142.0,
- "cpu_s": 563.6,
- "build_s": 0.7,
+ "wall_s": 137.6,
+ "cpu_s": 547.1,
+ "build_s": 0.6,
  "settings": {
   "resolution": [
    720,

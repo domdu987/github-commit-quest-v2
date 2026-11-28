@@ -1,7 +1,7 @@
 {
  "preset": "fac_foreman",
- "wall_s": 134.8,
- "cpu_s": 534.7,
+ "wall_s": 119.2,
+ "cpu_s": 474.1,
  "build_s": 0.6,
  "settings": {
   "resolution": [

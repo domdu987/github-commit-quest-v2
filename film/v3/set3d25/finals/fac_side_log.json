@@ -1,7 +1,7 @@
 {
  "preset": "fac_side",
- "wall_s": 146.4,
- "cpu_s": 580.2,
+ "wall_s": 124.2,
+ "cpu_s": 493.9,
  "build_s": 0.6,
  "settings": {
   "resolution": [

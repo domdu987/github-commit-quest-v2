@@ -1,8 +1,8 @@
 {
  "preset": "front_parapet",
- "wall_s": 95.5,
- "cpu_s": 377.4,
- "build_s": 7.8,
+ "wall_s": 84.8,
+ "cpu_s": 336.9,
+ "build_s": 6.2,
  "settings": {
   "resolution": [
    720,

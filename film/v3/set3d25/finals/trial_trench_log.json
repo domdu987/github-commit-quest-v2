@@ -1,8 +1,8 @@
 {
  "preset": "trial_trench",
- "wall_s": 74.0,
- "cpu_s": 293.6,
- "build_s": 2.8,
+ "wall_s": 72.9,
+ "cpu_s": 288.8,
+ "build_s": 3.0,
  "settings": {
   "resolution": [
    720,

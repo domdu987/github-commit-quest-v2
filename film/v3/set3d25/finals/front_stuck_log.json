@@ -1,8 +1,8 @@
 {
  "preset": "front_stuck",
- "wall_s": 86.2,
- "cpu_s": 341.1,
- "build_s": 7.4,
+ "wall_s": 75.5,
+ "cpu_s": 299.6,
+ "build_s": 6.5,
  "settings": {
   "resolution": [
    720,

@@ -1,8 +1,8 @@
 {
  "preset": "fac_wide",
- "wall_s": 92.3,
- "cpu_s": 365.1,
- "build_s": 0.7,
+ "wall_s": 80.5,
+ "cpu_s": 319.1,
+ "build_s": 0.6,
  "settings": {
   "resolution": [
    720,

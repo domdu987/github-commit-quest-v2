@@ -1,7 +1,7 @@
 {
  "preset": "fac_bench",
- "wall_s": 125.5,
- "cpu_s": 498.1,
+ "wall_s": 109.6,
+ "cpu_s": 436.0,
  "build_s": 0.6,
  "settings": {
   "resolution": [

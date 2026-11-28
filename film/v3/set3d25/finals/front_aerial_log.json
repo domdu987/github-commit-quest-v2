@@ -1,8 +1,8 @@
 {
  "preset": "front_aerial",
- "wall_s": 100.1,
- "cpu_s": 396.1,
- "build_s": 5.9,
+ "wall_s": 70.4,
+ "cpu_s": 279.1,
+ "build_s": 6.3,
  "settings": {
   "resolution": [
    720,
@@ -32,7 +32,7 @@
     0.5799999833106995
    ]
   },
-  "haze": 0.0006,
+  "haze": 0.0,
   "post": "unsharp r1.1 55% + clarity r5 40%"
  },
  "cards": [

@@ -1,8 +1,8 @@
 {
  "preset": "front_op",
- "wall_s": 90.4,
- "cpu_s": 357.7,
- "build_s": 7.2,
+ "wall_s": 89.9,
+ "cpu_s": 356.9,
+ "build_s": 6.5,
  "settings": {
   "resolution": [
    720,
@@ -38,23 +38,23 @@
  "cards": [
   [
    "tommy_a",
-   562,
-   910,
-   238
+   606,
+   788,
+   301
   ]
  ],
  "anchors": {
   "tank0_nose": [
-   795,
-   536
+   695,
+   496
   ],
   "tank0_front": [
-   935,
-   684
+   795,
+   614
   ],
   "tank0_rear": [
-   1503,
-   613
+   1191,
+   569
   ]
  }
 }

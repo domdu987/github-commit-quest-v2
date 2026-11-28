@@ -1,8 +1,8 @@
 {
  "preset": "cross_pull",
- "wall_s": 85.1,
- "cpu_s": 336.3,
- "build_s": 7.5,
+ "wall_s": 83.8,
+ "cpu_s": 332.8,
+ "build_s": 9.1,
  "settings": {
   "resolution": [
    720,
@@ -38,23 +38,23 @@
  "cards": [
   [
    "tommy_a",
-   566,
-   775,
-   -461
+   458,
+   819,
+   -1064
   ]
  ],
  "anchors": {
   "tank0_nose": [
-   922,
-   520
+   1253,
+   424
   ],
   "tank0_front": [
-   759,
-   687
+   993,
+   683
   ],
   "tank0_rear": [
-   317,
-   590
+   325,
+   548
   ]
  }
 }

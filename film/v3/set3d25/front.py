@@ -10,6 +10,7 @@ World: 1 unit = 1 D (head, ~0.53 m), z up.  See API.md."""
 import os, sys, math, json, time, random, hashlib, subprocess, copy
 import numpy as np
 import bpy
+from PIL import Image
 from mathutils import Vector, Matrix, Euler
 if __name__ == '__main__': sys.modules['front'] = sys.modules['__main__']          # lib25 / tank25 do `import front`
 
@@ -834,7 +835,7 @@ def _cross(name, u, cam, **kw):
 PRESETS = dict(
     cross_nose=_cross('cross_nose', 0.24, dict(loc=(6.0, -17.0, 1.0), look_at=(-2.0, 4.5, 3.6), lens=21), cards=[('a', (-8, -6), 3.2)], note='shot 24: side-on low, the nose lifting over the trench gap'),
     cross_hero=_cross('cross_hero', 0.40, dict(loc=(4.0, -16.0, 1.6), look_at=(0.5, 4.5, 3.4), lens=22), cards=[('a', (-9, -5), 3.2), ('b', (10, -4), 3.2)], note='shot 25: SIDE-ON, nose lifted, front track gripping the far lip, rear on the near parapet'),
-    cross_pull=_cross('cross_pull', 0.60, fill=500.0, dict(loc=(7.5, -11.0, 1.3), look_at=(4.5, 4.5, 2.6), lens=24), dress_n=2.6, cards=[('a', (-6, -6), 3.2)], note='shot 26: pulling across, rear tracks leaving the near lip'),
+    cross_pull=_cross('cross_pull', 0.60, dict(loc=(7.5, -11.0, 1.3), look_at=(4.5, 4.5, 2.6), lens=24), fill=500.0, dress_n=2.6, cards=[('a', (-6, -6), 3.2)], note='shot 26: pulling across, rear tracks leaving the near lip'),
     cross_wire=_cross('cross_wire', 0.12, dict(loc=(-5.0, -8.0, 0.8), look_at=(-9.5, 2.0, 1.2), lens=22), dress_n=0.3, near=False, sun=(205.0, 30.0), fill=1200.0, tune=dict(cloud_k=0.8, green_k=0.2), lane_ok=True, world=dict(crates=[]), note='shot 27: low insert, barbed wire squashed flat under the track'),
     cross_hull=_cross('cross_hull', 0.50, dict(loc=(11.0, -7.0, 3.2), look_at=(5.0, 4.5, 3.0), lens=24), sparks=0.30, sun=(205.0, 30.0), fill=2200.0, dress_n=0.4, near=False, tune=dict(cloud_k=0.8), note='shot 28: hull side, bullet pings (sparks)'),
     cross_flee=_cross('cross_flee', 0.62, dict(loc=(-24.0, -2.0, 3.0), look_at=(6.0, 5.0, 3.4), lens=20), dress_n=2.0, tune=dict(cloud_k=0.9), cards=[('b', (14, 3), 3.2), ('a', (19, 8), 3.2), ('b', (24, 0), 3.2), ('a', (17, 12), 3.2)], note='shot 29: wide behind the tank, Germans (stand-ins) running'),
@@ -1072,12 +1073,36 @@ def finish(cam, P, samples=None, quality=None, sun=None, haze=None):
     S['exposure'] = S.get('exposure', -0.25); S['samples'] = samples or P.get('samples', 64); setup_render(sc, 'final')
 
 # ============================================================================= render + post
+def grade(im, p1_t=0.035, p99_t=0.925, mean_t=0.51, sat_t=0.31, knee=0.85, iters=3):
+    """final tone step (producer directive): per image (1) levels p1 -> 0.035 and p99 -> 0.925 with a soft knee above 0.85 (highlights roll off, no clipping),
+    (2) a gamma on the luma that pulls the mean to 0.51 (gamma clamped 0.75-1.35), (3) saturation scaled toward 0.31 (factor clamped 0.7-1.3).  Repeated 3x (the three interact)."""
+    a = np.asarray(im.convert('RGB')).astype(np.float32) / 255.0; W709 = np.array([0.2126, 0.7152, 0.0722], np.float32)
+    def lum(x): return x @ W709
+    def hsv_sat(x):
+        sm = np.asarray(Image.fromarray((np.clip(x, 0, 1) * 255).astype(np.uint8)).resize((180, 320))).astype(np.float32) / 255; mx, mn = sm.max(2), sm.min(2); return float(np.where(mx > 0, (mx - mn) / np.maximum(mx, 1e-6), 0).mean())
+    for _ in range(iters):
+        L = lum(a); lo, hi = np.percentile(L, 1), np.percentile(L, 99)                                   # (1) levels, luma percentiles, same affine on every channel (hue kept)
+        a = (a - lo) / max(hi - lo, 1e-3) * (p99_t - p1_t) + p1_t
+        k = knee; over = a > k; a = np.where(over, k + (1 - k) * np.tanh((a - k) / (1 - k)), a); a = np.clip(a, 0, 1)
+        g_lo, g_hi = 0.75, 1.35; mean = lambda g: float(np.mean(lum(np.power(np.clip(a, 1e-4, 1), g))))                    # (2) gamma pulls the mean luma to 0.51
+        if mean(1.0) != mean_t:
+            lo_, hi_ = g_lo, g_hi
+            for _ in range(24):
+                mid = (lo_ + hi_) / 2
+                if mean(mid) > mean_t: lo_ = mid
+                else: hi_ = mid
+            g = float(np.clip((lo_ + hi_) / 2, g_lo, g_hi)); a = np.power(np.clip(a, 1e-4, 1), g)
+        sat = hsv_sat(a); f = float(np.clip(sat_t / max(sat, 1e-3), 0.7, 1.3)); L = lum(a)[..., None]; a = np.clip(L + (a - L) * f, 0, 1)   # (3) saturation toward 0.31
+    return Image.fromarray((np.clip(a, 0, 1) * 255 + 0.5).astype(np.uint8))
+
 def post(src, dst, W=720, H=1280, sharp=0.55, radius=1.1):
-    """mild unsharp mask (crisp, no halo: threshold 2) at native size; no heavy grade (the look is made at the source: light and materials)"""
+    """mild unsharp mask (threshold 2) + clarity at native size, then the final grade() (levels / gamma / saturation, directive of the director)"""
     from PIL import Image, ImageFilter
     im = Image.open(src).convert('RGB')
     if im.size != (W, H): im = im.resize((W, H), Image.LANCZOS)
-    im = im.filter(ImageFilter.UnsharpMask(radius=radius, percent=int(sharp * 100), threshold=2)); im = im.filter(ImageFilter.UnsharpMask(radius=5, percent=int(S.get('clarity', 40)), threshold=1)); im.save(dst)
+    im = im.filter(ImageFilter.UnsharpMask(radius=radius, percent=int(sharp * 100), threshold=2)); im = im.filter(ImageFilter.UnsharpMask(radius=5, percent=int(S.get('clarity', 40)), threshold=1))
+    if S.get('grade', 1): im = grade(im)
+    im.save(dst)
 
 def render_still(path, quality='final', samples=None, scale=None):
     sc = bpy.context.scene; setup_render(sc, quality, samples, scale); raw = path[:-4] + '_raw.png'; w, c = T.render(raw); post(raw, path); return w, c

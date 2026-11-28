@@ -1,8 +1,8 @@
 {
  "preset": "cross_hull",
- "wall_s": 138.3,
- "cpu_s": 547.8,
- "build_s": 7.9,
+ "wall_s": 106.6,
+ "cpu_s": 423.7,
+ "build_s": 6.1,
  "settings": {
   "resolution": [
    720,
@@ -25,7 +25,7 @@
   "threads": 4,
   "sun": {
    "energy": 5.0,
-   "elevation": 28.0,
+   "elevation": 30.0,
    "color": [
     1.0,
     0.8199999928474426,
@@ -38,16 +38,16 @@
  "cards": [],
  "anchors": {
   "tank0_nose": [
-   1519,
-   184
+   1229,
+   269
   ],
   "tank0_front": [
-   963,
-   711
+   805,
+   682
   ],
   "tank0_rear": [
-   9,
-   532
+   104,
+   544
   ]
  }
 }

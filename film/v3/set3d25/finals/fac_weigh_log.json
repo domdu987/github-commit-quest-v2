@@ -1,8 +1,8 @@
 {
  "preset": "fac_weigh",
- "wall_s": 140.8,
- "cpu_s": 557.3,
- "build_s": 0.6,
+ "wall_s": 123.4,
+ "cpu_s": 490.7,
+ "build_s": 0.5,
  "settings": {
   "resolution": [
    720,

@@ -59,7 +59,9 @@ def street_scene(P):
     for k in range(14): L.oak(mt2, ml, (8.5 if k % 2 else -8.5), -30 + k * 10, 0, r.uniform(6, 9), k, M['fol_a'], 0.8)
     for nm, m in (('st_walls', mw), ('st_trim', mr), ('st_roofs', mt), ('st_rubble', ms), ('st_trunks', mt2)): mkobj(m, nm, smooth=(nm == 'st_rubble'))
     mkobj(ml, 'st_leaves', smooth=True)
-    pts = L.scatter_rect(-9, -40, 9, 100, 500, 3); L.dress(lambda x, y: 0.0, pts, L.scatter_rect(-9, -40, 9, 100, 60, 4), L.scatter_rect(-9, -40, 9, 100, 30, 5), L.scatter_rect(-8, -40, 8, 100, 120, 6), 7, 'st', 6, (0.2, 0.5))
+    k = P.get('dress_k', 1.0); pts = L.scatter_rect(-9, -40, 9, 100, int(500 * k), 3); L.dress(lambda x, y: 0.0, pts, L.scatter_rect(-9, -40, 9, 100, int(60 * k), 4), L.scatter_rect(-9, -40, 9, 100, int(30 * k), 5), L.scatter_rect(-8, -40, 8, 100, int(120 * k), 6), 7, 'st', 6, (0.2, 0.5))
+    if P.get('near_box'):
+        x0, y0, x1, y1 = P['near_box']; L.dress(lambda x, y: 0.0, L.scatter_rect(x0, y0, x1, y1, 900, 13), L.scatter_rect(x0, y0, x1, y1, 80, 14), L.scatter_rect(x0, y0, x1, y1, 40, 15), L.scatter_rect(x0, y0, x1, y1, 160, 16), 9, 'stn', 6, (0.2, 0.55))
 
 def build(preset, samples=None, quality=None):
     P = PRESETS[preset]; t0 = time.time(); F.begin('street', preset, P); S.update(flat=True, trenches=[], craters=[], corridors=[], mud_zones=[]); street_scene(P)

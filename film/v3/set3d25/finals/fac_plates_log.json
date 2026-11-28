@@ -1,8 +1,8 @@
 {
  "preset": "fac_plates",
- "wall_s": 142.6,
- "cpu_s": 566.2,
- "build_s": 0.6,
+ "wall_s": 127.4,
+ "cpu_s": 506.5,
+ "build_s": 0.5,
  "settings": {
   "resolution": [
    720,

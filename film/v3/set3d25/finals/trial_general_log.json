@@ -1,8 +1,8 @@
 {
  "preset": "trial_general",
- "wall_s": 76.6,
- "cpu_s": 303.3,
- "build_s": 3.2,
+ "wall_s": 74.2,
+ "cpu_s": 294.1,
+ "build_s": 3.3,
  "settings": {
   "resolution": [
    720,

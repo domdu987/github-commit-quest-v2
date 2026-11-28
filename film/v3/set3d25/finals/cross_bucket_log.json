@@ -1,8 +1,8 @@
 {
  "preset": "cross_bucket",
- "wall_s": 102.3,
- "cpu_s": 404.4,
- "build_s": 7.6,
+ "wall_s": 78.5,
+ "cpu_s": 311.6,
+ "build_s": 7.2,
  "settings": {
   "resolution": [
    720,
@@ -38,16 +38,16 @@
  "cards": [],
  "anchors": {
   "tank0_nose": [
-   797,
-   558
+   930,
+   427
   ],
   "tank0_front": [
-   729,
-   692
+   798,
+   593
   ],
   "tank0_rear": [
-   390,
-   571
+   340,
+   490
   ]
  }
 }

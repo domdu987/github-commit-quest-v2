@@ -43,5 +43,5 @@ PRESETS = dict(
     trial_wide=dict(tune=dict(grass_val=0.62), dress_n=2.4, cam=dict(loc=(-2.0, -40.0, 3.4), look_at=(-18.0, -4.0, 4.2), lens=24), cards=[('a', (-26, -12), 3.2), ('b', (-30, -8), 3.2), ('a', (-34, -16), 3.2)], note='shot 9'),
     trial_general=dict(tune=dict(grass_val=0.7), cam=dict(loc=(-9.0, -18.0, 2.6), look_at=(-14.0, -4.0, 3.2), lens=30), cards=[('a', (-12, -10), 3.4), ('b', (-17, -9), 3.2)], note='shots 10, 12'),
     trial_trench=dict(tune=dict(grass_val=0.62), cam=dict(loc=(-6.0, -30.0, 3.0), look_at=(-2.0, -2.0, 2.4), lens=22), cards=[('a', (-9, -12), 3.2)], note='shot 11'),
-    trial_camp=dict(tune=dict(grass_val=0.62, cloud_k=0.85), cam=dict(loc=(-16.0, -32.0, 2.6), look_at=(-36.0, -15.0, 3.0), lens=24), cards=[('a', (-31, -12), 3.2), ('b', (-33, -9), 3.2), ('a', (-28, -9), 3.2)], note='shot 13'),
+    trial_camp=dict(dress_n=3.5, tune=dict(grass_val=0.62, cloud_k=0.85), cam=dict(loc=(-16.0, -32.0, 2.6), look_at=(-36.0, -15.0, 3.0), lens=24), cards=[('a', (-31, -12), 3.2), ('b', (-33, -9), 3.2), ('a', (-28, -9), 3.2)], note='shot 13'),
 )
