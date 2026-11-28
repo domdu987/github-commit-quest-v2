@@ -37,13 +37,13 @@ def hooks(g, Tk):
         t = ((g + i * 7) % 14) / 30.0
         z = gz + 0.75 - 0.5 * 18.5 * t * t
         if z <= gz + 0.02:
-            ob.location = (B[0] + 0.5, B[1], gz + 0.02); ob.scale = (2.4, 2.4, 0.25)            # splash flat
+            ob.location = (B[0] + 0.5, B[1], gz + 0.02); ob.scale = (4.0, 4.0, 0.4)            # splash flat
             if t > 0.30:
                 ob.hide_render = True
             else:
                 ob.hide_render = False
         else:
-            ob.location = (B[0] + 0.5, B[1], z); ob.scale = (0.8, 0.8, 1.3); ob.hide_render = False
+            ob.location = (B[0] + 0.5, B[1], z); ob.scale = (1.5, 1.5, 2.2); ob.hide_render = False
 
 
 def report(Tk, g):
