@@ -21,12 +21,12 @@ MG = (30.5, 11.0, -math.pi / 2 - 0.35)
 def cam_of(g):
     k = min(max((g - G0) / float(G1 - 1 - G0), 0.0), 1.0)
     push = 1.0 + 0.10 * T.smooth(k)
-    ang = math.radians(T.lerp(-12.0, 4.0, T.smooth(k)))                   # slight arc
-    d = 27.0 / push
-    cx = T.lerp(21.5, 22.5, k)
-    loc = (cx + d * math.sin(ang), Y_T - d * math.cos(ang), 2.4)
-    look = (cx, Y_T, 2.3)
-    return loc, look, 26.0, (3.0, d)
+    ang = math.radians(T.lerp(-16.0, 8.0, T.smooth(k)))                   # slight arc about the vertical axis through the target
+    p = T.TK_.crossing_pose(F.S["tank"], U)["pos"]                        # tank origin (front of the bottom run), heading +x, level
+    tgt = (p[0] - T.lerp(4.4, 3.4, k), p[1] - 2.9, p[2] + 2.3)            # riveted side plates + sponson
+    d = 8.0 / push
+    loc = (tgt[0] + d * math.sin(ang), tgt[1] - d * math.cos(ang), tgt[2] - 0.6)
+    return loc, tgt, 26.0, (3.5, d)
 
 
 def hooks(g, Tk):
@@ -44,6 +44,8 @@ def report(Tk, g):
 
 
 if __name__ == "__main__":
+    import tank25 as TK_
+    T.TK_ = TK_
     cmd = sys.argv[1]
     gs = [g for g in C.parse(sys.argv[2]) if FIRST <= g <= LAST]
     T.register(PRESET, "cross_hull", cards=[], cam=dict(loc=(26.0, -12.0, 2.4), look_at=(23.0, 4.5, 2.6), lens=26.0), dress_n=0.8, near=False,
