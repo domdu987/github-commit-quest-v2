@@ -60,7 +60,7 @@ def shade_layer(SH, sc, al, head, hr):
     return np.clip(np.where(face[..., None], fs, s), 0, 1)
 
 
-def compose(g, wd, out_dir, edge=0.18, wb=None, gamma=None, vib=2.0, gclip=(0.55, 1.9)):
+def compose(g, wd, out_dir, edge=0.18, wb=None, gamma=None, vib=2.0, gclip=(0.55, 1.9), sat=1.0):
     md = json.load(open(os.path.join(wd, "meta", "g_%04d.json" % g)))
     raw = Image.open(os.path.join(wd, "beauty", "f_%04d.png" % g)).convert("RGB")
     if raw.size != (720, 1280):
@@ -124,6 +124,8 @@ def compose(g, wd, out_dir, edge=0.18, wb=None, gamma=None, vib=2.0, gclip=(0.55
         gains[2] *= np.exp(0.025 * (bm - WBT[1])); gains[1] *= np.exp(0.02 * (am - WBT[0]))
         gains /= float(gains @ W709); gains = np.clip(gains, gclip[0], gclip[1])
     b = P.vibrance(tone(e, gains), vib)
+    if sat != 1.0:
+        hh, ss, vv = P.rgb2hsv(b); b = P.hsv2rgb(hh, np.clip(ss * sat, 0, 1), vv)
     yy = np.linspace(0, 1, 1280, dtype=np.float32)[:, None, None]
     b = b * (1 - edge * np.clip((yy - 0.86) / 0.14, 0, 1) ** 1.5)
     out = comp(b)
