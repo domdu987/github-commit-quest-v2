@@ -3,6 +3,24 @@
 Follow film/WORKER.md for section 1 (setup), section 4 (delivery) and section 5 (rules). The film-25 differences below take precedence.
 Work autonomously: the client has approved the look and the set. Do not ask for confirmation.
 
+# READ FIRST: MOTION-TEST PIPELINE (director, 28 Nov; overrides anything below where they differ)
+- **Worked example:** PROJ/film25/gate/motion/. It holds the general's mock beat, rows 19-22, rendered and approved at the gate. Copy its structure:
+  - `motion.py` (the shot)
+  - `c25.py` (the helpers, adapted from film24 common.py)
+  - `post25.py` (THE FILM GRADE)
+  - `assemble.py`
+  - `measure.py`
+  Read motion_test_QA.md for its gotchas.
+- **Render:** 24 adaptive samples, threshold 0.02, OIDN, at 75 % scale, about 50 s per frame. Then post25.py does the set sharpen/clarity, then the gentle background grade (soft shoulder, warm-key white balance, gamma 0.95, vibrance 1.25), then composites the exact cast25 sprite onto each card UNGRADED, with the occlusion test. Faces come out exactly #fef7f6.
+- **Frozen snapshot:** render from a frozen snapshot of set3d25 and cast25 taken at your start (copy them into your scratchpad) so mid-render edits cannot leak. Hide the set's framing-reference puppet cards at runtime.
+- **Framing fixes from the gate (binding):**
+  - In C shots, crop at the WAIST: the waist sits at the frame bottom and the head centre at 0.30-0.45 H. For the short general, put the camera closer or lower. Shins and boots must not show in C shots.
+  - Behind close-ups, use plain hull plate, sky or field. Frame rivet rows, track horns and gun barrels out of the area behind the head.
+  - On big gestures (point, dangle, wag, laugh, run), add 2-3 in-between frames using lerp_pose.
+  - Action pans: 20-35 % of frame width per second. Keep the calm drifts for dialogue only.
+- **sky_close_cockpit** is weak in the set. Build your own tight cockpit close-up for row 64+65: pilot25_lean_look against saturated blue sky with the wing edge and struts in the near frame.
+- **Gates per take:** light_metrics.py hard gates PASS (luma 0.46-0.56, sat 0.40-0.50, |a*|,|b*| ≤ 6), qa_auto, qa_jitter, and exact faces. Bare set plates may miss; the TAKE must pass.
+
 ## Inputs
 - **Shots:** PROJ/film25/shot_plan_v2.md (58 shot rows, hard cuts only; v1 is void). The story is in PROJ/film25/script/script_th.txt; the facts are in PROJ/film25/FACTS.md.
 - **Client checklist:** PROJ/CLIENT_CHECKLIST.md. Every rule applies to every frame.
