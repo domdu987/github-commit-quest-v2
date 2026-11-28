@@ -2,3 +2,5 @@
 take: hid set cards ['pilot25_lean_look', 'pilot25_lean_look_decal']
 take: built sky_close_cockpit in 0.4 s
 01:05.457  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s64/work/beauty/f_1880.png'
+01:26.588  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s64/work/shade/f_1880.png'
+g 1880  63.0 s beauty  84.1 s total
