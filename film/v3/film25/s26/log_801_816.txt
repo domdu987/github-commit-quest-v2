@@ -49,3 +49,6 @@ g 815  65.6 s beauty  80.8 s total
 22:15.096  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s26/work/beauty/f_0816.png'
 22:29.946  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s26/work/shade/f_0816.png'
 g 816  64.5 s beauty  79.3 s total
+00:04.120  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: hid set cards ['tommy_c25_ladle_tap', 'tommy_c25_ladle_tap_decal']
+take: built camp_close_tank in 3.9 s
