@@ -1,7 +1,7 @@
 {
  "preset": "dock_crate",
- "wall_s": 25.2,
- "cpu_s": 49.1,
+ "wall_s": 24.7,
+ "cpu_s": 48.2,
  "build_s": 0.9,
  "settings": {
   "resolution": [
@@ -38,15 +38,15 @@
  "cards": [
   [
    "tommy_a",
-   1047,
-   1202,
-   182
+   1017,
+   1167,
+   186
   ],
   [
    "tommy_b",
-   1022,
-   1169,
-   -373
+   993,
+   1135,
+   -358
   ]
  ],
  "anchors": {}

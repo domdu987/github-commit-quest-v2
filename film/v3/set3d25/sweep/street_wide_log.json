@@ -1,8 +1,8 @@
 {
  "preset": "street_wide",
- "wall_s": 27.8,
- "cpu_s": 54.6,
- "build_s": 1.1,
+ "wall_s": 24.5,
+ "cpu_s": 48.0,
+ "build_s": 1.0,
  "settings": {
   "resolution": [
    360,

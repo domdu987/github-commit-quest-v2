@@ -1,7 +1,7 @@
 {
  "preset": "fac_close_rivet",
- "wall_s": 48.1,
- "cpu_s": 100.4,
+ "wall_s": 49.2,
+ "cpu_s": 96.8,
  "build_s": 0.9,
  "settings": {
   "resolution": [
@@ -38,23 +38,23 @@
  "cards": [
   [
    "worker_a25_rivet",
-   332,
-   1090,
+   140,
+   905,
    360
   ]
  ],
  "anchors": {
   "tank0_nose": [
-   1117,
-   326
+   1171,
+   134
   ],
   "tank0_front": [
-   685,
-   748
+   683,
+   583
   ],
   "tank0_rear": [
-   -506,
-   424
+   -551,
+   243
   ]
  }
 }

@@ -1,7 +1,7 @@
 {
  "preset": "dock_deck",
- "wall_s": 25.1,
- "cpu_s": 48.5,
+ "wall_s": 24.1,
+ "cpu_s": 47.2,
  "build_s": 0.9,
  "settings": {
   "resolution": [

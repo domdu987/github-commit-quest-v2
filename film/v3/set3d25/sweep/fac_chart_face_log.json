@@ -1,8 +1,8 @@
 {
  "preset": "fac_chart_face",
- "wall_s": 43.5,
- "cpu_s": 85.2,
- "build_s": 1.8,
+ "wall_s": 43.2,
+ "cpu_s": 86.3,
+ "build_s": 1.2,
  "settings": {
   "resolution": [
    360,

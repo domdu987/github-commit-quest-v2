@@ -1,7 +1,7 @@
 {
  "preset": "fac_stencil",
- "wall_s": 46.5,
- "cpu_s": 91.1,
+ "wall_s": 50.5,
+ "cpu_s": 99.3,
  "build_s": 0.7,
  "settings": {
   "resolution": [

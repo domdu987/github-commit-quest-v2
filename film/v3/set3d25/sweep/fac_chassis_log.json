@@ -1,8 +1,8 @@
 {
  "preset": "fac_chassis",
- "wall_s": 49.8,
- "cpu_s": 97.5,
- "build_s": 0.6,
+ "wall_s": 47.1,
+ "cpu_s": 92.6,
+ "build_s": 0.8,
  "settings": {
   "resolution": [
    360,

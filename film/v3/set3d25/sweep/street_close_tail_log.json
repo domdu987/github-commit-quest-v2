@@ -1,8 +1,8 @@
 {
  "preset": "street_close_tail",
- "wall_s": 29.4,
- "cpu_s": 57.1,
- "build_s": 1.3,
+ "wall_s": 27.6,
+ "cpu_s": 54.1,
+ "build_s": 1.2,
  "settings": {
   "resolution": [
    360,

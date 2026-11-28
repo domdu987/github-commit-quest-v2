@@ -1,7 +1,7 @@
 {
  "preset": "dock_watertank",
- "wall_s": 24.8,
- "cpu_s": 48.1,
+ "wall_s": 22.9,
+ "cpu_s": 44.4,
  "build_s": 0.9,
  "settings": {
   "resolution": [

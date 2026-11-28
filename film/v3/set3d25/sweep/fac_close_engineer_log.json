@@ -1,8 +1,8 @@
 {
  "preset": "fac_close_engineer",
- "wall_s": 54.5,
- "cpu_s": 106.7,
- "build_s": 1.2,
+ "wall_s": 51.3,
+ "cpu_s": 101.4,
+ "build_s": 1.0,
  "settings": {
   "resolution": [
    360,

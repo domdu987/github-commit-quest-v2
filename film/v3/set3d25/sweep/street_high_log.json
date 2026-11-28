@@ -1,8 +1,8 @@
 {
  "preset": "street_high",
- "wall_s": 36.5,
- "cpu_s": 70.8,
- "build_s": 1.0,
+ "wall_s": 33.3,
+ "cpu_s": 65.0,
+ "build_s": 1.1,
  "settings": {
   "resolution": [
    360,
