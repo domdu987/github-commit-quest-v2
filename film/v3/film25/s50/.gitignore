@@ -1,0 +1,7 @@
+frames/
+raw/
+work/
+frames_post/
+*.png
+!contact.png
+!phone_sheet.png
