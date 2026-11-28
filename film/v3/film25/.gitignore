@@ -1,0 +1,4 @@
+__pycache__/
+*.log
+q[AB]
+q[AB].stop
