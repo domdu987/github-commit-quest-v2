@@ -1,0 +1,2 @@
+front_close_britishtrench.png          luma 0.472 p1 0.058 p99 0.987 lc 0.0422 sat 0.313 chroma 17.3 a +3.3 b +3.6 p98 0.94 blue 0.55 warm 0.39 neut 0.20 M 59  MISS  (guides off: p99,chroma,blue_frac,warm_frac,M)
+front_close_germantrench.png           luma 0.500 p1 0.057 p99 0.994 lc 0.0401 sat 0.222 chroma 11.1 a +3.2 b +3.5 p98 0.93 blue 0.12 warm 0.73 neut 0.50 M 43  MISS  (guides off: p99,chroma,M)

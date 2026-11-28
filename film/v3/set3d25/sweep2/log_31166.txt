@@ -1,0 +1,2 @@
+fac_bench.png                          luma 0.493 p1 0.049 p99 0.823 lc 0.0292 sat 0.361 chroma 19.3 a +5.9 b +14.0 p98 0.95 blue 0.10 warm 0.88 neut 0.05 M 55  MISS  (guides off: p99,lc,chroma,M)
+cross_close_lip.png                    luma 0.339 p1 0.052 p99 0.892 lc 0.0393 sat 0.405 chroma 19.7 a +1.8 b +8.6 p98 0.82 blue 0.20 warm 0.51 neut 0.08 M 49  MISS  (guides off: p99,chroma,sat_p98,M)

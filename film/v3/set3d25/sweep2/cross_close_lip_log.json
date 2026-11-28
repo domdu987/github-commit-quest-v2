@@ -1,8 +1,8 @@
 {
  "preset": "cross_close_lip",
- "wall_s": 57.1,
- "cpu_s": 88.3,
- "build_s": 18.3,
+ "wall_s": 39.5,
+ "cpu_s": 77.7,
+ "build_s": 16.4,
  "settings": {
   "resolution": [
    360,
@@ -38,16 +38,16 @@
  "cards": [],
  "anchors": {
   "tank0_nose": [
-   1193,
-   -420
+   845,
+   66
   ],
   "tank0_front": [
-   886,
-   502
+   667,
+   599
   ],
   "tank0_rear": [
-   -750,
-   870
+   -308,
+   812
   ]
  }
 }

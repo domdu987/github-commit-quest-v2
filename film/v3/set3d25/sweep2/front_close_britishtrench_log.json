@@ -1,8 +1,8 @@
 {
  "preset": "front_close_britishtrench",
- "wall_s": 42.5,
- "cpu_s": 67.9,
- "build_s": 7.3,
+ "wall_s": 30.9,
+ "cpu_s": 60.9,
+ "build_s": 7.1,
  "settings": {
   "resolution": [
    360,
@@ -38,8 +38,8 @@
  "cards": [
   [
    "tommy_a25_peek",
-   -74,
-   743,
+   225,
+   981,
    360
   ]
  ],
