@@ -1,7 +1,7 @@
 {
  "preset": "fac_crate_open",
- "wall_s": 47.3,
- "cpu_s": 92.5,
+ "wall_s": 47.6,
+ "cpu_s": 93.5,
  "build_s": 0.6,
  "settings": {
   "resolution": [
@@ -22,7 +22,7 @@
   },
   "view": "Standard",
   "exposure": -0.25,
-  "threads": 4,
+  "threads": 2,
   "sun": {
    "energy": 5.0,
    "elevation": 28.0,

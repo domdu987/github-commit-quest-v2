@@ -1,8 +1,8 @@
 {
  "preset": "front_op",
- "wall_s": 37.9,
- "cpu_s": 74.3,
- "build_s": 7.4,
+ "wall_s": 53.5,
+ "cpu_s": 79.6,
+ "build_s": 8.9,
  "settings": {
   "resolution": [
    360,
@@ -22,7 +22,7 @@
   },
   "view": "Standard",
   "exposure": -0.25,
-  "threads": 4,
+  "threads": 2,
   "sun": {
    "energy": 5.0,
    "elevation": 28.0,

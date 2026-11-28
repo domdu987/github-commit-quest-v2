@@ -1,8 +1,8 @@
 {
  "preset": "fac_chart",
- "wall_s": 42.5,
- "cpu_s": 83.6,
- "build_s": 0.9,
+ "wall_s": 67.9,
+ "cpu_s": 99.5,
+ "build_s": 1.2,
  "settings": {
   "resolution": [
    360,
@@ -22,7 +22,7 @@
   },
   "view": "Standard",
   "exposure": -0.25,
-  "threads": 4,
+  "threads": 2,
   "sun": {
    "energy": 5.0,
    "elevation": 28.0,
@@ -38,16 +38,16 @@
  "cards": [],
  "anchors": {
   "tank0_nose": [
-   399,
-   468
+   389,
+   577
   ],
   "tank0_front": [
-   342,
-   507
+   371,
+   595
   ],
   "tank0_rear": [
-   181,
-   419
+   321,
+   561
   ]
  }
 }

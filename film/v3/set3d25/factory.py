@@ -224,8 +224,8 @@ def build(preset, samples=None, quality=None):
     for (x, y) in ((-14, 14), (0, 14), (14, 14), (-14, 34), (0, 34), (14, 34), (-8, 24), (8, 24)): lamp(x, y, 11.6, P.get('lamp_w', 1400.0))
     area_fill(0, 26, 12.5, 40, 40, P.get('fill', 5000.0))
     mb = MB(); TM = TK.tank_mats(0.0, 'a')
-    for (x, y, sz, yw) in P.get('small_crates', []):
-        L.crate_box(mb, (x, y, 0), sz, sz * 0.8, sz * 0.7, 0.0); TK.tank_silhouette(mb, (x, y, sz * 0.35), (1, 0, 0), (0, -1, 0), (0, 0, 1), sz * 0.3, TM['paint'], TM['paint_d'], lift=sz * 0.4 + 0.02)
+    for (x, y, sz, yw, *cm) in P.get('small_crates', []):
+        L.crate_box(mb, (x, y, 0), sz, sz * 0.8, sz * 0.7, 0.0, M[cm[0]] if cm else None); TK.tank_silhouette(mb, (x, y, sz * 0.35), (1, 0, 0), (0, -1, 0), (0, 0, 1), sz * 0.3, TM['paint'], TM['paint_d'], lift=sz * 0.4 + 0.02)
     mkobj(mb, 'small_crates')
     if P.get('doors') is not None: set_doors(P['doors'])
     if P.get('chart'): build_chart(P['chart'])
@@ -247,7 +247,7 @@ PRESETS = dict(
     fac_foreman=dict(cam=dict(loc=(-3.0, 8.0, 2.6), look_at=(-4.0, 22.0, 4.6), lens=26), stages=FULL, cards=[('a', (-9, 14), 3.2), ('b', (-3, 12), 3.2), ('a', (3, 14), 3.2)], note='shots 3'),
     fac_stencil=dict(fill=5000.0, cam=dict(loc=(-9.0, 13.0, 4.8), look_at=(-12.5, 20.0, 4.9), lens=26), stages=FULL, cards=[('b', (-8, 16), 3.2)], note='shot 4'),
     fac_side=dict(cam=dict(loc=(-4.0, 5.0, 4.6), look_at=(-4.0, 22.0, 4.8), lens=24), stages=FULL, cards=[('a', (-12, 14), 3.2), ('b', (4, 15), 3.2)], note='shot 7: side-on, work lamps'),
-    fac_bench=dict(fill=2500.0, lamp_w=800.0, cam=dict(loc=(-8.0, 2.0, 2.6), look_at=(-26.0, 6.0, 1.6), lens=26), stages=FULL, small_crates=[(-13, 8, 2.6, 0.5), (-16, 6, 2.2, 0.3)], cards=[('a', (-16, 10), 3.2), ('b', (-13, 12), 3.2)], note='shot 8'),
+    fac_bench=dict(fill=2500.0, lamp_w=800.0, cam=dict(loc=(-8.0, 2.0, 2.6), look_at=(-26.0, 6.0, 1.6), lens=26), stages=FULL, small_crates=[(-13, 8, 2.6, 0.5, 'plank_blue'), (-16, 6, 2.2, 0.3, 'plank_red'), (-11, 5, 1.8, 0.0, 'plank_yellow')], cards=[('a', (-16, 10), 3.2), ('b', (-13, 12), 3.2)], note='shot 8'),
     fac_chassis=dict(cam=dict(loc=(-9.0, 9.0, 3.4), look_at=(-6.0, 22.0, 4.2), lens=26), stages=_st(), cards=[('a', (-4, 14), 3.2)], note='shot 14'),
     fac_plates=dict(cam=dict(loc=(2.0, 11.0, 5.0), look_at=(-6.0, 22.0, 6.6), lens=26), stages=_st(plates=0.88, rivets=0.0), crane_x=-5.0, crane_y=22.0, hook_z=10.4, slings=dict(stage='plates', points=[(-5.5, 1.8, 4.25), (-5.5, -1.8, 4.25), (0.8, 1.8, 4.0), (0.8, -1.8, 4.0)]), cards=[('a', (-14, 15), 3.2)], note='shots 15'),
     fac_tracks=dict(cam=dict(loc=(-4.0, 7.0, 4.4), look_at=(-4.0, 22.0, 6.4), lens=24), stages=_st(plates=1, rivets=1, tracks=0.86), crane_x=-5.0, crane_y=22.0, hook_z=11.0, slings=dict(stage='tracks', points=[(-6.0, 2.6, 4.4), (-6.0, -2.6, 4.4), (0.0, 2.6, 4.2), (0.0, -2.6, 4.2)]), cards=[('b', (8, 13), 3.2)], note='shot 16'),

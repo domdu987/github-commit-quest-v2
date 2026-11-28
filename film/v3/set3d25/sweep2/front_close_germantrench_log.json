@@ -1,8 +1,8 @@
 {
  "preset": "front_close_germantrench",
- "wall_s": 31.1,
- "cpu_s": 60.8,
- "build_s": 6.5,
+ "wall_s": 38.9,
+ "cpu_s": 64.5,
+ "build_s": 7.0,
  "settings": {
   "resolution": [
    360,
@@ -22,7 +22,7 @@
   },
   "view": "Standard",
   "exposure": -0.25,
-  "threads": 4,
+  "threads": 2,
   "sun": {
    "energy": 5.0,
    "elevation": 28.0,

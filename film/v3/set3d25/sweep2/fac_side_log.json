@@ -1,7 +1,7 @@
 {
  "preset": "fac_side",
- "wall_s": 45.3,
- "cpu_s": 89.4,
+ "wall_s": 58.9,
+ "cpu_s": 94.9,
  "build_s": 0.7,
  "settings": {
   "resolution": [
@@ -22,7 +22,7 @@
   },
   "view": "Standard",
   "exposure": -0.25,
-  "threads": 4,
+  "threads": 2,
   "sun": {
    "energy": 5.0,
    "elevation": 28.0,

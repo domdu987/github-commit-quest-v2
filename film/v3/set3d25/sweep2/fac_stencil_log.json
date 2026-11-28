@@ -1,8 +1,8 @@
 {
  "preset": "fac_stencil",
- "wall_s": 51.2,
- "cpu_s": 89.5,
- "build_s": 0.6,
+ "wall_s": 65.1,
+ "cpu_s": 96.2,
+ "build_s": 0.9,
  "settings": {
   "resolution": [
    360,
@@ -22,7 +22,7 @@
   },
   "view": "Standard",
   "exposure": -0.25,
-  "threads": 4,
+  "threads": 2,
   "sun": {
    "energy": 5.0,
    "elevation": 28.0,

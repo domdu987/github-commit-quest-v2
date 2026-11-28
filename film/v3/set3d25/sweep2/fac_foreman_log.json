@@ -1,8 +1,8 @@
 {
  "preset": "fac_foreman",
- "wall_s": 49.1,
- "cpu_s": 86.7,
- "build_s": 0.6,
+ "wall_s": 61.7,
+ "cpu_s": 92.6,
+ "build_s": 0.8,
  "settings": {
   "resolution": [
    360,
@@ -22,7 +22,7 @@
   },
   "view": "Standard",
   "exposure": -0.25,
-  "threads": 4,
+  "threads": 2,
   "sun": {
    "energy": 5.0,
    "elevation": 28.0,

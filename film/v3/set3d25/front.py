@@ -806,7 +806,7 @@ def setup_render(sc, quality='final', samples=None, scale=None):
     cy.use_denoising = True; cy.denoiser = 'OPENIMAGEDENOISE'; cy.denoising_prefilter = 'ACCURATE'; cy.denoising_input_passes = 'RGB_ALBEDO_NORMAL'; cy.denoising_use_gpu = False
     cy.max_bounces = 6; cy.diffuse_bounces = 5; cy.glossy_bounces = 3; cy.transmission_bounces = 2; cy.volume_bounces = 0; cy.transparent_max_bounces = 8; cy.caustics_reflective = False; cy.caustics_refractive = False
     cy.blur_glossy = 0.5; cy.volume_step_rate = 2.0; cy.use_light_tree = True; cy.sample_clamp_indirect = 8.0; cy.sample_clamp_direct = 0.0
-    r.threads_mode = 'FIXED'; r.threads = 4; r.use_persistent_data = True
+    r.threads_mode = 'FIXED'; r.threads = int(os.environ.get('SET25_THREADS', 4)); r.use_persistent_data = True
     sc.view_settings.view_transform = S.get('view', 'Standard')
     try: sc.view_settings.look = S.get('look', 'None')
     except TypeError: pass
@@ -839,7 +839,7 @@ def _cam_lip(S_):
     for (x, z) in TK.outline_pts(0.3):
         p = H.root.matrix_world @ Vector((x, -2.6, z)); cl = p.z - gh(p.x, p.y)
         if p.x > 1.0 and (best is None or cl < best[0]): best = (cl, p)
-    p = best[1]; return dict(loc=(p.x + 0.8, p.y - 5.0, p.z + 0.3), look_at=(p.x, p.y, p.z + 0.5), lens=35)
+    p = best[1]; return dict(loc=(p.x + 1.5, p.y - 8.5, p.z + 0.6), look_at=(p.x, p.y, p.z + 0.9), lens=30)
 _TP = [(0.0, -3.0), (0.0, 14.0), (7.0, 21.0), (31.0, 21.0)]
 _CR = dict(x0=0.0, y=4.5, s_a=-5.0, s_b=27.0, mud=1.0)
 _CT = dict(poly=_TP, mw=0.8, me=1.9, sb_layers=(2, 2))
@@ -859,8 +859,8 @@ PRESETS = dict(
     front_halt=dict(loc='front', tune=dict(cloud_k=0.85, green_k=2.2), dress_n=4.0, cam=dict(loc=(8.0, -36.0, 2.8), look_at=(-22.0, -36.0, 2.0), lens=22), tanks=[dict(front=(-22.0, -33.0), yaw=90.0, nocorr=True), dict(front=(-8.0, -22.0), yaw=95.0, smoke=1.0)], clamp=True, note='shot 21: one smoking, one nose-down in a crater'),
     front_stuck=dict(loc='front', dress_n=3.0, tune=dict(cloud_k=0.85, green_k=0.3), world=dict(rocks=[(5.0, -9.6, 3, 1.6), (3.0, -49.0, 22, 4.0), (6.0, -47.0, 16, 3.0), (0.0, -46.0, 14, 3.0), (8.0, -44.0, 12, 3.0)], spill=[(4.0, -48.0, 4.0, 14)]), cam=dict(loc=(6.0, -52.0, 1.4), look_at=(-4.0, -41.0, -0.6), lens=24), tanks=[dict(front=(-4.0, -42.0), yaw=90.0, state='stuck')], extras=[('mud', -4.0, -42.0, math.pi / 2)], cards=[('a', (2.0, -45.0), 3.2), ('b', (-9.0, -47.0), 3.2)], clamp=True, note='shot 22: sunk to the sponsons in mud'),
     front_op=dict(loc='front', tune=dict(cloud_k=0.85), fill=3000.0, cam=dict(loc=(-45.0, -17.0, 6.5), look_at=(-26.0, -8.0, 2.4), lens=28), extras=[('op', -28.0, -8.0, 0.0)], tanks=[dict(front=(-6.0, -16.0), yaw=90.0, smoke=1.0)], cards=[('a', (-30.5, -9.0), 2.6)], note='shot 23: observation post'),
-    front_close_britishtrench=dict(loc='front', mark=dict(pos=(-34.0, -8.0), face_deg=262.9, dist=4.2, lens=28, zc=1.9, look_dz=-1.4), clamp=True, cast=[dict(story='tommy_a25_peek')], extras=[('bags', -34.0, -4.5), ('pop', -34.0, -3.0)], dress_n=0.3, near=False, note='shots 8-9, 10-11: waist-up Tommy inside the British trench (mark)'),
-    front_close_germantrench=dict(loc='front', mark=dict(pos=(0.0, 6.0), face_deg=90.0, dist=4.2, lens=28, zc=1.9, look_dz=-1.4), clamp=True, cast=[dict(story='german_a25_peek', mirror=True)], extras=[('bags', 0.0, 2.0), ('pop', 0.0, 1.0)], dress_n=0.3, near=False, note='shots 8-9, 55: German trench mirror close (mark)'),
+    front_close_britishtrench=dict(loc='front', mark=dict(pos=(-34.0, -8.0), face_deg=262.9, dist=4.2, lens=28, zc=1.9, look_dz=-0.4), clamp=True, cast=[dict(story='tommy_a25_peek')], extras=[('bags', -34.0, -4.5), ('pop', -34.0, -3.0)], dress_n=0.3, near=False, note='shots 8-9, 10-11: waist-up Tommy inside the British trench (mark)'),
+    front_close_germantrench=dict(loc='front', mark=dict(pos=(0.0, 6.0), face_deg=90.0, dist=4.2, lens=28, zc=1.9, look_dz=-0.4), clamp=True, cast=[dict(story='german_a25_peek', mirror=True)], extras=[('bags', 0.0, 2.0), ('pop', 0.0, 1.0)], dress_n=0.3, near=False, note='shots 8-9, 55: German trench mirror close (mark)'),
     op_close_general=dict(loc='front', mark=dict(pos=(-30.2, -8.0), face_deg=0.0, dist=4.2, lens=28, zc=1.9), cast=[dict(story='general25_point_stick')], extras=[('op', -28.0, -8.0, 0.0)], dress_n=0.3, near=False, note='shots 43-44: general in the observation post (mark)'),
     cross_close_idler=_cross('cross_close_idler', 0.40, _cam_idler, clamp=True, dress_n=1.2, note='shots 47-49: track links round the front idler as the nose lifts against the sky'),
     cross_close_lip=_cross('cross_close_lip', 0.40, _cam_lip, clamp=True, dress_n=1.6, extras=[('clods', 5.0, 4.5)], note='shot 50: the front track gripping the far lip, earth crumbling'),

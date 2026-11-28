@@ -1,8 +1,8 @@
 {
  "preset": "cross_wire",
- "wall_s": 31.8,
- "cpu_s": 61.9,
- "build_s": 7.4,
+ "wall_s": 48.8,
+ "cpu_s": 72.5,
+ "build_s": 7.7,
  "settings": {
   "resolution": [
    360,
@@ -22,7 +22,7 @@
   },
   "view": "Standard",
   "exposure": -0.25,
-  "threads": 4,
+  "threads": 2,
   "sun": {
    "energy": 5.0,
    "elevation": 30.0,

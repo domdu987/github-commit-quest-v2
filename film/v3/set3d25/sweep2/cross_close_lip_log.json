@@ -1,8 +1,8 @@
 {
  "preset": "cross_close_lip",
- "wall_s": 41.4,
- "cpu_s": 81.5,
- "build_s": 18.9,
+ "wall_s": 57.1,
+ "cpu_s": 88.3,
+ "build_s": 18.3,
  "settings": {
   "resolution": [
    360,
@@ -22,7 +22,7 @@
   },
   "view": "Standard",
   "exposure": -0.25,
-  "threads": 4,
+  "threads": 2,
   "sun": {
    "energy": 5.0,
    "elevation": 28.0,
@@ -38,16 +38,16 @@
  "cards": [],
  "anchors": {
   "tank0_nose": [
-   966,
-   -357
+   1193,
+   -420
   ],
   "tank0_front": [
-   719,
-   467
+   886,
+   502
   ],
   "tank0_rear": [
-   -977,
-   882
+   -750,
+   870
   ]
  }
 }

@@ -1,8 +1,8 @@
 {
  "preset": "front_parapet",
- "wall_s": 29.9,
- "cpu_s": 58.6,
- "build_s": 7.5,
+ "wall_s": 40.8,
+ "cpu_s": 63.1,
+ "build_s": 8.7,
  "settings": {
   "resolution": [
    360,
@@ -22,7 +22,7 @@
   },
   "view": "Standard",
   "exposure": -0.25,
-  "threads": 4,
+  "threads": 2,
   "sun": {
    "energy": 5.0,
    "elevation": 28.0,
