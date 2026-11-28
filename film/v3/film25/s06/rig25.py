@@ -366,14 +366,14 @@ def run(shot, cmd, gs, out_root=None, scale=None, samples=None, sh_samples=None)
         geos = {g: rig.card_geo(g) for g in samp}
         best = None; P.ITERS_ = 7
         tmp = os.path.join(TAKE, "work", "ag"); os.makedirs(tmp, exist_ok=True)
-        for vib, ck_, (wba, wbb) in itertools.product((1.0, 1.25), (1.0, 2.0, 3.0), ((2.0, 4.5), (0.0, 1.0))):
+        for vib, ck_, (wba, wbb) in itertools.product((1.0, 1.25), (1.0, 2.0, 3.0), ((2.0, 4.5), (0.0, 1.0), (-1.0, -2.0))):
             P.VIB = vib; P.COOLK = ck_; P.WB_T = (wba, wbb); ds = []
             for g in samp:
                 shp = os.path.join(out_root, "shade", "f_%04d.png" % g)
                 composite(g, os.path.join(out_root, "raw", "f_%04d.png" % g), shp if (geos[g] and os.path.exists(shp)) else None, geos[g], os.path.join(tmp, "s.png"))
                 ds.append(ns["m"](Image.open(os.path.join(tmp, "s.png"))))
             d = {k: float(np.mean([x[k] for x in ds])) for k in ds[0]}
-            cost = abs(d["sat"] - 0.45) * 25 + 40 * max(0, abs(d["a_mean"]) - 5.6) + 40 * max(0, abs(d["b_mean"]) - 5.6) + 60 * max(0, 0.47 - d["luma"])
+            cost = abs(d["sat"] - 0.465) * 25 + 40 * max(0, abs(d["a_mean"]) - 5.6) + 40 * max(0, abs(d["b_mean"]) - 5.6) + 60 * max(0, 0.47 - d["luma"])
             if best is None or cost < best[0]: best = (cost, vib, wbb, wba, d, ck_)
         print("AUTOGRADE", best[1:4], "coolk", best[5], {k: round(v, 3) for k, v in best[4].items() if k in ("sat", "a_mean", "b_mean", "luma")}, flush=True)
         os.environ["VIB"], os.environ["WBB"], os.environ["WBA"], os.environ["COOLK"] = str(best[1]), str(best[2]), str(best[3]), str(best[5])
