@@ -303,7 +303,7 @@ def composite(g, raw_path, shade_path, geo, out_path, bg_only=False):
         return np.power(np.clip(P.to_srgb(y), 1e-5, 1), gam)
     gains = np.ones(3, np.float32); e = 1.0
     ms = m[::4, ::4, None]; scs4 = sc[::4, ::4]
-    for it in range(int(os.environ.get("ITERS", 4))):
+    for it in range(int(os.environ.get("ITERS", 4)) if not hasattr(P, "ITERS_") else 7):
         lo, hi = 0.8, P.EXP_MAX
         for _ in range(11):
             e = (lo + hi) / 2
@@ -340,8 +340,29 @@ def run(shot, cmd, gs, out_root=None, scale=None, samples=None, sh_samples=None)
             flag = [k for k, v in fr.items() if 850 < v[1] < 1290 and k in hr]
             print(json.dumps(dict(g=g, heads={k: (round(v["x"]), round(v["y"]), round(v["w"])) for k, v in hr.items()}, feet={k: (round(v[0]), round(v[1])) for k, v in fr.items()}, FEET_IN_BAND=flag)), flush=True)
         return rig
+    if cmd == "autograde":                               # pick vibrance / WB target so the take passes the hard colour gates, then regrade all frames in place
+        import importlib.util, itertools
+        spec = importlib.util.spec_from_file_location("lm", os.path.join(C.PROJ, "film25", "tools", "light_metrics.py"))
+        src = open(spec.origin).read().split("for p in sys.argv[1:]:")[0]
+        ns = {}; exec(compile(src, "lm", "exec"), ns)
+        samp = [gs[0], gs[len(gs) // 2], gs[-1]]
+        geos = {g: rig.card_geo(g) for g in samp}
+        best = None; P.ITERS_ = 7
+        tmp = os.path.join(TAKE, "work", "ag"); os.makedirs(tmp, exist_ok=True)
+        for vib, wbb, wba in itertools.product((1.0, 1.3, 1.6, 1.9), (0.0, 3.0), (1.0,)):
+            P.VIB = vib; P.WB_T = (wba, wbb); ds = []
+            for g in samp:
+                shp = os.path.join(out_root, "shade", "f_%04d.png" % g)
+                composite(g, os.path.join(out_root, "raw", "f_%04d.png" % g), shp if (geos[g] and os.path.exists(shp)) else None, geos[g], os.path.join(tmp, "s.png"))
+                ds.append(ns["m"](Image.open(os.path.join(tmp, "s.png"))))
+            d = {k: float(np.mean([x[k] for x in ds])) for k in ds[0]}
+            cost = abs(d["sat"] - 0.45) * 6 + max(0, abs(d["a_mean"]) - 4) + max(0, abs(d["b_mean"]) - 4) + 8 * max(0, 0.47 - d["luma"]) * (d["luma"] < 0.47)
+            if best is None or cost < best[0]: best = (cost, vib, wbb, wba, d)
+        print("AUTOGRADE", best[1:4], {k: round(v, 3) for k, v in best[4].items() if k in ("sat", "a_mean", "b_mean", "luma")}, flush=True)
+        os.environ["VIB"], os.environ["WBB"], os.environ["WBA"] = str(best[1]), str(best[2]), str(best[3])
+        cmd = "recomp"
     if cmd == "recomp":                                  # re-run only the composite / grade on stored raw + shading renders (env VIB = vibrance)
-        P.VIB = float(os.environ.get("VIB", P.VIB)); P.WB_T = (float(os.environ.get("WBA", 2.0)), float(os.environ.get("WBB", 4.5)))
+        P.VIB = float(os.environ.get("VIB", P.VIB)); P.WB_T = (float(os.environ.get("WBA", 2.0)), float(os.environ.get("WBB", 4.5))); P.ITERS_ = 7
         outd = os.environ.get("RECOMP_OUT", out_root)
         os.makedirs(outd, exist_ok=True)
         for g in gs:

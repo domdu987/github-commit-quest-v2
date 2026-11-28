@@ -34,6 +34,7 @@ while True:
             continue
         left += 1
         if all(os.path.exists(os.path.join(d, "frames", "g_%04d.json" % g)) for g in range(f, l + 1)):
+            subprocess.run(["python3", "shot.py", "autograde", "%d:%d" % (f, l)], cwd=d, stdout=open(os.path.join(HERE, "watcher.log"), "a"), stderr=subprocess.STDOUT)
             subprocess.run(["python3", os.path.join(HERE, "s06", "finish.py"), d, lab, str(g0), str(g1), str(f), str(l), "--move", mv, "--push"],
                            stdout=open(os.path.join(HERE, "watcher.log"), "a"), stderr=subprocess.STDOUT)
     if left == 0:

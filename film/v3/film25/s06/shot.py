@@ -40,7 +40,7 @@ def build(rig):
     rig.wc = rig.actor("wc", "worker_c25")
     rig.wb = rig.actor("wb", "worker_b25")
     rig.mk = Vector((HATCH_X, 17.6, 0.0))
-    rig.backdrop((HATCH_X - 6.0, 26.0, 0.0), -90.0, w=40.0, h=16.0, col=(0.20, 0.23, 0.17), name="wall_plate")   # calm grey-olive plate behind the hull: hides the girders above it
+    rig.backdrop((HATCH_X - 6.0, 26.0, 0.0), -90.0, w=40.0, h=16.0, col=(0.10, 0.20, 0.34), name="wall_plate")   # calm grey-olive plate behind the hull: hides the girders above it
 
 
 def cam_of(g):
