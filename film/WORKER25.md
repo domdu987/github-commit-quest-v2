@@ -176,6 +176,18 @@ The g column of shot_plan_v2.md is authoritative (g1 exclusive). Render 6 handle
   - A static wide is allowed for at most 1 s.
 - **Close framing:** the camera stays close (waist-up or tighter) on characters, as in the C/M rows. Widen only where the plan says W.
 
+## Close-shot composition (producer, R11 comparison; binding)
+- **SIMPLE BACKDROP behind every C and close M shot,** so the figure pops:
+  - plain riveted hull plate
+  - a brick wall
+  - a canvas tent
+  - sandbags
+  - open sky
+  Never put scaffolding, bunting, prop clutter or rows of clouds behind a close character. Keep busy detail for W shots. Use the set's `*_close_*` presets, or aim your own camera at a plain surface; you may hide clutter at runtime from shot.py.
+- **Size:** in C shots the character's head is about 1/3 of the frame width. The camera is about 2.5-3.5 D from the card at about 40 mm, the waist is at the frame bottom, and the head stays above y 880.
+- **Light:** puppets carry cast25 form shading, fabric texture and a key-side rim (pose keys `light25` and `rim25`). Set `light25` to match the sun side of your shot, so the rim faces the key.
+- **Sky:** real neutral daylight; clouds varied in size and spacing, never a repeated pattern.
+
 ## QA (before delivering every take)
 1. Run `python3 PROJ/qa_auto.py take.mkv --first_g <first_g> --cuts <in-take cut g's or none>`. Fix every FAIL, then add QA_AUTO.md and phone_sheet.jpg.
 2. Run `python3 PROJ/qa_jitter.py` on every take with a camera move, a walk or a tank move. It must report no shake and no slide.
