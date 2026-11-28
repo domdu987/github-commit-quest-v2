@@ -210,7 +210,12 @@ def post_take(frames, raw_dir, out_dir, cache=None):
         vib = hi
     else:
         vib = VIB
-    print("post_take vibrance %.2f" % vib, flush=True)
+    ab = np.mean([lab_ab(apply(a, p, vib)[::4, ::4][None]) for a, p in smp], 0)
+    print("post_take vibrance %.2f  a* %.1f b* %.1f" % (vib, ab[0], ab[1]), flush=True)
+    if abs(ab[1]) > 4.8 or abs(ab[0]) > 4.8:                              # vibrance pushes the cast: re-solve the white balance so the finished take sits at a* +2.5, b* +3.5
+        tgt = (WB_T[0] + (2.5 - ab[0]), WB_T[1] + (3.5 - ab[1]))
+        P = smooth_params([solve(a_, wb_t=tgt) for a_ in [sharpen(os.path.join(raw_dir, "f_%04d.png" % g)) for g in frames]])
+        print("post_take re-solved WB target", tgt, flush=True)
     for g, p in zip(frames, P):
         a = A[g] if A[g] is not None else sharpen(os.path.join(raw_dir, "f_%04d.png" % g))
         Image.fromarray((apply(a, p, vib) * 255 + 0.5).astype(np.uint8)).save(os.path.join(out_dir, "g_%04d.png" % g))

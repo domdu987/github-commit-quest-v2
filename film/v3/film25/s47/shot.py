@@ -17,8 +17,8 @@ G0, G1 = 1424, 1493
 FIRST, LAST = G0 - 6, G1 - 1 + 6
 PRESET = "t2_hero"
 Y_T = 4.5                         # the crossing lane (set _CR y)
-D0, LENS = 25.0, 24.0
-CAM_Z, LOOK_Z = 1.9, 2.9
+D0, LENS = 21.5, 24.0
+CAM_Z, LOOK_Z = 1.3, 2.5
 
 
 def tank_state(g):
@@ -34,7 +34,7 @@ def cam_of(g):
     drift = T.smooth((g - (G0 + 7)) / float(G1 - 1 - G0 - 7))
     scale = (1.0 / 1.15) * (1.0 + 0.15 * pk) * (1.0 - 0.05 * drift) if g >= G0 else 1.0 / 1.15
     d = D0 / scale
-    cx = T.lerp(-4.2, 4.6, T.smooth(k * 0.85 + 0.15 * k * k))       # lateral slide, leads the tank (centre of the tank is about -1 .. +3.5)
+    cx = T.lerp(-3.0, 5.8, T.smooth(k * 0.85 + 0.15 * k * k))       # lateral slide, leads the tank (centre of the tank is about -1 .. +3.5)
     z = T.lerp(CAM_Z, CAM_Z + 0.25, k)
     loc = (cx, Y_T - d, z)
     look = (cx, Y_T, LOOK_Z + 0.35 * k)
@@ -53,7 +53,7 @@ def report(Tk, g):
 if __name__ == "__main__":
     cmd = sys.argv[1]
     gs = [g for g in C.parse(sys.argv[2]) if FIRST <= g <= LAST]
-    T.register(PRESET, "cross_hero", cards=[], cam=dict(loc=cam_of(1460)[0], look_at=cam_of(1460)[1], lens=LENS), dress_n=1.4, tune=dict(green_k=1.2, cloud_k=0.95))
+    T.register(PRESET, "cross_hero", cards=[], cam=dict(loc=cam_of(1460)[0], look_at=cam_of(1460)[1], lens=LENS), dress_n=0.9, tune=dict(green_k=1.2, cloud_k=0.95))
     Tk = T.Take(PRESET, cam_of, hooks)
     if cmd == "probe":
         Tk.pose(gs)

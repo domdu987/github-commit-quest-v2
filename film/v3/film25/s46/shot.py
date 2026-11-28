@@ -17,7 +17,7 @@ Y_T = 4.5
 def cam_of(g):
     k = min(max((g - G0) / float(G1 - 1 - G0), 0.0), 1.0)
     cx = T.lerp(-12.5, -2.5, T.smooth(0.2 * k + 0.8 * k * k * (3 - 2 * k)))
-    d = T.lerp(25.0, 24.0, k)
+    d = T.lerp(21.0, 20.0, k)
     loc = (cx, Y_T - d, 1.0)
     look = (cx + 1.5, Y_T, 2.6)
     return loc, look, 24.0
@@ -35,7 +35,7 @@ def report(Tk, g):
 if __name__ == "__main__":
     cmd = sys.argv[1]
     gs = [g for g in C.parse(sys.argv[2]) if FIRST <= g <= LAST]
-    T.register(PRESET, "cross_hero", cards=[], cam=dict(loc=cam_of(1410)[0], look_at=cam_of(1410)[1], lens=24.0), dress_n=1.4, tune=dict(green_k=1.2, cloud_k=0.95),
+    T.register(PRESET, "cross_hero", cards=[], cam=dict(loc=cam_of(1410)[0], look_at=cam_of(1410)[1], lens=24.0), dress_n=0.9, tune=dict(green_k=1.2, cloud_k=0.95),
                tanks=[dict(front=(-17.0, 16.5), yaw=80.0, smoke=1.0, nocorr=True)])
     Tk = T.Take(PRESET, cam_of, hooks)
     if cmd == "probe":
