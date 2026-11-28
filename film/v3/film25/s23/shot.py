@@ -15,9 +15,9 @@ PRESET = "trial_close_general"
 G0, G1 = 676, 712
 V = 0.10                                                 # D / frame (3 D/s: the camera pans about 24 % of the width per second)
 YAW = 90.0                                               # tank heading (deg): north, along the free lawn west of the trench
-REAR, GAP = -19.8, 1.9
+REAR, GAP = -19.8, 1.3
 WALL_D = 6.5
-PHI = 35.0                                               # view direction: PHI deg left of the travel direction (the pair marches screen-right and away)
+PHI = 14.0                                               # view direction: PHI deg left of the travel direction (the pair marches screen-right and away)
 
 
 class Take(D.Rig):
@@ -45,11 +45,11 @@ class Take(D.Rig):
         u = (g - G0) / float(G1 - 1 - G0)
         w = C.calm(u)
         P = self.gen_pos(g)
-        dist = 9.4 - 1.4 * w                                 # slow push while following
-        loc = P - self.ud * dist + Vector((0, 0, 1.45))
+        dist = 5.0 - 0.7 * w
+        loc = P - self.ud * dist + Vector((0, 0, 0.9))
         right = self.ud.cross(Vector((0, 0, 1))).normalized()
-        look = P + Vector((0, 0, 3.0)) + right * (0.6 - 0.3 * w) + self.ud * (3.0 - 0.8 * w)
-        return (loc, look), 32.0
+        look = P + Vector((0, 0, 2.7)) + right * 0.2 + self.ud * 1.0
+        return (loc, look), 30.0
 
     def gen_pose(self, g):
         ph = (g - G0) / 24.0

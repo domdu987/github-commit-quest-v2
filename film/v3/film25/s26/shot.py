@@ -15,7 +15,7 @@ ND = 0.7
 class Take(D.Rig):
     def __init__(self, work):
         D.Rig.__init__(self, "camp_close_tank", work, fstop=2.0, sun_e=15.0, sky_k=1.3, sun_col=(1.0, 0.95, 0.88), ev=1.0)
-        self.H = F.S["tank"]; TK.set_stencil(self.H, 0); D.flatten_hull(self.H, (0.10, 0.36, 0.40)); bpy.context.view_layer.update()
+        self.H = F.S["tank"]; TK.set_stencil(self.H, 0); D.flatten_hull(self.H, (0.34, 0.38, 0.17)); bpy.context.view_layer.update()
         mw = self.H.root.matrix_world
         m = F.S["mark"]; ml = mw.inverted() @ Vector(m["pos"]); sg = -1.0 if ml.y < 0 else 1.0
         n = mw.to_3x3() @ Vector((0, sg, 0)); self.nrm = math.degrees(math.atan2(n.y, n.x))

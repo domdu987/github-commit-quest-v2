@@ -346,3 +346,17 @@ def flatten_hull(H, color=(0.34, 0.38, 0.31)):
             if s.material is not None and s.material == H.mats.get("hull"):
                 s.material = new; n += 1
     return n
+
+
+def olive_steel(name="tail_olive", color=(0.20, 0.22, 0.15)):
+    mat = bpy.data.materials.new(name); mat.use_nodes = True
+    bs = mat.node_tree.nodes["Principled BSDF"]; bs.inputs["Base Color"].default_value = (*color, 1); bs.inputs["Roughness"].default_value = 0.7; bs.inputs["Metallic"].default_value = 0.0
+    return mat
+
+
+def dull_tail(H):
+    """runtime dressing: the tail A-frame and wheels (blue-grey steel in the set) become dark olive steel, so the whole tank reads olive"""
+    m = olive_steel()
+    for ob in bpy.data.objects:
+        if ob.type == "MESH" and ("tailframe" in ob.name or "tailwheel" in ob.name):
+            ob.data.materials.clear(); ob.data.materials.append(m)

@@ -17,7 +17,7 @@ class Take(D.Rig):
 
     def __init__(self, work):
         D.Rig.__init__(self, "street_high", work, fstop=None, sun_e=9.0, sky_k=1.2, sun_left=26.0, sun_el=48.0)
-        self.H = F.S["tank"]
+        self.H = F.S["tank"]; D.dull_tail(self.H)
 
     def ty(self, g):
         return 22.0 + V * (g - G0)

@@ -15,11 +15,11 @@ import tank25 as TK                                      # noqa: E402
 PRESET = "street_close_tail"
 G0, G1 = 2009, 2093
 V = 0.06                                                 # D per frame (1.8 D/s)
-PHI = 28.0                                               # view direction is rotated PHI deg left of the travel direction (+y): the group marches screen-right
+PHI = 14.0                                               # view direction is rotated PHI deg left of the travel direction (+y): the group marches screen-right
 TY0 = 44.0                                               # tank front y at G0
 REAR = -19.8                                             # tail wheels' outer edge, tank-local x
-GAP = 2.4                                                # general behind the tail wheels
-GEN_X = -0.2
+GAP = 1.4                                                # general behind the tail wheels
+GEN_X = 0.0
 # Tommies: (member, x, depth behind the general, mode, phase offset)
 TOM = [("tommy_c25", -1.5, 3.4, "cheer_march", 0.15), ("tommy_a25", 1.6, 4.8, "march", 0.55), ("tommy_d25", -2.0, 6.2, "wave_march", 0.8), ("tommy_b25", 2.1, 7.6, "cheer_march", 0.35)]
 
@@ -42,12 +42,12 @@ class Take(D.Rig):
     def cam_of(self, g):
         u = (g - G0) / float(G1 - 1 - G0)
         w = C.calm(u)
-        dist = 10.4 - 5.8 * w                                  # 10.4 -> 4.6 D
+        dist = 8.4 - 4.6 * w                                   # 8.4 -> 3.8 D
         P = self.gen_pos(g)
-        loc = P - self.ud * dist + Vector((0, 0, 1.45 + 0.1 * w))
+        loc = P - self.ud * dist + Vector((0, 0, 0.8 + 0.3 * w))
         right = self.ud.cross(Vector((0, 0, 1))).normalized()
-        look = P + Vector((0, 0, 2.1 + 0.2 * (1 - w))) + right * (0.15 + 0.6 * (1 - w)) + self.ud * (0.4 * (1 - w))
-        return (loc, look), 34.0 + 6.0 * w
+        look = P + Vector((0, 0, 2.6 + 0.6 * (1 - w))) + right * (0.0 + 0.3 * (1 - w)) + self.ud * (1.5 * (1 - w))
+        return (loc, look), 26.0 + 10.0 * w
 
     # ------------------------------------------------------------------ acting
     def gen_pose(self, g):
@@ -94,6 +94,12 @@ class Take(D.Rig):
                 per[m] = dict(feet=Vector((q.x, q.y, F.gh(q.x, q.y))), pose=self.tom_pose(m, mode, off, g), hide=((q - cam[0]).dot(self.ud) < 0.7))
             self.key_frame(g, cam, lens, per)
         self.pose_frames(gs)
+        for g in gs:                                   # no Tommy head cut by the top frame edge: such a Tommy is dropped for that frame (he is leaving the frame anyway)
+            md = self.meta(g)
+            for m, *_ in TOM:
+                a = md["actors"].get(m)
+                if a and a["head"][1] - a["hw"] * 0.8 < 10 and a["head"][1] > -a["hw"] * 1.2:
+                    self._st[g][m]["hide"] = True
 
     def on_frame(self, f):
         D.Rig.on_frame(self, f)
