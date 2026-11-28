@@ -1,21 +1,21 @@
 # QA s47 (film 25, g 1424-1492)
 
 ## Render
-- 81 frames g 1418-1498 (row g 1424-1492 + handles), 55.6 s wall / frame mean (min 48.4, max 74.5), 102.0 s CPU, samples 20 thr 0.02 scale 0.75, OIDN, 2 procs x 2 threads
+- 81 frames g 1418-1498 (row g 1424-1492 + handles), 61.7 s wall / frame mean (min 48.9, max 166.5), 106.1 s CPU, samples 20 thr 0.02 scale 0.75, OIDN, 2 procs x 2 threads
 - post: t2lib.post_take (set sharpen + clarity, gentle grade, exposure/WB smoothed over the take)
 
 ## light_metrics
 ```
-take.mkv (3 fr)                        luma 0.468 p1 0.066 p99 0.900 lc 0.0281 sat 0.445 chroma 27.9 a +2.1 b +3.2 p98 0.94 blue 0.41 warm 0.35 neut 0.06 M 69  PASS  (guides off: p99,lc,chroma,warm_frac)
+take.mkv (3 fr)                        luma 0.480 p1 0.056 p99 0.885 lc 0.0335 sat 0.434 chroma 26.4 a +2.5 b +3.4 p98 0.78 blue 0.36 warm 0.55 neut 0.02 M 70  PASS  (guides off: p99,lc,chroma,sat_p98)
 ```
 
 ## qa_jitter
 ```
-overall median jitter px 0.36
+overall median jitter px 0.35
 ```
 
 ## qa_auto
 PASS
 
 ## Camera
-- camera: first -> last frame of the row: subject distance 22.4 -> 20.5 D (scale +9.3 %), lateral camera travel 7.2 D = 17 % of the frame width per second (frame width 18.9 D at the subject)
+- camera: first -> last frame of the row: subject distance 19.0 -> 10.4 D (scale +83.0 %), lateral camera travel 5.0 D = 11 % of the frame width per second (frame width 19.2 D at the subject)

@@ -1,93 +1,11 @@
-crossing table [(np.float64(0.0), np.float64(-5.0), np.float64(1.09), np.float64(7.8)), (np.float64(0.1), np.float64(-2.5), np.float64(1.51), np.float64(10.7)), (np.float64(0.2), np.float64(0.2), np.float64(1.4), np.float64(4.4)), (np.float64(0.3), np.float64(3.4), np.float64(1.99), np.float64(7.0)), (np.float64(0.4), np.float64(7.1), np.float64(3.36), np.float64(27.3)), (np.float64(0.5), np.float64(11.0), np.float64(2.54), np.float64(4.4)), (np.float64(0.6), np.float64(14.9), np.float64(1.74), np.float64(2.0)), (np.float64(0.7), np.float64(18.6), np.float64(0.34), np.float64(2.0)), (np.float64(0.8), np.float64(21.8), np.float64(0.44), np.float64(2.0)), (np.float64(0.9), np.float64(24.5), np.float64(0.48), np.float64(2.0)), (np.float64(1.0), np.float64(27.0), np.float64(0.22), np.float64(2.0))]
-00:16.676  cycles           | WARNING CUEW initialization failed: Error opening the library
-take: built t2_lip in 16.4 s
-01:25.793  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1487.png'
-g 1487  61.5 s wall  120.6 s cpu
-02:25.586  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1488.png'
-g 1488  59.8 s wall  117.7 s cpu
-03:27.777  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1489.png'
-g 1489  62.2 s wall  122.3 s cpu
-04:28.272  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1490.png'
-g 1490  60.4 s wall  119.1 s cpu
-05:32.529  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1491.png'
-g 1491  64.2 s wall  126.3 s cpu
-06:37.060  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1492.png'
-g 1492  64.5 s wall  126.6 s cpu
-07:38.483  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1493.png'
-g 1493  61.4 s wall  121.2 s cpu
-08:39.526  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1494.png'
-g 1494  61.0 s wall  120.3 s cpu
-09:42.097  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1495.png'
-g 1495  62.5 s wall  123.7 s cpu
-10:47.686  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1496.png'
-g 1496  65.5 s wall  129.4 s cpu
-11:53.089  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1497.png'
-g 1497  65.4 s wall  128.8 s cpu
-12:54.861  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1498.png'
-g 1498  61.7 s wall  121.7 s cpu
-13:56.051  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1499.png'
-g 1499  61.2 s wall  120.4 s cpu
-14:57.229  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1500.png'
-g 1500  61.1 s wall  120.5 s cpu
-15:58.744  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1501.png'
-g 1501  61.5 s wall  121.0 s cpu
-16:59.119  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1502.png'
-g 1502  60.3 s wall  119.1 s cpu
-18:02.208  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1503.png'
-g 1503  63.1 s wall  124.4 s cpu
-19:06.664  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1504.png'
-g 1504  64.4 s wall  126.7 s cpu
-20:13.127  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1505.png'
-g 1505  66.4 s wall  130.7 s cpu
-21:19.940  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1506.png'
-g 1506  66.8 s wall  131.7 s cpu
-22:27.959  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1507.png'
-g 1507  68.0 s wall  134.5 s cpu
-23:31.905  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1508.png'
-g 1508  63.9 s wall  126.2 s cpu
-24:36.074  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1509.png'
-g 1509  64.1 s wall  126.7 s cpu
-25:40.848  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1510.png'
-g 1510  64.7 s wall  127.8 s cpu
-26:47.128  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1511.png'
-g 1511  66.2 s wall  131.2 s cpu
-27:53.366  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1512.png'
-g 1512  66.2 s wall  130.8 s cpu
-28:57.717  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1513.png'
-g 1513  64.3 s wall  127.1 s cpu
-30:01.923  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1514.png'
-g 1514  64.2 s wall  126.5 s cpu
-31:06.857  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1515.png'
-g 1515  64.9 s wall  128.0 s cpu
-32:10.194  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1516.png'
-g 1516  63.3 s wall  125.2 s cpu
-33:13.366  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1517.png'
-g 1517  63.1 s wall  124.6 s cpu
-34:16.778  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1518.png'
-g 1518  63.4 s wall  125.0 s cpu
-35:23.831  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1519.png'
-g 1519  67.0 s wall  132.6 s cpu
-36:31.096  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1520.png'
-g 1520  67.2 s wall  132.7 s cpu
-37:36.249  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1521.png'
-g 1521  65.1 s wall  128.9 s cpu
-38:41.777  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1522.png'
-g 1522  65.5 s wall  129.1 s cpu
-39:47.436  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1523.png'
-g 1523  65.6 s wall  129.5 s cpu
-40:50.084  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1524.png'
-g 1524  62.6 s wall  123.5 s cpu
-41:55.858  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1525.png'
-g 1525  65.7 s wall  129.4 s cpu
-43:05.188  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1526.png'
-g 1526  69.3 s wall  137.2 s cpu
-44:10.691  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1527.png'
-g 1527  65.5 s wall  129.0 s cpu
-45:16.304  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1528.png'
-g 1528  65.6 s wall  129.6 s cpu
-46:21.769  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1529.png'
-g 1529  65.4 s wall  129.0 s cpu
-47:25.386  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1530.png'
-g 1530  63.5 s wall  125.6 s cpu
-48:25.528  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1531.png'
-g 1531  60.1 s wall  118.9 s cpu
+crossing table [(np.float64(0.0), np.float64(-5.0), np.float64(0.63), np.float64(4.7)), (np.float64(0.1), np.float64(-2.5), np.float64(0.9), np.float64(6.9)), (np.float64(0.2), np.float64(0.2), np.float64(0.86), np.float64(3.2)), (np.float64(0.3), np.float64(3.4), np.float64(1.17), np.float64(4.4)), (np.float64(0.4), np.float64(7.1), np.float64(1.7), np.float64(19.7)), (np.float64(0.5), np.float64(11.0), np.float64(0.89), np.float64(2.9)), (np.float64(0.6), np.float64(14.9), np.float64(0.69), np.float64(2.0)), (np.float64(0.7), np.float64(18.6), np.float64(0.34), np.float64(2.0)), (np.float64(0.8), np.float64(21.8), np.float64(0.44), np.float64(2.0)), (np.float64(0.9), np.float64(24.5), np.float64(0.48), np.float64(2.0)), (np.float64(1.0), np.float64(27.0), np.float64(0.22), np.float64(2.0))]
+00:13.293  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: built t2_lip in 12.8 s
+02:30.810  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1488.png'
+g 1488  119.7 s wall  180.7 s cpu
+04:12.488  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1489.png'
+g 1489  101.6 s wall  154.1 s cpu
+05:57.249  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1490.png'
+g 1490  104.7 s wall  155.6 s cpu
+07:32.779  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s50/frames/raw/f_1491.png'
+g 1491  95.5 s wall  143.4 s cpu
