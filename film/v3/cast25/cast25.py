@@ -745,6 +745,18 @@ def _face(k, C, P_, white):
     return "".join(under) + svg, L
 
 
+_GL_ORIG = [None]
+
+
+def _glasses_slip(k, C, L):
+    dy = _POSE25["glasses_dy"]
+    if dy <= 0.0 or not (C and C.get("_cast25")):
+        return _GL_ORIG[0](k, C, L)
+    L2 = dict(L)
+    L2["ey"] = L["ey"] + 0.15 * dy
+    return _GL_ORIG[0](k, C, L2)
+
+
 # ============================================================================= legs: puttees
 def _puttee(k, S, E, H, kk, w, col, dark):
     pts = C3._limb_pts(S, E, H, kk)
@@ -1082,6 +1094,18 @@ def _prop_body(k, kind, ang=0.0):
         o.append('<path d="M0.115,-0.080 Q0.110,0.0 0.125,0.090" fill="none" stroke="#ffffff" stroke-width="0.016" stroke-linecap="round" opacity="0.8"/>')
         for (x, y) in ((0.30, 0.060), (0.34, 0.010), (0.19, 0.095)):
             o.append('<circle cx="%.3f" cy="%.3f" r="0.011" fill="%s"/>' % (x, y, k.c("#4a4a52")))
+    if kind == "mg25" and _POSE25["fire"] > 0.02:
+        f = _POSE25["fire"]
+        pts = []
+        for i in range(12):
+            a = math.pi * 2 * i / 12.0
+            r = (0.30 if i % 2 == 0 else 0.12) * (0.5 + 0.5 * f)
+            pts.append((1.30 + 0.9 * r * math.cos(a) + 0.12 * f, 0.0 + r * math.sin(a)))
+        o.append('<path d="%s" fill="#ffd83a" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (_poly_d(pts) + "Z", k.ink))
+        o.append('<circle cx="%.4f" cy="0" r="%.4f" fill="#fff6c8"/>' % (1.30 + 0.12 * f, 0.07 * (0.5 + 0.5 * f)))
+        for (dy, ln) in ((-0.20, 0.30), (0.0, 0.42), (0.20, 0.30)):
+            o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="#ffffff" stroke-width="0.016" stroke-linecap="round" opacity="0.8"/>' % (1.60, dy * 1.2, 1.60 + ln * f, dy * 1.6))
+        o.append('<circle cx="1.22" cy="-0.16" r="0.05" fill="#d8d4cc" opacity="0.8"/><circle cx="1.12" cy="-0.26" r="0.07" fill="#e4e0d8" opacity="0.7"/>')
     return "".join(o)
 
 
@@ -1714,6 +1738,8 @@ def register():
     P._norm = _norm
     P._moustache = _moustache
     P._ink_limb = _ink_limb
+    _GL_ORIG[0] = CE._glasses
+    CE._glasses = _glasses_slip
     CE.COSTUMES.update(COSTUMES25)
     CE.HATS.update(HATS25)
     P.PROP_TYPES = tuple(P.PROP_TYPES) + tuple(t for t in NEW_PROPS25 if t not in P.PROP_TYPES)
