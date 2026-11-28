@@ -10,3 +10,4 @@ Pipeline: film/v3/film25/s21/{d25,post_d,finish,qa_write}.py (Look A: beauty 24 
 | s43 (row 43) | g 1301-1330 | 65 s | take.mkv (1 fr) luma 0.499 p1 0.096 p99 0.974 lc 0.0463 sat 0.419 chroma 27.4 a +2.3 b +4.7 p98 0.90 blue 0.48 warm 0.47 neut 0.05 M 82 PASS (guides off: p1,p99,chroma,blue_frac) |
 | s44 (row 44) | g 1331-1367 (37) | ~95 s | take.mkv (1 fr)                        luma 0.498 p1 0.097 p99 0.963 lc 0.0461 sat 0.408 chroma 27.8 a +2.2 b +4.2 p98 0.90 blue 0.40 warm 0.50 neut 0.04 M 81  PASS  (guides off: p1,p99,chroma) |
 | s20 (row 20) | g 552-601 | 77 s | take.mkv (2 fr) luma 0.497 p1 0.095 p99 0.973 lc 0.0484 sat 0.454 chroma 33.2 a +2.3 b +4.7 p98 0.90 blue 0.34 warm 0.50 neut 0.16 M 96 PASS (guides off: p1,p99) |
+| s24 (row 24) | g 712-759 | 71 s | take.mkv (2 fr) luma 0.490 p1 0.093 p99 0.974 lc 0.0553 sat 0.465 chroma 33.2 a +2.5 b +4.9 p98 0.90 blue 0.31 warm 0.52 neut 0.10 M 91 PASS (guides off: p1,p99) |
