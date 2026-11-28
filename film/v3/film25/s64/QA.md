@@ -8,11 +8,11 @@
 
 ## light_metrics
 ```
-take.mkv (2 fr)                        luma 0.455 p1 0.086 p99 0.837 lc 0.0230 sat 0.505 chroma 36.3 a +1.3 b +0.4 p98 1.00 blue 0.31 warm 0.27 neut 0.02 M 80  MISS  (guides off: p1,p99,lc,warm_frac)
+take.mkv (2 fr)                        luma 0.465 p1 0.091 p99 0.843 lc 0.0226 sat 0.471 chroma 33.7 a +0.7 b +1.1 p98 0.97 blue 0.32 warm 0.28 neut 0.03 M 75  PASS  (guides off: p1,p99,lc,warm_frac)
 ```
 ## qa_jitter
 ```
-overall median jitter px 1.14
+overall median jitter px 1.09
 ```
 ## Framing numbers (from the per-frame meta)
 - highest head top y 453 px (rule: heads above y 880 means head bottoms; head tops far above), lowest feet y 1216 px (feet are below the frame edge when > 1280 or above y 860 when in frame).
