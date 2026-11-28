@@ -17,13 +17,13 @@ def more_materials():
         def f(b, col):
             n = b.noise(sc, 3.0, 0.6, None, None); return b.mul(col, b.mix(b.rng(n, 0.3, 0.7), lo, hi))
         return f
-    M['lawn'] = pbr('lawn', 'grass', 2.4, '#e8ecb4', 0.8, 0.95, None, 0.9, 0.06, extra=wob((0.78, 0.9, 0.55), (1.25, 1.2, 0.8), 0.18))
+    M['lawn'] = pbr('lawn', 'grass', 2.4, '#e8f0a8', 1.3, 0.95, None, 0.9, 0.06, extra=wob((0.78, 0.9, 0.55), (1.25, 1.2, 0.8), 0.18))
     M['cobble'] = pbr('cobble', 'cobble', 3.2, '#f6e4d0', 1.0, 1.15, None, 1.5, 0.10)
     M['cobble_r'] = pbr('cobble_r', 'cobble', 3.0, '#ecd8c0', 1.0, 1.05, None, 1.5, 0.10, extra=wob((0.7, 0.62, 0.55), (1.2, 1.1, 1.0), 0.25))
     M['concrete'] = pbr('concrete', 'concrete', 5.0, '#efe6d6', 1.0, 1.1, None, 0.5, 0.05, extra=wob((0.8, 0.78, 0.74), (1.15, 1.12, 1.05), 0.3))
     M['gravel'] = pbr('gravel', 'gravel', 3.0, '#f0d8b8', 1.0, 0.85, None, 1.2, 0.05)
     M['dirt'] = pbr('dirt', 'dirt', 4.0, '#e0c890', 1.1, 0.9, None, 0.9, 0.06)
-    M['brick_r'] = pbr('brick_r', 'brick2', 2.2, '#ffe8d8', 0.85, 1.35, None, 1.0, 0.06)
+    M['brick_r'] = pbr('brick_r', 'brick2', 2.2, '#ffe0cc', 1.3, 1.4, None, 1.0, 0.06)
     M['brick_o'] = pbr('brick_o', 'brick', 2.2, '#ffe0c8', 1.25, 1.25, None, 1.0, 0.06)
     M['brick_w'] = pbr('brick_w', 'brick', 2.2, '#fff6ea', 0.25, 1.6, None, 0.9, 0.06)
     M['brick_y'] = pbr('brick_y', 'brick', 2.2, '#f4e0a0', 0.9, 1.05, None, 1.0, 0.06)
@@ -63,16 +63,16 @@ def more_materials():
             c = b.coord(); n = b.noise(sc, 4.0, 0.62, c, None); n2 = b.noise(sc * 4, 3.0, 0.6, c, None); col = b.mix(b.rng(n, 0.3, 0.7), hexl(lo), hexl(hi)); col = b.mul(col, b.mix(b.rng(n2, 0.3, 0.7), (0.8, 0.8, 0.8), (1.2, 1.2, 1.1)))
             b.princ(col, 0.8, 0.0, b.bump(n2, 1.0, 0.1))
         return fmat(name, f)
-    M['fol_a'] = foliage('#2f6a2a', '#78ac3c', 'fol_a'); M['fol_b'] = foliage('#3a7a30', '#9cc050', 'fol_b'); M['fol_p'] = foliage('#3f7a2c', '#86b83e', 'fol_p', 2.5)
+    M['fol_a'] = foliage('#25701e', '#7cc030', 'fol_a'); M['fol_b'] = foliage('#2e8024', '#a2d040', 'fol_b'); M['fol_p'] = foliage('#3f7a2c', '#86b83e', 'fol_p', 2.5)
     M['trunk2'] = pbr('trunk2', 'wood', 1.4, '#8a6a48', 0.8, 0.7, 0.8, 1.2, 0.06)
     def blade(b):
         tip = b.n('ShaderNodeAttribute'); tip.attribute_name = 'tip'; tip.attribute_type = 'GEOMETRY'; tone = b.n('ShaderNodeAttribute'); tone.attribute_name = 'tone'; tone.attribute_type = 'GEOMETRY'
-        g1 = b.mix(b.rng(tip.outputs['Fac'], 0.0, 1.0), (0.07, 0.15, 0.04), (0.33, 0.46, 0.16)); g2 = b.mix(b.rng(tip.outputs['Fac'], 0.0, 1.0), (0.22, 0.18, 0.08), (0.58, 0.50, 0.26))
-        g3 = b.mix(b.rng(tip.outputs['Fac'], 0.0, 1.0), (0.05, 0.12, 0.05), (0.19, 0.32, 0.12)); col = b.mix(b.rng(tone.outputs['Fac'], 0.55, 0.85), g1, g2); col = b.mix(b.rng(tone.outputs['Fac'], 0.0, 0.25), g3, col)
+        g1 = b.mix(b.rng(tip.outputs['Fac'], 0.0, 1.0), (0.04, 0.16, 0.02), (0.28, 0.55, 0.07)); g2 = b.mix(b.rng(tip.outputs['Fac'], 0.0, 1.0), (0.22, 0.18, 0.08), (0.58, 0.50, 0.26))
+        g3 = b.mix(b.rng(tip.outputs['Fac'], 0.0, 1.0), (0.03, 0.13, 0.03), (0.15, 0.38, 0.06)); col = b.mix(b.rng(tone.outputs['Fac'], 0.55, 0.85), g1, g2); col = b.mix(b.rng(tone.outputs['Fac'], 0.0, 0.25), g3, col)
         p = b.princ(col, 0.7, 0.0, None)
     M['blade'] = fmat('blade', blade)
-    M['poppy'] = flat('poppy', '#d42818', 0.6); M['poppy_c'] = flat('poppy_c', '#161210', 0.7); M['daisy'] = flat('daisy', '#f4f0e0', 0.7); M['butter'] = flat('butter', '#f0c820', 0.6)
-    M['brickbat'] = pbr('brickbat', 'brick2', 0.9, '#ffd8c0', 1.05, 1.15, None, 1.3, 0.05)
+    M['poppy'] = flat('poppy', '#e02612', 0.6); M['poppy_c'] = flat('poppy_c', '#161210', 0.7); M['daisy'] = flat('daisy', '#f4f0e0', 0.7); M['butter'] = flat('butter', '#f0c820', 0.6)
+    M['brickbat'] = pbr('brickbat', 'brick2', 0.9, '#ffd0b8', 1.3, 1.15, None, 1.3, 0.05)
     M['bag_g'] = flat('bag_g', '#8a8460', 0.95)
     def glow(b):
         e = b.n('ShaderNodeEmission'); e.inputs['Color'].default_value = (1.0, 0.82, 0.5, 1); e.inputs['Strength'].default_value = 4.0; b.l(e.outputs[0], b.out.inputs['Surface'])
@@ -132,7 +132,8 @@ def tufts(name, pts, zf, seed=1, blades=7, h=(0.45, 1.0), w=0.075, lean=0.4, ton
 def poppies(name, pts, zf, seed=3, cols=('poppy',)):
     mb = MB(); rr = rnd(seed); M = S['M']
     for (x, y) in pts:
-        z = zf(x, y); h = rr.uniform(0.35, 0.8); c = rr.choice(cols); lean = Vector((rr.uniform(-0.08, 0.08), rr.uniform(-0.08, 0.08), 0))
+        z = zf(x, y); h = rr.uniform(0.35, 0.8); c = rr.choice(cols)
+        if S.get('clamp') and S.get('cam_loc') is not None: cl = S['cam_loc']; h = min(h, max(0.15, 0.085 * math.sqrt((x - cl[0]) ** 2 + (y - cl[1]) ** 2 + (z - cl[2]) ** 2)), 0.9); lean = Vector((rr.uniform(-0.08, 0.08), rr.uniform(-0.08, 0.08), 0))
         rod(mb, (x, y, z - 0.02), Vector((x, y, z + h)) + lean, 0.012, M['blade'] if False else M['p_green'], 4)
         top = Vector((x, y, z + h)) + lean; mb.frustum(top, top + Vector((0, 0, 0.09)), 0.075, 0.11, M[c], seg=6)
         mb.frustum(top + Vector((0, 0, 0.09)), top + Vector((0, 0, 0.1)), 0.045, 0.0, M['poppy_c'] if c == 'poppy' else M['butter'], seg=6, cap1=False)

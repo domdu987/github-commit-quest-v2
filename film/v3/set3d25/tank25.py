@@ -40,7 +40,7 @@ def tank_mats(mud=1.0, tag=''):
         ve = b.n('ShaderNodeTexVoronoi', voronoi_dimensions='3D', feature='DISTANCE_TO_EDGE'); ve.inputs['Scale'].default_value = 0.40; ve.inputs['Randomness'].default_value = 1.0; b.l(wp.outputs[0], ve.inputs['Vector'])
         g = b.n('ShaderNodeRGBToBW'); b.l(vv.outputs['Color'], g.inputs[0])
         ramp = b.n('ShaderNodeValToRGB'); cr = ramp.color_ramp; cr.interpolation = 'CONSTANT'
-        pal = ['#c0a060', '#74875a', '#7a5c40', '#bdb494']; cr.elements[0].position = 0.0; cr.elements[0].color = (*hexl(pal[0]), 1); cr.elements[1].position = 0.25; cr.elements[1].color = (*hexl(pal[1]), 1)
+        pal = ['#cf9a2e', '#5c8a34', '#7c4a26', '#bcae6c']; cr.elements[0].position = 0.0; cr.elements[0].color = (*hexl(pal[0]), 1); cr.elements[1].position = 0.25; cr.elements[1].color = (*hexl(pal[1]), 1)
         for pos, cc in ((0.5, pal[2]), (0.75, pal[3])): e = cr.elements.new(pos); e.color = (*hexl(cc), 1)
         b.l(g.outputs[0], ramp.inputs['Fac'])
         edge = b.rng(ve.outputs['Distance'], 0.0, 0.035, 1.0, 0.0); col = b.mix(edge, ramp.outputs['Color'], (0.07, 0.06, 0.05))

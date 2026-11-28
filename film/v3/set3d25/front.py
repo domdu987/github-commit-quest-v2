@@ -82,7 +82,7 @@ def brick_mat(name, size=2.4, tint=None, sat=1.1, val=1.0, soot=0.0):
         return col
     return pbr(name, 'brick', size, tint, sat, val, None, 1.0, 0.06, extra=extra)
 
-def tile_mat(name, c1='#c4562e', c2='#9e3a22'):
+def tile_mat(name, c1='#d04a22', c2='#a8341c'):
     """Red clay roof tiles (procedural brick texture on the roof's UV plane: u along the eave, v up the slope)."""
     def f(b):
         uv = b.n('ShaderNodeUVMap').outputs[0]; br = b.n('ShaderNodeTexBrick'); br.offset = 0.5; br.offset_frequency = 2; br.squash = 1.0
@@ -97,7 +97,7 @@ def tile_mat(name, c1='#c4562e', c2='#9e3a22'):
 def make_materials():
     M = {}
     M['ground'] = ground_mat()
-    M['brick'] = brick_mat('brick', 2.2, '#f2dccc', 1.05, 1.02); M['brick_s'] = brick_mat('brick_s', 2.2, '#cdb8a8', 0.9, 0.9, soot=1.0)
+    M['brick'] = brick_mat('brick', 2.2, '#f8d4c0', 1.45, 1.02); M['brick_s'] = brick_mat('brick_s', 2.2, '#cdb8a8', 0.9, 0.9, soot=1.0)
     M['tile'] = tile_mat('tile'); M['tile_d'] = tile_mat('tile_d', '#b04a2a', '#8a3320')
     M['plaster'] = flat('plaster', '#e0d2b4', 0.9)
     M['rev'] = wood_seam('rev', '#e6bf88', 2.4, 1.0, 'X', 1.4, mud=3.6, vertical=True); M['rev_d'] = wood_seam('rev_d', '#c49a68', 2.4, 1.0, 'X', 1.4, mud=3.6, vertical=True)
@@ -187,12 +187,12 @@ def ground_mat():
         mc, mh = tex('mud', 3.0, '#a07650', 1.1, 1.2)
         wetm = b.rng(wet, 0.25, 0.75, 0.0, 1.0)
         col = b.mix(wetm, dry, mc)
-        gr = b.n('ShaderNodeAttribute'); gr.attribute_name = 'green'; gr.attribute_type = 'GEOMETRY'; gcol, gh_ = tex('grass', 2.4, '#d8e08a', 0.9, S.get('grass_val', 0.85)); gv = b.noise(0.6, 3.0, 0.6, c, None)
+        gr = b.n('ShaderNodeAttribute'); gr.attribute_name = 'green'; gr.attribute_type = 'GEOMETRY'; gcol, gh_ = tex('grass', 2.4, '#d8e08a', 1.25, S.get('grass_val', 0.85)); gv = b.noise(0.6, 3.0, 0.6, c, None)
         gcol = b.mul(gcol, b.mix(b.rng(gv, 0.3, 0.7), (0.85, 0.9, 0.6), (1.35, 1.25, 0.8)))
         col = b.mix(b.rng(gr.outputs['Fac'], 0.25, 0.7), col, gcol)
         # distant fields: green-gold stripes fading in with the 'far' attribute
         st = b.n('ShaderNodeTexWave', wave_type='BANDS', bands_direction='X', wave_profile='SAW'); st.inputs['Scale'].default_value = 0.035; st.inputs['Distortion'].default_value = 3.0; b.l(c, st.inputs['Vector'])
-        fn = b.noise(0.02, 2.0, 0.5, c, None); fld = b.mix(b.rng(fn, 0.35, 0.65), b.mix(b.rng(st.outputs['Fac'], 0.4, 0.6), (0.55, 0.62, 0.22), (0.80, 0.68, 0.28)), (0.40, 0.55, 0.22))
+        fn = b.noise(0.02, 2.0, 0.5, c, None); fld = b.mix(b.rng(fn, 0.35, 0.65), b.mix(b.rng(st.outputs['Fac'], 0.4, 0.6), (0.50, 0.66, 0.18), (0.80, 0.68, 0.26)), (0.34, 0.58, 0.16))
         col = b.mix(fa, col, fld)
         hgt = b.math('ADD', b.math('MULTIPLY', ch, 0.6), b.math('MULTIPLY', ch2, 0.4)); hgt = b.mix(wetm, hgt, mh)
         rough = b.rng(wetm, 0.0, 1.0, 0.92, 0.38); hgt = b.mix(b.rng(gr.outputs['Fac'], 0.25, 0.7), hgt, gh_) if False else hgt
@@ -746,7 +746,7 @@ def decal_material():
     return fmat('decal', f)
 
 # ============================================================================= world, sun, haze, render
-SKY_Z = [(0.0, '#f4ecd6'), (0.06, '#cfe4f2'), (0.30, '#8fc2ee'), (0.7, '#4f90e2')]
+SKY_Z = [(0.0, '#f4ecd6'), (0.06, '#cfe4f2'), (0.30, '#74aeee'), (0.7, '#2c74de')]
 
 def setup_world(sc, sky_k=1.0, cloud_k=1.0):
     w = bpy.data.worlds.new('front_sky'); sc.world = w; w.use_nodes = True; nt = w.node_tree
@@ -833,8 +833,8 @@ _CT = dict(poly=_TP, mw=0.8, me=1.9, sb_layers=(2, 2))
 def _cross(name, u, cam, **kw):
     d = dict(loc='front', cam=cam, cross=dict(_CR, u=u), trench0=_CT); d.update(kw); return d
 PRESETS = dict(
-    cross_nose=_cross('cross_nose', 0.34, dict(loc=(0.5, -24.0, 1.0), look_at=(2.0, 4.5, 3.8), lens=21), cards=[('a', (-8, -6), 3.2)], clamp=True, note='shot 24: side-on low, the nose lifting over the trench gap'),
-    cross_hero=_cross('cross_hero', 0.40, dict(loc=(4.0, -24.0, 1.0), look_at=(2.5, 4.5, 3.8), lens=21), cards=[('a', (-9, -5), 3.2), ('b', (10, -4), 3.2)], clamp=True, note='shot 25: SIDE-ON, nose lifted, front track gripping the far lip, rear on the near parapet'),
+    cross_nose=_cross('cross_nose', 0.34, dict(loc=(0.5, -18.5, 1.0), look_at=(2.0, 4.5, 3.8), lens=21), dress_n=2.4, tune=dict(green_k=0.3), cards=[('a', (-8, -6), 3.2)], clamp=True, note='shot 24: side-on low, the nose lifting over the trench gap'),
+    cross_hero=_cross('cross_hero', 0.40, dict(loc=(4.0, -18.5, 1.0), look_at=(2.5, 4.5, 3.8), lens=21), dress_n=2.4, tune=dict(green_k=0.3), cards=[('a', (-9, -5), 3.2), ('b', (10, -4), 3.2)], clamp=True, note='shot 25: SIDE-ON, nose lifted, front track gripping the far lip, rear on the near parapet'),
     cross_pull=_cross('cross_pull', 0.60, dict(loc=(7.5, -11.0, 1.3), look_at=(4.5, 4.5, 2.6), lens=24), fill=500.0, dress_n=2.6, cards=[('a', (-6, -6), 3.2)], clamp=True, note='shot 26: pulling across, rear tracks leaving the near lip'),
     cross_wire=_cross('cross_wire', 0.12, dict(loc=(-5.0, -8.0, 0.8), look_at=(-9.5, 2.0, 1.2), lens=22), dress_n=0.3, near=False, sun=(205.0, 30.0), fill=1200.0, tune=dict(cloud_k=0.8, green_k=0.2), lane_ok=True, world=dict(crates=[]), note='shot 27: low insert, barbed wire squashed flat under the track'),
     cross_hull=_cross('cross_hull', 0.50, dict(loc=(11.0, -7.0, 3.2), look_at=(5.0, 4.5, 3.0), lens=24), sparks=0.30, sun=(205.0, 30.0), fill=2200.0, dress_n=0.4, near=False, tune=dict(cloud_k=0.8), note='shot 28: hull side, bullet pings (sparks)'),
@@ -1085,7 +1085,7 @@ def begin(loc, preset, P=None):
 def finish(cam, P, samples=None, quality=None, sun=None, haze=None):
     """light recipe (identical for every location): warm key sun 5.0 at 28 deg from the camera's left/front, bright pastel sky, thin far haze, Standard view -0.25 EV, 64 samples + OIDN"""
     sc = bpy.context.scene; S['cam'] = cam
-    sun_d = bpy.data.lights.new('key_sun', 'SUN'); sun_d.color = S.get('sun_col', (1.0, 0.82, 0.58)); sun_d.energy = S.get('sun_e', 5.0); sun_d.angle = math.radians(1.6)
+    sun_d = bpy.data.lights.new('key_sun', 'SUN'); sun_d.color = S.get('sun_col', (1.0, 0.78, 0.50)); sun_d.energy = S.get('sun_e', 5.0); sun_d.angle = math.radians(1.6)
     so = bpy.data.objects.new('key_sun', sun_d); sc.collection.objects.link(so); S['sun'] = so
     sun = sun or P.get('sun'); az, el = (sun if sun else sun_for_camera(cam, S.get('sun_elev', 28.0), S.get('sun_left', 1.0), S.get('sun_front', 0.45)))
     set_sun(az, el); S['sun_elev'] = el
@@ -1096,26 +1096,38 @@ def finish(cam, P, samples=None, quality=None, sun=None, haze=None):
     S['exposure'] = S.get('exposure', -0.25); S['samples'] = samples or P.get('samples', 64); setup_render(sc, 'final')
 
 # ============================================================================= render + post
-def grade(im, p1_t=0.035, p99_t=0.925, mean_t=0.51, sat_t=0.31, knee=0.85, iters=3):
-    """final tone step (producer directive): per image (1) levels p1 -> 0.035 and p99 -> 0.925 with a soft knee above 0.85 (highlights roll off, no clipping),
-    (2) a gamma on the luma that pulls the mean to 0.51 (gamma clamped 0.75-1.35), (3) saturation scaled toward 0.31 (factor clamped 0.7-1.3).  Repeated 3x (the three interact)."""
+def grade(im, p1_t=0.035, p99_t=0.925, mean_t=0.51, sat_t=0.48, knee=0.85, iters=2):
+    """final tone step: (1) levels p1 -> 0.035 and p99 -> 0.925 with a soft knee above 0.85 (no clipping), (2) a gamma on the luma that pulls the mean to 0.51 (clamped 0.75-1.35),
+    (3) VIBRANCE (client note 28 Nov: references sit at HSV saturation 0.44-0.64): low-saturation pixels are boosted more than saturated ones, scaled around their own luma (so luma is untouched),
+    never clipping a channel, and masking near-white low-sat pixels (luma > 0.9: puppet faces stay #fef7f6) until the mean HSV saturation reaches `sat_t`."""
     a = np.asarray(im.convert('RGB')).astype(np.float32) / 255.0; W709 = np.array([0.2126, 0.7152, 0.0722], np.float32)
     def lum(x): return x @ W709
     def hsv_sat(x):
         sm = np.asarray(Image.fromarray((np.clip(x, 0, 1) * 255).astype(np.uint8)).resize((180, 320))).astype(np.float32) / 255; mx, mn = sm.max(2), sm.min(2); return float(np.where(mx > 0, (mx - mn) / np.maximum(mx, 1e-6), 0).mean())
-    for _ in range(iters):
-        L = lum(a); lo, hi = np.percentile(L, 1), np.percentile(L, 99)                                   # (1) levels, luma percentiles, same affine on every channel (hue kept)
+    def vib(x, k):
+        L = lum(x)[..., None]; mx = x.max(2, keepdims=True); mn = x.min(2, keepdims=True); s = (mx - mn) / np.maximum(mx, 1e-6); c = x - L
+        prot = np.clip((L - 0.88) / 0.07, 0, 1) * (1 - np.clip(s / 0.2, 0, 1)); f = 1 + k * (1 - s) * (1 - prot)
+        with np.errstate(divide='ignore', invalid='ignore'):
+            lim_hi = np.where(c > 1e-6, (1 - L) / c, 1e9).min(2, keepdims=True); lim_lo = np.where(c < -1e-6, L / -c, 1e9).min(2, keepdims=True)
+        f = np.maximum(np.minimum(f, np.minimum(lim_hi, lim_lo)), 1.0); return np.clip(L + c * f, 0, 1)
+    for it in range(iters):
+        L = lum(a); lo, hi = np.percentile(L, 1), np.percentile(L, 99)
         a = (a - lo) / max(hi - lo, 1e-3) * (p99_t - p1_t) + p1_t
         k = knee; over = a > k; a = np.where(over, k + (1 - k) * np.tanh((a - k) / (1 - k)), a); a = np.clip(a, 0, 1)
-        g_lo, g_hi = 0.75, 1.35; mean = lambda g: float(np.mean(lum(np.power(np.clip(a, 1e-4, 1), g))))                    # (2) gamma pulls the mean luma to 0.51
-        if mean(1.0) != mean_t:
-            lo_, hi_ = g_lo, g_hi
-            for _ in range(24):
-                mid = (lo_ + hi_) / 2
-                if mean(mid) > mean_t: lo_ = mid
-                else: hi_ = mid
-            g = float(np.clip((lo_ + hi_) / 2, g_lo, g_hi)); a = np.power(np.clip(a, 1e-4, 1), g)
-        sat = hsv_sat(a); f = float(np.clip(sat_t / max(sat, 1e-3), 0.7, 1.3)); L = lum(a)[..., None]; a = np.clip(L + (a - L) * f, 0, 1)   # (3) saturation toward 0.31
+        g_lo, g_hi = 0.75, 1.35; mean = lambda g: float(np.mean(lum(np.power(np.clip(a, 1e-4, 1), g))))
+        lo_, hi_ = g_lo, g_hi
+        for _ in range(24):
+            mid = (lo_ + hi_) / 2
+            if mean(mid) > mean_t: lo_ = mid
+            else: hi_ = mid
+        g = float(np.clip((lo_ + hi_) / 2, g_lo, g_hi)); a = np.power(np.clip(a, 1e-4, 1), g)
+    if hsv_sat(a) < sat_t:
+        lo_, hi_ = 0.0, 8.0
+        for _ in range(14):
+            mid = (lo_ + hi_) / 2
+            if hsv_sat(vib(a, mid)) < sat_t: lo_ = mid
+            else: hi_ = mid
+        a = vib(a, (lo_ + hi_) / 2)
     return Image.fromarray((np.clip(a, 0, 1) * 255 + 0.5).astype(np.uint8))
 
 def post(src, dst, W=720, H=1280, sharp=0.55, radius=1.1):

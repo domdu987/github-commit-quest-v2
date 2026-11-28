@@ -1,8 +1,8 @@
 {
  "preset": "front_op",
- "wall_s": 89.9,
- "cpu_s": 356.9,
- "build_s": 6.5,
+ "wall_s": 90.1,
+ "cpu_s": 354.8,
+ "build_s": 6.7,
  "settings": {
   "resolution": [
    720,

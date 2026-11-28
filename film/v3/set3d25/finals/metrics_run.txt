@@ -88,3 +88,5 @@ fac_crate_open.png                     luma 0.510 p1 0.042 p99 0.921 lc 0.0391 s
 render 129.3 s wall, 513.0 s cpu
 fac_bench.png                          luma 0.552 p1 0.010 p99 0.894 lc 0.0751 sat 0.321  MISS
 render 123.1 s wall, 487.8 s cpu
+front_op.png                           luma 0.510 p1 0.034 p99 0.916 lc 0.0471 sat 0.309 chroma 17.4  MISS
+render 90.1 s wall, 354.8 s cpu
