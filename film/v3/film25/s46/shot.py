@@ -18,8 +18,9 @@ def cam_of(g):
     k = min(max((g - G0) / float(G1 - 1 - G0), 0.0), 1.0)
     cx = T.lerp(-12.5, -2.5, T.smooth(0.2 * k + 0.8 * k * k * (3 - 2 * k)))
     d = T.lerp(21.0, 20.0, k)
-    loc = (cx, Y_T - d, 1.0)
-    look = (cx + 1.5, Y_T, 2.6)
+    az = math.radians(22.0)
+    loc = (cx - d * math.sin(az), Y_T - d * math.cos(az), 2.2)
+    look = (cx + 1.5, Y_T, 2.0)
     return loc, look, 24.0
 
 
@@ -36,7 +37,9 @@ if __name__ == "__main__":
     cmd = sys.argv[1]
     gs = [g for g in C.parse(sys.argv[2]) if FIRST <= g <= LAST]
     T.register(PRESET, "cross_hero", cards=[], cam=dict(loc=cam_of(1410)[0], look_at=cam_of(1410)[1], lens=24.0), dress_n=0.9, tune=dict(green_k=1.2, cloud_k=0.95),
-               tanks=[dict(front=(-17.0, 16.5), yaw=80.0, smoke=1.0, nocorr=True)])
+               tanks=[dict(front=(-17.0, 16.5), yaw=80.0, smoke=1.0, nocorr=True)],
+               world=dict(F.PRESETS['cross_hero']['world'], wire_belts=[(9.0, -1.0, 10.0, 16.0, 2)], wire_coils=[], crates=[], barrels=[]),
+               trench0=dict(poly=[(0.0, -45.0), (0.0, 14.0), (7.0, 21.0), (31.0, 21.0)], mw=0.8, me=1.9, sb_layers=(2, 2)))
     Tk = T.Take(PRESET, cam_of, hooks)
     if cmd == "probe":
         Tk.pose(gs)
